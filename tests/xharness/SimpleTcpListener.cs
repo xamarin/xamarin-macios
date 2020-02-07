@@ -34,6 +34,7 @@ namespace xharness
 				do {
 					Log.WriteLine ("Test log server listening on: {0}:{1}", Address, Port);
 					using (TcpClient client = server.AcceptTcpClient ()) {
+						client.ReceiveBufferSize = buffer.Length;
 						processed = Processing (client);
 					}
 				} while (!AutoExit || !processed);

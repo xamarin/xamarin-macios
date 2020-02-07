@@ -37,6 +37,7 @@ namespace MonoTouchFixtures.UIKit {
 	[Preserve (AllMembers = true)]
 	public class FloatRangeTest {
 
+		[Ignore] // https://github.com/xamarin/maccore/issues/1885
 		[Test]
 		public void ManagedVersusNative ()
 		{
@@ -64,6 +65,7 @@ namespace MonoTouchFixtures.UIKit {
 			Assert.False (UIFloatRange.Zero.IsInfinite, "Zero");
 		}
 
+		[Ignore] // https://github.com/xamarin/maccore/issues/1885
 		[Test]
 		public void Equals ()
 		{

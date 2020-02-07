@@ -89,8 +89,6 @@
     <Compile Include="DeviceLogCapturer.cs" />
     <Compile Include="MakefileGenerator.cs" />
     <Compile Include="SolutionGenerator.cs" />
-    <Compile Include="MacClassicTarget.cs" />
-    <Compile Include="MacUnifiedTarget.cs" />
     <Compile Include="MacTarget.cs" />
     <Compile Include="SimpleHttpListener.cs" />
     <Compile Include="SimpleListener.cs" />
@@ -130,6 +128,7 @@
     <Compile Include="..\..\tools\bcl-test-importer\BCLTestImporter\BCLTestInfoPlistGenerator.cs">
       <Link>BCLTestImporter\BCLTestInfoPlistGenerator.cs</Link>
     </Compile>
+    <Compile Include="XmlResultParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="BCLTestImporter\" />

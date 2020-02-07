@@ -51,7 +51,7 @@ namespace MapKit {
 
 	// MKGeometry.h
 	[StructLayout (LayoutKind.Sequential)]
-	[Mac (10,9, onlyOn64 : true)]
+	[Mac (10,9)]
 	public struct MKCoordinateRegion {
 		public CLLocationCoordinate2D Center;
 		public MKCoordinateSpan Span;
@@ -78,7 +78,7 @@ namespace MapKit {
 
 	// MKGeometry.h
 	[StructLayout (LayoutKind.Sequential)]
-	[Mac (10,9, onlyOn64 : true)]
+	[Mac (10,9)]
 	public struct MKMapPoint {
 		public double X, Y;
 
@@ -178,7 +178,7 @@ namespace MapKit {
 
 	// MKGeometry.h
 	[StructLayout (LayoutKind.Sequential)]
-	[Mac (10,9, onlyOn64 : true)]
+	[Mac (10,9)]
 	public struct MKMapRect {
 		[TV (9,2)]
 		public static readonly MKMapRect Null = new MKMapRect (double.PositiveInfinity, double.PositiveInfinity, 0, 0);
@@ -378,7 +378,7 @@ namespace MapKit {
 	}
 
 	// MKGeometry.h
-	[Mac (10,9, onlyOn64 : true)]
+	[Mac (10,9)]
 	public static class MKGeometry {
 		
 		[DllImport (Constants.MapKitLibrary, EntryPoint="MKMapPointsPerMeterAtLatitude")]

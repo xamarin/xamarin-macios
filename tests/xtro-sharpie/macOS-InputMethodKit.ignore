@@ -50,3 +50,34 @@
 !missing-type! IMKCandidates not bound
 !missing-type! IMKInputController not bound
 !missing-type! IMKServer not bound
+
+# Added in Xcode 11 Beta 5
+!missing-selector! IMKCandidates::attributes not bound
+!missing-selector! IMKCandidates::candidateFrame not bound
+!missing-selector! IMKCandidates::clearSelection not bound
+!missing-selector! IMKCandidates::dismissesAutomatically not bound
+!missing-selector! IMKCandidates::hide not bound
+!missing-selector! IMKCandidates::hideChild not bound
+!missing-selector! IMKCandidates::isVisible not bound
+!missing-selector! IMKCandidates::panelType not bound
+!missing-selector! IMKCandidates::selectedCandidate not bound
+!missing-selector! IMKCandidates::selectedCandidateString not bound
+!missing-selector! IMKCandidates::selectionKeys not bound
+!missing-selector! IMKCandidates::selectionKeysKeylayout not bound
+!missing-selector! IMKCandidates::showCandidates not bound
+!missing-selector! IMKCandidates::showChild not bound
+!missing-selector! IMKCandidates::updateCandidates not bound
+!missing-selector! IMKInputController::cancelComposition not bound
+!missing-selector! IMKInputController::client not bound
+!missing-selector! IMKInputController::delegate not bound
+!missing-selector! IMKInputController::hidePalettes not bound
+!missing-selector! IMKInputController::inputControllerWillClose not bound
+!missing-selector! IMKInputController::menu not bound
+!missing-selector! IMKInputController::replacementRange not bound
+!missing-selector! IMKInputController::selectionRange not bound
+!missing-selector! IMKInputController::server not bound
+!missing-selector! IMKInputController::updateComposition not bound
+!missing-selector! IMKServer::bundle not bound
+!missing-selector! IMKServer::lastKeyEventWasDeadKey not bound
+!missing-selector! IMKServer::paletteWillTerminate not bound
+

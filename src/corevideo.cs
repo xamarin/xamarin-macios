@@ -244,7 +244,6 @@ namespace CoreVideo {
 
 		[Static]
 		[Wrap ("CVImageBufferColorPrimaries.P22.GetConstant ()")]
-		[iOS (6,0)]
 		NSString ColorPrimaries_P22 { get; }
 
 		[iOS (8,0), Mac (10,10)]
@@ -258,6 +257,10 @@ namespace CoreVideo {
 		[iOS (11,0), Mac (10,13), TV (11,0)]
 		[Field ("kCVImageBufferContentLightLevelInfoKey")]
 		NSString ContentLightLevelInfoKey { get; }
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[Field ("kCVImageBufferAlphaChannelModeKey")]
+		NSString AlphaChannelModeKey { get; }
 	}
 
 	[Watch (4,0)]
@@ -327,7 +330,6 @@ namespace CoreVideo {
 		[Field ("kCVImageBufferColorPrimaries_SMPTE_C")]
 		SmpteC,
 
-		[iOS (6,0)]
 		[Field ("kCVImageBufferColorPrimaries_P22")]
 		P22,
 	}
@@ -407,7 +409,6 @@ namespace CoreVideo {
 
 #if !MONOMAC || !XAMCORE_2_0
 		[NoWatch]
-		[iOS (6,0)]
 		[Field ("kCVPixelBufferOpenGLESCompatibilityKey")]
 		NSString OpenGLESCompatibilityKey { get; }
 
@@ -441,13 +442,17 @@ namespace CoreVideo {
 		NSString MaximumBufferAgeKey { get; }
 	}
 
-#if !MONOMAC
 	[NoWatch]
 	[Partial]
 	interface CVMetalTextureCache {
+		[NoMac]
 		[Internal]
 		[Field ("kCVMetalTextureCacheMaximumTextureAgeKey")]
 		IntPtr MaxTextureAge { get; }
+
+		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+		[Field ("kCVMetalTextureStorageMode")]
+		NSString StorageMode { get; }
 	}
 
 	// CVOpenGLESTextureCache is bound (manually) in OpenTK[-1.0].dll.
@@ -457,9 +462,8 @@ namespace CoreVideo {
 	// 	[Field ("kCVOpenGLESTextureCacheMaximumTextureAgeKey")]
 	// 	IntPtr MaxTextureAge { get; }
 	// }
-#endif
 
-	[iOS (11,0), Mac (10,13, onlyOn64:true), TV (11,0), NoWatch]
+	[iOS (11,0), Mac (10,13), TV (11,0), NoWatch]
 	[Static, Internal]
 	interface CVMetalTextureAttributesKeys {
 
@@ -467,7 +471,7 @@ namespace CoreVideo {
 		NSString UsageKey { get; }
 	}
 
-	[iOS (11,0), Mac (10,13, onlyOn64:true), TV (11,0), NoWatch]
+	[iOS (11,0), Mac (10,13), TV (11,0), NoWatch]
 	[StrongDictionary ("CVMetalTextureAttributesKeys")]
 	interface CVMetalTextureAttributes {
 		// Create stub DictionaryContainer class

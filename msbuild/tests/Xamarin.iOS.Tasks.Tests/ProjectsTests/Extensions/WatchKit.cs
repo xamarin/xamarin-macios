@@ -11,7 +11,7 @@ namespace Xamarin.iOS.Tasks {
 	[TestFixture ("iPhoneSimulator")]
 	public class WatchKit : ExtensionTestBase {
 
-		bool isXcode10OrLater = Version.Parse (Configuration.XcodeVersion).Major >= 10;
+		bool isXcode10OrLater = Configuration.XcodeVersion.Major >= 10;
 
 		public WatchKit (string platform) : base(platform)
 		{
@@ -66,7 +66,7 @@ namespace Xamarin.iOS.Tasks {
 
 			const string hostAppName = "MyWatchApp";
 //			string extensionName = "MyWatchKitExtension";
-			const string configuration = "AppStore";
+			const string configuration = "Release";
 
 			var mtouchPaths = SetupProjectPaths (hostAppName, "../", true, Platform, configuration);
 			var proj = SetupProject (Engine, mtouchPaths.ProjectCSProjPath);

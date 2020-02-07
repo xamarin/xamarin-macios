@@ -26,7 +26,7 @@ using ObjCRuntime;
 
 namespace iTunesLibrary {
 
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[Native]
 	public enum ITLibArtworkFormat : ulong
 	{
@@ -41,7 +41,7 @@ namespace iTunesLibrary {
 		Pict = 8,
 	}
 
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[Native]
 	public enum ITLibMediaItemMediaKind : ulong
 	{
@@ -65,7 +65,7 @@ namespace iTunesLibrary {
 		AlertTone = 21,
 	}
 
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[Native]
 	public enum ITLibMediaItemLyricsContentRating : ulong
 	{
@@ -74,7 +74,7 @@ namespace iTunesLibrary {
 		Clean = 2,
 	}
 
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[Native]
 	public enum ITLibMediaItemLocationType : ulong
 	{
@@ -84,7 +84,7 @@ namespace iTunesLibrary {
 		Remote = 3,
 	}
 
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[Native]
 	public enum ITLibMediaItemPlayStatus : ulong
 	{
@@ -93,7 +93,7 @@ namespace iTunesLibrary {
 		Unplayed = 2,
 	}
 
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[Native]
 	public enum ITLibDistinguishedPlaylistKind : ulong 
 	{
@@ -122,7 +122,7 @@ namespace iTunesLibrary {
 		MusicShowsAndMovies = 53,
 	}
 
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[Native]
 	public enum ITLibPlaylistKind : ulong
 	{
@@ -133,14 +133,14 @@ namespace iTunesLibrary {
 		GeniusMix,
 	}
 
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[Native]
 	public enum ITLibExportFeature : ulong
 	{
 		ITLibExportFeatureNone = 0,
 	}
 
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[Native]
 	public enum ITLibInitOptions : ulong
 	{
@@ -148,7 +148,7 @@ namespace iTunesLibrary {
 		LazyLoadData = 1,
 	}
 
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	public enum MediaItemProperty
 	{
 		[Field ("ITLibMediaItemPropertyAlbumTitle")]
@@ -293,7 +293,7 @@ namespace iTunesLibrary {
 		Artwork,
 	}
 
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	public enum ITLibPlaylistProperty {
 		[Field ("ITLibPlaylistPropertyName")]
 		Name,
@@ -313,7 +313,7 @@ namespace iTunesLibrary {
 		Kind,
 	}
 
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	public enum ITLibMediaEntityProperty {
 		[Field ("ITLibMediaEntityPropertyPersistentID")]
 		PersistentId,

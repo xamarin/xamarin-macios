@@ -153,6 +153,40 @@ namespace MonoTouchFixtures.CoreGraphics {
 				Assert.Throws<Exception> (() => new CGColorConversionInfo (from, to));
 			}
 		}
+
+		[Test]
+		public void CGColorSpace_CGColorSpace_NSDictionary ()
+		{
+			TestRuntime.AssertXcodeVersion (11, 0);
+			using (var from = CGColorSpace.CreateGenericGray ())
+			using (var to = CGColorSpace.CreateGenericRgb ()) {
+				using (var converter = new CGColorConversionInfo (from, to, (NSDictionary)null)) {
+					Assert.That (converter.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle - null");
+				}
+				using (var d = new NSDictionary ())
+				using (var converter = new CGColorConversionInfo (from, to, d)) {
+					Assert.That (converter.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
+				}
+			}
+		}
+
+		[Test]
+		public void CGColorSpace_CGColorSpace_CGColorConversionOptions ()
+		{
+			TestRuntime.AssertXcodeVersion (11, 0);
+			using (var from = CGColorSpace.CreateGenericGray ())
+			using (var to = CGColorSpace.CreateGenericRgb ()) {
+				using (var converter = new CGColorConversionInfo (from, to, (CGColorConversionOptions)null)) {
+					Assert.That (converter.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle-null");
+				}
+
+				var o = new CGColorConversionOptions ();
+				o.BlackPointCompensation = true;
+				using (var converter = new CGColorConversionInfo (from, to, o)) {
+					Assert.That (converter.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
+				}
+			}
+		}
 	}
 }
 

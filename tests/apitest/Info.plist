@@ -16,5 +16,17 @@
 	<string>NSApplication</string>
 	<key>LSUIElement</key>
 	<string>1</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Testing tastes</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Smile!</string>
+	<key>NSContactsUsageDescription</key>
+	<string>Testing friends</string>
+	<key>NSHomeKitUsageDescription</key>
+	<string>Testing roofs</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Testing mike</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Testing lens</string>
 </dict>
 </plist>

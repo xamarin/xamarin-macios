@@ -29,6 +29,7 @@ using CMVideoDimensions = System.Drawing.Size;
 namespace CoreMedia {
 
 	// untyped enum (uses as OSStatus) -> CMFormatDescription.h
+	[Watch (6,0)]
 	public enum CMFormatDescriptionError : int {
 		None				= 0,
 		InvalidParameter	= -12710,
@@ -36,6 +37,7 @@ namespace CoreMedia {
 		ValueNotAvailable   = -12718,
 	}
 
+	[Watch (6,0)]
 	public class CMFormatDescription : INativeObject, IDisposable {
 		internal IntPtr handle;
 
@@ -360,6 +362,7 @@ namespace CoreMedia {
 #endif
 	}
 
+	[Watch (6,0)]
 	public class CMAudioFormatDescription : CMFormatDescription {
 		
 		internal CMAudioFormatDescription (IntPtr handle)
@@ -375,6 +378,7 @@ namespace CoreMedia {
 		// TODO: Move more audio specific methods here
 	}
 
+	[Watch (6,0)]
 	public partial class CMVideoFormatDescription : CMFormatDescription {
 		
 		internal CMVideoFormatDescription (IntPtr handle)

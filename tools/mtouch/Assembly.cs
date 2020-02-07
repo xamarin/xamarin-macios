@@ -90,8 +90,7 @@ namespace Xamarin.Bundler {
 				}
 
 				if (!found) {
-					warnings.Add (new MonoTouchException (3005, false, "The dependency '{0}' of the assembly '{1}' was not found. Please review the project's references.",
-					                                      ar.FullName, AssemblyDefinition.FullName));
+					warnings.Add (new MonoTouchException (3005, false, Errors.MT3005, ar.FullName, AssemblyDefinition.FullName));
 					has_dependency_map = false;
 				}
 			}
@@ -138,7 +137,7 @@ namespace Xamarin.Bundler {
 
 				CopyConfigToDirectory (Path.GetDirectoryName (target));
 			} catch (Exception e) {
-				throw new MonoTouchException (1009, true, e, "Could not copy the assembly '{0}' to '{1}': {2}", source, target, e.Message);
+				throw new MonoTouchException (1009, true, e, Errors.MX1009, source, target, e.Message);
 			}
 
 			return copied;
@@ -254,7 +253,7 @@ namespace Xamarin.Bundler {
 			Directory.CreateDirectory (asm_dir);
 
 			if (!File.Exists (assembly_path))
-				throw new MonoTouchException (3004, true, "Could not AOT the assembly '{0}' because it doesn't exist.", assembly_path);
+				throw new MonoTouchException (3004, true, Errors.MT3004, assembly_path);
 
 			var aotInfo = new AotInfo ();
 			AotInfos.Add (abi, aotInfo);
@@ -281,7 +280,7 @@ namespace Xamarin.Bundler {
 				aotInfo.AsmFiles.Add (asm_output);
 			aotInfo.AotDataFiles.Add (data);
 
-			var aotCompiler = Driver.GetAotCompiler (App, Target.Is64Build);
+			var aotCompiler = Driver.GetAotCompiler (App, abi, Target.Is64Build);
 			var aotArgs = Driver.GetAotArguments (App, assembly_path, abi, build_dir, asm_output ?? other_output, llvm_aot_ofile, data);
 			var task = new AOTTask
 			{
@@ -354,7 +353,7 @@ namespace Xamarin.Bundler {
 				Driver.Log (3, "Loaded '{0}'", FullPath);
 			} catch (Exception e) {
 				// cecil might not be able to load the assembly, e.g. bug #758
-				throw new MonoTouchException (1010, true, e, "Could not load the assembly '{0}': {1}", FullPath, e.Message);
+				throw new MonoTouchException (1010, true, e, Errors.MT1010, FullPath, e.Message);
 			}
 		}
 	}

@@ -70,7 +70,7 @@ namespace AudioToolbox {
 		EnqueueDuringReset   = -66632,
 		InvalidOfflineMode   = -66626,
 		BufferEnqueuedTwice  = -66666,
-		[iOS (10,0), Mac (10,12, onlyOn64: true)]
+		[iOS (10,0), Mac (10,12)]
 		CannotStartYet       = -66665,
 		
 		// There is countless of not well documented error codes returned
@@ -988,11 +988,10 @@ namespace AudioToolbox {
 				int size;
 				var h = GetProperty (AudioQueueProperty.MagicCookie, out size);
 				if (h == IntPtr.Zero)
-					return new byte [0];
+					return Array.Empty<byte> ();
 				
 				byte [] cookie = new byte [size];
-				for (int i = 0; i < cookie.Length; i++)
-					cookie [i] = Marshal.ReadByte (h, i);
+				Marshal.Copy (h, cookie, 0, size);
 				Marshal.FreeHGlobal (h);
 
 				return cookie;
@@ -1129,7 +1128,6 @@ namespace AudioToolbox {
 			}
 		}
 
-		[iOS (6,0)]
 		public AudioQueueStatus SetChannelAssignments (params AudioQueueChannelAssignment[] channelAssignments)
 		{
 			if (channelAssignments == null)
@@ -1157,7 +1155,6 @@ namespace AudioToolbox {
 		}	
 #endif
 
-		[iOS (6,0)]
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static AudioQueueStatus AudioQueueProcessingTapNew (IntPtr inAQ, AudioQueueProcessingTapCallbackShared inCallback,
 			IntPtr inClientData, AudioQueueProcessingTapFlags inFlags, out uint outMaxFrames,
@@ -1165,7 +1162,6 @@ namespace AudioToolbox {
 
 #if !XAMCORE_2_0
 		[Obsolete ("Use 'CreateProcessingTap (AudioQueueProcessingTapDelegate, AudioQueueProcessingTapFlags, out AudioQueueStatus)' instead.", true)]
-		[iOS (6,0)]
 		public AudioQueueProcessingTap CreateProcessingTap (AudioQueueProcessingTapCallback processingCallback, AudioQueueProcessingTapFlags flags,
 		                                                    out AudioQueueStatus status)
 		{
@@ -1173,7 +1169,6 @@ namespace AudioToolbox {
 		}
 #endif
 
-		[iOS (6,0)]
 		public AudioQueueProcessingTap CreateProcessingTap (AudioQueueProcessingTapDelegate processingCallback, AudioQueueProcessingTapFlags flags,
 		                                                    out AudioQueueStatus status)
 		{		
@@ -1212,7 +1207,6 @@ namespace AudioToolbox {
 	                                                      ref AudioTimeStamp timeStamp, ref AudioQueueProcessingTapFlags flags,
 	                                                      AudioBuffers data);
 
-	[iOS (6,0)]
 	public class AudioQueueProcessingTap : IDisposable
 	{
 		internal static readonly AudioQueueProcessingTapCallbackShared CreateTapCallback = TapCallback;

@@ -78,7 +78,7 @@ public class Cache {
 		}
 
 		var diff = new StringBuilder ();
-		if (Driver.RunCommand ("diff", $"-ur {StringUtils.Quote (a)} {StringUtils.Quote (b)}", output: diff, suppressPrintOnErrors: true) != 0) {
+		if (Driver.RunCommand ("diff", new [] { "-ur", a, b, }, output: diff, suppressPrintOnErrors: true) != 0) {
 			Driver.Log (1, "Directories {0} and {1} are considered different because diff said so:\n{2}", a, b, diff);
 			return false;
 		}
@@ -190,10 +190,8 @@ public class Cache {
 		var args = new List<string> (arguments);
 
 		sb.Append ("# Version: ").Append (Constants.Version).Append ('.').Append (Constants.Revision).AppendLine ();
-		if (args.Count > 0)
-			sb.Append ("# [first argument, ignore] # ").AppendLine (args [0]);
 		sb.Append (Driver.GetFullPath ()).AppendLine (" \\");
-		CollectArgumentsForCache (args, 1, sb);
+		CollectArgumentsForCache (args, 0, sb);
 		return sb.ToString ();
 	}
 

@@ -478,6 +478,23 @@ static UltimateMachine *shared;
 		return self.INSCodingArrayProperty;
 	}
 
+	-(void) methodEncodings:
+			      (inout NSObject **) obj1P
+			obj2: (in NSObject **) obj2P
+			obj3: (out NSObject **) obj3P
+			obj4: (const NSObject **) obj4P
+			obj5: (bycopy NSObject **) obj5P
+			obj6: (byref NSObject **) obj6P
+			obj7: (oneway NSObject **) obj7P
+	{
+		obj1P = NULL;
+		obj2P = NULL;
+		obj3P = NULL;
+		obj4P = NULL;
+		obj5P = NULL;
+		obj6P = NULL;
+		obj7P = NULL;
+	}
 @end
 
 @implementation ProtocolAssigner
@@ -489,7 +506,7 @@ static UltimateMachine *shared;
 
 -(void) completedSetProtocol: (id<ProtocolAssignerProtocol>) value
 {
-	assert (!"THIS FUNCTION SHOULD BE OVERRIDDEN");
+	assert (false); // "THIS FUNCTION SHOULD BE OVERRIDDEN";
 }
 @end
 
@@ -556,6 +573,17 @@ static UltimateMachine *shared;
 {
 	// Do nothing
 }
+-(void) methodEncodings:
+	(inout NSObject **) obj1P
+	obj2: (in NSObject **) obj2P
+	obj3: (out NSObject **) obj3P
+	obj4: (const NSObject **) obj4P
+	obj5: (bycopy NSObject **) obj5P
+	obj6: (byref NSObject **) obj6P
+	obj7: (oneway NSObject **) obj7P
+{
+	// Do nothing
+}
 @end
 
 static volatile int freed_blocks = 0;
@@ -574,7 +602,7 @@ static Class _TestClass = NULL;
 
 -(void) classCallback: (void (^)(int32_t magic_number))completionHandler
 {
-	assert (!"THIS FUNCTION SHOULD BE OVERRIDDEN");
+	assert (false); // THIS FUNCTION SHOULD BE OVERRIDDEN
 }
 
 -(void) callClassCallback
@@ -649,6 +677,23 @@ static Class _TestClass = NULL;
     [obj release];
 }
 
++(void) callAssertMainThreadBlockReleaseQOS: (outerBlock) completionHandler
+{
+	MainThreadDeallocator *obj = [[MainThreadDeallocator alloc] init];
+	__block bool success = false;
+
+	dispatch_sync (dispatch_get_global_queue (QOS_CLASS_DEFAULT, 0ul), ^{
+		completionHandler (^(int magic_number)
+		{
+			assert (magic_number == 42);
+			assert ([NSThread isMainThread]); // This may crash way after the failed test has finished executing.
+			success = obj != NULL; // this captures the 'obj', and it's only freed when the block is freed.
+		});
+    });
+	assert (success);
+    [obj release];
+}
+
 -(void) callAssertMainThreadBlockReleaseCallback
 {
 	MainThreadDeallocator *obj = [[MainThreadDeallocator alloc] init];
@@ -666,9 +711,26 @@ static Class _TestClass = NULL;
     [obj release];
 }
 
+-(void) callAssertMainThreadBlockReleaseCallbackQOS
+{
+	MainThreadDeallocator *obj = [[MainThreadDeallocator alloc] init];
+	__block bool success = false;
+
+	dispatch_sync (dispatch_get_global_queue (QOS_CLASS_DEFAULT, 0ul), ^{
+		[self assertMainThreadBlockReleaseCallback: ^(int magic_number)
+		{
+			assert (magic_number == 42);
+			assert ([NSThread isMainThread]); // This may crash way after the failed test has finished executing.
+			success = obj != NULL; // this captures the 'obj', and it's only freed when the block is freed.
+		}];
+    });
+	assert (success);
+    [obj release];
+}
+
 -(void) assertMainThreadBlockReleaseCallback: (innerBlock) completionHandler
 {
-	assert (!"THIS FUNCTION SHOULD BE OVERRIDDEN");
+	assert (false); // THIS FUNCTION SHOULD BE OVERRIDDEN
 }
 
 -(void) testFreedBlocks
@@ -694,7 +756,10 @@ static Class _TestClass = NULL;
 
 static void block_called ()
 {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 	OSAtomicIncrement32 (&called_blocks);
+#pragma clang diagnostic pop
 }
 
 +(void) callProtocolWithBlockProperties: (id<ProtocolWithBlockProperties>) obj required: (bool) required instance: (bool) instance;
@@ -759,7 +824,10 @@ static void block_called ()
 @implementation FreedNotifier
 -(void) dealloc
 {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 	OSAtomicIncrement32 (&freed_blocks);
+#pragma clang diagnostic pop
 	[super dealloc];
 }
 @end

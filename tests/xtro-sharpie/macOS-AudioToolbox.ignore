@@ -1,4 +1,3 @@
-!missing-enum! AudioSettingsFlags not bound
 !missing-enum! AudioUnitEventType not bound
 !missing-enum! AUParameterMIDIMappingFlags not bound
 !missing-enum! CAClockMessage not bound
@@ -6,16 +5,6 @@
 !missing-enum! CAClockSyncMode not bound
 !missing-enum! CAClockTimebase not bound
 !missing-enum! CAClockTimeFormat not bound
-!missing-pinvoke! AudioCodecAppendInputBufferList is not bound
-!missing-pinvoke! AudioCodecAppendInputData is not bound
-!missing-pinvoke! AudioCodecGetProperty is not bound
-!missing-pinvoke! AudioCodecGetPropertyInfo is not bound
-!missing-pinvoke! AudioCodecInitialize is not bound
-!missing-pinvoke! AudioCodecProduceOutputBufferList is not bound
-!missing-pinvoke! AudioCodecProduceOutputPackets is not bound
-!missing-pinvoke! AudioCodecReset is not bound
-!missing-pinvoke! AudioCodecSetProperty is not bound
-!missing-pinvoke! AudioCodecUninitialize is not bound
 !missing-pinvoke! AudioComponentCopyConfigurationInfo is not bound
 !missing-pinvoke! AudioComponentValidate is not bound
 !missing-pinvoke! AudioConverterFillBuffer is not bound

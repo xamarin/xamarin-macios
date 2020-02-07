@@ -272,12 +272,18 @@ public class ListSourceFiles {
 				}
 				try {
 					File.Copy (fixedSource, target);
-				} catch (FileNotFoundException e) { 
+				} catch (FileNotFoundException e) {
 					Console.WriteLine ("The file {0} could not be copied to {1} because the file does not exists: {2}", fixedSource, target, e);
 					Console.WriteLine ("Debugging info:");
 					Console.WriteLine ("\tSource is {0}", src);
 					Console.WriteLine ("\tFixed source is {0}", fixedSource);
-					Console.WriteLine ("\tPath mangler type is {0}", mangler.GetType().Name);
+					Console.WriteLine ("\tPath mangler type is {0}", mangler.GetType ().Name);
+				} catch (DirectoryNotFoundException e) {
+					Console.WriteLine ("The file {0} could not be copied to {1} because the dir does not exists: {2}", fixedSource, target, e);
+					Console.WriteLine ("Debugging info:");
+					Console.WriteLine ("\tSource is {0}", src);
+					Console.WriteLine ("\tFixed source is {0}", fixedSource);
+					Console.WriteLine ("\tPath mangler type is {0}", mangler.GetType ().Name);
 				} catch (PathTooLongException e) {
 					Console.WriteLine ("The file {0} could not be copied to {1} because the file path is too long: {2}", fixedSource, target, e);
 					return 1;

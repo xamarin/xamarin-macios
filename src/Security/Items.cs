@@ -50,13 +50,18 @@ namespace Security {
 		Identity
 	}
 
+	// manually mapped to KeysAccessible
 	public enum SecAccessible {
 		Invalid = -1,
 		WhenUnlocked,
 		AfterFirstUnlock,
+		[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'AfterFirstUnlock' or a better suited option instead.")]
+		[Deprecated (PlatformName.iOS, 12,0, message: "Use 'AfterFirstUnlock' or a better suited option instead.")]
 		Always,
 		WhenUnlockedThisDeviceOnly,
 		AfterFirstUnlockThisDeviceOnly,
+		[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'AfterFirstUnlockThisDeviceOnly' or a better suited option instead.")]
+		[Deprecated (PlatformName.iOS, 12,0, message: "Use 'AfterFirstUnlockThisDeviceOnly' or a better suited option instead.")]
 		AlwaysThisDeviceOnly,
 		WhenPasscodeSetThisDeviceOnly
 	}
@@ -142,7 +147,7 @@ namespace Security {
 					if (max == 1)
 						return new NSData [] { new NSData (ptr, false) };
 
-					var array = new NSArray (ptr);
+					using var array = new NSArray (ptr);
 					var records = new NSData [array.Count];
 					for (uint i = 0; i < records.Length; i++)
 						records [i] = new NSData (array.ValueAt (i), false);
@@ -195,7 +200,7 @@ namespace Security {
 				result = SecItem.SecItemCopyMatching (copy.Handle, out ptr);
 				n = null;
 				if (result == SecStatusCode.Success){
-					var array = new NSArray (ptr);
+					using var array = new NSArray (ptr);
 					var records = new SecRecord [array.Count];
 					for (uint i = 0; i < records.Length; i++)
 						records [i] = new SecRecord (new NSMutableDictionary (array.ValueAt (i), false));

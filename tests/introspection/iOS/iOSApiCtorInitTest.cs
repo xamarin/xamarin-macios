@@ -157,7 +157,7 @@ namespace Introspection {
 
 			// Metal is not available on the (iOS8) simulator
 			case "CAMetalLayer":
-				return (Runtime.Arch == Arch.SIMULATOR);
+				return (Runtime.Arch == Arch.SIMULATOR) && !TestRuntime.CheckXcodeVersion (11, 0);
 
 #if !XAMCORE_2_0
 			// from iOS8 (beta4) they do not return a valid handle
@@ -214,7 +214,8 @@ namespace Introspection {
 				return true;
 			case "INBookRestaurantReservationIntentResponse": // iOS 11 beta 2: stack overflow in description. radar:32945914
 				return true;
-			case "IOSurface": // Only works on device
+			case "IOSurface": // Only works on device before Xcode 11
+				return !TestRuntime.CheckXcodeVersion (11, 0);
 			case "NEHotspotEapSettings": // Wireless Accessory Configuration is not supported in the simulator.
 			case "NEHotspotConfigurationManager":
 			case "NEHotspotHS20Settings":
@@ -232,6 +233,14 @@ namespace Introspection {
 				return Runtime.Arch == Arch.SIMULATOR;
 			case "RPSystemBroadcastPickerView": // Symbol not available in simulator
 				return Runtime.Arch == Arch.SIMULATOR;
+			case "ICNotificationManagerConfiguration": // This works on device but not on simulator, and docs explicitly says it is user creatable
+				return Runtime.Arch == Arch.SIMULATOR;
+			case "VNDocumentCameraViewController": // Name: NSGenericException Reason: Document camera is not available on simulator
+				return Runtime.Arch == Arch.SIMULATOR;
+			case "AVAudioRecorder": // Stopped working with Xcode 11.2 beta 2
+				return TestRuntime.CheckXcodeVersion (11, 2);
+			case "UIMenuController": // Stopped working with Xcode 11.3 beta 1
+				return TestRuntime.CheckXcodeVersion (11, 3);
 			default:
 				return base.Skip (type);
 			}

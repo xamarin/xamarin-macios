@@ -73,6 +73,21 @@ namespace MonoTouchFixtures.CoreText {
 				}
 			}
 		}
+
+		[Test]
+		public void GetBaseAdvancesAndOrigins ()
+		{
+			TestRuntime.AssertXcodeVersion (11,0);
+
+			using (var attributedString = new NSAttributedString ("Hello world."))
+			using (var line = new CTLine (attributedString)) {
+				var runs = line.GetGlyphRuns ();
+				Assert.That (runs.Length, Is.EqualTo (1), "runs");
+				runs [0].GetBaseAdvancesAndOrigins (new NSRange (0, 10), out var advances, out var origins);
+				Assert.IsNotNull (advances, "advances");
+				Assert.IsNotNull (origins, "origins");
+			}
+		}
 	}
 }
 

@@ -97,6 +97,7 @@ namespace Introspection {
 
 			// Metal is not available on the simulator
 			case "CAMetalLayer":
+				return (Runtime.Arch == Arch.SIMULATOR) && !TestRuntime.CheckXcodeVersion (11, 0);
 			case "SKRenderer":
 				return (Runtime.Arch == Arch.SIMULATOR);
 
@@ -212,6 +213,11 @@ namespace Introspection {
 					if (TestRuntime.CheckXcodeVersion (9, 0))
 						return true;
 					break;
+				case "priority":
+				case "setPriority:":
+					if (TestRuntime.CheckXcodeVersion (11, 0))
+						return true;
+					break;
 				}
 				break;
 			case "NSUrlSessionConfiguration":
@@ -227,6 +233,12 @@ namespace Introspection {
 				case "originalRequest":
 				case "response":
 					if (TestRuntime.CheckXcodeVersion (7, 0))
+						return true;
+					break;
+				case "loadedTimeRanges":
+				case "options":
+				case "URLAsset":
+					if (TestRuntime.CheckXcodeVersion (11, 0))
 						return true;
 					break;
 				}
@@ -269,7 +281,7 @@ namespace Introspection {
 				switch (name) {
 				case "render:toIOSurface:bounds:colorSpace:":
 					if (Runtime.Arch == Arch.SIMULATOR)
-						return true;
+						return !TestRuntime.CheckXcodeVersion (11, 0);
 					if (!TestRuntime.CheckXcodeVersion (9, 0))
 						return true;
 					break;
@@ -279,8 +291,13 @@ namespace Introspection {
 				switch (name) {
 				case "initWithIOSurface:":
 				case "initWithIOSurface:options:":
+					// works on both sim/device with Xcode 11 (continue main logic)
+					if (TestRuntime.CheckXcodeVersion (11, 0))
+						break;
+					// did not work on simulator before iOS 13 (shortcut logic)
 					if (Runtime.Arch == Arch.SIMULATOR)
 						return true;
+					// was a private framework (on iOS) before Xcode 9.0 (shortcut logic)
 					if (!TestRuntime.CheckXcodeVersion (9, 0))
 						return true;
 					break;
@@ -290,7 +307,7 @@ namespace Introspection {
 				switch (name) {
 				case "initWithIOSurface:":
 					if (Runtime.Arch == Arch.SIMULATOR)
-						return true;
+						return !TestRuntime.CheckXcodeVersion (11, 0);
 					if (!TestRuntime.CheckXcodeVersion (9, 0))
 						return true;
 					break;
@@ -304,7 +321,7 @@ namespace Introspection {
 				case "setTessellator:":
 				case "tessellator":
 					if (Runtime.Arch == Arch.SIMULATOR)
-						return true;
+						return !TestRuntime.CheckXcodeVersion (11, 0);
 					if (!TestRuntime.CheckXcodeVersion (9, 0))
 						return true;
 					break;
@@ -794,8 +811,13 @@ namespace Introspection {
 			case "imageWithIOSurface:options:":
 				switch (declaredType.Name) {
 				case "CIImage":
+					// works on both sim/device with Xcode 11 (continue main logic)
+					if (TestRuntime.CheckXcodeVersion (11, 0))
+						break;
+					// did not work on simulator before iOS 13 (shortcut logic)
 					if (Runtime.Arch == Arch.SIMULATOR)
 						return true;
+					// was a private framework (on iOS) before Xcode 9.0 (shortcut logic)
 					if (!TestRuntime.CheckXcodeVersion (9, 0))
 						return true;
 					break;

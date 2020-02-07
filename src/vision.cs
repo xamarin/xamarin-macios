@@ -1,4 +1,4 @@
-﻿//
+//
 // Vision C# bindings
 //
 // Authors:
@@ -25,7 +25,7 @@ using Matrix3 = global::OpenTK.NMatrix3;
 namespace Vision {
 
 	[ErrorDomain ("VNErrorDomain")]
-	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	[Native]
 	enum VNErrorCode : long {
 		Ok = 0,
@@ -45,24 +45,25 @@ namespace Vision {
 		InvalidArgument,
 		InvalidModel,
 		UnsupportedRevision,
+		DataUnavailable,
 	}
 
-	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	[Native]
 	enum VNRequestTrackingLevel : ulong {
 		Accurate = 0,
 		Fast,
 	}
 
-	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	[Native]
 	enum VNImageCropAndScaleOption : ulong {
 		CenterCrop = 0,
 		ScaleFit = 1,
-		ScaleFill,
+		ScaleFill = 2,
 	}
 
-	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	enum VNBarcodeSymbology {
 		[Field ("VNBarcodeSymbologyAztec")]
 		Aztec,
@@ -116,7 +117,7 @@ namespace Vision {
 		Upce,
 	}
 
-	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Native]
 	enum VNRequestRevision : ulong {
 		Unspecified = 0,
@@ -124,29 +125,31 @@ namespace Vision {
 		Two = 2,
 	}
 
-	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Native]
 	enum VNCoreMLRequestRevision : ulong {
 		Unspecified = 0,
 		One = 1,
 	}
 
-	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Native]
 	enum VNDetectBarcodesRequestRevision : ulong {
 		Unspecified = 0,
 		One = 1,
 	}
 
-	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Native]
 	enum VNDetectFaceLandmarksRequestRevision : ulong {
 		Unspecified = 0,
 		One = 1,
 		Two = 2,
+		[TV (13,0), Mac (10,15), iOS (13,0)]
+		Three = 3,
 	}
 
-	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Native]
 	enum VNDetectFaceRectanglesRequestRevision : ulong {
 		Unspecified = 0,
@@ -154,56 +157,58 @@ namespace Vision {
 		Two = 2,
 	}
 
-	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Native]
 	enum VNDetectHorizonRequestRevision : ulong {
 		Unspecified = 0,
 		One = 1,
 	}
 
-	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Native]
 	enum VNDetectRectanglesRequestRevision : ulong {
 		Unspecified = 0,
 		One = 1,
 	}
 
-	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Native]
 	enum VNDetectTextRectanglesRequestRevision : ulong {
 		Unspecified = 0,
 		One = 1,
 	}
 
-	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Native]
 	enum VNTranslationalImageRegistrationRequestRevision : ulong {
 		Unspecified = 0,
 		One = 1,
 	}
 
-	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Native]
 	enum VNHomographicImageRegistrationRequestRevision : ulong {
 		Unspecified = 0,
 		One = 1,
 	}
 
-	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Native]
 	enum VNTrackObjectRequestRevision : ulong {
 		Unspecified = 0,
 		One = 1,
+		[TV (13,0), Mac (10,15), iOS (13,0)]
+		Two = 2,
 	}
 
-	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Native]
 	enum VNTrackRectangleRequestRevision : ulong {
 		Unspecified = 0,
 		One = 1,
 	}
 
-	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Native]
 	enum VNDetectedObjectObservationRequestRevision : ulong {
 		Unspecified = 0,
@@ -211,7 +216,7 @@ namespace Vision {
 		Two = 2,
 	}
 
-	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Native]
 	enum VNFaceObservationRequestRevision : ulong {
 		Unspecified = 0,
@@ -219,7 +224,7 @@ namespace Vision {
 		Two = 2,
 	}
 
-	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Native]
 	enum VNRecognizedObjectObservationRequestRevision : ulong {
 		Unspecified = 0,
@@ -227,7 +232,7 @@ namespace Vision {
 		Two = 2,
 	}
 
-	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Native]
 	enum VNRectangleObservationRequestRevision : ulong {
 		Unspecified = 0,
@@ -235,7 +240,7 @@ namespace Vision {
 		Two = 2,
 	}
 
-	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Native]
 	enum VNTextObservationRequestRevision : ulong {
 		Unspecified = 0,
@@ -243,7 +248,7 @@ namespace Vision {
 		Two = 2,
 	}
 
-	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Native]
 	enum VNBarcodeObservationRequestRevision : ulong {
 		Unspecified = 0,
@@ -251,7 +256,86 @@ namespace Vision {
 		Two = 2,
 	}
 
-	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[TV (13,0), Mac (10,15), iOS (13,0)]
+	[Native]
+	enum VNClassifyImageRequestRevision : ulong {
+		Unspecified = 0,
+		One = 1,
+	}
+
+	[TV (13,0), Mac (10,15), iOS (13,0)]
+	[Native]
+	enum VNDetectFaceCaptureQualityRequestRevision : ulong {
+		Unspecified = 0,
+		One = 1,
+	}
+
+	[TV (13,0), Mac (10,15), iOS (13,0)]
+	[Native]
+	enum VNRequestFaceLandmarksConstellation : ulong {
+		NotDefined = 0,
+		SixtyFivePoints,
+		SeventySixPoints,
+	}
+
+	[TV (13,0), Mac (10,15), iOS (13,0)]
+	[Native]
+	enum VNDetectHumanRectanglesRequestRevision : ulong {
+		Unspecified = 0,
+		One = 1,
+	}
+
+	[TV (13,0), Mac (10,15), iOS (13,0)]
+	[Native]
+	enum VNGenerateAttentionBasedSaliencyImageRequestRevision : ulong {
+		Unspecified = 0,
+		One = 1,
+	}
+
+	[TV (13,0), Mac (10,15), iOS (13,0)]
+	[Native]
+	enum VNGenerateImageFeaturePrintRequestRevision : ulong {
+		Unspecified = 0,
+		One = 1,
+	}
+
+	[TV (13,0), Mac (10,15), iOS (13,0)]
+	[Native]
+	enum VNGenerateObjectnessBasedSaliencyImageRequestRevision : ulong {
+		Unspecified = 0,
+		One = 1,
+	}
+
+	[TV (13,0), Mac (10,15), iOS (13,0)]
+	[Native]
+	enum VNRecognizeAnimalsRequestRevision : ulong {
+		Unspecified = 0,
+		One = 1,
+	}
+
+	[TV (13,0), Mac (10,15), iOS (13,0)]
+	[Native]
+	enum VNRequestTextRecognitionLevel : long {
+		Accurate = 0,
+		Fast,
+	}
+
+	[TV (13,0), Mac (10,15), iOS (13,0)]
+	[Native]
+	enum VNRecognizeTextRequestRevision : ulong {
+		Unspecified = 0,
+		One = 1,
+	}
+
+	[TV (13,0), Mac (10,15), iOS (13,0)]
+	[Native]
+	enum VNElementType : ulong {
+		Unknown = 0,
+		Float = 1,
+		Double = 2,
+	}
+
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface VNCoreMLModel {
@@ -260,12 +344,20 @@ namespace Vision {
 		[Export ("modelForMLModel:error:")]
 		[return: NullAllowed]
 		VNCoreMLModel FromMLModel (MLModel model, out NSError error);
+
+		[TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("inputImageFeatureName")]
+		string InputImageFeatureName { get; set; }
+
+		[TV (13,0), Mac (10,15), iOS (13,0)]
+		[NullAllowed, Export ("featureProvider", ArgumentSemantic.Strong)]
+		IMLFeatureProvider FeatureProvider { get; set; }
 	}
 
-	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	delegate void VNRequestCompletionHandler (VNRequest request, NSError error);
 
-	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (VNImageBasedRequest))]
 	interface VNCoreMLRequest {
@@ -289,34 +381,34 @@ namespace Vision {
 
 		// We must inline the following 5 properties
 		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
-		// into subclasses so the correct class_ptr fot the static ones and the right enum type are used.
+		// into subclasses so the correct class_ptr is used for the static members and the right enum type is also used.
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Export ("revision")]
 		VNCoreMLRequestRevision Revision { get; set; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Export ("supportedRevisions", ArgumentSemantic.Copy)]
 		NSIndexSet WeakSupportedRevisions { get; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Wrap ("GetSupportedVersions<VNCoreMLRequestRevision> (WeakSupportedRevisions)")]
 		VNCoreMLRequestRevision [] SupportedRevisions { get; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Export ("defaultRevision")]
 		VNCoreMLRequestRevision DefaultRevision { get; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Export ("currentRevision")]
 		VNCoreMLRequestRevision CurrentRevision { get; }
 	}
 
-	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (VNImageBasedRequest))]
 	interface VNDetectBarcodesRequest {
@@ -340,34 +432,34 @@ namespace Vision {
 
 		// We must inline the following 5 properties
 		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
-		// into subclasses so the correct class_ptr fot the static ones and the right enum type are used.
+		// into subclasses so the correct class_ptr is used for the static members and the right enum type is also used.
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Export ("revision")]
 		VNDetectBarcodesRequestRevision Revision { get; set; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Export ("supportedRevisions", ArgumentSemantic.Copy)]
 		NSIndexSet WeakSupportedRevisions { get; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Wrap ("GetSupportedVersions<VNDetectBarcodesRequestRevision> (WeakSupportedRevisions)")]
 		VNDetectBarcodesRequestRevision [] SupportedRevisions { get; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Export ("defaultRevision")]
 		VNDetectBarcodesRequestRevision DefaultRevision { get; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Export ("currentRevision")]
 		VNDetectBarcodesRequestRevision CurrentRevision { get; }
 	}
 
-	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (VNImageBasedRequest))]
 	interface VNDetectFaceLandmarksRequest : VNFaceObservationAccepting {
@@ -376,36 +468,45 @@ namespace Vision {
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
 
+		[TV (13,0), Mac (10,15), iOS (13,0)]
+		[Static]
+		[Export ("revision:supportsConstellation:")]
+		bool SupportsConstellation (VNDetectFaceLandmarksRequestRevision revision, VNRequestFaceLandmarksConstellation constellation);
+
+		[TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("constellation", ArgumentSemantic.Assign)]
+		VNRequestFaceLandmarksConstellation Constellation { get; set; }
+
 		// We must inline the following 5 properties
 		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
-		// into subclasses so the correct class_ptr fot the static ones and the right enum type are used.
+		// into subclasses so the correct class_ptr is used for the static members and the right enum type is also used.
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Export ("revision")]
 		VNDetectFaceLandmarksRequestRevision Revision { get; set; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Export ("supportedRevisions", ArgumentSemantic.Copy)]
 		NSIndexSet WeakSupportedRevisions { get; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Wrap ("GetSupportedVersions<VNDetectFaceLandmarksRequestRevision> (WeakSupportedRevisions)")]
 		VNDetectFaceLandmarksRequestRevision [] SupportedRevisions { get; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Export ("defaultRevision")]
 		VNDetectFaceLandmarksRequestRevision DefaultRevision { get; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Export ("currentRevision")]
 		VNDetectFaceLandmarksRequestRevision CurrentRevision { get; }
 	}
 
-	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (VNImageBasedRequest))]
 	interface VNDetectFaceRectanglesRequest {
@@ -416,34 +517,34 @@ namespace Vision {
 
 		// We must inline the following 5 properties
 		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
-		// into subclasses so the correct class_ptr fot the static ones and the right enum type are used.
+		// into subclasses so the correct class_ptr is used for the static members and the right enum type is also used.
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Export ("revision")]
 		VNDetectFaceRectanglesRequestRevision Revision { get; set; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Export ("supportedRevisions", ArgumentSemantic.Copy)]
 		NSIndexSet WeakSupportedRevisions { get; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Wrap ("GetSupportedVersions<VNDetectFaceRectanglesRequestRevision> (WeakSupportedRevisions)")]
 		VNDetectFaceRectanglesRequestRevision [] SupportedRevisions { get; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Export ("defaultRevision")]
 		VNDetectFaceRectanglesRequestRevision DefaultRevision { get; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Export ("currentRevision")]
 		VNDetectFaceRectanglesRequestRevision CurrentRevision { get; }
 	}
 
-	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (VNImageBasedRequest))]
 	interface VNDetectHorizonRequest {
@@ -454,34 +555,34 @@ namespace Vision {
 
 		// We must inline the following 5 properties
 		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
-		// into subclasses so the correct class_ptr fot the static ones and the right enum type are used.
+		// into subclasses so the correct class_ptr is used for the static members and the right enum type is also used.
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Export ("revision")]
 		VNDetectHorizonRequestRevision Revision { get; set; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Export ("supportedRevisions", ArgumentSemantic.Copy)]
 		NSIndexSet WeakSupportedRevisions { get; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Wrap ("GetSupportedVersions<VNDetectHorizonRequestRevision> (WeakSupportedRevisions)")]
 		VNDetectHorizonRequestRevision [] SupportedRevisions { get; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Export ("defaultRevision")]
 		VNDetectHorizonRequestRevision DefaultRevision { get; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Export ("currentRevision")]
 		VNDetectHorizonRequestRevision CurrentRevision { get; }
 	}
 
-	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (VNImageBasedRequest))]
 	interface VNDetectRectanglesRequest {
@@ -510,34 +611,34 @@ namespace Vision {
 
 		// We must inline the following 5 properties
 		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
-		// into subclasses so the correct class_ptr fot the static ones and the right enum type are used.
+		// into subclasses so the correct class_ptr is used for the static members and the right enum type is also used.
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Export ("revision")]
 		VNDetectRectanglesRequestRevision Revision { get; set; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Export ("supportedRevisions", ArgumentSemantic.Copy)]
 		NSIndexSet WeakSupportedRevisions { get; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Wrap ("GetSupportedVersions<VNDetectRectanglesRequestRevision> (WeakSupportedRevisions)")]
 		VNDetectRectanglesRequestRevision [] SupportedRevisions { get; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Export ("defaultRevision")]
 		VNDetectRectanglesRequestRevision DefaultRevision { get; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Export ("currentRevision")]
 		VNDetectRectanglesRequestRevision CurrentRevision { get; }
 	}
 
-	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (VNImageBasedRequest))]
 	interface VNDetectTextRectanglesRequest {
@@ -551,44 +652,44 @@ namespace Vision {
 
 		// We must inline the following 5 properties
 		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
-		// into subclasses so the correct class_ptr fot the static ones and the right enum type are used.
+		// into subclasses so the correct class_ptr is used for the static members and the right enum type is also used.
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Export ("revision")]
 		VNDetectTextRectanglesRequestRevision Revision { get; set; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Export ("supportedRevisions", ArgumentSemantic.Copy)]
 		NSIndexSet WeakSupportedRevisions { get; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Wrap ("GetSupportedVersions<VNDetectTextRectanglesRequestRevision> (WeakSupportedRevisions)")]
 		VNDetectTextRectanglesRequestRevision [] SupportedRevisions { get; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Export ("defaultRevision")]
 		VNDetectTextRectanglesRequestRevision DefaultRevision { get; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Export ("currentRevision")]
 		VNDetectTextRectanglesRequestRevision CurrentRevision { get; }
 	}
 
-	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	[Abstract]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
-	interface VNFaceLandmarkRegion {
+	interface VNFaceLandmarkRegion : NSCopying, NSSecureCoding, VNRequestRevisionProviding {
 
 		[Export ("pointCount")]
 		nuint PointCount { get; }
 	}
 
-	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (VNFaceLandmarkRegion))]
 	interface VNFaceLandmarkRegion2D {
@@ -600,19 +701,24 @@ namespace Vision {
 		[Internal]
 		[Export ("pointsInImageOfSize:")]
 		IntPtr _GetPointsInImage (CGSize imageSize);
+
+		[TV (13,0), Mac (10,15), iOS (13,0)]
+		[BindAs (typeof (nfloat []))]
+		[NullAllowed, Export ("precisionEstimatesPerPoint")]
+		NSNumber [] PrecisionEstimatesPerPoint { get; }
 	}
 
-	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	[Abstract]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
-	interface VNFaceLandmarks {
+	interface VNFaceLandmarks  : NSCopying, NSSecureCoding, VNRequestRevisionProviding {
 
 		[Export ("confidence")]
 		float Confidence { get; }
 	}
 
-	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (VNFaceLandmarks))]
 	interface VNFaceLandmarks2D {
@@ -659,7 +765,7 @@ namespace Vision {
 
 	interface IVNFaceObservationAccepting { }
 
-	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	[Protocol]
 	interface VNFaceObservationAccepting {
 
@@ -668,7 +774,7 @@ namespace Vision {
 		VNFaceObservation [] InputFaceObservations { get; set; }
 	}
 
-	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	[Abstract]
 	[DisableDefaultCtor]
 	[BaseType (typeof (VNTargetedImageRequest))]
@@ -796,7 +902,7 @@ namespace Vision {
 		IntPtr Constructor (NSData imageData, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 	}
 
-	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (VNImageRegistrationRequest))]
 	interface VNTranslationalImageRegistrationRequest {
@@ -923,28 +1029,28 @@ namespace Vision {
 		IntPtr Constructor (NSData imageData, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		// into subclasses so the correct class_ptr is used.
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Export ("supportedRevisions", ArgumentSemantic.Copy)]
 		NSIndexSet WeakSupportedRevisions { get; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Wrap ("GetSupportedVersions<VNTranslationalImageRegistrationRequestRevision> (WeakSupportedRevisions)")]
 		VNTranslationalImageRegistrationRequestRevision [] SupportedRevisions { get; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Export ("defaultRevision")]
 		VNTranslationalImageRegistrationRequestRevision DefaultRevision { get; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Export ("currentRevision")]
 		VNTranslationalImageRegistrationRequestRevision CurrentRevision { get; }
 	}
 
-	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (VNImageRegistrationRequest))]
 	interface VNHomographicImageRegistrationRequest {
@@ -1072,34 +1178,34 @@ namespace Vision {
 
 		// We must inline the following 5 properties
 		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
-		// into subclasses so the correct class_ptr fot the static ones and the right enum type are used.
+		// into subclasses so the correct class_ptr is used for the static members and the right enum type is also used.
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Export ("revision")]
 		VNHomographicImageRegistrationRequestRevision Revision { get; set; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Export ("supportedRevisions", ArgumentSemantic.Copy)]
 		NSIndexSet WeakSupportedRevisions { get; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Wrap ("GetSupportedVersions<VNHomographicImageRegistrationRequestRevision> (WeakSupportedRevisions)")]
 		VNHomographicImageRegistrationRequestRevision [] SupportedRevisions { get; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Export ("defaultRevision")]
 		VNHomographicImageRegistrationRequestRevision DefaultRevision { get; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Export ("currentRevision")]
 		VNHomographicImageRegistrationRequestRevision CurrentRevision { get; }
 	}
 
-	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	[Abstract]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
@@ -1112,7 +1218,7 @@ namespace Vision {
 		float Confidence { get; }
 	}
 
-	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (VNObservation))]
 	interface VNDetectedObjectObservation {
@@ -1121,7 +1227,7 @@ namespace Vision {
 		[Export ("observationWithBoundingBox:")]
 		VNDetectedObjectObservation FromBoundingBox (CGRect boundingBox);
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Export ("observationWithRequestRevision:boundingBox:")]
 		VNDetectedObjectObservation FromBoundingBox (VNDetectedObjectObservationRequestRevision requestRevision, CGRect boundingBox);
@@ -1130,7 +1236,7 @@ namespace Vision {
 		CGRect BoundingBox { get; }
 	}
 
-	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (VNDetectedObjectObservation))]
 	interface VNFaceObservation {
@@ -1143,28 +1249,33 @@ namespace Vision {
 		[Export ("observationWithBoundingBox:")]
 		VNFaceObservation FromBoundingBox (CGRect boundingBox);
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Export ("observationWithRequestRevision:boundingBox:")]
 		VNFaceObservation FromBoundingBox (VNFaceObservationRequestRevision requestRevision, CGRect boundingBox);
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Export ("faceObservationWithRequestRevision:boundingBox:roll:yaw:")]
 		VNFaceObservation FromBoundingBox (VNFaceObservationRequestRevision requestRevision, CGRect boundingBox, [NullAllowed] [BindAs (typeof (nfloat?))] NSNumber roll, [NullAllowed] [BindAs (typeof (nfloat?))] NSNumber yaw);
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (13,0), Mac (10,15), iOS (13,0)]
+		[BindAs (typeof (float?))]
+		[NullAllowed, Export ("faceCaptureQuality", ArgumentSemantic.Strong)]
+		NSNumber FaceCaptureQuality { get; }
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[BindAs (typeof (nfloat?))]
 		[NullAllowed, Export ("roll", ArgumentSemantic.Strong)]
 		NSNumber Roll { get; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[BindAs (typeof (nfloat?))]
 		[NullAllowed, Export ("yaw", ArgumentSemantic.Strong)]
 		NSNumber Yaw { get; }
 	}
 
-	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[BaseType (typeof (VNDetectedObjectObservation))]
 	[DisableDefaultCtor]
 	interface VNRecognizedObjectObservation {
@@ -1182,37 +1293,64 @@ namespace Vision {
 		VNClassificationObservation [] Labels { get; }
 	}
 
-	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (VNObservation))]
 	interface VNClassificationObservation {
 
 		[Export ("identifier")]
 		string Identifier { get; }
+
+		// From interface VNClassificationObservation
+
+		[TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("hasPrecisionRecallCurve")]
+		bool HasPrecisionRecallCurve { get; }
+
+		[TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("hasMinimumRecall:forPrecision:")]
+		bool HasMinimumRecall (float minimumRecall, float precision);
+
+		[TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("hasMinimumPrecision:forRecall:")]
+		bool HasMinimumPrecision (float minimumPrecision, float recall);
 	}
 
-	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (VNObservation))]
 	interface VNCoreMLFeatureValueObservation {
 
 		[Export ("featureValue", ArgumentSemantic.Copy)]
 		MLFeatureValue FeatureValue { get; }
+
+		[TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("featureName")]
+		string FeatureName { get; }
 	}
 
-	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (VNObservation))]
 	interface VNPixelBufferObservation {
 
 		[Export ("pixelBuffer")]
 		CVPixelBuffer PixelBuffer { get; }
+
+		[TV (13,0), Mac (10,15), iOS (13,0)]
+		[NullAllowed, Export ("featureName")]
+		string FeatureName { get; }
 	}
 
-	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (VNDetectedObjectObservation))]
 	interface VNRectangleObservation {
+
+		[TV (13,0), Mac (10,15), iOS (13,0)]
+		[Static]
+		[Export ("rectangleObservationWithRequestRevision:topLeft:bottomLeft:bottomRight:topRight:")]
+		VNRectangleObservation GetRectangleObservation (VNRectangleObservationRequestRevision requestRevision, CGPoint topLeft, CGPoint bottomLeft, CGPoint bottomRight, CGPoint topRight);
 
 		[Export ("topLeft", ArgumentSemantic.Assign)]
 		CGPoint TopLeft { get; }
@@ -1231,13 +1369,13 @@ namespace Vision {
 		[Export ("observationWithBoundingBox:")]
 		VNRectangleObservation FromBoundingBox (CGRect boundingBox);
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Export ("observationWithRequestRevision:boundingBox:")]
 		VNRectangleObservation FromBoundingBox (VNRectangleObservationRequestRevision requestRevision, CGRect boundingBox);
 	}
 
-	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (VNRectangleObservation))]
 	interface VNTextObservation {
@@ -1250,13 +1388,13 @@ namespace Vision {
 		[Export ("observationWithBoundingBox:")]
 		VNTextObservation FromBoundingBox (CGRect boundingBox);
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Export ("observationWithRequestRevision:boundingBox:")]
 		VNTextObservation FromBoundingBox (VNTextObservationRequestRevision requestRevision, CGRect boundingBox);
 	}
 
-	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	[BaseType (typeof (VNRectangleObservation))]
 	interface VNBarcodeObservation {
 
@@ -1275,7 +1413,7 @@ namespace Vision {
 		[Export ("observationWithBoundingBox:")]
 		VNBarcodeObservation FromBoundingBox (CGRect boundingBox);
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Export ("observationWithRequestRevision:boundingBox:")]
 		VNBarcodeObservation FromBoundingBox (VNBarcodeObservationRequestRevision requestRevision, CGRect boundingBox);
@@ -1284,7 +1422,7 @@ namespace Vision {
 		string PayloadStringValue { get; }
 	}
 
-	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (VNObservation))]
 	interface VNHorizonObservation {
@@ -1296,14 +1434,14 @@ namespace Vision {
 		nfloat Angle { get; }
 	}
 
-	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	[Abstract]
 	[DisableDefaultCtor]
 	[BaseType (typeof (VNObservation))]
 	interface VNImageAlignmentObservation {
 	}
 
-	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (VNImageAlignmentObservation))]
 	interface VNImageTranslationAlignmentObservation {
@@ -1312,7 +1450,7 @@ namespace Vision {
 		CGAffineTransform AlignmentTransform { get; set; }
 	}
 
-	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (VNImageAlignmentObservation))]
 	interface VNImageHomographicAlignmentObservation {
@@ -1326,7 +1464,7 @@ namespace Vision {
 		}
 	}
 
-	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	[Abstract]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
@@ -1352,36 +1490,40 @@ namespace Vision {
 		[Export ("usesCPUOnly")]
 		bool UsesCpuOnly { get; set; }
 
+		[TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("cancel")]
+		void Cancel ();
+
 		// We must inline the following 5 properties
 		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
-		// into subclasses so the correct class_ptr fot the static ones and the right enum type are used.
+		// into subclasses so the correct class_ptr is used for the static members and the right enum type is also used.
 
-		//[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		//[TV (12,0), Mac (10,14), iOS (12,0)]
 		//[Export ("revision")]
 		//VNRequestRevision Revision { get; set; }
 
-		//[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		//[TV (12,0), Mac (10,14), iOS (12,0)]
 		//[Static]
 		//[Export ("supportedRevisions", ArgumentSemantic.Copy)]
 		//NSIndexSet WeakSupportedRevisions { get; }
 
-		//[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		//[TV (12,0), Mac (10,14), iOS (12,0)]
 		//[Static]
 		//[Wrap ("GetSupportedVersions (WeakSupportedRevisions)")]
 		//VNRequestRevision [] SupportedRevisions { get; }
 
-		//[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		//[TV (12,0), Mac (10,14), iOS (12,0)]
 		//[Static]
 		//[Export ("defaultRevision")]
 		//VNRequestRevision DefaultRevision { get; }
 
-		//[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		//[TV (12,0), Mac (10,14), iOS (12,0)]
 		//[Static]
 		//[Export ("currentRevision")]
 		//VNRequestRevision CurrentRevision { get; }
 	}
 
-	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	[Abstract]
 	[DisableDefaultCtor]
 	[BaseType (typeof (VNRequest))]
@@ -1395,7 +1537,7 @@ namespace Vision {
 		CGRect RegionOfInterest { get; set; }
 	}
 
-	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	[Internal]
 	[Static]
 	interface VNImageOptionKeys {
@@ -1409,7 +1551,7 @@ namespace Vision {
 		NSString CIContextKey { get; }
 	}
 
-	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	[StrongDictionary ("VNImageOptionKeys")]
 	interface VNImageOptions {
 		[Export ("PropertiesKey")] // Have the option to set your own dict
@@ -1422,7 +1564,7 @@ namespace Vision {
 		CIContext CIContext { get; set; }
 	}
 
-	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface VNImageRequestHandler {
@@ -1491,7 +1633,7 @@ namespace Vision {
 		bool Perform (VNRequest [] requests, out NSError error);
 	}
 
-	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // it's a designated initializer
 	interface VNSequenceRequestHandler {
@@ -1531,7 +1673,7 @@ namespace Vision {
 		bool Perform (VNRequest [] requests, NSData imageData, CGImagePropertyOrientation orientation, out NSError error);
 	}
 
-	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	[Abstract]
 	[BaseType (typeof (VNImageBasedRequest))]
 	[DisableDefaultCtor]
@@ -1658,7 +1800,7 @@ namespace Vision {
 		IntPtr Constructor (NSData imageData, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 	}
 
-	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	[BaseType (typeof (VNTrackingRequest))]
 	[DisableDefaultCtor]
 	interface VNTrackObjectRequest {
@@ -1675,34 +1817,34 @@ namespace Vision {
 
 		// We must inline the following 5 properties
 		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
-		// into subclasses so the correct class_ptr fot the static ones and the right enum type are used.
+		// into subclasses so the correct class_ptr is used for the static members and the right enum type is also used.
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Export ("revision")]
 		VNTrackObjectRequestRevision Revision { get; set; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Export ("supportedRevisions", ArgumentSemantic.Copy)]
 		NSIndexSet WeakSupportedRevisions { get; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Wrap ("GetSupportedVersions<VNTrackObjectRequestRevision> (WeakSupportedRevisions)")]
 		VNTrackObjectRequestRevision [] SupportedRevisions { get; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Export ("defaultRevision")]
 		VNTrackObjectRequestRevision DefaultRevision { get; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Export ("currentRevision")]
 		VNTrackObjectRequestRevision CurrentRevision { get; }
 	}
 
-	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	[BaseType (typeof (VNTrackingRequest))]
 	[DisableDefaultCtor]
 	interface VNTrackRectangleRequest {
@@ -1720,34 +1862,34 @@ namespace Vision {
 
 		// We must inline the following 5 properties
 		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
-		// into subclasses so the correct class_ptr fot the static ones and the right enum type are used.
+		// into subclasses so the correct class_ptr is used for the static members and the right enum type is also used.
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Export ("revision")]
 		VNTrackRectangleRequestRevision Revision { get; set; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Export ("supportedRevisions", ArgumentSemantic.Copy)]
 		NSIndexSet WeakSupportedRevisions { get; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Wrap ("GetSupportedVersions<VNTrackRectangleRequestRevision> (WeakSupportedRevisions)")]
 		VNTrackRectangleRequestRevision [] SupportedRevisions { get; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Export ("defaultRevision")]
 		VNTrackRectangleRequestRevision DefaultRevision { get; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Export ("currentRevision")]
 		VNTrackRectangleRequestRevision CurrentRevision { get; }
 	}
 
-	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	[Abstract]
 	[BaseType (typeof (VNImageBasedRequest))]
 	[DisableDefaultCtor]
@@ -1767,7 +1909,7 @@ namespace Vision {
 		bool LastFrame { [Bind ("isLastFrame")] get; set; }
 	}
 
-	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Protocol]
 	interface VNRequestRevisionProviding {
 
@@ -1775,5 +1917,393 @@ namespace Vision {
 		[Export ("requestRevision")]
 		VNRequestRevision RequestRevision { get; }
 	}
+
+	[TV (13,0), Mac (10,15), iOS (13,0)]
+	[BaseType (typeof (VNImageBasedRequest))]
+	[DisableDefaultCtor]
+	interface VNClassifyImageRequest {
+
+		[Export ("initWithCompletionHandler:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
+
+		[Static]
+		[Export ("knownClassificationsForRevision:error:")]
+		[return: NullAllowed]
+		VNClassificationObservation [] GetKnownClassifications (VNClassifyImageRequestRevision revision, [NullAllowed] out NSError error);
+
+		// We must inline the following 5 properties
+		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
+		// into subclasses so the correct class_ptr is used for the static members and the right enum type is also used.
+
+		[Export ("revision")]
+		VNClassifyImageRequestRevision Revision { get; set; }
+
+		[Static]
+		[Export ("supportedRevisions", ArgumentSemantic.Copy)]
+		NSIndexSet WeakSupportedRevisions { get; }
+
+		[Static]
+		[Wrap ("GetSupportedVersions<VNClassifyImageRequestRevision> (WeakSupportedRevisions)")]
+		VNClassifyImageRequestRevision [] SupportedRevisions { get; }
+
+		[Static]
+		[Export ("defaultRevision")]
+		VNClassifyImageRequestRevision DefaultRevision { get; }
+
+		[Static]
+		[Export ("currentRevision")]
+		VNClassifyImageRequestRevision CurrentRevision { get; }
+	}
+
+	[TV (13,0), Mac (10,15), iOS (13,0)]
+	[BaseType (typeof (VNImageBasedRequest))]
+	[DisableDefaultCtor]
+	interface VNDetectFaceCaptureQualityRequest : VNFaceObservationAccepting {
+
+		[Export ("initWithCompletionHandler:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
+
+		// We must inline the following 5 properties
+		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
+		// into subclasses so the correct class_ptr is used for the static members and the right enum type is also used.
+
+		[Export ("revision")]
+		VNDetectFaceCaptureQualityRequestRevision Revision { get; set; }
+
+		[Static]
+		[Export ("supportedRevisions", ArgumentSemantic.Copy)]
+		NSIndexSet WeakSupportedRevisions { get; }
+
+		[Static]
+		[Wrap ("GetSupportedVersions<VNDetectFaceCaptureQualityRequestRevision> (WeakSupportedRevisions)")]
+		VNDetectFaceCaptureQualityRequestRevision [] SupportedRevisions { get; }
+
+		[Static]
+		[Export ("defaultRevision")]
+		VNDetectFaceCaptureQualityRequestRevision DefaultRevision { get; }
+
+		[Static]
+		[Export ("currentRevision")]
+		VNDetectFaceCaptureQualityRequestRevision CurrentRevision { get; }
+	}
+
+	[TV (13,0), Mac (10,15), iOS (13,0)]
+	[BaseType (typeof (VNImageBasedRequest))]
+	[DisableDefaultCtor]
+	interface VNDetectHumanRectanglesRequest {
+
+		[Export ("initWithCompletionHandler:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
+
+		// We must inline the following 5 properties
+		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
+		// into subclasses so the correct class_ptr is used for the static members and the right enum type is also used.
+
+		[Export ("revision")]
+		VNDetectHumanRectanglesRequestRevision Revision { get; set; }
+
+		[Static]
+		[Export ("supportedRevisions", ArgumentSemantic.Copy)]
+		NSIndexSet WeakSupportedRevisions { get; }
+
+		[Static]
+		[Wrap ("GetSupportedVersions<VNDetectHumanRectanglesRequestRevision> (WeakSupportedRevisions)")]
+		VNDetectHumanRectanglesRequestRevision [] SupportedRevisions { get; }
+
+		[Static]
+		[Export ("defaultRevision")]
+		VNDetectHumanRectanglesRequestRevision DefaultRevision { get; }
+
+		[Static]
+		[Export ("currentRevision")]
+		VNDetectHumanRectanglesRequestRevision CurrentRevision { get; }
+	}
+
+	[TV (13,0), Mac (10,15), iOS (13,0)]
+	[BaseType (typeof (VNImageBasedRequest))]
+	[DisableDefaultCtor]
+	interface VNGenerateAttentionBasedSaliencyImageRequest {
+
+		[Export ("initWithCompletionHandler:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
+
+		// We must inline the following 5 properties
+		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
+		// into subclasses so the correct class_ptr is used for the static members and the right enum type is also used.
+
+		[Export ("revision")]
+		VNGenerateAttentionBasedSaliencyImageRequestRevision Revision { get; set; }
+
+		[Static]
+		[Export ("supportedRevisions", ArgumentSemantic.Copy)]
+		NSIndexSet WeakSupportedRevisions { get; }
+
+		[Static]
+		[Wrap ("GetSupportedVersions<VNGenerateAttentionBasedSaliencyImageRequestRevision> (WeakSupportedRevisions)")]
+		VNGenerateAttentionBasedSaliencyImageRequestRevision [] SupportedRevisions { get; }
+
+		[Static]
+		[Export ("defaultRevision")]
+		VNGenerateAttentionBasedSaliencyImageRequestRevision DefaultRevision { get; }
+
+		[Static]
+		[Export ("currentRevision")]
+		VNGenerateAttentionBasedSaliencyImageRequestRevision CurrentRevision { get; }
+	}
+
+	[TV (13,0), Mac (10,15), iOS (13,0)]
+	[BaseType (typeof (VNImageBasedRequest))]
+	[DisableDefaultCtor]
+	interface VNGenerateImageFeaturePrintRequest {
+
+		[Export ("imageCropAndScaleOption", ArgumentSemantic.Assign)]
+		VNImageCropAndScaleOption ImageCropAndScaleOption { get; set; }
+
+		[Export ("initWithCompletionHandler:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
+
+		// We must inline the following 5 properties
+		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
+		// into subclasses so the correct class_ptr is used for the static members and the right enum type is also used.
+
+		[Export ("revision")]
+		VNGenerateImageFeaturePrintRequestRevision Revision { get; set; }
+
+		[Static]
+		[Export ("supportedRevisions", ArgumentSemantic.Copy)]
+		NSIndexSet WeakSupportedRevisions { get; }
+
+		[Static]
+		[Wrap ("GetSupportedVersions<VNGenerateImageFeaturePrintRequestRevision> (WeakSupportedRevisions)")]
+		VNGenerateImageFeaturePrintRequestRevision [] SupportedRevisions { get; }
+
+		[Static]
+		[Export ("defaultRevision")]
+		VNGenerateImageFeaturePrintRequestRevision DefaultRevision { get; }
+
+		[Static]
+		[Export ("currentRevision")]
+		VNGenerateImageFeaturePrintRequestRevision CurrentRevision { get; }
+	}
+
+	[TV (13,0), Mac (10,15), iOS (13,0)]
+	[BaseType (typeof (VNImageBasedRequest))]
+	[DisableDefaultCtor]
+	interface VNGenerateObjectnessBasedSaliencyImageRequest {
+
+		[Export ("initWithCompletionHandler:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
+
+		// We must inline the following 5 properties
+		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
+		// into subclasses so the correct class_ptr is used for the static members and the right enum type is also used.
+
+		[Export ("revision")]
+		VNGenerateObjectnessBasedSaliencyImageRequestRevision Revision { get; set; }
+
+		[Static]
+		[Export ("supportedRevisions", ArgumentSemantic.Copy)]
+		NSIndexSet WeakSupportedRevisions { get; }
+
+		[Static]
+		[Wrap ("GetSupportedVersions<VNGenerateObjectnessBasedSaliencyImageRequestRevision> (WeakSupportedRevisions)")]
+		VNGenerateObjectnessBasedSaliencyImageRequestRevision [] SupportedRevisions { get; }
+
+		[Static]
+		[Export ("defaultRevision")]
+		VNGenerateObjectnessBasedSaliencyImageRequestRevision DefaultRevision { get; }
+
+		[Static]
+		[Export ("currentRevision")]
+		VNGenerateObjectnessBasedSaliencyImageRequestRevision CurrentRevision { get; }
+	}
+
+	[TV (13,0), Mac (10,15), iOS (13,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface VNRecognizedText : NSCopying, NSSecureCoding {
+
+		[Export ("string")]
+		string String { get; }
+
+		[Export ("confidence")]
+		float Confidence { get; }
+
+		[Export ("boundingBoxForRange:error:")]
+		[return: NullAllowed]
+		VNRectangleObservation GetBoundingBox (NSRange range, [NullAllowed] out NSError error);
+	}
+
+	[TV (13,0), Mac (10,15), iOS (13,0)]
+	[BaseType (typeof (VNRectangleObservation))]
+	[DisableDefaultCtor]
+	interface VNRecognizedTextObservation {
+
+		[Export ("topCandidates:")]
+		VNRecognizedText [] TopCandidates (nuint maxCandidateCount);
+
+		[Static]
+		[Export ("observationWithBoundingBox:")]
+		VNRecognizedTextObservation Create (CGRect boundingBox);
+	}
+
+	[TV (13,0), Mac (10,15), iOS (13,0)]
+	[DisableDefaultCtor]
+	[BaseType (typeof (VNPixelBufferObservation))]
+	interface VNSaliencyImageObservation {
+
+		[NullAllowed, Export ("salientObjects")]
+		VNRectangleObservation [] SalientObjects { get; }
+	}
+
+	[TV (13,0), Mac (10,15), iOS (13,0)]
+	[BaseType (typeof (VNObservation))]
+	[DisableDefaultCtor]
+	interface VNFeaturePrintObservation {
+
+		[Export ("elementType", ArgumentSemantic.Assign)]
+		VNElementType ElementType { get; }
+
+		[Export ("elementCount")]
+		nuint ElementCount { get; }
+
+		[Export ("data", ArgumentSemantic.Strong)]
+		NSData Data { get; }
+
+		[Internal]
+		[Export ("computeDistance:toFeaturePrintObservation:error:")]
+		bool _ComputeDistance (IntPtr outDistance, VNFeaturePrintObservation featurePrint, [NullAllowed] out NSError error);
+	}
+
+	[TV (13,0), Mac (10,15), iOS (13,0)]
+	enum VNAnimalIdentifier {
+
+		[DefaultEnumValue]
+		[Field (null)]
+		Unknown = -1,
+
+		[Field ("VNAnimalIdentifierDog")]
+		Dog,
+
+		[Field ("VNAnimalIdentifierCat")]
+		Cat,
+	}
+
+	[TV (13,0), Mac (10,15), iOS (13,0)]
+	[BaseType (typeof (VNImageBasedRequest))]
+	[DisableDefaultCtor]
+	interface VNRecognizeAnimalsRequest {
+
+		[Static]
+		[Export ("knownAnimalIdentifiersForRevision:error:")]
+		[return: NullAllowed]
+		[return: BindAs (typeof (VNAnimalIdentifier []))]
+		NSString [] GetKnownAnimalIdentifiers (VNRecognizeAnimalsRequestRevision revision, [NullAllowed] out NSError error);
+
+		[Export ("initWithCompletionHandler:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
+
+		// We must inline the following 5 properties
+		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
+		// into subclasses so the correct class_ptr is used for the static members and the right enum type is also used.
+
+		[Export ("revision")]
+		VNRecognizeAnimalsRequestRevision Revision { get; set; }
+
+		[Static]
+		[Export ("supportedRevisions", ArgumentSemantic.Copy)]
+		NSIndexSet WeakSupportedRevisions { get; }
+
+		[Static]
+		[Wrap ("GetSupportedVersions<VNRecognizeAnimalsRequestRevision> (WeakSupportedRevisions)")]
+		VNRecognizeAnimalsRequestRevision [] SupportedRevisions { get; }
+
+		[Static]
+		[Export ("defaultRevision")]
+		VNRecognizeAnimalsRequestRevision DefaultRevision { get; }
+
+		[Static]
+		[Export ("currentRevision")]
+		VNRecognizeAnimalsRequestRevision CurrentRevision { get; }
+	}
+
+	[TV (13,0), Mac (10,15), iOS (13,0)]
+	[BaseType (typeof (VNImageBasedRequest))]
+	[DisableDefaultCtor]
+	interface VNRecognizeTextRequest : VNRequestProgressProviding {
+
+		[Static]
+		[Export ("supportedRecognitionLanguagesForTextRecognitionLevel:revision:error:")]
+		[return: NullAllowed]
+		string [] GetSupportedRecognitionLanguages (VNRequestTextRecognitionLevel textRecognitionLevel, VNRecognizeTextRequestRevision revision, [NullAllowed] out NSError error);
+
+		[Export ("recognitionLanguages", ArgumentSemantic.Copy)]
+		string [] RecognitionLanguages { get; set; }
+
+		[Export ("customWords", ArgumentSemantic.Copy)]
+		string [] CustomWords { get; set; }
+
+		[Export ("recognitionLevel", ArgumentSemantic.Assign)]
+		VNRequestTextRecognitionLevel RecognitionLevel { get; set; }
+
+		[Export ("usesLanguageCorrection")]
+		bool UsesLanguageCorrection { get; set; }
+
+		[Export ("minimumTextHeight")]
+		float MinimumTextHeight { get; set; }
+
+		[Export ("initWithCompletionHandler:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
+
+		// We must inline the following 5 properties
+		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
+		// into subclasses so the correct class_ptr is used for the static members and the right enum type is also used.
+
+		[Export ("revision")]
+		VNRecognizeTextRequestRevision Revision { get; set; }
+
+		[Static]
+		[Export ("supportedRevisions", ArgumentSemantic.Copy)]
+		NSIndexSet WeakSupportedRevisions { get; }
+
+		[Static]
+		[Wrap ("GetSupportedVersions<VNRecognizeTextRequestRevision> (WeakSupportedRevisions)")]
+		VNRecognizeTextRequestRevision [] SupportedRevisions { get; }
+
+		[Static]
+		[Export ("defaultRevision")]
+		VNRecognizeTextRequestRevision DefaultRevision { get; }
+
+		[Static]
+		[Export ("currentRevision")]
+		VNRecognizeTextRequestRevision CurrentRevision { get; }
+	}
+
+	[TV (13,0), Mac (10,15), iOS (13,0)]
+	delegate void VNRequestProgressHandler (VNRequest request, double fractionCompleted, [NullAllowed] NSError error);
+	interface IVNRequestProgressProviding { }
+
+	[TV (13,0), Mac (10,15), iOS (13,0)]
+	[Protocol]
+	interface VNRequestProgressProviding {
+
+		[Abstract]
+		[Export ("progressHandler", ArgumentSemantic.Copy)]
+		VNRequestProgressHandler ProgressHandler { get; set; }
+
+		[Abstract]
+		[Export ("indeterminate")]
+		bool Indeterminate { get; }
+	}
+
+
 }
 #endif

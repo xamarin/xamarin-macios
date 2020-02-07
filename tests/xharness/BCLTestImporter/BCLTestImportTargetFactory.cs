@@ -26,7 +26,7 @@ namespace xharness.BCLTestImporter {
 				MacMonoSDKPath = Harness.MONO_MAC_SDK_DESTDIR,
 				Override = true,
 				GuidGenerator = Harness.NewStableGuid,
-				GroupTests = Harness.InJenkins || Harness.UseGroupedApps,
+				GroupTests = Harness.InCI || Harness.UseGroupedApps,
 			};
 		}
 		
@@ -37,12 +37,12 @@ namespace xharness.BCLTestImporter {
 			// generate all projects, then create a new iOSTarget per project
 			foreach (var tp in projectGenerator.GenerateAlliOSTestProjects ()) {
 				var prefix = tp.XUnit ? "xUnit" : "NUnit";
-				var finalName = (tp.Name == "mscorlib") ? tp.Name : $"[{prefix}] Mono {tp.Name}"; // mscorlib is our special test
+				var finalName = tp.Name.StartsWith ("mscorlib", StringComparison.Ordinal) ? tp.Name : $"[{prefix}] Mono {tp.Name}"; // mscorlib is our special test
 				result.Add (new iOSTestProject (tp.Path) {
 					Name = finalName,
 					SkipiOSVariation = !tp.Platforms.Contains (Platform.iOS),
 					SkiptvOSVariation = !tp.Platforms.Contains (Platform.TvOS),
-					SkipwatchOS32Variation = tp.Name == "mscorlib", // mscorlib is our special test
+					SkipwatchOS32Variation = tp.Name.StartsWith ("mscorlib", StringComparison.Ordinal), // mscorlib is our special test
 					SkipwatchOSVariation = !tp.Platforms.Contains (Platform.WatchOS),
 					FailureMessage = tp.Failure,
 					RestoreNugetsInProject = true,
@@ -63,8 +63,8 @@ namespace xharness.BCLTestImporter {
 			var result = new List<MacTestProject> ();
 			foreach (var tp in projectGenerator.GenerateAllMacTestProjects (platform)) {
 				var prefix = tp.XUnit ? "xUnit" : "NUnit";
-				var finalName = (tp.Name == "mscorlib") ? tp.Name : $"[{prefix}] Mono {tp.Name}"; // mscorlib is our special test
-				result.Add (new MacTestProject (tp.Path, targetFrameworkFlavor: flavor, generateVariations: false) {
+				var finalName = tp.Name.StartsWith ("mscorlib", StringComparison.Ordinal) ? tp.Name : $"[{prefix}] Mono {tp.Name}"; // mscorlib is our special test
+				result.Add (new MacTestProject (tp.Path, targetFrameworkFlavor: flavor) {
 					Name = finalName,
 					Platform = "AnyCPU",
 					IsExecutableProject = true,
@@ -86,4 +86,3 @@ namespace xharness.BCLTestImporter {
 		}
 	}
 }
-

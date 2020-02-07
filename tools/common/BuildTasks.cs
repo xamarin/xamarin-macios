@@ -5,6 +5,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -177,7 +178,7 @@ namespace Xamarin.Bundler
 		public bool Rebuilt {
 			get {
 				if (!completed_task.Task.IsCompleted)
-					throw ErrorHelper.CreateError (99, "Internal error: Can't rebuild a task that hasn't completed. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
+					throw ErrorHelper.CreateError (99, Errors.MX0099, "Can't rebuild a task that hasn't completed");
 				return completed_task.Task.Result;
 			}
 		}
@@ -286,12 +287,46 @@ namespace Xamarin.Bundler
 
 		protected virtual void Execute ()
 		{
-			throw ErrorHelper.CreateError (99, "Internal error: 'Either Execute or ExecuteAsync must be overridden'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
+			throw ErrorHelper.CreateError (99, Errors.MX0099, "'Either Execute or ExecuteAsync must be overridden'");
 		}
 
 		public override string ToString ()
 		{
 			return GetType ().Name;
+		}
+
+		bool reported_5107;
+		protected void CheckFor5107 (string assembly_name, string line, List<Exception> exceptions)
+		{
+			if (line.Contains ("can not encode offset") && line.Contains ("in resulting scattered relocation")) {
+				if (!reported_5107) {
+					// There can be thousands of these, but we only need one.
+					reported_5107 = true;
+					exceptions.Add (ErrorHelper.CreateError (5107, Errors.MT5107, assembly_name));
+				}
+			}
+		}
+
+		// Writes a list of lines to stderr, writing only a limited number of lines if there are too many of them.
+		protected void WriteLimitedOutput (string first, IEnumerable<string> lines, List<Exception> exceptions)
+		{
+			if ((first == null || first.Length == 0) && !lines.Any ())
+				return;
+
+			if (Driver.Verbosity < 6 && lines.Count () > 1000) {
+				lines = lines.Take (1000); // Limit the output so that we don't overload VSfM.
+				exceptions.Add (ErrorHelper.CreateWarning (5108, Errors.MT5108));
+			}
+
+			// Construct the entire message before writing anything, so that there's a better chance the message isn't
+			// mixed up with output from other threads.
+			var sb = new StringBuilder ();
+			if (first != null && first.Length > 0)
+				sb.AppendLine (first);
+			foreach (var line in lines)
+				sb.AppendLine (line);
+			sb.Length -= Environment.NewLine.Length; // strip off the last newline, since we're adding it in the next line
+			Console.Error.WriteLine (sb);
 		}
 	}
 

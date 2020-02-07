@@ -104,29 +104,23 @@ namespace AssetsLibrary {
 		void AddAssetsGroupAlbum (string name, ALAssetsLibraryGroupResult resultBlock, ALAssetsLibraryAccessFailure failureBlock);
 #endif
 
-		[iOS (6,0)]
 		[Static]
 		[Export ("authorizationStatus")]
 		ALAuthorizationStatus AuthorizationStatus { get; }
 
-		[iOS (6,0)]
 		[Static]
 		[Export ("disableSharedPhotoStreamsSupport")]
 		void DisableSharedPhotoStreamsSupport ();
 
-		[iOS (6,0)]
 		[Field ("ALAssetLibraryUpdatedAssetsKey")]
 		NSString UpdatedAssetsKey { get; }
 
-		[iOS (6,0)]
 		[Field ("ALAssetLibraryInsertedAssetGroupsKey")]
 		NSString InsertedAssetGroupsKey { get; }
 
-		[iOS (6,0)]
 		[Field ("ALAssetLibraryUpdatedAssetGroupsKey")]
 		NSString UpdatedAssetGroupsKey { get; }
 
-		[iOS (6,0)]
 		[Field ("ALAssetLibraryDeletedAssetGroupsKey")]
 		NSString DeletedAssetGroupsKey { get; }
 	}
@@ -178,7 +172,6 @@ namespace AssetsLibrary {
 		[Field ("ALAssetPropertyURLs"), Internal]
 		NSString _PropertyURLs { get; }
 
-		[iOS (6,0)]
 		[Field ("ALAssetPropertyAssetURL"), Internal]
 		NSString _PropertyAssetURL { get; }
 

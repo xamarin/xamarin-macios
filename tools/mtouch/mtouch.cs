@@ -194,7 +194,7 @@ namespace Xamarin.Bundler
 			case ApplePlatform.TVOS:
 				return app.IsDeviceBuild ? "AppleTVOS" : "AppleTVSimulator";
 			default:
-				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", app.Platform);
+				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, "Xamarin.iOS");
 			}
 		}
 
@@ -242,7 +242,7 @@ namespace Xamarin.Bundler
 			case ApplePlatform.TVOS:
 				return Path.Combine (MonoTouchDirectory, "lib", "mono", "Xamarin.TVOS");
 			default:
-				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", app.Platform);
+				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, "Xamarin.iOS");
 			}
 		}
 
@@ -252,7 +252,7 @@ namespace Xamarin.Bundler
 			case ApplePlatform.iOS:
 				return Path.Combine (GetPlatformFrameworkDirectory (app), "..", "..", "32bits");
 			default:
-				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", app.Platform);
+				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, "Xamarin.iOS");
 			}
 		}
 
@@ -262,7 +262,7 @@ namespace Xamarin.Bundler
 			case ApplePlatform.iOS:
 				return Path.Combine (GetPlatformFrameworkDirectory (app), "..", "..", "64bits");
 			default:
-				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", app.Platform);
+				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, "Xamarin.iOS");
 			}
 		}
 
@@ -276,7 +276,7 @@ namespace Xamarin.Bundler
 			case ApplePlatform.TVOS:
 				return Path.Combine (MonoTouchDirectory, "SDKs", app.IsDeviceBuild ? "Xamarin.AppleTVOS.sdk" : "Xamarin.AppleTVSimulator.sdk");
 			default:
-				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", app.Platform);
+				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, "Xamarin.iOS");
 			}
 		}
 
@@ -296,7 +296,7 @@ namespace Xamarin.Bundler
 			case ApplePlatform.TVOS:
 				return app.IsDeviceBuild ? "tvos" : "tvos-simulator";
 			default:
-				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", app.Platform);
+				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, "Xamarin.iOS");
 			}
 		}
 
@@ -310,7 +310,7 @@ namespace Xamarin.Bundler
 			case ApplePlatform.TVOS:
 				return "Xamarin.TVOS";
 			default:
-				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", app.Platform);
+				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, "Xamarin.iOS");
 			}
 		}
 
@@ -325,7 +325,7 @@ namespace Xamarin.Bundler
 			case ApplePlatform.WatchOS:
 				return true;
 			default:
-				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", app.Platform);
+				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, "Xamarin.iOS");
 			}
 		}
 
@@ -350,19 +350,7 @@ namespace Xamarin.Bundler
 			return Path.Combine (PlatformsDirectory, GetPlatform (app) + ".platform");
 		}
 
-		public static int XcodeRun (string command, string args, StringBuilder output = null)
-		{
-			string [] env = DeveloperDirectory != String.Empty ? new string [] { "DEVELOPER_DIR", DeveloperDirectory } : null;
-			int ret = RunCommand ("xcrun", String.Concat ("-sdk macosx ", command, " ", args), env, output);
-			if (ret != 0 && verbose > 1) {
-				StringBuilder debug = new StringBuilder ();
-				RunCommand ("xcrun", String.Concat ("--find ", command), env, debug);
-				Console.WriteLine ("failed using `{0}` from: {1}", command, debug);
-			}
-			return ret;
-		}
-
-		public static string GetAotCompiler (Application app, bool is64bits)
+		public static string GetAotCompiler (Application app, Abi abi, bool is64bits)
 		{
 			switch (app.Platform) {
 			case ApplePlatform.iOS:
@@ -372,18 +360,23 @@ namespace Xamarin.Bundler
 					return Path.Combine (cross_prefix, "bin", "arm-darwin-mono-sgen");
 				}
 			case ApplePlatform.WatchOS:
-				return Path.Combine (cross_prefix, "bin", "armv7k-unknown-darwin-mono-sgen");
+				/* Use arm64_32 cross only for Debug mode */
+				if (abi == Abi.ARM64_32 && !app.EnableLLVMOnlyBitCode) {
+					return Path.Combine (cross_prefix, "bin", "arm64_32-darwin-mono-sgen");
+				} else {
+					return Path.Combine (cross_prefix, "bin", "armv7k-unknown-darwin-mono-sgen");
+				}
 			case ApplePlatform.TVOS:
 				return Path.Combine (cross_prefix, "bin", "arm64-darwin-mono-sgen");
 			default:
-				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", app.Platform);
+				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, "Xamarin.iOS");
 			}
 		}
 
-		public static string GetAotArguments (Application app, string filename, Abi abi, string outputDir, string outputFile, string llvmOutputFile, string dataFile)
+		public static IList<string> GetAotArguments (Application app, string filename, Abi abi, string outputDir, string outputFile, string llvmOutputFile, string dataFile)
 		{
 			string fname = Path.GetFileName (filename);
-			StringBuilder args = new StringBuilder ();
+			var args = new List<string> ();
 			bool enable_llvm = (abi & Abi.LLVM) != 0;
 			bool enable_thumb = (abi & Abi.Thumb) != 0;
 			bool enable_debug = app.EnableDebug;
@@ -394,67 +387,70 @@ namespace Xamarin.Bundler
 			bool is32bit = (abi & Abi.Arch32Mask) > 0;
 			string arch = abi.AsArchString ();
 
-			args.Append ("--debug ");
+			args.Add ("--debug");
 
 			if (enable_llvm)
-				args.Append ("--llvm ");
+				args.Add ("--llvm");
 
 			if (!llvm_only && !interp)
-				args.Append ("-O=gsharedvt ");
-			args.Append (app.AotOtherArguments).Append (" ");
-			args.Append ("--aot=mtriple=");
-			args.Append (enable_thumb ? arch.Replace ("arm", "thumb") : arch);
-			args.Append ("-ios,");
-			args.Append ("data-outfile=").Append (StringUtils.Quote (dataFile)).Append (",");
-			args.Append (app.AotArguments);
+				args.Add ("-O=gsharedvt");
+			if (app.AotOtherArguments != null)
+				args.AddRange (app.AotOtherArguments);
+			var aot = new StringBuilder ();
+			aot.Append ("--aot=mtriple=");
+			aot.Append (enable_thumb ? arch.Replace ("arm", "thumb") : arch);
+			aot.Append ("-ios,");
+			aot.Append ("data-outfile=").Append (dataFile).Append (",");
+			aot.Append (app.AotArguments);
 			if (llvm_only)
-				args.Append ("llvmonly,");
+				aot.Append ("llvmonly,");
 			else if (interp) {
 				if (fname != "mscorlib.dll")
-					throw ErrorHelper.CreateError (99, $"Internal error: can only enable the interpreter for mscorlib.dll when AOT-compiling assemblies (tried to interpret {fname}). Please file an issue at https://github.com/xamarin/xamarin-macios/issues/new.");
-				args.Append ("interp,");
+					throw ErrorHelper.CreateError (99, Errors.MX0099, fname);
+				aot.Append ("interp,");
 			} else if (interp_full) {
-				args.Append ("interp,full,");
+				aot.Append ("interp,full,");
 			} else
-				args.Append ("full,");
+				aot.Append ("full,");
 
 			var aname = Path.GetFileNameWithoutExtension (fname);
 			var sdk_or_product = Profile.IsSdkAssembly (aname) || Profile.IsProductAssembly (aname);
 
 			if (enable_llvm)
-				args.Append ("nodebug,");
+				aot.Append ("nodebug,");
 			else if (!(enable_debug || enable_debug_symbols))
-				args.Append ("nodebug,");
+				aot.Append ("nodebug,");
 			else if (app.DebugAll || app.DebugAssemblies.Contains (fname) || !sdk_or_product)
-				args.Append ("soft-debug,");
+				aot.Append ("soft-debug,");
 
-			args.Append ("dwarfdebug,");
+			aot.Append ("dwarfdebug,");
 
 			/* Needed for #4587 */
 			if (enable_debug && !enable_llvm)
-				args.Append ("no-direct-calls,");
+				aot.Append ("no-direct-calls,");
 
 			if (!app.UseDlsym (filename))
-				args.Append ("direct-pinvoke,");
+				aot.Append ("direct-pinvoke,");
 
 			if (app.EnableMSym) {
-				var msymdir = StringUtils.Quote (Path.Combine (outputDir, "Msym"));
-				args.Append ($"msym-dir={msymdir},");
+				var msymdir = Path.Combine (outputDir, "Msym");
+				aot.Append ($"msym-dir={msymdir},");
 			}
 
 			if (enable_llvm)
-				args.Append ("llvm-path=").Append (MonoTouchDirectory).Append ("/LLVM/bin/,");
+				aot.Append ("llvm-path=").Append (MonoTouchDirectory).Append ("/LLVM/bin/,");
 
-			args.Append ("outfile=").Append (StringUtils.Quote (outputFile));
+			aot.Append ("outfile=").Append (outputFile);
 			if (enable_llvm)
-				args.Append (",llvm-outfile=").Append (StringUtils.Quote (llvmOutputFile));
-			args.Append (" \"").Append (filename).Append ("\"");
-			return args.ToString ();
+				aot.Append (",llvm-outfile=").Append (llvmOutputFile);
+			args.Add (aot.ToString ());
+			args.Add (filename);
+			return args;
 		}
 
-		public static ProcessStartInfo CreateStartInfo (Application app, string file_name, string arguments, string mono_path, string mono_debug = null)
+		public static ProcessStartInfo CreateStartInfo (Application app, string file_name, IList<string> arguments, string mono_path, string mono_debug = null)
 		{
-			var info = new ProcessStartInfo (file_name, arguments);
+			var info = new ProcessStartInfo (file_name, StringUtils.FormatArguments (arguments));
 			info.UseShellExecute = false;
 			info.RedirectStandardOutput = true;
 			info.RedirectStandardError = true;
@@ -672,12 +668,20 @@ namespace Xamarin.Bundler
 					sw.WriteLine ("\txamarin_register_modules = xamarin_register_modules_impl;");
 					sw.WriteLine ("}");
 
+					if (app.Platform == ApplePlatform.WatchOS && app.SdkVersion.Major >= 6 && app.IsWatchExtension) {
+						sw.WriteLine ();
+						sw.WriteLine ("extern \"C\" { int WKExtensionMain (int argc, char* argv[]); }");
+						sw.WriteLine ("int main (int argc, char *argv[])");
+						sw.WriteLine ("{");
+						sw.WriteLine ("\treturn WKExtensionMain (argc, argv);");
+						sw.WriteLine ("}");
+					}
 				}
 				WriteIfDifferent (main_source, sb.ToString (), true);
 			} catch (MonoTouchException) {
 				throw;
 			} catch (Exception e) {
-				throw new MonoTouchException (4001, true, e, "The main template could not be expanded to `{0}`.", main_source);
+				throw new MonoTouchException (4001, true, e, Errors.MT4001, main_source);
 			}
 
 			return main_source;
@@ -805,7 +809,7 @@ namespace Xamarin.Bundler
 				return false;
 
 			//Custom gcc flags requires us to build template.m
-			if (!string.IsNullOrEmpty (app.UserGccFlags))
+			if (app.UserGccFlags?.Count > 0)
 				return false;
 
 			// Setting environment variables is done in the generated main.m, so we can't symlink in this case.
@@ -866,7 +870,7 @@ namespace Xamarin.Bundler
 		{
 			bool result;
 			if (!TryParseBool (value, out result))
-				throw ErrorHelper.CreateError (26, "Could not parse the command line argument '-{0}:{1}'", name, value);
+				throw ErrorHelper.CreateError (26, Errors.MX0026, name, value);
 			return result;
 		}
 
@@ -920,7 +924,7 @@ namespace Xamarin.Bundler
 					}
 					goto default;
 				default:
-					throw new MonoTouchException (19, true, "Only one --[log|install|kill|launch]dev or --[launch|debug|list]sim option can be used.");
+					throw new MonoTouchException (19, true, Errors.MT0019);
 				}
 			};
 
@@ -937,7 +941,11 @@ namespace Xamarin.Bundler
 				v => {
 					if (v.Contains ("--profile") || v.Contains ("--attach"))
 						throw new Exception ("Unsupported flag to -aot-options");
-					app.AotOtherArguments = v + " " + app.AotOtherArguments;
+					if (!StringUtils.TryParseArguments (v, out var aot_options, out var ex))
+						throw ErrorHelper.CreateError (26, ex, Errors.MX0026, "-aot-options="+v, ex.Message);
+					if (app.AotOtherArguments == null)
+						app.AotOtherArguments = new List<string> ();
+					app.AotOtherArguments.AddRange (aot_options);
 				}
 			},
 			{ "gsharedvt:", "Generic sharing for value-types - always enabled [Deprecated]", v => {} },
@@ -969,7 +977,15 @@ namespace Xamarin.Bundler
 			{ "dsym:", "Turn on (default for device) or off (default for simulator) .dSYM symbols.", v => app.BuildDSym = ParseBool (v, "dsym") },
 			{ "dlsym:", "Use dlsym to resolve pinvokes in AOT compiled assemblies", v => app.ParseDlsymOptions (v) },
 			{ "r|ref=", "Add an assembly to the resolver", v => app.References.Add (v) },
-			{ "gcc_flags=", "Set flags to be passed along to gcc at link time", v => app.UserGccFlags = v },
+			{ "gcc_flags=", "Set flags to be passed along to gcc at link time", v =>
+				{
+					if (!StringUtils.TryParseArguments (v, out var gcc_flags, out var ex))
+						throw ErrorHelper.CreateError (26, ex, Errors.MX0026, "-gcc-flags=" + v, ex.Message);
+					if (app.UserGccFlags == null)
+						app.UserGccFlags = new List<string> ();
+					app.UserGccFlags.AddRange (gcc_flags);
+				}
+			},
 			{ "framework=", "Link with the specified framework. This can either be a system framework (like 'UIKit'), or it can be a path to a custom framework ('/path/to/My.framework'). In the latter case the entire 'My.framework' directory is copied into the app as well.", (v) => app.Frameworks.Add (v) },
 			{ "weak-framework=", "Weak link with the specified framework. This can either be a system framework (like 'UIKit'), or it can be a path to a custom framework ('/path/to/My.framework'). In the latter case the entire 'My.framework' directory is copied into the app as well.", (v) => app.Frameworks.Add (v) },	
 
@@ -993,7 +1009,7 @@ namespace Xamarin.Bundler
 					try {
 						app.SdkVersion = StringUtils.ParseVersion (v);
 					} catch (Exception ex) {
-						ErrorHelper.Error (26, ex, $"Could not parse the command line argument '-sdk:{v}': {ex.Message}");
+						ErrorHelper.Error (26, ex, Errors.MX0026, "sdk:" + v, ex.Message);
 					}
 				}
 			},
@@ -1002,7 +1018,7 @@ namespace Xamarin.Bundler
 					try {
 						app.DeploymentTarget = StringUtils.ParseVersion (v);
 					} catch (Exception ex) {
-						throw new MonoTouchException (26, true, ex,  $"Could not parse the command line argument '-targetver:{v}': {ex.Message}");
+						throw new MonoTouchException (26, true, ex, Errors.MX0026, "targetver:" + v, ex.Message);
 					}
 				}
 			},
@@ -1041,7 +1057,7 @@ namespace Xamarin.Bundler
 				{
 					int eq = v.IndexOf ('=');
 					if (eq <= 0)
-						throw new MonoTouchException (2, true, "Could not parse the environment variable '{0}'", v);
+						throw new MonoTouchException (2, true, Errors.MT0002, v);
 					string name = v.Substring (0, eq);
 					string value = v.Substring (eq + 1);
 					app.EnvironmentVariables.Add (name, value);
@@ -1050,20 +1066,20 @@ namespace Xamarin.Bundler
 			{ "sgen:", "Enable the SGen garbage collector",
 					v => {
 						if (!ParseBool (v, "sgen")) 
-							ErrorHelper.Warning (43, "The Boehm garbage collector is not supported. The SGen garbage collector has been selected instead.");
+							ErrorHelper.Warning (43, Errors.MX0043);
 					},
 					true // do not show the option anymore
 				},
 			{ "boehm:", "Enable the Boehm garbage collector",
 					v => {
 						if (ParseBool (v, "boehm"))
-							ErrorHelper.Warning (43, "The Boehm garbage collector is not supported. The SGen garbage collector has been selected instead."); }, 
+							ErrorHelper.Warning (43, Errors.MX0043); }, 
 					true // do not show the option anymore
 				},
 			{ "new-refcount:", "Enable new refcounting logic",
 				v => {
 					if (!ParseBool (v, "new-refcount"))
-						ErrorHelper.Warning (80, "Disabling the new refcount logic is deprecated.");
+						ErrorHelper.Warning (80, Errors.MX0080);
 				},
 				true // do not show the option anymore
 			},
@@ -1111,7 +1127,7 @@ namespace Xamarin.Bundler
 						app.Registrar = RegistrarMode.Default;
 						break;
 					default:
-						throw new MonoTouchException (20, true, "The valid options for '{0}' are '{1}'.", "--registrar", "static, dynamic or default");
+						throw new MonoTouchException (20, true, Errors.MX0020, "--registrar", "static, dynamic or default");
 					}
 
 					switch (value) {
@@ -1123,7 +1139,7 @@ namespace Xamarin.Bundler
 						app.RegistrarOptions = RegistrarOptions.Default;
 						break;
 					default:
-						throw new MonoTouchException (20, true, "The valid options for '{0}' are '{1}'.", "--registrar", "static, dynamic or default");
+						throw new MonoTouchException (20, true, Errors.MX0020, "--registrar", "static, dynamic or default");
 					}
 				}
 			},
@@ -1154,7 +1170,7 @@ namespace Xamarin.Bundler
 							app.PackageMonoFramework = false;
 							break;
 						default:
-							throw new MonoTouchException (20, true, "The valid options for '{0}' are '{1}'.", "--mono", "static, framework or [no-]package-framework");
+							throw new MonoTouchException (20, true, Errors.MX0020, "--mono", "static, framework or [no-]package-framework");
 						}
 					}
 				}
@@ -1173,7 +1189,7 @@ namespace Xamarin.Bundler
 						app.BitCodeMode = BitCodeMode.MarkerOnly;
 						break;
 					default:
-						throw new MonoTouchException (20, true, "The valid options for '{0}' are '{1}'.", "--bitcode", "asmonly, full or marker");
+						throw new MonoTouchException (20, true, Errors.MX0020, "--bitcode", "asmonly, full or marker");
 					}
 				}
 			},
@@ -1182,7 +1198,7 @@ namespace Xamarin.Bundler
 				{
 						var equals = v.IndexOf ('=');
 						if (equals == -1)
-							throw ErrorHelper.CreateError (26, "Could not parse the command line argument '{0}': {1}", "--llvm-opt=" + v, "Both assembly and optimization must be specified (assembly=optimization)");
+							throw ErrorHelper.CreateError (26, Errors.MX0026, "-llvm-opt=" + v, "Both assembly and optimization must be specified (assembly=optimization)");
 						var asm = v.Substring (0, equals);
 						var opt = v.Substring (equals + 1); // An empty string is valid here, meaning 'no optimizations'
 						app.LLVMOptimizations [asm] = opt;
@@ -1221,7 +1237,7 @@ namespace Xamarin.Bundler
 				throw;
 			}
 			catch (Exception e) {
-				throw new MonoTouchException (10, true, e, "Could not parse the command line arguments: {0}", e);
+				throw new MonoTouchException (10, true, e, Errors.MX0010, e);
 			}
 
 			a = action;
@@ -1242,7 +1258,7 @@ namespace Xamarin.Bundler
 
 			if (action == Action.Build || action == Action.RunRegistrar) {
 				if (app.RootAssemblies.Count == 0)
-					throw new MonoTouchException (17, true, "You should provide a root assembly.");
+					throw new MonoTouchException (17, true, Errors.MX0017);
 			}
 
 			return app;
@@ -1288,22 +1304,22 @@ namespace Xamarin.Bundler
 			}
 
 			if (app.SdkVersion == null)
-				throw new MonoTouchException (25, true, "No SDK version was provided. Please add --sdk=X.Y to specify which {0} SDK should be used to build your application.", app.PlatformName);
+				throw new MonoTouchException (25, true, Errors.MT0025, app.PlatformName);
 
 			var framework_dir = GetFrameworkDirectory (app);
 			Driver.Log ("Xamarin.iOS {0}.{1} using framework: {2}", Constants.Version, Constants.Revision, framework_dir);
 
 			if (action == Action.None)
-				throw new MonoTouchException (52, true, "No command specified.");
+				throw new MonoTouchException (52, true, Errors.MT0052);
 
 			if (app.SdkVersion < new Version (6, 0) && app.IsArchEnabled (Abi.ARMv7s))
-				throw new MonoTouchException (14, true, "The iOS {0} SDK does not support building applications targeting {1}", app.SdkVersion, "ARMv7s");
+				throw new MonoTouchException (14, true, Errors.MT0014, app.SdkVersion, "ARMv7s");
 
 			if (app.SdkVersion < new Version (7, 0) && app.IsArchEnabled (Abi.ARM64))
-				throw new MonoTouchException (14, true, "The iOS {0} SDK does not support building applications targeting {1}", app.SdkVersion, "ARM64");
+				throw new MonoTouchException (14, true, Errors.MT0014, app.SdkVersion, "ARM64");
 
 			if (app.SdkVersion < new Version (7, 0) && app.IsArchEnabled (Abi.x86_64))
-				throw new MonoTouchException (14, true, "The iOS {0} SDK does not support building applications targeting {1}", app.SdkVersion, "x86_64");
+				throw new MonoTouchException (14, true, Errors.MT0014, app.SdkVersion, "x86_64");
 
 			if (!Directory.Exists (framework_dir)) {
 				Console.WriteLine ("Framework does not exist {0}", framework_dir);
@@ -1313,33 +1329,16 @@ namespace Xamarin.Bundler
 			}
 
 			if (!Directory.Exists (GetPlatformDirectory (app)))
-				throw new MonoTouchException (6, true, "There is no devel platform at {0}, use --platform=PLAT to specify the SDK", GetPlatformDirectory (app));
+				throw new MonoTouchException (6, true, Errors.MT0006, GetPlatformDirectory (app));
 
 			if (!Directory.Exists (app.AppDirectory))
 				Directory.CreateDirectory (app.AppDirectory);
 
 			if (app.EnableRepl && app.BuildTarget != BuildTarget.Simulator)
-				throw new MonoTouchException (29, true, "REPL (--enable-repl) is only supported in the simulator (--sim)");
+				throw new MonoTouchException (29, true, Errors.MT0029);
 
 			if (app.EnableRepl && app.LinkMode != LinkMode.None)
-				throw new MonoTouchException (82, true, "REPL (--enable-repl) is only supported when linking is not used (--nolink).");
-
-			if (app.UseInterpreter) {
-				// it's confusing to use different options to get a feature to work (e.g. dynamic, SRE...) on both simulator and device
-				if (app.IsSimulatorBuild) {
-					ErrorHelper.Show (ErrorHelper.CreateWarning (141, "The interpreter is not supported in the simulator. Switching to REPL which provide the same extra features on the simulator."));
-					app.UseInterpreter = false;
-				}
-
-				// FIXME: the interpreter only supports ARM64 right now
-				// temporary - without a check here the error happens when deploying
-				if (!app.IsSimulatorBuild && !app.IsArchEnabled (Abi.ARM64))
-					throw ErrorHelper.CreateError (99, "Internal error: The interpreter is currently only available for 64 bits.");
-
-				// needs to be set after the argument validations
-				// interpreter can use some extra code (e.g. SRE) that is not shipped in the default (AOT) profile
-				app.EnableRepl = true;
-			}
+				throw new MonoTouchException (82, true, Errors.MT0082);
 
 			if (cross_prefix == null)
 				cross_prefix = MonoTouchDirectory;
@@ -1364,13 +1363,13 @@ namespace Xamarin.Bundler
 						ext.ContainerApp = app;
 						app.AppExtensions.Add (ext);
 						if (app_action != Action.Build)
-							throw ErrorHelper.CreateError (99, "Internal error: Extension build action is '{0}' when it should be 'Build'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", app_action);
+							throw ErrorHelper.CreateError (99, Errors.MX0099, $"Extension build action is '{app_action}' when it should be 'Build'");
 					}
 
 					app.BuildAll ();
 				}
 			} else {
-				throw ErrorHelper.CreateError (99, "Internal error: Invalid action: {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", action);
+				throw ErrorHelper.CreateError (99, Errors.MX0099, action);
 			}
 
 			return 0;
@@ -1401,7 +1400,7 @@ namespace Xamarin.Bundler
 				if (File.Exists (path))
 					return path;
 
-				throw ErrorHelper.CreateError (93, "Could not find 'mlaunch'.");
+				throw ErrorHelper.CreateError (93, Errors.MT0093);
 			}
 		}
 
@@ -1415,13 +1414,8 @@ namespace Xamarin.Bundler
 				p.StartInfo.RedirectStandardOutput = true;
 				p.StartInfo.FileName = MlaunchPath;
 
-				var sb = new StringBuilder ();
-				foreach (var str in Environment.GetCommandLineArgs ().Skip (1)) {
-					if (sb.Length > 0)
-						sb.Append (' ');
-					sb.Append (StringUtils.Quote (str));
-				}
-				p.StartInfo.Arguments = sb.ToString ();
+				var sb = Environment.GetCommandLineArgs ().Skip (1).ToList ();
+				p.StartInfo.Arguments = StringUtils.FormatArguments (sb);
 				p.Start ();
 
 				RedirectStream (new StreamReader (Console.OpenStandardInput ()), p.StandardInput);
@@ -1502,9 +1496,9 @@ namespace Xamarin.Bundler
 					goto tryagain;
 				}
 				if (string.IsNullOrEmpty (original_compiler)) {
-					throw new MonoTouchException (5101, true, "Missing '{0}' compiler. Please install Xcode 'Command-Line Tools' component", app.Compiler);
+					throw new MonoTouchException (5101, true, Errors.MT5101, app.Compiler);
 				} else {
-					throw new MonoTouchException (5103, true, "Could not find neither the '{0}' nor the '{1}' compiler. Please install Xcode 'Command-Line Tools' component", app.Compiler, original_compiler);
+					throw new MonoTouchException (5103, true, Errors.MT5103, app.Compiler, original_compiler);
 				}
 			}
 		}
@@ -1512,15 +1506,15 @@ namespace Xamarin.Bundler
 		// workaround issues like:
 		// * Xcode 4.x versus 4.3 (location of /Developer); and 
 		// * the (optional) installation of "Command-Line Tools" by Xcode
-		public static void RunStrip (string options)
+		public static void RunStrip (IList<string> options)
 		{
 			// either /Developer (Xcode 4.2 and earlier), /Applications/Xcode.app/Contents/Developer (Xcode 4.3) or user override
 			string strip = FindTool ("strip");
 			if (strip == null)
-				throw new MonoTouchException (5301, "Missing 'strip' tool. Please install Xcode 'Command-Line Tools' component");
+				throw new MonoTouchException (5301, Errors.MT5301);
 
 			if (RunCommand (strip, options) != 0)
-				throw new MonoTouchException (5304, true, "Failed to strip the final binary. Please review the build log.");
+				throw new MonoTouchException (5304, true, Errors.MT5304);
 		}
 
 		static string FindTool (string tool)
@@ -1545,43 +1539,39 @@ namespace Xamarin.Bundler
 
 		public static void CreateDsym (string output_dir, string appname, string dsym_dir)
 		{
-			string quoted_app_path = StringUtils.Quote (Path.Combine (output_dir, appname));
-			string quoted_dsym_dir = StringUtils.Quote (dsym_dir);
-			RunDsymUtil (string.Format ("{0} -t 4 -z -o {1}", quoted_app_path, quoted_dsym_dir));
-			RunCommand ("/usr/bin/mdimport", quoted_dsym_dir);
+			RunDsymUtil (Path.Combine (output_dir, appname), "-t", "4", "-z", "-o", dsym_dir);
+			RunCommand ("/usr/bin/mdimport", dsym_dir);
 		}
 
 		public static void RunLipo (string output, IEnumerable<string> inputs)
 		{
-			var sb = new StringBuilder ();
-			foreach (var lib in inputs) {
-				sb.Append (StringUtils.Quote (lib));
-				sb.Append (' ');
-			}
-			sb.Append ("-create -output ");
-			sb.Append (StringUtils.Quote (output));
-			RunLipo (sb.ToString ());
+			var sb = new List<string> ();
+			sb.AddRange (inputs);
+			sb.Add ("-create");
+			sb.Add ("-output");
+			sb.Add (output);
+			RunLipo (sb);
 		}
 
-		public static void RunLipo (string options)
+		public static void RunLipo (IList<string> options)
 		{
 			string lipo = FindTool ("lipo");
 			if (lipo == null)
-				throw new MonoTouchException (5305, true, "Missing 'lipo' tool. Please install Xcode 'Command-Line Tools' component");
+				throw new MonoTouchException (5305, true, Errors.MT5305);
 			if (RunCommand (lipo, options) != 0)
-				throw new MonoTouchException (5306, true, "Failed to create the a fat library. Please review the build log.");
+				throw new MonoTouchException (5306, true, Errors.MT5305);
 		}
 
-		static void RunDsymUtil (string options)
+		static void RunDsymUtil (params string[] options)
 		{
 			// either /Developer (Xcode 4.2 and earlier), /Applications/Xcode.app/Contents/Developer (Xcode 4.3) or user override
 			string dsymutil = FindTool ("dsymutil");
 			if (dsymutil == null) {
-				ErrorHelper.Warning (5302, "Missing 'dsymutil' tool. Please install Xcode 'Command-Line Tools' component");
+				ErrorHelper.Warning (5302, Errors.MT5302);
 				return;
 			}
 			if (RunCommand (dsymutil, options) != 0)
-				throw new MonoTouchException (5303, true, "Failed to generate the debug symbols (dSYM directory). Please review the build log.");
+				throw new MonoTouchException (5303, true, Errors.MT5303);
 		}
 
 		static string GetFrameworkDir (string platform, Version iphone_sdk)
@@ -1654,7 +1644,7 @@ namespace Xamarin.Bundler
 			case ApplePlatform.TVOS:
 				return Frameworks.TVOSFrameworks;
 			default:
-				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", app.Platform);
+				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, "Xamarin.iOS");
 			}
 		}
 

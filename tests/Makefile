@@ -207,11 +207,12 @@ killall:
 	@killall Touch.Server >/dev/null 2>&1 || true
 
 NUNIT_MSBUILD_DIR=$(TOP)/packages/NUnit.Runners.2.6.4/tools/lib
-test-ios-tasks:
-	$(SYSTEM_XIBUILD) -- $(TOP)/msbuild/Xamarin.MacDev.Tasks.sln
-	cd $(NUNIT_MSBUILD_DIR) && $(SYSTEM_XIBUILD) -t -- ../nunit-console.exe ../../../../msbuild/tests/bin/Xamarin.iOS.Tasks.Tests.dll -xml=TestResults_Xamarin.iOS.Tasks.Tests.xml -labels $(TEST_FIXTURE) || touch .failed-stamp
-	@[[ -z "$$BUILD_REPOSITORY" ]] || ( xsltproc $(TOP)/tests/HtmlTransform.xslt $(NUNIT_MSBUILD_DIR)/TestResults_Xamarin.iOS.Tasks.Tests.xml > $(TOP)/tests/index.html && echo "@MonkeyWrench: AddFile: $$PWD/index.html" )
-	@if test -e $(NUNIT_MSBUILD_DIR)/.failed-stamp; then rm $(NUNIT_MSBUILD_DIR)/.failed-stamp; exit 1; fi
+test-ios-tasks: test-ios-tasks-net461 test-ios-tasks-netstandard2.0
+test-ios-tasks-%: verify-system-vsmac-xcode-match
+	$(SYSTEM_MSBUILD) $(TOP)/msbuild/tests/Xamarin.iOS.Tasks.Tests/Xamarin.iOS.Tasks.Tests.csproj /p:Configuration=Debug-$*
+	cd $(TOP)/msbuild/tests/Xamarin.iOS.Tasks.Tests && $(SYSTEM_XIBUILD) -t -- $(abspath $(TOP)/tools/nunit3-console-3.10.0) $(abspath $(TOP)/msbuild/tests/Xamarin.iOS.Tasks.Tests/bin/Debug-$*/net461/Xamarin.iOS.Tasks.Tests.dll) "--result=$(abspath $(CURDIR)/TestResults_$*_Xamarin.iOS.Tasks.Tests.xml);format=nunit2" -labels=All $(TEST_FIXTURE) || touch .failed-stamp
+	@[[ -z "$$BUILD_REPOSITORY" ]] || ( xsltproc $(TOP)/tests/HtmlTransform.xslt $(CURDIR)/TestResults_$*_Xamarin.iOS.Tasks.Tests.xml > $(TOP)/tests/index-$*.html && echo "@MonkeyWrench: AddFile: $$PWD/index-$*.html" )
+	@if test -e $(CURDIR)/.$@-failed-stamp; then rm $(CURDIR)/.$@-failed-stamp; exit 1; fi
 
 test-install-sources:
 	$(SYSTEM_XIBUILD) -- $(TOP)/tools/install-source/InstallSourcesTests/InstallSourcesTests.csproj
@@ -228,18 +229,26 @@ qa-test-dependencies.zip:
 	$(Q) rm -rf $@ $@.tmpdir
 ifdef INCLUDE_TVOS
 	@# TVOS
-	$(Q) mkdir -p $@.tmpdir/tvos
+	$(Q) mkdir -p $@.tmpdir/tvos $@.tmpdir/tvsimulator
 	$(Q) $(CP) $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/MonoTouch.Dialog-1.dll* $@.tmpdir/tvos
 	$(Q) $(CP) $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/MonoTouch.NUnitLite.dll* $@.tmpdir/tvos
 	$(Q) $(CP) $(TOP)/tests/test-libraries/.libs/tvos/libtest.a $@.tmpdir/tvos
 	$(Q) $(CP) $(TOP)/tests/test-libraries/.libs/tvos/libtest.dylib $@.tmpdir/tvos
 	$(Q) $(CP) -a $(TOP)/tests/test-libraries/.libs/tvos/XTest.framework $@.tmpdir/tvos
+	$(Q) $(CP) $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/MonoTouch.Dialog-1.dll* $@.tmpdir/tvsimulator
+	$(Q) $(CP) $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/MonoTouch.NUnitLite.dll* $@.tmpdir/tvsimulator
+	$(Q) $(CP) $(TOP)/tests/test-libraries/.libs/tvsimulator/libtest.a $@.tmpdir/tvsimulator
+	$(Q) $(CP) $(TOP)/tests/test-libraries/.libs/tvsimulator/libtest.dylib $@.tmpdir/tvsimulator
+	$(Q) $(CP) -a $(TOP)/tests/test-libraries/.libs/tvsimulator/XTest.framework $@.tmpdir/tvsimulator
 endif
 	@# iOS
-	$(Q) mkdir -p $@.tmpdir/ios
-	$(Q) $(CP) $(TOP)/tests/test-libraries/.libs/ios/libtest.a $@.tmpdir/ios
-	$(Q) $(CP) $(TOP)/tests/test-libraries/.libs/ios/libtest.dylib $@.tmpdir/ios
-	$(Q) $(CP) -a $(TOP)/tests/test-libraries/.libs/ios/XTest.framework $@.tmpdir/ios
+	$(Q) mkdir -p $@.tmpdir/iphoneos $@.tmpdir/iphonesimulator
+	$(Q) $(CP) $(TOP)/tests/test-libraries/.libs/iphoneos/libtest.a $@.tmpdir/iphoneos
+	$(Q) $(CP) $(TOP)/tests/test-libraries/.libs/iphoneos/libtest.dylib $@.tmpdir/iphoneos
+	$(Q) $(CP) -a $(TOP)/tests/test-libraries/.libs/iphoneos/XTest.framework $@.tmpdir/iphoneos
+	$(Q) $(CP) $(TOP)/tests/test-libraries/.libs/iphonesimulator/libtest.a $@.tmpdir/iphonesimulator
+	$(Q) $(CP) $(TOP)/tests/test-libraries/.libs/iphonesimulator/libtest.dylib $@.tmpdir/iphonesimulator
+	$(Q) $(CP) -a $(TOP)/tests/test-libraries/.libs/iphonesimulator/XTest.framework $@.tmpdir/iphonesimulator
 	$(Q) printf '#!/bin/bash -e\n\n/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/mlaunch "$$@"\n' > $@.tmpdir/mlaunch
 	$(Q) chmod +x $@.tmpdir/mlaunch
 	@# Generate zip
@@ -362,7 +371,7 @@ wrench-xtro:
 	@echo Not here anymore
 
 jenkins: xharness/xharness.exe
-	$(Q) $(SYSTEM_MONO) --trace=E:all --debug $(CURDIR)/$< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT) --markdown-summary=$(abspath $(CURDIR))/TestSummary.md
+	$(Q) $(SYSTEM_MONO) --trace=E:all,-E:System.Reflection.ReflectionTypeLoadException --debug $(CURDIR)/$< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT) --markdown-summary=$(abspath $(CURDIR))/TestSummary.md
 
 # This will launch xharness' interactive test runner in the system's default browser
 runner: xharness/xharness.exe
@@ -372,13 +381,23 @@ runner: xharness/xharness.exe
 # This makefile target will run the device tests using the Xamarin.iOS version
 # installed on the system.
 vsts-device-tests: xharness/xharness.exe
-	$(MAKE) -C $(TOP)/builds .stamp-mono-ios-sdk-destdir downloads -j
+	$(MAKE) -C $(TOP)/builds .stamp-mono-ios-sdk-destdir download -j
 	$(Q) ulimit -n 4096 && $(SYSTEM_MONO) --debug $(CURDIR)/$< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT) --use-system:true --label=skip-all-tests,run-device-tests,run-bcl-tests --markdown-summary=$(CURDIR)/TestSummary.md $(TESTS_EXTRA_ARGUMENTS) $(TESTS_PERIODIC_COMMAND)
 
 ifdef ENABLE_XAMARIN
 wrench-launch-external wrench-report-external:
 	$(MAKE) -C $(MACCORE_PATH)/tests/external $@
+
+# This will schedule a manual device test run for the current commit. The current commit must already have packages.
+launch-manual-device-tests:
+	./launch-manual-device-tests.sh
+
 else
 wrench-launch-external wrench-report-external:
 	@echo "External tests have been disabled"
 endif
+
+verify-system-vsmac-xcode-match:
+	@SYSTEM_XCODE=$$(dirname $$(dirname $$(xcode-select -p))); \
+	VSMAC_XCODE=$$(/usr/libexec/PlistBuddy -c 'print :AppleSdkRoot' ~/Library/Preferences/Xamarin/Settings.plist); \
+	if [[ "$$SYSTEM_XCODE" != "$$VSMAC_XCODE" ]]; then echo "Error: the system's Xcode ($$SYSTEM_XCODE) does not match the Xcode selected in Visual Studio for Mac ($$VSMAC_XCODE). This will make tests fail in non-trivial ways, so please make sure both match the expected Xcode ($(shell dirname $(shell dirname $(XCODE_DEVELOPER_ROOT))))."; exit 1; fi

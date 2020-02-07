@@ -134,6 +134,13 @@ namespace Introspection {
 				return TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 14, 4); // Broke in macOS 10.14.4.
 			}
 
+#if __IOS__
+			switch (type.Namespace) {
+			case "WatchKit":
+				return true; // WatchKit has been removed from iOS.
+			}
+#endif
+
 			return SkipDueToAttribute (type);
 		}
 
@@ -378,6 +385,9 @@ namespace Introspection {
 			case "TVDigitEntryViewController":
 				// full screen, no customization w/NIB
 				return true;
+			case "TVDocumentViewController":
+				// as documented
+				return true;
 #endif
 			case "PdfAnnotationButtonWidget":
 			case "PdfAnnotationChoiceWidget":
@@ -448,6 +458,39 @@ namespace Introspection {
 			case "MPSNNReduceUnary": // Not meant to be used, only subclasses
 				var cstr = ctor.ToString ();
 				if (cstr == "Void .ctor(Metal.IMTLDevice)" || cstr == $"Void .ctor({foundation_namespace}.NSCoder, Metal.IMTLDevice)")
+					return true;
+				break;
+			case "MFMailComposeViewController": // You are meant to use the system provided one
+			case "MFMessageComposeViewController": // You are meant to use the system provided one
+			case "GKFriendRequestComposeViewController": // You are meant to use the system provided one
+			case "GKGameCenterViewController": // You are meant to use the system provided one
+			case "GKMatchmakerViewController": // You are meant to use the system provided one
+			case "GKTurnBasedMatchmakerViewController": // You are meant to use the system provided one
+			case "UIImagePickerController": // You are meant to use the system provided one
+			case "UIVideoEditorController": // You are meant to use the system provided one
+			case "VNDocumentCameraViewController": // Explicitly disabled on the headers
+				if (ctor.ToString () == $"Void .ctor(System.String, {foundation_namespace}.NSBundle)")
+					return true;
+				if (ctor.ToString () == $"Void .ctor(UIKit.UIViewController)")
+					return true;
+				break;
+			case "UICollectionViewCompositionalLayout":
+				// Explicitly disabled ctors - (instancetype)init NS_UNAVAILABLE;
+				return true;
+			case "NSPickerTouchBarItem": // You are meant to use the static factory methods
+				if (ctor.ToString () == $"Void .ctor(System.String)")
+					return true;
+				break;
+			case "NSMenuToolbarItem": // No ctor specified
+				if (ctor.ToString () == $"Void .ctor(System.String)")
+					return true;
+				break;
+			case "NSStepperTouchBarItem": // You are meant to use the static factory methods
+				if (ctor.ToString () == $"Void .ctor(System.String)")
+					return true;
+				break;
+			case "NSSharingServicePickerToolbarItem": // This type doesn't have .ctors
+				if (ctor.ToString () == $"Void .ctor(System.String)")
 					return true;
 				break;
 			}

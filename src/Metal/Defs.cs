@@ -44,11 +44,11 @@ namespace Metal {
 #if !COREBUILD
 	public static class MTLVertexFormatExtensions {
 
-		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
+		[iOS (9,0)][Mac (10,11)]
 		[DllImport (Constants.MetalKitLibrary)]
 		static extern /* MDLVertexFormat */ nuint MTKModelIOVertexFormatFromMetal (/* MTLVertexFormat */ nuint modelIODescriptor);
 
-		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
+		[iOS (9,0)][Mac (10,11)]
 		public static MDLVertexFormat ToModelVertexFormat (this MTLVertexFormat vertexFormat)
 		{
 			nuint mdlVertexFormat = MTKModelIOVertexFormatFromMetal ((nuint)(ulong)vertexFormat);
@@ -226,7 +226,7 @@ namespace Metal {
 		public uint ThreadGroupsPerGrid3;
 	}
 
-	[Mac (10,14, onlyOn64: true), iOS (12,0), TV (12,0)]
+	[Mac (10,14), iOS (12,0), TV (12,0)]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLStageInRegionIndirectArguments {
 		public uint StageInOrigin1;
@@ -329,7 +329,7 @@ namespace Metal {
 	}
 #endif // COREBUILD
 #if MONOMAC
-	[NoiOS, NoTV, NoWatch, Mac (10,14, onlyOn64: true)]
+	[NoiOS, NoTV, NoWatch, Mac (10,14)]
 	public struct MTLIndirectCommandBufferExecutionRange
 	{
 		public uint Location;
@@ -342,5 +342,46 @@ namespace Metal {
 		}
 	}
 #endif // MONOMAC
+
+	[Mac (10,15), iOS (13,0), TV (13,0)]
+	public enum MTLTextureSwizzle : byte {
+		Zero = 0,
+		One = 1,
+		Red = 2,
+		Green = 3,
+		Blue = 4,
+		Alpha = 5,
+	}
+
+	[Mac (10,15), iOS (13,0), TV (13,0)]
+	[StructLayout (LayoutKind.Sequential)]
+	public struct MTLTextureSwizzleChannels {
+		public MTLTextureSwizzle Red;
+
+		public MTLTextureSwizzle Green;
+
+		public MTLTextureSwizzle Blue;
+
+		public MTLTextureSwizzle Alpha;
+	}
+
+#if IOS
+	[Introduced (PlatformName.iOS, 13,0, PlatformArchitecture.All)]
+	[StructLayout (LayoutKind.Sequential)]
+	public struct MTLVertexAmplificationViewMapping {
+		public uint ViewportArrayIndexOffset;
+
+		public uint RenderTargetArrayIndexOffset;
+	}
+
+	[Introduced (PlatformName.iOS, 13,0, PlatformArchitecture.All)]
+	[StructLayout (LayoutKind.Sequential)]
+	public struct MTLCoordinate2D {
+		public float X;
+
+		public float Y;
+	}
+#endif
+
 }
 #endif

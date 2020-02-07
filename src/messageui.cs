@@ -22,7 +22,7 @@ namespace MessageUI {
 		[Static, Export ("canSendMail")]
 		bool CanSendMail { get; }
 
-		[Export ("mailComposeDelegate", ArgumentSemantic.Assign)][NullAllowed]
+		[Export ("mailComposeDelegate", ArgumentSemantic.Weak)][NullAllowed]
 		NSObject WeakMailComposeDelegate { get; set; }
 
 		[Wrap ("WeakMailComposeDelegate")]

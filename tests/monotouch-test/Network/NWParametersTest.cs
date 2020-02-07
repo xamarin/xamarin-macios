@@ -1,4 +1,4 @@
-﻿#if !__WATCHOS__
+#if !__WATCHOS__
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -16,6 +16,7 @@ using MonoTouch.Security;
 #endif
 
 using NUnit.Framework;
+using MonoTests.System.Net.Http;
 
 namespace MonoTouchFixtures.Network {
 
@@ -39,7 +40,7 @@ namespace MonoTouchFixtures.Network {
 			TestRuntime.AssertXcodeVersion (10, 0);
 			// we want to use a single connection, since it is expensive
 			connectedEvent = new AutoResetEvent(false);
-			host = "www.google.com";
+			host = NetworkResources.MicrosoftUri.Host;
 			interfaces = new List<NWInterface> ();
 			using (var parameters = NWParameters.CreateUdp ())
 			using (var endpoint = NWEndpoint.Create (host, "80")) {
@@ -58,7 +59,11 @@ namespace MonoTouchFixtures.Network {
 		[TestFixtureTearDown]
 		public void Dispose()
 		{
-			connection?.Cancel ();
+			connection?.Dispose ();
+			if (interfaces != null) {
+				foreach (var i in interfaces)
+					i.Dispose ();
+			}
 		}
 
 		[SetUp]
@@ -77,10 +82,6 @@ namespace MonoTouchFixtures.Network {
  				connectedEvent.Set ();
  				break;
  			case NWConnectionState.Cancelled:
- 				connection?.Dispose ();
- 				connection = null;
-				foreach (var i in interfaces)
-					i.Dispose ();
 				break;
  			case NWConnectionState.Invalid:
  			case NWConnectionState.Failed:
@@ -96,7 +97,7 @@ namespace MonoTouchFixtures.Network {
 			secureConnectionWasSet = false;
 			protocolConfigured = false;
 		}
-
+		
 		void EnumerateInterfacesHandler (NWInterface nwInterface)
 		{
 			interfaces.Add (nwInterface);
@@ -125,13 +126,9 @@ namespace MonoTouchFixtures.Network {
 			var setUpProtocol = CreateConfigureProtocolHandler ();
 
 			using (var parameters = NWParameters.CreateSecureUdp (configureTls: setUpTls, configureUdp: setUpProtocol))
-			using (var endpoint = NWEndpoint.Create ("wwww.google.com", "80"))
-			using (var connection = new NWConnection (endpoint, parameters)) {
-				connection.SetQueue (DispatchQueue.MainQueue);
-				connection.Start ();
+			using (var endpoint = NWEndpoint.Create (NetworkResources.MicrosoftUri.Host, "80")) { 
 				secureEvent.WaitOne ();
 				configureEvent.WaitOne ();
-				connection.Cancel ();
 				Assert.True (secureConnectionWasSet, "Configure TLS handler was not called.");
 				Assert.True (protocolConfigured, "Protocol configure handler was not called.");
 			}
@@ -143,12 +140,8 @@ namespace MonoTouchFixtures.Network {
 			var setUpTls = CreateTlsHandler ();
 
 			using (var parameters = NWParameters.CreateSecureUdp (configureTls: setUpTls))
-			using (var endpoint = NWEndpoint.Create ("wwww.google.com", "80"))
-			using (var connection = new NWConnection (endpoint, parameters)) {
-				connection.SetQueue (DispatchQueue.MainQueue);
-				connection.Start ();
+			using (var endpoint = NWEndpoint.Create (NetworkResources.MicrosoftUri.Host, "80")) { 
 				secureEvent.WaitOne ();
-				connection.Cancel ();
 				Assert.True (secureConnectionWasSet, "Configure TLS handler was not called.");
 				Assert.False (protocolConfigured, "Protocol configure handler was called.");
 			}
@@ -160,12 +153,8 @@ namespace MonoTouchFixtures.Network {
 			var setUpProtocol = CreateConfigureProtocolHandler ();
 
 			using (var parameters = NWParameters.CreateSecureUdp (configureTls: null, configureUdp: setUpProtocol))
-			using (var endpoint = NWEndpoint.Create ("wwww.google.com", "80"))
-			using (var connection = new NWConnection (endpoint, parameters)) {
-				connection.SetQueue (DispatchQueue.MainQueue);
-				connection.Start ();
+			using (var endpoint = NWEndpoint.Create (NetworkResources.MicrosoftUri.Host, "80")) {
 				configureEvent.WaitOne ();
-				connection.Cancel ();
 				Assert.False (secureConnectionWasSet, "Configure TLS handler was not called.");
 				Assert.True (protocolConfigured, "Protocol configure handler was not called.");
 			}
@@ -178,13 +167,9 @@ namespace MonoTouchFixtures.Network {
 			var setUpProtocol = CreateConfigureProtocolHandler ();
 
 			using (var parameters = NWParameters.CreateSecureTcp (configureTls: setUpTls, configureTcp: setUpProtocol))
-			using (var endpoint = NWEndpoint.Create ("wwww.google.com", "80"))
-			using (var connection = new NWConnection (endpoint, parameters)) {
-				connection.SetQueue (DispatchQueue.MainQueue);
-				connection.Start ();
+			using (var endpoint = NWEndpoint.Create (NetworkResources.MicrosoftUri.Host, "80")) { 
 				secureEvent.WaitOne ();
 				configureEvent.WaitOne ();
-				connection.Cancel ();
 				Assert.True (secureConnectionWasSet, "Configure TLS handler was not called.");
 				Assert.True (protocolConfigured, "Protocol configure handler was not called.");
 			}
@@ -197,12 +182,8 @@ namespace MonoTouchFixtures.Network {
 			var setUpProtocol = CreateConfigureProtocolHandler ();
 
 			using (var parameters = NWParameters.CreateSecureTcp (configureTls: setUpTls))
-			using (var endpoint = NWEndpoint.Create ("wwww.google.com", "80"))
-			using (var connection = new NWConnection (endpoint, parameters)) {
-				connection.SetQueue (DispatchQueue.MainQueue);
-				connection.Start ();
+			using (var endpoint = NWEndpoint.Create (NetworkResources.MicrosoftUri.Host, "80")) { 
 				secureEvent.WaitOne ();
-				connection.Cancel ();
 				Assert.True (secureConnectionWasSet, "Configure TLS handler was not called.");
 				Assert.False (protocolConfigured, "Protocol configure handler was called.");
 			}
@@ -214,16 +195,27 @@ namespace MonoTouchFixtures.Network {
 			var setUpProtocol = CreateConfigureProtocolHandler ();
 
 			using (var parameters = NWParameters.CreateSecureTcp (configureTls: null, configureTcp: setUpProtocol))
-			using (var endpoint = NWEndpoint.Create ("wwww.google.com", "80"))
-			using (var connection = new NWConnection (endpoint, parameters)) {
-				connection.SetQueue (DispatchQueue.MainQueue);
-				connection.Start ();
+			using (var endpoint = NWEndpoint.Create (NetworkResources.MicrosoftUri.Host, "80")) { 
 				configureEvent.WaitOne ();
-				connection.Cancel ();
 				Assert.False (secureConnectionWasSet, "Configure TLS handler was called.");
 				Assert.True (protocolConfigured, "Protocol configure handler was not called.");
 			}
 		}
+
+#if MONOMAC
+		[Test]
+		public void CreateCustomIP ()
+		{
+			TestRuntime.AssertXcodeVersion (11, 0);
+			byte ipVersion = 10;
+			var setUpProtocol = CreateConfigureProtocolHandler ();
+			using (var parameters = NWParameters.CreateCustomIP (ipVersion, setUpProtocol))
+			using (var endpoint = NWEndpoint.Create ("wwww.google.com", "80")) {
+				configureEvent.WaitOne ();
+				Assert.True (protocolConfigured, "Protocol configure handler was not called.");
+			}
+		}
+#endif
 
 		[Test]
 		public void MultiPathServicePropertyTest ()
@@ -376,7 +368,7 @@ namespace MonoTouchFixtures.Network {
 		{
 			Assert.Ignore ("nw_parameters_copy_local_endpoint always return null. Rdar filled 44095278.");
 			using (var parameters = NWParameters.CreateUdp ())
-			using (var endpoint = NWEndpoint.Create ("wwww.google.com", "80"))
+			using (var endpoint = NWEndpoint.Create (NetworkResources.MicrosoftUri.Host, "80"))
 			{
 				var defaultValue = parameters.LocalEndpoint;
 				Assert.IsNull (defaultValue, "Default value changed.");
@@ -394,6 +386,18 @@ namespace MonoTouchFixtures.Network {
 				Assert.False (defaultValue, "Default value changed.");
 				parameters.IncludePeerToPeer = true;
 				Assert.True (parameters.IncludePeerToPeer, "New value was not stored.");
+			}
+		}
+
+		[Test]
+		public void TestProhibitConstrained ()
+		{
+			TestRuntime.AssertXcodeVersion (11, 0);
+			using (var parameters = new NWParameters ()) {
+				var defaultValue = false;
+				Assert.False (defaultValue, "Default value changed.");
+				parameters.ProhibitConstrained = true;
+				Assert.True (parameters.ProhibitConstrained, "New value was not stored.");
 			}
 		}
 	}

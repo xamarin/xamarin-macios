@@ -35,6 +35,9 @@ namespace WatchConnectivity {
 		// iOS 9.3 / watchOS 2.2
 		SessionInactive = 7016,
 		TransferTimedOut = 7017,
+		// iOS 13, watchOS 6
+		CompanionAppNotInstalled = 7018,
+		WatchOnlyApp = 7019,
 	}
 
 	[Watch (2,2)][iOS (9,3)]

@@ -119,6 +119,16 @@ namespace CoreImage {
 				SetBooleanValue (CIContext.CacheIntermediates, value);
 			}
 		}
+
+		[iOS (13,0)][TV (13,0)][Mac (10,15)]
+		public bool? AllowLowPower {
+			get {
+				return GetBoolValue (CIContext.AllowLowPower);
+			}
+			set {
+				SetBooleanValue (CIContext.AllowLowPower, value);
+			}
+		}
 	}
 	
 	public partial class CIContext {

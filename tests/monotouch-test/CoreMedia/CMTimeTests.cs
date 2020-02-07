@@ -7,9 +7,6 @@
 //
 // Copyright 2012-2014 Xamarin Inc. All rights reserved.
 //
-
-#if !__WATCHOS__
-
 using System;
 #if XAMCORE_2_0
 using Foundation;
@@ -171,7 +168,7 @@ namespace MonoTouchFixtures.CoreMedia {
 			Assert.AreEqual (first.Start, second.Start, "CompareCMTimeRange - start - " + description);
 		}
 
-#if XAMCORE_2_0
+#if XAMCORE_2_0 && !__WATCHOS__
 		[Test]
 		public void CMTimeStrongDictionary ()
 		{
@@ -193,5 +190,3 @@ namespace MonoTouchFixtures.CoreMedia {
 #endif // XAMCORE_2_0
 	}
 }
-
-#endif // !__WATCHOS__

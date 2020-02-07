@@ -8,7 +8,7 @@ namespace Extrospection {
 		static string InputDirectory { get; set; }
 		static string ReportFolder { get; set; }
 
-		static List<string> Frameworks = new List<string> ();
+		static SortedSet<string> Frameworks = new SortedSet<string> (StringComparer.OrdinalIgnoreCase);
 
 		static readonly string [] Platforms = new [] { "iOS", "tvOS", "watchOS", "macOS" };
 
@@ -141,7 +141,6 @@ namespace Extrospection {
 			var todo = new int [Platforms.Length];
 			int errors = 0;
 
-			Frameworks.Sort ();
 			foreach (var fx in Frameworks) {
 				if (Helpers.Filter (fx))
 					continue;

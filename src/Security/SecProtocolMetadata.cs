@@ -17,7 +17,7 @@ using sec_protocol_metadata_t=System.IntPtr;
 using dispatch_queue_t=System.IntPtr;
 
 namespace Security {
-	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0), Watch (5,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0), Watch (5,0)]
 	public class SecProtocolMetadata : NativeObject {
 		internal SecProtocolMetadata (IntPtr handle) : base (handle, false) {}
 
@@ -36,10 +36,33 @@ namespace Security {
 #if !COREBUILD
 		public DispatchData PeerPublicKey => CreateDispatchData (sec_protocol_metadata_copy_peer_public_key (GetCheckedHandle ()));
 #endif
+
+		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'NegotiatedTlsProtocolVersion' instead.")]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'NegotiatedTlsProtocolVersion' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'NegotiatedTlsProtocolVersion' instead.")]
+		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'NegotiatedTlsProtocolVersion' instead.")]
 		[DllImport (Constants.SecurityLibrary)]
 		extern static SslProtocol sec_protocol_metadata_get_negotiated_protocol_version (IntPtr handle);
 
+		[Deprecated(PlatformName.MacOSX, 10, 15, message: "Use 'NegotiatedTlsProtocolVersion' instead.")]
+		[Deprecated(PlatformName.iOS, 13, 0, message: "Use 'NegotiatedTlsProtocolVersion' instead.")]
+		[Deprecated(PlatformName.WatchOS, 6, 0, message: "Use 'NegotiatedTlsProtocolVersion' instead.")]
+		[Deprecated(PlatformName.TvOS, 13, 0, message: "Use 'NegotiatedTlsProtocolVersion' instead.")]
 		public SslProtocol NegotiatedProtocolVersion => sec_protocol_metadata_get_negotiated_protocol_version (GetCheckedHandle ());
+
+		[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+		[DllImport (Constants.SecurityLibrary)]
+		static extern TlsProtocolVersion sec_protocol_metadata_get_negotiated_tls_protocol_version (IntPtr handle);
+
+		[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+		public TlsProtocolVersion NegotiatedTlsProtocolVersion => sec_protocol_metadata_get_negotiated_tls_protocol_version (GetCheckedHandle ());
+
+		[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+		[DllImport (Constants.SecurityLibrary)]
+		static extern TlsCipherSuite sec_protocol_metadata_get_negotiated_tls_ciphersuite (IntPtr handle);
+
+		[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+		public TlsCipherSuite NegotiatedTlsCipherSuite => sec_protocol_metadata_get_negotiated_tls_ciphersuite (GetCheckedHandle ());
 
 		[DllImport (Constants.SecurityLibrary)]
 		extern static SslCipherSuite sec_protocol_metadata_get_negotiated_ciphersuite (IntPtr handle);
@@ -218,7 +241,6 @@ namespace Security {
 			}
  		}
 
-#if false
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* OS_dispatch_data */ IntPtr sec_protocol_metadata_create_secret (/* OS_sec_protocol_metadata */ IntPtr metadata, /* size_t */ nuint label_len, /* const char*/ [MarshalAs(UnmanagedType.LPStr)] string label, /* size_t */ nuint exporter_length);
 
@@ -241,12 +263,54 @@ namespace Security {
 			fixed (byte* p = context)
 				return CreateDispatchData (sec_protocol_metadata_create_secret_with_context (GetCheckedHandle (), (nuint) label.Length, label, (nuint) context.Length, p, exporterLength));
 		}
-#endif
+
 		// API returning `OS_dispatch_data` can also return `null` and
 		// a managed instance with (with an empty handle) is not the same
-		static DispatchData CreateDispatchData (IntPtr handle)
+		internal static DispatchData CreateDispatchData (IntPtr handle)
 		{
 			return handle == IntPtr.Zero ? null : new DispatchData (handle, owns: true);
+		}
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[DllImport (Constants.SecurityLibrary)]
+		static extern /* const char* */ IntPtr sec_protocol_metadata_get_server_name (IntPtr /* sec_protocol_metadata_t */ handle);
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		public string ServerName => Marshal.PtrToStringAnsi (sec_protocol_metadata_get_server_name (GetCheckedHandle ()));
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[DllImport (Constants.SecurityLibrary)]
+		static extern bool sec_protocol_metadata_access_pre_shared_keys (IntPtr /* sec_protocol_metadata_t */ handle, ref BlockLiteral block);
+
+		public delegate void SecAccessPreSharedKeysHandler (DispatchData psk, DispatchData pskIdentity);
+
+		internal delegate void AccessPreSharedKeysHandler (IntPtr block, IntPtr dd_psk, IntPtr dd_psk_identity);
+		static readonly AccessPreSharedKeysHandler presharedkeys = TrampolineAccessPreSharedKeys;
+
+		[MonoPInvokeCallback (typeof (AccessPreSharedKeysHandler))]
+		static void TrampolineAccessPreSharedKeys (IntPtr block, IntPtr psk, IntPtr psk_identity)
+		{
+			var del = BlockLiteral.GetTarget<Action<DispatchData,DispatchData>> (block);
+			if (del != null)
+				del (CreateDispatchData (psk), CreateDispatchData (psk_identity));
+		}
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		// no [Async] as it can be called multiple times
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public bool AccessPreSharedKeys (SecAccessPreSharedKeysHandler handler)
+		{
+			if (handler == null)
+				throw new ArgumentNullException (nameof (handler));
+
+			BlockLiteral block_handler = new BlockLiteral ();
+			try {
+				block_handler.SetupBlockUnsafe (presharedkeys, handler);
+				return sec_protocol_metadata_access_pre_shared_keys (GetCheckedHandle (), ref block_handler);
+			}
+			finally {
+				block_handler.CleanupBlock ();
+			}
 		}
 #endif
 	}

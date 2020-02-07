@@ -58,6 +58,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.Mac" />
+    <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -78,6 +79,15 @@
     </Compile>
     <Compile Include="..\..\CommonLinkSdkTest.cs">
       <Link>CommonLinkSdkTest.cs</Link>
+    </Compile>
+    <Compile Include="..\LinkAnyTest.cs">
+      <Link>LinkAnyTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\CommonLinkAnyTest.cs">
+      <Link>CommonLinkAnyTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\monotouch-test\System.Net.Http\NetworkResources.cs">
+      <Link>NetworkResources.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>

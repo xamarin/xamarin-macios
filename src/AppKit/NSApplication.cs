@@ -37,10 +37,6 @@ namespace AppKit {
 
 		private static Thread mainThread;
 
-		static NSApplication () {
-			class_ptr = Class.GetHandle ("NSApplication");
-		}
-
 		[DllImport (Constants.AppKitLibrary)]
 		extern static int /* int */ NSApplicationMain (int /* int */ argc, string [] argv);
 

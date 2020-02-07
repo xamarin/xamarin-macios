@@ -397,11 +397,11 @@ namespace AudioUnit
 #endif
 
 #if IOS || MONOMAC
-		[NoWatch, NoTV, Mac (10,13, onlyOn64: true), iOS (11,0)]
+		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern int /* OSStatus */ AudioUnitExtensionSetComponentList (IntPtr /* CFString */ extensionIdentifier, /* CFArrayRef */ IntPtr audioComponentInfo);
 
-		[NoWatch, NoTV, Mac (10,13, onlyOn64: true), iOS (11,0)]
+		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern /* CFArrayRef */ IntPtr AudioUnitExtensionCopyComponentList (IntPtr /* CFString */ extensionIdentifier);
 

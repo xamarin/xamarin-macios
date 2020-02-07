@@ -4,7 +4,7 @@ using Xamarin.Linker;
 
 namespace MonoMac.Tuner {
 
-	abstract class MacBaseProfile : BaseProfile {
+	public abstract class MacBaseProfile : BaseProfile {
 
 		static readonly HashSet<string> Sdk = new HashSet<string> {
 			"mscorlib",

@@ -143,16 +143,17 @@ namespace MonoTouchFixtures.UIKit {
 					Assert.NotNull (tb.TintColor, "1");
 				else
 					Assert.Null (tb.TintColor, "1");
-				
+
 				tb.TintColor = UIColor.White;
 				Assert.That (tb.TintColor, Is.EqualTo (UIColor.White), "2");
 
 				tb.TintColor = null;
-				if (TestRuntime.IsTVOS)
-					Assert.That (tb.TintColor, Is.EqualTo (UIColor.White), "3");
-				else if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false))
+				if (TestRuntime.IsTVOS) {
+					// we only care that setting `null` gives us back some default OS value
+					Assert.NotNull (tb.TintColor, "3");
+				} else if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false)) {
 					Assert.That (tb.TintColor, Is.Not.EqualTo (UIColor.White), "3");
-				else
+				} else
 					Assert.Null (tb.TintColor, "3");
 			}
 		}

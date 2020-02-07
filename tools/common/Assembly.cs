@@ -273,7 +273,7 @@ namespace Xamarin.Bundler {
 		{
 #if MONOTOUCH
 			if (App.Platform == Xamarin.Utils.ApplePlatform.iOS && App.DeploymentTarget.Major < 8) {
-				throw ErrorHelper.CreateError (1305, "The binding library '{0}' contains a user framework ({0}), but embedded user frameworks require iOS 8.0 (the deployment target is {1}). Please set the deployment target in the Info.plist file to at least 8.0.",
+				throw ErrorHelper.CreateError (1305, Errors.MT1305,
 					FileName, Path.GetFileName (path), App.DeploymentTarget);
 			}
 #endif
@@ -292,7 +292,9 @@ namespace Xamarin.Bundler {
 			if (!string.IsNullOrEmpty (metadata.LinkerFlags)) {
 				if (LinkerFlags == null)
 					LinkerFlags = new List<string> ();
-				LinkerFlags.Add (metadata.LinkerFlags);
+				if (!StringUtils.TryParseArguments (metadata.LinkerFlags, out string [] args, out var ex))
+					throw ErrorHelper.CreateError (148, ex, Errors.MX0148, metadata.LinkerFlags, metadata.LibraryName, FileName, ex.Message);
+				LinkerFlags.AddRange (args);
 			}
 
 			if (!string.IsNullOrEmpty (metadata.Frameworks)) {
@@ -336,10 +338,7 @@ namespace Xamarin.Bundler {
 			}
 
 			if (!File.Exists (path))
-				ErrorHelper.Warning (1302, "Could not extract the native library '{0}' from '{1}'. " +
-				"Please ensure the native library was properly embedded in the managed assembly " +
-				"(if the assembly was built using a binding project, the native library must be included in the project, and its Build Action must be 'ObjcBindingNativeLibrary').",
-					metadata.LibraryName, path);
+				ErrorHelper.Warning (1302, Errors.MT1302, metadata.LibraryName, path);
 
 			return path;
 		}
@@ -358,16 +357,13 @@ namespace Xamarin.Bundler {
 			}
 
 			if (!File.Exists (zipPath)) {
-				ErrorHelper.Warning (1302, "Could not extract the native framework '{0}' from '{1}'. " +
-					"Please ensure the native framework was properly embedded in the managed assembly " +
-					"(if the assembly was built using a binding project, the native framework must be included in the project, and its Build Action must be 'ObjcBindingNativeFramework').",
-					metadata.LibraryName, zipPath);
+				ErrorHelper.Warning (1302, Errors.MT1302, metadata.LibraryName, zipPath);
 			} else {
 				if (!Directory.Exists (path))
 					Directory.CreateDirectory (path);
 
-				if (Driver.RunCommand ("/usr/bin/unzip", string.Format ("-u -o -d {0} {1}", StringUtils.Quote (path), StringUtils.Quote (zipPath))) != 0)
-					throw ErrorHelper.CreateError (1303, "Could not decompress the native framework '{0}' from '{1}'. Please review the build log for more information from the native 'unzip' command.", metadata.LibraryName, zipPath);
+				if (Driver.RunCommand ("/usr/bin/unzip", "-u", "-o", "-d", path, zipPath) != 0)
+					throw ErrorHelper.CreateError (1303, Errors.MT1303, metadata.LibraryName, zipPath);
 			}
 
 			return path;
@@ -448,7 +444,7 @@ namespace Xamarin.Bundler {
 		void AddFramework (string file)
 		{
 			if (Driver.GetFrameworks (App).TryGetValue (file, out var framework) && framework.Version > App.SdkVersion)
-				ErrorHelper.Warning (135, "Did not link system framework '{0}' (referenced by assembly '{1}') because it was introduced in {2} {3}, and we're using the {2} {4} SDK.", file, FileName, App.PlatformName, framework.Version, App.SdkVersion);
+				ErrorHelper.Warning (135, Errors.MX0135, file, FileName, App.PlatformName, framework.Version, App.SdkVersion);
 			else {
 #if MTOUCH
 				var strong = (framework == null) || (App.DeploymentTarget >= (App.IsSimulatorBuild ? framework.VersionAvailableInSimulator ?? framework.Version : framework.Version));
@@ -480,7 +476,7 @@ namespace Xamarin.Bundler {
 			case ApplePlatform.WatchOS:
 				return "-lcompression";
 			default:
-				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", App.Platform, App.SdkVersion);
+				throw ErrorHelper.CreateError (71, Errors.MX0071, App.Platform, App.SdkVersion);
 			}
 		}
 
@@ -611,9 +607,21 @@ namespace Xamarin.Bundler {
 
 		public void ComputeSatellites ()
 		{
-			var path = Path.GetDirectoryName (FullPath);
 			var satellite_name = Path.GetFileNameWithoutExtension (FullPath) + ".resources.dll";
+			var path = Path.GetDirectoryName (FullPath);
+			// first look if satellites are located in subdirectories of the current location of the assembly
+			ComputeSatellites (satellite_name, path);
+			if (Satellites == null) {
+				// 2nd chance: satellite assemblies can come from different nugets (as dependencies)
+				// they will be copied (at build time) into the destination directory (making them work at runtime)
+				// but they won't be side-by-side the original assembly (which breaks our build time assumptions)
+				path = Path.GetDirectoryName (App.RootAssemblies [0]);
+				ComputeSatellites (satellite_name, path);
+			}
+		}
 
+		void ComputeSatellites (string satellite_name, string path)
+		{
 			foreach (var subdir in Directory.GetDirectories (path)) {
 				var culture_name = Path.GetFileName (subdir);
 				CultureInfo ci;
@@ -621,9 +629,12 @@ namespace Xamarin.Bundler {
 				if (culture_name.IndexOf ('.') >= 0)
 					continue; // cultures can't have dots. This way we don't check every *.app directory
 
+				// well-known subdirectories (that are not cultures) to avoid (slow) exceptions handling
 				switch (culture_name) {
 				case "Facades":
 				case "repl":
+				case "device-builds":
+				case "Design": // XF
 					continue;
 				}
 
@@ -699,7 +710,7 @@ namespace Xamarin.Bundler {
 		{
 			Assembly other;
 			if (HashedAssemblies.TryGetValue (assembly.Identity, out other))
-				throw ErrorHelper.CreateError (2018, "The assembly '{0}' is referenced from two different locations: '{1}' and '{2}'.", assembly.Identity, other.FullPath, assembly.FullPath);
+				throw ErrorHelper.CreateError (2018, Errors.MT2018, assembly.Identity, other.FullPath, assembly.FullPath);
 			HashedAssemblies.Add (assembly.Identity, assembly);
 		}
 

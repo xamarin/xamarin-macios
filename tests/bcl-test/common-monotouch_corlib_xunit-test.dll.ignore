@@ -409,3 +409,23 @@ System.Collections.Concurrent.Tests.ConcurrentDictionaryTests.TestDebuggerAttrib
 System.Collections.Concurrent.Tests.ConcurrentDictionaryTests.TestDebuggerAttributes
 System.SpanTests.ReadOnlySpanTests.BinarySearch_UInt
 System.SpanTests.ReadOnlySpanTests.BinarySearch_Double
+
+# device failures, reported at: https://github.com/mono/mono/issues/15983
+System.Reflection.Tests.MethodBaseTests.Test_GetCurrentMethod_Inlineable
+
+# device issues, it was reported here: https://github.com/mono/mono/issues/14761
+System.Text.Tests.StringBuilderTests.Append_CharPointer_Null_ThrowsNullReferenceException
+
+# mono issue: https://github.com/mono/mono/issues/17752
+# Exception messages: System.OutOfMemoryException : Insufficient memory to continue the execution of the program.
+Platform32:System.Reflection.Tests.RuntimeReflectionExtensionsTests.GetRuntimeMethod
+
+# maccore issue: https://github.com/xamarin/maccore/issues/1659
+# random OOMs
+Platform32:System.Collections.Tests.HashtableTests.Ctor_Int_Int_GenerateNewPrime
+Platform32:System.Tests.BitConverterTests.ToString_ByteArrayTooLong_Throws
+# device failures, reported at: https://github.com/mono/mono/issues/17375
+Platform32:System.Reflection.Tests.RuntimeReflectionExtensionsTests.GetRuntimeMethod
+Platform32:System.Reflection.Tests.RuntimeReflectionExtensionsTests.GetRuntimeField
+Platform32:System.Reflection.Tests.RuntimeReflectionExtensionsTests.GetRuntimeEvent
+Platform32:System.Reflection.Tests.RuntimeReflectionExtensionsTests.GetRuntimeProperty

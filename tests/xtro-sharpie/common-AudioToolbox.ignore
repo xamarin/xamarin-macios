@@ -58,3 +58,13 @@
 !missing-selector! AUAudioUnit::setMusicalContextBlock: not bound
 !missing-selector! AUAudioUnit::tokenByAddingRenderObserver: not bound
 !missing-type! AUAudioUnitV2Bridge not bound
+!missing-pinvoke! AudioCodecAppendInputBufferList is not bound
+!missing-pinvoke! AudioCodecAppendInputData is not bound
+!missing-pinvoke! AudioCodecGetProperty is not bound
+!missing-pinvoke! AudioCodecGetPropertyInfo is not bound
+!missing-pinvoke! AudioCodecInitialize is not bound
+!missing-pinvoke! AudioCodecProduceOutputBufferList is not bound
+!missing-pinvoke! AudioCodecProduceOutputPackets is not bound
+!missing-pinvoke! AudioCodecReset is not bound
+!missing-pinvoke! AudioCodecSetProperty is not bound
+!missing-pinvoke! AudioCodecUninitialize is not bound

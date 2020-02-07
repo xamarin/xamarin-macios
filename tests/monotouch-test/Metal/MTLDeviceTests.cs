@@ -110,7 +110,7 @@ namespace MonoTouchFixtures.Metal {
 			}
 
 #if __MACOS__
-			if (TestRuntime.CheckXcodeVersion (10, 0)) {
+			if (TestRuntime.CheckXcodeVersion (10, 0) && device.SupportsFeatureSet (MTLFeatureSet.macOS_GPUFamily2_v1)) {
 				using (var descriptor = MTLTextureDescriptor.CreateTexture2DDescriptor (MTLPixelFormat.RGBA8Unorm, 64, 64, false)) {
 					descriptor.StorageMode = MTLStorageMode.Private;
 					using (var texture = device.CreateSharedTexture (descriptor)) {
@@ -275,28 +275,29 @@ namespace MonoTouchFixtures.Metal {
 				Assert.IsNotNull (library, "CreateArgumentEncoder (MTLArgumentDescriptor[]): NonNull");
 			}
 
-			TestRuntime.AssertXcodeVersion (10, 0);
-			using (var descriptor = new MTLIndirectCommandBufferDescriptor ()) {
-				using (var library = device.CreateIndirectCommandBuffer (descriptor, 1, MTLResourceOptions.CpuCacheModeDefault)) {
-					Assert.IsNotNull (library, "CreateIndirectCommandBuffer: NonNull");
+			if (TestRuntime.CheckXcodeVersion (10, 0)) {
+#if __MACOS__
+				if (device.SupportsFeatureSet (MTLFeatureSet.macOS_GPUFamily2_v1))
+#endif
+				using (var descriptor = new MTLIndirectCommandBufferDescriptor ()) {
+					using (var library = device.CreateIndirectCommandBuffer (descriptor, 1, MTLResourceOptions.CpuCacheModeDefault)) {
+						Assert.IsNotNull (library, "CreateIndirectCommandBuffer: NonNull");
+					}
 				}
-			}
 
-			TestRuntime.AssertXcodeVersion (10, 0);
-			using (var evt = device.CreateEvent ()) {
-				Assert.IsNotNull (evt, "CreateEvent: NonNull");
-			}
+				using (var evt = device.CreateEvent ()) {
+					Assert.IsNotNull (evt, "CreateEvent: NonNull");
+				}
 
-			TestRuntime.AssertXcodeVersion (10, 0);
-			using (var evt = device.CreateSharedEvent ()) {
-				Assert.IsNotNull (evt, "CreateSharedEvent: NonNull");
-			}
+				using (var evt = device.CreateSharedEvent ()) {
+					Assert.IsNotNull (evt, "CreateSharedEvent: NonNull");
+				}
 
-			TestRuntime.AssertXcodeVersion (10, 0);
-			using (var evt1 = device.CreateSharedEvent ())
-			using (var evt_handle = evt1.CreateSharedEventHandle ())
-			using (var evt = device.CreateSharedEvent (evt_handle)) {
-				Assert.IsNotNull (evt, "CreateSharedEvent (MTLSharedEventHandle): NonNull");
+				using (var evt1 = device.CreateSharedEvent ())
+				using (var evt_handle = evt1.CreateSharedEventHandle ())
+				using (var evt = device.CreateSharedEvent (evt_handle)) {
+					Assert.IsNotNull (evt, "CreateSharedEvent (MTLSharedEventHandle): NonNull");
+				}
 			}
 
 			using (var descriptor = new MTLRenderPipelineDescriptor ())

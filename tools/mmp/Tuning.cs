@@ -71,7 +71,7 @@ namespace MonoMac.Tuner {
 		}
 	}
 
-	class Linker {
+	static partial class Linker {
 
 		public static void Process (LinkerOptions options, out MonoMacLinkContext context, out List<string> assemblies)
 		{
@@ -84,37 +84,7 @@ namespace MonoMac.Tuner {
 			context.KeepTypeForwarderOnlyAssemblies = (Profile.Current is XamarinMacProfile);
 			options.Target.LinkContext = (context as MonoMacLinkContext);
 
-			try {
-				pipeline.Process (context);
-			} catch (AssemblyResolutionException fnfe) {
-				throw new MonoMacException (2002, true, fnfe, fnfe.Message);
-			} catch (AggregateException) {
-				throw;
-			} catch (MonoMacException) {
-				throw;
-			} catch (ResolutionException re) {
-				TypeReference tr = (re.Member as TypeReference);
-				IMetadataScope scope = tr == null ? re.Member.DeclaringType.Scope : tr.Scope;
-				throw new MonoMacException (2002, true, re, "Failed to resolve \"{0}\" reference from \"{1}\"", re.Member, scope);
-			} catch (XmlResolutionException ex) {
-				throw new MonoMacException (2017, true, ex, "Could not process XML description: {0}", ex?.InnerException?.Message ?? ex.Message);
-			} catch (Exception e) {
-				var message = new StringBuilder ();
-				if (e.Data.Count > 0) {
-					message.AppendLine ();
-					var m = e.Data ["MethodDefinition"] as string;
-					if (m != null)
-						message.AppendLine ($"\tMethod: `{m}`");
-					var t = e.Data ["TypeReference"] as string;
-					if (t != null)
-						message.AppendLine ($"\tType: `{t}`");
-					var a = e.Data ["AssemblyDefinition"] as string;
-					if (a != null)
-						message.AppendLine ($"\tAssembly: `{a}`");
-				}
-				message.Append ($"Reason: {e.Message}");
-				throw new MonoMacException (2001, true, e, "Could not link assemblies. {0}", message);
-			}
+			Process (pipeline, context);
 
 			assemblies = ListAssemblies (context);
 		}
@@ -232,7 +202,7 @@ namespace MonoMac.Tuner {
 			filename = Path.GetFullPath (filename);
 			
 			if (!File.Exists (filename))
-				throw new MonoMacException (2004, true, "Extra linker definitions file '{0}' could not be located.", filename);
+				throw new MonoMacException (2004, true, Errors.MX2004, filename);
 			
 			try {
 				using (StreamReader sr = new StreamReader (filename)) {
@@ -240,7 +210,7 @@ namespace MonoMac.Tuner {
 				}
 			}
 			catch (Exception e) {
-				throw new MonoMacException (2005, true, e, "Definitions from '{0}' could not be parsed.", filename);
+				throw new MonoMacException (2005, true, e, Errors.MX2005, filename);
 			}
 		}
 	}
@@ -283,7 +253,7 @@ namespace MonoMac.Tuner {
 				base.ProcessAssembly (assembly);
 			}
 			catch (Exception e) {
-				throw new MonoMacException (2103, true, e, $"Error processing assembly '{assembly.FullName}': {e}");
+				throw new MonoMacException (2103, true, e, Errors.MX2103, assembly.FullName, e);
 			}
 		}
 	}
@@ -308,7 +278,7 @@ namespace MonoMac.Tuner {
 				try {
 					ProcessReferences (Context.Resolve (reference));
 				} catch (AssemblyResolutionException fnfe) {
-					ErrorHelper.Warning (2013, fnfe, "Failed to resolve the reference to \"{0}\", referenced in \"{1}\". The app will not include the referenced assembly, and may fail at runtime.", fnfe.AssemblyReference.FullName, assembly.Name.FullName);
+					ErrorHelper.Warning (2013, fnfe, Errors.MM2013, fnfe.AssemblyReference.FullName, assembly.Name.FullName);
 				}
 			}
 		}

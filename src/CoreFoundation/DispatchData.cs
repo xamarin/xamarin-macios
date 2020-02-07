@@ -82,10 +82,24 @@ namespace CoreFoundation {
 		//
 		public static DispatchData FromBuffer (IntPtr buffer, nuint size)
 		{
-			if (buffer == null)
+			if (buffer == IntPtr.Zero)
 				throw new ArgumentNullException (nameof (buffer));
 			var dd = dispatch_data_create (buffer, (nuint) size, IntPtr.Zero, destructor: IntPtr.Zero);
 			return new DispatchData (dd, owns: true);
+		}
+
+		// create a dd using the data of the span 
+		public static DispatchData FromReadOnlySpan (ReadOnlySpan<byte> content)
+		{
+			unsafe {
+				fixed (byte* ptr = content) {
+					// As per the documentation for dispatch_data_create, seems the data the pointer points to is copied 
+					// internally when specifying DISPATCH_DATA_DESTRUCTOR_DEFAULT as the destructor,
+					// and DISPATCH_DATA_DESTRUCTOR_DEFAULT=NULL, which is what you're passing, which means the code is OK. 
+					var dd = dispatch_data_create ((IntPtr) ptr, (nuint) content.Length, IntPtr.Zero, destructor: IntPtr.Zero);
+					return new DispatchData (dd, owns: true);
+				}
+			}
 		}
 
 		[DllImport (Constants.libcLibrary)]
@@ -122,6 +136,19 @@ namespace CoreFoundation {
 		{
 			return new DispatchData (dispatch_data_create_subrange (Handle, offset, size), owns: true);
 		}
+
+		// copies the dispatch data to a managed array
+		public byte [] ToArray ()
+		{
+			IntPtr bufferAddress = IntPtr.Zero;
+			nuint bufferSize = 0;
+			using DispatchData dataCopy = CreateMap (out bufferAddress, out bufferSize);
+
+			byte[] managedArray = new byte[(int) bufferSize];
+			Marshal.Copy (bufferAddress, managedArray, 0, (int) bufferSize);
+			return managedArray;
+		}
+
 #endif
 	}
 }

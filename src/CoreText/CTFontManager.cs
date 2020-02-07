@@ -6,6 +6,7 @@
 //     
 // Copyright 2010 Novell, Inc
 // Copyright 2011 - 2014 Xamarin Inc
+// Copyright 2019 Microsoft Corporation
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -41,7 +42,16 @@ namespace CoreText {
 
 	// defined as uint32_t - /System/Library/Frameworks/CoreText.framework/Headers/CTFontManager.h
 	public enum CTFontManagerScope : uint {
-		None = 0, Process = 1, User = 2, Session = 3
+		None = 0,
+		Process = 1,
+		[iOS (13,0)][TV (13,0)][Watch (6,0)]
+		Persistent = 2,
+		[NoiOS][NoTV][NoWatch]
+		Session = 3,
+#if !XAMCORE_4_0
+		[NoiOS][NoTV][NoWatch] // historically not available under the old name
+		User = Persistent,
+#endif
 	}
 
 	// defined as uint32_t - /System/Library/Frameworks/CoreText.framework/Headers/CTFontManager.h
@@ -93,37 +103,92 @@ namespace CoreText {
 					return Runtime.GetNSObject<NSError> (error);
 			} finally {
 				if (error != IntPtr.Zero)
-					NSObject.DangerousRelease (error);
+					CFObject.CFRelease (error);
+			}
+		}
+
+		static NSArray EnsureNonNullArray (object [] items, string name)
+		{
+			if (items == null)
+				throw new ArgumentNullException (name);
+
+			foreach (var i in items)
+				if (i == null)
+					throw new ArgumentException ("Array contains a null entry", name);
+
+			return NSArray.FromObjects (items);
+		}
+
+		static T[] ArrayFromHandle<T> (IntPtr handle, bool releaseAfterUse) where T : class, INativeObject
+		{
+			if (handle == IntPtr.Zero)
+				return null;
+			try {
+				return NSArray.ArrayFromHandle<T> (handle);
+			}
+			finally {
+				if (releaseAfterUse)
+					CFObject.CFRetain (handle);
 			}
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern bool CTFontManagerRegisterFontsForURLs(IntPtr arrayRef, CTFontManagerScope scope, ref IntPtr error_array);
+
+		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'RegisterFonts' instead.")]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'RegisterFonts' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'RegisterFonts' instead.")]
+		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'RegisterFonts' instead.")]
 		public static NSError [] RegisterFontsForUrl (NSUrl [] fontUrls, CTFontManagerScope scope)
 		{
-			if (fontUrls == null)
-				throw new ArgumentNullException ("fontUrls");
-
-			foreach (var furl in fontUrls)
-				if (furl == null)
-					throw new ArgumentException ("contains a null entry", "fontUrls");
-
-			using (var arr = NSArray.FromNSObjects (fontUrls)) {
+			using (var arr = EnsureNonNullArray (fontUrls, nameof (fontUrls))) {
 				IntPtr error_array = IntPtr.Zero;
-				try {
-					if (CTFontManagerRegisterFontsForURLs (arr.Handle, scope, ref error_array))
-						return null;
-					else
-						return NSArray.ArrayFromHandle<NSError> (error_array);
-				} finally {
-					if (error_array != IntPtr.Zero)
-						NSObject.DangerousRelease (error_array);
+				if (CTFontManagerRegisterFontsForURLs (arr.Handle, scope, ref error_array))
+					return null;
+				return ArrayFromHandle<NSError> (error_array, releaseAfterUse: true);
+			}
+		}
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		public delegate bool CTFontRegistrationHandler (NSError[] errors, bool done);
+
+		internal delegate bool InnerRegistrationHandler (IntPtr block, IntPtr errors, bool done);
+		static readonly InnerRegistrationHandler callback = TrampolineRegistrationHandler;
+
+		[MonoPInvokeCallback (typeof (InnerRegistrationHandler))]
+		static unsafe bool TrampolineRegistrationHandler (IntPtr block, /* NSArray */ IntPtr errors, bool done)
+		{
+			var del = BlockLiteral.GetTarget<CTFontRegistrationHandler> (block);
+			return del != null ? del (NSArray.ArrayFromHandle<NSError> (errors), done) : true;
+		}
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[DllImport (Constants.CoreTextLibrary)]
+		static extern void CTFontManagerRegisterFontURLs (/* CFArrayRef */ IntPtr fontUrls, CTFontManagerScope scope, bool enabled, IntPtr registrationHandler);
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[DllImport (Constants.CoreTextLibrary)]
+		static extern void CTFontManagerRegisterFontURLs (/* CFArrayRef */ IntPtr fontUrls, CTFontManagerScope scope, bool enabled, ref BlockLiteral registrationHandler);
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public static void RegisterFonts (NSUrl [] fontUrls, CTFontManagerScope scope, bool enabled, CTFontRegistrationHandler registrationHandler)
+		{
+			using (var arr = EnsureNonNullArray (fontUrls, nameof (fontUrls))) {
+				if (registrationHandler == null) {
+					CTFontManagerRegisterFontURLs (arr.Handle, scope, enabled, IntPtr.Zero);
+				} else {
+					BlockLiteral block_handler = new BlockLiteral ();
+					block_handler.SetupBlockUnsafe (callback, registrationHandler);
+					CTFontManagerRegisterFontURLs (arr.Handle, scope, enabled, ref block_handler);
+					block_handler.CleanupBlock ();
 				}
 			}
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern bool CTFontManagerUnregisterFontsForURL(IntPtr fotUrl, CTFontManagerScope scope, ref IntPtr error);
+
 		public static NSError UnregisterFontsForUrl (NSUrl fontUrl, CTFontManagerScope scope)
 		{
 			if (fontUrl == null)
@@ -138,32 +203,47 @@ namespace CoreText {
 					return Runtime.GetNSObject<NSError> (error);
 			} finally {
 				if (error != IntPtr.Zero)
-					NSObject.DangerousRelease (error);
+					CFObject.CFRelease (error);
 			}
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern bool CTFontManagerUnregisterFontsForURLs(IntPtr arrayRef, CTFontManagerScope scope, ref IntPtr error_array);
+
+		[Deprecated (PlatformName.MacOSX, 10,15, message : "Use 'UnregisterFonts' instead.")]
+		[Deprecated (PlatformName.iOS, 13,0, message : "Use 'UnregisterFonts' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6,0, message : "Use 'UnregisterFonts' instead.")]
+		[Deprecated (PlatformName.TvOS, 13,0, message : "Use 'UnregisterFonts' instead.")]
 		public static NSError [] UnregisterFontsForUrl (NSUrl [] fontUrls, CTFontManagerScope scope)
 		{
-			if (fontUrls == null)
-				throw new ArgumentNullException ("fontUrls");
-
-			foreach (var furl in fontUrls)
-				if (furl == null)
-					throw new ArgumentException ("contains a null entry", "fontUrls");
-
-
 			IntPtr error_array = IntPtr.Zero;
-			using (var arr = NSArray.FromNSObjects (fontUrls)) {
-				try {
-					if (CTFontManagerUnregisterFontsForURLs (arr.Handle, scope, ref error_array))
-						return null;
-					else
-						return NSArray.ArrayFromHandle<NSError> (error_array);
-				} finally {
-					if (error_array != IntPtr.Zero)
-						NSObject.DangerousRelease (error_array);
+			using (var arr = EnsureNonNullArray (fontUrls, nameof (fontUrls))) {
+				if (CTFontManagerUnregisterFontsForURLs (arr.Handle, scope, ref error_array))
+					return null;
+				return ArrayFromHandle<NSError> (error_array, releaseAfterUse: true);
+			}
+		}
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[DllImport (Constants.CoreTextLibrary)]
+		static extern unsafe void CTFontManagerUnregisterFontURLs (/* CFArrayRef */ IntPtr fontUrls, CTFontManagerScope scope, IntPtr registrationHandler);
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[DllImport (Constants.CoreTextLibrary)]
+		static extern unsafe void CTFontManagerUnregisterFontURLs (/* CFArrayRef */ IntPtr fontUrls, CTFontManagerScope scope, ref BlockLiteral registrationHandler);
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public static void UnregisterFonts (NSUrl [] fontUrls, CTFontManagerScope scope, CTFontRegistrationHandler registrationHandler)
+		{
+			using (var arr = EnsureNonNullArray (fontUrls, nameof (fontUrls))) {
+				if (registrationHandler == null) {
+					CTFontManagerUnregisterFontURLs (arr.Handle, scope, IntPtr.Zero);
+				} else {
+					BlockLiteral block_handler = new BlockLiteral ();
+					block_handler.SetupBlockUnsafe (callback, registrationHandler);
+					CTFontManagerUnregisterFontURLs (arr.Handle, scope, ref block_handler);
+					block_handler.CleanupBlock ();
 				}
 			}
 		}
@@ -208,7 +288,7 @@ namespace CoreText {
 					error = new NSError (h);
 			} finally {
 				if (h != IntPtr.Zero)
-					NSObject.DangerousRelease (h);
+					CFObject.CFRelease (h);
 			}
 			return ret;
 		}
@@ -230,7 +310,7 @@ namespace CoreText {
 					error = new NSError (h);
 			} finally {
 				if (h != IntPtr.Zero)
-					NSObject.DangerousRelease (h);
+					CFObject.CFRelease (h);
 			}
 			return ret;
 		}
@@ -241,7 +321,9 @@ namespace CoreText {
 #if !XAMCORE_3_0
 			ErrorDomain  = Dlfcn.GetStringConstant (handle, "kCTFontManagerErrorDomain");
 #endif
+#if !XAMCORE_4_0
 			ErrorFontUrlsKey  = Dlfcn.GetStringConstant (handle, "kCTFontManagerErrorFontURLsKey");
+#endif
 		}
 
 		static NSString _RegisteredFontsChangedNotification;
@@ -258,7 +340,10 @@ namespace CoreText {
 #if !XAMCORE_3_0
 		public readonly static NSString ErrorDomain;
 #endif
+#if !XAMCORE_4_0
+		[Obsolete ("Use the 'CTFontManagerErrorKeys.FontUrlsKey' property instead.")]
 		public readonly static NSString ErrorFontUrlsKey;
+#endif
 
 		public static partial class Notifications {
 			public static NSObject ObserveRegisteredFontsChanged (EventHandler<NSNotificationEventArgs> handler)
@@ -267,5 +352,159 @@ namespace CoreText {
 			}
 			
 		}
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[DllImport (Constants.CoreTextLibrary)]
+		static extern unsafe void CTFontManagerRegisterFontDescriptors (/* CFArrayRef */ IntPtr fontDescriptors, CTFontManagerScope scope, bool enabled, IntPtr registrationHandler);
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[DllImport (Constants.CoreTextLibrary)]
+		static extern unsafe void CTFontManagerRegisterFontDescriptors (/* CFArrayRef */ IntPtr fontDescriptors, CTFontManagerScope scope, bool enabled, ref BlockLiteral registrationHandler);
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public static void RegisterFontDescriptors (CTFontDescriptor[] fontDescriptors, CTFontManagerScope scope, bool enabled, CTFontRegistrationHandler registrationHandler)
+		{
+			using (var arr = EnsureNonNullArray (fontDescriptors, nameof (fontDescriptors))) {
+				if (registrationHandler == null) {
+					CTFontManagerRegisterFontDescriptors (arr.Handle, scope, enabled, IntPtr.Zero);
+				} else {
+					BlockLiteral block_handler = new BlockLiteral ();
+					block_handler.SetupBlockUnsafe (callback, registrationHandler);
+					CTFontManagerRegisterFontDescriptors (arr.Handle, scope, enabled, ref block_handler);
+					block_handler.CleanupBlock ();
+				}
+			}
+		}
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[DllImport (Constants.CoreTextLibrary)]
+		static extern unsafe void CTFontManagerUnregisterFontDescriptors (/* CFArrayRef */ IntPtr fontDescriptors, CTFontManagerScope scope, IntPtr registrationHandler);
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[DllImport (Constants.CoreTextLibrary)]
+		static extern unsafe void CTFontManagerUnregisterFontDescriptors (/* CFArrayRef */ IntPtr fontDescriptors, CTFontManagerScope scope, ref BlockLiteral registrationHandler);
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public static void UnregisterFontDescriptors (CTFontDescriptor[] fontDescriptors, CTFontManagerScope scope, CTFontRegistrationHandler registrationHandler)
+		{
+			using (var arr = EnsureNonNullArray (fontDescriptors, nameof (fontDescriptors))) {
+				if (registrationHandler == null) {
+					CTFontManagerUnregisterFontDescriptors (arr.Handle, scope, IntPtr.Zero);
+				} else {
+					BlockLiteral block_handler = new BlockLiteral ();
+					block_handler.SetupBlockUnsafe (callback, registrationHandler);
+					CTFontManagerUnregisterFontDescriptors (arr.Handle, scope, ref block_handler);
+					block_handler.CleanupBlock ();
+				}
+			}
+		}
+
+#if __IOS__
+		[iOS (13,0)]
+		[DllImport (Constants.CoreTextLibrary)]
+		static extern /* CFArrayRef */ IntPtr CTFontManagerCopyRegisteredFontDescriptors (CTFontManagerScope scope, bool enabled);
+
+		[iOS (13,0)]
+		[NoWatch][NoTV][NoMac]
+		public static CTFontDescriptor[] GetRegisteredFontDescriptors (CTFontManagerScope scope, bool enabled)
+		{
+			var p = CTFontManagerCopyRegisteredFontDescriptors (scope, enabled);
+			// Copy/Create rule - we must release the CFArrayRef
+			return ArrayFromHandle<CTFontDescriptor> (p, releaseAfterUse: true);
+		}
+#endif
+
+		// [Watch (2,0), TV (9,0), Mac (10,7), iOS (7,0)]
+		[DllImport (Constants.CoreTextLibrary)]
+		static extern unsafe /* CTFontDescriptorRef _Nullable */ IntPtr CTFontManagerCreateFontDescriptorFromData (/* CFDataRef */ IntPtr data);
+
+		public static CTFontDescriptor CreateFontDescriptor (NSData data)
+		{
+			if (data == null)
+				throw new ArgumentNullException (nameof (data));
+
+			var p = CTFontManagerCreateFontDescriptorFromData (data.Handle);
+			if (p == IntPtr.Zero)
+				return null;
+			// Copy/Create rule - dont retain it inside the .ctor
+			return new CTFontDescriptor (p, owns: true);
+		}
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[DllImport (Constants.CoreTextLibrary)]
+		static extern unsafe /* CFArrayRef */ IntPtr CTFontManagerCreateFontDescriptorsFromData (/* CFDataRef */ IntPtr data);
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		public static CTFontDescriptor[] CreateFontDescriptors (NSData data)
+		{
+			if (data == null)
+				throw new ArgumentNullException (nameof (data));
+
+			var p = CTFontManagerCreateFontDescriptorsFromData (data.Handle);
+			// Copy/Create rule - we must release the CFArrayRef
+			return ArrayFromHandle<CTFontDescriptor> (p, releaseAfterUse: true);
+		}
+
+#if __IOS__
+		[NoWatch, NoTV, NoMac, iOS (13,0)]
+		[DllImport (Constants.CoreTextLibrary)]
+		static extern unsafe void CTFontManagerRegisterFontsWithAssetNames (/* CFArrayRef */ IntPtr fontAssetNames, /* CFBundleRef _Nullable */ IntPtr bundle, CTFontManagerScope scope, bool enabled, IntPtr registrationHandler);
+
+		[NoWatch, NoTV, NoMac, iOS (13,0)]
+		[DllImport (Constants.CoreTextLibrary)]
+		static extern unsafe void CTFontManagerRegisterFontsWithAssetNames (/* CFArrayRef */ IntPtr fontAssetNames, /* CFBundleRef _Nullable */ IntPtr bundle, CTFontManagerScope scope, bool enabled, ref BlockLiteral registrationHandler);
+
+		// reminder that NSBundle and CFBundle are NOT toll-free bridged :(
+		[NoWatch, NoTV, NoMac, iOS (13,0)]
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public static void RegisterFonts (string[] assetNames, CFBundle bundle, CTFontManagerScope scope, bool enabled, CTFontRegistrationHandler registrationHandler)
+		{
+			using (var arr = EnsureNonNullArray (assetNames, nameof (assetNames))) {
+				if (registrationHandler == null) {
+					CTFontManagerRegisterFontsWithAssetNames (arr.Handle, bundle.GetHandle (), scope, enabled, IntPtr.Zero);
+				} else {
+					BlockLiteral block_handler = new BlockLiteral ();
+					block_handler.SetupBlockUnsafe (callback, registrationHandler);
+					CTFontManagerRegisterFontsWithAssetNames (arr.Handle, bundle.GetHandle (), scope, enabled, ref block_handler);
+					block_handler.CleanupBlock ();
+				}
+			}
+		}
+
+		[NoWatch, NoTV, NoMac, iOS (13,0)]
+		public delegate void CTFontManagerRequestFontsHandler (CTFontDescriptor[] unresolvedFontDescriptors);
+
+		[NoWatch, NoTV, NoMac, iOS (13,0)]
+		[DllImport (Constants.CoreTextLibrary)]
+		static extern unsafe void CTFontManagerRequestFonts (/* CFArrayRef */ IntPtr fontDescriptors, ref BlockLiteral completionHandler);
+
+		internal delegate void InnerRequestFontsHandler (IntPtr block, IntPtr fontDescriptors);
+		static readonly InnerRequestFontsHandler requestCallback = TrampolineRequestFonts;
+
+		[MonoPInvokeCallback (typeof (InnerRequestFontsHandler))]
+		static unsafe void TrampolineRequestFonts (IntPtr block, /* CFArray */ IntPtr fontDescriptors)
+		{
+			var del = BlockLiteral.GetTarget<CTFontManagerRequestFontsHandler> (block);
+			if (del != null)
+				del (NSArray.ArrayFromHandle<CTFontDescriptor> (fontDescriptors));
+		}
+
+		[NoWatch, NoTV, NoMac, iOS (13,0)]
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public static void RequestFonts (CTFontDescriptor[] fontDescriptors, CTFontManagerRequestFontsHandler completionHandler)
+		{
+			if (completionHandler == null)
+				throw new ArgumentNullException (nameof (completionHandler));
+
+			using (var arr = EnsureNonNullArray (fontDescriptors, nameof (fontDescriptors))) {
+				BlockLiteral block_handler = new BlockLiteral ();
+				block_handler.SetupBlockUnsafe (requestCallback, completionHandler);
+				CTFontManagerRequestFonts (arr.Handle, ref block_handler);
+				block_handler.CleanupBlock ();
+			}
+		}
+#endif
 	}
 }

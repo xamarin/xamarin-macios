@@ -31,6 +31,7 @@
 using System;
 #if MONOMAC
 using AppKit;
+using UIViewController = Foundation.NSObject;
 #else
 using UIKit;
 using NSColor = UIKit.UIColor;
@@ -1635,7 +1636,8 @@ namespace PdfKit {
 		[Notification]
 		NSString DocumentEditedNotification { get; }
 
-		[Export ("PDFView"), NullAllowed]
+		[Export ("PDFView", ArgumentSemantic.Weak)]
+		[NullAllowed]
 		PdfView PdfView { get; set; }
 
 		[Export ("thumbnailSize")]
@@ -1786,7 +1788,7 @@ namespace PdfKit {
 		[Export ("interpolationQuality", ArgumentSemantic.Assign)]
 		PdfInterpolationQuality InterpolationQuality { get; set; }
 
-		[iOS (12,0), Mac (10,14, onlyOn64: true)]
+		[iOS (12,0), Mac (10,14)]
 		[Export ("pageShadowsEnabled")]
 		bool PageShadowsEnabled { get; [Bind ("enablePageShadows:")] set; }
 
@@ -2036,6 +2038,11 @@ namespace PdfKit {
 
 		[Export ("PDFViewOpenPDF:forRemoteGoToAction:"), EventArgs ("PdfViewAction")]
 		void OpenPdf (PdfView sender, PdfActionRemoteGoTo action);
+
+		[iOS (13,0)]
+		[NoMac]
+		[Export ("PDFViewParentViewController")]
+		UIViewController ParentViewController { get; }
 	}
 
 }

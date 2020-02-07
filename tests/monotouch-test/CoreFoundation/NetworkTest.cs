@@ -23,6 +23,8 @@ using NUnit.Framework;
 #if !__WATCHOS__
 using PlatformCFNetwork = CoreFoundation.CFNetwork;
 #endif
+using MonoTests.System.Net.Http;
+
 
 namespace MonoTouchFixtures.CoreFoundation {
 	
@@ -64,7 +66,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		public void Bug_7923 ()
 		{
 			// Bug #7923 - crash when proxy is in effect.
-			var uri = new Uri ("http://www.google.com");
+			var uri = NetworkResources.MicrosoftUri;
 
 			if (PlatformCFNetwork.GetProxiesForUri (uri, settings).Length <= 1)
 				Assert.Ignore ("Only run when proxy is configured.");

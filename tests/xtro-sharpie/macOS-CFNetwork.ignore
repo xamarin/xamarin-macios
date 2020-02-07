@@ -7,7 +7,6 @@
 !missing-field! kCFNetworkProxiesGopherEnable not bound
 !missing-field! kCFNetworkProxiesGopherPort not bound
 !missing-field! kCFNetworkProxiesGopherProxy not bound
-!missing-field! kCFNetworkProxiesHTTPSEnable not bound
 !missing-field! kCFNetworkProxiesHTTPSPort not bound
 !missing-field! kCFNetworkProxiesHTTPSProxy not bound
 !missing-field! kCFNetworkProxiesProxyAutoDiscoveryEnable not bound
@@ -21,8 +20,5 @@
 !missing-field! kCFStreamSSLAllowsAnyRoot not bound
 !missing-field! kCFStreamSSLAllowsExpiredCertificates not bound
 !missing-field! kCFStreamSSLAllowsExpiredRoots not bound
-!missing-pinvoke! CFHTTPReadStreamSetRedirectsAutomatically is not bound
-!missing-pinvoke! CFNetServiceGetProtocolSpecificInformation is not bound
 !missing-pinvoke! CFNetServiceRegister is not bound
 !missing-pinvoke! CFNetServiceResolve is not bound
-!missing-pinvoke! CFNetServiceSetProtocolSpecificInformation is not bound

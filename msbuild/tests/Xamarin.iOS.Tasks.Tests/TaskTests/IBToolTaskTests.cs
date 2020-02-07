@@ -74,34 +74,41 @@ namespace Xamarin.iOS.Tasks
 
 				foreach (var bundleResource in ibtool.BundleResources) {
 					Assert.IsTrue (File.Exists (bundleResource.ItemSpec), "File does not exist: {0}", bundleResource.ItemSpec);
-					Assert.IsNotNullOrEmpty (bundleResource.GetMetadata ("LogicalName"), "The 'LogicalName' metadata must be set.");
-					Assert.IsNotNullOrEmpty (bundleResource.GetMetadata ("Optimize"), "The 'Optimize' metadata must be set.");
+					Assert.That (bundleResource.GetMetadata ("LogicalName"), Is.Not.Null.Or.Empty, "The 'LogicalName' metadata must be set.");
+					Assert.That (bundleResource.GetMetadata ("Optimize"), Is.Not.Null.Or.Empty, "The 'Optimize' metadata must be set.");
 
 					bundleResources.Add (bundleResource.GetMetadata ("LogicalName"));
 				}
 
 				string[] expected = { "LaunchScreen~ipad.nib/objects-8.0+.nib",
+					"LaunchScreen~ipad.nib/objects-13.0+.nib",
 					"LaunchScreen~ipad.nib/runtime.nib",
+					"LaunchScreen~iphone.nib/objects-13.0+.nib",
 					"LaunchScreen~iphone.nib/objects-8.0+.nib",
 					"LaunchScreen~iphone.nib/runtime.nib",
+					"Main.storyboardc/BYZ-38-t0r-view-8bC-Xf-vdC~ipad.nib/objects-13.0+.nib",
 					"Main.storyboardc/BYZ-38-t0r-view-8bC-Xf-vdC~ipad.nib/objects-8.0+.nib",
 					"Main.storyboardc/BYZ-38-t0r-view-8bC-Xf-vdC~ipad.nib/runtime.nib",
+					"Main.storyboardc/BYZ-38-t0r-view-8bC-Xf-vdC~iphone.nib/objects-13.0+.nib",
 					"Main.storyboardc/BYZ-38-t0r-view-8bC-Xf-vdC~iphone.nib/objects-8.0+.nib",
 					"Main.storyboardc/BYZ-38-t0r-view-8bC-Xf-vdC~iphone.nib/runtime.nib",
+					"Main.storyboardc/UIViewController-BYZ-38-t0r~ipad.nib/objects-13.0+.nib",
 					"Main.storyboardc/UIViewController-BYZ-38-t0r~ipad.nib/objects-8.0+.nib",
 					"Main.storyboardc/UIViewController-BYZ-38-t0r~ipad.nib/runtime.nib",
+					"Main.storyboardc/UIViewController-BYZ-38-t0r~iphone.nib/objects-13.0+.nib",
 					"Main.storyboardc/UIViewController-BYZ-38-t0r~iphone.nib/objects-8.0+.nib",
 					"Main.storyboardc/UIViewController-BYZ-38-t0r~iphone.nib/runtime.nib",
 					"Main~ipad.storyboardc/Info-8.0+.plist",
 					"Main~ipad.storyboardc/Info.plist",
 					"Main~iphone.storyboardc/Info-8.0+.plist",
-					"Main~iphone.storyboardc/Info.plist"
+					"Main~iphone.storyboardc/Info.plist",
 				};
 
-				foreach (var bundleResource in expected)
-					Assert.IsTrue (bundleResources.Contains (bundleResource), "BundleResources should include '{0}'", bundleResource);
+				var inexistentResource = bundleResources.Except (expected).ToArray ();
+				var unexpectedResource = expected.Except (bundleResources).ToArray ();
 
-				Assert.AreEqual (expected.Length, bundleResources.Count, "Unexpected number of BundleResources");
+				Assert.That (inexistentResource, Is.Empty, "No missing resources");
+				Assert.That (unexpectedResource, Is.Empty, "No extra resources");
 			} finally {
 				Directory.Delete (tmp, true);
 			}
@@ -134,10 +141,10 @@ namespace Xamarin.iOS.Tasks
 					var tag = bundleResource.GetMetadata ("ResourceTags");
 
 					Assert.IsTrue (File.Exists (bundleResource.ItemSpec), "File does not exist: {0}", bundleResource.ItemSpec);
-					Assert.IsNotNullOrEmpty (bundleResource.GetMetadata ("LogicalName"), "The 'LogicalName' metadata must be set.");
-					Assert.IsNotNullOrEmpty (bundleResource.GetMetadata ("Optimize"), "The 'Optimize' metadata must be set.");
+					Assert.That (bundleResource.GetMetadata ("LogicalName"), Is.Not.Null.Or.Empty, "The 'LogicalName' metadata must be set.");
+					Assert.That (bundleResource.GetMetadata ("Optimize"), Is.Not.Null.Or.Empty, "The 'Optimize' metadata must be set.");
 
-					Assert.IsNotNullOrEmpty (tag, "The 'ResourceTags' metadata should be set.");
+					Assert.That (tag, Is.Not.Null.Or.Empty, "The 'ResourceTags' metadata should be set.");
 					Assert.IsTrue (bundleName.Contains (".lproj/" + tag + ".storyboardc/"), "BundleResource does not have the proper ResourceTags set: {0}", bundleName);
 
 					bundleResources.Add (bundleName);
@@ -146,29 +153,42 @@ namespace Xamarin.iOS.Tasks
 				ibtool.EnableOnDemandResources = true;
 
 				string[] expected = {
-					"Base.lproj/LaunchScreen.storyboardc/01J-lp-oVM-view-Ze5-6b-2t3.nib",
+					"Base.lproj/LaunchScreen.storyboardc/01J-lp-oVM-view-Ze5-6b-2t3.nib/objects-13.0+.nib",
+					"Base.lproj/LaunchScreen.storyboardc/01J-lp-oVM-view-Ze5-6b-2t3.nib/runtime.nib",
 					"Base.lproj/LaunchScreen.storyboardc/Info.plist",
-					"Base.lproj/LaunchScreen.storyboardc/UIViewController-01J-lp-oVM.nib",
-					"Base.lproj/Linked.storyboardc/5xv-Yx-H4r-view-gMo-tm-chA.nib",
+					"Base.lproj/LaunchScreen.storyboardc/UIViewController-01J-lp-oVM.nib/objects-13.0+.nib",
+					"Base.lproj/LaunchScreen.storyboardc/UIViewController-01J-lp-oVM.nib/runtime.nib",
+					"Base.lproj/Linked.storyboardc/5xv-Yx-H4r-view-gMo-tm-chA.nib/objects-13.0+.nib",
+					"Base.lproj/Linked.storyboardc/5xv-Yx-H4r-view-gMo-tm-chA.nib/runtime.nib",
 					"Base.lproj/Linked.storyboardc/Info.plist",
-					"Base.lproj/Linked.storyboardc/MyLinkedViewController.nib",
-					"Base.lproj/Main.storyboardc/BYZ-38-t0r-view-8bC-Xf-vdC.nib",
+					"Base.lproj/Linked.storyboardc/MyLinkedViewController.nib/objects-13.0+.nib",
+					"Base.lproj/Linked.storyboardc/MyLinkedViewController.nib/runtime.nib",
+					"Base.lproj/Main.storyboardc/BYZ-38-t0r-view-8bC-Xf-vdC.nib/objects-13.0+.nib",
+					"Base.lproj/Main.storyboardc/BYZ-38-t0r-view-8bC-Xf-vdC.nib/runtime.nib",
 					"Base.lproj/Main.storyboardc/Info.plist",
-					"Base.lproj/Main.storyboardc/MyLinkedViewController.nib",
-					"Base.lproj/Main.storyboardc/UIViewController-BYZ-38-t0r.nib",
-					"en.lproj/Linked.storyboardc/5xv-Yx-H4r-view-gMo-tm-chA.nib",
+					"Base.lproj/Main.storyboardc/MyLinkedViewController.nib/objects-13.0+.nib",
+					"Base.lproj/Main.storyboardc/MyLinkedViewController.nib/runtime.nib",
+					"Base.lproj/Main.storyboardc/UIViewController-BYZ-38-t0r.nib/objects-13.0+.nib",
+					"Base.lproj/Main.storyboardc/UIViewController-BYZ-38-t0r.nib/runtime.nib",
+					"en.lproj/Linked.storyboardc/5xv-Yx-H4r-view-gMo-tm-chA.nib/objects-13.0+.nib",
+					"en.lproj/Linked.storyboardc/5xv-Yx-H4r-view-gMo-tm-chA.nib/runtime.nib",
 					"en.lproj/Linked.storyboardc/Info.plist",
-					"en.lproj/Linked.storyboardc/MyLinkedViewController.nib",
-					"en.lproj/Main.storyboardc/BYZ-38-t0r-view-8bC-Xf-vdC.nib",
+					"en.lproj/Linked.storyboardc/MyLinkedViewController.nib/objects-13.0+.nib",
+					"en.lproj/Linked.storyboardc/MyLinkedViewController.nib/runtime.nib",
+					"en.lproj/Main.storyboardc/BYZ-38-t0r-view-8bC-Xf-vdC.nib/objects-13.0+.nib",
+					"en.lproj/Main.storyboardc/BYZ-38-t0r-view-8bC-Xf-vdC.nib/runtime.nib",
 					"en.lproj/Main.storyboardc/Info.plist",
-					"en.lproj/Main.storyboardc/MyLinkedViewController.nib",
-					"en.lproj/Main.storyboardc/UIViewController-BYZ-38-t0r.nib"
+					"en.lproj/Main.storyboardc/MyLinkedViewController.nib/objects-13.0+.nib",
+					"en.lproj/Main.storyboardc/MyLinkedViewController.nib/runtime.nib",
+					"en.lproj/Main.storyboardc/UIViewController-BYZ-38-t0r.nib/objects-13.0+.nib",
+					"en.lproj/Main.storyboardc/UIViewController-BYZ-38-t0r.nib/runtime.nib",
 				};
 
-				foreach (var bundleResource in expected)
-					Assert.IsTrue (bundleResources.Contains (bundleResource), "BundleResources should include '{0}'", bundleResource);
+				var inexistentResource = bundleResources.Except (expected).ToArray ();
+				var unexpectedResource = expected.Except (bundleResources).ToArray ();
 
-				Assert.AreEqual (expected.Length, bundleResources.Count, "Unexpected number of BundleResources");
+				Assert.That (inexistentResource, Is.Empty, "No missing resources");
+				Assert.That (unexpectedResource, Is.Empty, "No extra resources");
 			} finally {
 				Directory.Delete (tmp, true);
 			}
@@ -213,23 +233,27 @@ namespace Xamarin.iOS.Tasks
 					var tag = bundleResource.GetMetadata ("ResourceTags");
 
 					Assert.IsTrue (File.Exists (bundleResource.ItemSpec), "File does not exist: {0}", bundleResource.ItemSpec);
-					Assert.IsNotNullOrEmpty (bundleResource.GetMetadata ("LogicalName"), "The 'LogicalName' metadata must be set.");
-					Assert.IsNotNullOrEmpty (bundleResource.GetMetadata ("Optimize"), "The 'Optimize' metadata must be set.");
+					Assert.That (bundleResource.GetMetadata ("LogicalName"), Is.Not.Null.Or.Empty, "The 'LogicalName' metadata must be set.");
+					Assert.That (bundleResource.GetMetadata ("Optimize"), Is.Not.Null.Or.Empty, "The 'Optimize' metadata must be set.");
 
-					Assert.IsNotNullOrEmpty (tag, "The 'ResourceTags' metadata should be set.");
-					Assert.AreEqual (Path.Combine (tmp, "ibtool", tag + ".nib"), bundleResource.ItemSpec, "BundleResource is not at the expected location.");
+					Assert.That (tag, Is.Not.Null.Or.Empty, "The 'ResourceTags' metadata should be set.");
+					Assert.AreEqual (Path.Combine (tmp, "ibtool", tag + ".nib", Path.GetFileName (bundleName)), bundleResource.ItemSpec, $"BundleResource {bundleName} is not at the expected location.");
 
 					bundleResources.Add (bundleName);
 				}
 
 				string[] expected = {
-					"View.nib", "View~ipad.nib"
+					"View~ipad.nib/objects-13.0+.nib",
+					"View~ipad.nib/runtime.nib",
+					"View.nib/objects-13.0+.nib",
+					"View.nib/runtime.nib",
 				};
 
-				foreach (var bundleResource in expected)
-					Assert.IsTrue (bundleResources.Contains (bundleResource), "BundleResources should include '{0}'", bundleResource);
+				var inexistentResource = bundleResources.Except (expected).ToArray ();
+				var unexpectedResource = expected.Except (bundleResources).ToArray ();
 
-				Assert.AreEqual (expected.Length, bundleResources.Count, "Unexpected number of BundleResources");
+				Assert.That (inexistentResource, Is.Empty, "No missing resources");
+				Assert.That (unexpectedResource, Is.Empty, "No extra resources");
 			} finally {
 				Directory.Delete (tmp, true);
 			}

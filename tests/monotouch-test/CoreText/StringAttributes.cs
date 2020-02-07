@@ -62,6 +62,9 @@ namespace MonoTouchFixtures.CoreText
 			sa.SetBaselineInfo (CTBaselineClass.IdeographicHigh, 3);
 			sa.SetWritingDirection (CTWritingDirection.LeftToRight);
 
+			if (TestRuntime.CheckXcodeVersion (11, 0))
+				sa.TrackingAdjustment = 1.0f;
+
 			var size = new SizeF (300, 300);
 			UIGraphics.BeginImageContext (size);
 			var gctx = UIGraphics.GetCurrentContext ();

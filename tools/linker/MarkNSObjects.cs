@@ -29,11 +29,11 @@
 //
 
 using System;
-using System.Collections.Generic;
 
 using Mono.Cecil;
 using Mono.Linker;
 using Mono.Tuner;
+using Xamarin.Bundler;
 
 namespace Xamarin.Linker.Steps {
 
@@ -152,10 +152,15 @@ namespace Xamarin.Linker.Steps {
 			return (method.DeclaringType.Module.Assembly.Name.Name == ProductAssembly);
 		}
 
-		static bool IsProductType (TypeDefinition type)
+		bool IsProductType (TypeDefinition type)
 		{
 			var name = type.Module.Assembly.Name.Name;
-			return name == ProductAssembly || name == "System.Net.Http";
+			switch (name) {
+			case "Xamarin.Forms.Platform.iOS":
+				return LinkContext.App.Optimizations.ExperimentalFormsProductType == true;
+			default:
+				return name == ProductAssembly;
+			}
 		}
 	}
 }

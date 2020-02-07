@@ -35,7 +35,6 @@ using AudioToolbox;
 namespace AVFoundation {
 
 	// Should be called AVAudioSetting but AVAudioSetting has been already used by keys class
-	[iOS (6,0)]
 	public class AudioSettings : DictionaryContainer
 	{
 #if !COREBUILD

@@ -361,13 +361,11 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGColorSpaceGetColorTable (/* CGColorSpaceRef */ IntPtr space, /* uint8_t* */ byte[] table);
 		
-		static byte[] Empty = new byte [0];
-		
 		public byte[] GetColorTable ()
 		{
 			nint n = CGColorSpaceGetColorTableCount (handle);
 			if (n == 0)
-				return Empty;
+				return Array.Empty<byte> ();
 			
 			byte[] table = new byte [n * GetBaseColorSpace ().Components];
 			CGColorSpaceGetColorTable (handle, table);
@@ -532,7 +530,19 @@ namespace CoreGraphics {
 				return null;
 			return new CFPropertyList (x, owns: true);
 		}
-		
+
+		[Mac (10,15)][iOS(13,0)]
+		[TV (13,0)][Watch (6,0)]
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern bool CGColorSpaceIsHDR (/* CGColorSpaceRef */ IntPtr space);
+
+		[Mac (10,15)][iOS(13,0)]
+		[TV (13,0)][Watch (6,0)]
+		public bool IsHdr {
+			get {
+				return CGColorSpaceIsHDR (handle);
+			}
+		}
 #endif // !COREBUILD
 	}
 }

@@ -1809,8 +1809,8 @@ class Demo {
 ```
 
 In the above scenario the developer needs to keep the reference to the
-object himself and either leak or actively clear the reference for box
-on his own.  While binding code, the generator supports keeping track
+object themselves and either leak or actively clear the reference for box
+on their own.  While binding code, the generator supports keeping track
 of the reference for you and clear it when a special method is
 invoked, the above code would then become:
 

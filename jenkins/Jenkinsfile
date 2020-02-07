@@ -10,6 +10,8 @@ packagePrefix = null
 virtualPath = null
 xiPackageUrl = null
 xmPackageUrl = null
+xiNotarizedPackageUrl = null
+xmNotarizedPackageUrl = null
 utils = null
 errorMessage = null
 currentStage = null
@@ -19,6 +21,8 @@ manualException = false
 
 xiPackageFilename = null
 xmPackageFilename = null
+xiNotarizedPkgFilename = null
+xmNotarizedPkgFilename = null
 msbuildZipFilename = null
 bundleZipFilename = null
 manifestFilename = null
@@ -152,8 +156,8 @@ def reportFinalStatusToSlack (err, gitHash, currentStage, fileContents)
             authorEmail = env.CHANGE_AUTHOR_EMAIL
             slackMessage = "Pull Request #<${env.CHANGE_URL}|${env.CHANGE_ID}> failed to build."
         } else {
-            authorName = sh (script: "cd ${workspace} && git log -1 --pretty=%an", returnStdout: true).trim ()
-            authorEmail = sh (script: "cd ${workspace} && git log -1 --pretty=%ae", returnStdout: true).trim ()
+            authorName = sh (script: "cd ${workspace}/xamarin-macios && git log -1 --pretty=%an", returnStdout: true).trim ()
+            authorEmail = sh (script: "cd ${workspace}/xamarin-macios && git log -1 --pretty=%ae", returnStdout: true).trim ()
             slackMessage = "Commit <https://github.com/${repository}/commit/${gitHash}|${gitHash}> failed to build."
         }
 
@@ -393,7 +397,7 @@ def abortExecutingBuilds ()
 }
 
 timestamps {
-    def mainMacOSVersion = 14
+    def mainMacOSVersion = 15
     node ("xamarin-macios && macos-10.${mainMacOSVersion}") {
         try {
             timeout (time: 15, unit: 'HOURS') {
@@ -403,6 +407,7 @@ timestamps {
                 workspace = "${env.HOME}/jenkins/workspace/xamarin-macios"
                 commentFile = "${workspace}/xamarin-macios/jenkins/pr-comments.md"
                 withEnv ([
+                    "BUILD_REVISION=jenkins",
                     "PATH=/Library/Frameworks/Mono.framework/Versions/Current/Commands:${env.PATH}",
                     "WORKSPACE=${workspace}"
                     ]) {
@@ -476,6 +481,7 @@ timestamps {
                         }
 
                         stage ('Signing') {
+                            def entitlements = "${workspace}/xamarin-macios/mac-entitlements.plist"
                             currentStage = "${STAGE_NAME}"
                             echo ("Building on ${env.NODE_NAME}")
                             def xiPackages = findFiles (glob: "package/xamarin.ios-*.pkg")
@@ -494,8 +500,46 @@ timestamps {
                             def bundleZip = findFiles (glob: "package/bundle.zip")
                             if (bundleZip.length > 0)
                                 bundleZipFilename = bundleZip [0].name
-                            withCredentials ([string (credentialsId: 'codesign_keychain_pw', variable: 'PRODUCTSIGN_KEYCHAIN_PASSWORD')]) {
+
+                            if (isPr) {
+                              withCredentials ([string (credentialsId: 'codesign_keychain_pw', variable: 'PRODUCTSIGN_KEYCHAIN_PASSWORD')]) {
                                 sh ("${workspace}/xamarin-macios/jenkins/productsign.sh")
+                              }
+                            } else {
+                                try {
+                                    pkgs = xiPackages + xmPackages
+                                    if (fileExists('release-scripts')) {
+                                        dir('release-scripts') {
+                                            sh ('git checkout sign-and-notarized && git pull')
+                                        }
+                                    } else {
+                                        sh ('git clone git@github.com:xamarin/release-scripts -b sign-and-notarized')
+                                    }
+                                    withCredentials([string(credentialsId: 'codesign_keychain_pw', variable: 'KEYCHAIN_PASS'), string(credentialsId: 'team_id', variable: 'TEAM_ID'), string(credentialsId: 'application_id', variable: 'APP_ID'), string(credentialsId: 'installer_id', variable: 'INSTALL_ID'), usernamePassword(credentialsId: 'apple_account', passwordVariable: 'APPLE_PASS', usernameVariable: 'APPLE_ACCOUNT')]) {
+                                        sh (returnStatus: true, script: "security create-keychain -p ${env.KEYCHAIN_PASS} login.keychain") // needed to repopulate the keychain
+                                        sh ("security unlock-keychain -p ${env.KEYCHAIN_PASS} login.keychain")
+                                        timeout (time: 90, unit: 'MINUTES') {
+                                          sh ("python release-scripts/sign_and_notarize.py -a ${env.APP_ID} -i ${env.INSTALL_ID} -u ${env.APPLE_ACCOUNT} -p ${env.APPLE_PASS} -t ${env.TEAM_ID} -d package/notarized -e ${entitlements} -k login.keychain " + pkgs.flatten ().join (" "))
+                                        }
+                                    }
+
+                                    def xiNotarizedPackages = findFiles (glob: "package/notarized/xamarin.ios-*.pkg")
+                                    if (xiNotarizedPackages.length > 0) {
+                                        xiNotarizedPkgFilename = xiNotarizedPackages [0].name
+                                        echo ("Created notarized Xamarin.iOS package: ${xiNotarizedPkgFilename}")
+                                    }
+                                    def xmNotarizedPackages = findFiles (glob: "package/notarized/xamarin.mac-*.pkg")
+                                    if (xmNotarizedPackages.length > 0) {
+                                        xmNotarizedPkgFilename = xmNotarizedPackages [0].name
+                                        echo ("Created notarized Xamarin.Mac package: ${xmNotarizedPkgFilename}")
+                                    }
+                                } catch (ex) {
+                                    echo "Notarization failed:\n${ex.getMessage()}"
+                                    for (def stack : ex.getStackTrace()) {
+                                        echo "\t${stack}"
+                                    }
+                                    manager.addWarningBadge("PKGs are not notarized")
+                                }
                             }
                         }
 
@@ -530,6 +574,10 @@ timestamps {
 
                             sh ("ls -la package")
                             uploadFiles ("package/*", "wrench", virtualPath)
+
+                            def notarized_files = findFiles (glob: "package/notarized/*")
+                            if (notarized_files.size () > 0)
+                              uploadFiles ("package/notarized/*", "wrench", virtualPath)
                             uploadFiles ("package-internal/*", "jenkins-internal", virtualPath)
 
                             // Also upload manifest to a predictable url (without the build number)
@@ -537,6 +585,8 @@ timestamps {
                             uploadFiles ("package/manifest", "wrench", "jenkins/${branchName}/${gitHash}")
                             // And also create a 'latest' version (which really means 'latest built', not 'latest hash', but it will hopefully be good enough)
                             uploadFiles ("package/manifest", "wrench", "jenkins/${branchName}/latest")
+                            // And finally create a per-hash manifest (which will be overwritten in rebuilds of the same hash)
+                            uploadFiles ("package/manifest", "wrench", "jenkins/${gitHash}")
 
                             manifestFilename = "manifest"
                         }
@@ -544,8 +594,15 @@ timestamps {
                         stage ('Generate artifacts.json') {
                             withCredentials ([string (credentialsId: '92cf81e5-6db5-408c-8a0d-192b36200a16', variable: 'GITHUB_AUTH_TOKEN'), usernamePassword (credentialsId: 'd146d4aa-a437-4633-908f-b455876c44d0', passwordVariable: 'STORAGE_PASSWORD', usernameVariable: 'STORAGE_ACCOUNT')]) {
                                 dir ("BuildTasks") {
-                                    sh "mono tools/BuildTasks/build-tasks.exe artifacts -s ${workspace}/xamarin-macios -a ${env.STORAGE_ACCOUNT} -c ${env.STORAGE_PASSWORD} -u wrench/${virtualPath}/package"
-                                    artifactsFilename = "artifacts.json"
+                                    try {
+                                        sh "mono tools/BuildTasks/build-tasks.exe artifacts -s ${workspace}/xamarin-macios -a ${env.STORAGE_ACCOUNT} -c ${env.STORAGE_PASSWORD} -u wrench/${virtualPath}/package"
+                                        artifactsFilename = "artifacts.json"
+                                    } catch (err) {
+                                        def msg = "Failed to generate/upload artifacts.json: " + err.getMessage ();
+                                        echo ("⚠️ ${msg} ⚠️")
+                                        manager.addWarningBadge (msg)
+                                        appendFileComment ("⚠️ [${msg}](${env.RUN_DISPLAY_URL}) 🔥\n")
+                                    }
                                 }
                             }
                         }
@@ -557,12 +614,22 @@ timestamps {
                             if (xiPackageFilename != null) {
                                 xiPackageUrl = "${packagePrefix}/${xiPackageFilename}"
                                 utils.reportGitHubStatus (gitHash, 'PKG-Xamarin.iOS', "${xiPackageUrl}", 'SUCCESS', "${xiPackageFilename}")
-                                packagesMessage += "[${xiPackageFilename}](${xiPackageUrl}) "
+                                packagesMessage += "* [${xiPackageFilename} (Not notarized)](${xiPackageUrl})\n"
                             }
                             if (xmPackageFilename != null) {
                                 xmPackageUrl = "${packagePrefix}/${xmPackageFilename}"
                                 utils.reportGitHubStatus (gitHash, 'PKG-Xamarin.Mac', "${xmPackageUrl}", 'SUCCESS', "${xmPackageFilename}")
-                                packagesMessage += "[${xmPackageFilename}](${xmPackageUrl})"
+                                packagesMessage += "* [${xmPackageFilename} (Not notarized)](${xmPackageUrl})\n"
+                            }
+                            if (xiNotarizedPkgFilename != null) {
+                                xiNotarizedPackageUrl = "${packagePrefix}/notarized/${xiNotarizedPkgFilename}"
+                                utils.reportGitHubStatus (gitHash, 'PKG-Xamarin.iOS-notarized', "${xiNotarizedPackageUrl}", 'SUCCESS', "${xiNotarizedPkgFilename}")
+                                packagesMessage += "* [${xiNotarizedPkgFilename} (Notarized)](${xiNotarizedPackageUrl})\n"
+                            }
+                            if (xmNotarizedPkgFilename != null) {
+                                xmNotarizedPackageUrl = "${packagePrefix}/notarized/${xmNotarizedPkgFilename}"
+                                utils.reportGitHubStatus (gitHash, 'PKG-Xamarin.Mac-notarized', "${xmNotarizedPackageUrl}", 'SUCCESS', "${xmNotarizedPkgFilename}")
+                                packagesMessage += "* [${xmNotarizedPkgFilename} (Notarized)](${xmNotarizedPackageUrl})\n"
                             }
                             if (manifestFilename != null) {
                                 def manifestUrl = "${packagePrefix}/${manifestFilename}"
@@ -582,7 +649,7 @@ timestamps {
                             }
 
                             if (packagesMessage != "")
-                                appendFileComment ("✅ Packages: ${packagesMessage}\n")
+                                appendFileComment ("✅ Packages: \n${packagesMessage}\n")
                         }
 
                         dir ('xamarin-macios') {
@@ -592,13 +659,13 @@ timestamps {
                                 // Since pull requests don't create branches in the xamarin org (that VSTS sees at least),
                                 // I've created a 'pull-request' branch which we'll use for pull requests.
                                 def vsts_branch = isPr ? "pull-request" : branchName;
-                                if (isPr) {
+                                if (isPr && !githubGetPullRequestLabels ().contains ("trigger-device-tests")) {
                                     echo "Currently not launching external tests for pull requests"
                                 } else {
                                     def outputFile = "${workspace}/xamarin-macios/wrench-launch-external.output.tmp"
                                     try {
-                                        withCredentials ([string (credentialsId: 'macios_provisionator_pat', variable: 'PROVISIONATOR_VSTS_PAT')]) {
-                                            sh ("make -C ${workspace}/xamarin-macios/tests wrench-launch-external MAC_PACKAGE_URL=${xmPackageUrl} IOS_PACKAGE_URL=${xiPackageUrl} WRENCH_URL=${env.RUN_DISPLAY_URL} BUILD_REVISION=${gitHash} BUILD_LANE=${vsts_branch} BUILD_WORK_HOST=${env.NODE_NAME} 2>&1 | tee ${outputFile}")
+                                        withCredentials ([string (credentialsId: 'macios_provisionator_pat', variable: 'PROVISIONATOR_VSTS_PAT'), string (credentialsId: 'macios_github_comment_token', variable: 'GITHUB_PAT_TOKEN')]) {
+                                            sh ("make -C ${workspace}/xamarin-macios/tests wrench-launch-external MAC_PACKAGE_URL=${xmPackageUrl} IOS_PACKAGE_URL=${xiPackageUrl} WRENCH_URL=${env.RUN_DISPLAY_URL} BUILD_REVISION=${gitHash} BUILD_LANE=${vsts_branch} BUILD_WORK_HOST=${env.NODE_NAME} GITHUB_TOKEN=${GITHUB_PAT_TOKEN} 2>&1 | tee ${outputFile}")
                                         }
                                         processAtMonkeyWrench (outputFile)
                                     } catch (error) {

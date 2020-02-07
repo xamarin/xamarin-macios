@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using Mono.Options;
+using Xamarin.Utils;
 
 namespace xibuild {
 	class MainClass {
@@ -103,36 +104,40 @@ namespace xibuild {
 				if (no_logo)
 					remaining.Add ("/nologo");
 			}
-
+			var arguments = remaining.Skip (runMSBuild ? 0 : 1).ToArray ();
 			return RunTool (
 					toolPath: runMSBuild ? "msbuild" : remaining [0],
-					combinedArgs: BuildQuotedCommandLine (remaining, runMSBuild ? 0 : 1),
+					combinedArgs: StringUtils.FormatArguments (arguments),
 					baseConfigFile: runMSBuild ? null : baseConfigFile);
-
-			string BuildQuotedCommandLine (List<string> a, int skip) => String.Join (" ", a.Skip (skip).Select (arg => $"\"{arg}\""));
 		}
 
 		static int RunTool (string toolPath, string combinedArgs, string baseConfigFile)
 		{
 			var tmpMSBuildExePathForConfig = Path.GetTempFileName ();
 			var configFilePath = tmpMSBuildExePathForConfig + ".config";
+			try {
+				GenerateAppConfig (configFilePath, baseConfigFile, out string MSBuildSdksPath);
 
-			GenerateAppConfig (configFilePath, baseConfigFile, out string MSBuildSdksPath);
+				var psi = new ProcessStartInfo {
+					FileName = toolPath,
+					Arguments = combinedArgs,
+					UseShellExecute = false,
+				};
+				// Required so that msbuild can read the correct config file
+				psi.EnvironmentVariables ["MSBUILD_EXE_PATH"] = tmpMSBuildExePathForConfig;
+				// MSBuildSDKsPath only works via an env var
+				psi.EnvironmentVariables ["MSBuildSDKsPath"] = MSBuildSdksPath;
 
-			var psi = new ProcessStartInfo {
-				FileName = toolPath,
-				Arguments = combinedArgs,
-				UseShellExecute = false,
-			};
-			// Required so that msbuild can read the correct config file
-			psi.EnvironmentVariables ["MSBUILD_EXE_PATH"] = tmpMSBuildExePathForConfig;
-			// MSBuildSDKsPath only works via an env var
-			psi.EnvironmentVariables ["MSBuildSDKsPath"] = MSBuildSdksPath;
+				var p = Process.Start (psi);
 
-			var p = Process.Start (psi);
-
-			p.WaitForExit ();
-			return p.ExitCode;
+				p.WaitForExit ();
+				return p.ExitCode;
+			} finally {
+				if (File.Exists (tmpMSBuildExePathForConfig))
+					File.Delete (tmpMSBuildExePathForConfig);
+				if (File.Exists (tmpMSBuildExePathForConfig))
+					File.Delete (configFilePath);
+			}
 		}
 
 		static void GenerateAppConfig (string targetConfigFile, string baseConfigFile, out string MSBuildSdksPath)

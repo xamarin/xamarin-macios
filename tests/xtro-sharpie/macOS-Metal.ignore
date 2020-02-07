@@ -3,12 +3,6 @@
 !missing-field! MTLDeviceWasAddedNotification not bound
 !missing-field! MTLDeviceWasRemovedNotification not bound
 
-## fixed in XAMCORE_4_0
-!extra-protocol-member! unexpected selector MTLCommandBuffer::GPUEndTime found
-!extra-protocol-member! unexpected selector MTLCommandBuffer::GPUStartTime found
-!extra-protocol-member! unexpected selector MTLCommandBuffer::kernelEndTime found
-!extra-protocol-member! unexpected selector MTLCommandBuffer::kernelStartTime found
-
 
 ## unsorted
 
@@ -25,7 +19,6 @@
 !incorrect-protocol-member! MTLArgumentEncoder::setIndirectCommandBuffer:atIndex: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLArgumentEncoder::setIndirectCommandBuffers:withRange: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLArgumentEncoder::setRenderPipelineState:atIndex: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLArgumentEncoder::setRenderPipelineStates:withRange: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLBlitCommandEncoder::copyIndirectCommandBuffer:sourceRange:destination:destinationIndex: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLBlitCommandEncoder::optimizeContentsForCPUAccess: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLBlitCommandEncoder::optimizeContentsForCPUAccess:slice:level: is REQUIRED and should be abstract
@@ -54,6 +47,32 @@
 !incorrect-protocol-member! MTLRenderPipelineState::supportIndirectCommandBuffers is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLTexture::allowGPUOptimizedContents is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::newSharedTextureWithDescriptor: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLDevice::newSharedTextureWithHandle: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLTexture::isShareable is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLTexture::newSharedTextureHandle is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLBlitCommandEncoder::resolveCounters:inRange:destinationBuffer:destinationOffset: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLBlitCommandEncoder::sampleCountersInBuffer:atSampleIndex:withBarrier: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLBuffer::newRemoteBufferViewForDevice: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLBuffer::remoteStorageBuffer is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::sampleCountersInBuffer:atSampleIndex:withBarrier: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::areBarycentricCoordsSupported is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::counterSets is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::location is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::locationNumber is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::maxTransferRate is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newCounterSampleBufferWithDescriptor:error: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::peerCount is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::peerGroupID is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::peerIndex is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::sampleTimestamps:gpuTimestamp: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::supportsShaderBarycentricCoordinates is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::sampleCountersInBuffer:atSampleIndex:withBarrier: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLTexture::newRemoteTextureViewForDevice: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLTexture::remoteStorageTexture is REQUIRED and should be abstract
+
+# Selectors missing reported by introspection: https://github.com/xamarin/maccore/issues/1978
+!missing-selector! MTLHeapDescriptor::hazardTrackingMode not bound
+!missing-selector! MTLHeapDescriptor::resourceOptions not bound
+!missing-selector! MTLHeapDescriptor::setHazardTrackingMode: not bound
+!missing-selector! MTLHeapDescriptor::setResourceOptions: not bound
+!missing-selector! MTLHeapDescriptor::setType: not bound
+!missing-selector! MTLHeapDescriptor::type not bound

@@ -141,6 +141,16 @@ namespace UIKit {
 			return MonospacedDigitSystemFontOfSize (fontSize, GetFontWeight (weight));
 		}
 
+		[iOS (13,0), TV (13,0)]
+		public static UIFont GetMonospacedSystemFont (nfloat size, nfloat weight)
+		{
+			var ptr = _MonospacedSystemFontOfSize (size, weight);
+			return ptr == IntPtr.Zero ? null : new UIFont (ptr);
+		}
+
+		[iOS(13,0), TV(13,0)]
+		public static UIFont GetMonospacedSystemFont (nfloat size, UIFontWeight weight) => GetMonospacedSystemFont (size, GetFontWeight (weight));
+
 		// In this case we want to _always_ return a different managed instance
 		// so one can be disposed without affecting others
 		// ref: https://bugzilla.xamarin.com/show_bug.cgi?id=25511

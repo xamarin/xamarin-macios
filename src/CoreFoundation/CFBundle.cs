@@ -10,29 +10,12 @@ using Foundation;
 
 namespace CoreFoundation {
 
-	public class CFBundle : INativeObject, IDisposable {
+	public partial class CFBundle : INativeObject, IDisposable {
 
 		public enum PackageType {
 			Application,
 			Framework,
 			Bundle
-		}
-
-		// from machine.h
-		// #define CPU_ARCH_ABI64       0x01000000
-		// #define CPU_TYPE_X86        ((cpu_type_t) 7)
-		// #define CPU_TYPE_X86_64     (CPU_TYPE_X86 | CPU_ARCH_ABI64)
-		// #define CPU_TYPE_ARM        ((cpu_type_t) 12)
-		// #define CPU_TYPE_ARM64      (CPU_TYPE_ARM | CPU_ARCH_ABI64)
-		// #define CPU_TYPE_POWERPC    ((cpu_type_t) 18)
-		// #define CPU_TYPE_POWERPC64  (CPU_TYPE_POWERPC | CPU_ARCH_ABI64)
-		public enum Architecture {
-			I386     = 0x00000007,
-			X86_64   = 0x01000007,
-			ARM      = 0x00000012,
-			ARM64    = 0x01000012,
-			PPC      = 0x00000018,
-			PPC64    = 0x01000018,
 		}
 
 		public struct PackageInfo {
@@ -120,11 +103,22 @@ namespace CoreFoundation {
 		
 		public static CFBundle[] GetAll ()
 		{
-			using (var cfBundles = new CFArray (CFBundleGetAllBundles ())) {
-				var managedBundles = new CFBundle [cfBundles.Count];
-				for (int index = 0; index < cfBundles.Count; index++) {
+			// as per apple documentation: 
+			// CFBundleGetAllBundles
+			//
+			// 	'This function is potentially expensive and not thread-safe'
+			//
+			// This means, that we should not trust the size of the array, since is a get and
+			// might be modified by a diff thread. We are going to clone the array and make sure
+			// that Apple does not modify the array while we work with it. That avoids changes
+			// in the index or in the bundles returned.
+			using (var cfBundles = new CFArray (CFBundleGetAllBundles ()))
+			using (var cfBundlesCopy = cfBundles.Clone () ) {
+				var bundleCount = cfBundlesCopy.Count; // the property is a C call, calling everytime we loop is not needed
+				var managedBundles = new CFBundle [bundleCount];
+				for (int index = 0; index < bundleCount; index++) {
 					// follow the get rule, we do not own the object
-					managedBundles [index] = new CFBundle (cfBundles.GetValue (index), false);
+					managedBundles [index] = new CFBundle (cfBundlesCopy.GetValue (index), false);
 				}
 				return managedBundles;
 			}

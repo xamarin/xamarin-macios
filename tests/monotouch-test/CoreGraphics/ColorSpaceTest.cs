@@ -398,5 +398,15 @@ namespace MonoTouchFixtures.CoreGraphics {
 				Assert.IsNotNull (space, "all null");
 			}
 		}
+
+		[Test]
+		public void IsHdr ()
+		{
+			TestRuntime.AssertXcodeVersion (11, 0);
+			using (var cs = CGColorSpace.CreateWithName (CGColorSpaceNames.GenericRgb))
+				Assert.False (cs.IsHdr, "GenericRgb");
+			using (var cs = CGColorSpace.CreateWithName (CGColorSpaceNames.DisplayP3_Hlg))
+				Assert.True (cs.IsHdr, "DisplayP3_Hlg");
+		}
 	}
 }

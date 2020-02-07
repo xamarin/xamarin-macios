@@ -14,9 +14,11 @@ using CoreFoundation;
 
 using nw_advertise_descriptor_t=System.IntPtr;
 using OS_nw_advertise_descriptor=System.IntPtr;
+using OS_nw_txt_record=System.IntPtr;
 
 namespace Network {
-	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0)]
+	[Watch (6,0)]
 	public class NWAdvertiseDescriptor : NativeObject {
 		public NWAdvertiseDescriptor (IntPtr handle, bool owns) : base (handle, owns)
 		{ }
@@ -59,6 +61,20 @@ namespace Network {
 		public bool NoAutoRename {
 			set => nw_advertise_descriptor_set_no_auto_rename (GetCheckedHandle (), value);
 			get => nw_advertise_descriptor_get_no_auto_rename (GetCheckedHandle ());
+		}
+
+		[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		static extern OS_nw_txt_record nw_advertise_descriptor_copy_txt_record_object (OS_nw_advertise_descriptor advertise_descriptor);
+
+		[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		static extern void nw_advertise_descriptor_set_txt_record_object (OS_nw_advertise_descriptor advertise_descriptor, OS_nw_txt_record txt_record);
+
+		[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+		public NWTxtRecord TxtRecord {
+			get => new NWTxtRecord (nw_advertise_descriptor_copy_txt_record_object (GetCheckedHandle ()), owns: true); 
+			set => nw_advertise_descriptor_set_txt_record_object (GetCheckedHandle (), value.GetHandle ()); 
 		}
 	}
 }

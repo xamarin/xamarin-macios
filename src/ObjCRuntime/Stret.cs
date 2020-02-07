@@ -92,12 +92,6 @@ namespace ObjCRuntime
 			case "nint":
 			case "nuint":
 			case "nfloat":
-#if BGENERATOR
-				var isUnified = generator.UnifiedAPI;
-#endif
-				if (!isUnified)
-					return false;
-
 				if (t.Namespace != "System")
 					return false;
 #if BGENERATOR
@@ -208,12 +202,6 @@ namespace ObjCRuntime
 
 		public static bool X86_64NeedStret (Type returnType, Generator generator)
 		{
-#if BGENERATOR
-			var isUnified = generator.UnifiedAPI;
-#endif
-			if (!isUnified)
-				return false;
-
 			Type t = returnType;
 
 			if (!t.IsValueType || t.IsEnum || IsMagicTypeOrCorlibType (t, generator))

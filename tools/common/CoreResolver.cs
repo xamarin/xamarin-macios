@@ -97,11 +97,11 @@ namespace Xamarin.Bundler {
 					parameters.SymbolReaderProvider = null;
 					assembly = ModuleDefinition.ReadModule (fileName, parameters).Assembly;
 					// only report the warning (on symbols) if we can actually load the assembly itself (otherwise it's more confusing than helpful)
-					ErrorHelper.Show (ErrorHelper.CreateWarning (129, $"Debugging symbol file for '{fileName}' does not match the assembly and is ignored."));
+					ErrorHelper.Show (ErrorHelper.CreateWarning (129, Errors.MX0129, fileName));
 				}
 			}
 			catch (Exception e) {
-				throw new ProductException (9, true, e, "Error while loading assemblies: {0}", fileName);
+				throw new ProductException (9, true, e, Errors.MX0009, fileName);
 			}
 			cache.Add (name, assembly);
 			return assembly;
@@ -120,7 +120,7 @@ namespace Xamarin.Bundler {
 			var files = Directory.GetFiles (directory, file);
 			if (files != null && files.Length > 0) {
 				if (files.Length > 1) {
-					ErrorHelper.Warning (133, "Found more than 1 assembly matching '{0}', choosing first:{1}{2}", file, Environment.NewLine, string.Join ("\n", files));
+					ErrorHelper.Warning (133, Errors.MX0133, file, Environment.NewLine, string.Join ("\n", files));
 				}
 				return files [0];
 			}

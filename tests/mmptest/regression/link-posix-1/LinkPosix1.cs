@@ -4,9 +4,9 @@ using System;
 using System.IO;
 using System.IO.Compression;
 using System.Reflection;
-using MonoMac.Foundation;
-using MonoMac.AppKit;
-using MonoMac.ObjCRuntime;
+using Foundation;
+using AppKit;
+using ObjCRuntime;
 
 // Test
 // * application does not reference assembly Mono.Posix.dll

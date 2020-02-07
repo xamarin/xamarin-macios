@@ -53,7 +53,8 @@ fi
 # Install 7z. We can't do this from the system-dependencies.sh script, because
 # we need 7z to decompress the file where the system-dependencies.sh script
 # resides.
-brew install p7zip
+# Also ignore any failures, brew may fail if 7z is already installed.
+brew install p7zip || true
 
 env
 rm -f -- ./*.7z
@@ -65,7 +66,7 @@ cd mac-test-package
 COUNTER=0
 while [[ $COUNTER -lt 5 ]]; do
 	EC=0
-	./system-dependencies.sh --provision-mono --ignore-autotools --ignore-xamarin-studio --ignore-xcode --ignore-osx --ignore-cmake --ignore-simulators --ignore-7z || EC=$?
+	./system-dependencies.sh --provision-mono --ignore-autotools --ignore-xamarin-studio --ignore-xcode --ignore-osx --ignore-cmake --ignore-simulators --ignore-7z --ignore-python3 || EC=$?
 	if [[ $EC -eq 56 ]]; then
 		# Sometimes we get spurious "curl: (56) SSLRead() return error -9806" errors. Trying again usually works, so lets try again a few more times.
 		# https://github.com/xamarin/maccore/issues/1098

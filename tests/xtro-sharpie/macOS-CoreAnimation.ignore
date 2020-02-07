@@ -7,8 +7,6 @@
 !missing-protocol-conformance! CAConstraintLayoutManager should conform to CALayoutManager
 !missing-selector! +CALayer::layerWithRemoteClientId: not bound
 !missing-selector! CAConstraint::offset not bound
-!missing-selector! CAMetalLayer::colorspace not bound
-!missing-selector! CAMetalLayer::setColorspace: not bound
 !missing-selector! CAMetalLayer::setWantsExtendedDynamicRangeContent: not bound
 !missing-selector! CAMetalLayer::wantsExtendedDynamicRangeContent not bound
 !missing-selector! CAOpenGLLayer::colorspace not bound

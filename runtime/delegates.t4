@@ -44,7 +44,7 @@
 		},
 
 		new XDelegate ("NSException *", "IntPtr", "xamarin_unwrap_ns_exception",
-			"int", "int", "exc_handle"
+			"uint32_t", "uint", "exc_handle"
 		) {
 			WrappedManagedFunction = "UnwrapNSException",
 			OnlyDynamicUsage = false,

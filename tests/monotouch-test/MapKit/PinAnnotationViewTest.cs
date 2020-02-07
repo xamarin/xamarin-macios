@@ -86,7 +86,7 @@ namespace MonoTouchFixtures.MapKit {
 				}
 #else
 				if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 10, 0))
-					Assert.That (av.PinTintColor.ToString (), Is.EqualTo (UIColor.FromRGBA (255, 59, 48, 255).ToString ()), "PinTintColor");
+					Assert.NotNull (av.PinTintColor, "PinTintColor");
 				else
 					Assert.Null (av.PinTintColor, "PinTintColor"); // differs from the other init call
 #endif

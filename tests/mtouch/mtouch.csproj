@@ -10,6 +10,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>MTouchTests</RootNamespace>
     <AssemblyName>mtouch</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>full</DebugType>
@@ -91,9 +92,15 @@
     <Compile Include="..\..\tools\mtouch\SdkVersions.cs">
       <Link>SdkVersions.cs</Link>
     </Compile>
+    <Compile Include="..\..\tools\mtouch\Errors.Designer.cs">
+      <Link>Errors.Designer.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="..\..\tools\mtouch\Errors.resx">
+      <Link>Errors.resx</Link>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

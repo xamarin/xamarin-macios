@@ -278,6 +278,11 @@ namespace ObjCRuntime {
 			return new ProductException (code, false, message, args);
 		}
 
+		public static ProductException CreateWarning (int code, Exception innerException, string message, params object [] args)
+		{
+			return new ProductException (code, false, innerException, message, args);
+		}
+
 		public static void Error (int code, Exception innerException, string message, params object[] args)
 		{
 			throw new ProductException (code, true, innerException, message, args);

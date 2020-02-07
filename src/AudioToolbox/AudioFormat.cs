@@ -40,12 +40,14 @@ using AudioFileID = System.IntPtr;
 namespace AudioToolbox {
 
 	// AudioFormatListItem
+	[Watch (6,0)]
 	[StructLayout(LayoutKind.Sequential)]
 	public struct AudioFormat
 	{
 		public AudioStreamBasicDescription AudioStreamBasicDescription;
 		public AudioChannelLayoutTag AudioChannelLayoutTag;
 
+#if !WATCH
 		public unsafe static AudioFormat? GetFirstPlayableFormat (AudioFormat[] formatList)
 		{
 			if (formatList == null)
@@ -59,16 +61,18 @@ namespace AudioToolbox {
 				var ptr_size = sizeof (AudioFormat) * formatList.Length;
 				if (AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.FirstPlayableFormatFromList, ptr_size, item, ref size, out index) != 0)
 					return null;
-
 				return formatList [index];
 			}
 		}
+#endif
 
 		public override string ToString ()
 		{
 			return AudioChannelLayoutTag + ":" + AudioStreamBasicDescription.ToString ();
 		}
 	}
+
+#if !WATCH
 
 	public enum AudioFormatError : int // Implictly cast to OSType
 	{
@@ -385,4 +389,5 @@ namespace AudioToolbox {
 		HardwareCodecCapabilities	= 0x68776363,	// 'hwcc'
 #endif
 	}
+#endif // !WATCH
 }

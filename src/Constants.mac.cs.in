@@ -153,5 +153,21 @@ namespace MonoMac {
 		public const string VideoSubscriberAccountLibrary = "/System/Library/Frameworks/VideoSubscriberAccount.framework/VideoSubscriberAccount";
 		public const string UserNotificationsLibrary = "/System/Library/Frameworks/UserNotifications.framework/UserNotifications";
 		public const string iTunesLibraryLibrary = "/System/Library/Frameworks/iTunesLibrary.framework/iTunesLibrary";
+
+		// macOS 10.15
+		public const string AuthenticationServicesLibrary = "/System/Library/Frameworks/AuthenticationServices.framework/AuthenticationServices";
+		public const string CoreMotionLibrary = "/System/Library/Frameworks/CoreMotion.framework/CoreMotion";
+		public const string DeviceCheckLibrary = "/System/Library/Frameworks/DeviceCheck.framework/DeviceCheck";
+		public const string ExecutionPolicyLibrary = "/System/Library/Frameworks/ExecutionPolicy.framework/ExecutionPolicy";
+		public const string FileProviderLibrary = "/System/Library/Frameworks/FileProvider.framework/FileProvider";
+		public const string FileProviderUILibrary = "/System/Library/Frameworks/FileProviderUI.framework/FileProviderUI";
+		public const string PushKitLibrary = "/System/Library/Frameworks/PushKit.framework/PushKit";
+		public const string QuickLookThumbnailingLibrary = "/System/Library/Frameworks/QuickLookThumbnailing.framework/QuickLookThumbnailing";
+		public const string SoundAnalysisLibrary = "/System/Library/Frameworks/SoundAnalysis.framework/SoundAnalysis";
+		public const string PencilKitLibrary = "/System/Library/Frameworks/PencilKit.framework/PencilKit";
+		public const string SpeechLibrary = "/System/Library/Frameworks/Speech.framework/Speech";
+		public const string LinkPresentationLibrary = "/System/Library/Frameworks/LinkPresentation.framework/LinkPresentation";
+		// not clear if the api is available, issue: https://github.com/xamarin/maccore/issues/1951
+		//public const string CoreHapticsLibrary = "/System/Library/Frameworks/CoreHaptics.framework/CoreHaptics";
 	}
 }

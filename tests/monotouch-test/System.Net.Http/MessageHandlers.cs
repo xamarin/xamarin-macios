@@ -14,7 +14,9 @@ using System.IO;
 
 using NUnit.Framework;
 using System.Net.Http.Headers;
+using System.Security.Authentication;
 using System.Text;
+using Foundation;
 #if MONOMAC
 using Foundation;
 #endif
@@ -74,42 +76,229 @@ namespace MonoTests.System.Net.Http
 		}
 
 #if !__WATCHOS__
-		// ensure that we do get the same number of cookies as the managed handler
-		[TestCase]
+		// ensure that we do get the same cookies as the managed handler
+		[Test]
 		public void TestNSUrlSessionHandlerCookies ()
 		{
-			bool areEqual = false;
-			var manageCount = 0;
-			var nativeCount = 0;
+			var managedCookieResult = false;
+			var nativeCookieResult = false;
 			Exception ex = null;
+			var completed = false;
+			IEnumerable<string> nativeCookies = null;
+			IEnumerable<string> managedCookies = null;
 
 			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () =>
 			{
+				var url = NetworkResources.Httpbin.GetSetCookieUrl ("cookie", "chocolate-chip");
 				try {
-					var managedClient = new HttpClient (new HttpClientHandler ());
-					var managedResponse = await managedClient.GetAsync ("https://google.com");
-					if (managedResponse.Headers.TryGetValues ("Set-Cookie", out var managedCookies)) {
-						var nativeClient = new HttpClient (new NSUrlSessionHandler ());
-						var nativeResponse = await nativeClient.GetAsync ("https://google.com");
-						if (managedResponse.Headers.TryGetValues ("Set-Cookie", out var nativeCookies)) {
-							manageCount = managedCookies.Count ();
-							nativeCount = nativeCookies.Count ();
-							areEqual = manageCount == nativeCount;
-						} else {
-							manageCount = -1;
-							nativeCount = -1;
-							areEqual = false;
-						}
-					}
-					
+					var managedHandler = new HttpClientHandler () {
+						AllowAutoRedirect = false,
+					};
+					var managedClient = new HttpClient (managedHandler);
+					var managedResponse = await managedClient.GetAsync (url);
+					managedCookieResult = managedResponse.Headers.TryGetValues ("Set-Cookie", out managedCookies);
+
+					var nativeHandler = new NSUrlSessionHandler () {
+						AllowAutoRedirect = false,
+					};
+					nativeHandler.AllowAutoRedirect = true;
+					var nativeClient = new HttpClient (nativeHandler);					
+					var nativeResponse = await nativeClient.GetAsync (url);
+					nativeCookieResult = nativeResponse.Headers.TryGetValues ("Set-Cookie", out nativeCookies);
 				} catch (Exception e) {
 					ex = e;
-				} 
-			}, () => areEqual);
+				} finally {
+					completed = true;
+				}
+			}, () => completed);
 
-			Assert.IsTrue (areEqual, $"Cookies are different - Managed {manageCount} vs Native {nativeCount}");
 			Assert.IsNull (ex, "Exception");
+			Assert.IsTrue (managedCookieResult, $"Failed to get managed cookies");
+			Assert.IsTrue (nativeCookieResult, $"Failed to get native cookies");
+			Assert.AreEqual (1, managedCookies.Count (), $"Managed Cookie Count");
+			Assert.AreEqual (1, nativeCookies.Count (), $"Native Cookie Count");
+			Assert.That (nativeCookies.First (), Is.StringStarting ("cookie=chocolate-chip;"), $"Native Cookie Value");
+			Assert.That (managedCookies.First (), Is.StringStarting ("cookie=chocolate-chip;"), $"Managed Cookie Value");
 		}
+
+		// ensure that we can use a cookie container to set the cookies for a url
+		[Test]
+		public void TestNSUrlSessionHandlerCookieContainer ()
+		{
+			var url = NetworkResources.Httpbin.CookiesUrl;
+			var cookie = new Cookie ("cookie", "chocolate-chip");
+			var cookieContainer = new CookieContainer ();
+			cookieContainer.Add (new Uri (url), cookie);
+
+			string managedCookieResult = null;
+			string nativeCookieResult = null;
+			Exception ex = null;
+			var completed = false;
+
+			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
+				try {
+					var managedHandler = new HttpClientHandler () {
+						AllowAutoRedirect = false,
+						CookieContainer = cookieContainer,
+					};
+					var managedClient = new HttpClient (managedHandler);
+					var managedResponse = await managedClient.GetAsync (url);
+					managedCookieResult = await managedResponse.Content.ReadAsStringAsync ();
+					
+					var nativeHandler = new NSUrlSessionHandler () {
+						AllowAutoRedirect = true,
+						CookieContainer = cookieContainer,
+					};
+					var nativeClient = new HttpClient (nativeHandler);
+					var nativeResponse = await nativeClient.GetAsync (url);
+					nativeCookieResult = await nativeResponse.Content.ReadAsStringAsync ();
+				} catch (Exception e) {
+					ex = e;
+				} finally {
+					completed = true;
+				}
+			}, () => completed);
+
+			Assert.IsNull (ex, "Exception");
+			Assert.IsNotNull (managedCookieResult, "Managed cookies result");
+			Assert.IsNotNull (nativeCookieResult, "Native cookies result");
+			Assert.AreEqual (managedCookieResult, nativeCookieResult, "Cookies");
+		}
+
+		// ensure that the Set-Cookie headers do update the CookieContainer
+		[Test]
+		public void TestNSurlSessionHandlerCookieContainerSetCookie ()
+		{
+			var url = NetworkResources.Httpbin.GetSetCookieUrl ("cookie", "chocolate-chip");
+			var cookieContainer = new CookieContainer ();
+
+			string nativeCookieResult = null;
+			Exception ex = null;
+			var completed = false;
+
+			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
+				try {
+		
+					var nativeHandler = new NSUrlSessionHandler () {
+						AllowAutoRedirect = true,
+						CookieContainer = cookieContainer,
+					};
+					var nativeClient = new HttpClient (nativeHandler);
+					var nativeResponse = await nativeClient.GetAsync (url);
+					nativeCookieResult = await nativeResponse.Content.ReadAsStringAsync ();
+				} catch (Exception e) {
+					ex = e;
+				} finally {
+					completed = true;
+				}
+			}, () => completed);
+
+			Assert.IsNull (ex, "Exception");
+			Assert.IsNotNull (nativeCookieResult, "Native cookies result");
+			var cookiesFromServer = cookieContainer.GetCookies (new Uri (url));
+			Assert.AreEqual (1, cookiesFromServer.Count, "Cookies received from server.");
+		}
+
+		[Test]
+		public void TestNSUrlSessionDefaultDisabledCookies ()
+		{
+			// simple test. send a request with a set-cookie url, get the data
+			// and ensure that the second request does not send any cookies.
+			var url = NetworkResources.Httpbin.GetSetCookieUrl ("cookie", "chocolate-chip");
+
+			string nativeSetCookieResult = null;
+			string nativeCookieResult = null;
+
+
+			Exception ex = null;
+			var completed = false;
+
+			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
+				try {
+
+					var nativeHandler = new NSUrlSessionHandler () {
+						AllowAutoRedirect = true,
+						UseCookies = false,
+					};
+					var nativeClient = new HttpClient (nativeHandler);
+					var nativeResponse = await nativeClient.GetAsync (url);
+					nativeSetCookieResult = await nativeResponse.Content.ReadAsStringAsync ();
+
+					// got the response, perofm a second queries to the cookies endpoint to get
+					// the actual cookies sent from the storage
+					nativeResponse = await nativeClient.GetAsync (NetworkResources.Httpbin.CookiesUrl);
+					nativeCookieResult = await nativeResponse.Content.ReadAsStringAsync ();
+				} catch (Exception e) {
+					ex = e;
+				} finally {
+					completed = true;
+				}
+			}, () => completed);
+
+			Assert.IsNull (ex, "Exception");
+			Assert.IsNotNull (nativeSetCookieResult, "Native set-cookies result");
+			Assert.IsNotNull (nativeCookieResult, "Native cookies result");
+			Assert.IsFalse (nativeCookieResult.Contains ("chocolate-chip"));
+		}
+
+		[Test]
+		public void TestNSUrlSessionDefaultDisableCookiesWithManagedContainer ()
+		{
+			// simple test. send a request with a set-cookie url, get the data
+			// and ensure that the second request does not send any cookies.
+			var url = NetworkResources.Httpbin.GetSetCookieUrl ("cookie", "chocolate-chip");
+
+			string nativeSetCookieResult = null;
+			string nativeCookieResult = null;
+			var cookieContainer = new CookieContainer ();
+
+
+			Exception ex = null;
+			var completed = false;
+
+			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
+				try {
+
+					var nativeHandler = new NSUrlSessionHandler () {
+						AllowAutoRedirect = true,
+						UseCookies = false,
+					};
+					var nativeClient = new HttpClient (nativeHandler);
+					var nativeResponse = await nativeClient.GetAsync (url);
+					nativeSetCookieResult = await nativeResponse.Content.ReadAsStringAsync ();
+
+					// got the response, preform a second queries to the cookies endpoint to get
+					// the actual cookies sent from the storage
+					nativeResponse = await nativeClient.GetAsync (NetworkResources.Httpbin.CookiesUrl);
+					nativeCookieResult = await nativeResponse.Content.ReadAsStringAsync ();
+				} catch (Exception e) {
+					ex = e;
+				} finally {
+					completed = true;
+				}
+			}, () => completed);
+
+			Assert.IsNull (ex, "Exception");
+			Assert.IsNotNull (nativeSetCookieResult, "Native set-cookies result");
+			Assert.IsNotNull (nativeCookieResult, "Native cookies result");
+			Assert.IsFalse (nativeCookieResult.Contains ("chocolate-chip"));
+			var cookiesFromServer = cookieContainer.GetCookies (new Uri (url));
+			Assert.AreEqual (0, cookiesFromServer.Count, "Cookies received from server.");
+		}
+
+		[Test]
+		public void TestNSUrlSessionEphemeralDisabledCookies ()
+		{
+			// assert we do throw an exception with ephmeral configs.
+			using (var config = NSUrlSessionConfiguration.EphemeralSessionConfiguration) {
+				Assert.True (config.SessionType == NSUrlSessionConfiguration.SessionConfigurationType.Ephemeral, "Session type.");
+				var nativeHandler = new NSUrlSessionHandler (config);
+				Assert.Throws<InvalidOperationException> (() => {
+					nativeHandler.UseCookies = false;
+				});
+			}
+		}
+
 #endif
 
 		// ensure that if we have a redirect, we do not have the auth headers in the following requests
@@ -134,10 +323,10 @@ namespace MonoTests.System.Net.Http
 			{
 				try {
 					HttpClient client = new HttpClient (GetHandler (handlerType));
-					client.BaseAddress = new Uri ("https://httpbin.org");
+					client.BaseAddress = NetworkResources.Httpbin.Uri;
 					var byteArray = new UTF8Encoding ().GetBytes ("username:password");
 					client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue ("Basic", Convert.ToBase64String(byteArray));
-					var result = await client.GetAsync ("https://httpbin.org/redirect/3");
+					var result = await client.GetAsync (NetworkResources.Httpbin.GetRedirectUrl (3));
 					// get the data returned from httpbin which contains the details of the requested performed.
 					json = await result.Content.ReadAsStringAsync ();
 					containsAuthorizarion = json.Contains ("Authorization");
@@ -149,7 +338,7 @@ namespace MonoTests.System.Net.Http
 				}
 			}, () => done);
 
-			if (!done) { // timeouts happen in the bost due to dns issues, connection issues etc.. we do not want to fail
+			if (!done) { // timeouts happen in the bots due to dns issues, connection issues etc.. we do not want to fail
 				Assert.Inconclusive ("Request timedout.");
 			} else if (!containsHeaders) {
 				Assert.Inconclusive ("Response from httpbin does not contain headers, therefore we cannot ensure that if the authoriation is present.");
@@ -173,34 +362,45 @@ namespace MonoTests.System.Net.Http
 				Assert.Ignore ("Fails on macOS 10.10: https://github.com/xamarin/maccore/issues/1645");
 #endif
 
-			bool servicePointManagerCbWasExcuted = false;
+			bool validationCbWasExecuted = false;
+			bool customValidationCbWasExecuted = false;
+			bool invalidServicePointManagerCbWasExcuted = false;
 			bool done = false;
 			Exception ex = null;
+			Type expectedExceptionType = null;
 			HttpResponseMessage result = null;
 
 			var handler = GetHandler (handlerType);
-			if (handler is NSUrlSessionHandler ns) {
+			if (handler is HttpClientHandler ch) {
+				expectedExceptionType = typeof (AuthenticationException);
+				ch.ServerCertificateCustomValidationCallback = (sender, certificate, chain, errors) => {
+					validationCbWasExecuted = true;
+					// return false, since we want to test that the exception is raised
+					return false;
+				};
+				ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, errors) => {
+					invalidServicePointManagerCbWasExcuted = true;
+					return false;
+				};
+			} else if (handler is NSUrlSessionHandler ns) {
+				expectedExceptionType = typeof (WebException);
 				ns.TrustOverride += (a,b) => {
-					servicePointManagerCbWasExcuted = true;
+					validationCbWasExecuted = true;
 					// return false, since we want to test that the exception is raised
 					return false;
 				};
 			} else {
-				ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, errors) => {
-					servicePointManagerCbWasExcuted = true;
-					// return false, since we want to test that the exception is raised
-					return false;
-				};
+				Assert.Fail ($"Invalid HttpMessageHandler: '{handler.GetType ()}'.");
 			}
 
 			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () =>
 			{
 				try {
 					HttpClient client = new HttpClient (handler);
-					client.BaseAddress = new Uri ("https://httpbin.org");
+					client.BaseAddress = NetworkResources.Httpbin.Uri;
 					var byteArray = new UTF8Encoding ().GetBytes ("username:password");
 					client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue ("Basic", Convert.ToBase64String(byteArray));
-					result = await client.GetAsync ("https://httpbin.org/redirect/3");
+					result = await client.GetAsync (NetworkResources.Httpbin.GetRedirectUrl (3));
 				} catch (Exception e) {
 					ex = e;
 				} finally {
@@ -212,11 +412,14 @@ namespace MonoTests.System.Net.Http
 			if (!done) { // timeouts happen in the bots due to dns issues, connection issues etc.. we do not want to fail
 				Assert.Inconclusive ("Request timedout.");
 			} else {
+				// the ServicePointManager.ServerCertificateValidationCallback will never be executed.
+				Assert.False(invalidServicePointManagerCbWasExcuted);
+				Assert.True(validationCbWasExecuted);
 				// assert the exception type
 				Assert.IsNotNull (ex, (result == null)? "Expected exception is missing and got no result" : $"Expected exception but got {result.Content.ReadAsStringAsync ().Result}");
 				Assert.IsInstanceOfType (typeof (HttpRequestException), ex);
 				Assert.IsNotNull (ex.InnerException);
-				Assert.IsInstanceOfType (typeof (WebException), ex.InnerException);
+				Assert.IsInstanceOfType (expectedExceptionType, ex.InnerException);
 			}
 		}
 
@@ -250,10 +453,10 @@ namespace MonoTests.System.Net.Http
 			{
 				try {
 					HttpClient client = new HttpClient (handler);
-					client.BaseAddress = new Uri ("https://httpbin.org");
+					client.BaseAddress = NetworkResources.Httpbin.Uri;
 					var byteArray = new UTF8Encoding ().GetBytes ("username:password");
 					client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue ("Basic", Convert.ToBase64String(byteArray));
-					var result = await client.GetAsync ("https://httpbin.org/redirect/3");
+					var result = await client.GetAsync (NetworkResources.Httpbin.GetRedirectUrl (3));
 				} catch (Exception e) {
 					ex = e;
 				} finally {
@@ -272,5 +475,21 @@ namespace MonoTests.System.Net.Http
 				}
 			}
 		}
+
+		[Test]
+		public void AssertDefaultValuesNSUrlSessionHandler ()
+		{
+			using (var handler = new NSUrlSessionHandler ()) {
+				Assert.True (handler.AllowAutoRedirect, "Default redirects value");
+				Assert.True (handler.AllowsCellularAccess, "Default cellular data value.");
+			}
+			using (var config = NSUrlSessionConfiguration.DefaultSessionConfiguration) {
+				config.AllowsCellularAccess = false;
+				using (var handler = new NSUrlSessionHandler (config)) {
+					Assert.False (handler.AllowsCellularAccess, "Configuration cellular data value.");
+				}
+			}
+		}
+
 	}
 }

@@ -105,7 +105,7 @@ param_read_primitive (struct ParamIterator *it, const char *type_ptr, void *targ
 
 		if (target == NULL) {
 			LOGZ (" not reading, since target is NULL.\n");
-			return size;
+			return (int) size;
 		}
 
 		switch (size) {
@@ -130,7 +130,7 @@ param_read_primitive (struct ParamIterator *it, const char *type_ptr, void *targ
 			return 0;
 		}
 
-		return size;
+		return (int) size;
 	}
 	}
 }

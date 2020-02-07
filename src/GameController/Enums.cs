@@ -12,6 +12,9 @@ using ObjCRuntime;
 using Foundation;
 
 namespace GameController {
+	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'GCController.GetMicroGamepadController()' instead.")]
+	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GCController.GetMicroGamepadController()' instead.")]
+	[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GCController.GetMicroGamepadController()' instead.")]
 	[Native]
 	public enum GCExtendedGamepadSnapshotDataVersion : long
 	{

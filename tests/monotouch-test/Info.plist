@@ -9,7 +9,7 @@
 	<key>CFBundleName</key>
 	<string>MonoTouchTest</string>
 	<key>MinimumOSVersion</key>
-	<string>6.0</string>
+	<string>7.0</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
@@ -27,6 +27,8 @@
 	<string>Testing mike</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Testing lens</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Testing world domination through blue teeth coloring</string>
 	<key>UIDeviceFamily</key>
 	<array>
 		<integer>1</integer>
@@ -52,5 +54,13 @@
 	</array>
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/AppIcons.appiconset</string>
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array>
+		<string>com.xamarin.monotouch-test.TesgBackgroundTask</string>
+	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>processing</string>
+	</array>
 </dict>
 </plist>

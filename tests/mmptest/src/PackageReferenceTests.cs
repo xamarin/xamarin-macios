@@ -26,8 +26,30 @@ namespace Xamarin.MMP.Tests
 
 				string project = TI.GenerateUnifiedExecutableProject (config);
 				TI.NugetRestore (project);
-				TI.BuildProject (project, true);
+				TI.BuildProject (project);
 				TI.RunGeneratedUnifiedExecutable (config);
+			});
+		}
+
+		[TestCase (true)]
+		[TestCase (false)]
+		// context https://github.com/xamarin/xamarin-macios/issues/7113
+		public void SatellitesFromNuget (bool full)
+		{
+			MMPTests.RunMMPTest (tmpDir => {
+				var config = new TI.UnifiedTestConfig (tmpDir) {
+					ItemGroup = @"<ItemGroup><PackageReference Include = ""Humanizer"" Version = ""2.7.2"" /></ItemGroup>",
+					TestCode = "Humanizer.DateHumanizeExtensions.Humanize (System.DateTime.UtcNow.AddHours (-30));\n",
+					XM45 = full
+				};
+				TI.AddGUIDTestCode (config);
+
+				string project = TI.GenerateUnifiedExecutableProject (config);
+				TI.NugetRestore (project);
+				TI.BuildProject (project);
+
+				var appDir = Path.Combine (tmpDir, "bin", "Debug", full ? "XM45Example.app" : "UnifiedExample.app");
+				Assert.True (File.Exists (Path.Combine (appDir, "Contents", "MonoBundle", "fr", "Humanizer.resources.dll")), "fr");
 			});
 		}
 
@@ -44,7 +66,7 @@ namespace Xamarin.MMP.Tests
 				TI.CopyFileWithSubstitutions (main, main, s => s.Replace ("%TESTCODE%", TestCode));
 
 				TI.NugetRestore (project);
-				string output = TI.BuildProject (Path.Combine (tmpDir, "Today/TodayExtensionTest.csproj"), isUnified: true);
+				string output = TI.BuildProject (Path.Combine (tmpDir, "Today/TodayExtensionTest.csproj"));
 				Assert.IsTrue (!output.Contains ("MM2013"));
 			});
 		}
