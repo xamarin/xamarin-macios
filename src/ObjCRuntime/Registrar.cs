@@ -43,7 +43,6 @@ using R=ObjCRuntime.Runtime;
 
 #if MONOTOUCH
 #if MTOUCH
-using Xamarin.Bundler;
 using ProductException=Xamarin.Bundler.MonoTouchException;
 #else
 #if XAMCORE_2_0
@@ -54,7 +53,6 @@ using ProductException=MonoTouch.RuntimeException;
 #endif
 #elif MONOMAC
 #if MMP
-using Xamarin.Bundler;
 using ProductException=Xamarin.Bundler.MonoMacException;
 #elif XAMCORE_2_0
 using ProductException=ObjCRuntime.RuntimeException;
