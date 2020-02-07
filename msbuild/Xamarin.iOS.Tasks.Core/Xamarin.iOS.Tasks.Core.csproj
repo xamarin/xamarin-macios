@@ -4,12 +4,16 @@
     <TargetFrameworks>net461;netstandard2.0</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
+  <PropertyGroup>
+    <UpdateXlfOnBuild>true</UpdateXlfOnBuild>
+  </PropertyGroup>
   <ItemGroup>
     <!-- Compile against Microsoft.Build* NuGet refs, but do not copy to OutputDir. -->
     <PackageReference Include="Microsoft.Build" Version="15.9.20" IncludeAssets="compile" />
     <PackageReference Include="Microsoft.Build.Framework" Version="15.9.20" IncludeAssets="compile" />
     <PackageReference Include="Microsoft.Build.Tasks.Core" Version="15.9.20" IncludeAssets="compile" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.9.20" IncludeAssets="compile" />
+    <PackageReference Include="XliffTasks" Version="1.0.0-beta.20105.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\Xamarin.MacDev.csproj" />
@@ -28,5 +32,20 @@
     <None Include="../Xamarin.Shared/Xamarin.Shared.targets">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="MSBStrings.resx">
+      <XlfSourceFormat>Resx</XlfSourceFormat>
+      <XlfOutputItem>EmbeddedResource</XlfOutputItem>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <CustomToolNamespace>MSBLocalization</CustomToolNamespace>
+      <LastGenOutput>MSBStrings.Designer.cs</LastGenOutput>
+      <LogicalName>MSBLocalization.MSBStrings</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="MSBStrings.Designer.cs">
+      <DependentUpon>MSBStrings.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

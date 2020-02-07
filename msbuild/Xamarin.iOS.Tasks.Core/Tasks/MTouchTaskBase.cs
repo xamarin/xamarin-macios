@@ -8,6 +8,7 @@ using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev.Tasks;
 using Xamarin.MacDev;
+using MSBLocalization;
 
 namespace Xamarin.iOS.Tasks
 {
@@ -222,7 +223,7 @@ namespace Xamarin.iOS.Tasks
 				bool boolean;
 
 				if (string.IsNullOrEmpty (value) || !Enum.TryParse (value, out kind)) {
-					Log.LogWarning ("Unknown native reference type for '{0}'.", item.ItemSpec);
+					Log.LogWarning (MSBStrings.W0051, item.ItemSpec);
 					continue;
 				}
 
@@ -254,7 +255,7 @@ namespace Xamarin.iOS.Tasks
 				} else if (kind == NativeReferenceKind.Framework) {
 					gcc.Frameworks.Add (item.ItemSpec);
 				} else {
-					Log.LogWarning ("Dynamic native references are not supported: '{0}'", item.ItemSpec);
+					Log.LogWarning (MSBStrings.W0052, item.ItemSpec);
 					continue;
 				}
 
@@ -360,7 +361,7 @@ namespace Xamarin.iOS.Tasks
 				architectures = TargetArchitecture.Default;
 
 			if (architectures == TargetArchitecture.ARMv6) {
-				Log.LogError ("Target architecture ARMv6 is no longer supported in Xamarin.iOS. Please select a supported architecture.");
+				Log.LogError (MSBStrings.E0053);
 				return null;
 			}
 
@@ -612,7 +613,7 @@ namespace Xamarin.iOS.Tasks
 						writer.Write (args);
 				}
 			} catch (Exception ex) {
-				Log.LogWarning ("Failed to create response file '{0}': {1}", responseFile, ex);
+				Log.LogWarning (MSBStrings.W0054, responseFile, ex);
 			}
 
 			// Some arguments can not safely go in the response file and are 
@@ -645,7 +646,7 @@ namespace Xamarin.iOS.Tasks
 			try {
 				plist = PDictionary.FromFile (AppManifest.ItemSpec);
 			} catch (Exception ex) {
-				Log.LogError (null, null, null, AppManifest.ItemSpec, 0, 0, 0, 0, "Could not load Info.plist: {0}", ex.Message);
+				Log.LogError (null, null, null, AppManifest.ItemSpec, 0, 0, 0, 0, MSBStrings.E0055, ex.Message);
 				return false;
 			}
 
@@ -653,7 +654,7 @@ namespace Xamarin.iOS.Tasks
 
 			if (plist.TryGetValue (ManifestKeys.MinimumOSVersion, out value)) {
 				if (!IPhoneSdkVersion.TryParse (value.Value, out minimumOSVersion)) {
-					Log.LogError (null, null, null, AppManifest.ItemSpec, 0, 0, 0, 0, "Could not parse MinimumOSVersion '{0}'", value);
+					Log.LogError (null, null, null, AppManifest.ItemSpec, 0, 0, 0, 0, MSBStrings.E0011, value);
 					return false;
 				}
 			} else {
@@ -661,7 +662,7 @@ namespace Xamarin.iOS.Tasks
 				case PlatformFramework.iOS:
 					IPhoneSdkVersion sdkVersion;
 					if (!IPhoneSdkVersion.TryParse (SdkVersion, out sdkVersion)) {
-						Log.LogError (null, null, null, AppManifest.ItemSpec, 0, 0, 0, 0, "Could not parse SdkVersion '{0}'", SdkVersion);
+						Log.LogError (null, null, null, AppManifest.ItemSpec, 0, 0, 0, 0, MSBStrings.E0056, SdkVersion);
 						return false;
 					}
 

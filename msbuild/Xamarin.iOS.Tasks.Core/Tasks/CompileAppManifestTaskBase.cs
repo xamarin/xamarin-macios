@@ -8,6 +8,7 @@ using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev.Tasks;
 using Xamarin.MacDev;
+using MSBLocalization;
 
 namespace Xamarin.iOS.Tasks
 {
@@ -60,7 +61,7 @@ namespace Xamarin.iOS.Tasks
 			try {
 				plist = PDictionary.FromFile (AppManifest);
 			} catch (Exception ex) {
-				LogAppManifestError ("Error loading '{0}': {1}", AppManifest, ex.Message);
+				LogAppManifestError (MSBStrings.E0010, AppManifest, ex.Message);
 				return false;
 			}
 
@@ -69,7 +70,7 @@ namespace Xamarin.iOS.Tasks
 			if (string.IsNullOrEmpty (text)) {
 				minimumOSVersion = sdkVersion;
 			} else if (!IPhoneSdkVersion.TryParse (text, out minimumOSVersion)) {
-				LogAppManifestError ("Could not parse MinimumOSVersion value '{0}'", text);
+				LogAppManifestError (MSBStrings.E0011, text);
 				return false;
 			}
 
@@ -86,7 +87,7 @@ namespace Xamarin.iOS.Tasks
 			}
 
 			if (!string.IsNullOrEmpty (TargetArchitectures) && !Enum.TryParse (TargetArchitectures, out architectures)) {
-				LogAppManifestError ("Could not parse TargetArchitectures '{0}'", TargetArchitectures);
+				LogAppManifestError (MSBStrings.E0012, TargetArchitectures);
 				return false;
 			}
 
@@ -98,7 +99,7 @@ namespace Xamarin.iOS.Tasks
 			var currentSDK = IPhoneSdks.GetSdk (Framework);
 
 			if (!currentSDK.SdkIsInstalled (sdkVersion, SdkIsSimulator)) {
-				Log.LogError (null, null, null, null, 0, 0, 0, 0, "The {0} SDK for '{1}' is not installed.", Framework, sdkVersion);
+				Log.LogError (null, null, null, null, 0, 0, 0, 0, MSBStrings.E0013, Framework, sdkVersion);
 				return false;
 			}
 
@@ -132,12 +133,12 @@ namespace Xamarin.iOS.Tasks
 			if (IsIOS) {
 				var executable = plist.GetCFBundleExecutable ();
 				if (executable.EndsWith (".app", StringComparison.Ordinal))
-					LogAppManifestError ("The executable (CFBundleExecutable) name ({0}) cannot end with '.app', because iOS may fail to launch the app.", executable);
+					LogAppManifestError (MSBStrings.E0014, executable);
 			}
 
 			if (IsIOS) {
 				if (minimumOSVersion < IPhoneSdkVersion.V5_0 && plist.GetUIMainStoryboardFile (true) != null)
-					LogAppManifestError ("Applications using a storyboard as the Main Interface must have a deployment target greater than 5.0");
+					LogAppManifestError (MSBStrings.E0015);
 
 				if (!plist.ContainsKey (ManifestKeys.CFBundleName))
 					plist [ManifestKeys.CFBundleName] = plist.ContainsKey (ManifestKeys.CFBundleDisplayName) ? plist.GetString (ManifestKeys.CFBundleDisplayName).Clone () : new PString (AppBundleName);
@@ -202,7 +203,7 @@ namespace Xamarin.iOS.Tasks
 					if (dtXcodeBuild != null)
 						dtXcodeBuild = "9F1027a";
 				} else {
-					Log.LogWarning ("Can only fake the watchOS 4.3 SDK when building for watchOS.");
+					Log.LogWarning (MSBStrings.W0016);
 				}
 			}
 
@@ -399,9 +400,9 @@ namespace Xamarin.iOS.Tasks
 				plist.Add (ManifestKeys.NSAppTransportSecurity, ats = new PDictionary ());
 
 			if (ats.GetBoolean (ManifestKeys.NSAllowsArbitraryLoads)) {
-				Log.LogMessage (MessageImportance.Low, "All http loads are already allowed.");
+				Log.LogMessage (MessageImportance.Low, MSBStrings.M0017);
 			} else {
-				Log.LogMessage (MessageImportance.Low, "Allowed arbitrary HTTP loads to support debugging.");
+				Log.LogMessage (MessageImportance.Low, MSBStrings.M0018);
 				ats.SetBooleanOrRemove (ManifestKeys.NSAllowsArbitraryLoads, true);
 			}
 		}
@@ -419,18 +420,18 @@ namespace Xamarin.iOS.Tasks
 				if (supportsIPhone) {
 					orientation = plist.GetUISupportedInterfaceOrientations (false);
 					if (orientation == IPhoneOrientation.None) {
-						LogAppManifestWarning ("Supported iPhone orientations have not been set");
+						LogAppManifestWarning (MSBStrings.W0019);
 					} else if (!orientation.IsValidPair ()) {
-						LogAppManifestWarning ("Supported iPhone orientations are not matched pairs");
+						LogAppManifestWarning (MSBStrings.W0020);
 					}
 				}
 
 				if (supportsIPad) {
 					orientation = plist.GetUISupportedInterfaceOrientations (true);
 					if (orientation == IPhoneOrientation.None) {
-						LogAppManifestWarning ("Supported iPad orientations have not been set");
+						LogAppManifestWarning (MSBStrings.W0021);
 					} else if (!orientation.IsValidPair ()) {
-						LogAppManifestWarning ("Supported iPad orientations are not matched pairs");
+						LogAppManifestWarning (MSBStrings.W0022);
 					}
 				}
 			}
