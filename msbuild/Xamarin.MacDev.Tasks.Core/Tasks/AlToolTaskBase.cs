@@ -5,6 +5,8 @@ using Microsoft.Build.Utilities;
 using Microsoft.Build.Framework;
 using System.Text;
 
+using MSBLocalization;
+
 namespace Xamarin.MacDev.Tasks
 {
 	public abstract class ALToolTaskBase : ToolTask
@@ -120,7 +122,7 @@ namespace Xamarin.MacDev.Tasks
 					}
 				}
 			} catch (Exception ex) {
-				Log.LogWarning ($"Failed to parse altool output: {ex.Message}. \nOutput: {output}");
+				Log.LogWarning (MSBStrings.W0095, ex.Message, output);
 			}
 		}
 	}

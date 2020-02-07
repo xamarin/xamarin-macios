@@ -7,6 +7,7 @@ using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev;
 using Xamarin.Utils;
+using MSBLocalization;
 
 namespace Xamarin.MacDev.Tasks
 {
@@ -63,7 +64,7 @@ namespace Xamarin.MacDev.Tasks
 				case PlatformFramework.iOS:
 					return "ios";
 				default:
-					Log.LogError ($"Unknown target framework identifier: {TargetFrameworkIdentifier}.");
+					Log.LogError (MSBStrings.E0169, TargetFrameworkIdentifier);
 					return string.Empty;
 				}
 			}

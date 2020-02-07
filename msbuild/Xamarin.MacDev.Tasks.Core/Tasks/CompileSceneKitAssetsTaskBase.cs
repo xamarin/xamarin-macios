@@ -7,6 +7,7 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev;
+using MSBLocalization;
 
 namespace Xamarin.MacDev.Tasks
 {
@@ -136,7 +137,7 @@ namespace Xamarin.MacDev.Tasks
 
 			try {
 				using (var process = new Process ()) {
-					Log.LogMessage (MessageImportance.Normal, "Tool {0} execution started with arguments: {1}", startInfo.FileName, startInfo.Arguments);
+					Log.LogMessage (MessageImportance.Normal, MSBStrings.M0001, startInfo.FileName, startInfo.Arguments);
 
 					process.StartInfo = startInfo;
 					process.OutputDataReceived += (sender, e) => {
@@ -150,12 +151,12 @@ namespace Xamarin.MacDev.Tasks
 					process.BeginOutputReadLine ();
 					process.WaitForExit ();
 
-					Log.LogMessage (MessageImportance.Low, "Tool {0} execution finished.", startInfo.FileName);
+					Log.LogMessage (MessageImportance.Low, MSBStrings.M0116, startInfo.FileName);
 
 					return process.ExitCode;
 				}
 			} catch (Exception ex) {
-				Log.LogError ("Error executing tool '{0}': {1}", startInfo.FileName, ex.Message);
+				Log.LogError (MSBStrings.E0003, startInfo.FileName, ex.Message);
 				return -1;
 			}
 		}
