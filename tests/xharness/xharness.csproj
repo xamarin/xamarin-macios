@@ -128,6 +128,7 @@
     <Compile Include="..\..\tools\bcl-test-importer\BCLTestImporter\BCLTestInfoPlistGenerator.cs">
       <Link>BCLTestImporter\BCLTestInfoPlistGenerator.cs</Link>
     </Compile>
+    <Compile Include="XmlResultParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="BCLTestImporter\" />
