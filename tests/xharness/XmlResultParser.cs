@@ -290,6 +290,7 @@ namespace xharness {
 			switch (xmlType) {
 			case Jargon.TouchUnit:
 			case Jargon.NUnitV2:
+			case Jargon.NUnitV3:
 				return path.Replace (fileName, $"nunit-{fileName}");
 			case Jargon.xUnit:
 				return path.Replace (fileName, $"xunit-{fileName}");
