@@ -2216,26 +2216,32 @@ namespace xharness
 									} else if (log.Description == "NUnit results" || log.Description == "XML log") {
 										try {
 											if (File.Exists (log.FullPath) && new FileInfo (log.FullPath).Length > 0) {
-												var doc = new System.Xml.XmlDocument ();
-												doc.LoadWithoutNetworkAccess (log.FullPath);
-												var failures = doc.SelectNodes ("//test-case[@result='Error' or @result='Failure']").Cast<System.Xml.XmlNode> ().ToArray ();
-												if (failures.Length > 0) {
-													writer.WriteLine ("<div style='padding-left: 15px;'>");
-													writer.WriteLine ("<ul>");
-													foreach (var failure in failures) {
-														writer.WriteLine ("<li>");
-														var test_name = failure.Attributes ["name"]?.Value;
-														var message = failure.SelectSingleNode ("failure/message")?.InnerText;
-														writer.Write (HtmlFormat (test_name));
-														if (!string.IsNullOrEmpty (message)) {
-															writer.Write (": ");
-															writer.Write (HtmlFormat (message));
+												if (XmlResultParser.IsValidXml (log.FullPath, out var jargon)) {
+													if (jargon == XmlResultParser.Jargon.NUnit) {
+														var doc = new XmlDocument ();
+														doc.LoadWithoutNetworkAccess (log.FullPath);
+														var failures = doc.SelectNodes ("//test-case[@result='Error' or @result='Failure']").Cast<System.Xml.XmlNode> ().ToArray ();
+														if (failures.Length > 0) {
+															writer.WriteLine ("<div style='padding-left: 15px;'>");
+															writer.WriteLine ("<ul>");
+															foreach (var failure in failures) {
+																writer.WriteLine ("<li>");
+																var test_name = failure.Attributes ["name"]?.Value;
+																var message = failure.SelectSingleNode ("failure/message")?.InnerText;
+																writer.Write (HtmlFormat (test_name));
+																if (!string.IsNullOrEmpty (message)) {
+																	writer.Write (": ");
+																	writer.Write (HtmlFormat (message));
+																}
+																writer.WriteLine ("<br />");
+																writer.WriteLine ("</li>");
+															}
+															writer.WriteLine ("</ul>");
+															writer.WriteLine ("</div>");
 														}
-														writer.WriteLine ("<br />");
-														writer.WriteLine ("</li>");
+													} else {
+														writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {log.Description}: Not supported format.</span><br />");
 													}
-													writer.WriteLine ("</ul>");
-													writer.WriteLine ("</div>");
 												}
 											}
 										} catch (Exception ex) {
