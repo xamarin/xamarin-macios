@@ -15,6 +15,7 @@ using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev.Tasks;
 using Xamarin.MacDev;
+using MSBLocalization;
 
 namespace Xamarin.Mac.Tasks
 {
@@ -155,7 +156,7 @@ namespace Xamarin.Mac.Tasks
 					args.AddLine (string.Format("/minos={0}", minimumDeploymentTarget));
 				}
 				catch (Exception ex) {
-					Log.LogWarning (null, null, null, AppManifest.ItemSpec, 0, 0, 0, 0, "Error loading '{0}': {1}", AppManifest.ItemSpec, ex.Message);
+					Log.LogWarning (null, null, null, AppManifest.ItemSpec, 0, 0, 0, 0, MSBStrings.E0010, AppManifest.ItemSpec, ex.Message);
 				}
 			}
 
@@ -232,7 +233,7 @@ namespace Xamarin.Mac.Tasks
 						writer.Write (args);
 				}
 			} catch (Exception ex) {
-				Log.LogWarning ("Failed to create response file '{0}': {1}", responseFile, ex);
+				Log.LogWarning (MSBStrings.W0054, responseFile, ex);
 			}
 
 			// Some arguments can not safely go in the response file and are 
@@ -309,7 +310,7 @@ namespace Xamarin.Mac.Tasks
 
 				NativeLibraries = nativeLibraryItems.ToArray ();
 			} catch (Exception ex) {
-				Log.LogError (null, null, null, AppBundleDir, 0, 0, 0, 0, "Could not get native libraries: {0}", ex.Message);
+				Log.LogError (null, null, null, AppBundleDir, 0, 0, 0, 0, MSBStrings.E0088, ex.Message);
 				return false;
 			}
 
