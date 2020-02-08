@@ -344,29 +344,31 @@ namespace xharness {
 		}
 
 		// get the file, parse it and add the attachments to the first node found
-		public static void UpdateMissingData (string source, string destination, string applicationName, params (string path, string description) [] attachments)
+		public static void UpdateMissingData (string source, string destination, string applicationName, params string [] attachments)
 		{
 			// we could do this with a XmlReader and a Writer, but might be to complicated to get right, we pay with performance what we
 			// cannot pay with brain cells.
 			var doc = XDocument.Load (source);
 			var attachmentsElement = new XElement ("attachments");
-			foreach (var (path, description) in attachments) {
+			foreach (var path in attachments) {
+				// we do not add a description, VSTS ignores that :/
 				attachmentsElement.Add (new XElement ("attachment",
-					new XElement ("filePath", path),
-					new XElement ("description", new XCData(description))));
+					new XElement ("filePath", path)));
 			}
-
-			// add the first test-suit and add the attachments
-			var rooTestSuite = doc.Descendants ().Where (e => e.Name == "test-suite").FirstOrDefault ();
-			rooTestSuite?.Add (attachmentsElement);
 
 			// get the test suites and make them all use the same app name for better parsing in VSTS
 			var testSuitsElements = doc.Descendants ().Where (e => e.Name == "test-suite" && e.Attribute ("type")?.Value == "Assembly");
 			if (!testSuitsElements.Any ())
 				return;
 
+			// add also the attachments to all the tests, bad for VSTS, nicer for the monitoring person
 			foreach (var suite in testSuitsElements) {
 				suite.SetAttributeValue ("name", applicationName);
+				suite.SetAttributeValue ("fullname", applicationName); // docs say just name, but I've seen the fullname instead, docs usually lie
+				var tests = suite.Descendants ().Where (e => e.Name == "test-case");
+				foreach (var t in tests) {
+					t.Add (attachmentsElement);
+				}
 			}
 
 			doc.Save (destination);

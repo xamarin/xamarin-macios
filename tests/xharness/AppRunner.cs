@@ -364,9 +364,8 @@ namespace xharness
 					// the right one (NUnitV3) add the nodes. ATM only TouchUnit uses V3.
 					var testRunName = $"{appName} ({configuration})";
 					if (xmlType == XmlResultParser.Jargon.NUnitV3) {
-						(string path, string descrition) [] logs = Logs.Select (e => (e.FullPath, e.Description)).ToArray ();
 						// add the attachments and write in the new filename
-						XmlResultParser.UpdateMissingData (path, newFilename, testRunName, logs);
+						XmlResultParser.UpdateMissingData (path, newFilename, testRunName, Directory.GetFiles(Logs.Directory));
 					} else {
 						// rename the path to the correct value
 						File.Move (path, newFilename);
