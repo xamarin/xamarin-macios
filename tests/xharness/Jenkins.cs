@@ -2100,7 +2100,7 @@ namespace xharness
 								writer.WriteLine ($"Known failure: {test.KnownFailure} <br />");
 
 							if (!string.IsNullOrEmpty (test.FailureMessage)) {
-								var msg = test.FailureMessage.AsHtmlFormat ();
+								var msg = test.FailureMessage.AsHtml ();
 								var prefix = test.Ignored ? "Ignored" : "Failure";
 								if (test.FailureMessage.Contains ('\n')) {
 									writer.WriteLine ($"{prefix}:<br /> <div style='margin-left: 20px;'>{msg}</div>");
@@ -2110,7 +2110,7 @@ namespace xharness
 							}
 							var progressMessage = test.ProgressMessage;
 							if (!string.IsNullOrEmpty (progressMessage))
-								writer.WriteLine (progressMessage.AsHtmlFormat () + " <br />");
+								writer.WriteLine (progressMessage.AsHtml () + " <br />");
 
 							if (runTest != null) {
 								if (runTest.BuildTask.Duration.Ticks > 0) {
@@ -2203,13 +2203,13 @@ namespace xharness
 											if (fails.Count > 0) {
 												writer.WriteLine ("<div style='padding-left: 15px;'>");
 												foreach (var fail in fails)
-													writer.WriteLine ("{0} <br />", fail.AsHtmlFormat ());
+													writer.WriteLine ("{0} <br />", fail.AsHtml ());
 												writer.WriteLine ("</div>");
 											}
 											if (!string.IsNullOrEmpty (summary))
 												writer.WriteLine ("<span style='padding-left: 15px;'>{0}</span><br />", summary);
 										} catch (Exception ex) {
-											writer.WriteLine ("<span style='padding-left: 15px;'>Could not parse log file: {0}</span><br />", ex.Message.AsHtmlFormat ());
+											writer.WriteLine ("<span style='padding-left: 15px;'>Could not parse log file: {0}</span><br />", ex.Message.AsHtml ());
 										}
 									} else if (log.Description == "Build log") {
 										HashSet<string> errors;
@@ -2241,11 +2241,11 @@ namespace xharness
 											if (errors.Count > 0) {
 												writer.WriteLine ("<div style='padding-left: 15px;'>");
 												foreach (var error in errors)
-													writer.WriteLine ("{0} <br />",  error.AsHtmlFormat ());
+													writer.WriteLine ("{0} <br />",  error.AsHtml ());
 												writer.WriteLine ("</div>");
 											}
 										} catch (Exception ex) {
-											writer.WriteLine ("<span style='padding-left: 15px;'>Could not parse log file: {0}</span><br />", ex.Message.AsHtmlFormat ());
+											writer.WriteLine ("<span style='padding-left: 15px;'>Could not parse log file: {0}</span><br />", ex.Message.AsHtml ());
 										}
 									} else if (log.Description == "NUnit results" || log.Description == "XML log") {
 										try {
@@ -2255,7 +2255,7 @@ namespace xharness
 												}
 											}
 										} catch (Exception ex) {
-											writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {log.Description}: {ex.Message.AsHtmlFormat ()}</span><br />");
+											writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {log.Description}: {ex.Message.AsHtml ()}</span><br />");
 										}
 									}
 								}
@@ -2297,7 +2297,7 @@ namespace xharness
 					if (runningTests.Any ()) {
 						writer.WriteLine ($"<h3>{runningTests.Count ()} running tests:</h3>");
 						foreach (var test in runningTests) {
-							writer.WriteLine ($"<a href='#test_{test.TestName}'>{test.TestName} ({test.Mode})</a> {test.Duration.ToString ()} {"\n\t" + test.ProgressMessage.AsHtmlFormat ()}<br />");
+							writer.WriteLine ($"<a href='#test_{test.TestName}'>{test.TestName} ({test.Mode})</a> {test.Duration.ToString ()} {("\n\t" + test.ProgressMessage).AsHtml ()}<br />");
 						}
 					}
 

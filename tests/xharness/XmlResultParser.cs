@@ -282,13 +282,13 @@ namespace xharness {
 						case "Failure":
 							writer.WriteLine ("<li>");
 							var test_name = reader ["name"];
-							writer.Write (test_name.AsHtmlFormat ());
+							writer.Write (test_name.AsHtml ());
 							// read to the message of the error and get it
 							reader.ReadToDescendant ("message");
 							var message = reader.ReadElementContentAsString ();
 							if (!string.IsNullOrEmpty (message)) {
 								writer.Write (": ");
-								writer.Write (message.AsHtmlFormat ());
+								writer.Write (message.AsHtml ());
 							}
 							writer.WriteLine ("<br />");
 							writer.WriteLine ("</li>");
@@ -328,10 +328,10 @@ namespace xharness {
 				writer.WriteLine ("<ul>");
 				foreach (var (name, message) in failedTests) {
 					writer.WriteLine ("<li>");
-					writer.Write (name.AsHtmlFormat ());
+					writer.Write (name.AsHtml ());
 					if (!string.IsNullOrEmpty (message)) {
 						writer.Write (": ");
-						writer.Write (message.AsHtmlFormat ());
+						writer.Write (message.AsHtml ());
 					}
 				}
 				writer.WriteLine ("<br />");
