@@ -37,7 +37,7 @@ namespace Xamarin.MacDev.Tasks {
 			}
 
 			string bindingResourcePath = Path.Combine (ProjectDir, OutputPath, Path.ChangeExtension (Path.GetFileName (BindingAssembly), ".resources"));
-			Log.LogMessage (String.Format (MSBStrings.M0121, bindingResourcePath));
+			Log.LogMessage (MSBStrings.M0121, bindingResourcePath);
 
 			Directory.CreateDirectory (bindingResourcePath);
 			foreach (var nativeRef in NativeReferences)
