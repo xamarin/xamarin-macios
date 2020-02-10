@@ -5,9 +5,6 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-  <PropertyGroup>
-    <UpdateXlfOnBuild>true</UpdateXlfOnBuild>
-  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="System.Text.Json" Version="4.7.0" />
     <!-- Compile against Microsoft.Build* NuGet refs, but do not copy to OutputDir. -->
