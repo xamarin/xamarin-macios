@@ -188,8 +188,8 @@ struct Managed_NSObject {
 static void
 xamarin_add_internal_call (const char *name, const void *method)
 {
-	/* COOP: With cooperative GC, icalls will run, like manageed methods,
-	 * in GC Unsafe mode, avoiding a thread state trandition.  In return
+	/* COOP: With cooperative GC, icalls will run, like managed methods,
+	 * in GC Unsafe mode, avoiding a thread state transition.  In return
 	 * the icalls must guarantee that they won't block, or run indefinitely
 	 * without a safepoint, by manually performing a transition to GC Safe
 	 * mode.  With backward-compatible hybrid GC, icalls run in GC Safe
