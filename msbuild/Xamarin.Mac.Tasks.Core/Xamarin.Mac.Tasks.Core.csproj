@@ -18,21 +18,26 @@
     <ProjectReference Include="..\Xamarin.MacDev.Tasks\Xamarin.MacDev.Tasks.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Xamarin.iOS.Tasks.Core\MSBStrings.Designer.cs">
-      <Link>MSBStrings.Designer.cs</Link>
-      <DependentUpon>MSBStrings.resx</DependentUpon>
-    </Compile>
+    <!-- <Compile Include="..\Xamarin.iOS.Tasks.Core\MSBStrings.Designer.cs"> -->
+    <!--   <Link>MSBStrings.Designer.cs</Link> -->
+    <!--   <DependentUpon>MSBStrings.resx</DependentUpon> -->
+    <!-- </Compile> -->
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="..\Xamarin.iOS.Tasks.Core\MSBStrings.resx">
-      <Link>MSBStrings.resx</Link>
-      <XlfSourceFormat>Resx</XlfSourceFormat>
-      <XlfOutputItem>EmbeddedResource</XlfOutputItem>
-      <Generator>ResXFileCodeGenerator</Generator>
-      <CustomToolNamespace>MSBLocalization</CustomToolNamespace>
-      <LastGenOutput>MSBStrings.Designer.cs</LastGenOutput>
-      <LogicalName>MSBLocalization.MSBStrings</LogicalName>
-    </EmbeddedResource>
+    <!-- <EmbeddedResource Include="..\Xamarin.iOS.Tasks.Core\MSBStrings.resx"> -->
+    <!--   <Link>MSBStrings.resx</Link> -->
+    <!--   <XlfSourceFormat>Resx</XlfSourceFormat> -->
+    <!--   <XlfOutputItem>EmbeddedResource</XlfOutputItem> -->
+    <!--   <Generator>ResXFileCodeGenerator</Generator> -->
+    <!--   <CustomToolNamespace>MSBLocalization</CustomToolNamespace> -->
+    <!--   <LastGenOutput>MSBStrings.Designer.cs</LastGenOutput> -->
+    <!--   <LogicalName>MSBLocalization.MSBStrings</LogicalName> -->
+    <!-- </EmbeddedResource> -->
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Include="..\Xamarin.iOS.Tasks.Core\MSBStrings.Designer.cs">
+      <Link>MSBStrings.Designer.cs</Link>
+    </Compile>
+  </ItemGroup>
 </Project>

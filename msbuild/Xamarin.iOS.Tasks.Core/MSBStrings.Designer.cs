@@ -1498,11 +1498,5 @@ namespace MSBLocalization {
                 return ResourceManager.GetString("E7068", resourceCulture);
             }
         }
-        
-        internal static string test2 {
-            get {
-                return ResourceManager.GetString("test2", resourceCulture);
-            }
-        }
     }
 }
