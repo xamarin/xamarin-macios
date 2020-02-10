@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 
@@ -253,6 +254,108 @@ namespace xharness {
 				}
 			}
 			return parseData;
+		}
+
+		static void GenerateNUnitTestReport (StreamWriter writer, XmlReader reader)
+		{
+			while (reader.Read ()) {
+
+				if (reader.NodeType == XmlNodeType.Element && reader.Name == "test-suite" && (reader ["type"] == "TestFixture" || reader ["type"] == "TestCollection")) {
+
+					long.TryParse (reader ["errors"], out var errors);
+					long.TryParse (reader ["failed"], out var failed);
+					if (errors == 0 && failed == 0) {
+						// if we do not have any errors, return, nothing to be written here
+						return;
+					}
+					writer.WriteLine ("<div style='padding-left: 15px;'>");
+					writer.WriteLine ("<ul>");
+
+					reader.ReadToDescendant ("test-case");
+					do {
+						if (reader.Name != "test-case")
+							break;
+						// read the test cases in the current node
+						var status = reader ["result"];
+						switch (status) { // only interested in errors
+						case "Error":
+						case "Failure":
+							writer.WriteLine ("<li>");
+							var test_name = reader ["name"];
+							writer.Write (test_name.AsHtmlFormat ());
+							// read to the message of the error and get it
+							reader.ReadToDescendant ("message");
+							var message = reader.ReadElementContentAsString ();
+							if (!string.IsNullOrEmpty (message)) {
+								writer.Write (": ");
+								writer.Write (message.AsHtmlFormat ());
+							}
+							writer.WriteLine ("<br />");
+							writer.WriteLine ("</li>");
+							break;
+						}
+					} while (reader.ReadToNextSibling ("test-case"));
+				}
+			}
+		}
+
+		static void GeneratexUnitTestReport (StreamWriter writer, XmlReader reader)
+		{
+			var failedTests = new List<(string name, string message)> ();
+			// xUnit is not as nice and does not provide the final result in a top node,
+			// we need to look in all the collections and find all the failed thests, this is really bad :/
+			while (reader.Read ()) {
+				if (reader.NodeType == XmlNodeType.Element && reader.Name == "collection") {
+					reader.ReadToDescendant ("test");
+					do {
+						if (reader.Name != "test")
+							break;
+						// read the test cases in the current node
+						var status = reader ["result"];
+						switch (status) {
+						case "Fail":
+							var name =  reader ["name"];
+							reader.ReadToDescendant ("message");
+							var message = reader.ReadElementContentAsString ();
+							failedTests.Add ((name, message));
+							break;
+						}
+					} while (reader.ReadToNextSibling ("test"));
+				}
+			}
+			if (failedTests.Count > 0) {
+				writer.WriteLine ("<div style='padding-left: 15px;'>");
+				writer.WriteLine ("<ul>");
+				foreach (var (name, message) in failedTests) {
+					writer.WriteLine ("<li>");
+					writer.Write (name.AsHtmlFormat ());
+					if (!string.IsNullOrEmpty (message)) {
+						writer.Write (": ");
+						writer.Write (message.AsHtmlFormat ());
+					}
+				}
+				writer.WriteLine ("<br />");
+				writer.WriteLine ("</li>");
+			}
+		}
+
+		public static void GenerateTestReport (StreamWriter writer, string resultsPath, Jargon xmlType)
+		{
+			using (var stream = new StreamReader (resultsPath))
+			using (var reader = XmlReader.Create (stream)) {
+				switch (xmlType) {
+				case Jargon.NUnit:
+				case Jargon.TouchUnit:
+					GenerateNUnitTestReport (writer, reader);
+					break;
+				case Jargon.xUnit:
+					GeneratexUnitTestReport (writer, reader);
+					break;
+				default:
+					writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {resultsPath}: Not supported format.</span><br />");
+					break;
+				}
+			}
 		}
 	}
 }
