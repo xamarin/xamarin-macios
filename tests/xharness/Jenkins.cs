@@ -2061,7 +2061,7 @@ namespace xharness
 								writer.WriteLine ($"Known failure: {test.KnownFailure} <br />");
 
 							if (!string.IsNullOrEmpty (test.FailureMessage)) {
-								var msg = HtmlFormat (test.FailureMessage);
+								var msg = test.FailureMessage.AsHtmlFormat ();
 								var prefix = test.Ignored ? "Ignored" : "Failure";
 								if (test.FailureMessage.Contains ('\n')) {
 									writer.WriteLine ($"{prefix}:<br /> <div style='margin-left: 20px;'>{msg}</div>");
@@ -2071,7 +2071,7 @@ namespace xharness
 							}
 							var progressMessage = test.ProgressMessage;
 							if (!string.IsNullOrEmpty (progressMessage))
-								writer.WriteLine (HtmlFormat (progressMessage) + " <br />");
+								writer.WriteLine (progressMessage.AsHtmlFormat () + " <br />");
 
 							if (runTest != null) {
 								if (runTest.BuildTask.Duration.Ticks > 0) {
@@ -2164,13 +2164,13 @@ namespace xharness
 											if (fails.Count > 0) {
 												writer.WriteLine ("<div style='padding-left: 15px;'>");
 												foreach (var fail in fails)
-													writer.WriteLine ("{0} <br />", HtmlFormat (fail));
+													writer.WriteLine ("{0} <br />", fail.AsHtmlFormat ());
 												writer.WriteLine ("</div>");
 											}
 											if (!string.IsNullOrEmpty (summary))
 												writer.WriteLine ("<span style='padding-left: 15px;'>{0}</span><br />", summary);
 										} catch (Exception ex) {
-											writer.WriteLine ("<span style='padding-left: 15px;'>Could not parse log file: {0}</span><br />", HtmlFormat (ex.Message));
+											writer.WriteLine ("<span style='padding-left: 15px;'>Could not parse log file: {0}</span><br />", ex.Message.AsHtmlFormat ());
 										}
 									} else if (log.Description == "Build log") {
 										HashSet<string> errors;
@@ -2202,45 +2202,21 @@ namespace xharness
 											if (errors.Count > 0) {
 												writer.WriteLine ("<div style='padding-left: 15px;'>");
 												foreach (var error in errors)
-													writer.WriteLine ("{0} <br />", HtmlFormat (error));
+													writer.WriteLine ("{0} <br />",  error.AsHtmlFormat ());
 												writer.WriteLine ("</div>");
 											}
 										} catch (Exception ex) {
-											writer.WriteLine ("<span style='padding-left: 15px;'>Could not parse log file: {0}</span><br />", HtmlFormat (ex.Message));
+											writer.WriteLine ("<span style='padding-left: 15px;'>Could not parse log file: {0}</span><br />", ex.Message.AsHtmlFormat ());
 										}
 									} else if (log.Description == "NUnit results" || log.Description == "XML log") {
 										try {
 											if (File.Exists (log.FullPath) && new FileInfo (log.FullPath).Length > 0) {
 												if (XmlResultParser.IsValidXml (log.FullPath, out var jargon)) {
-													if (jargon == XmlResultParser.Jargon.NUnit) {
-														var doc = new XmlDocument ();
-														doc.LoadWithoutNetworkAccess (log.FullPath);
-														var failures = doc.SelectNodes ("//test-case[@result='Error' or @result='Failure']").Cast<System.Xml.XmlNode> ().ToArray ();
-														if (failures.Length > 0) {
-															writer.WriteLine ("<div style='padding-left: 15px;'>");
-															writer.WriteLine ("<ul>");
-															foreach (var failure in failures) {
-																writer.WriteLine ("<li>");
-																var test_name = failure.Attributes ["name"]?.Value;
-																var message = failure.SelectSingleNode ("failure/message")?.InnerText;
-																writer.Write (HtmlFormat (test_name));
-																if (!string.IsNullOrEmpty (message)) {
-																	writer.Write (": ");
-																	writer.Write (HtmlFormat (message));
-																}
-																writer.WriteLine ("<br />");
-																writer.WriteLine ("</li>");
-															}
-															writer.WriteLine ("</ul>");
-															writer.WriteLine ("</div>");
-														}
-													} else {
-														writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {log.Description}: Not supported format.</span><br />");
-													}
+													XmlResultParser.GenerateTestReport (writer, log.FullPath, jargon);
 												}
 											}
 										} catch (Exception ex) {
-											writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {log.Description}: {HtmlFormat (ex.Message)}</span><br />");
+											writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {log.Description}: {ex.Message.AsHtmlFormat ()}</span><br />");
 										}
 									}
 								}
@@ -2282,7 +2258,7 @@ namespace xharness
 					if (runningTests.Any ()) {
 						writer.WriteLine ($"<h3>{runningTests.Count ()} running tests:</h3>");
 						foreach (var test in runningTests) {
-							writer.WriteLine ($"<a href='#test_{test.TestName}'>{test.TestName} ({test.Mode})</a> {test.Duration.ToString ()} {HtmlFormat ("\n\t" + test.ProgressMessage)}<br />");
+							writer.WriteLine ($"<a href='#test_{test.TestName}'>{test.TestName} ({test.Mode})</a> {test.Duration.ToString ()} {"\n\t" + test.ProgressMessage.AsHtmlFormat ()}<br />");
 						}
 					}
 
@@ -2315,12 +2291,6 @@ namespace xharness
 			}
 		}
 		Dictionary<Log, Tuple<long, object>> log_data = new Dictionary<Log, Tuple<long, object>> ();
-
-		static string HtmlFormat (string value)
-		{
-			var rv = System.Web.HttpUtility.HtmlEncode (value);
-			return rv.Replace ("\t", "&nbsp;&nbsp;&nbsp;&nbsp;").Replace ("\n", "<br/>\n");
-		}
 
 		static string LinkEncode (string path)
 		{
