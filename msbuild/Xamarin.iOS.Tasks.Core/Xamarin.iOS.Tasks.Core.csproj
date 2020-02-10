@@ -46,7 +46,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <CustomToolNamespace>MSBLocalization</CustomToolNamespace>
       <LastGenOutput>MSBStrings.Designer.cs</LastGenOutput>
-      <LogicalName>MSBLocalization.MSBStrings</LogicalName>
+      <LogicalName>MSBLocalization.MSBStrings.resources</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
