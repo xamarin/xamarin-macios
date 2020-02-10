@@ -46,7 +46,6 @@ echo 'cat (//xar/toc/signature/x:KeyInfo/x:X509Data/x:X509Certificate)[1]/text()
 
 echo Signature Verification
 for pkg in package/*.pkg; do
-	/usr/sbin/spctl -vvv --assess --type install "$pkg"
 	pkgutil --check-signature "$pkg"
 	xar -f "$pkg" --dump-toc="$pkg.toc"
 	(
