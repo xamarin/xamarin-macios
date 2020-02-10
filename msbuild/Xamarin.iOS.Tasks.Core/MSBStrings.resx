@@ -1708,11 +1708,4 @@
         <comment>
         </comment>
     </data>
-	
-	<data name="error" xml:space="preserve">
-        <value>Can't create a binding resource package unless there are native references in the binding project.
-        </value>
-        <comment>
-        </comment>
-    </data>
 </root>

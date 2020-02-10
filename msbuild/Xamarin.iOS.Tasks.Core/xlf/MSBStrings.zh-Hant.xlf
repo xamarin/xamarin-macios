@@ -1940,14 +1940,6 @@
         <note>
         </note>
       </trans-unit>
-      <trans-unit id="error">
-        <source>Can't create a binding resource package unless there are native references in the binding project.
-        </source>
-        <target state="new">Can't create a binding resource package unless there are native references in the binding project.
-        </target>
-        <note>
-        </note>
-      </trans-unit>
     </body>
   </file>
 </xliff>
