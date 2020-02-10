@@ -501,11 +501,7 @@ timestamps {
                             if (bundleZip.length > 0)
                                 bundleZipFilename = bundleZip [0].name
 
-                            if (isPr) {
-                              withCredentials ([string (credentialsId: 'codesign_keychain_pw', variable: 'PRODUCTSIGN_KEYCHAIN_PASSWORD')]) {
-                                sh ("${workspace}/xamarin-macios/jenkins/productsign.sh")
-                              }
-                            } else {
+                            if (!isPr) {
                                 try {
                                     pkgs = xiPackages + xmPackages
                                     if (fileExists('release-scripts')) {
