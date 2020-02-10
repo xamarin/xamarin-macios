@@ -45,6 +45,7 @@ downloads/%: downloads/%.7z
 	$(Q) echo "Unzipping $*..."
 	$(Q) rm -Rf $@.tmp
 	$(Q) 7z x $< -o$@.tmp
+	$(Q) find $@.tmp -exec touch {} +
 	$(Q) mv $@.tmp $@
 	$(Q) echo "Unzipped $*."
 
