@@ -12,17 +12,15 @@ namespace Cecil.Tests {
 	[TestFixture]
 	public class Test {
 
-		[TestCase ("/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/32bits/Xamarin.iOS.dll")]
-		[TestCase ("/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/32bits/Xamarin.WatchOS.dll")]
-		[TestCase ("/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/64bits/Xamarin.iOS.dll")]
-		[TestCase ("/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/64bits/Xamarin.TVOS.dll")]
-		[TestCase ("/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/x86_64/mobile/Xamarin.Mac.dll")]
+		[TestCaseSource (typeof(Helper), "PlatformAssemblies")]
 		// ref: https://github.com/xamarin/xamarin-macios/pull/7760
-		public void IdentifyBackingFieldAssignation (string assemblyName)
+		public void IdentifyBackingFieldAssignation (string assemblyPath)
 		{
-			var assembly = Helper.GetAssembly (assemblyName);
+			var assembly = Helper.GetAssembly (assemblyPath);
+			if (assembly == null)
+				Assert.Ignore ("{assemblyPath} could not be found (might be disabled in build)");
 			// look inside all .cctor (static constructor) insde `assemblyName`
-			foreach (var m in Helper.FilterMethods (assembly, (m) => m.IsStatic && m.IsConstructor)) {
+			foreach (var m in Helper.FilterMethods (assembly!, (m) => m.IsStatic && m.IsConstructor)) {
 				foreach (var ins in m.Body.Instructions) {
 					if (ins.OpCode != OpCodes.Stsfld)
 						continue;

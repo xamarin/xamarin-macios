@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 
 using NUnit.Framework;
 
 using Mono.Cecil;
+
+using Xamarin.Tests;
 
 #nullable enable
 
@@ -14,11 +18,13 @@ namespace Cecil.Tests {
 		static Dictionary<string, AssemblyDefinition> cache = new Dictionary<string, AssemblyDefinition> ();
 
 		// make sure we load assemblies only once into memory
-		public static AssemblyDefinition GetAssembly (string assemblyName)
+		public static AssemblyDefinition? GetAssembly (string assembly)
 		{
-			if (!cache.TryGetValue (assemblyName, out var ad)) {
-				ad = AssemblyDefinition.ReadAssembly (assemblyName);
-				cache.Add (assemblyName, ad);
+			if (!File.Exists (assembly))
+				return null;
+			if (!cache.TryGetValue (assembly, out var ad)) {
+				ad = AssemblyDefinition.ReadAssembly (assembly);
+				cache.Add (assembly, ad);
 			}
 			return ad;
 		}
@@ -49,6 +55,19 @@ namespace Cecil.Tests {
 				}
 			}
 			yield break;
+		}
+
+		public static IEnumerable PlatformAssemblies {
+			get {
+				// we want to process 32/64 bits individually since their content can differ
+				yield return new TestCaseData (Path.Combine (Configuration.MonoTouchRootDirectory, "lib", "32bits", "Xamarin.iOS.dll"));
+				yield return new TestCaseData (Path.Combine (Configuration.MonoTouchRootDirectory, "lib", "64bits", "Xamarin.iOS.dll"));
+
+				yield return new TestCaseData (Configuration.XamarinWatchOSDll);
+				yield return new TestCaseData (Configuration.XamarinTVOSDll);
+				yield return new TestCaseData (Configuration.XamarinMacMobileDll);
+				yield return new TestCaseData (Configuration.XamarinMacFullDll);
+			}
 		}
 	}
 }
