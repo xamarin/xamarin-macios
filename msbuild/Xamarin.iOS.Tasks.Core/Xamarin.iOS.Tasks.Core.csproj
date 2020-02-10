@@ -20,6 +20,12 @@
     <ProjectReference Include="..\Xamarin.MacDev.Tasks.Core\Xamarin.MacDev.Tasks.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Xamarin.iOS.Tasks.Core\Xamarin.WatchOS.AppExtension.FSharp.targets" />
+    <None Remove="Xamarin.iOS.Tasks.Core\Xamarin.TVOS.AppExtension.Common.props" />
+    <None Remove="Xamarin.iOS.Tasks.Core\Xamarin.WatchOS.AppExtension.Common.targets" />
+    <None Remove="Xamarin.iOS.Tasks.Core\Xamarin.WatchOS.ObjCBinding.CSharp.targets" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="NoCode.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
