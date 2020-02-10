@@ -1,5 +1,5 @@
 ﻿using System;
-using System.IO;
+using System.Linq;
 using NUnit.Framework;
 
 namespace Xamarin.iOS.Tasks
@@ -16,6 +16,14 @@ namespace Xamarin.iOS.Tasks
 		public void BasicTest ()
 		{
 			this.BuildProject ("My Spaced App", Platform, "Debug", clean: false);
+
+			// Message of the form:
+			// Property reassignment: $(AssemblySearchPaths)="..." (previous value: "...") at Xamarin.iOS.Common.props (106,3)
+			var assemblySearchPaths = Engine.Logger.MessageEvents.FirstOrDefault (m => m.Message.Contains ("Property reassignment: $(AssemblySearchPaths)=\""));
+			Assert.IsNotNull (assemblySearchPaths, "$(AssemblySearchPaths) should be modified");
+			var split = assemblySearchPaths.Message.Split ('"');
+			Assert.GreaterOrEqual (split.Length, 1, "Unexpected string contents");
+			Assert.IsFalse (split [1].Contains ("{GAC}"), "$(AssemblySearchPaths) should not contain {GAC}");
 		}
 	}
 }
