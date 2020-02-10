@@ -27,7 +27,7 @@ namespace xharness
 		public bool IncludeiOSExtensions;
 		public bool ForceExtensionBuildOnly;
 		public bool IncludetvOS = true;
-		public bool IncludewatchOS = true;
+		public bool IncludewatchOS = false;
 		public bool IncludeMmpTest;
 		public bool IncludeiOSMSBuild = true;
 		public bool IncludeMtouch;
