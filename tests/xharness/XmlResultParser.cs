@@ -63,14 +63,7 @@ namespace xharness {
 						long.TryParse (reader ["failed"], out failed);
 						long.TryParse (reader ["inconclusive"], out inconclusive);
 						long.TryParse (reader ["skipped"], out skipped);
-						switch (reader["result"]) {
-						case "Failed":
-							failedTestRun = true;
-							break;
-						default:
-							failedTestRun = false;
-							break;
-						}
+						failedTestRun = failed != 0;
 					}
 					if (reader.NodeType == XmlNodeType.Element && reader.Name == "test-suite" && (reader ["type"] == "TestFixture" || reader ["type"] == "ParameterizedFixture")) {
 						var testCaseName = reader ["fullname"];
