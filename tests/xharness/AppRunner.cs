@@ -366,7 +366,7 @@ namespace xharness
 					var testRunName = $"{appName} {Variation}";
 					if (xmlType == XmlResultParser.Jargon.NUnitV3) {
 						// add the attachments and write in the new filename
-						XmlResultParser.UpdateMissingData (path, newFilename, testRunName, Directory.GetFiles(Logs.Directory));
+						XmlResultParser.UpdateMissingData (path, newFilename, testRunName, Directory.GetFiles (Logs.Directory));
 					} else {
 						// rename the path to the correct value
 						File.Move (path, newFilename);
