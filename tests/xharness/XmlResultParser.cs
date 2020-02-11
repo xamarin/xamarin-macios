@@ -303,7 +303,7 @@ namespace xharness {
 		{
 			var failedTests = new List<(string name, string message)> ();
 			// xUnit is not as nice and does not provide the final result in a top node,
-			// we need to look in all the collections and find all the failed thests, this is really bad :/
+			// we need to look in all the collections and find all the failed tests, this is really bad :/
 			while (reader.Read ()) {
 				if (reader.NodeType == XmlNodeType.Element && reader.Name == "collection") {
 					reader.ReadToDescendant ("test");
