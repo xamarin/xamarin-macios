@@ -18,11 +18,11 @@ Copyright (c) 2017 Microsoft Corp. (www.microsoft.com)
 	<!-- MSBuild specific hacks - Teach msbuild where to find our BCL and facades -->
 
 	<!-- Location of mscorlib -->
-	<PropertyGroup Condition="'$(OS)' != 'Windows_NT'">
+	<PropertyGroup Condition="'$(OS)' != 'Windows_NT' And '$(UsingXamarinSdk)' == ''">
 		<FrameworkPathOverride Condition="'$(TargetFrameworkName)' != 'System'">$(MacBclPath)</FrameworkPathOverride>
 	</PropertyGroup>
 
-	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.TargetFrameworkFix.targets"/>
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.TargetFrameworkFix.targets" Condition="'$(UsingXamarinSdk)' == ''"/>
 
-	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.Common.ImplicitFacade.msbuild.targets" Condition="'$(TargetFrameworkName)' == 'Modern' Or '$(TargetFrameworkName)' == 'Full'"/>
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.Common.ImplicitFacade.msbuild.targets" Condition="('$(TargetFrameworkName)' == 'Modern' Or '$(TargetFrameworkName)' == 'Full') And '$(UsingXamarinSdk)' == ''"/>
 </Project>

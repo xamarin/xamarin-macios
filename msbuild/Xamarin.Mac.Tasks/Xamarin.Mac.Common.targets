@@ -752,7 +752,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		/>
 	</Target>
 
-	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.msbuild.targets" />
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.msbuild.targets" Condition="'$(UsingXamarinSdk)' == ''" />
 
 	<Target Name="_SeparateAppExtensionReferences" BeforeTargets="AssignProjectConfiguration" Condition="'$(IsAppExtension)' != 'true'">
 		<CreateItem Include="@(ProjectReference)" PreserveExistingMetadata="true" Condition="'%(Identity)' != '' And '%(ProjectReference.IsAppExtension)' == 'true'">
