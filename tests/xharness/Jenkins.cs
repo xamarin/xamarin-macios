@@ -2118,7 +2118,7 @@ namespace xharness
 									}
 									if (!exists) {
 										writer.WriteLine ("<a href='{0}' type='{2}' target='{3}'>{1}</a> (does not exist)<br />", LinkEncode (log.FullPath.Substring (LogDirectory.Length + 1)), log.Description, log_type, log_target);
-									} else if (log.Description == "Build log") {
+									} else if (log.Description == Log.BUILD_LOG) {
 										var binlog = log.FullPath.Replace (".txt", ".binlog");
 										if (File.Exists (binlog)) {
 											var textLink = string.Format ("<a href='{0}' type='{2}' target='{3}'>{1}</a>", LinkEncode (log.FullPath.Substring (LogDirectory.Length + 1)), log.Description, log_type, log_target);
@@ -2132,7 +2132,7 @@ namespace xharness
 									}
 									if (!exists) {
 										// Don't try to parse files that don't exist
-									} else if (log.Description == "Test log" || log.Description == "Extension test log" || log.Description == "Execution log") {
+									} else if (log.Description == Log.TEST_LOG || log.Description == Log.EXTENSION_TEST_LOG || log.Description == Log.EXECUTION_LOG) {
 										string summary;
 										List<string> fails;
 										try {
@@ -2172,7 +2172,7 @@ namespace xharness
 										} catch (Exception ex) {
 											writer.WriteLine ("<span style='padding-left: 15px;'>Could not parse log file: {0}</span><br />", ex.Message.AsHtml ());
 										}
-									} else if (log.Description == "Build log") {
+									} else if (log.Description == Log.BUILD_LOG) {
 										HashSet<string> errors;
 										try {
 											using (var reader = log.GetReader ()) {
@@ -2208,7 +2208,7 @@ namespace xharness
 										} catch (Exception ex) {
 											writer.WriteLine ("<span style='padding-left: 15px;'>Could not parse log file: {0}</span><br />", ex.Message.AsHtml ());
 										}
-									} else if (log.Description == "NUnit results" || log.Description == "XML log") {
+									} else if (log.Description == Log.NUNIT_RESULT || log.Description == Log.XML_LOG) {
 										try {
 											if (File.Exists (log.FullPath) && new FileInfo (log.FullPath).Length > 0) {
 												if (XmlResultParser.IsValidXml (log.FullPath, out var jargon)) {
@@ -2890,7 +2890,7 @@ namespace xharness
 					make.StartInfo.WorkingDirectory = WorkingDirectory;
 					make.StartInfo.Arguments = Target;
 					SetEnvironmentVariables (make);
-					var log = Logs.Create ($"make-{Platform}-{Timestamp}.txt", "Build log");
+					var log = Logs.Create ($"make-{Platform}-{Timestamp}.txt", Log.BUILD_LOG);
 					LogEvent (log, "Making {0} in {1}", Target, WorkingDirectory);
 					if (!Harness.DryRun) {
 						var timeout = Timeout;
@@ -2919,7 +2919,7 @@ namespace xharness
 		protected override async Task ExecuteAsync ()
 		{
 			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
-				var log = Logs.Create ($"build-{Platform}-{Timestamp}.txt", "Build log");
+				var log = Logs.Create ($"build-{Platform}-{Timestamp}.txt", Log.BUILD_LOG);
 				var binlogPath = log.FullPath.Replace (".txt", ".binlog");
 
 				await RestoreNugetsAsync (log, resource, useXIBuild: true);
@@ -3086,8 +3086,8 @@ namespace xharness
 		protected override async Task RunTestAsync ()
 		{
 			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
-				var xmlLog = Logs.CreateFile ($"log-{Timestamp}.xml", "XML log");
-				var log = Logs.Create ($"execute-{Timestamp}.txt", "Execution log");
+				var xmlLog = Logs.CreateFile ($"log-{Timestamp}.xml", Log.XML_LOG);
+				var log = Logs.Create ($"execute-{Timestamp}.txt", Log.EXECUTION_LOG);
 				FindNUnitConsoleExecutable (log);
 				using (var proc = new Process ()) {
 
@@ -3263,7 +3263,7 @@ namespace xharness
 						proc.StartInfo.EnvironmentVariables ["DISABLE_SYSTEM_PERMISSION_TESTS"] = "1";
 					proc.StartInfo.EnvironmentVariables ["MONO_DEBUG"] = "no-gdb-backtrace";
 					Jenkins.MainLog.WriteLine ("Executing {0} ({1})", TestName, Mode);
-					var log = Logs.Create ($"execute-{Platform}-{Timestamp}.txt", "Execution log");
+					var log = Logs.Create ($"execute-{Platform}-{Timestamp}.txt", Log.EXECUTION_LOG);
 					if (!Harness.DryRun) {
 						ExecutionResult = TestExecutingResult.Running;
 
@@ -3317,8 +3317,8 @@ namespace xharness
 					proc.StartInfo.Arguments = $"--debug {reporter} {WorkingDirectory} {results}";
 
 					Jenkins.MainLog.WriteLine ("Executing {0} ({1})", TestName, Mode);
-					var log = Logs.Create ($"execute-xtro-{Timestamp}.txt", "Execution log");
-					log.WriteLine ("{0} {1}", proc.StartInfo.FileName, proc.StartInfo.Arguments);
+					var log = Logs.Create ($"execute-xtro-{Timestamp}.txt", Log.EXECUTION_LOG);
+						log.WriteLine ("{0} {1}", proc.StartInfo.FileName, proc.StartInfo.Arguments);
 					if (!Harness.DryRun) {
 						ExecutionResult = TestExecutingResult.Running;
 
