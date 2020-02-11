@@ -336,7 +336,7 @@ namespace xharness {
 			return parseData;
 		}
 
-		static void GenerateNUnitTestReport (StreamWriter writer, XmlReader reader)
+		static void GenerateNUnitV2TestReport (StreamWriter writer, XmlReader reader)
 		{
 			while (reader.Read ()) {
 
@@ -376,6 +376,53 @@ namespace xharness {
 						}
 					} while (reader.ReadToNextSibling ("test-case"));
 				}
+			}
+		}
+
+		static void GenerateNUnitV3TestReport (StreamWriter writer, XmlReader reader)
+		{
+			List<(string name, string message)> failedTests = new List<(string name, string message)> ();
+			while (reader.Read ()) {
+				if (reader.NodeType == XmlNodeType.Element && reader.Name == "test-run") {
+					long.TryParse (reader ["failed"], out var failed);
+					if (failed == 0)
+						break;
+				}
+
+				if (reader.NodeType == XmlNodeType.Element && reader.Name == "test-suite" && (reader ["type"] == "TestFixture" || reader ["type"] == "ParameterizedFixture")) {
+					var testCaseName = reader ["fullname"];
+					reader.ReadToDescendant ("test-case");
+					do {
+						if (reader.Name != "test-case")
+							break;
+						// read the test cases in the current node
+						var status = reader ["result"];
+						switch (status) {
+						case "Error":
+						case "Failed":
+							var name = reader ["name"];
+							reader.ReadToDescendant ("message");
+							var message = reader.ReadElementContentAsString ();
+							failedTests.Add ((name, message));
+							break;
+						
+						}
+					} while (reader.ReadToNextSibling ("test-case"));
+				}
+			}
+			if (failedTests.Count > 0) {
+				writer.WriteLine ("<div style='padding-left: 15px;'>");
+				writer.WriteLine ("<ul>");
+				foreach (var (name, message) in failedTests) {
+					writer.WriteLine ("<li>");
+					writer.Write (name.AsHtml ());
+					if (!string.IsNullOrEmpty (message)) {
+						writer.Write (": ");
+						writer.Write (message.AsHtml ());
+					}
+				}
+				writer.WriteLine ("<br />");
+				writer.WriteLine ("</li>");
 			}
 		}
 
@@ -426,10 +473,13 @@ namespace xharness {
 				switch (xmlType) {
 				case Jargon.NUnitV2:
 				case Jargon.TouchUnit:
-					GenerateNUnitTestReport (writer, reader);
+					GenerateNUnitV2TestReport (writer, reader);
 					break;
 				case Jargon.xUnit:
 					GeneratexUnitTestReport (writer, reader);
+					break;
+				case Jargon.NUnitV3:
+					GenerateNUnitV3TestReport (writer, reader);
 					break;
 				default:
 					writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {resultsPath}: Not supported format.</span><br />");
