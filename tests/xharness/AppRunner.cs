@@ -365,7 +365,7 @@ namespace xharness
 					File.Delete (tmpFile);
 
 					// we do not longer need the tmp file
-					Logs.AddFile (path, "Test xml");
+					Logs.AddFile (path, "XML log");
 					return parseResult;
 
 				} catch (Exception e) {
