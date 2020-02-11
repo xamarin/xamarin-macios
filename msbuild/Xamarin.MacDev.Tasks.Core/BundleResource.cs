@@ -77,7 +77,8 @@ namespace Xamarin.MacDev
 				}
 			}
 
-			var definingProjectFullPath = item.GetMetadata ("DefiningProjectFullPath");
+			var isDefaultItem = item.GetMetadata ("IsDefaultItem") == "true";
+			var definingProjectFullPath = item.GetMetadata (isDefaultItem ? "MSBuildProjectFullPath" : "DefiningProjectFullPath");
 			var path = item.GetMetadata ("FullPath");
 			string baseDir;
 
