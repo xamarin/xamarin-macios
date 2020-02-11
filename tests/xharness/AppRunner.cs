@@ -39,6 +39,7 @@ namespace xharness
 		public Harness Harness;
 		public string ProjectFile;
 		public string AppPath;
+		public string Variation;
 
 		public TestExecutingResult Result { get; private set; }
 		public string FailureMessage { get; private set; }
@@ -362,7 +363,7 @@ namespace xharness
 
 					// at this point, we have the test results, but we want to be able to have attachments in vsts, so if the format is
 					// the right one (NUnitV3) add the nodes. ATM only TouchUnit uses V3.
-					var testRunName = $"{appName} ({configuration})";
+					var testRunName = $"{appName} {Variation}";
 					if (xmlType == XmlResultParser.Jargon.NUnitV3) {
 						// add the attachments and write in the new filename
 						XmlResultParser.UpdateMissingData (path, newFilename, testRunName, Directory.GetFiles(Logs.Directory));
