@@ -46,7 +46,7 @@ fi
 
 P=$(cat tmp.p)
 
-VSTS_BUILD_URL="${SYSTEM_TEAMFOUNDATIONCOLLECTIONURI}${SYSTEM_TEAMPROJECT}/_build/index?buildId=${BUILD_BUILDID}"
+VSTS_BUILD_URL="${SYSTEM_TEAMFOUNDATIONCOLLECTIONURI}${SYSTEM_TEAMPROJECT}/_build/index?buildId=${BUILD_BUILDID}&view=ms.vss-test-web.test-result-details"
 
 # Add a GitHub status to the commit we're testing
 GH_STATE=failure
