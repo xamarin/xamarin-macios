@@ -644,7 +644,7 @@ namespace AudioUnit
 			}
 
 			var info = new AudioUnitParameterInfo [data.Length];
-			size = (uint) Marshal.SizeOf (typeof (AudioUnitParameterInfoNative));
+			size = (uint)sizeof (AudioUnitParameterInfoNative);
 
 			for (int i = 0; i < data.Length; ++i) {
 				var native = new AudioUnitParameterInfoNative ();

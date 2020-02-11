@@ -259,9 +259,6 @@ namespace Xamarin.Tests
 			mac_xcode_root = xcode_root;
 #endif
 
-			if (!Directory.Exists (mt_root) && !File.Exists (mt_root) && string.IsNullOrEmpty (ios_destdir))
-				mt_root = "/Developer/MonoTouch";
-
 			if (Directory.Exists (Path.Combine (mt_root, "usr")))
 				mt_root = Path.Combine (mt_root, "usr");
 
