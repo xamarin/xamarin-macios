@@ -827,14 +827,14 @@ namespace Xamarin.iOS.UnitTests.XUnit
 					try {
 						Transform_Results ("NUnitXml.xslt", assembliesElement, xmlWriter);
 					} catch (Exception e) {
-						writer.WriteLine ($"{e}");
+						writer.WriteLine (e);
 					}
 					break;
 				case Jargon.NUnitV3:
 					try {
 						Transform_Results ("NUnit3Xml.xslt", assembliesElement, xmlWriter);
 					} catch (Exception e) {
-						writer.WriteLine ($"{e}");
+						writer.WriteLine (e);
 					}
 					break;
 				default: // defualt to xunit until we add NUnitv3 support
