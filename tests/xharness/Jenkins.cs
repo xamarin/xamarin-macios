@@ -3715,6 +3715,7 @@ namespace xharness
 						Configuration = ProjectConfiguration,
 						TimeoutMultiplier = TimeoutMultiplier,
 						Variation = Variation,
+						BuildTaskID = BuildTask.ID,
 					};
 
 					// Sometimes devices can't upgrade (depending on what has changed), so make sure to uninstall any existing apps first.
