@@ -365,7 +365,7 @@ namespace xharness
 					File.Delete (tmpFile);
 
 					// we do not longer need the tmp file
-					Logs.AddFile (path, "XML log");
+					Logs.AddFile (path, Log.XML_LOG);
 					return parseResult;
 
 				} catch (Exception e) {
@@ -521,7 +521,7 @@ namespace xharness
 			args.AppendFormat (" -argument=-app-arg:-transport:{0}", transport);
 			args.AppendFormat (" -setenv=NUNIT_TRANSPORT={0}", transport);
 
-			listener_log = Logs.Create ($"test-{mode}-{Harness.Timestamp}.log", "Test log", timestamp: !useXmlOutput);
+			listener_log = Logs.Create ($"test-{mode}-{Harness.Timestamp}.log", Log.TEST_LOG, timestamp: !useXmlOutput);
 
 			SimpleListener listener;
 			switch (transport) {
@@ -623,7 +623,7 @@ namespace xharness
 					var log = new CaptureLog (Logs, sim.SystemLog, entire_file: Harness.Action != HarnessAction.Jenkins)
 					{
 						Path = Path.Combine (LogDirectory, sim.Name + ".log"),
-						Description = isCompanion ? "System log (companion)" : "System log",
+						Description = isCompanion ? Log.COMPANION_SYSTEM_LOG : Log.SYSTEM_LOG,
 					};
 					log.StartCapture ();
 					Logs.Add (log);

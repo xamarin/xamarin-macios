@@ -12,6 +12,15 @@ namespace xharness
 		public string Description;
 		public bool Timestamp = true;
 
+		public static string XML_LOG = "XML log";
+		public static string NUNIT_RESULT = "NUnit results";
+		public static string SYSTEM_LOG = "System log";
+		public static string COMPANION_SYSTEM_LOG = "System log (companion)";
+		public static string BUILD_LOG = "Build log";
+		public static string TEST_LOG = "Test log";
+		public static string EXTENSION_TEST_LOG = "Extension test log";
+		public static string EXECUTION_LOG = "Execution log";
+
 		protected Log (Logs logs)
 		{
 			Logs = logs;
