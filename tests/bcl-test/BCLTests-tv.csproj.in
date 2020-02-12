@@ -176,9 +176,6 @@
     <Compile Include="templates\common\TestRunner.NUnit\TestMethodFilter.cs">
       <Link>TestRunner.NUnit\TestMethodFilter.cs</Link>
     </Compile>
-    <Compile Include="templates\common\TestRunner.NUnit\XmlOutputWriter.cs">
-      <Link>TestRunner.NUnit\XmlOutputWriter.cs</Link>
-    </Compile>
     <Compile Include="templates\common\TestRunner.Core\Extensions.Bool.cs">
       <Link>TestRunner.Core\Extensions.Bool.cs</Link>
     </Compile>
@@ -217,9 +214,6 @@
     </Compile>
     <Compile Include="templates\common\TestRunner.xUnit\XUnitFilterType.cs">
       <Link>TestRunner.xUnit\XUnitFilterType.cs</Link>
-    </Compile>
-    <Compile Include="templates\common\TestRunner.xUnit\XUnitResultFileFormat.cs">
-      <Link>TestRunner.xUnit\XUnitResultFileFormat.cs</Link>
     </Compile>
     <Compile Include="templates\common\TestRunner.xUnit\XUnitTestRunner.cs">
       <Link>TestRunner.xUnit\XUnitTestRunner.cs</Link>
