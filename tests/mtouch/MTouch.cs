@@ -3168,9 +3168,10 @@ class Test {
 
 				File.WriteAllText (dllcs, "public class TestLib { public TestLib () { System.Console.WriteLine (typeof (UIKit.UIWindow).ToString ()); } }");
 
-				var args = new [] { dllcs, "/debug:full", "/noconfig", "/t:library", "/nologo", $"/out:{dll}", "/r:" + Configuration.XamarinIOSDll };
+				var args = new List<string> () { dllcs, "/debug:full", "/noconfig", "/t:library", "/nologo", $"/out:{dll}", "/r:" + Configuration.XamarinIOSDll };
 				File.WriteAllText (DLL + ".config", "");
-				if (ExecutionHelper.Execute (Configuration.SmcsPath, args, out output) != 0)
+				var compiler = Configuration.GetCompiler (Profile.iOS, args);
+				if (ExecutionHelper.Execute (compiler, args, out output) != 0)
 					throw new Exception (output);
 
 				var execs = @"public class TestApp { 
@@ -3185,8 +3186,9 @@ class Test {
 
 				File.WriteAllText (exeF, execs);
 
-				var cmds = new [] { exeF, "/noconfig", "/t:exe", "/nologo", $"/out:{exe}", $"/r:{dll}", $"-r:{Configuration.XamarinIOSDll}" };
-				if (ExecutionHelper.Execute (Configuration.SmcsPath, cmds, out output) != 0)
+				var cmds = new List<string> () { exeF, "/noconfig", "/t:exe", "/nologo", $"/out:{exe}", $"/r:{dll}", $"-r:{Configuration.XamarinIOSDll}" };
+				compiler = Configuration.GetCompiler (Profile.iOS, cmds);
+				if (ExecutionHelper.Execute (compiler, cmds, out output) != 0)
 					throw new Exception (output);
 
 				File.Move (dll, DLL);

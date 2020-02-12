@@ -595,12 +595,8 @@ $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/bin/smcs:
 	@echo Installing smcs script
 	@echo "#!/bin/bash" > $@
 	@echo >> $@
-	@echo 'SMCS=`which mcs`' >> $@
-	@echo 'if test -z $$SMCS; then' >> $@
-	@echo "    SMCS=/Library/Frameworks/Mono.framework/Versions/Current/bin/mcs" >> $@
-	@echo "fi" >> $@
-	@echo 'unset MONO_PATH' >> $@
-	@echo "\$$SMCS -nostdlib -r:$(abspath $(IOS_TARGETDIR)/$(MONOTOUCH_PREFIX)/lib/mono/2.1/mscorlib.dll) -r:$(abspath $(IOS_TARGETDIR)/$(MONOTOUCH_PREFIX)/lib/mono/2.1/System.dll) \"\$$@\"" >> $@
+	@echo "echo 'This script ($$0) is obsolete. Use csc to compile instead."
+	@echo "exit 1"
 	@chmod +x $@
 
 install-smcs: $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/bin/smcs
