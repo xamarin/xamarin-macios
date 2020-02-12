@@ -801,9 +801,11 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			using (var xmlWriter = XmlWriter.Create (outputFilePath, settings)) {
 				switch (jargon) {
 				case Jargon.NUnitV2:
-					Transform_Results ("NUnitXml.xslt", assembliesElement, xmlWriter); // TODO: Add resource
+					Transform_Results ("NUnitXml.xslt", assembliesElement, xmlWriter);
 					break;
-
+				case Jargon.NUnitV3:
+					Transform_Results ("NUnit3Xml.xslt", assembliesElement, xmlWriter);
+					break;
 				default: // default to xunit until we implement NUnit v3 support.
 					assembliesElement.Save (xmlWriter);
 					break;
@@ -825,10 +827,16 @@ namespace Xamarin.iOS.UnitTests.XUnit
 					try {
 						Transform_Results ("NUnitXml.xslt", assembliesElement, xmlWriter);
 					} catch (Exception e) {
-						writer.WriteLine ($"{e}");
+						writer.WriteLine (e);
 					}
 					break;
-
+				case Jargon.NUnitV3:
+					try {
+						Transform_Results ("NUnit3Xml.xslt", assembliesElement, xmlWriter);
+					} catch (Exception e) {
+						writer.WriteLine (e);
+					}
+					break;
 				default: // defualt to xunit until we add NUnitv3 support
 					assembliesElement.Save (xmlWriter);
 					break;
@@ -839,7 +847,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 		void Transform_Results (string xsltResourceName, XElement element, XmlWriter writer)
 		{
 			var xmlTransform = new System.Xml.Xsl.XslCompiledTransform ();
-			var name = GetType ().Assembly.GetManifestResourceNames ().Select ((arg) => { arg.EndsWith (xsltResourceName, StringComparison.Ordinal); return arg; }).First ();
+			var name = GetType ().Assembly.GetManifestResourceNames ().Where (a => a.EndsWith (xsltResourceName, StringComparison.Ordinal)).FirstOrDefault ();
 			if (name == null)
 				return;
 			using (var xsltStream = GetType ().Assembly.GetManifestResourceStream (name)) {
