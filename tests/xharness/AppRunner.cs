@@ -34,13 +34,13 @@ namespace xharness
 		TodayExtension,
 	}
 
-	public class AppRunner
+	class AppRunner
 	{
 		public Harness Harness;
 		public string ProjectFile;
 		public string AppPath;
 		public string Variation;
-		public int BuildTaskID;
+		public BuildToolTask BuildTask;
 
 		public TestExecutingResult Result { get; private set; }
 		public string FailureMessage { get; private set; }
@@ -369,8 +369,7 @@ namespace xharness
 						var logs = new List<string> ();
 						// add our logs AND the logs of the previous task, which is the build task
 						logs.AddRange (Directory.GetFiles (Logs.Directory));
-						var previousLogsDir = Path.Combine (Directory.GetParent (Logs.Directory).FullName, BuildTaskID.ToString ());
-						logs.AddRange (Directory.GetFiles (previousLogsDir));
+						logs.AddRange (Directory.GetFiles (BuildTask.LogDirectory));
 						// add the attachments and write in the new filename
 						XmlResultParser.UpdateMissingData (path, newFilename, testRunName, logs);
 					} else {
