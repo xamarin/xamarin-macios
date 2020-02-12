@@ -5210,7 +5210,7 @@ namespace AppKit {
 		[Export ("maxDate", ArgumentSemantic.Copy)]
 		NSDate MaxDate { get; set; }
 
-		[NoiOS, Mac (10,15,4)]
+		[Mac (10,15,4)]
 		[Export ("presentsCalendarOverlay")]
 		bool PresentsCalendarOverlay { get; set; }
 
