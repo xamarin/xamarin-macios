@@ -1,2 +1,0 @@
-!missing-field! AVPlayerEligibleForHDRPlaybackDidChangeNotification not bound
-!missing-selector! +AVPlayer::eligibleForHDRPlayback not bound
