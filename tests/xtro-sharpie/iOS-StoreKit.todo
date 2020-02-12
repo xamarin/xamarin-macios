@@ -1,0 +1,2 @@
+!missing-protocol-member! SKPaymentQueueDelegate::paymentQueueShouldShowPriceConsent: not found
+!missing-selector! SKPaymentQueue::showPriceConsentIfNeeded not bound

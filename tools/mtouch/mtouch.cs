@@ -1570,7 +1570,7 @@ namespace Xamarin.Bundler
 		{
 			string quoted_app_path = StringUtils.Quote (Path.Combine (output_dir, appname));
 			string quoted_dsym_dir = StringUtils.Quote (dsym_dir);
-			RunDsymUtil (string.Format ("{0} -t 4 -z -o {1}", quoted_app_path, quoted_dsym_dir));
+			RunDsymUtil (string.Format ("{0} -num-threads 4 -z -o {1}", quoted_app_path, quoted_dsym_dir));
 			RunCommand ("/usr/bin/mdimport", quoted_dsym_dir);
 		}
 
