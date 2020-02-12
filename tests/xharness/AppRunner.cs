@@ -496,7 +496,7 @@ namespace xharness
 			if (useXmlOutput) {
 				args.Append (" -setenv=NUNIT_ENABLE_XML_OUTPUT=true");
 				args.Append (" -setenv=NUNIT_ENABLE_XML_MODE=wrapped");
-				args.Append ("-setenv=NUNIT_XML_VERSION=nunitv3");
+				args.Append (" -setenv=NUNIT_XML_VERSION=nunitv3");
 			}
 
 			if (Harness.InCI) {
