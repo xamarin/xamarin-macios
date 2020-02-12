@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -9,6 +9,13 @@ namespace Xamarin.iOS.UnitTests
 {
 	public abstract class TestRunner
 	{
+		public enum Jargon {
+			TouchUnit,
+			NUnitV2,
+			NUnitV3,
+			xUnit,
+		}
+
 		public long InconclusiveTests { get; protected set; } = 0;
 		public long FailedTests { get; protected set; } = 0;
 		public long PassedTests { get; protected set; } = 0;
@@ -32,8 +39,8 @@ namespace Xamarin.iOS.UnitTests
 		}
 
 		public abstract Task Run (IEnumerable<TestAssemblyInfo> testAssemblies);
-		public abstract string WriteResultsToFile ();
-		public abstract void WriteResultsToFile (TextWriter writer);
+		public abstract string WriteResultsToFile (Jargon jargon);
+		public abstract void WriteResultsToFile (TextWriter writer, Jargon jargon);
 		public abstract void SkipTests (IEnumerable<string> tests);
 		public abstract void SkipCategories (IEnumerable<string> categories);
 
