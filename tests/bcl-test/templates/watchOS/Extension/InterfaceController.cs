@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Linq;
 using System.Threading;
@@ -131,11 +131,21 @@ namespace monotouchtestWatchKitExtension
 					RenderResults ();
 					cmdRun.SetEnabled (true);
 					cmdRun.SetHidden (false);
+					Xamarin.iOS.UnitTests.TestRunner.Jargon jargon = Xamarin.iOS.UnitTests.TestRunner.Jargon.NUnitV3;
+					switch (options.XmlVersion) {
+					default:
+					case XmlVersion.NUnitV2:
+						jargon = Xamarin.iOS.UnitTests.TestRunner.Jargon.NUnitV2;
+						break;
+					case XmlVersion.NUnitV3:
+						jargon = Xamarin.iOS.UnitTests.TestRunner.Jargon.NUnitV3;
+						break;
+					}
 					if (options.EnableXml) {
-						runner.WriteResultsToFile (writer);
+						runner.WriteResultsToFile (writer, jargon);
 						logger.Info ("Xml file was written to the http listener.");
 					} else {
-						string resultsFilePath = runner.WriteResultsToFile ();
+						string resultsFilePath = runner.WriteResultsToFile (jargon);
 						logger.Info ($"Xml result can be found {resultsFilePath}");
 					}
 					logger.Info ($"Tests run: {runner.TotalTests} Passed: {runner.PassedTests} Inconclusive: {runner.InconclusiveTests} Failed: {runner.FailedTests} Ignored: {runner.FilteredTests}");

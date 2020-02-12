@@ -23,7 +23,6 @@ namespace Xamarin.iOS.UnitTests.XUnit
 		List<XUnitFilter> filters = new List<XUnitFilter> ();
 		bool runAssemblyByDefault;
 
-		public XUnitResultFileFormat ResultFileFormat { get; set; } = XUnitResultFileFormat.XunitV2;
 		public AppDomainSupport AppDomainSupport { get; set; } = AppDomainSupport.Denied;
 		protected override string ResultsFileName { get; set; } = "TestResults.xUnit.xml";
 
@@ -791,7 +790,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			}
 		}
 
-		public override string WriteResultsToFile ()
+		public override string WriteResultsToFile (Jargon jargon)
 		{
 			if (assembliesElement == null)
 				return String.Empty;
@@ -800,22 +799,20 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			string outputFilePath = GetResultsFilePath ();
 			var settings = new XmlWriterSettings { Indent = true};
 			using (var xmlWriter = XmlWriter.Create (outputFilePath, settings)) {
-				switch (ResultFileFormat) {
-				case XUnitResultFileFormat.XunitV2:
-					assembliesElement.Save (xmlWriter);
-					break;
-				case XUnitResultFileFormat.NUnit:
+				switch (jargon) {
+				case Jargon.NUnitV2:
 					Transform_Results ("NUnitXml.xslt", assembliesElement, xmlWriter); // TODO: Add resource
 					break;
 
-				default:
-					throw new InvalidOperationException ($"Result output format '{ResultFileFormat}' is not currently supported");
+				default: // default to xunit until we implement NUnit v3 support.
+					assembliesElement.Save (xmlWriter);
+					break;
 				}
 			}
 			
 			return outputFilePath;
 		}
-		public override void WriteResultsToFile (TextWriter writer)
+		public override void WriteResultsToFile (TextWriter writer, Jargon jargon)
 		{
 			if (assembliesElement == null)
 				return;
@@ -823,11 +820,8 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			assembliesElement.Descendants ().Where (e => e.Name == "collection" && !e.Descendants ().Any ()).Remove ();
 			var settings = new XmlWriterSettings { Indent = true };
 			using (var xmlWriter = XmlWriter.Create (writer, settings)) {
-				switch (ResultFileFormat) {
-				case XUnitResultFileFormat.XunitV2:
-					assembliesElement.Save (xmlWriter);
-					break;
-				case XUnitResultFileFormat.NUnit:
+				switch (jargon) {
+				case Jargon.NUnitV2:
 					try {
 						Transform_Results ("NUnitXml.xslt", assembliesElement, xmlWriter);
 					} catch (Exception e) {
@@ -835,8 +829,9 @@ namespace Xamarin.iOS.UnitTests.XUnit
 					}
 					break;
 
-				default:
-					throw new InvalidOperationException ($"Result output format '{ResultFileFormat}' is not currently supported");
+				default: // defualt to xunit until we add NUnitv3 support
+					assembliesElement.Save (xmlWriter);
+					break;
 				}
 			}
 		}

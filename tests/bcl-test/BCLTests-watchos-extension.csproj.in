@@ -206,17 +206,11 @@
     <Compile Include="templates\common\TestRunner.NUnit\TestMethodFilter.cs">
       <Link>TestRunner.NUnit\TestMethodFilter.cs</Link>
     </Compile>
-    <Compile Include="templates\common\TestRunner.NUnit\XmlOutputWriter.cs">
-      <Link>TestRunner.NUnit\XmlOutputWriter.cs</Link>
-    </Compile>
     <Compile Include="templates\common\TestRunner.xUnit\XUnitFilter.cs">
       <Link>TestRunner.xUnit\XUnitFilter.cs</Link>
     </Compile>
     <Compile Include="templates\common\TestRunner.xUnit\XUnitFilterType.cs">
       <Link>TestRunner.xUnit\XUnitFilterType.cs</Link>
-    </Compile>
-    <Compile Include="templates\common\TestRunner.xUnit\XUnitResultFileFormat.cs">
-      <Link>TestRunner.xUnit\XUnitResultFileFormat.cs</Link>
     </Compile>
     <Compile Include="templates\common\TestRunner.xUnit\XUnitTestRunner.cs">
       <Link>TestRunner.xUnit\XUnitTestRunner.cs</Link>
