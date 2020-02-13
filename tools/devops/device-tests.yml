@@ -15,5 +15,6 @@ jobs:
     name: 'macOS'
     displayName: 'Run iOS Device Tests'
     pool: 'VSEng-Xamarin-Mac-Devices'
+    demands: 'ios'
     statusContext: 'iOS-DDFun'
     testsLabels: '--label=run-ios-64-tests'

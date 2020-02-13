@@ -7,6 +7,7 @@
 #                the source of the status, for example, iOS device tests, tvOS device tests, CI, etc..
 # testsLabels: Contains the labels that are going to be passed to the test runner to device which of the tests to be ran, that means
 #              that the caller can configure which tests to call, for example, just the ios 64b device tests.
+# demands: The capabilities that the bots need.
 
 parameters:
 
@@ -30,13 +31,18 @@ parameters:
   type: string 
   default: '--label=run-ios-64-tests' # default context, since we started dealing with iOS devices. 
 
+- name: demands
+  type: string 
+  default: 'ios' # default context, since we started dealing with iOS devices. 
+
 jobs:
 - job: ${{ parameters.name }}
   displayName: ${{ parameters.displayName }}
   timeoutInMinutes: 1000
 
   pool: 
-    name: ${{ parameters.pool}}
+    name: ${{ parameters.pool }}
+    demands: ${{ parameters.demands }}
 
   steps:
 
