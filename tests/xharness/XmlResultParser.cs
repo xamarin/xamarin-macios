@@ -489,7 +489,7 @@ namespace xharness {
 		}
 
 		// get the file, parse it and add the attachments to the first node found
-		public static void UpdateMissingData (string source, string destination, string applicationName, params string [] attachments)
+		public static void UpdateMissingData (string source, string destination, string applicationName, List<string> attachments)
 		{
 			// we could do this with a XmlReader and a Writer, but might be to complicated to get right, we pay with performance what we
 			// cannot pay with brain cells.
