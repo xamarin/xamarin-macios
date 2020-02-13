@@ -1,2 +1,0 @@
-!deprecated-attribute-missing! GKLocalPlayer::generateIdentityVerificationSignatureWithCompletionHandler: missing a [Deprecated] attribute
-!missing-selector! GKLocalPlayer::fetchItemsForIdentityVerificationSignature: not bound
