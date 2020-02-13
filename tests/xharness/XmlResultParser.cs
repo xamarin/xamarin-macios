@@ -522,5 +522,211 @@ namespace xharness {
 
 			doc.Save (destination);
 		}
+
+		static void WriteAttributes (XmlWriter writer, params (string name, string data) [] attrs)
+		{
+			foreach (var (name, data) in attrs ) {
+				writer.WriteAttributeString (name, data);
+			}
+		}
+
+		static void WriteNUnitV2TestSuiteAttributes (XmlWriter writer, string title) => WriteAttributes (writer,
+			("name", title),
+			("executed", "True"),
+			("result", "Failure"),
+			("success", "False"),
+			("time", "0"),
+			("asserts", "1"));
+
+		static void WriteNUnitV2TestCase (XmlWriter writer, string message, StreamReader stderr)
+		{
+			writer.WriteStartElement ("test-case");
+			WriteAttributes (writer, 
+				("name", "Crash Report"),
+				("executed", "True"),
+				("result", "Failure"),
+				("success", "False"),
+				("time", "0"),
+				("asserts", "1")
+			);
+			writer.WriteStartElement ("failure");
+			writer.WriteStartElement ("message");
+			writer.WriteCData (message);
+			writer.WriteEndElement (); // message
+			writer.WriteStartElement ("stack-trace");
+			writer.WriteCData (stderr.ReadToEnd ());
+			writer.WriteEndElement (); // stack-trace
+			writer.WriteEndElement (); // failure
+			writer.WriteEndElement (); // test-case
+		}
+
+		static void GenerateNUnitV2Failure (XmlWriter writer, string title, string message, StreamReader stderr)
+		{
+			writer.WriteStartElement ("test-results");
+			WriteAttributes (writer,
+				("name", title),
+				("total", "1"),
+				("errors", ""),
+				("failures", "1"),
+				("not-run", "0"),
+				("inconclusive", "0"),
+				("ignored", "0"),
+				("skipped", "0"),
+				("invalid", "0"),
+				("date", XmlConvert.ToString (DateTime.Now, "yyyy-MM-dd")));
+
+			// we are not writting the env and the cunture info since the VSTS uploader does not care
+			writer.WriteStartElement ("test-suite");
+			writer.WriteAttributeString ("type", "Assembly");
+			WriteNUnitV2TestSuiteAttributes (writer, title);
+			writer.WriteStartElement ("results");
+			writer.WriteStartElement ("test-suite");
+			writer.WriteAttributeString ("type", "TestFixture");
+			WriteNUnitV2TestSuiteAttributes (writer, title);
+			writer.WriteStartElement ("results");
+			WriteNUnitV2TestCase (writer, message, stderr);
+			writer.WriteEndElement (); // results
+			writer.WriteEndElement (); // test-suite TextFixture
+			writer.WriteEndElement (); // results
+			writer.WriteEndElement (); // test-suite Assembly
+			writer.WriteEndElement (); // test-results
+		}
+
+		static void WriteNUnitV3TestSuiteAttributes (XmlWriter writer) => WriteAttributes (writer,
+			("id", "1"),
+			("name", "Test Crash"),
+			("testcasecount", "1"),
+			("result", "Failed"),
+			("time", "0"),
+			("total", "1"),
+			("passed", "0"),
+			("failed", "1"),
+			("inconclusive", "0"),
+			("skipped", "0"),
+			("asserts", "0"));
+
+		static void WriteFailure (XmlWriter writer, string message, StreamReader stderr = null)
+		{
+			writer.WriteStartElement ("failure");
+			writer.WriteStartElement ("message");
+			writer.WriteCData (message);
+			if (stderr != null) {
+				writer.WriteStartElement ("stack-trace");
+				writer.WriteCData (stderr.ReadToEnd ());
+				writer.WriteEndElement (); //stack trace
+			}
+			writer.WriteEndElement (); // message
+			writer.WriteEndElement (); // failure
+		}
+
+		static void GenerateNUnitV3Failure (XmlWriter writer, string title, string message, StreamReader stderr)
+		{
+			writer.WriteStartElement ("test-run");
+			// defualt values for the crash
+			WriteAttributes (writer,
+				("name", title),
+				("testcasecount", "1"),
+				("result", "Failed"),
+				("time", "0"),
+				("total", "1"),
+				("passed", "0"),
+				("failed", "1"),
+				("inconclusive", "0"),
+				("skipped", "0"),
+				("asserts", "1"),
+				("date", XmlConvert.ToString (DateTime.Now, "yyyy-MM-dd"))
+			);
+			writer.WriteStartElement ("test-suite");
+			writer.WriteAttributeString ("type", "Assembly");
+			WriteNUnitV3TestSuiteAttributes (writer);
+			WriteFailure (writer, "Child test failed");
+			writer.WriteStartElement ("test-suite");
+			WriteAttributes (writer,
+				("name", title),
+				("fullname", title),
+				("type", "TestFixture"),
+				("testcasecount", "1"),
+				("result", "Failed"),
+				("time", "0"),
+				("total", "1"),
+				("passed", "0"),
+				("failed", "1"),
+				("inconclusive", "0"),
+				("skipped", "0"),
+				("asserts", "1"));
+			writer.WriteStartElement ("test-case");
+			WriteAttributes (writer,
+				("id", "1"),
+				("name", "Crash Report"),
+				("fullname", "Crash Report"),
+				("result", "Failed"),
+				("time", "0"),
+				("asserts", "1"));
+			WriteFailure (writer, message, stderr);
+			writer.WriteEndElement (); // test-case
+			writer.WriteEndElement (); // test-suite = TestFixture
+			writer.WriteEndElement (); // test-suite = Assembly
+			writer.WriteEndElement (); // test-run
+		}
+
+		static void GeneratexUnitFailure (XmlWriter writer, string title, string message, StreamReader stderr)
+		{
+			writer.WriteStartElement ("assemblies");
+			writer.WriteStartElement ("assembly");
+			WriteAttributes (writer,
+				("name", title),
+				("environment", "64-bit .NET Standard [collection-per-class, non-parallel]"),
+				("test-framework", "xUnit.net 2.4.1.0"),
+				("run-date", XmlConvert.ToString (DateTime.Now, "yyyy-MM-dd")),
+				("total", "1"),
+				("passed", "0"),
+				("failed", "1"),
+				("skipped", "0"),
+				("time", "0"),
+				("errors", "0"));
+			writer.WriteStartElement ("collection");
+			WriteAttributes (writer,
+				("total", "1"),
+				("passed", "0"),
+				("failed", "1"),
+				("skipped", "0"),
+				("name", "Crash Report"),
+				("time", "0"));
+			writer.WriteStartElement ("test");
+			WriteAttributes (writer,
+				("name", title),
+				("type", "TestApp"),
+				("method", "Run"),
+				("time", "0"),
+				("result", "Fail"));
+			WriteFailure (writer, message, stderr);
+			writer.WriteEndElement (); // test
+			writer.WriteEndElement (); // collection
+			writer.WriteEndElement (); // assembly
+			writer.WriteEndElement (); // assemblies
+
+		}
+
+		public static void GenerateFailure (string destination, string title, string message, string stderrPath, Jargon jargon)
+		{
+			XmlWriterSettings settings = new XmlWriterSettings { Indent = true };
+			using (var stream = File.CreateText (destination))
+			using (var stderrReader = new StreamReader (stderrPath))
+			using (var xmlWriter = XmlWriter.Create (stream, settings)) {
+				xmlWriter.WriteStartDocument ();
+				switch (jargon) {
+				case Jargon.NUnitV2:
+					GenerateNUnitV2Failure (xmlWriter, title, message, stderrReader);
+					break;
+				case Jargon.NUnitV3:
+					GenerateNUnitV3Failure (xmlWriter, title, message, stderrReader);
+					break;
+				case Jargon.xUnit:
+					GeneratexUnitFailure (xmlWriter, title, message, stderrReader);
+					break;
+				}
+				xmlWriter.WriteEndDocument ();
+			}
+		}
 	}
 }
