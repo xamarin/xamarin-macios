@@ -622,6 +622,8 @@ namespace Xamarin.Bundler {
 				// they will be copied (at build time) into the destination directory (making them work at runtime)
 				// but they won't be side-by-side the original assembly (which breaks our build time assumptions)
 				path = Path.GetDirectoryName (App.RootAssemblies [0]);
+				if (string.IsNullOrEmpty (path))
+					path = Environment.CurrentDirectory;
 				ComputeSatellites (satellite_name, path);
 			}
 		}
