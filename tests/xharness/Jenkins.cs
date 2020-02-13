@@ -3625,6 +3625,7 @@ namespace xharness
 						Configuration = ProjectConfiguration,
 						TimeoutMultiplier = TimeoutMultiplier,
 						Variation = Variation,
+						BuildTask = BuildTask,
 					};
 
 					// Sometimes devices can't upgrade (depending on what has changed), so make sure to uninstall any existing apps first.
@@ -3680,6 +3681,7 @@ namespace xharness
 								CompanionDeviceName = CompanionDevice?.Name,
 								Configuration = ProjectConfiguration,
 								Variation = Variation,
+								BuildTask = BuildTask,
 							};
 							additional_runner = todayRunner;
 							await todayRunner.RunAsync ();
@@ -3790,7 +3792,8 @@ namespace xharness
 				MainLog = Logs.Create ($"run-{Device.UDID}-{Timestamp}.log", "Run log"),
 				Configuration = ProjectConfiguration,
 				TimeoutMultiplier = TimeoutMultiplier,
-				Variation = Variation
+				Variation = Variation,
+				BuildTask = BuildTask,
 			};
 			runner.Simulators = Simulators;
 			runner.Initialize ();

@@ -34,12 +34,13 @@ namespace xharness
 		TodayExtension,
 	}
 
-	public class AppRunner
+	class AppRunner
 	{
 		public Harness Harness;
 		public string ProjectFile;
 		public string AppPath;
 		public string Variation;
+		public BuildToolTask BuildTask;
 
 		public TestExecutingResult Result { get; private set; }
 		public string FailureMessage { get; private set; }
@@ -359,8 +360,12 @@ namespace xharness
 					// the right one (NUnitV3) add the nodes. ATM only TouchUnit uses V3.
 					var testRunName = $"{appName} {Variation}";
 					if (xmlType == XmlResultParser.Jargon.NUnitV3) {
+						var logs = new List<string> ();
+						// add our logs AND the logs of the previous task, which is the build task
+						logs.AddRange (Directory.GetFiles (Logs.Directory));
+						logs.AddRange (Directory.GetFiles (BuildTask.LogDirectory));
 						// add the attachments and write in the new filename
-						XmlResultParser.UpdateMissingData (path, newFilename, testRunName, Directory.GetFiles (Logs.Directory));
+						XmlResultParser.UpdateMissingData (path, newFilename, testRunName, logs);
 					} else {
 						// rename the path to the correct value
 						File.Move (path, newFilename);
