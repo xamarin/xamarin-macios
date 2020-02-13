@@ -80,7 +80,7 @@ if test -z "$START"; then
 	trap cleanup EXIT
 
 	HTML_REPORT=""
-	if [ $DEVICE_TYPE == "iOS-DDFun" ]; then
+	if [[ $DEVICE_TYPE == *"DDFun"* ]]; then
 		printf "### :construction: Experimental DDFun pipeline\\n" > "$MESSAGE_FILE"
 	else
 		P=$(cat tmp.p)
