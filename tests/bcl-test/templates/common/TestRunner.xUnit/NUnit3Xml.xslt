@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:myGenerator="urn:hash-generator">
   <xsl:output cdata-section-elements="message stack-trace"/>
 
   <xsl:template match="/">
@@ -7,7 +7,7 @@
   </xsl:template>
 
   <xsl:template match="assemblies">
-    <test-run name="Test results" inconclusive="0" asserts="0" > 
+    <test-run name="Test results" inconclusive="0" asserts="0" id="2"> 
       <!-- test-run attributes -->
       <xsl:attribute name="testcasecount">
         <xsl:value-of select="sum(assembly/@total)"/>
@@ -138,9 +138,13 @@
   <!-- Map test to test-case -->
 
   <xsl:template match="test">
+    <xsl:param name="hash_source" select="@name"/>
     <test-case>
       <xsl:attribute name="name">
         <xsl:value-of select="@name"/>
+      </xsl:attribute>
+      <xsl:attribute name="id">
+        <xsl:value-of select="myGenerator:GenerateHash($hash_source)"/>
       </xsl:attribute>
       <xsl:attribute name="result">
         <xsl:if test="@result='Fail'">Failed</xsl:if>
