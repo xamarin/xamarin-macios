@@ -49,6 +49,7 @@ namespace Extrospection {
 			{ "tls_protocol_version_t", "TlsProtocolVersion" },
 			{ "UIDataDetectorTypes", "UIDataDetectorType" },
 			{ "UIControlEvents", "UIControlEvent" },
+			{ "UIKeyboardHIDUsage", "UIKeyboardHidUsage" },
 			{ "UITableViewCellAccessoryType", "UITableViewCellAccessory" },
 			{ "UITableViewCellStateMask", "UITableViewCellState" },
 			{ "WatchKitErrorCode", "WKErrorCode" }, // WebKit already had that name

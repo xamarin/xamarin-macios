@@ -108,3 +108,7 @@
 !missing-selector! UIBarAppearance::copy not bound
 !missing-selector! UIBarButtonItemAppearance::copy not bound
 !missing-selector! UITabBarItemAppearance::copy not bound
+
+# Xcode 11.4 Beta 1
+## Parent type UIDatePicker is not available in tvOS
+!missing-enum! UIDatePickerStyle not bound

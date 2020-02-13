@@ -6552,6 +6552,26 @@ namespace UIKit {
 		[Field ("UIKeyInputEscape")]
 		NSString Escape { get; }
 
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[iOS (13,4), TV (13,4)]
+		[Field ("UIKeyInputPageUp")]
+		NSString PageUp { get; }
+
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[iOS (13,4), TV (13,4)]
+		[Field ("UIKeyInputPageDown")]
+		NSString PageDown { get; }
+
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[iOS (13,4), TV (13,4)]
+		[Field ("UIKeyInputHome")]
+		NSString Home { get; }
+
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[iOS (13,4), TV (13,4)]
+		[Field ("UIKeyInputEnd")]
+		NSString End { get; }
+
 		[iOS (9,0)]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'UIKeyCommand.Create (NSString, UIKeyModifierFlags, Selector)' overload instead.")]
 		[Static]
@@ -8539,7 +8559,16 @@ namespace UIKit {
 		
 		[Export ("setDate:animated:")]
 		void SetDate (NSDate date, bool animated);
-		
+
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[iOS (13,4)]
+		[Export ("preferredDatePickerStyle", ArgumentSemantic.Assign)]
+		UIDatePickerStyle PreferredDatePickerStyle { get; set; }
+
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[iOS (13,4)]
+		[Export ("datePickerStyle", ArgumentSemantic.Assign)]
+		UIDatePickerStyle DatePickerStyle { get; }
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -17686,6 +17715,11 @@ namespace UIKit {
 
 		[Export ("force")]
 		nfloat Force { get; }
+
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[iOS (13,4), TV (13,4)]
+		[NullAllowed, Export ("key")]
+		UIKey Key { get; }
 	}
 
 	[NoWatch]
@@ -21041,6 +21075,25 @@ namespace UIKit {
 		[Abstract]
 		[Export ("addCompletion:")]
 		void AddCompletion (Action completion);
+	}
+
+	[Introduced (PlatformName.MacCatalyst, 13, 4)]
+	[iOS (13,4), NoWatch, TV (13,4)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface UIKey : NSCopying, NSCoding {
+
+		[Export ("characters")]
+		string Characters { get; }
+
+		[Export ("charactersIgnoringModifiers")]
+		string CharactersIgnoringModifiers { get; }
+
+		[Export ("modifierFlags")]
+		UIKeyModifierFlags ModifierFlags { get; }
+
+		[Export ("keyCode")]
+		UIKeyboardHidUsage KeyCode { get; }
 	}
 
 }
