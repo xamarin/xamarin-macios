@@ -88,8 +88,16 @@ namespace Xamarin.iOS.Tasks
 
 		public override bool Execute ()
 		{
-			if (!AppleSdkSettings.IsValid)
+			var key = "AppleSdkSettings.Init";
+			var val = BuildEngine4.GetRegisteredTaskObject (key, RegisteredTaskObjectLifetime.Build);
+
+			if (val == null) {
 				AppleSdkSettings.Init ();
+				Log.LogMessage (MessageImportance.Low, "Calling AppleSdkSettings.Init");
+				BuildEngine4.RegisterTaskObject (key, true, RegisteredTaskObjectLifetime.Build, allowEarlyCollection: false);
+			} else {
+				Log.LogMessage (MessageImportance.Low, "Skipping AppleSdkSettings.Init, already valid.");
+			}
 
 			IPhoneSdks.Reload ();
 
