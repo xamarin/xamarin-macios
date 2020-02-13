@@ -81,7 +81,15 @@ if test -z "$START"; then
 	trap cleanup ERR
 	trap cleanup EXIT
 
-	printf "%s%s on [Azure DevOps](%s)($DEVICE_TYPE): [Html Report](http://xamarin-storage/%s/jenkins-results/tests/index.html) %s\\n\\n" "$RESULT_EMOJII" "$DESCRIPTION" "$VSTS_BUILD_URL" "$P" "$RESULT_EMOJII" > "$MESSAGE_FILE"
+	HTML_REPORT=""
+	if [[ $DEVICE_TYPE == *"DDFun"* ]]; then
+		printf "### :construction: Experimental DDFun pipeline\\n" > "$MESSAGE_FILE"
+	else
+		P=$(cat tmp.p)
+		HTML_REPORT=": [Html Report](http://xamarin-storage/${P}/jenkins-results/tests/index.html)"
+	fi
+
+	printf "%s%s on [Azure DevOps](%s)($DEVICE_TYPE)%s %s\\n\\n" "$RESULT_EMOJII" "$DESCRIPTION" "$VSTS_BUILD_URL" "$HTML_REPORT" "$RESULT_EMOJII" >> "$MESSAGE_FILE"
 
 	FILE=$PWD/tests/TestSummary.md
 	if ! test -f "$FILE"; then
