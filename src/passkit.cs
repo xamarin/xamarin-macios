@@ -48,6 +48,9 @@ namespace PassKit {
 		[NullAllowed, Export ("supplementarySubLocality", ArgumentSemantic.Strong)]
 		string SupplementarySubLocality { get; set; }
 	}
+
+	[Watch (6,2), iOS (13,4)]
+	delegate void PKPassLibrarySignDataCompletionHandler (NSData signedData, NSData signature, NSError error);
 	
 	[BaseType (typeof (NSObject))]
 	interface PKPassLibrary {
@@ -149,6 +152,11 @@ namespace PassKit {
 		[NoWatch][iOS (10,0)]
 		[Export ("presentPaymentPass:")]
 		void PresentPaymentPass (PKPaymentPass pass);
+
+		[Watch (6,2), iOS (13,4)]
+		[Async (ResultTypeName = "PKSignDataCompletionResult")]
+		[Export ("signData:withPaymentPass:completion:")]
+		void SignData (NSData signData, PKPaymentPass paymentPass, PKPassLibrarySignDataCompletionHandler completion);
 	}
 
 	[Static]
