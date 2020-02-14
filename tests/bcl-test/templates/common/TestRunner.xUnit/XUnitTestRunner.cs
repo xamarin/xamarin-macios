@@ -8,13 +8,19 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
-
-
+using System.Xml.Xsl;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Xamarin.iOS.UnitTests.XUnit
 {
+	public class XsltIdGenerator
+	{
+		// NUnit3 xml does not have schema, there is no much info about it, most examples just have incremental IDs.
+		int seed = 1000;
+		public int GenerateHash (string name) => seed++;
+	}
+
 	public class XUnitTestRunner : TestRunner
 	{
 		readonly TestMessageSink messageSink;
@@ -854,10 +860,17 @@ namespace Xamarin.iOS.UnitTests.XUnit
 				if (xsltStream == null) {
 					throw new Exception ($"Stream with name {name} cannot be found! We have {GetType ().Assembly.GetManifestResourceNames ()[0]}");
 				}
+				// add the extension so that we can get the hash from the name of the test
+				// Create an XsltArgumentList.
+				XsltArgumentList xslArg = new XsltArgumentList ();
+
+				var generator = new XsltIdGenerator ();
+				xslArg.AddExtensionObject ("urn:hash-generator", generator);
+
 				using (var xsltReader = XmlReader.Create (xsltStream))
 				using (var xmlReader = element.CreateReader ()) {
 					xmlTransform.Load (xsltReader);
-					xmlTransform.Transform (xmlReader, writer);
+					xmlTransform.Transform (xmlReader, xslArg, writer);
 				}
 			}
 		}
