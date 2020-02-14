@@ -78,6 +78,8 @@ namespace xharness
 			}
 		}
 
+		public string AppName => $"{appName} {Variation}";
+
 		public double TimeoutMultiplier { get; set; } = 1;
 
 		// For watch apps we end up with 2 simulators, the watch simulator (the main one), and the iphone simulator (the companion one).
@@ -919,7 +921,7 @@ namespace xharness
 
 	// Monitor the output from 'mlaunch --installdev' and cancel the installation if there's no output for 1 minute.
 	class AppInstallMonitorLog : Log {
-		public override string FullPath => throw new NotImplementedException ();
+		public override string FullPath => copy_to.FullPath;
 
 		Log copy_to;
 		CancellationTokenSource cancellation_source;
