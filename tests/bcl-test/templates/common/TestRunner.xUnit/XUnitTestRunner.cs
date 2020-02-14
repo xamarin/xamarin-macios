@@ -16,14 +16,9 @@ namespace Xamarin.iOS.UnitTests.XUnit
 {
 	public class XsltIdGenerator
 	{
-		public int GenerateHash (string name)
-		{
-			var sum = 0;
-			foreach (var c in name) {
-				sum += c;
-			}
-			return sum;
-		}
+		// NUnit3 xml does not have schema, there is no much info about it, most examples just have incremental IDs.
+		int seed = 1000;
+		public int GenerateHash (string name) => seed++;
 	}
 
 	public class XUnitTestRunner : TestRunner
