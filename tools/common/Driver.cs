@@ -21,6 +21,20 @@ using ObjCRuntime;
 
 namespace Xamarin.Bundler {
 	public partial class Driver {
+		public static int Main (string [] args)
+		{
+			try {
+				Console.OutputEncoding = new UTF8Encoding (false, false);
+				SetCurrentLanguage ();
+				return Main2 (args);
+			} catch (Exception e) {
+				ErrorHelper.Show (e);
+			} finally {
+				Watch ("Total time", 0);
+			}
+			return 0;
+		}
+
 		static void AddSharedOptions (Application app, Mono.Options.OptionSet options)
 		{
 			options.Add ("sdkroot=", "Specify the location of Apple SDKs, default to 'xcode-select' value.", v => sdk_root = v);
