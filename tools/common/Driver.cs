@@ -573,6 +573,59 @@ namespace Xamarin.Bundler {
 			}
 		}
 
+		static string local_build;
+		public static string WalkUpDirHierarchyLookingForLocalBuild ()
+		{
+			if (local_build == null) {
+				var localPath = Path.GetDirectoryName (GetFullPath ());
+				while (localPath.Length > 1) {
+					if (File.Exists (Path.Combine (localPath, "Make.config"))) {
+						local_build = Path.Combine (localPath, LOCAL_BUILD_DIR, "Library", "Frameworks", PRODUCT + ".framework", "Versions", "Current");
+						return local_build;
+					}
+
+					localPath = Path.GetDirectoryName (localPath);
+				}
+			}
+			return local_build;
+		}
+
+		// This is the 'Current' directory of the installed framework
+		// For XI/XM installed from package it's /Library/Frameworks/Xamarin.iOS.framework/Versions/Current or /Library/Frameworks/Xamarin.Mac.framework/Versions/Current
+		static string framework_dir;
+		public static string FrameworkDirectory {
+			get {
+				if (framework_dir == null) {
+					var env_framework_dir = Environment.GetEnvironmentVariable (FRAMEWORK_LOCATION_VARIABLE);
+					if (!string.IsNullOrEmpty (env_framework_dir)) {
+						framework_dir = env_framework_dir;
+					} else {
+#if DEV
+						// when launched from Visual Studio, the executable is not in the final install location,
+						// so walk the directory hierarchy to find the root source directory.
+						framework_dir = WalkUpDirHierarchyLookingForLocalBuild ();
+#else
+						framework_dir = Path.GetDirectoryName (Path.GetDirectoryName (Path.GetDirectoryName (GetFullPath ())));
+#endif
+					}
+					framework_dir = Target.GetRealPath (framework_dir);
+				}
+				return framework_dir;
+			}
+		}
+
+		public static string FrameworkBinDirectory {
+			get {
+				return Path.Combine (FrameworkDirectory, "bin");
+			}
+		}
+
+		public static string FrameworkLibDirectory {
+			get {
+				return Path.Combine (FrameworkDirectory, "lib");
+			}
+		}
+
 		static void ValidateXcode (bool accept_any_xcode_version, bool warn_if_not_found)
 		{
 			if (sdk_root == null) {

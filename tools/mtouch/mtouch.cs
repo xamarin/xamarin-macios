@@ -81,6 +81,8 @@ namespace Xamarin.Bundler
 	public partial class Driver {
 		internal const string NAME = "mtouch";
 		internal const string PRODUCT = "Xamarin.iOS";
+		const string LOCAL_BUILD_DIR = "_ios-build";
+		const string FRAMEWORK_LOCATION_VARIABLE = "MD_MTOUCH_SDK_ROOT";
 
 		public static void ShowHelp (OptionSet os)
 		{
@@ -147,8 +149,6 @@ namespace Xamarin.Bundler
 			return v;
 		}
 
-		static string mtouch_dir;
-
 		public static void Log (string value)
 		{
 			Log (0, value);
@@ -203,44 +203,15 @@ namespace Xamarin.Bundler
 			return Path.Combine (GetProductSdkDirectory (app), "usr", "lib");
 		}
 
-		public static string DriverBinDirectory {
-			get {
-				return MonoTouchBinDirectory;
-			}
-		}
-
-		public static string MonoTouchBinDirectory {
-			get {
-				return Path.Combine (MonoTouchDirectory, "bin");
-			}
-		}
-
-		public static string MonoTouchDirectory {
-			get {
-				if (mtouch_dir == null) {
-					mtouch_dir = Path.GetFullPath (GetFullPath () + "/../../..");
-#if DEV
-					// when launched from Xamarin Studio, mtouch is not in the final install location,
-					// so walk the directory hierarchy to find the root source directory.
-					while (!File.Exists (Path.Combine (mtouch_dir, "Make.config")))
-						mtouch_dir = Path.GetDirectoryName (mtouch_dir);
-					mtouch_dir = Path.Combine (mtouch_dir, "_ios-build", "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current");
-#endif
-					mtouch_dir = Target.GetRealPath (mtouch_dir);
-				}
-				return mtouch_dir;
-			}
-		}
-
 		public static string GetPlatformFrameworkDirectory (Application app)
 		{
 			switch (app.Platform) {
 			case ApplePlatform.iOS:
-				return Path.Combine (MonoTouchDirectory, "lib", "mono", "Xamarin.iOS");
+				return Path.Combine (FrameworkLibDirectory, "mono", "Xamarin.iOS");
 			case ApplePlatform.WatchOS:
-				return Path.Combine (MonoTouchDirectory, "lib", "mono", "Xamarin.WatchOS");
+				return Path.Combine (FrameworkLibDirectory, "mono", "Xamarin.WatchOS");
 			case ApplePlatform.TVOS:
-				return Path.Combine (MonoTouchDirectory, "lib", "mono", "Xamarin.TVOS");
+				return Path.Combine (FrameworkLibDirectory, "mono", "Xamarin.TVOS");
 			default:
 				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, "Xamarin.iOS");
 			}
@@ -268,16 +239,21 @@ namespace Xamarin.Bundler
 
 		public static string GetProductSdkDirectory (Application app)
 		{
+			string sdkName;
 			switch (app.Platform) {
 			case ApplePlatform.iOS:
-				return Path.Combine (MonoTouchDirectory, "SDKs", app.IsDeviceBuild ? "MonoTouch.iphoneos.sdk" : "MonoTouch.iphonesimulator.sdk");
+				sdkName = app.IsDeviceBuild ? "MonoTouch.iphoneos.sdk" : "MonoTouch.iphonesimulator.sdk";
+				break;
 			case ApplePlatform.WatchOS:
-				return Path.Combine (MonoTouchDirectory, "SDKs", app.IsDeviceBuild ? "Xamarin.WatchOS.sdk" : "Xamarin.WatchSimulator.sdk");
+				sdkName = app.IsDeviceBuild ? "Xamarin.WatchOS.sdk" : "Xamarin.WatchSimulator.sdk";
+				break;
 			case ApplePlatform.TVOS:
-				return Path.Combine (MonoTouchDirectory, "SDKs", app.IsDeviceBuild ? "Xamarin.AppleTVOS.sdk" : "Xamarin.AppleTVSimulator.sdk");
+				sdkName = app.IsDeviceBuild ? "Xamarin.AppleTVOS.sdk" : "Xamarin.AppleTVSimulator.sdk";
+				break;
 			default:
 				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, "Xamarin.iOS");
 			}
+			return Path.Combine (FrameworkDirectory, "SDKs", sdkName);
 		}
 
 		public static string GetProductFrameworksDirectory (Application app)
@@ -438,7 +414,7 @@ namespace Xamarin.Bundler
 			}
 
 			if (enable_llvm)
-				aot.Append ("llvm-path=").Append (MonoTouchDirectory).Append ("/LLVM/bin/,");
+				aot.Append ("llvm-path=").Append (FrameworkDirectory).Append ("/LLVM/bin/,");
 
 			aot.Append ("outfile=").Append (outputFile);
 			if (enable_llvm)
@@ -1218,7 +1194,7 @@ namespace Xamarin.Bundler
 				}
 			},
 			{ "tls-provider=", "Specify the default TLS provider", v => { tls_provider = v; }},
-			{ "xamarin-framework-directory=", "The framework directory", v => { mtouch_dir = v; }, true },
+			{ "xamarin-framework-directory=", "The framework directory", v => { framework_dir = v; }, true },
 			{ "assembly-build-target=", "Specifies how to compile assemblies to native code. Possible values: 'staticobject' (default), 'dynamiclibrary' and 'framework'. " +
 					"Each option also takes an assembly and a potential name (defaults to the name of the assembly). Example: --assembly-build-target=mscorlib.dll=framework[=name]." +
 					"There also two special names: '@all' and '@sdk': --assembly-build-target=@all|@sdk=framework[=name].", v =>
@@ -1341,7 +1317,7 @@ namespace Xamarin.Bundler
 				throw new MonoTouchException (82, true, Errors.MT0082);
 
 			if (cross_prefix == null)
-				cross_prefix = MonoTouchDirectory;
+				cross_prefix = FrameworkDirectory;
 
 			Watch ("Setup", 1);
 
@@ -1391,7 +1367,7 @@ namespace Xamarin.Bundler
 		static string MlaunchPath {
 			get {
 				// check next to mtouch first
-				var path = Path.Combine (MonoTouchDirectory, "bin", "mlaunch");
+				var path = Path.Combine (FrameworkBinDirectory, "mlaunch");
 				if (File.Exists (path))
 					return path;
 
