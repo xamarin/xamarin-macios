@@ -3507,7 +3507,7 @@ namespace xharness
 					var buildLogXml = Logs.Create ($"nunit-install-{Timestamp}.xml", Log.XML_LOG);
 					XmlResultParser.GenerateFailure (buildXmlTmp.FullPath, "AppBuild", $"App could not be built {FailureMessage}.", projectTask.BuildLog.FullPath, XmlResultParser.Jargon.NUnitV3);
 					// add the required attachments and the info of the application that failed to install
-					var logs = Directory.GetFiles (BuildTask.Logs.Directory).Where (p => !p.Contains ("nunit")); // all logs but oursefl
+					var logs = Directory.GetFiles (BuildTask.Logs.Directory).Where (p => !p.Contains ("nunit")); // all logs but ourself
 					XmlResultParser.UpdateMissingData (buildXmlTmp.FullPath, buildLogXml.FullPath,  $"{projectTask.TestName} {projectTask.Variation}", logs);
 				}
 			} else {
