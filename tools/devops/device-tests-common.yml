@@ -153,15 +153,6 @@ jobs:
     continueOnError: true
     condition: succeededOrFailed()
 
-  - task: ArchiveFiles@1
-    displayName: 'Archive HtmlReport'
-    inputs:
-      rootFolder: 'xamarin-macios/jenkins-results'
-      includeRootFolder: false
-      archiveFile: '$(Build.ArtifactStagingDirectory)/HtmlReport-$(Build.BuildId).zip'
-    continueOnError: true
-    condition: succeededOrFailed()
-
   ###
   ### Upload the xml results to vsts. We have two types, nunit and xunit. We want both
   ###
@@ -182,7 +173,7 @@ jobs:
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: HtmlReport'
     inputs:
-      pathtoPublish: '$(Build.ArtifactStagingDirectory)/HtmlReport-$(Build.BuildId).zip'
+      pathtoPublish: 'xamarin-macios/jenkins-results'
       artifactName: HtmlReport
     continueOnError: true
     condition: succeededOrFailed()
