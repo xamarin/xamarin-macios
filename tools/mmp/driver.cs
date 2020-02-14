@@ -112,7 +112,6 @@ namespace Xamarin.Bundler {
 
 		static string icon;
 		static string certificate_name;
-		static int verbose = 0;
 		public static bool Force;
 
 		static bool is_extension, is_xpc_service;
@@ -262,8 +261,6 @@ namespace Xamarin.Bundler {
 				{ "i18n=", "List of i18n assemblies to copy to the output directory, separated by commas (none,all,cjk,mideast,other,rare,west)", v => App.I18n = LinkerOptions.ParseI18nAssemblies (v) },
 				{ "c|certificate=", "The Code Signing certificate for the application", v => { certificate_name = v; }},
 				{ "p", "Generate a plist for the application", v => { generate_plist = true; }},
-				{ "v|verbose", "Verbose output", v => { verbose++; }},
-				{ "q", "Quiet", v => verbose-- },
 				{ "i|icon=", "Use the specified file as the bundle icon", v => { icon = v; }},
 				{ "xml=", "Provide an extra XML definition file to the linker", v => App.Definitions.Add (v) },
 				{ "time", v => WatchLevel++ },
@@ -388,8 +385,6 @@ namespace Xamarin.Bundler {
 
 			App.RuntimeOptions = RuntimeOptions.Create (App, http_message_provider, tls_provider);
 
-			ErrorHelper.Verbosity = verbose;
-
 			if (action == Action.Help || (args.Length == 0)) {
 				ShowHelp (os);
 				return;
@@ -508,10 +503,7 @@ namespace Xamarin.Bundler {
 			App.InitializeCommon ();
 
 			Log ("Xamarin.Mac {0}.{1}", Constants.Version, Constants.Revision);
-
-			if (verbose > 0)
-				Console.WriteLine ("Selected target framework: {0}; API: Unified", targetFramework);
-
+			Log (1, "Selected target framework: {0}; API: Unified", targetFramework);
 			Log (1, $"Selected Linking: '{App.LinkMode}'");
 
 			if (action == Action.RunRegistrar) {
@@ -1031,19 +1023,6 @@ namespace Xamarin.Bundler {
 			return Application.IsUptodate (source, target);
 		}
 
-		public static void Log (string format, params object[] args)
-		{
-			Log (0, format, args);
-		}
-
-		public static void Log (int min_verbosity, string format, params object[] args)
-		{
-			if (min_verbosity > verbose)
-				return;
-
-			Console.WriteLine (format, args);
-		}
-
 		static string GenerateMain ()
 		{
 			var sb = new StringBuilder ();
@@ -1214,8 +1193,7 @@ namespace Xamarin.Bundler {
 				foreach (var assembly in BuildTarget.Assemblies) {
 					if (assembly.LinkWith != null) {
 						foreach (var linkWith in assembly.LinkWith) {
-							if (verbose > 1)
-								Console.WriteLine ("Found LinkWith on {0} for {1}", assembly.FileName, linkWith);
+							Log (2, "Found LinkWith on {0} for {1}", assembly.FileName, linkWith);
 							if (linkWith.EndsWith (".dylib", StringComparison.Ordinal)) {
 								// Link against the version copied into MonoBudle, since we install_name_tool'd it already
 								string libName = Path.GetFileName (linkWith);
@@ -1236,15 +1214,13 @@ namespace Xamarin.Bundler {
 							args.Add (linkFlag);
 					if (assembly.Frameworks != null) {
 						foreach (var f in assembly.Frameworks) {
-							if (verbose > 1)
-								Console.WriteLine ($"Adding Framework {f} for {assembly.FileName}");
+							Log (2, $"Adding Framework {f} for {assembly.FileName}");
 							HandleFramework (args, f, false);
 						}
 					}
 					if (assembly.WeakFrameworks != null) { 
 						foreach (var f in assembly.WeakFrameworks) {
-							if (verbose > 1)
-								Console.WriteLine ($"Adding Weak Framework {f} for {assembly.FileName}");
+							Log (2, $"Adding Weak Framework {f} for {assembly.FileName}");
 							HandleFramework (args, f, true);
 						}
 					}
@@ -1667,7 +1643,7 @@ namespace Xamarin.Bundler {
 				ErrorHelper.Show (new MonoMacException (2006, false, Errors.MM2006, name));
 				if (used_by_methods != null && used_by_methods.Count > 0) {
 					const int referencedByLimit = 25;
-					bool limitReferencedByWarnings = used_by_methods.Count > referencedByLimit && verbose < 4;
+					bool limitReferencedByWarnings = used_by_methods.Count > referencedByLimit && Verbosity < 4;
 					foreach (var m in limitReferencedByWarnings ? used_by_methods.Take (referencedByLimit) : used_by_methods) {
 						ErrorHelper.Warning (2009, Errors.MM2009, m.DeclaringType.FullName, m.Name);
 					}
@@ -1679,8 +1655,7 @@ namespace Xamarin.Bundler {
 			string real_src = GetRealPath (src);
 
 			string dest = Path.Combine (mmp_dir, Path.GetFileName (real_src));
-			if (verbose > 1)
-				Console.WriteLine ("Native library '{0}' copied to application bundle.", Path.GetFileName (real_src));
+			Log (2, "Native library '{0}' copied to application bundle.", Path.GetFileName (real_src));
 
 			if (GetRealPath (dest) == real_src) {
 				Console.WriteLine ("Dependency {0} was already at destination, skipping.", Path.GetFileName (real_src));
@@ -1881,8 +1856,7 @@ namespace Xamarin.Bundler {
 				// The linker later gets angry if you copy in a read only assembly
 				CopyFileAndRemoveReadOnly (asm, Path.Combine (mmp_dir, filename));
 
-				if (verbose > 0)
-					Console.WriteLine ("Added assembly {0}", asm);
+				Log (1, "Added assembly {0}", asm);
 
 				if (App.EnableDebug) {
 					var mdbfile = asm + ".mdb";
