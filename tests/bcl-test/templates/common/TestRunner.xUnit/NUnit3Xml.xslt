@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8" ?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:myGenerator="urn:hash-generator">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:testIdGenerator="urn:hash-generator">
   <xsl:output cdata-section-elements="message stack-trace"/>
 
   <xsl:template match="/">
@@ -98,9 +98,13 @@
 
   <!-- Map colection to test-case name="TestFixture" -->
   <xsl:template match="collection">
+    <xsl:param name="hash_source" select="@name"/>
     <test-suite type="TestFixture" inconclusive="0">
       <xsl:attribute name="name">
         <xsl:value-of select="@name"/>
+      </xsl:attribute>
+      <xsl:attribute name="id">
+        <xsl:value-of select="testIdGenerator:GenerateHash($hash_source)"/>
       </xsl:attribute>
       <xsl:attribute name="testcasecount">
         <xsl:value-of select="@total"/>
@@ -144,7 +148,7 @@
         <xsl:value-of select="@name"/>
       </xsl:attribute>
       <xsl:attribute name="id">
-        <xsl:value-of select="myGenerator:GenerateHash($hash_source)"/>
+        <xsl:value-of select="testIdGenerator:GenerateHash($hash_source)"/>
       </xsl:attribute>
       <xsl:attribute name="result">
         <xsl:if test="@result='Fail'">Failed</xsl:if>
