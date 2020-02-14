@@ -1747,7 +1747,7 @@ namespace Xamarin.Bundler
 
 			try {
 				var launcher = new StringBuilder ();
-				launcher.Append (Path.Combine (Driver.FrameworkDirectory, "bin", "simlauncher"));
+				launcher.Append (Path.Combine (Driver.FrameworkBinDirectory, "simlauncher"));
 				if (Is32Build)
 					launcher.Append ("32");
 				else if (Is64Build)
