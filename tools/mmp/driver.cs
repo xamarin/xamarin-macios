@@ -940,18 +940,10 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		[DllImport ("/usr/lib/system/libdyld.dylib")]
-		static extern int _NSGetExecutablePath (byte[] buffer, ref uint bufsize);
-
 		static string PartialStaticLibrary {
 			get {
 				return Path.Combine (FrameworkLibDirectory, string.Format ("mmp/Xamarin.Mac.registrar.{0}.a", IsUnifiedMobile ? "mobile" : "full"));
 			}
-		}
-
-		public static bool IsUptodate (string source, string target)
-		{
-			return Application.IsUptodate (source, target);
 		}
 
 		static string GenerateMain ()
