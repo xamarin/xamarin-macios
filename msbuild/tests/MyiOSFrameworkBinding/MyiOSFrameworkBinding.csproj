@@ -7,9 +7,9 @@
     <ProjectTypeGuids>{8FFB629D-F513-41CE-95D2-7ECE97B6EEEC};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <ProjectGuid>{CB22E620-41D9-4625-805E-0CE15D3A7286}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>MyiOSBinding</RootNamespace>
+    <RootNamespace>MyiOSFrameworkBinding</RootNamespace>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
-    <AssemblyName>MyiOSBinding</AssemblyName>
+    <AssemblyName>MyiOSFrameworkBinding</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
