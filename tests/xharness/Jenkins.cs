@@ -2915,14 +2915,15 @@ namespace xharness
 	class XBuildTask : BuildProjectTask
 	{
 		public bool UseMSBuild;
+		public Log BuildLog;
 
 		protected override async Task ExecuteAsync ()
 		{
 			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
-				var log = Logs.Create ($"build-{Platform}-{Timestamp}.txt", Log.BUILD_LOG);
-				var binlogPath = log.FullPath.Replace (".txt", ".binlog");
+				BuildLog = Logs.Create ($"build-{Platform}-{Timestamp}.txt", Log.BUILD_LOG);
+				var binlogPath = BuildLog.FullPath.Replace (".txt", ".binlog");
 
-				await RestoreNugetsAsync (log, resource, useXIBuild: true);
+				await RestoreNugetsAsync (BuildLog, resource, useXIBuild: true);
 
 				using (var xbuild = new Process ()) {
 					xbuild.StartInfo.FileName = Harness.XIBuildPath;
@@ -2939,13 +2940,13 @@ namespace xharness
 					SetEnvironmentVariables (xbuild);
 					if (UseMSBuild)
 						xbuild.StartInfo.EnvironmentVariables ["MSBuildExtensionsPath"] = null;
-					LogEvent (log, "Building {0} ({1})", TestName, Mode);
+					LogEvent (BuildLog, "Building {0} ({1})", TestName, Mode);
 					if (!Harness.DryRun) {
 						var timeout = TimeSpan.FromMinutes (60);
-						var result = await xbuild.RunAsync (log, true, timeout);
+						var result = await xbuild.RunAsync (BuildLog, true, timeout);
 						if (result.TimedOut) {
 							ExecutionResult = TestExecutingResult.TimedOut;
-							log.WriteLine ("Build timed out after {0} seconds.", timeout.TotalSeconds);
+							BuildLog.WriteLine ("Build timed out after {0} seconds.", timeout.TotalSeconds);
 						} else if (result.Succeeded) {
 							ExecutionResult = TestExecutingResult.Succeeded;
 						} else {
@@ -2955,7 +2956,7 @@ namespace xharness
 					Jenkins.MainLog.WriteLine ("Built {0} ({1})", TestName, Mode);
 				}
 
-				log.Dispose ();
+				BuildLog.Dispose ();
 			}
 		}
 
@@ -3409,6 +3410,16 @@ namespace xharness
 					ExecutionResult = TestExecutingResult.BuildFailure;
 				}
 				FailureMessage = BuildTask.FailureMessage;
+				if (Harness.InCI && BuildTask is XBuildTask projectTask) {
+					// VSTS does not provide a nice way to report build errors, create a fake
+					// test result with a failure in the case the build did not work
+					var buildXmlTmp = Logs.Create ($"nunit-build-{Timestamp}.tmp", "Build Log tmp");
+					var buildLogXml = Logs.Create ($"nunit-build-{Timestamp}.xml", Log.XML_LOG);
+					XmlResultParser.GenerateFailure (buildXmlTmp.FullPath, "AppBuild", $"App could not be built {FailureMessage}.", projectTask.BuildLog.FullPath, XmlResultParser.Jargon.NUnitV3);
+					// add the required attachments and the info of the application that failed to install
+					var logs = Directory.GetFiles (BuildTask.Logs.Directory).Where (p => !p.Contains ("nunit")); // all logs but ourself
+					XmlResultParser.UpdateMissingData (buildXmlTmp.FullPath, buildLogXml.FullPath,  $"{projectTask.TestName} {projectTask.Variation}", logs);
+				}
 			} else {
 				ExecutionResult = TestExecutingResult.Built;
 			}
