@@ -1539,7 +1539,7 @@ namespace Xamarin.Bundler
 
 		public static void CreateDsym (string output_dir, string appname, string dsym_dir)
 		{
-			RunDsymUtil (Path.Combine (output_dir, appname), "-t", "4", "-z", "-o", dsym_dir);
+			RunDsymUtil (Path.Combine (output_dir, appname), "-num-threads", "4", "-z", "-o", dsym_dir);
 			RunCommand ("/usr/bin/mdimport", dsym_dir);
 		}
 
