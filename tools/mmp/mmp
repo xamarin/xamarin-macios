@@ -1,0 +1,7 @@
+#!/bin/bash -e
+
+pushd "$(dirname "$0")/.." > /dev/null
+FRAMEWORK_PATH=$(pwd -P)
+popd > /dev/null
+
+exec /Library/Frameworks/Mono.framework/Commands/mono --debug "$FRAMEWORK_PATH/lib/mmp/mmp.exe" "$@"
