@@ -63,7 +63,7 @@ namespace Xamarin.MacDev.Tasks
 		{
 			var args = new CommandLineBuilder ();
 
-			args.AppendSwitch ("-t");
+			args.AppendSwitch ("-num-threads");
 			args.AppendSwitch ("4");
 			args.AppendSwitch ("-z");
 			args.AppendSwitch ("-o");
