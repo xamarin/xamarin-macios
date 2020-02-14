@@ -859,8 +859,20 @@ namespace xharness
 								crash_reason = node?.SelectSingleNode ("reason")?.InnerText;
 							}
 						}
-						if (crash_reason != null)
+						if (crash_reason != null) {
+							// if in CI, do write an xml error that will be picked as a failure by VSTS
+							if (Harness.InCI) {
+								// VSTS does not provide a nice way to report build errors, create a fake
+								// test result with a failure in the case the build did not work
+								var crashXmlTmp = Logs.Create ($"nunit-crash-{Harness.Timestamp}.tmp", "Build Log tmp");
+								var crashLogXml = Logs.Create ($"nunit-crash-{Harness.Timestamp}.xml", Log.XML_LOG);
+								XmlResultParser.GenerateFailure (crashXmlTmp.FullPath, "AppCrash", $"App crashed {crash_reason}.", crash_reports.Log.FullPath, XmlResultParser.Jargon.NUnitV3);
+								// add the required attachments and the info of the application that failed to install
+								var crash_logs = Directory.GetFiles (Logs.Directory).Where (p => !p.Contains ("nunit")); // all logs but ourself
+								XmlResultParser.UpdateMissingData (crashXmlTmp.FullPath, crashLogXml.FullPath, $"{appName} {Variation}", crash_logs);
+							}
 							break;
+						}
 					} catch (Exception e) {
 						Harness.Log (2, "Failed to process crash report '{1}': {0}", e.Message, crash.Description);
 					}
@@ -871,8 +883,27 @@ namespace xharness
 					} else {
 						FailureMessage = $"Killed by the OS ({crash_reason})";
 					}
+					if (Harness.InCI) {
+						 // VSTS does not provide a nice way to report build errors, create a fake
+						// test result with a failure in the case the build did not work
+						var crashXmlTmp = Logs.Create ($"nunit-crash-{Harness.Timestamp}.tmp", "Build Log tmp");
+						var crashLogXml = Logs.Create ($"nunit-crash-{Harness.Timestamp}.xml", Log.XML_LOG);
+						XmlResultParser.GenerateFailure (crashXmlTmp.FullPath, "AppCrash", $"App crashed: {FailureMessage}", crash_reports.Log.FullPath, XmlResultParser.Jargon.NUnitV3);
+						// add the required attachments and the info of the application that failed to install
+						var crash_logs = Directory.GetFiles (Logs.Directory).Where (p => !p.Contains ("nunit")); // all logs but ourself
+						XmlResultParser.UpdateMissingData (crashXmlTmp.FullPath, crashLogXml.FullPath, $"{appName} {Variation}", crash_logs);
+					}
 				} else if (launch_failure) {
+					// same as with a crash
 					FailureMessage = $"Launch failure";
+					if (Harness.InCI) {
+						var launchXmlTmp = Logs.Create ($"nunit-launch-{Harness.Timestamp}.tmp", "Build Log tmp");
+						var launchLogXml = Logs.Create ($"nunit-launch-{Harness.Timestamp}.xml", Log.XML_LOG);
+						XmlResultParser.GenerateFailure (launchXmlTmp.FullPath, "AppLaunch", FailureMessage, main_log.FullPath, XmlResultParser.Jargon.NUnitV3);
+						// add the required attachments and the info of the application that failed to install
+						var launchLogs = Directory.GetFiles (Logs.Directory).Where (p => !p.Contains ("nunit")); // all logs but ourself
+						XmlResultParser.UpdateMissingData (launchXmlTmp.FullPath, launchLogXml.FullPath, $"{appName} {Variation}", launchLogs);
+					}
 				}
 			}
 
