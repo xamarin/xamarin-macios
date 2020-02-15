@@ -1,0 +1,95 @@
+# Template that contains the different stages to be executed in a pipeline
+# 
+# The tamplate contains the following parameters
+#
+# include32b: Run tests on iOS 32b devices.
+# useBetaDevices: Use beta devices instead of stable ones.
+# pool: The pool/lab to use
+# timeout: Timeout used in the different jobs.
+# maxParallel: Max number of parallel jobs to do in a stage.
+#
+parameters:
+
+# set demands as possible parameters because we keep changing them from lab to lab :/
+- name: iOSDemand
+  type: string
+  default: 'ios'
+
+- name: iOS32Demand
+  type: string
+  default: 'xismoke-32'
+
+- name: tvOSDemand
+  type: string
+  default: 'tvos'
+
+- name: pool
+  type: string 
+  default: 'VSEng-Xamarin-Mac-Devices' # default ddfun pool
+
+- name: timeout
+  type: number
+  default: 1000
+
+- name: maxParallel
+  type: number
+  default: 5
+
+stages:
+- stage: iOSDeviceTests 
+  displayName: 'iOS Device Tests'
+  dependsOn: []    # this removes the implicit dependency on previous stage and causes this to run in parallel
+  jobs:
+  - template: job-matrix.yml # all the smart stuff happens in the template, just needed to set the params
+    parameters:
+      demands:  ${{ parameters.iOSDemand }}
+      deviceLabel: 'run-ios-64-tests'
+      variation: "iOS"
+      pool: ${{ parameters.pool }} 
+      timeout: ${{ parameters.timeout }} 
+      maxParallel: ${{ parameters.maxParallel}} 
+
+- stage: tvOSDeviceTests
+  displayName: 'tvOS Device Tests'
+  dependsOn: []    # this removes the implicit dependency on previous stage and causes this to run in parallel
+  jobs:
+  - template: job-matrix.yml # all the smart stuff happens in the template, just needed to set the params
+    parameters:
+      demands: ${{ parameters.tvOSDemand }}
+      deviceLabel: 'run-tvos-tests'
+      variation: "tvOS"
+      pool: ${{ parameters.pool }} 
+      timeout: ${{ parameters.timeout }} 
+      maxParallel: ${{ parameters.maxParallel }} 
+
+# Wait for the lab to have devices, templates do not let me do what I want with expressions :/ 
+#- stage: iOS32DeviceTests 
+#  displayName: 'iOS32b Device Tests'
+#  dependsOn: []    # this removes the implicit dependency on previous stage and causes this to run in parallel
+#  jobs:
+#  - template: job-matrix.yml # all the smart stuff happens in the template, just needed to set the params
+#    parameters:
+#      demands: ${{ parameters.iOS32Demand }} # old QA lab capability, might change
+#      deviceLabel: 'run-ios-32-tests'
+#      variation: "iOS32b"
+#      pool: ${{ parameters.pool }} 
+#      timeout: ${{ parameters.timeout }} 
+#      maxParallel: ${{ parameters.maxParallel }} 
+
+- stage: monitoring
+  displayName: 'Device test monitoring'
+  dependsOn:
+  - iOSDeviceTests
+  - tvOSDeviceTests
+# - iOS32DeviceTests 
+
+  condition: always() # always notify of what happened.
+
+  pool: 
+    name: ${{ parameters.pool }}
+    demands: 'ios' # we should not have demands here, but the problem is that DDFun does not set all machines to be able to checout private repos :/
+
+  jobs:
+  - job:
+    steps:
+    - template: publish-results.yml # template contains the steps to get all test reports and upload them

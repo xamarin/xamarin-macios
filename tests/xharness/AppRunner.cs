@@ -373,6 +373,9 @@ namespace xharness
 						logs.AddRange (Directory.GetFiles (Logs.Directory));
 						logs.AddRange (Directory.GetFiles (BuildTask.LogDirectory));
 						// add the attachments and write in the new filename
+						// add a final prefix to the file name to make sure that the VSTS test uploaded just pick
+						// the final version, else we will upload tests more than once
+						newFilename = Path.Combine (Path.GetDirectoryName (newFilename), $"vsts-{Path.GetFileName (newFilename)}");
 						XmlResultParser.UpdateMissingData (path, newFilename, testRunName, logs);
 					} else {
 						// rename the path to the correct value

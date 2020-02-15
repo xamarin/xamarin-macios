@@ -40,6 +40,11 @@ namespace xharness
 		public bool IncludeXtro;
 		public bool IncludeCecil;
 		public bool IncludeDocs;
+		public bool IncludeNewBCL;
+		public bool IncludeOldBCL;
+		public bool IncludeMscorlib;
+		public bool IncludeXamarin = true;
+		public bool IncludeMonotouch = true;
 
 		public bool CleanSuccessfulTestRuns = true;
 		public bool UninstallTestApp = true;
@@ -219,13 +224,31 @@ namespace xharness
 		{
 			if (!project.IsExecutableProject)
 				return false;
+			
+			if (project.IsBclTest) {
+				// logic is not that hard, lets start with the old blc, that is easy, it returns true
+				// if IncludeBCL || IncludeOldBCL
+				if (!project.IsNewBclTest)
+					return IncludeBcl || IncludeOldBCL;
+				// we now have to deal with the new bcls, that include the mscorlib variation, that
+				// is NEW && can be ignored, so lets split between all and the special case
+				if (project.IsMscorlib) { // not need to check if new since we check above
+					return IncludeMscorlib;
+				} else {
+					// simple case, is in if IncludeBCL || IncludeNew
+					return IncludeBcl || IncludeNewBCL;
+				}
+				
+			}
 
-			if (!IncludeBcl && project.IsBclTest)
+			if (IncludeMonotouch && project.IsMonotouch)
+				return true;
+
+			if (!IncludeXamarin && !project.IsBclTest)
 				return false;
 
 			if (Harness.IncludeSystemPermissionTests == false && project.Name == "introspection")
 				return false;
-
 			return true;
 		}
 
@@ -625,7 +648,8 @@ namespace xharness
 				foreach (var task in projectTasks) {
 					task.TimeoutMultiplier = project.TimeoutMultiplier;
 					task.BuildOnly |= project.BuildOnly;
-					task.Ignored |= ignored;
+					if (!task.Ignored && ignored)
+						task.Ignored = true;
 				}
 				rv.AddRange (projectTasks);
 			}
@@ -799,6 +823,9 @@ namespace xharness
 			SetEnabled (labels, "mtouch", ref IncludeMtouch);
 			SetEnabled (labels, "mmp", ref IncludeMmpTest);
 			SetEnabled (labels, "bcl", ref IncludeBcl);
+			SetEnabled (labels, "new-bcl", ref IncludeNewBCL);
+			SetEnabled (labels, "old-bcl", ref IncludeOldBCL);
+			SetEnabled (labels, "mscorlib", ref IncludeMscorlib);
 			SetEnabled (labels, "btouch", ref IncludeBtouch);
 			SetEnabled (labels, "mac-binding-project", ref IncludeMacBindingProject);
 			SetEnabled (labels, "ios-extensions", ref IncludeiOSExtensions);
@@ -817,6 +844,9 @@ namespace xharness
 			SetEnabled (labels, "mac", ref IncludeMac);
 			SetEnabled (labels, "ios-msbuild", ref IncludeiOSMSBuild);
 			SetEnabled (labels, "ios-simulator", ref IncludeSimulator);
+			SetEnabled (labels, "xamarin", ref IncludeXamarin);
+			SetEnabled (labels, "monotouch", ref IncludeMonotouch);
+
 			bool inc_permission_tests = false;
 			if (SetEnabled (labels, "system-permission", ref inc_permission_tests))
 				Harness.IncludeSystemPermissionTests = inc_permission_tests;

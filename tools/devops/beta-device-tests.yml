@@ -12,7 +12,7 @@ resources:
 
 # create parallel stages, this means that one single trigger to the pipeline will execute tvos and ios device tests
 stages:
-- template: templates/stable-stages.yml # all the smart stuff happens in the template, just needed to set the params
+- template: templates/beta-stages.yml # all the smart stuff happens in the template, just needed to set the params
   parameters:
     pool: 'VSEng-Xamarin-Mac-Devices'
     timeout: 1000

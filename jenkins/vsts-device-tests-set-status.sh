@@ -89,7 +89,7 @@ if test -z "$START"; then
 
 	printf "%s%s on [Azure DevOps](%s)($DEVICE_TYPE)%s %s\\n\\n" "$RESULT_EMOJII" "$DESCRIPTION" "$VSTS_BUILD_URL" "$HTML_REPORT" "$RESULT_EMOJII" >> "$MESSAGE_FILE"
 
-	FILE=$PWD/tests/TestSummary.md
+	FILE=$PWD/TestSummary.md
 	if ! test -f "$FILE"; then
 		printf "🔥 Tests failed catastrophically on $DEVICE_TYPE  (no summary found)\\n" >> "$MESSAGE_FILE"
 	else
