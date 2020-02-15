@@ -2639,7 +2639,28 @@
 		<comment>
 		</comment>
 	</data>
-	
+
+	<data name="MX5312" xml:space="preserve">
+		<value>pkg-config failed with an error code '{0}'. Check build log for details.
+		</value>
+		<comment>
+		</comment>
+	</data>
+
+	<data name="MX5313" xml:space="preserve">
+		<value>Could not find pkg-config. Please install the Mono.framework from https://mono-project.com/Downloads
+		</value>
+		<comment>
+		</comment>
+	</data>
+
+	<data name="MX5314" xml:space="preserve">
+		<value>Failed to execute pkg-config: '{0}'. Check build log for details.
+		</value>
+		<comment>
+		</comment>
+	</data>
+
 	<data name="MT8018" xml:space="preserve">
 		<value>Internal consistency error. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.
 		</value>

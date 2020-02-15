@@ -3002,6 +3002,30 @@
         <note>
 		</note>
       </trans-unit>
+      <trans-unit id="MX5312">
+        <source>pkg-config failed with an error code '{0}'. Check build log for details.
+		</source>
+        <target state="new">pkg-config failed with an error code '{0}'. Check build log for details.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX5313">
+        <source>Could not find pkg-config. Please install the Mono.framework from https://mono-project.com/Downloads
+		</source>
+        <target state="new">Could not find pkg-config. Please install the Mono.framework from https://mono-project.com/Downloads
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX5314">
+        <source>Failed to execute pkg-config: '{0}'. Check build log for details.
+		</source>
+        <target state="new">Failed to execute pkg-config: '{0}'. Check build log for details.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
       <trans-unit id="default">
         <source>The error message for code {0} could not be found. Please report this missing message on GitHub at https://github.com/xamarin/xamarin-macios/issues/new</source>
         <target state="new">The error message for code {0} could not be found. Please report this missing message on GitHub at https://github.com/xamarin/xamarin-macios/issues/new</target>
