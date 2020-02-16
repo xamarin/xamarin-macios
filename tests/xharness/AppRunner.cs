@@ -373,6 +373,9 @@ namespace xharness
 						logs.AddRange (Directory.GetFiles (Logs.Directory));
 						logs.AddRange (Directory.GetFiles (BuildTask.LogDirectory));
 						// add the attachments and write in the new filename
+						// add a final prefix to the file name to make sure that the VSTS test uploaded just pick
+						// the final version, else we will upload tests more than once
+						newFilename = XmlResultParser.GetVSTSFilename (newFilename);
 						XmlResultParser.UpdateMissingData (path, newFilename, testRunName, logs);
 					} else {
 						// rename the path to the correct value
@@ -863,16 +866,8 @@ namespace xharness
 						}
 						if (crash_reason != null) {
 							// if in CI, do write an xml error that will be picked as a failure by VSTS
-							if (Harness.InCI) {
-								// VSTS does not provide a nice way to report build errors, create a fake
-								// test result with a failure in the case the build did not work
-								var crashXmlTmp = Logs.Create ($"nunit-crash-{Harness.Timestamp}.tmp", "Build Log tmp");
-								var crashLogXml = Logs.Create ($"nunit-crash-{Harness.Timestamp}.xml", Log.XML_LOG);
-								XmlResultParser.GenerateFailure (crashXmlTmp.FullPath, "AppCrash", $"App crashed {crash_reason}.", crash_reports.Log.FullPath, XmlResultParser.Jargon.NUnitV3);
-								// add the required attachments and the info of the application that failed to install
-								var crash_logs = Directory.GetFiles (Logs.Directory).Where (p => !p.Contains ("nunit")); // all logs but ourself
-								XmlResultParser.UpdateMissingData (crashXmlTmp.FullPath, crashLogXml.FullPath, $"{appName} {Variation}", crash_logs);
-							}
+							if (Harness.InCI)
+								XmlResultParser.GenerateFailure (Logs, "crash", appName, Variation, "AppCrash", $"App crashed {crash_reason}.", crash_reports.Log.FullPath, XmlResultParser.Jargon.NUnitV3);
 							break;
 						}
 					} catch (Exception e) {
@@ -885,27 +880,13 @@ namespace xharness
 					} else {
 						FailureMessage = $"Killed by the OS ({crash_reason})";
 					}
-					if (Harness.InCI) {
-						 // VSTS does not provide a nice way to report build errors, create a fake
-						// test result with a failure in the case the build did not work
-						var crashXmlTmp = Logs.Create ($"nunit-crash-{Harness.Timestamp}.tmp", "Build Log tmp");
-						var crashLogXml = Logs.Create ($"nunit-crash-{Harness.Timestamp}.xml", Log.XML_LOG);
-						XmlResultParser.GenerateFailure (crashXmlTmp.FullPath, "AppCrash", $"App crashed: {FailureMessage}", crash_reports.Log.FullPath, XmlResultParser.Jargon.NUnitV3);
-						// add the required attachments and the info of the application that failed to install
-						var crash_logs = Directory.GetFiles (Logs.Directory).Where (p => !p.Contains ("nunit")); // all logs but ourself
-						XmlResultParser.UpdateMissingData (crashXmlTmp.FullPath, crashLogXml.FullPath, $"{appName} {Variation}", crash_logs);
-					}
+					if (Harness.InCI)
+						XmlResultParser.GenerateFailure (Logs, "crash", appName, Variation, "AppCrash", $"App crashed: {FailureMessage}", crash_reports.Log.FullPath, XmlResultParser.Jargon.NUnitV3);
 				} else if (launch_failure) {
 					// same as with a crash
 					FailureMessage = $"Launch failure";
-					if (Harness.InCI) {
-						var launchXmlTmp = Logs.Create ($"nunit-launch-{Harness.Timestamp}.tmp", "Build Log tmp");
-						var launchLogXml = Logs.Create ($"nunit-launch-{Harness.Timestamp}.xml", Log.XML_LOG);
-						XmlResultParser.GenerateFailure (launchXmlTmp.FullPath, "AppLaunch", FailureMessage, main_log.FullPath, XmlResultParser.Jargon.NUnitV3);
-						// add the required attachments and the info of the application that failed to install
-						var launchLogs = Directory.GetFiles (Logs.Directory).Where (p => !p.Contains ("nunit")); // all logs but ourself
-						XmlResultParser.UpdateMissingData (launchXmlTmp.FullPath, launchLogXml.FullPath, $"{appName} {Variation}", launchLogs);
-					}
+					if (Harness.InCI)
+						XmlResultParser.GenerateFailure (Logs, "launch", appName, Variation, "AppLaunch", FailureMessage, main_log.FullPath, XmlResultParser.Jargon.NUnitV3);
 				}
 			}
 
