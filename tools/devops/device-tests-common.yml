@@ -196,7 +196,13 @@ jobs:
   ### Cleanup after us, not having that can lead to VSMac install issues
   ###
 
-  - bash: ./xamarin-macios/tools/devops/cleanup.sh
+  - bash: |
+      sudo rm -rf /Applications/Visual\ Studio*
+      rm -rf ~/Library/Caches/VisualStudio
+      rm -rf ~/Library/Logs/VisualStudio
+      rm -rf ~/Library/VisualStudio
+      rm -rf ~/Library/Preferences/Xamarin/
+      rm -rf ~/Library/Caches/com.xamarin.provisionator
     displayName: 'Cleanup'
     continueOnError: true
     condition: succeededOrFailed()
