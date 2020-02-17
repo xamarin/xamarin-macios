@@ -37,6 +37,7 @@ namespace MonoMac.Tuner {
 		public MonoMacLinkContext LinkContext { get; set; }
 		public Target Target { get; set; }
 		public Application Application { get { return Target.App; } }
+		public List<string> WarnOnTypeRef { get; set; }
 
 		public static I18nAssemblies ParseI18nAssemblies (string i18n)
 		{
@@ -152,6 +153,9 @@ namespace MonoMac.Tuner {
 			if (options.LinkMode != LinkMode.None)
 				pipeline.AppendStep (new BlacklistStep ());
 
+			if (options.WarnOnTypeRef.Count > 0)
+				pipeline.AppendStep (new PreLinkScanTypeReferenceStep (options.WarnOnTypeRef));
+
 			pipeline.AppendStep (new CustomizeMacActions (options.LinkMode, options.SkippedAssemblies));
 
 			// We need to store the Field attribute in annotations, since it may end up removed.
@@ -184,6 +188,10 @@ namespace MonoMac.Tuner {
 			pipeline.AppendStep (new ListExportedSymbols (options.MarshalNativeExceptionsState, options.SkipExportedSymbolsInSdkAssemblies));
 
 			pipeline.AppendStep (new OutputStep ());
+
+			// expect that changes can occur until it's all saved back to disk
+			if (options.WarnOnTypeRef.Count > 0)
+				pipeline.AppendStep (new PostLinkScanTypeReferenceStep (options.WarnOnTypeRef));
 
 			return pipeline;
 		}
