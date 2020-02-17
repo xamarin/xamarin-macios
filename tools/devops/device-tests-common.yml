@@ -205,4 +205,4 @@ jobs:
       rm -rf ~/Library/Caches/com.xamarin.provisionator
     displayName: 'Cleanup'
     continueOnError: true
-    condition: succeededOrFailed()
+    condition: always() # no matter what, includes cancellation
