@@ -713,7 +713,7 @@ namespace xharness {
 
 		}
 
-		public static void GenerateFailure (string destination, string title, string message, string stderrPath, Jargon jargon)
+		static void GenerateFailureXml (string destination, string title, string message, string stderrPath, Jargon jargon)
 		{
 			XmlWriterSettings settings = new XmlWriterSettings { Indent = true };
 			using (var stream = File.CreateText (destination))
@@ -734,5 +734,20 @@ namespace xharness {
 				xmlWriter.WriteEndDocument ();
 			}
 		}
+
+		public static void GenerateFailure (Logs logs, string source, string appName, string variation, string title, string message, string stderrPath, Jargon jargon)
+		{
+			// VSTS does not provide a nice way to report build errors, create a fake
+			// test result with a failure in the case the build did not work
+			var failureXmlTmp = logs.Create ($"nunit-{source}-{Harness.Timestamp}.tmp", "Failure Log tmp");
+			var failureLogXml = logs.Create ($"vsts-nunit-{source}-{Harness.Timestamp}.xml", Log.XML_LOG);
+			GenerateFailureXml (failureXmlTmp.FullPath, title, message, stderrPath, jargon);
+			// add the required attachments and the info of the application that failed to install
+			var failure_logs = Directory.GetFiles (logs.Directory).Where (p => !p.Contains ("nunit")); // all logs but ourself
+			UpdateMissingData (failureXmlTmp.FullPath, failureLogXml.FullPath, $"{appName} {variation}", failure_logs);
+		}
+
+		public static string GetVSTSFilename (string filename)
+			=> Path.Combine (Path.GetDirectoryName (filename), $"vsts-{Path.GetFileName (filename)}");
 	}
 }
