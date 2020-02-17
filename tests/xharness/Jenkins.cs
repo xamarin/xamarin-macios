@@ -3410,16 +3410,8 @@ namespace xharness
 					ExecutionResult = TestExecutingResult.BuildFailure;
 				}
 				FailureMessage = BuildTask.FailureMessage;
-				if (Harness.InCI && BuildTask is XBuildTask projectTask) {
-					// VSTS does not provide a nice way to report build errors, create a fake
-					// test result with a failure in the case the build did not work
-					var buildXmlTmp = Logs.Create ($"nunit-build-{Timestamp}.tmp", "Build Log tmp");
-					var buildLogXml = Logs.Create ($"nunit-build-{Timestamp}.xml", Log.XML_LOG);
-					XmlResultParser.GenerateFailure (buildXmlTmp.FullPath, "AppBuild", $"App could not be built {FailureMessage}.", projectTask.BuildLog.FullPath, XmlResultParser.Jargon.NUnitV3);
-					// add the required attachments and the info of the application that failed to install
-					var logs = Directory.GetFiles (BuildTask.Logs.Directory).Where (p => !p.Contains ("nunit")); // all logs but ourself
-					XmlResultParser.UpdateMissingData (buildXmlTmp.FullPath, buildLogXml.FullPath,  $"{projectTask.TestName} {projectTask.Variation}", logs);
-				}
+				if (Harness.InCI && BuildTask is XBuildTask projectTask)
+					XmlResultParser.GenerateFailure (Logs, "build", projectTask.TestName, projectTask.Variation, "AppBuild", $"App could not be built {FailureMessage}.", projectTask.BuildLog.FullPath, XmlResultParser.Jargon.NUnitV3);
 			} else {
 				ExecutionResult = TestExecutingResult.Built;
 			}
@@ -3658,17 +3650,8 @@ namespace xharness
 							if (!install_result.Succeeded) {
 								FailureMessage = $"Install failed, exit code: {install_result.ExitCode}.";
 								ExecutionResult = TestExecutingResult.Failed;
-								if (Harness.InCI) {
-									// we are in the CI, VSTS had no nice way to report that we failed to install the app, which makes
-									// the monitoring job harder, but we can write a installation failed test and that will be reported in
-									// VSTS and an install failure when the tests are uploaded
-									var installLogXmlTmp = Logs.Create ($"nunit-install-{Timestamp}.tmp", "Install Log tmp");
-									var installLogXml = Logs.Create ($"nunit-install-{Timestamp}.xml", Log.XML_LOG);
-									XmlResultParser.GenerateFailure (installLogXmlTmp.FullPath, "AppInstallation", $"Install failed, exit code: {install_result.ExitCode}", install_log.FullPath, XmlResultParser.Jargon.NUnitV3);
-									// add the required attachments and the info of the application that failed to install
-									var logs = Directory.GetFiles (Logs.Directory).Where (p => !p.Contains ("nunit")); // all logs but oursefl
-									XmlResultParser.UpdateMissingData (installLogXmlTmp.FullPath, installLogXml.FullPath, runner.AppName, logs);
-								}
+								if (Harness.InCI)
+									XmlResultParser.GenerateFailure (Logs, "install", runner.AppName, runner.Variation, "AppInstallation", $"Install failed, exit code: {install_result.ExitCode}", install_log.FullPath, XmlResultParser.Jargon.NUnitV3);
 							}
 						} finally {
 							this.install_log.Dispose ();
