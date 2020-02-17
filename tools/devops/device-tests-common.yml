@@ -175,7 +175,7 @@ jobs:
     displayName: 'Publish NUnit Device Test Results'
     inputs:
       testResultsFormat: NUnit
-      testResultsFiles: '**/nunit-test-*.xml'
+      testResultsFiles: '**/vsts-*.xml'
       failTaskOnFailedTests: true
     continueOnError: true
     condition: and(succeededOrFailed(), eq(variables['ProvisioningProfiles'], 'success')) # with no profiles we have no test results
