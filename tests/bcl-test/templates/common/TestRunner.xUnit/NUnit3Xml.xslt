@@ -7,7 +7,7 @@
   </xsl:template>
 
   <xsl:template match="assemblies">
-    <test-run name="Test results" inconclusive="0" asserts="0" id="2"> 
+    <test-run name="Test results" fullname="Test results" inconclusive="0" asserts="0" id="2"> 
       <!-- test-run attributes -->
       <xsl:attribute name="testcasecount">
         <xsl:value-of select="sum(assembly/@total)"/>
@@ -145,6 +145,9 @@
     <xsl:param name="hash_source" select="@name"/>
     <test-case>
       <xsl:attribute name="name">
+        <xsl:value-of select="@name"/>
+      </xsl:attribute>
+      <xsl:attribute name="fullname">
         <xsl:value-of select="@name"/>
       </xsl:attribute>
       <xsl:attribute name="id">
