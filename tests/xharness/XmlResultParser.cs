@@ -375,6 +375,8 @@ namespace xharness {
 							break;
 						}
 					} while (reader.ReadToNextSibling ("test-case"));
+					writer.WriteLine ("</ul>");
+					writer.WriteLine ("</div>");
 				}
 			}
 		}
@@ -420,9 +422,11 @@ namespace xharness {
 						writer.Write (": ");
 						writer.Write (message.AsHtml ());
 					}
+					writer.WriteLine ("<br />");
+					writer.WriteLine ("</li>");
 				}
-				writer.WriteLine ("<br />");
-				writer.WriteLine ("</li>");
+				writer.WriteLine ("</ul>");
+				writer.WriteLine ("</div>");
 			}
 		}
 
@@ -460,9 +464,11 @@ namespace xharness {
 						writer.Write (": ");
 						writer.Write (message.AsHtml ());
 					}
+					writer.WriteLine ("<br />");
+					writer.WriteLine ("</li>");
 				}
-				writer.WriteLine ("<br />");
-				writer.WriteLine ("</li>");
+				writer.WriteLine ("</ul>");
+				writer.WriteLine ("</div>");
 			}
 		}
 
