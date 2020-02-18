@@ -129,50 +129,10 @@ namespace Xamarin.Bundler
 		static string cross_prefix = Environment.GetEnvironmentVariable ("MONO_CROSS_PREFIX");
 		static string extra_args = Environment.GetEnvironmentVariable ("MTOUCH_ENV_OPTIONS");
 
-		static int verbose = GetDefaultVerbosity ();
-
 		public static string DotFile {
 			get {
 				return dotfile;
 			}
-		}
-
-		static int GetDefaultVerbosity ()
-		{
-			var v = 0;
-			var fn = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.Personal), ".mtouch-verbosity");
-			if (File.Exists (fn)) {
-				v = (int) new FileInfo (fn).Length;
-				if (v == 0)
-					v = 4; // this is the magic verbosity level we give everybody.
-			}
-			return v;
-		}
-
-		public static void Log (string value)
-		{
-			Log (0, value);
-		}
-
-		public static void Log (string format, params object [] args)
-		{
-			Log (0, format, args);
-		}
-
-		public static void Log (int min_verbosity, string value)
-		{
-			if (min_verbosity > verbose)
-				return;
-
-			Console.WriteLine (value);
-		}
-
-		public static void Log (int min_verbosity, string format, params object [] args)
-		{
-			if (min_verbosity > verbose)
-				return;
-
-			Console.WriteLine (format, args);
 		}
 
 		public static bool IsUnified {
@@ -605,7 +565,7 @@ namespace Xamarin.Bundler
 					sw.WriteLine ("\txamarin_init_mono_debug = {0};", app.PackageManagedDebugSymbols ? "TRUE" : "FALSE");
 					sw.WriteLine ("\txamarin_executable_name = \"{0}\";", assembly_name);
 					sw.WriteLine ("\tmono_use_llvm = {0};", enable_llvm ? "TRUE" : "FALSE");
-					sw.WriteLine ("\txamarin_log_level = {0};", verbose.ToString (CultureInfo.InvariantCulture));
+					sw.WriteLine ("\txamarin_log_level = {0};", Verbosity.ToString (CultureInfo.InvariantCulture));
 					sw.WriteLine ("\txamarin_arch_name = \"{0}\";", abi.AsArchString ());
 					if (!app.IsDefaultMarshalManagedExceptionMode)
 						sw.WriteLine ("\txamarin_marshal_managed_exception_mode = MarshalManagedExceptionMode{0};", app.MarshalManagedExceptions);
@@ -850,22 +810,6 @@ namespace Xamarin.Bundler
 			return result;
 		}
 
-		public static int Main (string [] args)
-		{
-			try {
-				Console.OutputEncoding = new UTF8Encoding (false, false);
-				SetCurrentLanguage ();
-				return Main2 (args);
-			}
-			catch (Exception e) {
-				ErrorHelper.Show (e);
-			}
-			finally {
-				Watch ("Total time", 0);
-			}
-			return 0;
-		}
-
 		static Application ParseArguments (string [] args, out Action a)
 		{
 			var action = Action.None;
@@ -925,8 +869,6 @@ namespace Xamarin.Bundler
 				}
 			},
 			{ "gsharedvt:", "Generic sharing for value-types - always enabled [Deprecated]", v => {} },
-			{ "v", "Verbose", v => verbose++ },
-			{ "q", "Quiet", v => verbose-- },
 			{ "time", v => WatchLevel++ },
 			{ "executable=", "Specifies the native executable name to output", v => app.ExecutableName = v },
 			{ "nofastsim", "Do not run the simulator fast-path build", v => app.NoFastSim = true },
@@ -1249,8 +1191,6 @@ namespace Xamarin.Bundler
 				return 0;
 			
 			LogArguments (args);
-
-			ErrorHelper.Verbosity = verbose;
 
 			// Allow a few actions, since these seem to always work no matter the Xcode version.
 			var accept_any_xcode_version = action == Action.ListDevices || action == Action.ListCrashReports || action == Action.ListApps || action == Action.LogDev;
