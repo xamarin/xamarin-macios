@@ -226,25 +226,17 @@ namespace xharness
 				return false;
 			
 			if (project.IsBclTest) {
-				// logic is not that hard, lets start with the old blc, that is easy, it returns true
-				// if IncludeBCL || IncludeOldBCL
 				if (!project.IsNewBclTest)
 					return IncludeBcl || IncludeOldBCL;
-				// we now have to deal with the new bcls, that include the mscorlib variation, that
-				// is NEW && can be ignored, so lets split between all and the special case
-				if (project.IsMscorlib) { // not need to check if new since we check above
+				if (project.IsMscorlib) 
 					return IncludeMscorlib;
-				} else {
-					// simple case, is in if IncludeBCL || IncludeNew
-					return IncludeBcl || IncludeNewBCL;
-				}
-				
+				return IncludeBcl || IncludeNewBCL;
 			}
 
-			if (IncludeMonotouch && project.IsMonotouch)
-				return true;
+			if (!IncludeMonotouch && project.IsMonotouch)
+				return false;
 
-			if (!IncludeXamarin && !project.IsBclTest)
+			if (!IncludeXamarin && !project.IsBclTest && !project.IsMonotouch)
 				return false;
 
 			if (Harness.IncludeSystemPermissionTests == false && project.Name == "introspection")
@@ -648,8 +640,7 @@ namespace xharness
 				foreach (var task in projectTasks) {
 					task.TimeoutMultiplier = project.TimeoutMultiplier;
 					task.BuildOnly |= project.BuildOnly;
-					if (!task.Ignored && ignored)
-						task.Ignored = true;
+					task.Ignored |= ignored;
 				}
 				rv.AddRange (projectTasks);
 			}

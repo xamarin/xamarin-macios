@@ -62,7 +62,7 @@ jobs:
         TESTS: 'Monotouch'
       xUnitBCL:
         CONTEXT: '${{ parameters.variation }}-xUnit-BCL-DDFun'
-        TESTS_EXTRA_ARGUMENTS: '--label=${{ parameters.deviceLabel }},run-new-bcl-tests,skip-mscorlib-tests' # run only the new bcl tests
+        TESTS_EXTRA_ARGUMENTS: '--label=${{ parameters.deviceLabel }},run-new-bcl-tests' # run only the new bcl tests
         TESTS: 'xUnitBCL'
       nUnitBCL:
         CONTEXT: '${{ parameters.variation }}-NUnit-BCL-DDFun'
