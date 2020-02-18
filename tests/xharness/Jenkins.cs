@@ -2989,14 +2989,15 @@ namespace xharness
 	class XBuildTask : BuildProjectTask
 	{
 		public bool UseMSBuild;
+		public Log BuildLog;
 
 		protected override async Task ExecuteAsync ()
 		{
 			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
-				var log = Logs.Create ($"build-{Platform}-{Timestamp}.txt", Log.BUILD_LOG);
-				var binlogPath = log.FullPath.Replace (".txt", ".binlog");
+				BuildLog = Logs.Create ($"build-{Platform}-{Timestamp}.txt", Log.BUILD_LOG);
+				var binlogPath = BuildLog.FullPath.Replace (".txt", ".binlog");
 
-				await RestoreNugetsAsync (log, resource, useXIBuild: true);
+				await RestoreNugetsAsync (BuildLog, resource, useXIBuild: true);
 
 				using (var xbuild = new Process ()) {
 					xbuild.StartInfo.FileName = Harness.XIBuildPath;
@@ -3013,13 +3014,13 @@ namespace xharness
 					SetEnvironmentVariables (xbuild);
 					if (UseMSBuild)
 						xbuild.StartInfo.EnvironmentVariables ["MSBuildExtensionsPath"] = null;
-					LogEvent (log, "Building {0} ({1})", TestName, Mode);
+					LogEvent (BuildLog, "Building {0} ({1})", TestName, Mode);
 					if (!Harness.DryRun) {
 						var timeout = TimeSpan.FromMinutes (60);
-						var result = await xbuild.RunAsync (log, true, timeout);
+						var result = await xbuild.RunAsync (BuildLog, true, timeout);
 						if (result.TimedOut) {
 							ExecutionResult = TestExecutingResult.TimedOut;
-							log.WriteLine ("Build timed out after {0} seconds.", timeout.TotalSeconds);
+							BuildLog.WriteLine ("Build timed out after {0} seconds.", timeout.TotalSeconds);
 						} else if (result.Succeeded) {
 							ExecutionResult = TestExecutingResult.Succeeded;
 						} else {
@@ -3029,7 +3030,7 @@ namespace xharness
 					Jenkins.MainLog.WriteLine ("Built {0} ({1})", TestName, Mode);
 				}
 
-				log.Dispose ();
+				BuildLog.Dispose ();
 			}
 		}
 
@@ -3499,6 +3500,8 @@ namespace xharness
 					ExecutionResult = TestExecutingResult.BuildFailure;
 				}
 				FailureMessage = BuildTask.FailureMessage;
+				if (Harness.InCI && BuildTask is XBuildTask projectTask)
+					XmlResultParser.GenerateFailure (Logs, "build", projectTask.TestName, projectTask.Variation, "AppBuild", $"App could not be built {FailureMessage}.", projectTask.BuildLog.FullPath, XmlResultParser.Jargon.NUnitV3);
 			} else {
 				ExecutionResult = TestExecutingResult.Built;
 			}
@@ -3714,6 +3717,8 @@ namespace xharness
 						CompanionDeviceName = CompanionDevice?.Name,
 						Configuration = ProjectConfiguration,
 						TimeoutMultiplier = TimeoutMultiplier,
+						Variation = Variation,
+						BuildTask = BuildTask,
 					};
 
 					// Sometimes devices can't upgrade (depending on what has changed), so make sure to uninstall any existing apps first.
@@ -3735,6 +3740,8 @@ namespace xharness
 							if (!install_result.Succeeded) {
 								FailureMessage = $"Install failed, exit code: {install_result.ExitCode}.";
 								ExecutionResult = TestExecutingResult.Failed;
+								if (Harness.InCI)
+									XmlResultParser.GenerateFailure (Logs, "install", runner.AppName, runner.Variation, "AppInstallation", $"Install failed, exit code: {install_result.ExitCode}", install_log.FullPath, XmlResultParser.Jargon.NUnitV3);
 							}
 						} finally {
 							this.install_log.Dispose ();
@@ -3768,6 +3775,8 @@ namespace xharness
 								DeviceName = Device.Name,
 								CompanionDeviceName = CompanionDevice?.Name,
 								Configuration = ProjectConfiguration,
+								Variation = Variation,
+								BuildTask = BuildTask,
 							};
 							additional_runner = todayRunner;
 							await todayRunner.RunAsync ();
@@ -3878,6 +3887,8 @@ namespace xharness
 				MainLog = Logs.Create ($"run-{Device.UDID}-{Timestamp}.log", "Run log"),
 				Configuration = ProjectConfiguration,
 				TimeoutMultiplier = TimeoutMultiplier,
+				Variation = Variation,
+				BuildTask = BuildTask,
 			};
 			runner.Simulators = Simulators;
 			runner.Initialize ();

@@ -62,7 +62,7 @@ namespace Xamarin.Mac.Tests
 
 			if (options.ResultFile != null) {
 				using (var writer = new StreamWriter (options.ResultFile)) {
-					runner.WriteResultsToFile (writer);
+					runner.WriteResultsToFile (writer, TestRunner.Jargon.NUnitV3);
 				}
 				logger.Info ($"Xml result can be found {options.ResultFile}");
 			}

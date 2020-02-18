@@ -1,13 +1,19 @@
-﻿// Modified version of the TouchOptions found in 
+// Modified version of the TouchOptions found in 
 using System;
 using Foundation;
 using Mono.Options;
+using Xamarin.iOS.UnitTests;
 
 namespace BCLTests {
 	
 	public enum XmlMode {
 		Default = 0,
 		Wrapped = 1,
+	}
+
+	public enum XmlVersion {
+		NUnitV2 = 0,
+		NUnitV3 = 1,
 	}
 
 	public class ApplicationOptions {
@@ -49,6 +55,9 @@ namespace BCLTests {
 			var xml_mode = Environment.GetEnvironmentVariable ("NUNIT_ENABLE_XML_MODE");
 			if (!string.IsNullOrEmpty (xml_mode))
 				XmlMode = (XmlMode) Enum.Parse (typeof (XmlMode), xml_mode, true);
+			var xml_version = Environment.GetEnvironmentVariable ("NUNIT_XML_VERSION");
+			if (!string.IsNullOrEmpty (xml_version))
+				XmlVersion = (XmlVersion)Enum.Parse (typeof (XmlVersion), xml_version, true);
 			if (!string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("NUNIT_LOG_FILE")))
 				LogFile = Environment.GetEnvironmentVariable ("NUNIT_LOG_FILE");
 
@@ -61,6 +70,7 @@ namespace BCLTests {
 				{ "transport=", "Select transport method. Either TCP (default), HTTP or FILE.", v => Transport = v },
 				{ "enablexml", "Enable the xml reported.", v => EnableXml = false },
 				{ "xmlmode", "The xml mode.", v => XmlMode = (XmlMode) Enum.Parse (typeof (XmlMode), v, false) },
+				{ "xmlversion", "The xml version.", v => XmlVersion = (XmlVersion) Enum.Parse (typeof (XmlVersion), v, false) },
 				{ "logfile=", "A path where output will be saved.", v => LogFile = v },
 				{ "result=", "The path to be used to store the result", v => ResultFile = v},
 			};
@@ -75,6 +85,8 @@ namespace BCLTests {
 		private bool EnableNetwork { get; set; }
 
 		public XmlMode XmlMode { get; set; }
+
+		public XmlVersion XmlVersion { get; set; } = XmlVersion.NUnitV2;
 
 		public bool EnableXml { get; set; }
 		
