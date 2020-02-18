@@ -5,6 +5,9 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+  <PropertyGroup>
+    <UpdateXlfOnBuild>true</UpdateXlfOnBuild>
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="System.Text.Json" Version="4.7.0" />
     <!-- Compile against Microsoft.Build* NuGet refs, but do not copy to OutputDir. -->
@@ -29,11 +32,21 @@
     </Compile>
     <Compile Include="..\Xamarin.iOS.Tasks.Core\MSBStrings.Designer.cs">
       <Link>MSBStrings.Designer.cs</Link>
+      <DependentUpon>MSBStrings.resx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\tools\mtouch\errors.resx">
       <Link>errors.resx</Link>
     </None>
+    <EmbeddedResource Include="..\Xamarin.iOS.Tasks.Core\MSBStrings.resx">
+      <Link>MSBStrings.resx</Link>
+      <XlfSourceFormat>Resx</XlfSourceFormat>
+      <XlfOutputItem>EmbeddedResource</XlfOutputItem>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <CustomToolNamespace>MSBLocalization</CustomToolNamespace>
+      <LastGenOutput>MSBStrings.Designer.cs</LastGenOutput>
+      <LogicalName>MSBLocalization.MSBStrings.resources</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>
