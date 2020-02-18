@@ -18,6 +18,8 @@ using Security;
 using AppKit;
 #else
 using UIKit;
+using NSPrintInfo = Foundation.NSObject;
+using NSPrintOperation = Foundation.NSObject;
 #endif
 
 namespace WebKit
@@ -747,6 +749,32 @@ namespace WebKit
 		[Export ("handlesURLScheme:")]
 		bool HandlesUrlScheme (string urlScheme);
 
+		[Mac (10, 15), iOS (13, 0)]
+		[Export ("pageZoom")]
+		nfloat PageZoom { get; set; }
+
+		[Mac (10,15), iOS (13,0)]
+		[Export ("createPDFWithConfiguration:completionHandler:")]
+		[Async]
+		void CreatePdf ([NullAllowed] WKPdfConfiguration pdfConfiguration, Action<NSData, NSError> completionHandler);
+
+		[Mac (10,15), iOS (13,0)]
+		[Export ("createWebArchiveDataWithCompletionHandler:")]
+		[Async]
+		void CreateWebArchiveData (Action<NSData, NSError> completionHandler);
+
+		[Mac (10,15), iOS (13,0)]
+		[Export ("findString:withConfiguration:completionHandler:")]
+		[Async]
+		void FindString (string @string, [NullAllowed] WKFindConfiguration configuration, Action<WKFindResult> completionHandler);
+
+		[Mac (10,15), iOS (13,4)]
+		[NullAllowed, Export ("mediaType")]
+		string MediaType { get; set; }
+
+		[Mac (10,15), NoiOS]
+		[Export ("printOperationWithPrintInfo:")]
+		NSPrintOperation GetPrintOperation (NSPrintInfo printInfo);
 	}
 
 	delegate void WKJavascriptEvaluationResult (NSObject result, NSError error);
@@ -934,4 +962,36 @@ namespace WebKit
 		NSUrl LinkUrl { get; }
 	}
 
+	[Mac (10,15), iOS (13,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface WKFindConfiguration : NSCopying
+	{
+		[Export ("backwards")]
+		bool Backwards { get; set; }
+
+		[Export ("caseSensitive")]
+		bool CaseSensitive { get; set; }
+
+		[Export ("wraps")]
+		bool Wraps { get; set; }
+	}
+
+	[Mac (10,15), iOS (13,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface WKFindResult : NSCopying
+	{
+		[Export ("matchFound")]
+		bool MatchFound { get; }
+	}
+
+	[Mac (10,15), iOS (13,0)]
+	[BaseType (typeof(NSObject), Name = "WKPDFConfiguration")]
+	[DisableDefaultCtor]
+	interface WKPdfConfiguration : NSCopying
+	{
+		[Export ("rect", ArgumentSemantic.Assign)]
+		CGRect Rect { get; set; }
+	}
 }
