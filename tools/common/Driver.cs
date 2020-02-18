@@ -23,6 +23,8 @@ namespace Xamarin.Bundler {
 	public partial class Driver {
 		static void AddSharedOptions (Application app, Mono.Options.OptionSet options)
 		{
+			options.Add ("v|verbose", "Specify how verbose the output should be. This can be passed multiple times to increase the verbosity.", v => Verbosity++);
+			options.Add ("q|quiet", "Specify how quiet the output should be. This can be passed multiple times to increase the silence.", v => Verbosity--);
 			options.Add ("sdkroot=", "Specify the location of Apple SDKs, default to 'xcode-select' value.", v => sdk_root = v);
 			options.Add ("no-xcode-version-check", "Ignores the Xcode version check.", v => { min_xcode_version = null; }, true /* This is a non-documented option. Please discuss any customers running into the xcode version check on the maciosdev@ list before giving this option out to customers. */);
 			options.Add ("warnaserror:", "An optional comma-separated list of warning codes that should be reported as errors (if no warnings are specified all warnings are reported as errors).", v =>
@@ -166,8 +168,51 @@ namespace Xamarin.Bundler {
 			}
 		}
 
+		static int verbose = GetDefaultVerbosity ();
 		public static int Verbosity {
 			get { return verbose; }
+			set {
+				verbose = value;
+				ErrorHelper.Verbosity = Verbosity;
+			}
+		}
+
+		static int GetDefaultVerbosity ()
+		{
+			var v = 0;
+			var fn = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.Personal), $".{NAME}-verbosity");
+			if (File.Exists (fn)) {
+				v = (int) new FileInfo (fn).Length;
+				if (v == 0)
+					v = 4; // this is the magic verbosity level we give everybody.
+			}
+			return v;
+		}
+
+		public static void Log (string value)
+		{
+			Log (0, value);
+		}
+
+		public static void Log (string format, params object [] args)
+		{
+			Log (0, format, args);
+		}
+
+		public static void Log (int min_verbosity, string value)
+		{
+			if (min_verbosity > Verbosity)
+				return;
+
+			Console.WriteLine (value);
+		}
+
+		public static void Log (int min_verbosity, string format, params object [] args)
+		{
+			if (min_verbosity > Verbosity)
+				return;
+
+			Console.WriteLine (format, args);
 		}
 
 		public const bool IsXAMCORE_4_0 = false;
@@ -278,8 +323,7 @@ namespace Xamarin.Bundler {
 				}
 			}
 
-			if (verbose > 0)
-				Console.WriteLine ("{0} {1}", path, args);
+			Log (1, "{0} {1}", path, args);
 
 			using (var p = Process.Start (info)) {
 
@@ -324,7 +368,7 @@ namespace Xamarin.Bundler {
 						Console.Error.WriteLine (output);
 					}
 					return p.ExitCode;
-				} else if (verbose > 0 && output != null && output.Length > 0 && !suppressPrintOnErrors) {
+				} else if (Verbosity > 0 && output != null && output.Length > 0 && !suppressPrintOnErrors) {
 					Console.WriteLine (output.ToString ());
 				}
 
@@ -653,7 +697,7 @@ namespace Xamarin.Bundler {
 			args.Add (command);
 			args.AddRange (arguments);
 			int ret = RunCommand ("xcrun", args, env, output);
-			if (ret != 0 && verbose > 1) {
+			if (ret != 0 && Verbosity > 1) {
 				StringBuilder debug = new StringBuilder ();
 				RunCommand ("xcrun", new [] { "--find", command }, env, debug);
 				Console.WriteLine ("failed using `{0}` from: {1}", command, debug);
