@@ -126,7 +126,7 @@ steps:
 ###
 ### Push the HTML report to Azure DevOps (shows up in Summary tab as Build Artifact)
 ###
-- bash |
+- bash: |
     echo "$CONTEXT" >> TestSummary-$CONTEXT.md
 
 # - task: PublishPipelineArtifact@1
