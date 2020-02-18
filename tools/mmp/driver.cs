@@ -196,23 +196,7 @@ namespace Xamarin.Bundler {
 			get { return App.EnableDebug; }
 		}
 
-		public static int Main (string [] args)
-		{
-			try {
-				Console.OutputEncoding = new UTF8Encoding (false, false);
-				SetCurrentLanguage ();
-				Main2 (args);
-			}
-			catch (Exception e) {
-				ErrorHelper.Show (e);
-			}
-			finally {
-				Watch ("Total time", 0);
-			}
-			return 0;
-		}
-
-		static void Main2 (string [] args)
+		static int Main2 (string [] args)
 		{
 			var os = new OptionSet () {
 				{ "h|?|help", "Displays the help", v => action = Action.Help },
@@ -387,11 +371,11 @@ namespace Xamarin.Bundler {
 
 			if (action == Action.Help || (args.Length == 0)) {
 				ShowHelp (os);
-				return;
+				return 0;
 			} else if (action == Action.Version) {
 				Console.Write ("mmp {0}.{1}", Constants.Version, Constants.Revision);
 				Console.WriteLine ();
-				return;
+				return 0;
 			}
 
 			bool force45From40UnifiedSystemFull = false;
@@ -509,7 +493,7 @@ namespace Xamarin.Bundler {
 			if (action == Action.RunRegistrar) {
 				App.Registrar = RegistrarMode.Static;
 				App.RunRegistrar ();
-				return;
+				return 0;
 			}
 			try {
 				Pack (App.RootAssemblies);
@@ -531,6 +515,7 @@ namespace Xamarin.Bundler {
 			}
 
 			Log ("bundling complete");
+			return 0;
 		}
 
 		static void ValidateXamarinMacReference ()

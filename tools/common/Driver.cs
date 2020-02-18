@@ -21,6 +21,20 @@ using ObjCRuntime;
 
 namespace Xamarin.Bundler {
 	public partial class Driver {
+		public static int Main (string [] args)
+		{
+			try {
+				Console.OutputEncoding = new UTF8Encoding (false, false);
+				SetCurrentLanguage ();
+				return Main2 (args);
+			} catch (Exception e) {
+				ErrorHelper.Show (e);
+			} finally {
+				Watch ("Total time", 0);
+			}
+			return 0;
+		}
+
 		static void AddSharedOptions (Application app, Mono.Options.OptionSet options)
 		{
 			options.Add ("v|verbose", "Specify how verbose the output should be. This can be passed multiple times to increase the verbosity.", v => Verbosity++);

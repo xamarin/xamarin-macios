@@ -834,22 +834,6 @@ namespace Xamarin.Bundler
 			return result;
 		}
 
-		public static int Main (string [] args)
-		{
-			try {
-				Console.OutputEncoding = new UTF8Encoding (false, false);
-				SetCurrentLanguage ();
-				return Main2 (args);
-			}
-			catch (Exception e) {
-				ErrorHelper.Show (e);
-			}
-			finally {
-				Watch ("Total time", 0);
-			}
-			return 0;
-		}
-
 		static Application ParseArguments (string [] args, out Action a)
 		{
 			var action = Action.None;
