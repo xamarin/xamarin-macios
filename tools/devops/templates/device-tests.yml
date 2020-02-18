@@ -143,7 +143,7 @@ steps:
     targetPath: 'xamarin-macios/tests/TestSummary.md'
     artifactName: TestSummary-$(CONTEXT)
   continueOnError: true
-  condition: and(succeededOrFailed(), eq(variables['ProvisioningProfiles'], 'success'))
+#  condition: and(succeededOrFailed(), eq(variables['ProvisioningProfiles'], 'success'))
 
 ###
 ### Cleanup after us, not having that can lead to VSMac install issues
