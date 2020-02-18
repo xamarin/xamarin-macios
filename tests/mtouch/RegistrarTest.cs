@@ -317,7 +317,8 @@ class MyObjectErr : NSObject, IFoo1, IFoo2
 				mtouch.CreateTemporaryApp (extraCode: sb.ToString (), usings: "using System; using Foundation; using ObjCRuntime;", extraArg: "/debug:full");
 				mtouch.Linker = MTouchLinker.LinkSdk;
 				mtouch.Registrar = MTouchRegistrar.Static;
-				mtouch.AssertExecuteFailure (MTouchAction.BuildDev);
+				mtouch.AssertExecuteFailure (MTouchAction.BuildDev);BackgroundTasks
+				// the above MUST be kept in sync with new frameworks or it will fail.
 				var invalidFrameworks = new [] {
 					new { Framework = "IdentityLookup", Version = "11.0" },
 					new { Framework = "FileProviderUI", Version = "11.0" },
