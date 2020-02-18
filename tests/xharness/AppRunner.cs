@@ -887,6 +887,8 @@ namespace xharness
 					FailureMessage = $"Launch failure";
 					if (Harness.InCI)
 						XmlResultParser.GenerateFailure (Logs, "launch", appName, Variation, "AppLaunch", FailureMessage, main_log.FullPath, XmlResultParser.Jargon.NUnitV3);
+				} else if (timed_out && Harness.InCI) {
+					XmlResultParser.GenerateFailure (Logs, "timeout", appName, Variation, "AppTimeout", $"Test run timed out after {timeout.TotalMinutes} minute(s).", main_log.FullPath, XmlResultParser.Jargon.NUnitV3);
 				}
 			}
 
