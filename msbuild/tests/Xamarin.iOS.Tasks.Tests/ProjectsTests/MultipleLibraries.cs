@@ -5,7 +5,7 @@ using System.Linq;
 using NUnit.Framework;
 
 namespace Xamarin.iOS.Tasks {
-	[TestFixture ("iPhone")] // Not working yet (native linker error)
+	[TestFixture ("iPhone")]
 	[TestFixture ("iPhoneSimulator")]
 	public class MultipleLibrariesTests : ExtensionTestBase {
 
@@ -25,11 +25,6 @@ namespace Xamarin.iOS.Tasks {
 			var skippingCount = Engine.Logger.MessageEvents.Count (m => m.Message.Contains ("Skipping AppleSdkSettings.Init, already valid."));
 			Assert.AreEqual (callingCount, 1);
 			Assert.AreEqual (skippingCount, 2);
-
-			if (Platform == "iPhone") {
-				// make sure the dSYMs exist
-				var appexDsymDir = Path.GetFullPath (Path.Combine (AppBundlePath, "..", "MyWatchKit2Extension.appex.dSYM"));
-			}
 		}
 
 		public override string TargetFrameworkIdentifier {
