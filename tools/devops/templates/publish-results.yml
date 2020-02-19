@@ -19,10 +19,12 @@ steps:
     allowFailedBuilds: true
     path: $(Pipeline.Workspace)/Summaries
 
+#    cat $PIPELINE_WORKSPACE/Summaries/*.md >> ./TestSummary.md
 - bash: |
     set -x
     set -e
-    ls -la 
+    ls -la
+    pwd
     cat $PIPELINE_WORKSPACE/Summaries/*.md >> ./TestSummary.md
   displayName: 'Merge TestSummary files'
 
