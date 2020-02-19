@@ -40,15 +40,11 @@ steps:
     continueOnError: true
 
 ###
-### Download merged TestSummary file
+### Report final results to GitHub
 ###
-- task: DownloadPipelineArtifact@2
-  displayName: Download test summary
-  inputs:
-    patterns: '**/TestSummary.md'
-    allowFailedBuilds: true
-    path: $(Pipeline.Workspace)/Summaries
-
+- task: PowerShell@2
+  targetType: inline
+  script: Write-Host $env:TOKEN 
 
 ###
 ### Report final results to GitHub
