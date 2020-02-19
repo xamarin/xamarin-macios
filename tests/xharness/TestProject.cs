@@ -94,6 +94,14 @@ namespace xharness
 			}
 		}
 
+		public bool IsMonotouch => Name.Contains ("monotouch");
+
+		public bool IsNewBclTest => IsBclTest && (Name.Contains ("xUnit") || IsMscorlib);
+
+
+		public bool IsMscorlib => Name.Contains ("mscorlib");
+
+
 		public virtual TestProject Clone ()
 		{
 			TestProject rv = (TestProject) Activator.CreateInstance (GetType ());
