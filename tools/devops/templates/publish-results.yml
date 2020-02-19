@@ -19,7 +19,6 @@ steps:
     allowFailedBuilds: true
     path: $(Pipeline.Workspace)/Summaries
 
-#    cat $PIPELINE_WORKSPACE/Summaries/*.md >> ./TestSummary.md
 - bash: |
     set -x
     set -e
@@ -28,6 +27,28 @@ steps:
     cat $PIPELINE_WORKSPACE/s/TestSummary-*.md >> ./TestSummary.md
     cat ./TestSummary.md
   displayName: 'Merge TestSummary files'
+
+###
+### Publish merged TestSummary file
+###
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Artifact: Aggregate TestSummary'
+  inputs:
+#    targetPath: 'xamarin-macios/tests/TestSummary.md'
+    targetPath: ./TestSummary.md
+    artifactName: TestSummary
+    continueOnError: true
+
+###
+### Download merged TestSummary file
+###
+- task: DownloadPipelineArtifact@2
+  displayName: Download test summary
+  inputs:
+    patterns: '**/TestSummary.md'
+    allowFailedBuilds: true
+    path: $(Pipeline.Workspace)/Summaries
+
 
 ###
 ### Report final results to GitHub
