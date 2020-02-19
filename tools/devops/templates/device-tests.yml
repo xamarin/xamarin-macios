@@ -141,7 +141,7 @@ steps:
   displayName: 'Publish Artifact: TestSummary'
   inputs:
 #    targetPath: 'xamarin-macios/tests/TestSummary.md'
-    targetPath: TestSummary-$(CONTEXT)
+    targetPath: TestSummary-$(CONTEXT).md
     artifactName: TestSummary-$(CONTEXT)
   continueOnError: true
 #  condition: and(succeededOrFailed(), eq(variables['ProvisioningProfiles'], 'success'))
