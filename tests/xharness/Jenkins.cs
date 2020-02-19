@@ -241,6 +241,7 @@ namespace xharness
 
 			if (Harness.IncludeSystemPermissionTests == false && project.Name == "introspection")
 				return false;
+
 			return true;
 		}
 
@@ -495,11 +496,9 @@ namespace xharness
 					continue;
 
 				bool ignored = !IncludeSimulator;
-				Console.WriteLine (new string ('#', 50));
 				if (!IsIncluded (project))
 					ignored = true;
-				Console.WriteLine ($"{project.Name} is included? {ignored}");
-				Console.WriteLine (new string ('#', 50));
+
 				var ps = new List<Tuple<TestProject, TestPlatform, bool>> ();
 				if (!project.SkipiOSVariation)
 					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project, TestPlatform.iOS_Unified, ignored || !IncludeiOS64));
@@ -561,13 +560,10 @@ namespace xharness
 			foreach (var project in Harness.IOSTestProjects) {
 				if (!project.IsExecutableProject)
 					continue;
-
-				Console.WriteLine (new string ('#', 50));
+				
 				bool ignored = !IncludeDevice;
 				if (!IsIncluded (project))
 					ignored = true;
-				Console.WriteLine ($"{project.Name} is ignored? {ignored}");
-				Console.WriteLine (new string ('#', 50));
 
 				projectTasks.Clear ();
 				if (!project.SkipiOSVariation) {
