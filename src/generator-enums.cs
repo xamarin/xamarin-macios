@@ -207,7 +207,7 @@ public partial class Generator {
 			}
 			// if there's no default then we throw on unknown constants
 			if (default_symbol == null)
-				print ("throw new NotSupportedException (constant + \" has no associated enum value in \" + nameof ({0}) + \" on this platform.\");", type.Name);
+				print ("throw new NotSupportedException ($\"{constant} has no associated enum value on this platform.\");");
 			else
 				print ("return {0}.{1};", type.Name, default_symbol.Item1.Name);
 			indent--;
