@@ -372,8 +372,9 @@ namespace xharness
 					if (xmlType == XmlResultParser.Jargon.NUnitV3) {
 						var logFiles = new List<string> ();
 						// add our logs AND the logs of the previous task, which is the build task
-						logFiles.AddRange (Directory.GetFiles (Logs.Directory));
-						logFiles.AddRange (Directory.GetFiles (BuildTask.LogDirectory));
+						logs.AddRange (Directory.GetFiles (Logs.Directory));
+						if (BuildTask != null) // when using the run command, we do not have a build task, ergo, there are no logs to add.
+							logs.AddRange (Directory.GetFiles (BuildTask.LogDirectory));
 						// add the attachments and write in the new filename
 						// add a final prefix to the file name to make sure that the VSTS test uploaded just pick
 						// the final version, else we will upload tests more than once
