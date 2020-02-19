@@ -81,6 +81,8 @@ namespace Xamarin.Bundler
 	public partial class Driver {
 		internal const string NAME = "mtouch";
 		internal const string PRODUCT = "Xamarin.iOS";
+		const string LOCAL_BUILD_DIR = "_ios-build";
+		const string FRAMEWORK_LOCATION_VARIABLE = "MD_MTOUCH_SDK_ROOT";
 
 		public static void ShowHelp (OptionSet os)
 		{
@@ -127,52 +129,10 @@ namespace Xamarin.Bundler
 		static string cross_prefix = Environment.GetEnvironmentVariable ("MONO_CROSS_PREFIX");
 		static string extra_args = Environment.GetEnvironmentVariable ("MTOUCH_ENV_OPTIONS");
 
-		static int verbose = GetDefaultVerbosity ();
-
 		public static string DotFile {
 			get {
 				return dotfile;
 			}
-		}
-
-		static int GetDefaultVerbosity ()
-		{
-			var v = 0;
-			var fn = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.Personal), ".mtouch-verbosity");
-			if (File.Exists (fn)) {
-				v = (int) new FileInfo (fn).Length;
-				if (v == 0)
-					v = 4; // this is the magic verbosity level we give everybody.
-			}
-			return v;
-		}
-
-		static string mtouch_dir;
-
-		public static void Log (string value)
-		{
-			Log (0, value);
-		}
-
-		public static void Log (string format, params object [] args)
-		{
-			Log (0, format, args);
-		}
-
-		public static void Log (int min_verbosity, string value)
-		{
-			if (min_verbosity > verbose)
-				return;
-
-			Console.WriteLine (value);
-		}
-
-		public static void Log (int min_verbosity, string format, params object [] args)
-		{
-			if (min_verbosity > verbose)
-				return;
-
-			Console.WriteLine (format, args);
 		}
 
 		public static bool IsUnified {
@@ -203,44 +163,15 @@ namespace Xamarin.Bundler
 			return Path.Combine (GetProductSdkDirectory (app), "usr", "lib");
 		}
 
-		public static string DriverBinDirectory {
-			get {
-				return MonoTouchBinDirectory;
-			}
-		}
-
-		public static string MonoTouchBinDirectory {
-			get {
-				return Path.Combine (MonoTouchDirectory, "bin");
-			}
-		}
-
-		public static string MonoTouchDirectory {
-			get {
-				if (mtouch_dir == null) {
-					mtouch_dir = Path.GetFullPath (GetFullPath () + "/../../..");
-#if DEV
-					// when launched from Xamarin Studio, mtouch is not in the final install location,
-					// so walk the directory hierarchy to find the root source directory.
-					while (!File.Exists (Path.Combine (mtouch_dir, "Make.config")))
-						mtouch_dir = Path.GetDirectoryName (mtouch_dir);
-					mtouch_dir = Path.Combine (mtouch_dir, "_ios-build", "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current");
-#endif
-					mtouch_dir = Target.GetRealPath (mtouch_dir);
-				}
-				return mtouch_dir;
-			}
-		}
-
 		public static string GetPlatformFrameworkDirectory (Application app)
 		{
 			switch (app.Platform) {
 			case ApplePlatform.iOS:
-				return Path.Combine (MonoTouchDirectory, "lib", "mono", "Xamarin.iOS");
+				return Path.Combine (FrameworkLibDirectory, "mono", "Xamarin.iOS");
 			case ApplePlatform.WatchOS:
-				return Path.Combine (MonoTouchDirectory, "lib", "mono", "Xamarin.WatchOS");
+				return Path.Combine (FrameworkLibDirectory, "mono", "Xamarin.WatchOS");
 			case ApplePlatform.TVOS:
-				return Path.Combine (MonoTouchDirectory, "lib", "mono", "Xamarin.TVOS");
+				return Path.Combine (FrameworkLibDirectory, "mono", "Xamarin.TVOS");
 			default:
 				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, "Xamarin.iOS");
 			}
@@ -268,16 +199,21 @@ namespace Xamarin.Bundler
 
 		public static string GetProductSdkDirectory (Application app)
 		{
+			string sdkName;
 			switch (app.Platform) {
 			case ApplePlatform.iOS:
-				return Path.Combine (MonoTouchDirectory, "SDKs", app.IsDeviceBuild ? "MonoTouch.iphoneos.sdk" : "MonoTouch.iphonesimulator.sdk");
+				sdkName = app.IsDeviceBuild ? "MonoTouch.iphoneos.sdk" : "MonoTouch.iphonesimulator.sdk";
+				break;
 			case ApplePlatform.WatchOS:
-				return Path.Combine (MonoTouchDirectory, "SDKs", app.IsDeviceBuild ? "Xamarin.WatchOS.sdk" : "Xamarin.WatchSimulator.sdk");
+				sdkName = app.IsDeviceBuild ? "Xamarin.WatchOS.sdk" : "Xamarin.WatchSimulator.sdk";
+				break;
 			case ApplePlatform.TVOS:
-				return Path.Combine (MonoTouchDirectory, "SDKs", app.IsDeviceBuild ? "Xamarin.AppleTVOS.sdk" : "Xamarin.AppleTVSimulator.sdk");
+				sdkName = app.IsDeviceBuild ? "Xamarin.AppleTVOS.sdk" : "Xamarin.AppleTVSimulator.sdk";
+				break;
 			default:
 				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, "Xamarin.iOS");
 			}
+			return Path.Combine (FrameworkDirectory, "SDKs", sdkName);
 		}
 
 		public static string GetProductFrameworksDirectory (Application app)
@@ -438,7 +374,7 @@ namespace Xamarin.Bundler
 			}
 
 			if (enable_llvm)
-				aot.Append ("llvm-path=").Append (MonoTouchDirectory).Append ("/LLVM/bin/,");
+				aot.Append ("llvm-path=").Append (FrameworkDirectory).Append ("/LLVM/bin/,");
 
 			aot.Append ("outfile=").Append (outputFile);
 			if (enable_llvm)
@@ -629,7 +565,7 @@ namespace Xamarin.Bundler
 					sw.WriteLine ("\txamarin_init_mono_debug = {0};", app.PackageManagedDebugSymbols ? "TRUE" : "FALSE");
 					sw.WriteLine ("\txamarin_executable_name = \"{0}\";", assembly_name);
 					sw.WriteLine ("\tmono_use_llvm = {0};", enable_llvm ? "TRUE" : "FALSE");
-					sw.WriteLine ("\txamarin_log_level = {0};", verbose.ToString (CultureInfo.InvariantCulture));
+					sw.WriteLine ("\txamarin_log_level = {0};", Verbosity.ToString (CultureInfo.InvariantCulture));
 					sw.WriteLine ("\txamarin_arch_name = \"{0}\";", abi.AsArchString ());
 					if (!app.IsDefaultMarshalManagedExceptionMode)
 						sw.WriteLine ("\txamarin_marshal_managed_exception_mode = MarshalManagedExceptionMode{0};", app.MarshalManagedExceptions);
@@ -874,22 +810,6 @@ namespace Xamarin.Bundler
 			return result;
 		}
 
-		public static int Main (string [] args)
-		{
-			try {
-				Console.OutputEncoding = new UTF8Encoding (false, false);
-				SetCurrentLanguage ();
-				return Main2 (args);
-			}
-			catch (Exception e) {
-				ErrorHelper.Show (e);
-			}
-			finally {
-				Watch ("Total time", 0);
-			}
-			return 0;
-		}
-
 		static Application ParseArguments (string [] args, out Action a)
 		{
 			var action = Action.None;
@@ -949,8 +869,6 @@ namespace Xamarin.Bundler
 				}
 			},
 			{ "gsharedvt:", "Generic sharing for value-types - always enabled [Deprecated]", v => {} },
-			{ "v", "Verbose", v => verbose++ },
-			{ "q", "Quiet", v => verbose-- },
 			{ "time", v => WatchLevel++ },
 			{ "executable=", "Specifies the native executable name to output", v => app.ExecutableName = v },
 			{ "nofastsim", "Do not run the simulator fast-path build", v => app.NoFastSim = true },
@@ -1218,7 +1136,7 @@ namespace Xamarin.Bundler
 				}
 			},
 			{ "tls-provider=", "Specify the default TLS provider", v => { tls_provider = v; }},
-			{ "xamarin-framework-directory=", "The framework directory", v => { mtouch_dir = v; }, true },
+			{ "xamarin-framework-directory=", "The framework directory", v => { framework_dir = v; }, true },
 			{ "assembly-build-target=", "Specifies how to compile assemblies to native code. Possible values: 'staticobject' (default), 'dynamiclibrary' and 'framework'. " +
 					"Each option also takes an assembly and a potential name (defaults to the name of the assembly). Example: --assembly-build-target=mscorlib.dll=framework[=name]." +
 					"There also two special names: '@all' and '@sdk': --assembly-build-target=@all|@sdk=framework[=name].", v =>
@@ -1273,8 +1191,6 @@ namespace Xamarin.Bundler
 				return 0;
 			
 			LogArguments (args);
-
-			ErrorHelper.Verbosity = verbose;
 
 			// Allow a few actions, since these seem to always work no matter the Xcode version.
 			var accept_any_xcode_version = action == Action.ListDevices || action == Action.ListCrashReports || action == Action.ListApps || action == Action.LogDev;
@@ -1341,7 +1257,7 @@ namespace Xamarin.Bundler
 				throw new MonoTouchException (82, true, Errors.MT0082);
 
 			if (cross_prefix == null)
-				cross_prefix = MonoTouchDirectory;
+				cross_prefix = FrameworkDirectory;
 
 			Watch ("Setup", 1);
 
@@ -1391,7 +1307,7 @@ namespace Xamarin.Bundler
 		static string MlaunchPath {
 			get {
 				// check next to mtouch first
-				var path = Path.Combine (MonoTouchDirectory, "bin", "mlaunch");
+				var path = Path.Combine (FrameworkBinDirectory, "mlaunch");
 				if (File.Exists (path))
 					return path;
 
@@ -1539,7 +1455,7 @@ namespace Xamarin.Bundler
 
 		public static void CreateDsym (string output_dir, string appname, string dsym_dir)
 		{
-			RunDsymUtil (Path.Combine (output_dir, appname), "-t", "4", "-z", "-o", dsym_dir);
+			RunDsymUtil (Path.Combine (output_dir, appname), "-num-threads", "4", "-z", "-o", dsym_dir);
 			RunCommand ("/usr/bin/mdimport", dsym_dir);
 		}
 

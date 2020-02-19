@@ -8,13 +8,19 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
-
-
+using System.Xml.Xsl;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Xamarin.iOS.UnitTests.XUnit
 {
+	public class XsltIdGenerator
+	{
+		// NUnit3 xml does not have schema, there is no much info about it, most examples just have incremental IDs.
+		int seed = 1000;
+		public int GenerateHash (string name) => seed++;
+	}
+
 	public class XUnitTestRunner : TestRunner
 	{
 		readonly TestMessageSink messageSink;
@@ -801,9 +807,11 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			using (var xmlWriter = XmlWriter.Create (outputFilePath, settings)) {
 				switch (jargon) {
 				case Jargon.NUnitV2:
-					Transform_Results ("NUnitXml.xslt", assembliesElement, xmlWriter); // TODO: Add resource
+					Transform_Results ("NUnitXml.xslt", assembliesElement, xmlWriter);
 					break;
-
+				case Jargon.NUnitV3:
+					Transform_Results ("NUnit3Xml.xslt", assembliesElement, xmlWriter);
+					break;
 				default: // default to xunit until we implement NUnit v3 support.
 					assembliesElement.Save (xmlWriter);
 					break;
@@ -825,10 +833,16 @@ namespace Xamarin.iOS.UnitTests.XUnit
 					try {
 						Transform_Results ("NUnitXml.xslt", assembliesElement, xmlWriter);
 					} catch (Exception e) {
-						writer.WriteLine ($"{e}");
+						writer.WriteLine (e);
 					}
 					break;
-
+				case Jargon.NUnitV3:
+					try {
+						Transform_Results ("NUnit3Xml.xslt", assembliesElement, xmlWriter);
+					} catch (Exception e) {
+						writer.WriteLine (e);
+					}
+					break;
 				default: // defualt to xunit until we add NUnitv3 support
 					assembliesElement.Save (xmlWriter);
 					break;
@@ -839,17 +853,24 @@ namespace Xamarin.iOS.UnitTests.XUnit
 		void Transform_Results (string xsltResourceName, XElement element, XmlWriter writer)
 		{
 			var xmlTransform = new System.Xml.Xsl.XslCompiledTransform ();
-			var name = GetType ().Assembly.GetManifestResourceNames ().Select ((arg) => { arg.EndsWith (xsltResourceName, StringComparison.Ordinal); return arg; }).First ();
+			var name = GetType ().Assembly.GetManifestResourceNames ().Where (a => a.EndsWith (xsltResourceName, StringComparison.Ordinal)).FirstOrDefault ();
 			if (name == null)
 				return;
 			using (var xsltStream = GetType ().Assembly.GetManifestResourceStream (name)) {
 				if (xsltStream == null) {
 					throw new Exception ($"Stream with name {name} cannot be found! We have {GetType ().Assembly.GetManifestResourceNames ()[0]}");
 				}
+				// add the extension so that we can get the hash from the name of the test
+				// Create an XsltArgumentList.
+				XsltArgumentList xslArg = new XsltArgumentList ();
+
+				var generator = new XsltIdGenerator ();
+				xslArg.AddExtensionObject ("urn:hash-generator", generator);
+
 				using (var xsltReader = XmlReader.Create (xsltStream))
 				using (var xmlReader = element.CreateReader ()) {
 					xmlTransform.Load (xsltReader);
-					xmlTransform.Transform (xmlReader, writer);
+					xmlTransform.Transform (xmlReader, xslArg, writer);
 				}
 			}
 		}

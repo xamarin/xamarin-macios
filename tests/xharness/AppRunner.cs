@@ -34,12 +34,13 @@ namespace xharness
 		TodayExtension,
 	}
 
-	public class AppRunner
+	class AppRunner
 	{
 		public Harness Harness;
 		public string ProjectFile;
 		public string AppPath;
 		public string Variation;
+		public BuildToolTask BuildTask;
 
 		public TestExecutingResult Result { get; private set; }
 		public string FailureMessage { get; private set; }
@@ -76,6 +77,8 @@ namespace xharness
 				return extension.HasValue;
 			}
 		}
+
+		public string AppName => $"{appName} {Variation}";
 
 		public double TimeoutMultiplier { get; set; } = 1;
 
@@ -365,8 +368,16 @@ namespace xharness
 					// the right one (NUnitV3) add the nodes. ATM only TouchUnit uses V3.
 					var testRunName = $"{appName} {Variation}";
 					if (xmlType == XmlResultParser.Jargon.NUnitV3) {
+						var logs = new List<string> ();
+						// add our logs AND the logs of the previous task, which is the build task
+						logs.AddRange (Directory.GetFiles (Logs.Directory));
+						if (BuildTask != null) // when using the run command, we do not have a build task, ergo, there are no logs to add.
+							logs.AddRange (Directory.GetFiles (BuildTask.LogDirectory));
 						// add the attachments and write in the new filename
-						XmlResultParser.UpdateMissingData (path, newFilename, testRunName, Directory.GetFiles (Logs.Directory));
+						// add a final prefix to the file name to make sure that the VSTS test uploaded just pick
+						// the final version, else we will upload tests more than once
+						newFilename = XmlResultParser.GetVSTSFilename (newFilename);
+						XmlResultParser.UpdateMissingData (path, newFilename, testRunName, logs);
 					} else {
 						// rename the path to the correct value
 						File.Move (path, newFilename);
@@ -854,8 +865,12 @@ namespace xharness
 								crash_reason = node?.SelectSingleNode ("reason")?.InnerText;
 							}
 						}
-						if (crash_reason != null)
+						if (crash_reason != null) {
+							// if in CI, do write an xml error that will be picked as a failure by VSTS
+							if (Harness.InCI)
+								XmlResultParser.GenerateFailure (Logs, "crash", appName, Variation, "AppCrash", $"App crashed {crash_reason}.", crash_reports.Log.FullPath, XmlResultParser.Jargon.NUnitV3);
 							break;
+						}
 					} catch (Exception e) {
 						Harness.Log (2, "Failed to process crash report '{1}': {0}", e.Message, crash.Description);
 					}
@@ -866,8 +881,20 @@ namespace xharness
 					} else {
 						FailureMessage = $"Killed by the OS ({crash_reason})";
 					}
+					if (Harness.InCI)
+						XmlResultParser.GenerateFailure (Logs, "crash", appName, Variation, "AppCrash", $"App crashed: {FailureMessage}", crash_reports.Log.FullPath, XmlResultParser.Jargon.NUnitV3);
 				} else if (launch_failure) {
+					// same as with a crash
 					FailureMessage = $"Launch failure";
+					if (Harness.InCI)
+						XmlResultParser.GenerateFailure (Logs, "launch", appName, Variation, "AppLaunch", FailureMessage, main_log.FullPath, XmlResultParser.Jargon.NUnitV3);
+				} else if (!File.Exists (listener_log.FullPath) && Harness.InCI) {
+					// this happens more that what we would like on devices, the main reason most of the time is that we have had netwoking problems and the
+					// tcp connection could not be stablished. We are going to report it as an error since we have not parsed the logs, evne when the app might have
+					// not crashed.
+					XmlResultParser.GenerateFailure (Logs, "tcp-connection", appName, Variation, "TcpConnection", "Device could not reach the host over tcp.", main_log.FullPath, XmlResultParser.Jargon.NUnitV3);
+				} else if (timed_out && Harness.InCI) {
+					XmlResultParser.GenerateFailure (Logs, "timeout", appName, Variation, "AppTimeout", $"Test run timed out after {timeout.TotalMinutes} minute(s).", main_log.FullPath, XmlResultParser.Jargon.NUnitV3);
 				}
 			}
 
@@ -890,7 +917,7 @@ namespace xharness
 
 	// Monitor the output from 'mlaunch --installdev' and cancel the installation if there's no output for 1 minute.
 	class AppInstallMonitorLog : Log {
-		public override string FullPath => throw new NotImplementedException ();
+		public override string FullPath => copy_to.FullPath;
 
 		Log copy_to;
 		CancellationTokenSource cancellation_source;

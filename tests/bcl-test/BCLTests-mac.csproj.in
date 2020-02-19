@@ -164,6 +164,9 @@
     <EmbeddedResource Include="templates\common\TestRunner.xUnit\NUnitXml.xslt">
       <Link>TestRunner.xUnit\NUnitXml.xslt</Link>
     </EmbeddedResource>
+    <EmbeddedResource Include="templates\common\TestRunner.xUnit\NUnit3Xml.xslt">
+      <Link>TestRunner.xUnit\NUnit3Xml.xslt</Link>
+    </EmbeddedResource>
     %CONTENT RESOURCES%
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
