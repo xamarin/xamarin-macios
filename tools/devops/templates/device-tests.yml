@@ -140,7 +140,8 @@ steps:
 - task: PublishPipelineArtifact@1
   displayName: 'Publish Artifact: TestSummary'
   inputs:
-    targetPath: 'xamarin-macios/tests/TestSummary.md'
+#    targetPath: 'xamarin-macios/tests/TestSummary.md'
+    targetPath: TestSummary-$(CONTEXT)
     artifactName: TestSummary-$(CONTEXT)
   continueOnError: true
 #  condition: and(succeededOrFailed(), eq(variables['ProvisioningProfiles'], 'success'))
