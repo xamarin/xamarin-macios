@@ -372,6 +372,7 @@ namespace xharness
 						// add our logs AND the logs of the previous task, which is the build task
 						logs.AddRange (Directory.GetFiles (Logs.Directory));
 						logs.AddRange (Directory.GetFiles (BuildTask.LogDirectory));
+						logs.Add (Harness.LogFile);
 						// add the attachments and write in the new filename
 						// add a final prefix to the file name to make sure that the VSTS test uploaded just pick
 						// the final version, else we will upload tests more than once
