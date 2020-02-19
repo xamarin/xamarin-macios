@@ -25,7 +25,7 @@ steps:
     set -e
     ls -la
     pwd
-    cat $PIPELINE_WORKSPACE/*.md >> ./TestSummary.md
+    cat $PIPELINE_WORKSPACE/s/*.md >> ./TestSummary.md
     cat ./TestSummary.md
   displayName: 'Merge TestSummary files'
 
