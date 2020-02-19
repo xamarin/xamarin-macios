@@ -43,8 +43,9 @@ steps:
 ### Report final results to GitHub
 ###
 - task: PowerShell@2
-  targetType: inline
-  script: Write-Host $env:TOKEN 
+  inputs:
+    targetType: inline
+    script: Write-Host $env:TOKEN 
 
 ###
 ### Report final results to GitHub
