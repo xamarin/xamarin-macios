@@ -327,6 +327,10 @@ public class Frameworks : Dictionary <string, Framework>
 				// the above MUST be kept in sync with simlauncher
 				// see tools/mtouch/Makefile
 				// please also keep it sorted to ease comparison
+        // 
+        // The following tests also need to be updated:
+        // 
+        // * RegistrarTest.MT4134
 			};
 		}
 		return ios_frameworks;
