@@ -893,7 +893,7 @@ namespace xharness
 					XmlResultParser.GenerateFailure (Logs, "tcp-connection", appName, Variation, "TcpConnection", "Device could not reach the host over tcp.", main_log.FullPath, XmlResultParser.Jargon.NUnitV3);
 				} else if (timed_out && Harness.InCI) {
 					XmlResultParser.GenerateFailure (Logs, "timeout", appName, Variation, "AppTimeout", $"Test run timed out after {timeout.TotalMinutes} minute(s).", main_log.FullPath, XmlResultParser.Jargon.NUnitV3);
-				} 
+				}
 			}
 
 			return success.Value ? 0 : 1;
