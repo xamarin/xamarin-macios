@@ -226,7 +226,10 @@ namespace Xamarin.Bundler {
 			if (min_verbosity > Verbosity)
 				return;
 
-			Console.WriteLine (format, args);
+			if (args.Length > 0)
+				Console.WriteLine (format, args);
+			else
+				Console.WriteLine (format);
 		}
 
 		public const bool IsXAMCORE_4_0 = false;
