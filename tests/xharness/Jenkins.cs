@@ -3763,7 +3763,9 @@ namespace xharness
 								FailureMessage = $"Install failed, exit code: {install_result.ExitCode}.";
 								ExecutionResult = TestExecutingResult.Failed;
 								if (Harness.InCI)
-									XmlResultParser.GenerateFailure (Logs, "install", runner.AppName, runner.Variation, "AppInstallation", $"Install failed, exit code: {install_result.ExitCode}", install_log.FullPath, XmlResultParser.Jargon.NUnitV3);
+									XmlResultParser.GenerateFailure (Logs, "install", runner.AppName, runner.Variation,
+										$"AppInstallation on {runner.DeviceName}", $"Install failed on {runner.DeviceName}, exit code: {install_result.ExitCode}",
+										install_log.FullPath, XmlResultParser.Jargon.NUnitV3);
 							}
 						} finally {
 							this.install_log.Dispose ();
