@@ -616,12 +616,12 @@ namespace xharness {
 			writer.WriteStartElement ("failure");
 			writer.WriteStartElement ("message");
 			writer.WriteCData (message);
+			writer.WriteEndElement (); // message
 			if (stderr != null) {
 				writer.WriteStartElement ("stack-trace");
 				writer.WriteCData (stderr.ReadToEnd ());
 				writer.WriteEndElement (); //stack trace
 			}
-			writer.WriteEndElement (); // message
 			writer.WriteEndElement (); // failure
 		}
 
