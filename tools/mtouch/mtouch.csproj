@@ -429,6 +429,9 @@
     <Compile Include="Errors.Designer.cs">
       <DependentUpon>Errors.resx</DependentUpon>
     </Compile>
+    <Compile Include="..\linker\ScanTypeReferenceStep.cs">
+      <Link>Xamarin.Linker\ScanTypeReferenceStep.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Core" />
