@@ -328,5 +328,37 @@ class Issue4072Session : NSUrlSession {
 				bundler.AssertWarningCount (1);
 			}
 		}
+
+		[Test]
+#if __MACOS__
+		[TestCase (Profile.macOSMobile)]
+#else
+		[TestCase (Profile.iOS)]
+#endif
+		public void XmlUnexpandedVariable_7904 (Profile profile)
+		{
+			using (var bundler = new BundlerTool ()) {
+				var code = @"
+ using System;
+ using Foundation;
+ using ObjCRuntime;
+ class T {
+	static void Main ()
+	{
+		Console.WriteLine (typeof (NSObject));
+	}
+ }
+ ";
+				bundler.Profile = profile;
+				bundler.CreateTemporaryCacheDirectory ();
+				bundler.CreateTemporaryApp (profile, code: code);
+				// typo is intentional since `{ProjectDir}` should be expanded (different issue)
+				bundler.CustomArguments = new [] { "--xml=${xProjectDir}/linker.xml", "-v", "-v", "-v", "-v" };
+				bundler.AssertExecuteFailure ();
+				// {} messing with a good pattern substitution - we want to avoid an MT0000 when verbosity is applied
+				bundler.AssertErrorPattern (2004, "");
+				bundler.AssertErrorCount (1);
+			}
+		}
 	}
 }
