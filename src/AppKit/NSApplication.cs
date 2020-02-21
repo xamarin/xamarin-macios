@@ -83,8 +83,8 @@ namespace AppKit {
 		// separate method so it can be invoked without `Init` (if needed)
 		static void ResetHandle ()
 		{
-				// `class_ptr` is `readonly` so one can't simply do `class_ptr = Class.GetHandle ("NSApplication");`
-				typeof (NSApplication).GetField ("class_ptr", BindingFlags.Static | BindingFlags.NonPublic).SetValue (null, Class.GetHandle ("NSApplication"));
+			// `class_ptr` is `readonly` so one can't simply do `class_ptr = Class.GetHandle ("NSApplication");`
+			typeof (NSApplication).GetField ("class_ptr", BindingFlags.Static | BindingFlags.NonPublic).SetValue (null, Class.GetHandle ("NSApplication"));
 		}
 
 		public static void InitDrawingBridge ()
