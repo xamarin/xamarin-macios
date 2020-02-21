@@ -78,7 +78,7 @@ namespace xharness
 			}
 		}
 
-		public string AppName => $"{appName} {Variation}";
+		public string AppName => appName;
 
 		public double TimeoutMultiplier { get; set; } = 1;
 
