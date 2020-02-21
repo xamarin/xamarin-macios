@@ -640,7 +640,8 @@ namespace xharness {
 				("inconclusive", "0"),
 				("skipped", "0"),
 				("asserts", "1"),
-				("date", XmlConvert.ToString (DateTime.Now, "yyyy-MM-dd"))
+				("run-date", XmlConvert.ToString (DateTime.Now, "yyyy-MM-dd")),
+				("start-time", DateTime.Now.ToString ("HH:mm:ss"))
 			);
 			writer.WriteStartElement ("test-suite");
 			writer.WriteAttributeString ("type", "Assembly");
