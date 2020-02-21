@@ -110,61 +110,62 @@ namespace MonoMac.Tuner {
 		{
 			var pipeline = new Pipeline ();
 
-			pipeline.AppendStep (options.LinkMode == LinkMode.None ? new LoadOptionalReferencesStep () : new LoadReferencesStep ());
+			pipeline.Append (options.LinkMode == LinkMode.None ? new LoadOptionalReferencesStep () : new LoadReferencesStep ());
 
 			if (options.I18nAssemblies != I18nAssemblies.None)
-				pipeline.AppendStep (new LoadI18nAssemblies (options.I18nAssemblies));
+				pipeline.Append (new LoadI18nAssemblies (options.I18nAssemblies));
 
 			// that must be done early since the XML files can "add" new assemblies [#15878]
 			// and some of the assemblies might be (directly or referenced) SDK assemblies
 			foreach (string definition in options.ExtraDefinitions)
-				pipeline.AppendStep (GetResolveStep (definition));
+				pipeline.Append (GetResolveStep (definition));
 
 			if (options.LinkMode != LinkMode.None)
-				pipeline.AppendStep (new BlacklistStep ());
+				pipeline.Append (new BlacklistStep ());
 
 			if (options.WarnOnTypeRef.Count > 0)
-				pipeline.AppendStep (new PreLinkScanTypeReferenceStep (options.WarnOnTypeRef));
+				pipeline.Append (new PreLinkScanTypeReferenceStep (options.WarnOnTypeRef));
 
-			pipeline.AppendStep (new CustomizeMacActions (options.LinkMode, options.SkippedAssemblies));
+			pipeline.Append (new CustomizeMacActions (options.LinkMode, options.SkippedAssemblies));
 
 			// We need to store the Field attribute in annotations, since it may end up removed.
-			pipeline.AppendStep (new ProcessExportedFields ());
+			pipeline.Append (new ProcessExportedFields ());
 
 			if (options.LinkMode != LinkMode.None) {
-				pipeline.AppendStep (new CoreTypeMapStep ());
+				pipeline.Append (new CoreTypeMapStep ());
 
-				pipeline.AppendStep (GetSubSteps (options));
+				pipeline.Append (GetSubSteps (options));
 
-				pipeline.AppendStep (new MonoMacPreserveCode (options));
-				pipeline.AppendStep (new PreserveCrypto ());
+				pipeline.Append (new MonoMacPreserveCode (options));
+				pipeline.Append (new PreserveCrypto ());
 
-				pipeline.AppendStep (new MonoMacMarkStep ());
-				pipeline.AppendStep (new MacRemoveResources (options));
-				pipeline.AppendStep (new CoreSweepStep (options.LinkSymbols));
-				pipeline.AppendStep (new CleanStep ());
+				pipeline.Append (new MonoMacMarkStep ());
+				pipeline.Append (new MacRemoveResources (options));
+				pipeline.Append (new CoreSweepStep (options.LinkSymbols));
+				pipeline.Append (new CleanStep ());
 
-				pipeline.AppendStep (new MonoMacNamespaces ());
-				pipeline.AppendStep (new RemoveSelectors ());
+				pipeline.Append (new MonoMacNamespaces ());
+				pipeline.Append (new RemoveSelectors ());
 
-				pipeline.AppendStep (new RegenerateGuidStep ());
+				pipeline.Append (new RegenerateGuidStep ());
 			} else {
 				SubStepDispatcher sub = new SubStepDispatcher () {
 					new RemoveUserResourcesSubStep ()
 				};
-				pipeline.AppendStep (sub);
+				pipeline.Append (sub);
 			}
 
-			pipeline.AppendStep (new ListExportedSymbols (options.MarshalNativeExceptionsState, options.SkipExportedSymbolsInSdkAssemblies));
+			pipeline.Append (new ListExportedSymbols (options.MarshalNativeExceptionsState, options.SkipExportedSymbolsInSdkAssemblies));
 
-			pipeline.AppendStep (new OutputStep ());
+			pipeline.Append (new OutputStep ());
 
 			// expect that changes can occur until it's all saved back to disk
 			if (options.WarnOnTypeRef.Count > 0)
-				pipeline.AppendStep (new PostLinkScanTypeReferenceStep (options.WarnOnTypeRef));
+				pipeline.Append (new PostLinkScanTypeReferenceStep (options.WarnOnTypeRef));
 
 			return pipeline;
 		}
+
 
 		static SubStepDispatcher GetSubSteps (LinkerOptions options)
 		{
