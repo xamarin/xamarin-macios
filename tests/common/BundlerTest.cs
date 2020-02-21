@@ -339,16 +339,16 @@ class Issue4072Session : NSUrlSession {
 		{
 			using (var bundler = new BundlerTool ()) {
 				var code = @"
- using System;
- using Foundation;
- using ObjCRuntime;
- class T {
-	static void Main ()
+using System;
+using Foundation;
+using ObjCRuntime;
+class T {
+ 	static void Main ()
 	{
 		Console.WriteLine (typeof (NSObject));
 	}
- }
- ";
+}
+";
 				bundler.Profile = profile;
 				bundler.CreateTemporaryCacheDirectory ();
 				bundler.CreateTemporaryApp (profile, code: code);
@@ -358,6 +358,38 @@ class Issue4072Session : NSUrlSession {
 				// {} messing with a good pattern substitution - we want to avoid an MT0000 when verbosity is applied
 				bundler.AssertErrorPattern (2004, "");
 				bundler.AssertErrorCount (1);
+			}
+		}
+
+		[Test]
+#if __MACOS__
+		[TestCase (Profile.macOSMobile)]
+#else
+		[TestCase (Profile.iOS)]
+#endif
+		public void MX1502_3 (Profile profile)
+		{
+			using (var bundler = new BundlerTool ()) {
+				var code = @"
+using System;
+using Foundation;
+using ObjCRuntime;
+class T {
+	static void Main ()
+	{
+		Console.WriteLine (typeof (NSObject));
+	}
+}
+";
+				bundler.Profile = profile;
+				bundler.CreateTemporaryCacheDirectory ();
+				bundler.CreateTemporaryApp (profile, code: code);
+				bundler.Linker = LinkerOption.LinkAll;
+				bundler.CustomArguments = new [] { "--warn-on-type-ref=Foundation.NSObject" };
+				bundler.AssertExecute ();
+				bundler.AssertWarning (1502, "One or more reference(s) to type 'Foundation.NSObject' already exists inside 'testApp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null' before linking");
+				bundler.AssertWarning (1503, "One or more reference(s) to type 'Foundation.NSObject' still exists inside 'testApp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null' after linking");
+				bundler.AssertWarningCount (2);
 			}
 		}
 	}

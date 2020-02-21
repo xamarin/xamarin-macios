@@ -427,6 +427,9 @@
       <Link>Errors.Designer.cs</Link>
       <DependentUpon>Errors.resx</DependentUpon>
     </Compile>
+    <Compile Include="..\linker\ScanTypeReferenceStep.cs">
+      <Link>Xamarin.Linker\ScanTypeReferenceStep.cs</Link>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

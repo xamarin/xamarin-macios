@@ -2906,6 +2906,22 @@
         <note>
 		</note>
       </trans-unit>
+      <trans-unit id="MX1502">
+        <source>One or more reference(s) to type '{0}' already exists inside '{1}' before linking
+		</source>
+        <target state="new">One or more reference(s) to type '{0}' already exists inside '{1}' before linking
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX1503">
+        <source>One or more reference(s) to type '{0}' still exists inside '{1}' after linking
+		</source>
+        <target state="new">One or more reference(s) to type '{0}' still exists inside '{1}' after linking
+		</target>
+        <note>
+		</note>
+      </trans-unit>
       <trans-unit id="MX1600">
         <source>Not a Mach-O dynamic library (unknown header '0x{0}'): {1}.
 		</source>

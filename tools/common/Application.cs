@@ -66,6 +66,7 @@ namespace Xamarin.Bundler {
 		public List<string> LinkSkipped = new List<string> ();
 		public List<string> Definitions = new List<string> ();
 		public Mono.Linker.I18nAssemblies I18n;
+		public List<string> WarnOnTypeRef = new List<string> ();
 
 		public bool? EnableCoopGC;
 		public bool EnableSGenConc;
