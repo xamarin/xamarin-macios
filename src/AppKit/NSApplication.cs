@@ -70,8 +70,21 @@ namespace AppKit {
 			// But can affect child xbuild processes, so unset
 			Environment.SetEnvironmentVariable ("MONO_CFG_DIR", "");
 
+			// custom initialization might have happened before native NSApplication code was full ready to be queried
+			// as such it's possible that `class_ptr` might be empty and that will make things fails later
+			// reference: https://github.com/xamarin/xamarin-macios/issues/7932
+			if (class_ptr == IntPtr.Zero)
+				ResetHandle ();
+
 			// TODO:
 			//   Install hook to register dynamically loaded assemblies
+		}
+
+		// separate method so it can be invoked without `Init` (if needed)
+		static void ResetHandle ()
+		{
+				// `class_ptr` is `readonly` so one can't simply do `class_ptr = Class.GetHandle ("NSApplication");`
+				typeof (NSApplication).GetField ("class_ptr", BindingFlags.Static | BindingFlags.NonPublic).SetValue (null, Class.GetHandle ("NSApplication"));
 		}
 
 		public static void InitDrawingBridge ()
