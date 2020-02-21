@@ -616,12 +616,12 @@ namespace xharness {
 			writer.WriteStartElement ("failure");
 			writer.WriteStartElement ("message");
 			writer.WriteCData (message);
+			writer.WriteEndElement (); // message
 			if (stderr != null) {
 				writer.WriteStartElement ("stack-trace");
 				writer.WriteCData (stderr.ReadToEnd ());
 				writer.WriteEndElement (); //stack trace
 			}
-			writer.WriteEndElement (); // message
 			writer.WriteEndElement (); // failure
 		}
 
@@ -640,7 +640,8 @@ namespace xharness {
 				("inconclusive", "0"),
 				("skipped", "0"),
 				("asserts", "1"),
-				("date", XmlConvert.ToString (DateTime.Now, "yyyy-MM-dd"))
+				("run-date", XmlConvert.ToString (DateTime.Now, "yyyy-MM-dd")),
+				("start-time", DateTime.Now.ToString ("HH:mm:ss"))
 			);
 			writer.WriteStartElement ("test-suite");
 			writer.WriteAttributeString ("type", "Assembly");
