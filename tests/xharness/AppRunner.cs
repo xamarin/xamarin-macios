@@ -887,7 +887,7 @@ namespace xharness
 					// same as with a crash
 					FailureMessage = $"Launch failure";
 					if (Harness.InCI)
-						XmlResultParser.GenerateFailure (Logs, "launch", appName, Variation, $"AppLaunch on {device_name}", $"{FailureMessage} oon {device_name}", main_log.FullPath, XmlResultParser.Jargon.NUnitV3);
+						XmlResultParser.GenerateFailure (Logs, "launch", appName, Variation, $"AppLaunch on {device_name}", $"{FailureMessage} on {device_name}", main_log.FullPath, XmlResultParser.Jargon.NUnitV3);
 				} else if ((!File.Exists (listener_log.FullPath) || string.IsNullOrEmpty (crash_reason)) && Harness.InCI) {
 					// this happens more that what we would like on devices, the main reason most of the time is that we have had netwoking problems and the
 					// tcp connection could not be stablished. We are going to report it as an error since we have not parsed the logs, evne when the app might have

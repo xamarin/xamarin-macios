@@ -627,6 +627,7 @@ namespace xharness {
 
 		static void GenerateNUnitV3Failure (XmlWriter writer, string title, string message, StreamReader stderr)
 		{
+			var date = DateTime.Now;
 			writer.WriteStartElement ("test-run");
 			// defualt values for the crash
 			WriteAttributes (writer,
@@ -640,8 +641,8 @@ namespace xharness {
 				("inconclusive", "0"),
 				("skipped", "0"),
 				("asserts", "1"),
-				("run-date", XmlConvert.ToString (DateTime.Now, "yyyy-MM-dd")),
-				("start-time", DateTime.Now.ToString ("HH:mm:ss"))
+				("run-date", XmlConvert.ToString (date, "yyyy-MM-dd")),
+				("start-time", date.ToString ("HH:mm:ss"))
 			);
 			writer.WriteStartElement ("test-suite");
 			writer.WriteAttributeString ("type", "Assembly");

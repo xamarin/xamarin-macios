@@ -33,6 +33,7 @@ namespace MonoTouch.Tuner {
 		public bool DumpDependencies { get; set; }
 		internal PInvokeWrapperGenerator MarshalNativeExceptionsState { get; set; }
 		internal RuntimeOptions RuntimeOptions { get; set; }
+		public List<string> WarnOnTypeRef { get; set; }
 
 		public MonoTouchLinkContext LinkContext { get; set; }
 		public Target Target { get; set; }
@@ -145,6 +146,9 @@ namespace MonoTouch.Tuner {
 			if (options.LinkMode != LinkMode.None)
 				pipeline.Append (new BlacklistStep ());
 
+			if (options.WarnOnTypeRef.Count > 0)
+				pipeline.Append (new PreLinkScanTypeReferenceStep (options.WarnOnTypeRef));
+
 			pipeline.Append (new CustomizeIOSActions (options.LinkMode, options.SkippedAssemblies));
 
 			// We need to store the Field attribute in annotations, since it may end up removed.
@@ -191,6 +195,10 @@ namespace MonoTouch.Tuner {
 			pipeline.Append (new ListExportedSymbols (options.MarshalNativeExceptionsState));
 
 			pipeline.Append (new OutputStep ());
+
+			// expect that changes can occur until it's all saved back to disk
+			if (options.WarnOnTypeRef.Count > 0)
+				pipeline.Append (new PostLinkScanTypeReferenceStep (options.WarnOnTypeRef));
 
 			return pipeline;
 		}
