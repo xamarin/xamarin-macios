@@ -78,7 +78,7 @@ namespace xharness
 			}
 		}
 
-		public string AppName => $"{appName} {Variation}";
+		public string AppName => appName;
 
 		public double TimeoutMultiplier { get; set; } = 1;
 
@@ -338,11 +338,13 @@ namespace xharness
 			}
 		}
 
-		(string resultLine, bool failed, bool crashed) ParseResult (string test_log_path, bool timed_out, bool crashed)
+		(string resultLine, bool failed, bool crashed) ParseResult (string test_log_path, bool timed_out, out bool crashed)
 		{
-			if (!File.Exists (test_log_path))
+			crashed = false;
+			if (!File.Exists (test_log_path)) {
+				crashed = true;
 				return (null, false, true); // if we do not have a log file, the test crashes
-
+			}
 			// parsing the result is different if we are in jenkins or not.
 			// When in Jenkins, Touch.Unit produces an xml file instead of a console log (so that we can get better test reporting).
 			// However, for our own reporting, we still want the console-based log. This log is embedded inside the xml produced
@@ -368,16 +370,16 @@ namespace xharness
 					// the right one (NUnitV3) add the nodes. ATM only TouchUnit uses V3.
 					var testRunName = $"{appName} {Variation}";
 					if (xmlType == XmlResultParser.Jargon.NUnitV3) {
-						var logs = new List<string> ();
+						var logFiles = new List<string> ();
 						// add our logs AND the logs of the previous task, which is the build task
-						logs.AddRange (Directory.GetFiles (Logs.Directory));
+						logFiles.AddRange (Directory.GetFiles (Logs.Directory));
 						if (BuildTask != null) // when using the run command, we do not have a build task, ergo, there are no logs to add.
-							logs.AddRange (Directory.GetFiles (BuildTask.LogDirectory));
+							logFiles.AddRange (Directory.GetFiles (BuildTask.LogDirectory));
 						// add the attachments and write in the new filename
 						// add a final prefix to the file name to make sure that the VSTS test uploaded just pick
 						// the final version, else we will upload tests more than once
 						newFilename = XmlResultParser.GetVSTSFilename (newFilename);
-						XmlResultParser.UpdateMissingData (path, newFilename, testRunName, logs);
+						XmlResultParser.UpdateMissingData (path, newFilename, testRunName, logFiles);
 					} else {
 						// rename the path to the correct value
 						File.Move (path, newFilename);
@@ -418,36 +420,33 @@ namespace xharness
 						return parseResult;
 					}
 				}
-				
-			} else {
-				// delete not needed copy
-				File.Delete (path);
-				// not the most efficient way but this just happens when we run
-				// the tests locally and we usually do not run all tests, we are
-				// more interested to be efficent on the bots
-				string resultLine = null;
-				using (var reader = new StreamReader (test_log_path)) {
-					string line = null;
-					bool failed = false;
-					while ((line = reader.ReadLine ()) != null)
-					{
-						if (line.Contains ("Tests run:")) {
-							Console.WriteLine (line);
-							resultLine = line;
-							break;
-						} else if (line.Contains ("[FAIL]")) {
-							Console.WriteLine (line);
-							failed = true;
-						}
+
+			}               // delete not needed copy
+			File.Delete (path);
+			// not the most efficient way but this just happens when we run
+			// the tests locally and we usually do not run all tests, we are
+			// more interested to be efficent on the bots
+			string resultLine = null;
+			using (var reader = new StreamReader (test_log_path)) {
+				string line = null;
+				bool failed = false;
+				while ((line = reader.ReadLine ()) != null) {
+					if (line.Contains ("Tests run:")) {
+						Console.WriteLine (line);
+						resultLine = line;
+						break;
+					} else if (line.Contains ("[FAIL]")) {
+						Console.WriteLine (line);
+						failed = true;
 					}
-					return (resultLine, failed, false);
 				}
+				return (resultLine, failed, false);
 			}
 		}
 
-		public bool TestsSucceeded (string test_log_path, bool timed_out, bool crashed)
+		public bool TestsSucceeded (string test_log_path, bool timed_out, out bool crashed)
 		{
-			var (resultLine, failed, crashed_out) = ParseResult (test_log_path, timed_out, crashed);
+			var (resultLine, failed, crashed_out) = ParseResult (test_log_path, timed_out, out crashed);
 			// read the parsed logs in a human readable way
 			if (resultLine != null) {
 				var tests_run = resultLine.Replace ("Tests run: ", "");
@@ -797,7 +796,7 @@ namespace xharness
 			var crashed = false;
 			if (File.Exists (listener_log.FullPath)) {
 				Harness.LogWrench ("@MonkeyWrench: AddFile: {0}", listener_log.FullPath);
-				success = TestsSucceeded (listener_log.FullPath, timed_out, crashed);
+				success = TestsSucceeded (listener_log.FullPath, timed_out, out crashed);
 			} else if (timed_out) {
 				Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} never launched</i></b><br/>", mode);
 				main_log.WriteLine ("Test run never launched");
@@ -887,12 +886,12 @@ namespace xharness
 					// same as with a crash
 					FailureMessage = $"Launch failure";
 					if (Harness.InCI)
-						XmlResultParser.GenerateFailure (Logs, "launch", appName, Variation, "AppLaunch", FailureMessage, main_log.FullPath, XmlResultParser.Jargon.NUnitV3);
-				} else if (!File.Exists (listener_log.FullPath) && Harness.InCI) {
+						XmlResultParser.GenerateFailure (Logs, "launch", appName, Variation, $"AppLaunch on {device_name}", $"{FailureMessage} on {device_name}", main_log.FullPath, XmlResultParser.Jargon.NUnitV3);
+				} else if ((!File.Exists (listener_log.FullPath) || string.IsNullOrEmpty (crash_reason)) && Harness.InCI) {
 					// this happens more that what we would like on devices, the main reason most of the time is that we have had netwoking problems and the
 					// tcp connection could not be stablished. We are going to report it as an error since we have not parsed the logs, evne when the app might have
 					// not crashed.
-					XmlResultParser.GenerateFailure (Logs, "tcp-connection", appName, Variation, "TcpConnection", "Device could not reach the host over tcp.", main_log.FullPath, XmlResultParser.Jargon.NUnitV3);
+					XmlResultParser.GenerateFailure (Logs, "tcp-connection", appName, Variation, $"TcpConnection on {device_name}", $"Device {device_name} could not reach the host over tcp.", main_log.FullPath, XmlResultParser.Jargon.NUnitV3);
 				} else if (timed_out && Harness.InCI) {
 					XmlResultParser.GenerateFailure (Logs, "timeout", appName, Variation, "AppTimeout", $"Test run timed out after {timeout.TotalMinutes} minute(s).", main_log.FullPath, XmlResultParser.Jargon.NUnitV3);
 				}

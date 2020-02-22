@@ -1378,6 +1378,20 @@
 		<comment>
 		</comment>
 	</data>
+	
+	<data name="MX1502" xml:space="preserve">
+		<value>One or more reference(s) to type '{0}' already exists inside '{1}' before linking
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MX1503" xml:space="preserve">
+		<value>One or more reference(s) to type '{0}' still exists inside '{1}' after linking
+		</value>
+		<comment>
+		</comment>
+	</data>
 
 	<data name="MX1600" xml:space="preserve">
 		<value>Not a Mach-O dynamic library (unknown header '0x{0}'): {1}.
