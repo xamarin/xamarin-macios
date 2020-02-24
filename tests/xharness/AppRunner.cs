@@ -41,6 +41,9 @@ namespace xharness
 		public string AppPath;
 		public string Variation;
 		public BuildToolTask BuildTask;
+		public bool UseTcpTunnel;
+
+
 
 		public TestExecutingResult Result { get; private set; }
 		public string FailureMessage { get; private set; }
@@ -562,7 +565,7 @@ namespace xharness
 				listener = new SimpleHttpListener ();
 				break;
 			case "TCP":
-				listener = new SimpleTcpListener ();
+				listener = new SimpleTcpListener (UseTcpTunnel);
 				break;
 			default:
 				throw new NotImplementedException ();
@@ -730,6 +733,9 @@ namespace xharness
 				} else {
 					args.Add ("--wait-for-exit");
 				}
+
+				if (UseTcpTunnel)
+					args.Add ($"-setenv=USE_TCP_TUNNEL=true");
 				
 				AddDeviceName (args);
 
@@ -756,8 +762,38 @@ namespace xharness
 					});
 					var runLog = Log.CreateAggregatedLog (callbackLog, main_log);
 					var timeoutWatch = Stopwatch.StartNew ();
-					var result = await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, args, runLog, timeout, cancellation_token: cancellation_source.Token);
+					// how we wait for the execution depends if we are using a tcp tunnel or not. If we are, we cannot wait for the result, since the tests won't start
+					// until we are connected to the tunnel and ready to receive data, in other cases we can.
+					ProcessExecutionResult result;
+					if (transport == "TCP" && UseTcpTunnel && listener is SimpleTcpListener tcpListener) {
+						// launch app, but do not await for the result, since we need to create the tunnel
+						var testResultExecutionTask = ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, args, runLog, timeout, cancellation_token: cancellation_source.Token);
 
+						var tcpArgs = new List<string> ();
+						tcpArgs.Add ($"--tcp-tunnel={listener.Port}:{listener.Port}");
+						tcpArgs.Add ("-v");
+						AddDeviceName (args);
+
+						// use a cancelation token, later will be used to kill the tcp tunnel proces
+						CancellationTokenSource tunnelCancelation = new CancellationTokenSource ();
+						main_log.WriteLine ($"Starting tcp tunnel between mac port: {listener.Port} and devie port {listener.Port}.");
+						var tunnelbackLog = new CallbackLog ((line) => {
+							main_log.WriteLine ($"The tcp tunnel output is {line}");
+							if (line.Contains ("Tcp tunnel started on device")) {
+								main_log.Write ($"Tcp tunnel create on port {listener.Port}");
+								tcpListener.TunnelInitialized = true;
+							}
+						});
+						var tcpTunnelExecutionTask = ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, tcpArgs, tunnelbackLog, timeout, cancellation_token: tunnelCancelation.Token);
+
+						// tunnel started, we should be able to get logs from the app, so we can now await on the test execution
+						result = await testResultExecutionTask;
+						// kill tunnel
+						tunnelCancelation.Cancel ();
+					} else {
+						result = await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, args, runLog, timeout, cancellation_token: cancellation_source.Token);
+					}
+					
 					if (!waitedForExit && !result.TimedOut) {
 						// mlaunch couldn't wait for exit for some reason. Let's assume the app exits when the test listener completes.
 						main_log.WriteLine ("Waiting for listener to complete, since mlaunch won't tell.");
@@ -887,7 +923,7 @@ namespace xharness
 					FailureMessage = $"Launch failure";
 					if (Harness.InCI)
 						XmlResultParser.GenerateFailure (Logs, "launch", appName, Variation, $"AppLaunch on {device_name}", $"{FailureMessage} on {device_name}", main_log.FullPath, XmlResultParser.Jargon.NUnitV3);
-				} else if ((!File.Exists (listener_log.FullPath) || string.IsNullOrEmpty (crash_reason)) && Harness.InCI) {
+				} else if ((crashed && !File.Exists (listener_log.FullPath) || (!crashed && string.IsNullOrEmpty (crash_reason)) && Harness.InCI)) {
 					// this happens more that what we would like on devices, the main reason most of the time is that we have had netwoking problems and the
 					// tcp connection could not be stablished. We are going to report it as an error since we have not parsed the logs, evne when the app might have
 					// not crashed.

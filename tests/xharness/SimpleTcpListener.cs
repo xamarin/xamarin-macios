@@ -10,11 +10,20 @@ namespace xharness
 	public class SimpleTcpListener : SimpleListener
 	{
 		byte[] buffer = new byte [16 * 1024];
+		bool useTcpTunnel = true;
+		public bool TunnelInitialized = false;
 		TcpListener server;
+		TcpClient client;
 
+		public SimpleTcpListener (bool tunnel = false) : base ()
+		{
+			useTcpTunnel = tunnel;
+		}
 		protected override void Stop ()
 		{
-			server.Stop ();
+			client?.Close ();
+			client?.Dispose ();
+			server?.Stop ();
 		}
 
 		public override void Initialize ()
@@ -23,17 +32,24 @@ namespace xharness
 			server.Start ();
 
 			if (Port == 0)
-				Port = ((IPEndPoint) server.LocalEndpoint).Port;
+				Port = ((IPEndPoint)server.LocalEndpoint).Port;
+			if (useTcpTunnel) {
+				// close the listener. We have a port. This is not the best
+				// way to find a free port, but there is nothing we can do
+				// better than this.
+
+				server.Stop ();
+			}
 		}
 
-		protected override void Start ()
+		void StartNetworkTcp ()
 		{
 			bool processed;
 
 			try {
 				do {
 					Log.WriteLine ("Test log server listening on: {0}:{1}", Address, Port);
-					using (TcpClient client = server.AcceptTcpClient ()) {
+					using (client = server.AcceptTcpClient ()) {
 						client.ReceiveBufferSize = buffer.Length;
 						processed = Processing (client);
 					}
@@ -48,6 +64,55 @@ namespace xharness
 				} finally {
 					Finished ();
 				}
+			}
+		}
+		
+		void StartTcpTunnel ()
+		{
+			while (!TunnelInitialized) ; // do nothing until the tunnel is ready
+			bool processed;
+			try {
+				int timeout = 100;
+				var watch = new System.Diagnostics.Stopwatch ();
+				while (true) {
+					try {
+						client = new TcpClient ("localhost", Port);
+						Log.WriteLine ("Test log server listening on: {0}:{1}", Address, Port);
+						// let the device know we are ready!
+						var stream = client.GetStream ();
+						var ping = Encoding.UTF8.GetBytes ("ping");
+						stream.Write (ping, 0, ping.Length);
+						break;
+
+					} catch (SocketException ex) {
+						if (timeout == 100 && watch.ElapsedMilliseconds > 20000) {
+							timeout = 250; // Switch to a 250ms timeout after 20 seconds
+						} else if (timeout == 250 && watch.ElapsedMilliseconds > 120000) {
+							// Give up after 2 minutes.
+							throw ex;
+						}
+						Thread.Sleep (timeout);
+					}
+				}
+				do {
+					client.ReceiveBufferSize = buffer.Length;
+					processed = Processing (client);
+				} while (!AutoExit || !processed);
+			} catch (Exception e) {
+				var se = e as SocketException;
+				if (se == null || se.SocketErrorCode != SocketError.Interrupted)
+					Console.WriteLine ("[{0}] : {1}", DateTime.Now, e);
+			} finally {
+				Finished ();
+			}
+		}
+
+		protected override void Start ()
+		{
+			if (useTcpTunnel) {
+				StartTcpTunnel ();
+			} else {
+				StartNetworkTcp ();
 			}
 		}
 
