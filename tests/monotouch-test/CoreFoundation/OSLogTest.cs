@@ -14,6 +14,12 @@ namespace MonoTouchFixtures.CoreFoundation {
 	[Preserve (AllMembers = true)]
 	public class OSLogTest {
 
+		[TestFixtureSetUp]
+		public void SetUp ()
+		{
+			TestRuntime.AssertXcodeVersion (8,0);
+		}
+
 		[Test]
 		public void Default ()
 		{

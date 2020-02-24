@@ -30,15 +30,19 @@ namespace CoreFoundation {
 	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	public sealed class OSLog : NativeObject {
 
-		static IntPtr _os_log_default;
+		static OSLog _default;
 
-		static OSLog ()
-		{
-			_os_log_default = Dlfcn.dlsym (Libraries.System.Handle, "_os_log_default");
-			Default = new OSLog (_os_log_default, false);
+		public static OSLog Default {
+			get {
+				if (_default== null) {
+					var h = Dlfcn.dlsym (Libraries.System.Handle, "_os_log_default");
+					if (h == IntPtr.Zero)
+						throw new NotSupportedException ("Feature not available on this OS version");
+					_default = new OSLog (h, false);
+				}
+				return _default;
+			}
 		}
-
-		public static OSLog Default { get; private set; }
 
 		protected override void Retain ()
 		{
