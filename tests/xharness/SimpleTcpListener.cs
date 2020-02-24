@@ -70,7 +70,7 @@ namespace xharness
 		
 		void StartTcpTunnel ()
 		{
-			if (!TunnelHoleThrough.Task.Result) { // do noting until the tunnel is ready
+			if (!TunnelHoleThrough.Task.Result) { // do nothing until the tunnel is ready
 				throw new InvalidOperationException ("Tcp tunnel could not be initialized.");
 			}
 			bool processed;
