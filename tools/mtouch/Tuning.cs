@@ -174,13 +174,13 @@ namespace MonoTouch.Tuner {
 				// after the mark step. If we remove any incompatible code, we'll mark
 				// the NotSupportedException constructor we need, so we need to do this before the sweep step.
 				if (remove_incompatible_bitcode != null)
-					pipeline.AppendStep (new SubStepDispatcher { remove_incompatible_bitcode });
+					pipeline.Append (new SubStepDispatcher { remove_incompatible_bitcode });
 				
 				pipeline.Append (new MonoTouchSweepStep (options));
 				pipeline.Append (new CleanStep ());
 
 				if (!options.DebugBuild)
-					pipeline.AppendStep (GetPostLinkOptimizations (options));
+					pipeline.Append (GetPostLinkOptimizations (options));
 
 				pipeline.Append (new FixModuleFlags ());
 			} else {
@@ -201,13 +201,6 @@ namespace MonoTouch.Tuner {
 				pipeline.Append (new PostLinkScanTypeReferenceStep (options.WarnOnTypeRef));
 
 			return pipeline;
-		}
-
-		static void Append (this Pipeline self, IStep step)
-		{
-			self.AppendStep (step);
-			if (Driver.WatchLevel > 0)
-				self.AppendStep (new TimeStampStep (step));
 		}
 
 		static List<AssemblyDefinition> ListAssemblies (MonoTouchLinkContext context)
@@ -238,20 +231,6 @@ namespace MonoTouch.Tuner {
 			catch (Exception e) {
 				throw new MonoTouchException (2005, true, e, Errors.MX2005, filename);
 			}
-		}
-	}
-
-	public class TimeStampStep : IStep {
-		string message;
-
-		public TimeStampStep (IStep step)
-		{
-			message = step.ToString ();
-		}
-
-		public void Process (LinkContext context)
-		{
-			Driver.Watch (message, 2);
 		}
 	}
 
