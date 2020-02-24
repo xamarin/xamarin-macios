@@ -6572,6 +6572,66 @@ namespace UIKit {
 		[Field ("UIKeyInputEnd")]
 		NSString End { get; }
 
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[iOS (13,4), TV (13,4)]
+		[Field ("UIKeyInputF1")]
+		NSString F1 { get; }
+
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[iOS (13,4), TV (13,4)]
+		[Field ("UIKeyInputF2")]
+		NSString F2 { get; }
+
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[iOS (13,4), TV (13,4)]
+		[Field ("UIKeyInputF3")]
+		NSString F3 { get; }
+
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[iOS (13,4), TV (13,4)]
+		[Field ("UIKeyInputF4")]
+		NSString F4 { get; }
+
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[iOS (13,4), TV (13,4)]
+		[Field ("UIKeyInputF5")]
+		NSString F5 { get; }
+
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[iOS (13,4), TV (13,4)]
+		[Field ("UIKeyInputF6")]
+		NSString F6 { get; }
+
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[iOS (13,4), TV (13,4)]
+		[Field ("UIKeyInputF7")]
+		NSString F7 { get; }
+
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[iOS (13,4), TV (13,4)]
+		[Field ("UIKeyInputF8")]
+		NSString F8 { get; }
+
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[iOS (13,4), TV (13,4)]
+		[Field ("UIKeyInputF9")]
+		NSString F9 { get; }
+
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[iOS (13,4), TV (13,4)]
+		[Field ("UIKeyInputF10")]
+		NSString F10 { get; }
+
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[iOS (13,4), TV (13,4)]
+		[Field ("UIKeyInputF11")]
+		NSString F11 { get; }
+
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[iOS (13,4), TV (13,4)]
+		[Field ("UIKeyInputF12")]
+		NSString F12 { get; }
+
 		[iOS (9,0)]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'UIKeyCommand.Create (NSString, UIKeyModifierFlags, Selector)' overload instead.")]
 		[Static]
