@@ -34,7 +34,7 @@ namespace CoreFoundation {
 
 		public static OSLog Default {
 			get {
-				if (_default== null) {
+				if (_default == null) {
 					var h = Dlfcn.dlsym (Libraries.System.Handle, "_os_log_default");
 					if (h == IntPtr.Zero)
 						throw new NotSupportedException ("Feature not available on this OS version");
