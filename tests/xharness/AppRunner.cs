@@ -43,8 +43,6 @@ namespace xharness
 		public BuildToolTask BuildTask;
 		public bool UseTcpTunnel;
 
-
-
 		public TestExecutingResult Result { get; private set; }
 		public string FailureMessage { get; private set; }
 
@@ -781,7 +779,7 @@ namespace xharness
 							main_log.WriteLine ($"The tcp tunnel output is {line}");
 							if (line.Contains ("Tcp tunnel started on device")) {
 								main_log.Write ($"Tcp tunnel create on port {listener.Port}");
-								tcpListener.TunnelInitialized = true;
+								tcpListener.TunnelHoleThrough.TrySetResult (true);
 							}
 						});
 						var tcpTunnelExecutionTask = ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, tcpArgs, tunnelbackLog, timeout, cancellation_token: tunnelCancelation.Token);

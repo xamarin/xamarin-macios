@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace xharness
 {
@@ -11,11 +12,11 @@ namespace xharness
 	{
 		byte[] buffer = new byte [16 * 1024];
 		bool useTcpTunnel = true;
-		public bool TunnelInitialized = false;
+		public TaskCompletionSource<bool> TunnelHoleThrough { get; private set; }  = new TaskCompletionSource<bool> ();
 		TcpListener server;
 		TcpClient client;
 
-		public SimpleTcpListener (bool tunnel = false) : base ()
+		public SimpleTcpListener (bool tunnel = false)
 		{
 			useTcpTunnel = tunnel;
 		}
@@ -32,7 +33,7 @@ namespace xharness
 			server.Start ();
 
 			if (Port == 0)
-				Port = ((IPEndPoint)server.LocalEndpoint).Port;
+				Port = ((IPEndPoint) server.LocalEndpoint).Port;
 			if (useTcpTunnel) {
 				// close the listener. We have a port. This is not the best
 				// way to find a free port, but there is nothing we can do
@@ -69,7 +70,9 @@ namespace xharness
 		
 		void StartTcpTunnel ()
 		{
-			while (!TunnelInitialized) ; // do nothing until the tunnel is ready
+			if (!TunnelHoleThrough.Task.Result) { // do noting until the tunnel is ready
+				throw new InvalidOperationException ("Tcp tunnel could not be initialized.");
+			}
 			bool processed;
 			try {
 				int timeout = 100;

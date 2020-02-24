@@ -64,7 +64,7 @@ namespace BCLTests.TestRunner.Core {
 			return result;
 		}
 
-		public TcpTextWriter (string hostName, int port, bool isTunnel = true)
+		public TcpTextWriter (string hostName, int port, bool isTunnel = false)
 		{
 			if ((port < 0) || (port > ushort.MaxValue))
 				throw new ArgumentOutOfRangeException (nameof (port), $"Port must be between 0 and {ushort.MaxValue}" );
@@ -83,6 +83,7 @@ namespace BCLTests.TestRunner.Core {
 			try {
 				if (isTunnel) {
 					server = new TcpListener (IPAddress.Any, Port);
+					server.Server.ReceiveTimeout = 5000;
 					server.Start ();
 					client = server.AcceptTcpClient ();
 					// block until we have the ping from the client side
@@ -98,7 +99,8 @@ namespace BCLTests.TestRunner.Core {
 					client = new TcpClient (HostName, port);
 				}
 				writer = new StreamWriter (client.GetStream ());
-			} catch {
+			}
+			catch {
 #if __IOS__
 				UIApplication.SharedApplication.NetworkActivityIndicatorVisible = false;
 #endif

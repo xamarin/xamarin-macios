@@ -3719,7 +3719,7 @@ namespace xharness
 						TimeoutMultiplier = TimeoutMultiplier,
 						Variation = Variation,
 						BuildTask = BuildTask,
-						UseTcpTunnel = Device.DevicePlatform == DevicePlatform.iOS,
+						UseTcpTunnel = Device.DevicePlatform == DevicePlatform.iOS || Device.DevicePlatform == DevicePlatform.tvOS,
 					};
 
 					// Sometimes devices can't upgrade (depending on what has changed), so make sure to uninstall any existing apps first.
@@ -3780,7 +3780,7 @@ namespace xharness
 								Configuration = ProjectConfiguration,
 								Variation = Variation,
 								BuildTask = BuildTask,
-								UseTcpTunnel = Device.DevicePlatform == DevicePlatform.iOS,
+								UseTcpTunnel = Device.DevicePlatform == DevicePlatform.iOS || Device.DevicePlatform == DevicePlatform.tvOS,
 							};
 							additional_runner = todayRunner;
 							await todayRunner.RunAsync ();
