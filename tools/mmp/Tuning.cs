@@ -166,7 +166,6 @@ namespace MonoMac.Tuner {
 			return pipeline;
 		}
 
-
 		static SubStepDispatcher GetSubSteps (LinkerOptions options)
 		{
 			SubStepDispatcher sub = new SubStepDispatcher ();
