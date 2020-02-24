@@ -77,6 +77,7 @@ namespace xharness
 			try {
 				int timeout = 100;
 				var watch = new System.Diagnostics.Stopwatch ();
+				watch.Start (); 
 				while (true) {
 					try {
 						client = new TcpClient ("localhost", Port);
