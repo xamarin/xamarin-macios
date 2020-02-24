@@ -30,8 +30,15 @@ namespace CoreFoundation {
 	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	public sealed class OSLog : NativeObject {
 
-		// initialized only once (see tests/cecil-tests/)
-		public static OSLog Default { get; } = new OSLog (IntPtr.Zero, false);
+		static IntPtr _os_log_default;
+
+		static OSLog ()
+		{
+			_os_log_default = Dlfcn.dlsym (Libraries.System.Handle, "_os_log_default");
+			Default = new OSLog (_os_log_default, false);
+		}
+
+		public static OSLog Default { get; private set; }
 
 		protected override void Retain ()
 		{
