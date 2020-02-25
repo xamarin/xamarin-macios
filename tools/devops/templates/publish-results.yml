@@ -49,7 +49,7 @@ steps:
 
 # pwsh for PowerShell Core
 # powershell is for Win PowerShell
-- pwsh: ./publish_results.ps1
+- pwsh: publish_results.ps1
 
 
 # 	printf "\t\"state\": \"%s\",\n" "$STATE"
