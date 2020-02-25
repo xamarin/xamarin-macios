@@ -36,7 +36,7 @@ IOS_TARGETS += \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/btouch                        \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/btouch-native                 \
 
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/bgen: bgen | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/bgen: bgen/bgen | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin
 	$(Q) $(CP) $< $@
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/btouch: Makefile.generator | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin
@@ -124,7 +124,7 @@ MAC_TARGETS += \
 MAC_TARGETS += \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bmac                     \
 
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bgen: bgen | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bgen: bgen/bgen | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin
 	$(Q) $(CP) $< $@
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bgen-classic: Makefile.generator | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin
