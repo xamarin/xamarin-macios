@@ -1,0 +1,7 @@
+#!/bin/bash -e
+
+pushd "$(dirname "$0")" > /dev/null
+BIN_DIR=$(pwd -P)
+popd > /dev/null
+
+exec /Library/Frameworks/Mono.framework/Commands/mono --debug "$BIN_DIR/../lib/mmp/mmp.exe" "$@"
