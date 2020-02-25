@@ -3352,7 +3352,10 @@ namespace xharness
 					}
 					if (!Harness.GetIncludeSystemPermissionTests (Platform, false))
 						proc.StartInfo.EnvironmentVariables ["DISABLE_SYSTEM_PERMISSION_TESTS"] = "1";
-					proc.StartInfo.EnvironmentVariables ["MONO_DEBUG"] = "no-gdb-backtrace";
+					var mono_debug = "no-gdb-backtrace";
+					if (BuildTask.ProjectConfiguration == "Debug")
+						mono_debug += ",disable_omit_fp";
+					proc.StartInfo.EnvironmentVariables ["MONO_DEBUG"] = mono_debug;
 					Jenkins.MainLog.WriteLine ("Executing {0} ({1})", TestName, Mode);
 					var log = Logs.Create ($"execute-{Platform}-{Timestamp}.txt", Log.EXECUTION_LOG);
 					if (!Harness.DryRun) {
