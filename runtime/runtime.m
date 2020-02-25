@@ -41,6 +41,7 @@ bool xamarin_mac_modern = false;
 bool xamarin_debug_mode = false;
 #endif
 bool xamarin_disable_lldb_attach = false;
+bool xamarin_disable_omit_fp = false;
 #if DEBUG
 bool xamarin_init_mono_debug = true;
 #else

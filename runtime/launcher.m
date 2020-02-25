@@ -368,11 +368,18 @@ update_environment (xamarin_initialize_data *data)
 		}
 	}
 #endif
-	if (xamarin_disable_lldb_attach) {
-		// Unfortunately the only place to set debug_options.no_gdb_backtrace is in mini_parse_debug_option
-		// So route through MONO_DEBUG
-		setenv ("MONO_DEBUG", "no-gdb-backtrace", 0);
+	const char *mono_debug = NULL;
+	// Unfortunately the only place to set debug_options.no_gdb_backtrace is in mini_parse_debug_option
+	// So route through MONO_DEBUG
+	if (xamarin_disable_lldb_attach && xamarin_disable_omit_fp) {
+		mono_debug = "no-gdb-trace,disable-omit-fp";
+	} else if (xamarin_disable_lldb_attach) {
+		mono_debug = "no-gdb-trace";
+	} else if (xamarin_disable_omit_fp) {
+		mono_debug = "disable_omit_fp";
 	}
+	if (mono_debug != NULL)
+		setenv ("MONO_DEBUG", mono_debug, 0);
 
 #ifndef DYNAMIC_MONO_RUNTIME
 	setenv ("MONO_CFG_DIR", [monobundle_dir UTF8String], 0);
