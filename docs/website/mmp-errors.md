@@ -740,10 +740,7 @@ You can silence this warning by adding `--nowarn=5221` to the **Additional mmp a
 
 ### MM53xx: other tools
 
-<a name="MM5301" />
-
-#### MM5301: pkg-config could not be found. Please install the Mono.framework from http://mono-project.com/Downloads
-
+<!-- 5301 used by mtouch -->
 <!-- 5302 used by mtouch -->
 <!-- 5303 used by mtouch -->
 <!-- 5304 used by mtouch -->

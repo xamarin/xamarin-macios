@@ -338,14 +338,6 @@
         <note>
 		</note>
       </trans-unit>
-      <trans-unit id="MM5301">
-        <source>pkg-config could not be found. Please install the Mono.framework from http://mono-project.com/Downloads
-		</source>
-        <target state="new">pkg-config could not be found. Please install the Mono.framework from http://mono-project.com/Downloads
-		</target>
-        <note>
-		</note>
-      </trans-unit>
       <trans-unit id="MM5308">
         <source>Xcode license agreement may not have been accepted.  Please launch Xcode.
 		</source>

@@ -2577,13 +2577,6 @@
 		</comment>
 	</data>
 
-	<data name="MM5301" xml:space="preserve">
-		<value>pkg-config could not be found. Please install the Mono.framework from http://mono-project.com/Downloads
-		</value>
-		<comment>
-		</comment>
-	</data>
-
 	<data name="MT5302" xml:space="preserve">
 		<value>Missing 'dsymutil' tool. Please install Xcode 'Command-Line Tools' component
 		</value>
