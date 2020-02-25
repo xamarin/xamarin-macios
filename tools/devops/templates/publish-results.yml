@@ -42,10 +42,22 @@ steps:
 ###
 ### Report final results to GitHub
 ###
-- task: PowerShell@2
-  inputs:
-    targetType: inline
-    script: Write-Host $env:TOKEN 
+# - task: PowerShell@2
+#   inputs:
+#     targetType: #filePath
+#     script: @json_payload = @"{"token": $TOKEN, "target": $TARGET_URL}"
+
+# pwsh for PowerShell Core
+# powershell is for Win PowerShell
+- pwsh: ./publish_results.ps1
+
+
+# 	printf "\t\"state\": \"%s\",\n" "$STATE"
+#	printf "\t\"target_url\": \"%s\",\n" "$TARGET_URL"
+#	printf "\t\"description\": %s,\n" "$(echo -n "$DESCRIPTION" | python -c 'import json,sys; print(json.dumps(sys.stdin.read()))')"
+#	printf "\t\"context\": \"%s\"\n" "$CONTEXT"
+# ./jenkins/add-commit-status.sh --token="$TOKEN" --hash="$BUILD_REVISION" --state="$GH_STATE" --target-url="$VSTS_BUILD_URL" --description="$DESCRIPTION" --context="VSTS: device tests ($DEVICE_TYPE)"
+
 
 ###
 ### Report final results to GitHub
