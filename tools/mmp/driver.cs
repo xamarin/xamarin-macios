@@ -531,31 +531,6 @@ namespace Xamarin.Bundler {
 			references.AddRange (fixedAssemblies);
 		}
 
-		static bool ParseBool (string value, string name)
-		{
-			if (string.IsNullOrEmpty (value))
-				return true;
-
-			switch (value.ToLowerInvariant ()) {
-			case "1":
-			case "yes":
-			case "true":
-			case "enable":
-				return true;
-			case "0":
-			case "no":
-			case "false":
-			case "disable":
-				return false;
-			default:
-				try {
-					return bool.Parse (value);
-				} catch (Exception ex) {
-					throw ErrorHelper.CreateError (26, ex, Errors.MX0026, $"{name}:{value}", ex.Message);
-				}
-			}
-		}
-
 		// SDK versions are only passed in as X.Y but some frameworks/APIs require X.Y.Z
 		// Mutate them if we have a new enough Xcode
 		static Version MutateSDKVersionToPointRelease (Version rv)
@@ -940,18 +915,10 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		[DllImport ("/usr/lib/system/libdyld.dylib")]
-		static extern int _NSGetExecutablePath (byte[] buffer, ref uint bufsize);
-
 		static string PartialStaticLibrary {
 			get {
 				return Path.Combine (FrameworkLibDirectory, string.Format ("mmp/Xamarin.Mac.registrar.{0}.a", IsUnifiedMobile ? "mobile" : "full"));
 			}
-		}
-
-		public static bool IsUptodate (string source, string target)
-		{
-			return Application.IsUptodate (source, target);
 		}
 
 		static string GenerateMain ()
