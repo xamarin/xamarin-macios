@@ -777,39 +777,6 @@ namespace Xamarin.Bundler
 			return true;
 		}
 
-		internal static bool TryParseBool (string value, out bool result)
-		{
-			if (string.IsNullOrEmpty (value)) {
-				result = true;
-				return true;
-			}
-
-			switch (value.ToLowerInvariant ()) {
-			case "1":
-			case "yes":
-			case "true":
-			case "enable":
-				result = true;
-				return true;
-			case "0":
-			case "no":
-			case "false":
-			case "disable":
-				result = false;
-				return true;
-			default:
-				return bool.TryParse (value, out result);
-			}
-		}
-
-		internal static bool ParseBool (string value, string name, bool show_error = true)
-		{
-			bool result;
-			if (!TryParseBool (value, out result))
-				throw ErrorHelper.CreateError (26, Errors.MX0026, name, value);
-			return result;
-		}
-
 		static Application ParseArguments (string [] args, out Action a)
 		{
 			var action = Action.None;
