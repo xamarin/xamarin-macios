@@ -3501,7 +3501,7 @@ namespace xharness
 				}
 				FailureMessage = BuildTask.FailureMessage;
 				if (Harness.InCI && BuildTask is XBuildTask projectTask)
-					XmlResultParser.GenerateFailure (Logs, "build", projectTask.TestName, projectTask.Variation, "AppBuild", $"App could not be built {FailureMessage}.", projectTask.BuildLog.FullPath, XmlResultParser.Jargon.NUnitV3);
+					XmlResultParser.GenerateFailure (Logs, "build", projectTask.TestName, projectTask.Variation, "AppBuild", $"App could not be built {FailureMessage}.", projectTask.BuildLog.FullPath, Harness.XmlJargon);
 			} else {
 				ExecutionResult = TestExecutingResult.Built;
 			}
@@ -3743,7 +3743,7 @@ namespace xharness
 								if (Harness.InCI)
 									XmlResultParser.GenerateFailure (Logs, "install", runner.AppName, runner.Variation,
 										$"AppInstallation on {runner.DeviceName}", $"Install failed on {runner.DeviceName}, exit code: {install_result.ExitCode}",
-										install_log.FullPath, XmlResultParser.Jargon.NUnitV3);
+										install_log.FullPath, Harness.XmlJargon);
 							}
 						} finally {
 							this.install_log.Dispose ();

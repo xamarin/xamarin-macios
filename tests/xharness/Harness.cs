@@ -30,6 +30,7 @@ namespace xharness
 		public Log HarnessLog { get; set; }
 		public bool UseSystem { get; set; } // if the system XI/XM should be used, or the locally build XI/XM.
 		public HashSet<string> Labels { get; } = new HashSet<string> ();
+		public Jargon XmlJargon { get; set; } = Jargon.NUnitV3;
 
 		public string XIBuildPath {
 			get { return Path.GetFullPath (Path.Combine (RootDirectory, "..", "tools", "xibuild", "xibuild")); }

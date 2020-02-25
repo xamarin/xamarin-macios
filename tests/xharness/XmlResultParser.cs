@@ -6,15 +6,16 @@ using System.Xml;
 using System.Xml.Linq;
 
 namespace xharness {
-	public static class XmlResultParser {
 
-		public enum Jargon {
-			TouchUnit,
-			NUnitV2,
-			NUnitV3,
-			xUnit,
-			Missing,
-		}
+	public enum Jargon {
+		TouchUnit,
+		NUnitV2,
+		NUnitV3,
+		xUnit,
+		Missing,
+	}
+
+	public static class XmlResultParser {
 
 		// test if the file is valid xml, or at least, that can be read it.
 		public static bool IsValidXml (string path, out Jargon type)

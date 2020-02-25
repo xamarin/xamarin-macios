@@ -72,6 +72,15 @@ namespace xharness
 				{ "periodic-command-arguments=", "Arguments to the command to execute periodically.", (v) => harness.PeriodicCommandArguments = v },
 				{ "periodic-interval=", "An interval (in minutes) between every attempt to execute the periodic command.", (v) => harness.PeriodicCommandInterval = TimeSpan.FromMinutes (double.Parse (v)) },
 				{ "include-system-permission-tests:", "If tests that require system permissions (which could cause the OS to launch dialogs that hangs the test) should be executed or not. Default is to include such tests.", (v) => harness.IncludeSystemPermissionTests = ParseBool (v, "include-system-permission-tests") },
+				{ "xml-jargon:", "The xml format to be used for test results. Values can be nunitv2, nunitv3, xunit,", (v) =>
+					{
+						if (Enum.TryParse<Jargon> (v, out var jargon))
+							harness.XmlJargon = jargon;
+						else
+							harness.XmlJargon = Jargon.NUnitV3; // default
+					}
+				},
+
 			};
 
 			showHelp = () => {
