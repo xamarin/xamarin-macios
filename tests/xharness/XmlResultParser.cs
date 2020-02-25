@@ -7,7 +7,7 @@ using System.Xml.Linq;
 
 namespace xharness {
 
-	public enum Jargon {
+	public enum XmlResultJargon {
 		TouchUnit,
 		NUnitV2,
 		NUnitV3,
@@ -18,9 +18,9 @@ namespace xharness {
 	public static class XmlResultParser {
 
 		// test if the file is valid xml, or at least, that can be read it.
-		public static bool IsValidXml (string path, out Jargon type)
+		public static bool IsValidXml (string path, out XmlResultJargon type)
 		{
-			type = Jargon.Missing;
+			type = XmlResultJargon.Missing;
 			if (!File.Exists (path))
 				return false;
 
@@ -30,19 +30,19 @@ namespace xharness {
 					if (line.Contains ("ping"))
 						continue;
 					if (line.Contains ("test-run")) { // first element of the NUnitV3 test collection
-						type = Jargon.NUnitV3;
+						type = XmlResultJargon.NUnitV3;
 						return true;
 					}
 					if (line.Contains ("TouchUnitTestRun")) {
-						type = Jargon.TouchUnit;
+						type = XmlResultJargon.TouchUnit;
 						return true;
 					}
 					if (line.Contains ("test-results")) { // first element of the NUnitV3 test collection
-						type = Jargon.NUnitV2;
+						type = XmlResultJargon.NUnitV2;
 						return true;
 					}
 					if (line.Contains ("<assemblies>")) { // first element of the xUnit test collection
-						type = Jargon.xUnit;
+						type = XmlResultJargon.xUnit;
 						return true;
 					}
 				}
@@ -278,15 +278,15 @@ namespace xharness {
 			return (resultLine, total == 0 | errors != 0 || failed != 0);
 		}
 
-		public static string GetXmlFilePath (string path, Jargon xmlType)
+		public static string GetXmlFilePath (string path, XmlResultJargon xmlType)
 		{
 			var fileName = Path.GetFileName (path);
 			switch (xmlType) {
-			case Jargon.TouchUnit:
-			case Jargon.NUnitV2:
-			case Jargon.NUnitV3:
+			case XmlResultJargon.TouchUnit:
+			case XmlResultJargon.NUnitV2:
+			case XmlResultJargon.NUnitV3:
 				return path.Replace (fileName, $"nunit-{fileName}");
-			case Jargon.xUnit:
+			case XmlResultJargon.xUnit:
 				return path.Replace (fileName, $"xunit-{fileName}");
 			default:
 				return path;
@@ -311,22 +311,22 @@ namespace xharness {
 			}
 		}
 
-		public static (string resultLine, bool failed) GenerateHumanReadableResults (string source, string destination, Jargon xmlType)
+		public static (string resultLine, bool failed) GenerateHumanReadableResults (string source, string destination, XmlResultJargon xmlType)
 		{
 			(string resultLine, bool failed) parseData;
 			using (var reader = new StreamReader (source)) 
 			using (var writer = new StreamWriter (destination, true)) {
 				switch (xmlType) {
-				case Jargon.TouchUnit:
+				case XmlResultJargon.TouchUnit:
 					parseData = ParseTouchUnitXml (reader, writer);
 					break;
-				case Jargon.NUnitV2:
+				case XmlResultJargon.NUnitV2:
 					parseData = ParseNUnitXml (reader, writer);
 					break;
-				case Jargon.NUnitV3:
+				case XmlResultJargon.NUnitV3:
 					parseData = ParseNUnitV3Xml (reader, writer);
 					break;
-				case Jargon.xUnit:
+				case XmlResultJargon.xUnit:
 					parseData = ParsexUnitXml (reader, writer);
 					break;
 				default:
@@ -473,19 +473,19 @@ namespace xharness {
 			}
 		}
 
-		public static void GenerateTestReport (StreamWriter writer, string resultsPath, Jargon xmlType)
+		public static void GenerateTestReport (StreamWriter writer, string resultsPath, XmlResultJargon xmlType)
 		{
 			using (var stream = new StreamReader (resultsPath))
 			using (var reader = XmlReader.Create (stream)) {
 				switch (xmlType) {
-				case Jargon.NUnitV2:
-				case Jargon.TouchUnit:
+				case XmlResultJargon.NUnitV2:
+				case XmlResultJargon.TouchUnit:
 					GenerateNUnitV2TestReport (writer, reader);
 					break;
-				case Jargon.xUnit:
+				case XmlResultJargon.xUnit:
 					GeneratexUnitTestReport (writer, reader);
 					break;
-				case Jargon.NUnitV3:
+				case XmlResultJargon.NUnitV3:
 					GenerateNUnitV3TestReport (writer, reader);
 					break;
 				default:
@@ -716,7 +716,7 @@ namespace xharness {
 
 		}
 
-		static void GenerateFailureXml (string destination, string title, string message, string stderrPath, Jargon jargon)
+		static void GenerateFailureXml (string destination, string title, string message, string stderrPath, XmlResultJargon jargon)
 		{
 			XmlWriterSettings settings = new XmlWriterSettings { Indent = true };
 			using (var stream = File.CreateText (destination))
@@ -724,13 +724,13 @@ namespace xharness {
 			using (var xmlWriter = XmlWriter.Create (stream, settings)) {
 				xmlWriter.WriteStartDocument ();
 				switch (jargon) {
-				case Jargon.NUnitV2:
+				case XmlResultJargon.NUnitV2:
 					GenerateNUnitV2Failure (xmlWriter, title, message, stderrReader);
 					break;
-				case Jargon.NUnitV3:
+				case XmlResultJargon.NUnitV3:
 					GenerateNUnitV3Failure (xmlWriter, title, message, stderrReader);
 					break;
-				case Jargon.xUnit:
+				case XmlResultJargon.xUnit:
 					GeneratexUnitFailure (xmlWriter, title, message, stderrReader);
 					break;
 				}
@@ -738,7 +738,7 @@ namespace xharness {
 			}
 		}
 
-		public static void GenerateFailure (Logs logs, string source, string appName, string variation, string title, string message, string stderrPath, Jargon jargon)
+		public static void GenerateFailure (Logs logs, string source, string appName, string variation, string title, string message, string stderrPath, XmlResultJargon jargon)
 		{
 			// VSTS does not provide a nice way to report build errors, create a fake
 			// test result with a failure in the case the build did not work
