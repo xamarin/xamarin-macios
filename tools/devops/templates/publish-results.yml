@@ -49,7 +49,9 @@ steps:
 
 # pwsh for PowerShell Core
 # powershell is for Win PowerShell
-- pwsh: publish_results.ps1
+- pwsh: ./tools/devops/templates/publish_results.ps1
+
+/Users/whitneyschmidt/Documents/xamarin-macios/xamarin-macios/tools/devops/templates
 
 
 # 	printf "\t\"state\": \"%s\",\n" "$STATE"
