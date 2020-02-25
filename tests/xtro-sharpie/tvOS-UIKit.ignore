@@ -112,3 +112,8 @@
 # Xcode 11.4 Beta 1
 ## Parent type UIDatePicker is not available in tvOS
 !missing-enum! UIDatePickerStyle not bound
+
+## Xcode 11.4 Beta 2
+## Duplicated entry field UIKeyInputF1 FB66299477
+## https://github.com/xamarin/xamarin-macios/wiki/UIKit-iOS-xcode11.4-beta2
+!missing-field! UIKeyInputF1 not bound
