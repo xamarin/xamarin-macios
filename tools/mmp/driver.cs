@@ -1321,7 +1321,7 @@ namespace Xamarin.Bundler {
 			var sb = new StringBuilder ();
 			int rv;
 			try {
-				rv = RunCommand (pkg_config, new string [] { option, "mono-2" }, env, sb);
+				rv = RunCommand (pkg_config, new [] { option, "mono-2" }, env, sb);
 			} catch (Exception e) {
 				throw ErrorHelper.CreateError (5314, e, Errors.MX5314, e.Message);
 			}
