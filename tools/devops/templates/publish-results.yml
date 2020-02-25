@@ -51,8 +51,6 @@ steps:
 # powershell is for Win PowerShell
 - pwsh: ./tools/devops/templates/publish_results.ps1
 
-/Users/whitneyschmidt/Documents/xamarin-macios/xamarin-macios/tools/devops/templates
-
 
 # 	printf "\t\"state\": \"%s\",\n" "$STATE"
 #	printf "\t\"target_url\": \"%s\",\n" "$TARGET_URL"
