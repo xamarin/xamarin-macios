@@ -3003,6 +3003,8 @@ An error occurred when signing the application. Please review the build log to s
 <!-- 5310 is used by mmp -->
 <!-- 5311 is used by mmp -->
 <!-- 5312 is used by mmp -->
+<!-- 5313 is used by mmp -->
+<!-- 5314 is used by mmp -->
 
 ## MT6xxx: mtouch internal tools error messages
 

@@ -740,10 +740,7 @@ You can silence this warning by adding `--nowarn=5221` to the **Additional mmp a
 
 ### MM53xx: other tools
 
-<a name="MM5301" />
-
-#### MM5301: pkg-config could not be found. Please install the Mono.framework from http://mono-project.com/Downloads
-
+<!-- 5301 used by mtouch -->
 <!-- 5302 used by mtouch -->
 <!-- 5303 used by mtouch -->
 <!-- 5304 used by mtouch -->
@@ -775,6 +772,14 @@ You can silence this warning by adding `--nowarn=5221` to the **Additional mmp a
 <a name="MM5312" />
 
 ### MM5312: pkg-config failed with an error code '{code}'. Check build log for details.
+
+<a name="MM5313" />
+
+### MM5313: Could not find pkg-config. Please install the Mono.framework from https://mono-project.com/Downloads
+
+<a name="MM5314" />
+
+### MM5314: Failed to execute pkg-config: '{0}'. Check build log for details.
 
 <!-- MM6xxx: mmp internal tools -->
 <!-- MM7xxx: reserved -->
