@@ -531,31 +531,6 @@ namespace Xamarin.Bundler {
 			references.AddRange (fixedAssemblies);
 		}
 
-		static bool ParseBool (string value, string name)
-		{
-			if (string.IsNullOrEmpty (value))
-				return true;
-
-			switch (value.ToLowerInvariant ()) {
-			case "1":
-			case "yes":
-			case "true":
-			case "enable":
-				return true;
-			case "0":
-			case "no":
-			case "false":
-			case "disable":
-				return false;
-			default:
-				try {
-					return bool.Parse (value);
-				} catch (Exception ex) {
-					throw ErrorHelper.CreateError (26, ex, Errors.MX0026, $"{name}:{value}", ex.Message);
-				}
-			}
-		}
-
 		// SDK versions are only passed in as X.Y but some frameworks/APIs require X.Y.Z
 		// Mutate them if we have a new enough Xcode
 		static Version MutateSDKVersionToPointRelease (Version rv)
@@ -940,18 +915,10 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		[DllImport ("/usr/lib/system/libdyld.dylib")]
-		static extern int _NSGetExecutablePath (byte[] buffer, ref uint bufsize);
-
 		static string PartialStaticLibrary {
 			get {
 				return Path.Combine (FrameworkLibDirectory, string.Format ("mmp/Xamarin.Mac.registrar.{0}.a", IsUnifiedMobile ? "mobile" : "full"));
 			}
-		}
-
-		public static bool IsUptodate (string source, string target)
-		{
-			return Application.IsUptodate (source, target);
 		}
 
 		static string GenerateMain ()
@@ -1041,18 +1008,36 @@ namespace Xamarin.Bundler {
 				LipoLibrary (framework, Path.Combine (name, Path.Combine (frameworks_dir, name + ".framework", name)));
 		}
 
+		static void CheckSystemMonoVersion ()
+		{
+			string mono_version;
+
+			var versionFile = "/Library/Frameworks/Mono.framework/Versions/Current/VERSION";
+			if (File.Exists (versionFile)) {
+				mono_version = File.ReadAllText (versionFile);
+			} else {
+				mono_version = RunPkgConfig ("--modversion", force_system_mono: true);
+			}
+
+			mono_version = mono_version.Trim ();
+
+			if (!Version.TryParse (mono_version, out var mono_ver))
+				return;
+
+			if (mono_ver < MonoVersions.MinimumMonoVersion)
+				throw ErrorHelper.CreateError (1, Errors.MM0001, MonoVersions.MinimumMonoVersion, mono_version);
+		}
+
 		static int Compile ()
 		{
 			int ret = 1;
 
 			string [] cflags = Array.Empty<string> ();
-			string libdir;
-			StringBuilder cflagsb = new StringBuilder ();
-			StringBuilder libdirb = new StringBuilder ();
-			StringBuilder mono_version = new StringBuilder ();
 
 			string mainSource = GenerateMain ();
 			string registrarPath = null;
+
+			CheckSystemMonoVersion ();
 
 			if (Registrar == RegistrarMode.Static) {
 				registrarPath = Path.Combine (App.Cache.Location, "registrar.m");
@@ -1063,32 +1048,11 @@ namespace Xamarin.Bundler {
 				Frameworks.Gather (App, platform_assembly, BuildTarget.Frameworks, BuildTarget.WeakFrameworks);
 			}
 
-			try {
-				string [] env = null;
-				if (!IsUnifiedFullSystemFramework)
-					env = new [] { "PKG_CONFIG_PATH", Path.Combine (FrameworkLibDirectory, "pkgconfig") };
+			var str_cflags = RunPkgConfig ("--cflags");
+			var libdir = RunPkgConfig ("--variable=libdir");
 
-				RunCommand (pkg_config, new [] { "--cflags", "mono-2" }, env, cflagsb);
-				RunCommand (pkg_config, new [] { "--variable=libdir", "mono-2" }, env, libdirb);
-				var versionFile = "/Library/Frameworks/Mono.framework/Versions/Current/VERSION";
-				if (File.Exists (versionFile)) {
-					mono_version.Append (File.ReadAllText (versionFile));
-				} else {
-					RunCommand (pkg_config, new [] { "--modversion", "mono-2" }, env, mono_version);
-				}
-			} catch (Win32Exception e) {
-				throw new MonoMacException (5301, true, e, Errors.MM5301);
-			}
-
-			Version mono_ver;
-			if (Version.TryParse (mono_version.ToString ().TrimEnd (), out mono_ver) && mono_ver < MonoVersions.MinimumMonoVersion)
-				throw new MonoMacException (1, true, Errors.MM0001, 
-					MonoVersions.MinimumMonoVersion, mono_version.ToString ().TrimEnd ());
-
-			var str_cflags = cflagsb.ToString ().Replace (Environment.NewLine, String.Empty);
 			if (!StringUtils.TryParseArguments (str_cflags, out cflags, out var ex))
 				throw ErrorHelper.CreateError (147, ex, Errors.MM0147, str_cflags, ex.Message);
-			libdir = libdirb.ToString ().Replace (Environment.NewLine, String.Empty);
 
 			var libmain = embed_mono ? "libxammac" : "libxammac-system";
 			var libxammac = Path.Combine (FrameworkLibDirectory, libmain + (App.EnableDebug ? "-debug" : "") + ".a");
@@ -1309,6 +1273,29 @@ namespace Xamarin.Bundler {
 			}
 			
 			return ret;
+		}
+
+		static string RunPkgConfig (string option, bool force_system_mono = false)
+		{
+			string [] env = null;
+
+			if (!File.Exists (pkg_config))
+				throw ErrorHelper.CreateError (5313, Errors.MX5313);
+
+			if (!IsUnifiedFullSystemFramework && !force_system_mono)
+				env = new [] { "PKG_CONFIG_PATH", Path.Combine (FrameworkLibDirectory, "pkgconfig") };
+
+			var sb = new StringBuilder ();
+			int rv;
+			try {
+				rv = RunCommand (pkg_config, new [] { option, "mono-2" }, env, sb);
+			} catch (Exception e) {
+				throw ErrorHelper.CreateError (5314, e, Errors.MX5314, e.Message);
+			}
+			if (rv != 0)
+				throw ErrorHelper.CreateError (5312, Errors.MX5312, rv);
+
+			return sb.ToString ().Trim ();
 		}
 
 		// check that we have a reference to Xamarin.Mac.dll and not to MonoMac.dll.
