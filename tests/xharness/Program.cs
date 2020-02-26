@@ -74,10 +74,10 @@ namespace xharness
 				{ "include-system-permission-tests:", "If tests that require system permissions (which could cause the OS to launch dialogs that hangs the test) should be executed or not. Default is to include such tests.", (v) => harness.IncludeSystemPermissionTests = ParseBool (v, "include-system-permission-tests") },
 				{ "xml-jargon:", "The xml format to be used for test results. Values can be nunitv2, nunitv3, xunit.", (v) =>
 					{
-						if (Enum.TryParse<Jargon> (v, out var jargon))
+						if (Enum.TryParse<XmlResultJargon> (v, out var jargon))
 							harness.XmlJargon = jargon;
 						else
-							harness.XmlJargon = Jargon.Missing;
+							harness.XmlJargon = XmlResultJargon.Missing;
 					}
 				},
 
@@ -94,7 +94,7 @@ namespace xharness
 			if (harness.Action == HarnessAction.None)
 				showHelp ();
 
-			if (harness.XmlJargon == Jargon.Missing) {
+			if (harness.XmlJargon == XmlResultJargon.Missing) {
 				Console.WriteLine ("Unknown xml-jargon value provided. Values can be nunitv2, nunitv3, xunit");
 				return 1;
 			}
