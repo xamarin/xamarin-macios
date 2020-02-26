@@ -40,6 +40,11 @@ namespace xharness
 		public bool IncludeXtro;
 		public bool IncludeCecil;
 		public bool IncludeDocs;
+		public bool IncludeBCLxUnit;
+		public bool IncludeBCLNUnit;
+		public bool IncludeMscorlib;
+		public bool IncludeNonMonotouch = true;
+		public bool IncludeMonotouch = true;
 
 		public bool CleanSuccessfulTestRuns = true;
 		public bool UninstallTestApp = true;
@@ -219,8 +224,19 @@ namespace xharness
 		{
 			if (!project.IsExecutableProject)
 				return false;
+			
+			if (project.IsBclTest) {
+				if (!project.IsBclxUnit)
+					return IncludeBcl || IncludeBCLNUnit;
+				if (project.IsMscorlib) 
+					return IncludeMscorlib;
+				return IncludeBcl || IncludeBCLxUnit;
+			}
 
-			if (!IncludeBcl && project.IsBclTest)
+			if (!IncludeMonotouch && project.IsMonotouch)
+				return false;
+
+			if (!IncludeNonMonotouch && !project.IsMonotouch)
 				return false;
 
 			if (Harness.IncludeSystemPermissionTests == false && project.Name == "introspection")
@@ -799,6 +815,9 @@ namespace xharness
 			SetEnabled (labels, "mtouch", ref IncludeMtouch);
 			SetEnabled (labels, "mmp", ref IncludeMmpTest);
 			SetEnabled (labels, "bcl", ref IncludeBcl);
+			SetEnabled (labels, "bcl-xunit", ref IncludeBCLxUnit);
+			SetEnabled (labels, "bcl-nunit", ref IncludeBCLNUnit);
+			SetEnabled (labels, "mscorlib", ref IncludeMscorlib);
 			SetEnabled (labels, "btouch", ref IncludeBtouch);
 			SetEnabled (labels, "mac-binding-project", ref IncludeMacBindingProject);
 			SetEnabled (labels, "ios-extensions", ref IncludeiOSExtensions);
@@ -817,6 +836,9 @@ namespace xharness
 			SetEnabled (labels, "mac", ref IncludeMac);
 			SetEnabled (labels, "ios-msbuild", ref IncludeiOSMSBuild);
 			SetEnabled (labels, "ios-simulator", ref IncludeSimulator);
+			SetEnabled (labels, "non-monotouch", ref IncludeNonMonotouch);
+			SetEnabled (labels, "monotouch", ref IncludeMonotouch);
+
 			bool inc_permission_tests = false;
 			if (SetEnabled (labels, "system-permission", ref inc_permission_tests))
 				Harness.IncludeSystemPermissionTests = inc_permission_tests;
@@ -3741,7 +3763,9 @@ namespace xharness
 								FailureMessage = $"Install failed, exit code: {install_result.ExitCode}.";
 								ExecutionResult = TestExecutingResult.Failed;
 								if (Harness.InCI)
-									XmlResultParser.GenerateFailure (Logs, "install", runner.AppName, runner.Variation, "AppInstallation", $"Install failed, exit code: {install_result.ExitCode}", install_log.FullPath, XmlResultParser.Jargon.NUnitV3);
+									XmlResultParser.GenerateFailure (Logs, "install", runner.AppName, runner.Variation,
+										$"AppInstallation on {runner.DeviceName}", $"Install failed on {runner.DeviceName}, exit code: {install_result.ExitCode}",
+										install_log.FullPath, XmlResultParser.Jargon.NUnitV3);
 							}
 						} finally {
 							this.install_log.Dispose ();

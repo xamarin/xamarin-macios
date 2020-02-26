@@ -301,7 +301,7 @@ namespace Xamarin.Bundler {
 			get {
 				switch (compilerType) {
 				case AOTCompilerType.Bundled64:
-					return Path.Combine (XamarinMacPrefix, "bin/bmac-mobile-mono");
+					return Path.Combine (XamarinMacPrefix, "bin", "mono-sgen");
 				case AOTCompilerType.System64:
 					return "/Library/Frameworks/Mono.framework/Commands/mono64";
 				default:

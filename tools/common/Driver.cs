@@ -226,7 +226,10 @@ namespace Xamarin.Bundler {
 			if (min_verbosity > Verbosity)
 				return;
 
-			Console.WriteLine (format, args);
+			if (args.Length > 0)
+				Console.WriteLine (format, args);
+			else
+				Console.WriteLine (format);
 		}
 
 		public const bool IsXAMCORE_4_0 = false;
@@ -770,6 +773,39 @@ namespace Xamarin.Bundler {
 				Console.WriteLine ("failed using `{0}` from: {1}", command, debug);
 			}
 			return ret;
+		}
+
+		internal static bool TryParseBool (string value, out bool result)
+		{
+			if (string.IsNullOrEmpty (value)) {
+				result = true;
+				return true;
+			}
+
+			switch (value.ToLowerInvariant ()) {
+			case "1":
+			case "yes":
+			case "true":
+			case "enable":
+				result = true;
+				return true;
+			case "0":
+			case "no":
+			case "false":
+			case "disable":
+				result = false;
+				return true;
+			default:
+				return bool.TryParse (value, out result);
+			}
+		}
+
+		internal static bool ParseBool (string value, string name, bool show_error = true)
+		{
+			bool result;
+			if (!TryParseBool (value, out result))
+				throw ErrorHelper.CreateError (26, Errors.MX0026, name, value);
+			return result;
 		}
 
 	}
