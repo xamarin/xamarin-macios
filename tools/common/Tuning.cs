@@ -37,6 +37,13 @@ namespace MonoMac.Tuner {
 			}
 		}
 
+		static void Append (this Pipeline self, IStep step)
+		{
+			self.AppendStep (step);
+			if (Driver.WatchLevel > 0)
+				self.AppendStep (new TimeStampStep (step));
+		}
+
 		static Exception HandlePipelineProcessException (Exception e)
 		{
 			switch (e) {
@@ -89,6 +96,20 @@ namespace MonoMac.Tuner {
 				message.Append ($"Reason: {e.Message}");
 				return new PlatformException (2001, true, e, Errors.MX2001, message);
 			}
+		}
+	}
+
+	public class TimeStampStep : IStep {
+		string message;
+
+		public TimeStampStep (IStep step)
+		{
+			message = step.ToString ();
+		}
+
+		public void Process (LinkContext context)
+		{
+			Driver.Watch (message, 2);
 		}
 	}
 }

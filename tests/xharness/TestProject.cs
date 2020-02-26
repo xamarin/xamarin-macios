@@ -96,8 +96,7 @@ namespace xharness
 
 		public bool IsMonotouch => Name.Contains ("monotouch");
 
-		public bool IsNewBclTest => IsBclTest && (Name.Contains ("xUnit") || IsMscorlib);
-
+		public bool IsBclxUnit => IsBclTest && (Name.Contains ("xUnit") || IsMscorlib);
 
 		public bool IsMscorlib => Name.Contains ("mscorlib");
 

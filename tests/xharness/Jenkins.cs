@@ -40,10 +40,10 @@ namespace xharness
 		public bool IncludeXtro;
 		public bool IncludeCecil;
 		public bool IncludeDocs;
-		public bool IncludeNewBCL;
-		public bool IncludeOldBCL;
+		public bool IncludeBCLxUnit;
+		public bool IncludeBCLNUnit;
 		public bool IncludeMscorlib;
-		public bool IncludeXamarin = true;
+		public bool IncludeNonMonotouch = true;
 		public bool IncludeMonotouch = true;
 
 		public bool CleanSuccessfulTestRuns = true;
@@ -226,17 +226,17 @@ namespace xharness
 				return false;
 			
 			if (project.IsBclTest) {
-				if (!project.IsNewBclTest)
-					return IncludeBcl || IncludeOldBCL;
+				if (!project.IsBclxUnit)
+					return IncludeBcl || IncludeBCLNUnit;
 				if (project.IsMscorlib) 
 					return IncludeMscorlib;
-				return IncludeBcl || IncludeNewBCL;
+				return IncludeBcl || IncludeBCLxUnit;
 			}
 
 			if (!IncludeMonotouch && project.IsMonotouch)
 				return false;
 
-			if (!IncludeXamarin && !project.IsBclTest && !project.IsMonotouch)
+			if (!IncludeNonMonotouch && !project.IsMonotouch)
 				return false;
 
 			if (Harness.IncludeSystemPermissionTests == false && project.Name == "introspection")
@@ -815,8 +815,8 @@ namespace xharness
 			SetEnabled (labels, "mtouch", ref IncludeMtouch);
 			SetEnabled (labels, "mmp", ref IncludeMmpTest);
 			SetEnabled (labels, "bcl", ref IncludeBcl);
-			SetEnabled (labels, "new-bcl", ref IncludeNewBCL);
-			SetEnabled (labels, "old-bcl", ref IncludeOldBCL);
+			SetEnabled (labels, "bcl-xunit", ref IncludeBCLxUnit);
+			SetEnabled (labels, "bcl-nunit", ref IncludeBCLNUnit);
 			SetEnabled (labels, "mscorlib", ref IncludeMscorlib);
 			SetEnabled (labels, "btouch", ref IncludeBtouch);
 			SetEnabled (labels, "mac-binding-project", ref IncludeMacBindingProject);
@@ -836,7 +836,7 @@ namespace xharness
 			SetEnabled (labels, "mac", ref IncludeMac);
 			SetEnabled (labels, "ios-msbuild", ref IncludeiOSMSBuild);
 			SetEnabled (labels, "ios-simulator", ref IncludeSimulator);
-			SetEnabled (labels, "xamarin", ref IncludeXamarin);
+			SetEnabled (labels, "non-monotouch", ref IncludeNonMonotouch);
 			SetEnabled (labels, "monotouch", ref IncludeMonotouch);
 
 			bool inc_permission_tests = false;
