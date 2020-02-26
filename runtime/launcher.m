@@ -372,9 +372,9 @@ update_environment (xamarin_initialize_data *data)
 	// Unfortunately the only place to set debug_options.no_gdb_backtrace is in mini_parse_debug_option
 	// So route through MONO_DEBUG
 	if (xamarin_disable_lldb_attach && xamarin_disable_omit_fp) {
-		mono_debug = "no-gdb-trace,disable-omit-fp";
+		mono_debug = "no-gdb-backtrace,disable-omit-fp";
 	} else if (xamarin_disable_lldb_attach) {
-		mono_debug = "no-gdb-trace";
+		mono_debug = "no-gdb-backtrace";
 	} else if (xamarin_disable_omit_fp) {
 		mono_debug = "disable_omit_fp";
 	}
