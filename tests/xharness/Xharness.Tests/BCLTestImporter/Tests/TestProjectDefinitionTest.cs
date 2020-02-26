@@ -1,19 +1,18 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 
-using Xunit;
-using Xunit.Sdk;
+using NUnit.Framework;
+
 
 using BCLTestImporter;
 
-namespace BCLTestImporterTests {
+namespace Xharness.Tests.BCLTestImporter.Tests {
 	public class TestProjectDefinitionTest {
 
-		[Fact]
+		[Test]
 		public void GetTypeForAssembliesNullMonoPath ()
 		{
-			var projectDefinition = new BCLTestProjectDefinition ("MyProject", new List<BCLTestAssemblyDefinition> ());	
+			var projectDefinition = new BCLTestProjectDefinition ("MyProject", new List<BCLTestAssemblyDefinition> (), "");	
 			Assert.Throws<ArgumentNullException> (() => projectDefinition.GetTypeForAssemblies (null, Platform.iOS, true));
 		}
 	}
