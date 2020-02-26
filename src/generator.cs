@@ -5939,6 +5939,9 @@ public partial class Generator : IMemberGatherer {
 	{
 		var dir = basedir;
 
+		if (!string.IsNullOrEmpty (@namespace))
+			dir = Path.Combine (dir, @namespace);
+
 		var filename = Path.Combine (dir, name + ".g.cs");
 		var counter = 2;
 		while (generated_files.Contains (filename)) {
