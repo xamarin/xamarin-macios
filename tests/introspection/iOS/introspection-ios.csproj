@@ -223,6 +223,9 @@
     <Compile Include="..\ApiFrameworkTest.cs">
       <Link>ApiFrameworkTest.cs</Link>
     </Compile>
+    <Compile Include="..\ApiTypeTest.cs">
+      <Link>ApiTypeTest.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist">
