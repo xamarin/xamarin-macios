@@ -20,7 +20,7 @@ $url = "https://api.github.com/repos/xamarin/xamarin-macios/statuses/$BUILD_REVI
 
 $params = @{
     Uri = $url
-    Headers = @{"Authorization = token $TOKEN"}
+    Headers = @{'Authorization' = "token $TOKEN"}
     Method = 'POST'
     Body = $json_payload
     ContentType = 'application/json'
