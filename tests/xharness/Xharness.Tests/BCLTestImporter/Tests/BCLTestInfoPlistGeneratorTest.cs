@@ -1,30 +1,30 @@
 using System;
 using System.IO;
 
-using Xunit;
-using Xunit.Sdk;
+using NUnit.Framework;
 
 using BCLTestImporter;
+using System.Threading.Tasks;
 
-namespace BCLTestImporterTests {
+namespace Xharness.Tests.BCLTestImporter.Tests {
 	public class BCLTestInfoPlistGeneratorTest {
 
-		[Fact]
-		public async void GenerateCodeNullTemplateFile ()
+		[Test]
+		public void GenerateCodeNullTemplateFile ()
 		{
-			await Assert.ThrowsAsync<ArgumentNullException> (() => 
+			Assert.ThrowsAsync<ArgumentNullException> (() => 
 				BCLTestInfoPlistGenerator.GenerateCodeAsync (null, "Project Name"));
 		}
 
-		[Fact]
-		public async void GenerateCodeNullProjectName ()
+		[Test]
+		public void GenerateCodeNullProjectName ()
 		{
-			await Assert.ThrowsAsync <ArgumentNullException> (() =>
+			Assert.ThrowsAsync <ArgumentNullException> (() =>
 				BCLTestInfoPlistGenerator.GenerateCodeAsync ("A/path", null));
 		}
 
-		[Fact]
-		public async void GenerateCode ()
+		[Test]
+		public async Task GenerateCode ()
 		{
 			const string projectName = "MyTest";
 			var fakeTemplate = $"{BCLTestInfoPlistGenerator.ApplicationNameReplacement}-{BCLTestInfoPlistGenerator.IndentifierReplacement}";
@@ -36,9 +36,9 @@ namespace BCLTestImporterTests {
 
 			var result = await BCLTestInfoPlistGenerator.GenerateCodeAsync (templatePath, projectName);
 			try {
-				Assert.DoesNotContain (BCLTestInfoPlistGenerator.ApplicationNameReplacement, result);
-				Assert.DoesNotContain (BCLTestInfoPlistGenerator.IndentifierReplacement, result);
-				Assert.Contains (projectName, result);
+				StringAssert.DoesNotContain (BCLTestInfoPlistGenerator.ApplicationNameReplacement, result);
+				StringAssert.DoesNotContain (BCLTestInfoPlistGenerator.IndentifierReplacement, result);
+				StringAssert.Contains (projectName, result);
 			}
 			finally {
 				File.Delete (templatePath);
