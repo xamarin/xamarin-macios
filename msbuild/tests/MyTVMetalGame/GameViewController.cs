@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 using System.Threading;
 
@@ -9,12 +9,9 @@ using OpenTK;
 using Metal;
 using UIKit;
 
-namespace MyMetalGame
-{
-	public partial class GameViewController : UIViewController
-	{
-		struct Uniforms
-		{
+namespace MyTVMetalGame {
+	public partial class GameViewController : UIViewController {
+		struct Uniforms {
 			public Matrix4 ModelviewProjectionMatrix;
 			public Matrix4 NormalMatrix;
 		}
@@ -25,7 +22,7 @@ namespace MyMetalGame
 		// Max API memory buffer size
 		const int max_bytes_per_frame = 1024 * 1024;
 
-		float[] cubeVertexData = {
+		float [] cubeVertexData = {
 			// Data layout for each line below is:
 			// positionX, positionY, positionZ,     normalX, normalY, normalZ,
 			0.5f, -0.5f, 0.5f,   0.0f, -1.0f,  0.0f,
@@ -73,7 +70,6 @@ namespace MyMetalGame
 
 		// Layer
 		CAMetalLayer metalLayer;
-		bool layerSizeDidUpdate;
 		MTLRenderPassDescriptor renderPassDescriptor;
 
 		// Controller
@@ -190,7 +186,7 @@ namespace MyMetalGame
 				DepthCompareFunction = MTLCompareFunction.Less,
 				DepthWriteEnabled = true
 			};
-		
+
 			depthState = device.CreateDepthStencilState (depthStateDesc);
 		}
 
@@ -209,8 +205,7 @@ namespace MyMetalGame
 				//  Then allocate one of the proper size
 				MTLTextureDescriptor desc = MTLTextureDescriptor.CreateTexture2DDescriptor (MTLPixelFormat.Depth32Float, texture.Width, texture.Height, false);
 				if (ObjCRuntime.Runtime.Arch == ObjCRuntime.Arch.SIMULATOR)
-					desc.StorageMode = MTLStorageMode.Private;
-				depthTex = device.CreateTexture (desc);
+					desc.StorageMode = MTLStorageMode.Private; depthTex = device.CreateTexture (desc);
 				depthTex.Label = "Depth";
 
 				renderPassDescriptor.DepthAttachment.Texture = depthTex;
@@ -244,7 +239,7 @@ namespace MyMetalGame
 			renderEncoder.PushDebugGroup ("DrawCube");
 			renderEncoder.SetRenderPipelineState (pipelineState);
 			renderEncoder.SetVertexBuffer (vertexBuffer, 0, 0);
-			renderEncoder.SetVertexBuffer (dynamicConstantBuffer, (nuint)(Marshal.SizeOf (typeof(Uniforms)) * constantDataBufferIndex), 1);
+			renderEncoder.SetVertexBuffer (dynamicConstantBuffer, (nuint)(Marshal.SizeOf (typeof (Uniforms)) * constantDataBufferIndex), 1);
 
 			// Tell the render context we want to draw our primitives
 			renderEncoder.DrawPrimitives (MTLPrimitiveType.Triangle, 0, 36, 1);
@@ -258,7 +253,7 @@ namespace MyMetalGame
 				drawable.Dispose ();
 				inflightSemaphore.Release ();
 			});
-				
+
 			// Schedule a present once the framebuffer is complete
 			commandBuffer.PresentDrawable (drawable);
 
@@ -288,8 +283,8 @@ namespace MyMetalGame
 			uniformBuffer.ModelviewProjectionMatrix = Matrix4.Transpose (Matrix4.Mult (projectionMatrix, modelViewMatrix));
 
 			// Copy uniformBuffer's content into dynamicConstantBuffer.Contents
-			int rawsize = Marshal.SizeOf (typeof(Uniforms));
-			var rawdata = new byte[rawsize];
+			int rawsize = Marshal.SizeOf (typeof (Uniforms));
+			var rawdata = new byte [rawsize];
 			IntPtr ptr = Marshal.AllocHGlobal (rawsize);
 			Marshal.StructureToPtr (uniformBuffer, ptr, false);
 			Marshal.Copy (ptr, rawdata, 0, rawsize);
@@ -303,38 +298,13 @@ namespace MyMetalGame
 		// The main game loop called by the CADisplayLine timer
 		public void Gameloop ()
 		{
-			if (layerSizeDidUpdate) {
-				CGSize drawableSize = View.Bounds.Size;
-				drawableSize.Width *= View.ContentScaleFactor;
-				drawableSize.Height *= View.ContentScaleFactor;
-				metalLayer.DrawableSize = drawableSize;
-
-				Reshape ();
-				layerSizeDidUpdate = false;
-			}
-
 			Render ();
 		}
 
 		// Called whenever view changes orientation or layout is changed
 		public override void ViewDidLayoutSubviews ()
 		{
-			base.ViewDidLayoutSubviews ();
-			layerSizeDidUpdate = true;
-			metalLayer.Frame = View.Layer.Frame;
-		}
-
-		public override bool ShouldAutorotate ()
-		{
-			return true;
-		}
-
-		public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations ()
-		{
-			if (UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Phone)
-				return UIInterfaceOrientationMask.AllButUpsideDown;
-
-			return UIInterfaceOrientationMask.All;
+			Reshape ();
 		}
 
 		ICAMetalDrawable GetCurrentDrawable ()
