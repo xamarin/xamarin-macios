@@ -34,6 +34,13 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Runtime.CompilerServices.Unsafe">
+      <HintPath>..\..\..\packages\System.Runtime.CompilerServices.Unsafe.4.5.0\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions">
+      <HintPath>..\..\..\packages\System.Threading.Tasks.Extensions.4.5.1\lib\netstandard2.0\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\AppRunner.cs">
@@ -154,6 +161,7 @@
     <Compile Include="BCLTestImporter\Tests\BCLTestProjectGeneratorTest.cs" />
     <Compile Include="BCLTestImporter\Tests\TestAssemblyDefinitionTest.cs" />
     <Compile Include="BCLTestImporter\Tests\TestProjectDefinitionTest.cs" />
+    <Compile Include="Tests\XmlResultParserTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -161,6 +169,14 @@
   <ItemGroup>
     <Folder Include="BCLTestImporter\" />
     <Folder Include="BCLTestImporter\Tests\" />
+    <Folder Include="Tests\" />
+    <Folder Include="Samples\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Samples\NUnitV2Sample.xml" />
+    <EmbeddedResource Include="Samples\NUnitV3Sample.xml" />
+    <EmbeddedResource Include="Samples\TouchUnitSample.xml" />
+    <EmbeddedResource Include="Samples\xUnitSample.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
