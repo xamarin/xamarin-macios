@@ -15,11 +15,31 @@ namespace Introspection {
 	[Preserve (AllMembers = true)]
 	public class ApiTypeTest : ApiBaseTest {
 
+		bool Skip (Type type)
+		{
+			switch (type.Namespace) {
+#if __IOS__
+			// running the .cctor on the simulator works... but makes some other CoreNFC intro tests fail later
+			// we'll still get the results from device tests
+			case "CoreNFC":
+			case "DeviceCheck":
+				// we can't call the `NFCNdefReaderSession.ReadingAvailable` API on 32bits (PlatformNotSupportedException)
+				// and if we call it then the .cctor is executed and we get the same failures :()
+				return ((IntPtr.Size == 4) || (Runtime.Arch == Arch.SIMULATOR));
+#endif
+			default:
+				return false;
+			}
+		}
+
 		[Test]
 		public void StaticCtor ()
 		{
 			ContinueOnFailure = true;
 			foreach (Type t in Assembly.GetTypes ()) {
+				if (Skip (t))
+					continue;
+
 				var cctor = t.GetConstructor (BindingFlags.Static | BindingFlags.NonPublic, null, Type.EmptyTypes, null);
 				if (cctor == null)
 					continue;
