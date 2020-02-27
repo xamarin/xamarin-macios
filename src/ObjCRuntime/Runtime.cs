@@ -253,6 +253,10 @@ namespace ObjCRuntime {
 				Registrar = new DynamicRegistrar ();
 			RegisterDelegates (options);
 			Class.Initialize (options);
+#if !DOTNET
+			// This is not needed for .NET 5:
+			// * https://github.com/xamarin/xamarin-macios/issues/7924#issuecomment-588331822
+			// * https://github.com/xamarin/xamarin-macios/issues/7924#issuecomment-589356481
 			Mono.SystemDependencyProvider.Initialize ();
 #endif
 			InitializePlatform (options);

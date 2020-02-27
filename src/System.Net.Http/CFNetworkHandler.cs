@@ -194,7 +194,10 @@ namespace System.Net.Http
 			return req;
 		}
 
-		protected internal override async Task<HttpResponseMessage> SendAsync (HttpRequestMessage request, CancellationToken cancellationToken)
+#if !DOTNET
+		internal
+#endif
+		protected override async Task<HttpResponseMessage> SendAsync (HttpRequestMessage request, CancellationToken cancellationToken)
 		{
 			return await SendAsync (request, cancellationToken, true).ConfigureAwait (false);
 		}
