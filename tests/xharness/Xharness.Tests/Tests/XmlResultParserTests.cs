@@ -13,20 +13,20 @@ namespace Xharness.Tests {
 	[TestFixture]
 	public class XmlResultParserTests {
 
-		string CreateResultSample (Jargon jargon, bool includePing = false)
+		string CreateResultSample (XmlResultJargon jargon, bool includePing = false)
 		{
 			string sampleFileName = null;
 			switch (jargon) {
-			case Jargon.NUnitV2:
+			case XmlResultJargon.NUnitV2:
 				sampleFileName = "NUnitV2Sample.xml";
 				break;
-			case Jargon.NUnitV3:
+			case XmlResultJargon.NUnitV3:
 				sampleFileName = "NUnitV3Sample.xml";
 				break;
-			case Jargon.TouchUnit:
+			case XmlResultJargon.TouchUnit:
 				sampleFileName = "TouchUnitSample.xml";
 				break;
-			case Jargon.xUnit:
+			case XmlResultJargon.xUnit:
 				sampleFileName = "xUnitSample.xml";
 				break;
 			}
@@ -53,11 +53,11 @@ namespace Xharness.Tests {
 			Assert.IsFalse (XmlResultParser.IsValidXml (path, out var jargon), "missing file");
 		}
 
-		[TestCase (Jargon.NUnitV2)]
-		[TestCase (Jargon.NUnitV3)]
-		[TestCase (Jargon.TouchUnit)]
-		[TestCase (Jargon.xUnit)]
-		public void IsValidXmlTest (Jargon jargon)
+		[TestCase (XmlResultJargon.NUnitV2)]
+		[TestCase (XmlResultJargon.NUnitV3)]
+		[TestCase (XmlResultJargon.TouchUnit)]
+		[TestCase (XmlResultJargon.xUnit)]
+		public void IsValidXmlTest (XmlResultJargon jargon)
 		{
 			var path = CreateResultSample (jargon);
 			Assert.IsTrue (XmlResultParser.IsValidXml (path, out var resultJargon), "is valid");
@@ -66,11 +66,11 @@ namespace Xharness.Tests {
 		}
 
 
-		[TestCase ("nunit-", Jargon.NUnitV2)]
-		[TestCase ("nunit-", Jargon.NUnitV2)]
-		[TestCase ("nunit-", Jargon.TouchUnit)]
-		[TestCase ("xunit-", Jargon.xUnit)]
-		public void GetXmlFilePathTest (string prefix, Jargon jargon)
+		[TestCase ("nunit-", XmlResultJargon.NUnitV2)]
+		[TestCase ("nunit-", XmlResultJargon.NUnitV2)]
+		[TestCase ("nunit-", XmlResultJargon.TouchUnit)]
+		[TestCase ("xunit-", XmlResultJargon.xUnit)]
+		public void GetXmlFilePathTest (string prefix, XmlResultJargon jargon)
 		{
 			var orignialPath = "/path/to/a/xml/result.xml";
 			var xmlPath = XmlResultParser.GetXmlFilePath (orignialPath, jargon);
@@ -78,10 +78,10 @@ namespace Xharness.Tests {
 			StringAssert.StartsWith (prefix, fileName, "xml prefix");
 		}
 
-		[TestCase (Jargon.NUnitV3)]
-		[TestCase (Jargon.NUnitV2)]
-		[TestCase (Jargon.xUnit)]
-		public void CleanXmlPingTest (Jargon jargon)
+		[TestCase (XmlResultJargon.NUnitV3)]
+		[TestCase (XmlResultJargon.NUnitV2)]
+		[TestCase (XmlResultJargon.xUnit)]
+		public void CleanXmlPingTest (XmlResultJargon jargon)
 		{
 			var path = CreateResultSample (jargon, includePing: true);
 			var cleanPath = path + "_clean";
@@ -96,11 +96,11 @@ namespace Xharness.Tests {
 		public void CleanXmlTouchUnitTest () 
 		{
 			// similar to CleanXmlPingTest but using TouchUnit, so we do not want to see the extra nodes
-			var path = CreateResultSample (Jargon.TouchUnit, includePing: true);
+			var path = CreateResultSample (XmlResultJargon.TouchUnit, includePing: true);
 			var cleanPath = path + "_clean";
 			XmlResultParser.CleanXml (path, cleanPath);
 			Assert.IsTrue (XmlResultParser.IsValidXml (cleanPath, out var resultJargon), "is valid");
-			Assert.AreEqual (Jargon.NUnitV2, resultJargon, "jargon");
+			Assert.AreEqual (XmlResultJargon.NUnitV2, resultJargon, "jargon");
 			// load the xml, ensure we do not have the nodes we removed
 			var doc = XDocument.Load (cleanPath);
 			Assert.IsFalse (doc.Descendants ().Where (e => e.Name == "TouchUnitTestRun").Any (), "TouchUnitTestRun");
@@ -113,7 +113,7 @@ namespace Xharness.Tests {
 		public void UpdateMissingDataTest () // only works with NUnitV3
 		{
 			string appName = "TestApp";
-			var path = CreateResultSample (Jargon.NUnitV3);
+			var path = CreateResultSample (XmlResultJargon.NUnitV3);
 			var cleanPath = path + "_clean";
 			XmlResultParser.CleanXml (path, cleanPath);
 			var updatedXml = path + "_updated";

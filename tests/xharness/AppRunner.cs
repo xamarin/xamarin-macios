@@ -369,7 +369,7 @@ namespace xharness
 					// at this point, we have the test results, but we want to be able to have attachments in vsts, so if the format is
 					// the right one (NUnitV3) add the nodes. ATM only TouchUnit uses V3.
 					var testRunName = $"{appName} {Variation}";
-					if (xmlType == Jargon.NUnitV3) {
+					if (xmlType == XmlResultJargon.NUnitV3) {
 						var logFiles = new List<string> ();
 						// add our logs AND the logs of the previous task, which is the build task
 						logFiles.AddRange (Directory.GetFiles (Logs.Directory));
@@ -886,7 +886,7 @@ namespace xharness
 					// same as with a crash
 					FailureMessage = $"Launch failure";
 					if (Harness.InCI)
-						XmlResultParser.GenerateFailure (Logs, "launch", appName, Variation, $"AppLaunch on {device_name}", $"{FailureMessage} on {device_name}", main_log.FullPath, XmlResultParser.Jargon.NUnitV3);
+						XmlResultParser.GenerateFailure (Logs, "launch", appName, Variation, $"AppLaunch on {device_name}", $"{FailureMessage} on {device_name}", main_log.FullPath, XmlResultJargon.NUnitV3);
 				} else if (crashed && (!File.Exists (listener_log.FullPath) || string.IsNullOrEmpty (crash_reason)) && Harness.InCI) {
 					// this happens more that what we would like on devices, the main reason most of the time is that we have had netwoking problems and the
 					// tcp connection could not be stablished. We are going to report it as an error since we have not parsed the logs, evne when the app might have
