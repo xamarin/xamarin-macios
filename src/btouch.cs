@@ -481,6 +481,18 @@ public class BindingTouch {
 			}
 
 			foreach (var r in references) {
+				// IKVM has a bug where it doesn't correctly compare assemblies, which means it
+				// can end up loading the same assembly (in particular any System.Runtime whose
+				// version > 4.0, but likely others as well) more than once. This is bad, because
+				// we compare types based on reference equality, which breaks down when there are
+				// multiple instances of the same type.
+				// 
+				// So just don't ask IKVM to load assemblies that have already been loaded.
+				var fn = Path.GetFileNameWithoutExtension (r);
+				var assemblies = universe.GetAssemblies ();
+				if (assemblies.Any ((v) => v.GetName ().Name == fn))
+					continue;
+
 				if (File.Exists (r)) {
 					try {
 						universe.LoadFile (r);
