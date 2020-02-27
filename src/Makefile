@@ -2,6 +2,7 @@ TOP=..
 include $(TOP)/Make.config
 
 BUILD_DIR=build
+DOTNET_BUILD_DIR=build/dotnet
 PROJECT_DIR=.
 
 include $(TOP)/src/frameworks.sources
@@ -864,6 +865,14 @@ $(COMMON_TARGET_DIRS):
 
 install-local:: $(INSTALL_TARGETS)
 all-local:: $(ALL_TARGETS)
+
+$(DOTNET_TARGETS_DIRS):
+	$(Q) mkdir -p $@
+
+dotnet: $(DOTNET_TARGETS)
+ifdef ENABLE_DOTNET
+all-local:: $(DOTNET_TARGETS)
+endif
 
 project-files: $(PROJECT_FILES)
 
