@@ -27,9 +27,6 @@ namespace xharness
 		public IEnumerable<TestProject> ProjectReferences;
 
 		// Optional
-		public BCLTestInfo BCLInfo { get; set; }
-
-		// Optional
 		public MonoNativeInfo MonoNativeInfo { get; set; }
 
 		public TestProject ()
@@ -218,7 +215,6 @@ namespace xharness
 		{
 			var rv = (MacTestProject) base.Clone ();
 			rv.TargetFrameworkFlavors = TargetFrameworkFlavors;
-			rv.BCLInfo = BCLInfo;
 			rv.Platform = Platform;
 			return rv;
 		}

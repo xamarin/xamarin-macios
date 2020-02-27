@@ -34,6 +34,9 @@ namespace Xamarin.MacDev.Tasks
 		public string SdkVersion { get; set; }
 
 		[Required]
+		public bool SdkIsSimulator { get; set; }
+
+		[Required]
 		public string SdkRoot { get; set; }
 
 		[Required]
@@ -55,13 +58,13 @@ namespace Xamarin.MacDev.Tasks
 			get {
 				switch (PlatformFrameworkHelper.GetFramework (TargetFrameworkIdentifier)) {
 				case PlatformFramework.WatchOS:
-					return "watchos";
+					return SdkIsSimulator ? "watchos-simulator" : "watchos";
 				case PlatformFramework.TVOS:
-					return "tvos";
+					return SdkIsSimulator ? "tvos-simulator" : "tvos";
 				case PlatformFramework.MacOS:
 					return "macosx";
 				case PlatformFramework.iOS:
-					return "ios";
+					return SdkIsSimulator ? "iphonesimulator" : "ios";
 				default:
 					Log.LogError ($"Unknown target framework identifier: {TargetFrameworkIdentifier}.");
 					return string.Empty;

@@ -296,19 +296,6 @@ namespace xharness
 				});
 			}
 
-			var bcl_suites = new string[] {
-			};
-			foreach (var p in bcl_suites) {
-				var bclTestInfo = new MacBCLTestInfo (this, p);
-				var bclTestProject = new MacTestProject (bclTestInfo.ProjectPath, targetFrameworkFlavor: MacFlavors.Modern | MacFlavors.Full) {
-					Name = p,
-					BCLInfo = bclTestInfo,
-					Platform = "AnyCPU",
-				};
-
-				MacTestProjects.Add (bclTestProject);
-			}
-
 			foreach (var flavor in new MonoNativeFlavor [] { MonoNativeFlavor.Compat, MonoNativeFlavor.Unified }) {
 				var monoNativeInfo = new MacMonoNativeInfo (this, flavor);
 				var macTestProject = new MacTestProject (monoNativeInfo.ProjectPath, targetFrameworkFlavor: MacFlavors.Modern | MacFlavors.Full) {
@@ -326,9 +313,6 @@ namespace xharness
 
 			// Generate test projects from templates (bcl/mono-native templates)
 			if (generate_projects) {
-				foreach (var bclTestInfo in MacTestProjects.Where (x => x.BCLInfo != null).Select (x => x.BCLInfo))
-					bclTestInfo.Convert ();
-
 				foreach (var mtp in MacTestProjects.Where (x => x.MonoNativeInfo != null).Select (x => x.MonoNativeInfo))
 					mtp.Convert ();
 			}
@@ -403,10 +387,7 @@ namespace xharness
 			var library_projects = new string [] { "BundledResources", "EmbeddedResources", "bindings-test", "bindings-test2", "bindings-framework-test" };
 			var fsharp_test_suites = new string [] { "fsharp" };
 			var fsharp_library_projects = new string [] { "fsharplibrary" };
-			var bcl_suites = new string [] {
-			};
-			var bcl_skip_watchos = new string [] {
-			};
+
 			foreach (var p in test_suites)
 				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".csproj"))) { Name = p });
 			foreach (var p in fsharp_test_suites)
@@ -416,15 +397,6 @@ namespace xharness
 			foreach (var p in fsharp_library_projects)
 				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".fsproj")), false) { Name = p });
 
-			foreach (var p in bcl_suites) {
-				BCLTestInfo bclTestInfo = new BCLTestInfo (this, p);
-				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/" + p + "/" + p + ".csproj"))) {
-					SkipwatchOSVariation = bcl_skip_watchos.Contains (p),
-					BCLInfo = bclTestInfo,
-					Name = p
-				});
-			}
-			
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "iOS", "introspection-ios.csproj"))) { Name = "introspection" });
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "dont link", "dont link.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link all", "link all.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
@@ -510,8 +482,6 @@ namespace xharness
 			if (AutoConf)
 				AutoConfigureIOS ();
 
-			foreach (var bclTestInfo in IOSTestProjects.Where (x => x.BCLInfo != null).Select (x => x.BCLInfo))
-				bclTestInfo.Convert ();
 			foreach (var monoNativeInfo in IOSTestProjects.Where (x => x.MonoNativeInfo != null).Select (x => x.MonoNativeInfo))
 				monoNativeInfo.Convert ();
 
