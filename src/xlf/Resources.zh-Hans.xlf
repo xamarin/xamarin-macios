@@ -879,6 +879,14 @@
         <note>
 		</note>
       </trans-unit>
+      <trans-unit id="BI1119">
+        <source>Internal error: found the same type ({0}) in multiple assemblies ({1} and {2}). Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
+		</source>
+        <target state="new">Internal error: found the same type ({0}) in multiple assemblies ({1} and {2}). Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
       <trans-unit id="default">
         <source>The error message for code {0} could not be found. Please report this missing message on GitHub at https://github.com/xamarin/xamarin-macios/issues/new</source>
         <target state="new">The error message for code {0} could not be found. Please report this missing message on GitHub at https://github.com/xamarin/xamarin-macios/issues/new</target>
