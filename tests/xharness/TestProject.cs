@@ -27,9 +27,6 @@ namespace xharness
 		public IEnumerable<TestProject> ProjectReferences;
 
 		// Optional
-		public BCLTestInfo BCLInfo { get; set; }
-
-		// Optional
 		public MonoNativeInfo MonoNativeInfo { get; set; }
 
 		public TestProject ()
@@ -93,6 +90,14 @@ namespace xharness
 				return Path.Contains ("bcl-test");
 			}
 		}
+
+		public bool IsMonotouch => Name.Contains ("monotouch");
+
+		public bool IsBclxUnit => IsBclTest && (Name.Contains ("xUnit") || IsMscorlib);
+
+
+		public bool IsMscorlib => Name.Contains ("mscorlib");
+
 
 		public virtual TestProject Clone ()
 		{
@@ -210,7 +215,6 @@ namespace xharness
 		{
 			var rv = (MacTestProject) base.Clone ();
 			rv.TargetFrameworkFlavors = TargetFrameworkFlavors;
-			rv.BCLInfo = BCLInfo;
 			rv.Platform = Platform;
 			return rv;
 		}

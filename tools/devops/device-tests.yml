@@ -17,4 +17,4 @@ jobs:
     pool: 'VSEng-Xamarin-Mac-Devices'
     demands: 'ios'
     statusContext: 'iOS-DDFun'
-    testsLabels: '--label=run-ios-64-tests'
+    testsLabels: '--label=run-ios-64-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
