@@ -63,16 +63,8 @@ public class AttributeManager
 			// Types (attributes) in the generator are mocked types from
 			// either the binding assembly or the platform assembly.
 			rv = TypeManager.BindingAssembly.GetType (type.FullName);
-			if (rv == null) {
-				string fullname;
-				// HACK ??
-				if (type.Namespace?.StartsWith ("XamCore.", System.StringComparison.Ordinal) == true) {
-					fullname = type.FullName.Substring (8);
-				} else {
-					fullname = type.FullName;
-				}
-				rv = TypeManager.PlatformAssembly.GetType (fullname);
-			}
+			if (rv == null)
+				rv = TypeManager.PlatformAssembly.GetType (type.FullName);
 		} else {
 			throw ErrorHelper.CreateError (1054, type.AssemblyQualifiedName);
 		}
