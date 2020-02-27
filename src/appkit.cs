@@ -9812,6 +9812,7 @@ namespace AppKit {
 
 	}
 
+	[ThreadSafe]
 	[Mac (10,11)]
 	[BaseType (typeof(NSObject))]
 	interface NSStringDrawingContext
@@ -9848,6 +9849,7 @@ namespace AppKit {
 		void DrawInRect (CGRect rect, AppKit.NSStringAttributes attributes);
 	}
 
+	[ThreadSafe]
 	[Category, BaseType (typeof (NSAttributedString))]
 	interface NSStringDrawing_NSAttributedString {
 		[Export ("size")]
@@ -9860,6 +9862,7 @@ namespace AppKit {
 		void DrawInRect (CGRect rect);
 	}
 		
+	[ThreadSafe]
 	[Category, BaseType (typeof (NSString))]
 	interface NSExtendedStringDrawing {
 		[Mac (10,11)]
@@ -9880,6 +9883,7 @@ namespace AppKit {
 	}
 
 	// @interface NSExtendedStringDrawing (NSAttributedString)
+	[ThreadSafe]
 	[Category]
 	[BaseType (typeof(NSAttributedString))]
 	interface NSAttributedString_NSExtendedStringDrawing
