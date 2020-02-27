@@ -381,6 +381,9 @@ namespace System.Net.Http
 
 		void AddCookie (string value, Uri uri, string header)
 		{
+#if !DOTNET_TODO
+			// DOTNET_TODO: CookieCollection.CookieCutter is internal to mscorlib:
+			// https://github.com/microsoft/referencesource/blob/a7bd3242bd7732dec4aebb21fbc0f6de61c2545e/System/net/System/Net/cookiecontainer.cs#L632
 			CookieCollection cookies1 = null;
 			try {
 				cookies1 = cookies.CookieCutter (uri, header, value, false);
@@ -389,6 +392,7 @@ namespace System.Net.Http
 
 			if (cookies1 != null && cookies1.Count != 0) 
 				cookies.Add (cookies1);
+#endif
 		}
 
 		static bool IsContentHeader (string header)

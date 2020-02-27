@@ -300,11 +300,19 @@ namespace Compression
 			throw new InvalidOperationException ("Writing to the compression stream is not supported.");
 		}
 
+#if !DOTNET_TODO
+		// DOTNET_TODO: TaskToApm is internal API in mscorlib, so we can't use it.
+		// Although I'm not sure if we even need to override these methods,
+		// the base class implementation works (but synchronously),
+		// and the documentation recommends using ReadAsync instead.
+		// If we decide to implement this, we could just copy the TaskToApm implementation:
+		// https://github.com/microsoft/referencesource/blob/a7bd3242bd7732dec4aebb21fbc0f6de61c2545e/mscorlib/system/threading/Tasks/TaskToApm.cs
 		public override IAsyncResult BeginRead (byte[] buffer, int offset, int count, AsyncCallback asyncCallback, object asyncState) =>
 			TaskToApm.Begin(ReadAsync (buffer, offset, count, CancellationToken.None), asyncCallback, asyncState);
 
 		public override int EndRead (IAsyncResult asyncResult) =>
 			TaskToApm.End<int> (asyncResult);
+#endif // !DOTNET_TODO
 
 		public override Task<int> ReadAsync (byte[] array, int offset, int count, CancellationToken cancellationToken)
 		{
@@ -547,10 +555,13 @@ namespace Compression
 			}
 		}
 
+#if !DOTNET_TODO
+		// DOTNET_TODO: See comment about TaskToApm elsewhere in this file.
 		public override IAsyncResult BeginWrite (byte[] array, int offset, int count, AsyncCallback asyncCallback, object asyncState) =>
 			TaskToApm.Begin(WriteAsync (array, offset, count, CancellationToken.None), asyncCallback, asyncState);
 
 		public override void EndWrite (IAsyncResult asyncResult) => TaskToApm.End (asyncResult);
+#endif // !DOTNET_TODO
 
 		public override Task WriteAsync (byte[] array, int offset, int count, CancellationToken cancellationToken)
 		{
