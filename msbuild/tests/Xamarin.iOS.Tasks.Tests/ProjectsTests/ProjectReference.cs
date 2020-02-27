@@ -8,7 +8,6 @@ namespace Xamarin.iOS.Tasks
 {
 	[TestFixture ("iPhone")]
 	[TestFixture ("iPhoneSimulator")]
-	[Ignore ("https://github.com/xamarin/xamarin-macios/issues/4110")]
 	public class ProjectReferenceTests : ProjectTest
 	{
 
