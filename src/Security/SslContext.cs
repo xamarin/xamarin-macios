@@ -339,7 +339,7 @@ namespace Security {
 
 			var array = ciphers.ToArray ();
 			fixed (SslCipherSuite *p = array)
-			result = SSLSetEnabledCiphers (Handle, p, ciphers.Count ());
+			result = SSLSetEnabledCiphers (Handle, p, array.Length);
 			return result;
 		}
 
