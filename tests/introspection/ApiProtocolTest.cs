@@ -232,6 +232,7 @@ namespace Introspection {
 				case "NSFileProviderItemVersion":
 				case "NSFileProviderRequest":
 				case "NSFileProviderSearchQuery":
+				case "INUserContext": // Header shows NSSecureCoding but intro says nope
 					return true;
 				// Xcode 11.4, not documented
 				case "NSHttpCookie":
