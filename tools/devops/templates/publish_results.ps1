@@ -11,7 +11,8 @@ $json_payload = @"
     "state" : $Env:GH_STATE,
     "target-url" : $Env:TARGET_URL,
     "description" : "description placeholder", 
-    "context" : "VSTS: device tests"
+    "context" : "VSTS: device tests",
+    "vsts-for-debugging" : $Env:VSTS_BUILD_URL
 }
 "@
 
