@@ -7,9 +7,9 @@
 # add description back in
 $json_payload = @"
 {
-    "hash" : $BUILD_REVISION,
-    "state" : $GH_STATE,
-    "target-url" : $TARGET_URL,
+    "hash" : $Env:BUILD_REVISION,
+    "state" : $Env:$GH_STATE,
+    "target-url" : $Env:$TARGET_URL,
     "description" : "description placeholder", 
     "context" : "VSTS: device tests"
 }
