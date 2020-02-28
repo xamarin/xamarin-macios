@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 using Mono.Cecil;
 using Mono.Linker;
@@ -155,7 +154,7 @@ namespace Xamarin.Tuner
 		public void AddLinkedAwayType (TypeDefinition td)
 		{
 			var latr = new LinkedAwayTypeReference (td);
-			LinkedAwayTypes.Add (td.Module.Assembly.Name.Name + ": " + td.FullName, new LinkedAwayTypeReference (td));
+			LinkedAwayTypes.Add (td.Module.Assembly.Name.Name + ": " + td.FullName, latr);
 			LinkedAwayTypeMap.Add (td, latr);
 		}
 
@@ -177,7 +176,7 @@ namespace Xamarin.Tuner
 				return td;
 			}
 
-			var name = tr.Scope.Name;
+			string name;
 			switch (tr.Scope.MetadataScopeType) {
 			case MetadataScopeType.ModuleDefinition:
 				var md = (ModuleDefinition) tr.Scope;
