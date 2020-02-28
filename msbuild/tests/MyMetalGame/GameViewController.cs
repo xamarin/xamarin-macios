@@ -208,6 +208,8 @@ namespace MyMetalGame
 				//  If we need a depth texture and don't have one, or if the depth texture we have is the wrong size
 				//  Then allocate one of the proper size
 				MTLTextureDescriptor desc = MTLTextureDescriptor.CreateTexture2DDescriptor (MTLPixelFormat.Depth32Float, texture.Width, texture.Height, false);
+				if (ObjCRuntime.Runtime.Arch == ObjCRuntime.Arch.SIMULATOR)
+					desc.StorageMode = MTLStorageMode.Private;
 				depthTex = device.CreateTexture (desc);
 				depthTex.Label = "Depth";
 
