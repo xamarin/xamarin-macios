@@ -90,7 +90,7 @@ namespace Introspection {
 				case "NSPrintInfo": // Conformance not in headers
 				case "NSPrinter": // Conformance not in headers
 					return true;
-#if !UNIFIED
+#if !__UNIFIED__
 				// existing classic/old binary is not updated
 				case "NSAppearance":
 				case "NSBezierPath":
