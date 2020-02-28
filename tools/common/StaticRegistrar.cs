@@ -3394,7 +3394,7 @@ namespace Registrar {
 				var isArray = type is ArrayType;
 				var isByRefArray = isRef && GetElementType (type) is ArrayType;
 				var isNativeEnum = false;
-				var td = type.Resolve ();
+				var td = ResolveType (type);
 				var isVariadic = i + 1 == num_arg && method.IsVariadic;
 
 				if (type != nativetype) {

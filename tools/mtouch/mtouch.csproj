@@ -432,6 +432,12 @@
     <Compile Include="..\linker\ScanTypeReferenceStep.cs">
       <Link>Xamarin.Linker\ScanTypeReferenceStep.cs</Link>
     </Compile>
+    <Compile Include="..\linker\RemoveRejectedTypesStep.cs">
+      <Link>Xamarin.Linker\RemoveRejectedTypesStep.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\MonoTouch.Tuner\RemoveCodeBase.cs">
+      <Link>MonoTouch.Tuner\RemoveCodeBase.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Core" />
