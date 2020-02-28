@@ -18,6 +18,8 @@ $json_payload = @"
 
 $url = "https://api.github.com/repos/xamarin/xamarin-macios/statuses/$BUILD_REVISION"
 
+Write-Host @{'Authorization' = ("token {0}" -f $GITHUB_TOKEN)}
+
 $params = @{
     Uri = $url
     Headers = @{'Authorization' = ("token {0}" -f $GITHUB_TOKEN)}
