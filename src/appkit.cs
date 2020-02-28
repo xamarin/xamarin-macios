@@ -20878,7 +20878,7 @@ namespace AppKit {
 		[Export ("animationBehavior")]
 		NSWindowAnimationBehavior AnimationBehavior { get; set; }
 
-#if !XAMARIN_MAC
+#if !MONOMAC
 		//
 		// Fields
 		//

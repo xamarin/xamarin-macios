@@ -76,7 +76,7 @@ IOS_SOURCES += $(IOS_EXTRA_SOURCES) $(IOS_HTTP_SOURCES)
 
 IOS_GENERATOR_FLAGS = -inline-selectors -d:IOS -process-enums -warnaserror:$(IOS_GENERATOR_WARNASERROR)
 IOS_GENERATOR_native_FLAGS = -d:XAMCORE_2_0 -d:__UNIFIED__
-IOS_DEFINES = -define:IPHONE -define:IOS -define:MONOTOUCH -d:NET_2_0 -d:__IOS__ $(APPLETLS_DEFINES) -d:SYSTEM_NET_HTTP
+IOS_DEFINES = -define:IPHONE -define:IOS -define:MONOTOUCH -d:__IOS__ $(APPLETLS_DEFINES) -d:SYSTEM_NET_HTTP
 IOS_native_DEFINES = -d:XAMCORE_2_0 -d:__UNIFIED__
 IOS_GENERATOR=$(BUILD_DIR)/common/bgen.exe
 IOS_GENERATE=$(SYSTEM_MONO) --debug $(IOS_GENERATOR)
@@ -289,11 +289,11 @@ MAC_WARNINGS_TO_FIX := 114,108
 # 4014 is "The statement is not awaited and execution of current method continues before the call is completed. Consider using `await' operator or calling `Wait' method"
 MAC_WARNINGS_TO_FIX := $(MAC_WARNINGS_TO_FIX),4014
 
-MAC_COMMON_DEFINES = -define:NET_2_0,XAMARIN_MAC,MONOMAC,XAMCORE_2_0,__UNIFIED__
+MAC_COMMON_DEFINES = -define:MONOMAC,XAMCORE_2_0,__UNIFIED__
 MAC_full_ARGS = -define:NO_SYSTEM_DRAWING -define:XAMMAC_SYSTEM_MONO
 MAC_mobile_ARGS = 
 MAC_BOOTSTRAP_DEFINES = $(MAC_COMMON_DEFINES),COREBUILD
-MAC_GENERATED_DEFINES = -d:MONOMAC -d:XAMARIN_MAC -d:XAMCORE_2_0 -d:__UNIFIED__
+MAC_GENERATED_DEFINES = -d:MONOMAC -d:XAMCORE_2_0 -d:__UNIFIED__
 
 $(MAC_BUILD_DIR)/$(1)/$(3).pdb: $(MAC_BUILD_DIR)/$(1)/$(3).dll
 
@@ -402,7 +402,7 @@ $(MAC_BUILD_DIR)/$(1)/$(2): $(MAC_BUILD_DIR)/$(3)/generated-sources $(MAC_SOURCE
 	$$(call Q_PROF_CSC,mac/$(1)) \
 		$$(MAC_$(3)_CSC) -nologo -out:$$@ -target:library -debug -unsafe \
 		-deterministic \
-		$$(MAC_COMMON_DEFINES),OBJECT_REF_TRACKING \
+		$$(MAC_COMMON_DEFINES) \
 		$$(MAC_$(3)_ARGS) \
 		$$(ARGS_$(6)) \
 		-publicsign -keyfile:$(SN_KEY) \
@@ -416,8 +416,8 @@ $(MAC_BUILD_DIR)/$(1)/$(2:.dll=.pdb): $(MAC_BUILD_DIR)/$(1)/$(2)
 
 endef
 
-$(eval $(call MAC_TARGETS_template,mobile-64,Xamarin.Mac.dll,mobile,$(MAC_CFNETWORK_SOURCES) $(MAC_HTTP_SOURCES) $(SHARED_SYSTEM_DRAWING_SOURCES) $(APPLETLS_DEFINES) -D:XAMARIN_MODERN -D:UNIFIED -D:__UNIFIED__,mobile-64,64))
-$(eval $(call MAC_TARGETS_template,full-64,Xamarin.Mac.dll,full,$(MAC_CFNETWORK_SOURCES) $(MAC_HTTP_SOURCES) -D:XAMARIN_MODERN -D:UNIFIED -D:__UNIFIED__,full-64,64))
+$(eval $(call MAC_TARGETS_template,mobile-64,Xamarin.Mac.dll,mobile,$(MAC_CFNETWORK_SOURCES) $(MAC_HTTP_SOURCES) $(SHARED_SYSTEM_DRAWING_SOURCES) $(APPLETLS_DEFINES),mobile-64,64))
+$(eval $(call MAC_TARGETS_template,full-64,Xamarin.Mac.dll,full,$(MAC_CFNETWORK_SOURCES) $(MAC_HTTP_SOURCES),full-64,64))
 
 $(MAC_BUILD_DIR)/%-reference/Xamarin.Mac.dll: $(MAC_BUILD_DIR)/%-64/Xamarin.Mac.dll
 	@mkdir -p $(@D)
@@ -519,7 +519,7 @@ all-mac: $(MAC_TARGETS)
 # Xamarin.WatchOS
 #
 
-WATCH_DEFINES = -define:IPHONE -define:MONOTOUCH -d:NET_2_0 -d:WATCH -d:XAMCORE_2_0 -d:XAMCORE_3_0 -d:__WATCHOS__ -d:__UNIFIED__ -d:SYSTEM_NET_HTTP
+WATCH_DEFINES = -define:IPHONE -define:MONOTOUCH -d:WATCH -d:XAMCORE_2_0 -d:XAMCORE_3_0 -d:__WATCHOS__ -d:__UNIFIED__ -d:SYSTEM_NET_HTTP
 WATCH_GENERATOR=$(BUILD_DIR)/common/bgen.exe
 WATCH_GENERATE=$(SYSTEM_MONO) --debug $(WATCH_GENERATOR)
 WATCH_GENERATED_DEFINES= -d:WATCH -d:XAMCORE_3_0 -d:XAMCORE_2_0 -d:__UNIFIED__
@@ -683,7 +683,7 @@ endif
 # Xamarin.TVOS
 #
 
-TVOS_DEFINES = -define:IPHONE -define:MONOTOUCH -d:NET_2_0 -d:TVOS -d:XAMCORE_2_0 -d:XAMCORE_3_0 -d:__TVOS__ $(APPLETLS_DEFINES) -d:__UNIFIED__ -d:SYSTEM_NET_HTTP
+TVOS_DEFINES = -define:IPHONE -define:MONOTOUCH -d:TVOS -d:XAMCORE_2_0 -d:XAMCORE_3_0 -d:__TVOS__ $(APPLETLS_DEFINES) -d:__UNIFIED__ -d:SYSTEM_NET_HTTP
 TVOS_GENERATOR=$(BUILD_DIR)/common/bgen.exe
 TVOS_GENERATE=$(SYSTEM_MONO) --debug $(TVOS_GENERATOR)
 TVOS_GENERATED_DEFINES= -d:TVOS -d:XAMCORE_3_0 -d:XAMCORE_2_0 -d:__UNIFIED__
