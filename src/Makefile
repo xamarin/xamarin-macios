@@ -7,7 +7,6 @@ PROJECT_DIR=.
 include $(TOP)/src/frameworks.sources
 include $(TOP)/mk/rules.mk
 
-include $(TOP)/src/system-drawing.sources
 include $(TOP)/src/touch-unit.sources
 
 export MD_MTOUCH_SDK_ROOT=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)
@@ -50,6 +49,8 @@ ARGS_32 = -define:ARCH_32
 ARGS_64 = -define:ARCH_64
 
 CURRENT_BRANCH_SED_ESCAPED:=$(subst |,\|,$(subst &,\&,$(subst $$,\$$,$(subst /,\/,$(CURRENT_BRANCH))))))
+
+SHARED_SYSTEM_DRAWING_SOURCES = System.Drawing/PointSizeRectangleTypeForwarders.cs
 
 #
 # Xamarin.iOS
@@ -161,14 +162,6 @@ $(IOS_BUILD_DIR)/reference%MonoTouch.NUnitLite.dll $(IOS_BUILD_DIR)/reference%Mo
 		-nowarn:3006,612,649,414,1635,659 \
 		-define:NUNITLITE,CLR_4_0,NET_4_5,__MOBILE__,MONO $(IOS_DEFINES) \
 		$(IOS_TOUCHUNIT_SOURCES)
-
-# System.Drawing
-# not installed or shipped yet - must be compiled manually using "make System.Drawing.dll"
-$(IOS_BUILD_DIR)/reference/System.Drawing.dll: $(IOS_SYSTEM_DRAWING_SOURCES) monotouch.dll $(PRODUCT_KEY_PATH)
-	$(call Q_PROF_CSC,ios/reference) $(IOS_CSC) -nologo -out:$@ -target:library -debug:portable -optimize -publicsign \
-		-keyfile:$(PRODUCT_KEY_PATH) -r:$(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll -define:XAMCORE_2_0 -define:__UNIFIED__ \
-		-nowarn:114,169,414,1635 $(IOS_DEFINES) \
-		$(IOS_SYSTEM_DRAWING_SOURCES)
 
 $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll: $(IOS_BUILD_DIR)/native-64/Xamarin.iOS.dll | $(IOS_BUILD_DIR)/reference
 	$(Q_STRIP) mono-cil-strip -q $< $@
