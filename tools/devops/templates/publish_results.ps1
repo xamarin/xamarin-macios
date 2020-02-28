@@ -8,8 +8,8 @@
 $json_payload = @"
 {
     "hash" : $Env:BUILD_REVISION,
-    "state" : $Env:$GH_STATE,
-    "target-url" : $Env:$TARGET_URL,
+    "state" : $Env:GH_STATE,
+    "target-url" : $Env:TARGET_URL,
     "description" : "description placeholder", 
     "context" : "VSTS: device tests"
 }
