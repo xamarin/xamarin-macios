@@ -358,7 +358,7 @@ namespace System.Net.Http
 					var key = entry.Key.ToString ();
 					var value = entry.Value == null ? string.Empty : entry.Value.ToString ();
 					HttpHeaders item_headers;
-					if (HeaderDescriptor.TryGet (key, out var descriptor) && descriptor.HeaderType == HttpHeaderType.Content) {
+					if (IsContentHeader (key)) {
 						item_headers = response_msg.Content.Headers;
 					} else {
 						item_headers = response_msg.Headers;
@@ -389,6 +389,26 @@ namespace System.Net.Http
 
 			if (cookies1 != null && cookies1.Count != 0) 
 				cookies.Add (cookies1);
+		}
+
+		static bool IsContentHeader (string header)
+		{
+			// The headers here which have HttpHeaderType.Content: https://github.com/dotnet/runtime/blob/e9853d4baa4c9510dc62ed5852f8381141f3c87e/src/libraries/System.Net.Http/src/System/Net/Http/Headers/KnownHeaders.cs#L15-L101
+			switch (header) {
+			case "Allow":
+			case "ContentDisposition":
+			case "ContentEncoding":
+			case "ContentLanguage":
+			case "ContentLength":
+			case "ContentLocation":
+			case "ContentMD5":
+			case "ContentRange":
+			case "ContentType":
+			case "Expires":
+			case "LastModified":
+				return true;
+			}
+			return false;
 		}
 	}
 }
