@@ -787,3 +787,6 @@ Code inside the members will be replaced with a
 
 The default behavior can be overridden by passing
 `--optimize=[+|-]force-rejected-types-removal` to `mtouch`.
+
+The exact list of types might change over time and is best read directly from
+the [source code](https://github.com/xamarin/xamarin-macios/blob/master/tools/linker/RemoveRejectedTypesStep.cs).
