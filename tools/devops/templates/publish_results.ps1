@@ -20,15 +20,15 @@ $url = "https://api.github.com/repos/xamarin/xamarin-macios/statuses/$BUILD_REVI
 
 $params = @{
     Uri = $url
-    Headers = @{'Authorization' = "Bearer $TOKEN"}
+    Headers = @{'Authorization' = ("token {0}" -f $GITHUB_TOKEN)}
     Method = 'PUT'
     Body = $json_payload
     ContentType = 'application/json'
 }
 
-Write-Host "$TOKEN"
-
 $response = Invoke-RestMethod @params
+
+$response | ConvertTo-Json | Write-Host
 
 # -Uri $url
 # -Method Post
