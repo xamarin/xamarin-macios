@@ -46,9 +46,6 @@
     <Compile Include="..\AppRunner.cs">
       <Link>AppRunner.cs</Link>
     </Compile>
-    <Compile Include="..\BCLTestInfo.cs">
-      <Link>BCLTestInfo.cs</Link>
-    </Compile>
     <Compile Include="..\DeviceLogCapturer.cs">
       <Link>DeviceLogCapturer.cs</Link>
     </Compile>
