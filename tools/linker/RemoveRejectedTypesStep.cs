@@ -9,6 +9,9 @@ using Xamarin.Tuner;
 
 namespace Xamarin.Linker {
 
+	// Important: This is NOT a general purpose code remover. There are a lot of
+	// cases to cover and this implementation cover only the one it requires so far.
+	// IOW additional testing is REQUIRED if you change the scope of the code.
 	public class RemoveRejectedTypesStep : RemoveCodeBase {
 
 		public RemoveRejectedTypesStep ()
@@ -26,16 +29,16 @@ namespace Xamarin.Linker {
 		protected override string Name { get; } = " Removing Rejected Type";
 		protected override int ErrorCode { get; } = 2660;
 
-		public List<string> ReferencesToBeRemoved = new List<string> () {
-			// order is important for nested types
-			"UIKit.UIWebView/_UIWebViewDelegate",
-			"UIKit.UIWebView/UIWebViewAppearance",
-			"UIKit.IUIWebViewDelegate",
-			"UIKit.UIWebView",
-			"UIKit.UIWebViewDelegate",
-			"UIKit.UIWebViewDelegate_Extensions",
-			"UIKit.UIWebViewDelegateWrapper",
-			"UIKit.UIWebViewNavigationType",
+		public List<(string originalFullName, string replacementTypeName)> TypeReferencesToBeRemoved = new List<(string,string)> () {
+			// order is important for nested types (that's why tuples are used instead of a Dictionary)
+			( "UIKit.UIWebView/_UIWebViewDelegate", "_DeprecatedWebViewDelegate"),
+			( "UIKit.UIWebView/UIWebViewAppearance","DeprecatedWebViewAppearance"),
+			( "UIKit.IUIWebViewDelegate","IDeprecatedWebViewDelegate"),
+			( "UIKit.UIWebView","DeprecatedWebView"),
+			( "UIKit.UIWebViewDelegate","DeprecatedWebViewDelegate"),
+			( "UIKit.UIWebViewDelegate_Extensions", "DeprecatedWebViewDelegate_Extensions"),
+			( "UIKit.UIWebViewDelegateWrapper", "DeprecatedWebViewDelegateWrapper"),
+			( "UIKit.UIWebViewNavigationType", "DeprecatedWebViewNavigationType"),
 		};
 
 		protected override void Process (AssemblyDefinition assembly)
@@ -46,13 +49,14 @@ namespace Xamarin.Linker {
 			var updated = false;
 			if (Profile.IsProductAssembly (assembly)) {
 				updated = true;
-				foreach (var remove in ReferencesToBeRemoved) {
-					var type = assembly.MainModule.GetType (remove);
+				foreach (var item in TypeReferencesToBeRemoved) {
+					var type = assembly.MainModule.GetType (item.originalFullName);
 					if (type == null)
 						continue;
-					type.Name = type.Name.Replace ("UI", "Deprecated");
+					type.Name = item.replacementTypeName;
 					Context.AddLinkedAwayType (type);
-					// remove [Register], [Protocol] and [ProtocolMembers] attributes
+					// we need to remove [Register], [Protocol] and [ProtocolMembers] attributes
+					// and since other attributes won't make sense anymore so we remove them all
 					type.CustomAttributes.Clear ();
 					if (!type.IsInterface) {
 						// remove IL and custom attributes (e.g. [Export])
@@ -65,9 +69,9 @@ namespace Xamarin.Linker {
 				return;
 			} else {
 				foreach (var module in assembly.Modules) {
-					foreach (var remove in ReferencesToBeRemoved) {
-						if (module.TryGetTypeReference (remove, out var tr)) {
-							tr.Name = tr.Name.Replace ("UI", "Deprecated");
+					foreach (var item in TypeReferencesToBeRemoved) {
+						if (module.TryGetTypeReference (item.originalFullName, out var tr)) {
+							tr.Name = item.replacementTypeName;
 							updated = true;
 						}
 					}
@@ -83,13 +87,11 @@ namespace Xamarin.Linker {
 			if (method.HasCustomAttributes)
 				method.CustomAttributes.Clear ();
 
-            // don't break IDisposable
-//			if (method.Name != "Dispose") {
-				// deal with method `EnsureUIWebViewDelegate`
-				method.Name = method.Name.Replace ("UIWebView", "Deprecated");
+			// single special case: deal with method `EnsureUIWebViewDelegate`
+			if (method.Name == "EnsureUIWebViewDelegate")
+				method.Name = "EnsureDeprecatedWebViewDelegate";
 
-			    base.ProcessMethod (method);
-//		    }
+			base.ProcessMethod (method);
 		}
 	}
 }
