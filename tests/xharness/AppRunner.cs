@@ -12,6 +12,7 @@ using System.Xml;
 using System.Xml.Xsl;
 using Xamarin;
 using Xamarin.Utils;
+using xharness.Logging;
 
 namespace xharness
 {
@@ -99,15 +100,15 @@ namespace xharness
 			set { log_directory = value; }
 		}
 
-		Logs logs;
-		public Logs Logs {
+		ILogs logs;
+		public ILogs Logs {
 			get {
 				return logs ?? (logs = new Logs (LogDirectory));
 			}
 		}
 
-		Log main_log;
-		public Log MainLog {
+		ILog main_log;
+		public ILog MainLog {
 			get { return main_log; }
 			set { main_log = value; }
 		}
@@ -476,9 +477,9 @@ namespace xharness
 		public async Task<int> RunAsync ()
 		{
 			CrashReportSnapshot crash_reports;
-			Log device_system_log = null;
-			Log listener_log = null;
-			Log run_log = main_log;
+			ILog device_system_log = null;
+			ILog listener_log = null;
+			ILog run_log = main_log;
 
 			Initialize ();
 
@@ -929,7 +930,7 @@ namespace xharness
 	class AppInstallMonitorLog : Log {
 		public override string FullPath => copy_to.FullPath;
 
-		Log copy_to;
+		ILog copy_to;
 		CancellationTokenSource cancellation_source;
 		
 		public bool CopyingApp;
@@ -951,7 +952,7 @@ namespace xharness
 			}
 		}
 
-		public AppInstallMonitorLog (Log copy_to)
+		public AppInstallMonitorLog (ILog copy_to)
 				: base (copy_to.Logs, $"Watch transfer log for {copy_to.Description}")
 		{
 			this.copy_to = copy_to;

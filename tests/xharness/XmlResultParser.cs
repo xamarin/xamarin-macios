@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using xharness.Logging;
 
 namespace xharness {
 
@@ -573,7 +574,7 @@ namespace xharness {
 			WriteAttributes (writer,
 				("name", title),
 				("total", "1"),
-				("errors", ""),
+				("errors", "0"),
 				("failures", "1"),
 				("not-run", "0"),
 				("inconclusive", "0"),
@@ -738,16 +739,20 @@ namespace xharness {
 			}
 		}
 
-		public static void GenerateFailure (Logs logs, string source, string appName, string variation, string title, string message, string stderrPath, XmlResultJargon jargon)
+		public static void GenerateFailure (ILogs logs, string source, string appName, string variation, string title, string message, string stderrPath, XmlResultJargon jargon)
 		{
 			// VSTS does not provide a nice way to report build errors, create a fake
 			// test result with a failure in the case the build did not work
-			var failureXmlTmp = logs.Create ($"nunit-{source}-{Harness.Timestamp}.tmp", "Failure Log tmp");
 			var failureLogXml = logs.Create ($"vsts-nunit-{source}-{Harness.Timestamp}.xml", Log.XML_LOG);
-			GenerateFailureXml (failureXmlTmp.FullPath, title, message, stderrPath, jargon);
-			// add the required attachments and the info of the application that failed to install
-			var failure_logs = Directory.GetFiles (logs.Directory).Where (p => !p.Contains ("nunit")); // all logs but ourself
-			UpdateMissingData (failureXmlTmp.FullPath, failureLogXml.FullPath, $"{appName} {variation}", failure_logs);
+			if (jargon == XmlResultJargon.NUnitV3) {
+				var failureXmlTmp = logs.Create ($"nunit-{source}-{Harness.Timestamp}.tmp", "Failure Log tmp");
+				GenerateFailureXml (failureXmlTmp.FullPath, title, message, stderrPath, jargon);
+				// add the required attachments and the info of the application that failed to install
+				var failure_logs = Directory.GetFiles (logs.Directory).Where (p => !p.Contains ("nunit")); // all logs but ourself
+				UpdateMissingData (failureXmlTmp.FullPath, failureLogXml.FullPath, $"{appName} {variation}", failure_logs);
+			} else {
+				GenerateFailureXml (failureLogXml.FullPath, title, message, stderrPath, jargon);
+			}
 		}
 
 		public static string GetVSTSFilename (string filename)

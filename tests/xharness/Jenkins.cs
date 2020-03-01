@@ -11,6 +11,7 @@ using System.Text;
 using Xamarin;
 using Xamarin.Utils;
 using System.Xml;
+using xharness.Logging;
 
 namespace xharness
 {
@@ -49,9 +50,9 @@ namespace xharness
 		public bool CleanSuccessfulTestRuns = true;
 		public bool UninstallTestApp = true;
 
-		public Log MainLog;
-		public Log SimulatorLoadLog;
-		public Log DeviceLoadLog;
+		public ILog MainLog;
+		public ILog SimulatorLoadLog;
+		public ILog DeviceLoadLog;
 
 		string log_directory;
 		public string LogDirectory {
@@ -65,8 +66,8 @@ namespace xharness
 			}
 		}
 
-		Logs logs;
-		public Logs Logs {
+		ILogs logs;
+		public ILogs Logs {
 			get {
 				return logs ?? (logs = new Logs (LogDirectory));
 			}
@@ -96,7 +97,7 @@ namespace xharness
 			return new Resources (resources);
 		}
 
-		Task LoadAsync (ref Log log, ILoadAsync loadable, string name)
+		Task LoadAsync (ref ILog log, ILoadAsync loadable, string name)
 		{
 			loadable.Harness = Harness;
 			if (log == null)
@@ -107,7 +108,7 @@ namespace xharness
 			return loadable.LoadAsync (capturedLog, include_locked: false, force: true).ContinueWith ((v) => {
 				if (v.IsFaulted) {
 					capturedLog.WriteLine ("Failed to load:");
-					capturedLog.WriteLine (v.Exception);
+					capturedLog.WriteLine (v.Exception.ToString ());
 					capturedLog.Description = $"{name} Listing {v.Exception.Message})";
 				} else if (v.IsCompleted) {
 					if (loadable is Devices devices) {
@@ -1207,7 +1208,7 @@ namespace xharness
 			return Task.WhenAll (loadsim, loaddev);
 		}
 
-		async Task ExecutePeriodicCommandAsync (Log periodic_loc)
+		async Task ExecutePeriodicCommandAsync (ILog periodic_loc)
 		{
 			periodic_loc.WriteLine ($"Starting periodic task with interval {Harness.PeriodicCommandInterval.TotalMinutes} minutes.");
 			while (true) {
@@ -1231,7 +1232,7 @@ namespace xharness
 		{
 			try {
 				Directory.CreateDirectory (LogDirectory);
-				Log log = Logs.Create ($"Harness-{Harness.Timestamp}.log", "Harness log");
+				ILog log = Logs.Create ($"Harness-{Harness.Timestamp}.log", "Harness log");
 				if (Harness.InCI)
 					log = Log.CreateAggregatedLog (log, new ConsoleLog ());
 				Harness.HarnessLog = MainLog = log;
@@ -1725,7 +1726,7 @@ namespace xharness
 			}
 		}
 
-		public bool IsHE0038Error (Log log) {
+		public bool IsHE0038Error (ILog log) {
 			if (log == null)
 				return false;
 			if (File.Exists (log.FullPath) && new FileInfo (log.FullPath).Length > 0) {
@@ -2582,8 +2583,8 @@ namespace xharness
 
 		public List<Resource> Resources = new List<Resource> ();
 
-		Log test_log;
-		public Log MainLog {
+		ILog test_log;
+		public ILog MainLog {
 			get {
 				if (test_log == null)
 					test_log = Logs.Create ($"main-{Timestamp}.log", "Main log");
@@ -2605,8 +2606,8 @@ namespace xharness
 			}
 		}
 
-		Logs logs;
-		public Logs Logs {
+		ILogs logs;
+		public ILogs Logs {
 			get {
 				return logs ?? (logs = new Logs (LogDirectory));
 			}
@@ -2784,13 +2785,13 @@ namespace xharness
 			}
 		}
 
-		protected void LogEvent (Log log, string text, params object[] args)
+		protected void LogEvent (ILog log, string text, params object[] args)
 		{
 			Jenkins.MainLog.WriteLine (text, args);
 			log.WriteLine (text, args);
 		}
 
-		public string GuessFailureReason (Log log)
+		public string GuessFailureReason (ILog log)
 		{
 			try {
 				using (var reader = log.GetReader ()) {
@@ -2889,7 +2890,7 @@ namespace xharness
 			}
 		}
 
-		async Task<TestExecutingResult> RestoreNugetsAsync (string projectPath, Log log, bool useXIBuild=false)
+		async Task<TestExecutingResult> RestoreNugetsAsync (string projectPath, ILog log, bool useXIBuild=false)
 		{
 			using (var resource = await Jenkins.NugetResource.AcquireExclusiveAsync ()) {
 				// we do not want to use xibuild on solutions, we will have some failures with Mac Full
@@ -2946,7 +2947,7 @@ namespace xharness
 
 		// This method must be called with the desktop resource acquired
 		// (which is why it takes an IAcquiredResources as a parameter without using it in the function itself).
-		protected async Task RestoreNugetsAsync (Log log, IAcquiredResource resource, bool useXIBuild=false)
+		protected async Task RestoreNugetsAsync (ILog log, IAcquiredResource resource, bool useXIBuild=false)
 		{
 			if (!RestoreNugets)
 				return;
@@ -3011,7 +3012,7 @@ namespace xharness
 	class XBuildTask : BuildProjectTask
 	{
 		public bool UseMSBuild;
-		public Log BuildLog;
+		public ILog BuildLog;
 
 		protected override async Task ExecuteAsync ()
 		{
@@ -3056,7 +3057,7 @@ namespace xharness
 			}
 		}
 
-		async Task CleanProjectAsync (Log log, string project_file, string project_platform, string project_configuration)
+		async Task CleanProjectAsync (ILog log, string project_file, string project_platform, string project_configuration)
 		{
 			// Don't require the desktop resource here, this shouldn't be that resource sensitive
 			using (var xbuild = new Process ()) {
@@ -3109,7 +3110,7 @@ namespace xharness
 		{
 		}
 			
-		public void FindNUnitConsoleExecutable (Log log)
+		public void FindNUnitConsoleExecutable (ILog log)
 		{
 			if (!string.IsNullOrEmpty (TestExecutable)) {
 				log.WriteLine ("Using existing executable: {0}", TestExecutable);
@@ -3246,11 +3247,11 @@ namespace xharness
 						var output = Logs.Create ($"Log-{Timestamp}.html", "HTML log");
 						using (var srt = new StringReader (File.ReadAllText (Path.Combine (Harness.RootDirectory, "HtmlTransform.xslt")))) {
 							using (var sri = File.OpenRead (xmlLog)) {
-								using (var xrt = System.Xml.XmlReader.Create (srt)) {
-									using (var xri = System.Xml.XmlReader.Create (sri)) {
+								using (var xrt = XmlReader.Create (srt)) {
+									using (var xri = XmlReader.Create (sri)) {
 										var xslt = new System.Xml.Xsl.XslCompiledTransform ();
 										xslt.Load (xrt);
-										using (var xwo = System.Xml.XmlWriter.Create (output, xslt.OutputSettings)) // use OutputSettings of xsl, so it can be output as HTML
+										using (var xwo = XmlWriter.Create (output as TextWriter, xslt.OutputSettings)) // use OutputSettings of xsl, so it can be output as HTML
 										{
 											xslt.Transform (xri, xwo);
 										}

@@ -10,11 +10,12 @@ using System.Threading.Tasks;
 using System.Xml;
 using Xamarin;
 using Xamarin.Utils;
+using xharness.Logging;
 
 namespace xharness
 {
 	interface ILoadAsync {
-		Task LoadAsync (Log log, bool include_locked, bool force);
+		Task LoadAsync (ILog log, bool include_locked, bool force);
 		Harness Harness { get; set; }
 	}
 
@@ -35,7 +36,7 @@ namespace xharness
 		public IEnumerable<SimDevice> AvailableDevices => available_devices;
 		public IEnumerable<SimDevicePair> AvailableDevicePairs => available_device_pairs;
 
-		public async Task LoadAsync (Log log, bool include_locked = false, bool force = false)
+		public async Task LoadAsync (ILog log, bool include_locked = false, bool force = false)
 		{
 			await semaphore.WaitAsync ();
 			if (loaded) {
@@ -133,7 +134,7 @@ namespace xharness
 		}
 
 		// Will return all devices that match the runtime + devicetype (even if a new device was created, any other devices will also be returned)
-		async Task<IEnumerable<SimDevice>> FindOrCreateDevicesAsync (Log log, string runtime, string devicetype, bool force = false)
+		async Task<IEnumerable<SimDevice>> FindOrCreateDevicesAsync (ILog log, string runtime, string devicetype, bool force = false)
 		{
 			if (runtime == null || devicetype == null)
 				return null;
@@ -163,7 +164,7 @@ namespace xharness
 			return devices;
 		}
 
-		async Task<bool> CreateDevicePair (Log log, SimDevice device, SimDevice companion_device, string runtime, string devicetype, bool create_device)
+		async Task<bool> CreateDevicePair (ILog log, SimDevice device, SimDevice companion_device, string runtime, string devicetype, bool create_device)
 		{
 			if (create_device) {
 				// watch device is already paired to some other phone. Create a new watch device
@@ -202,7 +203,7 @@ namespace xharness
 			return true;
 		}
 
-		async Task<SimDevicePair> FindOrCreateDevicePairAsync (Log log, IEnumerable<SimDevice> devices, IEnumerable<SimDevice> companion_devices)
+		async Task<SimDevicePair> FindOrCreateDevicePairAsync (ILog log, IEnumerable<SimDevice> devices, IEnumerable<SimDevice> companion_devices)
 		{
 			// Check if we already have a device pair with the specified devices
 			var pairs = AvailableDevicePairs.Where ((SimDevicePair pair) => {
@@ -237,7 +238,7 @@ namespace xharness
 			return pairs.FirstOrDefault ();
 		}
 
-		public async Task<SimDevice []> FindAsync (AppRunnerTarget target, Log log, bool create_if_needed = true, bool min_version = false)
+		public async Task<SimDevice []> FindAsync (AppRunnerTarget target, ILog log, bool create_if_needed = true, bool min_version = false)
 		{
 			SimDevice [] simulators = null;
 
@@ -313,13 +314,13 @@ namespace xharness
 			return simulators;
 		}
 
-		public SimDevice FindCompanionDevice (Log log, SimDevice device)
+		public SimDevice FindCompanionDevice (ILog log, SimDevice device)
 		{
 			var pair = available_device_pairs.Where ((v) => v.Gizmo == device.UDID).Single ();
 			return available_devices.Single ((v) => v.UDID == pair.Companion);
 		}
 
-		public IEnumerable<SimDevice> SelectDevices (AppRunnerTarget target, Log log, bool min_version)
+		public IEnumerable<SimDevice> SelectDevices (AppRunnerTarget target, ILog log, bool min_version)
 		{
 			return new SimulatorEnumerable
 			{
@@ -348,7 +349,7 @@ namespace xharness
 			public Simulators Simulators;
 			public AppRunnerTarget Target;
 			public bool MinVersion;
-			public Log Log;
+			public ILog Log;
 			object lock_obj = new object ();
 			Task<SimDevice []> findTask;
 
@@ -468,7 +469,7 @@ namespace xharness
 			}
 		}
 
-		public async Task EraseAsync (Log log)
+		public async Task EraseAsync (ILog log)
 		{
 			// here we don't care if execution fails.
 			// erase the simulator (make sure the device isn't running first)
@@ -480,12 +481,12 @@ namespace xharness
 			await Harness.ExecuteXcodeCommandAsync ("simctl", new [] { "shutdown", UDID }, log, TimeSpan.FromMinutes (1));
 		}
 
-		public async Task ShutdownAsync (Log log)
+		public async Task ShutdownAsync (ILog log)
 		{
 			await Harness.ExecuteXcodeCommandAsync ("simctl", new [] { "shutdown", UDID }, log, TimeSpan.FromMinutes (1));
 		}
 
-		public static async Task KillEverythingAsync (Log log)
+		public static async Task KillEverythingAsync (ILog log)
 		{
 			await ProcessHelper.ExecuteCommandAsync ("launchctl", new [] { "remove", "com.apple.CoreSimulator.CoreSimulatorService" }, log, TimeSpan.FromSeconds (10));
 
@@ -543,7 +544,7 @@ namespace xharness
 			}
 		}
 
-		public async Task AgreeToPromptsAsync (Log log, params string[] bundle_identifiers)
+		public async Task AgreeToPromptsAsync (ILog log, params string[] bundle_identifiers)
 		{
 			if (bundle_identifiers == null || bundle_identifiers.Length == 0) {
 				log.WriteLine ("No bundle identifiers given when requested permission editing.");
@@ -616,7 +617,7 @@ namespace xharness
 			await ProcessHelper.ExecuteCommandAsync ("sqlite3", new [] { TCC_db, ".dump" }, log, TimeSpan.FromSeconds (5));
 		}
 
-		async Task OpenSimulator (Log log)
+		async Task OpenSimulator (ILog log)
 		{
 			string simulator_app;
 
@@ -631,7 +632,7 @@ namespace xharness
 			await ProcessHelper.ExecuteCommandAsync ("open", new [] { "-a", simulator_app, "--args", "-CurrentDeviceUDID", UDID }, log, TimeSpan.FromSeconds (15));
 		}
 
-		public async Task PrepareSimulatorAsync (Log log, params string[] bundle_identifiers)
+		public async Task PrepareSimulatorAsync (ILog log, params string[] bundle_identifiers)
 		{
 			// Kill all existing processes
 			await KillEverythingAsync (log);
@@ -703,12 +704,12 @@ namespace xharness
 			}
 		}
 
-		Task ILoadAsync.LoadAsync (Log log, bool include_locked, bool force)
+		Task ILoadAsync.LoadAsync (ILog log, bool include_locked, bool force)
 		{
 			return LoadAsync (log, extra_data: false, removed_locked: !include_locked, force: force);
 		}
 
-		public async Task LoadAsync (Log log, bool extra_data = false, bool removed_locked = false, bool force = false)
+		public async Task LoadAsync (ILog log, bool extra_data = false, bool removed_locked = false, bool force = false)
 		{
 			if (loaded) {
 				if (!force)
@@ -770,7 +771,7 @@ namespace xharness
 			});
 		}
 
-		public Device FindCompanionDevice (Log log, Device device)
+		public Device FindCompanionDevice (ILog log, Device device)
 		{
 			var companion = ConnectedDevices.Where ((v) => v.DeviceIdentifier == device.CompanionIdentifier);
 			if (companion.Count () == 0)

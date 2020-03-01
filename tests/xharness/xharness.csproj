@@ -117,9 +117,15 @@
     <Compile Include="BCLTestImporter\BCLTestProjectGenerator.cs" />
     <Compile Include="BCLTestImporter\Platform.cs" />
     <Compile Include="BCLTestImporter\RegisterTypeGenerator.cs" />
+    <Compile Include="Logging\ILogs.cs" />
+    <Compile Include="Logging\Logs.cs" />
+    <Compile Include="Logging\Log.cs" />
+    <Compile Include="Logging\ILog.cs" />
+    <Compile Include="Logging\ILogFile.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="BCLTestImporter\" />
+    <Folder Include="Logging\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="xharness.js">

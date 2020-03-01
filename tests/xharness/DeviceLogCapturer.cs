@@ -5,13 +5,14 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using Xamarin.Utils;
+using xharness.Logging;
 
 namespace xharness
 {
 	public class DeviceLogCapturer
 	{
 		public Harness Harness;
-		public Log Log;
+		public ILog Log;
 		public string DeviceName;
 
 		Process process;

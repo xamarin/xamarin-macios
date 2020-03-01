@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using Xamarin.Utils;
 using xharness.BCLTestImporter;
+using xharness.Logging;
 
 namespace xharness
 {
@@ -27,7 +28,7 @@ namespace xharness
 	{
 		public HarnessAction Action { get; set; }
 		public int Verbosity { get; set; }
-		public Log HarnessLog { get; set; }
+		public ILog HarnessLog { get; set; }
 		public bool UseSystem { get; set; } // if the system XI/XM should be used, or the locally build XI/XM.
 		public HashSet<string> Labels { get; } = new HashSet<string> ();
 		public XmlResultJargon XmlJargon { get; set; } = XmlResultJargon.NUnitV3;
@@ -776,7 +777,7 @@ namespace xharness
 			}
 		}
 
-		public Task<ProcessExecutionResult> ExecuteXcodeCommandAsync (string executable, IList<string> args, Log log, TimeSpan timeout)
+		public Task<ProcessExecutionResult> ExecuteXcodeCommandAsync (string executable, IList<string> args, ILog log, TimeSpan timeout)
 		{
 			return ProcessHelper.ExecuteCommandAsync (Path.Combine (XcodeRoot, "Contents", "Developer", "usr", "bin", executable), args, log, timeout: timeout);
 		}
@@ -786,7 +787,7 @@ namespace xharness
 			await ExecuteXcodeCommandAsync ("simctl", new [] { "list" }, log, TimeSpan.FromSeconds (10));
 		}
 
-		public async Task<LogFile> SymbolicateCrashReportAsync (Logs logs, Log log, LogFile report)
+		public async Task<ILogFile> SymbolicateCrashReportAsync (ILogs logs, ILog log, ILogFile report)
 		{
 			var symbolicatecrash = Path.Combine (XcodeRoot, "Contents/SharedFrameworks/DTDeviceKitBase.framework/Versions/A/Resources/symbolicatecrash");
 			if (!File.Exists (symbolicatecrash))
@@ -810,7 +811,7 @@ namespace xharness
 			}
 		}
 
-		public async Task<HashSet<string>> CreateCrashReportsSnapshotAsync (Log log, bool simulatorOrDesktop, string device)
+		public async Task<HashSet<string>> CreateCrashReportsSnapshotAsync (ILog log, bool simulatorOrDesktop, string device)
 		{
 			var rv = new HashSet<string> ();
 
@@ -845,8 +846,8 @@ namespace xharness
 	public class CrashReportSnapshot
 	{
 		public Harness Harness { get; set; }
-		public Log Log { get; set; }
-		public Logs Logs { get; set; }
+		public ILog Log { get; set; }
+		public ILogs Logs { get; set; }
 		public string LogDirectory { get; set; }
 		public bool Device { get; set; }
 		public string DeviceName { get; set; }
@@ -872,16 +873,16 @@ namespace xharness
 				Reports = end_crashes;
 				if (end_crashes.Count > 0) {
 					Log.WriteLine ("Found {0} new crash report(s)", end_crashes.Count);
-					List<LogFile> crash_reports;
+					List<ILogFile> crash_reports;
 					if (!Device) {
-						crash_reports = new List<LogFile> (end_crashes.Count);
+						crash_reports = new List<ILogFile> (end_crashes.Count);
 						foreach (var path in end_crashes) {
 							Logs.AddFile (path, $"Crash report: {Path.GetFileName (path)}");
 						}
 					} else {
 						// Download crash reports from the device. We put them in the project directory so that they're automatically deleted on wrench
 						// (if we put them in /tmp, they'd never be deleted).
-						var downloaded_crash_reports = new List<LogFile> ();
+						var downloaded_crash_reports = new List<ILogFile> ();
 						foreach (var file in end_crashes) {
 							var name = Path.GetFileName (file);
 							var crash_report_target = Logs.Create (name, $"Crash report: {name}", timestamp: false);
