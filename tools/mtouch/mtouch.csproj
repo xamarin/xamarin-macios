@@ -7,7 +7,7 @@
     <OutputType>Exe</OutputType>
     <AssemblyName>mtouch</AssemblyName>
     <RootNamespace>mtouch</RootNamespace>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
@@ -19,6 +19,7 @@
     <WarningLevel>4</WarningLevel>
     <Deterministic>True</Deterministic>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -30,6 +31,7 @@
     <WarningLevel>4</WarningLevel>
     <Deterministic>True</Deterministic>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -418,6 +420,12 @@
     </Compile>
     <Compile Include="..\linker\ScanTypeReferenceStep.cs">
       <Link>Xamarin.Linker\ScanTypeReferenceStep.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\RemoveRejectedTypesStep.cs">
+      <Link>Xamarin.Linker\RemoveRejectedTypesStep.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\MonoTouch.Tuner\RemoveCodeBase.cs">
+      <Link>MonoTouch.Tuner\RemoveCodeBase.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>
