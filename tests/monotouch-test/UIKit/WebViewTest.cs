@@ -2,6 +2,9 @@
 
 #if !__TVOS__ && !__WATCHOS__ && !MONOMAC
 
+// in release mode xharness tests with all optimizations which removes UIWebView and make this crash
+#if DEBUG
+
 using System;
 using System.Drawing;
 #if XAMCORE_2_0
@@ -53,5 +56,7 @@ namespace MonoTouchFixtures.UIKit {
 	}
 
 }
+
+#endif // DEBUG
 
 #endif // !__TVOS__ && !__WATCHOS__

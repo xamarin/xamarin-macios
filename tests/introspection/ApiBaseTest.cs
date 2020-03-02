@@ -184,6 +184,24 @@ namespace Introspection {
 			return property != null && SkipDueToAttribute (property);
 		}
 
+		protected bool SkipDueToRejectedTypes (Type type)
+		{
+			switch (type.FullName) {
+			case "UIKit.DeprecatedWebView+_DeprecatedWebViewDelegate":
+			case "UIKit.DeprecatedWebView+DeprecatedWebViewAppearance":
+				return true;
+			case "UIKit.IDeprecatedWebViewDelegate":
+			case "UIKit.DeprecatedWebView":
+			case "UIKit.DeprecatedWebViewDelegate":
+			case "UIKit.DeprecatedWebViewDelegate_Extensions":
+			case "UIKit.DeprecatedWebViewDelegateWrapper":
+			case "UIKit.DeprecatedWebViewNavigationType":
+				return true;
+			default:
+				return false;
+			}
+		}
+
 		/// <summary>
 		/// Gets the assembly on which the test fixture will reflect the NSObject-derived types.
 		/// The default implementation returns the assembly where NSObject is defined, e.g.

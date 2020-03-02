@@ -34,6 +34,7 @@ namespace MonoTouch.Tuner {
 		internal PInvokeWrapperGenerator MarshalNativeExceptionsState { get; set; }
 		internal RuntimeOptions RuntimeOptions { get; set; }
 		public List<string> WarnOnTypeRef { get; set; }
+		public bool RemoveRejectedTypes { get; set; }
 
 		public MonoTouchLinkContext LinkContext { get; set; }
 		public Target Target { get; set; }
@@ -123,9 +124,13 @@ namespace MonoTouch.Tuner {
 		static SubStepDispatcher GetPostLinkOptimizations (LinkerOptions options)
 		{
 			SubStepDispatcher sub = new SubStepDispatcher ();
-			sub.Add (new MetadataReducerSubStep ());
-			if (options.Application.Optimizations.SealAndDevirtualize == true)
-				sub.Add (new SealerSubStep ());
+			if (options.Application.Optimizations.ForceRejectedTypesRemoval == true)
+				sub.Add (new RemoveRejectedTypesStep ());
+			if (!options.DebugBuild) {
+				sub.Add (new MetadataReducerSubStep ());
+				if (options.Application.Optimizations.SealAndDevirtualize == true)
+					sub.Add (new SealerSubStep ());
+			}
 			return sub;
 		}
 
@@ -179,14 +184,15 @@ namespace MonoTouch.Tuner {
 				pipeline.Append (new MonoTouchSweepStep (options));
 				pipeline.Append (new CleanStep ());
 
-				if (!options.DebugBuild)
-					pipeline.Append (GetPostLinkOptimizations (options));
+				pipeline.AppendStep (GetPostLinkOptimizations (options));
 
 				pipeline.Append (new FixModuleFlags ());
 			} else {
 				SubStepDispatcher sub = new SubStepDispatcher () {
 					new RemoveUserResourcesSubStep (options),
 				};
+				if (options.Application.Optimizations.ForceRejectedTypesRemoval == true)
+					sub.Add (new RemoveRejectedTypesStep ());
 				if (remove_incompatible_bitcode != null)
 					sub.Add (remove_incompatible_bitcode);
 				pipeline.Append (sub);
