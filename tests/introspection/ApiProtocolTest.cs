@@ -172,6 +172,9 @@ namespace Introspection {
 				case "NSFileProviderRequest":
 				case "NSFileProviderSearchQuery":
 					return true;
+				// Xcode 11.4, not documented
+				case "NSHttpCookie":
+					return true;
 				}
 				break;
 			case "NSSecureCoding":
@@ -229,6 +232,9 @@ namespace Introspection {
 				case "NSFileProviderItemVersion":
 				case "NSFileProviderRequest":
 				case "NSFileProviderSearchQuery":
+					return true;
+				// Xcode 11.4, not documented
+				case "NSHttpCookie":
 					return true;
 				}
 				break;

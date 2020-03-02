@@ -39,14 +39,19 @@ namespace Xamarin.MacDev.Tasks
 			}
 		}
 
+		[Required]
+		public string TargetFrameworkIdentifier { get; set; }
+
 		#endregion
 
 		string DevicePlatformBinDir {
 			get { return Path.Combine (SdkDevPath, "usr", "bin"); }
 		}
 
-		protected abstract string OperatingSystem {
-			get;
+		protected virtual string OperatingSystem {
+			get {
+				return PlatformFrameworkHelper.GetOperatingSystem (TargetFrameworkIdentifier);
+			}
 		}
 
 		protected override string ToolName {
