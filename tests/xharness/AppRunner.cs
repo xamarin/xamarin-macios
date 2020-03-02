@@ -369,7 +369,7 @@ namespace xharness
 					// at this point, we have the test results, but we want to be able to have attachments in vsts, so if the format is
 					// the right one (NUnitV3) add the nodes. ATM only TouchUnit uses V3.
 					var testRunName = $"{appName} {Variation}";
-					if (xmlType == XmlResultParser.Jargon.NUnitV3) {
+					if (xmlType == XmlResultJargon.NUnitV3) {
 						var logFiles = new List<string> ();
 						// add our logs AND the logs of the previous task, which is the build task
 						logFiles.AddRange (Directory.GetFiles (Logs.Directory));
@@ -867,7 +867,7 @@ namespace xharness
 						if (crash_reason != null) {
 							// if in CI, do write an xml error that will be picked as a failure by VSTS
 							if (Harness.InCI)
-								XmlResultParser.GenerateFailure (Logs, "crash", appName, Variation, "AppCrash", $"App crashed {crash_reason}.", crash_reports.Log.FullPath, XmlResultParser.Jargon.NUnitV3);
+								XmlResultParser.GenerateFailure (Logs, "crash", appName, Variation, "AppCrash", $"App crashed {crash_reason}.", crash_reports.Log.FullPath, Harness.XmlJargon);
 							break;
 						}
 					} catch (Exception e) {
@@ -881,19 +881,30 @@ namespace xharness
 						FailureMessage = $"Killed by the OS ({crash_reason})";
 					}
 					if (Harness.InCI)
-						XmlResultParser.GenerateFailure (Logs, "crash", appName, Variation, "AppCrash", $"App crashed: {FailureMessage}", crash_reports.Log.FullPath, XmlResultParser.Jargon.NUnitV3);
+						XmlResultParser.GenerateFailure (Logs, "crash", appName, Variation, "AppCrash", $"App crashed: {FailureMessage}", crash_reports.Log.FullPath, Harness.XmlJargon);
 				} else if (launch_failure) {
 					// same as with a crash
 					FailureMessage = $"Launch failure";
 					if (Harness.InCI)
-						XmlResultParser.GenerateFailure (Logs, "launch", appName, Variation, $"AppLaunch on {device_name}", $"{FailureMessage} on {device_name}", main_log.FullPath, XmlResultParser.Jargon.NUnitV3);
-				} else if (crashed && (!File.Exists (listener_log.FullPath) || string.IsNullOrEmpty (crash_reason)) && Harness.InCI) {
+						XmlResultParser.GenerateFailure (Logs, "launch", appName, Variation, $"AppLaunch on {device_name}", $"{FailureMessage} on {device_name}", main_log.FullPath, XmlResultJargon.NUnitV3);
+				} else if (!isSimulator && crashed && string.IsNullOrEmpty (crash_reason) && Harness.InCI) {
 					// this happens more that what we would like on devices, the main reason most of the time is that we have had netwoking problems and the
 					// tcp connection could not be stablished. We are going to report it as an error since we have not parsed the logs, evne when the app might have
-					// not crashed.
-					XmlResultParser.GenerateFailure (Logs, "tcp-connection", appName, Variation, $"TcpConnection on {device_name}", $"Device {device_name} could not reach the host over tcp.", main_log.FullPath, XmlResultParser.Jargon.NUnitV3);
+					// not crashed. We need to check the main_log to see if we do have an tcp issue or not
+					var isTcp = false;
+					using (var reader = new StreamReader (main_log.FullPath)) {
+						string line;
+						while ((line = reader.ReadLine ()) != null) {
+							if (line.Contains ("Couldn't establish a TCP connection with any of the hostnames")) {
+								isTcp = true;
+								break;
+							}
+						}
+					}
+					if (isTcp)
+						XmlResultParser.GenerateFailure (Logs, "tcp-connection", appName, Variation, $"TcpConnection on {device_name}", $"Device {device_name} could not reach the host over tcp.", main_log.FullPath, Harness.XmlJargon);
 				} else if (timed_out && Harness.InCI) {
-					XmlResultParser.GenerateFailure (Logs, "timeout", appName, Variation, "AppTimeout", $"Test run timed out after {timeout.TotalMinutes} minute(s).", main_log.FullPath, XmlResultParser.Jargon.NUnitV3);
+					XmlResultParser.GenerateFailure (Logs, "timeout", appName, Variation, "AppTimeout", $"Test run timed out after {timeout.TotalMinutes} minute(s).", main_log.FullPath, Harness.XmlJargon);
 				}
 			}
 

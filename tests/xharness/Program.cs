@@ -72,6 +72,15 @@ namespace xharness
 				{ "periodic-command-arguments=", "Arguments to the command to execute periodically.", (v) => harness.PeriodicCommandArguments = v },
 				{ "periodic-interval=", "An interval (in minutes) between every attempt to execute the periodic command.", (v) => harness.PeriodicCommandInterval = TimeSpan.FromMinutes (double.Parse (v)) },
 				{ "include-system-permission-tests:", "If tests that require system permissions (which could cause the OS to launch dialogs that hangs the test) should be executed or not. Default is to include such tests.", (v) => harness.IncludeSystemPermissionTests = ParseBool (v, "include-system-permission-tests") },
+				{ "xml-jargon:", "The xml format to be used for test results. Values can be nunitv2, nunitv3, xunit.", (v) =>
+					{
+						if (Enum.TryParse<XmlResultJargon> (v, out var jargon))
+							harness.XmlJargon = jargon;
+						else
+							harness.XmlJargon = XmlResultJargon.Missing;
+					}
+				},
+
 			};
 
 			showHelp = () => {
@@ -85,6 +94,10 @@ namespace xharness
 			if (harness.Action == HarnessAction.None)
 				showHelp ();
 
+			if (harness.XmlJargon == XmlResultJargon.Missing) {
+				Console.WriteLine ("Unknown xml-jargon value provided. Values can be nunitv2, nunitv3, xunit");
+				return 1;
+			}
 			// XS sets this, which breaks pretty much everything if it doesn't match what was passed to --sdkroot.
 			Environment.SetEnvironmentVariable ("XCODE_DEVELOPER_DIR_PATH", null);
 
