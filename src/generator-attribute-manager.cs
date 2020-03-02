@@ -199,10 +199,11 @@ public class AttributeManager
 		return rv;
 	}
 
-	static Dictionary<System.Type, Type> ikvm_type_lookup = new Dictionary<System.Type, Type> ();
 	// This method gets the IKVM.Reflection.Type for a System.Type.
 	Type ConvertType (System.Type type, ICustomAttributeProvider provider)
 	{
+		var ikvm_type_lookup = BindingTouch.IKVMTypeLookup;
+
 		if (!ikvm_type_lookup.TryGetValue (type, out var rv)) {
 			// Brute force: look everywhere.
 			// Due to how types move around between assemblies in .NET 5 it gets complicated

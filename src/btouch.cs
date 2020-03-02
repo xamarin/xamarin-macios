@@ -57,6 +57,11 @@ public class BindingTouch {
 	public Frameworks Frameworks;
 	public AttributeManager AttributeManager;
 
+	readonly Dictionary<System.Type, Type> ikvm_type_lookup = new Dictionary<System.Type, Type> ();
+	internal Dictionary<System.Type, Type> IKVMTypeLookup {
+		get { return ikvm_type_lookup;  }
+	}
+
 	public TargetFramework TargetFramework {
 		get { return target_framework.Value; }
 	}
