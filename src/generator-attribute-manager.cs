@@ -76,8 +76,12 @@ public class AttributeManager
 			return typeof (Foundation.ModelAttribute);
 		case "Foundation.NotImplementedAttribute":
 			return typeof (Foundation.NotImplementedAttribute);
+		case "Foundation.PreserveAttribute":
+			return typeof (Foundation.PreserveAttribute);
 		case "Foundation.ProtocolAttribute":
 			return typeof (Foundation.ProtocolAttribute);
+		case "Foundation.RegisterAttribute":
+			return typeof (Foundation.RegisterAttribute);
 		case "IgnoredInDelegateAttribute":
 			return typeof (IgnoredInDelegateAttribute);
 		case "InternalAttribute":
@@ -102,6 +106,10 @@ public class AttributeManager
 			return typeof (ObjCRuntime.ArgumentSemantic);
 		case "ObjCRuntime.BindAsAttribute":
 			return typeof (ObjCRuntime.BindAsAttribute);
+		case "ObjCRuntime.BindingImplAttribute":
+			return typeof (ObjCRuntime.BindingImplAttribute);
+		case "ObjCRuntime.BindingImplOptions":
+			return typeof (ObjCRuntime.BindingImplOptions);
 		case "ObjCRuntime.DeprecatedAttribute":
 			return typeof (ObjCRuntime.DeprecatedAttribute);
 		case "ObjCRuntime.IntroducedAttribute":
