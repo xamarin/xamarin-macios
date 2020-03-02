@@ -57,6 +57,11 @@ public class BindingTouch {
 	public Frameworks Frameworks;
 	public AttributeManager AttributeManager;
 
+	readonly Dictionary<System.Type, Type> ikvm_type_lookup = new Dictionary<System.Type, Type> ();
+	internal Dictionary<System.Type, Type> IKVMTypeLookup {
+		get { return ikvm_type_lookup;  }
+	}
+
 	public TargetFramework TargetFramework {
 		get { return target_framework.Value; }
 	}
@@ -463,10 +468,10 @@ public class BindingTouch {
 			Frameworks = new Frameworks (CurrentPlatform);
 
 			Assembly corlib_assembly = universe.LoadFile (LocateAssembly ("mscorlib"));
-			Assembly platform_assembly = baselib;
-			Assembly system_assembly = universe.LoadFile (LocateAssembly ("System"));
-			Assembly binding_assembly = universe.LoadFile (GetAttributeLibraryPath ());
-			TypeManager.Initialize (this, api, corlib_assembly, platform_assembly, system_assembly, binding_assembly);
+			// Explicitly load our attribute library so that IKVM doesn't try (and fail) to find it.
+			universe.LoadFile (GetAttributeLibraryPath ());
+
+			TypeManager.Initialize (this, api, corlib_assembly, baselib);
 
 			foreach (var linkWith in AttributeManager.GetCustomAttributes<LinkWithAttribute> (api)) {
 				if (!linkwith.Contains (linkWith.LibraryName)) {

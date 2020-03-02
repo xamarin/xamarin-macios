@@ -893,4 +893,11 @@
 		<comment>
 		</comment>
 	</data>
+
+	<data name="BI1119" xml:space="preserve">
+		<value>Internal error: found the same type ({0}) in multiple assemblies ({1} and {2}). Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
+		</value>
+		<comment>
+		</comment>
+	</data>
 </root>
