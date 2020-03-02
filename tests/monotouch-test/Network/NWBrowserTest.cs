@@ -94,6 +94,7 @@ namespace MonoTouchFixtures.Network {
 			bool firstRun = true;
 			bool eventsDone = false;
 			bool listeningDone = false;
+			Exception ex = null;
 			var changesEvent = new AutoResetEvent (false);
 			var browserReady = new AutoResetEvent (false);
 			var finalEvent = new AutoResetEvent (false);
@@ -108,16 +109,21 @@ namespace MonoTouchFixtures.Network {
 				browser.SetChangesHandler ((oldResult, newResult) => {
 					// first time, listener appears, so we do not have an old result, second time
 					// listener goes, so we do not have a new result
-					if (firstRun) {
-						Assert.IsNull (oldResult, "oldResult first run.");
-						Assert.IsNotNull (newResult, "newResult first run");
-						firstRun = false;
-					} else {
-						Assert.IsNotNull (oldResult, "oldResult first run.");
-						Assert.IsNull (newResult, "newResult first run");
+					try {
+						if (firstRun) {
+							Assert.IsNull (oldResult, "oldResult first run.");
+							Assert.IsNotNull (newResult, "newResult first run");
+							firstRun = false;
+						} else {
+							Assert.IsNotNull (oldResult, "oldResult first run.");
+							Assert.IsNull (newResult, "newResult first run");
+						}
+					} catch (Exception e) {
+						ex = e;
+					} finally {
+						changesEvent.Set ();
+						eventsDone = true;
 					}
-					changesEvent.Set ();
-					eventsDone = true;
 
 				});
 				browser.Start ();
@@ -152,6 +158,7 @@ namespace MonoTouchFixtures.Network {
 			finalEvent.WaitOne (30000);
 			Assert.IsTrue (eventsDone);
 			Assert.IsTrue (listeningDone);
+			Assert.IsNull (ex, "Exception");
 			browser.Cancel ();
 		}
 	}
