@@ -7,6 +7,7 @@ using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev.Tasks;
 using Xamarin.MacDev;
+using Xamarin.Utils;
 
 namespace Xamarin.iOS.Tasks
 {
@@ -76,7 +77,7 @@ namespace Xamarin.iOS.Tasks
 
 #endregion Outputs
 
-		public PlatformFramework Framework {
+		public ApplePlatform Framework {
 			get { return PlatformFrameworkHelper.GetFramework (TargetFrameworkIdentifier); }
 		}
 
@@ -101,13 +102,13 @@ namespace Xamarin.iOS.Tasks
 
 			if (EnsureAppleSdkRoot ()) {
 				switch (Framework) {
-				case PlatformFramework.iOS:
+				case ApplePlatform.iOS:
 					EnsureiOSSdkPath ();
 					break;
-				case PlatformFramework.TVOS:
+				case ApplePlatform.TVOS:
 					EnsureTVOSSdkPath ();
 					break;
-				case PlatformFramework.WatchOS:
+				case ApplePlatform.WatchOS:
 					EnsureWatchSdkPath ();
 					break;
 				default:

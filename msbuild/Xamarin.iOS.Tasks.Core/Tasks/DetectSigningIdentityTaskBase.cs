@@ -3,6 +3,7 @@ using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev;
 using Xamarin.MacDev.Tasks;
+using Xamarin.Utils;
 
 namespace Xamarin.iOS.Tasks
 {
@@ -17,17 +18,17 @@ namespace Xamarin.iOS.Tasks
 		protected override string[] DirectDistributionPrefixes { get { return directDistributionPrefixes; } }
 		protected override string[] AppStoreDistributionPrefixes { get { return IPhoneCertificate.DistributionPrefixes; } }
 		protected override string DeveloperRoot { get { return IPhoneSdks.GetSdk (TargetFrameworkIdentifier).DeveloperRoot; } }
-		protected override PlatformFramework Framework {
+		protected override ApplePlatform Framework {
 			get { return PlatformFrameworkHelper.GetFramework (TargetFrameworkIdentifier); }
 		}
 		protected override string PlatformName {
 			get {
 				switch (Framework) {
-				case PlatformFramework.iOS:
+				case ApplePlatform.iOS:
 					return "iOS";
-				case PlatformFramework.WatchOS:
+				case ApplePlatform.WatchOS:
 					return "watchOS";
-				case PlatformFramework.TVOS:
+				case ApplePlatform.TVOS:
 					return "tvOS";
 				default:
 					throw new System.InvalidOperationException (string.Format ("Invalid framework: {0}", Framework));
