@@ -7,6 +7,8 @@ Write-Host $PSScriptRoot
 Set-Location -Path $PSScriptRoot
 Write-Host $pwd.Path
 
+$target_url = Join-Path $Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI "$Env:SYSTEM_TEAMPROJECT/_build/index?buildId=$Env:BUILD_BUILDID&view=ms.vss-test-web.test-result-details"
+
 ## don't need context here b/c we are combining all device tests into one post?
 #$json_payload = @"{"token": $TOKEN, "hash":$BUILD_REVISION "state": $GH_STATE, "target-url": $TARGET_URL, "description": $DESCRIPTION, "context": "VSTS: device tests $DEVICE_TYPE"}"
 
@@ -16,7 +18,7 @@ $json_payload = @"
 {
     "hash" : $Env:BUILD_REVISION,
     "state" : $Env:GH_STATE,
-    "target-url" : $Env:TARGET_URL,
+    "target-url" : $target_url,
     "description" : "description placeholder", 
     "context" : "VSTS: device tests",
     "vsts-for-debugging" : $Env:VSTS_BUILD_URL
