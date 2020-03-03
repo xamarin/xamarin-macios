@@ -2,9 +2,6 @@
 
 #if !__TVOS__ && !__WATCHOS__ && !MONOMAC
 
-// in release mode xharness tests with all optimizations which removes UIWebView and make this crash
-#if DEBUG
-
 using System;
 using System.Drawing;
 #if XAMCORE_2_0
@@ -31,6 +28,13 @@ namespace MonoTouchFixtures.UIKit {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class WebViewTest {
+
+		[TestFixtureSetUp]
+		public void Setup ()
+		{
+			if (Type.GetType ("UIKit.DeprecatedWebView, Xamarin.iOS") != null)
+				Assert.Ignore ("All type references to UIWebView were removed (optimized).");
+		}
 		
 		[Test]
 		public void InitWithFrame ()
@@ -56,7 +60,5 @@ namespace MonoTouchFixtures.UIKit {
 	}
 
 }
-
-#endif // DEBUG
 
 #endif // !__TVOS__ && !__WATCHOS__
