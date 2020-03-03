@@ -39,6 +39,7 @@ namespace xharness
 		public Harness Harness;
 		public string ProjectFile;
 		public string AppPath;
+		public string Variation;
 
 		public TestExecutingResult Result { get; private set; }
 		public string FailureMessage { get; private set; }
@@ -360,8 +361,16 @@ namespace xharness
 				try {
 					var newFilename = XmlResultParser.GetXmlFilePath (path, xmlType);
 
-					// rename the path to the correct value
-					File.Move (path, newFilename);
+					// at this point, we have the test results, but we want to be able to have attachments in vsts, so if the format is
+					// the right one (NUnitV3) add the nodes. ATM only TouchUnit uses V3.
+					var testRunName = $"{appName} {Variation}";
+					if (xmlType == XmlResultParser.Jargon.NUnitV3) {
+						// add the attachments and write in the new filename
+						XmlResultParser.UpdateMissingData (path, newFilename, testRunName, Directory.GetFiles (Logs.Directory));
+					} else {
+						// rename the path to the correct value
+						File.Move (path, newFilename);
+					}
 					path = newFilename;
 
 					// write the human readable results in a tmp file, which we later use to step on the logs
@@ -371,7 +380,7 @@ namespace xharness
 					File.Delete (tmpFile);
 
 					// we do not longer need the tmp file
-					Logs.AddFile (path, "Test xml");
+					Logs.AddFile (path, Log.XML_LOG);
 					return parseResult;
 
 				} catch (Exception e) {
@@ -495,6 +504,7 @@ namespace xharness
 			if (useXmlOutput) {
 				args.Add ("-setenv=NUNIT_ENABLE_XML_OUTPUT=true");
 				args.Add ("-setenv=NUNIT_ENABLE_XML_MODE=wrapped");
+				args.Add ("-setenv=NUNIT_XML_VERSION=nunitv3");
 			}
 
 			if (Harness.InCI) {
@@ -529,7 +539,7 @@ namespace xharness
 			args.Add ($"-argument=-app-arg:-transport:{transport}");
 			args.Add ($"-setenv=NUNIT_TRANSPORT={transport}");
 
-			listener_log = Logs.Create ($"test-{mode}-{Harness.Timestamp}.log", "Test log", timestamp: !useXmlOutput);
+			listener_log = Logs.Create ($"test-{mode}-{Harness.Timestamp}.log", Log.TEST_LOG, timestamp: !useXmlOutput);
 
 			SimpleListener listener;
 			switch (transport) {
@@ -630,7 +640,7 @@ namespace xharness
 					var log = new CaptureLog (Logs, sim.SystemLog, entire_file: Harness.Action != HarnessAction.Jenkins)
 					{
 						Path = Path.Combine (LogDirectory, sim.Name + ".log"),
-						Description = isCompanion ? "System log (companion)" : "System log",
+						Description = isCompanion ? Log.COMPANION_SYSTEM_LOG : Log.SYSTEM_LOG,
 					};
 					log.StartCapture ();
 					Logs.Add (log);

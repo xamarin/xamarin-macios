@@ -17,6 +17,9 @@ namespace Xamarin.MMP.Tests
 			else if (Environment.OSVersion.Version.Major >= 19 /* macOS 10.15+ */)
 				Assert.Ignore ("Xcode 9.4 does not work on Catalina or later."); // This can check can be removed after switching to a newer Xcode than 9.4.
 
+			if (PlatformHelpers.CheckSystemVersion (10, 15))
+				Assert.Ignore ("This test requires Xcode 9.4, which doesn't work on macOS 10.15+");
+
 			MMPTests.RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir);
 				var output = TI.TestUnifiedExecutable (test, environment: new string[] { "MD_APPLE_SDK_ROOT", Path.GetDirectoryName (Path.GetDirectoryName (oldXcode)) });

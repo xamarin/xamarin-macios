@@ -17,13 +17,8 @@ namespace Xamarin.iOS.Tasks {
 		[Test]
 		public void BasicTest () 
 		{
-			if (Platform == "iPhoneSimulator") {
-				// Note: we expect an error due to Metal not being supported on iPhoneSimulator
-				// Note 2: msbuild now is aware that Metal is device-only and throws an error thus this test becomes device-only for time being
-				//this.BuildExtension ("MyMetalGame", "MyKeyboardExtension", Platform, 1);
-				return;
-			}
-
+			if (Platform == "iPhoneSimulator" && Environment.OSVersion.Version.Major < 19) // Environment.OSVersion = 19.* in macOS Catalina.
+				Assert.Ignore ("Metal support is not available in the simulator until macOS 10.15.");
 			this.BuildExtension ("MyMetalGame", "MyKeyboardExtension", Platform, "Debug");
 			this.TestStoryboardC (AppBundlePath);
 		}

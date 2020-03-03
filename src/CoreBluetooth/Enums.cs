@@ -117,6 +117,8 @@ namespace CoreBluetooth {
 		UnknownDevice,
 		[iOS (12,0)][TV (12,0)][Mac (10,14)][Watch (5,0)]
 		OperationNotSupported,
+		PeerRemovedPairingInformation,
+		EncryptionTimedOut,
 	}
 
 	[Watch (4,0)]
