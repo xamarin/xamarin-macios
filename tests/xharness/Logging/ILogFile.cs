@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace xharness.Logging {
+namespace Xharness.Logging {
 	public interface ILogFile : ILog, IDisposable {
 		string Path { get; }
 	}

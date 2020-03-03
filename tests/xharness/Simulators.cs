@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 using System.Xml;
 using Xamarin;
 using Xamarin.Utils;
-using xharness.Logging;
+using Xharness.Logging;
 
-namespace xharness
+namespace Xharness
 {
 	interface ILoadAsync {
 		Task LoadAsync (ILog log, bool include_locked, bool force);

@@ -1,13 +1,13 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading;
 using Xamarin.Utils;
-using xharness.Logging;
+using Xharness.Logging;
 
-namespace xharness
+namespace Xharness
 {
 	public class DeviceLogCapturer
 	{

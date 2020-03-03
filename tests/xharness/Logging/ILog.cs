@@ -2,18 +2,18 @@
 using System.IO;
 using System.Text;
 
-namespace xharness.Logging {
+namespace Xharness.Logging {
 
 	// defines common log types
 	public enum LogType {
-		XML_LOG,
-		NUNIT_RESULT,
-		SYSTEM_LOG,
-		COMPANION_SYSTEM_LOG,
-		BUILD_LOG,
-		TEST_LOG,
-		EXTENSION_TEST_LOG,
-		EXECUTION_LOG,
+		XmlLog,
+		NUnitResult,
+		SystemLog,
+		CompanionSystemLog,
+		BuildLog,
+		TestLog,
+		ExtensionTestLog,
+		ExecutionLog,
 	}
 
 	public static class LogTypeExtensions {
@@ -21,24 +21,24 @@ namespace xharness.Logging {
 		public static string ToString (this LogType type)
 		{
 			switch (type) {
-			case LogType.XML_LOG:
+			case LogType.XmlLog:
 				return "XML log";
-			case LogType.NUNIT_RESULT:
+			case LogType.NUnitResult:
 				return "NUnit results";
-			case LogType.SYSTEM_LOG:
+			case LogType.SystemLog:
 				return "System log";
-			case LogType.COMPANION_SYSTEM_LOG:
+			case LogType.CompanionSystemLog:
 				return "System log (companion)";
-			case LogType.BUILD_LOG:
+			case LogType.BuildLog:
 				return "Build log";
-			case LogType.TEST_LOG:
+			case LogType.TestLog:
 				return "Test log";
-			case LogType.EXTENSION_TEST_LOG:
+			case LogType.ExtensionTestLog:
 				return "Extension test log";
-			case LogType.EXECUTION_LOG:
+			case LogType.ExecutionLog:
 				return "Execution log";
 			default:
-				throw new ArgumentException ($"Unknoe tyme for {nameof (type)}");
+				throw new ArgumentException ($"Unknown type for {nameof (type)}");
 			}
 		}
 	}

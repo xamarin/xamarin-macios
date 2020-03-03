@@ -8,9 +8,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Utils;
-using xharness.Logging;
+using Xharness.Logging;
 
-namespace xharness
+namespace Xharness
 {
 	public class ProcessExecutionResult
 	{

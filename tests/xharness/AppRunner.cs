@@ -12,9 +12,9 @@ using System.Xml;
 using System.Xml.Xsl;
 using Xamarin;
 using Xamarin.Utils;
-using xharness.Logging;
+using Xharness.Logging;
 
-namespace xharness
+namespace Xharness
 {
 	public enum AppRunnerTarget
 	{
@@ -394,7 +394,7 @@ namespace xharness
 					File.Delete (tmpFile);
 
 					// we do not longer need the tmp file
-					Logs.AddFile (path, Log.XML_LOG);
+					Logs.AddFile (path, LogType.XmlLog.ToString ());
 					return parseResult;
 
 				} catch (Exception e) {
@@ -550,7 +550,7 @@ namespace xharness
 			args.Add ($"-argument=-app-arg:-transport:{transport}");
 			args.Add ($"-setenv=NUNIT_TRANSPORT={transport}");
 
-			listener_log = Logs.Create ($"test-{mode}-{Harness.Timestamp}.log", Log.TEST_LOG, timestamp: !useXmlOutput);
+			listener_log = Logs.Create ($"test-{mode}-{Harness.Timestamp}.log", LogType.TestLog.ToString (), timestamp: !useXmlOutput);
 
 			SimpleListener listener;
 			switch (transport) {
@@ -651,7 +651,7 @@ namespace xharness
 					var log = new CaptureLog (Logs, sim.SystemLog, entire_file: Harness.Action != HarnessAction.Jenkins)
 					{
 						Path = Path.Combine (LogDirectory, sim.Name + ".log"),
-						Description = isCompanion ? Log.COMPANION_SYSTEM_LOG : Log.SYSTEM_LOG,
+						Description = isCompanion ? LogType.CompanionSystemLog.ToString () : LogType.SystemLog.ToString (),
 					};
 					log.StartCapture ();
 					Logs.Add (log);

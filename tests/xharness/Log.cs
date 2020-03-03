@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.IO;
 using System.Text;
-using xharness.Logging;
+using Xharness.Logging;
 
-namespace xharness
+namespace Xharness
 {
 
 	public class LogFile : Log, ILogFile
