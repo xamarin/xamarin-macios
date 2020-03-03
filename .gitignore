@@ -3,6 +3,7 @@ Make.config.local
 configure.inc
 _ios-build
 _mac-build
+_build
 *.userprefs
 *.user
 *.suo
