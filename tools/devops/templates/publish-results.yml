@@ -47,6 +47,18 @@ steps:
 #     targetType: #filePath
 #     script: @json_payload = @"{"token": $TOKEN, "target": $TARGET_URL}"
 
+###
+### Publish merged TestSummary file
+###
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Artifact: Aggregate TestSummary'
+  inputs:
+#    targetPath: 'xamarin-macios/tests/TestSummary.md'
+    targetPath: ./TestSummary.md
+    artifactName: TestSummary
+    continueOnError: true
+
+
 # pwsh for PowerShell Core
 # powershell is for Win PowerShell
 - pwsh: ./tools/devops/templates/publish_results.ps1

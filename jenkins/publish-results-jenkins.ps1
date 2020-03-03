@@ -20,8 +20,6 @@ $json_payload = @"
 
 $url = "https://api.github.com/repos/xamarin/xamarin-macios/statuses/$BUILD_REVISION"
 
-Write-Host $pwd.Path
-Write-Host Get-Location
 Write-Host @{'Authorization' = ("token {0}" -f $GITHUB_TOKEN)}
 Write-Host $json_payload
 
