@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
 
 using NUnit.Framework;
+using Xamarin.Tests;
 
 namespace Xamarin.iOS.Tasks
 {
@@ -18,6 +19,10 @@ namespace Xamarin.iOS.Tasks
 		public void BuildTest ()
 		{
 			BuildProject ("MyReleaseBuild", Platform, "Release");
+
+			var args = new List<string> { "-r", "UIWebView", AppBundlePath };
+			ExecutionHelper.Execute ("grep", args, out var output);
+			Assert.That (output.ToString (), Is.Empty, "UIWebView");
 		}
 
 		[Ignore ("requires msbuild instead of xbuild")]

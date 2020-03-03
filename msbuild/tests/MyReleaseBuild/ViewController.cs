@@ -39,7 +39,25 @@ namespace MyReleaseBuild
 		public override void ViewDidLoad ()
 		{
 			base.ViewDidLoad ();
-			// Perform any additional setup after loading the view, typically from a nib.
+			try {
+				// always false - not likely to be optimized away by compilers
+				if (DateTime.UtcNow.Ticks < 0)
+					Add (new UIWebView ());
+
+				// look for non-existing type - it should be there to replace UIWebView
+				var t = Type.GetType ("UIKit.DeprecatedWebView, Xamarin.iOS");
+				if (t == null) {
+					View.BackgroundColor = UIColor.Red;
+					Console.WriteLine ("FAIL");
+				} else {
+					View.BackgroundColor = UIColor.Green;
+					Console.WriteLine ("OK");
+				}
+			} catch (NotSupportedException e) {
+				// linked away (code replaced by the linker)
+				View.BackgroundColor = UIColor.Orange;
+				Console.WriteLine ($"FAIL {e}");
+			}
 		}
 
 		public override void DidReceiveMemoryWarning ()

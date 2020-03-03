@@ -1,27 +1,128 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.IO;
+using System.Text;
+using Xharness.Logging;
 
-namespace Xharness.Logging {
+namespace Xharness
+{
+
+	public class LogFile : Log, ILogFile
+	{
+		object lock_obj = new object ();
+		public string Path { get; private set; }
+		FileStream writer;
+		bool disposed;
+
+		public LogFile (ILogs logs, string description, string path, bool append = true)
+			: base (logs, description)
+		{
+			Path = path;
+			if (!append)
+				File.WriteAllText (path, string.Empty);
+		}
+
+		public override void Write (byte [] buffer, int offset, int count)
+		{
+			try {
+				// We don't want to open the file every time someone writes to the log, so we keep it as an instance
+				// variable until we're disposed. Due to the async nature of how we run tests, writes may still
+				// happen after we're disposed, in which case we create a temporary stream we close after writing
+				lock (lock_obj) {
+					var fs = writer;
+					if (fs == null) {
+						fs = new FileStream (Path, FileMode.Append, FileAccess.Write, FileShare.Read);
+					}
+					fs.Write (buffer, offset, count);
+					if (disposed) {
+						fs.Dispose ();
+					} else {
+						writer = fs;
+					}
+				}
+			} catch (Exception e) {
+				Console.WriteLine ($"Failed to write to the file {Path}: {e.Message}.");
+				return;
+			}
+		}
+
+		public override void Flush()
+		{
+			base.Flush();
+
+			if (writer != null && !disposed)
+				writer.Flush ();
+		}
+
+		public override string FullPath {
+			get {
+				return Path;
+			}
+		}
+
+		public override StreamReader GetReader ()
+		{
+			return new StreamReader (new FileStream (Path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
+		}
+
+		protected override void Dispose (bool disposing)
+		{
+			base.Dispose (disposing);
+
+			if (writer != null) {
+				writer.Dispose ();
+				writer = null;
+			}
+
+			disposed = true;
+		}
+
+	}
+
+	// A log that writes to standard output
+	public class ConsoleLog : Log
+	{
+		StringBuilder captured = new StringBuilder ();
+
+		public ConsoleLog ()
+			: base (null)
+		{
+		}
+
+		public override void WriteImpl (string value)
+		{
+			captured.Append (value);
+			Console.Write (value);
+		}
+
+		public override string FullPath {
+			get {
+				throw new NotSupportedException ();
+			}
+		}
+
+		public override StreamReader GetReader ()
+		{
+			var str = new MemoryStream (System.Text.Encoding.UTF8.GetBytes (captured.ToString ()));
+			return new StreamReader (str, System.Text.Encoding.UTF8, false);
+		}
+	}
 
 	// A log that captures data written to a separate file between two moments in time
 	// (between StartCapture and StopCapture).
 	public class CaptureLog : Log
 	{
 		public string CapturePath { get; private set; }
-		public string Path { get; private set; }
+		public string Path { get; set; }
 
 		long startPosition;
 		long endPosition;
 		bool entire_file;
-		bool started;
 
-		public CaptureLog (ILogs logs, string path, string capture_path, bool entire_file = false)
+		public CaptureLog (ILogs logs, string capture_path, bool entire_file = false)
 			: base (logs)
 		{
-			if (path == null)
-				throw new ArgumentNullException (nameof (path));
-
-			Path = path;
 			CapturePath = capture_path;
 			this.entire_file = entire_file;
 		}
@@ -33,13 +134,10 @@ namespace Xharness.Logging {
 
 			if (File.Exists (CapturePath))
 				startPosition = new FileInfo (CapturePath).Length;
-			started = true;
 		}
 
 		public void StopCapture ()
 		{
-			if (!started && !entire_file)
-				throw new InvalidOperationException ("StartCapture most be called before StopCature on when the entire file will be captured.");
 			if (!File.Exists (CapturePath)) {
 				File.WriteAllText (Path, $"Could not capture the file '{CapturePath}' because it doesn't exist.");
 				return;
@@ -135,6 +233,25 @@ namespace Xharness.Logging {
 			get {
 				return Path;
 			}
+		}
+	}
+
+	// A log that forwards all written data to a callback
+	public class CallbackLog : Log
+	{
+		public Action<string> OnWrite;
+
+		public CallbackLog (Action<string> onWrite)
+			: base (null)
+		{
+			OnWrite = onWrite;
+		}
+
+		public override string FullPath => throw new NotImplementedException ();
+
+		public override void WriteImpl (string value)
+		{
+			OnWrite (value);
 		}
 	}
 }
