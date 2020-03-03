@@ -4,7 +4,7 @@ using System.Xml;
 
 using Xamarin;
 
-namespace xharness
+namespace Xharness
 {
 	public class UnifiedTarget : iOSTarget
 	{

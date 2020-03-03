@@ -3,7 +3,7 @@ using System.Xml;
 
 using Xamarin;
 
-namespace xharness
+namespace Xharness
 {
 	// iOS here means Xamarin.iOS, not iOS as opposed to tvOS/watchOS.
 	public class iOSTarget : Target

@@ -12,8 +12,9 @@ using System.Xml;
 using System.Xml.Xsl;
 using Xamarin;
 using Xamarin.Utils;
+using Xharness.Logging;
 
-namespace xharness
+namespace Xharness
 {
 	public enum AppRunnerTarget
 	{
@@ -99,15 +100,15 @@ namespace xharness
 			set { log_directory = value; }
 		}
 
-		Logs logs;
-		public Logs Logs {
+		ILogs logs;
+		public ILogs Logs {
 			get {
 				return logs ?? (logs = new Logs (LogDirectory));
 			}
 		}
 
-		Log main_log;
-		public Log MainLog {
+		ILog main_log;
+		public ILog MainLog {
 			get { return main_log; }
 			set { main_log = value; }
 		}
@@ -393,7 +394,7 @@ namespace xharness
 					File.Delete (tmpFile);
 
 					// we do not longer need the tmp file
-					Logs.AddFile (path, Log.XML_LOG);
+					Logs.AddFile (path, LogType.XmlLog.ToString ());
 					return parseResult;
 
 				} catch (Exception e) {
@@ -476,9 +477,9 @@ namespace xharness
 		public async Task<int> RunAsync ()
 		{
 			CrashReportSnapshot crash_reports;
-			Log device_system_log = null;
-			Log listener_log = null;
-			Log run_log = main_log;
+			ILog device_system_log = null;
+			ILog listener_log = null;
+			ILog run_log = main_log;
 
 			Initialize ();
 
@@ -549,7 +550,7 @@ namespace xharness
 			args.Add ($"-argument=-app-arg:-transport:{transport}");
 			args.Add ($"-setenv=NUNIT_TRANSPORT={transport}");
 
-			listener_log = Logs.Create ($"test-{mode}-{Harness.Timestamp}.log", Log.TEST_LOG, timestamp: !useXmlOutput);
+			listener_log = Logs.Create ($"test-{mode}-{Harness.Timestamp}.log", LogType.TestLog.ToString (), timestamp: !useXmlOutput);
 
 			SimpleListener listener;
 			switch (transport) {
@@ -650,7 +651,7 @@ namespace xharness
 					var log = new CaptureLog (Logs, sim.SystemLog, entire_file: Harness.Action != HarnessAction.Jenkins)
 					{
 						Path = Path.Combine (LogDirectory, sim.Name + ".log"),
-						Description = isCompanion ? Log.COMPANION_SYSTEM_LOG : Log.SYSTEM_LOG,
+						Description = isCompanion ? LogType.CompanionSystemLog.ToString () : LogType.SystemLog.ToString (),
 					};
 					log.StartCapture ();
 					Logs.Add (log);
@@ -929,7 +930,7 @@ namespace xharness
 	class AppInstallMonitorLog : Log {
 		public override string FullPath => copy_to.FullPath;
 
-		Log copy_to;
+		ILog copy_to;
 		CancellationTokenSource cancellation_source;
 		
 		public bool CopyingApp;
@@ -951,7 +952,7 @@ namespace xharness
 			}
 		}
 
-		public AppInstallMonitorLog (Log copy_to)
+		public AppInstallMonitorLog (ILog copy_to)
 				: base (copy_to.Logs, $"Watch transfer log for {copy_to.Description}")
 		{
 			this.copy_to = copy_to;

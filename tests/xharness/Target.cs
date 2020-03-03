@@ -5,7 +5,7 @@ using System.Linq;
 using System.Xml;
 using Xamarin;
 
-namespace xharness
+namespace Xharness
 {
 	public abstract class Target
 	{

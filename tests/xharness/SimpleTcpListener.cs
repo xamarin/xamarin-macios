@@ -5,7 +5,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 
-namespace xharness
+namespace Xharness
 {
 	public class SimpleTcpListener : SimpleListener
 	{
