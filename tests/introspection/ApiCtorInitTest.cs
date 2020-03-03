@@ -140,6 +140,9 @@ namespace Introspection {
 				return true; // WatchKit has been removed from iOS.
 			}
 #endif
+			// skip types that we renamed / rewrite since they won't behave correctly (by design)
+			if (SkipDueToRejectedTypes (type))
+				return true;
 
 			return SkipDueToAttribute (type);
 		}

@@ -6132,7 +6132,19 @@ public partial class Generator : IMemberGatherer {
 	{
 		if (BindThirdPartyLibrary)
 			return Path.GetFileNameWithoutExtension (BindingTouch.outfile);
-		return BindingTouch.TargetFramework.Identifier;
+
+		switch (BindingTouch.TargetFramework.Platform) {
+		case ApplePlatform.iOS:
+			return "Xamarin.iOS";
+		case ApplePlatform.MacOSX:
+			return "Xamarin.Mac";
+		case ApplePlatform.TVOS:
+			return "Xamarin.TVOS";
+		case ApplePlatform.WatchOS:
+			return "Xamarin.WatchOS";
+		default:
+			throw ErrorHelper.CreateError (1053, /* Internal error: unknown target framework '{0}'. */ BindingTouch.TargetFramework);
+		}
 	}
 
 	public void Generate (Type type)
