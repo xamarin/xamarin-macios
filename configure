@@ -70,7 +70,7 @@ while test x$1 != x; do
         shift
         ;;
     --enable-ccache)
-        if ! CCACHE=$(which ccache); then
+        if ! command -v ccache >/dev/null; then
             echo "Could not find ccache"
         else
             echo "ENABLE_CCACHE=1" >> $CONFIGURED_FILE
@@ -108,7 +108,7 @@ while test x$1 != x; do
 		exit 0
 		;;
 	*)
-		echo Unknown configure argument $1 >&2
+		echo "Unknown configure argument $1" >&2
 		shift
 		;;
 	esac
