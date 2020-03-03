@@ -1,5 +1,3 @@
-!missing-field! INPersonRelationshipDaughter not bound
-!missing-field! INPersonRelationshipSon not bound
 !unknown-field! INIntentErrorDomain bound
 !unknown-native-enum! INCallCapability bound
 !unknown-native-enum! INCallCapabilityOptions bound
