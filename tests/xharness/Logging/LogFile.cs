@@ -11,6 +11,8 @@ namespace Xharness.Logging {
 		public LogFile (ILogs logs, string description, string path, bool append = true)
 			: base (logs, description)
 		{
+			if (path == null)
+				throw new ArgumentNullException (nameof (path));
 			Path = path;
 			if (!append)
 				File.WriteAllText (path, string.Empty);

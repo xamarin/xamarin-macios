@@ -1,6 +1,6 @@
 ﻿using System;
 using NUnit.Framework;
-using xharness.Logging;
+using Xharness.Logging;
 
 namespace Xharness.Tests.Logging.Tests {
 

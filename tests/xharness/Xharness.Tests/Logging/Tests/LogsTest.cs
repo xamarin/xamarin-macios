@@ -2,7 +2,7 @@
 using System.IO;
 using System.Reflection;
 using NUnit.Framework;
-using xharness.Logging;
+using Xharness.Logging;
 
 namespace Xharness.Tests.Logging.Tests {
 
@@ -93,7 +93,10 @@ namespace Xharness.Tests.Logging.Tests {
 		public void AddFileNotInDirTest ()
 		{
 			var fullPath = Path.Combine (Path.GetDirectoryName (Assembly.GetExecutingAssembly ().Location), fileName);
-			File.SetLastWriteTimeUtc (fullPath, DateTime.UtcNow);
+			using (var stream = File.Create (fullPath))
+			using (var writer = new StreamWriter (stream)){
+				writer.WriteLine ("Hello world!");
+			}
 			using (var logs = new Logs (directory)) {
 				var newPath = Path.Combine (directory, Path.GetFileNameWithoutExtension (fileName));
 				var fileLog = logs.AddFile (fileName, description);

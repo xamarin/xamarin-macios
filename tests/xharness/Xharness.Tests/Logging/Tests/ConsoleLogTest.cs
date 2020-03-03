@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using NUnit.Framework;
-using xharness.Logging;
+using Xharness.Logging;
 
 namespace Xharness.Tests.Logging.Tests {
 
