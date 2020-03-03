@@ -15,7 +15,7 @@ namespace Xharness.Tests.Logging.Tests {
 		Mock<ILogs> logs;
 
 		[SetUp]
-		public void SetUpt ()
+		public void SetUp ()
 		{
 			description = "My log";
 			path = Path.GetTempFileName ();
@@ -34,7 +34,7 @@ namespace Xharness.Tests.Logging.Tests {
 		}
 
 		[Test]
-		public void ConstrutorTest ()
+		public void ConstructorTest ()
 		{
 			using (var log = new LogFile (logs.Object, description, path)) {
 				Assert.AreEqual (description, log.Description, "description");
@@ -44,7 +44,7 @@ namespace Xharness.Tests.Logging.Tests {
 		}
 
 		[Test]
-		public void ConstrutorNullILogsTest ()
+		public void ConstructorNullILogsTest ()
 		{
 			Assert.DoesNotThrow (() => {
 				using (var log = new LogFile (null, description, path)) ;
@@ -52,13 +52,13 @@ namespace Xharness.Tests.Logging.Tests {
 		}
 
 		[Test]
-		public void ConstrutorNullPathTest ()
+		public void ConstructorNullPathTest ()
 		{
 			Assert.Throws<ArgumentNullException> (() => { var log = new LogFile (logs.Object, description, null); });
 		}
 
 		[Test]
-		public void ConstrutorNullDescritionTest ()
+		public void ConstructorNullDescriptionTest ()
 		{
 			Assert.DoesNotThrow (() => {
 				using (var log = new LogFile (logs.Object, null, path)) ;
