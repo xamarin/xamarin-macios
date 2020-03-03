@@ -61,8 +61,7 @@ steps:
 
 # pwsh for PowerShell Core
 # powershell is for Win PowerShell
-# ./tools/devops/templates/publish_results.ps1
-- pwsh: ./jenkins/publish-results-jenkins.ps1
+- pwsh: ./tools/devops/templates/publish_results.ps1
   condition: succeededOrFailed()
   env:
     BUILD_REVISION: $(BUILD_REVISION)

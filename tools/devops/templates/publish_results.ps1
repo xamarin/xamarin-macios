@@ -1,3 +1,7 @@
+Set-Location Env:
+Get-ChildItem
+
+
 Write-Host $pwd.Path
 Write-Host $PSScriptRoot
 Set-Location -Path $PSScriptRoot
