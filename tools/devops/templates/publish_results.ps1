@@ -33,7 +33,7 @@ Write-Host $url
 
 $params = @{
     Uri = $url
-    Headers = @{'Authorization' = ("token {0}" -f $GITHUB_TOKEN)}
+    Headers = @{'Authorization' = ("token {0}" -f $Env:GITHUB_TOKEN)}
     Method = 'PUT'
     Body = $json_payload
     ContentType = 'application/json'
