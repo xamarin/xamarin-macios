@@ -6,7 +6,7 @@ using System.Xml;
 using Xamarin;
 using Xamarin.Utils;
 
-namespace xharness
+namespace Xharness
 {
 	public class WatchOSTarget : iOSTarget
 	{

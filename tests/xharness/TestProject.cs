@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using Xamarin;
 
-namespace xharness
+namespace Xharness
 {
 	public class TestProject
 	{

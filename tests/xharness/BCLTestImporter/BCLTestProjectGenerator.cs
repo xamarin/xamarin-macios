@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Security.Cryptography;
-using xharness;
+using Xharness;
 
 namespace BCLTestImporter {
 	/// <summary>

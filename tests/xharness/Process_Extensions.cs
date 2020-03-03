@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -8,8 +8,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Utils;
+using Xharness.Logging;
 
-namespace xharness
+namespace Xharness
 {
 	public class ProcessExecutionResult
 	{
@@ -21,7 +22,7 @@ namespace xharness
 
 	public static class ProcessHelper
 	{
-		public static async Task<ProcessExecutionResult> ExecuteCommandAsync (string filename, IList<string> args, Log log, TimeSpan timeout, Dictionary<string, string> environment_variables = null, CancellationToken? cancellation_token = null)
+		public static async Task<ProcessExecutionResult> ExecuteCommandAsync (string filename, IList<string> args, ILog log, TimeSpan timeout, Dictionary<string, string> environment_variables = null, CancellationToken? cancellation_token = null)
 		{
 			using (var p = new Process ()) {
 				p.StartInfo.FileName = filename;
@@ -56,17 +57,26 @@ namespace xharness
 
 	public static class Process_Extensions
 	{
-		public static async Task<ProcessExecutionResult> RunAsync (this Process process, Log log, CancellationToken? cancellation_token = null, bool? diagnostics = null)
+		public static async Task<ProcessExecutionResult> RunAsync (this Process process, ILog log, CancellationToken? cancellation_token = null, bool? diagnostics = null)
 		{
 			return await RunAsync (process, log, log, log, cancellation_token: cancellation_token, diagnostics: diagnostics);
 		}
 
-		public static Task<ProcessExecutionResult> RunAsync (this Process process, Log log, bool append = true, TimeSpan? timeout = null, Dictionary<string, string> environment_variables = null, CancellationToken? cancellation_token = null, bool? diagnostics = null)
+		public static Task<ProcessExecutionResult> RunAsync (this Process process, ILog log, bool append = true, TimeSpan? timeout = null, Dictionary<string, string> environment_variables = null, CancellationToken? cancellation_token = null, bool? diagnostics = null)
 		{
 			return RunAsync (process, log, log, log, timeout, environment_variables, cancellation_token, diagnostics);
 		}
 
-		public static async Task<ProcessExecutionResult> RunAsync (this Process process, Log log, TextWriter StdoutStream, TextWriter StderrStream, TimeSpan? timeout = null, Dictionary<string, string> environment_variables = null, CancellationToken? cancellation_token = null, bool? diagnostics = null)
+		public static Task<ProcessExecutionResult> RunAsync (this Process process, ILog log, ILog stdoutLog, ILog stderrLog, TimeSpan? timeout = null, Dictionary<string, string> environment_variables = null, CancellationToken? cancellation_token = null, bool? diagnostics = null)
+		{
+			if (stdoutLog is TextWriter StdoutStream && stderrLog is TextWriter StderrStream) {
+				return RunAsync (process, log, StdoutStream, StderrStream, timeout, environment_variables, cancellation_token, diagnostics);
+			} else {
+				throw new ArgumentException ("Could not cast ILog to TextWriter.");
+			}
+		}
+
+		public static async Task<ProcessExecutionResult> RunAsync (this Process process, ILog log, TextWriter StdoutStream, TextWriter StderrStream, TimeSpan? timeout = null, Dictionary<string, string> environment_variables = null, CancellationToken? cancellation_token = null, bool? diagnostics = null)
 		{
 			var stdout_completion = new TaskCompletionSource<bool> ();
 			var stderr_completion = new TaskCompletionSource<bool> ();
@@ -195,12 +205,12 @@ namespace xharness
 			}
 		}
 
-		public static Task KillTreeAsync (this Process @this, Log log, bool? diagnostics = true)
+		public static Task KillTreeAsync (this Process @this, ILog log, bool? diagnostics = true)
 		{
 			return KillTreeAsync (@this.Id, log, diagnostics);
 		}
 
-		public static async Task KillTreeAsync (int pid, Log log, bool? diagnostics = true)
+		public static async Task KillTreeAsync (int pid, ILog log, bool? diagnostics = true)
 		{
 			var pids = new List<int> ();
 			GetChildrenPS (log, pids, pid);
@@ -250,7 +260,7 @@ namespace xharness
 				ProcessHelper.kill (pids [i], 9);
 		}
 
-		static void GetChildrenPS (Log log, List<int> list, int pid)
+		static void GetChildrenPS (ILog log, List<int> list, int pid)
 		{
 			string stdout;
 

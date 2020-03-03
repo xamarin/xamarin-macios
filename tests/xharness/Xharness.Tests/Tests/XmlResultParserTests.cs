@@ -3,15 +3,22 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
+using Moq;
 using NUnit.Framework;
-using xharness;
-
-using static xharness.XmlResultParser;
+using Xharness;
+using Xharness.Logging;
+using static Xharness.XmlResultParser;
 
 namespace Xharness.Tests {
 
 	[TestFixture]
 	public class XmlResultParserTests {
+
+		static Dictionary<XmlResultJargon, Action<string, string, string, string, string, string, string, int>> ValidationMap = new Dictionary<XmlResultJargon, Action<string, string, string, string, string, string, string, int>> {
+			[XmlResultJargon.NUnitV2] = ValidateNUnitV2Failure,
+			[XmlResultJargon.NUnitV3] = ValidateNUnitV3Failure,
+			[XmlResultJargon.xUnit] = ValidatexUnitFailure,
+		};
 
 		string CreateResultSample (XmlResultJargon jargon, bool includePing = false)
 		{
@@ -147,6 +154,146 @@ namespace Xharness.Tests {
 			var newPath = XmlResultParser.GetVSTSFilename (path);
 			StringAssert.StartsWith ("vsts-", Path.GetFileName (newPath));
 			File.Delete (path);
+		}
+
+		static void ValidateNUnitV2Failure (string src, string appName, string variation, string title, string message, string stderrMessage, string xmlPath, int _)
+		{
+			// load the doc and ensure that all the data is correct setup
+			var doc = XDocument.Load (xmlPath);
+			var testResultsNodes = doc.Descendants ().Where (e => e.Name == "test-results");
+			Assert.AreEqual (1, testResultsNodes.Count ());
+			var rootNode = testResultsNodes.FirstOrDefault ();
+			Assert.AreEqual (title, rootNode.Attribute ("name").Value, "title");
+			Assert.AreEqual ("1", rootNode.Attribute ("total").Value, "total");
+			Assert.AreEqual ("0", rootNode.Attribute ("errors").Value, "errors");
+			Assert.AreEqual ("1", rootNode.Attribute ("failures").Value, "failures");
+			// ensure we do have a test result with the failure data
+			var testResult = doc.Descendants ().Where (e => e.Name == "test-suite" && e.Attribute ("type").Value == "TestFixture");
+			Assert.AreEqual (1, testResult.Count (), "test results");
+		}
+
+		static void ValidateNUnitV3Failure (string src, string appName, string variation, string title, string message, string stderrMessage, string xmlPath, int attachemntsCount)
+		{
+			var doc = XDocument.Load (xmlPath);
+			// get test-run and verify attrs
+			var testResultNodes = doc.Descendants ().Where (e => e.Name == "test-run");
+			Assert.AreEqual (1, testResultNodes.Count (), "test-result");
+			var testResultNode = testResultNodes.FirstOrDefault ();
+			Assert.AreEqual (title, testResultNode.Attribute ("name").Value, "name");
+			Assert.AreEqual ("1", testResultNode.Attribute ("testcasecount").Value, "testcasecount");
+			Assert.AreEqual ("Failed", testResultNode.Attribute ("result").Value, "result");
+			Assert.AreEqual ("1", testResultNode.Attribute ("total").Value, "total");
+			Assert.AreEqual ("0", testResultNode.Attribute ("passed").Value, "passed");
+			Assert.AreEqual ("1", testResultNode.Attribute ("failed").Value, "failed");
+			Assert.AreEqual ("1", testResultNode.Attribute ("asserts").Value, "asserts");
+			// important attrs for the import, if they miss, we wont be able to add the files to vsts
+			Assert.IsNotNull (testResultNode.Attribute ("run-date").Value);
+			Assert.IsNotNull (testResultNode.Attribute ("start-time").Value);
+			// get the test-suite and verify the name and fullname are correct
+			var testSuite = testResultNode.Descendants ().Where (e => e.Name == "test-suite" && e.Attribute ("type").Value == "TestFixture").FirstOrDefault ();
+			Assert.IsNotNull (testSuite, "testSuite");
+			Assert.AreEqual (title, testSuite.Attribute ("name").Value, "test suite name");
+			Assert.AreEqual (title, testSuite.Attribute ("fullname").Value, "test suite full name");
+			// verify the test case
+			var testCase = testSuite.Descendants ().Where (e => e.Name == "test-case").FirstOrDefault ();
+			Assert.IsNotNull (testCase, "test case");
+			Assert.AreEqual ("Failed", testCase.Attribute ("result").Value, "test case result");
+			// validate that we do have attachments
+			var attachmentsNode = testCase.Descendants ().Where (e => e.Name == "attachments").FirstOrDefault ();
+			Assert.IsNotNull (attachmentsNode, "attachments");
+			var attachments = attachmentsNode.Descendants ().Where (e => e.Name == "attachment");
+			Assert.AreEqual (attachemntsCount, attachments.Count (), "attachments count");
+		}
+
+		static void ValidatexUnitFailure (string src, string appName, string variation, string title, string message, string stderrMessage, string xmlPath, int _)
+		{
+			var doc = XDocument.Load (xmlPath);
+			// get the assemlby and validate its attrs
+			var assemblies = doc.Descendants ().Where (e => e.Name == "assembly");
+			Assert.AreEqual (1, assemblies.Count (), "assemblies count");
+			var assemblyNode = assemblies.FirstOrDefault ();
+			Assert.AreEqual (title, assemblyNode.Attribute ("name").Value, "name");
+			Assert.AreEqual ("1", assemblyNode.Attribute ("total").Value, "total");
+			Assert.AreEqual ("1", assemblyNode.Attribute ("failed").Value, "failed");
+			Assert.AreEqual ("0", assemblyNode.Attribute ("passed").Value, "passed");
+			var collections = assemblyNode.Descendants ().Where (e => e.Name == "collection");
+			Assert.AreEqual (1, collections.Count (), "collections count");
+			var collectionNode = collections.FirstOrDefault ();
+			// assert the collection attrs
+			Assert.AreEqual ("1", collectionNode.Attribute ("failed").Value, "failed");
+			Assert.AreEqual ("0", collectionNode.Attribute ("passed").Value, "passed");
+		}
+
+		[TestCase (XmlResultJargon.NUnitV2)]
+		[TestCase (XmlResultJargon.NUnitV3)]
+		[TestCase (XmlResultJargon.xUnit)]
+		public void GenerateFailureTest (XmlResultJargon jargon)
+		{
+			var src = "test-case";
+			var appName = "MyUnitTest";
+			var variation = "Debug";
+			var title = "Testing";
+			var message = "This is a test";
+			var stderrMessage = "Something went very wrong";
+
+			var stderrPath = Path.GetTempFileName ();
+
+			// write the message in the stderrParh that should be read
+			using (var writer = new StreamWriter (stderrPath)) {
+				writer.WriteLine (stderrMessage);
+			}
+
+			// create a path with data in it
+			var logs = new Mock<ILogs> ();
+			var tmpLogMock = new Mock<ILogFile> ();
+			var xmlLogMock = new Mock<ILogFile> ();
+
+			var tmpPath = Path.GetTempFileName ();
+			var finalPath = Path.GetTempFileName ();
+
+			// create a number of fake logs to be added to the failure
+			var logsDir = Path.GetTempFileName ();
+			File.Delete (logsDir);
+			Directory.CreateDirectory (logsDir);
+			var failureLogs = new [] { "first.txt", "second.txt", "last.txt" };
+
+			foreach (var file in failureLogs) {
+				var path = Path.Combine (logsDir, file);
+				File.Create (path);
+			}
+
+			// expect the creation of the two diff xml file logs
+			_ = logs.Setup (l => l.Create (It.IsAny<string> (), "Failure Log tmp", null)).Returns (tmpLogMock.Object);
+			_ = logs.Setup (l => l.Create (It.IsAny<string> (), Log.XML_LOG, null)).Returns (xmlLogMock.Object);
+			if (jargon == XmlResultJargon.NUnitV3) {
+				_ = logs.Setup (l => l.Directory).Returns (logsDir);
+				_ = tmpLogMock.Setup (tmpLog => tmpLog.FullPath).Returns (tmpPath);
+
+			}
+
+			// return the two temp files so that we can later validate that everything is present
+			_ = xmlLogMock.Setup (xmlLog => xmlLog.FullPath).Returns (finalPath);
+
+			XmlResultParser.GenerateFailure (logs.Object, src, appName, variation, title, message, stderrPath, jargon);
+
+			// actual assertions do happen in the validation functions
+			ValidationMap [jargon] (src, appName, variation, title, message, stderrMessage, finalPath, failureLogs.Length);
+
+			// verify that we are correctly adding the logs
+			logs.Verify (l => l.Create (It.IsAny<string> (), It.IsAny<string> (), null), (jargon == XmlResultJargon.NUnitV3) ? Times.AtMost (2) : Times.AtMostOnce ());
+			if (jargon == XmlResultJargon.NUnitV3) {
+				logs.Verify (l => l.Directory, Times.Once);
+				tmpLogMock.Verify (l => l.FullPath, Times.AtLeastOnce);
+
+			}
+
+			xmlLogMock.Verify (l => l.FullPath, Times.AtLeastOnce);
+
+			// clean files
+			File.Delete (stderrPath);
+			File.Delete (tmpPath);
+			File.Delete (finalPath);
+			Directory.Delete (logsDir, true);
 		}
 	}
 }

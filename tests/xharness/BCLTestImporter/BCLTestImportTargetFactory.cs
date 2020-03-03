@@ -3,7 +3,7 @@ using System.IO;
 using System.Collections.Generic;
 using BCLTestImporter;
 
-namespace xharness.BCLTestImporter {
+namespace Xharness.BCLTestImporter {
 	// Class that is use as the connection between xharness and the BCLImporter
 	// This class knows about both worlds, will get the required information, 
 	// from xharness, that will then be passed to the importer to generate

@@ -11,8 +11,9 @@ using System.Text;
 using Xamarin;
 using Xamarin.Utils;
 using System.Xml;
+using Xharness.Logging;
 
-namespace xharness
+namespace Xharness
 {
 	public class Jenkins
 	{
@@ -48,9 +49,9 @@ namespace xharness
 		public bool CleanSuccessfulTestRuns = true;
 		public bool UninstallTestApp = true;
 
-		public Log MainLog;
-		public Log SimulatorLoadLog;
-		public Log DeviceLoadLog;
+		public ILog MainLog;
+		public ILog SimulatorLoadLog;
+		public ILog DeviceLoadLog;
 
 		string log_directory;
 		public string LogDirectory {
@@ -64,8 +65,8 @@ namespace xharness
 			}
 		}
 
-		Logs logs;
-		public Logs Logs {
+		ILogs logs;
+		public ILogs Logs {
 			get {
 				return logs ?? (logs = new Logs (LogDirectory));
 			}
@@ -95,7 +96,7 @@ namespace xharness
 			return new Resources (resources);
 		}
 
-		Task LoadAsync (ref Log log, ILoadAsync loadable, string name)
+		Task LoadAsync (ref ILog log, ILoadAsync loadable, string name)
 		{
 			loadable.Harness = Harness;
 			if (log == null)
@@ -106,7 +107,7 @@ namespace xharness
 			return loadable.LoadAsync (capturedLog, include_locked: false, force: true).ContinueWith ((v) => {
 				if (v.IsFaulted) {
 					capturedLog.WriteLine ("Failed to load:");
-					capturedLog.WriteLine (v.Exception);
+					capturedLog.WriteLine (v.Exception.ToString ());
 					capturedLog.Description = $"{name} Listing {v.Exception.Message})";
 				} else if (v.IsCompleted) {
 					if (loadable is Devices devices) {
@@ -1179,7 +1180,7 @@ namespace xharness
 			return Task.WhenAll (loadsim, loaddev);
 		}
 
-		async Task ExecutePeriodicCommandAsync (Log periodic_loc)
+		async Task ExecutePeriodicCommandAsync (ILog periodic_loc)
 		{
 			periodic_loc.WriteLine ($"Starting periodic task with interval {Harness.PeriodicCommandInterval.TotalMinutes} minutes.");
 			while (true) {
@@ -1203,7 +1204,7 @@ namespace xharness
 		{
 			try {
 				Directory.CreateDirectory (LogDirectory);
-				Log log = Logs.Create ($"Harness-{Harness.Timestamp}.log", "Harness log");
+				ILog log = Logs.Create ($"Harness-{Harness.Timestamp}.log", "Harness log");
 				if (Harness.InCI)
 					log = Log.CreateAggregatedLog (log, new ConsoleLog ());
 				Harness.HarnessLog = MainLog = log;
@@ -1697,7 +1698,7 @@ namespace xharness
 			}
 		}
 
-		public bool IsHE0038Error (Log log) {
+		public bool IsHE0038Error (ILog log) {
 			if (log == null)
 				return false;
 			if (File.Exists (log.FullPath) && new FileInfo (log.FullPath).Length > 0) {
@@ -2179,7 +2180,7 @@ namespace xharness
 									}
 									if (!exists) {
 										writer.WriteLine ("<a href='{0}' type='{2}' target='{3}'>{1}</a> (does not exist)<br />", LinkEncode (log.FullPath.Substring (LogDirectory.Length + 1)), log.Description, log_type, log_target);
-									} else if (log.Description == Log.BUILD_LOG) {
+									} else if (log.Description == LogType.BuildLog.ToString ()) {
 										var binlog = log.FullPath.Replace (".txt", ".binlog");
 										if (File.Exists (binlog)) {
 											var textLink = string.Format ("<a href='{0}' type='{2}' target='{3}'>{1}</a>", LinkEncode (log.FullPath.Substring (LogDirectory.Length + 1)), log.Description, log_type, log_target);
@@ -2193,7 +2194,7 @@ namespace xharness
 									}
 									if (!exists) {
 										// Don't try to parse files that don't exist
-									} else if (log.Description == Log.TEST_LOG || log.Description == Log.EXTENSION_TEST_LOG || log.Description == Log.EXECUTION_LOG) {
+									} else if (log.Description == LogType.TestLog.ToString () || log.Description ==  LogType.ExecutionLog.ToString () || log.Description == LogType.ExecutionLog.ToString ()) {
 										string summary;
 										List<string> fails;
 										try {
@@ -2233,7 +2234,7 @@ namespace xharness
 										} catch (Exception ex) {
 											writer.WriteLine ("<span style='padding-left: 15px;'>Could not parse log file: {0}</span><br />", ex.Message.AsHtml ());
 										}
-									} else if (log.Description == Log.BUILD_LOG) {
+									} else if (log.Description == LogType.BuildLog.ToString ()) {
 										HashSet<string> errors;
 										try {
 											using (var reader = log.GetReader ()) {
@@ -2269,7 +2270,7 @@ namespace xharness
 										} catch (Exception ex) {
 											writer.WriteLine ("<span style='padding-left: 15px;'>Could not parse log file: {0}</span><br />", ex.Message.AsHtml ());
 										}
-									} else if (log.Description == Log.NUNIT_RESULT || log.Description == Log.XML_LOG) {
+									} else if (log.Description == LogType.NUnitResult.ToString () || log.Description == LogType.XmlLog.ToString () ) {
 										try {
 											if (File.Exists (log.FullPath) && new FileInfo (log.FullPath).Length > 0) {
 												if (XmlResultParser.IsValidXml (log.FullPath, out var jargon)) {
@@ -2554,8 +2555,8 @@ namespace xharness
 
 		public List<Resource> Resources = new List<Resource> ();
 
-		Log test_log;
-		public Log MainLog {
+		ILog test_log;
+		public ILog MainLog {
 			get {
 				if (test_log == null)
 					test_log = Logs.Create ($"main-{Timestamp}.log", "Main log");
@@ -2577,8 +2578,8 @@ namespace xharness
 			}
 		}
 
-		Logs logs;
-		public Logs Logs {
+		ILogs logs;
+		public ILogs Logs {
 			get {
 				return logs ?? (logs = new Logs (LogDirectory));
 			}
@@ -2756,13 +2757,13 @@ namespace xharness
 			}
 		}
 
-		protected void LogEvent (Log log, string text, params object[] args)
+		protected void LogEvent (ILog log, string text, params object[] args)
 		{
 			Jenkins.MainLog.WriteLine (text, args);
 			log.WriteLine (text, args);
 		}
 
-		public string GuessFailureReason (Log log)
+		public string GuessFailureReason (ILog log)
 		{
 			try {
 				using (var reader = log.GetReader ()) {
@@ -2861,7 +2862,7 @@ namespace xharness
 			}
 		}
 
-		async Task<TestExecutingResult> RestoreNugetsAsync (string projectPath, Log log, bool useXIBuild=false)
+		async Task<TestExecutingResult> RestoreNugetsAsync (string projectPath, ILog log, bool useXIBuild=false)
 		{
 			using (var resource = await Jenkins.NugetResource.AcquireExclusiveAsync ()) {
 				// we do not want to use xibuild on solutions, we will have some failures with Mac Full
@@ -2918,7 +2919,7 @@ namespace xharness
 
 		// This method must be called with the desktop resource acquired
 		// (which is why it takes an IAcquiredResources as a parameter without using it in the function itself).
-		protected async Task RestoreNugetsAsync (Log log, IAcquiredResource resource, bool useXIBuild=false)
+		protected async Task RestoreNugetsAsync (ILog log, IAcquiredResource resource, bool useXIBuild=false)
 		{
 			if (!RestoreNugets)
 				return;
@@ -2958,7 +2959,7 @@ namespace xharness
 					make.StartInfo.WorkingDirectory = WorkingDirectory;
 					make.StartInfo.Arguments = Target;
 					SetEnvironmentVariables (make);
-					var log = Logs.Create ($"make-{Platform}-{Timestamp}.txt", Log.BUILD_LOG);
+					var log = Logs.Create ($"make-{Platform}-{Timestamp}.txt", LogType.BuildLog.ToString ());
 					LogEvent (log, "Making {0} in {1}", Target, WorkingDirectory);
 					if (!Harness.DryRun) {
 						var timeout = Timeout;
@@ -2983,12 +2984,12 @@ namespace xharness
 	class XBuildTask : BuildProjectTask
 	{
 		public bool UseMSBuild;
-		public Log BuildLog;
+		public ILog BuildLog;
 
 		protected override async Task ExecuteAsync ()
 		{
 			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
-				BuildLog = Logs.Create ($"build-{Platform}-{Timestamp}.txt", Log.BUILD_LOG);
+				BuildLog = Logs.Create ($"build-{Platform}-{Timestamp}.txt", LogType.BuildLog.ToString ());
 				var binlogPath = BuildLog.FullPath.Replace (".txt", ".binlog");
 
 				await RestoreNugetsAsync (BuildLog, resource, useXIBuild: true);
@@ -3028,7 +3029,7 @@ namespace xharness
 			}
 		}
 
-		async Task CleanProjectAsync (Log log, string project_file, string project_platform, string project_configuration)
+		async Task CleanProjectAsync (ILog log, string project_file, string project_platform, string project_configuration)
 		{
 			// Don't require the desktop resource here, this shouldn't be that resource sensitive
 			using (var xbuild = new Process ()) {
@@ -3081,7 +3082,7 @@ namespace xharness
 		{
 		}
 			
-		public void FindNUnitConsoleExecutable (Log log)
+		public void FindNUnitConsoleExecutable (ILog log)
 		{
 			if (!string.IsNullOrEmpty (TestExecutable)) {
 				log.WriteLine ("Using existing executable: {0}", TestExecutable);
@@ -3170,8 +3171,8 @@ namespace xharness
 		protected override async Task RunTestAsync ()
 		{
 			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
-				var xmlLog = Logs.CreateFile ($"log-{Timestamp}.xml", Log.XML_LOG);
-				var log = Logs.Create ($"execute-{Timestamp}.txt", Log.EXECUTION_LOG);
+				var xmlLog = Logs.CreateFile ($"log-{Timestamp}.xml", LogType.XmlLog.ToString ());
+				var log = Logs.Create ($"execute-{Timestamp}.txt", LogType.ExecutionLog.ToString ());
 				FindNUnitConsoleExecutable (log);
 				using (var proc = new Process ()) {
 
@@ -3218,11 +3219,11 @@ namespace xharness
 						var output = Logs.Create ($"Log-{Timestamp}.html", "HTML log");
 						using (var srt = new StringReader (File.ReadAllText (Path.Combine (Harness.RootDirectory, "HtmlTransform.xslt")))) {
 							using (var sri = File.OpenRead (xmlLog)) {
-								using (var xrt = System.Xml.XmlReader.Create (srt)) {
-									using (var xri = System.Xml.XmlReader.Create (sri)) {
+								using (var xrt = XmlReader.Create (srt)) {
+									using (var xri = XmlReader.Create (sri)) {
 										var xslt = new System.Xml.Xsl.XslCompiledTransform ();
 										xslt.Load (xrt);
-										using (var xwo = System.Xml.XmlWriter.Create (output, xslt.OutputSettings)) // use OutputSettings of xsl, so it can be output as HTML
+										using (var xwo = XmlWriter.Create (output as TextWriter, xslt.OutputSettings)) // use OutputSettings of xsl, so it can be output as HTML
 										{
 											xslt.Transform (xri, xwo);
 										}
@@ -3341,14 +3342,14 @@ namespace xharness
 				using (var proc = new Process ()) {
 					proc.StartInfo.FileName = Path;
 					if (IsUnitTest) {
-						var xml = Logs.CreateFile ($"test-{Platform}-{Timestamp}.xml", Log.NUNIT_RESULT);
+						var xml = Logs.CreateFile ($"test-{Platform}-{Timestamp}.xml", LogType.NUnitResult.ToString ());
 						proc.StartInfo.Arguments = StringUtils.FormatArguments ($"-result=" + xml);
 					}
 					if (!Harness.GetIncludeSystemPermissionTests (Platform, false))
 						proc.StartInfo.EnvironmentVariables ["DISABLE_SYSTEM_PERMISSION_TESTS"] = "1";
 					proc.StartInfo.EnvironmentVariables ["MONO_DEBUG"] = "no-gdb-backtrace";
 					Jenkins.MainLog.WriteLine ("Executing {0} ({1})", TestName, Mode);
-					var log = Logs.Create ($"execute-{Platform}-{Timestamp}.txt", Log.EXECUTION_LOG);
+					var log = Logs.Create ($"execute-{Platform}-{Timestamp}.txt", LogType.ExecutionLog.ToString ());
 					if (!Harness.DryRun) {
 						ExecutionResult = TestExecutingResult.Running;
 
@@ -3402,7 +3403,7 @@ namespace xharness
 					proc.StartInfo.Arguments = $"--debug {reporter} {WorkingDirectory} {results}";
 
 					Jenkins.MainLog.WriteLine ("Executing {0} ({1})", TestName, Mode);
-					var log = Logs.Create ($"execute-xtro-{Timestamp}.txt", Log.EXECUTION_LOG);
+					var log = Logs.Create ($"execute-xtro-{Timestamp}.txt", LogType.ExecutionLog.ToString ());
 					log.WriteLine ("{0} {1}", proc.StartInfo.FileName, proc.StartInfo.Arguments);
 					if (!Harness.DryRun) {
 						ExecutionResult = TestExecutingResult.Running;
