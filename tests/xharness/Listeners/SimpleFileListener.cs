@@ -5,7 +5,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 
-namespace Xharness
+namespace Xharness.Listeners
 {
 	public class SimpleFileListener : SimpleListener
 	{
@@ -15,7 +15,7 @@ namespace Xharness
 
 		public SimpleFileListener (string path)
 		{
-			Path = path;
+			Path = path ?? throw new ArgumentNullException (nameof (path));
 		}
 
 		protected override void Stop ()
