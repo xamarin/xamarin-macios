@@ -1,4 +1,7 @@
-#!/bin/bash -eux
+Write-Host $pwd.Path
+Write-Host $PSScriptRoot
+Set-Location -Path $PSScriptRoot
+Write-Host $pwd.Path
 
 ## don't need context here b/c we are combining all device tests into one post?
 #$json_payload = @"{"token": $TOKEN, "hash":$BUILD_REVISION "state": $GH_STATE, "target-url": $TARGET_URL, "description": $DESCRIPTION, "context": "VSTS: device tests $DEVICE_TYPE"}"
@@ -20,8 +23,6 @@ $json_payload = @"
 
 $url = "https://api.github.com/repos/xamarin/xamarin-macios/statuses/$BUILD_REVISION"
 
-Write-Host $pwd.Path
-Write-Host Get-Location
 Write-Host @{'Authorization' = ("token {0}" -f $GITHUB_TOKEN)}
 Write-Host $json_payload
 
