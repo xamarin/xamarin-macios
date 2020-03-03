@@ -3,3 +3,26 @@
 !missing-selector! WKPreferences::plugInsEnabled not bound
 !missing-selector! WKPreferences::setJavaEnabled: not bound
 !missing-selector! WKPreferences::setPlugInsEnabled: not bound
+
+# TODO Below are marked as ios(WK_IOS_TBA) as of 11.4 beta2
+!missing-selector! WKFindConfiguration::backwards not bound
+!missing-selector! WKFindConfiguration::caseSensitive not bound
+!missing-selector! WKFindConfiguration::setBackwards: not bound
+!missing-selector! WKFindConfiguration::setCaseSensitive: not bound
+!missing-selector! WKFindConfiguration::setWraps: not bound
+!missing-selector! WKFindConfiguration::wraps not bound
+!missing-selector! WKFindResult::matchFound not bound
+!missing-selector! WKPDFConfiguration::rect not bound
+!missing-selector! WKPDFConfiguration::setRect: not bound
+!missing-selector! WKWebView::createPDFWithConfiguration:completionHandler: not bound
+!missing-selector! WKWebView::createWebArchiveDataWithCompletionHandler: not bound
+!missing-selector! WKWebView::findString:withConfiguration:completionHandler: not bound
+!missing-selector! WKWebView::pageZoom not bound
+!missing-selector! WKWebView::setPageZoom: not bound
+!missing-type! WKFindConfiguration not bound
+!missing-type! WKFindResult not bound
+!missing-type! WKPDFConfiguration not bound
+
+# TODO mediaType is not available in 11.4 beta2 even though it is marked as such
+!missing-selector! WKWebView::mediaType not bound
+!missing-selector! WKWebView::setMediaType: not bound
