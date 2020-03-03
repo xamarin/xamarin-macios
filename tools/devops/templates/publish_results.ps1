@@ -17,20 +17,19 @@ $target_url = $Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI + "$Env:SYSTEM_TEAMPROJECT
 $json_payload = @"
 {
     "hash" : $Env:BUILD_REVISION,
-    "state" : $Env:GH_STATE,
+    "state" : "failure",
     "target-url" : $target_url,
     "description" : "description placeholder", 
     "context" : "VSTS: device tests",
-    "vsts-for-debugging" : $Env:VSTS_BUILD_URL
-    "GH-token-for-debugging" : $Env:GITHUB_TOKEN
 }
 "@
 
 
-$url = "https://api.github.com/repos/xamarin/xamarin-macios/statuses/$BUILD_REVISION"
+$url = "https://api.github.com/repos/xamarin/xamarin-macios/statuses/$Env:BUILD_REVISION"
 
 Write-Host @{'Authorization' = ("token {0}" -f $GITHUB_TOKEN)}
 Write-Host $json_payload
+Write-Host $url
 
 $params = @{
     Uri = $url
