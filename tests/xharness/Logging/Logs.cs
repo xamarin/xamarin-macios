@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace xharness.Logging {
+namespace Xharness.Logging {
 	public class Logs : List<Log>, ILogs {
 		public string Directory { get; set; }
 

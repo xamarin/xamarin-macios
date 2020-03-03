@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text;
 
-namespace xharness.Logging {
+namespace Xharness.Logging {
 	// A log that writes to standard output
 	public class ConsoleLog : Log {
 		StringBuilder captured = new StringBuilder ();

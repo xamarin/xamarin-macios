@@ -9,10 +9,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using Xamarin.Utils;
-using xharness.BCLTestImporter;
-using xharness.Logging;
+using Xharness.BCLTestImporter;
+using Xharness.Logging;
 
-namespace xharness
+namespace Xharness
 {
 	public enum HarnessAction
 	{

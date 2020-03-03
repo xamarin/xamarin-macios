@@ -4,7 +4,7 @@ using System.Linq;
 using System.Xml;
 using Xamarin.Utils;
 
-namespace xharness
+namespace Xharness
 {
 	static class ProjectFileExtensions {
 		const string MSBuild_Namespace = "http://schemas.microsoft.com/developer/msbuild/2003";

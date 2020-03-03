@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace xharness.Logging {
+namespace Xharness.Logging {
 	public class LogFile : Log, ILogFile {
 		object lock_obj = new object ();
 		public string Path { get; private set; }

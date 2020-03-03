@@ -4,9 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
-using xharness.Logging;
+using Xharness.Logging;
 
-namespace xharness {
+namespace Xharness {
 
 	public enum XmlResultJargon {
 		TouchUnit,
@@ -743,7 +743,7 @@ namespace xharness {
 		{
 			// VSTS does not provide a nice way to report build errors, create a fake
 			// test result with a failure in the case the build did not work
-			var failureLogXml = logs.Create ($"vsts-nunit-{source}-{Harness.Timestamp}.xml", Log.XML_LOG);
+			var failureLogXml = logs.Create ($"vsts-nunit-{source}-{Harness.Timestamp}.xml", LogType.XmlLog.ToString ());
 			if (jargon == XmlResultJargon.NUnitV3) {
 				var failureXmlTmp = logs.Create ($"nunit-{source}-{Harness.Timestamp}.tmp", "Failure Log tmp");
 				GenerateFailureXml (failureXmlTmp.FullPath, title, message, stderrPath, jargon);

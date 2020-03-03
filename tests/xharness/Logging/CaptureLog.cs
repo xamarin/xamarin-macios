@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace xharness.Logging {
+namespace Xharness.Logging {
 
 	// A log that captures data written to a separate file between two moments in time
 	// (between StartCapture and StopCapture).
