@@ -10061,9 +10061,16 @@ namespace Intents {
 		//[NullAllowed, Export ("pronunciationHint", ArgumentSemantic.Strong)]
 		//string PronunciationHint { get; }
 
+		[Sealed]
 		[Watch (6,0), NoMac, iOS (13,0)]
-		[NullAllowed, Export ("alternativeSpeakableMatches", ArgumentSemantic.Strong)]
-		new INSpeakableString [] AlternativeSpeakableMatches { get; set; }
+		[Export ("alternativeSpeakableMatches")]
+		[return: NullAllowed]
+		INSpeakableString [] GetAlternativeSpeakableMatches ();
+
+		// Not [Sealed] since the 'AlternativeSpeakableMatches' inlined property is read-only
+		[Watch (6,0), NoMac, iOS (13,0)]
+		[Export ("setAlternativeSpeakableMatches:")]
+		void SetAlternativeSpeakableMatches ([NullAllowed] INSpeakableString [] alternativeSpeakableMatches);
 	}
 
 	[Watch (5,0), NoMac, iOS (12,0)]
@@ -12473,7 +12480,7 @@ namespace Intents {
 
 		[Static]
 		[Export ("successWithResolvedURL:")]
-		INUrlResolutionResult GetSuccess (NSUrl resolvedURL);
+		INUrlResolutionResult GetSuccess (NSUrl resolvedUrl);
 
 		[Static]
 		[Export ("disambiguationWithURLsToDisambiguate:")]
