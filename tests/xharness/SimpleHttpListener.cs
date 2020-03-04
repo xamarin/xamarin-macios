@@ -4,7 +4,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
-namespace xharness
+namespace Xharness
 {
 	public class SimpleHttpListener : SimpleListener
 	{

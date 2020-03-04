@@ -5,7 +5,7 @@ using System.Xml;
 using System.Text;
 using Xamarin;
 
-namespace xharness
+namespace Xharness
 {
 	public static class SolutionGenerator
 	{

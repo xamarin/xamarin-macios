@@ -3,134 +3,19 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.IO;
 using System.Text;
+using Xharness.Logging;
 
-namespace xharness
+namespace Xharness
 {
-	public abstract class Log : TextWriter
-	{
-		public Logs Logs { get; private set; }
-		public string Description;
-		public bool Timestamp = true;
 
-		public static string XML_LOG = "XML log";
-		public static string NUNIT_RESULT = "NUnit results";
-		public static string SYSTEM_LOG = "System log";
-		public static string COMPANION_SYSTEM_LOG = "System log (companion)";
-		public static string BUILD_LOG = "Build log";
-		public static string TEST_LOG = "Test log";
-		public static string EXTENSION_TEST_LOG = "Extension test log";
-		public static string EXECUTION_LOG = "Execution log";
-
-		protected Log (Logs logs)
-		{
-			Logs = logs;
-		}
-
-		protected Log (Logs logs, string description)
-		{
-			Logs = logs;
-			Description = description;
-		}
-
-		public abstract string FullPath { get; }
-
-		internal protected virtual void WriteImpl (string value)
-		{
-			Write (Encoding.UTF8.GetBytes (value));
-		}
-
-		public virtual void Write (byte [] buffer)
-		{
-			Write (buffer, 0, buffer.Length);
-		}
-
-		public virtual void Write (byte[] buffer, int offset, int count)
-		{
-			throw new NotSupportedException ();
-		}
-
-		public virtual StreamReader GetReader ()
-		{
-			throw new NotSupportedException ();
-		}
-
-		public override void Write (char value)
-		{
-			WriteImpl (value.ToString ());
-		}
-
-		public override void Write (string value)
-		{
-			if (Timestamp)
-				value = DateTime.Now.ToString ("HH:mm:ss.fffffff") + " " + value;
-			WriteImpl (value);
-		}
-
-		public override void WriteLine (string value)
-		{
-			Write (value + "\n");
-		}
-
-		public override void WriteLine (string format, params object [] args)
-		{
-			Write (string.Format (format, args) + "\n");
-		}
-
-		public override string ToString ()
-		{
-			return Description;
-		}
-
-		public override void Flush ()
-		{
-		}
-
-		public override Encoding Encoding {
-			get {
-				return System.Text.Encoding.UTF8;
-			}
-		}
-
-		public static Log CreateAggregatedLog (params Log [] logs)
-		{
-			return new AggregatedLog (logs);
-		}
-
-		// Log that will duplicate log output to multiple other logs.
-		class AggregatedLog : Log
-		{
-			Log [] logs;
-
-			public AggregatedLog (params Log [] logs)
-				: base (null)
-			{
-				this.logs = logs;
-			}
-
-			public override string FullPath => throw new NotImplementedException ();
-
-			internal protected override void WriteImpl (string value)
-			{
-				foreach (var log in logs)
-					log.WriteImpl (value);
-			}
-
-			public override void Write (byte [] buffer, int offset, int count)
-			{
-				foreach (var log in logs)
-					log.Write (buffer, offset, count);
-			}
-		}
-	}
-
-	public class LogFile : Log
+	public class LogFile : Log, ILogFile
 	{
 		object lock_obj = new object ();
 		public string Path { get; private set; }
 		FileStream writer;
 		bool disposed;
 
-		public LogFile (Logs logs, string description, string path, bool append = true)
+		public LogFile (ILogs logs, string description, string path, bool append = true)
 			: base (logs, description)
 		{
 			Path = path;
@@ -192,71 +77,7 @@ namespace xharness
 
 			disposed = true;
 		}
-	}
 
-	public class Logs : List<Log>, IDisposable
-	{
-		public string Directory;
-
-		public Logs (string directory)
-		{
-			Directory = directory;
-		}
-
-		// Create a new log backed with a file
-		public LogFile Create (string filename, string name, bool? timestamp = null)
-		{
-			return Create (Directory, filename, name, timestamp);
-		}
-
-		LogFile Create (string directory, string filename, string name, bool? timestamp = null)
-		{
-			System.IO.Directory.CreateDirectory (directory);
-			var rv = new LogFile (this, name, Path.GetFullPath (Path.Combine (directory, filename)));
-			if (timestamp.HasValue)
-				rv.Timestamp = timestamp.Value;
-			Add (rv);
-			return rv;
-		}
-
-		// Adds an existing file to this collection of logs.
-		// If the file is not inside the log directory, then it's copied there.
-		// 'path' must be a full path to the file.
-		public LogFile AddFile (string path)
-		{
-			return AddFile (path, Path.GetFileName (path));
-		}
-
-		// Adds an existing file to this collection of logs.
-		// If the file is not inside the log directory, then it's copied there.
-		// 'path' must be a full path to the file.
-		public LogFile AddFile (string path, string name)
-		{
-			if (!path.StartsWith (Directory, StringComparison.Ordinal)) {
-				var newPath = Path.Combine (Directory, Path.GetFileNameWithoutExtension (path) + "-" + Harness.Timestamp + Path.GetExtension (path));
-				File.Copy (path, newPath, true);
-				path = newPath;
-			}
-
-			var log = new LogFile (this, name, path, true);
-			Add (log);
-			return log;
-		}
-
-		// Create an empty file in the log directory and return the full path to the file
-		public string CreateFile (string path, string description)
-		{
-			using (var rv = new LogFile (this, description, Path.Combine (Directory, path), false)) {
-				Add (rv);
-				return rv.FullPath;
-			}
-		}
-
-		public void Dispose ()
-		{
-			foreach (var log in this)
-				log.Dispose ();
-		}
 	}
 
 	// A log that writes to standard output
@@ -269,7 +90,7 @@ namespace xharness
 		{
 		}
 
-		internal protected override void WriteImpl (string value)
+		public override void WriteImpl (string value)
 		{
 			captured.Append (value);
 			Console.Write (value);
@@ -299,7 +120,7 @@ namespace xharness
 		long endPosition;
 		bool entire_file;
 
-		public CaptureLog (Logs logs, string capture_path, bool entire_file = false)
+		public CaptureLog (ILogs logs, string capture_path, bool entire_file = false)
 			: base (logs)
 		{
 			CapturePath = capture_path;
@@ -403,7 +224,7 @@ namespace xharness
 			Capture ();
 		}
 
-		internal protected override void WriteImpl (string value)
+		public override void WriteImpl (string value)
 		{
 			throw new InvalidOperationException ();
 		}
@@ -428,7 +249,7 @@ namespace xharness
 
 		public override string FullPath => throw new NotImplementedException ();
 
-		internal protected override void WriteImpl (string value)
+		public override void WriteImpl (string value)
 		{
 			OnWrite (value);
 		}

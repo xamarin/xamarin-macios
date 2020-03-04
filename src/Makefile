@@ -74,10 +74,8 @@ IOS_HTTP_SOURCES = \
 IOS_CORE_SOURCES += $(IOS_EXTRA_SOURCES)
 IOS_SOURCES += $(IOS_EXTRA_SOURCES) $(IOS_HTTP_SOURCES)
 
-IOS_GENERATOR_FLAGS = -inline-selectors -d:IOS -process-enums -warnaserror:$(IOS_GENERATOR_WARNASERROR)
-IOS_GENERATOR_native_FLAGS = -d:XAMCORE_2_0 -d:__UNIFIED__
-IOS_DEFINES = -define:IPHONE -define:IOS -define:MONOTOUCH -d:__IOS__ $(APPLETLS_DEFINES) -d:SYSTEM_NET_HTTP
-IOS_native_DEFINES = -d:XAMCORE_2_0 -d:__UNIFIED__
+IOS_GENERATOR_FLAGS = -inline-selectors -d:IOS -process-enums -warnaserror:$(IOS_GENERATOR_WARNASERROR) -d:XAMCORE_2_0 -d:__UNIFIED__
+IOS_DEFINES = -define:IPHONE -define:IOS -define:MONOTOUCH -d:__IOS__ $(APPLETLS_DEFINES) -d:SYSTEM_NET_HTTP -d:XAMCORE_2_0 -d:__UNIFIED__
 IOS_GENERATOR=$(BUILD_DIR)/common/bgen.exe
 IOS_GENERATE=$(SYSTEM_MONO) --debug $(IOS_GENERATOR)
 $(IOS_BUILD_DIR)/Constants.cs: Constants.iOS.cs.in Makefile $(TOP)/Make.config.inc | $(IOS_BUILD_DIR)
@@ -97,7 +95,6 @@ $(IOS_BUILD_DIR)/native/core.dll: $(IOS_CORE_SOURCES) frameworks.sources
 	$(call Q_PROF_CSC,ios) $(IOS_CSC) -nologo -out:$@ -target:library -debug -unsafe \
 		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
 		-define:COREBUILD $(IOS_DEFINES) \
-		$(IOS_native_DEFINES) \
 		$(IOS_CORE_SOURCES)
 
 # generated_sources
@@ -107,7 +104,6 @@ $(IOS_BUILD_DIR)/native/generated_sources: $(IOS_GENERATOR) $(IOS_APIS) $(IOS_BU
 $(BUILD_DIR)/ios.rsp: Makefile Makefile.generator frameworks.sources
 	$(Q_GEN) echo \
 		$(IOS_GENERATOR_FLAGS) \
-		$(IOS_GENERATOR_native_FLAGS) \
 		-core \
 		-sourceonly=$(IOS_BUILD_DIR)/native/generated_sources \
 		-compiler=$(IOS_CSC) \
@@ -129,7 +125,6 @@ $(IOS_BUILD_DIR)/native-$(1)%Xamarin.iOS.dll $(IOS_BUILD_DIR)/native-$(1)%Xamari
 		-deterministic \
 		$$(ARGS_$(1)) \
 		-publicsign -keyfile:$(PRODUCT_KEY_PATH) $$(IOS_DEFINES) \
-		$$(IOS_native_DEFINES) \
 		-nowarn:219,618,114,414,1635,3021,$$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
 		$$(IOS_CSC_FLAGS_XI) \
 		$$(IOS_SOURCES) @$(IOS_BUILD_DIR)/native/generated_sources
@@ -355,10 +350,6 @@ xm_mobile_profile=--target-framework=Xamarin.Mac,Version=v2.0,Profile=Mobile
 
 MAC_GENERATOR=$(BUILD_DIR)/common/bgen.exe
 MAC_GENERATE=$(SYSTEM_MONO) --debug $(MAC_GENERATOR)
-MAC_full_GENERATOR=$(MAC_GENERATOR)
-MAC_full_GENERATE=$(MAC_GENERATE)
-MAC_mobile_GENERATOR=$(MAC_GENERATOR)
-MAC_mobile_GENERATE=$(MAC_GENERATE)
 
 define MAC_GENERATOR_template
 $(MAC_BUILD_DIR)/$(1)/core.dll: $(MAC_CORE_SOURCES) frameworks.sources
@@ -366,11 +357,11 @@ $(MAC_BUILD_DIR)/$(1)/core.dll: $(MAC_CORE_SOURCES) frameworks.sources
 	$$(call Q_PROF_CSC,mac/$(1)) \
 		$$(MAC_$(1)_CSC) -nologo -out:$$@ -target:library -debug -unsafe -nowarn:3021,612,618,1635 \
 		$$(MAC_BOOTSTRAP_DEFINES) \
-		$(3) \
+		$(2) \
 		$$(MAC_CORE_SOURCES)
 
-$(MAC_BUILD_DIR)/$(1)/generated-sources: $$(MAC_$(1)_GENERATOR) $(MAC_APIS) $(MAC_BUILD_DIR)/$(1)/core.dll $(MAC_BUILD_DIR)/$(7) $(BUILD_DIR)/mac-$(1).rsp
-	$$(call Q_PROF_GEN,mac/$(1)) $$(MAC_$(1)_GENERATE) @$(BUILD_DIR)/mac-$(1).rsp
+$(MAC_BUILD_DIR)/$(1)/generated-sources: $$(MAC_GENERATOR) $(MAC_APIS) $(MAC_BUILD_DIR)/$(1)/core.dll $(MAC_BUILD_DIR)/Xamarin.Mac-$(1).BindingAttributes.dll $(BUILD_DIR)/mac-$(1).rsp
+	$$(call Q_PROF_GEN,mac/$(1)) $$(MAC_GENERATE) @$(BUILD_DIR)/mac-$(1).rsp
 
 $(BUILD_DIR)/mac-$(1).rsp: Makefile Makefile.generator frameworks.sources
 	$$(Q_GEN) echo \
@@ -384,40 +375,41 @@ $(BUILD_DIR)/mac-$(1).rsp: Makefile Makefile.generator frameworks.sources
 		-sourceonly:$(MAC_BUILD_DIR)/$(1)/generated-sources \
 		-tmpdir:$(MAC_BUILD_DIR)/$(1) \
 		-baselib:$(MAC_BUILD_DIR)/$(1)/core.dll \
-		-attributelib:$(MAC_BUILD_DIR)/$(7) \
+		-attributelib:$(MAC_BUILD_DIR)/Xamarin.Mac-$(1).BindingAttributes.dll \
 		-d:NO_SYSTEM_DRAWING \
+		--ns=ObjCRuntime \
 		$(2) \
-		$(3) \
 		$(xm_$(1)_profile) \
 		$(MAC_APIS) \
 		> $$@
 endef
 
-$(eval $(call MAC_GENERATOR_template,full,--ns=ObjCRuntime,-d:NO_SYSTEM_DRAWING,,,full,Xamarin.Mac-full.BindingAttributes.dll))
-$(eval $(call MAC_GENERATOR_template,mobile,--ns=ObjCRuntime,$(SHARED_SYSTEM_DRAWING_SOURCES),,,mobile,Xamarin.Mac-mobile.BindingAttributes.dll))
+$(eval $(call MAC_GENERATOR_template,full,-d:NO_SYSTEM_DRAWING))
+$(eval $(call MAC_GENERATOR_template,mobile,$(SHARED_SYSTEM_DRAWING_SOURCES)))
 
 define MAC_TARGETS_template
-$(MAC_BUILD_DIR)/$(1)/$(2): $(MAC_BUILD_DIR)/$(3)/generated-sources $(MAC_SOURCES) $(MAC_CFNETWORK_SOURCES) $(MAC_CLASSIC_SOURCES) $(SN_KEY)
-	@mkdir -p $(MAC_BUILD_DIR)/$(1)
-	$$(call Q_PROF_CSC,mac/$(1)) \
-		$$(MAC_$(3)_CSC) -nologo -out:$$@ -target:library -debug -unsafe \
+$(MAC_BUILD_DIR)/$(1)-64/Xamarin.Mac.dll: $(MAC_BUILD_DIR)/$(1)/generated-sources $(MAC_SOURCES) $(MAC_CFNETWORK_SOURCES) $(MAC_CLASSIC_SOURCES) $(SN_KEY)
+	@mkdir -p $(MAC_BUILD_DIR)/$(1)-64
+	$$(call Q_PROF_CSC,mac/$(1)-64) \
+		$$(MAC_$(1)_CSC) -nologo -out:$$@ -target:library -debug -unsafe \
 		-deterministic \
 		$$(MAC_COMMON_DEFINES) \
-		$$(MAC_$(3)_ARGS) \
-		$$(ARGS_$(6)) \
+		$$(MAC_$(1)_ARGS) \
+		$$(ARGS_64) \
 		-publicsign -keyfile:$(SN_KEY) \
 		-nowarn:3021,1635,612,618,0219,0414,$(MAC_WARNINGS_TO_FIX) \
 		$$(MAC_CSC_FLAGS_XM) \
-		$(4) \
+		$(MAC_CFNETWORK_SOURCES) $(MAC_HTTP_SOURCES) \
+		$(2) \
 		$$(MAC_SOURCES) \
 		@$$<
 
-$(MAC_BUILD_DIR)/$(1)/$(2:.dll=.pdb): $(MAC_BUILD_DIR)/$(1)/$(2)
+$(MAC_BUILD_DIR)/$(1)-64/Xamarin.Mac.pdb: $(MAC_BUILD_DIR)/$(1)-64/Xamarin.Mac.dll
 
 endef
 
-$(eval $(call MAC_TARGETS_template,mobile-64,Xamarin.Mac.dll,mobile,$(MAC_CFNETWORK_SOURCES) $(MAC_HTTP_SOURCES) $(SHARED_SYSTEM_DRAWING_SOURCES) $(APPLETLS_DEFINES),mobile-64,64))
-$(eval $(call MAC_TARGETS_template,full-64,Xamarin.Mac.dll,full,$(MAC_CFNETWORK_SOURCES) $(MAC_HTTP_SOURCES),full-64,64))
+$(eval $(call MAC_TARGETS_template,mobile,$(SHARED_SYSTEM_DRAWING_SOURCES) $(APPLETLS_DEFINES)))
+$(eval $(call MAC_TARGETS_template,full,))
 
 $(MAC_BUILD_DIR)/%-reference/Xamarin.Mac.dll: $(MAC_BUILD_DIR)/%-64/Xamarin.Mac.dll
 	@mkdir -p $(@D)
