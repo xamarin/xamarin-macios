@@ -46,6 +46,8 @@ namespace PassKit {
 	public enum PKPassType : ulong {
 		Barcode,
 		SecureElement,
+		[Deprecated (PlatformName.iOS, 13, 4, message: "Use 'SecureElement' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6, 2, message: "Use 'SecureElement' instead.")]
 		Payment = SecureElement,
 		Any = ulong.MaxValue,
 	}

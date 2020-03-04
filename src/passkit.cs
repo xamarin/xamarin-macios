@@ -768,14 +768,13 @@ namespace PassKit {
 		[Export ("passType")]
 		PKPassType PassType { get; }
 
-		[Deprecated (PlatformName.MacOSX, 10, 15, 4, message: "Use 'SecureElementPass' instead.")]
 		[Deprecated (PlatformName.iOS, 13, 4, message: "Use 'SecureElementPass' instead.")]
 		[Deprecated (PlatformName.WatchOS, 6, 2, message: "Use 'SecureElementPass' instead.")]
 		[iOS (8,0)]
 		[Export ("paymentPass")]
 		PKPaymentPass PaymentPass { get; }
 
-		[Watch (6,2), Mac (10,15,4), iOS (13,4)]
+		[Watch (6,2), iOS (13,4)]
 		[NullAllowed, Export ("secureElementPass")]
 		PKSecureElementPass SecureElementPass { get; }
 
@@ -804,11 +803,10 @@ namespace PassKit {
 
 		[Deprecated (PlatformName.iOS, 13, 4, message: "Use 'SecureElementPass' instead.")]
 		[Deprecated (PlatformName.WatchOS, 6, 2, message: "Use 'SecureElementPass' instead.")]
-		[Deprecated (PlatformName.MacOSX, 10, 15, 4, message: "Use 'SecureElementPass' instead.")]
 		[NullAllowed, Export ("paymentPass", ArgumentSemantic.Copy)]
 		PKPaymentPass PaymentPass { get; }
 
-		[Watch (6,2), Mac (10,15,4), iOS (13,4)]
+		[Watch (6,2), iOS (13,4)]
 		[NullAllowed, Export ("secureElementPass", ArgumentSemantic.Copy)]
 		PKSecureElementPass SecureElementPass { get; }
 
@@ -823,7 +821,6 @@ namespace PassKit {
 
 		[Deprecated (PlatformName.iOS, 13, 4, message: "Use 'PKSecureElementPass.PassActivationState' instead.")]
 		[Deprecated (PlatformName.WatchOS, 6, 2, message: "Use 'PKSecureElementPass.PassActivationState' instead.")]
-		[Deprecated (PlatformName.MacOSX, 10, 15, 4, message: "Use 'PKSecureElementPass.PassActivationState' instead.")]
 		[Export ("activationState")]
 		PKPaymentPassActivationState ActivationState { get; }
 	}
@@ -1310,7 +1307,7 @@ namespace PassKit {
 		NSUrl RedemptionUrl { get; }
 	}
 
-	[Watch (6,2), Mac (10,15,4), iOS (13,4)]
+	[Watch (6,2), iOS (13,4)]
 	[BaseType (typeof (PKPass))]
 	[DisableDefaultCtor]
 	interface PKSecureElementPass {
