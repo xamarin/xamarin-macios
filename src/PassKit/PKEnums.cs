@@ -85,7 +85,7 @@ namespace PassKit {
 		Activated, RequiresActivation, Activating, Suspended, Deactivated
 	}
 
-	[Watch (6,2), Mac (10,15,4), iOS (13,4)]
+	[Watch (6,2), iOS (13,4)]
 	[Native]
 	public enum PKSecureElementPassActivationState : long {
 		Activated,
