@@ -128,6 +128,8 @@ trap cleanup EXIT
 	printf "}\n"
 ) > "$JSONFILE"
 
+cat $JSONFILE
+
 if test -n "$VERBOSE"; then
 	echo "JSON file:"
 	sed 's/^/    /' "$JSONFILE";
