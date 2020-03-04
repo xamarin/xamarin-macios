@@ -1223,6 +1223,10 @@ namespace Xamarin.Bundler
 						app.AddAssemblyBuildTarget (v);
 					}
 			},
+			{ "warn-on-type-ref=", "Warn if any of the comma-separated types is referenced by assemblies - both before and after linking", v => {
+					app.WarnOnTypeRef.AddRange (v.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries));
+				}
+			},
 		};
 
 			AddSharedOptions (app, os);
