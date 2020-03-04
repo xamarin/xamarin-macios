@@ -351,6 +351,13 @@ namespace MonoTouchFixtures.CoreGraphics {
 				Assert.AreEqual ((nfloat)6, tback.y0, "y0");
 			}
 		}
+
+		[Test]
+		public unsafe void SizeOfTest ()
+		{
+			Assert.AreEqual (sizeof (CGAffineTransform), Marshal.SizeOf (typeof (CGAffineTransform)));
+		}
+
 	}
 
 

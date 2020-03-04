@@ -12,8 +12,9 @@ using System.Xml;
 using System.Xml.Xsl;
 using Xamarin;
 using Xamarin.Utils;
+using Xharness.Logging;
 
-namespace xharness
+namespace Xharness
 {
 	public enum AppRunnerTarget
 	{
@@ -34,11 +35,13 @@ namespace xharness
 		TodayExtension,
 	}
 
-	public class AppRunner
+	class AppRunner
 	{
 		public Harness Harness;
 		public string ProjectFile;
 		public string AppPath;
+		public string Variation;
+		public BuildToolTask BuildTask;
 
 		public TestExecutingResult Result { get; private set; }
 		public string FailureMessage { get; private set; }
@@ -76,6 +79,8 @@ namespace xharness
 			}
 		}
 
+		public string AppName => appName;
+
 		public double TimeoutMultiplier { get; set; } = 1;
 
 		// For watch apps we end up with 2 simulators, the watch simulator (the main one), and the iphone simulator (the companion one).
@@ -95,15 +100,15 @@ namespace xharness
 			set { log_directory = value; }
 		}
 
-		Logs logs;
-		public Logs Logs {
+		ILogs logs;
+		public ILogs Logs {
 			get {
 				return logs ?? (logs = new Logs (LogDirectory));
 			}
 		}
 
-		Log main_log;
-		public Log MainLog {
+		ILog main_log;
+		public ILog MainLog {
 			get { return main_log; }
 			set { main_log = value; }
 		}
@@ -334,11 +339,13 @@ namespace xharness
 			}
 		}
 
-		(string resultLine, bool failed, bool crashed) ParseResult (string test_log_path, bool timed_out, bool crashed)
+		(string resultLine, bool failed, bool crashed) ParseResult (string test_log_path, bool timed_out, out bool crashed)
 		{
-			if (!File.Exists (test_log_path))
+			crashed = false;
+			if (!File.Exists (test_log_path)) {
+				crashed = true;
 				return (null, false, true); // if we do not have a log file, the test crashes
-
+			}
 			// parsing the result is different if we are in jenkins or not.
 			// When in Jenkins, Touch.Unit produces an xml file instead of a console log (so that we can get better test reporting).
 			// However, for our own reporting, we still want the console-based log. This log is embedded inside the xml produced
@@ -360,8 +367,24 @@ namespace xharness
 				try {
 					var newFilename = XmlResultParser.GetXmlFilePath (path, xmlType);
 
-					// rename the path to the correct value
-					File.Move (path, newFilename);
+					// at this point, we have the test results, but we want to be able to have attachments in vsts, so if the format is
+					// the right one (NUnitV3) add the nodes. ATM only TouchUnit uses V3.
+					var testRunName = $"{appName} {Variation}";
+					if (xmlType == XmlResultJargon.NUnitV3) {
+						var logFiles = new List<string> ();
+						// add our logs AND the logs of the previous task, which is the build task
+						logFiles.AddRange (Directory.GetFiles (Logs.Directory));
+						if (BuildTask != null) // when using the run command, we do not have a build task, ergo, there are no logs to add.
+							logFiles.AddRange (Directory.GetFiles (BuildTask.LogDirectory));
+						// add the attachments and write in the new filename
+						// add a final prefix to the file name to make sure that the VSTS test uploaded just pick
+						// the final version, else we will upload tests more than once
+						newFilename = XmlResultParser.GetVSTSFilename (newFilename);
+						XmlResultParser.UpdateMissingData (path, newFilename, testRunName, logFiles);
+					} else {
+						// rename the path to the correct value
+						File.Move (path, newFilename);
+					}
 					path = newFilename;
 
 					// write the human readable results in a tmp file, which we later use to step on the logs
@@ -371,7 +394,7 @@ namespace xharness
 					File.Delete (tmpFile);
 
 					// we do not longer need the tmp file
-					Logs.AddFile (path, "Test xml");
+					Logs.AddFile (path, LogType.XmlLog.ToString ());
 					return parseResult;
 
 				} catch (Exception e) {
@@ -398,36 +421,33 @@ namespace xharness
 						return parseResult;
 					}
 				}
-				
-			} else {
-				// delete not needed copy
-				File.Delete (path);
-				// not the most efficient way but this just happens when we run
-				// the tests locally and we usually do not run all tests, we are
-				// more interested to be efficent on the bots
-				string resultLine = null;
-				using (var reader = new StreamReader (test_log_path)) {
-					string line = null;
-					bool failed = false;
-					while ((line = reader.ReadLine ()) != null)
-					{
-						if (line.Contains ("Tests run:")) {
-							Console.WriteLine (line);
-							resultLine = line;
-							break;
-						} else if (line.Contains ("[FAIL]")) {
-							Console.WriteLine (line);
-							failed = true;
-						}
+
+			}               // delete not needed copy
+			File.Delete (path);
+			// not the most efficient way but this just happens when we run
+			// the tests locally and we usually do not run all tests, we are
+			// more interested to be efficent on the bots
+			string resultLine = null;
+			using (var reader = new StreamReader (test_log_path)) {
+				string line = null;
+				bool failed = false;
+				while ((line = reader.ReadLine ()) != null) {
+					if (line.Contains ("Tests run:")) {
+						Console.WriteLine (line);
+						resultLine = line;
+						break;
+					} else if (line.Contains ("[FAIL]")) {
+						Console.WriteLine (line);
+						failed = true;
 					}
-					return (resultLine, failed, false);
 				}
+				return (resultLine, failed, false);
 			}
 		}
 
-		public bool TestsSucceeded (string test_log_path, bool timed_out, bool crashed)
+		public bool TestsSucceeded (string test_log_path, bool timed_out, out bool crashed)
 		{
-			var (resultLine, failed, crashed_out) = ParseResult (test_log_path, timed_out, crashed);
+			var (resultLine, failed, crashed_out) = ParseResult (test_log_path, timed_out, out crashed);
 			// read the parsed logs in a human readable way
 			if (resultLine != null) {
 				var tests_run = resultLine.Replace ("Tests run: ", "");
@@ -457,9 +477,9 @@ namespace xharness
 		public async Task<int> RunAsync ()
 		{
 			CrashReportSnapshot crash_reports;
-			Log device_system_log = null;
-			Log listener_log = null;
-			Log run_log = main_log;
+			ILog device_system_log = null;
+			ILog listener_log = null;
+			ILog run_log = main_log;
 
 			Initialize ();
 
@@ -495,6 +515,7 @@ namespace xharness
 			if (useXmlOutput) {
 				args.Add ("-setenv=NUNIT_ENABLE_XML_OUTPUT=true");
 				args.Add ("-setenv=NUNIT_ENABLE_XML_MODE=wrapped");
+				args.Add ("-setenv=NUNIT_XML_VERSION=nunitv3");
 			}
 
 			if (Harness.InCI) {
@@ -529,7 +550,7 @@ namespace xharness
 			args.Add ($"-argument=-app-arg:-transport:{transport}");
 			args.Add ($"-setenv=NUNIT_TRANSPORT={transport}");
 
-			listener_log = Logs.Create ($"test-{mode}-{Harness.Timestamp}.log", "Test log", timestamp: !useXmlOutput);
+			listener_log = Logs.Create ($"test-{mode}-{Harness.Timestamp}.log", LogType.TestLog.ToString (), timestamp: !useXmlOutput);
 
 			SimpleListener listener;
 			switch (transport) {
@@ -630,7 +651,7 @@ namespace xharness
 					var log = new CaptureLog (Logs, sim.SystemLog, entire_file: Harness.Action != HarnessAction.Jenkins)
 					{
 						Path = Path.Combine (LogDirectory, sim.Name + ".log"),
-						Description = isCompanion ? "System log (companion)" : "System log",
+						Description = isCompanion ? LogType.CompanionSystemLog.ToString () : LogType.SystemLog.ToString (),
 					};
 					log.StartCapture ();
 					Logs.Add (log);
@@ -776,7 +797,7 @@ namespace xharness
 			var crashed = false;
 			if (File.Exists (listener_log.FullPath)) {
 				Harness.LogWrench ("@MonkeyWrench: AddFile: {0}", listener_log.FullPath);
-				success = TestsSucceeded (listener_log.FullPath, timed_out, crashed);
+				success = TestsSucceeded (listener_log.FullPath, timed_out, out crashed);
 			} else if (timed_out) {
 				Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} never launched</i></b><br/>", mode);
 				main_log.WriteLine ("Test run never launched");
@@ -844,8 +865,12 @@ namespace xharness
 								crash_reason = node?.SelectSingleNode ("reason")?.InnerText;
 							}
 						}
-						if (crash_reason != null)
+						if (crash_reason != null) {
+							// if in CI, do write an xml error that will be picked as a failure by VSTS
+							if (Harness.InCI)
+								XmlResultParser.GenerateFailure (Logs, "crash", appName, Variation, "AppCrash", $"App crashed {crash_reason}.", crash_reports.Log.FullPath, Harness.XmlJargon);
 							break;
+						}
 					} catch (Exception e) {
 						Harness.Log (2, "Failed to process crash report '{1}': {0}", e.Message, crash.Description);
 					}
@@ -856,8 +881,31 @@ namespace xharness
 					} else {
 						FailureMessage = $"Killed by the OS ({crash_reason})";
 					}
+					if (Harness.InCI)
+						XmlResultParser.GenerateFailure (Logs, "crash", appName, Variation, "AppCrash", $"App crashed: {FailureMessage}", crash_reports.Log.FullPath, Harness.XmlJargon);
 				} else if (launch_failure) {
+					// same as with a crash
 					FailureMessage = $"Launch failure";
+					if (Harness.InCI)
+						XmlResultParser.GenerateFailure (Logs, "launch", appName, Variation, $"AppLaunch on {device_name}", $"{FailureMessage} on {device_name}", main_log.FullPath, XmlResultJargon.NUnitV3);
+				} else if (!isSimulator && crashed && string.IsNullOrEmpty (crash_reason) && Harness.InCI) {
+					// this happens more that what we would like on devices, the main reason most of the time is that we have had netwoking problems and the
+					// tcp connection could not be stablished. We are going to report it as an error since we have not parsed the logs, evne when the app might have
+					// not crashed. We need to check the main_log to see if we do have an tcp issue or not
+					var isTcp = false;
+					using (var reader = new StreamReader (main_log.FullPath)) {
+						string line;
+						while ((line = reader.ReadLine ()) != null) {
+							if (line.Contains ("Couldn't establish a TCP connection with any of the hostnames")) {
+								isTcp = true;
+								break;
+							}
+						}
+					}
+					if (isTcp)
+						XmlResultParser.GenerateFailure (Logs, "tcp-connection", appName, Variation, $"TcpConnection on {device_name}", $"Device {device_name} could not reach the host over tcp.", main_log.FullPath, Harness.XmlJargon);
+				} else if (timed_out && Harness.InCI) {
+					XmlResultParser.GenerateFailure (Logs, "timeout", appName, Variation, "AppTimeout", $"Test run timed out after {timeout.TotalMinutes} minute(s).", main_log.FullPath, Harness.XmlJargon);
 				}
 			}
 
@@ -880,9 +928,9 @@ namespace xharness
 
 	// Monitor the output from 'mlaunch --installdev' and cancel the installation if there's no output for 1 minute.
 	class AppInstallMonitorLog : Log {
-		public override string FullPath => throw new NotImplementedException ();
+		public override string FullPath => copy_to.FullPath;
 
-		Log copy_to;
+		ILog copy_to;
 		CancellationTokenSource cancellation_source;
 		
 		public bool CopyingApp;
@@ -904,7 +952,7 @@ namespace xharness
 			}
 		}
 
-		public AppInstallMonitorLog (Log copy_to)
+		public AppInstallMonitorLog (ILog copy_to)
 				: base (copy_to.Logs, $"Watch transfer log for {copy_to.Description}")
 		{
 			this.copy_to = copy_to;

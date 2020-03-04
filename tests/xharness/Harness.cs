@@ -9,9 +9,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using Xamarin.Utils;
-using xharness.BCLTestImporter;
+using Xharness.BCLTestImporter;
+using Xharness.Logging;
 
-namespace xharness
+namespace Xharness
 {
 	public enum HarnessAction
 	{
@@ -27,9 +28,10 @@ namespace xharness
 	{
 		public HarnessAction Action { get; set; }
 		public int Verbosity { get; set; }
-		public Log HarnessLog { get; set; }
+		public ILog HarnessLog { get; set; }
 		public bool UseSystem { get; set; } // if the system XI/XM should be used, or the locally build XI/XM.
 		public HashSet<string> Labels { get; } = new HashSet<string> ();
+		public XmlResultJargon XmlJargon { get; set; } = XmlResultJargon.NUnitV3;
 
 		public string XIBuildPath {
 			get { return Path.GetFullPath (Path.Combine (RootDirectory, "..", "tools", "xibuild", "xibuild")); }
@@ -295,19 +297,6 @@ namespace xharness
 				});
 			}
 
-			var bcl_suites = new string[] {
-			};
-			foreach (var p in bcl_suites) {
-				var bclTestInfo = new MacBCLTestInfo (this, p);
-				var bclTestProject = new MacTestProject (bclTestInfo.ProjectPath, targetFrameworkFlavor: MacFlavors.Modern | MacFlavors.Full) {
-					Name = p,
-					BCLInfo = bclTestInfo,
-					Platform = "AnyCPU",
-				};
-
-				MacTestProjects.Add (bclTestProject);
-			}
-
 			foreach (var flavor in new MonoNativeFlavor [] { MonoNativeFlavor.Compat, MonoNativeFlavor.Unified }) {
 				var monoNativeInfo = new MacMonoNativeInfo (this, flavor);
 				var macTestProject = new MacTestProject (monoNativeInfo.ProjectPath, targetFrameworkFlavor: MacFlavors.Modern | MacFlavors.Full) {
@@ -325,9 +314,6 @@ namespace xharness
 
 			// Generate test projects from templates (bcl/mono-native templates)
 			if (generate_projects) {
-				foreach (var bclTestInfo in MacTestProjects.Where (x => x.BCLInfo != null).Select (x => x.BCLInfo))
-					bclTestInfo.Convert ();
-
 				foreach (var mtp in MacTestProjects.Where (x => x.MonoNativeInfo != null).Select (x => x.MonoNativeInfo))
 					mtp.Convert ();
 			}
@@ -402,10 +388,7 @@ namespace xharness
 			var library_projects = new string [] { "BundledResources", "EmbeddedResources", "bindings-test", "bindings-test2", "bindings-framework-test" };
 			var fsharp_test_suites = new string [] { "fsharp" };
 			var fsharp_library_projects = new string [] { "fsharplibrary" };
-			var bcl_suites = new string [] {
-			};
-			var bcl_skip_watchos = new string [] {
-			};
+
 			foreach (var p in test_suites)
 				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".csproj"))) { Name = p });
 			foreach (var p in fsharp_test_suites)
@@ -415,15 +398,6 @@ namespace xharness
 			foreach (var p in fsharp_library_projects)
 				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".fsproj")), false) { Name = p });
 
-			foreach (var p in bcl_suites) {
-				BCLTestInfo bclTestInfo = new BCLTestInfo (this, p);
-				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/" + p + "/" + p + ".csproj"))) {
-					SkipwatchOSVariation = bcl_skip_watchos.Contains (p),
-					BCLInfo = bclTestInfo,
-					Name = p
-				});
-			}
-			
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "iOS", "introspection-ios.csproj"))) { Name = "introspection" });
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "dont link", "dont link.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link all", "link all.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
@@ -509,8 +483,6 @@ namespace xharness
 			if (AutoConf)
 				AutoConfigureIOS ();
 
-			foreach (var bclTestInfo in IOSTestProjects.Where (x => x.BCLInfo != null).Select (x => x.BCLInfo))
-				bclTestInfo.Convert ();
 			foreach (var monoNativeInfo in IOSTestProjects.Where (x => x.MonoNativeInfo != null).Select (x => x.MonoNativeInfo))
 				monoNativeInfo.Convert ();
 
@@ -805,7 +777,7 @@ namespace xharness
 			}
 		}
 
-		public Task<ProcessExecutionResult> ExecuteXcodeCommandAsync (string executable, IList<string> args, Log log, TimeSpan timeout)
+		public Task<ProcessExecutionResult> ExecuteXcodeCommandAsync (string executable, IList<string> args, ILog log, TimeSpan timeout)
 		{
 			return ProcessHelper.ExecuteCommandAsync (Path.Combine (XcodeRoot, "Contents", "Developer", "usr", "bin", executable), args, log, timeout: timeout);
 		}
@@ -815,7 +787,7 @@ namespace xharness
 			await ExecuteXcodeCommandAsync ("simctl", new [] { "list" }, log, TimeSpan.FromSeconds (10));
 		}
 
-		public async Task<LogFile> SymbolicateCrashReportAsync (Logs logs, Log log, LogFile report)
+		public async Task<ILogFile> SymbolicateCrashReportAsync (ILogs logs, ILog log, ILogFile report)
 		{
 			var symbolicatecrash = Path.Combine (XcodeRoot, "Contents/SharedFrameworks/DTDeviceKitBase.framework/Versions/A/Resources/symbolicatecrash");
 			if (!File.Exists (symbolicatecrash))
@@ -839,7 +811,7 @@ namespace xharness
 			}
 		}
 
-		public async Task<HashSet<string>> CreateCrashReportsSnapshotAsync (Log log, bool simulatorOrDesktop, string device)
+		public async Task<HashSet<string>> CreateCrashReportsSnapshotAsync (ILog log, bool simulatorOrDesktop, string device)
 		{
 			var rv = new HashSet<string> ();
 
@@ -874,8 +846,8 @@ namespace xharness
 	public class CrashReportSnapshot
 	{
 		public Harness Harness { get; set; }
-		public Log Log { get; set; }
-		public Logs Logs { get; set; }
+		public ILog Log { get; set; }
+		public ILogs Logs { get; set; }
 		public string LogDirectory { get; set; }
 		public bool Device { get; set; }
 		public string DeviceName { get; set; }
@@ -901,16 +873,16 @@ namespace xharness
 				Reports = end_crashes;
 				if (end_crashes.Count > 0) {
 					Log.WriteLine ("Found {0} new crash report(s)", end_crashes.Count);
-					List<LogFile> crash_reports;
+					List<ILogFile> crash_reports;
 					if (!Device) {
-						crash_reports = new List<LogFile> (end_crashes.Count);
+						crash_reports = new List<ILogFile> (end_crashes.Count);
 						foreach (var path in end_crashes) {
 							Logs.AddFile (path, $"Crash report: {Path.GetFileName (path)}");
 						}
 					} else {
 						// Download crash reports from the device. We put them in the project directory so that they're automatically deleted on wrench
 						// (if we put them in /tmp, they'd never be deleted).
-						var downloaded_crash_reports = new List<LogFile> ();
+						var downloaded_crash_reports = new List<ILogFile> ();
 						foreach (var file in end_crashes) {
 							var name = Path.GetFileName (file);
 							var crash_report_target = Logs.Create (name, $"Crash report: {name}", timestamp: false);

@@ -4,12 +4,13 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Xharness.Logging;
 
-namespace xharness
+namespace Xharness
 {
 	public abstract class SimpleListener : IDisposable
 	{
-		Log output_writer;
+		ILog output_writer;
 		string xml_data;
 
 		TaskCompletionSource<bool> stopped = new TaskCompletionSource<bool> ();
@@ -17,8 +18,8 @@ namespace xharness
 
 		public IPAddress Address { get; set; }
 		public int Port { get; set; }
-		public Log Log { get; set; }
-		public Log TestLog { get; set; }
+		public ILog Log { get; set; }
+		public ILog TestLog { get; set; }
 		public bool AutoExit { get; set; }
 		public bool XmlOutput { get; set; }
 
@@ -30,7 +31,7 @@ namespace xharness
 		protected abstract void Start ();
 		protected abstract void Stop ();
 
-		public Log OutputWriter {
+		public ILog OutputWriter {
 			get {
 				return output_writer;
 			}

@@ -43,6 +43,11 @@ namespace Xamarin.Bundler
 			"cctor-beforefieldinit",
 			"custom-attributes-removal",
 			"experimental-xforms-product-type",
+#if MONOTOUCH
+			"force-rejected-types-removal",
+#else
+			"", // dummy value to make indices match up between XM and XI
+#endif
 		};
 
 		enum Opt
@@ -64,6 +69,7 @@ namespace Xamarin.Bundler
 			StaticConstructorBeforeFieldInit,
 			CustomAttributesRemoval,
 			ExperimentalFormsProductType,
+			ForceRejectedTypesRemoval,
 		}
 
 		bool? all;
@@ -151,6 +157,13 @@ namespace Xamarin.Bundler
 			get { return values [(int) Opt.ExperimentalFormsProductType]; }
 			set { values [(int) Opt.ExperimentalFormsProductType] = value; }
 		}
+
+#if MONOTOUCH
+		public bool? ForceRejectedTypesRemoval {
+			get { return values [(int) Opt.ForceRejectedTypesRemoval]; }
+			set { values [(int) Opt.ForceRejectedTypesRemoval] = value; }
+		}
+#endif
 
 		public Optimizations ()
 		{

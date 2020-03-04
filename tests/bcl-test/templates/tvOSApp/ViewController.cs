@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Reflection;
 using System.Collections.Generic;
@@ -86,11 +86,21 @@ namespace BCLTests {
 			}
 
 			await runner.Run (testAssemblies).ConfigureAwait (false);
+			Xamarin.iOS.UnitTests.TestRunner.Jargon jargon = Xamarin.iOS.UnitTests.TestRunner.Jargon.NUnitV3;
+			switch (options.XmlVersion) {
+			default:
+				case XmlVersion.NUnitV2:
+				jargon = Xamarin.iOS.UnitTests.TestRunner.Jargon.NUnitV2;
+				break;
+			case XmlVersion.NUnitV3:
+				jargon = Xamarin.iOS.UnitTests.TestRunner.Jargon.NUnitV3;
+				break;
+			}
 			if (options.EnableXml) {
-				runner.WriteResultsToFile (writer);
+				runner.WriteResultsToFile (writer, jargon);
 				logger.Info ("Xml file was written to the tcp listener.");
 			} else {
-				string resultsFilePath = runner.WriteResultsToFile ();
+				string resultsFilePath = runner.WriteResultsToFile (jargon);
 				logger.Info ($"Xml result can be found {resultsFilePath}");
 			}
 			

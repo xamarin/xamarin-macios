@@ -1,7 +1,11 @@
 #!/bin/bash -ex
 
-export TESTS_EXTRA_ARGUMENTS="--label=run-ios-64-tests"
 
-make -C xamarin-macios/builds download -j
-make -C xamarin-macios/builds .stamp-mono-ios-sdk-destdir -j
-make -C xamarin-macios/tests vsts-device-tests
+if [[ "$SYSTEM_DEBUG" == "true" ]]; then
+  DEBUG="-d"
+else
+  DEBUG=""
+fi
+make $DEBUG -C xamarin-macios/builds download -j
+make $DEBUG -C xamarin-macios/builds .stamp-mono-ios-sdk-destdir -j
+make $DEBUG -C xamarin-macios/tests vsts-device-tests

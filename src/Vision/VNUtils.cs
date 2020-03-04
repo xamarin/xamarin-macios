@@ -21,6 +21,7 @@ namespace Vision {
 	[TV (11,0), Mac (10,13), iOS (11,0)]
 	public static partial class VNUtils {
 	
+		// initialized only once (see tests/cecil-tests/)
 		[Field ("VNNormalizedIdentityRect", Constants.VisionLibrary)]
 		public static CGRect NormalizedIdentityRect { get; } = Dlfcn.GetCGRect (Libraries.Vision.Handle, "VNNormalizedIdentityRect");
 

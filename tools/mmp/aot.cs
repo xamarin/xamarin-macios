@@ -177,7 +177,7 @@ namespace Xamarin.Bundler {
 		// Allows tests to stub out actual compilation and parallelism
 		public RunCommandDelegate RunCommand { get; set; } = Driver.RunCommand; 
 		public ParallelOptions ParallelOptions { get; set; } = new ParallelOptions () { MaxDegreeOfParallelism = Driver.Concurrency };
-		public string XamarinMacPrefix { get; set; } = Driver.GetXamMacPrefix (); // GetXamMacPrefix assumes GetExecutingAssembly in ways that are not valid for tests, so we must stub out
+		public string XamarinMacPrefix { get; set; } = Driver.FrameworkDirectory; // FrameworkDirectory assumes GetExecutingAssembly in ways that are not valid for tests, so we must stub out
 
 		AOTOptions options;
 		AOTCompilerType compilerType;
@@ -301,7 +301,7 @@ namespace Xamarin.Bundler {
 			get {
 				switch (compilerType) {
 				case AOTCompilerType.Bundled64:
-					return Path.Combine (XamarinMacPrefix, "bin/bmac-mobile-mono");
+					return Path.Combine (XamarinMacPrefix, "bin", "mono-sgen");
 				case AOTCompilerType.System64:
 					return "/Library/Frameworks/Mono.framework/Commands/mono64";
 				default:

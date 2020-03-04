@@ -11,8 +11,9 @@ using System.Text;
 using Xamarin;
 using Xamarin.Utils;
 using System.Xml;
+using Xharness.Logging;
 
-namespace xharness
+namespace Xharness
 {
 	public class Jenkins
 	{
@@ -38,14 +39,20 @@ namespace xharness
 		public bool IncludeOldSimulatorTests;
 		public bool IncludeDevice;
 		public bool IncludeXtro;
+		public bool IncludeCecil;
 		public bool IncludeDocs;
+		public bool IncludeBCLxUnit;
+		public bool IncludeBCLNUnit;
+		public bool IncludeMscorlib;
+		public bool IncludeNonMonotouch = true;
+		public bool IncludeMonotouch = true;
 
 		public bool CleanSuccessfulTestRuns = true;
 		public bool UninstallTestApp = true;
 
-		public Log MainLog;
-		public Log SimulatorLoadLog;
-		public Log DeviceLoadLog;
+		public ILog MainLog;
+		public ILog SimulatorLoadLog;
+		public ILog DeviceLoadLog;
 
 		string log_directory;
 		public string LogDirectory {
@@ -59,8 +66,8 @@ namespace xharness
 			}
 		}
 
-		Logs logs;
-		public Logs Logs {
+		ILogs logs;
+		public ILogs Logs {
 			get {
 				return logs ?? (logs = new Logs (LogDirectory));
 			}
@@ -90,7 +97,7 @@ namespace xharness
 			return new Resources (resources);
 		}
 
-		Task LoadAsync (ref Log log, ILoadAsync loadable, string name)
+		Task LoadAsync (ref ILog log, ILoadAsync loadable, string name)
 		{
 			loadable.Harness = Harness;
 			if (log == null)
@@ -101,7 +108,7 @@ namespace xharness
 			return loadable.LoadAsync (capturedLog, include_locked: false, force: true).ContinueWith ((v) => {
 				if (v.IsFaulted) {
 					capturedLog.WriteLine ("Failed to load:");
-					capturedLog.WriteLine (v.Exception);
+					capturedLog.WriteLine (v.Exception.ToString ());
 					capturedLog.Description = $"{name} Listing {v.Exception.Message})";
 				} else if (v.IsCompleted) {
 					if (loadable is Devices devices) {
@@ -218,8 +225,19 @@ namespace xharness
 		{
 			if (!project.IsExecutableProject)
 				return false;
+			
+			if (project.IsBclTest) {
+				if (!project.IsBclxUnit)
+					return IncludeBcl || IncludeBCLNUnit;
+				if (project.IsMscorlib) 
+					return IncludeMscorlib;
+				return IncludeBcl || IncludeBCLxUnit;
+			}
 
-			if (!IncludeBcl && project.IsBclTest)
+			if (!IncludeMonotouch && project.IsMonotouch)
+				return false;
+
+			if (!IncludeNonMonotouch && !project.IsMonotouch)
 				return false;
 
 			if (Harness.IncludeSystemPermissionTests == false && project.Name == "introspection")
@@ -738,6 +756,11 @@ namespace xharness
 				"src",
 				"Make.config",
 			};
+			var cecil_prefixes = new string [] {
+				"tests/cecil-tests",
+				"src",
+				"Make.config",
+			};
 
 			SetEnabled (files, mtouch_prefixes, "mtouch", ref IncludeMtouch);
 			SetEnabled (files, mmp_prefixes, "mmp", ref IncludeMmpTest);
@@ -745,6 +768,7 @@ namespace xharness
 			SetEnabled (files, btouch_prefixes, "btouch", ref IncludeBtouch);
 			SetEnabled (files, mac_binding_project, "mac-binding-project", ref IncludeMacBindingProject);
 			SetEnabled (files, xtro_prefixes, "xtro", ref IncludeXtro);
+			SetEnabled (files, cecil_prefixes, "cecil", ref IncludeCecil);
 		}
 
 		void SetEnabled (IEnumerable<string> files, string [] prefixes, string testname, ref bool value)
@@ -792,11 +816,15 @@ namespace xharness
 			SetEnabled (labels, "mtouch", ref IncludeMtouch);
 			SetEnabled (labels, "mmp", ref IncludeMmpTest);
 			SetEnabled (labels, "bcl", ref IncludeBcl);
+			SetEnabled (labels, "bcl-xunit", ref IncludeBCLxUnit);
+			SetEnabled (labels, "bcl-nunit", ref IncludeBCLNUnit);
+			SetEnabled (labels, "mscorlib", ref IncludeMscorlib);
 			SetEnabled (labels, "btouch", ref IncludeBtouch);
 			SetEnabled (labels, "mac-binding-project", ref IncludeMacBindingProject);
 			SetEnabled (labels, "ios-extensions", ref IncludeiOSExtensions);
 			SetEnabled (labels, "device", ref IncludeDevice);
 			SetEnabled (labels, "xtro", ref IncludeXtro);
+			SetEnabled (labels, "cecil", ref IncludeCecil);
 			SetEnabled (labels, "old-simulator", ref IncludeOldSimulatorTests);
 			SetEnabled (labels, "all", ref IncludeAll);
 
@@ -809,6 +837,9 @@ namespace xharness
 			SetEnabled (labels, "mac", ref IncludeMac);
 			SetEnabled (labels, "ios-msbuild", ref IncludeiOSMSBuild);
 			SetEnabled (labels, "ios-simulator", ref IncludeSimulator);
+			SetEnabled (labels, "non-monotouch", ref IncludeNonMonotouch);
+			SetEnabled (labels, "monotouch", ref IncludeMonotouch);
+
 			bool inc_permission_tests = false;
 			if (SetEnabled (labels, "system-permission", ref inc_permission_tests))
 				Harness.IncludeSystemPermissionTests = inc_permission_tests;
@@ -1121,6 +1152,26 @@ namespace xharness
 			};
 			Tasks.Add (runXtroReporter);
 
+			var buildCecilTests = new MakeTask {
+				Jenkins = this,
+				Platform = TestPlatform.All,
+				TestName = "Cecil",
+				Target = "build",
+				WorkingDirectory = Path.Combine (Harness.RootDirectory, "cecil-tests"),
+				Ignored = !IncludeCecil,
+				Timeout = TimeSpan.FromMinutes (5),
+			};
+			var runCecilTests = new NUnitExecuteTask (buildCecilTests) {
+				TestLibrary = Path.Combine (buildCecilTests.WorkingDirectory, "bin", "Debug", "cecil-tests.dll"),
+				TestProject = new TestProject (Path.Combine (buildCecilTests.WorkingDirectory, "cecil-tests.csproj")),
+				Platform = TestPlatform.iOS,
+				TestName = "Cecil-based tests",
+				Timeout = TimeSpan.FromMinutes (5),
+				Ignored = !IncludeCecil,
+				InProcess = true,
+			};
+			Tasks.Add (runCecilTests);
+
 			var runDocsTests = new MakeTask {
 				Jenkins = this,
 				Platform = TestPlatform.All,
@@ -1157,7 +1208,7 @@ namespace xharness
 			return Task.WhenAll (loadsim, loaddev);
 		}
 
-		async Task ExecutePeriodicCommandAsync (Log periodic_loc)
+		async Task ExecutePeriodicCommandAsync (ILog periodic_loc)
 		{
 			periodic_loc.WriteLine ($"Starting periodic task with interval {Harness.PeriodicCommandInterval.TotalMinutes} minutes.");
 			while (true) {
@@ -1181,7 +1232,7 @@ namespace xharness
 		{
 			try {
 				Directory.CreateDirectory (LogDirectory);
-				Log log = Logs.Create ($"Harness-{Harness.Timestamp}.log", "Harness log");
+				ILog log = Logs.Create ($"Harness-{Harness.Timestamp}.log", "Harness log");
 				if (Harness.InCI)
 					log = Log.CreateAggregatedLog (log, new ConsoleLog ());
 				Harness.HarnessLog = MainLog = log;
@@ -1675,7 +1726,7 @@ namespace xharness
 			}
 		}
 
-		public bool IsHE0038Error (Log log) {
+		public bool IsHE0038Error (ILog log) {
 			if (log == null)
 				return false;
 			if (File.Exists (log.FullPath) && new FileInfo (log.FullPath).Length > 0) {
@@ -2100,7 +2151,7 @@ namespace xharness
 								writer.WriteLine ($"Known failure: {test.KnownFailure} <br />");
 
 							if (!string.IsNullOrEmpty (test.FailureMessage)) {
-								var msg = HtmlFormat (test.FailureMessage);
+								var msg = test.FailureMessage.AsHtml ();
 								var prefix = test.Ignored ? "Ignored" : "Failure";
 								if (test.FailureMessage.Contains ('\n')) {
 									writer.WriteLine ($"{prefix}:<br /> <div style='margin-left: 20px;'>{msg}</div>");
@@ -2110,7 +2161,7 @@ namespace xharness
 							}
 							var progressMessage = test.ProgressMessage;
 							if (!string.IsNullOrEmpty (progressMessage))
-								writer.WriteLine (HtmlFormat (progressMessage) + " <br />");
+								writer.WriteLine (progressMessage.AsHtml () + " <br />");
 
 							if (runTest != null) {
 								if (runTest.BuildTask.Duration.Ticks > 0) {
@@ -2157,7 +2208,7 @@ namespace xharness
 									}
 									if (!exists) {
 										writer.WriteLine ("<a href='{0}' type='{2}' target='{3}'>{1}</a> (does not exist)<br />", LinkEncode (log.FullPath.Substring (LogDirectory.Length + 1)), log.Description, log_type, log_target);
-									} else if (log.Description == "Build log") {
+									} else if (log.Description == LogType.BuildLog.ToString ()) {
 										var binlog = log.FullPath.Replace (".txt", ".binlog");
 										if (File.Exists (binlog)) {
 											var textLink = string.Format ("<a href='{0}' type='{2}' target='{3}'>{1}</a>", LinkEncode (log.FullPath.Substring (LogDirectory.Length + 1)), log.Description, log_type, log_target);
@@ -2171,7 +2222,7 @@ namespace xharness
 									}
 									if (!exists) {
 										// Don't try to parse files that don't exist
-									} else if (log.Description == "Test log" || log.Description == "Extension test log" || log.Description == "Execution log") {
+									} else if (log.Description == LogType.TestLog.ToString () || log.Description ==  LogType.ExecutionLog.ToString () || log.Description == LogType.ExecutionLog.ToString ()) {
 										string summary;
 										List<string> fails;
 										try {
@@ -2203,15 +2254,15 @@ namespace xharness
 											if (fails.Count > 0) {
 												writer.WriteLine ("<div style='padding-left: 15px;'>");
 												foreach (var fail in fails)
-													writer.WriteLine ("{0} <br />", HtmlFormat (fail));
+													writer.WriteLine ("{0} <br />", fail.AsHtml ());
 												writer.WriteLine ("</div>");
 											}
 											if (!string.IsNullOrEmpty (summary))
 												writer.WriteLine ("<span style='padding-left: 15px;'>{0}</span><br />", summary);
 										} catch (Exception ex) {
-											writer.WriteLine ("<span style='padding-left: 15px;'>Could not parse log file: {0}</span><br />", HtmlFormat (ex.Message));
+											writer.WriteLine ("<span style='padding-left: 15px;'>Could not parse log file: {0}</span><br />", ex.Message.AsHtml ());
 										}
-									} else if (log.Description == "Build log") {
+									} else if (log.Description == LogType.BuildLog.ToString ()) {
 										HashSet<string> errors;
 										try {
 											using (var reader = log.GetReader ()) {
@@ -2241,39 +2292,21 @@ namespace xharness
 											if (errors.Count > 0) {
 												writer.WriteLine ("<div style='padding-left: 15px;'>");
 												foreach (var error in errors)
-													writer.WriteLine ("{0} <br />", HtmlFormat (error));
+													writer.WriteLine ("{0} <br />",  error.AsHtml ());
 												writer.WriteLine ("</div>");
 											}
 										} catch (Exception ex) {
-											writer.WriteLine ("<span style='padding-left: 15px;'>Could not parse log file: {0}</span><br />", HtmlFormat (ex.Message));
+											writer.WriteLine ("<span style='padding-left: 15px;'>Could not parse log file: {0}</span><br />", ex.Message.AsHtml ());
 										}
-									} else if (log.Description == "NUnit results" || log.Description == "XML log") {
+									} else if (log.Description == LogType.NUnitResult.ToString () || log.Description == LogType.XmlLog.ToString () ) {
 										try {
 											if (File.Exists (log.FullPath) && new FileInfo (log.FullPath).Length > 0) {
-												var doc = new System.Xml.XmlDocument ();
-												doc.LoadWithoutNetworkAccess (log.FullPath);
-												var failures = doc.SelectNodes ("//test-case[@result='Error' or @result='Failure']").Cast<System.Xml.XmlNode> ().ToArray ();
-												if (failures.Length > 0) {
-													writer.WriteLine ("<div style='padding-left: 15px;'>");
-													writer.WriteLine ("<ul>");
-													foreach (var failure in failures) {
-														writer.WriteLine ("<li>");
-														var test_name = failure.Attributes ["name"]?.Value;
-														var message = failure.SelectSingleNode ("failure/message")?.InnerText;
-														writer.Write (HtmlFormat (test_name));
-														if (!string.IsNullOrEmpty (message)) {
-															writer.Write (": ");
-															writer.Write (HtmlFormat (message));
-														}
-														writer.WriteLine ("<br />");
-														writer.WriteLine ("</li>");
-													}
-													writer.WriteLine ("</ul>");
-													writer.WriteLine ("</div>");
+												if (XmlResultParser.IsValidXml (log.FullPath, out var jargon)) {
+													XmlResultParser.GenerateTestReport (writer, log.FullPath, jargon);
 												}
 											}
 										} catch (Exception ex) {
-											writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {log.Description}: {HtmlFormat (ex.Message)}</span><br />");
+											writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {log.Description}: {ex.Message.AsHtml ()}</span><br />");
 										}
 									}
 								}
@@ -2315,7 +2348,7 @@ namespace xharness
 					if (runningTests.Any ()) {
 						writer.WriteLine ($"<h3>{runningTests.Count ()} running tests:</h3>");
 						foreach (var test in runningTests) {
-							writer.WriteLine ($"<a href='#test_{test.TestName}'>{test.TestName} ({test.Mode})</a> {test.Duration.ToString ()} {HtmlFormat ("\n\t" + test.ProgressMessage)}<br />");
+							writer.WriteLine ($"<a href='#test_{test.TestName}'>{test.TestName} ({test.Mode})</a> {test.Duration.ToString ()} {("\n\t" + test.ProgressMessage).AsHtml ()}<br />");
 						}
 					}
 
@@ -2348,12 +2381,6 @@ namespace xharness
 			}
 		}
 		Dictionary<Log, Tuple<long, object>> log_data = new Dictionary<Log, Tuple<long, object>> ();
-
-		static string HtmlFormat (string value)
-		{
-			var rv = System.Web.HttpUtility.HtmlEncode (value);
-			return rv.Replace ("\t", "&nbsp;&nbsp;&nbsp;&nbsp;").Replace ("\n", "<br/>\n");
-		}
 
 		static string LinkEncode (string path)
 		{
@@ -2556,8 +2583,8 @@ namespace xharness
 
 		public List<Resource> Resources = new List<Resource> ();
 
-		Log test_log;
-		public Log MainLog {
+		ILog test_log;
+		public ILog MainLog {
 			get {
 				if (test_log == null)
 					test_log = Logs.Create ($"main-{Timestamp}.log", "Main log");
@@ -2579,8 +2606,8 @@ namespace xharness
 			}
 		}
 
-		Logs logs;
-		public Logs Logs {
+		ILogs logs;
+		public ILogs Logs {
 			get {
 				return logs ?? (logs = new Logs (LogDirectory));
 			}
@@ -2758,13 +2785,13 @@ namespace xharness
 			}
 		}
 
-		protected void LogEvent (Log log, string text, params object[] args)
+		protected void LogEvent (ILog log, string text, params object[] args)
 		{
 			Jenkins.MainLog.WriteLine (text, args);
 			log.WriteLine (text, args);
 		}
 
-		public string GuessFailureReason (Log log)
+		public string GuessFailureReason (ILog log)
 		{
 			try {
 				using (var reader = log.GetReader ()) {
@@ -2863,7 +2890,7 @@ namespace xharness
 			}
 		}
 
-		async Task<TestExecutingResult> RestoreNugetsAsync (string projectPath, Log log, bool useXIBuild=false)
+		async Task<TestExecutingResult> RestoreNugetsAsync (string projectPath, ILog log, bool useXIBuild=false)
 		{
 			using (var resource = await Jenkins.NugetResource.AcquireExclusiveAsync ()) {
 				// we do not want to use xibuild on solutions, we will have some failures with Mac Full
@@ -2920,7 +2947,7 @@ namespace xharness
 
 		// This method must be called with the desktop resource acquired
 		// (which is why it takes an IAcquiredResources as a parameter without using it in the function itself).
-		protected async Task RestoreNugetsAsync (Log log, IAcquiredResource resource, bool useXIBuild=false)
+		protected async Task RestoreNugetsAsync (ILog log, IAcquiredResource resource, bool useXIBuild=false)
 		{
 			if (!RestoreNugets)
 				return;
@@ -2960,7 +2987,7 @@ namespace xharness
 					make.StartInfo.WorkingDirectory = WorkingDirectory;
 					make.StartInfo.Arguments = Target;
 					SetEnvironmentVariables (make);
-					var log = Logs.Create ($"make-{Platform}-{Timestamp}.txt", "Build log");
+					var log = Logs.Create ($"make-{Platform}-{Timestamp}.txt", LogType.BuildLog.ToString ());
 					LogEvent (log, "Making {0} in {1}", Target, WorkingDirectory);
 					if (!Harness.DryRun) {
 						var timeout = Timeout;
@@ -2985,14 +3012,15 @@ namespace xharness
 	class XBuildTask : BuildProjectTask
 	{
 		public bool UseMSBuild;
+		public ILog BuildLog;
 
 		protected override async Task ExecuteAsync ()
 		{
 			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
-				var log = Logs.Create ($"build-{Platform}-{Timestamp}.txt", "Build log");
-				var binlogPath = log.FullPath.Replace (".txt", ".binlog");
+				BuildLog = Logs.Create ($"build-{Platform}-{Timestamp}.txt", LogType.BuildLog.ToString ());
+				var binlogPath = BuildLog.FullPath.Replace (".txt", ".binlog");
 
-				await RestoreNugetsAsync (log, resource, useXIBuild: true);
+				await RestoreNugetsAsync (BuildLog, resource, useXIBuild: true);
 
 				using (var xbuild = new Process ()) {
 					xbuild.StartInfo.FileName = Harness.XIBuildPath;
@@ -3009,13 +3037,13 @@ namespace xharness
 					SetEnvironmentVariables (xbuild);
 					if (UseMSBuild)
 						xbuild.StartInfo.EnvironmentVariables ["MSBuildExtensionsPath"] = null;
-					LogEvent (log, "Building {0} ({1})", TestName, Mode);
+					LogEvent (BuildLog, "Building {0} ({1})", TestName, Mode);
 					if (!Harness.DryRun) {
 						var timeout = TimeSpan.FromMinutes (60);
-						var result = await xbuild.RunAsync (log, true, timeout);
+						var result = await xbuild.RunAsync (BuildLog, true, timeout);
 						if (result.TimedOut) {
 							ExecutionResult = TestExecutingResult.TimedOut;
-							log.WriteLine ("Build timed out after {0} seconds.", timeout.TotalSeconds);
+							BuildLog.WriteLine ("Build timed out after {0} seconds.", timeout.TotalSeconds);
 						} else if (result.Succeeded) {
 							ExecutionResult = TestExecutingResult.Succeeded;
 						} else {
@@ -3025,11 +3053,11 @@ namespace xharness
 					Jenkins.MainLog.WriteLine ("Built {0} ({1})", TestName, Mode);
 				}
 
-				log.Dispose ();
+				BuildLog.Dispose ();
 			}
 		}
 
-		async Task CleanProjectAsync (Log log, string project_file, string project_platform, string project_configuration)
+		async Task CleanProjectAsync (ILog log, string project_file, string project_platform, string project_configuration)
 		{
 			// Don't require the desktop resource here, this shouldn't be that resource sensitive
 			using (var xbuild = new Process ()) {
@@ -3082,7 +3110,7 @@ namespace xharness
 		{
 		}
 			
-		public void FindNUnitConsoleExecutable (Log log)
+		public void FindNUnitConsoleExecutable (ILog log)
 		{
 			if (!string.IsNullOrEmpty (TestExecutable)) {
 				log.WriteLine ("Using existing executable: {0}", TestExecutable);
@@ -3171,8 +3199,8 @@ namespace xharness
 		protected override async Task RunTestAsync ()
 		{
 			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
-				var xmlLog = Logs.CreateFile ($"log-{Timestamp}.xml", "XML log");
-				var log = Logs.Create ($"execute-{Timestamp}.txt", "Execution log");
+				var xmlLog = Logs.CreateFile ($"log-{Timestamp}.xml", LogType.XmlLog.ToString ());
+				var log = Logs.Create ($"execute-{Timestamp}.txt", LogType.ExecutionLog.ToString ());
 				FindNUnitConsoleExecutable (log);
 				using (var proc = new Process ()) {
 
@@ -3219,11 +3247,11 @@ namespace xharness
 						var output = Logs.Create ($"Log-{Timestamp}.html", "HTML log");
 						using (var srt = new StringReader (File.ReadAllText (Path.Combine (Harness.RootDirectory, "HtmlTransform.xslt")))) {
 							using (var sri = File.OpenRead (xmlLog)) {
-								using (var xrt = System.Xml.XmlReader.Create (srt)) {
-									using (var xri = System.Xml.XmlReader.Create (sri)) {
+								using (var xrt = XmlReader.Create (srt)) {
+									using (var xri = XmlReader.Create (sri)) {
 										var xslt = new System.Xml.Xsl.XslCompiledTransform ();
 										xslt.Load (xrt);
-										using (var xwo = System.Xml.XmlWriter.Create (output, xslt.OutputSettings)) // use OutputSettings of xsl, so it can be output as HTML
+										using (var xwo = XmlWriter.Create (output as TextWriter, xslt.OutputSettings)) // use OutputSettings of xsl, so it can be output as HTML
 										{
 											xslt.Transform (xri, xwo);
 										}
@@ -3342,14 +3370,14 @@ namespace xharness
 				using (var proc = new Process ()) {
 					proc.StartInfo.FileName = Path;
 					if (IsUnitTest) {
-						var xml = Logs.CreateFile ($"test-{Platform}-{Timestamp}.xml", "NUnit results");
+						var xml = Logs.CreateFile ($"test-{Platform}-{Timestamp}.xml", LogType.NUnitResult.ToString ());
 						proc.StartInfo.Arguments = StringUtils.FormatArguments ($"-result=" + xml);
 					}
 					if (!Harness.GetIncludeSystemPermissionTests (Platform, false))
 						proc.StartInfo.EnvironmentVariables ["DISABLE_SYSTEM_PERMISSION_TESTS"] = "1";
 					proc.StartInfo.EnvironmentVariables ["MONO_DEBUG"] = "no-gdb-backtrace";
 					Jenkins.MainLog.WriteLine ("Executing {0} ({1})", TestName, Mode);
-					var log = Logs.Create ($"execute-{Platform}-{Timestamp}.txt", "Execution log");
+					var log = Logs.Create ($"execute-{Platform}-{Timestamp}.txt", LogType.ExecutionLog.ToString ());
 					if (!Harness.DryRun) {
 						ExecutionResult = TestExecutingResult.Running;
 
@@ -3403,7 +3431,7 @@ namespace xharness
 					proc.StartInfo.Arguments = $"--debug {reporter} {WorkingDirectory} {results}";
 
 					Jenkins.MainLog.WriteLine ("Executing {0} ({1})", TestName, Mode);
-					var log = Logs.Create ($"execute-xtro-{Timestamp}.txt", "Execution log");
+					var log = Logs.Create ($"execute-xtro-{Timestamp}.txt", LogType.ExecutionLog.ToString ());
 					log.WriteLine ("{0} {1}", proc.StartInfo.FileName, proc.StartInfo.Arguments);
 					if (!Harness.DryRun) {
 						ExecutionResult = TestExecutingResult.Running;
@@ -3495,6 +3523,8 @@ namespace xharness
 					ExecutionResult = TestExecutingResult.BuildFailure;
 				}
 				FailureMessage = BuildTask.FailureMessage;
+				if (Harness.InCI && BuildTask is XBuildTask projectTask)
+					XmlResultParser.GenerateFailure (Logs, "build", projectTask.TestName, projectTask.Variation, "AppBuild", $"App could not be built {FailureMessage}.", projectTask.BuildLog.FullPath, Harness.XmlJargon);
 			} else {
 				ExecutionResult = TestExecutingResult.Built;
 			}
@@ -3710,6 +3740,8 @@ namespace xharness
 						CompanionDeviceName = CompanionDevice?.Name,
 						Configuration = ProjectConfiguration,
 						TimeoutMultiplier = TimeoutMultiplier,
+						Variation = Variation,
+						BuildTask = BuildTask,
 					};
 
 					// Sometimes devices can't upgrade (depending on what has changed), so make sure to uninstall any existing apps first.
@@ -3731,6 +3763,10 @@ namespace xharness
 							if (!install_result.Succeeded) {
 								FailureMessage = $"Install failed, exit code: {install_result.ExitCode}.";
 								ExecutionResult = TestExecutingResult.Failed;
+								if (Harness.InCI)
+									XmlResultParser.GenerateFailure (Logs, "install", runner.AppName, runner.Variation,
+										$"AppInstallation on {runner.DeviceName}", $"Install failed on {runner.DeviceName}, exit code: {install_result.ExitCode}",
+										install_log.FullPath, Harness.XmlJargon);
 							}
 						} finally {
 							this.install_log.Dispose ();
@@ -3764,6 +3800,8 @@ namespace xharness
 								DeviceName = Device.Name,
 								CompanionDeviceName = CompanionDevice?.Name,
 								Configuration = ProjectConfiguration,
+								Variation = Variation,
+								BuildTask = BuildTask,
 							};
 							additional_runner = todayRunner;
 							await todayRunner.RunAsync ();
@@ -3874,6 +3912,8 @@ namespace xharness
 				MainLog = Logs.Create ($"run-{Device.UDID}-{Timestamp}.log", "Run log"),
 				Configuration = ProjectConfiguration,
 				TimeoutMultiplier = TimeoutMultiplier,
+				Variation = Variation,
+				BuildTask = BuildTask,
 			};
 			runner.Simulators = Simulators;
 			runner.Initialize ();

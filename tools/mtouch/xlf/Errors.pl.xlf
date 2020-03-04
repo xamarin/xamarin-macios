@@ -338,14 +338,6 @@
         <note>
 		</note>
       </trans-unit>
-      <trans-unit id="MM5301">
-        <source>pkg-config could not be found. Please install the Mono.framework from http://mono-project.com/Downloads
-		</source>
-        <target state="new">pkg-config could not be found. Please install the Mono.framework from http://mono-project.com/Downloads
-		</target>
-        <note>
-		</note>
-      </trans-unit>
       <trans-unit id="MM5308">
         <source>Xcode license agreement may not have been accepted.  Please launch Xcode.
 		</source>
@@ -2906,6 +2898,22 @@
         <note>
 		</note>
       </trans-unit>
+      <trans-unit id="MX1502">
+        <source>One or more reference(s) to type '{0}' already exists inside '{1}' before linking
+		</source>
+        <target state="new">One or more reference(s) to type '{0}' already exists inside '{1}' before linking
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX1503">
+        <source>One or more reference(s) to type '{0}' still exists inside '{1}' after linking
+		</source>
+        <target state="new">One or more reference(s) to type '{0}' still exists inside '{1}' after linking
+		</target>
+        <note>
+		</note>
+      </trans-unit>
       <trans-unit id="MX1600">
         <source>Not a Mach-O dynamic library (unknown header '0x{0}'): {1}.
 		</source>
@@ -2982,6 +2990,30 @@
         <source>Could not {0} the assembly '{1}'
 		</source>
         <target state="new">Could not {0} the assembly '{1}'
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX5312">
+        <source>pkg-config failed with an error code '{0}'. Check build log for details.
+		</source>
+        <target state="new">pkg-config failed with an error code '{0}'. Check build log for details.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX5313">
+        <source>Could not find pkg-config. Please install the Mono.framework from https://mono-project.com/Downloads
+		</source>
+        <target state="new">Could not find pkg-config. Please install the Mono.framework from https://mono-project.com/Downloads
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX5314">
+        <source>Failed to execute pkg-config: '{0}'. Check build log for details.
+		</source>
+        <target state="new">Failed to execute pkg-config: '{0}'. Check build log for details.
 		</target>
         <note>
 		</note>

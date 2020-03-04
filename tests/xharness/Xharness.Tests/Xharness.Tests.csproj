@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\..\packages\NUnit.3.12.0\build\NUnit.props" Condition="Exists('..\..\..\packages\NUnit.3.12.0\build\NUnit.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{AD1B78C3-6A36-40D0-B45D-246504A39D64}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Xharness.Tests</RootNamespace>
+    <AssemblyName>Xharness.Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="nunit.framework">
+      <HintPath>..\..\..\packages\NUnit.3.12.0\lib\net45\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Runtime.CompilerServices.Unsafe">
+      <HintPath>..\..\..\packages\System.Runtime.CompilerServices.Unsafe.4.5.0\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions">
+      <HintPath>..\..\..\packages\System.Threading.Tasks.Extensions.4.5.1\lib\netstandard2.0\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Core">
+      <HintPath>..\..\..\packages\Castle.Core.4.4.0\lib\net45\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Moq">
+      <HintPath>..\..\..\packages\Moq.4.13.1\lib\net45\Moq.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\AppRunner.cs">
+      <Link>AppRunner.cs</Link>
+    </Compile>
+    <Compile Include="..\DeviceLogCapturer.cs">
+      <Link>DeviceLogCapturer.cs</Link>
+    </Compile>
+    <Compile Include="..\Extensions.cs">
+      <Link>Extensions.cs</Link>
+    </Compile>
+    <Compile Include="..\GitHub.cs">
+      <Link>GitHub.cs</Link>
+    </Compile>
+    <Compile Include="..\Harness.cs">
+      <Link>Harness.cs</Link>
+    </Compile>
+    <Compile Include="..\iOSTarget.cs">
+      <Link>iOSTarget.cs</Link>
+    </Compile>
+    <Compile Include="..\Jenkins.cs">
+      <Link>Jenkins.cs</Link>
+    </Compile>
+    <Compile Include="..\Log.cs">
+      <Link>Log.cs</Link>
+    </Compile>
+    <Compile Include="..\MacTarget.cs">
+      <Link>MacTarget.cs</Link>
+    </Compile>
+    <Compile Include="..\MakefileGenerator.cs">
+      <Link>MakefileGenerator.cs</Link>
+    </Compile>
+    <Compile Include="..\MonoNativeInfo.cs">
+      <Link>MonoNativeInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Process_Extensions.cs">
+      <Link>Process_Extensions.cs</Link>
+    </Compile>
+    <Compile Include="..\ProjectFileExtensions.cs">
+      <Link>ProjectFileExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\SimpleFileListener.cs">
+      <Link>SimpleFileListener.cs</Link>
+    </Compile>
+    <Compile Include="..\SimpleHttpListener.cs">
+      <Link>SimpleHttpListener.cs</Link>
+    </Compile>
+    <Compile Include="..\SimpleListener.cs">
+      <Link>SimpleListener.cs</Link>
+    </Compile>
+    <Compile Include="..\SimpleTcpListener.cs">
+      <Link>SimpleTcpListener.cs</Link>
+    </Compile>
+    <Compile Include="..\Simulators.cs">
+      <Link>Simulators.cs</Link>
+    </Compile>
+    <Compile Include="..\SolutionGenerator.cs">
+      <Link>SolutionGenerator.cs</Link>
+    </Compile>
+    <Compile Include="..\Target.cs">
+      <Link>Target.cs</Link>
+    </Compile>
+    <Compile Include="..\TestProject.cs">
+      <Link>TestProject.cs</Link>
+    </Compile>
+    <Compile Include="..\TodayExtensionTarget.cs">
+      <Link>TodayExtensionTarget.cs</Link>
+    </Compile>
+    <Compile Include="..\TVOSTarget.cs">
+      <Link>TVOSTarget.cs</Link>
+    </Compile>
+    <Compile Include="..\UnifiedTarget.cs">
+      <Link>UnifiedTarget.cs</Link>
+    </Compile>
+    <Compile Include="..\WatchOSTarget.cs">
+      <Link>WatchOSTarget.cs</Link>
+    </Compile>
+    <Compile Include="..\XmlResultParser.cs">
+      <Link>XmlResultParser.cs</Link>
+    </Compile>
+    <Compile Include="..\BCLTestImporter\BCLTestAssemblyDefinition.cs">
+      <Link>BCLTestImporter\BCLTestAssemblyDefinition.cs</Link>
+    </Compile>
+    <Compile Include="..\BCLTestImporter\BCLTestImportTargetFactory.cs">
+      <Link>BCLTestImporter\BCLTestImportTargetFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\BCLTestImporter\BCLTestInfoPlistGenerator.cs">
+      <Link>BCLTestImporter\BCLTestInfoPlistGenerator.cs</Link>
+    </Compile>
+    <Compile Include="..\BCLTestImporter\BCLTestProjectDefinition.cs">
+      <Link>BCLTestImporter\BCLTestProjectDefinition.cs</Link>
+    </Compile>
+    <Compile Include="..\BCLTestImporter\BCLTestProjectGenerator.cs">
+      <Link>BCLTestImporter\BCLTestProjectGenerator.cs</Link>
+    </Compile>
+    <Compile Include="..\BCLTestImporter\Platform.cs">
+      <Link>BCLTestImporter\Platform.cs</Link>
+    </Compile>
+    <Compile Include="..\BCLTestImporter\RegisterTypeGenerator.cs">
+      <Link>BCLTestImporter\RegisterTypeGenerator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\mtouch\Cache.cs">
+      <Link>Cache.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\tools\common\PListExtensions.cs">
+      <Link>PListExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\tools\common\StringUtils.cs">
+      <Link>StringUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\tools\mtouch\SdkVersions.cs">
+      <Link>SdkVersions.cs</Link>
+    </Compile>
+    <Compile Include="BCLTestImporter\Tests\BCLTestInfoPlistGeneratorTest.cs" />
+    <Compile Include="BCLTestImporter\Tests\BCLTestProjectGeneratorTest.cs" />
+    <Compile Include="BCLTestImporter\Tests\TestAssemblyDefinitionTest.cs" />
+    <Compile Include="BCLTestImporter\Tests\TestProjectDefinitionTest.cs" />
+    <Compile Include="Tests\XmlResultParserTests.cs" />
+    <Compile Include="..\Logging\ILogs.cs">
+      <Link>Logging\ILogs.cs</Link>
+    </Compile>
+    <Compile Include="..\Logging\Logs.cs">
+      <Link>Logging\Logs.cs</Link>
+    </Compile>
+    <Compile Include="..\Logging\Log.cs">
+      <Link>Logging\Log.cs</Link>
+    </Compile>
+    <Compile Include="..\Logging\ILog.cs">
+      <Link>Logging\ILog.cs</Link>
+    </Compile>
+    <Compile Include="..\Logging\ILogFile.cs">
+      <Link>Logging\ILogFile.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="BCLTestImporter\" />
+    <Folder Include="BCLTestImporter\Tests\" />
+    <Folder Include="Tests\" />
+    <Folder Include="Samples\" />
+    <Folder Include="Logging\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Samples\NUnitV2Sample.xml" />
+    <EmbeddedResource Include="Samples\NUnitV3Sample.xml" />
+    <EmbeddedResource Include="Samples\TouchUnitSample.xml" />
+    <EmbeddedResource Include="Samples\xUnitSample.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+</Project>

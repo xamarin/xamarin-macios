@@ -44,7 +44,7 @@ if test -z "$DEVICE_TYPE"; then
 	DEVICE_TYPE="iOS/tvOS"
 fi
 
-VSTS_BUILD_URL="${SYSTEM_TEAMFOUNDATIONCOLLECTIONURI}${SYSTEM_TEAMPROJECT}/_build/index?buildId=${BUILD_BUILDID}"
+VSTS_BUILD_URL="${SYSTEM_TEAMFOUNDATIONCOLLECTIONURI}${SYSTEM_TEAMPROJECT}/_build/index?buildId=${BUILD_BUILDID}&view=ms.vss-test-web.test-result-details"
 
 # Add a GitHub status to the commit we're testing
 GH_STATE=failure
@@ -80,7 +80,7 @@ if test -z "$START"; then
 	trap cleanup EXIT
 
 	HTML_REPORT=""
-	if [ $DEVICE_TYPE == "iOS-DDFun" ]; then
+	if [[ $DEVICE_TYPE == *"DDFun"* ]]; then
 		printf "### :construction: Experimental DDFun pipeline\\n" > "$MESSAGE_FILE"
 	else
 		P=$(cat tmp.p)

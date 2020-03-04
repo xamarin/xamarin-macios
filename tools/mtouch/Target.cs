@@ -582,6 +582,7 @@ namespace Xamarin.Bundler
 				DumpDependencies = App.LinkerDumpDependencies,
 				RuntimeOptions = App.RuntimeOptions,
 				MarshalNativeExceptionsState = MarshalNativeExceptionsState,
+				WarnOnTypeRef = App.WarnOnTypeRef,
 				Target = this,
 			};
 
@@ -1747,7 +1748,7 @@ namespace Xamarin.Bundler
 
 			try {
 				var launcher = new StringBuilder ();
-				launcher.Append (Path.Combine (Driver.MonoTouchDirectory, "bin", "simlauncher"));
+				launcher.Append (Path.Combine (Driver.FrameworkBinDirectory, "simlauncher"));
 				if (Is32Build)
 					launcher.Append ("32");
 				else if (Is64Build)
