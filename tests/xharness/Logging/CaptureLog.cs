@@ -7,28 +7,26 @@ namespace Xharness.Logging {
 	// (between StartCapture and StopCapture).
 	public class CaptureLog : Log
 	{
-		public string CapturePath { get; private set; }
-		public string Path { get; private set; }
+		public readonly string CapturePath;
+		public readonly string Path;
 
 		long startPosition;
 		long endPosition;
-		bool entire_file;
+		bool entireFile;
 		bool started;
 
 		public CaptureLog (ILogs logs, string path, string capture_path, bool entire_file = false)
 			: base (logs)
 		{
-			if (path == null)
-				throw new ArgumentNullException (nameof (path));
 
-			Path = path;
-			CapturePath = capture_path;
-			this.entire_file = entire_file;
+			Path = path ?? throw new ArgumentNullException (nameof (path));
+			CapturePath = capture_path ?? throw new ArgumentNullException (nameof (path));
+			this.entireFile = entire_file;
 		}
 
 		public void StartCapture ()
 		{
-			if (entire_file)
+			if (entireFile)
 				return;
 
 			if (File.Exists (CapturePath))
@@ -38,14 +36,14 @@ namespace Xharness.Logging {
 
 		public void StopCapture ()
 		{
-			if (!started && !entire_file)
+			if (!started && !entireFile)
 				throw new InvalidOperationException ("StartCapture most be called before StopCature on when the entire file will be captured.");
 			if (!File.Exists (CapturePath)) {
 				File.WriteAllText (Path, $"Could not capture the file '{CapturePath}' because it doesn't exist.");
 				return;
 			}
 
-			if (entire_file) {
+			if (entireFile) {
 				File.Copy (CapturePath, Path, true);
 				return;
 			}
@@ -57,7 +55,7 @@ namespace Xharness.Logging {
 
 		void Capture ()
 		{
-			if (startPosition == 0 || entire_file)
+			if (startPosition == 0 || entireFile)
 				return;
 
 			if (!File.Exists (CapturePath)) {
@@ -74,7 +72,8 @@ namespace Xharness.Logging {
 			var capturedLength = 0L;
 
 			if (length < 0) {
-				// The file shrank?
+				// The file shrank? lets copy the entire file in this case, which is better than nothing
+				File.Copy (CapturePath, Path, true);
 				return;
 			}
 
@@ -138,4 +137,3 @@ namespace Xharness.Logging {
 		}
 	}
 }
-

@@ -24,7 +24,7 @@ namespace Xharness.Tests.Logging.Tests {
 		}
 
 		[TearDown]
-		public void TeatDown ()
+		public void TearDown ()
 		{
 			if (File.Exists (filePath))
 				File.Delete (filePath);
@@ -61,7 +61,7 @@ namespace Xharness.Tests.Logging.Tests {
 				using (var captureStream = captureLog.GetReader ()) {
 					string line;
 					while ((line = captureStream.ReadLine ()) != null) {
-						Assert.Contains (line, logLines, line);
+						Assert.Contains (line, logLines, "Lines not captured");
 					}
 				}
 			}
@@ -71,7 +71,7 @@ namespace Xharness.Tests.Logging.Tests {
 		public void CaptureMissingFileTest ()
 		{
 			using (var captureLog = new CaptureLog (logs.Object, capturePath, filePath, false)) {
-				Assert.AreEqual (capturePath, captureLog.Path);
+				Assert.AreEqual (capturePath, captureLog.Path, "capture path");
 				captureLog.StartCapture ();
 				captureLog.StopCapture ();
 			}
@@ -93,7 +93,6 @@ namespace Xharness.Tests.Logging.Tests {
 		}
 
 		[Test]
-
 		public void CaptureWrongOrderEntirePath ()
 		{
 			Assert.DoesNotThrow (() => {

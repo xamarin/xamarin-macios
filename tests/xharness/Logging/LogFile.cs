@@ -11,9 +11,7 @@ namespace Xharness.Logging {
 		public LogFile (ILogs logs, string description, string path, bool append = true)
 			: base (logs, description)
 		{
-			if (path == null)
-				throw new ArgumentNullException (nameof (path));
-			Path = path;
+			Path = path ?? throw new ArgumentNullException (nameof (path));
 			if (!append)
 				File.WriteAllText (path, string.Empty);
 		}
@@ -37,7 +35,7 @@ namespace Xharness.Logging {
 					}
 				}
 			} catch (Exception e) {
-				Console.WriteLine ($"Failed to write to the file {Path}: {e.Message}.");
+				Console.Error.WriteLine ($"Failed to write to the file {Path}: {e}.");
 				return;
 			}
 		}
@@ -50,11 +48,7 @@ namespace Xharness.Logging {
 				writer.Flush ();
 		}
 
-		public override string FullPath {
-			get {
-				return Path;
-			}
-		}
+		public override string FullPath => Path;
 
 		public override StreamReader GetReader ()
 		{
@@ -65,8 +59,8 @@ namespace Xharness.Logging {
 		{
 			base.Dispose (disposing);
 
-			if (writer != null) {
-				writer.Dispose ();
+			lock (lock_obj) {
+				writer?.Dispose ();
 				writer = null;
 			}
 

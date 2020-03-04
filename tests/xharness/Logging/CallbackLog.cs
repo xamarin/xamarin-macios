@@ -2,7 +2,7 @@
 namespace Xharness.Logging {
 	// A log that forwards all written data to a callback
 	public class CallbackLog : Log {
-		public Action<string> OnWrite;
+		readonly Action<string> OnWrite;
 
 		public CallbackLog (Action<string> onWrite)
 			: base (null)
@@ -10,7 +10,7 @@ namespace Xharness.Logging {
 			OnWrite = onWrite;
 		}
 
-		public override string FullPath => throw new NotImplementedException ();
+		public override string FullPath => throw new NotSupportedException ();
 
 		public override void WriteImpl (string value)
 		{
