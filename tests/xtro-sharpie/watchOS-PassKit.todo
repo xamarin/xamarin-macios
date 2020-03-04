@@ -1,0 +1,24 @@
+!deprecated-attribute-missing! PKPass::paymentPass missing a [Deprecated] attribute
+!deprecated-attribute-missing! PKPassLibrary::canAddPaymentPassWithPrimaryAccountIdentifier: missing a [Deprecated] attribute
+!deprecated-attribute-missing! PKPassLibrary::remotePaymentPasses missing a [Deprecated] attribute
+!deprecated-attribute-missing! PKPaymentMethod::paymentPass missing a [Deprecated] attribute
+!deprecated-attribute-missing! PKPaymentPass::activationState missing a [Deprecated] attribute
+!missing-enum! PKAddSecureElementPassErrorCode not bound
+!missing-enum! PKSecureElementPassActivationState not bound
+!missing-field! PKAddSecureElementPassErrorDomain not bound
+!missing-selector! PKPass::secureElementPass not bound
+!missing-selector! PKPassLibrary::activatePaymentPass:withActivationData:completion: not bound
+!missing-selector! PKPassLibrary::canAddSecureElementPassWithPrimaryAccountIdentifier: not bound
+!missing-selector! PKPassLibrary::isSecureElementPassActivationAvailable not bound
+!missing-selector! PKPassLibrary::remoteSecureElementPasses not bound
+!missing-selector! PKPassLibrary::signData:withSecureElementPass:completion: not bound
+!missing-selector! PKPaymentMethod::secureElementPass not bound
+!missing-selector! PKSecureElementPass::deviceAccountIdentifier not bound
+!missing-selector! PKSecureElementPass::deviceAccountNumberSuffix not bound
+!missing-selector! PKSecureElementPass::devicePassIdentifier not bound
+!missing-selector! PKSecureElementPass::pairedTerminalIdentifier not bound
+!missing-selector! PKSecureElementPass::passActivationState not bound
+!missing-selector! PKSecureElementPass::primaryAccountIdentifier not bound
+!missing-selector! PKSecureElementPass::primaryAccountNumberSuffix not bound
+!missing-type! PKSecureElementPass not bound
+!wrong-base-type! PKPaymentPass expected PKSecureElementPass actual PKPass
