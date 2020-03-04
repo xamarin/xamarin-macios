@@ -7,8 +7,8 @@ namespace Xharness.Logging {
 	// (between StartCapture and StopCapture).
 	public class CaptureLog : Log
 	{
-		public string CapturePath { get; private set; }
-		public string Path { get; private set; }
+		public readonly string CapturePath;
+		public readonly string Path;
 
 		long startPosition;
 		long endPosition;
@@ -72,7 +72,8 @@ namespace Xharness.Logging {
 			var capturedLength = 0L;
 
 			if (length < 0) {
-				// The file shrank?
+				// The file shrank? lets copy the entire file in this case, which is better than nothing
+				File.Copy (CapturePath, Path, true);
 				return;
 			}
 
