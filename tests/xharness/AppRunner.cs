@@ -12,6 +12,7 @@ using System.Xml;
 using System.Xml.Xsl;
 using Xamarin;
 using Xamarin.Utils;
+using Xharness.Execution;
 using Xharness.Listeners;
 using Xharness.Logging;
 
@@ -125,6 +126,8 @@ namespace Xharness
 				return bundle_identifier;
 			}
 		}
+
+		public IProcessManager ProcessManager { get; set; } = new ProcessManager ();
 
 		string mode;
 
@@ -304,7 +307,7 @@ namespace Xharness
 			var totalSize = Directory.GetFiles (appPath, "*", SearchOption.AllDirectories).Select ((v) => new FileInfo (v).Length).Sum ();
 			main_log.WriteLine ($"Installing '{appPath}' to '{companion_device_name ?? device_name}'. Size: {totalSize} bytes = {totalSize / 1024.0 / 1024.0:N2} MB");
 
-			return await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, args, main_log, TimeSpan.FromHours (1), cancellation_token: cancellation_token);
+			return await ProcessManager.ExecuteCommandAsync (Harness.MlaunchPath, args, main_log, TimeSpan.FromHours (1), cancellation_token: cancellation_token);
 		}
 
 		public async Task<ProcessExecutionResult> UninstallAsync ()
@@ -328,7 +331,7 @@ namespace Xharness
 			args.Add (bundle_identifier);
 			AddDeviceName (args, companion_device_name ?? device_name);
 
-			return await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, args, main_log, TimeSpan.FromMinutes (1));
+			return await ProcessManager.ExecuteCommandAsync (Harness.MlaunchPath, args, main_log, TimeSpan.FromMinutes (1));
 		}
 
 		bool ensure_clean_simulator_state = true;
@@ -657,7 +660,7 @@ namespace Xharness
 
 				main_log.WriteLine ("Starting test run");
 
-				var result = await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, args, run_log, timeout, cancellation_token: cancellation_source.Token);
+				var result = await ProcessManager.ExecuteCommandAsync (Harness.MlaunchPath, args, run_log, timeout, cancellation_token: cancellation_source.Token);
 				if (result.TimedOut) {
 					timed_out = true;
 					success = false;
@@ -694,7 +697,7 @@ namespace Xharness
 						var timeoutType = launchTimedout ? "Launch" : "Completion";
 						var timeoutValue = launchTimedout ? Harness.LaunchTimeout : timeout.TotalSeconds;
 						main_log.WriteLine ($"{timeoutType} timed out after {timeoutValue} seconds");
-						await Process_Extensions.KillTreeAsync (pid, main_log, true);
+						await ProcessManager.KillTreeAsync (pid, main_log, true);
 					} else {
 						main_log.WriteLine ("Could not find pid in mtouch output.");
 					}
@@ -742,7 +745,7 @@ namespace Xharness
 					});
 					var runLog = Log.CreateAggregatedLog (callbackLog, main_log);
 					var timeoutWatch = Stopwatch.StartNew ();
-					var result = await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, args, runLog, timeout, cancellation_token: cancellation_source.Token);
+					var result = await ProcessManager.ExecuteCommandAsync (Harness.MlaunchPath, args, runLog, timeout, cancellation_token: cancellation_source.Token);
 
 					if (!waitedForExit && !result.TimedOut) {
 						// mlaunch couldn't wait for exit for some reason. Let's assume the app exits when the test listener completes.

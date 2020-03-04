@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using Xamarin;
 using Xamarin.Utils;
+using Xharness.Execution;
 using Xharness.Logging;
 
 namespace Xharness
@@ -59,7 +60,7 @@ namespace Xharness
 						process.StartInfo.FileName = Harness.MlaunchPath;
 						process.StartInfo.Arguments = string.Format ("--sdkroot {0} --listsim {1}", Harness.XcodeRoot, tmpfile);
 						log.WriteLine ("Launching {0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments);
-						var rv = await process.RunAsync (log, false, timeout: TimeSpan.FromSeconds (30));
+						var rv = await Harness.ProcessManager.RunAsync (process, log, timeout: TimeSpan.FromSeconds (30));
 						if (!rv.Succeeded)
 							throw new Exception ("Failed to list simulators.");
 						log.WriteLine ("Result:");
@@ -450,6 +451,7 @@ namespace Xharness
 	{
 		public string UDID { get; set; }
 		public string Name { get; set; }
+		static IProcessManager ProcessManager { get; set; } = new ProcessManager ();
 		public string SimRuntime;
 		public string SimDeviceType;
 		public string DataPath;
@@ -488,14 +490,14 @@ namespace Xharness
 
 		public static async Task KillEverythingAsync (ILog log)
 		{
-			await ProcessHelper.ExecuteCommandAsync ("launchctl", new [] { "remove", "com.apple.CoreSimulator.CoreSimulatorService" }, log, TimeSpan.FromSeconds (10));
+			await ProcessManager.ExecuteCommandAsync ("launchctl", new [] { "remove", "com.apple.CoreSimulator.CoreSimulatorService" }, log, TimeSpan.FromSeconds (10));
 
 			var to_kill = new string [] { "iPhone Simulator", "iOS Simulator", "Simulator", "Simulator (Watch)", "com.apple.CoreSimulator.CoreSimulatorService", "ibtoold" };
 
 			var args = new List<string> ();
 			args.Add ("-9");
 			args.AddRange (to_kill);
-			await ProcessHelper.ExecuteCommandAsync ("killall", args, log, TimeSpan.FromSeconds (10));
+			await ProcessManager.ExecuteCommandAsync ("killall", args, log, TimeSpan.FromSeconds (10));
 
 			foreach (var dir in new string [] {
 				Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.UserProfile), "Library", "Saved Application State", "com.apple.watchsimulator.savedState"),
@@ -599,7 +601,7 @@ namespace Xharness
 						}
 					}
 					args.Add (sql.ToString ());
-					var rv = await ProcessHelper.ExecuteCommandAsync ("sqlite3", args, log, TimeSpan.FromSeconds (5));
+					var rv = await ProcessManager.ExecuteCommandAsync ("sqlite3", args, log, TimeSpan.FromSeconds (5));
 					if (!rv.Succeeded) {
 						failure = true;
 						break;
@@ -614,7 +616,7 @@ namespace Xharness
 			}
 
 			log.WriteLine ("Current TCC database contents:");
-			await ProcessHelper.ExecuteCommandAsync ("sqlite3", new [] { TCC_db, ".dump" }, log, TimeSpan.FromSeconds (5));
+			await ProcessManager.ExecuteCommandAsync ("sqlite3", new [] { TCC_db, ".dump" }, log, TimeSpan.FromSeconds (5));
 		}
 
 		async Task OpenSimulator (ILog log)
@@ -629,7 +631,7 @@ namespace Xharness
 					simulator_app = Path.Combine (Harness.XcodeRoot, "Contents", "Developer", "Applications", "iOS Simulator.app");
 			}
 
-			await ProcessHelper.ExecuteCommandAsync ("open", new [] { "-a", simulator_app, "--args", "-CurrentDeviceUDID", UDID }, log, TimeSpan.FromSeconds (15));
+			await ProcessManager.ExecuteCommandAsync ("open", new [] { "-a", simulator_app, "--args", "-CurrentDeviceUDID", UDID }, log, TimeSpan.FromSeconds (15));
 		}
 
 		public async Task PrepareSimulatorAsync (ILog log, params string[] bundle_identifiers)
@@ -727,7 +729,7 @@ namespace Xharness
 						process.StartInfo.FileName = Harness.MlaunchPath;
 						process.StartInfo.Arguments = string.Format ("--sdkroot {0} --listdev={1} {2} --output-format=xml", Harness.XcodeRoot, tmpfile, extra_data ? "--list-extra-data" : string.Empty);
 						log.WriteLine ("Launching {0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments);
-						var rv = await process.RunAsync (log, false, timeout: TimeSpan.FromSeconds (120));
+						var rv = await Harness.ProcessManager.RunAsync (process, log, timeout: TimeSpan.FromSeconds (120));
 						if (!rv.Succeeded)
 							throw new Exception ("Failed to list devices.");
 						log.WriteLine ("Result:");

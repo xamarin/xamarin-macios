@@ -12,6 +12,7 @@ using Xamarin;
 using Xamarin.Utils;
 using System.Xml;
 using Xharness.Logging;
+using Xharness.Execution;
 
 namespace Xharness
 {
@@ -1216,7 +1217,7 @@ namespace Xharness
 				using (var process = new Process ()) {
 					process.StartInfo.FileName = Harness.PeriodicCommand;
 					process.StartInfo.Arguments = Harness.PeriodicCommandArguments;
-					var rv = await process.RunAsync (periodic_loc, timeout: Harness.PeriodicCommandInterval);
+					var rv = await Harness.ProcessManager.RunAsync (process, periodic_loc, timeout: Harness.PeriodicCommandInterval);
 					if (!rv.Succeeded)
 						periodic_loc.WriteLine ($"Periodic command failed with exit code {rv.ExitCode} (Timed out: {rv.TimedOut})");
 				}
@@ -1282,7 +1283,7 @@ namespace Xharness
 
 		void BuildTestLibraries ()
 		{
-			ProcessHelper.ExecuteCommandAsync ("make", new [] { "all", $"-j{Environment.ProcessorCount}", "-C", Path.Combine (Harness.RootDirectory, "test-libraries") }, MainLog, TimeSpan.FromMinutes (10)).Wait ();
+			Harness.ProcessManager.ExecuteCommandAsync ("make", new [] { "all", $"-j{Environment.ProcessorCount}", "-C", Path.Combine (Harness.RootDirectory, "test-libraries") }, MainLog, TimeSpan.FromMinutes (10)).Wait ();
 		}
 
 		Task RunTestServer ()
@@ -2424,6 +2425,7 @@ namespace Xharness
 		public string ProjectConfiguration;
 		public string ProjectPlatform;
 		public Dictionary<string, string> Environment = new Dictionary<string, string> ();
+		public IProcessManager ProcessManager { get; set; } = new ProcessManager ();
 
 		public Func<Task> Dependency; // a task that's feteched and awaited before this task's ExecuteAsync method
 		public Task InitialTask; // a task that's executed before this task's ExecuteAsync method.
@@ -2877,6 +2879,7 @@ namespace Xharness
 	abstract class BuildProjectTask : BuildToolTask
 	{
 		public string SolutionPath;
+		public IProcessManager ProcessManager { get; set; } = new ProcessManager ();
 
 		public bool RestoreNugets {
 			get {
@@ -2915,7 +2918,7 @@ namespace Xharness
 					LogEvent (log, "Restoring nugets for {0} ({1}) on path {2}", TestName, Mode, projectPath);
 
 					var timeout = TimeSpan.FromMinutes (15);
-					var result = await nuget.RunAsync (log, true, timeout);
+					var result = await ProcessManager.RunAsync (nuget, log, timeout);
 					if (result.TimedOut) {
 						log.WriteLine ("Nuget restore timed out after {0} seconds.", timeout.TotalSeconds);
 						return TestExecutingResult.TimedOut;
@@ -2991,7 +2994,7 @@ namespace Xharness
 					LogEvent (log, "Making {0} in {1}", Target, WorkingDirectory);
 					if (!Harness.DryRun) {
 						var timeout = Timeout;
-						var result = await make.RunAsync (log, true, timeout);
+						var result = await ProcessManager.RunAsync (make, log, timeout);
 						if (result.TimedOut) {
 							ExecutionResult = TestExecutingResult.TimedOut;
 							log.WriteLine ("Make timed out after {0} seconds.", timeout.TotalSeconds);
@@ -3040,7 +3043,7 @@ namespace Xharness
 					LogEvent (BuildLog, "Building {0} ({1})", TestName, Mode);
 					if (!Harness.DryRun) {
 						var timeout = TimeSpan.FromMinutes (60);
-						var result = await xbuild.RunAsync (BuildLog, true, timeout);
+						var result = await ProcessManager.RunAsync (xbuild, BuildLog, timeout);
 						if (result.TimedOut) {
 							ExecutionResult = TestExecutingResult.TimedOut;
 							BuildLog.WriteLine ("Build timed out after {0} seconds.", timeout.TotalSeconds);
@@ -3075,7 +3078,7 @@ namespace Xharness
 				SetEnvironmentVariables (xbuild);
 				LogEvent (log, "Cleaning {0} ({1}) - {2}", TestName, Mode, project_file);
 				var timeout = TimeSpan.FromMinutes (1);
-				await xbuild.RunAsync (log, true, timeout);
+				await ProcessManager.RunAsync (xbuild, log, timeout);
 				log.WriteLine ("Clean timed out after {0} seconds.", timeout.TotalSeconds);
 				Jenkins.MainLog.WriteLine ("Cleaned {0} ({1})", TestName, Mode);
 			}
@@ -3227,7 +3230,7 @@ namespace Xharness
 					Jenkins.MainLog.WriteLine ("Executing {0} ({1})", TestName, Mode);
 					if (!Harness.DryRun) {
 						ExecutionResult = TestExecutingResult.Running;
-						var result = await proc.RunAsync (log, true, Timeout);
+						var result = await ProcessManager.RunAsync (proc, log, Timeout);
 						if (result.TimedOut) {
 							FailureMessage = $"Execution timed out after {Timeout.TotalMinutes} minutes.";
 							log.WriteLine (FailureMessage);
@@ -3388,7 +3391,7 @@ namespace Xharness
 						try {
 							var timeout = TimeSpan.FromMinutes (20);
 
-							result = await proc.RunAsync (log, true, timeout);
+							result = await ProcessManager.RunAsync (proc, log, timeout);
 							if (result.TimedOut) {
 								FailureMessage = $"Execution timed out after {timeout.TotalSeconds} seconds.";
 								log.WriteLine (FailureMessage);
@@ -3442,7 +3445,7 @@ namespace Xharness
 						try {
 							var timeout = TimeSpan.FromMinutes (20);
 
-							var result = await proc.RunAsync (log, true, timeout);
+							var result = await ProcessManager.RunAsync (proc, log, timeout);
 							if (result.TimedOut) {
 								FailureMessage = $"Execution timed out after {timeout.TotalSeconds} seconds.";
 								log.WriteLine (FailureMessage);

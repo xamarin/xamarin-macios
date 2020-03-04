@@ -79,9 +79,6 @@
     <Compile Include="..\MonoNativeInfo.cs">
       <Link>MonoNativeInfo.cs</Link>
     </Compile>
-    <Compile Include="..\Process_Extensions.cs">
-      <Link>Process_Extensions.cs</Link>
-    </Compile>
     <Compile Include="..\ProjectFileExtensions.cs">
       <Link>ProjectFileExtensions.cs</Link>
     </Compile>
@@ -200,6 +197,13 @@
     <Compile Include="Listeners\Tests\SimpleListenerFactoryTest.cs" />
     <Compile Include="Listeners\Tests\SimpleFileListenerTest.cs" />
     <Compile Include="Listeners\Tests\SimpleTcpListenerTest.cs" />
+    <Compile Include="..\Execution\ProcessManager.cs">
+      <Link>Execution\ProcessManager.cs</Link>
+    </Compile>
+    <Compile Include="..\Execution\IProcessManager.cs">
+      <Link>Execution\IProcessManager.cs</Link>
+    </Compile>
+    <Compile Include="Execution\Tests\ProcessManagerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -213,12 +217,19 @@
     <Folder Include="Logging\Tests\" />
     <Folder Include="Listeners\" />
     <Folder Include="Listeners\Tests\" />
+    <Folder Include="Execution\" />
+    <Folder Include="Execution\Tests\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Samples\NUnitV2Sample.xml" />
     <EmbeddedResource Include="Samples\NUnitV3Sample.xml" />
     <EmbeddedResource Include="Samples\TouchUnitSample.xml" />
     <EmbeddedResource Include="Samples\xUnitSample.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../DummyTestProcess/DummyTestProcess.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
