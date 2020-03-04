@@ -17,9 +17,9 @@ $target_url = $Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI + "$Env:SYSTEM_TEAMPROJECT
 $json_payload = @"
 {
     "state" : "failure",
-    "target-url" : "$target_url",
+    "target_url" : "$target_url",
     "description" : "description placeholder", 
-    "context" : "VSTS: device tests",
+    "context" : "VSTS: device tests"
 }
 "@
 
