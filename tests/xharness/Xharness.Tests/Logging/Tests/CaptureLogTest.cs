@@ -61,7 +61,7 @@ namespace Xharness.Tests.Logging.Tests {
 				using (var captureStream = captureLog.GetReader ()) {
 					string line;
 					while ((line = captureStream.ReadLine ()) != null) {
-						Assert.Contains (line, logLines, line);
+						Assert.Contains (line, logLines, "Lines not captured");
 					}
 				}
 			}

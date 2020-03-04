@@ -26,8 +26,8 @@ namespace Xharness.Logging {
 
 		public override StreamReader GetReader ()
 		{
-			var str = new MemoryStream (System.Text.Encoding.UTF8.GetBytes (captured.ToString ()));
-			return new StreamReader (str, System.Text.Encoding.UTF8, false);
+			var str = new MemoryStream (Encoding.GetBytes (captured.ToString ()));
+			return new StreamReader (str, Encoding, false);
 		}
 	}
 }

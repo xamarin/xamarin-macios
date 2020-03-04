@@ -18,11 +18,8 @@ namespace Xharness.Logging {
 		public CaptureLog (ILogs logs, string path, string capture_path, bool entire_file = false)
 			: base (logs)
 		{
-			if (path == null)
-				throw new ArgumentNullException (nameof (path));
-
-			Path = path;
-			CapturePath = capture_path;
+			Path = path ?? throw new ArgumentNullException(nameof(path));
+			CapturePath = capture_path ?? throw new ArgumentNullException(nameof(capture_path));
 			this.entire_file = entire_file;
 		}
 
@@ -138,4 +135,3 @@ namespace Xharness.Logging {
 		}
 	}
 }
-
