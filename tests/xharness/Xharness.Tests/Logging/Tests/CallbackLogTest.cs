@@ -21,9 +21,9 @@ namespace Xharness.Tests.Logging.Tests {
 
 			var log = new CallbackLog (cb);
 			log.Write (message);
-			Assert.IsTrue (called, "called");
+			Assert.IsTrue (called, "Callback was not called");
 			Assert.IsNotNull (data, "data");
-			StringAssert.EndsWith (message, data, "message"); // take time stamp into account
+			StringAssert.EndsWith (message, data, "message"); // TODO: take time stamp into account
 		}
 	}
 }

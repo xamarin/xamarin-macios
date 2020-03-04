@@ -24,7 +24,7 @@ namespace Xharness.Tests.Logging.Tests {
 		}
 
 		[TearDown]
-		public void TeatDown ()
+		public void TearDown ()
 		{
 			if (File.Exists (filePath))
 				File.Delete (filePath);
