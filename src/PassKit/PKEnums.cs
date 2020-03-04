@@ -44,8 +44,10 @@ namespace PassKit {
 
 	[Native]
 	public enum PKPassType : ulong {
-		Barcode, Payment,
-		// Any = ~0
+		Barcode,
+		SecureElement,
+		Payment = SecureElement,
+		Any = ulong.MaxValue,
 	}
 
 	[Watch (3,0)]
@@ -74,9 +76,22 @@ namespace PassKit {
 		PinLockout
 	}
 
+	[Deprecated (PlatformName.iOS, 13, 4, message: "Use 'PKSecureElementPassActivationState' instead.")]
+	[Deprecated (PlatformName.WatchOS, 6, 2, message: "Use 'PKSecureElementPassActivationState' instead.")]
+	[Deprecated (PlatformName.MacOSX, 10, 15, 4, message: "Use 'PKSecureElementPassActivationState' instead.")]
 	[Native]
 	public enum PKPaymentPassActivationState : ulong {
 		Activated, RequiresActivation, Activating, Suspended, Deactivated
+	}
+
+	[Watch (6,2), Mac (10,15,4), iOS (13,4)]
+	[Native]
+	public enum PKSecureElementPassActivationState : long {
+		Activated,
+		RequiresActivation,
+		Activating,
+		Suspended,
+		Deactivated,
 	}
 
 	[Watch (3,0)]
@@ -203,5 +218,17 @@ namespace PassKit {
 	public enum PKAddPaymentPassStyle : ulong {
 		Payment,
 		Access,
+	}
+
+	[Watch (6,4), iOS (13,4)]
+	[ErrorDomain ("PKAddSecureElementPassErrorDomain")]
+	[Native]
+	public enum PKAddSecureElementPassErrorCode : long {
+		UnknownError,
+		UserCanceledError,
+		UnavailableError,
+		InvalidConfigurationError,
+		DeviceNotSupportedError,
+		DeviceNotReadyError
 	}
 }
