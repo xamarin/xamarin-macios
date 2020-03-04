@@ -10,7 +10,7 @@ namespace Xharness.Logging {
 			OnWrite = onWrite;
 		}
 
-		public override string FullPath => throw new NotImplementedException ();
+		public override string FullPath => throw new NotSupportedException ();
 
 		public override void WriteImpl (string value)
 		{

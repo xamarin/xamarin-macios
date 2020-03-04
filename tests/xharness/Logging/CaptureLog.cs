@@ -136,4 +136,3 @@ namespace Xharness.Logging {
 		}
 	}
 }
-
