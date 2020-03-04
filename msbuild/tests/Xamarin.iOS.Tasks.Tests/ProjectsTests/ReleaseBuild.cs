@@ -20,8 +20,7 @@ namespace Xamarin.iOS.Tasks
 		{
 			BuildProject ("MyReleaseBuild", Platform, "Release");
 
-			var args = new List<string> { "-r", "UIWebView", AppBundlePath };
-			ExecutionHelper.Execute ("grep", args, out var output);
+			ExecutionHelper.Execute ("grep", $"-r UIWebView {AppBundlePath}", out var output);
 			Assert.That (output.ToString (), Is.Empty, "UIWebView");
 		}
 
