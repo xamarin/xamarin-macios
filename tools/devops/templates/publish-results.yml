@@ -64,10 +64,8 @@ steps:
 - pwsh: ./tools/devops/templates/publish_results.ps1
   condition: succeededOrFailed()
   env:
-    BUILD_REVISION: $(BUILD_REVISION)
     GH_STATE: $(GH_STATE)
-    GITHUB_TOKEN: $(GitHub.Token)
-
+    
 #    GITHUB_TOKEN: $(GITHUB_TOKEN)
 
 #  VSTS_BUILD_URL='https://dev.azure.com/devdiv/ - SYSTEM_TEAMFOUNDATIONSERVERURI
