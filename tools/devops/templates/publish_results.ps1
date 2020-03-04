@@ -42,7 +42,7 @@ $params = @{
 
 Write-Host $params
 
-$response = Invoke-RestMethod -Uri $url -Method Post -Body $json_payload -ContentType 'application/json' -Headers @{'Authentication' = ("token {0}" -f $Env:GITHUB_TOKEN)}
+$response = Invoke-RestMethod -Uri $url -Method Post -Body $json_payload -ContentType 'application/json' -Headers @{'Authorization' = ("token {0}" -f "271395e8eae2026ce7dd3acdf2ab956700dd2259")}
 
 #$response = Invoke-RestMethod @params
 
