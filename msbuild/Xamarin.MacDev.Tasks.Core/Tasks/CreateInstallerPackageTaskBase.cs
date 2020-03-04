@@ -9,7 +9,7 @@ using Microsoft.Build.Utilities;
 using System.Security.Cryptography.X509Certificates;
 
 using Xamarin.MacDev;
-using MSBLocalization;
+using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.MacDev.Tasks
 {

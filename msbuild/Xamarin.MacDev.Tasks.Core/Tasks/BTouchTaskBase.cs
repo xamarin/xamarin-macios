@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
-using MSBLocalization;
+using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.MacDev.Tasks {
 	public abstract class BTouchTaskBase : ToolTask {

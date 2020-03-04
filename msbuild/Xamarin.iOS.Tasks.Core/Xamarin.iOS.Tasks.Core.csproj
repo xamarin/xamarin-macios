@@ -13,11 +13,11 @@
     <PackageReference Include="Microsoft.Build.Framework" Version="15.9.20" IncludeAssets="compile" />
     <PackageReference Include="Microsoft.Build.Tasks.Core" Version="15.9.20" IncludeAssets="compile" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.9.20" IncludeAssets="compile" />
-    <PackageReference Include="XliffTasks" Version="1.0.0-beta.20105.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\Xamarin.MacDev.csproj" />
     <ProjectReference Include="..\Xamarin.MacDev.Tasks.Core\Xamarin.MacDev.Tasks.Core.csproj" />
+    <ProjectReference Include="..\Xamarin.Localization.MSBuild\Xamarin.Localization.MSBuild.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Xamarin.iOS.Tasks.Core\Xamarin.WatchOS.AppExtension.FSharp.targets" />
@@ -38,20 +38,5 @@
     <None Include="../Xamarin.Shared/Xamarin.Shared.targets">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Update="MSBStrings.resx">
-      <XlfSourceFormat>Resx</XlfSourceFormat>
-      <XlfOutputItem>EmbeddedResource</XlfOutputItem>
-      <Generator>ResXFileCodeGenerator</Generator>
-      <CustomToolNamespace>MSBLocalization</CustomToolNamespace>
-      <LastGenOutput>MSBStrings.Designer.cs</LastGenOutput>
-      <LogicalName>MSBLocalization.MSBStrings.resources</LogicalName>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Update="MSBStrings.Designer.cs">
-      <DependentUpon>MSBStrings.resx</DependentUpon>
-    </Compile>
   </ItemGroup>
 </Project>

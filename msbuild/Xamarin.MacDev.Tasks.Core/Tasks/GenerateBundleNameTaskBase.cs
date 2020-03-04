@@ -3,7 +3,7 @@ using System.Text;
 
 using Microsoft.Build.Utilities;
 using Microsoft.Build.Framework;
-using MSBLocalization;
+using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.MacDev.Tasks
 {

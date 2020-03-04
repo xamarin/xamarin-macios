@@ -15,10 +15,10 @@
     <PackageReference Include="Microsoft.Build.Framework" Version="15.9.20" IncludeAssets="compile" />
     <PackageReference Include="Microsoft.Build.Tasks.Core" Version="15.9.20" IncludeAssets="compile" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.9.20" IncludeAssets="compile" />
-    <PackageReference Include="XliffTasks" Version="1.0.0-beta.20105.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\Xamarin.MacDev.csproj" />
+    <ProjectReference Include="..\Xamarin.Localization.MSBuild\Xamarin.Localization.MSBuild.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\tools\common\StringUtils.cs">
@@ -30,23 +30,10 @@
     <Compile Include="..\..\tools\mtouch\errors.Designer.cs">
       <Link>errors.Designer.cs</Link>
     </Compile>
-    <Compile Include="..\Xamarin.iOS.Tasks.Core\MSBStrings.Designer.cs">
-      <Link>MSBStrings.Designer.cs</Link>
-      <DependentUpon>MSBStrings.resx</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\tools\mtouch\errors.resx">
       <Link>errors.resx</Link>
     </None>
-    <EmbeddedResource Include="..\Xamarin.iOS.Tasks.Core\MSBStrings.resx">
-      <Link>MSBStrings.resx</Link>
-      <XlfSourceFormat>Resx</XlfSourceFormat>
-      <XlfOutputItem>EmbeddedResource</XlfOutputItem>
-      <Generator>ResXFileCodeGenerator</Generator>
-      <CustomToolNamespace>MSBLocalization</CustomToolNamespace>
-      <LastGenOutput>MSBStrings.Designer.cs</LastGenOutput>
-      <LogicalName>MSBLocalization.MSBStrings.resources</LogicalName>
-    </EmbeddedResource>
   </ItemGroup>
 </Project>

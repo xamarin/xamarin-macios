@@ -5,7 +5,7 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev.Tasks;
-using MSBLocalization;
+using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.iOS.Tasks
 {

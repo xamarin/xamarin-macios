@@ -6,7 +6,7 @@ using System.Security.Cryptography.X509Certificates;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
-using MSBLocalization;
+using Xamarin.Localization.MSBuild;
 
 using SecKeychain = Xamarin.MacDev.Keychain;
 
