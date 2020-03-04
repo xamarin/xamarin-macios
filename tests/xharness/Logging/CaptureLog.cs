@@ -12,7 +12,7 @@ namespace Xharness.Logging {
 
 		long startPosition;
 		long endPosition;
-		bool entire_file;
+		bool entireFile;
 		bool started;
 
 		public CaptureLog (ILogs logs, string path, string capture_path, bool entire_file = false)
@@ -21,12 +21,12 @@ namespace Xharness.Logging {
 
 			Path = path ?? throw new ArgumentNullException (nameof (path));
 			CapturePath = capture_path ?? throw new ArgumentNullException (nameof (path));
-			this.entire_file = entire_file;
+			this.entireFile = entire_file;
 		}
 
 		public void StartCapture ()
 		{
-			if (entire_file)
+			if (entireFile)
 				return;
 
 			if (File.Exists (CapturePath))
@@ -36,14 +36,14 @@ namespace Xharness.Logging {
 
 		public void StopCapture ()
 		{
-			if (!started && !entire_file)
+			if (!started && !entireFile)
 				throw new InvalidOperationException ("StartCapture most be called before StopCature on when the entire file will be captured.");
 			if (!File.Exists (CapturePath)) {
 				File.WriteAllText (Path, $"Could not capture the file '{CapturePath}' because it doesn't exist.");
 				return;
 			}
 
-			if (entire_file) {
+			if (entireFile) {
 				File.Copy (CapturePath, Path, true);
 				return;
 			}
@@ -55,7 +55,7 @@ namespace Xharness.Logging {
 
 		void Capture ()
 		{
-			if (startPosition == 0 || entire_file)
+			if (startPosition == 0 || entireFile)
 				return;
 
 			if (!File.Exists (CapturePath)) {
