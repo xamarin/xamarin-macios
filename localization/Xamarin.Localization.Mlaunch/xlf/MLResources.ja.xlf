@@ -1,0 +1,1039 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="en" target-language="ja" original="../MLResources.resx">
+    <body>
+      <trans-unit id="HE0001">
+        <source>This library only runs in a 64bit process.
+        </source>
+        <target state="new">This library only runs in a 64bit process.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="HE0002_A">
+        <source>This library only works with Xcode 6 or newer.
+        </source>
+        <target state="new">This library only works with Xcode 6 or newer.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="HE0003">
+        <source>Failed to launch the application '{0}' on '{1}: {3} ({2})
+        </source>
+        <target state="new">Failed to launch the application '{0}' on '{1}: {3} ({2})
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="HE0003_A">
+        <source>Failed to resume the application '{0}' on '{1}: {2}
+        </source>
+        <target state="new">Failed to resume the application '{0}' on '{1}: {2}
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="HE0003_B">
+        <source>Could not load the framework '{0}' (path: {1}): not found.
+        </source>
+        <target state="new">Could not load the framework '{0}' (path: {1}): not found.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="HE0004">
+        <source>Could not load the framework '{0}' (path: {1}): {2}
+        </source>
+        <target state="new">Could not load the framework '{0}' (path: {1}): {2}
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="HE0005">
+        <source>Failed to kill the application '{0}' on '{1}': {2}
+        </source>
+        <target state="new">Failed to kill the application '{0}' on '{1}': {2}
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="HE0005_A">
+        <source>Failed to discover devices: {0}
+        </source>
+        <target state="new">Failed to discover devices: {0}
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="HE0007">
+        <source>Could not start Instruments server on the device '{0}'. Please try rebooting the device.
+        </source>
+        <target state="new">Could not start Instruments server on the device '{0}'. Please try rebooting the device.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="HE0008">
+        <source>The device '{0}' does not support '{1}'
+        </source>
+        <target state="new">The device '{0}' does not support '{1}'
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="HE0009">
+        <source>Could not find the service '{0}' on the device '{1}': {2}
+        </source>
+        <target state="new">Could not find the service '{0}' on the device '{1}': {2}
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="HE0013">
+        <source>Failed to register bindings. Please make sure Xamarin.Hosting.dll is not registered before calling Services.Initialize.
+        </source>
+        <target state="new">Failed to register bindings. Please make sure Xamarin.Hosting.dll is not registered before calling Services.Initialize.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="HE0018">
+        <source>Could not launch the simulator application: {0}
+        </source>
+        <target state="new">Could not launch the simulator application: {0}
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="HE0019">
+        <source>Unknown device family '{0}' ({1}) for device '{2}'
+        </source>
+        <target state="new">Unknown device family '{0}' ({1}) for device '{2}'
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="HE1800">
+        <source>Failed to create http listener for the sdb http tunnel. Please try again.
+        </source>
+        <target state="new">Failed to create http listener for the sdb http tunnel. Please try again.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML0002">
+        <source>Failed to fetch the pid for the application '{0}' on '{1}': {3} ({2})
+        </source>
+        <target state="new">Failed to fetch the pid for the application '{0}' on '{1}': {3} ({2})
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML0002_A">
+        <source>Could not parse the environment variable '{0}'
+        </source>
+        <target state="new">Could not parse the environment variable '{0}'
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML0007">
+        <source>Could not start Instruments server on the device '{0}'. Please try rebooting the device.
+        </source>
+        <target state="new">Could not start Instruments server on the device '{0}'. Please try rebooting the device.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML0010">
+        <source>Could not parse the command line arguments: {0}
+        </source>
+        <target state="new">Could not parse the command line arguments: {0}
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML0011">
+        <source>Could not launch the simulator '{0}': {1}
+        </source>
+        <target state="new">Could not launch the simulator '{0}': {1}
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML0012">
+        <source>{0} requires Xcode version {1} (current version: {2} from {3})
+        </source>
+        <target state="new">{0} requires Xcode version {1} (current version: {2} from {3})
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML0014">
+        <source>The path '{0}' does not specify an Xcode app.
+        </source>
+        <target state="new">The path '{0}' does not specify an Xcode app.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML0015">
+        <source>Could not find the 'DTXAllowedRPC' protocol. This likely means an new and/or unsupported Xcode version is selected.
+        </source>
+        <target state="new">Could not find the 'DTXAllowedRPC' protocol. This likely means an new and/or unsupported Xcode version is selected.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML0016">
+        <source>The selected device '{0}' ('{1}') does not support the required services for debugging ('{2}')
+        </source>
+        <target state="new">The selected device '{0}' ('{1}') does not support the required services for debugging ('{2}')
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML0017">
+        <source>Invalid watch launch mode: {0}
+        </source>
+        <target state="new">Invalid watch launch mode: {0}
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML0018">
+        <source>Unknown command line argument: '{0}'
+        </source>
+        <target state="new">Unknown command line argument: '{0}'
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML0021">
+        <source>Could not find the application '{0}' on the device '{1}'.
+        </source>
+        <target state="new">Could not find the application '{0}' on the device '{1}'.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML0023">
+        <source>Found more than on Watch app in {0}. Only one is supported.
+        </source>
+        <target state="new">Found more than on Watch app in {0}. Only one is supported.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML0024">
+        <source>Could not find required file '{0}'.
+        </source>
+        <target state="new">Could not find required file '{0}'.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML0026">
+        <source>Could not parse the command line argument '{0}': {1}
+        </source>
+        <target state="new">Could not parse the command line argument '{0}': {1}
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML0028">
+        <source>Could not find any Watch extensions in {0}.
+        </source>
+        <target state="new">Could not find any Watch extensions in {0}.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML0030">
+        <source>Could not mount developer tools on '{0}': {1}
+        </source>
+        <target state="new">Could not mount developer tools on '{0}': {1}
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML0031">
+        <source>Failed to mount developer tools on '{0}'.
+        </source>
+        <target state="new">Failed to mount developer tools on '{0}'.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML0032">
+        <source>Could not mount developer tools on '{0}': {1}
+        </source>
+        <target state="new">Could not mount developer tools on '{0}': {1}
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML0033">
+        <source>The device '{0}' has iOS {1}, but only iOS 6+ is supported when using Xcode 7+. Either use an older version of Xcode or upgrade the device.
+        </source>
+        <target state="new">The device '{0}' has iOS {1}, but only iOS 6+ is supported when using Xcode 7+. Either use an older version of Xcode or upgrade the device.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML0035">
+        <source>Could not find a paired iPhone device for the Watch '{0}' ({1})
+        </source>
+        <target state="new">Could not find a paired iPhone device for the Watch '{0}' ({1})
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML0036">
+        <source>Could not find a paired Watch device for the iPhone '{0}' ({1})
+        </source>
+        <target state="new">Could not find a paired Watch device for the iPhone '{0}' ({1})
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML0038">
+        <source>Failed to launch the app '{0}' on the device '{1}': {2}
+        </source>
+        <target state="new">Failed to launch the app '{0}' on the device '{1}': {2}
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML0039">
+        <source>Could not '{0}': timed out after {1} attempts. Please try again.
+        </source>
+        <target state="new">Could not '{0}': timed out after {1} attempts. Please try again.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML0040">
+        <source>The app bundle {0} is not a Watch app.
+        </source>
+        <target state="new">The app bundle {0} is not a Watch app.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML0041">
+        <source>Error while processing device notifications from {1} (0x{2}): {0}
+        </source>
+        <target state="new">Error while processing device notifications from {1} (0x{2}): {0}
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML0042">
+        <source>Could not launch the app '{0}' on the device '{1}' after {2} attempts.
+        </source>
+        <target state="new">Could not launch the app '{0}' on the device '{1}' after {2} attempts.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML0044">
+        <source>Failed to lookup the pid for '{0}': {1}
+        </source>
+        <target state="new">Failed to lookup the pid for '{0}': {1}
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML0045">
+        <source>Failed to launch messages extension: {0}
+        </source>
+        <target state="new">Failed to launch messages extension: {0}
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML0045_A">
+        <source>Failed to launch Siri: {0}
+        </source>
+        <target state="new">Failed to launch Siri: {0}
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML0045_B">
+        <source>Failed to press home button: {0}
+        </source>
+        <target state="new">Failed to press home button: {0}
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML0045_C">
+        <source>Failed to send background fetch request: {0}
+        </source>
+        <target state="new">Failed to send background fetch request: {0}
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML0045_D">
+        <source>Failed to launch notification center: {0}
+        </source>
+        <target state="new">Failed to launch notification center: {0}
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML0047">
+        <source>Failed to request XPC observation: {0} ({1}). Please try again.
+        </source>
+        <target state="new">Failed to request XPC observation: {0} ({1}). Please try again.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML0050">
+        <source>Can't connect to the device {0} ({1}) over wifi because wireless debugging is not enabled for this device.
+        </source>
+        <target state="new">Can't connect to the device {0} ({1}) over wifi because wireless debugging is not enabled for this device.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML0051">
+        <source>Failed to rename potentially troublesome weak library references from the executable {0}: {1}
+        </source>
+        <target state="new">Failed to rename potentially troublesome weak library references from the executable {0}: {1}
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML0052">
+        <source>No command specified.
+        </source>
+        <target state="new">No command specified.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML0054">
+        <source>Invalid simulator specification for Xcode {0}: {1}
+        </source>
+        <target state="new">Invalid simulator specification for Xcode {0}: {1}
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML0055">
+        <source>The Xcode path '{0}' does not exist.
+        </source>
+        <target state="new">The Xcode path '{0}' does not exist.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML0057">
+        <source>Cannot determine the path to Xcode.app from the sdk root '{0}'. Please specify the full path to the Xcode.app bundle.
+        </source>
+        <target state="new">Cannot determine the path to Xcode.app from the sdk root '{0}'. Please specify the full path to the Xcode.app bundle.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML0058">
+        <source>The Xcode.app '{0}' is invalid (the file '{1}' does not exist).
+        </source>
+        <target state="new">The Xcode.app '{0}' is invalid (the file '{1}' does not exist).
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML0059">
+        <source>Could not find the currently selected Xcode on the system: {0}
+        </source>
+        <target state="new">Could not find the currently selected Xcode on the system: {0}
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML0069">
+        <source>The app directory '{0}' does not exist.
+        </source>
+        <target state="new">The app directory '{0}' does not exist.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML0081">
+        <source>The command line argument --download-crash-report also requires --download-crash-report-to.
+        </source>
+        <target state="new">The command line argument --download-crash-report also requires --download-crash-report-to.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML0100">
+        <source>The option '{0}' is required.
+        </source>
+        <target state="new">The option '{0}' is required.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML0117">
+        <source>Can't launch a 32-bit app on a simulator that only supports 64-bit apps ({0}).
+        </source>
+        <target state="new">Can't launch a 32-bit app on a simulator that only supports 64-bit apps ({0}).
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1001">
+        <source>Could not find an application at the specified directory: {0}
+        </source>
+        <target state="new">Could not find an application at the specified directory: {0}
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1003">
+        <source>Could not kill the application '{0}'. You may have to kill the application manually.
+        </source>
+        <target state="new">Could not kill the application '{0}'. You may have to kill the application manually.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1004">
+        <source>Could not get the list of installed applications.
+        </source>
+        <target state="new">Could not get the list of installed applications.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1005">
+        <source>Could not kill the application '{0}' on the device{1}: {2}. You may have to kill the application manually.
+        </source>
+        <target state="new">Could not kill the application '{0}' on the device{1}: {2}. You may have to kill the application manually.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1006">
+        <source>Could not install the application '{0}' on the device{1}: {2}.
+        </source>
+        <target state="new">Could not install the application '{0}' on the device{1}: {2}.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1007">
+        <source>Failed to launch the application '{0}' on the device{1}: {2}. You can still launch the application manually by tapping on it.
+        </source>
+        <target state="new">Failed to launch the application '{0}' on the device{1}: {2}. You can still launch the application manually by tapping on it.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1008">
+        <source>Failed to launch the simulator: {0}
+        </source>
+        <target state="new">Failed to launch the simulator: {0}
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1012">
+        <source>Failed to list the apps on the device{0}: {1}
+        </source>
+        <target state="new">Failed to list the apps on the device{0}: {1}
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1018">
+        <source>Your application failed code-signing checks and could not be installed on the device '{0}'. Check your certificates, provisioning profiles, and bundle ids. Probably your device is not part of the selected provisioning profile (error: 0xe8008015).
+        </source>
+        <target state="new">Your application failed code-signing checks and could not be installed on the device '{0}'. Check your certificates, provisioning profiles, and bundle ids. Probably your device is not part of the selected provisioning profile (error: 0xe8008015).
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1019">
+        <source>Your application has entitlements not supported by your current provisioning profile (or your device is not part of the current provisioning profile) and could not be installed on the device '{0}'. Please check the iOS Device Log for details (error: 0xe8008016)
+        </source>
+        <target state="new">Your application has entitlements not supported by your current provisioning profile (or your device is not part of the current provisioning profile) and could not be installed on the device '{0}'. Please check the iOS Device Log for details (error: 0xe8008016)
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1020">
+        <source>Failed to launch the application '{0}' on the device '{1}': {2}
+        </source>
+        <target state="new">Failed to launch the application '{0}' on the device '{1}': {2}
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1023">
+        <source>Could not communicate with the device to find the application '{0}' : {1}
+        </source>
+        <target state="new">Could not communicate with the device to find the application '{0}' : {1}
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1024">
+        <source>The application signature could not be verified on device '{0}'. Please make sure that the provisioning profile is installed and not expired (error: 0xe8008017).
+        </source>
+        <target state="new">The application signature could not be verified on device '{0}'. Please make sure that the provisioning profile is installed and not expired (error: 0xe8008017).
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1025">
+        <source>Could not list the crash reports on the device {0}.
+        </source>
+        <target state="new">Could not list the crash reports on the device {0}.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1026">
+        <source>Could not download the crash report {1} from the device {0}.
+        </source>
+        <target state="new">Could not download the crash report {1} from the device {0}.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1026_A">
+        <source>Could not delete the crash report {1} from the device {0}.
+        </source>
+        <target state="new">Could not delete the crash report {1} from the device {0}.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1027">
+        <source>Can't use Xcode 7+ to launch applications on devices with iOS {0} (Xcode 7 only supports iOS 6+).
+        </source>
+        <target state="new">Can't use Xcode 7+ to launch applications on devices with iOS {0} (Xcode 7 only supports iOS 6+).
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1028">
+        <source>Invalid device specification: '{0}'. Expected 'ios', 'watchos' or 'all'.
+        </source>
+        <target state="new">Invalid device specification: '{0}'. Expected 'ios', 'watchos' or 'all'.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1029">
+        <source>Could not find an application at the specified directory: {0}
+        </source>
+        <target state="new">Could not find an application at the specified directory: {0}
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1030">
+        <source>Specifying a bundle id to --launchdev is deprecated. Please pass the full path to the bundle to --launchdev, or use --launchdevbundleid
+        </source>
+        <target state="new">Specifying a bundle id to --launchdev is deprecated. Please pass the full path to the bundle to --launchdev, or use --launchdevbundleid
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1031">
+        <source>The device '{0}' is locked, please unlock it.
+        </source>
+        <target state="new">The device '{0}' is locked, please unlock it.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1031_A">
+        <source>Could not launch the app '{0}' on the device '{1}' because the device is locked. Please unlock the device and try again.
+        </source>
+        <target state="new">Could not launch the app '{0}' on the device '{1}' because the device is locked. Please unlock the device and try again.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1032">
+        <source>This application executable might be too large ({0} MB) to execute on device. If bitcode was enabled you might want to disable it for development, it is only required to submit applications to Apple.
+        </source>
+        <target state="new">This application executable might be too large ({0} MB) to execute on device. If bitcode was enabled you might want to disable it for development, it is only required to submit applications to Apple.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1033">
+        <source>Could not uninstall the application '{0}' from the device '{1}': {2}
+        </source>
+        <target state="new">Could not uninstall the application '{0}' from the device '{1}': {2}
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1033_A">
+        <source>Specifying '--launchsim=none' as the bundle to launch to not launch a bundle but only the simulator is deprecated. Use '--launchsimulator' instead.
+        </source>
+        <target state="new">Specifying '--launchsim=none' as the bundle to launch to not launch a bundle but only the simulator is deprecated. Use '--launchsimulator' instead.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1034">
+        <source>The install mode 'Fast' is not available anymore. Please delete the file {0} and try again to use the most recent install mode.
+        </source>
+        <target state="new">The install mode 'Fast' is not available anymore. Please delete the file {0} and try again to use the most recent install mode.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1043">
+        <source>Failed to launch the application using the instruments service. Will try launching the app using gdb service.
+        </source>
+        <target state="new">Failed to launch the application using the instruments service. Will try launching the app using gdb service.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1101">
+        <source>Could not start app: {0}
+        </source>
+        <target state="new">Could not start app: {0}
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1102">
+        <source>Could not attach to the app: {0}
+        </source>
+        <target state="new">Could not attach to the app: {0}
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1103">
+        <source>Could not detach
+        </source>
+        <target state="new">Could not detach
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1104">
+        <source>Failed to send packet: {0}
+        </source>
+        <target state="new">Failed to send packet: {0}
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1105">
+        <source>Unexpected response type
+        </source>
+        <target state="new">Unexpected response type
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1106">
+        <source>Could not get list of applications on the device: Request timed out.
+        </source>
+        <target state="new">Could not get list of applications on the device: Request timed out.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1107">
+        <source>Application failed to launch: {0}
+        </source>
+        <target state="new">Application failed to launch: {0}
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1109">
+        <source>Application failed to launch because the device is locked. Please unlock the device and try again.
+        </source>
+        <target state="new">Application failed to launch because the device is locked. Please unlock the device and try again.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1111">
+        <source>Application launched successfully, but it's not possible to wait for the app to exit as requested because it's not possible to detect app termination when launching using gdbserver.
+        </source>
+        <target state="new">Application launched successfully, but it's not possible to wait for the app to exit as requested because it's not possible to detect app termination when launching using gdbserver.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1202">
+        <source>Invalid simulator configuration: {0}
+        </source>
+        <target state="new">Invalid simulator configuration: {0}
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1203">
+        <source>Could not get shared SimServiceContext: {0}
+        </source>
+        <target state="new">Could not get shared SimServiceContext: {0}
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1203_A">
+        <source>Could not get default device set for context: {0}
+        </source>
+        <target state="new">Could not get default device set for context: {0}
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1203_B">
+        <source>Invalid simulator specification: {0}
+        </source>
+        <target state="new">Invalid simulator specification: {0}
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1204">
+        <source>Invalid simulator specification '{0}': runtime not specified.
+        </source>
+        <target state="new">Invalid simulator specification '{0}': runtime not specified.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1205">
+        <source>Invalid simulator specification '{0}': device type not specified.
+        </source>
+        <target state="new">Invalid simulator specification '{0}': device type not specified.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1206">
+        <source>Could not find the simulator runtime '{0}'.
+        </source>
+        <target state="new">Could not find the simulator runtime '{0}'.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1207">
+        <source>Could not find the simulator device type '{0}'.
+        </source>
+        <target state="new">Could not find the simulator device type '{0}'.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1210">
+        <source>Invalid simulator specification: '{0}', unknown key '{1}'
+        </source>
+        <target state="new">Invalid simulator specification: '{0}', unknown key '{1}'
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1211">
+        <source>The simulator version '{0}' does not support the simulator type '{1}'
+        </source>
+        <target state="new">The simulator version '{0}' does not support the simulator type '{1}'
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1212">
+        <source>Failed to create a simulator where type = {0} and runtime = {1}.
+        </source>
+        <target state="new">Failed to create a simulator where type = {0} and runtime = {1}.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1216">
+        <source>Could not find the simulator UDID '{0}'.
+        </source>
+        <target state="new">Could not find the simulator UDID '{0}'.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1220">
+        <source>Could not find the latest simulator runtime for device '{0}'.
+        </source>
+        <target state="new">Could not find the latest simulator runtime for device '{0}'.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1221">
+        <source>Could not find the paired iPhone simulator for the WatchOS simulator '{0}'.
+        </source>
+        <target state="new">Could not find the paired iPhone simulator for the WatchOS simulator '{0}'.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1400">
+        <source>Could not create connection for crash report service
+        </source>
+        <target state="new">Could not create connection for crash report service
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1401">
+        <source>Could not close crash report service: AFCConnectionClose returned {0}
+        </source>
+        <target state="new">Could not close crash report service: AFCConnectionClose returned {0}
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1402">
+        <source>Could not read file info for {0}: AFCFileInfoOpen returned {1}
+        </source>
+        <target state="new">Could not read file info for {0}: AFCFileInfoOpen returned {1}
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1403">
+        <source>Could not read crash report: AFCDirectoryOpen ({0}) returned: {1}
+        </source>
+        <target state="new">Could not read crash report: AFCDirectoryOpen ({0}) returned: {1}
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1403_A">
+        <source>Could not delete crash report: AFCDirectoryOpen ({0}) returned: {1}
+        </source>
+        <target state="new">Could not delete crash report: AFCDirectoryOpen ({0}) returned: {1}
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1404">
+        <source>Could not read crash report: AFCFileRefOpen ({0}) returned: {1}
+        </source>
+        <target state="new">Could not read crash report: AFCFileRefOpen ({0}) returned: {1}
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1404_A">
+        <source>Could not delete crash report: AFCRemovePath ({0}) returned: {1}
+        </source>
+        <target state="new">Could not delete crash report: AFCRemovePath ({0}) returned: {1}
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1405">
+        <source>Could not read crash report: AFCFileRefRead ({0}) returned: {1}
+        </source>
+        <target state="new">Could not read crash report: AFCFileRefRead ({0}) returned: {1}
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1406">
+        <source>Could not list crash reports: AFCDirectoryOpen ({0}) returned: {1}
+        </source>
+        <target state="new">Could not list crash reports: AFCDirectoryOpen ({0}) returned: {1}
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1801">
+        <source>Received invalid http request from the app ({0}). Debugging may stop working.
+        </source>
+        <target state="new">Received invalid http request from the app ({0}). Debugging may stop working.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1802">
+        <source>Received invalid http request from the app ({0} - incorrect pid, expected {1}). Debugging may stop working.
+        </source>
+        <target state="new">Received invalid http request from the app ({0} - incorrect pid, expected {1}). Debugging may stop working.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1803">
+        <source>An error occurred when sending debug data to the app ({0}). Debugging may stop working.
+        </source>
+        <target state="new">An error occurred when sending debug data to the app ({0}). Debugging may stop working.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1804">
+        <source>An error occurred when receiving data from the app ({0}). Debugging may stop working.
+        </source>
+        <target state="new">An error occurred when receiving data from the app ({0}). Debugging may stop working.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1805">
+        <source>Received invalid http request from the app ({0} - invalid action). Debugging may stop working.
+        </source>
+        <target state="new">Received invalid http request from the app ({0} - invalid action). Debugging may stop working.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1900">
+        <source>The device '{0}' is not paired with your computer. Please unlock the device, and choose to trust your computer.
+        </source>
+        <target state="new">The device '{0}' is not paired with your computer. Please unlock the device, and choose to trust your computer.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1901">
+        <source>The application '{0}' has been signed with a provisioning profile which does not include any devices.
+        </source>
+        <target state="new">The application '{0}' has been signed with a provisioning profile which does not include any devices.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1902">
+        <source>The application '{0}' has been signed with a provisioning profile which does not include the device '{1}'.
+        </source>
+        <target state="new">The application '{0}' has been signed with a provisioning profile which does not include the device '{1}'.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+      <trans-unit id="ML1903">
+        <source>Failed to connect to a detected device within {0} seconds.
+        </source>
+        <target state="new">Failed to connect to a detected device within {0} seconds.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
