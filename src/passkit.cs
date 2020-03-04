@@ -135,7 +135,7 @@ namespace PassKit {
 		[Export ("canAddPaymentPassWithPrimaryAccountIdentifier:")]
 		bool CanAddPaymentPass (string primaryAccountIdentifier);
 
-		[Watch (6,4), iOS (13,4)]
+		[Watch (6,2), iOS (13,4)]
 		[Export ("canAddSecureElementPassWithPrimaryAccountIdentifier:")]
 		bool CanAddSecureElementPass (string primaryAccountIdentifier);
 
