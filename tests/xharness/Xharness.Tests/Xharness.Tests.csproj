@@ -70,9 +70,6 @@
     <Compile Include="..\Jenkins.cs">
       <Link>Jenkins.cs</Link>
     </Compile>
-    <Compile Include="..\Log.cs">
-      <Link>Log.cs</Link>
-    </Compile>
     <Compile Include="..\MacTarget.cs">
       <Link>MacTarget.cs</Link>
     </Compile>
@@ -180,6 +177,23 @@
     <Compile Include="..\Logging\ILogFile.cs">
       <Link>Logging\ILogFile.cs</Link>
     </Compile>
+    <Compile Include="Logging\Tests\LogsTest.cs" />
+    <Compile Include="..\Logging\LogFile.cs">
+      <Link>Logging\LogFile.cs</Link>
+    </Compile>
+    <Compile Include="Logging\Tests\LogFileTest.cs" />
+    <Compile Include="Logging\Tests\ConsoleLogTest.cs" />
+    <Compile Include="..\Logging\ConsoleLog.cs">
+      <Link>Logging\ConsoleLog.cs</Link>
+    </Compile>
+    <Compile Include="..\Logging\CallbackLog.cs">
+      <Link>Logging\CallbackLog.cs</Link>
+    </Compile>
+    <Compile Include="Logging\Tests\CallbackLogTest.cs" />
+    <Compile Include="..\Logging\CaptureLog.cs">
+      <Link>Logging\CaptureLog.cs</Link>
+    </Compile>
+    <Compile Include="Logging\Tests\CaptureLogTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -190,6 +204,7 @@
     <Folder Include="Tests\" />
     <Folder Include="Samples\" />
     <Folder Include="Logging\" />
+    <Folder Include="Logging\Tests\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Samples\NUnitV2Sample.xml" />

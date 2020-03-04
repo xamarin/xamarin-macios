@@ -79,7 +79,7 @@ namespace Xharness.Logging {
 
 		public override Encoding Encoding {
 			get {
-				return System.Text.Encoding.UTF8;
+				return Encoding.UTF8;
 			}
 		}
 

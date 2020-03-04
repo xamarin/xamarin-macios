@@ -8,7 +8,7 @@ namespace Xharness.Logging {
 
 		public Logs (string directory)
 		{
-			Directory = directory;
+			Directory = directory ?? throw new ArgumentNullException (nameof (directory));
 		}
 
 		// Create a new log backed with a file
@@ -40,6 +40,9 @@ namespace Xharness.Logging {
 		// 'path' must be a full path to the file.
 		public ILogFile AddFile (string path, string name)
 		{
+			if (path == null)
+				throw new ArgumentNullException (nameof (path));
+
 			if (!path.StartsWith (Directory, StringComparison.Ordinal)) {
 				var newPath = Path.Combine (Directory, Path.GetFileNameWithoutExtension (path) + "-" + Harness.Timestamp + Path.GetExtension (path));
 				File.Copy (path, newPath, true);
@@ -54,6 +57,8 @@ namespace Xharness.Logging {
 		// Create an empty file in the log directory and return the full path to the file
 		public string CreateFile (string path, string description)
 		{
+			if (path == null)
+				throw new ArgumentNullException (nameof (path));
 			using (var rv = new LogFile (this, description, Path.Combine (Directory, path), false)) {
 				Add (rv);
 				return rv.FullPath;
