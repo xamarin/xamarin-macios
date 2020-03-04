@@ -125,6 +125,7 @@ namespace Xamarin.Tests
 								alternate_version = new Version (7, 0, 0); // our arm64 slices has min iOS 7.0.
 							} else if (slice.IsDynamicLibrary && !device) {
 								version = new Version (8, 0, 0);
+								alternate_version = new Version (7, 0, 0);
 							}
 							mono_native_compat_version = version;
 							mono_native_unified_version = new Version (10, 0, 0);

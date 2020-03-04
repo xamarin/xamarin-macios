@@ -23,7 +23,7 @@ namespace SafariServices {
 	delegate void SFExtensionValidationHandler (bool shouldHide, NSString text);
 
 	[Mac (10,12)][iOS (10,0)]
-	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
+	[Introduced (PlatformName.MacCatalyst, 13, 4)]
 	[BaseType (typeof(NSObject))]
 	interface SFContentBlockerState
 	{
@@ -32,7 +32,7 @@ namespace SafariServices {
 	}
 
 	[iOS (9,0)][Mac (10,12)]
-	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
+	[Introduced (PlatformName.MacCatalyst, 13, 4)]
 	[BaseType (typeof (NSObject))]
 	interface SFContentBlockerManager {
 		[Async]
@@ -47,7 +47,7 @@ namespace SafariServices {
 
 #if !MONOMAC
 	[iOS (7,0)]
-	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
+	[Introduced (PlatformName.MacCatalyst, 13, 4)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSGenericException Misuse of SSReadingList interface. Use class method defaultReadingList.
 	partial interface SSReadingList {

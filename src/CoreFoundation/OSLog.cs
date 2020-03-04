@@ -29,7 +29,20 @@ namespace CoreFoundation {
 	[Mac (10,12), iOS (10,0), Watch (3,0), TV (10,0)]
 	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	public sealed class OSLog : NativeObject {
-		public static OSLog Default { get; } = new OSLog (IntPtr.Zero, false);
+
+		static OSLog _default;
+
+		public static OSLog Default {
+			get {
+				if (_default == null) {
+					var h = Dlfcn.dlsym (Libraries.System.Handle, "_os_log_default");
+					if (h == IntPtr.Zero)
+						throw new NotSupportedException ("Feature not available on this OS version");
+					_default = new OSLog (h, false);
+				}
+				return _default;
+			}
+		}
 
 		protected override void Retain ()
 		{

@@ -126,5 +126,11 @@ namespace xharness
 			var rnd = new Random ((int) DateTime.Now.Ticks);
 			return collection.OrderBy (v => rnd.Next ());
 		}
+
+		public static string AsHtml (this string inString)
+		{
+			var rv = System.Web.HttpUtility.HtmlEncode (inString);
+			return rv.Replace ("\t", "&nbsp;&nbsp;&nbsp;&nbsp;").Replace ("\n", "<br/>\n");
+		}
 	}
 }
