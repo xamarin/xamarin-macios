@@ -152,11 +152,6 @@ namespace PassKit {
 		[NoWatch][iOS (10,0)]
 		[Export ("presentPaymentPass:")]
 		void PresentPaymentPass (PKPaymentPass pass);
-
-		[Watch (6,2), iOS (13,4)]
-		[Async (ResultTypeName = "PKSignDataCompletionResult")]
-		[Export ("signData:withPaymentPass:completion:")]
-		void SignData (NSData signData, PKPaymentPass paymentPass, PKPassLibrarySignDataCompletionHandler completion);
 	}
 
 	[Static]
