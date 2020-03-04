@@ -63,14 +63,11 @@ steps:
 # powershell is for Win PowerShell
 - pwsh: ./tools/devops/templates/publish_results.ps1
   condition: succeededOrFailed()
-  env:
-    BUILD_REVISION: $(BUILD_REVISION)
-    TARGET_URL: $(SYSTEM_TEAMFOUNDATIONCOLLECTIONURI)
-    GH_STATE: $(GH_STATE)
-    GITHUB_TOKEN: $(GitHub.Token)
-    VSTS_BUILD_URL: "${SYSTEM_TEAMFOUNDATIONCOLLECTIONURI}${SYSTEM_TEAMPROJECT}/_build/index?buildId=${BUILD_BUILDID}&view=ms.vss-test-web.test-result-details"
 
 #    GITHUB_TOKEN: $(GITHUB_TOKEN)
+
+#  VSTS_BUILD_URL='https://dev.azure.com/devdiv/ - SYSTEM_TEAMFOUNDATIONSERVERURI
+# DevDiv/_build/index?buildId=3521765&view=ms.vss-test-web.test-result-details'
 #VSTS_BUILD_URL="${SYSTEM_TEAMFOUNDATIONCOLLECTIONURI}${SYSTEM_TEAMPROJECT}/_build/index?buildId=${BUILD_BUILDID}&view=ms.vss-test-web.test-result-details"
 # 	printf "\t\"state\": \"%s\",\n" "$STATE"
 #	printf "\t\"target_url\": \"%s\",\n" "$TARGET_URL"
