@@ -59,8 +59,8 @@ namespace Xharness.Logging {
 		{
 			base.Dispose (disposing);
 
-			if (writer != null) {
-				writer.Dispose ();
+			lock (lock_obj) {
+				writer?.Dispose ();
 				writer = null;
 			}
 
