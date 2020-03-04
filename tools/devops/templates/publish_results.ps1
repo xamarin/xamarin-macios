@@ -1,6 +1,4 @@
 
-
-
 $target_url = $Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI + "$Env:SYSTEM_TEAMPROJECT/_build/index?buildId=$Env:BUILD_BUILDID&view=ms.vss-test-web.test-result-details"
 
 ## don't need context here b/c we are combining all device tests into one post?
@@ -26,7 +24,7 @@ Write-Host $url
 
 $params = @{
     Uri = $url
-    Headers = @{'Authentication' = ("token {0}" -f $Env:GITHUB_TOKEN)}
+    Headers = @{'Authorization' = ("token {0}" -f $Env:GITHUB_TOKEN)}
     Method = 'POST'
     Body = $json_payload
     ContentType = 'application/json'
@@ -36,9 +34,9 @@ $params = @{
 
 Write-Host $params
 
-$response = Invoke-RestMethod -Uri $url -Method Post -Body $json_payload -ContentType 'application/json' -Headers @{'Authorization' = ("token {0}" -f $Env:GITHUB_TOKEN)}
+#$response = Invoke-RestMethod -Uri $url -Method Post -Body $json_payload -ContentType 'application/json' -Headers @{'Authorization' = ("token {0}" -f $Env:GITHUB_TOKEN)}
 
-#$response = Invoke-RestMethod @params
+$response = Invoke-RestMethod @params
 
 $response | ConvertTo-Json | Write-Host
 
