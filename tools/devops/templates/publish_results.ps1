@@ -16,9 +16,9 @@ $target_url = $Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI + "$Env:SYSTEM_TEAMPROJECT
 # add description back in
 $json_payload = @"
 {
-    "hash" : $Env:BUILD_REVISION,
+    "hash" : "$Env:BUILD_REVISION",
     "state" : "failure",
-    "target-url" : $target_url,
+    "target-url" : "$target_url",
     "description" : "description placeholder", 
     "context" : "VSTS: device tests",
 }
