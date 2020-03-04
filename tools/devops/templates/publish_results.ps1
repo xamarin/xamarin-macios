@@ -1,4 +1,8 @@
 
+Set-Location Env:
+Get-ChildItem
+
+
 $target_url = $Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI + "$Env:SYSTEM_TEAMPROJECT/_build/index?buildId=$Env:BUILD_BUILDID&view=ms.vss-test-web.test-result-details"
 
 ## don't need context here b/c we are combining all device tests into one post?
@@ -18,7 +22,6 @@ $json_payload = @"
 
 $url = "https://api.github.com/repos/xamarin/xamarin-macios/statuses/$Env:BUILD_REVISION"
 
-Write-Host @{'Authorization' = ("token {0}" -f $GITHUB_TOKEN)}
 Write-Host $json_payload
 Write-Host $url
 
@@ -30,11 +33,7 @@ $params = @{
     ContentType = 'application/json'
 }
 
-#    Headers = @{Authorization = ("token {0}" -f $Env:GITHUB_TOKEN)}
-
 Write-Host $params
-
-#$response = Invoke-RestMethod -Uri $url -Method Post -Body $json_payload -ContentType 'application/json' -Headers @{'Authorization' = ("token {0}" -f $Env:GITHUB_TOKEN)}
 
 $response = Invoke-RestMethod @params
 
