@@ -96,7 +96,6 @@
     <Compile Include="Process_Extensions.cs" />
     <Compile Include="Simulators.cs" />
     <Compile Include="TestProject.cs" />
-    <Compile Include="Log.cs" />
     <Compile Include="GitHub.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="..\mtouch\Cache.cs">
@@ -122,6 +121,10 @@
     <Compile Include="Logging\Log.cs" />
     <Compile Include="Logging\ILog.cs" />
     <Compile Include="Logging\ILogFile.cs" />
+    <Compile Include="Logging\LogFile.cs" />
+    <Compile Include="Logging\ConsoleLog.cs" />
+    <Compile Include="Logging\CallbackLog.cs" />
+    <Compile Include="Logging\CaptureLog.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="BCLTestImporter\" />

@@ -648,9 +648,8 @@ namespace Xharness
 					main_log.WriteLine ("System log for the '{1}' simulator is: {0}", sim.SystemLog, sim.Name);
 					bool isCompanion = sim != simulator;
 
-					var log = new CaptureLog (Logs, sim.SystemLog, entire_file: Harness.Action != HarnessAction.Jenkins)
+					var log = new CaptureLog (Logs, Path.Combine (LogDirectory, sim.Name + ".log"), sim.SystemLog, entire_file: Harness.Action != HarnessAction.Jenkins)
 					{
-						Path = Path.Combine (LogDirectory, sim.Name + ".log"),
 						Description = isCompanion ? LogType.CompanionSystemLog.ToString () : LogType.SystemLog.ToString (),
 					};
 					log.StartCapture ();
