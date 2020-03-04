@@ -1,11 +1,5 @@
-Set-Location Env:
-Get-ChildItem
 
 
-Write-Host $pwd.Path
-Write-Host $PSScriptRoot
-Set-Location -Path $PSScriptRoot
-Write-Host $pwd.Path
 
 $target_url = $Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI + "$Env:SYSTEM_TEAMPROJECT/_build/index?buildId=$Env:BUILD_BUILDID&view=ms.vss-test-web.test-result-details"
 
