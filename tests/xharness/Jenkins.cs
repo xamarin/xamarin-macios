@@ -3729,6 +3729,11 @@ namespace Xharness
 						CompanionDevice = Jenkins.Devices.FindCompanionDevice (Jenkins.DeviceLoadLog, Device);
 					Jenkins.MainLog.WriteLine ("Acquired device '{0}' for '{1}'", Device.Name, ProjectFile);
 
+					var multiplier = TimeoutMultiplier;
+					// ios 32b is slow and we need more time to run the tests.
+					if (BuildTask.Platform == TestPlatform.iOS_Unified32)
+						multiplier *= 2;
+
 					runner = new AppRunner
 					{
 						Harness = Harness,
@@ -3739,7 +3744,7 @@ namespace Xharness
 						DeviceName = Device.Name,
 						CompanionDeviceName = CompanionDevice?.Name,
 						Configuration = ProjectConfiguration,
-						TimeoutMultiplier = TimeoutMultiplier,
+						TimeoutMultiplier = multiplier,
 						Variation = Variation,
 						BuildTask = BuildTask,
 					};
