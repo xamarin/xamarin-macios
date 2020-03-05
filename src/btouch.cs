@@ -70,6 +70,10 @@ public class BindingTouch {
 		get { return "bgen"; }
 	}
 
+	bool IsDotNet {
+		get { return TargetFramework.IsDotNet; }
+	}
+
 	static void ShowHelp (OptionSet os)
 	{
 		Console.WriteLine ("{0} - Mono Objective-C API binder", ToolName);
@@ -117,31 +121,33 @@ public class BindingTouch {
 
 	IEnumerable<string> GetLibraryDirectories ()
 	{
-		switch (CurrentPlatform) {
-		case PlatformName.iOS:
-			yield return Path.Combine (GetSDKRoot (), "lib", "mono", "Xamarin.iOS");
-			break;
-		case PlatformName.WatchOS:
-			yield return Path.Combine (GetSDKRoot (), "lib", "mono", "Xamarin.WatchOS");
-			break;
-		case PlatformName.TvOS:
-			yield return Path.Combine (GetSDKRoot (), "lib", "mono", "Xamarin.TVOS");
-			break;
-		case PlatformName.MacOSX:
-			if (target_framework == TargetFramework.Xamarin_Mac_4_5_Full) {
-				yield return Path.Combine (GetSDKRoot (), "lib", "reference", "full");
-				yield return Path.Combine (GetSDKRoot (), "lib", "mono", "4.5");
-			} else if (target_framework == TargetFramework.Xamarin_Mac_4_5_System) {
-				yield return "/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5";
-				yield return Path.Combine (GetSDKRoot (), "lib", "mono", "4.5");
-			} else if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
-				yield return Path.Combine (GetSDKRoot (), "lib", "mono", "Xamarin.Mac");
-			} else {
-				throw ErrorHelper.CreateError (1053, target_framework);
+		if (!IsDotNet) {
+			switch (CurrentPlatform) {
+			case PlatformName.iOS:
+				yield return Path.Combine (GetSDKRoot (), "lib", "mono", "Xamarin.iOS");
+				break;
+			case PlatformName.WatchOS:
+				yield return Path.Combine (GetSDKRoot (), "lib", "mono", "Xamarin.WatchOS");
+				break;
+			case PlatformName.TvOS:
+				yield return Path.Combine (GetSDKRoot (), "lib", "mono", "Xamarin.TVOS");
+				break;
+			case PlatformName.MacOSX:
+				if (target_framework == TargetFramework.Xamarin_Mac_4_5_Full) {
+					yield return Path.Combine (GetSDKRoot (), "lib", "reference", "full");
+					yield return Path.Combine (GetSDKRoot (), "lib", "mono", "4.5");
+				} else if (target_framework == TargetFramework.Xamarin_Mac_4_5_System) {
+					yield return "/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5";
+					yield return Path.Combine (GetSDKRoot (), "lib", "mono", "4.5");
+				} else if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
+					yield return Path.Combine (GetSDKRoot (), "lib", "mono", "Xamarin.Mac");
+				} else {
+					throw ErrorHelper.CreateError (1053, target_framework);
+				}
+				break;
+			default:
+				throw new BindingException (1047, CurrentPlatform);
 			}
-			break;
-		default:
-			throw new BindingException (1047, CurrentPlatform);
 		}
 		foreach (var lib in libs)
 			yield return lib;
