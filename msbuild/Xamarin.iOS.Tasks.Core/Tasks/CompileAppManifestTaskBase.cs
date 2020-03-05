@@ -8,6 +8,7 @@ using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev.Tasks;
 using Xamarin.MacDev;
+using Xamarin.Utils;
 
 namespace Xamarin.iOS.Tasks
 {
@@ -42,7 +43,7 @@ namespace Xamarin.iOS.Tasks
 
 		public string ResourceRules { get; set; }
 
-		public PlatformFramework Framework {
+		public ApplePlatform Framework {
 			get { return PlatformFrameworkHelper.GetFramework (TargetFrameworkIdentifier); }
 		}
 
@@ -74,12 +75,12 @@ namespace Xamarin.iOS.Tasks
 			}
 
 			switch (Framework) {
-			case PlatformFramework.iOS:
+			case ApplePlatform.iOS:
 				IsIOS = true;
 				break;
-			case PlatformFramework.WatchOS:
+			case ApplePlatform.WatchOS:
 				break;
-			case PlatformFramework.TVOS:
+			case ApplePlatform.TVOS:
 				break;
 			default:
 				throw new InvalidOperationException (string.Format ("Invalid framework: {0}", Framework));
@@ -188,7 +189,7 @@ namespace Xamarin.iOS.Tasks
 
 			if (UseFakeWatchOS4_3Sdk) {
 				// This is a workaround for https://github.com/xamarin/xamarin-macios/issues/4810
-				if (Framework == PlatformFramework.WatchOS) {
+				if (Framework == ApplePlatform.WatchOS) {
 					if (dtPlatformBuild != null)
 						dtPlatformBuild = "15T212";
 					if (dtPlatformVersion != null)
@@ -221,7 +222,7 @@ namespace Xamarin.iOS.Tasks
 
 			if (IsWatchExtension) {
 				// Note: Only watchOS1 Extensions target Xamarin.iOS
-				if (Framework == PlatformFramework.iOS) {
+				if (Framework == ApplePlatform.iOS) {
 					PObject value;
 
 					if (!plist.TryGetValue (ManifestKeys.UIRequiredDeviceCapabilities, out value)) {
@@ -350,13 +351,13 @@ namespace Xamarin.iOS.Tasks
 		void SetDeviceFamily (PDictionary plist)
 		{
 			switch (Framework) {
-			case PlatformFramework.iOS:
+			case ApplePlatform.iOS:
 				SetIOSDeviceFamily (plist);
 				break;
-			case PlatformFramework.WatchOS:
+			case ApplePlatform.WatchOS:
 				plist.SetUIDeviceFamily (IPhoneDeviceType.Watch);
 				break;
-			case PlatformFramework.TVOS:
+			case ApplePlatform.TVOS:
 				plist.SetUIDeviceFamily (IPhoneDeviceType.TV);
 				break;
 			}

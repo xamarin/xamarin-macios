@@ -8,6 +8,7 @@ using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev.Tasks;
 using Xamarin.MacDev;
+using Xamarin.Utils;
 
 namespace Xamarin.iOS.Tasks
 {
@@ -185,7 +186,7 @@ namespace Xamarin.iOS.Tasks
 
 		#endregion
 
-		public PlatformFramework Framework {
+		public ApplePlatform Framework {
 			get { return PlatformFrameworkHelper.GetFramework (TargetFrameworkIdentifier); }
 		}
 
@@ -429,10 +430,10 @@ namespace Xamarin.iOS.Tasks
 
 			if (EnableBitcode) {
 				switch (Framework) {
-				case PlatformFramework.WatchOS:
+				case ApplePlatform.WatchOS:
 					args.AddLine ("--bitcode=full");
 					break;
-				case PlatformFramework.TVOS:
+				case ApplePlatform.TVOS:
 					args.AddLine ("--bitcode=asmonly");
 					break;
 				default:
@@ -658,7 +659,7 @@ namespace Xamarin.iOS.Tasks
 				}
 			} else {
 				switch (Framework) {
-				case PlatformFramework.iOS:
+				case ApplePlatform.iOS:
 					IPhoneSdkVersion sdkVersion;
 					if (!IPhoneSdkVersion.TryParse (SdkVersion, out sdkVersion)) {
 						Log.LogError (null, null, null, AppManifest.ItemSpec, 0, 0, 0, 0, "Could not parse SdkVersion '{0}'", SdkVersion);
@@ -667,8 +668,8 @@ namespace Xamarin.iOS.Tasks
 
 					minimumOSVersion = sdkVersion;
 					break;
-				case PlatformFramework.WatchOS:
-				case PlatformFramework.TVOS:
+				case ApplePlatform.WatchOS:
+				case ApplePlatform.TVOS:
 					minimumOSVersion = IPhoneSdkVersion.UseDefault;
 					break;
 				default:
