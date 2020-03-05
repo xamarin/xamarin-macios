@@ -69,13 +69,8 @@ namespace LinkAll {
 	[Preserve (AllMembers = true)]
 	public class LinkAllRegressionTest {
 #if __IOS__
-#if XAMCORE_2_0
 		public const string NamespacePrefix = "";
 		public const string AssemblyName = "Xamarin.iOS";
-#else
-		public const string NamespacePrefix = "MonoTouch.";
-		public const string AssemblyName = "monotouch";
-#endif
 #elif __TVOS__
 		public const string NamespacePrefix = "";
 		public const string AssemblyName = "Xamarin.TVOS";
