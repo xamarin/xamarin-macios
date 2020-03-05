@@ -1,6 +1,6 @@
-﻿namespace xharness.Jenkins
+﻿namespace xharness
 {
-    public enum TestPlatform
+	public enum TestPlatform
 	{
 		None,
 		All,

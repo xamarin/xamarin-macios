@@ -73,7 +73,6 @@
     <Compile Include="Jenkins\TestTask\AggregatedRunSimulatorTask.cs" />
     <Compile Include="Jenkins\TestTask\BuildProjectTask.cs" />
     <Compile Include="Jenkins\TestTask\BuildToolTask.cs" />
-    <Compile Include="Jenkins\IAcquiredResource.cs" />
     <Compile Include="Jenkins\TestTask\MacExecuteTask.cs" />
     <Compile Include="Jenkins\TestTask\MacTask.cs" />
     <Compile Include="Jenkins\TestTask\MakeTask.cs" />
@@ -85,8 +84,8 @@
     <Compile Include="Jenkins\TestTask\RunTestTask.cs" />
     <Compile Include="Jenkins\TestTask\RunXITask.cs" />
     <Compile Include="Jenkins\TestTask\RunXtroTask.cs" />
-    <Compile Include="Jenkins\TestExecutingResult.cs" />
-    <Compile Include="Jenkins\TestPlatform.cs" />
+    <Compile Include="TestExecutingResult.cs" />
+    <Compile Include="TestPlatform.cs" />
     <Compile Include="Jenkins\TestTask\TestTask.cs" />
     <Compile Include="Jenkins\TestTask\XBuildTask.cs" />
     <Compile Include="Program.cs" />

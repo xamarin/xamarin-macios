@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace xharness.Jenkins
+namespace xharness
 {
-    [Flags]
+	[Flags]
 	public enum TestExecutingResult
 	{
 		NotStarted = 0,
