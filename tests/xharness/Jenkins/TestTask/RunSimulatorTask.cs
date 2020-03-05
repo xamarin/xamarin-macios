@@ -7,7 +7,7 @@ using Xharness;
 
 namespace xharness.Jenkins.TestTask
 {
-	partial class RunSimulatorTask : RunXITask<SimDevice>
+	class RunSimulatorTask : RunXITask<SimDevice>
 	{
 		public IAcquiredResource AcquiredResource;
 
@@ -144,6 +144,24 @@ namespace xharness.Jenkins.TestTask
 			get
 			{
 				return "simulator";
+			}
+		}
+
+		class NondisposedResource : IAcquiredResource
+		{
+			public IAcquiredResource Wrapped;
+
+			public Resource Resource
+			{
+				get
+				{
+					return Wrapped.Resource;
+				}
+			}
+
+			public void Dispose()
+			{
+				// Nope, no disposing here.
 			}
 		}
 	}

@@ -8,7 +8,7 @@ using System.Xml;
 using Xharness.Logging;
 using Xharness;
 
-namespace xharness.Jenkins.TestTask.TestTask
+namespace xharness.Jenkins.TestTask
 {
     class XBuildTask : BuildProjectTask
 	{

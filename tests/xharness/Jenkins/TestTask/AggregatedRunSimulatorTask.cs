@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xharness;
 
-namespace xharness.Jenkins.TestTask.TestTask
+namespace xharness.Jenkins.TestTask
 {
     // This class groups simulator run tasks according to the
     // simulator they'll run from, so that we minimize switching

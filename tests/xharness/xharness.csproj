@@ -77,7 +77,6 @@
     <Compile Include="Jenkins\TestTask\MacExecuteTask.cs" />
     <Compile Include="Jenkins\TestTask\MacTask.cs" />
     <Compile Include="Jenkins\TestTask\MakeTask.cs" />
-    <Compile Include="Jenkins\NondisposedResource.cs" />
     <Compile Include="Jenkins\TestTask\NUnitExecuteTask.cs" />
     <Compile Include="Jenkins\Resource.cs" />
     <Compile Include="Jenkins\Resources.cs" />
