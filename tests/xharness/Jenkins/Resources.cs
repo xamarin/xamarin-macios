@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace xharness.Jenkins
 {
-    class Resources
+	class Resources
 	{
 		readonly Resource[] resources;
 
@@ -29,11 +29,11 @@ namespace xharness.Jenkins
 			for (int i = 0; i < resources.Length; i++)
 			{
 				resources[i].AcquireConcurrentAsync().ContinueWith((v) =>
-			 {
-				 var ar = v.Result;
-				 if (!tcs.TrySetResult(ar))
-					 ar.Dispose();
-			 });
+				{
+					var ar = v.Result;
+					if (!tcs.TrySetResult(ar))
+						ar.Dispose();
+				});
 			}
 
 			return tcs.Task;

@@ -17,28 +17,16 @@ namespace xharness.Jenkins
 		public string Description;
 		ConcurrentQueue<TaskCompletionSource<IAcquiredResource>> queue = new ConcurrentQueue<TaskCompletionSource<IAcquiredResource>>();
 		ConcurrentQueue<TaskCompletionSource<IAcquiredResource>> exclusive_queue = new ConcurrentQueue<TaskCompletionSource<IAcquiredResource>>();
-		int users;
-		int max_concurrent_users = 1;
 		bool exclusive;
 
-		public int Users => users;
+		public int Users { get; private set; }
 		public int QueuedUsers => queue.Count + exclusive_queue.Count;
-		public int MaxConcurrentUsers
-		{
-			get
-			{
-				return max_concurrent_users;
-			}
-			set
-			{
-				max_concurrent_users = value;
-			}
-		}
+		public int MaxConcurrentUsers { get; set; } = 1;
 
 		public Resource(string name, int max_concurrent_users = 1, string description = null)
 		{
 			this.Name = name;
-			this.max_concurrent_users = max_concurrent_users;
+			this.MaxConcurrentUsers = max_concurrent_users;
 			this.Description = description ?? name;
 		}
 
@@ -46,9 +34,9 @@ namespace xharness.Jenkins
 		{
 			lock (queue)
 			{
-				if (!exclusive && users < max_concurrent_users)
+				if (!exclusive && Users < MaxConcurrentUsers)
 				{
-					users++;
+					Users++;
 					return Task.FromResult<IAcquiredResource>(new AcquiredResource(this));
 				}
 				else
@@ -64,9 +52,9 @@ namespace xharness.Jenkins
 		{
 			lock (queue)
 			{
-				if (users == 0)
+				if (Users == 0)
 				{
-					users++;
+					Users++;
 					exclusive = true;
 					return Task.FromResult<IAcquiredResource>(new AcquiredResource(this));
 				}
@@ -81,20 +69,18 @@ namespace xharness.Jenkins
 
 		void Release()
 		{
-			TaskCompletionSource<IAcquiredResource> tcs;
-
 			lock (queue)
 			{
-				users--;
+				Users--;
 				exclusive = false;
-				if (queue.TryDequeue(out tcs))
+				if (queue.TryDequeue(out TaskCompletionSource<IAcquiredResource> tcs))
 				{
-					users++;
+					Users++;
 					tcs.SetResult((IAcquiredResource)tcs.Task.AsyncState);
 				}
-				else if (users == 0 && exclusive_queue.TryDequeue(out tcs))
+				else if (Users == 0 && exclusive_queue.TryDequeue(out tcs))
 				{
-					users++;
+					Users++;
 					exclusive = true;
 					tcs.SetResult((IAcquiredResource)tcs.Task.AsyncState);
 				}
@@ -103,19 +89,22 @@ namespace xharness.Jenkins
 
 		class AcquiredResource : IAcquiredResource
 		{
-			Resource resource;
-
 			public AcquiredResource(Resource resource)
 			{
-				this.resource = resource;
+				this.Resource = resource;
 			}
 
 			void IDisposable.Dispose()
 			{
-				resource.Release();
+				Resource.Release();
 			}
 
-			public Resource Resource { get { return resource; } }
+			public Resource Resource { get; }
 		}
+	}
+
+	interface IAcquiredResource : IDisposable
+	{
+		Resource Resource { get; }
 	}
 }
