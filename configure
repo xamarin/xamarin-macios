@@ -29,6 +29,8 @@ Usage: configure [options]
 
     --enable-packaged-mono
     --disable-packaged-mono Enable/disable using the precompiled version of mono. If disabled mono will be compiled from source.
+
+    --enable-dotnet         Enable building .NET 5 bits.
 EOL
 }
 
@@ -101,6 +103,14 @@ while test x$1 != x; do
         ;;
     --disable-packaged-mono=no | --disable-packaged-mono=false)
         echo "MONO_BUILD_FROM_SOURCE=" >> "$CONFIGURED_FILE"
+        shift
+        ;;
+    --enable-dotnet)
+        echo "ENABLE_DOTNET=1" >> "$CONFIGURED_FILE"
+        shift
+        ;;
+    --disable-dotnet)
+        echo "ENABLE_DOTNET=" >> "$CONFIGURED_FILE"
         shift
         ;;
 	--help|-h)

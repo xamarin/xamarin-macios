@@ -74,6 +74,11 @@ while ! test -z $1; do
 			unset IGNORE_SIMULATORS
 			shift
 			;;
+		--provision-dotnet)
+			PROVISION_DOTNET=1
+			unset IGNORE_DOTNET
+			shift
+			;;
 		--provision-all)
 			PROVISION_MONO=1
 			unset IGNORE_MONO
@@ -95,6 +100,8 @@ while ! test -z $1; do
 			unset IGNORE_SIMULATORS
 			PROVISION_PYTHON3=1
 			unset IGNORE_PYTHON3
+			PROVISION_DOTNET=1
+			unset IGNORE_DOTNET
 			shift
 			;;
 		--ignore-all)
@@ -109,6 +116,7 @@ while ! test -z $1; do
 			IGNORE_SHARPIE=1
 			IGNORE_SIMULATORS=1
 			IGNORE_PYTHON3=1
+			IGNORE_DOTNET=1
 			shift
 			;;
 		--ignore-osx)
@@ -159,6 +167,10 @@ while ! test -z $1; do
 		--enforce-simulators)
 			unset IGNORE_SIMULATORS
 			unset OPTIONAL_SIMULATORS
+			shift
+			;;
+		--ignore-dotnet)
+			IGNORE_DOTNET=1
 			shift
 			;;
 		-v | --verbose)
@@ -999,6 +1011,41 @@ function check_simulators ()
 	fi
 }
 
+function check_dotnet ()
+{
+	if test -n "$IGNORE_DOTNET"; then return; fi
+
+	local DOTNET_VERSION
+	local DOTNET_INSTALL_DIR
+	local DOTNET_URL
+	local DOTNET_FILENAME
+
+	DOTNET_VERSION=$(grep ^DOTNET_VERSION= Make.config | sed 's/.*=//')
+	DOTNET_URL=$(grep ^DOTNET_URL= Make.config | sed 's/.*=//')
+	DOTNET_INSTALL_DIR=/usr/local/share/dotnet/sdk/"$DOTNET_VERSION"
+	DOTNET_FILENAME=$(basename "$DOTNET_URL")
+
+	if test -d "$DOTNET_INSTALL_DIR"; then
+		ok "Found dotnet $DOTNET_VERSION (exactly $DOTNET_VERSION is required)."
+		return
+	fi
+
+	if test -z "$PROVISION_DOTNET"; then
+		fail "You must install dotnet $DOTNET_VERSION. You can download it from ${COLOR_BLUE}$DOTNET_URL${COLOR_RESET}."
+		fail "Alternatively you can ${COLOR_MAGENTA}export IGNORE_DOTNET=1${COLOR_RED} to skip this check."
+		return
+	fi
+
+	log "Downloading dotnet $DOTNET_VERSION from $DOTNET_URL..."
+	mkdir -p "$PROVISION_DOWNLOAD_DIR"
+	curl -f -L "$DOTNET_URL" -o "$PROVISION_DOWNLOAD_DIR/$DOTNET_FILENAME"
+
+	log "Installing dotnet $DOTNET_VERSION..."
+	$SUDO installer -pkg "$PROVISION_DOWNLOAD_DIR/$DOTNET_FILENAME" -target /
+
+	ok "Installed dotnet $DOTNET_VERSION."
+}
+
 echo "Checking system..."
 
 check_osx_version
@@ -1012,6 +1059,7 @@ check_cmake
 check_7z
 check_objective_sharpie
 check_simulators
+check_dotnet
 
 if test -z $FAIL; then
 	echo "System check succeeded"
