@@ -19,62 +19,56 @@ namespace Xharness.Jenkins.TestTasks
 
 		public TDevice CompanionDevice { get; protected set; }
 
-		public string BundleIdentifier
-		{
+		public string BundleIdentifier {
 			get { return runner.BundleIdentifier; }
 		}
 
-		public RunXITask(BuildToolTask build_task, IEnumerable<TDevice> candidates)
-			: base(build_task)
+		public RunXITask (BuildToolTask build_task, IEnumerable<TDevice> candidates)
+			: base (build_task)
 		{
 			this.Candidates = candidates;
 		}
 
-		public override IEnumerable<Log> AggregatedLogs
-		{
-			get
-			{
+		public override IEnumerable<Log> AggregatedLogs {
+			get {
 				var rv = base.AggregatedLogs;
 				if (runner != null)
-					rv = rv.Union(runner.Logs);
+					rv = rv.Union (runner.Logs);
 				if (additional_runner != null)
-					rv = rv.Union(additional_runner.Logs);
+					rv = rv.Union (additional_runner.Logs);
 				return rv;
 			}
 		}
 
-		public override string Mode
-		{
-			get
-			{
+		public override string Mode {
+			get {
 
-				switch (Platform)
-				{
-					case TestPlatform.tvOS:
-					case TestPlatform.watchOS:
-						return Platform.ToString() + " - " + XIMode;
-					case TestPlatform.watchOS_32:
-						return "watchOS 32-bits - " + XIMode;
-					case TestPlatform.watchOS_64_32:
-						return "watchOS 64-bits (ARM64_32) - " + XIMode;
-					case TestPlatform.iOS_Unified32:
-						return "iOS Unified 32-bits - " + XIMode;
-					case TestPlatform.iOS_Unified64:
-						return "iOS Unified 64-bits - " + XIMode;
-					case TestPlatform.iOS_TodayExtension64:
-						return "iOS Unified Today Extension 64-bits - " + XIMode;
-					case TestPlatform.iOS_Unified:
-						return "iOS Unified - " + XIMode;
-					default:
-						throw new NotImplementedException();
+				switch (Platform) {
+				case TestPlatform.tvOS:
+				case TestPlatform.watchOS:
+					return Platform.ToString () + " - " + XIMode;
+				case TestPlatform.watchOS_32:
+					return "watchOS 32-bits - " + XIMode;
+				case TestPlatform.watchOS_64_32:
+					return "watchOS 64-bits (ARM64_32) - " + XIMode;
+				case TestPlatform.iOS_Unified32:
+					return "iOS Unified 32-bits - " + XIMode;
+				case TestPlatform.iOS_Unified64:
+					return "iOS Unified 64-bits - " + XIMode;
+				case TestPlatform.iOS_TodayExtension64:
+					return "iOS Unified Today Extension 64-bits - " + XIMode;
+				case TestPlatform.iOS_Unified:
+					return "iOS Unified - " + XIMode;
+				default:
+					throw new NotImplementedException ();
 				}
 			}
-			set { throw new NotImplementedException(); }
+			set { throw new NotImplementedException (); }
 		}
 
-		public override async Task VerifyRunAsync()
+		public override async Task VerifyRunAsync ()
 		{
-			await base.VerifyRunAsync();
+			await base.VerifyRunAsync ();
 			if (Finished)
 				return;
 
@@ -82,8 +76,7 @@ namespace Xharness.Jenkins.TestTasks
 			var asyncEnumerable = enumerable as IAsyncEnumerable;
 			if (asyncEnumerable != null)
 				await asyncEnumerable.ReadyTask;
-			if (!enumerable.Any())
-			{
+			if (!enumerable.Any ()) {
 				ExecutionResult = TestExecutingResult.DeviceNotFound;
 				FailureMessage = "No applicable devices found.";
 			}
@@ -91,9 +84,9 @@ namespace Xharness.Jenkins.TestTasks
 
 		protected abstract string XIMode { get; }
 
-		public override void Reset()
+		public override void Reset ()
 		{
-			base.Reset();
+			base.Reset ();
 			runner = null;
 			additional_runner = null;
 		}

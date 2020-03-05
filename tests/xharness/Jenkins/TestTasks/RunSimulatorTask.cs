@@ -10,44 +10,32 @@ namespace Xharness.Jenkins.TestTasks
 	{
 		public IAcquiredResource AcquiredResource;
 
-		public SimDevice[] Simulators
-		{
-			get
-			{
-				if (Device == null)
-				{
-					return new SimDevice[] { };
-				}
-				else if (CompanionDevice == null)
-				{
-					return new SimDevice[] { Device };
-				}
-				else
-				{
-					return new SimDevice[] { Device, CompanionDevice };
+		public SimDevice[] Simulators {
+			get {
+				if (Device == null) {
+					return new SimDevice [] { };
+				} else if (CompanionDevice == null) {
+					return new SimDevice [] { Device };
+				} else {
+					return new SimDevice [] { Device, CompanionDevice };
 				}
 			}
 		}
 
-		public RunSimulatorTask(XBuildTask build_task, IEnumerable<SimDevice> candidates = null)
-			: base(build_task, candidates)
+		public RunSimulatorTask (XBuildTask build_task, IEnumerable<SimDevice> candidates = null)
+			: base (build_task, candidates)
 		{
-			var project = Path.GetFileNameWithoutExtension(ProjectFile);
-			if (project.EndsWith("-tvos", StringComparison.Ordinal))
-			{
+			var project = Path.GetFileNameWithoutExtension (ProjectFile);
+			if (project.EndsWith ("-tvos", StringComparison.Ordinal)) {
 				AppRunnerTarget = AppRunnerTarget.Simulator_tvOS;
-			}
-			else if (project.EndsWith("-watchos", StringComparison.Ordinal))
-			{
+			} else if (project.EndsWith ("-watchos", StringComparison.Ordinal)) {
 				AppRunnerTarget = AppRunnerTarget.Simulator_watchOS;
-			}
-			else
-			{
+			} else {
 				AppRunnerTarget = AppRunnerTarget.Simulator_iOS;
 			}
 		}
 
-		public async Task FindSimulatorAsync()
+		public async Task FindSimulatorAsync ()
 		{
 			if (Device != null)
 				return;
@@ -56,92 +44,80 @@ namespace Xharness.Jenkins.TestTasks
 			if (asyncEnumerable != null)
 				await asyncEnumerable.ReadyTask;
 
-			if (!Candidates.Any())
-			{
+			if (!Candidates.Any ()) {
 				ExecutionResult = TestExecutingResult.DeviceNotFound;
 				FailureMessage = "No applicable devices found.";
-			}
-			else
-			{
-				Device = Candidates.First();
+			} else {
+				Device = Candidates.First ();
 				if (Platform == TestPlatform.watchOS)
-					CompanionDevice = Jenkins.Simulators.FindCompanionDevice(Jenkins.SimulatorLoadLog, Device);
+					CompanionDevice = Jenkins.Simulators.FindCompanionDevice (Jenkins.SimulatorLoadLog, Device);
 			}
 
 		}
 
-		public async Task SelectSimulatorAsync()
+		public async Task SelectSimulatorAsync ()
 		{
 			if (Finished)
 				return;
 
-			if (!BuildTask.Succeeded)
-			{
+			if (!BuildTask.Succeeded) {
 				ExecutionResult = TestExecutingResult.BuildFailure;
 				return;
 			}
 
-			await FindSimulatorAsync();
+			await FindSimulatorAsync ();
 
 			var clean_state = false;//Platform == TestPlatform.watchOS;
-			runner = new AppRunner()
-			{
+			runner = new AppRunner () {
 				Harness = Harness,
 				ProjectFile = ProjectFile,
 				EnsureCleanSimulatorState = clean_state,
 				Target = AppRunnerTarget,
 				LogDirectory = LogDirectory,
-				MainLog = Logs.Create($"run-{Device.UDID}-{Timestamp}.log", "Run log"),
+				MainLog = Logs.Create ($"run-{Device.UDID}-{Timestamp}.log", "Run log"),
 				Configuration = ProjectConfiguration,
 				TimeoutMultiplier = TimeoutMultiplier,
 				Variation = Variation,
 				BuildTask = BuildTask,
 			};
 			runner.Simulators = Simulators;
-			runner.Initialize();
+			runner.Initialize ();
 		}
 
-		Task<IAcquiredResource> AcquireResourceAsync()
+		Task<IAcquiredResource> AcquireResourceAsync ()
 		{
-			if (AcquiredResource != null)
-			{
+			if (AcquiredResource != null) {
 				// We don't own the acquired resource, so wrap it in a class that won't dispose it.
-				return Task.FromResult<IAcquiredResource>(new NondisposedResource() { Wrapped = AcquiredResource });
-			}
-			else
-			{
-				return Jenkins.DesktopResource.AcquireExclusiveAsync();
+				return Task.FromResult<IAcquiredResource> (new NondisposedResource () { Wrapped = AcquiredResource });
+			} else {
+				return Jenkins.DesktopResource.AcquireExclusiveAsync ();
 			}
 		}
 
-		protected override async Task RunTestAsync()
+		protected override async Task RunTestAsync ()
 		{
-			Jenkins.MainLog.WriteLine("Running XI on '{0}' ({2}) for {1}", Device?.Name, ProjectFile, Device?.UDID);
+			Jenkins.MainLog.WriteLine ("Running XI on '{0}' ({2}) for {1}", Device?.Name, ProjectFile, Device?.UDID);
 
 			ExecutionResult = ExecutionResult & ~TestExecutingResult.InProgressMask | TestExecutingResult.Running;
-			await BuildTask.RunAsync();
-			if (!BuildTask.Succeeded)
-			{
+			await BuildTask.RunAsync ();
+			if (!BuildTask.Succeeded) {
 				ExecutionResult = TestExecutingResult.BuildFailure;
 				return;
 			}
-			using (var resource = await NotifyBlockingWaitAsync(AcquireResourceAsync()))
-			{
+			using (var resource = await NotifyBlockingWaitAsync (AcquireResourceAsync ())) {
 				if (runner == null)
-					await SelectSimulatorAsync();
-				await runner.RunAsync();
+					await SelectSimulatorAsync ();
+				await runner.RunAsync ();
 			}
 			ExecutionResult = runner.Result;
 
 			KnownFailure = null;
-			if (Jenkins.IsHE0038Error(runner.MainLog))
+			if (Jenkins.IsHE0038Error (runner.MainLog))
 				KnownFailure = $"<a href='https://github.com/xamarin/maccore/issues/581'>HE0038</a>";
 		}
 
-		protected override string XIMode
-		{
-			get
-			{
+		protected override string XIMode {
+			get {
 				return "simulator";
 			}
 		}
@@ -150,15 +126,13 @@ namespace Xharness.Jenkins.TestTasks
 		{
 			public IAcquiredResource Wrapped;
 
-			public Resource Resource
-			{
-				get
-				{
+			public Resource Resource {
+				get {
 					return Wrapped.Resource;
 				}
 			}
 
-			public void Dispose()
+			public void Dispose ()
 			{
 				// Nope, no disposing here.
 			}

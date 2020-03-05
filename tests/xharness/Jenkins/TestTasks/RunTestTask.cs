@@ -10,7 +10,7 @@ namespace Xharness.Jenkins.TestTasks
 		public readonly BuildToolTask BuildTask;
 		public double TimeoutMultiplier { get; set; } = 1;
 
-		public RunTestTask(BuildToolTask build_task)
+		public RunTestTask (BuildToolTask build_task)
 		{
 			this.BuildTask = build_task;
 
@@ -23,99 +23,87 @@ namespace Xharness.Jenkins.TestTasks
 				TestName = build_task.TestName;
 		}
 
-		public override IEnumerable<Log> AggregatedLogs
-		{
-			get
-			{
+		public override IEnumerable<Log> AggregatedLogs {
+			get {
 				var rv = base.AggregatedLogs;
 				if (BuildTask != null)
-					rv = rv.Union(BuildTask.AggregatedLogs);
+					rv = rv.Union (BuildTask.AggregatedLogs);
 				return rv;
 			}
 		}
 
-		public override TestExecutingResult ExecutionResult
-		{
-			get
-			{
+		public override TestExecutingResult ExecutionResult {
+			get {
 				// When building, the result is the build result.
 				if ((BuildTask.ExecutionResult & (TestExecutingResult.InProgress | TestExecutingResult.Waiting)) != 0)
 					return BuildTask.ExecutionResult & ~TestExecutingResult.InProgressMask | TestExecutingResult.Building;
 				return base.ExecutionResult;
 			}
-			set
-			{
+			set {
 				base.ExecutionResult = value;
 			}
 		}
 
-		public async Task<bool> BuildAsync()
+		public async Task<bool> BuildAsync ()
 		{
 			if (Finished)
 				return true;
 
-			await VerifyBuildAsync();
+			await VerifyBuildAsync ();
 			if (Finished)
 				return BuildTask.Succeeded;
 
 			ExecutionResult = TestExecutingResult.Building;
-			await BuildTask.RunAsync();
-			if (!BuildTask.Succeeded)
-			{
-				if (BuildTask.TimedOut)
-				{
+			await BuildTask.RunAsync ();
+			if (!BuildTask.Succeeded) {
+				if (BuildTask.TimedOut) {
 					ExecutionResult = TestExecutingResult.TimedOut;
-				}
-				else
-				{
+				} else {
 					ExecutionResult = TestExecutingResult.BuildFailure;
 				}
 				FailureMessage = BuildTask.FailureMessage;
 				if (Harness.InCI && BuildTask is XBuildTask projectTask)
-					XmlResultParser.GenerateFailure(Logs, "build", projectTask.TestName, projectTask.Variation, "AppBuild", $"App could not be built {FailureMessage}.", projectTask.BuildLog.FullPath, Harness.XmlJargon);
-			}
-			else
-			{
+					XmlResultParser.GenerateFailure (Logs, "build", projectTask.TestName, projectTask.Variation, "AppBuild", $"App could not be built {FailureMessage}.", projectTask.BuildLog.FullPath, Harness.XmlJargon);
+			} else {
 				ExecutionResult = TestExecutingResult.Built;
 			}
 			return BuildTask.Succeeded;
 		}
 
-		protected override async Task ExecuteAsync()
+		protected override async Task ExecuteAsync ()
 		{
 			if (Finished)
 				return;
 
-			await VerifyRunAsync();
+			await VerifyRunAsync ();
 			if (Finished)
 				return;
 
-			if (!await BuildAsync())
+			if (!await BuildAsync ())
 				return;
 
-			if (BuildOnly)
-			{
+			if (BuildOnly) {
 				ExecutionResult = TestExecutingResult.BuildSucceeded;
 				return;
 			}
 
 			ExecutionResult = TestExecutingResult.Running;
-			duration.Restart(); // don't count the build time.
-			await RunTestAsync();
+			duration.Restart (); // don't count the build time.
+			await RunTestAsync ();
 		}
 
-		protected abstract Task RunTestAsync();
+		protected abstract Task RunTestAsync ();
 		// VerifyBuild is called in BuildAsync to verify that the task can be built.
 		// Typically used to fail tasks if there's not enough disk space.
-		public virtual Task VerifyBuildAsync()
+		public virtual Task VerifyBuildAsync ()
 		{
-			return VerifyDiskSpaceAsync();
+			return VerifyDiskSpaceAsync ();
 		}
 
-		public override void Reset()
+		public override void Reset ()
 		{
-			base.Reset();
-			BuildTask.Reset();
+			base.Reset ();
+			BuildTask.Reset ();
 		}
 	}
 }
