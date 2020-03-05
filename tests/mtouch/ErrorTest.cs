@@ -16,15 +16,28 @@ namespace Xamarin.Test.Bundler {
 	public class ErrorTest {
 
 		[Test]
-		public void Ctor3 ()
+		public void Ctor2 ()
 		{
 			var e = new ProductException (0, "valid");
+			Assert.That (e.ToString (), Is.EqualTo ($"warning {ProductException.Prefix}0000: valid"), "ToString-1");
+
+			e = new ProductException (9999, "valid") {
+				FileName = "here.cs",
+				LineNumber = 42
+			};
+			Assert.That (e.ToString (), Is.EqualTo ($"here.cs(42): warning {ProductException.Prefix}9999: valid"), "ToString-2");
+		}
+
+		[Test]
+		public void Ctor3 ()
+		{
+			var e = new ProductException (0, "valid", new string [] { });
 			Assert.That (e.ToString (), Is.EqualTo ($"warning {ProductException.Prefix}0000: valid"), "ToString-1");
 
 			e = new ProductException (10, "valid {0}", "output");
 			Assert.That (e.ToString (), Is.EqualTo ($"warning {ProductException.Prefix}0010: valid output"), "ToString-2");
 
-			e = new ProductException (9999, "valid") {
+			e = new ProductException (9999, "valid", new string [] { }) {
 				FileName = "here.cs",
 				LineNumber = 42
 			};
@@ -40,13 +53,13 @@ namespace Xamarin.Test.Bundler {
 		[Test]
 		public void Ctor4 ()
 		{
-			var e = new ProductException (0, true, "valid");
+			var e = new ProductException (0, true, "valid", new string [] { });
 			Assert.That (e.ToString (), Is.EqualTo ($"error {ProductException.Prefix}0000: valid"), "ToString-1");
 
 			e = new ProductException (10, true, "valid {0}", "output");
 			Assert.That (e.ToString (), Is.EqualTo ($"error {ProductException.Prefix}0010: valid output"), "ToString-2");
 
-			e = new ProductException (9999, true, "valid") {
+			e = new ProductException (9999, true, "valid", new string [] { }) {
 				FileName = "here.cs",
 				LineNumber = 42
 			};
@@ -62,13 +75,13 @@ namespace Xamarin.Test.Bundler {
 		[Test]
 		public void Ctor5 ()
 		{
-			var e = new ProductException (0, true, null, "valid");
+			var e = new ProductException (0, true, null, "valid", new string [] { });
 			Assert.That (e.ToString (), Is.EqualTo ($"error {ProductException.Prefix}0000: valid"), "ToString-1");
 
 			e = new ProductException (10, true, new Exception ("uho"), "valid {0}", "output");
 			Assert.That (e.ToString (), Is.EqualTo ($"error {ProductException.Prefix}0010: valid output"), "ToString-2");
 
-			e = new ProductException (9999, true, new NotFiniteNumberException (), "valid") {
+			e = new ProductException (9999, true, new NotFiniteNumberException (), "valid", new string [] { }) {
 				FileName = "here.cs",
 				LineNumber = 42
 			};
@@ -84,8 +97,12 @@ namespace Xamarin.Test.Bundler {
 		[Test]
 		public void BadFormats ()
 		{
+			// {0} without argument - not using the `args` overload -> no exception
+			var e = new ProductException (0, true, null, "valid {0}");
+			Assert.That (e.ToString (), Is.EqualTo ($"error {ProductException.Prefix}0000: valid {{0}}"), "ToString-0");
+
 			// {0} without argument
-			var e = new ProductException (0, true, null, "invalid {0}");
+			e = new ProductException (0, true, null, "invalid {0}", null);
 			Assert.That (e.ToString (), Is.EqualTo ($"error {ProductException.Prefix}0000: invalid {{0}}. String.Format failed! Arguments were:. Please file an issue to report this incorrect error handling."), "ToString-1");
 
 			// {0} with 2 arguments -> no exception

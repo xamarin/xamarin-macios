@@ -10,8 +10,18 @@ namespace Xamarin.Bundler {
 	public class MonoTouchException : Exception {
 		public const string Prefix = "MT";
 
+		public MonoTouchException (int code, string message) :
+			this (code, false, message)
+		{
+		}
+
 		public MonoTouchException (int code, string message, params object[] args) : 
 			this (code, false, message, args)
+		{
+		}
+
+		public MonoTouchException (int code, bool error, string message) :
+			this (code, error, null, message)
 		{
 		}
 
@@ -20,18 +30,33 @@ namespace Xamarin.Bundler {
 		{
 		}
 
+		public MonoTouchException (int code, bool error, Exception innerException, string message) :
+			base (message, innerException)
+		{
+			SetValues (code, error);
+		}
+
 		public MonoTouchException (int code, bool error, Exception innerException, string message, params object[] args) : 
 			base (Format (message, args), innerException)
 		{
-			Code = code;
-			Error = error || ErrorHelper.GetWarningLevel (code) == ErrorHelper.WarningLevel.Error;
+			SetValues (code, error);
 		}
 #else
 	public class MonoMacException : Exception {
 		public const string Prefix = "MM";
 
+		public MonoMacException (int code, string message) :
+			this (code, false, message)
+		{
+		}
+
 		public MonoMacException (int code, string message, params object[] args) :
 			this (code, false, message, args)
+		{
+		}
+
+		public MonoMacException (int code, bool error, string message) :
+			this (code, error, null, message)
 		{
 		}
 
@@ -40,14 +65,19 @@ namespace Xamarin.Bundler {
 		{
 		}
 
+		public MonoMacException (int code, bool error, Exception innerException, string message) :
+			base (message, innerException)
+		{
+			SetValues (code, error);
+		}
+
 		public MonoMacException (int code, bool error, Exception innerException, string message, params object[] args) :
 			base (Format (message, args), innerException)
 		{
-			Code = code;
-			Error = error || ErrorHelper.GetWarningLevel (code) == ErrorHelper.WarningLevel.Error;
+			SetValues (code, error);
 		}
 #endif
-	
+
 		public string FileName { get; set; }
 
 		public int LineNumber { get; set; }
@@ -55,7 +85,13 @@ namespace Xamarin.Bundler {
 		public int Code { get; private set; }
 		
 		public bool Error { get; private set; }
-		
+
+		void SetValues (int code, bool error)
+		{
+			Code = code;
+			Error = error || ErrorHelper.GetWarningLevel (code) == ErrorHelper.WarningLevel.Error;
+		}
+
 		// http://blogs.msdn.com/b/msbuild/archive/2006/11/03/msbuild-visual-studio-aware-error-messages-and-message-formats.aspx
 		public override string ToString ()
 		{
@@ -78,8 +114,10 @@ namespace Xamarin.Bundler {
 			catch {
 				var sb = new StringBuilder (message);
 				sb.Append (". String.Format failed! Arguments were:");
-				foreach (var arg in args) {
-					sb.Append (" \"").Append (arg).Append ('"');
+				if (args != null) {
+					foreach (var arg in args) {
+						sb.Append (" \"").Append (arg).Append ('"');
+					}
 				}
 				sb.Append (". Please file an issue to report this incorrect error handling.");
 				return sb.ToString ();
