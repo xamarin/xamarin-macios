@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace xharness.Jenkins
+namespace xharness.Jenkins.TestTask
 {
-    abstract class BuildToolTask : TestTask
+	abstract class BuildToolTask : TestTask
 	{
 		public bool SpecifyPlatform = true;
 		public bool SpecifyConfiguration = true;

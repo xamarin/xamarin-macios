@@ -13,6 +13,7 @@ using System.Xml.Xsl;
 using Xamarin;
 using Xamarin.Utils;
 using xharness.Jenkins;
+using xharness.Jenkins.TestTask;
 using Xharness.Logging;
 
 namespace Xharness

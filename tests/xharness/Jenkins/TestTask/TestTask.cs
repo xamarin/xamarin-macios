@@ -9,9 +9,9 @@ using System.Xml;
 using Xharness.Logging;
 using Xharness;
 
-namespace xharness.Jenkins
+namespace xharness.Jenkins.TestTask
 {
-    abstract class TestTask
+	abstract class TestTask
 	{
 		static int counter;
 		public readonly int ID = counter++;

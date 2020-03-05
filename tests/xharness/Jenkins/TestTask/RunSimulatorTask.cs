@@ -5,9 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xharness;
 
-namespace xharness.Jenkins
+namespace xharness.Jenkins.TestTask
 {
-    partial class RunSimulatorTask : RunXITask<SimDevice>
+	partial class RunSimulatorTask : RunXITask<SimDevice>
 	{
 		public IAcquiredResource AcquiredResource;
 

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Xharness.Logging;
 using Xharness;
 
-namespace xharness.Jenkins
+namespace xharness.Jenkins.TestTask
 {
     abstract class RunXITask<TDevice> : RunTestTask where TDevice : class, IDevice
 	{

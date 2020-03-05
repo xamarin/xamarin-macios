@@ -8,10 +8,11 @@ using System.Threading.Tasks;
 using System.Text;
 using Xharness.Logging;
 using Xharness;
+using xharness.Jenkins.TestTask;
 
 namespace xharness.Jenkins
 {
-	public class Jenkins
+    public class Jenkins
 	{
 		bool populating = true;
 

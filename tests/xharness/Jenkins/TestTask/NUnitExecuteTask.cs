@@ -11,7 +11,7 @@ using System.Xml;
 using Xharness.Logging;
 using Xharness;
 
-namespace xharness.Jenkins
+namespace xharness.Jenkins.TestTask
 {
     class NUnitExecuteTask : RunTestTask
 	{

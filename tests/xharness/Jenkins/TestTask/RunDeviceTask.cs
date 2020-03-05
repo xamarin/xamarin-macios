@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xharness;
 
-namespace xharness.Jenkins
+namespace xharness.Jenkins.TestTask
 {
-    class RunDeviceTask : RunXITask<Device>
+	class RunDeviceTask : RunXITask<Device>
 	{
 		AppInstallMonitorLog install_log;
 		public override string ProgressMessage

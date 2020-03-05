@@ -9,9 +9,9 @@ using System.Xml;
 using Xharness.Logging;
 using Xharness;
 
-namespace xharness.Jenkins
+namespace xharness.Jenkins.TestTask
 {
-    class MacExecuteTask : MacTask
+	class MacExecuteTask : MacTask
 	{
 		public string Path;
 		public bool BCLTest;
