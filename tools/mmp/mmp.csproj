@@ -54,7 +54,9 @@
     <Compile Include="resolver.cs" />
     <Compile Include="Tuning.cs" />
     <Compile Include="Assembly.cs" />
-    <Compile Include="error.cs" />
+    <Compile Include="..\common\error.cs">
+      <Link>external\error.cs</Link>
+    </Compile>
     <Compile Include="SdkVersions.cs" />
     <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\external\linker\src\tuner\Mono.Tuner\ApplyPreserveAttributeBase.cs">
       <Link>Mono.Tuner\ApplyPreserveAttributeBase.cs</Link>
