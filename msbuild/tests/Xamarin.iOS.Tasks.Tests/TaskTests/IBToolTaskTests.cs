@@ -10,13 +10,14 @@ using NUnit.Framework;
 
 using Xamarin.MacDev;
 using Xamarin.MacDev.Tasks;
+using Xamarin.Utils;
 
 namespace Xamarin.iOS.Tasks
 {
 	[TestFixture]
 	public class IBToolTaskTests
 	{
-		static IBTool CreateIBToolTask (PlatformFramework framework, string projectDir, string intermediateOutputPath)
+		static IBTool CreateIBToolTask (ApplePlatform framework, string projectDir, string intermediateOutputPath)
 		{
 			var interfaceDefinitions = new List<ITaskItem> ();
 			var sdk = IPhoneSdks.GetSdk (framework);
@@ -27,10 +28,10 @@ namespace Xamarin.iOS.Tasks
 			string platform;
 
 			switch (framework) {
-			case PlatformFramework.WatchOS:
+			case ApplePlatform.WatchOS:
 				platform = "WatchOS";
 				break;
-			case PlatformFramework.TVOS:
+			case ApplePlatform.TVOS:
 				platform = "AppleTVOS";
 				break;
 			default:
@@ -67,7 +68,7 @@ namespace Xamarin.iOS.Tasks
 			Directory.CreateDirectory (tmp);
 
 			try {
-				var ibtool = CreateIBToolTask (PlatformFramework.iOS, "../MyIBToolLinkTest", tmp);
+				var ibtool = CreateIBToolTask (ApplePlatform.iOS, "../MyIBToolLinkTest", tmp);
 				var bundleResources = new HashSet<string> ();
 
 				Assert.IsTrue (ibtool.Execute (), "Execution of IBTool task failed.");
@@ -123,7 +124,7 @@ namespace Xamarin.iOS.Tasks
 			Directory.CreateDirectory (tmp);
 
 			try {
-				ibtool = CreateIBToolTask (PlatformFramework.iOS, "../IBToolTaskTests/LinkedAndTranslated", tmp);
+				ibtool = CreateIBToolTask (ApplePlatform.iOS, "../IBToolTaskTests/LinkedAndTranslated", tmp);
 				var bundleResources = new HashSet<string> ();
 
 				// Add some ResourceTags...
@@ -194,7 +195,7 @@ namespace Xamarin.iOS.Tasks
 			}
 		}
 
-		static IBTool CreateIBToolTask (PlatformFramework framework, string projectDir, string intermediateOutputPath, params string[] fileNames)
+		static IBTool CreateIBToolTask (ApplePlatform framework, string projectDir, string intermediateOutputPath, params string[] fileNames)
 		{
 			var ibtool = CreateIBToolTask (framework, projectDir, intermediateOutputPath);
 			var interfaceDefinitions = new List<ITaskItem> ();
@@ -215,7 +216,7 @@ namespace Xamarin.iOS.Tasks
 			Directory.CreateDirectory (tmp);
 
 			try {
-				ibtool = CreateIBToolTask (PlatformFramework.iOS, "../IBToolTaskTests/GenericAndDeviceSpecific", tmp, fileNames);
+				ibtool = CreateIBToolTask (ApplePlatform.iOS, "../IBToolTaskTests/GenericAndDeviceSpecific", tmp, fileNames);
 				var bundleResources = new HashSet<string> ();
 
 				// Add some ResourceTags...

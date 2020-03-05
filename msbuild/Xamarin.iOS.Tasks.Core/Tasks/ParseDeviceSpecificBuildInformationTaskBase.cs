@@ -6,6 +6,7 @@ using Microsoft.Build.Framework;
 
 using Xamarin.MacDev;
 using Xamarin.MacDev.Tasks;
+using Xamarin.Utils;
 
 namespace Xamarin.iOS.Tasks
 {
@@ -59,10 +60,10 @@ namespace Xamarin.iOS.Tasks
 			PString value, os;
 
 			switch (PlatformFrameworkHelper.GetFramework (TargetFrameworkIdentifier)) {
-			case PlatformFramework.WatchOS:
+			case ApplePlatform.WatchOS:
 				targetOperatingSystem = "watchOS";
 				break;
-			case PlatformFramework.TVOS:
+			case ApplePlatform.TVOS:
 				targetOperatingSystem = "tvOS";
 				break;
 			default:

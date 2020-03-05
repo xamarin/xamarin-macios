@@ -26,6 +26,9 @@
     <Compile Include="..\..\tools\mtouch\errors.Designer.cs">
       <Link>errors.Designer.cs</Link>
     </Compile>
+    <Compile Include="..\..\tools\common\TargetFramework.cs">
+      <Link>TargetFramework.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\tools\mtouch\errors.resx">

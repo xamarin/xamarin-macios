@@ -7,6 +7,7 @@
 // Copyright 2014 Xamarin Inc.
 
 using Xamarin.MacDev.Tasks;
+using Xamarin.Utils;
 
 namespace Xamarin.Mac.Tasks
 {
@@ -20,7 +21,7 @@ namespace Xamarin.Mac.Tasks
 		protected override string[] DirectDistributionPrefixes { get { return directDistributionPrefixes; } }
 		protected override string[] AppStoreDistributionPrefixes { get { return appStoreDistributionPrefixes; } }
 		protected override string DeveloperRoot { get { return MacOSXSdks.Native.DeveloperRoot; } }
-		protected override PlatformFramework Framework { get { return PlatformFramework.MacOS; } }
+		protected override ApplePlatform Framework { get { return ApplePlatform.MacOSX; } }
 		protected override string PlatformName { get { return "macOS"; } }
 		protected override string ApplicationIdentifierKey { get { return "com.apple.application-identifier"; } }
 	}
