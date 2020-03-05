@@ -130,7 +130,7 @@ namespace Xharness
 		{
 			if (simulators != null)
 				return true;
-
+			
 			var sims = new Simulators () {
 				Harness = Harness,
 			};
@@ -144,7 +144,7 @@ namespace Xharness
 		{
 			if (device_name != null)
 				return;
-
+			
 			device_name = Environment.GetEnvironmentVariable ("DEVICE_NAME");
 			if (!string.IsNullOrEmpty (device_name))
 				return;
@@ -289,7 +289,7 @@ namespace Xharness
 			}
 			for (int i = -1; i < Harness.Verbosity; i++)
 				args.Add ("-v");
-
+			
 			args.Add ("--installdev");
 			args.Add (appPath);
 			AddDeviceName (args, companion_device_name ?? device_name);
@@ -544,14 +544,14 @@ namespace Xharness
 
 			listener_log = Logs.Create ($"test-{mode}-{Harness.Timestamp}.log", LogType.TestLog.ToString (), timestamp: !useXmlOutput);
 			var transport = ListenerFactory.Create (mode, listener_log, isSimulator, out var listener, out var fn);
-
+			
 			args.Add ($"-argument=-app-arg:-transport:{transport}");
 			args.Add ($"-setenv=NUNIT_TRANSPORT={transport.ToString ().ToUpper ()}");
 
 			if (transport == ListenerTransport.File)
 				args.Add ($"-setenv=NUNIT_LOG_FILE={fn}");
 
-
+			
 			listener.TestLog = listener_log;
 			listener.Log = main_log;
 			listener.AutoExit = true;
@@ -569,20 +569,19 @@ namespace Xharness
 
 			listener.ConnectedTask
 				.TimeoutAfter (TimeSpan.FromMinutes (Harness.LaunchTimeout))
-				.ContinueWith ((v) =>
-				 {
-					 if (v.IsFaulted) {
-						 main_log.WriteLine ("Test launch failed: {0}", v.Exception);
-					 } else if (v.IsCanceled) {
-						 main_log.WriteLine ("Test launch was cancelled.");
-					 } else if (v.Result) {
-						 main_log.WriteLine ("Test run started");
-					 } else {
-						 cancellation_source.Cancel ();
-						 main_log.WriteLine ("Test launch timed out after {0} minute(s).", Harness.LaunchTimeout);
-						 timed_out = true;
-					 }
-				 }).DoNotAwait ();
+				.ContinueWith ((v) => {
+					if (v.IsFaulted) {
+						main_log.WriteLine ("Test launch failed: {0}", v.Exception);
+					} else if (v.IsCanceled) {
+						main_log.WriteLine ("Test launch was cancelled.");
+					} else if (v.Result) {
+						main_log.WriteLine ("Test run started");
+					} else {
+						cancellation_source.Cancel ();
+						main_log.WriteLine ("Test launch timed out after {0} minute(s).", Harness.LaunchTimeout);
+						timed_out = true;
+					}
+				}).DoNotAwait ();
 
 			foreach (var kvp in Harness.EnvironmentVariables)
 				args.Add ($"-setenv={kvp.Key}={kvp.Value}");
@@ -633,7 +632,8 @@ namespace Xharness
 					main_log.WriteLine ("System log for the '{1}' simulator is: {0}", sim.SystemLog, sim.Name);
 					bool isCompanion = sim != simulator;
 
-					var log = new CaptureLog (Logs, Path.Combine (LogDirectory, sim.Name + ".log"), sim.SystemLog, entire_file: Harness.Action != HarnessAction.Jenkins) {
+					var log = new CaptureLog (Logs, Path.Combine (LogDirectory, sim.Name + ".log"), sim.SystemLog, entire_file: Harness.Action != HarnessAction.Jenkins)
+					{
 						Description = isCompanion ? LogType.CompanionSystemLog.ToString () : LogType.SystemLog.ToString (),
 					};
 					log.StartCapture ();
@@ -705,7 +705,7 @@ namespace Xharness
 
 				foreach (var log in systemLogs)
 					log.StopCapture ();
-
+				
 			} else {
 				main_log.WriteLine ("*** Executing {0}/{1} on device '{2}' ***", appName, mode, device_name);
 
@@ -714,12 +714,12 @@ namespace Xharness
 				} else {
 					args.Add ("--wait-for-exit");
 				}
-
+				
 				AddDeviceName (args);
 
 				device_system_log = Logs.Create ($"device-{device_name}-{Harness.Timestamp}.log", "Device log");
 				var logdev = new DeviceLogCapturer () {
-					Harness = Harness,
+					Harness =  Harness,
 					Log = device_system_log,
 					DeviceName = device_name,
 				};
@@ -732,13 +732,12 @@ namespace Xharness
 
 					bool waitedForExit = true;
 					// We need to check for MT1111 (which means that mlaunch won't wait for the app to exit).
-					var callbackLog = new CallbackLog ((line) =>
-					 {
-						 // MT1111: Application launched successfully, but it's not possible to wait for the app to exit as requested because it's not possible to detect app termination when launching using gdbserver
-						 waitedForExit &= line?.Contains ("MT1111: ") != true;
-						 if (line?.Contains ("error MT1007") == true)
-							 launch_failure = true;
-					 });
+					var callbackLog = new CallbackLog ((line) => {
+						// MT1111: Application launched successfully, but it's not possible to wait for the app to exit as requested because it's not possible to detect app termination when launching using gdbserver
+						waitedForExit &= line?.Contains ("MT1111: ") != true;
+						if (line?.Contains ("error MT1007") == true)
+							launch_failure = true;
+					});
 					var runLog = Log.CreateAggregatedLog (callbackLog, main_log);
 					var timeoutWatch = Stopwatch.StartNew ();
 					var result = await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, args, runLog, timeout, cancellation_token: cancellation_source.Token);
@@ -787,16 +786,16 @@ namespace Xharness
 				main_log.WriteLine ("Test run never launched");
 				success = false;
 			} else if (launch_failure) {
-				Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} failed to launch</i></b><br/>", mode);
-				main_log.WriteLine ("Test run failed to launch");
-				success = false;
+ 				Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} failed to launch</i></b><br/>", mode);
+ 				main_log.WriteLine ("Test run failed to launch");
+ 				success = false;
 			} else {
 				Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} crashed at startup (no log)</i></b><br/>", mode);
 				main_log.WriteLine ("Test run crashed before it started (no log file produced)");
 				crashed = true;
 				success = false;
 			}
-
+				
 			if (!success.HasValue)
 				success = false;
 
@@ -911,13 +910,12 @@ namespace Xharness
 	}
 
 	// Monitor the output from 'mlaunch --installdev' and cancel the installation if there's no output for 1 minute.
-	class AppInstallMonitorLog : Log
-	{
+	class AppInstallMonitorLog : Log {
 		public override string FullPath => copy_to.FullPath;
 
 		ILog copy_to;
 		CancellationTokenSource cancellation_source;
-
+		
 		public bool CopyingApp;
 		public bool CopyingWatchApp;
 		public TimeSpan AppCopyDuration;
@@ -942,10 +940,9 @@ namespace Xharness
 		{
 			this.copy_to = copy_to;
 			cancellation_source = new CancellationTokenSource ();
-			cancellation_source.Token.Register (() =>
-			 {
-				 copy_to.WriteLine ("App installation cancelled: it timed out after no output for 1 minute.");
-			 });
+			cancellation_source.Token.Register (() => {
+				copy_to.WriteLine ("App installation cancelled: it timed out after no output for 1 minute.");
+			});
 		}
 
 		public override Encoding Encoding => copy_to.Encoding;

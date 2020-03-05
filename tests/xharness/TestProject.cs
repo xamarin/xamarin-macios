@@ -9,7 +9,7 @@ using Xharness.Jenkins.TestTasks;
 
 namespace Xharness
 {
-    public class TestProject
+	public class TestProject
 	{
 		XmlDocument xml;
 

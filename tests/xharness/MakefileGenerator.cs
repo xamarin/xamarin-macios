@@ -7,7 +7,7 @@ using Xharness;
 
 namespace Xharness
 {
-    public static class MakefileGenerator
+	public static class MakefileGenerator
 	{
 		static void WriteTarget (this StreamWriter writer, string target, string dependencies, params string [] arguments)
 		{

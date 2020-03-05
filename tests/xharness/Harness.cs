@@ -262,7 +262,7 @@ namespace Xharness
 			MONO_MAC_SDK_DESTDIR = make_config ["MONO_MAC_SDK_DESTDIR"];
 			ENABLE_XAMARIN = make_config.ContainsKey ("ENABLE_XAMARIN") && !string.IsNullOrEmpty (make_config ["ENABLE_XAMARIN"]);
 		}
-
+		 
 		int AutoConfigureMac (bool generate_projects)
 		{
 			int rv = 0;
@@ -277,7 +277,7 @@ namespace Xharness
 					TargetFrameworkFlavors = p.Flavors,
 				});
 			}
-
+			
 			MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "Mac", "introspection-mac.csproj")), targetFrameworkFlavor: MacFlavors.Modern) { Name = "introspection" });
 
 			var hard_coded_test_suites = new [] {
@@ -297,7 +297,7 @@ namespace Xharness
 				});
 			}
 
-			foreach (var flavor in new MonoNativeFlavor[] { MonoNativeFlavor.Compat, MonoNativeFlavor.Unified }) {
+			foreach (var flavor in new MonoNativeFlavor [] { MonoNativeFlavor.Compat, MonoNativeFlavor.Unified }) {
 				var monoNativeInfo = new MacMonoNativeInfo (this, flavor);
 				var macTestProject = new MacTestProject (monoNativeInfo.ProjectPath, targetFrameworkFlavor: MacFlavors.Modern | MacFlavors.Full) {
 					MonoNativeInfo = monoNativeInfo,
@@ -403,7 +403,7 @@ namespace Xharness
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link all", "link all.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link sdk", "link sdk.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
 
-			foreach (var flavor in new MonoNativeFlavor [] { MonoNativeFlavor.Compat, MonoNativeFlavor.Unified }) {
+			foreach (var flavor in new MonoNativeFlavor[] { MonoNativeFlavor.Compat, MonoNativeFlavor.Unified }) {
 				var monoNativeInfo = new MonoNativeInfo (this, flavor);
 				var iosTestProject = new iOSTestProject (monoNativeInfo.ProjectPath) {
 					MonoNativeInfo = monoNativeInfo,
@@ -549,7 +549,7 @@ namespace Xharness
 		{
 			if (HarnessLog == null)
 				HarnessLog = new ConsoleLog ();
-
+			
 			foreach (var project in IOSTestProjects) {
 				var runner = new AppRunner () {
 					Harness = this,
@@ -571,7 +571,8 @@ namespace Xharness
 				HarnessLog = new ConsoleLog ();
 
 			foreach (var project in IOSTestProjects) {
-				var runner = new AppRunner () {
+				var runner = new AppRunner ()
+				{
 					Harness = this,
 					ProjectFile = project.Path,
 					MainLog = HarnessLog,
@@ -587,7 +588,7 @@ namespace Xharness
 		{
 			if (HarnessLog == null)
 				HarnessLog = new ConsoleLog ();
-
+			
 			foreach (var project in IOSTestProjects) {
 				var runner = new AppRunner () {
 					Harness = this,
@@ -609,7 +610,7 @@ namespace Xharness
 			HarnessLog?.WriteLine (message);
 		}
 
-		public void Log (int min_level, string message, params object [] args)
+		public void Log (int min_level, string message, params object[] args)
 		{
 			if (Verbosity < min_level)
 				return;
@@ -622,12 +623,12 @@ namespace Xharness
 			Log (0, message);
 		}
 
-		public void Log (string message, params object [] args)
+		public void Log (string message, params object[] args)
 		{
 			Log (0, message, args);
 		}
 
-		public void LogWrench (string message, params object [] args)
+		public void LogWrench (string message, params object[] args)
 		{
 			// Disable this for now, since we're not uploading directly to wrench anymore, but instead using the Html Report.
 			//if (!InWrench)
@@ -643,7 +644,7 @@ namespace Xharness
 
 			Console.WriteLine (message);
 		}
-
+		
 		public bool InCI {
 			get {
 				// We use the 'BUILD_REVISION' variable to detect whether we're running CI or not.
@@ -683,8 +684,9 @@ namespace Xharness
 				AutoConfigureIOS ();
 				AutoConfigureMac (false);
 			}
-
-			var jenkins = new Jenkins.Jenkins () {
+			
+			var jenkins = new Jenkins.Jenkins ()
+			{
 				Harness = this,
 			};
 			return jenkins.Run ();
@@ -751,7 +753,7 @@ namespace Xharness
 		// annoying when XS reloads the projects, and also causes unnecessary rebuilds).
 		// Nothing really breaks when the sequence isn't identical from run to run, so
 		// this is just a best minimal effort.
-		static Random guid_generator = new Random (unchecked((int) 0xdeadf00d));
+		static Random guid_generator = new Random (unchecked ((int) 0xdeadf00d));
 		public Guid NewStableGuid (string seed = null)
 		{
 			var bytes = new byte [16];
@@ -800,7 +802,7 @@ namespace Xharness
 			var symbolicated = logs.Create (Path.ChangeExtension (name, ".symbolicated.log"), $"Symbolicated crash report: {name}", timestamp: false);
 			var environment = new Dictionary<string, string> { { "DEVELOPER_DIR", Path.Combine (XcodeRoot, "Contents", "Developer") } };
 			var rv = await ProcessHelper.ExecuteCommandAsync (symbolicatecrash, new [] { report.Path }, symbolicated, TimeSpan.FromMinutes (1), environment);
-			if (rv.Succeeded) {
+			if (rv.Succeeded) {;
 				log.WriteLine ("Symbolicated {0} successfully.", report.Path);
 				return symbolicated;
 			} else {
