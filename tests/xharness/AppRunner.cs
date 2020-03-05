@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using Xamarin;
 using Xharness.Jenkins.TestTasks;
+using Xharness.Listeners;
 using Xharness.Logging;
 
 namespace Xharness
@@ -40,6 +41,7 @@ namespace Xharness
 		public string AppPath;
 		public string Variation;
 		public BuildToolTask BuildTask;
+		public ISimpleListenerFactory ListenerFactory = new SimpleListenerFactory();
 
 		public TestExecutingResult Result { get; private set; }
 		public string FailureMessage { get; private set; }
@@ -605,37 +607,17 @@ namespace Xharness
 				args.Add($"-argument=-app-arg:-hostname:{ips.ToString()}");
 				args.Add($"-setenv=NUNIT_HOSTNAME={ips.ToString()}");
 			}
-			string transport;
-			if (mode == "watchos")
-			{
-				transport = isSimulator ? "FILE" : "HTTP";
-			}
-			else
-			{
-				transport = "TCP";
-			}
-			args.Add($"-argument=-app-arg:-transport:{transport}");
-			args.Add($"-setenv=NUNIT_TRANSPORT={transport}");
 
 			listener_log = Logs.Create($"test-{mode}-{Harness.Timestamp}.log", LogType.TestLog.ToString(), timestamp: !useXmlOutput);
+			var transport = ListenerFactory.Create(mode, listener_log, isSimulator, out var listener, out var fn);
 
-			SimpleListener listener;
-			switch (transport)
-			{
-				case "FILE":
-					var fn = listener_log.FullPath + ".tmp";
-					listener = new SimpleFileListener(fn);
-					args.Add($"-setenv=NUNIT_LOG_FILE={fn}");
-					break;
-				case "HTTP":
-					listener = new SimpleHttpListener();
-					break;
-				case "TCP":
-					listener = new SimpleTcpListener();
-					break;
-				default:
-					throw new NotImplementedException();
-			}
+			args.Add($"-argument=-app-arg:-transport:{transport}");
+			args.Add($"-setenv=NUNIT_TRANSPORT={transport.ToString().ToUpper()}");
+
+			if (transport == ListenerTransport.File)
+				args.Add($"-setenv=NUNIT_LOG_FILE={fn}");
+
+
 			listener.TestLog = listener_log;
 			listener.Log = main_log;
 			listener.AutoExit = true;

@@ -59,11 +59,23 @@
     <Compile Include="Logging\Tests\ConsoleLogTest.cs" />
     <Compile Include="Logging\Tests\CallbackLogTest.cs" />
     <Compile Include="Logging\Tests\CaptureLogTest.cs" />
+    <Compile Include="Listeners\Tests\SimpleListenerFactoryTest.cs" />
+    <Compile Include="Listeners\Tests\SimpleFileListenerTest.cs" />
+    <Compile Include="Listeners\Tests\SimpleTcpListenerTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="BCLTestImporter\" />
+    <Folder Include="BCLTestImporter\Tests\" />
+    <Folder Include="Tests\" />
+    <Folder Include="Samples\" />
+    <Folder Include="Logging\" />
+    <Folder Include="Logging\Tests\" />
+    <Folder Include="Listeners\" />
+    <Folder Include="Listeners\Tests\" />
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Samples\NUnitV2Sample.xml" />
     <EmbeddedResource Include="Samples\NUnitV3Sample.xml" />
