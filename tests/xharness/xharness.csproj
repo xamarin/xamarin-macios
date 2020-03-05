@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -70,6 +70,26 @@
     <PackageReference Include="Mono.Options" Version="5.3.0.1" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Jenkins\TestTask\AggregatedRunSimulatorTask.cs" />
+    <Compile Include="Jenkins\TestTask\BuildProjectTask.cs" />
+    <Compile Include="Jenkins\TestTask\BuildToolTask.cs" />
+    <Compile Include="Jenkins\IAcquiredResource.cs" />
+    <Compile Include="Jenkins\TestTask\MacExecuteTask.cs" />
+    <Compile Include="Jenkins\TestTask\MacTask.cs" />
+    <Compile Include="Jenkins\TestTask\MakeTask.cs" />
+    <Compile Include="Jenkins\NondisposedResource.cs" />
+    <Compile Include="Jenkins\TestTask\NUnitExecuteTask.cs" />
+    <Compile Include="Jenkins\Resource.cs" />
+    <Compile Include="Jenkins\Resources.cs" />
+    <Compile Include="Jenkins\TestTask\RunDeviceTask.cs" />
+    <Compile Include="Jenkins\TestTask\RunSimulatorTask.cs" />
+    <Compile Include="Jenkins\TestTask\RunTestTask.cs" />
+    <Compile Include="Jenkins\TestTask\RunXITask.cs" />
+    <Compile Include="Jenkins\TestTask\RunXtroTask.cs" />
+    <Compile Include="Jenkins\TestExecutingResult.cs" />
+    <Compile Include="Jenkins\TestPlatform.cs" />
+    <Compile Include="Jenkins\TestTask\TestTask.cs" />
+    <Compile Include="Jenkins\TestTask\XBuildTask.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Harness.cs" />
@@ -92,7 +112,7 @@
     <Compile Include="MacTarget.cs" />
     <Compile Include="SimpleHttpListener.cs" />
     <Compile Include="SimpleListener.cs" />
-    <Compile Include="Jenkins.cs" />
+    <Compile Include="Jenkins\Jenkins.cs" />
     <Compile Include="Process_Extensions.cs" />
     <Compile Include="Simulators.cs" />
     <Compile Include="TestProject.cs" />
@@ -126,10 +146,7 @@
     <Compile Include="Logging\CallbackLog.cs" />
     <Compile Include="Logging\CaptureLog.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="BCLTestImporter\" />
-    <Folder Include="Logging\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="xharness.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
