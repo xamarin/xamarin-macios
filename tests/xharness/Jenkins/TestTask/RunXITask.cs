@@ -3,33 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xharness.Logging;
-using Xharness;
 
-namespace xharness.Jenkins.TestTask
+namespace Xharness.Jenkins.TestTask
 {
-    abstract class RunXITask<TDevice> : RunTestTask where TDevice : class, IDevice
+	abstract class RunXITask<TDevice> : RunTestTask where TDevice : class, IDevice
 	{
-		IEnumerable<TDevice> candidates;
-		TDevice device;
-		TDevice companion_device;
 		public AppRunnerTarget AppRunnerTarget;
 
 		protected AppRunner runner;
 		protected AppRunner additional_runner;
 
-		public IEnumerable<TDevice> Candidates => candidates;
+		public IEnumerable<TDevice> Candidates { get; }
 
-		public TDevice Device
-		{
-			get { return device; }
-			protected set { device = value; }
-		}
+		public TDevice Device { get; protected set; }
 
-		public TDevice CompanionDevice
-		{
-			get { return companion_device; }
-			protected set { companion_device = value; }
-		}
+		public TDevice CompanionDevice { get; protected set; }
 
 		public string BundleIdentifier
 		{
@@ -39,7 +27,7 @@ namespace xharness.Jenkins.TestTask
 		public RunXITask(BuildToolTask build_task, IEnumerable<TDevice> candidates)
 			: base(build_task)
 		{
-			this.candidates = candidates;
+			this.Candidates = candidates;
 		}
 
 		public override IEnumerable<Log> AggregatedLogs
@@ -90,7 +78,7 @@ namespace xharness.Jenkins.TestTask
 			if (Finished)
 				return;
 
-			var enumerable = candidates;
+			var enumerable = Candidates;
 			var asyncEnumerable = enumerable as IAsyncEnumerable;
 			if (asyncEnumerable != null)
 				await asyncEnumerable.ReadyTask;

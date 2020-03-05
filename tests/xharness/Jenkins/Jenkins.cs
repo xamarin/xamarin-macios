@@ -4,15 +4,15 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
 using System.Text;
-using Xharness.Logging;
+using System.Threading.Tasks;
 using Xharness;
-using xharness.Jenkins.TestTask;
+using Xharness.Jenkins.TestTask;
+using Xharness.Logging;
 
-namespace xharness.Jenkins
+namespace Xharness.Jenkins
 {
-    public class Jenkins
+	public class Jenkins
 	{
 		bool populating = true;
 

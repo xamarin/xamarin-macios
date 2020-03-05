@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
-using Xamarin.Utils;
 using System.Xml;
+using Xamarin.Utils;
 using Xharness.Logging;
-using Xharness;
 
-namespace xharness.Jenkins.TestTask
+namespace Xharness.Jenkins.TestTask
 {
-    abstract class BuildProjectTask : BuildToolTask
+	abstract class BuildProjectTask : BuildToolTask
 	{
 		public string SolutionPath;
 

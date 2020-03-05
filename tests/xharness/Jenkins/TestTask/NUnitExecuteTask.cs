@@ -5,15 +5,14 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml;
 using Xamarin;
 using Xamarin.Utils;
-using System.Xml;
 using Xharness.Logging;
-using Xharness;
 
-namespace xharness.Jenkins.TestTask
+namespace Xharness.Jenkins.TestTask
 {
-    class NUnitExecuteTask : RunTestTask
+	class NUnitExecuteTask : RunTestTask
 	{
 		public string TestLibrary;
 		public string TestExecutable;

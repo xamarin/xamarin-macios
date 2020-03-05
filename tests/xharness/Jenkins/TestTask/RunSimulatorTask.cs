@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Xharness;
 
-namespace xharness.Jenkins.TestTask
+namespace Xharness.Jenkins.TestTask
 {
 	class RunSimulatorTask : RunXITask<SimDevice>
 	{

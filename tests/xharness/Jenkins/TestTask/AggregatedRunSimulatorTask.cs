@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using Xharness;
 
-namespace xharness.Jenkins.TestTask
+namespace Xharness.Jenkins.TestTask
 {
-    // This class groups simulator run tasks according to the
-    // simulator they'll run from, so that we minimize switching
-    // between different simulators (which is slow).
-    class AggregatedRunSimulatorTask : TestTask
+	// This class groups simulator run tasks according to the
+	// simulator they'll run from, so that we minimize switching
+	// between different simulators (which is slow).
+	class AggregatedRunSimulatorTask : TestTask
 	{
 		public IEnumerable<RunSimulatorTask> Tasks;
 

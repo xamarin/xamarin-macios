@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace xharness
+namespace Xharness
 {
 	[Flags]
 	public enum TestExecutingResult

@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml;
 using Xamarin;
 using Xamarin.Utils;
-using System.Xml;
 using Xharness.Logging;
-using Xharness;
 
-namespace xharness.Jenkins.TestTask
+namespace Xharness.Jenkins.TestTask
 {
 	class MacExecuteTask : MacTask
 	{

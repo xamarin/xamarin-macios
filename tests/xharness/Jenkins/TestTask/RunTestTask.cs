@@ -2,11 +2,10 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Xharness.Logging;
-using Xharness;
 
-namespace xharness.Jenkins.TestTask
+namespace Xharness.Jenkins.TestTask
 {
-    internal abstract class RunTestTask : TestTask
+	internal abstract class RunTestTask : TestTask
 	{
 		public readonly BuildToolTask BuildTask;
 		public double TimeoutMultiplier { get; set; } = 1;

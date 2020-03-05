@@ -2,11 +2,10 @@
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Xharness.Logging;
-using Xharness;
 
-namespace xharness.Jenkins.TestTask
+namespace Xharness.Jenkins.TestTask
 {
-    class RunXtroTask : MacExecuteTask
+	class RunXtroTask : MacExecuteTask
 	{
 
 		public string WorkingDirectory;

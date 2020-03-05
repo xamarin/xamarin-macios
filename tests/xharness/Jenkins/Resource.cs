@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 
-namespace xharness.Jenkins
+namespace Xharness.Jenkins
 {
     // This is a very simple class to manage the general concept of 'resource'.
     // Performance isn't important, so this is very simple.

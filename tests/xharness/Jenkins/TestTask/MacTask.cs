@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace xharness.Jenkins.TestTask
+namespace Xharness.Jenkins.TestTask
 {
-	abstract class MacTask : RunTestTask
+    abstract class MacTask : RunTestTask
 	{
 		public MacTask(BuildToolTask build_task)
 			: base(build_task)
