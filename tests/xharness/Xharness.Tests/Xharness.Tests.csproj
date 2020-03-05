@@ -85,18 +85,6 @@
     <Compile Include="..\ProjectFileExtensions.cs">
       <Link>ProjectFileExtensions.cs</Link>
     </Compile>
-    <Compile Include="..\SimpleFileListener.cs">
-      <Link>SimpleFileListener.cs</Link>
-    </Compile>
-    <Compile Include="..\SimpleHttpListener.cs">
-      <Link>SimpleHttpListener.cs</Link>
-    </Compile>
-    <Compile Include="..\SimpleListener.cs">
-      <Link>SimpleListener.cs</Link>
-    </Compile>
-    <Compile Include="..\SimpleTcpListener.cs">
-      <Link>SimpleTcpListener.cs</Link>
-    </Compile>
     <Compile Include="..\Simulators.cs">
       <Link>Simulators.cs</Link>
     </Compile>
@@ -194,6 +182,24 @@
       <Link>Logging\CaptureLog.cs</Link>
     </Compile>
     <Compile Include="Logging\Tests\CaptureLogTest.cs" />
+    <Compile Include="..\Listeners\SimpleFileListener.cs">
+      <Link>Listeners\SimpleFileListener.cs</Link>
+    </Compile>
+    <Compile Include="..\Listeners\SimpleHttpListener.cs">
+      <Link>Listeners\SimpleHttpListener.cs</Link>
+    </Compile>
+    <Compile Include="..\Listeners\SimpleListener.cs">
+      <Link>Listeners\SimpleListener.cs</Link>
+    </Compile>
+    <Compile Include="..\Listeners\SimpleTcpListener.cs">
+      <Link>Listeners\SimpleTcpListener.cs</Link>
+    </Compile>
+    <Compile Include="..\Listeners\SimpleListenerFactory.cs">
+      <Link>Listeners\SimpleListenerFactory.cs</Link>
+    </Compile>
+    <Compile Include="Listeners\Tests\SimpleListenerFactoryTest.cs" />
+    <Compile Include="Listeners\Tests\SimpleFileListenerTest.cs" />
+    <Compile Include="Listeners\Tests\SimpleTcpListenerTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -205,6 +211,8 @@
     <Folder Include="Samples\" />
     <Folder Include="Logging\" />
     <Folder Include="Logging\Tests\" />
+    <Folder Include="Listeners\" />
+    <Folder Include="Listeners\Tests\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Samples\NUnitV2Sample.xml" />
