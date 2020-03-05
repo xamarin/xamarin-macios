@@ -593,6 +593,7 @@ namespace WebKit
 	interface WKWebView
 #if MONOMAC
 		: NSUserInterfaceValidations
+		/* TODO , NSTextFinderClient  K_API_AVAILABLE(macos(WK_MAC_TBA)) in 11.4 beta 2 */
 #endif
 	{
 
