@@ -25,7 +25,7 @@ namespace Xamarin.Utils
 #if MONOMAC
 			Parse ("4.0");
 #else
-			Parse ("MonoTouch,v1.0");	
+			Parse ("Xamarin.iOS,v1.0");
 #endif
 		public static readonly TargetFramework Net_2_0 = Parse ("2.0");
 		public static readonly TargetFramework Net_3_0 = Parse ("3.0");
@@ -34,7 +34,6 @@ namespace Xamarin.Utils
 		public static readonly TargetFramework Net_4_5 = Parse ("4.5");
 		public static readonly TargetFramework Xamarin_Mac_2_0 = Parse ("Xamarin.Mac,v2.0");
 
-		public static readonly TargetFramework MonoTouch_1_0 = Parse ("MonoTouch,v1.0");
 		public static readonly TargetFramework Xamarin_iOS_1_0 = Parse ("Xamarin.iOS,v1.0");
 		public static readonly TargetFramework Xamarin_WatchOS_1_0 = Parse ("Xamarin.WatchOS,v1.0");
 		public static readonly TargetFramework Xamarin_TVOS_1_0 = Parse ("Xamarin.TVOS,v1.0");
@@ -47,7 +46,7 @@ namespace Xamarin.Utils
 #elif BGENERATOR
 		public static readonly TargetFramework [] ValidFrameworks = new TargetFramework[]
 		{
-			MonoTouch_1_0, Xamarin_iOS_1_0, Xamarin_TVOS_1_0, Xamarin_WatchOS_1_0,
+			Xamarin_iOS_1_0, Xamarin_TVOS_1_0, Xamarin_WatchOS_1_0,
 			Xamarin_Mac_2_0_Mobile, Xamarin_Mac_4_5_Full, Xamarin_Mac_4_5_System
 		};
 #endif
