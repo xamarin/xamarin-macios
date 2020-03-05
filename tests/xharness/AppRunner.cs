@@ -12,11 +12,12 @@ using System.Xml;
 using System.Xml.Xsl;
 using Xamarin;
 using Xamarin.Utils;
+using xharness.Jenkins;
 using Xharness.Logging;
 
 namespace Xharness
 {
-	public enum AppRunnerTarget
+    public enum AppRunnerTarget
 	{
 		None,
 		Simulator_iOS,

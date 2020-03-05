@@ -9,12 +9,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using Xamarin.Utils;
+using xharness.Jenkins;
 using Xharness.BCLTestImporter;
 using Xharness.Logging;
 
 namespace Xharness
 {
-	public enum HarnessAction
+    public enum HarnessAction
 	{
 		None,
 		Configure,

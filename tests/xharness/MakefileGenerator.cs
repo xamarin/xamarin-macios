@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using xharness.Jenkins;
 
 namespace Xharness
 {
-	public static class MakefileGenerator
+    public static class MakefileGenerator
 	{
 		static void WriteTarget (this StreamWriter writer, string target, string dependencies, params string [] arguments)
 		{
