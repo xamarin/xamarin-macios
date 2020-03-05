@@ -34,7 +34,6 @@ namespace MonoTouch.Tuner {
 			case "mscorlib":
 				product = false;
 				return context.Annotations.GetAction (assembly) == AssemblyAction.Link;
-			case "monotouch":
 			case "Xamarin.iOS":
 			case "Xamarin.TVOS":
 			case "Xamarin.WatchOS":
