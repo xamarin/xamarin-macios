@@ -340,24 +340,30 @@ public class BindingTouch {
 			nostdlib = true;
 			if (string.IsNullOrEmpty (baselibdll))
 				baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/Xamarin.iOS/Xamarin.iOS.dll");
-			references.Add ("Facades/System.Drawing.Common");
-			ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/Xamarin.iOS", references);
+			if (!IsDotNet) {
+				references.Add ("Facades/System.Drawing.Common");
+				ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/Xamarin.iOS", references);
+			}
 			break;
 		case ApplePlatform.TVOS:
 			CurrentPlatform = PlatformName.TvOS;
 			nostdlib = true;
 			if (string.IsNullOrEmpty (baselibdll))
 				baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/Xamarin.TVOS/Xamarin.TVOS.dll");
-			references.Add ("Facades/System.Drawing.Common");
-			ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/Xamarin.TVOS", references);
+			if (!IsDotNet) {
+				references.Add ("Facades/System.Drawing.Common");
+				ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/Xamarin.TVOS", references);
+			}
 			break;
 		case ApplePlatform.WatchOS:
 			CurrentPlatform = PlatformName.WatchOS;
 			nostdlib = true;
 			if (string.IsNullOrEmpty (baselibdll))
 				baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/Xamarin.WatchOS/Xamarin.WatchOS.dll");
-			references.Add ("Facades/System.Drawing.Common");
-			ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/Xamarin.WatchOS", references);
+			if (!IsDotNet) {
+				references.Add ("Facades/System.Drawing.Common");
+				ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/Xamarin.WatchOS", references);
+			}
 			break;
 		case ApplePlatform.MacOSX:
 			CurrentPlatform = PlatformName.MacOSX;
