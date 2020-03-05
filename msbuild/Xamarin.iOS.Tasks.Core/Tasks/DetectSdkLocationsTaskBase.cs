@@ -23,8 +23,10 @@ namespace Xamarin.iOS.Tasks
 			get; set;
 		}
 
+		public TargetFramework TargetFramework { get { return TargetFramework.Parse (TargetFrameworkMoniker); } }
+
 		[Required]
-		public string TargetFrameworkIdentifier {
+		public string TargetFrameworkMoniker {
 			get; set; 
 		}
 	
@@ -78,7 +80,7 @@ namespace Xamarin.iOS.Tasks
 #endregion Outputs
 
 		public ApplePlatform Framework {
-			get { return PlatformFrameworkHelper.GetFramework (TargetFrameworkIdentifier); }
+			get { return PlatformFrameworkHelper.GetFramework (TargetFrameworkMoniker); }
 		}
 
 		public AppleSdk CurrentSdk {
@@ -118,14 +120,6 @@ namespace Xamarin.iOS.Tasks
 			EnsureXamarinSdkRoot ();
 
 			return !Log.HasLoggedErrors;
-		}
-
-		bool IsWatchFramework {
-			get { return TargetFrameworkIdentifier == "Xamarin.WatchOS"; }
-		}
-
-		bool IsTVOSFramework {
-			get { return TargetFrameworkIdentifier == "Xamarin.TVOS"; }
 		}
 
 		void EnsureTVOSSdkPath ()

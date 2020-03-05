@@ -24,12 +24,12 @@ namespace Xamarin.iOS.Tasks
 		public bool SdkIsSimulator { get; set; }
 
 		[Required]
-		public string TargetFrameworkIdentifier { get; set; }
+		public string TargetFrameworkMoniker { get; set; }
 
 		#endregion
 
 		public ApplePlatform Framework {
-			get { return PlatformFrameworkHelper.GetFramework (TargetFrameworkIdentifier); }
+			get { return PlatformFrameworkHelper.GetFramework (TargetFrameworkMoniker); }
 		}
 
 		void ValidateAppExtension (string path, string mainBundleIdentifier, string mainShortVersionString, string mainVersion)

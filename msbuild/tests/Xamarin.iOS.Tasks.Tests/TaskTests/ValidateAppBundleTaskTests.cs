@@ -26,7 +26,7 @@ namespace Xamarin.iOS.Tasks
 			task = CreateTask<ValidateAppBundleTask> ();
 			task.AppBundlePath = AppBundlePath;
 			task.SdkIsSimulator = true;
-			task.TargetFrameworkIdentifier = "Xamarin.iOS";
+			task.TargetFrameworkMoniker = "Xamarin.iOS,v1.0";
 
 			extensionBundlePath = Path.Combine (AppBundlePath, "PlugIns", extensionName + ".appex");
 

@@ -109,7 +109,7 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 			ProcessEnums="$(ProcessEnums)"
 			ProjectDir="$(MSBuildProjectDirectory)"
 			References="@(ReferencePath);@(BTouchReferencePath)"
-			TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			FrameworkRoot="$(XamarinMacFrameworkRoot)"
 			BTouchToolPath="$(BTouchToolPath)"
 			BTouchToolExe="$(BTouchToolExe)"

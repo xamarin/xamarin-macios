@@ -230,7 +230,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			Architectures="$(MtouchArch)"
 			IntermediateOutputPath="$(IntermediateOutputPath)"
 			OutputPath="$(OutputPath)"
-			TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			TargetiOSDevice="$(TargetiOSDevice)"
 		>
 			<Output TaskParameter="DeviceSpecificIntermediateOutputPath" PropertyName="DeviceSpecificIntermediateOutputPath" />
@@ -427,7 +427,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			Username="$(Username)"
 			Password="$(Password)"
 			FilePath="$(FilePath)"
-			TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			SdkDevPath="$(_SdkDevPath)"
 		/>
 	</Target>
@@ -438,7 +438,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			Username="$(Username)"
 			Password="$(Password)"
 			FilePath="$(FilePath)"
-			TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			SdkDevPath="$(_SdkDevPath)"
 		/>
 	</Target>
@@ -608,7 +608,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
 			AppManifest="$(_AppManifest)"
 			ProjectDir="$(MSBuildProjectDirectory)"
-			TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			ResourcePrefix="$(IPhoneResourcePrefix)"
 			SdkDevPath="$(_SdkDevPath)"
 			SdkIsSimulator="$(_SdkIsSimulator)"
@@ -681,7 +681,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
 			SdkVersion="$(MtouchSdkVersion)"
-			TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			TargetArchitectures="$(TargetArchitectures)"
 			>
 			
@@ -709,7 +709,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			SdkPlatform="$(_SdkPlatform)"
 			ProvisioningProfile="$(CodesignProvision)"
 			SigningKey="$(CodesignKey)"
-			TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			>
 
 			<Output TaskParameter="DetectedAppId" PropertyName="_AppIdentifier" />
@@ -785,7 +785,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			PartialAppManifests="@(_PartialAppManifest)"
 			ResourceRules="$(_PreparedResourceRules)"
 			TargetArchitectures="$(TargetArchitectures)"
-			TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			SdkPlatform="$(_SdkPlatform)"
 			SdkIsSimulator="$(_SdkIsSimulator)"
 			DebugIPAddresses="$(_DebugIPAddresses)"
@@ -911,8 +911,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			SdkIsSimulator="$(_SdkIsSimulator)"
 			SdkVersion="$(MtouchSdkVersion)"
 			SymbolsList="$(_MtouchSymbolsList)"
-			TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
-			TargetFrameworkVersion="$(TargetFrameworkVersion)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			UseLlvm="$(MtouchUseLlvm)"
 			UseFloat32="$(MtouchFloat32)"
 			UseThumb="$(MtouchUseThumb)"
@@ -1261,7 +1260,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			SdkRoot="$(_SdkRoot)"
 			SdkDevPath="$(_SdkDevPath)"
 			SdkVersion="$(MtouchSdkVersion)"
-			TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
 			InputScene="%(_ColladaAssetWithLogicalName.Identity)"
 			OutputScene="$(DeviceSpecificIntermediateOutputPath)%(_ColladaAssetWithLogicalName.LogicalName)">
@@ -1375,7 +1374,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			ToolPath="$(CopySceneKitAssetsPath)"
 			SceneKitAssets="@(SceneKitAsset)"
 			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
-			TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			ProjectDir="$(MSBuildProjectDirectory)"
 			ResourcePrefix="$(IPhoneResourcePrefix)"
 			IsWatchApp="$(IsWatchApp)"
@@ -1590,7 +1589,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			SdkIsSimulator="$(_SdkIsSimulator)"
 			SdkPlatform="$(_SdkPlatform)"
 			SdkVersion="$(MtouchSdkVersion)"
-			TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			>
 
 			<!-- We output the same task parameter to 2 different properties because they will be used differently -->
@@ -1730,7 +1729,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			SessionId="$(BuildSessionId)"
 			AppBundlePath="$(_AppBundlePath)"
 			SdkIsSimulator="$(_SdkIsSimulator)"
-			TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 		/>
 	</Target>
 

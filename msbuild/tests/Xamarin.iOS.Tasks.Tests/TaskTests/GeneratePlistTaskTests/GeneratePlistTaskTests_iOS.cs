@@ -12,7 +12,7 @@ namespace Xamarin.iOS.Tasks
 		{
 			base.ConfigureTask ();
 			Task.DefaultSdkVersion = IPhoneSdks.Native.GetClosestInstalledSdk (IPhoneSdkVersion.V6_1, true).ToString ();
-			Task.TargetFrameworkIdentifier = "Xamarin.iOS";
+			Task.TargetFrameworkMoniker = "Xamarin.iOS,v1.0";
 			Task.TargetArchitectures = "ARM64";
 		}
 

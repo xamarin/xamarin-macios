@@ -149,11 +149,14 @@ namespace Xamarin.iOS.Tasks
 		[Required]
 		public string SymbolsList { get; set; }
 
-		[Required]
-		public string TargetFrameworkIdentifier { get; set; }
+		public string TargetFrameworkIdentifier { get { return TargetFramework.Identifier; } }
+
+		public TargetFramework TargetFramework { get { return TargetFramework.Parse (TargetFrameworkMoniker); } }
+
+		public string TargetFrameworkVersion { get { return TargetFramework.Version.ToString (); } }
 
 		[Required]
-		public string TargetFrameworkVersion { get; set; }
+		public string TargetFrameworkMoniker { get; set; }
 
 		[Required]
 		public bool UseLlvm { get; set; }
@@ -187,7 +190,7 @@ namespace Xamarin.iOS.Tasks
 		#endregion
 
 		public ApplePlatform Framework {
-			get { return PlatformFrameworkHelper.GetFramework (TargetFrameworkIdentifier); }
+			get { return PlatformFrameworkHelper.GetFramework (TargetFrameworkMoniker); }
 		}
 
 		protected override string ToolName {
