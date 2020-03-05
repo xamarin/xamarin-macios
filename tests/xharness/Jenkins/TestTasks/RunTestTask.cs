@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xharness.Logging;
 
-namespace Xharness.Jenkins.TestTask
+namespace Xharness.Jenkins.TestTasks
 {
 	internal abstract class RunTestTask : TestTask
 	{

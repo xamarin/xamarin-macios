@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Xharness.Jenkins.TestTask
+namespace Xharness.Jenkins.TestTasks
 {
 	class RunDeviceTask : RunXITask<Device>
 	{

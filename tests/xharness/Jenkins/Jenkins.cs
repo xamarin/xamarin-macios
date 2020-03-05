@@ -7,7 +7,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Xharness;
-using Xharness.Jenkins.TestTask;
+using Xharness.Jenkins.TestTasks;
 using Xharness.Logging;
 
 namespace Xharness.Jenkins

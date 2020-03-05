@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Xharness.Jenkins.TestTask
+namespace Xharness.Jenkins.TestTasks
 {
 	abstract class BuildToolTask : TestTask
 	{

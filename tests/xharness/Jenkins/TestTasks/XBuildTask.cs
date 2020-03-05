@@ -7,7 +7,7 @@ using Xamarin;
 using Xamarin.Utils;
 using Xharness.Logging;
 
-namespace Xharness.Jenkins.TestTask
+namespace Xharness.Jenkins.TestTasks
 {
 	class XBuildTask : BuildProjectTask
 	{

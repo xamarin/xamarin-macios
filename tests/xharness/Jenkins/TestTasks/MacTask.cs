@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Xharness.Jenkins.TestTask
+namespace Xharness.Jenkins.TestTasks
 {
     abstract class MacTask : RunTestTask
 	{

@@ -8,7 +8,7 @@ using System.Xml;
 using Xamarin;
 using Xharness.Logging;
 
-namespace Xharness.Jenkins.TestTask
+namespace Xharness.Jenkins.TestTasks
 {
 	abstract class TestTask
 	{

@@ -70,24 +70,24 @@
     <PackageReference Include="Mono.Options" Version="5.3.0.1" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Jenkins\TestTask\AggregatedRunSimulatorTask.cs" />
-    <Compile Include="Jenkins\TestTask\BuildProjectTask.cs" />
-    <Compile Include="Jenkins\TestTask\BuildToolTask.cs" />
-    <Compile Include="Jenkins\TestTask\MacExecuteTask.cs" />
-    <Compile Include="Jenkins\TestTask\MacTask.cs" />
-    <Compile Include="Jenkins\TestTask\MakeTask.cs" />
-    <Compile Include="Jenkins\TestTask\NUnitExecuteTask.cs" />
+    <Compile Include="Jenkins\TestTasks\AggregatedRunSimulatorTask.cs" />
+    <Compile Include="Jenkins\TestTasks\BuildProjectTask.cs" />
+    <Compile Include="Jenkins\TestTasks\BuildToolTask.cs" />
+    <Compile Include="Jenkins\TestTasks\MacExecuteTask.cs" />
+    <Compile Include="Jenkins\TestTasks\MacTask.cs" />
+    <Compile Include="Jenkins\TestTasks\MakeTask.cs" />
+    <Compile Include="Jenkins\TestTasks\NUnitExecuteTask.cs" />
     <Compile Include="Jenkins\Resource.cs" />
     <Compile Include="Jenkins\Resources.cs" />
-    <Compile Include="Jenkins\TestTask\RunDeviceTask.cs" />
-    <Compile Include="Jenkins\TestTask\RunSimulatorTask.cs" />
-    <Compile Include="Jenkins\TestTask\RunTestTask.cs" />
-    <Compile Include="Jenkins\TestTask\RunXITask.cs" />
-    <Compile Include="Jenkins\TestTask\RunXtroTask.cs" />
+    <Compile Include="Jenkins\TestTasks\RunDeviceTask.cs" />
+    <Compile Include="Jenkins\TestTasks\RunSimulatorTask.cs" />
+    <Compile Include="Jenkins\TestTasks\RunTestTask.cs" />
+    <Compile Include="Jenkins\TestTasks\RunXITask.cs" />
+    <Compile Include="Jenkins\TestTasks\RunXtroTask.cs" />
     <Compile Include="TestExecutingResult.cs" />
     <Compile Include="TestPlatform.cs" />
-    <Compile Include="Jenkins\TestTask\TestTask.cs" />
-    <Compile Include="Jenkins\TestTask\XBuildTask.cs" />
+    <Compile Include="Jenkins\TestTasks\TestTask.cs" />
+    <Compile Include="Jenkins\TestTasks\XBuildTask.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Harness.cs" />
