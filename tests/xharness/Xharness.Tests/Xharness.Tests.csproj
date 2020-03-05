@@ -67,7 +67,7 @@
     <Compile Include="..\iOSTarget.cs">
       <Link>iOSTarget.cs</Link>
     </Compile>
-    <Compile Include="..\Jenkins.cs">
+    <Compile Include="..\Jenkins\Jenkins.cs">
       <Link>Jenkins.cs</Link>
     </Compile>
     <Compile Include="..\MacTarget.cs">
