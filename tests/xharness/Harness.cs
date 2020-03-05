@@ -9,8 +9,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using Xamarin.Utils;
-using Xharness;
-using Xharness.Jenkins;
 using Xharness.BCLTestImporter;
 using Xharness.Logging;
 
@@ -687,7 +685,7 @@ namespace Xharness
 				AutoConfigureMac (false);
 			}
 			
-			var jenkins = new Jenkins ()
+			var jenkins = new Jenkins.Jenkins ()
 			{
 				Harness = this,
 			};

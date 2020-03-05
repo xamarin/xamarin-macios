@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
 using Xamarin;
-using Xharness.Jenkins.TestTask;
+using Xharness.Jenkins.TestTasks;
 
 namespace Xharness
 {
