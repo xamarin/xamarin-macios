@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Text;
 using System.Threading;
-using Xamarin.Utils;
 using Xharness.Logging;
+using Xharness.Utilities;
 
 namespace Xharness
 {

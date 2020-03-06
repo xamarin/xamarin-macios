@@ -9,7 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using Xamarin;
-using Xamarin.Utils;
+using xharness.Utilities;
 using Xharness.Logging;
 
 namespace Xharness

@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
-
-using Xamarin;
-using Xamarin.Utils;
+using Xharness.Utilities;
 
 namespace Xharness
 {

@@ -7,7 +7,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{E1F53F80-8399-499B-8017-C414B9CD263B}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>xharness</RootNamespace>
+    <RootNamespace>Xharness</RootNamespace>
     <AssemblyName>xharness</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
   </PropertyGroup>
@@ -70,6 +70,7 @@
     <PackageReference Include="Mono.Options" Version="5.3.0.1" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CrashReportSnapshot.cs" />
     <Compile Include="Jenkins\TestTasks\AggregatedRunSimulatorTask.cs" />
     <Compile Include="Jenkins\TestTasks\BuildProjectTask.cs" />
     <Compile Include="Jenkins\TestTasks\BuildToolTask.cs" />
@@ -92,9 +93,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Harness.cs" />
     <Compile Include="ProjectFileExtensions.cs" />
-    <Compile Include="..\..\tools\common\PListExtensions.cs">
-      <Link>PListExtensions.cs</Link>
-    </Compile>
+    <Compile Include="Utilities\PlistExtensions.cs" />
+    <Compile Include="Utilities\StringExtensions.cs" />
+    <Compile Include="Utilities\StringUtils.cs" />
     <Compile Include="WatchOSTarget.cs" />
     <Compile Include="TVOSTarget.cs" />
     <Compile Include="Target.cs" />
@@ -117,9 +118,6 @@
       <Link>Cache.cs</Link>
     </Compile>
     <Compile Include="TodayExtensionTarget.cs" />
-    <Compile Include="..\..\tools\common\StringUtils.cs">
-      <Link>StringUtils.cs</Link>
-    </Compile>
     <Compile Include="iOSTarget.cs" />
     <Compile Include="MonoNativeInfo.cs" />
     <Compile Include="XmlResultParser.cs" />
@@ -145,11 +143,7 @@
     <Compile Include="Listeners\SimpleTcpListener.cs" />
     <Compile Include="Listeners\SimpleListenerFactory.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="BCLTestImporter\" />
-    <Folder Include="Logging\" />
-    <Folder Include="Listeners\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="xharness.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

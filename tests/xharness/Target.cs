@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using Xamarin;
+using xharness.Utilities;
 
 namespace Xharness
 {
