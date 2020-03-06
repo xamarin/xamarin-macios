@@ -18,12 +18,14 @@
     <DefineConstants>DEBUG;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
     <OutputPath>bin\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
@@ -62,13 +64,11 @@
     <Compile Include="Listeners\Tests\SimpleListenerFactoryTest.cs" />
     <Compile Include="Listeners\Tests\SimpleFileListenerTest.cs" />
     <Compile Include="Listeners\Tests\SimpleTcpListenerTest.cs" />
-    <Compile Include="..\Execution\ProcessManager.cs">
-      <Link>Execution\ProcessManager.cs</Link>
-    </Compile>
-    <Compile Include="..\Execution\IProcessManager.cs">
-      <Link>Execution\IProcessManager.cs</Link>
-    </Compile>
     <Compile Include="Execution\Tests\ProcessManagerTests.cs" />
+    <Compile Include="Execution\Tests\MlaunchArgumentsTest.cs" />
+    <Compile Include="Hardware\Tests\DeviceTest.cs" />
+    <Compile Include="Hardware\Tests\DevicesTest.cs" />
+    <Compile Include="Hardware\Tests\TCCDatabaseTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -78,15 +78,22 @@
     <EmbeddedResource Include="Samples\NUnitV3Sample.xml" />
     <EmbeddedResource Include="Samples\TouchUnitSample.xml" />
     <EmbeddedResource Include="Samples\xUnitSample.xml" />
+    <EmbeddedResource Include="Samples\devices.xml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../DummyTestProcess/DummyTestProcess.csproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <Project>{2318BC20-40F1-4A12-B695-10B0433CFB35}</Project>
+      <Name>DummyTestProcess</Name>
     </ProjectReference>
     <ProjectReference Include="..\xharness.csproj">
       <Project>{e1f53f80-8399-499b-8017-c414b9cd263b}</Project>
       <Name>xharness</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Hardware\" />
+    <Folder Include="Hardware\Tests\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

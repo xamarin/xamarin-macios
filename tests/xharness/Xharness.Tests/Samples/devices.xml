@@ -1,0 +1,243 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<MTouch Version="0" Revision="0">
+  <SdkRoot>/Applications/Xcode113.app/Contents/Developer</SdkRoot>
+  <Device>
+    <ActivationState>Activated</ActivationState>
+    <AmountDataAvailable>5650776064</AmountDataAvailable>
+    <BatteryCurrentCapacity>100</BatteryCurrentCapacity>
+    <BluetoothAddress>b0:19:c6:94:f2:26</BluetoothAddress>
+    <BuildVersion>17D50</BuildVersion>
+    <ChipID>32789</ChipID>
+    <CPUArchitecture>arm64</CPUArchitecture>
+    <DeveloperStatus>Development</DeveloperStatus>
+    <DeviceClass>iPhone</DeviceClass>
+    <DeviceColor>1</DeviceColor>
+    <DeviceEnclosureColor>1</DeviceEnclosureColor>
+    <DeviceIdentifier>bd3fd054136767445ff47819f65b74867a48e591</DeviceIdentifier>
+    <DevToolsAvailable>Standard</DevToolsAvailable>
+    <EnableWifiDebugging />
+    <HardwareModel>D211AP</HardwareModel>
+    <InterfaceType>Usb</InterfaceType>
+    <InternationalMobileEquipmentIdentity>359401080217877</InternationalMobileEquipmentIdentity>
+    <IsPaired>True</IsPaired>
+    <IsUsableForDebugging>True</IsUsableForDebugging>
+    <IsValid>True</IsValid>
+    <ModelNumber>MQ8L2</ModelNumber>
+    <Name>iPhone</Name>
+    <PasswordProtected>True</PasswordProtected>
+    <ProductionSOC>1</ProductionSOC>
+    <ProductType>iPhone10,5</ProductType>
+    <ProductVersion>13.3.1</ProductVersion>
+    <SerialNumber>C39V7FLJJCM2</SerialNumber>
+    <TotalDataCapacity>58561933312</TotalDataCapacity>
+    <UDID>bd3fd054136767445ff47819f65b74867a48e591</UDID>
+    <UniqueChipID>1434502442682426</UniqueChipID>
+    <WatchCompanionCapability>True</WatchCompanionCapability>
+    <WiFiAddress>b0:19:c6:94:f2:25</WiFiAddress>
+  </Device>
+  <Device>
+    <ActivationState />
+    <AmountDataAvailable />
+    <BatteryCurrentCapacity />
+    <BluetoothAddress />
+    <BuildVersion />
+    <ChipID />
+    <CPUArchitecture />
+    <DeveloperStatus />
+    <DeviceClass>iPhone</DeviceClass>
+    <DeviceColor />
+    <DeviceEnclosureColor />
+    <DeviceIdentifier>00008020-0005703902D8002E</DeviceIdentifier>
+    <DevToolsAvailable />
+    <EnableWifiDebugging />
+    <HardwareModel />
+    <InterfaceType>Usb</InterfaceType>
+    <InternationalMobileEquipmentIdentity />
+    <IsPaired>False</IsPaired>
+    <IsUsableForDebugging />
+    <IsValid>True</IsValid>
+    <ModelNumber />
+    <Name>iPhone</Name>
+    <PasswordProtected />
+    <ProductionSOC />
+    <ProductType />
+    <ProductVersion />
+    <SerialNumber />
+    <TotalDataCapacity />
+    <UDID>00008020-0005703902D8002E</UDID>
+    <UniqueChipID />
+    <WatchCompanionCapability />
+    <WiFiAddress />
+  </Device>
+  <Device>
+    <ActivationState />
+    <AmountDataAvailable />
+    <BatteryCurrentCapacity />
+    <BluetoothAddress />
+    <BuildVersion />
+    <ChipID />
+    <CPUArchitecture />
+    <DeveloperStatus />
+    <DeviceClass>iPhone</DeviceClass>
+    <DeviceColor />
+    <DeviceEnclosureColor />
+    <DeviceIdentifier>e575659cb63d148c5909e28f464466d782ec98b1</DeviceIdentifier>
+    <DevToolsAvailable />
+    <EnableWifiDebugging />
+    <HardwareModel />
+    <InterfaceType>Usb</InterfaceType>
+    <InternationalMobileEquipmentIdentity />
+    <IsPaired>False</IsPaired>
+    <IsUsableForDebugging />
+    <IsValid>True</IsValid>
+    <ModelNumber />
+    <Name>XQAiPhone5Sa</Name>
+    <PasswordProtected />
+    <ProductionSOC />
+    <ProductType />
+    <ProductVersion />
+    <SerialNumber />
+    <TotalDataCapacity />
+    <UDID>e575659cb63d148c5909e28f464466d782ec98b1</UDID>
+    <UniqueChipID />
+    <WatchCompanionCapability />
+    <WiFiAddress />
+  </Device>
+  <Device>
+    <ActivationState />
+    <AmountDataAvailable />
+    <BatteryCurrentCapacity />
+    <BluetoothAddress />
+    <BuildVersion />
+    <ChipID />
+    <CPUArchitecture />
+    <DeveloperStatus />
+    <DeviceClass>iPod</DeviceClass>
+    <DeviceColor />
+    <DeviceEnclosureColor />
+    <DeviceIdentifier>28dc7b6d60dd27cf1ef5967d51c07546de0a4187</DeviceIdentifier>
+    <DevToolsAvailable />
+    <EnableWifiDebugging />
+    <HardwareModel />
+    <InterfaceType>Usb</InterfaceType>
+    <InternationalMobileEquipmentIdentity />
+    <IsPaired>False</IsPaired>
+    <IsUsableForDebugging />
+    <IsValid>True</IsValid>
+    <ModelNumber />
+    <Name>XQAiPodTouch5f</Name>
+    <PasswordProtected />
+    <ProductionSOC />
+    <ProductType />
+    <ProductVersion />
+    <SerialNumber />
+    <TotalDataCapacity />
+    <UDID>28dc7b6d60dd27cf1ef5967d51c07546de0a4187</UDID>
+    <UniqueChipID />
+    <WatchCompanionCapability />
+    <WiFiAddress />
+  </Device>
+  <Device>
+    <ActivationState>Activated</ActivationState>
+    <AmountDataAvailable>43999293440</AmountDataAvailable>
+    <BatteryCurrentCapacity>100</BatteryCurrentCapacity>
+    <BluetoothAddress>88:64:40:5c:ee:c5</BluetoothAddress>
+    <BuildVersion>17A577</BuildVersion>
+    <ChipID>32816</ChipID>
+    <CPUArchitecture>arm64e</CPUArchitecture>
+    <DeveloperStatus>Development</DeveloperStatus>
+    <DeviceClass>iPhone</DeviceClass>
+    <DeviceColor>1</DeviceColor>
+    <DeviceEnclosureColor>1</DeviceEnclosureColor>
+    <DeviceIdentifier>00008030-000A21EE0250802E</DeviceIdentifier>
+    <DevToolsAvailable>Standard</DevToolsAvailable>
+    <EnableWifiDebugging>False</EnableWifiDebugging>
+    <HardwareModel>N104AP</HardwareModel>
+    <InterfaceType>Usb</InterfaceType>
+    <InternationalMobileEquipmentIdentity>353981100627011</InternationalMobileEquipmentIdentity>
+    <IsPaired>True</IsPaired>
+    <IsUsableForDebugging>True</IsUsableForDebugging>
+    <IsValid>True</IsValid>
+    <ModelNumber>MWL72</ModelNumber>
+    <Name>Manuel’s iPhone</Name>
+    <PasswordProtected>True</PasswordProtected>
+    <ProductionSOC>1</ProductionSOC>
+    <ProductType>iPhone12,1</ProductType>
+    <ProductVersion>13.0</ProductVersion>
+    <SerialNumber>DNPZ893NN72J</SerialNumber>
+    <TotalDataCapacity>54814302208</TotalDataCapacity>
+    <UDID>00008030-000A21EE0250802E</UDID>
+    <UniqueChipID>2852055891869742</UniqueChipID>
+    <WatchCompanionCapability>True</WatchCompanionCapability>
+    <WiFiAddress>88:64:40:67:a1:06</WiFiAddress>
+  </Device>
+  <Device>
+    <ActivationState />
+    <AmountDataAvailable />
+    <BatteryCurrentCapacity />
+    <BluetoothAddress />
+    <BuildVersion />
+    <ChipID />
+    <CPUArchitecture />
+    <DeveloperStatus />
+    <DeviceClass>Watch</DeviceClass>
+    <DeviceColor />
+    <DeviceEnclosureColor />
+    <DeviceIdentifier>00008006-0002058626A2002E</DeviceIdentifier>
+    <DevToolsAvailable />
+    <EnableWifiDebugging />
+    <HardwareModel />
+    <InterfaceType>3</InterfaceType>
+    <InternationalMobileEquipmentIdentity />
+    <IsPaired>False</IsPaired>
+    <IsUsableForDebugging />
+    <IsValid>True</IsValid>
+    <ModelNumber />
+    <Name>Manuel’s Apple Watch</Name>
+    <PasswordProtected />
+    <ProductionSOC />
+    <ProductType />
+    <ProductVersion />
+    <SerialNumber />
+    <TotalDataCapacity />
+    <UDID>00008006-0002058626A2002E</UDID>
+    <UniqueChipID />
+    <WatchCompanionCapability />
+    <WiFiAddress />
+    <CompanionIdentifier>bd3fd054136767445ff47819f65b74867a48e591</CompanionIdentifier>
+  </Device>
+  <Device>
+    <ActivationState>Activated</ActivationState>
+    <AmountDataAvailable>22636388352</AmountDataAvailable>
+    <BatteryCurrentCapacity>90</BatteryCurrentCapacity>
+    <BluetoothAddress>a4:d1:d2:74:24:89</BluetoothAddress>
+    <BuildVersion>13G36</BuildVersion>
+    <ChipID>35136</ChipID>
+    <CPUArchitecture>armv7f</CPUArchitecture>
+    <DeveloperStatus />
+    <DeviceClass>iPad</DeviceClass>
+    <DeviceColor>white</DeviceColor>
+    <DeviceEnclosureColor>unknown</DeviceEnclosureColor>
+    <DeviceIdentifier>56f4fd946620062d8f87205aebc7eb4fc9fb565d</DeviceIdentifier>
+    <DevToolsAvailable>Standard</DevToolsAvailable>
+    <EnableWifiDebugging />
+    <HardwareModel>K93AP</HardwareModel>
+    <InterfaceType>Usb</InterfaceType>
+    <InternationalMobileEquipmentIdentity />
+    <IsPaired>True</IsPaired>
+    <IsUsableForDebugging>True</IsUsableForDebugging>
+    <IsValid>True</IsValid>
+    <ModelNumber>MC980</ModelNumber>
+    <Name>Manuel de la Pena Saenz’s iPad</Name>
+    <PasswordProtected>False</PasswordProtected>
+    <ProductionSOC>1</ProductionSOC>
+    <ProductType>iPad2,1</ProductType>
+    <ProductVersion>9.3.5</ProductVersion>
+    <SerialNumber>DN6FV2LSDKPJ</SerialNumber>
+    <TotalDataCapacity>29631791104</TotalDataCapacity>
+    <UDID>56f4fd946620062d8f87205aebc7eb4fc9fb565d</UDID>
+    <UniqueChipID>4130031754541</UniqueChipID>
+    <WatchCompanionCapability>False</WatchCompanionCapability>
+    <WiFiAddress>a4:d1:d2:74:24:88</WiFiAddress>
+  </Device>
+</MTouch>

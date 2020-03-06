@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using xharness.Hardware;
 using Xharness.Logging;
 
 namespace Xharness.Jenkins.TestTasks

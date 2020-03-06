@@ -21,6 +21,7 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>full</DebugType>
@@ -29,6 +30,7 @@
     <WarningLevel>4</WarningLevel>
     <Externalconsole>true</Externalconsole>
     <OutputPath>bin\Release</OutputPath>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
     <StartAction>Project</StartAction>
@@ -145,12 +147,26 @@
     <Compile Include="Listeners\SimpleListenerFactory.cs" />
     <Compile Include="Execution\IProcessManager.cs" />
     <Compile Include="Execution\ProcessManager.cs" />
+    <Compile Include="Hardware\Simulators.cs" />
+    <Compile Include="Hardware\IAsyncEnumerable.cs" />
+    <Compile Include="Hardware\SimDevice.cs" />
+    <Compile Include="Hardware\IDevice.cs" />
+    <Compile Include="Hardware\Device.cs" />
+    <Compile Include="Hardware\Devices.cs" />
+    <Compile Include="Collections\BlockingEnumerableCollection.cs" />
+    <Compile Include="Collections\ILoadAsync.cs" />
+    <Compile Include="Hardware\IHardwareDevice.cs" />
+    <Compile Include="Hardware\ISimulatorDevice.cs" />
+    <Compile Include="Execution\MlaunchArguments.cs" />
+    <Compile Include="Hardware\TCCDatabase.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="BCLTestImporter\" />
     <Folder Include="Logging\" />
     <Folder Include="Listeners\" />
     <Folder Include="Execution\" />
+    <Folder Include="Hardware\" />
+    <Folder Include="Collections\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="xharness.js">

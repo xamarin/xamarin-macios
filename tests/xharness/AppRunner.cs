@@ -9,7 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using Xamarin;
-using Xamarin.Utils;
+using xharness.Hardware;
 using Xharness.Execution;
 using Xharness.Jenkins.TestTasks;
 using Xharness.Listeners;
@@ -86,9 +86,9 @@ namespace Xharness
 		public double TimeoutMultiplier { get; set; } = 1;
 
 		// For watch apps we end up with 2 simulators, the watch simulator (the main one), and the iphone simulator (the companion one).
-		SimDevice[] simulators;
-		SimDevice simulator { get { return simulators [0]; } }
-		SimDevice companion_simulator { get { return simulators.Length == 2 ? simulators [1] : null; } }
+		ISimulatorDevice [] simulators;
+		ISimulatorDevice simulator { get { return simulators [0]; } }
+		ISimulatorDevice companion_simulator { get { return simulators.Length == 2 ? simulators [1] : null; } }
 
 		AppRunnerTarget target;
 		public AppRunnerTarget Target {
@@ -115,7 +115,7 @@ namespace Xharness
 			set { main_log = value; }
 		}
 
-		public SimDevice [] Simulators {
+		public ISimulatorDevice [] Simulators {
 			get { return simulators; }
 			set { simulators = value; }
 		}
@@ -177,7 +177,7 @@ namespace Xharness
 			}
 
 			var selected = devs.ConnectedDevices.Where ((v) => deviceClasses.Contains (v.DeviceClass) && v.IsUsableForDebugging != false);
-			Device selected_data;
+			IHardwareDevice selected_data;
 			if (selected.Count () == 0) {
 				throw new Exception ($"Could not find any applicable devices with device class(es): {string.Join (", ", deviceClasses)}");
 			} else if (selected.Count () > 1) {
