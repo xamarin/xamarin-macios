@@ -95,6 +95,10 @@
     <Compile Include="..\..\tools\mtouch\Errors.Designer.cs">
       <Link>Errors.Designer.cs</Link>
     </Compile>
+    <Compile Include="..\..\tools\common\error.cs">
+      <Link>error.cs</Link>
+    </Compile>
+    <Compile Include="ErrorTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -40,7 +40,7 @@ namespace Xharness.Jenkins.TestTasks
 					LogEvent (BuildLog, "Building {0} ({1})", TestName, Mode);
 					if (!Harness.DryRun) {
 						var timeout = TimeSpan.FromMinutes (60);
-						var result = await xbuild.RunAsync (BuildLog, true, timeout);
+						var result = await ProcessManager.RunAsync (xbuild, BuildLog, timeout);
 						if (result.TimedOut) {
 							ExecutionResult = TestExecutingResult.TimedOut;
 							BuildLog.WriteLine ("Build timed out after {0} seconds.", timeout.TotalSeconds);
@@ -75,7 +75,7 @@ namespace Xharness.Jenkins.TestTasks
 				SetEnvironmentVariables (xbuild);
 				LogEvent (log, "Cleaning {0} ({1}) - {2}", TestName, Mode, project_file);
 				var timeout = TimeSpan.FromMinutes (1);
-				await xbuild.RunAsync (log, true, timeout);
+				await ProcessManager.RunAsync (xbuild, log, timeout);
 				log.WriteLine ("Clean timed out after {0} seconds.", timeout.TotalSeconds);
 				Jenkins.MainLog.WriteLine ("Cleaned {0} ({1})", TestName, Mode);
 			}

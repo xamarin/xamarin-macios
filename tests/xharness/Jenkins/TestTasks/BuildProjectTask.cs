@@ -50,7 +50,7 @@ namespace Xharness.Jenkins.TestTasks
 					LogEvent (log, "Restoring nugets for {0} ({1}) on path {2}", TestName, Mode, projectPath);
 
 					var timeout = TimeSpan.FromMinutes (15);
-					var result = await nuget.RunAsync (log, true, timeout);
+					var result = await ProcessManager.RunAsync (nuget, log, timeout);
 					if (result.TimedOut) {
 						log.WriteLine ("Nuget restore timed out after {0} seconds.", timeout.TotalSeconds);
 						return TestExecutingResult.TimedOut;

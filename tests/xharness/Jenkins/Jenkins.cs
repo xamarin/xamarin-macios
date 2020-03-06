@@ -7,6 +7,7 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Text;
 using Xharness.Logging;
+using Xharness.Execution;
 using Xharness.Jenkins.TestTasks;
 
 namespace Xharness.Jenkins
@@ -1212,7 +1213,7 @@ namespace Xharness.Jenkins
 				using (var process = new Process ()) {
 					process.StartInfo.FileName = Harness.PeriodicCommand;
 					process.StartInfo.Arguments = Harness.PeriodicCommandArguments;
-					var rv = await process.RunAsync (periodic_loc, timeout: Harness.PeriodicCommandInterval);
+					var rv = await Harness.ProcessManager.RunAsync (process, periodic_loc, timeout: Harness.PeriodicCommandInterval);
 					if (!rv.Succeeded)
 						periodic_loc.WriteLine ($"Periodic command failed with exit code {rv.ExitCode} (Timed out: {rv.TimedOut})");
 				}
@@ -1278,7 +1279,7 @@ namespace Xharness.Jenkins
 
 		void BuildTestLibraries ()
 		{
-			ProcessHelper.ExecuteCommandAsync ("make", new [] { "all", $"-j{Environment.ProcessorCount}", "-C", Path.Combine (Harness.RootDirectory, "test-libraries") }, MainLog, TimeSpan.FromMinutes (10)).Wait ();
+			Harness.ProcessManager.ExecuteCommandAsync ("make", new [] { "all", $"-j{Environment.ProcessorCount}", "-C", Path.Combine (Harness.RootDirectory, "test-libraries") }, MainLog, TimeSpan.FromMinutes (10)).Wait ();
 		}
 
 		Task RunTestServer ()
