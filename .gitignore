@@ -3,6 +3,7 @@ Make.config.local
 configure.inc
 _ios-build
 _mac-build
+_build
 *.userprefs
 *.user
 *.suo
@@ -29,3 +30,5 @@ tests/bcl-test/Mac\ OS\ X\ BCL\ \tests*.csproj
 tests/bcl-test/mscorlib*.csproj
 tests/bcl-test/SystemCoreXunit*.csproj
 tests/bcl-test/SystemXunit.csproj
+global.json
+

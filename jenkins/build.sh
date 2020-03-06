@@ -120,6 +120,9 @@ if test -z "$ENABLE_DEVICE_BUILD"; then
 	CONFIGURE_FLAGS="$CONFIGURE_FLAGS --disable-ios-device"
 fi
 
+# Enable dotnet bits on the bots
+CONFIGURE_FLAGS="$CONFIGURE_FLAGS --enable-dotnet"
+
 make reset
 make git-clean-all
 make print-versions

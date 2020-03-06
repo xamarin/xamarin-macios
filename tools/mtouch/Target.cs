@@ -449,7 +449,6 @@ namespace Xamarin.Bundler
 			foreach (AssemblyNameReference reference in main.AssemblyReferences) {
 				// Verify that none of the references references an incorrect platform assembly.
 				switch (reference.Name) {
-				case "monotouch":
 				case "Xamarin.iOS":
 				case "Xamarin.TVOS":
 				case "Xamarin.WatchOS":

@@ -59,13 +59,8 @@ namespace LinkAll.Attributes {
 #else
 		const bool Debug = false;
 #endif
-#if XAMCORE_2_0
 		const string NamespacePrefix = "";
 		string AssemblyName = typeof (NSObject).Assembly.ToString ();
-#else
-		const string NamespacePrefix = "MonoTouch.";
-		const string AssemblyName = "monotouch";
-#endif
 
 		[Test]
 		public void PreserveTypeWithMembers ()

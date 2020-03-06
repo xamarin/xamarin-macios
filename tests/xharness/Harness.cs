@@ -687,7 +687,7 @@ namespace Xharness
 				AutoConfigureMac (false);
 			}
 			
-			var jenkins = new Jenkins ()
+			var jenkins = new Jenkins.Jenkins ()
 			{
 				Harness = this,
 			};
