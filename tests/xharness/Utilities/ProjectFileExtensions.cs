@@ -204,11 +204,6 @@ namespace Xharness.Utilities {
 			SetTopLevelPropertyGroupValue (csproj, "TargetFrameworkIdentifier", value);
 		}
 
-		public static void SetTargetFrameworkVersion (this XmlDocument csproj, string value)
-		{
-			SetTopLevelPropertyGroupValue (csproj, "TargetFrameworkVersion", value);
-		}
-
 		public static void SetTopLevelPropertyGroupValue (this XmlDocument csproj, string key, string value)
 		{
 			var firstPropertyGroups = csproj.SelectNodes ("//*[local-name() = 'PropertyGroup']")[0];
@@ -249,16 +244,6 @@ namespace Xharness.Utilities {
 			SetAssemblyReference (csproj, "Xamarin.iOS", value);
 		}
 
-		public static void AddReference (this XmlDocument csproj, string projectName)
-		{
-			var reference = csproj.SelectSingleNode ("/*/*/*[local-name() = 'Reference' and @Include = 'System']");
-			var node = csproj.CreateElement ("Reference", MSBuild_Namespace);
-			var include_attribute = csproj.CreateAttribute ("Include");
-			include_attribute.Value = projectName;
-			node.Attributes.Append (include_attribute);
-			reference.ParentNode.AppendChild (node);
-		}
-
 		public static void SetAssemblyReference (this XmlDocument csproj, string current, string value)
 		{
 			var project = csproj.ChildNodes [1];
@@ -272,17 +257,6 @@ namespace Xharness.Utilities {
 			var reference = csproj.SelectSingleNode ("/*/*/*[local-name() = 'Reference' and @Include = '" + projectName + "']");
 			if (reference != null)
 				reference.ParentNode.RemoveChild (reference);
-		}
-
-		public static void SetHintPath (this XmlDocument csproj, string current, string value)
-		{
-			var project = csproj.ChildNodes [1];
-			var reference = csproj.SelectSingleNode ("/*/*/*[local-name() = 'Reference' and @Include = '" + current + "']");
-			if (reference != null) {
-				var hintPath = csproj.CreateElement ("HintPath", MSBuild_Namespace);
-				hintPath.InnerText = value;
-				reference.AppendChild (hintPath);
-			}
 		}
 
 		public static void AddCompileInclude (this XmlDocument csproj, string link, string include, bool prepend = false)
@@ -374,17 +348,6 @@ namespace Xharness.Utilities {
 				pg.AppendChild (mea);
 			}
 		}
-		public static string GetExtraMtouchArgs (this XmlDocument csproj, string platform, string configuration)
-		{
-			var mtouchExtraArgs = csproj.SelectNodes ("//*[local-name() = 'MtouchExtraArgs']");
-			foreach (XmlNode mea in mtouchExtraArgs) {
-				if (!IsNodeApplicable (mea, platform, configuration))
-					continue;
-				return mea.InnerText;
-			}
-
-			return string.Empty;
-		}
 
 		public static string GetMtouchLink (this XmlDocument csproj, string platform, string configuration)
 		{
@@ -439,7 +402,7 @@ namespace Xharness.Utilities {
 			}
 		}
 
-		public static string GetNode (this XmlDocument csproj, string name, string platform, string configuration)
+		static string GetNode (this XmlDocument csproj, string name, string platform, string configuration)
 		{
 			foreach (var pg in GetPropertyGroups (csproj, platform, configuration)) {
 				foreach (XmlNode node in pg.ChildNodes)
@@ -512,16 +475,6 @@ namespace Xharness.Utilities {
 					foreach (var tl in test_libraries)
 						outputsAttribute.Value = outputsAttribute.Value.Replace ($"test-libraries\\.libs\\ios-fat\\${tl}", $"test-libraries\\.libs\\{platform}-fat\\${tl}");
 				}
-			}
-		}
-
-		public static void SetArchitecture (this XmlDocument csproj, string platform, string configuration, string architecture)
-		{
-			var nodes = csproj.SelectNodes ("/*/*/*[local-name() = 'MtouchArch']");
-			foreach (XmlNode n in nodes) {
-				if (!IsNodeApplicable (n, platform, configuration))
-					continue;
-				n.InnerText = architecture;
 			}
 		}
 
