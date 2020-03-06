@@ -53,6 +53,7 @@
     <Compile Include="BCLTestImporter\Tests\BCLTestProjectGeneratorTest.cs" />
     <Compile Include="BCLTestImporter\Tests\TestAssemblyDefinitionTest.cs" />
     <Compile Include="BCLTestImporter\Tests\TestProjectDefinitionTest.cs" />
+    <Compile Include="Cache.cs" />
     <Compile Include="Tests\XmlResultParserTests.cs" />
     <Compile Include="Logging\Tests\LogsTest.cs" />
     <Compile Include="Logging\Tests\LogFileTest.cs" />
