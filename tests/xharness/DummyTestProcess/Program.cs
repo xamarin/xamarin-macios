@@ -28,7 +28,7 @@ namespace DummyTestProcess {
 
 		public static void Main (string [] args)
 		{
-			var timeout = new TimeSpan (0, 1, 0);
+			var timeout = TimeSpan.FromMinutes(1);
 			var childrenCount = 0;
 			var exitCode = 0;
 			var showHelp = false;
@@ -44,11 +44,11 @@ namespace DummyTestProcess {
 				{ "timeout=", "Timeout for a test run (in seconds). Default is 1 minute.", (v) =>
 					{
 						if (int.TryParse (v, out var newTimeout)) {
-							timeout = new TimeSpan (0, 0, newTimeout);
+							timeout = TimeSpan.FromSeconds(newTimeout);
 						}
 					}
 				},
-				{ "children=", "The number of childres that will be created by the application", (v) => int.TryParse (v, out childrenCount) },
+				{ "children=", "The number of children processes that will be created by the application", (v) => int.TryParse (v, out childrenCount) },
 			};
 
 			_ = os.Parse (args); // dont care about any extra args, ignore them
