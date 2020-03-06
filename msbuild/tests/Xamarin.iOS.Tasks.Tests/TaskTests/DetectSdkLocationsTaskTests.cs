@@ -13,7 +13,7 @@ namespace Xamarin.iOS.Tasks
 		{
 			var task = CreateTask<DetectSdkLocations> ();
 			task.XamarinSdkRoot = "XYZ";
-			task.TargetFrameworkIdentifier = "Xamarin.iOS";
+			task.TargetFrameworkMoniker = "Xamarin.iOS,v1.0";
 			task.Execute ();
 
 			Assert.AreEqual ("XYZ", task.XamarinSdkRoot, "#1");
@@ -24,7 +24,7 @@ namespace Xamarin.iOS.Tasks
 		{
 			var task = CreateTask<DetectSdkLocations> ();
 			task.SdkVersion = "4.0";
-			task.TargetFrameworkIdentifier = "Xamarin.iOS";
+			task.TargetFrameworkMoniker = "Xamarin.iOS,v1.0";
 			Assert.IsTrue (task.Execute (), "4.0 Execute");
 
 			Assert.AreNotEqual ("4.0", task.SdkVersion, "#1");

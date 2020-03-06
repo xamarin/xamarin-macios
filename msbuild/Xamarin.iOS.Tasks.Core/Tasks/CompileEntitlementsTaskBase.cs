@@ -5,16 +5,18 @@ using System.Collections.Generic;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
-using Xamarin.MacDev;
+using Xamarin.Utils;
 
 namespace Xamarin.iOS.Tasks
 {
 	public abstract class CompileEntitlementsTaskBase : Xamarin.MacDev.Tasks.CompileEntitlementsTaskBase
 	{
 		public bool SdkIsSimulator { get; set; }
+		
+		public TargetFramework TargetFramework { get { return TargetFramework.Parse (TargetFrameworkMoniker); } }
 
 		[Required]
-		public string TargetFrameworkIdentifier { get; set; }
+		public string TargetFrameworkMoniker { get; set; }
 
 		static readonly HashSet<string> allowedProvisioningKeys = new HashSet<string> {
 			"application-identifier",
@@ -40,7 +42,7 @@ namespace Xamarin.iOS.Tasks
 
 		protected override string DefaultEntitlementsPath {
 			get {
-				return Path.Combine (IPhoneSdks.GetSdk (TargetFrameworkIdentifier).GetSdkPath (SdkVersion, false), "Entitlements.plist");
+				return Path.Combine (IPhoneSdks.GetSdk (TargetFrameworkMoniker).GetSdkPath (SdkVersion, false), "Entitlements.plist");
 			}
 		}
 

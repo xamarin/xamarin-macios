@@ -26,11 +26,13 @@ namespace Xamarin.MacDev.Tasks
 		public string FilePath { get; set; }
 
 		protected ApplePlatform FileType {
-			get { return PlatformFrameworkHelper.GetFramework (TargetFrameworkIdentifier); }
+			get { return PlatformFrameworkHelper.GetFramework (TargetFrameworkMoniker); }
 		}
 
+		public TargetFramework TargetFramework { get { return TargetFramework.Parse (TargetFrameworkMoniker); } }
+
 		[Required]
-		public string TargetFrameworkIdentifier { get; set; }
+		public string TargetFrameworkMoniker { get; set; }
 
 		protected override string ToolName {
 			get { return "altool"; }

@@ -25,8 +25,10 @@ namespace Xamarin.iOS.Tasks
 		[Required]
 		public string OutputPath { get; set; }
 
+		public TargetFramework TargetFramework { get { return TargetFramework.Parse (TargetFrameworkMoniker); } }
+
 		[Required]
-		public string TargetFrameworkIdentifier { get; set; }
+		public string TargetFrameworkMoniker { get; set; }
 
 		[Required]
 		public string TargetiOSDevice { get; set; }
@@ -59,7 +61,7 @@ namespace Xamarin.iOS.Tasks
 			PDictionary plist, device;
 			PString value, os;
 
-			switch (PlatformFrameworkHelper.GetFramework (TargetFrameworkIdentifier)) {
+			switch (PlatformFrameworkHelper.GetFramework (TargetFrameworkMoniker)) {
 			case ApplePlatform.WatchOS:
 				targetOperatingSystem = "watchOS";
 				break;

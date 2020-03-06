@@ -15,6 +15,7 @@ using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev.Tasks;
 using Xamarin.MacDev;
+using Xamarin.Utils;
 
 namespace Xamarin.Mac.Tasks
 {
@@ -42,10 +43,13 @@ namespace Xamarin.Mac.Tasks
 		public string HttpClientHandler { get; set; }
 
 		[Required]
-		public string TargetFrameworkIdentifier { get; set; }
+		public string TargetFrameworkMoniker { get; set; }
 
-		[Required]
-		public string TargetFrameworkVersion { get; set; }
+		public string TargetFrameworkIdentifier { get { return TargetFramework.Identifier; } }
+
+		public TargetFramework TargetFramework { get { return TargetFramework.Parse (TargetFrameworkMoniker); } }
+
+		public string TargetFrameworkVersion { get { return TargetFramework.Version.ToString (); } }
 
 		[Required]
 		public string SdkRoot {	get; set; }

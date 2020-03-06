@@ -31,27 +31,14 @@ namespace Xamarin.MacDev.Tasks
 {
 	public static class PlatformFrameworkHelper
 	{
-		public static ApplePlatform GetFramework (string targetFrameworkIdentifier)
+		public static ApplePlatform GetFramework (string targetFrameworkMoniker)
 		{
-			switch (targetFrameworkIdentifier) {
-			case "Xamarin.Mac":
-			case "MonoMac":
-				return ApplePlatform.MacOSX;
-			case "Xamarin.iOS":
-			case "MonoTouch":
-				return ApplePlatform.iOS;
-			case "Xamarin.WatchOS":
-				return ApplePlatform.WatchOS;
-			case "Xamarin.TVOS":
-				return ApplePlatform.TVOS;
-			default:
-				throw new InvalidOperationException ("Unknown TargetFrameworkIdentifier: " + targetFrameworkIdentifier);
-			}
+			return TargetFramework.Parse (targetFrameworkMoniker).Platform;
 		}
 
-		public static string GetOperatingSystem (string targetFrameworkIdentifier)
+		public static string GetOperatingSystem (string targetFrameworkMoniker)
 		{
-			var framework = PlatformFrameworkHelper.GetFramework (targetFrameworkIdentifier);
+			var framework = PlatformFrameworkHelper.GetFramework (targetFrameworkMoniker);
 			switch (framework) {
 			case ApplePlatform.WatchOS:
 				return "watchos";
@@ -62,7 +49,7 @@ namespace Xamarin.MacDev.Tasks
 			case ApplePlatform.iOS:
 				return "ios";
 			default:
-				throw new InvalidOperationException (string.Format ("Unknown target framework {0} for target framework identifier {2}.", framework, targetFrameworkIdentifier));
+				throw new InvalidOperationException (string.Format ("Unknown target framework {0} for target framework moniker {2}.", framework, targetFrameworkMoniker));
 			}
 		}
 	}
