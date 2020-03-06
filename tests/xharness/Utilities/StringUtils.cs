@@ -7,6 +7,10 @@ namespace Xharness.Utilities
 {
 	class StringUtils
 	{
+		static readonly char shellQuoteChar;
+		static readonly char [] mustQuoteCharacters = new char [] { ' ', '\'', ',', '$', '\\' };
+		static readonly char [] mustQuoteCharactersProcess = { ' ', '\\', '"', '\'' };
+
 		static StringUtils ()
 		{
 			PlatformID pid = Environment.OSVersion.Platform;
@@ -15,10 +19,6 @@ namespace Xharness.Utilities
 			else
 				shellQuoteChar = '\''; // !Windows
 		}
-
-		static char shellQuoteChar;
-		static char [] mustQuoteCharacters = new char [] { ' ', '\'', ',', '$', '\\' };
-		static char [] mustQuoteCharactersProcess = { ' ', '\\', '"', '\'' };
 
 		public static string FormatArguments (params string [] arguments)
 		{

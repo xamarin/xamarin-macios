@@ -63,6 +63,7 @@
     <Compile Include="Listeners\Tests\SimpleFileListenerTest.cs" />
     <Compile Include="Listeners\Tests\SimpleTcpListenerTest.cs" />
     <Compile Include="Execution\Tests\ProcessManagerTests.cs" />
+    <Compile Include="Utilities\Tests\StringUtilsTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
