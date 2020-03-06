@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Xharness.Execution;
 
 namespace Xharness.Jenkins.TestTasks
 {
@@ -7,6 +8,7 @@ namespace Xharness.Jenkins.TestTasks
 	{
 		public bool SpecifyPlatform = true;
 		public bool SpecifyConfiguration = true;
+		public IProcessManager ProcessManager { get; set; } = new ProcessManager ();
 
 		public override string Mode {
 			get { return Platform.ToString (); }

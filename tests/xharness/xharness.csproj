@@ -108,7 +108,6 @@
     <Compile Include="SolutionGenerator.cs" />
     <Compile Include="MacTarget.cs" />
     <Compile Include="Jenkins\Jenkins.cs" />
-    <Compile Include="Process_Extensions.cs" />
     <Compile Include="Simulators.cs" />
     <Compile Include="TestProject.cs" />
     <Compile Include="GitHub.cs" />
@@ -144,11 +143,14 @@
     <Compile Include="Listeners\SimpleListener.cs" />
     <Compile Include="Listeners\SimpleTcpListener.cs" />
     <Compile Include="Listeners\SimpleListenerFactory.cs" />
+    <Compile Include="Execution\IProcessManager.cs" />
+    <Compile Include="Execution\ProcessManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="BCLTestImporter\" />
     <Folder Include="Logging\" />
     <Folder Include="Listeners\" />
+    <Folder Include="Execution\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="xharness.js">
