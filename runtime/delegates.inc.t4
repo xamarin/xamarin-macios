@@ -40,10 +40,16 @@ create_linked_away_exception (const char *func)
 <#= d.CReturnType #>
 <#= d.EntryPoint #> (<#= d.CArgumentSignature #>)
 {
-	<#if (d.ExceptionHandling && d.OnlyDynamicUsage) {#>if (delegates.<#= d.EntryPoint.Substring ("xamarin_".Length) #> == NULL) {
+<#if (d.ExceptionHandling && d.OnlyDynamicUsage) {#>	if (delegates.<#= d.EntryPoint.Substring ("xamarin_".Length) #> == NULL) {
 		*exception_gchandle = create_linked_away_exception ("<#= d.EntryPoint.Substring ("xamarin_".Length) #>");
 		return<# if (d.CReturnType != "void") { #> (<#= d.CReturnType #>) 0<# } #>;
 	}
+<#} else {#>#if DEBUG
+	if (delegates.<#= d.EntryPoint.Substring ("xamarin_".Length) #> == NULL) {
+		NSLog (@PRODUCT ": The managed function <#= d.EntryPoint.Substring ("xamarin_".Length) #> could not be loaded.");
+		xamarin_assertion_message ("The managed function <#= d.EntryPoint.Substring ("xamarin_".Length) #> could not be loaded.");
+	}
+#endif
 <#}#>
 	<# if (d.CReturnType != "void") { #>return <# } #>delegates.<#= d.EntryPoint.Substring ("xamarin_".Length) #> (<#= d.CArgumentNames #>);
 }
