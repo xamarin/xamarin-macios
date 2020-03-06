@@ -5,6 +5,8 @@ using Microsoft.Build.Utilities;
 using Microsoft.Build.Framework;
 using System.Text;
 
+using Xamarin.Utils;
+
 namespace Xamarin.MacDev.Tasks
 {
 	public abstract class ALToolTaskBase : ToolTask
@@ -23,12 +25,14 @@ namespace Xamarin.MacDev.Tasks
 		[Required]
 		public string FilePath { get; set; }
 
-		protected PlatformFramework FileType {
-			get { return PlatformFrameworkHelper.GetFramework (TargetFrameworkIdentifier); }
+		protected ApplePlatform FileType {
+			get { return PlatformFrameworkHelper.GetFramework (TargetFrameworkMoniker); }
 		}
 
+		public TargetFramework TargetFramework { get { return TargetFramework.Parse (TargetFrameworkMoniker); } }
+
 		[Required]
-		public string TargetFrameworkIdentifier { get; set; }
+		public string TargetFrameworkMoniker { get; set; }
 
 		protected override string ToolName {
 			get { return "altool"; }
@@ -94,9 +98,9 @@ namespace Xamarin.MacDev.Tasks
 		string GetFileTypeValue ()
 		{
 			switch (FileType) {
-				case PlatformFramework.MacOS: return "osx";
-				case PlatformFramework.TVOS: return "appletvos";
-				case PlatformFramework.iOS: return "ios";
+				case ApplePlatform.MacOSX: return "osx";
+				case ApplePlatform.TVOS: return "appletvos";
+				case ApplePlatform.iOS: return "ios";
 				default: throw new NotSupportedException ($"Provided file type '{FileType}' is not supported by altool");
 			}
 		}

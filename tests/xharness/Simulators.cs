@@ -10,11 +10,13 @@ using System.Threading.Tasks;
 using System.Xml;
 using Xamarin;
 using Xamarin.Utils;
+using Xharness.Execution;
+using Xharness.Logging;
 
-namespace xharness
+namespace Xharness
 {
 	interface ILoadAsync {
-		Task LoadAsync (Log log, bool include_locked, bool force);
+		Task LoadAsync (ILog log, bool include_locked, bool force);
 		Harness Harness { get; set; }
 	}
 
@@ -35,7 +37,7 @@ namespace xharness
 		public IEnumerable<SimDevice> AvailableDevices => available_devices;
 		public IEnumerable<SimDevicePair> AvailableDevicePairs => available_device_pairs;
 
-		public async Task LoadAsync (Log log, bool include_locked = false, bool force = false)
+		public async Task LoadAsync (ILog log, bool include_locked = false, bool force = false)
 		{
 			await semaphore.WaitAsync ();
 			if (loaded) {
@@ -58,7 +60,7 @@ namespace xharness
 						process.StartInfo.FileName = Harness.MlaunchPath;
 						process.StartInfo.Arguments = string.Format ("--sdkroot {0} --listsim {1}", Harness.XcodeRoot, tmpfile);
 						log.WriteLine ("Launching {0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments);
-						var rv = await process.RunAsync (log, false, timeout: TimeSpan.FromSeconds (30));
+						var rv = await Harness.ProcessManager.RunAsync (process, log, timeout: TimeSpan.FromSeconds (30));
 						if (!rv.Succeeded)
 							throw new Exception ("Failed to list simulators.");
 						log.WriteLine ("Result:");
@@ -133,7 +135,7 @@ namespace xharness
 		}
 
 		// Will return all devices that match the runtime + devicetype (even if a new device was created, any other devices will also be returned)
-		async Task<IEnumerable<SimDevice>> FindOrCreateDevicesAsync (Log log, string runtime, string devicetype, bool force = false)
+		async Task<IEnumerable<SimDevice>> FindOrCreateDevicesAsync (ILog log, string runtime, string devicetype, bool force = false)
 		{
 			if (runtime == null || devicetype == null)
 				return null;
@@ -163,7 +165,7 @@ namespace xharness
 			return devices;
 		}
 
-		async Task<bool> CreateDevicePair (Log log, SimDevice device, SimDevice companion_device, string runtime, string devicetype, bool create_device)
+		async Task<bool> CreateDevicePair (ILog log, SimDevice device, SimDevice companion_device, string runtime, string devicetype, bool create_device)
 		{
 			if (create_device) {
 				// watch device is already paired to some other phone. Create a new watch device
@@ -202,7 +204,7 @@ namespace xharness
 			return true;
 		}
 
-		async Task<SimDevicePair> FindOrCreateDevicePairAsync (Log log, IEnumerable<SimDevice> devices, IEnumerable<SimDevice> companion_devices)
+		async Task<SimDevicePair> FindOrCreateDevicePairAsync (ILog log, IEnumerable<SimDevice> devices, IEnumerable<SimDevice> companion_devices)
 		{
 			// Check if we already have a device pair with the specified devices
 			var pairs = AvailableDevicePairs.Where ((SimDevicePair pair) => {
@@ -237,7 +239,7 @@ namespace xharness
 			return pairs.FirstOrDefault ();
 		}
 
-		public async Task<SimDevice []> FindAsync (AppRunnerTarget target, Log log, bool create_if_needed = true, bool min_version = false)
+		public async Task<SimDevice []> FindAsync (AppRunnerTarget target, ILog log, bool create_if_needed = true, bool min_version = false)
 		{
 			SimDevice [] simulators = null;
 
@@ -253,21 +255,21 @@ namespace xharness
 				break;
 			case AppRunnerTarget.Simulator_iOS64:
 				simulator_devicetype = "com.apple.CoreSimulator.SimDeviceType." + (min_version ? "iPhone-6" : "iPhone-X");
-				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + (min_version ? Xamarin.SdkVersions.MiniOSSimulator : Xamarin.SdkVersions.iOS).Replace ('.', '-');
+				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + (min_version ? Xamarin.SdkVersions.MiniOSSimulator : Xamarin.SdkVersions.MaxiOSSimulator).Replace ('.', '-');
 				break;
 			case AppRunnerTarget.Simulator_iOS:
 				simulator_devicetype = "com.apple.CoreSimulator.SimDeviceType.iPhone-5";
-				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + (min_version ? Xamarin.SdkVersions.MiniOSSimulator : Xamarin.SdkVersions.iOS).Replace ('.', '-');
+				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + (min_version ? Xamarin.SdkVersions.MiniOSSimulator : Xamarin.SdkVersions.MaxiOSSimulator).Replace ('.', '-');
 				break;
 			case AppRunnerTarget.Simulator_tvOS:
 				simulator_devicetype = "com.apple.CoreSimulator.SimDeviceType.Apple-TV-1080p";
-				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.tvOS-" + (min_version ? Xamarin.SdkVersions.MinTVOSSimulator : Xamarin.SdkVersions.TVOS).Replace ('.', '-');
+				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.tvOS-" + (min_version ? Xamarin.SdkVersions.MinTVOSSimulator : Xamarin.SdkVersions.MaxTVOSSimulator).Replace ('.', '-');
 				break;
 			case AppRunnerTarget.Simulator_watchOS:
 				simulator_devicetype = "com.apple.CoreSimulator.SimDeviceType." + (min_version ? "Apple-Watch-38mm" : "Apple-Watch-Series-3-38mm");
-				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.watchOS-" + (min_version ? Xamarin.SdkVersions.MinWatchOSSimulator : Xamarin.SdkVersions.WatchOS).Replace ('.', '-');
+				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.watchOS-" + (min_version ? Xamarin.SdkVersions.MinWatchOSSimulator : Xamarin.SdkVersions.MaxWatchOSSimulator).Replace ('.', '-');
 				companion_devicetype = "com.apple.CoreSimulator.SimDeviceType." + (min_version ? "iPhone-6" : "iPhone-X");
-				companion_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + (min_version ? Xamarin.SdkVersions.MinWatchOSCompanionSimulator : Xamarin.SdkVersions.iOS).Replace ('.', '-');
+				companion_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + (min_version ? Xamarin.SdkVersions.MinWatchOSCompanionSimulator : Xamarin.SdkVersions.MaxWatchOSCompanionSimulator).Replace ('.', '-');
 				break;
 			default:
 				throw new Exception (string.Format ("Unknown simulator target: {0}", target));
@@ -313,13 +315,13 @@ namespace xharness
 			return simulators;
 		}
 
-		public SimDevice FindCompanionDevice (Log log, SimDevice device)
+		public SimDevice FindCompanionDevice (ILog log, SimDevice device)
 		{
 			var pair = available_device_pairs.Where ((v) => v.Gizmo == device.UDID).Single ();
 			return available_devices.Single ((v) => v.UDID == pair.Companion);
 		}
 
-		public IEnumerable<SimDevice> SelectDevices (AppRunnerTarget target, Log log, bool min_version)
+		public IEnumerable<SimDevice> SelectDevices (AppRunnerTarget target, ILog log, bool min_version)
 		{
 			return new SimulatorEnumerable
 			{
@@ -348,7 +350,7 @@ namespace xharness
 			public Simulators Simulators;
 			public AppRunnerTarget Target;
 			public bool MinVersion;
-			public Log Log;
+			public ILog Log;
 			object lock_obj = new object ();
 			Task<SimDevice []> findTask;
 
@@ -449,6 +451,7 @@ namespace xharness
 	{
 		public string UDID { get; set; }
 		public string Name { get; set; }
+		static IProcessManager ProcessManager { get; set; } = new ProcessManager ();
 		public string SimRuntime;
 		public string SimDeviceType;
 		public string DataPath;
@@ -468,33 +471,33 @@ namespace xharness
 			}
 		}
 
-		public async Task EraseAsync (Log log)
+		public async Task EraseAsync (ILog log)
 		{
 			// here we don't care if execution fails.
 			// erase the simulator (make sure the device isn't running first)
-			await Harness.ExecuteXcodeCommandAsync ("simctl", new [] { "shutdown " + UDID }, log, TimeSpan.FromMinutes (1));
-			await Harness.ExecuteXcodeCommandAsync ("simctl", new [] { "erase " + UDID }, log, TimeSpan.FromMinutes (1));
+			await Harness.ExecuteXcodeCommandAsync ("simctl", new [] { "shutdown", UDID }, log, TimeSpan.FromMinutes (1));
+			await Harness.ExecuteXcodeCommandAsync ("simctl", new [] { "erase", UDID }, log, TimeSpan.FromMinutes (1));
 
 			// boot & shutdown to make sure it actually works
-			await Harness.ExecuteXcodeCommandAsync ("simctl", new [] { "boot " + UDID }, log, TimeSpan.FromMinutes (1));
-			await Harness.ExecuteXcodeCommandAsync ("simctl", new [] { "shutdown " + UDID }, log, TimeSpan.FromMinutes (1));
+			await Harness.ExecuteXcodeCommandAsync ("simctl", new [] { "boot", UDID }, log, TimeSpan.FromMinutes (1));
+			await Harness.ExecuteXcodeCommandAsync ("simctl", new [] { "shutdown", UDID }, log, TimeSpan.FromMinutes (1));
 		}
 
-		public async Task ShutdownAsync (Log log)
+		public async Task ShutdownAsync (ILog log)
 		{
-			await Harness.ExecuteXcodeCommandAsync ("simctl", new [] { "shutdown " + UDID }, log, TimeSpan.FromMinutes (1));
+			await Harness.ExecuteXcodeCommandAsync ("simctl", new [] { "shutdown", UDID }, log, TimeSpan.FromMinutes (1));
 		}
 
-		public static async Task KillEverythingAsync (Log log)
+		public static async Task KillEverythingAsync (ILog log)
 		{
-			await ProcessHelper.ExecuteCommandAsync ("launchctl", new [] { "remove", "com.apple.CoreSimulator.CoreSimulatorService" }, log, TimeSpan.FromSeconds (10));
+			await ProcessManager.ExecuteCommandAsync ("launchctl", new [] { "remove", "com.apple.CoreSimulator.CoreSimulatorService" }, log, TimeSpan.FromSeconds (10));
 
 			var to_kill = new string [] { "iPhone Simulator", "iOS Simulator", "Simulator", "Simulator (Watch)", "com.apple.CoreSimulator.CoreSimulatorService", "ibtoold" };
 
 			var args = new List<string> ();
 			args.Add ("-9");
 			args.AddRange (to_kill);
-			await ProcessHelper.ExecuteCommandAsync ("killall", args, log, TimeSpan.FromSeconds (10));
+			await ProcessManager.ExecuteCommandAsync ("killall", args, log, TimeSpan.FromSeconds (10));
 
 			foreach (var dir in new string [] {
 				Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.UserProfile), "Library", "Saved Application State", "com.apple.watchsimulator.savedState"),
@@ -543,7 +546,7 @@ namespace xharness
 			}
 		}
 
-		public async Task AgreeToPromptsAsync (Log log, params string[] bundle_identifiers)
+		public async Task AgreeToPromptsAsync (ILog log, params string[] bundle_identifiers)
 		{
 			if (bundle_identifiers == null || bundle_identifiers.Length == 0) {
 				log.WriteLine ("No bundle identifiers given when requested permission editing.");
@@ -556,6 +559,7 @@ namespace xharness
 					"kTCCServiceCalendar",
 					"kTCCServicePhotos",
 					"kTCCServiceMediaLibrary",
+					"kTCCServiceMicrophone",
 					"kTCCServiceUbiquity",
 					"kTCCServiceWillow"
 				};
@@ -589,15 +593,15 @@ namespace xharness
 							break;
 						case 3: // Xcode 10+
 							// CREATE TABLE access (    service        TEXT        NOT NULL,     client         TEXT        NOT NULL,     client_type    INTEGER     NOT NULL,     allowed        INTEGER     NOT NULL,     prompt_count   INTEGER     NOT NULL,     csreq          BLOB,     policy_id      INTEGER,     indirect_object_identifier_type    INTEGER,     indirect_object_identifier         TEXT,     indirect_object_code_identity      BLOB,     flags          INTEGER,     last_modified  INTEGER     NOT NULL DEFAULT (CAST(strftime('%s','now') AS INTEGER)),     PRIMARY KEY (service, client, client_type, indirect_object_identifier),    FOREIGN KEY (policy_id) REFERENCES policies(id) ON DELETE CASCADE ON UPDATE CASCADE)
-							sql.AppendFormat ("INSERT OR REPLACE INTO access VALUES('{0}','{1}',0,1,0,NULL,NULL,NULL,'UNUSED',NULL,NULL,1);", service, bundle_identifier);
-							sql.AppendFormat ("INSERT OR REPLACE INTO access VALUES('{0}','{1}',0,1,0,NULL,NULL,NULL,'UNUSED',NULL,NULL,1);", service, bundle_identifier + ".watchkitapp");
+							sql.AppendFormat ("INSERT OR REPLACE INTO access VALUES('{0}','{1}',0,1,0,NULL,NULL,NULL,'UNUSED',NULL,NULL,{2});", service, bundle_identifier, DateTimeOffset.Now.ToUnixTimeSeconds ());
+							sql.AppendFormat ("INSERT OR REPLACE INTO access VALUES('{0}','{1}',0,1,0,NULL,NULL,NULL,'UNUSED',NULL,NULL,{2});", service, bundle_identifier + ".watchkitapp", DateTimeOffset.Now.ToUnixTimeSeconds ());
 							break;
 						default:
 							throw new NotImplementedException ();
 						}
 					}
 					args.Add (sql.ToString ());
-					var rv = await ProcessHelper.ExecuteCommandAsync ("sqlite3", args, log, TimeSpan.FromSeconds (5));
+					var rv = await ProcessManager.ExecuteCommandAsync ("sqlite3", args, log, TimeSpan.FromSeconds (5));
 					if (!rv.Succeeded) {
 						failure = true;
 						break;
@@ -612,10 +616,10 @@ namespace xharness
 			}
 
 			log.WriteLine ("Current TCC database contents:");
-			await ProcessHelper.ExecuteCommandAsync ("sqlite3", new [] { TCC_db, ".dump" }, log, TimeSpan.FromSeconds (5));
+			await ProcessManager.ExecuteCommandAsync ("sqlite3", new [] { TCC_db, ".dump" }, log, TimeSpan.FromSeconds (5));
 		}
 
-		async Task OpenSimulator (Log log)
+		async Task OpenSimulator (ILog log)
 		{
 			string simulator_app;
 
@@ -627,10 +631,10 @@ namespace xharness
 					simulator_app = Path.Combine (Harness.XcodeRoot, "Contents", "Developer", "Applications", "iOS Simulator.app");
 			}
 
-			await ProcessHelper.ExecuteCommandAsync ("open", new [] { "-a ", simulator_app, "--args", "-CurrentDeviceUDID", UDID }, log, TimeSpan.FromSeconds (15));
+			await ProcessManager.ExecuteCommandAsync ("open", new [] { "-a", simulator_app, "--args", "-CurrentDeviceUDID", UDID }, log, TimeSpan.FromSeconds (15));
 		}
 
-		public async Task PrepareSimulatorAsync (Log log, params string[] bundle_identifiers)
+		public async Task PrepareSimulatorAsync (ILog log, params string[] bundle_identifiers)
 		{
 			// Kill all existing processes
 			await KillEverythingAsync (log);
@@ -702,12 +706,12 @@ namespace xharness
 			}
 		}
 
-		Task ILoadAsync.LoadAsync (Log log, bool include_locked, bool force)
+		Task ILoadAsync.LoadAsync (ILog log, bool include_locked, bool force)
 		{
 			return LoadAsync (log, extra_data: false, removed_locked: !include_locked, force: force);
 		}
 
-		public async Task LoadAsync (Log log, bool extra_data = false, bool removed_locked = false, bool force = false)
+		public async Task LoadAsync (ILog log, bool extra_data = false, bool removed_locked = false, bool force = false)
 		{
 			if (loaded) {
 				if (!force)
@@ -725,7 +729,7 @@ namespace xharness
 						process.StartInfo.FileName = Harness.MlaunchPath;
 						process.StartInfo.Arguments = string.Format ("--sdkroot {0} --listdev={1} {2} --output-format=xml", Harness.XcodeRoot, tmpfile, extra_data ? "--list-extra-data" : string.Empty);
 						log.WriteLine ("Launching {0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments);
-						var rv = await process.RunAsync (log, false, timeout: TimeSpan.FromSeconds (120));
+						var rv = await Harness.ProcessManager.RunAsync (process, log, timeout: TimeSpan.FromSeconds (120));
 						if (!rv.Succeeded)
 							throw new Exception ("Failed to list devices.");
 						log.WriteLine ("Result:");
@@ -769,7 +773,7 @@ namespace xharness
 			});
 		}
 
-		public Device FindCompanionDevice (Log log, Device device)
+		public Device FindCompanionDevice (ILog log, Device device)
 		{
 			var companion = ConnectedDevices.Where ((v) => v.DeviceIdentifier == device.CompanionIdentifier);
 			if (companion.Count () == 0)

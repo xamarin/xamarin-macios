@@ -73,7 +73,7 @@ namespace Xamarin.MMP.Tests.Unit
 		{
 			switch (compilerType) {
 			case AOTCompilerType.Bundled64:
-				return "bmac-mobile-mono";
+				return "mono-sgen";
 			case AOTCompilerType.System64:
 				return "mono64";
 			default:

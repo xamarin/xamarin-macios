@@ -7379,6 +7379,41 @@ namespace Foundation
 		void Cancel (Action<NSData> resumeCallback);
 	}
 	
+	[Internal]
+	[Static]
+	[NoWatch]
+	interface ProxyConfigurationDictionaryKeys {
+		[Field ("kCFNetworkProxiesHTTPEnable")]
+		NSString HttpEnableKey { get; }
+
+		[Field ("kCFStreamPropertyHTTPProxyHost")]
+		NSString HttpProxyHostKey { get; }
+
+		[Field ("kCFStreamPropertyHTTPProxyPort")]
+		NSString HttpProxyPortKey { get; }
+
+		[NoiOS, NoTV]
+		[Field ("kCFNetworkProxiesHTTPSEnable")]
+		NSString HttpsEnableKey { get; }
+
+		[Field ("kCFStreamPropertyHTTPSProxyHost")]
+		NSString HttpsProxyHostKey { get; }
+
+		[Field ("kCFStreamPropertyHTTPSProxyPort")]
+		NSString HttpsProxyPortKey { get; }
+	}
+
+	[NoWatch]
+	[StrongDictionary ("ProxyConfigurationDictionaryKeys")]
+	interface ProxyConfigurationDictionary {
+		bool HttpEnable { get; set; }
+		string HttpProxyHost { get; set; }
+		int HttpProxyPort { get; set;}
+		[NoiOS, NoTV]
+		bool HttpsEnable { get; set; }
+		string HttpsProxyHost { get; set;}
+		int HttpsProxyPort { get; set; }
+	}
 
 	[iOS (7,0)]
 	[Availability (Introduced = Platform.Mac_10_9)]
@@ -7388,16 +7423,17 @@ namespace Foundation
 #endif
 	partial interface NSUrlSessionConfiguration : NSCopying {
 	
+		[Internal]
 		[Static, Export ("defaultSessionConfiguration", ArgumentSemantic.Strong)]
-		NSUrlSessionConfiguration DefaultSessionConfiguration { get; }
-	
+		NSUrlSessionConfiguration _DefaultSessionConfiguration { get; }
+
+		[Internal]
 		[Static, Export ("ephemeralSessionConfiguration", ArgumentSemantic.Strong)]
-		NSUrlSessionConfiguration EphemeralSessionConfiguration { get; }
+		NSUrlSessionConfiguration _EphemeralSessionConfiguration { get; }
 	
+		[Internal]
 		[Static, Export ("backgroundSessionConfiguration:")]
-		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'CreateBackgroundSessionConfiguration' instead.")]
-		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'CreateBackgroundSessionConfiguration' instead.")]
-		NSUrlSessionConfiguration BackgroundSessionConfiguration (string identifier);
+		NSUrlSessionConfiguration _BackgroundSessionConfiguration (string identifier);
 	
 		[Export ("identifier", ArgumentSemantic.Copy), NullAllowed]
 		string Identifier { get; }
@@ -7426,6 +7462,14 @@ namespace Foundation
 		[NullAllowed]
 		[Export ("connectionProxyDictionary", ArgumentSemantic.Copy)]
 		NSDictionary ConnectionProxyDictionary { get; set; }
+
+		[NoWatch]
+		ProxyConfigurationDictionary StrongConnectionProxyDictionary {
+			[Wrap ("new ProxyConfigurationDictionary (ConnectionProxyDictionary)")]
+			get;
+			[Wrap ("ConnectionProxyDictionary = value?.Dictionary")]
+			set;
+		}
 	
 		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'TlsMinimumSupportedProtocolVersion' instead.")]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'TlsMinimumSupportedProtocolVersion' instead.")]
@@ -7486,9 +7530,10 @@ namespace Foundation
 		[Export ("sharedContainerIdentifier")]
 		string SharedContainerIdentifier { get; set; }
 
+		[Internal]
 		[iOS (8,0)]
 		[Static, Export ("backgroundSessionConfigurationWithIdentifier:")]
-		NSUrlSessionConfiguration CreateBackgroundSessionConfiguration (string identifier);
+		NSUrlSessionConfiguration _CreateBackgroundSessionConfiguration (string identifier);
 
 		[iOS (9,0), Mac(10,11)]
 		[Export ("shouldUseExtendedBackgroundIdleMode")]

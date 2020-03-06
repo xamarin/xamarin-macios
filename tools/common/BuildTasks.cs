@@ -178,7 +178,7 @@ namespace Xamarin.Bundler
 		public bool Rebuilt {
 			get {
 				if (!completed_task.Task.IsCompleted)
-					throw ErrorHelper.CreateError (99, "Internal error: Can't rebuild a task that hasn't completed. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
+					throw ErrorHelper.CreateError (99, Errors.MX0099, "Can't rebuild a task that hasn't completed");
 				return completed_task.Task.Result;
 			}
 		}
@@ -287,7 +287,7 @@ namespace Xamarin.Bundler
 
 		protected virtual void Execute ()
 		{
-			throw ErrorHelper.CreateError (99, "Internal error: 'Either Execute or ExecuteAsync must be overridden'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
+			throw ErrorHelper.CreateError (99, Errors.MX0099, "'Either Execute or ExecuteAsync must be overridden'");
 		}
 
 		public override string ToString ()
@@ -302,7 +302,7 @@ namespace Xamarin.Bundler
 				if (!reported_5107) {
 					// There can be thousands of these, but we only need one.
 					reported_5107 = true;
-					exceptions.Add (ErrorHelper.CreateError (5107, "The assembly '{0}' can't be AOT-compiled for 32-bit architectures because the native code is too big for the 32-bit ARM architecture.", assembly_name));
+					exceptions.Add (ErrorHelper.CreateError (5107, Errors.MT5107, assembly_name));
 				}
 			}
 		}
@@ -315,7 +315,7 @@ namespace Xamarin.Bundler
 
 			if (Driver.Verbosity < 6 && lines.Count () > 1000) {
 				lines = lines.Take (1000); // Limit the output so that we don't overload VSfM.
-				exceptions.Add (ErrorHelper.CreateWarning (5108, "The compiler output is too long, it's been limited to 1000 lines."));
+				exceptions.Add (ErrorHelper.CreateWarning (5108, Errors.MT5108));
 			}
 
 			// Construct the entire message before writing anything, so that there's a better chance the message isn't

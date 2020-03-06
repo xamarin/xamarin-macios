@@ -7,10 +7,8 @@ using Xamarin.Linker;
 
 namespace MonoTouch.Tuner {
 
-	public class RemoveCode : ExceptionalSubStep {
+	public class RemoveCode : RemoveCodeBase {
 
-		MethodDefinition get_nse_def;
-		MethodReference get_nse;
 		bool product;
 
 		public RemoveCode (LinkerOptions options)
@@ -36,7 +34,6 @@ namespace MonoTouch.Tuner {
 			case "mscorlib":
 				product = false;
 				return context.Annotations.GetAction (assembly) == AssemblyAction.Link;
-			case "monotouch":
 			case "Xamarin.iOS":
 			case "Xamarin.TVOS":
 			case "Xamarin.WatchOS":
@@ -45,24 +42,6 @@ namespace MonoTouch.Tuner {
 			default:
 				return false;
 			}
-		}
-
-		protected override void Process (AssemblyDefinition assembly)
-		{
-			if (get_nse_def == null) {
-				var corlib = context.GetAssembly ("mscorlib");
-				var nse = corlib.MainModule.GetType ("System", "NotSupportedException");
-				foreach (var m in nse.Methods) {
-					// no need to check HasMethods because we know there are (and nothing is removed at this stage)
-					if (m.Name != "LinkedAway")
-						continue;
-					get_nse_def = m;
-					break;
-				}
-			}
-
-			// import the method into the current assembly
-			get_nse = assembly.MainModule.ImportReference (get_nse_def);
 		}
 
 		protected override void Process (TypeDefinition type)
@@ -78,7 +57,7 @@ namespace MonoTouch.Tuner {
 					foreach (var m in type.Methods) {
 						if (m.Name == "RegisterEntryAssembly") {
 							ProcessMethod (m);
-							type.Module.ImportReference (get_nse);
+							type.Module.ImportReference (NotSupportedException);
 						}
 					}
 				}
@@ -121,46 +100,6 @@ namespace MonoTouch.Tuner {
 				ins.Operand = null;
 				break;
 			}
-		}
-
-		void ProcessMethods (TypeDefinition type)
-		{
-			if (type.HasMethods) {
-				MethodDefinition static_ctor = null;
-				foreach (MethodDefinition method in type.Methods) {
-					if (method.IsConstructor && method.IsStatic)
-						static_ctor = method;
-					else
-						ProcessMethod (method);
-				}
-				if (static_ctor != null)
-					type.Methods.Remove (static_ctor);
-			}
-		}
-
-		new void ProcessMethod (MethodDefinition method)
-		{
-			ProcessParameters (method);
-
-			if (!method.HasBody)
-				return;
-
-			var body = new MethodBody (method);
-
-			var il = body.GetILProcessor ();
-			il.Emit (OpCodes.Call, get_nse);
-			il.Emit (OpCodes.Throw);
-
-			method.Body = body;
-		}
-
-		static void ProcessParameters (MethodDefinition method)
-		{
-			if (!method.HasParameters)
-				return;
-
-			foreach (ParameterDefinition parameter in method.Parameters)
-				parameter.Name = string.Empty;
 		}
 
 		static bool IsCandidate (TypeDefinition type)

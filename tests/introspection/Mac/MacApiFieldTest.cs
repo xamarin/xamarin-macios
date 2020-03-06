@@ -159,7 +159,7 @@ namespace Introspection {
 				if (Mac.CheckSystemVersion (10, 13)) // radar 32858911
 					return true;
 				goto default;
-#if !UNIFIED
+#if !__UNIFIED__
 			case "InputRSSArticleDurationKey":
 			case "InputRSSFeedURLKey":
 			case "ProtocolRSSVisualizer":

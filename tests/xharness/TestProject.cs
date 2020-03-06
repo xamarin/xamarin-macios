@@ -5,8 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
 using Xamarin;
+using Xharness.Jenkins.TestTasks;
 
-namespace xharness
+namespace Xharness
 {
 	public class TestProject
 	{
@@ -25,9 +26,6 @@ namespace xharness
 		public double TimeoutMultiplier = 1;
 
 		public IEnumerable<TestProject> ProjectReferences;
-
-		// Optional
-		public BCLTestInfo BCLInfo { get; set; }
 
 		// Optional
 		public MonoNativeInfo MonoNativeInfo { get; set; }
@@ -93,6 +91,14 @@ namespace xharness
 				return Path.Contains ("bcl-test");
 			}
 		}
+
+		public bool IsMonotouch => Name.Contains ("monotouch");
+
+		public bool IsBclxUnit => IsBclTest && (Name.Contains ("xUnit") || IsMscorlib);
+
+
+		public bool IsMscorlib => Name.Contains ("mscorlib");
+
 
 		public virtual TestProject Clone ()
 		{
@@ -169,6 +175,7 @@ namespace xharness
 		public iOSTestProject (string path, bool isExecutableProject = true)
 			: base (path, isExecutableProject)
 		{
+			Name = System.IO.Path.GetFileNameWithoutExtension (path);
 		}
 	}
 
@@ -209,7 +216,6 @@ namespace xharness
 		{
 			var rv = (MacTestProject) base.Clone ();
 			rv.TargetFrameworkFlavors = TargetFrameworkFlavors;
-			rv.BCLInfo = BCLInfo;
 			rv.Platform = Platform;
 			return rv;
 		}

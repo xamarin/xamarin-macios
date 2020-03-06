@@ -6,6 +6,7 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev;
+using Xamarin.MacDev.Tasks;
 using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks
@@ -34,13 +35,18 @@ namespace Xamarin.MacDev.Tasks
 		public string SdkVersion { get; set; }
 
 		[Required]
+		public bool SdkIsSimulator { get; set; }
+
+		[Required]
 		public string SdkRoot { get; set; }
 
 		[Required]
 		public ITaskItem SourceFile { get; set; }
 
+		public TargetFramework TargetFramework { get { return TargetFramework.Parse (TargetFrameworkMoniker); } }
+
 		[Required]
-		public string TargetFrameworkIdentifier { get; set; }
+		public string TargetFrameworkMoniker { get; set; }
 
 		#endregion
 
@@ -53,17 +59,17 @@ namespace Xamarin.MacDev.Tasks
 
 		protected virtual string OperatingSystem {
 			get {
-				switch (PlatformFrameworkHelper.GetFramework (TargetFrameworkIdentifier)) {
-				case PlatformFramework.WatchOS:
-					return "watchos";
-				case PlatformFramework.TVOS:
-					return "tvos";
-				case PlatformFramework.MacOS:
+				switch (PlatformFrameworkHelper.GetFramework (TargetFrameworkMoniker)) {
+				case ApplePlatform.WatchOS:
+					return SdkIsSimulator ? "watchos-simulator" : "watchos";
+				case ApplePlatform.TVOS:
+					return SdkIsSimulator ? "tvos-simulator" : "tvos";
+				case ApplePlatform.MacOSX:
 					return "macosx";
-				case PlatformFramework.iOS:
-					return "ios";
+				case ApplePlatform.iOS:
+					return SdkIsSimulator ? "iphonesimulator" : "ios";
 				default:
-					Log.LogError ($"Unknown target framework identifier: {TargetFrameworkIdentifier}.");
+					Log.LogError ($"Unknown target framework moniker: {TargetFrameworkMoniker}.");
 					return string.Empty;
 				}
 			}

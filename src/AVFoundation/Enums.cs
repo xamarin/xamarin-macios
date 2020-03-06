@@ -571,7 +571,12 @@ namespace AVFoundation {
 	[NoTV]
 	[Native]
 	public enum AVCaptureVideoStabilizationMode : long {
-		Off, Standard, Cinematic, Auto = -1
+		Off,
+		Standard,
+		Cinematic,
+		[iOS (13,0)]
+		CinematicExtended,
+		Auto = -1
 	}
 
 #if XAMCORE_4_0

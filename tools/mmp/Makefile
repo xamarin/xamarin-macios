@@ -30,9 +30,8 @@ MMP_DIRECTORIES = \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp \
 
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/mmp: mmp.in | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin
-	$(Q_GEN) sed 's!@XAMARIN_MAC_PREFIX@!$(abspath $(MAC_TARGETDIR)$(MAC_FRAMEWORK_CURRENT_DIR))!g' $< > $@
-	$(Q) chmod +x $@
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/mmp: mmp | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin
+	$(Q) $(CP) $< $@
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp/mmp.exe: $(MMP_DIR)/mmp.exe | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp
 	$(Q) $(CP) $(dir $<)/*.exe $(dir $@)
@@ -70,10 +69,6 @@ ifdef INCLUDE_MAC
 install-local:: $(MMP_TARGETS)
 all-local:: $(MMP_TARGETS)
 endif
-
-mmp: \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/mmp \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp/mmp.exe \
 
 clean-local::
 	rm -f mmp.stub.c mmp.helper.o

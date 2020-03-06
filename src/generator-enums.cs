@@ -80,14 +80,14 @@ public partial class Generator {
 			if (fa.SymbolName == null)
 				null_field = new Tuple<FieldInfo, FieldAttribute> (f, fa);
 			else if (unique_constants.Contains (fa.SymbolName))
-				throw new BindingException (1046, true, $"The [Field] constant {fa.SymbolName} cannot only be used once inside enum {type.Name}.");
+				throw new BindingException (1046, true, fa.SymbolName, type.Name);
 			else {
 				fields.Add (f, fa);
 				unique_constants.Add (fa.SymbolName);
 			}
 			if (AttributeManager.GetCustomAttribute<DefaultEnumValueAttribute> (f) != null) {
 				if (default_symbol != null)
-					throw new BindingException (1045, true, $"Only a single [DefaultEnumValue] attribute can be used inside enum {type.Name}.");
+					throw new BindingException (1045, true, type.Name);
 				default_symbol = new Tuple<FieldInfo, FieldAttribute> (f, fa);
 			}
 		}
@@ -208,7 +208,7 @@ public partial class Generator {
 			}
 			// if there's no default then we throw on unknown constants
 			if (default_symbol == null)
-				print ("throw new NotSupportedException (constant + \" has no associated enum value in \" + nameof ({0}) + \" on this platform.\");", type.Name);
+				print ("throw new NotSupportedException ($\"{constant} has no associated enum value on this platform.\");");
 			else
 				print ("return {0}.{1};", type.Name, default_symbol.Item1.Name);
 			indent--;

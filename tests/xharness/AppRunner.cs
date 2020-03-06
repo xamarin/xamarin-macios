@@ -3,17 +3,19 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
-using System.Xml.Xsl;
 using Xamarin;
 using Xamarin.Utils;
+using Xharness.Execution;
+using Xharness.Jenkins.TestTasks;
+using Xharness.Listeners;
+using Xharness.Logging;
 
-namespace xharness
+namespace Xharness
 {
 	public enum AppRunnerTarget
 	{
@@ -34,11 +36,14 @@ namespace xharness
 		TodayExtension,
 	}
 
-	public class AppRunner
+	class AppRunner
 	{
 		public Harness Harness;
 		public string ProjectFile;
 		public string AppPath;
+		public string Variation;
+		public BuildToolTask BuildTask;
+		public ISimpleListenerFactory ListenerFactory = new SimpleListenerFactory ();
 
 		public TestExecutingResult Result { get; private set; }
 		public string FailureMessage { get; private set; }
@@ -76,6 +81,8 @@ namespace xharness
 			}
 		}
 
+		public string AppName => appName;
+
 		public double TimeoutMultiplier { get; set; } = 1;
 
 		// For watch apps we end up with 2 simulators, the watch simulator (the main one), and the iphone simulator (the companion one).
@@ -95,15 +102,15 @@ namespace xharness
 			set { log_directory = value; }
 		}
 
-		Logs logs;
-		public Logs Logs {
+		ILogs logs;
+		public ILogs Logs {
 			get {
 				return logs ?? (logs = new Logs (LogDirectory));
 			}
 		}
 
-		Log main_log;
-		public Log MainLog {
+		ILog main_log;
+		public ILog MainLog {
 			get { return main_log; }
 			set { main_log = value; }
 		}
@@ -118,6 +125,8 @@ namespace xharness
 				return bundle_identifier;
 			}
 		}
+
+		public IProcessManager ProcessManager { get; set; } = new ProcessManager ();
 
 		string mode;
 
@@ -297,7 +306,7 @@ namespace xharness
 			var totalSize = Directory.GetFiles (appPath, "*", SearchOption.AllDirectories).Select ((v) => new FileInfo (v).Length).Sum ();
 			main_log.WriteLine ($"Installing '{appPath}' to '{companion_device_name ?? device_name}'. Size: {totalSize} bytes = {totalSize / 1024.0 / 1024.0:N2} MB");
 
-			return await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, args, main_log, TimeSpan.FromHours (1), cancellation_token: cancellation_token);
+			return await ProcessManager.ExecuteCommandAsync (Harness.MlaunchPath, args, main_log, TimeSpan.FromHours (1), cancellation_token: cancellation_token);
 		}
 
 		public async Task<ProcessExecutionResult> UninstallAsync ()
@@ -321,7 +330,7 @@ namespace xharness
 			args.Add (bundle_identifier);
 			AddDeviceName (args, companion_device_name ?? device_name);
 
-			return await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, args, main_log, TimeSpan.FromMinutes (1));
+			return await ProcessManager.ExecuteCommandAsync (Harness.MlaunchPath, args, main_log, TimeSpan.FromMinutes (1));
 		}
 
 		bool ensure_clean_simulator_state = true;
@@ -334,122 +343,13 @@ namespace xharness
 			}
 		}
 
-		bool IsTouchUnitResult (StreamReader stream)
+		(string resultLine, bool failed, bool crashed) ParseResult (string test_log_path, bool timed_out, out bool crashed)
 		{
-			// TouchUnitTestRun is the very first node in the TouchUnit xml result
-			// which is not preset in the xunit xml, therefore we know the runner
-			// quite quickly
-			bool isTouchUnit = false;
-			using (var reader = XmlReader.Create (stream)) {
-				while (reader.Read ()) {
-					if (reader.NodeType == XmlNodeType.Element && reader.Name == "TouchUnitTestRun") {
-						isTouchUnit = true;
-						break;
-					}
-				}
-			}
-			// we want to reuse the stream (and we are sync)
-			stream.BaseStream.Position = 0;
-			stream.DiscardBufferedData ();
-			return isTouchUnit;
-		}
-
-		(string resultLine, bool failed) ParseTouchUnitXml (StreamReader stream, StreamWriter writer)
-		{
-			long total, errors, failed, notRun, inconclusive, ignored, skipped, invalid;
-			total = errors = failed = notRun = inconclusive = ignored = skipped = invalid = 0L;
-			using (var reader = XmlReader.Create (stream)) {
-				while (reader.Read ()) {
-					if (reader.NodeType == XmlNodeType.Element && reader.Name == "test-results") {
-						total = long.Parse (reader ["total"]);
-						errors = long.Parse (reader ["errors"]);
-						failed = long.Parse (reader ["failures"]);
-						notRun = long.Parse (reader ["not-run"]);
-						inconclusive = long.Parse (reader ["inconclusive"]);
-						ignored = long.Parse (reader ["ignored"]);
-						skipped = long.Parse (reader ["skipped"]);
-						invalid = long.Parse (reader ["invalid"]);
-					}
-					if (reader.NodeType == XmlNodeType.Element && reader.Name == "TouchUnitExtraData") {
-						// move fwd to get to the CData
-						if (reader.Read ())
-							writer.Write (reader.Value);
-					}
-				}
-			}
-			var passed = total - errors - failed - notRun - inconclusive - ignored - skipped - invalid;
-			var resultLine = $"Tests run: {total} Passed: {passed} Inconclusive: {inconclusive} Failed: {failed + errors} Ignored: {ignored + skipped + invalid}";
-			return (resultLine, total == 0 || errors != 0 || failed != 0);
-		}
-
-		(string resultLine, bool failed) ParseNUnitXml (StreamReader stream, StreamWriter writer)
-		{
-			long total, errors, failed, notRun, inconclusive, ignored, skipped, invalid;
-			total = errors = failed = notRun = inconclusive = ignored = skipped = invalid = 0L;
-			using (var reader = XmlReader.Create (stream)) {
-				while (reader.Read ()) {
-					if (reader.NodeType == XmlNodeType.Element && reader.Name == "test-results") {
-						total = long.Parse (reader ["total"]);
-						errors = long.Parse (reader ["errors"]);
-						failed = long.Parse (reader ["failures"]);
-						notRun = long.Parse (reader ["not-run"]);
-						inconclusive = long.Parse (reader ["inconclusive"]);
-						ignored = long.Parse (reader ["ignored"]);
-						skipped = long.Parse (reader ["skipped"]);
-						invalid = long.Parse (reader ["invalid"]);
-					}
-					if (reader.NodeType == XmlNodeType.Element && reader.Name == "test-suite" && (reader["type"] == "TestFixture" || reader["type"] == "TestCollection")) {
-						var testCaseName = reader ["name"];
-						writer.WriteLine (testCaseName);
-						var time = reader.GetAttribute ("time") ?? "0"; // some nodes might not have the time :/
-						// get the first node and then move in the siblings of the same type
-						reader.ReadToDescendant ("test-case");
-						do {
-							if (reader.Name != "test-case")
-								break;
-							// read the test cases in the current node
-							var status = reader ["result"];
-							switch (status) {
-							case "Success":
-								writer.Write ("\t[PASS] ");
-								break;
-							case "Ignored":
-								writer.Write ("\t[IGNORED] ");
-								break;
-							case "Error":
-							case "Failure":
-								writer.Write ("\t[FAIL] ");
-								break;
-							case "Inconclusive":
-								writer.Write ("\t[INCONCLUSIVE] ");
-								break;
-							default:
-								writer.Write ("\t[INFO] ");
-								break;
-							}
-							writer.Write (reader ["name"]);
-							if (status == "Failure" || status == "Error") { //  we need to print the message
-								writer.Write ($" : {reader.ReadElementContentAsString ()}");
-							}
-							// add a new line
-							writer.WriteLine ();
-						} while (reader.ReadToNextSibling ("test-case"));
-						writer.WriteLine ($"{testCaseName} {time} ms");
-					}
-				}
-			}
-			var passed = total - errors - failed - notRun - inconclusive - ignored - skipped - invalid;
-			string resultLine = $"Tests run: {total} Passed: {passed} Inconclusive: {inconclusive} Failed: {failed + errors} Ignored: {ignored + skipped + invalid}";
-			writer.WriteLine (resultLine);
-			
-			return (resultLine, total == 0 | errors != 0 || failed != 0);
-		}
-		
-		(string resultLine, bool failed, bool crashed) ParseResult (Log listener_log, bool timed_out, bool crashed)
-		{
-			if (!File.Exists (listener_log.FullPath))
+			crashed = false;
+			if (!File.Exists (test_log_path)) {
+				crashed = true;
 				return (null, false, true); // if we do not have a log file, the test crashes
-
+			}
 			// parsing the result is different if we are in jenkins or not.
 			// When in Jenkins, Touch.Unit produces an xml file instead of a console log (so that we can get better test reporting).
 			// However, for our own reporting, we still want the console-based log. This log is embedded inside the xml produced
@@ -457,58 +357,63 @@ namespace xharness
 			// wraps the NUnit xml output with additional information, which we need to unwrap so that Jenkins understands it.
 			// 
 			// On the other hand, the nunit and xunit do not have that data and have to be parsed.
-			if (Harness.InJenkins) {
-				(string resultLine, bool failed, bool crashed) parseResult = (null, false, false);
-				// move the xml to a tmp path, that path will be use to read the xml
-				// in the reader, and the writer will use the stream from the logger to
-				// write the human readable log
-				var tmpFile = Path.Combine (Path.GetTempPath (), Guid.NewGuid ().ToString ()); 
+			// 
+			// This if statement has a small trick, we found out that internet sharing in some of the bots (VSTS) does not work, in
+			// that case, we cannot do a TCP connection to xharness to get the log, this is a problem since if we did not get the xml
+			// from the TCP connection, we are going to fail when trying to read it and not parse it. Therefore, we are not only
+			// going to check if we are in CI, but also if the listener_log is valid.
+			var path = Path.ChangeExtension (test_log_path, "xml");
+			XmlResultParser.CleanXml (test_log_path, path);
 
-				File.Move (listener_log.FullPath, tmpFile);
+			if (Harness.InCI && XmlResultParser.IsValidXml (path, out var xmlType)) {
+				(string resultLine, bool failed, bool crashed) parseResult = (null, false, false);
 				crashed = false;
 				try {
-					using (var streamReaderTmp = new StreamReader (tmpFile)) {
-						var isTouchUnit = IsTouchUnitResult (streamReaderTmp); // method resets position
-						using (var writer = new StreamWriter (listener_log.FullPath, true)) { // write the human result to the log file
-							if (isTouchUnit) {
-								var (resultLine, failed)= ParseTouchUnitXml (streamReaderTmp, writer);
-								parseResult.resultLine = resultLine;
-								parseResult.failed = failed;
-							} else {
-								var (resultLine, failed)= ParseNUnitXml (streamReaderTmp, writer);
-								parseResult.resultLine = resultLine;
-								parseResult.failed = failed;
-							}
-						}
-						// reset pos of the stream
-						streamReaderTmp.BaseStream.Position = 0;
-						streamReaderTmp.DiscardBufferedData ();
-						var path = listener_log.FullPath;
-						path = Path.ChangeExtension (path, "xml");
-						// both the nunit and xunit runners are not
-						// setting the test results correctly, lets add them
-						using (var xmlWriter = new StreamWriter (path)) {
-							string line;
-							while ((line = streamReaderTmp.ReadLine ()) != null) {
-								if (line.Contains ("<test-results")) {
-									if (line.Contains ("name=\"\"")) { // NUnit case
-										xmlWriter.WriteLine (line.Replace ("name=\"\"", $"name=\"{appName + " " + configuration}\""));
-										xmlWriter.WriteLine (line);
-									} else if (line.Contains ($"name=\"com.xamarin.bcltests.{appName}\"")) { // xunit case
-										xmlWriter.WriteLine (line.Replace ($"name=\"com.xamarin.bcltests.{appName}\"", $"name=\"{appName + " " + configuration}\""));
-									}
-								} else {
-									xmlWriter.WriteLine (line);
-								}
-							}
-						}
-						// we do not longer need the tmp file
-						Logs.AddFile (path, "Test xml");
+					var newFilename = XmlResultParser.GetXmlFilePath (path, xmlType);
+
+					// at this point, we have the test results, but we want to be able to have attachments in vsts, so if the format is
+					// the right one (NUnitV3) add the nodes. ATM only TouchUnit uses V3.
+					var testRunName = $"{appName} {Variation}";
+					if (xmlType == XmlResultJargon.NUnitV3) {
+						var logFiles = new List<string> ();
+						// add our logs AND the logs of the previous task, which is the build task
+						logFiles.AddRange (Directory.GetFiles (Logs.Directory));
+						if (BuildTask != null) // when using the run command, we do not have a build task, ergo, there are no logs to add.
+							logFiles.AddRange (Directory.GetFiles (BuildTask.LogDirectory));
+						// add the attachments and write in the new filename
+						// add a final prefix to the file name to make sure that the VSTS test uploaded just pick
+						// the final version, else we will upload tests more than once
+						newFilename = XmlResultParser.GetVSTSFilename (newFilename);
+						XmlResultParser.UpdateMissingData (path, newFilename, testRunName, logFiles);
+					} else {
+						// rename the path to the correct value
+						File.Move (path, newFilename);
 					}
+					path = newFilename;
+
+					// write the human readable results in a tmp file, which we later use to step on the logs
+					var tmpFile = Path.Combine (Path.GetTempPath (), Guid.NewGuid ().ToString ());
+					(parseResult.resultLine, parseResult.failed) = XmlResultParser.GenerateHumanReadableResults (path, tmpFile, xmlType);
+					File.Copy (tmpFile, test_log_path, true);
+					File.Delete (tmpFile);
+
+					// we do not longer need the tmp file
+					Logs.AddFile (path, LogType.XmlLog.ToString ());
 					return parseResult;
+
 				} catch (Exception e) {
 					main_log.WriteLine ("Could not parse xml result file: {0}", e);
-
+					// print file for better debugging
+					main_log.WriteLine ("File data is:");
+					main_log.WriteLine (new string ('#', 10));
+					using (var stream = new StreamReader (path)) {
+						string line;
+						while ((line = stream.ReadLine ()) != null) {
+							main_log.WriteLine (line);
+						}
+					}
+					main_log.WriteLine (new string ('#', 10));
+					main_log.WriteLine ("End of xml results.");
 					if (timed_out) {
 						Harness.LogWrench ($"@MonkeyWrench: AddSummary: <b><i>{mode} timed out</i></b><br/>");
 						return parseResult;
@@ -519,38 +424,34 @@ namespace xharness
 						parseResult.crashed = true;
 						return parseResult;
 					}
-				} finally {
-					if (File.Exists (tmpFile))
-						File.Delete (tmpFile);
 				}
-				
-			} else {
-				// not the most efficient way but this just happens when we run
-				// the tests locally and we usually do not run all tests, we are
-				// more interested to be efficent on the bots
-				string resultLine = null;
-				using (var reader = new StreamReader (listener_log.FullPath)) {
-					string line = null;
-					bool failed = false;
-					while ((line = reader.ReadLine ()) != null)
-					{
-						if (line.Contains ("Tests run:")) {
-							Console.WriteLine (line);
-							resultLine = line;
-							break;
-						} else if (line.Contains ("[FAIL]")) {
-							Console.WriteLine (line);
-							failed = true;
-						}
+
+			}               // delete not needed copy
+			File.Delete (path);
+			// not the most efficient way but this just happens when we run
+			// the tests locally and we usually do not run all tests, we are
+			// more interested to be efficent on the bots
+			string resultLine = null;
+			using (var reader = new StreamReader (test_log_path)) {
+				string line = null;
+				bool failed = false;
+				while ((line = reader.ReadLine ()) != null) {
+					if (line.Contains ("Tests run:")) {
+						Console.WriteLine (line);
+						resultLine = line;
+						break;
+					} else if (line.Contains ("[FAIL]")) {
+						Console.WriteLine (line);
+						failed = true;
 					}
-					return (resultLine, failed, false);
 				}
+				return (resultLine, failed, false);
 			}
 		}
 
-		public bool TestsSucceeded (Log listener_log, bool timed_out, bool crashed)
+		public bool TestsSucceeded (string test_log_path, bool timed_out, out bool crashed)
 		{
-			var (resultLine, failed, crashed_out) = ParseResult (listener_log, timed_out, crashed);
+			var (resultLine, failed, crashed_out) = ParseResult (test_log_path, timed_out, out crashed);
 			// read the parsed logs in a human readable way
 			if (resultLine != null) {
 				var tests_run = resultLine.Replace ("Tests run: ", "");
@@ -580,9 +481,9 @@ namespace xharness
 		public async Task<int> RunAsync ()
 		{
 			CrashReportSnapshot crash_reports;
-			Log device_system_log = null;
-			Log listener_log = null;
-			Log run_log = main_log;
+			ILog device_system_log = null;
+			ILog listener_log = null;
+			ILog run_log = main_log;
 
 			Initialize ();
 
@@ -614,10 +515,11 @@ namespace xharness
 			args.Add ("-argument=-app-arg:-enablenetwork");
 			args.Add ("-setenv=NUNIT_ENABLE_NETWORK=true");
 			// detect if we are using a jenkins bot.
-			var useXmlOutput = Harness.InJenkins;
+			var useXmlOutput = Harness.InCI;
 			if (useXmlOutput) {
 				args.Add ("-setenv=NUNIT_ENABLE_XML_OUTPUT=true");
 				args.Add ("-setenv=NUNIT_ENABLE_XML_MODE=wrapped");
+				args.Add ("-setenv=NUNIT_XML_VERSION=nunitv3");
 			}
 
 			if (Harness.InCI) {
@@ -643,33 +545,17 @@ namespace xharness
 				args.Add ($"-argument=-app-arg:-hostname:{ips.ToString ()}");
 				args.Add ($"-setenv=NUNIT_HOSTNAME={ips.ToString ()}");
 			}
-			string transport;
-			if (mode == "watchos") {
-				transport = isSimulator ? "FILE" : "HTTP";
-			} else {
-				transport = "TCP";
-			}
+
+			listener_log = Logs.Create ($"test-{mode}-{Harness.Timestamp}.log", LogType.TestLog.ToString (), timestamp: !useXmlOutput);
+			var transport = ListenerFactory.Create (mode, listener_log, isSimulator, out var listener, out var fn);
+			
 			args.Add ($"-argument=-app-arg:-transport:{transport}");
-			args.Add ($"-setenv=NUNIT_TRANSPORT={transport}");
+			args.Add ($"-setenv=NUNIT_TRANSPORT={transport.ToString ().ToUpper ()}");
 
-			listener_log = Logs.Create ($"test-{mode}-{Harness.Timestamp}.log", "Test log", timestamp: !useXmlOutput);
-
-			SimpleListener listener;
-			switch (transport) {
-			case "FILE":
-				var fn = listener_log.FullPath + ".tmp";
-				listener = new SimpleFileListener (fn);
+			if (transport == ListenerTransport.File)
 				args.Add ($"-setenv=NUNIT_LOG_FILE={fn}");
-				break;
-			case "HTTP":
-				listener = new SimpleHttpListener ();
-				break;
-			case "TCP":
-				listener = new SimpleTcpListener ();
-				break;
-			default:
-				throw new NotImplementedException ();
-			}
+
+			
 			listener.TestLog = listener_log;
 			listener.Log = main_log;
 			listener.AutoExit = true;
@@ -750,10 +636,9 @@ namespace xharness
 					main_log.WriteLine ("System log for the '{1}' simulator is: {0}", sim.SystemLog, sim.Name);
 					bool isCompanion = sim != simulator;
 
-					var log = new CaptureLog (Logs, sim.SystemLog, entire_file: Harness.Action != HarnessAction.Jenkins)
+					var log = new CaptureLog (Logs, Path.Combine (LogDirectory, sim.Name + ".log"), sim.SystemLog, entire_file: Harness.Action != HarnessAction.Jenkins)
 					{
-						Path = Path.Combine (LogDirectory, sim.Name + ".log"),
-						Description = isCompanion ? "System log (companion)" : "System log",
+						Description = isCompanion ? LogType.CompanionSystemLog.ToString () : LogType.SystemLog.ToString (),
 					};
 					log.StartCapture ();
 					Logs.Add (log);
@@ -774,7 +659,7 @@ namespace xharness
 
 				main_log.WriteLine ("Starting test run");
 
-				var result = await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, args, run_log, timeout, cancellation_token: cancellation_source.Token);
+				var result = await ProcessManager.ExecuteCommandAsync (Harness.MlaunchPath, args, run_log, timeout, cancellation_token: cancellation_source.Token);
 				if (result.TimedOut) {
 					timed_out = true;
 					success = false;
@@ -811,7 +696,7 @@ namespace xharness
 						var timeoutType = launchTimedout ? "Launch" : "Completion";
 						var timeoutValue = launchTimedout ? Harness.LaunchTimeout : timeout.TotalSeconds;
 						main_log.WriteLine ($"{timeoutType} timed out after {timeoutValue} seconds");
-						await Process_Extensions.KillTreeAsync (pid, main_log, true);
+						await ProcessManager.KillTreeAsync (pid, main_log, true);
 					} else {
 						main_log.WriteLine ("Could not find pid in mtouch output.");
 					}
@@ -859,7 +744,7 @@ namespace xharness
 					});
 					var runLog = Log.CreateAggregatedLog (callbackLog, main_log);
 					var timeoutWatch = Stopwatch.StartNew ();
-					var result = await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, args, runLog, timeout, cancellation_token: cancellation_source.Token);
+					var result = await ProcessManager.ExecuteCommandAsync (Harness.MlaunchPath, args, runLog, timeout, cancellation_token: cancellation_source.Token);
 
 					if (!waitedForExit && !result.TimedOut) {
 						// mlaunch couldn't wait for exit for some reason. Let's assume the app exits when the test listener completes.
@@ -899,7 +784,7 @@ namespace xharness
 			var crashed = false;
 			if (File.Exists (listener_log.FullPath)) {
 				Harness.LogWrench ("@MonkeyWrench: AddFile: {0}", listener_log.FullPath);
-				success = TestsSucceeded (listener_log, timed_out, crashed);
+				success = TestsSucceeded (listener_log.FullPath, timed_out, out crashed);
 			} else if (timed_out) {
 				Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} never launched</i></b><br/>", mode);
 				main_log.WriteLine ("Test run never launched");
@@ -967,8 +852,12 @@ namespace xharness
 								crash_reason = node?.SelectSingleNode ("reason")?.InnerText;
 							}
 						}
-						if (crash_reason != null)
+						if (crash_reason != null) {
+							// if in CI, do write an xml error that will be picked as a failure by VSTS
+							if (Harness.InCI)
+								XmlResultParser.GenerateFailure (Logs, "crash", appName, Variation, "AppCrash", $"App crashed {crash_reason}.", crash_reports.Log.FullPath, Harness.XmlJargon);
 							break;
+						}
 					} catch (Exception e) {
 						Harness.Log (2, "Failed to process crash report '{1}': {0}", e.Message, crash.Description);
 					}
@@ -979,8 +868,31 @@ namespace xharness
 					} else {
 						FailureMessage = $"Killed by the OS ({crash_reason})";
 					}
+					if (Harness.InCI)
+						XmlResultParser.GenerateFailure (Logs, "crash", appName, Variation, "AppCrash", $"App crashed: {FailureMessage}", crash_reports.Log.FullPath, Harness.XmlJargon);
 				} else if (launch_failure) {
+					// same as with a crash
 					FailureMessage = $"Launch failure";
+					if (Harness.InCI)
+						XmlResultParser.GenerateFailure (Logs, "launch", appName, Variation, $"AppLaunch on {device_name}", $"{FailureMessage} on {device_name}", main_log.FullPath, XmlResultJargon.NUnitV3);
+				} else if (!isSimulator && crashed && string.IsNullOrEmpty (crash_reason) && Harness.InCI) {
+					// this happens more that what we would like on devices, the main reason most of the time is that we have had netwoking problems and the
+					// tcp connection could not be stablished. We are going to report it as an error since we have not parsed the logs, evne when the app might have
+					// not crashed. We need to check the main_log to see if we do have an tcp issue or not
+					var isTcp = false;
+					using (var reader = new StreamReader (main_log.FullPath)) {
+						string line;
+						while ((line = reader.ReadLine ()) != null) {
+							if (line.Contains ("Couldn't establish a TCP connection with any of the hostnames")) {
+								isTcp = true;
+								break;
+							}
+						}
+					}
+					if (isTcp)
+						XmlResultParser.GenerateFailure (Logs, "tcp-connection", appName, Variation, $"TcpConnection on {device_name}", $"Device {device_name} could not reach the host over tcp.", main_log.FullPath, Harness.XmlJargon);
+				} else if (timed_out && Harness.InCI) {
+					XmlResultParser.GenerateFailure (Logs, "timeout", appName, Variation, "AppTimeout", $"Test run timed out after {timeout.TotalMinutes} minute(s).", main_log.FullPath, Harness.XmlJargon);
 				}
 			}
 
@@ -1003,9 +915,9 @@ namespace xharness
 
 	// Monitor the output from 'mlaunch --installdev' and cancel the installation if there's no output for 1 minute.
 	class AppInstallMonitorLog : Log {
-		public override string FullPath => throw new NotImplementedException ();
+		public override string FullPath => copy_to.FullPath;
 
-		Log copy_to;
+		ILog copy_to;
 		CancellationTokenSource cancellation_source;
 		
 		public bool CopyingApp;
@@ -1027,7 +939,7 @@ namespace xharness
 			}
 		}
 
-		public AppInstallMonitorLog (Log copy_to)
+		public AppInstallMonitorLog (ILog copy_to)
 				: base (copy_to.Logs, $"Watch transfer log for {copy_to.Description}")
 		{
 			this.copy_to = copy_to;

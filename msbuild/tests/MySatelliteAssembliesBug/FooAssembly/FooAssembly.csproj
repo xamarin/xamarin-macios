@@ -23,7 +23,6 @@
     <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
     <MtouchFastDev>true</MtouchFastDev>
     <MtouchProfiling>true</MtouchProfiling>
-    <IOSDebuggerPort>45829</IOSDebuggerPort>
     <DeviceSpecificBuild>false</DeviceSpecificBuild>
     <MtouchLink></MtouchLink>
     <MtouchHttpClientHandler></MtouchHttpClientHandler>

@@ -132,6 +132,8 @@ namespace Introspection {
 						continue;
 					}
 					break;
+				case "Errors":
+					continue;
 				}
 				// Either Skip method or Frameworks.cs needs to be updated
 				ReportError ("Unknown framework '{0}'", ns);

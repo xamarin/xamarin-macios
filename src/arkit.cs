@@ -1829,6 +1829,7 @@ namespace ARKit {
 
 	interface IARSessionProviding {}
 
+	[iOS (13,0)]
 	[Protocol]
 	interface ARSessionProviding {
 

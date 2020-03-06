@@ -7,6 +7,8 @@ using System.Security.Cryptography.X509Certificates;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
+using Xamarin.Utils;
+
 using SecKeychain = Xamarin.MacDev.Keychain;
 
 namespace Xamarin.MacDev.Tasks
@@ -22,8 +24,8 @@ namespace Xamarin.MacDev.Tasks
 		protected abstract string[] DevelopmentPrefixes { get; }
 		protected abstract string[] DirectDistributionPrefixes { get; }
 		protected abstract string[] AppStoreDistributionPrefixes { get; }
-		protected abstract PlatformFramework Framework { get; }
-		protected abstract string PlatformName { get ; }
+		protected abstract ApplePlatform Framework { get; }
+		protected abstract string PlatformName { get; }
 		protected abstract string ApplicationIdentifierKey { get; }
 
 		string provisioningProfileName;
@@ -456,7 +458,7 @@ namespace Xamarin.MacDev.Tasks
 				return false;
 			}
 
-			if (Framework == PlatformFramework.MacOS) {
+			if (Framework == ApplePlatform.MacOSX) {
 				if (!RequireCodeSigning) {
 					DetectedBundleId = identity.BundleId;
 					DetectedAppId = DetectedBundleId;

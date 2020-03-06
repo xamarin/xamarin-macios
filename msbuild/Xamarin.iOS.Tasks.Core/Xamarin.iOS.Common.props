@@ -24,6 +24,12 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<_XamarinCommonPropsHasBeenImported>true</_XamarinCommonPropsHasBeenImported>
 	</PropertyGroup>
 
+	<PropertyGroup>
+		<!-- Get the TargetFrameworkMoniker and store it in our own variable so that it's overridable while only affecting the parts of the build that we care about.
+			 This is overridability is a workaround while we wait for .NET 5 to be able to give us the TFM we're supposed to get during the build. -->
+		<_ComputedTargetFrameworkMoniker Condition="'$(_ComputedTargetFrameworkMoniker)' == ''">$(TargetFrameworkMoniker)</_ComputedTargetFrameworkMoniker>
+	</PropertyGroup>
+
 	<!-- When looking for related files to copy, look for Mono debugging files as well -->
 	<PropertyGroup>
 		<AllowedReferenceRelatedFileExtensions>
@@ -100,6 +106,12 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<ItemGroup>
 		<AvailableItemName Include="BundleResource" />
 	</ItemGroup>
+
+	<!-- Do not resolve from the GAC under any circumstances in Mobile -->
+	<PropertyGroup>
+		<AssemblySearchPaths>$([System.String]::Copy('$(AssemblySearchPaths)').Replace('{GAC}',''))</AssemblySearchPaths>
+		<AssemblySearchPaths Condition="'$(MSBuildRuntimeVersion)' != ''">$(AssemblySearchPaths.Split(';'))</AssemblySearchPaths>
+	</PropertyGroup>
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.props"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.props')"/>

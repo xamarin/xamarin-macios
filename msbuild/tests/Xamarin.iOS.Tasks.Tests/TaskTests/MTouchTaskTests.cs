@@ -60,7 +60,7 @@ namespace Xamarin.iOS.Tasks
 
 			Task.AppBundleDir = AppBundlePath;
 			Task.AppManifest = new TaskItem (Path.Combine (MonoTouchProjectPath, "Info.plist"));
-			Task.CompiledEntitlements = Path.Combine ("..", "bin", "Resources", "Entitlements.plist");
+			Task.CompiledEntitlements = Path.Combine (Path.GetDirectoryName (GetType ().Assembly.Location), "Resources", "Entitlements.plist");
 			Task.IntermediateOutputPath = Path.Combine ("obj", "mtouch-cache");
 			Task.MainAssembly = new TaskItem ("Main.exe");
 			Task.References = new [] { new TaskItem ("a.dll"), new TaskItem ("b with spaces.dll"), new TaskItem ("c\"quoted\".dll") };
@@ -68,7 +68,7 @@ namespace Xamarin.iOS.Tasks
 			Task.SdkRoot = "/path/to/sdkroot";
 			Task.SdkVersion = "6.1";
 			Task.SymbolsList = Path.Combine (Path.GetTempPath (), "mtouch-symbol-list");
-			Task.TargetFrameworkIdentifier = "Xamarin.iOS";
+			Task.TargetFrameworkMoniker = "Xamarin.iOS,v1.0";
 		}
 
 		[Test]
@@ -132,16 +132,16 @@ namespace Xamarin.iOS.Tasks
 		{
 			Task.EnableBitcode = true;
 
-			Task.TargetFrameworkIdentifier = frameworkIdentifier;
+			Task.TargetFrameworkMoniker = frameworkIdentifier + ",v1.0";
 		}
 
 		[Test]
-		[ExpectedException (typeof(InvalidOperationException), ExpectedMessage = "Bitcode is currently not supported on iOS.")]
 		public void StandardCommandline_WithBitcodeEnabled_iOS ()
 		{
 			MTouchEnableBitcode("Xamarin.iOS");
 
-			Task.GenerateCommandLineCommands ();
+			var ex = Assert.Throws<InvalidOperationException> (() => Task.GenerateCommandLineCommands (), "Exception");
+			Assert.AreEqual ("Bitcode is currently not supported on iOS.", ex.Message, "Message");
 		}
 
 		[Test]
@@ -189,7 +189,7 @@ namespace Xamarin.iOS.Tasks
 				var args = Task.GenerateCommandLineCommands ();
 				Assert.IsFalse (args.Contains ("$"), "#1");
 				Assert.IsTrue (args.Contains ("xyz-path/to-xyz"), "#ProjectDir");
-				Assert.IsTrue (args.Contains ("xxx-../MySingleView/bin/iPhoneSimulator/Debug/MySingleView.app-xxx"), "#AppBundleDir");
+				Assert.That (args, Does.Match ("xxx-.*/MySingleView/bin/iPhoneSimulator/Debug/MySingleView.app-xxx"), "#AppBundleDir");
 				Assert.IsTrue (args.Contains ("yyy-Main.exe-yyy"), "#TargetPath");
 				Assert.IsTrue (args.Contains ("yzy--yzy"), "#TargetDir");
 				Assert.IsTrue (args.Contains ("zzz-Main.exe-zzz"), "#TargetName");
@@ -203,15 +203,15 @@ namespace Xamarin.iOS.Tasks
 		public void BuildEntitlementFlagsTest ()
 		{
 			var args = Task.GenerateCommandLineCommands ();
-			Assert.IsTrue (args.Contains ("\"--gcc_flags=-Xlinker -sectcreate -Xlinker __TEXT -Xlinker __entitlements -Xlinker"), "#1");
-			Assert.IsTrue (args.Contains ("Entitlements.plist"), "#2");
+			Assert.That (args, Does.Contain ("\"--gcc_flags=-Xlinker -sectcreate -Xlinker __TEXT -Xlinker __entitlements -Xlinker"), "#1");
+			Assert.That (args, Does.Contain ("Entitlements.plist"), "#2");
 		}
 
 		[Test]
 		public void ReferenceFrameworkFileResolution_WhenReceivedReferencePathExists()
 		{
 			using (var sdk = new TempSdk()) {
-				Task.TargetFrameworkIdentifier = "MonoTouch";
+				Task.TargetFrameworkMoniker = "MonoTouch,v1.0";
 
 				var expectedPath = Path.GetTempFileName ();
 
@@ -234,11 +234,11 @@ namespace Xamarin.iOS.Tasks
 			Assert.IsTrue (args.Contains ($"@{Task.ResponseFilePath}"), "#@response-file");
 		}
 
-		[TestCase("Xamarin.iOS", "Xamarin.iOS")]
-		public void ReferenceFrameworkFileResolution_WhenFacadeFileExists(string targetFramework, string frameworkDir)
+		[TestCase("Xamarin.iOS,v1.0", "Xamarin.iOS")]
+		public void ReferenceFrameworkFileResolution_WhenFacadeFileExists(string targetFrameworkMoniker, string frameworkDir)
 		{
 			using (var sdk = new TempSdk()) {
-				Task.TargetFrameworkIdentifier = targetFramework;
+				Task.TargetFrameworkMoniker = targetFrameworkMoniker;
 				var expectedPath = Path.Combine (IPhoneSdks.MonoTouch.LibDir, "mono", frameworkDir, "Facades", "System.Collections.dll");
 				Directory.CreateDirectory (Path.GetDirectoryName (expectedPath));
 				File.WriteAllText (expectedPath, "");
@@ -259,11 +259,11 @@ namespace Xamarin.iOS.Tasks
 			}
 		}
 
-		[TestCase("Xamarin.iOS", "Xamarin.iOS")]
-		public void ReferenceFrameworkFileResolution_WhenFrameworkFileExists(string targetFramework, string frameworkDir)
+		[TestCase("Xamarin.iOS,v1.0", "Xamarin.iOS")]
+		public void ReferenceFrameworkFileResolution_WhenFrameworkFileExists(string targetFrameworkMoniker, string frameworkDir)
 		{
 			using (var sdk = new TempSdk()) {
-				Task.TargetFrameworkIdentifier = targetFramework;
+				Task.TargetFrameworkMoniker = targetFrameworkMoniker;
 				var expectedPath = Path.Combine (IPhoneSdks.MonoTouch.LibDir, "mono", frameworkDir, "System.Collections.dll");
 				Directory.CreateDirectory (Path.GetDirectoryName (expectedPath));
 				File.WriteAllText (expectedPath, "");
@@ -284,11 +284,11 @@ namespace Xamarin.iOS.Tasks
 			}
 		}
 
-		[TestCase("Xamarin.iOS", "Xamarin.iOS")]
-		public void ReferenceFrameworkFileResolution_WhenResolutionFails(string targetFramework, string frameworkDir)
+		[TestCase("Xamarin.iOS,v1.0", "Xamarin.iOS")]
+		public void ReferenceFrameworkFileResolution_WhenResolutionFails(string targetFrameworkMoniker, string frameworkDir)
 		{
 			using (var sdk = new TempSdk()) {
-				Task.TargetFrameworkIdentifier = targetFramework;
+				Task.TargetFrameworkMoniker = targetFrameworkMoniker;
 
 				Task.References = new[] { new TaskItem ("/usr/foo/System.Collections.dll", new Dictionary<string, string> { { "FrameworkFile", "true" } }) };
 

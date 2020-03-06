@@ -50,7 +50,7 @@ Delegates.generated.cs: Delegates.cs.t4 delegates.t4
 	$(Q_GEN) $(TT) $< -o $@
 
 bindings-generator.exe: bindings-generator.cs
-	$(Q) $(SYSTEM_CSC) $< -out:$@ -debug:full
+	$(Q) $(SYSTEM_CSC) $< -out:$@ -debug:full -features:strict 
 
 bindings-generated.m: bindings-generator.exe
 	$(Q_GEN) $(SYSTEM_MONO) --debug $< $@
@@ -520,3 +520,5 @@ clean-local::
 
 
 include $(TOP)/mk/rules.mk
+
+.SECONDARY: delegates.h delegates.inc

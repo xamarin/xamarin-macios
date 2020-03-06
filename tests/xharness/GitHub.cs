@@ -8,11 +8,13 @@ using System.Runtime.Serialization.Json;
 using System.Xml;
 using System.Text;
 using Xamarin;
+using Xharness.Execution;
 
-namespace xharness
+namespace Xharness
 {
 	public static class GitHub
 	{
+		static IProcessManager ProcessManager { get; set; } = new ProcessManager ();
 		static WebClient CreateClient ()
 		{
 			var client = new WebClient ();
@@ -152,7 +154,7 @@ namespace xharness
 				git.StartInfo.FileName = "git";
 				git.StartInfo.Arguments = $"diff-tree --no-commit-id --name-only -r {base_commit}..{head_commit}";
 				var output = new StringWriter ();
-				var rv = git.RunAsync (harness.HarnessLog, output, output).Result;
+				var rv = ProcessManager.RunAsync (git, harness.HarnessLog, output, output).Result;
 				if (rv.Succeeded)
 					return output.ToString ().Split (new char [] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
 

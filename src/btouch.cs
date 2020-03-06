@@ -57,6 +57,11 @@ public class BindingTouch {
 	public Frameworks Frameworks;
 	public AttributeManager AttributeManager;
 
+	readonly Dictionary<System.Type, Type> ikvm_type_lookup = new Dictionary<System.Type, Type> ();
+	internal Dictionary<System.Type, Type> IKVMTypeLookup {
+		get { return ikvm_type_lookup;  }
+	}
+
 	public TargetFramework TargetFramework {
 		get { return target_framework.Value; }
 	}
@@ -103,10 +108,10 @@ public class BindingTouch {
 			} else if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
 				return Path.Combine (GetSDKRoot (), "lib", "bgen", "Xamarin.Mac-mobile.BindingAttributes.dll");
 			} else {
-				throw ErrorHelper.CreateError (1043, "Internal error: unknown target framework '{0}'.", target_framework);
+				throw ErrorHelper.CreateError (1053, target_framework);
 			}
 		default:
-			throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.", CurrentPlatform);
+			throw new BindingException (1047, CurrentPlatform);
 		}
 	}
 
@@ -132,11 +137,11 @@ public class BindingTouch {
 			} else if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
 				yield return Path.Combine (GetSDKRoot (), "lib", "mono", "Xamarin.Mac");
 			} else {
-				throw ErrorHelper.CreateError (1043, "Internal error: unknown target framework '{0}'.", target_framework);
+				throw ErrorHelper.CreateError (1053, target_framework);
 			}
 			break;
 		default:
-			throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.", CurrentPlatform);
+			throw new BindingException (1047, CurrentPlatform);
 		}
 		foreach (var lib in libs)
 			yield return lib;
@@ -177,7 +182,7 @@ public class BindingTouch {
 				macSdkRoot = "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current";
 			return macSdkRoot;
 		default:
-			throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.", CurrentPlatform);
+			throw new BindingException (1047, CurrentPlatform);
 		}
 	}
 
@@ -185,11 +190,11 @@ public class BindingTouch {
 	{
 		TargetFramework tf;
 		if (!TargetFramework.TryParse (fx, out tf))
-			throw ErrorHelper.CreateError (68, "Invalid value for target framework: {0}.", fx);
+			throw ErrorHelper.CreateError (68, fx);
 		target_framework = tf;
 
 		if (Array.IndexOf (TargetFramework.ValidFrameworks, target_framework.Value) == -1)
-			throw ErrorHelper.CreateError (70, "Invalid target framework: {0}. Valid target frameworks are: {1}.", target_framework.Value, string.Join (" ", TargetFramework.ValidFrameworks.Select ((v) => v.ToString ()).ToArray ()));
+			throw ErrorHelper.CreateError (70, target_framework.Value, string.Join (" ", TargetFramework.ValidFrameworks.Select ((v) => v.ToString ()).ToArray ()));
 	}
 
 	static int Main2 (string [] args)
@@ -237,7 +242,7 @@ public class BindingTouch {
 			{ "ns=", "Sets the namespace for storing helper classes", v => ns = v },
 			{ "unsafe", "Sets the unsafe flag for the build", v=> unsafef = true },
 			{ "core", "Use this to build product assemblies", v => BindThirdPartyLibrary = false },
-			{ "r=", "Adds a reference", v => references.Add (v) },
+			{ "r|reference=", "Adds a reference", v => references.Add (v) },
 			{ "lib=", "Adds the directory to the search path for the compiler", v => libs.Add (v) },
 			{ "compiler=", "Sets the compiler to use (Obsolete) ", v => compiler = v, true },
 			{ "sdk=", "Sets the .NET SDK to use (Obsolete)", v => {}, true },
@@ -277,7 +282,7 @@ public class BindingTouch {
 			},
 			{ "unified-full-profile", "Launches compiler pointing to XM Full Profile", l => { /* no-op*/ }, true },
 			{ "unified-mobile-profile", "Launches compiler pointing to XM Mobile Profile", l => { /* no-op*/ }, true },
-			{ "target-framework=", "Specify target framework to use. Always required, and the currently supported values are: 'MonoTouch,v1.0', 'Xamarin.iOS,v1.0', 'Xamarin.TVOS,v1.0', 'Xamarin.WatchOS,v1.0', 'XamMac,v1.0', 'Xamarin.Mac,Version=v2.0,Profile=Mobile', 'Xamarin.Mac,Version=v4.5,Profile=Full' and 'Xamarin.Mac,Version=v4.5,Profile=System')", v => SetTargetFramework (v) },
+			{ "target-framework=", "Specify target framework to use. Always required, and the currently supported values are: 'Xamarin.iOS,v1.0', 'Xamarin.TVOS,v1.0', 'Xamarin.WatchOS,v1.0', 'XamMac,v1.0', 'Xamarin.Mac,Version=v2.0,Profile=Mobile', 'Xamarin.Mac,Version=v4.5,Profile=Full' and 'Xamarin.Mac,Version=v4.5,Profile=System')", v => SetTargetFramework (v) },
 			{ "warnaserror:", "An optional comma-separated list of warning codes that should be reported as errors (if no warnings are specified all warnings are reported as errors).", v => {
 					try {
 						if (!string.IsNullOrEmpty (v)) {
@@ -287,7 +292,7 @@ public class BindingTouch {
 							ErrorHelper.SetWarningLevel (ErrorHelper.WarningLevel.Error);
 						}
 					} catch (Exception ex) {
-						throw ErrorHelper.CreateError (26, $"Could not parse the command line argument '--warnaserror': {ex.Message}");
+						throw ErrorHelper.CreateError (26, ex.Message);
 					}
 				}
 			},
@@ -300,7 +305,7 @@ public class BindingTouch {
 							ErrorHelper.SetWarningLevel (ErrorHelper.WarningLevel.Disable);
 						}
 					} catch (Exception ex) {
-						throw ErrorHelper.CreateError (26, $"Could not parse the command line argument '--nowarn': {ex.Message}");
+						throw ErrorHelper.CreateError (26, ex.Message);
 					}
 				}
 			},
@@ -321,10 +326,10 @@ public class BindingTouch {
 		}
 
 		if (!target_framework.HasValue)
-			throw ErrorHelper.CreateError (86, "A target framework (--target-framework) must be specified.");
+			throw ErrorHelper.CreateError (86);
 
-		switch (target_framework.Value.Identifier.ToLowerInvariant ()) {
-		case "xamarin.ios":
+		switch (target_framework.Value.Platform) {
+		case ApplePlatform.iOS:
 			CurrentPlatform = PlatformName.iOS;
 			nostdlib = true;
 			if (string.IsNullOrEmpty (baselibdll))
@@ -332,7 +337,7 @@ public class BindingTouch {
 			references.Add ("Facades/System.Drawing.Common");
 			ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/Xamarin.iOS", references);
 			break;
-		case "xamarin.tvos":
+		case ApplePlatform.TVOS:
 			CurrentPlatform = PlatformName.TvOS;
 			nostdlib = true;
 			if (string.IsNullOrEmpty (baselibdll))
@@ -340,7 +345,7 @@ public class BindingTouch {
 			references.Add ("Facades/System.Drawing.Common");
 			ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/Xamarin.TVOS", references);
 			break;
-		case "xamarin.watchos":
+		case ApplePlatform.WatchOS:
 			CurrentPlatform = PlatformName.WatchOS;
 			nostdlib = true;
 			if (string.IsNullOrEmpty (baselibdll))
@@ -348,7 +353,7 @@ public class BindingTouch {
 			references.Add ("Facades/System.Drawing.Common");
 			ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/Xamarin.WatchOS", references);
 			break;
-		case "xamarin.mac":
+		case ApplePlatform.MacOSX:
 			CurrentPlatform = PlatformName.MacOSX;
 			nostdlib = true;
 			if (string.IsNullOrEmpty (baselibdll)) {
@@ -357,7 +362,7 @@ public class BindingTouch {
 				else if (target_framework == TargetFramework.Xamarin_Mac_4_5_Full || target_framework == TargetFramework.Xamarin_Mac_4_5_System)
 					baselibdll = Path.Combine (GetSDKRoot (), "lib", "reference", "full", "Xamarin.Mac.dll");
 				else
-					throw ErrorHelper.CreateError (1043, "Internal error: unknown target framework '{0}'.", target_framework); 
+					throw ErrorHelper.CreateError (1053, target_framework); 
 			}
 			if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
 				skipSystemDrawing = true;
@@ -371,12 +376,12 @@ public class BindingTouch {
 				skipSystemDrawing = false;
 				ReferenceFixer.FixSDKReferences ("/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5", references, forceSystemDrawing : true);
 			} else {
-				throw ErrorHelper.CreateError (1043, "Internal error: unknown target framework '{0}'.", target_framework); 
+				throw ErrorHelper.CreateError (1053, target_framework); 
 			}
 
 			break;
 		default:
-			throw ErrorHelper.CreateError (1043, "Internal error: unknown target framework '{0}'.", target_framework);
+			throw ErrorHelper.CreateError (1053, target_framework);
 		}
 
 		if (sources.Count > 0) {
@@ -432,7 +437,8 @@ public class BindingTouch {
 				cargs.Add ("-lib:" + Path.GetDirectoryName (baselibdll));
 
 			if (Driver.RunCommand (compiler, cargs, null, out var compile_output, true, verbose ? 1 : 0) != 0)
-				throw ErrorHelper.CreateError (2, "Could not compile the API bindings.\n\t" + compile_output.ToString ().Replace ("\n", "\n\t"));
+				throw ErrorHelper.CreateError (2, compile_output.ToString ().Replace ("\n", "\n\t"));
+				
 
 			universe = new Universe (UniverseOptions.EnableFunctionPointers | UniverseOptions.ResolveMissingMembers | UniverseOptions.MetadataOnly);
 
@@ -462,10 +468,10 @@ public class BindingTouch {
 			Frameworks = new Frameworks (CurrentPlatform);
 
 			Assembly corlib_assembly = universe.LoadFile (LocateAssembly ("mscorlib"));
-			Assembly platform_assembly = baselib;
-			Assembly system_assembly = universe.LoadFile (LocateAssembly ("System"));
-			Assembly binding_assembly = universe.LoadFile (GetAttributeLibraryPath ());
-			TypeManager.Initialize (this, api, corlib_assembly, platform_assembly, system_assembly, binding_assembly);
+			// Explicitly load our attribute library so that IKVM doesn't try (and fail) to find it.
+			universe.LoadFile (GetAttributeLibraryPath ());
+
+			TypeManager.Initialize (this, api, corlib_assembly, baselib);
 
 			foreach (var linkWith in AttributeManager.GetCustomAttributes<LinkWithAttribute> (api)) {
 				if (!linkwith.Contains (linkWith.LibraryName)) {
@@ -479,7 +485,7 @@ public class BindingTouch {
 					try {
 						universe.LoadFile (r);
 					} catch (Exception ex) {
-						ErrorHelper.Warning (1104, "Could not load the referenced library '{0}': {1}.", r, ex.Message);
+						ErrorHelper.Warning (1104, r, ex.Message);
 					}
 				}
 			}
@@ -540,7 +546,7 @@ public class BindingTouch {
 				cargs.Add ("-lib:" + Path.GetDirectoryName (baselibdll));
 
 			if (Driver.RunCommand (compiler, cargs, null, out var generated_compile_output, true, verbose ? 1 : 0) != 0)
-				throw ErrorHelper.CreateError (1000, "Could not compile the generated API bindings.\n\t" + generated_compile_output.ToString ().Replace ("\n", "\n\t"));
+				throw ErrorHelper.CreateError (1000, generated_compile_output.ToString ().Replace ("\n", "\n\t"));
 		} finally {
 			if (delete_temp)
 				Directory.Delete (tmpdir, true);

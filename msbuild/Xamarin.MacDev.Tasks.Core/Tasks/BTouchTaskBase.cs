@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
+using Xamarin.Utils;
+
 namespace Xamarin.MacDev.Tasks {
 	public abstract class BTouchTaskBase : ToolTask {
 
@@ -63,8 +65,12 @@ namespace Xamarin.MacDev.Tasks {
 
 		public ITaskItem[] Sources { get; set; }
 
+		public string TargetFrameworkIdentifier { get { return TargetFramework.Identifier; } }
+
+		public TargetFramework TargetFramework { get { return TargetFramework.Parse (TargetFrameworkMoniker); } }
+
 		[Required]
-		public string TargetFrameworkIdentifier { get; set; }
+		public string TargetFrameworkMoniker { get; set; }
 
 		protected override string ToolName {
 			get { return Path.GetFileNameWithoutExtension (ToolExe); }
@@ -224,8 +230,10 @@ namespace Xamarin.MacDev.Tasks {
 
 			var v = VerbosityUtils.Merge (ExtraArgs, (LoggerVerbosity) Verbosity);
 			if (v.Length > 0) {
-				cmd.AppendTextUnquoted (" ");
-				cmd.AppendTextUnquoted (v);
+				foreach (var arg in v) {
+					cmd.AppendTextUnquoted (" ");
+					cmd.AppendTextUnquoted (arg);
+				}
 			}
 
 			return cmd.ToString ();

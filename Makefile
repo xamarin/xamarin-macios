@@ -42,6 +42,10 @@ ifdef INCLUDE_IOS
 	@echo Validated file permissions for Xamarin.iOS.
 endif
 
+all-local:: global.json
+global.json: Make.config Makefile
+	$(Q) printf "{\n\t\"sdk\": {\n\t\t\"version\": \"$(DOTNET_VERSION)\"\n\t}\n}\n" > $@
+
 install-hook::
 	@$(MAKE) check-permissions
 ifdef INCLUDE_IOS

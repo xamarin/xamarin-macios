@@ -136,7 +136,7 @@ namespace Xamarin.Utils
 				AddFramework (Application.GetLibMono (mode));
 				break;
 			default:
-				throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", mode);
+				throw ErrorHelper.CreateError (100, Errors.MT0100, mode);
 			}
 			AddOtherFlag ("-lz");
 			AddOtherFlag ("-liconv");
@@ -154,7 +154,7 @@ namespace Xamarin.Utils
 				AddFramework (Application.GetLibXamarin (mode));
 				break;
 			default:
-				throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", mode);
+				throw ErrorHelper.CreateError (100, Errors.MT0100, mode);
 			}
 			AddFramework ("Foundation");
 			AddOtherFlag ("-lz");

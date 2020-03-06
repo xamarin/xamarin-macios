@@ -116,8 +116,8 @@ namespace Foundation {
 			int n;
 			try {
 				unsafe {
-					while ((n = stream.Read (buffer, 0, buffer.Length)) != 0){
-						fixed (byte *ptr = &buffer [0])
+					fixed (byte* ptr = &buffer [0]) {
+						while ((n = stream.Read (buffer, 0, buffer.Length)) != 0)
 							ret.AppendBytes ((IntPtr) ptr, (nuint) n);
 					}
 				}

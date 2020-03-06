@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Xharness;
 
-namespace xharness
+namespace Xharness
 {
 	public static class MakefileGenerator
 	{
@@ -211,7 +212,7 @@ namespace xharness
 
 		public static void CreateMakefile (Harness harness, IEnumerable<UnifiedTarget> unified_targets, IEnumerable<TVOSTarget> tvos_targets, IEnumerable<WatchOSTarget> watchos_targets, IEnumerable<TodayExtensionTarget> today_targets)
 		{
-			var executeSim32 = !harness.InWrench; // Waiting for iOS 10.3 simulator to be installed on wrench
+			var executeSim32 = !harness.InCI; // Waiting for iOS 10.3 simulator to be installed on wrench
 			var makefile = Path.Combine (Harness.RootDirectory, "Makefile.inc");
 			using (var writer = new StreamWriter (makefile, false, new UTF8Encoding (false))) {
 				writer.WriteLine (".stamp-configure-projects: Makefile xharness/xharness.exe");
@@ -453,7 +454,7 @@ namespace xharness
 					}
 					var chunks = new List<string> ();
 					if (target is WatchOSTarget && target.IsBCLProject) {
-						if (target.Name == "mscorlib") {
+						if (target.Name.StartsWith ("mscorlib", StringComparison.Ordinal)) {
 							for (int i = (int) 'A'; i <= (int) 'Z'; i++) {
 								chunks.Add (((char) i).ToString () + ((char) i).ToString ());
 							}

@@ -7,7 +7,6 @@ PROJECT_DIR=.
 include $(TOP)/src/frameworks.sources
 include $(TOP)/mk/rules.mk
 
-include $(TOP)/src/system-drawing.sources
 include $(TOP)/src/touch-unit.sources
 
 export MD_MTOUCH_SDK_ROOT=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)
@@ -51,6 +50,8 @@ ARGS_64 = -define:ARCH_64
 
 CURRENT_BRANCH_SED_ESCAPED:=$(subst |,\|,$(subst &,\&,$(subst $$,\$$,$(subst /,\/,$(CURRENT_BRANCH))))))
 
+SHARED_SYSTEM_DRAWING_SOURCES = System.Drawing/PointSizeRectangleTypeForwarders.cs
+
 #
 # Xamarin.iOS
 #
@@ -62,6 +63,7 @@ IOS_EXTRA_SOURCES = \
 	$(IOS_BUILD_DIR)/Constants.cs    \
 	$(IOS_BUILD_DIR)/AssemblyInfo.cs \
 	Compat.iOS.cs                    \
+	$(TOP)/tools/mtouch/Errors.Designer.cs \
 	$(SHARED_SYSTEM_DRAWING_SOURCES) \
 
 IOS_HTTP_SOURCES = \
@@ -72,18 +74,14 @@ IOS_HTTP_SOURCES = \
 IOS_CORE_SOURCES += $(IOS_EXTRA_SOURCES)
 IOS_SOURCES += $(IOS_EXTRA_SOURCES) $(IOS_HTTP_SOURCES)
 
-IOS_GENERATOR_FLAGS = -inline-selectors -d:IOS -process-enums -warnaserror:$(IOS_GENERATOR_WARNASERROR)
-IOS_GENERATOR_native_FLAGS = -d:XAMCORE_2_0 -d:__UNIFIED__
-IOS_DEFINES = -define:IPHONE -define:IOS -define:MONOTOUCH -d:NET_2_0 -d:__IOS__ $(APPLETLS_DEFINES) -d:SYSTEM_NET_HTTP
-IOS_native_DEFINES = -d:XAMCORE_2_0 -d:__UNIFIED__
-IOS_LIBDIR = $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1
-IOS_BMONO = MONO_PATH=$(IOS_LIBDIR) $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/btouch-mono
+IOS_GENERATOR_FLAGS = -inline-selectors -d:IOS -process-enums -warnaserror:$(IOS_GENERATOR_WARNASERROR) -d:XAMCORE_2_0 -d:__UNIFIED__
+IOS_DEFINES = -define:IPHONE -define:IOS -define:MONOTOUCH -d:__IOS__ $(APPLETLS_DEFINES) -d:SYSTEM_NET_HTTP -d:XAMCORE_2_0 -d:__UNIFIED__
 IOS_GENERATOR=$(BUILD_DIR)/common/bgen.exe
 IOS_GENERATE=$(SYSTEM_MONO) --debug $(IOS_GENERATOR)
 $(IOS_BUILD_DIR)/Constants.cs: Constants.iOS.cs.in Makefile $(TOP)/Make.config.inc | $(IOS_BUILD_DIR)
 	$(call Q_PROF_GEN,ios) sed \
 		-e "s/@VERSION@/$(IOS_PACKAGE_VERSION_MAJOR).$(IOS_PACKAGE_VERSION_MINOR).$(IOS_PACKAGE_VERSION_REV)/g" \
-		-e 's/@REVISION@/$(IOS_COMMIT_DISTANCE) ($(CURRENT_BRANCH_SED_ESCAPED): $(shell git log -1 --pretty=%h))/g' \
+		-e 's/@REVISION@/$(IOS_COMMIT_DISTANCE) ($(CURRENT_BRANCH_SED_ESCAPED): $(shell git log -1 --pretty=%h)/g' \
 		-e "s/@IOS_SDK_VERSION@/$(IOS_SDK_VERSION)/g" \
 		$< > $@
 
@@ -97,7 +95,6 @@ $(IOS_BUILD_DIR)/native/core.dll: $(IOS_CORE_SOURCES) frameworks.sources
 	$(call Q_PROF_CSC,ios) $(IOS_CSC) -nologo -out:$@ -target:library -debug -unsafe \
 		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
 		-define:COREBUILD $(IOS_DEFINES) \
-		$(IOS_native_DEFINES) \
 		$(IOS_CORE_SOURCES)
 
 # generated_sources
@@ -107,7 +104,6 @@ $(IOS_BUILD_DIR)/native/generated_sources: $(IOS_GENERATOR) $(IOS_APIS) $(IOS_BU
 $(BUILD_DIR)/ios.rsp: Makefile Makefile.generator frameworks.sources
 	$(Q_GEN) echo \
 		$(IOS_GENERATOR_FLAGS) \
-		$(IOS_GENERATOR_native_FLAGS) \
 		-core \
 		-sourceonly=$(IOS_BUILD_DIR)/native/generated_sources \
 		-compiler=$(IOS_CSC) \
@@ -125,11 +121,10 @@ define IOS_TARGETS_template
 # Xamarin.iOS.dll
 $(IOS_BUILD_DIR)/native-$(1)%Xamarin.iOS.dll $(IOS_BUILD_DIR)/native-$(1)%Xamarin.iOS.pdb: $$(IOS_SOURCES) $(IOS_BUILD_DIR)/native/generated_sources $(PRODUCT_KEY_PATH)
 	@mkdir -p $(IOS_BUILD_DIR)/native-$(1)
-	$$(call Q_PROF_CSC,ios/$(1) bit) $$(IOS_CSC) -nologo -out:$$@ -target:library -debug -unsafe -optimize \
+	$$(call Q_PROF_CSC,ios/$(1) bit) $$(IOS_CSC) -nologo -out:$$(basename $$@).dll -target:library -debug -unsafe -optimize \
 		-deterministic \
 		$$(ARGS_$(1)) \
 		-publicsign -keyfile:$(PRODUCT_KEY_PATH) $$(IOS_DEFINES) \
-		$$(IOS_native_DEFINES) \
 		-nowarn:219,618,114,414,1635,3021,$$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
 		$$(IOS_CSC_FLAGS_XI) \
 		$$(IOS_SOURCES) @$(IOS_BUILD_DIR)/native/generated_sources
@@ -156,18 +151,10 @@ $(IOS_BUILD_DIR)/reference/MonoTouch.Dialog-1.pdb: $(MACIOS_BINARIES_PATH)/MonoT
 $(IOS_BUILD_DIR)/reference%MonoTouch.NUnitLite.dll $(IOS_BUILD_DIR)/reference%MonoTouch.NUnitLite.pdb: $(IOS_TOUCHUNIT_SOURCES) $(IOS_BUILD_DIR)/reference/MonoTouch.Dialog-1.dll $(PRODUCT_KEY_PATH) $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll
 	$(call Q_PROF_CSC,ios) $(IOS_CSC) -nologo -out:$(basename $@).dll -target:library -debug:portable -optimize -publicsign \
 		-deterministic \
-		-keyfile:$(PRODUCT_KEY_PATH) -r:$(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll -define:XAMCORE_2_0 -define:__UNIFIED__ -r:$(IOS_BUILD_DIR)/reference/MonoTouch.Dialog-1.dll -r:$(MONOTOUCH_MONO_PATH)/System.dll -r:$(MONOTOUCH_MONO_PATH)/System.Xml.dll \
-		-nowarn:3006,612,649,414,1635 \
-		-define:NUNITLITE,CLR_4_0,NET_4_5,__MOBILE__ $(IOS_DEFINES) \
+		-keyfile:$(PRODUCT_KEY_PATH) -r:$(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll -define:XAMCORE_2_0 -define:__UNIFIED__ -define:MONO -r:$(IOS_BUILD_DIR)/reference/MonoTouch.Dialog-1.dll -r:$(MONOTOUCH_MONO_PATH)/System.dll -r:$(MONOTOUCH_MONO_PATH)/System.Xml.dll \
+		-nowarn:3006,612,649,414,1635,659 \
+		-define:NUNITLITE,CLR_4_0,NET_4_5,__MOBILE__,MONO $(IOS_DEFINES) \
 		$(IOS_TOUCHUNIT_SOURCES)
-
-# System.Drawing
-# not installed or shipped yet - must be compiled manually using "make System.Drawing.dll"
-$(IOS_BUILD_DIR)/reference/System.Drawing.dll: $(IOS_SYSTEM_DRAWING_SOURCES) monotouch.dll $(PRODUCT_KEY_PATH)
-	$(call Q_PROF_CSC,ios/reference) $(IOS_CSC) -nologo -out:$@ -target:library -debug:portable -optimize -publicsign \
-		-keyfile:$(PRODUCT_KEY_PATH) -r:$(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll -define:XAMCORE_2_0 -define:__UNIFIED__ \
-		-nowarn:114,169,414,1635 $(IOS_DEFINES) \
-		$(IOS_SYSTEM_DRAWING_SOURCES)
 
 $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll: $(IOS_BUILD_DIR)/native-64/Xamarin.iOS.dll | $(IOS_BUILD_DIR)/reference
 	$(Q_STRIP) mono-cil-strip -q $< $@
@@ -297,11 +284,11 @@ MAC_WARNINGS_TO_FIX := 114,108
 # 4014 is "The statement is not awaited and execution of current method continues before the call is completed. Consider using `await' operator or calling `Wait' method"
 MAC_WARNINGS_TO_FIX := $(MAC_WARNINGS_TO_FIX),4014
 
-MAC_COMMON_DEFINES = -define:NET_2_0,XAMARIN_MAC,MONOMAC,XAMCORE_2_0,__UNIFIED__
+MAC_COMMON_DEFINES = -define:MONOMAC,XAMCORE_2_0,__UNIFIED__
 MAC_full_ARGS = -define:NO_SYSTEM_DRAWING -define:XAMMAC_SYSTEM_MONO
 MAC_mobile_ARGS = 
 MAC_BOOTSTRAP_DEFINES = $(MAC_COMMON_DEFINES),COREBUILD
-MAC_GENERATED_DEFINES = -d:MONOMAC -d:XAMARIN_MAC -d:XAMCORE_2_0 -d:__UNIFIED__
+MAC_GENERATED_DEFINES = -d:MONOMAC -d:XAMCORE_2_0 -d:__UNIFIED__
 
 $(MAC_BUILD_DIR)/$(1)/$(3).pdb: $(MAC_BUILD_DIR)/$(1)/$(3).dll
 
@@ -321,6 +308,7 @@ MAC_SOURCES += \
 	Obsoletes.cs \
 	Darwin/KernelNotification.cs \
 	Darwin/SystemLog.cs \
+	$(TOP)/tools/mtouch/Errors.Designer.cs \
 
 # CFNetwork is shipped:
 # * In a separate library (XamMac.CFNetwork.dll) for Classic.
@@ -342,7 +330,7 @@ MAC_HTTP_SOURCES = \
 $(MAC_BUILD_DIR)/Constants.cs: Constants.mac.cs.in Makefile $(TOP)/Make.config.inc | $(MAC_BUILD_DIR)
 	$(Q) sed \
 			-e "s/@VERSION@/$(MAC_PACKAGE_VERSION_MAJOR).$(MAC_PACKAGE_VERSION_MINOR).$(MAC_PACKAGE_VERSION_REV)/g" \
-			-e 's/@REVISION@/$(MAC_COMMIT_DISTANCE) ($(CURRENT_BRANCH_SED_ESCAPED): $(shell git log -1 --pretty=%h))/g' \
+			-e 's/@REVISION@/$(MAC_COMMIT_DISTANCE) ($(CURRENT_BRANCH_SED_ESCAPED): $(shell git log -1 --pretty=%h)/g' \
 			-e "s/@OSX_SDK_VERSION@/$(OSX_SDK_VERSION)/g" \
 			-e "s/@MIN_XM_MONO_VERSION@/$(MIN_XM_MONO_VERSION)/g" \
 		$< > $@
@@ -362,10 +350,6 @@ xm_mobile_profile=--target-framework=Xamarin.Mac,Version=v2.0,Profile=Mobile
 
 MAC_GENERATOR=$(BUILD_DIR)/common/bgen.exe
 MAC_GENERATE=$(SYSTEM_MONO) --debug $(MAC_GENERATOR)
-MAC_full_GENERATOR=$(MAC_GENERATOR)
-MAC_full_GENERATE=$(MAC_GENERATE)
-MAC_mobile_GENERATOR=$(MAC_GENERATOR)
-MAC_mobile_GENERATE=$(MAC_GENERATE)
 
 define MAC_GENERATOR_template
 $(MAC_BUILD_DIR)/$(1)/core.dll: $(MAC_CORE_SOURCES) frameworks.sources
@@ -373,11 +357,11 @@ $(MAC_BUILD_DIR)/$(1)/core.dll: $(MAC_CORE_SOURCES) frameworks.sources
 	$$(call Q_PROF_CSC,mac/$(1)) \
 		$$(MAC_$(1)_CSC) -nologo -out:$$@ -target:library -debug -unsafe -nowarn:3021,612,618,1635 \
 		$$(MAC_BOOTSTRAP_DEFINES) \
-		$(3) \
+		$(2) \
 		$$(MAC_CORE_SOURCES)
 
-$(MAC_BUILD_DIR)/$(1)/generated-sources: $$(MAC_$(1)_GENERATOR) $(MAC_APIS) $(MAC_BUILD_DIR)/$(1)/core.dll $(MAC_BUILD_DIR)/$(7) $(BUILD_DIR)/mac-$(1).rsp
-	$$(call Q_PROF_GEN,mac/$(1)) $$(MAC_$(1)_GENERATE) @$(BUILD_DIR)/mac-$(1).rsp
+$(MAC_BUILD_DIR)/$(1)/generated-sources: $$(MAC_GENERATOR) $(MAC_APIS) $(MAC_BUILD_DIR)/$(1)/core.dll $(MAC_BUILD_DIR)/Xamarin.Mac-$(1).BindingAttributes.dll $(BUILD_DIR)/mac-$(1).rsp
+	$$(call Q_PROF_GEN,mac/$(1)) $$(MAC_GENERATE) @$(BUILD_DIR)/mac-$(1).rsp
 
 $(BUILD_DIR)/mac-$(1).rsp: Makefile Makefile.generator frameworks.sources
 	$$(Q_GEN) echo \
@@ -391,40 +375,41 @@ $(BUILD_DIR)/mac-$(1).rsp: Makefile Makefile.generator frameworks.sources
 		-sourceonly:$(MAC_BUILD_DIR)/$(1)/generated-sources \
 		-tmpdir:$(MAC_BUILD_DIR)/$(1) \
 		-baselib:$(MAC_BUILD_DIR)/$(1)/core.dll \
-		-attributelib:$(MAC_BUILD_DIR)/$(7) \
+		-attributelib:$(MAC_BUILD_DIR)/Xamarin.Mac-$(1).BindingAttributes.dll \
 		-d:NO_SYSTEM_DRAWING \
+		--ns=ObjCRuntime \
 		$(2) \
-		$(3) \
 		$(xm_$(1)_profile) \
 		$(MAC_APIS) \
 		> $$@
 endef
 
-$(eval $(call MAC_GENERATOR_template,full,--ns=ObjCRuntime,-d:NO_SYSTEM_DRAWING,,,full,Xamarin.Mac-full.BindingAttributes.dll))
-$(eval $(call MAC_GENERATOR_template,mobile,--ns=ObjCRuntime,$(SHARED_SYSTEM_DRAWING_SOURCES),,,mobile,Xamarin.Mac-mobile.BindingAttributes.dll))
+$(eval $(call MAC_GENERATOR_template,full,-d:NO_SYSTEM_DRAWING))
+$(eval $(call MAC_GENERATOR_template,mobile,$(SHARED_SYSTEM_DRAWING_SOURCES)))
 
 define MAC_TARGETS_template
-$(MAC_BUILD_DIR)/$(1)/$(2): $(MAC_BUILD_DIR)/$(3)/generated-sources $(MAC_SOURCES) $(MAC_CFNETWORK_SOURCES) $(MAC_CLASSIC_SOURCES) $(SN_KEY)
-	@mkdir -p $(MAC_BUILD_DIR)/$(1)
-	$$(call Q_PROF_CSC,mac/$(1)) \
-		$$(MAC_$(3)_CSC) -nologo -out:$$@ -target:library -debug -unsafe \
+$(MAC_BUILD_DIR)/$(1)-64/Xamarin.Mac.dll: $(MAC_BUILD_DIR)/$(1)/generated-sources $(MAC_SOURCES) $(MAC_CFNETWORK_SOURCES) $(MAC_CLASSIC_SOURCES) $(SN_KEY)
+	@mkdir -p $(MAC_BUILD_DIR)/$(1)-64
+	$$(call Q_PROF_CSC,mac/$(1)-64) \
+		$$(MAC_$(1)_CSC) -nologo -out:$$@ -target:library -debug -unsafe \
 		-deterministic \
-		$$(MAC_COMMON_DEFINES),OBJECT_REF_TRACKING \
-		$$(MAC_$(3)_ARGS) \
-		$$(ARGS_$(6)) \
+		$$(MAC_COMMON_DEFINES) \
+		$$(MAC_$(1)_ARGS) \
+		$$(ARGS_64) \
 		-publicsign -keyfile:$(SN_KEY) \
 		-nowarn:3021,1635,612,618,0219,0414,$(MAC_WARNINGS_TO_FIX) \
 		$$(MAC_CSC_FLAGS_XM) \
-		$(4) \
+		$(MAC_CFNETWORK_SOURCES) $(MAC_HTTP_SOURCES) \
+		$(2) \
 		$$(MAC_SOURCES) \
 		@$$<
 
-$(MAC_BUILD_DIR)/$(1)/$(2:.dll=.pdb): $(MAC_BUILD_DIR)/$(1)/$(2)
+$(MAC_BUILD_DIR)/$(1)-64/Xamarin.Mac.pdb: $(MAC_BUILD_DIR)/$(1)-64/Xamarin.Mac.dll
 
 endef
 
-$(eval $(call MAC_TARGETS_template,mobile-64,Xamarin.Mac.dll,mobile,$(MAC_CFNETWORK_SOURCES) $(MAC_HTTP_SOURCES) $(SHARED_SYSTEM_DRAWING_SOURCES) $(APPLETLS_DEFINES) -D:XAMARIN_MODERN -D:UNIFIED -D:__UNIFIED__,mobile-64,64))
-$(eval $(call MAC_TARGETS_template,full-64,Xamarin.Mac.dll,full,$(MAC_CFNETWORK_SOURCES) $(MAC_HTTP_SOURCES) -D:XAMARIN_MODERN -D:UNIFIED -D:__UNIFIED__,full-64,64))
+$(eval $(call MAC_TARGETS_template,mobile,$(SHARED_SYSTEM_DRAWING_SOURCES) $(APPLETLS_DEFINES)))
+$(eval $(call MAC_TARGETS_template,full,))
 
 $(MAC_BUILD_DIR)/%-reference/Xamarin.Mac.dll: $(MAC_BUILD_DIR)/%-64/Xamarin.Mac.dll
 	@mkdir -p $(@D)
@@ -526,9 +511,7 @@ all-mac: $(MAC_TARGETS)
 # Xamarin.WatchOS
 #
 
-WATCH_DEFINES = -define:IPHONE -define:MONOTOUCH -d:NET_2_0 -d:WATCH -d:XAMCORE_2_0 -d:XAMCORE_3_0 -d:__WATCHOS__ -d:__UNIFIED__ -d:SYSTEM_NET_HTTP
-WATCH_LIBDIR = $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS
-WATCH_BMONO = MONO_PATH=$(WATCH_LIBDIR)/repl $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/bwatch-mono
+WATCH_DEFINES = -define:IPHONE -define:MONOTOUCH -d:WATCH -d:XAMCORE_2_0 -d:XAMCORE_3_0 -d:__WATCHOS__ -d:__UNIFIED__ -d:SYSTEM_NET_HTTP
 WATCH_GENERATOR=$(BUILD_DIR)/common/bgen.exe
 WATCH_GENERATE=$(SYSTEM_MONO) --debug $(WATCH_GENERATOR)
 WATCH_GENERATED_DEFINES= -d:WATCH -d:XAMCORE_3_0 -d:XAMCORE_2_0 -d:__UNIFIED__
@@ -552,11 +535,12 @@ WATCHOS_CORE_SOURCES +=           \
 WATCHOS_SOURCES +=                \
     $(WATCHOS_EXTRA_CORE_SOURCES) \
     $(WATCHOS_HTTP_SOURCES)        \
+    $(TOP)/tools/mtouch/Errors.Designer.cs \
 
 $(WATCH_BUILD_DIR)/Constants.cs: $(TOP)/src/Constants.watch.cs.in Makefile $(TOP)/Make.config.inc | $(WATCH_BUILD_DIR)
 	$(call Q_PROF_GEN,watch) sed \
 		-e "s/@VERSION@/$(IOS_PACKAGE_VERSION_MAJOR).$(IOS_PACKAGE_VERSION_MINOR).$(IOS_PACKAGE_VERSION_REV)/g" \
-		-e 's/@REVISION@/$(IOS_COMMIT_DISTANCE) ($(CURRENT_BRANCH_SED_ESCAPED): $(shell git log -1 --pretty=%h))/g' \
+		-e 's/@REVISION@/$(IOS_COMMIT_DISTANCE) ($(CURRENT_BRANCH_SED_ESCAPED): $(shell git log -1 --pretty=%h)/g' \
 		-e "s/@WATCH_SDK_VERSION@/$(WATCH_SDK_VERSION)/g" \
 		$< > $@
 
@@ -598,7 +582,6 @@ $(BUILD_DIR)/watchos.rsp: Makefile Makefile.generator frameworks.sources
 		-tmpdir=$(WATCH_BUILD_DIR)/watch                         \
 		-baselib=$(WATCH_BUILD_DIR)/watch/core.dll               \
 		-attributelib=$(WATCH_BUILD_DIR)/Xamarin.WatchOS.BindingAttributes.dll \
-		-ns=MonoTouch.ObjCRuntime                                \
 		-native-exception-marshalling                            \
 		$(WATCH_GENERATED_DEFINES)				\
 		--ns:ObjCRuntime                                         \
@@ -622,10 +605,10 @@ $(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.pdb: $(WATCH_BUILD_DIR)/watch-32/Xa
 
 # MonoTouch.NUnitLite
 $(WATCH_BUILD_DIR)/reference/MonoTouch.NUnitLite%dll $(WATCH_BUILD_DIR)/reference/MonoTouch.NUnitLite%pdb: $(WATCHOS_TOUCHUNIT_SOURCES) $(PRODUCT_KEY_PATH) $(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.dll
-	$(call Q_PROF_CSC,watch) $(SYSTEM_CSC) -nologo -out:$(basename $@).dll -target:library -debug:portable -optimize -publicsign -noconfig -nostdlib \
+	$(call Q_PROF_CSC,watch) $(SYSTEM_CSC) -features:strict -nologo -out:$(basename $@).dll -target:library -debug:portable -optimize -publicsign -noconfig -nostdlib \
 		-keyfile:$(PRODUCT_KEY_PATH) -r:$(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.dll -r:$(MONOTOUCH_WATCH_MONO_PATH)/mscorlib.dll -r:$(MONOTOUCH_WATCH_MONO_PATH)/System.dll -r:$(MONOTOUCH_WATCH_MONO_PATH)/System.Xml.dll \
-		-nowarn:3006,612,649,414,1635 \
-		-define:NUNITLITE,CLR_4_0,NET_4_5,__MOBILE__ $(WATCH_DEFINES) \
+		-nowarn:3006,612,649,414,1635,659 \
+		-define:NUNITLITE,CLR_4_0,NET_4_5,__MOBILE__,MONO $(WATCH_DEFINES) \
 		-deterministic \
 		$(WATCHOS_TOUCHUNIT_SOURCES)
 
@@ -692,9 +675,7 @@ endif
 # Xamarin.TVOS
 #
 
-TVOS_DEFINES = -define:IPHONE -define:MONOTOUCH -d:NET_2_0 -d:TVOS -d:XAMCORE_2_0 -d:XAMCORE_3_0 -d:__TVOS__ $(APPLETLS_DEFINES) -d:__UNIFIED__ -d:SYSTEM_NET_HTTP
-TVOS_LIBDIR = $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS
-TVOS_BMONO = MONO_PATH=$(TVOS_LIBDIR)/repl $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/btv-mono
+TVOS_DEFINES = -define:IPHONE -define:MONOTOUCH -d:TVOS -d:XAMCORE_2_0 -d:XAMCORE_3_0 -d:__TVOS__ $(APPLETLS_DEFINES) -d:__UNIFIED__ -d:SYSTEM_NET_HTTP
 TVOS_GENERATOR=$(BUILD_DIR)/common/bgen.exe
 TVOS_GENERATE=$(SYSTEM_MONO) --debug $(TVOS_GENERATOR)
 TVOS_GENERATED_DEFINES= -d:TVOS -d:XAMCORE_3_0 -d:XAMCORE_2_0 -d:__UNIFIED__
@@ -712,6 +693,7 @@ TVOS_HTTP_SOURCES = \
 	Foundation/NSUrlSessionHandler.cs \
 	System.Net.Http/CFContentStream.cs \
 	System.Net.Http/CFNetworkHandler.cs \
+	$(TOP)/tools/mtouch/Errors.Designer.cs \
 
 TVOS_SOURCES +=                \
 	$(TVOS_EXTRA_CORE_SOURCES) \
@@ -720,7 +702,7 @@ TVOS_SOURCES +=                \
 $(TVOS_BUILD_DIR)/Constants.cs: $(TOP)/src/Constants.tvos.cs.in Makefile $(TOP)/Make.config.inc | $(TVOS_BUILD_DIR)
 	$(call Q_PROF_GEN,tvos) sed \
 		-e "s/@VERSION@/$(IOS_PACKAGE_VERSION_MAJOR).$(IOS_PACKAGE_VERSION_MINOR).$(IOS_PACKAGE_VERSION_REV)/g" \
-		-e 's/@REVISION@/$(IOS_COMMIT_DISTANCE) ($(CURRENT_BRANCH_SED_ESCAPED): $(shell git log -1 --pretty=%h))/g' \
+		-e 's/@REVISION@/$(IOS_COMMIT_DISTANCE) ($(CURRENT_BRANCH_SED_ESCAPED): $(shell git log -1 --pretty=%h)/g' \
 		-e "s/@TVOS_SDK_VERSION@/$(TVOS_SDK_VERSION)/g" \
 		$< > $@
 
@@ -764,7 +746,6 @@ $(BUILD_DIR)/tvos.rsp: Makefile Makefile.generator frameworks.sources
 		-baselib=$(TVOS_BUILD_DIR)/tvos/core.dll               \
 		-attributelib=$(TVOS_BUILD_DIR)/Xamarin.TVOS.BindingAttributes.dll \
 		$(TVOS_GENERATED_DEFINES)				\
-		-ns=MonoTouch.ObjCRuntime                                \
 		-native-exception-marshalling                            \
 		--ns:ObjCRuntime                                         \
 		$(TVOS_APIS)                                            \
@@ -787,10 +768,10 @@ $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.pdb: $(TVOS_BUILD_DIR)/tvos-64/Xamarin.
 
 # MonoTouch.NUnitLite
 $(TVOS_BUILD_DIR)/reference/MonoTouch.NUnitLite%dll $(TVOS_BUILD_DIR)/reference/MonoTouch.NUnitLite%pdb: $(TVOS_TOUCHUNIT_SOURCES) $(PRODUCT_KEY_PATH) $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll $(TVOS_BUILD_DIR)/reference/MonoTouch.Dialog-1.dll
-	$(call Q_PROF_CSC,tvos) $(SYSTEM_CSC) -nologo -r:$(MONOTOUCH_TV_MONO_PATH)/mscorlib.dll -out:$(basename $@).dll -target:library -debug:portable -optimize -noconfig -nostdlib -publicsign \
+	$(call Q_PROF_CSC,tvos) $(SYSTEM_CSC) -features:strict -nologo -r:$(MONOTOUCH_TV_MONO_PATH)/mscorlib.dll -out:$(basename $@).dll -target:library -debug:portable -optimize -noconfig -nostdlib -publicsign \
 		-keyfile:$(PRODUCT_KEY_PATH) -r:$(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll -r:$(TVOS_BUILD_DIR)/reference/MonoTouch.Dialog-1.dll -r:$(MONOTOUCH_TV_MONO_PATH)/System.dll -r:$(MONOTOUCH_TV_MONO_PATH)/System.Xml.dll \
-		-nowarn:3006,612,649,414,1635 \
-		-define:NUNITLITE,CLR_4_0,NET_4_5,__MOBILE__ $(TVOS_DEFINES) \
+		-nowarn:3006,612,649,414,1635,659 \
+		-define:NUNITLITE,CLR_4_0,NET_4_5,__MOBILE__,MONO $(TVOS_DEFINES) \
 		-deterministic \
 		$(TVOS_TOUCHUNIT_SOURCES)
 

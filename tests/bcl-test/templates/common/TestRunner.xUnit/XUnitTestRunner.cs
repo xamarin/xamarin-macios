@@ -8,13 +8,19 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
-
-
+using System.Xml.Xsl;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Xamarin.iOS.UnitTests.XUnit
 {
+	public class XsltIdGenerator
+	{
+		// NUnit3 xml does not have schema, there is no much info about it, most examples just have incremental IDs.
+		int seed = 1000;
+		public int GenerateHash (string name) => seed++;
+	}
+
 	public class XUnitTestRunner : TestRunner
 	{
 		readonly TestMessageSink messageSink;
@@ -23,7 +29,6 @@ namespace Xamarin.iOS.UnitTests.XUnit
 		List<XUnitFilter> filters = new List<XUnitFilter> ();
 		bool runAssemblyByDefault;
 
-		public XUnitResultFileFormat ResultFileFormat { get; set; } = XUnitResultFileFormat.NUnit;
 		public AppDomainSupport AppDomainSupport { get; set; } = AppDomainSupport.Denied;
 		protected override string ResultsFileName { get; set; } = "TestResults.xUnit.xml";
 
@@ -791,67 +796,81 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			}
 		}
 
-		public override string WriteResultsToFile ()
+		public override string WriteResultsToFile (Jargon jargon)
 		{
 			if (assembliesElement == null)
 				return String.Empty;
-
+			// remove all the empty nodes
+			assembliesElement.Descendants ().Where (e => e.Name == "collection" && !e.Descendants ().Any ()).Remove ();
 			string outputFilePath = GetResultsFilePath ();
-			var settings = new XmlWriterSettings { Indent = true };
+			var settings = new XmlWriterSettings { Indent = true};
 			using (var xmlWriter = XmlWriter.Create (outputFilePath, settings)) {
-				switch (ResultFileFormat) {
-				case XUnitResultFileFormat.XunitV2:
+				switch (jargon) {
+				case Jargon.NUnitV2:
+					Transform_Results ("NUnitXml.xslt", assembliesElement, xmlWriter);
+					break;
+				case Jargon.NUnitV3:
+					Transform_Results ("NUnit3Xml.xslt", assembliesElement, xmlWriter);
+					break;
+				default: // default to xunit until we implement NUnit v3 support.
 					assembliesElement.Save (xmlWriter);
 					break;
-				case XUnitResultFileFormat.NUnit:
-					Transform_Results ("NUnitXml.xslt", assembliesElement, xmlWriter); // TODO: Add resource
-					break;
-
-				default:
-					throw new InvalidOperationException ($"Result output format '{ResultFileFormat}' is not currently supported");
 				}
 			}
 			
 			return outputFilePath;
 		}
-		public override void WriteResultsToFile (TextWriter writer)
+		public override void WriteResultsToFile (TextWriter writer, Jargon jargon)
 		{
 			if (assembliesElement == null)
 				return;
+			// remove all the empty nodes
+			assembliesElement.Descendants ().Where (e => e.Name == "collection" && !e.Descendants ().Any ()).Remove ();
 			var settings = new XmlWriterSettings { Indent = true };
 			using (var xmlWriter = XmlWriter.Create (writer, settings)) {
-				switch (ResultFileFormat) {
-				case XUnitResultFileFormat.XunitV2:
-					assembliesElement.Save (xmlWriter);
-					break;
-				case XUnitResultFileFormat.NUnit:
+				switch (jargon) {
+				case Jargon.NUnitV2:
 					try {
 						Transform_Results ("NUnitXml.xslt", assembliesElement, xmlWriter);
 					} catch (Exception e) {
-						writer.WriteLine ($"{e}");
+						writer.WriteLine (e);
 					}
 					break;
-
-				default:
-					throw new InvalidOperationException ($"Result output format '{ResultFileFormat}' is not currently supported");
+				case Jargon.NUnitV3:
+					try {
+						Transform_Results ("NUnit3Xml.xslt", assembliesElement, xmlWriter);
+					} catch (Exception e) {
+						writer.WriteLine (e);
+					}
+					break;
+				default: // defualt to xunit until we add NUnitv3 support
+					assembliesElement.Save (xmlWriter);
+					break;
 				}
 			}
 		}
-		
+
 		void Transform_Results (string xsltResourceName, XElement element, XmlWriter writer)
 		{
 			var xmlTransform = new System.Xml.Xsl.XslCompiledTransform ();
-			var name = GetType ().Assembly.GetManifestResourceNames ().Select ((arg) => { arg.EndsWith (xsltResourceName, StringComparison.Ordinal); return arg; }).First ();
+			var name = GetType ().Assembly.GetManifestResourceNames ().Where (a => a.EndsWith (xsltResourceName, StringComparison.Ordinal)).FirstOrDefault ();
 			if (name == null)
 				return;
 			using (var xsltStream = GetType ().Assembly.GetManifestResourceStream (name)) {
 				if (xsltStream == null) {
 					throw new Exception ($"Stream with name {name} cannot be found! We have {GetType ().Assembly.GetManifestResourceNames ()[0]}");
 				}
+				// add the extension so that we can get the hash from the name of the test
+				// Create an XsltArgumentList.
+				XsltArgumentList xslArg = new XsltArgumentList ();
+
+				var generator = new XsltIdGenerator ();
+				xslArg.AddExtensionObject ("urn:hash-generator", generator);
+
 				using (var xsltReader = XmlReader.Create (xsltStream))
 				using (var xmlReader = element.CreateReader ()) {
 					xmlTransform.Load (xsltReader);
-					xmlTransform.Transform (xmlReader, writer);
+					xmlTransform.Transform (xmlReader, xslArg, writer);
 				}
 			}
 		}
@@ -934,6 +953,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 					ITestFrameworkExecutionOptions executionOptions = GetFrameworkOptionsForExecution (configuration);
 					executionOptions.SetDisableParallelization (!RunInParallel);
 					executionOptions.SetSynchronousMessageReporting (true);
+					executionOptions.SetMaxParallelThreads (Environment.ProcessorCount / 2); // lets not be greedy and let the UI breath.
 
 					// set the wait for event cb first, then execute the tests
 					var resultTask = WaitForEvent (resultsSink.Finished, TimeSpan.FromDays (10)).ConfigureAwait (false);

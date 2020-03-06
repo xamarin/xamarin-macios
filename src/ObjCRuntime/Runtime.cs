@@ -445,7 +445,7 @@ namespace ObjCRuntime {
 			}
 		}
 
-		static IntPtr GetBlockWrapperCreator (IntPtr method, uint parameter)
+		static IntPtr GetBlockWrapperCreator (IntPtr method, int parameter)
 		{
 			return ObjectWrapper.Convert (GetBlockWrapperCreator ((MethodInfo) ObjectWrapper.Convert (method), parameter));
 		}
@@ -722,19 +722,19 @@ namespace ObjCRuntime {
 				return false; // might be a ConstructorInfo (bug #15583), but we don't care about that (yet at least).
 			minfo = minfo.GetBaseDefinition ();
 			var parameters = minfo.GetParameters ();
-			if (parameters == null || parameters.Length <= parameter)
+			if (parameters.Length <= parameter)
 				return false;
 			return parameters [parameter].IsDefined (typeof(TransientAttribute), false);
 		}
 
-		static bool IsParameterOut (IntPtr info, uint parameter)
+		static bool IsParameterOut (IntPtr info, int parameter)
 		{
 			var minfo = ObjectWrapper.Convert (info) as MethodInfo;
 			if (minfo == null)
 				return false; // might be a ConstructorInfo (bug #15583), but we don't care about that (yet at least).
 			minfo = minfo.GetBaseDefinition ();
 			var parameters = minfo.GetParameters ();
-			if (parameters == null || parameters.Length <= parameter)
+			if (parameters.Length <= parameter)
 				return false;
 			return parameters [parameter].IsOut;
 		}
@@ -773,7 +773,7 @@ namespace ObjCRuntime {
 		}
 #endregion
 
-		static MethodInfo GetBlockProxyAttributeMethod (MethodInfo method, uint parameter)
+		static MethodInfo GetBlockProxyAttributeMethod (MethodInfo method, int parameter)
 		{
 			var attrs = method.GetParameters () [parameter].GetCustomAttributes (typeof (BlockProxyAttribute), true);
 			if (attrs.Length == 1) {
@@ -840,7 +840,7 @@ namespace ObjCRuntime {
 #else
 		public 
 #endif
-		static MethodInfo GetBlockWrapperCreator (MethodInfo method, uint parameter)
+		static MethodInfo GetBlockWrapperCreator (MethodInfo method, int parameter)
 		{
 			// A mirror of this method is also implemented in StaticRegistrar:FindBlockProxyCreatorMethod
 			// If this method is changed, that method will probably have to be updated too (tests!!!)
@@ -1603,8 +1603,14 @@ namespace ObjCRuntime {
 
 		static int MajorVersion = -1;
 		static int MinorVersion = -1;
+		static int BuildVersion = -1;
 
 		internal static bool CheckSystemVersion (int major, int minor, string systemVersion)
+		{
+			return CheckSystemVersion (major, minor, 0, systemVersion);
+		}
+
+		internal static bool CheckSystemVersion (int major, int minor, int build, string systemVersion)
 		{
 			if (MajorVersion == -1) {
 				string[] version = systemVersion.Split (new char[] { '.' });
@@ -1614,9 +1620,25 @@ namespace ObjCRuntime {
 				
 				if (version.Length < 2 || !int.TryParse (version[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out MinorVersion))
 					MinorVersion = 0;
+
+				if (version.Length < 3 || !int.TryParse (version[2], NumberStyles.Integer, CultureInfo.InvariantCulture, out BuildVersion))
+					BuildVersion = 0;
 			}
 			
-			return MajorVersion > major || (MajorVersion == major && MinorVersion >= minor);
+			if (MajorVersion > major)
+				return true;
+			else if (MajorVersion < major)
+				return false;
+
+			if (MinorVersion > minor)
+				return true;
+			else if (MinorVersion < minor)
+				return false;
+
+			if (BuildVersion < build)
+				return false;
+
+			return true;
 		}
 
 		internal static IntPtr CloneMemory (IntPtr source, nint length)
@@ -1704,13 +1726,7 @@ namespace ObjCRuntime {
 		//
 		internal static T ThrowOnNull<T> (T obj, string name, string message = null) where T : class
 		{
-			if (obj == null) {
-				if (message == null)
-					throw new ArgumentNullException (name);
-				else
-					throw new ArgumentNullException (name, message);
-			}
-			return obj;
+			return obj ?? throw new ArgumentNullException (name, message);
 		}
 
 

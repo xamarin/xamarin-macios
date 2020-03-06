@@ -15,6 +15,7 @@ using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev.Tasks;
 using Xamarin.MacDev;
+using Xamarin.Utils;
 
 namespace Xamarin.Mac.Tasks
 {
@@ -42,10 +43,13 @@ namespace Xamarin.Mac.Tasks
 		public string HttpClientHandler { get; set; }
 
 		[Required]
-		public string TargetFrameworkIdentifier { get; set; }
+		public string TargetFrameworkMoniker { get; set; }
 
-		[Required]
-		public string TargetFrameworkVersion { get; set; }
+		public string TargetFrameworkIdentifier { get { return TargetFramework.Identifier; } }
+
+		public TargetFramework TargetFramework { get { return TargetFramework.Parse (TargetFrameworkMoniker); } }
+
+		public string TargetFrameworkVersion { get { return TargetFramework.Version.ToString (); } }
 
 		[Required]
 		public string SdkRoot {	get; set; }
@@ -246,8 +250,14 @@ namespace Xamarin.Mac.Tasks
 				actualArgs.Add (ExtraArguments);
 
 			var verbosity = VerbosityUtils.Merge (ExtraArguments, (LoggerVerbosity) Verbosity);
-			// for compatibility with earlier versions nothing means one /v
-			actualArgs.AddLine (verbosity.Length > 0 ? verbosity : "/verbose");
+			if (verbosity.Length > 0) {
+				foreach (var arg in verbosity) {
+					actualArgs.Add (arg);
+				}
+			} else {
+				// for compatibility with earlier versions nothing means one /v
+				actualArgs.Add ("/verbose");
+			}
 
 			return actualArgs.ToString ();
 		}

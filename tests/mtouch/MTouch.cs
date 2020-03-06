@@ -665,7 +665,7 @@ public class B : A {}
 				mtouch.CreateTemporaryApp ();
 				mtouch.CustomArguments = new string [] { "--optimize:?" };
 				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
-				mtouch.AssertError (10, "Could not parse the command line argument '--optimize=?'");
+				mtouch.AssertError (10, "Could not parse the command line arguments: '--optimize=?'");
 			}
 		}
 
@@ -1619,6 +1619,7 @@ public class B : A {}
 		[TestCase ("", "System.dll", "the interpreted assemblies are different between the container app (all assemblies) and the extension (System.dll).")]
 		[TestCase ("mscorlib.dll", "System.dll", "the interpreted assemblies are different between the container app (mscorlib.dll) and the extension (System.dll).")]
 		[TestCase ("mscorlib.dll", "mscorlib.dll,System.dll", "the interpreted assemblies are different between the container app (mscorlib.dll) and the extension (mscorlib.dll, System.dll).")]
+		[TestCase ("-all", "-all", null)]
 		public void MT0113_interpreter (string app_interpreter, string appex_interpreter, string msg)
 		{
 			using (var extension = new MTouchTool ()) {
@@ -1633,8 +1634,13 @@ public class B : A {}
 					app.CreateTemporaryCacheDirectory ();
 					app.Interpreter = app_interpreter;
 					app.WarnAsError = new int [] { 113 };
-					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
-					app.AssertError (113, "Native code sharing has been disabled for the extension 'testServiceExtension' because " + msg); 
+					if (!string.IsNullOrEmpty (msg)) {
+						app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
+						app.AssertError (113, "Native code sharing has been disabled for the extension 'testServiceExtension' because " + msg);
+					} else {
+						app.AssertExecute (MTouchAction.BuildDev, "build app");
+						app.AssertWarningCount (0);
+					}
 				}
 			}
 		}
@@ -1773,7 +1779,7 @@ public class TestApp {
 				mtouch.Linker = MTouchLinker.LinkSdk;
 				mtouch.Optimize = new string [] { "foo" };
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
-				mtouch.AssertWarning (132, "Unknown optimization: 'foo'. Valid optimizations are: remove-uithread-checks, dead-code-elimination, inline-isdirectbinding, inline-intptr-size, inline-runtime-arch, blockliteral-setupblock, register-protocols, inline-dynamic-registration-supported, static-block-to-delegate-lookup, remove-dynamic-registrar, remove-unsupported-il-for-bitcode, inline-is-arm64-calling-convention, seal-and-devirtualize, cctor-beforefieldinit, custom-attributes-removal, experimental-xforms-product-type.");
+				mtouch.AssertWarning (132, "Unknown optimization: 'foo'. Valid optimizations are: remove-uithread-checks, dead-code-elimination, inline-isdirectbinding, inline-intptr-size, inline-runtime-arch, blockliteral-setupblock, register-protocols, inline-dynamic-registration-supported, static-block-to-delegate-lookup, remove-dynamic-registrar, remove-unsupported-il-for-bitcode, inline-is-arm64-calling-convention, seal-and-devirtualize, cctor-beforefieldinit, custom-attributes-removal, experimental-xforms-product-type, force-rejected-types-removal.");
 			}
 		}
 
@@ -2605,7 +2611,8 @@ public class TestApp {
 		[TestCase (Target.Dev, Profile.iOS, "link all", "Release64")]
 		[TestCase (Target.Dev, Profile.iOS, "link sdk", "Release64")]
 		[TestCase (Target.Dev, Profile.iOS, "monotouch-test", "Release64")]
-		[TestCase (Target.Dev, Profile.iOS, "mscorlib", "Release64")]
+		[TestCase (Target.Dev, Profile.iOS, "mscorlib Part 1", "Release64")]
+		[TestCase (Target.Dev, Profile.iOS, "mscorlib Part 2", "Release64")]
 		[TestCase (Target.Dev, Profile.iOS, "BCL tests group 1", "Release64")]
 		public void BuildTestProject (Target target, Profile profile, string testname, string configuration)
 		{
@@ -3161,9 +3168,10 @@ class Test {
 
 				File.WriteAllText (dllcs, "public class TestLib { public TestLib () { System.Console.WriteLine (typeof (UIKit.UIWindow).ToString ()); } }");
 
-				var args = new [] { dllcs, "/debug:full", "/noconfig", "/t:library", "/nologo", $"/out:{dll}", "/r:" + Configuration.XamarinIOSDll };
+				var args = new List<string> () { dllcs, "/debug:full", "/noconfig", "/t:library", "/nologo", $"/out:{dll}", "/r:" + Configuration.XamarinIOSDll };
 				File.WriteAllText (DLL + ".config", "");
-				if (ExecutionHelper.Execute (Configuration.SmcsPath, args, out output) != 0)
+				var compiler = Configuration.GetCompiler (Profile.iOS, args);
+				if (ExecutionHelper.Execute (compiler, args, out output) != 0)
 					throw new Exception (output);
 
 				var execs = @"public class TestApp { 
@@ -3178,8 +3186,9 @@ class Test {
 
 				File.WriteAllText (exeF, execs);
 
-				var cmds = new [] { exeF, "/noconfig", "/t:exe", "/nologo", $"/out:{exe}", $"/r:{dll}", $"-r:{Configuration.XamarinIOSDll}" };
-				if (ExecutionHelper.Execute (Configuration.SmcsPath, cmds, out output) != 0)
+				var cmds = new List<string> () { exeF, "/noconfig", "/t:exe", "/nologo", $"/out:{exe}", $"/r:{dll}", $"-r:{Configuration.XamarinIOSDll}" };
+				compiler = Configuration.GetCompiler (Profile.iOS, cmds);
+				if (ExecutionHelper.Execute (compiler, cmds, out output) != 0)
 					throw new Exception (output);
 
 				File.Move (dll, DLL);
@@ -3697,7 +3706,8 @@ public partial class NotificationService : UNNotificationServiceExtension
 				mtouch.AssertWarning (2003, "Option '--optimize=cctor-beforefieldinit' will be ignored since linking is disabled");
 				mtouch.AssertWarning (2003, "Option '--optimize=custom-attributes-removal' will be ignored since linking is disabled");
 				mtouch.AssertWarning (2003, "Option '--optimize=experimental-xforms-product-type' will be ignored since linking is disabled");
-				mtouch.AssertWarningCount (15);
+				mtouch.AssertWarning (2003, "Option '--optimize=force-rejected-types-removal' will be ignored since linking is disabled");
+				mtouch.AssertWarningCount (16);
 			}
 
 			using (var mtouch = new MTouchTool ()) {

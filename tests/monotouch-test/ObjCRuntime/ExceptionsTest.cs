@@ -36,7 +36,11 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		MarshalObjectiveCExceptionMode defaultObjectiveCExceptionMode = MarshalObjectiveCExceptionMode.ThrowManagedException;
 		MarshalManagedExceptionMode defaultManagedExceptionMode = MarshalManagedExceptionMode.Default;
 #else
+#if __MACOS__ && DEBUG
+		MarshalObjectiveCExceptionMode defaultObjectiveCExceptionMode = MarshalObjectiveCExceptionMode.ThrowManagedException;
+#else
 		MarshalObjectiveCExceptionMode defaultObjectiveCExceptionMode = MarshalObjectiveCExceptionMode.UnwindManagedCode;
+#endif
 		MarshalManagedExceptionMode defaultManagedExceptionMode = MarshalManagedExceptionMode.Default;
 #endif
 

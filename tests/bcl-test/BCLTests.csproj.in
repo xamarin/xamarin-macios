@@ -135,15 +135,15 @@
     <MtouchI18n>cjk,mideast,other,rare,west</MtouchI18n>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Mono.Options" Version="5.3.0.1" />
-    <PackageReference Include="System.Buffers" Version="4.4.0" />
-    <PackageReference Include="System.Memory" Version="4.5.1" />
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.1" />
-    <PackageReference Include="xunit" Version="2.4.0" />
+    <PackageReference Include="Mono.Options" Version="6.6.0.161" />
+    <PackageReference Include="System.Buffers" Version="4.5.0" />
+    <PackageReference Include="System.Memory" Version="4.5.3" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.7.0" />
+    <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.analyzers" Version="0.10.0" />
-    <PackageReference Include="xunit.extensibility.core" Version="2.4.0" />
-    <PackageReference Include="xunit.extensibility.execution" Version="2.4.0" />
-    <PackageReference Include="xunit.runner.utility" Version="2.4.0" />
+    <PackageReference Include="xunit.extensibility.core" Version="2.4.1" />
+    <PackageReference Include="xunit.extensibility.execution" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.utility" Version="2.4.1" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -228,9 +228,6 @@
     <Compile Include="templates\common\TestRunner.xUnit\XUnitFilterType.cs">
       <Link>TestRunner.xUnit\XUnitFilterType.cs</Link>
     </Compile>
-    <Compile Include="templates\common\TestRunner.xUnit\XUnitResultFileFormat.cs">
-      <Link>TestRunner.xUnit\XUnitResultFileFormat.cs</Link>
-    </Compile>
     <Compile Include="templates\common\TestRunner.xUnit\XUnitTestRunner.cs">
       <Link>TestRunner.xUnit\XUnitTestRunner.cs</Link>
     </Compile>
@@ -258,6 +255,9 @@
   <ItemGroup>
     <EmbeddedResource Include="templates\common\TestRunner.xUnit\NUnitXml.xslt">
       <Link>TestRunner.xUnit\NUnitXml.xslt</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="templates\common\TestRunner.xUnit\NUnit3Xml.xslt">
+      <Link>TestRunner.xUnit\NUnit3Xml.xslt</Link>
     </EmbeddedResource>
     %CONTENT RESOURCES%
   </ItemGroup>

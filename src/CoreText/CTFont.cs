@@ -1875,7 +1875,7 @@ namespace CoreText {
 		{
 			var cfArrayRef = CTFontCopySupportedLanguages (handle);
 			if (cfArrayRef == IntPtr.Zero)
-				return new string [0];
+				return Array.Empty<string> ();
 			var languages = NSArray.ArrayFromHandle<string> (cfArrayRef, CFString.FetchString);
 			CFObject.CFRelease (cfArrayRef);
 			return languages;

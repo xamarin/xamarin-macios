@@ -249,7 +249,6 @@ NUNITLITE_SOURCES = \
 	$(MONO_IOS_SDK_DESTDIR)/ios-sources/external/nunit-lite/NUnitLite-1.0.0/src/framework/Runner/DebugWriter.cs \
 	$(MONO_IOS_SDK_DESTDIR)/ios-sources/external/nunit-lite/NUnitLite-1.0.0/src/framework/Runner/ResultSummary.cs \
 	$(MONO_IOS_SDK_DESTDIR)/ios-sources/external/nunit-lite/NUnitLite-1.0.0/src/framework/Runner/TcpWriter.cs \
-	$(MONO_IOS_SDK_DESTDIR)/ios-sources/external/nunit-lite/NUnitLite-1.0.0/src/framework/Runner/TextUI.cs \
 	$(MONO_IOS_SDK_DESTDIR)/ios-sources/external/nunit-lite/NUnitLite-1.0.0/src/framework/Runner/OutputWriters/NUnit2XmlOutputWriter.cs \
 	$(MONO_IOS_SDK_DESTDIR)/ios-sources/external/nunit-lite/NUnitLite-1.0.0/src/framework/Runner/OutputWriters/NUnit3XmlOutputWriter.cs \
 	$(MONO_IOS_SDK_DESTDIR)/ios-sources/external/nunit-lite/NUnitLite-1.0.0/src/framework/Runner/OutputWriters/OutputWriter.cs \
@@ -264,6 +263,7 @@ NUNITLITE_SOURCES = \
 	$(MONO_IOS_SDK_DESTDIR)/ios-sources/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/AsyncSynchronizationContext.cs \
 	$(MONO_IOS_SDK_DESTDIR)/ios-sources/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/RandomGenerator.cs \
 	$(MONO_IOS_SDK_DESTDIR)/ios-sources/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/StringUtil.cs \
+	$(MONO_IOS_SDK_DESTDIR)/ios-sources/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/Commands/FlakyTestRetriesCommand.cs \
 	$(MONO_IOS_SDK_DESTDIR)/ios-sources/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/Commands/OneTimeSetUpCommand.cs \
 	$(MONO_IOS_SDK_DESTDIR)/ios-sources/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/Commands/OneTimeTearDownCommand.cs \
 	$(MONO_IOS_SDK_DESTDIR)/ios-sources/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/Commands/TheoryResultCommand.cs \

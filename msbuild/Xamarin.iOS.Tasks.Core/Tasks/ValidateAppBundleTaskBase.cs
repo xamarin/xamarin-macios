@@ -7,6 +7,7 @@ using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev;
 using Xamarin.MacDev.Tasks;
+using Xamarin.Utils;
 
 namespace Xamarin.iOS.Tasks
 {
@@ -23,12 +24,12 @@ namespace Xamarin.iOS.Tasks
 		public bool SdkIsSimulator { get; set; }
 
 		[Required]
-		public string TargetFrameworkIdentifier { get; set; }
+		public string TargetFrameworkMoniker { get; set; }
 
 		#endregion
 
-		public PlatformFramework Framework {
-			get { return PlatformFrameworkHelper.GetFramework (TargetFrameworkIdentifier); }
+		public ApplePlatform Framework {
+			get { return PlatformFrameworkHelper.GetFramework (TargetFrameworkMoniker); }
 		}
 
 		void ValidateAppExtension (string path, string mainBundleIdentifier, string mainShortVersionString, string mainVersion)
@@ -402,17 +403,17 @@ namespace Xamarin.iOS.Tasks
 			AppleDeviceFamily[] validFamilies = null;
 
 			switch (Framework) {
-			case PlatformFramework.iOS:
+			case ApplePlatform.iOS:
 				validFamilies = new AppleDeviceFamily[] {
 					AppleDeviceFamily.IPhone,
 					AppleDeviceFamily.IPad,
 					AppleDeviceFamily.Watch
 				};
 				break;
-			case PlatformFramework.WatchOS:
+			case ApplePlatform.WatchOS:
 				validFamilies = new AppleDeviceFamily[] { AppleDeviceFamily.Watch };
 				break;
-			case PlatformFramework.TVOS:
+			case ApplePlatform.TVOS:
 				validFamilies = new AppleDeviceFamily[] { AppleDeviceFamily.TV };
 				break;
 			default:

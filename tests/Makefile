@@ -207,11 +207,12 @@ killall:
 	@killall Touch.Server >/dev/null 2>&1 || true
 
 NUNIT_MSBUILD_DIR=$(TOP)/packages/NUnit.Runners.2.6.4/tools/lib
-test-ios-tasks:
-	$(SYSTEM_XIBUILD) -- $(TOP)/msbuild/Xamarin.MacDev.Tasks.sln
-	cd $(NUNIT_MSBUILD_DIR) && $(SYSTEM_XIBUILD) -t -- ../nunit-console.exe ../../../../msbuild/tests/bin/Xamarin.iOS.Tasks.Tests.dll -xml=TestResults_Xamarin.iOS.Tasks.Tests.xml -labels $(TEST_FIXTURE) || touch .failed-stamp
-	@[[ -z "$$BUILD_REPOSITORY" ]] || ( xsltproc $(TOP)/tests/HtmlTransform.xslt $(NUNIT_MSBUILD_DIR)/TestResults_Xamarin.iOS.Tasks.Tests.xml > $(TOP)/tests/index.html && echo "@MonkeyWrench: AddFile: $$PWD/index.html" )
-	@if test -e $(NUNIT_MSBUILD_DIR)/.failed-stamp; then rm $(NUNIT_MSBUILD_DIR)/.failed-stamp; exit 1; fi
+test-ios-tasks: test-ios-tasks-net461 test-ios-tasks-netstandard2.0
+test-ios-tasks-%: verify-system-vsmac-xcode-match
+	$(SYSTEM_MSBUILD) $(TOP)/msbuild/tests/Xamarin.iOS.Tasks.Tests/Xamarin.iOS.Tasks.Tests.csproj /p:Configuration=Debug-$*
+	cd $(TOP)/msbuild/tests/Xamarin.iOS.Tasks.Tests && $(SYSTEM_XIBUILD) -t -- $(abspath $(TOP)/tools/nunit3-console-3.10.0) $(abspath $(TOP)/msbuild/tests/Xamarin.iOS.Tasks.Tests/bin/Debug-$*/net461/Xamarin.iOS.Tasks.Tests.dll) "--result=$(abspath $(CURDIR)/TestResults_$*_Xamarin.iOS.Tasks.Tests.xml);format=nunit2" -labels=All $(TEST_FIXTURE) || touch .failed-stamp
+	@[[ -z "$$BUILD_REPOSITORY" ]] || ( xsltproc $(TOP)/tests/HtmlTransform.xslt $(CURDIR)/TestResults_$*_Xamarin.iOS.Tasks.Tests.xml > $(TOP)/tests/index-$*.html && echo "@MonkeyWrench: AddFile: $$PWD/index-$*.html" )
+	@if test -e $(CURDIR)/.$@-failed-stamp; then rm $(CURDIR)/.$@-failed-stamp; exit 1; fi
 
 test-install-sources:
 	$(SYSTEM_XIBUILD) -- $(TOP)/tools/install-source/InstallSourcesTests/InstallSourcesTests.csproj
@@ -370,7 +371,7 @@ wrench-xtro:
 	@echo Not here anymore
 
 jenkins: xharness/xharness.exe
-	$(Q) $(SYSTEM_MONO) --trace=E:all --debug $(CURDIR)/$< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT) --markdown-summary=$(abspath $(CURDIR))/TestSummary.md
+	$(Q) $(SYSTEM_MONO) --trace=E:all,-E:System.Reflection.ReflectionTypeLoadException --debug $(CURDIR)/$< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT) --markdown-summary=$(abspath $(CURDIR))/TestSummary.md
 
 # This will launch xharness' interactive test runner in the system's default browser
 runner: xharness/xharness.exe
@@ -395,3 +396,8 @@ else
 wrench-launch-external wrench-report-external:
 	@echo "External tests have been disabled"
 endif
+
+verify-system-vsmac-xcode-match:
+	@SYSTEM_XCODE=$$(dirname $$(dirname $$(xcode-select -p))); \
+	VSMAC_XCODE=$$(/usr/libexec/PlistBuddy -c 'print :AppleSdkRoot' ~/Library/Preferences/Xamarin/Settings.plist); \
+	if [[ "$$SYSTEM_XCODE" != "$$VSMAC_XCODE" ]]; then echo "Error: the system's Xcode ($$SYSTEM_XCODE) does not match the Xcode selected in Visual Studio for Mac ($$VSMAC_XCODE). This will make tests fail in non-trivial ways, so please make sure both match the expected Xcode ($(shell dirname $(shell dirname $(XCODE_DEVELOPER_ROOT))))."; exit 1; fi

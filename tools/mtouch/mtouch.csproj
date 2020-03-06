@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <Import Project="..\..\packages\XliffTasks.1.0.0-beta.20078.1\build\XliffTasks.props" Condition="Exists('..\..\packages\XliffTasks.1.0.0-beta.20078.1\build\XliffTasks.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -7,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <AssemblyName>mtouch</AssemblyName>
     <RootNamespace>mtouch</RootNamespace>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
@@ -19,6 +20,7 @@
     <WarningLevel>4</WarningLevel>
     <Deterministic>True</Deterministic>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -30,6 +32,10 @@
     <WarningLevel>4</WarningLevel>
     <Deterministic>True</Deterministic>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+       <UpdateXlfOnBuild>true</UpdateXlfOnBuild>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -37,7 +43,9 @@
     <Compile Include="Assembly.cs" />
     <Compile Include="AssemblyResolver.cs" />
     <Compile Include="BitcodeConverter.cs" />
-    <Compile Include="error.cs" />
+    <Compile Include="..\common\error.cs">
+      <Link>external\error.cs</Link>
+    </Compile>
     <Compile Include="mtouch.cs" />
     <Compile Include="SdkVersions.cs" />
     <Compile Include="Stripper.cs" />
@@ -331,6 +339,9 @@
     <Compile Include="..\common\CompilerFlags.cs">
       <Link>external\CompilerFlags.cs</Link>
     </Compile>
+    <Compile Include="..\common\Tuning.cs">
+      <Link>external\Tuning.cs</Link>
+    </Compile>
     <Compile Include="..\..\src\ObjCRuntime\RuntimeOptions.cs">
       <Link>external\RuntimeOptions.cs</Link>
     </Compile>
@@ -419,6 +430,18 @@
     <Compile Include="..\linker\CustomSymbolWriter.cs">
       <Link>Xamarin.Linker\CustomSymbolWriter.cs</Link>
     </Compile>
+    <Compile Include="Errors.Designer.cs">
+      <DependentUpon>Errors.resx</DependentUpon>
+    </Compile>
+    <Compile Include="..\linker\ScanTypeReferenceStep.cs">
+      <Link>Xamarin.Linker\ScanTypeReferenceStep.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\RemoveRejectedTypesStep.cs">
+      <Link>Xamarin.Linker\RemoveRejectedTypesStep.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\MonoTouch.Tuner\RemoveCodeBase.cs">
+      <Link>MonoTouch.Tuner\RemoveCodeBase.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Core" />
@@ -439,6 +462,7 @@
     <None Include="..\..\docs\website\mtouch-errors.md">
       <Link>mtouch-errors.md</Link>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Linker\" />
@@ -449,8 +473,19 @@
     <Folder Include="external\maccore\" />
     <Folder Include="Xamarin.Linker\" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Errors.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <XlfSourceFormat>Resx</XlfSourceFormat>
+      <XlfOutputItem>EmbeddedResource</XlfOutputItem>
+      <LastGenOutput>Errors.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>Xamarin.Bundler</CustomToolNamespace>
+      <LogicalName>Errors.mtouch.resources</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
   <Target Name="AfterBuild">
     <!-- This makes sure that just building the csproj will install the updated mtouch.exe, so that tests get it without having to 'make mtouch' manually -->
     <Exec Command="make mtouch" />
   </Target>
+  <Import Project="..\..\packages\XliffTasks.1.0.0-beta.20078.1\build\XliffTasks.targets" Condition="Exists('..\..\packages\XliffTasks.1.0.0-beta.20078.1\build\XliffTasks.targets')" />
 </Project>

@@ -45,6 +45,7 @@ downloads/%: downloads/%.7z
 	$(Q) echo "Unzipping $*..."
 	$(Q) rm -Rf $@.tmp
 	$(Q) 7z x $< -o$@.tmp
+	$(Q) find $@.tmp -exec touch {} +
 	$(Q) mv $@.tmp $@
 	$(Q) echo "Unzipped $*."
 
@@ -106,9 +107,6 @@ SDK_CONFIG = $(MONO_PATH)/sdks/Make.config
 SDK_BUILDDIR = $(MONO_PATH)/sdks/builds
 
 $(SDK_CONFIG):
-	echo "DISABLE_ANDROID=1" > $@
-	echo "DISABLE_DESKTOP=1" >> $@
-	echo "DISABLE_WASM=1" >> $@
 	echo "ENABLE_IOS=1" >> $@
 	echo "ENABLE_MAC=1" >> $@
 
@@ -597,12 +595,8 @@ $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/bin/smcs:
 	@echo Installing smcs script
 	@echo "#!/bin/bash" > $@
 	@echo >> $@
-	@echo 'SMCS=`which mcs`' >> $@
-	@echo 'if test -z $$SMCS; then' >> $@
-	@echo "    SMCS=/Library/Frameworks/Mono.framework/Versions/Current/bin/mcs" >> $@
-	@echo "fi" >> $@
-	@echo 'unset MONO_PATH' >> $@
-	@echo "\$$SMCS -nostdlib -r:$(abspath $(IOS_TARGETDIR)/$(MONOTOUCH_PREFIX)/lib/mono/2.1/mscorlib.dll) -r:$(abspath $(IOS_TARGETDIR)/$(MONOTOUCH_PREFIX)/lib/mono/2.1/System.dll) \"\$$@\"" >> $@
+	@echo "echo 'This script ($$0) is obsolete. Use csc to compile instead."
+	@echo "exit 1"
 	@chmod +x $@
 
 install-smcs: $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/bin/smcs
@@ -644,7 +638,7 @@ $(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/Version: $(TOP)/Make.config.inc
 	$(Q) echo $(MAC_PACKAGE_VERSION) > $@
 
 $(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/Versions.plist: $(TOP)/Versions-mac.plist.in Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/versions-check.csharp .stamp-$(MONO_BUILD_MODE)
-	$(Q) $(TOP)/versions-check.csharp $< "$(MIN_IOS_SDK_VERSION)" "$(MAX_IOS_VERSION)" "$(MIN_TVOS_SDK_VERSION)" "$(MAX_TVOS_VERSION)" "$(MIN_WATCH_OS_VERSION)" "$(MAX_WATCH_VERSION)" "$(MIN_OSX_SDK_VERSION)" "$(OSX_SDK_VERSION)"
+	$(Q) $(TOP)/versions-check.csharp $< "$(MIN_IOS_SDK_VERSION)" "$(MAX_IOS_DEPLOYMENT_TARGET)" "$(MIN_TVOS_SDK_VERSION)" "$(MAX_TVOS_DEPLOYMENT_TARGET)" "$(MIN_WATCH_OS_VERSION)" "$(MAX_WATCH_DEPLOYMENT_TARGET)" "$(MIN_OSX_SDK_VERSION)" "$(OSX_SDK_VERSION)"
 	$(Q_GEN) sed -e 's/@XCODE_VERSION@/$(XCODE_VERSION)/g' -e "s/@MONO_VERSION@/$(shell cat $(MONO_MAC_SDK_DESTDIR)/mac-mono-version.txt)/g" -e "s/@MIN_XM_MONO_VERSION@/$(MIN_XM_MONO_VERSION)/g" $< > $@
 
 $(MAC_COMMON_DIRECTORIES):
@@ -676,7 +670,7 @@ MAC_TARGETS = \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmono-2.0.a                        \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/pkgconfig/mono-2.pc                  \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/etc/mono/assemblies/System/System.config \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bmac-mobile-mono                     \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/mono-sgen                            \
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/%: .stamp-$(MONO_BUILD_MODE) | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib
 	$(Q) $(CP) $(MONO_MAC_SDK_DESTDIR)/mac-libs/$(notdir $@) $@
@@ -691,7 +685,7 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/pkgconfig/mono-2.pc: .stamp-$(MON
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/etc/mono/assemblies/System/System.config: mac-System.config | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/etc/mono/assemblies/System
 	$(Q) $(CP) $< $@
 
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bmac-mobile-mono: .stamp-$(MONO_BUILD_MODE) | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/mono-sgen: .stamp-$(MONO_BUILD_MODE) | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin
 	$(Q) install -m 0755 $(MONO_MAC_SDK_DESTDIR)/mac-bin/mono-sgen $@
 
 $(MAC_DIRECTORIES):
@@ -732,7 +726,7 @@ $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/updateinfo: $(TOP)/Make.config.inc
 	$(Q) echo "4569c276-1397-4adb-9485-82a7696df22e $(IOS_PACKAGE_UPDATE_ID)" > $@
 
 $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/Versions.plist: $(TOP)/Versions-ios.plist.in Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/versions-check.csharp .stamp-$(MONO_BUILD_MODE)
-	$(Q) $(TOP)/versions-check.csharp $< "$(MIN_IOS_SDK_VERSION)" "$(MAX_IOS_VERSION)" "$(MIN_TVOS_SDK_VERSION)" "$(MAX_TVOS_VERSION)" "$(MIN_WATCH_OS_VERSION)" "$(MAX_WATCH_VERSION)" "$(MIN_OSX_SDK_VERSION)" "$(OSX_SDK_VERSION)"
+	$(Q) $(TOP)/versions-check.csharp $< "$(MIN_IOS_SDK_VERSION)" "$(MAX_IOS_DEPLOYMENT_TARGET)" "$(MIN_TVOS_SDK_VERSION)" "$(MAX_TVOS_DEPLOYMENT_TARGET)" "$(MIN_WATCH_OS_VERSION)" "$(MAX_WATCH_DEPLOYMENT_TARGET)" "$(MIN_OSX_SDK_VERSION)" "$(OSX_SDK_VERSION)"
 	$(Q_GEN) sed -e 's/@XCODE_VERSION@/$(XCODE_VERSION)/g' -e "s/@MONO_VERSION@/$(shell cat $(MONO_IOS_SDK_DESTDIR)/ios-mono-version.txt)/g" $< > $@
 
 $(IOS_COMMON_DIRECTORIES):

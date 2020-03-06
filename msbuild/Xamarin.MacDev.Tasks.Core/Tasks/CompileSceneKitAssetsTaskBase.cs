@@ -7,6 +7,7 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev;
+using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks
 {
@@ -47,8 +48,10 @@ namespace Xamarin.MacDev.Tasks
 		[Required]
 		public string SdkVersion { get; set; }
 
+		public TargetFramework TargetFramework { get { return TargetFramework.Parse (TargetFrameworkMoniker); } }
+
 		[Required]
-		public string TargetFrameworkIdentifier { get; set; }
+		public string TargetFrameworkMoniker { get; set; }
 
 		public string ToolExe {
 			get { return toolExe ?? ToolName; }
@@ -72,7 +75,7 @@ namespace Xamarin.MacDev.Tasks
 
 		protected virtual string OperatingSystem {
 			get {
-				return PlatformFrameworkHelper.GetOperatingSystem (TargetFrameworkIdentifier);
+				return PlatformFrameworkHelper.GetOperatingSystem (TargetFrameworkMoniker);
 			}
 		}
 

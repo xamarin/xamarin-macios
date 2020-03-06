@@ -9,12 +9,10 @@ using System.Threading.Tasks;
 
 using Foundation;
 
-using NUnitLite.Runner;
 using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
-using NUnit.Framework.Internal.WorkItems;
 using NUnit.Framework.Internal.Filters;
-
+using NUnitLite.Runner;
 using NUnitTest = NUnit.Framework.Internal.Test;
 
 namespace Xamarin.iOS.UnitTests.NUnit
@@ -253,7 +251,7 @@ namespace Xamarin.iOS.UnitTests.NUnit
 			}
 		}
 
-		public override string WriteResultsToFile ()
+		public override string WriteResultsToFile (Jargon jargon)
 		{
 			if (results == null)
 				return string.Empty;
@@ -261,20 +259,40 @@ namespace Xamarin.iOS.UnitTests.NUnit
 			string ret = GetResultsFilePath ();
  			if (string.IsNullOrEmpty (ret))
  				return string.Empty;
- 			
- 				
- 			var resultsXml = new NUnit2XmlOutputWriter (DateTime.UtcNow);
- 			resultsXml.WriteResultFile (results, ret);
+
+			OutputWriter formatter;
+			switch (jargon) {
+			case Jargon.NUnitV2:
+				formatter = new NUnit2XmlOutputWriter (DateTime.UtcNow);
+				break;
+			case Jargon.NUnitV3:
+				formatter = new NUnit3XmlOutputWriter (DateTime.UtcNow);
+				break;
+			default:
+				throw new InvalidOperationException ($"Jargon {jargon} is not supported by this runner.");
+			}
+
+ 			formatter.WriteResultFile (results, ret);
 
  			return ret;
 		}
 		
-		public override void WriteResultsToFile (TextWriter writer)
+		public override void WriteResultsToFile (TextWriter writer, Jargon jargon)
 		{
 			if (results == null)
 				return;
-			var resultsXml = new NUnit2XmlOutputWriter (DateTime.UtcNow);
-			resultsXml.WriteResultFile (results, writer);
+			OutputWriter formatter;
+			switch (jargon) {
+			case Jargon.NUnitV2:
+				formatter = new NUnit2XmlOutputWriter (DateTime.UtcNow);
+				break;
+			case Jargon.NUnitV3:
+				formatter = new NUnit3XmlOutputWriter (DateTime.UtcNow);
+				break;
+			default:
+				throw new InvalidOperationException ($"Jargon {jargon} is not supported by this runner.");
+			}
+			formatter.WriteResultFile (results, writer);
 		}
 		
 		void AppendFilter (ITestFilter filter)

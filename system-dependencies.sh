@@ -74,6 +74,11 @@ while ! test -z $1; do
 			unset IGNORE_SIMULATORS
 			shift
 			;;
+		--provision-dotnet)
+			PROVISION_DOTNET=1
+			unset IGNORE_DOTNET
+			shift
+			;;
 		--provision-all)
 			PROVISION_MONO=1
 			unset IGNORE_MONO
@@ -95,6 +100,8 @@ while ! test -z $1; do
 			unset IGNORE_SIMULATORS
 			PROVISION_PYTHON3=1
 			unset IGNORE_PYTHON3
+			PROVISION_DOTNET=1
+			unset IGNORE_DOTNET
 			shift
 			;;
 		--ignore-all)
@@ -109,6 +116,7 @@ while ! test -z $1; do
 			IGNORE_SHARPIE=1
 			IGNORE_SIMULATORS=1
 			IGNORE_PYTHON3=1
+			IGNORE_DOTNET=1
 			shift
 			;;
 		--ignore-osx)
@@ -161,6 +169,10 @@ while ! test -z $1; do
 			unset OPTIONAL_SIMULATORS
 			shift
 			;;
+		--ignore-dotnet)
+			IGNORE_DOTNET=1
+			shift
+			;;
 		-v | --verbose)
 			set -x
 			shift
@@ -179,8 +191,11 @@ COLOR_MAGENTA=$(tput setaf 5 2>/dev/null || true)
 COLOR_BLUE=$(tput setaf 6 2>/dev/null || true)
 COLOR_CLEAR=$(tput sgr0 2>/dev/null || true)
 COLOR_RESET=uniquesearchablestring
+FAILURE_PREFIX=
+if test -z "$COLOR_RED"; then FAILURE_PREFIX="** failure ** "; fi
+
 function fail () {
-	echo "    ${COLOR_RED}${1//${COLOR_RESET}/${COLOR_RED}}${COLOR_CLEAR}"
+	echo "    $FAILURE_PREFIX${COLOR_RED}${1//${COLOR_RESET}/${COLOR_RED}}${COLOR_CLEAR}"
 	FAIL=1
 }
 
@@ -950,7 +965,7 @@ function check_simulators ()
 	local XCODE
 
 	EXTRA_SIMULATORS=$(grep ^EXTRA_SIMULATORS= Make.config | sed 's/.*=//')
-	XCODE=$(grep ^XCODE_DEVELOPER_ROOT= Make.config | sed 's/.*=//')/../..
+	XCODE=$(dirname "$(dirname "$(grep ^XCODE_DEVELOPER_ROOT= Make.config | sed 's/.*=//')")")
 
 	if ! make -C tools/siminstaller >/dev/null; then
 		warn "Can't check if simulators are available, because siminstaller failed to build."
@@ -976,13 +991,17 @@ function check_simulators ()
 		fi
 		if [[ "$FAILED_SIMULATORS" =~ "Unknown simulators:" ]]; then
 			$action "${FAILED_SIMULATORS}"
-			$action "    If you just updated the Xcode version, it's likely Apple stopped shipping these simulators with the new version of Xcode."
-			$action "    If that's the case, you can list the available simulators with ${COLOR_MAGENTA}make -C tools/siminstaller print-simulators${COLOR_RESET},"
+			$action "    If you just updated the Xcode version, it's possible Apple stopped shipping these simulators with the new version of Xcode."
+			$action "    If that's the case, you can list the available simulators with ${COLOR_MAGENTA}make -C tools/siminstaller print-simulators --xcode $XCODE${COLOR_RESET},"
 			$action "    and then update the ${COLOR_MAGENTA}MIN_<OS>_SIMULATOR_VERSION${COLOR_RESET} and ${COLOR_MAGENTA}EXTRA_SIMULATORS${COLOR_RESET} variables in Make.config to the earliest available simulators."
+			$action "    Another possibility is that Apple is not shipping any simulators (yet?) for the new version of Xcode (if the previous list shows no simulators)."
 		else
 			if ! test -z $PROVISION_SIMULATORS; then
-				mono --debug tools/siminstaller/bin/Debug/siminstaller.exe -q --xcode "$XCODE" "${SIMS[@]}"
-				ok "Extra simulators installed successfully: '${FAILED_SIMULATORS//$'\n'/', '}'"
+				if ! mono --debug tools/siminstaller/bin/Debug/siminstaller.exe -q --xcode "$XCODE" "${SIMS[@]}"; then
+					$action "Failed to install extra simulators."
+				else
+					ok "Extra simulators installed successfully: '${FAILED_SIMULATORS//$'\n'/', '}'"
+				fi
 			else
 				$action "The simulators '${FAILED_SIMULATORS//$'\n'/', '}' are not installed or need to be upgraded."
 			fi
@@ -990,6 +1009,41 @@ function check_simulators ()
 	else
 		ok "Found all extra simulators: ${EXTRA_SIMULATORS// /, }"
 	fi
+}
+
+function check_dotnet ()
+{
+	if test -n "$IGNORE_DOTNET"; then return; fi
+
+	local DOTNET_VERSION
+	local DOTNET_INSTALL_DIR
+	local DOTNET_URL
+	local DOTNET_FILENAME
+
+	DOTNET_VERSION=$(grep ^DOTNET_VERSION= Make.config | sed 's/.*=//')
+	DOTNET_URL=$(grep ^DOTNET_URL= Make.config | sed 's/.*=//')
+	DOTNET_INSTALL_DIR=/usr/local/share/dotnet/sdk/"$DOTNET_VERSION"
+	DOTNET_FILENAME=$(basename "$DOTNET_URL")
+
+	if test -d "$DOTNET_INSTALL_DIR"; then
+		ok "Found dotnet $DOTNET_VERSION (exactly $DOTNET_VERSION is required)."
+		return
+	fi
+
+	if test -z "$PROVISION_DOTNET"; then
+		fail "You must install dotnet $DOTNET_VERSION. You can download it from ${COLOR_BLUE}$DOTNET_URL${COLOR_RESET}."
+		fail "Alternatively you can ${COLOR_MAGENTA}export IGNORE_DOTNET=1${COLOR_RED} to skip this check."
+		return
+	fi
+
+	log "Downloading dotnet $DOTNET_VERSION from $DOTNET_URL..."
+	mkdir -p "$PROVISION_DOWNLOAD_DIR"
+	curl -f -L "$DOTNET_URL" -o "$PROVISION_DOWNLOAD_DIR/$DOTNET_FILENAME"
+
+	log "Installing dotnet $DOTNET_VERSION..."
+	$SUDO installer -pkg "$PROVISION_DOWNLOAD_DIR/$DOTNET_FILENAME" -target /
+
+	ok "Installed dotnet $DOTNET_VERSION."
 }
 
 echo "Checking system..."
@@ -1005,6 +1059,7 @@ check_cmake
 check_7z
 check_objective_sharpie
 check_simulators
+check_dotnet
 
 if test -z $FAIL; then
 	echo "System check succeeded"

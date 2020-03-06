@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+using System;
 using System.Collections.Generic;
 
 using UIKit;
@@ -9,11 +8,8 @@ using Xamarin.iOS.UnitTests;
 using Xamarin.iOS.UnitTests.NUnit;
 using BCLTests.TestRunner.Core;
 using Xamarin.iOS.UnitTests.XUnit;
-using System.IO;
-using System.Threading.Tasks;
 using System.Linq;
 using Foundation;
-using NUnit.Framework.Internal.Filters;
 
 namespace BCLTests {
 	public partial class ViewController : UIViewController {
@@ -66,8 +62,14 @@ namespace BCLTests {
 			base.ViewDidLoad ();
 			var options = ApplicationOptions.Current;
 			TcpTextWriter writer = null;
-			if (!string.IsNullOrEmpty (options.HostName))
-				writer = new TcpTextWriter (options.HostName, options.HostPort);
+			if (!string.IsNullOrEmpty (options.HostName)) {
+				try {
+					writer = new TcpTextWriter (options.HostName, options.HostPort);
+				} catch (Exception ex) {
+					Console.WriteLine ("Network error: Cannot connect to {0}:{1}: {2}. Continuing on console.", options.HostName, options.HostPort, ex);
+					writer = null; // will default to the console
+				}
+			}
 
 			// we generate the logs in two different ways depending if the generate xml flag was
 			// provided. If it was, we will write the xml file to the tcp writer if present, else
@@ -89,11 +91,21 @@ namespace BCLTests {
 			}
 			await runner.Run (testAssemblies).ConfigureAwait (false);
 
+			Xamarin.iOS.UnitTests.TestRunner.Jargon jargon = Xamarin.iOS.UnitTests.TestRunner.Jargon.NUnitV3;
+			switch (options.XmlVersion) {
+			default:
+			case XmlVersion.NUnitV2:
+				jargon = Xamarin.iOS.UnitTests.TestRunner.Jargon.NUnitV2;
+				break;
+			case XmlVersion.NUnitV3:
+				jargon = Xamarin.iOS.UnitTests.TestRunner.Jargon.NUnitV3;
+				break;
+			}
 			if (options.EnableXml) {
-				runner.WriteResultsToFile (writer);
+				runner.WriteResultsToFile (writer, jargon);
 				logger.Info ("Xml file was written to the tcp listener.");
 			} else {
-				string resultsFilePath = runner.WriteResultsToFile ();
+				string resultsFilePath = runner.WriteResultsToFile (jargon);
 				logger.Info ($"Xml result can be found {resultsFilePath}");
 			}
 			

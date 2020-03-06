@@ -1,17 +1,18 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading;
 using Xamarin.Utils;
+using Xharness.Logging;
 
-namespace xharness
+namespace Xharness
 {
 	public class DeviceLogCapturer
 	{
 		public Harness Harness;
-		public Log Log;
+		public ILog Log;
 		public string DeviceName;
 
 		Process process;
@@ -66,7 +67,7 @@ namespace xharness
 			if (process.WaitForExit ((int) TimeSpan.FromSeconds (5).TotalMilliseconds))
 				return;
 
-			process.KillTreeAsync (Harness.HarnessLog, diagnostics: false).Wait ();
+			Harness.ProcessManager.KillTreeAsync (process, Harness.HarnessLog, diagnostics: false).Wait ();
 			process.Dispose ();
 		}
 	}
