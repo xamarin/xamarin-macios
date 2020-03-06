@@ -78,7 +78,7 @@
     <Compile Include="BCLTestImporter\BCLTestProjectGenerator.cs" />
     <Compile Include="BCLTestImporter\Platform.cs" />
     <Compile Include="BCLTestImporter\RegisterTypeGenerator.cs" />
-    <Compile Include="Cache.cs" />
+    <Compile Include="Utilities\TempDirectory.cs" />
     <Compile Include="CrashReportSnapshot.cs" />
     <Compile Include="DeviceLogCapturer.cs" />
     <Compile Include="Extensions.cs" />
