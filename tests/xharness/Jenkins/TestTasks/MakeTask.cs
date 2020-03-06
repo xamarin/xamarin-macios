@@ -23,7 +23,7 @@ namespace Xharness.Jenkins.TestTasks
 					LogEvent (log, "Making {0} in {1}", Target, WorkingDirectory);
 					if (!Harness.DryRun) {
 						var timeout = Timeout;
-						var result = await make.RunAsync (log, true, timeout);
+						var result = await ProcessManager.RunAsync (make, log, timeout);
 						if (result.TimedOut) {
 							ExecutionResult = TestExecutingResult.TimedOut;
 							log.WriteLine ("Make timed out after {0} seconds.", timeout.TotalSeconds);

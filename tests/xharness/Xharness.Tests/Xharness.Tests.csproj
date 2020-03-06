@@ -62,6 +62,7 @@
     <Compile Include="Listeners\Tests\SimpleListenerFactoryTest.cs" />
     <Compile Include="Listeners\Tests\SimpleFileListenerTest.cs" />
     <Compile Include="Listeners\Tests\SimpleTcpListenerTest.cs" />
+    <Compile Include="Execution\Tests\ProcessManagerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -73,6 +74,9 @@
     <EmbeddedResource Include="Samples\xUnitSample.xml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="../DummyTestProcess/DummyTestProcess.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
     <ProjectReference Include="..\xharness.csproj">
       <Project>{e1f53f80-8399-499b-8017-c414b9cd263b}</Project>
       <Name>xharness</Name>

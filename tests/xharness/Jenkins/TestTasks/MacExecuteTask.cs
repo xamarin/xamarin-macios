@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
+using Xharness.Execution;
 using Xharness.Logging;
 using Xharness.Utilities;
 
@@ -14,6 +15,7 @@ namespace Xharness.Jenkins.TestTasks
 		public string Path;
 		public bool BCLTest;
 		public bool IsUnitTest;
+		public IProcessManager ProcessManager { get; set; } = new ProcessManager ();
 
 		public MacExecuteTask (BuildToolTask build_task)
 			: base (build_task)
@@ -96,7 +98,7 @@ namespace Xharness.Jenkins.TestTasks
 						try {
 							var timeout = TimeSpan.FromMinutes (20);
 
-							result = await proc.RunAsync (log, true, timeout);
+							result = await ProcessManager.RunAsync (proc, log, timeout);
 							if (result.TimedOut) {
 								FailureMessage = $"Execution timed out after {timeout.TotalSeconds} seconds.";
 								log.WriteLine (FailureMessage);

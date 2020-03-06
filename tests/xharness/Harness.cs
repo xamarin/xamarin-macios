@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using Xharness.BCLTestImporter;
 using Xharness.Logging;
+using Xharness.Execution;
 using Xharness.Targets;
 using Xharness.Utilities;
 
@@ -32,6 +33,7 @@ namespace Xharness
 		public bool UseSystem { get; set; } // if the system XI/XM should be used, or the locally build XI/XM.
 		public HashSet<string> Labels { get; } = new HashSet<string> ();
 		public XmlResultJargon XmlJargon { get; set; } = XmlResultJargon.NUnitV3;
+		public IProcessManager ProcessManager { get; set; } = new ProcessManager ();
 
 		public string XIBuildPath {
 			get { return Path.GetFullPath (Path.Combine (RootDirectory, "..", "tools", "xibuild", "xibuild")); }
@@ -779,7 +781,7 @@ namespace Xharness
 
 		public Task<ProcessExecutionResult> ExecuteXcodeCommandAsync (string executable, IList<string> args, ILog log, TimeSpan timeout)
 		{
-			return ProcessHelper.ExecuteCommandAsync (Path.Combine (XcodeRoot, "Contents", "Developer", "usr", "bin", executable), args, log, timeout: timeout);
+			return ProcessManager.ExecuteCommandAsync (Path.Combine (XcodeRoot, "Contents", "Developer", "usr", "bin", executable), args, log, timeout: timeout);
 		}
 
 		public async Task ShowSimulatorList (Log log)
@@ -801,7 +803,7 @@ namespace Xharness
 			var name = Path.GetFileName (report.Path);
 			var symbolicated = logs.Create (Path.ChangeExtension (name, ".symbolicated.log"), $"Symbolicated crash report: {name}", timestamp: false);
 			var environment = new Dictionary<string, string> { { "DEVELOPER_DIR", Path.Combine (XcodeRoot, "Contents", "Developer") } };
-			var rv = await ProcessHelper.ExecuteCommandAsync (symbolicatecrash, new [] { report.Path }, symbolicated, TimeSpan.FromMinutes (1), environment);
+			var rv = await ProcessManager.ExecuteCommandAsync (symbolicatecrash, new [] { report.Path }, symbolicated, TimeSpan.FromMinutes (1), environment);
 			if (rv.Succeeded) {;
 				log.WriteLine ("Symbolicated {0} successfully.", report.Path);
 				return symbolicated;
@@ -830,7 +832,7 @@ namespace Xharness
 						sb.Add ("--devname");
 						sb.Add (device);
 					}
-					var result = await ProcessHelper.ExecuteCommandAsync (MlaunchPath, sb, log, TimeSpan.FromMinutes (1));
+					var result = await ProcessManager.ExecuteCommandAsync (MlaunchPath, sb, log, TimeSpan.FromMinutes (1));
 					if (result.Succeeded)
 						rv.UnionWith (File.ReadAllLines (tmp));
 				} finally {

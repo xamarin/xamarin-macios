@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
+using Xharness.Execution;
 using Xharness.Logging;
 using Xharness.Utilities;
 
@@ -19,6 +20,7 @@ namespace Xharness.Jenkins.TestTasks
 		public bool ProduceHtmlReport = true;
 		public bool InProcess;
 		public TimeSpan Timeout = TimeSpan.FromMinutes (10);
+		IProcessManager ProcessManager { get; set; } = new ProcessManager ();
 
 		public NUnitExecuteTask (BuildToolTask build_task)
 			: base (build_task)
@@ -142,7 +144,7 @@ namespace Xharness.Jenkins.TestTasks
 					Jenkins.MainLog.WriteLine ("Executing {0} ({1})", TestName, Mode);
 					if (!Harness.DryRun) {
 						ExecutionResult = TestExecutingResult.Running;
-						var result = await proc.RunAsync (log, true, Timeout);
+						var result = await ProcessManager.RunAsync (proc, log, Timeout);
 						if (result.TimedOut) {
 							FailureMessage = $"Execution timed out after {Timeout.TotalMinutes} minutes.";
 							log.WriteLine (FailureMessage);

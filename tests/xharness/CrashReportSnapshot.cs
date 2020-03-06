@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Xharness.Logging;
@@ -61,7 +60,7 @@ namespace Xharness
 								sb.Add ("--devname");
 								sb.Add (DeviceName);
 							}
-							var result = await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, sb, Log, TimeSpan.FromMinutes (1));
+							var result = await Harness.ProcessManager.ExecuteCommandAsync (Harness.MlaunchPath, sb, Log, TimeSpan.FromMinutes (1));
 							if (result.Succeeded) {
 								Log.WriteLine ("Downloaded crash report {0} to {1}", file, crash_report_target.Path);
 								crash_report_target = await Harness.SymbolicateCrashReportAsync (Logs, Log, crash_report_target);

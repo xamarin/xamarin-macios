@@ -38,7 +38,7 @@ namespace Xharness.Jenkins.TestTasks
 						try {
 							var timeout = TimeSpan.FromMinutes (20);
 
-							var result = await proc.RunAsync (log, true, timeout);
+							var result = await ProcessManager.RunAsync (proc, log, timeout);
 							if (result.TimedOut) {
 								FailureMessage = $"Execution timed out after {timeout.TotalSeconds} seconds.";
 								log.WriteLine (FailureMessage);

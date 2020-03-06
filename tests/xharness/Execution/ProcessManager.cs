@@ -10,24 +10,18 @@ using System.Threading.Tasks;
 using Xharness.Logging;
 using Xharness.Utilities;
 
-namespace Xharness
-{
-	public class ProcessExecutionResult
-	{
-		public bool TimedOut { get; set; }
-		public int ExitCode { get; set; }
+namespace Xharness.Execution {
+	public class ProcessManager : IProcessManager {
+		public ProcessManager ()
+		{
+		}
 
-		public bool Succeeded { get { return !TimedOut && ExitCode == 0; } }
-	}
-
-	public static class ProcessHelper
-	{
-		public static async Task<ProcessExecutionResult> ExecuteCommandAsync (string filename, IList<string> args, ILog log, TimeSpan timeout, Dictionary<string, string> environment_variables = null, CancellationToken? cancellation_token = null)
+		public async Task<ProcessExecutionResult> ExecuteCommandAsync (string filename, IList<string> args, ILog log, TimeSpan timeout, Dictionary<string, string> environment_variables = null, CancellationToken? cancellation_token = null)
 		{
 			using (var p = new Process ()) {
 				p.StartInfo.FileName = filename;
 				p.StartInfo.Arguments = StringUtils.FormatArguments (args);
-				return await p.RunAsync (log, true, timeout, environment_variables, cancellation_token);
+				return await RunAsync (p, log, timeout, environment_variables, cancellation_token);
 			}
 		}
 
@@ -53,21 +47,18 @@ namespace Xharness
 			});
 			return rv.Task;
 		}
-	}
 
-	public static class Process_Extensions
-	{
-		public static async Task<ProcessExecutionResult> RunAsync (this Process process, ILog log, CancellationToken? cancellation_token = null, bool? diagnostics = null)
+		public async Task<ProcessExecutionResult> RunAsync (Process process, ILog log, CancellationToken? cancellation_token = null, bool? diagnostics = null)
 		{
 			return await RunAsync (process, log, log, log, cancellation_token: cancellation_token, diagnostics: diagnostics);
 		}
 
-		public static Task<ProcessExecutionResult> RunAsync (this Process process, ILog log, bool append = true, TimeSpan? timeout = null, Dictionary<string, string> environment_variables = null, CancellationToken? cancellation_token = null, bool? diagnostics = null)
+		public Task<ProcessExecutionResult> RunAsync (Process process, ILog log, TimeSpan? timeout = null, Dictionary<string, string> environment_variables = null, CancellationToken? cancellation_token = null, bool? diagnostics = null)
 		{
 			return RunAsync (process, log, log, log, timeout, environment_variables, cancellation_token, diagnostics);
 		}
 
-		public static Task<ProcessExecutionResult> RunAsync (this Process process, ILog log, ILog stdoutLog, ILog stderrLog, TimeSpan? timeout = null, Dictionary<string, string> environment_variables = null, CancellationToken? cancellation_token = null, bool? diagnostics = null)
+		public Task<ProcessExecutionResult> RunAsync (Process process, ILog log, ILog stdoutLog, ILog stderrLog, TimeSpan? timeout = null, Dictionary<string, string> environment_variables = null, CancellationToken? cancellation_token = null, bool? diagnostics = null)
 		{
 			if (stdoutLog is TextWriter StdoutStream && stderrLog is TextWriter StderrStream) {
 				return RunAsync (process, log, StdoutStream, StderrStream, timeout, environment_variables, cancellation_token, diagnostics);
@@ -76,7 +67,7 @@ namespace Xharness
 			}
 		}
 
-		public static async Task<ProcessExecutionResult> RunAsync (this Process process, ILog log, TextWriter StdoutStream, TextWriter StderrStream, TimeSpan? timeout = null, Dictionary<string, string> environment_variables = null, CancellationToken? cancellation_token = null, bool? diagnostics = null)
+		public async Task<ProcessExecutionResult> RunAsync (Process process, ILog log, TextWriter StdoutStream, TextWriter StderrStream, TimeSpan? timeout = null, Dictionary<string, string> environment_variables = null, CancellationToken? cancellation_token = null, bool? diagnostics = null)
 		{
 			var stdout_completion = new TaskCompletionSource<bool> ();
 			var stderr_completion = new TaskCompletionSource<bool> ();
@@ -149,19 +140,19 @@ namespace Xharness
 				}
 				if (!hasExited) {
 					StderrStream.WriteLine ($"Execution of {pid} was cancelled.");
-					ProcessHelper.kill (pid, 9);
+					kill (pid, 9);
 				}
 			});
 
 			if (timeout.HasValue) {
-				if (!await process.WaitForExitAsync (timeout.Value)) {
-					await process.KillTreeAsync (log, diagnostics ?? true);
+				if (!await WaitForExitAsync (process, timeout.Value)) {
+					await KillTreeAsync (process, log, diagnostics ?? true);
 					rv.TimedOut = true;
 					lock (StderrStream)
 						log.WriteLine ($"{pid} Execution timed out after {timeout.Value.TotalSeconds} seconds and the process was killed.");
 				}
 			}
-			await process.WaitForExitAsync ();
+			await WaitForExitAsync (process);
 			Task.WaitAll (new Task [] { stderr_completion.Task, stdout_completion.Task }, TimeSpan.FromSeconds (1));
 
 			try {
@@ -173,7 +164,7 @@ namespace Xharness
 			return rv;
 		}
 
-		public async static Task<bool> WaitForExitAsync (this Process process, TimeSpan? timeout = null)
+		public async Task<bool> WaitForExitAsync (Process process, TimeSpan? timeout = null)
 		{
 			if (process.HasExited)
 				return true;
@@ -205,12 +196,12 @@ namespace Xharness
 			}
 		}
 
-		public static Task KillTreeAsync (this Process @this, ILog log, bool? diagnostics = true)
+		public Task KillTreeAsync (Process process, ILog log, bool? diagnostics = true)
 		{
-			return KillTreeAsync (@this.Id, log, diagnostics);
+			return KillTreeAsync (process.Id, log, diagnostics);
 		}
 
-		public static async Task KillTreeAsync (int pid, ILog log, bool? diagnostics = true)
+		public async Task KillTreeAsync (int pid, ILog log, bool? diagnostics = true)
 		{
 			var pids = new List<int> ();
 			GetChildrenPS (log, pids, pid);
@@ -220,7 +211,7 @@ namespace Xharness
 					log.WriteLine ("Writing process list:");
 					ps.StartInfo.FileName = "ps";
 					ps.StartInfo.Arguments = "-A -o pid,ruser,ppid,pgid,%cpu=%CPU,%mem=%MEM,flags=FLAGS,lstart,rss,vsz,tty,state,time,command";
-					await ps.RunAsync (log, true, TimeSpan.FromSeconds (5), diagnostics: false);
+					await RunAsync (ps, log, TimeSpan.FromSeconds (5), diagnostics: false);
 				}
 
 				foreach (var diagnose_pid in pids) {
@@ -238,7 +229,7 @@ namespace Xharness
 							File.WriteAllText (template, commands.ToString ());
 
 							log.WriteLine ($"Printing backtrace for pid={pid}");
-							await dbg.RunAsync (log, true, TimeSpan.FromSeconds (30), diagnostics: false);
+							await RunAsync (dbg, log, TimeSpan.FromSeconds (30), diagnostics: false);
 						}
 					} finally {
 						try {
@@ -253,14 +244,14 @@ namespace Xharness
 			// Send SIGABRT since that produces a crash report
 			// lldb may fail to attach to system processes, but crash reports will still be produced with potentially helpful stack traces.
 			for (int i = 0; i < pids.Count; i++)
-				ProcessHelper.kill (pids [i], 6);
+				kill (pids [i], 6);
 
 			// send kill -9 anyway as a last resort
 			for (int i = 0; i < pids.Count; i++)
-				ProcessHelper.kill (pids [i], 9);
+				kill (pids [i], 9);
 		}
 
-		static void GetChildrenPS (ILog log, List<int> list, int pid)
+		public void GetChildrenPS (ILog log, List<int> list, int pid)
 		{
 			string stdout;
 
