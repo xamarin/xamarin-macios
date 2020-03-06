@@ -17,25 +17,11 @@ namespace Xharness.Targets
 		public string TodayContainerProjectPath { get; private set; }
 		public string TodayExtensionProjectPath { get; private set; }
 
-		public override string Suffix {
-			get {
-				return MonoNativeInfo != null ? MonoNativeInfo.FlavorSuffix + "-today" : "-today";
-			}
-		}
+		public override string Suffix => MonoNativeInfo != null ? MonoNativeInfo.FlavorSuffix + "-today" : "-today";
 
-		public override string ExtraLinkerDefsSuffix {
-			get {
-				return "-today";
-			}
-		}
+		public override string ExtraLinkerDefsSuffix => "-today";
 
-		public override string ProjectFileSuffix {
-			get {
-				if (MonoNativeInfo != null)
-					return MonoNativeInfo.FlavorSuffix + "-today";
-				return "-today";
-			}
-		}
+		public override string ProjectFileSuffix => MonoNativeInfo.FlavorSuffix + "-today";
 
 		protected override void CalculateName ()
 		{

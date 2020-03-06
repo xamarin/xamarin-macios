@@ -12,59 +12,56 @@ namespace Xharness.Targets
 		public Harness Harness;
 
 		protected XmlDocument inputProject;
-		string outputType;
-		string bundleIdentifier;
-		string targetDirectory;
 
 		public string Name { get; protected set; }
 		public string ProjectGuid { get; protected set; }
 		public string ProjectPath { get; protected set; }
 
-		public string ProjectFileExtension { get { return IsFSharp ? "fsproj" : "csproj"; } }
-		public bool IsFSharp { get { return (ProjectPath ?? TemplateProjectPath).EndsWith (".fsproj", StringComparison.Ordinal); } }
+		public string ProjectFileExtension => IsFSharp ? "fsproj" : "csproj";
+		public bool IsFSharp => (ProjectPath ?? TemplateProjectPath).EndsWith (".fsproj", StringComparison.Ordinal);
 
 		public string TemplateProjectPath { get; set; }
 
-		public string OutputType { get { return outputType; } }
-		public string TargetDirectory { get { return targetDirectory; } }
-		public bool IsLibrary { get { return outputType == "Library"; } }
-		public bool IsExe { get { return outputType == "Exe"; } }
+		public string OutputType { get; private set; }
+		public string TargetDirectory { get; private set; }
+		public bool IsLibrary => OutputType == "Library";
+		public bool IsExe => OutputType == "Exe";
 		public bool IsBindingProject { get; private set; }
-		public bool IsBCLProject { get { return ProjectPath.Contains ("bcl-test"); } }
+		public bool IsBCLProject => ProjectPath.Contains ("bcl-test");
 		public bool IsNUnitProject { get; set; }
 
-		public string BundleIdentifier { get { return bundleIdentifier; } protected set { bundleIdentifier = value; } }
+		public string BundleIdentifier { get; protected set; }
 
-		public virtual string Suffix { get { throw new NotImplementedException (); } }
-		public virtual string MakefileWhereSuffix { get { return string.Empty; } }
-		public virtual string ProjectFileSuffix { get { return Suffix; } }
-		public virtual string ExtraLinkerDefsSuffix { get { return Suffix; } }
-		protected virtual string ProjectTypeGuids { get { throw new NotImplementedException (); } }
-		protected virtual string BindingsProjectTypeGuids { get { throw new NotImplementedException (); } }
-		protected virtual string TargetFrameworkIdentifier { get { throw new NotImplementedException (); } }
-		protected virtual string Imports { get { throw new NotImplementedException (); } }
-		protected virtual string BindingsImports { get { throw new NotImplementedException (); } }
-		protected virtual bool SupportsBitcode { get { return false; } }
-		public virtual bool IsMultiArchitecture { get { return false; } }
-		public virtual string SimulatorArchitectures { get { throw new NotImplementedException (); } }
-		public virtual string DeviceArchitectures { get { throw new NotImplementedException (); } }
+		public virtual string Suffix => throw new NotImplementedException ();
+		public virtual string MakefileWhereSuffix => string.Empty;
+		public virtual string ProjectFileSuffix => Suffix;
+		public virtual string ExtraLinkerDefsSuffix => Suffix;
+		protected virtual string ProjectTypeGuids => throw new NotImplementedException ();
+		protected virtual string BindingsProjectTypeGuids => throw new NotImplementedException ();
+		protected virtual string TargetFrameworkIdentifier => throw new NotImplementedException ();
+		protected virtual string Imports => throw new NotImplementedException ();
+		protected virtual string BindingsImports => throw new NotImplementedException ();
+		protected virtual bool SupportsBitcode => false;
+		public virtual bool IsMultiArchitecture => false;
+		public virtual string SimulatorArchitectures => throw new NotImplementedException ();
+		public virtual string DeviceArchitectures => throw new NotImplementedException ();
 		protected virtual string GetMinimumOSVersion (string templateMinimumOSVersion) { throw new NotImplementedException (); }
-		protected virtual int [] UIDeviceFamily { get { throw new NotImplementedException (); } }
-		protected virtual string AdditionalDefines { get { return string.Empty; } }
-		protected virtual string RemoveDefines { get { return string.Empty; } }
-		public virtual string Platform { get { throw new NotImplementedException (); } }
+		protected virtual int [] UIDeviceFamily => throw new NotImplementedException ();
+		protected virtual string AdditionalDefines => string.Empty;
+		protected virtual string RemoveDefines => string.Empty;
+		public virtual string Platform => throw new NotImplementedException ();
 
 		public bool ShouldSkipProjectGeneration { get; set; }
-		public virtual bool ShouldSetTargetFrameworkIdentifier { get { return true; } }
-		public virtual string DefaultAssemblyReference { get { return "Xamarin.iOS"; } }
-		public virtual IEnumerable<string> ReferenceToRemove { get { return Enumerable.Empty<string> (); } }
-		public virtual Dictionary<string, string> NewPropertiesToAdd { get { return new Dictionary<string, string> (); } }
-		public virtual HashSet<string> PropertiesToRemove { get { return null; } }
+		public virtual bool ShouldSetTargetFrameworkIdentifier => true;
+		public virtual string DefaultAssemblyReference => "Xamarin.iOS";
+		public virtual IEnumerable<string> ReferenceToRemove => Enumerable.Empty<string> ();
+		public virtual Dictionary<string, string> NewPropertiesToAdd => new Dictionary<string, string> ();
+		public virtual HashSet<string> PropertiesToRemove => null;
 
 		public const string FSharpGuid = "{F2A71F9B-5D33-465A-A702-920D77279786}";
 		public const string CSharpGuid = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}";
 
-		public string LanguageGuid { get { return IsFSharp ? FSharpGuid : CSharpGuid; } }
+		public string LanguageGuid => IsFSharp ? FSharpGuid : CSharpGuid;
 
 		protected virtual bool FixProjectReference (string name, out string fixed_name)
 		{
@@ -158,14 +155,14 @@ namespace Xharness.Targets
 
 		protected virtual void CalculateName ()
 		{
-			Name = Path.GetFileName (targetDirectory);
+			Name = Path.GetFileName (TargetDirectory);
 			if (string.Equals (Name, "ios", StringComparison.OrdinalIgnoreCase) || string.Equals (Name, "mac", StringComparison.OrdinalIgnoreCase))
-				Name = Path.GetFileName (Path.GetDirectoryName (targetDirectory));
+				Name = Path.GetFileName (Path.GetDirectoryName (TargetDirectory));
 		}
 
 		public void Execute ()
 		{
-			targetDirectory = Path.GetDirectoryName (TemplateProjectPath);
+			TargetDirectory = Path.GetDirectoryName (TemplateProjectPath);
 			CalculateName ();
 
 			var templateName = Path.GetFileName (TemplateProjectPath);
@@ -176,13 +173,13 @@ namespace Xharness.Targets
 			if (templateName.Equals ("mono-native-mac"))
 				templateName = "mono-native";
 
-			ProjectPath = Path.Combine (targetDirectory, templateName + ProjectFileSuffix + "." + ProjectFileExtension);
+			ProjectPath = Path.Combine (TargetDirectory, templateName + ProjectFileSuffix + "." + ProjectFileExtension);
 
 			if (!ShouldSkipProjectGeneration) {
 				inputProject = new XmlDocument ();
 				inputProject.LoadWithoutNetworkAccess (TemplateProjectPath);
 
-				outputType = inputProject.GetOutputType ();
+				OutputType = inputProject.GetOutputType ();
 
 				switch (inputProject.GetImport ()) {
 				case "$(MSBuildExtensionsPath)\\Xamarin\\iOS\\Xamarin.iOS.CSharp.targets":

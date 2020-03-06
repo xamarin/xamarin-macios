@@ -53,35 +53,15 @@ namespace Xharness.Targets
 			}
 		}
 
-		protected override string ProjectTypeGuids {
-			get {
-				return "{A3F8F2AB-B479-4A4A-A458-A89E7DC349F1};" + LanguageGuid;
-			}
-		}
+		protected override string ProjectTypeGuids => "{A3F8F2AB-B479-4A4A-A458-A89E7DC349F1};" + LanguageGuid;
 
-		protected override string BindingsProjectTypeGuids {
-			get {
-				return "{810C163F-4746-4721-8B8E-88A3673A62EA}";
-			}
-		}
+		protected override string BindingsProjectTypeGuids => "{810C163F-4746-4721-8B8E-88A3673A62EA}";
 
-		protected override string TargetFrameworkIdentifier {
-			get {
-				return "Xamarin.Mac";
-			}
-		}
+		protected override string TargetFrameworkIdentifier => "Xamarin.Mac";
 
-		protected override string Imports {
-			get {
-				return IsFSharp ? "Mac\\Xamarin.Mac.FSharp.targets" : "Mac\\Xamarin.Mac.CSharp.targets";
-			}
-		}
+		protected override string Imports => IsFSharp ? "Mac\\Xamarin.Mac.FSharp.targets" : "Mac\\Xamarin.Mac.CSharp.targets";
 
-		protected override string BindingsImports {
-			get {
-				return "Mac\\Xamarin.Mac.ObjcBinding.CSharp";
-			}
-		}
+		protected override string BindingsImports => "Mac\\Xamarin.Mac.ObjcBinding.CSharp";
 
 		protected override string AdditionalDefines {
 			get {
@@ -105,11 +85,7 @@ namespace Xharness.Targets
 			}
 		}
 
-		public override string Platform {
-			get {
-				return "mac";
-			}
-		}
+		public override string Platform => "mac";
 
 		public MonoNativeInfo MonoNativeInfo { get; set; }
 
@@ -132,17 +108,13 @@ namespace Xharness.Targets
 			}
 		}
 
-		public string SimplifiedName {
-			get {
-				return Name.EndsWith ("-mac", StringComparison.Ordinal) ? Name.Substring (0, Name.Length - 4) : Name;
-			}
-		}
+		public string SimplifiedName => Name.EndsWith ("-mac", StringComparison.Ordinal) ? Name.Substring (0, Name.Length - 4) : Name;
 
-		public override string DefaultAssemblyReference { get { return "Xamarin.Mac"; } }
+		public override string DefaultAssemblyReference => "Xamarin.Mac";
 
-		public override IEnumerable<string> ReferenceToRemove { get { yield return "System.Drawing"; } }
+		public override IEnumerable<string> ReferenceToRemove => new [] { "System.Drawing" };
 
-		public override bool ShouldSetTargetFrameworkIdentifier { get { return Modern; } }
+		public override bool ShouldSetTargetFrameworkIdentifier => Modern;
 
 		public override Dictionary<string, string> NewPropertiesToAdd {
 			get {

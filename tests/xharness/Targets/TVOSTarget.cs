@@ -7,59 +7,23 @@ namespace Xharness.Targets
 {
 	public class TVOSTarget : iOSTarget
 	{
-		public override string Suffix {
-			get {
-				return MonoNativeInfo != null ? MonoNativeInfo.FlavorSuffix + "-tvos" : "-tvos";
-			}
-		}
+		public override string Suffix => MonoNativeInfo != null ? MonoNativeInfo.FlavorSuffix + "-tvos" : "-tvos";
 
-		public override string ExtraLinkerDefsSuffix {
-			get {
-				return "-tvos";
-			}
-		}
+		public override string ExtraLinkerDefsSuffix => "-tvos";
 
-		protected override string BindingsProjectTypeGuids {
-			get {
-				return "{4A1ED743-3331-459B-915A-4B17C7B6DBB6}";
-			}
-		}
+		protected override string BindingsProjectTypeGuids => "{4A1ED743-3331-459B-915A-4B17C7B6DBB6}";
 
-		protected override string ProjectTypeGuids {
-			get {
-				return "{06FA79CB-D6CD-4721-BB4B-1BD202089C55}";
-			}
-		}
+		protected override string ProjectTypeGuids => "{06FA79CB-D6CD-4721-BB4B-1BD202089C55}";
 
-		protected override string TargetFrameworkIdentifier {
-			get {
-				return "Xamarin.TVOS";
-			}
-		}
+		protected override string TargetFrameworkIdentifier => "Xamarin.TVOS";
 
-		protected override string Imports {
-			get {
-				return IsFSharp ? "TVOS\\Xamarin.TVOS.FSharp.targets" : "TVOS\\Xamarin.TVOS.CSharp.targets";
-			}
-		}
+		protected override string Imports => IsFSharp ? "TVOS\\Xamarin.TVOS.FSharp.targets" : "TVOS\\Xamarin.TVOS.CSharp.targets";
 
-		protected override string BindingsImports {
-			get {
-				return IsFSharp ? "TVOS\\Xamarin.TVOS.ObjCBinding.FSharp.targets" : "TVOS\\Xamarin.TVOS.ObjCBinding.CSharp.targets";
-			}
-		}
+		protected override string BindingsImports => IsFSharp ? "TVOS\\Xamarin.TVOS.ObjCBinding.FSharp.targets" : "TVOS\\Xamarin.TVOS.ObjCBinding.CSharp.targets";
 
-		public override string SimulatorArchitectures {
-			get {
-				return "x86_64";
-			}
-		}
+		public override string SimulatorArchitectures => "x86_64";
 
-		public override string DeviceArchitectures {
-			get {
-				return "ARM64";
-			}
-		}
+		public override string DeviceArchitectures => "ARM64";
 
 		protected override void CalculateName ()
 		{
@@ -75,29 +39,13 @@ namespace Xharness.Targets
 			return MonoNativeHelper.GetMinimumOSVersion (DevicePlatform.tvOS, MonoNativeInfo.Flavor);
 		}
 
-		protected override int [] UIDeviceFamily {
-			get {
-				return new int [] { 3 };
-			}
-		}
+		protected override int [] UIDeviceFamily => new int [] { 3 };
 
-		protected override string AdditionalDefines {
-			get {
-				return "XAMCORE_2_0;XAMCORE_3_0;MONOTOUCH_TV;";
-			}
-		}
+		protected override string AdditionalDefines => "XAMCORE_2_0;XAMCORE_3_0;MONOTOUCH_TV;";
 
-		public override string Platform {
-			get {
-				return "tvos";
-			}
-		}
+		public override string Platform => "tvos";
 
-		protected override bool SupportsBitcode {
-			get {
-				return true;
-			}
-		}
+		protected override bool SupportsBitcode => true;
 
 		static Dictionary<string, string> project_guids = new Dictionary<string, string> ();
 
