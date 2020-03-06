@@ -43,7 +43,9 @@
     <Compile Include="Assembly.cs" />
     <Compile Include="AssemblyResolver.cs" />
     <Compile Include="BitcodeConverter.cs" />
-    <Compile Include="error.cs" />
+    <Compile Include="..\common\error.cs">
+      <Link>external\error.cs</Link>
+    </Compile>
     <Compile Include="mtouch.cs" />
     <Compile Include="SdkVersions.cs" />
     <Compile Include="Stripper.cs" />
