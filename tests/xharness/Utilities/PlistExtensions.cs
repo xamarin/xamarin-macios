@@ -51,10 +51,6 @@ namespace Xharness.Utilities
 			return plist.GetPListStringValue ("MinimumOSVersion");
 		}
 
-		public static string GetMinimummacOSVersion (this XmlDocument plist)
-		{
-			return plist.GetPListStringValue ("LSMinimumSystemVersion");
-		}
 		public static void SetCFBundleIdentifier (this XmlDocument plist, string value)
 		{
 			plist.SetPListStringValue ("CFBundleIdentifier", value);
@@ -78,11 +74,6 @@ namespace Xharness.Utilities
 		public static string GetNSExtensionPointIdentifier (this XmlDocument plist)
 		{
 			return plist.SelectSingleNode ("//dict/key[text()='NSExtensionPointIdentifier']")?.NextSibling?.InnerText;
-		}
-
-		public static string GetPListStringValue (this XmlDocument plist, string node)
-		{
-			return plist.SelectSingleNode ("//dict/key[text()='" + node + "']").NextSibling.InnerText;
 		}
 
 		public static void SetPListStringValue (this XmlDocument plist, string node, string value)
@@ -117,7 +108,12 @@ namespace Xharness.Utilities
 			root.AppendChild (valueElement);
 		}
 
-		public static void SetPListArrayOfIntegerValues (this XmlDocument plist, string node, params int [] values)
+		public static bool ContainsKey (this XmlDocument plist, string key)
+		{
+			return plist.SelectSingleNode ("//dict/key[text()='" + key + "']") != null;
+		}
+
+		private static void SetPListArrayOfIntegerValues (this XmlDocument plist, string node, params int [] values)
 		{
 			var key = plist.SelectSingleNode ("//dict/key[text()='" + node + "']");
 			key.ParentNode.RemoveChild (key.NextSibling);
@@ -130,16 +126,9 @@ namespace Xharness.Utilities
 			key.ParentNode.InsertAfter (array, key);
 		}
 
-		public static void RemoveUIRequiredDeviceCapabilities (this XmlDocument plist)
+		private static string GetPListStringValue (this XmlDocument plist, string node)
 		{
-			var key = plist.SelectSingleNode ("//dict/key[text()='UIRequiredDeviceCapabilities']");
-			key.ParentNode.RemoveChild (key.NextSibling);
-			key.ParentNode.RemoveChild (key);
-		}
-
-		public static bool ContainsKey (this XmlDocument plist, string key)
-		{
-			return plist.SelectSingleNode ("//dict/key[text()='" + key + "']") != null;
+			return plist.SelectSingleNode ("//dict/key[text()='" + node + "']").NextSibling.InnerText;
 		}
 	}
 }
