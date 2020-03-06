@@ -5,11 +5,10 @@ using System.Linq;
 using System.Xml.Linq;
 using Moq;
 using NUnit.Framework;
-using Xharness;
 using Xharness.Logging;
-using static Xharness.XmlResultParser;
 
-namespace Xharness.Tests {
+namespace Xharness.Tests
+{
 
 	[TestFixture]
 	public class XmlResultParserTests {

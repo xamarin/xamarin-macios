@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -70,6 +70,24 @@
     <PackageReference Include="Mono.Options" Version="5.3.0.1" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Jenkins\TestTasks\AggregatedRunSimulatorTask.cs" />
+    <Compile Include="Jenkins\TestTasks\BuildProjectTask.cs" />
+    <Compile Include="Jenkins\TestTasks\BuildToolTask.cs" />
+    <Compile Include="Jenkins\TestTasks\MacExecuteTask.cs" />
+    <Compile Include="Jenkins\TestTasks\MacTask.cs" />
+    <Compile Include="Jenkins\TestTasks\MakeTask.cs" />
+    <Compile Include="Jenkins\TestTasks\NUnitExecuteTask.cs" />
+    <Compile Include="Jenkins\Resource.cs" />
+    <Compile Include="Jenkins\Resources.cs" />
+    <Compile Include="Jenkins\TestTasks\RunDeviceTask.cs" />
+    <Compile Include="Jenkins\TestTasks\RunSimulatorTask.cs" />
+    <Compile Include="Jenkins\TestTasks\RunTestTask.cs" />
+    <Compile Include="Jenkins\TestTasks\RunXITask.cs" />
+    <Compile Include="Jenkins\TestTasks\RunXtroTask.cs" />
+    <Compile Include="TestExecutingResult.cs" />
+    <Compile Include="TestPlatform.cs" />
+    <Compile Include="Jenkins\TestTasks\TestTask.cs" />
+    <Compile Include="Jenkins\TestTasks\XBuildTask.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Harness.cs" />
@@ -89,7 +107,7 @@
     <Compile Include="MakefileGenerator.cs" />
     <Compile Include="SolutionGenerator.cs" />
     <Compile Include="MacTarget.cs" />
-    <Compile Include="Jenkins.cs" />
+    <Compile Include="Jenkins\Jenkins.cs" />
     <Compile Include="Process_Extensions.cs" />
     <Compile Include="Simulators.cs" />
     <Compile Include="TestProject.cs" />
