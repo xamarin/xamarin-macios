@@ -1,11 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Xml;
 
-using Xamarin;
-
-namespace Xharness
+namespace Xharness.Targets
 {
 	public class MacTarget : Target
 	{
@@ -56,7 +52,7 @@ namespace Xharness
 				}
 			}
 		}
-			
+
 		protected override string ProjectTypeGuids {
 			get {
 				return "{A3F8F2AB-B479-4A4A-A458-A89E7DC349F1};" + LanguageGuid;
@@ -114,7 +110,7 @@ namespace Xharness
 				return "mac";
 			}
 		}
-		
+
 		public MonoNativeInfo MonoNativeInfo { get; set; }
 
 		protected override bool FixProjectReference (string name, out string fixed_name)
@@ -148,22 +144,17 @@ namespace Xharness
 
 		public override bool ShouldSetTargetFrameworkIdentifier { get { return Modern; } }
 
-		public override Dictionary<string, string> NewPropertiesToAdd 
-		{
-			get 
-			{
+		public override Dictionary<string, string> NewPropertiesToAdd {
+			get {
 				var props = new Dictionary<string, string> ();
 
 
 				if (System) {
 					props.Add ("TargetFrameworkVersion", "v4.7.1");
 					props.Add ("MonoBundlingExtraArgs", "--embed-mono=no");
-				} else if (Modern)
-				{
+				} else if (Modern) {
 					props.Add ("TargetFrameworkVersion", "v2.0");
-				}
-				else
-				{
+				} else {
 					props.Add ("TargetFrameworkVersion", "v4.5");
 					props.Add ("UseXamMacFullFramework", "true");
 				}

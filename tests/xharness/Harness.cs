@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using Xharness.BCLTestImporter;
 using Xharness.Logging;
+using Xharness.Targets;
 using Xharness.Utilities;
 
 namespace Xharness

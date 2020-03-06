@@ -3,7 +3,7 @@ using System.IO;
 using System.Xml;
 using Xharness.Utilities;
 
-namespace Xharness
+namespace Xharness.Targets
 {
 	public class TVOSTarget : iOSTarget
 	{
@@ -75,7 +75,7 @@ namespace Xharness
 			return MonoNativeHelper.GetMinimumOSVersion (DevicePlatform.tvOS, MonoNativeInfo.Flavor);
 		}
 
-		protected override int[] UIDeviceFamily {
+		protected override int [] UIDeviceFamily {
 			get {
 				return new int [] { 3 };
 			}

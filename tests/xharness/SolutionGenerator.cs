@@ -4,6 +4,7 @@ using System.IO;
 using System.Xml;
 using System.Text;
 using Xharness.Utilities;
+using Xharness.Targets;
 
 namespace Xharness
 {

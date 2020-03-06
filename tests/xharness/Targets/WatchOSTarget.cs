@@ -4,7 +4,7 @@ using System.IO;
 using System.Xml;
 using Xharness.Utilities;
 
-namespace Xharness
+namespace Xharness.Targets
 {
 	public class WatchOSTarget : iOSTarget
 	{
@@ -190,7 +190,7 @@ namespace Xharness
 				return IsFSharp ? "$(MSBuildExtensionsPath)\\Xamarin\\WatchOS\\Xamarin.WatchOS.ObjCBinding.FSharp.targets" : "$(MSBuildExtensionsPath)\\Xamarin\\WatchOS\\Xamarin.WatchOS.ObjCBinding.CSharp.targets";
 			}
 		}
-			
+
 		void CreateWatchOSLibraryProject ()
 		{
 			var csproj = inputProject;

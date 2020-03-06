@@ -3,12 +3,12 @@ using System.IO;
 using System.Xml;
 using Xharness.Utilities;
 
-namespace Xharness
+namespace Xharness.Targets
 {
 	public class UnifiedTarget : iOSTarget
 	{
 		// special cases for the BCL applications
-		
+
 		public override string Suffix {
 			get {
 				return MonoNativeInfo != null ? MonoNativeInfo.FlavorSuffix : "-ios";
@@ -74,9 +74,9 @@ namespace Xharness
 				else {
 					var bclIndex = TestProject.Name.IndexOf ("BCL", StringComparison.Ordinal);
 					// most of the BCL test are grouped, but there are a number that are not, in those cases remove the "{testype} Mono " prefix
-					Name = (bclIndex == -1) ? TestProject.Name.Substring (TestProject.Name.IndexOf ("Mono ", StringComparison.Ordinal) + "Mono ".Length) : TestProject.Name.Substring (bclIndex);
+					Name = bclIndex == -1 ? TestProject.Name.Substring (TestProject.Name.IndexOf ("Mono ", StringComparison.Ordinal) + "Mono ".Length) : TestProject.Name.Substring (bclIndex);
 				}
-			}  else
+			} else
 				base.CalculateName ();
 			if (MonoNativeInfo != null)
 				Name = Name + MonoNativeInfo.FlavorSuffix;
@@ -89,7 +89,7 @@ namespace Xharness
 			return MonoNativeHelper.GetMinimumOSVersion (DevicePlatform.iOS, MonoNativeInfo.Flavor);
 		}
 
-		protected override int[] UIDeviceFamily {
+		protected override int [] UIDeviceFamily {
 			get {
 				return new int [] { 1, 2 };
 			}

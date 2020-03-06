@@ -5,7 +5,7 @@ using System.Linq;
 using System.Xml;
 using Xharness.Utilities;
 
-namespace Xharness
+namespace Xharness.Targets
 {
 	public abstract class Target
 	{
@@ -38,18 +38,18 @@ namespace Xharness
 		public virtual string Suffix { get { throw new NotImplementedException (); } }
 		public virtual string MakefileWhereSuffix { get { return string.Empty; } }
 		public virtual string ProjectFileSuffix { get { return Suffix; } }
-		public virtual string ExtraLinkerDefsSuffix {  get { return Suffix; } }
+		public virtual string ExtraLinkerDefsSuffix { get { return Suffix; } }
 		protected virtual string ProjectTypeGuids { get { throw new NotImplementedException (); } }
 		protected virtual string BindingsProjectTypeGuids { get { throw new NotImplementedException (); } }
 		protected virtual string TargetFrameworkIdentifier { get { throw new NotImplementedException (); } }
 		protected virtual string Imports { get { throw new NotImplementedException (); } }
 		protected virtual string BindingsImports { get { throw new NotImplementedException (); } }
 		protected virtual bool SupportsBitcode { get { return false; } }
-		public virtual bool IsMultiArchitecture { get { return false; } }	
+		public virtual bool IsMultiArchitecture { get { return false; } }
 		public virtual string SimulatorArchitectures { get { throw new NotImplementedException (); } }
 		public virtual string DeviceArchitectures { get { throw new NotImplementedException (); } }
 		protected virtual string GetMinimumOSVersion (string templateMinimumOSVersion) { throw new NotImplementedException (); }
-		protected virtual int[] UIDeviceFamily { get { throw new NotImplementedException (); } }
+		protected virtual int [] UIDeviceFamily { get { throw new NotImplementedException (); } }
 		protected virtual string AdditionalDefines { get { return string.Empty; } }
 		protected virtual string RemoveDefines { get { return string.Empty; } }
 		public virtual string Platform { get { throw new NotImplementedException (); } }
@@ -59,7 +59,7 @@ namespace Xharness
 		public virtual string DefaultAssemblyReference { get { return "Xamarin.iOS"; } }
 		public virtual IEnumerable<string> ReferenceToRemove { get { return Enumerable.Empty<string> (); } }
 		public virtual Dictionary<string, string> NewPropertiesToAdd { get { return new Dictionary<string, string> (); } }
-		public virtual HashSet<string> PropertiesToRemove {  get { return null;  } }
+		public virtual HashSet<string> PropertiesToRemove { get { return null; } }
 
 		public const string FSharpGuid = "{F2A71F9B-5D33-465A-A702-920D77279786}";
 		public const string CSharpGuid = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}";
@@ -87,7 +87,7 @@ namespace Xharness
 
 			inputProject.SetOutputPath ("bin\\$(Platform)\\$(Configuration)" + Suffix);
 			inputProject.SetIntermediateOutputPath ("obj\\$(Platform)\\$(Configuration)" + Suffix);
-			
+
 			if (ShouldSetTargetFrameworkIdentifier)
 				inputProject.SetTargetFrameworkIdentifier (TargetFrameworkIdentifier);
 
@@ -98,7 +98,7 @@ namespace Xharness
 
 			var newProperties = NewPropertiesToAdd;
 			foreach (var k in newProperties.Keys)
-				inputProject.SetTopLevelPropertyGroupValue (k, newProperties[k]);
+				inputProject.SetTopLevelPropertyGroupValue (k, newProperties [k]);
 
 			var removedProperties = PropertiesToRemove;
 			if (removedProperties != null) {
@@ -165,7 +165,7 @@ namespace Xharness
 
 		public void Execute ()
 		{
-			targetDirectory = Path.GetDirectoryName(TemplateProjectPath);
+			targetDirectory = Path.GetDirectoryName (TemplateProjectPath);
 			CalculateName ();
 
 			var templateName = Path.GetFileName (TemplateProjectPath);
@@ -178,13 +178,12 @@ namespace Xharness
 
 			ProjectPath = Path.Combine (targetDirectory, templateName + ProjectFileSuffix + "." + ProjectFileExtension);
 
-			if (!ShouldSkipProjectGeneration)
-			{
+			if (!ShouldSkipProjectGeneration) {
 				inputProject = new XmlDocument ();
 				inputProject.LoadWithoutNetworkAccess (TemplateProjectPath);
-	
+
 				outputType = inputProject.GetOutputType ();
-	
+
 				switch (inputProject.GetImport ()) {
 				case "$(MSBuildExtensionsPath)\\Xamarin\\iOS\\Xamarin.iOS.CSharp.targets":
 				case "$(MSBuildExtensionsPath)\\Xamarin\\iOS\\Xamarin.iOS.FSharp.targets":
@@ -195,7 +194,7 @@ namespace Xharness
 					break;
 				case "$(MSBuildExtensionsPath)\\Xamarin\\iOS\\Xamarin.iOS.ObjCBinding.CSharp.targets":
 				case "$(MSBuildExtensionsPath)\\Xamarin\\iOS\\Xamarin.iOS.ObjCBinding.FSharp.targets":
-				case "$(MSBuildExtensionsPath)\\Xamarin\\Mac\\Xamarin.Mac.ObjcBinding.CSharp":	
+				case "$(MSBuildExtensionsPath)\\Xamarin\\Mac\\Xamarin.Mac.ObjcBinding.CSharp":
 					IsBindingProject = true;
 					break;
 				default:
