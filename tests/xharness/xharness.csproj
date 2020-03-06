@@ -80,7 +80,7 @@
     <Compile Include="BCLTestImporter\RegisterTypeGenerator.cs" />
     <Compile Include="CrashReportSnapshot.cs" />
     <Compile Include="DeviceLogCapturer.cs" />
-    <Compile Include="Extensions.cs" />
+    <Compile Include="Utilities\Extensions.cs" />
     <Compile Include="GitHub.cs" />
     <Compile Include="Harness.cs" />
     <Compile Include="Jenkins\Jenkins.cs" />
