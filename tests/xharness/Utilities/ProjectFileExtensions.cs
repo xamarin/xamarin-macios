@@ -2,10 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
-using Xharness.Utilities;
 
-namespace Xharness
-{
+namespace Xharness.Utilities {
 	static class ProjectFileExtensions {
 		const string MSBuild_Namespace = "http://schemas.microsoft.com/developer/msbuild/2003";
 

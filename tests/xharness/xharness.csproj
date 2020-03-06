@@ -78,7 +78,6 @@
     <Compile Include="BCLTestImporter\BCLTestProjectGenerator.cs" />
     <Compile Include="BCLTestImporter\Platform.cs" />
     <Compile Include="BCLTestImporter\RegisterTypeGenerator.cs" />
-    <Compile Include="Utilities\TempDirectory.cs" />
     <Compile Include="CrashReportSnapshot.cs" />
     <Compile Include="DeviceLogCapturer.cs" />
     <Compile Include="Extensions.cs" />
@@ -119,7 +118,6 @@
     <Compile Include="MonoNativeInfo.cs" />
     <Compile Include="Process_Extensions.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="ProjectFileExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Simulators.cs" />
     <Compile Include="SolutionGenerator.cs" />
@@ -134,7 +132,9 @@
     <Compile Include="TestPlatform.cs" />
     <Compile Include="TestProject.cs" />
     <Compile Include="Utilities\PlistExtensions.cs" />
+    <Compile Include="Utilities\ProjectFileExtensions.cs" />
     <Compile Include="Utilities\StringUtils.cs" />
+    <Compile Include="Utilities\TempDirectory.cs" />
     <Compile Include="XmlResultParser.cs" />
   </ItemGroup>
   <ItemGroup>
