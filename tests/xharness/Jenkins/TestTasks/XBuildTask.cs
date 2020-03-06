@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Xml;
-using Xamarin;
-using Xamarin.Utils;
 using Xharness.Logging;
+using Xharness.Utilities;
 
 namespace Xharness.Jenkins.TestTasks
 {

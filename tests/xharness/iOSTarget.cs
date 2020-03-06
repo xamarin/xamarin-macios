@@ -1,8 +1,6 @@
 using System.IO;
 using System.Xml;
-
-using Xamarin;
-using xharness.Utilities;
+using Xharness.Utilities;
 
 namespace Xharness
 {

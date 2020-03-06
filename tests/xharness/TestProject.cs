@@ -4,8 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
-using Xamarin;
 using Xharness.Jenkins.TestTasks;
+using Xharness.Utilities;
 
 namespace Xharness
 {
@@ -121,7 +121,7 @@ namespace Xharness
 
 		internal async Task CreateCopyAsync (TestTask test = null)
 		{
-			var directory = Xamarin.Cache.CreateTemporaryDirectory (test?.TestName ?? System.IO.Path.GetFileNameWithoutExtension (Path));
+			var directory = Cache.CreateTemporaryDirectory (test?.TestName ?? System.IO.Path.GetFileNameWithoutExtension (Path));
 			Directory.CreateDirectory (directory);
 			var original_path = Path;
 			Path = System.IO.Path.Combine (directory, System.IO.Path.GetFileName (Path));
