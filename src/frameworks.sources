@@ -1830,6 +1830,7 @@ MAC_FRAMEWORKS =            \
 	AppKit XKit             \
 	AudioToolbox            \
 	AudioUnit               \
+	AutomaticAssessmentConfiguration \
 	AVKit                   \
 	BusinessChat            \
 	CFNetwork               \
@@ -1918,6 +1919,7 @@ IOS_FRAMEWORKS =         \
 	AssetsLibrary \
 	AudioToolbox \
 	AudioUnit \
+	AutomaticAssessmentConfiguration \
 	BackgroundTasks \
 	BusinessChat \
 	CallKit \

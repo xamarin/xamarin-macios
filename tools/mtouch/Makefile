@@ -158,6 +158,8 @@ SIMLAUNCHER_FRAMEWORKS =  \
 	-weak_framework QuickLookThumbnailing		\
 	-weak_framework SoundAnalysis			\
 	-weak_framework VisionKit			\
+						\
+	-weak_framework AutomaticAssessmentConfiguration	\
 
 # keep the above list of weak_framework
 # 1. grouped by iOS versions;

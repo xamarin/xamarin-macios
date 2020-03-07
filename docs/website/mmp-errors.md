@@ -313,6 +313,30 @@ Change the architecture in the project's Mac Build options to 'x86_64' in order 
 
 #### MM1501: Can not resolve reference: {0}
 
+<a name="MM1502" />
+
+#### MM1502: One or more reference(s) to type '{0}' already exists inside '{1}' before linking
+
+This warning might be reported when using `--warn-on-type-ref=X` if any loaded (unmodified) assembly has a type reference to the type `X`.
+
+This can be used along with `--warnaserror:1502` to ensure a reference to a specific type (e.g. `UIKit.UIWebView`) is not being used by any assembly used the application.
+
+Notes:
+* Custom attributes are encoded differently and not included inside an assembly type references metadata.
+* Assembly that define a type `X` do not have a reference (but the definition) of the type (and won't be reported).
+
+<a name="MM1503" />
+
+#### MM1503: One or more reference(s) to type '{0}' still exists inside '{1}' after linking
+
+This warning might be reported when using `--warn-on-type-ref=X` if any linked (modified) assembly has a type reference to the type `X`.
+
+This can be used along with `--warnaserror:1503` to ensure a reference to a specific type (e.g. `UIKit.UIWebView`) will not be part of (the managed side of) the application.
+
+Notes:
+* Custom attributes are encoded differently and not included inside an assembly type references metadata.
+* Assembly that define a type `X` do not have a reference (but the definition) of the type (and won't be reported).
+
 ### MachO.cs
 
 <a name="MM1600" />

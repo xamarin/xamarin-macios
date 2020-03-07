@@ -28,6 +28,13 @@ namespace MonoTouchFixtures.UIKit {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class WebViewTest {
+
+		[TestFixtureSetUp]
+		public void Setup ()
+		{
+			if (Type.GetType ("UIKit.DeprecatedWebView, Xamarin.iOS") != null)
+				Assert.Ignore ("All type references to UIWebView were removed (optimized).");
+		}
 		
 		[Test]
 		public void InitWithFrame ()

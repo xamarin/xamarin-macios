@@ -416,6 +416,9 @@
       <Link>Xamarin.Linker\CustomSymbolWriter.cs</Link>
     </Compile>
     <Compile Include="Target.mmp.cs" />
+    <Compile Include="..\linker\ScanTypeReferenceStep.cs">
+      <Link>Xamarin.Linker\ScanTypeReferenceStep.cs</Link>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

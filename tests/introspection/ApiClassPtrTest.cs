@@ -38,6 +38,11 @@ namespace Introspection {
 				if (ca is ModelAttribute)
 					return true;
 			}
+
+			// skip types that we renamed / rewrite since they won't behave correctly (by design)
+			if (SkipDueToRejectedTypes (type))
+				return true;
+
 			return SkipDueToAttribute (type);
 		}
 
