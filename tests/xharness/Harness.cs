@@ -10,6 +10,7 @@ using Xharness.BCLTestImporter;
 using Xharness.Logging;
 using Xharness.Execution;
 using Xharness.Targets;
+using Xharness.Utilities;
 
 namespace Xharness
 {
@@ -34,7 +35,7 @@ namespace Xharness
 		public IProcessManager ProcessManager { get; set; } = new ProcessManager ();
 
 		public string XIBuildPath {
-			get { return Path.GetFullPath (Path.Combine (RootDirectory, "..", "tools", "xibuild", "xibuild")); }
+			get { return Path.GetFullPath (Path.Combine (DirectoryUtilities.RootDirectory, "..", "tools", "xibuild", "xibuild")); }
 		}
 
 		public static string Timestamp {
@@ -43,33 +44,6 @@ namespace Xharness
 			}
 		}
 
-		// This is the maccore/tests directory.
-		static string root_directory;
-		public static string RootDirectory {
-			get {
-				if (root_directory == null) {
-					var testAssemblyDirectory = Path.GetDirectoryName (System.Reflection.Assembly.GetExecutingAssembly ().Location);
-					var dir = testAssemblyDirectory;
-					var path = Path.Combine (testAssemblyDirectory, ".git");
-					while (!Directory.Exists (path) && path.Length > 3) {
-						dir = Path.GetDirectoryName (dir);
-						path = Path.Combine (dir, ".git");
-					}
-					if (!Directory.Exists (path))
-						throw new Exception ("Could not find the xamarin-macios repo.");
-					path = Path.Combine (Path.GetDirectoryName (path), "tests");
-					if (!Directory.Exists (path))
-						throw new Exception ("Could not find the tests directory.");
-					root_directory = path;
-				}
-				return root_directory;
-			}
-			set {
-				root_directory = value;
-				if (root_directory != null)
-					root_directory = Path.GetFullPath (root_directory).TrimEnd ('/');
-			}
-		}
 
 		public List<iOSTestProject> IOSTestProjects { get; set; } = new List<iOSTestProject> ();
 		public List<MacTestProject> MacTestProjects { get; set; } = new List<MacTestProject> ();

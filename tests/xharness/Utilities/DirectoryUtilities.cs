@@ -2,19 +2,17 @@
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace Xharness.Utilities
-{
+namespace Xharness.Utilities {
 	// A class that creates temporary directories next to the test assembly, and cleans the output on startup
 	// Advantages:
 	// * The temporary directories are automatically cleaned on Wrench (unlike /tmp, which isn't)
 	// * The temporary directories stay after a test is run (until a new test run is started),
 	//   which makes it easier to re-run (copy-paste) commands that failed.
-	public static class TempDirectory
-	{
+	public static class DirectoryUtilities {
 		static string root;
 		static int lastNumber;
 
-		static TempDirectory ()
+		static DirectoryUtilities ()
 		{
 			root = Path.Combine (Path.GetDirectoryName (System.Reflection.Assembly.GetExecutingAssembly ().Location), "tmp-test-dir");
 			if (Directory.Exists (root))
@@ -51,6 +49,44 @@ namespace Xharness.Utilities
 			}
 
 			throw new Exception ("Could not create temporary directory");
+		}
+
+		static string root_directory;
+		public static string RootDirectory {
+			get {
+				if (root_directory == null)
+					root_directory = FindRootDirectory ();
+
+				return root_directory;
+			}
+
+			set {
+				root_directory = value;
+				if (root_directory != null)
+					root_directory = Path.GetFullPath (root_directory).TrimEnd ('/');
+			}
+		}
+
+		private static string FindRootDirectory ()
+		{
+			// Keep going up and look for .git
+			var testAssemblyDirectory = Path.GetDirectoryName (System.Reflection.Assembly.GetExecutingAssembly ().Location);
+			var dir = testAssemblyDirectory;
+			var path = Path.Combine (testAssemblyDirectory, ".git");
+			while (!Directory.Exists (path) && path.Length > 3) {
+				dir = Path.GetDirectoryName (dir);
+				path = Path.Combine (dir, ".git");
+			}
+
+			if (!Directory.Exists (path))
+				throw new Exception ("Could not find the xamarin-macios repo.");
+
+			path = Path.Combine (Path.GetDirectoryName (path), "tests");
+
+			if (!Directory.Exists (path))
+				throw new Exception ("Could not find the tests directory.");
+
+			return path;
 		}
 	}
 }
