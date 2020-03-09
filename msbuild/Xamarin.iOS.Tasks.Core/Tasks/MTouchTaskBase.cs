@@ -8,6 +8,7 @@ using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev.Tasks;
 using Xamarin.MacDev;
+using Xamarin.Utils;
 
 namespace Xamarin.iOS.Tasks
 {
@@ -148,11 +149,14 @@ namespace Xamarin.iOS.Tasks
 		[Required]
 		public string SymbolsList { get; set; }
 
-		[Required]
-		public string TargetFrameworkIdentifier { get; set; }
+		public string TargetFrameworkIdentifier { get { return TargetFramework.Identifier; } }
+
+		public TargetFramework TargetFramework { get { return TargetFramework.Parse (TargetFrameworkMoniker); } }
+
+		public string TargetFrameworkVersion { get { return TargetFramework.Version.ToString (); } }
 
 		[Required]
-		public string TargetFrameworkVersion { get; set; }
+		public string TargetFrameworkMoniker { get; set; }
 
 		[Required]
 		public bool UseLlvm { get; set; }
@@ -185,8 +189,8 @@ namespace Xamarin.iOS.Tasks
 
 		#endregion
 
-		public PlatformFramework Framework {
-			get { return PlatformFrameworkHelper.GetFramework (TargetFrameworkIdentifier); }
+		public ApplePlatform Framework {
+			get { return PlatformFrameworkHelper.GetFramework (TargetFrameworkMoniker); }
 		}
 
 		protected override string ToolName {
@@ -429,10 +433,10 @@ namespace Xamarin.iOS.Tasks
 
 			if (EnableBitcode) {
 				switch (Framework) {
-				case PlatformFramework.WatchOS:
+				case ApplePlatform.WatchOS:
 					args.AddLine ("--bitcode=full");
 					break;
-				case PlatformFramework.TVOS:
+				case ApplePlatform.TVOS:
 					args.AddLine ("--bitcode=asmonly");
 					break;
 				default:
@@ -658,7 +662,7 @@ namespace Xamarin.iOS.Tasks
 				}
 			} else {
 				switch (Framework) {
-				case PlatformFramework.iOS:
+				case ApplePlatform.iOS:
 					IPhoneSdkVersion sdkVersion;
 					if (!IPhoneSdkVersion.TryParse (SdkVersion, out sdkVersion)) {
 						Log.LogError (null, null, null, AppManifest.ItemSpec, 0, 0, 0, 0, "Could not parse SdkVersion '{0}'", SdkVersion);
@@ -667,8 +671,8 @@ namespace Xamarin.iOS.Tasks
 
 					minimumOSVersion = sdkVersion;
 					break;
-				case PlatformFramework.WatchOS:
-				case PlatformFramework.TVOS:
+				case ApplePlatform.WatchOS:
+				case ApplePlatform.TVOS:
 					minimumOSVersion = IPhoneSdkVersion.UseDefault;
 					break;
 				default:

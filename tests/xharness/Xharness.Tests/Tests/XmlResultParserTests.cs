@@ -5,11 +5,10 @@ using System.Linq;
 using System.Xml.Linq;
 using Moq;
 using NUnit.Framework;
-using Xharness;
 using Xharness.Logging;
-using static Xharness.XmlResultParser;
 
-namespace Xharness.Tests {
+namespace Xharness.Tests
+{
 
 	[TestFixture]
 	public class XmlResultParserTests {
@@ -264,7 +263,7 @@ namespace Xharness.Tests {
 
 			// expect the creation of the two diff xml file logs
 			_ = logs.Setup (l => l.Create (It.IsAny<string> (), "Failure Log tmp", null)).Returns (tmpLogMock.Object);
-			_ = logs.Setup (l => l.Create (It.IsAny<string> (), Log.XML_LOG, null)).Returns (xmlLogMock.Object);
+			_ = logs.Setup (l => l.Create (It.IsAny<string> (), LogType.XmlLog.ToString (), null)).Returns (xmlLogMock.Object);
 			if (jargon == XmlResultJargon.NUnitV3) {
 				_ = logs.Setup (l => l.Directory).Returns (logsDir);
 				_ = tmpLogMock.Setup (tmpLog => tmpLog.FullPath).Returns (tmpPath);

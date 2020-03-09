@@ -66,7 +66,7 @@ cd mac-test-package
 COUNTER=0
 while [[ $COUNTER -lt 5 ]]; do
 	EC=0
-	./system-dependencies.sh --provision-mono --ignore-autotools --ignore-xamarin-studio --ignore-xcode --ignore-osx --ignore-cmake --ignore-simulators --ignore-7z --ignore-python3 || EC=$?
+	./system-dependencies.sh --ignore-all --provision-mono || EC=$?
 	if [[ $EC -eq 56 ]]; then
 		# Sometimes we get spurious "curl: (56) SSLRead() return error -9806" errors. Trying again usually works, so lets try again a few more times.
 		# https://github.com/xamarin/maccore/issues/1098

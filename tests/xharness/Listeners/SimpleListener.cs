@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xharness.Logging;
 
-namespace Xharness
+namespace Xharness.Listeners
 {
 	public abstract class SimpleListener : IDisposable
 	{

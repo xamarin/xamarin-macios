@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
-using System.Xml.Xsl;
 using Xamarin;
 using Xamarin.Utils;
+using Xharness.Execution;
+using Xharness.Jenkins.TestTasks;
+using Xharness.Listeners;
 using Xharness.Logging;
 
 namespace Xharness
@@ -42,6 +43,7 @@ namespace Xharness
 		public string AppPath;
 		public string Variation;
 		public BuildToolTask BuildTask;
+		public ISimpleListenerFactory ListenerFactory = new SimpleListenerFactory ();
 
 		public TestExecutingResult Result { get; private set; }
 		public string FailureMessage { get; private set; }
@@ -123,6 +125,8 @@ namespace Xharness
 				return bundle_identifier;
 			}
 		}
+
+		public IProcessManager ProcessManager { get; set; } = new ProcessManager ();
 
 		string mode;
 
@@ -302,7 +306,7 @@ namespace Xharness
 			var totalSize = Directory.GetFiles (appPath, "*", SearchOption.AllDirectories).Select ((v) => new FileInfo (v).Length).Sum ();
 			main_log.WriteLine ($"Installing '{appPath}' to '{companion_device_name ?? device_name}'. Size: {totalSize} bytes = {totalSize / 1024.0 / 1024.0:N2} MB");
 
-			return await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, args, main_log, TimeSpan.FromHours (1), cancellation_token: cancellation_token);
+			return await ProcessManager.ExecuteCommandAsync (Harness.MlaunchPath, args, main_log, TimeSpan.FromHours (1), cancellation_token: cancellation_token);
 		}
 
 		public async Task<ProcessExecutionResult> UninstallAsync ()
@@ -326,7 +330,7 @@ namespace Xharness
 			args.Add (bundle_identifier);
 			AddDeviceName (args, companion_device_name ?? device_name);
 
-			return await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, args, main_log, TimeSpan.FromMinutes (1));
+			return await ProcessManager.ExecuteCommandAsync (Harness.MlaunchPath, args, main_log, TimeSpan.FromMinutes (1));
 		}
 
 		bool ensure_clean_simulator_state = true;
@@ -541,33 +545,17 @@ namespace Xharness
 				args.Add ($"-argument=-app-arg:-hostname:{ips.ToString ()}");
 				args.Add ($"-setenv=NUNIT_HOSTNAME={ips.ToString ()}");
 			}
-			string transport;
-			if (mode == "watchos") {
-				transport = isSimulator ? "FILE" : "HTTP";
-			} else {
-				transport = "TCP";
-			}
-			args.Add ($"-argument=-app-arg:-transport:{transport}");
-			args.Add ($"-setenv=NUNIT_TRANSPORT={transport}");
 
 			listener_log = Logs.Create ($"test-{mode}-{Harness.Timestamp}.log", LogType.TestLog.ToString (), timestamp: !useXmlOutput);
+			var transport = ListenerFactory.Create (mode, listener_log, isSimulator, out var listener, out var fn);
+			
+			args.Add ($"-argument=-app-arg:-transport:{transport}");
+			args.Add ($"-setenv=NUNIT_TRANSPORT={transport.ToString ().ToUpper ()}");
 
-			SimpleListener listener;
-			switch (transport) {
-			case "FILE":
-				var fn = listener_log.FullPath + ".tmp";
-				listener = new SimpleFileListener (fn);
+			if (transport == ListenerTransport.File)
 				args.Add ($"-setenv=NUNIT_LOG_FILE={fn}");
-				break;
-			case "HTTP":
-				listener = new SimpleHttpListener ();
-				break;
-			case "TCP":
-				listener = new SimpleTcpListener ();
-				break;
-			default:
-				throw new NotImplementedException ();
-			}
+
+			
 			listener.TestLog = listener_log;
 			listener.Log = main_log;
 			listener.AutoExit = true;
@@ -648,9 +636,8 @@ namespace Xharness
 					main_log.WriteLine ("System log for the '{1}' simulator is: {0}", sim.SystemLog, sim.Name);
 					bool isCompanion = sim != simulator;
 
-					var log = new CaptureLog (Logs, sim.SystemLog, entire_file: Harness.Action != HarnessAction.Jenkins)
+					var log = new CaptureLog (Logs, Path.Combine (LogDirectory, sim.Name + ".log"), sim.SystemLog, entire_file: Harness.Action != HarnessAction.Jenkins)
 					{
-						Path = Path.Combine (LogDirectory, sim.Name + ".log"),
 						Description = isCompanion ? LogType.CompanionSystemLog.ToString () : LogType.SystemLog.ToString (),
 					};
 					log.StartCapture ();
@@ -672,7 +659,7 @@ namespace Xharness
 
 				main_log.WriteLine ("Starting test run");
 
-				var result = await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, args, run_log, timeout, cancellation_token: cancellation_source.Token);
+				var result = await ProcessManager.ExecuteCommandAsync (Harness.MlaunchPath, args, run_log, timeout, cancellation_token: cancellation_source.Token);
 				if (result.TimedOut) {
 					timed_out = true;
 					success = false;
@@ -709,7 +696,7 @@ namespace Xharness
 						var timeoutType = launchTimedout ? "Launch" : "Completion";
 						var timeoutValue = launchTimedout ? Harness.LaunchTimeout : timeout.TotalSeconds;
 						main_log.WriteLine ($"{timeoutType} timed out after {timeoutValue} seconds");
-						await Process_Extensions.KillTreeAsync (pid, main_log, true);
+						await ProcessManager.KillTreeAsync (pid, main_log, true);
 					} else {
 						main_log.WriteLine ("Could not find pid in mtouch output.");
 					}
@@ -757,7 +744,7 @@ namespace Xharness
 					});
 					var runLog = Log.CreateAggregatedLog (callbackLog, main_log);
 					var timeoutWatch = Stopwatch.StartNew ();
-					var result = await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, args, runLog, timeout, cancellation_token: cancellation_source.Token);
+					var result = await ProcessManager.ExecuteCommandAsync (Harness.MlaunchPath, args, runLog, timeout, cancellation_token: cancellation_source.Token);
 
 					if (!waitedForExit && !result.TimedOut) {
 						// mlaunch couldn't wait for exit for some reason. Let's assume the app exits when the test listener completes.

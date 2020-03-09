@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -70,6 +70,24 @@
     <PackageReference Include="Mono.Options" Version="5.3.0.1" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Jenkins\TestTasks\AggregatedRunSimulatorTask.cs" />
+    <Compile Include="Jenkins\TestTasks\BuildProjectTask.cs" />
+    <Compile Include="Jenkins\TestTasks\BuildToolTask.cs" />
+    <Compile Include="Jenkins\TestTasks\MacExecuteTask.cs" />
+    <Compile Include="Jenkins\TestTasks\MacTask.cs" />
+    <Compile Include="Jenkins\TestTasks\MakeTask.cs" />
+    <Compile Include="Jenkins\TestTasks\NUnitExecuteTask.cs" />
+    <Compile Include="Jenkins\Resource.cs" />
+    <Compile Include="Jenkins\Resources.cs" />
+    <Compile Include="Jenkins\TestTasks\RunDeviceTask.cs" />
+    <Compile Include="Jenkins\TestTasks\RunSimulatorTask.cs" />
+    <Compile Include="Jenkins\TestTasks\RunTestTask.cs" />
+    <Compile Include="Jenkins\TestTasks\RunXITask.cs" />
+    <Compile Include="Jenkins\TestTasks\RunXtroTask.cs" />
+    <Compile Include="TestExecutingResult.cs" />
+    <Compile Include="TestPlatform.cs" />
+    <Compile Include="Jenkins\TestTasks\TestTask.cs" />
+    <Compile Include="Jenkins\TestTasks\MSBuildTask.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Harness.cs" />
@@ -85,18 +103,13 @@
     <Compile Include="..\..\tools\mtouch\SdkVersions.cs">
       <Link>SdkVersions.cs</Link>
     </Compile>
-    <Compile Include="SimpleTcpListener.cs" />
     <Compile Include="DeviceLogCapturer.cs" />
     <Compile Include="MakefileGenerator.cs" />
     <Compile Include="SolutionGenerator.cs" />
     <Compile Include="MacTarget.cs" />
-    <Compile Include="SimpleHttpListener.cs" />
-    <Compile Include="SimpleListener.cs" />
-    <Compile Include="Jenkins.cs" />
-    <Compile Include="Process_Extensions.cs" />
+    <Compile Include="Jenkins\Jenkins.cs" />
     <Compile Include="Simulators.cs" />
     <Compile Include="TestProject.cs" />
-    <Compile Include="Log.cs" />
     <Compile Include="GitHub.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="..\mtouch\Cache.cs">
@@ -106,7 +119,6 @@
     <Compile Include="..\..\tools\common\StringUtils.cs">
       <Link>StringUtils.cs</Link>
     </Compile>
-    <Compile Include="SimpleFileListener.cs" />
     <Compile Include="iOSTarget.cs" />
     <Compile Include="MonoNativeInfo.cs" />
     <Compile Include="XmlResultParser.cs" />
@@ -122,10 +134,23 @@
     <Compile Include="Logging\Log.cs" />
     <Compile Include="Logging\ILog.cs" />
     <Compile Include="Logging\ILogFile.cs" />
+    <Compile Include="Logging\LogFile.cs" />
+    <Compile Include="Logging\ConsoleLog.cs" />
+    <Compile Include="Logging\CallbackLog.cs" />
+    <Compile Include="Logging\CaptureLog.cs" />
+    <Compile Include="Listeners\SimpleFileListener.cs" />
+    <Compile Include="Listeners\SimpleHttpListener.cs" />
+    <Compile Include="Listeners\SimpleListener.cs" />
+    <Compile Include="Listeners\SimpleTcpListener.cs" />
+    <Compile Include="Listeners\SimpleListenerFactory.cs" />
+    <Compile Include="Execution\IProcessManager.cs" />
+    <Compile Include="Execution\ProcessManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="BCLTestImporter\" />
     <Folder Include="Logging\" />
+    <Folder Include="Listeners\" />
+    <Folder Include="Execution\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="xharness.js">

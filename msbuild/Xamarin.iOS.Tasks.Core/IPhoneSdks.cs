@@ -3,6 +3,7 @@ using System.IO;
 
 using Xamarin.MacDev;
 using Xamarin.MacDev.Tasks;
+using Xamarin.Utils;
 
 namespace Xamarin.iOS.Tasks
 {
@@ -44,23 +45,23 @@ namespace Xamarin.iOS.Tasks
 			TVOS = new AppleTVOSSdk (AppleSdkSettings.DeveloperRoot, AppleSdkSettings.DeveloperRootVersionPlist);
 		}
 
-		public static AppleSdk GetSdk (PlatformFramework framework)
+		public static AppleSdk GetSdk (ApplePlatform framework)
 		{
 			switch (framework) {
-			case PlatformFramework.iOS:
+			case ApplePlatform.iOS:
 				return IPhoneSdks.Native;
-			case PlatformFramework.WatchOS:
+			case ApplePlatform.WatchOS:
 				return IPhoneSdks.Watch;
-			case PlatformFramework.TVOS:
+			case ApplePlatform.TVOS:
 				return IPhoneSdks.TVOS;
 			default:
 				throw new InvalidOperationException (string.Format ("Invalid framework: {0}", framework));
 			}
 		}
 
-		public static AppleSdk GetSdk (string targetFrameworkIdentifier)
+		public static AppleSdk GetSdk (string targetFrameworkMoniker)
 		{
-			return GetSdk (PlatformFrameworkHelper.GetFramework (targetFrameworkIdentifier));
+			return GetSdk (PlatformFrameworkHelper.GetFramework (targetFrameworkMoniker));
 		}
 	}
 }
