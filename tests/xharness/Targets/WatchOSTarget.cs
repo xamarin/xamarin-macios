@@ -19,9 +19,13 @@ namespace Xharness.Targets
 		public string WatchOSExtensionProjectPath { get; private set; }
 		public string WatchOSProjectPath { get { return ProjectPath; } private set { ProjectPath = value; } }
 
-		public override string SimulatorArchitectures => "i386";
+		public override string SimulatorArchitectures {
+			get { return "i386"; }
+		}
 
-		public override string DeviceArchitectures => "ARMv7k, ARM64_32";
+		public override string DeviceArchitectures {
+			get { return "ARMv7k, ARM64_32"; }
+		}
 
 		void CreateWatchOSAppProject ()
 		{
@@ -175,10 +179,18 @@ namespace Xharness.Targets
 			Harness.Save (info_plist, target_info_plist);
 		}
 
-		protected override string Imports => IsFSharp ? "$(MSBuildExtensionsPath)\\Xamarin\\WatchOS\\Xamarin.WatchOS.FSharp.targets" : "$(MSBuildExtensionsPath)\\Xamarin\\WatchOS\\Xamarin.WatchOS.CSharp.targets";
+		protected override string Imports {
+			get {
+				return IsFSharp ? "$(MSBuildExtensionsPath)\\Xamarin\\WatchOS\\Xamarin.WatchOS.FSharp.targets" : "$(MSBuildExtensionsPath)\\Xamarin\\WatchOS\\Xamarin.WatchOS.CSharp.targets";
+			}
+		}
 
-		protected override string BindingsImports => IsFSharp ? "$(MSBuildExtensionsPath)\\Xamarin\\WatchOS\\Xamarin.WatchOS.ObjCBinding.FSharp.targets" : "$(MSBuildExtensionsPath)\\Xamarin\\WatchOS\\Xamarin.WatchOS.ObjCBinding.CSharp.targets";
-
+		protected override string BindingsImports {
+			get {
+				return IsFSharp ? "$(MSBuildExtensionsPath)\\Xamarin\\WatchOS\\Xamarin.WatchOS.ObjCBinding.FSharp.targets" : "$(MSBuildExtensionsPath)\\Xamarin\\WatchOS\\Xamarin.WatchOS.ObjCBinding.CSharp.targets";
+			}
+		}
+			
 		void CreateWatchOSLibraryProject ()
 		{
 			var csproj = inputProject;
@@ -240,13 +252,29 @@ namespace Xharness.Targets
 			return MonoNativeHelper.GetMinimumOSVersion (DevicePlatform.watchOS, MonoNativeInfo.Flavor);
 		}
 
-		public override string Suffix => MonoNativeInfo != null ? MonoNativeInfo.FlavorSuffix + "-watchos" : "-watchos";
+		public override string Suffix {
+			get {
+				return MonoNativeInfo != null ? MonoNativeInfo.FlavorSuffix + "-watchos" : "-watchos";
+			}
+		}
 
-		public override string ExtraLinkerDefsSuffix => "-watchos";
+		public override string ExtraLinkerDefsSuffix {
+			get {
+				return "-watchos";
+			}
+		}
 
-		public override string Platform => "watchos";
+		public override string Platform {
+			get {
+				return "watchos";
+			}
+		}
 
-		protected override bool SupportsBitcode => true;
+		protected override bool SupportsBitcode {
+			get {
+				return true;
+			}
+		}
 
 		public override IEnumerable<RelatedProject> GetRelatedProjects ()
 		{
@@ -257,4 +285,3 @@ namespace Xharness.Targets
 		}
 	}
 }
-

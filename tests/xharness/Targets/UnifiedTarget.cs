@@ -8,22 +8,54 @@ namespace Xharness.Targets
 	public class UnifiedTarget : iOSTarget
 	{
 		// special cases for the BCL applications
+		
+		public override string Suffix {
+			get {
+				return MonoNativeInfo != null ? MonoNativeInfo.FlavorSuffix : "-ios";
+			}
+		}
 
-		public override string Suffix => MonoNativeInfo != null ? MonoNativeInfo.FlavorSuffix : "-ios";
+		public override string ExtraLinkerDefsSuffix {
+			get {
+				return string.Empty;
+			}
+		}
 
-		public override string ExtraLinkerDefsSuffix => string.Empty;
+		protected override string ProjectTypeGuids {
+			get {
+				return "{FEACFBD2-3405-455C-9665-78FE426C6842};" + LanguageGuid;
+			}
+		}
 
-		protected override string ProjectTypeGuids => "{FEACFBD2-3405-455C-9665-78FE426C6842};" + LanguageGuid;
+		protected override string BindingsProjectTypeGuids {
+			get {
+				return "{8FFB629D-F513-41CE-95D2-7ECE97B6EEEC}";
+			}
+		}
 
-		protected override string BindingsProjectTypeGuids => "{8FFB629D-F513-41CE-95D2-7ECE97B6EEEC}";
+		protected override string TargetFrameworkIdentifier {
+			get {
+				return "Xamarin.iOS";
+			}
+		}
 
-		protected override string TargetFrameworkIdentifier => "Xamarin.iOS";
+		protected override string Imports {
+			get {
+				return IsFSharp ? "iOS\\Xamarin.iOS.FSharp.targets" : "iOS\\Xamarin.iOS.CSharp.targets";
+			}
+		}
 
-		protected override string Imports => IsFSharp ? "iOS\\Xamarin.iOS.FSharp.targets" : "iOS\\Xamarin.iOS.CSharp.targets";
+		protected override string BindingsImports {
+			get {
+				return IsFSharp ? "iOS\\Xamarin.iOS.ObjCBinding.FSharp.targets" : "iOS\\Xamarin.iOS.ObjCBinding.CSharp.targets";
+			}
+		}
 
-		protected override string BindingsImports => IsFSharp ? "iOS\\Xamarin.iOS.ObjCBinding.FSharp.targets" : "iOS\\Xamarin.iOS.ObjCBinding.CSharp.targets";
-
-		public override string SimulatorArchitectures => "i386, x86_64";
+		public override string SimulatorArchitectures {
+			get {
+				return "i386, x86_64";
+			}
+		}
 
 		public override string DeviceArchitectures {
 			get {
@@ -42,9 +74,9 @@ namespace Xharness.Targets
 				else {
 					var bclIndex = TestProject.Name.IndexOf ("BCL", StringComparison.Ordinal);
 					// most of the BCL test are grouped, but there are a number that are not, in those cases remove the "{testype} Mono " prefix
-					Name = bclIndex == -1 ? TestProject.Name.Substring (TestProject.Name.IndexOf ("Mono ", StringComparison.Ordinal) + "Mono ".Length) : TestProject.Name.Substring (bclIndex);
+					Name = (bclIndex == -1) ? TestProject.Name.Substring (TestProject.Name.IndexOf ("Mono ", StringComparison.Ordinal) + "Mono ".Length) : TestProject.Name.Substring (bclIndex);
 				}
-			} else
+			}  else
 				base.CalculateName ();
 			if (MonoNativeInfo != null)
 				Name = Name + MonoNativeInfo.FlavorSuffix;
@@ -57,13 +89,29 @@ namespace Xharness.Targets
 			return MonoNativeHelper.GetMinimumOSVersion (DevicePlatform.iOS, MonoNativeInfo.Flavor);
 		}
 
-		protected override int [] UIDeviceFamily => new int [] { 1, 2 };
+		protected override int[] UIDeviceFamily {
+			get {
+				return new int [] { 1, 2 };
+			}
+		}
 
-		protected override string AdditionalDefines => "XAMCORE_2_0";
+		protected override string AdditionalDefines {
+			get {
+				return "XAMCORE_2_0";
+			}
+		}
 
-		public override bool IsMultiArchitecture => true;
+		public override bool IsMultiArchitecture {
+			get {
+				return true;
+			}
+		}
 
-		public override string Platform => "ios";
+		public override string Platform {
+			get {
+				return "ios";
+			}
+		}
 
 		public override string ProjectFileSuffix {
 			get {
@@ -73,7 +121,11 @@ namespace Xharness.Targets
 			}
 		}
 
-		protected override bool SupportsBitcode => true;
+		protected override bool SupportsBitcode {
+			get {
+				return true;
+			}
+		}
 
 		protected override void ExecuteInternal ()
 		{
@@ -96,4 +148,3 @@ namespace Xharness.Targets
 		}
 	}
 }
-
