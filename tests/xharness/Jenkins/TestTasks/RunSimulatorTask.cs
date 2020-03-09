@@ -22,7 +22,7 @@ namespace Xharness.Jenkins.TestTasks
 			}
 		}
 
-		public RunSimulatorTask (XBuildTask build_task, IEnumerable<SimDevice> candidates = null)
+		public RunSimulatorTask (MSBuildTask build_task, IEnumerable<SimDevice> candidates = null)
 			: base (build_task, candidates)
 		{
 			var project = Path.GetFileNameWithoutExtension (ProjectFile);

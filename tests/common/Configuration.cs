@@ -303,13 +303,8 @@ namespace Xamarin.Tests
 
 		public static string SourceRoot {
 			get {
-				// might need tweaking.
 				if (mt_src_root == null)
-#if MONOMAC
 					mt_src_root = RootPath;
-#else
-					mt_src_root = Path.GetFullPath (Path.Combine (TestAssemblyDirectory, "../../../.."));
-#endif
 				return mt_src_root;
 			}
 		}

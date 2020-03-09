@@ -93,6 +93,7 @@
     <Compile Include="Jenkins\TestTasks\MacExecuteTask.cs" />
     <Compile Include="Jenkins\TestTasks\MacTask.cs" />
     <Compile Include="Jenkins\TestTasks\MakeTask.cs" />
+    <Compile Include="Jenkins\TestTasks\MSBuildTask.cs" />
     <Compile Include="Jenkins\TestTasks\NUnitExecuteTask.cs" />
     <Compile Include="Jenkins\TestTasks\RunDeviceTask.cs" />
     <Compile Include="Jenkins\TestTasks\RunSimulatorTask.cs" />
@@ -100,7 +101,6 @@
     <Compile Include="Jenkins\TestTasks\RunXITask.cs" />
     <Compile Include="Jenkins\TestTasks\RunXtroTask.cs" />
     <Compile Include="Jenkins\TestTasks\TestTask.cs" />
-    <Compile Include="Jenkins\TestTasks\XBuildTask.cs" />
     <Compile Include="Listeners\SimpleFileListener.cs" />
     <Compile Include="Listeners\SimpleHttpListener.cs" />
     <Compile Include="Listeners\SimpleListener.cs" />
