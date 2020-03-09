@@ -3,7 +3,7 @@
 
 variables:
   azure_build_url: '$(System.CollectionUri)/$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)'
-  macOSVersion: 'macOS-10.15'
+  macOSVersion: 'macOS-latest'
   debug_filter: '^.*Debug.*$'
   release_filter: '^.*Release.*$'
   iphone_filter: '^iPhone$'
