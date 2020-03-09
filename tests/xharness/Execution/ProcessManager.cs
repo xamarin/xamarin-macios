@@ -76,6 +76,9 @@ namespace Xharness.Execution {
 
 			process.StartInfo.RedirectStandardError = true;
 			process.StartInfo.RedirectStandardOutput = true;
+			// Make cute emojiis show up as cute emojiis in the output instead of ugly text symbols!
+			process.StartInfo.StandardOutputEncoding = Encoding.UTF8; 
+			process.StartInfo.StandardErrorEncoding = Encoding.UTF8;
 			process.StartInfo.UseShellExecute = false;
 
 			if (environment_variables != null) {
