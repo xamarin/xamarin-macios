@@ -11,7 +11,7 @@ using Xharness;
 using Xharness.Execution;
 using Xharness.Logging;
 
-namespace xharness.Hardware {
+namespace Xharness.Hardware {
 	public class Devices : IDeviceLoader {
 		public IHarness Harness { get; set; }
 		public IProcessManager ProcessManager { get; set; } = new ProcessManager ();

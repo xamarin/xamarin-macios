@@ -1,4 +1,4 @@
-﻿namespace xharness.Hardware {
+﻿namespace Xharness.Hardware {
 
 	public enum Architecture {
 		ARMv6,

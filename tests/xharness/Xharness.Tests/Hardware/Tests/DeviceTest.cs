@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
-using xharness.Hardware;
+using Xharness.Hardware;
 
 namespace Xharness.Tests.Hardware.Tests {
 	[TestFixture]

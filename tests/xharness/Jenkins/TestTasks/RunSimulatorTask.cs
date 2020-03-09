@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using xharness.Collections;
-using xharness.Hardware;
+using Xharness.Hardware;
 
 namespace Xharness.Jenkins.TestTasks
 {

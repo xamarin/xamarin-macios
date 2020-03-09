@@ -7,7 +7,7 @@ using Xharness;
 using Xharness.Execution;
 using Xharness.Logging;
 
-namespace xharness.Hardware {
+namespace Xharness.Hardware {
 
 	public class SimDevice : ISimulatorDevice {
 		public IProcessManager ProcessManager { get; set; } = new ProcessManager ();

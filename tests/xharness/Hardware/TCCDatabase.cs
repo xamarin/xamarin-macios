@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Xharness.Execution;
 using Xharness.Logging;
 
-namespace xharness.Hardware {
+namespace Xharness.Hardware {
 
 	public interface ITCCDatabase {
 		IProcessManager ProcessManager { get; set; }
