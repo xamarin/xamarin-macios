@@ -7,9 +7,6 @@ namespace Xharness.Jenkins.TestTasks
 {
 	class RunXtroTask : MacExecuteTask
 	{
-
-		public string WorkingDirectory;
-
 		public RunXtroTask (BuildToolTask build_task) : base (build_task)
 		{
 		}

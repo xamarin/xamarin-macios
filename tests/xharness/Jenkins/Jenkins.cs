@@ -740,6 +740,7 @@ namespace Xharness.Jenkins
 				"src/generator.cs",
 				"src/generator-",
 				"src/Makefile.generator",
+				"tests/bgen",
 				"tests/generator",
 				"tests/common",
 			};
@@ -1093,10 +1094,27 @@ namespace Xharness.Jenkins
 				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "generator", "generator-tests.csproj"))),
 				Platform = TestPlatform.iOS,
 				TestName = "Generator tests",
+				Mode = "NUnit",
 				Timeout = TimeSpan.FromMinutes (10),
 				Ignored = !IncludeBtouch,
 			};
 			Tasks.Add (runGenerator);
+
+			var buildDotNetGenerator = new DotNetBuildTask {
+				Jenkins = this,
+				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "bgen", "bgen-tests.csproj"))),
+				SpecifyPlatform = false,
+				SpecifyConfiguration = false,
+				Platform = TestPlatform.iOS,
+			};
+			var runDotNetGenerator = new DotNetTestTask (buildDotNetGenerator) {
+				TestProject = buildDotNetGenerator.TestProject,
+				Platform = TestPlatform.iOS,
+				TestName = "Generator tests",
+				Mode = ".NET",
+				Ignored = !IncludeBtouch,
+			};
+			Tasks.Add (runDotNetGenerator);
 
 			var run_mmp = new MakeTask
 			{
@@ -1748,6 +1766,7 @@ namespace Xharness.Jenkins
 			var allNUnitTasks = new List<NUnitExecuteTask> ();
 			var allMakeTasks = new List<MakeTask> ();
 			var allDeviceTasks = new List<RunDeviceTask> ();
+			var allDotNetTestTasks = new List<DotNetTestTask> ();
 			foreach (var task in Tasks) {
 				var aggregated = task as AggregatedRunSimulatorTask;
 				if (aggregated != null) {
@@ -1779,6 +1798,11 @@ namespace Xharness.Jenkins
 					continue;
 				}
 
+				if (task is DotNetTestTask dotnet) {
+					allDotNetTestTasks.Add (dotnet);
+					continue;
+				}
+
 				throw new NotImplementedException ();
 			}
 
@@ -1789,6 +1813,7 @@ namespace Xharness.Jenkins
 				allTasks.AddRange (allNUnitTasks);
 				allTasks.AddRange (allMakeTasks);
 				allTasks.AddRange (allDeviceTasks);
+				allTasks.AddRange (allDotNetTestTasks);
 			}
 
 			var failedTests = allTasks.Where ((v) => v.Failed);

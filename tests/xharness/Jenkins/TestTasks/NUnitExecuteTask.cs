@@ -17,11 +17,8 @@ namespace Xharness.Jenkins.TestTasks
 	{
 		public string TestLibrary;
 		public string TestExecutable;
-		public string WorkingDirectory;
 		public bool ProduceHtmlReport = true;
 		public bool InProcess;
-		public TimeSpan Timeout = TimeSpan.FromMinutes (10);
-		IProcessManager ProcessManager { get; set; } = new ProcessManager ();
 
 		public NUnitExecuteTask (BuildToolTask build_task)
 			: base (build_task)
@@ -120,45 +117,22 @@ namespace Xharness.Jenkins.TestTasks
 				var xmlLog = Logs.CreateFile ($"log-{Timestamp}.xml", LogType.XmlLog.ToString ());
 				var log = Logs.Create ($"execute-{Timestamp}.txt", LogType.ExecutionLog.ToString ());
 				FindNUnitConsoleExecutable (log);
-				using (var proc = new Process ()) {
 
-					proc.StartInfo.WorkingDirectory = WorkingDirectory;
-					proc.StartInfo.FileName = Harness.XIBuildPath;
-					var args = new List<string> ();
-					args.Add ("-t");
-					args.Add ("--");
-					args.Add (Path.GetFullPath (TestExecutable));
-					args.Add (Path.GetFullPath (TestLibrary));
-					if (IsNUnit3) {
-						args.Add ("-result=" + xmlLog + ";format=nunit2");
-						args.Add ("--labels=All");
-						if (InProcess)
-							args.Add ("--inprocess");
-					} else {
-						args.Add ("-xml=" + xmlLog);
-						args.Add ("-labels");
-					}
-					proc.StartInfo.Arguments = StringUtils.FormatArguments (args);
-					SetEnvironmentVariables (proc);
-					foreach (DictionaryEntry de in proc.StartInfo.EnvironmentVariables)
-						log.WriteLine ($"export {de.Key}={de.Value}");
-					Jenkins.MainLog.WriteLine ("Executing {0} ({1})", TestName, Mode);
-					if (!Harness.DryRun) {
-						ExecutionResult = TestExecutingResult.Running;
-						var result = await ProcessManager.RunAsync (proc, log, Timeout);
-						if (result.TimedOut) {
-							FailureMessage = $"Execution timed out after {Timeout.TotalMinutes} minutes.";
-							log.WriteLine (FailureMessage);
-							ExecutionResult = TestExecutingResult.TimedOut;
-						} else if (result.Succeeded) {
-							ExecutionResult = TestExecutingResult.Succeeded;
-						} else {
-							ExecutionResult = TestExecutingResult.Failed;
-							FailureMessage = $"Execution failed with exit code {result.ExitCode}";
-						}
-					}
-					Jenkins.MainLog.WriteLine ("Executed {0} ({1})", TestName, Mode);
+				var args = new List<string> ();
+				args.Add ("-t");
+				args.Add ("--");
+				args.Add (Path.GetFullPath (TestExecutable));
+				args.Add (Path.GetFullPath (TestLibrary));
+				if (IsNUnit3) {
+					args.Add ("-result=" + xmlLog + ";format=nunit2");
+					args.Add ("--labels=All");
+					if (InProcess)
+						args.Add ("--inprocess");
+				} else {
+					args.Add ("-xml=" + xmlLog);
+					args.Add ("-labels");
 				}
+				await ExecuteProcessAsync (log, Harness.XIBuildPath, args);
 
 				if (ProduceHtmlReport) {
 					try {

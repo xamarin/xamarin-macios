@@ -13,26 +13,37 @@ namespace Xharness.Jenkins.TestTasks
 	{
 		public ILog BuildLog;
 
+		protected virtual string ToolName {
+			get { return Harness.XIBuildPath; }
+		}
+
+		protected virtual List<string> ToolArguments {
+			get {
+				var binlogPath = BuildLog.FullPath.Replace (".txt", ".binlog");
+
+				var args = new List<string> ();
+				args.Add ("--");
+				args.Add ("/verbosity:diagnostic");
+				args.Add ($"/bl:{binlogPath}");
+				if (SpecifyPlatform)
+					args.Add ($"/p:Platform={ProjectPlatform}");
+				if (SpecifyConfiguration)
+					args.Add ($"/p:Configuration={ProjectConfiguration}");
+				args.Add (ProjectFile);
+				return args;
+			}
+		}
+
 		protected override async Task ExecuteAsync ()
 		{
 			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
 				BuildLog = Logs.Create ($"build-{Platform}-{Timestamp}.txt", LogType.BuildLog.ToString ());
-				var binlogPath = BuildLog.FullPath.Replace (".txt", ".binlog");
 
 				await RestoreNugetsAsync (BuildLog, resource, useXIBuild: true);
 
 				using (var xbuild = new Process ()) {
-					xbuild.StartInfo.FileName = Harness.XIBuildPath;
-					var args = new List<string> ();
-					args.Add ("--");
-					args.Add ("/verbosity:diagnostic");
-					args.Add ($"/bl:{binlogPath}");
-					if (SpecifyPlatform)
-						args.Add ($"/p:Platform={ProjectPlatform}");
-					if (SpecifyConfiguration)
-						args.Add ($"/p:Configuration={ProjectConfiguration}");
-					args.Add (ProjectFile);
-					xbuild.StartInfo.Arguments = StringUtils.FormatArguments (args);
+					xbuild.StartInfo.FileName = ToolName;
+					xbuild.StartInfo.Arguments = StringUtils.FormatArguments (ToolArguments);
 					SetEnvironmentVariables (xbuild);
 					xbuild.StartInfo.EnvironmentVariables ["MSBuildExtensionsPath"] = null;
 					LogEvent (BuildLog, "Building {0} ({1})", TestName, Mode);

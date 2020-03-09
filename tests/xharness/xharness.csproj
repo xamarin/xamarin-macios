@@ -10,6 +10,7 @@
     <RootNamespace>xharness</RootNamespace>
     <AssemblyName>xharness</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -145,6 +146,8 @@
     <Compile Include="Listeners\SimpleListenerFactory.cs" />
     <Compile Include="Execution\IProcessManager.cs" />
     <Compile Include="Execution\ProcessManager.cs" />
+    <Compile Include="Jenkins\TestTasks\DotNetTestTask.cs" />
+    <Compile Include="Jenkins\TestTasks\DotNetBuildTask.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="BCLTestImporter\" />
