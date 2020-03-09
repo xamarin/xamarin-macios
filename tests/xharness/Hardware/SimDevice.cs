@@ -20,11 +20,11 @@ namespace xharness.Hardware {
 		public string SimDeviceType { get; set; }
 		public string DataPath { get; set; }
 		public string LogPath { get; set; }
-		public string SystemLog { get { return Path.Combine (LogPath, "system.log"); } }
+		public string SystemLog => Path.Combine (LogPath, "system.log");
 
 		public IHarness Harness;
 
-		public bool IsWatchSimulator { get { return SimRuntime.StartsWith ("com.apple.CoreSimulator.SimRuntime.watchOS", StringComparison.Ordinal); } }
+		public bool IsWatchSimulator => SimRuntime.StartsWith ("com.apple.CoreSimulator.SimRuntime.watchOS", StringComparison.Ordinal);
 
 		public string OSVersion {
 			get {
