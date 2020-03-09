@@ -19,10 +19,10 @@ namespace Xharness.Execution {
 		public MlaunchArgumentType Type { get; set; }
 		public string Value { get; set; }
 
-		public MlaunchArgument ((MlaunchArgumentType type, string value) data)
+		public MlaunchArgument (MlaunchArgumentType type, string value)
 		{
-			Type = data.type;
-			Value = data.value;
+			Type = type;
+			Value = value;
 			if (!IsValid (out var reason)) 
 				throw new ArgumentException (reason);
 		}
@@ -88,7 +88,7 @@ namespace Xharness.Execution {
 		}
 
 		public void Add (MlaunchArgumentType type) => arguments.Add (new MlaunchArgument (type));
-		public void Add ((MlaunchArgumentType type, string value) argument) => arguments.Add (new MlaunchArgument (argument));
+		public void Add ((MlaunchArgumentType type, string value) arg) => arguments.Add (new MlaunchArgument (arg.type, arg.value));
 		public void Add (params MlaunchArgumentType [] types) => Array.ForEach (types, t => Add (t));
 		public void Add (params (MlaunchArgumentType type, string value) [] arguments) => Array.ForEach (arguments, arg => Add (arg));
 		public string AsCommandLine () => string.Join (" ", arguments.Select (a => a.AsCommandLineArgument ()));
