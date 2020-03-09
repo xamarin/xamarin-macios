@@ -5,7 +5,7 @@ using System.Xml;
 
 using Xamarin;
 using Xamarin.Utils;
-using xharness.Hardware;
+using Xharness.Hardware;
 
 namespace Xharness
 {

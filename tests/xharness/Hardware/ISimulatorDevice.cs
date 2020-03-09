@@ -5,7 +5,7 @@ using Xharness;
 using Xharness.Execution;
 using Xharness.Logging;
 
-namespace xharness.Hardware {
+namespace Xharness.Hardware {
 	public class SimRuntime {
 		public string Name;
 		public string Identifier;

@@ -1,7 +1,7 @@
 ﻿using System;
 using Xharness;
 
-namespace xharness.Hardware {
+namespace Xharness.Hardware {
 	public class Device : IHardwareDevice {
 		public string DeviceIdentifier { get; set; }
 		public string DeviceClass { get; set; }
@@ -21,10 +21,10 @@ namespace xharness.Hardware {
 		// Add a speed property that can be used to sort a list of devices according to speed.
 		public int DebugSpeed => InterfaceType?.ToLowerInvariant () switch
 		{
-			"usb" => 0,
-			null => 1,
-			"wifi" => 2,
-			_ => 3,
+			"usb" => 0, // fastest
+			null => 1, // mlaunch doesn't know - not sure when this can happen, but wifi is quite slow, so maybe this faster
+			"wifi" => 2, // wifi is quite slow
+			_ => 3, // Anything else is probably slower than wifi (e.g. watch).
 		};
 
 		public DevicePlatform DevicePlatform => DeviceClass switch

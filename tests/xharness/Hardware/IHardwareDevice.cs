@@ -4,7 +4,7 @@ using Xharness;
 using Xharness.Execution;
 using Xharness.Logging;
 
-namespace xharness.Hardware {
+namespace Xharness.Hardware {
 	public interface IHardwareDevice : IDevice {
 		string DeviceIdentifier { get; set; }
 		string DeviceClass { get; set; }

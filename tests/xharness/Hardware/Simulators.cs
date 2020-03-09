@@ -14,7 +14,7 @@ using Xharness;
 using Xharness.Execution;
 using Xharness.Logging;
 
-namespace xharness.Hardware {
+namespace Xharness.Hardware {
 	public class Simulators : ISimulatorsLoader {
 		public IHarness Harness { get; set; }
 		public IProcessManager ProcessManager { get; set; } = new ProcessManager ();

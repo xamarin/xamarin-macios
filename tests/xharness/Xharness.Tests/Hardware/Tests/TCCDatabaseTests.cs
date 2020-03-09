@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
-using xharness.Hardware;
+using Xharness.Hardware;
 using Xharness.Execution;
 using Xharness.Logging;
 

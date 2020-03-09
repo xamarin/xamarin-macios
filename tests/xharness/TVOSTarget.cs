@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using Xamarin;
-using xharness.Hardware;
+using Xharness.Hardware;
 
 namespace Xharness
 {

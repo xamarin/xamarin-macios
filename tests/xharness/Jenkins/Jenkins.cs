@@ -9,7 +9,7 @@ using System.Text;
 using Xharness.Logging;
 using Xharness.Execution;
 using Xharness.Jenkins.TestTasks;
-using xharness.Hardware;
+using Xharness.Hardware;
 using xharness.Collections;
 
 namespace Xharness.Jenkins
