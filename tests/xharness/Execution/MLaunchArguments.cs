@@ -6,7 +6,7 @@ namespace Xharness.Execution {
 	// mlaunch is really important and has a lot of arguments that are known but
 	// used to be passed as strings. This class allows to add arguments without
 	// knowing the exact string and will also validate that an argument that
-	// needs a value does contain the valuw
+	// needs a value does contain the value
 	public enum MlaunchArgumentType {
 		SdkRoot,
 		ListDev,

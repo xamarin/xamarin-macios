@@ -54,7 +54,7 @@ namespace Xharness.Tests.Hardware.Tests {
 		}
 
 		[Test]
-		public void GetTCCFormatUnknonwTest ()
+		public void GetTCCFormatUnknownTest ()
 		{
 			Assert.Throws<NotImplementedException> (() => database.GetTCCFormat ("unknown-sim-runtime"));
 		}
