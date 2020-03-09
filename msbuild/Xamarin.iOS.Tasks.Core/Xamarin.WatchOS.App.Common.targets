@@ -58,7 +58,7 @@ Copyright (C) 2015-2016 Xamarin. All rights reserved.
 			SessionId="$(BuildSessionId)"
 			SdkVersion="$(MtouchSdkVersion)"
 			SdkIsSimulator="$(_SdkIsSimulator)"
-			TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			>
 			<Output TaskParameter="NativeWatchApp" PropertyName="_NativeWatchApp" />
 		</ResolveNativeWatchApp>

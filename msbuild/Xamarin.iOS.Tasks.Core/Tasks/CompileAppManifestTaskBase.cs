@@ -31,8 +31,10 @@ namespace Xamarin.iOS.Tasks
 
 		public string TargetArchitectures { get; set; }
 
+		public TargetFramework TargetFramework { get { return TargetFramework.Parse (TargetFrameworkMoniker); } }
+
 		[Required]
-		public string TargetFrameworkIdentifier { get; set; }
+		public string TargetFrameworkMoniker { get; set; }
 
 		[Required]
 		public bool Debug { get; set; }
@@ -44,7 +46,7 @@ namespace Xamarin.iOS.Tasks
 		public string ResourceRules { get; set; }
 
 		public ApplePlatform Framework {
-			get { return PlatformFrameworkHelper.GetFramework (TargetFrameworkIdentifier); }
+			get { return PlatformFrameworkHelper.GetFramework (TargetFrameworkMoniker); }
 		}
 
 		TargetArchitecture architectures;

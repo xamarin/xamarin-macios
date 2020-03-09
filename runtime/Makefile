@@ -520,3 +520,5 @@ clean-local::
 
 
 include $(TOP)/mk/rules.mk
+
+.SECONDARY: delegates.h delegates.inc

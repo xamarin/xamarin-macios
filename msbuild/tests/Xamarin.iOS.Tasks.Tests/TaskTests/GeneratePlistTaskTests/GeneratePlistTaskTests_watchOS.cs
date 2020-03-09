@@ -10,7 +10,7 @@ namespace Xamarin.iOS.Tasks
 		{
 			base.ConfigureTask ();
 			Task.DefaultSdkVersion = IPhoneSdks.Watch.GetClosestInstalledSdk (IPhoneSdkVersion.V2_0, true).ToString ();
-			Task.TargetFrameworkIdentifier = "Xamarin.WatchOS";
+			Task.TargetFrameworkMoniker = "Xamarin.WatchOS,v1.0";
 		}
 	}
 }

@@ -77,14 +77,7 @@ jobs:
       set -x
       set -e
 
-      CONFIGURE_ARGS="--provision-xcode --provision-xamarin-studio --provision-mono --ignore-osx --ignore-autotools --ignore-cmake"
-      if grep ignore-7z xamarin-macios/system-dependencies.sh 2>&1 > /dev/null; then
-         CONFIGURE_ARGS="$CONFIGURE_ARGS --provision-7z"
-      fi
-      if grep ignore-python3 xamarin-macios/system-dependencies.sh 2>&1 > /dev/null; then
-         CONFIGURE_ARGS="$CONFIGURE_ARGS --ignore-python3"
-      fi
-      ./xamarin-macios/system-dependencies.sh $CONFIGURE_ARGS
+      ./xamarin-macios/system-dependencies.sh --ignore-all --provision-xcode --provision-xamarin-studio --provision-mono --provision-7z
     displayName: 'Provision dependencies'
     timeoutInMinutes: 240
 
