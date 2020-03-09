@@ -89,7 +89,7 @@ namespace Xharness.Utilities
 			return s.ToString ();
 		}
 
-		private static string [] QuoteForProcess (IList<string> arguments)
+		static string [] QuoteForProcess (IList<string> arguments)
 		{
 			if (arguments == null)
 				return Array.Empty<string> ();
