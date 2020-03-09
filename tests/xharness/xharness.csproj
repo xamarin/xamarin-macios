@@ -89,7 +89,7 @@
     <Compile Include="TestExecutingResult.cs" />
     <Compile Include="TestPlatform.cs" />
     <Compile Include="Jenkins\TestTasks\TestTask.cs" />
-    <Compile Include="Jenkins\TestTasks\XBuildTask.cs" />
+    <Compile Include="Jenkins\TestTasks\MSBuildTask.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Harness.cs" />
