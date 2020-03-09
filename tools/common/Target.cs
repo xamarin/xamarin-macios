@@ -294,19 +294,16 @@ namespace Xamarin.Bundler {
 				dynamic_symbols.Save (cache_location);
 			}
 
-			foreach (var name in App.IgnoredSymbols) {
-				var symbol = dynamic_symbols.Find (name);
-				if (symbol == null) {
-					ErrorHelper.Warning (5218, Errors.MT5218, StringUtils.Quote (name));
-				} else {
-					symbol.Ignore = true;
-				}
-			}
+			// Warn if we're asked to ignore symbols that don't exist.
+			foreach (var name in App.IgnoredSymbols.Where ((v) => dynamic_symbols.Contains (v)))
+				ErrorHelper.Warning (5218, Errors.MT5218, StringUtils.Quote (name));
 		}
 
 		bool IsRequiredSymbol (Symbol symbol, Assembly single_assembly = null)
 		{
-			if (symbol.Ignore)
+			if (!symbol.Ignore.HasValue)
+				symbol.Ignore = App.IgnoredSymbols.Contains (symbol.Name);
+			if (symbol.Ignore == true)
 				return false;
 
 			// Check if this symbol is used in the assembly we're filtering to

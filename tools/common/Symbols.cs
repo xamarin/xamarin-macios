@@ -25,7 +25,7 @@ namespace Xamarin.Bundler
 	public class Symbol
 	{
 		public SymbolType Type;
-		public bool Ignore;
+		public bool? Ignore;
 
 		static string ObjectiveCPrefix {
 			get {
