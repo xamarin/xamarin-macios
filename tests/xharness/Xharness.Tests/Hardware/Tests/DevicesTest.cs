@@ -98,7 +98,6 @@ namespace Xharness.Tests.Hardware.Tests {
 			// moq It.Is is not working as nicelly as we would like it, we capture data and use asserts
 			processManager.Setup (p => p.RunAsync (It.IsAny<Process> (), It.IsAny<MlaunchArguments> (), It.IsAny<ILog> (), It.IsAny<TimeSpan?> (), It.IsAny<Dictionary<string, string>> (), It.IsAny<CancellationToken?> (), It.IsAny<bool?> ()))
 				.Returns<Process, MlaunchArguments, ILog, TimeSpan?, Dictionary<string, string>, CancellationToken?, bool?> ((p, args, log, t, env, token, d) => {
-					// we are going set the used args to validate them later, will always return an error from this method
 					processPath = p.StartInfo.FileName;
 					passedArguments = args;
 
