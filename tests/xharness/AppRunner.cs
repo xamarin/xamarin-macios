@@ -9,7 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using Xamarin;
-using xharness.Hardware;
+using Xharness.Hardware;
 using Xharness.Execution;
 using Xharness.Jenkins.TestTasks;
 using Xharness.Listeners;
