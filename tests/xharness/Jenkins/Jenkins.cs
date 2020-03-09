@@ -1588,7 +1588,7 @@ namespace Xharness.Jenkins
 										response.ContentType = "image/png";
 										break;
 									default:
-										response.ContentType = System.Net.Mime.MediaTypeNames.Text.Plain;
+										response.ContentType = System.Net.Mime.MediaTypeNames.Text.Plain + ";charset=UTF-8";
 										break;
 									}
 									while ((read = fs.Read (buffer, 0, buffer.Length)) > 0)
@@ -1882,7 +1882,7 @@ namespace Xharness.Jenkins
 				writer.WriteLine ("<h1>Test results</h1>");
 
 				foreach (var log in Logs)
-					writer.WriteLine ("<span id='x{2}' class='autorefreshable'> <a href='{0}' type='text/plain'>{1}</a></span><br />", log.FullPath.Substring (LogDirectory.Length + 1), log.Description, id_counter++);
+					writer.WriteLine ("<span id='x{2}' class='autorefreshable'> <a href='{0}' type='text/plain;charset=UTF-8'>{1}</a></span><br />", log.FullPath.Substring (LogDirectory.Length + 1), log.Description, id_counter++);
 
 				var headerColor = "black";
 				if (unfinishedTests.Any ()) {
@@ -2199,6 +2199,9 @@ namespace Xharness.Jenkins
 									case "text/xml":
 										log_target = "_top";
 										break;
+									case "text/plain":
+										log_type += ";charset=UTF-8";
+										goto default;
 									default:
 										log_target = "_self";
 										break;
