@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using BCLTestImporter;
+using Xharness.Utilities;
 
 namespace Xharness.BCLTestImporter {
 	// Class that is use as the connection between xharness and the BCLImporter
@@ -16,7 +17,7 @@ namespace Xharness.BCLTestImporter {
 		public BCLTestImportTargetFactory (Harness harness)
 		{
 			Harness = harness;
-			var outputDir = Path.GetFullPath (Path.Combine (Harness.RootDirectory, "bcl-test"));
+			var outputDir = Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "bcl-test"));
 			var projectTemplatePath = outputDir;
 			var registerTypesTemplatePath = Path.Combine (outputDir, "RegisterType.cs.in");
 			var plistTemplatePath = outputDir;

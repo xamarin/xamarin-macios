@@ -167,7 +167,7 @@ namespace Xharness
 		void LoadConfig ()
 		{
 			ParseConfigFiles ();
-			var src_root = Path.GetDirectoryName (Path.GetFullPath (RootDirectory));
+			var src_root = Path.GetDirectoryName ( DirectoryUtilities.RepositoryRootDirectory);
 			MONO_PATH = Path.GetFullPath (Path.Combine (src_root, "external", "mono"));
 			TVOS_MONO_PATH = MONO_PATH;
 			INCLUDE_IOS = make_config.ContainsKey ("INCLUDE_IOS") && !string.IsNullOrEmpty (make_config ["INCLUDE_IOS"]);
@@ -193,13 +193,13 @@ namespace Xharness
 				new { Directory = "linker/mac/dont link", ProjectFile = "dont link-mac", Name = "dont link", Flavors = MacFlavors.Modern | MacFlavors.Full | MacFlavors.System },
 			};
 			foreach (var p in test_suites) {
-				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p.Directory, p.ProjectFile + ".csproj"))) {
+				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, p.Directory, p.ProjectFile + ".csproj"))) {
 					Name = p.Name,
 					TargetFrameworkFlavors = p.Flavors,
 				});
 			}
 			
-			MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "Mac", "introspection-mac.csproj")), targetFrameworkFlavor: MacFlavors.Modern) { Name = "introspection" });
+			MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "introspection", "Mac", "introspection-mac.csproj")), targetFrameworkFlavor: MacFlavors.Modern) { Name = "introspection" });
 
 			var hard_coded_test_suites = new [] {
 				new { Directory = "mmptest", ProjectFile = "mmptest", Name = "mmptest", IsNUnit = true, Configurations = (string[]) null, Platform = "x86", Flavors = MacFlavors.Console, },
@@ -209,10 +209,11 @@ namespace Xharness
 				new { Directory = "linker/mac/link sdk", ProjectFile = "link sdk-mac", Name = "link sdk", IsNUnit = false, Configurations = new string [] { "Debug", "Release" }, Platform = "x86", Flavors = MacFlavors.Modern, },
 			};
 			foreach (var p in hard_coded_test_suites) {
-				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p.Directory, p.ProjectFile + ".csproj")), targetFrameworkFlavor: p.Flavors) {
+				string projectPath = Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, p.Directory, p.ProjectFile + ".csproj"));
+				MacTestProjects.Add (new MacTestProject (projectPath, targetFrameworkFlavor: p.Flavors) {
 					Name = p.Name,
 					IsNUnitProject = p.IsNUnit,
-					SolutionPath = Path.GetFullPath (Path.Combine (RootDirectory, "tests-mac.sln")),
+					SolutionPath = Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "tests-mac.sln")),
 					Configurations = p.Configurations,
 					Platform = p.Platform,
 				});
@@ -311,18 +312,18 @@ namespace Xharness
 			var fsharp_library_projects = new string [] { "fsharplibrary" };
 
 			foreach (var p in test_suites)
-				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".csproj"))) { Name = p });
+				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, p + "/" + p + ".csproj"))) { Name = p });
 			foreach (var p in fsharp_test_suites)
-				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".fsproj"))) { Name = p });
+				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, p + "/" + p + ".fsproj"))) { Name = p });
 			foreach (var p in library_projects)
-				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".csproj")), false) { Name = p });
+				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, p + "/" + p + ".csproj")), false) { Name = p });
 			foreach (var p in fsharp_library_projects)
-				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".fsproj")), false) { Name = p });
+				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, p + "/" + p + ".fsproj")), false) { Name = p });
 
-			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "iOS", "introspection-ios.csproj"))) { Name = "introspection" });
-			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "dont link", "dont link.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
-			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link all", "link all.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
-			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link sdk", "link sdk.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "introspection", "iOS", "introspection-ios.csproj"))) { Name = "introspection" });
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "linker", "ios", "dont link", "dont link.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "linker", "ios", "link all", "link all.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "linker", "ios", "link sdk", "link sdk.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
 
 			foreach (var flavor in new MonoNativeFlavor[] { MonoNativeFlavor.Compat, MonoNativeFlavor.Unified }) {
 				var monoNativeInfo = new MonoNativeInfo (this, flavor);
@@ -339,19 +340,19 @@ namespace Xharness
 			var monoImportTestFactory = new BCLTestImportTargetFactory (this);
 			IOSTestProjects.AddRange (monoImportTestFactory.GetiOSBclTargets ());
 
-			WatchOSContainerTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "templates/WatchContainer"));
-			WatchOSAppTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "templates/WatchApp"));
-			WatchOSExtensionTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "templates/WatchExtension"));
+			WatchOSContainerTemplate = Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "templates/WatchContainer"));
+			WatchOSAppTemplate = Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "templates/WatchApp"));
+			WatchOSExtensionTemplate = Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "templates/WatchExtension"));
 
-			TodayContainerTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "templates", "TodayContainer"));
-			TodayExtensionTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "templates", "TodayExtension"));
-			BCLTodayExtensionTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test", "templates", "today"));
+			TodayContainerTemplate = Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "templates", "TodayContainer"));
+			TodayExtensionTemplate = Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "templates", "TodayExtension"));
+			BCLTodayExtensionTemplate = Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "bcl-test", "templates", "today"));
 		}
 
 		Dictionary<string, string> make_config = new Dictionary<string, string> ();
 		IEnumerable<string> FindConfigFiles (string name)
 		{
-			var dir = Path.GetFullPath (RootDirectory);
+			var dir = Path.GetFullPath (DirectoryUtilities.RepositoryRootDirectory);
 			while (dir != "/") {
 				var file = Path.Combine (dir, name);
 				if (File.Exists (file))
