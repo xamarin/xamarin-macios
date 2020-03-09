@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -11,7 +10,6 @@ using Xharness.BCLTestImporter;
 using Xharness.Logging;
 using Xharness.Execution;
 using Xharness.Targets;
-using Xharness.Utilities;
 
 namespace Xharness
 {
@@ -106,7 +104,7 @@ namespace Xharness
 		public string LogFile { get; set; }
 		public string LogDirectory { get; set; } = Environment.CurrentDirectory;
 		public double Timeout { get; set; } = 15; // in minutes
-		public double LaunchTimeout { get; set; } // in minutes
+		public TimeSpan LaunchTimeout { get; set; } // in minutes
 		public bool DryRun { get; set; } // Most things don't support this. If you need it somewhere, implement it!
 		public string JenkinsConfiguration { get; set; }
 		public Dictionary<string, string> EnvironmentVariables { get; set; } = new Dictionary<string, string> ();
@@ -119,7 +117,7 @@ namespace Xharness
 
 		public Harness ()
 		{
-			LaunchTimeout = InCI ? 3 : 120;
+			LaunchTimeout = TimeSpan.FromMinutes(InCI ? 3 : 120);
 		}
 
 		public bool GetIncludeSystemPermissionTests (TestPlatform platform, bool device)
@@ -183,59 +181,6 @@ namespace Xharness
 					xcode_version = Version.Parse (doc.SelectSingleNode ("//key[text() = 'CFBundleShortVersionString']/following-sibling::string").InnerText);
 				}
 				return xcode_version;
-			}
-		}
-
-		object mlaunch_lock = new object ();
-		string DownloadMlaunch ()
-		{
-			// NOTE: the filename part in the url must be unique so that the caching logic works properly.
-			var mlaunch_url = "https://dl.xamarin.com/ios/mlaunch-acdb43d346c431b2c40663c938c919dcb0e91bd7.zip";
-			var extraction_dir = Path.Combine (Path.GetTempPath (), Path.GetFileNameWithoutExtension (mlaunch_url));
-			var mlaunch_path = Path.Combine (extraction_dir, "bin", "mlaunch");
-
-			lock (mlaunch_lock) {
-				if (File.Exists (mlaunch_path))
-					return mlaunch_path;
-
-				try {
-					var local_zip = extraction_dir + ".zip";
-					Log ("Downloading mlaunch to: {0}", local_zip);
-					var wc = new System.Net.WebClient ();
-					wc.DownloadFile (mlaunch_url, local_zip);
-					Log ("Downloaded mlaunch.");
-
-					var tmp_extraction_dir = extraction_dir + ".tmp";
-					if (Directory.Exists (tmp_extraction_dir))
-						Directory.Delete (tmp_extraction_dir, true);
-					if (Directory.Exists (extraction_dir))
-						Directory.Delete (extraction_dir, true);
-
-					Log ("Extracting mlaunch...");
-					using (var p = new Process ()) {
-						p.StartInfo.FileName = "unzip";
-						p.StartInfo.Arguments = StringUtils.FormatArguments ("-d", tmp_extraction_dir, local_zip);
-						Log ("{0} {1}", p.StartInfo.FileName, p.StartInfo.Arguments);
-						p.Start ();
-						p.WaitForExit ();
-						if (p.ExitCode != 0) {
-							Log ("Could not unzip mlaunch, exit code: {0}", p.ExitCode);
-							return mlaunch_path;
-						}
-					}
-					Directory.Move (tmp_extraction_dir, extraction_dir);
-
-					Log ("Final mlaunch path: {0}", mlaunch_path);
-				} catch (Exception e) {
-					Log ("Could not download mlaunch: {0}", e);
-				}
-				return mlaunch_path;
-			}
-		}
-
-		public string MtouchPath {
-			get {
-				return Path.Combine (IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current", "bin", "mtouch");
 			}
 		}
 
@@ -782,35 +727,6 @@ namespace Xharness
 		public Task<ProcessExecutionResult> ExecuteXcodeCommandAsync (string executable, IList<string> args, ILog log, TimeSpan timeout)
 		{
 			return ProcessManager.ExecuteCommandAsync (Path.Combine (XcodeRoot, "Contents", "Developer", "usr", "bin", executable), args, log, timeout: timeout);
-		}
-
-		public async Task ShowSimulatorList (Log log)
-		{
-			await ExecuteXcodeCommandAsync ("simctl", new [] { "list" }, log, TimeSpan.FromSeconds (10));
-		}
-
-		public async Task<ILogFile> SymbolicateCrashReportAsync (ILogs logs, ILog log, ILogFile report)
-		{
-			var symbolicatecrash = Path.Combine (XcodeRoot, "Contents/SharedFrameworks/DTDeviceKitBase.framework/Versions/A/Resources/symbolicatecrash");
-			if (!File.Exists (symbolicatecrash))
-				symbolicatecrash = Path.Combine (XcodeRoot, "Contents/SharedFrameworks/DVTFoundation.framework/Versions/A/Resources/symbolicatecrash");
-
-			if (!File.Exists (symbolicatecrash)) {
-				log.WriteLine ("Can't symbolicate {0} because the symbolicatecrash script {1} does not exist", report.Path, symbolicatecrash);
-				return report;
-			}
-
-			var name = Path.GetFileName (report.Path);
-			var symbolicated = logs.Create (Path.ChangeExtension (name, ".symbolicated.log"), $"Symbolicated crash report: {name}", timestamp: false);
-			var environment = new Dictionary<string, string> { { "DEVELOPER_DIR", Path.Combine (XcodeRoot, "Contents", "Developer") } };
-			var rv = await ProcessManager.ExecuteCommandAsync (symbolicatecrash, new [] { report.Path }, symbolicated, TimeSpan.FromMinutes (1), environment);
-			if (rv.Succeeded) {;
-				log.WriteLine ("Symbolicated {0} successfully.", report.Path);
-				return symbolicated;
-			} else {
-				log.WriteLine ("Failed to symbolicate {0}.", report.Path);
-				return report;
-			}
 		}
 
 		public async Task<HashSet<string>> CreateCrashReportsSnapshotAsync (ILog log, bool simulatorOrDesktop, string device)
