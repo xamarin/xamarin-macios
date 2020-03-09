@@ -64,7 +64,7 @@ namespace Xharness.Utilities
 		}
 
 		// Quote input according to how System.Diagnostics.Process needs it quoted.
-		private static string QuoteForProcess (string f)
+		static string QuoteForProcess (string f)
 		{
 			if (string.IsNullOrEmpty (f))
 				return f ?? string.Empty;
