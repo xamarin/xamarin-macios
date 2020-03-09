@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -9,9 +9,8 @@ using Xharness.Logging;
 
 namespace Xharness.Jenkins.TestTasks
 {
-	class XBuildTask : BuildProjectTask
+	class MSBuildTask : BuildProjectTask
 	{
-		public bool UseMSBuild;
 		public ILog BuildLog;
 
 		protected override async Task ExecuteAsync ()
@@ -35,8 +34,7 @@ namespace Xharness.Jenkins.TestTasks
 					args.Add (ProjectFile);
 					xbuild.StartInfo.Arguments = StringUtils.FormatArguments (args);
 					SetEnvironmentVariables (xbuild);
-					if (UseMSBuild)
-						xbuild.StartInfo.EnvironmentVariables ["MSBuildExtensionsPath"] = null;
+					xbuild.StartInfo.EnvironmentVariables ["MSBuildExtensionsPath"] = null;
 					LogEvent (BuildLog, "Building {0} ({1})", TestName, Mode);
 					if (!Harness.DryRun) {
 						var timeout = TimeSpan.FromMinutes (60);
