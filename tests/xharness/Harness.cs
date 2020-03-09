@@ -352,7 +352,7 @@ namespace Xharness
 		Dictionary<string, string> make_config = new Dictionary<string, string> ();
 		IEnumerable<string> FindConfigFiles (string name)
 		{
-			var dir = Path.GetFullPath (DirectoryUtilities.RepositoryRootDirectory);
+			var dir = DirectoryUtilities.RepositoryRootDirectory;
 			while (dir != "/") {
 				var file = Path.Combine (dir, name);
 				if (File.Exists (file))
