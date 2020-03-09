@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using NUnit.Framework;
 using Xharness.Utilities;
 
@@ -28,17 +29,21 @@ namespace Xharness.Tests.Utilities.Tests {
 		{
 			Assert.AreEqual (shellQuoteChar + expected + shellQuoteChar, StringUtils.Quote (input));
 		}
-		
+
 		[Test]
 		public void FormatArgumentsTest ()
 		{
-			var arguments = new [] {
-				"foo $bar's",
-				"x\"yz"
-			};
-			string expected = "\"foo $bar's\" \"x\\\"\"\"yz\"";
+			var p = new Process ();
+			p.StartInfo.RedirectStandardOutput = true;
+			p.StartInfo.UseShellExecute = false;
+			p.StartInfo.FileName = "/bin/echo";
 
-			Assert.AreEqual (expected, StringUtils.FormatArguments (arguments));
+			var complexInput = "\\\"\"\"'";
+
+			p.StartInfo.Arguments = StringUtils.FormatArguments ("-n", "foo", complexInput, "bar");
+			p.Start ();
+			var output = p.StandardOutput.ReadToEnd ();
+			Assert.AreEqual ($"foo {complexInput} bar", output, "echo");
 		}
 	}
 }
