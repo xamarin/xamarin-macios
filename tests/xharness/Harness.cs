@@ -35,7 +35,7 @@ namespace Xharness
 		public IProcessManager ProcessManager { get; set; } = new ProcessManager ();
 
 		public string XIBuildPath {
-			get { return Path.GetFullPath (Path.Combine (DirectoryUtilities.RootDirectory, "..", "tools", "xibuild", "xibuild")); }
+			get { return Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "..", "tools", "xibuild", "xibuild")); }
 		}
 
 		public static string Timestamp {

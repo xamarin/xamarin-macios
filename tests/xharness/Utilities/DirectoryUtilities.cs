@@ -51,19 +51,19 @@ namespace Xharness.Utilities {
 			throw new Exception ("Could not create temporary directory");
 		}
 
-		static string root_directory;
-		public static string RootDirectory {
+		static string gitRoot;
+		public static string RepositoryRootDirectory {
 			get {
-				if (root_directory == null)
-					root_directory = FindRootDirectory ();
+				if (gitRoot == null)
+					gitRoot = FindRootDirectory ();
 
-				return root_directory;
+				return gitRoot;
 			}
 
 			set {
-				root_directory = value;
-				if (root_directory != null)
-					root_directory = Path.GetFullPath (root_directory).TrimEnd ('/');
+				gitRoot = value;
+				if (gitRoot != null)
+					gitRoot = Path.GetFullPath (gitRoot).TrimEnd ('/');
 			}
 		}
 
