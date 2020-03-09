@@ -389,7 +389,7 @@ namespace Xharness
 			}
 		}
 
-		public int Configure ()
+		int Configure ()
 		{
 			return Mac ? AutoConfigureMac (true) : ConfigureIOS ();
 		}
@@ -467,7 +467,7 @@ namespace Xharness
 			return rv;
 		}
 
-		public int Install ()
+		int Install ()
 		{
 			if (HarnessLog == null)
 				HarnessLog = new ConsoleLog ();
@@ -487,7 +487,7 @@ namespace Xharness
 			return 0;
 		}
 
-		public int Uninstall ()
+		int Uninstall ()
 		{
 			if (HarnessLog == null)
 				HarnessLog = new ConsoleLog ();
@@ -506,7 +506,7 @@ namespace Xharness
 			return 0;
 		}
 
-		public int Run ()
+		int Run ()
 		{
 			if (HarnessLog == null)
 				HarnessLog = new ConsoleLog ();
@@ -522,6 +522,20 @@ namespace Xharness
 					return rv;
 			}
 			return 0;
+		}
+
+		int Jenkins ()
+		{
+			if (AutoConf) {
+				AutoConfigureIOS ();
+				AutoConfigureMac (false);
+			}
+			
+			var jenkins = new Jenkins.Jenkins ()
+			{
+				Harness = this,
+			};
+			return jenkins.Run ();
 		}
 
 		public void Log (int min_level, string message)
@@ -600,20 +614,6 @@ namespace Xharness
 			}
 		}
 
-		public int Jenkins ()
-		{
-			if (AutoConf) {
-				AutoConfigureIOS ();
-				AutoConfigureMac (false);
-			}
-			
-			var jenkins = new Jenkins.Jenkins ()
-			{
-				Harness = this,
-			};
-			return jenkins.Run ();
-		}
-
 		public void Save (XmlDocument doc, string path)
 		{
 			if (!File.Exists (path)) {
@@ -649,22 +649,6 @@ namespace Xharness
 					Log (1, "Not saved {0}, no change", path);
 				} else {
 					File.WriteAllText (path, updated);
-					Log (1, "Updated {0}", path);
-				}
-			}
-		}
-
-		public void Save (string doc, string path)
-		{
-			if (!File.Exists (path)) {
-				File.WriteAllText (path, doc);
-				Log (1, "Created {0}", path);
-			} else {
-				var existing = File.ReadAllText (path);
-				if (existing == doc) {
-					Log (1, "Not saved {0}, no change", path);
-				} else {
-					File.WriteAllText (path, doc);
 					Log (1, "Updated {0}", path);
 				}
 			}
