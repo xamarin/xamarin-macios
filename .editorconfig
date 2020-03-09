@@ -8,6 +8,7 @@ indent_size = 2
 
 # C# files
 [*.cs]
+max_line_length = 120
 
 #### Core EditorConfig Options ####
 
