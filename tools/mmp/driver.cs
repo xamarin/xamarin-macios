@@ -354,6 +354,10 @@ namespace Xamarin.Bundler {
 					}
 				},
 				{ "link-prohibited-frameworks", "Natively link against prohibited (rejected by AppStore) frameworks", v => { LinkProhibitedFrameworks = true; } },
+				{ "warn-on-type-ref=", "Warn if any of the comma-separated types is referenced by assemblies - both before and after linking", v => {
+						App.WarnOnTypeRef.AddRange (v.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries));
+					}
+				},
 			};
 
 			AddSharedOptions (App, os);
@@ -597,6 +601,8 @@ namespace Xamarin.Bundler {
 		static Version MutateSDKVersionToPointRelease (Version rv)
 		{
 			if (rv.Major == 10 && (rv.Revision == 0 || rv.Revision == -1)) {
+				if (rv.Minor == 15 && XcodeVersion >= new Version (11, 4))
+					return new Version (rv.Major, rv.Minor, 4);
 				if (rv.Minor == 13 && XcodeVersion >= new Version (9, 3))
 					return new Version (rv.Major, rv.Minor, 4);
 				if (rv.Minor == 13 && XcodeVersion >= new Version (9, 2))
@@ -1471,6 +1477,7 @@ namespace Xamarin.Bundler {
 				},
 				SkipExportedSymbolsInSdkAssemblies = !embed_mono,
 				Target = BuildTarget,
+				WarnOnTypeRef = App.WarnOnTypeRef,
 			};
 
 			linker_options = options;
