@@ -148,7 +148,6 @@
     <Compile Include="Execution\IProcessManager.cs" />
     <Compile Include="Execution\ProcessManager.cs" />
     <Compile Include="Hardware\Simulators.cs" />
-    <Compile Include="Hardware\IAsyncEnumerable.cs" />
     <Compile Include="Hardware\SimDevice.cs" />
     <Compile Include="Hardware\IDevice.cs" />
     <Compile Include="Hardware\Device.cs" />
@@ -159,6 +158,7 @@
     <Compile Include="Hardware\ISimulatorDevice.cs" />
     <Compile Include="Execution\MlaunchArguments.cs" />
     <Compile Include="Hardware\TCCDatabase.cs" />
+    <Compile Include="Collections\IAsyncEnumerable.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="BCLTestImporter\" />

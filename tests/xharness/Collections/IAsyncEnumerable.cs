@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace xharness.Hardware {
+namespace xharness.Collections {
 	public interface IAsyncEnumerable {
 		Task ReadyTask { get; }
 	}
