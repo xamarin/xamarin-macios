@@ -57,8 +57,8 @@ namespace Xharness
 		{
 			var folders = new StringBuilder ();
 
-			var srcDirectory = Path.Combine (Harness.RootDirectory, "..", "src");
-			var sln_path = exeTarget == null ? Path.Combine (Harness.RootDirectory, "tests-" + infix + ".sln") : Path.Combine (Path.GetDirectoryName (exeTarget.ProjectPath), Path.GetFileNameWithoutExtension (exeTarget.ProjectPath) + ".sln");
+			var srcDirectory = Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "..", "src");
+			var sln_path = exeTarget == null ? Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "tests-" + infix + ".sln") : Path.Combine (Path.GetDirectoryName (exeTarget.ProjectPath), Path.GetFileNameWithoutExtension (exeTarget.ProjectPath) + ".sln");
 
 			using (var writer = new StringWriter ()) {
 				writer.WriteLine ();
