@@ -55,7 +55,7 @@ namespace Xharness.Tests.Hardware.Tests {
 		}
 
 		[Test]
-		public async Task ErateAsyncTest ()
+		public async Task EraseAsyncTest ()
 		{
 			// just call and verify the correct args are pass
 			await simulator.EraseAsync (executionLog.Object);
