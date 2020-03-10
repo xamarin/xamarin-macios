@@ -2598,7 +2598,7 @@
 		</comment>
 	</data>
 
-	<data name="MT5305" xml:space="preserve">
+	<data name="MX5305" xml:space="preserve">
 		<value>Missing 'lipo' tool. Please install Xcode 'Command-Line Tools' component
 		</value>
 		<comment>
@@ -2612,6 +2612,13 @@
 		</comment>
 	</data>
 
+	<data name="MX5307" xml:space="preserve">
+		<value>Missing '{0}' tool. Please install Xcode 'Command-Line Tools' component
+		</value>
+		<comment>
+		</comment>
+	</data>
+
 	<data name="MM5308" xml:space="preserve">
 		<value>Xcode license agreement may not have been accepted.  Please launch Xcode.
 		</value>
@@ -2619,6 +2626,12 @@
 		</comment>
 	</data>
 
+	<data name="MX5309" xml:space="preserve">
+		<value>Failed to execute the tool '{0}', it failed with an error code '{1}'. Please check the build log for details.
+		</value>
+		<comment>
+		</comment>
+	</data>
 	<data name="MM5310" xml:space="preserve">
 		<value>install_name_tool failed with an error code '{0}'. Check build log for details.
 		</value>
@@ -2626,7 +2639,7 @@
 		</comment>
 	</data>
 	
-	<data name="MM5311" xml:space="preserve">
+	<data name="MX5311" xml:space="preserve">
 		<value>lipo failed with an error code '{0}'. Check build log for details.
 		</value>
 		<comment>
