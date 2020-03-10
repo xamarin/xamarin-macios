@@ -1,11 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Xml;
+using Xharness.Utilities;
 
-using Xamarin;
-
-namespace Xharness
+namespace Xharness.Targets
 {
 	public class MacTarget : Target
 	{
