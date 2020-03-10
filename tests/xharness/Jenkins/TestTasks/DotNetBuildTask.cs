@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace Xharness.Jenkins.TestTasks {
 	class DotNetBuildTask : MSBuildTask {
 		protected override string ToolName {
-			get { return "dotnet"; }
+			get { return Harness.DOTNET; }
 		}
 
 		protected override List<string> ToolArguments {

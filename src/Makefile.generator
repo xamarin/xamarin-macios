@@ -12,7 +12,7 @@ $(BUILD_DIR)/common/bgen.exe: $(generator_dependencies) Makefile.generator $(BUI
 	$(Q_GEN) $(SYSTEM_MSBUILD) $(XBUILD_VERBOSITY) /p:Configuration=Debug generator.csproj /p:IntermediateOutputPath=$(BUILD_DIR)/IDE/obj/common/ /p:OutputPath=$(BUILD_DIR)/common
 
 $(DOTNET_BUILD_DIR)/bgen/bgen:  $(generator_dependencies) Makefile.generator $(BUILD_DIR)/generator-frameworks.g.cs | $(DOTNET_BUILD_DIR)/bgen
-	$(Q_DOTNET_BUILD) dotnet build $(XBUILD_VERBOSITY) /p:Configuration=Debug bgen/bgen.csproj
+	$(Q_DOTNET_BUILD) $(DOTNET) build $(XBUILD_VERBOSITY) /p:Configuration=Debug bgen/bgen.csproj
 	$(Q) $(CP) bgen/bin/Debug/netcoreapp3.1/bgen* $(dir $@)
 
 DOTNET_TARGETS += \
