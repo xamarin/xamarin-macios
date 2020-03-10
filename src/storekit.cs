@@ -24,6 +24,7 @@ namespace StoreKit {
 
 		[iOS (12,0)]
 		[TV (12,0)]
+		[Watch (6,2)]
 		[Export ("state")]
 		SKDownloadState State { get; }
 #if MONOMAC
@@ -44,25 +45,31 @@ namespace StoreKit {
 		long ContentLength { get;  }
 #endif
 
-		[TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[TV (13, 0), Mac (10, 15), iOS (13, 0), Watch (6, 2)]
 		[Export ("expectedContentLength")]
 		long ExpectedContentLength { get; }
 
+		[Watch (6, 2)]
 		[Export ("contentIdentifier")]
 		string ContentIdentifier { get;  }
 
+		[Watch (6, 2)]
 		[Export ("contentURL", ArgumentSemantic.Copy)]
 		NSUrl ContentUrl { get;  }
 
+		[Watch (6, 2)]
 		[Export ("contentVersion", ArgumentSemantic.Copy)]
 		string ContentVersion { get;  }
 
+		[Watch (6, 2)]
 		[Export ("error", ArgumentSemantic.Copy)]
 		NSError Error { get;  }
 
+		[Watch (6, 2)]
 		[Export ("progress")]
 		float Progress { get;  } /* float, not CGFloat */
 
+		[Watch (6, 2)]
 		[Export ("timeRemaining")]
 		double TimeRemaining { get;  }
 
@@ -76,15 +83,16 @@ namespace StoreKit {
 		void DeleteContentForProduct (string productId);
 #endif
 
-		[Mac (10,14)]
+		[Watch (6, 2), Mac (10, 14)]
 		[Field ("SKDownloadTimeRemainingUnknown")]
 		double TimeRemainingUnknown { get; }
 
-		[Mac (10,11)]
+		[Watch (6, 2), Mac (10, 11)]
 		[Export ("transaction")]
 		SKPaymentTransaction Transaction { get;  }
 	}
 
+	[Watch (6, 2)]
 	[BaseType (typeof (NSObject))]
 	partial interface SKPayment : NSMutableCopying {
 		[Static]
@@ -132,34 +140,39 @@ namespace StoreKit {
 		[Availability (Deprecated = Platform.iOS_5_0, Message = "Use 'PaymentWithProduct (SKProduct)' after fetching the list of available products from 'SKProductRequest' instead.")]
 		SKMutablePayment PaymentWithProduct (string identifier);
 
+		[Watch (6, 2)]
 		[NullAllowed] // by default this property is null
 		[Export ("productIdentifier", ArgumentSemantic.Copy)][New]
 		string ProductIdentifier { get; set; }
 
+		[Watch (6, 2)]
 		[Export ("quantity")][New]
 		nint Quantity { get; set; }
 
+		[Watch (6, 2)]
 		[NullAllowed] // by default this property is null
 		[Export ("requestData", ArgumentSemantic.Copy)]
 		[Override]
 		NSData RequestData { get; set; }
 
-		[iOS (7,0), Mac (10, 9)]
+		[Watch (6, 2), iOS (7,0), Mac (10, 9)]
 		[NullAllowed] // by default this property is null
 		[Export ("applicationUsername", ArgumentSemantic.Copy)][New]
 		string ApplicationUsername { get; set; }
 
-		[iOS (8,3), Mac (10,14)]
+		[Watch (6, 2), iOS (8,3), Mac (10,14)]
 		[Export ("simulatesAskToBuyInSandbox")]
 		bool SimulatesAskToBuyInSandbox { get; set; }
 
 		[iOS (12,2)]
 		[TV (12,2)]
 		[Mac (10,14,4)]
+		[Watch (6, 2)]
 		[NullAllowed, Export ("paymentDiscount", ArgumentSemantic.Copy)]
 		SKPaymentDiscount PaymentDiscount { get; set; }
 	}
 
+	[Watch (6, 2)]
 	[BaseType (typeof (NSObject))]
 	interface SKPaymentQueue {
 		[Export ("defaultQueue")][Static]
@@ -205,7 +218,7 @@ namespace StoreKit {
 		[Export ("cancelDownloads:")]
 		void CancelDownloads (SKDownload [] downloads);
 
-		[Mac (10, 15), iOS (13, 0)]
+		[Mac (10, 15), iOS (13, 0)] // NoWatch??
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
 		ISKPaymentQueueDelegate Delegate { get; set; }
@@ -219,8 +232,13 @@ namespace StoreKit {
 		[TV (13,0)]
 		[NullAllowed, Export ("storefront")]
 		SKStorefront Storefront { get; }
+
+		[NoWatch, NoTV, NoMac, iOS (13,4)]
+		[Export ("showPriceConsentIfNeeded")]
+		void ShowPriceConsentIfNeeded ();
 	}
 	
+	[Watch (6, 2)]
 	[BaseType (typeof (NSObject))]
 	interface SKProduct {
 		[Export ("localizedDescription")]
@@ -255,6 +273,7 @@ namespace StoreKit {
 		bool IsDownloadable { get; }
 
 		[NoiOS]
+		[NoWatch]
 #if XAMCORE_4_0
 		[NoTV]
 #else
@@ -269,6 +288,7 @@ namespace StoreKit {
 		NSNumber [] DownloadContentLengths { get;  }
 
 		[NoiOS]
+		[Watch (6, 2)]
 #if XAMCORE_4_0
 		[NoTV]
 #else
@@ -301,6 +321,7 @@ namespace StoreKit {
 		SKProductDiscount [] Discounts { get; }
 	}
 
+	[Watch (6, 2)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -321,7 +342,7 @@ namespace StoreKit {
 		[Export ("paymentQueue:updatedDownloads:")]
 		void UpdatedDownloads (SKPaymentQueue queue, SKDownload [] downloads);
 
-		[iOS (11,0)][TV (11,0)][NoMac]
+		[iOS (11,0)][TV (11,0)][NoMac][NoWatch]
 		[Export ("paymentQueue:shouldAddStorePayment:forProduct:")]
 		bool ShouldAddStorePayment (SKPaymentQueue queue, SKPayment payment, SKProduct product);
 
@@ -332,6 +353,7 @@ namespace StoreKit {
 		void DidChangeStorefront (SKPaymentQueue queue);
 	}
 
+	[Watch (6, 2)]
 	[BaseType (typeof (NSObject))]
 	interface SKPaymentTransaction {
 		[Export ("error")]
@@ -350,7 +372,7 @@ namespace StoreKit {
 		string TransactionIdentifier { get; }
 
 #if !MONOMAC
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'NSBundle.AppStoreReceiptUrl' instead.")]
+		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'NSBundle.AppStoreReceiptUrl' instead.")] // NoWatch??
 		[Export ("transactionReceipt")]
 		NSData TransactionReceipt { get; }
 #endif
@@ -362,6 +384,7 @@ namespace StoreKit {
 		SKDownload [] Downloads { get;  }
 	}
 
+	[Watch (6, 2)]
 	[BaseType (typeof (NSObject), Delegates=new string [] {"WeakDelegate"}, Events=new Type [] {typeof (SKRequestDelegate)})]
 	interface SKRequest {
 		[Export ("delegate", ArgumentSemantic.Weak)][NullAllowed]
@@ -378,6 +401,7 @@ namespace StoreKit {
 		void Start ();
 	}
 
+	[Watch (6, 2)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -393,12 +417,14 @@ namespace StoreKit {
 	[Mac (10,9)]
 	[BaseType (typeof (SKRequest))]
 	interface SKReceiptRefreshRequest {
+		[Watch (6,2)]
 		[Export ("initWithReceiptProperties:")]
 		IntPtr Constructor ([NullAllowed] NSDictionary properties);
 
 		[Wrap ("this (receiptProperties == null ? null : receiptProperties.Dictionary)")]
 		IntPtr Constructor ([NullAllowed] SKReceiptProperties receiptProperties);
 
+		[Watch (6,2)]
 		[Export ("receiptProperties")]
 		NSDictionary WeakReceiptProperties { get; }
 
@@ -408,6 +434,7 @@ namespace StoreKit {
 
 	[iOS (7,0)]
 	[Mac (10,9)]
+	[Watch (6,2)]
 	[Static, Internal]
 	interface _SKReceiptProperty {
 		[Field ("SKReceiptPropertyIsExpired"), Internal]
@@ -420,6 +447,7 @@ namespace StoreKit {
 		NSString IsVolumePurchase { get; }
 	}
 
+	[Watch (6,2)]
 	[BaseType (typeof (SKRequest), Delegates=new string [] {"WeakDelegate"}, Events=new Type [] {typeof (SKProductsRequestDelegate)})]
 	interface SKProductsRequest {
 		[Export ("initWithProductIdentifiers:")]
@@ -433,6 +461,7 @@ namespace StoreKit {
 		SKProductsRequestDelegate Delegate { get; set; }
 	}
 	
+	[Watch (6, 2)]
 	[BaseType (typeof (NSObject))]
 	interface SKProductsResponse {
 		[Export ("products")]
@@ -442,6 +471,7 @@ namespace StoreKit {
 		string [] InvalidProducts { get; }
 	}
 
+	[Watch (6, 2)]
 	[BaseType (typeof (SKRequestDelegate))]
 	[Model]
 	[Protocol]
@@ -450,7 +480,7 @@ namespace StoreKit {
 		void ReceivedResponse (SKProductsRequest request, SKProductsResponse response);
 	}
 
-#if !MONOMAC
+#if !MONOMAC && !WATCH
 	[NoTV]
 	[BaseType (typeof (UIViewController),
 		   Delegates=new string [] { "WeakDelegate" },
@@ -617,11 +647,13 @@ namespace StoreKit {
 		NSString StorefrontCountryCodeDidChangeNotification { get; }
 	}
 
+#if !WATCH
 	[iOS (10,1)]
 	[NoTV] // __TVOS_PROHIBITED
 	[BaseType (typeof(UIViewController))]
 	interface SKCloudServiceSetupViewController
 	{
+#endif // !WATCH
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		ISKCloudServiceSetupViewControllerDelegate Delegate { get; set; }
 
@@ -740,6 +772,7 @@ namespace StoreKit {
 
 	[iOS (10,3), Mac (10,14)]
 	[NoTV]
+	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // Not specified but very likely
 	interface SKStoreReviewController {
@@ -749,7 +782,7 @@ namespace StoreKit {
 		void RequestReview ();
 	}
 
-	[iOS (11,2), TV (11,2), Mac (10,13,2)]
+	[Watch (6,2), iOS (11,2), TV (11,2), Mac (10,13,2)]
 	[BaseType (typeof (NSObject))]
 	interface SKProductSubscriptionPeriod {
 
@@ -760,7 +793,7 @@ namespace StoreKit {
 		SKProductPeriodUnit Unit { get; }
 	}
 
-	[iOS (11,2), TV (11,2), Mac (10,13,2)]
+	[Watch (4,2), iOS (11,2), TV (11,2), Mac (10,13,2)]
 	[BaseType (typeof (NSObject))]
 	interface SKProductDiscount {
 
@@ -785,6 +818,7 @@ namespace StoreKit {
 		[Export ("paymentMode")]
 		SKProductDiscountPaymentMode PaymentMode { get; }
 
+		[Watch (6,2)]
 		[iOS (12,2)]
 		[TV (12,2)]
 		[Mac (10,14,4)]
@@ -792,7 +826,7 @@ namespace StoreKit {
 		SKProductDiscountType Type { get; }
 	}
 
-	[iOS (11,3), NoTV, NoMac]
+	[iOS (11,3), NoTV, NoMac, NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SKAdNetwork {
@@ -805,6 +839,7 @@ namespace StoreKit {
 	[iOS (12,2)]
 	[TV (12,2)]
 	[Mac (10,14,4)]
+	[Watch (6,2)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SKPaymentDiscount {
@@ -839,6 +874,7 @@ namespace StoreKit {
 	[Mac (10,15)]
 	[iOS (13,0)]
 	[TV (13,0)]
+	[Watch (6,2)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // no `init` but non-null properties
 	interface SKStorefront {
@@ -852,13 +888,17 @@ namespace StoreKit {
 
 	interface ISKPaymentQueueDelegate {}
 
-	[Mac (10,15), iOS (13,0)]
+	[Watch (6,2), Mac (10,15), iOS (13,0)]
 	[Protocol]
 	[Model (AutoGeneratedName = true)]
 	[BaseType (typeof(NSObject))]
 	interface SKPaymentQueueDelegate {
 		[Export ("paymentQueue:shouldContinueTransaction:inStorefront:")]
 		bool ShouldContinueTransaction (SKPaymentQueue paymentQueue, SKPaymentTransaction transaction, SKStorefront newStorefront);
+
+		[NoWatch, NoMac, iOS (13,4)]
+		[Export ("paymentQueueShouldShowPriceConsent:")]
+		bool PaymentQueueShouldShowPriceConsent (SKPaymentQueue paymentQueue);
 	}
 
 	// SKArcade.h has not been part of the StoreKit.h umbrella header since it was added
@@ -876,6 +916,7 @@ namespace StoreKit {
 	[Mac (10,15)]
 	[iOS (13,0)]
 	[TV (13,0)]
+	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // all static members so far
 	interface SKArcadeService {

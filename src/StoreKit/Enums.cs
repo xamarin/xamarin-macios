@@ -5,6 +5,7 @@ namespace StoreKit {
 
 	// typedef NSInteger SKPaymentTransactionState;
 	// StoreKit.framework/Headers/SKPaymentTransaction.h
+	[Watch (6,2)]
 	[Native]
 	public enum SKPaymentTransactionState : long {
 		Purchasing,
@@ -45,7 +46,8 @@ namespace StoreKit {
 	}
 
 	// typedef NSInteger SKDownloadState;
-	// StoreKit.framework/Headers/SKDownload.h 
+	// StoreKit.framework/Headers/SKDownload.h
+	[Watch (6,2)]
 	[Native]
 	public enum SKDownloadState : long {
 		Waiting, Active, Paused, Finished, Failed, Cancelled
@@ -79,7 +81,7 @@ namespace StoreKit {
 		Hide,
 	}
 #endif
-	[iOS (11,2), TV (11,2), Mac (10,13,2)]
+	[Watch (6,2), iOS (11,2), TV (11,2), Mac (10,13,2)]
 	[Native]
 	public enum SKProductPeriodUnit : ulong {
 		Day,
@@ -88,7 +90,7 @@ namespace StoreKit {
 		Year,
 	}
 
-	[iOS (11,2), TV (11,2), Mac (10,13,2)]
+	[Watch (6,2), iOS (11,2), TV (11,2), Mac (10,13,2)]
 	[Native]
 	public enum SKProductDiscountPaymentMode : ulong {
 		PayAsYouGo,
