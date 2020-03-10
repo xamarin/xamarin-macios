@@ -38,7 +38,7 @@ namespace Xamarin.iOS.Tasks
 		Framework
 	}
 
-	public abstract class MTouchTaskBase : ToolTask
+	public abstract class MTouchTaskBase : BundlerToolTaskBase
 	{
 		class GccOptions
 		{
@@ -60,22 +60,9 @@ namespace Xamarin.iOS.Tasks
 
 		#region Inputs
 
-		public string SessionId { get; set; }
-
-		[Required]
-		public string AppBundleDir { get; set; }
-
-		[Required]
-		public ITaskItem AppManifest { get; set; }
-
 		public string Architectures { get; set; }
 
-		public string ArchiveSymbols { get; set; }
-
 		public string CompiledEntitlements { get; set; }
-
-		[Required]
-		public bool Debug { get; set; }
 
 		[Required]
 		public bool EnableBitcode { get; set; }
@@ -88,25 +75,10 @@ namespace Xamarin.iOS.Tasks
 		[Required]
 		public string ExecutableName { get; set; }
 
-		public string ExtraArgs { get; set; }
-
 		[Required]
 		public bool FastDev { get; set; }
-
-		[Required]
-		public string HttpClientHandler { get; set; }
-
-		public string I18n { get; set; }
-
-		public string IntermediateOutputPath { get; set; }
-
-		[Required]
-		public bool IsAppExtension { get; set; }
-
+		
 		public ITaskItem[] LinkDescriptions { get; set; }
-
-		[Required]
-		public bool EnableSGenConc { get; set; }
 
 		public string Interpreter { get; set; }
 
@@ -114,49 +86,13 @@ namespace Xamarin.iOS.Tasks
 		public bool LinkerDumpDependencies { get; set; }
 
 		[Required]
-		public string LinkMode { get; set; }
-
-		[Required]
-		public ITaskItem MainAssembly { get; set; }
-
-		public ITaskItem[] NativeReferences { get; set; }
-
-		// Note: This property is used by XVS in order to calculate the Mac-equivalent paths for the MainAssembly and possibly other properties.
-		[Required]
-		public string OutputPath { get; set; }
-
-		[Required]
-		public bool Profiling { get; set; }
-
-		[Required]
 		public string ProjectDir { get; set; }
-
-		[Required]
-		public ITaskItem[] References { get; set; }
-
-		[Required]
-		public string ResponseFilePath { get; set; }
 
 		[Required]
 		public bool SdkIsSimulator { get; set; }
 
 		[Required]
-		public string SdkRoot {	get; set; }
-
-		[Required]
-		public string SdkVersion { get; set; }
-
-		[Required]
 		public string SymbolsList { get; set; }
-
-		public string TargetFrameworkIdentifier { get { return TargetFramework.Identifier; } }
-
-		public TargetFramework TargetFramework { get { return TargetFramework.Parse (TargetFrameworkMoniker); } }
-
-		public string TargetFrameworkVersion { get { return TargetFramework.Version.ToString (); } }
-
-		[Required]
-		public string TargetFrameworkMoniker { get; set; }
 
 		[Required]
 		public bool UseLlvm { get; set; }
@@ -166,8 +102,6 @@ namespace Xamarin.iOS.Tasks
 
 		[Required]
 		public bool UseThumb { get; set; }
-
-		public int Verbosity { get; set; }
 
 		[Required]
 		public ITaskItem[] AppExtensionReferences { get; set; }
@@ -189,22 +123,8 @@ namespace Xamarin.iOS.Tasks
 
 		#endregion
 
-		public ApplePlatform Framework {
-			get { return PlatformFrameworkHelper.GetFramework (TargetFrameworkMoniker); }
-		}
-
 		protected override string ToolName {
 			get { return "mtouch"; }
-		}
-
-		protected override string GenerateFullPathToTool ()
-		{
-			if (!string.IsNullOrEmpty (ToolPath))
-				return Path.Combine (ToolPath, ToolExe);
-
-			var path = Path.Combine (IPhoneSdks.MonoTouch.BinDir, ToolExe);
-
-			return File.Exists (path) ? path : ToolExe;
 		}
 
 		protected override int ExecuteTool (string pathToTool, string responseFileCommands, string commandLineCommands)
@@ -354,11 +274,10 @@ namespace Xamarin.iOS.Tasks
 
 		protected override string GenerateCommandLineCommands ()
 		{
-			var args = new CommandLineArgumentBuilder ();
+			var args = GenerateCommandLineArguments ();
 			List<string> unescapedArgs = new List<string> ();
 
 			TargetArchitecture architectures;
-			bool msym;
 
 			if (string.IsNullOrEmpty (Architectures) || !Enum.TryParse (Architectures, out architectures))
 				architectures = TargetArchitecture.Default;
@@ -367,13 +286,7 @@ namespace Xamarin.iOS.Tasks
 				Log.LogError ("Target architecture ARMv6 is no longer supported in Xamarin.iOS. Please select a supported architecture.");
 				return null;
 			}
-
-			if (!string.IsNullOrEmpty (IntermediateOutputPath)) {
-				Directory.CreateDirectory (IntermediateOutputPath);
-
-				args.AddQuotedLine ($"--cache={Path.GetFullPath (IntermediateOutputPath)}");
-			}
-
+			
 			args.AddQuotedLine ((SdkIsSimulator ? "--sim=" : "--dev=") + Path.GetFullPath (AppBundleDir));
 
 			if (AppleSdkSettings.XcodeVersion.Major >= 5 && IPhoneSdks.MonoTouch.Version.CompareTo (new IPhoneSdkVersion (6, 3, 7)) < 0)
@@ -387,18 +300,10 @@ namespace Xamarin.iOS.Tasks
 			if (Debug) {
 				if (FastDev && !SdkIsSimulator)
 					args.AddLine ("--fastdev");
-
-				args.AddLine ("--debug");
 			}
-
-			if (Profiling)
-				args.AddLine ("--profiling");
 
 			if (LinkerDumpDependencies)
 				args.AddLine ("--linkerdumpdependencies");
-
-			if (EnableSGenConc)
-				args.AddLine ("--sgen-conc");
 
 			if (!string.IsNullOrEmpty (Interpreter))
 				args.AddLine ($"--interpreter={Interpreter}");
@@ -407,11 +312,6 @@ namespace Xamarin.iOS.Tasks
 			case "sdkonly": args.AddLine ("--linksdkonly"); break;
 			case "none":    args.AddLine ("--nolink"); break;
 			}
-
-			if (!string.IsNullOrEmpty (I18n))
-				args.AddQuotedLine ($"--i18n={I18n}");
-
-			args.AddQuotedLine ($"--sdkroot={SdkRoot}");
 
 			args.AddQuotedLine ($"--sdk={SdkVersion}");
 
@@ -443,9 +343,6 @@ namespace Xamarin.iOS.Tasks
 					throw new InvalidOperationException (string.Format ("Bitcode is currently not supported on {0}.", Framework));
 				}
 			}
-
-			if (!string.IsNullOrEmpty (HttpClientHandler))
-				args.AddLine ($"--http-message-handler={HttpClientHandler}");
 
 			string thumb = UseThumb && UseLlvm ? "+thumb2" : "";
 			string llvm = UseLlvm ? "+llvm" : "";
@@ -497,9 +394,6 @@ namespace Xamarin.iOS.Tasks
 
 			// don't have mtouch generate the dsyms...
 			args.AddLine ("--dsym=no");
-
-			if (!string.IsNullOrEmpty (ArchiveSymbols) && bool.TryParse (ArchiveSymbols.Trim (), out msym))
-				args.AddLine ($"--msym={(msym ? "yes" : "no")}");
 
 			var gcc = new GccOptions ();
 
@@ -592,44 +486,11 @@ namespace Xamarin.iOS.Tasks
 				args.AddQuotedLine ($"--app-extension={Path.GetFullPath (ext.ItemSpec)}");
 
 			args.AddLine ($"--target-framework={TargetFrameworkIdentifier},{TargetFrameworkVersion}");
-
-			args.AddQuotedLine ($"--root-assembly={Path.GetFullPath (MainAssembly.ItemSpec)}");
-
-			var v = VerbosityUtils.Merge (ExtraArgs, (LoggerVerbosity) Verbosity);
-			if (v.Length > 0) {
-				foreach (var arg in v)
-					args.AddLine (arg);
-			}
-
+			
 			if (!string.IsNullOrWhiteSpace (License))
 				args.AddLine ($"--license={License}");
 
-			// Generate a response file
-			var responseFile = Path.GetFullPath (ResponseFilePath);
-
-			if (File.Exists (responseFile))
-				File.Delete (responseFile);
-
-			try {
-				using (var fs = File.Create (responseFile)) {
-					using (var writer = new StreamWriter (fs))
-						writer.Write (args);
-				}
-			} catch (Exception ex) {
-				Log.LogWarning ("Failed to create response file '{0}': {1}", responseFile, ex);
-			}
-
-			// Some arguments can not safely go in the response file and are 
-			// added separately. They must go _after_ the response file
-			// as they may override options passed in the response file
-			var actualArgs = new CommandLineArgumentBuilder ();
-
-			actualArgs.AddQuoted ($"@{responseFile}");
-
-			foreach (var arg in unescapedArgs)
-				actualArgs.AddQuoted (arg);
-
-			return actualArgs.ToString ();
+			return CreateResponseFile (args, unescapedArgs);
 		}
 
 		static bool IsFrameworkItem (ITaskItem item)

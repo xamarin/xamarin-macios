@@ -87,6 +87,7 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
 		<EnableSGenConc Condition="'$(EnableSGenConc)' == ''">false</EnableSGenConc>
 		<AotScope Condition="'$(AotScope)' == ''">None</AotScope>
 		<ArchiveOnBuild Condition="'$(ArchiveOnBuild)' == ''">False</ArchiveOnBuild>
+		<Profiling Condition="'$(MtouchProfiling)' == ''">False</Profiling>
 	</PropertyGroup>
 
 	<PropertyGroup>
