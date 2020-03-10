@@ -5,6 +5,9 @@
 #     --configure-flags=<flags>: Flags to pass to --configure. Optional
 #     --timeout=<timeout>: Time out the build after <timeout> seconds.
 
+
+env | sort
+
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 WORKSPACE=$(pwd)
 
@@ -123,6 +126,7 @@ fi
 # Enable dotnet bits on the bots
 CONFIGURE_FLAGS="$CONFIGURE_FLAGS --enable-dotnet"
 
+dotnet help
 make reset
 make git-clean-all
 make print-versions
