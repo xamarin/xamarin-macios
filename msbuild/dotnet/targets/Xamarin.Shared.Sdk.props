@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.props" />
+
+  <PropertyGroup>
+    <_TFI Condition=" '$(_PlatformName)' == 'iOS' ">Xamarin.iOS</_TFI>
+    <_TFI Condition=" '$(_PlatformName)' == 'tvOS' ">Xamarin.TVOS</_TFI>
+    <_TFI Condition=" '$(_PlatformName)' == 'watchOS' ">Xamarin.WatchOS</_TFI>
+    <_TFI Condition=" '$(_PlatformName)' == 'macOS' ">Xamarin.Mac</_TFI>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <UsingXamarinSdk>true</UsingXamarinSdk>
+
+    <!--
+      Terminology:
+      * Framework refers to XI/XM when installed into /Library/Frameworks
+      * Sdk refers to the XI/XM when installed into /usr/local/share/dotnet/sdk/<version>/Sdks
+    -->
+
+    <!-- This is the .net 5 location of the Xamarin.Sdk (/usr/local/share/dotnet/sdk/<version>/Sdks/Xamarin.[iOS/tvOS/watchOS/macOS].Sdk) -->
+    <XamarinSdkRootDirectory>$([MSBuild]::NormalizePath('$(MSBuildThisFileDirectory)', '..'))\</XamarinSdkRootDirectory>
+
+    <!-- Opt-in to use the version of XI/XM installed into the system -->
+    <XamarinUseSystemInstall Condition=" '$(XamarinUseSystemInstall)' == '' ">false</XamarinUseSystemInstall>
+    <MD_MTOUCH_SDK_ROOT      Condition=" '$(XamarinUseSystemInstall)' == 'false' And '$(_PlatformName)' != 'macOS' And '$(MD_MTOUCH_SDK_ROOT)' == ''      ">$(XamarinSdkRootDirectory)</MD_MTOUCH_SDK_ROOT>
+    <XamarinMacFrameworkRoot Condition=" '$(XamarinUseSystemInstall)' == 'false' And '$(_PlatformName)' == 'macOS' And '$(XamarinMacFrameworkRoot)' == '' ">$(XamarinSdkRootDirectory)</XamarinMacFrameworkRoot>
+
+    <!-- This is the old location of the legacy Xamarin Sdk -->
+    <!-- For iOS, first check MD_MTOUCH_SDK_ROOT and then MonoTouchSdkRoot -->
+    <MonoTouchSdkRoot Condition=" '$(MonoTouchSdkRoot)' == '' And '$(MD_MTOUCH_SDK_ROOT)' != '' ">$(MD_MTOUCH_SDK_ROOT)</MonoTouchSdkRoot>
+    <MonoTouchSdkRoot Condition=" '$(MonoTouchSdkRoot)' == '' And Exists('/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin') ">/Library/Frameworks/Xamarin.iOS.framework/Versions/Current</MonoTouchSdkRoot>
+    <!-- for macOS, check XamarinMacFrameworkRoot only -->
+    <XamarinMacFrameworkRoot Condition=" '$(XamarinMacFrameworkRoot)' == '' ">/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/</XamarinMacFrameworkRoot>
+
+    <!-- Have one variable for either MonoTouchSdkRoot and XamarinMacFrameworkRoot, it simplifies our code a bit -->
+    <XamarinFrameworkRoot Condition=" '$(_PlatformName)' == 'macOS' ">$(XamarinMacFrameworkRoot)</XamarinFrameworkRoot>
+    <XamarinFrameworkRoot Condition=" '$(_PlatformName)' != 'macOS' ">$(MonoTouchSdkRoot)</XamarinFrameworkRoot>
+
+    <!-- We should always override the framework path so that we resolves to our own mscorlib.dll -->
+    <TargetFrameworkRootPath Condition=" '$(TargetFrameworkRootPath)' == '' ">$(XamarinSdkRootDirectory)lib</TargetFrameworkRootPath>
+    <FrameworkPathOverride Condition=" '$(FrameworkPathOverride)' == '' ">$(XamarinSdkRootDirectory)lib\$(_TFI)\v1.0</FrameworkPathOverride>
+
+    <XamarinFrameworkBinDir Condition=" '$(_PlatformName)' == 'macOS' And '$(XamarinUseSystemInstall)' == 'false' ">$(XamarinFrameworkRoot)/tools/bin</XamarinFrameworkBinDir>
+    <XamarinFrameworkBinDir Condition=" '$(_PlatformName)' == 'macOS' And '$(XamarinUseSystemInstall)' != 'false' ">$(XamarinFrameworkRoot)/bin</XamarinFrameworkBinDir>
+
+    <!-- Enable nuget package conflict resolution -->
+    <ResolveAssemblyConflicts>true</ResolveAssemblyConflicts>
+
+    <!-- We want to set OutputType=Library automatically for app extensions
+    and watch apps, which means we need to be able to detect if the project
+    sets it or not (so that we don't override anything the user sets). A
+    complication is that at this point OutputType=Library by default (set by
+    Sdk.props at the top of this file), so we can't check if OutputType=''.
+    Instead set OutputType to a sentinent value we can check for later -->
+    <OutputType>DefaultOutputType</OutputType>
+  </PropertyGroup>
+
+  <!-- Defaults -->
+
+  <!-- Defaults shared between all platforms (iOS/macOS/watchOS/tvOS) -->
+  <PropertyGroup>
+    <RootNamespace>$(MSBuildProjectName)</RootNamespace>
+    <AssemblyName>$(MSBuildProjectName)</AssemblyName>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineConstants>DEBUG</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+
+  <!-- Defaults specific to iOS/watchOS/tvOS -->
+  <PropertyGroup Condition=" '$(_PlatformName)' != 'macOS' ">
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
+    <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
+
+    <!-- We cannot use $(Platform) in conditions on props, because VS interprets them as valid platforms
+       for the current project and makes them available for solution configurations, which fails miserably
+       for iOS class library projects. By using another property name, we "opt out" of this "smart" behavior -->
+    <_Platform>$(Platform)</_Platform>
+
+    <!-- Set the TargeDeviceArchitecture value. -->
+    <!-- Fall back to old behavior, where the target device architecture was specified using the Platform property -->
+    <TargetDeviceArchitecture Condition="'$(TargetDeviceArchitecture)' == '' And '$(_Platform)' == 'iPhoneSimulator'">Simulator</TargetDeviceArchitecture>
+    <TargetDeviceArchitecture Condition="'$(TargetDeviceArchitecture)' == '' And '$(_Platform)' == 'iPhone'">Device</TargetDeviceArchitecture>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(_PlatformName)' != 'macOS' And '$(Configuration)' == 'Debug' ">
+    <MtouchDebug>true</MtouchDebug>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(_PlatformName)' != 'macOS' And '$(Configuration)' == 'Release' ">
+  </PropertyGroup>
+
+  <!-- Defaults specific to macOS -->
+  <PropertyGroup Condition=" '$(_PlatformName)' == 'macOS' ">
+    <EnableCodeSigning>false</EnableCodeSigning>
+    <EnablePackageSigning>false</EnablePackageSigning>
+    <IncludeMonoRuntime>true</IncludeMonoRuntime>
+  </PropertyGroup>
+
+  <!-- Default item includes (globs and implicit references) -->
+  <Import Project="Xamarin.$(_PlatformName).Sdk.DefaultItems.props" />
+</Project>

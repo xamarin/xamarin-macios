@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Xamarin.iOS.Sdk">
+  <PropertyGroup>
+    <TargetFramework>xamarinios10</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetDeviceArchitecture)' == 'Device' And '$(Configuration)' == 'Debug' ">
+    <MtouchFastDev>true</MtouchFastDev>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetDeviceArchitecture)' == 'Simulator' ">
+    <CodesignEntitlements>None</CodesignEntitlements>
+    <MtouchArch>i386, x86_64</MtouchArch>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetDeviceArchitecture)' == 'Device' ">
+    <MtouchArch>ARMv7, ARM64</MtouchArch>
+  </PropertyGroup>
+
+  <!-- No automatic inclusion since these files are outside of the project directory -->
+  <ItemGroup>
+    <ImageAsset Include="..\MySingleView\Resources\Images.xcassets\AppIcons.appiconset\Contents.json">
+      <Link>Assets.xcassets\AppIcon.appiconset\Contents.json</Link>
+    </ImageAsset>
+    <ImageAsset Include="..\MySingleView\Resources\Images.xcassets\AppIcons.appiconset\Icon.png">
+      <Link>Assets.xcassets\AppIcon.appiconset\Icon.png</Link>
+    </ImageAsset>
+    <ImageAsset Include="..\MySingleView\Resources\Images.xcassets\AppIcons.appiconset\Icon%402x.png">
+      <Link>Assets.xcassets\AppIcon.appiconset\Icon%402x.png</Link>
+    </ImageAsset>
+    <ImageAsset Include="..\MySingleView\Resources\Images.xcassets\AppIcons.appiconset\Icon-60%402x.png">
+      <Link>Assets.xcassets\AppIcon.appiconset\Icon-60%402x.png</Link>
+    </ImageAsset>
+    <ImageAsset Include="..\MySingleView\Resources\Images.xcassets\AppIcons.appiconset\Icon-Small.png">
+      <Link>Assets.xcassets\AppIcon.appiconset\Icon-Small.png</Link>
+    </ImageAsset>
+    <ImageAsset Include="..\MySingleView\Resources\Images.xcassets\AppIcons.appiconset\Icon-Small%402x.png">
+      <Link>Assets.xcassets\AppIcon.appiconset\Icon-Small%402x.png</Link>
+    </ImageAsset>
+    <ImageAsset Include="..\MySingleView\Resources\Images.xcassets\AppIcons.appiconset\Icon-Small-40%402x.png">
+      <Link>Assets.xcassets\AppIcon.appiconset\Icon-Small-40%402x.png</Link>
+    </ImageAsset>
+  </ItemGroup>
+</Project>

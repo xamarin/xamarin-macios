@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Xamarin.watchOS.Sdk">
+  <PropertyGroup>
+    <TargetFramework>xamarinwatchos10</TargetFramework>
+    <IsWatchOSApp>true</IsWatchOSApp>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetDeviceArchitecture)' == 'Simulator' ">
+    <CodesignEntitlements>None</CodesignEntitlements>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MyWatchKit2Extension\MyWatchKit2Extension.dotnet.csproj">
+      <Name>MyWatchKit2Extension</Name>
+      <IsAppExtension>True</IsAppExtension>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

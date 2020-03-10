@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition=" '$(UsingNETSdkDefaults)' == 'true'">
+    <!-- Enable default inclusion behavior unless told otherwise -->
+    <EnableDefaultItems Condition=" '$(EnableDefaultItems)' == '' ">true</EnableDefaultItems>
+    <EnableDefaultXamarinAssetCatalogItems Condition=" '$(EnableDefaultXamarinAssetCatalogItems)' == '' ">$(EnableDefaultItems)</EnableDefaultXamarinAssetCatalogItems>
+    <EnableDefaultXamarinAtlasTextureItems Condition=" '$(EnableDefaultXamarinAtlasTextureItems)' == '' ">$(EnableDefaultItems)</EnableDefaultXamarinAtlasTextureItems>
+    <EnableDefaultXamarinStoryboardItems Condition=" '$(EnableDefaultXamarinStoryboardItems)' == '' ">$(EnableDefaultItems)</EnableDefaultXamarinStoryboardItems>
+    <EnableDefaultXamarinPlistItems Condition=" '$(EnableDefaultXamarinPlistItems)' == '' ">$(EnableDefaultItems)</EnableDefaultXamarinPlistItems>
+    <EnableDefaultXamarinITunesArtworkItems Condition=" '$(EnableDefaultXamarinITunesArtworkItems)' == '' ">$(EnableDefaultItems)</EnableDefaultXamarinITunesArtworkItems>
+    <EnableDefaultXamarinCoreMLModelItems Condition=" '$(EnableDefaultXamarinCoreMLModelItems)' == '' ">$(EnableDefaultItems)</EnableDefaultXamarinCoreMLModelItems>
+    <EnableDefaultXamarinMetalItems Condition=" '$(EnableDefaultXamarinMetalItems)' == '' ">$(EnableDefaultItems)</EnableDefaultXamarinMetalItems>
+    <EnableDefaultXamarinSceneKitAssetItems Condition=" '$(EnableDefaultXamarinSceneKitAssetItems)' == '' ">$(EnableDefaultItems)</EnableDefaultXamarinSceneKitAssetItems>
+    <EnableDefaultXamarinBindingItems Condition=" '$(EnableDefaultXamarinBindingItems)' == '' And '$(IsBindingProject)' == 'true'">true</EnableDefaultXamarinBindingItems>
+
+    <!-- Don't include default Compile items for binding projects, because that would pick up ApiDefinition.cs and StructsAndEnums.cs -->
+    <EnableDefaultCompileItems Condition=" '$(EnableDefaultCompileItems)' == '' And '$(IsBindingProject)' == 'true' ">false</EnableDefaultCompileItems>
+  </PropertyGroup>
+
+  <!-- Defaults -->
+
+  <!-- Default Asset Catalog file inclusion -->
+  <ItemGroup Condition="'$(EnableDefaultXamarinAssetCatalogItems)' == 'true' ">
+    <ImageAsset Include="**\*.xcassets\**\*.png;**\*.xcassets\*\*.jpg;**\*.xcassets\**\*.json" Exclude="$(DefaultItemExcludes);$(DefaultXamarinAssetCatalogItemExcludes)">
+      <Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
+      <Visible>false</Visible>
+      <IsDefaultItem>true</IsDefaultItem>
+    </ImageAsset>
+  </ItemGroup>
+
+  <!-- Default Storyboard file inclusion -->
+  <ItemGroup Condition=" '$(EnableDefaultXamarinStoryboardItems)' == 'true' ">
+    <InterfaceDefinition Include="**\*.storyboard;**\*.xib" Exclude="$(DefaultItemExcludes);$(DefaultXamarinStoryboardItemExcludes)">
+      <Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
+      <IsDefaultItem>true</IsDefaultItem>
+    </InterfaceDefinition>
+  </ItemGroup>
+
+  <!-- Default Atlas Texture file inclusion -->
+  <ItemGroup Condition=" '$(EnableDefaultXamarinAtlasTextureItems)' == 'true' ">
+    <AtlasTexture Include="**\*.atlas\*.png" Exclude="$(DefaultItemExcludes);$(DefaultXamarinAtlasTextureItemExcludes)">
+      <Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
+      <IsDefaultItem>true</IsDefaultItem>
+    </AtlasTexture>
+  </ItemGroup>
+
+  <!-- Default plist file inclusion -->
+  <ItemGroup Condition="'$(EnableDefaultXamarinPlistItems)' == 'true' ">
+    <None Include="*.plist" Exclude="$(DefaultItemExcludes);$(DefaultXamarinPlistItemExcludes)">
+      <Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
+      <IsDefaultItem>true</IsDefaultItem>
+    </None>
+  </ItemGroup>
+
+  <!-- Default iTunesArtwork inclusion -->
+  <ItemGroup Condition="'$(EnableDefaultXamarinITunesArtworkItems)' == 'true' ">
+    <ITunesArtwork Include="iTunesArtwork" Exclude="$(DefaultItemExcludes);$(DefaultXamarinITunesArtworkItemExcludes)" Condition="Exists ('iTunesArtwork')">
+      <Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
+      <IsDefaultItem>true</IsDefaultItem>
+    </ITunesArtwork>
+    <ITunesArtwork Include="iTunesArtwork%402x" Exclude="$(DefaultItemExcludes);$(DefaultXamarinITunesArtworkItemExcludes)" Condition="Exists ('iTunesArtwork%402x')">
+      <Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
+      <IsDefaultItem>true</IsDefaultItem>
+    </ITunesArtwork>
+  </ItemGroup>
+
+  <!-- Default CoreMLModel inclusion -->
+  <ItemGroup Condition="'$(EnableDefaultXamarinCoreMLModelItems)' == 'true' ">
+    <CoreMLModel Include="**\*.mlmodel" Exclude="$(DefaultItemExcludes);$(DefaultXamarinCoreMLModelItemExcludes)">
+      <Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
+      <IsDefaultItem>true</IsDefaultItem>
+    </CoreMLModel>
+  </ItemGroup>
+
+  <!-- Default Metal inclusion -->
+  <ItemGroup Condition="'$(EnableDefaultXamarinMetalItems)' == 'true' ">
+    <Metal Include="**\*.metal" Exclude="$(DefaultItemExcludes);$(DefaultXamarinMetalItemExcludes)">
+      <Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
+      <IsDefaultItem>true</IsDefaultItem>
+    </Metal>
+  </ItemGroup>
+
+  <!-- Default SceneKit assets inclusion -->
+  <ItemGroup Condition="'$(EnableDefaultXamarinSceneKitAssetItems)' == 'true' ">
+    <SceneKitAsset Include="**\*.scnassets\*" Exclude="$(DefaultItemExcludes);$(DefaultXamarinSceneKitAssetItemExcludes)">
+      <IsDefaultItem>true</IsDefaultItem>
+    </SceneKitAsset>
+  </ItemGroup>
+
+  <!-- Default includes for binding projects: StructsAndEnums.cs and ApiDefinition.cs -->
+  <ItemGroup Condition="'$(EnableDefaultXamarinBindingItems)' == 'true' ">
+    <ObjcBindingCoreSource Condition="Exists ('StructsAndEnums.cs')" Include="StructsAndEnums.cs">
+      <IsDefaultItem>true</IsDefaultItem>
+    </ObjcBindingCoreSource>
+    <ObjcBindingApiDefinition Condition="Exists ('ApiDefinition.cs')" Include="ApiDefinition.cs">
+      <IsDefaultItem>true</IsDefaultItem>
+    </ObjcBindingApiDefinition>
+  </ItemGroup>
+
+   <!-- Default References -->
+  <ItemGroup Condition="'$(DisableImplicitFrameworkReferences)' != 'true'">
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Xamarin.iOS" Condition="'$(_PlatformName)' == 'iOS'" />
+    <Reference Include="Xamarin.TVOS" Condition="'$(_PlatformName)' == 'tvOS'" />
+    <Reference Include="Xamarin.WatchOS" Condition="'$(_PlatformName)' == 'watchOS'" />
+    <Reference Include="Xamarin.Mac" Condition="'$(_PlatformName)' == 'macOS'" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="$(MSBuildProjectDirectory)\Resources\" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,23 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySpriteKitGame", "MySpriteKitGame.csproj", "{724D2300-FE99-4BED-B9FD-0ABEAA27A8F3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyClassLibrary", "..\MyClassLibrary\MyClassLibrary.csproj", "{67D699F3-DC1B-4753-AE23-F36D46746856}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{724D2300-FE99-4BED-B9FD-0ABEAA27A8F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{724D2300-FE99-4BED-B9FD-0ABEAA27A8F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{724D2300-FE99-4BED-B9FD-0ABEAA27A8F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{724D2300-FE99-4BED-B9FD-0ABEAA27A8F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67D699F3-DC1B-4753-AE23-F36D46746856}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67D699F3-DC1B-4753-AE23-F36D46746856}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67D699F3-DC1B-4753-AE23-F36D46746856}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67D699F3-DC1B-4753-AE23-F36D46746856}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

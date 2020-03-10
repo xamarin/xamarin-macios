@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <NoStdLib>true</NoStdLib>
+    <DisableExtraReferences>true</DisableExtraReferences>
+  </PropertyGroup>
+
+  <!-- Set some default values. These values can't be set in Sdk.props, because they're evaluated based on the MtouchArch property, which is not set yet in Sdk.props -->
+  <PropertyGroup Condition=" '$(_PlatformName)' != 'macOS' ">
+    <MtouchArch Condition="'$(MtouchArch)' == '' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS') And '$(TargetDeviceArchitecture)' == 'Simulator'">x86_64</MtouchArch>
+    <MtouchArch Condition="'$(MtouchArch)' == '' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS') And '$(TargetDeviceArchitecture)' == 'Device'">ARM64</MtouchArch>
+    <MtouchArch Condition="'$(MtouchArch)' == '' And '$(_PlatformName)' == 'watchOS' And '$(TargetDeviceArchitecture)' == 'Simulator'">i386</MtouchArch>
+    <MtouchArch Condition="'$(MtouchArch)' == '' And '$(_PlatformName)' == 'watchOS' And '$(TargetDeviceArchitecture)' == 'Device' ">ARM64_32</MtouchArch>
+    <MtouchUseLlvm Condition="'$(MtouchUseLlvm)' == '' And ('$(_PlatformName)' == 'watchOS' Or '$(_PlatformName)' == 'tvOS') And '$(TargetDeviceArchitecture)' == 'Device' And '$(Configuration)' == 'Release' ">true</MtouchUseLlvm>
+
+    <TargetDeviceArchitecture Condition="'$(TargetDeviceArchitecture)' == '' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS')    And '$(MtouchArch)' == 'x86_64'">Simulator</TargetDeviceArchitecture>
+    <TargetDeviceArchitecture Condition="'$(TargetDeviceArchitecture)' == '' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'watchOS') And '$(MtouchArch)' == 'i386'">Simulator</TargetDeviceArchitecture>
+    <TargetDeviceArchitecture Condition="'$(TargetDeviceArchitecture)' == '' And ('$(_PlatformName)' == 'iOS')                                    And '$(MtouchArch)' == 'i386, x86_64'">Simulator</TargetDeviceArchitecture>
+    <TargetDeviceArchitecture Condition="'$(TargetDeviceArchitecture)' == '' And ('$(_PlatformName)' == 'iOS')                                    And '$(MtouchArch)' == 'ARMv7'">Device</TargetDeviceArchitecture>
+    <TargetDeviceArchitecture Condition="'$(TargetDeviceArchitecture)' == '' And ('$(_PlatformName)' == 'iOS')                                    And '$(MtouchArch)' == 'ARMv7s'">Device</TargetDeviceArchitecture>
+    <TargetDeviceArchitecture Condition="'$(TargetDeviceArchitecture)' == '' And ('$(_PlatformName)' == 'watchOS')                                And '$(MtouchArch)' == 'ARMv7k'">Device</TargetDeviceArchitecture>
+    <TargetDeviceArchitecture Condition="'$(TargetDeviceArchitecture)' == '' And ('$(_PlatformName)' == 'watchOS')                                And '$(MtouchArch)' == 'ARM64_32'">Device</TargetDeviceArchitecture>
+    <TargetDeviceArchitecture Condition="'$(TargetDeviceArchitecture)' == '' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS')    And '$(MtouchArch)' == 'ARM64'">Device</TargetDeviceArchitecture>
+    <TargetDeviceArchitecture Condition="'$(TargetDeviceArchitecture)' == '' And ('$(_PlatformName)' == 'iOS')                                    And '$(MtouchArch)' == 'ARMv7, ARMv7s'">Device</TargetDeviceArchitecture>
+    <TargetDeviceArchitecture Condition="'$(TargetDeviceArchitecture)' == '' And ('$(_PlatformName)' == 'iOS')                                    And '$(MtouchArch)' == 'ARMv7, ARM64'">Device</TargetDeviceArchitecture>
+    <TargetDeviceArchitecture Condition="'$(TargetDeviceArchitecture)' == '' And ('$(_PlatformName)' == 'iOS')                                    And '$(MtouchArch)' == 'ARMv7s, ARM64'">Device</TargetDeviceArchitecture>
+    <TargetDeviceArchitecture Condition="'$(TargetDeviceArchitecture)' == '' And ('$(_PlatformName)' == 'iOS')                                    And '$(MtouchArch)' == 'ARMv7, ARMv7s, ARM64'">Device</TargetDeviceArchitecture>
+
+    <ComputedPlatform Condition="'$(TargetDeviceArchitecture)' == 'Device'">iPhone</ComputedPlatform>
+    <ComputedPlatform Condition="'$(TargetDeviceArchitecture)' == 'Simulator'">iPhoneSimulator</ComputedPlatform>
+  </PropertyGroup>
+
+  <!-- Figure out the app bundle extension -->
+  <PropertyGroup Condition="'$(AppBundleExtension)' == ''">
+    <!-- The extension for app extensions is .appex -->
+    <AppBundleExtension Condition="'$(IsAppExtension)' == 'true'">.appex</AppBundleExtension>
+    <!-- Otherwise use .app as the extension -->
+    <AppBundleExtension Condition="'$(AppBundleExtension)' == ''">.app</AppBundleExtension>
+  </PropertyGroup>
+
+  <!-- OutputType is Library if we're building a binding project, an app extension or a watch app, otherwise it's Exe (unless it's already set) -->
+  <PropertyGroup Condition="'$(OutputType)' == '' Or '$(OutputType)' == 'DefaultOutputType'">
+    <OutputType Condition="'$(IsBindingProject)' == 'true' Or '$(IsAppExtension)' == 'true' Or '$(IsWatchOSApp)' == 'true'">Library</OutputType>
+    <OutputType Condition="'$(OutputType)' == '' Or '$(OutputType)' == 'DefaultOutputType'">Exe</OutputType>
+  </PropertyGroup>
+
+  <!-- Figure out what kind of project we are -->
+  <PropertyGroup>
+    <!-- Are we a project that outputs a bundle? This is an executable or app extension project -->
+    <IsAppBundle Condition="'$(IsAppBundle)' == '' And ('$(OutputType)' == 'Exe' Or '$(IsAppExtension)' == 'true')">true</IsAppBundle>
+    <IsAppBundle Condition="'$(IsAppBundle)' == ''">false</IsAppBundle>
+  </PropertyGroup>
+
+  <!-- Defaults specific to iOS -->
+  <PropertyGroup Condition=" '$(_PlatformName)' == 'iOS' ">
+  </PropertyGroup>
+
+  <!-- Defaults specific to tvOS -->
+  <PropertyGroup Condition=" '$(_PlatformName)' == 'tvOS' ">
+    <MtouchEnableBitcode Condition=" '$(MtouchEnableBitcode)' == '' And '$(TargetDeviceArchitecture)' == 'Device' And '$(Configuration)' == 'Release' ">true</MtouchEnableBitcode>
+  </PropertyGroup>
+
+  <!-- Defaults specific to watchOS -->
+  <PropertyGroup Condition=" '$(_PlatformName)' == 'watchOS' ">
+    <MtouchEnableBitcode Condition=" '$(MtouchEnableBitcode)' == '' And '$(TargetDeviceArchitecture)' == 'Device' And '$(Configuration)' == 'Release' And '$(IsAppExtension)' == 'true' ">true</MtouchEnableBitcode>
+  </PropertyGroup>
+
+  <!-- Defaults specific to macOS -->
+  <PropertyGroup Condition=" '$(_PlatformName)' == 'macOS' And '$(IsAppBundle)' == 'true' ">
+    <EnableCodeSigning Condition=" '$(EnableCodeSigning)' == ''">false</EnableCodeSigning>
+    <EnablePackageSigning Condition=" '$(EnablePackageSigning)' == ''">false</EnablePackageSigning>
+    <IncludeMonoRuntime Condition=" '$(IncludeMonoRuntime)' == ''">true</IncludeMonoRuntime>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(_PlatformName)' == 'macOS' And '$(Configuration)' == 'Debug' And '$(IsAppBundle)' == 'true' ">
+    <CreatePackage Condition=" '$(OutputType)' == 'Exe' And '$(CreatePackage)' == '' ">false</CreatePackage>
+    <LinkMode Condition=" '$(LinkMode)' == '' ">None</LinkMode>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(_PlatformName)' == 'macOS' And '$(Configuration)' == 'Release' And '$(IsAppBundle)' == 'true' ">
+    <CreatePackage Condition=" '$(OutputType)' == 'Exe' And '$(CreatePackage)' == '' ">true</CreatePackage>
+    <LinkMode Condition=" '$(LinkMode)' == '' ">SdkOnly</LinkMode>
+  </PropertyGroup>
+
+  <Target Name="_ValidateXamarinConfiguration" Condition="'$(IsAppBundle)' == 'true'">
+    <Error Text="The project file must specify a value for the MtouchArch or the TargetDeviceArchitecture property. Platform: $(Platform)" Condition="'$(MtouchArch)' == '' And '$(_PlatformName)' != 'macOS' "/>
+    <Error Text="The project file does not specify a valid value for the MtouchArch property ($(MtouchArch)). Valid values are: i386, x86_64, ARMv7, ARMv7s and ARM64." Condition="'$(TargetDeviceArchitecture)' == '' And '$(_PlatformName)' == 'iOS'"/>
+    <Error Text="The project file does not specify a valid value for the MtouchArch property ($(MtouchArch)). Valid values are: x86_64 and ARM64."                      Condition="'$(TargetDeviceArchitecture)' == '' And '$(_PlatformName)' == 'tvOS'"/>
+    <Error Text="The project file does not specify a valid value for the MtouchArch property ($(MtouchArch)). Valid values are: i386, ARMv7k and ARM64_32."             Condition="'$(TargetDeviceArchitecture)' == '' And '$(_PlatformName)' == 'watchOS'"/>
+    <Error Text="The project file does not specify a valid value for the TargetDeviceArchitecture property ($(TargetDeviceArchitecture)). Valid values are: Simulator and Device." Condition="'$(TargetDeviceArchitecture)' != 'Simulator' And '$(TargetDeviceArchitecture)' != 'Device' And '$(_PlatformName)' != 'macOS' "/>
+    <Error Text="Invalid language: $(_ProjectLanguage). Valid languages: C# and F#." Condition=" '$(_ProjectLanguage)' == '' " />
+  </Target>
+
+  <PropertyGroup Condition=" '$(TargetDeviceArchitecture)' == 'Simulator' ">
+    <MtouchLink Condition="'$(MtouchLink)' == ''">None</MtouchLink>
+    <CodesignEntitlements Condition="'$(CodesignEntitlements)' == '' And Exists ('$(MSBuildProjectDirectory)\Entitlements.plist')">$(MSBuildProjectDirectory)\Entitlements.plist</CodesignEntitlements>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetDeviceArchitecture)' == 'Device' ">
+    <MtouchLink Condition="'$(MtouchLink)' == ''">SdkOnly</MtouchLink>
+    <CodesignEntitlements Condition="'$(CodesignEntitlements)' == '' And Exists ('$(MSBuildProjectDirectory)\Entitlements.plist')">$(MSBuildProjectDirectory)\Entitlements.plist</CodesignEntitlements>
+    <CodesignKey Condition=" '$(CodesignKey)' == '' And '$(_PlatformName)' != 'macOS' ">iPhone Developer</CodesignKey>
+    <CodesignKey Condition=" '$(CodesignKey)' == '' And '$(_PlatformName)' == 'macOS' ">Mac Developer</CodesignKey>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <IntermediateOutputPath>$(MSBuildProjectDirectory)\bin\$(Platform)\$(Configuration)\$(TargetDeviceArchitecture)\</IntermediateOutputPath>
+    <OutputPath>$(MSBuildProjectDirectory)\bin\$(Platform)\$(Configuration)\$(TargetDeviceArchitecture)\</OutputPath>
+
+    <!-- Make it possible to disable CodesignEntitlements by setting it to 'None' -->
+    <CodesignEntitlements Condition="'$(CodesignEntitlements)' == 'None' "></CodesignEntitlements>
+  </PropertyGroup>
+
+  <ImportGroup Condition="'$(IsMultiTargetingBuild)' != 'true'">
+    <Import Project="..\targets\Xamarin.$(_PlatformName).TargetFrameworkInference.targets" Condition="'$(TargetFramework)' != '' AND !($(TargetFramework.Contains(',')) OR $(TargetFramework.Contains(';')))"/>
+  </ImportGroup>
+
+  <!-- Default item includes (globs and implicit references) -->
+  <Import Project="Xamarin.Shared.Sdk.DefaultItems.targets" />
+
+  <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.targets" />
+
+  <!-- Project types and how do we distinguish between them
+
+                                  OutputType   Custom variable
+    ==================================================================
+    iOS Executable Project        Exe
+    iOS App Extension Project     Library      IsAppExtension
+    iOS Binding Project           Library      IsBindingProject
+    iOS Class Library Project     Library
+
+    tvOS Executable Project       Exe
+    tvOS App Extension Project    Library      IsAppExtension
+    tvOS Binding Project          Library      IsBindingProject
+    tvOS Class Library Project    Library
+
+    watchOS App Project           Library      IsWatchOSApp
+    watchOS App Extension Project Library      IsAppExtension
+    watchOS Binding Project       Library      IsBindingProject
+    watchOS Class Library Project Library
+
+    macOS Executable Project        Exe
+    macOS App Extension Project     Library      IsAppExtension
+    macOS Binding Project           Library      IsBindingProject
+    macOS Class Library Project     Library
+
+  -->
+
+  <PropertyGroup>
+    <_ProjectType Condition="'$(_ProjectType)' == '' And '$(_PlatformName)' == 'iOS' And '$(OutputType)' == 'Exe'">iOSExecutableProject</_ProjectType>
+    <_ProjectType Condition="'$(_ProjectType)' == '' And '$(_PlatformName)' == 'iOS' And '$(OutputType)' == 'Library' And '$(IsAppExtension)' != ''">iOSAppExtensionProject</_ProjectType>
+    <_ProjectType Condition="'$(_ProjectType)' == '' And '$(_PlatformName)' == 'iOS' And '$(OutputType)' == 'Library' And '$(IsBindingProject)' != ''">iOSBindingProject</_ProjectType>
+    <_ProjectType Condition="'$(_ProjectType)' == '' And '$(_PlatformName)' == 'iOS' And '$(OutputType)' == 'Library'">iOSClassLibrary</_ProjectType>
+
+    <_ProjectType Condition="'$(_ProjectType)' == '' And '$(_PlatformName)' == 'tvOS' And '$(OutputType)' == 'Exe'">tvOSExecutableProject</_ProjectType>
+    <_ProjectType Condition="'$(_ProjectType)' == '' And '$(_PlatformName)' == 'tvOS' And '$(OutputType)' == 'Library' And '$(IsAppExtension)' != ''">tvOSAppExtensionProject</_ProjectType>
+    <_ProjectType Condition="'$(_ProjectType)' == '' And '$(_PlatformName)' == 'tvOS' And '$(OutputType)' == 'Library' And '$(IsBindingProject)' != ''">tvOSBindingProject</_ProjectType>
+    <_ProjectType Condition="'$(_ProjectType)' == '' And '$(_PlatformName)' == 'tvOS' And '$(OutputType)' == 'Library'">tvOSClassLibrary</_ProjectType>
+
+    <_ProjectType Condition="'$(_ProjectType)' == '' And '$(_PlatformName)' == 'watchOS' And '$(IsWatchOSApp)' != ''">watchOSAppProject</_ProjectType>
+    <_ProjectType Condition="'$(_ProjectType)' == '' And '$(_PlatformName)' == 'watchOS' And '$(IsAppExtension)' != ''">watchOSAppExtensionProject</_ProjectType>
+    <_ProjectType Condition="'$(_ProjectType)' == '' And '$(_PlatformName)' == 'watchOS' And '$(IsBindingProject)' != ''">watchOSBindingProject</_ProjectType>
+    <_ProjectType Condition="'$(_ProjectType)' == '' And '$(_PlatformName)' == 'watchOS'">watchOSClassLibrary</_ProjectType>
+
+    <_ProjectType Condition="'$(_ProjectType)' == '' And '$(_PlatformName)' == 'macOS' And '$(OutputType)' == 'Exe'">macOSExecutableProject</_ProjectType>
+    <_ProjectType Condition="'$(_ProjectType)' == '' And '$(_PlatformName)' == 'macOS' And '$(OutputType)' == 'Library' And '$(IsAppExtension)' != ''">macOSAppExtensionProject</_ProjectType>
+    <_ProjectType Condition="'$(_ProjectType)' == '' And '$(_PlatformName)' == 'macOS' And '$(OutputType)' == 'Library' And '$(IsBindingProject)' != ''">macOSBindingProject</_ProjectType>
+    <_ProjectType Condition="'$(_ProjectType)' == '' And '$(_PlatformName)' == 'macOS' And '$(OutputType)' == 'Library'">macOSClassLibrary</_ProjectType>
+
+    <_ProjectLanguage>$(Language)</_ProjectLanguage>
+    <_ProjectLanguage Condition="'$(_ProjectLanguage)' == '' Or '$(_ProjectLanguage)' == 'C#' ">CSharp</_ProjectLanguage>
+    <_ProjectLanguage Condition="'$(_ProjectLanguage)' == 'F#' ">FSharp</_ProjectLanguage>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(XamarinUseSystemInstall)' == 'false' ">
+    <_TargetsDiriOS>$(XamarinSdkRootDirectory)\tools\msbuild\iOS</_TargetsDiriOS>
+    <_TargetsDirtvOS>$(XamarinSdkRootDirectory)\tools\msbuild\TVOS</_TargetsDirtvOS>
+    <_TargetsDirwatchOS>$(XamarinSdkRootDirectory)\tools\msbuild\WatchOS</_TargetsDirwatchOS>
+    <_TargetsDirmacOS>$(XamarinSdkRootDirectory)\tools\msbuild</_TargetsDirmacOS>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(XamarinUseSystemInstall)' != 'false' ">
+    <_TargetsDiriOS>$(XamarinFrameworkRoot)\lib\msbuild\iOS</_TargetsDiriOS>
+    <_TargetsDirtvOS>$(XamarinFrameworkRoot)\lib\msbuild\TVOS</_TargetsDirtvOS>
+    <_TargetsDirwatchOS>$(XamarinFrameworkRoot)\lib\msbuild\WatchOS</_TargetsDirwatchOS>
+    <_TargetsDirmacOS>$(XamarinFrameworkRoot)\lib\msbuild</_TargetsDirmacOS>
+  </PropertyGroup>
+
+  <Import Project="$(_TargetsDiriOS)\Xamarin.iOS.$(_ProjectLanguage).targets"              Condition="'$(_ProjectType)' == 'iOSExecutableProject' Or '$(_ProjectType)' == 'iOSClassLibrary' " />
+  <Import Project="$(_TargetsDiriOS)\Xamarin.iOS.AppExtension.$(_ProjectLanguage).targets" Condition="'$(_ProjectType)' == 'iOSAppExtensionProject' " />
+  <Import Project="$(_TargetsDiriOS)\Xamarin.iOS.ObjCBinding.$(_ProjectLanguage).targets"  Condition="'$(_ProjectType)' == 'iOSBindingProject' " />
+
+  <Import Project="$(_TargetsDirtvOS)\Xamarin.TVOS.$(_ProjectLanguage).targets"              Condition="'$(_ProjectType)' == 'tvOSExecutableProject' Or '$(_ProjectType)' == 'tvOSClassLibrary' " />
+  <Import Project="$(_TargetsDirtvOS)\Xamarin.TVOS.AppExtension.$(_ProjectLanguage).targets" Condition="'$(_ProjectType)' == 'tvOSAppExtensionProject' " />
+  <Import Project="$(_TargetsDirtvOS)\Xamarin.TVOS.ObjCBinding.$(_ProjectLanguage).targets"  Condition="'$(_ProjectType)' == 'tvOSBindingProject' " />
+
+  <Import Project="$(_TargetsDirwatchOS)\Xamarin.WatchOS.$(_ProjectLanguage).targets"              Condition="'$(_ProjectType)' == 'watchOSClassLibrary' " />
+  <Import Project="$(_TargetsDirwatchOS)\Xamarin.WatchOS.App.$(_ProjectLanguage).targets"          Condition="'$(_ProjectType)' == 'watchOSAppProject' " />
+  <Import Project="$(_TargetsDirwatchOS)\Xamarin.WatchOS.AppExtension.$(_ProjectLanguage).targets" Condition="'$(_ProjectType)' == 'watchOSAppExtensionProject' " />
+  <Import Project="$(_TargetsDirwatchOS)\Xamarin.WatchOS.ObjCBinding.$(_ProjectLanguage).targets"  Condition="'$(_ProjectType)' == 'watchOSBindingProject' " />
+
+  <Import Project="$(_TargetsDirmacOS)\Xamarin.Mac.$(_ProjectLanguage).targets"              Condition="'$(_ProjectType)' == 'macOSExecutableProject' Or '$(_ProjectType)' == 'macOSClassLibrary' " />
+  <Import Project="$(_TargetsDirmacOS)\Xamarin.Mac.AppExtension.$(_ProjectLanguage).targets" Condition="'$(_ProjectType)' == 'macOSAppExtensionProject' " />
+  <Import Project="$(_TargetsDirmacOS)\Xamarin.Mac.ObjCBinding.$(_ProjectLanguage).targets"  Condition="'$(_ProjectType)' == 'macOSBindingProject' " />
+
+  <PropertyGroup>
+    <BuildDependsOn>
+      _ValidateXamarinConfiguration;
+      $(BuildDependsOn);
+    </BuildDependsOn>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PublishDependsOn>
+      Build;
+    </PublishDependsOn>
+  </PropertyGroup>
+
+  <Target Name="Publish" Condition=" '$(IsGraphBuild)' != 'true' ">
+    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Build" Properties="BuildIpa=true" />
+  </Target>
+</Project>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Xamarin.iOS.Sdk">
+  <PropertyGroup>
+    <TargetFramework>xamarinios10</TargetFramework>
+    <DefaultItemExcludes>$(DefaultItemExcludes);MyLibrary\**</DefaultItemExcludes>
+
+    <MtouchExtraArgs>--nofastsim --ignore-dynamic-symbol=SystemNative_EnumerateGatewayAddressesForInterface --dlsym:true --nosymbolstrip</MtouchExtraArgs>
+    <MtouchLink>Full</MtouchLink>
+    <AssemblyName>MySingleView</AssemblyName>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetDeviceArchitecture)' == 'Device' And '$(Configuration)' == 'Release'">
+    <MtouchArch>ARMv7, ARM64</MtouchArch>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <BundleResource Include="LinkedBundleResource.txt">
+      <Link>Folder\LinkedBundleResource.txt</Link>
+    </BundleResource>
+    <BundleResource Include="Folder\BundleResource.txt" />
+    <BundleResource Include="Resources\image.png" />
+
+    <Reference Include="System.Console" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="LinkedEmbeddedResource.txt">
+      <Link>Folder\LinkedEmbeddedResource.txt</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Folder\EmbeddedResource.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Folder\Content.txt" />
+    <Content Include="LinkedContent.txt">
+      <Link>Folder\LinkedContent.txt</Link>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="MyLibrary\MyLibrary.dotnet.csproj" />
+  </ItemGroup>
+</Project>

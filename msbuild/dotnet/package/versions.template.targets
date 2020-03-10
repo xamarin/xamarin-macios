@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+		<XIPackageVersionMajor>@IOS_PACKAGE_VERSION_MAJOR@</XIPackageVersionMajor>
+		<XIPackageVersionMinor>@IOS_PACKAGE_VERSION_MINOR@</XIPackageVersionMinor>
+		<XIPackageVersionRev>@IOS_PACKAGE_VERSION_REV@</XIPackageVersionRev>
+		<XICommitDistance>@IOS_COMMIT_DISTANCE@</XICommitDistance>
+		<XMPackageVersionMajor>@MAC_PACKAGE_VERSION_MAJOR@</XMPackageVersionMajor>
+		<XMPackageVersionMinor>@MAC_PACKAGE_VERSION_MINOR@</XMPackageVersionMinor>
+		<XMPackageVersionRev>@MAC_PACKAGE_VERSION_REV@</XMPackageVersionRev>
+		<XMCommitDistance>@MAC_COMMIT_DISTANCE@</XMCommitDistance>
+		<CurrentBranch>@CURRENT_BRANCH@</CurrentBranch>
+		<CurrentHash>@CURRENT_HASH@</CurrentHash>
+
+	    <XIPackageVersion>$(XIPackageVersionMajor).$(XIPackageVersionMinor).$(XIPackageVersionRev)-alpha.$(XICommitDistance)+$(CurrentHash)</XIPackageVersion>
+	    <XMPackageVersion>$(XMPackageVersionMajor).$(XMPackageVersionMinor).$(XMPackageVersionRev)-alpha.$(XMCommitDistance)+$(CurrentHash)</XMPackageVersion>
+	</PropertyGroup>
+
+	<Target Name="PrintVersions">
+		<Exec Command="printf 'XIPackageVersion: $(XIPackageVersion)' "/>
+		<Exec Command="printf 'XMPackageVersion: $(XMPackageVersion)' " />
+	</Target>
+</Project>

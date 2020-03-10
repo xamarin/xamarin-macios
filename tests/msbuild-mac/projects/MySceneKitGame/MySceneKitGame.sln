@@ -1,0 +1,23 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySceneKitGame", "MySceneKitGame.csproj", "{CF82C511-7053-4619-82C2-7DD0A79EE2F3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyBindingLibrary", "..\MyBindingLibrary\MyBindingLibrary.csproj", "{6A5A8AFF-B0D8-403C-B95E-76D853DDA840}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CF82C511-7053-4619-82C2-7DD0A79EE2F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF82C511-7053-4619-82C2-7DD0A79EE2F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF82C511-7053-4619-82C2-7DD0A79EE2F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF82C511-7053-4619-82C2-7DD0A79EE2F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A5A8AFF-B0D8-403C-B95E-76D853DDA840}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A5A8AFF-B0D8-403C-B95E-76D853DDA840}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A5A8AFF-B0D8-403C-B95E-76D853DDA840}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A5A8AFF-B0D8-403C-B95E-76D853DDA840}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

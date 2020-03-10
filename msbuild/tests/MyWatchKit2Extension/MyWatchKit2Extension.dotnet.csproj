@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Xamarin.watchOS.Sdk">
+  <PropertyGroup>
+    <TargetFramework>xamarinwatchos10</TargetFramework>
+    <IsAppExtension>true</IsAppExtension>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetDeviceArchitecture)' == 'Simulator' ">
+    <CodesignEntitlements>None</CodesignEntitlements>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' And '$(TargetDeviceArchitecture)' == 'Device' ">
+    <MtouchFastDev>true</MtouchFastDev>
+    <MtouchProfiling>true</MtouchProfiling>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MyWatchKit2IntentsExtension\MyWatchKit2IntentsExtension.dotnet.csproj">
+      <IsAppExtension>true</IsAppExtension>
+      <Name>MyWatchKit2IntentsExtension</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Xamarin.iOS.Sdk">
+  <PropertyGroup>
+    <TargetFramework>xamarinios10</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' And '$(TargetDeviceArchitecture)' == 'Device' ">
+    <MtouchFastDev>true</MtouchFastDev>
+    <MtouchProfiling>true</MtouchProfiling>
+  </PropertyGroup>
+</Project>

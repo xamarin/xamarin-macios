@@ -1,0 +1,31 @@
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- https://github.com/dotnet/sdk/blob/6379373a53cadf8657a176589cb55f1fda6d038c/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.TargetFrameworkInference.targets#L46 -->
+  <!-- Split $(TargetFramework) (e.g. xamarinios10) into short identifier and short version (e.g. 'xamarinios' and '1.0'). -->
+  <PropertyGroup Condition="'$(TargetFramework)' != '' and !$(TargetFramework.Contains(',')) and !$(TargetFramework.Contains('+'))">
+   <_ShortFrameworkIdentifier>$(TargetFramework.TrimEnd('.0123456789'))</_ShortFrameworkIdentifier>
+   <_ShortFrameworkVersion>$(TargetFramework.Substring($(_ShortFrameworkIdentifier.Length)))</_ShortFrameworkVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFrameworkIdentifier)' == ''">
+    <TargetFrameworkIdentifier Condition="'$(_ShortFrameworkIdentifier)' == 'xamarinios' And '$(_PlatformName)' == 'iOS'">Xamarin.iOS</TargetFrameworkIdentifier>
+    <TargetFrameworkIdentifier Condition="'$(_ShortFrameworkIdentifier)' == 'xamarintvos' And '$(_PlatformName)' == 'tvOS'">Xamarin.TVOS</TargetFrameworkIdentifier>
+    <TargetFrameworkIdentifier Condition="'$(_ShortFrameworkIdentifier)' == 'xamarinwatchos' And '$(_PlatformName)' == 'watchOS'">Xamarin.WatchOS</TargetFrameworkIdentifier>
+    <TargetFrameworkIdentifier Condition="'$(_ShortFrameworkIdentifier)' == 'xamarinmac' And '$(_PlatformName)' == 'macOS'">Xamarin.Mac</TargetFrameworkIdentifier>
+  </PropertyGroup>
+
+  <!-- Versions with no dots and up to 3 characters get leading 'v' and implicit dots between characters. -->
+  <PropertyGroup Condition="'$(TargetFrameworkVersion)' == '' and '$(_ShortFrameworkVersion)' != ''">
+    <TargetFrameworkVersion Condition="$(_ShortFrameworkVersion.Length) == 1">v$(_ShortFrameworkVersion[0]).0</TargetFrameworkVersion>
+    <TargetFrameworkVersion Condition="$(_ShortFrameworkVersion.Length) == 2">v$(_ShortFrameworkVersion[0]).$(_ShortFrameworkVersion[1])</TargetFrameworkVersion>
+    <TargetFrameworkVersion Condition="$(_ShortFrameworkVersion.Length) == 3">v$(_ShortFrameworkVersion[0]).$(_ShortFrameworkVersion[1]).$(_ShortFrameworkVersion[2])</TargetFrameworkVersion>
+  </PropertyGroup>
+
+  <!-- This is a hack until we get the TFM values for real from the .NET build logic -->
+  <PropertyGroup>
+    <_ComputedTargetFrameworkMoniker Condition="'$(_PlatformName)' == 'iOS'">.NETCoreApp,Version=5.0,Profile=ios</_ComputedTargetFrameworkMoniker>
+    <_ComputedTargetFrameworkMoniker Condition="'$(_PlatformName)' == 'tvOS'">.NETCoreApp,Version=5.0,Profile=tvos</_ComputedTargetFrameworkMoniker>
+    <_ComputedTargetFrameworkMoniker Condition="'$(_PlatformName)' == 'watchOS'">.NETCoreApp,Version=5.0,Profile=watchos</_ComputedTargetFrameworkMoniker>
+    <_ComputedTargetFrameworkMoniker Condition="'$(_PlatformName)' == 'macOS'">.NETCoreApp,Version=5.0,Profile=macos</_ComputedTargetFrameworkMoniker>
+  </PropertyGroup>
+</Project>

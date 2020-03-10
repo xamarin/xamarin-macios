@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Xamarin.macOS.Sdk">
+  <PropertyGroup>
+    <TargetFramework>xamarinmac10</TargetFramework>
+    <OutputType>Library</OutputType>
+    <IsBindingProject>true</IsBindingProject>
+  </PropertyGroup>
+</Project>

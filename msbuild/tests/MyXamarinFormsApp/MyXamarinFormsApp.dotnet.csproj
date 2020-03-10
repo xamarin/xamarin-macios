@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Xamarin.iOS.Sdk">
+  <PropertyGroup>
+    <TargetFramework>xamarinios10</TargetFramework>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <MtouchEnableSGenConc>true</MtouchEnableSGenConc>
+    <AssemblyName>MyXamarinFormsApp</AssemblyName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <DefaultItemExcludes>$(DefaultItemExcludes);MyXamarinFormsAppNS\**</DefaultItemExcludes>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetDeviceArchitecture)' == 'Simulator' ">
+    <CodesignEntitlements>None</CodesignEntitlements>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Xamarin.Forms" Version="4.0.0.540366" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.1.0" />
+    <Reference Include="System.Runtime.InteropServices" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="MyXamarinFormsAppNS\MyXamarinFormsAppNS.csproj" />
+  </ItemGroup>
+</Project>

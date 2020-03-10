@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Xamarin.macOS.Sdk">
+  <PropertyGroup>
+    <TargetFramework>xamarinmac10</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <BundleResource Include="GameScene.sks" />
+    <BundleResource Include="Spaceship.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MyClassLibrary\MyClassLibrary.dotnet.csproj">
+      <Name>MyClassLibrary</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

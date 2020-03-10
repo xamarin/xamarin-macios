@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Xamarin.iOS.Sdk">
+  <PropertyGroup>
+    <TargetFramework>xamarinios10</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="OpenTK-1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <BundleResource Include="Shader.fsh" />
+    <BundleResource Include="Shader.vsh" />
+  </ItemGroup>
+
+  <PropertyGroup Condition=" '$(TargetDeviceArchitecture)' == 'Simulator' ">
+    <CodesignEntitlements>None</CodesignEntitlements>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetDeviceArchitecture)' == 'Device' ">
+    <MtouchArch>ARMv7, ARM64</MtouchArch>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetDeviceArchitecture)' == 'Device' And '$(Configuration)' == 'Debug' ">
+    <MtouchProfiling>true</MtouchProfiling>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MyTodayExtension\MyTodayExtension.dotnet.csproj">
+      <Name>MyTodayExtension</Name>
+      <IsAppExtension>True</IsAppExtension>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

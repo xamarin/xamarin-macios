@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Xamarin.tvOS.Sdk">
+  <PropertyGroup>
+    <TargetFramework>xamarintvos10</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetDeviceArchitecture)' == 'Simulator' ">
+    <CodesignEntitlements>None</CodesignEntitlements>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetDeviceArchitecture)' == 'Device' And '$(Configuration)' == 'Debug'">
+    <MtouchFastDev>true</MtouchFastDev>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MyTVServicesExtension\MyTVServicesExtension.dotnet.csproj">
+      <IsAppExtension>true</IsAppExtension>
+    </ProjectReference>
+  </ItemGroup>
+</Project>
