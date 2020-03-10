@@ -67,7 +67,7 @@ namespace Xharness.Utilities {
 			}
 		}
 
-		private static string FindRootDirectory ()
+		static string FindRootDirectory ()
 		{
 			// Keep going up and look for .git
 			var testAssemblyDirectory = Path.GetDirectoryName (System.Reflection.Assembly.GetExecutingAssembly ().Location);
