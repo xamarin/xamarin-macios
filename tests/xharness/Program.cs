@@ -1,6 +1,7 @@
 ﻿using System;
 
 using Mono.Options;
+using Xharness.Utilities;
 
 namespace Xharness {
 	class MainClass {

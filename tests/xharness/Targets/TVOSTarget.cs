@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using Xamarin;
 using Xharness.Hardware;
+using Xharness.Utilities;
 
-namespace Xharness
+namespace Xharness.Targets
 {
 	public class TVOSTarget : iOSTarget
 	{

@@ -1,9 +1,8 @@
 using System.IO;
 using System.Xml;
+using Xharness.Utilities;
 
-using Xamarin;
-
-namespace Xharness
+namespace Xharness.Targets
 {
 	// iOS here means Xamarin.iOS, not iOS as opposed to tvOS/watchOS.
 	public class iOSTarget : Target

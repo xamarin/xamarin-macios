@@ -29,6 +29,7 @@ using System.Xml;
 
 using Xamarin;
 using Xharness.Hardware;
+using Xharness.Utilities;
 
 namespace Xharness
 {

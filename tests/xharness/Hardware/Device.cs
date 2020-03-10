@@ -1,5 +1,4 @@
 ﻿using System;
-using Xharness;
 
 namespace Xharness.Hardware {
 	public class Device : IHardwareDevice {

@@ -5,8 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
-using Xamarin;
 using Xharness.Logging;
+using Xharness.Utilities;
 
 namespace Xharness.Jenkins.TestTasks
 {

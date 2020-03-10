@@ -8,10 +8,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
-using Xamarin;
-using Xamarin.Utils;
 using Xharness.Execution;
 using Xharness.Logging;
+using Xharness.Utilities;
 
 namespace Xharness
 {

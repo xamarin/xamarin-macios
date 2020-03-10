@@ -7,9 +7,8 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Xamarin.Utils;
-using Xharness;
 using Xharness.Logging;
+using Xharness.Utilities;
 
 namespace Xharness.Execution {
 	public class ProcessManager : IProcessManager {
