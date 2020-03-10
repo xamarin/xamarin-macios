@@ -69,7 +69,6 @@
     <Compile Include="Hardware\Tests\DeviceTest.cs" />
     <Compile Include="Hardware\Tests\DevicesTest.cs" />
     <Compile Include="Hardware\Tests\TCCDatabaseTests.cs" />
-    <Compile Include="Hardware\Tests\SimDeviceTest.cs" />
     <Compile Include="Utilities\Tests\StringUtilsTests.cs" />
     <Compile Include="Hardware\Tests\SimulatorsTest.cs" />
   </ItemGroup>
