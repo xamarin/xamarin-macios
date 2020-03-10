@@ -9,11 +9,11 @@
 
   <ItemGroup>
     <PackageReference Include="Mono.Options" Version="6.6.0.161" />
-    <PackageReference Include="XliffTasks" Version="1.0.0-beta.19607.1" PrivateAssets="all" />
+    <!--<PackageReference Include="XliffTasks" Version="1.0.0-beta.19607.1" PrivateAssets="all" />-->
   </ItemGroup>
 
   <PropertyGroup>
-    <UpdateXlfOnBuild>true</UpdateXlfOnBuild>
+    <!--<UpdateXlfOnBuild>true</UpdateXlfOnBuild>-->
     <RepositoryPath>$(MSBuildThisFileDirectory)/../..</RepositoryPath>
     <DotNetBuildDir>$(MSBuildThisFileDirectory)/../build/dotnet</DotNetBuildDir>
     <BuildsDir>$(RepositoryPath)/builds</BuildsDir>
