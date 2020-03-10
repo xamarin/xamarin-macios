@@ -165,16 +165,21 @@ namespace Xamarin.Bundler
 
 		public static string GetPlatformFrameworkDirectory (Application app)
 		{
+			string platform;
 			switch (app.Platform) {
 			case ApplePlatform.iOS:
-				return Path.Combine (FrameworkLibDirectory, "mono", "Xamarin.iOS");
+				platform = "Xamarin.iOS";
+				break;
 			case ApplePlatform.WatchOS:
-				return Path.Combine (FrameworkLibDirectory, "mono", "Xamarin.WatchOS");
+				platform = "Xamarin.WatchOS";
+				break;
 			case ApplePlatform.TVOS:
-				return Path.Combine (FrameworkLibDirectory, "mono", "Xamarin.TVOS");
+				platform = "Xamarin.TVOS";
+				break;
 			default:
 				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, "Xamarin.iOS");
 			}
+			return Path.Combine (FrameworkLibDirectory, "mono", platform);
 		}
 
 		public static string GetArch32Directory (Application app)
