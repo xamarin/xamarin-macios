@@ -54,14 +54,13 @@ namespace Xharness.Hardware {
 			}
 		}
 
-		public async Task AgreeToPromptsAsync (string simRuntime, string dataPath, ILog log, params string [] bundle_identifiers)
+		public async Task AgreeToPromptsAsync (string simRuntime, string TCCDb, ILog log, params string [] bundle_identifiers)
 		{
 			if (bundle_identifiers == null || bundle_identifiers.Length == 0) {
 				log.WriteLine ("No bundle identifiers given when requested permission editing.");
 				return;
 			}
 
-			var TCC_db = Path.Combine (dataPath, "data", "Library", "TCC", "TCC.db");
 			var sim_services = new string [] {
 					"kTCCServiceAddressBook",
 					"kTCCServiceCalendar",
@@ -86,7 +85,7 @@ namespace Xharness.Hardware {
 				foreach (var bundle_identifier in bundle_identifiers) {
 					var args = new List<string> ();
 					var sql = new System.Text.StringBuilder ();
-					args.Add (TCC_db);
+					args.Add (TCCDb);
 					foreach (var service in sim_services) {
 						switch (GetTCCFormat (simRuntime)) {
 						case 1:
@@ -124,7 +123,7 @@ namespace Xharness.Hardware {
 			}
 
 			log.WriteLine ("Current TCC database contents:");
-			await ProcessManager.ExecuteCommandAsync ("sqlite3", new [] { TCC_db, ".dump" }, log, TimeSpan.FromSeconds (5));
+			await ProcessManager.ExecuteCommandAsync ("sqlite3", new [] { TCCDb, ".dump" }, log, TimeSpan.FromSeconds (5));
 		}
 	}
 }
