@@ -387,6 +387,7 @@ namespace System.Net.Http
 #if !DOTNET_TODO
 			// DOTNET_TODO: CookieCollection.CookieCutter is internal to mscorlib:
 			// https://github.com/microsoft/referencesource/blob/a7bd3242bd7732dec4aebb21fbc0f6de61c2545e/System/net/System/Net/cookiecontainer.cs#L632
+			// https://github.com/xamarin/xamarin-macios/issues/8072
 			CookieCollection cookies1 = null;
 			try {
 				cookies1 = cookies.CookieCutter (uri, header, value, false);
