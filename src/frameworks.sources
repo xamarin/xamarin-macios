@@ -2025,6 +2025,7 @@ WATCHOS_FRAMEWORKS =        \
 	PassKit                 \
 	PushKit			\
 	Security                \
+	StoreKit                \
 	UIKit XKit              \
 	UserNotifications       \
 	WatchConnectivity       \
