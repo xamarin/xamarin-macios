@@ -43,6 +43,7 @@ namespace Xharness {
 		bool isSimulator;
 		string configuration;
 		string mode;
+		bool initialized;
 
 		public Harness Harness;
 		public string ProjectFile;
@@ -169,7 +170,6 @@ namespace Xharness {
 				CompanionDeviceName = devs.FindCompanionDevice (MainLog, selected_data).Name;
 		}
 
-		bool initialized;
 		public void Initialize ()
 		{
 			if (initialized)
