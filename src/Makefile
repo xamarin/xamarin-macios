@@ -92,8 +92,6 @@ COMMON_TARGET_DIRS = \
 ARGS_32 = -define:ARCH_32
 ARGS_64 = -define:ARCH_64
 
-CURRENT_BRANCH_SED_ESCAPED:=$(subst |,\|,$(subst &,\&,$(subst $$,\$$,$(subst /,\/,$(CURRENT_BRANCH))))))
-
 SHARED_SYSTEM_DRAWING_SOURCES = System.Drawing/PointSizeRectangleTypeForwarders.cs
 
 #
