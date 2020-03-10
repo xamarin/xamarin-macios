@@ -136,7 +136,7 @@ namespace Xharness.Tests.Hardware.Tests {
 
 			Assert.AreEqual ("sqlite3", processName, "sqlite3 process");
 			// assert that the sql is present
-			Assert.That (args, Has.Member (Path.Combine (dataPath, "data", "Library", "TCC", "TCC.db")), "data path");
+			Assert.That (args, Has.Member (dataPath));
 			Assert.That (args, Has.Member (expectedArgs.ToString ()), "insert sql"); 
 		}
 	}

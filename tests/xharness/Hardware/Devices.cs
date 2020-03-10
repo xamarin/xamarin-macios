@@ -5,11 +5,10 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
-using Xamarin;
-using xharness.Collections;
-using Xharness;
+using Xharness.Collections;
 using Xharness.Execution;
 using Xharness.Logging;
+using Xharness.Utilities;
 
 namespace Xharness.Hardware {
 	public class Devices : IDeviceLoader {

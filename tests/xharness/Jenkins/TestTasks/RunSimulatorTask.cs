@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using xharness.Collections;
+using Xharness.Collections;
 using Xharness.Hardware;
 
 namespace Xharness.Jenkins.TestTasks

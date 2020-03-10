@@ -10,7 +10,8 @@ using Xharness.Logging;
 using Xharness.Execution;
 using Xharness.Jenkins.TestTasks;
 using Xharness.Hardware;
-using xharness.Collections;
+using Xharness.Collections;
+using Xharness.Utilities;
 
 namespace Xharness.Jenkins
 {

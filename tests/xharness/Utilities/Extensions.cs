@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Xharness
-{
-	public static class Extensions
-	{
+namespace Xharness.Utilities {
+	public static class Extensions {
 		public static string AsString (this AppRunnerTarget @this)
 		{
 			switch (@this) {

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\..\..\packages\NUnit.3.12.0\build\NUnit.props" Condition="Exists('..\..\..\packages\NUnit.3.12.0\build\NUnit.props')" />
   <PropertyGroup>
@@ -70,6 +70,7 @@
     <Compile Include="Hardware\Tests\DevicesTest.cs" />
     <Compile Include="Hardware\Tests\TCCDatabaseTests.cs" />
     <Compile Include="Hardware\Tests\SimDeviceTest.cs" />
+    <Compile Include="Utilities\Tests\StringUtilsTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -84,8 +85,6 @@
   <ItemGroup>
     <ProjectReference Include="../DummyTestProcess/DummyTestProcess.csproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <Project>{2318BC20-40F1-4A12-B695-10B0433CFB35}</Project>
-      <Name>DummyTestProcess</Name>
     </ProjectReference>
     <ProjectReference Include="..\xharness.csproj">
       <Project>{e1f53f80-8399-499b-8017-c414b9cd263b}</Project>
