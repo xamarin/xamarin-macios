@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -36,7 +35,7 @@ namespace Xharness
 		public IProcessManager ProcessManager { get; set; } = new ProcessManager ();
 
 		public string XIBuildPath {
-			get { return Path.GetFullPath (Path.Combine (RootDirectory, "..", "tools", "xibuild", "xibuild")); }
+			get { return Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "..", "tools", "xibuild", "xibuild")); }
 		}
 
 		public static string Timestamp {
@@ -45,33 +44,6 @@ namespace Xharness
 			}
 		}
 
-		// This is the maccore/tests directory.
-		static string root_directory;
-		public static string RootDirectory {
-			get {
-				if (root_directory == null) {
-					var testAssemblyDirectory = Path.GetDirectoryName (System.Reflection.Assembly.GetExecutingAssembly ().Location);
-					var dir = testAssemblyDirectory;
-					var path = Path.Combine (testAssemblyDirectory, ".git");
-					while (!Directory.Exists (path) && path.Length > 3) {
-						dir = Path.GetDirectoryName (dir);
-						path = Path.Combine (dir, ".git");
-					}
-					if (!Directory.Exists (path))
-						throw new Exception ("Could not find the xamarin-macios repo.");
-					path = Path.Combine (Path.GetDirectoryName (path), "tests");
-					if (!Directory.Exists (path))
-						throw new Exception ("Could not find the tests directory.");
-					root_directory = path;
-				}
-				return root_directory;
-			}
-			set {
-				root_directory = value;
-				if (root_directory != null)
-					root_directory = Path.GetFullPath (root_directory).TrimEnd ('/');
-			}
-		}
 
 		public List<iOSTestProject> IOSTestProjects { get; set; } = new List<iOSTestProject> ();
 		public List<MacTestProject> MacTestProjects { get; set; } = new List<MacTestProject> ();
@@ -107,7 +79,7 @@ namespace Xharness
 		public string LogFile { get; set; }
 		public string LogDirectory { get; set; } = Environment.CurrentDirectory;
 		public double Timeout { get; set; } = 15; // in minutes
-		public double LaunchTimeout { get; set; } // in minutes
+		public TimeSpan LaunchTimeout { get; set; } // in minutes
 		public bool DryRun { get; set; } // Most things don't support this. If you need it somewhere, implement it!
 		public string JenkinsConfiguration { get; set; }
 		public Dictionary<string, string> EnvironmentVariables { get; set; } = new Dictionary<string, string> ();
@@ -120,7 +92,7 @@ namespace Xharness
 
 		public Harness ()
 		{
-			LaunchTimeout = InCI ? 3 : 120;
+			LaunchTimeout = TimeSpan.FromMinutes(InCI ? 3 : 120);
 		}
 
 		public bool GetIncludeSystemPermissionTests (TestPlatform platform, bool device)
@@ -187,59 +159,6 @@ namespace Xharness
 			}
 		}
 
-		object mlaunch_lock = new object ();
-		string DownloadMlaunch ()
-		{
-			// NOTE: the filename part in the url must be unique so that the caching logic works properly.
-			var mlaunch_url = "https://dl.xamarin.com/ios/mlaunch-acdb43d346c431b2c40663c938c919dcb0e91bd7.zip";
-			var extraction_dir = Path.Combine (Path.GetTempPath (), Path.GetFileNameWithoutExtension (mlaunch_url));
-			var mlaunch_path = Path.Combine (extraction_dir, "bin", "mlaunch");
-
-			lock (mlaunch_lock) {
-				if (File.Exists (mlaunch_path))
-					return mlaunch_path;
-
-				try {
-					var local_zip = extraction_dir + ".zip";
-					Log ("Downloading mlaunch to: {0}", local_zip);
-					var wc = new System.Net.WebClient ();
-					wc.DownloadFile (mlaunch_url, local_zip);
-					Log ("Downloaded mlaunch.");
-
-					var tmp_extraction_dir = extraction_dir + ".tmp";
-					if (Directory.Exists (tmp_extraction_dir))
-						Directory.Delete (tmp_extraction_dir, true);
-					if (Directory.Exists (extraction_dir))
-						Directory.Delete (extraction_dir, true);
-
-					Log ("Extracting mlaunch...");
-					using (var p = new Process ()) {
-						p.StartInfo.FileName = "unzip";
-						p.StartInfo.Arguments = StringUtils.FormatArguments ("-d", tmp_extraction_dir, local_zip);
-						Log ("{0} {1}", p.StartInfo.FileName, p.StartInfo.Arguments);
-						p.Start ();
-						p.WaitForExit ();
-						if (p.ExitCode != 0) {
-							Log ("Could not unzip mlaunch, exit code: {0}", p.ExitCode);
-							return mlaunch_path;
-						}
-					}
-					Directory.Move (tmp_extraction_dir, extraction_dir);
-
-					Log ("Final mlaunch path: {0}", mlaunch_path);
-				} catch (Exception e) {
-					Log ("Could not download mlaunch: {0}", e);
-				}
-				return mlaunch_path;
-			}
-		}
-
-		public string MtouchPath {
-			get {
-				return Path.Combine (IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current", "bin", "mtouch");
-			}
-		}
-
 		public string MlaunchPath {
 			get {
 				return Path.Combine (IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current", "bin", "mlaunch");
@@ -249,7 +168,7 @@ namespace Xharness
 		void LoadConfig ()
 		{
 			ParseConfigFiles ();
-			var src_root = Path.GetDirectoryName (Path.GetFullPath (RootDirectory));
+			var src_root = Path.GetDirectoryName ( DirectoryUtilities.RepositoryRootDirectory);
 			MONO_PATH = Path.GetFullPath (Path.Combine (src_root, "external", "mono"));
 			TVOS_MONO_PATH = MONO_PATH;
 			INCLUDE_IOS = make_config.ContainsKey ("INCLUDE_IOS") && !string.IsNullOrEmpty (make_config ["INCLUDE_IOS"]);
@@ -276,13 +195,13 @@ namespace Xharness
 				new { Directory = "linker/mac/dont link", ProjectFile = "dont link-mac", Name = "dont link", Flavors = MacFlavors.Modern | MacFlavors.Full | MacFlavors.System },
 			};
 			foreach (var p in test_suites) {
-				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p.Directory, p.ProjectFile + ".csproj"))) {
+				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, p.Directory, p.ProjectFile + ".csproj"))) {
 					Name = p.Name,
 					TargetFrameworkFlavors = p.Flavors,
 				});
 			}
 			
-			MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "Mac", "introspection-mac.csproj")), targetFrameworkFlavor: MacFlavors.Modern) { Name = "introspection" });
+			MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "introspection", "Mac", "introspection-mac.csproj")), targetFrameworkFlavor: MacFlavors.Modern) { Name = "introspection" });
 
 			var hard_coded_test_suites = new [] {
 				new { Directory = "mmptest", ProjectFile = "mmptest", Name = "mmptest", IsNUnit = true, Configurations = (string[]) null, Platform = "x86", Flavors = MacFlavors.Console, },
@@ -292,10 +211,11 @@ namespace Xharness
 				new { Directory = "linker/mac/link sdk", ProjectFile = "link sdk-mac", Name = "link sdk", IsNUnit = false, Configurations = new string [] { "Debug", "Release" }, Platform = "x86", Flavors = MacFlavors.Modern, },
 			};
 			foreach (var p in hard_coded_test_suites) {
-				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p.Directory, p.ProjectFile + ".csproj")), targetFrameworkFlavor: p.Flavors) {
+				string projectPath = Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, p.Directory, p.ProjectFile + ".csproj"));
+				MacTestProjects.Add (new MacTestProject (projectPath, targetFrameworkFlavor: p.Flavors) {
 					Name = p.Name,
 					IsNUnitProject = p.IsNUnit,
-					SolutionPath = Path.GetFullPath (Path.Combine (RootDirectory, "tests-mac.sln")),
+					SolutionPath = Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "tests-mac.sln")),
 					Configurations = p.Configurations,
 					Platform = p.Platform,
 				});
@@ -394,18 +314,18 @@ namespace Xharness
 			var fsharp_library_projects = new string [] { "fsharplibrary" };
 
 			foreach (var p in test_suites)
-				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".csproj"))) { Name = p });
+				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, p + "/" + p + ".csproj"))) { Name = p });
 			foreach (var p in fsharp_test_suites)
-				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".fsproj"))) { Name = p });
+				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, p + "/" + p + ".fsproj"))) { Name = p });
 			foreach (var p in library_projects)
-				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".csproj")), false) { Name = p });
+				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, p + "/" + p + ".csproj")), false) { Name = p });
 			foreach (var p in fsharp_library_projects)
-				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".fsproj")), false) { Name = p });
+				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, p + "/" + p + ".fsproj")), false) { Name = p });
 
-			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "iOS", "introspection-ios.csproj"))) { Name = "introspection" });
-			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "dont link", "dont link.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
-			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link all", "link all.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
-			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link sdk", "link sdk.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "introspection", "iOS", "introspection-ios.csproj"))) { Name = "introspection" });
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "linker", "ios", "dont link", "dont link.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "linker", "ios", "link all", "link all.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "linker", "ios", "link sdk", "link sdk.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
 
 			foreach (var flavor in new MonoNativeFlavor[] { MonoNativeFlavor.Compat, MonoNativeFlavor.Unified }) {
 				var monoNativeInfo = new MonoNativeInfo (this, flavor);
@@ -422,19 +342,19 @@ namespace Xharness
 			var monoImportTestFactory = new BCLTestImportTargetFactory (this);
 			IOSTestProjects.AddRange (monoImportTestFactory.GetiOSBclTargets ());
 
-			WatchOSContainerTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "templates/WatchContainer"));
-			WatchOSAppTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "templates/WatchApp"));
-			WatchOSExtensionTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "templates/WatchExtension"));
+			WatchOSContainerTemplate = Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "templates/WatchContainer"));
+			WatchOSAppTemplate = Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "templates/WatchApp"));
+			WatchOSExtensionTemplate = Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "templates/WatchExtension"));
 
-			TodayContainerTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "templates", "TodayContainer"));
-			TodayExtensionTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "templates", "TodayExtension"));
-			BCLTodayExtensionTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test", "templates", "today"));
+			TodayContainerTemplate = Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "templates", "TodayContainer"));
+			TodayExtensionTemplate = Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "templates", "TodayExtension"));
+			BCLTodayExtensionTemplate = Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "bcl-test", "templates", "today"));
 		}
 
 		Dictionary<string, string> make_config = new Dictionary<string, string> ();
 		IEnumerable<string> FindConfigFiles (string name)
 		{
-			var dir = Path.GetFullPath (RootDirectory);
+			var dir = DirectoryUtilities.RepositoryRootDirectory;
 			while (dir != "/") {
 				var file = Path.Combine (dir, name);
 				if (File.Exists (file))
@@ -471,7 +391,7 @@ namespace Xharness
 			}
 		}
 
-		public int Configure ()
+		int Configure ()
 		{
 			return Mac ? AutoConfigureMac (true) : ConfigureIOS ();
 		}
@@ -549,7 +469,7 @@ namespace Xharness
 			return rv;
 		}
 
-		public int Install ()
+		int Install ()
 		{
 			if (HarnessLog == null)
 				HarnessLog = new ConsoleLog ();
@@ -569,7 +489,7 @@ namespace Xharness
 			return 0;
 		}
 
-		public int Uninstall ()
+		int Uninstall ()
 		{
 			if (HarnessLog == null)
 				HarnessLog = new ConsoleLog ();
@@ -588,7 +508,7 @@ namespace Xharness
 			return 0;
 		}
 
-		public int Run ()
+		int Run ()
 		{
 			if (HarnessLog == null)
 				HarnessLog = new ConsoleLog ();
@@ -604,6 +524,20 @@ namespace Xharness
 					return rv;
 			}
 			return 0;
+		}
+
+		int Jenkins ()
+		{
+			if (AutoConf) {
+				AutoConfigureIOS ();
+				AutoConfigureMac (false);
+			}
+			
+			var jenkins = new Jenkins.Jenkins ()
+			{
+				Harness = this,
+			};
+			return jenkins.Run ();
 		}
 
 		public void Log (int min_level, string message)
@@ -682,20 +616,6 @@ namespace Xharness
 			}
 		}
 
-		public int Jenkins ()
-		{
-			if (AutoConf) {
-				AutoConfigureIOS ();
-				AutoConfigureMac (false);
-			}
-			
-			var jenkins = new Jenkins.Jenkins ()
-			{
-				Harness = this,
-			};
-			return jenkins.Run ();
-		}
-
 		public void Save (XmlDocument doc, string path)
 		{
 			if (!File.Exists (path)) {
@@ -736,42 +656,6 @@ namespace Xharness
 			}
 		}
 
-		public void Save (string doc, string path)
-		{
-			if (!File.Exists (path)) {
-				File.WriteAllText (path, doc);
-				Log (1, "Created {0}", path);
-			} else {
-				var existing = File.ReadAllText (path);
-				if (existing == doc) {
-					Log (1, "Not saved {0}, no change", path);
-				} else {
-					File.WriteAllText (path, doc);
-					Log (1, "Updated {0}", path);
-				}
-			}
-		}
-
-		// We want guids that nobody else has, but we also want to generate the same guid
-		// on subsequent invocations (so that csprojs don't change unnecessarily, which is
-		// annoying when XS reloads the projects, and also causes unnecessary rebuilds).
-		// Nothing really breaks when the sequence isn't identical from run to run, so
-		// this is just a best minimal effort.
-		static Random guid_generator = new Random (unchecked ((int) 0xdeadf00d));
-		public Guid NewStableGuid (string seed = null)
-		{
-			var bytes = new byte [16];
-			if (seed == null) {
-				guid_generator.NextBytes (bytes);
-			} else {
-				using (var provider = MD5.Create ()) {
-					var inputBytes = Encoding.UTF8.GetBytes (seed);
-					bytes = provider.ComputeHash (inputBytes);
-				}
-			}
-			return new Guid (bytes);
-		}
-
 		bool? disable_watchos_on_wrench;
 		public bool DisableWatchOSOnWrench {
 			get {
@@ -784,35 +668,6 @@ namespace Xharness
 		public Task<ProcessExecutionResult> ExecuteXcodeCommandAsync (string executable, IList<string> args, ILog log, TimeSpan timeout)
 		{
 			return ProcessManager.ExecuteCommandAsync (Path.Combine (XcodeRoot, "Contents", "Developer", "usr", "bin", executable), args, log, timeout: timeout);
-		}
-
-		public async Task ShowSimulatorList (Log log)
-		{
-			await ExecuteXcodeCommandAsync ("simctl", new [] { "list" }, log, TimeSpan.FromSeconds (10));
-		}
-
-		public async Task<ILogFile> SymbolicateCrashReportAsync (ILogs logs, ILog log, ILogFile report)
-		{
-			var symbolicatecrash = Path.Combine (XcodeRoot, "Contents/SharedFrameworks/DTDeviceKitBase.framework/Versions/A/Resources/symbolicatecrash");
-			if (!File.Exists (symbolicatecrash))
-				symbolicatecrash = Path.Combine (XcodeRoot, "Contents/SharedFrameworks/DVTFoundation.framework/Versions/A/Resources/symbolicatecrash");
-
-			if (!File.Exists (symbolicatecrash)) {
-				log.WriteLine ("Can't symbolicate {0} because the symbolicatecrash script {1} does not exist", report.Path, symbolicatecrash);
-				return report;
-			}
-
-			var name = Path.GetFileName (report.Path);
-			var symbolicated = logs.Create (Path.ChangeExtension (name, ".symbolicated.log"), $"Symbolicated crash report: {name}", timestamp: false);
-			var environment = new Dictionary<string, string> { { "DEVELOPER_DIR", Path.Combine (XcodeRoot, "Contents", "Developer") } };
-			var rv = await ProcessManager.ExecuteCommandAsync (symbolicatecrash, new [] { report.Path }, symbolicated, TimeSpan.FromMinutes (1), environment);
-			if (rv.Succeeded) {;
-				log.WriteLine ("Symbolicated {0} successfully.", report.Path);
-				return symbolicated;
-			} else {
-				log.WriteLine ("Failed to symbolicate {0}.", report.Path);
-				return report;
-			}
 		}
 
 		public async Task<HashSet<string>> CreateCrashReportsSnapshotAsync (ILog log, bool simulatorOrDesktop, string device)
