@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
+using Xamarin;
+using Xharness.Hardware;
 using Xharness.Execution;
 using Xharness.Jenkins.TestTasks;
 using Xharness.Listeners;
@@ -71,8 +73,8 @@ namespace Xharness {
 
 		public ILog MainLog { get; set; }
 
-		public SimDevice [] Simulators { get; set; }
-		SimDevice simulator => Simulators [0];
+		public ISimulatorDevice [] Simulators { get; set; }
+		ISimulatorDevice simulator => Simulators [0];
 
 		public string BundleIdentifier { get; private set; }
 
@@ -148,7 +150,7 @@ namespace Xharness {
 			}
 
 			var selected = devs.ConnectedDevices.Where ((v) => deviceClasses.Contains (v.DeviceClass) && v.IsUsableForDebugging != false);
-			Device selected_data;
+			IHardwareDevice selected_data;
 			if (selected.Count () == 0) {
 				throw new Exception ($"Could not find any applicable devices with device class(es): {string.Join (", ", deviceClasses)}");
 			} else if (selected.Count () > 1) {

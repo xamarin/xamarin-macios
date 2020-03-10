@@ -9,6 +9,8 @@ using System.Text;
 using Xharness.Logging;
 using Xharness.Execution;
 using Xharness.Jenkins.TestTasks;
+using Xharness.Hardware;
+using Xharness.Collections;
 using Xharness.Utilities;
 
 namespace Xharness.Jenkins
@@ -71,8 +73,8 @@ namespace Xharness.Jenkins
 			}
 		}
 
-		public Simulators Simulators = new Simulators ();
-		public Devices Devices = new Devices ();
+		public ISimulatorsLoader Simulators = new Simulators ();
+		public IDeviceLoader Devices = new Devices ();
 
 		List<TestTask> Tasks = new List<TestTask> ();
 		Dictionary<string, MakeTask> DependencyTasks = new Dictionary<string, MakeTask> ();
@@ -81,7 +83,7 @@ namespace Xharness.Jenkins
 		internal static Resource NugetResource = new Resource ("Nuget", 1); // nuget is not parallel-safe :(
 
 		static Dictionary<string, Resource> device_resources = new Dictionary<string, Resource> ();
-		internal static Resources GetDeviceResources (IEnumerable<Device> devices)
+		internal static Resources GetDeviceResources (IEnumerable<IHardwareDevice> devices)
 		{
 			List<Resource> resources = new List<Resource> ();
 			lock (device_resources) {
@@ -645,7 +647,7 @@ namespace Xharness.Jenkins
 				rv.AddRange (projectTasks);
 			}
 
-			return Task.FromResult<IEnumerable<TestTask>> (CreateTestVariations (rv, (buildTask, test, candidates) => new RunDeviceTask (buildTask, candidates?.Cast<Device> () ?? test.Candidates)));
+			return Task.FromResult<IEnumerable<TestTask>> (CreateTestVariations (rv, (buildTask, test, candidates) => new RunDeviceTask (buildTask, candidates?.Cast<IHardwareDevice> () ?? test.Candidates)));
 		}
 
 		static string AddSuffixToPath (string path, string suffix)

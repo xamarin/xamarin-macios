@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -21,6 +21,7 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>full</DebugType>
@@ -29,6 +30,7 @@
     <WarningLevel>4</WarningLevel>
     <Externalconsole>true</Externalconsole>
     <OutputPath>bin\Release</OutputPath>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
     <StartAction>Project</StartAction>
@@ -80,10 +82,22 @@
     <Compile Include="BCLTestImporter\Platform.cs" />
     <Compile Include="BCLTestImporter\RegisterTypeGenerator.cs" />
     <Compile Include="CrashReportSnapshot.cs" />
+    <Compile Include="Collections\BlockingEnumerableCollection.cs" />
+    <Compile Include="Collections\ILoadAsync.cs" />
+    <Compile Include="Collections\IAsyncEnumerable.cs" />
     <Compile Include="DeviceLogCapturer.cs" />
+    <Compile Include="Execution\MlaunchArguments.cs" />
     <Compile Include="Execution\IProcessManager.cs" />
     <Compile Include="Execution\ProcessManager.cs" />
     <Compile Include="GitHub.cs" />
+    <Compile Include="Hardware\Simulators.cs" />
+    <Compile Include="Hardware\SimDevice.cs" />
+    <Compile Include="Hardware\IDevice.cs" />
+    <Compile Include="Hardware\Device.cs" />
+    <Compile Include="Hardware\Devices.cs" />
+    <Compile Include="Hardware\IHardwareDevice.cs" />
+    <Compile Include="Hardware\ISimulatorDevice.cs" />
+    <Compile Include="Hardware\TCCDatabase.cs" />
     <Compile Include="Harness.cs" />
     <Compile Include="Jenkins\Jenkins.cs" />
     <Compile Include="Jenkins\Resource.cs" />
