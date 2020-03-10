@@ -54,11 +54,13 @@ namespace Xharness.Hardware {
 						process.StartInfo.FileName = Harness.MlaunchPath;
 						var arguments = new MlaunchArguments (
 							(MlaunchArgumentType.SdkRoot, Harness.XcodeRoot),
-							(MlaunchArgumentType.ListSim, tmpfile)
+							(MlaunchArgumentType.ListSim, tmpfile),
+							(MlaunchArgumentType.OutputFormat, "xml")
 						);
 						process.StartInfo.Arguments = arguments.AsCommandLine ();
 						log.WriteLine ("Launching {0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments);
-						var rv = await ProcessManager.RunAsync (process, log, timeout: TimeSpan.FromSeconds (30));
+						var rv = await ProcessManager.RunAsync (process, arguments, log, timeout: TimeSpan.FromSeconds (30));
+
 						if (!rv.Succeeded)
 							throw new Exception ("Failed to list simulators.");
 						log.WriteLine ("Result:");

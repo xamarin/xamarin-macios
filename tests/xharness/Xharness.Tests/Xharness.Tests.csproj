@@ -71,6 +71,7 @@
     <Compile Include="Hardware\Tests\TCCDatabaseTests.cs" />
     <Compile Include="Hardware\Tests\SimDeviceTest.cs" />
     <Compile Include="Utilities\Tests\StringUtilsTests.cs" />
+    <Compile Include="Hardware\Tests\SimulatorsTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -81,10 +82,13 @@
     <EmbeddedResource Include="Samples\TouchUnitSample.xml" />
     <EmbeddedResource Include="Samples\xUnitSample.xml" />
     <EmbeddedResource Include="Samples\devices.xml" />
+    <EmbeddedResource Include="Samples\simulators.xml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../DummyTestProcess/DummyTestProcess.csproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <Project>{2318BC20-40F1-4A12-B695-10B0433CFB35}</Project>
+      <Name>DummyTestProcess</Name>
     </ProjectReference>
     <ProjectReference Include="..\xharness.csproj">
       <Project>{e1f53f80-8399-499b-8017-c414b9cd263b}</Project>

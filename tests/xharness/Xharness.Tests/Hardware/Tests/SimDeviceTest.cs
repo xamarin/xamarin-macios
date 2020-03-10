@@ -46,8 +46,8 @@ namespace Xharness.Tests.Hardware.Tests {
 			Assert.AreEqual (expectation, simulator.IsWatchSimulator);
 		}
 
-		[TestCase ("com.apple.CoreSimulator.SimRuntime.iOS-12-1", "12,1")]
-		[TestCase ("com.apple.CoreSimulator.SimRuntime.iOS-10-1", "10,1")]
+		[TestCase ("com.apple.CoreSimulator.SimRuntime.iOS-12-1", "iOS 12.1")]
+		[TestCase ("com.apple.CoreSimulator.SimRuntime.iOS-10-1", "iOS 10.1")]
 		public void OSVersionTest (string runtime, string expected)
 		{
 			simulator.SimRuntime = runtime;
@@ -87,10 +87,5 @@ namespace Xharness.Tests.Hardware.Tests {
 			processManager.Verify (p => p.ExecuteCommandAsync (It.Is<string> (s => s == "killall"), It.Is<IList<string>> (a => verifyKillAll (a)), It.IsAny<ILog> (), It.IsAny<TimeSpan> (), null, null));
 		}
 
-		[Test]
-		public void PrepareSimulatorAsyncTest ()
-		{
-
-		}
 	}
 }
