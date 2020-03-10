@@ -9,6 +9,7 @@ using System.Text;
 using Xharness.Logging;
 using Xharness.Execution;
 using Xharness.Jenkins.TestTasks;
+using Xharness.Utilities;
 
 namespace Xharness.Jenkins
 {

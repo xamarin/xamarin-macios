@@ -1,10 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
-using Xamarin.Utils;
-using Xharness.Execution;
 using Xharness.Logging;
 
 namespace Xharness.Jenkins.TestTasks {

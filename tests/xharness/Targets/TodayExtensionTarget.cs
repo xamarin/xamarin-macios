@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
-using Xamarin;
+using Xharness.Utilities;
 
-namespace Xharness
+namespace Xharness.Targets
 {
 	public class TodayExtensionTarget : UnifiedTarget
 	{

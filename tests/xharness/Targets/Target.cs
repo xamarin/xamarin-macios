@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
-using Xamarin;
+using Xharness.Utilities;
 
-namespace Xharness
+namespace Xharness.Targets
 {
 	public abstract class Target
 	{
@@ -218,4 +218,3 @@ namespace Xharness
 		public string Guid;
 	}
 }
-
