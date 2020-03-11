@@ -541,7 +541,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			Architecture="$(XamMacArch)"
 			ArchiveSymbols="$(MonoSymbolArchive)"
 			LinkMode="$(LinkMode)"
-			Debug="$(DebugSymbols)"
+			Debug="$(MmpDebug)"
 			HttpClientHandler="$(HttpClientHandler)"
 			I18n="$(I18n)"
 			Profiling="$(Profiling)"
