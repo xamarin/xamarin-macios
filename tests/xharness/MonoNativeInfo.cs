@@ -157,9 +157,9 @@ namespace Xharness
 
 		public string FlavorSuffix => Flavor == MonoNativeFlavor.Compat ? "-compat" : "-unified";
 		public string ProjectName => "mono-native" + FlavorSuffix;
-		public string ProjectPath => Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "mono-native", TemplateName + FlavorSuffix + ".csproj");
+		public string ProjectPath => Path.Combine (Harness.RootDirectory, "mono-native", TemplateName + FlavorSuffix + ".csproj");
 		string TemplateName => "mono-native" + TemplateSuffix;
-		public string TemplatePath => Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "mono-native", TemplateName + ".csproj.template");
+		public string TemplatePath => Path.Combine (Harness.RootDirectory, "mono-native", TemplateName + ".csproj.template");
 		protected virtual string TemplateSuffix => string.Empty;
 
 		public void Convert ()

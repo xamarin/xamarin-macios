@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
-using Xharness;
 using Xharness.Execution;
 using Xharness.Logging;
 

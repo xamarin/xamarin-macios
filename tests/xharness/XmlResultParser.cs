@@ -547,11 +547,11 @@ namespace Xharness {
 			("time", "0"),
 			("asserts", "1"));
 
-		static void WriteNUnitV2TestCase (XmlWriter writer, string message, StreamReader stderr)
+		static void WriteNUnitV2TestCase (XmlWriter writer, string title, string message, StreamReader stderr)
 		{
 			writer.WriteStartElement ("test-case");
 			WriteAttributes (writer, 
-				("name", "Crash Report"),
+				("name", title),
 				("executed", "True"),
 				("result", "Failure"),
 				("success", "False"),
@@ -593,7 +593,7 @@ namespace Xharness {
 			writer.WriteAttributeString ("type", "TestFixture");
 			WriteNUnitV2TestSuiteAttributes (writer, title);
 			writer.WriteStartElement ("results");
-			WriteNUnitV2TestCase (writer, message, stderr);
+			WriteNUnitV2TestCase (writer, title, message, stderr);
 			writer.WriteEndElement (); // results
 			writer.WriteEndElement (); // test-suite TextFixture
 			writer.WriteEndElement (); // results
@@ -668,8 +668,8 @@ namespace Xharness {
 			writer.WriteStartElement ("test-case");
 			WriteAttributes (writer,
 				("id", "1"),
-				("name", "Crash Report"),
-				("fullname", "Crash Report"),
+				("name", title),
+				("fullname", title),
 				("result", "Failed"),
 				("time", "0"),
 				("asserts", "1"));
@@ -701,7 +701,7 @@ namespace Xharness {
 				("passed", "0"),
 				("failed", "1"),
 				("skipped", "0"),
-				("name", "Crash Report"),
+				("name", title),
 				("time", "0"));
 			writer.WriteStartElement ("test");
 			WriteAttributes (writer,

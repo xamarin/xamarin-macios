@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Xharness;
 using Xharness.Collections;
 using Xharness.Execution;
 using Xharness.Logging;
