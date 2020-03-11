@@ -26,21 +26,18 @@ TVOS_DOTNET_BUILD_DIR=$(DOTNET_BUILD_DIR)/tvos
 GENERATOR_FLAGS=-process-enums -core -nologo -nostdlib -noconfig -native-exception-marshalling --ns:ObjCRuntime
 
 DOTNET_FLAGS=/noconfig /nostdlib+ /deterministic /features:strict /nologo /target:library /debug /unsafe /define:DOTNET /define:DOTNET_TODO \
-	/r:$(DOTNET_BCL_DIR)/mscorlib.dll \
 	/r:$(DOTNET_BCL_DIR)/System.Buffers.dll \
-	/r:$(DOTNET_BCL_DIR)/System.Collections.dll \
 	/r:$(DOTNET_BCL_DIR)/System.Collections.Concurrent.dll \
+	/r:$(DOTNET_BCL_DIR)/System.Collections.dll \
 	/r:$(DOTNET_BCL_DIR)/System.Collections.NonGeneric.dll \
 	/r:$(DOTNET_BCL_DIR)/System.Console.dll \
 	/r:$(DOTNET_BCL_DIR)/System.Diagnostics.Debug.dll \
 	/r:$(DOTNET_BCL_DIR)/System.Diagnostics.Tools.dll \
-	/r:$(DOTNET_BCL_DIR)/System.dll \
 	/r:$(DOTNET_BCL_DIR)/System.Drawing.Primitives.dll \
 	/r:$(DOTNET_BCL_DIR)/System.IO.Compression.dll \
 	/r:$(DOTNET_BCL_DIR)/System.IO.FileSystem.dll \
 	/r:$(DOTNET_BCL_DIR)/System.Linq.dll \
 	/r:$(DOTNET_BCL_DIR)/System.Memory.dll \
-	/r:$(DOTNET_BCL_DIR)/System.Net.dll \
 	/r:$(DOTNET_BCL_DIR)/System.Net.Http.dll \
 	/r:$(DOTNET_BCL_DIR)/System.Net.NameResolution.dll \
 	/r:$(DOTNET_BCL_DIR)/System.Net.Primitives.dll \
@@ -48,19 +45,17 @@ DOTNET_FLAGS=/noconfig /nostdlib+ /deterministic /features:strict /nologo /targe
 	/r:$(DOTNET_BCL_DIR)/System.Net.Security.dll \
 	/r:$(DOTNET_BCL_DIR)/System.Net.ServicePoint.dll \
 	/r:$(DOTNET_BCL_DIR)/System.Net.Sockets.dll \
-	/r:$(DOTNET_BCL_DIR)/System.ObjectModel.dll \
-	/r:$(DOTNET_BCL_DIR)/System.Text.RegularExpressions.dll \
 	/r:$(DOTNET_BCL_DIR)/System.Resources.ResourceManager.dll \
 	/r:$(DOTNET_BCL_DIR)/System.Runtime.dll \
 	/r:$(DOTNET_BCL_DIR)/System.Runtime.Extensions.dll \
 	/r:$(DOTNET_BCL_DIR)/System.Runtime.InteropServices.dll \
 	/r:$(DOTNET_BCL_DIR)/System.Security.Cryptography.X509Certificates.dll \
+	/r:$(DOTNET_BCL_DIR)/System.Text.RegularExpressions.dll \
 	/r:$(DOTNET_BCL_DIR)/System.Threading.dll \
 	/r:$(DOTNET_BCL_DIR)/System.Threading.Tasks.dll \
 	/r:$(DOTNET_BCL_DIR)/System.Threading.Thread.dll \
+	/r:$(DOTNET_BCL_DIR)/System.Xml.dll \
 	/r:$(DOTNET_BCL_DIR)/System.Xml.ReaderWriter.dll \
-	/r:$(DOTNET_BCL_DIR)/System.Xml.Serialization.dll \
-	/r:$(DOTNET_BCL_DIR)/System.Xml.XmlSerializer.dll \
 
 DOTNET_GENERATOR_FLAGS=$(GENERATOR_FLAGS) -compiler=$(SYSTEM_CSC) $(DOTNET_FLAGS) --lib=$(DOTNET_BCL_DIR) -attributelib:$(DOTNET_BINDING_ATTRIBUTES)
 DOTNET_GENERATOR=$(DOTNET_BUILD_DIR)/bgen/bgen
