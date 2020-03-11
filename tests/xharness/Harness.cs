@@ -124,8 +124,58 @@ namespace Xharness
 		// whether tests that require access to system resources (system contacts, photo library, etc) should be executed or not
 		public bool? IncludeSystemPermissionTests { get; set; }
 
-		public Harness ()
+		public Harness (HarnessAction action,
+			bool autoConf,
+			string configuration,
+			bool dryRun,
+			Dictionary<string, string> environmentVariables,
+			bool? includeSystemPermissionTests,
+			List<iOSTestProject> iOSTestProjects,
+			string jenkinsConfiguration,
+			HashSet<string> labels,
+			string logDirectory,
+			string logFile,
+			bool mac,
+			string markdownSummaryPath,
+			string periodicCommand,
+			string periodicCommandArguments,
+			TimeSpan periodicCommandInterval,
+			string rootDirectory,
+			string sdkRoot,
+			AppRunnerTarget target,
+			double timeout,
+			bool useSystem,
+			int verbosity,
+			string watchOSAppTemplate,
+			string watchOSContainerTemplate,
+			XmlResultJargon xmlJargon)
 		{
+			Action = action;
+			AutoConf = autoConf;
+			Configuration = configuration;
+			DryRun = dryRun;
+			EnvironmentVariables = environmentVariables;
+			IncludeSystemPermissionTests = includeSystemPermissionTests;
+			IOSTestProjects = iOSTestProjects;
+			JenkinsConfiguration = jenkinsConfiguration;
+			Labels = labels;
+			LogDirectory = logDirectory;
+			LogFile = logFile;
+			Mac = mac;
+			MarkdownSummaryPath = markdownSummaryPath;
+			PeriodicCommand = periodicCommand;
+			PeriodicCommandArguments = periodicCommandArguments;
+			PeriodicCommandInterval = periodicCommandInterval;
+			RootDirectory = rootDirectory;
+			SdkRoot = sdkRoot;
+			Target = target;
+			Timeout = timeout;
+			UseSystem = useSystem;
+			Verbosity = verbosity;
+			WatchOSAppTemplate = watchOSAppTemplate;
+			WatchOSContainerTemplate = watchOSContainerTemplate;
+			XmlJargon = xmlJargon;
+			
 			LaunchTimeout = InCI ? 3 : 120;
 		}
 
@@ -778,6 +828,7 @@ namespace Xharness
 		}
 
 		bool? disable_watchos_on_wrench;
+
 		public bool DisableWatchOSOnWrench {
 			get {
 				if (!disable_watchos_on_wrench.HasValue)

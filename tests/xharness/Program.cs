@@ -7,25 +7,24 @@ namespace Xharness {
 	class MainClass {
 		public static int Main (string [] args)
 		{
-			var harness = new Harness ();
-
 			Action showHelp = null;
+
 			var action = HarnessAction.None;
 			var autoConf = false;
 			var configuration = "Debug";
 			var dryRun = false;
 			var environmentVariables = new Dictionary<string, string> ();
-			var includeSystemPermissionTests = false;
+			bool? includeSystemPermissionTests = null;
 			var iOSTestProjects = new List<iOSTestProject> ();
-			string jenkinsConfiguration;
+			string jenkinsConfiguration = null;
 			var labels = new HashSet<string> ();
 			var logDirectory = Environment.CurrentDirectory;
-			string logFile;
+			string logFile = null;
 			var mac = false;
 			string markdownSummaryPath = null;
-			string periodicCommand;
-			string periodicCommandArguments;
-			TimeSpan periodicCommandInterval;
+			string periodicCommand = null;
+			string periodicCommandArguments = null;
+			TimeSpan periodicCommandInterval = TimeSpan.Zero;
 			string rootDirectory = null;
 			string sdkRoot = null;
 			var target = AppRunnerTarget.None;
@@ -116,15 +115,43 @@ namespace Xharness {
 			var input = os.Parse (args);
 			if (input.Count > 0)
 				throw new Exception (string.Format ("Unknown arguments: {0}", string.Join (", ", input.ToArray ())));
-			if (harness.Action == HarnessAction.None)
+			
+			if (action == HarnessAction.None)
 				showHelp ();
 
-			if (harness.XmlJargon == XmlResultJargon.Missing) {
+			if (xmlJargon == XmlResultJargon.Missing) {
 				Console.WriteLine ("Unknown xml-jargon value provided. Values can be nunitv2, nunitv3, xunit");
 				return 1;
 			}
+
 			// XS sets this, which breaks pretty much everything if it doesn't match what was passed to --sdkroot.
 			Environment.SetEnvironmentVariable ("XCODE_DEVELOPER_DIR_PATH", null);
+
+			var harness = new Harness (action,
+				autoConf,
+				configuration,
+				dryRun,
+				environmentVariables,
+				includeSystemPermissionTests,
+				iOSTestProjects,
+				jenkinsConfiguration,
+				labels,
+				logDirectory,
+				logFile,
+				mac,
+				markdownSummaryPath,
+				periodicCommand,
+				periodicCommandArguments,
+				periodicCommandInterval,
+				rootDirectory,
+				sdkRoot,
+				target,
+				timeout,
+				useSystem,
+				verbosity,
+				watchOSAppTemplate,
+				watchOSContainerTemplate,
+				xmlJargon);
 
 			return harness.Execute ();
 		}
