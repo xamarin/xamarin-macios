@@ -1103,7 +1103,7 @@ namespace Xharness.Jenkins
 
 			var buildDotNetGenerator = new DotNetBuildTask {
 				Jenkins = this,
-				TestProject = new TestProject (Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "bgen", "bgen-tests.csproj"))),
+				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "bgen", "bgen-tests.csproj"))),
 				SpecifyPlatform = false,
 				SpecifyConfiguration = false,
 				Platform = TestPlatform.iOS,
