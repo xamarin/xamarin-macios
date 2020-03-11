@@ -3,9 +3,6 @@ using System.IO;
 using System.Xml;
 using Xharness.Utilities;
 
-using Xamarin;
-using Xharness.Hardware;
-
 namespace Xharness.Targets
 {
 	public class UnifiedTarget : iOSTarget

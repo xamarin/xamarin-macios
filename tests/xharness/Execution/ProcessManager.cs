@@ -58,12 +58,6 @@ namespace Xharness.Execution {
 			return RunAsync (process, log, log, log, timeout, environment_variables, cancellation_token, diagnostics);
 		}
 
-		public Task<ProcessExecutionResult> RunAsync (Process process, MlaunchArguments args, ILog log, TimeSpan? timeout = null, Dictionary<string, string> environment_variables = null, CancellationToken? cancellation_token = null, bool? diagnostics = null)
-		{
-			process.StartInfo.Arguments = args.AsCommandLine ();
-			return RunAsync (process, log, timeout, environment_variables, cancellation_token, diagnostics);
-		}
-
 		public Task<ProcessExecutionResult> RunAsync (Process process, ILog log, ILog stdoutLog, ILog stderrLog, TimeSpan? timeout = null, Dictionary<string, string> environment_variables = null, CancellationToken? cancellation_token = null, bool? diagnostics = null)
 		{
 			if (stdoutLog is TextWriter StdoutStream && stderrLog is TextWriter StderrStream) {

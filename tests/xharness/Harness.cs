@@ -24,14 +24,7 @@ namespace Xharness
 		Jenkins,
 	}
 
-	public interface IHarness {
-		string MlaunchPath { get; }
-		string XcodeRoot { get; }
-		Version XcodeVersion { get; }
-		Task<ProcessExecutionResult> ExecuteXcodeCommandAsync (string executable, IList<string> args, ILog log, TimeSpan timeout);
-	}
-
-	public class Harness : IHarness
+	public class Harness
 	{
 		public HarnessAction Action { get; set; }
 		public int Verbosity { get; set; }
