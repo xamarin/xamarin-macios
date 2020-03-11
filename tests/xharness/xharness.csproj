@@ -172,9 +172,6 @@
     <Folder Include="BCLTestImporter\Templates\Managed\Resources\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="BCLTestImporter\Templates\Managed\Resources\Managed.watchOS.Extension.plist.in" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.iOS.csproj.in" />
     <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.macOS.csproj.in" />
     <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.tvOS.csproj.in" />
@@ -186,6 +183,7 @@
     <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.watchOS.Extension.csproj.in" />
     <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.tvOS.plist.in" />
     <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.watchOS.App.plist.in" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.watchOS.Extension.plist.in" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
