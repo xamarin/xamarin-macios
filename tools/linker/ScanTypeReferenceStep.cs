@@ -41,7 +41,7 @@ namespace Xamarin.Linker.Steps {
 
 		protected override void Report (string typeName, AssemblyDefinition assembly)
 		{
-			ErrorHelper.Show (new ProductException (1502, false, "One or more reference(s) to type '{0}' already exists inside '{1}' before linking", typeName, assembly));
+			ErrorHelper.Show (new ProductException (1502, false, Errors.MX1502, typeName, assembly));
 		}
 	}
 
@@ -53,7 +53,7 @@ namespace Xamarin.Linker.Steps {
 
 		protected override void Report (string typeName, AssemblyDefinition assembly)
 		{
-			ErrorHelper.Show (new ProductException (1503, false, "One or more reference(s) to type '{0}' still exists inside '{1}' after linking", typeName, assembly));
+			ErrorHelper.Show (new ProductException (1503, false, Errors.MX1503, typeName, assembly));
 		}
 	}
 }

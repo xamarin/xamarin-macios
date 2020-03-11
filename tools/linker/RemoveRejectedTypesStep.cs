@@ -26,7 +26,7 @@ namespace Xamarin.Linker {
 			get { return SubStepTargets.Assembly; }
 		}
 
-		protected override string Name { get; } = " Removing Rejected Type";
+		protected override string Name { get; } = "Removing Rejected Type";
 		protected override int ErrorCode { get; } = 2660;
 
 		public List<(string originalFullName, string replacementTypeName)> TypeReferencesToBeRemoved = new List<(string,string)> () {
