@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\..\..\packages\NUnit.3.12.0\build\NUnit.props" Condition="Exists('..\..\..\packages\NUnit.3.12.0\build\NUnit.props')" />
   <PropertyGroup>
@@ -18,12 +18,14 @@
     <DefineConstants>DEBUG;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
     <OutputPath>bin\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
@@ -63,6 +65,10 @@
     <Compile Include="Listeners\Tests\SimpleFileListenerTest.cs" />
     <Compile Include="Listeners\Tests\SimpleTcpListenerTest.cs" />
     <Compile Include="Execution\Tests\ProcessManagerTests.cs" />
+    <Compile Include="Execution\Tests\MlaunchArgumentsTest.cs" />
+    <Compile Include="Hardware\Tests\DeviceTest.cs" />
+    <Compile Include="Hardware\Tests\DevicesTest.cs" />
+    <Compile Include="Hardware\Tests\TCCDatabaseTests.cs" />
     <Compile Include="Utilities\Tests\StringUtilsTests.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -73,6 +79,7 @@
     <EmbeddedResource Include="Samples\NUnitV3Sample.xml" />
     <EmbeddedResource Include="Samples\TouchUnitSample.xml" />
     <EmbeddedResource Include="Samples\xUnitSample.xml" />
+    <EmbeddedResource Include="Samples\devices.xml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../DummyTestProcess/DummyTestProcess.csproj">
@@ -82,6 +89,10 @@
       <Project>{e1f53f80-8399-499b-8017-c414b9cd263b}</Project>
       <Name>xharness</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Hardware\" />
+    <Folder Include="Hardware\Tests\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Xml;
+using Xamarin;
+using Xharness.Hardware;
 using Xharness.Utilities;
 
 namespace Xharness.Targets
@@ -111,7 +113,7 @@ namespace Xharness.Targets
 				MonoNativeHelper.RemoveSymlinkMode (inputProject);
 			}
 
-			var srcDirectory = Path.Combine (Harness.RootDirectory, "..", "src");
+			var srcDirectory = Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "..", "src");
 
 			string project_guid;
 			var mt_nunitlite_project_path = Path.GetFullPath (Path.Combine (srcDirectory, "MonoTouch.NUnitLite.tvos.csproj"));
