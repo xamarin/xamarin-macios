@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Xharness.BCLTestImporter.Templates {
 	// interface that represent a project that is created from a template.
@@ -10,5 +11,6 @@ namespace Xharness.BCLTestImporter.Templates {
 		Stream GetProjectTemplate (WatchAppType appType);
 		Stream GetPlistTemplate (Platform platform);
 		Stream GetPlistTemplate (WatchAppType appType);
+		Task GenerateSource (string srcOuputPath);
 	}
 }
