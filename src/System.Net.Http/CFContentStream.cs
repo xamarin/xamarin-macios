@@ -147,7 +147,7 @@ namespace System.Net.Http
 			}
 		}
 
-#if !DOTNET
+#if !NET
 		internal
 #endif
 		protected override bool TryComputeLength (out long length)

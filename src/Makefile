@@ -25,7 +25,7 @@ TVOS_DOTNET_BUILD_DIR=$(DOTNET_BUILD_DIR)/tvos
 
 GENERATOR_FLAGS=-process-enums -core -nologo -nostdlib -noconfig -native-exception-marshalling --ns:ObjCRuntime
 
-DOTNET_FLAGS=/noconfig /nostdlib+ /deterministic /features:strict /nologo /target:library /debug /unsafe /define:DOTNET /define:DOTNET_TODO \
+DOTNET_FLAGS=/noconfig /nostdlib+ /deterministic /features:strict /nologo /target:library /debug /unsafe /define:NET /define:NET_TODO \
 	/r:$(DOTNET_BCL_DIR)/System.Buffers.dll \
 	/r:$(DOTNET_BCL_DIR)/System.Collections.Concurrent.dll \
 	/r:$(DOTNET_BCL_DIR)/System.Collections.dll \

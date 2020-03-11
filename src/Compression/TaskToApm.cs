@@ -18,7 +18,7 @@
 // We need it to be backwards compatible in .NET 5 for the implementations of Compression.[Begin|End]|[Read|Write].
 //
 
-#if DOTNET
+#if NET
 #nullable enable
 using System.Diagnostics;
 
