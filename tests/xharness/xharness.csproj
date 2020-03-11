@@ -137,6 +137,8 @@
     <Compile Include="Utilities\StringUtils.cs" />
     <Compile Include="Utilities\TempDirectory.cs" />
     <Compile Include="XmlResultParser.cs" />
+    <Compile Include="BCLTestImporter\Templates\ITemplatedProject.cs" />
+    <Compile Include="BCLTestImporter\Templates\Managed\XamariniOSTemplate.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\tools\mtouch\SdkVersions.cs">
@@ -150,6 +152,27 @@
     <Content Include="xharness.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="BCLTestImporter\Templates\" />
+    <Folder Include="BCLTestImporter\Templates\Managed\" />
+    <Folder Include="BCLTestImporter\Templates\Managed\Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="BCLTestImporter\Templates\Managed\Resources\Managed.watchOS.Extension.plist.in" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.iOS.csproj.in" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.macOS.csproj.in" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.tvOS.csproj.in" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.watchOS.csproj.in" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.watchOS.App.csproj.in" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.iOS.plist.in" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.macOS.plist.in" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.watchOS.plist.in" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.watchOS.Extension.csproj.in" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.tvOS.plist.in" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.watchOS.App.plist.in" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

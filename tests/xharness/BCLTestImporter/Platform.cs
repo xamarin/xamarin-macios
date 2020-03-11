@@ -1,4 +1,4 @@
-namespace BCLTestImporter {
+namespace Xharness.BCLTestImporter {
 	/// <summary>
 	/// Represents the supported platforms to which we can create projects.
 	/// </summary>
@@ -8,5 +8,13 @@ namespace BCLTestImporter {
 		TvOS,
 		MacOSFull,
 		MacOSModern,
+	}
+
+	/// <summary>
+	/// Represents the different types of wathcOS apps.
+	/// </summary>
+	public enum WatchAppType {
+		App,
+		Extension
 	}
 }
