@@ -61,7 +61,7 @@ namespace Xharness.Targets
 			csproj.SetProjectReferenceInclude ("TodayExtension.csproj", TodayExtensionProjectPath.Replace ('/', '\\'));
 			csproj.FixCompileInclude ("Main.cs", Path.Combine (Harness.TodayContainerTemplate, "Main.cs").Replace ('/', '\\'));
 			csproj.FixInfoPListInclude (suffix, IsGeneratedBclTest ? GeneratedPath : null);
-			TodayContainerGuid = "{" + Helpers.GenerateStableGuid ().ToString ().ToUpper () + "}";
+			TodayContainerGuid = "{" + Harness.NewStableGuid ().ToString ().ToUpper () + "}";
 			ProjectGuid = TodayContainerGuid;
 			csproj.SetProjectGuid (TodayContainerGuid);
 			if (MonoNativeInfo != null) {
