@@ -16,6 +16,8 @@ namespace Xamarin.Mac.Tasks
 
 		public string SessionId { get; set; }
 
+		// This is also an input
+		[Output]
 		public string XamarinSdkRoot {
 			get; set;
 		}
