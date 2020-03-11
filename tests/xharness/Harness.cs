@@ -167,7 +167,7 @@ namespace Xharness
 		void LoadConfig ()
 		{
 			ParseConfigFiles ();
-			var src_root = Path.GetDirectoryName ( DirectoryUtilities.RepositoryRootDirectory);
+			var src_root = Path.GetDirectoryName ( Path.GetFullPath (DirectoryUtilities.RepositoryRootDirectory));
 			MONO_PATH = Path.GetFullPath (Path.Combine (src_root, "external", "mono"));
 			TVOS_MONO_PATH = MONO_PATH;
 			INCLUDE_IOS = make_config.ContainsKey ("INCLUDE_IOS") && !string.IsNullOrEmpty (make_config ["INCLUDE_IOS"]);
@@ -352,7 +352,7 @@ namespace Xharness
 		Dictionary<string, string> make_config = new Dictionary<string, string> ();
 		IEnumerable<string> FindConfigFiles (string name)
 		{
-			var dir = DirectoryUtilities.RepositoryRootDirectory;
+			var dir = Path.GetFullPath (DirectoryUtilities.RepositoryRootDirectory);
 			while (dir != "/") {
 				var file = Path.Combine (dir, name);
 				if (File.Exists (file))
