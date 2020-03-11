@@ -38,9 +38,9 @@ namespace Xharness
 		public int Verbosity { get; set; }
 		public ILog HarnessLog { get; set; }
 		public bool UseSystem { get; set; } // if the system XI/XM should be used, or the locally build XI/XM.
-		public HashSet<string> Labels { get; } = new HashSet<string> ();
-		public XmlResultJargon XmlJargon { get; set; } = XmlResultJargon.NUnitV3;
-		public IProcessManager ProcessManager { get; set; } = new ProcessManager ();
+		public HashSet<string> Labels { get; }
+		public XmlResultJargon XmlJargon { get; set; }
+		public IProcessManager ProcessManager { get; set; }
 
 		public string XIBuildPath {
 			get { return Path.GetFullPath (Path.Combine (RootDirectory, "..", "tools", "xibuild", "xibuild")); }
@@ -80,7 +80,7 @@ namespace Xharness
 			}
 		}
 
-		public List<iOSTestProject> IOSTestProjects { get; set; } = new List<iOSTestProject> ();
+		public List<iOSTestProject> IOSTestProjects { get; set; }
 		public List<MacTestProject> MacTestProjects { get; set; } = new List<MacTestProject> ();
 
 		// Configure
@@ -109,14 +109,14 @@ namespace Xharness
 		// Run
 		public AppRunnerTarget Target { get; set; }
 		public string SdkRoot { get; set; }
-		public string Configuration { get; set; } = "Debug";
+		public string Configuration { get; set; }
 		public string LogFile { get; set; }
-		public string LogDirectory { get; set; } = Environment.CurrentDirectory;
+		public string LogDirectory { get; set; }
 		public double Timeout { get; set; } = 15; // in minutes
 		public double LaunchTimeout { get; set; } // in minutes
 		public bool DryRun { get; set; } // Most things don't support this. If you need it somewhere, implement it!
 		public string JenkinsConfiguration { get; set; }
-		public Dictionary<string, string> EnvironmentVariables { get; set; } = new Dictionary<string, string> ();
+		public Dictionary<string, string> EnvironmentVariables { get; set; }
 		public string MarkdownSummaryPath { get; set; }
 		public string PeriodicCommand { get; set; }
 		public string PeriodicCommandArguments { get; set; }
