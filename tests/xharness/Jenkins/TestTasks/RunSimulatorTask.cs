@@ -3,28 +3,26 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Xharness.Collections;
-using Xharness.Hardware;
 
 namespace Xharness.Jenkins.TestTasks
 {
-	class RunSimulatorTask : RunXITask<ISimulatorDevice>
+	class RunSimulatorTask : RunXITask<SimDevice>
 	{
 		public IAcquiredResource AcquiredResource;
 
-		public ISimulatorDevice [] Simulators {
+		public SimDevice[] Simulators {
 			get {
 				if (Device == null) {
-					return new ISimulatorDevice [] { };
+					return new SimDevice [] { };
 				} else if (CompanionDevice == null) {
-					return new ISimulatorDevice [] { Device };
+					return new SimDevice [] { Device };
 				} else {
-					return new ISimulatorDevice [] { Device, CompanionDevice };
+					return new SimDevice [] { Device, CompanionDevice };
 				}
 			}
 		}
 
-		public RunSimulatorTask (MSBuildTask build_task, IEnumerable<ISimulatorDevice> candidates = null)
+		public RunSimulatorTask (MSBuildTask build_task, IEnumerable<SimDevice> candidates = null)
 			: base (build_task, candidates)
 		{
 			var project = Path.GetFileNameWithoutExtension (ProjectFile);
