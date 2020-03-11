@@ -300,37 +300,11 @@ namespace Compression
 			throw new InvalidOperationException ("Writing to the compression stream is not supported.");
 		}
 
-#if DOTNET
-		#pragma warning disable 0809 // Obsolete member 'CompressionStream.BeginRead(...)' overrides non-obsolete member 'Stream.BeginRead(...)'
-		[Obsolete ("Use 'ReadAsync' instead. This method is synchronous.")]
-#endif
-		public override IAsyncResult BeginRead (byte[] buffer, int offset, int count, AsyncCallback asyncCallback, object asyncState)
-		{
-#if DOTNET
-			// TaskToApm is internal API in mscorlib, so we can't use it.
-			// In any case, the documentation recommends using ReadAsync instead,
-			// so obsolete this method and just call the base method implementation,
-			// which should still work (just synchronously).
-			return base.BeginRead (buffer, offset, count, asyncCallback, asyncState);
-#else
-			return TaskToApm.Begin(ReadAsync (buffer, offset, count, CancellationToken.None), asyncCallback, asyncState);
-#endif
-		}
+		public override IAsyncResult BeginRead (byte[] buffer, int offset, int count, AsyncCallback asyncCallback, object asyncState) =>
+			TaskToApm.Begin(ReadAsync (buffer, offset, count, CancellationToken.None), asyncCallback, asyncState);
 
-#if DOTNET
-		[Obsolete ("Use 'EndRead' instead.")]
-#endif
-		public override int EndRead (IAsyncResult asyncResult)
-		{
-#if DOTNET
-			return base.EndRead (asyncResult);
-#else
-			return TaskToApm.End<int> (asyncResult);
-#endif
-		}
-#if DOTNET
-		#pragma warning restore 0809
-#endif
+		public override int EndRead (IAsyncResult asyncResult) =>
+			TaskToApm.End<int> (asyncResult);
 
 		public override Task<int> ReadAsync (byte[] array, int offset, int count, CancellationToken cancellationToken)
 		{
@@ -573,34 +547,10 @@ namespace Compression
 			}
 		}
 
-#if DOTNET
-		#pragma warning disable 0809 // Obsolete member 'CompressionStream.BeginWrite(...)' overrides non-obsolete member 'Stream.BeginWrite(...)'
-		[Obsolete ("Use 'BeginWrite' instead. This method is synchronous.")]
-#endif
-		public override IAsyncResult BeginWrite (byte[] array, int offset, int count, AsyncCallback asyncCallback, object asyncState)
-		{
-#if DOTNET
-			// See comment about TaskToApm elsewhere in this file.
-			return base.BeginWrite (array, offset, count, asyncCallback, asyncState);
-#else
-			return TaskToApm.Begin(WriteAsync (array, offset, count, CancellationToken.None), asyncCallback, asyncState);
-#endif
-		}
+		public override IAsyncResult BeginWrite (byte[] array, int offset, int count, AsyncCallback asyncCallback, object asyncState) =>
+			TaskToApm.Begin(WriteAsync (array, offset, count, CancellationToken.None), asyncCallback, asyncState);
 
-#if DOTNET
-		[Obsolete ("Use 'EndWrite' instead.")]
-#endif
-		public override void EndWrite (IAsyncResult asyncResult)
-		{
-#if DOTNET
-			base.EndWrite (asyncResult);
-#else
-			TaskToApm.End (asyncResult);
-#endif
-		}
-#if DOTNET
-		#pragma warning restore 0809
-#endif
+		public override void EndWrite (IAsyncResult asyncResult) => TaskToApm.End (asyncResult);
 
 		public override Task WriteAsync (byte[] array, int offset, int count, CancellationToken cancellationToken)
 		{
