@@ -88,6 +88,11 @@ def githubGetPullRequestLabels ()
 
 def githubAddComment (url, markdown)
 {
+    if (markdown.length () > 32768) {
+        // GitHub only allows adding comments < 65536 characters log, so lets cap at half that, which should be more than enough to say that something went horribly wrong
+        markdown = markdown.substring (0, 32768)
+    }
+
     def json = groovy.json.JsonOutput.toJson ([body: markdown])
     def jsonFile = "${workspace}/xamarin-macios/jenkins/commit-comments.json"
     try {
