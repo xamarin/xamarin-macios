@@ -13,6 +13,7 @@ using xharness.Collections;
 using Xharness;
 using Xharness.Execution;
 using Xharness.Logging;
+using Xharness.Utilities;
 
 namespace Xharness.Hardware {
 	public class Simulators : ISimulatorsLoader {

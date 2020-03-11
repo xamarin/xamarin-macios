@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
+using Xharness.Utilities;
 
-using Xamarin;
-using Xamarin.Utils;
 using Xharness.Hardware;
 
-namespace Xharness
+namespace Xharness.Targets
 {
 	public class WatchOSTarget : iOSTarget
 	{
@@ -288,4 +287,3 @@ namespace Xharness
 		}
 	}
 }
-

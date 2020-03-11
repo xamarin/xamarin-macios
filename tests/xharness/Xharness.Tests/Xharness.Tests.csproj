@@ -69,6 +69,7 @@
     <Compile Include="Hardware\Tests\DeviceTest.cs" />
     <Compile Include="Hardware\Tests\DevicesTest.cs" />
     <Compile Include="Hardware\Tests\TCCDatabaseTests.cs" />
+    <Compile Include="Utilities\Tests\StringUtilsTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

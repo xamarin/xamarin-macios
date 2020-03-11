@@ -7,9 +7,8 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Xamarin.Utils;
-using Xharness;
 using Xharness.Logging;
+using Xharness.Utilities;
 
 namespace Xharness.Execution {
 	public class ProcessManager : IProcessManager {
@@ -82,6 +81,9 @@ namespace Xharness.Execution {
 
 			process.StartInfo.RedirectStandardError = true;
 			process.StartInfo.RedirectStandardOutput = true;
+			// Make cute emojiis show up as cute emojiis in the output instead of ugly text symbols!
+			process.StartInfo.StandardOutputEncoding = Encoding.UTF8; 
+			process.StartInfo.StandardErrorEncoding = Encoding.UTF8;
 			process.StartInfo.UseShellExecute = false;
 
 			if (environment_variables != null) {

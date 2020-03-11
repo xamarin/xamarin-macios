@@ -33,7 +33,7 @@ namespace Xharness.Jenkins.TestTasks
 			}
 		}
 
-		public RunDeviceTask (XBuildTask build_task, IEnumerable<IHardwareDevice> candidates)
+		public RunDeviceTask (MSBuildTask build_task, IEnumerable<IHardwareDevice> candidates)
 			: base (build_task, candidates.OrderBy ((v) => v.DebugSpeed))
 		{
 			switch (build_task.Platform) {

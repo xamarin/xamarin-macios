@@ -14,6 +14,7 @@ using Xharness.Execution;
 using Xharness.Jenkins.TestTasks;
 using Xharness.Listeners;
 using Xharness.Logging;
+using Xharness.Utilities;
 
 namespace Xharness
 {
