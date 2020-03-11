@@ -34,6 +34,8 @@ namespace Xamarin.iOS.Tasks
 			get; set;
 		}
 
+		// This is also an input
+		[Output]
 		public string XamarinSdkRoot {
 			get; set;
 		}

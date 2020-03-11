@@ -87,6 +87,10 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
 		<EnableSGenConc Condition="'$(EnableSGenConc)' == ''">false</EnableSGenConc>
 		<AotScope Condition="'$(AotScope)' == ''">None</AotScope>
 		<ArchiveOnBuild Condition="'$(ArchiveOnBuild)' == ''">False</ArchiveOnBuild>
+		<Profiling Condition="'$(MtouchProfiling)' == ''">False</Profiling>
+		<!-- MmpDebug first checks $(DebugSymbols) and then defaults to False. We don't want to touch the DebugSymbols value, since it's used by other tasks. -->
+		<MmpDebug Condition="'$(MmpDebug)' == ''">$(DebugSymbols)</MmpDebug>
+		<MmpDebug Condition="'$(MmpDebug)' == ''">False</MmpDebug>
 	</PropertyGroup>
 
 	<PropertyGroup>

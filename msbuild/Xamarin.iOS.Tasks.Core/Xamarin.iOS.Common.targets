@@ -693,6 +693,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			<Output TaskParameter="SdkPlatform" PropertyName="_SdkPlatform" />
 			<Output TaskParameter="SdkIsSimulator" PropertyName="_SdkIsSimulator" />
 			<Output TaskParameter="IsXcode8" PropertyName="_IsXcode8" />
+			<Output TaskParameter="XamarinSdkRoot" PropertyName="_XamarinSdkRoot" />
 		</DetectSdkLocations>
 	</Target>
 
@@ -922,6 +923,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			ArchiveSymbols="$(MonoSymbolArchive)"
 			Verbosity="$(MtouchVerbosity)"
 			StandardOutputImportance="High"
+			XamarinSdkRoot="$(_XamarinSdkRoot)"
 			>
 			<Output TaskParameter="CompiledArchitectures" PropertyName="_CompiledArchitectures" />
 		</MTouch>
