@@ -11,6 +11,6 @@ namespace Xharness.BCLTestImporter.Templates {
 		Stream GetProjectTemplate (WatchAppType appType);
 		Stream GetPlistTemplate (Platform platform);
 		Stream GetPlistTemplate (WatchAppType appType);
-		Task GenerateSource (string srcOuputPath);
+		void GenerateSource (string srcOuputPath);
 	}
 }

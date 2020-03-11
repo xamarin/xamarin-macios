@@ -717,7 +717,7 @@ namespace Xharness.BCLTestImporter {
 			IEnumerable<BclTestProjectInfo> projects, Platform platform, string generatedDir)
 		{
 			// generate the template c# code before we create the diff projects
-			await TemplatedProject.GenerateSource (Path.Combine (OutputDirectoryPath, "templates"));
+			TemplatedProject.GenerateSource (Path.Combine (OutputDirectoryPath, "templates"));
 			var result = new List<BclTestProject> ();
 			switch (platform) {
 			case Platform.WatchOS:

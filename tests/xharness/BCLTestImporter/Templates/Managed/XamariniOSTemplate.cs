@@ -109,7 +109,7 @@ namespace Xharness.BCLTestImporter.Templates.Managed {
 			return Path.Combine (srcOuputPath, resourceName);
 		}
 
-		public async Task GenerateSource (string srcOuputPath)
+		public void GenerateSource (string srcOuputPath)
 		{
 			// mk the expected directories
 			BuildSrcTree (srcOuputPath);
@@ -123,7 +123,7 @@ namespace Xharness.BCLTestImporter.Templates.Managed {
 				// copy the stream
 				using (var sourceReader = GetType ().Assembly.GetManifestResourceStream (r))
 				using (var destination = File.Create (path)) {
-					await sourceReader.CopyToAsync (destination);
+					sourceReader.CopyTo (destination);
 				}
 			}
 		}
