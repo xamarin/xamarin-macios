@@ -667,36 +667,5 @@ namespace Xharness
 		{
 			return ProcessManager.ExecuteCommandAsync (Path.Combine (XcodeRoot, "Contents", "Developer", "usr", "bin", executable), args, log, timeout: timeout);
 		}
-
-		public async Task<HashSet<string>> CreateCrashReportsSnapshotAsync (ILog log, bool simulatorOrDesktop, string device)
-		{
-			var rv = new HashSet<string> ();
-
-			if (simulatorOrDesktop) {
-				var dir = Path.Combine (Environment.GetEnvironmentVariable ("HOME"), "Library", "Logs", "DiagnosticReports");
-				if (Directory.Exists (dir))
-					rv.UnionWith (Directory.EnumerateFiles (dir));
-			} else {
-				var tmp = Path.GetTempFileName ();
-				try {
-					var sb = new List<string> ();
-					sb.Add ($"--list-crash-reports={tmp}");
-					sb.Add ("--sdkroot");
-					sb.Add (XcodeRoot);
-					if (!string.IsNullOrEmpty (device)) {
-						sb.Add ("--devname");
-						sb.Add (device);
-					}
-					var result = await ProcessManager.ExecuteCommandAsync (MlaunchPath, sb, log, TimeSpan.FromMinutes (1));
-					if (result.Succeeded)
-						rv.UnionWith (File.ReadAllLines (tmp));
-				} finally {
-					File.Delete (tmp);
-				}
-			}
-
-			return rv;
-		}
-
 	}
 }

@@ -449,14 +449,7 @@ namespace Xharness {
 			if (!isSimulator)
 				FindDevice ();
 
-			crash_reports = new CrashReportSnapshot () {
-				Device = !isSimulator,
-				DeviceName = DeviceName,
-				Harness = Harness,
-				Log = MainLog,
-				Logs = Logs,
-				LogDirectory = LogDirectory,
-			};
+			crash_reports = new CrashReportSnapshot (Harness, MainLog, Logs, !isSimulator, DeviceName);
 
 			var args = new List<string> ();
 			if (!string.IsNullOrEmpty (Harness.XcodeRoot)) {
