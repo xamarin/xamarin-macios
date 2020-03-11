@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Xharness.Hardware;
 
 namespace Xharness.Jenkins.TestTasks
 {
-	class RunDeviceTask : RunXITask<Device>
+	class RunDeviceTask : RunXITask<IHardwareDevice>
 	{
 		AppInstallMonitorLog install_log;
 		public override string ProgressMessage {
@@ -32,7 +33,7 @@ namespace Xharness.Jenkins.TestTasks
 			}
 		}
 
-		public RunDeviceTask (MSBuildTask build_task, IEnumerable<Device> candidates)
+		public RunDeviceTask (MSBuildTask build_task, IEnumerable<IHardwareDevice> candidates)
 			: base (build_task, candidates.OrderBy ((v) => v.DebugSpeed))
 		{
 			switch (build_task.Platform) {
