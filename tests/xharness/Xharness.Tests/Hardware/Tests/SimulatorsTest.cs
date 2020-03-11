@@ -47,7 +47,7 @@ namespace Xharness.Tests.Hardware.Tests {
 
 
 		[TestCase (false)] // no timeout
-		[TestCase (true)] // timeoout
+		[TestCase (true)] // timeout
 		public void LoadAsyncProcessErrorTest (bool timeout)
 		{
 			string processPath = null;

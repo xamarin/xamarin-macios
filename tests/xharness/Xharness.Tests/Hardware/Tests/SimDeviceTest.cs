@@ -10,7 +10,7 @@ using Xharness.Logging;
 
 namespace Xharness.Tests.Hardware.Tests {
 	[TestFixture]
-	public class SImDeviceTest {
+	public class SimDeviceTest {
 
 		Mock<ILog> executionLog;
 		Mock<IProcessManager> processManager;
