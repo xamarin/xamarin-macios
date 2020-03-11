@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
-using Xamarin;
 using Xharness.Hardware;
 using Xharness.Execution;
 using Xharness.Jenkins.TestTasks;
@@ -376,10 +375,10 @@ namespace Xharness {
 					MainLog.WriteLine (new string ('#', 10));
 					MainLog.WriteLine ("End of xml results.");
 					if (timed_out) {
-						Harness.LogWrench ($"@MonkeyWrench: AddSummary: <b><i>{mode} timed out</i></b><br/>");
+						WrenchLog.WriteLine ("AddSummary: <b><i>{mode} timed out</i></b><br/>");
 						return parseResult;
 					} else {
-						Harness.LogWrench ($"@MonkeyWrench: AddSummary: <b><i>{mode} crashed</i></b><br/>");
+						WrenchLog.WriteLine ("AddSummary: <b><i>{mode} crashed</i></b><br/>");
 						MainLog.WriteLine ("Test run crashed");
 						crashed = true;
 						parseResult.crashed = true;
@@ -417,19 +416,19 @@ namespace Xharness {
 			if (resultLine != null) {
 				var tests_run = resultLine.Replace ("Tests run: ", "");
 				if (failed) {
-					Harness.LogWrench ("@MonkeyWrench: AddSummary: <b>{0} failed: {1}</b><br/>", mode, tests_run);
+					WrenchLog.WriteLine ("AddSummary: <b>{0} failed: {1}</b><br/>", mode, tests_run);
 					MainLog.WriteLine ("Test run failed");
 					return false;
 				} else {
-					Harness.LogWrench ("@MonkeyWrench: AddSummary: {0} succeeded: {1}<br/>", mode, tests_run);
+					WrenchLog.WriteLine ("AddSummary: {0} succeeded: {1}<br/>", mode, tests_run);
 					MainLog.WriteLine ("Test run succeeded");
 					return true;
 				}
 			} else if (timed_out) {
-				Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} timed out</i></b><br/>", mode);
+				WrenchLog.WriteLine ("AddSummary: <b><i>{0} timed out</i></b><br/>", mode);
 				return false;
 			} else {
-				Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} crashed</i></b><br/>", mode);
+				WrenchLog.WriteLine ("AddSummary: <b><i>{0} crashed</i></b><br/>", mode);
 				MainLog.WriteLine ("Test run crashed");
 				crashed = true;
 				return false;
@@ -604,7 +603,7 @@ namespace Xharness {
 					log.StartCapture ();
 					Logs.Add (log);
 					systemLogs.Add (log);
-					Harness.LogWrench ("@MonkeyWrench: AddFile: {0}", log.Path);
+					WrenchLog.WriteLine ("AddFile: {0}", log.Path);
 				}
 
 				MainLog.WriteLine ("*** Executing {0}/{1} in the simulator ***", AppName, mode);
@@ -734,7 +733,7 @@ namespace Xharness {
 				// Upload the system log
 				if (File.Exists (device_system_log.FullPath)) {
 					MainLog.WriteLine ("A capture of the device log is: {0}", device_system_log.FullPath);
-					Harness.LogWrench ("@MonkeyWrench: AddFile: {0}", device_system_log.FullPath);
+					WrenchLog.WriteLine ("AddFile: {0}", device_system_log.FullPath);
 				}
 			}
 
@@ -744,18 +743,18 @@ namespace Xharness {
 			// check the final status
 			var crashed = false;
 			if (File.Exists (listener_log.FullPath)) {
-				Harness.LogWrench ("@MonkeyWrench: AddFile: {0}", listener_log.FullPath);
+				WrenchLog.WriteLine ("AddFile: {0}", listener_log.FullPath);
 				success = TestsSucceeded (listener_log.FullPath, timed_out, out crashed);
 			} else if (timed_out) {
-				Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} never launched</i></b><br/>", mode);
+				WrenchLog.WriteLine ("AddSummary: <b><i>{0} never launched</i></b><br/>", mode);
 				MainLog.WriteLine ("Test run never launched");
 				success = false;
 			} else if (launch_failure) {
- 				Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} failed to launch</i></b><br/>", mode);
+ 				WrenchLog.WriteLine ("AddSummary: <b><i>{0} failed to launch</i></b><br/>", mode);
  				MainLog.WriteLine ("Test run failed to launch");
  				success = false;
 			} else {
-				Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} crashed at startup (no log)</i></b><br/>", mode);
+				WrenchLog.WriteLine ("AddSummary: <b><i>{0} crashed at startup (no log)</i></b><br/>", mode);
 				MainLog.WriteLine ("Test run crashed before it started (no log file produced)");
 				crashed = true;
 				success = false;

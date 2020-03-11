@@ -570,23 +570,6 @@ namespace Xharness
 		{
 			Log (0, message, args);
 		}
-
-		public void LogWrench (string message, params object[] args)
-		{
-			// Disable this for now, since we're not uploading directly to wrench anymore, but instead using the Html Report.
-			//if (!InWrench)
-			//	return;
-
-			//Console.WriteLine (message, args);
-		}
-
-		public void LogWrench (string message)
-		{
-			if (!InCI)
-				return;
-
-			Console.WriteLine (message);
-		}
 		
 		public bool InCI {
 			get {
