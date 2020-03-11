@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Collections.Generic;
 using Mono.Options;
 using Xharness.Utilities;
 
@@ -10,73 +10,99 @@ namespace Xharness {
 			var harness = new Harness ();
 
 			Action showHelp = null;
+			var action = HarnessAction.None;
+			var autoConf = false;
+			var configuration = "Debug";
+			var dryRun = false;
+			var environmentVariables = new Dictionary<string, string> ();
+			var includeSystemPermissionTests = false;
+			var iOSTestProjects = new List<iOSTestProject> ();
+			string jenkinsConfiguration;
+			var labels = new HashSet<string> ();
+			var logDirectory = Environment.CurrentDirectory;
+			string logFile;
+			var mac = false;
+			string markdownSummaryPath = null;
+			string periodicCommand;
+			string periodicCommandArguments;
+			TimeSpan periodicCommandInterval;
+			string rootDirectory = null;
+			string sdkRoot = null;
+			var target = AppRunnerTarget.None;
+			var timeout = 15d;
+			var useSystem = false;
+			var verbosity = 0;
+			string watchOSAppTemplate = null;
+			string watchOSContainerTemplate = null;
+			XmlResultJargon xmlJargon = XmlResultJargon.NUnitV3;
+
 			var os = new OptionSet () {
 				{ "h|?|help", "Displays the help", (v) => showHelp () },
-				{ "v|verbose", "Show verbose output", (v) => harness.Verbosity++ },
-				{ "use-system:", "Use the system version of Xamarin.iOS/Xamarin.Mac or the locally build version. Default: the locally build version.", (v) => harness.UseSystem = v == "1" || v == "true" || string.IsNullOrEmpty (v) },
+				{ "v|verbose", "Show verbose output", (v) => verbosity++ },
+				{ "use-system:", "Use the system version of Xamarin.iOS/Xamarin.Mac or the locally build version. Default: the locally build version.", (v) => useSystem = v == "1" || v == "true" || string.IsNullOrEmpty (v) },
 				// Configure
-				{ "mac", "Configure for Xamarin.Mac instead of iOS.", (v) => harness.Mac = true },
-				{ "configure", "Creates project files and makefiles.", (v) => harness.Action = HarnessAction.Configure },
-				{ "autoconf", "Automatically decide what to configure.", (v) => harness.AutoConf = true },
-				{ "rootdir=", "The root directory for the tests.", (v) => Harness.RootDirectory = v },
-				{ "project=", "Add a project file to process. This can be specified multiple times.", (v) => harness.IOSTestProjects.Add (new iOSTestProject (v)) },
-				{ "watchos-container-template=", "The directory to use as a template for a watchos container app.", (v) => harness.WatchOSContainerTemplate = v },
-				{ "watchos-app-template=", "The directory to use as a template for a watchos app.", (v) => harness.WatchOSAppTemplate = v },
+				{ "mac", "Configure for Xamarin.Mac instead of iOS.", (v) => mac = true },
+				{ "configure", "Creates project files and makefiles.", (v) => action = HarnessAction.Configure },
+				{ "autoconf", "Automatically decide what to configure.", (v) => autoConf = true },
+				{ "rootdir=", "The root directory for the tests.", (v) => rootDirectory = v },
+				{ "project=", "Add a project file to process. This can be specified multiple times.", (v) => iOSTestProjects.Add (new iOSTestProject (v)) },
+				{ "watchos-container-template=", "The directory to use as a template for a watchos container app.", (v) => watchOSContainerTemplate = v },
+				{ "watchos-app-template=", "The directory to use as a template for a watchos app.", (v) => watchOSAppTemplate = v },
 				// Run
 				{ "run=", "Executes a project.", (v) =>
 					{
-						harness.Action = HarnessAction.Run;
-						harness.IOSTestProjects.Add (new iOSTestProject (v));
+						action = HarnessAction.Run;
+						iOSTestProjects.Add (new iOSTestProject (v));
 					}
 				},
 				{ "install=", "Installs a project.", (v) =>
 					{
-						harness.Action = HarnessAction.Install;
-						harness.IOSTestProjects.Add (new iOSTestProject (v));
+						action = HarnessAction.Install;
+						iOSTestProjects.Add (new iOSTestProject (v));
 					}
 				},
 				{ "uninstall=", "Uninstalls a project.", (v) =>
 					{
-						harness.Action = HarnessAction.Uninstall;
-						harness.IOSTestProjects.Add (new iOSTestProject (v));
+						action = HarnessAction.Uninstall;
+						iOSTestProjects.Add (new iOSTestProject (v));
 					}
 				},
-				{ "sdkroot=", "Where Xcode is", (v) => harness.SdkRoot = v },
+				{ "sdkroot=", "Where Xcode is", (v) => sdkRoot = v },
 				{ "sdkroot94=", "Where Xcode 9.4 is", (v) => Console.WriteLine ("--sdkroot94 is deprecated"), true },
-				{ "target=", "Where to run the project ([ios|watchos|tvos]-[device|simulator|simulator-32|simulator-64]).", (v) => harness.Target = v.ParseAsAppRunnerTarget () },
-				{ "configuration=", "Which configuration to run (defaults to Debug).", (v) => harness.Configuration = v },
-				{ "logdirectory=", "Where to store logs.", (v) => harness.LogDirectory = v },
-				{ "logfile=", "Where to store the log.", (v) => harness.LogFile = v },
-				{ "timeout=", "Timeout for a test run (in minutes). Default is 10 minutes.", (v) => harness.Timeout = double.Parse (v) },
+				{ "target=", "Where to run the project ([ios|watchos|tvos]-[device|simulator|simulator-32|simulator-64]).", (v) => target = v.ParseAsAppRunnerTarget () },
+				{ "configuration=", "Which configuration to run (defaults to Debug).", (v) => configuration = v },
+				{ "logdirectory=", "Where to store logs.", (v) => logDirectory = v },
+				{ "logfile=", "Where to store the log.", (v) => logFile = v },
+				{ "timeout=", $"Timeout for a test run (in minutes). Default is {timeout} minutes.", (v) => timeout = double.Parse (v) },
 				{ "jenkins:", "Execute test run for jenkins.", (v) =>
 					{
-						harness.JenkinsConfiguration = v;
-						harness.Action = HarnessAction.Jenkins;
+						jenkinsConfiguration = v;
+						action = HarnessAction.Jenkins;
 					}
 				},
-				{ "dry-run", "Only print what would be done.", (v) => harness.DryRun = true },
+				{ "dry-run", "Only print what would be done.", (v) => dryRun = true },
 				{ "setenv:", "Set the specified environment variable when running apps.", (v) =>
 					{
 						var split = v.Split ('=');
-						harness.EnvironmentVariables [split [0]] = split [1];
+						environmentVariables [split [0]] = split [1];
 					}
 				},
 				{ "label=", "Comma-separated list of labels to select which tests to run.", (v) =>
 					{
-						harness.Labels.UnionWith (v.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries));
+						labels.UnionWith (v.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries));
 					}
 				},
-				{ "markdown-summary=", "The path where a summary (in Markdown format) will be written.", (v) => harness.MarkdownSummaryPath = v },
-				{ "periodic-command=", "A command to execute periodically.", (v) => harness.PeriodicCommand = v },
-				{ "periodic-command-arguments=", "Arguments to the command to execute periodically.", (v) => harness.PeriodicCommandArguments = v },
-				{ "periodic-interval=", "An interval (in minutes) between every attempt to execute the periodic command.", (v) => harness.PeriodicCommandInterval = TimeSpan.FromMinutes (double.Parse (v)) },
-				{ "include-system-permission-tests:", "If tests that require system permissions (which could cause the OS to launch dialogs that hangs the test) should be executed or not. Default is to include such tests.", (v) => harness.IncludeSystemPermissionTests = ParseBool (v, "include-system-permission-tests") },
+				{ "markdown-summary=", "The path where a summary (in Markdown format) will be written.", (v) => markdownSummaryPath = v },
+				{ "periodic-command=", "A command to execute periodically.", (v) => periodicCommand = v },
+				{ "periodic-command-arguments=", "Arguments to the command to execute periodically.", (v) => periodicCommandArguments = v },
+				{ "periodic-interval=", "An interval (in minutes) between every attempt to execute the periodic command.", (v) => periodicCommandInterval = TimeSpan.FromMinutes (double.Parse (v)) },
+				{ "include-system-permission-tests:", "If tests that require system permissions (which could cause the OS to launch dialogs that hangs the test) should be executed or not. Default is to include such tests.", (v) => includeSystemPermissionTests = ParseBool (v, "include-system-permission-tests") },
 				{ "xml-jargon:", "The xml format to be used for test results. Values can be nunitv2, nunitv3, xunit.", (v) =>
 					{
 						if (Enum.TryParse<XmlResultJargon> (v, out var jargon))
-							harness.XmlJargon = jargon;
+							xmlJargon = jargon;
 						else
-							harness.XmlJargon = XmlResultJargon.Missing;
+							xmlJargon = XmlResultJargon.Missing;
 					}
 				},
 
