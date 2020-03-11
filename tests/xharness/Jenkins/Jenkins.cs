@@ -920,17 +920,17 @@ namespace Xharness.Jenkins
 			var buildiOSMSBuild_net461 = new MSBuildTask ()
 			{
 				Jenkins = this,
-				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "msbuild", "tests", "Xamarin.iOS.Tasks.Tests", "Xamarin.iOS.Tasks.Tests.csproj"))),
+				TestProject = new TestProject (Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "..", "msbuild", "tests", "Xamarin.iOS.Tasks.Tests", "Xamarin.iOS.Tasks.Tests.csproj"))),
 				SpecifyPlatform = false,
 				SpecifyConfiguration = true,
 				ProjectConfiguration = "Debug-net461",
 				Platform = TestPlatform.iOS,
-				SolutionPath = Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "msbuild", "Xamarin.MacDev.Tasks.sln")),
+				SolutionPath = Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "..", "msbuild", "Xamarin.MacDev.Tasks.sln")),
 				SupportsParallelExecution = false,
 			};
 			var nunitExecutioniOSMSBuild_net461 = new NUnitExecuteTask (buildiOSMSBuild_net461)
 			{
-				TestLibrary = Path.Combine (Harness.RootDirectory, "..", "msbuild", "tests", "Xamarin.iOS.Tasks.Tests", "bin", "Debug-net461", "net461", "Xamarin.iOS.Tasks.Tests.dll"),
+				TestLibrary = Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "..", "msbuild", "tests", "Xamarin.iOS.Tasks.Tests", "bin", "Debug-net461", "net461", "Xamarin.iOS.Tasks.Tests.dll"),
 				TestProject = buildiOSMSBuild_net461.TestProject,
 				ProjectConfiguration = "Debug-net461",
 				Platform = TestPlatform.iOS,
@@ -944,16 +944,16 @@ namespace Xharness.Jenkins
 
 			var buildiOSMSBuild_netstandard2 = new MSBuildTask () {
 				Jenkins = this,
-				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "msbuild", "tests", "Xamarin.iOS.Tasks.Tests", "Xamarin.iOS.Tasks.Tests.csproj"))),
+				TestProject = new TestProject (Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "..", "msbuild", "tests", "Xamarin.iOS.Tasks.Tests", "Xamarin.iOS.Tasks.Tests.csproj"))),
 				SpecifyPlatform = false,
 				SpecifyConfiguration = true,
 				ProjectConfiguration = "Debug-netstandard2.0",
 				Platform = TestPlatform.iOS,
-				SolutionPath = Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "msbuild", "Xamarin.MacDev.Tasks.sln")),
+				SolutionPath = Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "..", "msbuild", "Xamarin.MacDev.Tasks.sln")),
 				SupportsParallelExecution = false,
 			};
 			var nunitExecutioniOSMSBuild_netstandard2 = new NUnitExecuteTask (buildiOSMSBuild_netstandard2) {
-				TestLibrary = Path.Combine (Harness.RootDirectory, "..", "msbuild", "tests", "Xamarin.iOS.Tasks.Tests", "bin", "Debug-netstandard2.0", "net461", "Xamarin.iOS.Tasks.Tests.dll"),
+				TestLibrary = Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "..", "msbuild", "tests", "Xamarin.iOS.Tasks.Tests", "bin", "Debug-netstandard2.0", "net461", "Xamarin.iOS.Tasks.Tests.dll"),
 				TestProject = buildiOSMSBuild_netstandard2.TestProject,
 				ProjectConfiguration = "Debug-netstandard2.0",
 				Platform = TestPlatform.iOS,
@@ -968,15 +968,15 @@ namespace Xharness.Jenkins
 			var buildInstallSources = new MSBuildTask ()
 			{
 				Jenkins = this,
-				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "tools", "install-source", "InstallSourcesTests", "InstallSourcesTests.csproj"))),
+				TestProject = new TestProject (Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "..", "tools", "install-source", "InstallSourcesTests", "InstallSourcesTests.csproj"))),
 				SpecifyPlatform = false,
 				SpecifyConfiguration = false,
 				Platform = TestPlatform.iOS,
 			};
-			buildInstallSources.SolutionPath = Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "tools", "install-source", "install-source.sln")); // this is required for nuget restore to be executed
+			buildInstallSources.SolutionPath = Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "..", "tools", "install-source", "install-source.sln")); // this is required for nuget restore to be executed
 			var nunitExecutionInstallSource = new NUnitExecuteTask (buildInstallSources)
 			{
-				TestLibrary = Path.Combine (Harness.RootDirectory, "..", "tools", "install-source", "InstallSourcesTests", "bin", "Release", "InstallSourcesTests.dll"),
+				TestLibrary = Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "..", "tools", "install-source", "InstallSourcesTests", "bin", "Release", "InstallSourcesTests.dll"),
 				TestProject = buildInstallSources.TestProject,
 				Platform = TestPlatform.iOS,
 				TestName = "Install Sources tests",
@@ -1061,17 +1061,17 @@ namespace Xharness.Jenkins
 			var buildMTouch = new MakeTask ()
 			{
 				Jenkins = this,
-				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "mtouch", "mtouch.sln"))),
+				TestProject = new TestProject (Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "mtouch", "mtouch.sln"))),
 				SpecifyPlatform = false,
 				SpecifyConfiguration = false,
 				Platform = TestPlatform.iOS,
 				Target = "dependencies",
-				WorkingDirectory = Path.GetFullPath (Path.Combine (Harness.RootDirectory, "mtouch")),
+				WorkingDirectory = Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "mtouch")),
 			};
 			var nunitExecutionMTouch = new NUnitExecuteTask (buildMTouch)
 			{
-				TestLibrary = Path.Combine (Harness.RootDirectory, "mtouch", "bin", "Debug", "mtouch.dll"),
-				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "mtouch", "mtouch.csproj"))),
+				TestLibrary = Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "mtouch", "bin", "Debug", "mtouch.dll"),
+				TestProject = new TestProject (Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "mtouch", "mtouch.csproj"))),
 				Platform = TestPlatform.iOS,
 				TestName = "MTouch tests",
 				Timeout = TimeSpan.FromMinutes (180),
@@ -1082,16 +1082,16 @@ namespace Xharness.Jenkins
 
 			var buildGenerator = new MakeTask {
 				Jenkins = this,
-				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "src", "generator.sln"))),
+				TestProject = new TestProject (Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "..", "src", "generator.sln"))),
 				SpecifyPlatform = false,
 				SpecifyConfiguration = false,
 				Platform = TestPlatform.iOS,
 				Target = "build-unit-tests",
-				WorkingDirectory = Path.GetFullPath (Path.Combine (Harness.RootDirectory, "generator")),
+				WorkingDirectory = Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "generator")),
 			};
 			var runGenerator = new NUnitExecuteTask (buildGenerator) {
-				TestLibrary = Path.Combine (Harness.RootDirectory, "generator", "bin", "Debug", "generator-tests.dll"),
-				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "generator", "generator-tests.csproj"))),
+				TestLibrary = Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "generator", "bin", "Debug", "generator-tests.dll"),
+				TestProject = new TestProject (Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "generator", "generator-tests.csproj"))),
 				Platform = TestPlatform.iOS,
 				TestName = "Generator tests",
 				Timeout = TimeSpan.FromMinutes (10),
@@ -1105,7 +1105,7 @@ namespace Xharness.Jenkins
 				Platform = TestPlatform.Mac,
 				TestName = "MMP Regression Tests",
 				Target = "all", // -j" + Environment.ProcessorCount,
-				WorkingDirectory = Path.Combine (Harness.RootDirectory, "mmptest", "regression"),
+				WorkingDirectory = Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "mmptest", "regression"),
 				Ignored = !IncludeMmpTest || !IncludeMac,
 				Timeout = TimeSpan.FromMinutes (30),
 				SupportsParallelExecution = false, // Already doing parallel execution by running "make -jX"
@@ -1124,7 +1124,7 @@ namespace Xharness.Jenkins
 				Platform = TestPlatform.Mac,
 				TestName = "Mac Binding Projects",
 				Target = "all",
-				WorkingDirectory = Path.Combine (Harness.RootDirectory, "mac-binding-project"),
+				WorkingDirectory = Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "mac-binding-project"),
 				Ignored = !IncludeMacBindingProject || !IncludeMac,
 				Timeout = TimeSpan.FromMinutes (15),
 			};
@@ -1135,7 +1135,7 @@ namespace Xharness.Jenkins
 				Platform = TestPlatform.All,
 				TestName = "Xtro",
 				Target = "wrench",
-				WorkingDirectory = Path.Combine (Harness.RootDirectory, "xtro-sharpie"),
+				WorkingDirectory = Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "xtro-sharpie"),
 				Ignored = !IncludeXtro,
 				Timeout = TimeSpan.FromMinutes (15),
 			};
@@ -1153,7 +1153,7 @@ namespace Xharness.Jenkins
 				Platform = TestPlatform.All,
 				TestName = "Cecil",
 				Target = "build",
-				WorkingDirectory = Path.Combine (Harness.RootDirectory, "cecil-tests"),
+				WorkingDirectory = Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "cecil-tests"),
 				Ignored = !IncludeCecil,
 				Timeout = TimeSpan.FromMinutes (5),
 			};
@@ -1173,7 +1173,7 @@ namespace Xharness.Jenkins
 				Platform = TestPlatform.All,
 				TestName = "Documentation",
 				Target = "wrench-docs",
-				WorkingDirectory = Harness.RootDirectory,
+				WorkingDirectory = DirectoryUtilities.RepositoryRootDirectory,
 				Ignored = !IncludeDocs,
 				Timeout = TimeSpan.FromMinutes (45),
 			};
@@ -1181,14 +1181,14 @@ namespace Xharness.Jenkins
 
 			var buildSampleTests = new MSBuildTask {
 				Jenkins = this,
-				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "sampletester", "sampletester.sln"))),
+				TestProject = new TestProject (Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "sampletester", "sampletester.sln"))),
 				SpecifyPlatform = false,
 				Platform = TestPlatform.All,
 				ProjectConfiguration = "Debug",
 			};
 			var runSampleTests = new NUnitExecuteTask (buildSampleTests) {
-				TestLibrary = Path.Combine (Harness.RootDirectory, "sampletester", "bin", "Debug", "sampletester.dll"),
-				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "sampletester", "sampletester.csproj"))),
+				TestLibrary = Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "sampletester", "bin", "Debug", "sampletester.dll"),
+				TestProject = new TestProject (Path.GetFullPath (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "sampletester", "sampletester.csproj"))),
 				Platform = TestPlatform.All,
 				TestName = "Sample tests",
 				Timeout = TimeSpan.FromDays (1), // These can take quite a while to execute.
@@ -1278,7 +1278,7 @@ namespace Xharness.Jenkins
 
 		void BuildTestLibraries ()
 		{
-			Harness.ProcessManager.ExecuteCommandAsync ("make", new [] { "all", $"-j{Environment.ProcessorCount}", "-C", Path.Combine (Harness.RootDirectory, "test-libraries") }, MainLog, TimeSpan.FromMinutes (10)).Wait ();
+			Harness.ProcessManager.ExecuteCommandAsync ("make", new [] { "all", $"-j{Environment.ProcessorCount}", "-C", Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "test-libraries") }, MainLog, TimeSpan.FromMinutes (10)).Wait ();
 		}
 
 		Task RunTestServer ()
@@ -1552,7 +1552,7 @@ namespace Xharness.Jenkins
 							server.Stop ();
 							break;
 						case "/favicon.ico":
-							serveFile = Path.Combine (Harness.RootDirectory, "xharness", "favicon.ico");
+							serveFile = Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "xharness", "favicon.ico");
 							goto default;
 						case "/index.html":
 							var redirect_to = request.Url.AbsoluteUri.Replace ("/index.html", "/" + Path.GetFileName (LogDirectory) + "/index.html");
@@ -1715,7 +1715,7 @@ namespace Xharness.Jenkins
 					foreach (var file in new string [] { "xharness.js", "xharness.css" }) {
 						File.Copy (Path.Combine (dependentFileLocation, file), Path.Combine (LogDirectory, file), true);
 					}
-					File.Copy (Path.Combine (Harness.RootDirectory, "xharness", "favicon.ico"), Path.Combine (LogDirectory, "favicon.ico"), true);
+					File.Copy (Path.Combine (DirectoryUtilities.RepositoryRootDirectory, "xharness", "favicon.ico"), Path.Combine (LogDirectory, "favicon.ico"), true);
 				}
 			} catch (Exception e) {
 				this.MainLog.WriteLine ("Failed to write log: {0}", e);
