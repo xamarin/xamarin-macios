@@ -47,9 +47,7 @@ namespace Xharness.Tests.Logging.Tests {
 		public void ConstructorNullILogsTest ()
 		{
 			Assert.DoesNotThrow (() => {
-#pragma warning disable CS0642 // Possible mistaken empty statement
 				using (var log = new LogFile (null, description, path)) ;
-#pragma warning restore CS0642 // Possible mistaken empty statement
 			});
 		}
 
@@ -63,9 +61,7 @@ namespace Xharness.Tests.Logging.Tests {
 		public void ConstructorNullDescriptionTest ()
 		{
 			Assert.DoesNotThrow (() => {
-#pragma warning disable CS0642 // Possible mistaken empty statement
 				using (var log = new LogFile (logs.Object, null, path)) ;
-#pragma warning restore CS0642 // Possible mistaken empty statement
 			});
 		}
 
