@@ -42,23 +42,6 @@ namespace MonoTouch.Tuner {
 			}
 		}
 
-		void PreserveCalendar (string name)
-		{
-			var calendar = Corlib.MainModule.GetType ("System.Globalization", name);
-			if (calendar == null || !calendar.HasMethods)
-				return;
-
-			// we just preserve the default .ctor so Activation.Create will work, 
-			// the normal linker logic will do the rest
-			foreach (MethodDefinition ctor in calendar.Methods) {
-				if (ctor.IsConstructor && !ctor.IsStatic && !ctor.HasParameters) {
-					Context.Annotations.AddPreservedMethod (calendar, ctor);
-					// we need to mark the type or the above won't be processed
-					Context.Annotations.Mark (calendar);
-				}
-			}
-		}
-
 		void PreserveQueryableEnumerable ()
 		{
 			AssemblyDefinition core;
@@ -96,18 +79,6 @@ namespace MonoTouch.Tuner {
 			}
 		}
 
-		// FIXME: for compatibility with the existing .xml files - it's not clear why they are needed
-		// and git's history is not helpful. To be reviewed someday
-		void PreserveOpenTk ()
-		{
-			AssemblyDefinition opentk;
-			if (Context.TryGetLinkedAssembly ("OpenTK", out opentk))
-				PreserveOpenTk (opentk);
-
-			if (Context.TryGetLinkedAssembly ("OpenTK-1.0", out opentk))
-				PreserveOpenTk (opentk);
-		}
-
 		void PreserveType (TypeDefinition type)
 		{
 			if (type == null)
@@ -122,14 +93,6 @@ namespace MonoTouch.Tuner {
 
 			foreach (var nested in type.NestedTypes)
 				PreserveType (nested);
-		}
-
-		void PreserveOpenTk (AssemblyDefinition opentk)
-		{
-			// if OpenTK.dll or OpenTK-1.0.dll are used then the following types will always be preserved
-			// that include the nested Core type (note: Delegates nested type does not exists ?anymore?)
-			PreserveType (opentk.MainModule.GetType ("OpenTK.Graphics.ES11", "GL"));
-			PreserveType (opentk.MainModule.GetType ("OpenTK.Graphics.ES20", "GL"));
 		}
 	}
 }
