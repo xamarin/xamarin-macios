@@ -31,6 +31,9 @@ Q_XBUILD=$(if $(V),,@echo "XBUILD  $(@F)";)
 Q_TT=   $(if $(V),,@echo "TT       $(@F)";)
 Q_BUILD=$(if $(V),,@echo "BUILD    $(@F)";)
 
+Q_DOTNET_BUILD=$(if $(V),,@echo "CSC      [dotnet] $(@F)";)
+Q_DOTNET_GEN  =$(if $(V),,@echo "GEN      [dotnet] $(@F)";)
+
 Q_PROF_MCS =  $(if $(V),,@echo "MCS      [$(1)] $(@F)";)
 Q_PROF_CSC =  $(if $(V),,@echo "CSC      [$(1)] $(@F)";)
 Q_PROF_GEN  = $(if $(V),,@echo "GEN      [$(1)] $(@F)";)
