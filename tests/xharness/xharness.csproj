@@ -188,6 +188,7 @@
     <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.watchOS.Extension.csproj.in" />
     <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.tvOS.plist.in" />
     <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.watchOS.App.plist.in" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\RegisterType.cs" />
     <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\common\ApplicationOptions.cs" />
     <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\common\IgnoreFileParser.cs" />
     <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\iOSApp\AppDelegate.cs" />

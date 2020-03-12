@@ -10,6 +10,7 @@ namespace Xharness.BCLTestImporter.Templates.Managed {
 	// to create a testing application for given xunit and nunit test assemblies
 	public class XamariniOSTemplate : ITemplatedProject {
 		static string srcResourcePrefix = "Xharness.BCLTestImporter.Templates.Managed.Resources.src.";
+		static string registerTemplateResourceName = "RegisterType.cs";
 		static string [] [] srcDirectories = new [] {
 			new [] { "common", },
 			new [] { "common", "TestRunner" },
@@ -54,8 +55,6 @@ namespace Xharness.BCLTestImporter.Templates.Managed {
 			{ WatchAppType.Extension, "Managed.watchOS.Extension.csproj.in"}
 		};
 
-
-
 		static readonly Dictionary<WatchAppType, string> watchOSPlistTemplateMatches = new Dictionary<WatchAppType, string> {
 			{WatchAppType.App, "Managed.watchOS.App.plist.in"},
 			{WatchAppType.Extension, "Managed.watchOS.Extension.plist.in"}
@@ -63,6 +62,7 @@ namespace Xharness.BCLTestImporter.Templates.Managed {
 
 		Stream GetTemplateStream (string templateName)
 		{
+			var resources = GetType ().Assembly.GetManifestResourceNames ();
 			var name = GetType ().Assembly.GetManifestResourceNames ().Where (a => a.EndsWith (templateName, StringComparison.Ordinal)).FirstOrDefault ();
 			return GetType ().Assembly.GetManifestResourceStream (name);
 		}
@@ -74,6 +74,8 @@ namespace Xharness.BCLTestImporter.Templates.Managed {
 		public Stream GetProjectTemplate (Platform platform) => GetTemplateStream (projectTemplateMatches [platform]);
 
 		public Stream GetProjectTemplate (WatchAppType appType) => GetTemplateStream (watchOSProjectTemplateMatches [appType]);
+
+		public Stream GetRegisterTypeTemplate () => GetTemplateStream (registerTemplateResourceName);
 
 		void BuildSrcTree (string srcOuputPath)
 		{

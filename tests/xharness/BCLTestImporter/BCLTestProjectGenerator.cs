@@ -583,7 +583,7 @@ namespace Xharness.BCLTestImporter {
 					}
 					var typesPerAssembly = projectDefinition.GetTypeForAssemblies (GetReleaseDownload (Platform.iOS), Platform.WatchOS, true);
 					var registerCode = await RegisterTypeGenerator.GenerateCodeAsync (typesPerAssembly,
-						projectDefinition.IsXUnit, RegisterTypesTemplatePath);
+						projectDefinition.IsXUnit, TemplatedProject.GetRegisterTypeTemplate ());
 					using (var file = new StreamWriter (registerTypePath, false)) { // false is do not append
 						await file.WriteAsync (registerCode);
 					}
@@ -638,7 +638,7 @@ namespace Xharness.BCLTestImporter {
 					}
 					var typesPerAssembly = projectDefinition.GetTypeForAssemblies (GetReleaseDownload (platform), platform, true);
 					var registerCode = await RegisterTypeGenerator.GenerateCodeAsync (typesPerAssembly,
-						projectDefinition.IsXUnit, RegisterTypesTemplatePath);
+						projectDefinition.IsXUnit, TemplatedProject.GetRegisterTypeTemplate ());
 
 					using (var file = new StreamWriter (registerTypePath, false)) { // false is do not append
 						await file.WriteAsync (registerCode);
@@ -674,7 +674,7 @@ namespace Xharness.BCLTestImporter {
 
 				var typesPerAssembly = projectDefinition.GetTypeForAssemblies (GetReleaseDownload (platform), platform, true);
 				var registerCode = await RegisterTypeGenerator.GenerateCodeAsync (typesPerAssembly,
-					projectDefinition.IsXUnit, RegisterTypesTemplatePath);
+					projectDefinition.IsXUnit, TemplatedProject.GetRegisterTypeTemplate ());
 
 				using (var file = new StreamWriter (registerTypePath, false)) { // false is do not append
 					await file.WriteAsync (registerCode);
