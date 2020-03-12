@@ -152,14 +152,14 @@ namespace Xharness
 		{
 			Action = action;
 			AutoConf = autoConf;
-			Configuration = configuration;
+			Configuration = configuration ?? throw new ArgumentNullException (nameof (configuration));
 			DryRun = dryRun;
-			EnvironmentVariables = environmentVariables;
+			EnvironmentVariables = environmentVariables ?? new Dictionary<string, string> ();
 			IncludeSystemPermissionTests = includeSystemPermissionTests;
 			IOSTestProjects = iOSTestProjects;
 			JenkinsConfiguration = jenkinsConfiguration;
-			Labels = labels;
-			LogDirectory = logDirectory;
+			Labels = labels ?? new HashSet<string> ();
+			LogDirectory = logDirectory ?? throw new ArgumentNullException (nameof (logDirectory));
 			LogFile = logFile;
 			Mac = mac;
 			MarkdownSummaryPath = markdownSummaryPath;
