@@ -1252,14 +1252,19 @@ namespace Xharness.Jenkins
 					Task.Run (async () => await ExecutePeriodicCommandAsync (periodic_log));
 				}
 
-				Task.Run (async () =>
-				{
+				// We can populate and build test-libraries in parallel.
+				var populate = Task.Run (async () => {
 					await SimDevice.KillEverythingAsync (MainLog);
 					await PopulateTasksAsync ();
 					populating = false;
-				}).Wait ();
+				});
+				var preparations = new List<Task> ();
+				preparations.Add (populate);
+				preparations.Add (BuildTestLibrariesAsync ());
+				Task.WaitAll (preparations.ToArray ());
+
 				GenerateReport ();
-				BuildTestLibraries ();
+
 				if (!IsServerMode) {
 					foreach (var task in Tasks)
 						tasks.Add (task.RunAsync ());
@@ -1278,9 +1283,19 @@ namespace Xharness.Jenkins
 			get { return Harness.JenkinsConfiguration == "server"; }
 		}
 
-		void BuildTestLibraries ()
+		Task BuildTestLibrariesAsync ()
 		{
-			Harness.ProcessManager.ExecuteCommandAsync ("make", new [] { "all", $"-j{Environment.ProcessorCount}", "-C", Path.Combine (Harness.RootDirectory, "test-libraries") }, MainLog, TimeSpan.FromMinutes (10)).Wait ();
+			var sb = new StringBuilder ();
+			var callback_log = new CallbackLog ((v) => sb.Append (v));
+			var log = Log.CreateAggregatedLog (callback_log, MainLog);
+			return Harness.ProcessManager.ExecuteCommandAsync ("make", new [] { "all", $"-j{Environment.ProcessorCount}", "-C", Path.Combine (Harness.RootDirectory, "test-libraries") }, log, TimeSpan.FromMinutes (10)).ContinueWith ((v) => {
+				var per = v.Result;
+				if (!per.Succeeded) {
+					// Only show the log if something went wrong.
+					using var fn = Logs.Create ("build-test-libraries.log", "⚠️ Build test/test-libraries failed ⚠️");
+					File.WriteAllText (fn.FullPath, sb.ToString ());
+				}
+			});
 		}
 
 		Task RunTestServer ()
@@ -1882,8 +1897,10 @@ namespace Xharness.Jenkins
 
 				writer.WriteLine ("<h1>Test results</h1>");
 
+				writer.WriteLine ($"<span id='x{id_counter++}' class='autorefreshable'>");
 				foreach (var log in Logs)
-					writer.WriteLine ("<span id='x{2}' class='autorefreshable'> <a href='{0}' type='text/plain;charset=UTF-8'>{1}</a></span><br />", log.FullPath.Substring (LogDirectory.Length + 1), log.Description, id_counter++);
+					writer.WriteLine ("<a href='{0}' type='text/plain;charset=UTF-8'>{1}</a><br />", log.FullPath.Substring (LogDirectory.Length + 1), log.Description);
+				writer.WriteLine ("</span>");
 
 				var headerColor = "black";
 				if (unfinishedTests.Any ()) {
