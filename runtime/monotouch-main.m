@@ -256,6 +256,8 @@ xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode)
 	setenv ("DYLD_BIND_AT_LAUNCH", "1", 1);
 	setenv ("MONO_REFLECTION_SERIALIZER", "yes", 1);
 
+	setenv ("DOTNET_SYSTEM_GLOBALIZATION_INVARIANT", "1", 1); // NET_TODO: FIXME
+
 #if TARGET_OS_WATCH
 	// watchOS can raise signals just fine...
 	// we might want to move this inside mono at some point.
