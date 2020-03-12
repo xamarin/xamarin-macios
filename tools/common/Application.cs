@@ -411,7 +411,7 @@ namespace Xamarin.Bundler {
 			var RootAssembly = RootAssemblies [0];
 			var resolvedAssemblies = new Dictionary<string, AssemblyDefinition> ();
 			var resolver = new PlatformResolver () {
-				FrameworkDirectory = Driver.GetPlatformFrameworkDirectory (this),
+				FrameworkDirectory = Driver.GetBCLImplementationDirectory (this),
 				RootDirectory = Path.GetDirectoryName (RootAssembly),
 #if MMP
 				CommandLineAssemblies = RootAssemblies,
