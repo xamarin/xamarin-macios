@@ -130,6 +130,7 @@ namespace Xharness
 		public string MONO_IOS_SDK_DESTDIR { get; private set; }
 		public string MONO_MAC_SDK_DESTDIR { get; private set; }
 		public bool ENABLE_XAMARIN { get; private set; }
+		public string DOTNET { get; private set; }
 
 		// Run
 		public AppRunnerTarget Target { get; }
@@ -328,6 +329,7 @@ namespace Xharness
 			MONO_IOS_SDK_DESTDIR = make_config ["MONO_IOS_SDK_DESTDIR"];
 			MONO_MAC_SDK_DESTDIR = make_config ["MONO_MAC_SDK_DESTDIR"];
 			ENABLE_XAMARIN = make_config.ContainsKey ("ENABLE_XAMARIN") && !string.IsNullOrEmpty (make_config ["ENABLE_XAMARIN"]);
+			DOTNET = make_config ["DOTNET"];
 		}
 		 
 		int AutoConfigureMac (bool generate_projects)
@@ -836,7 +838,6 @@ namespace Xharness
 		}
 
 		bool? disable_watchos_on_wrench;
-
 		public bool DisableWatchOSOnWrench {
 			get {
 				if (!disable_watchos_on_wrench.HasValue)

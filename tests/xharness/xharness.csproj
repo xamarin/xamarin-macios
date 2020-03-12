@@ -10,6 +10,7 @@
     <RootNamespace>Xharness</RootNamespace>
     <AssemblyName>xharness</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -104,6 +105,8 @@
     <Compile Include="Jenkins\TestTasks\AggregatedRunSimulatorTask.cs" />
     <Compile Include="Jenkins\TestTasks\BuildProjectTask.cs" />
     <Compile Include="Jenkins\TestTasks\BuildToolTask.cs" />
+    <Compile Include="Jenkins\TestTasks\DotNetBuildTask.cs" />
+    <Compile Include="Jenkins\TestTasks\DotNetTestTask.cs" />
     <Compile Include="Jenkins\TestTasks\MacExecuteTask.cs" />
     <Compile Include="Jenkins\TestTasks\MacTask.cs" />
     <Compile Include="Jenkins\TestTasks\MakeTask.cs" />

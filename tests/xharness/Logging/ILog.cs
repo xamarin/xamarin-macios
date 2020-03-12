@@ -14,6 +14,8 @@ namespace Xharness.Logging {
 		TestLog,
 		ExtensionTestLog,
 		ExecutionLog,
+		TrxLog,
+		HtmlLog,
 	}
 
 	public static class LogTypeExtensions {
@@ -37,6 +39,10 @@ namespace Xharness.Logging {
 				return "Extension test log";
 			case LogType.ExecutionLog:
 				return "Execution log";
+			case LogType.TrxLog:
+				return "Test log (trx)";
+			case LogType.HtmlLog:
+				return "Test log (html)";
 			default:
 				throw new ArgumentException ($"Unknown type for {nameof (type)}");
 			}

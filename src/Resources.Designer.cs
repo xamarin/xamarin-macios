@@ -605,6 +605,12 @@ namespace bgen {
             }
         }
         
+        internal static string BI1081 {
+            get {
+                return ResourceManager.GetString("BI1081", resourceCulture);
+            }
+        }
+        
         internal static string BI1101 {
             get {
                 return ResourceManager.GetString("BI1101", resourceCulture);
