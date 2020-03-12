@@ -734,16 +734,11 @@ namespace Foundation {
 
 		public override bool Equals (object obj)
 		{
-			if (obj == null)
-				return false;
 			var o = obj as NSObject;
 			if (o == null)
 				return false;
-			// is only one is a direct binding then both cannot be equals
-			if (IsDirectBinding != o.IsDirectBinding)
-				return false;
 			// we can only ask `isEqual:` to test equality if both objects are direct bindings
-			return IsDirectBinding ? IsEqual (o) : Object.ReferenceEquals (this, obj);
+			return (IsDirectBinding && o.IsDirectBinding) ? IsEqual (o) : ReferenceEquals (this, obj);
 		}
 
 		// IEquatable<T>
@@ -752,7 +747,7 @@ namespace Foundation {
 			if (obj == null)
 				return false;
 			// we'll ask the overridden Equals (if available) if one of the instances is not a direct binding
-			return (IsDirectBinding && obj.IsDirectBinding) ? IsEqual (obj) : Equals ((object) obj);
+			return (IsDirectBinding && obj.IsDirectBinding) ? IsEqual (obj) : ReferenceEquals (this, obj);
 		}
 #endif
 
