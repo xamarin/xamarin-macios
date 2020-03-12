@@ -5,6 +5,9 @@ using Mono.Linker;
 using Mono.Linker.Steps;
 using Mono.Tuner;
 
+using Xamarin.Bundler;
+using Xamarin.Tuner;
+
 namespace Xamarin.Linker {
 
 	public class CorePreserveCode : IStep {
@@ -14,16 +17,13 @@ namespace Xamarin.Linker {
 			I18n = i18n;
 		}
 
-		protected LinkContext Context { get; private set; }
-
-		protected AssemblyDefinition Corlib { get; private set; }
+		protected DerivedLinkContext Context { get; private set; }
 
 		protected I18nAssemblies I18n { get; private set; }
 
 		public virtual void Process (LinkContext context)
 		{
-			Context = context;
-			Corlib = context.GetAssembly ("mscorlib");
+			Context = (DerivedLinkContext) context;
 
 			if (I18n.HasFlag (I18nAssemblies.MidEast)) {
 				PreserveCalendar ("UmAlQuraCalendar");
@@ -37,7 +37,7 @@ namespace Xamarin.Linker {
 
 		void PreserveCalendar (string name)
 		{
-			var calendar = Corlib.MainModule.GetType ("System.Globalization", name);
+			var calendar = Context.Corlib.MainModule.GetType ("System.Globalization", name);
 			if (calendar == null || !calendar.HasMethods)
 				return;
 
@@ -54,7 +54,7 @@ namespace Xamarin.Linker {
 
 		void PreserveResourceSet ()
 		{
-			var resource_set = Corlib.MainModule.GetType ("System.Resources", "RuntimeResourceSet");
+			var resource_set = Context.Corlib.MainModule.GetType ("System.Resources", "RuntimeResourceSet");
 			if (resource_set == null || !resource_set.HasMethods)
 				return;
 

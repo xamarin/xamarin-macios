@@ -72,8 +72,7 @@ namespace MonoTouch.Tuner {
 			var il = body.GetILProcessor ();
 			il.Emit (OpCodes.Ldstr, "This method contains IL not supported when compiled to bitcode.");
 			if (nse_ctor_def == null) {
-				var corlib = context.GetAssembly ("mscorlib");
-				var nse = corlib.MainModule.GetType ("System", "NotSupportedException");
+				var nse = DerivedLinkContext.Corlib.MainModule.GetType ("System", "NotSupportedException");
 				foreach (var ctor in nse.GetConstructors ()) {
 					if (!ctor.HasParameters)
 						continue;

@@ -32,7 +32,7 @@ namespace MonoTouch.Tuner {
 
 		void PreserveDictionaryConstructor ()
 		{
-			var dictionary = Corlib.MainModule.GetType ("System.Collections.Generic", "Dictionary`2");
+			var dictionary = Context.Corlib.MainModule.GetType ("System.Collections.Generic", "Dictionary`2");
 			if (dictionary == null || !dictionary.HasMethods)
 				return;
 

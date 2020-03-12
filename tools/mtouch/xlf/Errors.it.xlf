@@ -2986,6 +2986,14 @@
         <note>
 		</note>
       </trans-unit>
+      <trans-unit id="MX2111">
+        <source>Can not find the corlib assembly '{0}' in the list of loaded assemblies.
+		</source>
+        <target state="new">Can not find the corlib assembly '{0}' in the list of loaded assemblies.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
       <trans-unit id="MX3001">
         <source>Could not {0} the assembly '{1}'
 		</source>
