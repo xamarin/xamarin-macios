@@ -31,6 +31,32 @@ namespace Xharness
 		Version XcodeVersion { get; }
 		Task<ProcessExecutionResult> ExecuteXcodeCommandAsync (string executable, IList<string> args, ILog log, TimeSpan timeout);
 	}
+	public class HarnessConfiguration {
+		public bool AutoConf { get; set; }
+		public string Configuration { get; set; } = "Debug";
+		public bool DryRun { get; set; }
+		public Dictionary<string, string> EnvironmentVariables { get; set; } = new Dictionary<string, string> ();
+		public bool? IncludeSystemPermissionTests { get; set; }
+		public List<iOSTestProject> IOSTestProjects { get; set; } = new List<iOSTestProject> ();
+		public string JenkinsConfiguration { get; set; }
+		public HashSet<string> Labels { get; set; } = new HashSet<string> ();
+		public string LogDirectory { get; set; } = Environment.CurrentDirectory;
+		public string LogFile { get; set; }
+		public bool Mac { get; set; }
+		public string MarkdownSummaryPath { get; set; }
+		public string PeriodicCommand { get; set; }
+		public string PeriodicCommandArguments { get; set; }
+		public TimeSpan PeriodicCommandInterval { get; set; }
+		public string RootDirectory { get; set; }
+		public string SdkRoot { get; set; }
+		public AppRunnerTarget Target { get; set; }
+		public double TimeoutInMinutes { get; set; } = 15;
+		public bool UseSystem { get; set; }
+		public int Verbosity { get; set; }
+		public string WatchOSAppTemplate { get; set; }
+		public string WatchOSContainerTemplate { get; set; }
+		public XmlResultJargon XmlJargon { get; set; } = XmlResultJargon.NUnitV3;
+	}
 
 	public class Harness : IHarness
 	{
@@ -124,60 +150,36 @@ namespace Xharness
 		// whether tests that require access to system resources (system contacts, photo library, etc) should be executed or not
 		public bool? IncludeSystemPermissionTests { get; set; }
 
-		public Harness (IProcessManager processManager,
-			HarnessAction action,
-			bool autoConf,
-			string configuration,
-			bool dryRun,
-			Dictionary<string, string> environmentVariables,
-			bool? includeSystemPermissionTests,
-			List<iOSTestProject> iOSTestProjects,
-			string jenkinsConfiguration,
-			HashSet<string> labels,
-			string logDirectory,
-			string logFile,
-			bool mac,
-			string markdownSummaryPath,
-			string periodicCommand,
-			string periodicCommandArguments,
-			TimeSpan periodicCommandInterval,
-			string rootDirectory,
-			string sdkRoot,
-			AppRunnerTarget target,
-			double timeout,
-			bool useSystem,
-			int verbosity,
-			string watchOSAppTemplate,
-			string watchOSContainerTemplate,
-			XmlResultJargon xmlJargon)
+		public Harness (IProcessManager processManager, HarnessAction action, HarnessConfiguration configuration)
 		{
 			ProcessManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 			Action = action;
-			AutoConf = autoConf;
-			Configuration = configuration ?? throw new ArgumentNullException (nameof (configuration));
-			DryRun = dryRun;
-			EnvironmentVariables = environmentVariables ?? new Dictionary<string, string> ();
-			IncludeSystemPermissionTests = includeSystemPermissionTests;
-			IOSTestProjects = iOSTestProjects;
-			JenkinsConfiguration = jenkinsConfiguration;
-			Labels = labels ?? new HashSet<string> ();
-			LogDirectory = logDirectory ?? throw new ArgumentNullException (nameof (logDirectory));
-			LogFile = logFile;
-			Mac = mac;
-			MarkdownSummaryPath = markdownSummaryPath;
-			PeriodicCommand = periodicCommand;
-			PeriodicCommandArguments = periodicCommandArguments;
-			PeriodicCommandInterval = periodicCommandInterval;
-			RootDirectory = rootDirectory;
-			SdkRoot = sdkRoot;
-			Target = target;
-			Timeout = timeout;
-			UseSystem = useSystem;
-			Verbosity = verbosity;
-			WatchOSAppTemplate = watchOSAppTemplate;
-			WatchOSContainerTemplate = watchOSContainerTemplate;
-			XmlJargon = xmlJargon;
-			
+
+			AutoConf = configuration.AutoConf;
+			Configuration = configuration.Configuration ?? throw new ArgumentNullException (nameof (configuration));
+			DryRun = configuration.DryRun;
+			EnvironmentVariables = configuration.EnvironmentVariables ?? new Dictionary<string, string> ();
+			IncludeSystemPermissionTests = configuration.IncludeSystemPermissionTests;
+			IOSTestProjects = configuration.IOSTestProjects;
+			JenkinsConfiguration = configuration.JenkinsConfiguration;
+			Labels = configuration.Labels ?? new HashSet<string> ();
+			LogDirectory = configuration.LogDirectory ?? throw new ArgumentNullException (nameof (configuration.LogDirectory));
+			LogFile = configuration.LogFile;
+			Mac = configuration.Mac;
+			MarkdownSummaryPath = configuration.MarkdownSummaryPath;
+			PeriodicCommand = configuration.PeriodicCommand;
+			PeriodicCommandArguments = configuration.PeriodicCommandArguments;
+			PeriodicCommandInterval = configuration.PeriodicCommandInterval;
+			RootDirectory = configuration.RootDirectory;
+			SdkRoot = configuration.SdkRoot;
+			Target = configuration.Target;
+			Timeout = configuration.TimeoutInMinutes;
+			UseSystem = configuration.UseSystem;
+			Verbosity = configuration.Verbosity;
+			WatchOSAppTemplate = configuration.WatchOSAppTemplate;
+			WatchOSContainerTemplate = configuration.WatchOSContainerTemplate;
+			XmlJargon = configuration.XmlJargon;
+
 			LaunchTimeout = InCI ? 3 : 120;
 		}
 
