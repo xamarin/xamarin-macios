@@ -70,6 +70,8 @@
     <Compile Include="Hardware\Tests\DevicesTest.cs" />
     <Compile Include="Hardware\Tests\TCCDatabaseTests.cs" />
     <Compile Include="Utilities\Tests\StringUtilsTests.cs" />
+    <Compile Include="Hardware\Tests\SimulatorsTest.cs" />
+    <Compile Include="Hardware\Tests\SimDeviceTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -80,6 +82,7 @@
     <EmbeddedResource Include="Samples\TouchUnitSample.xml" />
     <EmbeddedResource Include="Samples\xUnitSample.xml" />
     <EmbeddedResource Include="Samples\devices.xml" />
+    <EmbeddedResource Include="Samples\simulators.xml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../DummyTestProcess/DummyTestProcess.csproj">
