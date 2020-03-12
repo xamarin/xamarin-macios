@@ -1588,6 +1588,13 @@
 		</comment>
 	</data>
 
+	<data name="MX2020" xml:space="preserve">
+		<value>Can not find the corlib assembly '{0}' in the list of loaded assemblies.
+		</value>
+		<comment>
+		</comment>
+	</data>
+
 	<data name="MT2101" xml:space="preserve">
 		<value>Can't resolve the reference '{0}', referenced from the method '{1}' in '{2}'.
 		</value>

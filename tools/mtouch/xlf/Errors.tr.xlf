@@ -2970,6 +2970,14 @@
         <note>
 		</note>
       </trans-unit>
+      <trans-unit id="MX2020">
+        <source>Can not find the corlib assembly '{0}' in the list of loaded assemblies.
+		</source>
+        <target state="new">Can not find the corlib assembly '{0}' in the list of loaded assemblies.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
       <trans-unit id="MX2103">
         <source>Error processing assembly '{0}': {1}
 		</source>

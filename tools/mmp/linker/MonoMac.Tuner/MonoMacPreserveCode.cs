@@ -26,7 +26,7 @@ namespace MonoMac.Tuner {
 			// * .ctor(UnmanagedType)
 			// * MarshalTypeRef field - but since it's decorated with [StructLayout (LayoutKind.Sequential)] 
 			//   the linker will keep every fields
-			var marshalas = Corlib.MainModule.GetType ("System.Runtime.InteropServices", "MarshalAsAttribute");
+			var marshalas = Context.Corlib.MainModule.GetType ("System.Runtime.InteropServices", "MarshalAsAttribute");
 			if (marshalas == null || !marshalas.HasMethods)
 				return;
 			foreach (MethodDefinition ctor in marshalas.Methods) {

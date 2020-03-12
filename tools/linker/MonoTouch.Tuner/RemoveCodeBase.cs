@@ -20,7 +20,7 @@ namespace MonoTouch.Tuner {
 		{
 			// only one definition exists (in mscorlib.dll)
 			if (get_nse_def == null) {
-				var corlib = context.GetAssembly ("mscorlib");
+				var corlib = context.Corlib;
 				var nse = corlib.MainModule.GetType ("System", "NotSupportedException");
 				foreach (var m in nse.Methods) {
 					// no need to check HasMethods because we know there are (and nothing is removed at this stage)
