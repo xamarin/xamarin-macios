@@ -3,8 +3,8 @@ using System.IO;
 
 using NUnit.Framework;
 
-using BCLTestImporter;
 using System.Threading.Tasks;
+using Xharness.BCLTestImporter;
 
 namespace Xharness.Tests.BCLTestImporter.Tests {
 	public class BCLTestInfoPlistGeneratorTest {
@@ -19,8 +19,10 @@ namespace Xharness.Tests.BCLTestImporter.Tests {
 		[Test]
 		public void GenerateCodeNullProjectName ()
 		{
+			var tmp = Path.GetTempFileName ();
 			Assert.ThrowsAsync <ArgumentNullException> (() =>
-				BCLTestInfoPlistGenerator.GenerateCodeAsync ("A/path", null));
+				BCLTestInfoPlistGenerator.GenerateCodeAsync (File.Create (tmp), null));
+			File.Delete (tmp);
 		}
 
 		[Test]
@@ -34,7 +36,7 @@ namespace Xharness.Tests.BCLTestImporter.Tests {
 				await file.WriteAsync (fakeTemplate);
 			}
 
-			var result = await BCLTestInfoPlistGenerator.GenerateCodeAsync (templatePath, projectName);
+			var result = await BCLTestInfoPlistGenerator.GenerateCodeAsync (File.OpenRead (templatePath), projectName);
 			try {
 				StringAssert.DoesNotContain (BCLTestInfoPlistGenerator.ApplicationNameReplacement, result);
 				StringAssert.DoesNotContain (BCLTestInfoPlistGenerator.IndentifierReplacement, result);

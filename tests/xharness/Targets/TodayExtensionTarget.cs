@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
+using Xamarin;
+using Xharness.Hardware;
 using Xharness.Utilities;
 
 namespace Xharness.Targets
