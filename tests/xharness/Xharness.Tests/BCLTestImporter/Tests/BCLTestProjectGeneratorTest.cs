@@ -2,8 +2,7 @@ using System;
 using System.IO;
 using System.Text;
 using NUnit.Framework;
-
-using BCLTestImporter;
+using Xharness.BCLTestImporter;
 
 namespace Xharness.Tests.BCLTestImporter.Tests {
 	
@@ -51,9 +50,9 @@ namespace Xharness.Tests.BCLTestImporter.Tests {
 			Assert.AreEqual (Path.Combine (generator.OutputDirectoryPath, expectedName), path);
 		}
 		
-		[TestCase ("WatchApp", BCLTestProjectGenerator.WatchAppType.App, "WatchApp-watchos-app.csproj")]
-		[TestCase ("WatchExtension", BCLTestProjectGenerator.WatchAppType.Extension, "WatchExtension-watchos-extension.csproj")]
-		public void GetProjectPathWatchOS (string projectName, BCLTestProjectGenerator.WatchAppType appType, string expectedName)
+		[TestCase ("WatchApp", WatchAppType.App, "WatchApp-watchos-app.csproj")]
+		[TestCase ("WatchExtension", WatchAppType.Extension, "WatchExtension-watchos-extension.csproj")]
+		public void GetProjectPathWatchOS (string projectName, WatchAppType appType, string expectedName)
 		{
 			// ignore the fact that all params are the same, we do not care
 			var generator = new BCLTestProjectGenerator (outputdir, outputdir, outputdir, outputdir, outputdir);
@@ -71,9 +70,9 @@ namespace Xharness.Tests.BCLTestImporter.Tests {
 			Assert.AreEqual (Path.Combine (rootDir, expectedName), path);
 		}
 		
-		[TestCase ("/usr/bin", BCLTestProjectGenerator.WatchAppType.App, "Info-watchos-app.plist")]
-		[TestCase ("/usr/local", BCLTestProjectGenerator.WatchAppType.Extension, "Info-watchos-extension.plist")]
-		public void GetPListPathWatchOS  (string rootDir, BCLTestProjectGenerator.WatchAppType  appType, string expectedName)
+		[TestCase ("/usr/bin", WatchAppType.App, "Info-watchos-app.plist")]
+		[TestCase ("/usr/local", WatchAppType.Extension, "Info-watchos-extension.plist")]
+		public void GetPListPathWatchOS  (string rootDir, WatchAppType  appType, string expectedName)
 		{
 			var path = BCLTestProjectGenerator.GetPListPath (rootDir, appType);
 			Assert.AreEqual (Path.Combine (rootDir, expectedName), path);

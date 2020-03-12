@@ -25,7 +25,14 @@ namespace Xharness
 		Jenkins,
 	}
 
-	public class Harness
+	public interface IHarness {
+		string MlaunchPath { get; }
+		string XcodeRoot { get; }
+		Version XcodeVersion { get; }
+		Task<ProcessExecutionResult> ExecuteXcodeCommandAsync (string executable, IList<string> args, ILog log, TimeSpan timeout);
+	}
+
+	public class Harness : IHarness
 	{
 		public HarnessAction Action { get; set; }
 		public int Verbosity { get; set; }
@@ -98,6 +105,7 @@ namespace Xharness
 		public string MONO_MAC_SDK_DESTDIR { get; set; }
 		public bool IncludeMac32 { get; set; }
 		public bool ENABLE_XAMARIN { get; set; }
+		public string DOTNET { get; set; }
 
 		// Run
 		public AppRunnerTarget Target { get; set; }
@@ -263,6 +271,7 @@ namespace Xharness
 			MONO_IOS_SDK_DESTDIR = make_config ["MONO_IOS_SDK_DESTDIR"];
 			MONO_MAC_SDK_DESTDIR = make_config ["MONO_MAC_SDK_DESTDIR"];
 			ENABLE_XAMARIN = make_config.ContainsKey ("ENABLE_XAMARIN") && !string.IsNullOrEmpty (make_config ["ENABLE_XAMARIN"]);
+			DOTNET = make_config ["DOTNET"];
 		}
 		 
 		int AutoConfigureMac (bool generate_projects)

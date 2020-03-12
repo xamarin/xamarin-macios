@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
-using BCLTestImporter;
 
 namespace Xharness.BCLTestImporter {
 	// Class that is use as the connection between xharness and the BCLImporter

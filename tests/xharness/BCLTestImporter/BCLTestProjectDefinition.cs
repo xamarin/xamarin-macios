@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Collections.Generic;
 
-namespace BCLTestImporter {
+namespace Xharness.BCLTestImporter {
 	/// <summary>
 	/// Class that defines a bcl test project. A bcl test project by definition is the combination of the name
 	/// of the project and a set on assemblies to be tested.

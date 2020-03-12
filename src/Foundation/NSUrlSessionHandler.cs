@@ -473,7 +473,7 @@ namespace Foundation {
 			return nsrequest;
 		}
 
-#if SYSTEM_NET_HTTP || MONOMAC
+#if (SYSTEM_NET_HTTP || MONOMAC) && !NET
 		internal
 #endif
 		protected override async Task<HttpResponseMessage> SendAsync (HttpRequestMessage request, CancellationToken cancellationToken)
@@ -935,7 +935,10 @@ namespace Foundation {
 				return content.CopyToAsync (stream, bufferSize, cancellationToken);
 			}
 
-			protected internal override bool TryComputeLength (out long length)
+#if !NET
+			internal
+#endif
+			protected override bool TryComputeLength (out long length)
 			{
 				if (!content.CanSeek) {
 					length = 0;

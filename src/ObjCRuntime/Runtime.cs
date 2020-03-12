@@ -253,10 +253,16 @@ namespace ObjCRuntime {
 				Registrar = new DynamicRegistrar ();
 			RegisterDelegates (options);
 			Class.Initialize (options);
+#if !NET
+			// This is not needed for .NET 5:
+			// * https://github.com/xamarin/xamarin-macios/issues/7924#issuecomment-588331822
+			// * https://github.com/xamarin/xamarin-macios/issues/7924#issuecomment-589356481
 			Mono.SystemDependencyProvider.Initialize ();
+#endif
 			InitializePlatform (options);
 
-#if !XAMMAC_SYSTEM_MONO
+#if !XAMMAC_SYSTEM_MONO && !NET_TODO
+			// NET_TODO: https://github.com/dotnet/runtime/issues/32543
 			UseAutoreleasePoolInThreadPool = true;
 #endif
 			IsARM64CallingConvention = GetIsARM64CallingConvention (); // Can only be done after Runtime.Arch is set (i.e. InitializePlatform has been called).
@@ -270,7 +276,8 @@ namespace ObjCRuntime {
 #endif
 		}
 
-#if !XAMMAC_SYSTEM_MONO
+#if !XAMMAC_SYSTEM_MONO && !NET_TODO
+		// NET_TODO: https://github.com/dotnet/runtime/issues/32543
 		static bool has_autoreleasepool_in_thread_pool;
 		public static bool UseAutoreleasePoolInThreadPool {
 			get {

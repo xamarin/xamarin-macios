@@ -147,7 +147,10 @@ namespace System.Net.Http
 			}
 		}
 
-		protected internal override bool TryComputeLength (out long length)
+#if !NET
+		internal
+#endif
+		protected override bool TryComputeLength (out long length)
 		{
 			length = 0;
 			return false;

@@ -9,7 +9,9 @@ using System.Text;
 using Xharness.Logging;
 using Xharness.Execution;
 using Xharness.Jenkins.TestTasks;
+using Xharness.Hardware;
 using Xharness.Utilities;
+using Xharness.Collections;
 
 namespace Xharness.Jenkins
 {
@@ -71,8 +73,8 @@ namespace Xharness.Jenkins
 			}
 		}
 
-		public Simulators Simulators = new Simulators ();
-		public Devices Devices = new Devices ();
+		public ISimulatorsLoader Simulators = new Simulators ();
+		public IDeviceLoader Devices = new Devices ();
 
 		List<TestTask> Tasks = new List<TestTask> ();
 		Dictionary<string, MakeTask> DependencyTasks = new Dictionary<string, MakeTask> ();
@@ -81,7 +83,7 @@ namespace Xharness.Jenkins
 		internal static Resource NugetResource = new Resource ("Nuget", 1); // nuget is not parallel-safe :(
 
 		static Dictionary<string, Resource> device_resources = new Dictionary<string, Resource> ();
-		internal static Resources GetDeviceResources (IEnumerable<Device> devices)
+		internal static Resources GetDeviceResources (IEnumerable<IHardwareDevice> devices)
 		{
 			List<Resource> resources = new List<Resource> ();
 			lock (device_resources) {
@@ -645,7 +647,7 @@ namespace Xharness.Jenkins
 				rv.AddRange (projectTasks);
 			}
 
-			return Task.FromResult<IEnumerable<TestTask>> (CreateTestVariations (rv, (buildTask, test, candidates) => new RunDeviceTask (buildTask, candidates?.Cast<Device> () ?? test.Candidates)));
+			return Task.FromResult<IEnumerable<TestTask>> (CreateTestVariations (rv, (buildTask, test, candidates) => new RunDeviceTask (buildTask, candidates?.Cast<IHardwareDevice> () ?? test.Candidates)));
 		}
 
 		static string AddSuffixToPath (string path, string suffix)
@@ -741,6 +743,7 @@ namespace Xharness.Jenkins
 				"src/generator.cs",
 				"src/generator-",
 				"src/Makefile.generator",
+				"tests/bgen",
 				"tests/generator",
 				"tests/common",
 			};
@@ -1094,10 +1097,27 @@ namespace Xharness.Jenkins
 				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "generator", "generator-tests.csproj"))),
 				Platform = TestPlatform.iOS,
 				TestName = "Generator tests",
+				Mode = "NUnit",
 				Timeout = TimeSpan.FromMinutes (10),
 				Ignored = !IncludeBtouch,
 			};
 			Tasks.Add (runGenerator);
+
+			var buildDotNetGenerator = new DotNetBuildTask {
+				Jenkins = this,
+				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "bgen", "bgen-tests.csproj"))),
+				SpecifyPlatform = false,
+				SpecifyConfiguration = false,
+				Platform = TestPlatform.iOS,
+			};
+			var runDotNetGenerator = new DotNetTestTask (buildDotNetGenerator) {
+				TestProject = buildDotNetGenerator.TestProject,
+				Platform = TestPlatform.iOS,
+				TestName = "Generator tests",
+				Mode = ".NET",
+				Ignored = !IncludeBtouch,
+			};
+			Tasks.Add (runDotNetGenerator);
 
 			var run_mmp = new MakeTask
 			{
@@ -1250,14 +1270,19 @@ namespace Xharness.Jenkins
 					Task.Run (async () => await ExecutePeriodicCommandAsync (periodic_log));
 				}
 
-				Task.Run (async () =>
-				{
+				// We can populate and build test-libraries in parallel.
+				var populate = Task.Run (async () => {
 					await SimDevice.KillEverythingAsync (MainLog);
 					await PopulateTasksAsync ();
 					populating = false;
-				}).Wait ();
+				});
+				var preparations = new List<Task> ();
+				preparations.Add (populate);
+				preparations.Add (BuildTestLibrariesAsync ());
+				Task.WaitAll (preparations.ToArray ());
+
 				GenerateReport ();
-				BuildTestLibraries ();
+
 				if (!IsServerMode) {
 					foreach (var task in Tasks)
 						tasks.Add (task.RunAsync ());
@@ -1276,9 +1301,19 @@ namespace Xharness.Jenkins
 			get { return Harness.JenkinsConfiguration == "server"; }
 		}
 
-		void BuildTestLibraries ()
+		Task BuildTestLibrariesAsync ()
 		{
-			Harness.ProcessManager.ExecuteCommandAsync ("make", new [] { "all", $"-j{Environment.ProcessorCount}", "-C", Path.Combine (Harness.RootDirectory, "test-libraries") }, MainLog, TimeSpan.FromMinutes (10)).Wait ();
+			var sb = new StringBuilder ();
+			var callback_log = new CallbackLog ((v) => sb.Append (v));
+			var log = Log.CreateAggregatedLog (callback_log, MainLog);
+			return Harness.ProcessManager.ExecuteCommandAsync ("make", new [] { "all", $"-j{Environment.ProcessorCount}", "-C", Path.Combine (Harness.RootDirectory, "test-libraries") }, log, TimeSpan.FromMinutes (10)).ContinueWith ((v) => {
+				var per = v.Result;
+				if (!per.Succeeded) {
+					// Only show the log if something went wrong.
+					using var fn = Logs.Create ("build-test-libraries.log", "⚠️ Build test/test-libraries failed ⚠️");
+					File.WriteAllText (fn.FullPath, sb.ToString ());
+				}
+			});
 		}
 
 		Task RunTestServer ()
@@ -1749,6 +1784,7 @@ namespace Xharness.Jenkins
 			var allNUnitTasks = new List<NUnitExecuteTask> ();
 			var allMakeTasks = new List<MakeTask> ();
 			var allDeviceTasks = new List<RunDeviceTask> ();
+			var allDotNetTestTasks = new List<DotNetTestTask> ();
 			foreach (var task in Tasks) {
 				var aggregated = task as AggregatedRunSimulatorTask;
 				if (aggregated != null) {
@@ -1780,6 +1816,11 @@ namespace Xharness.Jenkins
 					continue;
 				}
 
+				if (task is DotNetTestTask dotnet) {
+					allDotNetTestTasks.Add (dotnet);
+					continue;
+				}
+
 				throw new NotImplementedException ();
 			}
 
@@ -1790,6 +1831,7 @@ namespace Xharness.Jenkins
 				allTasks.AddRange (allNUnitTasks);
 				allTasks.AddRange (allMakeTasks);
 				allTasks.AddRange (allDeviceTasks);
+				allTasks.AddRange (allDotNetTestTasks);
 			}
 
 			var failedTests = allTasks.Where ((v) => v.Failed);
@@ -1880,8 +1922,10 @@ namespace Xharness.Jenkins
 
 				writer.WriteLine ("<h1>Test results</h1>");
 
+				writer.WriteLine ($"<span id='x{id_counter++}' class='autorefreshable'>");
 				foreach (var log in Logs)
-					writer.WriteLine ("<span id='x{2}' class='autorefreshable'> <a href='{0}' type='text/plain;charset=UTF-8'>{1}</a></span><br />", log.FullPath.Substring (LogDirectory.Length + 1), log.Description, id_counter++);
+					writer.WriteLine ("<a href='{0}' type='text/plain;charset=UTF-8'>{1}</a><br />", log.FullPath.Substring (LogDirectory.Length + 1), log.Description);
+				writer.WriteLine ("</span>");
 
 				var headerColor = "black";
 				if (unfinishedTests.Any ()) {
