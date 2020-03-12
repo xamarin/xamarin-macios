@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Mono.Options;
+using Xharness.Execution;
 using Xharness.Utilities;
 
 namespace Xharness {
@@ -127,7 +128,8 @@ namespace Xharness {
 			// XS sets this, which breaks pretty much everything if it doesn't match what was passed to --sdkroot.
 			Environment.SetEnvironmentVariable ("XCODE_DEVELOPER_DIR_PATH", null);
 
-			var harness = new Harness (action,
+			var harness = new Harness (new ProcessManager(),
+				action,
 				autoConf,
 				configuration,
 				dryRun,

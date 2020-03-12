@@ -124,7 +124,8 @@ namespace Xharness
 		// whether tests that require access to system resources (system contacts, photo library, etc) should be executed or not
 		public bool? IncludeSystemPermissionTests { get; set; }
 
-		public Harness (HarnessAction action,
+		public Harness (IProcessManager processManager,
+			HarnessAction action,
 			bool autoConf,
 			string configuration,
 			bool dryRun,
@@ -150,6 +151,7 @@ namespace Xharness
 			string watchOSContainerTemplate,
 			XmlResultJargon xmlJargon)
 		{
+			ProcessManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 			Action = action;
 			AutoConf = autoConf;
 			Configuration = configuration ?? throw new ArgumentNullException (nameof (configuration));
