@@ -1,7 +1,14 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Xharness.Jenkins.TestTasks {
 	class DotNetBuildTask : MSBuildTask {
+
+		public DotNetBuildTask ()
+		{
+			SetDotNetEnvironmentVariables (Environment);
+		}
+
 		protected override string ToolName {
 			get { return Harness.DOTNET; }
 		}
@@ -14,6 +21,16 @@ namespace Xharness.Jenkins.TestTasks {
 				args.Insert (0, "build");
 				return args;
 			}
+		}
+
+
+		public static void SetDotNetEnvironmentVariables (Dictionary<string, string> environment)
+		{
+			environment ["MSBUILD_EXE_PATH"] = null;
+			environment ["MSBuildExtensionsPathFallbackPathsOverride"] = null;
+			environment ["MSBuildSDKsPath"] = null;
+			environment ["TargetFrameworkFallbackSearchPaths"] = null;
+			environment ["MSBuildExtensionsPathFallbackPathsOverride"] = null;
 		}
 	}
 }

@@ -8,6 +8,7 @@ namespace Xharness.Jenkins.TestTasks {
 		public DotNetTestTask (DotNetBuildTask build_task)
 			: base (build_task)
 		{
+			DotNetBuildTask.SetDotNetEnvironmentVariables (Environment);
 		}
 
 		protected override async Task RunTestAsync ()
