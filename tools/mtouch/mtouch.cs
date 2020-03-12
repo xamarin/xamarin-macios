@@ -182,6 +182,13 @@ namespace Xamarin.Bundler
 			return Path.Combine (FrameworkLibDirectory, "mono", platform);
 		}
 
+		public static string GetArchDirectory (Application app, bool is64bit)
+		{
+			if (is64bit)
+				return GetArch64Directory (app);
+			return GetArch32Directory (app);
+		}
+
 		public static string GetArch32Directory (Application app)
 		{
 			switch (app.Platform) {
