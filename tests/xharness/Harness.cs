@@ -34,13 +34,13 @@ namespace Xharness
 
 	public class Harness : IHarness
 	{
-		public HarnessAction Action { get; set; }
-		public int Verbosity { get; set; }
+		public HarnessAction Action { get; }
+		public int Verbosity { get; }
 		public ILog HarnessLog { get; set; }
-		public bool UseSystem { get; set; } // if the system XI/XM should be used, or the locally build XI/XM.
+		public bool UseSystem { get; } // if the system XI/XM should be used, or the locally build XI/XM.
 		public HashSet<string> Labels { get; }
-		public XmlResultJargon XmlJargon { get; set; }
-		public IProcessManager ProcessManager { get; set; }
+		public XmlResultJargon XmlJargon { get; }
+		public IProcessManager ProcessManager { get; }
 
 		public string XIBuildPath {
 			get { return Path.GetFullPath (Path.Combine (RootDirectory, "..", "tools", "xibuild", "xibuild")); }
@@ -80,47 +80,47 @@ namespace Xharness
 			}
 		}
 
-		public List<iOSTestProject> IOSTestProjects { get; set; }
-		public List<MacTestProject> MacTestProjects { get; set; } = new List<MacTestProject> ();
+		public List<iOSTestProject> IOSTestProjects { get; }
+		public List<MacTestProject> MacTestProjects { get; } = new List<MacTestProject> ();
 
 		// Configure
-		public bool AutoConf { get; set; }
-		public bool Mac { get; set; }
-		public string WatchOSContainerTemplate { get; set; }
-		public string WatchOSAppTemplate { get; set; }
-		public string WatchOSExtensionTemplate { get; set; }
-		public string TodayContainerTemplate { get; set; }
-		public string TodayExtensionTemplate { get; set; }
-		public string BCLTodayExtensionTemplate { get; set; }
-		public string MONO_PATH { get; set; } // Use same name as in Makefiles, so that a grep finds it.
-		public string TVOS_MONO_PATH { get; set; } // Use same name as in Makefiles, so that a grep finds it.
-		public bool INCLUDE_IOS { get; set; }
-		public bool INCLUDE_TVOS { get; set; }
-		public bool INCLUDE_WATCH { get; set; }
-		public bool INCLUDE_MAC { get; set; }
-		public string JENKINS_RESULTS_DIRECTORY { get; set; } // Use same name as in Makefiles, so that a grep finds it.
-		public string MAC_DESTDIR { get; set; }
-		public string IOS_DESTDIR { get; set; }
-		public string MONO_IOS_SDK_DESTDIR { get; set; }
-		public string MONO_MAC_SDK_DESTDIR { get; set; }
-		public bool IncludeMac32 { get; set; }
-		public bool ENABLE_XAMARIN { get; set; }
+		public bool AutoConf { get; }
+		public bool Mac { get; }
+		public string WatchOSContainerTemplate { get; private set; }
+		public string WatchOSAppTemplate { get; private set; }
+		public string WatchOSExtensionTemplate { get; private set; }
+		public string TodayContainerTemplate { get; private set; }
+		public string TodayExtensionTemplate { get; private set; }
+		public string BCLTodayExtensionTemplate { get; private set; }
+		public string MONO_PATH { get; private set; } // Use same name as in Makefiles, so that a grep finds it.
+		public string TVOS_MONO_PATH { get; private set; } // Use same name as in Makefiles, so that a grep finds it.
+		public bool INCLUDE_IOS { get; private set; }
+		public bool INCLUDE_TVOS { get; private set; }
+		public bool INCLUDE_WATCH { get; private set; }
+		public bool INCLUDE_MAC { get; private set; }
+		public string JENKINS_RESULTS_DIRECTORY { get; private set; } // Use same name as in Makefiles, so that a grep finds it.
+		public string MAC_DESTDIR { get; private set; }
+		public string IOS_DESTDIR { get; private set; }
+		public string MONO_IOS_SDK_DESTDIR { get; private set; }
+		public string MONO_MAC_SDK_DESTDIR { get; private set; }
+		public bool IncludeMac32 { get; private set; }
+		public bool ENABLE_XAMARIN { get; private set; }
 
 		// Run
-		public AppRunnerTarget Target { get; set; }
-		public string SdkRoot { get; set; }
-		public string Configuration { get; set; }
-		public string LogFile { get; set; }
-		public string LogDirectory { get; set; }
-		public double Timeout { get; set; } = 15; // in minutes
-		public double LaunchTimeout { get; set; } // in minutes
-		public bool DryRun { get; set; } // Most things don't support this. If you need it somewhere, implement it!
-		public string JenkinsConfiguration { get; set; }
-		public Dictionary<string, string> EnvironmentVariables { get; set; }
-		public string MarkdownSummaryPath { get; set; }
-		public string PeriodicCommand { get; set; }
-		public string PeriodicCommandArguments { get; set; }
-		public TimeSpan PeriodicCommandInterval { get; set; }
+		public AppRunnerTarget Target { get; }
+		public string SdkRoot { get; private set; }
+		public string Configuration { get; }
+		public string LogFile { get; }
+		public string LogDirectory { get; }
+		public double Timeout { get; } = 15; // in minutes
+		public double LaunchTimeout { get; } // in minutes
+		public bool DryRun { get; } // Most things don't support this. If you need it somewhere, implement it!
+		public string JenkinsConfiguration { get; }
+		public Dictionary<string, string> EnvironmentVariables { get; }
+		public string MarkdownSummaryPath { get; }
+		public string PeriodicCommand { get; }
+		public string PeriodicCommandArguments { get; }
+		public TimeSpan PeriodicCommandInterval { get; }
 		// whether tests that require access to system resources (system contacts, photo library, etc) should be executed or not
 		public bool? IncludeSystemPermissionTests { get; set; }
 
