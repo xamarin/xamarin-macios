@@ -112,6 +112,8 @@ namespace Xharness.BCLTestImporter.Templates.Managed {
 		public async Task GenerateSource (string srcOuputPath)
 		{
 			// mk the expected directories
+			if (Directory.Exists (srcOuputPath))
+				Directory.Delete (srcOuputPath, true); // delete, we always want to add the embeded src
 			BuildSrcTree (srcOuputPath);
 			// the code is simple, we are going to look for all the resources that we know are src and will write a
 			// copy of the stream in the designated output path
