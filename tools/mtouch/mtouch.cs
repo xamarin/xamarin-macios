@@ -1210,8 +1210,11 @@ namespace Xamarin.Bundler
 			if (app.EnableRepl && app.LinkMode != LinkMode.None)
 				throw new MonoTouchException (82, true, Errors.MT0082);
 
-			if (cross_prefix == null)
+			if (cross_prefix == null) {
 				cross_prefix = FrameworkDirectory;
+				if (IsDotNet)
+					cross_prefix = Path.Combine (cross_prefix, "tools");
+			}
 
 			Watch ("Setup", 1);
 
