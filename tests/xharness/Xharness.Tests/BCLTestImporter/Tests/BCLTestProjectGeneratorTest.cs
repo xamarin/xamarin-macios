@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Text;
 using NUnit.Framework;
 using Xharness.BCLTestImporter;
 
@@ -19,25 +18,14 @@ namespace Xharness.Tests.BCLTestImporter.Tests {
 		public void ConstructorNullOutputDir ()
 		{
 			Assert.Throws<ArgumentNullException> (() => new BCLTestProjectGenerator (null));
-			Assert.Throws<ArgumentNullException> (() => new BCLTestProjectGenerator (null, "", "", "", ""));
+			Assert.Throws<ArgumentNullException> (() => new BCLTestProjectGenerator (null, ""));
 		}
 		
 		[Test]
 		public void ConstructorNullMonoDir () => 
-			Assert.Throws<ArgumentNullException> (() => new BCLTestProjectGenerator ("", null, "", "", ""));
-		
-		[Test]
-		public void ConstructorNullProjectTemplatePath () =>
-			Assert.Throws<ArgumentNullException> (() => new BCLTestProjectGenerator ("", "", null, "", ""));
-		
-		[Test]
-		public void ConstructorNullRegisterPath () =>
-			Assert.Throws<ArgumentNullException> (() => new BCLTestProjectGenerator ("", "", "", null, ""));
-		
-		[Test]
-		public void ConstructorNullPlistTemplatePath () =>
-			Assert.Throws<ArgumentNullException> (() => new BCLTestProjectGenerator ("", "", "", "", null));
-		
+			Assert.Throws<ArgumentNullException> (() => new BCLTestProjectGenerator ("", null));
+
+		/*
 		[TestCase ("iOSProject", Platform.iOS, "iOSProject.csproj")]
 		[TestCase ("WatchOSProject", Platform.WatchOS, "WatchOSProject-watchos.csproj")]
 		[TestCase ("TvOSProject", Platform.TvOS, "TvOSProject-tvos.csproj")]
@@ -45,7 +33,7 @@ namespace Xharness.Tests.BCLTestImporter.Tests {
 		public void GetProjectPath (string projectName, Platform platform, string expectedName)
 		{
 			// ignore the fact that all params are the same, we do not care
-			var generator = new BCLTestProjectGenerator (outputdir, outputdir, outputdir, outputdir, outputdir);
+			var generator = new BCLTestProjectGenerator (outputdir);
 			var path = generator.GetProjectPath (projectName, platform);	
 			Assert.AreEqual (Path.Combine (generator.OutputDirectoryPath, expectedName), path);
 		}
@@ -77,7 +65,7 @@ namespace Xharness.Tests.BCLTestImporter.Tests {
 			var path = BCLTestProjectGenerator.GetPListPath (rootDir, appType);
 			Assert.AreEqual (Path.Combine (rootDir, expectedName), path);
 		}
-
+		
 		[TestCase ("System.Xml.dll")]
 		[TestCase ("MyAssembly.dll")]
 		public void GetReferenceNodeNullHint (string assembly)
@@ -125,5 +113,6 @@ namespace Xharness.Tests.BCLTestImporter.Tests {
 			StringAssert.DoesNotContain (BCLTestProjectGenerator.PlistKey, generatedProject);
 			StringAssert.Contains (plistPath, generatedProject);
 		}
+		*/
 	}
 }
