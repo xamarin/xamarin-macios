@@ -738,8 +738,8 @@ namespace Foundation {
 			if (o == null)
 				return false;
 				
-			bool isDirectBinding = IsDirectBinding;
 			// we can only ask `isEqual:` to test equality if both objects are direct bindings
+			bool isDirectBinding = IsDirectBinding;
 			return (isDirectBinding == o.IsDirectBinding) && (isDirectBinding ? IsEqual (o) : ReferenceEquals (this, o));
 		}
 
@@ -748,8 +748,10 @@ namespace Foundation {
 		{
 			if (obj == null)
 				return false;
+				
 			// we'll ask the overridden Equals (if available) if one of the instances is not a direct binding
-			return (isDirectBinding == o.IsDirectBinding) && (isDirectBinding ? IsEqual (obj) : ReferenceEquals (this, obj));
+			bool isDirectBinding = IsDirectBinding;
+			return (isDirectBinding == obj.IsDirectBinding) && (isDirectBinding ? IsEqual (obj) : ReferenceEquals (this, obj));
 		}
 #endif
 
