@@ -19,6 +19,12 @@ using Xamarin.MacDev;
 using Xamarin.Utils;
 using ObjCRuntime;
 
+#if MTOUCH
+using ProductException = Xamarin.Bundler.MonoTouchException;
+#else
+using ProductException=Xamarin.Bundler.MonoMacException;
+#endif
+
 namespace Xamarin.Bundler {
 	public partial class Driver {
 		public static int Main (string [] args)
@@ -35,11 +41,17 @@ namespace Xamarin.Bundler {
 			return 0;
 		}
 
-		static void AddSharedOptions (Application app, Mono.Options.OptionSet options)
+		// Returns true if the process should exit (with a 0 exit code; failures are propagated using exceptions)
+		static bool ParseOptions (Application app, Mono.Options.OptionSet options, string[] args, ref Action action)
 		{
+			Action a = Action.None; // Need a temporary local variable, since anonymous functions can't write directly to ref/out arguments.
+
+			options.Add ("h|?|help", "Displays the help", v => a = Action.Help);
+			options.Add ("version", "Output version information and exit.", v => a = Action.Version);
 			options.Add ("v|verbose", "Specify how verbose the output should be. This can be passed multiple times to increase the verbosity.", v => Verbosity++);
 			options.Add ("q|quiet", "Specify how quiet the output should be. This can be passed multiple times to increase the silence.", v => Verbosity--);
 			options.Add ("sdkroot=", "Specify the location of Apple SDKs, default to 'xcode-select' value.", v => sdk_root = v);
+			options.Add ("target-framework=", "Specify target framework to use. Currently supported: '" + string.Join ("', '", TargetFramework.ValidFrameworks.Select ((v) => v.ToString ())) + "'.", v => SetTargetFramework (v));
 			options.Add ("no-xcode-version-check", "Ignores the Xcode version check.", v => { min_xcode_version = null; }, true /* This is a non-documented option. Please discuss any customers running into the xcode version check on the maciosdev@ list before giving this option out to customers. */);
 			options.Add ("warnaserror:", "An optional comma-separated list of warning codes that should be reported as errors (if no warnings are specified all warnings are reported as errors).", v =>
 			{
@@ -174,6 +186,31 @@ namespace Xamarin.Bundler {
 						app.Optimizations.Parse (v);
 					});
 			options.Add (new Mono.Options.ResponseFileSource ());
+
+			try {
+				app.RootAssemblies.AddRange (options.Parse (args));
+			} catch (ProductException) {
+				throw;
+			} catch (Exception e) {
+				throw ErrorHelper.CreateError (10, e, Errors.MX0010, e);
+			}
+
+			if (a != Action.None)
+				action = a;
+
+			if (action == Action.Help || args.Length == 0) {
+				ShowHelp (options);
+				return true;
+			} else if (action == Action.Version) {
+				Console.WriteLine (NAME + " {0}.{1}", Constants.Version, Constants.Revision);
+				return true;
+			}
+
+			LogArguments (args);
+
+			ValidateTargetFramework ();
+
+			return false;
 		}
 
 		static int Jobs;
@@ -235,54 +272,110 @@ namespace Xamarin.Bundler {
 
 		public const bool IsXAMCORE_4_0 = false;
 
-#if MONOMAC
-#pragma warning disable 0414
-		static string userTargetFramework = TargetFramework.Default.ToString ();
-#pragma warning restore 0414
-#endif
-
-		static TargetFramework? targetFramework;
-		public static bool HasTargetFramework {
-			get { return targetFramework.HasValue; }
-		}
+		static TargetFramework targetFramework;
 
 		public static TargetFramework TargetFramework {
-			get { return targetFramework.Value; }
+			get { return targetFramework; }
 			set { targetFramework = value; }
 		}
 
-		static void SetTargetFramework (string fx)
+		// We need to delay validating the target framework until we've parsed all the command line arguments,
+		// so first store it here, and then we call ValidateTargetFramework when we're done parsing the command
+		// line arguments.
+		static string target_framework;
+		static void SetTargetFramework (string value)
 		{
-#if MONOMAC
-			userTargetFramework = fx;
-#endif
+			target_framework = value;
+		}
 
+		static void ValidateTargetFramework ()
+		{
+			if (string.IsNullOrEmpty (target_framework))
+				throw ErrorHelper.CreateError (86, Errors.MX0086 /* A target framework (--target-framework) must be specified */);
+
+			var fx = target_framework;
 			switch (fx.Trim ().ToLowerInvariant ()) {
-#if MONOMAC
 			case "xammac":
 			case "mobile":
 			case "xamarin.mac":
-				targetFramework = TargetFramework.Xamarin_Mac_2_0;
-				break;
-#endif
+				targetFramework = TargetFramework.Xamarin_Mac_2_0_Mobile;
+				ErrorHelper.Warning (90, Errors.MX0090, /* The target framework '{0}' is deprecated. Use '{1}' instead. */ fx, targetFramework);
+				return;
 			default:
 				TargetFramework parsedFramework;
-				if (!Xamarin.Utils.TargetFramework.TryParse (fx, out parsedFramework))
+				if (!TargetFramework.TryParse (fx, out parsedFramework))
 					throw ErrorHelper.CreateError (68, Errors.MX0068, fx);
-#if MONOMAC
-				if (parsedFramework == TargetFramework.Net_3_0 || parsedFramework == TargetFramework.Net_3_5)
-					parsedFramework = TargetFramework.Net_2_0;
-#endif
 
 				targetFramework = parsedFramework;
 
 				break;
 			}
 
-#if MTOUCH
-			if (Array.IndexOf (TargetFramework.ValidFrameworks, targetFramework.Value) == -1)
-				throw ErrorHelper.CreateError (70, Errors.MT0070, targetFramework.Value, string.Join (" ", TargetFramework.ValidFrameworks.Select ((v) => v.ToString ()).ToArray ()));
+			bool show_0090 = false;
+#if MONOMAC
+			if (!TargetFramework.IsValidFramework (targetFramework)) {
+				// For historic reasons this is messy.
+				// If the TargetFramework we got isn't any of the one we accept, we have to do some fudging.
+				bool force45From40UnifiedSystemFull = false;
+
+				if (references.Any ((v) => Path.GetFileName (v) == "XamMac.dll"))
+					throw ErrorHelper.CreateError (143, Errors.MM0143);
+
+				if (targetFramework == TargetFramework.Net_2_0
+					|| targetFramework == TargetFramework.Net_3_0
+					|| targetFramework == TargetFramework.Net_3_5
+					|| targetFramework == TargetFramework.Net_4_0
+					|| targetFramework == TargetFramework.Net_4_5) {
+					// .NETFramework,v2.0 => Xamarin.Mac,Version=v4.5,Profile=Full
+					// .NETFramework,v3.0 => Xamarin.Mac,Version=v4.5,Profile=Full
+					// .NETFramework,v3.5 => Xamarin.Mac,Version=v4.5,Profile=Full
+					// .NETFramework,v4.0 => Xamarin.Mac,Version=v4.5,Profile=Full
+					// .NETFramework,v4.5 => Xamarin.Mac,Version=v4.5,Profile=Full
+					TargetFramework = TargetFramework.Xamarin_Mac_4_5_Full;
+				} else if (TargetFramework.Identifier == TargetFramework.Xamarin_Mac_2_0_Mobile.Identifier
+					&& TargetFramework.Version == TargetFramework.Xamarin_Mac_2_0_Mobile.Version) {
+					// At least once instance of a TargetFramework of Xamarin.Mac,v2.0,(null) was found already. Assume any v2.0 implies a desire for Modern.
+					TargetFramework = TargetFramework.Xamarin_Mac_2_0_Mobile;
+				} else if (TargetFramework.Identifier == TargetFramework.Xamarin_Mac_4_5_Full.Identifier
+						 && TargetFramework.Profile == TargetFramework.Xamarin_Mac_4_5_Full.Profile) {
+					// Xamarin.Mac,Version=vX.Y,Profile=Full => Xamarin.Mac,Version=v4.5,Profile=Full
+					TargetFramework = TargetFramework.Xamarin_Mac_4_5_Full;
+				} else if (TargetFramework.Identifier == TargetFramework.Xamarin_Mac_4_5_System.Identifier
+						 && TargetFramework.Profile == TargetFramework.Xamarin_Mac_4_5_System.Profile) {
+					// Xamarin.Mac,Version=vX.Y,Profile=System => Xamarin.Mac,Version=v4.5,Profile=System
+					TargetFramework = TargetFramework.Xamarin_Mac_4_5_System;
+				} else {
+					// This is a total hack. Instead of passing in an argument, we walk the references looking for
+					// the "right" Xamarin.Mac and assume you are doing something
+					// Skip it if xamarin-full-framework or xamarin-system-framework passed in 
+					foreach (var asm in references) {
+						if (asm.EndsWith ("reference/full/Xamarin.Mac.dll", StringComparison.Ordinal)) {
+							force45From40UnifiedSystemFull = TargetFramework == TargetFramework.Net_4_0;
+							TargetFramework = TargetFramework.Xamarin_Mac_4_5_System;
+							break;
+						} else if (asm.EndsWith ("mono/4.5/Xamarin.Mac.dll", StringComparison.Ordinal)) {
+							TargetFramework = TargetFramework.Xamarin_Mac_4_5_Full;
+							break;
+						}
+					}
+				}
+
+				if (force45From40UnifiedSystemFull) {
+					// Xamarin.Mac Unified Full System profile requires .NET 4.5, not .NET 4.0.
+					FixReferences (x => x.Contains ("lib/mono/4.0"), x => x.Replace ("lib/mono/4.0", "lib/mono/4.5"));
+				}
+
+				show_0090 = true;
+			}
 #endif
+
+			// Verify that our TargetFramework is our limited list of valid target frameworks.
+			if (!TargetFramework.IsValidFramework (TargetFramework))
+				throw ErrorHelper.CreateError (70, Errors.MX0070, fx, "'" + string.Join ("', '", TargetFramework.ValidFrameworks.Select ((v) => v.ToString ()).ToArray ()) + "'");
+
+			// Only show the warning if no errors were shown.
+			if (show_0090)
+				ErrorHelper.Warning (90, Errors.MX0090, /* The target framework '{0}' is deprecated. Use '{1}' instead. */ fx, TargetFramework);
 		}
 
 		public static int RunCommand (string path, params string [] args)

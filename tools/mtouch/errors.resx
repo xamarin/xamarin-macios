@@ -503,7 +503,7 @@
 		</comment>
 	</data>
 
-	<data name="MT0070" xml:space="preserve">
+	<data name="MX0070" xml:space="preserve">
 		<value>Invalid target framework: {0}. Valid target frameworks are: {1}.
 		</value>
 		<comment>
@@ -623,8 +623,8 @@
 		</comment>
 	</data>
 
-	<data name="MT0086" xml:space="preserve">
-		<value>A target framework (--target-framework) must be specified when building for TVOS or WatchOS.
+	<data name="MX0086" xml:space="preserve">
+		<value>A target framework (--target-framework) must be specified.
 		</value>
 		<comment>
 		</comment>
@@ -651,6 +651,13 @@
 		</comment>
 	</data>
 
+	<data name="MX0090" xml:space="preserve">
+		<value>The target framework '{0}' is deprecated. Use '{1}' instead.
+		</value>
+		<comment>
+		</comment>
+	</data>
+
 	<data name="MX0091" xml:space="preserve">
 		<value>This version of {0} requires the {1} {2} SDK (shipped with Xcode {3}). Either upgrade Xcode to get the required header files or {4} (to try to avoid the new APIs).
 		</value>
@@ -658,12 +665,16 @@
 		</comment>
 	</data>
 
+	<!-- MT0092 has been used in the past -->
+
 	<data name="MT0093" xml:space="preserve">
 		<value>Could not find 'mlaunch'.
 		</value>
 		<comment>
 		</comment>
 	</data>
+
+	<!-- MT0094 has been used in the past -->
 
 	<data name="MT0095" xml:space="preserve">
 		<value>Aot files could not be copied to the destination directory {0}: {1}
@@ -699,6 +710,8 @@
 		<comment>
 		</comment>
 	</data>
+
+	<!-- MM0098 has been used in the past -->
 
 	<data name="MX0099" xml:space="preserve">
 		<value>Internal error: {0}. Please file an issue at https://github.com/xamarin/xamarin-macios/issues/new.

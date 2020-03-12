@@ -782,6 +782,8 @@ namespace Xamarin.Bundler
 			var action = Action.None;
 			var app = new Application (args);
 
+			a = Action.None;
+
 			if (extra_args != null) {
 				var l = new List<string> (args);
 				foreach (var s in extra_args.Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
@@ -816,8 +818,6 @@ namespace Xamarin.Bundler
 			};
 
 			var os = new OptionSet () {
-			{ "h|?|help", "Displays the help", v => SetAction (Action.Help) },
-			{ "version", "Output version information and exit.", v => SetAction (Action.Version) },
 			{ "f|force", "Forces the recompilation of code, regardless of timestamps", v=>force = true },
 			{ "dot:", "Generate a dot file to visualize the build tree.", v => dotfile = v ?? string.Empty },
 			{ "cache=", "Specify the directory where object files will be cached", v => app.Cache.Location = v },
@@ -1060,7 +1060,6 @@ namespace Xamarin.Bundler
 					}
 				}
 			},
-			{"target-framework=", "Specify target framework to use. Currently supported: 'Xamarin.iOS,v1.0', 'Xamarin.WatchOS,v1.0' and 'Xamarin.TVOS,v1.0' (defaults to '" + TargetFramework.Default + "')", v => SetTargetFramework (v) },
 			{ "bitcode:", "Enable generation of bitcode (asmonly, full, marker)", v =>
 				{
 					switch (v) {
@@ -1117,30 +1116,11 @@ namespace Xamarin.Bundler
 			},
 		};
 
-			AddSharedOptions (app, os);
-
-			try {
-				app.RootAssemblies.AddRange (os.Parse (args));
-			}
-			catch (MonoTouchException) {
-				throw;
-			}
-			catch (Exception e) {
-				throw new MonoTouchException (10, true, e, Errors.MX0010, e);
-			}
+			if (ParseOptions (app, os, args, ref action))
+				return null;
 
 			a = action;
 
-			if (action == Action.Help) {
-				ShowHelp (os);
-				return null;
-			} else if (action == Action.Version) {
-				Console.Write ("mtouch {0}.{1}", Constants.Version, Constants.Revision);
-				Console.WriteLine ();
-				return null;
-			}
-
-			app.SetDefaultFramework ();
 			app.SetDefaultAbi ();
 
 			app.RuntimeOptions = RuntimeOptions.Create (app, http_message_handler, tls_provider);
@@ -1161,8 +1141,6 @@ namespace Xamarin.Bundler
 			if (app == null)
 				return 0;
 			
-			LogArguments (args);
-
 			// Allow a few actions, since these seem to always work no matter the Xcode version.
 			var accept_any_xcode_version = action == Action.ListDevices || action == Action.ListCrashReports || action == Action.ListApps || action == Action.LogDev;
 			ValidateXcode (accept_any_xcode_version, false);

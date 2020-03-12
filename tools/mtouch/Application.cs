@@ -950,35 +950,6 @@ namespace Xamarin.Bundler {
 			Console.WriteLine ("{0} built successfully.", AppDirectory);
 		}
 
-		bool no_framework;
-		public void SetDefaultFramework ()
-		{
-			// If no target framework was specified, check if we're referencing Xamarin.iOS.dll.
-			// It's an error if neither target framework nor Xamarin.iOS.dll is not specified
-			if (!Driver.HasTargetFramework) {
-				foreach (var reference in References) {
-					var name = Path.GetFileName (reference);
-					switch (name) {
-					case "Xamarin.iOS.dll":
-						Driver.TargetFramework = TargetFramework.Xamarin_iOS_1_0;
-						break;
-					case "Xamarin.TVOS.dll":
-					case "Xamarin.WatchOS.dll":
-						throw ErrorHelper.CreateError (86, Errors.MT0086);
-					}
-
-					if (Driver.HasTargetFramework)
-						break;
-				}
-			}
-
-			if (!Driver.HasTargetFramework) {
-				// Set a default target framework to show errors in the least confusing order.
-				Driver.TargetFramework = TargetFramework.Xamarin_iOS_1_0;
-				no_framework = true;
-			}
-		}
-
 		string FormatAssemblyBuildTargets ()
 		{
 			var sb = new StringBuilder ();
@@ -1260,10 +1231,6 @@ namespace Xamarin.Bundler {
 			}
 			if (exceptions?.Count > 0)
 				throw new AggregateException (exceptions);
-
-
-			if (no_framework)
-				throw ErrorHelper.CreateError (96, Errors.MT0096);
 
 			// Add a reference to the platform assembly if none has been added, and check that we're not referencing
 			// any platform assemblies from another platform.

@@ -256,23 +256,18 @@ namespace Xamarin.Tests
 			} else if (!string.IsNullOrEmpty (TargetFramework)) {
 				sb.Add ("--target-framework");
 				sb.Add (TargetFramework);
-			} else if (!NoPlatformAssemblyReference) {
-				// make the implicit default the way tests have been running until now, and at the same time the very minimum to make apps build.
+			} else {
 				switch (Profile) {
 				case Profile.iOS:
-					sb.Add ($"-r:" + Configuration.XamarinIOSDll);
-					break;
 				case Profile.tvOS:
 				case Profile.watchOS:
-					sb.Add ("--target-framework");
-					sb.Add (Configuration.GetTargetFramework (Profile));
-					sb.Add ("-r:" + Configuration.GetBaseLibrary (Profile));
-					break;
 				case Profile.macOSFull:
 				case Profile.macOSMobile:
 				case Profile.macOSSystem:
 					sb.Add ("--target-framework");
 					sb.Add (Configuration.GetTargetFramework (Profile));
+					if (!NoPlatformAssemblyReference)
+						sb.Add ("-r:" + Configuration.GetBaseLibrary (Profile));
 					break;
 				default:
 					throw new NotImplementedException ();

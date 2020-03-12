@@ -1048,7 +1048,7 @@ public class B : A {}
 
 		[Test]
 		[TestCase (Profile.tvOS)]
-		//[TestCase (Profile.WatchOS)] MT0077 interferring.
+		[TestCase (Profile.watchOS)]
 		[TestCase (Profile.iOS)]
 		public void MT0085 (Profile profile)
 		{
@@ -1056,8 +1056,11 @@ public class B : A {}
 				mtouch.Profile = profile;
 				mtouch.CreateTemporaryApp ();
 				mtouch.TargetFramework = GetTargetFramework (profile);
-				Assert.AreEqual (0, mtouch.Execute (MTouchAction.BuildSim));
+				mtouch.WarnAsError = new int [] { 85 };
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim);
 				mtouch.AssertError (85, string.Format ("No reference to '{0}' was found. It will be added automatically.", Path.GetFileName (GetBaseLibrary (profile))));
+				mtouch.AssertErrorCount (1);
+				mtouch.AssertWarningCount (0);
 			}
 		}
 
@@ -1067,10 +1070,11 @@ public class B : A {}
 		public void MT0086 (Profile profile)
 		{
 			using (var mtouch = new MTouchTool ()) {
+				mtouch.TargetFramework = BundlerTool.None;
 				mtouch.CreateTemporaryApp ();
 				mtouch.References = new string [] { GetBaseLibrary (profile) };
 				Assert.AreEqual (1, mtouch.Execute (MTouchAction.BuildSim));
-				mtouch.AssertError (86, "A target framework (--target-framework) must be specified when building for TVOS or WatchOS.");
+				mtouch.AssertError (86, "A target framework (--target-framework) must be specified.");
 			}
 		}
 
