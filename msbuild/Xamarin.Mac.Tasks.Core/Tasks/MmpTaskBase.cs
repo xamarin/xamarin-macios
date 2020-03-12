@@ -19,84 +19,25 @@ using Xamarin.Utils;
 
 namespace Xamarin.Mac.Tasks
 {
-	public class MmpTaskBase : ToolTask
+	public class MmpTaskBase : BundlerToolTaskBase
 	{
 		protected override string ToolName {
 			get { return "mmp"; }
 		}
 
-		public string SessionId { get; set; }
-
-		[Required]
-		public string AppBundleDir { get; set; }
-
-		[Required]
-		public string FrameworkRoot { get; set; }
-
-		[Required]
-		public string OutputPath { get; set; }
-
-		[Required]
-		public ITaskItem ApplicationAssembly { get; set; }
-
-		[Required]
-		public string HttpClientHandler { get; set; }
-
-		[Required]
-		public string TargetFrameworkMoniker { get; set; }
-
-		public string TargetFrameworkIdentifier { get { return TargetFramework.Identifier; } }
-
-		public TargetFramework TargetFramework { get { return TargetFramework.Parse (TargetFrameworkMoniker); } }
-
-		public string TargetFrameworkVersion { get { return TargetFramework.Version.ToString (); } }
-
-		[Required]
-		public string SdkRoot {	get; set; }
-
-		[Required]
-		public ITaskItem AppManifest { get; set; }
-
-		[Required]
-		public string SdkVersion { get; set; }
-
-		public bool IsAppExtension { get; set; }
 		public bool IsXPCService { get; set; }
-
-		[Required]
-		public bool EnableSGenConc { get; set; }
 
 		public bool UseXamMacFullFramework { get; set; }
 
 		public string ApplicationName { get; set; }
-		public string ArchiveSymbols { get; set; }
 		public string Architecture { get; set; }
-		public string LinkMode { get; set; }
-		public bool Debug { get; set; }
-		public bool Profiling { get; set; }
-		public string I18n { get; set; }
-		public string ExtraArguments { get; set; }
-		public int Verbosity { get; set; }
 
 		public string AotMode { get; set; }
 		public bool HybridAOT { get; set; }
 		public string ExplicitAotAssemblies { get; set; }
 
-		public ITaskItem [] ExplicitReferences { get; set; }
-		public ITaskItem [] NativeReferences { get; set; }
-
-		[Required]
-		public string ResponseFilePath { get; set; }
-
-		public string IntermediateOutputPath { get; set; }
-
 		[Output]
 		public ITaskItem[] NativeLibraries { get; set; }
-		
-		protected override string GenerateFullPathToTool ()
-		{
-			return Path.Combine (FrameworkRoot, "bin", "mmp");
-		}
 
 		protected override bool ValidateParameters ()
 		{
@@ -107,11 +48,7 @@ namespace Xamarin.Mac.Tasks
 
 		protected override string GenerateCommandLineCommands ()
 		{
-			var args = new CommandLineArgumentBuilder ();
-			bool msym;
-
-			if (Debug)
-				args.AddLine ("/debug");
+			var args = GenerateCommandLineArguments ();
 
 			if (!string.IsNullOrEmpty (OutputPath))
 				args.AddQuotedLine ("/output:" + Path.GetFullPath (OutputPath));
@@ -139,11 +76,6 @@ namespace Xamarin.Mac.Tasks
 			if (arch.HasFlag (XamMacArch.x86_64))
 				args.AddLine ("/arch:x86_64");
 
-			if (!string.IsNullOrEmpty (ArchiveSymbols) && bool.TryParse (ArchiveSymbols.Trim (), out msym))
-				args.AddLine ("--msym:" + (msym ? "yes" : "no"));
-
-			args.AddLine (string.Format ("--http-message-handler={0}", HttpClientHandler));
-
 			if (AppManifest != null) {
 				try {
 					var plist = PDictionary.FromFile (AppManifest.ItemSpec);
@@ -162,12 +94,6 @@ namespace Xamarin.Mac.Tasks
 					Log.LogWarning (null, null, null, AppManifest.ItemSpec, 0, 0, 0, 0, "Error loading '{0}': {1}", AppManifest.ItemSpec, ex.Message);
 				}
 			}
-
-			if (Profiling)
-				args.AddLine ("/profiling");
-
-			if (EnableSGenConc)
-				args.AddLine ("/sgen-conc");
 
 			switch ((LinkMode ?? string.Empty).ToLower ()) {
 			case "full":
@@ -194,16 +120,9 @@ namespace Xamarin.Mac.Tasks
 				args.AddLine (aot);
 			}
 
-			if (!string.IsNullOrEmpty (I18n))
-				args.AddQuotedLine ("/i18n:" + I18n);
-
-			if (ExplicitReferences != null) {
-				foreach (var asm in ExplicitReferences)
+			if (References != null) {
+				foreach (var asm in References)
 					args.AddQuotedLine ("/assembly:" + Path.GetFullPath (asm.ItemSpec));
-			}
-
-			if (!string.IsNullOrEmpty (ApplicationAssembly.ItemSpec)) {
-				args.AddQuotedLine ("/root-assembly:" + Path.GetFullPath (ApplicationAssembly.ItemSpec));
 			}
 
 			if (NativeReferences != null) {
@@ -216,56 +135,13 @@ namespace Xamarin.Mac.Tasks
 			if (IsXPCService)
 				args.AddQuotedLine ("/xpc");
 
-			args.AddQuotedLine ("/sdkroot:" + SdkRoot);
-
-			if (!string.IsNullOrEmpty (IntermediateOutputPath)) {
-				Directory.CreateDirectory (IntermediateOutputPath);
-
-				args.AddQuotedLine ("--cache:" + Path.GetFullPath (IntermediateOutputPath));
-			}
-
-			// Generate a response file
-			var responseFile = Path.GetFullPath (ResponseFilePath);
-
-			if (File.Exists (responseFile))
-				File.Delete (responseFile);
-
-			try {
-				using (var fs = File.Create (responseFile)) {
-					using (var writer = new StreamWriter (fs))
-						writer.Write (args);
-				}
-			} catch (Exception ex) {
-				Log.LogWarning ("Failed to create response file '{0}': {1}", responseFile, ex);
-			}
-
-			// Some arguments can not safely go in the response file and are 
-			// added separately. They must go _after_ the response file
-			// as they may override options passed in the response file
-			var actualArgs = new CommandLineArgumentBuilder ();
-
-			actualArgs.AddQuoted ($"@{responseFile}");
-
-			if (!string.IsNullOrWhiteSpace (ExtraArguments))
-				actualArgs.Add (ExtraArguments);
-
-			var verbosity = VerbosityUtils.Merge (ExtraArguments, (LoggerVerbosity) Verbosity);
-			if (verbosity.Length > 0) {
-				foreach (var arg in verbosity) {
-					actualArgs.Add (arg);
-				}
-			} else {
-				// for compatibility with earlier versions nothing means one /v
-				actualArgs.Add ("/verbose");
-			}
-
-			return actualArgs.ToString ();
+			return CreateResponseFile (args, ExtraArgs == null ? null : CommandLineArgumentBuilder.Parse (ExtraArgs));
 		}
 
 		string GetMonoBundleDirName ()
 		{
-			if (!string.IsNullOrEmpty (ExtraArguments)) {
-				var args = CommandLineArgumentBuilder.Parse (ExtraArguments);
+			if (!string.IsNullOrEmpty (ExtraArgs)) {
+				var args = CommandLineArgumentBuilder.Parse (ExtraArgs);
 
 				for (int i = 0; i < args.Length; i++) {
 					string arg;

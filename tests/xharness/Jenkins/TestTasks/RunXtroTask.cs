@@ -32,7 +32,7 @@ namespace Xharness.Jenkins.TestTasks
 					if (!Harness.DryRun) {
 						ExecutionResult = TestExecutingResult.Running;
 
-						var snapshot = new CrashReportSnapshot  (Harness, MainLog, Logs, false, null);
+						var snapshot = new CrashReportSnapshot (Harness, MainLog, Logs, false, null);
 						await snapshot.StartCaptureAsync ();
 
 						try {

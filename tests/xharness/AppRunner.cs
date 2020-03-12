@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
+using Xharness.Hardware;
 using Xharness.Execution;
 using Xharness.Jenkins.TestTasks;
 using Xharness.Listeners;
@@ -71,8 +72,8 @@ namespace Xharness {
 
 		public ILog MainLog { get; set; }
 
-		public SimDevice [] Simulators { get; set; }
-		SimDevice simulator => Simulators [0];
+		public ISimulatorDevice [] Simulators { get; set; }
+		ISimulatorDevice simulator => Simulators [0];
 
 		public string BundleIdentifier { get; private set; }
 
@@ -148,7 +149,7 @@ namespace Xharness {
 			}
 
 			var selected = devs.ConnectedDevices.Where ((v) => deviceClasses.Contains (v.DeviceClass) && v.IsUsableForDebugging != false);
-			Device selected_data;
+			IHardwareDevice selected_data;
 			if (selected.Count () == 0) {
 				throw new Exception ($"Could not find any applicable devices with device class(es): {string.Join (", ", deviceClasses)}");
 			} else if (selected.Count () > 1) {
@@ -807,7 +808,7 @@ namespace Xharness {
 						if (crash_reason != null) {
 							// if in CI, do write an xml error that will be picked as a failure by VSTS
 							if (Harness.InCI)
-								XmlResultParser.GenerateFailure (Logs, "crash", AppName, Variation, "AppCrash", $"App crashed {crash_reason}.", crash_reports.Log.FullPath, Harness.XmlJargon);
+								XmlResultParser.GenerateFailure (Logs, "crash", AppName, Variation, $"App Crash {AppName} {Variation}", $"App crashed {crash_reason}.", crash_reports.Log.FullPath, Harness.XmlJargon);
 							break;
 						}
 					} catch (Exception e) {
@@ -821,12 +822,12 @@ namespace Xharness {
 						FailureMessage = $"Killed by the OS ({crash_reason})";
 					}
 					if (Harness.InCI)
-						XmlResultParser.GenerateFailure (Logs, "crash", AppName, Variation, "AppCrash", $"App crashed: {FailureMessage}", crash_reports.Log.FullPath, Harness.XmlJargon);
+						XmlResultParser.GenerateFailure (Logs, "crash", AppName, Variation, $"App Crash {AppName} {Variation}", $"App crashed: {FailureMessage}", crash_reports.Log.FullPath, Harness.XmlJargon);
 				} else if (launch_failure) {
 					// same as with a crash
 					FailureMessage = $"Launch failure";
 					if (Harness.InCI)
-						XmlResultParser.GenerateFailure (Logs, "launch", AppName, Variation, $"AppLaunch on {DeviceName}", $"{FailureMessage} on {DeviceName}", MainLog.FullPath, XmlResultJargon.NUnitV3);
+						XmlResultParser.GenerateFailure (Logs, "launch", AppName, Variation, $"App Launch {AppName} {Variation} on {DeviceName}", $"{FailureMessage} on {DeviceName}", MainLog.FullPath, XmlResultJargon.NUnitV3);
 				} else if (!isSimulator && crashed && string.IsNullOrEmpty (crash_reason) && Harness.InCI) {
 					// this happens more that what we would like on devices, the main reason most of the time is that we have had netwoking problems and the
 					// tcp connection could not be stablished. We are going to report it as an error since we have not parsed the logs, evne when the app might have
@@ -844,7 +845,7 @@ namespace Xharness {
 					if (isTcp)
 						XmlResultParser.GenerateFailure (Logs, "tcp-connection", AppName, Variation, $"TcpConnection on {DeviceName}", $"Device {DeviceName} could not reach the host over tcp.", MainLog.FullPath, Harness.XmlJargon);
 				} else if (timed_out && Harness.InCI) {
-					XmlResultParser.GenerateFailure (Logs, "timeout", AppName, Variation, "AppTimeout", $"Test run timed out after {timeout.TotalMinutes} minute(s).", MainLog.FullPath, Harness.XmlJargon);
+					XmlResultParser.GenerateFailure (Logs, "timeout", AppName, Variation, $"App Timeout {AppName} {Variation}", $"Test run timed out after {timeout.TotalMinutes} minute(s).", MainLog.FullPath, Harness.XmlJargon);
 				}
 			}
 

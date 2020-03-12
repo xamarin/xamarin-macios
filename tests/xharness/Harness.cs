@@ -24,7 +24,14 @@ namespace Xharness
 		Jenkins,
 	}
 
-	public class Harness
+	public interface IHarness {
+		string MlaunchPath { get; }
+		string XcodeRoot { get; }
+		Version XcodeVersion { get; }
+		Task<ProcessExecutionResult> ExecuteXcodeCommandAsync (string executable, IList<string> args, ILog log, TimeSpan timeout);
+	}
+
+	public class Harness : IHarness
 	{
 		public HarnessAction Action { get; set; }
 		public int Verbosity { get; set; }
@@ -167,7 +174,7 @@ namespace Xharness
 		void LoadConfig ()
 		{
 			ParseConfigFiles ();
-			var src_root = Path.GetDirectoryName ( Path.GetFullPath (DirectoryUtilities.RepositoryRootDirectory));
+			var src_root = Path.GetDirectoryName (Path.GetFullPath (DirectoryUtilities.RepositoryRootDirectory));
 			MONO_PATH = Path.GetFullPath (Path.Combine (src_root, "external", "mono"));
 			TVOS_MONO_PATH = MONO_PATH;
 			INCLUDE_IOS = make_config.ContainsKey ("INCLUDE_IOS") && !string.IsNullOrEmpty (make_config ["INCLUDE_IOS"]);

@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
-using BCLTestImporter;
 using Xharness.Utilities;
 
 namespace Xharness.BCLTestImporter {
