@@ -2,9 +2,7 @@ using System;
 using System.IO;
 
 using NUnit.Framework;
-
-
-using BCLTestImporter;
+using Xharness.BCLTestImporter;
 
 namespace Xharness.Tests.BCLTestImporter.Tests {
 	public class TestAssemblyDefinitionTest {

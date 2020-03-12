@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using Xharness;
+using Xharness.BCLTestImporter.Templates;
+using Xharness.BCLTestImporter.Templates.Managed;
 
-namespace BCLTestImporter {
+namespace Xharness.BCLTestImporter {
 	/// <summary>
 	/// Class that knows how to generate .csproj files based on a BCLTestProjectDefinition.
 	/// </summary>
@@ -29,35 +30,7 @@ namespace BCLTestImporter {
 		internal static readonly string TargetExtraInfoKey = "%TARGET EXTRA INFO%";
 		internal static readonly string DefineConstantsKey = "%DEFINE CONSTANTS%";
 		internal static readonly string DownloadPathKey = "%DOWNLOAD PATH%";
-		static readonly Dictionary<Platform, string> plistTemplateMatches = new Dictionary<Platform, string> {
-			{Platform.iOS, "Info.plist.in"},
-			{Platform.TvOS, "Info-tv.plist.in"},
-			{Platform.WatchOS, "Info-watchos.plist.in"},
-			{Platform.MacOSFull, "Info-mac.plist.in"},
-			{Platform.MacOSModern, "Info-mac.plist.in"},
-		};
-		static readonly Dictionary<Platform, string> projectTemplateMatches = new Dictionary<Platform, string> {
-			{Platform.iOS, "BCLTests.csproj.in"},
-			{Platform.TvOS, "BCLTests-tv.csproj.in"},
-			{Platform.WatchOS, "BCLTests-watchos.csproj.in"},
-			{Platform.MacOSFull, "BCLTests-mac.csproj.in"},
-			{Platform.MacOSModern, "BCLTests-mac.csproj.in"},
-		};
-		static readonly Dictionary<WatchAppType, string> watchOSProjectTemplateMatches = new Dictionary<WatchAppType, string>
-		{
-			{ WatchAppType.App, "BCLTests-watchos-app.csproj.in"},
-			{ WatchAppType.Extension, "BCLTests-watchos-extension.csproj.in"}
-		};
-
-		public enum WatchAppType {
-			App,
-			Extension
-		}
-
-		static readonly Dictionary<WatchAppType, string> watchOSPlistTemplateMatches = new Dictionary<WatchAppType, string> {
-			{WatchAppType.App, "Info-watchos-app.plist.in"},
-			{WatchAppType.Extension, "Info-watchos-extension.plist.in"}
-		};
+		
 
 		//list of reference that we are already adding, and we do not want to readd (although it is just a warning)
 		static readonly List<string> excludeDlls = new List<string> {
@@ -257,6 +230,7 @@ namespace BCLTestImporter {
 		public string PlistTemplateRootPath{ get; private set; }
 		public string RegisterTypesTemplatePath { get; private set; }
 		public Func<string, Guid> GuidGenerator { get; set; }
+		public ITemplatedProject TemplatedProject { get; set; } = new XamariniOSTemplate ();
 		string GeneratedCodePathRoot => Path.Combine (OutputDirectoryPath, "generated");
 		string WatchContainerTemplatePath => Path.Combine (OutputDirectoryPath, "templates", "watchOS", "Container").Replace ("/", "\\");
 		string WatchAppTemplatePath => Path.Combine (OutputDirectoryPath, "templates", "watchOS", "App").Replace ("/", "\\");
@@ -426,15 +400,14 @@ namespace BCLTestImporter {
 			}
 		}
 		
-		internal static IEnumerable<string> GetIgnoreFiles (string templatePath, string projectName, List<(string assembly, string hintPath)> assemblies, Platform platform)
+		internal static IEnumerable<string> GetIgnoreFiles (string outputDir, string projectName, List<(string assembly, string hintPath)> assemblies, Platform platform)
 		{
 			// check if the common and plaform paths can be found in the template path, if they are, we return them
-			var templateDir = Path.GetDirectoryName (templatePath);
-			var commonIgnore = Path.Combine (templateDir, GetCommonIgnoreFileName (projectName, platform));
+			var commonIgnore = Path.Combine (outputDir, GetCommonIgnoreFileName (projectName, platform));
 			if (File.Exists (commonIgnore))
 				yield return commonIgnore;
 			foreach (var platformFile in GetIgnoreFileNames (projectName, platform)) {
-				var platformIgnore = Path.Combine (templateDir, platformFile);
+				var platformIgnore = Path.Combine (outputDir, platformFile);
 				if (File.Exists (platformIgnore))
 					yield return platformIgnore;
 			}
@@ -448,10 +421,10 @@ namespace BCLTestImporter {
 				if (index != -1)
 					assemblyName = assembly.Substring (0, index) + ".dll";
 				foreach (var platformFile in GetIgnoreFileNames (assemblyName, platform)) {
-					var commonAssemblyIgnore = Path.Combine (templateDir, GetCommonIgnoreFileName (assemblyName, platform));
+					var commonAssemblyIgnore = Path.Combine (outputDir, GetCommonIgnoreFileName (assemblyName, platform));
 					if (File.Exists (commonAssemblyIgnore))
 						yield return commonAssemblyIgnore;
-					var platformAssemblyIgnore = Path.Combine (templateDir, platformFile);
+					var platformAssemblyIgnore = Path.Combine (outputDir, platformFile);
 					if (File.Exists (platformAssemblyIgnore))
 						yield return platformAssemblyIgnore;
 				}
@@ -484,10 +457,10 @@ namespace BCLTestImporter {
 			};
 		}
 		
-		string GenerateIncludeFilesNode (string projectName, (string FailureMessage, List<(string assembly, string hintPath)> Assemblies) info, string templatePath, Platform platform)
+		string GenerateIncludeFilesNode (string projectName, (string FailureMessage, List<(string assembly, string hintPath)> Assemblies) info, Platform platform)
 		{
 			var contentFiles = new StringBuilder ();
-			foreach (var path in GetIgnoreFiles (templatePath, projectName, info.Assemblies, platform)) {
+			foreach (var path in GetIgnoreFiles (OutputDirectoryPath, projectName, info.Assemblies, platform)) {
 				contentFiles.Append (GetContentNode (path));
 			}
 			// add the files that contain the traits/categoiries info
@@ -571,22 +544,20 @@ namespace BCLTestImporter {
 					var projectData = new Dictionary<WatchAppType, (string plist, string project)> ();
 					foreach (var appType in new [] { WatchAppType.Extension, WatchAppType.App }) {
 						(string plist, string project) data;
-						var plistTemplate = Path.Combine (PlistTemplateRootPath, watchOSPlistTemplateMatches [appType]);
-						var plist = await BCLTestInfoPlistGenerator.GenerateCodeAsync (plistTemplate, projectDefinition.Name);
+						var plist = await BCLTestInfoPlistGenerator.GenerateCodeAsync (TemplatedProject.GetPlistTemplate (appType), projectDefinition.Name);
 						data.plist = GetPListPath (generatedCodeDir, appType);
 						using (var file = new StreamWriter (data.plist, false)) { // false is do not append
 							await file.WriteAsync (plist);
 						}
 
 						string generatedProject;
-						var projetTemplate = Path.Combine (ProjectTemplateRootPath, watchOSProjectTemplateMatches [appType]);
 						switch (appType) {
 						case WatchAppType.App:
-							generatedProject = await GenerateWatchAppAsync (projectDefinition.Name, projetTemplate, data.plist);
+							generatedProject = await GenerateWatchAppAsync (projectDefinition.Name, TemplatedProject.GetProjectTemplate (appType), data.plist);
 							break;
 						default:
 							var info = projectDefinition.GetAssemblyInclusionInformation (GetReleaseDownload (Platform.WatchOS), Platform.WatchOS, true);
-							generatedProject = await GenerateWatchExtensionAsync (projectDefinition.Name, projetTemplate, data.plist, registerTypePath, info);
+							generatedProject = await GenerateWatchExtensionAsync (projectDefinition.Name, TemplatedProject.GetProjectTemplate (appType), data.plist, registerTypePath, info);
 							failure = failure ?? info.FailureMessage;
 							break;
 						}
@@ -598,16 +569,14 @@ namespace BCLTestImporter {
 						projectData [appType] = data;
 					} // foreach app type
 
-					var rootPlistTemplate = Path.Combine (PlistTemplateRootPath, plistTemplateMatches [Platform.WatchOS]);
-					var rootPlist = await BCLTestInfoPlistGenerator.GenerateCodeAsync (rootPlistTemplate, projectDefinition.Name);
+					var rootPlist = await BCLTestInfoPlistGenerator.GenerateCodeAsync (TemplatedProject.GetPlistTemplate (Platform.WatchOS), projectDefinition.Name);
 					var infoPlistPath = GetPListPath (generatedCodeDir, Platform.WatchOS);
 					using (var file = new StreamWriter (infoPlistPath, false)) { // false is do not append
 						await file.WriteAsync (rootPlist);
 					}
 
-					var projectTemplatePath = Path.Combine (ProjectTemplateRootPath, projectTemplateMatches [Platform.WatchOS]);
 					using (var file = new StreamWriter (rootProjectPath, false)) // false is do not append
-					using (var reader = new StreamReader (projectTemplatePath)) {
+					using (var reader = new StreamReader (TemplatedProject.GetProjectTemplate (Platform.WatchOS))) {
 						var template = await reader.ReadToEndAsync ();
 						var generatedRootProject = GenerateWatchProject (def.Name, template, infoPlistPath);
 						await file.WriteAsync (generatedRootProject);
@@ -656,16 +625,14 @@ namespace BCLTestImporter {
 				string projectPath = GetProjectPath (projectDefinition.Name, platform);
 				string failure = null;
 				try {
-					var plistTemplate = Path.Combine (PlistTemplateRootPath, plistTemplateMatches [platform]);
-					var plist = await BCLTestInfoPlistGenerator.GenerateCodeAsync (plistTemplate, projectDefinition.Name);
+					var plist = await BCLTestInfoPlistGenerator.GenerateCodeAsync (TemplatedProject.GetPlistTemplate (platform), projectDefinition.Name);
 					var infoPlistPath = GetPListPath (generatedCodeDir, platform);
 					using (var file = new StreamWriter (infoPlistPath, false)) { // false is do not append
 						await file.WriteAsync (plist);
 					}
 
-					var projectTemplatePath = Path.Combine (ProjectTemplateRootPath, projectTemplateMatches [platform]);
 					var info = projectDefinition.GetAssemblyInclusionInformation (GetReleaseDownload (platform), platform, true);
-					var generatedProject = await GenerateAsync (projectDefinition.Name, registerTypePath, info, projectTemplatePath, infoPlistPath, platform);
+					var generatedProject = await GenerateAsync (projectDefinition.Name, registerTypePath, info, TemplatedProject.GetProjectTemplate (platform), infoPlistPath, platform);
 					using (var file = new StreamWriter (projectPath, false)) { // false is do not append
 						await file.WriteAsync (generatedProject);
 					}
@@ -715,17 +682,15 @@ namespace BCLTestImporter {
 				var projectPath = GetProjectPath (projectDefinition.Name, platform);
 				string failure = null;
 				try {
-					var plistTemplate = Path.Combine (PlistTemplateRootPath, plistTemplateMatches [platform]);
-					var plist = await BCLTestInfoPlistGenerator.GenerateCodeAsync (plistTemplate, projectDefinition.Name);
+					var plist = await BCLTestInfoPlistGenerator.GenerateCodeAsync (TemplatedProject.GetPlistTemplate (platform), projectDefinition.Name);
 					var infoPlistPath = GetPListPath (generatedCodeDir, platform);
 					using (var file = new StreamWriter (infoPlistPath, false)) { // false is do not append
 						await file.WriteAsync (plist);
 					}
 
-					var projectTemplatePath = Path.Combine (ProjectTemplateRootPath, projectTemplateMatches [platform]);
 					var info = projectDefinition.GetAssemblyInclusionInformation (GetReleaseDownload (platform), platform, true);
 					var generatedProject = await GenerateMacAsync (projectDefinition.Name, registerTypePath,
-						info, projectTemplatePath, infoPlistPath, platform);
+						info, TemplatedProject.GetProjectTemplate (platform), infoPlistPath, platform);
 					using (var file = new StreamWriter (projectPath, false)) { // false is do not append
 						await file.WriteAsync (generatedProject);
 					}
@@ -898,7 +863,7 @@ namespace BCLTestImporter {
 		/// <param name="templatePath">A path to the template used to generate the path.</param>
 		/// <param name="infoPlistPath">The path to the info plist of the project.</param>
 		/// <returns></returns>
-		async Task<string> GenerateAsync (string projectName, string registerPath, (string FailureMessage, List<(string assembly, string hintPath)> Assemblies) info, string templatePath, string infoPlistPath, Platform platform)
+		async Task<string> GenerateAsync (string projectName, string registerPath, (string FailureMessage, List<(string assembly, string hintPath)> Assemblies) info, Stream template, string infoPlistPath, Platform platform)
 		{
 			var downloadPath = GetReleaseDownload (platform).Replace ("/", "\\");
 			// fix possible issues with the paths to be included in the msbuild xml
@@ -914,7 +879,7 @@ namespace BCLTestImporter {
 			}
 
 			var projectGuid = GuidGenerator?.Invoke (projectName) ?? Guid.NewGuid ();
-			using (var reader = new StreamReader(templatePath)) {
+			using (var reader = new StreamReader(template)) {
 				var result = await reader.ReadToEndAsync ();
 				result = result.Replace (DownloadPathKey, downloadPath);
 				result = result.Replace (ProjectGuidKey, projectGuid.ToString ().ToUpperInvariant ());
@@ -922,12 +887,12 @@ namespace BCLTestImporter {
 				result = result.Replace (ReferencesKey, sb.ToString ());
 				result = result.Replace (RegisterTypeKey, GetRegisterTypeNode (registerPath));
 				result = result.Replace (PlistKey, infoPlistPath);
-				result = result.Replace (ContentKey, GenerateIncludeFilesNode (projectName, info, templatePath, platform));
+				result = result.Replace (ContentKey, GenerateIncludeFilesNode (projectName, info, platform));
 				return result;
 			}
 		}
 		
-		async Task<string> GenerateMacAsync (string projectName, string registerPath,  (string FailureMessage, List<(string assembly, string hintPath)> Assemblies) info, string templatePath, string infoPlistPath, Platform platform)
+		async Task<string> GenerateMacAsync (string projectName, string registerPath,  (string FailureMessage, List<(string assembly, string hintPath)> Assemblies) info, Stream template, string infoPlistPath, Platform platform)
 		{
 			var downloadPath = Path.Combine(GetReleaseDownload (platform), "mac-bcl", platform == Platform.MacOSFull? "xammac_net_4_5" : "xammac").Replace ("/", "\\");
 			infoPlistPath = infoPlistPath.Replace ('/', '\\');
@@ -942,7 +907,7 @@ namespace BCLTestImporter {
 			}
 
 			var projectGuid = GuidGenerator?.Invoke (projectName) ?? Guid.NewGuid ();
-			using (var reader = new StreamReader(templatePath)) {
+			using (var reader = new StreamReader(template)) {
 				var result = await reader.ReadToEndAsync ();
 				result = result.Replace (DownloadPathKey, downloadPath);
 				result = result.Replace (ProjectGuidKey, projectGuid.ToString ().ToUpperInvariant ());
@@ -950,7 +915,7 @@ namespace BCLTestImporter {
 				result = result.Replace (ReferencesKey, sb.ToString ());
 				result = result.Replace (RegisterTypeKey, GetRegisterTypeNode (registerPath));
 				result = result.Replace (PlistKey, infoPlistPath);
-				result = result.Replace (ContentKey, GenerateIncludeFilesNode (projectName, info, templatePath, platform));
+				result = result.Replace (ContentKey, GenerateIncludeFilesNode (projectName, info, platform));
 				switch (platform){
 				case Platform.MacOSFull:
 					result = result.Replace (TargetFrameworkVersionKey, "v4.5.2");
@@ -978,9 +943,9 @@ namespace BCLTestImporter {
 				return result;
 		}
 
-		async Task<string> GenerateWatchAppAsync (string projectName, string templatePath, string infoPlistPath)
+		async Task<string> GenerateWatchAppAsync (string projectName, Stream template, string infoPlistPath)
 		{
-			using (var reader = new StreamReader(templatePath)) {
+			using (var reader = new StreamReader(template)) {
 				var result = await reader.ReadToEndAsync ();
 				result = result.Replace (NameKey, projectName);
 				result = result.Replace (WatchOSTemplatePathKey, WatchAppTemplatePath);
@@ -997,7 +962,7 @@ namespace BCLTestImporter {
 			sb.AppendLine ("<Reference Include=\"ProjectGenerationFailure_PleaseRegenerateProjectFiles.dll\" />"); // Make sure the project fails to build.
 		}
 
-		async Task<string> GenerateWatchExtensionAsync (string projectName, string templatePath, string infoPlistPath, string registerPath, (string FailureMessage, List<(string assembly, string hintPath)> Assemblies) info)
+		async Task<string> GenerateWatchExtensionAsync (string projectName, Stream template, string infoPlistPath, string registerPath, (string FailureMessage, List<(string assembly, string hintPath)> Assemblies) info)
 		{
 			var downloadPath = GetReleaseDownload (Platform.WatchOS).Replace ("/", "\\");
 			var sb = new StringBuilder ();
@@ -1010,7 +975,7 @@ namespace BCLTestImporter {
 				}
 			}
 			
-			using (var reader = new StreamReader(templatePath)) {
+			using (var reader = new StreamReader(template)) {
 				var result = await reader.ReadToEndAsync ();
 				result = result.Replace (DownloadPathKey, downloadPath);
 				result = result.Replace (NameKey, projectName);
@@ -1018,7 +983,7 @@ namespace BCLTestImporter {
 				result = result.Replace (PlistKey, infoPlistPath);
 				result = result.Replace (RegisterTypeKey, GetRegisterTypeNode (registerPath));
 				result = result.Replace (ReferencesKey, sb.ToString ());
-				result = result.Replace (ContentKey, GenerateIncludeFilesNode (projectName, info, templatePath, Platform.WatchOS));
+				result = result.Replace (ContentKey, GenerateIncludeFilesNode (projectName, info, Platform.WatchOS));
 				return result;
 			}
 		}

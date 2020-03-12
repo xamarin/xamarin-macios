@@ -2,11 +2,9 @@ using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using System.Reflection;
 using System.Collections.Generic;
-using System.Linq;
 
-namespace BCLTestImporter {
+namespace Xharness.BCLTestImporter {
 	public static class RegisterTypeGenerator {
 
 		static readonly string UsingReplacement = "%USING%";
