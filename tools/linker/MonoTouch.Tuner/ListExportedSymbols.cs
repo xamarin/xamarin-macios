@@ -16,6 +16,7 @@ namespace MonoTouch.Tuner
 	{
 		PInvokeWrapperGenerator state;
 		bool skip_sdk_assemblies;
+		bool is_bcl_assembly;
 
 		public DerivedLinkContext DerivedLinkContext {
 			get {
@@ -51,6 +52,7 @@ namespace MonoTouch.Tuner
 			if (!hasSymbols)
 				return;
 
+			is_bcl_assembly = Profile.IsSdkAssembly (assembly);
 			foreach (var type in assembly.MainModule.Types)
 				ProcessType (type);
 		}
@@ -121,6 +123,11 @@ namespace MonoTouch.Tuner
 				case "System.Security.Cryptography.Native.Apple":
 					DerivedLinkContext.RequireMonoNative = true;
 					DerivedLinkContext.RequiredSymbols.AddFunction (pinfo.EntryPoint).AddMember (method);
+					break;
+				default:
+					if (is_bcl_assembly) {
+						DerivedLinkContext.RequiredSymbols.AddField (pinfo.EntryPoint).AddMember (method);
+					}
 					break;
 				}
 			}

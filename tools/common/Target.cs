@@ -129,8 +129,107 @@ namespace Xamarin.Bundler {
 
 		public void ComputeLinkerFlags ()
 		{
+			ComputePInvokeLinkerFlags ();
 			foreach (var a in Assemblies)
 				a.ComputeLinkerFlags ();
+		}
+
+		void ComputePInvokeLinkerFlags ()
+		{
+			if (!Driver.IsDotNet)
+				return;
+
+#if MTOUCH
+			// Check for native libraries from the BCL
+			var symbols = GetAllSymbols ();
+			var native_libraries = new Dictionary<string, List<Tuple<Symbol, Mono.Cecil.MethodDefinition>>> ();
+			foreach (var symbol in symbols) {
+				foreach (var member in symbol.Members) {
+					var md = member.Resolve () as Mono.Cecil.MethodDefinition;
+					if (md == null)
+						continue;
+					var pinvoke = md.PInvokeInfo;
+					if (!native_libraries.TryGetValue (pinvoke.Module.Name, out var list))
+						native_libraries [pinvoke.Module.Name] = list = new List<Tuple<Symbol, Mono.Cecil.MethodDefinition>> ();
+					list.Add (new Tuple<Symbol, MethodDefinition> (symbol, md));
+
+				}
+			}
+
+			string lib_extension;
+			var mode = App.LibMonoLinkMode;
+			switch (mode) {
+			case AssemblyBuildTarget.DynamicLibrary:
+				lib_extension = ".dylib";
+				break;
+			case AssemblyBuildTarget.Framework:
+			case AssemblyBuildTarget.StaticObject:
+				lib_extension = ".a";
+				break;
+			default:
+				throw ErrorHelper.CreateError (100, Errors.MT0100, mode);
+			}
+
+			var bcl_implementation_dir = Driver.GetBCLImplementationDirectory (this);
+			foreach (var nl in native_libraries) {
+				var lib = nl.Key;
+
+				if (lib == "__Internal")
+					continue;
+				else if (Path.IsPathRooted (lib))
+					continue; // Reference to a system library
+
+				var lib_path = Path.Combine (bcl_implementation_dir, lib + lib_extension);
+
+				if (!File.Exists (lib_path)) {
+					// FIXME: Add an actual warning
+					Driver.Log ("Could not find the native library {0}. This library is referenced from {1} P/Invokes:", lib_path, nl.Value.Count);
+					foreach (var (symbol, md) in nl.Value) {
+						Driver.Log ("    {0} in {1}", symbol.Name, md.FullName);
+						App.IgnoredSymbols.Add (symbol.Name);
+						AddAssemblyWithInexistentPInvokes (md.Module.Assembly);
+					}
+					continue;
+				}
+
+				var nm_output = new StringBuilder ();
+				var rv = Driver.RunCommand ("nm", new string [] { "-jg", lib_path }, output: nm_output);
+				if (rv != 0) {
+					Driver.Log ("Could not list symbols in {0}, nm failed to execute (exit code: {1}):", lib_path, rv);
+					Driver.Log ($"nm -jg {lib_path}");
+					Driver.Log (nm_output.ToString ());
+				} else {
+					var actual_symbols = new HashSet<string> (nm_output.ToString ().Split (new char [] { '\n' }, StringSplitOptions.RemoveEmptyEntries));
+					var not_found = nl.Value.Where ((v) => !actual_symbols.Contains ("_" + v.Item1.Name));
+					if (not_found.Any ()) {
+						not_found = not_found.Distinct (new III ());
+						not_found = not_found.ToArray ();
+						Driver.Log ("There are {0} P/Invokes that reference functions supposedly in {1}:", not_found.Count (), lib_path);
+						foreach (var (symbol, md) in not_found) {
+							Driver.Log ("    {0} in {1}", symbol.Name, md.FullName);
+							App.IgnoredSymbols.Add (symbol.Name);
+							AddAssemblyWithInexistentPInvokes (md.Module.Assembly);
+						}
+					}
+				}
+
+				foreach (var abi in Abis)
+					linker_flags_by_abi [abi].AddLinkWith (lib_path);
+			}
+#endif
+		}
+
+		class III : IEqualityComparer<Tuple<Symbol, Mono.Cecil.MethodDefinition>>
+		{
+			public bool Equals (Tuple<Symbol, MethodDefinition> x, Tuple<Symbol, MethodDefinition> y)
+			{
+				return x.Item1.Name == y.Item1.Name && x.Item2.FullName == y.Item2.FullName;
+			}
+
+			public int GetHashCode (Tuple<Symbol, MethodDefinition> obj)
+			{
+				return obj.Item1.Name.GetHashCode () ^ obj.Item2.FullName.GetHashCode ();
+			}
 		}
 
 		public void GatherFrameworks ()
@@ -243,6 +342,18 @@ namespace Xamarin.Bundler {
 		{
 			CollectAllSymbols ();
 			return dynamic_symbols;
+		}
+
+		HashSet<string> assemblies_with_inexistent_pinvokes = new HashSet<string> ();
+		public void AddAssemblyWithInexistentPInvokes (AssemblyDefinition ad)
+		{
+			assemblies_with_inexistent_pinvokes.Add (ad.Name.Name);
+		}
+
+		public HashSet<string> AssembliesWithInexistentPInvokes {
+			get {
+				return assemblies_with_inexistent_pinvokes;
+			}
 		}
 
 		public void CollectAllSymbols ()
