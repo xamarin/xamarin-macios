@@ -31,4 +31,4 @@ logs
 *.mSYM
 *.generated.cs
 x86
-
+bcl-test/templates
