@@ -16,7 +16,7 @@ namespace Xharness {
 			var os = new OptionSet () {
 				{ "h|?|help", "Displays the help", (v) => showHelp () },
 				{ "v|verbose", "Show verbose output", (v) => configuration.Verbosity++ },
-				{ "use-system:", "Use the system version of Xamarin.iOS/Xamarin.Mac or the locally build version. Default: the locally build version.", (v) => configuration.UseSystem = v == "1" || v == "true" || string.IsNullOrEmpty (v) },
+				{ "use-system:", "Use the system version of Xamarin.iOS/Xamarin.Mac or the locally build version. Default: the locally build version.", (v) => configuration.UseSystemXamarinIOSMac = v == "1" || v == "true" || string.IsNullOrEmpty (v) },
 				// Configure
 				{ "mac", "Configure for Xamarin.Mac instead of iOS.", (v) => configuration.Mac = true },
 				{ "configure", "Creates project files and makefiles.", (v) => action = HarnessAction.Configure },
@@ -49,7 +49,7 @@ namespace Xharness {
 				{ "target=", "Where to run the project ([ios|watchos|tvos]-[device|simulator|simulator-32|simulator-64]).", (v) => configuration.Target = v.ParseAsAppRunnerTarget () },
 				{ "configuration=", "Which configuration to run (defaults to Debug).", (v) => configuration.Configuration = v },
 				{ "logdirectory=", "Where to store logs.", (v) => configuration.LogDirectory = v },
-				{ "logfile=", "Where to store the log.", (v) => configuration.LogFile = v },
+				{ "logfile=", "Where to store the log.", (v) => Console.WriteLine("The logfile option is deprecated. Please use logdirectory."), true },
 				{ "timeout=", $"Timeout for a test run (in minutes). Default is {configuration.TimeoutInMinutes} minutes.", (v) => configuration.TimeoutInMinutes = double.Parse (v) },
 				{ "jenkins:", "Execute test run for jenkins.", (v) =>
 					{

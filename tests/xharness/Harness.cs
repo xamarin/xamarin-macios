@@ -41,7 +41,6 @@ namespace Xharness
 		public string JenkinsConfiguration { get; set; }
 		public HashSet<string> Labels { get; set; } = new HashSet<string> ();
 		public string LogDirectory { get; set; } = Environment.CurrentDirectory;
-		public string LogFile { get; set; }
 		public bool Mac { get; set; }
 		public string MarkdownSummaryPath { get; set; }
 		public string PeriodicCommand { get; set; }
@@ -51,7 +50,7 @@ namespace Xharness
 		public string SdkRoot { get; set; }
 		public AppRunnerTarget Target { get; set; }
 		public double TimeoutInMinutes { get; set; } = 15;
-		public bool UseSystem { get; set; }
+		public bool UseSystemXamarinIOSMac { get; set; }
 		public int Verbosity { get; set; }
 		public string WatchOSAppTemplate { get; set; }
 		public string WatchOSContainerTemplate { get; set; }
@@ -63,7 +62,6 @@ namespace Xharness
 		public HarnessAction Action { get; }
 		public int Verbosity { get; }
 		public ILog HarnessLog { get; set; }
-		public bool UseSystem { get; } // if the system XI/XM should be used, or the locally build XI/XM.
 		public HashSet<string> Labels { get; }
 		public XmlResultJargon XmlJargon { get; }
 		public IProcessManager ProcessManager { get; }
@@ -110,8 +108,10 @@ namespace Xharness
 		public List<MacTestProject> MacTestProjects { get; } = new List<MacTestProject> ();
 
 		// Configure
-		public bool AutoConf { get; }
-		public bool Mac { get; }
+		readonly bool useSystemXamarinIOSMac; // if the system XI/XM should be used, or the locally build XI/XM.
+		readonly bool autoConf;
+		readonly bool mac;
+
 		public string WatchOSContainerTemplate { get; private set; }
 		public string WatchOSAppTemplate { get; private set; }
 		public string WatchOSExtensionTemplate { get; private set; }
@@ -129,14 +129,12 @@ namespace Xharness
 		public string IOS_DESTDIR { get; private set; }
 		public string MONO_IOS_SDK_DESTDIR { get; private set; }
 		public string MONO_MAC_SDK_DESTDIR { get; private set; }
-		public bool IncludeMac32 { get; private set; }
 		public bool ENABLE_XAMARIN { get; private set; }
 
 		// Run
 		public AppRunnerTarget Target { get; }
 		public string SdkRoot { get; private set; }
 		public string Configuration { get; }
-		public string LogFile { get; }
 		public string LogDirectory { get; }
 		public double Timeout { get; } = 15; // in minutes
 		public double LaunchTimeout { get; } // in minutes
@@ -154,18 +152,18 @@ namespace Xharness
 		{
 			ProcessManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 			Action = action;
+			
+			if (configuration is null)
+				throw new ArgumentNullException (nameof (configuration));
 
-			AutoConf = configuration.AutoConf;
+			autoConf = configuration.AutoConf;
 			Configuration = configuration.Configuration ?? throw new ArgumentNullException (nameof (configuration));
 			DryRun = configuration.DryRun;
-			EnvironmentVariables = configuration.EnvironmentVariables ?? new Dictionary<string, string> ();
 			IncludeSystemPermissionTests = configuration.IncludeSystemPermissionTests;
 			IOSTestProjects = configuration.IOSTestProjects;
 			JenkinsConfiguration = configuration.JenkinsConfiguration;
-			Labels = configuration.Labels ?? new HashSet<string> ();
 			LogDirectory = configuration.LogDirectory ?? throw new ArgumentNullException (nameof (configuration.LogDirectory));
-			LogFile = configuration.LogFile;
-			Mac = configuration.Mac;
+			mac = configuration.Mac;
 			MarkdownSummaryPath = configuration.MarkdownSummaryPath;
 			PeriodicCommand = configuration.PeriodicCommand;
 			PeriodicCommandArguments = configuration.PeriodicCommandArguments;
@@ -174,11 +172,17 @@ namespace Xharness
 			SdkRoot = configuration.SdkRoot;
 			Target = configuration.Target;
 			Timeout = configuration.TimeoutInMinutes;
-			UseSystem = configuration.UseSystem;
+			useSystemXamarinIOSMac = configuration.UseSystemXamarinIOSMac;
 			Verbosity = configuration.Verbosity;
 			WatchOSAppTemplate = configuration.WatchOSAppTemplate;
 			WatchOSContainerTemplate = configuration.WatchOSContainerTemplate;
 			XmlJargon = configuration.XmlJargon;
+
+			if (configuration.Labels != null)
+				Labels = new HashSet<string> (configuration.Labels);
+			
+			if (configuration.EnvironmentVariables != null)
+				EnvironmentVariables = new Dictionary<string, string> (configuration.EnvironmentVariables);
 
 			LaunchTimeout = InCI ? 3 : 120;
 		}
@@ -504,7 +508,7 @@ namespace Xharness
 
 		void ParseConfigFiles ()
 		{
-			ParseConfigFiles (FindConfigFiles (UseSystem ? "test-system.config" : "test.config"));
+			ParseConfigFiles (FindConfigFiles (useSystemXamarinIOSMac ? "test-system.config" : "test.config"));
 			ParseConfigFiles (FindConfigFiles ("Make.config.local"));
 			ParseConfigFiles (FindConfigFiles ("Make.config"));
 		}
@@ -532,7 +536,7 @@ namespace Xharness
 
 		public int Configure ()
 		{
-			return Mac ? AutoConfigureMac (true) : ConfigureIOS ();
+			return mac ? AutoConfigureMac (true) : ConfigureIOS ();
 		}
 
 		int ConfigureIOS ()
@@ -543,7 +547,7 @@ namespace Xharness
 			var watchos_targets = new List<WatchOSTarget> ();
 			var today_targets = new List<TodayExtensionTarget> ();
 
-			if (AutoConf)
+			if (autoConf)
 				AutoConfigureIOS ();
 
 			foreach (var monoNativeInfo in IOSTestProjects.Where (x => x.MonoNativeInfo != null).Select (x => x.MonoNativeInfo))
@@ -743,7 +747,7 @@ namespace Xharness
 
 		public int Jenkins ()
 		{
-			if (AutoConf) {
+			if (autoConf) {
 				AutoConfigureIOS ();
 				AutoConfigureMac (false);
 			}
