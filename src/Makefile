@@ -1128,10 +1128,6 @@ ifdef ENABLE_DOTNET
 all-local:: $(DOTNET_TARGETS)
 endif
 
-ifdef ENABLE_DOTNET
-all-local:: $(DOTNET_TARGETS)
-endif
-
 project-files: $(PROJECT_FILES)
 
 # Using .SECONDARY can cause make to go into an infinite loop.
