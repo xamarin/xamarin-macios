@@ -1822,6 +1822,7 @@ COMMON_FRAMEWORKS =         \
 	SceneKit                \
 	SoundAnalysis 			\
 	SpriteKit               \
+	StoreKit				\
 
 MAC_FRAMEWORKS =            \
 	$(COMMON_FRAMEWORKS)    \
@@ -1899,7 +1900,6 @@ MAC_FRAMEWORKS =            \
 	Security                \
 	Social                  \
 	Speech                  \
-	StoreKit                \
 	SystemConfiguration     \
 	UserNotifications       \
 	VideoSubscriberAccount  \
@@ -1993,7 +1993,6 @@ IOS_FRAMEWORKS =         \
 	Security \
 	Social \
 	Speech \
-	StoreKit \
 	SystemConfiguration \
 	Twitter \
 	UIKit XKit \
@@ -2029,7 +2028,6 @@ WATCHOS_FRAMEWORKS =        \
 	PassKit                 \
 	PushKit			\
 	Security                \
-	StoreKit                \
 	UIKit XKit              \
 	UserNotifications       \
 	WatchConnectivity       \
@@ -2075,7 +2073,6 @@ TVOS_FRAMEWORKS =           \
 	PhotosUI                \
 	ReplayKit               \
 	Security                \
-	StoreKit                \
 	SystemConfiguration     \
 	TVMLKit                 \
 	TVUIKit					\
