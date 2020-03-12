@@ -7,6 +7,7 @@ using Microsoft.Build.Utilities;
 using Xamarin.MacDev.Tasks;
 using Xamarin.MacDev;
 using Xamarin.Utils;
+using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.iOS.Tasks
 {
@@ -51,7 +52,7 @@ namespace Xamarin.iOS.Tasks
 
 			if (IsWatchFramework) {
 				if (!IPhoneSdkVersion.TryParse (SdkVersion, out version)) {
-					Log.LogError ("Failed to parse SdkVersion '{0}'.", SdkVersion);
+					Log.LogError (MSBStrings.E0066, SdkVersion);
 					return false;
 				}
 
@@ -59,21 +60,21 @@ namespace Xamarin.iOS.Tasks
 				sdk_path = currentSdk.GetSdkPath (version, SdkIsSimulator);
 			} else {
 				if (AppleSdkSettings.XcodeVersion.Major >= 10) {
-					Log.LogError ("Xcode 10 does not support watchOS 1 apps. Either upgrade to watchOS 2 apps, or use an older version of Xcode.");
+					Log.LogError (MSBStrings.E0067);
 					return false;
 				}
 				if (!(AppleSdkSettings.XcodeVersion.Major > 6 || (AppleSdkSettings.XcodeVersion.Major == 6 && AppleSdkSettings.XcodeVersion.Minor >= 2))) {
-					Log.LogError ("An installation of Xcode >= 6.2 is required to build WatchKit applications.");
+					Log.LogError (MSBStrings.E0068);
 					return false;
 				}
 
 				if (!IPhoneSdkVersion.TryParse (SdkVersion, out version)) {
-					Log.LogError ("Failed to parse SdkVersion '{0}'.", SdkVersion);
+					Log.LogError (MSBStrings.E0066, SdkVersion);
 					return false;
 				}
 
 				if (version < IPhoneSdkVersion.V8_2) {
-					Log.LogError ("iOS {0} does not support WatchKit.", version);
+					Log.LogError (MSBStrings.E0069, version);
 					return false;
 				}
 
@@ -85,7 +86,7 @@ namespace Xamarin.iOS.Tasks
 			if (File.Exists (NativeWatchApp))
 				return true;
 
-			Log.LogError ("Failed to locate the WatchKit launcher in the Xcode app bundle.");
+			Log.LogError (MSBStrings.E0070);
 
 			return false;
 		}

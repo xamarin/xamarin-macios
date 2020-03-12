@@ -10,6 +10,7 @@ using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev.Tasks;
 using Xamarin.MacDev;
+using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.iOS.Tasks
 {
@@ -66,7 +67,7 @@ namespace Xamarin.iOS.Tasks
 
 								ips.Add (ipEndPoint.Address.ToString ());
 							} catch {
-								Log.LogError (7001, null, "Could not resolve host IPs for WiFi debugger settings.");
+								Log.LogError (7001, null, MSBStrings.E7001);
 								return false;
 							}
 						}
@@ -81,7 +82,7 @@ namespace Xamarin.iOS.Tasks
 				}
 
 				if (ips == null || ips.Count == 0) {
-					Log.LogError (7002, null, "This machine does not have any network adapters. This is required when debugging or profiling on device over WiFi.");
+					Log.LogError (7002, null, MSBStrings.E7002);
 					return false;
 				}
 			}
