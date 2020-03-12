@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
+using Microsoft.Build.Evaluation;
 
 namespace Xamarin.iOS.Tasks
 {
@@ -34,19 +35,24 @@ namespace Xamarin.iOS.Tasks
 			SetupEngine ();
 		}
 
-		public string BuildProject (string appName, string platform, string config, int expectedErrorCount = 0, bool clean = true)
+		public string BuildProject (string appName, string platform, string config, int expectedErrorCount = 0, bool clean = true, string projectBaseDir = "../", bool use_dotnet = false, bool nuget_restore = false)
 		{
-			var mtouchPaths = SetupProjectPaths (appName, "../", true, platform, config);
+			var mtouchPaths = SetupProjectPaths (appName, projectBaseDir, true, platform, config, use_dotnet);
 			var csproj = mtouchPaths["project_csprojpath"];
 
-			var proj = SetupProject (Engine, csproj);
+			Project proj = null;
+			if (!use_dotnet)
+				proj = SetupProject (Engine, csproj);
 
 			AppBundlePath = mtouchPaths ["app_bundlepath"];
 			Engine.ProjectCollection.SetGlobalProperty("Platform", platform);
 			Engine.ProjectCollection.SetGlobalProperty("Configuration", config);
 
+			if (nuget_restore)
+				NugetRestore (csproj);
+
 			if (clean) {
-				RunTarget (proj, "Clean");
+				RunTarget (proj, csproj, "Clean", use_dotnet);
 				Assert.IsFalse (Directory.Exists (AppBundlePath), "App bundle exists after cleanup: {0} ", AppBundlePath);
 				Assert.IsFalse (Directory.Exists (AppBundlePath + ".dSYM"), "App bundle .dSYM exists after cleanup: {0} ", AppBundlePath + ".dSYM");
 				Assert.IsFalse (Directory.Exists (AppBundlePath + ".mSYM"), "App bundle .mSYM exists after cleanup: {0} ", AppBundlePath + ".mSYM");
@@ -67,8 +73,10 @@ namespace Xamarin.iOS.Tasks
 				}
 			}
 
-			proj = SetupProject (Engine, mtouchPaths.ProjectCSProjPath);
-			RunTarget (proj, "Build", expectedErrorCount);
+			if (!use_dotnet)
+				proj = SetupProject (Engine, mtouchPaths.ProjectCSProjPath);
+
+			RunTarget (proj, csproj, "Build", use_dotnet, expectedErrorCount);
 
 			if (expectedErrorCount > 0)
 				return csproj;

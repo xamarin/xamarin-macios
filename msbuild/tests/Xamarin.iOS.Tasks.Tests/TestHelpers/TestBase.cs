@@ -33,45 +33,20 @@ namespace Xamarin.iOS.Tasks
 			public static string ResolveReferences = "ResolveReferences";
 		}
 
-		static Dictionary<string, string> tests_directories = new Dictionary<string, string> ();
-		protected static string GetTestDirectory ()
+		protected static string GetTestDirectory (string mode = null)
 		{
-			var mode = "unknown";
 			var assembly_path = Assembly.GetExecutingAssembly ().Location;
-			if (assembly_path.Contains ("netstandard2.0"))
-				mode = "netstandard2.0";
-			else if (assembly_path.Contains ("net461"))
-				mode = "net461";
-
-			// Copy the test projects to a temporary directory and run the tests there.
-			// Some tests may modify the test code / projects, and this way the working copy doesn't end up dirty.
-			lock (tests_directories) {
-				if (tests_directories.TryGetValue (mode, out var value))
-					return value;
-
-				var testSourceDirectory = Path.Combine (Configuration.RootPath, "msbuild", "tests");
-				var testsTemporaryDirectory = Path.Combine (Path.GetDirectoryName (assembly_path), "tests-tmp", mode);
-
-				// We want to start off clean every time the tests are launched
-				if (Directory.Exists (testsTemporaryDirectory))
-					Directory.Delete (testsTemporaryDirectory, true);
-
-				// Only copy files in git, we want a clean copy
-				var rv = ExecutionHelper.Execute ("git", new string [] { "ls-files" }, out var ls_files_output, working_directory: testSourceDirectory, timeout: TimeSpan.FromSeconds (15));
-				Assert.AreEqual (0, rv, "Failed to list test files");
-				var files = ls_files_output.ToString ().Split (new char [] { '\n' }, StringSplitOptions.RemoveEmptyEntries).ToArray ();
-
-				foreach (var file in files) {
-					var src = Path.Combine (testSourceDirectory, file);
-					var tgt = Path.Combine (testsTemporaryDirectory, file);
-					var tgtDir = Path.GetDirectoryName (tgt);
-					Directory.CreateDirectory (tgtDir);
-					File.Copy (src, tgt);
-				}
-
-				tests_directories [mode] = testsTemporaryDirectory;
-				return testsTemporaryDirectory;
+			if (string.IsNullOrEmpty (mode)) {
+				if (assembly_path.Contains ("netstandard2.0"))
+					mode = "netstandard2.0";
+				else if (assembly_path.Contains ("net461"))
+					mode = "net461";
+				else
+					mode = "unknown";
 			}
+
+			var testSourceDirectory = Path.Combine (Configuration.RootPath, "msbuild", "tests");
+			return Configuration.CloneTestDirectory (testSourceDirectory, mode);
 		}
 
 		public string [] ExpectedAppFiles = { };
@@ -148,19 +123,41 @@ namespace Xamarin.iOS.Tasks
 			get; set;
 		}
 
-		public ProjectPaths SetupProjectPaths (string projectName, string csprojName, string baseDir = "../", bool includePlatform = true, string platform = "iPhoneSimulator", string config = "Debug")
+		public ProjectPaths SetupProjectPaths (string projectName, string csprojName, string baseDir = "../", bool includePlatform = true, string platform = "iPhoneSimulator", string config = "Debug", bool use_dotnet = false)
 		{
-			var testsBase = GetTestDirectory ();
 			string projectPath;
 			if (Path.IsPathRooted (baseDir)) {
 				projectPath = Path.Combine (baseDir, projectName);
 			} else {
+				var testsBase = GetTestDirectory ();
 				projectPath = Path.Combine (testsBase, "Xamarin.iOS.Tasks.Tests", baseDir, projectName);
 			}
 
-			var binPath = includePlatform ? Path.Combine (projectPath, "bin", platform, config) : Path.Combine (projectPath, "bin", config);
-			var objPath = includePlatform ? Path.Combine (projectPath, "obj", platform, config) : Path.Combine (projectPath, "obj", config);
-
+			string binPath;
+			string objPath;
+			if (use_dotnet) {
+				var targetPlatform = platform == "iPhone" ? "Device" : "Simulator";
+				var subdir = string.Empty;
+				switch (TargetFrameworkIdentifier) {
+				case "Xamarin.iOS":
+					subdir = "xamarinios10";
+					break;
+				case "Xamarin.TVOS":
+					subdir = "xamarintvos10";
+					break;
+				case "Xamarin.WatchOS":
+					subdir = "xamarinwatchos10";
+					break;
+				default:
+					throw new NotImplementedException ($"Unknown TargetFrameworkIdentifier: {TargetFrameworkIdentifier}");
+				}
+				binPath = Path.Combine (projectPath, "bin", platform, config, targetPlatform, subdir);
+				objPath = Path.Combine (projectPath, "obj", platform, config, targetPlatform, subdir);
+			} else {
+				binPath = includePlatform ? Path.Combine (projectPath, "bin", platform, config) : Path.Combine (projectPath, "bin", config);
+				objPath = includePlatform ? Path.Combine (projectPath, "obj", platform, config) : Path.Combine (projectPath, "obj", config);
+			}			
+			
 			return new ProjectPaths {
 				ProjectPath = projectPath,
 				ProjectBinPath = binPath,
@@ -170,9 +167,9 @@ namespace Xamarin.iOS.Tasks
 			};
 		}
 
-		public ProjectPaths SetupProjectPaths (string projectName, string baseDir = "../", bool includePlatform = true, string platform = "iPhoneSimulator", string config = "Debug")
+		public ProjectPaths SetupProjectPaths (string projectName, string baseDir = "../", bool includePlatform = true, string platform = "iPhoneSimulator", string config = "Debug", bool use_dotnet = false)
 		{
-			return SetupProjectPaths (projectName, projectName, baseDir, includePlatform, platform, config);
+			return SetupProjectPaths (projectName, projectName, baseDir, includePlatform, platform, config, use_dotnet);
 		}
 
 		[SetUp]
@@ -405,7 +402,33 @@ namespace Xamarin.iOS.Tasks
 
 		public void RunTarget (Project project, string target, int expectedErrorCount = 0)
 		{
-			RunTargetOnInstance (project.CreateProjectInstance (), target, expectedErrorCount);
+			RunTarget (project, null, target, false, expectedErrorCount);
+		}
+		public void RunTarget (Project project, string project_path, string target, bool use_dotnet, int expectedErrorCount = 0)
+		{
+			if (use_dotnet) {
+				if (expectedErrorCount != 0)
+					throw new NotImplementedException ();
+				var platform = Engine.ProjectCollection.GetGlobalProperty ("Platform")?.EvaluatedValue;
+				var configuration = Engine.ProjectCollection.GetGlobalProperty ("Configuration")?.EvaluatedValue;
+				var dict = new Dictionary<string, string> ();
+				if (!string.IsNullOrEmpty (platform))
+					dict ["Platform"] = platform;
+				if (!string.IsNullOrEmpty (configuration))
+					dict ["Configuration"] = configuration;
+				Dotnet (target, project_path, dict);
+			} else {
+				RunTargetOnInstance (project.CreateProjectInstance (), target, expectedErrorCount);
+			}
+		}
+
+		public void Dotnet (string command, string project, Dictionary<string, string> properties)
+		{
+			if (properties == null)
+				properties = new Dictionary<string, string> ();
+			properties.Add ("XamarinMacFrameworkRoot", Configuration.SdkRootXM);
+			properties.Add ("MD_MTOUCH_SDK_ROOT", Configuration.SdkRootXI);
+			DotNet.Execute (command, project, properties, out var _, assert_success: true);
 		}
 
 		public void RunTargetOnInstance (ProjectInstance instance, string target, int expectedErrorCount = 0)

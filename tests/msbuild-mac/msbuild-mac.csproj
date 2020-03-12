@@ -47,6 +47,12 @@
     <Compile Include="..\..\tests\common\Configuration.cs">
       <Link>Configuration.cs</Link>
     </Compile>
+    <Compile Include="..\..\tests\common\DotNet.cs">
+      <Link>DotNet.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tests\mtouch\Cache.cs">
+      <Link>Cache.cs</Link>
+    </Compile>
     <Compile Include="..\..\src\ObjCRuntime\ErrorHelper.cs">
       <Link>ErrorHelper.cs</Link>
     </Compile>
@@ -64,6 +70,7 @@
     <Compile Include="..\common\Profile.cs">
       <Link>Profile.cs</Link>
     </Compile>
+    <Compile Include="src\DotNetTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
