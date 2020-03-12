@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
+
 using Xamarin.Utils;
 using Xamarin.Localization.MSBuild;
 

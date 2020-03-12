@@ -6,6 +6,7 @@ using System.Security.Cryptography.X509Certificates;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
+
 using Xamarin.Utils;
 using Xamarin.Localization.MSBuild;
 
