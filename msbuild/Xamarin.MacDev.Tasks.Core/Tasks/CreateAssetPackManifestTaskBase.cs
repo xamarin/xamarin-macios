@@ -7,6 +7,7 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev;
+using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.MacDev.Tasks
 {
@@ -154,7 +155,7 @@ namespace Xamarin.MacDev.Tasks
 				try {
 					onDemandResources.Save (onDemandResourcesPath, true, true);
 				} catch (Exception ex) {
-					Log.LogError ("Error saving `{0}': {1}", onDemandResourcesPath, ex.Message);
+					Log.LogError (MSBStrings.E0120, onDemandResourcesPath, ex.Message);
 				}
 			}
 
@@ -162,7 +163,7 @@ namespace Xamarin.MacDev.Tasks
 				try {
 					manifest.Save (manifestPath, true, true);
 				} catch (Exception ex) {
-					Log.LogError ("Error saving `{0}': {1}", manifestPath, ex.Message);
+					Log.LogError (MSBStrings.E0120, manifestPath, ex.Message);
 				}
 			}
 

@@ -6,8 +6,8 @@ using System.Collections.Generic;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
-
 using Xamarin.Utils;
+using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.MacDev.Tasks {
 	public abstract class BTouchTaskBase : ToolTask {
@@ -248,7 +248,7 @@ namespace Xamarin.MacDev.Tasks {
 				case "Xamarin.WatchOS":
 					return $"/target-framework={TargetFrameworkIdentifier},v1.0";
 				default:
-					Log.LogError ($"Unknown target framework identifier: {TargetFrameworkIdentifier}.");
+					Log.LogError (MSBStrings.E0096, TargetFrameworkIdentifier);
 					return string.Empty;
 			}
 		}
@@ -265,7 +265,7 @@ namespace Xamarin.MacDev.Tasks {
 			}
 
 			if (ApiDefinitions.Length == 0) {
-				Log.LogError ("No API definition file specified.");
+				Log.LogError (MSBStrings.E0097);
 				return false;
 			}
 
