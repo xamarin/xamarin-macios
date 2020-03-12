@@ -84,27 +84,28 @@ namespace Xharness.Hardware {
 				failure = false;
 				foreach (var bundle_identifier in bundle_identifiers) {
 					var args = new List<string> ();
-					var sql = new System.Text.StringBuilder ();
+					var sql = new System.Text.StringBuilder ("\n");
 					args.Add (TCCDb);
-					foreach (var service in sim_services) {
-						switch (GetTCCFormat (simRuntime)) {
-						case 1:
-							// CREATE TABLE access (service TEXT NOT NULL, client TEXT NOT NULL, client_type INTEGER NOT NULL, allowed INTEGER NOT NULL, prompt_count INTEGER NOT NULL, csreq BLOB, CONSTRAINT key PRIMARY KEY (service, client, client_type));
-							sql.AppendFormat ("INSERT INTO access VALUES('{0}','{1}',0,1,0,NULL);", service, bundle_identifier);
-							sql.AppendFormat ("INSERT INTO access VALUES('{0}','{1}',0,1,0,NULL);", service, bundle_identifier + ".watchkitapp");
-							break;
-						case 2:
-							// CREATE TABLE access (service	TEXT NOT NULL, client TEXT NOT NULL, client_type INTEGER NOT NULL, allowed INTEGER NOT NULL, prompt_count INTEGER NOT NULL, csreq BLOB, policy_id INTEGER, PRIMARY KEY (service, client, client_type), FOREIGN KEY (policy_id) REFERENCES policies(id) ON DELETE CASCADE ON UPDATE CASCADE);
-							sql.AppendFormat ("INSERT INTO access VALUES('{0}','{1}',0,1,0,NULL,NULL);", service, bundle_identifier);
-							sql.AppendFormat ("INSERT INTO access VALUES('{0}','{1}',0,1,0,NULL,NULL);", service, bundle_identifier + ".watchkitapp");
-							break;
-						case 3: // Xcode 10+
-							// CREATE TABLE access (    service        TEXT        NOT NULL,     client         TEXT        NOT NULL,     client_type    INTEGER     NOT NULL,     allowed        INTEGER     NOT NULL,     prompt_count   INTEGER     NOT NULL,     csreq          BLOB,     policy_id      INTEGER,     indirect_object_identifier_type    INTEGER,     indirect_object_identifier         TEXT,     indirect_object_code_identity      BLOB,     flags          INTEGER,     last_modified  INTEGER     NOT NULL DEFAULT (CAST(strftime('%s','now') AS INTEGER)),     PRIMARY KEY (service, client, client_type, indirect_object_identifier),    FOREIGN KEY (policy_id) REFERENCES policies(id) ON DELETE CASCADE ON UPDATE CASCADE)
-							sql.AppendFormat ("INSERT OR REPLACE INTO access VALUES('{0}','{1}',0,1,0,NULL,NULL,NULL,'UNUSED',NULL,NULL,{2});", service, bundle_identifier, DateTimeOffset.Now.ToUnixTimeSeconds ());
-							sql.AppendFormat ("INSERT OR REPLACE INTO access VALUES('{0}','{1}',0,1,0,NULL,NULL,NULL,'UNUSED',NULL,NULL,{2});", service, bundle_identifier + ".watchkitapp", DateTimeOffset.Now.ToUnixTimeSeconds ());
-							break;
-						default:
-							throw new NotImplementedException ();
+					foreach (var bundle_id in new [] { bundle_identifier, bundle_identifier + ".watchkitapp" }) {
+						foreach (var service in sim_services) {
+							switch (GetTCCFormat (simRuntime)) {
+							case 1:
+								// CREATE TABLE access (service TEXT NOT NULL, client TEXT NOT NULL, client_type INTEGER NOT NULL, allowed INTEGER NOT NULL, prompt_count INTEGER NOT NULL, csreq BLOB, CONSTRAINT key PRIMARY KEY (service, client, client_type));
+								sql.AppendFormat ("DELETE FROM access WHERE service = '{0}' AND client = '{1}';\n", service, bundle_identifier);
+								sql.AppendFormat ("INSERT INTO access VALUES('{0}','{1}',0,1,0,NULL);\n", service, bundle_identifier);
+								break;
+							case 2:
+								// CREATE TABLE access (service	TEXT NOT NULL, client TEXT NOT NULL, client_type INTEGER NOT NULL, allowed INTEGER NOT NULL, prompt_count INTEGER NOT NULL, csreq BLOB, policy_id INTEGER, PRIMARY KEY (service, client, client_type), FOREIGN KEY (policy_id) REFERENCES policies(id) ON DELETE CASCADE ON UPDATE CASCADE);
+								sql.AppendFormat ("DELETE FROM access WHERE service = '{0}' AND client = '{1}';\n", service, bundle_identifier);
+								sql.AppendFormat ("INSERT INTO access VALUES('{0}','{1}',0,1,0,NULL,NULL);\n", service, bundle_identifier);
+								break;
+							case 3: // Xcode 10+
+								// CREATE TABLE access (    service        TEXT        NOT NULL,     client         TEXT        NOT NULL,     client_type    INTEGER     NOT NULL,     allowed        INTEGER     NOT NULL,     prompt_count   INTEGER     NOT NULL,     csreq          BLOB,     policy_id      INTEGER,     indirect_object_identifier_type    INTEGER,     indirect_object_identifier         TEXT,     indirect_object_code_identity      BLOB,     flags          INTEGER,     last_modified  INTEGER     NOT NULL DEFAULT (CAST(strftime('%s','now') AS INTEGER)),     PRIMARY KEY (service, client, client_type, indirect_object_identifier),    FOREIGN KEY (policy_id) REFERENCES policies(id) ON DELETE CASCADE ON UPDATE CASCADE)
+								sql.AppendFormat ("INSERT OR REPLACE INTO access VALUES('{0}','{1}',0,1,0,NULL,NULL,NULL,'UNUSED',NULL,NULL,{2});\n", service, bundle_identifier, DateTimeOffset.Now.ToUnixTimeSeconds ());
+								break;
+							default:
+								throw new NotImplementedException ();
+							}
 						}
 					}
 					args.Add (sql.ToString ());
