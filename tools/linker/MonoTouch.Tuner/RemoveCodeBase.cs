@@ -22,12 +22,29 @@ namespace MonoTouch.Tuner {
 			if (get_nse_def == null) {
 				var corlib = context.Corlib;
 				var nse = corlib.MainModule.GetType ("System", "NotSupportedException");
+				MethodDefinition ctor = null;
 				foreach (var m in nse.Methods) {
 					// no need to check HasMethods because we know there are (and nothing is removed at this stage)
+					if (m.IsConstructor && m.Parameters.Count == 1 && m.Parameters [0].ParameterType.Is ("System", "String")) {
+						ctor = m;
+						continue;
+					}
 					if (m.Name != "LinkedAway")
 						continue;
 					get_nse_def = m;
 					break;
+				}
+
+				if (get_nse_def == null) {
+					// There's no System.NotSupportedException.LinkedAway() in .NET 5+, so create it.
+					// https://github.com/mono/mono/blob/a5f8905afa4dfaf71095a590c298acb10d5c2662/mcs/class/corlib/System/NotSupportedException.iOS.cs#L5-L11
+					get_nse_def = new MethodDefinition ("LinkedAway", MethodAttributes.Static | MethodAttributes.Assembly, nse);
+					var body = get_nse_def.Body;
+					var il = body.GetILProcessor ();
+					il.Append (Instruction.Create (OpCodes.Ldstr, "Linked Away"));
+					il.Append (Instruction.Create (OpCodes.Newobj, ctor));
+					il.Append (Instruction.Create (OpCodes.Ret));
+					nse.Methods.Add (get_nse_def);
 				}
 			}
 
