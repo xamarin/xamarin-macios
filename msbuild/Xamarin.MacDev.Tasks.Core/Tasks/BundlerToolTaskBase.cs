@@ -91,7 +91,11 @@ namespace Xamarin.MacDev.Tasks {
 			if (!string.IsNullOrEmpty (ToolPath))
 				return Path.Combine (ToolPath, ToolExe);
 
-			return Path.Combine (XamarinSdkRoot, "bin", ToolExe);
+			var path = Path.Combine (XamarinSdkRoot, "bin", ToolExe);
+			if (File.Exists (path))
+				return path;
+
+			return Path.Combine (XamarinSdkRoot, "tools", "bin", ToolExe);
 		}
 
 		// Returns command line arguments common to both mtouch and mmp
