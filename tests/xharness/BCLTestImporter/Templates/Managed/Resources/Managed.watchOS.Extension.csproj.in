@@ -164,56 +164,56 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="%TEMPLATE PATH%\InterfaceController.cs" />
-    <Compile Include="templates\common\TestRunner.Core\Extensions.Bool.cs">
-      <Link>TestRunner.Core\Extensions.Bool.cs</Link>
+    <Compile Include="templates\common\TestRunner\Core\Extensions.cs">
+      <Link>TestRunner\Core\Extensions.cs</Link>
     </Compile>
-    <Compile Include="templates\common\TestRunner.Core\LogWriter.cs">
-      <Link>TestRunner.Core\LogWriter.cs</Link>
+    <Compile Include="templates\common\TestRunner\Core\LogWriter.cs">
+      <Link>TestRunner\Core\LogWriter.cs</Link>
     </Compile>
-    <Compile Include="templates\common\TestRunner.Core\MinimumLogLevel.cs">
-      <Link>TestRunner.Core\MinimumLogLevel.cs</Link>
+    <Compile Include="templates\common\TestRunner\Core\MinimumLogLevel.cs">
+      <Link>TestRunner\Core\MinimumLogLevel.cs</Link>
     </Compile>
-    <Compile Include="templates\common\TestRunner.Core\HttpTextWriter.cs">
-      <Link>TestRunner.Core\HttpTextWriter.cs</Link>
+    <Compile Include="templates\common\TestRunner\Core\HttpTextWriter.cs">
+      <Link>TestRunner\Core\HttpTextWriter.cs</Link>
     </Compile>
-    <Compile Include="templates\common\TestRunner.Core\TestAssemblyInfo.cs">
-      <Link>TestRunner.Core\TestAssemblyInfo.cs</Link>
+    <Compile Include="templates\common\TestRunner\Core\TestAssemblyInfo.cs">
+      <Link>TestRunner\Core\TestAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="templates\common\TestRunner.Core\TestCompletionStatus.cs">
-      <Link>TestRunner.Core\TestCompletionStatus.cs</Link>
+    <Compile Include="templates\common\TestRunner\Core\TestCompletionStatus.cs">
+      <Link>TestRunner\Core\TestCompletionStatus.cs</Link>
     </Compile>
-    <Compile Include="templates\common\TestRunner.Core\TestExecutionState.cs">
-      <Link>TestRunner.Core\TestExecutionState.cs</Link>
+    <Compile Include="templates\common\TestRunner\Core\TestExecutionState.cs">
+      <Link>TestRunner\Core\TestExecutionState.cs</Link>
     </Compile>
-    <Compile Include="templates\common\TestRunner.Core\TestFailureInfo.cs">
-      <Link>TestRunner.Core\TestFailureInfo.cs</Link>
+    <Compile Include="templates\common\TestRunner\Core\TestFailureInfo.cs">
+      <Link>TestRunner\Core\TestFailureInfo.cs</Link>
     </Compile>
-    <Compile Include="templates\common\TestRunner.Core\TestRunner.cs">
-      <Link>TestRunner.Core\TestRunner.cs</Link>
+    <Compile Include="templates\common\TestRunner\Core\TestRunner.cs">
+      <Link>TestRunner\Core\TestRunner.cs</Link>
     </Compile>
-    <Compile Include="templates\common\TestRunner.Core\TestRunSelector.cs">
-      <Link>TestRunner.Core\TestRunSelector.cs</Link>
+    <Compile Include="templates\common\TestRunner\Core\TestRunSelector.cs">
+      <Link>TestRunner\Core\TestRunSelector.cs</Link>
     </Compile>
-    <Compile Include="templates\common\TestRunner.Core\TestRunSelectorType.cs">
-      <Link>TestRunner.Core\TestRunSelectorType.cs</Link>
+    <Compile Include="templates\common\TestRunner\Core\TestRunSelectorType.cs">
+      <Link>TestRunner\Core\TestRunSelectorType.cs</Link>
     </Compile>
-    <Compile Include="templates\common\TestRunner.NUnit\NUnitTestRunner.cs">
-      <Link>TestRunner.NUnit\NUnitTestRunner.cs</Link>
+    <Compile Include="templates\common\TestRunner\NUnit\NUnitTestRunner.cs">
+      <Link>TestRunner\NUnit\NUnitTestRunner.cs</Link>
     </Compile>
-    <Compile Include="templates\common\TestRunner.NUnit\ClassOrNamespaceFilter.cs">
-      <Link>TestRunner.NUnit\ClassOrNamespaceFilter.cs</Link>
+    <Compile Include="templates\common\TestRunner\NUnit\ClassOrNamespaceFilter.cs">
+      <Link>TestRunner\NUnit\ClassOrNamespaceFilter.cs</Link>
     </Compile>
-    <Compile Include="templates\common\TestRunner.NUnit\TestMethodFilter.cs">
-      <Link>TestRunner.NUnit\TestMethodFilter.cs</Link>
+    <Compile Include="templates\common\TestRunner\NUnit\TestMethodFilter.cs">
+      <Link>TestRunner\NUnit\TestMethodFilter.cs</Link>
     </Compile>
-    <Compile Include="templates\common\TestRunner.xUnit\XUnitFilter.cs">
-      <Link>TestRunner.xUnit\XUnitFilter.cs</Link>
+    <Compile Include="templates\common\TestRunner\xUnit\XUnitFilter.cs">
+      <Link>TestRunner\xUnit\XUnitFilter.cs</Link>
     </Compile>
-    <Compile Include="templates\common\TestRunner.xUnit\XUnitFilterType.cs">
-      <Link>TestRunner.xUnit\XUnitFilterType.cs</Link>
+    <Compile Include="templates\common\TestRunner\xUnit\XUnitFilterType.cs">
+      <Link>TestRunner\xUnit\XUnitFilterType.cs</Link>
     </Compile>
-    <Compile Include="templates\common\TestRunner.xUnit\XUnitTestRunner.cs">
-      <Link>TestRunner.xUnit\XUnitTestRunner.cs</Link>
+    <Compile Include="templates\common\TestRunner\xUnit\XUnitTestRunner.cs">
+      <Link>TestRunner\xUnit\XUnitTestRunner.cs</Link>
     </Compile>
     <Compile Include="templates\common\ApplicationOptions.cs">
       <Link>ApplicationOptions.cs</Link>
@@ -224,18 +224,18 @@
     %REGISTER TYPE%
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="templates\common\TestRunner.xUnit\NUnitXml.xslt">
-      <Link>TestRunner.xUnit\NUnitXml.xslt</Link>
+    <EmbeddedResource Include="templates\common\TestRunner\xUnit\NUnitXml.xslt">
+      <Link>TestRunner\xUnit\NUnitXml.xslt</Link>
     </EmbeddedResource>
-    <EmbeddedResource Include="templates\common\TestRunner.xUnit\NUnit3Xml.xslt">
-      <Link>TestRunner.xUnit\NUnit3Xml.xslt</Link>
+    <EmbeddedResource Include="templates\common\TestRunner\xUnit\NUnit3Xml.xslt">
+      <Link>TestRunner\xUnit\NUnit3Xml.xslt</Link>
     </EmbeddedResource>
     %CONTENT RESOURCES%
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="TestRunner.Core\" />
-    <Folder Include="TestRunner.NUnit\" />
-    <Folder Include="TestRunner.xUnit\" />
+    <Folder Include="TestRunner\Core\" />
+    <Folder Include="TestRunner\NUnit\" />
+    <Folder Include="TestRunner\xUnit\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\WatchOS\Xamarin.WatchOS.AppExtension.CSharp.targets" />
 </Project>
