@@ -12,6 +12,8 @@ using Xharness.Logging;
 using Xharness.Execution;
 using Xharness.Targets;
 using Xharness.Utilities;
+using Xharness.Hardware;
+using Xharness.Listeners;
 
 namespace Xharness
 {
@@ -620,11 +622,15 @@ namespace Xharness
 				HarnessLog = new ConsoleLog ();
 			
 			foreach (var project in IOSTestProjects) {
-				var runner = new AppRunner () {
-					Harness = this,
-					ProjectFile = project.Path,
-					MainLog = HarnessLog,
-				};
+				var runner = new AppRunner (ProcessManager,
+					new SimulatorsLoaderFactory(this),
+					new SimpleListenerFactory(),
+					new DeviceLoaderFactory(this, ProcessManager),
+					this,
+					project.Path,
+					HarnessLog,
+					Target);
+
 				using (var install_log = new AppInstallMonitorLog (runner.MainLog)) {
 					var rv = runner.InstallAsync (install_log.CancellationToken).Result;
 					if (!rv.Succeeded)
@@ -640,12 +646,15 @@ namespace Xharness
 				HarnessLog = new ConsoleLog ();
 
 			foreach (var project in IOSTestProjects) {
-				var runner = new AppRunner ()
-				{
-					Harness = this,
-					ProjectFile = project.Path,
-					MainLog = HarnessLog,
-				};
+				var runner = new AppRunner (ProcessManager,
+					new SimulatorsLoaderFactory(this),
+					new SimpleListenerFactory(),
+					new DeviceLoaderFactory(this, ProcessManager),
+					this,
+					project.Path,
+					HarnessLog,
+					Target);
+
 				var rv = runner.UninstallAsync ().Result;
 				if (!rv.Succeeded)
 					return rv.ExitCode;
@@ -659,11 +668,15 @@ namespace Xharness
 				HarnessLog = new ConsoleLog ();
 			
 			foreach (var project in IOSTestProjects) {
-				var runner = new AppRunner () {
-					Harness = this,
-					ProjectFile = project.Path,
-					MainLog = HarnessLog,
-				};
+				var runner = new AppRunner (ProcessManager,
+					new SimulatorsLoaderFactory(this),
+					new SimpleListenerFactory(),
+					new DeviceLoaderFactory(this, ProcessManager),
+					this,
+					project.Path,
+					HarnessLog,
+					Target);
+
 				var rv = runner.RunAsync ().Result;
 				if (rv != 0)
 					return rv;
@@ -754,10 +767,7 @@ namespace Xharness
 				AutoConfigureMac (false);
 			}
 			
-			var jenkins = new Jenkins.Jenkins ()
-			{
-				Harness = this,
-			};
+			var jenkins = new Jenkins.Jenkins (this, ProcessManager);
 			return jenkins.Run ();
 		}
 

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Xharness.Collections;
-using Xharness.Execution;
 using Xharness.Logging;
 
 namespace Xharness.Hardware {
@@ -23,7 +22,6 @@ namespace Xharness.Hardware {
 	}
 
 	public interface IDeviceLoader : ILoadAsync {
-		IProcessManager ProcessManager { get; set; }
 		IEnumerable<IHardwareDevice> ConnectedDevices { get; }
 		IEnumerable<IHardwareDevice> Connected64BitIOS { get; }
 		IEnumerable<IHardwareDevice> Connected32BitIOS { get; }

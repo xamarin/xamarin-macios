@@ -4,12 +4,16 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Xharness.Collections;
+using Xharness.Execution;
 using Xharness.Hardware;
+using Xharness.Listeners;
 
 namespace Xharness.Jenkins.TestTasks
 {
 	class RunSimulatorTask : RunXITask<ISimulatorDevice>
 	{
+		readonly IProcessManager processManager = new ProcessManager ();
+		readonly ISimulatorsLoader simulators;
 		public IAcquiredResource AcquiredResource;
 
 		public ISimulatorDevice [] Simulators {
@@ -24,7 +28,7 @@ namespace Xharness.Jenkins.TestTasks
 			}
 		}
 
-		public RunSimulatorTask (MSBuildTask build_task, IEnumerable<ISimulatorDevice> candidates = null)
+		public RunSimulatorTask (ISimulatorsLoader simulators, MSBuildTask build_task, IEnumerable<ISimulatorDevice> candidates = null)
 			: base (build_task, candidates)
 		{
 			var project = Path.GetFileNameWithoutExtension (ProjectFile);
@@ -35,6 +39,8 @@ namespace Xharness.Jenkins.TestTasks
 			} else {
 				AppRunnerTarget = AppRunnerTarget.Simulator_iOS;
 			}
+
+			this.simulators = simulators ?? throw new ArgumentNullException (nameof (simulators));
 		}
 
 		public async Task FindSimulatorAsync ()
@@ -52,7 +58,7 @@ namespace Xharness.Jenkins.TestTasks
 			} else {
 				Device = Candidates.First ();
 				if (Platform == TestPlatform.watchOS)
-					CompanionDevice = Jenkins.Simulators.FindCompanionDevice (Jenkins.SimulatorLoadLog, Device);
+					CompanionDevice = simulators.FindCompanionDevice (Jenkins.SimulatorLoadLog, Device);
 			}
 
 		}
@@ -70,13 +76,17 @@ namespace Xharness.Jenkins.TestTasks
 			await FindSimulatorAsync ();
 
 			var clean_state = false;//Platform == TestPlatform.watchOS;
-			runner = new AppRunner () {
-				Harness = Harness,
-				ProjectFile = ProjectFile,
+			runner = new AppRunner (processManager,
+				new SimulatorsLoaderFactory (Harness),
+				new SimpleListenerFactory (),
+				new DeviceLoaderFactory (Harness, processManager),
+				Harness,
+				ProjectFile,
+				Logs.Create ($"run-{Device.UDID}-{Timestamp}.log", "Run log"),
+				AppRunnerTarget
+			) {
 				EnsureCleanSimulatorState = clean_state,
-				Target = AppRunnerTarget,
 				LogDirectory = LogDirectory,
-				MainLog = Logs.Create ($"run-{Device.UDID}-{Timestamp}.log", "Run log"),
 				Configuration = ProjectConfiguration,
 				TimeoutMultiplier = TimeoutMultiplier,
 				Variation = Variation,

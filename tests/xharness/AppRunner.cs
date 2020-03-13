@@ -35,49 +35,39 @@ namespace Xharness
 
 	class AppRunner
 	{
-		public Harness Harness;
-		public string ProjectFile;
-		public string AppPath;
+		readonly IProcessManager processManager;
+		readonly ISimulatorsLoaderFactory simulatorsFactory;
+		readonly ISimpleListenerFactory listenerFactory;
+		readonly IDeviceLoaderFactory devicesFactory;
+		readonly Harness harness;
+		readonly string projectFile;
+		readonly AppRunnerTarget target;
+		readonly RunMode mode;
+		readonly bool isSimulator;
+
+		string appPath;
+		string launchAppPath;
+		Extension? extension;
+		string configuration;
+
 		public string Variation;
 		public BuildToolTask BuildTask;
-		public ISimpleListenerFactory ListenerFactory = new SimpleListenerFactory ();
 
 		public TestExecutingResult Result { get; private set; }
 		public string FailureMessage { get; private set; }
 
-		string appName;
-		string appPath;
-		string launchAppPath;
-		string bundle_identifier;
-		Extension? extension;
-		bool isSimulator;
-
-		string device_name;
-		string companion_device_name;
-
-		string configuration;
 		public string Configuration {
-			get { return configuration ?? Harness.Configuration; }
+			get { return configuration ?? harness.Configuration; }
 			set { configuration = value; }
 		}
 
-		public string DeviceName {
-			get { return device_name; }
-			set { device_name = value; }
-		}
+		public string DeviceName { get; set; }
 
-		public string CompanionDeviceName {
-			get { return companion_device_name; }
-			set { companion_device_name = value; }
-		}
+		public string CompanionDeviceName { get; set; }
 
-		public bool isExtension {
-			get {
-				return extension.HasValue;
-			}
-		}
+		public bool IsExtension => extension.HasValue;
 
-		public string AppName => appName;
+		public string AppName { get; private set; }
 
 		public double TimeoutMultiplier { get; set; } = 1;
 
@@ -86,24 +76,14 @@ namespace Xharness
 		ISimulatorDevice simulator { get { return simulators [0]; } }
 		ISimulatorDevice companion_simulator { get { return simulators.Length == 2 ? simulators [1] : null; } }
 
-		AppRunnerTarget target;
-		public AppRunnerTarget Target {
-			get { return target == AppRunnerTarget.None ? Harness.Target : target; }
-			set { target = value; }
-		}
-
 		string log_directory;
 		public string LogDirectory {
-			get { return log_directory ?? Harness.LogDirectory; }
+			get { return log_directory ?? harness.LogDirectory; }
 			set { log_directory = value; }
 		}
 
 		ILogs logs;
-		public ILogs Logs {
-			get {
-				return logs ?? (logs = new Logs (LogDirectory));
-			}
-		}
+		public ILogs Logs => logs ?? (logs = new Logs (LogDirectory));
 
 		ILog main_log;
 		public ILog MainLog {
@@ -116,45 +96,55 @@ namespace Xharness
 			set { simulators = value; }
 		}
 
-		public string BundleIdentifier {
-			get {
-				return bundle_identifier;
-			}
+		public string BundleIdentifier { get; private set; }
+
+		public AppRunner (IProcessManager processManager,
+						  ISimulatorsLoaderFactory simulatorsFactory,
+						  ISimpleListenerFactory simpleListenerFactory,
+						  IDeviceLoaderFactory devicesFactory,
+						  Harness harness,
+						  string projectFile,
+						  ILog mainLog,
+						  AppRunnerTarget target)
+		{
+			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
+			this.simulatorsFactory = simulatorsFactory ?? throw new ArgumentNullException (nameof (simulatorsFactory));
+			this.listenerFactory = simpleListenerFactory ?? throw new ArgumentNullException (nameof (simpleListenerFactory));
+			this.devicesFactory = devicesFactory ?? throw new ArgumentNullException (nameof (devicesFactory));
+			this.harness = harness ?? throw new ArgumentNullException (nameof (harness));
+			this.projectFile = projectFile ?? throw new ArgumentNullException (nameof (projectFile));
+			this.MainLog = mainLog ?? throw new ArgumentNullException (nameof (mainLog));
+
+			this.target = target;			
+			this.mode = target.ToRunMode ();
+			this.isSimulator = target.IsSimulator ();
 		}
-
-		public IProcessManager ProcessManager { get; set; } = new ProcessManager ();
-
-		RunMode mode;
 
 		async Task<bool> FindSimulatorAsync ()
 		{
 			if (simulators != null)
 				return true;
 			
-			var sims = new Simulators () {
-				Harness = Harness,
-			};
-			await sims.LoadAsync (Logs.Create ($"simulator-list-{Harness.Timestamp}.log", "Simulator list"));
-			simulators = await sims.FindAsync (Target, main_log);
+			var sims = simulatorsFactory.CreateLoader();
+			await sims.LoadAsync (Logs.Create ($"simulator-list-{Harness.Timestamp}.log", "Simulator list"), false, false);
+			simulators = await sims.FindAsync (target, main_log);
 
 			return simulators != null;
 		}
 
 		void FindDevice ()
 		{
-			if (device_name != null)
+			if (DeviceName != null)
 				return;
 			
-			device_name = Environment.GetEnvironmentVariable ("DEVICE_NAME");
-			if (!string.IsNullOrEmpty (device_name))
+			DeviceName = Environment.GetEnvironmentVariable ("DEVICE_NAME");
+			if (!string.IsNullOrEmpty (DeviceName))
 				return;
-
-			var devs = new Devices () {
-				Harness = Harness,
-			};
+			
+			var devs = devicesFactory.CreateLoader ();
 			Task.Run (async () =>
 			{
-				await devs.LoadAsync (main_log);
+				await devs.LoadAsync (main_log, false, false);
 			}).Wait ();
 
 			DeviceClass [] deviceClasses;
@@ -190,10 +180,10 @@ namespace Xharness
 			} else {
 				selected_data = selected.First ();
 			}
-			device_name = selected_data.Name;
+			DeviceName = selected_data.Name;
 
 			if (mode == RunMode.WatchOS)
-				companion_device_name = devs.FindCompanionDevice (main_log, selected_data).Name;
+				CompanionDeviceName = devs.FindCompanionDevice (main_log, selected_data).Name;
 		}
 
 		bool initialized;
@@ -204,22 +194,19 @@ namespace Xharness
 			initialized = true;
 
 			var csproj = new XmlDocument ();
-			csproj.LoadWithoutNetworkAccess (ProjectFile);
-			appName = csproj.GetAssemblyName ();
+			csproj.LoadWithoutNetworkAccess (projectFile);
+			AppName = csproj.GetAssemblyName ();
 			var info_plist_path = csproj.GetInfoPListInclude ();
 			var info_plist = new XmlDocument ();
-			info_plist.LoadWithoutNetworkAccess (Path.Combine (Path.GetDirectoryName (ProjectFile), info_plist_path.Replace ('\\', '/')));
-			bundle_identifier = info_plist.GetCFBundleIdentifier ();
+			info_plist.LoadWithoutNetworkAccess (Path.Combine (Path.GetDirectoryName (projectFile), info_plist_path.Replace ('\\', '/')));
+			BundleIdentifier = info_plist.GetCFBundleIdentifier ();
 
 			var extensionPointIdentifier = info_plist.GetNSExtensionPointIdentifier ();
 			if (!string.IsNullOrEmpty (extensionPointIdentifier))
 				extension = extensionPointIdentifier.ParseFromNSExtensionPointIdentifier ();
-			
-			mode = target.ToRunMode ();
-			isSimulator = target.IsSimulator ();
 
 			var platform = isSimulator ? "iPhoneSimulator" : "iPhone";
-			appPath = Path.Combine (Path.GetDirectoryName (ProjectFile), csproj.GetOutputPath (platform, Configuration).Replace ('\\', '/'), appName + (isExtension ? ".appex" : ".app"));
+			appPath = Path.Combine (Path.GetDirectoryName (projectFile), csproj.GetOutputPath (platform, Configuration).Replace ('\\', '/'), AppName + (IsExtension ? ".appex" : ".app"));
 			if (!Directory.Exists (appPath))
 				throw new Exception (string.Format ("The app directory {0} does not exist. This is probably a bug in the test harness.", appPath));
 
@@ -242,16 +229,16 @@ namespace Xharness
 			FindDevice ();
 
 			var args = new List<string> ();
-			if (!string.IsNullOrEmpty (Harness.XcodeRoot)) {
+			if (!string.IsNullOrEmpty (harness.XcodeRoot)) {
 				args.Add ("--sdkroot");
-				args.Add (Harness.XcodeRoot);
+				args.Add (harness.XcodeRoot);
 			}
-			for (int i = -1; i < Harness.Verbosity; i++)
+			for (int i = -1; i < harness.Verbosity; i++)
 				args.Add ("-v");
 			
 			args.Add ("--installdev");
 			args.Add (appPath);
-			AddDeviceName (args, companion_device_name ?? device_name);
+			AddDeviceName (args, CompanionDeviceName ?? DeviceName);
 
 			if (mode == RunMode.WatchOS) {
 				args.Add ("--device");
@@ -259,9 +246,9 @@ namespace Xharness
 			}
 
 			var totalSize = Directory.GetFiles (appPath, "*", SearchOption.AllDirectories).Select ((v) => new FileInfo (v).Length).Sum ();
-			main_log.WriteLine ($"Installing '{appPath}' to '{companion_device_name ?? device_name}'. Size: {totalSize} bytes = {totalSize / 1024.0 / 1024.0:N2} MB");
+			main_log.WriteLine ($"Installing '{appPath}' to '{CompanionDeviceName ?? DeviceName}'. Size: {totalSize} bytes = {totalSize / 1024.0 / 1024.0:N2} MB");
 
-			return await ProcessManager.ExecuteCommandAsync (Harness.MlaunchPath, args, main_log, TimeSpan.FromHours (1), cancellation_token: cancellation_token);
+			return await processManager.ExecuteCommandAsync (harness.MlaunchPath, args, main_log, TimeSpan.FromHours (1), cancellation_token: cancellation_token);
 		}
 
 		public async Task<ProcessExecutionResult> UninstallAsync ()
@@ -274,21 +261,22 @@ namespace Xharness
 			FindDevice ();
 
 			var args = new List<string> ();
-			if (!string.IsNullOrEmpty (Harness.XcodeRoot)) {
+			if (!string.IsNullOrEmpty (harness.XcodeRoot)) {
 				args.Add ("--sdkroot");
-				args.Add (Harness.XcodeRoot);
+				args.Add (harness.XcodeRoot);
 			}
-			for (int i = -1; i < Harness.Verbosity; i++)
+			for (int i = -1; i < harness.Verbosity; i++)
 				args.Add ("-v");
 
 			args.Add ("--uninstalldevbundleid");
-			args.Add (bundle_identifier);
-			AddDeviceName (args, companion_device_name ?? device_name);
+			args.Add (BundleIdentifier);
+			AddDeviceName (args, CompanionDeviceName ?? DeviceName);
 
-			return await ProcessManager.ExecuteCommandAsync (Harness.MlaunchPath, args, main_log, TimeSpan.FromMinutes (1));
+			return await processManager.ExecuteCommandAsync (harness.MlaunchPath, args, main_log, TimeSpan.FromMinutes (1));
 		}
 
 		bool ensure_clean_simulator_state = true;
+
 		public bool EnsureCleanSimulatorState {
 			get {
 				return ensure_clean_simulator_state && string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("SKIP_SIMULATOR_SETUP"));
@@ -320,7 +308,7 @@ namespace Xharness
 			var path = Path.ChangeExtension (test_log_path, "xml");
 			XmlResultParser.CleanXml (test_log_path, path);
 
-			if (Harness.InCI && XmlResultParser.IsValidXml (path, out var xmlType)) {
+			if (harness.InCI && XmlResultParser.IsValidXml (path, out var xmlType)) {
 				(string resultLine, bool failed, bool crashed) parseResult = (null, false, false);
 				crashed = false;
 				try {
@@ -328,7 +316,7 @@ namespace Xharness
 
 					// at this point, we have the test results, but we want to be able to have attachments in vsts, so if the format is
 					// the right one (NUnitV3) add the nodes. ATM only TouchUnit uses V3.
-					var testRunName = $"{appName} {Variation}";
+					var testRunName = $"{AppName} {Variation}";
 					if (xmlType == XmlResultJargon.NUnitV3) {
 						var logFiles = new List<string> ();
 						// add our logs AND the logs of the previous task, which is the build task
@@ -370,10 +358,10 @@ namespace Xharness
 					main_log.WriteLine (new string ('#', 10));
 					main_log.WriteLine ("End of xml results.");
 					if (timed_out) {
-						Harness.LogWrench ($"@MonkeyWrench: AddSummary: <b><i>{mode} timed out</i></b><br/>");
+						harness.LogWrench ($"@MonkeyWrench: AddSummary: <b><i>{mode} timed out</i></b><br/>");
 						return parseResult;
 					} else {
-						Harness.LogWrench ($"@MonkeyWrench: AddSummary: <b><i>{mode} crashed</i></b><br/>");
+						harness.LogWrench ($"@MonkeyWrench: AddSummary: <b><i>{mode} crashed</i></b><br/>");
 						main_log.WriteLine ("Test run crashed");
 						crashed = true;
 						parseResult.crashed = true;
@@ -411,19 +399,19 @@ namespace Xharness
 			if (resultLine != null) {
 				var tests_run = resultLine.Replace ("Tests run: ", "");
 				if (failed) {
-					Harness.LogWrench ("@MonkeyWrench: AddSummary: <b>{0} failed: {1}</b><br/>", mode, tests_run);
+					harness.LogWrench ("@MonkeyWrench: AddSummary: <b>{0} failed: {1}</b><br/>", mode, tests_run);
 					main_log.WriteLine ("Test run failed");
 					return false;
 				} else {
-					Harness.LogWrench ("@MonkeyWrench: AddSummary: {0} succeeded: {1}<br/>", mode, tests_run);
+					harness.LogWrench ("@MonkeyWrench: AddSummary: {0} succeeded: {1}<br/>", mode, tests_run);
 					main_log.WriteLine ("Test run succeeded");
 					return true;
 				}
 			} else if (timed_out) {
-				Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} timed out</i></b><br/>", mode);
+				harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} timed out</i></b><br/>", mode);
 				return false;
 			} else {
-				Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} crashed</i></b><br/>", mode);
+				harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} crashed</i></b><br/>", mode);
 				main_log.WriteLine ("Test run crashed");
 				crashed = true;
 				return false;
@@ -447,19 +435,19 @@ namespace Xharness
 
 			crash_reports = new CrashReportSnapshot () {
 				Device = !isSimulator,
-				DeviceName = device_name,
-				Harness = Harness,
+				DeviceName = DeviceName,
+				Harness = harness,
 				Log = main_log,
 				Logs = Logs,
 				LogDirectory = LogDirectory,
 			};
 
 			var args = new List<string> ();
-			if (!string.IsNullOrEmpty (Harness.XcodeRoot)) {
+			if (!string.IsNullOrEmpty (harness.XcodeRoot)) {
 				args.Add ("--sdkroot");
-				args.Add (Harness.XcodeRoot);
+				args.Add (harness.XcodeRoot);
 			}
-			for (int i = -1; i < Harness.Verbosity; i++)
+			for (int i = -1; i < harness.Verbosity; i++)
 				args.Add ("-v");
 			args.Add ("-argument=-connection-mode");
 			args.Add ("-argument=none"); // This will prevent the app from trying to connect to any IDEs
@@ -470,19 +458,19 @@ namespace Xharness
 			args.Add ("-argument=-app-arg:-enablenetwork");
 			args.Add ("-setenv=NUNIT_ENABLE_NETWORK=true");
 			// detect if we are using a jenkins bot.
-			var useXmlOutput = Harness.InCI;
+			var useXmlOutput = harness.InCI;
 			if (useXmlOutput) {
 				args.Add ("-setenv=NUNIT_ENABLE_XML_OUTPUT=true");
 				args.Add ("-setenv=NUNIT_ENABLE_XML_MODE=wrapped");
 				args.Add ("-setenv=NUNIT_XML_VERSION=nunitv3");
 			}
 
-			if (Harness.InCI) {
+			if (harness.InCI) {
 				// We use the 'BUILD_REVISION' variable to detect whether we're running CI or not.
 				args.Add ($"-setenv=BUILD_REVISION=${Environment.GetEnvironmentVariable ("BUILD_REVISION")}");
 			}
 
-			if (!Harness.GetIncludeSystemPermissionTests (TestPlatform.iOS, !isSimulator))
+			if (!harness.GetIncludeSystemPermissionTests (TestPlatform.iOS, !isSimulator))
 				args.Add ("-setenv=DISABLE_SYSTEM_PERMISSION_TESTS=1");
 
 			if (isSimulator) {
@@ -502,7 +490,7 @@ namespace Xharness
 			}
 
 			listener_log = Logs.Create ($"test-{mode.ToString().ToLower()}-{Harness.Timestamp}.log", LogType.TestLog.ToString (), timestamp: !useXmlOutput);
-			var transport = ListenerFactory.Create (mode, listener_log, isSimulator, out var listener, out var fn);
+			var transport = listenerFactory.Create (mode, listener_log, isSimulator, out var listener, out var fn);
 			
 			args.Add ($"-argument=-app-arg:-transport:{transport}");
 			args.Add ($"-setenv=NUNIT_TRANSPORT={transport.ToString ().ToUpper ()}");
@@ -527,7 +515,7 @@ namespace Xharness
 			var timed_out = false;
 
 			listener.ConnectedTask
-				.TimeoutAfter (TimeSpan.FromMinutes (Harness.LaunchTimeout))
+				.TimeoutAfter (TimeSpan.FromMinutes (harness.LaunchTimeout))
 				.ContinueWith ((v) => {
 					if (v.IsFaulted) {
 						main_log.WriteLine ("Test launch failed: {0}", v.Exception);
@@ -537,18 +525,18 @@ namespace Xharness
 						main_log.WriteLine ("Test run started");
 					} else {
 						cancellation_source.Cancel ();
-						main_log.WriteLine ("Test launch timed out after {0} minute(s).", Harness.LaunchTimeout);
+						main_log.WriteLine ("Test launch timed out after {0} minute(s).", harness.LaunchTimeout);
 						timed_out = true;
 					}
 				}).DoNotAwait ();
 
-			foreach (var kvp in Harness.EnvironmentVariables)
+			foreach (var kvp in harness.EnvironmentVariables)
 				args.Add ($"-setenv={kvp.Key}={kvp.Value}");
 
 			bool? success = null;
 			bool launch_failure = false;
 
-			if (isExtension) {
+			if (IsExtension) {
 				switch (extension) {
 				case Extension.TodayExtension:
 					args.Add (isSimulator ? "--launchsimbundleid" : "--launchdevbundleid");
@@ -567,7 +555,7 @@ namespace Xharness
 			if (!isSimulator)
 				args.Add ("--disable-memory-limits");
 
-			var timeout = TimeSpan.FromMinutes (Harness.Timeout * TimeoutMultiplier);
+			var timeout = TimeSpan.FromMinutes (harness.Timeout * TimeoutMultiplier);
 			if (isSimulator) {
 				if (!await FindSimulatorAsync ())
 					return 1;
@@ -591,21 +579,21 @@ namespace Xharness
 					main_log.WriteLine ("System log for the '{1}' simulator is: {0}", sim.SystemLog, sim.Name);
 					bool isCompanion = sim != simulator;
 
-					var log = new CaptureLog (Logs, Path.Combine (LogDirectory, sim.Name + ".log"), sim.SystemLog, entire_file: Harness.Action != HarnessAction.Jenkins)
+					var log = new CaptureLog (Logs, Path.Combine (LogDirectory, sim.Name + ".log"), sim.SystemLog, entire_file: harness.Action != HarnessAction.Jenkins)
 					{
 						Description = isCompanion ? LogType.CompanionSystemLog.ToString () : LogType.SystemLog.ToString (),
 					};
 					log.StartCapture ();
 					Logs.Add (log);
 					systemLogs.Add (log);
-					Harness.LogWrench ("@MonkeyWrench: AddFile: {0}", log.Path);
+					harness.LogWrench ("@MonkeyWrench: AddFile: {0}", log.Path);
 				}
 
-				main_log.WriteLine ("*** Executing {0}/{1} in the simulator ***", appName, mode);
+				main_log.WriteLine ("*** Executing {0}/{1} in the simulator ***", AppName, mode);
 
 				if (EnsureCleanSimulatorState) {
 					foreach (var sim in simulators)
-						await sim.PrepareSimulatorAsync (main_log, bundle_identifier);
+						await sim.PrepareSimulatorAsync (main_log, BundleIdentifier);
 				}
 
 				args.Add ($"--device=:v2:udid={simulator.UDID}");
@@ -614,7 +602,7 @@ namespace Xharness
 
 				main_log.WriteLine ("Starting test run");
 
-				var result = await ProcessManager.ExecuteCommandAsync (Harness.MlaunchPath, args, run_log, timeout, cancellation_token: cancellation_source.Token);
+				var result = await processManager.ExecuteCommandAsync (harness.MlaunchPath, args, run_log, timeout, cancellation_token: cancellation_source.Token);
 				if (result.TimedOut) {
 					timed_out = true;
 					success = false;
@@ -649,9 +637,9 @@ namespace Xharness
 					if (pid > 0) {
 						var launchTimedout = cancellation_source.IsCancellationRequested;
 						var timeoutType = launchTimedout ? "Launch" : "Completion";
-						var timeoutValue = launchTimedout ? Harness.LaunchTimeout : timeout.TotalSeconds;
+						var timeoutValue = launchTimedout ? harness.LaunchTimeout : timeout.TotalSeconds;
 						main_log.WriteLine ($"{timeoutType} timed out after {timeoutValue} seconds");
-						await ProcessManager.KillTreeAsync (pid, main_log, true);
+						await processManager.KillTreeAsync (pid, main_log, true);
 					} else {
 						main_log.WriteLine ("Could not find pid in mtouch output.");
 					}
@@ -666,7 +654,7 @@ namespace Xharness
 					log.StopCapture ();
 				
 			} else {
-				main_log.WriteLine ("*** Executing {0}/{1} on device '{2}' ***", appName, mode, device_name);
+				main_log.WriteLine ("*** Executing {0}/{1} on device '{2}' ***", AppName, mode, DeviceName);
 
 				if (mode == RunMode.WatchOS) {
 					args.Add ("--attach-native-debugger"); // this prevents the watch from backgrounding the app.
@@ -676,11 +664,11 @@ namespace Xharness
 				
 				AddDeviceName (args);
 
-				device_system_log = Logs.Create ($"device-{device_name}-{Harness.Timestamp}.log", "Device log");
+				device_system_log = Logs.Create ($"device-{DeviceName}-{Harness.Timestamp}.log", "Device log");
 				var logdev = new DeviceLogCapturer () {
-					Harness =  Harness,
+					Harness =  harness,
 					Log = device_system_log,
-					DeviceName = device_name,
+					DeviceName = DeviceName,
 				};
 				logdev.StartCapture ();
 
@@ -699,7 +687,7 @@ namespace Xharness
 					});
 					var runLog = Log.CreateAggregatedLog (callbackLog, main_log);
 					var timeoutWatch = Stopwatch.StartNew ();
-					var result = await ProcessManager.ExecuteCommandAsync (Harness.MlaunchPath, args, runLog, timeout, cancellation_token: cancellation_source.Token);
+					var result = await processManager.ExecuteCommandAsync (harness.MlaunchPath, args, runLog, timeout, cancellation_token: cancellation_source.Token);
 
 					if (!waitedForExit && !result.TimedOut) {
 						// mlaunch couldn't wait for exit for some reason. Let's assume the app exits when the test listener completes.
@@ -728,7 +716,7 @@ namespace Xharness
 				// Upload the system log
 				if (File.Exists (device_system_log.FullPath)) {
 					main_log.WriteLine ("A capture of the device log is: {0}", device_system_log.FullPath);
-					Harness.LogWrench ("@MonkeyWrench: AddFile: {0}", device_system_log.FullPath);
+					harness.LogWrench ("@MonkeyWrench: AddFile: {0}", device_system_log.FullPath);
 				}
 			}
 
@@ -738,18 +726,18 @@ namespace Xharness
 			// check the final status
 			var crashed = false;
 			if (File.Exists (listener_log.FullPath)) {
-				Harness.LogWrench ("@MonkeyWrench: AddFile: {0}", listener_log.FullPath);
+				harness.LogWrench ("@MonkeyWrench: AddFile: {0}", listener_log.FullPath);
 				success = TestsSucceeded (listener_log.FullPath, timed_out, out crashed);
 			} else if (timed_out) {
-				Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} never launched</i></b><br/>", mode);
+				harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} never launched</i></b><br/>", mode);
 				main_log.WriteLine ("Test run never launched");
 				success = false;
 			} else if (launch_failure) {
- 				Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} failed to launch</i></b><br/>", mode);
+ 				harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} failed to launch</i></b><br/>", mode);
  				main_log.WriteLine ("Test run failed to launch");
  				success = false;
 			} else {
-				Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} crashed at startup (no log)</i></b><br/>", mode);
+				harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} crashed at startup (no log)</i></b><br/>", mode);
 				main_log.WriteLine ("Test run crashed before it started (no log file produced)");
 				crashed = true;
 				success = false;
@@ -809,12 +797,12 @@ namespace Xharness
 						}
 						if (crash_reason != null) {
 							// if in CI, do write an xml error that will be picked as a failure by VSTS
-							if (Harness.InCI)
-								XmlResultParser.GenerateFailure (Logs, "crash", AppName, Variation, $"App Crash {AppName} {Variation}", $"App crashed {crash_reason}.", crash_reports.Log.FullPath, Harness.XmlJargon);
+							if (harness.InCI)
+								XmlResultParser.GenerateFailure (Logs, "crash", AppName, Variation, $"App Crash {AppName} {Variation}", $"App crashed {crash_reason}.", crash_reports.Log.FullPath, harness.XmlJargon);
 							break;
 						}
 					} catch (Exception e) {
-						Harness.Log (2, "Failed to process crash report '{1}': {0}", e.Message, crash.Description);
+						harness.Log (2, "Failed to process crash report '{1}': {0}", e.Message, crash.Description);
 					}
 				}
 				if (!string.IsNullOrEmpty (crash_reason)) {
@@ -823,14 +811,14 @@ namespace Xharness
 					} else {
 						FailureMessage = $"Killed by the OS ({crash_reason})";
 					}
-					if (Harness.InCI)
-						XmlResultParser.GenerateFailure (Logs, "crash", AppName, Variation, $"App Crash {AppName} {Variation}", $"App crashed: {FailureMessage}", crash_reports.Log.FullPath, Harness.XmlJargon);
+					if (harness.InCI)
+						XmlResultParser.GenerateFailure (Logs, "crash", AppName, Variation, $"App Crash {AppName} {Variation}", $"App crashed: {FailureMessage}", crash_reports.Log.FullPath, harness.XmlJargon);
 				} else if (launch_failure) {
 					// same as with a crash
 					FailureMessage = $"Launch failure";
-					if (Harness.InCI)
+					if (harness.InCI)
 						XmlResultParser.GenerateFailure (Logs, "launch", AppName, Variation, $"App Launch {AppName} {Variation} on {DeviceName}", $"{FailureMessage} on {DeviceName}", MainLog.FullPath, XmlResultJargon.NUnitV3);
-				} else if (!isSimulator && crashed && string.IsNullOrEmpty (crash_reason) && Harness.InCI) {
+				} else if (!isSimulator && crashed && string.IsNullOrEmpty (crash_reason) && harness.InCI) {
 					// this happens more that what we would like on devices, the main reason most of the time is that we have had netwoking problems and the
 					// tcp connection could not be stablished. We are going to report it as an error since we have not parsed the logs, evne when the app might have
 					// not crashed. We need to check the main_log to see if we do have an tcp issue or not
@@ -845,9 +833,9 @@ namespace Xharness
 						}
 					}
 					if (isTcp)
-						XmlResultParser.GenerateFailure (Logs, "tcp-connection", appName, Variation, $"TcpConnection on {device_name}", $"Device {device_name} could not reach the host over tcp.", main_log.FullPath, Harness.XmlJargon);
-				} else if (timed_out && Harness.InCI) {
-					XmlResultParser.GenerateFailure (Logs, "timeout", AppName, Variation, $"App Timeout {AppName} {Variation}", $"Test run timed out after {timeout.TotalMinutes} minute(s).", MainLog.FullPath, Harness.XmlJargon);
+						XmlResultParser.GenerateFailure (Logs, "tcp-connection", AppName, Variation, $"TcpConnection on {DeviceName}", $"Device {DeviceName} could not reach the host over tcp.", main_log.FullPath, harness.XmlJargon);
+				} else if (timed_out && harness.InCI) {
+					XmlResultParser.GenerateFailure (Logs, "timeout", AppName, Variation, $"App Timeout {AppName} {Variation}", $"Test run timed out after {timeout.TotalMinutes} minute(s).", MainLog.FullPath, harness.XmlJargon);
 				}
 			}
 
@@ -856,7 +844,7 @@ namespace Xharness
 
 		public void AddDeviceName (IList<string> args)
 		{
-			AddDeviceName (args, device_name);
+			AddDeviceName (args, DeviceName);
 		}
 
 		public static void AddDeviceName (IList<string> args, string device_name)
