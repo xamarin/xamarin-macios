@@ -744,15 +744,7 @@ namespace Foundation {
 		}
 
 		// IEquatable<T>
-		public bool Equals (NSObject obj)
-		{
-			if (obj == null)
-				return false;
-				
-			// we'll ask the overridden Equals (if available) if one of the instances is not a direct binding
-			bool isDirectBinding = IsDirectBinding;
-			return (isDirectBinding == obj.IsDirectBinding) && (isDirectBinding ? IsEqual (obj) : ReferenceEquals (this, obj));
-		}
+		public bool Equals (NSObject obj) => Equals ((object) obj);
 #endif
 
 		public override string ToString ()
