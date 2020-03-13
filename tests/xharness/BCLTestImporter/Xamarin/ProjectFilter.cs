@@ -71,7 +71,24 @@ namespace Xharness.BCLTestImporter.Xamarin {
 		public string IgnoreFilesRootDir { get; set; }
 		public IAssemblyLocator AssemblyLocator { get; set; }
 
-		public bool ExcludeDll (Platform _, string assembly) => excludeDlls.Contains (assembly);
+		public bool ExcludeDll (Platform platform, string assembly)
+		{
+			if (CommonIgnoredAssemblies.Contains (assembly))
+				return true;
+			switch (platform) {
+			case Platform.iOS:
+				return iOSIgnoredAssemblies.Contains (assembly);
+			case Platform.TvOS:
+				return tvOSIgnoredAssemblies.Contains (assembly);
+			case Platform.WatchOS:
+				return watcOSIgnoredAssemblies.Contains (assembly);
+			case Platform.MacOSFull:
+				return macIgnoredAssemblies.Any ((ignored) => (ignored.assembly == assembly) && ignored.platforms.Contains (Platform.MacOSFull));
+			case Platform.MacOSModern:
+				return macIgnoredAssemblies.Any ((ignored) => (ignored.assembly == assembly) && ignored.platforms.Contains (Platform.MacOSModern));
+			}
+			return false;
+		}
 
 		public bool ExludeProject (BCLTestProjectDefinition project, Platform platform)
 		{
