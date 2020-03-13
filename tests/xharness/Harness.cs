@@ -750,59 +750,5 @@ namespace Xharness
 			await ExecuteXcodeCommandAsync ("simctl", new [] { "list" }, log, TimeSpan.FromSeconds (10));
 		}
 
-		public async Task<ILogFile> SymbolicateCrashReportAsync (ILogs logs, ILog log, ILogFile report)
-		{
-			var symbolicatecrash = Path.Combine (XcodeRoot, "Contents/SharedFrameworks/DTDeviceKitBase.framework/Versions/A/Resources/symbolicatecrash");
-			if (!File.Exists (symbolicatecrash))
-				symbolicatecrash = Path.Combine (XcodeRoot, "Contents/SharedFrameworks/DVTFoundation.framework/Versions/A/Resources/symbolicatecrash");
-
-			if (!File.Exists (symbolicatecrash)) {
-				log.WriteLine ("Can't symbolicate {0} because the symbolicatecrash script {1} does not exist", report.Path, symbolicatecrash);
-				return report;
-			}
-
-			var name = Path.GetFileName (report.Path);
-			var symbolicated = logs.Create (Path.ChangeExtension (name, ".symbolicated.log"), $"Symbolicated crash report: {name}", timestamp: false);
-			var environment = new Dictionary<string, string> { { "DEVELOPER_DIR", Path.Combine (XcodeRoot, "Contents", "Developer") } };
-			var rv = await ProcessManager.ExecuteCommandAsync (symbolicatecrash, new [] { report.Path }, symbolicated, TimeSpan.FromMinutes (1), environment);
-			if (rv.Succeeded) {;
-				log.WriteLine ("Symbolicated {0} successfully.", report.Path);
-				return symbolicated;
-			} else {
-				log.WriteLine ("Failed to symbolicate {0}.", report.Path);
-				return report;
-			}
-		}
-
-		public async Task<HashSet<string>> CreateCrashReportsSnapshotAsync (ILog log, bool simulatorOrDesktop, string device)
-		{
-			var rv = new HashSet<string> ();
-
-			if (simulatorOrDesktop) {
-				var dir = Path.Combine (Environment.GetEnvironmentVariable ("HOME"), "Library", "Logs", "DiagnosticReports");
-				if (Directory.Exists (dir))
-					rv.UnionWith (Directory.EnumerateFiles (dir));
-			} else {
-				var tmp = Path.GetTempFileName ();
-				try {
-					var sb = new List<string> ();
-					sb.Add ($"--list-crash-reports={tmp}");
-					sb.Add ("--sdkroot");
-					sb.Add (XcodeRoot);
-					if (!string.IsNullOrEmpty (device)) {
-						sb.Add ("--devname");
-						sb.Add (device);
-					}
-					var result = await ProcessManager.ExecuteCommandAsync (MlaunchPath, sb, log, TimeSpan.FromMinutes (1));
-					if (result.Succeeded)
-						rv.UnionWith (File.ReadAllLines (tmp));
-				} finally {
-					File.Delete (tmp);
-				}
-			}
-
-			return rv;
-		}
-
 	}
 }
