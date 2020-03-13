@@ -80,20 +80,17 @@ namespace Xharness.Jenkins.TestTasks
 				new SimulatorsLoaderFactory (Harness),
 				new SimpleListenerFactory (),
 				new DeviceLoaderFactory (Harness, processManager),
+				AppRunnerTarget,
 				Harness,
-				ProjectFile,
-				Logs.Create ($"run-{Device.UDID}-{Timestamp}.log", "Run log"),
-				AppRunnerTarget
-			) {
-				EnsureCleanSimulatorState = clean_state,
-				LogDirectory = LogDirectory,
-				Configuration = ProjectConfiguration,
-				TimeoutMultiplier = TimeoutMultiplier,
-				Variation = Variation,
-				BuildTask = BuildTask,
-			};
-			runner.Simulators = Simulators;
-			runner.Initialize ();
+				mainLog: Logs.Create ($"run-{Device.UDID}-{Timestamp}.log", "Run log"),
+				projectFilePath: ProjectFile,				
+				ensureCleanSimulatorState: clean_state,
+				logDirectory: LogDirectory,
+				configuration: ProjectConfiguration,
+				timeoutMultiplier: TimeoutMultiplier,
+				variation: Variation,
+				buildTask: BuildTask,
+				simulators: Simulators);
 		}
 
 		Task<IAcquiredResource> AcquireResourceAsync ()

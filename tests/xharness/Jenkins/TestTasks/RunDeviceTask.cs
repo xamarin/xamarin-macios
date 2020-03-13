@@ -83,20 +83,17 @@ namespace Xharness.Jenkins.TestTasks
 						new SimulatorsLoaderFactory (Harness),
 						new SimpleListenerFactory (),
 						new DeviceLoaderFactory (Harness, processManager),
+						AppRunnerTarget,
 						Harness,
-						ProjectFile,
-						uninstall_log,
-						AppRunnerTarget
-					) {
-						LogDirectory = LogDirectory,
-						MainLog = uninstall_log,
-						DeviceName = Device.Name,
-						CompanionDeviceName = CompanionDevice?.Name,
-						Configuration = ProjectConfiguration,
-						TimeoutMultiplier = TimeoutMultiplier,
-						Variation = Variation,
-						BuildTask = BuildTask,
-					};
+						projectFilePath: ProjectFile,
+						mainLog: uninstall_log,
+						configuration: ProjectConfiguration,
+						logDirectory: LogDirectory,
+						deviceName: Device.Name,
+						companionDeviceName: CompanionDevice?.Name,
+						timeoutMultiplier: TimeoutMultiplier,
+						variation: Variation,
+						buildTask: BuildTask);
 
 					// Sometimes devices can't upgrade (depending on what has changed), so make sure to uninstall any existing apps first.
 					if (Jenkins.UninstallTestApp) {
@@ -118,8 +115,8 @@ namespace Xharness.Jenkins.TestTasks
 								FailureMessage = $"Install failed, exit code: {install_result.ExitCode}.";
 								ExecutionResult = TestExecutingResult.Failed;
 								if (Harness.InCI)
-									XmlResultParser.GenerateFailure (Logs, "install", runner.AppName, runner.Variation,
-										$"AppInstallation on {runner.DeviceName}", $"Install failed on {runner.DeviceName}, exit code: {install_result.ExitCode}",
+									XmlResultParser.GenerateFailure (Logs, "install", runner.AppInformation.AppName, Variation,
+										$"AppInstallation on {Device.Name}", $"Install failed on {Device.Name}, exit code: {install_result.ExitCode}",
 										install_log.FullPath, Harness.XmlJargon);
 							}
 						} finally {
@@ -148,18 +145,18 @@ namespace Xharness.Jenkins.TestTasks
 								new SimulatorsLoaderFactory (Harness),
 								new SimpleListenerFactory (),
 								new DeviceLoaderFactory (Harness, processManager),
+								AppRunnerTarget,
 								Harness,
-								ProjectFile,
-								Logs.Create ($"extension-run-{Device.UDID}-{Timestamp}.log", "Extension run log"),
-								AppRunnerTarget
-							) {
-								LogDirectory = LogDirectory,
-								DeviceName = Device.Name,
-								CompanionDeviceName = CompanionDevice?.Name,
-								Configuration = ProjectConfiguration,
-								Variation = Variation,
-								BuildTask = BuildTask,
-							};
+								projectFilePath: ProjectFile,
+								mainLog: Logs.Create ($"extension-run-{Device.UDID}-{Timestamp}.log", "Extension run log"),
+								configuration: ProjectConfiguration,
+								logDirectory: LogDirectory,
+								deviceName: Device.Name,
+								companionDeviceName: CompanionDevice?.Name,
+								timeoutMultiplier: TimeoutMultiplier,
+								variation: Variation,
+								buildTask: BuildTask);
+
 							additional_runner = todayRunner;
 							await todayRunner.RunAsync ();
 							foreach (var log in todayRunner.Logs.Where ((v) => !v.Description.StartsWith ("Extension ", StringComparison.Ordinal)))

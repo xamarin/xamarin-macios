@@ -626,10 +626,11 @@ namespace Xharness
 					new SimulatorsLoaderFactory(this),
 					new SimpleListenerFactory(),
 					new DeviceLoaderFactory(this, ProcessManager),
+					Target,
 					this,
-					project.Path,
 					HarnessLog,
-					Target);
+					project.Path,
+					Configuration);
 
 				using (var install_log = new AppInstallMonitorLog (runner.MainLog)) {
 					var rv = runner.InstallAsync (install_log.CancellationToken).Result;
@@ -650,10 +651,11 @@ namespace Xharness
 					new SimulatorsLoaderFactory(this),
 					new SimpleListenerFactory(),
 					new DeviceLoaderFactory(this, ProcessManager),
+					Target,
 					this,
-					project.Path,
 					HarnessLog,
-					Target);
+					project.Path,
+					Configuration);
 
 				var rv = runner.UninstallAsync ().Result;
 				if (!rv.Succeeded)
@@ -672,10 +674,11 @@ namespace Xharness
 					new SimulatorsLoaderFactory(this),
 					new SimpleListenerFactory(),
 					new DeviceLoaderFactory(this, ProcessManager),
+					Target,
 					this,
-					project.Path,
 					HarnessLog,
-					Target);
+					project.Path,
+					Configuration);
 
 				var rv = runner.RunAsync ().Result;
 				if (rv != 0)
