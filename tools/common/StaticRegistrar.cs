@@ -727,11 +727,6 @@ namespace Registrar {
 			ErrorHelper.Show (ErrorHelper.CreateWarning (code, message, args));
 		}
 
-		protected override bool IsCorlibType (TypeReference type)
-		{
-			return type.Resolve ().Module.Assembly.Name.Name == "mscorlib";
-		}
-
 		public static int GetValueTypeSize (TypeDefinition type, bool is_64_bits)
 		{
 			switch (type.FullName) {

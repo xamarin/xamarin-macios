@@ -351,6 +351,7 @@ COMPRESSION_SOURCES = \
 	Compression/Deflater.cs \
 	Compression/Enums.cs \
 	Compression/Inflater.cs \
+	Compression/TaskToApm.cs \
 
 # Contacts
 

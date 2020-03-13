@@ -31,16 +31,40 @@ namespace Xharness
 		Version XcodeVersion { get; }
 		Task<ProcessExecutionResult> ExecuteXcodeCommandAsync (string executable, IList<string> args, ILog log, TimeSpan timeout);
 	}
+	public class HarnessConfiguration {
+		public bool AutoConf { get; set; }
+		public string Configuration { get; set; } = "Debug";
+		public bool DryRun { get; set; }
+		public Dictionary<string, string> EnvironmentVariables { get; set; } = new Dictionary<string, string> ();
+		public bool? IncludeSystemPermissionTests { get; set; }
+		public List<iOSTestProject> IOSTestProjects { get; set; } = new List<iOSTestProject> ();
+		public string JenkinsConfiguration { get; set; }
+		public HashSet<string> Labels { get; set; } = new HashSet<string> ();
+		public string LogDirectory { get; set; } = Environment.CurrentDirectory;
+		public bool Mac { get; set; }
+		public string MarkdownSummaryPath { get; set; }
+		public string PeriodicCommand { get; set; }
+		public string PeriodicCommandArguments { get; set; }
+		public TimeSpan PeriodicCommandInterval { get; set; }
+		public string RootDirectory { get; set; }
+		public string SdkRoot { get; set; }
+		public AppRunnerTarget Target { get; set; }
+		public double TimeoutInMinutes { get; set; } = 15;
+		public bool UseSystemXamarinIOSMac { get; set; }
+		public int Verbosity { get; set; }
+		public string WatchOSAppTemplate { get; set; }
+		public string WatchOSContainerTemplate { get; set; }
+		public XmlResultJargon XmlJargon { get; set; } = XmlResultJargon.NUnitV3;
+	}
 
 	public class Harness : IHarness
 	{
-		public HarnessAction Action { get; set; }
-		public int Verbosity { get; set; }
+		public HarnessAction Action { get; }
+		public int Verbosity { get; }
 		public ILog HarnessLog { get; set; }
-		public bool UseSystem { get; set; } // if the system XI/XM should be used, or the locally build XI/XM.
-		public HashSet<string> Labels { get; } = new HashSet<string> ();
-		public XmlResultJargon XmlJargon { get; set; } = XmlResultJargon.NUnitV3;
-		public IProcessManager ProcessManager { get; set; } = new ProcessManager ();
+		public HashSet<string> Labels { get; }
+		public XmlResultJargon XmlJargon { get; }
+		public IProcessManager ProcessManager { get; }
 
 		public string XIBuildPath {
 			get { return Path.GetFullPath (Path.Combine (RootDirectory, "..", "tools", "xibuild", "xibuild")); }
@@ -80,52 +104,87 @@ namespace Xharness
 			}
 		}
 
-		public List<iOSTestProject> IOSTestProjects { get; set; } = new List<iOSTestProject> ();
-		public List<MacTestProject> MacTestProjects { get; set; } = new List<MacTestProject> ();
+		public List<iOSTestProject> IOSTestProjects { get; }
+		public List<MacTestProject> MacTestProjects { get; } = new List<MacTestProject> ();
 
 		// Configure
-		public bool AutoConf { get; set; }
-		public bool Mac { get; set; }
-		public string WatchOSContainerTemplate { get; set; }
-		public string WatchOSAppTemplate { get; set; }
-		public string WatchOSExtensionTemplate { get; set; }
-		public string TodayContainerTemplate { get; set; }
-		public string TodayExtensionTemplate { get; set; }
-		public string BCLTodayExtensionTemplate { get; set; }
-		public string MONO_PATH { get; set; } // Use same name as in Makefiles, so that a grep finds it.
-		public string TVOS_MONO_PATH { get; set; } // Use same name as in Makefiles, so that a grep finds it.
-		public bool INCLUDE_IOS { get; set; }
-		public bool INCLUDE_TVOS { get; set; }
-		public bool INCLUDE_WATCH { get; set; }
-		public bool INCLUDE_MAC { get; set; }
-		public string JENKINS_RESULTS_DIRECTORY { get; set; } // Use same name as in Makefiles, so that a grep finds it.
-		public string MAC_DESTDIR { get; set; }
-		public string IOS_DESTDIR { get; set; }
-		public string MONO_IOS_SDK_DESTDIR { get; set; }
-		public string MONO_MAC_SDK_DESTDIR { get; set; }
-		public bool IncludeMac32 { get; set; }
-		public bool ENABLE_XAMARIN { get; set; }
+		readonly bool useSystemXamarinIOSMac; // if the system XI/XM should be used, or the locally build XI/XM.
+		readonly bool autoConf;
+		readonly bool mac;
+
+		public string WatchOSContainerTemplate { get; private set; }
+		public string WatchOSAppTemplate { get; private set; }
+		public string WatchOSExtensionTemplate { get; private set; }
+		public string TodayContainerTemplate { get; private set; }
+		public string TodayExtensionTemplate { get; private set; }
+		public string BCLTodayExtensionTemplate { get; private set; }
+		public string MONO_PATH { get; private set; } // Use same name as in Makefiles, so that a grep finds it.
+		public string TVOS_MONO_PATH { get; private set; } // Use same name as in Makefiles, so that a grep finds it.
+		public bool INCLUDE_IOS { get; private set; }
+		public bool INCLUDE_TVOS { get; private set; }
+		public bool INCLUDE_WATCH { get; private set; }
+		public bool INCLUDE_MAC { get; private set; }
+		public string JENKINS_RESULTS_DIRECTORY { get; private set; } // Use same name as in Makefiles, so that a grep finds it.
+		public string MAC_DESTDIR { get; private set; }
+		public string IOS_DESTDIR { get; private set; }
+		public string MONO_IOS_SDK_DESTDIR { get; private set; }
+		public string MONO_MAC_SDK_DESTDIR { get; private set; }
+		public bool ENABLE_XAMARIN { get; private set; }
+		public string DOTNET { get; private set; }
 
 		// Run
-		public AppRunnerTarget Target { get; set; }
-		public string SdkRoot { get; set; }
-		public string Configuration { get; set; } = "Debug";
-		public string LogFile { get; set; }
-		public string LogDirectory { get; set; } = Environment.CurrentDirectory;
-		public double Timeout { get; set; } = 15; // in minutes
-		public double LaunchTimeout { get; set; } // in minutes
-		public bool DryRun { get; set; } // Most things don't support this. If you need it somewhere, implement it!
-		public string JenkinsConfiguration { get; set; }
-		public Dictionary<string, string> EnvironmentVariables { get; set; } = new Dictionary<string, string> ();
-		public string MarkdownSummaryPath { get; set; }
-		public string PeriodicCommand { get; set; }
-		public string PeriodicCommandArguments { get; set; }
-		public TimeSpan PeriodicCommandInterval { get; set; }
+		public AppRunnerTarget Target { get; }
+		public string SdkRoot { get; private set; }
+		public string Configuration { get; }
+		public string LogDirectory { get; }
+		public double Timeout { get; } = 15; // in minutes
+		public double LaunchTimeout { get; } // in minutes
+		public bool DryRun { get; } // Most things don't support this. If you need it somewhere, implement it!
+		public string JenkinsConfiguration { get; }
+		public Dictionary<string, string> EnvironmentVariables { get; }
+		public string MarkdownSummaryPath { get; }
+		public string PeriodicCommand { get; }
+		public string PeriodicCommandArguments { get; }
+		public TimeSpan PeriodicCommandInterval { get; }
 		// whether tests that require access to system resources (system contacts, photo library, etc) should be executed or not
 		public bool? IncludeSystemPermissionTests { get; set; }
 
-		public Harness ()
+		public Harness (IProcessManager processManager, HarnessAction action, HarnessConfiguration configuration)
 		{
+			ProcessManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
+			Action = action;
+			
+			if (configuration is null)
+				throw new ArgumentNullException (nameof (configuration));
+
+			autoConf = configuration.AutoConf;
+			Configuration = configuration.Configuration ?? throw new ArgumentNullException (nameof (configuration));
+			DryRun = configuration.DryRun;
+			IncludeSystemPermissionTests = configuration.IncludeSystemPermissionTests;
+			IOSTestProjects = configuration.IOSTestProjects;
+			JenkinsConfiguration = configuration.JenkinsConfiguration;
+			LogDirectory = configuration.LogDirectory ?? throw new ArgumentNullException (nameof (configuration.LogDirectory));
+			mac = configuration.Mac;
+			MarkdownSummaryPath = configuration.MarkdownSummaryPath;
+			PeriodicCommand = configuration.PeriodicCommand;
+			PeriodicCommandArguments = configuration.PeriodicCommandArguments;
+			PeriodicCommandInterval = configuration.PeriodicCommandInterval;
+			RootDirectory = configuration.RootDirectory;
+			SdkRoot = configuration.SdkRoot;
+			Target = configuration.Target;
+			Timeout = configuration.TimeoutInMinutes;
+			useSystemXamarinIOSMac = configuration.UseSystemXamarinIOSMac;
+			Verbosity = configuration.Verbosity;
+			WatchOSAppTemplate = configuration.WatchOSAppTemplate;
+			WatchOSContainerTemplate = configuration.WatchOSContainerTemplate;
+			XmlJargon = configuration.XmlJargon;
+
+			if (configuration.Labels != null)
+				Labels = new HashSet<string> (configuration.Labels);
+			
+			if (configuration.EnvironmentVariables != null)
+				EnvironmentVariables = new Dictionary<string, string> (configuration.EnvironmentVariables);
+
 			LaunchTimeout = InCI ? 3 : 120;
 		}
 
@@ -270,6 +329,7 @@ namespace Xharness
 			MONO_IOS_SDK_DESTDIR = make_config ["MONO_IOS_SDK_DESTDIR"];
 			MONO_MAC_SDK_DESTDIR = make_config ["MONO_MAC_SDK_DESTDIR"];
 			ENABLE_XAMARIN = make_config.ContainsKey ("ENABLE_XAMARIN") && !string.IsNullOrEmpty (make_config ["ENABLE_XAMARIN"]);
+			DOTNET = make_config ["DOTNET"];
 		}
 		 
 		int AutoConfigureMac (bool generate_projects)
@@ -450,7 +510,7 @@ namespace Xharness
 
 		void ParseConfigFiles ()
 		{
-			ParseConfigFiles (FindConfigFiles (UseSystem ? "test-system.config" : "test.config"));
+			ParseConfigFiles (FindConfigFiles (useSystemXamarinIOSMac ? "test-system.config" : "test.config"));
 			ParseConfigFiles (FindConfigFiles ("Make.config.local"));
 			ParseConfigFiles (FindConfigFiles ("Make.config"));
 		}
@@ -478,7 +538,7 @@ namespace Xharness
 
 		public int Configure ()
 		{
-			return Mac ? AutoConfigureMac (true) : ConfigureIOS ();
+			return mac ? AutoConfigureMac (true) : ConfigureIOS ();
 		}
 
 		int ConfigureIOS ()
@@ -489,7 +549,7 @@ namespace Xharness
 			var watchos_targets = new List<WatchOSTarget> ();
 			var today_targets = new List<TodayExtensionTarget> ();
 
-			if (AutoConf)
+			if (autoConf)
 				AutoConfigureIOS ();
 
 			foreach (var monoNativeInfo in IOSTestProjects.Where (x => x.MonoNativeInfo != null).Select (x => x.MonoNativeInfo))
@@ -689,7 +749,7 @@ namespace Xharness
 
 		public int Jenkins ()
 		{
-			if (AutoConf) {
+			if (autoConf) {
 				AutoConfigureIOS ();
 				AutoConfigureMac (false);
 			}

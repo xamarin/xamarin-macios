@@ -41,15 +41,25 @@ namespace Xamarin.Utils
 		public static readonly TargetFramework Xamarin_Mac_2_0_Mobile = Parse ("Xamarin.Mac,Version=v2.0,Profile=Mobile");
 		public static readonly TargetFramework Xamarin_Mac_4_5_Full = Parse ("Xamarin.Mac,Version=v4.5,Profile=Full");
 		public static readonly TargetFramework Xamarin_Mac_4_5_System = Parse ("Xamarin.Mac,Version=v4.5,Profile=System");
+
+		public static readonly TargetFramework DotNet_5_0_iOS = Parse (".NETCoreApp,Version=5.0,Profile=ios"); // Short form: net5.0-ios
+		public static readonly TargetFramework DotNet_5_0_tvOS = Parse (".NETCoreApp,Version=5.0,Profile=tvos"); // Short form: net5.0-tvos
+		public static readonly TargetFramework DotNet_5_0_watchOS = Parse (".NETCoreApp,Version=5.0,Profile=watchos"); // Short form: net5.0-watchos
+		public static readonly TargetFramework DotNet_5_0_macOS = Parse (".NETCoreApp,Version=5.0,Profile=macos"); // Short form: net5.0-macos
 #if MTOUCH
 		public static readonly TargetFramework [] ValidFrameworks = new TargetFramework[] { Xamarin_iOS_1_0, Xamarin_WatchOS_1_0, Xamarin_TVOS_1_0 };
 #elif BGENERATOR
 		public static readonly TargetFramework [] ValidFrameworks = new TargetFramework[]
 		{
 			Xamarin_iOS_1_0, Xamarin_TVOS_1_0, Xamarin_WatchOS_1_0,
-			Xamarin_Mac_2_0_Mobile, Xamarin_Mac_4_5_Full, Xamarin_Mac_4_5_System
+			Xamarin_Mac_2_0_Mobile, Xamarin_Mac_4_5_Full, Xamarin_Mac_4_5_System,
+			DotNet_5_0_iOS, DotNet_5_0_macOS, DotNet_5_0_tvOS, DotNet_5_0_watchOS,
 		};
 #endif
+
+		public bool IsDotNet {
+			get { return Identifier == ".NETCoreApp" && Version.Major >= 5; }
+		}
 
 		public static TargetFramework Parse (string targetFrameworkString)
 		{
@@ -209,6 +219,19 @@ namespace Xamarin.Utils
 					return ApplePlatform.WatchOS;
 				case "Xamarin.TVOS":
 					return ApplePlatform.TVOS;
+				case ".NETCoreApp":
+					switch (Profile) {
+					case "ios":
+						return ApplePlatform.iOS;
+					case "tvos":
+						return ApplePlatform.TVOS;
+					case "watchos":
+						return ApplePlatform.WatchOS;
+					case "macos":
+						return ApplePlatform.MacOSX;
+					default:
+						throw new InvalidOperationException (string.Format ("Invalid .NETCoreApp Profile for Apple platforms: {0}", Profile));
+					}
 				default:
 					return ApplePlatform.MacOSX;
 				}

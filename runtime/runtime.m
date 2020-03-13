@@ -1362,8 +1362,11 @@ xamarin_initialize ()
 
 	mono_runtime_invoke (runtime_initialize, NULL, params, &exc);
 
-	if (exc)
+	if (exc) {
+		NSLog (@PRODUCT ": An exception occurred when calling Runtime.Initialize:\n%@", xamarin_print_all_exceptions (exc));
 		xamarin_process_managed_exception (exc);
+		xamarin_assertion_message ("Can't continue if Runtime.Initialize fails.");
+	}
 
 	if (!register_assembly (assembly, &exception_gchandle))
 		xamarin_process_managed_exception_gchandle (exception_gchandle);

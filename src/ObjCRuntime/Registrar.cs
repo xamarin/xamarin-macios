@@ -1106,7 +1106,6 @@ namespace Registrar {
 		protected abstract IEnumerable<TField> GetFields (TType type); // Must return all instance fields. May return static fields (they are filtered out automatically).
 		protected abstract TType GetFieldType (TField field);
 		protected abstract int GetValueTypeSize (TType type);
-		protected abstract bool IsCorlibType (TType type);
 		protected abstract bool IsSimulatorOrDesktop { get; }
 		protected abstract bool Is64Bits { get; }
 		protected abstract Exception CreateExceptionImpl (int code, bool error, Exception innerException, TMethod method, string message, params object[] args);

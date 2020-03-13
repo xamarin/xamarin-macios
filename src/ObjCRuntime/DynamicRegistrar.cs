@@ -193,11 +193,6 @@ namespace Registrar {
 			return Marshal.SizeOf (type);
 		}
 
-		protected override bool IsCorlibType (Type type)
-		{
-			return type.Assembly == typeof(object).Assembly;
-		}
-
 		protected override IEnumerable<MethodBase> CollectConstructors (Type type)
 		{
 			return type.GetConstructors (BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
