@@ -6,6 +6,7 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev.Tasks;
+using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.iOS.Tasks
 {
@@ -35,7 +36,7 @@ namespace Xamarin.iOS.Tasks
 
 			if (!string.IsNullOrEmpty (Option)) {
 				if (!Enum.TryParse (Option, out option)) {
-					Log.LogError ("Unknown search option: {0}", Option);
+					Log.LogError (MSBStrings.E0050, Option);
 					return false;
 				}
 			} else {

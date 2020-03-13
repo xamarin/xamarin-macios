@@ -8,6 +8,7 @@ using Microsoft.Build.Utilities;
 using Xamarin.MacDev.Tasks;
 using Xamarin.MacDev;
 using Xamarin.Utils;
+using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.iOS.Tasks
 {
@@ -132,7 +133,7 @@ namespace Xamarin.iOS.Tasks
 			if (string.IsNullOrEmpty (SdkVersion)) {
 				requestedSdkVersion = IPhoneSdkVersion.UseDefault;
 			} else if (!IPhoneSdkVersion.TryParse (SdkVersion, out requestedSdkVersion)) {
-				Log.LogError ("Could not parse the SDK version '{0}'", SdkVersion);
+				Log.LogError (MSBStrings.E0025, SdkVersion);
 				return;
 			}
 
@@ -142,32 +143,32 @@ namespace Xamarin.iOS.Tasks
 
 				if (sdkVersion.IsUseDefault || !currentSdk.SdkIsInstalled (sdkVersion, SdkIsSimulator)) {
 					if (requestedSdkVersion.IsUseDefault) {
-						Log.LogError ("The Apple TVOS SDK is not installed.");
+						Log.LogError (MSBStrings.E0026);
 					} else {
-						Log.LogError ("The TVOS SDK version '{0}' is not installed, and no newer version was found.", requestedSdkVersion.ToString ());
+						Log.LogError (MSBStrings.E0027, requestedSdkVersion.ToString ());
 					}
 					return;
 				}
-				Log.LogWarning ("The TVOS SDK version '{0}' is not installed. Using newer version '{1}' instead'.", requestedSdkVersion, sdkVersion);
+				Log.LogWarning (MSBStrings.E0028, requestedSdkVersion, sdkVersion);
 			}
 
 			SdkVersion = sdkVersion.ToString ();
 
 			var platformDir = currentSdk.GetPlatformPath (SdkIsSimulator);
 			if (string.IsNullOrEmpty (platformDir) || !Directory.Exists (platformDir))
-				Log.LogError ("Could not locate the TVOS platform directory at path '{0}'", platformDir);
+				Log.LogError (MSBStrings.E0029, platformDir);
 
 			SdkRoot = currentSdk.GetSdkPath (sdkVersion, SdkIsSimulator);
 			if (string.IsNullOrEmpty (SdkRoot) || !Directory.Exists (SdkRoot))
-				Log.LogError ("Could not locate the TVOS '{0}' SDK at path '{1}'", SdkVersion, SdkRoot);
+				Log.LogError (MSBStrings.E0030, SdkVersion, SdkRoot);
 
 			SdkUsrPath = DirExists ("SDK Usr directory", Path.Combine (currentSdk.DeveloperRoot, "usr"));
 			if (string.IsNullOrEmpty (SdkUsrPath))
-				Log.LogError ("Could not locate the TVOS '{0}' SDK usr path at '{1}'", SdkVersion, SdkRoot);
+				Log.LogError (MSBStrings.E0031, SdkVersion, SdkRoot);
 
 			SdkBinPath = DirExists ("SDK bin directory", Path.Combine (SdkUsrPath, "bin"));
 			if (string.IsNullOrEmpty (SdkBinPath))
-				Log.LogError ("Could not locate SDK bin directory");
+				Log.LogError (MSBStrings.E0032);
 
 			SdkPlatform = SdkIsSimulator ? "AppleTVSimulator" : "AppleTVOS";
 		}
@@ -180,7 +181,7 @@ namespace Xamarin.iOS.Tasks
 			if (string.IsNullOrEmpty (SdkVersion)) {
 				requestedSdkVersion = IPhoneSdkVersion.UseDefault;
 			} else if (!IPhoneSdkVersion.TryParse (SdkVersion, out requestedSdkVersion)) {
-				Log.LogError ("Could not parse the SDK version '{0}'", SdkVersion);
+				Log.LogError (MSBStrings.E0025, SdkVersion);
 				return;
 			}
 
@@ -190,32 +191,32 @@ namespace Xamarin.iOS.Tasks
 
 				if (sdkVersion.IsUseDefault || !currentSDK.SdkIsInstalled (sdkVersion, SdkIsSimulator)) {
 					if (requestedSdkVersion.IsUseDefault) {
-						Log.LogError ("The Apple Watch SDK is not installed.");
+						Log.LogError (MSBStrings.E0026);
 					} else {
-						Log.LogError ("The Watch SDK version '{0}' is not installed, and no newer version was found.", requestedSdkVersion.ToString ());
+						Log.LogError (MSBStrings.E0033, requestedSdkVersion.ToString ());
 					}
 					return;
 				}
-				Log.LogWarning ("The Watch SDK version '{0}' is not installed. Using newer version '{1}' instead'.", requestedSdkVersion, sdkVersion);
+				Log.LogWarning (MSBStrings.W0034, requestedSdkVersion, sdkVersion);
 			}
 
 			SdkVersion = sdkVersion.ToString ();
 
 			var platformDir = currentSDK.GetPlatformPath (SdkIsSimulator);
 			if (string.IsNullOrEmpty (platformDir) || !Directory.Exists (platformDir))
-				Log.LogError ("Could not locate the WatchOS platform directory at path '{0}'", platformDir);
+				Log.LogError (MSBStrings.E0035, platformDir);
 
 			SdkRoot = currentSDK.GetSdkPath (sdkVersion, SdkIsSimulator);
 			if (string.IsNullOrEmpty (SdkRoot) || !Directory.Exists (SdkRoot))
-				Log.LogError ("Could not locate the WatchOS '{0}' SDK at path '{1}'", SdkVersion, SdkRoot);
-			
+				Log.LogError (MSBStrings.E0036, SdkVersion, SdkRoot);
+
 			SdkUsrPath = DirExists ("SDK Usr directory", Path.Combine (currentSDK.DeveloperRoot, "usr"));
 			if (string.IsNullOrEmpty (SdkUsrPath))
-				Log.LogError ("Could not locate the WatchOS '{0}' SDK usr path at '{1}'", SdkVersion, SdkRoot);
-				
+				Log.LogError (MSBStrings.E0037, SdkVersion, SdkRoot);
+
 			SdkBinPath = DirExists ("SDK bin directory", Path.Combine (SdkUsrPath, "bin"));
 			if (string.IsNullOrEmpty (SdkBinPath))
-				Log.LogError ("Could not locate SDK bin directory");
+				Log.LogError (MSBStrings.E0032);
 
 			SdkPlatform = SdkIsSimulator ? "WatchSimulator" : "WatchOS";
 		}
@@ -228,7 +229,7 @@ namespace Xamarin.iOS.Tasks
 			if (string.IsNullOrEmpty (SdkVersion)) {
 				requestedSdkVersion = IPhoneSdkVersion.UseDefault;
 			} else if (!IPhoneSdkVersion.TryParse (SdkVersion, out requestedSdkVersion)) {
-				Log.LogError ("Could not parse the SDK version '{0}'", SdkVersion);
+				Log.LogError (MSBStrings.E0025, SdkVersion);
 				return;
 			}
 
@@ -238,25 +239,24 @@ namespace Xamarin.iOS.Tasks
 
 				if (sdkVersion.IsUseDefault || !currentSDK.SdkIsInstalled (sdkVersion, SdkIsSimulator)) {
 					if (requestedSdkVersion.IsUseDefault) {
-						Log.LogError ("The Apple iOS SDK is not installed.");
+						Log.LogError (MSBStrings.E0038);
 					} else {
-						Log.LogError ("The iOS SDK version '{0}' is not installed, and no newer version was found.", requestedSdkVersion.ToString ());
+						Log.LogError (MSBStrings.E0039, requestedSdkVersion.ToString ());
 					}
 					return;
 				}
-				Log.LogWarning ("The iOS SDK version '{0}' is not installed. Using newer version '{1}' instead'.", requestedSdkVersion, sdkVersion);
+				Log.LogWarning (MSBStrings.E0040, requestedSdkVersion, sdkVersion);
 			}
 
 			SdkVersion = sdkVersion.ToString ();
 
 			var platformDir = currentSDK.GetPlatformPath (SdkIsSimulator);
 			if (string.IsNullOrEmpty (platformDir) || !Directory.Exists (platformDir))
-				Log.LogError ("Could not locate the iOS platform directory at path '{0}'", platformDir);
+				Log.LogError (MSBStrings.E0041, platformDir);
 
 			SdkRoot = currentSDK.GetSdkPath (sdkVersion, SdkIsSimulator);
 			if (string.IsNullOrEmpty (SdkRoot) || !Directory.Exists (SdkRoot))
-				Log.LogError ("Could not locate the iOS '{0}' SDK at path '{1}'", SdkVersion, SdkRoot);
-
+				Log.LogError (MSBStrings.E0042, SdkVersion, SdkRoot);
 			// Note: Developer/Platforms/iPhoneOS.platform/Developer/usr is a physical directory, but
 			// Developer/Platforms/iPhoneSimulator.platform/Developer/bin has always been a symlink
 			// to Developer/bin and starting with Xcode 7 Beta 2, the usr symlink no longer exists.
@@ -268,12 +268,12 @@ namespace Xamarin.iOS.Tasks
 			if (string.IsNullOrEmpty (SdkUsrPath)) {
 				SdkUsrPath = DirExists ("SDK Usr directory", Path.Combine (currentSDK.DeveloperRoot, "usr"));
 				if (string.IsNullOrEmpty (SdkUsrPath))
-					Log.LogError ("Could not locate the iOS '{0}' SDK usr path at '{1}'", SdkVersion, SdkRoot);
+					Log.LogError (MSBStrings.E0043, SdkVersion, SdkRoot);
 			}
 
 			SdkBinPath = DirExists ("SDK bin directory", Path.Combine (SdkUsrPath, "bin"));
 			if (string.IsNullOrEmpty (SdkBinPath))
-				Log.LogError ("Could not locate SDK bin directory");
+				Log.LogError (MSBStrings.E0032);
 
 			SdkPlatform = SdkIsSimulator ? "iPhoneSimulator" : "iPhoneOS";
 		}
@@ -288,7 +288,7 @@ namespace Xamarin.iOS.Tasks
 					ideSdkPath = "(Project > SDK Locations > Apple > Apple SDK)";
 				else
 					ideSdkPath = "(Tools > Options > Xamarin > iOS Settings > Apple SDK)";
-				Log.LogError ("Could not find a valid Xcode app bundle at '{0}'. Please update your Apple SDK location in Visual Studio's preferences {1}.", AppleSdkSettings.InvalidDeveloperRoot, ideSdkPath);
+				Log.LogError (MSBStrings.E0044, AppleSdkSettings.InvalidDeveloperRoot, ideSdkPath);
 				return false;
 			}
 			Log.LogMessage (MessageImportance.Low, "DeveloperRoot: {0}", CurrentSdk.DeveloperRoot);
@@ -309,7 +309,7 @@ namespace Xamarin.iOS.Tasks
 				XamarinSdkRoot = IPhoneSdks.MonoTouch.SdkDir;
 
 			if (string.IsNullOrEmpty (XamarinSdkRoot) || !Directory.Exists (XamarinSdkRoot))
-				Log.LogError ("Could not find 'Xamarin.iOS'");
+				Log.LogError (MSBStrings.E0046);
 		}
 
 		string DirExists (string checkingFor, string path)
@@ -320,7 +320,7 @@ namespace Xamarin.iOS.Tasks
 
 				path = Path.GetFullPath (path);
 
-				Log.LogMessage (MessageImportance.Low, "Searching for '{0}' in '{1}'", checkingFor, path);
+				Log.LogMessage (MessageImportance.Low, MSBStrings.M0047, checkingFor, path);
 				return Directory.Exists (path) ? path : null;
 			} catch {
 				return null;

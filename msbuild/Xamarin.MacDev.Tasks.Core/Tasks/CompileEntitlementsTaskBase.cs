@@ -6,6 +6,7 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev;
+using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.MacDev.Tasks
 {
@@ -70,12 +71,12 @@ namespace Xamarin.MacDev.Tasks
 
 			if (profile == null) {
 				if (!warnedTeamIdentifierPrefix && pstr.Value.Contains ("$(TeamIdentifierPrefix)")) {
-					Log.LogWarning (null, null, null, Entitlements, 0, 0, 0, 0, "Cannot expand $(TeamIdentifierPrefix) in Entitlements.plist without a provisioning profile.");
+					Log.LogWarning (null, null, null, Entitlements, 0, 0, 0, 0, MSBStrings.W0108);
 					warnedTeamIdentifierPrefix = true;
 				}
 				
 				if (!warnedAppIdentifierPrefix && pstr.Value.Contains ("$(AppIdentifierPrefix)")) {
-					Log.LogWarning (null, null, null, Entitlements, 0, 0, 0, 0, "Cannot expand $(AppIdentifierPrefix) in Entitlements.plist without a provisioning profile.");
+					Log.LogWarning (null, null, null, Entitlements, 0, 0, 0, 0, MSBStrings.W0109);
 					warnedAppIdentifierPrefix = true;
 				}
 			}
@@ -251,9 +252,9 @@ namespace Xamarin.MacDev.Tasks
 				    item.Key == "com.apple.developer.icloud-container-environment" ||
 				    item.Key == "com.apple.developer.icloud-services") {
 					if (profile == null)
-						Log.LogWarning (null, null, null, Entitlements, 0, 0, 0, 0, "iCloud entitlements such as '" + item.Key + "' require a Provisioning Profile.");
+						Log.LogWarning (null, null, null, Entitlements, 0, 0, 0, 0, MSBStrings.W0110, item.Key);
 					else if (!profile.Entitlements.ContainsKey (item.Key))
-						Log.LogWarning (null, null, null, Entitlements, 0, 0, 0, 0, "The iCloud entitlement '" + item.Key + "' is not supported by the Provisioning Profile.");
+						Log.LogWarning (null, null, null, Entitlements, 0, 0, 0, 0, MSBStrings.W0111, item.Key);
 				} else if (item.Key == ApplicationIdentifierKey) {
 					var str = value as PString;
 
@@ -334,7 +335,7 @@ namespace Xamarin.MacDev.Tasks
 
 			if (!string.IsNullOrEmpty (ProvisioningProfile)) {
 				if ((profile = GetMobileProvision (platform, ProvisioningProfile)) == null) {
-					Log.LogError ("Could not locate the provisioning profile with a Name or UUID of {0}.", ProvisioningProfile);
+					Log.LogError (MSBStrings.E0049, ProvisioningProfile);
 					return false;
 				}
 			} else {
@@ -343,7 +344,7 @@ namespace Xamarin.MacDev.Tasks
 
 			if (!string.IsNullOrEmpty (Entitlements)) {
 				if (!File.Exists (Entitlements)) {
-					Log.LogError ("Entitlements.plist template '{0}' not found.", Entitlements);
+					Log.LogError (MSBStrings.E0112, Entitlements);
 					return false;
 				}
 
@@ -355,7 +356,7 @@ namespace Xamarin.MacDev.Tasks
 			try {
 				template = PDictionary.FromFile (path);
 			} catch (Exception ex) {
-				Log.LogError ("Error loading Entitlements.plist template '{0}': {1}", path, ex.Message);
+				Log.LogError (MSBStrings.E0113, path, ex.Message);
 				return false;
 			}
 
@@ -366,7 +367,7 @@ namespace Xamarin.MacDev.Tasks
 				Directory.CreateDirectory (Path.GetDirectoryName (CompiledEntitlements.ItemSpec));
 				WriteXcent (compiled, CompiledEntitlements.ItemSpec);
 			} catch (Exception ex) {
-				Log.LogError ("Error writing xcent file '{0}': {1}", CompiledEntitlements, ex.Message);
+				Log.LogError (MSBStrings.E0114, CompiledEntitlements, ex.Message);
 				return false;
 			}
 
@@ -386,7 +387,7 @@ namespace Xamarin.MacDev.Tasks
 				try {
 					archived.Save (path, true);
 				} catch (Exception ex) {
-					Log.LogError ("Error writing archived-expanded-entitlements.xcent file: {0}", ex.Message);
+					Log.LogError (MSBStrings.E0115, ex.Message);
 					return false;
 				}
 			}

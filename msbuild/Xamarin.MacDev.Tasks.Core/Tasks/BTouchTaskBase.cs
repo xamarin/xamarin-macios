@@ -8,6 +8,7 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
 using Xamarin.Utils;
+using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.MacDev.Tasks {
 	public abstract class BTouchTaskBase : ToolTask {
@@ -251,7 +252,7 @@ namespace Xamarin.MacDev.Tasks {
 			}
 
 			if (ApiDefinitions.Length == 0) {
-				Log.LogError ("No API definition file specified.");
+				Log.LogError (MSBStrings.E0097);
 				return false;
 			}
 
