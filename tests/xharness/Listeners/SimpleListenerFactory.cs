@@ -9,16 +9,16 @@ namespace Xharness.Listeners {
 	}
 
 	public interface ISimpleListenerFactory {
-		ListenerTransport Create (string mode, ILog listenerLog, bool isSimulator, out SimpleListener listener, out string listenerFileTemp);
+		ListenerTransport Create (RunMode mode, ILog listenerLog, bool isSimulator, out SimpleListener listener, out string listenerFileTemp);
 	}
 
 	public class SimpleListenerFactory : ISimpleListenerFactory {
 
-		public ListenerTransport Create (string mode, ILog listenerLog, bool isSimulator, out SimpleListener listener, out string listenerFileTemp)
+		public ListenerTransport Create (RunMode mode, ILog listenerLog, bool isSimulator, out SimpleListener listener, out string listenerFileTemp)
 		{
 			listenerFileTemp = null;
 			ListenerTransport transport;
-			if (mode == "watchos") {
+			if (mode == RunMode.WatchOS) {
 				transport = isSimulator ? ListenerTransport.File : ListenerTransport.Http;
 			} else {
 				transport = ListenerTransport.Tcp;

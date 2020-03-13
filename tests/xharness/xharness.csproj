@@ -74,6 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppRunner.cs" />
+    <Compile Include="AppRunnerTarget.cs" />
     <Compile Include="BCLTestImporter\BCLTestAssemblyDefinition.cs" />
     <Compile Include="BCLTestImporter\BCLTestImportTargetFactory.cs" />
     <Compile Include="BCLTestImporter\BCLTestInfoPlistGenerator.cs" />
@@ -169,16 +170,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="BCLTestImporter\Templates\" />
-    <Folder Include="BCLTestImporter\Templates\Managed\" />
-    <Folder Include="BCLTestImporter\Templates\Managed\Resources\" />
-    <Folder Include="BCLTestImporter\Templates\Managed\Resources\src\" />
-    <Folder Include="BCLTestImporter\Templates\Managed\Resources\src\common\TestRunner\" />
-    <Folder Include="BCLTestImporter\Templates\Managed\Resources\src\common\TestRunner\Core\" />
-    <Folder Include="BCLTestImporter\Templates\Managed\Resources\src\common\TestRunner\NUnit\" />
-    <Folder Include="BCLTestImporter\Templates\Managed\Resources\src\common\TestRunner\xUnit\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.iOS.csproj.in" />
     <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.macOS.csproj.in" />

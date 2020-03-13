@@ -76,7 +76,7 @@ namespace Xharness.Hardware {
 							var usable = dev.SelectSingleNode ("IsUsableForDebugging")?.InnerText;
 							Device d = new Device {
 								DeviceIdentifier = dev.SelectSingleNode ("DeviceIdentifier")?.InnerText,
-								DeviceClass = dev.SelectSingleNode ("DeviceClass")?.InnerText,
+								DeviceClass = (DeviceClass) Enum.Parse(typeof(DeviceClass), dev.SelectSingleNode ("DeviceClass")?.InnerText, true),
 								CompanionIdentifier = dev.SelectSingleNode ("CompanionIdentifier")?.InnerText,
 								Name = dev.SelectSingleNode ("Name")?.InnerText,
 								BuildVersion = dev.SelectSingleNode ("BuildVersion")?.InnerText,

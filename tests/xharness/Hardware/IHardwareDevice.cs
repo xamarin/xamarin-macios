@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Xharness;
 using Xharness.Collections;
 using Xharness.Execution;
 using Xharness.Logging;
@@ -7,7 +6,7 @@ using Xharness.Logging;
 namespace Xharness.Hardware {
 	public interface IHardwareDevice : IDevice {
 		string DeviceIdentifier { get; set; }
-		string DeviceClass { get; set; }
+		DeviceClass DeviceClass { get; set; }
 		string CompanionIdentifier { get; set; }
 		string BuildVersion { get; set; }
 		string ProductVersion { get; set; }

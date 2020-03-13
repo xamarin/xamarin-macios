@@ -18,17 +18,13 @@ using Xharness.Utilities;
 
 namespace Xharness
 {
-	public enum AppRunnerTarget
-	{
-		None,
-		Simulator_iOS,
-		Simulator_iOS32,
-		Simulator_iOS64,
-		Simulator_tvOS,
-		Simulator_watchOS,
-		Device_iOS,
-		Device_tvOS,
-		Device_watchOS,
+	public enum RunMode {
+		Sim32,
+		Sim64,
+		Classic,
+		iOS,
+		TvOS,
+		WatchOS,
 	}
 
 	public enum Extension
@@ -53,7 +49,6 @@ namespace Xharness
 		string appPath;
 		string launchAppPath;
 		string bundle_identifier;
-		string platform;
 		Extension? extension;
 		bool isSimulator;
 
@@ -129,7 +124,7 @@ namespace Xharness
 
 		public IProcessManager ProcessManager { get; set; } = new ProcessManager ();
 
-		string mode;
+		RunMode mode;
 
 		async Task<bool> FindSimulatorAsync ()
 		{
@@ -162,19 +157,19 @@ namespace Xharness
 				await devs.LoadAsync (main_log);
 			}).Wait ();
 
-			string [] deviceClasses;
+			DeviceClass [] deviceClasses;
 			switch (mode) {
-			case "ios":
-				deviceClasses = new string [] { "iPhone", "iPad", "iPod" };
+			case RunMode.iOS:
+				deviceClasses = new [] { DeviceClass.iPhone, DeviceClass.iPad, DeviceClass.iPod };
 				break;
-			case "watchos":
-				deviceClasses = new string [] { "Watch" };
+			case RunMode.WatchOS:
+				deviceClasses = new [] { DeviceClass.Watch };
 				break;
-			case "tvos":
-				deviceClasses = new string [] { "AppleTV" }; // Untested
+			case RunMode.TvOS:
+				deviceClasses = new [] { DeviceClass.AppleTV }; // Untested
 				break;
 			default:
-				throw new Exception ($"unknown mode: {mode}");
+				throw new ArgumentException (nameof(mode));
 			}
 
 			var selected = devs.ConnectedDevices.Where ((v) => deviceClasses.Contains (v.DeviceClass) && v.IsUsableForDebugging != false);
@@ -197,7 +192,7 @@ namespace Xharness
 			}
 			device_name = selected_data.Name;
 
-			if (mode == "watchos")
+			if (mode == RunMode.WatchOS)
 				companion_device_name = devs.FindCompanionDevice (main_log, selected_data).Name;
 		}
 
@@ -219,57 +214,16 @@ namespace Xharness
 			var extensionPointIdentifier = info_plist.GetNSExtensionPointIdentifier ();
 			if (!string.IsNullOrEmpty (extensionPointIdentifier))
 				extension = extensionPointIdentifier.ParseFromNSExtensionPointIdentifier ();
+			
+			mode = target.ToRunMode ();
+			isSimulator = target.IsSimulator ();
 
-			switch (Target) {
-			case AppRunnerTarget.Simulator_iOS32:
-				mode = "sim32";
-				platform = "iPhoneSimulator";
-				isSimulator = true;
-				break;
-			case AppRunnerTarget.Simulator_iOS64:
-				mode = "sim64";
-				platform = "iPhoneSimulator";
-				isSimulator = true;
-				break;
-			case AppRunnerTarget.Simulator_iOS:
-				mode = "classic";
-				platform = "iPhoneSimulator";
-				isSimulator = true;
-				break;
-			case AppRunnerTarget.Device_iOS:
-				mode = "ios";
-				platform = "iPhone";
-				isSimulator = false;
-				break;
-			case AppRunnerTarget.Simulator_tvOS:
-				mode = "tvos";
-				platform = "iPhoneSimulator";
-				isSimulator = true;
-				break;
-			case AppRunnerTarget.Device_tvOS:
-				mode = "tvos";
-				platform = "iPhone";
-				isSimulator = false;
-				break;
-			case AppRunnerTarget.Simulator_watchOS:
-				mode = "watchos";
-				platform = "iPhoneSimulator";
-				isSimulator = true;
-				break;
-			case AppRunnerTarget.Device_watchOS:
-				mode = "watchos";
-				platform = "iPhone";
-				isSimulator = false;
-				break;
-			default:
-				throw new Exception (string.Format ("Unknown target: {0}", Harness.Target));
-			}
-
+			var platform = isSimulator ? "iPhoneSimulator" : "iPhone";
 			appPath = Path.Combine (Path.GetDirectoryName (ProjectFile), csproj.GetOutputPath (platform, Configuration).Replace ('\\', '/'), appName + (isExtension ? ".appex" : ".app"));
 			if (!Directory.Exists (appPath))
 				throw new Exception (string.Format ("The app directory {0} does not exist. This is probably a bug in the test harness.", appPath));
 
-			if (mode == "watchos") {
+			if (mode == RunMode.WatchOS) {
 				launchAppPath = Directory.GetDirectories (Path.Combine (appPath, "Watch"), "*.app") [0];
 			} else {
 				launchAppPath = appPath;
@@ -299,7 +253,7 @@ namespace Xharness
 			args.Add (appPath);
 			AddDeviceName (args, companion_device_name ?? device_name);
 
-			if (mode == "watchos") {
+			if (mode == RunMode.WatchOS) {
 				args.Add ("--device");
 				args.Add ("ios,watchos");
 			}
@@ -547,7 +501,7 @@ namespace Xharness
 				args.Add ($"-setenv=NUNIT_HOSTNAME={ips.ToString ()}");
 			}
 
-			listener_log = Logs.Create ($"test-{mode}-{Harness.Timestamp}.log", LogType.TestLog.ToString (), timestamp: !useXmlOutput);
+			listener_log = Logs.Create ($"test-{mode.ToString().ToLower()}-{Harness.Timestamp}.log", LogType.TestLog.ToString (), timestamp: !useXmlOutput);
 			var transport = ListenerFactory.Create (mode, listener_log, isSimulator, out var listener, out var fn);
 			
 			args.Add ($"-argument=-app-arg:-transport:{transport}");
@@ -618,7 +572,7 @@ namespace Xharness
 				if (!await FindSimulatorAsync ())
 					return 1;
 
-				if (mode != "watchos") {
+				if (mode != RunMode.WatchOS) {
 					var stderr_tty = Marshal.PtrToStringAuto (ttyname (2));
 					if (!string.IsNullOrEmpty (stderr_tty)) {
 						args.Add ($"--stdout={stderr_tty}");
@@ -714,7 +668,7 @@ namespace Xharness
 			} else {
 				main_log.WriteLine ("*** Executing {0}/{1} on device '{2}' ***", appName, mode, device_name);
 
-				if (mode == "watchos") {
+				if (mode == RunMode.WatchOS) {
 					args.Add ("--attach-native-debugger"); // this prevents the watch from backgrounding the app.
 				} else {
 					args.Add ("--wait-for-exit");
