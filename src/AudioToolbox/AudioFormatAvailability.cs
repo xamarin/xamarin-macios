@@ -69,10 +69,11 @@ namespace AudioToolbox {
 				var res = AudioFormatPropertyNative.AudioFormatGetProperty (prop, sizeof (AudioFormatType), ref format, ref size, (IntPtr) ptr);
 				if (res != 0)
 					return null;
-
-				Array.Resize (ref data, (int) size / sizeof (T));
-				return data;
 			}
+			
+
+			Array.Resize (ref data, (int) size / sizeof (T));
+			return data;
 		}
 	}
 
