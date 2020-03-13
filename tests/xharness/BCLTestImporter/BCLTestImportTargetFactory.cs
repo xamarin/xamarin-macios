@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using Xharness.Utilities;
 
 namespace Xharness.BCLTestImporter {
 	// Class that is use as the connection between xharness and the BCLImporter
@@ -24,7 +25,7 @@ namespace Xharness.BCLTestImporter {
 				iOSMonoSDKPath = Harness.MONO_IOS_SDK_DESTDIR,
 				MacMonoSDKPath = Harness.MONO_MAC_SDK_DESTDIR,
 				Override = true,
-				GuidGenerator = Harness.NewStableGuid,
+				GuidGenerator = Helpers.GenerateStableGuid,
 				GroupTests = Harness.InCI || Harness.UseGroupedApps,
 			};
 		}
