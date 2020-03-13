@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using Xharness;
 using Xharness.BCLTestImporter.Templates;
 using Xharness.BCLTestImporter.Templates.Managed;
+using Xharness.Utilities;
 
 namespace Xharness.BCLTestImporter {
 	/// <summary>
@@ -113,7 +114,7 @@ namespace Xharness.BCLTestImporter {
 			new BclTestProjectInfo { Name = "mscorlib Part 3", assemblies = new [] { "monotouch_corlib_xunit-test.part3.dll" }, Group = "mscorlib Part 3" },
 			new BclTestProjectInfo { Name = "SystemCoreXunit Part 1", assemblies = new [] { "monotouch_System.Core_xunit-test.part1.dll" }, Group = "SystemCoreXunit Part 1" },
 			new BclTestProjectInfo { Name = "SystemCoreXunit Part 2", assemblies = new [] { "monotouch_System.Core_xunit-test.part2.dll" }, Group = "SystemCoreXunit Part 2" },
-			new BclTestProjectInfo { Name = "SystemXunit", assemblies = new [] { "monotouch_System_xunit-test.dll" }, ExtraArgs = $"--xml={Path.Combine (Harness.RootDirectory, "bcl-test", "SystemXunitLinker.xml")} --optimize=-custom-attributes-removal", Group = "SystemXunit" }, // special case due to the need of the extra args
+			new BclTestProjectInfo { Name = "SystemXunit", assemblies = new [] { "monotouch_System_xunit-test.dll" }, ExtraArgs = $"--xml={Path.Combine (DirectoryUtilities.RootDirectory, "bcl-test", "SystemXunitLinker.xml")} --optimize=-custom-attributes-removal", Group = "SystemXunit" }, // special case due to the need of the extra args
 		};
 			
 		static readonly List <string> CommonIgnoredAssemblies = new List <string> {
