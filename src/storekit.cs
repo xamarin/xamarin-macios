@@ -6,7 +6,7 @@
 //   Miguel de Icaza
 //
 // Copyright 2009, Novell, Inc.
-// Copyright 2012 Xamarin Inc.
+// Copyright 2020 Xamarin Inc.
 //
 using ObjCRuntime;
 using Foundation;
@@ -22,19 +22,21 @@ using System;
 
 namespace StoreKit {
 
+	[Watch (6, 2)]
 	[BaseType (typeof (NSObject))]
 	partial interface SKDownload {
 
 		[iOS (12,0)]
 		[TV (12,0)]
-		[Watch (6, 2)]
 		[Export ("state")]
 		SKDownloadState State { get; }
 #if MONOMAC
+		[NoWatch] // not necessary b/c #if MONOMAC, so this will not even compile for ios/watch/tvos?
 		[Obsolete ("Use 'State' instead.")]
 		[Wrap ("State", IsVirtual = true)]
 		SKDownloadState DownloadState { get;  }
 
+		[NoWatch] // not necessary b/c #if MONOMAC, so this will not even compile for ios/watch/tvos?
 		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'ExpectedContentLength' instead.")]
 		[Export ("contentLength", ArgumentSemantic.Copy)]
 		NSNumber ContentLength { get; }
@@ -73,10 +75,12 @@ namespace StoreKit {
 		double TimeRemaining { get;  }
 
 #if MONOMAC
+		[NoWatch] // not necessary b/c #if MONOMAC, so this will not even compile for ios/watch/tvos?
 		[Export ("contentURLForProductID:")]
 		[Static]
 		NSUrl GetContentUrlForProduct (string productId);
 
+		[NoWatch] // not necessary b/c #if MONOMAC, so this will not even compile for ios/watch/tvos?
 		[Export ("deleteContentForProductID:")]
 		[Static]
 		void DeleteContentForProduct (string productId);
@@ -98,7 +102,7 @@ namespace StoreKit {
 		[Export("paymentWithProduct:")]
 		SKPayment CreateFrom (SKProduct product);
 #if !MONOMAC
-		[NoWatch]
+		[NoWatch] // not necessary b/c #if MONOMAC, so this will not even compile for ios/watch/tvos?
 		[Static]
 		[Export ("paymentWithProductIdentifier:")]
 		[Availability (Deprecated = Platform.iOS_5_0, Message = "Use 'FromProduct (SKProduct)'' after fetching the list of available products from 'SKProductRequest' instead.")]
@@ -129,45 +133,43 @@ namespace StoreKit {
 		SKPaymentDiscount PaymentDiscount { get; [NotImplemented ("Not available on SKPayment, only available on SKMutablePayment")] set; }
 	}
 
+	[Watch (6, 2)]
 	[BaseType (typeof (SKPayment))]
 	interface SKMutablePayment {
 		[Static]
 		[Export("paymentWithProduct:")]
 		SKMutablePayment PaymentWithProduct (SKProduct product);
 
+		[NoWatch]
 		[Static]
 		[Export ("paymentWithProductIdentifier:")]
 		[Availability (Deprecated = Platform.iOS_5_0, Message = "Use 'PaymentWithProduct (SKProduct)' after fetching the list of available products from 'SKProductRequest' instead.")]
 		SKMutablePayment PaymentWithProduct (string identifier);
 
-		[Watch (6, 2)]
 		[NullAllowed] // by default this property is null
 		[Export ("productIdentifier", ArgumentSemantic.Copy)][New]
 		string ProductIdentifier { get; set; }
 
-		[Watch (6, 2)]
 		[Export ("quantity")][New]
 		nint Quantity { get; set; }
 
-		[Watch (6, 2)]
 		[NullAllowed] // by default this property is null
 		[Export ("requestData", ArgumentSemantic.Copy)]
 		[Override]
 		NSData RequestData { get; set; }
 
-		[Watch (6, 2), iOS (7,0), Mac (10, 9)]
+		[iOS (7,0), Mac (10, 9)]
 		[NullAllowed] // by default this property is null
 		[Export ("applicationUsername", ArgumentSemantic.Copy)][New]
 		string ApplicationUsername { get; set; }
 
-		[Watch (6, 2), iOS (8,3), Mac (10,14)]
+		[iOS (8,3), Mac (10,14)]
 		[Export ("simulatesAskToBuyInSandbox")]
 		bool SimulatesAskToBuyInSandbox { get; set; }
 
 		[iOS (12,2)]
 		[TV (12,2)]
 		[Mac (10,14,4)]
-		[Watch (6, 2)]
 		[NullAllowed, Export ("paymentDiscount", ArgumentSemantic.Copy)]
 		SKPaymentDiscount PaymentDiscount { get; set; }
 	}
@@ -219,7 +221,6 @@ namespace StoreKit {
 		void CancelDownloads (SKDownload [] downloads);
 
 		[Mac (10, 15), iOS (13, 0)]
-		[NoWatch]
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
 		ISKPaymentQueueDelegate Delegate { get; set; }
@@ -258,10 +259,12 @@ namespace StoreKit {
 		string ProductIdentifier { get; }
 
 #if MONOMAC
+		[NoWatch] // not necessary b/c #if MONOMAC, so this will not even compile for ios/watch/tvos?
 		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'IsDownloadable' instead.")]
 		[Export ("downloadable")]
 		bool Downloadable { get; }
 #elif !XAMCORE_4_0
+		[NoWatch] // IS THIS RIGHT?
 		[Obsolete ("Use 'IsDownloadable' instead.")]
 		bool Downloadable {
 			[Wrap ("IsDownloadable")]
@@ -289,7 +292,6 @@ namespace StoreKit {
 		NSNumber [] DownloadContentLengths { get;  }
 
 		[NoiOS]
-		[Watch (6, 2)]
 #if XAMCORE_4_0
 		[NoTV]
 #else
@@ -414,19 +416,18 @@ namespace StoreKit {
 		[Export ("request:didFailWithError:"), EventArgs ("SKRequestError")]
 		void RequestFailed (SKRequest request, NSError error);
 	}
-		
+
+	[Watch (6, 2)]
 	[iOS (7,0)]
 	[Mac (10,9)]
 	[BaseType (typeof (SKRequest))]
 	interface SKReceiptRefreshRequest {
-		[Watch (6, 2)]
 		[Export ("initWithReceiptProperties:")]
 		IntPtr Constructor ([NullAllowed] NSDictionary properties);
 
 		[Wrap ("this (receiptProperties == null ? null : receiptProperties.Dictionary)")]
 		IntPtr Constructor ([NullAllowed] SKReceiptProperties receiptProperties);
 
-		[Watch (6, 2)]
 		[Export ("receiptProperties")]
 		NSDictionary WeakReceiptProperties { get; }
 
@@ -512,6 +513,7 @@ namespace StoreKit {
 		void LoadProduct (StoreProductParameters parameters, [NullAllowed] Action<bool,NSError> callback);
 	}
 
+	[NoWatch]
 	[NoMac]
 	[StrongDictionary ("SKStoreProductParameterKey")]
 	interface StoreProductParameters {
@@ -537,6 +539,7 @@ namespace StoreKit {
 		uint AdNetworkTimestamp { get; set; }
 	}
 
+	[NoWatch]
 	[NoMac]
 	[Static]
 	interface SKStoreProductParameterKey
@@ -596,6 +599,7 @@ namespace StoreKit {
 		void Finished (SKStoreProductViewController controller);
 	}
 
+	[NoWatch]
 	[iOS (9,3)]
 	[TV (9,2)]
 	[BaseType (typeof (NSObject))]
@@ -682,7 +686,7 @@ namespace StoreKit {
 		void DidDismiss (SKCloudServiceSetupViewController cloudServiceSetupViewController);
 	}
 
-	[NoTV, iOS (10,1)]
+	[NoWatch, NoTV, iOS (10,1)]
 	[StrongDictionary ("SKCloudServiceSetupOptionsKeys")]
 	interface SKCloudServiceSetupOptions
 	{
@@ -706,7 +710,7 @@ namespace StoreKit {
 		string MessageIdentifier { get; set; }
 	}
 
-	[NoTV, iOS (10,1)]
+	[NoWatch, NoTV, iOS (10,1)]
 	[Internal, Static]
 	interface SKCloudServiceSetupOptionsKeys
 	{
@@ -729,14 +733,14 @@ namespace StoreKit {
 		NSString MessageIdentifierKey { get; }
 	}
 
-	[NoTV, iOS (10,1)]
+	[NoWatch, NoTV, iOS (10,1)]
 	enum SKCloudServiceSetupAction
 	{
 		[Field ("SKCloudServiceSetupActionSubscribe")]
 		Subscribe,
 	}
 
-	[iOS (11,0), TV (11,0)]
+	[NoWatch, iOS (11,0), TV (11,0)]
 	enum SKCloudServiceSetupMessageIdentifier {
 		[Field ("SKCloudServiceSetupMessageIdentifierJoin")]
 		Join,
@@ -748,7 +752,7 @@ namespace StoreKit {
 		PlayMusic,
 	}
 
-	[iOS (11,0), TV (11,0)]
+	[NoWatch, iOS (11,0), TV (11,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // static Default property is the only documented way to get the controller
 	interface SKProductStorePromotionController {
@@ -865,6 +869,7 @@ namespace StoreKit {
 		NSNumber Timestamp { get; }
 	}
 
+	[Watch (6, 2)]
 	[iOS (12,2)]
 	[TV (12,2)]
 	[Mac (10,14,4)]
@@ -899,7 +904,7 @@ namespace StoreKit {
 		[Export ("paymentQueue:shouldContinueTransaction:inStorefront:")]
 		bool ShouldContinueTransaction (SKPaymentQueue paymentQueue, SKPaymentTransaction transaction, SKStorefront newStorefront);
 
-		[NoWatch, NoMac, iOS (13,4)]
+		[NoWatch, NoMac, NoTV, iOS (13,4)]
 		[Export ("paymentQueueShouldShowPriceConsent:")]
 		bool ShouldShowPriceConsent (SKPaymentQueue paymentQueue);
 	}
@@ -908,11 +913,11 @@ namespace StoreKit {
 	// in Xcode 11 GM is was added - but only for macOS ?!?
 	// https://feedbackassistant.apple.com/feedback/7017660 - https://github.com/xamarin/maccore/issues/1913
 
-	[NoiOS][NoTV]
+	[NoWatch][NoiOS][NoTV]
 	[Mac (10,15)]
 	delegate void SKArcadeServiceRegisterHandler (NSData randomFromFP, uint /* uint32_t */ randomFromFPLength, NSData cmacOfAppPid, uint /* uint32_t */ cmacOfAppPidLength, NSError error);
 
-	[NoiOS][NoTV]
+	[NoWatch][NoiOS][NoTV]
 	[Mac (10,15)]
 	delegate void SKArcadeServiceSubscriptionHandler (NSData subscriptionStatus, uint /* uint32_t */ subscriptionStatusLength, NSData cmacOfNonce, uint /* uint32_t */ cmacOfNonceLength, NSError error);
 

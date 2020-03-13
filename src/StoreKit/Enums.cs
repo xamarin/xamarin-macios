@@ -5,7 +5,7 @@ namespace StoreKit {
 
 	// typedef NSInteger SKPaymentTransactionState;
 	// StoreKit.framework/Headers/SKPaymentTransaction.h
-	[Watch (6,2)]
+	[Watch (6, 2)]
 	[Native]
 	public enum SKPaymentTransactionState : long {
 		Purchasing,
@@ -47,13 +47,14 @@ namespace StoreKit {
 
 	// typedef NSInteger SKDownloadState;
 	// StoreKit.framework/Headers/SKDownload.h
-	[Watch (6,2)]
+	[Watch (6, 2)]
 	[Native]
 	public enum SKDownloadState : long {
 		Waiting, Active, Paused, Finished, Failed, Cancelled
 	}
 
 #if !MONOMAC || !XAMCORE_4_0
+	[NoWatch]
 	[iOS (9,3)]
 	[Native]
 	public enum SKCloudServiceAuthorizationStatus : long {
@@ -63,6 +64,7 @@ namespace StoreKit {
 		Authorized
 	}
 
+	[NoWatch]
 	[iOS (9,3)]
 	[Native]
 	public enum SKCloudServiceCapability : ulong {
@@ -73,7 +75,7 @@ namespace StoreKit {
 		AddToCloudMusicLibrary = 1 << 8
 	}
 
-	[iOS (11,0)][TV (11,0)][NoMac]
+	[iOS (11,0)][TV (11,0)][NoMac][NoWatch]
 	[Native]
 	public enum SKProductStorePromotionVisibility : long {
 		Default,
@@ -81,7 +83,7 @@ namespace StoreKit {
 		Hide,
 	}
 #endif
-	[Watch (6,2), iOS (11,2), TV (11,2), Mac (10,13,2)]
+	[Watch (6, 2), iOS (11,2), TV (11,2), Mac (10,13,2)]
 	[Native]
 	public enum SKProductPeriodUnit : ulong {
 		Day,
@@ -90,7 +92,7 @@ namespace StoreKit {
 		Year,
 	}
 
-	[Watch (6,2), iOS (11,2), TV (11,2), Mac (10,13,2)]
+	[Watch (6, 2), iOS (11,2), TV (11,2), Mac (10,13,2)]
 	[Native]
 	public enum SKProductDiscountPaymentMode : ulong {
 		PayAsYouGo,
