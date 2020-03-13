@@ -11,7 +11,6 @@ using Xamarin.MacDev;
 using Xamarin.Utils;
 using Xamarin.Localization.MSBuild;
 
-
 namespace Xamarin.iOS.Tasks
 {
 	[Flags]

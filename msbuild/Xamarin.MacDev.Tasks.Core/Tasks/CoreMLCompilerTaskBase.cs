@@ -228,7 +228,7 @@ namespace Xamarin.MacDev.Tasks
 						Log.LogMessage (MessageImportance.Low, MSBStrings.M0119, model.ItemSpec, partialPlist);
 					}
 				}
-				
+
 				bundleResources.AddRange (GetCompiledOutput (coremlcOutputDir, mapping));
 
 				foreach (var path in Directory.EnumerateFiles (coremlcOutputDir, "*-partial.plist", SearchOption.AllDirectories))
