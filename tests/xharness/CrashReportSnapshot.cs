@@ -79,7 +79,7 @@ namespace Xharness
 						crash_reports = downloaded_crash_reports;
 					}
 					foreach (var cp in crash_reports) {
-						harness.LogWrench ("@MonkeyWrench: AddFile: {0}", cp.Path);
+						WrenchLog.WriteLine ("AddFile: {0}", cp.Path);
 						Log.WriteLine ("    {0}", cp.Path);
 					}
 					crash_report_search_done = true;

@@ -133,6 +133,7 @@
     <Compile Include="Logging\Log.cs" />
     <Compile Include="Logging\LogFile.cs" />
     <Compile Include="Logging\Logs.cs" />
+    <Compile Include="Logging\WrenchLog.cs" />
     <Compile Include="MakefileGenerator.cs" />
     <Compile Include="MonoNativeInfo.cs" />
     <Compile Include="Program.cs" />
