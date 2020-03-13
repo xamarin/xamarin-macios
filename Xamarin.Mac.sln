@@ -23,7 +23,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "link sdk-mac", "tests\linke
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "link all-mac", "tests\linker\mac\link all\link all-mac.csproj", "{4C943B12-C5AF-4CD4-B583-B4011D13CAAB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dont link-mac-unified", "tests\linker\mac\dont link\dont link-mac-unified.csproj", "{78831857-A261-8EE0-A5F6-33D2628DE5D0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dont link-mac", "tests\linker\mac\dont link\dont link-mac.csproj", "{78831857-A261-8EE0-A5F6-33D2628DE5D0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
