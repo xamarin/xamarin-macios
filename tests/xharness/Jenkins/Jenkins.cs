@@ -872,11 +872,13 @@ namespace Xharness.Jenkins
 			// old simulator tests is also a bit special:
 			// - enabled by default if using a beta Xcode, otherwise disabled by default
 			changed = SetEnabled (labels, "old-simulator", ref IncludeOldSimulatorTests);
-			if (!changed && Harness.IsBetaXcode) {
+			if (!changed && IsBetaXcode) {
 				IncludeOldSimulatorTests = true;
 				MainLog.WriteLine ("Enabled 'old-simulator' tests because we're using a beta Xcode.");
 			}
 		}
+
+		bool IsBetaXcode => Harness.XcodeRoot.IndexOf ("beta", StringComparison.OrdinalIgnoreCase) >= 0;
 
 		// Returns true if the value was changed.
 		bool SetEnabled (HashSet<string> labels, string testname, ref bool value)

@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using Xharness.BCLTestImporter;
@@ -128,13 +125,6 @@ namespace Xharness
 			}
 		}
 
-		public bool IsBetaXcode {
-			get {
-				// There's no string.Contains (string, StringComparison) overload, so use IndexOf instead.
-				return XcodeRoot.IndexOf ("beta", StringComparison.OrdinalIgnoreCase) >= 0;
-			}
-		}
-
 		static string FindXcode (string path)
 		{
 			var p = path;
@@ -163,59 +153,6 @@ namespace Xharness
 					xcode_version = Version.Parse (doc.SelectSingleNode ("//key[text() = 'CFBundleShortVersionString']/following-sibling::string").InnerText);
 				}
 				return xcode_version;
-			}
-		}
-
-		object mlaunch_lock = new object ();
-		string DownloadMlaunch ()
-		{
-			// NOTE: the filename part in the url must be unique so that the caching logic works properly.
-			var mlaunch_url = "https://dl.xamarin.com/ios/mlaunch-acdb43d346c431b2c40663c938c919dcb0e91bd7.zip";
-			var extraction_dir = Path.Combine (Path.GetTempPath (), Path.GetFileNameWithoutExtension (mlaunch_url));
-			var mlaunch_path = Path.Combine (extraction_dir, "bin", "mlaunch");
-
-			lock (mlaunch_lock) {
-				if (File.Exists (mlaunch_path))
-					return mlaunch_path;
-
-				try {
-					var local_zip = extraction_dir + ".zip";
-					Log ("Downloading mlaunch to: {0}", local_zip);
-					var wc = new System.Net.WebClient ();
-					wc.DownloadFile (mlaunch_url, local_zip);
-					Log ("Downloaded mlaunch.");
-
-					var tmp_extraction_dir = extraction_dir + ".tmp";
-					if (Directory.Exists (tmp_extraction_dir))
-						Directory.Delete (tmp_extraction_dir, true);
-					if (Directory.Exists (extraction_dir))
-						Directory.Delete (extraction_dir, true);
-
-					Log ("Extracting mlaunch...");
-					using (var p = new Process ()) {
-						p.StartInfo.FileName = "unzip";
-						p.StartInfo.Arguments = StringUtils.FormatArguments ("-d", tmp_extraction_dir, local_zip);
-						Log ("{0} {1}", p.StartInfo.FileName, p.StartInfo.Arguments);
-						p.Start ();
-						p.WaitForExit ();
-						if (p.ExitCode != 0) {
-							Log ("Could not unzip mlaunch, exit code: {0}", p.ExitCode);
-							return mlaunch_path;
-						}
-					}
-					Directory.Move (tmp_extraction_dir, extraction_dir);
-
-					Log ("Final mlaunch path: {0}", mlaunch_path);
-				} catch (Exception e) {
-					Log ("Could not download mlaunch: {0}", e);
-				}
-				return mlaunch_path;
-			}
-		}
-
-		public string MtouchPath {
-			get {
-				return Path.Combine (IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current", "bin", "mtouch");
 			}
 		}
 
@@ -450,7 +387,7 @@ namespace Xharness
 			}
 		}
 
-		public int Configure ()
+		int Configure ()
 		{
 			return Mac ? AutoConfigureMac (true) : ConfigureIOS ();
 		}
@@ -528,7 +465,7 @@ namespace Xharness
 			return rv;
 		}
 
-		public int Install ()
+		int Install ()
 		{
 			if (HarnessLog == null)
 				HarnessLog = new ConsoleLog ();
@@ -548,7 +485,7 @@ namespace Xharness
 			return 0;
 		}
 
-		public int Uninstall ()
+		int Uninstall ()
 		{
 			if (HarnessLog == null)
 				HarnessLog = new ConsoleLog ();
@@ -567,7 +504,7 @@ namespace Xharness
 			return 0;
 		}
 
-		public int Run ()
+		int Run ()
 		{
 			if (HarnessLog == null)
 				HarnessLog = new ConsoleLog ();
@@ -585,7 +522,7 @@ namespace Xharness
 			return 0;
 		}
 
-		public void Log (int min_level, string message)
+		void Log (int min_level, string message)
 		{
 			if (Verbosity < min_level)
 				return;
@@ -609,23 +546,6 @@ namespace Xharness
 		public void Log (string message, params object[] args)
 		{
 			Log (0, message, args);
-		}
-
-		public void LogWrench (string message, params object[] args)
-		{
-			// Disable this for now, since we're not uploading directly to wrench anymore, but instead using the Html Report.
-			//if (!InWrench)
-			//	return;
-
-			//Console.WriteLine (message, args);
-		}
-
-		public void LogWrench (string message)
-		{
-			if (!InCI)
-				return;
-
-			Console.WriteLine (message);
 		}
 		
 		public bool InCI {
@@ -661,7 +581,7 @@ namespace Xharness
 			}
 		}
 
-		public int Jenkins ()
+		int Jenkins ()
 		{
 			if (AutoConf) {
 				AutoConfigureIOS ();
@@ -715,22 +635,6 @@ namespace Xharness
 			}
 		}
 
-		public void Save (string doc, string path)
-		{
-			if (!File.Exists (path)) {
-				File.WriteAllText (path, doc);
-				Log (1, "Created {0}", path);
-			} else {
-				var existing = File.ReadAllText (path);
-				if (existing == doc) {
-					Log (1, "Not saved {0}, no change", path);
-				} else {
-					File.WriteAllText (path, doc);
-					Log (1, "Updated {0}", path);
-				}
-			}
-		}
-
 		bool? disable_watchos_on_wrench;
 		public bool DisableWatchOSOnWrench {
 			get {
@@ -744,11 +648,5 @@ namespace Xharness
 		{
 			return ProcessManager.ExecuteCommandAsync (Path.Combine (XcodeRoot, "Contents", "Developer", "usr", "bin", executable), args, log, timeout: timeout);
 		}
-
-		public async Task ShowSimulatorList (Log log)
-		{
-			await ExecuteXcodeCommandAsync ("simctl", new [] { "list" }, log, TimeSpan.FromSeconds (10));
-		}
-
 	}
 }
