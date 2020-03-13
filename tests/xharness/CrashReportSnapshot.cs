@@ -10,19 +10,27 @@ namespace Xharness
 {
 	public class CrashReportSnapshot
 	{
-		public Harness Harness { get; set; }
-		public ILog Log { get; set; }
-		public ILogs Logs { get; set; }
-		public string LogDirectory { get; set; }
-		public bool Device { get; set; }
-		public string DeviceName { get; set; }
+		readonly Harness harness;
+		readonly bool isDevice;
+		readonly string deviceName;
+
+		public ILog Log { get; }
+		public ILogs Logs { get; }
 
 		public HashSet<string> InitialSet { get; private set; }
-		public IEnumerable<string> Reports { get; private set; }
+
+		public CrashReportSnapshot (Harness harness, ILog log, ILogs logs, bool isDevice, string deviceName)
+		{
+			this.harness = harness ?? throw new ArgumentNullException (nameof (harness));
+			this.Log = log ?? throw new ArgumentNullException (nameof (log));
+			this.Logs = logs ?? throw new ArgumentNullException (nameof (logs));
+			this.isDevice = isDevice;
+			this.deviceName = deviceName;
+		}
 
 		public async Task StartCaptureAsync ()
 		{
-			InitialSet = await Harness.CreateCrashReportsSnapshotAsync (Log, !Device, DeviceName);
+			InitialSet = await harness.CreateCrashReportsSnapshotAsync (Log, !isDevice, deviceName);
 		}
 
 		public async Task EndCaptureAsync (TimeSpan timeout)
@@ -33,13 +41,12 @@ namespace Xharness
 			var watch = new Stopwatch ();
 			watch.Start ();
 			do {
-				var end_crashes = await Harness.CreateCrashReportsSnapshotAsync (Log, !Device, DeviceName);
+				var end_crashes = await harness.CreateCrashReportsSnapshotAsync (Log, !isDevice, deviceName);
 				end_crashes.ExceptWith (InitialSet);
-				Reports = end_crashes;
 				if (end_crashes.Count > 0) {
 					Log.WriteLine ("Found {0} new crash report(s)", end_crashes.Count);
 					List<ILogFile> crash_reports;
-					if (!Device) {
+					if (!isDevice) {
 						crash_reports = new List<ILogFile> (end_crashes.Count);
 						foreach (var path in end_crashes) {
 							Logs.AddFile (path, $"Crash report: {Path.GetFileName (path)}");
@@ -55,15 +62,15 @@ namespace Xharness
 							sb.Add ($"--download-crash-report={file}");
 							sb.Add ($"--download-crash-report-to={crash_report_target.Path}");
 							sb.Add ("--sdkroot");
-							sb.Add (Harness.XcodeRoot);
-							if (!string.IsNullOrEmpty (DeviceName)) {
+							sb.Add (harness.XcodeRoot);
+							if (!string.IsNullOrEmpty (deviceName)) {
 								sb.Add ("--devname");
-								sb.Add (DeviceName);
+								sb.Add (deviceName);
 							}
-							var result = await Harness.ProcessManager.ExecuteCommandAsync (Harness.MlaunchPath, sb, Log, TimeSpan.FromMinutes (1));
+							var result = await harness.ProcessManager.ExecuteCommandAsync (harness.MlaunchPath, sb, Log, TimeSpan.FromMinutes (1));
 							if (result.Succeeded) {
 								Log.WriteLine ("Downloaded crash report {0} to {1}", file, crash_report_target.Path);
-								crash_report_target = await Harness.SymbolicateCrashReportAsync (Logs, Log, crash_report_target);
+								crash_report_target = await harness.SymbolicateCrashReportAsync (Logs, Log, crash_report_target);
 								downloaded_crash_reports.Add (crash_report_target);
 							} else {
 								Log.WriteLine ("Could not download crash report {0}", file);
@@ -72,7 +79,7 @@ namespace Xharness
 						crash_reports = downloaded_crash_reports;
 					}
 					foreach (var cp in crash_reports) {
-						Harness.LogWrench ("@MonkeyWrench: AddFile: {0}", cp.Path);
+						harness.LogWrench ("@MonkeyWrench: AddFile: {0}", cp.Path);
 						Log.WriteLine ("    {0}", cp.Path);
 					}
 					crash_report_search_done = true;
