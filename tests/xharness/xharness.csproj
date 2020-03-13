@@ -153,7 +153,7 @@
     <Compile Include="Utilities\PlistExtensions.cs" />
     <Compile Include="Utilities\ProjectFileExtensions.cs" />
     <Compile Include="Utilities\StringUtils.cs" />
-    <Compile Include="Utilities\TempDirectory.cs" />
+    <Compile Include="Utilities\DirectoryUtilities.cs" />
     <Compile Include="XmlResultParser.cs" />
     <Compile Include="BCLTestImporter\Templates\ITemplatedProject.cs" />
     <Compile Include="BCLTestImporter\Templates\Managed\XamariniOSTemplate.cs" />
