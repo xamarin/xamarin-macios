@@ -740,7 +740,7 @@ namespace Foundation {
 				
 			bool isDirectBinding = IsDirectBinding;
 			// is only one is a direct binding then both cannot be equals
-			if (IsDirectBinding != o.IsDirectBinding)
+			if (isDirectBinding != o.IsDirectBinding)
 				return false;
 
 			// we can only ask `isEqual:` to test equality if both objects are direct bindings
