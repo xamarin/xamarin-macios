@@ -738,9 +738,13 @@ namespace Foundation {
 			if (o == null)
 				return false;
 				
-			// we can only ask `isEqual:` to test equality if both objects are direct bindings
 			bool isDirectBinding = IsDirectBinding;
-			return (isDirectBinding == o.IsDirectBinding) && (isDirectBinding ? IsEqual (o) : ReferenceEquals (this, o));
+			// is only one is a direct binding then both cannot be equals
+			if (IsDirectBinding != o.IsDirectBinding)
+				return false;
+
+			// we can only ask `isEqual:` to test equality if both objects are direct bindings
+			return isDirectBinding ? IsEqual (o) : ReferenceEquals (this, o);
 		}
 
 		// IEquatable<T>
