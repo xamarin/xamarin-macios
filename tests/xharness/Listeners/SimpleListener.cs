@@ -1,14 +1,29 @@
 ﻿using System;
 using System.Net;
-using System.IO;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Xharness.Logging;
 
 namespace Xharness.Listeners
 {
-	public abstract class SimpleListener : IDisposable
+	public interface ISimpleListener {
+		IPAddress Address { get; set; }
+		bool AutoExit { get; set; }
+		Task CompletionTask { get; }
+		Task ConnectedTask { get; }
+		ILog Log { get; set; }
+		ILog OutputWriter { get; }
+		int Port { get; set; }
+		ILog TestLog { get; set; }
+		bool XmlOutput { get; set; }
+
+		void Cancel ();
+		void Dispose ();
+		void Initialize ();
+		void StartAsync ();
+	}
+
+	public abstract class SimpleListener : ISimpleListener, IDisposable
 	{
 		ILog output_writer;
 		string xml_data;

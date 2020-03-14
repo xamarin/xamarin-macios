@@ -135,6 +135,7 @@
     <Compile Include="Logging\Logs.cs" />
     <Compile Include="MakefileGenerator.cs" />
     <Compile Include="MonoNativeInfo.cs" />
+    <Compile Include="NoDeviceFoundException.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SolutionGenerator.cs" />
@@ -148,6 +149,7 @@
     <Compile Include="TestExecutingResult.cs" />
     <Compile Include="TestPlatform.cs" />
     <Compile Include="TestProject.cs" />
+    <Compile Include="UnsupportedOperationException.cs" />
     <Compile Include="Utilities\Extensions.cs" />
     <Compile Include="Utilities\PlistExtensions.cs" />
     <Compile Include="Utilities\ProjectFileExtensions.cs" />

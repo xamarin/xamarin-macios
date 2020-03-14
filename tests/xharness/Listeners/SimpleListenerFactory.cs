@@ -9,14 +9,17 @@ namespace Xharness.Listeners {
 	}
 
 	public interface ISimpleListenerFactory {
-		ListenerTransport Create (RunMode mode, ILog listenerLog, bool isSimulator, out SimpleListener listener, out string listenerFileTemp);
+		(ListenerTransport transport, ISimpleListener listener, string listenerTempFile) Create (RunMode mode, ILog listenerLog, bool isSimulator);
 	}
 
 	public class SimpleListenerFactory : ISimpleListenerFactory {
 
-		public ListenerTransport Create (RunMode mode, ILog listenerLog, bool isSimulator, out SimpleListener listener, out string listenerFileTemp)
+		public (ListenerTransport transport, ISimpleListener listener, string listenerTempFile) Create (RunMode mode, ILog listenerLog, bool isSimulator)
 		{
-			listenerFileTemp = null;
+			string listenerTempFile = null;
+			ISimpleListener listener;
+
+			listenerTempFile = null;
 			ListenerTransport transport;
 			if (mode == RunMode.WatchOS) {
 				transport = isSimulator ? ListenerTransport.File : ListenerTransport.Http;
@@ -26,8 +29,8 @@ namespace Xharness.Listeners {
 
 			switch (transport) {
 			case ListenerTransport.File:
-				listenerFileTemp = listenerLog.FullPath + ".tmp";
-				listener = new SimpleFileListener (listenerFileTemp);
+				listenerTempFile = listenerLog.FullPath + ".tmp";
+				listener = new SimpleFileListener (listenerTempFile);
 				break;
 			case ListenerTransport.Http:
 				listener = new SimpleHttpListener ();
@@ -38,7 +41,8 @@ namespace Xharness.Listeners {
 			default:
 				throw new NotImplementedException ();
 			}
-			return transport;
+
+			return (transport, listener, listenerTempFile);
 		}
 	}
 }

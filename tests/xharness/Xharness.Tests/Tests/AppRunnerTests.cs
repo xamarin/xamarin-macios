@@ -1,0 +1,175 @@
+﻿using System.IO;
+using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
+using Moq;
+using NUnit.Framework;
+using Xharness.Execution;
+using Xharness.Hardware;
+using Xharness.Listeners;
+using Xharness.Logging;
+
+namespace Xharness.Tests {
+	[TestFixture]
+	public class AppRunnerTests {
+
+		const string appName = "com.xamarin.bcltests.SystemXunit";
+
+		static readonly string outputPath = Path.GetDirectoryName (Assembly.GetAssembly (typeof(AppRunnerTests)).Location);
+		static readonly string sampleProjectPath = Path.Combine (outputPath, "Samples", "TestProject");
+		static readonly string appPath = Path.Combine (sampleProjectPath, "bin", appName + ".app");
+		
+		Mock<IProcessManager> processManager;
+		Mock<ISimulatorsLoader> simulators;
+		Mock<IDeviceLoader> devices;
+		Mock<ISimpleListener> simpleListener;
+
+		ISimulatorsLoaderFactory simulatorsFactory;
+		IDeviceLoaderFactory devicesFactory;
+		ISimpleListenerFactory listenerFactory;
+
+		[SetUp]
+		public void SetUp ()
+		{
+			processManager = new Mock<IProcessManager> ();
+			simulators = new Mock<ISimulatorsLoader> ();
+			devices = new Mock<IDeviceLoader> ();
+			simpleListener = new Mock<ISimpleListener> ();
+
+			var mock1 = new Mock<ISimulatorsLoaderFactory> ();
+			mock1.Setup (m => m.CreateLoader ()).Returns (simulators.Object);
+			simulatorsFactory = mock1.Object;
+
+			var mock2 = new Mock<IDeviceLoaderFactory> ();
+			mock2.Setup (m => m.CreateLoader ()).Returns (devices.Object);
+			devicesFactory = mock2.Object;
+
+			var mock3 = new Mock<ISimpleListenerFactory> ();
+			mock3.Setup (m => m.Create (It.IsAny<RunMode>(), It.IsAny<ILog>(), It.IsAny<bool>())).Returns ((ListenerTransport.Tcp, simpleListener.Object, null));
+			listenerFactory = mock3.Object;
+
+			Directory.CreateDirectory (appPath);
+		}
+
+		[Test]
+		public void InitializeTest ()
+		{
+			var appRunner = new AppRunner (processManager.Object,
+				simulatorsFactory,
+				listenerFactory,
+				devicesFactory,
+				AppRunnerTarget.Simulator_iOS64,
+				new Harness(processManager.Object, HarnessAction.Install, new HarnessConfiguration ()),
+				new Mock<ILog>().Object,
+				Path.Combine (sampleProjectPath, "SystemXunit.csproj"),
+				"Debug",
+				Path.Combine (outputPath, "logs"));
+			
+			Assert.AreEqual (appName, appRunner.AppInformation.AppName);
+			Assert.AreEqual (appPath, appRunner.AppInformation.AppPath);
+			Assert.AreEqual (appPath, appRunner.AppInformation.LaunchAppPath);
+			Assert.AreEqual (appName, appRunner.AppInformation.BundleIdentifier);
+		}
+
+		[Test]
+		public void InstallToSimulatorTest ()
+		{
+			var appRunner = new AppRunner (processManager.Object,
+				simulatorsFactory,
+				listenerFactory,
+				devicesFactory,
+				AppRunnerTarget.Simulator_iOS64,
+				new Harness(processManager.Object, HarnessAction.Install, new HarnessConfiguration ()),
+				new Mock<ILog>().Object,
+				Path.Combine (sampleProjectPath, "SystemXunit.csproj"),
+				"Debug",
+				Path.Combine (outputPath, "logs"));
+
+			var exception = Assert.ThrowsAsync<UnsupportedOperationException> (
+				async () => await appRunner.InstallAsync (new CancellationToken ()),
+				"Install should not be allowed on a simulator");
+		}
+
+		[Test]
+		public void UninstallToSimulatorTest ()
+		{
+			var appRunner = new AppRunner (processManager.Object,
+				simulatorsFactory,
+				listenerFactory,
+				devicesFactory,
+				AppRunnerTarget.Simulator_iOS64,
+				new Harness(processManager.Object, HarnessAction.Uninstall, new HarnessConfiguration ()),
+				new Mock<ILog>().Object,
+				Path.Combine (sampleProjectPath, "SystemXunit.csproj"),
+				"Debug",
+				Path.Combine (outputPath, "logs"));
+
+			var exception = Assert.ThrowsAsync<UnsupportedOperationException> (
+				async () => await appRunner.UninstallAsync (),
+				"Uninstall should not be allowed on a simulator");
+		}
+
+		[Test]
+		public void InstallWhenNoDevicesTest ()
+		{
+			var appRunner = new AppRunner (processManager.Object,
+				simulatorsFactory,
+				listenerFactory,
+				devicesFactory,
+				AppRunnerTarget.Device_iOS,
+				new Harness(processManager.Object, HarnessAction.Install, new HarnessConfiguration ()),
+				new Mock<ILog>().Object,
+				Path.Combine (sampleProjectPath, "SystemXunit.csproj"),
+				"Debug",
+				Path.Combine (outputPath, "logs"));
+
+			devices.Setup (x => x.ConnectedDevices).Returns (new IHardwareDevice [0]);
+
+			var exception = Assert.ThrowsAsync<NoDeviceFoundException> (
+				async () => await appRunner.InstallAsync (new CancellationToken ()),
+				"Install requires a connected devices");
+		}
+
+		[Test]
+		public async Task InstallOnDeviceTest ()
+		{
+			var appRunner = new AppRunner (processManager.Object,
+				simulatorsFactory,
+				listenerFactory,
+				devicesFactory,
+				AppRunnerTarget.Device_iOS,
+				new Harness(processManager.Object, HarnessAction.Install, new HarnessConfiguration ()),
+				new Mock<ILog>().Object,
+				Path.Combine (sampleProjectPath, "SystemXunit.csproj"),
+				"Debug",
+				Path.Combine (outputPath, "logs"));
+
+			devices.Setup (x => x.ConnectedDevices).Returns (new IHardwareDevice [2] {
+				new Device() {
+					BuildVersion = "17A577",
+					DeviceClass = DeviceClass.iPhone,
+					DeviceIdentifier = "8A450AA31EA94191AD6B02455F377CC1",
+					InterfaceType = "Usb",
+					IsUsableForDebugging = true,
+					Name = "Manuel’s iPhone",
+					ProductType = "iPhone12,1",
+					ProductVersion = "13.0",
+					UDID = "58F21118E4D34FD69EAB7860BB9B38A0",
+				},
+				new Device() {
+					BuildVersion = "13G36",
+					DeviceClass = DeviceClass.iPad,
+					DeviceIdentifier = "E854B2C3E7C8451BAF8053EC4DAAEE49",
+					InterfaceType = "Usb",
+					IsUsableForDebugging = true,
+					Name = "Manuel de la Pena Saenz’s iPad",
+					ProductType = "iPad2,1",
+					ProductVersion = "9.3.5",
+					UDID = "51F3354D448D4814825D07DC5658C19B",
+				}
+			});
+
+			await appRunner.InstallAsync (new CancellationToken ());
+		}
+	}
+}

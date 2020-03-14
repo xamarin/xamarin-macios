@@ -213,7 +213,7 @@ namespace Xharness
 			var selected = devs.ConnectedDevices.Where ((v) => deviceClasses.Contains (v.DeviceClass) && v.IsUsableForDebugging != false);
 			IHardwareDevice selected_data;
 			if (selected.Count () == 0) {
-				throw new Exception ($"Could not find any applicable devices with device class(es): {string.Join (", ", deviceClasses)}");
+				throw new NoDeviceFoundException ($"Could not find any applicable devices with device class(es): {string.Join (", ", deviceClasses)}");
 			} else if (selected.Count () > 1) {
 				selected_data = selected
 					.OrderBy ((dev) =>
@@ -241,7 +241,7 @@ namespace Xharness
 
 			if (isSimulator) {
 				// We reset the simulator when running, so a separate install step does not make much sense.
-				throw new Exception ("Installing to a simulator is not supported.");
+				throw new UnsupportedOperationException ("Installing to a simulator is not supported.");
 			}
 
 			FindDevice ();
@@ -274,7 +274,7 @@ namespace Xharness
 			var appInfo = Initialize ();
 
 			if (isSimulator)
-				throw new Exception ("Uninstalling from a simulator is not supported.");
+				throw new UnsupportedOperationException ("Uninstalling from a simulator is not supported.");
 
 			FindDevice ();
 
@@ -497,13 +497,13 @@ namespace Xharness
 			}
 
 			listener_log = Logs.Create ($"test-{mode.ToString().ToLower()}-{Harness.Timestamp}.log", LogType.TestLog.ToString (), timestamp: !useXmlOutput);
-			var transport = listenerFactory.Create (mode, listener_log, isSimulator, out var listener, out var fn);
+			var (transport, listener, listenerTmpFile) = listenerFactory.Create (mode, listener_log, isSimulator);
 			
 			args.Add ($"-argument=-app-arg:-transport:{transport}");
 			args.Add ($"-setenv=NUNIT_TRANSPORT={transport.ToString ().ToUpper ()}");
 
 			if (transport == ListenerTransport.File)
-				args.Add ($"-setenv=NUNIT_LOG_FILE={fn}");
+				args.Add ($"-setenv=NUNIT_LOG_FILE={listenerTmpFile}");
 
 			
 			listener.TestLog = listener_log;
