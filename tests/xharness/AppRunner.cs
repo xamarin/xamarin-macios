@@ -60,7 +60,7 @@ namespace Xharness
 		readonly bool isSimulator;
 		readonly AppRunnerTarget target;
 		readonly string projectFilePath;
-		readonly Harness harness;
+		readonly IHarness harness;
 		readonly string configuration;
 		readonly string variation;
 		readonly double timeoutMultiplier;
@@ -96,7 +96,7 @@ namespace Xharness
 						  ISimpleListenerFactory simpleListenerFactory,
 						  IDeviceLoaderFactory devicesFactory,
 						  AppRunnerTarget target,
-						  Harness harness,
+						  IHarness harness,
 						  ILog mainLog,
 						  string projectFilePath,
 						  string configuration,

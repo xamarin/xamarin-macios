@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -59,7 +61,7 @@ namespace Xharness.Tests {
 				listenerFactory,
 				devicesFactory,
 				AppRunnerTarget.Simulator_iOS64,
-				new Harness(processManager.Object, HarnessAction.Install, new HarnessConfiguration ()),
+				new Mock<IHarness> ().Object,
 				new Mock<ILog>().Object,
 				Path.Combine (sampleProjectPath, "SystemXunit.csproj"),
 				"Debug",
@@ -79,7 +81,7 @@ namespace Xharness.Tests {
 				listenerFactory,
 				devicesFactory,
 				AppRunnerTarget.Simulator_iOS64,
-				new Harness(processManager.Object, HarnessAction.Install, new HarnessConfiguration ()),
+				new Mock<IHarness> ().Object,
 				new Mock<ILog>().Object,
 				Path.Combine (sampleProjectPath, "SystemXunit.csproj"),
 				"Debug",
@@ -98,7 +100,7 @@ namespace Xharness.Tests {
 				listenerFactory,
 				devicesFactory,
 				AppRunnerTarget.Simulator_iOS64,
-				new Harness(processManager.Object, HarnessAction.Uninstall, new HarnessConfiguration ()),
+				new Mock<IHarness> ().Object,
 				new Mock<ILog>().Object,
 				Path.Combine (sampleProjectPath, "SystemXunit.csproj"),
 				"Debug",
@@ -117,7 +119,7 @@ namespace Xharness.Tests {
 				listenerFactory,
 				devicesFactory,
 				AppRunnerTarget.Device_iOS,
-				new Harness(processManager.Object, HarnessAction.Install, new HarnessConfiguration ()),
+				new Mock<IHarness> ().Object,
 				new Mock<ILog>().Object,
 				Path.Combine (sampleProjectPath, "SystemXunit.csproj"),
 				"Debug",
@@ -133,13 +135,30 @@ namespace Xharness.Tests {
 		[Test]
 		public async Task InstallOnDeviceTest ()
 		{
+			Mock<IHarness> harnessMock = new Mock<IHarness> ();
+			harnessMock.SetupGet (x => x.XcodeRoot).Returns ("/path/to/xcode");
+			harnessMock.SetupGet (x => x.MlaunchPath).Returns ("/path/to/mlaunch");
+			harnessMock.SetupGet (x => x.Verbosity).Returns (2);
+
+			var processResult = new ProcessExecutionResult () { ExitCode = 1, TimedOut = false };
+
+			processManager
+				.Setup (x => x.ExecuteCommandAsync (
+					 It.IsAny<string> (),
+					 It.IsAny<IList<string>> (),
+					 It.IsAny<ILog> (),
+					 It.IsAny<TimeSpan> (),
+					 It.IsAny<Dictionary<string, string>> (),
+					 It.IsAny<CancellationToken> ()))
+				.ReturnsAsync(processResult);
+
 			var appRunner = new AppRunner (processManager.Object,
 				simulatorsFactory,
 				listenerFactory,
 				devicesFactory,
 				AppRunnerTarget.Device_iOS,
-				new Harness(processManager.Object, HarnessAction.Install, new HarnessConfiguration ()),
-				new Mock<ILog>().Object,
+				harnessMock.Object,
+				new Mock<ILog> ().Object,
 				Path.Combine (sampleProjectPath, "SystemXunit.csproj"),
 				"Debug",
 				Path.Combine (outputPath, "logs"));
@@ -169,7 +188,27 @@ namespace Xharness.Tests {
 				}
 			});
 
-			await appRunner.InstallAsync (new CancellationToken ());
+			var result = await appRunner.InstallAsync (new CancellationToken ());
+
+			Assert.AreEqual (1, result.ExitCode);
+			
+			processManager.Verify (x => x.ExecuteCommandAsync (
+				"/path/to/mlaunch",
+				new List<string> () {
+					"--sdkroot",
+					"/path/to/xcode",
+					"-v",
+					"-v",
+					"-v",
+					"--installdev",
+					appPath,
+					"--devname",
+					"Manuel de la Pena Saenz’s iPad"
+				},
+				It.IsAny<ILog> (),
+				It.IsAny<TimeSpan> (),
+				It.IsAny<Dictionary<string, string>> (),
+				It.IsAny<CancellationToken> ()));
 		}
 	}
 }

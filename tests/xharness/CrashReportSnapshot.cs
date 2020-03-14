@@ -10,7 +10,7 @@ namespace Xharness
 {
 	public class CrashReportSnapshot
 	{
-		public Harness Harness { get; set; }
+		public IHarness Harness { get; set; }
 		public ILog Log { get; set; }
 		public ILogs Logs { get; set; }
 		public string LogDirectory { get; set; }
