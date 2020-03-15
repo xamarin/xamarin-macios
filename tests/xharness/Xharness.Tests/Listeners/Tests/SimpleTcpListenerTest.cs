@@ -45,11 +45,7 @@ namespace Xharness.Tests.Listeners.Tests {
 			});
 			// create a linstener that will start in an other thread, connect to it
 			// and send the data.
-			var listener = new SimpleTcpListener () {
-				Log = log.Object,
-				TestLog = testLog.Object,
-				Address = IPAddress.Any,
-			};
+			var listener = new SimpleTcpListener (log.Object, testLog.Object, true, true);
 			listener.Initialize ();
 			var connectionPort = listener.Port;
 			listener.StartAsync ();

@@ -14,6 +14,7 @@ using Xharness.Jenkins.TestTasks;
 using Xharness.Listeners;
 using Xharness.Logging;
 using Xharness.Utilities;
+using System.Net;
 
 namespace Xharness
 {
@@ -492,12 +493,12 @@ namespace Xharness
 					ips.Append (ipAddresses [i].ToString ());
 				}
 
-				args.Add ($"-argument=-app-arg:-hostname:{ips.ToString ()}");
-				args.Add ($"-setenv=NUNIT_HOSTNAME={ips.ToString ()}");
+				args.Add ($"-argument=-app-arg:-hostname:{ips}");
+				args.Add ($"-setenv=NUNIT_HOSTNAME={ips}");
 			}
 
 			listener_log = Logs.Create ($"test-{mode.ToString().ToLower()}-{Harness.Timestamp}.log", LogType.TestLog.ToString (), timestamp: !useXmlOutput);
-			var (transport, listener, listenerTmpFile) = listenerFactory.Create (mode, listener_log, isSimulator);
+			var (transport, listener, listenerTmpFile) = listenerFactory.Create (mode, MainLog, listener_log, isSimulator, true, useXmlOutput);
 			
 			args.Add ($"-argument=-app-arg:-transport:{transport}");
 			args.Add ($"-setenv=NUNIT_TRANSPORT={transport.ToString ().ToUpper ()}");
@@ -505,12 +506,6 @@ namespace Xharness
 			if (transport == ListenerTransport.File)
 				args.Add ($"-setenv=NUNIT_LOG_FILE={listenerTmpFile}");
 
-			
-			listener.TestLog = listener_log;
-			listener.Log = MainLog;
-			listener.AutoExit = true;
-			listener.Address = System.Net.IPAddress.Any;
-			listener.XmlOutput = useXmlOutput;
 			listener.Initialize ();
 
 			args.Add ($"-argument=-app-arg:-hostport:{listener.Port}");
