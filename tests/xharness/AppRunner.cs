@@ -804,8 +804,17 @@ namespace Xharness
 						}
 						if (crash_reason != null) {
 							// if in CI, do write an xml error that will be picked as a failure by VSTS
-							if (harness.InCI)
-								XmlResultParser.GenerateFailure (Logs, "crash", appInfo.AppName, variation, $"App Crash {appInfo.AppName} {variation}", $"App crashed {crash_reason}.", crash_reports.Log.FullPath, harness.XmlJargon);
+							if (harness.InCI) {
+								XmlResultParser.GenerateFailure (Logs,
+									"crash",
+									appInfo.AppName,
+									variation,
+									$"App Crash {appInfo.AppName} {variation}",
+									$"App crashed {crash_reason}.",
+									crash_reports.Log.FullPath,
+									harness.XmlJargon);
+							}
+
 							break;
 						}
 					} catch (Exception e) {
@@ -818,13 +827,31 @@ namespace Xharness
 					} else {
 						FailureMessage = $"Killed by the OS ({crash_reason})";
 					}
-					if (harness.InCI)
-						XmlResultParser.GenerateFailure (Logs, "crash", appInfo.AppName, variation, $"App Crash {appInfo.AppName} {variation}", $"App crashed: {FailureMessage}", crash_reports.Log.FullPath, harness.XmlJargon);
+					if (harness.InCI) {
+						XmlResultParser.GenerateFailure (
+							Logs,
+							"crash",
+							appInfo.AppName,
+							variation,
+							$"App Crash {appInfo.AppName} {variation}",
+							$"App crashed: {FailureMessage}",
+							crash_reports.Log.FullPath,
+							harness.XmlJargon);
+					}
 				} else if (launch_failure) {
 					// same as with a crash
 					FailureMessage = $"Launch failure";
-					if (harness.InCI)
-						XmlResultParser.GenerateFailure (Logs, "launch", appInfo.AppName, variation, $"App Launch {appInfo.AppName} {variation} on {deviceName}", $"{FailureMessage} on {deviceName}", MainLog.FullPath, XmlResultJargon.NUnitV3);
+					if (harness.InCI) {
+						XmlResultParser.GenerateFailure (
+							Logs,
+							"launch",
+							appInfo.AppName,
+							variation,
+							$"App Launch {appInfo.AppName} {variation} on {deviceName}",
+							$"{FailureMessage} on {deviceName}",
+							MainLog.FullPath,
+							XmlResultJargon.NUnitV3);
+					}
 				} else if (!isSimulator && crashed && string.IsNullOrEmpty (crash_reason) && harness.InCI) {
 					// this happens more that what we would like on devices, the main reason most of the time is that we have had netwoking problems and the
 					// tcp connection could not be stablished. We are going to report it as an error since we have not parsed the logs, evne when the app might have
@@ -839,10 +866,26 @@ namespace Xharness
 							}
 						}
 					}
-					if (isTcp)
-						XmlResultParser.GenerateFailure (Logs, "tcp-connection", appInfo.AppName, variation, $"TcpConnection on {deviceName}", $"Device {deviceName} could not reach the host over tcp.", MainLog.FullPath, harness.XmlJargon);
+
+					if (isTcp) {
+						XmlResultParser.GenerateFailure (Logs,
+							"tcp-connection",
+							appInfo.AppName,
+							variation,
+							$"TcpConnection on {deviceName}",
+							$"Device {deviceName} could not reach the host over tcp.",
+							MainLog.FullPath,
+							harness.XmlJargon);
+					}
 				} else if (timed_out && harness.InCI) {
-					XmlResultParser.GenerateFailure (Logs, "timeout", appInfo.AppName, variation, $"App Timeout {appInfo.AppName} {variation}", $"Test run timed out after {timeout.TotalMinutes} minute(s).", MainLog.FullPath, harness.XmlJargon);
+					XmlResultParser.GenerateFailure (Logs,
+						"timeout",
+						appInfo.AppName,
+						variation,
+						$"App Timeout {appInfo.AppName} {variation} on bot {deviceName}",
+						$"{appInfo.AppName} {variation} Test run timed out after {timeout.TotalMinutes} minute(s) on bot {deviceName}.",
+						MainLog.FullPath,
+						harness.XmlJargon);
 				}
 			}
 

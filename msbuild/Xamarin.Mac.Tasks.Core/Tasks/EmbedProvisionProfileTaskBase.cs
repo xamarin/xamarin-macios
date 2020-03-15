@@ -7,6 +7,7 @@ using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev.Tasks;
 using Xamarin.MacDev;
+using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.Mac.Tasks
 {
@@ -29,7 +30,7 @@ namespace Xamarin.Mac.Tasks
 			var profile = MobileProvisionIndex.GetMobileProvision (MobileProvisionPlatform.MacOS, ProvisioningProfile);
 
 			if (profile == null) {
-				Log.LogError ("Could not locate the provisioning profile with a Name or UUID of {0}.", ProvisioningProfile);
+				Log.LogError (MSBStrings.E0049, ProvisioningProfile);
 				return false;
 			}
 

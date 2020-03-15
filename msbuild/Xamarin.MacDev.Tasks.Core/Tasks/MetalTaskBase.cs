@@ -8,6 +8,7 @@ using Microsoft.Build.Utilities;
 using Xamarin.MacDev;
 using Xamarin.MacDev.Tasks;
 using Xamarin.Utils;
+using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.MacDev.Tasks
 {
@@ -69,7 +70,7 @@ namespace Xamarin.MacDev.Tasks
 				case ApplePlatform.iOS:
 					return SdkIsSimulator ? "iphonesimulator" : "ios";
 				default:
-					Log.LogError ($"Unknown target framework moniker: {TargetFrameworkMoniker}.");
+					Log.LogError (MSBStrings.E0169, TargetFrameworkMoniker);
 					return string.Empty;
 				}
 			}

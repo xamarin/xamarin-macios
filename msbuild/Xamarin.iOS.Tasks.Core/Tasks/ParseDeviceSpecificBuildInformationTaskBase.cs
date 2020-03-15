@@ -7,6 +7,7 @@ using Microsoft.Build.Framework;
 using Xamarin.MacDev;
 using Xamarin.MacDev.Tasks;
 using Xamarin.Utils;
+using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.iOS.Tasks
 {
@@ -74,32 +75,32 @@ namespace Xamarin.iOS.Tasks
 			}
 
 			if (!Enum.TryParse (Architectures, out architectures)) {
-				Log.LogError ("Invalid architectures: '{0}'.", Architectures);
+				Log.LogError (MSBStrings.E0057, Architectures);
 				return false;
 			}
 
 			if ((plist = PObject.FromString (TargetiOSDevice) as PDictionary) == null) {
-				Log.LogError ("Failed to parse the target device information.");
+				Log.LogError (MSBStrings.E0058);
 				return false;
 			}
 
 			if (!plist.TryGetValue ("device", out device)) {
-				Log.LogError ("No target device found.");
+				Log.LogError (MSBStrings.E0059);
 				return false;
 			}
 
 			if (!device.TryGetValue ("architecture", out value)) {
-				Log.LogError ("No device architecture information found.");
+				Log.LogError (MSBStrings.E0060);
 				return false;
 			}
 
 			if (!Enum.TryParse (value.Value, out deviceArchitectures) || deviceArchitectures == TargetArchitecture.Default) {
-				Log.LogError ("Invalid target architecture: '{0}'", value.Value);
+				Log.LogError (MSBStrings.E0061, value.Value);
 				return false;
 			}
 
 			if (!device.TryGetValue ("os", out os)) {
-				Log.LogError ("No device operating system information found.");
+				Log.LogError (MSBStrings.E0062);
 				return false;
 			}
 
@@ -127,14 +128,14 @@ namespace Xamarin.iOS.Tasks
 			TargetArchitectures = target.ToString ();
 
 			if (!device.TryGetValue ("model", out value)) {
-				Log.LogError ("No device model information found.");
+				Log.LogError (MSBStrings.E0063);
 				return false;
 			}
 
 			TargetDeviceModel = value.Value;
 
 			if (!device.TryGetValue ("os-version", out value)) {
-				Log.LogError ("No iOS version information found.");
+				Log.LogError (MSBStrings.E0064);
 				return false;
 			}
 

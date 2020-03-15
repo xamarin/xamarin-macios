@@ -10,6 +10,7 @@ using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev.Tasks;
 using Xamarin.MacDev;
+using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.MacDev.Tasks
 {
@@ -246,7 +247,7 @@ namespace Xamarin.MacDev.Tasks
 			case "AppleTVOS":
 				break;
 			default:
-				Log.LogError ("Unrecognized platform: {0}", SdkPlatform);
+				Log.LogError (MSBStrings.E0089, SdkPlatform);
 				return false;
 			}
 
@@ -276,7 +277,7 @@ namespace Xamarin.MacDev.Tasks
 					catalog = Path.GetDirectoryName (catalog);
 
 				if (string.IsNullOrEmpty (catalog)) {
-					Log.LogWarning (null, null, null, ImageAssets[i].ItemSpec, 0, 0, 0, 0, "Asset not part of an asset catalog: {0}", ImageAssets[i].ItemSpec);
+					Log.LogWarning (null, null, null, ImageAssets[i].ItemSpec, 0, 0, 0, 0, MSBStrings.W0090, ImageAssets[i].ItemSpec);
 					continue;
 				}
 
@@ -322,7 +323,7 @@ namespace Xamarin.MacDev.Tasks
 						var src = ImageAssets[i].GetMetadata ("FullPath");
 
 						if (!File.Exists (src)) {
-							Log.LogError (null, null, null, src, 0, 0, 0, 0, "File not found: {0}", src);
+							Log.LogError (null, null, null, src, 0, 0, 0, 0, MSBStrings.E0091, src);
 							return false;
 						}
 
@@ -394,7 +395,7 @@ namespace Xamarin.MacDev.Tasks
 						Log.LogError (null, null, null, items [i].ItemSpec, line, col, line, col, "{0}", je.Message);
 						return false;
 					} catch (Exception e) {
-						Log.LogError (null, null, null, items[i].ItemSpec, 0, 0, 0, 0, "Invalid json: {0}", e.Message);
+						Log.LogError (null, null, null, items[i].ItemSpec, 0, 0, 0, 0, MSBStrings.E0092, e.Message);
 						return false;
 
 					}
@@ -457,7 +458,7 @@ namespace Xamarin.MacDev.Tasks
 				return false;
 
 			if (PartialAppManifest != null && !File.Exists (PartialAppManifest.GetMetadata ("FullPath")))
-				Log.LogError ("Partial Info.plist file was not generated: {0}", PartialAppManifest.GetMetadata ("FullPath"));
+				Log.LogError (MSBStrings.E0093, PartialAppManifest.GetMetadata ("FullPath"));
 
 			try {
 				var manifestOutput = PDictionary.FromFile (manifest.ItemSpec);
@@ -467,7 +468,7 @@ namespace Xamarin.MacDev.Tasks
 				bundleResources.AddRange (GetCompiledBundleResources (manifestOutput, intermediateBundleDir));
 				outputManifests.Add (manifest);
 			} catch (Exception ex) {
-				Log.LogError ("Failed to load {0} log file `{1}`: {2}", ToolName, manifest.ItemSpec, ex.Message);
+				Log.LogError (MSBStrings.E0094, ToolName, manifest.ItemSpec, ex.Message);
 			}
 
 			foreach (var assetpack in specs.OfType<PDictionary> ()) {
