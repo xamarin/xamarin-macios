@@ -4,6 +4,7 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev;
+using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.MacDev.Tasks
 {
@@ -37,14 +38,14 @@ namespace Xamarin.MacDev.Tasks
 			path = Property.TrimStart (':').Split (new [] { ':' });
 
 			if (path.Length == 0) {
-				Log.LogError ("No property specified.");
+				Log.LogError (MSBStrings.E0152);
 				return false;
 			}
 
 			try {
 				value = dict = PDictionary.FromFile (PropertyListFile);
 			} catch (Exception ex) {
-				Log.LogError ("Error loading '{0}': {1}", PropertyListFile, ex.Message);
+				Log.LogError (MSBStrings.E0010, PropertyListFile, ex.Message);
 				return false;
 			}
 
@@ -52,26 +53,26 @@ namespace Xamarin.MacDev.Tasks
 				if (dict != null) {
 					if (!dict.TryGetValue (path[i], out value)) {
 						var item = i > 0 ? string.Join ("/", path, 0, i - 1) : PropertyListFile;
-						Log.LogError ("The dictionary at '{0}' did not contain the key: {1}", item, path[i]);
+						Log.LogError (MSBStrings.E0153, item, path[i]);
 						return false;
 					}
 				} else if (array != null) {
 					int arrayIndex;
 
 					if (!int.TryParse (path[i], out arrayIndex)) {
-						Log.LogError ("Could not parse array index: {0}", path[i]);
+						Log.LogError (MSBStrings.E0145, path[i]);
 						return false;
 					}
 
 					if (arrayIndex < 0 || arrayIndex >= array.Count) {
 						var item = i > 0 ? string.Join ("/", path, 0, i - 1) : PropertyListFile;
-						Log.LogError ("Array index out of range for item '{0}'", item);
+						Log.LogError (MSBStrings.E0155, item);
 						return false;
 					}
 
 					value = array[arrayIndex];
 				} else {
-					Log.LogError ("{0} values do not support child properties.", value.Type);
+					Log.LogError (MSBStrings.E0156, value.Type);
 					return false;
 				}
 
@@ -81,7 +82,7 @@ namespace Xamarin.MacDev.Tasks
 			} while (i < path.Length);
 
 			if (array != null || dict != null) {
-				Log.LogError ("Getting {0} values is not supported.", value.Type.ToString ().ToLowerInvariant ());
+				Log.LogError (MSBStrings.E0157, value.Type.ToString ().ToLowerInvariant ());
 				return false;
 			}
 

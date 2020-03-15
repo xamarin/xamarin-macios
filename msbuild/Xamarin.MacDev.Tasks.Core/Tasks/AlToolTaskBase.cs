@@ -6,6 +6,7 @@ using Microsoft.Build.Framework;
 using System.Text;
 
 using Xamarin.Utils;
+using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.MacDev.Tasks
 {
@@ -124,7 +125,7 @@ namespace Xamarin.MacDev.Tasks
 					}
 				}
 			} catch (Exception ex) {
-				Log.LogWarning ($"Failed to parse altool output: {ex.Message}. \nOutput: {output}");
+				Log.LogWarning (MSBStrings.W0095, ex.Message, output);
 			}
 		}
 	}

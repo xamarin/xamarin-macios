@@ -8,6 +8,7 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev.Tasks;
+using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.iOS.Tasks
 {
@@ -144,24 +145,24 @@ namespace Xamarin.iOS.Tasks
 					int width, height;
 
 					if (!File.Exists (path)) {
-						Log.LogError ("  '{0}' not found.", path);
+						Log.LogError (MSBStrings.E0006, path);
 						continue;
 					}
 
 					if (!GetPngImageSize (path, out width, out height) && !GetJpgImageSize (path, out width, out height)) {
-						Log.LogError (null, null, null, path, 0, 0, 0, 0, "Error loading '{0}': Unknown image format.", path);
+						Log.LogError (null, null, null, path, 0, 0, 0, 0, MSBStrings.E0007, path);
 						return false;
 					}
 
 					if (width != height || (width != 512 && width != 1024)) {
-						Log.LogError (null, null, null, path, 0, 0, 0, 0, "Invalid iTunesArtwork dimensions ({0}x{1}) for '{2}'.", width, height, path);
+						Log.LogError (null, null, null, path, 0, 0, 0, 0, MSBStrings.E0008, width, height, path);
 						return false;
 					}
 
 					logicalName = width == 1024 ? "iTunesArtwork@2x" : "iTunesArtwork";
 
 					if (!artwork.Add (logicalName)) {
-						Log.LogError (null, null, null, path, 0, 0, 0, 0, "Multiple iTunesArtwork files with the same dimensions detected ({0}x{1}) for '{2}'.", width, height, path);
+						Log.LogError (null, null, null, path, 0, 0, 0, 0, MSBStrings.E0009, width, height, path);
 						return false;
 					}
 

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
+using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.MacDev.Tasks
 {
@@ -192,12 +193,12 @@ namespace Xamarin.MacDev.Tasks
 				string output;
 
 				if (!File.Exists (item.ItemSpec)) {
-					Log.LogError (null, null, null, item.ItemSpec, 0, 0, 0, 0, "The file '{0}' does not exist.", item.ItemSpec);
+					Log.LogError (null, null, null, item.ItemSpec, 0, 0, 0, 0, MSBStrings.E0158, item.ItemSpec);
 					continue;
 				}
 
 				if (unique.TryGetValue (bundleName, out duplicate)) {
-					Log.LogError (null, null, null, item.ItemSpec, 0, 0, 0, 0, "The file '{0}' conflicts with '{1}'.", item.ItemSpec, duplicate.ItemSpec);
+					Log.LogError (null, null, null, item.ItemSpec, 0, 0, 0, 0, MSBStrings.E0159, item.ItemSpec, duplicate.ItemSpec);
 					continue;
 				}
 
@@ -233,7 +234,7 @@ namespace Xamarin.MacDev.Tasks
 
 					changed = true;
 				} else {
-					Log.LogMessage (MessageImportance.Low, "Skipping `{0}' as the output file, `{1}', is newer.", item.ItemSpec, manifest.ItemSpec);
+					Log.LogMessage (MessageImportance.Low, MSBStrings.M0119, item.ItemSpec, manifest.ItemSpec);
 				}
 
 				try {
@@ -241,7 +242,7 @@ namespace Xamarin.MacDev.Tasks
 
 					LogWarningsAndErrors (dict, item);
 				} catch (Exception ex) {
-					Log.LogError ("Failed to load {0} log file `{1}`: {2}", ToolName, manifest.ItemSpec, ex.Message);
+					Log.LogError (MSBStrings.E0094, ToolName, manifest.ItemSpec, ex.Message);
 					if (File.Exists (manifest.ItemSpec))
 						Log.LogError ("ibtool log: {0}", File.ReadAllText (manifest.ItemSpec));
 					continue;
@@ -403,7 +404,7 @@ namespace Xamarin.MacDev.Tasks
 		public override bool Execute ()
 		{
 			if (IsWatchApp && AppleSdkSettings.XcodeVersion < new Version (6, 2)) {
-				Log.LogError ("Watch apps/extensions require Xcode 6.2 or later. The current Xcode version is {0}", AppleSdkSettings.XcodeVersion);
+				Log.LogError (MSBStrings.E0160, AppleSdkSettings.XcodeVersion);
 
 				return !Log.HasLoggedErrors;
 			}
