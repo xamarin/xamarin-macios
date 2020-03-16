@@ -108,7 +108,7 @@ namespace Xharness.BCLTestImporter.Templates.Managed {
 
 		void BuildSrcTree (string srcOuputPath)
 		{
-			// loop over the known paths, and build them accodringly
+			// loop over the known paths, and build them accordingly
 			foreach (var components in srcDirectories) {
 				var completePathComponents = new [] { srcOuputPath }.Concat (components).ToArray ();
 				var path = Path.Combine (completePathComponents);
