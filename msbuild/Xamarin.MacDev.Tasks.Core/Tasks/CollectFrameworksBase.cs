@@ -5,6 +5,7 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev.Tasks;
+using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.iOS.Tasks
 {
@@ -34,14 +35,14 @@ namespace Xamarin.iOS.Tasks
 			if (Directory.Exists (fwDir)) {
 				foreach (var fw in Directory.GetDirectories (fwDir)) {
 					if (Path.GetExtension (fw) != ".framework") {
-						Log.LogWarning ("Found a directory within the Frameworks directory which is not a framework: {0}", fw);
+						Log.LogWarning (MSBStrings.W0103, fw);
 						continue;
 					}
 					var fwName = Path.GetFileName (fw);
 					var stem = fwName.Substring (0, fwName.Length - ".framework".Length);
 					var fwBinary = Path.Combine (fw, stem);
 					if (!File.Exists (fwBinary)) {
-						Log.LogWarning ("The framework {0} does not contain a binary named {1}", Path.GetDirectoryName (fwBinary), Path.GetFileName (fwBinary));
+						Log.LogWarning (MSBStrings.W0104, Path.GetDirectoryName (fwBinary), Path.GetFileName (fwBinary));
 						continue;
 					}
 					
@@ -49,7 +50,7 @@ namespace Xamarin.iOS.Tasks
 					frameworks.Add (framework);
 				}
 			} else {
-				Log.LogMessage ("No Frameworks directory found.");
+				Log.LogMessage (MSBStrings.M0105);
 			}
 
 			Frameworks = frameworks.ToArray ();

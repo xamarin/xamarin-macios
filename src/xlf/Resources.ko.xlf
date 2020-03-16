@@ -735,6 +735,14 @@
         <note>
 		</note>
       </trans-unit>
+      <trans-unit id="BI1081">
+        <source>Unable to find the assembly '{0}'. Add it as a reference using its full path.
+        </source>
+        <target state="new">Unable to find the assembly '{0}'. Add it as a reference using its full path.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
       <trans-unit id="BI1101">
         <source>Trying to use a string as a [Target]
 		</source>

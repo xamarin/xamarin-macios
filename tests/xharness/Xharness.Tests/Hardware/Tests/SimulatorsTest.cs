@@ -31,10 +31,7 @@ namespace Xharness.Tests.Hardware.Tests {
 			harness = new Mock<IHarness> ();
 			executionLog = new Mock<ILog> ();
 			processManager = new Mock<IProcessManager> ();
-			simulators = new Simulators {
-				Harness = harness.Object,
-				ProcessManager = processManager.Object,
-			};
+			simulators = new Simulators (harness.Object);
 		}
 
 		[TearDown]
@@ -44,7 +41,6 @@ namespace Xharness.Tests.Hardware.Tests {
 			processManager = null;
 			simulators = null;
 		}
-
 
 		[TestCase (false)] // no timeout
 		[TestCase (true)] // timeout

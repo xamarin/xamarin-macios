@@ -1,10 +1,18 @@
 ﻿using System;
-using Xharness;
 
 namespace Xharness.Hardware {
+	public enum DeviceClass {
+		Unknown = 0,
+		iPhone,
+		iPad,
+		iPod,
+		Watch,
+		AppleTV,
+	}
+
 	public class Device : IHardwareDevice {
 		public string DeviceIdentifier { get; set; }
-		public string DeviceClass { get; set; }
+		public DeviceClass DeviceClass { get; set; }
 		public string CompanionIdentifier { get; set; }
 		public string Name { get; set; }
 		public string BuildVersion { get; set; }
@@ -29,9 +37,9 @@ namespace Xharness.Hardware {
 
 		public DevicePlatform DevicePlatform => DeviceClass switch
 		{
-			_ when DeviceClass == "iPhone" || DeviceClass == "iPod" || DeviceClass == "iPad" => DevicePlatform.iOS,
-			_ when DeviceClass == "AppleTV" => DevicePlatform.tvOS,
-			_ when DeviceClass == "Watch" => DevicePlatform.watchOS,
+			_ when DeviceClass == DeviceClass.iPhone || DeviceClass == DeviceClass.iPod || DeviceClass == DeviceClass.iPad => DevicePlatform.iOS,
+			_ when DeviceClass == DeviceClass.AppleTV => DevicePlatform.tvOS,
+			_ when DeviceClass == DeviceClass.Watch => DevicePlatform.watchOS,
 			_ => DevicePlatform.Unknown,
 		};
 

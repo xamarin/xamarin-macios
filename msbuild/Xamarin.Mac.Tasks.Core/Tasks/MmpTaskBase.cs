@@ -16,6 +16,7 @@ using Microsoft.Build.Utilities;
 using Xamarin.MacDev.Tasks;
 using Xamarin.MacDev;
 using Xamarin.Utils;
+using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.Mac.Tasks
 {
@@ -26,8 +27,6 @@ namespace Xamarin.Mac.Tasks
 		}
 
 		public bool IsXPCService { get; set; }
-
-		public bool UseXamMacFullFramework { get; set; }
 
 		public string ApplicationName { get; set; }
 		public string Architecture { get; set; }
@@ -55,13 +54,6 @@ namespace Xamarin.Mac.Tasks
 
 			if (!string.IsNullOrEmpty (ApplicationName))
 				args.AddQuotedLine ("/name:" + ApplicationName);
-
-			if (TargetFrameworkIdentifier == "Xamarin.Mac")
-				args.AddLine ("/profile:Xamarin.Mac,Version=v2.0,Profile=Mobile");
-			else if (UseXamMacFullFramework)
-				args.AddLine ($"/profile:Xamarin.Mac,Version={TargetFrameworkVersion},Profile=Full");
-			else
-				args.AddLine ($"/profile:Xamarin.Mac,Version={TargetFrameworkVersion},Profile=System");
 
 			XamMacArch arch;
 			if (!Enum.TryParse (Architecture, true, out arch))
@@ -91,7 +83,7 @@ namespace Xamarin.Mac.Tasks
 					args.AddLine (string.Format("/minos={0}", minimumDeploymentTarget));
 				}
 				catch (Exception ex) {
-					Log.LogWarning (null, null, null, AppManifest.ItemSpec, 0, 0, 0, 0, "Error loading '{0}': {1}", AppManifest.ItemSpec, ex.Message);
+					Log.LogWarning (null, null, null, AppManifest.ItemSpec, 0, 0, 0, 0, MSBStrings.E0010, AppManifest.ItemSpec, ex.Message);
 				}
 			}
 
@@ -189,7 +181,7 @@ namespace Xamarin.Mac.Tasks
 
 				NativeLibraries = nativeLibraryItems.ToArray ();
 			} catch (Exception ex) {
-				Log.LogError (null, null, null, AppBundleDir, 0, 0, 0, 0, "Could not get native libraries: {0}", ex.Message);
+				Log.LogError (null, null, null, AppBundleDir, 0, 0, 0, 0, MSBStrings.E0088, ex.Message);
 				return false;
 			}
 

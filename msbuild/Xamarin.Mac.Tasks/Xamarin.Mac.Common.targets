@@ -537,7 +537,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			ApplicationName="$(_AppBundleName)"
 			MainAssembly="$(OutputPath)$(TargetName)$(TargetExt)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
-			UseXamMacFullFramework="$(UseXamMacFullFramework)"
 			Architecture="$(XamMacArch)"
 			ArchiveSymbols="$(MonoSymbolArchive)"
 			LinkMode="$(LinkMode)"

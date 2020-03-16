@@ -7,6 +7,7 @@ using System.Collections.Generic;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
+using Xamarin.Localization.MSBuild;
 
 using Xamarin.MacDev;
 
@@ -157,7 +158,7 @@ namespace Xamarin.MacDev.Tasks
 			int exitCode;
 
 			try {
-				Log.LogMessage (MessageImportance.Normal, "Tool {0} execution started with arguments: {1}", startInfo.FileName, startInfo.Arguments);
+				Log.LogMessage (MessageImportance.Normal, MSBStrings.M0001, startInfo.FileName, startInfo.Arguments);
 
 				using (var stdout = File.CreateText (manifest.ItemSpec)) {
 					using (var stderr = new StringWriter (errors)) {
@@ -168,10 +169,10 @@ namespace Xamarin.MacDev.Tasks
 						}
 					}
 
-					Log.LogMessage (MessageImportance.Low, "Tool {0} execution finished (exit code = {1}).", startInfo.FileName, exitCode);
+					Log.LogMessage (MessageImportance.Low, MSBStrings.M0002, startInfo.FileName, exitCode);
 				}
 			} catch (Exception ex) {
-				Log.LogError ("Error executing tool '{0}': {1}", startInfo.FileName, ex.Message);
+				Log.LogError (MSBStrings.E0003, startInfo.FileName, ex.Message);
 				File.Delete (manifest.ItemSpec);
 				return -1;
 			}
@@ -183,7 +184,7 @@ namespace Xamarin.MacDev.Tasks
 				if (errors.Length > 0)
 					Log.LogError (null, null, null, items[0].ItemSpec, 0, 0, 0, 0, "{0}", errors);
 
-				Log.LogError ("{0} exited with code {1}", ToolName, exitCode);
+				Log.LogError (MSBStrings.E0117, ToolName, exitCode);
 
 				// Note: If the log file exists and is parseable, log those warnings/errors as well...
 				if (File.Exists (manifest.ItemSpec)) {
@@ -192,7 +193,7 @@ namespace Xamarin.MacDev.Tasks
 
 						LogWarningsAndErrors (plist, items[0]);
 					} catch (Exception ex) {
-						Log.LogError ("Failed to load {0} log file `{1}`: {2}", ToolName, manifest.ItemSpec, ex.Message);
+						Log.LogError (MSBStrings.E0094, ToolName, manifest.ItemSpec, ex.Message);
 					}
 
 					File.Delete (manifest.ItemSpec);

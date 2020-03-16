@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
+using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.MacDev.Tasks
 {
@@ -55,22 +56,22 @@ namespace Xamarin.MacDev.Tasks
 					string illegal;
 
 					if (!File.Exists (path)) {
-						Log.LogError ("  Bundle Resource '{0}' not found on disk (should be at '{1}')", logicalName, path);
+						Log.LogError (MSBStrings.E0099, logicalName, path);
 						continue;
 					}
 
 					if (logicalName.StartsWith (".." + Path.DirectorySeparatorChar, StringComparison.Ordinal)) {
-						Log.LogError (null, null, null, item.ItemSpec, 0, 0, 0, 0, "The path '{0}' would result in a file outside of the app bundle and cannot be used.", logicalName);
+						Log.LogError (null, null, null, item.ItemSpec, 0, 0, 0, 0, MSBStrings.E0100, logicalName);
 						continue;
 					}
 
 					if (logicalName == "Info.plist") {
-						Log.LogWarning (null, null, null, item.ItemSpec, 0, 0, 0, 0, "Info.plist files should have a Build Action of 'None'.");
+						Log.LogWarning (null, null, null, item.ItemSpec, 0, 0, 0, 0, MSBStrings.E0101);
 						continue;
 					}
 
 					if (BundleResource.IsIllegalName (logicalName, out illegal)) {
-						Log.LogError (null, null, null, item.ItemSpec, 0, 0, 0, 0, "The name '{0}' is reserved and cannot be used.", illegal);
+						Log.LogError (null, null, null, item.ItemSpec, 0, 0, 0, 0, MSBStrings.E0102, illegal);
 						continue;
 					}
 

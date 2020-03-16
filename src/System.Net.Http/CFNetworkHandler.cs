@@ -194,7 +194,10 @@ namespace System.Net.Http
 			return req;
 		}
 
-		protected internal override async Task<HttpResponseMessage> SendAsync (HttpRequestMessage request, CancellationToken cancellationToken)
+#if !NET
+		internal
+#endif
+		protected override async Task<HttpResponseMessage> SendAsync (HttpRequestMessage request, CancellationToken cancellationToken)
 		{
 			return await SendAsync (request, cancellationToken, true).ConfigureAwait (false);
 		}
@@ -381,6 +384,10 @@ namespace System.Net.Http
 
 		void AddCookie (string value, Uri uri, string header)
 		{
+#if !NET_TODO
+			// NET_TODO: CookieCollection.CookieCutter is internal to mscorlib:
+			// https://github.com/microsoft/referencesource/blob/a7bd3242bd7732dec4aebb21fbc0f6de61c2545e/System/net/System/Net/cookiecontainer.cs#L632
+			// https://github.com/xamarin/xamarin-macios/issues/8072
 			CookieCollection cookies1 = null;
 			try {
 				cookies1 = cookies.CookieCutter (uri, header, value, false);
@@ -389,6 +396,7 @@ namespace System.Net.Http
 
 			if (cookies1 != null && cookies1.Count != 0) 
 				cookies.Add (cookies1);
+#endif
 		}
 
 		static bool IsContentHeader (string header)
