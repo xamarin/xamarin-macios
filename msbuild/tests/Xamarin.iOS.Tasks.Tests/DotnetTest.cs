@@ -55,7 +55,7 @@ namespace Xamarin.iOS.Tasks {
 		{
 			var net461 = GetTestDirectory ("net461");
 			var dotnet = GetTestDirectory ("dotnet");
-			Xamarin.Tests.Configuration.FixupTestFiles (dotnet, "dotnet5");
+			Xamarin.Tests.Configuration.FixupTestFiles (dotnet, "dotnet");
 
 			tfi = "Xamarin.iOS";
 			switch (project) {

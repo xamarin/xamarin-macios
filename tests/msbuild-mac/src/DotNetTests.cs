@@ -29,7 +29,7 @@ namespace Xamarin.MMP.Tests {
 			var project_dir = Path.Combine (Xamarin.Tests.Configuration.RootPath, "tests", "msbuild-mac", "projects");
 			var net461 = Xamarin.Tests.Configuration.CloneTestDirectory (project_dir, "net461");
 			var dotnet = Xamarin.Tests.Configuration.CloneTestDirectory (project_dir, "dotnet");
-			Xamarin.Tests.Configuration.FixupTestFiles (dotnet, "dotnet5");
+			Xamarin.Tests.Configuration.FixupTestFiles (dotnet, "dotnet");
 
 			var properties = new Dictionary<string, string> () {
 				{"Configuration", Configuration },

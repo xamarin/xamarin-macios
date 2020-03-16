@@ -51,9 +51,9 @@ copy_files ()
 	$cp "$destdir/Version" "$dotnet_destdir/"
 	$cp "$destdir/buildinfo" "$dotnet_destdir/tools/"
 
-	$cp "$TOP/msbuild/dotnet5/Xamarin.$platform.Sdk/Sdk/"* "$dotnet_destdir/Sdk/"
-	$cp "$TOP/msbuild/dotnet5/targets/"* "$dotnet_destdir/targets/"
-	$cp "$TOP/msbuild/dotnet5/Xamarin.$platform.Sdk/targets/"* "$dotnet_destdir/targets/"
+	$cp "$TOP/msbuild/dotnet/Xamarin.$platform.Sdk/Sdk/"* "$dotnet_destdir/Sdk/"
+	$cp "$TOP/msbuild/dotnet/targets/"* "$dotnet_destdir/targets/"
+	$cp "$TOP/msbuild/dotnet/Xamarin.$platform.Sdk/targets/"* "$dotnet_destdir/targets/"
 
 	$cp -r "$destdir/lib/msbuild" "$dotnet_destdir/tools/"
 
@@ -290,7 +290,7 @@ copy_files ()
 	chmod -R +r "$dotnet_destdir"
 }
 
-copy_files "$MACOS_DOTNET_DESTDIR"   "$MAC_DESTDIR$MAC_FRAMEWORK_DIR/Versions/Current" macOS	"x64"	   ""					Mac	 xamarinmac10
-copy_files "$IOS_DOTNET_DESTDIR"	 "$IOS_DESTDIR$MONOTOUCH_PREFIX"				   iOS	  "x64 arm64" "x86 arm"			 iOS	 xamarinios10
-copy_files "$TVOS_DOTNET_DESTDIR"	"$IOS_DESTDIR$MONOTOUCH_PREFIX"				   tvOS	 "x64 arm64" ""					TVOS	xamarintvos10
-copy_files "$WATCHOS_DOTNET_DESTDIR" "$IOS_DESTDIR$MONOTOUCH_PREFIX"				   watchOS  ""		  "x86 armv7k arm64_32" WatchOS xamarinwatchos10
+copy_files "$MACOS_DOTNET_DESTDIR"   "$MAC_DESTDIR$MAC_FRAMEWORK_DIR/Versions/Current" macOS   "x64"       ""                    Mac     xamarinmac10
+copy_files "$IOS_DOTNET_DESTDIR"     "$IOS_DESTDIR$MONOTOUCH_PREFIX"                   iOS     "x64 arm64" "x86 arm"             iOS     xamarinios10
+copy_files "$TVOS_DOTNET_DESTDIR"    "$IOS_DESTDIR$MONOTOUCH_PREFIX"                   tvOS    "x64 arm64" ""                    TVOS    xamarintvos10
+copy_files "$WATCHOS_DOTNET_DESTDIR" "$IOS_DESTDIR$MONOTOUCH_PREFIX"                   watchOS ""          "x86 armv7k arm64_32" WatchOS xamarinwatchos10

@@ -92,7 +92,7 @@ namespace Xamarin.Tests {
 
 		public static void InstallSdks (string dotnet_version)
 		{
-			var install_script = Path.Combine (Configuration.RootPath, "msbuild", "dotnet5", "install-into-dotnet.sh");
+			var install_script = Path.Combine (Configuration.RootPath, "msbuild", "dotnet", "install-into-dotnet.sh");
 			var env = new Dictionary<string, string> () {
 				{ "DOTNET_PATH", Path.Combine (DownloadPackage (dotnet_version, out var actual_version), "sdk", actual_version, "Sdks") },
 				{ "IOS_TARGETDIR", Configuration.IOS_DESTDIR },

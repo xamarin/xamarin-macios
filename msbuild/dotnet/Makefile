@@ -135,7 +135,7 @@ $(DIRECTORIES):
 
 all-local:: $(TARGETS)
 
-pack:
+pack: prepare
 	$(Q) rm -Rf nupkgs
 	$(Q) mkdir -p nupkgs
 	#$(Q) $(MAKE) pack-macOS
@@ -200,8 +200,7 @@ package/mac/buildinfo.txt: $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/buildinfo
 	$(Q) mkdir -p $(dir $@)
 	$(Q) $(CP) $< $@
 
-
-all-local::
+prepare:
 	TOP=$(TOP) \
 	DOTNET_BCL_DIR=$(DOTNET_BCL_DIR) \
 	MACOS_DOTNET_DESTDIR=$(MACOS_DOTNET_DESTDIR) \
@@ -214,5 +213,3 @@ all-local::
 	MONOTOUCH_PREFIX=$(MONOTOUCH_PREFIX) \
 	DOTNET_IOS_SDK_DESTDIR=$(DOTNET_IOS_SDK_DESTDIR) \
 	./build-nugets.sh
-
-

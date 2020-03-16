@@ -100,6 +100,10 @@ namespace Xamarin.Bundler
 
 		public void SelectMonoNative ()
 		{
+			if (Driver.IsDotNet) {
+				MonoNativeMode = MonoNativeMode.Unified;
+				return;
+			}
 			switch (App.Platform) {
 			case ApplePlatform.iOS:
 			case ApplePlatform.TVOS:
@@ -1511,6 +1515,10 @@ namespace Xamarin.Bundler
 			if (App.LibXamarinLinkMode != AssemblyBuildTarget.StaticObject)
 				AddToBundle (App.GetLibXamarin (App.LibXamarinLinkMode, abi));
 
+			if (App.LibMonoLinkMode == AssemblyBuildTarget.DynamicLibrary) {
+				foreach (var lib in Directory.GetFiles (Driver.GetBCLImplementationDirectory (this), "*.dylib"))
+					AddToBundle (lib);
+			}
 
 			linker_flags.AddOtherFlag ("-o", output_file);
 
@@ -1539,7 +1547,7 @@ namespace Xamarin.Bundler
 				throw ErrorHelper.CreateError (99, Errors.MX0099, $"invalid symbol mode: {App.SymbolMode}");
 			}
 
-			var libdir = Path.Combine (Driver.GetProductSdkDirectory (App), "usr", "lib");
+			var libdir = Driver.GetXamarinLibraryDirectory (App, abi);
 			if (App.Embeddinator) {
 				linker_flags.AddOtherFlag ("-shared");
 				linker_flags.AddOtherFlag ("-install_name", $"@rpath/{App.ExecutableName}.framework/{App.ExecutableName}");
@@ -1681,8 +1689,10 @@ namespace Xamarin.Bundler
 				return;
 			if (!MonoNative.RequireMonoNative)
 				return;
+			if (Driver.IsDotNet)
+				return;
 			var libnative = GetLibNativeName ();
-			var libdir = Driver.GetMonoTouchLibDirectory (app);
+			var libdir = Driver.GetProductSdkLibDirectory (app);
 			Driver.Log (3, "Adding mono-native library {0} for {1}.", libnative, app);
 			switch (app.LibMonoNativeLinkMode) {
 			case AssemblyBuildTarget.DynamicLibrary:
@@ -1766,11 +1776,11 @@ namespace Xamarin.Bundler
 
 			Symlinked = true;
 
-			if (MonoNativeMode != MonoNativeMode.None) {
+			if (MonoNativeMode != MonoNativeMode.None && !Driver.IsDotNet) {
 				var lib_native_target = Path.Combine (TargetDirectory, "libmono-native.dylib");
 
 				var lib_native_name = GetLibNativeName () + ".dylib";
-				var lib_native_path = Path.Combine (Driver.GetMonoTouchLibDirectory (App), lib_native_name);
+				var lib_native_path = Path.Combine (Driver.GetProductSdkLibDirectory (App), lib_native_name);
 				Application.UpdateFile (lib_native_path, lib_native_target);
 				Driver.Log (3, "Added mono-native library {0} for {1}.", lib_native_name, MonoNativeMode);
 			}

@@ -19,6 +19,7 @@
 
   <PropertyGroup>
     <_RepositoryPath>$(MSBuildThisFileDirectory)/../../..</_RepositoryPath>
+    <_buildPath>$(_RepositoryPath)/_build</_buildPath>
     <_iOSBuildPath>$(_RepositoryPath)/_ios-build</_iOSBuildPath>
     <_macOSBuildPath>$(_RepositoryPath)/_mac-build</_macOSBuildPath>
     <_iOSCurrentPath>$(_iOSBuildPath)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current</_iOSCurrentPath>
@@ -36,161 +37,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- Version -->
-    <Content Include="$(_OSCurrentPath)\Version" >
+    <Content Include="$(_buildPath)\Xamarin.$(_PlatformName).Sdk\**">
       <Pack>true</Pack>
       <PackagePath>\</PackagePath>
-    </Content>
-    <Content Include="$(_OSCurrentPath)\buildinfo" >
-      <Pack>true</Pack>
-      <PackagePath>tools</PackagePath>
-    </Content>
-    <!-- SDK tasks and targets -->
-    <Content Include="..\Xamarin.$(_PlatformName).Sdk\**" >
-      <Pack>true</Pack>
-      <PackagePath>\</PackagePath>
-    </Content>
-    <Content Include="..\targets\**" >
-      <Pack>true</Pack>
-      <PackagePath>targets</PackagePath>
-    </Content>
-    <!-- MSBuild tasks and targets -->
-    <Content Include="$(_iOSCurrentPath)\lib\msbuild\$(_PlatformName)\**">
-      <Pack>true</Pack>
-      <PackagePath>tools</PackagePath>
-    </Content>
-    <Content Include="$(_macOSCurrentPath)\lib\msbuild\**">
-      <Pack>true</Pack>
-      <PackagePath>tools</PackagePath>
-    </Content>
-    <!-- BCL -->
-    <Content Include="$(_OSCurrentPath)\lib\mono\$(_TFI)\**">
-      <Pack>true</Pack>
-      <PackagePath>lib\$(_TFI)\v1.0</PackagePath>
-    </Content>
-    <Content Include="$(_OSCurrentPath)\lib\x86_64\mobile\**" Condition=" '$(_PlatformName)' == 'macOS' ">
-      <Pack>true</Pack>
-      <PackagePath>lib\$(_TFI)\v1.0</PackagePath>
-    </Content>
-    <!-- simlauncher -->
-    <Content Include="$(_iOSCurrentPath)\bin\simlauncher-*" Condition=" '$(_PlatformName)' == 'iOS'">
-      <Pack>true</Pack>
-      <PackagePath>$(_BinDir)</PackagePath>
-    </Content>
-    <!-- generator -->
-    <Content Include="$(_iOSCurrentPath)\bin\bgen">
-      <Pack>true</Pack>
-      <PackagePath>$(_BinDir)</PackagePath>
-    </Content>
-    <Content Include="$(_iOSCurrentPath)\lib\bgen\**">
-      <Pack>true</Pack>
-      <PackagePath>tools\lib\bgen</PackagePath>
-    </Content>
-    <Content Include="$(_iOSCurrentPath)\bin\btouch" Condition=" '$(_PlatformName)' == 'iOS'">
-      <Pack>true</Pack>
-      <PackagePath>$(_BinDir)</PackagePath>
-    </Content>
-    <Content Include="$(_iOSCurrentPath)\bin\btv" Condition=" '$(_PlatformName)' == 'tvOS'">
-      <Pack>true</Pack>
-      <PackagePath>$(_BinDir)</PackagePath>
-    </Content>
-    <Content Include="$(_iOSCurrentPath)\bin\bwatch" Condition=" '$(_PlatformName)' == 'watchOS'">
-      <Pack>true</Pack>
-      <PackagePath>$(_BinDir)</PackagePath>
-    </Content>
-    <!-- mtouch -->
-    <Content Include="$(_iOSCurrentPath)\bin\mtouch" Condition=" '$(_PlatformName)' != 'macOS' ">
-      <Pack>true</Pack>
-      <PackagePath>$(_BinDir)</PackagePath>
-    </Content>
-    <Content Include="$(_iOSCurrentPath)\lib\mtouch\**" Condition=" '$(_PlatformName)' != 'macOS' ">
-      <Pack>true</Pack>
-      <PackagePath>tools\lib\mtouch</PackagePath>
-    </Content>
-    <!-- mtouch -->
-    <Content Include="$(_macOSCurrentPath)\bin\mmp" Condition=" '$(_PlatformName)' == 'macOS' ">
-      <Pack>true</Pack>
-      <PackagePath>$(_BinDir)</PackagePath>
-    </Content>
-    <Content Include="$(_macOSCurrentPath)\lib\mmp\**" Condition=" '$(_PlatformName)' == 'macOS' ">
-      <Pack>true</Pack>
-      <PackagePath>tools\lib\mmp</PackagePath>
-    </Content>
-    <!-- mlaunch -->
-    <Content Include="$(_iOSCurrentPath)\bin\mlaunch" Condition=" '$(_PlatformName)' != 'macOS' ">
-      <Pack>true</Pack>
-      <PackagePath>$(_BinDir)</PackagePath>
-    </Content>
-    <Content Include="$(_iOSCurrentPath)\lib\mlaunch\**" Condition=" '$(_PlatformName)' != 'macOS' ">
-      <Pack>true</Pack>
-      <PackagePath>tools\lib\mlaunch</PackagePath>
-    </Content>
-    <!-- AOT compilers -->
-    <Content Include="$(_iOSCurrentPath)\bin\arm64-darwin-mono-sgen" Condition=" '$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' ">
-      <Pack>true</Pack>
-      <PackagePath>$(_BinDir)</PackagePath>
-    </Content>
-    <Content Include="$(_iOSCurrentPath)\bin\arm-darwin-mono-sgen" Condition=" '$(_PlatformName)' == 'iOS' ">
-      <Pack>true</Pack>
-      <PackagePath>$(_BinDir)</PackagePath>
-    </Content>
-    <Content Include="$(_iOSCurrentPath)\bin\arm64_32-darwin-mono-sgen" Condition=" '$(_PlatformName)' == 'watchOS' ">
-      <Pack>true</Pack>
-      <PackagePath>$(_BinDir)</PackagePath>
-    </Content>
-    <Content Include="$(_iOSCurrentPath)\bin\armv7k-unknown-darwin-mono-sgen" Condition=" '$(_PlatformName)' == 'watchOS' ">
-      <Pack>true</Pack>
-      <PackagePath>$(_BinDir)</PackagePath>
-    </Content>
-    <Content Include="$(_iOSCurrentPath)\LLVM\bin\llc;$(_iOSCurrentPath)\LLVM\bin\opt">
-      <Pack>true</Pack>
-      <PackagePath>tools\LLVM\bin\</PackagePath>
-    </Content>
-    <!-- SDK frameworks -->
-    <Content Include="$(_iOSCurrentPath)\SDKs\MonoTouch.iphonesimulator.sdk\**" Condition=" '$(_PlatformName)' == 'iOS'">
-      <Pack>true</Pack>
-      <PackagePath>tools\SDKS\MonoTouch.iphonesimulator.sdk</PackagePath>
-    </Content>
-    <Content Include="$(_iOSCurrentPath)\SDKs\MonoTouch.iphoneos.sdk\**" Condition=" '$(_PlatformName)' == 'iOS'">
-      <Pack>true</Pack>
-      <PackagePath>tools\SDKS\MonoTouch.iphoneos.sdk</PackagePath>
-    </Content>
-    <Content Include="$(_iOSCurrentPath)\SDKs\Xamarin.AppleTVSimulator.sdk\**" Condition=" '$(_PlatformName)' == 'tvOS'">
-      <Pack>true</Pack>
-      <PackagePath>tools\SDKS\Xamarin.AppleTVSimulator.sdk</PackagePath>
-    </Content>
-    <Content Include="$(_iOSCurrentPath)\SDKs\Xamarin.AppleTVOS.sdk\**" Condition=" '$(_PlatformName)' == 'tvOS'">
-      <Pack>true</Pack>
-      <PackagePath>tools\SDKS\Xamarin.AppleTVOS.sdk</PackagePath>
-    </Content>
-    <Content Include="$(_iOSCurrentPath)\SDKs\Xamarin.WachSimulator.sdk\**" Condition=" '$(_PlatformName)' == 'watchOS'">
-      <Pack>true</Pack>
-      <PackagePath>tools\SDKS\Xamarin.WachSimulator.sdk</PackagePath>
-    </Content>
-    <Content Include="$(_iOSCurrentPath)\SDKs\Xamarin.WatchOS.sdk\**" Condition=" '$(_PlatformName)' == 'watchOS'">
-      <Pack>true</Pack>
-      <PackagePath>tools\SDKS\Xamarin.WatchOS.sdk</PackagePath>
-    </Content>
-    <Content Include="$(_macOSCurrentPath)\lib\*.dylib;$(_macOSCurrentPath)\lib\*.a" Condition=" '$(_PlatformName)' == 'macOS' ">
-      <Pack>true</Pack>
-      <PackagePath>tools\lib</PackagePath>
-    </Content>
-    <!-- arch-specifid BCL -->
-    <Content Include="$(_iOSCurrentPath)\lib\32bits\Xamarin.iOS.dll" Condition=" '$(_PlatformName)' == 'iOS' ">
-      <Pack>true</Pack>
-      <PackagePath>tools\lib\32bits</PackagePath>
-    </Content>
-    <Content Include="$(_iOSCurrentPath)\lib\32bits\Xamarin.WatchOS.dll" Condition=" '$(_PlatformName)' == 'watchOS' ">
-      <Pack>true</Pack>
-      <PackagePath>tools\lib\32bits</PackagePath>
-    </Content>
-    <Content Include="$(_iOSCurrentPath)\lib\64bits\Xamarin.iOS.dll" Condition=" '$(_PlatformName)' == 'iOS' ">
-      <Pack>true</Pack>
-      <PackagePath>tools\lib\64bits</PackagePath>
-    </Content>
-    <Content Include="$(_iOSCurrentPath)\lib\64bits\Xamarin.TVOS.dll" Condition=" '$(_PlatformName)' == 'tvOS' ">
-      <Pack>true</Pack>
-      <PackagePath>tools\lib\64bits</PackagePath>
     </Content>
   </ItemGroup>
 </Project>

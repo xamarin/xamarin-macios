@@ -10,6 +10,7 @@ namespace Xamarin.Bundler {
 		public bool Is64Build => true;
 		public bool IsDualBuild => false;
 		public bool IsSimulatorBuild => false;
+		public bool IsDeviceBuild => throw ErrorHelper.CreateError (99, Errors.MX0099, "Can't call IsDeviceBuild in mmp");
 
 		bool RequiresXcodeHeaders => Driver.Registrar == RegistrarMode.Static && LinkMode == LinkMode.None;
 

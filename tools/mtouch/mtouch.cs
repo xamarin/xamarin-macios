@@ -158,11 +158,6 @@ namespace Xamarin.Bundler
 			}
 		}
 
-		public static string GetMonoTouchLibDirectory (Application app)
-		{
-			return Path.Combine (GetProductSdkDirectory (app), "usr", "lib");
-		}
-
 		public static string GetPlatformFrameworkDirectory (Application app)
 		{
 			string platform;
@@ -179,6 +174,8 @@ namespace Xamarin.Bundler
 			default:
 				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, "Xamarin.iOS");
 			}
+			if (IsDotNet)
+				return Path.Combine (FrameworkLibDirectory, platform, "v1.0");
 			return Path.Combine (FrameworkLibDirectory, "mono", platform);
 		}
 
@@ -193,6 +190,8 @@ namespace Xamarin.Bundler
 		{
 			switch (app.Platform) {
 			case ApplePlatform.iOS:
+				if (IsDotNet)
+					return Path.Combine (GetPlatformFrameworkDirectory (app), "..", "..", "..", "runtimes", "ios-armv7", "lib", "xamarinios10");
 				return Path.Combine (GetPlatformFrameworkDirectory (app), "..", "..", "32bits");
 			default:
 				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, "Xamarin.iOS");
@@ -203,34 +202,12 @@ namespace Xamarin.Bundler
 		{
 			switch (app.Platform) {
 			case ApplePlatform.iOS:
+				if (IsDotNet)
+					return Path.Combine (GetPlatformFrameworkDirectory (app), "..", "..", "..", "runtimes", "ios-arm64", "lib", "xamarinios10");
 				return Path.Combine (GetPlatformFrameworkDirectory (app), "..", "..", "64bits");
 			default:
 				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, "Xamarin.iOS");
 			}
-		}
-
-		public static string GetProductSdkDirectory (Application app)
-		{
-			string sdkName;
-			switch (app.Platform) {
-			case ApplePlatform.iOS:
-				sdkName = app.IsDeviceBuild ? "MonoTouch.iphoneos.sdk" : "MonoTouch.iphonesimulator.sdk";
-				break;
-			case ApplePlatform.WatchOS:
-				sdkName = app.IsDeviceBuild ? "Xamarin.WatchOS.sdk" : "Xamarin.WatchSimulator.sdk";
-				break;
-			case ApplePlatform.TVOS:
-				sdkName = app.IsDeviceBuild ? "Xamarin.AppleTVOS.sdk" : "Xamarin.AppleTVSimulator.sdk";
-				break;
-			default:
-				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, "Xamarin.iOS");
-			}
-			return Path.Combine (FrameworkDirectory, "SDKs", sdkName);
-		}
-
-		public static string GetProductFrameworksDirectory (Application app)
-		{
-			return Path.Combine (GetProductSdkDirectory (app), "Frameworks");
 		}
 
 		// This is for the -mX-version-min=A.B compiler flag
@@ -567,8 +544,11 @@ namespace Xamarin.Bundler
 							mono_native_lib = target.GetLibNativeName () + ".dylib";
 						sw.WriteLine ();
 						sw.WriteLine ($"\tmono_dllmap_insert (NULL, \"System.Native\", NULL, \"{mono_native_lib}\", NULL);");
+						sw.WriteLine ($"\tmono_dllmap_insert (NULL, \"libSystem.Native\", NULL, \"{mono_native_lib}\", NULL);");
 						sw.WriteLine ($"\tmono_dllmap_insert (NULL, \"System.Security.Cryptography.Native.Apple\", NULL, \"{mono_native_lib}\", NULL);");
+						sw.WriteLine ($"\tmono_dllmap_insert (NULL, \"libSystem.Security.Cryptography.Native.Apple\", NULL, \"{mono_native_lib}\", NULL);");
 						sw.WriteLine ($"\tmono_dllmap_insert (NULL, \"System.Net.Security.Native\", NULL, \"{mono_native_lib}\", NULL);");
+						sw.WriteLine ($"\tmono_dllmap_insert (NULL, \"libSystem.Net.Security.Native\", NULL, \"{mono_native_lib}\", NULL);");
 						sw.WriteLine ();
 					}
 
