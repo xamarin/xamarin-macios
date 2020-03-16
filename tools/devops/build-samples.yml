@@ -3,7 +3,8 @@
 
 variables:
   azure_build_url: '$(System.CollectionUri)/$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)'
-  macOSVersion: 'Hosted Mac Internal Mojave'
+  azpPoolName: 'Azure Pipelines'
+  macOSVersion: 'internal-macos-10.15'
   debug_filter: '^.*Debug.*$'
   release_filter: '^.*Release.*$'
   iphone_filter: '^iPhone$'
@@ -34,7 +35,8 @@ jobs:
 - job: ReportStartToGitHub
   displayName: Set pending GitHub status
   pool:
-    name: '$(macOSVersion)'
+    name: '$(azpPoolName)'
+    vmImage: '$(macOSVersion)'
   steps:
   - bash: ./jenkins/add-commit-status.sh "--token=$(github-pat)" "--hash=$BUILD_SOURCEVERSION" "--state=pending" --target-url="$AZURE_BUILD_URL" --description="$BUILD_DEFINITIONNAME" --context="$BUILD_DEFINITIONNAME"
     displayName: Set pending GitHub status
@@ -93,7 +95,8 @@ jobs:
         TEST_CONFIG_FILTER_EXPRESSION: $(release_filter)
 
   pool:
-    name: '$(macOSVersion)'
+    name: '$(azpPoolName)'
+    vmImage: '$(macOSVersion)'
 
   steps:
   - checkout: self
@@ -161,7 +164,8 @@ jobs:
   condition: always()
   dependsOn: macOS
   pool:
-    name: '$(macOSVersion)'
+    name: '$(azpPoolName)'
+    vmImage: '$(macOSVersion)'
   steps:
   - checkout: self
   - checkout: xamarin-macios-data
@@ -192,7 +196,8 @@ jobs:
   - macOS
   condition: always()
   pool:
-    name: '$(macOSVersion)'
+    name: '$(azpPoolName)'
+    vmImage: '$(macOSVersion)'
   variables:
     jobResultDebugiPhoneAF: $[ dependencies.macOS.outputs['Debug_iPhone_AF.ExportedVariables.JobStatus'] ]
     jobResultDebugiPhoneGR: $[ dependencies.macOS.outputs['Debug_iPhone_GR.ExportedVariables.JobStatus'] ]
