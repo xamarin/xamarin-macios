@@ -6,7 +6,8 @@
 //   Miguel de Icaza
 //
 // Copyright 2009, Novell, Inc.
-// Copyright 2020 Xamarin Inc.
+// Copyright 2012 Xamarin Inc.
+// Copyright 2020 Microsoft Corp.
 //
 using ObjCRuntime;
 using Foundation;
@@ -31,12 +32,10 @@ namespace StoreKit {
 		[Export ("state")]
 		SKDownloadState State { get; }
 #if MONOMAC
-		[NoWatch] // not necessary b/c #if MONOMAC, so this will not even compile for ios/watch/tvos?
 		[Obsolete ("Use 'State' instead.")]
 		[Wrap ("State", IsVirtual = true)]
 		SKDownloadState DownloadState { get;  }
 
-		[NoWatch] // not necessary b/c #if MONOMAC, so this will not even compile for ios/watch/tvos?
 		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'ExpectedContentLength' instead.")]
 		[Export ("contentLength", ArgumentSemantic.Copy)]
 		NSNumber ContentLength { get; }
@@ -75,12 +74,10 @@ namespace StoreKit {
 		double TimeRemaining { get;  }
 
 #if MONOMAC
-		[NoWatch] // not necessary b/c #if MONOMAC, so this will not even compile for ios/watch/tvos?
 		[Export ("contentURLForProductID:")]
 		[Static]
 		NSUrl GetContentUrlForProduct (string productId);
 
-		[NoWatch] // not necessary b/c #if MONOMAC, so this will not even compile for ios/watch/tvos?
 		[Export ("deleteContentForProductID:")]
 		[Static]
 		void DeleteContentForProduct (string productId);
@@ -102,7 +99,7 @@ namespace StoreKit {
 		[Export("paymentWithProduct:")]
 		SKPayment CreateFrom (SKProduct product);
 #if !MONOMAC
-		[NoWatch] // not necessary b/c #if MONOMAC, so this will not even compile for ios/watch/tvos?
+		[NoWatch]
 		[Static]
 		[Export ("paymentWithProductIdentifier:")]
 		[Availability (Deprecated = Platform.iOS_5_0, Message = "Use 'FromProduct (SKProduct)'' after fetching the list of available products from 'SKProductRequest' instead.")]
@@ -259,12 +256,10 @@ namespace StoreKit {
 		string ProductIdentifier { get; }
 
 #if MONOMAC
-		[NoWatch] // not necessary b/c #if MONOMAC, so this will not even compile for ios/watch/tvos?
 		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'IsDownloadable' instead.")]
 		[Export ("downloadable")]
 		bool Downloadable { get; }
 #elif !XAMCORE_4_0
-		[NoWatch] // IS THIS RIGHT?
 		[Obsolete ("Use 'IsDownloadable' instead.")]
 		bool Downloadable {
 			[Wrap ("IsDownloadable")]
