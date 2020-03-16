@@ -172,7 +172,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.iOS.csproj.in" />
     <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.macOS.csproj.in" />
