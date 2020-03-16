@@ -146,11 +146,11 @@ namespace Xharness.BCLTestImporter {
 
 		public string iOSMonoSDKPath {
 			get {
-				var locator = AssemblyLocator as Xharness.BCLTestImporter.Xamarin.AssemblyLocator;
+				var locator = AssemblyLocator as AssemblyLocator;
 				return locator?.iOSMonoSDKPath;
 			}
 			set {
-				var locator = AssemblyLocator as Xharness.BCLTestImporter.Xamarin.AssemblyLocator;
+				var locator = AssemblyLocator as AssemblyLocator;
 				if (locator != null)
 					locator.iOSMonoSDKPath = value;
 			}
@@ -158,11 +158,11 @@ namespace Xharness.BCLTestImporter {
 
 		public string MacMonoSDKPath {
 			get {
-				var locator = AssemblyLocator as Xharness.BCLTestImporter.Xamarin.AssemblyLocator;
+				var locator = AssemblyLocator as AssemblyLocator;
 				return locator?.MacMonoSDKPath;
 			}
 			set {
-				var locator = TemplatedProject.AssemblyLocator as Xharness.BCLTestImporter.Xamarin.AssemblyLocator;
+				var locator = TemplatedProject.AssemblyLocator as AssemblyLocator;
 				if (locator != null)
 					locator.MacMonoSDKPath = value;
 			}
@@ -263,14 +263,7 @@ namespace Xharness.BCLTestImporter {
 			return projectPaths;
 		}
 
-		public async Task<List<iOSBclTestProject>> GenerateAlliOSTestProjectsAsync ()
-		{
-			var projectPaths = new List<iOSBclTestProject> ();
-			// generate all the common projects
-			projectPaths.AddRange (await GenerateAllCommonTestProjectsAsync ());
-
-			return projectPaths;
-		}
+		public Task<List<iOSBclTestProject>> GenerateAlliOSTestProjectsAsync () => GenerateAllCommonTestProjectsAsync ();
 
 		public List<iOSBclTestProject> GenerateAlliOSTestProjects () => GenerateAlliOSTestProjectsAsync ().Result;
 

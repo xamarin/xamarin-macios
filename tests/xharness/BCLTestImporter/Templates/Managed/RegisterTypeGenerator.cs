@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
-namespace Xharness.BCLTestImporter {
+namespace Xharness.BCLTestImporter.Templates.Managed {
 	public static class RegisterTypeGenerator {
 
 		static readonly string UsingReplacement = "%USING%";

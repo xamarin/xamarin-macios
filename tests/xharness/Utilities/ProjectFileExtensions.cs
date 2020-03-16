@@ -540,7 +540,7 @@ namespace Xharness.Utilities {
 			if (import != null) {
 				var value = import.Attributes ["Include"].Value;
 				var unixValue = value.Replace ('\\', '/');
-				var fname = System.IO.Path.GetFileName (unixValue);
+				var fname = Path.GetFileName (unixValue);
 				if (newName == null) {
 					if (string.IsNullOrEmpty (fullPath))
 						newName = value.Replace (fname, $"Info{suffix}.plist");

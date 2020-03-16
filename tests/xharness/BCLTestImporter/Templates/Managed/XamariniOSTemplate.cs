@@ -283,8 +283,9 @@ namespace Xharness.BCLTestImporter.Templates.Managed {
 
 		internal static string GetContentNode (string resourcePath)
 		{
+			var fixedPath = resourcePath.Replace ('/', '\\');
 			var sb = new StringBuilder ();
-			sb.AppendLine ($"<Content Include=\"{resourcePath}\">");
+			sb.AppendLine ($"<Content Include=\"{fixedPath}\">");
 			sb.AppendLine ($"<Link>{Path.GetFileName (resourcePath)}</Link>");
 			sb.AppendLine ("<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>");
 			sb.AppendLine ("</Content>");

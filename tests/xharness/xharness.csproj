@@ -79,7 +79,6 @@
     <Compile Include="BCLTestImporter\BCLTestProjectDefinition.cs" />
     <Compile Include="BCLTestImporter\BCLTestProjectGenerator.cs" />
     <Compile Include="BCLTestImporter\Platform.cs" />
-    <Compile Include="BCLTestImporter\RegisterTypeGenerator.cs" />
     <Compile Include="Collections\BlockingEnumerableCollection.cs" />
     <Compile Include="Collections\ILoadAsync.cs" />
     <Compile Include="Collections\IAsyncEnumerable.cs" />
@@ -159,6 +158,7 @@
     <Compile Include="BCLTestImporter\Templates\IProjectFilter.cs" />
     <Compile Include="BCLTestImporter\Xamarin\AssemblyLocator.cs" />
     <Compile Include="BCLTestImporter\Xamarin\ProjectFilter.cs" />
+    <Compile Include="BCLTestImporter\Templates\Managed\RegisterTypeGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\tools\mtouch\SdkVersions.cs">

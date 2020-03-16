@@ -6,9 +6,14 @@ using Xharness.BCLTestImporter.Templates;
 
 namespace Xharness.BCLTestImporter.Xamarin {
 	public class ProjectFilter : IProjectFilter {
+
 		static readonly string splitPattern = ".part";
 
-		static readonly List<string> excludeDlls = new List<string> {
+		// all could be private, but we allow them to be public since this file will not be shared aoutside
+		// the xamarin-macios repo and is very specific to how we run the tests. Making them public makes testing
+		// the filger easier and more robuts, we don't want to be looking at reflection in the tests
+		public static readonly List<string> CommonIgnoredAssemblies = new List<string> {
+			// we already have them in the templates, do not re-add them
 			"mscorlib",
 			"nunitlite",
 			"System",
@@ -19,9 +24,7 @@ namespace Xharness.BCLTestImporter.Xamarin {
 			"xunit.abstractions",
 			"xunit.assert",
 			"Xunit.NetCore.Extensions",
-		};
-
-		static readonly List<string> CommonIgnoredAssemblies = new List<string> {
+			// specific to tests
 			"monotouch_Commons.Xml.Relaxng_test.dll", // not supported by xamarin
 			"monotouch_Cscompmgd_test.dll", // not supported by xamarin
 			"monotouch_I18N.CJK_test.dll",
@@ -41,17 +44,17 @@ namespace Xharness.BCLTestImporter.Xamarin {
 		// list of assemblies that are going to be ignored, any project with an assemblies that is ignored will
 		// be ignored
 
-		static readonly List<string> iOSIgnoredAssemblies = new List<string> { };
+		public static readonly List<string> iOSIgnoredAssemblies = new List<string> { };
 
-		static readonly List<string> tvOSIgnoredAssemblies = new List<string> {
+		public static readonly List<string> tvOSIgnoredAssemblies = new List<string> {
 		};
 
-		static readonly List<string> watcOSIgnoredAssemblies = new List<string> {
+		public static readonly List<string> watcOSIgnoredAssemblies = new List<string> {
 			"monotouch_Mono.Security_test.dll",
 			"monotouch_Mono.Data.Tds_test.dll", // not present in the watch tests dlls
 		};
 
-		static readonly List<(string assembly, Platform [] platforms)> macIgnoredAssemblies = new List<(string assembly, Platform [] platforms)> {
+		public static readonly List<(string assembly, Platform [] platforms)> macIgnoredAssemblies = new List<(string assembly, Platform [] platforms)> {
 			(assembly: "xammac_net_4_5_I18N.CJK_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }),
 			(assembly: "xammac_net_4_5_I18N.MidEast_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }),
 			(assembly: "xammac_net_4_5_I18N.Other_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }),

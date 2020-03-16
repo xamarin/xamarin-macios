@@ -1,17 +1,45 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
+using Moq;
 using NUnit.Framework;
 using Xharness.BCLTestImporter;
+using Xharness.BCLTestImporter.Templates;
+using Xharness.BCLTestImporter.Xamarin;
 
 namespace Xharness.Tests.BCLTestImporter.Tests {
-	
+
+
+	// test the class so that we ensure that we do call the template object and that we are correctly creating the
+	// default projects.
 	public class BCLTestProjectGeneratorTest
 	{
-		readonly string outputdir;
-		
-		public BCLTestProjectGeneratorTest ()
+		string outputdir;
+		AssemblyLocator assemblyLocator;
+		Mock<ITemplatedProject> template;
+		BCLTestProjectGenerator generator;
+
+		[SetUp]
+		public void SetUp ()
 		{
-			outputdir = Path.GetTempPath ();
+			outputdir = Path.GetTempFileName ();
+			File.Delete (outputdir);
+			Directory.CreateDirectory (outputdir);
+			assemblyLocator = new AssemblyLocator ();
+			template = new Mock<ITemplatedProject> ();
+			generator = new BCLTestProjectGenerator (outputdir) {
+				AssemblyLocator = assemblyLocator,
+				TemplatedProject = template.Object
+			};
+		}
+
+		[TearDown]
+		public void TearDown ()
+		{
+			if (Directory.Exists (outputdir))
+				Directory.Delete (outputdir, false);
+			template = null;
 		}
 
 		[Test]
@@ -25,94 +53,61 @@ namespace Xharness.Tests.BCLTestImporter.Tests {
 		public void ConstructorNullMonoDir () => 
 			Assert.Throws<ArgumentNullException> (() => new BCLTestProjectGenerator ("", null));
 
-		/*
-		[TestCase ("iOSProject", Platform.iOS, "iOSProject.csproj")]
-		[TestCase ("WatchOSProject", Platform.WatchOS, "WatchOSProject-watchos.csproj")]
-		[TestCase ("TvOSProject", Platform.TvOS, "TvOSProject-tvos.csproj")]
-		// TODO: [InlineData ("MacProject", Platform.MacOS, null)] not implemented yet
-		public void GetProjectPath (string projectName, Platform platform, string expectedName)
+		[Test]
+		public void iOSMonoSDKPathGetterTest ()
 		{
-			// ignore the fact that all params are the same, we do not care
-			var generator = new BCLTestProjectGenerator (outputdir);
-			var path = generator.GetProjectPath (projectName, platform);	
-			Assert.AreEqual (Path.Combine (generator.OutputDirectoryPath, expectedName), path);
-		}
-		
-		[TestCase ("WatchApp", WatchAppType.App, "WatchApp-watchos-app.csproj")]
-		[TestCase ("WatchExtension", WatchAppType.Extension, "WatchExtension-watchos-extension.csproj")]
-		public void GetProjectPathWatchOS (string projectName, WatchAppType appType, string expectedName)
-		{
-			// ignore the fact that all params are the same, we do not care
-			var generator = new BCLTestProjectGenerator (outputdir, outputdir, outputdir, outputdir, outputdir);
-			var path = generator.GetProjectPath (projectName, appType);
-			Assert.AreEqual (Path.Combine (generator.OutputDirectoryPath, expectedName), path);
+			assemblyLocator.iOSMonoSDKPath = "/path/to/ios/sdk";
+			Assert.AreEqual (assemblyLocator.iOSMonoSDKPath, generator.iOSMonoSDKPath);
 		}
 
-		[TestCase ("/usr/path", Platform.iOS, "Info.plist")]
-		[TestCase ("/usr/second/path", Platform.TvOS, "Info-tv.plist")]
-		[TestCase ("/usr/other/path", Platform.WatchOS, "Info-watchos.plist")]
-		// TODO: [InlineData ("/usr/mac/path", Platform.MacOS)] not implemented yet
-		public void GetPListPath (string rootDir, Platform platform, string expectedName)
+		[Test]
+		public void iOSMonoSDKPathSetterTest ()
 		{
-			var path = BCLTestProjectGenerator.GetPListPath (rootDir, platform);
-			Assert.AreEqual (Path.Combine (rootDir, expectedName), path);
-		}
-		
-		[TestCase ("/usr/bin", WatchAppType.App, "Info-watchos-app.plist")]
-		[TestCase ("/usr/local", WatchAppType.Extension, "Info-watchos-extension.plist")]
-		public void GetPListPathWatchOS  (string rootDir, WatchAppType  appType, string expectedName)
-		{
-			var path = BCLTestProjectGenerator.GetPListPath (rootDir, appType);
-			Assert.AreEqual (Path.Combine (rootDir, expectedName), path);
-		}
-		
-		[TestCase ("System.Xml.dll")]
-		[TestCase ("MyAssembly.dll")]
-		public void GetReferenceNodeNullHint (string assembly)
-		{
-			var expected = $"<Reference Include=\"{assembly}\" />";
-			Assert.AreEqual (expected, BCLTestProjectGenerator.GetReferenceNode (assembly));
-		}
-		
-		[TestCase ("System.Xml.dll", "my/path/to/the/dll")]
-		[TestCase ("MyAssembly.dll", "thepath")]
-		public void GetReferenceNode (string assembly, string hint)
-		{
-			var fixedHint = hint.Replace ("/", "\\");
-			var sb = new StringBuilder ();
-			sb.AppendLine ($"<Reference Include=\"{assembly}\" >");
-			sb.AppendLine ($"<HintPath>{fixedHint}</HintPath>");
-			sb.AppendLine ("</Reference>");
-			var expected = sb.ToString ();	
-			Assert.AreEqual (expected, BCLTestProjectGenerator.GetReferenceNode (assembly, hint));
+			generator.iOSMonoSDKPath = "/path/to/ios/sdk";
+			Assert.AreEqual (generator.iOSMonoSDKPath, assemblyLocator.iOSMonoSDKPath);
 		}
 
-		[TestCase ("my/path/to/the/dll")]
-		[TestCase ("my/other/path/to/the/dll")]
-		public void GetRegisterTypeNode (string registerPath)
+		[Test]
+		public void MacMonoSDKPathGetterTest ()
 		{
-			var fixedPath = registerPath.Replace ("/", "\\");
-			var sb = new StringBuilder ();
-			sb.AppendLine ($"<Compile Include=\"{registerPath}\">");
-			sb.AppendLine ($"<Link>{Path.GetFileName (registerPath)}</Link>");
-			sb.AppendLine ("</Compile>");
-			var expected = sb.ToString ();
-			Assert.AreEqual (expected, BCLTestProjectGenerator.GetRegisterTypeNode (registerPath));
+			assemblyLocator.MacMonoSDKPath = "/path/to/mac/sdk";
+			Assert.AreEqual (assemblyLocator.MacMonoSDKPath, generator.MacMonoSDKPath);
 		}
 
-		[TestCase ("TestProject", "/my/project/plist/path")]
-		[TestCase ("OtherProject", "\\test\\project\\plist")]
-		public void GenerateWatchProject (string projectName, string plistPath)
+		[Test]
+		public void MacMonoSDKPathSetterTest ()
 		{
-			var generator = new BCLTestProjectGenerator (outputdir, outputdir, outputdir, outputdir, outputdir);
-			var template = $"{BCLTestProjectGenerator.NameKey} {BCLTestProjectGenerator.WatchOSTemplatePathKey} {BCLTestProjectGenerator.PlistKey} {BCLTestProjectGenerator.WatchOSCsporjAppKey}";
-			var generatedProject = generator.GenerateWatchProject (projectName, template, plistPath);
-			StringAssert.DoesNotContain (BCLTestProjectGenerator.NameKey, generatedProject);
-			StringAssert.Contains (projectName, generatedProject);
-			StringAssert.DoesNotContain (BCLTestProjectGenerator.WatchOSTemplatePathKey, generatedProject);
-			StringAssert.DoesNotContain (BCLTestProjectGenerator.PlistKey, generatedProject);
-			StringAssert.Contains (plistPath, generatedProject);
+			generator.MacMonoSDKPath = "/path/to/mac/sdk";
+			Assert.AreEqual (generator.MacMonoSDKPath, assemblyLocator.MacMonoSDKPath);
 		}
-		*/
+
+		[Test]
+		public async Task GenerateTestProjectsAsyncTest ()
+		{
+			var projects = new List<BclTestProject> () {
+				new BclTestProject  {
+					Name = "First project",
+					XUnit = false,
+				},
+				new BclTestProject {
+					Name = "Second project",
+					XUnit = true,
+				},
+			};
+			var infos = new List<BclTestProjectInfo> {
+				new BclTestProjectInfo {
+					Name = "First project",
+				},
+				new BclTestProjectInfo {
+					Name = "Second project",
+				}
+			};
+			template.Setup (t => t.GenerateTestProjectsAsync (It.IsAny<IEnumerable<BclTestProjectInfo>> (), It.IsAny<Platform> ())).Returns (() => {
+				return Task.FromResult (projects);
+			});
+			var result = await generator.GenerateTestProjectsAsync (infos, Platform.iOS);
+			Assert.AreEqual (projects.Count, result.Count);
+			template.Verify (t => t.GenerateTestProjectsAsync (It.IsAny<IEnumerable<BclTestProjectInfo>> (), It.IsAny<Platform> ()));
+		}
 	}
 }
