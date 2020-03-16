@@ -25,20 +25,20 @@ namespace Xharness.Jenkins
 		public Harness Harness { get; }
 		public bool IncludeAll;
 		public bool IncludeBcl;
-		public bool IncludeMac = true;
-		public bool IncludeiOS = true;
-		public bool IncludeiOS64 = true;
-		public bool IncludeiOS32 = true;
+		public bool IncludeMac = false;
+		public bool IncludeiOS = false;
+		public bool IncludeiOS64 = false;
+		public bool IncludeiOS32 = false;
 		public bool IncludeiOSExtensions;
 		public bool ForceExtensionBuildOnly;
-		public bool IncludetvOS = true;
-		public bool IncludewatchOS = true;
+		public bool IncludetvOS = false;
+		public bool IncludewatchOS = false;
 		public bool IncludeMmpTest;
-		public bool IncludeiOSMSBuild = true;
+		public bool IncludeiOSMSBuild = false;
 		public bool IncludeMtouch;
 		public bool IncludeBtouch;
 		public bool IncludeMacBindingProject;
-		public bool IncludeSimulator = true;
+		public bool IncludeSimulator = false;
 		public bool IncludeOldSimulatorTests;
 		public bool IncludeDevice;
 		public bool IncludeXtro;
@@ -47,8 +47,8 @@ namespace Xharness.Jenkins
 		public bool IncludeBCLxUnit;
 		public bool IncludeBCLNUnit;
 		public bool IncludeMscorlib;
-		public bool IncludeNonMonotouch = true;
-		public bool IncludeMonotouch = true;
+		public bool IncludeNonMonotouch = false;
+		public bool IncludeMonotouch = false;
 
 		public bool CleanSuccessfulTestRuns = true;
 		public bool UninstallTestApp = true;
@@ -1315,7 +1315,7 @@ namespace Xharness.Jenkins
 			var sb = new StringBuilder ();
 			var callback_log = new CallbackLog ((v) => sb.Append (v));
 			var log = Log.CreateAggregatedLog (callback_log, MainLog);
-			return Harness.ProcessManager.ExecuteCommandAsync ("make", new [] { "all", $"-j{Environment.ProcessorCount}", "-C", Path.Combine (Harness.RootDirectory, "test-libraries") }, log, TimeSpan.FromMinutes (10)).ContinueWith ((v) => {
+			return Harness.ProcessManager.ExecuteCommandAsync ("make", new [] { "all", $"-j{Environment.ProcessorCount}", "-C", Path.Combine (Harness.RootDirectory, "test-libraries"), "V=1" }, log, TimeSpan.FromMinutes (10)).ContinueWith ((v) => {
 				var per = v.Result;
 				if (!per.Succeeded) {
 					// Only show the log if something went wrong.

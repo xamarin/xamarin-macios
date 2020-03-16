@@ -1,6 +1,9 @@
 TOP=../..
 include $(TOP)/Make.config
 
+e:
+	env | sort
+
 # without this many compiler warnings about unused functions and variables
 # in system headers show up.
 export CCACHE_CPP2=1
@@ -23,13 +26,13 @@ GENERATED_FILES_PATTERN = \
 	RegistrarTest.generated%cs \
 	TrampolineTest.generated%cs \
 
-testgenerator.exe: testgenerator.cs Makefile
+testgenerator.exe: testgenerator.cs Makefile e
 	$(Q) mcs -out:$@ $<
 
-$(GENERATED_FILES_PATTERN): testgenerator.exe
+$(GENERATED_FILES_PATTERN): testgenerator.exe e
 	$(Q) mono --debug $<
 
-libtest-object.m libtest-ar.m:
+libtest-object.m libtest-ar.m: e
 	$(Q) ln -fhs libtest.m $@
 
 define Template
