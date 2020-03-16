@@ -61,7 +61,7 @@ namespace Xharness {
 
 		string configuration;
 		public string Configuration {
-			get { return configuration ?? Harness.Configuration; }
+			get { return configuration ?? Harness.BuildConfiguration; }
 			set { configuration = value; }
 		}
 

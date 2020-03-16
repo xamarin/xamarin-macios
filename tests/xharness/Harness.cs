@@ -28,9 +28,10 @@ namespace Xharness
 		Version XcodeVersion { get; }
 		Task<ProcessExecutionResult> ExecuteXcodeCommandAsync (string executable, IList<string> args, ILog log, TimeSpan timeout);
 	}
+
 	public class HarnessConfiguration {
 		public bool AutoConf { get; set; }
-		public string Configuration { get; set; } = "Debug";
+		public string BuildConfiguration { get; set; } = "Debug";
 		public bool DryRun { get; set; }
 		public Dictionary<string, string> EnvironmentVariables { get; set; } = new Dictionary<string, string> ();
 		public bool? IncludeSystemPermissionTests { get; set; }
@@ -43,7 +44,6 @@ namespace Xharness
 		public string PeriodicCommand { get; set; }
 		public string PeriodicCommandArguments { get; set; }
 		public TimeSpan PeriodicCommandInterval { get; set; }
-		public string RootDirectory { get; set; }
 		public string SdkRoot { get; set; }
 		public AppRunnerTarget Target { get; set; }
 		public double TimeoutInMinutes { get; set; } = 15;
@@ -104,7 +104,7 @@ namespace Xharness
 		// Run
 		public AppRunnerTarget Target { get; set; }
 		public string SdkRoot { get; set; }
-		public string Configuration { get; set; } = "Debug";
+		public string BuildConfiguration { get; set; } = "Debug";
 		public string LogFile { get; set; }
 		public string LogDirectory { get; set; } = Environment.CurrentDirectory;
 		public double Timeout { get; set; } = 15; // in minutes
@@ -128,7 +128,7 @@ namespace Xharness
 				throw new ArgumentNullException (nameof (configuration));
 
 			autoConf = configuration.AutoConf;
-			Configuration = configuration.Configuration ?? throw new ArgumentNullException (nameof (configuration));
+			BuildConfiguration = configuration.BuildConfiguration ?? throw new ArgumentNullException (nameof (configuration));
 			DryRun = configuration.DryRun;
 			IncludeSystemPermissionTests = configuration.IncludeSystemPermissionTests;
 			IOSTestProjects = configuration.IOSTestProjects;
@@ -139,7 +139,6 @@ namespace Xharness
 			PeriodicCommand = configuration.PeriodicCommand;
 			PeriodicCommandArguments = configuration.PeriodicCommandArguments;
 			PeriodicCommandInterval = configuration.PeriodicCommandInterval;
-			DirectoryUtilities.RootDirectory = configuration.RootDirectory;
 			SdkRoot = configuration.SdkRoot;
 			Target = configuration.Target;
 			Timeout = configuration.TimeoutInMinutes;
