@@ -391,6 +391,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "PushKit", "PushKit", 6 },
 				{ "SoundAnalysis", "SoundAnalysis", 6 },
 				{ "CoreMedia", "CoreMedia", 6 },
+				{ "StoreKit", "StoreKit", 6,2 }
 
 			};
 		}
