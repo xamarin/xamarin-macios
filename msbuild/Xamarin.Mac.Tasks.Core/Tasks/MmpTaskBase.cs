@@ -28,8 +28,6 @@ namespace Xamarin.Mac.Tasks
 
 		public bool IsXPCService { get; set; }
 
-		public bool UseXamMacFullFramework { get; set; }
-
 		public string ApplicationName { get; set; }
 		public string Architecture { get; set; }
 
@@ -56,8 +54,6 @@ namespace Xamarin.Mac.Tasks
 
 			if (!string.IsNullOrEmpty (ApplicationName))
 				args.AddQuotedLine ("/name:" + ApplicationName);
-
-			args.AddLine ($"/profile:{TargetFrameworkMoniker}");
 
 			XamMacArch arch;
 			if (!Enum.TryParse (Architecture, true, out arch))
