@@ -12,6 +12,8 @@ using Xharness.Logging;
 using Xharness.Execution;
 using Xharness.Targets;
 using Xharness.Utilities;
+using Xharness.Hardware;
+using Xharness.Listeners;
 
 namespace Xharness
 {
@@ -25,12 +27,6 @@ namespace Xharness
 		Jenkins,
 	}
 
-	public interface IHarness {
-		string MlaunchPath { get; }
-		string XcodeRoot { get; }
-		Version XcodeVersion { get; }
-		Task<ProcessExecutionResult> ExecuteXcodeCommandAsync (string executable, IList<string> args, ILog log, TimeSpan timeout);
-	}
 	public class HarnessConfiguration {
 		public bool AutoConf { get; set; }
 		public string Configuration { get; set; } = "Debug";
@@ -57,8 +53,78 @@ namespace Xharness
 		public XmlResultJargon XmlJargon { get; set; } = XmlResultJargon.NUnitV3;
 	}
 
-	public class Harness : IHarness
-	{
+	public interface IHarness {
+		HarnessAction Action { get; }
+		string BCLTodayExtensionTemplate { get; }
+		string Configuration { get; }
+		bool DisableWatchOSOnWrench { get; }
+		string DOTNET { get; }
+		bool DryRun { get; }
+		bool ENABLE_XAMARIN { get; }
+		Dictionary<string, string> EnvironmentVariables { get; }
+		ILog HarnessLog { get; set; }
+		bool InCI { get; }
+		bool INCLUDE_IOS { get; }
+		bool INCLUDE_MAC { get; }
+		bool INCLUDE_TVOS { get; }
+		bool INCLUDE_WATCH { get; }
+		bool? IncludeSystemPermissionTests { get; set; }
+		string IOS_DESTDIR { get; }
+		List<iOSTestProject> IOSTestProjects { get; }
+		bool IsBetaXcode { get; }
+		string JENKINS_RESULTS_DIRECTORY { get; }
+		string JenkinsConfiguration { get; }
+		HashSet<string> Labels { get; }
+		double LaunchTimeout { get; }
+		string LogDirectory { get; }
+		string MAC_DESTDIR { get; }
+		List<MacTestProject> MacTestProjects { get; }
+		string MarkdownSummaryPath { get; }
+		string MlaunchPath { get; }
+		string MONO_IOS_SDK_DESTDIR { get; }
+		string MONO_MAC_SDK_DESTDIR { get; }
+		string MONO_PATH { get; }
+		string PeriodicCommand { get; }
+		string PeriodicCommandArguments { get; }
+		TimeSpan PeriodicCommandInterval { get; }
+		IProcessManager ProcessManager { get; }
+		string SdkRoot { get; }
+		AppRunnerTarget Target { get; }
+		double Timeout { get; }
+		string TodayContainerTemplate { get; }
+		string TodayExtensionTemplate { get; }
+		string TVOS_MONO_PATH { get; }
+		bool UseGroupedApps { get; }
+		int Verbosity { get; }
+		string WatchOSAppTemplate { get; }
+		string WatchOSContainerTemplate { get; }
+		string WatchOSExtensionTemplate { get; }
+		string XcodeRoot { get; }
+		Version XcodeVersion { get; }
+		string XIBuildPath { get; }
+		XmlResultJargon XmlJargon { get; }
+
+		int Configure ();
+		Task<HashSet<string>> CreateCrashReportsSnapshotAsync (ILog log, bool simulatorOrDesktop, string device);
+		int Execute ();
+		Task<ProcessExecutionResult> ExecuteXcodeCommandAsync (string executable, IList<string> args, ILog log, TimeSpan timeout);
+		bool GetIncludeSystemPermissionTests (TestPlatform platform, bool device);
+		int Install ();
+		int Jenkins ();
+		void Log (int min_level, string message);
+		void Log (int min_level, string message, params object [] args);
+		void Log (string message);
+		void Log (string message, params object [] args);
+		void LogWrench (string message);
+		void LogWrench (string message, params object [] args);
+		Guid NewStableGuid (string seed = null);
+		int Run ();
+		void Save (StringWriter doc, string path);
+		Task<ILogFile> SymbolicateCrashReportAsync (ILogs logs, ILog log, ILogFile report);
+		int Uninstall ();
+	}
+
+	public class Harness : IHarness {
 		public HarnessAction Action { get; }
 		public int Verbosity { get; }
 		public ILog HarnessLog { get; set; }
@@ -153,7 +219,7 @@ namespace Xharness
 		{
 			ProcessManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 			Action = action;
-			
+
 			if (configuration is null)
 				throw new ArgumentNullException (nameof (configuration));
 
@@ -181,7 +247,7 @@ namespace Xharness
 
 			if (configuration.Labels != null)
 				Labels = new HashSet<string> (configuration.Labels);
-			
+
 			if (configuration.EnvironmentVariables != null)
 				EnvironmentVariables = new Dictionary<string, string> (configuration.EnvironmentVariables);
 
@@ -331,7 +397,7 @@ namespace Xharness
 			ENABLE_XAMARIN = make_config.ContainsKey ("ENABLE_XAMARIN") && !string.IsNullOrEmpty (make_config ["ENABLE_XAMARIN"]);
 			DOTNET = make_config ["DOTNET"];
 		}
-		 
+
 		int AutoConfigureMac (bool generate_projects)
 		{
 			int rv = 0;
@@ -346,7 +412,7 @@ namespace Xharness
 					TargetFrameworkFlavors = p.Flavors,
 				});
 			}
-			
+
 			MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "Mac", "introspection-mac.csproj")), targetFrameworkFlavor: MacFlavors.Modern) { Name = "introspection" });
 
 			var hard_coded_test_suites = new [] {
@@ -472,7 +538,7 @@ namespace Xharness
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link all", "link all.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link sdk", "link sdk.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
 
-			foreach (var flavor in new MonoNativeFlavor[] { MonoNativeFlavor.Compat, MonoNativeFlavor.Unified }) {
+			foreach (var flavor in new MonoNativeFlavor [] { MonoNativeFlavor.Compat, MonoNativeFlavor.Unified }) {
 				var monoNativeInfo = new MonoNativeInfo (this, flavor);
 				var iosTestProject = new iOSTestProject (monoNativeInfo.ProjectPath) {
 					MonoNativeInfo = monoNativeInfo,
@@ -618,13 +684,18 @@ namespace Xharness
 		{
 			if (HarnessLog == null)
 				HarnessLog = new ConsoleLog ();
-			
+
 			foreach (var project in IOSTestProjects) {
-				var runner = new AppRunner () {
-					Harness = this,
-					ProjectFile = project.Path,
-					MainLog = HarnessLog,
-				};
+				var runner = new AppRunner (ProcessManager,
+					new SimulatorsLoaderFactory (this),
+					new SimpleListenerFactory (),
+					new DeviceLoaderFactory (this, ProcessManager),
+					Target,
+					this,
+					HarnessLog,
+					project.Path,
+					Configuration);
+
 				using (var install_log = new AppInstallMonitorLog (runner.MainLog)) {
 					var rv = runner.InstallAsync (install_log.CancellationToken).Result;
 					if (!rv.Succeeded)
@@ -640,12 +711,16 @@ namespace Xharness
 				HarnessLog = new ConsoleLog ();
 
 			foreach (var project in IOSTestProjects) {
-				var runner = new AppRunner ()
-				{
-					Harness = this,
-					ProjectFile = project.Path,
-					MainLog = HarnessLog,
-				};
+				var runner = new AppRunner (ProcessManager,
+					new SimulatorsLoaderFactory (this),
+					new SimpleListenerFactory (),
+					new DeviceLoaderFactory (this, ProcessManager),
+					Target,
+					this,
+					HarnessLog,
+					project.Path,
+					Configuration);
+
 				var rv = runner.UninstallAsync ().Result;
 				if (!rv.Succeeded)
 					return rv.ExitCode;
@@ -657,13 +732,18 @@ namespace Xharness
 		{
 			if (HarnessLog == null)
 				HarnessLog = new ConsoleLog ();
-			
+
 			foreach (var project in IOSTestProjects) {
-				var runner = new AppRunner () {
-					Harness = this,
-					ProjectFile = project.Path,
-					MainLog = HarnessLog,
-				};
+				var runner = new AppRunner (ProcessManager,
+					new SimulatorsLoaderFactory (this),
+					new SimpleListenerFactory (),
+					new DeviceLoaderFactory (this, ProcessManager),
+					Target,
+					this,
+					HarnessLog,
+					project.Path,
+					Configuration);
+
 				var rv = runner.RunAsync ().Result;
 				if (rv != 0)
 					return rv;
@@ -679,7 +759,7 @@ namespace Xharness
 			HarnessLog?.WriteLine (message);
 		}
 
-		public void Log (int min_level, string message, params object[] args)
+		public void Log (int min_level, string message, params object [] args)
 		{
 			if (Verbosity < min_level)
 				return;
@@ -692,12 +772,12 @@ namespace Xharness
 			Log (0, message);
 		}
 
-		public void Log (string message, params object[] args)
+		public void Log (string message, params object [] args)
 		{
 			Log (0, message, args);
 		}
 
-		public void LogWrench (string message, params object[] args)
+		public void LogWrench (string message, params object [] args)
 		{
 			// Disable this for now, since we're not uploading directly to wrench anymore, but instead using the Html Report.
 			//if (!InWrench)
@@ -713,7 +793,7 @@ namespace Xharness
 
 			Console.WriteLine (message);
 		}
-		
+
 		public bool InCI {
 			get {
 				// We use the 'BUILD_REVISION' variable to detect whether we're running CI or not.
@@ -753,11 +833,8 @@ namespace Xharness
 				AutoConfigureIOS ();
 				AutoConfigureMac (false);
 			}
-			
-			var jenkins = new Jenkins.Jenkins ()
-			{
-				Harness = this,
-			};
+
+			var jenkins = new Jenkins.Jenkins (this, ProcessManager);
 			return jenkins.Run ();
 		}
 
@@ -822,7 +899,7 @@ namespace Xharness
 		// annoying when XS reloads the projects, and also causes unnecessary rebuilds).
 		// Nothing really breaks when the sequence isn't identical from run to run, so
 		// this is just a best minimal effort.
-		static Random guid_generator = new Random (unchecked ((int) 0xdeadf00d));
+		static Random guid_generator = new Random (unchecked((int) 0xdeadf00d));
 		public Guid NewStableGuid (string seed = null)
 		{
 			var bytes = new byte [16];
@@ -871,7 +948,7 @@ namespace Xharness
 			var symbolicated = logs.Create (Path.ChangeExtension (name, ".symbolicated.log"), $"Symbolicated crash report: {name}", timestamp: false);
 			var environment = new Dictionary<string, string> { { "DEVELOPER_DIR", Path.Combine (XcodeRoot, "Contents", "Developer") } };
 			var rv = await ProcessManager.ExecuteCommandAsync (symbolicatecrash, new [] { report.Path }, symbolicated, TimeSpan.FromMinutes (1), environment);
-			if (rv.Succeeded) {;
+			if (rv.Succeeded) {
 				log.WriteLine ("Symbolicated {0} successfully.", report.Path);
 				return symbolicated;
 			} else {

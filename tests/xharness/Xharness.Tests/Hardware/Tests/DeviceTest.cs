@@ -29,12 +29,12 @@ namespace Xharness.Tests.Hardware.Tests {
 			public static IEnumerable DevicePlatformDevices {
 				get {
 					var data = new [] {
-						(deviceClass: "iPhone", result: DevicePlatform.iOS),
-						(deviceClass: "iPod", result: DevicePlatform.iOS),
-						(deviceClass: "iPad", result: DevicePlatform.iOS),
-						(deviceClass: "AppleTV", result: DevicePlatform.tvOS),
-						(deviceClass: "Watch", result: DevicePlatform.watchOS),
-						(deviceClass: "Glasses??", result: DevicePlatform.Unknown),
+						(deviceClass: DeviceClass.iPhone, result: DevicePlatform.iOS),
+						(deviceClass: DeviceClass.iPod, result: DevicePlatform.iOS),
+						(deviceClass: DeviceClass.iPad, result: DevicePlatform.iOS),
+						(deviceClass: DeviceClass.AppleTV, result: DevicePlatform.tvOS),
+						(deviceClass: DeviceClass.Watch, result: DevicePlatform.watchOS),
+						(deviceClass: DeviceClass.Unknown, result: DevicePlatform.Unknown),
 					};
 					foreach (var (deviceClass, result) in data) {
 						yield return new TestCaseData (new Device { DeviceClass = deviceClass }).Returns (result);
@@ -134,17 +134,17 @@ namespace Xharness.Tests.Hardware.Tests {
 							(version: new Version (11,2), result: false),
 							(version: new Version (12,1), result: false),
 						};
-					var data = new Dictionary<string, (Version version, bool result) []> {
-						["iPhone"] = iOSCommon,
-						["iPad"] = iOSCommon,
-						["iPod"] = iOSCommon,
-						["AppleTV"] = new [] {
+					var data = new Dictionary<DeviceClass, (Version version, bool result) []> {
+						[DeviceClass.iPhone] = iOSCommon,
+						[DeviceClass.iPad] = iOSCommon,
+						[DeviceClass.iPod] = iOSCommon,
+						[DeviceClass.AppleTV] = new [] {
 							(version: new Version (1,1), result: false),
 							(version: new Version (2,1), result: false),
 							(version: new Version (3,1), result: false),
 							(version: new Version (4,1), result: false),
 						},
-						["Watch"] = new [] {
+						[DeviceClass.Watch] = new [] {
 							(version: new Version (1,1), result: true),
 							(version: new Version (2,1), result: true),
 							(version: new Version (3,1), result: true),

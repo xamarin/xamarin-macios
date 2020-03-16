@@ -28,10 +28,7 @@ namespace Xharness.Tests.Hardware.Tests {
 		{
 			harness = new Mock<IHarness> ();
 			processManager = new Mock<IProcessManager> ();
-			devices = new Devices {
-				Harness = harness.Object,
-				ProcessManager = processManager.Object,
-			};
+			devices = new Devices (harness.Object, processManager.Object);
 			executionLog = new Mock<ILog> ();
 			mlaunchPath = "/usr/bin/mlaunch"; // any will be ok, is mocked
 			sdkPath = "/Applications/Xcode.app";

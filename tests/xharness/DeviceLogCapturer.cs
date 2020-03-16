@@ -9,7 +9,7 @@ namespace Xharness
 {
 	public class DeviceLogCapturer
 	{
-		public Harness Harness;
+		public IHarness Harness;
 		public ILog Log;
 		public string DeviceName;
 
