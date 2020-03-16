@@ -77,7 +77,7 @@ namespace Xharness.Jenkins.TestTasks
 
 			var clean_state = false;//Platform == TestPlatform.watchOS;
 			runner = new AppRunner (processManager,
-				new SimulatorsLoaderFactory (Harness),
+				new SimulatorsLoaderFactory (Harness, processManager),
 				new SimpleListenerFactory (),
 				new DeviceLoaderFactory (Harness, processManager),
 				AppRunnerTarget,

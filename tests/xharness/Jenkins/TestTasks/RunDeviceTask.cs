@@ -80,7 +80,7 @@ namespace Xharness.Jenkins.TestTasks
 					Jenkins.MainLog.WriteLine ("Acquired device '{0}' for '{1}'", Device.Name, ProjectFile);
 
 					runner = new AppRunner (processManager,
-						new SimulatorsLoaderFactory (Harness),
+						new SimulatorsLoaderFactory (Harness, processManager),
 						new SimpleListenerFactory (),
 						new DeviceLoaderFactory (Harness, processManager),
 						AppRunnerTarget,
@@ -142,7 +142,7 @@ namespace Xharness.Jenkins.TestTasks
 							// will do both of these things, preparing the device for launching the today extension).
 
 							AppRunner todayRunner = new AppRunner (processManager,
-								new SimulatorsLoaderFactory (Harness),
+								new SimulatorsLoaderFactory (Harness, processManager),
 								new SimpleListenerFactory (),
 								new DeviceLoaderFactory (Harness, processManager),
 								AppRunnerTarget,
