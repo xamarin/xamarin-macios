@@ -11,7 +11,8 @@ else
 fi
 make $DEBUG -C xamarin-macios/builds download -j
 make $DEBUG -C xamarin-macios/builds .stamp-mono-ios-sdk-destdir -j
-make $DEBUG -C xamarin-macios/tests vsts-device-tests
+#make $DEBUG -C xamarin-macios/tests vsts-device-tests
+./foo.sh
 
 if [ $? -eq 0 ]; then
   echo "hello"
