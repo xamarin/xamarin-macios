@@ -52,41 +52,5 @@ namespace Xharness.Utilities
 
 			throw new Exception ("Could not create temporary directory");
 		}
-
-		static string root_directory;
-		public static string RootDirectory {
-			get {
-				if (root_directory == null)
-					root_directory = GetRootDirectory();
-				
-				return root_directory;
-			}
-
-			set {
-				root_directory = value;
-				if (root_directory != null)
-					root_directory = Path.GetFullPath (root_directory).TrimEnd ('/');
-			}
-		}
-
-		private static string GetRootDirectory() {
-			var dir = Path.GetDirectoryName (System.Reflection.Assembly.GetExecutingAssembly ().Location);
-
-			var path = Path.Combine (dir, ".git");
-			while (!Directory.Exists (path) && path.Length > 3) {
-				dir = Path.GetDirectoryName (dir);
-				path = Path.Combine (dir, ".git");
-			}
-
-			if (!Directory.Exists (path))
-				throw new Exception ("Could not find the xamarin-macios repo.");
-
-			path = Path.Combine (Path.GetDirectoryName (path), "tests");
-
-			if (!Directory.Exists (path))
-				throw new Exception ("Could not find the tests directory.");
-
-			return path;
-		}
 	}
 }

@@ -16,7 +16,7 @@ namespace Xharness.BCLTestImporter {
 		public BCLTestImportTargetFactory (Harness harness)
 		{
 			Harness = harness;
-			var outputDir = Path.GetFullPath (Path.Combine (DirectoryUtilities.RootDirectory, "bcl-test"));
+			var outputDir = Path.GetFullPath (Path.Combine (Harness.RootDirectory, "bcl-test"));
 			var projectTemplatePath = outputDir;
 			var registerTypesTemplatePath = Path.Combine (outputDir, "RegisterType.cs.in");
 			var plistTemplatePath = outputDir;
