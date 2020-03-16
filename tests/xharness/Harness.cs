@@ -610,7 +610,7 @@ namespace Xharness
 
 			foreach (var project in IOSTestProjects) {
 				var runner = new AppRunner (ProcessManager,
-					new SimulatorsLoaderFactory (this),
+					new SimulatorsLoaderFactory (this, ProcessManager),
 					new SimpleListenerFactory (),
 					new DeviceLoaderFactory (this, ProcessManager),
 					Target,
@@ -635,7 +635,7 @@ namespace Xharness
 
 			foreach (var project in IOSTestProjects) {
 				var runner = new AppRunner (ProcessManager,
-					new SimulatorsLoaderFactory (this),
+					new SimulatorsLoaderFactory (this, ProcessManager),
 					new SimpleListenerFactory (),
 					new DeviceLoaderFactory (this, ProcessManager),
 					Target,
@@ -658,7 +658,7 @@ namespace Xharness
 
 			foreach (var project in IOSTestProjects) {
 				var runner = new AppRunner (ProcessManager,
-					new SimulatorsLoaderFactory (this),
+					new SimulatorsLoaderFactory (this, ProcessManager),
 					new SimpleListenerFactory (),
 					new DeviceLoaderFactory (this, ProcessManager),
 					Target,

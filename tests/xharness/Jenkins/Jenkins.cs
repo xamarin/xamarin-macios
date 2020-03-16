@@ -101,7 +101,7 @@ namespace Xharness.Jenkins
 		{
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 			Harness = harness ?? throw new ArgumentNullException (nameof (harness));
-			simulators = new Simulators (harness);
+			simulators = new Simulators (harness, processManager);
 			devices = new Devices (harness, processManager);
 		}
 
