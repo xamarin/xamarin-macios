@@ -7,15 +7,9 @@ using Xharness.Logging;
 namespace Xharness.Listeners
 {
 	public interface ISimpleListener {
-		//IPAddress Address { get; set; } // TODO: Remove
-		//bool AutoExit { get; set; }
 		Task CompletionTask { get; }
 		Task ConnectedTask { get; }
-		//ILog Log { get; set; }
-		//ILog OutputWriter { get; }
 		int Port { get; }
-		ILog TestLog { get; set; }
-		//bool XmlOutput { get; set; }
 
 		void Cancel ();
 		void Dispose ();
@@ -25,9 +19,11 @@ namespace Xharness.Listeners
 
 	public abstract class SimpleListener : ISimpleListener, IDisposable
 	{
-		string xml_data;
 		readonly TaskCompletionSource<bool> stopped = new TaskCompletionSource<bool> ();
 		readonly TaskCompletionSource<bool> connected = new TaskCompletionSource<bool> ();
+		readonly ILog testLog;
+
+		string xml_data;
 
 		protected readonly IPAddress Address = IPAddress.Any;
 		protected ILog Log { get; }
@@ -38,23 +34,22 @@ namespace Xharness.Listeners
 
 		public Task ConnectedTask => connected.Task;
 		public int Port { get; protected set; }
-		public ILog TestLog { get; set; }
 		public abstract void Initialize ();
 
 		protected SimpleListener (ILog log, ILog testLog, bool xmlOutput)
 		{
 			Log = log ?? throw new ArgumentNullException (nameof (log));
-			TestLog = testLog ?? throw new ArgumentNullException (nameof (testLog));
+			this.testLog = testLog ?? throw new ArgumentNullException (nameof (testLog));
 			XmlOutput = xmlOutput;
 		}
 
 		protected void Connected (string remote)
 		{
-			Log.WriteLine ("Connection from {0} saving logs to {1}", remote, TestLog.FullPath);
+			Log.WriteLine ("Connection from {0} saving logs to {1}", remote, testLog.FullPath);
 			connected.TrySetResult (true);
 
 			if (OutputWriter == null) {
-				OutputWriter = TestLog;
+				OutputWriter = testLog;
 				// a few extra bits of data only available from this side
 				var local_data =
 $@"[Local Date/Time:	{DateTime.Now}]
