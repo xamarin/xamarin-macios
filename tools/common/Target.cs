@@ -179,8 +179,10 @@ namespace Xamarin.Bundler {
 				else if (Path.IsPathRooted (lib))
 					continue; // Reference to a system library
 
-				var lib_path = Path.Combine (bcl_implementation_dir, lib + lib_extension);
+				if (!lib.StartsWith ("lib", StringComparison.Ordinal))
+					lib = "lib" + lib;
 
+				var lib_path = Path.Combine (bcl_implementation_dir, lib + lib_extension);
 				if (!File.Exists (lib_path)) {
 					// FIXME: Add an actual warning
 					Driver.Log ("Could not find the native library {0}. This library is referenced from {1} P/Invokes:", lib_path, nl.Value.Count);
