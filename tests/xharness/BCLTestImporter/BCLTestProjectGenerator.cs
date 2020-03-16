@@ -182,7 +182,6 @@ namespace Xharness.BCLTestImporter {
 				OutputDirectoryPath = outputDirectory,
 				IgnoreFilesRootDirectory = outputDirectory,
 				ProjectFilter = ProjectFilter,
-				//public Func<string, Guid> GuidGenerator { get; set; }
 			};
 		}
 		
