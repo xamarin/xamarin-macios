@@ -23,6 +23,7 @@ namespace Xharness.Listeners
 		readonly TaskCompletionSource<bool> connected = new TaskCompletionSource<bool> ();
 		readonly ILog testLog;
 
+		// TODO: This can be removed as it's commented out below
 		string xml_data;
 
 		protected readonly IPAddress Address = IPAddress.Any;
