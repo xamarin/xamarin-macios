@@ -9,6 +9,8 @@ using Xharness.Logging;
 using Xharness.Execution;
 using Xharness.Targets;
 using Xharness.Utilities;
+using Xharness.Hardware;
+using Xharness.Listeners;
 
 namespace Xharness
 {
@@ -20,13 +22,6 @@ namespace Xharness
 		Install,
 		Uninstall,
 		Jenkins,
-	}
-
-	public interface IHarness {
-		string MlaunchPath { get; }
-		string XcodeRoot { get; }
-		Version XcodeVersion { get; }
-		Task<ProcessExecutionResult> ExecuteXcodeCommandAsync (string executable, IList<string> args, ILog log, TimeSpan timeout);
 	}
 
 	public class HarnessConfiguration {
@@ -54,8 +49,65 @@ namespace Xharness
 		public XmlResultJargon XmlJargon { get; set; } = XmlResultJargon.NUnitV3;
 	}
 
-	public class Harness : IHarness
-	{
+	public interface IHarness {
+		HarnessAction Action { get; }
+		string BCLTodayExtensionTemplate { get; }
+		string BuildConfiguration { get; }
+		bool DisableWatchOSOnWrench { get; }
+		string DOTNET { get; }
+		bool DryRun { get; }
+		bool ENABLE_XAMARIN { get; }
+		Dictionary<string, string> EnvironmentVariables { get; }
+		ILog HarnessLog { get; set; }
+		bool InCI { get; }
+		bool INCLUDE_IOS { get; }
+		bool INCLUDE_MAC { get; }
+		bool INCLUDE_TVOS { get; }
+		bool INCLUDE_WATCH { get; }
+		bool? IncludeSystemPermissionTests { get; set; }
+		string IOS_DESTDIR { get; }
+		List<iOSTestProject> IOSTestProjects { get; }
+		string JENKINS_RESULTS_DIRECTORY { get; }
+		string JenkinsConfiguration { get; }
+		HashSet<string> Labels { get; }
+		double LaunchTimeout { get; }
+		string LogDirectory { get; }
+		string MAC_DESTDIR { get; }
+		List<MacTestProject> MacTestProjects { get; }
+		string MarkdownSummaryPath { get; }
+		string MlaunchPath { get; }
+		string MONO_IOS_SDK_DESTDIR { get; }
+		string MONO_MAC_SDK_DESTDIR { get; }
+		string MONO_PATH { get; }
+		string PeriodicCommand { get; }
+		string PeriodicCommandArguments { get; }
+		TimeSpan PeriodicCommandInterval { get; }
+		IProcessManager ProcessManager { get; }
+		string SdkRoot { get; }
+		AppRunnerTarget Target { get; }
+		double Timeout { get; }
+		string TodayContainerTemplate { get; }
+		string TodayExtensionTemplate { get; }
+		string TVOS_MONO_PATH { get; }
+		bool UseGroupedApps { get; }
+		int Verbosity { get; }
+		string WatchOSAppTemplate { get; }
+		string WatchOSContainerTemplate { get; }
+		string WatchOSExtensionTemplate { get; }
+		string XcodeRoot { get; }
+		Version XcodeVersion { get; }
+		string XIBuildPath { get; }
+		XmlResultJargon XmlJargon { get; }
+		int Execute ();
+		Task<ProcessExecutionResult> ExecuteXcodeCommandAsync (string executable, IList<string> args, ILog log, TimeSpan timeout);
+		bool GetIncludeSystemPermissionTests (TestPlatform platform, bool device);
+		void Log (int min_level, string message, params object [] args);
+		void Log (string message);
+		void Log (string message, params object [] args);
+		void Save (StringWriter doc, string path);
+	}
+
+	public class Harness : IHarness {
 		public HarnessAction Action { get; }
 		public int Verbosity { get; }
 		public ILog HarnessLog { get; set; }
@@ -151,7 +203,7 @@ namespace Xharness
 		{
 			ProcessManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 			Action = action;
-			
+
 			if (configuration is null)
 				throw new ArgumentNullException (nameof (configuration));
 
@@ -178,7 +230,7 @@ namespace Xharness
 
 			if (configuration.Labels != null)
 				Labels = new HashSet<string> (configuration.Labels);
-			
+
 			if (configuration.EnvironmentVariables != null)
 				EnvironmentVariables = new Dictionary<string, string> (configuration.EnvironmentVariables);
 
@@ -251,7 +303,7 @@ namespace Xharness
 		void LoadConfig ()
 		{
 			ParseConfigFiles ();
-			var src_root = Path.GetDirectoryName (Path.GetFullPath (Harness.RootDirectory));
+			var src_root = Path.GetDirectoryName (Path.GetFullPath (RootDirectory));
 			MONO_PATH = Path.GetFullPath (Path.Combine (src_root, "external", "mono"));
 			TVOS_MONO_PATH = MONO_PATH;
 			INCLUDE_IOS = make_config.ContainsKey ("INCLUDE_IOS") && !string.IsNullOrEmpty (make_config ["INCLUDE_IOS"]);
@@ -268,7 +320,7 @@ namespace Xharness
 			ENABLE_XAMARIN = make_config.ContainsKey ("ENABLE_XAMARIN") && !string.IsNullOrEmpty (make_config ["ENABLE_XAMARIN"]);
 			DOTNET = make_config ["DOTNET"];
 		}
-		 
+
 		int AutoConfigureMac (bool generate_projects)
 		{
 			int rv = 0;
@@ -278,13 +330,13 @@ namespace Xharness
 				new { Directory = "linker/mac/dont link", ProjectFile = "dont link-mac", Name = "dont link", Flavors = MacFlavors.Modern | MacFlavors.Full | MacFlavors.System },
 			};
 			foreach (var p in test_suites) {
-				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, p.Directory, p.ProjectFile + ".csproj"))) {
+				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p.Directory, p.ProjectFile + ".csproj"))) {
 					Name = p.Name,
 					TargetFrameworkFlavors = p.Flavors,
 				});
 			}
-			
-			MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "introspection", "Mac", "introspection-mac.csproj")), targetFrameworkFlavor: MacFlavors.Modern) { Name = "introspection" });
+
+			MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "Mac", "introspection-mac.csproj")), targetFrameworkFlavor: MacFlavors.Modern) { Name = "introspection" });
 
 			var hard_coded_test_suites = new [] {
 				new { Directory = "mmptest", ProjectFile = "mmptest", Name = "mmptest", IsNUnit = true, Configurations = (string[]) null, Platform = "x86", Flavors = MacFlavors.Console, },
@@ -294,10 +346,10 @@ namespace Xharness
 				new { Directory = "linker/mac/link sdk", ProjectFile = "link sdk-mac", Name = "link sdk", IsNUnit = false, Configurations = new string [] { "Debug", "Release" }, Platform = "x86", Flavors = MacFlavors.Modern, },
 			};
 			foreach (var p in hard_coded_test_suites) {
-				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, p.Directory, p.ProjectFile + ".csproj")), targetFrameworkFlavor: p.Flavors) {
+				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p.Directory, p.ProjectFile + ".csproj")), targetFrameworkFlavor: p.Flavors) {
 					Name = p.Name,
 					IsNUnitProject = p.IsNUnit,
-					SolutionPath = Path.GetFullPath (Path.Combine (Harness.RootDirectory, "tests-mac.sln")),
+					SolutionPath = Path.GetFullPath (Path.Combine (RootDirectory, "tests-mac.sln")),
 					Configurations = p.Configurations,
 					Platform = p.Platform,
 				});
@@ -396,20 +448,20 @@ namespace Xharness
 			var fsharp_library_projects = new string [] { "fsharplibrary" };
 
 			foreach (var p in test_suites)
-				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, p + "/" + p + ".csproj"))) { Name = p });
+				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".csproj"))) { Name = p });
 			foreach (var p in fsharp_test_suites)
-				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, p + "/" + p + ".fsproj"))) { Name = p });
+				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".fsproj"))) { Name = p });
 			foreach (var p in library_projects)
-				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, p + "/" + p + ".csproj")), false) { Name = p });
+				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".csproj")), false) { Name = p });
 			foreach (var p in fsharp_library_projects)
-				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, p + "/" + p + ".fsproj")), false) { Name = p });
+				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".fsproj")), false) { Name = p });
 
-			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "introspection", "iOS", "introspection-ios.csproj"))) { Name = "introspection" });
-			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "linker", "ios", "dont link", "dont link.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
-			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "linker", "ios", "link all", "link all.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
-			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "linker", "ios", "link sdk", "link sdk.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "iOS", "introspection-ios.csproj"))) { Name = "introspection" });
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "dont link", "dont link.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link all", "link all.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link sdk", "link sdk.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
 
-			foreach (var flavor in new MonoNativeFlavor[] { MonoNativeFlavor.Compat, MonoNativeFlavor.Unified }) {
+			foreach (var flavor in new MonoNativeFlavor [] { MonoNativeFlavor.Compat, MonoNativeFlavor.Unified }) {
 				var monoNativeInfo = new MonoNativeInfo (this, flavor);
 				var iosTestProject = new iOSTestProject (monoNativeInfo.ProjectPath) {
 					MonoNativeInfo = monoNativeInfo,
@@ -424,19 +476,19 @@ namespace Xharness
 			var monoImportTestFactory = new BCLTestImportTargetFactory (this);
 			IOSTestProjects.AddRange (monoImportTestFactory.GetiOSBclTargets ());
 
-			WatchOSContainerTemplate = Path.GetFullPath (Path.Combine (Harness.RootDirectory, "templates/WatchContainer"));
-			WatchOSAppTemplate = Path.GetFullPath (Path.Combine (Harness.RootDirectory, "templates/WatchApp"));
-			WatchOSExtensionTemplate = Path.GetFullPath (Path.Combine (Harness.RootDirectory, "templates/WatchExtension"));
+			WatchOSContainerTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "templates/WatchContainer"));
+			WatchOSAppTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "templates/WatchApp"));
+			WatchOSExtensionTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "templates/WatchExtension"));
 
-			TodayContainerTemplate = Path.GetFullPath (Path.Combine (Harness.RootDirectory, "templates", "TodayContainer"));
-			TodayExtensionTemplate = Path.GetFullPath (Path.Combine (Harness.RootDirectory, "templates", "TodayExtension"));
-			BCLTodayExtensionTemplate = Path.GetFullPath (Path.Combine (Harness.RootDirectory, "bcl-test", "templates", "today"));
+			TodayContainerTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "templates", "TodayContainer"));
+			TodayExtensionTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "templates", "TodayExtension"));
+			BCLTodayExtensionTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test", "templates", "today"));
 		}
 
 		Dictionary<string, string> make_config = new Dictionary<string, string> ();
 		IEnumerable<string> FindConfigFiles (string name)
 		{
-			var dir = Path.GetFullPath (Harness.RootDirectory);
+			var dir = Path.GetFullPath (RootDirectory);
 			while (dir != "/") {
 				var file = Path.Combine (dir, name);
 				if (File.Exists (file))
@@ -555,13 +607,18 @@ namespace Xharness
 		{
 			if (HarnessLog == null)
 				HarnessLog = new ConsoleLog ();
-			
+
 			foreach (var project in IOSTestProjects) {
-				var runner = new AppRunner () {
-					Harness = this,
-					ProjectFile = project.Path,
-					MainLog = HarnessLog,
-				};
+				var runner = new AppRunner (ProcessManager,
+					new SimulatorsLoaderFactory (this),
+					new SimpleListenerFactory (),
+					new DeviceLoaderFactory (this, ProcessManager),
+					Target,
+					this,
+					HarnessLog,
+					project.Path,
+					BuildConfiguration);
+
 				using (var install_log = new AppInstallMonitorLog (runner.MainLog)) {
 					var rv = runner.InstallAsync (install_log.CancellationToken).Result;
 					if (!rv.Succeeded)
@@ -577,12 +634,16 @@ namespace Xharness
 				HarnessLog = new ConsoleLog ();
 
 			foreach (var project in IOSTestProjects) {
-				var runner = new AppRunner ()
-				{
-					Harness = this,
-					ProjectFile = project.Path,
-					MainLog = HarnessLog,
-				};
+				var runner = new AppRunner (ProcessManager,
+					new SimulatorsLoaderFactory (this),
+					new SimpleListenerFactory (),
+					new DeviceLoaderFactory (this, ProcessManager),
+					Target,
+					this,
+					HarnessLog,
+					project.Path,
+					BuildConfiguration);
+
 				var rv = runner.UninstallAsync ().Result;
 				if (!rv.Succeeded)
 					return rv.ExitCode;
@@ -594,13 +655,18 @@ namespace Xharness
 		{
 			if (HarnessLog == null)
 				HarnessLog = new ConsoleLog ();
-			
+
 			foreach (var project in IOSTestProjects) {
-				var runner = new AppRunner () {
-					Harness = this,
-					ProjectFile = project.Path,
-					MainLog = HarnessLog,
-				};
+				var runner = new AppRunner (ProcessManager,
+					new SimulatorsLoaderFactory (this),
+					new SimpleListenerFactory (),
+					new DeviceLoaderFactory (this, ProcessManager),
+					Target,
+					this,
+					HarnessLog,
+					project.Path,
+					BuildConfiguration);
+
 				var rv = runner.RunAsync ().Result;
 				if (rv != 0)
 					return rv;
@@ -616,7 +682,7 @@ namespace Xharness
 			HarnessLog?.WriteLine (message);
 		}
 
-		public void Log (int min_level, string message, params object[] args)
+		public void Log (int min_level, string message, params object [] args)
 		{
 			if (Verbosity < min_level)
 				return;
@@ -629,11 +695,11 @@ namespace Xharness
 			Log (0, message);
 		}
 
-		public void Log (string message, params object[] args)
+		public void Log (string message, params object [] args)
 		{
 			Log (0, message, args);
 		}
-		
+
 		public bool InCI {
 			get {
 				// We use the 'BUILD_REVISION' variable to detect whether we're running CI or not.
@@ -673,11 +739,8 @@ namespace Xharness
 				AutoConfigureIOS ();
 				AutoConfigureMac (false);
 			}
-			
-			var jenkins = new Jenkins.Jenkins ()
-			{
-				Harness = this,
-			};
+
+			var jenkins = new Jenkins.Jenkins (this, ProcessManager);
 			return jenkins.Run ();
 		}
 

@@ -29,10 +29,10 @@ namespace Xharness.Tests.Listeners.Tests {
 		[Test]
 		public void CreateNotWatchListener ()
 		{
-			var transport = factory.Create ("ios", log.Object, true, out var listener, out var listenerFileTemp);
+			var (transport, listener, listenerTmpFile) = factory.Create (RunMode.iOS, log.Object, true);
 			Assert.AreEqual (ListenerTransport.Tcp, transport, "transport");
 			Assert.IsInstanceOf (typeof (SimpleTcpListener), listener, "listener");
-			Assert.IsNull (listenerFileTemp, "tmp file");
+			Assert.IsNull (listenerTmpFile, "tmp file");
 		}
 
 		[Test]
@@ -41,11 +41,11 @@ namespace Xharness.Tests.Listeners.Tests {
 			var logFullPath = "myfullpath.txt";
 			_ = log.Setup (l => l.FullPath).Returns (logFullPath);
 
-			var transport = factory.Create ("watchos", log.Object, true, out var listener, out var listenerFileTemp);
+			var (transport, listener, listenerTmpFile) = factory.Create (RunMode.WatchOS, log.Object, true);
 			Assert.AreEqual (ListenerTransport.File, transport, "transport");
 			Assert.IsInstanceOf (typeof (SimpleFileListener), listener, "listener");
-			Assert.IsNotNull (listenerFileTemp, "tmp file");
-			Assert.AreEqual (logFullPath + ".tmp", listenerFileTemp);
+			Assert.IsNotNull (listenerTmpFile, "tmp file");
+			Assert.AreEqual (logFullPath + ".tmp", listenerTmpFile);
 
 			log.Verify (l => l.FullPath, Times.Once);
 
@@ -54,10 +54,10 @@ namespace Xharness.Tests.Listeners.Tests {
 		[Test]
 		public void CreateWatchOSDevice ()
 		{
-			var transport = factory.Create ("watchos", log.Object, false, out var listener, out var listenerFileTemp);
+			var (transport, listener, listenerTmpFile) = factory.Create (RunMode.WatchOS, log.Object, false);
 			Assert.AreEqual (ListenerTransport.Http, transport, "transport");
 			Assert.IsInstanceOf (typeof (SimpleHttpListener), listener, "listener");
-			Assert.IsNull (listenerFileTemp, "tmp file");
+			Assert.IsNull (listenerTmpFile, "tmp file");
 		}
 	}
 }

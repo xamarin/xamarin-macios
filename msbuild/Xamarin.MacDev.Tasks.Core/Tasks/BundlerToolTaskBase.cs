@@ -108,6 +108,8 @@ namespace Xamarin.MacDev.Tasks {
 			if (EnableSGenConc)
 				args.AddLine ("--sgen-conc");
 
+			args.AddLine ("/target-framework:" + TargetFrameworkMoniker);
+
 			args.AddLine (string.Format ("--http-message-handler={0}", HttpClientHandler));
 
 			if (!string.IsNullOrEmpty (I18n))

@@ -15,6 +15,22 @@ using Xharness.Logging;
 using Xharness.Utilities;
 
 namespace Xharness.Hardware {
+	
+	public interface ISimulatorsLoaderFactory {
+		ISimulatorsLoader CreateLoader ();
+	}
+
+	public class SimulatorsLoaderFactory : ISimulatorsLoaderFactory {
+		readonly IHarness harness;
+
+		public SimulatorsLoaderFactory (IHarness harness)
+		{
+			this.harness = harness ?? throw new ArgumentNullException (nameof (harness));
+		}
+
+		public ISimulatorsLoader CreateLoader () => new Simulators (harness);
+	}
+
 	public class Simulators : ISimulatorsLoader {
 		public IHarness Harness { get; set; }
 		public IProcessManager ProcessManager { get; set; } = new ProcessManager ();
@@ -31,6 +47,11 @@ namespace Xharness.Hardware {
 		public IEnumerable<SimDeviceType> SupportedDeviceTypes => supported_device_types;
 		public IEnumerable<SimDevice> AvailableDevices => available_devices;
 		public IEnumerable<SimDevicePair> AvailableDevicePairs => available_device_pairs;
+
+		public Simulators (IHarness harness)
+		{
+			Harness = harness ?? throw new ArgumentNullException (nameof (harness));
+		}
 
 		public async Task LoadAsync (ILog log, bool include_locked = false, bool force = false)
 		{

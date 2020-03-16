@@ -10,7 +10,7 @@ namespace Xharness
 {
 	public class CrashReportSnapshot
 	{
-		readonly Harness harness;
+		readonly IHarness harness;
 		readonly bool isDevice;
 		readonly string deviceName;
 
@@ -19,7 +19,7 @@ namespace Xharness
 
 		public HashSet<string> InitialSet { get; private set; }
 
-		public CrashReportSnapshot (Harness harness, ILog log, ILogs logs, bool isDevice, string deviceName)
+		public CrashReportSnapshot (IHarness harness, ILog log, ILogs logs, bool isDevice, string deviceName)
 		{
 			this.harness = harness ?? throw new ArgumentNullException (nameof (harness));
 			this.Log = log ?? throw new ArgumentNullException (nameof (log));

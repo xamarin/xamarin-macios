@@ -75,6 +75,7 @@
   <ItemGroup>
     <Compile Include="AppInstallMonitorLog.cs" />
     <Compile Include="AppRunner.cs" />
+    <Compile Include="AppRunnerTarget.cs" />
     <Compile Include="BCLTestImporter\BCLTestAssemblyDefinition.cs" />
     <Compile Include="BCLTestImporter\BCLTestImportTargetFactory.cs" />
     <Compile Include="BCLTestImporter\BCLTestInfoPlistGenerator.cs" />
@@ -136,6 +137,7 @@
     <Compile Include="Logging\WrenchLog.cs" />
     <Compile Include="MakefileGenerator.cs" />
     <Compile Include="MonoNativeInfo.cs" />
+    <Compile Include="NoDeviceFoundException.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SolutionGenerator.cs" />
