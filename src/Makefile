@@ -2,7 +2,7 @@ TOP=..
 include $(TOP)/Make.config
 
 BUILD_DIR=build
-DOTNET_BUILD_DIR=build/dotnet
+DOTNET_BUILD_DIR=$(BUILD_DIR)/dotnet
 PROJECT_DIR=.
 
 include $(TOP)/src/frameworks.sources
