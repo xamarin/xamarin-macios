@@ -81,7 +81,6 @@
     <Compile Include="BCLTestImporter\BCLTestProjectDefinition.cs" />
     <Compile Include="BCLTestImporter\BCLTestProjectGenerator.cs" />
     <Compile Include="BCLTestImporter\Platform.cs" />
-    <Compile Include="BCLTestImporter\RegisterTypeGenerator.cs" />
     <Compile Include="Collections\BlockingEnumerableCollection.cs" />
     <Compile Include="Collections\ILoadAsync.cs" />
     <Compile Include="Collections\IAsyncEnumerable.cs" />
@@ -158,6 +157,14 @@
     <Compile Include="XmlResultParser.cs" />
     <Compile Include="BCLTestImporter\Templates\ITemplatedProject.cs" />
     <Compile Include="BCLTestImporter\Templates\Managed\XamariniOSTemplate.cs" />
+    <Compile Include="BCLTestImporter\BclTestProjectInfo.cs" />
+    <Compile Include="BCLTestImporter\iOSBclTestProject.cs" />
+    <Compile Include="BCLTestImporter\BclTestProject.cs" />
+    <Compile Include="BCLTestImporter\Templates\IAssemblyLocator.cs" />
+    <Compile Include="BCLTestImporter\Templates\IProjectFilter.cs" />
+    <Compile Include="BCLTestImporter\Xamarin\AssemblyLocator.cs" />
+    <Compile Include="BCLTestImporter\Xamarin\ProjectFilter.cs" />
+    <Compile Include="BCLTestImporter\Templates\Managed\RegisterTypeGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\tools\mtouch\SdkVersions.cs">
@@ -172,7 +179,17 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="BCLTestImporter\Templates\" />
+    <Folder Include="BCLTestImporter\Templates\Managed\" />
+    <Folder Include="BCLTestImporter\Templates\Managed\Resources\" />
+    <Folder Include="BCLTestImporter\Templates\Managed\Resources\src\" />
+    <Folder Include="BCLTestImporter\Templates\Managed\Resources\src\common\TestRunner\" />
+    <Folder Include="BCLTestImporter\Templates\Managed\Resources\src\common\TestRunner\Core\" />
+    <Folder Include="BCLTestImporter\Templates\Managed\Resources\src\common\TestRunner\NUnit\" />
+    <Folder Include="BCLTestImporter\Templates\Managed\Resources\src\common\TestRunner\xUnit\" />
+    <Folder Include="BCLTestImporter\Xamarin\" />
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.iOS.csproj.in" />
     <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.macOS.csproj.in" />
@@ -185,6 +202,7 @@
     <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.watchOS.Extension.csproj.in" />
     <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.tvOS.plist.in" />
     <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.watchOS.App.plist.in" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\RegisterType.cs" />
     <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\common\ApplicationOptions.cs" />
     <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\common\IgnoreFileParser.cs" />
     <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\iOSApp\AppDelegate.cs" />

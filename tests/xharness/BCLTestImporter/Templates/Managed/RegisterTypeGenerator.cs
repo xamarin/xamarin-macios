@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
-namespace Xharness.BCLTestImporter {
+namespace Xharness.BCLTestImporter.Templates.Managed {
 	public static class RegisterTypeGenerator {
 
 		static readonly string UsingReplacement = "%USING%";
@@ -12,7 +12,7 @@ namespace Xharness.BCLTestImporter {
 		static readonly string IsxUnitReplacement = "%IS XUNIT%";
 
 		public static async Task<string> GenerateCodeAsync ((string FailureMessage, Dictionary<string, Type> Types) typeRegistration, bool isXunit,
-			string templatePath)
+			Stream template)
 		{
 			var importStringBuilder = new StringBuilder ();
 			var keyValuesStringBuilder = new StringBuilder ();
@@ -33,7 +33,7 @@ namespace Xharness.BCLTestImporter {
 			}
 			
 			// got the lines we want to add, read the template and substitute
-			using (var reader = new StreamReader(templatePath)) {
+			using (var reader = new StreamReader(template)) {
 				var result = await reader.ReadToEndAsync ();
 				result = result.Replace (UsingReplacement, importStringBuilder.ToString ());
 				result = result.Replace (KeysReplacement, keyValuesStringBuilder.ToString ());
