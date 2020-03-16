@@ -942,7 +942,7 @@ namespace Xamarin.Bundler {
 
 		public static void RunStrip (IList<string> options)
 		{
-			RunXcodeTool ("strup", options);
+			RunXcodeTool ("strip", options);
 		}
 	}
 }
