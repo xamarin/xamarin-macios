@@ -949,7 +949,6 @@ namespace Xharness
 			var environment = new Dictionary<string, string> { { "DEVELOPER_DIR", Path.Combine (XcodeRoot, "Contents", "Developer") } };
 			var rv = await ProcessManager.ExecuteCommandAsync (symbolicatecrash, new [] { report.Path }, symbolicated, TimeSpan.FromMinutes (1), environment);
 			if (rv.Succeeded) {
-				;
 				log.WriteLine ("Symbolicated {0} successfully.", report.Path);
 				return symbolicated;
 			} else {

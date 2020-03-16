@@ -149,7 +149,6 @@
     <Compile Include="TestExecutingResult.cs" />
     <Compile Include="TestPlatform.cs" />
     <Compile Include="TestProject.cs" />
-    <Compile Include="UnsupportedOperationException.cs" />
     <Compile Include="Utilities\Extensions.cs" />
     <Compile Include="Utilities\PlistExtensions.cs" />
     <Compile Include="Utilities\ProjectFileExtensions.cs" />

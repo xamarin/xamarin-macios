@@ -242,7 +242,7 @@ namespace Xharness
 
 			if (isSimulator) {
 				// We reset the simulator when running, so a separate install step does not make much sense.
-				throw new UnsupportedOperationException ("Installing to a simulator is not supported.");
+				throw new InvalidOperationException ("Installing to a simulator is not supported.");
 			}
 
 			FindDevice ();
@@ -275,7 +275,7 @@ namespace Xharness
 			var appInfo = Initialize ();
 
 			if (isSimulator)
-				throw new UnsupportedOperationException ("Uninstalling from a simulator is not supported.");
+				throw new InvalidOperationException ("Uninstalling from a simulator is not supported.");
 
 			FindDevice ();
 
