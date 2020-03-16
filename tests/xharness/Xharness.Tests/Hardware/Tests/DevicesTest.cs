@@ -10,6 +10,7 @@ using NUnit.Framework;
 using Xharness.Hardware;
 using Xharness.Execution;
 using Xharness.Logging;
+using Xharness.Execution.Mlaunch;
 
 namespace Xharness.Tests.Hardware.Tests {
 	
@@ -31,8 +32,7 @@ namespace Xharness.Tests.Hardware.Tests {
 			devices = new Devices (harness.Object, processManager.Object);
 			executionLog = new Mock<ILog> ();
 			mlaunchPath = "/usr/bin/mlaunch"; // any will be ok, is mocked
-			sdkPath = "/Applications/Xcode.app";
-			
+			sdkPath = "/Applications/Xcode.app";			
 		}
 
 		[TearDown]
@@ -65,21 +65,20 @@ namespace Xharness.Tests.Hardware.Tests {
 					else
 						return Task.FromResult (new ProcessExecutionResult { ExitCode = 0, TimedOut = true });
 			});
+
 			Assert.ThrowsAsync<Exception> (async () => {
 				await devices.LoadAsync (executionLog.Object);
 			});
 
-			// validate the execution of mlaunch
-			Assert.AreEqual (mlaunchPath, processPath, "process path");
-			Assert.AreEqual (1, passedArguments.GetArguments ().Where (a => a.type == MlaunchArgumentType.SdkRoot).Count (), "sdk arg missing");
-			var sdkArg = passedArguments.GetArguments ().Where (a => a.type == MlaunchArgumentType.SdkRoot).First ();
-			Assert.AreEqual (sdkArg.value, sdkPath, "sdk path");
-			Assert.AreEqual (1, passedArguments.GetArguments ().Where (a => a.type == MlaunchArgumentType.ListDev).Count (), "sdk path missing.");
-			var listDevArg = passedArguments.GetArguments ().Where (a => a.type == MlaunchArgumentType.ListDev).First ();
-			Assert.IsNotNull (listDevArg.value, "litdev file");
-			Assert.AreEqual (1, passedArguments.GetArguments ().Where (a => a.type == MlaunchArgumentType.OutputFormat).Count (), "output format missing.");
-			var outputFormat = passedArguments.GetArguments ().Where (a => a.type == MlaunchArgumentType.OutputFormat).First ();
-			Assert.AreEqual (outputFormat.value, "xml"); // format
+			MlaunchArgument sdkRootArg = passedArguments.GetArguments ().Where (a => a is SdkRootArgument).FirstOrDefault();
+			Assert.IsNotNull (sdkRootArg, "sdk arg missing");
+			AssertArgumentValue (sdkRootArg, sdkPath, "sdk arg wrong");
+
+			MlaunchArgument listDevArg = passedArguments.GetArguments ().Where (a => a is ListDevicesArgument).FirstOrDefault();
+			Assert.IsNotNull (listDevArg, "list devices arg missing");
+			
+			MlaunchArgument outputFormatArg = passedArguments.GetArguments ().Where (a => a is XmlOutputFormatArgument).FirstOrDefault();
+			Assert.IsNotNull (outputFormatArg, "output format arg missing");
 		}
 
 		[TestCase (true)]
@@ -97,10 +96,11 @@ namespace Xharness.Tests.Hardware.Tests {
 				.Returns<Process, MlaunchArguments, ILog, TimeSpan?, Dictionary<string, string>, CancellationToken?, bool?> ((p, args, log, t, env, token, d) => {
 					processPath = p.StartInfo.FileName;
 					passedArguments = args;
-
+					
 					// we get the temp file that was passed as the args, and write our sample xml, which will be parsed to get the devices :)
-					var (type, value) = args.GetArguments ().Where (a => a.type == MlaunchArgumentType.ListDev).First ();
-					var tempPath = value;
+					var tempPath = args.GetArguments ().Where (a => a is ListDevicesArgument).First ().AsCommandLineArgument ();
+					tempPath = tempPath.Substring(tempPath.IndexOf('=') + 1);
+
 					var name = GetType ().Assembly.GetManifestResourceNames ().Where (a => a.EndsWith ("devices.xml", StringComparison.Ordinal)).FirstOrDefault ();
 					using (var outputStream = new StreamWriter (tempPath))
 					using (var sampleStream = new StreamReader (GetType ().Assembly.GetManifestResourceStream (name))) {
@@ -110,27 +110,37 @@ namespace Xharness.Tests.Hardware.Tests {
 					}
 					return Task.FromResult (new ProcessExecutionResult { ExitCode = 0, TimedOut = false });
 				});
+
 			await devices.LoadAsync (executionLog.Object, extraData);
+
 			// assert the devices that are expected from the sample xml
 			// validate the execution of mlaunch
 			Assert.AreEqual (mlaunchPath, processPath, "process path");
-			Assert.AreEqual (1, passedArguments.GetArguments ().Where (a => a.type == MlaunchArgumentType.SdkRoot).Count (), "sdk arg missing");
-			var sdkArg = passedArguments.GetArguments ().Where (a => a.type == MlaunchArgumentType.SdkRoot).First ();
-			Assert.AreEqual (sdkArg.value, sdkPath, "sdk path");
-			Assert.AreEqual (1, passedArguments.GetArguments ().Where (a => a.type == MlaunchArgumentType.ListDev).Count (), "sdk path missing.");
-			var listDevArg = passedArguments.GetArguments ().Where (a => a.type == MlaunchArgumentType.ListDev).First ();
-			Assert.IsNotNull (listDevArg.value, "litdev file");
-			Assert.AreEqual (1, passedArguments.GetArguments ().Where (a => a.type == MlaunchArgumentType.OutputFormat).Count (), "output format missing.");
-			var outputFormat = passedArguments.GetArguments ().Where (a => a.type == MlaunchArgumentType.OutputFormat).First ();
-			Assert.AreEqual (outputFormat.value, "xml"); // format
+
+			MlaunchArgument sdkRootArg = passedArguments.GetArguments ().Where (a => a is SdkRootArgument).FirstOrDefault();
+			Assert.IsNotNull (sdkRootArg, "sdk arg missing");
+			AssertArgumentValue (sdkRootArg, sdkPath, "sdk arg wrong");
+
+			MlaunchArgument listDevArg = passedArguments.GetArguments ().Where (a => a is ListDevicesArgument).FirstOrDefault();
+			Assert.IsNotNull (listDevArg, "list devices arg missing");
+			
+			MlaunchArgument outputFormatArg = passedArguments.GetArguments ().Where (a => a is XmlOutputFormatArgument).FirstOrDefault();
+			Assert.IsNotNull (outputFormatArg, "output format arg missing");
+
 			if (extraData) {
-				var extraDataArg = passedArguments.GetArguments ().Where (a => a.type == MlaunchArgumentType.ListExtraData).First ();
-				Assert.IsNull (extraDataArg.value, "extra data takes no values");
+				MlaunchArgument listExtraDataArg = passedArguments.GetArguments ().Where (a => a is ListExtraDataArgument).FirstOrDefault();
+				Assert.IsNotNull (listExtraDataArg, "list extra data arg missing");
 			}
+
 			Assert.AreEqual (2, devices.Connected64BitIOS.Count ());
 			Assert.AreEqual (1, devices.Connected32BitIOS.Count());
 			Assert.AreEqual (0, devices.ConnectedTV.Count ());
 		}
 
+		private void AssertArgumentValue (MlaunchArgument arg, string expected, string message = null)
+		{
+			var value = arg.AsCommandLineArgument ().Split (new char [] { '=' }, 2).LastOrDefault ();
+			Assert.AreEqual (expected, value, message);
+		}
 	}
 }

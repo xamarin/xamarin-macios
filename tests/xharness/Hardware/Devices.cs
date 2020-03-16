@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using Xharness.Collections;
 using Xharness.Execution;
+using Xharness.Execution.Mlaunch;
 using Xharness.Logging;
 using Xharness.Utilities;
 
@@ -77,12 +78,13 @@ namespace Xharness.Hardware {
 					using (var process = new Process ()) {
 						process.StartInfo.FileName = Harness.MlaunchPath;
 						var arguments = new MlaunchArguments (
-							(MlaunchArgumentType.SdkRoot, Harness.XcodeRoot),
-							(MlaunchArgumentType.ListDev, tmpfile),
-							(MlaunchArgumentType.OutputFormat, "xml")
-						);
+							new SdkRootArgument (Harness.XcodeRoot),
+							new ListDevicesArgument (tmpfile),
+							new XmlOutputFormatArgument ());
+
 						if (extra_data)
-							arguments.Add (MlaunchArgumentType.ListExtraData);
+							arguments.Add (new ListExtraDataArgument ());
+
 						log.WriteLine ("Launching {0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments);
 						var rv = await processManager.RunAsync (process, arguments, log, timeout: TimeSpan.FromSeconds (120));
 						if (!rv.Succeeded)

@@ -47,7 +47,6 @@ namespace Xharness.Hardware {
 	}
 
 	public interface ISimulatorsLoader : ILoadAsync {
-		IProcessManager ProcessManager { get; set; }
 		IEnumerable<SimRuntime> SupportedRuntimes { get; }
 		IEnumerable<SimDeviceType> SupportedDeviceTypes { get; }
 		IEnumerable<SimDevice> AvailableDevices { get; }
