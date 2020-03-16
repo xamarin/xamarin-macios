@@ -90,7 +90,8 @@ steps:
 ### Run the device tests
 ###
 
-- bash: ./xamarin-macios/tools/devops/run-tests.sh  # move this to in-line code, should be very short
+  # move this to in-line code, should be very short
+- bash: ./xamarin-macios/tools/devops/run-tests.sh
   displayName: 'Run tests'
   timeoutInMinutes: 600
 
