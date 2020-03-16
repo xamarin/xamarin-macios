@@ -116,7 +116,7 @@ namespace Xharness.Tests {
 				"Debug",
 				Path.Combine (outputPath, "logs"));
 
-			var exception = Assert.ThrowsAsync<UnsupportedOperationException> (
+			var exception = Assert.ThrowsAsync<InvalidOperationException> (
 				async () => await appRunner.InstallAsync (new CancellationToken ()),
 				"Install should not be allowed on a simulator");
 		}
@@ -135,7 +135,7 @@ namespace Xharness.Tests {
 				"Debug",
 				Path.Combine (outputPath, "logs"));
 
-			var exception = Assert.ThrowsAsync<UnsupportedOperationException> (
+			var exception = Assert.ThrowsAsync<InvalidOperationException> (
 				async () => await appRunner.UninstallAsync (),
 				"Uninstall should not be allowed on a simulator");
 		}
