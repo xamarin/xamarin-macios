@@ -8,7 +8,7 @@ namespace Xharness.Jenkins.TestTasks
 {
 	class RunXtroTask : MacExecuteTask
 	{
-		public RunXtroTask (BuildToolTask build_task, IProcessManager processManager, ICrashReportSnapshotFactory crashReportSnapshotFactory)
+		public RunXtroTask (BuildToolTask build_task, IProcessManager processManager, ICrashSnapshotReporterFactory crashReportSnapshotFactory)
 			: base (build_task, processManager, crashReportSnapshotFactory)
 		{
 		}

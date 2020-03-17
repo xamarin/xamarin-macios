@@ -12,13 +12,13 @@ namespace Xharness.Jenkins.TestTasks
 {
 	class MacExecuteTask : MacTask
 	{
-		protected ICrashReportSnapshotFactory CrashReportSnapshotFactory { get; }
+		protected ICrashSnapshotReporterFactory CrashReportSnapshotFactory { get; }
 
 		public string Path;
 		public bool BCLTest;
 		public bool IsUnitTest;
 
-		public MacExecuteTask (BuildToolTask build_task, IProcessManager processManager, ICrashReportSnapshotFactory crashReportSnapshotFactory)
+		public MacExecuteTask (BuildToolTask build_task, IProcessManager processManager, ICrashSnapshotReporterFactory crashReportSnapshotFactory)
 			: base (build_task, processManager)
 		{
 			this.CrashReportSnapshotFactory = crashReportSnapshotFactory ?? throw new ArgumentNullException (nameof (crashReportSnapshotFactory));

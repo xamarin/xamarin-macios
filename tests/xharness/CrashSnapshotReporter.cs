@@ -10,32 +10,32 @@ using Xharness.Logging;
 
 namespace Xharness
 {
-	public interface ICrashReportSnapshotFactory {
-		ICrashReportSnapshot Create (ILog log, ILogs logs, bool isDevice, string deviceName);
+	public interface ICrashSnapshotReporterFactory {
+		ICrashSnapshotReporter Create (ILog log, ILogs logs, bool isDevice, string deviceName);
 	}
 
-	public class CrashReportSnapshotFactory : ICrashReportSnapshotFactory {
+	public class CrashSnapshotReporterFactory : ICrashSnapshotReporterFactory {
 		readonly IProcessManager processManager;
 		readonly string xcodeRoot;
 		readonly string mlaunchPath;
 
-		public CrashReportSnapshotFactory (IProcessManager processManager, string xcodeRoot, string mlaunchPath)
+		public CrashSnapshotReporterFactory (IProcessManager processManager, string xcodeRoot, string mlaunchPath)
 		{
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 			this.xcodeRoot = xcodeRoot ?? throw new ArgumentNullException (nameof (xcodeRoot));
 			this.mlaunchPath = mlaunchPath ?? throw new ArgumentNullException (nameof (mlaunchPath));
 		}
 
-		public ICrashReportSnapshot Create (ILog log, ILogs logs, bool isDevice, string deviceName) =>
-			new CrashReportSnapshot (processManager, log, logs, xcodeRoot, mlaunchPath, isDevice, deviceName);
+		public ICrashSnapshotReporter Create (ILog log, ILogs logs, bool isDevice, string deviceName) =>
+			new CrashSnapshotReporter (processManager, log, logs, xcodeRoot, mlaunchPath, isDevice, deviceName);
 	}
 
-	public interface ICrashReportSnapshot {
+	public interface ICrashSnapshotReporter {
 		Task EndCaptureAsync (TimeSpan timeout);
 		Task StartCaptureAsync ();
 	}
 
-	public class CrashReportSnapshot : ICrashReportSnapshot {
+	public class CrashSnapshotReporter : ICrashSnapshotReporter {
 		readonly IProcessManager processManager;
 		readonly ILog log;
 		readonly ILogs logs;
@@ -48,14 +48,14 @@ namespace Xharness
 
 		HashSet<string> initialCrashes;
 
-		public CrashReportSnapshot (IProcessManager processManager,
-								    ILog log,
-								    ILogs logs,
-								    string xcodeRoot,
-								    string mlaunchPath,
-								    bool isDevice,
-								    string deviceName,
-									Func<string> tempFileProvider = null)
+		public CrashSnapshotReporter (IProcessManager processManager,
+									  ILog log,
+								      ILogs logs,
+									  string xcodeRoot,
+								      string mlaunchPath,
+								      bool isDevice,
+								      string deviceName,
+									  Func<string> tempFileProvider = null)
 		{
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 			this.log = log ?? throw new ArgumentNullException (nameof (log));

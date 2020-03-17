@@ -97,7 +97,7 @@ namespace Xharness.Tests {
 				.ReturnsAsync (new ProcessExecutionResult () { ExitCode = 0 });
 
 			// Act
-			var snapshotReport = new CrashReportSnapshot (processManager.Object,
+			var snapshotReport = new CrashSnapshotReporter (processManager.Object,
 				log.Object,
 				logs.Object,
 				tempXcodeRoot,

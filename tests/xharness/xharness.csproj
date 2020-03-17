@@ -85,7 +85,7 @@
     <Compile Include="Collections\BlockingEnumerableCollection.cs" />
     <Compile Include="Collections\ILoadAsync.cs" />
     <Compile Include="Collections\IAsyncEnumerable.cs" />
-    <Compile Include="CrashReportSnapshot.cs" />
+    <Compile Include="CrashSnapshotReporter.cs" />
     <Compile Include="DeviceLogCapturer.cs" />
     <Compile Include="Execution\IProcessManager.cs" />
     <Compile Include="Execution\Mlaunch\Arguments.cs" />

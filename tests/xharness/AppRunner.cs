@@ -424,7 +424,7 @@ namespace Xharness {
 
 		public async Task<int> RunAsync ()
 		{
-			CrashReportSnapshot crash_reports;
+			CrashSnapshotReporter crash_reports;
 			ILog device_system_log = null;
 			ILog listener_log = null;
 			ILog run_log = MainLog;
@@ -432,7 +432,7 @@ namespace Xharness {
 			if (!isSimulator)
 				FindDevice ();
 
-			crash_reports = new CrashReportSnapshot (processManager,
+			crash_reports = new CrashSnapshotReporter (processManager,
 				MainLog,
 				Logs,
 				harness.XcodeRoot,
