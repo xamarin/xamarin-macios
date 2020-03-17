@@ -100,7 +100,7 @@ steps:
 # grab env variables to add test specific text
 # pwsh for PowerShell Core
 # powershell is for Win only PowerShell
-- pwsh: ./tools/devops/templates/publish_failure.ps1
+- pwsh: ./xamarin-macios/tools/devops/templates/publish_failure.ps1
   condition: failed()
   env:
     BUILD_REVISION: $(BUILD_REVISION)
