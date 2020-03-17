@@ -17,7 +17,12 @@ namespace Xharness.Execution {
 		{
 		}
 
-		public async Task<ProcessExecutionResult> ExecuteCommandAsync (string filename, IList<string> args, ILog log, TimeSpan timeout, Dictionary<string, string> environment_variables = null, CancellationToken? cancellation_token = null)
+		public async Task<ProcessExecutionResult> ExecuteCommandAsync (string filename,
+																	   IList<string> args,
+																	   ILog log,
+																	   TimeSpan timeout,
+																	   Dictionary<string, string> environment_variables = null,
+																	   CancellationToken? cancellation_token = null)
 		{
 			using (var p = new Process ()) {
 				p.StartInfo.FileName = filename;
@@ -26,7 +31,12 @@ namespace Xharness.Execution {
 			}
 		}
 
-		public async Task<ProcessExecutionResult> ExecuteCommandAsync (string filename, MlaunchArguments args, ILog log, TimeSpan timeout, Dictionary<string, string> environment_variables = null, CancellationToken? cancellation_token = null)
+		public async Task<ProcessExecutionResult> ExecuteCommandAsync (string filename,
+																	   MlaunchArguments args,
+																	   ILog log,
+																	   TimeSpan timeout,
+																	   Dictionary<string, string> environment_variables = null,
+																	   CancellationToken? cancellation_token = null)
 		{
 			using (var p = new Process ()) {
 				p.StartInfo.FileName = filename;
