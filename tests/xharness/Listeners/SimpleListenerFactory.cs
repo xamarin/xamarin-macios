@@ -9,18 +9,27 @@ namespace Xharness.Listeners {
 	}
 
 	public interface ISimpleListenerFactory {
-		(ListenerTransport transport, ISimpleListener listener, string listenerTempFile) Create (RunMode mode, ILog listenerLog, bool isSimulator);
+		(ListenerTransport transport, ISimpleListener listener, string listenerTempFile) Create (RunMode mode,
+																								 ILog log,
+																								 ILog listenerLog,
+																								 bool isSimulator,
+																								 bool autoExit,
+																								 bool xmlOutput);
 	}
 
 	public class SimpleListenerFactory : ISimpleListenerFactory {
 
-		public (ListenerTransport transport, ISimpleListener listener, string listenerTempFile) Create (RunMode mode, ILog listenerLog, bool isSimulator)
+		public (ListenerTransport transport, ISimpleListener listener, string listenerTempFile) Create (RunMode mode,
+																									    ILog log,
+																									    ILog listenerLog,
+																									    bool isSimulator,
+																									    bool autoExit,
+																									    bool xmlOutput)
 		{
 			string listenerTempFile = null;
 			ISimpleListener listener;
-
-			listenerTempFile = null;
 			ListenerTransport transport;
+
 			if (mode == RunMode.WatchOS) {
 				transport = isSimulator ? ListenerTransport.File : ListenerTransport.Http;
 			} else {
@@ -30,16 +39,16 @@ namespace Xharness.Listeners {
 			switch (transport) {
 			case ListenerTransport.File:
 				listenerTempFile = listenerLog.FullPath + ".tmp";
-				listener = new SimpleFileListener (listenerTempFile);
+				listener = new SimpleFileListener (listenerTempFile, log, listenerLog, xmlOutput);
 				break;
 			case ListenerTransport.Http:
-				listener = new SimpleHttpListener ();
+				listener = new SimpleHttpListener (log, listenerLog, autoExit, xmlOutput);
 				break;
 			case ListenerTransport.Tcp:
-				listener = new SimpleTcpListener ();
+				listener = new SimpleTcpListener (log, listenerLog, autoExit, xmlOutput);
 				break;
 			default:
-				throw new NotImplementedException ();
+				throw new NotImplementedException ("Unknown type of listener");
 			}
 
 			return (transport, listener, listenerTempFile);

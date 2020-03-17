@@ -34,16 +34,9 @@ namespace Xharness.Tests.Listeners.Tests {
 		}
 
 		[Test]
-		public void ConstructorTest ()
-		{
-			var listener = new SimpleFileListener (path);
-			Assert.AreEqual (path, listener.Path);
-		}
-
-		[Test]
 		public void ConstructorNullPathTest ()
 		{
-			Assert.Throws<ArgumentNullException> (() => new SimpleFileListener (null));
+			Assert.Throws<ArgumentNullException> (() => new SimpleFileListener (null, log.Object, testLog.Object, false));
 		}
 
 		[TestCase ("Tests run: ", false)]
@@ -59,11 +52,7 @@ namespace Xharness.Tests.Listeners.Tests {
 			}
 			// create a listener, set the writer and ensure that what we write in the file is present in the final path
 			using (var sourceWriter = new StreamWriter (path)) {
-				var listener = new SimpleFileListener (path) {
-					TestLog = testLog.Object,
-					Log = log.Object,
-					XmlOutput = isXml,
-				};
+				var listener = new SimpleFileListener (path, log.Object, testLog.Object, isXml);
 				listener.Initialize ();
 				listener.StartAsync ();
 				// write a number of lines and ensure that those are called in the mock

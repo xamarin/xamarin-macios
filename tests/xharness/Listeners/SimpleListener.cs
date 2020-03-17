@@ -7,15 +7,9 @@ using Xharness.Logging;
 namespace Xharness.Listeners
 {
 	public interface ISimpleListener {
-		IPAddress Address { get; set; }
-		bool AutoExit { get; set; }
 		Task CompletionTask { get; }
 		Task ConnectedTask { get; }
-		ILog Log { get; set; }
-		ILog OutputWriter { get; }
-		int Port { get; set; }
-		ILog TestLog { get; set; }
-		bool XmlOutput { get; set; }
+		int Port { get; }
 
 		void Cancel ();
 		void Dispose ();
@@ -25,40 +19,38 @@ namespace Xharness.Listeners
 
 	public abstract class SimpleListener : ISimpleListener, IDisposable
 	{
-		ILog output_writer;
+		readonly TaskCompletionSource<bool> stopped = new TaskCompletionSource<bool> ();
+		readonly TaskCompletionSource<bool> connected = new TaskCompletionSource<bool> ();
+		readonly ILog testLog;
+
+		// TODO: This can be removed as it's commented out below
 		string xml_data;
 
-		TaskCompletionSource<bool> stopped = new TaskCompletionSource<bool> ();
-		TaskCompletionSource<bool> connected = new TaskCompletionSource<bool> ();
-
-		public IPAddress Address { get; set; }
-		public int Port { get; set; }
-		public ILog Log { get; set; }
-		public ILog TestLog { get; set; }
-		public bool AutoExit { get; set; }
-		public bool XmlOutput { get; set; }
-
-		public Task ConnectedTask {
-			get { return connected.Task; }
-		}
-
-		public abstract void Initialize ();
+		protected readonly IPAddress Address = IPAddress.Any;
+		protected ILog Log { get; }
+		protected bool XmlOutput { get; }
+		protected ILog OutputWriter { get; private set; }
 		protected abstract void Start ();
 		protected abstract void Stop ();
 
-		public ILog OutputWriter {
-			get {
-				return output_writer;
-			}
+		public Task ConnectedTask => connected.Task;
+		public int Port { get; protected set; }
+		public abstract void Initialize ();
+
+		protected SimpleListener (ILog log, ILog testLog, bool xmlOutput)
+		{
+			Log = log ?? throw new ArgumentNullException (nameof (log));
+			this.testLog = testLog ?? throw new ArgumentNullException (nameof (testLog));
+			XmlOutput = xmlOutput;
 		}
 
 		protected void Connected (string remote)
 		{
-			Log.WriteLine ("Connection from {0} saving logs to {1}", remote, TestLog.FullPath);
+			Log.WriteLine ("Connection from {0} saving logs to {1}", remote, testLog.FullPath);
 			connected.TrySetResult (true);
 
-			if (output_writer == null) {
-				output_writer = TestLog;
+			if (OutputWriter == null) {
+				OutputWriter = testLog;
 				// a few extra bits of data only available from this side
 				var local_data =
 $@"[Local Date/Time:	{DateTime.Now}]
@@ -68,7 +60,7 @@ $@"[Local Date/Time:	{DateTime.Now}]
 					// https://github.com/xamarin/maccore/issues/827
 					//xml_data = local_data;
 				} else {
-					output_writer.WriteLine (local_data);
+					OutputWriter.WriteLine (local_data);
 				}
 			}
 		}
@@ -82,8 +74,8 @@ $@"[Local Date/Time:	{DateTime.Now}]
 					Log.WriteLine ("Tests have finished executing");
 				}
 				if (xml_data != null) {
-					output_writer.WriteLine ($"<!-- \n{xml_data}\n -->");
-					output_writer.Flush ();
+					OutputWriter.WriteLine ($"<!-- \n{xml_data}\n -->");
+					OutputWriter.Flush ();
 					xml_data = null;
 				}
 			}
@@ -131,8 +123,8 @@ $@"[Local Date/Time:	{DateTime.Now}]
 #region IDisposable Support
 		protected virtual void Dispose (bool disposing)
 		{
-			if (output_writer != null)
-				output_writer.Dispose ();
+			if (OutputWriter != null)
+				OutputWriter.Dispose ();
 		}
 
 		public void Dispose ()

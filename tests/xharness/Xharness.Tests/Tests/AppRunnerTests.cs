@@ -74,7 +74,9 @@ namespace Xharness.Tests {
 			devicesFactory = mock2.Object;
 
 			var mock3 = new Mock<ISimpleListenerFactory> ();
-			mock3.Setup (m => m.Create (It.IsAny<RunMode>(), It.IsAny<ILog>(), It.IsAny<bool>())).Returns ((ListenerTransport.Tcp, simpleListener.Object, null));
+			mock3
+				.Setup (m => m.Create (It.IsAny<RunMode>(), It.IsAny<ILog>(), It.IsAny<ILog>(), It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<bool>()))
+				.Returns ((ListenerTransport.Tcp, simpleListener.Object, null));
 			listenerFactory = mock3.Object;
 
 			mainLog = new Mock<ILog> ().Object;
