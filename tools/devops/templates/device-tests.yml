@@ -95,20 +95,23 @@ steps:
   displayName: 'Run tests'
   timeoutInMinutes: 600
 
-# - bash: |
+
+# if there's a failure, ping GH with status update
+# grab env variables to add test specific text
+
+# - Publish failure artifact: |
 #     echo "##vso[task.setvariable variable=TestState]failure"
 #     echo "$(TestState)"
 #   displayName: "set github status to failure if run-tests failed"
 #   condition: failed()
+  # publish to GH failure using pwsh script
 
 #- variables:
 #  github.status: "success"
 
-- variables:
-    ${{ if eq(variables['TestState'], 'failure') }}: # only works if you have a master branch
-    github.status: failure
-    condition: failed()
-    displayName: "set github status to failure"
+#variables:
+#  ${{ if eq(variables['Build.SourceBranchName'], 'master') }}: # only works if you have a master branch
+#    stageName: prod
 
 # - bash: |
 #     set -e
