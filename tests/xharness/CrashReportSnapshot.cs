@@ -129,7 +129,7 @@ namespace Xharness
 
 						if (result.Succeeded) {
 							log.WriteLine ("Downloaded crash report {0} to {1}", crash, crashReportFile.Path);
-							crashReportFile = await SymbolicateCrashReportAsync (crashReportFile);
+							crashReportFile = await GetSymbolicateCrashReportAsync (crashReportFile);
 							crashReports.Add (crashReportFile);
 						} else {
 							log.WriteLine ("Could not download crash report {0}", crash);
@@ -147,7 +147,7 @@ namespace Xharness
 			} while (true);
 		}
 
-		async Task<ILogFile> SymbolicateCrashReportAsync (ILogFile report)
+		async Task<ILogFile> GetSymbolicateCrashReportAsync (ILogFile report)
 		{
 			if (symbolicateCrashPath == null) {
 				log.WriteLine ("Can't symbolicate {0} because the symbolicatecrash script {1} does not exist", report.Path, symbolicateCrashPath);
