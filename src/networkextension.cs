@@ -144,7 +144,7 @@ namespace NetworkExtension {
 		None,
 		Low,
 		Medium,
-		High
+		High,
 	}
 
 	[iOS (9,0)][Mac (10,11)]
