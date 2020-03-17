@@ -1811,7 +1811,7 @@ namespace Xamarin.Bundler {
 							Driver.RunLipo (targetPath, files);
 						}
 						if (LibMonoLinkMode == AssemblyBuildTarget.Framework)
-							Driver.XcodeRun ("install_name_tool", "-change", "@rpath/libmonosgen-2.0.dylib", "@rpath/Mono.framework/Mono", targetPath);
+							Driver.RunInstallNameTool (new [] { "-change", "@rpath/libmonosgen-2.0.dylib", "@rpath/Mono.framework/Mono", targetPath });
 
 						// Remove architectures we don't care about.
 						if (IsDeviceBuild)
@@ -1863,7 +1863,7 @@ namespace Xamarin.Bundler {
 			}
 			sb.Add ("-o");
 			sb.Add (macho_file);
-			Driver.XcodeRun ("bitcode_strip", sb);
+			Driver.RunBitcodeStrip (sb);
 		}
 
 		// Returns true if is up-to-date

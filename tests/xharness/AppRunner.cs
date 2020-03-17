@@ -14,7 +14,6 @@ using Xharness.Jenkins.TestTasks;
 using Xharness.Listeners;
 using Xharness.Logging;
 using Xharness.Utilities;
-using System.Web.UI.HtmlControls;
 
 namespace Xharness {
 
