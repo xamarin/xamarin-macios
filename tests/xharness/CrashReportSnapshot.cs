@@ -43,8 +43,10 @@ namespace Xharness
 		readonly string mlaunchPath;
 		readonly bool isDevice;
 		readonly string deviceName;
+		readonly Func<string> tempFileProvider;
+		readonly string symbolicateCrashPath;
 
-		HashSet<string> initialSet;
+		HashSet<string> initialCrashes;
 
 		public CrashReportSnapshot (IProcessManager processManager,
 								    ILog log,
@@ -52,7 +54,8 @@ namespace Xharness
 								    string xcodeRoot,
 								    string mlaunchPath,
 								    bool isDevice,
-								    string deviceName)
+								    string deviceName,
+									Func<string> tempFileProvider = null)
 		{
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 			this.log = log ?? throw new ArgumentNullException (nameof (log));
@@ -61,94 +64,101 @@ namespace Xharness
 			this.mlaunchPath = mlaunchPath ?? throw new ArgumentNullException (nameof (mlaunchPath));
 			this.isDevice = isDevice;
 			this.deviceName = deviceName;
+			this.tempFileProvider = tempFileProvider ?? Path.GetTempFileName;
+			
+			symbolicateCrashPath = Path.Combine (xcodeRoot, "Contents", "SharedFrameworks", "DTDeviceKitBase.framework", "Versions", "A", "Resources", "symbolicatecrash");
+			if (!File.Exists (symbolicateCrashPath))
+				symbolicateCrashPath = Path.Combine (xcodeRoot, "Contents", "SharedFrameworks", "DVTFoundation.framework", "Versions", "A", "Resources", "symbolicatecrash");
+			if (!File.Exists (symbolicateCrashPath))
+				symbolicateCrashPath = null;
 		}
 
 		public async Task StartCaptureAsync ()
 		{
-			initialSet = await CreateCrashReportsSnapshotAsync ();
+			initialCrashes = await CreateCrashReportsSnapshotAsync ();
 		}
 
 		public async Task EndCaptureAsync (TimeSpan timeout)
 		{
 			// Check for crash reports
-			var crash_report_search_done = false;
-			var crash_report_search_timeout = timeout.TotalSeconds;
-			var watch = new Stopwatch ();
-			watch.Start ();
-			do {
-				var end_crashes = await CreateCrashReportsSnapshotAsync ();
-				end_crashes.ExceptWith (initialSet);
+			var stopwatch = Stopwatch.StartNew ();
 
-				if (end_crashes.Count == 0) {
-					if (watch.Elapsed.TotalSeconds > crash_report_search_timeout) {
-						crash_report_search_done = true;
+			do {
+				var newCrashes = await CreateCrashReportsSnapshotAsync ();
+				newCrashes.ExceptWith (initialCrashes);
+
+				if (newCrashes.Count == 0) {
+					if (stopwatch.Elapsed.TotalSeconds > timeout.TotalSeconds) {
+						break;
 					} else {
-						log.WriteLine ("No crash reports, waiting a second to see if the crash report service just didn't complete in time ({0})", (int) (crash_report_search_timeout - watch.Elapsed.TotalSeconds));
+						log.WriteLine (
+							"No crash reports, waiting a second to see if the crash report service just didn't complete in time ({0})",
+							(int) (timeout.TotalSeconds - stopwatch.Elapsed.TotalSeconds));
+						
 						Thread.Sleep (TimeSpan.FromSeconds (1));
 					}
 
 					continue;
 				}
 
-				log.WriteLine ("Found {0} new crash report(s)", end_crashes.Count);
-				List<ILogFile> crash_reports;
+				log.WriteLine ("Found {0} new crash report(s)", newCrashes.Count);
+
+				List<ILogFile> crashReports;
 				if (!isDevice) {
-					crash_reports = new List<ILogFile> (end_crashes.Count);
-					foreach (var path in end_crashes) {
+					crashReports = new List<ILogFile> (newCrashes.Count);
+					foreach (var path in newCrashes) {
 						logs.AddFile (path, $"Crash report: {Path.GetFileName (path)}");
 					}
 				} else {
 					// Download crash reports from the device. We put them in the project directory so that they're automatically deleted on wrench
 					// (if we put them in /tmp, they'd never be deleted).
-					var downloaded_crash_reports = new List<ILogFile> ();
-					foreach (var file in end_crashes) {
-						var name = Path.GetFileName (file);
-						var crash_report_target = logs.Create (name, $"Crash report: {name}", timestamp: false);
-						var sb = new List<string> ();
-						sb.Add ($"--download-crash-report={file}");
-						sb.Add ($"--download-crash-report-to={crash_report_target.Path}");
-						sb.Add ("--sdkroot");
-						sb.Add (xcodeRoot);
+					crashReports = new List<ILogFile> ();
+					foreach (var crash in newCrashes) {
+						var name = Path.GetFileName (crash);
+						var crashReportFile = logs.Create (name, $"Crash report: {name}", timestamp: false);
+						var args = new MlaunchArguments (
+							new DownloadCrashReportArgument (crash),
+							new DownloadCrashReportToArgument (crashReportFile.Path),
+							new SdkRootArgument (xcodeRoot));
+
 						if (!string.IsNullOrEmpty (deviceName)) {
-							sb.Add ("--devname");
-							sb.Add (deviceName);
+							args.Add (new DeviceNameArgument(deviceName));
 						}
-						var result = await processManager.ExecuteCommandAsync (mlaunchPath, sb, log, TimeSpan.FromMinutes (1));
+
+						var result = await processManager.ExecuteCommandAsync (mlaunchPath, args, log, TimeSpan.FromMinutes (1));
+
 						if (result.Succeeded) {
-							log.WriteLine ("Downloaded crash report {0} to {1}", file, crash_report_target.Path);
-							crash_report_target = await SymbolicateCrashReportAsync (crash_report_target);
-							downloaded_crash_reports.Add (crash_report_target);
+							log.WriteLine ("Downloaded crash report {0} to {1}", crash, crashReportFile.Path);
+							crashReportFile = await SymbolicateCrashReportAsync (crashReportFile);
+							crashReports.Add (crashReportFile);
 						} else {
-							log.WriteLine ("Could not download crash report {0}", file);
+							log.WriteLine ("Could not download crash report {0}", crash);
 						}
 					}
-					crash_reports = downloaded_crash_reports;
 				}
 
-				foreach (var cp in crash_reports) {
+				foreach (var cp in crashReports) {
 					WrenchLog.WriteLine ("AddFile: {0}", cp.Path);
 					log.WriteLine ("    {0}", cp.Path);
 				}
-				crash_report_search_done = true;
-			} while (!crash_report_search_done);
+
+				break;
+
+			} while (true);
 		}
 
 		async Task<ILogFile> SymbolicateCrashReportAsync (ILogFile report)
 		{
-			var symbolicatecrash = Path.Combine (xcodeRoot, "Contents", "SharedFrameworks", "DTDeviceKitBase.framework", "Versions", "A", "Resources", "symbolicatecrash");
-			if (!File.Exists (symbolicatecrash))
-				symbolicatecrash = Path.Combine (xcodeRoot, "Contents", "SharedFrameworks", "DVTFoundation.framework", "Versions", "A", "Resources", "symbolicatecrash");
-
-			if (!File.Exists (symbolicatecrash)) {
-				log.WriteLine ("Can't symbolicate {0} because the symbolicatecrash script {1} does not exist", report.Path, symbolicatecrash);
+			if (symbolicateCrashPath == null) {
+				log.WriteLine ("Can't symbolicate {0} because the symbolicatecrash script {1} does not exist", report.Path, symbolicateCrashPath);
 				return report;
 			}
 
 			var name = Path.GetFileName (report.Path);
 			var symbolicated = logs.Create (Path.ChangeExtension (name, ".symbolicated.log"), $"Symbolicated crash report: {name}", timestamp: false);
 			var environment = new Dictionary<string, string> { { "DEVELOPER_DIR", Path.Combine (xcodeRoot, "Contents", "Developer") } };
-			var rv = await processManager.ExecuteCommandAsync (symbolicatecrash, new [] { report.Path }, symbolicated, TimeSpan.FromMinutes (1), environment);
-			if (rv.Succeeded) {
+			var result = await processManager.ExecuteCommandAsync (symbolicateCrashPath, new [] { report.Path }, symbolicated, TimeSpan.FromMinutes (1), environment);
+			if (result.Succeeded) {
 				log.WriteLine ("Symbolicated {0} successfully.", report.Path);
 				return symbolicated;
 			} else {
@@ -166,10 +176,10 @@ namespace Xharness
 				if (Directory.Exists (dir))
 					crashes.UnionWith (Directory.EnumerateFiles (dir));
 			} else {
-				var tmp = Path.GetTempFileName ();
+				var tempFile = tempFileProvider ();
 				try {
 					var args = new MlaunchArguments (
-						new ListCrashReportsArgument (tmp),
+						new ListCrashReportsArgument (tempFile),
 						new SdkRootArgument (xcodeRoot));
 
 					if (!string.IsNullOrEmpty (deviceName)) {
@@ -178,9 +188,9 @@ namespace Xharness
 
 					var result = await processManager.ExecuteCommandAsync (mlaunchPath, args, log, TimeSpan.FromMinutes (1));
 					if (result.Succeeded)
-						crashes.UnionWith (File.ReadAllLines (tmp));
+						crashes.UnionWith (File.ReadAllLines (tempFile));
 				} finally {
-					File.Delete (tmp);
+					File.Delete (tempFile);
 				}
 			}
 
