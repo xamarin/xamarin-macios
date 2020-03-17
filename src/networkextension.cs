@@ -177,7 +177,7 @@ namespace NetworkExtension {
 		NWInterface NetworkInterface {
 			[Wrap ("Runtime.GetINativeObject<NWInterface> (WeakNetworkInterface, true)")]
 			get;
-			[Wrap ("WeakNetworkInterface = value.Handle")]
+			[Wrap ("WeakNetworkInterface = value != null ? value.Handle : IntPtr.Zero")]
 			set;
 		}
 
