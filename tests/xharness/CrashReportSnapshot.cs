@@ -5,6 +5,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Xharness.Execution;
+using Xharness.Execution.Mlaunch;
 using Xharness.Logging;
 
 namespace Xharness
@@ -167,15 +168,15 @@ namespace Xharness
 			} else {
 				var tmp = Path.GetTempFileName ();
 				try {
-					var sb = new List<string> ();
-					sb.Add ($"--list-crash-reports={tmp}");
-					sb.Add ("--sdkroot");
-					sb.Add (xcodeRoot);
+					var args = new MlaunchArguments (
+						new ListCrashReportsArgument (tmp),
+						new SdkRootArgument (xcodeRoot));
+
 					if (!string.IsNullOrEmpty (deviceName)) {
-						sb.Add ("--devname");
-						sb.Add (deviceName);
+						args.Add (new DeviceNameArgument(deviceName));
 					}
-					var result = await processManager.ExecuteCommandAsync (mlaunchPath, sb, log, TimeSpan.FromMinutes (1));
+
+					var result = await processManager.ExecuteCommandAsync (mlaunchPath, args, log, TimeSpan.FromMinutes (1));
 					if (result.Succeeded)
 						crashes.UnionWith (File.ReadAllLines (tmp));
 				} finally {
