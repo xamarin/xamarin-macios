@@ -9,12 +9,12 @@ namespace Xharness.Utilities
 	// * The temporary directories are automatically cleaned on Wrench (unlike /tmp, which isn't)
 	// * The temporary directories stay after a test is run (until a new test run is started),
 	//   which makes it easier to re-run (copy-paste) commands that failed.
-	public static class DirectoryUtilities
+	public static class TempDirectory
 	{
 		static string root;
 		static int lastNumber;
 
-		static DirectoryUtilities ()
+		static TempDirectory ()
 		{
 			root = Path.Combine (Path.GetDirectoryName (System.Reflection.Assembly.GetExecutingAssembly ().Location), "tmp-test-dir");
 			if (Directory.Exists (root))
