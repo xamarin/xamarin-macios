@@ -51,8 +51,6 @@ namespace Xharness
 
 	public interface IHarness {
 		HarnessAction Action { get; }
-		string BCLTodayExtensionTemplate { get; }
-		string BuildConfiguration { get; }
 		bool DisableWatchOSOnWrench { get; }
 		string DOTNET { get; }
 		bool DryRun { get; }
@@ -83,12 +81,9 @@ namespace Xharness
 		string PeriodicCommandArguments { get; }
 		TimeSpan PeriodicCommandInterval { get; }
 		IProcessManager ProcessManager { get; }
-		string SdkRoot { get; }
-		AppRunnerTarget Target { get; }
 		double Timeout { get; }
 		string TodayContainerTemplate { get; }
 		string TodayExtensionTemplate { get; }
-		string TVOS_MONO_PATH { get; }
 		bool UseGroupedApps { get; }
 		int Verbosity { get; }
 		string WatchOSAppTemplate { get; }
@@ -98,7 +93,6 @@ namespace Xharness
 		Version XcodeVersion { get; }
 		string XIBuildPath { get; }
 		XmlResultJargon XmlJargon { get; }
-		int Execute ();
 		Task<ProcessExecutionResult> ExecuteXcodeCommandAsync (string executable, IList<string> args, ILog log, TimeSpan timeout);
 		bool GetIncludeSystemPermissionTests (TestPlatform platform, bool device);
 		void Log (int min_level, string message, params object [] args);
@@ -108,6 +102,10 @@ namespace Xharness
 	}
 
 	public class Harness : IHarness {
+		readonly AppRunnerTarget target;
+		readonly string buildConfiguration = "Debug";
+		string sdkRoot;
+
 		public HarnessAction Action { get; }
 		public int Verbosity { get; }
 		public ILog HarnessLog { get; set; }
@@ -115,15 +113,9 @@ namespace Xharness
 		public XmlResultJargon XmlJargon { get; }
 		public IProcessManager ProcessManager { get; }
 
-		public string XIBuildPath {
-			get { return Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "tools", "xibuild", "xibuild")); }
-		}
+		public string XIBuildPath => Path.GetFullPath (Path.Combine (RootDirectory, "..", "tools", "xibuild", "xibuild"));
 
-		public static string Timestamp {
-			get {
-				return $"{DateTime.Now:yyyyMMdd_HHmmss}";
-			}
-		}
+		public static string Timestamp => $"{DateTime.Now:yyyyMMdd_HHmmss}";
 
 		// This is the maccore/tests directory.
 		static string root_directory;
@@ -182,20 +174,16 @@ namespace Xharness
 		public string DOTNET { get; private set; }
 
 		// Run
-		public AppRunnerTarget Target { get; set; }
-		public string SdkRoot { get; set; }
-		public string BuildConfiguration { get; set; } = "Debug";
-		public string LogFile { get; set; }
-		public string LogDirectory { get; set; } = Environment.CurrentDirectory;
-		public double Timeout { get; set; } = 15; // in minutes
-		public double LaunchTimeout { get; set; } // in minutes
-		public bool DryRun { get; set; } // Most things don't support this. If you need it somewhere, implement it!
-		public string JenkinsConfiguration { get; set; }
-		public Dictionary<string, string> EnvironmentVariables { get; set; } = new Dictionary<string, string> ();
-		public string MarkdownSummaryPath { get; set; }
-		public string PeriodicCommand { get; set; }
-		public string PeriodicCommandArguments { get; set; }
-		public TimeSpan PeriodicCommandInterval { get; set; }
+		public string LogDirectory { get; } = Environment.CurrentDirectory;
+		public double Timeout { get; } = 15; // in minutes
+		public double LaunchTimeout { get; } // in minutes
+		public bool DryRun { get; } // Most things don't support this. If you need it somewhere, implement it!
+		public string JenkinsConfiguration { get; }
+		public Dictionary<string, string> EnvironmentVariables { get; } = new Dictionary<string, string> ();
+		public string MarkdownSummaryPath { get; }
+		public string PeriodicCommand { get; }
+		public string PeriodicCommandArguments { get; }
+		public TimeSpan PeriodicCommandInterval { get;}
 		// whether tests that require access to system resources (system contacts, photo library, etc) should be executed or not
 		public bool? IncludeSystemPermissionTests { get; set; }
 
@@ -208,7 +196,7 @@ namespace Xharness
 				throw new ArgumentNullException (nameof (configuration));
 
 			autoConf = configuration.AutoConf;
-			BuildConfiguration = configuration.BuildConfiguration ?? throw new ArgumentNullException (nameof (configuration));
+			buildConfiguration = configuration.BuildConfiguration ?? throw new ArgumentNullException (nameof (configuration));
 			DryRun = configuration.DryRun;
 			IncludeSystemPermissionTests = configuration.IncludeSystemPermissionTests;
 			IOSTestProjects = configuration.IOSTestProjects;
@@ -219,8 +207,8 @@ namespace Xharness
 			PeriodicCommand = configuration.PeriodicCommand;
 			PeriodicCommandArguments = configuration.PeriodicCommandArguments;
 			PeriodicCommandInterval = configuration.PeriodicCommandInterval;
-			SdkRoot = configuration.SdkRoot;
-			Target = configuration.Target;
+			sdkRoot = configuration.SdkRoot;
+			target = configuration.Target;
 			Timeout = configuration.TimeoutInMinutes;
 			useSystemXamarinIOSMac = configuration.UseSystemXamarinIOSMac;
 			Verbosity = configuration.Verbosity;
@@ -278,7 +266,7 @@ namespace Xharness
 
 		public string XcodeRoot {
 			get {
-				return FindXcode (SdkRoot);
+				return FindXcode (sdkRoot);
 			}
 		}
 
@@ -313,8 +301,8 @@ namespace Xharness
 			INCLUDE_MAC = make_config.ContainsKey ("INCLUDE_MAC") && !string.IsNullOrEmpty (make_config ["INCLUDE_MAC"]);
 			MAC_DESTDIR = make_config ["MAC_DESTDIR"];
 			IOS_DESTDIR = make_config ["IOS_DESTDIR"];
-			if (string.IsNullOrEmpty (SdkRoot))
-				SdkRoot = make_config ["XCODE_DEVELOPER_ROOT"];
+			if (string.IsNullOrEmpty (sdkRoot))
+				sdkRoot = make_config ["XCODE_DEVELOPER_ROOT"];
 			MONO_IOS_SDK_DESTDIR = make_config ["MONO_IOS_SDK_DESTDIR"];
 			MONO_MAC_SDK_DESTDIR = make_config ["MONO_MAC_SDK_DESTDIR"];
 			ENABLE_XAMARIN = make_config.ContainsKey ("ENABLE_XAMARIN") && !string.IsNullOrEmpty (make_config ["ENABLE_XAMARIN"]);
@@ -613,11 +601,11 @@ namespace Xharness
 					new SimulatorsLoaderFactory (this, ProcessManager),
 					new SimpleListenerFactory (),
 					new DeviceLoaderFactory (this, ProcessManager),
-					Target,
+					target,
 					this,
 					HarnessLog,
 					project.Path,
-					BuildConfiguration);
+					buildConfiguration);
 
 				using (var install_log = new AppInstallMonitorLog (runner.MainLog)) {
 					var rv = runner.InstallAsync (install_log.CancellationToken).Result;
@@ -638,11 +626,11 @@ namespace Xharness
 					new SimulatorsLoaderFactory (this, ProcessManager),
 					new SimpleListenerFactory (),
 					new DeviceLoaderFactory (this, ProcessManager),
-					Target,
+					target,
 					this,
 					HarnessLog,
 					project.Path,
-					BuildConfiguration);
+					buildConfiguration);
 
 				var rv = runner.UninstallAsync ().Result;
 				if (!rv.Succeeded)
@@ -661,11 +649,11 @@ namespace Xharness
 					new SimulatorsLoaderFactory (this, ProcessManager),
 					new SimpleListenerFactory (),
 					new DeviceLoaderFactory (this, ProcessManager),
-					Target,
+					target,
 					this,
 					HarnessLog,
 					project.Path,
-					BuildConfiguration);
+					buildConfiguration);
 
 				var rv = runner.RunAsync ().Result;
 				if (rv != 0)
