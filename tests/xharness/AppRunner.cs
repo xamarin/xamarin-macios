@@ -432,7 +432,13 @@ namespace Xharness {
 			if (!isSimulator)
 				FindDevice ();
 
-			crash_reports = new CrashReportSnapshot (harness, processManager, MainLog, Logs, isDevice: !isSimulator, deviceName);
+			crash_reports = new CrashReportSnapshot (processManager,
+				MainLog,
+				Logs,
+				harness.XcodeRoot,
+				harness.MlaunchPath,
+				isDevice: !isSimulator,
+				deviceName);
 
 			var args = new List<string> ();
 			if (!string.IsNullOrEmpty (harness.XcodeRoot)) {

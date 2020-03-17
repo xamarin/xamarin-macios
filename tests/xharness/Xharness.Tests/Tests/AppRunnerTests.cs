@@ -274,5 +274,63 @@ namespace Xharness.Tests {
 				null,
 				null));
 		}
+
+		[Test]
+		public async Task RunOnDeviceTest ()
+		{
+			Mock<IHarness> harnessMock = new Mock<IHarness> ();
+			harnessMock.SetupGet (x => x.XcodeRoot).Returns ("/path/to/xcode");
+			harnessMock.SetupGet (x => x.MlaunchPath).Returns ("/path/to/mlaunch");
+			harnessMock.SetupGet (x => x.Verbosity).Returns (2);
+			
+			devices.Setup (x => x.ConnectedDevices).Returns (mockDevices);
+
+			/*var processResult = new ProcessExecutionResult () { ExitCode = 1, TimedOut = false };
+
+			processManager
+				.Setup (x => x.ExecuteCommandAsync (
+					 It.IsAny<string> (),
+					 It.IsAny<IList<string>> (),
+					 It.IsAny<ILog> (),
+					 It.IsAny<TimeSpan> (),
+					 It.IsAny<Dictionary<string, string>> (),
+					 It.IsAny<CancellationToken> ()))
+				.ReturnsAsync(processResult);
+
+			var appRunner = new AppRunner (processManager.Object,
+				simulatorsFactory,
+				listenerFactory,
+				devicesFactory,
+				AppRunnerTarget.Device_iOS,
+				harnessMock.Object,
+				mainLog,
+				Path.Combine (sampleProjectPath, "SystemXunit.csproj"),
+				"Debug",
+				Path.Combine (outputPath, "logs"));
+
+
+			CancellationToken cancellationToken = new CancellationToken ();
+			var result = await appRunner.InstallAsync (cancellationToken);
+
+			Assert.AreEqual (1, result.ExitCode);
+			
+			processManager.Verify (x => x.ExecuteCommandAsync (
+				"/path/to/mlaunch",
+				new List<string> () {
+					"--sdkroot",
+					"/path/to/xcode",
+					"-v",
+					"-v",
+					"-v",
+					"--installdev",
+					appPath,
+					"--devname",
+					"Test iPad"
+				},
+				mainLog,
+				TimeSpan.FromHours (1),
+				null,
+				cancellationToken));*/
+		}
 	}
 }
