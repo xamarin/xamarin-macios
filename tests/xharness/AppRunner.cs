@@ -14,7 +14,6 @@ using Xharness.Jenkins.TestTasks;
 using Xharness.Listeners;
 using Xharness.Logging;
 using Xharness.Utilities;
-using System.Net;
 
 namespace Xharness {
 
@@ -136,9 +135,6 @@ namespace Xharness {
 
 		AppInformation Initialize ()
 		{
-			if (AppInformation != null)
-				return AppInformation;
-
 			var csproj = new XmlDocument ();
 			csproj.LoadWithoutNetworkAccess (projectFilePath);
 			string appName = csproj.GetAssemblyName ();
@@ -238,8 +234,6 @@ namespace Xharness {
 
 		public async Task<ProcessExecutionResult> InstallAsync (CancellationToken cancellation_token)
 		{
-			var appInfo = Initialize ();
-
 			if (isSimulator) {
 				// We reset the simulator when running, so a separate install step does not make much sense.
 				throw new InvalidOperationException ("Installing to a simulator is not supported.");
@@ -256,7 +250,7 @@ namespace Xharness {
 				args.Add ("-v");
 			
 			args.Add ("--installdev");
-			args.Add (appInfo.AppPath);
+			args.Add (AppInformation.AppPath);
 			AddDeviceName (args, companionDeviceName ?? deviceName);
 
 			if (mode == RunMode.WatchOS) {
@@ -264,16 +258,14 @@ namespace Xharness {
 				args.Add ("ios,watchos");
 			}
 
-			var totalSize = Directory.GetFiles (appInfo.AppPath, "*", SearchOption.AllDirectories).Select ((v) => new FileInfo (v).Length).Sum ();
-			MainLog.WriteLine ($"Installing '{appInfo.AppPath}' to '{companionDeviceName ?? deviceName}'. Size: {totalSize} bytes = {totalSize / 1024.0 / 1024.0:N2} MB");
+			var totalSize = Directory.GetFiles (AppInformation.AppPath, "*", SearchOption.AllDirectories).Select ((v) => new FileInfo (v).Length).Sum ();
+			MainLog.WriteLine ($"Installing '{AppInformation.AppPath}' to '{companionDeviceName ?? deviceName}'. Size: {totalSize} bytes = {totalSize / 1024.0 / 1024.0:N2} MB");
 
 			return await processManager.ExecuteCommandAsync (harness.MlaunchPath, args, MainLog, TimeSpan.FromHours (1), cancellation_token: cancellation_token);
 		}
 
 		public async Task<ProcessExecutionResult> UninstallAsync ()
 		{
-			var appInfo = Initialize ();
-
 			if (isSimulator)
 				throw new InvalidOperationException ("Uninstalling from a simulator is not supported.");
 
@@ -288,7 +280,7 @@ namespace Xharness {
 				args.Add ("-v");
 
 			args.Add ("--uninstalldevbundleid");
-			args.Add (appInfo.BundleIdentifier);
+			args.Add (AppInformation.BundleIdentifier);
 			AddDeviceName (args, companionDeviceName ?? deviceName);
 
 			return await processManager.ExecuteCommandAsync (harness.MlaunchPath, args, MainLog, TimeSpan.FromMinutes (1));
@@ -436,8 +428,6 @@ namespace Xharness {
 			ILog listener_log = null;
 			ILog run_log = MainLog;
 
-			var appInfo = Initialize ();
-
 			if (!isSimulator)
 				FindDevice ();
 
@@ -532,12 +522,12 @@ namespace Xharness {
 			bool launch_failure = false;
 
 			if (IsExtension) {
-				switch (appInfo.Extension) {
+				switch (AppInformation.Extension) {
 				case Extension.TodayExtension:
 					args.Add (isSimulator ? "--launchsimbundleid" : "--launchdevbundleid");
-					args.Add ("todayviewforextensions:" + appInfo.BundleIdentifier);
+					args.Add ("todayviewforextensions:" + AppInformation.BundleIdentifier);
 					args.Add ("--observe-extension");
-					args.Add (appInfo.LaunchAppPath);
+					args.Add (AppInformation.LaunchAppPath);
 					break;
 				case Extension.WatchKit2:
 				default:
@@ -545,7 +535,7 @@ namespace Xharness {
 				}
 			} else {
 				args.Add (isSimulator ? "--launchsim" : "--launchdev");
-				args.Add (appInfo.LaunchAppPath);
+				args.Add (AppInformation.LaunchAppPath);
 			}
 			if (!isSimulator)
 				args.Add ("--disable-memory-limits");
@@ -584,11 +574,11 @@ namespace Xharness {
 					WrenchLog.WriteLine ("AddFile: {0}", log.Path);
 				}
 
-				MainLog.WriteLine ("*** Executing {0}/{1} in the simulator ***", appInfo.AppName, mode);
+				MainLog.WriteLine ("*** Executing {0}/{1} in the simulator ***", AppInformation.AppName, mode);
 
 				if (EnsureCleanSimulatorState) {
 					foreach (var sim in simulators)
-						await sim.PrepareSimulatorAsync (MainLog, appInfo.BundleIdentifier);
+						await sim.PrepareSimulatorAsync (MainLog, AppInformation.BundleIdentifier);
 				}
 
 				args.Add ($"--device=:v2:udid={simulator.UDID}");
@@ -649,7 +639,7 @@ namespace Xharness {
 					log.StopCapture ();
 				
 			} else {
-				MainLog.WriteLine ("*** Executing {0}/{1} on device '{2}' ***", appInfo.AppName, mode, deviceName);
+				MainLog.WriteLine ("*** Executing {0}/{1} on device '{2}' ***", AppInformation.AppName, mode, deviceName);
 
 				if (mode == RunMode.WatchOS) {
 					args.Add ("--attach-native-debugger"); // this prevents the watch from backgrounding the app.
@@ -722,7 +712,7 @@ namespace Xharness {
 			var crashed = false;
 			if (File.Exists (listener_log.FullPath)) {
 				WrenchLog.WriteLine ("AddFile: {0}", listener_log.FullPath);
-				success = TestsSucceeded (AppInformation, listener_log.FullPath, timed_out, out crashed);
+				success = TestsSucceeded (this.AppInformation, listener_log.FullPath, timed_out, out crashed);
 			} else if (timed_out) {
 				WrenchLog.WriteLine ("AddSummary: <b><i>{0} never launched</i></b><br/>", mode);
 				MainLog.WriteLine ("Test run never launched");
@@ -795,9 +785,9 @@ namespace Xharness {
 							if (harness.InCI) {
 								XmlResultParser.GenerateFailure (Logs,
 									"crash",
-									appInfo.AppName,
+									AppInformation.AppName,
 									variation,
-									$"App Crash {appInfo.AppName} {variation}",
+									$"App Crash {AppInformation.AppName} {variation}",
 									$"App crashed {crash_reason}.",
 									crash_reports.Log.FullPath,
 									harness.XmlJargon);
@@ -819,9 +809,9 @@ namespace Xharness {
 						XmlResultParser.GenerateFailure (
 							Logs,
 							"crash",
-							appInfo.AppName,
+							AppInformation.AppName,
 							variation,
-							$"App Crash {appInfo.AppName} {variation}",
+							$"App Crash {AppInformation.AppName} {variation}",
 							$"App crashed: {FailureMessage}",
 							crash_reports.Log.FullPath,
 							harness.XmlJargon);
@@ -833,9 +823,9 @@ namespace Xharness {
 						XmlResultParser.GenerateFailure (
 							Logs,
 							"launch",
-							appInfo.AppName,
+							AppInformation.AppName,
 							variation,
-							$"App Launch {appInfo.AppName} {variation} on {deviceName}",
+							$"App Launch {AppInformation.AppName} {variation} on {deviceName}",
 							$"{FailureMessage} on {deviceName}",
 							MainLog.FullPath,
 							XmlResultJargon.NUnitV3);
@@ -858,7 +848,7 @@ namespace Xharness {
 					if (isTcp) {
 						XmlResultParser.GenerateFailure (Logs,
 							"tcp-connection",
-							appInfo.AppName,
+							AppInformation.AppName,
 							variation,
 							$"TcpConnection on {deviceName}",
 							$"Device {deviceName} could not reach the host over tcp.",
@@ -868,10 +858,10 @@ namespace Xharness {
 				} else if (timed_out && harness.InCI) {
 					XmlResultParser.GenerateFailure (Logs,
 						"timeout",
-						appInfo.AppName,
+						AppInformation.AppName,
 						variation,
-						$"App Timeout {appInfo.AppName} {variation} on bot {deviceName}",
-						$"{appInfo.AppName} {variation} Test run timed out after {timeout.TotalMinutes} minute(s) on bot {deviceName}.",
+						$"App Timeout {AppInformation.AppName} {variation} on bot {deviceName}",
+						$"{AppInformation.AppName} {variation} Test run timed out after {timeout.TotalMinutes} minute(s) on bot {deviceName}.",
 						MainLog.FullPath,
 						harness.XmlJargon);
 				}
