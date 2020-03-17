@@ -55,6 +55,7 @@ namespace Xharness {
 		readonly ISimulatorsLoaderFactory simulatorsLoaderFactory;
 		readonly ISimpleListenerFactory listenerFactory;
 		readonly IDeviceLoaderFactory devicesLoaderFactory;
+		readonly ICrashSnapshotReporterFactory snapshotReporterFactory;
 		
 		readonly RunMode mode;
 		readonly bool isSimulator;
@@ -95,6 +96,7 @@ namespace Xharness {
 						  ISimulatorsLoaderFactory simulatorsFactory,
 						  ISimpleListenerFactory simpleListenerFactory,
 						  IDeviceLoaderFactory devicesFactory,
+						  ICrashSnapshotReporterFactory snapshotReporterFactory,
 						  AppRunnerTarget target,
 						  IHarness harness,
 						  ILog mainLog,
@@ -113,6 +115,7 @@ namespace Xharness {
 			this.simulatorsLoaderFactory = simulatorsFactory ?? throw new ArgumentNullException (nameof (simulatorsFactory));
 			this.listenerFactory = simpleListenerFactory ?? throw new ArgumentNullException (nameof (simpleListenerFactory));
 			this.devicesLoaderFactory = devicesFactory ?? throw new ArgumentNullException (nameof (devicesFactory));
+			this.snapshotReporterFactory = snapshotReporterFactory ?? throw new ArgumentNullException (nameof (snapshotReporterFactory));
 			this.harness = harness ?? throw new ArgumentNullException (nameof (harness));
 			this.MainLog = mainLog ?? throw new ArgumentNullException (nameof (mainLog));
 			this.projectFilePath = projectFilePath ?? throw new ArgumentNullException (nameof (projectFilePath));
@@ -423,7 +426,6 @@ namespace Xharness {
 
 		public async Task<int> RunAsync ()
 		{
-			CrashSnapshotReporter crash_reports;
 			ILog device_system_log = null;
 			ILog listener_log = null;
 			ILog run_log = MainLog;
@@ -431,13 +433,7 @@ namespace Xharness {
 			if (!isSimulator)
 				FindDevice ();
 
-			crash_reports = new CrashSnapshotReporter (processManager,
-				MainLog,
-				Logs,
-				harness.XcodeRoot,
-				harness.MlaunchPath,
-				isDevice: !isSimulator,
-				deviceName);
+			ICrashSnapshotReporter crash_reports = snapshotReporterFactory.Create (MainLog, Logs, isDevice: !isSimulator, deviceName);
 
 			var args = new List<string> ();
 			if (!string.IsNullOrEmpty (harness.XcodeRoot)) {
