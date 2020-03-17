@@ -15,9 +15,10 @@ make $DEBUG -C xamarin-macios/builds .stamp-mono-ios-sdk-destdir -j
 echo "exit 1" > bar.sh
 chmod a+x bar.sh
 ./bar.sh
-
 if [ $? -eq 0 ]; then
+  echo "##vso[task.setvariable variable=TestState]success"
   echo "hello"
 else
-  echo "##vso[task.setvariable variable=TESTSTATE]failure"
+  echo "##vso[task.setvariable variable=TestState]failure"
 fi
+echo "$(TestState)"
