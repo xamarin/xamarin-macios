@@ -134,9 +134,9 @@ namespace Xharness
 
 		async Task<ILogFile> SymbolicateCrashReportAsync (ILogFile report)
 		{
-			var symbolicatecrash = Path.Combine (xcodeRoot, "Contents/SharedFrameworks/DTDeviceKitBase.framework/Versions/A/Resources/symbolicatecrash");
+			var symbolicatecrash = Path.Combine (xcodeRoot, "Contents", "SharedFrameworks", "DTDeviceKitBase.framework", "Versions", "A", "Resources", "symbolicatecrash");
 			if (!File.Exists (symbolicatecrash))
-				symbolicatecrash = Path.Combine (xcodeRoot, "Contents/SharedFrameworks/DVTFoundation.framework/Versions/A/Resources/symbolicatecrash");
+				symbolicatecrash = Path.Combine (xcodeRoot, "Contents", "SharedFrameworks", "DVTFoundation.framework", "Versions", "A", "Resources", "symbolicatecrash");
 
 			if (!File.Exists (symbolicatecrash)) {
 				log.WriteLine ("Can't symbolicate {0} because the symbolicatecrash script {1} does not exist", report.Path, symbolicatecrash);
@@ -158,12 +158,12 @@ namespace Xharness
 
 		async Task<HashSet<string>> CreateCrashReportsSnapshotAsync ()
 		{
-			var rv = new HashSet<string> ();
+			var crashes = new HashSet<string> ();
 
 			if (!isDevice) {
 				var dir = Path.Combine (Environment.GetEnvironmentVariable ("HOME"), "Library", "Logs", "DiagnosticReports");
 				if (Directory.Exists (dir))
-					rv.UnionWith (Directory.EnumerateFiles (dir));
+					crashes.UnionWith (Directory.EnumerateFiles (dir));
 			} else {
 				var tmp = Path.GetTempFileName ();
 				try {
@@ -177,13 +177,13 @@ namespace Xharness
 					}
 					var result = await processManager.ExecuteCommandAsync (mlaunchPath, sb, log, TimeSpan.FromMinutes (1));
 					if (result.Succeeded)
-						rv.UnionWith (File.ReadAllLines (tmp));
+						crashes.UnionWith (File.ReadAllLines (tmp));
 				} finally {
 					File.Delete (tmp);
 				}
 			}
 
-			return rv;
+			return crashes;
 		}
 	}
 }

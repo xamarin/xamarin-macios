@@ -104,7 +104,6 @@ namespace Xharness
 	public class Harness : IHarness {
 		readonly AppRunnerTarget target;
 		readonly string buildConfiguration = "Debug";
-		string sdkRoot;
 
 		public HarnessAction Action { get; }
 		public int Verbosity { get; }
@@ -145,6 +144,15 @@ namespace Xharness
 			}
 		}
 
+		string sdkRoot;
+		string SdkRoot {
+			get => sdkRoot;
+			set {
+				sdkRoot = value;
+				XcodeRoot = FindXcode (sdkRoot);
+			}
+		}
+
 		public List<iOSTestProject> IOSTestProjects { get; }
 		public List<MacTestProject> MacTestProjects { get; } = new List<MacTestProject> ();
 
@@ -174,6 +182,8 @@ namespace Xharness
 		public string DOTNET { get; private set; }
 
 		// Run
+
+		public string XcodeRoot { get; private set; }
 		public string LogDirectory { get; } = Environment.CurrentDirectory;
 		public double Timeout { get; } = 15; // in minutes
 		public double LaunchTimeout { get; } // in minutes
@@ -183,7 +193,7 @@ namespace Xharness
 		public string MarkdownSummaryPath { get; }
 		public string PeriodicCommand { get; }
 		public string PeriodicCommandArguments { get; }
-		public TimeSpan PeriodicCommandInterval { get;}
+		public TimeSpan PeriodicCommandInterval { get; }
 		// whether tests that require access to system resources (system contacts, photo library, etc) should be executed or not
 		public bool? IncludeSystemPermissionTests { get; set; }
 
@@ -207,7 +217,7 @@ namespace Xharness
 			PeriodicCommand = configuration.PeriodicCommand;
 			PeriodicCommandArguments = configuration.PeriodicCommandArguments;
 			PeriodicCommandInterval = configuration.PeriodicCommandInterval;
-			sdkRoot = configuration.SdkRoot;
+			SdkRoot = configuration.SdkRoot;
 			target = configuration.Target;
 			Timeout = configuration.TimeoutInMinutes;
 			useSystemXamarinIOSMac = configuration.UseSystemXamarinIOSMac;
@@ -264,12 +274,6 @@ namespace Xharness
 			} while (true);
 		}
 
-		public string XcodeRoot {
-			get {
-				return FindXcode (sdkRoot);
-			}
-		}
-
 		Version xcode_version;
 		public Version XcodeVersion {
 			get {
@@ -301,8 +305,8 @@ namespace Xharness
 			INCLUDE_MAC = make_config.ContainsKey ("INCLUDE_MAC") && !string.IsNullOrEmpty (make_config ["INCLUDE_MAC"]);
 			MAC_DESTDIR = make_config ["MAC_DESTDIR"];
 			IOS_DESTDIR = make_config ["IOS_DESTDIR"];
-			if (string.IsNullOrEmpty (sdkRoot))
-				sdkRoot = make_config ["XCODE_DEVELOPER_ROOT"];
+			if (string.IsNullOrEmpty (SdkRoot))
+				SdkRoot = make_config ["XCODE_DEVELOPER_ROOT"];
 			MONO_IOS_SDK_DESTDIR = make_config ["MONO_IOS_SDK_DESTDIR"];
 			MONO_MAC_SDK_DESTDIR = make_config ["MONO_MAC_SDK_DESTDIR"];
 			ENABLE_XAMARIN = make_config.ContainsKey ("ENABLE_XAMARIN") && !string.IsNullOrEmpty (make_config ["ENABLE_XAMARIN"]);
@@ -773,6 +777,7 @@ namespace Xharness
 		}
 
 		bool? disable_watchos_on_wrench;
+
 		public bool DisableWatchOSOnWrench {
 			get {
 				if (!disable_watchos_on_wrench.HasValue)
