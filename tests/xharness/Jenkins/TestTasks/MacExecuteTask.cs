@@ -12,14 +12,16 @@ namespace Xharness.Jenkins.TestTasks
 {
 	class MacExecuteTask : MacTask
 	{
+		protected ICrashReportSnapshotFactory CrashReportSnapshotFactory { get; }
+
 		public string Path;
 		public bool BCLTest;
 		public bool IsUnitTest;
-		public IProcessManager ProcessManager { get; set; } = new ProcessManager ();
 
-		public MacExecuteTask (BuildToolTask build_task)
-			: base (build_task)
+		public MacExecuteTask (BuildToolTask build_task, IProcessManager processManager, ICrashReportSnapshotFactory crashReportSnapshotFactory)
+			: base (build_task, processManager)
 		{
+			this.CrashReportSnapshotFactory = crashReportSnapshotFactory ?? throw new ArgumentNullException (nameof (crashReportSnapshotFactory));
 		}
 
 		public override bool SupportsParallelExecution {
@@ -91,7 +93,7 @@ namespace Xharness.Jenkins.TestTasks
 					if (!Harness.DryRun) {
 						ExecutionResult = TestExecutingResult.Running;
 
-						var snapshot = new CrashReportSnapshot (Harness, log, Logs, isDevice: false, deviceName: null);
+						var snapshot = CrashReportSnapshotFactory.Create (log, Logs, isDevice: false, deviceName: null);
 						await snapshot.StartCaptureAsync ();
 
 						ProcessExecutionResult result = null;

@@ -28,8 +28,8 @@ namespace Xharness.Jenkins.TestTasks
 			}
 		}
 
-		public RunSimulatorTask (ISimulatorsLoader simulators, MSBuildTask build_task, IEnumerable<ISimulatorDevice> candidates = null)
-			: base (build_task, candidates)
+		public RunSimulatorTask (ISimulatorsLoader simulators, MSBuildTask build_task, IProcessManager processManager, IEnumerable<ISimulatorDevice> candidates = null)
+			: base (build_task, processManager, candidates)
 		{
 			var project = Path.GetFileNameWithoutExtension (ProjectFile);
 			if (project.EndsWith ("-tvos", StringComparison.Ordinal)) {

@@ -14,6 +14,7 @@ using Xharness.Jenkins.TestTasks;
 using Xharness.Listeners;
 using Xharness.Logging;
 using Xharness.Utilities;
+using System.Web.UI.HtmlControls;
 
 namespace Xharness {
 
@@ -431,7 +432,7 @@ namespace Xharness {
 			if (!isSimulator)
 				FindDevice ();
 
-			crash_reports = new CrashReportSnapshot (harness, MainLog, Logs, isDevice: !isSimulator, deviceName);
+			crash_reports = new CrashReportSnapshot (harness, processManager, MainLog, Logs, isDevice: !isSimulator, deviceName);
 
 			var args = new List<string> ();
 			if (!string.IsNullOrEmpty (harness.XcodeRoot)) {
@@ -747,7 +748,7 @@ namespace Xharness {
 			if (!success.Value) {
 				int pid = 0;
 				string crash_reason = null;
-				foreach (var crash in crash_reports.Logs) {
+				foreach (var crash in Logs) {
 					try {
 						if (pid == 0) {
 							// Find the pid
@@ -789,7 +790,7 @@ namespace Xharness {
 									variation,
 									$"App Crash {AppInformation.AppName} {variation}",
 									$"App crashed {crash_reason}.",
-									crash_reports.Log.FullPath,
+									MainLog.FullPath,
 									harness.XmlJargon);
 							}
 
@@ -813,7 +814,7 @@ namespace Xharness {
 							variation,
 							$"App Crash {AppInformation.AppName} {variation}",
 							$"App crashed: {FailureMessage}",
-							crash_reports.Log.FullPath,
+							MainLog.FullPath,
 							harness.XmlJargon);
 					}
 				} else if (launch_failure) {

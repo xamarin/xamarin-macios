@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Xharness.Execution;
 using Xharness.Logging;
 
 namespace Xharness.Jenkins.TestTasks {
 	class DotNetTestTask : RunTestTask {
-		public DotNetTestTask (DotNetBuildTask build_task)
-			: base (build_task)
+		public DotNetTestTask (DotNetBuildTask build_task, IProcessManager processManager)
+			: base (build_task, processManager)
 		{
 			DotNetBuildTask.SetDotNetEnvironmentVariables (Environment);
 		}
