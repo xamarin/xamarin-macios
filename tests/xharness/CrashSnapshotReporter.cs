@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Xharness.Execution;
@@ -84,10 +85,10 @@ namespace Xharness
 			var stopwatch = Stopwatch.StartNew ();
 
 			do {
-				var newCrashes = await CreateCrashReportsSnapshotAsync ();
-				newCrashes.ExceptWith (initialCrashes);
+				var newCrashFiles = await CreateCrashReportsSnapshotAsync ();
+				newCrashFiles.ExceptWith (initialCrashes);
 
-				if (newCrashes.Count == 0) {
+				if (newCrashFiles.Count == 0) {
 					if (stopwatch.Elapsed.TotalSeconds > timeout.TotalSeconds) {
 						break;
 					} else {
@@ -101,40 +102,21 @@ namespace Xharness
 					continue;
 				}
 
-				log.WriteLine ("Found {0} new crash report(s)", newCrashes.Count);
+				log.WriteLine ("Found {0} new crash report(s)", newCrashFiles.Count);
 
-				List<ILogFile> crashReports;
+				IEnumerable<ILogFile> crashReports;
 				if (!isDevice) {
-					crashReports = new List<ILogFile> (newCrashes.Count);
-					foreach (var path in newCrashes) {
+					crashReports = new List<ILogFile> (newCrashFiles.Count);
+					foreach (var path in newCrashFiles) {
 						logs.AddFile (path, $"Crash report: {Path.GetFileName (path)}");
 					}
 				} else {
 					// Download crash reports from the device. We put them in the project directory so that they're automatically deleted on wrench
 					// (if we put them in /tmp, they'd never be deleted).
-					crashReports = new List<ILogFile> ();
-					foreach (var crash in newCrashes) {
-						var name = Path.GetFileName (crash);
-						var crashReportFile = logs.Create (name, $"Crash report: {name}", timestamp: false);
-						var args = new MlaunchArguments (
-							new DownloadCrashReportArgument (crash),
-							new DownloadCrashReportToArgument (crashReportFile.Path),
-							new SdkRootArgument (xcodeRoot));
-
-						if (!string.IsNullOrEmpty (deviceName)) {
-							args.Add (new DeviceNameArgument(deviceName));
-						}
-
-						var result = await processManager.ExecuteCommandAsync (mlaunchPath, args, log, TimeSpan.FromMinutes (1));
-
-						if (result.Succeeded) {
-							log.WriteLine ("Downloaded crash report {0} to {1}", crash, crashReportFile.Path);
-							crashReportFile = await GetSymbolicateCrashReportAsync (crashReportFile);
-							crashReports.Add (crashReportFile);
-						} else {
-							log.WriteLine ("Could not download crash report {0}", crash);
-						}
-					}
+					crashReports = newCrashFiles
+						.Select (async crash => await ProcessCrash (crash))
+						.Select (t => t.Result)
+						.Where (c => c != null);
 				}
 
 				foreach (var cp in crashReports) {
@@ -145,6 +127,30 @@ namespace Xharness
 				break;
 
 			} while (true);
+		}
+
+		async Task<ILogFile> ProcessCrash (string crashFile)
+		{
+			var name = Path.GetFileName (crashFile);
+			var crashReportFile = logs.Create (name, $"Crash report: {name}", timestamp: false);
+			var args = new MlaunchArguments (
+				new DownloadCrashReportArgument (crashFile),
+				new DownloadCrashReportToArgument (crashReportFile.Path),
+				new SdkRootArgument (xcodeRoot));
+
+			if (!string.IsNullOrEmpty (deviceName)) {
+				args.Add (new DeviceNameArgument(deviceName));
+			}
+
+			var result = await processManager.ExecuteCommandAsync (mlaunchPath, args, log, TimeSpan.FromMinutes (1));
+
+			if (result.Succeeded) {
+				log.WriteLine ("Downloaded crash report {0} to {1}", crashFile, crashReportFile.Path);
+				return await GetSymbolicateCrashReportAsync (crashReportFile);
+			} else {
+				log.WriteLine ("Could not download crash report {0}", crashFile);
+				return null;
+			}
 		}
 
 		async Task<ILogFile> GetSymbolicateCrashReportAsync (ILogFile report)
