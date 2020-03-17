@@ -18,6 +18,18 @@
 		}
 	}
 
+	public sealed class ListCrashReportsArgument : SingleValueArgument {
+		public ListCrashReportsArgument (string outputFile) : base ("list-crash-reports", outputFile)
+		{
+		}
+	}
+
+	public sealed class DeviceNameArgument : SingleValueArgument {
+		public DeviceNameArgument (string deviceName) : base ("devname", deviceName)
+		{
+		}
+	}
+
 	public sealed class DefaultOutputFormatArgument : SingleValueArgument {
 		public DefaultOutputFormatArgument () : base ("output-format", "Default")
 		{
