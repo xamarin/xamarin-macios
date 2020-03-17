@@ -98,6 +98,17 @@ steps:
 
 # if there's a failure, ping GH with status update
 # grab env variables to add test specific text
+# pwsh for PowerShell Core
+# powershell is for Win only PowerShell
+- pwsh: ./tools/devops/templates/publish_failure.ps1
+  condition: failed()
+  env:
+    BUILD_REVISION: $(BUILD_REVISION)
+    GH_STATE: $(GH_STATE)
+    GITHUB_TOKEN: $(GitHub.Token)
+    CONTEXT: $(CONTEXT)
+
+
 
 # - Publish failure artifact: |
 #     echo "##vso[task.setvariable variable=TestState]failure"
@@ -108,24 +119,6 @@ steps:
 
 #- variables:
 #  github.status: "success"
-
-#variables:
-#  ${{ if eq(variables['Build.SourceBranchName'], 'master') }}: # only works if you have a master branch
-#    stageName: prod
-
-# - bash: |
-#     set -e
-#     set -x
-#     echo "success!"
-#   displayName: 'Success!!'
-#   condition: eq(variables['TESTSTATE'], 'success'))
-
-# - bash: |
-#     set -e
-#     set -x
-#     echo "failure!"
-#   displayName: 'Failure!!'
-#   condition: eq(variables['TESTSTATE'], 'failure'))
 
 - bash: ./xamarin-macios/tools/devops/add-summaries.sh
   displayName: 'Add summaries'
