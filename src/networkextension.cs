@@ -169,7 +169,7 @@ namespace NetworkExtension {
 		void SetMetadata (OS_nw_parameters nwparameters);
 
 		[NoWatch, NoTV, NoiOS, Mac (10,15,4)]
-		[Wrap ("SetMetadata (parameters.Handle)")]
+		[Wrap ("SetMetadata (parameters.GetHandle ())")]
 		void SetMetadata (NWParameters parameters);
 	
 		[Export ("metaData")]
