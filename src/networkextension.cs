@@ -15,6 +15,7 @@ namespace NetworkExtension {
 
 	// Just to satisfy the core dll contract, the right type will be used on the generated file
 	interface NWInterface { }
+	interface NWParameters { }
 
 	[ErrorDomain ("NEDNSProxyErrorDomain")]
 	[iOS (11,0)]
@@ -162,13 +163,19 @@ namespace NetworkExtension {
 		[Export ("closeWriteWithError:")]
 		void CloseWrite ([NullAllowed] NSError error);
 
+		[Internal]
 		[NoWatch, NoTV, NoiOS, Mac (10,15,4)]
 		[Export ("setMetadata:")]
-		void SetMetadata (OS_nw_parameters parameters);
+		void SetMetadata (OS_nw_parameters nwparameters);
+
+		[NoWatch, NoTV, NoiOS, Mac (10,15,4)]
+		[Wrap ("SetMetadata (parameters.Handle)")]
+		void SetMetadata (NWParameters parameters);
 	
 		[Export ("metaData")]
 		NEFlowMetaData MetaData { get; }
 
+		[Internal]
 		[NoWatch, NoTV, Mac (10,15,4), iOS (13,4)]
 		[NullAllowed, Export ("networkInterface", ArgumentSemantic.Copy)]
 		OS_nw_interface WeakNetworkInterface { get; set; }
@@ -177,7 +184,7 @@ namespace NetworkExtension {
 		NWInterface NetworkInterface {
 			[Wrap ("Runtime.GetINativeObject<NWInterface> (WeakNetworkInterface, false)")]
 			get;
-			[Wrap ("WeakNetworkInterface = value != null ? value.Handle : IntPtr.Zero")]
+			[Wrap ("WeakNetworkInterface = value.GetHandle ()")]
 			set;
 		}
 
