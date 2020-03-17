@@ -1,16 +1,21 @@
 ﻿using System;
-using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
-using System.Threading;
+using Xharness.Logging;
 
 namespace Xharness.Listeners
 {
 	public class SimpleTcpListener : SimpleListener
 	{
+		readonly bool autoExit;
+
 		byte[] buffer = new byte [16 * 1024];
 		TcpListener server;
+
+		public SimpleTcpListener (ILog log, ILog testLog, bool autoExit, bool xmlOutput) : base (log, testLog, xmlOutput)
+		{
+			this.autoExit = autoExit;
+		}
 
 		protected override void Stop ()
 		{
@@ -37,7 +42,7 @@ namespace Xharness.Listeners
 						client.ReceiveBufferSize = buffer.Length;
 						processed = Processing (client);
 					}
-				} while (!AutoExit || !processed);
+				} while (!autoExit || !processed);
 			}catch (Exception e) {
 				var se = e as SocketException;
 				if (se == null || se.SocketErrorCode != SocketError.Interrupted)
