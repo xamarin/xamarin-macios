@@ -62,11 +62,10 @@ namespace Xharness {
 		readonly AppRunnerTarget target;
 		readonly string projectFilePath;
 		readonly IHarness harness;
-		readonly string configuration;
+		readonly string buildConfiguration;
 		readonly string variation;
 		readonly double timeoutMultiplier;
 		readonly BuildToolTask buildTask;
-		readonly string logDirectory;
 
 		string deviceName;
 		string companionDeviceName;
@@ -89,8 +88,7 @@ namespace Xharness {
 
 		public ILog MainLog { get; set; }	
 
-		public ILogs Logs { get; }
-		
+		public ILogs Logs { get; }		
 
 		public AppRunner (IProcessManager processManager,
 						  ISimulatorsLoaderFactory simulatorsFactory,
@@ -100,9 +98,9 @@ namespace Xharness {
 						  AppRunnerTarget target,
 						  IHarness harness,
 						  ILog mainLog,
+						  ILogs logs,
 						  string projectFilePath,
-						  string configuration,
-						  string logDirectory = null,
+						  string buildConfiguration,
 						  ISimulatorDevice [] simulators = null,
 						  string deviceName = null,
 						  string companionDeviceName = null,
@@ -119,9 +117,8 @@ namespace Xharness {
 			this.harness = harness ?? throw new ArgumentNullException (nameof (harness));
 			this.MainLog = mainLog ?? throw new ArgumentNullException (nameof (mainLog));
 			this.projectFilePath = projectFilePath ?? throw new ArgumentNullException (nameof (projectFilePath));
-			this.logDirectory = logDirectory ?? harness.LogDirectory;
-			this.Logs = new Logs (this.logDirectory);
-			this.configuration = configuration;
+			this.Logs = logs ?? throw new ArgumentNullException (nameof (logs));
+			this.buildConfiguration = buildConfiguration ?? throw new ArgumentNullException (nameof (buildConfiguration));
 			this.timeoutMultiplier = timeoutMultiplier;
 			this.deviceName = deviceName;
 			this.companionDeviceName = companionDeviceName;
@@ -155,7 +152,7 @@ namespace Xharness {
 				extension = extensionPointIdentifier.ParseFromNSExtensionPointIdentifier ();
 
 			string appPath = Path.Combine (Path.GetDirectoryName (projectFilePath),
-				csproj.GetOutputPath (isSimulator ? "iPhoneSimulator" : "iPhone", configuration).Replace ('\\', Path.DirectorySeparatorChar),
+				csproj.GetOutputPath (isSimulator ? "iPhoneSimulator" : "iPhone", buildConfiguration).Replace ('\\', Path.DirectorySeparatorChar),
 				appName + (extension != null ? ".appex" : ".app"));
 
 			if (!Directory.Exists (appPath))
@@ -566,7 +563,7 @@ namespace Xharness {
 					MainLog.WriteLine ("System log for the '{1}' simulator is: {0}", sim.SystemLog, sim.Name);
 					bool isCompanion = sim != simulator;
 
-					var log = new CaptureLog (Logs, Path.Combine (logDirectory, sim.Name + ".log"), sim.SystemLog, entire_file: harness.Action != HarnessAction.Jenkins)
+					var log = new CaptureLog (Logs, Path.Combine (Logs.Directory, sim.Name + ".log"), sim.SystemLog, entire_file: harness.Action != HarnessAction.Jenkins)
 					{
 						Description = isCompanion ? LogType.CompanionSystemLog.ToString () : LogType.SystemLog.ToString (),
 					};

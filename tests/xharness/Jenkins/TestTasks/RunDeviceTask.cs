@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Xharness.Execution;
 using Xharness.Hardware;
 using Xharness.Listeners;
+using Xharness.Logging;
 
 namespace Xharness.Jenkins.TestTasks
 {
@@ -88,8 +89,8 @@ namespace Xharness.Jenkins.TestTasks
 						Harness,
 						projectFilePath: ProjectFile,
 						mainLog: uninstall_log,
-						configuration: ProjectConfiguration,
-						logDirectory: LogDirectory,
+						logs: new Logs (LogDirectory ?? Harness.LogDirectory),
+						buildConfiguration: ProjectConfiguration,
 						deviceName: Device.Name,
 						companionDeviceName: CompanionDevice?.Name,
 						timeoutMultiplier: TimeoutMultiplier,
@@ -151,8 +152,8 @@ namespace Xharness.Jenkins.TestTasks
 								Harness,
 								projectFilePath: ProjectFile,
 								mainLog: Logs.Create ($"extension-run-{Device.UDID}-{Timestamp}.log", "Extension run log"),
-								configuration: ProjectConfiguration,
-								logDirectory: LogDirectory,
+								logs: new Logs (LogDirectory ?? Harness.LogDirectory),
+								buildConfiguration: ProjectConfiguration,
 								deviceName: Device.Name,
 								companionDeviceName: CompanionDevice?.Name,
 								timeoutMultiplier: TimeoutMultiplier,
