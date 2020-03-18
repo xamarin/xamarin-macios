@@ -1440,6 +1440,7 @@ namespace Xamarin.Bundler {
 				}
 				// if required update the paths inside the .dylib that was copied
 				if (sb.Count > 0) {
+					sb.Add (library);
 					RunInstallNameTool (sb);
 					sb.Clear ();
 				}
