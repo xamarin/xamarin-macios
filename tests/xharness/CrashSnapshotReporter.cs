@@ -50,13 +50,13 @@ namespace Xharness
 		HashSet<string> initialCrashes;
 
 		public CrashSnapshotReporter (IProcessManager processManager,
-									  ILog log,
-								      ILogs logs,
-									  string xcodeRoot,
-								      string mlaunchPath,
-								      bool isDevice,
-								      string deviceName,
-									  Func<string> tempFileProvider = null)
+										ILog log,
+										ILogs logs,
+										string xcodeRoot,
+										string mlaunchPath,
+										bool isDevice,
+										string deviceName,
+										Func<string> tempFileProvider = null)
 		{
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 			this.log = log ?? throw new ArgumentNullException (nameof (log));
@@ -66,7 +66,7 @@ namespace Xharness
 			this.isDevice = isDevice;
 			this.deviceName = deviceName;
 			this.tempFileProvider = tempFileProvider ?? Path.GetTempFileName;
-			
+
 			symbolicateCrashPath = Path.Combine (xcodeRoot, "Contents", "SharedFrameworks", "DTDeviceKitBase.framework", "Versions", "A", "Resources", "symbolicatecrash");
 			if (!File.Exists (symbolicateCrashPath))
 				symbolicateCrashPath = Path.Combine (xcodeRoot, "Contents", "SharedFrameworks", "DVTFoundation.framework", "Versions", "A", "Resources", "symbolicatecrash");
