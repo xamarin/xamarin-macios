@@ -263,14 +263,17 @@ namespace Xharness
 
 		static string FindXcode (string path)
 		{
-			var p = path;
+			if (string.IsNullOrEmpty (path))
+				return path;
+
 			do {
-				if (p == "/") {
+				if (path == "/") {
 					throw new Exception (string.Format ("Could not find Xcode.app in {0}", path));
-				} else if (File.Exists (Path.Combine (p, "Contents", "MacOS", "Xcode"))) {
-					return p;
+				} else if (File.Exists (Path.Combine (path, "Contents", "MacOS", "Xcode"))) {
+					return path;
 				}
-				p = Path.GetDirectoryName (p);
+
+				path = Path.GetDirectoryName (path);
 			} while (true);
 		}
 
