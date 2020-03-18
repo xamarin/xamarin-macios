@@ -21,9 +21,7 @@ namespace Xharness.Jenkins.TestTasks
 
 		public TDevice CompanionDevice { get; protected set; }
 
-		public string BundleIdentifier {
-			get { return runner.BundleIdentifier; }
-		}
+		public string BundleIdentifier => runner.AppInformation.BundleIdentifier;
 
 		public RunXITask (BuildToolTask build_task, IEnumerable<TDevice> candidates)
 			: base (build_task)

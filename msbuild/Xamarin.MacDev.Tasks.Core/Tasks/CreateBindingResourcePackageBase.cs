@@ -7,6 +7,7 @@ using System.Xml;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
+using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.MacDev.Tasks {
 	public abstract class CreateBindingResourcePackageBase : Task {
@@ -31,12 +32,12 @@ namespace Xamarin.MacDev.Tasks {
 		{
 			// LinkWith must be migrated for NoBindingEmbedding styled binding projects
 			if (NativeReferences.Length == 0) {
-				Log.LogError (7068, null, $"Can't create a binding resource package unless there are native references in the binding project.");
+				Log.LogError (7068, null, MSBStrings.E7068);
 				return false;
 			}
 
 			string bindingResourcePath = Path.Combine (ProjectDir, OutputPath, Path.ChangeExtension (Path.GetFileName (BindingAssembly), ".resources"));
-			Log.LogMessage ($"Creating binding resource package: {bindingResourcePath}");
+			Log.LogMessage (MSBStrings.M0121, bindingResourcePath);
 
 			Directory.CreateDirectory (bindingResourcePath);
 			foreach (var nativeRef in NativeReferences)

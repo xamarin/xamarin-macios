@@ -5,19 +5,36 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
-using Xamarin;
-using Xharness;
 using Xharness.Collections;
 using Xharness.Execution;
+using Xharness.Execution.Mlaunch;
 using Xharness.Logging;
 using Xharness.Utilities;
 
 namespace Xharness.Hardware {
-	public class Devices : IDeviceLoader {
-		public IHarness Harness { get; set; }
-		public IProcessManager ProcessManager { get; set; } = new ProcessManager ();
+	
+	public interface IDeviceLoaderFactory {
+		IDeviceLoader CreateLoader ();
+	}
 
+	public class DeviceLoaderFactory : IDeviceLoaderFactory {
+		readonly IHarness harness;
+		readonly IProcessManager processManager;
+
+		public DeviceLoaderFactory (IHarness harness, IProcessManager processManager)
+		{
+			this.harness = harness ?? throw new ArgumentNullException (nameof (harness));
+			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
+		}
+
+		public IDeviceLoader CreateLoader () => new Devices (harness, processManager);
+	}
+
+	public class Devices : IDeviceLoader {
+		readonly IProcessManager processManager;
 		bool loaded;
+
+		public IHarness Harness { get; set; }
 
 		BlockingEnumerableCollection<IHardwareDevice> connected_devices = new BlockingEnumerableCollection<IHardwareDevice> ();
 
@@ -32,6 +49,12 @@ namespace Xharness.Hardware {
 					return x.DevicePlatform == DevicePlatform.watchOS && x.Architecture == Architecture.ARM64_32;
 				});
 			}
+		}
+
+		public Devices (IHarness harness, IProcessManager processManager)
+		{
+			Harness = harness ?? throw new ArgumentNullException (nameof (harness));
+			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 		}
 
 		Task ILoadAsync.LoadAsync (ILog log, bool include_locked, bool force)
@@ -55,14 +78,15 @@ namespace Xharness.Hardware {
 					using (var process = new Process ()) {
 						process.StartInfo.FileName = Harness.MlaunchPath;
 						var arguments = new MlaunchArguments (
-							(MlaunchArgumentType.SdkRoot, Harness.XcodeRoot),
-							(MlaunchArgumentType.ListDev, tmpfile),
-							(MlaunchArgumentType.OutputFormat, "xml")
-						);
+							new SdkRootArgument (Harness.XcodeRoot),
+							new ListDevicesArgument (tmpfile),
+							new XmlOutputFormatArgument ());
+
 						if (extra_data)
-							arguments.Add (MlaunchArgumentType.ListExtraData);
+							arguments.Add (new ListExtraDataArgument ());
+
 						log.WriteLine ("Launching {0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments);
-						var rv = await ProcessManager.RunAsync (process, arguments, log, timeout: TimeSpan.FromSeconds (120));
+						var rv = await processManager.RunAsync (process, arguments, log, timeout: TimeSpan.FromSeconds (120));
 						if (!rv.Succeeded)
 							throw new Exception ("Failed to list devices.");
 						log.WriteLine ("Result:");
@@ -76,7 +100,7 @@ namespace Xharness.Hardware {
 							var usable = dev.SelectSingleNode ("IsUsableForDebugging")?.InnerText;
 							Device d = new Device {
 								DeviceIdentifier = dev.SelectSingleNode ("DeviceIdentifier")?.InnerText,
-								DeviceClass = dev.SelectSingleNode ("DeviceClass")?.InnerText,
+								DeviceClass = (DeviceClass) Enum.Parse(typeof(DeviceClass), dev.SelectSingleNode ("DeviceClass")?.InnerText, true),
 								CompanionIdentifier = dev.SelectSingleNode ("CompanionIdentifier")?.InnerText,
 								Name = dev.SelectSingleNode ("Name")?.InnerText,
 								BuildVersion = dev.SelectSingleNode ("BuildVersion")?.InnerText,

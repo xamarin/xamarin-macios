@@ -73,22 +73,24 @@
     <PackageReference Include="Mono.Options" Version="5.3.0.1" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppInstallMonitorLog.cs" />
     <Compile Include="AppRunner.cs" />
+    <Compile Include="AppRunnerTarget.cs" />
     <Compile Include="BCLTestImporter\BCLTestAssemblyDefinition.cs" />
     <Compile Include="BCLTestImporter\BCLTestImportTargetFactory.cs" />
     <Compile Include="BCLTestImporter\BCLTestInfoPlistGenerator.cs" />
     <Compile Include="BCLTestImporter\BCLTestProjectDefinition.cs" />
     <Compile Include="BCLTestImporter\BCLTestProjectGenerator.cs" />
     <Compile Include="BCLTestImporter\Platform.cs" />
-    <Compile Include="BCLTestImporter\RegisterTypeGenerator.cs" />
     <Compile Include="Collections\BlockingEnumerableCollection.cs" />
     <Compile Include="Collections\ILoadAsync.cs" />
     <Compile Include="Collections\IAsyncEnumerable.cs" />
     <Compile Include="CrashReportSnapshot.cs" />
     <Compile Include="DeviceLogCapturer.cs" />
     <Compile Include="Execution\IProcessManager.cs" />
+    <Compile Include="Execution\Mlaunch\Arguments.cs" />
+    <Compile Include="Execution\Mlaunch\MLaunchArguments.cs" />
     <Compile Include="Execution\ProcessManager.cs" />
-    <Compile Include="Execution\MlaunchArguments.cs" />
     <Compile Include="GitHub.cs" />
     <Compile Include="Harness.cs" />
     <Compile Include="Hardware\Simulators.cs" />
@@ -132,8 +134,10 @@
     <Compile Include="Logging\Log.cs" />
     <Compile Include="Logging\LogFile.cs" />
     <Compile Include="Logging\Logs.cs" />
+    <Compile Include="Logging\WrenchLog.cs" />
     <Compile Include="MakefileGenerator.cs" />
     <Compile Include="MonoNativeInfo.cs" />
+    <Compile Include="NoDeviceFoundException.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SolutionGenerator.cs" />
@@ -148,6 +152,7 @@
     <Compile Include="TestPlatform.cs" />
     <Compile Include="TestProject.cs" />
     <Compile Include="Utilities\Extensions.cs" />
+    <Compile Include="Utilities\Helpers.cs" />
     <Compile Include="Utilities\PlistExtensions.cs" />
     <Compile Include="Utilities\ProjectFileExtensions.cs" />
     <Compile Include="Utilities\StringUtils.cs" />
@@ -155,6 +160,14 @@
     <Compile Include="XmlResultParser.cs" />
     <Compile Include="BCLTestImporter\Templates\ITemplatedProject.cs" />
     <Compile Include="BCLTestImporter\Templates\Managed\XamariniOSTemplate.cs" />
+    <Compile Include="BCLTestImporter\BclTestProjectInfo.cs" />
+    <Compile Include="BCLTestImporter\iOSBclTestProject.cs" />
+    <Compile Include="BCLTestImporter\BclTestProject.cs" />
+    <Compile Include="BCLTestImporter\Templates\IAssemblyLocator.cs" />
+    <Compile Include="BCLTestImporter\Templates\IProjectFilter.cs" />
+    <Compile Include="BCLTestImporter\Xamarin\AssemblyLocator.cs" />
+    <Compile Include="BCLTestImporter\Xamarin\ProjectFilter.cs" />
+    <Compile Include="BCLTestImporter\Templates\Managed\RegisterTypeGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\tools\mtouch\SdkVersions.cs">
@@ -169,16 +182,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="BCLTestImporter\Templates\" />
-    <Folder Include="BCLTestImporter\Templates\Managed\" />
-    <Folder Include="BCLTestImporter\Templates\Managed\Resources\" />
-    <Folder Include="BCLTestImporter\Templates\Managed\Resources\src\" />
-    <Folder Include="BCLTestImporter\Templates\Managed\Resources\src\common\TestRunner\" />
-    <Folder Include="BCLTestImporter\Templates\Managed\Resources\src\common\TestRunner\Core\" />
-    <Folder Include="BCLTestImporter\Templates\Managed\Resources\src\common\TestRunner\NUnit\" />
-    <Folder Include="BCLTestImporter\Templates\Managed\Resources\src\common\TestRunner\xUnit\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.iOS.csproj.in" />
     <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.macOS.csproj.in" />
@@ -191,6 +195,7 @@
     <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.watchOS.Extension.csproj.in" />
     <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.tvOS.plist.in" />
     <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.watchOS.App.plist.in" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\RegisterType.cs" />
     <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\common\ApplicationOptions.cs" />
     <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\common\IgnoreFileParser.cs" />
     <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\iOSApp\AppDelegate.cs" />

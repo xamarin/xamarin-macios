@@ -91,7 +91,7 @@ namespace Xharness.Jenkins.TestTasks
 					if (!Harness.DryRun) {
 						ExecutionResult = TestExecutingResult.Running;
 
-						var snapshot = new CrashReportSnapshot () { Device = false, Harness = Harness, Log = log, Logs = Logs, LogDirectory = LogDirectory };
+						var snapshot = new CrashReportSnapshot (Harness, log, Logs, isDevice: false, deviceName: null);
 						await snapshot.StartCaptureAsync ();
 
 						ProcessExecutionResult result = null;

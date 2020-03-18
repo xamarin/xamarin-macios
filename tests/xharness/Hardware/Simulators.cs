@@ -11,26 +11,51 @@ using System.Xml;
 using Xamarin;
 using Xharness.Collections;
 using Xharness.Execution;
+using Xharness.Execution.Mlaunch;
 using Xharness.Logging;
 using Xharness.Utilities;
 
 namespace Xharness.Hardware {
+	
+	public interface ISimulatorsLoaderFactory {
+		ISimulatorsLoader CreateLoader ();
+	}
+
+	public class SimulatorsLoaderFactory : ISimulatorsLoaderFactory {
+		readonly IHarness harness;
+		readonly IProcessManager processManager;
+
+		public SimulatorsLoaderFactory (IHarness harness, IProcessManager processManager)
+		{
+			this.harness = harness ?? throw new ArgumentNullException (nameof (harness));
+			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
+		}
+
+		public ISimulatorsLoader CreateLoader () => new Simulators (harness, processManager);
+	}
+
 	public class Simulators : ISimulatorsLoader {
-		public IHarness Harness { get; set; }
-		public IProcessManager ProcessManager { get; set; } = new ProcessManager ();
-
-		bool loaded;
 		readonly SemaphoreSlim semaphore = new SemaphoreSlim (1);
+		readonly BlockingEnumerableCollection<SimRuntime> supported_runtimes = new BlockingEnumerableCollection<SimRuntime> ();
+		readonly BlockingEnumerableCollection<SimDeviceType> supported_device_types = new BlockingEnumerableCollection<SimDeviceType> ();
+		readonly BlockingEnumerableCollection<SimDevice> available_devices = new BlockingEnumerableCollection<SimDevice> ();
+		readonly BlockingEnumerableCollection<SimDevicePair> available_device_pairs = new BlockingEnumerableCollection<SimDevicePair> ();
+		readonly IProcessManager processManager;
+		
+		bool loaded;
 
-		BlockingEnumerableCollection<SimRuntime> supported_runtimes = new BlockingEnumerableCollection<SimRuntime> ();
-		BlockingEnumerableCollection<SimDeviceType> supported_device_types = new BlockingEnumerableCollection<SimDeviceType> ();
-		BlockingEnumerableCollection<SimDevice> available_devices = new BlockingEnumerableCollection<SimDevice> ();
-		BlockingEnumerableCollection<SimDevicePair> available_device_pairs = new BlockingEnumerableCollection<SimDevicePair> ();
-
+		public IHarness Harness { get; set; }
+		
 		public IEnumerable<SimRuntime> SupportedRuntimes => supported_runtimes;
 		public IEnumerable<SimDeviceType> SupportedDeviceTypes => supported_device_types;
 		public IEnumerable<SimDevice> AvailableDevices => available_devices;
 		public IEnumerable<SimDevicePair> AvailableDevicePairs => available_device_pairs;
+
+		public Simulators (IHarness harness, IProcessManager processManager)
+		{
+			Harness = harness ?? throw new ArgumentNullException (nameof (harness));
+			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
+		}
 
 		public async Task LoadAsync (ILog log, bool include_locked = false, bool force = false)
 		{
@@ -53,13 +78,13 @@ namespace Xharness.Hardware {
 					using (var process = new Process ()) {
 						process.StartInfo.FileName = Harness.MlaunchPath;
 						var arguments = new MlaunchArguments (
-							(MlaunchArgumentType.SdkRoot, Harness.XcodeRoot),
-							(MlaunchArgumentType.ListSim, tmpfile),
-							(MlaunchArgumentType.OutputFormat, "xml")
-						);
+							new SdkRootArgument(Harness.XcodeRoot),
+							new ListSimulatorsArgument(tmpfile),
+							new XmlOutputFormatArgument());
+
 						process.StartInfo.Arguments = arguments.AsCommandLine ();
 						log.WriteLine ("Launching {0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments);
-						var rv = await ProcessManager.RunAsync (process, arguments, log, timeout: TimeSpan.FromSeconds (30));
+						var rv = await processManager.RunAsync (process, arguments, log, timeout: TimeSpan.FromSeconds (30));
 
 						if (!rv.Succeeded)
 							throw new Exception ("Failed to list simulators.");
@@ -344,7 +369,7 @@ namespace Xharness.Hardware {
 			public AppRunnerTarget Target;
 			public bool MinVersion;
 			public ILog Log;
-			object lock_obj = new object ();
+			readonly object lock_obj = new object ();
 			Task<ISimulatorDevice []> findTask;
 
 			public override string ToString ()

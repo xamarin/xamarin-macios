@@ -4,12 +4,16 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Xharness.Collections;
+using Xharness.Execution;
 using Xharness.Hardware;
+using Xharness.Listeners;
 
 namespace Xharness.Jenkins.TestTasks
 {
 	class RunSimulatorTask : RunXITask<ISimulatorDevice>
 	{
+		readonly IProcessManager processManager = new ProcessManager ();
+		readonly ISimulatorsLoader simulators;
 		public IAcquiredResource AcquiredResource;
 
 		public ISimulatorDevice [] Simulators {
@@ -24,7 +28,7 @@ namespace Xharness.Jenkins.TestTasks
 			}
 		}
 
-		public RunSimulatorTask (MSBuildTask build_task, IEnumerable<ISimulatorDevice> candidates = null)
+		public RunSimulatorTask (ISimulatorsLoader simulators, MSBuildTask build_task, IEnumerable<ISimulatorDevice> candidates = null)
 			: base (build_task, candidates)
 		{
 			var project = Path.GetFileNameWithoutExtension (ProjectFile);
@@ -35,6 +39,8 @@ namespace Xharness.Jenkins.TestTasks
 			} else {
 				AppRunnerTarget = AppRunnerTarget.Simulator_iOS;
 			}
+
+			this.simulators = simulators ?? throw new ArgumentNullException (nameof (simulators));
 		}
 
 		public async Task FindSimulatorAsync ()
@@ -52,7 +58,7 @@ namespace Xharness.Jenkins.TestTasks
 			} else {
 				Device = Candidates.First ();
 				if (Platform == TestPlatform.watchOS)
-					CompanionDevice = Jenkins.Simulators.FindCompanionDevice (Jenkins.SimulatorLoadLog, Device);
+					CompanionDevice = simulators.FindCompanionDevice (Jenkins.SimulatorLoadLog, Device);
 			}
 
 		}
@@ -70,20 +76,21 @@ namespace Xharness.Jenkins.TestTasks
 			await FindSimulatorAsync ();
 
 			var clean_state = false;//Platform == TestPlatform.watchOS;
-			runner = new AppRunner () {
-				Harness = Harness,
-				ProjectFile = ProjectFile,
-				EnsureCleanSimulatorState = clean_state,
-				Target = AppRunnerTarget,
-				LogDirectory = LogDirectory,
-				MainLog = Logs.Create ($"run-{Device.UDID}-{Timestamp}.log", "Run log"),
-				Configuration = ProjectConfiguration,
-				TimeoutMultiplier = TimeoutMultiplier,
-				Variation = Variation,
-				BuildTask = BuildTask,
-			};
-			runner.Simulators = Simulators;
-			runner.Initialize ();
+			runner = new AppRunner (processManager,
+				new SimulatorsLoaderFactory (Harness, processManager),
+				new SimpleListenerFactory (),
+				new DeviceLoaderFactory (Harness, processManager),
+				AppRunnerTarget,
+				Harness,
+				mainLog: Logs.Create ($"run-{Device.UDID}-{Timestamp}.log", "Run log"),
+				projectFilePath: ProjectFile,				
+				ensureCleanSimulatorState: clean_state,
+				logDirectory: LogDirectory,
+				configuration: ProjectConfiguration,
+				timeoutMultiplier: TimeoutMultiplier,
+				variation: Variation,
+				buildTask: BuildTask,
+				simulators: Simulators);
 		}
 
 		Task<IAcquiredResource> AcquireResourceAsync ()

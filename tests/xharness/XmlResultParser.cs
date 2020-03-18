@@ -601,9 +601,9 @@ namespace Xharness {
 			writer.WriteEndElement (); // test-results
 		}
 
-		static void WriteNUnitV3TestSuiteAttributes (XmlWriter writer) => WriteAttributes (writer,
+		static void WriteNUnitV3TestSuiteAttributes (XmlWriter writer, string title) => WriteAttributes (writer,
 			("id", "1"),
-			("name", "Test Crash"),
+			("name", title),
 			("testcasecount", "1"),
 			("result", "Failed"),
 			("time", "0"),
@@ -649,7 +649,7 @@ namespace Xharness {
 			);
 			writer.WriteStartElement ("test-suite");
 			writer.WriteAttributeString ("type", "Assembly");
-			WriteNUnitV3TestSuiteAttributes (writer);
+			WriteNUnitV3TestSuiteAttributes (writer, title);
 			WriteFailure (writer, "Child test failed");
 			writer.WriteStartElement ("test-suite");
 			WriteAttributes (writer,

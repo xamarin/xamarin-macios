@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
+using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.MacDev.Tasks
 {
@@ -51,7 +52,7 @@ namespace Xamarin.MacDev.Tasks
 			if (File.Exists (path))
 				File.Delete (path);
 
-			Log.LogMessage ("Creating directory '{0}'", path);
+			Log.LogMessage (MSBStrings.M0164, path);
 
 			Directory.CreateDirectory (path);
 		}
@@ -62,7 +63,7 @@ namespace Xamarin.MacDev.Tasks
 
 			EnsureDirectoryExists (dirName);
 
-			Log.LogMessage (MessageImportance.Normal, "Copying file from '{0}' to '{1}'", source, target);
+			Log.LogMessage (MessageImportance.Normal, MSBStrings.M0165, source, target);
 
 			File.Copy (source, target, true);
 			if (Environment.OSVersion.Platform == PlatformID.Unix) {
@@ -78,14 +79,14 @@ namespace Xamarin.MacDev.Tasks
 		public override bool Execute ()
 		{
 			if (DestinationFiles != null && DestinationFolder != null) {
-				Log.LogError ("You must specify a DestinationFolder or the DestinationFiles, but not both.");
+				Log.LogError (MSBStrings.E0166);
 				return false;
 			}
 
 			try {
 				if (DestinationFiles != null) {
 					if (DestinationFiles.Length != SourceFiles.Length) {
-						Log.LogError ("The number of DestinationFiles must match the number of SourceFiles.");
+						Log.LogError (MSBStrings.E0167);
 						return false;
 					}
 
@@ -112,7 +113,7 @@ namespace Xamarin.MacDev.Tasks
 							CopyFile (source, target, Path.Combine (DestinationFolder.ItemSpec, Path.GetFileName (item.ItemSpec)));
 					}
 				} else {
-					Log.LogError ("You must specify a DestinationFolder or the DestinationFiles.");
+					Log.LogError (MSBStrings.E0166);
 					return false;
 				}
 			} catch (Exception ex) {

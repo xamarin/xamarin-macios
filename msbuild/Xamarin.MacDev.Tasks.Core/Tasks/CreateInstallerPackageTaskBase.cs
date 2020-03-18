@@ -9,6 +9,7 @@ using Microsoft.Build.Utilities;
 using System.Security.Cryptography.X509Certificates;
 
 using Xamarin.MacDev;
+using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.MacDev.Tasks
 {
@@ -54,12 +55,12 @@ namespace Xamarin.MacDev.Tasks
 			try {
 				plist = PDictionary.FromFile (AppManifest);
 			} catch (Exception ex) {
-				Log.LogError (null, null, null, AppManifest, 0, 0, 0, 0, "Error loading '{0}': {1}", AppManifest, ex.Message);
+				Log.LogError (null, null, null, AppManifest, 0, 0, 0, 0, MSBStrings.E0010, AppManifest, ex.Message);
 				return null;
 			}
 
 			if (plist == null) {
-				Log.LogError (null, null, null, AppManifest, 0, 0, 0, 0, "Error loading '{0}'", AppManifest);
+				Log.LogError (null, null, null, AppManifest, 0, 0, 0, 0, MSBStrings.E0122, AppManifest);
 				return null;
 			}
 
@@ -105,7 +106,7 @@ namespace Xamarin.MacDev.Tasks
 				try {
 					AppendExtraArgs (args, PackagingExtraArgs);
 				} catch (FormatException) {
-					Log.LogError ("Package creation failed. Could not parse extra arguments.");
+					Log.LogError (MSBStrings.E0123);
 					return string.Empty;
 				}
 			}
@@ -166,7 +167,7 @@ namespace Xamarin.MacDev.Tasks
 			}
 
 			if (best == null) {
-				string msg = string.Format ("The identity '{0}' doesn't match any valid certificate/private key pair in the default keychain", key);
+				string msg = string.Format (MSBStrings.E0124, key);
 				Log.LogError (msg);
 				return string.Empty;
 			}

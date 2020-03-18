@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\..\packages\NUnit3TestAdapter.3.16.1\build\net35\NUnit3TestAdapter.props" Condition="Exists('..\..\..\packages\NUnit3TestAdapter.3.16.1\build\net35\NUnit3TestAdapter.props')" />
   <Import Project="..\..\..\packages\NUnit.3.12.0\build\NUnit.props" Condition="Exists('..\..\..\packages\NUnit.3.12.0\build\NUnit.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -9,6 +10,8 @@
     <RootNamespace>Xharness.Tests</RootNamespace>
     <AssemblyName>Xharness.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -55,6 +58,7 @@
     <Compile Include="BCLTestImporter\Tests\BCLTestProjectGeneratorTest.cs" />
     <Compile Include="BCLTestImporter\Tests\TestAssemblyDefinitionTest.cs" />
     <Compile Include="BCLTestImporter\Tests\TestProjectDefinitionTest.cs" />
+    <Compile Include="Tests\AppRunnerTests.cs" />
     <Compile Include="Tests\XmlResultParserTests.cs" />
     <Compile Include="Logging\Tests\LogsTest.cs" />
     <Compile Include="Logging\Tests\LogFileTest.cs" />
@@ -72,9 +76,18 @@
     <Compile Include="Utilities\Tests\StringUtilsTests.cs" />
     <Compile Include="Hardware\Tests\SimulatorsTest.cs" />
     <Compile Include="Hardware\Tests\SimDeviceTest.cs" />
+    <Compile Include="BCLTestImporter\Xamarin\Tests\ProjectFilterTest.cs" />
+    <Compile Include="BCLTestImporter\Xamarin\Tests\AssemblyLocatorTest.cs" />
+    <Compile Include="BCLTestImporter\Xamarin\Tests\XamariniOSTemplateTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Samples\TestProject\Info.plist">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Samples\TestProject\SystemXunit.csproj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Samples\NUnitV2Sample.xml" />
@@ -95,15 +108,13 @@
       <Name>xharness</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Hardware\" />
-    <Folder Include="Hardware\Tests\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\..\..\packages\NUnit.3.12.0\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\NUnit.3.12.0\build\NUnit.props'))" />
+    <Error Condition="!Exists('..\..\..\packages\NUnit3TestAdapter.3.16.1\build\net35\NUnit3TestAdapter.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\NUnit3TestAdapter.3.16.1\build\net35\NUnit3TestAdapter.props'))" />
   </Target>
 </Project>

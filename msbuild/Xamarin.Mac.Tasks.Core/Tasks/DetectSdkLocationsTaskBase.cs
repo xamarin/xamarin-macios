@@ -7,6 +7,7 @@ using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev.Tasks;
 using Xamarin.MacDev;
+using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.Mac.Tasks
 {
@@ -73,7 +74,7 @@ namespace Xamarin.Mac.Tasks
 		{
 			var sdkVersion = MacOSXSdkVersion.GetDefault (MacOSXSdks.Native);
 			if (!MacOSXSdks.Native.SdkIsInstalled (sdkVersion)) {
-				Log.LogError ("The Apple macOS SDK is not installed.");
+				Log.LogError (MSBStrings.E0083);
 				return;
 			}
 
@@ -81,15 +82,15 @@ namespace Xamarin.Mac.Tasks
 
 			SdkRoot = MacOSXSdks.Native.GetSdkPath (sdkVersion);
 			if (string.IsNullOrEmpty (SdkRoot))
-				Log.LogError ("Could not locate the macOS '{0}' SDK at path '{1}'", SdkVersion, SdkRoot);
+				Log.LogError (MSBStrings.E0084, SdkVersion, SdkRoot);
 
 			SdkUsrPath = DirExists ("SDK usr directory", Path.Combine (MacOSXSdks.Native.DeveloperRoot, "usr"));
 			if (string.IsNullOrEmpty (SdkUsrPath))
-				Log.LogError ("Could not locate the macOS '{0}' SDK usr path at '{1}'", SdkVersion, SdkRoot);
+				Log.LogError (MSBStrings.E0085, SdkVersion, SdkRoot);
 
 			SdkBinPath = DirExists ("SDK bin directory", Path.Combine (SdkUsrPath, "bin"));
 			if (string.IsNullOrEmpty (SdkBinPath))
-				Log.LogError ("Could not locate SDK bin directory");
+				Log.LogError (MSBStrings.E0032);
 		}
 
 		bool EnsureAppleSdkRoot ()
@@ -102,7 +103,7 @@ namespace Xamarin.Mac.Tasks
 					ideSdkPath = "(Projects > SDK Locations > Apple > Apple SDK)";
 				else
 					ideSdkPath = "(Tools > Options > Xamarin > iOS Settings > Apple SDK)";
-				Log.LogError ("Could not find a valid Xcode app bundle at '{0}'. Please update your Apple SDK location in Visual Studio's preferences {1}.", AppleSdkSettings.InvalidDeveloperRoot, ideSdkPath);
+				Log.LogError (MSBStrings.E0044, AppleSdkSettings.InvalidDeveloperRoot, ideSdkPath);
 				return false;
 			}
 			Log.LogMessage(MessageImportance.Low, "DeveloperRoot: {0}", MacOSXSdks.Native.DeveloperRoot);
@@ -110,7 +111,7 @@ namespace Xamarin.Mac.Tasks
 
 			SdkDevPath = MacOSXSdks.Native.DeveloperRoot;
 			if (string.IsNullOrEmpty(SdkDevPath)) {
-				Log.LogError("Could not find a valid Xcode developer path");
+				Log.LogError(MSBStrings.E0086);
 				return false;
 			}
 			return true;
@@ -122,7 +123,7 @@ namespace Xamarin.Mac.Tasks
 				XamarinSdkRoot = MacOSXSdks.XamMac.FrameworkDirectory;
 
 			if (string.IsNullOrEmpty (XamarinSdkRoot) || !Directory.Exists (XamarinSdkRoot))
-				Log.LogError ("Could not find 'Xamarin.Mac'");
+				Log.LogError (MSBStrings.E0087);
 		}
 
 		string DirExists (string checkingFor, params string[] paths)
@@ -132,7 +133,7 @@ namespace Xamarin.Mac.Tasks
 					return null;
 
 				var path = Path.GetFullPath (Path.Combine (paths));
-				Log.LogMessage (MessageImportance.Low, "Searching for '{0}' in '{1}'", checkingFor, path);
+				Log.LogMessage (MessageImportance.Low, MSBStrings.M0047, checkingFor, path);
 				return Directory.Exists (path) ? path : null;
 			} catch {
 				return null;

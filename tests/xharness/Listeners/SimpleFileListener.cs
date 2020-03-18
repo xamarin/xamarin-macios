@@ -1,9 +1,7 @@
 ﻿using System;
 using System.IO;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
 using System.Threading;
+using Xharness.Logging;
 
 namespace Xharness.Listeners
 {
@@ -13,7 +11,8 @@ namespace Xharness.Listeners
 		bool cancel;
 		public string Path { get; private set; }
 
-		public SimpleFileListener (string path)
+		public SimpleFileListener (string path, ILog log, ILog testLog, bool xmlOutput)
+			: base (log, testLog, xmlOutput)
 		{
 			Path = path ?? throw new ArgumentNullException (nameof (path));
 		}

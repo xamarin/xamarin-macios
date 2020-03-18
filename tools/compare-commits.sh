@@ -202,7 +202,7 @@ git checkout --quiet --force --detach "$BASE_HASH"
 touch "$OUTPUT_DIR/stamp"
 
 echo "${BLUE}Building src/...${CLEAR}"
-if ! make -C "$ROOT_DIR/src" BUILD_DIR=../tools/comparison/build PROJECT_DIR="$OUTPUT_DIR/project-files" "IOS_DESTDIR=$OUTPUT_DIR/_ios-build" "MAC_DESTDIR=$OUTPUT_DIR/_mac-build" -j8; then
+if ! make -C "$ROOT_DIR/src" BUILD_DIR="$ROOT_DIR/tools/comparison/build" PROJECT_DIR="$OUTPUT_DIR/project-files" "IOS_DESTDIR=$OUTPUT_DIR/_ios-build" "MAC_DESTDIR=$OUTPUT_DIR/_mac-build" -j8; then
 	EC=$?
 	report_error_line "${RED}Failed to build src/${CLEAR}"
 	exit "$EC"

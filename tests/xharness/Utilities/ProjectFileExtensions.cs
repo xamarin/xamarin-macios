@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Xml;
 
@@ -538,14 +539,15 @@ namespace Xharness.Utilities {
 			var import = GetInfoPListNode (csproj, false);
 			if (import != null) {
 				var value = import.Attributes ["Include"].Value;
-				var fname = System.IO.Path.GetFileName (value.Replace ('\\', '/'));
+				var unixValue = value.Replace ('\\', '/');
+				var fname = Path.GetFileName (unixValue);
 				if (newName == null) {
 					if (string.IsNullOrEmpty (fullPath))
 						newName = value.Replace (fname, $"Info{suffix}.plist");
 					else
 						newName = value.Replace (fname, $"{fullPath}\\Info{suffix}.plist");
 				}
-				import.Attributes ["Include"].Value = value.Replace (fname, newName);
+				import.Attributes ["Include"].Value = (!Path.IsPathRooted (unixValue)) ? value.Replace (fname, newName) : newName;
 
 				var logicalName = import.SelectSingleNode ("./*[local-name() = 'LogicalName']");
 				if (logicalName == null) {
