@@ -84,7 +84,7 @@ namespace Xharness.Tests {
 
 			var mock4 = new Mock<ICrashSnapshotReporterFactory> ();
 			mock4.Setup (m => m.Create (It.IsAny<ILog>(), It.IsAny<ILogs>(), It.IsAny<bool>(), It.IsAny<string>())).Returns (snapshotReporter.Object);
-			devicesFactory = mock2.Object;
+			snapshotReporterFactory = mock4.Object;
 
 			mainLog = new Mock<ILog> ().Object;
 
