@@ -138,9 +138,13 @@ all-local:: $(TARGETS)
 pack: prepare
 	$(Q) rm -Rf nupkgs
 	$(Q) mkdir -p nupkgs
-	#$(Q) $(MAKE) pack-macOS
+	$(Q) $(MAKE) pack-iOS pack-tvOS pack-watchOS pack-macOS
+
+# just a temporary target while debugging for faster turnaround
+pack-simple: prepare
+	$(Q) rm -Rf nupkgs
+	$(Q) mkdir -p nupkgs
 	$(Q) $(MAKE) pack-iOS
-	#pack-tvOS pack-watchOS pack-macOS
 
 ifeq ($(V),)
 DOTNET_PACK_VERBOSITY=--verbosity:quiet --nologo
@@ -152,10 +156,11 @@ endif
 
 TEST_FEED_PATH=test/feed
 
-pack-%: package/versions.targets package/ios/buildinfo.txt package/mac/buildinfo.txt
+pack-%: package/versions.targets
 	$(Q) rm -Rf $(TEST_FEED_PATH)/xamarin.$(shell echo $* | tr '[:upper:]' '[:lower:]').sdk
 	$(if $(V),,@echo "PACK     nupkgs/Xamarin.$*.Sdk.nupkg";) dotnet pack package/Xamarin.$*.csproj --output nupkgs $(DOTNET_PACK_VERBOSITY)
 	$(if $(V),,@echo "ADD      nupkgs/Xamarin.$*.Sdk.nupkg";) nuget add nupkgs/Xamarin.$*.Sdk.*nupkg -source $(TEST_FEED_PATH) $(NUGET_VERBOSITY)
+	echo packed-$*
 
 test/NuGet.config: $(TOP)/NuGet.config
 	$(Q_CP) $< $@.tmp
@@ -192,15 +197,8 @@ package/versions.targets: package/versions.template.targets Makefile $(TOP)/Make
 		-e "s/@CURRENT_HASH@/$(CURRENT_HASH)/g" \
 	$< > $@
 
-package/ios/buildinfo.txt: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/buildinfo
-	$(Q) mkdir -p $(dir $@)
-	$(Q) $(CP) $< $@
-
-package/mac/buildinfo.txt: $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/buildinfo
-	$(Q) mkdir -p $(dir $@)
-	$(Q) $(CP) $< $@
-
 prepare:
+	$(Q) V=$(V) \
 	TOP=$(TOP) \
 	DOTNET_BCL_DIR=$(DOTNET_BCL_DIR) \
 	MACOS_DOTNET_DESTDIR=$(MACOS_DOTNET_DESTDIR) \

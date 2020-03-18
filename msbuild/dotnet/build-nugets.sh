@@ -1,7 +1,8 @@
-#!/bin/bash -eux
+#!/bin/bash -e
 
 set -o pipefail
 
+if test -n "$V"; then set +x; fi
 if test -z "$TOP"; then echo "TOP not set"; exit 1; fi
 if test -z "$MACOS_DOTNET_DESTDIR"; then echo "MACOS_DOTNET_DESTDIR not set"; exit 1; fi
 if test -z "$IOS_DOTNET_DESTDIR"; then echo "IOS_DOTNET_DESTDIR not set"; exit 1; fi
