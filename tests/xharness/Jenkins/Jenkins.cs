@@ -550,7 +550,7 @@ namespace Xharness.Jenkins
 			}
 
 			var testVariations = CreateTestVariations (runSimulatorTasks, (buildTask, test, candidates) =>
-				new RunSimulatorTask (simulators, buildTask, processManager, candidates?.Cast<SimDevice> () ?? test.Candidates)).ToList ();
+				new RunSimulatorTask (simulators, buildTask, processManager, candidates?.Cast<SimulatorDevice> () ?? test.Candidates)).ToList ();
 
 			foreach (var tv in testVariations) {
 				if (!tv.Ignored)
@@ -1291,7 +1291,8 @@ namespace Xharness.Jenkins
 
 				// We can populate and build test-libraries in parallel.
 				var populate = Task.Run (async () => {
-					await SimDevice.KillEverythingAsync (MainLog);
+					var simulator = new SimulatorDevice (Harness, processManager);
+					await simulator.KillEverythingAsync (MainLog);
 					await PopulateTasksAsync ();
 					populating = false;
 				});
