@@ -29,7 +29,7 @@ namespace Xharness.Jenkins.TestTasks
 			this.Candidates = candidates;
 		}
 
-		public override IEnumerable<Log> AggregatedLogs {
+		public override IEnumerable<ILog> AggregatedLogs {
 			get {
 				var rv = base.AggregatedLogs;
 				if (runner != null)

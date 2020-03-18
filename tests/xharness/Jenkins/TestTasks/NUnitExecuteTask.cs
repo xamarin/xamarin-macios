@@ -95,7 +95,7 @@ namespace Xharness.Jenkins.TestTasks
 				return Path.GetFileName (TestExecutable).Contains ("unit3-console");
 			}
 		}
-		public override IEnumerable<Log> AggregatedLogs {
+		public override IEnumerable<ILog> AggregatedLogs {
 			get {
 				return base.AggregatedLogs.Union (BuildTask.Logs);
 			}
