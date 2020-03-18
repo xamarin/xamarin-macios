@@ -80,7 +80,7 @@ stages:
 - stage: monitoring
   displayName: 'Device test monitoring'
   dependsOn:
-  - iOSDeviceTests
+#  - iOSDeviceTests
   - tvOSDeviceTests
 # - iOS32DeviceTests 
 
