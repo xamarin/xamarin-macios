@@ -433,7 +433,9 @@ namespace Xharness {
 			if (!isSimulator)
 				FindDevice ();
 
-			ICrashSnapshotReporter crash_reports = snapshotReporterFactory.Create (MainLog, Logs, isDevice: !isSimulator, deviceName);
+			var crashLogs = new Logs (Logs.Directory);
+
+			ICrashSnapshotReporter crash_reports = snapshotReporterFactory.Create (MainLog, crashLogs, isDevice: !isSimulator, deviceName);
 
 			var args = new List<string> ();
 			if (!string.IsNullOrEmpty (harness.XcodeRoot)) {
@@ -749,7 +751,7 @@ namespace Xharness {
 			if (!success.Value) {
 				int pid = 0;
 				string crash_reason = null;
-				foreach (var crash in Logs) {
+				foreach (var crash in crashLogs) {
 					try {
 						if (pid == 0) {
 							// Find the pid
