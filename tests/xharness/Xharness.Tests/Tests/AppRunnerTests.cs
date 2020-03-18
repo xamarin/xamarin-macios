@@ -21,6 +21,7 @@ namespace Xharness.Tests {
 		static readonly string outputPath = Path.GetDirectoryName (Assembly.GetAssembly (typeof(AppRunnerTests)).Location);
 		static readonly string sampleProjectPath = Path.Combine (outputPath, "Samples", "TestProject");
 		static readonly string appPath = Path.Combine (sampleProjectPath, "bin", appName + ".app");
+		static readonly string projectFilePath = Path.Combine (sampleProjectPath, "SystemXunit.csproj");
 
 		static readonly IHardwareDevice [] mockDevices = new IHardwareDevice [] {
 			new Device() {
@@ -47,13 +48,21 @@ namespace Xharness.Tests {
 			}
 		};
 
+		static readonly ISimulatorDevice [] mockSimulators = new ISimulatorDevice [] {
+			new SimDevice() {
+				Name = "Test iPhone",
+				UDID = "58F21118E4D34FD69EAB7860BB9B38A0",
+			}
+		};
+
 		Mock<IProcessManager> processManager;
 		Mock<ISimulatorsLoader> simulators;
 		Mock<IDeviceLoader> devices;
 		Mock<ISimpleListener> simpleListener;
 		Mock<ICrashSnapshotReporter> snapshotReporter;
+		Mock<ILogs> logs;
+		Mock<ILog> mainLog;
 
-		ILog mainLog;
 		ISimulatorsLoaderFactory simulatorsFactory;
 		IDeviceLoaderFactory devicesFactory;
 		ISimpleListenerFactory listenerFactory;
@@ -62,6 +71,9 @@ namespace Xharness.Tests {
 		[SetUp]
 		public void SetUp ()
 		{
+			logs = new Mock<ILogs> ();
+			logs.SetupGet (x => x.Directory).Returns (Path.Combine (outputPath, "logs"));
+
 			processManager = new Mock<IProcessManager> ();
 			simulators = new Mock<ISimulatorsLoader> ();
 			devices = new Mock<IDeviceLoader> ();
@@ -79,14 +91,15 @@ namespace Xharness.Tests {
 			var mock3 = new Mock<ISimpleListenerFactory> ();
 			mock3
 				.Setup (m => m.Create (It.IsAny<RunMode>(), It.IsAny<ILog>(), It.IsAny<ILog>(), It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<bool>()))
-				.Returns ((ListenerTransport.Tcp, simpleListener.Object, null));
+				.Returns ((ListenerTransport.Tcp, simpleListener.Object, "listener-temp-file"));
 			listenerFactory = mock3.Object;
+			simpleListener.SetupGet (x => x.Port).Returns (1020);
 
 			var mock4 = new Mock<ICrashSnapshotReporterFactory> ();
 			mock4.Setup (m => m.Create (It.IsAny<ILog>(), It.IsAny<ILogs>(), It.IsAny<bool>(), It.IsAny<string>())).Returns (snapshotReporter.Object);
 			snapshotReporterFactory = mock4.Object;
 
-			mainLog = new Mock<ILog> ().Object;
+			mainLog = new Mock<ILog> ();
 
 			Directory.CreateDirectory (appPath);
 		}
@@ -100,11 +113,11 @@ namespace Xharness.Tests {
 				devicesFactory,
 				snapshotReporterFactory,
 				AppRunnerTarget.Simulator_iOS64,
-				new Mock<IHarness> ().Object,
-				new Mock<ILog>().Object,
-				Path.Combine (sampleProjectPath, "SystemXunit.csproj"),
-				"Debug",
-				Path.Combine (outputPath, "logs"));
+				Mock.Of<IHarness> (),
+				mainLog.Object,
+				logs.Object,
+				projectFilePath:projectFilePath,
+				buildConfiguration: "Debug");
 			
 			Assert.AreEqual (appName, appRunner.AppInformation.AppName);
 			Assert.AreEqual (appPath, appRunner.AppInformation.AppPath);
@@ -121,11 +134,11 @@ namespace Xharness.Tests {
 				devicesFactory,
 				snapshotReporterFactory,
 				AppRunnerTarget.Simulator_iOS64,
-				new Mock<IHarness> ().Object,
-				new Mock<ILog>().Object,
-				Path.Combine (sampleProjectPath, "SystemXunit.csproj"),
-				"Debug",
-				Path.Combine (outputPath, "logs"));
+				Mock.Of<IHarness> (),
+				mainLog.Object,
+				logs.Object,
+				projectFilePath:projectFilePath,
+				buildConfiguration: "Debug");
 
 			var exception = Assert.ThrowsAsync<InvalidOperationException> (
 				async () => await appRunner.InstallAsync (new CancellationToken ()),
@@ -141,11 +154,11 @@ namespace Xharness.Tests {
 				devicesFactory,
 				snapshotReporterFactory,
 				AppRunnerTarget.Simulator_iOS64,
-				new Mock<IHarness> ().Object,
-				new Mock<ILog>().Object,
-				Path.Combine (sampleProjectPath, "SystemXunit.csproj"),
-				"Debug",
-				Path.Combine (outputPath, "logs"));
+				Mock.Of<IHarness> (),
+				mainLog.Object,
+				logs.Object,
+				projectFilePath:projectFilePath,
+				buildConfiguration: "Debug");
 
 			var exception = Assert.ThrowsAsync<InvalidOperationException> (
 				async () => await appRunner.UninstallAsync (),
@@ -161,11 +174,11 @@ namespace Xharness.Tests {
 				devicesFactory,
 				snapshotReporterFactory,
 				AppRunnerTarget.Device_iOS,
-				new Mock<IHarness> ().Object,
-				new Mock<ILog>().Object,
-				Path.Combine (sampleProjectPath, "SystemXunit.csproj"),
-				"Debug",
-				Path.Combine (outputPath, "logs"));
+				Mock.Of<IHarness> (),
+				mainLog.Object,
+				logs.Object,
+				projectFilePath:projectFilePath,
+				buildConfiguration: "Debug");
 
 			devices.Setup (x => x.ConnectedDevices).Returns (new IHardwareDevice [0]);
 
@@ -200,11 +213,11 @@ namespace Xharness.Tests {
 				devicesFactory,
 				snapshotReporterFactory,
 				AppRunnerTarget.Device_iOS,
-				harnessMock.Object,
-				mainLog,
-				Path.Combine (sampleProjectPath, "SystemXunit.csproj"),
-				"Debug",
-				Path.Combine (outputPath, "logs"));
+				Mock.Of<IHarness> (),
+				mainLog.Object,
+				logs.Object,
+				projectFilePath:projectFilePath,
+				buildConfiguration: "Debug");
 
 			devices.Setup (x => x.ConnectedDevices).Returns (mockDevices);
 
@@ -226,7 +239,7 @@ namespace Xharness.Tests {
 					"--devname",
 					"Test iPad"
 				},
-				mainLog,
+				mainLog.Object,
 				TimeSpan.FromHours (1),
 				null,
 				cancellationToken));
@@ -259,10 +272,10 @@ namespace Xharness.Tests {
 				snapshotReporterFactory,
 				AppRunnerTarget.Device_iOS,
 				harnessMock.Object,
-				mainLog,
-				Path.Combine (sampleProjectPath, "SystemXunit.csproj"),
-				"Debug",
-				Path.Combine (outputPath, "logs"));
+				mainLog.Object,
+				logs.Object,
+				projectFilePath: Path.Combine (sampleProjectPath, "SystemXunit.csproj"),
+				buildConfiguration: "Debug");
 
 			devices.Setup (x => x.ConnectedDevices).Returns (mockDevices.Reverse());
 
@@ -282,7 +295,7 @@ namespace Xharness.Tests {
 					"--devname",
 					"Test iPad"
 				},
-				mainLog,
+				mainLog.Object,
 				TimeSpan.FromMinutes (1),
 				null,
 				null));
@@ -294,12 +307,40 @@ namespace Xharness.Tests {
 			const string xcodePath = "/path/to/xcode";
 			const string mlaunchPath = "/path/to/mlaunch";
 
-			Mock<IHarness> harnessMock = new Mock<IHarness> ();
-			harnessMock.SetupGet (x => x.XcodeRoot).Returns (xcodePath);
-			harnessMock.SetupGet (x => x.MlaunchPath).Returns (mlaunchPath);
-			harnessMock.SetupGet (x => x.Verbosity).Returns (1);
-			
+			var harness = Mock.Of<IHarness> (x =>
+				x.XcodeRoot == xcodePath &&
+				x.MlaunchPath == mlaunchPath &&
+				x.Verbosity == 1 &&
+				x.LogDirectory == logs.Object.Directory &&
+				x.InCI == false &&
+				x.EnvironmentVariables == new Dictionary<string, string> () {
+					{ "env1", "value1" },
+					{ "env2", "value2" },
+				} && 
+				x.Timeout == 1d);
+
 			devices.Setup (x => x.ConnectedDevices).Returns (mockDevices.Reverse());
+
+			var crashReporterFactory = new Mock<ICrashSnapshotReporterFactory> ();
+			crashReporterFactory
+				.Setup (x => x.Create (mainLog.Object, logs.Object, false, null))
+				.Returns (snapshotReporter.Object);
+
+			simulators
+				.Setup (x => x.LoadAsync (It.IsAny<ILog> (), false, false))
+				.Returns (Task.CompletedTask);
+
+			simulators
+				.Setup (x => x.FindAsync (AppRunnerTarget.Simulator_iOS64, mainLog.Object, true, false))
+				.ReturnsAsync (mockSimulators);
+
+			var listenerLogFile = new Mock<ILogFile> ();
+
+			logs
+				.Setup (x => x.Create (It.IsAny<string> (), "TestLog", It.IsAny<bool> ()))
+				.Returns (listenerLogFile.Object);
+
+			simpleListener.SetupGet (x => x.ConnectedTask).Returns (Task.CompletedTask);
 
 			var processResult = new ProcessExecutionResult () { ExitCode = 1 };
 
@@ -317,18 +358,27 @@ namespace Xharness.Tests {
 				simulatorsFactory,
 				listenerFactory,
 				devicesFactory,
-				snapshotReporterFactory,
+				crashReporterFactory.Object,
 				AppRunnerTarget.Simulator_iOS64,
-				harnessMock.Object,
-				mainLog,
-				Path.Combine (sampleProjectPath, "SystemXunit.csproj"),
-				"Debug",
-				Path.Combine (outputPath, "logs"));
+				harness,
+				mainLog.Object,
+				logs.Object,
+				projectFilePath: projectFilePath,
+				buildConfiguration: "Debug");
 
 			var result = await appRunner.RunAsync ();
 
 			Assert.AreEqual (0, result);
+
+			mainLog.Verify (x => x.WriteLine ("Test run started"));
+
+			simpleListener.Verify (x => x.Initialize (), Times.AtLeastOnce);
+			simpleListener.Verify (x => x.StartAsync (), Times.AtLeastOnce);
+
+			simulators.VerifyAll ();
 			
+			// "--sdkroot /path/to/xcode -v -v -argument=-connection-mode -argument=none -argument=-app-arg:-autostart -setenv=NUNIT_AUTOSTART=true -argument=-app-arg:-autoexit -setenv=NUNIT_AUTOEXIT=true -argument=-app-arg:-enablenetwork -setenv=NUNIT_ENABLE_NETWORK=true -setenv=DISABLE_SYSTEM_PERMISSION_TESTS=1 -argument=-app-arg:-hostname:127.0.0.1 -setenv=NUNIT_HOSTNAME=127.0.0.1 -argument=-app-arg:-transport:Tcp -setenv=NUNIT_TRANSPORT=TCP -argument=-app-arg:-hostport:1020 -setenv=NUNIT_HOSTPORT=1020 -setenv=env1=value1 -setenv=env2=value2 --launchsim D:\\github\\xamarin-macios\\tests\\xharness\\Xharness.Tests\\bin\\Debug\\Samples\\TestProject\\bin\\com.xamarin.bcltests.SystemXunit.app"
+
 			/*processManager.Verify (x => x.ExecuteCommandAsync (
 				"/path/to/mlaunch",
 				new List<string> () {
@@ -341,7 +391,7 @@ namespace Xharness.Tests {
 					"--devname",
 					"Test iPad"
 				},
-				mainLog,
+				mainLog.Object,
 				TimeSpan.FromMinutes (1),
 				null,
 				null));*/
