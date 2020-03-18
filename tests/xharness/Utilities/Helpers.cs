@@ -28,8 +28,13 @@ namespace Xharness.Utilities {
 		}
 
 		public static string Timestamp => $"{DateTime.Now:yyyyMMdd_HHmmss}";
-
+		
 		[DllImport ("/usr/lib/libc.dylib")]
-		extern internal static IntPtr Ttyname (int filedes);
+		extern static IntPtr ttyname (int filedes);
+
+		internal static string GetTerminalName (int filedescriptor)
+		{
+			 return Marshal.PtrToStringAuto (ttyname (filedescriptor));
+		}
 	}
 }
