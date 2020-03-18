@@ -3089,15 +3089,12 @@ class TestClass {
 			AssertDeviceAvailable ();
 
 			using (var mtouch = new MTouchTool ()) {
+				mtouch.Verbosity = -10; // This test fails when verbosity is increased, because mtouch will not show the MT5108 error, so make sure that doesn't happen.
 				mtouch.TargetVer = "10.3";
 				mtouch.Profile = Profile.iOS;
 				mtouch.Abi = "armv7";
-				mtouch.Linker = MTouchLinker.DontLink;
-				/* Once the xcode11 branch has been merged into master, we should be able to do the following instead, which will make the test faster
 				mtouch.Linker = MTouchLinker.LinkSdk;
-				mtouch.CustomArguments = new string [] { "--linkskip=System.Core" };
-				mtouch.CreateTemporaryApp (extraCode: "[Foundation.Preserve] class PreserveMe { void M () { System.Console.WriteLine (typeof (System.Collections.Generic.HashSet<string>)); } }", extraArg: "-r:System.Core.dll");
-				*/
+				mtouch.CustomArguments = new string [] { "--linkskip=Xamarin.iOS" };
 				mtouch.CreateTemporaryApp ();
 				mtouch.AssertExecuteFailure (MTouchAction.BuildDev);
 				mtouch.AssertError (5107, "The assembly 'Xamarin.iOS.dll' can't be AOT-compiled for 32-bit architectures because the native code is too big for the 32-bit ARM architecture.");
