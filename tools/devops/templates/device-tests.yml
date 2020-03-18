@@ -107,18 +107,8 @@ steps:
     GH_STATE: $(GH_STATE)
     GITHUB_TOKEN: $(GitHub.Token)
     CONTEXT: $(CONTEXT)
-
-
-
-# - Publish failure artifact: |
-#     echo "##vso[task.setvariable variable=TestState]failure"
-#     echo "$(TestState)"
-#   displayName: "set github status to failure if run-tests failed"
-#   condition: failed()
-  # publish to GH failure using pwsh script
-
-#- variables:
-#  github.status: "success"
+    TESTS: $(TESTS)
+    TESTSARGS: $(TESTS_EXTRA_ARGUMENTS)
 
 - bash: ./xamarin-macios/tools/devops/add-summaries.sh
   displayName: 'Add summaries'
