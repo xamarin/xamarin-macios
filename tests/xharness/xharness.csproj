@@ -76,7 +76,6 @@
     <Compile Include="AppInstallMonitorLog.cs" />
     <Compile Include="AppRunner.cs" />
     <Compile Include="AppRunnerTarget.cs" />
-    <Compile Include="BCLTestImporter\BCLTestAssemblyDefinition.cs" />
     <Compile Include="BCLTestImporter\BCLTestImportTargetFactory.cs" />
     <Compile Include="BCLTestImporter\BCLTestInfoPlistGenerator.cs" />
     <Compile Include="BCLTestImporter\BCLTestProjectDefinition.cs" />
@@ -168,6 +167,9 @@
     <Compile Include="BCLTestImporter\Xamarin\AssemblyLocator.cs" />
     <Compile Include="BCLTestImporter\Xamarin\ProjectFilter.cs" />
     <Compile Include="BCLTestImporter\Templates\Managed\RegisterTypeGenerator.cs" />
+    <Compile Include="BCLTestImporter\ITestAssemblyDefinition.cs" />
+    <Compile Include="BCLTestImporter\Xamarin\AssemblyDefinitionFactory.cs" />
+    <Compile Include="BCLTestImporter\Xamarin\TestAssemblyDefinition.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\tools\mtouch\SdkVersions.cs">

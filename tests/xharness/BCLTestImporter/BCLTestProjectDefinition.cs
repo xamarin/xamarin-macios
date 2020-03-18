@@ -10,11 +10,12 @@ namespace Xharness.BCLTestImporter {
 	/// Class that defines a bcl test project. A bcl test project by definition is the combination of the name
 	/// of the project and a set on assemblies to be tested.
 	/// </summary>
-	public partial struct BCLTestProjectDefinition {
+	public partial class BCLTestProjectDefinition {
 		public string Name { get; set; }
 		public string ExtraArgs { get; private set; }
 		public IAssemblyLocator AssemblyLocator { get; set; }
-		public List<BCLTestAssemblyDefinition> TestAssemblies {get; private set; }
+		public ITestAssemblyDefinitionFactory AssemblyDefinitionFactory { get; set; }
+		public List<ITestAssemblyDefinition> TestAssemblies {get; private set; }
 
 		public bool IsXUnit {
 			get {
@@ -24,25 +25,27 @@ namespace Xharness.BCLTestImporter {
 			}
 		}
 
-		public BCLTestProjectDefinition (string name, IAssemblyLocator locator, string[] assemblies, string extraArgs)
+		public BCLTestProjectDefinition (string name, IAssemblyLocator locator, ITestAssemblyDefinitionFactory factory, string [] assemblies, string extraArgs)
 		{
 			if (assemblies.Length == 0)
 				throw new ArgumentException ("Most provide at least an assembly.");
 
 			Name = name ?? throw new ArgumentNullException (nameof (name));
-			TestAssemblies = new List<BCLTestAssemblyDefinition> (assemblies.Length);
+			TestAssemblies = new List<ITestAssemblyDefinition> (assemblies.Length);
 			AssemblyLocator = locator ?? throw new ArgumentNullException (nameof (locator));
+			AssemblyDefinitionFactory = factory ?? throw new ArgumentNullException (nameof (factory));
 			ExtraArgs = extraArgs;
 			foreach (var assembly in assemblies) {
-				TestAssemblies.Add (new BCLTestAssemblyDefinition (assembly, AssemblyLocator));
+				TestAssemblies.Add (factory.Create (assembly, AssemblyLocator));
 			}
 		}
 		
-		public BCLTestProjectDefinition (string name, IAssemblyLocator locator, List<BCLTestAssemblyDefinition> assemblies, string extraArgs)
+		public BCLTestProjectDefinition (string name, IAssemblyLocator locator, ITestAssemblyDefinitionFactory factory, List<ITestAssemblyDefinition> assemblies, string extraArgs)
 		{
 			Name = name ?? throw new ArgumentNullException (nameof (locator));
 			AssemblyLocator = locator ?? throw new ArgumentNullException (nameof (locator));
-			TestAssemblies = assemblies ?? throw new ArgumentNullException (nameof (locator));
+			TestAssemblies = assemblies ?? throw new ArgumentNullException (nameof (assemblies));
+			AssemblyDefinitionFactory = factory ?? throw new ArgumentNullException (nameof (factory));
 			foreach (var a in TestAssemblies) {
 				a.AssemblyLocator = AssemblyLocator;
 			}
@@ -63,8 +66,8 @@ namespace Xharness.BCLTestImporter {
 		public bool Validate ()
 		{
 			// what a lame way to test this!
-			var xUnitAssemblies = new List<BCLTestAssemblyDefinition> ();
-			var nUnitAssemblies = new List<BCLTestAssemblyDefinition> ();
+			var xUnitAssemblies = new List<ITestAssemblyDefinition> ();
+			var nUnitAssemblies = new List<ITestAssemblyDefinition> ();
 			
 			foreach (var assemblyDefinition in TestAssemblies) {
 				if (assemblyDefinition.IsXUnit)
@@ -130,18 +133,14 @@ namespace Xharness.BCLTestImporter {
 		/// <param name="monoRootPath">The root path of the mono checkout.</param>
 		/// <param name="platform">The platform we are working with.</param>
 		/// <returns>The list of tuples (assembly name, path hint) for all the assemblies in the project.</returns>
-		public (string FailureMessage, List<(string assembly, string hintPath)> Assemblies) GetAssemblyInclusionInformation (string monoRootPath,
-			Platform platform)
+		public (string FailureMessage, List<(string assembly, string hintPath)> Assemblies) GetAssemblyInclusionInformation (Platform platform)
 		{
-			if (monoRootPath == null)
-				throw new ArgumentNullException (nameof (monoRootPath));
-
-			var references = GetProjectAssemblyReferences (monoRootPath, platform);
+			var references = GetProjectAssemblyReferences (AssemblyLocator.GetAssembliesRootLocation (platform), platform);
 			if (!string.IsNullOrEmpty (references.FailureMessage))
 				return (references.FailureMessage, null);
 			var asm = references.References.Select (
 					a => (assembly: a, 
-						hintPath: BCLTestAssemblyDefinition.GetHintPathForRefenreceAssembly (a, monoRootPath, platform))).Union (
+						hintPath: AssemblyLocator.GetHintPathForRefenreceAssembly (a, platform))).Union (
 					TestAssemblies.Select (
 						definition => (assembly: definition.GetName (platform),
 							hintPath: definition.GetPath (platform))))

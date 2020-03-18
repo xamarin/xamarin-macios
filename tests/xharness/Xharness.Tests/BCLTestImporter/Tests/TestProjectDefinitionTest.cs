@@ -9,11 +9,13 @@ namespace Xharness.Tests.BCLTestImporter.Tests {
 	public class TestProjectDefinitionTest {
 
 		Mock<IAssemblyLocator> assemblyLocator;
+		Mock<ITestAssemblyDefinitionFactory> factory;
 
 		[SetUp]
 		public void SetUp ()
 		{
 			assemblyLocator = new Mock<IAssemblyLocator> ();
+			factory = new Mock<ITestAssemblyDefinitionFactory> ();
 		}
 
 		[TearDown]
@@ -25,7 +27,7 @@ namespace Xharness.Tests.BCLTestImporter.Tests {
 		[Test]
 		public void GetTypeForAssembliesNullMonoPath ()
 		{
-			var projectDefinition = new BCLTestProjectDefinition ("MyProject", assemblyLocator.Object, new List<BCLTestAssemblyDefinition> (), "");	
+			var projectDefinition = new BCLTestProjectDefinition ("MyProject", assemblyLocator.Object, factory.Object,  new List<ITestAssemblyDefinition> (), "");	
 			Assert.Throws<ArgumentNullException> (() => projectDefinition.GetTypeForAssemblies (null, Platform.iOS));
 		}
 	}
