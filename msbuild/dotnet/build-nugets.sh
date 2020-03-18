@@ -76,8 +76,7 @@ copy_files ()
 		$cp "$TOP/src/build/dotnet/$platform_lower/$bitness/Xamarin.$assembly_infix.pdb" "$dotnet_destdir/runtimes/$platform_lower-$arch/lib/$framework/"
 	done
 
-	cp "$TOP/src/build/dotnet/$platform_lower/Xamarin.$assembly_infix.dll" "$dotnet_destdir/lib/Xamarin.$assembly_infix/v1.0/"
-	# cp "$TOP/src/build/dotnet/$platform_lower/Xamarin.$assembly_infix.pdb" "$dotnet_destdir/lib/Xamarin.$assembly_infix/v1.0/"
+	cp "$TOP/src/build/dotnet/$platform_lower/ref/Xamarin.$assembly_infix.dll" "$dotnet_destdir/lib/Xamarin.$assembly_infix/v1.0/"
 
 	if [[ "$platform" == "iOS" ]]; then
 		for arch in arm64 arm x64; do
