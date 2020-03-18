@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Xharness.Utilities;
 
 namespace Xharness.Logging {
 	public class Logs : List<Log>, ILogs {
@@ -44,7 +45,7 @@ namespace Xharness.Logging {
 				throw new ArgumentNullException (nameof (path));
 
 			if (!path.StartsWith (Directory, StringComparison.Ordinal)) {
-				var newPath = Path.Combine (Directory, Path.GetFileNameWithoutExtension (path) + "-" + Harness.Timestamp + Path.GetExtension (path));
+				var newPath = Path.Combine (Directory, Path.GetFileNameWithoutExtension (path) + "-" + Helpers.Timestamp + Path.GetExtension (path));
 				File.Copy (path, newPath, true);
 				path = newPath;
 			}

@@ -5,6 +5,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <UpdateXlfOnBuild>true</UpdateXlfOnBuild>
+    <ErrorOnOutOfDateXlf>false</ErrorOnOutOfDateXlf>
   </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Update="MSBStrings.resx">
