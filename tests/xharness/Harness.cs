@@ -11,7 +11,6 @@ using Xharness.Targets;
 using Xharness.Utilities;
 using Xharness.Hardware;
 using Xharness.Listeners;
-using System.Runtime.InteropServices;
 
 namespace Xharness
 {
@@ -184,7 +183,7 @@ namespace Xharness
 		// whether tests that require access to system resources (system contacts, photo library, etc) should be executed or not
 		public bool? IncludeSystemPermissionTests { get; set; }
 
-		public string GetStandardErrorTty () => Marshal.PtrToStringAuto (Helpers.Ttyname (2));
+		public string GetStandardErrorTty () => Helpers.GetTerminalName (2);
 
 		public Harness (IProcessManager processManager, HarnessAction action, HarnessConfiguration configuration)
 		{
