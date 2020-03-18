@@ -35,19 +35,19 @@ parameters:
   type: number
   default: 5
 
-stages:
-- stage: iOSDeviceTests 
-  displayName: 'iOS Device Tests'
-  dependsOn: []    # this removes the implicit dependency on previous stage and causes this to run in parallel
-  jobs:
-  - template: job-matrix.yml # all the smart stuff happens in the template, just needed to set the params
-    parameters:
-      demands:  ${{ parameters.iOSDemand }}
-      deviceLabel: 'run-ios-64-tests'
-      variation: "iOS"
-      pool: ${{ parameters.pool }} 
-      timeout: ${{ parameters.timeout }} 
-      maxParallel: ${{ parameters.maxParallel}} 
+# stages:
+# - stage: iOSDeviceTests 
+#   displayName: 'iOS Device Tests'
+#   dependsOn: []    # this removes the implicit dependency on previous stage and causes this to run in parallel
+#   jobs:
+#   - template: job-matrix.yml # all the smart stuff happens in the template, just needed to set the params
+#     parameters:
+#       demands:  ${{ parameters.iOSDemand }}
+#       deviceLabel: 'run-ios-64-tests'
+#       variation: "iOS"
+#       pool: ${{ parameters.pool }} 
+#       timeout: ${{ parameters.timeout }} 
+#       maxParallel: ${{ parameters.maxParallel}} 
 
 - stage: tvOSDeviceTests
   displayName: 'tvOS Device Tests'
