@@ -127,7 +127,7 @@ namespace MonoTouch.Tuner
 					DerivedLinkContext.RequiredSymbols.AddFunction (pinfo.EntryPoint).AddMember (method);
 					break;
 				default:
-					if (is_bcl_assembly) {
+					if (is_bcl_assembly && Driver.IsDotNet) {
 						DerivedLinkContext.RequiredSymbols.AddField (pinfo.EntryPoint).AddMember (method);
 					}
 					break;

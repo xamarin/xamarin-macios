@@ -688,27 +688,29 @@ all-local:: install-mac
 MAC_DIRECTORIES = \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/etc/mono/assemblies/System
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/etc/mono/assemblies/System \
+	$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/Frameworks \
+	$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/usr/lib \
 
 MAC_TARGETS = \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmonosgen-2.0.a                    \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmono-profiler-log.a               \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmono-native-compat.a              \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmono-native-unified.a             \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmonosgen-2.0.dylib                \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libMonoPosixHelper.dylib             \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmono-native-compat.dylib          \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmono-native-unified.dylib         \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmono-2.0.dylib                    \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmono-2.0.a                        \
+	$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/usr/lib/libmonosgen-2.0.a                        \
+	$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/usr/lib/libmono-profiler-log.a                   \
+	$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/usr/lib/libmono-native-compat.a                  \
+	$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/usr/lib/libmono-native-unified.a                 \
+	$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/usr/lib/libmonosgen-2.0.dylib                    \
+	$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/usr/lib/libMonoPosixHelper.dylib                 \
+	$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/usr/lib/libmono-native-compat.dylib              \
+	$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/usr/lib/libmono-native-unified.dylib             \
+	$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/usr/lib/libmono-2.0.dylib                        \
+	$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/usr/lib/libmono-2.0.a                            \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/pkgconfig/mono-2.pc                  \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/etc/mono/assemblies/System/System.config \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/mono-sgen                            \
 
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/%: .stamp-$(MONO_BUILD_MODE) | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib
+$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/usr/lib/%: .stamp-$(MONO_BUILD_MODE) | $(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/usr/lib
 	$(Q) $(CP) $(MONO_MAC_SDK_DESTDIR)/mac-libs/$(notdir $@) $@
 
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmono-2.0.dylib $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmono-2.0.a: | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib
+$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/usr/lib/libmono-2.0.dylib $(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/usr/lib/libmono-2.0.a: | $(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/usr/lib
 	$(Q) ln -sf libmonosgen-2.0$(suffix $@) $@
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/pkgconfig/mono-2.pc: .stamp-$(MONO_BUILD_MODE) | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib
