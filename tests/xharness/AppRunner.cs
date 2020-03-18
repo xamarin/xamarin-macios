@@ -629,7 +629,7 @@ namespace Xharness {
 
 				// cleanup after us
 				if (EnsureCleanSimulatorState)
-					await SimDevice.KillEverythingAsync (MainLog);
+					await simulator.KillEverythingAsync (MainLog);
 
 				foreach (var log in systemLogs)
 					log.StopCapture ();
