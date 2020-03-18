@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -25,5 +26,10 @@ namespace Xharness.Utilities {
 			}
 			return new Guid (bytes);
 		}
+
+		public static string Timestamp => $"{DateTime.Now:yyyyMMdd_HHmmss}";
+
+		[DllImport ("/usr/lib/libc.dylib")]
+		extern internal static IntPtr Ttyname (int filedes);
 	}
 }

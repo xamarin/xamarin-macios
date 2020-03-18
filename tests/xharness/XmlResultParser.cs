@@ -744,9 +744,9 @@ namespace Xharness {
 		{
 			// VSTS does not provide a nice way to report build errors, create a fake
 			// test result with a failure in the case the build did not work
-			var failureLogXml = logs.Create ($"vsts-nunit-{source}-{Harness.Timestamp}.xml", LogType.XmlLog.ToString ());
+			var failureLogXml = logs.Create ($"vsts-nunit-{source}-{Helpers.Timestamp}.xml", LogType.XmlLog.ToString ());
 			if (jargon == XmlResultJargon.NUnitV3) {
-				var failureXmlTmp = logs.Create ($"nunit-{source}-{Harness.Timestamp}.tmp", "Failure Log tmp");
+				var failureXmlTmp = logs.Create ($"nunit-{source}-{Helpers.Timestamp}.tmp", "Failure Log tmp");
 				GenerateFailureXml (failureXmlTmp.FullPath, title, message, stderrPath, jargon);
 				// add the required attachments and the info of the application that failed to install
 				var failure_logs = Directory.GetFiles (logs.Directory).Where (p => !p.Contains ("nunit")); // all logs but ourself

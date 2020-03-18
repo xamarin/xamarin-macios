@@ -131,7 +131,8 @@ namespace Xharness.Jenkins.TestTasks
 					args.Add ("-xml=" + xmlLog);
 					args.Add ("-labels");
 				}
-				await ExecuteProcessAsync (log, Harness.XIBuildPath, args);
+
+				await ExecuteProcessAsync (log, DirectoryUtilities.XIBuildPath, args);
 
 				if (ProduceHtmlReport) {
 					try {
