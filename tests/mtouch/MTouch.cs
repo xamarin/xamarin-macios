@@ -1181,17 +1181,6 @@ public class B : A {}
 			}
 		}
 		
-		[Test]
-		public void MT0096 ()
-		{
-			using (var mtouch = new MTouchTool ()) {
-				mtouch.CreateTemporaryApp ();
-				mtouch.NoPlatformAssemblyReference = true;
-				Assert.AreEqual (1, mtouch.Execute (MTouchAction.BuildSim));
-				mtouch.AssertError (96, "No reference to Xamarin.iOS.dll was found.");
-			}
-		}
-
 		/* MT0100 is a consistency check, and should never be seen (and as such can never be tested either, since there's no known test cases that would produce it) */
 
 		[Test]
