@@ -1315,7 +1315,7 @@ namespace Xharness.Jenkins
 			var sb = new StringBuilder ();
 			var callback_log = new CallbackLog ((v) => sb.Append (v));
 			var log = Log.CreateAggregatedLog (callback_log, MainLog);
-			return Harness.ProcessManager.ExecuteCommandAsync ("make", new [] { "all", "-j4", "-C", Path.Combine (Harness.RootDirectory, "test-libraries"), "V=1" }, log, TimeSpan.FromMinutes (10)).ContinueWith ((v) => {
+			return Harness.ProcessManager.ExecuteCommandAsync ("make", new [] { "all", $"-j{Environment.ProcessorCount}", "-C", Path.Combine (Harness.RootDirectory, "test-libraries"), "V=1" }, log, TimeSpan.FromMinutes (10)).ContinueWith ((v) => {
 				var per = v.Result;
 				// Only show the log if something went wrong.
 				using var fn = Logs.Create ("build-test-libraries.log", per.Succeeded ? "✅ Build test/test-libraries succeeded ✅" : "⚠️ Build test/test-libraries failed ⚠️");
