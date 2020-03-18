@@ -354,14 +354,6 @@
         <note>
 		</note>
       </trans-unit>
-      <trans-unit id="MM5311">
-        <source>lipo failed with an error code '{0}'. Check build log for details.
-		</source>
-        <target state="new">lipo failed with an error code '{0}'. Check build log for details.
-		</target>
-        <note>
-		</note>
-      </trans-unit>
       <trans-unit id="MT0000">
         <source>Unexpected error - Please fill a bug report at https://github.com/xamarin/xamarin-macios/issues/new
 		</source>
@@ -2658,14 +2650,6 @@
         <note>
 		</note>
       </trans-unit>
-      <trans-unit id="MT5305">
-        <source>Missing 'lipo' tool. Please install Xcode 'Command-Line Tools' component
-		</source>
-        <target state="new">Missing 'lipo' tool. Please install Xcode 'Command-Line Tools' component
-		</target>
-        <note>
-		</note>
-      </trans-unit>
       <trans-unit id="MT5306">
         <source>Failed to create the a fat library. Please review the build log.
 		</source>
@@ -2990,6 +2974,38 @@
         <source>Could not {0} the assembly '{1}'
 		</source>
         <target state="new">Could not {0} the assembly '{1}'
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX5305">
+        <source>Missing 'lipo' tool. Please install Xcode 'Command-Line Tools' component
+		</source>
+        <target state="new">Missing 'lipo' tool. Please install Xcode 'Command-Line Tools' component
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX5307">
+        <source>Missing '{0}' tool. Please install Xcode 'Command-Line Tools' component
+		</source>
+        <target state="new">Missing '{0}' tool. Please install Xcode 'Command-Line Tools' component
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX5309">
+        <source>Failed to execute the tool '{0}', it failed with an error code '{1}'. Please check the build log for details.
+		</source>
+        <target state="new">Failed to execute the tool '{0}', it failed with an error code '{1}'. Please check the build log for details.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX5311">
+        <source>lipo failed with an error code '{0}'. Check build log for details.
+		</source>
+        <target state="new">lipo failed with an error code '{0}'. Check build log for details.
 		</target>
         <note>
 		</note>

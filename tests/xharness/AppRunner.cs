@@ -14,10 +14,9 @@ using Xharness.Jenkins.TestTasks;
 using Xharness.Listeners;
 using Xharness.Logging;
 using Xharness.Utilities;
-using System.Net;
 
-namespace Xharness
-{
+namespace Xharness {
+
 	public enum RunMode {
 		Sim32,
 		Sim64,
@@ -136,9 +135,6 @@ namespace Xharness
 
 		AppInformation Initialize ()
 		{
-			if (AppInformation != null)
-				return AppInformation;
-
 			var csproj = new XmlDocument ();
 			csproj.LoadWithoutNetworkAccess (projectFilePath);
 			string appName = csproj.GetAssemblyName ();
@@ -238,8 +234,6 @@ namespace Xharness
 
 		public async Task<ProcessExecutionResult> InstallAsync (CancellationToken cancellation_token)
 		{
-			var appInfo = Initialize ();
-
 			if (isSimulator) {
 				// We reset the simulator when running, so a separate install step does not make much sense.
 				throw new InvalidOperationException ("Installing to a simulator is not supported.");
@@ -256,7 +250,7 @@ namespace Xharness
 				args.Add ("-v");
 			
 			args.Add ("--installdev");
-			args.Add (appInfo.AppPath);
+			args.Add (AppInformation.AppPath);
 			AddDeviceName (args, companionDeviceName ?? deviceName);
 
 			if (mode == RunMode.WatchOS) {
@@ -264,16 +258,14 @@ namespace Xharness
 				args.Add ("ios,watchos");
 			}
 
-			var totalSize = Directory.GetFiles (appInfo.AppPath, "*", SearchOption.AllDirectories).Select ((v) => new FileInfo (v).Length).Sum ();
-			MainLog.WriteLine ($"Installing '{appInfo.AppPath}' to '{companionDeviceName ?? deviceName}'. Size: {totalSize} bytes = {totalSize / 1024.0 / 1024.0:N2} MB");
+			var totalSize = Directory.GetFiles (AppInformation.AppPath, "*", SearchOption.AllDirectories).Select ((v) => new FileInfo (v).Length).Sum ();
+			MainLog.WriteLine ($"Installing '{AppInformation.AppPath}' to '{companionDeviceName ?? deviceName}'. Size: {totalSize} bytes = {totalSize / 1024.0 / 1024.0:N2} MB");
 
 			return await processManager.ExecuteCommandAsync (harness.MlaunchPath, args, MainLog, TimeSpan.FromHours (1), cancellation_token: cancellation_token);
 		}
 
 		public async Task<ProcessExecutionResult> UninstallAsync ()
 		{
-			var appInfo = Initialize ();
-
 			if (isSimulator)
 				throw new InvalidOperationException ("Uninstalling from a simulator is not supported.");
 
@@ -288,7 +280,7 @@ namespace Xharness
 				args.Add ("-v");
 
 			args.Add ("--uninstalldevbundleid");
-			args.Add (appInfo.BundleIdentifier);
+			args.Add (AppInformation.BundleIdentifier);
 			AddDeviceName (args, companionDeviceName ?? deviceName);
 
 			return await processManager.ExecuteCommandAsync (harness.MlaunchPath, args, MainLog, TimeSpan.FromMinutes (1));
@@ -366,10 +358,10 @@ namespace Xharness
 					MainLog.WriteLine (new string ('#', 10));
 					MainLog.WriteLine ("End of xml results.");
 					if (timed_out) {
-						harness.LogWrench ($"@MonkeyWrench: AddSummary: <b><i>{mode} timed out</i></b><br/>");
+						WrenchLog.WriteLine ($"AddSummary: <b><i>{mode} timed out</i></b><br/>");
 						return parseResult;
 					} else {
-						harness.LogWrench ($"@MonkeyWrench: AddSummary: <b><i>{mode} crashed</i></b><br/>");
+						WrenchLog.WriteLine ($"AddSummary: <b><i>{mode} crashed</i></b><br/>");
 						MainLog.WriteLine ("Test run crashed");
 						crashed = true;
 						parseResult.crashed = true;
@@ -407,19 +399,19 @@ namespace Xharness
 			if (resultLine != null) {
 				var tests_run = resultLine.Replace ("Tests run: ", "");
 				if (failed) {
-					harness.LogWrench ("@MonkeyWrench: AddSummary: <b>{0} failed: {1}</b><br/>", mode, tests_run);
+					WrenchLog.WriteLine ("AddSummary: <b>{0} failed: {1}</b><br/>", mode, tests_run);
 					MainLog.WriteLine ("Test run failed");
 					return false;
 				} else {
-					harness.LogWrench ("@MonkeyWrench: AddSummary: {0} succeeded: {1}<br/>", mode, tests_run);
+					WrenchLog.WriteLine ("AddSummary: {0} succeeded: {1}<br/>", mode, tests_run);
 					MainLog.WriteLine ("Test run succeeded");
 					return true;
 				}
 			} else if (timed_out) {
-				harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} timed out</i></b><br/>", mode);
+				WrenchLog.WriteLine ("AddSummary: <b><i>{0} timed out</i></b><br/>", mode);
 				return false;
 			} else {
-				harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} crashed</i></b><br/>", mode);
+				WrenchLog.WriteLine ("AddSummary: <b><i>{0} crashed</i></b><br/>", mode);
 				MainLog.WriteLine ("Test run crashed");
 				crashed = true;
 				return false;
@@ -436,19 +428,10 @@ namespace Xharness
 			ILog listener_log = null;
 			ILog run_log = MainLog;
 
-			var appInfo = Initialize ();
-
 			if (!isSimulator)
 				FindDevice ();
 
-			crash_reports = new CrashReportSnapshot () {
-				Device = !isSimulator,
-				DeviceName = deviceName,
-				Harness = harness,
-				Log = MainLog,
-				Logs = Logs,
-				LogDirectory = logDirectory,
-			};
+			crash_reports = new CrashReportSnapshot (harness, MainLog, Logs, isDevice: !isSimulator, deviceName);
 
 			var args = new List<string> ();
 			if (!string.IsNullOrEmpty (harness.XcodeRoot)) {
@@ -539,12 +522,12 @@ namespace Xharness
 			bool launch_failure = false;
 
 			if (IsExtension) {
-				switch (appInfo.Extension) {
+				switch (AppInformation.Extension) {
 				case Extension.TodayExtension:
 					args.Add (isSimulator ? "--launchsimbundleid" : "--launchdevbundleid");
-					args.Add ("todayviewforextensions:" + appInfo.BundleIdentifier);
+					args.Add ("todayviewforextensions:" + AppInformation.BundleIdentifier);
 					args.Add ("--observe-extension");
-					args.Add (appInfo.LaunchAppPath);
+					args.Add (AppInformation.LaunchAppPath);
 					break;
 				case Extension.WatchKit2:
 				default:
@@ -552,7 +535,7 @@ namespace Xharness
 				}
 			} else {
 				args.Add (isSimulator ? "--launchsim" : "--launchdev");
-				args.Add (appInfo.LaunchAppPath);
+				args.Add (AppInformation.LaunchAppPath);
 			}
 			if (!isSimulator)
 				args.Add ("--disable-memory-limits");
@@ -588,14 +571,14 @@ namespace Xharness
 					log.StartCapture ();
 					Logs.Add (log);
 					systemLogs.Add (log);
-					harness.LogWrench ("@MonkeyWrench: AddFile: {0}", log.Path);
+					WrenchLog.WriteLine ("AddFile: {0}", log.Path);
 				}
 
-				MainLog.WriteLine ("*** Executing {0}/{1} in the simulator ***", appInfo.AppName, mode);
+				MainLog.WriteLine ("*** Executing {0}/{1} in the simulator ***", AppInformation.AppName, mode);
 
 				if (EnsureCleanSimulatorState) {
 					foreach (var sim in simulators)
-						await sim.PrepareSimulatorAsync (MainLog, appInfo.BundleIdentifier);
+						await sim.PrepareSimulatorAsync (MainLog, AppInformation.BundleIdentifier);
 				}
 
 				args.Add ($"--device=:v2:udid={simulator.UDID}");
@@ -656,7 +639,7 @@ namespace Xharness
 					log.StopCapture ();
 				
 			} else {
-				MainLog.WriteLine ("*** Executing {0}/{1} on device '{2}' ***", appInfo.AppName, mode, deviceName);
+				MainLog.WriteLine ("*** Executing {0}/{1} on device '{2}' ***", AppInformation.AppName, mode, deviceName);
 
 				if (mode == RunMode.WatchOS) {
 					args.Add ("--attach-native-debugger"); // this prevents the watch from backgrounding the app.
@@ -718,7 +701,7 @@ namespace Xharness
 				// Upload the system log
 				if (File.Exists (device_system_log.FullPath)) {
 					MainLog.WriteLine ("A capture of the device log is: {0}", device_system_log.FullPath);
-					harness.LogWrench ("@MonkeyWrench: AddFile: {0}", device_system_log.FullPath);
+					WrenchLog.WriteLine ("AddFile: {0}", device_system_log.FullPath);
 				}
 			}
 
@@ -728,18 +711,18 @@ namespace Xharness
 			// check the final status
 			var crashed = false;
 			if (File.Exists (listener_log.FullPath)) {
-				harness.LogWrench ("@MonkeyWrench: AddFile: {0}", listener_log.FullPath);
-				success = TestsSucceeded (AppInformation, listener_log.FullPath, timed_out, out crashed);
+				WrenchLog.WriteLine ("AddFile: {0}", listener_log.FullPath);
+				success = TestsSucceeded (this.AppInformation, listener_log.FullPath, timed_out, out crashed);
 			} else if (timed_out) {
-				harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} never launched</i></b><br/>", mode);
+				WrenchLog.WriteLine ("AddSummary: <b><i>{0} never launched</i></b><br/>", mode);
 				MainLog.WriteLine ("Test run never launched");
 				success = false;
 			} else if (launch_failure) {
- 				harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} failed to launch</i></b><br/>", mode);
+ 				WrenchLog.WriteLine ("AddSummary: <b><i>{0} failed to launch</i></b><br/>", mode);
  				MainLog.WriteLine ("Test run failed to launch");
  				success = false;
 			} else {
-				harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} crashed at startup (no log)</i></b><br/>", mode);
+				WrenchLog.WriteLine ("AddSummary: <b><i>{0} crashed at startup (no log)</i></b><br/>", mode);
 				MainLog.WriteLine ("Test run crashed before it started (no log file produced)");
 				crashed = true;
 				success = false;
@@ -802,9 +785,9 @@ namespace Xharness
 							if (harness.InCI) {
 								XmlResultParser.GenerateFailure (Logs,
 									"crash",
-									appInfo.AppName,
+									AppInformation.AppName,
 									variation,
-									$"App Crash {appInfo.AppName} {variation}",
+									$"App Crash {AppInformation.AppName} {variation}",
 									$"App crashed {crash_reason}.",
 									crash_reports.Log.FullPath,
 									harness.XmlJargon);
@@ -826,9 +809,9 @@ namespace Xharness
 						XmlResultParser.GenerateFailure (
 							Logs,
 							"crash",
-							appInfo.AppName,
+							AppInformation.AppName,
 							variation,
-							$"App Crash {appInfo.AppName} {variation}",
+							$"App Crash {AppInformation.AppName} {variation}",
 							$"App crashed: {FailureMessage}",
 							crash_reports.Log.FullPath,
 							harness.XmlJargon);
@@ -840,9 +823,9 @@ namespace Xharness
 						XmlResultParser.GenerateFailure (
 							Logs,
 							"launch",
-							appInfo.AppName,
+							AppInformation.AppName,
 							variation,
-							$"App Launch {appInfo.AppName} {variation} on {deviceName}",
+							$"App Launch {AppInformation.AppName} {variation} on {deviceName}",
 							$"{FailureMessage} on {deviceName}",
 							MainLog.FullPath,
 							XmlResultJargon.NUnitV3);
@@ -865,7 +848,7 @@ namespace Xharness
 					if (isTcp) {
 						XmlResultParser.GenerateFailure (Logs,
 							"tcp-connection",
-							appInfo.AppName,
+							AppInformation.AppName,
 							variation,
 							$"TcpConnection on {deviceName}",
 							$"Device {deviceName} could not reach the host over tcp.",
@@ -875,10 +858,10 @@ namespace Xharness
 				} else if (timed_out && harness.InCI) {
 					XmlResultParser.GenerateFailure (Logs,
 						"timeout",
-						appInfo.AppName,
+						AppInformation.AppName,
 						variation,
-						$"App Timeout {appInfo.AppName} {variation} on bot {deviceName}",
-						$"{appInfo.AppName} {variation} Test run timed out after {timeout.TotalMinutes} minute(s) on bot {deviceName}.",
+						$"App Timeout {AppInformation.AppName} {variation} on bot {deviceName}",
+						$"{AppInformation.AppName} {variation} Test run timed out after {timeout.TotalMinutes} minute(s) on bot {deviceName}.",
 						MainLog.FullPath,
 						harness.XmlJargon);
 				}
@@ -898,109 +881,6 @@ namespace Xharness
 				args.Add ("--devname");
 				args.Add (device_name);
 			}
-		}
-	}
-
-	// Monitor the output from 'mlaunch --installdev' and cancel the installation if there's no output for 1 minute.
-	class AppInstallMonitorLog : Log {
-		public override string FullPath => copy_to.FullPath;
-
-		ILog copy_to;
-		CancellationTokenSource cancellation_source;
-		
-		public bool CopyingApp;
-		public bool CopyingWatchApp;
-		public TimeSpan AppCopyDuration;
-		public TimeSpan WatchAppCopyDuration;
-		public Stopwatch AppCopyStart = new Stopwatch ();
-		public Stopwatch WatchAppCopyStart = new Stopwatch ();
-		public int AppPercentComplete;
-		public int WatchAppPercentComplete;
-		public long AppBytes;
-		public long WatchAppBytes;
-		public long AppTotalBytes;
-		public long WatchAppTotalBytes;
-
-		public CancellationToken CancellationToken {
-			get {
-				return cancellation_source.Token;
-			}
-		}
-
-		public AppInstallMonitorLog (ILog copy_to)
-				: base (copy_to.Logs, $"Watch transfer log for {copy_to.Description}")
-		{
-			this.copy_to = copy_to;
-			cancellation_source = new CancellationTokenSource ();
-			cancellation_source.Token.Register (() => {
-				copy_to.WriteLine ("App installation cancelled: it timed out after no output for 1 minute.");
-			});
-		}
-
-		public override Encoding Encoding => copy_to.Encoding;
-		public override void Flush ()
-		{
-			copy_to.Flush ();
-		}
-
-		public override StreamReader GetReader ()
-		{
-			return copy_to.GetReader ();
-		}
-
-		protected override void Dispose (bool disposing)
-		{
-			base.Dispose (disposing);
-			copy_to.Dispose ();
-			cancellation_source.Dispose ();
-		}
-
-		void ResetTimer ()
-		{
-			cancellation_source.CancelAfter (TimeSpan.FromMinutes (1));
-		}
-
-		public override void WriteLine (string value)
-		{
-			var v = value.Trim ();
-			if (v.StartsWith ("Installing application bundle", StringComparison.Ordinal)) {
-				if (!CopyingApp) {
-					CopyingApp = true;
-					AppCopyStart.Start ();
-				} else if (!CopyingWatchApp) {
-					CopyingApp = false;
-					CopyingWatchApp = true;
-					AppCopyStart.Stop ();
-					WatchAppCopyStart.Start ();
-				}
-			} else if (v.StartsWith ("PercentComplete: ", StringComparison.Ordinal) && int.TryParse (v.Substring ("PercentComplete: ".Length).Trim (), out var percent)) {
-				if (CopyingApp)
-					AppPercentComplete = percent;
-				else if (CopyingWatchApp)
-					WatchAppPercentComplete = percent;
-			} else if (v.StartsWith ("NumBytes: ", StringComparison.Ordinal) && int.TryParse (v.Substring ("NumBytes: ".Length).Trim (), out var num_bytes)) {
-				if (CopyingApp) {
-					AppBytes = num_bytes;
-					AppCopyDuration = AppCopyStart.Elapsed;
-				} else if (CopyingWatchApp) {
-					WatchAppBytes = num_bytes;
-					WatchAppCopyDuration = WatchAppCopyStart.Elapsed;
-				}
-			} else if (v.StartsWith ("TotalBytes: ", StringComparison.Ordinal) && int.TryParse (v.Substring ("TotalBytes: ".Length).Trim (), out var total_bytes)) {
-				if (CopyingApp)
-					AppTotalBytes = total_bytes;
-				else if (CopyingWatchApp)
-					WatchAppTotalBytes = total_bytes;
-			}
-
-			ResetTimer ();
-
-			copy_to.WriteLine (value);
-		}
-
-		public override void Write (byte [] buffer, int offset, int count)
-		{
-			copy_to.Write (buffer, offset, count);
 		}
 	}
 }

@@ -758,17 +758,9 @@ namespace Xamarin.Bundler {
 			Watch ("Copy Dependencies", 1);
 
 			// MDK check
-			var ret = Compile ();
+			Compile ();
 			Watch ("Compile", 1);
-			if (ret != 0) {
-				if (ret == 1)
-					throw new MonoMacException (5109, true, Errors.MM5109);
-				if (ret == 69)
-					throw new MonoMacException (5308, true, Errors.MM5308);
-				// if not then the compilation really failed
-				throw new MonoMacException (5103, true, Errors.MM5103, ret);
-			}
-
+			
 			if (generate_plist)
 				GeneratePList ();
 
@@ -1032,10 +1024,8 @@ namespace Xamarin.Bundler {
 				throw ErrorHelper.CreateError (1, Errors.MM0001, MonoVersions.MinimumMonoVersion, mono_version);
 		}
 
-		static int Compile ()
+		static void Compile ()
 		{
-			int ret = 1;
-
 			string [] cflags = Array.Empty<string> ();
 
 			string mainSource = GenerateMain ();
@@ -1270,13 +1260,10 @@ namespace Xamarin.Bundler {
 				sourceFiles.Add (main);
 				args.AddRange (sourceFiles);
 
-
-				ret = XcodeRun ("clang", args, null);
+				RunClang (args);
 			} catch (Win32Exception e) {
 				throw new MonoMacException (5103, true, e, Errors.MM5103, "driver");
 			}
-			
-			return ret;
 		}
 
 		static string RunPkgConfig (string option, bool force_system_mono = false)
@@ -1425,9 +1412,7 @@ namespace Xamarin.Bundler {
 					string libName = Path.GetFileName (linkWith);
 					string finalLibPath = Path.Combine (mmp_dir, libName);
 					Application.UpdateFile (linkWith, finalLibPath);
-					int ret = XcodeRun ("install_name_tool", new [] { "-id", "@executable_path/../" + BundleName + "/" + libName, finalLibPath });
-					if (ret != 0)
-						throw new MonoMacException (5310, true, Errors.MM5310, ret);
+					RunInstallNameTool (new [] { "-id", "@executable_path/../" + BundleName + "/" + libName, finalLibPath });
 					native_libraries_copied_in.Add (libName);
 				}
 			}
@@ -1455,10 +1440,7 @@ namespace Xamarin.Bundler {
 				}
 				// if required update the paths inside the .dylib that was copied
 				if (sb.Count > 0) {
-					sb.Add (library);
-					int ret = XcodeRun ("install_name_tool", sb);
-					if (ret != 0)
-						throw new MonoMacException (5310, true, Errors.MM5310, ret);
+					RunInstallNameTool (sb);
 					sb.Clear ();
 				}
 			}
@@ -1595,11 +1577,8 @@ namespace Xamarin.Bundler {
 				LipoLibrary (name, dest);
 
 			if (native_references.Contains (real_src)) {
-				if (!isStaticLib) {
-					int ret = XcodeRun ("install_name_tool", new [] { "-id", "@executable_path/../" + BundleName + "/" + name, dest });
-					if (ret != 0)
-						throw new MonoMacException (5310, true, Errors.MM5310, ret);
-				}
+				if (!isStaticLib)
+					RunInstallNameTool (new [] { "-id", "@executable_path/../" + BundleName + "/" + name, dest });
 				native_libraries_copied_in.Add (name);
 			}
 
@@ -1631,9 +1610,7 @@ namespace Xamarin.Bundler {
 			if (existingArchs.Count () < 2)
 				return;
 
-			int ret = XcodeRun ("lipo", new [] { dest, "-thin", arch, "-output", dest });
-			if (ret != 0)
-				throw new MonoMacException (5311, true, Errors.MM5311, ret);
+			RunLipo (new [] { dest, "-thin", arch, "-output", dest });
 			if (name != "MonoPosixHelper" && name != "libmono-native-unified" && name != "libmono-native-compat")
 				ErrorHelper.Warning (2108, Errors.MM2108, name, arch);
 		}

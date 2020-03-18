@@ -1716,7 +1716,7 @@ namespace Xamarin.Bundler
 			}
 			if (sb.Count > 0) {
 				sb.Add (output);
-				Driver.XcodeRun ("install_name_tool", sb);
+				Driver.RunInstallNameTool (sb);
 				sb.Clear ();
 			}
 		}
