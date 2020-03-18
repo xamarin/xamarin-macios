@@ -26,7 +26,7 @@ namespace Xamarin.MMP.Tests
 			TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = projectConfig };
 			string buildOutput = TI.TestUnifiedExecutable (test).BuildOutput;
 			string [] splitBuildOutput = TI.TestUnifiedExecutable (test).BuildOutput.Split (new string[] { Environment.NewLine }, StringSplitOptions.None);
-			string clangInvocation = splitBuildOutput.Single (x => x.Contains ("clang"));
+			string clangInvocation = splitBuildOutput.Single (x => x.Contains ("usr/bin/clang"));
 			return clangInvocation.Split (new string[] { " " }, StringSplitOptions.None);
 		}
 
