@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -171,7 +170,7 @@ namespace Xharness {
 				return true;
 			
 			var sims = simulatorsLoaderFactory.CreateLoader();
-			await sims.LoadAsync (Logs.Create ($"simulator-list-{Harness.Timestamp}.log", "Simulator list"), false, false);
+			await sims.LoadAsync (Logs.Create ($"simulator-list-{Helpers.Timestamp}.log", "Simulator list"), false, false);
 			simulators = await sims.FindAsync (target, MainLog);
 
 			return simulators != null;
@@ -418,9 +417,6 @@ namespace Xharness {
 			}
 		}
 
-		[DllImport ("/usr/lib/libc.dylib")]
-		extern static IntPtr ttyname (int filedes);
-
 		public async Task<int> RunAsync ()
 		{
 			CrashReportSnapshot crash_reports;
@@ -480,7 +476,7 @@ namespace Xharness {
 				args.Add ($"-setenv=NUNIT_HOSTNAME={ips}");
 			}
 
-			listener_log = Logs.Create ($"test-{mode.ToString().ToLower()}-{Harness.Timestamp}.log", LogType.TestLog.ToString (), timestamp: !useXmlOutput);
+			listener_log = Logs.Create ($"test-{mode.ToString().ToLower()}-{Helpers.Timestamp}.log", LogType.TestLog.ToString (), timestamp: !useXmlOutput);
 			var (transport, listener, listenerTmpFile) = listenerFactory.Create (mode, MainLog, listener_log, isSimulator, true, useXmlOutput);
 			
 			args.Add ($"-argument=-app-arg:-transport:{transport}");
@@ -546,13 +542,13 @@ namespace Xharness {
 					return 1;
 
 				if (mode != RunMode.WatchOS) {
-					var stderr_tty = Marshal.PtrToStringAuto (ttyname (2));
+					var stderr_tty = harness.GetStandardErrorTty();
 					if (!string.IsNullOrEmpty (stderr_tty)) {
 						args.Add ($"--stdout={stderr_tty}");
 						args.Add ($"--stderr={stderr_tty}");
 					} else {
-						var stdout_log = Logs.CreateFile ($"stdout-{Harness.Timestamp}.log", "Standard output");
-						var stderr_log = Logs.CreateFile ($"stderr-{Harness.Timestamp}.log", "Standard error");
+						var stdout_log = Logs.CreateFile ($"stdout-{Helpers.Timestamp}.log", "Standard output");
+						var stderr_log = Logs.CreateFile ($"stderr-{Helpers.Timestamp}.log", "Standard error");
 						args.Add ($"--stdout={stdout_log}");
 						args.Add ($"--stderr={stderr_log}");
 					}
@@ -649,7 +645,7 @@ namespace Xharness {
 				
 				AddDeviceName (args);
 
-				device_system_log = Logs.Create ($"device-{deviceName}-{Harness.Timestamp}.log", "Device log");
+				device_system_log = Logs.Create ($"device-{deviceName}-{Helpers.Timestamp}.log", "Device log");
 				var logdev = new DeviceLogCapturer () {
 					Harness =  harness,
 					Log = device_system_log,
