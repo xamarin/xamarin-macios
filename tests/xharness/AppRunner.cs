@@ -744,8 +744,10 @@ namespace Xharness {
 			if (!success.Value) {
 				int pid = 0;
 				string crash_reason = null;
-				foreach (var crash in crashLogs) {
+				foreach (var crashLog in crashLogs) {
 					try {
+						Logs.Add (crashLog);
+
 						if (pid == 0) {
 							// Find the pid
 							using (var log_reader = MainLog.GetReader ()) {
@@ -765,7 +767,7 @@ namespace Xharness {
 							}
 						}
 
-						using (var crash_reader = crash.GetReader ()) {
+						using (var crash_reader = crashLog.GetReader ()) {
 							var text = crash_reader.ReadToEnd ();
 
 							var reader = System.Runtime.Serialization.Json.JsonReaderWriterFactory.CreateJsonReader (Encoding.UTF8.GetBytes (text), new XmlDictionaryReaderQuotas ());
@@ -793,7 +795,7 @@ namespace Xharness {
 							break;
 						}
 					} catch (Exception e) {
-						harness.Log (2, "Failed to process crash report '{1}': {0}", e.Message, crash.Description);
+						harness.Log (2, "Failed to process crash report '{1}': {0}", e.Message, crashLog.Description);
 					}
 				}
 				if (!string.IsNullOrEmpty (crash_reason)) {

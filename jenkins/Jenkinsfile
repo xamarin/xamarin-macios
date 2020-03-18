@@ -738,7 +738,7 @@ timestamps {
                                 def exitCode = sh (script: "make -C ${workspace}/xamarin-macios/tests package-tests", returnStatus: true)
                                 if (exitCode != 0) {
                                     hasXamarinMacTests = false
-                                    echoError ("Failed to package Xamarin.Mac tests (exit code: ${exitCode}")
+                                    echoError ("Failed to package Xamarin.Mac tests (exit code: ${exitCode})")
                                     failedStages.add (currentStage)
                                 }
                                 uploadFiles ("tests/*.7z", "wrench", virtualPath)
