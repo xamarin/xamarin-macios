@@ -48,13 +48,6 @@ namespace Xharness.Tests {
 			}
 		};
 
-		static readonly ISimulatorDevice [] mockSimulators = new ISimulatorDevice [] {
-			new SimDevice() {
-				Name = "Test iPhone",
-				UDID = "58F21118E4D34FD69EAB7860BB9B38A0",
-			}
-		};
-
 		Mock<IProcessManager> processManager;
 		Mock<ISimulatorsLoader> simulators;
 		Mock<IDeviceLoader> devices;
@@ -317,22 +310,32 @@ namespace Xharness.Tests {
 					{ "env1", "value1" },
 					{ "env2", "value2" },
 				} && 
-				x.Timeout == 1d);
+				x.Timeout == 1d &&
+				x.GetStandardErrorTty() == "tty1");
 
 			devices.Setup (x => x.ConnectedDevices).Returns (mockDevices.Reverse());
 
+			// Crash reporter
 			var crashReporterFactory = new Mock<ICrashSnapshotReporterFactory> ();
 			crashReporterFactory
-				.Setup (x => x.Create (mainLog.Object, logs.Object, false, null))
+				.Setup (x => x.Create (mainLog.Object, It.IsAny<ILogs> (), false, null))
 				.Returns (snapshotReporter.Object);
 
+			// Mock finding simulators
 			simulators
 				.Setup (x => x.LoadAsync (It.IsAny<ILog> (), false, false))
 				.Returns (Task.CompletedTask);
 
+			string simulatorLogPath = Path.Combine (Path.GetTempPath (), "simulator-logs");
 			simulators
 				.Setup (x => x.FindAsync (AppRunnerTarget.Simulator_iOS64, mainLog.Object, true, false))
-				.ReturnsAsync (mockSimulators);
+				.ReturnsAsync (new ISimulatorDevice [] {
+					new SimDevice() {
+						Name = "Test iPhone simulator",
+						UDID = "58F21118E4D34FD69EAB7860BB9B38A0",
+						LogPath = simulatorLogPath,
+					}
+				});
 
 			var listenerLogFile = new Mock<ILogFile> ();
 
@@ -344,16 +347,25 @@ namespace Xharness.Tests {
 
 			var processResult = new ProcessExecutionResult () { ExitCode = 1 };
 
-			/*processManager
+			var expectedArgs = $"--sdkroot {xcodePath} -v -v -argument=-connection-mode -argument=none " +
+				$"-argument=-app-arg:-autostart -setenv=NUNIT_AUTOSTART=true -argument=-app-arg:-autoexit " +
+				$"-setenv=NUNIT_AUTOEXIT=true -argument=-app-arg:-enablenetwork -setenv=NUNIT_ENABLE_NETWORK=true " +
+				$"-setenv=DISABLE_SYSTEM_PERMISSION_TESTS=1 -argument=-app-arg:-hostname:127.0.0.1 " +
+				$"-setenv=NUNIT_HOSTNAME=127.0.0.1 -argument=-app-arg:-transport:Tcp -setenv=NUNIT_TRANSPORT=TCP " +
+				$"-argument=-app-arg:-hostport:{simpleListener.Object.Port} -setenv=NUNIT_HOSTPORT={simpleListener.Object.Port} " +
+				$"-setenv=env1=value1 -setenv=env2=value2 --launchsim {appPath}";
+
+			processManager
 				.Setup (x => x.ExecuteCommandAsync (
 					mlaunchPath,
-					It.Is<MlaunchArguments> (args => args.AsCommandLine () == $"--download-crash-report={deviceName} --download-crash-report-to={crashLogPath} --sdkroot={tempXcodeRoot} --devname={deviceName}"),
-					log.Object,
-					TimeSpan.FromMinutes (1),
+					It.Is<IList<string>> (args => string.Join(" ", args) == expectedArgs),
+					mainLog.Object,
+					TimeSpan.FromMinutes (harness.Timeout * 2),
 					null,
-					null))
-				.ReturnsAsync (new ProcessExecutionResult () { ExitCode = 0 });*/
+					It.IsAny<CancellationToken> ()))
+				.ReturnsAsync (new ProcessExecutionResult () { ExitCode = 0 });
 
+			// Act
 			var appRunner = new AppRunner (processManager.Object,
 				simulatorsFactory,
 				listenerFactory,
@@ -364,10 +376,12 @@ namespace Xharness.Tests {
 				mainLog.Object,
 				logs.Object,
 				projectFilePath: projectFilePath,
-				buildConfiguration: "Debug");
+				buildConfiguration: "Debug",
+				timeoutMultiplier: 2);
 
 			var result = await appRunner.RunAsync ();
 
+			// Verify
 			Assert.AreEqual (0, result);
 
 			mainLog.Verify (x => x.WriteLine ("Test run started"));
@@ -376,8 +390,8 @@ namespace Xharness.Tests {
 			simpleListener.Verify (x => x.StartAsync (), Times.AtLeastOnce);
 
 			simulators.VerifyAll ();
-			
-			// "--sdkroot /path/to/xcode -v -v -argument=-connection-mode -argument=none -argument=-app-arg:-autostart -setenv=NUNIT_AUTOSTART=true -argument=-app-arg:-autoexit -setenv=NUNIT_AUTOEXIT=true -argument=-app-arg:-enablenetwork -setenv=NUNIT_ENABLE_NETWORK=true -setenv=DISABLE_SYSTEM_PERMISSION_TESTS=1 -argument=-app-arg:-hostname:127.0.0.1 -setenv=NUNIT_HOSTNAME=127.0.0.1 -argument=-app-arg:-transport:Tcp -setenv=NUNIT_TRANSPORT=TCP -argument=-app-arg:-hostport:1020 -setenv=NUNIT_HOSTPORT=1020 -setenv=env1=value1 -setenv=env2=value2 --launchsim D:\\github\\xamarin-macios\\tests\\xharness\\Xharness.Tests\\bin\\Debug\\Samples\\TestProject\\bin\\com.xamarin.bcltests.SystemXunit.app"
+
+			// 
 
 			/*processManager.Verify (x => x.ExecuteCommandAsync (
 				"/path/to/mlaunch",
