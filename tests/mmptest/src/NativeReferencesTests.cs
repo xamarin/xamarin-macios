@@ -112,7 +112,7 @@ namespace Xamarin.MMP.Tests
 			MMPTests.RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { ItemGroup = CreateSingleNativeRef (SimpleStaticPath, "Static") };
 				NativeReferenceTestCore (tmpDir, test, "Unified_WithNativeReferences_InMainProjectWorks - Static", null, true, false, s => {
-					string clangLine = s.Split ('\n').First (x => x.Contains ("xcrun -sdk macosx clang"));
+					string clangLine = s.Split ('\n').First (x => x.Contains ("usr/bin/clang"));
 					return clangLine.Contains ("SimpleClassStatic.a");
 				});
 			});

@@ -533,11 +533,19 @@ namespace CoreGraphics {
 
 		[Mac (10,15)][iOS(13,0)]
 		[TV (13,0)][Watch (6,0)]
+		[Deprecated (PlatformName.MacOSX, 10,15,4)]
+		[Deprecated (PlatformName.iOS, 13,4)]
+		[Deprecated (PlatformName.TvOS, 13,4)]
+		[Deprecated (PlatformName.WatchOS, 6,2)]
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern bool CGColorSpaceIsHDR (/* CGColorSpaceRef */ IntPtr space);
 
 		[Mac (10,15)][iOS(13,0)]
 		[TV (13,0)][Watch (6,0)]
+		[Deprecated (PlatformName.MacOSX, 10,15,4)]
+		[Deprecated (PlatformName.iOS, 13,4)]
+		[Deprecated (PlatformName.TvOS, 13,4)]
+		[Deprecated (PlatformName.WatchOS, 6,2)]
 		public bool IsHdr {
 			get {
 				return CGColorSpaceIsHDR (handle);

@@ -365,8 +365,10 @@ namespace Metal {
 		public MTLTextureSwizzle Alpha;
 	}
 
-#if IOS
+#if IOS || MONOMAC || COREBUILD
 	[Introduced (PlatformName.iOS, 13,0, PlatformArchitecture.All)]
+	[Introduced (PlatformName.MacCatalyst, 13, 4)]
+	[Introduced (PlatformName.MacOSX, 10, 15, 4)]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLVertexAmplificationViewMapping {
 		public uint ViewportArrayIndexOffset;
@@ -375,6 +377,8 @@ namespace Metal {
 	}
 
 	[Introduced (PlatformName.iOS, 13,0, PlatformArchitecture.All)]
+	[Introduced (PlatformName.MacCatalyst, 13, 4)]
+	[Introduced (PlatformName.MacOSX, 10, 15, 4)]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLCoordinate2D {
 		public float X;

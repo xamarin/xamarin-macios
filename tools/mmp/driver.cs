@@ -601,6 +601,8 @@ namespace Xamarin.Bundler {
 		static Version MutateSDKVersionToPointRelease (Version rv)
 		{
 			if (rv.Major == 10 && (rv.Revision == 0 || rv.Revision == -1)) {
+				if (rv.Minor == 15 && XcodeVersion >= new Version (11, 4))
+					return new Version (rv.Major, rv.Minor, 4);
 				if (rv.Minor == 13 && XcodeVersion >= new Version (9, 3))
 					return new Version (rv.Major, rv.Minor, 4);
 				if (rv.Minor == 13 && XcodeVersion >= new Version (9, 2))
@@ -821,16 +823,8 @@ namespace Xamarin.Bundler {
 			Watch ("Copy Dependencies", 1);
 
 			// MDK check
-			var ret = Compile ();
+			Compile ();
 			Watch ("Compile", 1);
-			if (ret != 0) {
-				if (ret == 1)
-					throw new MonoMacException (5109, true, "Native linking failed with error code 1.  Check build log for details.");
-				if (ret == 69)
-					throw new MonoMacException (5308, true, "Xcode license agreement may not have been accepted.  Please launch Xcode.");
-				// if not then the compilation really failed
-				throw new MonoMacException (5103, true, String.Format ("Failed to compile. Error code - {0}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", ret));
-			}
 
 			if (generate_plist)
 				GeneratePList ();
@@ -1136,10 +1130,8 @@ namespace Xamarin.Bundler {
 				LipoLibrary (framework, Path.Combine (name, Path.Combine (frameworks_dir, name + ".framework", name)));
 		}
 
-		static int Compile ()
+		static void Compile ()
 		{
-			int ret = 1;
-
 			string [] cflags = Array.Empty<string> ();
 			string libdir;
 			StringBuilder cflagsb = new StringBuilder ();
@@ -1400,13 +1392,10 @@ namespace Xamarin.Bundler {
 				sourceFiles.Add (main);
 				args.AddRange (sourceFiles);
 
-
-				ret = XcodeRun ("clang", args, null);
+				RunClang (args);
 			} catch (Win32Exception e) {
 				throw new MonoMacException (5103, true, e, "Failed to compile the file '{0}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", "driver");
 			}
-			
-			return ret;
 		}
 
 		// check that we have a reference to Xamarin.Mac.dll and not to MonoMac.dll.
@@ -1535,9 +1524,7 @@ namespace Xamarin.Bundler {
 					string libName = Path.GetFileName (linkWith);
 					string finalLibPath = Path.Combine (mmp_dir, libName);
 					Application.UpdateFile (linkWith, finalLibPath);
-					int ret = XcodeRun ("install_name_tool", new [] { "-id", "@executable_path/../" + BundleName + "/" + libName, finalLibPath });
-					if (ret != 0)
-						throw new MonoMacException (5310, true, "install_name_tool failed with an error code '{0}'. Check build log for details.", ret);
+					RunInstallNameTool (new [] { "-id", "@executable_path/../" + BundleName + "/" + libName, finalLibPath });
 					native_libraries_copied_in.Add (libName);
 				}
 			}
@@ -1566,9 +1553,7 @@ namespace Xamarin.Bundler {
 				// if required update the paths inside the .dylib that was copied
 				if (sb.Count > 0) {
 					sb.Add (library);
-					int ret = XcodeRun ("install_name_tool", sb);
-					if (ret != 0)
-						throw new MonoMacException (5310, true, "install_name_tool failed with an error code '{0}'. Check build log for details.", ret);
+					RunInstallNameTool (sb);
 					sb.Clear ();
 				}
 			}
@@ -1706,11 +1691,8 @@ namespace Xamarin.Bundler {
 				LipoLibrary (name, dest);
 
 			if (native_references.Contains (real_src)) {
-				if (!isStaticLib) {
-					int ret = XcodeRun ("install_name_tool", new [] { "-id", "@executable_path/../" + BundleName + "/" + name, dest });
-					if (ret != 0)
-						throw new MonoMacException (5310, true, "install_name_tool failed with an error code '{0}'. Check build log for details.", ret);
-				}
+				if (!isStaticLib)
+					RunInstallNameTool (new [] { "-id", "@executable_path/../" + BundleName + "/" + name, dest });
 				native_libraries_copied_in.Add (name);
 			}
 
@@ -1742,9 +1724,7 @@ namespace Xamarin.Bundler {
 			if (existingArchs.Count () < 2)
 				return;
 
-			int ret = XcodeRun ("lipo", new [] { dest, "-thin", arch, "-output", dest });
-			if (ret != 0)
-				throw new MonoMacException (5311, true, "lipo failed with an error code '{0}'. Check build log for details.", ret);
+			RunLipo (new [] { dest, "-thin", arch, "-output", dest });
 			if (name != "MonoPosixHelper" && name != "libmono-native-unified" && name != "libmono-native-compat")
 				ErrorHelper.Warning (2108, $"{name} was stripped of architectures except {arch} to comply with App Store restrictions. This could break existing codesigning signatures. Consider stripping the library with lipo or disabling with --optimize=-trim-architectures");
 		}
