@@ -49,7 +49,7 @@ namespace Xharness.Tests.BCLTestImporter.Tests {
 			assemblyLocator.Setup (a => a.GetAssembliesRootLocation (It.IsAny<Platform> ())).Returns (Environment.GetEnvironmentVariable ("HOME"));
 			var testAssemblyDefinition = new BCLTestAssemblyDefinition ("monotouch_System.Json.Microsoft_xunit-test.dll", assemblyLocator.Object);
 			var home = Environment.GetEnvironmentVariable ("HOME");
-			var expectedPath = Path.Combine (home, "ios-bcl","monotouch", "tests", testAssemblyDefinition.Name);
+			var expectedPath = Path.Combine (home, "ios-bcl", "monotouch", "tests", testAssemblyDefinition.Name);
 			Assert.AreEqual (expectedPath, testAssemblyDefinition.GetPath (Platform.iOS));
 		}
 

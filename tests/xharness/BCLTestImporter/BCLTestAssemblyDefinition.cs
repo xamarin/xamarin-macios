@@ -69,7 +69,7 @@ namespace Xharness.BCLTestImporter {
 			switch (platform) {
 			case Platform.MacOSFull:
 			case Platform.MacOSModern:
-				return Path.Combine (downloadsPath, "mac-bcl",  platformPathMatch [platform], "tests");
+				return Path.Combine (downloadsPath, "mac-bcl", platformPathMatch [platform], "tests");
 			case Platform.iOS:
 			case Platform.TvOS:
 			case Platform.WatchOS:
