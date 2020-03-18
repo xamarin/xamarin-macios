@@ -2434,7 +2434,7 @@ namespace Xharness.Jenkins
 				writer.WriteLine ("</html>");
 			}
 		}
-		Dictionary<Log, Tuple<long, object>> log_data = new Dictionary<Log, Tuple<long, object>> ();
+		Dictionary<ILog, Tuple<long, object>> log_data = new Dictionary<ILog, Tuple<long, object>> ();
 
 		static string LinkEncode (string path)
 		{
