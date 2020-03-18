@@ -132,7 +132,7 @@ namespace Xharness.Jenkins.TestTasks
 
 		protected static string Timestamp {
 			get {
-				return Harness.Timestamp;
+				return Helpers.Timestamp;
 			}
 		}
 
