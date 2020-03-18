@@ -55,7 +55,7 @@ namespace Xharness {
 		readonly ISimpleListenerFactory listenerFactory;
 		readonly IDeviceLoaderFactory devicesLoaderFactory;
 		readonly ICrashSnapshotReporterFactory snapshotReporterFactory;
-		
+		readonly ICaptureLogFactory captureLogFactory;		
 		readonly RunMode mode;
 		readonly bool isSimulator;
 		readonly AppRunnerTarget target;
@@ -87,13 +87,14 @@ namespace Xharness {
 
 		public ILog MainLog { get; set; }	
 
-		public ILogs Logs { get; }		
+		public ILogs Logs { get; }
 
 		public AppRunner (IProcessManager processManager,
 						  ISimulatorsLoaderFactory simulatorsFactory,
 						  ISimpleListenerFactory simpleListenerFactory,
 						  IDeviceLoaderFactory devicesFactory,
 						  ICrashSnapshotReporterFactory snapshotReporterFactory,
+						  ICaptureLogFactory captureLogFactory,
 						  AppRunnerTarget target,
 						  IHarness harness,
 						  ILog mainLog,
@@ -113,6 +114,7 @@ namespace Xharness {
 			this.listenerFactory = simpleListenerFactory ?? throw new ArgumentNullException (nameof (simpleListenerFactory));
 			this.devicesLoaderFactory = devicesFactory ?? throw new ArgumentNullException (nameof (devicesFactory));
 			this.snapshotReporterFactory = snapshotReporterFactory ?? throw new ArgumentNullException (nameof (snapshotReporterFactory));
+			this.captureLogFactory = captureLogFactory ?? throw new ArgumentNullException (nameof (captureLogFactory));
 			this.harness = harness ?? throw new ArgumentNullException (nameof (harness));
 			this.MainLog = mainLog ?? throw new ArgumentNullException (nameof (mainLog));
 			this.projectFilePath = projectFilePath ?? throw new ArgumentNullException (nameof (projectFilePath));
@@ -555,20 +557,23 @@ namespace Xharness {
 					}
 				}
 
-				var systemLogs = new List<CaptureLog> ();
+				var systemLogs = new List<ICaptureLog> ();
 				foreach (var sim in simulators) {
 					// Upload the system log
 					MainLog.WriteLine ("System log for the '{1}' simulator is: {0}", sim.SystemLog, sim.Name);
 					bool isCompanion = sim != simulator;
 
-					var log = new CaptureLog (Logs, Path.Combine (Logs.Directory, sim.Name + ".log"), sim.SystemLog, entire_file: harness.Action != HarnessAction.Jenkins)
-					{
-						Description = isCompanion ? LogType.CompanionSystemLog.ToString () : LogType.SystemLog.ToString (),
-					};
+					var logDescription = isCompanion ? LogType.CompanionSystemLog.ToString () : LogType.SystemLog.ToString ();
+					var log = captureLogFactory.Create (Logs,
+						Path.Combine (Logs.Directory, sim.Name + ".log"),
+						sim.SystemLog,
+						harness.Action != HarnessAction.Jenkins,
+						logDescription);
+
 					log.StartCapture ();
 					Logs.Add (log);
 					systemLogs.Add (log);
-					WrenchLog.WriteLine ("AddFile: {0}", log.Path);
+					WrenchLog.WriteLine ("AddFile: {0}", log.FullPath);
 				}
 
 				MainLog.WriteLine ("*** Executing {0}/{1} in the simulator ***", AppInformation.AppName, mode);

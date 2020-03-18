@@ -33,7 +33,7 @@ namespace Xharness.Jenkins.TestTasks
 				TestName = build_task.TestName;
 		}
 
-		public override IEnumerable<Log> AggregatedLogs {
+		public override IEnumerable<ILog> AggregatedLogs {
 			get {
 				var rv = base.AggregatedLogs;
 				if (BuildTask != null)

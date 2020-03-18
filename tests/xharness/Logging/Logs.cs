@@ -4,7 +4,7 @@ using System.IO;
 using Xharness.Utilities;
 
 namespace Xharness.Logging {
-	public class Logs : List<Log>, ILogs {
+	public class Logs : List<ILog>, ILogs {
 		public string Directory { get; set; }
 
 		public Logs (string directory)

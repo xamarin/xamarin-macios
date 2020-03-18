@@ -44,7 +44,7 @@ namespace Xharness.Jenkins.TestTasks
 			}
 		}
 
-		public override IEnumerable<Log> AggregatedLogs {
+		public override IEnumerable<ILog> AggregatedLogs {
 			get {
 				return base.AggregatedLogs.Union (BuildTask.Logs);
 			}

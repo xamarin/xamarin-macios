@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 namespace Xharness.Logging {
-	public interface ILogs : IList<Log>, IDisposable {
+	public interface ILogs : IList<ILog>, IDisposable {
 		string Directory { get; set; }
 
 		// Create a new log backed with a file
