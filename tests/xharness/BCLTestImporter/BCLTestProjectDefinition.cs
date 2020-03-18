@@ -40,9 +40,9 @@ namespace Xharness.BCLTestImporter {
 		
 		public BCLTestProjectDefinition (string name, IAssemblyLocator locator, List<BCLTestAssemblyDefinition> assemblies, string extraArgs)
 		{
-			Name = name ?? throw new ArgumentNullException (nameof (locator));
+			Name = name ?? throw new ArgumentNullException (nameof (name));
 			AssemblyLocator = locator ?? throw new ArgumentNullException (nameof (locator));
-			TestAssemblies = assemblies ?? throw new ArgumentNullException (nameof (locator));
+			TestAssemblies = assemblies ?? throw new ArgumentNullException (nameof (assemblies));
 			foreach (var a in TestAssemblies) {
 				a.AssemblyLocator = AssemblyLocator;
 			}
