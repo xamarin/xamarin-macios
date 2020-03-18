@@ -8,6 +8,13 @@
 # timeout: Timeout used in the different jobs.
 # maxParallel: Max number of parallel jobs to do in a stage.
 #
+
+# this is a global variable, it is available to all jobs
+# github_status: if there is a failure in any part of the pipeline tests, set to "failure"
+# otherwise, set to "success"
+variables:
+  github.status: "success"
+
 parameters:
 
 # set demands as possible parameters because we keep changing them from lab to lab :/
@@ -35,7 +42,7 @@ parameters:
   type: number
   default: 5
 
-# stages:
+stages:
 # - stage: iOSDeviceTests 
 #   displayName: 'iOS Device Tests'
 #   dependsOn: []    # this removes the implicit dependency on previous stage and causes this to run in parallel
