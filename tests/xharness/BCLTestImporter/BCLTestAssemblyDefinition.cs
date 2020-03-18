@@ -79,7 +79,7 @@ namespace Xharness.BCLTestImporter {
 			return null;
 		}
 
-		public static string GetHintPathForRefenreceAssembly (string assembly, string monoRootPath, Platform platform)
+		public static string GetHintPathForReferenceAssembly (string assembly, string monoRootPath, Platform platform)
 		{
 			var hintPath = Path.Combine (monoRootPath, downloadPartialPath [platform], platformPathMatch [platform], $"{assembly}.dll");
 			if (File.Exists (hintPath)) {

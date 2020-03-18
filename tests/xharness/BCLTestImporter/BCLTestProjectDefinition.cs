@@ -14,7 +14,7 @@ namespace Xharness.BCLTestImporter {
 		public string Name { get; set; }
 		public string ExtraArgs { get; private set; }
 		public IAssemblyLocator AssemblyLocator { get; set; }
-		public List<BCLTestAssemblyDefinition> TestAssemblies {get; private set; }
+		public List<BCLTestAssemblyDefinition> TestAssemblies { get; private set; }
 
 		public bool IsXUnit {
 			get {
@@ -141,7 +141,7 @@ namespace Xharness.BCLTestImporter {
 				return (references.FailureMessage, null);
 			var asm = references.References.Select (
 					a => (assembly: a, 
-						hintPath: BCLTestAssemblyDefinition.GetHintPathForRefenreceAssembly (a, monoRootPath, platform))).Union (
+						hintPath: BCLTestAssemblyDefinition.GetHintPathForReferenceAssembly (a, monoRootPath, platform))).Union (
 					TestAssemblies.Select (
 						definition => (assembly: definition.GetName (platform),
 							hintPath: definition.GetPath (platform))))
