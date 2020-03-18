@@ -84,7 +84,7 @@ namespace Xharness.Tests {
 
 			var mock4 = new Mock<ICrashSnapshotReporterFactory> ();
 			mock4.Setup (m => m.Create (It.IsAny<ILog>(), It.IsAny<ILogs>(), It.IsAny<bool>(), It.IsAny<string>())).Returns (snapshotReporter.Object);
-			devicesFactory = mock2.Object;
+			snapshotReporterFactory = mock4.Object;
 
 			mainLog = new Mock<ILog> ().Object;
 
@@ -286,6 +286,65 @@ namespace Xharness.Tests {
 				TimeSpan.FromMinutes (1),
 				null,
 				null));
+		}
+
+		[Test]
+		public async Task RunOnSimulatorTest ()
+		{
+			const string xcodePath = "/path/to/xcode";
+			const string mlaunchPath = "/path/to/mlaunch";
+
+			Mock<IHarness> harnessMock = new Mock<IHarness> ();
+			harnessMock.SetupGet (x => x.XcodeRoot).Returns (xcodePath);
+			harnessMock.SetupGet (x => x.MlaunchPath).Returns (mlaunchPath);
+			harnessMock.SetupGet (x => x.Verbosity).Returns (1);
+			
+			devices.Setup (x => x.ConnectedDevices).Returns (mockDevices.Reverse());
+
+			var processResult = new ProcessExecutionResult () { ExitCode = 1 };
+
+			/*processManager
+				.Setup (x => x.ExecuteCommandAsync (
+					mlaunchPath,
+					It.Is<MlaunchArguments> (args => args.AsCommandLine () == $"--download-crash-report={deviceName} --download-crash-report-to={crashLogPath} --sdkroot={tempXcodeRoot} --devname={deviceName}"),
+					log.Object,
+					TimeSpan.FromMinutes (1),
+					null,
+					null))
+				.ReturnsAsync (new ProcessExecutionResult () { ExitCode = 0 });*/
+
+			var appRunner = new AppRunner (processManager.Object,
+				simulatorsFactory,
+				listenerFactory,
+				devicesFactory,
+				snapshotReporterFactory,
+				AppRunnerTarget.Simulator_iOS64,
+				harnessMock.Object,
+				mainLog,
+				Path.Combine (sampleProjectPath, "SystemXunit.csproj"),
+				"Debug",
+				Path.Combine (outputPath, "logs"));
+
+			var result = await appRunner.RunAsync ();
+
+			Assert.AreEqual (0, result);
+			
+			/*processManager.Verify (x => x.ExecuteCommandAsync (
+				"/path/to/mlaunch",
+				new List<string> () {
+					"--sdkroot",
+					"/path/to/xcode",
+					"-v",
+					"-v",
+					"--uninstalldevbundleid",
+					appName,
+					"--devname",
+					"Test iPad"
+				},
+				mainLog,
+				TimeSpan.FromMinutes (1),
+				null,
+				null));*/
 		}
 	}
 }
