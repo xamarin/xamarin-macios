@@ -44,44 +44,5 @@ namespace Xharness.Tests.BCLTestImporter.Tests {
 			Assert.True( testAssemblyDefinition.IsXUnit);
 		}
 
-		[Test]
-		public void GetPathiOS ()
-		{
-			assemblyLocator.Setup (a => a.GetAssembliesRootLocation (It.IsAny<Platform> ())).Returns (Environment.GetEnvironmentVariable ("HOME"));
-			var testAssemblyDefinition = new TestAssemblyDefinition ("monotouch_System.Json.Microsoft_xunit-test.dll", assemblyLocator.Object);
-			var home = Environment.GetEnvironmentVariable ("HOME");
-			var expectedPath = Path.Combine (home, "ios-bcl","monotouch", "tests", testAssemblyDefinition.Name);
-			Assert.AreEqual (expectedPath, testAssemblyDefinition.GetPath (Platform.iOS));
-		}
-
-		[Test]
-		public void GetPathTvOS ()
-		{
-			assemblyLocator.Setup (a => a.GetAssembliesRootLocation (It.IsAny<Platform> ())).Returns (Environment.GetEnvironmentVariable ("HOME"));
-			var testAssemblyDefinition = new TestAssemblyDefinition ("monotouch_System.Json.Microsoft_xunit-test.dll", assemblyLocator.Object);
-			var home = Environment.GetEnvironmentVariable ("HOME");
-			var expectedPath = Path.Combine (home, "ios-bcl", "monotouch_tv", "tests", testAssemblyDefinition.Name.Replace ("monotouch", "monotouch_tv"));
-			Assert.AreEqual (expectedPath, testAssemblyDefinition.GetPath (Platform.TvOS));
-		}
-
-		[Test]
-		public void GetPathWatchOS ()
-		{
-			assemblyLocator.Setup (a => a.GetAssembliesRootLocation (It.IsAny<Platform> ())).Returns (Environment.GetEnvironmentVariable ("HOME"));
-			var testAssemblyDefinition = new TestAssemblyDefinition ("monotouch_System.Json.Microsoft_xunit-test.dll", assemblyLocator.Object);
-			var home = Environment.GetEnvironmentVariable ("HOME");
-			var expectedPath = Path.Combine (home, "ios-bcl", "monotouch_watch", "tests", testAssemblyDefinition.Name.Replace ("monotouch", "monotouch_watch"));
-			Assert.AreEqual (expectedPath, testAssemblyDefinition.GetPath (Platform.WatchOS));
-		}
-
-		[Test]
-		public void GetPathMacOS ()
-		{
-			assemblyLocator.Setup (a => a.GetAssembliesRootLocation (It.IsAny<Platform> ())).Returns (Environment.GetEnvironmentVariable ("HOME"));
-			var testAssemblyDefinition = new TestAssemblyDefinition ("monotouch_System.Json.Microsoft_xunit-test.dll", assemblyLocator.Object);
-			var home = Environment.GetEnvironmentVariable ("HOME");
-			var expectedPath = Path.Combine (home, "mac-bcl", "xammac_net_4_5", "tests", testAssemblyDefinition.Name);
-			Assert.AreEqual (expectedPath, testAssemblyDefinition.GetPath (Platform.MacOSFull));
-		}
 	}
 }

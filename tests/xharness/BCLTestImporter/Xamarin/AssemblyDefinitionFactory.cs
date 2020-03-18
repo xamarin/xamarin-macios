@@ -3,10 +3,6 @@ using Xharness.BCLTestImporter.Templates;
 
 namespace Xharness.BCLTestImporter.Xamarin {
 	public class AssemblyDefinitionFactory : ITestAssemblyDefinitionFactory {
-
-		public ITestAssemblyDefinition Create (string assembly, IAssemblyLocator loader)
-		{
-			return new TestAssemblyDefinition (assembly, loader);
-		}
+		public ITestAssemblyDefinition Create (string assembly, IAssemblyLocator loader) => new TestAssemblyDefinition (assembly, loader);
 	}
 }

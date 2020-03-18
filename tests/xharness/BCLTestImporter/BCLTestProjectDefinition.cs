@@ -130,7 +130,6 @@ namespace Xharness.BCLTestImporter {
 		/// Returns a list of tuples that contains the name of the assembly and the required hint path. If the
 		/// path is null it means that the assembly is part of the distribution.
 		/// </summary>
-		/// <param name="monoRootPath">The root path of the mono checkout.</param>
 		/// <param name="platform">The platform we are working with.</param>
 		/// <returns>The list of tuples (assembly name, path hint) for all the assemblies in the project.</returns>
 		public (string FailureMessage, List<(string assembly, string hintPath)> Assemblies) GetAssemblyInclusionInformation (Platform platform)

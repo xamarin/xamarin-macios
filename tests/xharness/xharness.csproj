@@ -155,14 +155,14 @@
     <Compile Include="Utilities\PlistExtensions.cs" />
     <Compile Include="Utilities\ProjectFileExtensions.cs" />
     <Compile Include="Utilities\StringUtils.cs" />
-    <Compile Include="Utilities\TempDirectory.cs" />
+    <Compile Include="Utilities\DirectoryUtilities.cs" />
     <Compile Include="XmlResultParser.cs" />
     <Compile Include="BCLTestImporter\Templates\ITemplatedProject.cs" />
     <Compile Include="BCLTestImporter\Templates\Managed\XamariniOSTemplate.cs" />
     <Compile Include="BCLTestImporter\BclTestProjectInfo.cs" />
     <Compile Include="BCLTestImporter\iOSBclTestProject.cs" />
+    <Compile Include="BCLTestImporter\IAssemblyLocator.cs" />
     <Compile Include="BCLTestImporter\BclTestProject.cs" />
-    <Compile Include="BCLTestImporter\Templates\IAssemblyLocator.cs" />
     <Compile Include="BCLTestImporter\Templates\IProjectFilter.cs" />
     <Compile Include="BCLTestImporter\Xamarin\AssemblyLocator.cs" />
     <Compile Include="BCLTestImporter\Xamarin\ProjectFilter.cs" />
