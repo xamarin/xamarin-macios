@@ -158,7 +158,7 @@ TEST_FEED_PATH=test/feed
 
 pack-%: package/versions.targets
 	$(Q) rm -Rf $(TEST_FEED_PATH)/xamarin.$(shell echo $* | tr '[:upper:]' '[:lower:]').sdk
-	$(if $(V),,@echo "PACK     nupkgs/Xamarin.$*.Sdk.nupkg";) dotnet pack package/Xamarin.$*.csproj --output nupkgs $(DOTNET_PACK_VERBOSITY)
+	$(if $(V),,@echo "PACK     nupkgs/Xamarin.$*.Sdk.nupkg";) $(DOTNET) pack package/Xamarin.$*.csproj --output nupkgs $(DOTNET_PACK_VERBOSITY)
 	$(if $(V),,@echo "ADD      nupkgs/Xamarin.$*.Sdk.nupkg";) nuget add nupkgs/Xamarin.$*.Sdk.*nupkg -source $(TEST_FEED_PATH) $(NUGET_VERBOSITY)
 	echo packed-$*
 
@@ -178,9 +178,9 @@ test-nuget: test/NuGet.config test/global.json
 	$(Q) $(MAKE) pack
 	@# Clear out anything from the nuget cache from previous tests
 	$(Q) rm -Rf $(HOME)/.nuget/packages/xamarin.*.sdk
-	@#$(if $(V),,@echo "BUILD    MySingleView.app";) dotnet build test/MySingleView/MySingleView.csproj /p:Platform=iPhone $(XBUILD_VERBOSITY)
-	$(if $(V),,@echo "BUILD    MySingleView.app";) dotnet build test/MySingleView/MySingleView.csproj /p:Platform=iPhoneSimulator $(XBUILD_VERBOSITY)
-	@#$(if $(V),,@echo "BUILD    MyCocoaApp.app";)   dotnet build test/MyCocoaApp/MyCocoaApp.csproj $(XBUILD_VERBOSITY)
+	@#$(if $(V),,@echo "BUILD    MySingleView.app";) $(DOTNET) build test/MySingleView/MySingleView.csproj /p:Platform=iPhone $(XBUILD_VERBOSITY)
+	$(if $(V),,@echo "BUILD    MySingleView.app";) $(DOTNET) build test/MySingleView/MySingleView.csproj /p:Platform=iPhoneSimulator $(XBUILD_VERBOSITY)
+	@#$(if $(V),,@echo "BUILD    MyCocoaApp.app";)   $(DOTNET) build test/MyCocoaApp/MyCocoaApp.csproj $(XBUILD_VERBOSITY)
 
 CURRENT_HASH:=$(shell git log -1 --pretty=%h)
 package/versions.targets: package/versions.template.targets Makefile $(TOP)/Make.config.inc
