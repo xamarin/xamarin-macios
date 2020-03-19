@@ -998,7 +998,7 @@ namespace Xamarin.Bundler {
 			}
 
 			var str_cflags = RunPkgConfig ("--cflags");
-			var libdir = RunPkgConfig ("--variable=libdir");
+			var libdir = GetMonoLibraryDirectory (App, App.Abi);
 
 			if (!StringUtils.TryParseArguments (str_cflags, out cflags, out var ex))
 				throw ErrorHelper.CreateError (147, ex, Errors.MM0147, str_cflags, ex.Message);

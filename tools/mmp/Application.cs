@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 
 namespace Xamarin.Bundler {
 	public partial class Application
@@ -13,6 +14,10 @@ namespace Xamarin.Bundler {
 		public bool IsDeviceBuild => throw ErrorHelper.CreateError (99, Errors.MX0099, "Can't call IsDeviceBuild in mmp");
 
 		bool RequiresXcodeHeaders => Driver.Registrar == RegistrarMode.Static && LinkMode == LinkMode.None;
+
+		// Use this to get the single Abi we currently support for Xamarin.Mac.
+		// This makes it easy to find everywhere we need to update when Apple adds support for new Abis.
+		public Abi Abi { get { return Targets.First ().Abis.First (); } }
 
 		internal void Initialize ()
 		{

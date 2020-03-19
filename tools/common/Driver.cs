@@ -910,6 +910,10 @@ namespace Xamarin.Bundler {
 		// This is the directory where libmono*.[a|dylib] are
 		public static string GetMonoLibraryDirectory (Application app, Abi abi)
 		{
+#if MMP
+			if (IsUnifiedFullSystemFramework)
+				return RunPkgConfig ("--variable=libdir");
+#endif
 			if (IsDotNet)
 				return Path.Combine (FrameworkDirectory, "runtimes", $"{GetNugetPlatform (app)}-{GetNugetArchitecture (abi)}", "native");
 			return GetProductSdkLibDirectory (app);
