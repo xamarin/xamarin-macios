@@ -459,7 +459,7 @@ namespace Xamarin.Bundler
 					flags.AddOtherFlag ("-std=c++14");
 				}
 
-				flags.AddOtherFlag ($"-I{Path.Combine (Driver.GetProductSdkDirectory (app), "usr", "include")}");
+				flags.AddOtherFlag ($"-I{Driver.GetProductSdkIncludeDirectory (app)}");
 			}
 			flags.AddOtherFlag ($"-isysroot", Driver.GetFrameworkDirectory (app));
 			flags.AddOtherFlag ("-Qunused-arguments"); // don't complain about unused arguments (clang reports -std=c99 and -Isomething as unused).

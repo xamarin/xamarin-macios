@@ -163,20 +163,6 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		public static string GetProductAssembly (Application app)
-		{
-			return "Xamarin.Mac";
-		}
-
-		public static string GetPlatformFrameworkDirectory (Application app)
-		{
-			if (IsUnifiedMobile)
-				return Path.Combine (FrameworkLibDirectory, "mono", "Xamarin.Mac");
-			else if (IsUnifiedFullXamMacFramework)
-				return Path.Combine (FrameworkLibDirectory, "mono", "4.5");
-			throw new InvalidOperationException ("PlatformFrameworkDirectory when not Mobile or Full?");
-		}
-
 		public static string GetArch32Directory (Application app)
 		{
 			throw new InvalidOperationException ("Arch32Directory when not Mobile or Full?");
@@ -191,7 +177,6 @@ namespace Xamarin.Bundler {
 			throw new InvalidOperationException ("Arch64Directory when not Mobile or Full?");
 		}
 					
-
 		static AOTOptions aotOptions = null;
 
 		public static bool EnableDebug {
@@ -753,7 +738,7 @@ namespace Xamarin.Bundler {
 		static void CopyMonoNative ()
 		{
 			string name;
-			if (File.Exists (Path.Combine (MonoDirectory, "lib", "libmono-system-native.dylib"))) {
+			if (File.Exists (Path.Combine (GetMonoLibraryDirectory (App), "libmono-system-native.dylib"))) {
 				// legacy libmono-system-native.a needs to be included if it exists in the mono in question
 				name = "libmono-system-native";
 			} else {
@@ -770,7 +755,7 @@ namespace Xamarin.Bundler {
 				}
 			}
 
-			var src = Path.Combine (MonoDirectory, "lib", name + ".dylib");
+			var src = Path.Combine (GetMonoLibraryDirectory (App), name + ".dylib");
 			var dest = Path.Combine (mmp_dir, "libmono-native.dylib");
 			Watch ($"Adding mono-native library {name} for {BuildTarget.MonoNativeMode}.", 1);
 
@@ -1501,7 +1486,7 @@ namespace Xamarin.Bundler {
 				src = library;
 
 			// Now let's check inside mono/lib
-			string monoDirPath = Path.Combine (MonoDirectory, "lib", libName);
+			string monoDirPath = Path.Combine (GetMonoLibraryDirectory (App), libName);
 			if (src == null && File.Exists (monoDirPath))
 				src = monoDirPath;
 
