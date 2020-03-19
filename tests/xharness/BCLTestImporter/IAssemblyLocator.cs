@@ -12,6 +12,6 @@ namespace Xharness.BCLTestImporter {
 		/// <returns>The root dir in which the precompiled assemblies can be found.</returns>
 		string GetAssembliesRootLocation (Platform platform);
 		string GetAssembliesLocation (Platform platform);
-		string GetHintPathForRefenreceAssembly (string assembly, Platform platform);
+		string GetHintPathForReferenceAssembly (string assembly, Platform platform);
 	}
 }

@@ -65,7 +65,7 @@ namespace Xharness.BCLTestImporter.Xamarin {
 			return null;
 		}
 
-		public string GetHintPathForRefenreceAssembly (string assembly, Platform platform)
+		public string GetHintPathForReferenceAssembly (string assembly, Platform platform)
 		{
 			var hintPath = Path.Combine (GetAssembliesRootLocation (platform), downloadPartialPath [platform], platformPathMatch [platform], $"{assembly}.dll");
 			if (File.Exists (hintPath)) {

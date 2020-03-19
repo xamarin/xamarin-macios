@@ -10,7 +10,7 @@ namespace Xharness.BCLTestImporter {
 	/// Class that defines a bcl test project. A bcl test project by definition is the combination of the name
 	/// of the project and a set on assemblies to be tested.
 	/// </summary>
-	public partial class BCLTestProjectDefinition {
+	public class BCLTestProjectDefinition {
 		public string Name { get; set; }
 		public string ExtraArgs { get; private set; }
 		public IAssemblyLocator AssemblyLocator { get; set; }
@@ -139,7 +139,7 @@ namespace Xharness.BCLTestImporter {
 				return (references.FailureMessage, null);
 			var asm = references.References.Select (
 					a => (assembly: a, 
-						hintPath: AssemblyLocator.GetHintPathForRefenreceAssembly (a, platform))).Union (
+						hintPath: AssemblyLocator.GetHintPathForReferenceAssembly (a, platform))).Union (
 					TestAssemblies.Select (
 						definition => (assembly: definition.GetName (platform),
 							hintPath: definition.GetPath (platform))))
