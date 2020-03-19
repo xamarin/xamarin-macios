@@ -37,6 +37,8 @@ namespace Xamarin
 				sb.Add ($"--output={OutputPath}");
 
 			switch (Profile) {
+			case Profile.None:
+				break;
 			case Profile.macOSMobile:
 				sb.Add ("--profile=Xamarin.Mac,Version=v2.0,Profile=Mobile");
 				break;

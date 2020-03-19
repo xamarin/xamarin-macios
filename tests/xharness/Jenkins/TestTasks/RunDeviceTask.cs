@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Xharness.Execution;
 using Xharness.Hardware;
 using Xharness.Listeners;
+using Xharness.Logging;
 
 namespace Xharness.Jenkins.TestTasks
 {
@@ -84,6 +85,7 @@ namespace Xharness.Jenkins.TestTasks
 						new SimpleListenerFactory (),
 						new DeviceLoaderFactory (Harness, processManager),
 						new CrashSnapshotReporterFactory (ProcessManager, Harness.XcodeRoot, Harness.MlaunchPath),
+						new CaptureLogFactory (),
 						AppRunnerTarget,
 						Harness,
 						projectFilePath: ProjectFile,
@@ -147,6 +149,7 @@ namespace Xharness.Jenkins.TestTasks
 								new SimpleListenerFactory (),
 								new DeviceLoaderFactory (Harness, processManager),
 								new CrashSnapshotReporterFactory (ProcessManager, Harness.XcodeRoot, Harness.MlaunchPath),
+								new CaptureLogFactory (),
 								AppRunnerTarget,
 								Harness,
 								projectFilePath: ProjectFile,

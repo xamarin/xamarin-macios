@@ -57,6 +57,7 @@ namespace Xharness
 		bool ENABLE_XAMARIN { get; }
 		Dictionary<string, string> EnvironmentVariables { get; }
 		ILog HarnessLog { get; set; }
+		string GetStandardErrorTty ();
 		bool InCI { get; }
 		bool INCLUDE_IOS { get; }
 		bool INCLUDE_MAC { get; }
@@ -91,7 +92,6 @@ namespace Xharness
 		string WatchOSExtensionTemplate { get; }
 		string XcodeRoot { get; }
 		Version XcodeVersion { get; }
-		string XIBuildPath { get; }
 		XmlResultJargon XmlJargon { get; }
 		Task<ProcessExecutionResult> ExecuteXcodeCommandAsync (string executable, IList<string> args, ILog log, TimeSpan timeout);
 		bool GetIncludeSystemPermissionTests (TestPlatform platform, bool device);
@@ -111,10 +111,6 @@ namespace Xharness
 		public HashSet<string> Labels { get; }
 		public XmlResultJargon XmlJargon { get; }
 		public IProcessManager ProcessManager { get; }
-
-		public string XIBuildPath => Path.GetFullPath (Path.Combine (RootDirectory, "..", "tools", "xibuild", "xibuild"));
-
-		public static string Timestamp => $"{DateTime.Now:yyyyMMdd_HHmmss}";
 
 		// This is the maccore/tests directory.
 		static string root_directory;
@@ -196,6 +192,8 @@ namespace Xharness
 		public TimeSpan PeriodicCommandInterval { get; }
 		// whether tests that require access to system resources (system contacts, photo library, etc) should be executed or not
 		public bool? IncludeSystemPermissionTests { get; set; }
+
+		public string GetStandardErrorTty () => Helpers.GetTerminalName (2);
 
 		public Harness (IProcessManager processManager, HarnessAction action, HarnessConfiguration configuration)
 		{
@@ -609,6 +607,7 @@ namespace Xharness
 					new SimpleListenerFactory (),
 					new DeviceLoaderFactory (this, ProcessManager),
 					new CrashSnapshotReporterFactory (ProcessManager, XcodeRoot, MlaunchPath),
+					new CaptureLogFactory (),
 					target,
 					this,
 					HarnessLog,
@@ -635,6 +634,7 @@ namespace Xharness
 					new SimpleListenerFactory (),
 					new DeviceLoaderFactory (this, ProcessManager),
 					new CrashSnapshotReporterFactory (ProcessManager, XcodeRoot, MlaunchPath),
+					new CaptureLogFactory (),
 					target,
 					this,
 					HarnessLog,
@@ -659,6 +659,7 @@ namespace Xharness
 					new SimpleListenerFactory (),
 					new DeviceLoaderFactory (this, ProcessManager),
 					new CrashSnapshotReporterFactory (ProcessManager, XcodeRoot, MlaunchPath),
+					new CaptureLogFactory (),
 					target,
 					this,
 					HarnessLog,

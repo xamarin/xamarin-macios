@@ -132,7 +132,7 @@ namespace Xharness.Jenkins.TestTasks
 
 		protected static string Timestamp {
 			get {
-				return Harness.Timestamp;
+				return Helpers.Timestamp;
 			}
 		}
 
@@ -192,7 +192,7 @@ namespace Xharness.Jenkins.TestTasks
 			}
 		}
 
-		public virtual IEnumerable<Log> AggregatedLogs {
+		public virtual IEnumerable<ILog> AggregatedLogs {
 			get {
 				return Logs;
 			}

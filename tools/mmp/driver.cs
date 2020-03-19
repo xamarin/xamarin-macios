@@ -133,11 +133,9 @@ namespace Xamarin.Bundler {
 			os.WriteOptionDescriptions (Console.Out);
 		}
 
-		public static bool IsUnifiedFullXamMacFramework { get; private set; }
-		public static bool IsUnifiedFullSystemFramework { get; private set; }
-		public static bool IsUnifiedMobile { get; private set; }
-		public static bool IsUnified { get { return IsUnifiedFullSystemFramework || IsUnifiedMobile || IsUnifiedFullXamMacFramework; } }
-		public static bool IsClassic { get { return !IsUnified; } }
+		public static bool IsUnifiedFullXamMacFramework { get { return TargetFramework == TargetFramework.Xamarin_Mac_4_5_Full; } }
+		public static bool IsUnifiedFullSystemFramework { get { return TargetFramework == TargetFramework.Xamarin_Mac_4_5_System; } }
+		public static bool IsUnifiedMobile { get { return TargetFramework == TargetFramework.Xamarin_Mac_2_0_Mobile; } }
 		public static bool LinkProhibitedFrameworks { get; private set; }
 
 		public static bool Is64Bit { 
@@ -184,8 +182,6 @@ namespace Xamarin.Bundler {
 		static int Main2 (string [] args)
 		{
 			var os = new OptionSet () {
-				{ "h|?|help", "Displays the help", v => action = Action.Help },
-				{ "version", "Output version information and exit.", v => action = Action.Version },
 				{ "f|force", "Forces the recompilation of code, regardless of timestamps", v=> Force = true },
 				{ "cache=", "Specify the directory where temporary build files will be cached", v => App.Cache.Location = v },
 				{ "a|assembly=", "Add an assembly to be processed", v => references.Add (v) },
@@ -234,8 +230,7 @@ namespace Xamarin.Bundler {
 				{ "xml=", "Provide an extra XML definition file to the linker", v => App.Definitions.Add (v) },
 				{ "time", v => WatchLevel++ },
 				{ "arch=", "Specify the architecture ('x86_64') of the native runtime (default to 'x86_64', which is the only valid value)", v => { arch = v; } },
-				{ "profile=", "(Obsoleted in favor of --target-framework) Specify the .NET profile to use (defaults to '" + Xamarin.Utils.TargetFramework.Default + "')", v => SetTargetFramework (v) },
-				{ "target-framework=", "Specify the .NET target framework to use (defaults to '" + Xamarin.Utils.TargetFramework.Default + "')", v => SetTargetFramework (v) },
+				{ "profile=", "(Obsoleted in favor of --target-framework) Specify the .NET profile to use", v => SetTargetFramework (v), true },
 				{ "force-thread-check", "Keep UI thread checks inside (even release) builds [DEPRECATED, use --optimize=-remove-uithread-checks instead]", v => { App.Optimizations.RemoveUIThreadChecks = false; }, true},
 				{ "disable-thread-check", "Remove UI thread checks inside (even debug) builds [DEPRECATED, use --optimize=remove-uithread-checks instead]", v => { App.Optimizations.RemoveUIThreadChecks = true; }, true},
 				{ "registrar:", "Specify the registrar to use (dynamic [default], static, partial)", v => {
@@ -313,8 +308,8 @@ namespace Xamarin.Bundler {
 					true /* this is an internal option */
 				},
 				{ "xamarin-framework-directory=", "The framework directory", v => { framework_dir = v; }, true },
-				{ "xamarin-full-framework", "Used with --target-framework=4.5 to select XM Full Target Framework", v => { IsUnifiedFullXamMacFramework = true; } },
-				{ "xamarin-system-framework", "Used with --target-framework=4.5 to select XM Full Target Framework", v => { IsUnifiedFullSystemFramework = true; } },
+				{ "xamarin-full-framework", "Used with --target-framework=4.5 to select XM Full Target Framework. Deprecated, use --target-framework=Xamarin.Mac,Version=v4.0,Profile=Full instead.", v => { TargetFramework = TargetFramework.Xamarin_Mac_4_5_Full; }, true },
+				{ "xamarin-system-framework", "Used with --target-framework=4.5 to select XM Full Target Framework. Deprecated, use --target-framework=Xamarin.Mac,Version=v4.0,Profile=System instead.", v => { TargetFramework = TargetFramework.Xamarin_Mac_4_5_System; }, true },
 				{ "aot:", "Specify assemblies that should be AOT compiled\n- none - No AOT (default)\n- all - Every assembly in MonoBundle\n- core - Xamarin.Mac, System, mscorlib\n- sdk - Xamarin.Mac.dll and BCL assemblies\n- |hybrid after option enables hybrid AOT which allows IL stripping but is slower (only valid for 'all')\n - Individual files can be included for AOT via +FileName.dll and excluded via -FileName.dll\n\nExamples:\n  --aot:all,-MyAssembly.dll\n  --aot:core,+MyOtherAssembly.dll,-mscorlib.dll",
 					v => {
 						aotOptions = new AOTOptions (v);
@@ -327,8 +322,6 @@ namespace Xamarin.Bundler {
 				},
 			};
 
-			AddSharedOptions (App, os);
-
 			var extra_args = Environment.GetEnvironmentVariable ("MMP_ENV_OPTIONS");
 			if (!string.IsNullOrEmpty (extra_args)) {
 				var l = new List<string> (args);
@@ -336,17 +329,8 @@ namespace Xamarin.Bundler {
 				args = l.ToArray ();
 			}
 
-			try {
-				App.RootAssemblies.AddRange (os.Parse (args));
-			}
-			catch (MonoMacException) {
-				throw;
-			}
-			catch (Exception e) {
-				throw new MonoMacException (10, true, Errors.MX0010, e.Message);
-			}
-
-			Driver.LogArguments (args);
+			if (ParseOptions (App, os, args, ref action))
+				return 0;
 
 			if (aotOptions == null) {
 				string forceAotVariable = Environment.GetEnvironmentVariable ("XM_FORCE_AOT");
@@ -354,63 +338,8 @@ namespace Xamarin.Bundler {
 					aotOptions = new AOTOptions (forceAotVariable);
 			}
 
-			if (!targetFramework.HasValue)
-				targetFramework = TargetFramework.Default;
-
 			App.RuntimeOptions = RuntimeOptions.Create (App, http_message_provider, tls_provider);
 
-			if (action == Action.Help || (args.Length == 0)) {
-				ShowHelp (os);
-				return 0;
-			} else if (action == Action.Version) {
-				Console.Write ("mmp {0}.{1}", Constants.Version, Constants.Revision);
-				Console.WriteLine ();
-				return 0;
-			}
-
-			bool force45From40UnifiedSystemFull = false;
-
-			// At least once instance of a TargetFramework of Xamarin.Mac,v2.0,(null) was found already. Assume any v2.0 implies a desire for Modern.
-			if (TargetFramework == TargetFramework.Xamarin_Mac_2_0_Mobile || TargetFramework.Version == TargetFramework.Xamarin_Mac_2_0_Mobile.Version) {
-				IsUnifiedMobile = true;
-			} else if (TargetFramework.Identifier == TargetFramework.Xamarin_Mac_4_5_Full.Identifier 
-			         && TargetFramework.Profile == TargetFramework.Xamarin_Mac_4_5_Full.Profile) {
-				IsUnifiedFullXamMacFramework = true;
-				TargetFramework = TargetFramework.Net_4_5;
-			} else if (TargetFramework.Identifier == TargetFramework.Xamarin_Mac_4_5_System.Identifier
-			         && TargetFramework.Profile == TargetFramework.Xamarin_Mac_4_5_System.Profile) {
-				IsUnifiedFullSystemFramework = true;
-				TargetFramework = TargetFramework.Net_4_5;
-			} else if (!IsUnifiedFullXamMacFramework && !IsUnifiedFullSystemFramework) {
-				// This is a total hack. Instead of passing in an argument, we walk the refernces looking for
-				// the "right" Xamarin.Mac and assume you are doing something
-				// Skip it if xamarin-full-framework or xamarin-system-framework passed in 
-				foreach (var asm in references) {
-					if (asm.EndsWith ("reference/full/Xamarin.Mac.dll", StringComparison.Ordinal)) {
-						IsUnifiedFullSystemFramework = true;
-						force45From40UnifiedSystemFull = targetFramework == TargetFramework.Net_4_0;
-						break;
-					}
-					if (asm.EndsWith ("mono/4.5/Xamarin.Mac.dll", StringComparison.Ordinal)) {
-						IsUnifiedFullXamMacFramework = true;
-						break;
-					}
-				}
-			}
-
-			if (IsUnifiedFullXamMacFramework) {
-				if (TargetFramework.Identifier != TargetFramework.Net_4_5.Identifier)
-					throw new MonoMacException (1405, true, Errors.MM1405, userTargetFramework);
-			}
-			if (IsUnifiedFullSystemFramework)
-			{
-				if (force45From40UnifiedSystemFull) {
-					Console.WriteLine ("Xamarin.Mac Unified Full System profile requires .NET 4.5, not .NET 4.0.");
-					FixReferences (x => x.Contains ("lib/mono/4.0"), x => x.Replace("lib/mono/4.0", "lib/mono/4.5"));
-					targetFramework = TargetFramework.Net_4_5;
-				}
-
-			}
 
 			if (IsUnifiedFullSystemFramework) {
 				// With newer Mono builds, the system assemblies passed to us by msbuild are
@@ -421,14 +350,8 @@ namespace Xamarin.Bundler {
 				FixReferences (x => monoAPIRegex.IsMatch (x) && !monoAPIFacadesRegex.IsMatch (x), x => x.Replace(monoAPIRegex.Match(x).Value, "lib/mono/4.5/"));
 			}
 
-			if (targetFramework == TargetFramework.Empty)
-				throw new MonoMacException (1404, true, Errors.MM1404, userTargetFramework);
-
 			if (Registrar == RegistrarMode.PartialStatic && App.LinkMode != LinkMode.None)
 				throw new MonoMacException (2110, true, Errors.MM2110);
-
-			if (IsClassic)
-				throw ErrorHelper.CreateError (143, Errors.MM0143);
 
 			// sanity check as this should never happen: we start out by not setting any
 			// Unified/Classic properties, and only IsUnifiedMobile if we are are on the
@@ -666,14 +589,18 @@ namespace Xamarin.Bundler {
 				if (references.Exists (a => Path.GetFileNameWithoutExtension (a).Equals (root_wo_ext)))
 					throw new MonoMacException (23, true, Errors.MM0023, root_wo_ext);
 
-				string monoFrameworkDirectory = TargetFramework.MonoFrameworkDirectory;
-				if (IsUnifiedFullXamMacFramework || IsUnifiedFullSystemFramework)
+				string monoFrameworkDirectory;
+
+				if (TargetFramework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
+					monoFrameworkDirectory = TargetFramework.Identifier;
+				} else {
 					monoFrameworkDirectory = "4.5";
+				}
 
 				fx_dir = Path.Combine (MonoDirectory, "lib", "mono", monoFrameworkDirectory);
 
 				if (!Directory.Exists (fx_dir))
-					throw new MonoMacException (1403, true, Errors.MM1403, "Directory", fx_dir, userTargetFramework);
+					throw new MonoMacException (1403, true, Errors.MM1403, "Directory", fx_dir, TargetFramework);
 
 				references.Add (root_assembly);
 				BuildTarget.Resolver.CommandLineAssemblies = references;
@@ -1340,7 +1267,6 @@ namespace Xamarin.Bundler {
 				SkippedAssemblies = App.LinkSkipped,
 				I18nAssemblies = App.I18n,
 				ExtraDefinitions = App.Definitions,
-				TargetFramework = TargetFramework,
 				Architecture = arch,
 				RuntimeOptions = App.RuntimeOptions,
 				MarshalNativeExceptionsState = !App.RequiresPInvokeWrappers ? null : new PInvokeWrapperGenerator ()
@@ -1687,7 +1613,7 @@ namespace Xamarin.Bundler {
 					string machine_config = Path.Combine (MonoDirectory, "etc", "mono", "4.5", "machine.config");
 
 					if (!File.Exists (machine_config))
-						throw new MonoMacException (1403, true, Errors.MM1403, "File", machine_config, userTargetFramework);
+						throw new MonoMacException (1403, true, Errors.MM1403, "File", machine_config, TargetFramework);
 
 					File.Copy (machine_config, Path.Combine (mmp_dir, "machine.config"), true);
 				}

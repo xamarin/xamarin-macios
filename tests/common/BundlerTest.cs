@@ -86,6 +86,63 @@ namespace Xamarin
 			}
 		}
 
+		[TestCase ("4.6")]
+		[TestCase ("4.7")]
+#if __MACOS__
+		[TestCase ("Xamarin.iOS,v1.0")]
+		[TestCase ("Xamarin.WatchOS,v1.0")]
+		[TestCase ("Xamarin.TVOS,v1.0")]
+#else
+		[TestCase ("Xamarin.Mac,Version=v2.0,Profile=Mobile")]
+		[TestCase ("Xamarin.Mac,Version=v4.5,Profile=Full")]
+		[TestCase ("Xamarin.Mac,Version=v4.5,Profile=System")]
+#endif
+		public void MX0070 (string target_framework)
+		{
+			using (var bundler = new BundlerTool ()) {
+				bundler.Sdk = BundlerTool.None;
+				bundler.TargetFramework = target_framework;
+#if MONOTOUCH
+				bundler.Action = MTouchAction.None;
+#endif
+				bundler.AssertExecuteFailure ();
+				bundler.AssertErrorPattern (70, $"Invalid target framework: {target_framework}.*");
+				bundler.AssertWarningCount (0);
+				bundler.AssertErrorCount (1);
+			}
+		}
+
+#if __MACOS__
+		[Test]
+		[TestCase ("2.0", "Xamarin.Mac,Version=v4.5,Profile=Full")]
+		[TestCase ("3.0", "Xamarin.Mac,Version=v4.5,Profile=Full")]
+		[TestCase ("3.5", "Xamarin.Mac,Version=v4.5,Profile=Full")]
+		[TestCase ("4.0", "Xamarin.Mac,Version=v4.5,Profile=Full")]
+		[TestCase ("4.5", "Xamarin.Mac,Version=v4.5,Profile=Full")]
+		[TestCase ("Xamarin.Mac,v2.0", "Xamarin.Mac,Version=v2.0,Profile=Mobile")]
+		[TestCase ("Xamarin.Mac,Version=v2.0,Profile=Whatever", "Xamarin.Mac,Version=v2.0,Profile=Mobile")]
+		[TestCase ("Xamarin.Mac,Version=v2.0", "Xamarin.Mac,Version=v2.0,Profile=Mobile")]
+		[TestCase ("Xamarin.Mac,Version=v2.0,Profile=Full", "Xamarin.Mac,Version=v2.0,Profile=Mobile")]
+		[TestCase ("Xamarin.Mac,Version=v4.0,Profile=Full", "Xamarin.Mac,Version=v4.5,Profile=Full")]
+		[TestCase ("Xamarin.Mac,Version=v4.6,Profile=Full", "Xamarin.Mac,Version=v4.5,Profile=Full")]
+		[TestCase ("Xamarin.Mac,Version=v2.0,Profile=System", "Xamarin.Mac,Version=v2.0,Profile=Mobile")]
+		[TestCase ("Xamarin.Mac,Version=v4.0,Profile=System", "Xamarin.Mac,Version=v4.5,Profile=System")]
+		[TestCase ("Xamarin.Mac,Version=v4.6,Profile=System", "Xamarin.Mac,Version=v4.5,Profile=System")]
+		public void MX0090 (string target_framework, string expected_target_framework)
+		{
+			using (var bundler = new BundlerTool ()) {
+				bundler.Sdk = BundlerTool.None;
+				bundler.TargetFramework = target_framework;
+				bundler.Linker = LinkerOption.DontLink; // This makes it possible to trigger a reliable error to shortcut mmp execution soon after showing the warning we're looking for.
+				bundler.AssertExecuteFailure ();
+				bundler.AssertWarning (90, $"The target framework '{target_framework}' is deprecated. Use '{expected_target_framework}' instead.");
+				bundler.AssertError (17, "You should provide a root assembly."); // We only want to test the MX0090 warning, and then stop doing stuff asap, which this error does.
+				bundler.AssertWarningCount (1);
+				bundler.AssertErrorCount (1);
+			}
+		}
+
+#endif
 
 		[Test]
 #if __MACOS__

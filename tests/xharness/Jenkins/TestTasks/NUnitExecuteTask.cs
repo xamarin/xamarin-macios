@@ -95,7 +95,7 @@ namespace Xharness.Jenkins.TestTasks
 				return Path.GetFileName (TestExecutable).Contains ("unit3-console");
 			}
 		}
-		public override IEnumerable<Log> AggregatedLogs {
+		public override IEnumerable<ILog> AggregatedLogs {
 			get {
 				return base.AggregatedLogs.Union (BuildTask.Logs);
 			}
@@ -131,7 +131,8 @@ namespace Xharness.Jenkins.TestTasks
 					args.Add ("-xml=" + xmlLog);
 					args.Add ("-labels");
 				}
-				await ExecuteProcessAsync (log, Harness.XIBuildPath, args);
+
+				await ExecuteProcessAsync (log, DirectoryUtilities.XIBuildPath, args);
 
 				if (ProduceHtmlReport) {
 					try {

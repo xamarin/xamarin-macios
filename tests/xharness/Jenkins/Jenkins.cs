@@ -63,7 +63,7 @@ namespace Xharness.Jenkins
 				if (string.IsNullOrEmpty (log_directory)) {
 					log_directory = Path.Combine (Harness.JENKINS_RESULTS_DIRECTORY, "tests");
 					if (IsServerMode)
-						log_directory = Path.Combine (log_directory, Harness.Timestamp);
+						log_directory = Path.Combine (log_directory, Helpers.Timestamp);
 				}
 				return log_directory;
 			}
@@ -109,7 +109,7 @@ namespace Xharness.Jenkins
 		{
 			loadable.Harness = Harness;
 			if (log == null)
-				log = Logs.Create ($"{name}-list-{Harness.Timestamp}.log", $"{name} Listing");
+				log = Logs.Create ($"{name}-list-{Helpers.Timestamp}.log", $"{name} Listing");
 			log.Description = $"{name} Listing (in progress)";
 
 			var capturedLog = log;
@@ -1267,7 +1267,7 @@ namespace Xharness.Jenkins
 		{
 			try {
 				Directory.CreateDirectory (LogDirectory);
-				ILog log = Logs.Create ($"Harness-{Harness.Timestamp}.log", "Harness log");
+				ILog log = Logs.Create ($"Harness-{Helpers.Timestamp}.log", "Harness log");
 				if (Harness.InCI)
 					log = Log.CreateAggregatedLog (log, new ConsoleLog ());
 				Harness.HarnessLog = MainLog = log;
@@ -1750,8 +1750,8 @@ namespace Xharness.Jenkins
 			try {
 				lock (report_lock) {
 					var report = Path.Combine (LogDirectory, "index.html");
-					var tmpreport = Path.Combine (LogDirectory, $"index-{Harness.Timestamp}.tmp.html");
-					var tmpmarkdown = string.IsNullOrEmpty (Harness.MarkdownSummaryPath) ? string.Empty : (Harness.MarkdownSummaryPath + $".{Harness.Timestamp}.tmp");
+					var tmpreport = Path.Combine (LogDirectory, $"index-{Helpers.Timestamp}.tmp.html");
+					var tmpmarkdown = string.IsNullOrEmpty (Harness.MarkdownSummaryPath) ? string.Empty : (Harness.MarkdownSummaryPath + $".{Helpers.Timestamp}.tmp");
 					using (var stream = new FileStream (tmpreport, FileMode.Create, FileAccess.ReadWrite)) {
 						using (var markdown_writer = (string.IsNullOrEmpty (tmpmarkdown) ? null : new StreamWriter (tmpmarkdown))) {
 							GenerateReportImpl (stream, markdown_writer);
@@ -2442,7 +2442,7 @@ namespace Xharness.Jenkins
 				writer.WriteLine ("</html>");
 			}
 		}
-		Dictionary<Log, Tuple<long, object>> log_data = new Dictionary<Log, Tuple<long, object>> ();
+		Dictionary<ILog, Tuple<long, object>> log_data = new Dictionary<ILog, Tuple<long, object>> ();
 
 		static string LinkEncode (string path)
 		{

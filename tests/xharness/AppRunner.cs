@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -56,7 +55,8 @@ namespace Xharness {
 		readonly ISimpleListenerFactory listenerFactory;
 		readonly IDeviceLoaderFactory devicesLoaderFactory;
 		readonly ICrashSnapshotReporterFactory snapshotReporterFactory;
-		
+		readonly ICaptureLogFactory captureLogFactory;
+
 		readonly RunMode mode;
 		readonly bool isSimulator;
 		readonly AppRunnerTarget target;
@@ -90,13 +90,13 @@ namespace Xharness {
 		public ILog MainLog { get; set; }	
 
 		public ILogs Logs { get; }
-		
 
 		public AppRunner (IProcessManager processManager,
 						  ISimulatorsLoaderFactory simulatorsFactory,
 						  ISimpleListenerFactory simpleListenerFactory,
 						  IDeviceLoaderFactory devicesFactory,
 						  ICrashSnapshotReporterFactory snapshotReporterFactory,
+						  ICaptureLogFactory captureLogFactory,
 						  AppRunnerTarget target,
 						  IHarness harness,
 						  ILog mainLog,
@@ -116,6 +116,7 @@ namespace Xharness {
 			this.listenerFactory = simpleListenerFactory ?? throw new ArgumentNullException (nameof (simpleListenerFactory));
 			this.devicesLoaderFactory = devicesFactory ?? throw new ArgumentNullException (nameof (devicesFactory));
 			this.snapshotReporterFactory = snapshotReporterFactory ?? throw new ArgumentNullException (nameof (snapshotReporterFactory));
+			this.captureLogFactory = captureLogFactory ?? throw new ArgumentNullException (nameof (captureLogFactory));
 			this.harness = harness ?? throw new ArgumentNullException (nameof (harness));
 			this.MainLog = mainLog ?? throw new ArgumentNullException (nameof (mainLog));
 			this.projectFilePath = projectFilePath ?? throw new ArgumentNullException (nameof (projectFilePath));
@@ -174,7 +175,7 @@ namespace Xharness {
 				return true;
 			
 			var sims = simulatorsLoaderFactory.CreateLoader();
-			await sims.LoadAsync (Logs.Create ($"simulator-list-{Harness.Timestamp}.log", "Simulator list"), false, false);
+			await sims.LoadAsync (Logs.Create ($"simulator-list-{Helpers.Timestamp}.log", "Simulator list"), false, false);
 			simulators = await sims.FindAsync (target, MainLog);
 
 			return simulators != null;
@@ -421,9 +422,6 @@ namespace Xharness {
 			}
 		}
 
-		[DllImport ("/usr/lib/libc.dylib")]
-		extern static IntPtr ttyname (int filedes);
-
 		public async Task<int> RunAsync ()
 		{
 			ILog device_system_log = null;
@@ -484,7 +482,7 @@ namespace Xharness {
 				args.Add ($"-setenv=NUNIT_HOSTNAME={ips}");
 			}
 
-			listener_log = Logs.Create ($"test-{mode.ToString().ToLower()}-{Harness.Timestamp}.log", LogType.TestLog.ToString (), timestamp: !useXmlOutput);
+			listener_log = Logs.Create ($"test-{mode.ToString().ToLower()}-{Helpers.Timestamp}.log", LogType.TestLog.ToString (), timestamp: !useXmlOutput);
 			var (transport, listener, listenerTmpFile) = listenerFactory.Create (mode, MainLog, listener_log, isSimulator, true, useXmlOutput);
 			
 			args.Add ($"-argument=-app-arg:-transport:{transport}");
@@ -550,32 +548,34 @@ namespace Xharness {
 					return 1;
 
 				if (mode != RunMode.WatchOS) {
-					var stderr_tty = Marshal.PtrToStringAuto (ttyname (2));
+					var stderr_tty = harness.GetStandardErrorTty();
 					if (!string.IsNullOrEmpty (stderr_tty)) {
 						args.Add ($"--stdout={stderr_tty}");
 						args.Add ($"--stderr={stderr_tty}");
 					} else {
-						var stdout_log = Logs.CreateFile ($"stdout-{Harness.Timestamp}.log", "Standard output");
-						var stderr_log = Logs.CreateFile ($"stderr-{Harness.Timestamp}.log", "Standard error");
+						var stdout_log = Logs.CreateFile ($"stdout-{Helpers.Timestamp}.log", "Standard output");
+						var stderr_log = Logs.CreateFile ($"stderr-{Helpers.Timestamp}.log", "Standard error");
 						args.Add ($"--stdout={stdout_log}");
 						args.Add ($"--stderr={stderr_log}");
 					}
 				}
 
-				var systemLogs = new List<CaptureLog> ();
+				var systemLogs = new List<ICaptureLog> ();
 				foreach (var sim in simulators) {
 					// Upload the system log
 					MainLog.WriteLine ("System log for the '{1}' simulator is: {0}", sim.SystemLog, sim.Name);
 					bool isCompanion = sim != simulator;
 
-					var log = new CaptureLog (Logs, Path.Combine (logDirectory, sim.Name + ".log"), sim.SystemLog, entire_file: harness.Action != HarnessAction.Jenkins)
-					{
-						Description = isCompanion ? LogType.CompanionSystemLog.ToString () : LogType.SystemLog.ToString (),
-					};
+					var logDescription = isCompanion ? LogType.CompanionSystemLog.ToString () : LogType.SystemLog.ToString ();
+					var log = captureLogFactory.Create (Logs,
+						Path.Combine (logDirectory, sim.Name + ".log"),
+						sim.SystemLog,
+						harness.Action != HarnessAction.Jenkins,
+						logDescription);
 					log.StartCapture ();
 					Logs.Add (log);
 					systemLogs.Add (log);
-					WrenchLog.WriteLine ("AddFile: {0}", log.Path);
+					WrenchLog.WriteLine ("AddFile: {0}", log.FullPath);
 				}
 
 				MainLog.WriteLine ("*** Executing {0}/{1} in the simulator ***", AppInformation.AppName, mode);
@@ -653,7 +653,7 @@ namespace Xharness {
 				
 				AddDeviceName (args);
 
-				device_system_log = Logs.Create ($"device-{deviceName}-{Harness.Timestamp}.log", "Device log");
+				device_system_log = Logs.Create ($"device-{deviceName}-{Helpers.Timestamp}.log", "Device log");
 				var logdev = new DeviceLogCapturer () {
 					Harness =  harness,
 					Log = device_system_log,
