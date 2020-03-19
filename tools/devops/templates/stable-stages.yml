@@ -69,13 +69,13 @@ stages:
   dependsOn: []    # this removes the implicit dependency on previous stage and causes this to run in parallel
   jobs:
   - template: job-matrix.yml # all the smart stuff happens in the template, just needed to set the params
-   parameters:
-     demands: ${{ parameters.iOS32Demand }} # old QA lab capability, might change
-     deviceLabel: 'run-ios-32-tests'
-     variation: "iOS32b"
-     pool: ${{ parameters.pool }} 
-     timeout: ${{ parameters.timeout }} 
-     maxParallel: ${{ parameters.maxParallel }} 
+    parameters:
+      demands: ${{ parameters.iOS32Demand }} # old QA lab capability, might change
+      deviceLabel: 'run-ios-32-tests'
+      variation: "iOS32b"
+      pool: ${{ parameters.pool }} 
+      timeout: ${{ parameters.timeout }} 
+      maxParallel: ${{ parameters.maxParallel }} 
 
 - stage: monitoring
   displayName: 'Device test monitoring'
