@@ -37,10 +37,37 @@
 	}
 
 	/// <summary>
-	/// Specify which device (when many are present) the [install|lauch|kill|log]dev command applies
+	/// Specifies the device type to launch the simulator as.
+	/// </summary>
+	public sealed class DeviceArgument : SingleValueArgument {
+		public DeviceArgument (string deviceType) : base ("device", deviceType)
+		{
+		}
+	}
+
+	/// <summary>
+	/// Specify which device (when many are present) the [install|lauch|kill|log]dev command applies.
 	/// </summary>
 	public sealed class DeviceNameArgument : SingleValueArgument {
 		public DeviceNameArgument (string deviceName) : base ("devname", deviceName)
+		{
+		}
+	}
+
+	/// <summary>
+	/// Install the specified iOS app bundle on the device.
+	/// </summary>
+	public sealed class InstallAppArgument : SingleValueArgument {
+		public InstallAppArgument (string appPath) : base ("installdev", appPath)
+		{
+		}
+	}
+
+	/// <summary>
+	/// Uninstall the specified bundle id from the device.
+	/// </summary>
+	public sealed class UninstallAppArgument : SingleValueArgument {
+		public UninstallAppArgument (string appBundleId) : base ("uninstalldevbundleid", appBundleId)
 		{
 		}
 	}
@@ -87,6 +114,12 @@
 	/// </summary>
 	public sealed class ListExtraDataArgument : OptionArgument {
 		public ListExtraDataArgument () : base ("list-extra-data")
+		{
+		}
+	}
+
+	public sealed class VerbosityArgument : OptionArgument {
+		public VerbosityArgument () : base ("v")
 		{
 		}
 	}

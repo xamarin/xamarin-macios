@@ -13,6 +13,7 @@ using Xharness.Jenkins.TestTasks;
 using Xharness.Listeners;
 using Xharness.Logging;
 using Xharness.Utilities;
+using Xharness.Execution.Mlaunch;
 
 namespace Xharness {
 
@@ -245,21 +246,20 @@ namespace Xharness {
 
 			FindDevice ();
 
-			var args = new List<string> ();
+			var args = new MlaunchArguments ();
+
 			if (!string.IsNullOrEmpty (harness.XcodeRoot)) {
-				args.Add ("--sdkroot");
-				args.Add (harness.XcodeRoot);
+				args.Add (new SdkRootArgument (harness.XcodeRoot));
 			}
+
 			for (int i = -1; i < harness.Verbosity; i++)
-				args.Add ("-v");
-			
-			args.Add ("--installdev");
-			args.Add (AppInformation.AppPath);
-			AddDeviceName (args, companionDeviceName ?? deviceName);
+				args.Add (new VerbosityArgument ());
+
+			args.Add (new InstallAppArgument (AppInformation.AppPath));
+			args.Add (new DeviceNameArgument (companionDeviceName ?? deviceName));
 
 			if (mode == RunMode.WatchOS) {
-				args.Add ("--device");
-				args.Add ("ios,watchos");
+				args.Add (new DeviceArgument("ios,watchos"));
 			}
 
 			var totalSize = Directory.GetFiles (AppInformation.AppPath, "*", SearchOption.AllDirectories).Select ((v) => new FileInfo (v).Length).Sum ();
@@ -274,18 +274,18 @@ namespace Xharness {
 				throw new InvalidOperationException ("Uninstalling from a simulator is not supported.");
 
 			FindDevice ();
+			
+			var args = new MlaunchArguments ();
 
-			var args = new List<string> ();
 			if (!string.IsNullOrEmpty (harness.XcodeRoot)) {
-				args.Add ("--sdkroot");
-				args.Add (harness.XcodeRoot);
+				args.Add (new SdkRootArgument (harness.XcodeRoot));
 			}
-			for (int i = -1; i < harness.Verbosity; i++)
-				args.Add ("-v");
 
-			args.Add ("--uninstalldevbundleid");
-			args.Add (AppInformation.BundleIdentifier);
-			AddDeviceName (args, companionDeviceName ?? deviceName);
+			for (int i = -1; i < harness.Verbosity; i++)
+				args.Add (new VerbosityArgument ());
+
+			args.Add (new UninstallAppArgument (AppInformation.BundleIdentifier));
+			args.Add (new DeviceNameArgument (companionDeviceName ?? deviceName));
 
 			return await processManager.ExecuteCommandAsync (harness.MlaunchPath, args, MainLog, TimeSpan.FromMinutes (1));
 		}
@@ -427,15 +427,15 @@ namespace Xharness {
 			if (!isSimulator)
 				FindDevice ();
 
-			var args = new List<string> ();
+			var args = new MlaunchArguments ();
 
 			if (!string.IsNullOrEmpty (harness.XcodeRoot)) {
-				args.Add ("--sdkroot");
-				args.Add (harness.XcodeRoot);
+				args.Add (new SdkRootArgument (harness.XcodeRoot));
 			}
 
 			for (int i = -1; i < harness.Verbosity; i++)
-				args.Add ("-v");
+				args.Add (new VerbosityArgument ());
+
 			args.Add ("-argument=-connection-mode");
 			args.Add ("-argument=none"); // This will prevent the app from trying to connect to any IDEs
 			args.Add ("-argument=-app-arg:-autostart");
