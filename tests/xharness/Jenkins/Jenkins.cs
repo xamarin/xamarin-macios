@@ -20,6 +20,7 @@ namespace Xharness.Jenkins
 		readonly ISimulatorsLoader simulators;
 		readonly IDeviceLoader devices;
 		readonly IProcessManager processManager;
+		readonly IResultParser resultParser;
 		bool populating = true;
 
 		public Harness Harness { get; }
@@ -97,9 +98,10 @@ namespace Xharness.Jenkins
 			return new Resources (resources);
 		}
 
-		public Jenkins (Harness harness, IProcessManager processManager)
+		public Jenkins (Harness harness, IProcessManager processManager, IResultParser resultParser)
 		{
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
+			this.resultParser = resultParser ?? throw new ArgumentNullException (nameof (resultParser));
 			Harness = harness ?? throw new ArgumentNullException (nameof (harness));
 			simulators = new Simulators (harness, processManager);
 			devices = new Devices (harness, processManager);
@@ -2356,8 +2358,8 @@ namespace Xharness.Jenkins
 									} else if (log.Description == LogType.NUnitResult.ToString () || log.Description == LogType.XmlLog.ToString () ) {
 										try {
 											if (File.Exists (log.FullPath) && new FileInfo (log.FullPath).Length > 0) {
-												if (XmlResultParser.IsValidXml (log.FullPath, out var jargon)) {
-													XmlResultParser.GenerateTestReport (writer, log.FullPath, jargon);
+												if (resultParser.IsValidXml (log.FullPath, out var jargon)) {
+													resultParser.GenerateTestReport (writer, log.FullPath, jargon);
 												}
 											}
 										} catch (Exception ex) {

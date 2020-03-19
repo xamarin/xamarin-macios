@@ -16,6 +16,7 @@ namespace Xharness.Jenkins.TestTasks
 		public TimeSpan Timeout = TimeSpan.FromMinutes (10);
 		public double TimeoutMultiplier { get; set; } = 1;
 		IProcessManager ProcessManager { get; } = new ProcessManager ();
+		IResultParser ResultParser { get; } = new XmlResultParser ();
 		public string WorkingDirectory;
 
 		public RunTestTask (BuildToolTask build_task)
@@ -71,7 +72,7 @@ namespace Xharness.Jenkins.TestTasks
 				}
 				FailureMessage = BuildTask.FailureMessage;
 				if (Harness.InCI && BuildTask is MSBuildTask projectTask)
-					XmlResultParser.GenerateFailure (Logs, "build", projectTask.TestName, projectTask.Variation, $"App Build {projectTask.TestName} {projectTask.Variation}", $"App could not be built {FailureMessage}.", projectTask.BuildLog.FullPath, Harness.XmlJargon);
+					ResultParser.GenerateFailure (Logs, "build", projectTask.TestName, projectTask.Variation, $"App Build {projectTask.TestName} {projectTask.Variation}", $"App could not be built {FailureMessage}.", projectTask.BuildLog.FullPath, Harness.XmlJargon);
 			} else {
 				ExecutionResult = TestExecutingResult.Built;
 			}

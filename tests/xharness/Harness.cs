@@ -112,6 +112,7 @@ namespace Xharness
 		public HashSet<string> Labels { get; }
 		public XmlResultJargon XmlJargon { get; }
 		public IProcessManager ProcessManager { get; }
+		public IResultParser ResultParser { get; }
 
 		// This is the maccore/tests directory.
 		static string root_directory;
@@ -185,9 +186,10 @@ namespace Xharness
 
 		public string GetStandardErrorTty () => Helpers.GetTerminalName (2);
 
-		public Harness (IProcessManager processManager, HarnessAction action, HarnessConfiguration configuration)
+		public Harness (IProcessManager processManager, IResultParser resultParser, HarnessAction action, HarnessConfiguration configuration)
 		{
 			ProcessManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
+			ResultParser = resultParser ?? throw new ArgumentNullException (nameof (resultParser));
 			Action = action;
 
 			if (configuration is null)
@@ -601,6 +603,7 @@ namespace Xharness
 					new DeviceLoaderFactory (this, ProcessManager),
 					new CaptureLogFactory (),
 					new DeviceLogCapturerFactory (ProcessManager, XcodeRoot, MlaunchPath),
+					new XmlResultParser (),
 					target,
 					this,
 					HarnessLog,
@@ -628,6 +631,7 @@ namespace Xharness
 					new DeviceLoaderFactory (this, ProcessManager),
 					new CaptureLogFactory (),
 					new DeviceLogCapturerFactory (ProcessManager, XcodeRoot, MlaunchPath),
+					new XmlResultParser (),
 					target,
 					this,
 					HarnessLog,
@@ -653,6 +657,7 @@ namespace Xharness
 					new DeviceLoaderFactory (this, ProcessManager),
 					new CaptureLogFactory (),
 					new DeviceLogCapturerFactory (ProcessManager, XcodeRoot, MlaunchPath),
+					new XmlResultParser (),
 					target,
 					this,
 					HarnessLog,
@@ -732,7 +737,7 @@ namespace Xharness
 				AutoConfigureMac (false);
 			}
 
-			var jenkins = new Jenkins.Jenkins (this, ProcessManager);
+			var jenkins = new Jenkins.Jenkins (this, ProcessManager, ResultParser);
 			return jenkins.Run ();
 		}
 

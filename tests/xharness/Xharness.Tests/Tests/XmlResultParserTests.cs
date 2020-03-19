@@ -19,6 +19,20 @@ namespace Xharness.Tests
 			[XmlResultJargon.xUnit] = ValidatexUnitFailure,
 		};
 
+		XmlResultParser resultParser;
+
+		[SetUp]
+		public void SetUp ()
+		{
+			resultParser = new XmlResultParser ();
+		}
+
+		[TearDown]
+		public void TearDown ()
+		{
+			resultParser = null;
+		}
+
 		string CreateResultSample (XmlResultJargon jargon, bool includePing = false)
 		{
 			string sampleFileName = null;
@@ -56,7 +70,7 @@ namespace Xharness.Tests
 		{
 			var path = Path.GetTempFileName ();
 			File.Delete (path);
-			Assert.IsFalse (XmlResultParser.IsValidXml (path, out var jargon), "missing file");
+			Assert.IsFalse (resultParser.IsValidXml (path, out var jargon), "missing file");
 		}
 
 		[TestCase (XmlResultJargon.NUnitV2)]
@@ -66,7 +80,7 @@ namespace Xharness.Tests
 		public void IsValidXmlTest (XmlResultJargon jargon)
 		{
 			var path = CreateResultSample (jargon);
-			Assert.IsTrue (XmlResultParser.IsValidXml (path, out var resultJargon), "is valid");
+			Assert.IsTrue (resultParser.IsValidXml (path, out var resultJargon), "is valid");
 			Assert.AreEqual (jargon, resultJargon, "jargon");
 			File.Delete (path);
 		}
@@ -79,7 +93,7 @@ namespace Xharness.Tests
 		public void GetXmlFilePathTest (string prefix, XmlResultJargon jargon)
 		{
 			var orignialPath = "/path/to/a/xml/result.xml";
-			var xmlPath = XmlResultParser.GetXmlFilePath (orignialPath, jargon);
+			var xmlPath = resultParser.GetXmlFilePath (orignialPath, jargon);
 			var fileName = Path.GetFileName (xmlPath);
 			StringAssert.StartsWith (prefix, fileName, "xml prefix");
 		}
@@ -91,8 +105,8 @@ namespace Xharness.Tests
 		{
 			var path = CreateResultSample (jargon, includePing: true);
 			var cleanPath = path + "_clean";
-			XmlResultParser.CleanXml (path, cleanPath);
-			Assert.IsTrue (XmlResultParser.IsValidXml (cleanPath, out var resultJargon), "is valid");
+			resultParser.CleanXml (path, cleanPath);
+			Assert.IsTrue (resultParser.IsValidXml (cleanPath, out var resultJargon), "is valid");
 			Assert.AreEqual (jargon, resultJargon, "jargon");
 			File.Delete (path);
 			File.Delete (cleanPath);
@@ -104,8 +118,8 @@ namespace Xharness.Tests
 			// similar to CleanXmlPingTest but using TouchUnit, so we do not want to see the extra nodes
 			var path = CreateResultSample (XmlResultJargon.TouchUnit, includePing: true);
 			var cleanPath = path + "_clean";
-			XmlResultParser.CleanXml (path, cleanPath);
-			Assert.IsTrue (XmlResultParser.IsValidXml (cleanPath, out var resultJargon), "is valid");
+			resultParser.CleanXml (path, cleanPath);
+			Assert.IsTrue (resultParser.IsValidXml (cleanPath, out var resultJargon), "is valid");
 			Assert.AreEqual (XmlResultJargon.NUnitV2, resultJargon, "jargon");
 			// load the xml, ensure we do not have the nodes we removed
 			var doc = XDocument.Load (cleanPath);
@@ -121,10 +135,10 @@ namespace Xharness.Tests
 			string appName = "TestApp";
 			var path = CreateResultSample (XmlResultJargon.NUnitV3);
 			var cleanPath = path + "_clean";
-			XmlResultParser.CleanXml (path, cleanPath);
+			resultParser.CleanXml (path, cleanPath);
 			var updatedXml = path + "_updated";
 			var logs = new [] { "/first/path", "/second/path", "/last/path" };
-			XmlResultParser.UpdateMissingData (cleanPath, updatedXml, appName, logs);
+			resultParser.UpdateMissingData (cleanPath, updatedXml, appName, logs);
 			// assert that the required info was updated
 			Assert.IsTrue (File.Exists (updatedXml), "file exists");
 			var doc = XDocument.Load (updatedXml);
@@ -273,7 +287,7 @@ namespace Xharness.Tests
 			// return the two temp files so that we can later validate that everything is present
 			_ = xmlLogMock.Setup (xmlLog => xmlLog.FullPath).Returns (finalPath);
 
-			XmlResultParser.GenerateFailure (logs.Object, src, appName, variation, title, message, stderrPath, jargon);
+			resultParser.GenerateFailure (logs.Object, src, appName, variation, title, message, stderrPath, jargon);
 
 			// actual assertions do happen in the validation functions
 			ValidationMap [jargon] (src, appName, variation, title, message, stderrMessage, finalPath, failureLogs.Length);
