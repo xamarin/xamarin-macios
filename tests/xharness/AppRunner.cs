@@ -427,15 +427,13 @@ namespace Xharness {
 			if (!isSimulator)
 				FindDevice ();
 
-			var crashLogs = new Logs (Logs.Directory);
-
-			ICrashSnapshotReporter crash_reports = snapshotReporterFactory.Create (MainLog, crashLogs, isDevice: !isSimulator, deviceName);
-
 			var args = new List<string> ();
+
 			if (!string.IsNullOrEmpty (harness.XcodeRoot)) {
 				args.Add ("--sdkroot");
 				args.Add (harness.XcodeRoot);
 			}
+
 			for (int i = -1; i < harness.Verbosity; i++)
 				args.Add ("-v");
 			args.Add ("-argument=-connection-mode");
@@ -539,12 +537,16 @@ namespace Xharness {
 				args.Add ("--disable-memory-limits");
 
 			var timeout = TimeSpan.FromMinutes (harness.Timeout * timeoutMultiplier);
+
+			var crashLogs = new Logs (Logs.Directory);
+			ICrashSnapshotReporter crashReporter = snapshotReporterFactory.Create (MainLog, crashLogs, isDevice: !isSimulator, deviceName);
+
 			if (isSimulator) {
 				if (!await FindSimulatorAsync ())
 					return 1;
 
 				if (mode != RunMode.WatchOS) {
-					var stderr_tty = harness.GetStandardErrorTty();
+					var stderr_tty = harness.GetStandardErrorTty ();
 					if (!string.IsNullOrEmpty (stderr_tty)) {
 						args.Add ($"--stdout={stderr_tty}");
 						args.Add ($"--stderr={stderr_tty}");
@@ -584,7 +586,7 @@ namespace Xharness {
 
 				args.Add ($"--device=:v2:udid={simulator.UDID}");
 
-				await crash_reports.StartCaptureAsync ();
+				await crashReporter.StartCaptureAsync ();
 
 				MainLog.WriteLine ("Starting test run");
 
@@ -644,7 +646,7 @@ namespace Xharness {
 
 				foreach (var log in systemLogs)
 					log.StopCapture ();
-				
+
 			} else {
 				MainLog.WriteLine ("*** Executing {0}/{1} on device '{2}' ***", AppInformation.AppName, mode, deviceName);
 
@@ -653,15 +655,15 @@ namespace Xharness {
 				} else {
 					args.Add ("--wait-for-exit");
 				}
-				
+
 				AddDeviceName (args);
 
-				deviceSystemLog = Logs.Create ($"device-{deviceName}-{Helpers.Timestamp}.log", "Device log");
-				var deviceLogCapturer = deviceLogCapturerFactory.Create (harness.HarnessLog,deviceSystemLog, deviceName);
+				var deviceSystemLog = Logs.Create ($"device-{deviceName}-{Helpers.Timestamp}.log", "Device log");
+				var deviceLogCapturer = deviceLogCapturerFactory.Create (harness.HarnessLog, deviceSystemLog, deviceName);
 				deviceLogCapturer.StartCapture ();
 
 				try {
-					await crash_reports.StartCaptureAsync ();
+					await crashReporter.StartCaptureAsync ();
 
 					MainLog.WriteLine ("Starting test run");
 
@@ -669,10 +671,11 @@ namespace Xharness {
 					// We need to check for MT1111 (which means that mlaunch won't wait for the app to exit).
 					var callbackLog = new CallbackLog ((line) => {
 						// MT1111: Application launched successfully, but it's not possible to wait for the app to exit as requested because it's not possible to detect app termination when launching using gdbserver
-						waitedForExit &= line?.Contains ("MT1111: ") != true;
+						waitedForExit &= !line?.Contains ("MT1111: ") != true;
 						if (line?.Contains ("error MT1007") == true)
 							launch_failure = true;
 					});
+
 					var runLog = Log.CreateAggregatedLog (callbackLog, MainLog);
 					var timeoutWatch = Stopwatch.StartNew ();
 					var result = await processManager.ExecuteCommandAsync (harness.MlaunchPath, args, runLog, timeout, cancellation_token: cancellation_source.Token);
@@ -734,7 +737,7 @@ namespace Xharness {
 			if (!success.HasValue)
 				success = false;
 
-			await crash_reports.EndCaptureAsync (TimeSpan.FromSeconds (success.Value ? 0 : 5));
+			await crashReporter.EndCaptureAsync (TimeSpan.FromSeconds (success.Value ? 0 : 5));
 
 			if (timed_out) {
 				Result = TestExecutingResult.TimedOut;

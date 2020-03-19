@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Moq;
@@ -340,6 +341,7 @@ namespace Xharness.Tests {
 				devicesFactory,
 				crashReporterFactory.Object,
 				captureLogFactory.Object,
+				Mock.Of<IDeviceLogCapturerFactory> (),
 				AppRunnerTarget.Simulator_tvOS,
 				GetMockedHarness (),
 				mainLog.Object,
@@ -394,7 +396,7 @@ namespace Xharness.Tests {
 			var listenerLogFile = Mock.Of<ILogFile> (x => x.FullPath == Path.GetTempFileName());
 
 			logs
-				.Setup (x => x.Create (It.Is<string> (s => s.StartsWith("test-sim64-")), "TestLog", It.IsAny<bool> ()))
+				.Setup (x => x.Create (It.Is<string> (s => s.StartsWith("test-sim64-")), "TestLog", It.IsAny<bool?> ()))
 				.Returns (listenerLogFile);
 
 			simpleListener.SetupGet (x => x.ConnectedTask).Returns (Task.CompletedTask);
@@ -438,6 +440,7 @@ namespace Xharness.Tests {
 				devicesFactory,
 				crashReporterFactory.Object,
 				captureLogFactory.Object,
+				Mock.Of<IDeviceLogCapturerFactory> (),
 				AppRunnerTarget.Simulator_iOS64,
 				harness,
 				mainLog.Object,
@@ -496,6 +499,7 @@ namespace Xharness.Tests {
 				devicesFactory,
 				crashReporterFactory.Object,
 				Mock.Of<ICaptureLogFactory> (),
+				Mock.Of<IDeviceLogCapturerFactory> (),
 				AppRunnerTarget.Device_tvOS,
 				GetMockedHarness(),
 				mainLog.Object,
@@ -519,44 +523,52 @@ namespace Xharness.Tests {
 			// Crash reporter
 			var crashReporterFactory = new Mock<ICrashSnapshotReporterFactory> ();
 			crashReporterFactory
-				.Setup (x => x.Create (mainLog.Object, It.IsAny<ILogs> (), false, null))
+				.Setup (x => x.Create (mainLog.Object, It.IsAny<ILogs> (), true, "Test iPad"))
 				.Returns (snapshotReporter.Object);
+
+			var deviceSystemLog = new Mock<ILogFile> ();
+			deviceSystemLog.SetupGet(x => x.FullPath).Returns(Path.GetTempFileName());
 
 			var listenerLogFile = Mock.Of<ILogFile> (x => x.FullPath == Path.GetTempFileName());
 
 			logs
-				.Setup (x => x.Create (It.Is<string> (s => s.StartsWith("test-sim64-")), "TestLog", It.IsAny<bool> ()))
+				.Setup (x => x.Create (It.Is<string> (s => s.StartsWith("test-ios-")), "TestLog", It.IsAny<bool?> ()))
 				.Returns (listenerLogFile);
+
+			logs
+				.Setup (x => x.Create (It.Is<string> (s => s.StartsWith("device-Test iPad-")), "Device log", It.IsAny<bool?> ()))
+				.Returns (deviceSystemLog.Object);
 
 			simpleListener.SetupGet (x => x.ConnectedTask).Returns (Task.CompletedTask);
 
-			/*var captureLog = new Mock<ICaptureLog> ();
-			captureLog.SetupGet (x => x.FullPath).Returns (simulatorLogPath);
+			var deviceLogCapturer = new Mock<IDeviceLogCapturer> ();
 
-			var captureLogFactory = new Mock<ICaptureLogFactory> ();
-			captureLogFactory
-				.Setup (x => x.Create (
-					logs.Object,
-					Path.Combine (logs.Object.Directory, simulator.Object.Name + ".log"),
-					simulator.Object.SystemLog,
-					true,
-					It.IsAny<string> ()))
-				.Returns (captureLog.Object);*/
+			var deviceLogCapturerFactory = new Mock<IDeviceLogCapturerFactory> ();
+			deviceLogCapturerFactory
+				.Setup (x => x.Create (mainLog.Object, deviceSystemLog.Object, "Test iPad"))
+				.Returns (deviceLogCapturer.Object);
+			
+			var ips = new StringBuilder ();
+			var ipAddresses = System.Net.Dns.GetHostEntry (System.Net.Dns.GetHostName ()).AddressList;
+			for (int i = 0; i < ipAddresses.Length; i++) {
+				if (i > 0)
+					ips.Append (',');
+				ips.Append (ipAddresses [i].ToString ());
+			}
 
 			var expectedArgs = $"--sdkroot {xcodePath} -v -v -argument=-connection-mode -argument=none " +
 				$"-argument=-app-arg:-autostart -setenv=NUNIT_AUTOSTART=true -argument=-app-arg:-autoexit " +
 				$"-setenv=NUNIT_AUTOEXIT=true -argument=-app-arg:-enablenetwork -setenv=NUNIT_ENABLE_NETWORK=true " +
-				$"-setenv=DISABLE_SYSTEM_PERMISSION_TESTS=1 -argument=-app-arg:-hostname:127.0.0.1 " +
-				$"-setenv=NUNIT_HOSTNAME=127.0.0.1 -argument=-app-arg:-transport:Tcp -setenv=NUNIT_TRANSPORT=TCP " +
-				$"-argument=-app-arg:-hostport:{simpleListener.Object.Port} -setenv=NUNIT_HOSTPORT={simpleListener.Object.Port} " +
-				$"-setenv=env1=value1 -setenv=env2=value2 --launchsim {appPath} --stdout=tty1 --stderr=tty1 " +
-				$"--device=:v2:udid=";
+				$"-setenv=DISABLE_SYSTEM_PERMISSION_TESTS=1 -argument=-app-arg:-hostname:{ips} -setenv=NUNIT_HOSTNAME={ips} " +
+				$"-argument=-app-arg:-transport:Tcp -setenv=NUNIT_TRANSPORT=TCP -argument=-app-arg:-hostport:{simpleListener.Object.Port} " +
+				$"-setenv=NUNIT_HOSTPORT={simpleListener.Object.Port} -setenv=env1=value1 -setenv=env2=value2 " +
+				$"--launchdev {appPath} --disable-memory-limits --wait-for-exit --devname Test iPad";
 
 			processManager
 				.Setup (x => x.ExecuteCommandAsync (
 					mlaunchPath,
 					It.Is<IList<string>> (args => string.Join(" ", args) == expectedArgs),
-					mainLog.Object,
+					It.IsAny<ILog> (),
 					TimeSpan.FromMinutes (harness.Timeout * 2),
 					null,
 					It.IsAny<CancellationToken> ()))
@@ -569,6 +581,7 @@ namespace Xharness.Tests {
 				devicesFactory,
 				crashReporterFactory.Object,
 				Mock.Of<ICaptureLogFactory> (),
+				deviceLogCapturerFactory.Object,
 				AppRunnerTarget.Device_iOS,
 				harness,
 				mainLog.Object,
@@ -581,6 +594,8 @@ namespace Xharness.Tests {
 
 			// Verify
 			Assert.AreEqual (0, result);
+
+			processManager.VerifyAll ();
 			
 			mainLog.Verify (x => x.WriteLine ("Test run started"));
 			mainLog.Verify (x => x.WriteLine ("Test run completed"));
@@ -589,14 +604,20 @@ namespace Xharness.Tests {
 			simpleListener.Verify (x => x.StartAsync (), Times.AtLeastOnce);
 			simpleListener.Verify (x => x.Cancel (), Times.AtLeastOnce);
 			simpleListener.Verify (x => x.Dispose (), Times.AtLeastOnce);
+			
+			snapshotReporter.Verify (x => x.StartCaptureAsync (), Times.AtLeastOnce);
+			snapshotReporter.Verify (x => x.StartCaptureAsync (), Times.AtLeastOnce);
+
+			deviceSystemLog.Verify (x => x.Dispose (), Times.AtLeastOnce);
 		}
 
-		private IHarness GetMockedHarness ()
+		IHarness GetMockedHarness ()
 		{
 			return Mock.Of<IHarness> (x => x.Action == HarnessAction.Run
 				&& x.XcodeRoot == xcodePath
 				&& x.MlaunchPath == mlaunchPath
 				&& x.Verbosity == 1
+				&& x.HarnessLog == mainLog.Object
 				&& x.LogDirectory == logs.Object.Directory
 				&& x.InCI == false
 				&& x.EnvironmentVariables == new Dictionary<string, string> () {
