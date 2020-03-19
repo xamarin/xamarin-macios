@@ -11,6 +11,7 @@
 # timeout: The timeout of the jobs in minutes.
 # maxParallel: The amount of parallel jobs to be used
 
+
 parameters:
 - name: variation 
   type: string 
@@ -56,10 +57,10 @@ jobs:
         CONTEXT: '${{ parameters.variation }}'
         TESTS_EXTRA_ARGUMENTS: '--label=${{ parameters.deviceLabel }},run-xamarin-tests' # run all tests but the bcl ones
         TESTS: 'Xamarin'
-      # Monotouch:
-      #   CONTEXT: '${{ parameters.variation }}-monotouch-DDFun'
-      #   TESTS_EXTRA_ARGUMENTS: '--label=${{ parameters.deviceLabel }},run-monotouch-tests' # run all tests but the bcl ones
-      #   TESTS: 'Monotouch'
+      Monotouch:
+        CONTEXT: '${{ parameters.variation }}-monotouch-DDFun'
+        TESTS_EXTRA_ARGUMENTS: '--label=${{ parameters.deviceLabel }},run-monotouch-tests' # run all tests but the bcl ones
+        TESTS: 'Monotouch'
       # xUnitBCL:
       #   CONTEXT: '${{ parameters.variation }}-xUnit-BCL-DDFun'
       #   TESTS_EXTRA_ARGUMENTS: '--label=${{ parameters.deviceLabel }},run-new-bcl-tests,skip-mscorlib-tests' # run only the new bcl tests

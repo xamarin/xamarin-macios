@@ -10,12 +10,13 @@ $target_url = $Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI + "$Env:SYSTEM_TEAMPROJECT
 
 # add real device type here
 # add description back in
+# state: only report failure, so state is always failure but we can also use AGENT_JOBSTATUS to avoid hardcoding values
 $json_payload = @"
 {
-    "state" : "failure",
+    "state" : "$Env:AGENT_JOBSTATUS",
     "target_url" : "$target_url",
-    "description" : "description placeholder", 
-    "context" : "FAILURE VSTS: device tests"
+    "description" : "$Env:SYSTEM_JOBNAME", 
+    "context" : "$Env:CONTEXT"
 }
 "@
 
@@ -39,10 +40,7 @@ $response = Invoke-RestMethod @params
 
 $response | ConvertTo-Json | Write-Host
 
-# -Uri $url
-# -Method Post
-# -Body $json_payload
-#$response = Invoke-RestMethod -Uri $url -ContentType application/json  -Method Post -Body @json_payload
+
 <# 
 (
 	printf '{\n'
@@ -54,20 +52,3 @@ $response | ConvertTo-Json | Write-Host
 ) > "$JSONFILE"
 
 if test -n "$VERBOSE"; then
-	echo "JSON file:"
-	sed 's/^/    /' "$JSONFILE";
-fi
-
-if ! curl -f -v -H "Authorization: token $TOKEN" -H "User-Agent: command line tool" -d "@$JSONFILE" "https://api.github.com/repos/xamarin/xamarin-macios/statuses/$HASH" > "$LOGFILE" 2>&1; then
-	echo "Failed to add status."
-	echo "curl output:"
-	sed 's/^/    /' "$LOGFILE"
-	echo "Json body:"
-	sed 's/^/    /' "$JSONFILE"
-	exit 1 #>
-
-# 	printf "\t\"state\": \"%s\",\n" "$STATE"
-#	printf "\t\"target_url\": \"%s\",\n" "$TARGET_URL"
-#	printf "\t\"description\": %s,\n" "$(echo -n "$DESCRIPTION" | python -c 'import json,sys; print(json.dumps(sys.stdin.read()))')"
-#	printf "\t\"context\": \"%s\"\n" "$CONTEXT"
-# ./jenkins/add-commit-status.sh --token="$TOKEN" --hash="$BUILD_REVISION" --state="$GH_STATE" --target-url="$VSTS_BUILD_URL" --description="$DESCRIPTION" --context="VSTS: device tests ($DEVICE_TYPE)"
