@@ -80,8 +80,8 @@ stages:
 - stage: monitoring
   displayName: 'Device test monitoring'
   dependsOn:
-#  - iOSDeviceTests
-  - tvOSDeviceTests
+  - iOSDeviceTests
+#  - tvOSDeviceTests
 # - iOS32DeviceTests 
 
   condition: always() # always notify of what happened.
