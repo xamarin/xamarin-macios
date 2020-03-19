@@ -50,13 +50,13 @@ namespace Xharness
 		HashSet<string> initialCrashes;
 
 		public CrashSnapshotReporter (IProcessManager processManager,
-										ILog log,
-										ILogs logs,
-										string xcodeRoot,
-										string mlaunchPath,
-										bool isDevice,
-										string deviceName,
-										Func<string> tempFileProvider = null)
+			ILog log,
+			ILogs logs,
+			string xcodeRoot,
+			string mlaunchPath,
+			bool isDevice,
+			string deviceName,
+			Func<string> tempFileProvider = null)
 		{
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 			this.log = log ?? throw new ArgumentNullException (nameof (log));
