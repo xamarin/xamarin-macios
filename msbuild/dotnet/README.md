@@ -32,7 +32,7 @@ To use the package locally without installing it:
     curl -LO https://bosstoragemirror.blob.core.windows.net/wrench/jenkins/net5-preview/92fc89d8ba0b743e207e13a666cb9c96add38f04/6/package/Xamarin.iOS.Sdk.13.19.0-alpha.242.nupkg
     ```
 
-* Add this `NuGet.config` to the directory (remember to change the `local-dotnet-feed` path):
+* Add this `NuGet.config` to the directory:
 
     ```xml
     <?xml version="1.0" encoding="utf-8"?>
