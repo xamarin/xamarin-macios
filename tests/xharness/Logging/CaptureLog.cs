@@ -2,11 +2,28 @@
 using System.IO;
 
 namespace Xharness.Logging {
+	
+	public interface ICaptureLogFactory {
+		ICaptureLog Create (ILogs logs, string logDirectory, string systemLogPath, bool entireFile, string description = null);
+	}
+
+	public class CaptureLogFactory : ICaptureLogFactory {
+		public ICaptureLog Create (ILogs logs, string logDirectory, string systemLogPath, bool entireFile, string description = null)
+		{
+			return new CaptureLog (logs, logDirectory, systemLogPath, entireFile) {
+				Description = description
+			};
+		}
+	}
+
+	public interface ICaptureLog : ILog {
+		void StartCapture ();
+		void StopCapture ();
+	}
 
 	// A log that captures data written to a separate file between two moments in time
 	// (between StartCapture and StopCapture).
-	public class CaptureLog : Log
-	{
+	public class CaptureLog : Log, ICaptureLog {
 		public readonly string CapturePath;
 		public readonly string Path;
 
@@ -66,7 +83,7 @@ namespace Xharness.Logging {
 			var currentEndPosition = endPosition;
 			if (currentEndPosition == 0)
 				currentEndPosition = new FileInfo (CapturePath).Length;
-			
+
 			var length = (int) (currentEndPosition - startPosition);
 			var currentLength = new FileInfo (CapturePath).Length;
 			var capturedLength = 0L;

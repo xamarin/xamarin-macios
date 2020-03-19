@@ -227,6 +227,16 @@ namespace Xamarin.Linker {
 			case Code.Callvirt:
 			case Code.Box:
 			case Code.Ldsfld:
+			case Code.Dup: // You might think we could get the constant of the previous instruction, but this instruction might be the target of a branch, in which case the question becomes: which instruction was the previous instruction? And that's not a question easily answered without a much more thorough analysis of the code.
+			case Code.Ldlen:
+			case Code.Ldind_U1:
+			case Code.Ldind_U2:
+			case Code.Ldind_U4:
+			case Code.Ldind_Ref:
+			case Code.Conv_I:
+			case Code.Conv_I1:
+			case Code.Conv_I2:
+			case Code.Conv_I4:
 				return null; // just to not hit the CWL below
 #endif
 			default:

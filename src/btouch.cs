@@ -199,7 +199,7 @@ public class BindingTouch {
 			throw ErrorHelper.CreateError (68, fx);
 		target_framework = tf;
 
-		if (Array.IndexOf (TargetFramework.ValidFrameworks, target_framework.Value) == -1)
+		if (!TargetFramework.IsValidFramework (target_framework.Value))
 			throw ErrorHelper.CreateError (70, target_framework.Value, string.Join (" ", TargetFramework.ValidFrameworks.Select ((v) => v.ToString ()).ToArray ()));
 	}
 
