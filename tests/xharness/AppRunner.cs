@@ -55,6 +55,7 @@ namespace Xharness {
 		readonly ISimpleListenerFactory listenerFactory;
 		readonly IDeviceLoaderFactory devicesLoaderFactory;
 		readonly ICaptureLogFactory captureLogFactory;
+		readonly IDeviceLogCapturerFactory deviceLogCapturerFactory;
 		readonly RunMode mode;
 		readonly bool isSimulator;
 		readonly AppRunnerTarget target;
@@ -94,6 +95,7 @@ namespace Xharness {
 						  ISimpleListenerFactory simpleListenerFactory,
 						  IDeviceLoaderFactory devicesFactory,
 						  ICaptureLogFactory captureLogFactory,
+						  IDeviceLogCapturerFactory deviceLogCapturerFactory,
 						  AppRunnerTarget target,
 						  IHarness harness,
 						  ILog mainLog,
@@ -113,6 +115,7 @@ namespace Xharness {
 			this.listenerFactory = simpleListenerFactory ?? throw new ArgumentNullException (nameof (simpleListenerFactory));
 			this.devicesLoaderFactory = devicesFactory ?? throw new ArgumentNullException (nameof (devicesFactory));
 			this.captureLogFactory = captureLogFactory ?? throw new ArgumentNullException (nameof (captureLogFactory));
+			this.deviceLogCapturerFactory = deviceLogCapturerFactory ?? throw new ArgumentNullException (nameof (deviceLogCapturerFactory));
 			this.harness = harness ?? throw new ArgumentNullException (nameof (harness));
 			this.MainLog = mainLog ?? throw new ArgumentNullException (nameof (mainLog));
 			this.projectFilePath = projectFilePath ?? throw new ArgumentNullException (nameof (projectFilePath));
@@ -421,7 +424,7 @@ namespace Xharness {
 		public async Task<int> RunAsync ()
 		{
 			CrashReportSnapshot crash_reports;
-			ILog device_system_log = null;
+			ILog deviceSystemLog = null;
 			ILog listener_log = null;
 			ILog run_log = MainLog;
 
@@ -648,13 +651,9 @@ namespace Xharness {
 				
 				AddDeviceName (args);
 
-				device_system_log = Logs.Create ($"device-{deviceName}-{Helpers.Timestamp}.log", "Device log");
-				var logdev = new DeviceLogCapturer () {
-					Harness =  harness,
-					Log = device_system_log,
-					DeviceName = deviceName,
-				};
-				logdev.StartCapture ();
+				deviceSystemLog = Logs.Create ($"device-{deviceName}-{Helpers.Timestamp}.log", "Device log");
+				var deviceLogCapturer = deviceLogCapturerFactory.Create (harness.HarnessLog,deviceSystemLog, deviceName);
+				deviceLogCapturer.StartCapture ();
 
 				try {
 					await crash_reports.StartCaptureAsync ();
@@ -693,14 +692,14 @@ namespace Xharness {
 						success = false;
 					}
 				} finally {
-					logdev.StopCapture ();
-					device_system_log.Dispose ();
+					deviceLogCapturer.StopCapture ();
+					deviceSystemLog.Dispose ();
 				}
 
 				// Upload the system log
-				if (File.Exists (device_system_log.FullPath)) {
-					MainLog.WriteLine ("A capture of the device log is: {0}", device_system_log.FullPath);
-					WrenchLog.WriteLine ("AddFile: {0}", device_system_log.FullPath);
+				if (File.Exists (deviceSystemLog.FullPath)) {
+					MainLog.WriteLine ("A capture of the device log is: {0}", deviceSystemLog.FullPath);
+					WrenchLog.WriteLine ("AddFile: {0}", deviceSystemLog.FullPath);
 				}
 			}
 
