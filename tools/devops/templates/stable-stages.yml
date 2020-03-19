@@ -63,12 +63,12 @@ stages:
 #       timeout: ${{ parameters.timeout }} 
 #       maxParallel: ${{ parameters.maxParallel }} 
 
-Wait for the lab to have devices, templates do not let me do what I want with expressions :/ 
+#Wait for the lab to have devices, templates do not let me do what I want with expressions :/ 
 - stage: iOS32DeviceTests 
- displayName: 'iOS32b Device Tests'
- dependsOn: []    # this removes the implicit dependency on previous stage and causes this to run in parallel
- jobs:
- - template: job-matrix.yml # all the smart stuff happens in the template, just needed to set the params
+  displayName: 'iOS32b Device Tests'
+  dependsOn: []    # this removes the implicit dependency on previous stage and causes this to run in parallel
+  jobs:
+  - template: job-matrix.yml # all the smart stuff happens in the template, just needed to set the params
    parameters:
      demands: ${{ parameters.iOS32Demand }} # old QA lab capability, might change
      deviceLabel: 'run-ios-32-tests'
