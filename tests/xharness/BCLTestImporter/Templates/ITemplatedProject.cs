@@ -13,6 +13,7 @@ namespace Xharness.BCLTestImporter.Templates {
 
 		IAssemblyLocator AssemblyLocator { get; set; }
 		IProjectFilter ProjectFilter { get; set; }
+		ITestAssemblyDefinitionFactory AssemblyDefinitionFactory { get; set; }
 		public Func<string, Guid> GuidGenerator { get; set; }
 
 		/// <summary>

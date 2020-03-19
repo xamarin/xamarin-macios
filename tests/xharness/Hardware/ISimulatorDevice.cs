@@ -28,12 +28,11 @@ namespace Xharness.Hardware {
 	}
 
 	public class SimDeviceSpecification {
-		public SimDevice Main;
-		public SimDevice Companion; // the phone for watch devices
+		public SimulatorDevice Main;
+		public SimulatorDevice Companion; // the phone for watch devices
 	}
 
 	public interface ISimulatorDevice : IDevice {
-		IProcessManager ProcessManager { get; set; }
 		ITCCDatabase TCCDatabase { get; set; }
 		string SimRuntime { get; set; }
 		string SimDeviceType { get; set; }
@@ -44,12 +43,13 @@ namespace Xharness.Hardware {
 		Task EraseAsync (ILog log);
 		Task ShutdownAsync (ILog log);
 		Task PrepareSimulatorAsync (ILog log, params string [] bundle_identifiers);
+		Task KillEverythingAsync (ILog log);
 	}
 
 	public interface ISimulatorsLoader : ILoadAsync {
 		IEnumerable<SimRuntime> SupportedRuntimes { get; }
 		IEnumerable<SimDeviceType> SupportedDeviceTypes { get; }
-		IEnumerable<SimDevice> AvailableDevices { get; }
+		IEnumerable<SimulatorDevice> AvailableDevices { get; }
 		IEnumerable<SimDevicePair> AvailableDevicePairs { get; }
 		Task<ISimulatorDevice []> FindAsync (AppRunnerTarget target, ILog log, bool create_if_needed = true, bool min_version = false);
 		ISimulatorDevice FindCompanionDevice (ILog log, ISimulatorDevice device);

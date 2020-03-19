@@ -82,6 +82,8 @@ namespace Xharness.BCLTestImporter.Templates.Managed {
 		public string IgnoreFilesRootDirectory { get; set; }
 		public IAssemblyLocator AssemblyLocator { get; set; } 
 		public IProjectFilter ProjectFilter { get; set; }
+		public ITestAssemblyDefinitionFactory AssemblyDefinitionFactory { get; set; }
+
 		public Func<string, Guid> GuidGenerator { get; set; }
 
 		// helpers that will return the destination of the different templates once writtne locally
@@ -389,7 +391,7 @@ namespace Xharness.BCLTestImporter.Templates.Managed {
 				// 2. The container
 				// 3. The extensions
 				// TODO: The following is very similar to what is done in the iOS generation. Must be grouped
-				var projectDefinition = new BCLTestProjectDefinition (def.Name, AssemblyLocator, def.assemblies, def.ExtraArgs);
+				var projectDefinition = new BCLTestProjectDefinition (def.Name, AssemblyLocator, AssemblyDefinitionFactory, def.assemblies, def.ExtraArgs);
 				if (ProjectFilter != null && ProjectFilter.ExludeProject (projectDefinition, Platform.WatchOS)) // if it is ignored, continue
 					continue;
 
@@ -419,7 +421,7 @@ namespace Xharness.BCLTestImporter.Templates.Managed {
 							generatedProject = await GenerateWatchAppAsync (projectDefinition.Name, GetProjectTemplate (appType), data.plist);
 							break;
 						default:
-							var info = projectDefinition.GetAssemblyInclusionInformation (AssemblyLocator.GetAssembliesRootLocation (Platform.WatchOS), Platform.WatchOS);
+							var info = projectDefinition.GetAssemblyInclusionInformation (Platform.WatchOS);
 							generatedProject = await GenerateWatchExtensionAsync (projectDefinition.Name, GetProjectTemplate (appType), data.plist, registerTypePath, info);
 							failure ??= info.FailureMessage;
 							break;
@@ -515,7 +517,7 @@ namespace Xharness.BCLTestImporter.Templates.Managed {
 			foreach (var def in projects) {
 				if (def.assemblies.Length == 0)
 					continue;
-				var projectDefinition = new BCLTestProjectDefinition (def.Name, AssemblyLocator, def.assemblies, def.ExtraArgs);
+				var projectDefinition = new BCLTestProjectDefinition (def.Name, AssemblyLocator, AssemblyDefinitionFactory, def.assemblies, def.ExtraArgs);
 				if (ProjectFilter != null && ProjectFilter.ExludeProject (projectDefinition, Platform.WatchOS)) // if it is ignored, continue
 					continue;
 
@@ -537,7 +539,7 @@ namespace Xharness.BCLTestImporter.Templates.Managed {
 						await file.WriteAsync (plist);
 					}
 
-					var info = projectDefinition.GetAssemblyInclusionInformation (AssemblyLocator.GetAssembliesRootLocation (platform), platform);
+					var info = projectDefinition.GetAssemblyInclusionInformation (platform);
 					var generatedProject = await GenerateAsync (projectDefinition.Name, registerTypePath, info, GetProjectTemplate (platform), infoPlistPath, platform);
 					using (var file = new StreamWriter (projectPath, false)) { // false is do not append
 						await file.WriteAsync (generatedProject);
@@ -612,7 +614,7 @@ namespace Xharness.BCLTestImporter.Templates.Managed {
 			foreach (var def in projects) {
 				if (!def.assemblies.Any ())
 					continue;
-				var projectDefinition = new BCLTestProjectDefinition (def.Name, AssemblyLocator, def.assemblies, def.ExtraArgs);
+				var projectDefinition = new BCLTestProjectDefinition (def.Name, AssemblyLocator, AssemblyDefinitionFactory, def.assemblies, def.ExtraArgs);
 				if (ProjectFilter != null && ProjectFilter.ExludeProject (projectDefinition, platform))
 					continue;
 
@@ -639,7 +641,7 @@ namespace Xharness.BCLTestImporter.Templates.Managed {
 						await file.WriteAsync (plist);
 					}
 
-					var info = projectDefinition.GetAssemblyInclusionInformation (AssemblyLocator.GetAssembliesRootLocation (platform), platform);
+					var info = projectDefinition.GetAssemblyInclusionInformation (platform);
 					var generatedProject = await GenerateMacAsync (projectDefinition.Name, registerTypePath,
 						info, GetProjectTemplate (platform), infoPlistPath, platform);
 					using (var file = new StreamWriter (projectPath, false)) { // false is do not append

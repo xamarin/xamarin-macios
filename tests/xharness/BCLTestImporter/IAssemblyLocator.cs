@@ -1,5 +1,5 @@
 ﻿using System;
-namespace Xharness.BCLTestImporter.Templates {
+namespace Xharness.BCLTestImporter {
 
 	// interface that will help locate the test assemblies that are used to create the apps. This way, we can
 	// point to a specific location from which the asseblies well be referenced. The idea is to allow to download
@@ -11,5 +11,7 @@ namespace Xharness.BCLTestImporter.Templates {
 		/// <param name="platform">The platform whose asseblies we want to use.</param>
 		/// <returns>The root dir in which the precompiled assemblies can be found.</returns>
 		string GetAssembliesRootLocation (Platform platform);
+		string GetAssembliesLocation (Platform platform);
+		string GetHintPathForReferenceAssembly (string assembly, Platform platform);
 	}
 }

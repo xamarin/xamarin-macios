@@ -76,7 +76,6 @@
     <Compile Include="AppInstallMonitorLog.cs" />
     <Compile Include="AppRunner.cs" />
     <Compile Include="AppRunnerTarget.cs" />
-    <Compile Include="BCLTestImporter\BCLTestAssemblyDefinition.cs" />
     <Compile Include="BCLTestImporter\BCLTestImportTargetFactory.cs" />
     <Compile Include="BCLTestImporter\BCLTestInfoPlistGenerator.cs" />
     <Compile Include="BCLTestImporter\BCLTestProjectDefinition.cs" />
@@ -94,7 +93,7 @@
     <Compile Include="GitHub.cs" />
     <Compile Include="Harness.cs" />
     <Compile Include="Hardware\Simulators.cs" />
-    <Compile Include="Hardware\SimDevice.cs" />
+    <Compile Include="Hardware\SimulatorDevice.cs" />
     <Compile Include="Hardware\IDevice.cs" />
     <Compile Include="Hardware\Device.cs" />
     <Compile Include="Hardware\Devices.cs" />
@@ -162,12 +161,15 @@
     <Compile Include="BCLTestImporter\Templates\Managed\XamariniOSTemplate.cs" />
     <Compile Include="BCLTestImporter\BclTestProjectInfo.cs" />
     <Compile Include="BCLTestImporter\iOSBclTestProject.cs" />
+    <Compile Include="BCLTestImporter\IAssemblyLocator.cs" />
     <Compile Include="BCLTestImporter\BclTestProject.cs" />
-    <Compile Include="BCLTestImporter\Templates\IAssemblyLocator.cs" />
     <Compile Include="BCLTestImporter\Templates\IProjectFilter.cs" />
     <Compile Include="BCLTestImporter\Xamarin\AssemblyLocator.cs" />
     <Compile Include="BCLTestImporter\Xamarin\ProjectFilter.cs" />
     <Compile Include="BCLTestImporter\Templates\Managed\RegisterTypeGenerator.cs" />
+    <Compile Include="BCLTestImporter\ITestAssemblyDefinition.cs" />
+    <Compile Include="BCLTestImporter\Xamarin\AssemblyDefinitionFactory.cs" />
+    <Compile Include="BCLTestImporter\Xamarin\TestAssemblyDefinition.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\tools\mtouch\SdkVersions.cs">
