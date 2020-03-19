@@ -15,3 +15,6 @@
 !missing-type! PKDisbursementAuthorizationController not bound
 !missing-type! PKDisbursementRequest not bound
 !missing-type! PKDisbursementVoucher not bound
+
+## This is already deprecated
+!missing-selector! PKPassLibrary::activatePaymentPass:withActivationData:completion: not bound

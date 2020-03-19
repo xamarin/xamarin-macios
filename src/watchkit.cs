@@ -515,7 +515,11 @@ namespace WatchKit {
 		[Watch (6,0)][NoiOS]
 		[Export ("supportsAudioStreaming")]
 		bool SupportsAudioStreaming { get; }
-        
+
+		[Watch (6,2), NoiOS]
+		[NullAllowed, Export ("identifierForVendor", ArgumentSemantic.Strong)]
+		NSUuid IdentifierForVendor { get; }
+
 		[Watch (6,1)][NoiOS]
 		[Export ("enableWaterLock")]
 		void EnableWaterLock ();

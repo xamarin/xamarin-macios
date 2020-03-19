@@ -144,5 +144,7 @@ namespace MonoTouch {
 		public const string QuickLookThumbnailingLibrary = "/System/Library/Frameworks/QuickLookThumbnailing.framework/QuickLookThumbnailing";
 		public const string VisionKitLibrary = "/System/Library/Frameworks/VisionKit.framework/VisionKit";
 		public const string SoundAnalysisLibrary = "/System/Library/Frameworks/SoundAnalysis.framework/SoundAnalysis";
+		// iOS 13.4
+		public const string AutomaticAssessmentConfigurationLibrary = "/System/Library/Frameworks/AutomaticAssessmentConfiguration.framework/AutomaticAssessmentConfiguration";
 	}
 }

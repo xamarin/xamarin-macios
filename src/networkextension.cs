@@ -7,8 +7,15 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 using Security;
+using Network;
+using OS_nw_parameters = System.IntPtr;
+using OS_nw_interface = System.IntPtr;
 
 namespace NetworkExtension {
+
+	// Just to satisfy the core dll contract, the right type will be used on the generated file
+	interface NWInterface { }
+	interface NWParameters { }
 
 	[ErrorDomain ("NEDNSProxyErrorDomain")]
 	[iOS (11,0)]
@@ -132,6 +139,15 @@ namespace NetworkExtension {
 		FlowClosed = 3,
 	}
 
+	[NoWatch, NoTV, NoiOS, Mac (10,15,4)]
+	[Native]
+	enum NEFilterReportFrequency : long {
+		None,
+		Low,
+		Medium,
+		High,
+	}
+
 	[iOS (9,0)][Mac (10,11)]
 	[BaseType (typeof (NSObject))]
 	[Abstract] // documented as such and ...
@@ -146,9 +162,31 @@ namespace NetworkExtension {
 	
 		[Export ("closeWriteWithError:")]
 		void CloseWrite ([NullAllowed] NSError error);
+
+		[Internal]
+		[NoWatch, NoTV, NoiOS, Mac (10,15,4)]
+		[Export ("setMetadata:")]
+		void SetMetadata (OS_nw_parameters nwparameters);
+
+		[NoWatch, NoTV, NoiOS, Mac (10,15,4)]
+		[Wrap ("SetMetadata (parameters.GetHandle ())")]
+		void SetMetadata (NWParameters parameters);
 	
 		[Export ("metaData")]
 		NEFlowMetaData MetaData { get; }
+
+		[Internal]
+		[NoWatch, NoTV, Mac (10,15,4), iOS (13,4)]
+		[NullAllowed, Export ("networkInterface", ArgumentSemantic.Copy)]
+		OS_nw_interface WeakNetworkInterface { get; set; }
+
+		[NoWatch, NoTV, Mac (10,15,4), iOS (13,4)]
+		NWInterface NetworkInterface {
+			[Wrap ("Runtime.GetINativeObject<NWInterface> (WeakNetworkInterface, false)")]
+			get;
+			[Wrap ("WeakNetworkInterface = value.GetHandle ()")]
+			set;
+		}
 
 #if !XAMCORE_4_0
 		[Field ("NEAppProxyErrorDomain")]
@@ -252,6 +290,10 @@ namespace NetworkExtension {
 
 		[NullAllowed, Export ("matchDomains", ArgumentSemantic.Copy)]
 		string [] MatchDomains { get; set; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10,15,4)]
+		[NullAllowed, Export ("matchTools", ArgumentSemantic.Copy)]
+		NEAppRule[] MatchTools { get; set; }
 	}
 	
 	[iOS (9,0)][Mac (10,11)]
@@ -361,6 +403,10 @@ namespace NetworkExtension {
 		[NoiOS]
 		[Export ("resumeFlow:withVerdict:")]
 		void ResumeFlow (NEFilterFlow flow, NEFilterVerdict verdict);
+
+		[NoWatch, NoTV, NoiOS, Mac (10,15,4)]
+		[Export ("updateFlow:usingVerdict:forDirection:")]
+		void UpdateFlow (NEFilterSocketFlow flow, NEFilterDataVerdict verdict, NETrafficDirection direction);
 	}
 
 	[iOS (9,0)]
@@ -368,6 +414,10 @@ namespace NetworkExtension {
 	[BaseType (typeof(NEFilterVerdict))]
 	interface NEFilterDataVerdict : NSSecureCoding, NSCopying
 	{
+		[NoWatch, NoTV, NoiOS, Mac (10,15,4)]
+		[Export ("statisticsReportFrequency", ArgumentSemantic.Assign)]
+		NEFilterReportFrequency StatisticsReportFrequency { get; set; }
+
 		[Static]
 		[Export ("allowVerdict")]
 		NEFilterDataVerdict AllowVerdict ();
@@ -478,6 +528,10 @@ namespace NetworkExtension {
 	[BaseType (typeof(NEFilterVerdict))]
 	interface NEFilterNewFlowVerdict : NSSecureCoding, NSCopying
 	{
+		[NoWatch, NoTV, NoiOS, Mac (10, 15, 4)]
+		[Export ("statisticsReportFrequency", ArgumentSemantic.Assign)]
+		NEFilterReportFrequency StatisticsReportFrequency { get; set; }
+
 		[Static]
 		[Export ("needRulesVerdict")]
 		NEFilterNewFlowVerdict NeedRulesVerdict ();
@@ -623,6 +677,10 @@ namespace NetworkExtension {
 		[Mac (10,15)]
 		[NullAllowed, Export ("sourceAppAuditToken")]
 		NSData SourceAppAuditToken { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10,15,4)]
+		[NullAllowed, Export ("filterFlowIdentifier")]
+		NSUuid FilterFlowIdentifier { get; }
 	}
 
 #if !MONOMAC
@@ -963,12 +1021,44 @@ namespace NetworkExtension {
 		[Export ("loadAllFromPreferencesWithCompletionHandler:")]
 		[Async]
 		void LoadAllFromPreferences (Action<NSArray, NSError> completionHandler);
-	
-		[NullAllowed, Export ("copyAppRules")]
-		NEAppRule[] AppRules { get; }
-	
+
+		[NoWatch, NoTV, NoiOS, Mac (10,15,4)]
+		[Static]
+		[Export ("forPerAppVPN")]
+		NETunnelProviderManager CreatePerAppVpn ();
+
+		[return: NullAllowed]
+		[Export ("copyAppRules")]
+		NEAppRule[] CopyAppRules ();
+
+		// CopyAppRules was incorrectly bound to AppRules and it is only available on macOS
+#if XAMCORE_4_0 || MONOMAC
+		[NoWatch, NoTV, NoiOS, Mac (10,15,4)]
+		[Export ("appRules", ArgumentSemantic.Copy)]
+		NEAppRule[] AppRules { get; set; }
+#else
+		[Obsolete ("Use 'CopyAppRules' instead, this property will be removed in the future.")]
+		NEAppRule[] AppRules { [Wrap ("CopyAppRules ()", IsVirtual = true)] get; }
+#endif
+
 		[Export ("routingMethod")]
 		NETunnelProviderRoutingMethod RoutingMethod { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 15, 4)]
+		[Export ("safariDomains", ArgumentSemantic.Copy)]
+		string[] SafariDomains { get; set; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 15, 4)]
+		[Export ("mailDomains", ArgumentSemantic.Copy)]
+		string[] MailDomains { get; set; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 15, 4)]
+		[Export ("calendarDomains", ArgumentSemantic.Copy)]
+		string[] CalendarDomains { get; set; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 15, 4)]
+		[Export ("contactsDomains", ArgumentSemantic.Copy)]
+		string[] ContactsDomains { get; set; }
 
 #if !XAMCORE_4_0
 		[Field ("NETunnelProviderErrorDomain")]

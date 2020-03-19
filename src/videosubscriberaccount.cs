@@ -34,6 +34,7 @@ namespace VideoSubscriberAccount {
 		ProviderRejected = 4,
 		InvalidVerificationToken = 5,
 		Rejected = 6,
+		Unsupported = 7,
 	}
 
 	[Native]
