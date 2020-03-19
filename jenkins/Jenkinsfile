@@ -660,6 +660,15 @@ timestamps {
                                 utils.reportGitHubStatus (gitHash, "msbuild.zip", "${msbuildZipUrl}", 'SUCCESS', "${msbuildZipFilename}")
                             }
 
+                            def nupkgs = findFiles (glob: "package/*.nupkg")
+                            for (def i = 0; i < nupkgs.size (); i++) {
+                                def nupkg = nupkgs [i]
+                                def nupkg_name = nupkg.name
+                                def nupkgUrl = "${packagePrefix}/${nupkg_name}"
+                                utils.reportGitHubStatus (gitHash, nupkg_name, nupkgUrl, "SUCCESS", nupkg_name)
+                                packagesMessage += "* [${nupkg_name}](${nupkgUrl})\n"
+                            }
+
                             if (packagesMessage != "")
                                 appendFileComment ("✅ Packages: \n${packagesMessage}\n")
                         }
