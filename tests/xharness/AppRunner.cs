@@ -735,7 +735,13 @@ namespace Xharness {
 			if (!success.HasValue)
 				success = false;
 
-			await crash_reports.EndCaptureAsync (TimeSpan.FromSeconds (success.Value ? 0 : 5));
+			var crashLogWaitTime = 0;
+			if (!success.Value)
+				crashLogWaitTime = 5;
+			if (crashed)
+				crashLogWaitTime = 30;
+
+			await crash_reports.EndCaptureAsync (TimeSpan.FromSeconds (crashLogWaitTime));
 
 			if (timed_out) {
 				Result = TestExecutingResult.TimedOut;
