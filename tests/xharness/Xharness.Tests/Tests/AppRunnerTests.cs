@@ -187,22 +187,12 @@ namespace Xharness.Tests {
 		[Test]
 		public async Task InstallOnDeviceTest ()
 		{
-			Mock<IHarness> harnessMock = new Mock<IHarness> ();
-			harnessMock.SetupGet (x => x.XcodeRoot).Returns ("/path/to/xcode");
-			harnessMock.SetupGet (x => x.MlaunchPath).Returns ("/path/to/mlaunch");
-			harnessMock.SetupGet (x => x.Verbosity).Returns (2);
+			var harness = Mock.Of<IHarness> (x => x.XcodeRoot == "/path/to/xcode"
+				&& x.MlaunchPath == "/path/to/mlaunch"
+				&& x.Verbosity == 2);
 
 			var processResult = new ProcessExecutionResult () { ExitCode = 1, TimedOut = false };
-
-			processManager
-				.Setup (x => x.ExecuteCommandAsync (
-					 It.IsAny<string> (),
-					 It.IsAny<IList<string>> (),
-					 It.IsAny<ILog> (),
-					 It.IsAny<TimeSpan> (),
-					 It.IsAny<Dictionary<string, string>> (),
-					 It.IsAny<CancellationToken> ()))
-				.ReturnsAsync(processResult);
+			processManager.SetReturnsDefault (Task.FromResult(processResult));
 
 			var appRunner = new AppRunner (processManager.Object,
 				simulatorsFactory,
@@ -211,7 +201,7 @@ namespace Xharness.Tests {
 				snapshotReporterFactory,
 				Mock.Of<ICaptureLogFactory> (),
 				AppRunnerTarget.Device_iOS,
-				Mock.Of<IHarness> (),
+				harness,
 				mainLog.Object,
 				logs.Object,
 				projectFilePath:projectFilePath,
@@ -219,9 +209,11 @@ namespace Xharness.Tests {
 
 			devices.Setup (x => x.ConnectedDevices).Returns (mockDevices);
 
+			// Act
 			CancellationToken cancellationToken = new CancellationToken ();
 			var result = await appRunner.InstallAsync (cancellationToken);
 
+			// Verify
 			Assert.AreEqual (1, result.ExitCode);
 			
 			processManager.Verify (x => x.ExecuteCommandAsync (
@@ -246,22 +238,12 @@ namespace Xharness.Tests {
 		[Test]
 		public async Task UninstallFromDeviceTest ()
 		{
-			Mock<IHarness> harnessMock = new Mock<IHarness> ();
-			harnessMock.SetupGet (x => x.XcodeRoot).Returns ("/path/to/xcode");
-			harnessMock.SetupGet (x => x.MlaunchPath).Returns ("/path/to/mlaunch");
-			harnessMock.SetupGet (x => x.Verbosity).Returns (1);
+			var harness = Mock.Of<IHarness> (x => x.XcodeRoot == "/path/to/xcode"
+				&& x.MlaunchPath == "/path/to/mlaunch"
+				&& x.Verbosity == 1);
 
 			var processResult = new ProcessExecutionResult () { ExitCode = 3, TimedOut = false };
-
-			processManager
-				.Setup (x => x.ExecuteCommandAsync (
-					 It.IsAny<string> (),
-					 It.IsAny<IList<string>> (),
-					 It.IsAny<ILog> (),
-					 It.IsAny<TimeSpan> (),
-					 null,
-					 null))
-				.ReturnsAsync(processResult);
+			processManager.SetReturnsDefault (Task.FromResult(processResult));
 
 			var appRunner = new AppRunner (processManager.Object,
 				simulatorsFactory,
@@ -270,7 +252,7 @@ namespace Xharness.Tests {
 				snapshotReporterFactory,
 				Mock.Of<ICaptureLogFactory> (),
 				AppRunnerTarget.Device_iOS,
-				harnessMock.Object,
+				harness,
 				mainLog.Object,
 				logs.Object,
 				projectFilePath: Path.Combine (sampleProjectPath, "SystemXunit.csproj"),
@@ -432,11 +414,11 @@ namespace Xharness.Tests {
 				.Setup (x => x.FindAsync (AppRunnerTarget.Simulator_iOS64, mainLog.Object, true, false))
 				.ReturnsAsync (new ISimulatorDevice [] { simulator.Object });
 
-			var listenerLogFile = new Mock<ILogFile> ();
+			var listenerLogFile = Mock.Of<ILogFile> (x => x.FullPath == Path.GetTempFileName());
 
 			logs
-				.Setup (x => x.Create (It.IsAny<string> (), "TestLog", It.IsAny<bool> ()))
-				.Returns (listenerLogFile.Object);
+				.Setup (x => x.Create (It.Is<string> (s => s.StartsWith("test-sim64-")), "TestLog", It.IsAny<bool> ()))
+				.Returns (listenerLogFile);
 
 			simpleListener.SetupGet (x => x.ConnectedTask).Returns (Task.CompletedTask);
 

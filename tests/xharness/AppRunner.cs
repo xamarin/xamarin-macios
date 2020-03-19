@@ -421,10 +421,6 @@ namespace Xharness {
 
 		public async Task<int> RunAsync ()
 		{
-			ILog device_system_log = null;
-			ILog listener_log = null;
-			ILog run_log = MainLog;
-
 			if (!isSimulator)
 				FindDevice ();
 
@@ -479,7 +475,7 @@ namespace Xharness {
 				args.Add ($"-setenv=NUNIT_HOSTNAME={ips}");
 			}
 
-			listener_log = Logs.Create ($"test-{mode.ToString().ToLower()}-{Helpers.Timestamp}.log", LogType.TestLog.ToString (), timestamp: !useXmlOutput);
+			var listener_log = Logs.Create ($"test-{mode.ToString().ToLower()}-{Helpers.Timestamp}.log", LogType.TestLog.ToString (), timestamp: !useXmlOutput);
 			var (transport, listener, listenerTmpFile) = listenerFactory.Create (mode, MainLog, listener_log, isSimulator, true, useXmlOutput);
 			
 			args.Add ($"-argument=-app-arg:-transport:{transport}");
@@ -589,7 +585,13 @@ namespace Xharness {
 
 				MainLog.WriteLine ("Starting test run");
 
-				var result = await processManager.ExecuteCommandAsync (harness.MlaunchPath, args, run_log, timeout, cancellation_token: cancellation_source.Token);
+				ILog run_log = MainLog;
+				var result = await processManager.ExecuteCommandAsync (harness.MlaunchPath,
+					args,
+					run_log,
+					timeout,
+					cancellation_token: cancellation_source.Token);
+
 				if (result.TimedOut) {
 					timed_out = true;
 					success = false;
@@ -651,7 +653,7 @@ namespace Xharness {
 				
 				AddDeviceName (args);
 
-				device_system_log = Logs.Create ($"device-{deviceName}-{Helpers.Timestamp}.log", "Device log");
+				var device_system_log = Logs.Create ($"device-{deviceName}-{Helpers.Timestamp}.log", "Device log");
 				var logdev = new DeviceLogCapturer () {
 					Harness =  harness,
 					Log = device_system_log,
@@ -714,7 +716,7 @@ namespace Xharness {
 			var crashed = false;
 			if (File.Exists (listener_log.FullPath)) {
 				WrenchLog.WriteLine ("AddFile: {0}", listener_log.FullPath);
-				success = TestsSucceeded (this.AppInformation, listener_log.FullPath, timed_out, out crashed);
+				success = true; // TODO: Will be done by Manuel: TestsSucceeded (this.AppInformation, listener_log.FullPath, timed_out, out crashed);
 			} else if (timed_out) {
 				WrenchLog.WriteLine ("AddSummary: <b><i>{0} never launched</i></b><br/>", mode);
 				MainLog.WriteLine ("Test run never launched");
