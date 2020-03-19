@@ -17,10 +17,10 @@ namespace Xharness {
 		Missing,
 	}
 
-	public static class XmlResultParser {
+	public class XmlResultParser : IResultParser {
 
 		// test if the file is valid xml, or at least, that can be read it.
-		public static bool IsValidXml (string path, out XmlResultJargon type)
+		public bool IsValidXml (string path, out XmlResultJargon type)
 		{
 			type = XmlResultJargon.Missing;
 			if (!File.Exists (path))
@@ -280,7 +280,7 @@ namespace Xharness {
 			return (resultLine, total == 0 | errors != 0 || failed != 0);
 		}
 
-		public static string GetXmlFilePath (string path, XmlResultJargon xmlType)
+		public string GetXmlFilePath (string path, XmlResultJargon xmlType)
 		{
 			var fileName = Path.GetFileName (path);
 			switch (xmlType) {
@@ -295,7 +295,7 @@ namespace Xharness {
 			}
 		}
 
-		public static void CleanXml (string source, string destination)
+		public void CleanXml (string source, string destination)
 		{
 			using (var reader = new StreamReader (source))
 			using (var writer = new StreamWriter (destination)) {
@@ -313,7 +313,7 @@ namespace Xharness {
 			}
 		}
 
-		public static (string resultLine, bool failed) GenerateHumanReadableResults (string source, string destination, XmlResultJargon xmlType)
+		public (string resultLine, bool failed) GenerateHumanReadableResults (string source, string destination, XmlResultJargon xmlType)
 		{
 			(string resultLine, bool failed) parseData;
 			using (var reader = new StreamReader (source)) 
@@ -475,7 +475,7 @@ namespace Xharness {
 			}
 		}
 
-		public static void GenerateTestReport (StreamWriter writer, string resultsPath, XmlResultJargon xmlType)
+		public void GenerateTestReport (StreamWriter writer, string resultsPath, XmlResultJargon xmlType)
 		{
 			using (var stream = new StreamReader (resultsPath))
 			using (var reader = XmlReader.Create (stream)) {
@@ -498,7 +498,7 @@ namespace Xharness {
 		}
 
 		// get the file, parse it and add the attachments to the first node found
-		public static void UpdateMissingData (string source, string destination, string applicationName, IEnumerable<string> attachments)
+		public void UpdateMissingData (string source, string destination, string applicationName, IEnumerable<string> attachments)
 		{
 			// we could do this with a XmlReader and a Writer, but might be to complicated to get right, we pay with performance what we
 			// cannot pay with brain cells.
@@ -715,7 +715,6 @@ namespace Xharness {
 			writer.WriteEndElement (); // collection
 			writer.WriteEndElement (); // assembly
 			writer.WriteEndElement (); // assemblies
-
 		}
 
 		static void GenerateFailureXml (string destination, string title, string message, string stderrPath, XmlResultJargon jargon)
@@ -740,7 +739,7 @@ namespace Xharness {
 			}
 		}
 
-		public static void GenerateFailure (ILogs logs, string source, string appName, string variation, string title, string message, string stderrPath, XmlResultJargon jargon)
+		public void GenerateFailure (ILogs logs, string source, string appName, string variation, string title, string message, string stderrPath, XmlResultJargon jargon)
 		{
 			// VSTS does not provide a nice way to report build errors, create a fake
 			// test result with a failure in the case the build did not work

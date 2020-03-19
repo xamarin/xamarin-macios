@@ -105,7 +105,7 @@ namespace Xharness {
 			// XS sets this, which breaks pretty much everything if it doesn't match what was passed to --sdkroot.
 			Environment.SetEnvironmentVariable ("XCODE_DEVELOPER_DIR_PATH", null);
 
-			var harness = new Harness (new ProcessManager(), action, configuration);
+			var harness = new Harness (new ProcessManager(), new XmlResultParser (), action, configuration);
 
 			return harness.Execute ();
 		}
