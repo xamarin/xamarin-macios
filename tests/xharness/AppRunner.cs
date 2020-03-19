@@ -436,33 +436,33 @@ namespace Xharness {
 			for (int i = -1; i < harness.Verbosity; i++)
 				args.Add (new VerbosityArgument ());
 
-			args.Add ("-argument=-connection-mode");
-			args.Add ("-argument=none"); // This will prevent the app from trying to connect to any IDEs
-			args.Add ("-argument=-app-arg:-autostart");
-			args.Add ("-setenv=NUNIT_AUTOSTART=true");
-			args.Add ("-argument=-app-arg:-autoexit");
-			args.Add ("-setenv=NUNIT_AUTOEXIT=true");
-			args.Add ("-argument=-app-arg:-enablenetwork");
-			args.Add ("-setenv=NUNIT_ENABLE_NETWORK=true");
+			args.Add (new SetAppArgumentArgument ("-connection-mode"));
+			args.Add (new SetAppArgumentArgument ("none")); // This will prevent the app from trying to connect to any IDEs
+			args.Add (new SetAppArgumentArgument ("-autostart", true));
+			args.Add (new SetEnvVariableArgument ("NUNIT_AUTOSTART", true));
+			args.Add (new SetAppArgumentArgument ("-autoexit", true));
+			args.Add (new SetEnvVariableArgument ("NUNIT_AUTOEXIT", true));
+			args.Add (new SetAppArgumentArgument ("-enablenetwork", true));
+			args.Add (new SetEnvVariableArgument ("NUNIT_ENABLE_NETWORK", true));
 			// detect if we are using a jenkins bot.
 			var useXmlOutput = harness.InCI;
 			if (useXmlOutput) {
-				args.Add ("-setenv=NUNIT_ENABLE_XML_OUTPUT=true");
-				args.Add ("-setenv=NUNIT_ENABLE_XML_MODE=wrapped");
-				args.Add ("-setenv=NUNIT_XML_VERSION=nunitv3");
+				args.Add (new SetEnvVariableArgument ("NUNIT_ENABLE_XML_OUTPUT", true));
+				args.Add (new SetEnvVariableArgument ("NUNIT_ENABLE_XML_MODE", "wrapped"));
+				args.Add (new SetEnvVariableArgument ("NUNIT_XML_VERSION", "nunitv3"));
 			}
 
 			if (harness.InCI) {
 				// We use the 'BUILD_REVISION' variable to detect whether we're running CI or not.
-				args.Add ($"-setenv=BUILD_REVISION=${Environment.GetEnvironmentVariable ("BUILD_REVISION")}");
+				args.Add (new SetEnvVariableArgument ("BUILD_REVISION", Environment.GetEnvironmentVariable ("BUILD_REVISION")));
 			}
 
 			if (!harness.GetIncludeSystemPermissionTests (TestPlatform.iOS, !isSimulator))
-				args.Add ("-setenv=DISABLE_SYSTEM_PERMISSION_TESTS=1");
+				args.Add (new SetEnvVariableArgument ("DISABLE_SYSTEM_PERMISSION_TESTS", 1));
 
 			if (isSimulator) {
-				args.Add ("-argument=-app-arg:-hostname:127.0.0.1");
-				args.Add ("-setenv=NUNIT_HOSTNAME=127.0.0.1");
+				args.Add (new SetAppArgumentArgument ("-hostname:127.0.0.1", true));
+				args.Add (new SetEnvVariableArgument ("NUNIT_HOSTNAME=127.0.0", 1));
 			} else {
 				var ips = new StringBuilder ();
 				var ipAddresses = System.Net.Dns.GetHostEntry (System.Net.Dns.GetHostName ()).AddressList;
@@ -472,24 +472,24 @@ namespace Xharness {
 					ips.Append (ipAddresses [i].ToString ());
 				}
 
-				args.Add ($"-argument=-app-arg:-hostname:{ips}");
-				args.Add ($"-setenv=NUNIT_HOSTNAME={ips}");
+				var ipArg = ips.ToString ();
+				args.Add (new SetAppArgumentArgument ($"-hostname:{ipArg}", true));
+				args.Add (new SetEnvVariableArgument ("NUNIT_HOSTNAME", ipArg));
 			}
 
 			var listener_log = Logs.Create ($"test-{mode.ToString().ToLower()}-{Helpers.Timestamp}.log", LogType.TestLog.ToString (), timestamp: !useXmlOutput);
 			var (transport, listener, listenerTmpFile) = listenerFactory.Create (mode, MainLog, listener_log, isSimulator, true, useXmlOutput);
-			
-			args.Add ($"-argument=-app-arg:-transport:{transport}");
-			args.Add ($"-setenv=NUNIT_TRANSPORT={transport.ToString ().ToUpper ()}");
+
+			args.Add (new SetAppArgumentArgument ($"-transport:{transport}", true));
+			args.Add (new SetEnvVariableArgument ("NUNIT_TRANSPORT", transport.ToString ().ToUpper ()));
 
 			if (transport == ListenerTransport.File)
-				args.Add ($"-setenv=NUNIT_LOG_FILE={listenerTmpFile}");
+				args.Add (new SetEnvVariableArgument ("NUNIT_LOG_FILE", listenerTmpFile));
 
+			args.Add (new SetAppArgumentArgument ($"-hostport:{listener.Port}", true));
+			args.Add (new SetEnvVariableArgument ("NUNIT_HOSTPORT", listener.Port));
+			
 			listener.Initialize ();
-
-			args.Add ($"-argument=-app-arg:-hostport:{listener.Port}");
-			args.Add ($"-setenv=NUNIT_HOSTPORT={listener.Port}");
-
 			listener.StartAsync ();
 
 			var cancellation_source = new CancellationTokenSource ();
@@ -511,8 +511,7 @@ namespace Xharness {
 					}
 				}).DoNotAwait ();
 
-			foreach (var kvp in harness.EnvironmentVariables)
-				args.Add ($"-setenv={kvp.Key}={kvp.Value}");
+			args.AddRange (harness.EnvironmentVariables.Select (kvp => new SetEnvVariableArgument (kvp.Key, kvp.Value)));
 
 			bool? success = null;
 			bool launch_failure = false;

@@ -44,7 +44,7 @@ namespace Xharness.Execution.Mlaunch {
 		}
 
 		public void Add (MlaunchArgument arg) => arguments.Add (arg);
-		public void AddRange (params MlaunchArgument [] args) => arguments.AddRange (args);
+		public void AddRange (IEnumerable<MlaunchArgument> args) => arguments.AddRange (args);
 		public string AsCommandLine () => string.Join (" ", arguments.Select (a => a.AsCommandLineArgument ()));
 		public IEnumerable<MlaunchArgument> GetArguments () => arguments;
 	}

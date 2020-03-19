@@ -118,6 +118,42 @@
 		}
 	}
 
+	/// <summary>
+	/// Launch the app with this command line argument. This must be specified multiple times for multiple arguments.
+	/// </summary>
+	public sealed class SetAppArgumentArgument : MlaunchArgument {
+		readonly string value;
+
+		public SetAppArgumentArgument (string value, bool isAppArg = false)
+		{
+			this.value = value ?? throw new System.ArgumentNullException (nameof (value));
+
+			if (isAppArg)
+				this.value = "-app-arg:" + this.value;
+		}
+
+		public override string AsCommandLineArgument () => "-argument=" + value;
+	}
+
+	/// <summary>
+	/// Set the environment variable in the application on startup.
+	/// </summary>
+	public sealed class SetEnvVariableArgument : MlaunchArgument {
+		readonly string variableName;
+		readonly string variableValue;
+
+		public SetEnvVariableArgument (string variableName, object variableValue)
+		{
+			this.variableName = variableName ?? throw new System.ArgumentNullException (nameof (variableName));
+			this.variableValue = variableValue?.ToString() ?? throw new System.ArgumentNullException (nameof (variableValue));
+		}
+
+		public override string AsCommandLineArgument () => $"-setenv={variableName}={variableValue}";
+	}
+
+	/// <summary>
+	/// Set the verbosity level. Can be used repeatedly to lower the level.
+	/// </summary>
 	public sealed class VerbosityArgument : OptionArgument {
 		public VerbosityArgument () : base ("v")
 		{
