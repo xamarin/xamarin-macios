@@ -87,6 +87,8 @@ if test -n "$VERBOSE"; then
 	sed 's/^/    /' "$JSONFILE";
 fi
 
+cat $JSONFILE
+
 if ! curl -f -v -H "Authorization: token $TOKEN" -H "User-Agent: command line tool" -d "@$JSONFILE" "https://api.github.com/repos/xamarin/xamarin-macios/commits/$HASH/comments" > "$LOGFILE" 2>&1; then
 	echo "Failed to add commit message."
 	echo "curl output:"
