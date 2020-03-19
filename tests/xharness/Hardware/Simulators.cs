@@ -38,7 +38,7 @@ namespace Xharness.Hardware {
 		readonly SemaphoreSlim semaphore = new SemaphoreSlim (1);
 		readonly BlockingEnumerableCollection<SimRuntime> supported_runtimes = new BlockingEnumerableCollection<SimRuntime> ();
 		readonly BlockingEnumerableCollection<SimDeviceType> supported_device_types = new BlockingEnumerableCollection<SimDeviceType> ();
-		readonly BlockingEnumerableCollection<SimDevice> available_devices = new BlockingEnumerableCollection<SimDevice> ();
+		readonly BlockingEnumerableCollection<SimulatorDevice> available_devices = new BlockingEnumerableCollection<SimulatorDevice> ();
 		readonly BlockingEnumerableCollection<SimDevicePair> available_device_pairs = new BlockingEnumerableCollection<SimDevicePair> ();
 		readonly IProcessManager processManager;
 		
@@ -48,7 +48,7 @@ namespace Xharness.Hardware {
 		
 		public IEnumerable<SimRuntime> SupportedRuntimes => supported_runtimes;
 		public IEnumerable<SimDeviceType> SupportedDeviceTypes => supported_device_types;
-		public IEnumerable<SimDevice> AvailableDevices => available_devices;
+		public IEnumerable<SimulatorDevice> AvailableDevices => available_devices;
 		public IEnumerable<SimDevicePair> AvailableDevicePairs => available_device_pairs;
 
 		public Simulators (IHarness harness, IProcessManager processManager)
@@ -112,8 +112,7 @@ namespace Xharness.Hardware {
 						}
 
 						foreach (XmlNode sim in simulator_data.SelectNodes ("/MTouch/Simulator/AvailableDevices/SimDevice")) {
-							available_devices.Add (new SimDevice () {
-								Harness = Harness,
+							available_devices.Add (new SimulatorDevice (Harness, processManager) {
 								Name = sim.Attributes ["Name"].Value,
 								UDID = sim.Attributes ["UDID"].Value,
 								SimRuntime = sim.SelectSingleNode ("SimRuntime").InnerText,
@@ -164,7 +163,7 @@ namespace Xharness.Hardware {
 			IEnumerable<ISimulatorDevice> devices = null;
 
 			if (!force) {
-				devices = AvailableDevices.Where ((SimDevice v) => v.SimRuntime == runtime && v.SimDeviceType == devicetype);
+				devices = AvailableDevices.Where ((SimulatorDevice v) => v.SimRuntime == runtime && v.SimDeviceType == devicetype);
 				if (devices.Any ())
 					return devices;
 			}

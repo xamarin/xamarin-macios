@@ -82,7 +82,7 @@ namespace Xharness.Jenkins.TestTasks
 				foreach (var dev in devices)
 					await dev.ShutdownAsync (Jenkins.MainLog);
 
-				await SimDevice.KillEverythingAsync (Jenkins.MainLog);
+				await devices.FirstOrDefault()?.KillEverythingAsync (Jenkins.MainLog);
 
 				run_timer.Stop ();
 			}

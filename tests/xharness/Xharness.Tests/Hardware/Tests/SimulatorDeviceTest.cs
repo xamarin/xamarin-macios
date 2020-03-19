@@ -10,12 +10,12 @@ using Xharness.Logging;
 
 namespace Xharness.Tests.Hardware.Tests {
 	[TestFixture]
-	public class SimDeviceTest {
+	public class SimulatorDeviceTest {
 
 		Mock<ILog> executionLog;
 		Mock<IProcessManager> processManager;
 		Mock<IHarness> harness;
-		SimDevice simulator;
+		SimulatorDevice simulator;
 
 		[SetUp]
 		public void SetUp ()
@@ -23,9 +23,7 @@ namespace Xharness.Tests.Hardware.Tests {
 			executionLog = new Mock<ILog> ();
 			processManager = new Mock<IProcessManager> ();
 			harness = new Mock<IHarness> ();
-			simulator = new SimDevice {
-				Harness = harness.Object,
-				ProcessManager = processManager.Object,
+			simulator = new SimulatorDevice (harness.Object, processManager.Object) {
 				UDID = Guid.NewGuid ().ToString ()
 			};
 		}
@@ -75,13 +73,17 @@ namespace Xharness.Tests.Hardware.Tests {
 		}
 
 		[Test]
+		[Ignore("Running this test will actually kill simulators on the machine")]
 		public async Task KillEverythingAsyncTest ()
 		{
 			Func<IList<string>, bool> verifyKillAll = (args) => {
 				var toKill = new List<string> { "-9", "iPhone Simulator", "iOS Simulator", "Simulator", "Simulator (Watch)", "com.apple.CoreSimulator.CoreSimulatorService", "ibtoold" };
 				return args.Where (a => toKill.Contains (a)).Count () == toKill.Count;
 			};
-			await SimDevice.KillEverythingAsync (executionLog.Object, processManager.Object);
+
+			var simulator = new SimulatorDevice (Mock.Of<IHarness> (), processManager.Object);
+			await simulator.KillEverythingAsync (executionLog.Object);
+
 			// verify that all the diff process have been killed making sure args are correct
 			processManager.Verify (p => p.ExecuteCommandAsync (It.Is<string> (s => s == "launchctl"), It.Is<string []> (args => args.Where (a => a == "remove" || a == "com.apple.CoreSimulator.CoreSimulatorService").Count () == 2), It.IsAny<ILog> (), It.IsAny<TimeSpan> (), null, null));
 			processManager.Verify (p => p.ExecuteCommandAsync (It.Is<string> (s => s == "killall"), It.Is<IList<string>> (a => verifyKillAll (a)), It.IsAny<ILog> (), It.IsAny<TimeSpan> (), null, null));
