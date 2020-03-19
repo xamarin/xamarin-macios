@@ -718,7 +718,7 @@ namespace Xharness {
 			var crashed = false;
 			if (File.Exists (listener_log.FullPath)) {
 				WrenchLog.WriteLine ("AddFile: {0}", listener_log.FullPath);
-				success = true; // TODO: Will be done by Manuel: TestsSucceeded (this.AppInformation, listener_log.FullPath, timed_out, out crashed);
+				success = TestsSucceeded (AppInformation, listener_log.FullPath, timed_out, out crashed);
 			} else if (timed_out) {
 				WrenchLog.WriteLine ("AddSummary: <b><i>{0} never launched</i></b><br/>", mode);
 				MainLog.WriteLine ("Test run never launched");
