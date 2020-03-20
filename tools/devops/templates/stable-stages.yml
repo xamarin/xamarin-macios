@@ -36,7 +36,7 @@ parameters:
   type: number
   default: 5
 
-# stages:
+stages:
 # - stage: iOSDeviceTests 
 #   displayName: 'iOS Device Tests'
 #   dependsOn: []    # this removes the implicit dependency on previous stage and causes this to run in parallel
