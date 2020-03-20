@@ -675,7 +675,7 @@ namespace Xharness {
 					// We need to check for MT1111 (which means that mlaunch won't wait for the app to exit).
 					var callbackLog = new CallbackLog ((line) => {
 						// MT1111: Application launched successfully, but it's not possible to wait for the app to exit as requested because it's not possible to detect app termination when launching using gdbserver
-						waitedForExit &= !line?.Contains ("MT1111: ") != true;
+						waitedForExit &= line?.Contains ("MT1111: ") != true;
 						if (line?.Contains ("error MT1007") == true)
 							launch_failure = true;
 					});
