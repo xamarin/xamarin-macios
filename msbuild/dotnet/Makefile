@@ -136,8 +136,6 @@ $(DIRECTORIES):
 all-local:: $(TARGETS)
 
 pack: prepare
-	$(Q) rm -Rf nupkgs
-	$(Q) mkdir -p nupkgs
 	$(Q) $(MAKE) pack-iOS pack-tvOS pack-watchOS pack-macOS
 
 # just a temporary target while debugging for faster turnaround
@@ -158,9 +156,14 @@ TEST_FEED_PATH=test/feed
 
 pack-%: package/versions.targets
 	$(Q) rm -Rf $(TEST_FEED_PATH)/xamarin.$(shell echo $* | tr '[:upper:]' '[:lower:]').sdk
+	$(Q) rm -f nupkgs/Xamarin.$*.Sdk.*.nupkg
 	$(if $(V),,@echo "PACK     nupkgs/Xamarin.$*.Sdk.nupkg";) $(DOTNET) pack package/$*/Xamarin.$*.csproj --output nupkgs $(DOTNET_PACK_VERBOSITY)
 	$(if $(V),,@echo "ADD      nupkgs/Xamarin.$*.Sdk.nupkg";) nuget add nupkgs/Xamarin.$*.Sdk.*nupkg -source $(TEST_FEED_PATH) $(NUGET_VERBOSITY)
-	echo packed-$*
+	@# Add the hash to the filename
+	$(Q) CURRENT_HASH=$(shell grep '<CurrentHash>' package/versions.targets | sed -e 's/<[/]*CurrentHash>//g' -e 's/[[:space:]]//g'); \
+	NAME=$$(echo nupkgs/Xamarin.$*.Sdk.*nupkg | sed -e 's/.nupkg$$//'); \
+	mv "$$NAME.nupkg" "$$NAME+$$CURRENT_HASH.nupkg"
+	$(Q) echo "Created: $$(ls -1 nupkgs/Xamarin.$*.Sdk.*nupkg)"
 
 test/NuGet.config: $(TOP)/NuGet.config
 	$(Q_CP) $< $@.tmp
