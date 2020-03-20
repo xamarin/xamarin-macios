@@ -11,7 +11,7 @@ namespace Xharness.Jenkins
 	// make each connected device a separate resource, which will make it possible
 	// to run tests in parallel across devices (and at the same time use the desktop
 	// to build the next test project).
-	class Resource
+	public class Resource
 	{
 		public string Name;
 		public string Description;
@@ -91,7 +91,7 @@ namespace Xharness.Jenkins
 		}
 	}
 
-	interface IAcquiredResource : IDisposable
+	public interface IAcquiredResource : IDisposable
 	{
 		Resource Resource { get; }
 	}

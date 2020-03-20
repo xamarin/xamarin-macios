@@ -171,6 +171,8 @@
     <Compile Include="BCLTestImporter\Xamarin\AssemblyDefinitionFactory.cs" />
     <Compile Include="BCLTestImporter\Xamarin\TestAssemblyDefinition.cs" />
     <Compile Include="IResultParser.cs" />
+    <Compile Include="TestResult.cs" />
+    <Compile Include="IAppRunner.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\tools\mtouch\SdkVersions.cs">

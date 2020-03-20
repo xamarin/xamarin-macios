@@ -10,7 +10,7 @@ using Xharness.Utilities;
 
 namespace Xharness.Jenkins.TestTasks
 {
-	abstract class TestTask
+	public abstract class TestTask
 	{
 		static int counter;
 		public readonly int ID = counter++;
