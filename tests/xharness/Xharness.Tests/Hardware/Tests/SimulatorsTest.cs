@@ -71,14 +71,14 @@ namespace Xharness.Tests.Hardware.Tests {
 			});
 
 			// validate the execution of mlaunch
-			MlaunchArgument sdkRootArg = passedArguments.GetArguments ().Where (a => a is SdkRootArgument).FirstOrDefault();
+			MlaunchArgument sdkRootArg = passedArguments.Where (a => a is SdkRootArgument).FirstOrDefault();
 			Assert.IsNotNull (sdkRootArg, "sdk arg missing");
 			AssertArgumentValue (sdkRootArg, sdkPath, "sdk arg wrong");
 
-			MlaunchArgument listSimArg = passedArguments.GetArguments ().Where (a => a is ListSimulatorsArgument).FirstOrDefault();
+			MlaunchArgument listSimArg = passedArguments.Where (a => a is ListSimulatorsArgument).FirstOrDefault();
 			Assert.IsNotNull (listSimArg, "list devices arg missing");
 			
-			MlaunchArgument outputFormatArg = passedArguments.GetArguments ().Where (a => a is XmlOutputFormatArgument).FirstOrDefault();
+			MlaunchArgument outputFormatArg = passedArguments.Where (a => a is XmlOutputFormatArgument).FirstOrDefault();
 			Assert.IsNotNull (outputFormatArg, "output format arg missing");
 		}
 
@@ -109,7 +109,7 @@ namespace Xharness.Tests.Hardware.Tests {
 					passedArguments = args;
 
 					// we get the temp file that was passed as the args, and write our sample xml, which will be parsed to get the devices :)
-					var tempPath = args.GetArguments ().Where (a => a is ListSimulatorsArgument).First ().AsCommandLineArgument ();
+					var tempPath = args.Where (a => a is ListSimulatorsArgument).First ().AsCommandLineArgument ();
 					tempPath = tempPath.Substring(tempPath.IndexOf('=') + 1);
 
 					CopySampleData (tempPath);
@@ -121,14 +121,14 @@ namespace Xharness.Tests.Hardware.Tests {
 			// validate the execution of mlaunch
 			Assert.AreEqual (mlaunchPath, processPath, "process path");
 
-			MlaunchArgument sdkRootArg = passedArguments.GetArguments ().Where (a => a is SdkRootArgument).FirstOrDefault();
+			MlaunchArgument sdkRootArg = passedArguments.Where (a => a is SdkRootArgument).FirstOrDefault();
 			Assert.IsNotNull (sdkRootArg, "sdk arg missing");
 			AssertArgumentValue (sdkRootArg, sdkPath, "sdk arg wrong");
 
-			MlaunchArgument listSimArg = passedArguments.GetArguments ().Where (a => a is ListSimulatorsArgument).FirstOrDefault();
+			MlaunchArgument listSimArg = passedArguments.Where (a => a is ListSimulatorsArgument).FirstOrDefault();
 			Assert.IsNotNull (listSimArg, "list devices arg missing");
 			
-			MlaunchArgument outputFormatArg = passedArguments.GetArguments ().Where (a => a is XmlOutputFormatArgument).FirstOrDefault();
+			MlaunchArgument outputFormatArg = passedArguments.Where (a => a is XmlOutputFormatArgument).FirstOrDefault();
 			Assert.IsNotNull (outputFormatArg, "output format arg missing");
 
 			Assert.AreEqual (75, simulators.AvailableDevices.Count());
@@ -158,7 +158,7 @@ namespace Xharness.Tests.Hardware.Tests {
 					passedArguments = args;
 
 					// we get the temp file that was passed as the args, and write our sample xml, which will be parsed to get the devices :)
-					var tempPath = args.GetArguments ().Where (a => a is ListSimulatorsArgument).First ().AsCommandLineArgument ();
+					var tempPath = args.Where (a => a is ListSimulatorsArgument).First ().AsCommandLineArgument ();
 					tempPath = tempPath.Substring(tempPath.IndexOf('=') + 1);
 
 					CopySampleData (tempPath);

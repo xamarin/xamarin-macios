@@ -19,6 +19,15 @@
 	}
 
 	/// <summary>
+	/// Write the syslog from the device to the console.
+	/// </summary>
+	public sealed class LogDevArgument : OptionArgument {
+		public LogDevArgument () : base ("logdev")
+		{
+		}
+	}
+
+	/// <summary>
 	/// List the available simulators. The output is xml, and written to the specified file.
 	/// </summary>
 	public sealed class ListSimulatorsArgument : SingleValueArgument {

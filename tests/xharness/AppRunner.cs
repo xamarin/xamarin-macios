@@ -655,7 +655,7 @@ namespace Xharness {
 					args.Add (new WaitForExitArgument ());
 				}
 
-				args.Add (new DeviceArgument (deviceName));
+				args.Add (new DeviceNameArgument (deviceName));
 
 				var deviceSystemLog = Logs.Create ($"device-{deviceName}-{Helpers.Timestamp}.log", "Device log");
 				var deviceLogCapturer = deviceLogCapturerFactory.Create (harness.HarnessLog, deviceSystemLog, deviceName);
@@ -875,19 +875,6 @@ namespace Xharness {
 			}
 
 			return success.Value ? 0 : 1;
-		}
-
-		public void AddDeviceName (IList<string> args)
-		{
-			AddDeviceName (args, deviceName);
-		}
-
-		public static void AddDeviceName (IList<string> args, string device_name)
-		{
-			if (!string.IsNullOrEmpty (device_name)) {
-				args.Add ("--devname");
-				args.Add (device_name);
-			}
 		}
 	}
 }

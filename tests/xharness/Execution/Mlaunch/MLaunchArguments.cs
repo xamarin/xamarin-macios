@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,8 +13,8 @@ namespace Xharness.Execution.Mlaunch {
 	}
 
 	public abstract class SingleValueArgument : MlaunchArgument {
-		private readonly string argumentName;
-		private readonly string argumentValue;
+		readonly string argumentName;
+		readonly string argumentValue;
 
 		protected SingleValueArgument (string argumentName, string argumentValue)
 		{
@@ -25,7 +26,7 @@ namespace Xharness.Execution.Mlaunch {
 	}
 
 	public abstract class OptionArgument : MlaunchArgument {
-		private readonly string argumentName;
+		readonly string argumentName;
 
 		protected OptionArgument (string argumentName)
 		{
@@ -35,7 +36,7 @@ namespace Xharness.Execution.Mlaunch {
 		public override string AsCommandLineArgument () => $"--{argumentName}";
 	}
 
-	public class MlaunchArguments {
+	public class MlaunchArguments : IEnumerable<MlaunchArgument> {
 		readonly List<MlaunchArgument> arguments = new List<MlaunchArgument> ();
 
 		public MlaunchArguments (params MlaunchArgument [] args)
@@ -44,8 +45,13 @@ namespace Xharness.Execution.Mlaunch {
 		}
 
 		public void Add (MlaunchArgument arg) => arguments.Add (arg);
+
 		public void AddRange (IEnumerable<MlaunchArgument> args) => arguments.AddRange (args);
+
 		public string AsCommandLine () => string.Join (" ", arguments.Select (a => a.AsCommandLineArgument ()));
-		public IEnumerable<MlaunchArgument> GetArguments () => arguments;
+
+		public IEnumerator<MlaunchArgument> GetEnumerator () => arguments.GetEnumerator();
+
+		IEnumerator IEnumerable.GetEnumerator () => arguments.GetEnumerator ();
 	}
 }
