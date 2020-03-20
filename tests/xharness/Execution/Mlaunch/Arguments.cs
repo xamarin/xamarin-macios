@@ -228,7 +228,7 @@
 	/// Specify which simulator to launch.
 	/// </summary>
 	public sealed class SimulatorUDIDArgument : SingleValueArgument {
-		public SimulatorUDIDArgument (string udid) : base ("--device=:v2:udid", udid)
+		public SimulatorUDIDArgument (string udid) : base ("device=:v2:udid", udid)
 		{
 		}
 	}
@@ -247,8 +247,8 @@
 		}
 
 		public override string AsCommandLineArgument () => "--launchsimbundleid " +
-			"todayviewforextensions:" + bundleId + " " +
-			"--observe-extension " + launchAppPath;
+			"todayviewforextensions:" + Escape (bundleId) + " " +
+			"--observe-extension " + Escape (launchAppPath);
 	}
 
 	/// <summary>
@@ -265,16 +265,18 @@
 		}
 
 		public override string AsCommandLineArgument () => "--launchdevbundleid " +
-			"todayviewforextensions:" + bundleId + " " +
-			"--observe-extension " + launchAppPath;
+			"todayviewforextensions:" + Escape (bundleId) + " " +
+			"--observe-extension " + Escape (launchAppPath);
 	}
 
 	/// <summary>
 	/// Set the verbosity level. Can be used repeatedly to lower the level.
 	/// </summary>
-	public sealed class VerbosityArgument : OptionArgument {
-		public VerbosityArgument () : base ("v")
+	public sealed class VerbosityArgument : MlaunchArgument {
+		public VerbosityArgument ()
 		{
 		}
+
+		public override string AsCommandLineArgument () => "-v";
 	}
 }
