@@ -1,8 +1,5 @@
 TOP = ..
 
-ifdef INCLUDE_MAC
-SUBDIRS += no-mmp
-endif
 # disabled for now: mac-test
 
 include $(TOP)/Make.config
