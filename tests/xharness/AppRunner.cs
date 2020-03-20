@@ -466,7 +466,7 @@ namespace Xharness {
 
 			if (isSimulator) {
 				args.Add (new SetAppArgumentArgument ("-hostname:127.0.0.1", true));
-				args.Add (new SetEnvVariableArgument ("NUNIT_HOSTNAME=127.0.0", 1));
+				args.Add (new SetEnvVariableArgument ("NUNIT_HOSTNAME", "127.0.0.1"));
 			} else {
 				var ips = new StringBuilder ();
 				var ipAddresses = System.Net.Dns.GetHostEntry (System.Net.Dns.GetHostName ()).AddressList;

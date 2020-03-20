@@ -183,6 +183,9 @@
 		{
 			this.variableName = variableName ?? throw new System.ArgumentNullException (nameof (variableName));
 			this.variableValue = variableValue?.ToString() ?? throw new System.ArgumentNullException (nameof (variableValue));
+
+			if (variableValue is bool)
+				this.variableValue = this.variableValue.ToLower ();
 		}
 
 		public override string AsCommandLineArgument () => $"-setenv={variableName}={variableValue}";

@@ -13,6 +13,7 @@ using Xharness.Execution.Mlaunch;
 using Xharness.Hardware;
 using Xharness.Listeners;
 using Xharness.Logging;
+using Xharness.Utilities;
 
 namespace Xharness.Tests {
 	[TestFixture]
@@ -206,6 +207,9 @@ namespace Xharness.Tests {
 			var processResult = new ProcessExecutionResult () { ExitCode = 1, TimedOut = false };
 			processManager.SetReturnsDefault (Task.FromResult (processResult));
 
+			devices.Setup (x => x.ConnectedDevices).Returns (mockDevices);
+			
+			// Act
 			var appRunner = new AppRunner (processManager.Object,
 				simulatorsFactory,
 				listenerFactory,
@@ -221,19 +225,19 @@ namespace Xharness.Tests {
 				projectFilePath: projectFilePath,
 				buildConfiguration: "Debug");
 
-			devices.Setup (x => x.ConnectedDevices).Returns (mockDevices);
-
-			// Act
 			CancellationToken cancellationToken = new CancellationToken ();
 			var result = await appRunner.InstallAsync (cancellationToken);
 
 			// Verify
 			Assert.AreEqual (1, result.ExitCode);
 
+			var expectedArgs = $"--sdkroot=/path/to/xcode -v -v -v " +
+				$"--installdev={StringUtils.FormatArguments (appPath)} " +
+				$"--devname=\"Test iPad\"";
+
 			processManager.Verify (x => x.ExecuteCommandAsync (
 				"/path/to/mlaunch",
-				It.Is<MlaunchArguments> (args => args.AsCommandLine() ==
-					"--sdkroot /path/to/xcode -v -v -v --installdev appPat --devname Test iPad"),
+				It.Is<MlaunchArguments> (args => args.AsCommandLine() == expectedArgs),
 				mainLog.Object,
 				TimeSpan.FromHours (1),
 				null,
@@ -250,6 +254,9 @@ namespace Xharness.Tests {
 			var processResult = new ProcessExecutionResult () { ExitCode = 3, TimedOut = false };
 			processManager.SetReturnsDefault (Task.FromResult (processResult));
 
+			devices.Setup (x => x.ConnectedDevices).Returns (mockDevices.Reverse ());
+			
+			// Act
 			var appRunner = new AppRunner (processManager.Object,
 				simulatorsFactory,
 				listenerFactory,
@@ -265,16 +272,18 @@ namespace Xharness.Tests {
 				projectFilePath: Path.Combine (sampleProjectPath, "SystemXunit.csproj"),
 				buildConfiguration: "Debug");
 
-			devices.Setup (x => x.ConnectedDevices).Returns (mockDevices.Reverse ());
-
 			var result = await appRunner.UninstallAsync ();
 
+			// Verify
 			Assert.AreEqual (3, result.ExitCode);
+
+			var expectedArgs = $"--sdkroot=/path/to/xcode -v -v " +
+				$"--uninstalldevbundleid={StringUtils.FormatArguments (appName)} " +
+				$"--devname=\"Test iPad\"";
 
 			processManager.Verify (x => x.ExecuteCommandAsync (
 				"/path/to/mlaunch",
-				It.Is<MlaunchArguments> (args => args.AsCommandLine() ==
-					"--sdkroot /path/to/xcode -v -v -v --uninstalldevbundleid appPat --devname Test iPad"),
+				It.Is<MlaunchArguments> (args => args.AsCommandLine() == expectedArgs),
 				mainLog.Object,
 				TimeSpan.FromMinutes (1),
 				null,
@@ -407,14 +416,15 @@ namespace Xharness.Tests {
 					It.IsAny<string> ()))
 				.Returns (captureLog.Object);
 
-			var expectedArgs = $"--sdkroot {xcodePath} -v -v -argument=-connection-mode -argument=none " +
-				$"-argument=-app-arg:-autostart -setenv=NUNIT_AUTOSTART=true -argument=-app-arg:-autoexit " +
-				$"-setenv=NUNIT_AUTOEXIT=true -argument=-app-arg:-enablenetwork -setenv=NUNIT_ENABLE_NETWORK=true " +
+			var expectedArgs = $"--sdkroot={StringUtils.FormatArguments (xcodePath)} -v -v " +
+				$"-argument=-connection-mode -argument=none -argument=-app-arg:-autostart " +
+				$"-setenv=NUNIT_AUTOSTART=true -argument=-app-arg:-autoexit -setenv=NUNIT_AUTOEXIT=true " +
+				$"-argument=-app-arg:-enablenetwork -setenv=NUNIT_ENABLE_NETWORK=true " +
 				$"-setenv=DISABLE_SYSTEM_PERMISSION_TESTS=1 -argument=-app-arg:-hostname:127.0.0.1 " +
 				$"-setenv=NUNIT_HOSTNAME=127.0.0.1 -argument=-app-arg:-transport:Tcp -setenv=NUNIT_TRANSPORT=TCP " +
 				$"-argument=-app-arg:-hostport:{simpleListener.Object.Port} -setenv=NUNIT_HOSTPORT={simpleListener.Object.Port} " +
-				$"-setenv=env1=value1 -setenv=env2=value2 --launchsim {appPath} --stdout=tty1 --stderr=tty1 " +
-				$"--device=:v2:udid={simulator.Object.UDID}";
+				$"-setenv=env1=value1 -setenv=env2=value2 --launchsim={StringUtils.FormatArguments (appPath)} " +
+				$"--stdout=tty1 --stderr=tty1 --device=:v2:udid={simulator.Object.UDID}";
 
 			processManager
 				.Setup (x => x.ExecuteCommandAsync (
@@ -562,13 +572,13 @@ namespace Xharness.Tests {
 				ips.Append (ipAddresses [i].ToString ());
 			}
 
-			var expectedArgs = $"--sdkroot {xcodePath} -v -v -argument=-connection-mode -argument=none " +
+			var expectedArgs = $"--sdkroot={StringUtils.FormatArguments (xcodePath)} -v -v -argument=-connection-mode -argument=none " +
 				$"-argument=-app-arg:-autostart -setenv=NUNIT_AUTOSTART=true -argument=-app-arg:-autoexit " +
 				$"-setenv=NUNIT_AUTOEXIT=true -argument=-app-arg:-enablenetwork -setenv=NUNIT_ENABLE_NETWORK=true " +
 				$"-setenv=DISABLE_SYSTEM_PERMISSION_TESTS=1 -argument=-app-arg:-hostname:{ips} -setenv=NUNIT_HOSTNAME={ips} " +
 				$"-argument=-app-arg:-transport:Tcp -setenv=NUNIT_TRANSPORT=TCP -argument=-app-arg:-hostport:{simpleListener.Object.Port} " +
 				$"-setenv=NUNIT_HOSTPORT={simpleListener.Object.Port} -setenv=env1=value1 -setenv=env2=value2 " +
-				$"--launchdev {appPath} --disable-memory-limits --wait-for-exit --devname Test iPad";
+				$"--launchdev={StringUtils.FormatArguments (appPath)} --disable-memory-limits --wait-for-exit --devname=\"Test iPad\"";
 
 			processManager
 				.Setup (x => x.ExecuteCommandAsync (
@@ -669,14 +679,14 @@ namespace Xharness.Tests {
 					ips.Append (',');
 				ips.Append (ipAddresses [i].ToString ());
 			}
-
-			var expectedArgs = $"--sdkroot {xcodePath} -v -v -argument=-connection-mode -argument=none " +
+			
+			var expectedArgs = $"--sdkroot={StringUtils.FormatArguments (xcodePath)} -v -v -argument=-connection-mode -argument=none " +
 				$"-argument=-app-arg:-autostart -setenv=NUNIT_AUTOSTART=true -argument=-app-arg:-autoexit " +
 				$"-setenv=NUNIT_AUTOEXIT=true -argument=-app-arg:-enablenetwork -setenv=NUNIT_ENABLE_NETWORK=true " +
 				$"-setenv=DISABLE_SYSTEM_PERMISSION_TESTS=1 -argument=-app-arg:-hostname:{ips} -setenv=NUNIT_HOSTNAME={ips} " +
 				$"-argument=-app-arg:-transport:Tcp -setenv=NUNIT_TRANSPORT=TCP -argument=-app-arg:-hostport:{simpleListener.Object.Port} " +
 				$"-setenv=NUNIT_HOSTPORT={simpleListener.Object.Port} -setenv=env1=value1 -setenv=env2=value2 " +
-				$"--launchdev {appPath} --disable-memory-limits --wait-for-exit --devname Test iPad";
+				$"--launchdev={StringUtils.FormatArguments (appPath)} --disable-memory-limits --wait-for-exit --devname=\"Test iPad\"";
 
 			processManager
 				.Setup (x => x.ExecuteCommandAsync (
