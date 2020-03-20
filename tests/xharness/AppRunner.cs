@@ -519,18 +519,18 @@ namespace Xharness {
 			if (IsExtension) {
 				switch (AppInformation.Extension) {
 				case Extension.TodayExtension:
-					args.Add (isSimulator ? "--launchsimbundleid" : "--launchdevbundleid");
-					args.Add ("todayviewforextensions:" + AppInformation.BundleIdentifier);
-					args.Add ("--observe-extension");
-					args.Add (AppInformation.LaunchAppPath);
+					args.Add (isSimulator
+						? (MlaunchArgument) new LaunchSimulatorExtensionArgument (AppInformation.LaunchAppPath, AppInformation.BundleIdentifier)
+						: new LaunchDeviceExtensionArgument (AppInformation.LaunchAppPath, AppInformation.BundleIdentifier));
 					break;
 				case Extension.WatchKit2:
 				default:
 					throw new NotImplementedException ();
 				}
 			} else {
-				args.Add (isSimulator ? "--launchsim" : "--launchdev");
-				args.Add (AppInformation.LaunchAppPath);
+				args.Add (isSimulator
+					? (MlaunchArgument) new LaunchSimulatorArgument (AppInformation.LaunchAppPath)
+					: new LaunchDeviceArgument (AppInformation.LaunchAppPath));
 			}
 			if (!isSimulator)
 				args.Add (new DisableMemoryLimitsArgument ());
@@ -583,7 +583,7 @@ namespace Xharness {
 						await sim.PrepareSimulatorAsync (MainLog, AppInformation.BundleIdentifier);
 				}
 
-				args.Add ($"--device=:v2:udid={simulator.UDID}");
+				args.Add (new SimulatorUDIDArgument (simulator.UDID));
 
 				await crashReporter.StartCaptureAsync ();
 
@@ -655,7 +655,7 @@ namespace Xharness {
 					args.Add (new WaitForExitArgument ());
 				}
 
-				AddDeviceName (args);
+				args.Add (new DeviceArgument (deviceName));
 
 				var deviceSystemLog = Logs.Create ($"device-{deviceName}-{Helpers.Timestamp}.log", "Device log");
 				var deviceLogCapturer = deviceLogCapturerFactory.Create (harness.HarnessLog, deviceSystemLog, deviceName);

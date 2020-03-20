@@ -196,6 +196,69 @@
 		{
 		}
 	}
+	
+	/// <summary>
+	/// Launch an app that is installed on device, specified by bundle identifier.
+	/// </summary>
+	public sealed class LaunchDeviceArgument : SingleValueArgument {
+		public LaunchDeviceArgument (string launchAppPath) : base ("launchdev", launchAppPath)
+		{
+		}
+	}
+	
+	/// <summary>
+	/// Launch the specified MonoTouch.app in the simulator.
+	/// </summary>
+	public sealed class LaunchSimulatorArgument : SingleValueArgument {
+		public LaunchSimulatorArgument (string launchAppPath) : base ("launchsim", launchAppPath)
+		{
+		}
+	}
+	
+	/// <summary>
+	/// Specify which simulator to launch.
+	/// </summary>
+	public sealed class SimulatorUDIDArgument : SingleValueArgument {
+		public SimulatorUDIDArgument (string udid) : base ("--device=:v2:udid", udid)
+		{
+		}
+	}
+
+	/// <summary>
+	/// Launch an app that is installed on device, specified by bundle identifier.
+	/// </summary>
+	public sealed class LaunchSimulatorExtensionArgument : MlaunchArgument {
+		readonly string launchAppPath;
+		readonly string bundleId;
+
+		public LaunchSimulatorExtensionArgument (string launchAppPath, string bundleId)
+		{
+			this.launchAppPath = launchAppPath ?? throw new System.ArgumentNullException (nameof (launchAppPath));
+			this.bundleId = bundleId ?? throw new System.ArgumentNullException (nameof (bundleId));
+		}
+
+		public override string AsCommandLineArgument () => "--launchsimbundleid " +
+			"todayviewforextensions:" + bundleId + " " +
+			"--observe-extension " + launchAppPath;
+	}
+
+	/// <summary>
+	/// Launch the specified bundle id in the simulator (which must already be installed).
+	/// </summary>
+	public sealed class LaunchDeviceExtensionArgument : MlaunchArgument {
+		readonly string launchAppPath;
+		readonly string bundleId;
+
+		public LaunchDeviceExtensionArgument (string launchAppPath, string bundleId)
+		{
+			this.launchAppPath = launchAppPath ?? throw new System.ArgumentNullException (nameof (launchAppPath));
+			this.bundleId = bundleId ?? throw new System.ArgumentNullException (nameof (bundleId));
+		}
+
+		public override string AsCommandLineArgument () => "--launchdevbundleid " +
+			"todayviewforextensions:" + bundleId + " " +
+			"--observe-extension " + launchAppPath;
+	}
 
 	/// <summary>
 	/// Set the verbosity level. Can be used repeatedly to lower the level.
