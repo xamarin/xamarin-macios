@@ -492,68 +492,68 @@ timestamps {
                             sh (script: "ls -la ${workspace}/package", returnStatus: true /* don't throw exceptions if something goes wrong */)
                         }
 
-                        stage ('Signing') {
-                            def entitlements = "${workspace}/xamarin-macios/mac-entitlements.plist"
-                            currentStage = "${STAGE_NAME}"
-                            echo ("Building on ${env.NODE_NAME}")
-                            def xiPackages = findFiles (glob: "package/xamarin.ios-*.pkg")
-                            if (xiPackages.length > 0) {
-                                xiPackageFilename = xiPackages [0].name
-                                echo ("Created Xamarin.iOS package: ${xiPackageFilename}")
-                            }
-                            def xmPackages = findFiles (glob: "package/xamarin.mac-*.pkg")
-                            if (xmPackages.length > 0) {
-                                xmPackageFilename = xmPackages [0].name
-                                echo ("Created Xamarin.Mac package: ${xmPackageFilename}")
-                            }
-                            def msbuildZip = findFiles (glob: "package/msbuild.zip")
-                            if (msbuildZip.length > 0)
-                                msbuildZipFilename = msbuildZip [0].name
-                            def bundleZip = findFiles (glob: "package/bundle.zip")
-                            if (bundleZip.length > 0)
-                                bundleZipFilename = bundleZip [0].name
+                        // stage ('Signing') {
+                        //     def entitlements = "${workspace}/xamarin-macios/mac-entitlements.plist"
+                        //     currentStage = "${STAGE_NAME}"
+                        //     echo ("Building on ${env.NODE_NAME}")
+                        //     def xiPackages = findFiles (glob: "package/xamarin.ios-*.pkg")
+                        //     if (xiPackages.length > 0) {
+                        //         xiPackageFilename = xiPackages [0].name
+                        //         echo ("Created Xamarin.iOS package: ${xiPackageFilename}")
+                        //     }
+                        //     def xmPackages = findFiles (glob: "package/xamarin.mac-*.pkg")
+                        //     if (xmPackages.length > 0) {
+                        //         xmPackageFilename = xmPackages [0].name
+                        //         echo ("Created Xamarin.Mac package: ${xmPackageFilename}")
+                        //     }
+                        //     def msbuildZip = findFiles (glob: "package/msbuild.zip")
+                        //     if (msbuildZip.length > 0)
+                        //         msbuildZipFilename = msbuildZip [0].name
+                        //     def bundleZip = findFiles (glob: "package/bundle.zip")
+                        //     if (bundleZip.length > 0)
+                        //         bundleZipFilename = bundleZip [0].name
 
-                            if (isPr) {
-                              withCredentials ([string (credentialsId: 'codesign_keychain_pw', variable: 'PRODUCTSIGN_KEYCHAIN_PASSWORD')]) {
-                                sh ("${workspace}/xamarin-macios/jenkins/productsign.sh")
-                              }
-                            } else {
-                                try {
-                                    pkgs = xiPackages + xmPackages
-                                    if (fileExists('release-scripts')) {
-                                        dir('release-scripts') {
-                                            sh ('git checkout sign-and-notarized && git pull')
-                                        }
-                                    } else {
-                                        sh ('git clone git@github.com:xamarin/release-scripts -b sign-and-notarized')
-                                    }
-                                    withCredentials([string(credentialsId: 'codesign_keychain_pw', variable: 'KEYCHAIN_PASS'), string(credentialsId: 'team_id', variable: 'TEAM_ID'), string(credentialsId: 'application_id', variable: 'APP_ID'), string(credentialsId: 'installer_id', variable: 'INSTALL_ID'), usernamePassword(credentialsId: 'apple_account', passwordVariable: 'APPLE_PASS', usernameVariable: 'APPLE_ACCOUNT')]) {
-                                        sh (returnStatus: true, script: "security create-keychain -p ${env.KEYCHAIN_PASS} login.keychain") // needed to repopulate the keychain
-                                        sh ("security unlock-keychain -p ${env.KEYCHAIN_PASS} login.keychain")
-                                        timeout (time: 90, unit: 'MINUTES') {
-                                          sh ("python release-scripts/sign_and_notarize.py -a ${env.APP_ID} -i ${env.INSTALL_ID} -u ${env.APPLE_ACCOUNT} -p ${env.APPLE_PASS} -t ${env.TEAM_ID} -d package/notarized -e ${entitlements} -k login.keychain " + pkgs.flatten ().join (" "))
-                                        }
-                                    }
+                        //     if (isPr) {
+                        //       withCredentials ([string (credentialsId: 'codesign_keychain_pw', variable: 'PRODUCTSIGN_KEYCHAIN_PASSWORD')]) {
+                        //         sh ("${workspace}/xamarin-macios/jenkins/productsign.sh")
+                        //       }
+                        //     } else {
+                        //         try {
+                        //             pkgs = xiPackages + xmPackages
+                        //             if (fileExists('release-scripts')) {
+                        //                 dir('release-scripts') {
+                        //                     sh ('git checkout sign-and-notarized && git pull')
+                        //                 }
+                        //             } else {
+                        //                 sh ('git clone git@github.com:xamarin/release-scripts -b sign-and-notarized')
+                        //             }
+                        //             withCredentials([string(credentialsId: 'codesign_keychain_pw', variable: 'KEYCHAIN_PASS'), string(credentialsId: 'team_id', variable: 'TEAM_ID'), string(credentialsId: 'application_id', variable: 'APP_ID'), string(credentialsId: 'installer_id', variable: 'INSTALL_ID'), usernamePassword(credentialsId: 'apple_account', passwordVariable: 'APPLE_PASS', usernameVariable: 'APPLE_ACCOUNT')]) {
+                        //                 sh (returnStatus: true, script: "security create-keychain -p ${env.KEYCHAIN_PASS} login.keychain") // needed to repopulate the keychain
+                        //                 sh ("security unlock-keychain -p ${env.KEYCHAIN_PASS} login.keychain")
+                        //                 timeout (time: 90, unit: 'MINUTES') {
+                        //                   sh ("python release-scripts/sign_and_notarize.py -a ${env.APP_ID} -i ${env.INSTALL_ID} -u ${env.APPLE_ACCOUNT} -p ${env.APPLE_PASS} -t ${env.TEAM_ID} -d package/notarized -e ${entitlements} -k login.keychain " + pkgs.flatten ().join (" "))
+                        //                 }
+                        //             }
 
-                                    def xiNotarizedPackages = findFiles (glob: "package/notarized/xamarin.ios-*.pkg")
-                                    if (xiNotarizedPackages.length > 0) {
-                                        xiNotarizedPkgFilename = xiNotarizedPackages [0].name
-                                        echo ("Created notarized Xamarin.iOS package: ${xiNotarizedPkgFilename}")
-                                    }
-                                    def xmNotarizedPackages = findFiles (glob: "package/notarized/xamarin.mac-*.pkg")
-                                    if (xmNotarizedPackages.length > 0) {
-                                        xmNotarizedPkgFilename = xmNotarizedPackages [0].name
-                                        echo ("Created notarized Xamarin.Mac package: ${xmNotarizedPkgFilename}")
-                                    }
-                                } catch (ex) {
-                                    echo "Notarization failed:\n${ex.getMessage()}"
-                                    for (def stack : ex.getStackTrace()) {
-                                        echo "\t${stack}"
-                                    }
-                                    manager.addWarningBadge("PKGs are not notarized")
-                                }
-                            }
-                        }
+                        //             def xiNotarizedPackages = findFiles (glob: "package/notarized/xamarin.ios-*.pkg")
+                        //             if (xiNotarizedPackages.length > 0) {
+                        //                 xiNotarizedPkgFilename = xiNotarizedPackages [0].name
+                        //                 echo ("Created notarized Xamarin.iOS package: ${xiNotarizedPkgFilename}")
+                        //             }
+                        //             def xmNotarizedPackages = findFiles (glob: "package/notarized/xamarin.mac-*.pkg")
+                        //             if (xmNotarizedPackages.length > 0) {
+                        //                 xmNotarizedPkgFilename = xmNotarizedPackages [0].name
+                        //                 echo ("Created notarized Xamarin.Mac package: ${xmNotarizedPkgFilename}")
+                        //             }
+                        //         } catch (ex) {
+                        //             echo "Notarization failed:\n${ex.getMessage()}"
+                        //             for (def stack : ex.getStackTrace()) {
+                        //                 echo "\t${stack}"
+                        //             }
+                        //             manager.addWarningBadge("PKGs are not notarized")
+                        //         }
+                        //     }
+                        // }
 
                         stage ('Generate Workspace Info') {
                             withCredentials([string (credentialsId: '92cf81e5-6db5-408c-8a0d-192b36200a16', variable: 'GITHUB_AUTH_TOKEN'), string (credentialsId: 'xamarin-build-tasks', variable: 'XAMARIN_BUILD_TASKS')]) {
