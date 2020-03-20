@@ -344,7 +344,7 @@
     </data>
     
     <data name="E0067" xml:space="preserve">
-        <value>Xcode 10 does not support watchOS 1 apps. Either upgrade to watchOS 2 apps, or use an older version of Xcode</value>
+        <value>Xcode 10 does not support watchOS 1 apps. Either upgrade to watchOS 2 apps, or use an older version of Xcode.</value>
     </data>
     
     <data name="E0068" xml:space="preserve">
