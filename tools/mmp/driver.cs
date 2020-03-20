@@ -909,7 +909,7 @@ namespace Xamarin.Bundler {
 						mono_dir = GetXamMacPrefix ();
 					} else {
 						var dir = new StringBuilder ();
-						RunCommand (pkg_config, new [] { "--variable=prefix", "mono-2" }, null, dir);
+						RunCommand (pkg_config, new [] { "--variable=prefix", "mono-2" }, dir);
 						mono_dir = Path.GetFullPath (dir.ToString ().Replace (Environment.NewLine, String.Empty));
 					}
 				}

@@ -24,7 +24,7 @@ namespace MonoTouchFixtures.ServiceModel {
 		public void ShouldIncludeSystemServiceModel ()
 		{
 			StringBuilder output = new StringBuilder ();
-			int result = Driver.RunCommand ("/Library/Frameworks/Mono.framework/Versions/Current/Commands/monop", new [] { "--refs", $"-r:{TI.FindRootDirectory ()}/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/mono/4.5/System.ServiceModel.dll" }, null, output);
+			int result = Driver.RunCommand ("/Library/Frameworks/Mono.framework/Versions/Current/Commands/monop", new [] { "--refs", $"-r:{TI.FindRootDirectory ()}/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/mono/4.5/System.ServiceModel.dll" }, output);
 			Assert.That (result, Is.EqualTo (0));
 			Assert.That (output.ToString (), Contains.Substring ("System.Web.Services, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"));
 		}
@@ -33,7 +33,7 @@ namespace MonoTouchFixtures.ServiceModel {
 		public void ShouldNotIncludeSystemDrawing ()
 		{
 			StringBuilder output = new StringBuilder ();
-			int result = Driver.RunCommand ("/Library/Frameworks/Mono.framework/Versions/Current/Commands/monop", new [] { "--refs", $"-r:{TI.FindRootDirectory ()}/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/mono/4.5/System.ServiceModel.dll" }, null, output);
+			int result = Driver.RunCommand ("/Library/Frameworks/Mono.framework/Versions/Current/Commands/monop", new [] { "--refs", $"-r:{TI.FindRootDirectory ()}/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/mono/4.5/System.ServiceModel.dll" }, output);
 			Assert.That (result, Is.EqualTo (0));
 			Assert.That (output.ToString (), !Contains.Substring ("System.Drawing"));
 		}
