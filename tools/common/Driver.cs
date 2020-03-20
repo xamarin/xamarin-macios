@@ -380,36 +380,79 @@ namespace Xamarin.Bundler {
 
 		public static int RunCommand (string path, params string [] args)
 		{
-			return RunCommand (path, args, null, (Action<string>) null);
+			return RunCommand (path, args, null, (Action<string>) null, (Action<string>) null, false);
 		}
 
 		public static int RunCommand (string path, IList<string> args)
 		{
-			return RunCommand (path, args, null, (Action<string>) null);
+			return RunCommand (path, args, null, (Action<string>) null, (Action<string>) null, false);
 		}
 
-		public static int RunCommand (string path, IList<string> args, string [] env = null, StringBuilder output = null, bool suppressPrintOnErrors = false)
+		public static int RunCommand (string path, IList<string> args, StringBuilder output)
 		{
-			if (output != null)
-				return RunCommand (path, args, env, (v) => { if (v != null) output.AppendLine (v); }, suppressPrintOnErrors);
-			return RunCommand (path, args, env, (Action<string>) null, suppressPrintOnErrors);
+			return RunCommand (path, args, null, output, output, false);
 		}
 
-		public static int RunCommand (string path, IList<string> args, string [] env = null, Action<string> output_received = null, bool suppressPrintOnErrors = false)
+		public static int RunCommand (string path, IList<string> args, StringBuilder output, bool suppressPrintOnErrors)
 		{
-			return RunCommand (path, StringUtils.FormatArguments (args), env, output_received, suppressPrintOnErrors);
+			return RunCommand (path, args, null, output, output, suppressPrintOnErrors);
 		}
 
-		static int RunCommand (string path, string args, string[] env = null, Action<string> output_received = null, bool suppressPrintOnErrors = false)
+		public static int RunCommand (string path, IList<string> args, string [] env, StringBuilder output)
+		{
+			return RunCommand (path, args, env, output, output, false);
+		}
+
+		public static int RunCommand (string path, IList<string> args, string [] env, StringBuilder output, bool suppressPrintOnErrors)
+		{
+			return RunCommand (path, args, env, output, output, suppressPrintOnErrors);
+		}
+
+		public static int RunCommand (string path, IList<string> args, string [] env, StringBuilder output, StringBuilder error)
+		{
+			return RunCommand (path, args, env, output, error, false);
+		}
+
+		public static int RunCommand (string path, IList<string> args, StringBuilder output, StringBuilder error)
+		{
+			return RunCommand (path, args, null, output, error, false);
+		}
+
+		public static int RunCommand (string path, IList<string> args, StringBuilder output, StringBuilder error, bool suppressPrintOnErrors)
+		{
+			return RunCommand (path, args, null, output, error, suppressPrintOnErrors);
+		}
+
+		public static int RunCommand (string path, IList<string> args, string [] env, StringBuilder output, StringBuilder error, bool suppressPrintOnErrors)
+		{
+			var output_received = output == null ? null : new Action<string> ((v) => { if (v != null) output.AppendLine (v); });
+			var error_received = error == null ? null : new Action<string> ((v) => { if (v != null) error.AppendLine (v); });
+			return RunCommand (path, args, env, output_received, error_received, suppressPrintOnErrors);
+		}
+
+		static int RunCommand (string path, IList<string> args, string [] env, Action<string> output_received, bool suppressPrintOnErrors)
+		{
+			return RunCommand (path, args, env, output_received, output_received, suppressPrintOnErrors);
+		}
+
+		static int RunCommand (string path, IList<string> args, string [] env, Action<string> output_received, Action<string> error_received)
+		{
+			return RunCommand (path, args, env, output_received, error_received, false);
+		}
+
+		static int RunCommand (string path, IList<string> args, string[] env, Action<string> output_received, Action<string> error_received, bool suppressPrintOnErrors)
 		{
 			Exception stdin_exc = null;
-			var info = new ProcessStartInfo (path, args);
+			var info = new ProcessStartInfo (path, StringUtils.FormatArguments (args));
 			info.UseShellExecute = false;
 			info.RedirectStandardInput = false;
 			info.RedirectStandardOutput = true;
 			info.RedirectStandardError = true;
 			System.Threading.ManualResetEvent stdout_completed = new System.Threading.ManualResetEvent (false);
 			System.Threading.ManualResetEvent stderr_completed = new System.Threading.ManualResetEvent (false);
+
+			if (output_received == null ^ error_received == null)
+				throw new ArgumentException ("Either both or neither of 'output_received' and 'error_received' can be specified.");
 
 			var lockobj = new object ();
 			StringBuilder output = null;
@@ -419,6 +462,7 @@ namespace Xamarin.Bundler {
 					if (line != null)
 						output.AppendLine (line);
 				};
+				error_received = output_received;
 			}
 
 			if (env != null){
@@ -434,7 +478,7 @@ namespace Xamarin.Bundler {
 				}
 			}
 
-			Log (1, "{0} {1}", path, args);
+			Log (1, "{0} {1}", info.FileName, info.Arguments);
 
 			using (var p = Process.Start (info)) {
 
@@ -450,7 +494,7 @@ namespace Xamarin.Bundler {
 				p.ErrorDataReceived += (s, e) => {
 					if (e.Data != null) {
 						lock (lockobj)
-							output_received (e.Data);
+							error_received (e.Data);
 					} else {
 						stderr_completed.Set ();
 					}
@@ -967,13 +1011,31 @@ namespace Xamarin.Bundler {
 			args.Add ("-f");
 			args.Add (tool);
 
-			var output = new StringBuilder ();
-			int ret = RunCommand ("xcrun", args, env.ToArray (), output);
+			var stdout = new StringBuilder ();
+			var stderr = new StringBuilder ();
+			var both = new StringBuilder ();
+			// xcrun can write unrelated stuff to stderr even if it succeeds, so we need to separate stdout and stderr.
+			// We also want to print out what happened if something went wrong, and in that case we don't want stdout
+			// and stderr captured separately, because related lines could end up printed far from eachother in time,
+			// and that's confusing. So capture stdout and stderr by themselves, and also capture both together.
+			int ret = RunCommand ("xcrun", args, env.ToArray (),
+				(v) => {
+					lock (both) {
+						both.AppendLine (v);
+						stdout.AppendLine (v);
+					}
+				},
+				(v) => {
+					lock (both) {
+						both.AppendLine (v);
+						stderr.AppendLine (v);
+					}
+				});
 
 			if (ret == 0) {
-				path = output.ToString ().Trim ();
+				path = stdout.ToString ().Trim ();
 			} else {
-				Log (1, "Failed to locate the developer tool '{0}', 'xcrun {1}' returned with the exit code {2}:\n{3}", tool, string.Join (" ", args), ret, output.ToString ());
+				Log (1, "Failed to locate the developer tool '{0}', 'xcrun {1}' returned with the exit code {2}:\n{3}", tool, string.Join (" ", args), ret, both.ToString ());
 			}
 
 			return ret == 0;
