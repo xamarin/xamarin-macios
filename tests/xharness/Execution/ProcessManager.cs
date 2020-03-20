@@ -17,11 +17,30 @@ namespace Xharness.Execution {
 		{
 		}
 
-		public async Task<ProcessExecutionResult> ExecuteCommandAsync (string filename, IList<string> args, ILog log, TimeSpan timeout, Dictionary<string, string> environment_variables = null, CancellationToken? cancellation_token = null)
+		public async Task<ProcessExecutionResult> ExecuteCommandAsync (string filename,
+			IList<string> args,
+			ILog log,
+			TimeSpan timeout,
+			Dictionary<string, string> environment_variables = null,
+			CancellationToken? cancellation_token = null)
 		{
 			using (var p = new Process ()) {
 				p.StartInfo.FileName = filename;
 				p.StartInfo.Arguments = StringUtils.FormatArguments (args);
+				return await RunAsync (p, log, timeout, environment_variables, cancellation_token);
+			}
+		}
+
+		public async Task<ProcessExecutionResult> ExecuteCommandAsync (string filename,
+			MlaunchArguments args,
+			ILog log,
+			TimeSpan timeout,
+			Dictionary<string, string> environment_variables = null,
+			CancellationToken? cancellation_token = null)
+		{
+			using (var p = new Process ()) {
+				p.StartInfo.FileName = filename;
+				p.StartInfo.Arguments = args.AsCommandLine ();
 				return await RunAsync (p, log, timeout, environment_variables, cancellation_token);
 			}
 		}

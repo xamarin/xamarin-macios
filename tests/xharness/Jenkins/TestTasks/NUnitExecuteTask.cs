@@ -19,8 +19,8 @@ namespace Xharness.Jenkins.TestTasks
 		public bool ProduceHtmlReport = true;
 		public bool InProcess;
 
-		public NUnitExecuteTask (BuildToolTask build_task)
-			: base (build_task)
+		public NUnitExecuteTask (BuildToolTask build_task, IProcessManager processManager)
+			: base (build_task, processManager)
 		{
 		}
 

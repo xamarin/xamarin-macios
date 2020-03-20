@@ -51,11 +51,13 @@ namespace Xharness.Tests {
 		Mock<ISimulatorsLoader> simulators;
 		Mock<IDeviceLoader> devices;
 		Mock<ISimpleListener> simpleListener;
+		Mock<ICrashSnapshotReporter> snapshotReporter;
 
 		ILog mainLog;
 		ISimulatorsLoaderFactory simulatorsFactory;
 		IDeviceLoaderFactory devicesFactory;
 		ISimpleListenerFactory listenerFactory;
+		ICrashSnapshotReporterFactory snapshotReporterFactory;
 
 		[SetUp]
 		public void SetUp ()
@@ -64,6 +66,7 @@ namespace Xharness.Tests {
 			simulators = new Mock<ISimulatorsLoader> ();
 			devices = new Mock<IDeviceLoader> ();
 			simpleListener = new Mock<ISimpleListener> ();
+			snapshotReporter = new Mock<ICrashSnapshotReporter> ();
 
 			var mock1 = new Mock<ISimulatorsLoaderFactory> ();
 			mock1.Setup (m => m.CreateLoader ()).Returns (simulators.Object);
@@ -79,6 +82,10 @@ namespace Xharness.Tests {
 				.Returns ((ListenerTransport.Tcp, simpleListener.Object, null));
 			listenerFactory = mock3.Object;
 
+			var mock4 = new Mock<ICrashSnapshotReporterFactory> ();
+			mock4.Setup (m => m.Create (It.IsAny<ILog>(), It.IsAny<ILogs>(), It.IsAny<bool>(), It.IsAny<string>())).Returns (snapshotReporter.Object);
+			snapshotReporterFactory = mock4.Object;
+
 			mainLog = new Mock<ILog> ().Object;
 
 			Directory.CreateDirectory (appPath);
@@ -91,6 +98,7 @@ namespace Xharness.Tests {
 				simulatorsFactory,
 				listenerFactory,
 				devicesFactory,
+				snapshotReporterFactory,
 				Mock.Of<ICaptureLogFactory> (),
 				Mock.Of<IDeviceLogCapturerFactory> (),
 				Mock.Of<IResultParser> (),
@@ -114,6 +122,7 @@ namespace Xharness.Tests {
 				simulatorsFactory,
 				listenerFactory,
 				devicesFactory,
+				snapshotReporterFactory,
 				Mock.Of<ICaptureLogFactory> (),
 				Mock.Of<IDeviceLogCapturerFactory> (),
 				Mock.Of<IResultParser> (),
@@ -136,6 +145,7 @@ namespace Xharness.Tests {
 				simulatorsFactory,
 				listenerFactory,
 				devicesFactory,
+				snapshotReporterFactory,
 				Mock.Of<ICaptureLogFactory> (),
 				Mock.Of<IDeviceLogCapturerFactory> (),
 				Mock.Of<IResultParser> (),
@@ -158,6 +168,7 @@ namespace Xharness.Tests {
 				simulatorsFactory,
 				listenerFactory,
 				devicesFactory,
+				snapshotReporterFactory,
 				Mock.Of<ICaptureLogFactory> (),
 				Mock.Of<IDeviceLogCapturerFactory> (),
 				Mock.Of<IResultParser> (),
@@ -199,6 +210,7 @@ namespace Xharness.Tests {
 				simulatorsFactory,
 				listenerFactory,
 				devicesFactory,
+				snapshotReporterFactory,
 				Mock.Of<ICaptureLogFactory> (),
 				Mock.Of<IDeviceLogCapturerFactory> (),
 				Mock.Of<IResultParser> (),
@@ -259,6 +271,7 @@ namespace Xharness.Tests {
 				simulatorsFactory,
 				listenerFactory,
 				devicesFactory,
+				snapshotReporterFactory,
 				Mock.Of<ICaptureLogFactory> (),
 				Mock.Of<IDeviceLogCapturerFactory> (),
 				Mock.Of<IResultParser> (),

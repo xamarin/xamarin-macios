@@ -9,6 +9,7 @@
     <AssemblyName>mtouch</AssemblyName>
     <RootNamespace>mtouch</RootNamespace>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
@@ -164,6 +165,18 @@
     </Compile>
     <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\external\linker\src\linker\Linker\OutputException.cs">
       <Link>Linker\OutputException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\external\linker\src\linker\Linker\IReflectionPatternRecorder.cs">
+      <Link>Linker\IReflectionPatternRecorder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\external\linker\src\linker\Linker\IDependencyRecorder.cs">
+      <Link>Linker\IDependencyRecorder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\external\linker\src\linker\Linker\XmlDependencyRecorder.cs">
+      <Link>Linker\XmlDependencyRecorder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\external\linker\src\linker\Linker\LoggingReflectionPatternRecorder.cs">
+      <Link>Linker\LoggingReflectionPatternRecorder.cs</Link>
     </Compile>
     <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\external\linker\src\linker\Linker.Steps\BaseStep.cs">
       <Link>Linker.Steps\BaseStep.cs</Link>

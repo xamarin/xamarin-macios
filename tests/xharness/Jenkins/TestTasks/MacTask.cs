@@ -1,11 +1,12 @@
 ﻿using System;
+using Xharness.Execution;
 
 namespace Xharness.Jenkins.TestTasks
 {
 	abstract class MacTask : RunTestTask
 	{
-		public MacTask (BuildToolTask build_task)
-			: base (build_task)
+		public MacTask (BuildToolTask build_task, IProcessManager processManager)
+			: base (build_task, processManager)
 		{
 		}
 

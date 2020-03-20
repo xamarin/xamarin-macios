@@ -29,8 +29,8 @@ namespace Xharness.Jenkins.TestTasks
 			}
 		}
 
-		public RunSimulatorTask (ISimulatorsLoader simulators, MSBuildTask build_task, IEnumerable<ISimulatorDevice> candidates = null)
-			: base (build_task, candidates)
+		public RunSimulatorTask (ISimulatorsLoader simulators, MSBuildTask build_task, IProcessManager processManager, IEnumerable<ISimulatorDevice> candidates = null)
+			: base (build_task, processManager, candidates)
 		{
 			var project = Path.GetFileNameWithoutExtension (ProjectFile);
 			if (project.EndsWith ("-tvos", StringComparison.Ordinal)) {
@@ -81,6 +81,7 @@ namespace Xharness.Jenkins.TestTasks
 				new SimulatorsLoaderFactory (Harness, processManager),
 				new SimpleListenerFactory (),
 				new DeviceLoaderFactory (Harness, processManager),
+				new CrashSnapshotReporterFactory (ProcessManager, Harness.XcodeRoot, Harness.MlaunchPath),
 				new CaptureLogFactory (),
 				new DeviceLogCapturerFactory (processManager, Harness.XcodeRoot, Harness.MlaunchPath),
 				new XmlResultParser (),
