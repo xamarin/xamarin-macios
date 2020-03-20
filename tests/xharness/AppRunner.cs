@@ -64,11 +64,10 @@ namespace Xharness {
 		readonly AppRunnerTarget target;
 		readonly string projectFilePath;
 		readonly IHarness harness;
-		readonly string configuration;
+		readonly string buildConfiguration;
 		readonly string variation;
 		readonly double timeoutMultiplier;
 		readonly BuildToolTask buildTask;
-		readonly string logDirectory;
 
 		string deviceName;
 		string companionDeviceName;
@@ -104,9 +103,9 @@ namespace Xharness {
 						  AppRunnerTarget target,
 						  IHarness harness,
 						  ILog mainLog,
+						  ILogs logs,
 						  string projectFilePath,
-						  string configuration,
-						  string logDirectory = null,
+						  string buildConfiguration,
 						  ISimulatorDevice [] simulators = null,
 						  string deviceName = null,
 						  string companionDeviceName = null,
@@ -126,9 +125,8 @@ namespace Xharness {
 			this.harness = harness ?? throw new ArgumentNullException (nameof (harness));
 			this.MainLog = mainLog ?? throw new ArgumentNullException (nameof (mainLog));
 			this.projectFilePath = projectFilePath ?? throw new ArgumentNullException (nameof (projectFilePath));
-			this.logDirectory = logDirectory ?? harness.LogDirectory;
-			this.Logs = new Logs (this.logDirectory);
-			this.configuration = configuration;
+			this.Logs = logs ?? throw new ArgumentNullException (nameof (logs));
+			this.buildConfiguration = buildConfiguration ?? throw new ArgumentNullException (nameof (buildConfiguration));
 			this.timeoutMultiplier = timeoutMultiplier;
 			this.deviceName = deviceName;
 			this.companionDeviceName = companionDeviceName;
@@ -162,7 +160,7 @@ namespace Xharness {
 				extension = extensionPointIdentifier.ParseFromNSExtensionPointIdentifier ();
 
 			string appPath = Path.Combine (Path.GetDirectoryName (projectFilePath),
-				csproj.GetOutputPath (isSimulator ? "iPhoneSimulator" : "iPhone", configuration).Replace ('\\', Path.DirectorySeparatorChar),
+				csproj.GetOutputPath (isSimulator ? "iPhoneSimulator" : "iPhone", buildConfiguration).Replace ('\\', Path.DirectorySeparatorChar),
 				appName + (extension != null ? ".appex" : ".app"));
 
 			if (!Directory.Exists (appPath))
@@ -430,21 +428,16 @@ namespace Xharness {
 
 		public async Task<int> RunAsync ()
 		{
-			ILog listener_log = null;
-			ILog run_log = MainLog;
-
 			if (!isSimulator)
 				FindDevice ();
 
-			var crashLogs = new Logs (Logs.Directory);
-
-			ICrashSnapshotReporter crash_reports = snapshotReporterFactory.Create (MainLog, crashLogs, isDevice: !isSimulator, deviceName);
-
 			var args = new List<string> ();
+
 			if (!string.IsNullOrEmpty (harness.XcodeRoot)) {
 				args.Add ("--sdkroot");
 				args.Add (harness.XcodeRoot);
 			}
+
 			for (int i = -1; i < harness.Verbosity; i++)
 				args.Add ("-v");
 			args.Add ("-argument=-connection-mode");
@@ -487,7 +480,7 @@ namespace Xharness {
 				args.Add ($"-setenv=NUNIT_HOSTNAME={ips}");
 			}
 
-			listener_log = Logs.Create ($"test-{mode.ToString().ToLower()}-{Helpers.Timestamp}.log", LogType.TestLog.ToString (), timestamp: !useXmlOutput);
+			var listener_log = Logs.Create ($"test-{mode.ToString().ToLower()}-{Helpers.Timestamp}.log", LogType.TestLog.ToString (), timestamp: !useXmlOutput);
 			var (transport, listener, listenerTmpFile) = listenerFactory.Create (mode, MainLog, listener_log, isSimulator, true, useXmlOutput);
 			
 			args.Add ($"-argument=-app-arg:-transport:{transport}");
@@ -548,12 +541,16 @@ namespace Xharness {
 				args.Add ("--disable-memory-limits");
 
 			var timeout = TimeSpan.FromMinutes (harness.Timeout * timeoutMultiplier);
+
+			var crashLogs = new Logs (Logs.Directory);
+			ICrashSnapshotReporter crashReporter = snapshotReporterFactory.Create (MainLog, crashLogs, isDevice: !isSimulator, deviceName);
+
 			if (isSimulator) {
 				if (!await FindSimulatorAsync ())
 					return 1;
 
 				if (mode != RunMode.WatchOS) {
-					var stderr_tty = harness.GetStandardErrorTty();
+					var stderr_tty = harness.GetStandardErrorTty ();
 					if (!string.IsNullOrEmpty (stderr_tty)) {
 						args.Add ($"--stdout={stderr_tty}");
 						args.Add ($"--stderr={stderr_tty}");
@@ -573,10 +570,11 @@ namespace Xharness {
 
 					var logDescription = isCompanion ? LogType.CompanionSystemLog.ToString () : LogType.SystemLog.ToString ();
 					var log = captureLogFactory.Create (Logs,
-						Path.Combine (logDirectory, sim.Name + ".log"),
+						Path.Combine (Logs.Directory, sim.Name + ".log"),
 						sim.SystemLog,
 						harness.Action != HarnessAction.Jenkins,
 						logDescription);
+
 					log.StartCapture ();
 					Logs.Add (log);
 					systemLogs.Add (log);
@@ -592,11 +590,17 @@ namespace Xharness {
 
 				args.Add ($"--device=:v2:udid={simulator.UDID}");
 
-				await crash_reports.StartCaptureAsync ();
+				await crashReporter.StartCaptureAsync ();
 
 				MainLog.WriteLine ("Starting test run");
 
-				var result = await processManager.ExecuteCommandAsync (harness.MlaunchPath, args, run_log, timeout, cancellation_token: cancellation_source.Token);
+				ILog run_log = MainLog;
+				var result = await processManager.ExecuteCommandAsync (harness.MlaunchPath,
+					args,
+					run_log,
+					timeout,
+					cancellation_token: cancellation_source.Token);
+
 				if (result.TimedOut) {
 					timed_out = true;
 					success = false;
@@ -646,7 +650,7 @@ namespace Xharness {
 
 				foreach (var log in systemLogs)
 					log.StopCapture ();
-				
+
 			} else {
 				MainLog.WriteLine ("*** Executing {0}/{1} on device '{2}' ***", AppInformation.AppName, mode, deviceName);
 
@@ -655,15 +659,15 @@ namespace Xharness {
 				} else {
 					args.Add ("--wait-for-exit");
 				}
-				
+
 				AddDeviceName (args);
 
 				var deviceSystemLog = Logs.Create ($"device-{deviceName}-{Helpers.Timestamp}.log", "Device log");
-				var deviceLogCapturer = deviceLogCapturerFactory.Create (harness.HarnessLog,deviceSystemLog, deviceName);
+				var deviceLogCapturer = deviceLogCapturerFactory.Create (harness.HarnessLog, deviceSystemLog, deviceName);
 				deviceLogCapturer.StartCapture ();
 
 				try {
-					await crash_reports.StartCaptureAsync ();
+					await crashReporter.StartCaptureAsync ();
 
 					MainLog.WriteLine ("Starting test run");
 
@@ -675,6 +679,7 @@ namespace Xharness {
 						if (line?.Contains ("error MT1007") == true)
 							launch_failure = true;
 					});
+
 					var runLog = Log.CreateAggregatedLog (callbackLog, MainLog);
 					var timeoutWatch = Stopwatch.StartNew ();
 					var result = await processManager.ExecuteCommandAsync (harness.MlaunchPath, args, runLog, timeout, cancellation_token: cancellation_source.Token);
@@ -717,7 +722,7 @@ namespace Xharness {
 			var crashed = false;
 			if (File.Exists (listener_log.FullPath)) {
 				WrenchLog.WriteLine ("AddFile: {0}", listener_log.FullPath);
-				success = TestsSucceeded (this.AppInformation, listener_log.FullPath, timed_out, out crashed);
+				success = TestsSucceeded (AppInformation, listener_log.FullPath, timed_out, out crashed);
 			} else if (timed_out) {
 				WrenchLog.WriteLine ("AddSummary: <b><i>{0} never launched</i></b><br/>", mode);
 				MainLog.WriteLine ("Test run never launched");
@@ -742,7 +747,7 @@ namespace Xharness {
 			if (crashed)
 				crashLogWaitTime = 30;
 
-			await crash_reports.EndCaptureAsync (TimeSpan.FromSeconds (crashLogWaitTime));
+			await crashReporter.EndCaptureAsync (TimeSpan.FromSeconds (crashLogWaitTime));
 
 			if (timed_out) {
 				Result = TestExecutingResult.TimedOut;

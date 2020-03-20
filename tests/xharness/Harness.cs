@@ -615,6 +615,7 @@ namespace Xharness
 					target,
 					this,
 					HarnessLog,
+					new Logs (LogDirectory),
 					project.Path,
 					buildConfiguration);
 
@@ -644,6 +645,7 @@ namespace Xharness
 					target,
 					this,
 					HarnessLog,
+					new Logs (LogDirectory),
 					project.Path,
 					buildConfiguration);
 
@@ -671,6 +673,7 @@ namespace Xharness
 					target,
 					this,
 					HarnessLog,
+					new Logs (LogDirectory),
 					project.Path,
 					buildConfiguration);
 
