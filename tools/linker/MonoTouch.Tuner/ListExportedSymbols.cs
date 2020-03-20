@@ -125,8 +125,8 @@ namespace MonoTouch.Tuner
 				}
 			}
 
-			if (MarkStep.IsPropertyMethod (method)) {
-				var property = MarkStep.GetProperty (method);
+			if (method.IsPropertyMethod ()) {
+				var property = method.GetProperty ();
 				object symbol;
 				// The Field attribute may have been linked away, but we've stored it in an annotation.
 				if (property != null && Context.Annotations.GetCustomAnnotations ("ExportedFields").TryGetValue (property, out symbol)) {
