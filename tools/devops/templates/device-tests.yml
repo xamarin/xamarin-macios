@@ -96,7 +96,9 @@ steps:
   timeoutInMinutes: 600
 
 
-# if there's a failure, ping GH with status update
+# if there's a failure:
+# - update GH commit status
+# - add commit comment
 # grab env variables to add test specific text
 # pwsh for PowerShell Core
 # powershell is for Win only PowerShell
