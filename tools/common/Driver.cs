@@ -478,7 +478,7 @@ namespace Xamarin.Bundler {
 				}
 			}
 
-			Log (1, "{0} {1}", path, args);
+			Log (1, "{0} {1}", info.FileName, info.Arguments);
 
 			using (var p = Process.Start (info)) {
 
