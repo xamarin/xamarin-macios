@@ -36,32 +36,32 @@ parameters:
   type: number
   default: 5
 
-stages:
-- stage: iOSDeviceTests 
-  displayName: 'iOS Device Tests'
-  dependsOn: []    # this removes the implicit dependency on previous stage and causes this to run in parallel
-  jobs:
-  - template: job-matrix.yml # all the smart stuff happens in the template, just needed to set the params
-    parameters:
-      demands:  ${{ parameters.iOSDemand }}
-      deviceLabel: 'run-ios-64-tests'
-      variation: "iOS"
-      pool: ${{ parameters.pool }} 
-      timeout: ${{ parameters.timeout }} 
-      maxParallel: ${{ parameters.maxParallel}} 
-
-# - stage: tvOSDeviceTests
-#   displayName: 'tvOS Device Tests'
+# stages:
+# - stage: iOSDeviceTests 
+#   displayName: 'iOS Device Tests'
 #   dependsOn: []    # this removes the implicit dependency on previous stage and causes this to run in parallel
 #   jobs:
 #   - template: job-matrix.yml # all the smart stuff happens in the template, just needed to set the params
 #     parameters:
-#       demands: ${{ parameters.tvOSDemand }}
-#       deviceLabel: 'run-tvos-tests'
-#       variation: "tvOS"
+#       demands:  ${{ parameters.iOSDemand }}
+#       deviceLabel: 'run-ios-64-tests'
+#       variation: "iOS"
 #       pool: ${{ parameters.pool }} 
 #       timeout: ${{ parameters.timeout }} 
-#       maxParallel: ${{ parameters.maxParallel }} 
+#       maxParallel: ${{ parameters.maxParallel}} 
+
+- stage: tvOSDeviceTests
+  displayName: 'tvOS Device Tests'
+  dependsOn: []    # this removes the implicit dependency on previous stage and causes this to run in parallel
+  jobs:
+  - template: job-matrix.yml # all the smart stuff happens in the template, just needed to set the params
+    parameters:
+      demands: ${{ parameters.tvOSDemand }}
+      deviceLabel: 'run-tvos-tests'
+      variation: "tvOS"
+      pool: ${{ parameters.pool }} 
+      timeout: ${{ parameters.timeout }} 
+      maxParallel: ${{ parameters.maxParallel }} 
 
 # Wait for the lab to have devices, templates do not let me do what I want with expressions :/ 
 #- stage: iOS32DeviceTests 
@@ -80,8 +80,8 @@ stages:
 - stage: monitoring
   displayName: 'Device test monitoring'
   dependsOn:
-  - iOSDeviceTests
-#  - tvOSDeviceTests
+#  - iOSDeviceTests
+  - tvOSDeviceTests
 # - iOS32DeviceTests 
 
   condition: always() # always notify of what happened.
