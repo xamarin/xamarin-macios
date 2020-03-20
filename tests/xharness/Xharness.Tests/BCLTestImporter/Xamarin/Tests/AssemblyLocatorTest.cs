@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using NUnit.Framework;
 using Xharness.BCLTestImporter;
 using Xharness.BCLTestImporter.Xamarin;
@@ -24,5 +25,13 @@ namespace Xharness.Tests.BCLTestImporter.Xamarin.Tests {
 		[TestCase (Platform.MacOSModern, macOSPath)]
 		public void GetAssembliesRootLocationTest (Platform platform, string expected)
 			=> Assert.AreEqual (expected, assemblyLocator.GetAssembliesRootLocation (platform));
+
+		[TestCase (Platform.iOS, iOSPath, "ios-bcl", "monotouch", "tests")]
+		[TestCase (Platform.TvOS, iOSPath, "ios-bcl", "monotouch_tv", "tests")]
+		[TestCase (Platform.WatchOS, iOSPath, "ios-bcl", "monotouch_watch", "tests")]
+		[TestCase (Platform.MacOSFull, macOSPath, "mac-bcl", "xammac_net_4_5", "tests")]
+		public void GetAssembliesLocation (Platform platform, params string [] expected)
+			=> Assert.AreEqual (Path.Combine (expected), assemblyLocator.GetAssembliesLocation (platform));
+
 	}
 }
