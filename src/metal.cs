@@ -26,10 +26,6 @@ using ObjCRuntime;
 
 namespace Metal {
 
-#if !IOS
-	interface MTLVertexAmplificationViewMapping {}
-	interface MTLCoordinate2D {}
-#endif
 	delegate void MTLDeallocator (IntPtr pointer, nuint length);
 
 	delegate void MTLNewComputePipelineStateWithReflectionCompletionHandler (IMTLComputePipelineState computePipelineState, MTLComputePipelineReflection reflection, NSError error);
@@ -325,7 +321,8 @@ namespace Metal {
 #if XAMCORE_4_0
 		[Abstract] // @required but we can't add abstract members in C# and keep binary compatibility
 #endif
-		[iOS (10,3)][TV (10,2)][NoMac]
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[iOS (10,3)][TV (10,2)][Mac (10,15,4)]
 		[Export ("presentDrawable:afterMinimumDuration:")]
 		void PresentDrawableAfter (IMTLDrawable drawable, double duration);
 
@@ -1266,18 +1263,16 @@ namespace Metal {
 #if XAMCORE_4_0
 		[Abstract]
 #endif
-		[Unavailable (PlatformName.MacCatalyst)]
-		[NoMac, NoTV, iOS (13,0)]
-		[Advice ("This API is not available when using UIKit on macOS.")]
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[Mac (10,15,4), NoTV, iOS (13,0)]
 		[Export ("supportsVertexAmplificationCount:")]
 		bool SupportsVertexAmplification (nuint count);
 
 #if XAMCORE_4_0
 		[Abstract]
 #endif
-		[Unavailable (PlatformName.MacCatalyst)]
-		[NoMac, NoTV, iOS (13,0)]
-		[Advice ("This API is not available when using UIKit on macOS.")]
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[Mac (10,15,4), NoTV, iOS (13,0)]
 		[Export ("supportsRasterizationRateMapWithLayerCount:")]
 		bool SupportsRasterizationRateMap (nuint layerCount);
 
@@ -1302,9 +1297,8 @@ namespace Metal {
 #if XAMCORE_4_0
 		[Abstract]
 #endif
-		[Unavailable (PlatformName.MacCatalyst)]
-		[NoMac, NoTV, iOS (13,0)]
-		[Advice ("This API is not available when using UIKit on macOS.")]
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[Mac (10,15,4), NoTV, iOS (13,0)]
 		[Export ("newRasterizationRateMapWithDescriptor:")]
 		[return: NullAllowed]
 		IMTLRasterizationRateMap CreateRasterizationRateMap (MTLRasterizationRateMapDescriptor descriptor);
@@ -1438,28 +1432,32 @@ namespace Metal {
 #if XAMCORE_4_0
 		[Abstract] // @required but we can't add abstract members in C# and keep binary compatibility
 #endif
-		[iOS (10,3)][TV (10,2)][NoMac]
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[iOS (10,3)][TV (10,2)][Mac (10,15,4)]
 		[Export ("presentAfterMinimumDuration:")]
 		void PresentAfter (double duration);
 
 #if XAMCORE_4_0
 		[Abstract] // @required but we can't add abstract members in C# and keep binary compatibility
 #endif
-		[iOS (10,3)][TV (10,2)][NoMac]
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[iOS (10,3)][TV (10,2)][Mac (10,15,4)]
 		[Export ("addPresentedHandler:")]
 		void AddPresentedHandler (Action<IMTLDrawable> block);
 
 #if XAMCORE_4_0
 		[Abstract] // @required but we can't add abstract members in C# and keep binary compatibility
 #endif
-		[iOS (10,3)][TV (10,2)][NoMac]
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[iOS (10,3)][TV (10,2)][Mac (10,15,4)]
 		[Export ("presentedTime")]
 		double /* CFTimeInterval */ PresentedTime { get; }
 
 #if XAMCORE_4_0
 		[Abstract] // @required but we can't add abstract members in C# and keep binary compatibility
 #endif
-		[iOS (10,3)][TV (10,2)][NoMac]
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[iOS (10,3)][TV (10,2)][Mac (10,15,4)]
 		[Export ("drawableID")]
 		nuint DrawableID { get; }
 	}
@@ -1914,9 +1912,8 @@ namespace Metal {
 		[Export ("supportIndirectCommandBuffers")]
 		bool SupportIndirectCommandBuffers { get; set; }
 
-		[Unavailable (PlatformName.MacCatalyst)]
-		[NoMac, NoTV, iOS (13, 0)]
-		[Advice ("This API is not available when using UIKit on macOS.")]
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[Mac (10,15,4), NoTV, iOS (13, 0)]
 		[Export ("maxVertexAmplificationCount")]
 		nuint MaxVertexAmplificationCount { get; set; }
 	}
@@ -2901,9 +2898,8 @@ namespace Metal {
 #if XAMCORE_4_0
 		[Abstract]
 #endif
-		[Unavailable (PlatformName.MacCatalyst)]
-		[NoMac, NoTV, iOS (13,0)]
-		[Advice ("This API is not available when using UIKit on macOS.")]
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[Mac (10,15,4), NoTV, iOS (13,0)]
 		[Export ("setVertexAmplificationCount:viewMappings:")]
 		void SetVertexAmplificationCount (nuint count, MTLVertexAmplificationViewMapping viewMappings);
 
@@ -3153,9 +3149,8 @@ namespace Metal {
 		nuint MaxVertexAmplificationCount { get; set; }
 */
 
-		[Unavailable (PlatformName.MacCatalyst)]
-		[NoMac, NoTV, iOS (13, 0)]
-		[Advice ("This API is not available when using UIKit on macOS.")]
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[Mac (10,15,4), NoTV, iOS (13, 0)]
 		[NullAllowed, Export ("rasterizationRateMap", ArgumentSemantic.Strong)]
 		IMTLRasterizationRateMap RasterizationRateMap { get; set; }
 	}
@@ -3922,9 +3917,8 @@ namespace Metal {
 		string Label { get; }
 	}
 
-	[Unavailable (PlatformName.MacCatalyst)]
-	[NoMac, NoTV, iOS (13,0)]
-	[Advice ("This API is not available when using UIKit on macOS.")]
+	[Introduced (PlatformName.MacCatalyst, 13, 4)]
+	[Mac (10,15,4), NoTV, iOS (13,0)]
 	[BaseType (typeof(NSObject))]
 	interface MTLRasterizationRateSampleArray {
 		[Export ("objectAtIndexedSubscript:")]
@@ -3934,9 +3928,8 @@ namespace Metal {
 		void SetObject (NSNumber value, nuint index);
 	}
 
-	[Unavailable (PlatformName.MacCatalyst)]
-	[NoMac, NoTV, iOS (13,0)]
-	[Advice ("This API is not available when using UIKit on macOS.")]
+	[Introduced (PlatformName.MacCatalyst, 13, 4)]
+	[Mac (10,15,4), NoTV, iOS (13,0)]
 	[BaseType (typeof(NSObject))]
 	interface MTLRasterizationRateMapDescriptor : NSCopying {
 		[Static]
@@ -3973,9 +3966,8 @@ namespace Metal {
 */
 	}
 
-	[Unavailable (PlatformName.MacCatalyst)]
-	[NoMac, NoTV, iOS (13,0)]
-	[Advice ("This API is not available when using UIKit on macOS.")]
+	[Introduced (PlatformName.MacCatalyst, 13, 4)]
+	[Mac (10,15,4), NoTV, iOS (13,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface MTLRasterizationRateLayerDescriptor : NSCopying {
@@ -4008,9 +4000,8 @@ namespace Metal {
  */
 	}
 
-	[Unavailable (PlatformName.MacCatalyst)]
-	[NoMac, NoTV, iOS (13,0)]
-	[Advice ("This API is not available when using UIKit on macOS.")]
+	[Introduced (PlatformName.MacCatalyst, 13, 4)]
+	[Mac (10,15,4), NoTV, iOS (13,0)]
 	[BaseType (typeof(NSObject))]
 	interface MTLRasterizationRateLayerArray {
 		[Export ("objectAtIndexedSubscript:")]
@@ -4023,9 +4014,9 @@ namespace Metal {
 
 	interface IMTLRasterizationRateMap {}
 
-	[Unavailable (PlatformName.MacCatalyst)]
-	[NoMac, NoTV, iOS (13,0)]
-	[Protocol, Advice ("This API is not available when using UIKit on macOS.")]
+	[Introduced (PlatformName.MacCatalyst, 13, 4)]
+	[Mac (10,15,4), NoTV, iOS (13,0)]
+	[Protocol]
 	interface MTLRasterizationRateMap {
 		[Abstract]
 		[Export ("device")]

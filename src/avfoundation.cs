@@ -10945,13 +10945,13 @@ namespace AVFoundation {
 		[Export ("preventsDisplaySleepDuringVideoPlayback")]
 		bool PreventsDisplaySleepDuringVideoPlayback { get; set; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10,15)]
+		[TV (13,4), NoWatch, Mac (10,15), iOS (13,4)]
 		[Static]
 		[Export ("eligibleForHDRPlayback")]
 		bool EligibleForHdrPlayback { get; }
 
 		[Notification]
-		[NoWatch, NoTV, NoiOS, Mac (10, 15)]
+		[TV (13,4), NoWatch, Mac (10,15), iOS (13,4)]
 		[Field ("AVPlayerEligibleForHDRPlaybackDidChangeNotification")]
 		NSString EligibleForHdrPlaybackDidChangeNotification { get; }
 	}

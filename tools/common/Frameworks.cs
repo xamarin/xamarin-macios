@@ -190,6 +190,8 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "LinkPresentation", "LinkPresentation", 10,15 },
 					// not sure if the API is available, issue: https://github.com/xamarin/maccore/issues/1951
 					//{ "CoreHaptics", "CoreHaptics", 10,15 },
+
+					{ "AutomaticAssessmentConfiguration", "AutomaticAssessmentConfiguration", 10,15,4 },
 				};
 			}
 			return mac_frameworks;
@@ -324,9 +326,15 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "SoundAnalysis", "SoundAnalysis", 13, 0 },
 				{ "VisionKit", "VisionKit", 13, 0 },
 
+				{ "AutomaticAssessmentConfiguration", "AutomaticAssessmentConfiguration", 13, 4 },
+
 				// the above MUST be kept in sync with simlauncher
 				// see tools/mtouch/Makefile
 				// please also keep it sorted to ease comparison
+				// 
+				// The following tests also need to be updated:
+				// 
+				// * RegistrarTest.MT4134
 			};
 		}
 		return ios_frameworks;
@@ -383,6 +391,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "PushKit", "PushKit", 6 },
 				{ "SoundAnalysis", "SoundAnalysis", 6 },
 				{ "CoreMedia", "CoreMedia", 6 },
+				{ "StoreKit", "StoreKit", 6,2 }
 
 			};
 		}

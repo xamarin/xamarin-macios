@@ -1197,6 +1197,33 @@ namespace Xamarin.Bundler {
 
 		void Initialize ()
 		{
+			if (UseInterpreter) {
+				// it's confusing to use different options to get a feature to work (e.g. dynamic, SRE...) on both simulator and device
+				if (IsSimulatorBuild) {
+					ErrorHelper.Show (ErrorHelper.CreateWarning (141, "The interpreter is not supported in the simulator. Switching to REPL which provide the same extra features on the simulator."));
+					UseInterpreter = false;
+				}
+
+				// FIXME: the interpreter only supports ARM64{,_32} right now
+				// temporary - without a check here the error happens when deploying
+				if (!IsSimulatorBuild && (!IsArchEnabled (Abi.ARM64) && !IsArchEnabled (Abi.ARM64_32)))
+					throw ErrorHelper.CreateError (99, "Internal error: The interpreter is currently only available for 64 bits.");
+
+				// needs to be set after the argument validations
+				// interpreter can use some extra code (e.g. SRE) that is not shipped in the default (AOT) profile
+				EnableRepl = true;
+			} else {
+				if (Platform == ApplePlatform.WatchOS && IsArchEnabled (Abi.ARM64_32) && BitCodeMode != BitCodeMode.LLVMOnly) {
+					if (IsArchEnabled (Abi.ARMv7k)) {
+						throw ErrorHelper.CreateError (145, "Please use device specific builds on WatchOS when building for Debug.");
+					} else {
+						ErrorHelper.Warning (146, "ARM64_32 Debug mode requires --interpreter[=all], forcing it.");
+						UseInterpreter = true;
+						InterpretedAssemblies.Clear ();
+					}
+				}
+			}
+
 			if (EnableDebug && IsLLVM)
 				ErrorHelper.Warning (3003, "Debugging is not supported when building with LLVM. Debugging has been disabled.");
 
@@ -1784,7 +1811,7 @@ namespace Xamarin.Bundler {
 							Driver.RunLipo (targetPath, files);
 						}
 						if (LibMonoLinkMode == AssemblyBuildTarget.Framework)
-							Driver.XcodeRun ("install_name_tool", "-change", "@rpath/libmonosgen-2.0.dylib", "@rpath/Mono.framework/Mono", targetPath);
+							Driver.RunInstallNameTool (new [] { "-change", "@rpath/libmonosgen-2.0.dylib", "@rpath/Mono.framework/Mono", targetPath });
 
 						// Remove architectures we don't care about.
 						if (IsDeviceBuild)
@@ -1836,7 +1863,7 @@ namespace Xamarin.Bundler {
 			}
 			sb.Add ("-o");
 			sb.Add (macho_file);
-			Driver.XcodeRun ("bitcode_strip", sb);
+			Driver.RunBitcodeStrip (sb);
 		}
 
 		// Returns true if is up-to-date

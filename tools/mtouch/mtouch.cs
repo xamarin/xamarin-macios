@@ -841,39 +841,6 @@ namespace Xamarin.Bundler
 			return true;
 		}
 
-		internal static bool TryParseBool (string value, out bool result)
-		{
-			if (string.IsNullOrEmpty (value)) {
-				result = true;
-				return true;
-			}
-
-			switch (value.ToLowerInvariant ()) {
-			case "1":
-			case "yes":
-			case "true":
-			case "enable":
-				result = true;
-				return true;
-			case "0":
-			case "no":
-			case "false":
-			case "disable":
-				result = false;
-				return true;
-			default:
-				return bool.TryParse (value, out result);
-			}
-		}
-
-		internal static bool ParseBool (string value, string name, bool show_error = true)
-		{
-			bool result;
-			if (!TryParseBool (value, out result))
-				throw ErrorHelper.CreateError (26, "Could not parse the command line argument '-{0}:{1}'", name, value);
-			return result;
-		}
-
 		public static int Main (string [] args)
 		{
 			try {
@@ -1344,33 +1311,6 @@ namespace Xamarin.Bundler
 			if (app.EnableRepl && app.LinkMode != LinkMode.None)
 				throw new MonoTouchException (82, true, "REPL (--enable-repl) is only supported when linking is not used (--nolink).");
 
-			if (app.UseInterpreter) {
-				// it's confusing to use different options to get a feature to work (e.g. dynamic, SRE...) on both simulator and device
-				if (app.IsSimulatorBuild) {
-					ErrorHelper.Show (ErrorHelper.CreateWarning (141, "The interpreter is not supported in the simulator. Switching to REPL which provide the same extra features on the simulator."));
-					app.UseInterpreter = false;
-				}
-
-				// FIXME: the interpreter only supports ARM64{,_32} right now
-				// temporary - without a check here the error happens when deploying
-				if (!app.IsSimulatorBuild && (!app.IsArchEnabled (Abi.ARM64) && !app.IsArchEnabled (Abi.ARM64_32)))
-					throw ErrorHelper.CreateError (99, "Internal error: The interpreter is currently only available for 64 bits.");
-
-				// needs to be set after the argument validations
-				// interpreter can use some extra code (e.g. SRE) that is not shipped in the default (AOT) profile
-				app.EnableRepl = true;
-			} else {
-				if (app.Platform == ApplePlatform.WatchOS && app.IsArchEnabled (Abi.ARM64_32) && app.BitCodeMode != BitCodeMode.LLVMOnly) {
-					if (app.IsArchEnabled (Abi.ARMv7k)) {
-						throw ErrorHelper.CreateError (145, "Please use device specific builds on WatchOS when building for Debug.");
-					} else {
-						ErrorHelper.Warning (146, "ARM64_32 Debug mode requires --interpreter[=all], forcing it.");
-						app.UseInterpreter = true;
-						app.InterpretedAssemblies.Clear ();
-					}
-				}
-			}
-
 			if (cross_prefix == null)
 				cross_prefix = MonoTouchDirectory;
 
@@ -1532,77 +1472,6 @@ namespace Xamarin.Bundler
 					throw new MonoTouchException (5103, true, "Could not find neither the '{0}' nor the '{1}' compiler. Please install Xcode 'Command-Line Tools' component", app.Compiler, original_compiler);
 				}
 			}
-		}
-
-		// workaround issues like:
-		// * Xcode 4.x versus 4.3 (location of /Developer); and 
-		// * the (optional) installation of "Command-Line Tools" by Xcode
-		public static void RunStrip (IList<string> options)
-		{
-			// either /Developer (Xcode 4.2 and earlier), /Applications/Xcode.app/Contents/Developer (Xcode 4.3) or user override
-			string strip = FindTool ("strip");
-			if (strip == null)
-				throw new MonoTouchException (5301, "Missing 'strip' tool. Please install Xcode 'Command-Line Tools' component");
-
-			if (RunCommand (strip, options) != 0)
-				throw new MonoTouchException (5304, true, "Failed to strip the final binary. Please review the build log.");
-		}
-
-		static string FindTool (string tool)
-		{
-			// either /Developer (Xcode 4.2 and earlier), /Applications/Xcode.app/Contents/Developer (Xcode 4.3) or user override
-			var path = Path.Combine (DeveloperDirectory, "usr", "bin", tool);
-			if (File.Exists (path))
-				return path;
-
-			// Xcode "Command-Line Tools" install a copy in /usr/bin (and it can be there afterward)
-			path = Path.Combine ("/usr", "bin", tool);
-			if (File.Exists (path))
-				return path;
-
-			// Xcode 4.3 (without command-line tools) also has a copy of 'strip'
-			path = Path.Combine (DeveloperDirectory, "Toolchains", "XcodeDefault.xctoolchain", "usr", "bin", tool);
-			if (File.Exists (path))
-				return path;
-
-			return null;
-		}
-
-		public static void CreateDsym (string output_dir, string appname, string dsym_dir)
-		{
-			RunDsymUtil (Path.Combine (output_dir, appname), "-num-threads", "4", "-z", "-o", dsym_dir);
-			RunCommand ("/usr/bin/mdimport", dsym_dir);
-		}
-
-		public static void RunLipo (string output, IEnumerable<string> inputs)
-		{
-			var sb = new List<string> ();
-			sb.AddRange (inputs);
-			sb.Add ("-create");
-			sb.Add ("-output");
-			sb.Add (output);
-			RunLipo (sb);
-		}
-
-		public static void RunLipo (IList<string> options)
-		{
-			string lipo = FindTool ("lipo");
-			if (lipo == null)
-				throw new MonoTouchException (5305, true, "Missing 'lipo' tool. Please install Xcode 'Command-Line Tools' component");
-			if (RunCommand (lipo, options) != 0)
-				throw new MonoTouchException (5306, true, "Failed to create the a fat library. Please review the build log.");
-		}
-
-		static void RunDsymUtil (params string[] options)
-		{
-			// either /Developer (Xcode 4.2 and earlier), /Applications/Xcode.app/Contents/Developer (Xcode 4.3) or user override
-			string dsymutil = FindTool ("dsymutil");
-			if (dsymutil == null) {
-				ErrorHelper.Warning (5302, "Missing 'dsymutil' tool. Please install Xcode 'Command-Line Tools' component");
-				return;
-			}
-			if (RunCommand (dsymutil, options) != 0)
-				throw new MonoTouchException (5303, true, "Failed to generate the debug symbols (dSYM directory). Please review the build log.");
 		}
 
 		static string GetFrameworkDir (string platform, Version iphone_sdk)

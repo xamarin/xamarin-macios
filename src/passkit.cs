@@ -48,6 +48,9 @@ namespace PassKit {
 		[NullAllowed, Export ("supplementarySubLocality", ArgumentSemantic.Strong)]
 		string SupplementarySubLocality { get; set; }
 	}
+
+	[Watch (6,2), iOS (13,4)]
+	delegate void PKPassLibrarySignDataCompletionHandler (NSData signedData, NSData signature, NSError error);
 	
 	[BaseType (typeof (NSObject))]
 	interface PKPassLibrary {
@@ -92,15 +95,27 @@ namespace PassKit {
 		[Deprecated (PlatformName.iOS, 9, 0, message: "Use the library's instance 'IsLibraryPaymentPassActivationAvailable' property instead.")]
 		bool IsPaymentPassActivationAvailable { get; }
 
+		[Deprecated (PlatformName.iOS, 13, 4, message: "Use 'SecureElementPassActivationAvailable' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6, 2, message: "Use 'SecureElementPassActivationAvailable' instead.")]
 		[iOS (9,0)]
 		[Export ("isPaymentPassActivationAvailable")]
 		bool IsLibraryPaymentPassActivationAvailable { get; }
 
+		[Watch (6,2), iOS (13,4)]
+		[Export ("secureElementPassActivationAvailable")]
+		bool SecureElementPassActivationAvailable { [Bind ("isSecureElementPassActivationAvailable")] get; }
+
+		[Deprecated (PlatformName.iOS, 13, 4, message: "Use 'ActivateSecureElementPass' instead.")]
 		[NoWatch]
 		[iOS (8,0)]
 		[Async]
 		[Export ("activatePaymentPass:withActivationData:completion:")]
 		void ActivatePaymentPass (PKPaymentPass paymentPass, NSData activationData, [NullAllowed] Action<bool, NSError> completion);
+
+		[Async]
+		[NoWatch, iOS (13,4)]
+		[Export ("activateSecureElementPass:withActivationData:completion:")]
+		void ActivateSecureElementPass (PKSecureElementPass secureElementPass, NSData activationData, [NullAllowed] Action<bool, NSError> completion);
 
 		[NoWatch]
 		[iOS (8,0)]
@@ -114,9 +129,15 @@ namespace PassKit {
 		[Export ("openPaymentSetup")]
 		void OpenPaymentSetup ();
 
+		[Deprecated (PlatformName.iOS, 13, 4, message: "Use 'CanAddSecureElementPass' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6, 2, message: "Use 'CanAddSecureElementPass' instead.")]
 		[iOS (9,0)]
 		[Export ("canAddPaymentPassWithPrimaryAccountIdentifier:")]
 		bool CanAddPaymentPass (string primaryAccountIdentifier);
+
+		[Watch (6,2), iOS (13,4)]
+		[Export ("canAddSecureElementPassWithPrimaryAccountIdentifier:")]
+		bool CanAddSecureElementPass (string primaryAccountIdentifier);
 
 		[iOS (10,1)]
 		[Watch (3,1)]
@@ -135,9 +156,15 @@ namespace PassKit {
 		[Export ("isSuppressingAutomaticPassPresentation")]
 		bool IsSuppressingAutomaticPassPresentation { get; }
 
+		[Deprecated (PlatformName.iOS, 13, 4, message: "Use 'RemoteSecureElementPasses' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6, 2, message: "Use 'RemoteSecureElementPasses' instead.")]
 		[iOS (9,0)]
 		[Export ("remotePaymentPasses")]
 		PKPaymentPass[] RemotePaymentPasses { get; }
+
+		[Watch (6,2), iOS (13,4)]
+		[Export ("remoteSecureElementPasses", ArgumentSemantic.Copy)]
+		PKSecureElementPass[] RemoteSecureElementPasses { get; }
 
 #if !WATCH
 		[NoWatch]
@@ -146,9 +173,20 @@ namespace PassKit {
 		[Export ("requestAutomaticPassPresentationSuppressionWithResponseHandler:")]
 		nuint RequestAutomaticPassPresentationSuppression (Action<PKAutomaticPassPresentationSuppressionResult> responseHandler);
 #endif
+
+		[Deprecated (PlatformName.iOS, 13, 4, message: "Use 'PresentSecureElementPass' instead.")]
 		[NoWatch][iOS (10,0)]
 		[Export ("presentPaymentPass:")]
 		void PresentPaymentPass (PKPaymentPass pass);
+
+		[NoWatch, iOS (13,4)]
+		[Export ("presentSecureElementPass:")]
+		void PresentSecureElementPass (PKSecureElementPass pass);
+
+		[Async (ResultTypeName = "PKSignDataCompletionResult")]
+		[Watch (6,2), iOS (13,4)]
+		[Export ("signData:withSecureElementPass:completion:")]
+		void SignData (NSData signData, PKSecureElementPass secureElementPass, PKPassLibrarySignDataCompletionHandler completion);
 	}
 
 	[Static]
@@ -730,9 +768,15 @@ namespace PassKit {
 		[Export ("passType")]
 		PKPassType PassType { get; }
 
+		[Deprecated (PlatformName.iOS, 13, 4, message: "Use 'SecureElementPass' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6, 2, message: "Use 'SecureElementPass' instead.")]
 		[iOS (8,0)]
 		[Export ("paymentPass")]
 		PKPaymentPass PaymentPass { get; }
+
+		[Watch (6,2), iOS (13,4)]
+		[NullAllowed, Export ("secureElementPass")]
+		PKSecureElementPass SecureElementPass { get; }
 
 		[iOS (9,0)]
 		[Export ("remotePass")]
@@ -757,8 +801,14 @@ namespace PassKit {
 		[Export ("type")]
 		PKPaymentMethodType Type { get; }
 
+		[Deprecated (PlatformName.iOS, 13, 4, message: "Use 'SecureElementPass' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6, 2, message: "Use 'SecureElementPass' instead.")]
 		[NullAllowed, Export ("paymentPass", ArgumentSemantic.Copy)]
 		PKPaymentPass PaymentPass { get; }
+
+		[Watch (6,2), iOS (13,4)]
+		[NullAllowed, Export ("secureElementPass", ArgumentSemantic.Copy)]
+		PKSecureElementPass SecureElementPass { get; }
 
 		[Watch (6, 0), iOS (13, 0)]
 		[NullAllowed, Export ("billingAddress", ArgumentSemantic.Copy)]
@@ -766,21 +816,11 @@ namespace PassKit {
 	}
 
 	[iOS (8,0)]
-	[BaseType (typeof (PKPass))]
+	[BaseType (typeof (PKSecureElementPass))]
 	interface PKPaymentPass {
 
-		[Export ("primaryAccountIdentifier")]
-		string PrimaryAccountIdentifier { get; }
-
-		[Export ("primaryAccountNumberSuffix")]
-		string PrimaryAccountNumberSuffix { get; }
-
-		[Export ("deviceAccountIdentifier")]
-		string DeviceAccountIdentifier { get; }
-
-		[Export ("deviceAccountNumberSuffix")]
-		string DeviceAccountNumberSuffix { get; }
-
+		[Deprecated (PlatformName.iOS, 13, 4, message: "Use 'PKSecureElementPass.PassActivationState' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6, 2, message: "Use 'PKSecureElementPass.PassActivationState' instead.")]
 		[Export ("activationState")]
 		PKPaymentPassActivationState ActivationState { get; }
 	}
@@ -1265,5 +1305,32 @@ namespace PassKit {
 
 		[Export ("redemptionURL", ArgumentSemantic.Copy)]
 		NSUrl RedemptionUrl { get; }
+	}
+
+	[Watch (6,2), iOS (13,4)]
+	[BaseType (typeof (PKPass))]
+	[DisableDefaultCtor]
+	interface PKSecureElementPass {
+
+		[Export ("primaryAccountIdentifier")]
+		string PrimaryAccountIdentifier { get; }
+
+		[Export ("primaryAccountNumberSuffix")]
+		string PrimaryAccountNumberSuffix { get; }
+
+		[Export ("deviceAccountIdentifier", ArgumentSemantic.Strong)]
+		string DeviceAccountIdentifier { get; }
+
+		[Export ("deviceAccountNumberSuffix", ArgumentSemantic.Strong)]
+		string DeviceAccountNumberSuffix { get; }
+
+		[Export ("passActivationState")]
+		PKSecureElementPassActivationState PassActivationState { get; }
+
+		[NullAllowed, Export ("devicePassIdentifier")]
+		string DevicePassIdentifier { get; }
+
+		[NullAllowed, Export ("pairedTerminalIdentifier")]
+		string PairedTerminalIdentifier { get; }
 	}
 }
