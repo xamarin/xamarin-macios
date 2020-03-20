@@ -38,7 +38,4 @@
       <Link>errors.resx</Link>
     </None>
   </ItemGroup>
-  <Target Name="BuildLocalization" BeforeTargets="BeforeBuild">
-    <MSBuild Projects="../Xamarin.Localization.MSBuild/Xamarin.Localization.MSBuild.csproj" Targets="UpdateXlf" />
-  </Target>
 </Project>
