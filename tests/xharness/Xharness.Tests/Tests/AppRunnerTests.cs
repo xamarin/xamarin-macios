@@ -348,6 +348,7 @@ namespace Xharness.Tests {
 				crashReporterFactory.Object,
 				captureLogFactory.Object,
 				Mock.Of<IDeviceLogCapturerFactory> (),
+				Mock.Of<IResultParser> (),
 				AppRunnerTarget.Simulator_tvOS,
 				GetMockedHarness (),
 				mainLog.Object,
@@ -399,7 +400,9 @@ namespace Xharness.Tests {
 				.Setup (x => x.FindAsync (AppRunnerTarget.Simulator_iOS64, mainLog.Object, true, false))
 				.ReturnsAsync (new ISimulatorDevice [] { simulator.Object });
 
-			var listenerLogFile = Mock.Of<ILogFile> (x => x.FullPath == Path.GetTempFileName());
+			var testResultFilePath = Path.GetTempFileName ();
+			var listenerLogFile = Mock.Of<ILogFile> (x => x.FullPath == testResultFilePath);
+			File.WriteAllLines (testResultFilePath, new [] { "Some result here", "Tests run: 124", "Some result there" });
 
 			logs
 				.Setup (x => x.Create (It.Is<string> (s => s.StartsWith("test-sim64-")), "TestLog", It.IsAny<bool?> ()))
@@ -439,6 +442,12 @@ namespace Xharness.Tests {
 					It.IsAny<CancellationToken> ()))
 				.ReturnsAsync (new ProcessExecutionResult () { ExitCode = 0 });
 
+			var xmlResultFile = Path.ChangeExtension (testResultFilePath, "xml");
+			var resultParser = new Mock<IResultParser> ();
+			resultParser
+				.Setup (x => x.CleanXml (testResultFilePath, xmlResultFile))
+				.Callback (() => File.Copy (testResultFilePath, xmlResultFile));
+
 			// Act
 			var appRunner = new AppRunner (processManager.Object,
 				simulatorsFactory,
@@ -446,7 +455,8 @@ namespace Xharness.Tests {
 				devicesFactory,
 				crashReporterFactory.Object,
 				captureLogFactory.Object,
-				Mock.Of<IDeviceLogCapturerFactory> (),
+				Mock.Of<IDeviceLogCapturerFactory> (), // Use for devices only
+				resultParser.Object,
 				AppRunnerTarget.Simulator_iOS64,
 				harness,
 				mainLog.Object,
@@ -477,6 +487,8 @@ namespace Xharness.Tests {
 			// When ensureCleanSimulatorState == true
 			simulator.Verify (x => x.PrepareSimulatorAsync (mainLog.Object, appName));
 			simulator.Verify (x => x.KillEverythingAsync (mainLog.Object));
+
+			resultParser.VerifyAll ();
 		}
 
 		[Test]
@@ -506,6 +518,7 @@ namespace Xharness.Tests {
 				crashReporterFactory.Object,
 				Mock.Of<ICaptureLogFactory> (),
 				Mock.Of<IDeviceLogCapturerFactory> (),
+				Mock.Of<IResultParser> (),
 				AppRunnerTarget.Device_tvOS,
 				GetMockedHarness(),
 				mainLog.Object,
@@ -535,7 +548,9 @@ namespace Xharness.Tests {
 			var deviceSystemLog = new Mock<ILogFile> ();
 			deviceSystemLog.SetupGet(x => x.FullPath).Returns(Path.GetTempFileName());
 
-			var listenerLogFile = Mock.Of<ILogFile> (x => x.FullPath == Path.GetTempFileName());
+			var testResultFilePath = Path.GetTempFileName ();
+			var listenerLogFile = Mock.Of<ILogFile> (x => x.FullPath == testResultFilePath);
+			File.WriteAllLines (testResultFilePath, new [] { "Some result here", "Some result there", "Tests run: 3" });
 
 			logs
 				.Setup (x => x.Create (It.Is<string> (s => s.StartsWith("test-ios-")), "TestLog", It.IsAny<bool?> ()))
@@ -579,6 +594,12 @@ namespace Xharness.Tests {
 					null,
 					It.IsAny<CancellationToken> ()))
 				.ReturnsAsync (new ProcessExecutionResult () { ExitCode = 0 });
+			
+			var xmlResultFile = Path.ChangeExtension (testResultFilePath, "xml");
+			var resultParser = new Mock<IResultParser> ();
+			resultParser
+				.Setup (x => x.CleanXml (testResultFilePath, xmlResultFile))
+				.Callback (() => File.Copy (testResultFilePath, xmlResultFile));
 
 			// Act
 			var appRunner = new AppRunner (processManager.Object,
@@ -586,8 +607,9 @@ namespace Xharness.Tests {
 				listenerFactory,
 				devicesFactory,
 				crashReporterFactory.Object,
-				Mock.Of<ICaptureLogFactory> (),
+				Mock.Of<ICaptureLogFactory> (), // Used for simulators only
 				deviceLogCapturerFactory.Object,
+				resultParser.Object,
 				AppRunnerTarget.Device_iOS,
 				harness,
 				mainLog.Object,
