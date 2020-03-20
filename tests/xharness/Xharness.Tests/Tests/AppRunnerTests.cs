@@ -473,6 +473,7 @@ namespace Xharness.Tests {
 
 			mainLog.Verify (x => x.WriteLine ("Test run started"));
 			mainLog.Verify (x => x.WriteLine ("Test run completed"));
+			mainLog.Verify (x => x.WriteLine ("Test run succeeded"));
 
 			simpleListener.Verify (x => x.Initialize (), Times.AtLeastOnce);
 			simpleListener.Verify (x => x.StartAsync (), Times.AtLeastOnce);
@@ -627,6 +628,115 @@ namespace Xharness.Tests {
 
 			mainLog.Verify (x => x.WriteLine ("Test run started"));
 			mainLog.Verify (x => x.WriteLine ("Test run completed"));
+			mainLog.Verify (x => x.WriteLine ("Test run succeeded"));
+
+			simpleListener.Verify (x => x.Initialize (), Times.AtLeastOnce);
+			simpleListener.Verify (x => x.StartAsync (), Times.AtLeastOnce);
+			simpleListener.Verify (x => x.Cancel (), Times.AtLeastOnce);
+			simpleListener.Verify (x => x.Dispose (), Times.AtLeastOnce);
+
+			snapshotReporter.Verify (x => x.StartCaptureAsync (), Times.AtLeastOnce);
+			snapshotReporter.Verify (x => x.StartCaptureAsync (), Times.AtLeastOnce);
+
+			deviceSystemLog.Verify (x => x.Dispose (), Times.AtLeastOnce);
+		}
+
+		[Test]
+		public async Task RunOnDeviceWithFailedTestsTest ()
+		{
+			var harness = GetMockedHarness ();
+
+			devices.Setup (x => x.ConnectedDevices).Returns (mockDevices.Reverse ());
+
+			// Crash reporter
+			var crashReporterFactory = new Mock<ICrashSnapshotReporterFactory> ();
+			crashReporterFactory
+				.Setup (x => x.Create (mainLog.Object, It.IsAny<ILogs> (), true, "Test iPad"))
+				.Returns (snapshotReporter.Object);
+
+			var deviceSystemLog = new Mock<ILogFile> ();
+			deviceSystemLog.SetupGet (x => x.FullPath).Returns (Path.GetTempFileName ());
+
+			var testResultFilePath = Path.GetTempFileName ();
+			var listenerLogFile = Mock.Of<ILogFile> (x => x.FullPath == testResultFilePath);
+			File.WriteAllLines (testResultFilePath, new [] { "Some result here", "[FAIL] This test failed", "Some result there", "Tests run: 3" });
+
+			logs
+				.Setup (x => x.Create (It.Is<string> (s => s.StartsWith ("test-ios-")), "TestLog", It.IsAny<bool?> ()))
+				.Returns (listenerLogFile);
+
+			logs
+				.Setup (x => x.Create (It.Is<string> (s => s.StartsWith ("device-Test iPad-")), "Device log", It.IsAny<bool?> ()))
+				.Returns (deviceSystemLog.Object);
+
+			simpleListener.SetupGet (x => x.ConnectedTask).Returns (Task.CompletedTask);
+
+			var deviceLogCapturer = new Mock<IDeviceLogCapturer> ();
+
+			var deviceLogCapturerFactory = new Mock<IDeviceLogCapturerFactory> ();
+			deviceLogCapturerFactory
+				.Setup (x => x.Create (mainLog.Object, deviceSystemLog.Object, "Test iPad"))
+				.Returns (deviceLogCapturer.Object);
+
+			var ips = new StringBuilder ();
+			var ipAddresses = System.Net.Dns.GetHostEntry (System.Net.Dns.GetHostName ()).AddressList;
+			for (int i = 0; i < ipAddresses.Length; i++) {
+				if (i > 0)
+					ips.Append (',');
+				ips.Append (ipAddresses [i].ToString ());
+			}
+
+			var expectedArgs = $"--sdkroot {xcodePath} -v -v -argument=-connection-mode -argument=none " +
+				$"-argument=-app-arg:-autostart -setenv=NUNIT_AUTOSTART=true -argument=-app-arg:-autoexit " +
+				$"-setenv=NUNIT_AUTOEXIT=true -argument=-app-arg:-enablenetwork -setenv=NUNIT_ENABLE_NETWORK=true " +
+				$"-setenv=DISABLE_SYSTEM_PERMISSION_TESTS=1 -argument=-app-arg:-hostname:{ips} -setenv=NUNIT_HOSTNAME={ips} " +
+				$"-argument=-app-arg:-transport:Tcp -setenv=NUNIT_TRANSPORT=TCP -argument=-app-arg:-hostport:{simpleListener.Object.Port} " +
+				$"-setenv=NUNIT_HOSTPORT={simpleListener.Object.Port} -setenv=env1=value1 -setenv=env2=value2 " +
+				$"--launchdev {appPath} --disable-memory-limits --wait-for-exit --devname Test iPad";
+
+			processManager
+				.Setup (x => x.ExecuteCommandAsync (
+					mlaunchPath,
+					It.Is<IList<string>> (args => string.Join (" ", args) == expectedArgs),
+					It.IsAny<ILog> (),
+					TimeSpan.FromMinutes (harness.Timeout * 2),
+					null,
+					It.IsAny<CancellationToken> ()))
+				.ReturnsAsync (new ProcessExecutionResult () { ExitCode = 0 });
+
+			var xmlResultFile = Path.ChangeExtension (testResultFilePath, "xml");
+			var resultParser = new Mock<IResultParser> ();
+			resultParser
+				.Setup (x => x.CleanXml (testResultFilePath, xmlResultFile))
+				.Callback (() => File.Copy (testResultFilePath, xmlResultFile));
+
+			// Act
+			var appRunner = new AppRunner (processManager.Object,
+				simulatorsFactory,
+				listenerFactory,
+				devicesFactory,
+				crashReporterFactory.Object,
+				Mock.Of<ICaptureLogFactory> (), // Used for simulators only
+				deviceLogCapturerFactory.Object,
+				resultParser.Object,
+				AppRunnerTarget.Device_iOS,
+				harness,
+				mainLog.Object,
+				logs.Object,
+				projectFilePath: projectFilePath,
+				buildConfiguration: "Debug",
+				timeoutMultiplier: 2);
+
+			var result = await appRunner.RunAsync ();
+
+			// Verify
+			Assert.AreEqual (1, result);
+
+			processManager.VerifyAll ();
+
+			mainLog.Verify (x => x.WriteLine ("Test run started"));
+			mainLog.Verify (x => x.WriteLine ("Test run completed"));
+			mainLog.Verify (x => x.WriteLine ("Test run failed"));
 
 			simpleListener.Verify (x => x.Initialize (), Times.AtLeastOnce);
 			simpleListener.Verify (x => x.StartAsync (), Times.AtLeastOnce);
