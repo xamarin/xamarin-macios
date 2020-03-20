@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
 using Xharness.Execution;
+using Xharness.Execution.Mlaunch;
 using Xharness.Hardware;
 using Xharness.Listeners;
 using Xharness.Logging;
@@ -231,17 +232,8 @@ namespace Xharness.Tests {
 
 			processManager.Verify (x => x.ExecuteCommandAsync (
 				"/path/to/mlaunch",
-				new List<string> () {
-					"--sdkroot",
-					"/path/to/xcode",
-					"-v",
-					"-v",
-					"-v",
-					"--installdev",
-					appPath,
-					"--devname",
-					"Test iPad"
-				},
+				It.Is<MlaunchArguments> (args => args.AsCommandLine() ==
+					"--sdkroot /path/to/xcode -v -v -v --installdev appPat --devname Test iPad"),
 				mainLog.Object,
 				TimeSpan.FromHours (1),
 				null,
@@ -281,16 +273,8 @@ namespace Xharness.Tests {
 
 			processManager.Verify (x => x.ExecuteCommandAsync (
 				"/path/to/mlaunch",
-				new List<string> () {
-					"--sdkroot",
-					"/path/to/xcode",
-					"-v",
-					"-v",
-					"--uninstalldevbundleid",
-					appName,
-					"--devname",
-					"Test iPad"
-				},
+				It.Is<MlaunchArguments> (args => args.AsCommandLine() ==
+					"--sdkroot /path/to/xcode -v -v -v --uninstalldevbundleid appPat --devname Test iPad"),
 				mainLog.Object,
 				TimeSpan.FromMinutes (1),
 				null,
@@ -435,7 +419,7 @@ namespace Xharness.Tests {
 			processManager
 				.Setup (x => x.ExecuteCommandAsync (
 					mlaunchPath,
-					It.Is<IList<string>> (args => string.Join (" ", args) == expectedArgs),
+					It.Is<MlaunchArguments> (args => args.AsCommandLine() == expectedArgs),
 					mainLog.Object,
 					TimeSpan.FromMinutes (harness.Timeout * 2),
 					null,
@@ -589,7 +573,7 @@ namespace Xharness.Tests {
 			processManager
 				.Setup (x => x.ExecuteCommandAsync (
 					mlaunchPath,
-					It.Is<IList<string>> (args => string.Join (" ", args) == expectedArgs),
+					It.Is<MlaunchArguments> (args => args.AsCommandLine() == expectedArgs),
 					It.IsAny<ILog> (),
 					TimeSpan.FromMinutes (harness.Timeout * 2),
 					null,
@@ -697,7 +681,7 @@ namespace Xharness.Tests {
 			processManager
 				.Setup (x => x.ExecuteCommandAsync (
 					mlaunchPath,
-					It.Is<IList<string>> (args => string.Join (" ", args) == expectedArgs),
+					It.Is<MlaunchArguments> (args => args.AsCommandLine() == expectedArgs),
 					It.IsAny<ILog> (),
 					TimeSpan.FromMinutes (harness.Timeout * 2),
 					null,

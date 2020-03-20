@@ -53,5 +53,7 @@ namespace Xharness.Execution.Mlaunch {
 		public IEnumerator<MlaunchArgument> GetEnumerator () => arguments.GetEnumerator();
 
 		IEnumerator IEnumerable.GetEnumerator () => arguments.GetEnumerator ();
+
+		public override string ToString () => AsCommandLine ();
 	}
 }
