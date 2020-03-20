@@ -50,7 +50,7 @@ To use the package locally without installing it:
 
     ```shell
     nuget add *.nupkg -source local-feed
-    nuget sources add -Name local-feed -Source local-feed -ConfigFile NuGet.config
+    nuget sources add -Name local-feed -Source $PWD/local-feed -ConfigFile NuGet.config
     ```
 
 * Add this `global.json` to the directory (remember to change the versions to the exact versions of the package):
