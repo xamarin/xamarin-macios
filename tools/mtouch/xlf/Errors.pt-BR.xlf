@@ -3042,6 +3042,13 @@
         <note>
 		</note>
       </trans-unit>
+      <trans-unit id="MX5315">
+        <source>The tool xcrun failed to find result when looking for the tool '{0}' (the file '{1}' does not exist). Check build log for details.
+		</source>
+        <target state="new">The tool xcrun failed to find result when looking for the tool '{0}' (the file '{1}' does not exist). Check build log for details.
+		</target>
+        <note></note>
+      </trans-unit>
       <trans-unit id="default">
         <source>The error message for code {0} could not be found. Please report this missing message on GitHub at https://github.com/xamarin/xamarin-macios/issues/new</source>
         <target state="new">The error message for code {0} could not be found. Please report this missing message on GitHub at https://github.com/xamarin/xamarin-macios/issues/new</target>
