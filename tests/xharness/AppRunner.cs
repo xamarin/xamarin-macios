@@ -533,7 +533,7 @@ namespace Xharness {
 				args.Add (AppInformation.LaunchAppPath);
 			}
 			if (!isSimulator)
-				args.Add ("--disable-memory-limits");
+				args.Add (new DisableMemoryLimitsArgument ());
 
 			var timeout = TimeSpan.FromMinutes (harness.Timeout * timeoutMultiplier);
 
@@ -547,13 +547,13 @@ namespace Xharness {
 				if (mode != RunMode.WatchOS) {
 					var stderr_tty = harness.GetStandardErrorTty ();
 					if (!string.IsNullOrEmpty (stderr_tty)) {
-						args.Add ($"--stdout={stderr_tty}");
-						args.Add ($"--stderr={stderr_tty}");
+						args.Add (new SetStdoutArgument(stderr_tty));
+						args.Add (new SetStderrArgument(stderr_tty));
 					} else {
 						var stdout_log = Logs.CreateFile ($"stdout-{Helpers.Timestamp}.log", "Standard output");
 						var stderr_log = Logs.CreateFile ($"stderr-{Helpers.Timestamp}.log", "Standard error");
-						args.Add ($"--stdout={stdout_log}");
-						args.Add ($"--stderr={stderr_log}");
+						args.Add (new SetStdoutArgument(stdout_log));
+						args.Add (new SetStderrArgument(stderr_log));
 					}
 				}
 
@@ -650,9 +650,9 @@ namespace Xharness {
 				MainLog.WriteLine ("*** Executing {0}/{1} on device '{2}' ***", AppInformation.AppName, mode, deviceName);
 
 				if (mode == RunMode.WatchOS) {
-					args.Add ("--attach-native-debugger"); // this prevents the watch from backgrounding the app.
+					args.Add (new AttachNativeDebuggerArgument ()); // this prevents the watch from backgrounding the app.
 				} else {
-					args.Add ("--wait-for-exit");
+					args.Add (new WaitForExitArgument ());
 				}
 
 				AddDeviceName (args);

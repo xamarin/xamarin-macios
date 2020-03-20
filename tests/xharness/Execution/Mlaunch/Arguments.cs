@@ -119,6 +119,34 @@
 	}
 
 	/// <summary>
+	/// Attach native debugger.
+	/// </summary>
+	public sealed class AttachNativeDebuggerArgument : OptionArgument {
+		public AttachNativeDebuggerArgument () : base ("attach-native-debugger")
+		{
+		}
+	}
+	
+	/// <summary>
+	/// Attempt to disable memory limits for launched apps.
+	/// This is just an attempt, some or all usual limits may still be enforced.
+	/// </summary>
+	public sealed class DisableMemoryLimitsArgument : OptionArgument {
+		public DisableMemoryLimitsArgument () : base ("disable-memory-limits")
+		{
+		}
+	}
+
+	/// <summary>
+	/// 
+	/// </summary>
+	public sealed class WaitForExitArgument : OptionArgument {
+		public WaitForExitArgument () : base ("wait-for-exit")
+		{
+		}
+	}
+
+	/// <summary>
 	/// Launch the app with this command line argument. This must be specified multiple times for multiple arguments.
 	/// </summary>
 	public sealed class SetAppArgumentArgument : MlaunchArgument {
@@ -149,6 +177,24 @@
 		}
 
 		public override string AsCommandLineArgument () => $"-setenv={variableName}={variableValue}";
+	}
+
+	/// <summary>
+	/// Redirect the standard output for the simulated application to the specified file.
+	/// </summary>
+	public sealed class SetStdoutArgument : SingleValueArgument {
+		public SetStdoutArgument (string targetFile) : base ("stdout", targetFile)
+		{
+		}
+	}
+
+	/// <summary>
+	/// Redirect the standard error for the simulated application to the specified file.
+	/// </summary>
+	public sealed class SetStderrArgument : SingleValueArgument {
+		public SetStderrArgument (string targetFile) : base ("stderr", targetFile)
+		{
+		}
 	}
 
 	/// <summary>
