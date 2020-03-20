@@ -54,9 +54,11 @@ namespace Xharness {
 		readonly ISimulatorsLoaderFactory simulatorsLoaderFactory;
 		readonly ISimpleListenerFactory listenerFactory;
 		readonly IDeviceLoaderFactory devicesLoaderFactory;
+		readonly ICrashSnapshotReporterFactory snapshotReporterFactory;
 		readonly ICaptureLogFactory captureLogFactory;
 		readonly IDeviceLogCapturerFactory deviceLogCapturerFactory;
 		readonly IResultParser resultParser;
+
 		readonly RunMode mode;
 		readonly bool isSimulator;
 		readonly AppRunnerTarget target;
@@ -95,6 +97,7 @@ namespace Xharness {
 						  ISimulatorsLoaderFactory simulatorsFactory,
 						  ISimpleListenerFactory simpleListenerFactory,
 						  IDeviceLoaderFactory devicesFactory,
+						  ICrashSnapshotReporterFactory snapshotReporterFactory,
 						  ICaptureLogFactory captureLogFactory,
 						  IDeviceLogCapturerFactory deviceLogCapturerFactory,
 						  IResultParser resultParser,
@@ -116,6 +119,7 @@ namespace Xharness {
 			this.simulatorsLoaderFactory = simulatorsFactory ?? throw new ArgumentNullException (nameof (simulatorsFactory));
 			this.listenerFactory = simpleListenerFactory ?? throw new ArgumentNullException (nameof (simpleListenerFactory));
 			this.devicesLoaderFactory = devicesFactory ?? throw new ArgumentNullException (nameof (devicesFactory));
+			this.snapshotReporterFactory = snapshotReporterFactory ?? throw new ArgumentNullException (nameof (snapshotReporterFactory));
 			this.captureLogFactory = captureLogFactory ?? throw new ArgumentNullException (nameof (captureLogFactory));
 			this.deviceLogCapturerFactory = deviceLogCapturerFactory ?? throw new ArgumentNullException (nameof (deviceLogCapturerFactory));
 			this.resultParser = resultParser ?? throw new ArgumentNullException (nameof (resultParser));
@@ -426,15 +430,15 @@ namespace Xharness {
 
 		public async Task<int> RunAsync ()
 		{
-			CrashReportSnapshot crash_reports;
-			ILog deviceSystemLog = null;
 			ILog listener_log = null;
 			ILog run_log = MainLog;
 
 			if (!isSimulator)
 				FindDevice ();
 
-			crash_reports = new CrashReportSnapshot (harness, MainLog, Logs, isDevice: !isSimulator, deviceName);
+			var crashLogs = new Logs (Logs.Directory);
+
+			ICrashSnapshotReporter crash_reports = snapshotReporterFactory.Create (MainLog, crashLogs, isDevice: !isSimulator, deviceName);
 
 			var args = new List<string> ();
 			if (!string.IsNullOrEmpty (harness.XcodeRoot)) {
@@ -654,7 +658,7 @@ namespace Xharness {
 				
 				AddDeviceName (args);
 
-				deviceSystemLog = Logs.Create ($"device-{deviceName}-{Helpers.Timestamp}.log", "Device log");
+				var deviceSystemLog = Logs.Create ($"device-{deviceName}-{Helpers.Timestamp}.log", "Device log");
 				var deviceLogCapturer = deviceLogCapturerFactory.Create (harness.HarnessLog,deviceSystemLog, deviceName);
 				deviceLogCapturer.StartCapture ();
 
@@ -754,8 +758,10 @@ namespace Xharness {
 			if (!success.Value) {
 				int pid = 0;
 				string crash_reason = null;
-				foreach (var crash in crash_reports.Logs) {
+				foreach (var crashLog in crashLogs) {
 					try {
+						Logs.Add (crashLog);
+
 						if (pid == 0) {
 							// Find the pid
 							using (var log_reader = MainLog.GetReader ()) {
@@ -775,7 +781,7 @@ namespace Xharness {
 							}
 						}
 
-						using (var crash_reader = crash.GetReader ()) {
+						using (var crash_reader = crashLog.GetReader ()) {
 							var text = crash_reader.ReadToEnd ();
 
 							var reader = System.Runtime.Serialization.Json.JsonReaderWriterFactory.CreateJsonReader (Encoding.UTF8.GetBytes (text), new XmlDictionaryReaderQuotas ());
@@ -796,14 +802,14 @@ namespace Xharness {
 									variation,
 									$"App Crash {AppInformation.AppName} {variation}",
 									$"App crashed {crash_reason}.",
-									crash_reports.Log.FullPath,
+									MainLog.FullPath,
 									harness.XmlJargon);
 							}
 
 							break;
 						}
 					} catch (Exception e) {
-						harness.Log (2, "Failed to process crash report '{1}': {0}", e.Message, crash.Description);
+						harness.Log (2, "Failed to process crash report '{1}': {0}", e.Message, crashLog.Description);
 					}
 				}
 				if (!string.IsNullOrEmpty (crash_reason)) {
@@ -820,7 +826,7 @@ namespace Xharness {
 							variation,
 							$"App Crash {AppInformation.AppName} {variation}",
 							$"App crashed: {FailureMessage}",
-							crash_reports.Log.FullPath,
+							MainLog.FullPath,
 							harness.XmlJargon);
 					}
 				} else if (launch_failure) {

@@ -12,16 +12,18 @@ namespace Xharness.Jenkins.TestTasks
 {
 	internal abstract class RunTestTask : TestTask
 	{
+		protected IProcessManager ProcessManager { get; }
+		IResultParser ResultParser { get; } = new XmlResultParser ();
+
 		public readonly BuildToolTask BuildTask;
 		public TimeSpan Timeout = TimeSpan.FromMinutes (10);
 		public double TimeoutMultiplier { get; set; } = 1;
-		IProcessManager ProcessManager { get; } = new ProcessManager ();
-		IResultParser ResultParser { get; } = new XmlResultParser ();
 		public string WorkingDirectory;
 
-		public RunTestTask (BuildToolTask build_task)
+		public RunTestTask (BuildToolTask build_task, IProcessManager processManager)
 		{
 			this.BuildTask = build_task;
+			this.ProcessManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 
 			Jenkins = build_task.Jenkins;
 			TestProject = build_task.TestProject;
