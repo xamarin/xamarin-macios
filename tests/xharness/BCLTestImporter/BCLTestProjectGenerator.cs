@@ -171,17 +171,20 @@ namespace Xharness.BCLTestImporter {
 		public IAssemblyLocator AssemblyLocator { get; set; }
 		public IProjectFilter ProjectFilter { get; set; }
 		public ITemplatedProject TemplatedProject { get; set; }
+		public ITestAssemblyDefinitionFactory AssemblyDefinitionFactory { get; set; }
 
 		public BCLTestProjectGenerator (string outputDirectory)
 		{
 			OutputDirectoryPath = outputDirectory ?? throw new ArgumentNullException (nameof (outputDirectory));
 			AssemblyLocator = new AssemblyLocator ();
 			ProjectFilter = new ProjectFilter { AssemblyLocator = AssemblyLocator, IgnoreFilesRootDir = outputDirectory };
+			AssemblyDefinitionFactory = new AssemblyDefinitionFactory ();
 			TemplatedProject = new XamariniOSTemplate {
 				AssemblyLocator = AssemblyLocator,
 				OutputDirectoryPath = outputDirectory,
 				IgnoreFilesRootDirectory = outputDirectory,
 				ProjectFilter = ProjectFilter,
+				AssemblyDefinitionFactory = AssemblyDefinitionFactory, 
 			};
 		}
 		

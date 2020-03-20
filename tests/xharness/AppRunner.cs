@@ -57,6 +57,8 @@ namespace Xharness {
 		readonly ICrashSnapshotReporterFactory snapshotReporterFactory;
 		readonly ICaptureLogFactory captureLogFactory;
 		readonly IDeviceLogCapturerFactory deviceLogCapturerFactory;
+		readonly IResultParser resultParser;
+
 		readonly RunMode mode;
 		readonly bool isSimulator;
 		readonly AppRunnerTarget target;
@@ -97,6 +99,7 @@ namespace Xharness {
 						  ICrashSnapshotReporterFactory snapshotReporterFactory,
 						  ICaptureLogFactory captureLogFactory,
 						  IDeviceLogCapturerFactory deviceLogCapturerFactory,
+						  IResultParser resultParser,
 						  AppRunnerTarget target,
 						  IHarness harness,
 						  ILog mainLog,
@@ -118,6 +121,7 @@ namespace Xharness {
 			this.snapshotReporterFactory = snapshotReporterFactory ?? throw new ArgumentNullException (nameof (snapshotReporterFactory));
 			this.captureLogFactory = captureLogFactory ?? throw new ArgumentNullException (nameof (captureLogFactory));
 			this.deviceLogCapturerFactory = deviceLogCapturerFactory ?? throw new ArgumentNullException (nameof (deviceLogCapturerFactory));
+			this.resultParser = resultParser ?? throw new ArgumentNullException (nameof (resultParser));
 			this.harness = harness ?? throw new ArgumentNullException (nameof (harness));
 			this.MainLog = mainLog ?? throw new ArgumentNullException (nameof (mainLog));
 			this.projectFilePath = projectFilePath ?? throw new ArgumentNullException (nameof (projectFilePath));
@@ -310,13 +314,13 @@ namespace Xharness {
 			// from the TCP connection, we are going to fail when trying to read it and not parse it. Therefore, we are not only
 			// going to check if we are in CI, but also if the listener_log is valid.
 			var path = Path.ChangeExtension (test_log_path, "xml");
-			XmlResultParser.CleanXml (test_log_path, path);
+			resultParser.CleanXml (test_log_path, path);
 
-			if (harness.InCI && XmlResultParser.IsValidXml (path, out var xmlType)) {
+			if (harness.InCI && resultParser.IsValidXml (path, out var xmlType)) {
 				(string resultLine, bool failed, bool crashed) parseResult = (null, false, false);
 				crashed = false;
 				try {
-					var newFilename = XmlResultParser.GetXmlFilePath (path, xmlType);
+					var newFilename = resultParser.GetXmlFilePath (path, xmlType);
 
 					// at this point, we have the test results, but we want to be able to have attachments in vsts, so if the format is
 					// the right one (NUnitV3) add the nodes. ATM only TouchUnit uses V3.
@@ -331,7 +335,7 @@ namespace Xharness {
 						// add a final prefix to the file name to make sure that the VSTS test uploaded just pick
 						// the final version, else we will upload tests more than once
 						newFilename = XmlResultParser.GetVSTSFilename (newFilename);
-						XmlResultParser.UpdateMissingData (path, newFilename, testRunName, logFiles);
+						resultParser.UpdateMissingData (path, newFilename, testRunName, logFiles);
 					} else {
 						// rename the path to the correct value
 						File.Move (path, newFilename);
@@ -340,7 +344,7 @@ namespace Xharness {
 
 					// write the human readable results in a tmp file, which we later use to step on the logs
 					var tmpFile = Path.Combine (Path.GetTempPath (), Guid.NewGuid ().ToString ());
-					(parseResult.resultLine, parseResult.failed) = XmlResultParser.GenerateHumanReadableResults (path, tmpFile, xmlType);
+					(parseResult.resultLine, parseResult.failed) = resultParser.GenerateHumanReadableResults (path, tmpFile, xmlType);
 					File.Copy (tmpFile, test_log_path, true);
 					File.Delete (tmpFile);
 
@@ -737,7 +741,13 @@ namespace Xharness {
 			if (!success.HasValue)
 				success = false;
 
-			await crashReporter.EndCaptureAsync (TimeSpan.FromSeconds (success.Value ? 0 : 5));
+			var crashLogWaitTime = 0;
+			if (!success.Value)
+				crashLogWaitTime = 5;
+			if (crashed)
+				crashLogWaitTime = 30;
+
+			await crashReporter.EndCaptureAsync (TimeSpan.FromSeconds (crashLogWaitTime));
 
 			if (timed_out) {
 				Result = TestExecutingResult.TimedOut;
@@ -791,7 +801,7 @@ namespace Xharness {
 						if (crash_reason != null) {
 							// if in CI, do write an xml error that will be picked as a failure by VSTS
 							if (harness.InCI) {
-								XmlResultParser.GenerateFailure (Logs,
+								resultParser.GenerateFailure (Logs,
 									"crash",
 									AppInformation.AppName,
 									variation,
@@ -814,7 +824,7 @@ namespace Xharness {
 						FailureMessage = $"Killed by the OS ({crash_reason})";
 					}
 					if (harness.InCI) {
-						XmlResultParser.GenerateFailure (
+						resultParser.GenerateFailure (
 							Logs,
 							"crash",
 							AppInformation.AppName,
@@ -828,7 +838,7 @@ namespace Xharness {
 					// same as with a crash
 					FailureMessage = $"Launch failure";
 					if (harness.InCI) {
-						XmlResultParser.GenerateFailure (
+						resultParser.GenerateFailure (
 							Logs,
 							"launch",
 							AppInformation.AppName,
@@ -854,7 +864,7 @@ namespace Xharness {
 					}
 
 					if (isTcp) {
-						XmlResultParser.GenerateFailure (Logs,
+						resultParser.GenerateFailure (Logs,
 							"tcp-connection",
 							AppInformation.AppName,
 							variation,
@@ -864,7 +874,7 @@ namespace Xharness {
 							harness.XmlJargon);
 					}
 				} else if (timed_out && harness.InCI) {
-					XmlResultParser.GenerateFailure (Logs,
+					resultParser.GenerateFailure (Logs,
 						"timeout",
 						AppInformation.AppName,
 						variation,
