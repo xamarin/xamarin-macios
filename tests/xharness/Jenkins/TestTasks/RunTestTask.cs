@@ -13,6 +13,7 @@ namespace Xharness.Jenkins.TestTasks
 	internal abstract class RunTestTask : TestTask
 	{
 		protected IProcessManager ProcessManager { get; }
+		IResultParser ResultParser { get; } = new XmlResultParser ();
 
 		public readonly BuildToolTask BuildTask;
 		public TimeSpan Timeout = TimeSpan.FromMinutes (10);
@@ -73,7 +74,7 @@ namespace Xharness.Jenkins.TestTasks
 				}
 				FailureMessage = BuildTask.FailureMessage;
 				if (Harness.InCI && BuildTask is MSBuildTask projectTask)
-					XmlResultParser.GenerateFailure (Logs, "build", projectTask.TestName, projectTask.Variation, $"App Build {projectTask.TestName} {projectTask.Variation}", $"App could not be built {FailureMessage}.", projectTask.BuildLog.FullPath, Harness.XmlJargon);
+					ResultParser.GenerateFailure (Logs, "build", projectTask.TestName, projectTask.Variation, $"App Build {projectTask.TestName} {projectTask.Variation}", $"App could not be built {FailureMessage}.", projectTask.BuildLog.FullPath, Harness.XmlJargon);
 			} else {
 				ExecutionResult = TestExecutingResult.Built;
 			}

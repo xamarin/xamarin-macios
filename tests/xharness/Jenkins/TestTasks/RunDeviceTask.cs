@@ -12,6 +12,7 @@ namespace Xharness.Jenkins.TestTasks
 	class RunDeviceTask : RunXITask<IHardwareDevice>
 	{
 		readonly IProcessManager processManager = new ProcessManager ();
+		readonly IResultParser resultParser = new XmlResultParser ();
 		readonly IDeviceLoader devices;
 		AppInstallMonitorLog install_log;
 
@@ -87,6 +88,7 @@ namespace Xharness.Jenkins.TestTasks
 						new CrashSnapshotReporterFactory (ProcessManager, Harness.XcodeRoot, Harness.MlaunchPath),
 						new CaptureLogFactory (),
 						new DeviceLogCapturerFactory (processManager, Harness.XcodeRoot, Harness.MlaunchPath),
+						new XmlResultParser (),
 						AppRunnerTarget,
 						Harness,
 						projectFilePath: ProjectFile,
@@ -119,7 +121,7 @@ namespace Xharness.Jenkins.TestTasks
 								FailureMessage = $"Install failed, exit code: {install_result.ExitCode}.";
 								ExecutionResult = TestExecutingResult.Failed;
 								if (Harness.InCI)
-									XmlResultParser.GenerateFailure (Logs, "install", runner.AppInformation.AppName, Variation,
+									resultParser.GenerateFailure (Logs, "install", runner.AppInformation.AppName, Variation,
 										$"AppInstallation on {Device.Name}", $"Install failed on {Device.Name}, exit code: {install_result.ExitCode}",
 										install_log.FullPath, Harness.XmlJargon);
 							}
@@ -152,6 +154,7 @@ namespace Xharness.Jenkins.TestTasks
 								new CrashSnapshotReporterFactory (ProcessManager, Harness.XcodeRoot, Harness.MlaunchPath),
 								new CaptureLogFactory (),
 								new DeviceLogCapturerFactory (processManager, Harness.XcodeRoot, Harness.MlaunchPath),
+								new XmlResultParser (),
 								AppRunnerTarget,
 								Harness,
 								projectFilePath: ProjectFile,
