@@ -43,7 +43,7 @@ namespace Xharness.Tests.Execution.Tests {
 							new DownloadCrashReportToArgument ("/path/with spaces.txt"),
 							new DeviceNameArgument ("Test iPad")
 						})
-						.Returns ($"--download-crash-report-to=\"/path/with spaces.txt\" --devname=\"Test iPad\"");
+						.Returns ($"\"--download-crash-report-to=/path/with spaces.txt\" \"--devname=Test iPad\"");
 
 					yield return new TestCaseData (arg:
 						new MlaunchArgument [] {
