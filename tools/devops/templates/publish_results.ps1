@@ -39,7 +39,7 @@ $response = Invoke-RestMethod @params
 
 $response | ConvertTo-Json | Write-Host
 
-$combined_status_url = "https://api.github.com/xamarin/xamarin-macios/commits/$Env:BUILD_REVISION/status"
+$combined_status_url = "https://api.github.com/repos/xamarin/xamarin-macios/commits/$Env:BUILD_REVISION/status"
 
 $params = @{
     Uri = $combined_status_url
