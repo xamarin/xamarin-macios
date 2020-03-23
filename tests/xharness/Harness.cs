@@ -67,7 +67,7 @@ namespace Xharness
 		readonly AppRunnerTarget target;
 		readonly string buildConfiguration = "Debug";
 
-		private IProcessManager processManager;
+		IProcessManager processManager;
 
 		public HarnessAction Action { get; }
 		public int Verbosity { get; }
@@ -113,6 +113,9 @@ namespace Xharness
 				processManager = new ProcessManager (XcodeRoot, MlaunchPath);
 			}
 		}
+
+		string MlaunchPath =>
+			Path.Combine (IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current", "bin", "mlaunch");
 
 		public List<iOSTestProject> IOSTestProjects { get; }
 		public List<MacTestProject> MacTestProjects { get; } = new List<MacTestProject> ();
@@ -238,12 +241,6 @@ namespace Xharness
 
 				path = Path.GetDirectoryName (path);
 			} while (true);
-		}
-
-		public string MlaunchPath {
-			get {
-				return Path.Combine (IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current", "bin", "mlaunch");
-			}
 		}
 
 		void LoadConfig ()
