@@ -47,9 +47,9 @@ $response | ConvertTo-Json | Write-Host
 $RESULT_EMOJI
 If ($Env:AGENT_JOBSTATUS -eq 'Failed')
 {
-	$RESULT_EMOJI = "🔥 "
+	$RESULT_EMOJI = ":fire: "
 } Else {
-	$RESULT_EMOJI = "✅ " # maybe remove this since we only add commit messages on failure?
+	$RESULT_EMOJI = ":white_check_mark: " # maybe remove this since we only add commit messages on failure?
 }
 
 #$MESSAGE_FILE = New-Item -Path . -Name "commit-message.txt" -ItemType "file"
@@ -57,7 +57,7 @@ If ($Env:AGENT_JOBSTATUS -eq 'Failed')
 $HEADER = ""
 If ($Env:BUILD_DEFINITIONNAME -like '*DDFun*')
 {
-	$HEADER = "### :construction: Experimental DDFun pipeline\\n"
+	$HEADER = "### :bangbang: :construction: Experimental DDFun pipeline `n"
 }
 #Else{
 #HTML Report jenkins stuff
