@@ -12,6 +12,8 @@ namespace Xharness.Execution.Mlaunch {
 	public abstract class MlaunchArgument {
 		public abstract string AsCommandLineArgument ();
 
+		protected static string Escape (string value) => StringUtils.FormatArguments (value);
+
 		public override bool Equals (object obj)
 		{
 			return obj is MlaunchArgument arg && arg.AsCommandLineArgument () == AsCommandLineArgument ();
@@ -33,7 +35,8 @@ namespace Xharness.Execution.Mlaunch {
 			this.argumentValue = argumentValue ?? throw new ArgumentNullException (nameof (argumentValue));
 		}
 
-		public override string AsCommandLineArgument () => $"--{argumentName}={argumentValue}";
+		public override string AsCommandLineArgument () =>
+			$"--{argumentName}={Escape (argumentValue)}";
 	}
 
 	public abstract class OptionArgument : MlaunchArgument {
@@ -59,7 +62,7 @@ namespace Xharness.Execution.Mlaunch {
 
 		public void AddRange (IEnumerable<MlaunchArgument> args) => arguments.AddRange (args);
 
-		public string AsCommandLine () => string.Join (" ", arguments.Select (a => StringUtils.FormatArguments (a.AsCommandLineArgument ())));
+		public string AsCommandLine () => string.Join (" ", arguments.Select (a => a.AsCommandLineArgument ()));
 
 		public IEnumerator<MlaunchArgument> GetEnumerator () => arguments.GetEnumerator ();
 

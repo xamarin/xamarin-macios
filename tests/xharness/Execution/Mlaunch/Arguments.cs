@@ -250,8 +250,8 @@
 		}
 
 		public override string AsCommandLineArgument () => "--launchsimbundleid " +
-			"todayviewforextensions:" + bundleId + " " +
-			"--observe-extension " + launchAppPath;
+			"todayviewforextensions:" + Escape (bundleId) + " " +
+			"--observe-extension " + Escape (launchAppPath);
 	}
 
 	/// <summary>
@@ -268,8 +268,8 @@
 		}
 
 		public override string AsCommandLineArgument () => "--launchdevbundleid " +
-			"todayviewforextensions:" + bundleId + " " +
-			"--observe-extension " + launchAppPath;
+			"todayviewforextensions:" + Escape (bundleId) + " " +
+			"--observe-extension " + Escape (launchAppPath);
 	}
 
 	/// <summary>
