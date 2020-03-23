@@ -1015,13 +1015,14 @@ function check_dotnet ()
 {
 	if test -n "$IGNORE_DOTNET"; then return; fi
 
+	local SUFFIX=$1
 	local DOTNET_VERSION
 	local DOTNET_INSTALL_DIR
 	local DOTNET_URL
 	local DOTNET_FILENAME
 
-	DOTNET_VERSION=$(grep ^DOTNET_VERSION= Make.config | sed 's/.*=//')
-	DOTNET_URL=$(grep ^DOTNET_URL= Make.config | sed 's/.*=//')
+	DOTNET_VERSION=$(grep ^DOTNET${SUFFIX}_VERSION= Make.config | sed 's/.*=//')
+	DOTNET_URL=$(grep ^DOTNET${SUFFIX}_URL= Make.config | sed 's/.*=//')
 	DOTNET_INSTALL_DIR=/usr/local/share/dotnet/sdk/"$DOTNET_VERSION"
 	DOTNET_FILENAME=$(basename "$DOTNET_URL")
 
@@ -1059,7 +1060,10 @@ check_cmake
 check_7z
 check_objective_sharpie
 check_simulators
-check_dotnet
+check_dotnet ""
+check_dotnet "5"
+ok ".NET SDKs:"
+(IFS=$'\n'; for i in $(dotnet --list-sdks); do log "$i"; done)
 
 if test -z $FAIL; then
 	echo "System check succeeded"
