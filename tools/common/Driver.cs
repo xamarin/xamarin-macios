@@ -1034,6 +1034,10 @@ namespace Xamarin.Bundler {
 
 			if (ret == 0) {
 				path = stdout.ToString ().Trim ();
+				if (!File.Exists (path)) {
+					ErrorHelper.Warning (5315, Errors.MX5315 /* The tool xcrun failed to return a valid result (the file {0} does not exist). Check build log for details. */, tool, path);
+					return false;
+				}
 			} else {
 				Log (1, "Failed to locate the developer tool '{0}', 'xcrun {1}' returned with the exit code {2}:\n{3}", tool, string.Join (" ", args), ret, both.ToString ());
 			}
