@@ -19,7 +19,7 @@ $json_payload = @"
     "state" : "failure",
     "target_url" : "$target_url",
     "description" : "$Env:SYSTEM_JOBNAME", 
-    "context" : "$Env:CONTEXT"
+    "context" : "$Env:SYSTEM_STAGEDISPLAYNAME"
 }
 "@
 
@@ -57,7 +57,7 @@ If ($Env:AGENT_JOBSTATUS -eq 'Failed')
 $HEADER = ""
 If ($Env:BUILD_DEFINITIONNAME -like '*DDFun*')
 {
-	$HEADER = "### :bangbang: :construction: Experimental DDFun pipeline\\n"
+	$HEADER = "### :bangbang: :construction: TESTING Experimental DDFun pipeline\\n"
 }
 #Else{
 #HTML Report jenkins stuff
