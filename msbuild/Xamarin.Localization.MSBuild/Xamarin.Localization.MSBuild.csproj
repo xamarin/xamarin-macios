@@ -3,10 +3,6 @@
   <PropertyGroup>
     <TargetFrameworks>net461;netstandard2.0</TargetFrameworks>
   </PropertyGroup>
-  <PropertyGroup>
-    <UpdateXlfOnBuild>true</UpdateXlfOnBuild>
-    <ErrorOnOutOfDateXlf>false</ErrorOnOutOfDateXlf>
-  </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Update="MSBStrings.resx">
       <XlfSourceFormat>Resx</XlfSourceFormat>
