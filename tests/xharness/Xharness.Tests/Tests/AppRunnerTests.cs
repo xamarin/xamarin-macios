@@ -200,9 +200,7 @@ namespace Xharness.Tests {
 		[Test]
 		public async Task InstallOnDeviceTest ()
 		{
-			var harness = Mock.Of<IHarness> (x => x.XcodeRoot == "/path/to/xcode"
-				&& x.MlaunchPath == "/path/to/mlaunch"
-				&& x.Verbosity == 2);
+			var harness = Mock.Of<IHarness> (x => x.Verbosity == 2);
 
 			var processResult = new ProcessExecutionResult () { ExitCode = 1, TimedOut = false };
 			processManager.SetReturnsDefault (Task.FromResult (processResult));
@@ -245,9 +243,7 @@ namespace Xharness.Tests {
 		[Test]
 		public async Task UninstallFromDeviceTest ()
 		{
-			var harness = Mock.Of<IHarness> (x => x.XcodeRoot == "/path/to/xcode"
-				&& x.MlaunchPath == "/path/to/mlaunch"
-				&& x.Verbosity == 1);
+			var harness = Mock.Of<IHarness> (x => x.Verbosity == 1);
 
 			var processResult = new ProcessExecutionResult () { ExitCode = 3, TimedOut = false };
 			processManager.SetReturnsDefault (Task.FromResult (processResult));
@@ -737,11 +733,8 @@ namespace Xharness.Tests {
 		IHarness GetMockedHarness ()
 		{
 			return Mock.Of<IHarness> (x => x.Action == HarnessAction.Run
-				&& x.XcodeRoot == xcodePath
-				&& x.MlaunchPath == mlaunchPath
 				&& x.Verbosity == 1
 				&& x.HarnessLog == mainLog.Object
-				&& x.LogDirectory == logs.Object.Directory
 				&& x.InCI == false
 				&& x.EnvironmentVariables == new Dictionary<string, string> () {
 					{ "env1", "value1" },

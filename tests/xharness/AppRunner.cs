@@ -626,7 +626,6 @@ namespace Xharness {
 					}
 				}
 
-
 				// cleanup after us
 				if (EnsureCleanSimulatorState)
 					await simulator.KillEverythingAsync (MainLog);

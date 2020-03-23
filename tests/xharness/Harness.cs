@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Xml;
 using Xharness.BCLTestImporter;
 using Xharness.Logging;
@@ -51,51 +50,17 @@ namespace Xharness
 
 	public interface IHarness {
 		HarnessAction Action { get; }
-		bool DisableWatchOSOnWrench { get; }
-		string DOTNET { get; }
-		bool DryRun { get; }
-		bool ENABLE_XAMARIN { get; }
 		Dictionary<string, string> EnvironmentVariables { get; }
 		ILog HarnessLog { get; set; }
-		string GetStandardErrorTty ();
 		bool InCI { get; }
-		bool INCLUDE_IOS { get; }
-		bool INCLUDE_MAC { get; }
-		bool INCLUDE_TVOS { get; }
-		bool INCLUDE_WATCH { get; }
-		bool? IncludeSystemPermissionTests { get; set; }
-		string IOS_DESTDIR { get; }
-		List<iOSTestProject> IOSTestProjects { get; }
-		string JENKINS_RESULTS_DIRECTORY { get; }
-		string JenkinsConfiguration { get; }
-		HashSet<string> Labels { get; }
 		double LaunchTimeout { get; }
-		string LogDirectory { get; }
-		string MAC_DESTDIR { get; }
-		List<MacTestProject> MacTestProjects { get; }
-		string MarkdownSummaryPath { get; }
-		string MlaunchPath { get; }
-		string MONO_IOS_SDK_DESTDIR { get; }
-		string MONO_MAC_SDK_DESTDIR { get; }
-		string MONO_PATH { get; }
-		string PeriodicCommand { get; }
-		string PeriodicCommandArguments { get; }
-		TimeSpan PeriodicCommandInterval { get; }
 		double Timeout { get; }
-		string TodayContainerTemplate { get; }
-		string TodayExtensionTemplate { get; }
-		bool UseGroupedApps { get; }
 		int Verbosity { get; }
-		string WatchOSAppTemplate { get; }
-		string WatchOSContainerTemplate { get; }
-		string WatchOSExtensionTemplate { get; }
-		string XcodeRoot { get; }
 		XmlResultJargon XmlJargon { get; }
+
 		bool GetIncludeSystemPermissionTests (TestPlatform platform, bool device);
+		string GetStandardErrorTty ();
 		void Log (int min_level, string message, params object [] args);
-		void Log (string message);
-		void Log (string message, params object [] args);
-		void Save (StringWriter doc, string path);
 	}
 
 	public class Harness : IHarness {
