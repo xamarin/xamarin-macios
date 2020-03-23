@@ -11,6 +11,17 @@ $(BUILD_DIR)/generator.csproj.inc: Makefile.generator $(TOP)/tools/common/create
 $(BUILD_DIR)/common/bgen.exe: $(generator_dependencies) Makefile.generator $(BUILD_DIR)/generator-frameworks.g.cs
 	$(Q_GEN) $(SYSTEM_MSBUILD) $(XBUILD_VERBOSITY) /p:Configuration=Debug generator.csproj /p:IntermediateOutputPath=$(BUILD_DIR)/IDE/obj/common/ /p:OutputPath=$(BUILD_DIR)/common
 
+$(DOTNET_BUILD_DIR)/bgen/bgen:  $(generator_dependencies) Makefile.generator $(BUILD_DIR)/generator-frameworks.g.cs | $(DOTNET_BUILD_DIR)/bgen
+	$(Q_DOTNET_BUILD) $(DOTNET) build $(XBUILD_VERBOSITY) /p:Configuration=Debug bgen/bgen.csproj /p:IntermediateOutputPath=$(abspath $(DOTNET_BUILD_DIR)/IDE/obj/common)/ /p:OutputPath=$(abspath $(DOTNET_BUILD_DIR)/IDE/bin/common)/
+	$(Q) $(CP) $(DOTNET_BUILD_DIR)/IDE/bin/common/bgen* $(dir $@)
+
+DOTNET_TARGETS += \
+	$(DOTNET_BUILD_DIR)/bgen/bgen \
+
+DOTNET_TARGETS_DIRS += \
+	$(DOTNET_BUILD_DIR) \
+	$(DOTNET_BUILD_DIR)/bgen \
+
 #
 # Common
 #
@@ -18,6 +29,9 @@ $(BUILD_DIR)/common/bgen.exe: $(generator_dependencies) Makefile.generator $(BUI
 $(BUILD_DIR)/generator-frameworks.g.cs: frameworks.sources Makefile.generator generate-frameworks.csharp
 	@mkdir -p $(dir $@)
 	@./generate-frameworks.csharp '$(IOS_FRAMEWORKS)' '$(MAC_FRAMEWORKS)' '$(WATCHOS_FRAMEWORKS)' '$(TVOS_FRAMEWORKS)' > $@
+
+$(DOTNET_BUILD_DIR)/Xamarin.Apple.BindingAttributes.dll: generator-attributes.cs Makefile.generator | $(DOTNET_BUILD_DIR)
+	$(Q_DOTNET_BUILD) $(SYSTEM_CSC) $(DOTNET_FLAGS) -out:$@ $<
 
 #
 # Xamarin.iOS (btouch)
@@ -36,7 +50,7 @@ IOS_TARGETS += \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/btouch                        \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/btouch-native                 \
 
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/bgen: bgen | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/bgen: bgen/bgen | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin
 	$(Q) $(CP) $< $@
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/btouch: Makefile.generator | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin
@@ -124,7 +138,7 @@ MAC_TARGETS += \
 MAC_TARGETS += \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bmac                     \
 
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bgen: bgen | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bgen: bgen/bgen | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin
 	$(Q) $(CP) $< $@
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bgen-classic: Makefile.generator | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin

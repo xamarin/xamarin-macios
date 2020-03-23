@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
+using Xamarin.Localization.MSBuild;
 
 using Xamarin.MacDev;
 
@@ -133,18 +134,18 @@ namespace Xamarin.MacDev.Tasks
 			var startInfo = GetProcessStartInfo (environment, GetFullPathToTool (), args.ToString ());
 
 			using (var process = new Process ()) {
-				Log.LogMessage (MessageImportance.Normal, "Tool {0} execution started with arguments: {1}", startInfo.FileName, startInfo.Arguments);
+				Log.LogMessage (MessageImportance.Normal, MSBStrings.M0001, startInfo.FileName, startInfo.Arguments);
 				process.StartInfo = startInfo;
 
 				try {
 					process.Start ();
 					process.WaitForExit ();
 				} catch (Win32Exception ex) {
-					Log.LogError ("Error executing tool '{0}': {1}", startInfo.FileName, ex.Message);
+					Log.LogError (MSBStrings.E0003, startInfo.FileName, ex.Message);
 					return -1;
 				}
 
-				Log.LogMessage (MessageImportance.Low, "Tool {0} execution finished.", startInfo.FileName);
+				Log.LogMessage (MessageImportance.Low, MSBStrings.M0116, startInfo.FileName);
 
 				return process.ExitCode;
 			}
@@ -164,7 +165,7 @@ namespace Xamarin.MacDev.Tasks
 					string illegal;
 
 					if (BundleResource.IsIllegalName (relative, out illegal)) {
-						Log.LogError (null, null, null, input.ItemSpec, 0, 0, 0, 0, "The name '{0}' is reserved and cannot be used.", illegal);
+						Log.LogError (null, null, null, input.ItemSpec, 0, 0, 0, 0, MSBStrings.E0102, illegal);
 						continue;
 					}
 

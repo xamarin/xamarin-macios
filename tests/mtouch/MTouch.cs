@@ -1048,7 +1048,7 @@ public class B : A {}
 
 		[Test]
 		[TestCase (Profile.tvOS)]
-		//[TestCase (Profile.WatchOS)] MT0077 interferring.
+		[TestCase (Profile.watchOS)]
 		[TestCase (Profile.iOS)]
 		public void MT0085 (Profile profile)
 		{
@@ -1056,8 +1056,11 @@ public class B : A {}
 				mtouch.Profile = profile;
 				mtouch.CreateTemporaryApp ();
 				mtouch.TargetFramework = GetTargetFramework (profile);
-				Assert.AreEqual (0, mtouch.Execute (MTouchAction.BuildSim));
+				mtouch.WarnAsError = new int [] { 85 };
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim);
 				mtouch.AssertError (85, string.Format ("No reference to '{0}' was found. It will be added automatically.", Path.GetFileName (GetBaseLibrary (profile))));
+				mtouch.AssertErrorCount (1);
+				mtouch.AssertWarningCount (0);
 			}
 		}
 
@@ -1067,10 +1070,11 @@ public class B : A {}
 		public void MT0086 (Profile profile)
 		{
 			using (var mtouch = new MTouchTool ()) {
+				mtouch.TargetFramework = BundlerTool.None;
 				mtouch.CreateTemporaryApp ();
 				mtouch.References = new string [] { GetBaseLibrary (profile) };
 				Assert.AreEqual (1, mtouch.Execute (MTouchAction.BuildSim));
-				mtouch.AssertError (86, "A target framework (--target-framework) must be specified when building for TVOS or WatchOS.");
+				mtouch.AssertError (86, "A target framework (--target-framework) must be specified.");
 			}
 		}
 
@@ -1177,17 +1181,6 @@ public class B : A {}
 			}
 		}
 		
-		[Test]
-		public void MT0096 ()
-		{
-			using (var mtouch = new MTouchTool ()) {
-				mtouch.CreateTemporaryApp ();
-				mtouch.NoPlatformAssemblyReference = true;
-				Assert.AreEqual (1, mtouch.Execute (MTouchAction.BuildSim));
-				mtouch.AssertError (96, "No reference to Xamarin.iOS.dll was found.");
-			}
-		}
-
 		/* MT0100 is a consistency check, and should never be seen (and as such can never be tested either, since there's no known test cases that would produce it) */
 
 		[Test]
@@ -3089,15 +3082,12 @@ class TestClass {
 			AssertDeviceAvailable ();
 
 			using (var mtouch = new MTouchTool ()) {
+				mtouch.Verbosity = -10; // This test fails when verbosity is increased, because mtouch will not show the MT5108 error, so make sure that doesn't happen.
 				mtouch.TargetVer = "10.3";
 				mtouch.Profile = Profile.iOS;
 				mtouch.Abi = "armv7";
-				mtouch.Linker = MTouchLinker.DontLink;
-				/* Once the xcode11 branch has been merged into master, we should be able to do the following instead, which will make the test faster
 				mtouch.Linker = MTouchLinker.LinkSdk;
-				mtouch.CustomArguments = new string [] { "--linkskip=System.Core" };
-				mtouch.CreateTemporaryApp (extraCode: "[Foundation.Preserve] class PreserveMe { void M () { System.Console.WriteLine (typeof (System.Collections.Generic.HashSet<string>)); } }", extraArg: "-r:System.Core.dll");
-				*/
+				mtouch.CustomArguments = new string [] { "--linkskip=Xamarin.iOS" };
 				mtouch.CreateTemporaryApp ();
 				mtouch.AssertExecuteFailure (MTouchAction.BuildDev);
 				mtouch.AssertError (5107, "The assembly 'Xamarin.iOS.dll' can't be AOT-compiled for 32-bit architectures because the native code is too big for the 32-bit ARM architecture.");

@@ -2,14 +2,21 @@
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading;
+using Xharness.Logging;
 
 namespace Xharness.Listeners
 {
 	public class SimpleHttpListener : SimpleListener
 	{
+		readonly bool autoExit;
 		HttpListener server;
 		bool connected_once;
+
+		public SimpleHttpListener (ILog log, ILog testLog, bool autoExit, bool xmlOutput)
+			: base (log, testLog, xmlOutput)
+		{
+			this.autoExit = autoExit;
+		}
 
 		public override void Initialize ()
 		{
@@ -49,7 +56,7 @@ namespace Xharness.Listeners
 				do {
 					var context = server.GetContext ();
 					processed = Processing (context);
-				} while (!AutoExit || !processed);
+				} while (!autoExit || !processed);
 			} catch (Exception e) {
 				var se = e as SocketException;
 				if (se == null || se.SocketErrorCode != SocketError.Interrupted)

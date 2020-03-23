@@ -5,6 +5,7 @@ using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev.Tasks;
 using Xamarin.MacDev;
+using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.iOS.Tasks
 {
@@ -41,14 +42,14 @@ namespace Xamarin.iOS.Tasks
 				platform = MobileProvisionPlatform.iOS;
 				break;
 			default:
-				Log.LogError ("Unknown SDK platform: {0}", SdkPlatform);
+				Log.LogError (MSBStrings.E0048, SdkPlatform);
 				return false;
 			}
 
 			var profile = MobileProvisionIndex.GetMobileProvision (platform, ProvisioningProfile);
 
 			if (profile == null) {
-				Log.LogError ("Could not locate the provisioning profile with a Name or UUID of {0}.", ProvisioningProfile);
+				Log.LogError (MSBStrings.E0049, ProvisioningProfile);
 				return false;
 			}
 

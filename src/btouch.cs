@@ -70,6 +70,10 @@ public class BindingTouch {
 		get { return "bgen"; }
 	}
 
+	bool IsDotNet {
+		get { return TargetFramework.IsDotNet; }
+	}
+
 	static void ShowHelp (OptionSet os)
 	{
 		Console.WriteLine ("{0} - Mono Objective-C API binder", ToolName);
@@ -117,31 +121,33 @@ public class BindingTouch {
 
 	IEnumerable<string> GetLibraryDirectories ()
 	{
-		switch (CurrentPlatform) {
-		case PlatformName.iOS:
-			yield return Path.Combine (GetSDKRoot (), "lib", "mono", "Xamarin.iOS");
-			break;
-		case PlatformName.WatchOS:
-			yield return Path.Combine (GetSDKRoot (), "lib", "mono", "Xamarin.WatchOS");
-			break;
-		case PlatformName.TvOS:
-			yield return Path.Combine (GetSDKRoot (), "lib", "mono", "Xamarin.TVOS");
-			break;
-		case PlatformName.MacOSX:
-			if (target_framework == TargetFramework.Xamarin_Mac_4_5_Full) {
-				yield return Path.Combine (GetSDKRoot (), "lib", "reference", "full");
-				yield return Path.Combine (GetSDKRoot (), "lib", "mono", "4.5");
-			} else if (target_framework == TargetFramework.Xamarin_Mac_4_5_System) {
-				yield return "/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5";
-				yield return Path.Combine (GetSDKRoot (), "lib", "mono", "4.5");
-			} else if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
-				yield return Path.Combine (GetSDKRoot (), "lib", "mono", "Xamarin.Mac");
-			} else {
-				throw ErrorHelper.CreateError (1053, target_framework);
+		if (!IsDotNet) {
+			switch (CurrentPlatform) {
+			case PlatformName.iOS:
+				yield return Path.Combine (GetSDKRoot (), "lib", "mono", "Xamarin.iOS");
+				break;
+			case PlatformName.WatchOS:
+				yield return Path.Combine (GetSDKRoot (), "lib", "mono", "Xamarin.WatchOS");
+				break;
+			case PlatformName.TvOS:
+				yield return Path.Combine (GetSDKRoot (), "lib", "mono", "Xamarin.TVOS");
+				break;
+			case PlatformName.MacOSX:
+				if (target_framework == TargetFramework.Xamarin_Mac_4_5_Full) {
+					yield return Path.Combine (GetSDKRoot (), "lib", "reference", "full");
+					yield return Path.Combine (GetSDKRoot (), "lib", "mono", "4.5");
+				} else if (target_framework == TargetFramework.Xamarin_Mac_4_5_System) {
+					yield return "/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5";
+					yield return Path.Combine (GetSDKRoot (), "lib", "mono", "4.5");
+				} else if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
+					yield return Path.Combine (GetSDKRoot (), "lib", "mono", "Xamarin.Mac");
+				} else {
+					throw ErrorHelper.CreateError (1053, target_framework);
+				}
+				break;
+			default:
+				throw new BindingException (1047, CurrentPlatform);
 			}
-			break;
-		default:
-			throw new BindingException (1047, CurrentPlatform);
 		}
 		foreach (var lib in libs)
 			yield return lib;
@@ -193,7 +199,7 @@ public class BindingTouch {
 			throw ErrorHelper.CreateError (68, fx);
 		target_framework = tf;
 
-		if (Array.IndexOf (TargetFramework.ValidFrameworks, target_framework.Value) == -1)
+		if (!TargetFramework.IsValidFramework (target_framework.Value))
 			throw ErrorHelper.CreateError (70, target_framework.Value, string.Join (" ", TargetFramework.ValidFrameworks.Select ((v) => v.ToString ()).ToArray ()));
 	}
 
@@ -334,24 +340,30 @@ public class BindingTouch {
 			nostdlib = true;
 			if (string.IsNullOrEmpty (baselibdll))
 				baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/Xamarin.iOS/Xamarin.iOS.dll");
-			references.Add ("Facades/System.Drawing.Common");
-			ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/Xamarin.iOS", references);
+			if (!IsDotNet) {
+				references.Add ("Facades/System.Drawing.Common");
+				ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/Xamarin.iOS", references);
+			}
 			break;
 		case ApplePlatform.TVOS:
 			CurrentPlatform = PlatformName.TvOS;
 			nostdlib = true;
 			if (string.IsNullOrEmpty (baselibdll))
 				baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/Xamarin.TVOS/Xamarin.TVOS.dll");
-			references.Add ("Facades/System.Drawing.Common");
-			ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/Xamarin.TVOS", references);
+			if (!IsDotNet) {
+				references.Add ("Facades/System.Drawing.Common");
+				ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/Xamarin.TVOS", references);
+			}
 			break;
 		case ApplePlatform.WatchOS:
 			CurrentPlatform = PlatformName.WatchOS;
 			nostdlib = true;
 			if (string.IsNullOrEmpty (baselibdll))
 				baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/Xamarin.WatchOS/Xamarin.WatchOS.dll");
-			references.Add ("Facades/System.Drawing.Common");
-			ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/Xamarin.WatchOS", references);
+			if (!IsDotNet) {
+				references.Add ("Facades/System.Drawing.Common");
+				ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/Xamarin.WatchOS", references);
+			}
 			break;
 		case ApplePlatform.MacOSX:
 			CurrentPlatform = PlatformName.MacOSX;
@@ -375,6 +387,8 @@ public class BindingTouch {
 			} else if (target_framework == TargetFramework.Xamarin_Mac_4_5_System) {
 				skipSystemDrawing = false;
 				ReferenceFixer.FixSDKReferences ("/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5", references, forceSystemDrawing : true);
+			} else if (target_framework == TargetFramework.DotNet_5_0_macOS) {
+				skipSystemDrawing = false;
 			} else {
 				throw ErrorHelper.CreateError (1053, target_framework); 
 			}
@@ -441,6 +455,39 @@ public class BindingTouch {
 				
 
 			universe = new Universe (UniverseOptions.EnableFunctionPointers | UniverseOptions.ResolveMissingMembers | UniverseOptions.MetadataOnly);
+			if (IsDotNet) {
+				// IKVM tries uses reflection to locate assemblies on disk, but .NET doesn't include reflection so that fails.
+				// Instead intercept assembly resolution and look for assemblies where we know they are.
+				var resolved_assemblies = new Dictionary<string, Assembly> ();
+				universe.AssemblyResolve += (object sender, IKVM.Reflection.ResolveEventArgs rea) => {
+					var an = new AssemblyName (rea.Name);
+
+					// Check if we've already found this assembly
+					if (resolved_assemblies.TryGetValue (an.Name, out var rv))
+						return rv;
+
+					// Check if the assembly has already been loaded into IKVM
+					var assemblies = universe.GetAssemblies ();
+					foreach (var asm in assemblies) {
+						if (asm.GetName ().Name == an.Name) {
+							resolved_assemblies [an.Name] = asm;
+							return asm;
+						}
+					}
+
+					// Look in the references to find a matching one and get the path from there.
+					foreach (var r in references) {
+						var fn = Path.GetFileNameWithoutExtension (r);
+						if (fn == an.Name) {
+							rv = universe.LoadFile (r);
+							resolved_assemblies [an.Name] = rv;
+							return rv;
+						}
+					}
+
+					throw ErrorHelper.CreateError (1081, rea.Name);
+				};
+			}
 
 			Assembly api;
 			try {
@@ -481,6 +528,18 @@ public class BindingTouch {
 			}
 
 			foreach (var r in references) {
+				// IKVM has a bug where it doesn't correctly compare assemblies, which means it
+				// can end up loading the same assembly (in particular any System.Runtime whose
+				// version > 4.0, but likely others as well) more than once. This is bad, because
+				// we compare types based on reference equality, which breaks down when there are
+				// multiple instances of the same type.
+				// 
+				// So just don't ask IKVM to load assemblies that have already been loaded.
+				var fn = Path.GetFileNameWithoutExtension (r);
+				var assemblies = universe.GetAssemblies ();
+				if (assemblies.Any ((v) => v.GetName ().Name == fn))
+					continue;
+
 				if (File.Exists (r)) {
 					try {
 						universe.LoadFile (r);

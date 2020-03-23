@@ -7,9 +7,9 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Xamarin.Utils;
-using Xharness;
+using Xharness.Execution.Mlaunch;
 using Xharness.Logging;
+using Xharness.Utilities;
 
 namespace Xharness.Execution {
 	public class ProcessManager : IProcessManager {
@@ -17,11 +17,30 @@ namespace Xharness.Execution {
 		{
 		}
 
-		public async Task<ProcessExecutionResult> ExecuteCommandAsync (string filename, IList<string> args, ILog log, TimeSpan timeout, Dictionary<string, string> environment_variables = null, CancellationToken? cancellation_token = null)
+		public async Task<ProcessExecutionResult> ExecuteCommandAsync (string filename,
+			IList<string> args,
+			ILog log,
+			TimeSpan timeout,
+			Dictionary<string, string> environment_variables = null,
+			CancellationToken? cancellation_token = null)
 		{
 			using (var p = new Process ()) {
 				p.StartInfo.FileName = filename;
 				p.StartInfo.Arguments = StringUtils.FormatArguments (args);
+				return await RunAsync (p, log, timeout, environment_variables, cancellation_token);
+			}
+		}
+
+		public async Task<ProcessExecutionResult> ExecuteCommandAsync (string filename,
+			MlaunchArguments args,
+			ILog log,
+			TimeSpan timeout,
+			Dictionary<string, string> environment_variables = null,
+			CancellationToken? cancellation_token = null)
+		{
+			using (var p = new Process ()) {
+				p.StartInfo.FileName = filename;
+				p.StartInfo.Arguments = args.AsCommandLine ();
 				return await RunAsync (p, log, timeout, environment_variables, cancellation_token);
 			}
 		}
@@ -59,6 +78,12 @@ namespace Xharness.Execution {
 			return RunAsync (process, log, log, log, timeout, environment_variables, cancellation_token, diagnostics);
 		}
 
+		public Task<ProcessExecutionResult> RunAsync (Process process, MlaunchArguments args, ILog log, TimeSpan? timeout = null, Dictionary<string, string> environment_variables = null, CancellationToken? cancellation_token = null, bool? diagnostics = null)
+		{
+			process.StartInfo.Arguments = args.AsCommandLine ();
+			return RunAsync (process, log, timeout, environment_variables, cancellation_token, diagnostics);
+		}
+
 		public Task<ProcessExecutionResult> RunAsync (Process process, ILog log, ILog stdoutLog, ILog stderrLog, TimeSpan? timeout = null, Dictionary<string, string> environment_variables = null, CancellationToken? cancellation_token = null, bool? diagnostics = null)
 		{
 			if (stdoutLog is TextWriter StdoutStream && stderrLog is TextWriter StderrStream) {
@@ -76,6 +101,9 @@ namespace Xharness.Execution {
 
 			process.StartInfo.RedirectStandardError = true;
 			process.StartInfo.RedirectStandardOutput = true;
+			// Make cute emojiis show up as cute emojiis in the output instead of ugly text symbols!
+			process.StartInfo.StandardOutputEncoding = Encoding.UTF8; 
+			process.StartInfo.StandardErrorEncoding = Encoding.UTF8;
 			process.StartInfo.UseShellExecute = false;
 
 			if (environment_variables != null) {

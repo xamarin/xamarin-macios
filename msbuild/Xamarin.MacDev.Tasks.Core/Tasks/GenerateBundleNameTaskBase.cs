@@ -3,6 +3,7 @@ using System.Text;
 
 using Microsoft.Build.Utilities;
 using Microsoft.Build.Framework;
+using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.MacDev.Tasks
 {
@@ -31,13 +32,13 @@ namespace Xamarin.MacDev.Tasks
 		public override bool Execute ()
 		{
 			if (string.IsNullOrEmpty (ProjectName)) {
-				Log.LogError ("  AssemblyPath cannot be null or empty");
+				Log.LogError (MSBStrings.E0150);
 				return false;
 			}
 
 			BundleName = SanitizeName (ProjectName);
 
-			Log.LogMessage ("Generated bundle name: {0}", BundleName);
+			Log.LogMessage (MSBStrings.M0151, BundleName);
 
 			return true;
 		}

@@ -306,6 +306,10 @@ namespace Xamarin.iOS.Tasks
 			{
 				SdkDir = Path.Combine (Path.GetTempPath (), Guid.NewGuid ().ToString ());
 				Directory.CreateDirectory (SdkDir);
+				Directory.CreateDirectory (Path.Combine (SdkDir, "bin"));
+				File.WriteAllText (Path.Combine (SdkDir, "Version"), "1.0.0.0"); // Fake Version file so that MonoTouchSdk detects this as a real Sdk location.
+				File.WriteAllText (Path.Combine (SdkDir, "bin", "mtouch"), "echo \"fake mtouch\""); // Fake mtouch binary so that MonoTouchSdk detects this as a real Sdk location.
+				Directory.CreateDirectory (Path.Combine (SdkDir, "lib"));
 				sdk = IPhoneSdks.MonoTouch;
 
 				IPhoneSdks.MonoTouch = new MonoTouchSdk (SdkDir);

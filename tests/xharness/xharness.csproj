@@ -7,9 +7,10 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{E1F53F80-8399-499B-8017-C414B9CD263B}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>xharness</RootNamespace>
+    <RootNamespace>Xharness</RootNamespace>
     <AssemblyName>xharness</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,6 +22,7 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>full</DebugType>
@@ -29,6 +31,7 @@
     <WarningLevel>4</WarningLevel>
     <Externalconsole>true</Externalconsole>
     <OutputPath>bin\Release</OutputPath>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
     <StartAction>Project</StartAction>
@@ -70,87 +73,109 @@
     <PackageReference Include="Mono.Options" Version="5.3.0.1" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Jenkins\TestTasks\AggregatedRunSimulatorTask.cs" />
-    <Compile Include="Jenkins\TestTasks\BuildProjectTask.cs" />
-    <Compile Include="Jenkins\TestTasks\BuildToolTask.cs" />
-    <Compile Include="Jenkins\TestTasks\MacExecuteTask.cs" />
-    <Compile Include="Jenkins\TestTasks\MacTask.cs" />
-    <Compile Include="Jenkins\TestTasks\MakeTask.cs" />
-    <Compile Include="Jenkins\TestTasks\NUnitExecuteTask.cs" />
-    <Compile Include="Jenkins\Resource.cs" />
-    <Compile Include="Jenkins\Resources.cs" />
-    <Compile Include="Jenkins\TestTasks\RunDeviceTask.cs" />
-    <Compile Include="Jenkins\TestTasks\RunSimulatorTask.cs" />
-    <Compile Include="Jenkins\TestTasks\RunTestTask.cs" />
-    <Compile Include="Jenkins\TestTasks\RunXITask.cs" />
-    <Compile Include="Jenkins\TestTasks\RunXtroTask.cs" />
-    <Compile Include="TestExecutingResult.cs" />
-    <Compile Include="TestPlatform.cs" />
-    <Compile Include="Jenkins\TestTasks\TestTask.cs" />
-    <Compile Include="Jenkins\TestTasks\XBuildTask.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Harness.cs" />
-    <Compile Include="ProjectFileExtensions.cs" />
-    <Compile Include="..\..\tools\common\PListExtensions.cs">
-      <Link>PListExtensions.cs</Link>
-    </Compile>
-    <Compile Include="WatchOSTarget.cs" />
-    <Compile Include="TVOSTarget.cs" />
-    <Compile Include="Target.cs" />
-    <Compile Include="UnifiedTarget.cs" />
+    <Compile Include="AppInstallMonitorLog.cs" />
     <Compile Include="AppRunner.cs" />
-    <Compile Include="..\..\tools\mtouch\SdkVersions.cs">
-      <Link>SdkVersions.cs</Link>
-    </Compile>
-    <Compile Include="DeviceLogCapturer.cs" />
-    <Compile Include="MakefileGenerator.cs" />
-    <Compile Include="SolutionGenerator.cs" />
-    <Compile Include="MacTarget.cs" />
-    <Compile Include="Jenkins\Jenkins.cs" />
-    <Compile Include="Simulators.cs" />
-    <Compile Include="TestProject.cs" />
-    <Compile Include="GitHub.cs" />
-    <Compile Include="Extensions.cs" />
-    <Compile Include="..\mtouch\Cache.cs">
-      <Link>Cache.cs</Link>
-    </Compile>
-    <Compile Include="TodayExtensionTarget.cs" />
-    <Compile Include="..\..\tools\common\StringUtils.cs">
-      <Link>StringUtils.cs</Link>
-    </Compile>
-    <Compile Include="iOSTarget.cs" />
-    <Compile Include="MonoNativeInfo.cs" />
-    <Compile Include="XmlResultParser.cs" />
-    <Compile Include="BCLTestImporter\BCLTestAssemblyDefinition.cs" />
+    <Compile Include="AppRunnerTarget.cs" />
     <Compile Include="BCLTestImporter\BCLTestImportTargetFactory.cs" />
     <Compile Include="BCLTestImporter\BCLTestInfoPlistGenerator.cs" />
     <Compile Include="BCLTestImporter\BCLTestProjectDefinition.cs" />
     <Compile Include="BCLTestImporter\BCLTestProjectGenerator.cs" />
     <Compile Include="BCLTestImporter\Platform.cs" />
-    <Compile Include="BCLTestImporter\RegisterTypeGenerator.cs" />
-    <Compile Include="Logging\ILogs.cs" />
-    <Compile Include="Logging\Logs.cs" />
-    <Compile Include="Logging\Log.cs" />
-    <Compile Include="Logging\ILog.cs" />
-    <Compile Include="Logging\ILogFile.cs" />
-    <Compile Include="Logging\LogFile.cs" />
-    <Compile Include="Logging\ConsoleLog.cs" />
-    <Compile Include="Logging\CallbackLog.cs" />
-    <Compile Include="Logging\CaptureLog.cs" />
+    <Compile Include="Collections\BlockingEnumerableCollection.cs" />
+    <Compile Include="Collections\ILoadAsync.cs" />
+    <Compile Include="Collections\IAsyncEnumerable.cs" />
+    <Compile Include="CrashSnapshotReporter.cs" />
+    <Compile Include="DeviceLogCapturer.cs" />
+    <Compile Include="Execution\IProcessManager.cs" />
+    <Compile Include="Execution\Mlaunch\Arguments.cs" />
+    <Compile Include="Execution\Mlaunch\MLaunchArguments.cs" />
+    <Compile Include="Execution\ProcessManager.cs" />
+    <Compile Include="GitHub.cs" />
+    <Compile Include="Harness.cs" />
+    <Compile Include="Hardware\Simulators.cs" />
+    <Compile Include="Hardware\SimulatorDevice.cs" />
+    <Compile Include="Hardware\IDevice.cs" />
+    <Compile Include="Hardware\Device.cs" />
+    <Compile Include="Hardware\Devices.cs" />
+    <Compile Include="Hardware\IHardwareDevice.cs" />
+    <Compile Include="Hardware\ISimulatorDevice.cs" />
+    <Compile Include="Hardware\TCCDatabase.cs" />
+    <Compile Include="Jenkins\Jenkins.cs" />
+    <Compile Include="Jenkins\Resource.cs" />
+    <Compile Include="Jenkins\Resources.cs" />
+    <Compile Include="Jenkins\TestTasks\AggregatedRunSimulatorTask.cs" />
+    <Compile Include="Jenkins\TestTasks\BuildProjectTask.cs" />
+    <Compile Include="Jenkins\TestTasks\BuildToolTask.cs" />
+    <Compile Include="Jenkins\TestTasks\DotNetBuildTask.cs" />
+    <Compile Include="Jenkins\TestTasks\DotNetTestTask.cs" />
+    <Compile Include="Jenkins\TestTasks\MacExecuteTask.cs" />
+    <Compile Include="Jenkins\TestTasks\MacTask.cs" />
+    <Compile Include="Jenkins\TestTasks\MakeTask.cs" />
+    <Compile Include="Jenkins\TestTasks\MSBuildTask.cs" />
+    <Compile Include="Jenkins\TestTasks\NUnitExecuteTask.cs" />
+    <Compile Include="Jenkins\TestTasks\RunDeviceTask.cs" />
+    <Compile Include="Jenkins\TestTasks\RunSimulatorTask.cs" />
+    <Compile Include="Jenkins\TestTasks\RunTestTask.cs" />
+    <Compile Include="Jenkins\TestTasks\RunXITask.cs" />
+    <Compile Include="Jenkins\TestTasks\RunXtroTask.cs" />
+    <Compile Include="Jenkins\TestTasks\TestTask.cs" />
     <Compile Include="Listeners\SimpleFileListener.cs" />
     <Compile Include="Listeners\SimpleHttpListener.cs" />
     <Compile Include="Listeners\SimpleListener.cs" />
-    <Compile Include="Listeners\SimpleTcpListener.cs" />
     <Compile Include="Listeners\SimpleListenerFactory.cs" />
-    <Compile Include="Execution\IProcessManager.cs" />
-    <Compile Include="Execution\ProcessManager.cs" />
+    <Compile Include="Listeners\SimpleTcpListener.cs" />
+    <Compile Include="Logging\CallbackLog.cs" />
+    <Compile Include="Logging\CaptureLog.cs" />
+    <Compile Include="Logging\ConsoleLog.cs" />
+    <Compile Include="Logging\ILog.cs" />
+    <Compile Include="Logging\ILogFile.cs" />
+    <Compile Include="Logging\ILogs.cs" />
+    <Compile Include="Logging\Log.cs" />
+    <Compile Include="Logging\LogFile.cs" />
+    <Compile Include="Logging\Logs.cs" />
+    <Compile Include="Logging\WrenchLog.cs" />
+    <Compile Include="MakefileGenerator.cs" />
+    <Compile Include="MonoNativeInfo.cs" />
+    <Compile Include="NoDeviceFoundException.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SolutionGenerator.cs" />
+    <Compile Include="Targets\iOSTarget.cs" />
+    <Compile Include="Targets\MacTarget.cs" />
+    <Compile Include="Targets\Target.cs" />
+    <Compile Include="Targets\TodayExtensionTarget.cs" />
+    <Compile Include="Targets\TVOSTarget.cs" />
+    <Compile Include="Targets\UnifiedTarget.cs" />
+    <Compile Include="Targets\WatchOSTarget.cs" />
+    <Compile Include="TestExecutingResult.cs" />
+    <Compile Include="TestPlatform.cs" />
+    <Compile Include="TestProject.cs" />
+    <Compile Include="Utilities\Extensions.cs" />
+    <Compile Include="Utilities\Helpers.cs" />
+    <Compile Include="Utilities\PlistExtensions.cs" />
+    <Compile Include="Utilities\ProjectFileExtensions.cs" />
+    <Compile Include="Utilities\StringUtils.cs" />
+    <Compile Include="Utilities\DirectoryUtilities.cs" />
+    <Compile Include="XmlResultParser.cs" />
+    <Compile Include="BCLTestImporter\Templates\ITemplatedProject.cs" />
+    <Compile Include="BCLTestImporter\Templates\Managed\XamariniOSTemplate.cs" />
+    <Compile Include="BCLTestImporter\BclTestProjectInfo.cs" />
+    <Compile Include="BCLTestImporter\iOSBclTestProject.cs" />
+    <Compile Include="BCLTestImporter\IAssemblyLocator.cs" />
+    <Compile Include="BCLTestImporter\BclTestProject.cs" />
+    <Compile Include="BCLTestImporter\Templates\IProjectFilter.cs" />
+    <Compile Include="BCLTestImporter\Xamarin\AssemblyLocator.cs" />
+    <Compile Include="BCLTestImporter\Xamarin\ProjectFilter.cs" />
+    <Compile Include="BCLTestImporter\Templates\Managed\RegisterTypeGenerator.cs" />
+    <Compile Include="BCLTestImporter\ITestAssemblyDefinition.cs" />
+    <Compile Include="BCLTestImporter\Xamarin\AssemblyDefinitionFactory.cs" />
+    <Compile Include="BCLTestImporter\Xamarin\TestAssemblyDefinition.cs" />
+    <Compile Include="IResultParser.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="BCLTestImporter\" />
-    <Folder Include="Logging\" />
-    <Folder Include="Listeners\" />
-    <Folder Include="Execution\" />
+    <Compile Include="..\..\tools\mtouch\SdkVersions.cs">
+      <Link>SdkVersions.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="xharness.js">
@@ -159,6 +184,89 @@
     <Content Include="xharness.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.iOS.csproj.in" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.macOS.csproj.in" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.tvOS.csproj.in" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.watchOS.csproj.in" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.watchOS.App.csproj.in" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.iOS.plist.in" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.macOS.plist.in" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.watchOS.plist.in" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.watchOS.Extension.csproj.in" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.tvOS.plist.in" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.watchOS.App.plist.in" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\RegisterType.cs" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\common\ApplicationOptions.cs" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\common\IgnoreFileParser.cs" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\iOSApp\AppDelegate.cs" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\iOSApp\Entitlements.plist" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\iOSApp\Main.cs" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\iOSApp\ViewController.cs" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\iOSApp\ViewController.designer.cs" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\macOS\Assert.cs" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\macOS\MacTestMain.cs" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\today\TodayExtensionMain.cs" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\watchOS\App\Images.xcassets\AppIcons.appiconset\Contents.json" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\watchOS\App\Images.xcassets\AppIcons.appiconset\Icon-24x24%402x.png" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\watchOS\App\Images.xcassets\AppIcons.appiconset\Icon-27.5x27.5%402x.png" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\watchOS\App\Images.xcassets\AppIcons.appiconset\Icon-29x29%402x.png" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\watchOS\App\Images.xcassets\AppIcons.appiconset\Icon-29x29%403x.png" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\watchOS\App\Images.xcassets\AppIcons.appiconset\Icon-40x40%402x.png" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\watchOS\App\Images.xcassets\AppIcons.appiconset\Icon-44x44%402x.png" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\watchOS\App\Images.xcassets\AppIcons.appiconset\Icon-86x86%402x.png" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\watchOS\App\Images.xcassets\AppIcons.appiconset\Icon-98x98%402x.png" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\watchOS\App\Resources\Images.xcassets\AppIcons.appiconset\Contents.json" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\watchOS\App\Resources\Images.xcassets\AppIcons.appiconset\Icon-24x24%402x.png" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\watchOS\App\Resources\Images.xcassets\AppIcons.appiconset\Icon-44x44%402x.png" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\watchOS\App\Resources\Images.xcassets\AppIcons.appiconset\Icon-40x40%402x.png" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\watchOS\App\Resources\Images.xcassets\AppIcons.appiconset\Icon-29x29%403x.png" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\watchOS\App\Resources\Images.xcassets\AppIcons.appiconset\Icon-29x29%402x.png" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\watchOS\App\Resources\Images.xcassets\AppIcons.appiconset\Icon-86x86%402x.png" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\watchOS\App\Resources\Images.xcassets\AppIcons.appiconset\Icon-98x98%402x.png" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\watchOS\App\Resources\Images.xcassets\AppIcons.appiconset\Icon-27.5x27.5%402x.png" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\watchOS\App\Entitlements.plist" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\watchOS\App\Interface.storyboard" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\watchOS\Container\Resources\Images.xcassets\AppIcons.appiconset\Contents.json" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\watchOS\Container\Entitlements.plist" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\watchOS\Container\AppDelegate.cs" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\watchOS\Container\Main.storyboard" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\watchOS\Container\Main.cs" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\watchOS\Container\ViewController.designer.cs" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\watchOS\Container\Container.sln" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\watchOS\Container\Container.csproj" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\watchOS\Container\ViewController.cs" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\watchOS\Container\Resources\LaunchScreen.xib" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\watchOS\Extension\InterfaceController.fs" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\watchOS\Extension\InterfaceController.cs" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\common\TestRunner\Core\Extensions.cs" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\common\TestRunner\Core\HttpTextWriter.cs" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\common\TestRunner\Core\LogWriter.cs" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\common\TestRunner\Core\MinimumLogLevel.cs" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\common\TestRunner\Core\TcpTextWriter.cs" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\common\TestRunner\Core\TestAssemblyInfo.cs" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\common\TestRunner\Core\TestCompletionStatus.cs" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\common\TestRunner\Core\TestExecutionState.cs" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\common\TestRunner\Core\TestFailureInfo.cs" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\common\TestRunner\Core\TestRunner.cs" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\common\TestRunner\Core\TestRunSelector.cs" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\common\TestRunner\Core\TestRunSelectorType.cs" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\common\TestRunner\NUnit\ClassOrNamespaceFilter.cs" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\common\TestRunner\NUnit\NUnitTestRunner.cs" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\common\TestRunner\NUnit\TestMethodFilter.cs" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\common\TestRunner\xUnit\NUnit3Xml.xslt" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\common\TestRunner\xUnit\NUnitXml.xslt" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\common\TestRunner\xUnit\XUnitFilter.cs" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\common\TestRunner\xUnit\XUnitFilterType.cs" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\common\TestRunner\xUnit\XUnitTestRunner.cs" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\tvOSApp\Entitlements.plist" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\tvOSApp\AppDelegate.cs" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\tvOSApp\Main.cs" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\tvOSApp\ViewController.designer.cs" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\src\tvOSApp\ViewController.cs" />
+    <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.watchOS.Extension.plist.in" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -189,7 +189,7 @@ namespace MonoTouch.Tuner {
 				case "CallSite":
 					var cs_ops = type.Module.GetType ("System.Runtime.CompilerServices.CallSiteOps");
 					if (cs_ops != null)
-						MarkMethods (ResolveTypeDefinition (cs_ops));
+						MarkMethods (cs_ops.Resolve ());
 
 					break;
 				case "CallSite`1":
@@ -197,7 +197,7 @@ namespace MonoTouch.Tuner {
 
 					var ud = type.Module.GetType ("System.Dynamic.UpdateDelegates");
 					if (ud != null)
-						MarkMethods (ResolveTypeDefinition (ud));
+						MarkMethods (ud.Resolve ());
 
 					break;
 				}

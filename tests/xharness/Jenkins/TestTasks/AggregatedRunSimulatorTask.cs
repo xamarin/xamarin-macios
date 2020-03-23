@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Xharness.Hardware;
 
 namespace Xharness.Jenkins.TestTasks
 {
@@ -81,7 +82,7 @@ namespace Xharness.Jenkins.TestTasks
 				foreach (var dev in devices)
 					await dev.ShutdownAsync (Jenkins.MainLog);
 
-				await SimDevice.KillEverythingAsync (Jenkins.MainLog);
+				await devices.FirstOrDefault()?.KillEverythingAsync (Jenkins.MainLog);
 
 				run_timer.Stop ();
 			}

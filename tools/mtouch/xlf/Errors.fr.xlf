@@ -354,14 +354,6 @@
         <note>
 		</note>
       </trans-unit>
-      <trans-unit id="MM5311">
-        <source>lipo failed with an error code '{0}'. Check build log for details.
-		</source>
-        <target state="new">lipo failed with an error code '{0}'. Check build log for details.
-		</target>
-        <note>
-		</note>
-      </trans-unit>
       <trans-unit id="MT0000">
         <source>Unexpected error - Please fill a bug report at https://github.com/xamarin/xamarin-macios/issues/new
 		</source>
@@ -762,14 +754,6 @@
         <note>
 		</note>
       </trans-unit>
-      <trans-unit id="MT0070">
-        <source>Invalid target framework: {0}. Valid target frameworks are: {1}.
-		</source>
-        <target state="new">Invalid target framework: {0}. Valid target frameworks are: {1}.
-		</target>
-        <note>
-		</note>
-      </trans-unit>
       <trans-unit id="MT0072">
         <source>Extensions are not supported for the platform '{0}'.
 		</source>
@@ -862,14 +846,6 @@
         <source>No reference to '{0}' was found. It will be added automatically.
 		</source>
         <target state="new">No reference to '{0}' was found. It will be added automatically.
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT0086">
-        <source>A target framework (--target-framework) must be specified when building for TVOS or WatchOS.
-		</source>
-        <target state="new">A target framework (--target-framework) must be specified when building for TVOS or WatchOS.
 		</target>
         <note>
 		</note>
@@ -2658,14 +2634,6 @@
         <note>
 		</note>
       </trans-unit>
-      <trans-unit id="MT5305">
-        <source>Missing 'lipo' tool. Please install Xcode 'Command-Line Tools' component
-		</source>
-        <target state="new">Missing 'lipo' tool. Please install Xcode 'Command-Line Tools' component
-		</target>
-        <note>
-		</note>
-      </trans-unit>
       <trans-unit id="MT5306">
         <source>Failed to create the a fat library. Please review the build log.
 		</source>
@@ -2794,6 +2762,14 @@
         <note>
 		</note>
       </trans-unit>
+      <trans-unit id="MX0070">
+        <source>Invalid target framework: {0}. Valid target frameworks are: {1}.
+		</source>
+        <target state="new">Invalid target framework: {0}. Valid target frameworks are: {1}.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
       <trans-unit id="MX0071">
         <source>Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.
 		</source>
@@ -2814,6 +2790,22 @@
         <source>Disabling the new refcount logic is deprecated.
 		</source>
         <target state="new">Disabling the new refcount logic is deprecated.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX0086">
+        <source>A target framework (--target-framework) must be specified.
+		</source>
+        <target state="new">A target framework (--target-framework) must be specified.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX0090">
+        <source>The target framework '{0}' is deprecated. Use '{1}' instead.
+		</source>
+        <target state="new">The target framework '{0}' is deprecated. Use '{1}' instead.
 		</target>
         <note>
 		</note>
@@ -2994,6 +2986,38 @@
         <note>
 		</note>
       </trans-unit>
+      <trans-unit id="MX5305">
+        <source>Missing 'lipo' tool. Please install Xcode 'Command-Line Tools' component
+		</source>
+        <target state="new">Missing 'lipo' tool. Please install Xcode 'Command-Line Tools' component
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX5307">
+        <source>Missing '{0}' tool. Please install Xcode 'Command-Line Tools' component
+		</source>
+        <target state="new">Missing '{0}' tool. Please install Xcode 'Command-Line Tools' component
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX5309">
+        <source>Failed to execute the tool '{0}', it failed with an error code '{1}'. Please check the build log for details.
+		</source>
+        <target state="new">Failed to execute the tool '{0}', it failed with an error code '{1}'. Please check the build log for details.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX5311">
+        <source>lipo failed with an error code '{0}'. Check build log for details.
+		</source>
+        <target state="new">lipo failed with an error code '{0}'. Check build log for details.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
       <trans-unit id="MX5312">
         <source>pkg-config failed with an error code '{0}'. Check build log for details.
 		</source>
@@ -3017,6 +3041,13 @@
 		</target>
         <note>
 		</note>
+      </trans-unit>
+      <trans-unit id="MX5315">
+        <source>The tool xcrun failed to find result when looking for the tool '{0}' (the file '{1}' does not exist). Check build log for details.
+		</source>
+        <target state="new">The tool xcrun failed to find result when looking for the tool '{0}' (the file '{1}' does not exist). Check build log for details.
+		</target>
+        <note></note>
       </trans-unit>
       <trans-unit id="default">
         <source>The error message for code {0} could not be found. Please report this missing message on GitHub at https://github.com/xamarin/xamarin-macios/issues/new</source>

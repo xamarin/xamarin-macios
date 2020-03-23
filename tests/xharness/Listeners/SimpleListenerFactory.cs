@@ -9,16 +9,28 @@ namespace Xharness.Listeners {
 	}
 
 	public interface ISimpleListenerFactory {
-		ListenerTransport Create (string mode, ILog listenerLog, bool isSimulator, out SimpleListener listener, out string listenerFileTemp);
+		(ListenerTransport transport, ISimpleListener listener, string listenerTempFile) Create (RunMode mode,
+																								 ILog log,
+																								 ILog listenerLog,
+																								 bool isSimulator,
+																								 bool autoExit,
+																								 bool xmlOutput);
 	}
 
 	public class SimpleListenerFactory : ISimpleListenerFactory {
 
-		public ListenerTransport Create (string mode, ILog listenerLog, bool isSimulator, out SimpleListener listener, out string listenerFileTemp)
+		public (ListenerTransport transport, ISimpleListener listener, string listenerTempFile) Create (RunMode mode,
+																									    ILog log,
+																									    ILog listenerLog,
+																									    bool isSimulator,
+																									    bool autoExit,
+																									    bool xmlOutput)
 		{
-			listenerFileTemp = null;
+			string listenerTempFile = null;
+			ISimpleListener listener;
 			ListenerTransport transport;
-			if (mode == "watchos") {
+
+			if (mode == RunMode.WatchOS) {
 				transport = isSimulator ? ListenerTransport.File : ListenerTransport.Http;
 			} else {
 				transport = ListenerTransport.Tcp;
@@ -26,19 +38,20 @@ namespace Xharness.Listeners {
 
 			switch (transport) {
 			case ListenerTransport.File:
-				listenerFileTemp = listenerLog.FullPath + ".tmp";
-				listener = new SimpleFileListener (listenerFileTemp);
+				listenerTempFile = listenerLog.FullPath + ".tmp";
+				listener = new SimpleFileListener (listenerTempFile, log, listenerLog, xmlOutput);
 				break;
 			case ListenerTransport.Http:
-				listener = new SimpleHttpListener ();
+				listener = new SimpleHttpListener (log, listenerLog, autoExit, xmlOutput);
 				break;
 			case ListenerTransport.Tcp:
-				listener = new SimpleTcpListener ();
+				listener = new SimpleTcpListener (log, listenerLog, autoExit, xmlOutput);
 				break;
 			default:
-				throw new NotImplementedException ();
+				throw new NotImplementedException ("Unknown type of listener");
 			}
-			return transport;
+
+			return (transport, listener, listenerTempFile);
 		}
 	}
 }

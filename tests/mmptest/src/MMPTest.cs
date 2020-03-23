@@ -26,7 +26,7 @@ namespace Xamarin.MMP.Tests
 			TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = projectConfig };
 			string buildOutput = TI.TestUnifiedExecutable (test).BuildOutput;
 			string [] splitBuildOutput = TI.TestUnifiedExecutable (test).BuildOutput.Split (new string[] { Environment.NewLine }, StringSplitOptions.None);
-			string clangInvocation = splitBuildOutput.Single (x => x.Contains ("clang"));
+			string clangInvocation = splitBuildOutput.Single (x => x.Contains ("usr/bin/clang"));
 			return clangInvocation.Split (new string[] { " " }, StringSplitOptions.None);
 		}
 
@@ -447,7 +447,7 @@ namespace Xamarin.MMP.Tests
 			RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { XM45 = true };
 				var output = TI.TestUnifiedExecutable (test);
-				Assert.That (output.BuildOutput, Contains.Substring ("Selected target framework: .NETFramework,Version=v4.5; API: Unified"));
+				Assert.That (output.BuildOutput, Contains.Substring ("Selected target framework: Xamarin.Mac,Version=v4.5,Profile=Full; API: Unified"));
 			});
 		}
 

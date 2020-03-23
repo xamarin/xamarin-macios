@@ -5,6 +5,7 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using Xharness.Logging;
+using Xharness.Utilities;
 
 namespace Xharness {
 
@@ -16,10 +17,10 @@ namespace Xharness {
 		Missing,
 	}
 
-	public static class XmlResultParser {
+	public class XmlResultParser : IResultParser {
 
 		// test if the file is valid xml, or at least, that can be read it.
-		public static bool IsValidXml (string path, out XmlResultJargon type)
+		public bool IsValidXml (string path, out XmlResultJargon type)
 		{
 			type = XmlResultJargon.Missing;
 			if (!File.Exists (path))
@@ -279,7 +280,7 @@ namespace Xharness {
 			return (resultLine, total == 0 | errors != 0 || failed != 0);
 		}
 
-		public static string GetXmlFilePath (string path, XmlResultJargon xmlType)
+		public string GetXmlFilePath (string path, XmlResultJargon xmlType)
 		{
 			var fileName = Path.GetFileName (path);
 			switch (xmlType) {
@@ -294,7 +295,7 @@ namespace Xharness {
 			}
 		}
 
-		public static void CleanXml (string source, string destination)
+		public void CleanXml (string source, string destination)
 		{
 			using (var reader = new StreamReader (source))
 			using (var writer = new StreamWriter (destination)) {
@@ -312,7 +313,7 @@ namespace Xharness {
 			}
 		}
 
-		public static (string resultLine, bool failed) GenerateHumanReadableResults (string source, string destination, XmlResultJargon xmlType)
+		public (string resultLine, bool failed) GenerateHumanReadableResults (string source, string destination, XmlResultJargon xmlType)
 		{
 			(string resultLine, bool failed) parseData;
 			using (var reader = new StreamReader (source)) 
@@ -474,7 +475,7 @@ namespace Xharness {
 			}
 		}
 
-		public static void GenerateTestReport (StreamWriter writer, string resultsPath, XmlResultJargon xmlType)
+		public void GenerateTestReport (StreamWriter writer, string resultsPath, XmlResultJargon xmlType)
 		{
 			using (var stream = new StreamReader (resultsPath))
 			using (var reader = XmlReader.Create (stream)) {
@@ -497,7 +498,7 @@ namespace Xharness {
 		}
 
 		// get the file, parse it and add the attachments to the first node found
-		public static void UpdateMissingData (string source, string destination, string applicationName, IEnumerable<string> attachments)
+		public void UpdateMissingData (string source, string destination, string applicationName, IEnumerable<string> attachments)
 		{
 			// we could do this with a XmlReader and a Writer, but might be to complicated to get right, we pay with performance what we
 			// cannot pay with brain cells.
@@ -546,11 +547,11 @@ namespace Xharness {
 			("time", "0"),
 			("asserts", "1"));
 
-		static void WriteNUnitV2TestCase (XmlWriter writer, string message, StreamReader stderr)
+		static void WriteNUnitV2TestCase (XmlWriter writer, string title, string message, StreamReader stderr)
 		{
 			writer.WriteStartElement ("test-case");
 			WriteAttributes (writer, 
-				("name", "Crash Report"),
+				("name", title),
 				("executed", "True"),
 				("result", "Failure"),
 				("success", "False"),
@@ -592,7 +593,7 @@ namespace Xharness {
 			writer.WriteAttributeString ("type", "TestFixture");
 			WriteNUnitV2TestSuiteAttributes (writer, title);
 			writer.WriteStartElement ("results");
-			WriteNUnitV2TestCase (writer, message, stderr);
+			WriteNUnitV2TestCase (writer, title, message, stderr);
 			writer.WriteEndElement (); // results
 			writer.WriteEndElement (); // test-suite TextFixture
 			writer.WriteEndElement (); // results
@@ -600,9 +601,9 @@ namespace Xharness {
 			writer.WriteEndElement (); // test-results
 		}
 
-		static void WriteNUnitV3TestSuiteAttributes (XmlWriter writer) => WriteAttributes (writer,
+		static void WriteNUnitV3TestSuiteAttributes (XmlWriter writer, string title) => WriteAttributes (writer,
 			("id", "1"),
-			("name", "Test Crash"),
+			("name", title),
 			("testcasecount", "1"),
 			("result", "Failed"),
 			("time", "0"),
@@ -648,7 +649,7 @@ namespace Xharness {
 			);
 			writer.WriteStartElement ("test-suite");
 			writer.WriteAttributeString ("type", "Assembly");
-			WriteNUnitV3TestSuiteAttributes (writer);
+			WriteNUnitV3TestSuiteAttributes (writer, title);
 			WriteFailure (writer, "Child test failed");
 			writer.WriteStartElement ("test-suite");
 			WriteAttributes (writer,
@@ -667,8 +668,8 @@ namespace Xharness {
 			writer.WriteStartElement ("test-case");
 			WriteAttributes (writer,
 				("id", "1"),
-				("name", "Crash Report"),
-				("fullname", "Crash Report"),
+				("name", title),
+				("fullname", title),
 				("result", "Failed"),
 				("time", "0"),
 				("asserts", "1"));
@@ -700,7 +701,7 @@ namespace Xharness {
 				("passed", "0"),
 				("failed", "1"),
 				("skipped", "0"),
-				("name", "Crash Report"),
+				("name", title),
 				("time", "0"));
 			writer.WriteStartElement ("test");
 			WriteAttributes (writer,
@@ -714,7 +715,6 @@ namespace Xharness {
 			writer.WriteEndElement (); // collection
 			writer.WriteEndElement (); // assembly
 			writer.WriteEndElement (); // assemblies
-
 		}
 
 		static void GenerateFailureXml (string destination, string title, string message, string stderrPath, XmlResultJargon jargon)
@@ -739,13 +739,13 @@ namespace Xharness {
 			}
 		}
 
-		public static void GenerateFailure (ILogs logs, string source, string appName, string variation, string title, string message, string stderrPath, XmlResultJargon jargon)
+		public void GenerateFailure (ILogs logs, string source, string appName, string variation, string title, string message, string stderrPath, XmlResultJargon jargon)
 		{
 			// VSTS does not provide a nice way to report build errors, create a fake
 			// test result with a failure in the case the build did not work
-			var failureLogXml = logs.Create ($"vsts-nunit-{source}-{Harness.Timestamp}.xml", LogType.XmlLog.ToString ());
+			var failureLogXml = logs.Create ($"vsts-nunit-{source}-{Helpers.Timestamp}.xml", LogType.XmlLog.ToString ());
 			if (jargon == XmlResultJargon.NUnitV3) {
-				var failureXmlTmp = logs.Create ($"nunit-{source}-{Harness.Timestamp}.tmp", "Failure Log tmp");
+				var failureXmlTmp = logs.Create ($"nunit-{source}-{Helpers.Timestamp}.tmp", "Failure Log tmp");
 				GenerateFailureXml (failureXmlTmp.FullPath, title, message, stderrPath, jargon);
 				// add the required attachments and the info of the application that failed to install
 				var failure_logs = Directory.GetFiles (logs.Directory).Where (p => !p.Contains ("nunit")); // all logs but ourself

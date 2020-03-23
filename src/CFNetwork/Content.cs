@@ -46,7 +46,7 @@ namespace CFNetwork {
 			this.responseStream = stream;
 		}
 
-#if MONOMAC && XAMCORE_2_0
+#if (MONOMAC && XAMCORE_2_0) && !NET
 		internal
 #endif
 		protected override bool TryComputeLength (out long length)

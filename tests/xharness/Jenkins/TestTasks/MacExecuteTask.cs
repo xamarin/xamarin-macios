@@ -4,23 +4,24 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
-using Xamarin;
-using Xamarin.Utils;
 using Xharness.Execution;
 using Xharness.Logging;
+using Xharness.Utilities;
 
 namespace Xharness.Jenkins.TestTasks
 {
 	class MacExecuteTask : MacTask
 	{
+		protected ICrashSnapshotReporterFactory CrashReportSnapshotFactory { get; }
+
 		public string Path;
 		public bool BCLTest;
 		public bool IsUnitTest;
-		public IProcessManager ProcessManager { get; set; } = new ProcessManager ();
 
-		public MacExecuteTask (BuildToolTask build_task)
-			: base (build_task)
+		public MacExecuteTask (BuildToolTask build_task, IProcessManager processManager, ICrashSnapshotReporterFactory crashReportSnapshotFactory)
+			: base (build_task, processManager)
 		{
+			this.CrashReportSnapshotFactory = crashReportSnapshotFactory ?? throw new ArgumentNullException (nameof (crashReportSnapshotFactory));
 		}
 
 		public override bool SupportsParallelExecution {
@@ -43,7 +44,7 @@ namespace Xharness.Jenkins.TestTasks
 			}
 		}
 
-		public override IEnumerable<Log> AggregatedLogs {
+		public override IEnumerable<ILog> AggregatedLogs {
 			get {
 				return base.AggregatedLogs.Union (BuildTask.Logs);
 			}
@@ -92,7 +93,7 @@ namespace Xharness.Jenkins.TestTasks
 					if (!Harness.DryRun) {
 						ExecutionResult = TestExecutingResult.Running;
 
-						var snapshot = new CrashReportSnapshot () { Device = false, Harness = Harness, Log = log, Logs = Logs, LogDirectory = LogDirectory };
+						var snapshot = CrashReportSnapshotFactory.Create (log, Logs, isDevice: false, deviceName: null);
 						await snapshot.StartCaptureAsync ();
 
 						ProcessExecutionResult result = null;

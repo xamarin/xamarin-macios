@@ -1,18 +1,29 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Xharness.Execution;
 using Xharness.Logging;
+using Xharness.Utilities;
 
 namespace Xharness.Jenkins.TestTasks
 {
 	internal abstract class RunTestTask : TestTask
 	{
-		public readonly BuildToolTask BuildTask;
-		public double TimeoutMultiplier { get; set; } = 1;
+		protected IProcessManager ProcessManager { get; }
+		IResultParser ResultParser { get; } = new XmlResultParser ();
 
-		public RunTestTask (BuildToolTask build_task)
+		public readonly BuildToolTask BuildTask;
+		public TimeSpan Timeout = TimeSpan.FromMinutes (10);
+		public double TimeoutMultiplier { get; set; } = 1;
+		public string WorkingDirectory;
+
+		public RunTestTask (BuildToolTask build_task, IProcessManager processManager)
 		{
 			this.BuildTask = build_task;
+			this.ProcessManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 
 			Jenkins = build_task.Jenkins;
 			TestProject = build_task.TestProject;
@@ -23,7 +34,7 @@ namespace Xharness.Jenkins.TestTasks
 				TestName = build_task.TestName;
 		}
 
-		public override IEnumerable<Log> AggregatedLogs {
+		public override IEnumerable<ILog> AggregatedLogs {
 			get {
 				var rv = base.AggregatedLogs;
 				if (BuildTask != null)
@@ -62,8 +73,8 @@ namespace Xharness.Jenkins.TestTasks
 					ExecutionResult = TestExecutingResult.BuildFailure;
 				}
 				FailureMessage = BuildTask.FailureMessage;
-				if (Harness.InCI && BuildTask is XBuildTask projectTask)
-					XmlResultParser.GenerateFailure (Logs, "build", projectTask.TestName, projectTask.Variation, "AppBuild", $"App could not be built {FailureMessage}.", projectTask.BuildLog.FullPath, Harness.XmlJargon);
+				if (Harness.InCI && BuildTask is MSBuildTask projectTask)
+					ResultParser.GenerateFailure (Logs, "build", projectTask.TestName, projectTask.Variation, $"App Build {projectTask.TestName} {projectTask.Variation}", $"App could not be built {FailureMessage}.", projectTask.BuildLog.FullPath, Harness.XmlJargon);
 			} else {
 				ExecutionResult = TestExecutingResult.Built;
 			}
@@ -104,6 +115,42 @@ namespace Xharness.Jenkins.TestTasks
 		{
 			base.Reset ();
 			BuildTask.Reset ();
+		}
+
+		protected Task ExecuteProcessAsync (string filename, List<string> arguments)
+		{ 
+			return ExecuteProcessAsync (null, filename, arguments);
+		}
+
+		protected async Task ExecuteProcessAsync (ILog log, string filename, List<string> arguments)
+		{
+			if (log == null)
+				log = Logs.Create ($"execute-{Timestamp}.txt", LogType.ExecutionLog.ToString ());
+
+			using var proc = new Process ();
+			proc.StartInfo.FileName = filename;
+			proc.StartInfo.Arguments = StringUtils.FormatArguments (arguments);
+			if (!string.IsNullOrEmpty (WorkingDirectory))
+				proc.StartInfo.WorkingDirectory = WorkingDirectory;
+			SetEnvironmentVariables (proc);
+			foreach (DictionaryEntry de in proc.StartInfo.EnvironmentVariables)
+				log.WriteLine ($"export {de.Key}={de.Value}");
+			Jenkins.MainLog.WriteLine ("Executing {0} ({1})", TestName, Mode);
+			if (!Harness.DryRun) {
+				ExecutionResult = TestExecutingResult.Running;
+				var result = await ProcessManager.RunAsync (proc, log, Timeout);
+				if (result.TimedOut) {
+					FailureMessage = $"Execution timed out after {Timeout.TotalMinutes} minutes.";
+					log.WriteLine (FailureMessage);
+					ExecutionResult = TestExecutingResult.TimedOut;
+				} else if (result.Succeeded) {
+					ExecutionResult = TestExecutingResult.Succeeded;
+				} else {
+					ExecutionResult = TestExecutingResult.Failed;
+					FailureMessage = $"Execution failed with exit code {result.ExitCode}";
+				}
+			}
+			Jenkins.MainLog.WriteLine ("Executed {0} ({1})", TestName, Mode);
 		}
 	}
 }

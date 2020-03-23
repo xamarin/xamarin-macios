@@ -9,13 +9,14 @@
     <AssemblyName>mmp</AssemblyName>
     <RootNamespace>mmp</RootNamespace>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
     <DebugType>portable</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>MONOMAC;MMP;XAMARIN_APPLETLS;DEBUG</DefineConstants>
+    <DefineConstants>MONOMAC;MMP;XAMARIN_APPLETLS;DEBUG;DEV</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Deterministic>True</Deterministic>
@@ -174,6 +175,18 @@
     </Compile>
     <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\external\linker\src\linker\Linker\OutputException.cs">
       <Link>Linker\OutputException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\external\linker\src\linker\Linker\IReflectionPatternRecorder.cs">
+      <Link>Linker\IReflectionPatternRecorder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\external\linker\src\linker\Linker\IDependencyRecorder.cs">
+      <Link>Linker\IDependencyRecorder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\external\linker\src\linker\Linker\XmlDependencyRecorder.cs">
+      <Link>Linker\XmlDependencyRecorder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\external\linker\src\linker\Linker\LoggingReflectionPatternRecorder.cs">
+      <Link>Linker\LoggingReflectionPatternRecorder.cs</Link>
     </Compile>
     <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\external\linker\src\linker\Linker.Steps\BaseStep.cs">
       <Link>Linker.Steps\BaseStep.cs</Link>

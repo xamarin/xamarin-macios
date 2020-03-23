@@ -782,6 +782,8 @@ namespace Xamarin.Bundler
 			var action = Action.None;
 			var app = new Application (args);
 
+			a = Action.None;
+
 			if (extra_args != null) {
 				var l = new List<string> (args);
 				foreach (var s in extra_args.Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
@@ -816,8 +818,6 @@ namespace Xamarin.Bundler
 			};
 
 			var os = new OptionSet () {
-			{ "h|?|help", "Displays the help", v => SetAction (Action.Help) },
-			{ "version", "Output version information and exit.", v => SetAction (Action.Version) },
 			{ "f|force", "Forces the recompilation of code, regardless of timestamps", v=>force = true },
 			{ "dot:", "Generate a dot file to visualize the build tree.", v => dotfile = v ?? string.Empty },
 			{ "cache=", "Specify the directory where object files will be cached", v => app.Cache.Location = v },
@@ -1060,7 +1060,6 @@ namespace Xamarin.Bundler
 					}
 				}
 			},
-			{"target-framework=", "Specify target framework to use. Currently supported: 'Xamarin.iOS,v1.0', 'Xamarin.WatchOS,v1.0' and 'Xamarin.TVOS,v1.0' (defaults to '" + TargetFramework.Default + "')", v => SetTargetFramework (v) },
 			{ "bitcode:", "Enable generation of bitcode (asmonly, full, marker)", v =>
 				{
 					switch (v) {
@@ -1117,30 +1116,11 @@ namespace Xamarin.Bundler
 			},
 		};
 
-			AddSharedOptions (app, os);
-
-			try {
-				app.RootAssemblies.AddRange (os.Parse (args));
-			}
-			catch (MonoTouchException) {
-				throw;
-			}
-			catch (Exception e) {
-				throw new MonoTouchException (10, true, e, Errors.MX0010, e);
-			}
+			if (ParseOptions (app, os, args, ref action))
+				return null;
 
 			a = action;
 
-			if (action == Action.Help) {
-				ShowHelp (os);
-				return null;
-			} else if (action == Action.Version) {
-				Console.Write ("mtouch {0}.{1}", Constants.Version, Constants.Revision);
-				Console.WriteLine ();
-				return null;
-			}
-
-			app.SetDefaultFramework ();
 			app.SetDefaultAbi ();
 
 			app.RuntimeOptions = RuntimeOptions.Create (app, http_message_handler, tls_provider);
@@ -1161,8 +1141,6 @@ namespace Xamarin.Bundler
 			if (app == null)
 				return 0;
 			
-			LogArguments (args);
-
 			// Allow a few actions, since these seem to always work no matter the Xcode version.
 			var accept_any_xcode_version = action == Action.ListDevices || action == Action.ListCrashReports || action == Action.ListApps || action == Action.LogDev;
 			ValidateXcode (accept_any_xcode_version, false);
@@ -1388,77 +1366,6 @@ namespace Xamarin.Bundler
 					throw new MonoTouchException (5103, true, Errors.MT5103, app.Compiler, original_compiler);
 				}
 			}
-		}
-
-		// workaround issues like:
-		// * Xcode 4.x versus 4.3 (location of /Developer); and 
-		// * the (optional) installation of "Command-Line Tools" by Xcode
-		public static void RunStrip (IList<string> options)
-		{
-			// either /Developer (Xcode 4.2 and earlier), /Applications/Xcode.app/Contents/Developer (Xcode 4.3) or user override
-			string strip = FindTool ("strip");
-			if (strip == null)
-				throw new MonoTouchException (5301, Errors.MT5301);
-
-			if (RunCommand (strip, options) != 0)
-				throw new MonoTouchException (5304, true, Errors.MT5304);
-		}
-
-		static string FindTool (string tool)
-		{
-			// either /Developer (Xcode 4.2 and earlier), /Applications/Xcode.app/Contents/Developer (Xcode 4.3) or user override
-			var path = Path.Combine (DeveloperDirectory, "usr", "bin", tool);
-			if (File.Exists (path))
-				return path;
-
-			// Xcode "Command-Line Tools" install a copy in /usr/bin (and it can be there afterward)
-			path = Path.Combine ("/usr", "bin", tool);
-			if (File.Exists (path))
-				return path;
-
-			// Xcode 4.3 (without command-line tools) also has a copy of 'strip'
-			path = Path.Combine (DeveloperDirectory, "Toolchains", "XcodeDefault.xctoolchain", "usr", "bin", tool);
-			if (File.Exists (path))
-				return path;
-
-			return null;
-		}
-
-		public static void CreateDsym (string output_dir, string appname, string dsym_dir)
-		{
-			RunDsymUtil (Path.Combine (output_dir, appname), "-num-threads", "4", "-z", "-o", dsym_dir);
-			RunCommand ("/usr/bin/mdimport", dsym_dir);
-		}
-
-		public static void RunLipo (string output, IEnumerable<string> inputs)
-		{
-			var sb = new List<string> ();
-			sb.AddRange (inputs);
-			sb.Add ("-create");
-			sb.Add ("-output");
-			sb.Add (output);
-			RunLipo (sb);
-		}
-
-		public static void RunLipo (IList<string> options)
-		{
-			string lipo = FindTool ("lipo");
-			if (lipo == null)
-				throw new MonoTouchException (5305, true, Errors.MT5305);
-			if (RunCommand (lipo, options) != 0)
-				throw new MonoTouchException (5306, true, Errors.MT5305);
-		}
-
-		static void RunDsymUtil (params string[] options)
-		{
-			// either /Developer (Xcode 4.2 and earlier), /Applications/Xcode.app/Contents/Developer (Xcode 4.3) or user override
-			string dsymutil = FindTool ("dsymutil");
-			if (dsymutil == null) {
-				ErrorHelper.Warning (5302, Errors.MT5302);
-				return;
-			}
-			if (RunCommand (dsymutil, options) != 0)
-				throw new MonoTouchException (5303, true, Errors.MT5303);
 		}
 
 		static string GetFrameworkDir (string platform, Version iphone_sdk)

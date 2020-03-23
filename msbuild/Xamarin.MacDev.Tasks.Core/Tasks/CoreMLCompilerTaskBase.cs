@@ -7,6 +7,7 @@ using System.Collections.Generic;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
+using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.MacDev.Tasks
 {
@@ -103,7 +104,7 @@ namespace Xamarin.MacDev.Tasks
 			int exitCode;
 
 			try {
-				Log.LogMessage (MessageImportance.Normal, "Tool {0} execution started with arguments: {1}", startInfo.FileName, startInfo.Arguments);
+				Log.LogMessage (MessageImportance.Normal, MSBStrings.M0001, startInfo.FileName, startInfo.Arguments);
 
 				using (var stdout = File.CreateText (log)) {
 					using (var stderr = new StringWriter (errors)) {
@@ -114,7 +115,7 @@ namespace Xamarin.MacDev.Tasks
 						}
 					}
 
-					Log.LogMessage (MessageImportance.Low, "Tool {0} execution finished (exit code = {1}).", startInfo.FileName, exitCode);
+					Log.LogMessage (MessageImportance.Low, MSBStrings.M0002, startInfo.FileName, exitCode);
 				}
 			} catch (Exception ex) {
 				Log.LogError ("Error executing tool '{0}': {1}", startInfo.FileName, ex.Message);
@@ -129,7 +130,7 @@ namespace Xamarin.MacDev.Tasks
 				if (errors.Length > 0)
 					Log.LogError (null, null, null, item.ItemSpec, 0, 0, 0, 0, "{0}", errors);
 
-				Log.LogError ("{0} exited with code {1}", ToolName, exitCode);
+				Log.LogError (MSBStrings.E0117, ToolName, exitCode);
 
 				// Note: If the log file exists, log those warnings/errors as well...
 				if (File.Exists (log)) {
@@ -224,7 +225,7 @@ namespace Xamarin.MacDev.Tasks
 						if ((Compile (model, outputDir, log, partialPlist)) != 0)
 							return false;
 					} else {
-						Log.LogMessage (MessageImportance.Low, "Skipping `{0}' as the output file, `{1}', is newer.", model.ItemSpec, partialPlist);
+						Log.LogMessage (MessageImportance.Low, MSBStrings.M0119, model.ItemSpec, partialPlist);
 					}
 				}
 

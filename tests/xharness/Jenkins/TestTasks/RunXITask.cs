@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Xharness.Collections;
+using Xharness.Execution;
+using Xharness.Hardware;
 using Xharness.Logging;
 
 namespace Xharness.Jenkins.TestTasks
@@ -19,17 +22,15 @@ namespace Xharness.Jenkins.TestTasks
 
 		public TDevice CompanionDevice { get; protected set; }
 
-		public string BundleIdentifier {
-			get { return runner.BundleIdentifier; }
-		}
+		public string BundleIdentifier => runner.AppInformation.BundleIdentifier;
 
-		public RunXITask (BuildToolTask build_task, IEnumerable<TDevice> candidates)
-			: base (build_task)
+		public RunXITask (BuildToolTask build_task, IProcessManager processManager, IEnumerable<TDevice> candidates)
+			: base (build_task, processManager)
 		{
 			this.Candidates = candidates;
 		}
 
-		public override IEnumerable<Log> AggregatedLogs {
+		public override IEnumerable<ILog> AggregatedLogs {
 			get {
 				var rv = base.AggregatedLogs;
 				if (runner != null)
