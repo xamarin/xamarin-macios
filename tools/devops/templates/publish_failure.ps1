@@ -57,7 +57,7 @@ If ($Env:AGENT_JOBSTATUS -eq 'Failed')
 $HEADER = ""
 If ($Env:BUILD_DEFINITIONNAME -like '*DDFun*')
 {
-	$HEADER = "### :bangbang: :construction: Experimental DDFun pipeline `n"
+	$HEADER = "### :bangbang: :construction: Experimental DDFun pipeline\\n"
 }
 #Else{
 #HTML Report jenkins stuff
