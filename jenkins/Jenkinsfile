@@ -676,7 +676,7 @@ timestamps {
                         stage ('Upload to Nuget') {
                             currentStage = "${STAGE_NAME}"
                             withCredentials ([string (credentialsId: 'azdo-package-feed-token', variable: 'AZDO_PACKAGE_FEED_TOKEN')]) {
-                                def nugetResult = sh (script: "${workspace}/xamarin-macios/jenkins/publish-to-nuget.sh --apikey=${AZDO_PACKAGE_FEED_TOKEN} --source=https://pkgs.dev.azure.com/azure-public/vside/_packaging/xamarin-impl%40Local/nuget/v3/index.json package/*.nupkg", returnStatus: true)
+                                def nugetResult = sh (script: "${workspace}/xamarin-macios/jenkins/publish-to-nuget.sh --apikey=${AZDO_PACKAGE_FEED_TOKEN} --source=https://pkgs.dev.azure.com/azure-public/vside/_packaging/xamarin-impl/nuget/v3/index.json package/*.nupkg", returnStatus: true)
                                 if (nugetResult != 0) {
                                     failedStages.add (currentStage)
                                     manualException = true

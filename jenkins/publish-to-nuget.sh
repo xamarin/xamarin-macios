@@ -76,7 +76,17 @@ if [[ "x${#NUGETS[@]}" == "x0" ]]; then
 	exit 1
 fi
 
+# create empty config for auth
+echo '<?xml version="1.0" encoding="utf-8"?><configuration></configuration>' > nuget.config
+
+# add the feed
+nuget sources add -name FEEDME -source "$SOURCE" -username WHATEVER -password "$APIKEY" -config nuget.config
+
+# push
 for nuget in "${NUGETS[@]}"; do
 	nuget="$(realpath "$nuget")"
-	nuget push "$nuget" -Source "$SOURCE" -ApiKey "$APIKEY" -NonInteractive "${VERBOSITY[@]}"
+	nuget push "$nuget" -Source FEEDME -ApiKey WHATEVER -NonInteractive "${VERBOSITY[@]}"
 done
+
+# remove config
+rm -f nuget.config
