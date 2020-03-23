@@ -9,10 +9,8 @@ using Xharness.Logging;
 namespace Xharness.Hardware {
 
 	public class SimulatorDevice : ISimulatorDevice {
-		readonly IHarness harness;
 		readonly IProcessManager processManager;
-
-		public ITCCDatabase TCCDatabase { get; set; } = new TCCDatabase ();
+		readonly ITCCDatabase tCCDatabase;
 
 		public string UDID { get; set; }
 		public string Name { get; set; }
@@ -23,10 +21,10 @@ namespace Xharness.Hardware {
 		public string SystemLog => Path.Combine (LogPath, "system.log");
 
 
-		public SimulatorDevice (IHarness harness, IProcessManager processManager)
+		public SimulatorDevice (IProcessManager processManager, ITCCDatabase tccDatabase)
 		{
-			this.harness = harness ?? throw new ArgumentNullException (nameof (harness));
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
+			this.tCCDatabase = tccDatabase ?? throw new ArgumentNullException (nameof (tccDatabase));
 		}
 
 		public bool IsWatchSimulator => SimRuntime.StartsWith ("com.apple.CoreSimulator.SimRuntime.watchOS", StringComparison.Ordinal);
@@ -43,17 +41,17 @@ namespace Xharness.Hardware {
 		{
 			// here we don't care if execution fails.
 			// erase the simulator (make sure the device isn't running first)
-			await harness.ExecuteXcodeCommandAsync ("simctl", new [] { "shutdown", UDID }, log, TimeSpan.FromMinutes (1));
-			await harness.ExecuteXcodeCommandAsync ("simctl", new [] { "erase", UDID }, log, TimeSpan.FromMinutes (1));
+			await processManager.ExecuteXcodeCommandAsync ("simctl", new [] { "shutdown", UDID }, log, TimeSpan.FromMinutes (1));
+			await processManager.ExecuteXcodeCommandAsync ("simctl", new [] { "erase", UDID }, log, TimeSpan.FromMinutes (1));
 
 			// boot & shutdown to make sure it actually works
-			await harness.ExecuteXcodeCommandAsync ("simctl", new [] { "boot", UDID }, log, TimeSpan.FromMinutes (1));
-			await harness.ExecuteXcodeCommandAsync ("simctl", new [] { "shutdown", UDID }, log, TimeSpan.FromMinutes (1));
+			await processManager.ExecuteXcodeCommandAsync ("simctl", new [] { "boot", UDID }, log, TimeSpan.FromMinutes (1));
+			await processManager.ExecuteXcodeCommandAsync ("simctl", new [] { "shutdown", UDID }, log, TimeSpan.FromMinutes (1));
 		}
 
 		public async Task ShutdownAsync (ILog log)
 		{
-			await harness.ExecuteXcodeCommandAsync ("simctl", new [] { "shutdown", UDID }, log, TimeSpan.FromMinutes (1));
+			await processManager.ExecuteXcodeCommandAsync ("simctl", new [] { "shutdown", UDID }, log, TimeSpan.FromMinutes (1));
 		}
 
 		public async Task KillEverythingAsync (ILog log)
@@ -86,12 +84,12 @@ namespace Xharness.Hardware {
 		{
 			string simulator_app;
 
-			if (IsWatchSimulator && harness.XcodeVersion.Major < 9) {
-				simulator_app = Path.Combine (harness.XcodeRoot, "Contents", "Developer", "Applications", "Simulator (Watch).app");
+			if (IsWatchSimulator && processManager.XcodeVersion.Major < 9) {
+				simulator_app = Path.Combine (processManager.XcodeRoot, "Contents", "Developer", "Applications", "Simulator (Watch).app");
 			} else {
-				simulator_app = Path.Combine (harness.XcodeRoot, "Contents", "Developer", "Applications", "Simulator.app");
+				simulator_app = Path.Combine (processManager.XcodeRoot, "Contents", "Developer", "Applications", "Simulator.app");
 				if (!Directory.Exists (simulator_app))
-					simulator_app = Path.Combine (harness.XcodeRoot, "Contents", "Developer", "Applications", "iOS Simulator.app");
+					simulator_app = Path.Combine (processManager.XcodeRoot, "Contents", "Developer", "Applications", "iOS Simulator.app");
 			}
 
 			await processManager.ExecuteCommandAsync ("open", new [] { "-a", simulator_app, "--args", "-CurrentDeviceUDID", UDID }, log, TimeSpan.FromSeconds (15));
@@ -121,7 +119,7 @@ namespace Xharness.Hardware {
 			}
 
 			if (File.Exists (TCC_db)) {
-				await TCCDatabase.AgreeToPromptsAsync (SimRuntime, TCC_db, log, bundle_identifiers);
+				await tCCDatabase.AgreeToPromptsAsync (SimRuntime, TCC_db, log, bundle_identifiers);
 			} else {
 				log.WriteLine ("No TCC.db found for the simulator {0} (SimRuntime={1} and SimDeviceType={1})", UDID, SimRuntime, SimDeviceType);
 			}

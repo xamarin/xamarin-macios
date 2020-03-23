@@ -18,17 +18,15 @@ namespace Xharness
 	public class CrashSnapshotReporterFactory : ICrashSnapshotReporterFactory {
 		readonly IProcessManager processManager;
 		readonly string xcodeRoot;
-		readonly string mlaunchPath;
 
-		public CrashSnapshotReporterFactory (IProcessManager processManager, string xcodeRoot, string mlaunchPath)
+		public CrashSnapshotReporterFactory (IProcessManager processManager, string xcodeRoot)
 		{
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 			this.xcodeRoot = xcodeRoot ?? throw new ArgumentNullException (nameof (xcodeRoot));
-			this.mlaunchPath = mlaunchPath ?? throw new ArgumentNullException (nameof (mlaunchPath));
 		}
 
 		public ICrashSnapshotReporter Create (ILog log, ILogs logs, bool isDevice, string deviceName) =>
-			new CrashSnapshotReporter (processManager, log, logs, xcodeRoot, mlaunchPath, isDevice, deviceName);
+			new CrashSnapshotReporter (processManager, log, logs, xcodeRoot, isDevice, deviceName);
 	}
 
 	public interface ICrashSnapshotReporter {
@@ -41,7 +39,6 @@ namespace Xharness
 		readonly ILog log;
 		readonly ILogs logs;
 		readonly string xcodeRoot;
-		readonly string mlaunchPath;
 		readonly bool isDevice;
 		readonly string deviceName;
 		readonly Func<string> tempFileProvider;
@@ -53,7 +50,6 @@ namespace Xharness
 			ILog log,
 			ILogs logs,
 			string xcodeRoot,
-			string mlaunchPath,
 			bool isDevice,
 			string deviceName,
 			Func<string> tempFileProvider = null)
@@ -62,7 +58,6 @@ namespace Xharness
 			this.log = log ?? throw new ArgumentNullException (nameof (log));
 			this.logs = logs ?? throw new ArgumentNullException (nameof (logs));
 			this.xcodeRoot = xcodeRoot ?? throw new ArgumentNullException (nameof (xcodeRoot));
-			this.mlaunchPath = mlaunchPath ?? throw new ArgumentNullException (nameof (mlaunchPath));
 			this.isDevice = isDevice;
 			this.deviceName = deviceName;
 			this.tempFileProvider = tempFileProvider ?? Path.GetTempFileName;
@@ -135,14 +130,13 @@ namespace Xharness
 			var crashReportFile = logs.Create (name, $"Crash report: {name}", timestamp: false);
 			var args = new MlaunchArguments (
 				new DownloadCrashReportArgument (crashFile),
-				new DownloadCrashReportToArgument (crashReportFile.Path),
-				new SdkRootArgument (xcodeRoot));
+				new DownloadCrashReportToArgument (crashReportFile.Path));
 
 			if (!string.IsNullOrEmpty (deviceName)) {
 				args.Add (new DeviceNameArgument(deviceName));
 			}
 
-			var result = await processManager.ExecuteCommandAsync (mlaunchPath, args, log, TimeSpan.FromMinutes (1));
+			var result = await processManager.ExecuteCommandAsync (args, log, TimeSpan.FromMinutes (1));
 
 			if (result.Succeeded) {
 				log.WriteLine ("Downloaded crash report {0} to {1}", crashFile, crashReportFile.Path);
@@ -184,15 +178,13 @@ namespace Xharness
 			} else {
 				var tempFile = tempFileProvider ();
 				try {
-					var args = new MlaunchArguments (
-						new ListCrashReportsArgument (tempFile),
-						new SdkRootArgument (xcodeRoot));
+					var args = new MlaunchArguments (new ListCrashReportsArgument (tempFile));
 
 					if (!string.IsNullOrEmpty (deviceName)) {
 						args.Add (new DeviceNameArgument(deviceName));
 					}
 
-					var result = await processManager.ExecuteCommandAsync (mlaunchPath, args, log, TimeSpan.FromMinutes (1));
+					var result = await processManager.ExecuteCommandAsync (args, log, TimeSpan.FromMinutes (1));
 					if (result.Succeeded)
 						crashes.UnionWith (File.ReadAllLines (tempFile));
 				} finally {

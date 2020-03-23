@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,9 +24,7 @@ namespace Xharness.Tests.Hardware.Tests {
 		public void SetUp ()
 		{
 			processManager = new Mock<IProcessManager> ();
-			database = new TCCDatabase {
-				ProcessManager = processManager.Object,
-			};
+			database = new TCCDatabase (processManager.Object);
 			executionLog = new Mock<ILog> ();
 			simRuntime = "com.apple.CoreSimulator.SimRuntime.iOS-12-1";
 			dataPath = "/path/to/my/data";

@@ -33,7 +33,6 @@ namespace Xharness.Hardware {
 	}
 
 	public interface ISimulatorDevice : IDevice {
-		ITCCDatabase TCCDatabase { get; set; }
 		string SimRuntime { get; set; }
 		string SimDeviceType { get; set; }
 		string DataPath { get; set; }

@@ -29,7 +29,7 @@ namespace Xharness.Tests.Hardware.Tests {
 		{
 			harness = new Mock<IHarness> ();
 			processManager = new Mock<IProcessManager> ();
-			devices = new Devices (harness.Object, processManager.Object);
+			devices = new Devices (processManager.Object);
 			executionLog = new Mock<ILog> ();
 			mlaunchPath = "/usr/bin/mlaunch"; // any will be ok, is mocked
 			sdkPath = "/Applications/Xcode.app";			
@@ -70,14 +70,14 @@ namespace Xharness.Tests.Hardware.Tests {
 				await devices.LoadAsync (executionLog.Object);
 			});
 
-			MlaunchArgument sdkRootArg = passedArguments.GetArguments ().Where (a => a is SdkRootArgument).FirstOrDefault();
+			MlaunchArgument sdkRootArg = passedArguments.Where (a => a is SdkRootArgument).FirstOrDefault();
 			Assert.IsNotNull (sdkRootArg, "sdk arg missing");
 			AssertArgumentValue (sdkRootArg, sdkPath, "sdk arg wrong");
 
-			MlaunchArgument listDevArg = passedArguments.GetArguments ().Where (a => a is ListDevicesArgument).FirstOrDefault();
+			MlaunchArgument listDevArg = passedArguments.Where (a => a is ListDevicesArgument).FirstOrDefault();
 			Assert.IsNotNull (listDevArg, "list devices arg missing");
 			
-			MlaunchArgument outputFormatArg = passedArguments.GetArguments ().Where (a => a is XmlOutputFormatArgument).FirstOrDefault();
+			MlaunchArgument outputFormatArg = passedArguments.Where (a => a is XmlOutputFormatArgument).FirstOrDefault();
 			Assert.IsNotNull (outputFormatArg, "output format arg missing");
 		}
 
@@ -98,7 +98,7 @@ namespace Xharness.Tests.Hardware.Tests {
 					passedArguments = args;
 					
 					// we get the temp file that was passed as the args, and write our sample xml, which will be parsed to get the devices :)
-					var tempPath = args.GetArguments ().Where (a => a is ListDevicesArgument).First ().AsCommandLineArgument ();
+					var tempPath = args.Where (a => a is ListDevicesArgument).First ().AsCommandLineArgument ();
 					tempPath = tempPath.Substring(tempPath.IndexOf('=') + 1);
 
 					var name = GetType ().Assembly.GetManifestResourceNames ().Where (a => a.EndsWith ("devices.xml", StringComparison.Ordinal)).FirstOrDefault ();
@@ -117,18 +117,18 @@ namespace Xharness.Tests.Hardware.Tests {
 			// validate the execution of mlaunch
 			Assert.AreEqual (mlaunchPath, processPath, "process path");
 
-			MlaunchArgument sdkRootArg = passedArguments.GetArguments ().Where (a => a is SdkRootArgument).FirstOrDefault();
+			MlaunchArgument sdkRootArg = passedArguments.Where (a => a is SdkRootArgument).FirstOrDefault();
 			Assert.IsNotNull (sdkRootArg, "sdk arg missing");
 			AssertArgumentValue (sdkRootArg, sdkPath, "sdk arg wrong");
 
-			MlaunchArgument listDevArg = passedArguments.GetArguments ().Where (a => a is ListDevicesArgument).FirstOrDefault();
+			MlaunchArgument listDevArg = passedArguments.Where (a => a is ListDevicesArgument).FirstOrDefault();
 			Assert.IsNotNull (listDevArg, "list devices arg missing");
 			
-			MlaunchArgument outputFormatArg = passedArguments.GetArguments ().Where (a => a is XmlOutputFormatArgument).FirstOrDefault();
+			MlaunchArgument outputFormatArg = passedArguments.Where (a => a is XmlOutputFormatArgument).FirstOrDefault();
 			Assert.IsNotNull (outputFormatArg, "output format arg missing");
 
 			if (extraData) {
-				MlaunchArgument listExtraDataArg = passedArguments.GetArguments ().Where (a => a is ListExtraDataArgument).FirstOrDefault();
+				MlaunchArgument listExtraDataArg = passedArguments.Where (a => a is ListExtraDataArgument).FirstOrDefault();
 				Assert.IsNotNull (listExtraDataArg, "list extra data arg missing");
 			}
 

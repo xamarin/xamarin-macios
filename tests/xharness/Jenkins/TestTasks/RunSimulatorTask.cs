@@ -13,7 +13,6 @@ namespace Xharness.Jenkins.TestTasks
 {
 	class RunSimulatorTask : RunXITask<ISimulatorDevice>
 	{
-		readonly IProcessManager processManager = new ProcessManager ();
 		readonly ISimulatorsLoader simulators;
 		public IAcquiredResource AcquiredResource;
 
@@ -77,13 +76,13 @@ namespace Xharness.Jenkins.TestTasks
 			await FindSimulatorAsync ();
 
 			var clean_state = false;//Platform == TestPlatform.watchOS;
-			runner = new AppRunner (processManager,
-				new SimulatorsLoaderFactory (Harness, processManager),
+			runner = new AppRunner (ProcessManager,
+				new SimulatorsLoaderFactory (ProcessManager),
 				new SimpleListenerFactory (),
-				new DeviceLoaderFactory (Harness, processManager),
-				new CrashSnapshotReporterFactory (ProcessManager, Harness.XcodeRoot, Harness.MlaunchPath),
+				new DeviceLoaderFactory (ProcessManager),
+				new CrashSnapshotReporterFactory (ProcessManager, Harness.XcodeRoot),
 				new CaptureLogFactory (),
-				new DeviceLogCapturerFactory (processManager, Harness.XcodeRoot, Harness.MlaunchPath),
+				new DeviceLogCapturerFactory (ProcessManager, Harness.XcodeRoot, Harness.MlaunchPath),
 				new XmlResultParser (),
 				AppRunnerTarget,
 				Harness,

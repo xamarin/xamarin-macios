@@ -81,7 +81,6 @@ namespace Xharness
 		string PeriodicCommand { get; }
 		string PeriodicCommandArguments { get; }
 		TimeSpan PeriodicCommandInterval { get; }
-		IProcessManager ProcessManager { get; }
 		double Timeout { get; }
 		string TodayContainerTemplate { get; }
 		string TodayExtensionTemplate { get; }
@@ -91,9 +90,7 @@ namespace Xharness
 		string WatchOSContainerTemplate { get; }
 		string WatchOSExtensionTemplate { get; }
 		string XcodeRoot { get; }
-		Version XcodeVersion { get; }
 		XmlResultJargon XmlJargon { get; }
-		Task<ProcessExecutionResult> ExecuteXcodeCommandAsync (string executable, IList<string> args, ILog log, TimeSpan timeout);
 		bool GetIncludeSystemPermissionTests (TestPlatform platform, bool device);
 		void Log (int min_level, string message, params object [] args);
 		void Log (string message);
@@ -105,12 +102,13 @@ namespace Xharness
 		readonly AppRunnerTarget target;
 		readonly string buildConfiguration = "Debug";
 
+		private IProcessManager processManager;
+
 		public HarnessAction Action { get; }
 		public int Verbosity { get; }
 		public ILog HarnessLog { get; set; }
 		public HashSet<string> Labels { get; }
 		public XmlResultJargon XmlJargon { get; }
-		public IProcessManager ProcessManager { get; }
 		public IResultParser ResultParser { get; }
 
 		// This is the maccore/tests directory.
@@ -147,6 +145,7 @@ namespace Xharness
 			set {
 				sdkRoot = value;
 				XcodeRoot = FindXcode (sdkRoot);
+				processManager = new ProcessManager (XcodeRoot, MlaunchPath);
 			}
 		}
 
@@ -196,9 +195,8 @@ namespace Xharness
 
 		public string GetStandardErrorTty () => Helpers.GetTerminalName (2);
 
-		public Harness (IProcessManager processManager, IResultParser resultParser, HarnessAction action, HarnessConfiguration configuration)
+		public Harness (IResultParser resultParser, HarnessAction action, HarnessConfiguration configuration)
 		{
-			ProcessManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 			ResultParser = resultParser ?? throw new ArgumentNullException (nameof (resultParser));
 			Action = action;
 
@@ -275,18 +273,6 @@ namespace Xharness
 
 				path = Path.GetDirectoryName (path);
 			} while (true);
-		}
-
-		Version xcode_version;
-		public Version XcodeVersion {
-			get {
-				if (xcode_version == null) {
-					var doc = new XmlDocument ();
-					doc.Load (Path.Combine (XcodeRoot, "Contents", "version.plist"));
-					xcode_version = Version.Parse (doc.SelectSingleNode ("//key[text() = 'CFBundleShortVersionString']/following-sibling::string").InnerText);
-				}
-				return xcode_version;
-			}
 		}
 
 		public string MlaunchPath {
@@ -604,13 +590,13 @@ namespace Xharness
 				HarnessLog = new ConsoleLog ();
 
 			foreach (var project in IOSTestProjects) {
-				var runner = new AppRunner (ProcessManager,
-					new SimulatorsLoaderFactory (this, ProcessManager),
+				var runner = new AppRunner (processManager,
+					new SimulatorsLoaderFactory (processManager),
 					new SimpleListenerFactory (),
-					new DeviceLoaderFactory (this, ProcessManager),
-					new CrashSnapshotReporterFactory (ProcessManager, XcodeRoot, MlaunchPath),
+					new DeviceLoaderFactory (processManager),
+					new CrashSnapshotReporterFactory (processManager, XcodeRoot),
 					new CaptureLogFactory (),
-					new DeviceLogCapturerFactory (ProcessManager, XcodeRoot, MlaunchPath),
+					new DeviceLogCapturerFactory (processManager, XcodeRoot, MlaunchPath),
 					new XmlResultParser (),
 					target,
 					this,
@@ -634,13 +620,13 @@ namespace Xharness
 				HarnessLog = new ConsoleLog ();
 
 			foreach (var project in IOSTestProjects) {
-				var runner = new AppRunner (ProcessManager,
-					new SimulatorsLoaderFactory (this, ProcessManager),
+				var runner = new AppRunner (processManager,
+					new SimulatorsLoaderFactory (processManager),
 					new SimpleListenerFactory (),
-					new DeviceLoaderFactory (this, ProcessManager),
-					new CrashSnapshotReporterFactory (ProcessManager, XcodeRoot, MlaunchPath),
+					new DeviceLoaderFactory (processManager),
+					new CrashSnapshotReporterFactory (processManager, XcodeRoot),
 					new CaptureLogFactory (),
-					new DeviceLogCapturerFactory (ProcessManager, XcodeRoot, MlaunchPath),
+					new DeviceLogCapturerFactory (processManager, XcodeRoot, MlaunchPath),
 					new XmlResultParser (),
 					target,
 					this,
@@ -662,13 +648,13 @@ namespace Xharness
 				HarnessLog = new ConsoleLog ();
 
 			foreach (var project in IOSTestProjects) {
-				var runner = new AppRunner (ProcessManager,
-					new SimulatorsLoaderFactory (this, ProcessManager),
+				var runner = new AppRunner (processManager,
+					new SimulatorsLoaderFactory (processManager),
 					new SimpleListenerFactory (),
-					new DeviceLoaderFactory (this, ProcessManager),
-					new CrashSnapshotReporterFactory (ProcessManager, XcodeRoot, MlaunchPath),
+					new DeviceLoaderFactory (processManager),
+					new CrashSnapshotReporterFactory (processManager, XcodeRoot),
 					new CaptureLogFactory (),
-					new DeviceLogCapturerFactory (ProcessManager, XcodeRoot, MlaunchPath),
+					new DeviceLogCapturerFactory (processManager, XcodeRoot, MlaunchPath),
 					new XmlResultParser (),
 					target,
 					this,
@@ -750,7 +736,7 @@ namespace Xharness
 				AutoConfigureMac (false);
 			}
 
-			var jenkins = new Jenkins.Jenkins (this, ProcessManager, ResultParser);
+			var jenkins = new Jenkins.Jenkins (this, processManager, ResultParser);
 			return jenkins.Run ();
 		}
 
@@ -802,11 +788,6 @@ namespace Xharness
 					disable_watchos_on_wrench = !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("DISABLE_WATCH_ON_WRENCH"));
 				return disable_watchos_on_wrench.Value;
 			}
-		}
-
-		public Task<ProcessExecutionResult> ExecuteXcodeCommandAsync (string executable, IList<string> args, ILog log, TimeSpan timeout)
-		{
-			return ProcessManager.ExecuteCommandAsync (Path.Combine (XcodeRoot, "Contents", "Developer", "usr", "bin", executable), args, log, timeout: timeout);
 		}
 	}
 }

@@ -12,7 +12,7 @@ using Xharness.Logging;
 namespace Xharness.Tests {
 	[TestFixture]
 	public class CrashReportSnapshotTests {
-		readonly string mlaunchPath = "./mlaunch";
+
 		string tempXcodeRoot;
 		string symbolicatePath;
 		
@@ -66,7 +66,6 @@ namespace Xharness.Tests {
 			// List of crash reports is retrieved
 			processManager
 				.Setup (x => x.ExecuteCommandAsync (
-					mlaunchPath,
 					It.Is<MlaunchArguments> (args => args.AsCommandLine () == $"--list-crash-reports={tempFilePath} --sdkroot={tempXcodeRoot} --devname={deviceName}"),
 					log.Object,
 					TimeSpan.FromMinutes (1),
@@ -77,7 +76,6 @@ namespace Xharness.Tests {
 			// Device crash log is downloaded
 			processManager
 				.Setup (x => x.ExecuteCommandAsync (
-					mlaunchPath,
 					It.Is<MlaunchArguments> (args => args.AsCommandLine () == $"--download-crash-report={deviceName} --download-crash-report-to={crashLogPath} --sdkroot={tempXcodeRoot} --devname={deviceName}"),
 					log.Object,
 					TimeSpan.FromMinutes (1),
@@ -101,7 +99,6 @@ namespace Xharness.Tests {
 				log.Object,
 				logs.Object,
 				tempXcodeRoot,
-				mlaunchPath,
 				true,
 				deviceName,
 				() => tempFilePath);
