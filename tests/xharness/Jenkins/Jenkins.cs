@@ -938,7 +938,7 @@ namespace Xharness.Jenkins
 			
 			//Tasks.AddRange (await CreateRunSimulatorTasksAsync ());
 
-			var crashReportSnapshotFactory = new CrashSnapshotReporterFactory (processManager, Harness.XcodeRoot);
+			var crashReportSnapshotFactory = new CrashSnapshotReporterFactory (processManager);
 
 			var buildiOSMSBuild_net461 = new MSBuildTask (processManager)
 			{

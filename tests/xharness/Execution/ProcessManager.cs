@@ -85,7 +85,7 @@ namespace Xharness.Execution {
 			bool? diagnostics = null)
 		{
 			if (!args.Any (a => a is SdkRootArgument))
-				args.Add (new SdkRootArgument (XcodeRoot));
+				args.Prepend (new SdkRootArgument (XcodeRoot));
 			
 			process.StartInfo.FileName = MlaunchPath;
 			process.StartInfo.Arguments = args.AsCommandLine ();
@@ -93,26 +93,10 @@ namespace Xharness.Execution {
 			return RunAsync (process, log, timeout, environmentVariables, cancellationToken, diagnostics);
 		}
 
-		public Task<ProcessExecutionResult> RunAsync (Process process,
-			ILog log,
-			ILog stdoutLog,
-			ILog stderrLog,
-			TimeSpan? timeout = null,
-			Dictionary<string, string> environmentVariables = null,
-			CancellationToken? cancellationToken = null,
-			bool? diagnostics = null)
-		{
-			if (stdoutLog is TextWriter StdoutStream && stderrLog is TextWriter StderrStream) {
-				return RunAsync (process, log, StdoutStream, StderrStream, timeout, environmentVariables, cancellationToken, diagnostics);
-			} else {
-				throw new ArgumentException ("Could not cast ILog to TextWriter.");
-			}
-		}
-
 		public async Task<ProcessExecutionResult> RunAsync (Process process,
 			ILog log,
-			TextWriter StdoutStream,
-			TextWriter StderrStream,
+			ILog stdout,
+			ILog stderr,
 			TimeSpan? timeout = null,
 			Dictionary<string, string> environment_variables = null,
 			CancellationToken? cancellationToken = null,
@@ -137,9 +121,9 @@ namespace Xharness.Execution {
 			process.OutputDataReceived += (object sender, DataReceivedEventArgs e) =>
 			{
 				if (e.Data != null) {
-					lock (StdoutStream) {
-						StdoutStream.WriteLine (e.Data);
-						StdoutStream.Flush ();
+					lock (stdout) {
+						stdout.WriteLine (e.Data);
+						stdout.Flush ();
 					}
 				} else {
 					stdout_completion.TrySetResult (true);
@@ -149,9 +133,9 @@ namespace Xharness.Execution {
 			process.ErrorDataReceived += (object sender, DataReceivedEventArgs e) =>
 			{
 				if (e.Data != null) {
-					lock (StderrStream) {
-						StderrStream.WriteLine (e.Data);
-						StderrStream.Flush ();
+					lock (stderr) {
+						stderr.WriteLine (e.Data);
+						stderr.Flush ();
 					}
 				} else {
 					stderr_completion.TrySetResult (true);
@@ -191,7 +175,7 @@ namespace Xharness.Execution {
 					// processes behind).
 				}
 				if (!hasExited) {
-					StderrStream.WriteLine ($"Execution of {pid} was cancelled.");
+					stderr.WriteLine ($"Execution of {pid} was cancelled.");
 					kill (pid, 9);
 				}
 			});
@@ -200,7 +184,7 @@ namespace Xharness.Execution {
 				if (!await WaitForExitAsync (process, timeout.Value)) {
 					await KillTreeAsync (process, log, diagnostics ?? true);
 					rv.TimedOut = true;
-					lock (StderrStream)
+					lock (stderr)
 						log.WriteLine ($"{pid} Execution timed out after {timeout.Value.TotalSeconds} seconds and the process was killed.");
 				}
 			}
@@ -271,7 +255,7 @@ namespace Xharness.Execution {
 				kill (pids [i], 9);
 		}
 
-		private static async Task<bool> WaitForExitAsync (Process process, TimeSpan? timeout = null)
+		static async Task<bool> WaitForExitAsync (Process process, TimeSpan? timeout = null)
 		{
 			if (process.HasExited)
 				return true;
@@ -303,7 +287,7 @@ namespace Xharness.Execution {
 			}
 		}
 
-		private static List<int> GetChildrenPS (ILog log, int pid)
+		static List<int> GetChildrenPS (ILog log, int pid)
 		{
 			var list = new List<int> ();
 
