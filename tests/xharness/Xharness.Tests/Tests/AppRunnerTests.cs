@@ -232,9 +232,7 @@ namespace Xharness.Tests {
 			// Verify
 			Assert.AreEqual (1, result.ExitCode);
 
-			var expectedArgs = $"--sdkroot=/path/to/xcode -v -v -v " +
-				$"--installdev={StringUtils.FormatArguments (appPath)} " +
-				$"--devname=\"Test iPad\"";
+			var expectedArgs = $"-v -v -v --installdev={StringUtils.FormatArguments (appPath)} --devname=\"Test iPad\"";
 
 			processManager.Verify (x => x.ExecuteCommandAsync (
 				It.Is<MlaunchArguments> (args => args.AsCommandLine() == expectedArgs),
@@ -277,9 +275,7 @@ namespace Xharness.Tests {
 			// Verify
 			Assert.AreEqual (3, result.ExitCode);
 
-			var expectedArgs = $"--sdkroot=/path/to/xcode -v -v " +
-				$"--uninstalldevbundleid={StringUtils.FormatArguments (appName)} " +
-				$"--devname=\"Test iPad\"";
+			var expectedArgs = $"-v -v --uninstalldevbundleid={StringUtils.FormatArguments (appName)} --devname=\"Test iPad\"";
 
 			processManager.Verify (x => x.ExecuteCommandAsync (
 				It.Is<MlaunchArguments> (args => args.AsCommandLine() == expectedArgs),
@@ -415,8 +411,7 @@ namespace Xharness.Tests {
 					It.IsAny<string> ()))
 				.Returns (captureLog.Object);
 
-			var expectedArgs = $"--sdkroot={StringUtils.FormatArguments (xcodePath)} -v -v " +
-				$"-argument=-connection-mode -argument=none -argument=-app-arg:-autostart " +
+			var expectedArgs = $"-v -v -argument=-connection-mode -argument=none -argument=-app-arg:-autostart " +
 				$"-setenv=NUNIT_AUTOSTART=true -argument=-app-arg:-autoexit -setenv=NUNIT_AUTOEXIT=true " +
 				$"-argument=-app-arg:-enablenetwork -setenv=NUNIT_ENABLE_NETWORK=true " +
 				$"-setenv=DISABLE_SYSTEM_PERMISSION_TESTS=1 -argument=-app-arg:-hostname:127.0.0.1 " +
@@ -570,7 +565,7 @@ namespace Xharness.Tests {
 				ips.Append (ipAddresses [i].ToString ());
 			}
 
-			var expectedArgs = $"--sdkroot={StringUtils.FormatArguments (xcodePath)} -v -v -argument=-connection-mode -argument=none " +
+			var expectedArgs = $"-v -v -argument=-connection-mode -argument=none " +
 				$"-argument=-app-arg:-autostart -setenv=NUNIT_AUTOSTART=true -argument=-app-arg:-autoexit " +
 				$"-setenv=NUNIT_AUTOEXIT=true -argument=-app-arg:-enablenetwork -setenv=NUNIT_ENABLE_NETWORK=true " +
 				$"-setenv=DISABLE_SYSTEM_PERMISSION_TESTS=1 -argument=-app-arg:-hostname:{ips} -setenv=NUNIT_HOSTNAME={ips} " +
@@ -677,7 +672,7 @@ namespace Xharness.Tests {
 				ips.Append (ipAddresses [i].ToString ());
 			}
 			
-			var expectedArgs = $"--sdkroot={StringUtils.FormatArguments (xcodePath)} -v -v -argument=-connection-mode -argument=none " +
+			var expectedArgs = $"-v -v -argument=-connection-mode -argument=none " +
 				$"-argument=-app-arg:-autostart -setenv=NUNIT_AUTOSTART=true -argument=-app-arg:-autoexit " +
 				$"-setenv=NUNIT_AUTOEXIT=true -argument=-app-arg:-enablenetwork -setenv=NUNIT_ENABLE_NETWORK=true " +
 				$"-setenv=DISABLE_SYSTEM_PERMISSION_TESTS=1 -argument=-app-arg:-hostname:{ips} -setenv=NUNIT_HOSTNAME={ips} " +
