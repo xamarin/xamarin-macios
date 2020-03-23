@@ -16,7 +16,7 @@ $target_url = $Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI + "$Env:SYSTEM_TEAMPROJECT
 # state: only report failure, so state is always failure but we can also use AGENT_JOBSTATUS to avoid hardcoding values
 $json_payload = @"
 {
-    "state" : "failure"
+    "state" : "failure",
     "target_url" : "$target_url",
     "description" : "$Env:SYSTEM_JOBNAME", 
     "context" : "$Env:CONTEXT"
