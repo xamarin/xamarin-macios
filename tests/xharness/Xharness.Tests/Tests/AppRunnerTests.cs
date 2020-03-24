@@ -445,7 +445,7 @@ namespace Xharness.Tests {
 				$"-setenv=NUNIT_HOSTNAME=127.0.0.1 -argument=-app-arg:-transport:Tcp -setenv=NUNIT_TRANSPORT=TCP " +
 				$"-argument=-app-arg:-hostport:{simpleListener.Object.Port} -setenv=NUNIT_HOSTPORT={simpleListener.Object.Port} " +
 				$"-setenv=env1=value1 -setenv=env2=value2 --launchsim {StringUtils.FormatArguments (appPath)} " +
-				$"--stdout tty1 --stderr tty1 --device=:v2:udid={simulator.Object.UDID}";
+				$"--stdout=tty1 --stderr=tty1 --device=:v2:udid={simulator.Object.UDID}";
 
 			processManager
 				.Setup (x => x.ExecuteCommandAsync (

@@ -195,7 +195,7 @@ namespace Xharness {
 			for (int i = -1; i < harness.Verbosity; i++)
 				args.Add (new VerbosityArgument ());
 
-			args.Add (new InstallAppArgument (AppInformation.AppPath));
+			args.Add (new InstallAppOnDeviceArgument (AppInformation.AppPath));
 			args.Add (new DeviceNameArgument (companionDeviceName ?? deviceName));
 
 			if (runMode == RunMode.WatchOS) {
@@ -224,7 +224,7 @@ namespace Xharness {
 			for (int i = -1; i < harness.Verbosity; i++)
 				args.Add (new VerbosityArgument ());
 
-			args.Add (new UninstallAppArgument (AppInformation.BundleIdentifier));
+			args.Add (new UninstallAppFromDeviceArgument (AppInformation.BundleIdentifier));
 			args.Add (new DeviceNameArgument (companionDeviceName ?? deviceName));
 
 			return await processManager.ExecuteCommandAsync (harness.MlaunchPath, args, MainLog, TimeSpan.FromMinutes (1));

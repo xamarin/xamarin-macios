@@ -4,7 +4,7 @@
 	/// Specify the location of Apple SDKs, default to 'xcode-select' value.
 	/// </summary>
 	public sealed class SdkRootArgument : SingleValueArgument {
-		public SdkRootArgument (string sdkPath) : base ("sdkroot", sdkPath)
+		public SdkRootArgument (string sdkPath) : base ("sdkroot", sdkPath, false)
 		{
 		}
 	}
@@ -58,7 +58,7 @@
 	/// Specify which device (when many are present) the [install|lauch|kill|log]dev command applies.
 	/// </summary>
 	public sealed class DeviceNameArgument : SingleValueArgument {
-		public DeviceNameArgument (string deviceName) : base ("devname", deviceName)
+		public DeviceNameArgument (string deviceName) : base ("devname", deviceName, false)
 		{
 		}
 	}
@@ -66,8 +66,8 @@
 	/// <summary>
 	/// Install the specified iOS app bundle on the device.
 	/// </summary>
-	public sealed class InstallAppArgument : SingleValueArgument {
-		public InstallAppArgument (string appPath) : base ("installdev", appPath)
+	public sealed class InstallAppOnDeviceArgument : SingleValueArgument {
+		public InstallAppOnDeviceArgument (string appPath) : base ("installdev", appPath, false)
 		{
 		}
 	}
@@ -75,8 +75,8 @@
 	/// <summary>
 	/// Uninstall the specified bundle id from the device.
 	/// </summary>
-	public sealed class UninstallAppArgument : SingleValueArgument {
-		public UninstallAppArgument (string appBundleId) : base ("uninstalldevbundleid", appBundleId)
+	public sealed class UninstallAppFromDeviceArgument : SingleValueArgument {
+		public UninstallAppFromDeviceArgument (string appBundleId) : base ("uninstalldevbundleid", appBundleId, false)
 		{
 		}
 	}
@@ -213,7 +213,7 @@
 	/// Launch an app that is installed on device, specified by bundle identifier.
 	/// </summary>
 	public sealed class LaunchDeviceArgument : SingleValueArgument {
-		public LaunchDeviceArgument (string launchAppPath) : base ("launchdev", launchAppPath)
+		public LaunchDeviceArgument (string launchAppPath) : base ("launchdev", launchAppPath, false)
 		{
 		}
 	}
@@ -222,7 +222,7 @@
 	/// Launch the specified MonoTouch.app in the simulator.
 	/// </summary>
 	public sealed class LaunchSimulatorArgument : SingleValueArgument {
-		public LaunchSimulatorArgument (string launchAppPath) : base ("launchsim", launchAppPath)
+		public LaunchSimulatorArgument (string launchAppPath) : base ("launchsim", launchAppPath, false)
 		{
 		}
 	}

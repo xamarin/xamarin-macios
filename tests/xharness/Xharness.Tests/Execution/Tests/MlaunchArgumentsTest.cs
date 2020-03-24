@@ -18,19 +18,19 @@ namespace Xharness.Tests.Execution.Tests {
 						new MlaunchArgument [] {
 							new ListDevicesArgument (listDevFile)
 						})
-						.Returns ($"--listdev {listDevFile}");
+						.Returns ($"--listdev={listDevFile}");
 
 					yield return new TestCaseData (arg:
 						new MlaunchArgument [] {
 							new ListSimulatorsArgument (listSimFile)
 						})
-						.Returns ($"--listsim {listSimFile}");
+						.Returns ($"--listsim={listSimFile}");
 
 					yield return new TestCaseData (arg:
 						new MlaunchArgument [] {
 							new XmlOutputFormatArgument ()
 						})
-						.Returns ($"--output-format {xmlOutputType}");
+						.Returns ($"--output-format={xmlOutputType}");
 
 					yield return new TestCaseData (arg:
 						new MlaunchArgument [] {
@@ -43,14 +43,14 @@ namespace Xharness.Tests.Execution.Tests {
 							new DownloadCrashReportToArgument ("/path/with spaces.txt"),
 							new DeviceNameArgument ("Test iPad")
 						})
-						.Returns ($"--download-crash-report-to \"/path/with spaces.txt\" --devname \"Test iPad\"");
+						.Returns ($"\"--download-crash-report-to=/path/with spaces.txt\" --devname \"Test iPad\"");
 
 					yield return new TestCaseData (arg:
 						new MlaunchArgument [] {
 							new ListDevicesArgument (listDevFile),
 							new ListSimulatorsArgument (listSimFile)
 						})
-						.Returns ($"--listdev {listDevFile} --listsim {listSimFile}");
+						.Returns ($"--listdev={listDevFile} --listsim={listSimFile}");
 
 					yield return new TestCaseData (arg:
 						new MlaunchArgument [] {
@@ -58,7 +58,7 @@ namespace Xharness.Tests.Execution.Tests {
 							new XmlOutputFormatArgument (),
 							new ListExtraDataArgument ()
 						})
-						.Returns ($"--listdev {listDevFile} --output-format {xmlOutputType} --list-extra-data");
+						.Returns ($"--listdev={listDevFile} --output-format={xmlOutputType} --list-extra-data");
 				}
 			}
 		}
