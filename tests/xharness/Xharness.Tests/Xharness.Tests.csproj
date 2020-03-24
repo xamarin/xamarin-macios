@@ -71,7 +71,7 @@
     <Compile Include="Listeners\Tests\SimpleFileListenerTest.cs" />
     <Compile Include="Listeners\Tests\SimpleTcpListenerTest.cs" />
     <Compile Include="Execution\Tests\ProcessManagerTests.cs" />
-    <Compile Include="Execution\Tests\MlaunchArgumentsTest.cs" />
+    <Compile Include="Execution\Tests\MlaunchArgumentsTests.cs" />
     <Compile Include="Hardware\Tests\DeviceTest.cs" />
     <Compile Include="Hardware\Tests\DevicesTest.cs" />
     <Compile Include="Hardware\Tests\TCCDatabaseTests.cs" />
