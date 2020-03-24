@@ -48,18 +48,18 @@ namespace Xharness.Jenkins.TestTasks
 			case TestPlatform.iOS_Unified:
 			case TestPlatform.iOS_Unified32:
 			case TestPlatform.iOS_Unified64:
-				AppRunnerTarget = AppRunnerTarget.Device_iOS;
+				AppRunnerTarget = TestTarget.Device_iOS;
 				break;
 			case TestPlatform.iOS_TodayExtension64:
-				AppRunnerTarget = AppRunnerTarget.Device_iOS;
+				AppRunnerTarget = TestTarget.Device_iOS;
 				break;
 			case TestPlatform.tvOS:
-				AppRunnerTarget = AppRunnerTarget.Device_tvOS;
+				AppRunnerTarget = TestTarget.Device_tvOS;
 				break;
 			case TestPlatform.watchOS:
 			case TestPlatform.watchOS_32:
 			case TestPlatform.watchOS_64_32:
-				AppRunnerTarget = AppRunnerTarget.Device_watchOS;
+				AppRunnerTarget = TestTarget.Device_watchOS;
 				break;
 			default:
 				throw new NotImplementedException ();
@@ -82,6 +82,7 @@ namespace Xharness.Jenkins.TestTasks
 					Jenkins.MainLog.WriteLine ("Acquired device '{0}' for '{1}'", Device.Name, ProjectFile);
 
 					runner = new AppRunner (processManager,
+						new AppBundleInformationParser (),
 						new SimulatorsLoaderFactory (Harness, processManager),
 						new SimpleListenerFactory (),
 						new DeviceLoaderFactory (Harness, processManager),
@@ -148,6 +149,7 @@ namespace Xharness.Jenkins.TestTasks
 							// will do both of these things, preparing the device for launching the today extension).
 
 							AppRunner todayRunner = new AppRunner (processManager,
+								new AppBundleInformationParser (),
 								new SimulatorsLoaderFactory (Harness, processManager),
 								new SimpleListenerFactory (),
 								new DeviceLoaderFactory (Harness, processManager),

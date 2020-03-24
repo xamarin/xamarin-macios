@@ -154,22 +154,22 @@ namespace Xharness.Jenkins
 			return Task.WhenAll (devs, sims);
 		}
 
-		AppRunnerTarget[] GetAppRunnerTargets (TestPlatform platform)
+		TestTarget[] GetAppRunnerTargets (TestPlatform platform)
 		{
 			switch (platform) {
 			case TestPlatform.tvOS:
-				return new AppRunnerTarget [] { AppRunnerTarget.Simulator_tvOS };
+				return new TestTarget [] { TestTarget.Simulator_tvOS };
 			case TestPlatform.watchOS:
 			case TestPlatform.watchOS_32:
 			case TestPlatform.watchOS_64_32:
-				return new AppRunnerTarget [] { AppRunnerTarget.Simulator_watchOS };
+				return new TestTarget [] { TestTarget.Simulator_watchOS };
 			case TestPlatform.iOS_Unified:
-				return new AppRunnerTarget [] { AppRunnerTarget.Simulator_iOS32, AppRunnerTarget.Simulator_iOS64 };
+				return new TestTarget [] { TestTarget.Simulator_iOS32, TestTarget.Simulator_iOS64 };
 			case TestPlatform.iOS_Unified32:
-				return new AppRunnerTarget [] { AppRunnerTarget.Simulator_iOS32 };
+				return new TestTarget [] { TestTarget.Simulator_iOS32 };
 			case TestPlatform.iOS_Unified64:
 			case TestPlatform.iOS_TodayExtension64:
-				return new AppRunnerTarget [] { AppRunnerTarget.Simulator_iOS64 };
+				return new TestTarget [] { TestTarget.Simulator_iOS64 };
 			default:
 				throw new NotImplementedException (platform.ToString ());
 			}
@@ -199,7 +199,7 @@ namespace Xharness.Jenkins
 		{
 			var runtasks = new List<RunSimulatorTask> ();
 
-			AppRunnerTarget [] targets = GetAppRunnerTargets (buildTask.Platform);
+			TestTarget [] targets = GetAppRunnerTargets (buildTask.Platform);
 			TestPlatform [] platforms;
 			bool [] ignored;
 
@@ -217,7 +217,7 @@ namespace Xharness.Jenkins
 				ignored = new [] { !IncludeiOS32, false};
 				break;
 			case TestPlatform.iOS_TodayExtension64:
-				targets = new AppRunnerTarget[] { AppRunnerTarget.Simulator_iOS64 };
+				targets = new TestTarget[] { TestTarget.Simulator_iOS64 };
 				platforms = new TestPlatform[] { TestPlatform.iOS_TodayExtension64 };
 				ignored = new [] { false };
 				break;
