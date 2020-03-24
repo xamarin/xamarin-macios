@@ -366,7 +366,8 @@ namespace Xharness.Tests {
 				It.IsAny<string> (),
 				It.IsAny<ISimpleListener> (),
 				It.IsAny<ILog> (),
-				It.IsAny<ICrashSnapshotReporter> ())).Returns (testReporter.Object);
+				It.IsAny<ICrashSnapshotReporter> (),
+				It.IsAny<IResultParser> ())).Returns (testReporter.Object);
 			testReporter.Setup (r => r.TimeoutWatch).Returns (new System.Diagnostics.Stopwatch ());
 			testReporter.Setup (r => r.ParseResult ()).Returns (() => {
 				return Task.FromResult<(TestExecutingResult, string)> ((TestExecutingResult.Succeeded, null));
@@ -484,7 +485,8 @@ namespace Xharness.Tests {
 				It.IsAny<string> (),
 				It.IsAny<ISimpleListener> (),
 				It.IsAny<ILog> (),
-				It.IsAny<ICrashSnapshotReporter> ())).Returns (testReporter.Object);
+				It.IsAny<ICrashSnapshotReporter> (),
+				It.IsAny<IResultParser> ())).Returns (testReporter.Object);
 			testReporter.Setup (r => r.Timeout).Returns (TimeSpan.FromMinutes (harness.Timeout * 2));
 			testReporter.Setup (r => r.TimeoutWatch).Returns (new System.Diagnostics.Stopwatch ());
 			testReporter.Setup (r => r.ParseResult ()).Returns (() => {
@@ -644,7 +646,8 @@ namespace Xharness.Tests {
 				It.IsAny<string> (),
 				It.IsAny<ISimpleListener> (),
 				It.IsAny<ILog> (),
-				It.IsAny<ICrashSnapshotReporter> ())).Returns (testReporter.Object);
+				It.IsAny<ICrashSnapshotReporter> (),
+				It.IsAny<IResultParser> ())).Returns (testReporter.Object);
 			testReporter.Setup (r => r.Timeout).Returns (TimeSpan.FromMinutes (harness.Timeout * 2));
 			testReporter.Setup (r => r.TimeoutWatch).Returns (new System.Diagnostics.Stopwatch ());
 			testReporter.Setup (r => r.ParseResult ()).Returns (() => {
@@ -759,7 +762,8 @@ namespace Xharness.Tests {
 				It.IsAny<string> (),
 				It.IsAny<ISimpleListener> (),
 				It.IsAny<ILog> (),
-				It.IsAny<ICrashSnapshotReporter> ())).Returns (testReporter.Object);
+				It.IsAny<ICrashSnapshotReporter> (),
+				It.IsAny<IResultParser> ())).Returns (testReporter.Object);
 			testReporter.Setup (r => r.Timeout).Returns (TimeSpan.FromMinutes (harness.Timeout * 2));
 			testReporter.Setup (r => r.TimeoutWatch).Returns (new System.Diagnostics.Stopwatch ());
 			testReporter.Setup (r => r.ParseResult ()).Returns (() => {

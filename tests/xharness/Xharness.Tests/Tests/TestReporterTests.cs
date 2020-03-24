@@ -12,7 +12,7 @@ using Xharness.Logging;
 namespace Xharness.Tests.Tests {
 
 	[TestFixture]
-	public class TestResultTests {
+	public class TestReporterTests {
 
 		Mock<IAppRunner> runner;
 		Mock<ICrashSnapshotReporter> crashReporter;
@@ -67,11 +67,9 @@ namespace Xharness.Tests.Tests {
 			runner.Setup (r => r.MainLog).Returns (mainLog.Object);
 			runner.Setup (r => r.AppInformation).Returns (appInformation);
 			runner.Setup (r => r.XmlJargon).Returns (XmlResultJargon.NUnitV3);
+			runner.Setup (r => r.ProcessManager).Returns (processManager.Object);
 			logs.Setup (l => l.Directory).Returns (logsDirectory);
-			return new TestReporter (runner.Object, deviceName, listener.Object, runLog.Object, crashReporter.Object) {
-				ProcessManager = processManager.Object,
-				ResultParser = parser,
-			};
+			return new TestReporter (runner.Object, deviceName, listener.Object, runLog.Object, crashReporter.Object, parser);
 		}
 
 		[Test]

@@ -9,15 +9,18 @@ using Xharness.Logging;
 namespace Xharness {
 
 	public interface ITestReporterFactory {
-		ITestReporter Create (IAppRunner appRunner, string device, ISimpleListener simpleListener, ILog log, ICrashSnapshotReporter crashReports);
+		ITestReporter Create (IAppRunner appRunner, 
+							  string device,
+							  ISimpleListener simpleListener,
+							  ILog log,
+							  ICrashSnapshotReporter crashReports,
+							  IResultParser resultParser);
 	}
 
-	// interface that represents a class that 
+	// interface that represents a class that know how to parse the results from an app run.
 	public interface ITestReporter {
 
 		TimeSpan Timeout { get; }
-		IProcessManager ProcessManager { get; set; }
-		IResultParser ResultParser { get; set; }
 		ILog CallbackLog { get; }
 
 		bool? Success { get; }

@@ -81,7 +81,7 @@
     <Compile Include="BCLTestImporter\Xamarin\Tests\ProjectFilterTest.cs" />
     <Compile Include="BCLTestImporter\Xamarin\Tests\AssemblyLocatorTest.cs" />
     <Compile Include="BCLTestImporter\Xamarin\Tests\XamariniOSTemplateTest.cs" />
-    <Compile Include="Tests\TestResultTests.cs" />
+    <Compile Include="Tests\TestReporterTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

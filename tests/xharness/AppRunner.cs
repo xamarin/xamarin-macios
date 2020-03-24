@@ -17,7 +17,6 @@ namespace Xharness {
 
 	class AppRunner : IAppRunner
 	{
-		readonly IProcessManager processManager;
 		readonly ISimulatorsLoaderFactory simulatorsLoaderFactory;
 		readonly ISimpleListenerFactory listenerFactory;
 		readonly IDeviceLoaderFactory devicesLoaderFactory;
@@ -44,6 +43,8 @@ namespace Xharness {
 			get => ensureCleanSimulatorState && string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("SKIP_SIMULATOR_SETUP"));
 			set => ensureCleanSimulatorState = value;
 		}
+
+		public IProcessManager ProcessManager { get; private set; }
 
 		public BuildToolTask BuildTask { get; private set; }
 
@@ -90,7 +91,7 @@ namespace Xharness {
 			if (appBundleInformationParser is null)
 				throw new ArgumentNullException (nameof (appBundleInformationParser));
 
-			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
+			this.ProcessManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 			this.simulatorsLoaderFactory = simulatorsFactory ?? throw new ArgumentNullException (nameof (simulatorsFactory));
 			this.listenerFactory = simpleListenerFactory ?? throw new ArgumentNullException (nameof (simpleListenerFactory));
 			this.devicesLoaderFactory = devicesFactory ?? throw new ArgumentNullException (nameof (devicesFactory));
@@ -212,7 +213,7 @@ namespace Xharness {
 			var totalSize = Directory.GetFiles (AppInformation.AppPath, "*", SearchOption.AllDirectories).Select ((v) => new FileInfo (v).Length).Sum ();
 			MainLog.WriteLine ($"Installing '{AppInformation.AppPath}' to '{companionDeviceName ?? deviceName}'. Size: {totalSize} bytes = {totalSize / 1024.0 / 1024.0:N2} MB");
 
-			return await processManager.ExecuteCommandAsync (harness.MlaunchPath, args, MainLog, TimeSpan.FromHours (1), cancellation_token: cancellation_token);
+			return await ProcessManager.ExecuteCommandAsync (harness.MlaunchPath, args, MainLog, TimeSpan.FromHours (1), cancellation_token: cancellation_token);
 		}
 
 		public async Task<ProcessExecutionResult> UninstallAsync ()
@@ -234,7 +235,7 @@ namespace Xharness {
 			args.Add (AppInformation.BundleIdentifier);
 			AddDeviceName (args, companionDeviceName ?? deviceName);
 
-			return await processManager.ExecuteCommandAsync (harness.MlaunchPath, args, MainLog, TimeSpan.FromMinutes (1));
+			return await ProcessManager.ExecuteCommandAsync (harness.MlaunchPath, args, MainLog, TimeSpan.FromMinutes (1));
 		}
 
 		public TimeSpan GetNewTimeout () => TimeSpan.FromMinutes (harness.Timeout * timeoutMultiplier);
@@ -315,11 +316,11 @@ namespace Xharness {
 			ILog run_log = MainLog;
 			var crashLogs = new Logs (Logs.Directory);
 			ICrashSnapshotReporter crashReporter = snapshotReporterFactory.Create (MainLog, crashLogs, isDevice: !isSimulator, deviceName);
-			var testResult = testReporterFactory.Create (this, deviceName, listener, run_log, crashReporter);
+			var testReporter = testReporterFactory.Create (this, deviceName, listener, run_log, crashReporter, new XmlResultParser ());
 
 			listener.ConnectedTask
 				.TimeoutAfter (TimeSpan.FromMinutes (harness.LaunchTimeout))
-				.ContinueWith (testResult.LaunchCallback)
+				.ContinueWith (testReporter.LaunchCallback)
 				.DoNotAwait ();
 
 			foreach (var kvp in harness.EnvironmentVariables)
@@ -393,8 +394,8 @@ namespace Xharness {
 
 				MainLog.WriteLine ("Starting test run");
 
-				await testResult.CollectSimulatorResult (
-					processManager.ExecuteCommandAsync (harness.MlaunchPath, args, run_log, testResult.Timeout, cancellation_token: testResult.CancellationToken));
+				await testReporter.CollectSimulatorResult (
+					ProcessManager.ExecuteCommandAsync (harness.MlaunchPath, args, run_log, testReporter.Timeout, cancellation_token: testReporter.CancellationToken));
 
 				// cleanup after us
 				if (EnsureCleanSimulatorState)
@@ -424,9 +425,9 @@ namespace Xharness {
 					MainLog.WriteLine ("Starting test run");
 
 					// We need to check for MT1111 (which means that mlaunch won't wait for the app to exit).
-					var runLog = Log.CreateAggregatedLog (testResult.CallbackLog, MainLog);
-					testResult.TimeoutWatch.Start ();
-					await testResult.CollectDeviceResult (processManager.ExecuteCommandAsync (harness.MlaunchPath, args, runLog, testResult.Timeout, cancellation_token: testResult.CancellationToken));
+					var runLog = Log.CreateAggregatedLog (testReporter.CallbackLog, MainLog);
+					testReporter.TimeoutWatch.Start ();
+					await testReporter.CollectDeviceResult (ProcessManager.ExecuteCommandAsync (harness.MlaunchPath, args, runLog, testReporter.Timeout, cancellation_token: testReporter.CancellationToken));
 				} finally {
 					deviceLogCapturer.StopCapture ();
 					deviceSystemLog.Dispose ();
@@ -443,8 +444,8 @@ namespace Xharness {
 			listener.Dispose ();
 
 			// check the final status, copy all the required data
-			(Result, FailureMessage) = await testResult.ParseResult ();
-			return testResult.Success.Value ? 0 : 1;
+			(Result, FailureMessage) = await testReporter.ParseResult ();
+			return testReporter.Success.Value ? 0 : 1;
 		}
 
 		public void AddDeviceName (IList<string> args)

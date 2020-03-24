@@ -16,8 +16,8 @@ namespace Xharness {
 
 	public class TestReporterFactory : ITestReporterFactory {
 
-		public ITestReporter Create (IAppRunner appRunner, string device, ISimpleListener simpleListener, ILog log, ICrashSnapshotReporter crashReports)
-			=> new TestReporter (appRunner, device, simpleListener, log, crashReports);
+		public ITestReporter Create (IAppRunner appRunner, string device, ISimpleListener simpleListener, ILog log, ICrashSnapshotReporter crashReports, IResultParser parser)
+			=> new TestReporter (appRunner, device, simpleListener, log, crashReports, parser);
 	}
 
 	// main class that gets the result of an executed test application, parses the results and provides information
@@ -29,8 +29,6 @@ namespace Xharness {
 		const string failureMessage = "Test run failed";
 
 		public TimeSpan Timeout { get; private set; }
-		public IProcessManager ProcessManager { get; set; } = new ProcessManager ();
-		public IResultParser ResultParser { get; set; } = new XmlResultParser ();
 		public ILog CallbackLog { get; private set; }
 
 		public bool? Success { get; private set; }
@@ -44,6 +42,7 @@ namespace Xharness {
 		readonly ILogs crashLogs;
 		readonly ILog runLog;
 		readonly ICrashSnapshotReporter crashReporter;
+		readonly IResultParser resultParser;
 		readonly string deviceName;
 		bool waitedForExit = true;
 		bool launchFailure;
@@ -52,7 +51,7 @@ namespace Xharness {
 
 		readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource ();
 
-		public TestReporter (IAppRunner appRunner, string device, ISimpleListener simpleListener, ILog log, ICrashSnapshotReporter crashReports)
+		public TestReporter (IAppRunner appRunner, string device, ISimpleListener simpleListener, ILog log, ICrashSnapshotReporter crashReports, IResultParser parser)
 		{
 			runner = appRunner ?? throw new ArgumentNullException (nameof (appRunner));
 			deviceName = device; // can be null on simulators 
@@ -60,6 +59,7 @@ namespace Xharness {
 			runLog = log ?? throw new ArgumentNullException (nameof (log));
 			crashLogs = new Logs (runner.Logs.Directory);
 			crashReporter = crashReports ?? throw new ArgumentNullException (nameof (crashReports));
+			resultParser = parser ?? throw new ArgumentNullException (nameof (parser));
 			Timeout = runner.GetNewTimeout ();
 			TimeoutWatch  = new Stopwatch ();
 			CallbackLog = new CallbackLog ((line) => {
@@ -154,7 +154,7 @@ namespace Xharness {
 				var timeoutValue = launchTimedout ? runner.LaunchTimeout : Timeout.TotalSeconds;
 
 				runner.MainLog.WriteLine ($"{timeoutType} timed out after {timeoutValue} seconds");
-				return ProcessManager.KillTreeAsync (pid, runner.MainLog, true);
+				return runner.ProcessManager.KillTreeAsync (pid, runner.MainLog, true);
 		}
 
 		async Task CollectResult (Task<ProcessExecutionResult> processExecution)
@@ -259,11 +259,11 @@ namespace Xharness {
 			// from the TCP connection, we are going to fail when trying to read it and not parse it. Therefore, we are not only
 			// going to check if we are in CI, but also if the listener_log is valid.
 			var path = Path.ChangeExtension (test_log_path, "xml");
-			ResultParser.CleanXml (test_log_path, path);
+			resultParser.CleanXml (test_log_path, path);
 
-			if (ResultsUseXml && ResultParser.IsValidXml (path, out var xmlType)) {
+			if (ResultsUseXml && resultParser.IsValidXml (path, out var xmlType)) {
 				try {
-					var newFilename = ResultParser.GetXmlFilePath (path, xmlType);
+					var newFilename = resultParser.GetXmlFilePath (path, xmlType);
 
 					// at this point, we have the test results, but we want to be able to have attachments in vsts, so if the format is
 					// the right one (NUnitV3) add the nodes. ATM only TouchUnit uses V3.
@@ -278,7 +278,7 @@ namespace Xharness {
 						// add a final prefix to the file name to make sure that the VSTS test uploaded just pick
 						// the final version, else we will upload tests more than once
 						newFilename = XmlResultParser.GetVSTSFilename (newFilename);
-						ResultParser.UpdateMissingData (path, newFilename, testRunName, logFiles);
+						resultParser.UpdateMissingData (path, newFilename, testRunName, logFiles);
 					} else {
 						// rename the path to the correct value
 						File.Move (path, newFilename);
@@ -287,7 +287,7 @@ namespace Xharness {
 
 					// write the human readable results in a tmp file, which we later use to step on the logs
 					var tmpFile = Path.Combine (Path.GetTempPath (), Guid.NewGuid ().ToString ());
-					(parseResult.resultLine, parseResult.failed) = ResultParser.GenerateHumanReadableResults (path, tmpFile, xmlType);
+					(parseResult.resultLine, parseResult.failed) = resultParser.GenerateHumanReadableResults (path, tmpFile, xmlType);
 					File.Copy (tmpFile, test_log_path, true);
 					File.Delete (tmpFile);
 
@@ -361,7 +361,7 @@ namespace Xharness {
 			if (!ResultsUseXml) // nothing to do
 				return;
 			if (!string.IsNullOrEmpty (crashReason)) {
-				ResultParser.GenerateFailure (
+				resultParser.GenerateFailure (
 					runner.Logs,
 					"crash",
 					runner.AppInformation.AppName,
@@ -371,7 +371,7 @@ namespace Xharness {
 					runner.MainLog.FullPath,
 					runner.XmlJargon);
 			} else if (launchFailure) {
-				ResultParser.GenerateFailure (
+				resultParser.GenerateFailure (
 					runner.Logs,
 					"launch",
 					runner.AppInformation.AppName,
@@ -385,7 +385,7 @@ namespace Xharness {
 				// tcp connection could not be stablished. We are going to report it as an error since we have not parsed the logs, evne when the app might have
 				// not crashed. We need to check the main_log to see if we do have an tcp issue or not
 				if (await TcpConnectionFailed ()) {
-					ResultParser.GenerateFailure (
+					resultParser.GenerateFailure (
 						runner.Logs,
 						"tcp-connection",
 						runner.AppInformation.AppName,
@@ -396,7 +396,7 @@ namespace Xharness {
 						runner.XmlJargon);
 				}
 			} else if (timedout) {
-				ResultParser.GenerateFailure (
+				resultParser.GenerateFailure (
 					runner.Logs,
 					"timeout",
 					runner.AppInformation.AppName,

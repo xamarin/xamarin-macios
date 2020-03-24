@@ -1,4 +1,5 @@
 ﻿using System;
+using Xharness.Execution;
 using Xharness.Jenkins.TestTasks;
 using Xharness.Logging;
 
@@ -10,6 +11,7 @@ namespace Xharness {
 		BuildToolTask BuildTask { get; }
 		TimeSpan GetNewTimeout ();
 		double LaunchTimeout { get; }
+		IProcessManager ProcessManager { get; }
 		ILogs Logs { get; }
 		ILog MainLog { get; }
 		RunMode RunMode { get; }
