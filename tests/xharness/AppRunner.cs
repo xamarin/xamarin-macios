@@ -391,7 +391,7 @@ namespace Xharness {
 
 			if (harness.InCI) {
 				// We use the 'BUILD_REVISION' variable to detect whether we're running CI or not.
-				args.Add (new SetEnvVariableArgument ("BUILD_REVISION", Environment.GetEnvironmentVariable ("BUILD_REVISION")));
+				args.Add (new SetEnvVariableArgument ("BUILD_REVISION", "$" + Environment.GetEnvironmentVariable ("BUILD_REVISION")));
 			}
 
 			if (!harness.GetIncludeSystemPermissionTests (TestPlatform.iOS, !isSimulator))
