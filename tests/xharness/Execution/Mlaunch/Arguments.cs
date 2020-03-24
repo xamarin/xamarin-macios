@@ -230,10 +230,15 @@
 	/// <summary>
 	/// Specify which simulator to launch.
 	/// </summary>
-	public sealed class SimulatorUDIDArgument : SingleValueArgument {
-		public SimulatorUDIDArgument (string udid) : base ("device=:v2:udid", udid)
+	public sealed class SimulatorUDIDArgument : MlaunchArgument {
+		readonly string udid;
+
+		public SimulatorUDIDArgument (string udid)
 		{
+			this.udid = udid ?? throw new System.ArgumentNullException (nameof (udid));
 		}
+
+		public override string AsCommandLineArgument () => $"--device=:v2:udid={udid}";
 	}
 
 	/// <summary>
