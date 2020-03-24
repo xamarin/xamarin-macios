@@ -18,19 +18,19 @@ world: check-system
 
 .PHONY: check-system
 check-system:
-	@if [[ "x$(IOS_COMMIT_DISTANCE)" != "x$(MAC_COMMIT_DISTANCE)" ]]; then \
-		echo "$(COLOR_RED)*** The commit distance for Xamarin.iOS ($(IOS_COMMIT_DISTANCE)) and Xamarin.Mac ($(MAC_COMMIT_DISTANCE)) are different.$(COLOR_CLEAR)"; \
-		echo "$(COLOR_RED)*** To fix this problem, bump the revision (the third number) for both $(COLOR_GRAY)IOS_PACKAGE_NUMBER$(COLOR_RED) and $(COLOR_GRAY)MAC_PACKAGE_NUMBER$(COLOR_RED) in Make.versions.$(COLOR_CLEAR)"; \
+	@if [[ "x$(IOS_COMMIT_DISTANCE)" != "x$(MAC_COMMIT_DISTANCE)" || "x$(IOS_COMMIT_DISTANCE)" != "x$(TVOS_COMMIT_DISTANCE)" || "x$(IOS_COMMIT_DISTANCE)" != "x$(WATCHOS_COMMIT_DISTANCE)"  || "x$(IOS_COMMIT_DISTANCE)" != "x$(MACOS_COMMIT_DISTANCE)" ]]; then \
+		echo "$(COLOR_RED)*** The commit distance for Xamarin.iOS ($(IOS_COMMIT_DISTANCE)), Xamarin.TvOS ($(TVOS_COMMIT_DISTANCE)), Xamarin.WatchOS ($(WATCHOS_COMMIT_DISTANCE)), Xamarin.macOS ($(MACOS_COMMIT_DISTANCE)) and Xamarin.Mac ($(MAC_COMMIT_DISTANCE)) are different.$(COLOR_CLEAR)"; \
+		echo "$(COLOR_RED)*** To fix this problem, bump the revision (the third number) for $(COLOR_GRAY)IOS_PACKAGE_NUMBER$(COLOR_RED), $(COLOR_GRAY)TVOS_PACKAGE_NUMBER$(COLOR_RED), $(COLOR_GRAY)WATCHOS_PACKAGE_NUMBER$(COLOR_RED), $(COLOR_GRAY)MACOS_PACKAGE_NUMBER$(COLOR_RED) and $(COLOR_GRAY)MAC_PACKAGE_NUMBER$(COLOR_RED) in Make.versions.$(COLOR_CLEAR)"; \
 		echo "$(COLOR_RED)*** Once fixed, you need to commit the changes for them to pass this check.$(COLOR_CLEAR)"; \
 		exit 1; \
-	elif (( $(IOS_COMMIT_DISTANCE) > 999 || $(MAC_COMMIT_DISTANCE) > 999 )); then \
-		echo "$(COLOR_RED)*** The commit distance for Xamarin.iOS ($(IOS_COMMIT_DISTANCE)) and/or Xamarin.Mac ($(MAC_COMMIT_DISTANCE)) are > 999.$(COLOR_CLEAR)"; \
-		echo "$(COLOR_RED)*** To fix this problem, bump the revision (the third number) for both $(COLOR_GRAY)IOS_PACKAGE_NUMBER$(COLOR_RED) and $(COLOR_GRAY)MAC_PACKAGE_NUMBER$(COLOR_RED) in Make.versions.$(COLOR_CLEAR)"; \
+	elif (( $(IOS_COMMIT_DISTANCE) > 999 || $(MAC_COMMIT_DISTANCE) > 999 || $(TVOS_COMMIT_DISTANCE) > 999 || $(WATCHOS_COMMIT_DISTANCE) > 999 || $(MACOS_COMMIT_DISTANCE) > 999 )); then \
+		echo "$(COLOR_RED)*** The commit distance for Xamarin.iOS ($(IOS_COMMIT_DISTANCE)), Xamarin.TvOS ($(TVOS_COMMIT_DISTANCE)), Xamarin.WatchOS ($(WATCHOS_COMMIT_DISTANCE)), Xamarin.macOS ($(MACOS_COMMIT_DISTANCE)) and/or Xamarin.Mac ($(MAC_COMMIT_DISTANCE)) are > 999.$(COLOR_CLEAR)"; \
+		echo "$(COLOR_RED)*** To fix this problem, bump the revision (the third number) for $(COLOR_GRAY)IOS_PACKAGE_NUMBER$(COLOR_RED), $(COLOR_GRAY)TVOS_PACKAGE_NUMBER$(COLOR_RED), $(COLOR_GRAY)WATCHOS_PACKAGE_NUMBER$(COLOR_RED), $(COLOR_GRAY)MACOS_PACKAGE_NUMBER$(COLOR_RED) and $(COLOR_GRAY)MAC_PACKAGE_NUMBER$(COLOR_RED) in Make.versions.$(COLOR_CLEAR)"; \
 		echo "$(COLOR_RED)*** Once fixed, you need to commit the changes for them to pass this check.$(COLOR_CLEAR)"; \
 		exit 1; \
 	fi
 	@./system-dependencies.sh
-	@echo "Building Xamarin.iOS $(IOS_PACKAGE_VERSION) and Xamarin.Mac $(MAC_PACKAGE_VERSION)"
+	@echo "Building Xamarin.iOS $(IOS_PACKAGE_VERSION), Xamarin.TvOS $(TVOS_PACKAGE_VERSION), Xamarin.WatchOS $(WATCHOS_PACKAGE_VERSION) and Xamarin.Mac $(MAC_PACKAGE_VERSION)"
 
 check-permissions:
 ifdef INCLUDE_MAC

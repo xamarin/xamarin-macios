@@ -1,8 +1,11 @@
 #
-# A release branch requires updating the following two variables at the bottom of this file:
+# A release branch requires updating the following five variables at the bottom of this file:
 #
 # IOS_PACKAGE_VERSION (major/minor/revision #)
 # MAC_PACKAGE_VERSION (major/minor/revision #)
+# MACOS_PACKAGE_VERSION (major/minor/revision #)
+# TVOS_PACKAGE_VERSION (major/minor/revision #)
+# WATCHOS_PACKAGE_VERSION (major/minor/revision #)
 #
 # Update version numbers on master as well, to the next version
 #
@@ -43,5 +46,8 @@
 #   line changed in git).
 #
 
-IOS_PACKAGE_VERSION=13.19.0.$(IOS_COMMIT_DISTANCE)
-MAC_PACKAGE_VERSION=6.19.0.$(MAC_COMMIT_DISTANCE)
+IOS_PACKAGE_VERSION=13.19.1.$(IOS_COMMIT_DISTANCE)
+MAC_PACKAGE_VERSION=5.19.1.$(MAC_COMMIT_DISTANCE)
+MACOS_PACKAGE_VERSION=15.19.1.$(MAC_COMMIT_DISTANCE)
+TVOS_PACKAGE_VERSION=13.19.1.$(TVOS_COMMIT_DISTANCE)
+WATCHOS_PACKAGE_VERSION=6.19.1.$(WATCHOS_COMMIT_DISTANCE)
