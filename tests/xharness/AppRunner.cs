@@ -17,38 +17,6 @@ using Xharness.Execution.Mlaunch;
 
 namespace Xharness {
 
-	public enum RunMode {
-		Sim32,
-		Sim64,
-		Classic,
-		iOS,
-		TvOS,
-		WatchOS,
-	}
-
-	public enum Extension
-	{
-		WatchKit2,
-		TodayExtension,
-	}
-
-	public class AppInformation {
-		public string AppName { get; }
-		public string BundleIdentifier { get; }
-		public string AppPath { get; }
-		public string LaunchAppPath { get; }
-		public Extension? Extension { get; }
-
-		public AppInformation (string appName, string bundleIdentifier, string appPath, string launchAppPath, Extension? extension)
-		{
-			AppName = appName;
-			BundleIdentifier = bundleIdentifier;
-			AppPath = appPath;
-			LaunchAppPath = launchAppPath;
-			Extension = extension;
-		}
-	}
-
 	class AppRunner
 	{
 		readonly IProcessManager processManager;
@@ -60,12 +28,10 @@ namespace Xharness {
 		readonly IDeviceLogCapturerFactory deviceLogCapturerFactory;
 		readonly IResultParser resultParser;
 
-		readonly RunMode mode;
+		readonly RunMode runMode;
 		readonly bool isSimulator;
-		readonly AppRunnerTarget target;
-		readonly string projectFilePath;
+		readonly TestTarget target;
 		readonly IHarness harness;
-		readonly string buildConfiguration;
 		readonly string variation;
 		readonly double timeoutMultiplier;
 		readonly BuildToolTask buildTask;
@@ -83,7 +49,7 @@ namespace Xharness {
 
 		bool IsExtension => AppInformation.Extension.HasValue;
 		
-		public AppInformation AppInformation { get; }
+		public AppBundleInformation AppInformation { get; }
 
 		public TestExecutingResult Result { get; private set; }
 
@@ -94,6 +60,7 @@ namespace Xharness {
 		public ILogs Logs { get; }
 
 		public AppRunner (IProcessManager processManager,
+						  IAppBundleInformationParser appBundleInformationParser,
 						  ISimulatorsLoaderFactory simulatorsFactory,
 						  ISimpleListenerFactory simpleListenerFactory,
 						  IDeviceLoaderFactory devicesFactory,
@@ -101,7 +68,7 @@ namespace Xharness {
 						  ICaptureLogFactory captureLogFactory,
 						  IDeviceLogCapturerFactory deviceLogCapturerFactory,
 						  IResultParser resultParser,
-						  AppRunnerTarget target,
+						  TestTarget target,
 						  IHarness harness,
 						  ILog mainLog,
 						  ILogs logs,
@@ -115,6 +82,9 @@ namespace Xharness {
 						  string variation = null,
 						  BuildToolTask buildTask = null)
 		{
+			if (appBundleInformationParser is null)
+				throw new ArgumentNullException (nameof (appBundleInformationParser));
+
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 			this.simulatorsLoaderFactory = simulatorsFactory ?? throw new ArgumentNullException (nameof (simulatorsFactory));
 			this.listenerFactory = simpleListenerFactory ?? throw new ArgumentNullException (nameof (simpleListenerFactory));
@@ -125,9 +95,7 @@ namespace Xharness {
 			this.resultParser = resultParser ?? throw new ArgumentNullException (nameof (resultParser));
 			this.harness = harness ?? throw new ArgumentNullException (nameof (harness));
 			this.MainLog = mainLog ?? throw new ArgumentNullException (nameof (mainLog));
-			this.projectFilePath = projectFilePath ?? throw new ArgumentNullException (nameof (projectFilePath));
 			this.Logs = logs ?? throw new ArgumentNullException (nameof (logs));
-			this.buildConfiguration = buildConfiguration ?? throw new ArgumentNullException (nameof (buildConfiguration));
 			this.timeoutMultiplier = timeoutMultiplier;
 			this.deviceName = deviceName;
 			this.companionDeviceName = companionDeviceName;
@@ -137,41 +105,9 @@ namespace Xharness {
 			this.buildTask = buildTask;
 			this.target = target;
 
-			mode = target.ToRunMode ();
+			runMode = target.ToRunMode ();
 			isSimulator = target.IsSimulator ();
-			AppInformation = Initialize ();
-		}
-
-		AppInformation Initialize ()
-		{
-			var csproj = new XmlDocument ();
-			csproj.LoadWithoutNetworkAccess (projectFilePath);
-			string appName = csproj.GetAssemblyName ();
-			string info_plist_path = csproj.GetInfoPListInclude ();
-
-			var info_plist = new XmlDocument ();
-			string plistPath = Path.Combine (Path.GetDirectoryName (projectFilePath), info_plist_path.Replace ('\\', Path.DirectorySeparatorChar));
-			info_plist.LoadWithoutNetworkAccess (plistPath);
-
-			string bundleIdentifier = info_plist.GetCFBundleIdentifier ();
-
-			Extension? extension = null;
-			string extensionPointIdentifier = info_plist.GetNSExtensionPointIdentifier ();
-			if (!string.IsNullOrEmpty (extensionPointIdentifier))
-				extension = extensionPointIdentifier.ParseFromNSExtensionPointIdentifier ();
-
-			string appPath = Path.Combine (Path.GetDirectoryName (projectFilePath),
-				csproj.GetOutputPath (isSimulator ? "iPhoneSimulator" : "iPhone", buildConfiguration).Replace ('\\', Path.DirectorySeparatorChar),
-				appName + (extension != null ? ".appex" : ".app"));
-
-			if (!Directory.Exists (appPath))
-				throw new Exception (string.Format ("The app directory {0} does not exist. This is probably a bug in the test harness.", appPath));
-
-			string launchAppPath = mode == RunMode.WatchOS
-				? Directory.GetDirectories (Path.Combine (appPath, "Watch"), "*.app") [0]
-				: appPath;
-
-			return new AppInformation (appName, bundleIdentifier, appPath, launchAppPath, extension);
+			AppInformation = appBundleInformationParser.ParseFromProject (projectFilePath, target, buildConfiguration);
 		}
 
 		async Task<bool> FindSimulatorAsync ()
@@ -202,7 +138,7 @@ namespace Xharness {
 			}).Wait ();
 
 			DeviceClass [] deviceClasses;
-			switch (mode) {
+			switch (runMode) {
 			case RunMode.iOS:
 				deviceClasses = new [] { DeviceClass.iPhone, DeviceClass.iPad, DeviceClass.iPod };
 				break;
@@ -213,7 +149,7 @@ namespace Xharness {
 				deviceClasses = new [] { DeviceClass.AppleTV }; // Untested
 				break;
 			default:
-				throw new ArgumentException (nameof(mode));
+				throw new ArgumentException (nameof(runMode));
 			}
 
 			var selected = devs.ConnectedDevices.Where ((v) => deviceClasses.Contains (v.DeviceClass) && v.IsUsableForDebugging != false);
@@ -237,7 +173,7 @@ namespace Xharness {
 
 			deviceName = selected_data.Name;
 
-			if (mode == RunMode.WatchOS)
+			if (runMode == RunMode.WatchOS)
 				companionDeviceName = devs.FindCompanionDevice (MainLog, selected_data).Name;
 		}
 
@@ -262,7 +198,7 @@ namespace Xharness {
 			args.Add (new InstallAppArgument (AppInformation.AppPath));
 			args.Add (new DeviceNameArgument (companionDeviceName ?? deviceName));
 
-			if (mode == RunMode.WatchOS) {
+			if (runMode == RunMode.WatchOS) {
 				args.Add (new DeviceArgument("ios,watchos"));
 			}
 
@@ -294,7 +230,7 @@ namespace Xharness {
 			return await processManager.ExecuteCommandAsync (harness.MlaunchPath, args, MainLog, TimeSpan.FromMinutes (1));
 		}
 
-		(string resultLine, bool failed, bool crashed) ParseResult (AppInformation appInfo, string test_log_path, bool timed_out, out bool crashed)
+		(string resultLine, bool failed, bool crashed) ParseResult (AppBundleInformation appInfo, string test_log_path, bool timed_out, out bool crashed)
 		{
 			crashed = false;
 			if (!File.Exists (test_log_path)) {
@@ -366,10 +302,10 @@ namespace Xharness {
 					MainLog.WriteLine (new string ('#', 10));
 					MainLog.WriteLine ("End of xml results.");
 					if (timed_out) {
-						WrenchLog.WriteLine ($"AddSummary: <b><i>{mode} timed out</i></b><br/>");
+						WrenchLog.WriteLine ($"AddSummary: <b><i>{runMode} timed out</i></b><br/>");
 						return parseResult;
 					} else {
-						WrenchLog.WriteLine ($"AddSummary: <b><i>{mode} crashed</i></b><br/>");
+						WrenchLog.WriteLine ($"AddSummary: <b><i>{runMode} crashed</i></b><br/>");
 						MainLog.WriteLine ("Test run crashed");
 						crashed = true;
 						parseResult.crashed = true;
@@ -400,26 +336,26 @@ namespace Xharness {
 			}
 		}
 
-		public bool TestsSucceeded (AppInformation appInfo, string test_log_path, bool timed_out, out bool crashed)
+		public bool TestsSucceeded (AppBundleInformation appInfo, string test_log_path, bool timed_out, out bool crashed)
 		{
 			var (resultLine, failed, crashed_out) = ParseResult (appInfo, test_log_path, timed_out, out crashed);
 			// read the parsed logs in a human readable way
 			if (resultLine != null) {
 				var tests_run = resultLine.Replace ("Tests run: ", "");
 				if (failed) {
-					WrenchLog.WriteLine ("AddSummary: <b>{0} failed: {1}</b><br/>", mode, tests_run);
+					WrenchLog.WriteLine ("AddSummary: <b>{0} failed: {1}</b><br/>", runMode, tests_run);
 					MainLog.WriteLine ("Test run failed");
 					return false;
 				} else {
-					WrenchLog.WriteLine ("AddSummary: {0} succeeded: {1}<br/>", mode, tests_run);
+					WrenchLog.WriteLine ("AddSummary: {0} succeeded: {1}<br/>", runMode, tests_run);
 					MainLog.WriteLine ("Test run succeeded");
 					return true;
 				}
 			} else if (timed_out) {
-				WrenchLog.WriteLine ("AddSummary: <b><i>{0} timed out</i></b><br/>", mode);
+				WrenchLog.WriteLine ("AddSummary: <b><i>{0} timed out</i></b><br/>", runMode);
 				return false;
 			} else {
-				WrenchLog.WriteLine ("AddSummary: <b><i>{0} crashed</i></b><br/>", mode);
+				WrenchLog.WriteLine ("AddSummary: <b><i>{0} crashed</i></b><br/>", runMode);
 				MainLog.WriteLine ("Test run crashed");
 				crashed = true;
 				return false;
@@ -481,8 +417,8 @@ namespace Xharness {
 				args.Add (new SetEnvVariableArgument ("NUNIT_HOSTNAME", ipArg));
 			}
 
-			var listener_log = Logs.Create ($"test-{mode.ToString().ToLower()}-{Helpers.Timestamp}.log", LogType.TestLog.ToString (), timestamp: !useXmlOutput);
-			var (transport, listener, listenerTmpFile) = listenerFactory.Create (mode, MainLog, listener_log, isSimulator, true, useXmlOutput);
+			var listener_log = Logs.Create ($"test-{runMode.ToString().ToLower()}-{Helpers.Timestamp}.log", LogType.TestLog.ToString (), timestamp: !useXmlOutput);
+			var (transport, listener, listenerTmpFile) = listenerFactory.Create (runMode, MainLog, listener_log, isSimulator, true, useXmlOutput);
 
 			args.Add (new SetAppArgumentArgument ($"-transport:{transport}", true));
 			args.Add (new SetEnvVariableArgument ("NUNIT_TRANSPORT", transport.ToString ().ToUpper ()));
@@ -548,7 +484,7 @@ namespace Xharness {
 				if (!await FindSimulatorAsync ())
 					return 1;
 
-				if (mode != RunMode.WatchOS) {
+				if (runMode != RunMode.WatchOS) {
 					var stderr_tty = harness.GetStandardErrorTty ();
 					if (!string.IsNullOrEmpty (stderr_tty)) {
 						args.Add (new SetStdoutArgument(stderr_tty));
@@ -580,7 +516,7 @@ namespace Xharness {
 					WrenchLog.WriteLine ("AddFile: {0}", log.FullPath);
 				}
 
-				MainLog.WriteLine ("*** Executing {0}/{1} in the simulator ***", AppInformation.AppName, mode);
+				MainLog.WriteLine ("*** Executing {0}/{1} in the simulator ***", AppInformation.AppName, runMode);
 
 				if (EnsureCleanSimulatorState) {
 					foreach (var sim in simulators)
@@ -651,9 +587,9 @@ namespace Xharness {
 					log.StopCapture ();
 
 			} else {
-				MainLog.WriteLine ("*** Executing {0}/{1} on device '{2}' ***", AppInformation.AppName, mode, deviceName);
+				MainLog.WriteLine ("*** Executing {0}/{1} on device '{2}' ***", AppInformation.AppName, runMode, deviceName);
 
-				if (mode == RunMode.WatchOS) {
+				if (runMode == RunMode.WatchOS) {
 					args.Add (new AttachNativeDebuggerArgument ()); // this prevents the watch from backgrounding the app.
 				} else {
 					args.Add (new WaitForExitArgument ());
@@ -723,15 +659,15 @@ namespace Xharness {
 				WrenchLog.WriteLine ("AddFile: {0}", listener_log.FullPath);
 				success = TestsSucceeded (AppInformation, listener_log.FullPath, timed_out, out crashed);
 			} else if (timed_out) {
-				WrenchLog.WriteLine ("AddSummary: <b><i>{0} never launched</i></b><br/>", mode);
+				WrenchLog.WriteLine ("AddSummary: <b><i>{0} never launched</i></b><br/>", runMode);
 				MainLog.WriteLine ("Test run never launched");
 				success = false;
 			} else if (launch_failure) {
- 				WrenchLog.WriteLine ("AddSummary: <b><i>{0} failed to launch</i></b><br/>", mode);
+ 				WrenchLog.WriteLine ("AddSummary: <b><i>{0} failed to launch</i></b><br/>", runMode);
  				MainLog.WriteLine ("Test run failed to launch");
  				success = false;
 			} else {
-				WrenchLog.WriteLine ("AddSummary: <b><i>{0} crashed at startup (no log)</i></b><br/>", mode);
+				WrenchLog.WriteLine ("AddSummary: <b><i>{0} crashed at startup (no log)</i></b><br/>", runMode);
 				MainLog.WriteLine ("Test run crashed before it started (no log file produced)");
 				crashed = true;
 				success = false;
