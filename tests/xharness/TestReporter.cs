@@ -14,9 +14,15 @@ using Xharness.Utilities;
 
 namespace Xharness {
 
+	public class TestReporterFactory : ITestReporterFactory {
+
+		public ITestReporter Create (IAppRunner appRunner, string device, ISimpleListener simpleListener, ILog log, ICrashSnapshotReporter crashReports)
+			=> new TestReporter (appRunner, device, simpleListener, log, crashReports);
+	}
+
 	// main class that gets the result of an executed test application, parses the results and provides information
 	// about the success or failure of the execution.
-	public class TestResult {
+	public class TestReporter : ITestReporter {
 
 		const string timeoutMessage = "Test run timed out after {0} minute(s).";
 		const string completionMessage = "Test run completed";
@@ -46,7 +52,7 @@ namespace Xharness {
 
 		readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource ();
 
-		public TestResult (IAppRunner appRunner, string device, ISimpleListener simpleListener, ILog log, ICrashSnapshotReporter crashReports)
+		public TestReporter (IAppRunner appRunner, string device, ISimpleListener simpleListener, ILog log, ICrashSnapshotReporter crashReports)
 		{
 			runner = appRunner ?? throw new ArgumentNullException (nameof (appRunner));
 			deviceName = device; // can be null on simulators 

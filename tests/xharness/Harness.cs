@@ -611,9 +611,11 @@ namespace Xharness
 					new CrashSnapshotReporterFactory (ProcessManager, XcodeRoot, MlaunchPath),
 					new CaptureLogFactory (),
 					new DeviceLogCapturerFactory (ProcessManager, XcodeRoot, MlaunchPath),
+					new TestReporterFactory (),
 					target,
 					this,
 					HarnessLog,
+					new Logs (LogDirectory),
 					project.Path,
 					buildConfiguration);
 
@@ -639,9 +641,11 @@ namespace Xharness
 					new CrashSnapshotReporterFactory (ProcessManager, XcodeRoot, MlaunchPath),
 					new CaptureLogFactory (),
 					new DeviceLogCapturerFactory (ProcessManager, XcodeRoot, MlaunchPath),
+					new TestReporterFactory (),
 					target,
 					this,
 					HarnessLog,
+					new Logs (LogDirectory),
 					project.Path,
 					buildConfiguration);
 
@@ -665,9 +669,11 @@ namespace Xharness
 					new CrashSnapshotReporterFactory (ProcessManager, XcodeRoot, MlaunchPath),
 					new CaptureLogFactory (),
 					new DeviceLogCapturerFactory (ProcessManager, XcodeRoot, MlaunchPath),
+					new TestReporterFactory (),
 					target,
 					this,
 					HarnessLog,
+					new Logs (LogDirectory),
 					project.Path,
 					buildConfiguration);
 

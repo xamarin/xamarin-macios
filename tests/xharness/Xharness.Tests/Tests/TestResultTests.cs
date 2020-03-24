@@ -62,14 +62,14 @@ namespace Xharness.Tests.Tests {
 			return GetType ().Assembly.GetManifestResourceStream (name);
 		}
 
-		TestResult BuildTestResult ()
+		TestReporter BuildTestResult ()
 		{
 			runner.Setup (r => r.Logs).Returns (logs.Object);
 			runner.Setup (r => r.MainLog).Returns (mainLog.Object);
 			runner.Setup (r => r.AppInformation).Returns (appInformation);
 			runner.Setup (r => r.XmlJargon).Returns (XmlResultJargon.NUnitV3);
 			logs.Setup (l => l.Directory).Returns (logsDirectory);
-			return new TestResult (runner.Object, deviceName, listener.Object, runLog.Object, crashReporter.Object) {
+			return new TestReporter (runner.Object, deviceName, listener.Object, runLog.Object, crashReporter.Object) {
 				ProcessManager = processManager.Object,
 				ResultParser = parser,
 			};

@@ -1,4 +1,5 @@
 TOP = ..
+SUBDIRS=test-libraries
 
 # disabled for now: mac-test
 
