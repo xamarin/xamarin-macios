@@ -1,8 +1,35 @@
-
+# debugging code: print out all environment variables, including those passed in via yml
 Set-Location Env:
 Get-ChildItem
 
+# get combined status:
+# success only if every status is success
+# otherwise failure
 
+# url to query for combined status
+$combined_status_url = "https://api.github.com/repos/xamarin/xamarin-macios/commits/$Env:BUILD_REVISION/status"
+
+$params = @{
+    Uri = $combined_status_url
+    Headers = @{'Authorization' = ("token {0}" -f $Env:GITHUB_TOKEN)}
+    Method = 'GET'
+    ContentType = 'application/json'
+}
+
+# 
+$response = Invoke-RestMethod @params
+
+Write-Host $response
+$response | ConvertTo-Json | Write-Host
+Write-Host "^ ConvertToJson below is ConvertFromJson `n"
+
+$response | ConvertFrom-Json | Write-Host
+
+$status = $response | ConvertFrom-Json | Select-Object state
+$state = $status.state
+
+
+# post status to github
 $target_url = $Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI + "$Env:SYSTEM_TEAMPROJECT/_build/index?buildId=$Env:BUILD_BUILDID&view=ms.vss-test-web.test-result-details"
 
 ## don't need context here b/c we are combining all device tests into one post?
@@ -12,7 +39,7 @@ $target_url = $Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI + "$Env:SYSTEM_TEAMPROJECT
 # add description back in
 $json_payload = @"
 {
-    "state" : "failure",
+    "state" : "$state",
     "target_url" : "$target_url",
     "description" : "description placeholder", 
     "context" : "VSTS: AGGREGATE device tests"
@@ -37,21 +64,7 @@ Write-Host $params
 
 $response = Invoke-RestMethod @params
 
-$response | ConvertTo-Json | Write-Host
-
-$combined_status_url = "https://api.github.com/repos/xamarin/xamarin-macios/commits/$Env:BUILD_REVISION/status"
-
-$params = @{
-    Uri = $combined_status_url
-    Headers = @{'Authorization' = ("token {0}" -f $Env:GITHUB_TOKEN)}
-    Method = 'GET'
-    ContentType = 'application/json'
-}
-
-$response = Invoke-RestMethod @params
-
-Write-Host $response
-$response | ConvertTo-Json | Write-Host
+$response | ConvertFrom-Json | Write-Host
 
 
 # https://api.github.com/xamarin/xamarin-macios/commits/eea6fd1f27ba9a0ac4fa09c8e57fc87d612b6340/status
