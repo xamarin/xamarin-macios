@@ -40,7 +40,7 @@ namespace Xharness
 		public string PeriodicCommandArguments { get; set; }
 		public TimeSpan PeriodicCommandInterval { get; set; }
 		public string SdkRoot { get; set; }
-		public AppRunnerTarget Target { get; set; }
+		public TestTarget Target { get; set; }
 		public double TimeoutInMinutes { get; set; } = 15;
 		public bool UseSystemXamarinIOSMac { get; set; }
 		public int Verbosity { get; set; }
@@ -102,7 +102,7 @@ namespace Xharness
 	}
 
 	public class Harness : IHarness {
-		readonly AppRunnerTarget target;
+		readonly TestTarget target;
 		readonly string buildConfiguration = "Debug";
 
 		public HarnessAction Action { get; }
@@ -605,6 +605,7 @@ namespace Xharness
 
 			foreach (var project in IOSTestProjects) {
 				var runner = new AppRunner (ProcessManager,
+					new AppBundleInformationParser (),
 					new SimulatorsLoaderFactory (this, ProcessManager),
 					new SimpleListenerFactory (),
 					new DeviceLoaderFactory (this, ProcessManager),
@@ -635,6 +636,7 @@ namespace Xharness
 
 			foreach (var project in IOSTestProjects) {
 				var runner = new AppRunner (ProcessManager,
+					new AppBundleInformationParser (),
 					new SimulatorsLoaderFactory (this, ProcessManager),
 					new SimpleListenerFactory (),
 					new DeviceLoaderFactory (this, ProcessManager),
@@ -663,6 +665,7 @@ namespace Xharness
 
 			foreach (var project in IOSTestProjects) {
 				var runner = new AppRunner (ProcessManager,
+					new AppBundleInformationParser (),
 					new SimulatorsLoaderFactory (this, ProcessManager),
 					new SimpleListenerFactory (),
 					new DeviceLoaderFactory (this, ProcessManager),

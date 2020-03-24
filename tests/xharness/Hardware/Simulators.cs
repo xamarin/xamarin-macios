@@ -259,7 +259,7 @@ namespace Xharness.Hardware {
 			return pairs.FirstOrDefault ();
 		}
 
-		public async Task<ISimulatorDevice []> FindAsync (AppRunnerTarget target, ILog log, bool create_if_needed = true, bool min_version = false)
+		public async Task<ISimulatorDevice []> FindAsync (TestTarget target, ILog log, bool create_if_needed = true, bool min_version = false)
 		{
 			ISimulatorDevice [] simulators = null;
 
@@ -269,23 +269,23 @@ namespace Xharness.Hardware {
 			string companion_runtime = null;
 
 			switch (target) {
-			case AppRunnerTarget.Simulator_iOS32:
+			case TestTarget.Simulator_iOS32:
 				simulator_devicetype = "com.apple.CoreSimulator.SimDeviceType.iPhone-5";
 				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + (min_version ? SdkVersions.MiniOSSimulator : "10-3").Replace ('.', '-');
 				break;
-			case AppRunnerTarget.Simulator_iOS64:
+			case TestTarget.Simulator_iOS64:
 				simulator_devicetype = "com.apple.CoreSimulator.SimDeviceType." + (min_version ? "iPhone-6" : "iPhone-X");
 				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + (min_version ? SdkVersions.MiniOSSimulator : SdkVersions.MaxiOSSimulator).Replace ('.', '-');
 				break;
-			case AppRunnerTarget.Simulator_iOS:
+			case TestTarget.Simulator_iOS:
 				simulator_devicetype = "com.apple.CoreSimulator.SimDeviceType.iPhone-5";
 				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + (min_version ? SdkVersions.MiniOSSimulator : SdkVersions.MaxiOSSimulator).Replace ('.', '-');
 				break;
-			case AppRunnerTarget.Simulator_tvOS:
+			case TestTarget.Simulator_tvOS:
 				simulator_devicetype = "com.apple.CoreSimulator.SimDeviceType.Apple-TV-1080p";
 				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.tvOS-" + (min_version ? SdkVersions.MinTVOSSimulator : SdkVersions.MaxTVOSSimulator).Replace ('.', '-');
 				break;
-			case AppRunnerTarget.Simulator_watchOS:
+			case TestTarget.Simulator_watchOS:
 				simulator_devicetype = "com.apple.CoreSimulator.SimDeviceType." + (min_version ? "Apple-Watch-38mm" : "Apple-Watch-Series-3-38mm");
 				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.watchOS-" + (min_version ? SdkVersions.MinWatchOSSimulator : SdkVersions.MaxWatchOSSimulator).Replace ('.', '-');
 				companion_devicetype = "com.apple.CoreSimulator.SimDeviceType." + (min_version ? "iPhone-6" : "iPhone-X");
@@ -341,7 +341,7 @@ namespace Xharness.Hardware {
 			return available_devices.Single ((v) => v.UDID == pair.Companion);
 		}
 
-		public IEnumerable<ISimulatorDevice> SelectDevices (AppRunnerTarget target, ILog log, bool min_version)
+		public IEnumerable<ISimulatorDevice> SelectDevices (TestTarget target, ILog log, bool min_version)
 		{
 			return new SimulatorEnumerable {
 				Simulators = this,
@@ -365,7 +365,7 @@ namespace Xharness.Hardware {
 
 		class SimulatorEnumerable : IEnumerable<ISimulatorDevice>, IAsyncEnumerable {
 			public Simulators Simulators;
-			public AppRunnerTarget Target;
+			public TestTarget Target;
 			public bool MinVersion;
 			public ILog Log;
 			readonly object lock_obj = new object ();

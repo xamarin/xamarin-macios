@@ -34,11 +34,11 @@ namespace Xharness.Jenkins.TestTasks
 		{
 			var project = Path.GetFileNameWithoutExtension (ProjectFile);
 			if (project.EndsWith ("-tvos", StringComparison.Ordinal)) {
-				AppRunnerTarget = AppRunnerTarget.Simulator_tvOS;
+				AppRunnerTarget = TestTarget.Simulator_tvOS;
 			} else if (project.EndsWith ("-watchos", StringComparison.Ordinal)) {
-				AppRunnerTarget = AppRunnerTarget.Simulator_watchOS;
+				AppRunnerTarget = TestTarget.Simulator_watchOS;
 			} else {
-				AppRunnerTarget = AppRunnerTarget.Simulator_iOS;
+				AppRunnerTarget = TestTarget.Simulator_iOS;
 			}
 
 			this.simulators = simulators ?? throw new ArgumentNullException (nameof (simulators));
@@ -78,6 +78,7 @@ namespace Xharness.Jenkins.TestTasks
 
 			var clean_state = false;//Platform == TestPlatform.watchOS;
 			runner = new AppRunner (processManager,
+				new AppBundleInformationParser (),
 				new SimulatorsLoaderFactory (Harness, processManager),
 				new SimpleListenerFactory (),
 				new DeviceLoaderFactory (Harness, processManager),

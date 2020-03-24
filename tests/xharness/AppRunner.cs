@@ -15,40 +15,6 @@ using Xharness.Utilities;
 
 namespace Xharness {
 
-	public enum RunMode {
-		Sim32,
-		Sim64,
-		Classic,
-		iOS,
-		TvOS,
-		WatchOS,
-	}
-
-	public enum Extension
-	{
-		WatchKit2,
-		TodayExtension,
-	}
-
-	public class AppInformation {
-		public string AppName { get; }
-		public string Variation { get; }
-		public string BundleIdentifier { get; }
-		public string AppPath { get; }
-		public string LaunchAppPath { get; }
-		public Extension? Extension { get; }
-
-		public AppInformation (string appName, string variation, string bundleIdentifier, string appPath, string launchAppPath, Extension? extension)
-		{
-			AppName = appName;
-			Variation = variation;
-			BundleIdentifier = bundleIdentifier;
-			AppPath = appPath;
-			LaunchAppPath = launchAppPath;
-			Extension = extension;
-		}
-	}
-
 	class AppRunner : IAppRunner
 	{
 		readonly IProcessManager processManager;
@@ -60,11 +26,10 @@ namespace Xharness {
 		readonly IDeviceLogCapturerFactory deviceLogCapturerFactory;
 		readonly ITestReporterFactory testReporterFactory;
 
+		readonly RunMode runMode;
 		readonly bool isSimulator;
-		readonly AppRunnerTarget target;
-		readonly string projectFilePath;
+		readonly TestTarget target;
 		readonly IHarness harness;
-		readonly string buildConfiguration;
 		readonly string variation;
 		readonly double timeoutMultiplier;
 		readonly string logDirectory;
@@ -86,7 +51,7 @@ namespace Xharness {
 
 		bool IsExtension => AppInformation.Extension.HasValue;
 		
-		public AppInformation AppInformation { get; }
+		public AppBundleInformation AppInformation { get; }
 
 		public TestExecutingResult Result { get; private set; }
 
@@ -100,6 +65,7 @@ namespace Xharness {
 		public double LaunchTimeout => harness.LaunchTimeout;
 
 		public AppRunner (IProcessManager processManager,
+						  IAppBundleInformationParser appBundleInformationParser,
 						  ISimulatorsLoaderFactory simulatorsFactory,
 						  ISimpleListenerFactory simpleListenerFactory,
 						  IDeviceLoaderFactory devicesFactory,
@@ -107,7 +73,7 @@ namespace Xharness {
 						  ICaptureLogFactory captureLogFactory,
 						  IDeviceLogCapturerFactory deviceLogCapturerFactory,
 						  ITestReporterFactory reporterFactory,
-						  AppRunnerTarget target,
+						  TestTarget target,
 						  IHarness harness,
 						  ILog mainLog,
 						  ILogs logs,
@@ -121,6 +87,9 @@ namespace Xharness {
 						  string variation = null,
 						  BuildToolTask buildTask = null)
 		{
+			if (appBundleInformationParser is null)
+				throw new ArgumentNullException (nameof (appBundleInformationParser));
+
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 			this.simulatorsLoaderFactory = simulatorsFactory ?? throw new ArgumentNullException (nameof (simulatorsFactory));
 			this.listenerFactory = simpleListenerFactory ?? throw new ArgumentNullException (nameof (simpleListenerFactory));
@@ -131,9 +100,7 @@ namespace Xharness {
 			this.testReporterFactory = reporterFactory ?? throw new ArgumentNullException (nameof (testReporterFactory));
 			this.harness = harness ?? throw new ArgumentNullException (nameof (harness));
 			this.MainLog = mainLog ?? throw new ArgumentNullException (nameof (mainLog));
-			this.projectFilePath = projectFilePath ?? throw new ArgumentNullException (nameof (projectFilePath));
 			this.Logs = logs ?? throw new ArgumentNullException (nameof (logs));
-			this.buildConfiguration = buildConfiguration ?? throw new ArgumentNullException (nameof (buildConfiguration));
 			this.timeoutMultiplier = timeoutMultiplier;
 			this.deviceName = deviceName;
 			this.companionDeviceName = companionDeviceName;
@@ -145,39 +112,8 @@ namespace Xharness {
 
 			RunMode = target.ToRunMode ();
 			isSimulator = target.IsSimulator ();
-			AppInformation = Initialize ();
-		}
-
-		AppInformation Initialize ()
-		{
-			var csproj = new XmlDocument ();
-			csproj.LoadWithoutNetworkAccess (projectFilePath);
-			string appName = csproj.GetAssemblyName ();
-			string info_plist_path = csproj.GetInfoPListInclude ();
-
-			var info_plist = new XmlDocument ();
-			string plistPath = Path.Combine (Path.GetDirectoryName (projectFilePath), info_plist_path.Replace ('\\', Path.DirectorySeparatorChar));
-			info_plist.LoadWithoutNetworkAccess (plistPath);
-
-			string bundleIdentifier = info_plist.GetCFBundleIdentifier ();
-
-			Extension? extension = null;
-			string extensionPointIdentifier = info_plist.GetNSExtensionPointIdentifier ();
-			if (!string.IsNullOrEmpty (extensionPointIdentifier))
-				extension = extensionPointIdentifier.ParseFromNSExtensionPointIdentifier ();
-
-			string appPath = Path.Combine (Path.GetDirectoryName (projectFilePath),
-				csproj.GetOutputPath (isSimulator ? "iPhoneSimulator" : "iPhone", buildConfiguration).Replace ('\\', Path.DirectorySeparatorChar),
-				appName + (extension != null ? ".appex" : ".app"));
-
-			if (!Directory.Exists (appPath))
-				throw new Exception (string.Format ("The app directory {0} does not exist. This is probably a bug in the test harness.", appPath));
-
-			string launchAppPath = RunMode == RunMode.WatchOS
-				? Directory.GetDirectories (Path.Combine (appPath, "Watch"), "*.app") [0]
-				: appPath;
-
-			return new AppInformation (appName, variation, bundleIdentifier, appPath, launchAppPath, extension);
+			AppInformation = appBundleInformationParser.ParseFromProject (projectFilePath, target, buildConfiguration);
+			AppInformation.Variation = variation;
 		}
 
 		async Task<bool> FindSimulatorAsync ()
@@ -413,7 +349,7 @@ namespace Xharness {
 					return 1;
 
 				if (RunMode != RunMode.WatchOS) {
-					var stderr_tty = harness.GetStandardErrorTty();
+					var stderr_tty = harness.GetStandardErrorTty ();
 					if (!string.IsNullOrEmpty (stderr_tty)) {
 						args.Add ($"--stdout={stderr_tty}");
 						args.Add ($"--stderr={stderr_tty}");

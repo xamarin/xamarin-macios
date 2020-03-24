@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -23,7 +22,7 @@ namespace Xharness.Tests.Tests {
 		Mock<ILog> mainLog;
 		Mock<ILogs> logs;
 		Mock<ISimpleListener> listener;
-		AppInformation appInformation;
+		AppBundleInformation appInformation;
 		string deviceName = "Device Name";
 		string logsDirectory;
 
@@ -38,7 +37,7 @@ namespace Xharness.Tests.Tests {
 			mainLog = new Mock<ILog> ();
 			logs = new Mock<ILogs> ();
 			listener = new Mock<ISimpleListener> ();
-			appInformation = new AppInformation ("test app", "Debug", "my.id.com", "/path/to/app", "/launch/app/path", null);
+			appInformation = new AppBundleInformation ("test app", "my.id.com", "/path/to/app", "/launch/app/path", null) { Variation = "Debug" };
 			logsDirectory = Path.GetTempFileName ();
 			File.Delete (logsDirectory);
 			Directory.CreateDirectory (logsDirectory);

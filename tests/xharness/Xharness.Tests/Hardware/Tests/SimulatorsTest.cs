@@ -134,11 +134,11 @@ namespace Xharness.Tests.Hardware.Tests {
 			Assert.AreEqual (75, simulators.AvailableDevices.Count());
 		}
 
-		[TestCase (AppRunnerTarget.Simulator_iOS64, 1)]
-		[TestCase (AppRunnerTarget.Simulator_iOS32, 1)]
-		[TestCase (AppRunnerTarget.Simulator_tvOS, 1)]
-		[TestCase (AppRunnerTarget.Simulator_watchOS, 2)]
-		public async Task FindAsyncDoNotCreateTest (AppRunnerTarget target, int expected)
+		[TestCase (TestTarget.Simulator_iOS64, 1)]
+		[TestCase (TestTarget.Simulator_iOS32, 1)]
+		[TestCase (TestTarget.Simulator_tvOS, 1)]
+		[TestCase (TestTarget.Simulator_watchOS, 2)]
+		public async Task FindAsyncDoNotCreateTest (TestTarget target, int expected)
 		{
 			string processPath = null;
 			MlaunchArguments passedArguments = null;

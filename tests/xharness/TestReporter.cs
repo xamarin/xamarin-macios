@@ -239,7 +239,7 @@ namespace Xharness {
 			return (ResultLine: resultLine, Failed: failed);
 		}
 
-		async Task<(string resultLine, bool failed, bool crashed)> ParseResultFile (AppInformation appInfo, string test_log_path, bool timed_out)
+		async Task<(string resultLine, bool failed, bool crashed)> ParseResultFile (AppBundleInformation appInfo, string test_log_path, bool timed_out)
 		{
 			(string resultLine, bool failed, bool crashed) parseResult = (null, false, false);
 			if (!File.Exists (test_log_path)) {
@@ -330,7 +330,7 @@ namespace Xharness {
 			return parseResult;
 		}
 
-		async Task<(bool Succeeded, bool Crashed)> TestsSucceeded (AppInformation appInfo, string test_log_path, bool timed_out)
+		async Task<(bool Succeeded, bool Crashed)> TestsSucceeded (AppBundleInformation appInfo, string test_log_path, bool timed_out)
 		{
 			var (resultLine, failed, crashed) = await ParseResultFile (appInfo, test_log_path, timed_out);
 			// read the parsed logs in a human readable way
