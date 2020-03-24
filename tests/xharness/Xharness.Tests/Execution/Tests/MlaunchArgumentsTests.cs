@@ -49,10 +49,10 @@ namespace Xharness.Tests.Execution.Tests {
 
 					yield return new TestCaseData (arg:
 						new MlaunchArgument [] {
-							new ListDevicesArgument (listDevFile),
-							new ListSimulatorsArgument (listSimFile)
+							new SetEnvVariableArgument ("SOME_PARAM", "true"),
+							new SetEnvVariableArgument ("NUNIT_LOG_FILE", "/another space/path.txt")
 						})
-						.Returns ($"--listdev={listDevFile} --listsim={listSimFile}");
+						.Returns ($"-setenv=SOME_PARAM=true \"-setenv=NUNIT_LOG_FILE=/another space/path.txt\"");
 
 					yield return new TestCaseData (arg:
 						new MlaunchArgument [] {

@@ -187,7 +187,7 @@ namespace Xharness.Execution.Mlaunch {
 				this.variableValue = this.variableValue.ToLower ();
 		}
 
-		public override string AsCommandLineArgument () => $"-setenv={variableName}={variableValue}";
+		public override string AsCommandLineArgument () => Escape ($"-setenv={variableName}={variableValue}");
 	}
 
 	/// <summary>
