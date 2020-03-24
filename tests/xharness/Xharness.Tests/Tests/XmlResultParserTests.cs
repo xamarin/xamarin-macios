@@ -258,8 +258,8 @@ namespace Xharness.Tests
 
 			// create a path with data in it
 			var logs = new Mock<ILogs> ();
-			var tmpLogMock = new Mock<ILogFile> ();
-			var xmlLogMock = new Mock<ILogFile> ();
+			var tmpLogMock = new Mock<ILog> ();
+			var xmlLogMock = new Mock<ILog> ();
 
 			var tmpPath = Path.GetTempFileName ();
 			var finalPath = Path.GetTempFileName ();

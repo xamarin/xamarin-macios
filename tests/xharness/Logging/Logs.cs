@@ -13,7 +13,7 @@ namespace Xharness.Logging {
 		}
 
 		// Create a new log backed with a file
-		public ILogFile Create (string filename, string name, bool? timestamp = null)
+		public ILog Create (string filename, string name, bool? timestamp = null)
 		{
 			return Create (Directory, filename, name, timestamp);
 		}
@@ -21,7 +21,7 @@ namespace Xharness.Logging {
 		LogFile Create (string directory, string filename, string name, bool? timestamp = null)
 		{
 			System.IO.Directory.CreateDirectory (directory);
-			var rv = new LogFile (this, name, Path.GetFullPath (Path.Combine (directory, filename)));
+			var rv = new LogFile (name, Path.GetFullPath (Path.Combine (directory, filename)));
 			if (timestamp.HasValue)
 				rv.Timestamp = timestamp.Value;
 			Add (rv);
@@ -31,7 +31,7 @@ namespace Xharness.Logging {
 		// Adds an existing file to this collection of logs.
 		// If the file is not inside the log directory, then it's copied there.
 		// 'path' must be a full path to the file.
-		public ILogFile AddFile (string path)
+		public ILog AddFile (string path)
 		{
 			return AddFile (path, Path.GetFileName (path));
 		}
@@ -39,7 +39,7 @@ namespace Xharness.Logging {
 		// Adds an existing file to this collection of logs.
 		// If the file is not inside the log directory, then it's copied there.
 		// 'path' must be a full path to the file.
-		public ILogFile AddFile (string path, string name)
+		public ILog AddFile (string path, string name)
 		{
 			if (path == null)
 				throw new ArgumentNullException (nameof (path));
@@ -50,7 +50,7 @@ namespace Xharness.Logging {
 				path = newPath;
 			}
 
-			var log = new LogFile (this, name, path, true);
+			var log = new LogFile (name, path, true);
 			Add (log);
 			return log;
 		}
@@ -60,7 +60,7 @@ namespace Xharness.Logging {
 		{
 			if (path == null)
 				throw new ArgumentNullException (nameof (path));
-			using (var rv = new LogFile (this, description, Path.Combine (Directory, path), false)) {
+			using (var rv = new LogFile (description, Path.Combine (Directory, path), false)) {
 				Add (rv);
 				return rv.FullPath;
 			}

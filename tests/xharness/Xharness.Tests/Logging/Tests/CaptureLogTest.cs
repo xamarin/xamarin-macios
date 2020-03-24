@@ -36,7 +36,7 @@ namespace Xharness.Tests.Logging.Tests {
 		public void ConstructorNullFilePath ()
 		{
 			Assert.Throws<ArgumentNullException> (() => {
-				var captureLog = new CaptureLog (logs.Object, null, filePath, false);
+				var captureLog = new CaptureLog (null, filePath, false);
 			});
 		}
 
@@ -50,7 +50,7 @@ namespace Xharness.Tests.Logging.Tests {
 			using (var writer = new StreamWriter (stream)) {
 				writer.WriteLine (ignoredLine);
 			}
-			using (var captureLog = new CaptureLog (logs.Object, capturePath, filePath, false)) {
+			using (var captureLog = new CaptureLog (capturePath, filePath, false)) {
 				captureLog.StartCapture ();
 				using (var writer = new StreamWriter (filePath)) {
 					foreach (var line in logLines)
@@ -70,8 +70,8 @@ namespace Xharness.Tests.Logging.Tests {
 		[Test]
 		public void CaptureMissingFileTest ()
 		{
-			using (var captureLog = new CaptureLog (logs.Object, capturePath, filePath, false)) {
-				Assert.AreEqual (capturePath, captureLog.Path, "capture path");
+			using (var captureLog = new CaptureLog (capturePath, filePath, false)) {
+				Assert.AreEqual (capturePath, captureLog.FullPath, "capture path");
 				captureLog.StartCapture ();
 				captureLog.StopCapture ();
 			}
@@ -86,7 +86,7 @@ namespace Xharness.Tests.Logging.Tests {
 		public void CaptureWrongOrder ()
 		{
 			Assert.Throws<InvalidOperationException> (() => {
-				using (var captureLog = new CaptureLog (logs.Object, capturePath, filePath, false)) {
+				using (var captureLog = new CaptureLog (capturePath, filePath, false)) {
 					captureLog.StopCapture ();
 				}
 			});
@@ -96,7 +96,7 @@ namespace Xharness.Tests.Logging.Tests {
 		public void CaptureWrongOrderEntirePath ()
 		{
 			Assert.DoesNotThrow (() => {
-				using (var captureLog = new CaptureLog (logs.Object, capturePath, filePath, true)) {
+				using (var captureLog = new CaptureLog (capturePath, filePath, true)) {
 					captureLog.StopCapture ();
 				}
 			});

@@ -39,9 +39,9 @@ namespace Xharness.Tests.Execution.Tests {
 			stdoutMessage = "Hola mundo!!!";
 			stderrMessage = "Adios mundo cruel";
 			logs = new Mock<ILogs> ();
-			executionLog = new LogFile (logs.Object, "my execution log", logPath);
-			stdoutLog = new LogFile (logs.Object, "my stdout log", stdoutLogPath);
-			stderrLog = new LogFile (logs.Object, "my stderr log", stderrLogPath);
+			executionLog = new LogFile ("my execution log", logPath);
+			stdoutLog = new LogFile ("my stdout log", stdoutLogPath);
+			stderrLog = new LogFile ("my stderr log", stderrLogPath);
 			dummyProcess = Path.Combine (Path.GetDirectoryName (GetType ().Assembly.Location), "DummyTestProcess.exe");
 			manager = new ProcessManager ();
 			testProcess = new Process ();
