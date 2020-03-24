@@ -9,6 +9,7 @@ using System.Xml;
 using System.Text;
 using Xamarin;
 using Xharness.Execution;
+using Xharness.Logging;
 
 namespace Xharness
 {
@@ -153,7 +154,7 @@ namespace Xharness
 			using (var git = new Process ()) {
 				git.StartInfo.FileName = "git";
 				git.StartInfo.Arguments = $"diff-tree --no-commit-id --name-only -r {base_commit}..{head_commit}";
-				var output = new StringWriter ();
+				var output = new MemoryLog ();
 				var rv = ProcessManager.RunAsync (git, harness.HarnessLog, output, output).Result;
 				if (rv.Succeeded)
 					return output.ToString ().Split (new char [] { '\n' }, StringSplitOptions.RemoveEmptyEntries);

@@ -78,6 +78,7 @@
     <Compile Include="AppRunner.cs" />
     <Compile Include="Extension.cs" />
     <Compile Include="Logging\AggregatedLog.cs" />
+    <Compile Include="Logging\MemoryLog.cs" />
     <Compile Include="RunMode.cs" />
     <Compile Include="TestTarget.cs" />
     <Compile Include="BCLTestImporter\BCLTestImportTargetFactory.cs" />
