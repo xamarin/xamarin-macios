@@ -102,8 +102,6 @@ namespace MonoTouchFixtures.Foundation {
 			Assert.IsTrue (success, "Success");
 		}
 
-		static CustomUrlProtocol custom_url_protocol_instance;
-
 		public class CustomUrlProtocol : NSUrlProtocol, INSUrlSessionDelegate, INSUrlSessionTaskDelegate, INSUrlSessionDataDelegate {
 
 			public static int State;
@@ -130,14 +128,24 @@ namespace MonoTouchFixtures.Foundation {
 			{
 				if (State == 2)
 					State++;
-				custom_url_protocol_instance = this;
 			}
 
 			[Export ("startLoading")]
 			public override void StartLoading ()
 			{
+#if MONOMAC
+				if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 10)) {
+					if (State == 3)
+						State++;
+				} else {
+					// looks like 10.9 is not calling `initWithRequest:cachedResponse:client:`
+					if (State >= 2)
+						State = 4;
+				}
+#else
 				if (State == 3)
 					State++;
+#endif
 
 				string file = Path.Combine (NSBundle.MainBundle.ResourcePath, "basn3p08.png");
 
