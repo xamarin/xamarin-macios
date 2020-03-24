@@ -8,10 +8,11 @@ using NUnit.Framework;
 using Xharness.Execution;
 using Xharness.Execution.Mlaunch;
 using Xharness.Logging;
+using Xharness.Utilities;
 
 namespace Xharness.Tests {
 	[TestFixture]
-	public class CrashReportSnapshotTests {
+	public class CrashSnapshotReporterTests {
 		readonly string mlaunchPath = "./mlaunch";
 		string tempXcodeRoot;
 		string symbolicatePath;
@@ -67,7 +68,10 @@ namespace Xharness.Tests {
 			processManager
 				.Setup (x => x.ExecuteCommandAsync (
 					mlaunchPath,
-					It.Is<MlaunchArguments> (args => args.AsCommandLine () == $"--list-crash-reports={tempFilePath} --sdkroot={tempXcodeRoot} --devname={deviceName}"),
+					It.Is<MlaunchArguments> (args => args.AsCommandLine () ==
+						$"--list-crash-reports {StringUtils.FormatArguments( tempFilePath)} " +
+						$"--sdkroot {StringUtils.FormatArguments (tempXcodeRoot)} " +
+						$"--devname {StringUtils.FormatArguments (deviceName)}"),
 					log.Object,
 					TimeSpan.FromMinutes (1),
 					null,
@@ -78,7 +82,11 @@ namespace Xharness.Tests {
 			processManager
 				.Setup (x => x.ExecuteCommandAsync (
 					mlaunchPath,
-					It.Is<MlaunchArguments> (args => args.AsCommandLine () == $"--download-crash-report={deviceName} --download-crash-report-to={crashLogPath} --sdkroot={tempXcodeRoot} --devname={deviceName}"),
+					It.Is<MlaunchArguments> (args => args.AsCommandLine () ==
+						 $"--download-crash-report {StringUtils.FormatArguments (deviceName)} " +
+						 $"--download-crash-report-to {StringUtils.FormatArguments (crashLogPath)} " +
+						 $"--sdkroot {StringUtils.FormatArguments (tempXcodeRoot)} " +
+						 $"--devname {StringUtils.FormatArguments (deviceName)}"),
 					log.Object,
 					TimeSpan.FromMinutes (1),
 					null,
