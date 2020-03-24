@@ -1,4 +1,6 @@
-﻿namespace Xharness.Execution.Mlaunch {
+﻿using System;
+
+namespace Xharness.Execution.Mlaunch {
 
 	/// <summary>
 	/// Specify the location of Apple SDKs, default to 'xcode-select' value.
@@ -80,7 +82,7 @@
 		{
 		}
 	}
-	
+
 	/// <summary>
 	/// Specify the output format for some commands as Default.
 	/// </summary>
@@ -135,7 +137,7 @@
 		{
 		}
 	}
-	
+
 	/// <summary>
 	/// Attempt to disable memory limits for launched apps.
 	/// This is just an attempt, some or all usual limits may still be enforced.
@@ -146,9 +148,6 @@
 		}
 	}
 
-	/// <summary>
-	/// 
-	/// </summary>
 	public sealed class WaitForExitArgument : OptionArgument {
 		public WaitForExitArgument () : base ("wait-for-exit")
 		{
@@ -163,7 +162,7 @@
 
 		public SetAppArgumentArgument (string value, bool isAppArg = false)
 		{
-			this.value = value ?? throw new System.ArgumentNullException (nameof (value));
+			this.value = value ?? throw new ArgumentNullException (nameof (value));
 
 			if (isAppArg)
 				this.value = "-app-arg:" + this.value;
@@ -181,8 +180,8 @@
 
 		public SetEnvVariableArgument (string variableName, object variableValue)
 		{
-			this.variableName = variableName ?? throw new System.ArgumentNullException (nameof (variableName));
-			this.variableValue = variableValue?.ToString() ?? throw new System.ArgumentNullException (nameof (variableValue));
+			this.variableName = variableName ?? throw new ArgumentNullException (nameof (variableName));
+			this.variableValue = variableValue?.ToString () ?? throw new ArgumentNullException (nameof (variableValue));
 
 			if (variableValue is bool)
 				this.variableValue = this.variableValue.ToLower ();
@@ -208,7 +207,7 @@
 		{
 		}
 	}
-	
+
 	/// <summary>
 	/// Launch an app that is installed on device, specified by bundle identifier.
 	/// </summary>
@@ -217,7 +216,7 @@
 		{
 		}
 	}
-	
+
 	/// <summary>
 	/// Launch the specified MonoTouch.app in the simulator.
 	/// </summary>
@@ -226,7 +225,7 @@
 		{
 		}
 	}
-	
+
 	/// <summary>
 	/// Specify which simulator to launch.
 	/// </summary>
@@ -235,7 +234,7 @@
 
 		public SimulatorUDIDArgument (string udid)
 		{
-			this.udid = udid ?? throw new System.ArgumentNullException (nameof (udid));
+			this.udid = udid ?? throw new ArgumentNullException (nameof (udid));
 		}
 
 		public override string AsCommandLineArgument () => $"--device=:v2:udid={udid}";
@@ -250,8 +249,8 @@
 
 		public LaunchSimulatorExtensionArgument (string launchAppPath, string bundleId)
 		{
-			this.launchAppPath = launchAppPath ?? throw new System.ArgumentNullException (nameof (launchAppPath));
-			this.bundleId = bundleId ?? throw new System.ArgumentNullException (nameof (bundleId));
+			this.launchAppPath = launchAppPath ?? throw new ArgumentNullException (nameof (launchAppPath));
+			this.bundleId = bundleId ?? throw new ArgumentNullException (nameof (bundleId));
 		}
 
 		public override string AsCommandLineArgument () => "--launchsimbundleid " +
@@ -268,8 +267,8 @@
 
 		public LaunchDeviceExtensionArgument (string launchAppPath, string bundleId)
 		{
-			this.launchAppPath = launchAppPath ?? throw new System.ArgumentNullException (nameof (launchAppPath));
-			this.bundleId = bundleId ?? throw new System.ArgumentNullException (nameof (bundleId));
+			this.launchAppPath = launchAppPath ?? throw new ArgumentNullException (nameof (launchAppPath));
+			this.bundleId = bundleId ?? throw new ArgumentNullException (nameof (bundleId));
 		}
 
 		public override string AsCommandLineArgument () => "--launchdevbundleid " +

@@ -226,7 +226,7 @@ namespace Xharness.Tests {
 			processManager.SetReturnsDefault (Task.FromResult (processResult));
 
 			devices.Setup (x => x.ConnectedDevices).Returns (mockDevices);
-			
+
 			// Act
 			var appRunner = new AppRunner (processManager.Object,
 				appBundleInformationParser,
@@ -256,7 +256,7 @@ namespace Xharness.Tests {
 
 			processManager.Verify (x => x.ExecuteCommandAsync (
 				"/path/to/mlaunch",
-				It.Is<MlaunchArguments> (args => args.AsCommandLine() == expectedArgs),
+				It.Is<MlaunchArguments> (args => args.AsCommandLine () == expectedArgs),
 				mainLog.Object,
 				TimeSpan.FromHours (1),
 				null,
@@ -274,7 +274,7 @@ namespace Xharness.Tests {
 			processManager.SetReturnsDefault (Task.FromResult (processResult));
 
 			devices.Setup (x => x.ConnectedDevices).Returns (mockDevices.Reverse ());
-			
+
 			// Act
 			var appRunner = new AppRunner (processManager.Object,
 				appBundleInformationParser,
@@ -303,7 +303,7 @@ namespace Xharness.Tests {
 
 			processManager.Verify (x => x.ExecuteCommandAsync (
 				"/path/to/mlaunch",
-				It.Is<MlaunchArguments> (args => args.AsCommandLine() == expectedArgs),
+				It.Is<MlaunchArguments> (args => args.AsCommandLine () == expectedArgs),
 				mainLog.Object,
 				TimeSpan.FromMinutes (1),
 				null,
@@ -450,7 +450,7 @@ namespace Xharness.Tests {
 			processManager
 				.Setup (x => x.ExecuteCommandAsync (
 					mlaunchPath,
-					It.Is<MlaunchArguments> (args => args.AsCommandLine() == expectedArgs),
+					It.Is<MlaunchArguments> (args => args.AsCommandLine () == expectedArgs),
 					mainLog.Object,
 					TimeSpan.FromMinutes (harness.Timeout * 2),
 					null,
@@ -606,7 +606,7 @@ namespace Xharness.Tests {
 			processManager
 				.Setup (x => x.ExecuteCommandAsync (
 					mlaunchPath,
-					It.Is<MlaunchArguments> (args => args.AsCommandLine() == expectedArgs),
+					It.Is<MlaunchArguments> (args => args.AsCommandLine () == expectedArgs),
 					It.IsAny<ILog> (),
 					TimeSpan.FromMinutes (harness.Timeout * 2),
 					null,
@@ -703,7 +703,7 @@ namespace Xharness.Tests {
 					ips.Append (',');
 				ips.Append (ipAddresses [i].ToString ());
 			}
-			
+
 			var expectedArgs = $"--sdkroot {StringUtils.FormatArguments (xcodePath)} -v -v -argument=-connection-mode -argument=none " +
 				$"-argument=-app-arg:-autostart -setenv=NUNIT_AUTOSTART=true -argument=-app-arg:-autoexit " +
 				$"-setenv=NUNIT_AUTOEXIT=true -argument=-app-arg:-enablenetwork -setenv=NUNIT_ENABLE_NETWORK=true " +
@@ -715,7 +715,7 @@ namespace Xharness.Tests {
 			processManager
 				.Setup (x => x.ExecuteCommandAsync (
 					mlaunchPath,
-					It.Is<MlaunchArguments> (args => args.AsCommandLine() == expectedArgs),
+					It.Is<MlaunchArguments> (args => args.AsCommandLine () == expectedArgs),
 					It.IsAny<ILog> (),
 					TimeSpan.FromMinutes (harness.Timeout * 2),
 					null,

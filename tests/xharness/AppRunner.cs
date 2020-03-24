@@ -7,18 +7,17 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
-using Xharness.Hardware;
 using Xharness.Execution;
+using Xharness.Execution.Mlaunch;
+using Xharness.Hardware;
 using Xharness.Jenkins.TestTasks;
 using Xharness.Listeners;
 using Xharness.Logging;
 using Xharness.Utilities;
-using Xharness.Execution.Mlaunch;
 
 namespace Xharness {
 
-	class AppRunner
-	{
+	class AppRunner {
 		readonly IProcessManager processManager;
 		readonly ISimulatorsLoaderFactory simulatorsLoaderFactory;
 		readonly ISimpleListenerFactory listenerFactory;
@@ -48,14 +47,14 @@ namespace Xharness {
 		}
 
 		bool IsExtension => AppInformation.Extension.HasValue;
-		
+
 		public AppBundleInformation AppInformation { get; }
 
 		public TestExecutingResult Result { get; private set; }
 
 		public string FailureMessage { get; private set; }
 
-		public ILog MainLog { get; set; }	
+		public ILog MainLog { get; set; }
 
 		public ILogs Logs { get; }
 
@@ -114,8 +113,8 @@ namespace Xharness {
 		{
 			if (simulators != null)
 				return true;
-			
-			var sims = simulatorsLoaderFactory.CreateLoader();
+
+			var sims = simulatorsLoaderFactory.CreateLoader ();
 			await sims.LoadAsync (Logs.Create ($"simulator-list-{Helpers.Timestamp}.log", "Simulator list"), false, false);
 			simulators = await sims.FindAsync (target, MainLog);
 
@@ -126,14 +125,13 @@ namespace Xharness {
 		{
 			if (deviceName != null)
 				return;
-			
+
 			deviceName = Environment.GetEnvironmentVariable ("DEVICE_NAME");
 			if (!string.IsNullOrEmpty (deviceName))
 				return;
-			
+
 			var devs = devicesLoaderFactory.CreateLoader ();
-			Task.Run (async () =>
-			{
+			Task.Run (async () => {
 				await devs.LoadAsync (MainLog, false, false);
 			}).Wait ();
 
@@ -149,7 +147,7 @@ namespace Xharness {
 				deviceClasses = new [] { DeviceClass.AppleTV }; // Untested
 				break;
 			default:
-				throw new ArgumentException (nameof(runMode));
+				throw new ArgumentException (nameof (runMode));
 			}
 
 			var selected = devs.ConnectedDevices.Where ((v) => deviceClasses.Contains (v.DeviceClass) && v.IsUsableForDebugging != false);
@@ -158,8 +156,7 @@ namespace Xharness {
 				throw new NoDeviceFoundException ($"Could not find any applicable devices with device class(es): {string.Join (", ", deviceClasses)}");
 			} else if (selected.Count () > 1) {
 				selected_data = selected
-					.OrderBy ((dev) =>
-					{
+					.OrderBy ((dev) => {
 						Version v;
 						if (Version.TryParse (dev.ProductVersion, out v))
 							return v;
@@ -199,7 +196,7 @@ namespace Xharness {
 			args.Add (new DeviceNameArgument (companionDeviceName ?? deviceName));
 
 			if (runMode == RunMode.WatchOS) {
-				args.Add (new DeviceArgument("ios,watchos"));
+				args.Add (new DeviceArgument ("ios,watchos"));
 			}
 
 			var totalSize = Directory.GetFiles (AppInformation.AppPath, "*", SearchOption.AllDirectories).Select ((v) => new FileInfo (v).Length).Sum ();
@@ -214,7 +211,7 @@ namespace Xharness {
 				throw new InvalidOperationException ("Uninstalling from a simulator is not supported.");
 
 			FindDevice ();
-			
+
 			var args = new MlaunchArguments ();
 
 			if (!string.IsNullOrEmpty (harness.XcodeRoot)) {
@@ -417,7 +414,7 @@ namespace Xharness {
 				args.Add (new SetEnvVariableArgument ("NUNIT_HOSTNAME", ipArg));
 			}
 
-			var listener_log = Logs.Create ($"test-{runMode.ToString().ToLower()}-{Helpers.Timestamp}.log", LogType.TestLog.ToString (), timestamp: !useXmlOutput);
+			var listener_log = Logs.Create ($"test-{runMode.ToString ().ToLower ()}-{Helpers.Timestamp}.log", LogType.TestLog.ToString (), timestamp: !useXmlOutput);
 			var (transport, listener, listenerTmpFile) = listenerFactory.Create (runMode, MainLog, listener_log, isSimulator, true, useXmlOutput);
 
 			args.Add (new SetAppArgumentArgument ($"-transport:{transport}", true));
@@ -428,7 +425,7 @@ namespace Xharness {
 
 			args.Add (new SetAppArgumentArgument ($"-hostport:{listener.Port}", true));
 			args.Add (new SetEnvVariableArgument ("NUNIT_HOSTPORT", listener.Port));
-			
+
 			listener.Initialize ();
 			listener.StartAsync ();
 
@@ -487,13 +484,13 @@ namespace Xharness {
 				if (runMode != RunMode.WatchOS) {
 					var stderr_tty = harness.GetStandardErrorTty ();
 					if (!string.IsNullOrEmpty (stderr_tty)) {
-						args.Add (new SetStdoutArgument(stderr_tty));
-						args.Add (new SetStderrArgument(stderr_tty));
+						args.Add (new SetStdoutArgument (stderr_tty));
+						args.Add (new SetStderrArgument (stderr_tty));
 					} else {
 						var stdout_log = Logs.CreateFile ($"stdout-{Helpers.Timestamp}.log", "Standard output");
 						var stderr_log = Logs.CreateFile ($"stderr-{Helpers.Timestamp}.log", "Standard error");
-						args.Add (new SetStdoutArgument(stdout_log));
-						args.Add (new SetStderrArgument(stderr_log));
+						args.Add (new SetStdoutArgument (stdout_log));
+						args.Add (new SetStderrArgument (stderr_log));
 					}
 				}
 
@@ -663,16 +660,16 @@ namespace Xharness {
 				MainLog.WriteLine ("Test run never launched");
 				success = false;
 			} else if (launch_failure) {
- 				WrenchLog.WriteLine ("AddSummary: <b><i>{0} failed to launch</i></b><br/>", runMode);
- 				MainLog.WriteLine ("Test run failed to launch");
- 				success = false;
+				WrenchLog.WriteLine ("AddSummary: <b><i>{0} failed to launch</i></b><br/>", runMode);
+				MainLog.WriteLine ("Test run failed to launch");
+				success = false;
 			} else {
 				WrenchLog.WriteLine ("AddSummary: <b><i>{0} crashed at startup (no log)</i></b><br/>", runMode);
 				MainLog.WriteLine ("Test run crashed before it started (no log file produced)");
 				crashed = true;
 				success = false;
 			}
-				
+
 			if (!success.HasValue)
 				success = false;
 
