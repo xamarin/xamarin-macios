@@ -416,6 +416,8 @@ namespace Xharness {
 
 			var listener_log = Logs.Create ($"test-{runMode.ToString ().ToLower ()}-{Helpers.Timestamp}.log", LogType.TestLog.ToString (), timestamp: !useXmlOutput);
 			var (transport, listener, listenerTmpFile) = listenerFactory.Create (runMode, MainLog, listener_log, isSimulator, true, useXmlOutput);
+			
+			listener.Initialize ();
 
 			args.Add (new SetAppArgumentArgument ($"-transport:{transport}", true));
 			args.Add (new SetEnvVariableArgument ("NUNIT_TRANSPORT", transport.ToString ().ToUpper ()));
@@ -426,7 +428,6 @@ namespace Xharness {
 			args.Add (new SetAppArgumentArgument ($"-hostport:{listener.Port}", true));
 			args.Add (new SetEnvVariableArgument ("NUNIT_HOSTPORT", listener.Port));
 
-			listener.Initialize ();
 			listener.StartAsync ();
 
 			var cancellation_source = new CancellationTokenSource ();
