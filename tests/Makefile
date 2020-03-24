@@ -394,6 +394,10 @@ wrench-launch-external wrench-report-external:
 launch-manual-device-tests:
 	./launch-manual-device-tests.sh
 
+# This will schedule a manual sample test run for the current commit. The current commit must already have packages.
+launch-manual-sample-tests:
+	./launch-manual-sample-tests.sh
+
 else
 wrench-launch-external wrench-report-external:
 	@echo "External tests have been disabled"
