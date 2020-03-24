@@ -65,6 +65,7 @@ namespace Xharness.Tests {
 		IDeviceLoaderFactory devicesFactory;
 		ISimpleListenerFactory listenerFactory;
 		ICrashSnapshotReporterFactory snapshotReporterFactory;
+		IAppBundleInformationParser appBundleInformationParser;
 
 		[SetUp]
 		public void SetUp ()
@@ -97,15 +98,29 @@ namespace Xharness.Tests {
 			mock4.Setup (m => m.Create (It.IsAny<ILog> (), It.IsAny<ILogs> (), It.IsAny<bool> (), It.IsAny<string> ())).Returns (snapshotReporter.Object);
 			snapshotReporterFactory = mock4.Object;
 
+			var mock5 = new Mock<IAppBundleInformationParser> ();
+			mock5
+				.Setup (x => x.ParseFromProject (projectFilePath, It.IsAny<TestTarget> (), "Debug"))
+				.Returns (new AppBundleInformation (appName, appName, appPath, appPath, null));
+
+			appBundleInformationParser = mock5.Object;
+
 			mainLog = new Mock<ILog> ();
 
 			Directory.CreateDirectory (appPath);
+		}
+
+		[TearDown]
+		public void TearDown ()
+		{
+			Directory.Delete (appPath, true);
 		}
 
 		[Test]
 		public void InitializeTest ()
 		{
 			var appRunner = new AppRunner (processManager.Object,
+				appBundleInformationParser,
 				simulatorsFactory,
 				listenerFactory,
 				devicesFactory,
@@ -113,7 +128,7 @@ namespace Xharness.Tests {
 				Mock.Of<ICaptureLogFactory> (),
 				Mock.Of<IDeviceLogCapturerFactory> (),
 				Mock.Of<IResultParser> (),
-				AppRunnerTarget.Simulator_iOS64,
+				TestTarget.Simulator_iOS64,
 				Mock.Of<IHarness> (),
 				mainLog.Object,
 				logs.Object,
@@ -130,6 +145,7 @@ namespace Xharness.Tests {
 		public void InstallToSimulatorTest ()
 		{
 			var appRunner = new AppRunner (processManager.Object,
+				appBundleInformationParser,
 				simulatorsFactory,
 				listenerFactory,
 				devicesFactory,
@@ -137,7 +153,7 @@ namespace Xharness.Tests {
 				Mock.Of<ICaptureLogFactory> (),
 				Mock.Of<IDeviceLogCapturerFactory> (),
 				Mock.Of<IResultParser> (),
-				AppRunnerTarget.Simulator_iOS64,
+				TestTarget.Simulator_iOS64,
 				Mock.Of<IHarness> (),
 				mainLog.Object,
 				logs.Object,
@@ -153,6 +169,7 @@ namespace Xharness.Tests {
 		public void UninstallToSimulatorTest ()
 		{
 			var appRunner = new AppRunner (processManager.Object,
+				appBundleInformationParser,
 				simulatorsFactory,
 				listenerFactory,
 				devicesFactory,
@@ -160,7 +177,7 @@ namespace Xharness.Tests {
 				Mock.Of<ICaptureLogFactory> (),
 				Mock.Of<IDeviceLogCapturerFactory> (),
 				Mock.Of<IResultParser> (),
-				AppRunnerTarget.Simulator_iOS64,
+				TestTarget.Simulator_iOS64,
 				Mock.Of<IHarness> (),
 				mainLog.Object,
 				logs.Object,
@@ -176,6 +193,7 @@ namespace Xharness.Tests {
 		public void InstallWhenNoDevicesTest ()
 		{
 			var appRunner = new AppRunner (processManager.Object,
+				appBundleInformationParser,
 				simulatorsFactory,
 				listenerFactory,
 				devicesFactory,
@@ -183,7 +201,7 @@ namespace Xharness.Tests {
 				Mock.Of<ICaptureLogFactory> (),
 				Mock.Of<IDeviceLogCapturerFactory> (),
 				Mock.Of<IResultParser> (),
-				AppRunnerTarget.Device_iOS,
+				TestTarget.Device_iOS,
 				Mock.Of<IHarness> (),
 				mainLog.Object,
 				logs.Object,
@@ -209,6 +227,7 @@ namespace Xharness.Tests {
 			
 			// Act
 			var appRunner = new AppRunner (processManager.Object,
+				appBundleInformationParser,
 				simulatorsFactory,
 				listenerFactory,
 				devicesFactory,
@@ -216,7 +235,7 @@ namespace Xharness.Tests {
 				Mock.Of<ICaptureLogFactory> (),
 				Mock.Of<IDeviceLogCapturerFactory> (),
 				Mock.Of<IResultParser> (),
-				AppRunnerTarget.Device_iOS,
+				TestTarget.Device_iOS,
 				harness,
 				mainLog.Object,
 				logs.Object,
@@ -252,6 +271,7 @@ namespace Xharness.Tests {
 			
 			// Act
 			var appRunner = new AppRunner (processManager.Object,
+				appBundleInformationParser,
 				simulatorsFactory,
 				listenerFactory,
 				devicesFactory,
@@ -259,7 +279,7 @@ namespace Xharness.Tests {
 				Mock.Of<ICaptureLogFactory> (),
 				Mock.Of<IDeviceLogCapturerFactory> (),
 				Mock.Of<IResultParser> (),
-				AppRunnerTarget.Device_iOS,
+				TestTarget.Device_iOS,
 				harness,
 				mainLog.Object,
 				logs.Object,
@@ -300,7 +320,7 @@ namespace Xharness.Tests {
 			string simulatorLogPath = Path.Combine (Path.GetTempPath (), "simulator-logs");
 
 			simulators
-				.Setup (x => x.FindAsync (AppRunnerTarget.Simulator_tvOS, mainLog.Object, true, false))
+				.Setup (x => x.FindAsync (TestTarget.Simulator_tvOS, mainLog.Object, true, false))
 				.ReturnsAsync ((ISimulatorDevice []) null);
 
 			var listenerLogFile = new Mock<ILogFile> ();
@@ -326,6 +346,7 @@ namespace Xharness.Tests {
 
 			// Act
 			var appRunner = new AppRunner (processManager.Object,
+				appBundleInformationParser,
 				simulatorsFactory,
 				listenerFactory,
 				devicesFactory,
@@ -333,7 +354,7 @@ namespace Xharness.Tests {
 				captureLogFactory.Object,
 				Mock.Of<IDeviceLogCapturerFactory> (),
 				Mock.Of<IResultParser> (),
-				AppRunnerTarget.Simulator_tvOS,
+				TestTarget.Simulator_tvOS,
 				GetMockedHarness (),
 				mainLog.Object,
 				logs.Object,
@@ -381,7 +402,7 @@ namespace Xharness.Tests {
 			simulator.SetupGet (x => x.SystemLog).Returns (Path.Combine (simulatorLogPath, "system.log"));
 
 			simulators
-				.Setup (x => x.FindAsync (AppRunnerTarget.Simulator_iOS64, mainLog.Object, true, false))
+				.Setup (x => x.FindAsync (TestTarget.Simulator_iOS64, mainLog.Object, true, false))
 				.ReturnsAsync (new ISimulatorDevice [] { simulator.Object });
 
 			var testResultFilePath = Path.GetTempFileName ();
@@ -433,6 +454,7 @@ namespace Xharness.Tests {
 
 			// Act
 			var appRunner = new AppRunner (processManager.Object,
+				appBundleInformationParser,
 				simulatorsFactory,
 				listenerFactory,
 				devicesFactory,
@@ -440,7 +462,7 @@ namespace Xharness.Tests {
 				captureLogFactory.Object,
 				Mock.Of<IDeviceLogCapturerFactory> (), // Use for devices only
 				resultParser.Object,
-				AppRunnerTarget.Simulator_iOS64,
+				TestTarget.Simulator_iOS64,
 				harness,
 				mainLog.Object,
 				logs.Object,
@@ -496,6 +518,7 @@ namespace Xharness.Tests {
 
 			// Act
 			var appRunner = new AppRunner (processManager.Object,
+				appBundleInformationParser,
 				simulatorsFactory,
 				listenerFactory,
 				devicesFactory,
@@ -503,7 +526,7 @@ namespace Xharness.Tests {
 				Mock.Of<ICaptureLogFactory> (),
 				Mock.Of<IDeviceLogCapturerFactory> (),
 				Mock.Of<IResultParser> (),
-				AppRunnerTarget.Device_tvOS,
+				TestTarget.Device_tvOS,
 				GetMockedHarness (),
 				mainLog.Object,
 				logs.Object,
@@ -586,6 +609,7 @@ namespace Xharness.Tests {
 
 			// Act
 			var appRunner = new AppRunner (processManager.Object,
+				appBundleInformationParser,
 				simulatorsFactory,
 				listenerFactory,
 				devicesFactory,
@@ -593,7 +617,7 @@ namespace Xharness.Tests {
 				Mock.Of<ICaptureLogFactory> (), // Used for simulators only
 				deviceLogCapturerFactory.Object,
 				resultParser.Object,
-				AppRunnerTarget.Device_iOS,
+				TestTarget.Device_iOS,
 				harness,
 				mainLog.Object,
 				logs.Object,
@@ -693,6 +717,7 @@ namespace Xharness.Tests {
 
 			// Act
 			var appRunner = new AppRunner (processManager.Object,
+				appBundleInformationParser,
 				simulatorsFactory,
 				listenerFactory,
 				devicesFactory,
@@ -700,7 +725,7 @@ namespace Xharness.Tests {
 				Mock.Of<ICaptureLogFactory> (), // Used for simulators only
 				deviceLogCapturerFactory.Object,
 				resultParser.Object,
-				AppRunnerTarget.Device_iOS,
+				TestTarget.Device_iOS,
 				harness,
 				mainLog.Object,
 				logs.Object,

@@ -50,9 +50,9 @@ namespace Xharness.Hardware {
 		IEnumerable<SimDeviceType> SupportedDeviceTypes { get; }
 		IEnumerable<SimulatorDevice> AvailableDevices { get; }
 		IEnumerable<SimDevicePair> AvailableDevicePairs { get; }
-		Task<ISimulatorDevice []> FindAsync (AppRunnerTarget target, ILog log, bool create_if_needed = true, bool min_version = false);
+		Task<ISimulatorDevice []> FindAsync (TestTarget target, ILog log, bool create_if_needed = true, bool min_version = false);
 		ISimulatorDevice FindCompanionDevice (ILog log, ISimulatorDevice device);
-		IEnumerable<ISimulatorDevice> SelectDevices (AppRunnerTarget target, ILog log, bool min_version);
+		IEnumerable<ISimulatorDevice> SelectDevices (TestTarget target, ILog log, bool min_version);
 	}
 
 }

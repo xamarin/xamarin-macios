@@ -2680,6 +2680,11 @@
 		</comment>
 	</data>
 
+	<data name="MX5315" xml:space="preserve">
+		<value>The tool xcrun failed to find result when looking for the tool '{0}' (the file '{1}' does not exist). Check build log for details.
+		</value>
+	</data>
+
 	<data name="MT8018" xml:space="preserve">
 		<value>Internal consistency error. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.
 		</value>

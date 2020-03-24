@@ -11,7 +11,7 @@ namespace Xharness.Jenkins.TestTasks
 {
 	abstract class RunXITask<TDevice> : RunTestTask where TDevice : class, IDevice
 	{
-		public AppRunnerTarget AppRunnerTarget;
+		public TestTarget AppRunnerTarget;
 
 		protected AppRunner runner;
 		protected AppRunner additional_runner;
