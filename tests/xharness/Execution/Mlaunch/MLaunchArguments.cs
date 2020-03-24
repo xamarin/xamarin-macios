@@ -36,7 +36,7 @@ namespace Xharness.Execution.Mlaunch {
 		}
 
 		public override string AsCommandLineArgument () =>
-			$"--{argumentName}={Escape (argumentValue)}";
+			$"--{argumentName} {Escape (argumentValue)}";
 	}
 
 	public abstract class OptionArgument : MlaunchArgument {
