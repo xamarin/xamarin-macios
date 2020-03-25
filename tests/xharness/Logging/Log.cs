@@ -4,57 +4,31 @@ using System.Text;
 
 namespace Xharness.Logging {
 
-	public abstract class Log : TextWriter, ILog {
-		public ILogs Logs { get; private set; }
+	public abstract partial class Log : ILog {
+
+		public virtual Encoding Encoding => Encoding.UTF8;
 		public string Description { get; set; }
 		public bool Timestamp { get; set; } = true;
 
-		protected Log (ILogs logs)
+		protected Log (string description = null)
 		{
-			Logs = logs;
-		}
-
-		protected Log (ILogs logs, string description)
-		{
-			Logs = logs;
 			Description = description;
-		}
-
-		public abstract string FullPath { get; }
-
-		public virtual void WriteImpl (string value)
-		{
-			Write (Encoding.UTF8.GetBytes (value));
-		}
-
-		public virtual void Write (byte [] buffer)
-		{
-			Write (buffer, 0, buffer.Length);
 		}
 
 		public virtual void Write (byte [] buffer, int offset, int count)
 		{
-			throw new NotSupportedException ();
+			Write (Encoding.GetString (buffer, offset, count));
 		}
 
-		public virtual StreamReader GetReader ()
-		{
-			throw new NotSupportedException ();
-		}
-
-		public override void Write (char value)
-		{
-			WriteImpl (value.ToString ());
-		}
-
-		public override void Write (string value)
+		public void Write (string value)
 		{
 			if (Timestamp)
 				value = DateTime.Now.ToString ("HH:mm:ss.fffffff") + " " + value;
+
 			WriteImpl (value);
 		}
 
-		public override void WriteLine (string value)
+		public void WriteLine (string value)
 		{
 			Write (value + "\n");
 		}
@@ -63,54 +37,22 @@ namespace Xharness.Logging {
 		{
 			Write (value.ToString () + "\n");
 		}
-		public override void WriteLine (string format, params object [] args)
+
+		public void WriteLine (string format, params object [] args)
 		{
 			Write (string.Format (format, args) + "\n");
-		}
+		}		
 
-		public override string ToString ()
-		{
-			return Description;
-		}
+		public abstract string FullPath { get; }
 
-		public override void Flush ()
-		{
-		}
+		protected abstract void WriteImpl (string value);
 
-		public override Encoding Encoding {
-			get {
-				return Encoding.UTF8;
-			}
-		}
+		public abstract StreamReader GetReader ();
 
-		public static Log CreateAggregatedLog (params ILog [] logs)
-		{
-			return new AggregatedLog (logs);
-		}
+		public override string ToString () => Description;
 
-		// Log that will duplicate log output to multiple other logs.
-		class AggregatedLog : Log {
-			ILog [] logs;
+		public abstract void Flush ();
 
-			public AggregatedLog (params ILog [] logs)
-				: base (null)
-			{
-				this.logs = logs;
-			}
-
-			public override string FullPath => throw new NotImplementedException ();
-
-			public override void WriteImpl (string value)
-			{
-				foreach (var log in logs)
-					log.WriteImpl (value);
-			}
-
-			public override void Write (byte [] buffer, int offset, int count)
-			{
-				foreach (var log in logs)
-					log.Write (buffer, offset, count);
-			}
-		}
+		public abstract void Dispose ();
 	}
 }

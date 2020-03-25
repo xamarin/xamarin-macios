@@ -248,7 +248,7 @@ namespace Xharness.Tests {
 			// Verify
 			Assert.AreEqual (1, result.ExitCode);
 
-			var expectedArgs = $"-v -v -v --installdev={StringUtils.FormatArguments (appPath)} --devname=\"Test iPad\"";
+			var expectedArgs = $"-v -v -v --installdev {StringUtils.FormatArguments (appPath)} --devname \"Test iPad\"";
 
 			processManager.Verify (x => x.ExecuteCommandAsync (
 				It.Is<MlaunchArguments> (args => args.AsCommandLine() == expectedArgs),
@@ -290,7 +290,7 @@ namespace Xharness.Tests {
 			// Verify
 			Assert.AreEqual (3, result.ExitCode);
 
-			var expectedArgs = $"-v -v --uninstalldevbundleid={StringUtils.FormatArguments (appName)} --devname=\"Test iPad\"";
+			var expectedArgs = $"-v -v --uninstalldevbundleid {StringUtils.FormatArguments (appName)} --devname \"Test iPad\"";
 
 			processManager.Verify (x => x.ExecuteCommandAsync (
 				It.Is<MlaunchArguments> (args => args.AsCommandLine() == expectedArgs),
@@ -322,7 +322,7 @@ namespace Xharness.Tests {
 				.Setup (x => x.FindAsync (TestTarget.Simulator_tvOS, mainLog.Object, true, false))
 				.ReturnsAsync ((ISimulatorDevice []) null);
 
-			var listenerLogFile = new Mock<ILogFile> ();
+			var listenerLogFile = new Mock<ILog> ();
 
 			logs
 				.Setup (x => x.Create (It.IsAny<string> (), "TestLog", It.IsAny<bool> ()))
@@ -336,7 +336,6 @@ namespace Xharness.Tests {
 			var captureLogFactory = new Mock<ICaptureLogFactory> ();
 			captureLogFactory
 				.Setup (x => x.Create (
-					logs.Object,
 					Path.Combine (logs.Object.Directory, "tvos.log"),
 					"/path/to/simulator.log",
 					true,
@@ -419,7 +418,7 @@ namespace Xharness.Tests {
 				.ReturnsAsync (new ISimulatorDevice [] { simulator.Object });
 
 			var testResultFilePath = Path.GetTempFileName ();
-			var listenerLogFile = Mock.Of<ILogFile> (x => x.FullPath == testResultFilePath);
+			var listenerLogFile = Mock.Of<ILog> (x => x.FullPath == testResultFilePath);
 			File.WriteAllLines (testResultFilePath, new [] { "Some result here", "Tests run: 124", "Some result there" });
 
 			logs
@@ -434,7 +433,6 @@ namespace Xharness.Tests {
 			var captureLogFactory = new Mock<ICaptureLogFactory> ();
 			captureLogFactory
 				.Setup (x => x.Create (
-					logs.Object,
 					Path.Combine (logs.Object.Directory, simulator.Object.Name + ".log"),
 					simulator.Object.SystemLog,
 					true,
@@ -501,10 +499,6 @@ namespace Xharness.Tests {
 			// Verify
 			Assert.AreEqual (0, result);
 
-			mainLog.Verify (x => x.WriteLine ("Test run started"));
-			mainLog.Verify (x => x.WriteLine ("Test run completed"));
-			mainLog.Verify (x => x.WriteLine ("Test run succeeded"));
-
 			simpleListener.Verify (x => x.Initialize (), Times.AtLeastOnce);
 			simpleListener.Verify (x => x.StartAsync (), Times.AtLeastOnce);
 			simpleListener.Verify (x => x.Cancel (), Times.AtLeastOnce);
@@ -531,7 +525,7 @@ namespace Xharness.Tests {
 				.Setup (x => x.Create (mainLog.Object, It.IsAny<ILogs> (), false, null))
 				.Returns (snapshotReporter.Object);
 
-			var listenerLogFile = new Mock<ILogFile> ();
+			var listenerLogFile = new Mock<ILog> ();
 
 			logs
 				.Setup (x => x.Create (It.IsAny<string> (), "TestLog", It.IsAny<bool> ()))
@@ -575,11 +569,11 @@ namespace Xharness.Tests {
 				.Setup (x => x.Create (mainLog.Object, It.IsAny<ILogs> (), true, "Test iPad"))
 				.Returns (snapshotReporter.Object);
 
-			var deviceSystemLog = new Mock<ILogFile> ();
+			var deviceSystemLog = new Mock<ILog> ();
 			deviceSystemLog.SetupGet (x => x.FullPath).Returns (Path.GetTempFileName ());
 
 			var testResultFilePath = Path.GetTempFileName ();
-			var listenerLogFile = Mock.Of<ILogFile> (x => x.FullPath == testResultFilePath);
+			var listenerLogFile = Mock.Of<ILog> (x => x.FullPath == testResultFilePath);
 			File.WriteAllLines (testResultFilePath, new [] { "Some result here", "Some result there", "Tests run: 3" });
 
 			logs
@@ -607,7 +601,7 @@ namespace Xharness.Tests {
 				ips.Append (ipAddresses [i].ToString ());
 			}
 
-			var expectedArgs = $"--sdkroot {StringUtils.FormatArguments (xcodePath)} -v -v -argument=-connection-mode -argument=none " +
+			var expectedArgs = $"-v -v -argument=-connection-mode -argument=none " +
 				$"-argument=-app-arg:-autostart -setenv=NUNIT_AUTOSTART=true -argument=-app-arg:-autoexit " +
 				$"-setenv=NUNIT_AUTOEXIT=true -argument=-app-arg:-enablenetwork -setenv=NUNIT_ENABLE_NETWORK=true " +
 				$"-setenv=DISABLE_SYSTEM_PERMISSION_TESTS=1 -argument=-app-arg:-hostname:{ips} -setenv=NUNIT_HOSTNAME={ips} " +
@@ -627,18 +621,18 @@ namespace Xharness.Tests {
 			var xmlResultFile = Path.ChangeExtension (testResultFilePath, "xml");
 			var testReporterFactory = new Mock<ITestReporterFactory> ();
 			var testReporter = new Mock<ITestReporter> ();
-			testReporterFactory.Setup (f => f.Create (
-				It.IsAny<IAppRunner> (),
-				It.IsAny<string> (),
-				It.IsAny<ISimpleListener> (),
-				It.IsAny<ILog> (),
-				It.IsAny<ICrashSnapshotReporter> (),
-				It.IsAny<IResultParser> ())).Returns (testReporter.Object);
+			testReporterFactory
+				.Setup (f => f.Create (
+					It.IsAny<IAppRunner> (),
+					"Test iPad",
+					It.IsAny<ISimpleListener> (),
+					mainLog.Object,
+					snapshotReporter.Object,
+					It.IsAny<IResultParser> ()))
+				.Returns (testReporter.Object);
 			testReporter.Setup (r => r.Timeout).Returns (TimeSpan.FromMinutes (harness.Timeout * 2));
 			testReporter.Setup (r => r.TimeoutWatch).Returns (new System.Diagnostics.Stopwatch ());
-			testReporter.Setup (r => r.ParseResult ()).Returns (() => {
-				return Task.FromResult<(TestExecutingResult, string)> ((TestExecutingResult.Succeeded, null));
-			});
+			testReporter.Setup (r => r.ParseResult ()).Returns (() => Task.FromResult<(TestExecutingResult, string)> ((TestExecutingResult.Succeeded, null)));
 			testReporter.Setup (r => r.Success).Returns (true);
 
 			// Act
@@ -690,11 +684,11 @@ namespace Xharness.Tests {
 				.Setup (x => x.Create (mainLog.Object, It.IsAny<ILogs> (), true, "Test iPad"))
 				.Returns (snapshotReporter.Object);
 
-			var deviceSystemLog = new Mock<ILogFile> ();
+			var deviceSystemLog = new Mock<ILog> ();
 			deviceSystemLog.SetupGet (x => x.FullPath).Returns (Path.GetTempFileName ());
 
 			var testResultFilePath = Path.GetTempFileName ();
-			var listenerLogFile = Mock.Of<ILogFile> (x => x.FullPath == testResultFilePath);
+			var listenerLogFile = Mock.Of<ILog> (x => x.FullPath == testResultFilePath);
 			File.WriteAllLines (testResultFilePath, new [] { "Some result here", "[FAIL] This test failed", "Some result there", "Tests run: 3" });
 
 			logs
@@ -722,7 +716,7 @@ namespace Xharness.Tests {
 				ips.Append (ipAddresses [i].ToString ());
 			}
 
-			var expectedArgs = $"--sdkroot {StringUtils.FormatArguments (xcodePath)} -v -v -argument=-connection-mode -argument=none " +
+			var expectedArgs = $"-v -v -argument=-connection-mode -argument=none " +
 				$"-argument=-app-arg:-autostart -setenv=NUNIT_AUTOSTART=true -argument=-app-arg:-autoexit " +
 				$"-setenv=NUNIT_AUTOEXIT=true -argument=-app-arg:-enablenetwork -setenv=NUNIT_ENABLE_NETWORK=true " +
 				$"-setenv=DISABLE_SYSTEM_PERMISSION_TESTS=1 -argument=-app-arg:-hostname:{ips} -setenv=NUNIT_HOSTNAME={ips} " +
@@ -742,13 +736,15 @@ namespace Xharness.Tests {
 			var xmlResultFile = Path.ChangeExtension (testResultFilePath, "xml");
 			var testReporterFactory = new Mock<ITestReporterFactory> ();
 			var testReporter = new Mock<ITestReporter> ();
-			testReporterFactory.Setup (f => f.Create (
-				It.IsAny<IAppRunner> (),
-				It.IsAny<string> (),
-				It.IsAny<ISimpleListener> (),
-				It.IsAny<ILog> (),
-				It.IsAny<ICrashSnapshotReporter> (),
-				It.IsAny<IResultParser> ())).Returns (testReporter.Object);
+			testReporterFactory
+				.Setup (f => f.Create (
+					It.IsAny<IAppRunner> (),
+					"Test iPad",
+					It.IsAny<ISimpleListener> (),
+					mainLog.Object,
+					snapshotReporter.Object,
+					It.IsAny<IResultParser> ()))
+				.Returns (testReporter.Object);
 			testReporter.Setup (r => r.Timeout).Returns (TimeSpan.FromMinutes (harness.Timeout * 2));
 			testReporter.Setup (r => r.TimeoutWatch).Returns (new System.Diagnostics.Stopwatch ());
 			testReporter.Setup (r => r.ParseResult ()).Returns (() => {
@@ -780,10 +776,6 @@ namespace Xharness.Tests {
 			Assert.AreEqual (1, result);
 
 			processManager.VerifyAll ();
-
-			mainLog.Verify (x => x.WriteLine ("Test run started"));
-			mainLog.Verify (x => x.WriteLine ("Test run completed"));
-			mainLog.Verify (x => x.WriteLine ("Test run failed"));
 
 			simpleListener.Verify (x => x.Initialize (), Times.AtLeastOnce);
 			simpleListener.Verify (x => x.StartAsync (), Times.AtLeastOnce);

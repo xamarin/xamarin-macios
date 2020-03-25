@@ -36,27 +36,16 @@ namespace Xharness.Tests.Logging.Tests {
 		[Test]
 		public void ConstructorTest ()
 		{
-			using (var log = new LogFile (logs.Object, description, path)) {
+			using (var log = new LogFile (description, path)) {
 				Assert.AreEqual (description, log.Description, "description");
 				Assert.AreEqual (path, log.FullPath, "path");
-				Assert.AreSame (logs.Object, log.Logs, "logs");
 			}
-		}
-
-		[Test]
-		public void ConstructorNullILogsTest ()
-		{
-			Assert.DoesNotThrow (() => {
-#pragma warning disable CS0642 // Possible mistaken empty statement
-				using (var log = new LogFile (null, description, path)) ;
-#pragma warning restore CS0642 // Possible mistaken empty statement
-			});
 		}
 
 		[Test]
 		public void ConstructorNullPathTest ()
 		{
-			Assert.Throws<ArgumentNullException> (() => { var log = new LogFile (logs.Object, description, null); });
+			Assert.Throws<ArgumentNullException> (() => { var log = new LogFile (description, null); });
 		}
 
 		[Test]
@@ -64,7 +53,7 @@ namespace Xharness.Tests.Logging.Tests {
 		{
 			Assert.DoesNotThrow (() => {
 #pragma warning disable CS0642 // Possible mistaken empty statement
-				using (var log = new LogFile (logs.Object, null, path)) ;
+				using (var log = new LogFile (null, path)) ;
 #pragma warning restore CS0642 // Possible mistaken empty statement
 			});
 		}
@@ -80,7 +69,7 @@ namespace Xharness.Tests.Logging.Tests {
 			using (var writer = new StreamWriter (stream)) {
 				writer.WriteLine (oldLine);
 			}
-			using (var log = new LogFile (logs.Object, description, path)) {
+			using (var log = new LogFile (description, path)) {
 				log.WriteLine (newLine);
 				log.Flush ();
 			}
@@ -110,7 +99,7 @@ namespace Xharness.Tests.Logging.Tests {
 			using (var writer = new StreamWriter (stream)) {
 				writer.WriteLine (oldLine);
 			}
-			using (var log = new LogFile (logs.Object, description, path, false)) {
+			using (var log = new LogFile (description, path, false)) {
 				log.WriteLine (newLine);
 				log.Flush ();
 			}

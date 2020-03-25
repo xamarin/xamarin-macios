@@ -13,7 +13,6 @@ using Xharness.Jenkins.TestTasks;
 using Xharness.Listeners;
 using Xharness.Logging;
 using Xharness.Utilities;
-using Xharness.Execution.Mlaunch;
 
 namespace Xharness {
 
@@ -352,7 +351,7 @@ namespace Xharness {
 					bool isCompanion = sim != simulator;
 
 					var logDescription = isCompanion ? LogType.CompanionSystemLog.ToString () : LogType.SystemLog.ToString ();
-					var log = captureLogFactory.Create (Logs,
+					var log = captureLogFactory.Create (
 						Path.Combine (Logs.Directory, sim.Name + ".log"),
 						sim.SystemLog,
 						harness.Action != HarnessAction.Jenkins,

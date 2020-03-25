@@ -194,10 +194,12 @@ namespace Xharness.Hardware {
 					return false;
 				device = unPairedDevices.First ();
 			}
+
 			log.WriteLine ($"Creating device pair for '{device.Name}' and '{companion_device.Name}'");
+
 			var capturedLog = new StringBuilder ();
 			var pairLog = new CallbackLog ((string value) => {
-				log.WriteImpl (value);
+				log.Write (value);
 				capturedLog.Append (value);
 			});
 			var rv = await processManager.ExecuteXcodeCommandAsync ("simctl", new [] { "pair", device.UDID, companion_device.UDID }, pairLog, TimeSpan.FromMinutes (1));

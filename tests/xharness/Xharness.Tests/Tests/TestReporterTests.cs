@@ -294,7 +294,7 @@ namespace Xharness.Tests.Tests {
 			runLog.Setup (l => l.GetReader ()).Returns (new StreamReader (GetRunLogSample ()));
 
 			var failurePath = Path.Combine (logsDirectory, "my-failure.xml");
-			var failureLog = new Mock<ILogFile> ();
+			var failureLog = new Mock<ILog> ();
 			failureLog.Setup (l => l.FullPath).Returns (failurePath);
 			logs.Setup (l => l.Create (It.IsAny<string> (), It.IsAny<string> (), null)).Returns (failureLog.Object);
 
