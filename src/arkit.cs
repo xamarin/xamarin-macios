@@ -110,6 +110,8 @@ namespace ARKit {
 		ResetTracking = 1 << 0,
 		RemoveExistingAnchors = 1 << 1,
 		StopTrackedRaycasts = 1 << 2,
+		[iOS (13,4)]
+		ResetSceneReconstruction = (1 << 3),
 	}
 
 	[iOS (11,0)]
@@ -955,6 +957,15 @@ namespace ARKit {
 		[iOS (13,0)]
 		[Export ("userFaceTrackingEnabled")]
 		bool UserFaceTrackingEnabled { [Bind ("userFaceTrackingEnabled")] get; set; }
+
+		[iOS (13,4)]
+		[Static]
+		[Export ("supportsSceneReconstruction:")]
+		bool SupportsSceneReconstruction (ARSceneReconstruction sceneReconstruction);
+
+		[iOS (13,4)]
+		[Export ("sceneReconstruction", ArgumentSemantic.Assign)]
+		ARSceneReconstruction SceneReconstruction { get; set; }
 	}
 
 	[iOS (11,0)]
@@ -1966,6 +1977,115 @@ namespace ARKit {
 
 		// [Export ("initWithTransform:")] marked as NS_UNAVAILABLE
 		// [Export ("initWithName:")] marked as NS_UNAVAILABLE
+	}
+
+	[iOS (13,4)]
+	[Native]
+	[Flags]
+	enum ARSceneReconstruction : ulong {
+		None = 0,
+		Mesh = 1,
+		MeshWithClassification = (1 << 1) | (1 << 0),
+	}
+
+	[iOS (13,4)]
+	[BaseType (typeof (ARAnchor))]
+	[DisableDefaultCtor]
+	interface ARMeshAnchor {
+
+		// Inlined from 'ARAnchorCopying' protocol (we can't have constructors in interfaces)
+		[Export ("initWithAnchor:")]
+		IntPtr Constructor (ARAnchor anchor);
+
+		// [Export ("initWithTransform:")] marked as NS_UNAVAILABLE
+		// [Export ("initWithName:")] marked as NS_UNAVAILABLE
+
+		[Export ("geometry")]
+		ARMeshGeometry Geometry { get; }
+	}
+
+	[iOS (13,4)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface ARGeometrySource : NSSecureCoding {
+
+		[Export ("buffer", ArgumentSemantic.Strong)]
+		IMTLBuffer Buffer { get; }
+
+		[Export ("count")]
+		nint Count { get; }
+
+		[Export ("format", ArgumentSemantic.Assign)]
+		MTLVertexFormat Format { get; }
+
+		[Export ("componentsPerVector")]
+		nint ComponentsPerVector { get; }
+
+		[Export ("offset")]
+		nint Offset { get; }
+
+		[Export ("stride")]
+		nint Stride { get; }
+	}
+
+	[iOS (13,4)]
+	[Native]
+	enum ARGeometryPrimitiveType : long {
+		Line,
+		Triangle,
+	}
+
+	[iOS (13,4)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface ARGeometryElement : NSSecureCoding {
+
+		[Export ("buffer", ArgumentSemantic.Strong)]
+		IMTLBuffer Buffer { get; }
+
+		[Export ("count")]
+		nint Count { get; }
+
+		[Export ("bytesPerIndex")]
+		nint BytesPerIndex { get; }
+
+		[Export ("indexCountPerPrimitive")]
+		nint IndexCountPerPrimitive { get; }
+
+		[Export ("primitiveType", ArgumentSemantic.Assign)]
+		ARGeometryPrimitiveType PrimitiveType { get; }
+	}
+
+	[iOS (13,4)]
+	[Native]
+	enum ARMeshClassification : long {
+		None,
+		Wall,
+		Floor,
+		Ceiling,
+		Table,
+		Seat,
+		Window,
+		Door,
+	}
+
+	[iOS (13,4)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface ARMeshGeometry : NSSecureCoding {
+
+		[Export ("vertices", ArgumentSemantic.Strong)]
+		ARGeometrySource Vertices { get; }
+
+		[Export ("normals", ArgumentSemantic.Strong)]
+		ARGeometrySource Normals { get; }
+
+		[Export ("faces", ArgumentSemantic.Strong)]
+		ARGeometryElement Faces { get; }
+
+		[Export ("classification", ArgumentSemantic.Strong)]
+		[NullAllowed]
+		ARGeometrySource Classification { get; }
 	}
 }
 
