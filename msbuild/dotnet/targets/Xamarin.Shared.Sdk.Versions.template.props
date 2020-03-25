@@ -7,15 +7,15 @@
 		<!-- tvOSPackageVersion:    @TVOS_PACKAGE_VERSION_MAJOR@.@TVOS_PACKAGE_VERSION_MINOR@.@TVOS_PACKAGE_VERSION_REV@-alpha.@TVOS_COMMIT_DISTANCE@+sha.@CURRENT_HASH@ -->
 		<!-- watchOSPackageVersion: @WATCHOS_PACKAGE_VERSION_MAJOR@.@WATCHOS_PACKAGE_VERSION_MINOR@.@WATCHOS_PACKAGE_VERSION_REV@-alpha.@WATCHOS_COMMIT_DISTANCE@+sha.@CURRENT_HASH@ -->
 		<_iOSPackageVersionMajor>@IOS_PACKAGE_VERSION_MAJOR@</_iOSPackageVersionMajor>
-		<_iOSPackageVersionMajor>@IOS_PACKAGE_VERSION_MINOR@</_iOSPackageVersionMajor>
+		<_iOSPackageVersionMinor>@IOS_PACKAGE_VERSION_MINOR@</_iOSPackageVersionMinor>
 		<_iOSPackageVersionRev>@IOS_PACKAGE_VERSION_REV@</_iOSPackageVersionRev>
 		<_iOSCommitDistance>@IOS_COMMIT_DISTANCE@</_iOSCommitDistance>
 		<_tvOSPackageVersionMajor>@TVOS_PACKAGE_VERSION_MAJOR@</_tvOSPackageVersionMajor>
-		<_tvOSPackageVersionMajor>@TVOS_PACKAGE_VERSION_MINOR@</_tvOSPackageVersionMajor>
+		<_tvosOSPackageVersionMinor>@TVOS_PACKAGE_VERSION_MINOR@</_tvosOSPackageVersionMinor>
 		<_tvOSPackageVersionRev>@TVOS_PACKAGE_VERSION_REV@</_tvOSPackageVersionRev>
 		<_tvOSCommitDistance>@TVOS_COMMIT_DISTANCE@</_tvOSCommitDistance>
 		<_watchOSPackageVersionMajor>@WATCHOS_PACKAGE_VERSION_MAJOR@</_watchOSPackageVersionMajor>
-		<_watchOSPackageVersionMajor>@WATCHOS_PACKAGE_VERSION_MINOR@</_watchOSPackageVersionMajor>
+		<_watchOSPackageVersionMinor>@WATCHOS_PACKAGE_VERSION_MINOR@</_watchOSPackageVersionMinor>
 		<_watchOSPackageVersionRev>@WATCHOS_PACKAGE_VERSION_REV@</_watchOSPackageVersionRev>
 		<_watchOSCommitDistance>@WATCHOS_COMMIT_DISTANCE@</_watchOSCommitDistance>
 		<_macOSPackageVersionMajor>@MACOS_PACKAGE_VERSION_MAJOR@</_macOSPackageVersionMajor>
@@ -25,7 +25,7 @@
 		<CurrentBranch>@CURRENT_BRANCH@</CurrentBranch>
 		<CurrentHash>@CURRENT_HASH@</CurrentHash>
 
-		<_iOSShortPackageVersion>$(_iOSPackageVersionMajor).$(_iOSPackageVersionMajor).$(_iOSPackageVersionRev)</_iOSShortPackageVersion>
+		<_iOSShortPackageVersion>$(_iOSPackageVersionMajor).$(_iOSPackageVersionMinor).$(_iOSPackageVersionRev)</_iOSShortPackageVersion>
 		<_macOSShortPackageVersion>$(_macOSPackageVersionMajor).$(_macOSPackageVersionMinor).$(_macOSPackageVersionRev)</_macOSShortPackageVersion>
 		<_tvosOSShortPackageVersion>$(_tvosOSPackageVersionMajor).$(_tvosOSPackageVersionMinor).$(_tvosOSPackageVersionRev)</_tvosOSShortPackageVersion>
 		<_watchOSShortPackageVersion>$(_watchOSPackageVersionMajor).$(_watchOSPackageVersionMinor).$(_watchOSPackageVersionRev)</_watchOSShortPackageVersion>

@@ -138,6 +138,7 @@ targets/%.props: targets/%.template.props Makefile $(TOP)/Make.config.inc
 
 TEMPLATED_FILES = \
 	targets/Xamarin.Shared.Sdk.Versions.props \
+	targets/Xamarin.Shared.Legacy.Sdk.Versions.props \
 
 all-local:: $(TARGETS)
 
@@ -150,15 +151,14 @@ pack-simple: prepare
 	$(Q) mkdir -p nupkgs
 	$(Q) $(MAKE) pack-iOS ref-pack-iOS
 
-
-ref-pack-%: $(TEMPLATED_FILES)
+ref-pack-%: prepare $(TEMPLATED_FILES)
 	$(Q) rm -Rf $(TEST_FEED_PATH)/xamarin.$(shell echo $* | tr '[:upper:]' '[:lower:]').app.ref
 	$(Q) rm -f nupkgs/Xamarin.$*.App.Ref.*.nupkg
 	$(if $(V),,@echo "PACK     nupkgs/Xamarin.$*.App.Ref.nupkg";) $(DOTNET) pack package/$*/Xamarin.$*.App.ref.csproj --output nupkgs $(DOTNET_PACK_VERBOSITY)
 	$(if $(V),,@echo "ADD      nupkgs/Xamarin.$*.App.Ref.nupkg";) nuget add nupkgs/Xamarin.$*.App.Ref.*nupkg -source $(TEST_FEED_PATH) $(NUGET_VERBOSITY)
 	$(Q) echo "Created: $$(ls -1 nupkgs/Xamarin.$*.App.Ref.*nupkg)"
 
-pack-%: $(TEMPLATED_FILES)
+pack-%: prepare $(TEMPLATED_FILES)
 	$(Q) rm -Rf $(TEST_FEED_PATH)/xamarin.$(shell echo $* | tr '[:upper:]' '[:lower:]').sdk
 	$(Q) rm -f nupkgs/Xamarin.$*.Sdk.*.nupkg
 	$(if $(V),,@echo "PACK     nupkgs/Xamarin.$*.Sdk.nupkg";) $(DOTNET) pack package/$*/Xamarin.$*.csproj --output nupkgs $(DOTNET_PACK_VERBOSITY)
@@ -174,7 +174,7 @@ test/NuGet.config: $(TOP)/NuGet.config
 	$(Q) nuget sources add -Name local-dotnet-feed -Source $(PWD)/$(TEST_FEED_PATH) -ConfigFile $@.tmp
 	$(Q) mv $@.tmp $@
 
-test/global.json: Makefile $(TEMPLATED_FILES) targets/Xamarin.Shared.Legacy.Sdk.Versions.props
+test/global.json: Makefile $(TEMPLATED_FILES)
 	$(Q_GEN) \
 		CURRENT_HASH=$(shell grep '<CurrentHash>' targets/Xamarin.Shared.Legacy.Sdk.Versions.props | sed -e 's/<[/]*CurrentHash>//g' -e 's/[[:space:]]//g'); \
 		export IOS_PACKAGE_VERSION='$(shell     grep iOSPackageVersion:     targets/Xamarin.Shared.Sdk.Versions.props | sed -e 's/.*iOSPackageVersion:[[:space:]]*//'     -e 's/[[:space:]]*-->.*//')'; \

@@ -98,7 +98,7 @@
   </ItemGroup>
 
    <!-- Default References -->
-  <ItemGroup Condition="'$(DisableImplicitFrameworkReferences)' != 'true'">
+  <ItemGroup Condition="'$(XamarinReplaceBuildTarget)' != 'false' And '$(DisableImplicitFrameworkReferences)' != 'true'">
     <Reference Include="mscorlib" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -114,4 +114,32 @@
   <ItemGroup>
     <Folder Include="$(MSBuildProjectDirectory)\Resources\" />
   </ItemGroup>
+
+  <!-- HACK: Declare the XI/XM framework bundled with this version of the SDK. See Microsoft.NETCoreSdk.BundledVersions.props -->
+  <PropertyGroup>
+    <!-- Runtime pack identifiers -->
+    <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'macOS' ">osx.10.12-x64</_RuntimePackRuntimeIdentifiers>
+    <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'iOS' ">ios.13-x64;ios.13-arm64</_RuntimePackRuntimeIdentifiers>
+    <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'tvOS' ">tvos.13-x64;tvos.13-arm64</_RuntimePackRuntimeIdentifiers>
+    <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'watchOS' ">watchos.6-x86;watchis.6-arm64_32</_RuntimePackRuntimeIdentifiers>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(XamarinReplaceBuildTarget)' == 'false'">
+    <KnownFrameworkReference Include="Xamarin.$(_PlatformName).App"
+                            TargetFramework="netcoreapp5.0"
+                            RuntimeFrameworkName="Xamarin.$(_PlatformName).App"
+                            DefaultRuntimeFrameworkVersion="$(_ShortPackageVersion)"
+                            LatestRuntimeFrameworkVersion="$(_ShortPackageVersion)"
+                            TargetingPackName="Xamarin.$(_PlatformName).App.Ref"
+                            TargetingPackVersion="$(_ShortPackageVersion)"
+                            RuntimePackNamePatterns="Xamarin.$(_PlatformName).App.Runtime.**RID**"
+                            RuntimePackRuntimeIdentifiers="$(_RuntimePackRuntimeIdentifiers)"
+                            Profile="$(_PlatformName)"
+                            />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(XamarinReplaceBuildTarget)' == 'false' And '$(DisableImplicitFrameworkReferences)' != 'true'">
+    <FrameworkReference Include="Xamarin.$(_PlatformName).App" IsImplicitlyDefined="true" Pack="false" PrivateAssets="All" />
+  </ItemGroup>
+
 </Project>
