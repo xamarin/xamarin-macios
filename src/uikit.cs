@@ -21352,15 +21352,15 @@ namespace UIKit {
 
 		[Static]
 		[Export ("shapeWithRoundedRect:")]
-		UIPointerShape Create (CGRect rect);
+		UIPointerShape CreateRounded (CGRect rect);
 
 		[Static]
 		[Export ("shapeWithRoundedRect:cornerRadius:")]
-		UIPointerShape Create (CGRect rect, nfloat cornerRadius);
+		UIPointerShape CreateRounded (CGRect rect, nfloat cornerRadius);
 
 		[Static]
 		[Export ("beamWithPreferredLength:axis:")]
-		UIPointerShape CreateBeam (nfloat length, UIAxis axis);
+		UIPointerShape CreateBeam (nfloat preferredLength, UIAxis axis);
 	}
 
 }

@@ -18,11 +18,11 @@ namespace UIKit {
 	public static partial class UIEventButtonMaskExtensions {
 
 		[DllImport (Constants.UIKitLibrary)]
-		static extern nint UIEventButtonMaskForButtonNumber (nint buttonNumber);
+		static extern nuint UIEventButtonMaskForButtonNumber (nint buttonNumber);
 
 		public static UIEventButtonMask Convert (nint buttonNumber)
 		{
-			return (UIEventButtonMask) (long) UIEventButtonMaskForButtonNumber (buttonNumber);
+			return (UIEventButtonMask) (ulong) UIEventButtonMaskForButtonNumber (buttonNumber);
 		}
 	}
 }

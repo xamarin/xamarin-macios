@@ -2883,7 +2883,7 @@ namespace UIKit {
 
 	[Flags, NoWatch, NoTV, iOS (13,4)]
 	[Native]
-	public enum UIEventButtonMask : long {
+	public enum UIEventButtonMask : ulong {
 		Primary = 1L << 0,
 		Secondary = 1L << 1,
 	}
@@ -2899,14 +2899,14 @@ namespace UIKit {
 
 	[NoWatch, NoTV, iOS (13,4)]
 	[Native]
-	public enum UIScrollType : ulong {
+	public enum UIScrollType : long {
 		Discrete,
 		Continuous,
 	}
 
 	[Flags, NoWatch, NoTV, iOS (13,4)]
 	[Native]
-	public enum UIScrollTypeMask : long {
+	public enum UIScrollTypeMask : ulong {
 		Discrete = 1L << 0,
 		Continuous = 1L << 1,
 		All = Discrete | Continuous,
