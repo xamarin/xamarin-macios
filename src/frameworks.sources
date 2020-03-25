@@ -1564,6 +1564,7 @@ UIKIT_SOURCES = \
 	UIKit/UIDynamicAnimator.cs \
 	UIKit/UIEnumsExtensions.cs \
 	UIKit/UIEvent.cs \
+	UIKit/UIEventButtonMaskExtensions.cs \
 	UIKit/UIFont.cs \
 	UIKit/UIFontFeature.cs \
 	UIKit/UIGestureRecognizer.cs \

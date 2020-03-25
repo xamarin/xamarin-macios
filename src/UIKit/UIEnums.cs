@@ -138,7 +138,13 @@ namespace UIKit {
 		Motion,
 		RemoteControl,
 		[iOS (9,0)]
-		Presses
+		Presses,
+		[iOS (13,4), TV (13,4)]
+		Scroll = 10,
+		[iOS (13,4), TV (13,4)]
+		Hover = 11,
+		[iOS (13,4), TV (13,4)]
+		Transform = 14,
 	}
 
 	// NSInteger -> UIEvent.h
@@ -564,7 +570,13 @@ namespace UIKit {
 		Moved,
 		Stationary,
 		Ended,
-		Cancelled,      
+		Cancelled,
+		[iOS (13,4), TV (13,4)]
+		RegionEntered,
+		[iOS (13,4), TV (13,4)]
+		RegionMoved,
+		[iOS (13,4), TV (13,4)]
+		RegionExited,
 	}
 
 	[NoWatch]
@@ -574,7 +586,9 @@ namespace UIKit {
 	{
 		Direct,
 		Indirect,
-		Stylus
+		Stylus,
+		[iOS (13,4), TV (13,4)]
+		IndirectPointer,
 	}
 
 	[NoWatch]
@@ -2866,4 +2880,44 @@ namespace UIKit {
 		KeyboardHiragana = KeyboardLang4,
 		KeyboardZenkakuHankakuKanji = KeyboardLang5,
 	}
+
+	[Flags, NoWatch, NoTV, iOS (13,4)]
+	[Native]
+	public enum UIEventButtonMask : long {
+		Primary = 1L << 0,
+		Secondary = 1L << 1,
+	}
+
+	[Flags, TV (13,4), NoWatch, iOS (13,4)]
+	[Native]
+	public enum UIAxis : ulong {
+		Neither = 0uL,
+		Horizontal = 1uL << 0,
+		Vertical = 1uL << 1,
+		Both = (Horizontal | Vertical),
+	}
+
+	[NoWatch, NoTV, iOS (13,4)]
+	[Native]
+	public enum UIScrollType : ulong {
+		Discrete,
+		Continuous,
+	}
+
+	[Flags, NoWatch, NoTV, iOS (13,4)]
+	[Native]
+	public enum UIScrollTypeMask : long {
+		Discrete = 1L << 0,
+		Continuous = 1L << 1,
+		All = Discrete | Continuous,
+	}
+
+	[NoWatch, NoTV, iOS (13,4)]
+	[Native]
+	public enum UIPointerEffectTintMode : long {
+		None = 0,
+		Overlay,
+		Underlay,
+	}
+
 }
