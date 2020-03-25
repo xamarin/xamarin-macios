@@ -36,7 +36,7 @@ namespace Xharness.Tests {
 
 			// Create fake symbolicate binary
 			Directory.CreateDirectory (symbolicatePath);
-			File.Create (Path.Combine (symbolicatePath, "symbolicatecrash"));
+			File.WriteAllText (Path.Combine (symbolicatePath, "symbolicatecrash"), "");
 		}
 
 		[TearDown]

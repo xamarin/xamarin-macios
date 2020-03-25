@@ -272,7 +272,7 @@ namespace Xharness.Tests
 
 			foreach (var file in failureLogs) {
 				var path = Path.Combine (logsDir, file);
-				File.Create (path);
+				File.WriteAllText (path, "");
 			}
 
 			// expect the creation of the two diff xml file logs
