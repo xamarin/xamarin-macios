@@ -19,64 +19,64 @@ LEGACY_DIRECTORIES += \
 LEGACY_IOS_TARGETS = \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.iOS.Legacy.Sdk/Sdk/Sdk.props \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.iOS.Legacy.Sdk/Sdk/Sdk.targets \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.iOS.Legacy.Sdk/targets/Xamarin.iOS.Legacy.TargetFrameworkInference.targets \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.iOS.Legacy.Sdk/targets/Xamarin.iOS.Legacy.Sdk.TargetFrameworkInference.targets \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.iOS.Legacy.Sdk/targets/Xamarin.iOS.Legacy.Sdk.DefaultItems.props \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.iOS.Legacy.Sdk/targets/Xamarin.iOS.Legacy.Sdk.targets \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.iOS.Legacy.Sdk/targets/Xamarin.iOS.Legacy.Sdk.props \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.iOS.Legacy.Sdk/targets/Xamarin.Shared.Legacy.TargetFrameworkInference.targets \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.iOS.Legacy.Sdk/targets/Xamarin.Shared.Legacy.Sdk.TargetFrameworkInference.targets \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.iOS.Legacy.Sdk/targets/Xamarin.Shared.Legacy.Sdk.DefaultItems.props \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.iOS.Legacy.Sdk/targets/Xamarin.Shared.Legacy.Sdk.DefaultItems.targets \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.iOS.Legacy.Sdk/targets/Xamarin.Shared.Legacy.Sdk.targets \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.iOS.Legacy.Sdk/targets/Xamarin.Shared.Legacy.Sdk.props \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.iOS.Legacy.Sdk/targets/Xamarin.Shared.Sdk.Versions.props \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.iOS.Legacy.Sdk/targets/Xamarin.Shared.Legacy.Sdk.Versions.props \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/RedistList/FrameworkList.xml \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.iOS.Legacy.Sdk/lib/Xamarin.iOS/v1.0 \
 
 LEGACY_TVOS_TARGETS = \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.tvOS.Legacy.Sdk/Sdk/Sdk.props \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.tvOS.Legacy.Sdk/Sdk/Sdk.targets \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.tvOS.Legacy.Sdk/targets/Xamarin.tvOS.Legacy.TargetFrameworkInference.targets \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.tvOS.Legacy.Sdk/targets/Xamarin.tvOS.Legacy.Sdk.TargetFrameworkInference.targets \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.tvOS.Legacy.Sdk/targets/Xamarin.tvOS.Legacy.Sdk.DefaultItems.props \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.tvOS.Legacy.Sdk/targets/Xamarin.tvOS.Legacy.Sdk.targets \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.tvOS.Legacy.Sdk/targets/Xamarin.tvOS.Legacy.Sdk.props \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.tvOS.Legacy.Sdk/targets/Xamarin.Shared.Legacy.TargetFrameworkInference.targets \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.tvOS.Legacy.Sdk/targets/Xamarin.Shared.Legacy.Sdk.TargetFrameworkInference.targets \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.tvOS.Legacy.Sdk/targets/Xamarin.Shared.Legacy.Sdk.DefaultItems.props \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.tvOS.Legacy.Sdk/targets/Xamarin.Shared.Legacy.Sdk.DefaultItems.targets \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.tvOS.Legacy.Sdk/targets/Xamarin.Shared.Legacy.Sdk.targets \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.tvOS.Legacy.Sdk/targets/Xamarin.Shared.Legacy.Sdk.props \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.tvOS.Legacy.Sdk/targets/Xamarin.Shared.Sdk.Versions.props \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.tvOS.Legacy.Sdk/targets/Xamarin.Shared.Legacy.Sdk.Versions.props \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/RedistList/FrameworkList.xml \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.tvOS.Legacy.Sdk/lib/Xamarin.TVOS/v1.0 \
 
 LEGACY_WATCHOS_TARGETS = \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.watchOS.Legacy.Sdk/Sdk/Sdk.props \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.watchOS.Legacy.Sdk/Sdk/Sdk.targets \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.watchOS.Legacy.Sdk/targets/Xamarin.watchOS.Legacy.TargetFrameworkInference.targets \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.watchOS.Legacy.Sdk/targets/Xamarin.watchOS.Legacy.Sdk.TargetFrameworkInference.targets \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.watchOS.Legacy.Sdk/targets/Xamarin.watchOS.Legacy.Sdk.DefaultItems.props \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.watchOS.Legacy.Sdk/targets/Xamarin.watchOS.Legacy.Sdk.targets \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.watchOS.Legacy.Sdk/targets/Xamarin.watchOS.Legacy.Sdk.props \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.watchOS.Legacy.Sdk/targets/Xamarin.Shared.Legacy.TargetFrameworkInference.targets \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.watchOS.Legacy.Sdk/targets/Xamarin.Shared.Legacy.Sdk.TargetFrameworkInference.targets \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.watchOS.Legacy.Sdk/targets/Xamarin.Shared.Legacy.Sdk.DefaultItems.props \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.watchOS.Legacy.Sdk/targets/Xamarin.Shared.Legacy.Sdk.DefaultItems.targets \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.watchOS.Legacy.Sdk/targets/Xamarin.Shared.Legacy.Sdk.targets \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.watchOS.Legacy.Sdk/targets/Xamarin.Shared.Legacy.Sdk.props \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.watchOS.Legacy.Sdk/targets/Xamarin.Shared.Sdk.Versions.props \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.watchOS.Legacy.Sdk/targets/Xamarin.Shared.Legacy.Sdk.Versions.props \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/RedistList/FrameworkList.xml \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.watchOS.Legacy.Sdk/lib/Xamarin.WatchOS/v1.0 \
 
 LEGACY_MACOS_TARGETS = \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/dotnet/Xamarin.macOS.Legacy.Sdk/Sdk/Sdk.props \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/dotnet/Xamarin.macOS.Legacy.Sdk/Sdk/Sdk.targets \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/dotnet/Xamarin.macOS.Legacy.Sdk/targets/Xamarin.macOS.Legacy.TargetFrameworkInference.targets \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/dotnet/Xamarin.macOS.Legacy.Sdk/targets/Xamarin.macOS.Legacy.Sdk.TargetFrameworkInference.targets \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/dotnet/Xamarin.macOS.Legacy.Sdk/targets/Xamarin.macOS.Legacy.Sdk.DefaultItems.props \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/dotnet/Xamarin.macOS.Legacy.Sdk/targets/Xamarin.macOS.Legacy.Sdk.targets \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/dotnet/Xamarin.macOS.Legacy.Sdk/targets/Xamarin.macOS.Legacy.Sdk.props \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/dotnet/Xamarin.macOS.Legacy.Sdk/targets/Xamarin.Shared.Legacy.TargetFrameworkInference.targets \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/dotnet/Xamarin.macOS.Legacy.Sdk/targets/Xamarin.Shared.Legacy.Sdk.TargetFrameworkInference.targets \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/dotnet/Xamarin.macOS.Legacy.Sdk/targets/Xamarin.Shared.Legacy.Sdk.DefaultItems.props \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/dotnet/Xamarin.macOS.Legacy.Sdk/targets/Xamarin.Shared.Legacy.Sdk.DefaultItems.targets \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/dotnet/Xamarin.macOS.Legacy.Sdk/targets/Xamarin.Shared.Legacy.Sdk.targets \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/dotnet/Xamarin.macOS.Legacy.Sdk/targets/Xamarin.Shared.Legacy.Sdk.props \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/dotnet/Xamarin.macOS.Legacy.Sdk/targets/Xamarin.Shared.Sdk.Versions.props \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/dotnet/Xamarin.macOS.Legacy.Sdk/targets/Xamarin.Shared.Legacy.Sdk.Versions.props \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/RedistList/FrameworkList.xml \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/dotnet/Xamarin.macOS.Legacy.Sdk/lib/Xamarin.Mac/v1.0 \
 
@@ -120,6 +120,9 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.watchOS.Legacy.Sdk/targets/
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/dotnet/Xamarin.macOS.Legacy.Sdk/targets/Xamarin.Shared.Legacy.%: targets/Xamarin.Shared.Legacy.% | $(DIRECTORIES)
 	$(Q) $(CP) $< $@
 
+targets/Xamarin.Shared.Legacy.Sdk.Versions.props: targets/Xamarin.Shared.Sdk.Versions.props
+	$(Q) $(CP) $< $@
+
 legacy-pack: legacy-prepare
 	$(Q) $(MAKE) $(foreach var,iOS tvOS watchOS macOS,legacy-pack-$(var))
 
@@ -131,8 +134,8 @@ legacy-pack-simple: prepare
 legacy-pack-%: $(TEMPLATED_FILES)
 	$(Q) rm -Rf $(TEST_FEED_PATH)/xamarin.$(shell echo $* | tr '[:upper:]' '[:lower:]').legacy.sdk
 	$(Q) rm -f nupkgs/Xamarin.$*.Legacy.Sdk.*.nupkg
-	$(if $(V),,@echo "PACK     nupkgs/Xamarin.$*Legacy.Sdk.nupkg";) $(DOTNET) pack package/$*/Xamarin.$*.Legacy.csproj --output nupkgs $(DOTNET_PACK_VERBOSITY)
-	$(if $(V),,@echo "ADD      nupkgs/Xamarin.$*Legacy.Sdk.nupkg";) nuget add nupkgs/Xamarin.$*.Legacy.Sdk.*nupkg -source $(TEST_FEED_PATH) $(NUGET_VERBOSITY)
+	$(if $(V),,@echo "PACK     nupkgs/Xamarin.$*.Legacy.Sdk.nupkg";) $(DOTNET) pack package/$*/Xamarin.$*.Legacy.csproj --output nupkgs $(DOTNET_PACK_VERBOSITY)
+	$(if $(V),,@echo "ADD      nupkgs/Xamarin.$*.Legacy.Sdk.nupkg";) nuget add nupkgs/Xamarin.$*.Legacy.Sdk.*nupkg -source $(TEST_FEED_PATH) $(NUGET_VERBOSITY)
 # 	@# Add the hash to the filename
 # 	$(Q) CURRENT_HASH=$(shell grep '<CurrentHash>' package/versions.targets | sed -e 's/<[/]*CurrentHash>//g' -e 's/[[:space:]]//g'); \
 # 	NAME=$$(echo nupkgs/Xamarin.$*.Sdk.*nupkg | sed -e 's/.nupkg$$//'); \
@@ -147,7 +150,7 @@ test-legacy-nuget: test/NuGet.config test/global.json
 	$(if $(V),,@echo "BUILD    MySingleView.app";) $(DOTNET) build test/MySingleView/MySingleView.csproj /p:Platform=iPhoneSimulator $(XBUILD_VERBOSITY)
 	@#$(if $(V),,@echo "BUILD    MyCocoaApp.app";)   $(DOTNET) build test/MyCocoaApp/MyCocoaApp.csproj $(XBUILD_VERBOSITY)
 
-prepare-legacy:
+legacy-prepare:
 	$(Q) V=$(V) \
 	TOP=$(TOP) \
 	DOTNET_BCL_DIR=$(DOTNET_BCL_DIR) \
