@@ -72,7 +72,7 @@ namespace Xharness.Tests.Hardware.Tests {
 
 			MlaunchArgument sdkRootArg = passedArguments.Where (a => a is SdkRootArgument).FirstOrDefault();
 			Assert.IsNotNull (sdkRootArg, "sdk arg missing");
-			AssertArgumentValue (sdkRootArg, sdkPath, "sdk arg wrong");
+			AssertArgumentValue (sdkRootArg, $"--sdkroot {sdkPath}", "sdk arg wrong");
 
 			MlaunchArgument listDevArg = passedArguments.Where (a => a is ListDevicesArgument).FirstOrDefault();
 			Assert.IsNotNull (listDevArg, "list devices arg missing");
@@ -119,7 +119,7 @@ namespace Xharness.Tests.Hardware.Tests {
 
 			MlaunchArgument sdkRootArg = passedArguments.Where (a => a is SdkRootArgument).FirstOrDefault();
 			Assert.IsNotNull (sdkRootArg, "sdk arg missing");
-			AssertArgumentValue (sdkRootArg, sdkPath, "sdk arg wrong");
+			AssertArgumentValue (sdkRootArg, $"--sdkroot {sdkPath}", "sdk arg wrong");
 
 			MlaunchArgument listDevArg = passedArguments.Where (a => a is ListDevicesArgument).FirstOrDefault();
 			Assert.IsNotNull (listDevArg, "list devices arg missing");

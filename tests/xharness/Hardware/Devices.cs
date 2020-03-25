@@ -62,6 +62,31 @@ namespace Xharness.Hardware {
 			return LoadAsync (log, extra_data: false, removed_locked: !include_locked, force: force);
 		}
 
+		Device GetDevice (XmlNode deviceNone)
+		{
+			// get data, if we are missing some of them, we will return null, happens sometimes that we 
+			// have some empty nodes.
+			var usable = deviceNone.SelectSingleNode ("IsUsableForDebugging")?.InnerText;
+			try {
+				var device = new Device {
+					DeviceIdentifier = deviceNone.SelectSingleNode ("DeviceIdentifier")?.InnerText,
+					DeviceClass = (DeviceClass) Enum.Parse (typeof (DeviceClass), deviceNone.SelectSingleNode ("DeviceClass")?.InnerText, true),
+					CompanionIdentifier = deviceNone.SelectSingleNode ("CompanionIdentifier")?.InnerText,
+					Name = deviceNone.SelectSingleNode ("Name")?.InnerText,
+					BuildVersion = deviceNone.SelectSingleNode ("BuildVersion")?.InnerText,
+					ProductVersion = deviceNone.SelectSingleNode ("ProductVersion")?.InnerText,
+					ProductType = deviceNone.SelectSingleNode ("ProductType")?.InnerText,
+					InterfaceType = deviceNone.SelectSingleNode ("InterfaceType")?.InnerText,
+					IsUsableForDebugging = usable == null ? (bool?) null : ((bool?) (usable == "True")),
+				};
+				bool.TryParse (deviceNone.SelectSingleNode ("IsLocked")?.InnerText, out var locked);
+				device.IsLocked = locked;
+				return device;
+			} catch {
+				return null; // this should not be a problem, nevertheless, return null 
+			}
+		}
+
 		public async Task LoadAsync (ILog log, bool extra_data = false, bool removed_locked = false, bool force = false)
 		{
 			if (loaded) {
@@ -97,20 +122,9 @@ namespace Xharness.Hardware {
 						doc.LoadWithoutNetworkAccess (tmpfile);
 
 						foreach (XmlNode dev in doc.SelectNodes ("/MTouch/Device")) {
-							var usable = dev.SelectSingleNode ("IsUsableForDebugging")?.InnerText;
-							Device d = new Device {
-								DeviceIdentifier = dev.SelectSingleNode ("DeviceIdentifier")?.InnerText,
-								DeviceClass = (DeviceClass) Enum.Parse(typeof(DeviceClass), dev.SelectSingleNode ("DeviceClass")?.InnerText, true),
-								CompanionIdentifier = dev.SelectSingleNode ("CompanionIdentifier")?.InnerText,
-								Name = dev.SelectSingleNode ("Name")?.InnerText,
-								BuildVersion = dev.SelectSingleNode ("BuildVersion")?.InnerText,
-								ProductVersion = dev.SelectSingleNode ("ProductVersion")?.InnerText,
-								ProductType = dev.SelectSingleNode ("ProductType")?.InnerText,
-								InterfaceType = dev.SelectSingleNode ("InterfaceType")?.InnerText,
-								IsUsableForDebugging = usable == null ? (bool?)null : ((bool?)(usable == "True")),
-							};
-							bool.TryParse (dev.SelectSingleNode ("IsLocked")?.InnerText, out var locked);
-							d.IsLocked = locked;
+							var d = GetDevice (dev);
+							if (d == null)
+								continue;
 							if (removed_locked && d.IsLocked) {
 								log.WriteLine ($"Skipping device {d.Name} ({d.DeviceIdentifier}) because it's locked.");
 								continue;
