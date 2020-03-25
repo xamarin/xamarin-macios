@@ -110,11 +110,11 @@
   </PropertyGroup>
 
   <ImportGroup Condition="'$(IsMultiTargetingBuild)' != 'true'">
-    <Import Project="..\targets\Xamarin.$(_PlatformName).TargetFrameworkInference.targets" Condition="'$(TargetFramework)' != '' AND !($(TargetFramework.Contains(',')) OR $(TargetFramework.Contains(';')))"/>
+    <Import Project="..\targets\Xamarin.$(_PlatformName).Legacy.TargetFrameworkInference.targets" Condition="'$(TargetFramework)' != '' AND !($(TargetFramework.Contains(',')) OR $(TargetFramework.Contains(';')))"/>
   </ImportGroup>
 
   <!-- Default item includes (globs and implicit references) -->
-  <Import Project="Xamarin.Shared.Sdk.DefaultItems.targets" />
+  <Import Project="Xamarin.Shared.Legacy.Sdk.DefaultItems.targets" />
 
   <!-- Automatically supply project capabilities for IDE use -->
   <ItemGroup>

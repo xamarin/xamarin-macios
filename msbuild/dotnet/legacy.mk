@@ -28,6 +28,7 @@ LEGACY_IOS_TARGETS = \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.iOS.Legacy.Sdk/targets/Xamarin.Shared.Legacy.Sdk.DefaultItems.targets \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.iOS.Legacy.Sdk/targets/Xamarin.Shared.Legacy.Sdk.targets \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.iOS.Legacy.Sdk/targets/Xamarin.Shared.Legacy.Sdk.props \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.iOS.Legacy.Sdk/targets/Xamarin.Shared.Sdk.Versions.props \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/RedistList/FrameworkList.xml \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.iOS.Legacy.Sdk/lib/Xamarin.iOS/v1.0 \
 
@@ -43,6 +44,7 @@ LEGACY_TVOS_TARGETS = \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.tvOS.Legacy.Sdk/targets/Xamarin.Shared.Legacy.Sdk.DefaultItems.targets \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.tvOS.Legacy.Sdk/targets/Xamarin.Shared.Legacy.Sdk.targets \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.tvOS.Legacy.Sdk/targets/Xamarin.Shared.Legacy.Sdk.props \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.tvOS.Legacy.Sdk/targets/Xamarin.Shared.Sdk.Versions.props \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/RedistList/FrameworkList.xml \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.tvOS.Legacy.Sdk/lib/Xamarin.TVOS/v1.0 \
 
@@ -58,6 +60,7 @@ LEGACY_WATCHOS_TARGETS = \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.watchOS.Legacy.Sdk/targets/Xamarin.Shared.Legacy.Sdk.DefaultItems.targets \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.watchOS.Legacy.Sdk/targets/Xamarin.Shared.Legacy.Sdk.targets \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.watchOS.Legacy.Sdk/targets/Xamarin.Shared.Legacy.Sdk.props \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.watchOS.Legacy.Sdk/targets/Xamarin.Shared.Sdk.Versions.props \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/RedistList/FrameworkList.xml \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.watchOS.Legacy.Sdk/lib/Xamarin.WatchOS/v1.0 \
 
@@ -73,6 +76,7 @@ LEGACY_MACOS_TARGETS = \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/dotnet/Xamarin.macOS.Legacy.Sdk/targets/Xamarin.Shared.Legacy.Sdk.DefaultItems.targets \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/dotnet/Xamarin.macOS.Legacy.Sdk/targets/Xamarin.Shared.Legacy.Sdk.targets \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/dotnet/Xamarin.macOS.Legacy.Sdk/targets/Xamarin.Shared.Legacy.Sdk.props \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/dotnet/Xamarin.macOS.Legacy.Sdk/targets/Xamarin.Shared.Sdk.Versions.props \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/RedistList/FrameworkList.xml \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/dotnet/Xamarin.macOS.Legacy.Sdk/lib/Xamarin.Mac/v1.0 \
 

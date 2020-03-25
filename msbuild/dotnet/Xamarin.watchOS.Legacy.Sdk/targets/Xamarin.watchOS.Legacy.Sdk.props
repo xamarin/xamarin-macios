@@ -4,5 +4,5 @@
     <_PlatformName>watchOS</_PlatformName>
   </PropertyGroup>
 
-  <Import Project="Xamarin.Shared.Sdk.props" />
+  <Import Project="Xamarin.Shared.Legacy.Sdk.props" />
 </Project>
