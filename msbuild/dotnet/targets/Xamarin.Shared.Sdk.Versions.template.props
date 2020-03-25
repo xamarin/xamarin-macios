@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+		<_iOSPackageVersionMajor>@IOS_PACKAGE_VERSION_MAJOR@</_iOSPackageVersionMajor>
+		<_iOSPackageVersionMajor>@IOS_PACKAGE_VERSION_MINOR@</_iOSPackageVersionMajor>
+		<_iOSPackageVersionRev>@IOS_PACKAGE_VERSION_REV@</_iOSPackageVersionRev>
+		<_iOSCommitDistance>@IOS_COMMIT_DISTANCE@</_iOSCommitDistance>
+		<_tvOSPackageVersionMajor>@TVOS_PACKAGE_VERSION_MAJOR@</_tvOSPackageVersionMajor>
+		<_tvOSPackageVersionMajor>@TVOS_PACKAGE_VERSION_MINOR@</_tvOSPackageVersionMajor>
+		<_tvOSPackageVersionRev>@TVOS_PACKAGE_VERSION_REV@</_tvOSPackageVersionRev>
+		<_tvOSCommitDistance>@TVOS_COMMIT_DISTANCE@</_tvOSCommitDistance>
+		<_watchOSPackageVersionMajor>@WATCHOS_PACKAGE_VERSION_MAJOR@</_watchOSPackageVersionMajor>
+		<_watchOSPackageVersionMajor>@WATCHOS_PACKAGE_VERSION_MINOR@</_watchOSPackageVersionMajor>
+		<_watchOSPackageVersionRev>@WATCHOS_PACKAGE_VERSION_REV@</_watchOSPackageVersionRev>
+		<_watchOSCommitDistance>@WATCHOS_COMMIT_DISTANCE@</_watchOSCommitDistance>
+		<_macOSPackageVersionMajor>@MACOS_PACKAGE_VERSION_MAJOR@</_macOSPackageVersionMajor>
+		<_macOSPackageVersionMinor>@MACOS_PACKAGE_VERSION_MINOR@</_macOSPackageVersionMinor>
+		<_macOSPackageVersionRev>@MACOS_PACKAGE_VERSION_REV@</_macOSPackageVersionRev>
+		<_macOSCommitDistance>@MACOS_COMMIT_DISTANCE@</_macOSCommitDistance>
+		<CurrentBranch>@CURRENT_BRANCH@</CurrentBranch>
+		<CurrentHash>@CURRENT_HASH@</CurrentHash>
+
+		<_iOSShortPackageVersion>$(_iOSPackageVersionMajor).$(_iOSPackageVersionMajor).$(_iOSPackageVersionRev)</_iOSShortPackageVersion>
+		<_macOSShortPackageVersion>$(_macOSPackageVersionMajor).$(_macOSPackageVersionMinor).$(_macOSPackageVersionRev)</_macOSShortPackageVersion>
+		<_tvosOSShortPackageVersion>$(_tvosOSPackageVersionMajor).$(_tvosOSPackageVersionMinor).$(_tvosOSPackageVersionRev)</_tvosOSShortPackageVersion>
+		<_watchOSShortPackageVersion>$(_watchOSPackageVersionMajor).$(_watchOSPackageVersionMinor).$(_watchOSPackageVersionRev)</_watchOSShortPackageVersion>
+
+		<_iOSPackageVersion>$(_iOSShortPackageVersion)-alpha.$(_iOSCommitDistance)+sha.$(CurrentHash)</_iOSPackageVersion>
+		<_macOSPackageVersion>$(_macOSShortPackageVersion)-alpha.$(_macOSCommitDistance)+sha.$(CurrentHash)</_macOSPackageVersion>
+		<_tvosOSPackageVersion>$(_tvosOSShortPackageVersion)-alpha.$(_tvosOSCommitDistance)+sha.$(CurrentHash)</_tvosOSPackageVersion>
+		<_watchOSPackageVersion>$(_watchOSShortPackageVersion)-alpha.$(_watchOSCommitDistance)+sha.$(CurrentHash)</_watchOSPackageVersion>
+
+		<_ShortPackageVersion Condition=" '$(_PlatformName)' == 'macOS' ">$(_macOSShortPackageVersion)</_ShortPackageVersion>
+		<_ShortPackageVersion Condition=" '$(_PlatformName)' == 'iOS' ">$(_iOSShortPackageVersion)</_ShortPackageVersion>
+		<_ShortPackageVersion Condition=" '$(_PlatformName)' == 'tvOS' ">$(_tvOSShortPackageVersion)</_ShortPackageVersion>
+		<_ShortPackageVersion Condition=" '$(_PlatformName)' == 'watchOS' ">$(_watchOSShortPackageVersion)</_ShortPackageVersion>
+
+		<_PackageVersion Condition=" '$(_PlatformName)' == 'macOS' ">$(_macOSPackageVersion)</_PackageVersion>
+		<_PackageVersion Condition=" '$(_PlatformName)' == 'iOS' ">$(_iOSPackageVersion)</_PackageVersion>
+		<_PackageVersion Condition=" '$(_PlatformName)' == 'tvOS' ">$(_tvOSPackageVersion)</_PackageVersion>
+		<_PackageVersion Condition=" '$(_PlatformName)' == 'watchOS' ">$(_watchOSPackageVersion)</_PackageVersion>
+	</PropertyGroup>
+
+	<Target Name="PrintVersions">
+		<Exec Command="printf 'Xamarin.iOS PackageVersion: $(_iOSPackageVersion)' "/>
+		<Exec Command="printf 'Xamarin.macOS: PackageVersion: $(_macOSPackageVersion)' " />
+		<Exec Command="printf 'Xamarin.tvOS: PackageVersion: $(_tvosOSPackageVersion)' " />
+		<Exec Command="printf 'Xamarin.watchOS: PackageVersion: $(_watchOSPackageVersion)' " />
+	</Target>
+</Project>

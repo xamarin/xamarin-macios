@@ -133,6 +133,32 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/dotnet/Xamarin.macOS.Sdk/targets/
 $(DIRECTORIES):
 	$(Q) mkdir -p $@
 
+CURRENT_HASH:=$(shell git log -1 --pretty=%h)
+targets/%.props: targets/%.template.props Makefile $(TOP)/Make.config.inc
+	$(Q_GEN) sed \
+		-e "s/@IOS_PACKAGE_VERSION_MAJOR@/$(IOS_PACKAGE_VERSION_MAJOR)/g" \
+		-e "s/@IOS_PACKAGE_VERSION_MINOR@/$(IOS_PACKAGE_VERSION_MINOR)/g" \
+		-e "s/@IOS_PACKAGE_VERSION_REV@/$(IOS_PACKAGE_VERSION_REV)/g" \
+		-e "s/@TVOS_PACKAGE_VERSION_MAJOR@/$(TVOS_PACKAGE_VERSION_MAJOR)/g" \
+		-e "s/@TVOS_PACKAGE_VERSION_MINOR@/$(TVOS_PACKAGE_VERSION_MINOR)/g" \
+		-e "s/@TVOS_PACKAGE_VERSION_REV@/$(TVOS_PACKAGE_VERSION_REV)/g" \
+		-e "s/@WATCHOS_PACKAGE_VERSION_MAJOR@/$(WATCHOS_PACKAGE_VERSION_MAJOR)/g" \
+		-e "s/@WATCHOS_PACKAGE_VERSION_MINOR@/$(WATCHOS_PACKAGE_VERSION_MINOR)/g" \
+		-e "s/@WATCHOS_PACKAGE_VERSION_REV@/$(WATCHOS_PACKAGE_VERSION_REV)/g" \
+		-e "s/@MACOS_PACKAGE_VERSION_MAJOR@/$(MACOS_PACKAGE_VERSION_MAJOR)/g" \
+		-e "s/@MACOS_PACKAGE_VERSION_MINOR@/$(MACOS_PACKAGE_VERSION_MINOR)/g" \
+		-e "s/@MACOS_PACKAGE_VERSION_REV@/$(MACOS_PACKAGE_VERSION_REV)/g" \
+		-e 's/@IOS_COMMIT_DISTANCE@/$(IOS_COMMIT_DISTANCE)/g' \
+		-e 's/@TVOS_COMMIT_DISTANCE@/$(TVOS_COMMIT_DISTANCE)/g' \
+		-e 's/@WATCHOS_COMMIT_DISTANCE@/$(WATCHOS_COMMIT_DISTANCE)/g' \
+		-e 's/@MACOS_COMMIT_DISTANCE@/$(MACOS_COMMIT_DISTANCE)/g' \
+		-e "s/@CURRENT_BRANCH@/$(CURRENT_BRANCH_SED_ESCAPED)/g" \
+		-e "s/@CURRENT_HASH@/$(CURRENT_HASH)/g" \
+	$< > $@
+
+TEMPLATED_FILES = \
+	targets/Xamarin.Shared.Sdk.Versions.props \
+
 all-local:: $(TARGETS)
 
 pack: prepare
@@ -154,15 +180,15 @@ endif
 
 TEST_FEED_PATH=test/feed
 
-pack-%: package/versions.targets
+pack-%: $(TEMPLATED_FILES)
 	$(Q) rm -Rf $(TEST_FEED_PATH)/xamarin.$(shell echo $* | tr '[:upper:]' '[:lower:]').sdk
 	$(Q) rm -f nupkgs/Xamarin.$*.Sdk.*.nupkg
 	$(if $(V),,@echo "PACK     nupkgs/Xamarin.$*.Sdk.nupkg";) $(DOTNET) pack package/$*/Xamarin.$*.csproj --output nupkgs $(DOTNET_PACK_VERBOSITY)
 	$(if $(V),,@echo "ADD      nupkgs/Xamarin.$*.Sdk.nupkg";) nuget add nupkgs/Xamarin.$*.Sdk.*nupkg -source $(TEST_FEED_PATH) $(NUGET_VERBOSITY)
-	@# Add the hash to the filename
-	$(Q) CURRENT_HASH=$(shell grep '<CurrentHash>' package/versions.targets | sed -e 's/<[/]*CurrentHash>//g' -e 's/[[:space:]]//g'); \
-	NAME=$$(echo nupkgs/Xamarin.$*.Sdk.*nupkg | sed -e 's/.nupkg$$//'); \
-	mv "$$NAME.nupkg" "$$NAME+$$CURRENT_HASH.nupkg"
+# 	@# Add the hash to the filename
+# 	$(Q) CURRENT_HASH=$(shell grep '<CurrentHash>' package/versions.targets | sed -e 's/<[/]*CurrentHash>//g' -e 's/[[:space:]]//g'); \
+# 	NAME=$$(echo nupkgs/Xamarin.$*.Sdk.*nupkg | sed -e 's/.nupkg$$//'); \
+# 	mv "$$NAME.nupkg" "$$NAME+$$CURRENT_HASH.nupkg"
 	$(Q) echo "Created: $$(ls -1 nupkgs/Xamarin.$*.Sdk.*nupkg)"
 
 test/NuGet.config: $(TOP)/NuGet.config
@@ -170,7 +196,7 @@ test/NuGet.config: $(TOP)/NuGet.config
 	$(Q) nuget sources add -Name local-dotnet-feed -Source $(PWD)/$(TEST_FEED_PATH) -ConfigFile $@.tmp
 	$(Q) mv $@.tmp $@
 
-test/global.json: Makefile package/versions.targets
+test/global.json: Makefile $(TEMPLATED_FILES)
 	$(Q_GEN) \
 		VERSIONS='$(shell msbuild package/versions.targets /t:PrintVersions /v:m /nologo)'; \
 		XIPackageVersion=$$(echo $$VERSIONS | sed -e 's/.*XIPackageVersion: //' -e 's/ XMPackageVersion.*//'); \
@@ -184,21 +210,6 @@ test-nuget: test/NuGet.config test/global.json
 	@#$(if $(V),,@echo "BUILD    MySingleView.app";) $(DOTNET) build test/MySingleView/MySingleView.csproj /p:Platform=iPhone $(XBUILD_VERBOSITY)
 	$(if $(V),,@echo "BUILD    MySingleView.app";) $(DOTNET) build test/MySingleView/MySingleView.csproj /p:Platform=iPhoneSimulator $(XBUILD_VERBOSITY)
 	@#$(if $(V),,@echo "BUILD    MyCocoaApp.app";)   $(DOTNET) build test/MyCocoaApp/MyCocoaApp.csproj $(XBUILD_VERBOSITY)
-
-CURRENT_HASH:=$(shell git log -1 --pretty=%h)
-package/versions.targets: package/versions.template.targets Makefile $(TOP)/Make.config.inc
-	$(call Q_PROF_GEN,ios) sed \
-		-e "s/@IOS_PACKAGE_VERSION_MAJOR@/$(IOS_PACKAGE_VERSION_MAJOR)/g" \
-		-e "s/@IOS_PACKAGE_VERSION_MINOR@/$(IOS_PACKAGE_VERSION_MINOR)/g" \
-		-e "s/@IOS_PACKAGE_VERSION_REV@/$(IOS_PACKAGE_VERSION_REV)/g" \
-		-e "s/@MAC_PACKAGE_VERSION_MAJOR@/$(MAC_PACKAGE_VERSION_MAJOR)/g" \
-		-e "s/@MAC_PACKAGE_VERSION_MINOR@/$(MAC_PACKAGE_VERSION_MINOR)/g" \
-		-e "s/@MAC_PACKAGE_VERSION_REV@/$(MAC_PACKAGE_VERSION_REV)/g" \
-		-e 's/@IOS_COMMIT_DISTANCE@/$(IOS_COMMIT_DISTANCE)/g' \
-		-e 's/@MAC_COMMIT_DISTANCE@/$(MAC_COMMIT_DISTANCE)/g' \
-		-e "s/@CURRENT_BRANCH@/$(CURRENT_BRANCH_SED_ESCAPED)/g" \
-		-e "s/@CURRENT_HASH@/$(CURRENT_HASH)/g" \
-	$< > $@
 
 prepare:
 	$(Q) V=$(V) \

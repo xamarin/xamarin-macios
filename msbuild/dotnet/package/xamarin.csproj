@@ -1,5 +1,5 @@
 <Project>
-  <Import Project="versions.targets" />
+  <Import Project="../targets/Xamarin.Shared.Sdk.Versions.props" />
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <IncludeBuildOutput>false</IncludeBuildOutput>
