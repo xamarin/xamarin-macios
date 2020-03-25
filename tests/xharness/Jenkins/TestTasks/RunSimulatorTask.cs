@@ -85,7 +85,7 @@ namespace Xharness.Jenkins.TestTasks
 				new CrashSnapshotReporterFactory (ProcessManager, Harness.XcodeRoot, Harness.MlaunchPath),
 				new CaptureLogFactory (),
 				new DeviceLogCapturerFactory (processManager, Harness.XcodeRoot, Harness.MlaunchPath),
-				new XmlResultParser (),
+				new TestReporterFactory (),
 				AppRunnerTarget,
 				Harness,
 				mainLog: Logs.Create ($"run-{Device.UDID}-{Timestamp}.log", "Run log"),

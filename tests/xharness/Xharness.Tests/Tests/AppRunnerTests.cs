@@ -127,7 +127,7 @@ namespace Xharness.Tests {
 				snapshotReporterFactory,
 				Mock.Of<ICaptureLogFactory> (),
 				Mock.Of<IDeviceLogCapturerFactory> (),
-				Mock.Of<IResultParser> (),
+				Mock.Of<ITestReporterFactory> (),
 				TestTarget.Simulator_iOS64,
 				Mock.Of<IHarness> (),
 				mainLog.Object,
@@ -152,7 +152,7 @@ namespace Xharness.Tests {
 				snapshotReporterFactory,
 				Mock.Of<ICaptureLogFactory> (),
 				Mock.Of<IDeviceLogCapturerFactory> (),
-				Mock.Of<IResultParser> (),
+				Mock.Of<ITestReporterFactory> (),
 				TestTarget.Simulator_iOS64,
 				Mock.Of<IHarness> (),
 				mainLog.Object,
@@ -176,7 +176,7 @@ namespace Xharness.Tests {
 				snapshotReporterFactory,
 				Mock.Of<ICaptureLogFactory> (),
 				Mock.Of<IDeviceLogCapturerFactory> (),
-				Mock.Of<IResultParser> (),
+				Mock.Of<ITestReporterFactory> (),
 				TestTarget.Simulator_iOS64,
 				Mock.Of<IHarness> (),
 				mainLog.Object,
@@ -200,7 +200,7 @@ namespace Xharness.Tests {
 				snapshotReporterFactory,
 				Mock.Of<ICaptureLogFactory> (),
 				Mock.Of<IDeviceLogCapturerFactory> (),
-				Mock.Of<IResultParser> (),
+				Mock.Of<ITestReporterFactory> (),
 				TestTarget.Device_iOS,
 				Mock.Of<IHarness> (),
 				mainLog.Object,
@@ -236,7 +236,7 @@ namespace Xharness.Tests {
 				snapshotReporterFactory,
 				Mock.Of<ICaptureLogFactory> (),
 				Mock.Of<IDeviceLogCapturerFactory> (),
-				Mock.Of<IResultParser> (),
+				Mock.Of<ITestReporterFactory> (),
 				TestTarget.Device_iOS,
 				harness,
 				mainLog.Object,
@@ -284,7 +284,7 @@ namespace Xharness.Tests {
 				snapshotReporterFactory,
 				Mock.Of<ICaptureLogFactory> (),
 				Mock.Of<IDeviceLogCapturerFactory> (),
-				Mock.Of<IResultParser> (),
+				Mock.Of<ITestReporterFactory> (),
 				TestTarget.Device_iOS,
 				harness,
 				mainLog.Object,
@@ -352,6 +352,20 @@ namespace Xharness.Tests {
 					true,
 					It.IsAny<string> ()))
 				.Returns (captureLog.Object);
+			var testReporterFactory = new Mock<ITestReporterFactory> ();
+			var testReporter = new Mock<ITestReporter> ();
+			testReporterFactory.Setup (f => f.Create (
+				It.IsAny<IAppRunner> (),
+				It.IsAny<string> (),
+				It.IsAny<ISimpleListener> (),
+				It.IsAny<ILog> (),
+				It.IsAny<ICrashSnapshotReporter> (),
+				It.IsAny<IResultParser> ())).Returns (testReporter.Object);
+			testReporter.Setup (r => r.TimeoutWatch).Returns (new System.Diagnostics.Stopwatch ());
+			testReporter.Setup (r => r.ParseResult ()).Returns (() => {
+				return Task.FromResult<(TestExecutingResult, string)> ((TestExecutingResult.Succeeded, null));
+			});
+			testReporter.Setup (r => r.Success).Returns (true);
 
 			// Act
 			var appRunner = new AppRunner (processManager.Object,
@@ -362,7 +376,7 @@ namespace Xharness.Tests {
 				crashReporterFactory.Object,
 				captureLogFactory.Object,
 				Mock.Of<IDeviceLogCapturerFactory> (),
-				Mock.Of<IResultParser> (),
+				testReporterFactory.Object,
 				TestTarget.Simulator_tvOS,
 				GetMockedHarness (),
 				mainLog.Object,
@@ -458,10 +472,21 @@ namespace Xharness.Tests {
 				.ReturnsAsync (new ProcessExecutionResult () { ExitCode = 0 });
 
 			var xmlResultFile = Path.ChangeExtension (testResultFilePath, "xml");
-			var resultParser = new Mock<IResultParser> ();
-			resultParser
-				.Setup (x => x.CleanXml (testResultFilePath, xmlResultFile))
-				.Callback (() => File.Copy (testResultFilePath, xmlResultFile));
+			var testReporterFactory = new Mock<ITestReporterFactory> ();
+			var testReporter = new Mock<ITestReporter> ();
+			testReporterFactory.Setup (f => f.Create (
+				It.IsAny<IAppRunner> (),
+				It.IsAny<string> (),
+				It.IsAny<ISimpleListener> (),
+				It.IsAny<ILog> (),
+				It.IsAny<ICrashSnapshotReporter> (),
+				It.IsAny<IResultParser> ())).Returns (testReporter.Object);
+			testReporter.Setup (r => r.Timeout).Returns (TimeSpan.FromMinutes (harness.Timeout * 2));
+			testReporter.Setup (r => r.TimeoutWatch).Returns (new System.Diagnostics.Stopwatch ());
+			testReporter.Setup (r => r.ParseResult ()).Returns (() => {
+				return Task.FromResult<(TestExecutingResult, string)> ((TestExecutingResult.Succeeded, null));
+			});
+			testReporter.Setup (r => r.Success).Returns (true);
 
 			// Act
 			var appRunner = new AppRunner (processManager.Object,
@@ -472,7 +497,7 @@ namespace Xharness.Tests {
 				crashReporterFactory.Object,
 				captureLogFactory.Object,
 				Mock.Of<IDeviceLogCapturerFactory> (), // Use for devices only
-				resultParser.Object,
+				testReporterFactory.Object,
 				TestTarget.Simulator_iOS64,
 				harness,
 				mainLog.Object,
@@ -487,10 +512,6 @@ namespace Xharness.Tests {
 			// Verify
 			Assert.AreEqual (0, result);
 
-			mainLog.Verify (x => x.WriteLine ("Test run started"));
-			mainLog.Verify (x => x.WriteLine ("Test run completed"));
-			mainLog.Verify (x => x.WriteLine ("Test run succeeded"));
-
 			simpleListener.Verify (x => x.Initialize (), Times.AtLeastOnce);
 			simpleListener.Verify (x => x.StartAsync (), Times.AtLeastOnce);
 			simpleListener.Verify (x => x.Cancel (), Times.AtLeastOnce);
@@ -504,8 +525,6 @@ namespace Xharness.Tests {
 			// When ensureCleanSimulatorState == true
 			simulator.Verify (x => x.PrepareSimulatorAsync (mainLog.Object, appName));
 			simulator.Verify (x => x.KillEverythingAsync (mainLog.Object));
-
-			resultParser.VerifyAll ();
 		}
 
 		[Test]
@@ -536,7 +555,7 @@ namespace Xharness.Tests {
 				crashReporterFactory.Object,
 				Mock.Of<ICaptureLogFactory> (),
 				Mock.Of<IDeviceLogCapturerFactory> (),
-				Mock.Of<IResultParser> (),
+				Mock.Of<ITestReporterFactory> (),
 				TestTarget.Device_tvOS,
 				GetMockedHarness (),
 				mainLog.Object,
@@ -614,10 +633,21 @@ namespace Xharness.Tests {
 				.ReturnsAsync (new ProcessExecutionResult () { ExitCode = 0 });
 
 			var xmlResultFile = Path.ChangeExtension (testResultFilePath, "xml");
-			var resultParser = new Mock<IResultParser> ();
-			resultParser
-				.Setup (x => x.CleanXml (testResultFilePath, xmlResultFile))
-				.Callback (() => File.Copy (testResultFilePath, xmlResultFile));
+			var testReporterFactory = new Mock<ITestReporterFactory> ();
+			var testReporter = new Mock<ITestReporter> ();
+			testReporterFactory.Setup (f => f.Create (
+				It.IsAny<IAppRunner> (),
+				It.IsAny<string> (),
+				It.IsAny<ISimpleListener> (),
+				It.IsAny<ILog> (),
+				It.IsAny<ICrashSnapshotReporter> (),
+				It.IsAny<IResultParser> ())).Returns (testReporter.Object);
+			testReporter.Setup (r => r.Timeout).Returns (TimeSpan.FromMinutes (harness.Timeout * 2));
+			testReporter.Setup (r => r.TimeoutWatch).Returns (new System.Diagnostics.Stopwatch ());
+			testReporter.Setup (r => r.ParseResult ()).Returns (() => {
+				return Task.FromResult<(TestExecutingResult, string)> ((TestExecutingResult.Succeeded, null));
+			});
+			testReporter.Setup (r => r.Success).Returns (true);
 
 			// Act
 			var appRunner = new AppRunner (processManager.Object,
@@ -628,7 +658,7 @@ namespace Xharness.Tests {
 				crashReporterFactory.Object,
 				Mock.Of<ICaptureLogFactory> (), // Used for simulators only
 				deviceLogCapturerFactory.Object,
-				resultParser.Object,
+				testReporterFactory.Object,
 				TestTarget.Device_iOS,
 				harness,
 				mainLog.Object,
@@ -643,10 +673,6 @@ namespace Xharness.Tests {
 			Assert.AreEqual (0, result);
 
 			processManager.VerifyAll ();
-
-			mainLog.Verify (x => x.WriteLine ("Test run started"));
-			mainLog.Verify (x => x.WriteLine ("Test run completed"));
-			mainLog.Verify (x => x.WriteLine ("Test run succeeded"));
 
 			simpleListener.Verify (x => x.Initialize (), Times.AtLeastOnce);
 			simpleListener.Verify (x => x.StartAsync (), Times.AtLeastOnce);
@@ -723,10 +749,21 @@ namespace Xharness.Tests {
 				.ReturnsAsync (new ProcessExecutionResult () { ExitCode = 0 });
 
 			var xmlResultFile = Path.ChangeExtension (testResultFilePath, "xml");
-			var resultParser = new Mock<IResultParser> ();
-			resultParser
-				.Setup (x => x.CleanXml (testResultFilePath, xmlResultFile))
-				.Callback (() => File.Copy (testResultFilePath, xmlResultFile));
+			var testReporterFactory = new Mock<ITestReporterFactory> ();
+			var testReporter = new Mock<ITestReporter> ();
+			testReporterFactory.Setup (f => f.Create (
+				It.IsAny<IAppRunner> (),
+				It.IsAny<string> (),
+				It.IsAny<ISimpleListener> (),
+				It.IsAny<ILog> (),
+				It.IsAny<ICrashSnapshotReporter> (),
+				It.IsAny<IResultParser> ())).Returns (testReporter.Object);
+			testReporter.Setup (r => r.Timeout).Returns (TimeSpan.FromMinutes (harness.Timeout * 2));
+			testReporter.Setup (r => r.TimeoutWatch).Returns (new System.Diagnostics.Stopwatch ());
+			testReporter.Setup (r => r.ParseResult ()).Returns (() => {
+				return Task.FromResult<(TestExecutingResult, string)> ((TestExecutingResult.Failed, null));
+			});
+			testReporter.Setup (r => r.Success).Returns (false);
 
 			// Act
 			var appRunner = new AppRunner (processManager.Object,
@@ -737,7 +774,7 @@ namespace Xharness.Tests {
 				crashReporterFactory.Object,
 				Mock.Of<ICaptureLogFactory> (), // Used for simulators only
 				deviceLogCapturerFactory.Object,
-				resultParser.Object,
+				testReporterFactory.Object,
 				TestTarget.Device_iOS,
 				harness,
 				mainLog.Object,
@@ -752,10 +789,6 @@ namespace Xharness.Tests {
 			Assert.AreEqual (1, result);
 
 			processManager.VerifyAll ();
-
-			mainLog.Verify (x => x.WriteLine ("Test run started"));
-			mainLog.Verify (x => x.WriteLine ("Test run completed"));
-			mainLog.Verify (x => x.WriteLine ("Test run failed"));
 
 			simpleListener.Verify (x => x.Initialize (), Times.AtLeastOnce);
 			simpleListener.Verify (x => x.StartAsync (), Times.AtLeastOnce);

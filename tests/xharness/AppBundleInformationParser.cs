@@ -8,6 +8,7 @@ namespace Xharness {
 		public string AppName { get; }
 		public string BundleIdentifier { get; }
 		public string AppPath { get; }
+		public string Variation { get; set;  }
 		public string LaunchAppPath { get; }
 		public Extension? Extension { get; }
 
