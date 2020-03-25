@@ -24,6 +24,10 @@
 
     <!-- Opt-in to use the version of XI/XM installed into the system -->
     <XamarinUseSystemInstall Condition=" '$(XamarinUseSystemInstall)' == '' ">false</XamarinUseSystemInstall>
+    <!-- Opt-in to use the simplified Build-target-replacement build logic -->
+    <XamarinReplaceBuildTarget Condition=" '$(XamarinReplaceBuildTarget)' == '' ">false</XamarinReplaceBuildTarget>
+    <!-- Default is to use the .NET5-style build -->
+
     <MD_MTOUCH_SDK_ROOT      Condition=" '$(XamarinUseSystemInstall)' == 'false' And '$(_PlatformName)' != 'macOS' And '$(MD_MTOUCH_SDK_ROOT)' == ''      ">$(XamarinSdkRootDirectory)</MD_MTOUCH_SDK_ROOT>
     <XamarinMacFrameworkRoot Condition=" '$(XamarinUseSystemInstall)' == 'false' And '$(_PlatformName)' == 'macOS' And '$(XamarinMacFrameworkRoot)' == '' ">$(XamarinSdkRootDirectory)</XamarinMacFrameworkRoot>
 
@@ -38,14 +42,15 @@
     <XamarinFrameworkRoot Condition=" '$(_PlatformName)' == 'macOS' ">$(XamarinMacFrameworkRoot)</XamarinFrameworkRoot>
     <XamarinFrameworkRoot Condition=" '$(_PlatformName)' != 'macOS' ">$(MonoTouchSdkRoot)</XamarinFrameworkRoot>
 
-    <!-- We should always override the framework path so that we resolves to our own mscorlib.dll -->
-    <TargetFrameworkRootPath Condition=" '$(TargetFrameworkRootPath)' == '' ">$(XamarinSdkRootDirectory)lib</TargetFrameworkRootPath>
-    <FrameworkPathOverride Condition=" '$(FrameworkPathOverride)' == '' ">$(XamarinSdkRootDirectory)lib\$(_TFI)\v1.0</FrameworkPathOverride>
+    <!-- We override the framework path so that we resolves to our own mscorlib.dll when we're not using the .NET 5 build logic -->
+    <TargetFrameworkRootPath Condition=" '$(XamarinReplaceBuildTarget)' == 'true' And '$(TargetFrameworkRootPath)' == '' ">$(XamarinSdkRootDirectory)lib</TargetFrameworkRootPath>
+    <FrameworkPathOverride   Condition=" '$(XamarinReplaceBuildTarget)' == 'true' And '$(FrameworkPathOverride)' == '' ">$(XamarinSdkRootDirectory)lib\$(_TFI)\v1.0</FrameworkPathOverride>
 
     <XamarinFrameworkBinDir Condition=" '$(_PlatformName)' == 'macOS' And '$(XamarinUseSystemInstall)' == 'false' ">$(XamarinFrameworkRoot)/tools/bin</XamarinFrameworkBinDir>
     <XamarinFrameworkBinDir Condition=" '$(_PlatformName)' == 'macOS' And '$(XamarinUseSystemInstall)' != 'false' ">$(XamarinFrameworkRoot)/bin</XamarinFrameworkBinDir>
 
     <!-- Enable nuget package conflict resolution -->
+    <!-- .NET5: Is this necessary? -->
     <ResolveAssemblyConflicts>true</ResolveAssemblyConflicts>
 
     <!-- We want to set OutputType=Library automatically for app extensions
@@ -54,7 +59,7 @@
     complication is that at this point OutputType=Library by default (set by
     Sdk.props at the top of this file), so we can't check if OutputType=''.
     Instead set OutputType to a sentinent value we can check for later -->
-    <OutputType>DefaultOutputType</OutputType>
+    <OutputType Condition=" '$(XamarinReplaceBuildTarget)' == 'true'">DefaultOutputType</OutputType>
   </PropertyGroup>
 
   <!-- Defaults -->
