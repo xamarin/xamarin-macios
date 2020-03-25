@@ -81,6 +81,7 @@
     <Compile Include="BCLTestImporter\Xamarin\Tests\ProjectFilterTest.cs" />
     <Compile Include="BCLTestImporter\Xamarin\Tests\AssemblyLocatorTest.cs" />
     <Compile Include="BCLTestImporter\Xamarin\Tests\XamariniOSTemplateTest.cs" />
+    <Compile Include="Tests\TestReporterTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -98,6 +99,9 @@
     <EmbeddedResource Include="Samples\xUnitSample.xml" />
     <EmbeddedResource Include="Samples\devices.xml" />
     <EmbeddedResource Include="Samples\simulators.xml" />
+    <EmbeddedResource Include="Samples\run-log.txt" />
+    <EmbeddedResource Include="Samples\NUnitV3SampleSuccess.xml" />
+    <EmbeddedResource Include="Samples\NUnitV3SampleFailure.xml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../DummyTestProcess/DummyTestProcess.csproj">
