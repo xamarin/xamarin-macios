@@ -1,0 +1,4 @@
+!missing-enum! UIAxis not bound
+!missing-protocol-member! UIGestureRecognizerDelegate::gestureRecognizer:shouldReceiveEvent: not found
+!missing-selector! UIEvent::modifierFlags not bound
+!missing-selector! UIGestureRecognizer::shouldReceiveEvent: not bound
