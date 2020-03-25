@@ -8,6 +8,7 @@ using NUnit.Framework;
 using Xharness.Execution;
 using Xharness.Execution.Mlaunch;
 using Xharness.Logging;
+using Xharness.Utilities;
 
 namespace Xharness.Tests {
 	[TestFixture]
@@ -15,7 +16,7 @@ namespace Xharness.Tests {
 
 		string tempXcodeRoot;
 		string symbolicatePath;
-		
+
 		Mock<IProcessManager> processManager;
 		Mock<ILog> log;
 		Mock<ILogs> logs;
@@ -27,7 +28,7 @@ namespace Xharness.Tests {
 			log = new Mock<ILog> ();
 			logs = new Mock<ILogs> ();
 
-			tempXcodeRoot = Path.Combine (Path.GetTempPath (), Guid.NewGuid ().ToString());
+			tempXcodeRoot = Path.Combine (Path.GetTempPath (), Guid.NewGuid ().ToString ());
 			symbolicatePath = Path.Combine (tempXcodeRoot, "Contents", "SharedFrameworks", "DTDeviceKitBase.framework", "Versions", "A", "Resources");
 
 			// Create fake place for device logs
@@ -39,7 +40,8 @@ namespace Xharness.Tests {
 		}
 
 		[TearDown]
-		public void TearDown () {
+		public void TearDown ()
+		{
 			Directory.Delete (tempXcodeRoot, true);
 		}
 
@@ -50,49 +52,20 @@ namespace Xharness.Tests {
 
 			const string deviceName = "Sample-iPhone";
 			const string crashLogPath = "/path/to/crash.log";
-			const string symbolicateLogPath = "/path/to/" + deviceName+ ".symbolicated.log";
-			
+			const string symbolicateLogPath = "/path/to/" + deviceName + ".symbolicated.log";
+
 			var crashReport = Mock.Of<ILogFile> (x => x.Path == crashLogPath);
 			var symbolicateReport = Mock.Of<ILogFile> (x => x.Path == symbolicateLogPath);
 
 			// Crash report is added
 			logs.Setup (x => x.Create (deviceName, "Crash report: " + deviceName, It.IsAny<bool> ()))
 				.Returns (crashReport);
-			
+
 			// Symbolicate report is added
 			logs.Setup (x => x.Create ("crash.symbolicated.log", "Symbolicated crash report: crash.log", It.IsAny<bool> ()))
 				.Returns (symbolicateReport);
 
-			// List of crash reports is retrieved
-			processManager
-				.Setup (x => x.ExecuteCommandAsync (
-					It.Is<MlaunchArguments> (args => args.AsCommandLine () == $"--list-crash-reports={tempFilePath} --sdkroot={tempXcodeRoot} --devname={deviceName}"),
-					log.Object,
-					TimeSpan.FromMinutes (1),
-					null,
-					null))
-				.ReturnsAsync (new ProcessExecutionResult () { ExitCode = 0 });
-			
-			// Device crash log is downloaded
-			processManager
-				.Setup (x => x.ExecuteCommandAsync (
-					It.Is<MlaunchArguments> (args => args.AsCommandLine () == $"--download-crash-report={deviceName} --download-crash-report-to={crashLogPath} --sdkroot={tempXcodeRoot} --devname={deviceName}"),
-					log.Object,
-					TimeSpan.FromMinutes (1),
-					null,
-					null))
-				.ReturnsAsync (new ProcessExecutionResult () { ExitCode = 0 });
-
-			// Symbolicate is ran
-			processManager
-				.Setup (x => x.ExecuteCommandAsync (
-					Path.Combine (symbolicatePath, "symbolicatecrash"),
-					It.Is<IList<string>> (args => args.First () == crashLogPath),
-					symbolicateReport,
-					TimeSpan.FromMinutes (1),
-					It.IsAny <Dictionary<string, string>>(),
-					null))
-				.ReturnsAsync (new ProcessExecutionResult () { ExitCode = 0 });
+			processManager.SetReturnsDefault (Task.FromResult (new ProcessExecutionResult () { ExitCode = 0 }));
 
 			// Act
 			var snapshotReport = new CrashSnapshotReporter (processManager.Object,
@@ -106,14 +79,51 @@ namespace Xharness.Tests {
 			File.WriteAllLines (tempFilePath, new [] { "crash 1", "crash 2" });
 
 			await snapshotReport.StartCaptureAsync ();
-			
+
 			File.WriteAllLines (tempFilePath, new [] { "Sample-iPhone" });
 
 			await snapshotReport.EndCaptureAsync (TimeSpan.FromSeconds (10));
 
-			// Verify all calls above
-			processManager.VerifyAll ();
+			// Verify
 			logs.VerifyAll ();
+
+			// List of crash reports is retrieved
+			processManager.Verify (
+				x => x.ExecuteCommandAsync (
+					It.Is<MlaunchArguments> (args => args.AsCommandLine () ==
+						StringUtils.FormatArguments ($"--list-crash-reports={tempFilePath}") + " " +
+						$"--sdkroot {StringUtils.FormatArguments (tempXcodeRoot)} " +
+						$"--devname {StringUtils.FormatArguments (deviceName)}"),
+					log.Object,
+					TimeSpan.FromMinutes (1),
+					null,
+					null),
+				Times.Exactly (2));
+
+			// Device crash log is downloaded
+			processManager.Verify (
+				x => x.ExecuteCommandAsync (
+					It.Is<MlaunchArguments> (args => args.AsCommandLine () ==
+						 StringUtils.FormatArguments ($"--download-crash-report={deviceName}") + " " +
+						 StringUtils.FormatArguments ($"--download-crash-report-to={crashLogPath}") + " " +
+						 $"--sdkroot {StringUtils.FormatArguments (tempXcodeRoot)} " +
+						 $"--devname {StringUtils.FormatArguments (deviceName)}"),
+					log.Object,
+					TimeSpan.FromMinutes (1),
+					null,
+					null),
+				Times.Once);
+
+			// Symbolicate is ran
+			processManager.Verify (
+				x => x.ExecuteCommandAsync (
+					Path.Combine (symbolicatePath, "symbolicatecrash"),
+					It.Is<IList<string>> (args => args.First () == crashLogPath),
+					symbolicateReport,
+					TimeSpan.FromMinutes (1),
+					It.IsAny<Dictionary<string, string>> (),
+					null),
+				Times.Once);
 		}
 	}
 }

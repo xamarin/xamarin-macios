@@ -1,11 +1,13 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using NUnit.Framework;
 using Xharness.Execution.Mlaunch;
+using Xharness.Utilities;
 
 namespace Xharness.Tests.Execution.Tests {
 
 	[TestFixture]
-	public class MlaunchArgumentsTest {
+	public class MlaunchArgumentsTests {
 
 		public class CommandLineDataTestSource {
 			public static IEnumerable CommandLineArgs {
@@ -43,14 +45,14 @@ namespace Xharness.Tests.Execution.Tests {
 							new DownloadCrashReportToArgument ("/path/with spaces.txt"),
 							new DeviceNameArgument ("Test iPad")
 						})
-						.Returns ($"--download-crash-report-to=\"/path/with spaces.txt\" --devname=\"Test iPad\"");
+						.Returns ($"\"--download-crash-report-to=/path/with spaces.txt\" --devname \"Test iPad\"");
 
 					yield return new TestCaseData (arg:
 						new MlaunchArgument [] {
-							new ListDevicesArgument (listDevFile),
-							new ListSimulatorsArgument (listSimFile)
+							new SetEnvVariableArgument ("SOME_PARAM", "true"),
+							new SetEnvVariableArgument ("NUNIT_LOG_FILE", "/another space/path.txt")
 						})
-						.Returns ($"--listdev={listDevFile} --listsim={listSimFile}");
+						.Returns ($"-setenv=SOME_PARAM=true \"-setenv=NUNIT_LOG_FILE=/another space/path.txt\"");
 
 					yield return new TestCaseData (arg:
 						new MlaunchArgument [] {
@@ -67,6 +69,29 @@ namespace Xharness.Tests.Execution.Tests {
 		public string AsCommandLineTest (MlaunchArgument [] args)
 		{
 			return new MlaunchArguments (args).AsCommandLine ();
+		}
+
+		[Test]
+		public void MlaunchArgumentAndProcessManagerTest ()
+		{
+			var oldArgs = new List<string> () {
+				"--download-crash-report-to=/path/with spaces.txt",
+				"--sdkroot",
+				"/path to xcode/spaces",
+				"--devname",
+				"Premek's iPhone",
+			};
+
+			var newArgs = new MlaunchArguments () {
+				new DownloadCrashReportToArgument ("/path/with spaces.txt"),
+				new SdkRootArgument ("/path to xcode/spaces"),
+				new DeviceNameArgument ("Premek's iPhone"),
+			};
+
+			var oldWayOfPassingArgs = StringUtils.FormatArguments (oldArgs);
+			var newWayOfPassingArgs = newArgs.AsCommandLine ();
+
+			Assert.AreEqual (oldWayOfPassingArgs, newWayOfPassingArgs, "Something changed when moving to MlaunchArguments");
 		}
 
 		[Test]

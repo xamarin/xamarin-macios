@@ -1,10 +1,12 @@
-﻿namespace Xharness.Execution.Mlaunch {
+﻿using System;
+
+namespace Xharness.Execution.Mlaunch {
 
 	/// <summary>
 	/// Specify the location of Apple SDKs, default to 'xcode-select' value.
 	/// </summary>
 	public sealed class SdkRootArgument : SingleValueArgument {
-		public SdkRootArgument (string sdkPath) : base ("sdkroot", sdkPath)
+		public SdkRootArgument (string sdkPath) : base ("sdkroot", sdkPath, false)
 		{
 		}
 	}
@@ -58,7 +60,7 @@
 	/// Specify which device (when many are present) the [install|lauch|kill|log]dev command applies.
 	/// </summary>
 	public sealed class DeviceNameArgument : SingleValueArgument {
-		public DeviceNameArgument (string deviceName) : base ("devname", deviceName)
+		public DeviceNameArgument (string deviceName) : base ("devname", deviceName, false)
 		{
 		}
 	}
@@ -66,8 +68,8 @@
 	/// <summary>
 	/// Install the specified iOS app bundle on the device.
 	/// </summary>
-	public sealed class InstallAppArgument : SingleValueArgument {
-		public InstallAppArgument (string appPath) : base ("installdev", appPath)
+	public sealed class InstallAppOnDeviceArgument : SingleValueArgument {
+		public InstallAppOnDeviceArgument (string appPath) : base ("installdev", appPath, false)
 		{
 		}
 	}
@@ -75,12 +77,12 @@
 	/// <summary>
 	/// Uninstall the specified bundle id from the device.
 	/// </summary>
-	public sealed class UninstallAppArgument : SingleValueArgument {
-		public UninstallAppArgument (string appBundleId) : base ("uninstalldevbundleid", appBundleId)
+	public sealed class UninstallAppFromDeviceArgument : SingleValueArgument {
+		public UninstallAppFromDeviceArgument (string appBundleId) : base ("uninstalldevbundleid", appBundleId, false)
 		{
 		}
 	}
-	
+
 	/// <summary>
 	/// Specify the output format for some commands as Default.
 	/// </summary>
@@ -135,7 +137,7 @@
 		{
 		}
 	}
-	
+
 	/// <summary>
 	/// Attempt to disable memory limits for launched apps.
 	/// This is just an attempt, some or all usual limits may still be enforced.
@@ -146,9 +148,6 @@
 		}
 	}
 
-	/// <summary>
-	/// 
-	/// </summary>
 	public sealed class WaitForExitArgument : OptionArgument {
 		public WaitForExitArgument () : base ("wait-for-exit")
 		{
@@ -163,7 +162,7 @@
 
 		public SetAppArgumentArgument (string value, bool isAppArg = false)
 		{
-			this.value = value ?? throw new System.ArgumentNullException (nameof (value));
+			this.value = value ?? throw new ArgumentNullException (nameof (value));
 
 			if (isAppArg)
 				this.value = "-app-arg:" + this.value;
@@ -181,14 +180,14 @@
 
 		public SetEnvVariableArgument (string variableName, object variableValue)
 		{
-			this.variableName = variableName ?? throw new System.ArgumentNullException (nameof (variableName));
-			this.variableValue = variableValue?.ToString() ?? throw new System.ArgumentNullException (nameof (variableValue));
+			this.variableName = variableName ?? throw new ArgumentNullException (nameof (variableName));
+			this.variableValue = variableValue?.ToString () ?? throw new ArgumentNullException (nameof (variableValue));
 
 			if (variableValue is bool)
 				this.variableValue = this.variableValue.ToLower ();
 		}
 
-		public override string AsCommandLineArgument () => $"-setenv={variableName}={variableValue}";
+		public override string AsCommandLineArgument () => Escape ($"-setenv={variableName}={variableValue}");
 	}
 
 	/// <summary>
@@ -208,32 +207,37 @@
 		{
 		}
 	}
-	
+
 	/// <summary>
 	/// Launch an app that is installed on device, specified by bundle identifier.
 	/// </summary>
 	public sealed class LaunchDeviceArgument : SingleValueArgument {
-		public LaunchDeviceArgument (string launchAppPath) : base ("launchdev", launchAppPath)
+		public LaunchDeviceArgument (string launchAppPath) : base ("launchdev", launchAppPath, false)
 		{
 		}
 	}
-	
+
 	/// <summary>
 	/// Launch the specified MonoTouch.app in the simulator.
 	/// </summary>
 	public sealed class LaunchSimulatorArgument : SingleValueArgument {
-		public LaunchSimulatorArgument (string launchAppPath) : base ("launchsim", launchAppPath)
+		public LaunchSimulatorArgument (string launchAppPath) : base ("launchsim", launchAppPath, false)
 		{
 		}
 	}
-	
+
 	/// <summary>
 	/// Specify which simulator to launch.
 	/// </summary>
-	public sealed class SimulatorUDIDArgument : SingleValueArgument {
-		public SimulatorUDIDArgument (string udid) : base ("device=:v2:udid", udid)
+	public sealed class SimulatorUDIDArgument : MlaunchArgument {
+		readonly string udid;
+
+		public SimulatorUDIDArgument (string udid)
 		{
+			this.udid = udid ?? throw new ArgumentNullException (nameof (udid));
 		}
+
+		public override string AsCommandLineArgument () => $"--device=:v2:udid={udid}";
 	}
 
 	/// <summary>
@@ -245,8 +249,8 @@
 
 		public LaunchSimulatorExtensionArgument (string launchAppPath, string bundleId)
 		{
-			this.launchAppPath = launchAppPath ?? throw new System.ArgumentNullException (nameof (launchAppPath));
-			this.bundleId = bundleId ?? throw new System.ArgumentNullException (nameof (bundleId));
+			this.launchAppPath = launchAppPath ?? throw new ArgumentNullException (nameof (launchAppPath));
+			this.bundleId = bundleId ?? throw new ArgumentNullException (nameof (bundleId));
 		}
 
 		public override string AsCommandLineArgument () => "--launchsimbundleid " +
@@ -263,8 +267,8 @@
 
 		public LaunchDeviceExtensionArgument (string launchAppPath, string bundleId)
 		{
-			this.launchAppPath = launchAppPath ?? throw new System.ArgumentNullException (nameof (launchAppPath));
-			this.bundleId = bundleId ?? throw new System.ArgumentNullException (nameof (bundleId));
+			this.launchAppPath = launchAppPath ?? throw new ArgumentNullException (nameof (launchAppPath));
+			this.bundleId = bundleId ?? throw new ArgumentNullException (nameof (bundleId));
 		}
 
 		public override string AsCommandLineArgument () => "--launchdevbundleid " +

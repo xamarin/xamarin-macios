@@ -4,7 +4,7 @@ using Xharness.Execution;
 
 namespace Xharness.Jenkins.TestTasks
 {
-	abstract class BuildToolTask : TestTask
+	public abstract class BuildToolTask : TestTask
 	{
 		protected readonly IProcessManager ProcessManager;
 

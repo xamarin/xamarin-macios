@@ -28,15 +28,22 @@ namespace Xharness.Execution.Mlaunch {
 	public abstract class SingleValueArgument : MlaunchArgument {
 		readonly string argumentName;
 		readonly string argumentValue;
+		readonly bool useEqualSign;
 
-		protected SingleValueArgument (string argumentName, string argumentValue)
+		protected SingleValueArgument (string argumentName, string argumentValue, bool useEqualSign = true)
 		{
 			this.argumentName = argumentName ?? throw new ArgumentNullException (nameof (argumentName));
 			this.argumentValue = argumentValue ?? throw new ArgumentNullException (nameof (argumentValue));
+			this.useEqualSign = useEqualSign;
 		}
 
-		public override string AsCommandLineArgument () =>
-			$"--{argumentName}={Escape (argumentValue)}";
+		public override string AsCommandLineArgument ()
+		{
+			if (useEqualSign)
+				return Escape ($"--{argumentName}={argumentValue}");
+			else
+				return $"--{argumentName} {Escape (argumentValue)}";
+		}
 	}
 
 	public abstract class OptionArgument : MlaunchArgument {

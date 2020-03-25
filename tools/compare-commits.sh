@@ -232,7 +232,19 @@ fi
 # affecting that build.
 $CP -R "$ROOT_DIR/src/build" "$OUTPUT_DIR/build-new"
 cd "$OUTPUT_DIR"
-find build build-new '(' -name '*.dll' -or -name '*.pdb' -or -name 'generated-sources' -or -name 'generated_sources' -or -name '*.exe' -or -name '*.rsp' -or -name 'AssemblyInfo.cs' -or -name 'Constants.cs' -or -name 'generator.csproj.*' ')' -delete
+find build build-new '(' \
+	-name '*.dll' -or \
+	-name '*.pdb' -or \
+	-name '*generated-sources' -or \
+	-name 'generated_sources' -or \
+	-name '*.exe' -or \
+	-name '*.rsp' -or \
+	-name 'AssemblyInfo.cs' -or \
+	-name 'Constants.cs' -or \
+	-name 'generator.csproj.*' -or \
+	-name 'bgen.csproj.*' -or \
+	-name '*.cache' \
+	')' -delete
 mkdir -p "$OUTPUT_DIR/generator-diff"
 GENERATOR_DIFF_FILE="$OUTPUT_DIR/generator-diff/index.html"
 git diff --no-index build build-new > "$OUTPUT_DIR/generator-diff/generator.diff" || true
@@ -245,6 +257,7 @@ MODIFIED_FILES=$(find \
 	"$ROOT_DIR/src" \
 	"$ROOT_DIR/tools/apidiff" \
 	-type f \
+	-not -name '*.xlf' \
 	-newer "$OUTPUT_DIR/stamp")
 
 if test -n "$MODIFIED_FILES"; then
