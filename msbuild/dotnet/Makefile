@@ -174,7 +174,7 @@ test/NuGet.config: $(TOP)/NuGet.config
 	$(Q) nuget sources add -Name local-dotnet-feed -Source $(PWD)/$(TEST_FEED_PATH) -ConfigFile $@.tmp
 	$(Q) mv $@.tmp $@
 
-test/global.json: Makefile $(TEMPLATED_FILES)
+test/global.json: Makefile $(TEMPLATED_FILES) targets/Xamarin.Shared.Legacy.Sdk.Versions.props
 	$(Q_GEN) \
 		CURRENT_HASH=$(shell grep '<CurrentHash>' targets/Xamarin.Shared.Legacy.Sdk.Versions.props | sed -e 's/<[/]*CurrentHash>//g' -e 's/[[:space:]]//g'); \
 		export IOS_PACKAGE_VERSION='$(shell     grep iOSPackageVersion:     targets/Xamarin.Shared.Sdk.Versions.props | sed -e 's/.*iOSPackageVersion:[[:space:]]*//'     -e 's/[[:space:]]*-->.*//')'; \
