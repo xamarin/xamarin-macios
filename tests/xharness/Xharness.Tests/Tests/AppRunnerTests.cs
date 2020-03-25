@@ -9,9 +9,11 @@ using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
 using Xharness.Execution;
+using Xharness.Execution.Mlaunch;
 using Xharness.Hardware;
 using Xharness.Listeners;
 using Xharness.Logging;
+using Xharness.Utilities;
 
 namespace Xharness.Tests {
 	[TestFixture]
@@ -125,7 +127,7 @@ namespace Xharness.Tests {
 				snapshotReporterFactory,
 				Mock.Of<ICaptureLogFactory> (),
 				Mock.Of<IDeviceLogCapturerFactory> (),
-				Mock.Of<IResultParser> (),
+				Mock.Of<ITestReporterFactory> (),
 				TestTarget.Simulator_iOS64,
 				Mock.Of<IHarness> (),
 				mainLog.Object,
@@ -150,7 +152,7 @@ namespace Xharness.Tests {
 				snapshotReporterFactory,
 				Mock.Of<ICaptureLogFactory> (),
 				Mock.Of<IDeviceLogCapturerFactory> (),
-				Mock.Of<IResultParser> (),
+				Mock.Of<ITestReporterFactory> (),
 				TestTarget.Simulator_iOS64,
 				Mock.Of<IHarness> (),
 				mainLog.Object,
@@ -174,7 +176,7 @@ namespace Xharness.Tests {
 				snapshotReporterFactory,
 				Mock.Of<ICaptureLogFactory> (),
 				Mock.Of<IDeviceLogCapturerFactory> (),
-				Mock.Of<IResultParser> (),
+				Mock.Of<ITestReporterFactory> (),
 				TestTarget.Simulator_iOS64,
 				Mock.Of<IHarness> (),
 				mainLog.Object,
@@ -198,7 +200,7 @@ namespace Xharness.Tests {
 				snapshotReporterFactory,
 				Mock.Of<ICaptureLogFactory> (),
 				Mock.Of<IDeviceLogCapturerFactory> (),
-				Mock.Of<IResultParser> (),
+				Mock.Of<ITestReporterFactory> (),
 				TestTarget.Device_iOS,
 				Mock.Of<IHarness> (),
 				mainLog.Object,
@@ -223,6 +225,9 @@ namespace Xharness.Tests {
 			var processResult = new ProcessExecutionResult () { ExitCode = 1, TimedOut = false };
 			processManager.SetReturnsDefault (Task.FromResult (processResult));
 
+			devices.Setup (x => x.ConnectedDevices).Returns (mockDevices);
+
+			// Act
 			var appRunner = new AppRunner (processManager.Object,
 				appBundleInformationParser,
 				simulatorsFactory,
@@ -231,7 +236,7 @@ namespace Xharness.Tests {
 				snapshotReporterFactory,
 				Mock.Of<ICaptureLogFactory> (),
 				Mock.Of<IDeviceLogCapturerFactory> (),
-				Mock.Of<IResultParser> (),
+				Mock.Of<ITestReporterFactory> (),
 				TestTarget.Device_iOS,
 				harness,
 				mainLog.Object,
@@ -239,28 +244,19 @@ namespace Xharness.Tests {
 				projectFilePath: projectFilePath,
 				buildConfiguration: "Debug");
 
-			devices.Setup (x => x.ConnectedDevices).Returns (mockDevices);
-
-			// Act
 			CancellationToken cancellationToken = new CancellationToken ();
 			var result = await appRunner.InstallAsync (cancellationToken);
 
 			// Verify
 			Assert.AreEqual (1, result.ExitCode);
 
+			var expectedArgs = $"--sdkroot /path/to/xcode -v -v -v " +
+				$"--installdev {StringUtils.FormatArguments (appPath)} " +
+				$"--devname \"Test iPad\"";
+
 			processManager.Verify (x => x.ExecuteCommandAsync (
 				"/path/to/mlaunch",
-				new List<string> () {
-					"--sdkroot",
-					"/path/to/xcode",
-					"-v",
-					"-v",
-					"-v",
-					"--installdev",
-					appPath,
-					"--devname",
-					"Test iPad"
-				},
+				It.Is<MlaunchArguments> (args => args.AsCommandLine () == expectedArgs),
 				mainLog.Object,
 				TimeSpan.FromHours (1),
 				null,
@@ -277,6 +273,9 @@ namespace Xharness.Tests {
 			var processResult = new ProcessExecutionResult () { ExitCode = 3, TimedOut = false };
 			processManager.SetReturnsDefault (Task.FromResult (processResult));
 
+			devices.Setup (x => x.ConnectedDevices).Returns (mockDevices.Reverse ());
+
+			// Act
 			var appRunner = new AppRunner (processManager.Object,
 				appBundleInformationParser,
 				simulatorsFactory,
@@ -285,7 +284,7 @@ namespace Xharness.Tests {
 				snapshotReporterFactory,
 				Mock.Of<ICaptureLogFactory> (),
 				Mock.Of<IDeviceLogCapturerFactory> (),
-				Mock.Of<IResultParser> (),
+				Mock.Of<ITestReporterFactory> (),
 				TestTarget.Device_iOS,
 				harness,
 				mainLog.Object,
@@ -293,24 +292,18 @@ namespace Xharness.Tests {
 				projectFilePath: Path.Combine (sampleProjectPath, "SystemXunit.csproj"),
 				buildConfiguration: "Debug");
 
-			devices.Setup (x => x.ConnectedDevices).Returns (mockDevices.Reverse ());
-
 			var result = await appRunner.UninstallAsync ();
 
+			// Verify
 			Assert.AreEqual (3, result.ExitCode);
+
+			var expectedArgs = $"--sdkroot /path/to/xcode -v -v " +
+				$"--uninstalldevbundleid {StringUtils.FormatArguments (appName)} " +
+				$"--devname \"Test iPad\"";
 
 			processManager.Verify (x => x.ExecuteCommandAsync (
 				"/path/to/mlaunch",
-				new List<string> () {
-					"--sdkroot",
-					"/path/to/xcode",
-					"-v",
-					"-v",
-					"--uninstalldevbundleid",
-					appName,
-					"--devname",
-					"Test iPad"
-				},
+				It.Is<MlaunchArguments> (args => args.AsCommandLine () == expectedArgs),
 				mainLog.Object,
 				TimeSpan.FromMinutes (1),
 				null,
@@ -358,6 +351,20 @@ namespace Xharness.Tests {
 					true,
 					It.IsAny<string> ()))
 				.Returns (captureLog.Object);
+			var testReporterFactory = new Mock<ITestReporterFactory> ();
+			var testReporter = new Mock<ITestReporter> ();
+			testReporterFactory.Setup (f => f.Create (
+				It.IsAny<IAppRunner> (),
+				It.IsAny<string> (),
+				It.IsAny<ISimpleListener> (),
+				It.IsAny<ILog> (),
+				It.IsAny<ICrashSnapshotReporter> (),
+				It.IsAny<IResultParser> ())).Returns (testReporter.Object);
+			testReporter.Setup (r => r.TimeoutWatch).Returns (new System.Diagnostics.Stopwatch ());
+			testReporter.Setup (r => r.ParseResult ()).Returns (() => {
+				return Task.FromResult<(TestExecutingResult, string)> ((TestExecutingResult.Succeeded, null));
+			});
+			testReporter.Setup (r => r.Success).Returns (true);
 
 			// Act
 			var appRunner = new AppRunner (processManager.Object,
@@ -368,7 +375,7 @@ namespace Xharness.Tests {
 				crashReporterFactory.Object,
 				captureLogFactory.Object,
 				Mock.Of<IDeviceLogCapturerFactory> (),
-				Mock.Of<IResultParser> (),
+				testReporterFactory.Object,
 				TestTarget.Simulator_tvOS,
 				GetMockedHarness (),
 				mainLog.Object,
@@ -442,19 +449,20 @@ namespace Xharness.Tests {
 					It.IsAny<string> ()))
 				.Returns (captureLog.Object);
 
-			var expectedArgs = $"--sdkroot {xcodePath} -v -v -argument=-connection-mode -argument=none " +
-				$"-argument=-app-arg:-autostart -setenv=NUNIT_AUTOSTART=true -argument=-app-arg:-autoexit " +
-				$"-setenv=NUNIT_AUTOEXIT=true -argument=-app-arg:-enablenetwork -setenv=NUNIT_ENABLE_NETWORK=true " +
+			var expectedArgs = $"--sdkroot {StringUtils.FormatArguments (xcodePath)} -v -v " +
+				$"-argument=-connection-mode -argument=none -argument=-app-arg:-autostart " +
+				$"-setenv=NUNIT_AUTOSTART=true -argument=-app-arg:-autoexit -setenv=NUNIT_AUTOEXIT=true " +
+				$"-argument=-app-arg:-enablenetwork -setenv=NUNIT_ENABLE_NETWORK=true " +
 				$"-setenv=DISABLE_SYSTEM_PERMISSION_TESTS=1 -argument=-app-arg:-hostname:127.0.0.1 " +
 				$"-setenv=NUNIT_HOSTNAME=127.0.0.1 -argument=-app-arg:-transport:Tcp -setenv=NUNIT_TRANSPORT=TCP " +
 				$"-argument=-app-arg:-hostport:{simpleListener.Object.Port} -setenv=NUNIT_HOSTPORT={simpleListener.Object.Port} " +
-				$"-setenv=env1=value1 -setenv=env2=value2 --launchsim {appPath} --stdout=tty1 --stderr=tty1 " +
-				$"--device=:v2:udid={simulator.Object.UDID}";
+				$"-setenv=env1=value1 -setenv=env2=value2 --launchsim {StringUtils.FormatArguments (appPath)} " +
+				$"--stdout=tty1 --stderr=tty1 --device=:v2:udid={simulator.Object.UDID}";
 
 			processManager
 				.Setup (x => x.ExecuteCommandAsync (
 					mlaunchPath,
-					It.Is<IList<string>> (args => string.Join (" ", args) == expectedArgs),
+					It.Is<MlaunchArguments> (args => args.AsCommandLine () == expectedArgs),
 					mainLog.Object,
 					TimeSpan.FromMinutes (harness.Timeout * 2),
 					null,
@@ -462,10 +470,21 @@ namespace Xharness.Tests {
 				.ReturnsAsync (new ProcessExecutionResult () { ExitCode = 0 });
 
 			var xmlResultFile = Path.ChangeExtension (testResultFilePath, "xml");
-			var resultParser = new Mock<IResultParser> ();
-			resultParser
-				.Setup (x => x.CleanXml (testResultFilePath, xmlResultFile))
-				.Callback (() => File.Copy (testResultFilePath, xmlResultFile));
+			var testReporterFactory = new Mock<ITestReporterFactory> ();
+			var testReporter = new Mock<ITestReporter> ();
+			testReporterFactory.Setup (f => f.Create (
+				It.IsAny<IAppRunner> (),
+				It.IsAny<string> (),
+				It.IsAny<ISimpleListener> (),
+				It.IsAny<ILog> (),
+				It.IsAny<ICrashSnapshotReporter> (),
+				It.IsAny<IResultParser> ())).Returns (testReporter.Object);
+			testReporter.Setup (r => r.Timeout).Returns (TimeSpan.FromMinutes (harness.Timeout * 2));
+			testReporter.Setup (r => r.TimeoutWatch).Returns (new System.Diagnostics.Stopwatch ());
+			testReporter.Setup (r => r.ParseResult ()).Returns (() => {
+				return Task.FromResult<(TestExecutingResult, string)> ((TestExecutingResult.Succeeded, null));
+			});
+			testReporter.Setup (r => r.Success).Returns (true);
 
 			// Act
 			var appRunner = new AppRunner (processManager.Object,
@@ -476,7 +495,7 @@ namespace Xharness.Tests {
 				crashReporterFactory.Object,
 				captureLogFactory.Object,
 				Mock.Of<IDeviceLogCapturerFactory> (), // Use for devices only
-				resultParser.Object,
+				testReporterFactory.Object,
 				TestTarget.Simulator_iOS64,
 				harness,
 				mainLog.Object,
@@ -491,10 +510,6 @@ namespace Xharness.Tests {
 			// Verify
 			Assert.AreEqual (0, result);
 
-			mainLog.Verify (x => x.WriteLine ("Test run started"));
-			mainLog.Verify (x => x.WriteLine ("Test run completed"));
-			mainLog.Verify (x => x.WriteLine ("Test run succeeded"));
-
 			simpleListener.Verify (x => x.Initialize (), Times.AtLeastOnce);
 			simpleListener.Verify (x => x.StartAsync (), Times.AtLeastOnce);
 			simpleListener.Verify (x => x.Cancel (), Times.AtLeastOnce);
@@ -508,8 +523,6 @@ namespace Xharness.Tests {
 			// When ensureCleanSimulatorState == true
 			simulator.Verify (x => x.PrepareSimulatorAsync (mainLog.Object, appName));
 			simulator.Verify (x => x.KillEverythingAsync (mainLog.Object));
-
-			resultParser.VerifyAll ();
 		}
 
 		[Test]
@@ -540,7 +553,7 @@ namespace Xharness.Tests {
 				crashReporterFactory.Object,
 				Mock.Of<ICaptureLogFactory> (),
 				Mock.Of<IDeviceLogCapturerFactory> (),
-				Mock.Of<IResultParser> (),
+				Mock.Of<ITestReporterFactory> (),
 				TestTarget.Device_tvOS,
 				GetMockedHarness (),
 				mainLog.Object,
@@ -599,18 +612,18 @@ namespace Xharness.Tests {
 				ips.Append (ipAddresses [i].ToString ());
 			}
 
-			var expectedArgs = $"--sdkroot {xcodePath} -v -v -argument=-connection-mode -argument=none " +
+			var expectedArgs = $"--sdkroot {StringUtils.FormatArguments (xcodePath)} -v -v -argument=-connection-mode -argument=none " +
 				$"-argument=-app-arg:-autostart -setenv=NUNIT_AUTOSTART=true -argument=-app-arg:-autoexit " +
 				$"-setenv=NUNIT_AUTOEXIT=true -argument=-app-arg:-enablenetwork -setenv=NUNIT_ENABLE_NETWORK=true " +
 				$"-setenv=DISABLE_SYSTEM_PERMISSION_TESTS=1 -argument=-app-arg:-hostname:{ips} -setenv=NUNIT_HOSTNAME={ips} " +
 				$"-argument=-app-arg:-transport:Tcp -setenv=NUNIT_TRANSPORT=TCP -argument=-app-arg:-hostport:{simpleListener.Object.Port} " +
 				$"-setenv=NUNIT_HOSTPORT={simpleListener.Object.Port} -setenv=env1=value1 -setenv=env2=value2 " +
-				$"--launchdev {appPath} --disable-memory-limits --wait-for-exit --devname Test iPad";
+				$"--launchdev {StringUtils.FormatArguments (appPath)} --disable-memory-limits --wait-for-exit --devname \"Test iPad\"";
 
 			processManager
 				.Setup (x => x.ExecuteCommandAsync (
 					mlaunchPath,
-					It.Is<IList<string>> (args => string.Join (" ", args) == expectedArgs),
+					It.Is<MlaunchArguments> (args => args.AsCommandLine () == expectedArgs),
 					It.IsAny<ILog> (),
 					TimeSpan.FromMinutes (harness.Timeout * 2),
 					null,
@@ -618,10 +631,21 @@ namespace Xharness.Tests {
 				.ReturnsAsync (new ProcessExecutionResult () { ExitCode = 0 });
 
 			var xmlResultFile = Path.ChangeExtension (testResultFilePath, "xml");
-			var resultParser = new Mock<IResultParser> ();
-			resultParser
-				.Setup (x => x.CleanXml (testResultFilePath, xmlResultFile))
-				.Callback (() => File.Copy (testResultFilePath, xmlResultFile));
+			var testReporterFactory = new Mock<ITestReporterFactory> ();
+			var testReporter = new Mock<ITestReporter> ();
+			testReporterFactory.Setup (f => f.Create (
+				It.IsAny<IAppRunner> (),
+				It.IsAny<string> (),
+				It.IsAny<ISimpleListener> (),
+				It.IsAny<ILog> (),
+				It.IsAny<ICrashSnapshotReporter> (),
+				It.IsAny<IResultParser> ())).Returns (testReporter.Object);
+			testReporter.Setup (r => r.Timeout).Returns (TimeSpan.FromMinutes (harness.Timeout * 2));
+			testReporter.Setup (r => r.TimeoutWatch).Returns (new System.Diagnostics.Stopwatch ());
+			testReporter.Setup (r => r.ParseResult ()).Returns (() => {
+				return Task.FromResult<(TestExecutingResult, string)> ((TestExecutingResult.Succeeded, null));
+			});
+			testReporter.Setup (r => r.Success).Returns (true);
 
 			// Act
 			var appRunner = new AppRunner (processManager.Object,
@@ -632,7 +656,7 @@ namespace Xharness.Tests {
 				crashReporterFactory.Object,
 				Mock.Of<ICaptureLogFactory> (), // Used for simulators only
 				deviceLogCapturerFactory.Object,
-				resultParser.Object,
+				testReporterFactory.Object,
 				TestTarget.Device_iOS,
 				harness,
 				mainLog.Object,
@@ -647,10 +671,6 @@ namespace Xharness.Tests {
 			Assert.AreEqual (0, result);
 
 			processManager.VerifyAll ();
-
-			mainLog.Verify (x => x.WriteLine ("Test run started"));
-			mainLog.Verify (x => x.WriteLine ("Test run completed"));
-			mainLog.Verify (x => x.WriteLine ("Test run succeeded"));
 
 			simpleListener.Verify (x => x.Initialize (), Times.AtLeastOnce);
 			simpleListener.Verify (x => x.StartAsync (), Times.AtLeastOnce);
@@ -708,18 +728,18 @@ namespace Xharness.Tests {
 				ips.Append (ipAddresses [i].ToString ());
 			}
 
-			var expectedArgs = $"--sdkroot {xcodePath} -v -v -argument=-connection-mode -argument=none " +
+			var expectedArgs = $"--sdkroot {StringUtils.FormatArguments (xcodePath)} -v -v -argument=-connection-mode -argument=none " +
 				$"-argument=-app-arg:-autostart -setenv=NUNIT_AUTOSTART=true -argument=-app-arg:-autoexit " +
 				$"-setenv=NUNIT_AUTOEXIT=true -argument=-app-arg:-enablenetwork -setenv=NUNIT_ENABLE_NETWORK=true " +
 				$"-setenv=DISABLE_SYSTEM_PERMISSION_TESTS=1 -argument=-app-arg:-hostname:{ips} -setenv=NUNIT_HOSTNAME={ips} " +
 				$"-argument=-app-arg:-transport:Tcp -setenv=NUNIT_TRANSPORT=TCP -argument=-app-arg:-hostport:{simpleListener.Object.Port} " +
 				$"-setenv=NUNIT_HOSTPORT={simpleListener.Object.Port} -setenv=env1=value1 -setenv=env2=value2 " +
-				$"--launchdev {appPath} --disable-memory-limits --wait-for-exit --devname Test iPad";
+				$"--launchdev {StringUtils.FormatArguments (appPath)} --disable-memory-limits --wait-for-exit --devname \"Test iPad\"";
 
 			processManager
 				.Setup (x => x.ExecuteCommandAsync (
 					mlaunchPath,
-					It.Is<IList<string>> (args => string.Join (" ", args) == expectedArgs),
+					It.Is<MlaunchArguments> (args => args.AsCommandLine () == expectedArgs),
 					It.IsAny<ILog> (),
 					TimeSpan.FromMinutes (harness.Timeout * 2),
 					null,
@@ -727,10 +747,21 @@ namespace Xharness.Tests {
 				.ReturnsAsync (new ProcessExecutionResult () { ExitCode = 0 });
 
 			var xmlResultFile = Path.ChangeExtension (testResultFilePath, "xml");
-			var resultParser = new Mock<IResultParser> ();
-			resultParser
-				.Setup (x => x.CleanXml (testResultFilePath, xmlResultFile))
-				.Callback (() => File.Copy (testResultFilePath, xmlResultFile));
+			var testReporterFactory = new Mock<ITestReporterFactory> ();
+			var testReporter = new Mock<ITestReporter> ();
+			testReporterFactory.Setup (f => f.Create (
+				It.IsAny<IAppRunner> (),
+				It.IsAny<string> (),
+				It.IsAny<ISimpleListener> (),
+				It.IsAny<ILog> (),
+				It.IsAny<ICrashSnapshotReporter> (),
+				It.IsAny<IResultParser> ())).Returns (testReporter.Object);
+			testReporter.Setup (r => r.Timeout).Returns (TimeSpan.FromMinutes (harness.Timeout * 2));
+			testReporter.Setup (r => r.TimeoutWatch).Returns (new System.Diagnostics.Stopwatch ());
+			testReporter.Setup (r => r.ParseResult ()).Returns (() => {
+				return Task.FromResult<(TestExecutingResult, string)> ((TestExecutingResult.Failed, null));
+			});
+			testReporter.Setup (r => r.Success).Returns (false);
 
 			// Act
 			var appRunner = new AppRunner (processManager.Object,
@@ -741,7 +772,7 @@ namespace Xharness.Tests {
 				crashReporterFactory.Object,
 				Mock.Of<ICaptureLogFactory> (), // Used for simulators only
 				deviceLogCapturerFactory.Object,
-				resultParser.Object,
+				testReporterFactory.Object,
 				TestTarget.Device_iOS,
 				harness,
 				mainLog.Object,
@@ -756,10 +787,6 @@ namespace Xharness.Tests {
 			Assert.AreEqual (1, result);
 
 			processManager.VerifyAll ();
-
-			mainLog.Verify (x => x.WriteLine ("Test run started"));
-			mainLog.Verify (x => x.WriteLine ("Test run completed"));
-			mainLog.Verify (x => x.WriteLine ("Test run failed"));
 
 			simpleListener.Verify (x => x.Initialize (), Times.AtLeastOnce);
 			simpleListener.Verify (x => x.StartAsync (), Times.AtLeastOnce);

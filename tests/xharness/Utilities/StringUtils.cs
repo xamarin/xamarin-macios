@@ -30,7 +30,7 @@ namespace Xharness.Utilities
 			return string.Join (" ", QuoteForProcess (arguments));
 		}
 
-	static string [] QuoteForProcess (params string [] array)
+		static string [] QuoteForProcess (params string [] array)
 		{
 			if (array == null || array.Length == 0)
 				return array;
