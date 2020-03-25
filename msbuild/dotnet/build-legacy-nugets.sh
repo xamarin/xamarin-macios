@@ -52,9 +52,9 @@ copy_files ()
 	$cp "$destdir/Version" "$dotnet_destdir/"
 	$cp "$destdir/buildinfo" "$dotnet_destdir/tools/"
 
-	$cp "$TOP/msbuild/dotnet/Xamarin.$platform.Sdk/Sdk/"* "$dotnet_destdir/Sdk/"
-	$cp "$TOP/msbuild/dotnet/targets/"* "$dotnet_destdir/targets/"
-	$cp "$TOP/msbuild/dotnet/Xamarin.$platform.Sdk/targets/"* "$dotnet_destdir/targets/"
+	$cp "$TOP/msbuild/dotnet/Xamarin.$platform.Legacy.Sdk/Sdk/"* "$dotnet_destdir/Sdk/"
+	$cp "$TOP/msbuild/dotnet/targets/"*Legacy* "$dotnet_destdir/targets/"
+	$cp "$TOP/msbuild/dotnet/Xamarin.$platform.Legacy.Sdk/targets/"* "$dotnet_destdir/targets/"
 
 	$cp -r "$destdir/lib/msbuild" "$dotnet_destdir/tools/"
 

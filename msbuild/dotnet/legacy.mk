@@ -127,7 +127,7 @@ legacy-pack: legacy-prepare
 	$(Q) $(MAKE) $(foreach var,iOS tvOS watchOS macOS,legacy-pack-$(var))
 
 # just a temporary target while debugging for faster turnaround
-legacy-pack-simple: prepare
+legacy-pack-simple: legacy-prepare
 	$(Q) mkdir -p nupkgs
 	$(Q) $(MAKE) legacy-pack-iOS
 
@@ -143,21 +143,22 @@ legacy-pack-%: $(TEMPLATED_FILES)
 	$(Q) echo "Created: $$(ls -1 nupkgs/Xamarin.$*.Legacy.Sdk.*nupkg)"
 
 test-legacy-nuget: test/NuGet.config test/global.json
-	$(Q) $(MAKE) pack
+	$(Q) $(MAKE) legacy-pack-simple
 	@# Clear out anything from the nuget cache from previous tests
-	$(Q) rm -Rf $(HOME)/.nuget/packages/xamarin.*.sdk
+	$(Q) rm -Rf $(HOME)/.nuget/packages/xamarin.*.legacy.sdk
 	@#$(if $(V),,@echo "BUILD    MySingleView.app";) $(DOTNET) build test/MySingleView/MySingleView.csproj /p:Platform=iPhone $(XBUILD_VERBOSITY)
-	$(if $(V),,@echo "BUILD    MySingleView.app";) $(DOTNET) build test/MySingleView/MySingleView.csproj /p:Platform=iPhoneSimulator $(XBUILD_VERBOSITY)
+	export MD_MTOUCH_SDK_ROOT=$(wildcard $(HOME)/.nuget/packages/xamarin.ios.legacy.sdk/13*/); \
+	$(DOTNET) build test/MySingleView/MySingleView.csproj /p:Platform=iPhoneSimulator $(XBUILD_VERBOSITY)
 	@#$(if $(V),,@echo "BUILD    MyCocoaApp.app";)   $(DOTNET) build test/MyCocoaApp/MyCocoaApp.csproj $(XBUILD_VERBOSITY)
 
 legacy-prepare:
 	$(Q) V=$(V) \
 	TOP=$(TOP) \
 	DOTNET_BCL_DIR=$(DOTNET_BCL_DIR) \
-	MACOS_DOTNET_DESTDIR=$(MACOS_DOTNET_DESTDIR) \
-	IOS_DOTNET_DESTDIR=$(IOS_DOTNET_DESTDIR) \
-	TVOS_DOTNET_DESTDIR=$(TVOS_DOTNET_DESTDIR) \
-	WATCHOS_DOTNET_DESTDIR=$(WATCHOS_DOTNET_DESTDIR) \
+	MACOS_DOTNET_DESTDIR=$(MACOS_LEGACY_DOTNET_DESTDIR) \
+	IOS_DOTNET_DESTDIR=$(IOS_LEGACY_DOTNET_DESTDIR) \
+	TVOS_DOTNET_DESTDIR=$(TVOS_LEGACY_DOTNET_DESTDIR) \
+	WATCHOS_DOTNET_DESTDIR=$(WATCHOS_LEGACY_DOTNET_DESTDIR) \
 	MAC_DESTDIR=$(MAC_DESTDIR) \
 	IOS_DESTDIR=$(IOS_DESTDIR) \
 	MAC_FRAMEWORK_DIR=$(MAC_FRAMEWORK_DIR) \
