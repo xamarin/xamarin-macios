@@ -136,11 +136,11 @@ legacy-pack-%: $(TEMPLATED_FILES)
 	$(Q) rm -f nupkgs/Xamarin.$*.Legacy.Sdk.*.nupkg
 	$(if $(V),,@echo "PACK     nupkgs/Xamarin.$*.Legacy.Sdk.nupkg";) $(DOTNET) pack package/$*/Xamarin.$*.Legacy.csproj --output nupkgs $(DOTNET_PACK_VERBOSITY)
 	$(if $(V),,@echo "ADD      nupkgs/Xamarin.$*.Legacy.Sdk.nupkg";) nuget add nupkgs/Xamarin.$*.Legacy.Sdk.*nupkg -source $(TEST_FEED_PATH) $(NUGET_VERBOSITY)
-# 	@# Add the hash to the filename
-# 	$(Q) CURRENT_HASH=$(shell grep '<CurrentHash>' package/versions.targets | sed -e 's/<[/]*CurrentHash>//g' -e 's/[[:space:]]//g'); \
-# 	NAME=$$(echo nupkgs/Xamarin.$*.Sdk.*nupkg | sed -e 's/.nupkg$$//'); \
-# 	mv "$$NAME.nupkg" "$$NAME+$$CURRENT_HASH.nupkg"
-	$(Q) echo "Created: $$(ls -1 nupkgs/Xamarin.$*.Sdk.*nupkg)"
+	@# Add the hash to the filename
+	$(Q) CURRENT_HASH=$(shell grep '<CurrentHash>' targets/Xamarin.Shared.Legacy.Sdk.Versions.props | sed -e 's/<[/]*CurrentHash>//g' -e 's/[[:space:]]//g'); \
+	NAME=$$(echo nupkgs/Xamarin.$*.Legacy.Sdk.*nupkg | sed -e 's/.nupkg$$//'); \
+	mv "$$NAME.nupkg" "$$NAME+$$CURRENT_HASH.nupkg"
+	$(Q) echo "Created: $$(ls -1 nupkgs/Xamarin.$*.Legacy.Sdk.*nupkg)"
 
 test-legacy-nuget: test/NuGet.config test/global.json
 	$(Q) $(MAKE) pack

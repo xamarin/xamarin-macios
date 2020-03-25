@@ -176,10 +176,21 @@ test/NuGet.config: $(TOP)/NuGet.config
 
 test/global.json: Makefile $(TEMPLATED_FILES)
 	$(Q_GEN) \
-		VERSIONS='$(shell msbuild package/versions.targets /t:PrintVersions /v:m /nologo)'; \
-		XIPackageVersion=$$(echo $$VERSIONS | sed -e 's/.*XIPackageVersion: //' -e 's/ XMPackageVersion.*//'); \
-		XMPackageVersion=$$(echo $$VERSIONS | sed -e 's/.*XMPackageVersion: //'); \
-		printf "{\n\t\"msbuild-sdks\": {\n\t\t\"Xamarin.iOS.Sdk\": \"$$XIPackageVersion\",\n\t\t\"Xamarin.tvOS.Sdk\": \"$$XIPackageVersion\",\n\t\t\"Xamarin.watchOS.Sdk\": \"$$XIPackageVersion\",\n\t\t\"Xamarin.macOS.Sdk\": \"$$XMPackageVersion\"\n\t}\n}\n" > $@
+		CURRENT_HASH=$(shell grep '<CurrentHash>' targets/Xamarin.Shared.Legacy.Sdk.Versions.props | sed -e 's/<[/]*CurrentHash>//g' -e 's/[[:space:]]//g'); \
+		export IOS_PACKAGE_VERSION='$(shell     grep iOSPackageVersion:     targets/Xamarin.Shared.Sdk.Versions.props | sed -e 's/.*iOSPackageVersion:[[:space:]]*//'     -e 's/[[:space:]]*-->.*//')'; \
+		MACOS_PACKAGE_VERSION='$(shell   grep macOSPackageVersion:   targets/Xamarin.Shared.Sdk.Versions.props | sed -e 's/.*macOSPackageVersion:[[:space:]]*//'   -e 's/[[:space:]]*-->.*//')'; \
+		TVOS_PACKAGE_VERSION='$(shell    grep tvOSPackageVersion:    targets/Xamarin.Shared.Sdk.Versions.props | sed -e 's/.*tvOSPackageVersion:[[:space:]]*//'    -e 's/[[:space:]]*-->.*//')'; \
+		WATCHOS_PACKAGE_VERSION='$(shell grep watchOSPackageVersion: targets/Xamarin.Shared.Sdk.Versions.props | sed -e 's/.*watchOSPackageVersion:[[:space:]]*//' -e 's/[[:space:]]*-->.*//')'; \
+		printf "{\n\t\"msbuild-sdks\": {\n" > $@; \
+		printf "\t\t\"Xamarin.iOS.Sdk\": \"$$IOS_PACKAGE_VERSION\",\n" >> $@; \
+		printf "\t\t\"Xamarin.tvOS.Sdk\": \"$$TVOS_PACKAGE_VERSION\",\n" >> $@; \
+		printf "\t\t\"Xamarin.watchOS.Sdk\": \"$$WATCHOS_PACKAGE_VERSION\",\n" >> $@; \
+		printf "\t\t\"Xamarin.macOS.Sdk\": \"$$MACOS_PACKAGE_VERSION\",\n" >> $@; \
+		printf "\t\t\"Xamarin.iOS.Legacy.Sdk\": \"$$IOS_PACKAGE_VERSION\",\n" >> $@; \
+		printf "\t\t\"Xamarin.tvOS.Legacy.Sdk\": \"$$TVOS_PACKAGE_VERSION\",\n" >> $@; \
+		printf "\t\t\"Xamarin.watchOS.Legacy.Sdk\": \"$$WATCHOS_PACKAGE_VERSION\",\n" >> $@; \
+		printf "\t\t\"Xamarin.macOS.Legacy.Sdk\": \"$$MACOS_PACKAGE_VERSION\"\n" >> $@; \
+		printf "\t}\n}\n" >> $@
 
 test-nuget: test/NuGet.config test/global.json
 	$(Q) $(MAKE) pack

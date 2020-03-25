@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<PropertyGroup>
+		<!-- Easily greppable versions. This should be the same as the value of the _*PackageVersion variables -->
+		<!-- iOSPackageVersion:     @IOS_PACKAGE_VERSION_MAJOR@.@IOS_PACKAGE_VERSION_MINOR@.@IOS_PACKAGE_VERSION_REV@-alpha.@IOS_COMMIT_DISTANCE@+sha.@CURRENT_HASH@ -->
+		<!-- macOSPackageVersion:   @MACOS_PACKAGE_VERSION_MAJOR@.@MACOS_PACKAGE_VERSION_MINOR@.@MACOS_PACKAGE_VERSION_REV@-alpha.@MACOS_COMMIT_DISTANCE@+sha.@CURRENT_HASH@ -->
+		<!-- tvOSPackageVersion:    @TVOS_PACKAGE_VERSION_MAJOR@.@TVOS_PACKAGE_VERSION_MINOR@.@TVOS_PACKAGE_VERSION_REV@-alpha.@TVOS_COMMIT_DISTANCE@+sha.@CURRENT_HASH@ -->
+		<!-- watchOSPackageVersion: @WATCHOS_PACKAGE_VERSION_MAJOR@.@WATCHOS_PACKAGE_VERSION_MINOR@.@WATCHOS_PACKAGE_VERSION_REV@-alpha.@WATCHOS_COMMIT_DISTANCE@+sha.@CURRENT_HASH@ -->
 		<_iOSPackageVersionMajor>@IOS_PACKAGE_VERSION_MAJOR@</_iOSPackageVersionMajor>
 		<_iOSPackageVersionMajor>@IOS_PACKAGE_VERSION_MINOR@</_iOSPackageVersionMajor>
 		<_iOSPackageVersionRev>@IOS_PACKAGE_VERSION_REV@</_iOSPackageVersionRev>
