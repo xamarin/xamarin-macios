@@ -29,16 +29,10 @@ copy_files ()
 	local assembly_infix=$6
 	local framework=$7
 
-	appref_destdir="$dotnet_destdir/../Xamarin.$platform.App.Ref"
-	mkdir -p "$appref_destdir/data"
-	mkdir -p "$appref_destdir/ref/netcoreapp5.0"
-
 	rm -Rf "$dotnet_destdir"
 
 	mkdir -p "$dotnet_destdir"
 	mkdir -p "$dotnet_destdir/lib/$framework"
-	mkdir -p "$dotnet_destdir/lib/netcoreapp5.0"
-	mkdir -p "$dotnet_destdir/lib/netstandard2.0"
 	mkdir -p "$dotnet_destdir/lib/Xamarin.$assembly_infix/v1.0/RedistList"
 	mkdir -p "$dotnet_destdir/runtimes"
 	for arch in $arches; do
@@ -49,8 +43,6 @@ copy_files ()
 	mkdir -p "$dotnet_destdir/Sdk"
 	mkdir -p "$dotnet_destdir/tools"
 	mkdir -p "$dotnet_destdir/tools/bin"
-	mkdir -p "$dotnet_destdir/ref/netcoreapp5.0"
-	mkdir -p "$dotnet_destdir/data"
 	for arch in $arches; do
 		mkdir -p "$dotnet_destdir/tools/bin/$arch"
 	done
@@ -66,36 +58,27 @@ copy_files ()
 
 	$cp -r "$destdir/lib/msbuild" "$dotnet_destdir/tools/"
 
-	# for arch in $arches; do
-	# 	case $arch in
-	# 	arm | armv7 | armv7s | armv7k | arm64_32 | x86)
-	# 		bitness=32
-	# 		;;
-	# 	arm64 | x64)
-	# 		bitness=64
-	# 		;;
-	# 	*)
-	# 		echo "Unknown arch: $arch"
-	# 		exit 1
-	# 		;;
-	# 	esac
-	# 	mkdir -p "$dotnet_destdir/runtimes/$platform_lower-$arch/lib/$framework"
-	# 	$cp "$TOP/src/build/dotnet/$platform_lower/$bitness/Xamarin.$assembly_infix.dll" "$dotnet_destdir/runtimes/$platform_lower-$arch/lib/$framework/"
-	# 	$cp "$TOP/src/build/dotnet/$platform_lower/$bitness/Xamarin.$assembly_infix.pdb" "$dotnet_destdir/runtimes/$platform_lower-$arch/lib/$framework/"
-	# done
+	for arch in $arches; do
+		case $arch in
+		arm | armv7 | armv7s | armv7k | arm64_32 | x86)
+			bitness=32
+			;;
+		arm64 | x64)
+			bitness=64
+			;;
+		*)
+			echo "Unknown arch: $arch"
+			exit 1
+			;;
+		esac
+		mkdir -p "$dotnet_destdir/runtimes/$platform_lower-$arch/lib/$framework"
+		$cp "$TOP/src/build/dotnet/$platform_lower/$bitness/Xamarin.$assembly_infix.dll" "$dotnet_destdir/runtimes/$platform_lower-$arch/lib/$framework/"
+		$cp "$TOP/src/build/dotnet/$platform_lower/$bitness/Xamarin.$assembly_infix.pdb" "$dotnet_destdir/runtimes/$platform_lower-$arch/lib/$framework/"
+	done
 
 	cp "$TOP/src/build/dotnet/$platform_lower/ref/Xamarin.$assembly_infix.dll" "$dotnet_destdir/lib/Xamarin.$assembly_infix/v1.0/"
 
-	$cp "$TOP/src/build/dotnet/$platform_lower/ref/Xamarin.$assembly_infix.dll" "$dotnet_destdir/ref/netcoreapp5.0/"
-	$cp "$TOP/src/build/dotnet/$platform_lower/ref/Xamarin.$assembly_infix.dll" "$dotnet_destdir/lib/netcoreapp5.0/"
-	$cp "$TOP/src/build/dotnet/$platform_lower/ref/Xamarin.$assembly_infix.dll" "$dotnet_destdir/lib/netstandard2.0/"
-	$cp "$TOP/msbuild/dotnet/package/$platform/FrameworkList.xml" "$dotnet_destdir/data/"
-
-
-	$cp "$TOP/src/build/dotnet/$platform_lower/ref/Xamarin.$assembly_infix.dll" "$appref_destdir/ref/netcoreapp5.0/"
-	$cp "$TOP/msbuild/dotnet/package/$platform/FrameworkList.xml" "$appref_destdir/data/"
-
-	if [[ "$platform" == "iOS--disabled" ]]; then
+	if [[ "$platform" == "iOS" ]]; then
 		for arch in arm64 arm x64; do
 			# FIXME: pending x86
 			$cp "$DOTNET_IOS_SDK_DESTDIR/debug/netcoreapp5.0-$platform-Debug-$arch/"* "$dotnet_destdir/runtimes/$platform_lower-$arch/lib/$framework/"
@@ -114,7 +97,7 @@ copy_files ()
 		done
 	fi
 
-	# $cp "$DOTNET_BCL_DIR/"* "$dotnet_destdir/lib/Xamarin.$assembly_infix/v1.0/"
+	$cp "$DOTNET_BCL_DIR/"* "$dotnet_destdir/lib/Xamarin.$assembly_infix/v1.0/"
 
 	$cp "$destdir/lib/mono/Xamarin.$assembly_infix/RedistList/FrameworkList.xml" "$dotnet_destdir/lib/Xamarin.$assembly_infix/v1.0/RedistList/"
 
@@ -123,9 +106,9 @@ copy_files ()
 	#   <Pack>true</Pack>
 	#   <PackagePath>$(_BinDir)</PackagePath>
 	# </Content>
-	# if [[ "$platform" != "macOS" ]]; then
-	# 	$cp "$destdir/bin/simlauncher"* "$dotnet_destdir/tools/bin/"
-	# fi
+	if [[ "$platform" != "macOS" ]]; then
+		$cp "$destdir/bin/simlauncher"* "$dotnet_destdir/tools/bin/"
+	fi
 
 	# <!-- generator -->
 	# <Content Include="$(_iOSCurrentPath)\bin\bgen">
@@ -199,10 +182,10 @@ copy_files ()
 	#   <Pack>true</Pack>
 	#   <PackagePath>tools\lib\mlaunch</PackagePath>
 	# </Content>
- #   	if [[ "$platform" != "macOS" ]]; then
-	# 	$cp "$destdir/bin/mlaunch"* "$dotnet_destdir/tools/bin/"
-	# 	$cp -r "$destdir/lib/mlaunch" "$dotnet_destdir/tools/lib/"
-	# fi
+   	if [[ "$platform" != "macOS" ]]; then
+		$cp "$destdir/bin/mlaunch"* "$dotnet_destdir/tools/bin/"
+		$cp -r "$destdir/lib/mlaunch" "$dotnet_destdir/tools/lib/"
+	fi
 
 	# <!-- AOT compilers -->
 	# <Content Include="$(_iOSCurrentPath)\bin\arm64-darwin-mono-sgen" Condition=" '$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' ">
@@ -236,7 +219,7 @@ copy_files ()
 	#   <PackagePath>tools\SDKS\MonoTouch.iphoneos.sdk</PackagePath>
 	# </Content>
 
-	if [[ "$platform" == "iOS--disabled--" ]]; then
+	if [[ "$platform" == "iOS" ]]; then
 		for arch in $arches; do
 		case $arch in
 			arm | armv7 | armv7s | armv7k | arm64_32 | arm64)
@@ -307,7 +290,7 @@ copy_files ()
 	chmod -R +r "$dotnet_destdir"
 }
 
-copy_files "$IOS_DOTNET_DESTDIR"     "$IOS_DESTDIR$MONOTOUCH_PREFIX"                   iOS     "x64 arm64" "x86 arm"             iOS     xamarinios10
 copy_files "$MACOS_DOTNET_DESTDIR"   "$MAC_DESTDIR$MAC_FRAMEWORK_DIR/Versions/Current" macOS   "x64"       ""                    Mac     xamarinmac10
+copy_files "$IOS_DOTNET_DESTDIR"     "$IOS_DESTDIR$MONOTOUCH_PREFIX"                   iOS     "x64 arm64" "x86 arm"             iOS     xamarinios10
 copy_files "$TVOS_DOTNET_DESTDIR"    "$IOS_DESTDIR$MONOTOUCH_PREFIX"                   tvOS    "x64 arm64" ""                    TVOS    xamarintvos10
 copy_files "$WATCHOS_DOTNET_DESTDIR" "$IOS_DESTDIR$MONOTOUCH_PREFIX"                   watchOS ""          "x86 armv7k arm64_32" WatchOS xamarinwatchos10
