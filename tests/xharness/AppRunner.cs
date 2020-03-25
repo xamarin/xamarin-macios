@@ -26,13 +26,10 @@ namespace Xharness {
 		readonly IDeviceLogCapturerFactory deviceLogCapturerFactory;
 		readonly ITestReporterFactory testReporterFactory;
 
-		readonly RunMode runMode;
 		readonly bool isSimulator;
 		readonly TestTarget target;
 		readonly IHarness harness;
-		readonly string variation;
 		readonly double timeoutMultiplier;
-		readonly string logDirectory;
 
 		string deviceName;
 		string companionDeviceName;
@@ -108,7 +105,6 @@ namespace Xharness {
 			this.companionDeviceName = companionDeviceName;
 			this.ensureCleanSimulatorState = ensureCleanSimulatorState;
 			this.simulators = simulators;
-			this.variation = variation;
 			this.BuildTask = buildTask;
 			this.target = target;
 
@@ -295,7 +291,7 @@ namespace Xharness {
 				args.Add (new SetEnvVariableArgument ("NUNIT_HOSTNAME", ipArg));
 			}
 
-			var listener_log = Logs.Create ($"test-{runMode.ToString ().ToLower ()}-{Helpers.Timestamp}.log", LogType.TestLog.ToString (), timestamp: !useXmlOutput);
+			var listener_log = Logs.Create ($"test-{RunMode.ToString ().ToLower ()}-{Helpers.Timestamp}.log", LogType.TestLog.ToString (), timestamp: !useXmlOutput);
 			var (transport, listener, listenerTmpFile) = listenerFactory.Create (RunMode, MainLog, listener_log, isSimulator, true, useXmlOutput);
 			
 			listener.Initialize ();
