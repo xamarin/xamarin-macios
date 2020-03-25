@@ -162,13 +162,13 @@ TEMPLATED_FILES = \
 all-local:: $(TARGETS)
 
 pack: prepare
-	$(Q) $(MAKE) pack-iOS pack-tvOS pack-watchOS pack-macOS
+	$(Q) $(MAKE) $(foreach var,iOS tvOS watchOS macOS,pack-$(var)) $(foreach var,iOS tvOS watchOS macOS,ref-pack-$(var))
 
 # just a temporary target while debugging for faster turnaround
 pack-simple: prepare
 	$(Q) rm -Rf nupkgs
 	$(Q) mkdir -p nupkgs
-	$(Q) $(MAKE) pack-iOS
+	$(Q) $(MAKE) pack-iOS ref-pack-iOS
 
 ifeq ($(V),)
 DOTNET_PACK_VERBOSITY=--verbosity:quiet --nologo
@@ -179,6 +179,13 @@ NUGET_VERBOSITY=-verbosity detailed
 endif
 
 TEST_FEED_PATH=test/feed
+
+ref-pack-%: $(TEMPLATED_FILES)
+	$(Q) rm -Rf $(TEST_FEED_PATH)/xamarin.$(shell echo $* | tr '[:upper:]' '[:lower:]').app.ref
+	$(Q) rm -f nupkgs/Xamarin.$*.App.Ref.*.nupkg
+	$(if $(V),,@echo "PACK     nupkgs/Xamarin.$*.App.Ref.nupkg";) $(DOTNET) pack package/$*/Xamarin.$*.App.ref.csproj --output nupkgs $(DOTNET_PACK_VERBOSITY)
+	$(if $(V),,@echo "ADD      nupkgs/Xamarin.$*.App.Ref.nupkg";) nuget add nupkgs/Xamarin.$*.App.Ref.*nupkg -source $(TEST_FEED_PATH) $(NUGET_VERBOSITY)
+	$(Q) echo "Created: $$(ls -1 nupkgs/Xamarin.$*.App.Ref.*nupkg)"
 
 pack-%: $(TEMPLATED_FILES)
 	$(Q) rm -Rf $(TEST_FEED_PATH)/xamarin.$(shell echo $* | tr '[:upper:]' '[:lower:]').sdk
