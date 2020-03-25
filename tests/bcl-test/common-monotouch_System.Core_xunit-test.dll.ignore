@@ -562,4 +562,5 @@ Platform32:System.Linq.Expressions.Tests.OnesComplementTests.CheckUnaryArithmeti
 Platform32:System.Linq.Expressions.Tests.OnesComplementTests.CheckUnaryArithmeticOnesComplementSByteTest(useInterpreter: True)
 Platform32:System.Linq.Expressions.Tests.UnaryPlusTests.CheckUnaryArithmeticUnaryPlusShortTest(useInterpreter: True)
 
-
+# ignore failing test, mono issue: https://github.com/mono/mono/issues/19308
+System.Linq.Expressions.Tests.BinaryPowerTests.CheckDecimalPowerTest(useInterpreter: True)
