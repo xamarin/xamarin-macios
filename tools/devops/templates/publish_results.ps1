@@ -23,9 +23,9 @@ Write-Host $response
 $response | ConvertTo-Json | Write-Host
 Write-Host "^ ConvertToJson below is ConvertFromJson `n"
 
-$response | ConvertFrom-Json | Write-Host
+$response | ConvertTo-Json | ConvertFrom-Json | Write-Host
 
-$status = $response | ConvertFrom-Json | Select-Object state
+$status = $response | ConvertTo-Json | ConvertFrom-Json | Select-Object state
 $state = $status.state
 
 
