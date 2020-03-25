@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml;
 using Xharness.Execution;
 using Xharness.Execution.Mlaunch;
 using Xharness.Hardware;
@@ -16,8 +15,7 @@ using Xharness.Utilities;
 
 namespace Xharness {
 
-	class AppRunner : IAppRunner
-	{
+	class AppRunner : IAppRunner {
 		readonly ISimulatorsLoaderFactory simulatorsLoaderFactory;
 		readonly ISimpleListenerFactory listenerFactory;
 		readonly IDeviceLoaderFactory devicesLoaderFactory;
@@ -152,7 +150,7 @@ namespace Xharness {
 				deviceClasses = new [] { DeviceClass.AppleTV }; // Untested
 				break;
 			default:
-				throw new ArgumentException (nameof(RunMode));
+				throw new ArgumentException (nameof (RunMode));
 			}
 
 			var selected = devs.ConnectedDevices.Where ((v) => deviceClasses.Contains (v.DeviceClass) && v.IsUsableForDebugging != false);
@@ -268,7 +266,7 @@ namespace Xharness {
 
 			if (harness.InCI) {
 				// We use the 'BUILD_REVISION' variable to detect whether we're running CI or not.
-				args.Add (new SetEnvVariableArgument ("BUILD_REVISION", "$" + Environment.GetEnvironmentVariable ("BUILD_REVISION")));
+				args.Add (new SetEnvVariableArgument ("BUILD_REVISION", Environment.GetEnvironmentVariable ("BUILD_REVISION")));
 			}
 
 			if (!harness.GetIncludeSystemPermissionTests (TestPlatform.iOS, !isSimulator))
@@ -291,9 +289,9 @@ namespace Xharness {
 				args.Add (new SetEnvVariableArgument ("NUNIT_HOSTNAME", ipArg));
 			}
 
-			var listener_log = Logs.Create ($"test-{RunMode.ToString ().ToLower ()}-{Helpers.Timestamp}.log", LogType.TestLog.ToString (), timestamp: !useXmlOutput);
+			var listener_log = Logs.Create ($"test-{RunMode.ToString ().ToLowerInvariant ()}-{Helpers.Timestamp}.log", LogType.TestLog.ToString (), timestamp: !useXmlOutput);
 			var (transport, listener, listenerTmpFile) = listenerFactory.Create (RunMode, MainLog, listener_log, isSimulator, true, useXmlOutput);
-			
+
 			listener.Initialize ();
 
 			args.Add (new SetAppArgumentArgument ($"-transport:{transport}", true));
