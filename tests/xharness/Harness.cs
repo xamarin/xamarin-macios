@@ -110,15 +110,10 @@ namespace Xharness
 			set {
 				sdkRoot = value;
 				XcodeRoot = FindXcode (sdkRoot);
-
-				if (XcodeRoot != null && MlaunchPath != null)
-					processManager = new ProcessManager (XcodeRoot, MlaunchPath);
 			}
 		}
 
-		string MlaunchPath => IOS_DESTDIR == null 
-			? null
-			: Path.Combine (IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current", "bin", "mlaunch");
+		string MlaunchPath => Path.Combine (IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current", "bin", "mlaunch");
 
 		public List<iOSTestProject> IOSTestProjects { get; }
 		public List<MacTestProject> MacTestProjects { get; } = new List<MacTestProject> ();
@@ -134,19 +129,19 @@ namespace Xharness
 		public string TodayContainerTemplate { get; private set; }
 		public string TodayExtensionTemplate { get; private set; }
 		public string BCLTodayExtensionTemplate { get; private set; }
-		public string MONO_PATH { get; private set; } // Use same name as in Makefiles, so that a grep finds it.
-		public string TVOS_MONO_PATH { get; private set; } // Use same name as in Makefiles, so that a grep finds it.
-		public bool INCLUDE_IOS { get; private set; }
-		public bool INCLUDE_TVOS { get; private set; }
-		public bool INCLUDE_WATCH { get; private set; }
-		public bool INCLUDE_MAC { get; private set; }
-		public string JENKINS_RESULTS_DIRECTORY { get; private set; } // Use same name as in Makefiles, so that a grep finds it.
-		public string MAC_DESTDIR { get; private set; }
-		public string IOS_DESTDIR { get; private set; }
-		public string MONO_IOS_SDK_DESTDIR { get; private set; }
-		public string MONO_MAC_SDK_DESTDIR { get; private set; }
-		public bool ENABLE_XAMARIN { get; private set; }
-		public string DOTNET { get; private set; }
+		public string MONO_PATH { get; } // Use same name as in Makefiles, so that a grep finds it.
+		public string TVOS_MONO_PATH { get; } // Use same name as in Makefiles, so that a grep finds it.
+		public bool INCLUDE_IOS { get; }
+		public bool INCLUDE_TVOS { get; }
+		public bool INCLUDE_WATCH { get; }
+		public bool INCLUDE_MAC { get; }
+		public string JENKINS_RESULTS_DIRECTORY { get; } // Use same name as in Makefiles, so that a grep finds it.
+		public string MAC_DESTDIR { get; }
+		public string IOS_DESTDIR { get; }
+		public string MONO_IOS_SDK_DESTDIR { get; }
+		public string MONO_MAC_SDK_DESTDIR { get; }
+		public bool ENABLE_XAMARIN { get; }
+		public string DOTNET { get; }
 
 		// Run
 
@@ -186,7 +181,6 @@ namespace Xharness
 			PeriodicCommand = configuration.PeriodicCommand;
 			PeriodicCommandArguments = configuration.PeriodicCommandArguments;
 			PeriodicCommandInterval = configuration.PeriodicCommandInterval;
-			SdkRoot = configuration.SdkRoot;
 			target = configuration.Target;
 			Timeout = configuration.TimeoutInMinutes;
 			useSystemXamarinIOSMac = configuration.UseSystemXamarinIOSMac;
@@ -203,7 +197,31 @@ namespace Xharness
 
 			LaunchTimeout = InCI ? 3 : 120;
 			
-			LoadConfig ();
+			var config = ParseConfigFiles ();
+			var src_root = Path.GetDirectoryName (Path.GetFullPath (RootDirectory));
+
+			MONO_PATH = Path.GetFullPath (Path.Combine (src_root, "external", "mono"));
+			TVOS_MONO_PATH = MONO_PATH;
+			INCLUDE_IOS = config.ContainsKey ("INCLUDE_IOS") && !string.IsNullOrEmpty (config ["INCLUDE_IOS"]);
+			INCLUDE_TVOS = config.ContainsKey ("INCLUDE_TVOS") && !string.IsNullOrEmpty (config ["INCLUDE_TVOS"]);
+			JENKINS_RESULTS_DIRECTORY = config ["JENKINS_RESULTS_DIRECTORY"];
+			INCLUDE_WATCH = config.ContainsKey ("INCLUDE_WATCH") && !string.IsNullOrEmpty (config ["INCLUDE_WATCH"]);
+			INCLUDE_MAC = config.ContainsKey ("INCLUDE_MAC") && !string.IsNullOrEmpty (config ["INCLUDE_MAC"]);
+			MAC_DESTDIR = config ["MAC_DESTDIR"];
+
+			IOS_DESTDIR = config ["IOS_DESTDIR"];
+			MONO_IOS_SDK_DESTDIR = config ["MONO_IOS_SDK_DESTDIR"];
+			MONO_MAC_SDK_DESTDIR = config ["MONO_MAC_SDK_DESTDIR"];
+			ENABLE_XAMARIN = config.ContainsKey ("ENABLE_XAMARIN") && !string.IsNullOrEmpty (config ["ENABLE_XAMARIN"]);
+			DOTNET = config ["DOTNET"];
+
+			Console.WriteLine ("!@#!@#!@#!@#!@#!@#!@#@!# " + IOS_DESTDIR);
+			Console.WriteLine ("!@#!@#!@#!@#!@#!@#!@#@!# " + config ["XCODE_DEVELOPER_ROOT"]);
+
+			if (string.IsNullOrEmpty (SdkRoot))
+				SdkRoot = config ["XCODE_DEVELOPER_ROOT"] ?? configuration.SdkRoot;
+			
+			processManager = new ProcessManager (XcodeRoot, MlaunchPath);
 		}
 
 		public bool GetIncludeSystemPermissionTests (TestPlatform platform, bool device)
@@ -250,28 +268,6 @@ namespace Xharness
 
 		void LoadConfig ()
 		{
-			ParseConfigFiles ();
-			var src_root = Path.GetDirectoryName (Path.GetFullPath (RootDirectory));
-			MONO_PATH = Path.GetFullPath (Path.Combine (src_root, "external", "mono"));
-			TVOS_MONO_PATH = MONO_PATH;
-			INCLUDE_IOS = make_config.ContainsKey ("INCLUDE_IOS") && !string.IsNullOrEmpty (make_config ["INCLUDE_IOS"]);
-			INCLUDE_TVOS = make_config.ContainsKey ("INCLUDE_TVOS") && !string.IsNullOrEmpty (make_config ["INCLUDE_TVOS"]);
-			JENKINS_RESULTS_DIRECTORY = make_config ["JENKINS_RESULTS_DIRECTORY"];
-			INCLUDE_WATCH = make_config.ContainsKey ("INCLUDE_WATCH") && !string.IsNullOrEmpty (make_config ["INCLUDE_WATCH"]);
-			INCLUDE_MAC = make_config.ContainsKey ("INCLUDE_MAC") && !string.IsNullOrEmpty (make_config ["INCLUDE_MAC"]);
-			MAC_DESTDIR = make_config ["MAC_DESTDIR"];
-
-			IOS_DESTDIR = make_config ["IOS_DESTDIR"];
-			MONO_IOS_SDK_DESTDIR = make_config ["MONO_IOS_SDK_DESTDIR"];
-			MONO_MAC_SDK_DESTDIR = make_config ["MONO_MAC_SDK_DESTDIR"];
-			ENABLE_XAMARIN = make_config.ContainsKey ("ENABLE_XAMARIN") && !string.IsNullOrEmpty (make_config ["ENABLE_XAMARIN"]);
-			DOTNET = make_config ["DOTNET"];
-
-			Console.WriteLine ("!@#!@#!@#!@#!@#!@#!@#@!# " + IOS_DESTDIR);
-			Console.WriteLine ("!@#!@#!@#!@#!@#!@#!@#@!# " + make_config ["XCODE_DEVELOPER_ROOT"]);
-
-			if (string.IsNullOrEmpty (SdkRoot))
-				SdkRoot = make_config ["XCODE_DEVELOPER_ROOT"];
 		}
 
 		int AutoConfigureMac (bool generate_projects)
@@ -438,7 +434,7 @@ namespace Xharness
 			BCLTodayExtensionTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test", "templates", "today"));
 		}
 
-		Dictionary<string, string> make_config = new Dictionary<string, string> ();
+		// Dictionary<string, string> make_config = new Dictionary<string, string> ();
 		IEnumerable<string> FindConfigFiles (string name)
 		{
 			var dir = Path.GetFullPath (RootDirectory);
@@ -450,20 +446,24 @@ namespace Xharness
 			}
 		}
 
-		void ParseConfigFiles ()
+		Dictionary<string, string> ParseConfigFiles ()
 		{
-			ParseConfigFiles (FindConfigFiles (useSystemXamarinIOSMac ? "test-system.config" : "test.config"));
-			ParseConfigFiles (FindConfigFiles ("Make.config.local"));
-			ParseConfigFiles (FindConfigFiles ("Make.config"));
+			var configuration = new Dictionary<string, string> ();
+			foreach (var file in GetConfigFiles ()) {
+				ParseConfigFile (file, configuration);
+			}
+
+			return configuration;
 		}
 
-		void ParseConfigFiles (IEnumerable<string> files)
+		IEnumerable <string> GetConfigFiles ()
 		{
-			foreach (var file in files)
-				ParseConfigFile (file);
+			return FindConfigFiles (useSystemXamarinIOSMac ? "test-system.config" : "test.config")
+				.Concat (FindConfigFiles ("Make.config"))
+				.Concat (FindConfigFiles ("Make.config.local"));
 		}
 
-		void ParseConfigFile (string file)
+		void ParseConfigFile (string file, Dictionary<string, string> configuration)
 		{
 			if (string.IsNullOrEmpty (file))
 				return;
@@ -472,9 +472,10 @@ namespace Xharness
 				var eq = line.IndexOf ('=');
 				if (eq == -1)
 					continue;
+
 				var key = line.Substring (0, eq);
-				if (!make_config.ContainsKey (key))
-					make_config [key] = line.Substring (eq + 1);
+				if (!configuration.ContainsKey (key))
+					configuration [key] = line.Substring (eq + 1);
 			}
 		}
 
