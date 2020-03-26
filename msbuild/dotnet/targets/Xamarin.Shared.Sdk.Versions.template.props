@@ -25,15 +25,15 @@
 		<CurrentBranch>@CURRENT_BRANCH@</CurrentBranch>
 		<CurrentHash>@CURRENT_HASH@</CurrentHash>
 
-		<_iOSShortPackageVersion>$(_iOSPackageVersionMajor).$(_iOSPackageVersionMinor).$(_iOSPackageVersionRev)</_iOSShortPackageVersion>
-		<_macOSShortPackageVersion>$(_macOSPackageVersionMajor).$(_macOSPackageVersionMinor).$(_macOSPackageVersionRev)</_macOSShortPackageVersion>
-		<_tvosOSShortPackageVersion>$(_tvosOSPackageVersionMajor).$(_tvosOSPackageVersionMinor).$(_tvosOSPackageVersionRev)</_tvosOSShortPackageVersion>
-		<_watchOSShortPackageVersion>$(_watchOSPackageVersionMajor).$(_watchOSPackageVersionMinor).$(_watchOSPackageVersionRev)</_watchOSShortPackageVersion>
+		<_iOSShortPackageVersion>$(_iOSPackageVersionMajor).$(_iOSPackageVersionMinor).$(_iOSPackageVersionRev)-alpha.$(_iOSCommitDistance)</_iOSShortPackageVersion>
+		<_macOSShortPackageVersion>$(_macOSPackageVersionMajor).$(_macOSPackageVersionMinor).$(_macOSPackageVersionRev)-alpha.$(_macOSCommitDistance)</_macOSShortPackageVersion>
+		<_tvosOSShortPackageVersion>$(_tvosOSPackageVersionMajor).$(_tvosOSPackageVersionMinor).$(_tvosOSPackageVersionRev)-alpha.$(_tvosOSCommitDistance)</_tvosOSShortPackageVersion>
+		<_watchOSShortPackageVersion>$(_watchOSPackageVersionMajor).$(_watchOSPackageVersionMinor).$(_watchOSPackageVersionRev)-alpha.$(_watchOSCommitDistance)</_watchOSShortPackageVersion>
 
-		<_iOSPackageVersion>$(_iOSShortPackageVersion)-alpha.$(_iOSCommitDistance)+sha.$(CurrentHash)</_iOSPackageVersion>
-		<_macOSPackageVersion>$(_macOSShortPackageVersion)-alpha.$(_macOSCommitDistance)+sha.$(CurrentHash)</_macOSPackageVersion>
-		<_tvosOSPackageVersion>$(_tvosOSShortPackageVersion)-alpha.$(_tvosOSCommitDistance)+sha.$(CurrentHash)</_tvosOSPackageVersion>
-		<_watchOSPackageVersion>$(_watchOSShortPackageVersion)-alpha.$(_watchOSCommitDistance)+sha.$(CurrentHash)</_watchOSPackageVersion>
+		<_iOSPackageVersion>$(_iOSShortPackageVersion)+sha.$(CurrentHash)</_iOSPackageVersion>
+		<_macOSPackageVersion>$(_macOSShortPackageVersion)+sha.$(CurrentHash)</_macOSPackageVersion>
+		<_tvosOSPackageVersion>$(_tvosOSShortPackageVersion)+sha.$(CurrentHash)</_tvosOSPackageVersion>
+		<_watchOSPackageVersion>$(_watchOSShortPackageVersion)+sha.$(CurrentHash)</_watchOSPackageVersion>
 
 		<_ShortPackageVersion Condition=" '$(_PlatformName)' == 'macOS' ">$(_macOSShortPackageVersion)</_ShortPackageVersion>
 		<_ShortPackageVersion Condition=" '$(_PlatformName)' == 'iOS' ">$(_iOSShortPackageVersion)</_ShortPackageVersion>
