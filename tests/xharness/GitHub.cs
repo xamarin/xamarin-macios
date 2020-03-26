@@ -152,7 +152,7 @@ namespace Xharness
 				git.StartInfo.FileName = "git";
 				git.StartInfo.Arguments = $"diff-tree --no-commit-id --name-only -r {base_commit}..{head_commit}";
 				var output = new MemoryLog ();
-				var rv = ProcessManager.RunAsync (git, harness.HarnessLog, output, output).Result;
+				var rv = processManager.RunAsync (git, harness.HarnessLog, stdoutLog: output, stderrLog: output).Result;
 				if (rv.Succeeded)
 					return output.ToString ().Split (new char [] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
