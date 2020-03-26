@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="Xamarin.iOS.Legacy.Sdk">
+<Project Sdk="Xamarin.iOS.Sdk">
   <PropertyGroup>
-    <TargetFramework>xamarinios10</TargetFramework>
+    <TargetFramework>netcoreapp5.0</TargetFramework>
+    <RuntimeIdentifier>ios.13-x64</RuntimeIdentifier>
+    <!-- <OutputType>Exe</OutputType> -->
   </PropertyGroup>
 </Project>
