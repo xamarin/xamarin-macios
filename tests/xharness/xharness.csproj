@@ -140,11 +140,6 @@
     <Compile Include="ITestReporter.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\tools\mtouch\SdkVersions.cs">
-      <Link>SdkVersions.cs</Link>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="xharness.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

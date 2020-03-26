@@ -18,7 +18,6 @@ namespace Microsoft.DotNet.XHarness.iOS.Hardware {
 		bool Supports64Bit { get; }
 		bool Supports32Bit { get; }
 		Architecture Architecture { get; }
-		bool IsSupported (iOSTestProject project); // TODO: Move out of this class, since we are looking at a specific case for xamarin-macions
 	}
 
 	public interface IDeviceLoader : ILoadAsync {

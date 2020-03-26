@@ -10,11 +10,9 @@ using NUnit.Framework;
 using Microsoft.DotNet.XHarness.iOS.Execution;
 using Microsoft.DotNet.XHarness.iOS.Logging;
 using Microsoft.DotNet.XHarness.iOS.Execution.Mlaunch;
-using Microsoft.DotNet.XHarness.iOS.Execution;
-using Microsoft.DotNet.XHarness.iOS.Execution.Mlaunch;
 using Microsoft.DotNet.XHarness.iOS.Hardware;
 
-namespace Xharness.Tests.Hardware.Tests {
+namespace Microsoft.DotNet.XHarness.iOS.Tests.Hardware.Tests {
 
 	[TestFixture]
 	public class DevicesTest {
@@ -32,7 +30,7 @@ namespace Xharness.Tests.Hardware.Tests {
 			devices = new Devices (processManager.Object);
 			executionLog = new Mock<ILog> ();
 			mlaunchPath = "/usr/bin/mlaunch"; // any will be ok, is mocked
-			sdkPath = "/Applications/Xcode.app";			
+			sdkPath = "/Applications/Xcode.app";
 		}
 
 		[TearDown]
@@ -51,8 +49,8 @@ namespace Xharness.Tests.Hardware.Tests {
 			MlaunchArguments passedArguments = null;
 
 			// moq It.Is is not working as nicelly as we would like it, we capture data and use asserts
-			processManager.Setup (p => p.RunAsync (It.IsAny<Process> (), It.IsAny<MlaunchArguments> (), It.IsAny<ILog> (), It.IsAny<TimeSpan?> (), It.IsAny<Dictionary<string, string>>(), It.IsAny<CancellationToken?> (), It.IsAny<bool?> ()))
-				.Returns<Process, MlaunchArguments, ILog, TimeSpan?, Dictionary< string, string>, CancellationToken?, bool?> ((p, args, log, t, env, token, d) => {
+			processManager.Setup (p => p.RunAsync (It.IsAny<Process> (), It.IsAny<MlaunchArguments> (), It.IsAny<ILog> (), It.IsAny<TimeSpan?> (), It.IsAny<Dictionary<string, string>> (), It.IsAny<CancellationToken?> (), It.IsAny<bool?> ()))
+				.Returns<Process, MlaunchArguments, ILog, TimeSpan?, Dictionary<string, string>, CancellationToken?, bool?> ((p, args, log, t, env, token, d) => {
 					// we are going set the used args to validate them later, will always return an error from this method
 					processPath = p.StartInfo.FileName;
 					passedArguments = args;
@@ -60,20 +58,20 @@ namespace Xharness.Tests.Hardware.Tests {
 						return Task.FromResult (new ProcessExecutionResult { ExitCode = 1, TimedOut = false });
 					else
 						return Task.FromResult (new ProcessExecutionResult { ExitCode = 0, TimedOut = true });
-			});
+				});
 
 			Assert.ThrowsAsync<Exception> (async () => {
 				await devices.LoadAsync (executionLog.Object);
 			});
 
-			MlaunchArgument sdkRootArg = passedArguments.Where (a => a is SdkRootArgument).FirstOrDefault();
+			MlaunchArgument sdkRootArg = passedArguments.Where (a => a is SdkRootArgument).FirstOrDefault ();
 			Assert.IsNotNull (sdkRootArg, "sdk arg missing");
 			AssertArgumentValue (sdkRootArg, sdkPath, "sdk arg wrong");
 
-			MlaunchArgument listDevArg = passedArguments.Where (a => a is ListDevicesArgument).FirstOrDefault();
+			MlaunchArgument listDevArg = passedArguments.Where (a => a is ListDevicesArgument).FirstOrDefault ();
 			Assert.IsNotNull (listDevArg, "list devices arg missing");
-			
-			MlaunchArgument outputFormatArg = passedArguments.Where (a => a is XmlOutputFormatArgument).FirstOrDefault();
+
+			MlaunchArgument outputFormatArg = passedArguments.Where (a => a is XmlOutputFormatArgument).FirstOrDefault ();
 			Assert.IsNotNull (outputFormatArg, "output format arg missing");
 		}
 
@@ -89,10 +87,10 @@ namespace Xharness.Tests.Hardware.Tests {
 				.Returns<Process, MlaunchArguments, ILog, TimeSpan?, Dictionary<string, string>, CancellationToken?, bool?> ((p, args, log, t, env, token, d) => {
 					processPath = p.StartInfo.FileName;
 					passedArguments = args;
-					
+
 					// we get the temp file that was passed as the args, and write our sample xml, which will be parsed to get the devices :)
 					var tempPath = args.Where (a => a is ListDevicesArgument).First ().AsCommandLineArgument ();
-					tempPath = tempPath.Substring(tempPath.IndexOf('=') + 1);
+					tempPath = tempPath.Substring (tempPath.IndexOf ('=') + 1);
 
 					var name = GetType ().Assembly.GetManifestResourceNames ().Where (a => a.EndsWith ("devices.xml", StringComparison.Ordinal)).FirstOrDefault ();
 					using (var outputStream = new StreamWriter (tempPath))
@@ -110,23 +108,23 @@ namespace Xharness.Tests.Hardware.Tests {
 			// validate the execution of mlaunch
 			Assert.AreEqual (mlaunchPath, processPath, "process path");
 
-			MlaunchArgument sdkRootArg = passedArguments.Where (a => a is SdkRootArgument).FirstOrDefault();
+			MlaunchArgument sdkRootArg = passedArguments.Where (a => a is SdkRootArgument).FirstOrDefault ();
 			Assert.IsNotNull (sdkRootArg, "sdk arg missing");
 			AssertArgumentValue (sdkRootArg, sdkPath, "sdk arg wrong");
 
-			MlaunchArgument listDevArg = passedArguments.Where (a => a is ListDevicesArgument).FirstOrDefault();
+			MlaunchArgument listDevArg = passedArguments.Where (a => a is ListDevicesArgument).FirstOrDefault ();
 			Assert.IsNotNull (listDevArg, "list devices arg missing");
-			
-			MlaunchArgument outputFormatArg = passedArguments.Where (a => a is XmlOutputFormatArgument).FirstOrDefault();
+
+			MlaunchArgument outputFormatArg = passedArguments.Where (a => a is XmlOutputFormatArgument).FirstOrDefault ();
 			Assert.IsNotNull (outputFormatArg, "output format arg missing");
 
 			if (extraData) {
-				MlaunchArgument listExtraDataArg = passedArguments.Where (a => a is ListExtraDataArgument).FirstOrDefault();
+				MlaunchArgument listExtraDataArg = passedArguments.Where (a => a is ListExtraDataArgument).FirstOrDefault ();
 				Assert.IsNotNull (listExtraDataArg, "list extra data arg missing");
 			}
 
 			Assert.AreEqual (2, devices.Connected64BitIOS.Count ());
-			Assert.AreEqual (1, devices.Connected32BitIOS.Count());
+			Assert.AreEqual (1, devices.Connected32BitIOS.Count ());
 			Assert.AreEqual (0, devices.ConnectedTV.Count ());
 		}
 

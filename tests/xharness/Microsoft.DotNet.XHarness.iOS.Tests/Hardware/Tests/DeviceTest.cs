@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Microsoft.DotNet.XHarness.iOS.Hardware;
 using NUnit.Framework;
 
-namespace Xharness.Tests.Hardware.Tests {
+namespace Microsoft.DotNet.XHarness.iOS.Tests.Hardware.Tests {
 	[TestFixture]
 	public class DeviceTest {
 
@@ -111,8 +111,8 @@ namespace Xharness.Tests.Hardware.Tests {
 					};
 
 
-					foreach  (var product in data.Keys) {
-						foreach (var (version, result) in data[product])
+					foreach (var product in data.Keys) {
+						foreach (var (version, result) in data [product])
 							yield return new TestCaseData (new Device { ProductType = $"{product}{version}" }).Returns (result).SetDescription ($"{product} {version}");
 					}
 				}

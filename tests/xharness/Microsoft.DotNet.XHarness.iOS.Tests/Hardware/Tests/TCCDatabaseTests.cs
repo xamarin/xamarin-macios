@@ -7,10 +7,9 @@ using Moq;
 using NUnit.Framework;
 using Microsoft.DotNet.XHarness.iOS.Execution;
 using Microsoft.DotNet.XHarness.iOS.Logging;
-using Microsoft.DotNet.XHarness.iOS.Execution;
 using Microsoft.DotNet.XHarness.iOS.Hardware;
 
-namespace Xharness.Tests.Hardware.Tests {
+namespace Microsoft.DotNet.XHarness.iOS.Tests.Hardware.Tests {
 
 	[TestFixture]
 	public class TCCDatabaseTests {
@@ -72,10 +71,10 @@ namespace Xharness.Tests.Hardware.Tests {
 			string processName = null;
 			// set the process manager to always return a failure so that we do eventually get a timeout
 			processManager.Setup (p => p.ExecuteCommandAsync (It.IsAny<string> (), It.IsAny<List<string>> (), It.IsAny<ILog> (), It.IsAny<TimeSpan> (), null, null))
-				.Returns<string, IList<string>, ILog, TimeSpan, Dictionary<string,string>, CancellationToken?> ((p, a, l, t, e, c) => {
+				.Returns<string, IList<string>, ILog, TimeSpan, Dictionary<string, string>, CancellationToken?> ((p, a, l, t, e, c) => {
 					processName = p;
 					return Task.FromResult (new ProcessExecutionResult { ExitCode = 1, TimedOut = true });
-			});
+				});
 			// try to accept and fail because we always timeout
 			await database.AgreeToPromptsAsync (simRuntime, dataPath, executionLog.Object, "my-bundle-id", "your-bundle-id");
 
@@ -129,14 +128,14 @@ namespace Xharness.Tests.Hardware.Tests {
 					processName = p;
 					args = a;
 					return Task.FromResult (new ProcessExecutionResult { ExitCode = 0, TimedOut = false });
-			});
+				});
 
 			await database.AgreeToPromptsAsync (runtime, dataPath, executionLog.Object, bundleIdentifier);
 
 			Assert.AreEqual ("sqlite3", processName, "sqlite3 process");
 			// assert that the sql is present
 			Assert.That (args, Has.Member (dataPath));
-			Assert.That (args, Has.Member (expectedArgs.ToString ()), "insert sql"); 
+			Assert.That (args, Has.Member (expectedArgs.ToString ()), "insert sql");
 		}
 	}
 }

@@ -6,10 +6,9 @@ using Moq;
 using NUnit.Framework;
 using Microsoft.DotNet.XHarness.iOS.Execution;
 using Microsoft.DotNet.XHarness.iOS.Logging;
-using Microsoft.DotNet.XHarness.iOS.Execution;
 using Microsoft.DotNet.XHarness.iOS.Hardware;
 
-namespace Xharness.Tests.Hardware.Tests {
+namespace Microsoft.DotNet.XHarness.iOS.Tests.Hardware.Tests {
 	[TestFixture]
 	public class SimulatorDeviceTest {
 
@@ -72,7 +71,7 @@ namespace Xharness.Tests.Hardware.Tests {
 		}
 
 		[Test]
-		[Ignore("Running this test will actually kill simulators on the machine")]
+		[Ignore ("Running this test will actually kill simulators on the machine")]
 		public async Task KillEverythingAsyncTest ()
 		{
 			Func<IList<string>, bool> verifyKillAll = (args) => {
