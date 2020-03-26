@@ -138,6 +138,8 @@
 !missing-protocol! WebDocumentView not bound
 !missing-protocol! WebEditingDelegate not bound
 !missing-protocol! WebPlugInViewFactory not bound
+# TODO WKWebView should conform to NSTextFinderClient is marked as macos(WK_MAC_TBA) as of 11.4 beta3
+!missing-protocol-conformance! WKWebView should conform to NSTextFinderClient (defined in 'WKNSTextFinderClient' category)
 !missing-protocol-member! DOMEventTarget::addEventListener::: not found
 !missing-protocol-member! DOMEventTarget::removeEventListener::: not found
 !missing-protocol-member! WebUIDelegate::webView:runOpenPanelForFileButtonWithResultListener:allowMultipleFiles: not found

@@ -60,7 +60,9 @@ namespace LocalAuthentication {
 	[iOS (9,0), Mac (10,11), Watch (3,0), TV (11,0)]
 	[Native]
 	public enum LACredentialType : long {
-		ApplicationPassword = 0
+		ApplicationPassword = 0,
+		[iOS (13,4), Mac (10,15,4), NoWatch, NoTV]
+		SmartCardPin = -3,
 	}
 
 	[iOS (9,0)]

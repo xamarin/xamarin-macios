@@ -162,6 +162,10 @@ namespace MonoMac.Tuner {
 			if (options.WarnOnTypeRef.Count > 0)
 				pipeline.Append (new PostLinkScanTypeReferenceStep (options.WarnOnTypeRef));
 
+			// expect that changes can occur until it's all saved back to disk
+			if (options.WarnOnTypeRef.Count > 0)
+				pipeline.AppendStep (new PostLinkScanTypeReferenceStep (options.WarnOnTypeRef));
+
 			return pipeline;
 		}
 

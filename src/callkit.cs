@@ -302,6 +302,13 @@ namespace CallKit {
 		[Async]
 		[Export ("getEnabledStatusForExtensionWithIdentifier:completionHandler:")]
 		void GetEnabledStatusForExtension (string identifier, Action<CXCallDirectoryEnabledStatus, NSError> completion);
+
+		[Unavailable (PlatformName.MacCatalyst)]
+		[NoWatch, NoTV, NoMac, iOS (13,4)]
+		[Advice ("This API is not available when using UIKit on macOS.")]
+		[Async]
+		[Export ("openSettingsWithCompletionHandler:")]
+		void OpenSettings ([NullAllowed] Action<NSError> completion);
 	}
 
 	[iOS (10, 0)]

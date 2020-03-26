@@ -1170,6 +1170,11 @@ namespace Introspection
 						if (fi.Name == "CoreNFCLibrary" && UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Pad)
 							continue;
 #endif
+#if __MACOS__
+						// Only available in macOS 10.15.4+
+						if (fi.Name == "AutomaticAssessmentConfigurationLibrary" && !TestRuntime.CheckXcodeVersion (11, 4))
+							continue;
+#endif
 
 						Assert.True (CheckLibrary (s), fi.Name);
 					} else {
