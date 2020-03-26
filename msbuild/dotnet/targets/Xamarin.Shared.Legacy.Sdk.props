@@ -24,7 +24,6 @@
 
     <!-- Opt-in to use the version of XI/XM installed into the system -->
     <XamarinUseSystemInstall Condition=" '$(XamarinUseSystemInstall)' == '' ">false</XamarinUseSystemInstall>
-    <MD_MTOUCH_SDK_ROOT      Condition=" '$(XamarinUseSystemInstall)' == 'false' And '$(_PlatformName)' != 'macOS' And '$(MD_MTOUCH_SDK_ROOT)' == ''      ">$(XamarinSdkRootDirectory)</MD_MTOUCH_SDK_ROOT>
     <XamarinMacFrameworkRoot Condition=" '$(XamarinUseSystemInstall)' == 'false' And '$(_PlatformName)' == 'macOS' And '$(XamarinMacFrameworkRoot)' == '' ">$(XamarinSdkRootDirectory)</XamarinMacFrameworkRoot>
 
     <!-- This is the old location of the legacy Xamarin Sdk -->

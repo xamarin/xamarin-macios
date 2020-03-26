@@ -81,6 +81,7 @@
   </PropertyGroup>
 
   <Target Name="_ValidateXamarinConfiguration" Condition="'$(IsAppBundle)' == 'true'">
+    <Error Text="The environment variable MD_MTOUCH_SDK_ROOT must be set to $(XamarinSdkRootDirectory)" Condition=" '$(XamarinUseSystemInstall)' == 'false' And '$(_PlatformName)' != 'macOS' And '$(MD_MTOUCH_SDK_ROOT)' == '' " />
     <Error Text="The project file must specify a value for the MtouchArch or the TargetDeviceArchitecture property. Platform: $(Platform)" Condition="'$(MtouchArch)' == '' And '$(_PlatformName)' != 'macOS' "/>
     <Error Text="The project file does not specify a valid value for the MtouchArch property ($(MtouchArch)). Valid values are: i386, x86_64, ARMv7, ARMv7s and ARM64." Condition="'$(TargetDeviceArchitecture)' == '' And '$(_PlatformName)' == 'iOS'"/>
     <Error Text="The project file does not specify a valid value for the MtouchArch property ($(MtouchArch)). Valid values are: x86_64 and ARM64."                      Condition="'$(TargetDeviceArchitecture)' == '' And '$(_PlatformName)' == 'tvOS'"/>
