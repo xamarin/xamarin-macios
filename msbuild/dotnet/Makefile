@@ -151,6 +151,8 @@ ref-pack-%: prepare $(TEMPLATED_FILES)
 	$(Q) rm -f nupkgs/Xamarin.$*.App.Ref.*.nupkg
 	$(if $(V),,@echo "PACK     nupkgs/Xamarin.$*.App.Ref.nupkg";) $(DOTNET) pack package/$*/Xamarin.$*.App.ref.csproj --output nupkgs $(DOTNET_PACK_VERBOSITY)
 	$(if $(V),,@echo "ADD      nupkgs/Xamarin.$*.App.Ref.nupkg";) nuget add nupkgs/Xamarin.$*.App.Ref.*nupkg -source $(TEST_FEED_PATH) $(NUGET_VERBOSITY)
+	$(Q) CURRENT_HASH=$(shell grep '<CurrentHash>' targets/Xamarin.Shared.Sdk.Versions.props | sed -e 's/<[/]*CurrentHash>//g' -e 's/[[:space:]]//g'); \
+		NAME=$$(echo nupkgs/Xamarin.$*.App.Ref.*nupkg | sed -e 's/.nupkg$$//'); mv "$$NAME.nupkg" "$$NAME+sha.$$CURRENT_HASH.nupkg"
 	$(Q) echo "Created: $$(ls -1 nupkgs/Xamarin.$*.App.Ref.*nupkg)"
 
 pack-%: prepare $(TEMPLATED_FILES)
@@ -160,9 +162,8 @@ pack-%: prepare $(TEMPLATED_FILES)
 	$(if $(V),,@echo "ADD      nupkgs/Xamarin.$*.Sdk.nupkg";) nuget add nupkgs/Xamarin.$*.Sdk.*nupkg -source $(TEST_FEED_PATH) $(NUGET_VERBOSITY)
 	@# Add the hash to the filename
 	$(Q) CURRENT_HASH=$(shell grep '<CurrentHash>' targets/Xamarin.Shared.Sdk.Versions.props | sed -e 's/<[/]*CurrentHash>//g' -e 's/[[:space:]]//g'); \
-		NAME=$$(echo nupkgs/Xamarin.$*.Sdk.*nupkg     | sed -e 's/.nupkg$$//'); mv "$$NAME.nupkg" "$$NAME+sha.$$CURRENT_HASH.nupkg"; \
-		NAME=$$(echo nupkgs/Xamarin.$*.App.Ref.*nupkg | sed -e 's/.nupkg$$//'); mv "$$NAME.nupkg" "$$NAME+sha.$$CURRENT_HASH.nupkg"
-	$(Q) echo "Created: $$(ls -1 nupkgs/Xamarin.$*.Sdk.*nupkg) $$(ls -1 nupkgs/Xamarin.$*.App.Ref.*nupkg)"
+		NAME=$$(echo nupkgs/Xamarin.$*.Sdk.*nupkg     | sed -e 's/.nupkg$$//'); mv "$$NAME.nupkg" "$$NAME+sha.$$CURRENT_HASH.nupkg"
+	$(Q) echo "Created: $$(ls -1 nupkgs/Xamarin.$*.Sdk.*nupkg)"
 
 test/NuGet.config: $(TOP)/NuGet.config
 	$(Q) $(CP) $< $@.tmp
