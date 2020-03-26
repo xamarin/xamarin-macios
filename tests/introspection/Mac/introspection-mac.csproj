@@ -132,6 +132,9 @@
     <Compile Include="..\ApiFrameworkTest.cs">
       <Link>ApiFrameworkTest.cs</Link>
     </Compile>
+    <Compile Include="..\ApiTypeTest.cs">
+      <Link>ApiTypeTest.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\external\guiunit\src\framework\GuiUnit_NET_4_5.csproj">

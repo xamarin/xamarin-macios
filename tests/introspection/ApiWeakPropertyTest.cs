@@ -30,7 +30,7 @@ namespace Introspection {
 				case "LinkWithAttribute": // LinkWithAttribute.WeakFrameworks
 				return true;
 			}
-			return false;
+			return SkipDueToRejectedTypes (type);
 		}
 
 		/// <summary>

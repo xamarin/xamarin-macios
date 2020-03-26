@@ -151,6 +151,7 @@ namespace Xamarin.Bundler {
 #else
 					"    register-protocols: Remove unneeded metadata for protocol support. Makes the app smaller and reduces memory requirements. Disabled, by default, to allow dynamic code loading.\n" +
 					"    remove-unsupported-il-for-bitcode: Remove IL that is not supported when compiling to bitcode, and replace with a NotSupportedException.\n" +
+					"    force-rejected-types-removal: Forcefully remove types that are known to cause rejections when applications are submitted to Apple. This includes: `UIWebView` and related types.\n" +
 #endif
 					"",
 					(v) => {
@@ -224,36 +225,79 @@ namespace Xamarin.Bundler {
 
 		public static int RunCommand (string path, params string [] args)
 		{
-			return RunCommand (path, args, null, (Action<string>) null);
+			return RunCommand (path, args, null, (Action<string>) null, (Action<string>) null, false);
 		}
 
 		public static int RunCommand (string path, IList<string> args)
 		{
-			return RunCommand (path, args, null, (Action<string>) null);
+			return RunCommand (path, args, null, (Action<string>) null, (Action<string>) null, false);
 		}
 
-		public static int RunCommand (string path, IList<string> args, string [] env = null, StringBuilder output = null, bool suppressPrintOnErrors = false)
+		public static int RunCommand (string path, IList<string> args, StringBuilder output)
 		{
-			if (output != null)
-				return RunCommand (path, args, env, (v) => { if (v != null) output.AppendLine (v); }, suppressPrintOnErrors);
-			return RunCommand (path, args, env, (Action<string>) null, suppressPrintOnErrors);
+			return RunCommand (path, args, null, output, output, false);
 		}
 
-		public static int RunCommand (string path, IList<string> args, string [] env = null, Action<string> output_received = null, bool suppressPrintOnErrors = false)
+		public static int RunCommand (string path, IList<string> args, StringBuilder output, bool suppressPrintOnErrors)
 		{
-			return RunCommand (path, StringUtils.FormatArguments (args), env, output_received, suppressPrintOnErrors);
+			return RunCommand (path, args, null, output, output, suppressPrintOnErrors);
 		}
 
-		static int RunCommand (string path, string args, string[] env = null, Action<string> output_received = null, bool suppressPrintOnErrors = false)
+		public static int RunCommand (string path, IList<string> args, string [] env, StringBuilder output)
+		{
+			return RunCommand (path, args, env, output, output, false);
+		}
+
+		public static int RunCommand (string path, IList<string> args, string [] env, StringBuilder output, bool suppressPrintOnErrors)
+		{
+			return RunCommand (path, args, env, output, output, suppressPrintOnErrors);
+		}
+
+		public static int RunCommand (string path, IList<string> args, string [] env, StringBuilder output, StringBuilder error)
+		{
+			return RunCommand (path, args, env, output, error, false);
+		}
+
+		public static int RunCommand (string path, IList<string> args, StringBuilder output, StringBuilder error)
+		{
+			return RunCommand (path, args, null, output, error, false);
+		}
+
+		public static int RunCommand (string path, IList<string> args, StringBuilder output, StringBuilder error, bool suppressPrintOnErrors)
+		{
+			return RunCommand (path, args, null, output, error, suppressPrintOnErrors);
+		}
+
+		public static int RunCommand (string path, IList<string> args, string [] env, StringBuilder output, StringBuilder error, bool suppressPrintOnErrors)
+		{
+			var output_received = output == null ? null : new Action<string> ((v) => { if (v != null) output.AppendLine (v); });
+			var error_received = error == null ? null : new Action<string> ((v) => { if (v != null) error.AppendLine (v); });
+			return RunCommand (path, args, env, output_received, error_received, suppressPrintOnErrors);
+		}
+
+		static int RunCommand (string path, IList<string> args, string [] env, Action<string> output_received, bool suppressPrintOnErrors)
+		{
+			return RunCommand (path, args, env, output_received, output_received, suppressPrintOnErrors);
+		}
+
+		static int RunCommand (string path, IList<string> args, string [] env, Action<string> output_received, Action<string> error_received)
+		{
+			return RunCommand (path, args, env, output_received, error_received, false);
+		}
+
+		static int RunCommand (string path, IList<string> args, string[] env, Action<string> output_received, Action<string> error_received, bool suppressPrintOnErrors)
 		{
 			Exception stdin_exc = null;
-			var info = new ProcessStartInfo (path, args);
+			var info = new ProcessStartInfo (path, StringUtils.FormatArguments (args));
 			info.UseShellExecute = false;
 			info.RedirectStandardInput = false;
 			info.RedirectStandardOutput = true;
 			info.RedirectStandardError = true;
 			System.Threading.ManualResetEvent stdout_completed = new System.Threading.ManualResetEvent (false);
 			System.Threading.ManualResetEvent stderr_completed = new System.Threading.ManualResetEvent (false);
+
+			if (output_received == null ^ error_received == null)
+				throw new ArgumentException ("Either both or neither of 'output_received' and 'error_received' can be specified.");
 
 			var lockobj = new object ();
 			StringBuilder output = null;
@@ -263,6 +307,7 @@ namespace Xamarin.Bundler {
 					if (line != null)
 						output.AppendLine (line);
 				};
+				error_received = output_received;
 			}
 
 			if (env != null){
@@ -278,8 +323,7 @@ namespace Xamarin.Bundler {
 				}
 			}
 
-			if (verbose > 0)
-				Console.WriteLine ("{0} {1}", path, args);
+			Log (1, "{0} {1}", info.FileName, info.Arguments);
 
 			using (var p = Process.Start (info)) {
 
@@ -295,7 +339,7 @@ namespace Xamarin.Bundler {
 				p.ErrorDataReceived += (s, e) => {
 					if (e.Data != null) {
 						lock (lockobj)
-							output_received (e.Data);
+							error_received (e.Data);
 					} else {
 						stderr_completed.Set ();
 					}
@@ -639,27 +683,213 @@ namespace Xamarin.Bundler {
 			Driver.Log (1, "Using Xcode {0} ({2}) found in {1}", XcodeVersion, sdk_root, XcodeProductVersion);
 		}
 
-		public static int XcodeRun (string command, params string [] arguments)
+		internal static bool TryParseBool (string value, out bool result)
 		{
-			return XcodeRun (command, (IList<string>) arguments, null);
-		}
-
-		public static int XcodeRun (string command, IList<string> arguments, StringBuilder output = null)
-		{
-			string [] env = DeveloperDirectory != String.Empty ? new string [] { "DEVELOPER_DIR", DeveloperDirectory } : null;
-			var args = new List<string> ();
-			args.Add ("-sdk");
-			args.Add ("macosx");
-			args.Add (command);
-			args.AddRange (arguments);
-			int ret = RunCommand ("xcrun", args, env, output);
-			if (ret != 0 && verbose > 1) {
-				StringBuilder debug = new StringBuilder ();
-				RunCommand ("xcrun", new [] { "--find", command }, env, debug);
-				Console.WriteLine ("failed using `{0}` from: {1}", command, debug);
+			if (string.IsNullOrEmpty (value)) {
+				result = true;
+				return true;
 			}
-			return ret;
+
+			switch (value.ToLowerInvariant ()) {
+			case "1":
+			case "yes":
+			case "true":
+			case "enable":
+				result = true;
+				return true;
+			case "0":
+			case "no":
+			case "false":
+			case "disable":
+				result = false;
+				return true;
+			default:
+				return bool.TryParse (value, out result);
+			}
 		}
 
+		internal static bool ParseBool (string value, string name, bool show_error = true)
+		{
+			bool result;
+			if (!TryParseBool (value, out result))
+				throw ErrorHelper.CreateError (26, "Could not parse the command line argument '-{0}': {1}", name, value);
+			return result;
+		}
+
+		static readonly Dictionary<string, string> tools = new Dictionary<string, string> ();
+		static string FindTool (string tool)
+		{
+			string path;
+
+			lock (tools) {
+				if (tools.TryGetValue (tool, out path))
+					return path;
+			}
+
+			path = LocateTool (tool);
+			static string LocateTool (string tool)
+			{
+				if (XcrunFind (tool, out var path))
+					return path;
+
+				// either /Developer (Xcode 4.2 and earlier), /Applications/Xcode.app/Contents/Developer (Xcode 4.3) or user override
+				path = Path.Combine (DeveloperDirectory, "usr", "bin", tool);
+				if (File.Exists (path))
+					return path;
+
+				// Xcode 4.3 (without command-line tools) also has a copy of 'strip'
+				path = Path.Combine (DeveloperDirectory, "Toolchains", "XcodeDefault.xctoolchain", "usr", "bin", tool);
+				if (File.Exists (path))
+					return path;
+
+				// Xcode "Command-Line Tools" install a copy in /usr/bin (and it can be there afterward)
+				path = Path.Combine ("/usr", "bin", tool);
+				if (File.Exists (path))
+					return path;
+
+				return null;
+			}
+
+			// We can end up finding the same tool multiple times.
+			// That's not a problem.
+			lock (tools)
+				tools [tool] = path;
+
+			if (path == null)
+				throw ErrorHelper.CreateError (5307, "Missing '{0}' tool. Please install Xcode 'Command-Line Tools' component", tool);
+
+			return path;
+		}
+
+		static bool XcrunFind (string tool, out string path)
+		{
+			return XcrunFind (ApplePlatform.None, false, tool, out path);
+		}
+
+		static bool XcrunFind (ApplePlatform platform, bool is_simulator, string tool, out string path)
+		{
+			var env = new List<string> ();
+			// Unset XCODE_DEVELOPER_DIR_PATH. See https://github.com/xamarin/xamarin-macios/issues/3931.
+			env.Add ("XCODE_DEVELOPER_DIR_PATH");
+			env.Add (null);
+			// Set DEVELOPER_DIR if we have it
+			if (!string.IsNullOrEmpty (DeveloperDirectory)) {
+				env.Add ("DEVELOPER_DIR");
+				env.Add (DeveloperDirectory);
+			}
+
+			path = null;
+
+			var args = new List<string> ();
+			if (platform != ApplePlatform.None) {
+				args.Add ("-sdk");
+				switch (platform) {
+				case ApplePlatform.iOS:
+					args.Add (is_simulator ? "iphonesimulator" : "iphoneos");
+					break;
+				case ApplePlatform.MacOSX:
+					args.Add ("macosx");
+					break;
+				case ApplePlatform.TVOS:
+					args.Add (is_simulator ? "appletvsimulator" : "appletvos");
+					break;
+				case ApplePlatform.WatchOS:
+					args.Add (is_simulator ? "watchsimulator" : "watchos");
+					break;
+				default:
+					throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", platform.ToString (), PRODUCT);
+				}
+			}
+			args.Add ("-f");
+			args.Add (tool);
+
+			var stdout = new StringBuilder ();
+			var stderr = new StringBuilder ();
+			var both = new StringBuilder ();
+			// xcrun can write unrelated stuff to stderr even if it succeeds, so we need to separate stdout and stderr.
+			// We also want to print out what happened if something went wrong, and in that case we don't want stdout
+			// and stderr captured separately, because related lines could end up printed far from eachother in time,
+			// and that's confusing. So capture stdout and stderr by themselves, and also capture both together.
+			int ret = RunCommand ("xcrun", args, env.ToArray (),
+				(v) => {
+					lock (both) {
+						both.AppendLine (v);
+						stdout.AppendLine (v);
+					}
+				},
+				(v) => {
+					lock (both) {
+						both.AppendLine (v);
+						stderr.AppendLine (v);
+					}
+				});
+
+			if (ret == 0) {
+				path = stdout.ToString ().Trim ();
+			} else {
+				Log (1, "Failed to locate the developer tool '{0}', 'xcrun {1}' returned with the exit code {2}:\n{3}", tool, string.Join (" ", args), ret, both.ToString ());
+			}
+
+			return ret == 0;
+		}
+
+		public static void RunXcodeTool (string tool, params string[] arguments)
+		{
+			RunXcodeTool (tool, (IList<string>) arguments);
+		}
+
+		public static void RunXcodeTool (string tool, IList<string> arguments)
+		{
+			var executable = FindTool (tool);
+			var rv = RunCommand (executable, arguments);
+			if (rv != 0)
+				throw ErrorHelper.CreateError (5309, "Failed to execute the tool '{0}', it failed with an error code '{1}'. Please check the build log for details.", tool, rv);
+		}
+
+		public static void RunClang (IList<string> arguments)
+		{
+			RunXcodeTool ("clang", arguments);
+		}
+
+		public static void RunInstallNameTool (IList<string> arguments)
+		{
+			RunXcodeTool ("install_name_tool", arguments);
+		}
+
+		public static void RunBitcodeStrip (IList<string> arguments)
+		{
+			RunXcodeTool ("bitcode_strip", arguments);
+		}
+
+		public static void RunLipo (string output, IEnumerable<string> inputs)
+		{
+			var sb = new List<string> ();
+			sb.AddRange (inputs);
+			sb.Add ("-create");
+			sb.Add ("-output");
+			sb.Add (output);
+			RunLipo (sb);
+		}
+
+		public static void RunLipo (IList<string> options)
+		{
+			RunXcodeTool ("lipo", options);
+		}
+
+		public static void CreateDsym (string output_dir, string appname, string dsym_dir)
+		{
+			RunDsymUtil (Path.Combine (output_dir, appname), "-num-threads", "4", "-z", "-o", dsym_dir);
+			RunCommand ("/usr/bin/mdimport", dsym_dir);
+		}
+
+		public static void RunDsymUtil (params string [] options)
+		{
+			RunXcodeTool ("dsymutil", options);
+		}
+
+		public static void RunStrip (IList<string> options)
+		{
+			RunXcodeTool ("strip", options);
+		}
 	}
 }

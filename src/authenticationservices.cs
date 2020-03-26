@@ -55,13 +55,16 @@ namespace AuthenticationServices {
 		Url,
 	}
 
-	[NoTV][NoWatch]
+	[NoTV]
+	[Watch (6,2)]
 	[Mac (10,15)]
 	[iOS (12,0)]
 	[Native]
 	[ErrorDomain ("ASWebAuthenticationSessionErrorDomain")]
 	public enum ASWebAuthenticationSessionErrorCode : long {
 		CanceledLogin = 1,
+		PresentationContextNotProvided = 2,
+		PresentationContextInvalid = 3,
 	}
 
 	delegate void ASCredentialIdentityStoreCompletionHandler (bool success, NSError error);
@@ -213,7 +216,8 @@ namespace AuthenticationServices {
 
 	delegate void ASWebAuthenticationSessionCompletionHandler ([NullAllowed] NSUrl callbackUrl, [NullAllowed] NSError error);
 
-	[NoTV][NoWatch]
+	[NoTV]
+	[Watch (6,2)]
 	[Mac (10, 15)]
 	[iOS (12,0)]
 	[BaseType (typeof (NSObject))]
@@ -228,13 +232,17 @@ namespace AuthenticationServices {
 		[Export ("cancel")]
 		void Cancel ();
 
-		[iOS (13,0)]
+		[iOS (13,0), NoWatch]
 		[NullAllowed, Export ("presentationContextProvider", ArgumentSemantic.Weak)]
 		IASWebAuthenticationPresentationContextProviding PresentationContextProvider { get; set; }
 
 		[iOS (13,0)]
 		[Export ("prefersEphemeralWebBrowserSession")]
 		bool PrefersEphemeralWebBrowserSession { get; set; }
+
+		[Mac (10,15,4), iOS (13,4)]
+		[Export ("canStart")]
+		bool CanStart { get; }
 	}
 
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
