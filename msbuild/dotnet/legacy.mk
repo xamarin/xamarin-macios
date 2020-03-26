@@ -133,6 +133,7 @@ legacy-pack-simple: legacy-prepare
 legacy-pack-%: legacy-prepare $(TEMPLATED_FILES)
 	$(Q) rm -Rf $(TEST_FEED_PATH)/xamarin.$(shell echo $* | tr '[:upper:]' '[:lower:]').legacy.sdk
 	$(Q) rm -f nupkgs/Xamarin.$*.Legacy.Sdk.*.nupkg
+	$(Q) rm -Rf $(HOME)/.nuget/packages/xamarin.*.legacy.sdk
 	$(if $(V),,@echo "PACK     nupkgs/Xamarin.$*.Legacy.Sdk.nupkg";) $(DOTNET) pack package/$*/Xamarin.$*.Legacy.csproj --output nupkgs $(DOTNET_PACK_VERBOSITY)
 	$(if $(V),,@echo "ADD      nupkgs/Xamarin.$*.Legacy.Sdk.nupkg";) nuget add nupkgs/Xamarin.$*.Legacy.Sdk.*nupkg -source $(TEST_FEED_PATH) $(NUGET_VERBOSITY)
 	@# Add the hash to the filename
