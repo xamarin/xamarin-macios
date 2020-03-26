@@ -12,6 +12,7 @@ namespace Xharness.Jenkins.TestTasks
 	class RunDeviceTask : RunXITask<IHardwareDevice>
 	{
 		readonly IProcessManager processManager = new ProcessManager ();
+		readonly IMetro metro;
 		readonly IResultParser resultParser = new XmlResultParser ();
 		readonly IDeviceLoader devices;
 		AppInstallMonitorLog install_log;
@@ -40,7 +41,7 @@ namespace Xharness.Jenkins.TestTasks
 			}
 		}
 
-		public RunDeviceTask (IDeviceLoader devices, MSBuildTask build_task, IProcessManager processManager, IEnumerable<IHardwareDevice> candidates)
+		public RunDeviceTask (IDeviceLoader devices, MSBuildTask build_task, IProcessManager processManager, IMetro metro, IEnumerable<IHardwareDevice> candidates)
 			: base (build_task, processManager, candidates.OrderBy ((v) => v.DebugSpeed))
 		{
 			switch (build_task.Platform) {
@@ -66,6 +67,7 @@ namespace Xharness.Jenkins.TestTasks
 			}
 
 			this.devices = devices ?? throw new ArgumentNullException (nameof (devices));
+			this.metro = metro ?? throw new ArgumentNullException (nameof (metro));
 		}
 
 		protected override async Task RunTestAsync ()
@@ -84,7 +86,7 @@ namespace Xharness.Jenkins.TestTasks
 					runner = new AppRunner (processManager,
 						new AppBundleInformationParser (),
 						new SimulatorsLoaderFactory (Harness, processManager),
-						new SimpleListenerFactory (),
+						new SimpleListenerFactory (metro),
 						new DeviceLoaderFactory (Harness, processManager),
 						new CrashSnapshotReporterFactory (ProcessManager, Harness.XcodeRoot, Harness.MlaunchPath),
 						new CaptureLogFactory (),
@@ -151,7 +153,7 @@ namespace Xharness.Jenkins.TestTasks
 							AppRunner todayRunner = new AppRunner (processManager,
 								new AppBundleInformationParser (),
 								new SimulatorsLoaderFactory (Harness, processManager),
-								new SimpleListenerFactory (),
+								new SimpleListenerFactory (metro),
 								new DeviceLoaderFactory (Harness, processManager),
 								new CrashSnapshotReporterFactory (ProcessManager, Harness.XcodeRoot, Harness.MlaunchPath),
 								new CaptureLogFactory (),

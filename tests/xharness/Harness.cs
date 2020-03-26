@@ -82,6 +82,7 @@ namespace Xharness
 		string PeriodicCommandArguments { get; }
 		TimeSpan PeriodicCommandInterval { get; }
 		IProcessManager ProcessManager { get; }
+		IMetro Metro { get; }
 		double Timeout { get; }
 		string TodayContainerTemplate { get; }
 		string TodayExtensionTemplate { get; }
@@ -111,6 +112,7 @@ namespace Xharness
 		public HashSet<string> Labels { get; }
 		public XmlResultJargon XmlJargon { get; }
 		public IProcessManager ProcessManager { get; }
+		public IMetro Metro { get; }
 		public IResultParser ResultParser { get; }
 
 		// This is the maccore/tests directory.
@@ -199,6 +201,7 @@ namespace Xharness
 		public Harness (IProcessManager processManager, IResultParser resultParser, HarnessAction action, HarnessConfiguration configuration)
 		{
 			ProcessManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
+			Metro = new Metro (processManager);
 			ResultParser = resultParser ?? throw new ArgumentNullException (nameof (resultParser));
 			Action = action;
 
@@ -607,7 +610,7 @@ namespace Xharness
 				var runner = new AppRunner (ProcessManager,
 					new AppBundleInformationParser (),
 					new SimulatorsLoaderFactory (this, ProcessManager),
-					new SimpleListenerFactory (),
+					new SimpleListenerFactory (Metro),
 					new DeviceLoaderFactory (this, ProcessManager),
 					new CrashSnapshotReporterFactory (ProcessManager, XcodeRoot, MlaunchPath),
 					new CaptureLogFactory (),
@@ -638,7 +641,7 @@ namespace Xharness
 				var runner = new AppRunner (ProcessManager,
 					new AppBundleInformationParser (),
 					new SimulatorsLoaderFactory (this, ProcessManager),
-					new SimpleListenerFactory (),
+					new SimpleListenerFactory (Metro),
 					new DeviceLoaderFactory (this, ProcessManager),
 					new CrashSnapshotReporterFactory (ProcessManager, XcodeRoot, MlaunchPath),
 					new CaptureLogFactory (),
@@ -667,7 +670,7 @@ namespace Xharness
 				var runner = new AppRunner (ProcessManager,
 					new AppBundleInformationParser (),
 					new SimulatorsLoaderFactory (this, ProcessManager),
-					new SimpleListenerFactory (),
+					new SimpleListenerFactory (Metro),
 					new DeviceLoaderFactory (this, ProcessManager),
 					new CrashSnapshotReporterFactory (ProcessManager, XcodeRoot, MlaunchPath),
 					new CaptureLogFactory (),

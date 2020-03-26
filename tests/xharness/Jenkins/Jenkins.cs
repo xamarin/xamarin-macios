@@ -12,6 +12,7 @@ using Xharness.Jenkins.TestTasks;
 using Xharness.Hardware;
 using Xharness.Utilities;
 using Xharness.Collections;
+using Xharness.Listeners;
 
 namespace Xharness.Jenkins
 {
@@ -21,6 +22,7 @@ namespace Xharness.Jenkins
 		readonly IDeviceLoader devices;
 		readonly IProcessManager processManager;
 		readonly IResultParser resultParser;
+		readonly IMetro metro;
 		bool populating = true;
 
 		public Harness Harness { get; }
@@ -227,7 +229,7 @@ namespace Xharness.Jenkins
 
 			for (int i = 0; i < targets.Length; i++) {
 				var sims = simulators.SelectDevices (targets [i], SimulatorLoadLog, false);
-				runtasks.Add (new RunSimulatorTask (simulators, buildTask, processManager, sims) {
+				runtasks.Add (new RunSimulatorTask (simulators, buildTask, processManager, metro, sims) {
 					Platform = platforms [i],
 					Ignored = ignored[i] || buildTask.Ignored
 				});
@@ -552,7 +554,7 @@ namespace Xharness.Jenkins
 			}
 
 			var testVariations = CreateTestVariations (runSimulatorTasks, (buildTask, test, candidates) =>
-				new RunSimulatorTask (simulators, buildTask, processManager, candidates?.Cast<SimulatorDevice> () ?? test.Candidates)).ToList ();
+				new RunSimulatorTask (simulators, buildTask, processManager, metro, candidates?.Cast<SimulatorDevice> () ?? test.Candidates)).ToList ();
 
 			foreach (var tv in testVariations) {
 				if (!tv.Ignored)
@@ -592,7 +594,7 @@ namespace Xharness.Jenkins
 						TestName = project.Name,
 					};
 					build64.CloneTestProject (project);
-					projectTasks.Add (new RunDeviceTask (devices, build64, processManager, devices.Connected64BitIOS.Where (d => d.IsSupported (project))) { Ignored = !IncludeiOS64 });
+					projectTasks.Add (new RunDeviceTask (devices, build64, processManager, metro, devices.Connected64BitIOS.Where (d => d.IsSupported (project))) { Ignored = !IncludeiOS64 });
 
 					var build32 = new MSBuildTask {
 						Jenkins = this,
@@ -602,7 +604,7 @@ namespace Xharness.Jenkins
 						TestName = project.Name,
 					};
 					build32.CloneTestProject (project);
-					projectTasks.Add (new RunDeviceTask (devices, build32, processManager, devices.Connected32BitIOS.Where (d => d.IsSupported (project))) { Ignored = !IncludeiOS32 });
+					projectTasks.Add (new RunDeviceTask (devices, build32, processManager, metro, devices.Connected32BitIOS.Where (d => d.IsSupported (project))) { Ignored = !IncludeiOS32 });
 
 					var todayProject = project.AsTodayExtensionProject ();
 					var buildToday = new MSBuildTask {
@@ -613,7 +615,7 @@ namespace Xharness.Jenkins
 						TestName = project.Name,
 					};
 					buildToday.CloneTestProject (todayProject);
-					projectTasks.Add (new RunDeviceTask (devices, buildToday, processManager, devices.Connected64BitIOS.Where (d => d.IsSupported (project))) { Ignored = !IncludeiOSExtensions, BuildOnly = ForceExtensionBuildOnly });
+					projectTasks.Add (new RunDeviceTask (devices, buildToday, processManager, metro, devices.Connected64BitIOS.Where (d => d.IsSupported (project))) { Ignored = !IncludeiOSExtensions, BuildOnly = ForceExtensionBuildOnly });
 				}
 
 				if (!project.SkiptvOSVariation) {
@@ -626,7 +628,7 @@ namespace Xharness.Jenkins
 						TestName = project.Name,
 					};
 					buildTV.CloneTestProject (tvOSProject);
-					projectTasks.Add (new RunDeviceTask (devices, buildTV, processManager, devices.ConnectedTV.Where (d => d.IsSupported (project))) { Ignored = !IncludetvOS });
+					projectTasks.Add (new RunDeviceTask (devices, buildTV, processManager, metro, devices.ConnectedTV.Where (d => d.IsSupported (project))) { Ignored = !IncludetvOS });
 				}
 
 				if (!project.SkipwatchOSVariation) {
@@ -640,7 +642,7 @@ namespace Xharness.Jenkins
 							TestName = project.Name,
 						};
 						buildWatch32.CloneTestProject (watchOSProject);
-						projectTasks.Add (new RunDeviceTask (devices, buildWatch32, processManager, devices.ConnectedWatch) { Ignored = !IncludewatchOS });
+						projectTasks.Add (new RunDeviceTask (devices, buildWatch32, processManager, metro, devices.ConnectedWatch) { Ignored = !IncludewatchOS });
 					}
 
 					if (!project.SkipwatchOSARM64_32Variation) {
@@ -652,7 +654,7 @@ namespace Xharness.Jenkins
 							TestName = project.Name,
 						};
 						buildWatch64_32.CloneTestProject (watchOSProject);
-						projectTasks.Add (new RunDeviceTask (devices, buildWatch64_32, processManager, devices.ConnectedWatch32_64.Where (d => d.IsSupported (project))) { Ignored = !IncludewatchOS });
+						projectTasks.Add (new RunDeviceTask (devices, buildWatch64_32, processManager, metro, devices.ConnectedWatch32_64.Where (d => d.IsSupported (project))) { Ignored = !IncludewatchOS });
 					}
 				}
 				foreach (var task in projectTasks) {
@@ -663,7 +665,7 @@ namespace Xharness.Jenkins
 				rv.AddRange (projectTasks);
 			}
 
-			return Task.FromResult<IEnumerable<TestTask>> (CreateTestVariations (rv, (buildTask, test, candidates) => new RunDeviceTask (devices, buildTask, processManager, candidates?.Cast<IHardwareDevice> () ?? test.Candidates)));
+			return Task.FromResult<IEnumerable<TestTask>> (CreateTestVariations (rv, (buildTask, test, candidates) => new RunDeviceTask (devices, buildTask, processManager, metro, candidates?.Cast<IHardwareDevice> () ?? test.Candidates)));
 		}
 
 		static string AddSuffixToPath (string path, string suffix)

@@ -9,22 +9,33 @@ namespace Xharness.Listeners {
 	}
 
 	public interface ISimpleListenerFactory {
-		(ListenerTransport transport, ISimpleListener listener, string listenerTempFile) Create (RunMode mode,
+		IMetro Metro { get; }
+		(ListenerTransport transport, ISimpleListener listener, string listenerTempFile) Create (string device,
+																								 RunMode mode,
 																								 ILog log,
 																								 ILog listenerLog,
 																								 bool isSimulator,
 																								 bool autoExit,
-																								 bool xmlOutput);
+																								 bool xmlOutput,
+																								 bool useTcpTunnel);
 	}
 
 	public class SimpleListenerFactory : ISimpleListenerFactory {
+		public IMetro Metro { get; private set; }
 
-		public (ListenerTransport transport, ISimpleListener listener, string listenerTempFile) Create (RunMode mode,
+		public SimpleListenerFactory (IMetro metro)
+		{
+			Metro = metro ?? throw new ArgumentNullException (nameof (metro));
+		}
+
+		public (ListenerTransport transport, ISimpleListener listener, string listenerTempFile) Create (string device,
+																									    RunMode mode,
 																									    ILog log,
 																									    ILog listenerLog,
 																									    bool isSimulator,
 																									    bool autoExit,
-																									    bool xmlOutput)
+																									    bool xmlOutput,
+																										bool useTcpTunnel)
 		{
 			string listenerTempFile = null;
 			ISimpleListener listener;
@@ -45,7 +56,12 @@ namespace Xharness.Listeners {
 				listener = new SimpleHttpListener (log, listenerLog, autoExit, xmlOutput);
 				break;
 			case ListenerTransport.Tcp:
-				listener = new SimpleTcpListener (log, listenerLog, autoExit, xmlOutput);
+				// if there is a tunnel, and we want to use it, re-use the port
+				if (Metro.HasTunnel (device, out var tunnel)) {
+					listener = new SimpleTcpListener (tunnel.Port, log, listenerLog, autoExit, xmlOutput, useTcpTunnel);
+				} else { 
+					listener = new SimpleTcpListener (log, listenerLog, autoExit, xmlOutput, useTcpTunnel);
+				}
 				break;
 			default:
 				throw new NotImplementedException ("Unknown type of listener");

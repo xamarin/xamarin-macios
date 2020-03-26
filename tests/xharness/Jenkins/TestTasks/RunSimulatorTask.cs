@@ -15,6 +15,7 @@ namespace Xharness.Jenkins.TestTasks
 	{
 		readonly IProcessManager processManager = new ProcessManager ();
 		readonly ISimulatorsLoader simulators;
+		readonly IMetro metro;
 		public IAcquiredResource AcquiredResource;
 
 		public ISimulatorDevice [] Simulators {
@@ -29,7 +30,7 @@ namespace Xharness.Jenkins.TestTasks
 			}
 		}
 
-		public RunSimulatorTask (ISimulatorsLoader simulators, MSBuildTask build_task, IProcessManager processManager, IEnumerable<ISimulatorDevice> candidates = null)
+		public RunSimulatorTask (ISimulatorsLoader simulators, MSBuildTask build_task, IProcessManager processManager, IMetro metro, IEnumerable<ISimulatorDevice> candidates = null)
 			: base (build_task, processManager, candidates)
 		{
 			var project = Path.GetFileNameWithoutExtension (ProjectFile);
@@ -42,6 +43,7 @@ namespace Xharness.Jenkins.TestTasks
 			}
 
 			this.simulators = simulators ?? throw new ArgumentNullException (nameof (simulators));
+			this.metro = metro ?? throw new ArgumentNullException (nameof (metro));
 		}
 
 		public async Task FindSimulatorAsync ()
@@ -80,7 +82,7 @@ namespace Xharness.Jenkins.TestTasks
 			runner = new AppRunner (processManager,
 				new AppBundleInformationParser (),
 				new SimulatorsLoaderFactory (Harness, processManager),
-				new SimpleListenerFactory (),
+				new SimpleListenerFactory (metro),
 				new DeviceLoaderFactory (Harness, processManager),
 				new CrashSnapshotReporterFactory (ProcessManager, Harness.XcodeRoot, Harness.MlaunchPath),
 				new CaptureLogFactory (),

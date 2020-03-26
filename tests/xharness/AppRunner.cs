@@ -44,6 +44,8 @@ namespace Xharness {
 
 		public BuildToolTask BuildTask { get; private set; }
 
+		public bool UseTcpTunnel { get; set; }
+
 		public RunMode RunMode { get; private set; }
 
 		bool IsExtension => AppInformation.Extension.HasValue;
@@ -290,7 +292,7 @@ namespace Xharness {
 			}
 
 			var listener_log = Logs.Create ($"test-{RunMode.ToString ().ToLowerInvariant ()}-{Helpers.Timestamp}.log", LogType.TestLog.ToString (), timestamp: !useXmlOutput);
-			var (transport, listener, listenerTmpFile) = listenerFactory.Create (RunMode, MainLog, listener_log, isSimulator, true, useXmlOutput);
+			var (transport, listener, listenerTmpFile) = listenerFactory.Create (deviceName, RunMode, MainLog, listener_log, isSimulator, true, useXmlOutput, UseTcpTunnel);
 
 			listener.Initialize ();
 
@@ -302,6 +304,9 @@ namespace Xharness {
 
 			args.Add (new SetAppArgumentArgument ($"-hostport:{listener.Port}", true));
 			args.Add (new SetEnvVariableArgument ("NUNIT_HOSTPORT", listener.Port));
+
+			if (UseTcpTunnel)
+				args.Add (new SetEnvVariableArgument ("USE_TCP_TUNNEL", "true"));
 
 			listener.StartAsync ();
 
@@ -385,6 +390,21 @@ namespace Xharness {
 				await crashReporter.StartCaptureAsync ();
 
 				MainLog.WriteLine ("Starting test run");
+
+				// if we want to use a tunnel, create or re-use one that is already present
+				if (transport == ListenerTransport.Tcp && UseTcpTunnel && listener is SimpleTcpListener tcpListener) {
+					// create or reuse a tunnel
+					TcpTunnel tunnel;
+					if (listenerFactory.Metro.HasTunnel (deviceName, out tunnel)) {
+						await tunnel.Connect (tcpListener);
+					} else {
+						// create a new tunnel using the listener
+						tunnel = listenerFactory.Metro.Create (deviceName, MainLog);
+						tunnel.Start (deviceName, tcpListener, testReporter.Timeout, MainLog);
+						// wait until we started the tunnel
+						await tunnel.Started; 
+					}
+				}
 
 				await testReporter.CollectSimulatorResult (
 					ProcessManager.ExecuteCommandAsync (harness.MlaunchPath, args, run_log, testReporter.Timeout, cancellation_token: testReporter.CancellationToken));

@@ -177,6 +177,8 @@
     <Compile Include="TestReporter.cs" />
     <Compile Include="IAppRunner.cs" />
     <Compile Include="ITestReporter.cs" />
+    <Compile Include="Listeners\Metro.cs" />
+    <Compile Include="Listeners\TcpTunnel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\tools\mtouch\SdkVersions.cs">
