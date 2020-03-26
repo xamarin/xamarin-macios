@@ -84,16 +84,7 @@ namespace Xharness.Execution {
 			return RunAsync (process, log, timeout, environment_variables, cancellation_token, diagnostics);
 		}
 
-		public Task<ProcessExecutionResult> RunAsync (Process process, ILog log, ILog stdoutLog, ILog stderrLog, TimeSpan? timeout = null, Dictionary<string, string> environment_variables = null, CancellationToken? cancellation_token = null, bool? diagnostics = null)
-		{
-			if (stdoutLog is TextWriter StdoutStream && stderrLog is TextWriter StderrStream) {
-				return RunAsync (process, log, StdoutStream, StderrStream, timeout, environment_variables, cancellation_token, diagnostics);
-			} else {
-				throw new ArgumentException ("Could not cast ILog to TextWriter.");
-			}
-		}
-
-		public async Task<ProcessExecutionResult> RunAsync (Process process, ILog log, TextWriter StdoutStream, TextWriter StderrStream, TimeSpan? timeout = null, Dictionary<string, string> environment_variables = null, CancellationToken? cancellation_token = null, bool? diagnostics = null)
+		public async Task<ProcessExecutionResult> RunAsync (Process process, ILog log, ILog StdoutStream, ILog StderrStream, TimeSpan? timeout = null, Dictionary<string, string> environment_variables = null, CancellationToken? cancellation_token = null, bool? diagnostics = null)
 		{
 			var stdout_completion = new TaskCompletionSource<bool> ();
 			var stderr_completion = new TaskCompletionSource<bool> ();

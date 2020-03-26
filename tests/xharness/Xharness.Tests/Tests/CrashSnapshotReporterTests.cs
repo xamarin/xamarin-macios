@@ -36,7 +36,7 @@ namespace Xharness.Tests {
 
 			// Create fake symbolicate binary
 			Directory.CreateDirectory (symbolicatePath);
-			File.Create (Path.Combine (symbolicatePath, "symbolicatecrash"));
+			File.WriteAllText (Path.Combine (symbolicatePath, "symbolicatecrash"), "");
 		}
 
 		[TearDown]
@@ -52,10 +52,10 @@ namespace Xharness.Tests {
 
 			const string deviceName = "Sample-iPhone";
 			const string crashLogPath = "/path/to/crash.log";
-			const string symbolicateLogPath = "/path/to/" + deviceName + ".symbolicated.log";
+			const string symbolicateLogPath = "/path/to/" + deviceName+ ".symbolicated.log";
 
-			var crashReport = Mock.Of<ILogFile> (x => x.Path == crashLogPath);
-			var symbolicateReport = Mock.Of<ILogFile> (x => x.Path == symbolicateLogPath);
+			var crashReport = Mock.Of<ILog> (x => x.FullPath == crashLogPath);
+			var symbolicateReport = Mock.Of<ILog> (x => x.FullPath == symbolicateLogPath);
 
 			// Crash report is added
 			logs.Setup (x => x.Create (deviceName, "Crash report: " + deviceName, It.IsAny<bool> ()))
