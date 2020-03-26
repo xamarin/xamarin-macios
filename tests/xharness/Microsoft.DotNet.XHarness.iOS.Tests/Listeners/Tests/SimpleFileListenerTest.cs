@@ -2,10 +2,10 @@
 using System.IO;
 using Moq;
 using NUnit.Framework;
-using Xharness.Listeners;
 using Microsoft.DotNet.XHarness.iOS.Logging;
+using Microsoft.DotNet.XHarness.iOS.Listeners;
 
-namespace Xharness.Tests.Listeners.Tests {
+namespace Microsoft.DotNet.XHarness.iOS.Tests.Listeners.Tests {
 
 	[TestFixture]
 	public class SimpleFileListenerTest {
@@ -13,7 +13,7 @@ namespace Xharness.Tests.Listeners.Tests {
 		string path;
 		Mock<ILog> testLog;
 		Mock<ILog> log;
-		
+
 		[SetUp]
 		public void SetUp ()
 		{

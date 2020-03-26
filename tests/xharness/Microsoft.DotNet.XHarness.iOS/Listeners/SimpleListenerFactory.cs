@@ -2,7 +2,7 @@
 using Microsoft.DotNet.XHarness.iOS;
 using Microsoft.DotNet.XHarness.iOS.Logging;
 
-namespace Xharness.Listeners {
+namespace Microsoft.DotNet.XHarness.iOS.Listeners {
 	public enum ListenerTransport {
 		Tcp,
 		Http,
@@ -21,19 +21,18 @@ namespace Xharness.Listeners {
 	public class SimpleListenerFactory : ISimpleListenerFactory {
 
 		public (ListenerTransport transport, ISimpleListener listener, string listenerTempFile) Create (RunMode mode,
-																									    ILog log,
-																									    ILog listenerLog,
-																									    bool isSimulator,
-																									    bool autoExit,
-																									    bool xmlOutput)
+																										ILog log,
+																										ILog listenerLog,
+																										bool isSimulator,
+																										bool autoExit,
+																										bool xmlOutput)
 		{
 			string listenerTempFile = null;
 			ISimpleListener listener;
 			ListenerTransport transport;
 
-			if (mode == RunMode.WatchOS) {
-				transport = isSimulator ? ListenerTransport.File : ListenerTransport.Http;
-			} else {
+			if (mode == RunMode.WatchOS) transport = isSimulator ? ListenerTransport.File : ListenerTransport.Http;
+			else {
 				transport = ListenerTransport.Tcp;
 			}
 

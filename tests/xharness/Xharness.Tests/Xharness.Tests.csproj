@@ -62,9 +62,6 @@
     <Compile Include="Tests\AppRunnerTests.cs" />
     <Compile Include="Tests\CrashSnapshotReporterTests.cs" />
     <Compile Include="Tests\XmlResultParserTests.cs" />
-    <Compile Include="Listeners\Tests\SimpleListenerFactoryTest.cs" />
-    <Compile Include="Listeners\Tests\SimpleFileListenerTest.cs" />
-    <Compile Include="Listeners\Tests\SimpleTcpListenerTest.cs" />
     <Compile Include="Hardware\Tests\DeviceTest.cs" />
     <Compile Include="Hardware\Tests\DevicesTest.cs" />
     <Compile Include="Hardware\Tests\TCCDatabaseTests.cs" />

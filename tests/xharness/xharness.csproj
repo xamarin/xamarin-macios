@@ -115,11 +115,6 @@
     <Compile Include="Jenkins\TestTasks\RunXITask.cs" />
     <Compile Include="Jenkins\TestTasks\RunXtroTask.cs" />
     <Compile Include="Jenkins\TestTasks\TestTask.cs" />
-    <Compile Include="Listeners\SimpleFileListener.cs" />
-    <Compile Include="Listeners\SimpleHttpListener.cs" />
-    <Compile Include="Listeners\SimpleListener.cs" />
-    <Compile Include="Listeners\SimpleListenerFactory.cs" />
-    <Compile Include="Listeners\SimpleTcpListener.cs" />
     <Compile Include="MakefileGenerator.cs" />
     <Compile Include="MonoNativeInfo.cs" />
     <Compile Include="NoDeviceFoundException.cs" />

@@ -4,8 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.DotNet.XHarness.iOS.Logging;
 
-namespace Xharness.Listeners
-{
+namespace Microsoft.DotNet.XHarness.iOS.Listeners {
 	public interface ISimpleListener {
 		Task CompletionTask { get; }
 		Task ConnectedTask { get; }
@@ -18,8 +17,7 @@ namespace Xharness.Listeners
 		void StartAsync ();
 	}
 
-	public abstract class SimpleListener : ISimpleListener, IDisposable
-	{
+	public abstract class SimpleListener : ISimpleListener, IDisposable {
 		readonly TaskCompletionSource<bool> stopped = new TaskCompletionSource<bool> ();
 		readonly TaskCompletionSource<bool> connected = new TaskCompletionSource<bool> ();
 		public ILog TestLog { get; private set; }
@@ -41,7 +39,7 @@ namespace Xharness.Listeners
 		protected SimpleListener (ILog log, ILog testLog, bool xmlOutput)
 		{
 			Log = log ?? throw new ArgumentNullException (nameof (log));
-			this.TestLog = testLog ?? throw new ArgumentNullException (nameof (testLog));
+			TestLog = testLog ?? throw new ArgumentNullException (nameof (testLog));
 			XmlOutput = xmlOutput;
 		}
 
@@ -69,9 +67,8 @@ $@"[Local Date/Time:	{DateTime.Now}]
 		protected void Finished (bool early_termination = false)
 		{
 			if (stopped.TrySetResult (early_termination)) {
-				if (early_termination) {
-					Log.WriteLine ("Tests were terminated before completion");
-				} else {
+				if (early_termination) Log.WriteLine ("Tests were terminated before completion");
+				else {
 					Log.WriteLine ("Tests have finished executing");
 				}
 				if (xml_data != null) {
@@ -91,8 +88,7 @@ $@"[Local Date/Time:	{DateTime.Now}]
 				} catch (Exception e) {
 					Console.WriteLine ($"{GetType ().Name}: an exception occurred in processing thread: {e}");
 				}
-			})
-			{
+			}) {
 				IsBackground = true,
 			};
 			t.Start ();
@@ -121,7 +117,7 @@ $@"[Local Date/Time:	{DateTime.Now}]
 			}
 		}
 
-#region IDisposable Support
+		#region IDisposable Support
 		protected virtual void Dispose (bool disposing)
 		{
 			if (OutputWriter != null)
@@ -132,7 +128,7 @@ $@"[Local Date/Time:	{DateTime.Now}]
 		{
 			Dispose (true);
 		}
-#endregion
+		#endregion
 
 	}
 }

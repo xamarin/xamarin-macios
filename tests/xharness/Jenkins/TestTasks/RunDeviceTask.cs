@@ -4,12 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.DotNet.XHarness.iOS.Execution;
 using Xharness.Hardware;
-using Xharness.Listeners;
 using Microsoft.DotNet.XHarness.iOS.Logging;
 using Microsoft.DotNet.XHarness.iOS;
+using Microsoft.DotNet.XHarness.iOS.Listeners;
 
-namespace Xharness.Jenkins.TestTasks
-{
+namespace Xharness.Jenkins.TestTasks {
 	class RunDeviceTask : RunXITask<IHardwareDevice>
 	{
 		readonly IResultParser resultParser = new XmlResultParser ();

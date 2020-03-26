@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
 using Microsoft.DotNet.XHarness.iOS.Execution;
-using Xharness.Listeners;
 using Microsoft.DotNet.XHarness.iOS.Logging;
 using Microsoft.DotNet.XHarness.iOS.Execution;
+using Microsoft.DotNet.XHarness.iOS.Listeners;
 
 namespace Xharness.Tests.Tests {
 

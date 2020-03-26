@@ -9,11 +9,10 @@ using Microsoft.DotNet.XHarness.iOS.Execution;
 using Xharness.Targets;
 using Microsoft.DotNet.XHarness.iOS.Utilities;
 using Xharness.Hardware;
-using Xharness.Listeners;
 using Microsoft.DotNet.XHarness.iOS;
+using Microsoft.DotNet.XHarness.iOS.Listeners;
 
-namespace Xharness
-{
+namespace Xharness {
 	public enum HarnessAction
 	{
 		None,

@@ -3,10 +3,8 @@ using System.IO;
 using System.Threading;
 using Microsoft.DotNet.XHarness.iOS.Logging;
 
-namespace Xharness.Listeners
-{
-	public class SimpleFileListener : SimpleListener
-	{
+namespace Microsoft.DotNet.XHarness.iOS.Listeners {
+	public class SimpleFileListener : SimpleListener {
 		Thread processor_thread;
 		bool cancel;
 		public string Path { get; private set; }
@@ -43,9 +41,8 @@ namespace Xharness.Listeners
 					string line;
 					while ((line = reader.ReadLine ()) != null) {
 						OutputWriter.WriteLine (line);
-						if (line.StartsWith ("[Runner executing:", StringComparison.Ordinal)) {
-							Log.WriteLine ("Tests have started executing");
-						} else if (!XmlOutput && line.StartsWith ("Tests run: ", StringComparison.Ordinal)) {
+						if (line.StartsWith ("[Runner executing:", StringComparison.Ordinal)) Log.WriteLine ("Tests have started executing");
+						else if (!XmlOutput && line.StartsWith ("Tests run: ", StringComparison.Ordinal)) {
 							Log.WriteLine ("Tests have finished executing");
 							Finished ();
 							return;
@@ -59,8 +56,7 @@ namespace Xharness.Listeners
 			}
 		}
 
-		class BlockingFileStream : FileStream
-		{
+		class BlockingFileStream : FileStream {
 			public SimpleFileListener Listener;
 
 			long last_position;

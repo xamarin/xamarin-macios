@@ -3,13 +3,11 @@ using System.Net;
 using System.Net.Sockets;
 using Microsoft.DotNet.XHarness.iOS.Logging;
 
-namespace Xharness.Listeners
-{
-	public class SimpleTcpListener : SimpleListener
-	{
+namespace Microsoft.DotNet.XHarness.iOS.Listeners {
+	public class SimpleTcpListener : SimpleListener {
 		readonly bool autoExit;
 
-		byte[] buffer = new byte [16 * 1024];
+		byte [] buffer = new byte [16 * 1024];
 		TcpListener server;
 
 		public SimpleTcpListener (ILog log, ILog testLog, bool autoExit, bool xmlOutput) : base (log, testLog, xmlOutput)
@@ -43,7 +41,7 @@ namespace Xharness.Listeners
 						processed = Processing (client);
 					}
 				} while (!autoExit || !processed);
-			}catch (Exception e) {
+			} catch (Exception e) {
 				var se = e as SocketException;
 				if (se == null || se.SocketErrorCode != SocketError.Interrupted)
 					Console.WriteLine ("[{0}] : {1}", DateTime.Now, e);
@@ -70,11 +68,9 @@ namespace Xharness.Listeners
 				total += i;
 			}
 
-			if (total < 16) {
-				// This wasn't a test run, but a connection from the app (on device) to find
-				// the ip address we're reachable on.
+			if (total < 16)                 // This wasn't a test run, but a connection from the app (on device) to find
+											// the ip address we're reachable on.
 				return false;
-			}
 			return true;
 		}
 	}

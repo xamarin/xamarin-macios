@@ -4,10 +4,8 @@ using System.Net;
 using System.Net.Sockets;
 using Microsoft.DotNet.XHarness.iOS.Logging;
 
-namespace Xharness.Listeners
-{
-	public class SimpleHttpListener : SimpleListener
-	{
+namespace Microsoft.DotNet.XHarness.iOS.Listeners {
+	public class SimpleHttpListener : SimpleListener {
 		readonly bool autoExit;
 		HttpListener server;
 		bool connected_once;

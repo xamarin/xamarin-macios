@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 using Xharness.Collections;
 using Microsoft.DotNet.XHarness.iOS.Execution;
 using Xharness.Hardware;
-using Xharness.Listeners;
 using Microsoft.DotNet.XHarness.iOS.Logging;
 using Microsoft.DotNet.XHarness.iOS;
+using Microsoft.DotNet.XHarness.iOS.Listeners;
 
-namespace Xharness.Jenkins.TestTasks
-{
+namespace Xharness.Jenkins.TestTasks {
 	class RunSimulatorTask : RunXITask<ISimulatorDevice>
 	{
 		readonly ISimulatorsLoader simulators;

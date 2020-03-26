@@ -5,10 +5,10 @@ using System.Net.Sockets;
 using System.Text;
 using Moq;
 using NUnit.Framework;
-using Xharness.Listeners;
 using Microsoft.DotNet.XHarness.iOS.Logging;
+using Microsoft.DotNet.XHarness.iOS.Listeners;
 
-namespace Xharness.Tests.Listeners.Tests {
+namespace Microsoft.DotNet.XHarness.iOS.Tests.Listeners.Tests {
 
 	[TestFixture]
 	public class SimpleTcpListenerTest {
@@ -37,7 +37,7 @@ namespace Xharness.Tests.Listeners.Tests {
 			// create a stream to be used and write the data there
 			var lines = new string [] { "first line", "second line", "last line" };
 			// setup the expected data to be written
-			testLog.Setup (l => l.Write (It.IsAny<byte []> (), 0, It.IsAny<int> ())).Callback<byte[], int, int> ((buffer, start, end) => {
+			testLog.Setup (l => l.Write (It.IsAny<byte []> (), 0, It.IsAny<int> ())).Callback<byte [], int, int> ((buffer, start, end) => {
 				using (var resultStream = File.Create (tempResult)) {// opening closing a lot, but for the test we do not care
 					resultStream.Write (buffer, start, end);
 					resultStream.Flush ();
@@ -53,7 +53,7 @@ namespace Xharness.Tests.Listeners.Tests {
 			// the expected data was provided
 			var client = new TcpClient ();
 			client.Connect ("localhost", connectionPort);
-			using (var networkStream = client.GetStream ()) 
+			using (var networkStream = client.GetStream ())
 			using (var streamWriter = new StreamWriter (networkStream)) {
 				foreach (var line in lines) {
 					streamWriter.WriteLine (line);
