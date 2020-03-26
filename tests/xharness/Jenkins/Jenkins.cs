@@ -11,8 +11,8 @@ using Microsoft.DotNet.XHarness.iOS.Execution;
 using Xharness.Jenkins.TestTasks;
 using Xharness.Hardware;
 using Microsoft.DotNet.XHarness.iOS.Utilities;
-using Xharness.Collections;
 using Microsoft.DotNet.XHarness.iOS;
+using Microsoft.DotNet.XHarness.iOS.Collections;
 
 namespace Xharness.Jenkins
 {

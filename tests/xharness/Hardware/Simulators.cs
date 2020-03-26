@@ -9,12 +9,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using Xamarin;
-using Xharness.Collections;
 using Microsoft.DotNet.XHarness.iOS.Execution;
 using Microsoft.DotNet.XHarness.iOS.Execution.Mlaunch;
 using Microsoft.DotNet.XHarness.iOS.Logging;
 using Microsoft.DotNet.XHarness.iOS.Utilities;
 using Microsoft.DotNet.XHarness.iOS;
+using Microsoft.DotNet.XHarness.iOS.Collections;
 
 namespace Xharness.Hardware {
 	

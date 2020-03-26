@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Xharness.Collections {
+namespace Microsoft.DotNet.XHarness.iOS.Collections {
 	public interface IAsyncEnumerable {
 		Task ReadyTask { get; }
 	}

@@ -81,9 +81,6 @@
     <Compile Include="BCLTestImporter\BCLTestProjectDefinition.cs" />
     <Compile Include="BCLTestImporter\BCLTestProjectGenerator.cs" />
     <Compile Include="BCLTestImporter\Platform.cs" />
-    <Compile Include="Collections\BlockingEnumerableCollection.cs" />
-    <Compile Include="Collections\ILoadAsync.cs" />
-    <Compile Include="Collections\IAsyncEnumerable.cs" />
     <Compile Include="CrashSnapshotReporter.cs" />
     <Compile Include="DeviceLogCapturer.cs" />
     <Compile Include="GitHub.cs" />

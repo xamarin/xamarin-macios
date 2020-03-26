@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Xharness.Collections;
+using Microsoft.DotNet.XHarness.iOS.Collections;
 using Microsoft.DotNet.XHarness.iOS.Logging;
 
 namespace Xharness.Hardware {
