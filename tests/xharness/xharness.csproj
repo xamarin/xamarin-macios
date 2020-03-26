@@ -86,10 +86,6 @@
     <Compile Include="Collections\IAsyncEnumerable.cs" />
     <Compile Include="CrashSnapshotReporter.cs" />
     <Compile Include="DeviceLogCapturer.cs" />
-    <Compile Include="Execution\IProcessManager.cs" />
-    <Compile Include="Execution\Mlaunch\Arguments.cs" />
-    <Compile Include="Execution\Mlaunch\MLaunchArguments.cs" />
-    <Compile Include="Execution\ProcessManager.cs" />
     <Compile Include="GitHub.cs" />
     <Compile Include="Harness.cs" />
     <Compile Include="Hardware\Simulators.cs" />

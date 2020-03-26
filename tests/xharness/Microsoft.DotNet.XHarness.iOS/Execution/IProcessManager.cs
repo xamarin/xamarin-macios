@@ -4,10 +4,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Xharness.Execution.Mlaunch;
 using Microsoft.DotNet.XHarness.iOS.Logging;
+using Microsoft.DotNet.XHarness.iOS.Execution.Mlaunch;
 
-namespace Xharness.Execution {
+namespace Microsoft.DotNet.XHarness.iOS.Execution {
 
 	public class ProcessExecutionResult {
 		public bool TimedOut { get; set; }

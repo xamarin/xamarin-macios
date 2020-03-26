@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 using System.Web.UI.WebControls;
 using System.Xml;
 using Xharness.Collections;
-using Xharness.Execution;
-using Xharness.Execution.Mlaunch;
+using Microsoft.DotNet.XHarness.iOS.Execution;
+using Microsoft.DotNet.XHarness.iOS.Execution.Mlaunch;
 using Microsoft.DotNet.XHarness.iOS.Logging;
 using Microsoft.DotNet.XHarness.iOS.Utilities;
 

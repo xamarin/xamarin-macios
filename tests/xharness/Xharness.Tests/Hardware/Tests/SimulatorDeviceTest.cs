@@ -4,9 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
-using Xharness.Execution;
+using Microsoft.DotNet.XHarness.iOS.Execution;
 using Xharness.Hardware;
 using Microsoft.DotNet.XHarness.iOS.Logging;
+using Microsoft.DotNet.XHarness.iOS.Execution;
 
 namespace Xharness.Tests.Hardware.Tests {
 	[TestFixture]

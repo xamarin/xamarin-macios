@@ -5,8 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Xharness.Execution;
-using Xharness.Execution.Mlaunch;
+using Microsoft.DotNet.XHarness.iOS.Execution;
+using Microsoft.DotNet.XHarness.iOS.Execution.Mlaunch;
 using Microsoft.DotNet.XHarness.iOS.Logging;
 
 namespace Xharness

@@ -8,12 +8,14 @@ using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
 using Xharness.Hardware;
-using Xharness.Execution;
+using Microsoft.DotNet.XHarness.iOS.Execution;
 using Microsoft.DotNet.XHarness.iOS.Logging;
-using Xharness.Execution.Mlaunch;
+using Microsoft.DotNet.XHarness.iOS.Execution.Mlaunch;
+using Microsoft.DotNet.XHarness.iOS.Execution;
+using Microsoft.DotNet.XHarness.iOS.Execution.Mlaunch;
 
 namespace Xharness.Tests.Hardware.Tests {
-	
+
 	[TestFixture]
 	public class DevicesTest {
 

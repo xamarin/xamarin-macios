@@ -8,11 +8,11 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
-using Xharness.Execution.Mlaunch;
 using Microsoft.DotNet.XHarness.iOS.Logging;
 using Microsoft.DotNet.XHarness.iOS.Utilities;
+using Microsoft.DotNet.XHarness.iOS.Execution.Mlaunch;
 
-namespace Xharness.Execution {
+namespace Microsoft.DotNet.XHarness.iOS.Execution {
 	public class ProcessManager : IProcessManager {
 		public string XcodeRoot { get; }
 		public string MlaunchPath { get; }
@@ -54,7 +54,7 @@ namespace Xharness.Execution {
 			Dictionary<string, string> environmentVariables = null,
 			CancellationToken? cancellationToken = null)
 		{
-			return await RunAsync (new Process(), args, log, timeout, environmentVariables, cancellationToken);
+			return await RunAsync (new Process (), args, log, timeout, environmentVariables, cancellationToken);
 		}
 
 		public Task<ProcessExecutionResult> ExecuteXcodeCommandAsync (string executable, IList<string> args, ILog log, TimeSpan timeout)
@@ -86,7 +86,7 @@ namespace Xharness.Execution {
 		{
 			if (!args.Any (a => a is SdkRootArgument))
 				args.Prepend (new SdkRootArgument (XcodeRoot));
-			
+
 			process.StartInfo.FileName = MlaunchPath;
 			process.StartInfo.Arguments = args.AsCommandLine ();
 
@@ -109,7 +109,7 @@ namespace Xharness.Execution {
 			process.StartInfo.RedirectStandardError = true;
 			process.StartInfo.RedirectStandardOutput = true;
 			// Make cute emojiis show up as cute emojiis in the output instead of ugly text symbols!
-			process.StartInfo.StandardOutputEncoding = Encoding.UTF8; 
+			process.StartInfo.StandardOutputEncoding = Encoding.UTF8;
 			process.StartInfo.StandardErrorEncoding = Encoding.UTF8;
 			process.StartInfo.UseShellExecute = false;
 
@@ -118,8 +118,7 @@ namespace Xharness.Execution {
 					process.StartInfo.EnvironmentVariables [kvp.Key] = kvp.Value;
 			}
 
-			process.OutputDataReceived += (object sender, DataReceivedEventArgs e) =>
-			{
+			process.OutputDataReceived += (sender, e) => {
 				if (e.Data != null) {
 					lock (stdout) {
 						stdout.WriteLine (e.Data);
@@ -130,8 +129,7 @@ namespace Xharness.Execution {
 				}
 			};
 
-			process.ErrorDataReceived += (object sender, DataReceivedEventArgs e) =>
-			{
+			process.ErrorDataReceived += (sender, e) => {
 				if (e.Data != null) {
 					lock (stderr) {
 						stderr.WriteLine (e.Data);
@@ -207,7 +205,7 @@ namespace Xharness.Execution {
 
 		public async Task KillTreeAsync (int pid, ILog log, bool? diagnostics = true)
 		{
-			var pids = GetChildrenPS (log, pid);			
+			var pids = GetChildrenPS (log, pid);
 
 			if (diagnostics == true) {
 				log.WriteLine ($"Pids to kill: {string.Join (", ", pids.Select ((v) => v.ToString ()).ToArray ())}");
@@ -279,9 +277,8 @@ namespace Xharness.Execution {
 				return true;
 			}
 
-			if (timeout.HasValue) {
-				return await tcs.Task.TimeoutAfter (timeout.Value);
-			} else {
+			if (timeout.HasValue) return await tcs.Task.TimeoutAfter (timeout.Value);
+			else {
 				await tcs.Task;
 				return true;
 			}
@@ -319,7 +316,7 @@ namespace Xharness.Execution {
 					var space = l.IndexOf (' ');
 					if (space <= 0)
 						continue;
-				
+
 					var parent = l.Substring (0, space);
 					var process = l.Substring (space + 1);
 

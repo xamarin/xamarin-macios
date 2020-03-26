@@ -5,7 +5,7 @@ using System.Linq;
 using System.Xml;
 using Xharness.BCLTestImporter;
 using Microsoft.DotNet.XHarness.iOS.Logging;
-using Xharness.Execution;
+using Microsoft.DotNet.XHarness.iOS.Execution;
 using Xharness.Targets;
 using Microsoft.DotNet.XHarness.iOS.Utilities;
 using Xharness.Hardware;
