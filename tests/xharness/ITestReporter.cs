@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Xharness.Execution;
@@ -9,22 +8,25 @@ using Xharness.Logging;
 namespace Xharness {
 
 	public interface ITestReporterFactory {
-		ITestReporter Create (IAppRunner appRunner, 
-							  string device,
-							  ISimpleListener simpleListener,
-							  ILog log,
-							  ICrashSnapshotReporter crashReports,
-							  IResultParser resultParser);
+		ITestReporter Create (ILog mainLog,
+			ILog runLog,
+			ILogs logs,
+			ISimpleListener simpleListener,
+			IResultParser parser,
+			AppBundleInformation appInformation,
+			RunMode runMode,
+			XmlResultJargon xmlJargon,
+			string device,
+			TimeSpan timeout,
+			double launchTimeout);
 	}
 
 	// interface that represents a class that know how to parse the results from an app run.
 	public interface ITestReporter {
 
-		TimeSpan Timeout { get; }
 		ILog CallbackLog { get; }
 
 		bool? Success { get; }
-		Stopwatch TimeoutWatch { get; }
 		CancellationToken CancellationToken { get; }
 
 		void LaunchCallback (Task<bool> launchResult);
