@@ -65,12 +65,14 @@ namespace Xharness.Hardware {
 		Device GetDevice (XmlNode deviceNone)
 		{
 			// get data, if we are missing some of them, we will return null, happens sometimes that we 
-			// have some empty nodes.
+			// have some empty nodes. We could do this with try/catch, but we want to throw the min amount
+			// of exceptions. We do know that we will have issues with the parsing of the DeviceClass, check
+			// the value, and if is there, get the rest, else return null
 			var usable = deviceNone.SelectSingleNode ("IsUsableForDebugging")?.InnerText;
-			try {
+			if (Enum.TryParse<DeviceClass> (deviceNone.SelectSingleNode ("DeviceClass")?.InnerText, true, out var deviceClass)) { 
 				var device = new Device {
 					DeviceIdentifier = deviceNone.SelectSingleNode ("DeviceIdentifier")?.InnerText,
-					DeviceClass = (DeviceClass) Enum.Parse (typeof (DeviceClass), deviceNone.SelectSingleNode ("DeviceClass")?.InnerText, true),
+					DeviceClass = deviceClass,
 					CompanionIdentifier = deviceNone.SelectSingleNode ("CompanionIdentifier")?.InnerText,
 					Name = deviceNone.SelectSingleNode ("Name")?.InnerText,
 					BuildVersion = deviceNone.SelectSingleNode ("BuildVersion")?.InnerText,
@@ -82,8 +84,8 @@ namespace Xharness.Hardware {
 				bool.TryParse (deviceNone.SelectSingleNode ("IsLocked")?.InnerText, out var locked);
 				device.IsLocked = locked;
 				return device;
-			} catch {
-				return null; // this should not be a problem, nevertheless, return null 
+			} else {
+				return null;
 			}
 		}
 
