@@ -554,22 +554,7 @@ namespace Xharness {
 				HarnessLog = new ConsoleLog ();
 
 			foreach (var project in IOSTestProjects) {
-				var runner = new AppRunner (processManager,
-					new AppBundleInformationParser (),
-					new SimulatorsLoaderFactory (processManager),
-					new SimpleListenerFactory (),
-					new DeviceLoaderFactory (processManager),
-					new CrashSnapshotReporterFactory (processManager),
-					new CaptureLogFactory (),
-					new DeviceLogCapturerFactory (processManager),
-					new TestReporterFactory (),
-					target,
-					this,
-					HarnessLog,
-					new Logs (LogDirectory),
-					project.Path,
-					buildConfiguration);
-
+				var runner = CreateAppRunner (project);
 				using (var install_log = new AppInstallMonitorLog (runner.MainLog)) {
 					var rv = runner.InstallAsync (install_log.CancellationToken).Result;
 					if (!rv.Succeeded)
@@ -585,22 +570,7 @@ namespace Xharness {
 				HarnessLog = new ConsoleLog ();
 
 			foreach (var project in IOSTestProjects) {
-				var runner = new AppRunner (processManager,
-					new AppBundleInformationParser (),
-					new SimulatorsLoaderFactory (processManager),
-					new SimpleListenerFactory (),
-					new DeviceLoaderFactory (processManager),
-					new CrashSnapshotReporterFactory (processManager),
-					new CaptureLogFactory (),
-					new DeviceLogCapturerFactory (processManager),
-					new TestReporterFactory (),
-					target,
-					this,
-					HarnessLog,
-					new Logs (LogDirectory),
-					project.Path,
-					buildConfiguration);
-
+				var runner = CreateAppRunner (project);
 				var rv = runner.UninstallAsync ().Result;
 				if (!rv.Succeeded)
 					return rv.ExitCode;
@@ -614,22 +584,7 @@ namespace Xharness {
 				HarnessLog = new ConsoleLog ();
 
 			foreach (var project in IOSTestProjects) {
-				var runner = new AppRunner (processManager,
-					new AppBundleInformationParser (),
-					new SimulatorsLoaderFactory (processManager),
-					new SimpleListenerFactory (),
-					new DeviceLoaderFactory (processManager),
-					new CrashSnapshotReporterFactory (processManager),
-					new CaptureLogFactory (),
-					new DeviceLogCapturerFactory (processManager),
-					new TestReporterFactory (),
-					target,
-					this,
-					HarnessLog,
-					new Logs (LogDirectory),
-					project.Path,
-					buildConfiguration);
-
+				var runner = CreateAppRunner (project);
 				var rv = runner.RunAsync ().Result;
 				if (rv != 0)
 					return rv;
@@ -755,6 +710,25 @@ namespace Xharness {
 					disable_watchos_on_wrench = !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("DISABLE_WATCH_ON_WRENCH"));
 				return disable_watchos_on_wrench.Value;
 			}
+		}
+
+		private AppRunner CreateAppRunner (TestProject project)
+		{
+			return new AppRunner (processManager,
+				new AppBundleInformationParser (),
+				new SimulatorsLoaderFactory (processManager),
+				new SimpleListenerFactory (),
+				new DeviceLoaderFactory (processManager),
+				new CrashSnapshotReporterFactory (processManager),
+				new CaptureLogFactory (),
+				new DeviceLogCapturerFactory (processManager),
+				new TestReporterFactory (),
+				target,
+				this,
+				HarnessLog,
+				new Logs (LogDirectory),
+				project.Path,
+				buildConfiguration);
 		}
 	}
 }
