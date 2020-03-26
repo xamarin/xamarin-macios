@@ -260,13 +260,18 @@ namespace Xharness
 			INCLUDE_WATCH = make_config.ContainsKey ("INCLUDE_WATCH") && !string.IsNullOrEmpty (make_config ["INCLUDE_WATCH"]);
 			INCLUDE_MAC = make_config.ContainsKey ("INCLUDE_MAC") && !string.IsNullOrEmpty (make_config ["INCLUDE_MAC"]);
 			MAC_DESTDIR = make_config ["MAC_DESTDIR"];
+
 			IOS_DESTDIR = make_config ["IOS_DESTDIR"];
-			if (string.IsNullOrEmpty (SdkRoot))
-				SdkRoot = make_config ["XCODE_DEVELOPER_ROOT"];
 			MONO_IOS_SDK_DESTDIR = make_config ["MONO_IOS_SDK_DESTDIR"];
 			MONO_MAC_SDK_DESTDIR = make_config ["MONO_MAC_SDK_DESTDIR"];
 			ENABLE_XAMARIN = make_config.ContainsKey ("ENABLE_XAMARIN") && !string.IsNullOrEmpty (make_config ["ENABLE_XAMARIN"]);
 			DOTNET = make_config ["DOTNET"];
+
+			Console.WriteLine ("!@#!@#!@#!@#!@#!@#!@#@!# " + IOS_DESTDIR);
+			Console.WriteLine ("!@#!@#!@#!@#!@#!@#!@#@!# " + make_config ["XCODE_DEVELOPER_ROOT"]);
+
+			if (string.IsNullOrEmpty (SdkRoot))
+				SdkRoot = make_config ["XCODE_DEVELOPER_ROOT"];
 		}
 
 		int AutoConfigureMac (bool generate_projects)
