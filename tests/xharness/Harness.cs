@@ -202,6 +202,8 @@ namespace Xharness
 				EnvironmentVariables = new Dictionary<string, string> (configuration.EnvironmentVariables);
 
 			LaunchTimeout = InCI ? 3 : 120;
+			
+			LoadConfig ();
 		}
 
 		public bool GetIncludeSystemPermissionTests (TestPlatform platform, bool device)
@@ -635,7 +637,6 @@ namespace Xharness
 
 		public int Execute ()
 		{
-			LoadConfig ();
 			switch (Action) {
 			case HarnessAction.Configure:
 				return Configure ();
