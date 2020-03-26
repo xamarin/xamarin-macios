@@ -215,9 +215,6 @@ namespace Xharness
 			ENABLE_XAMARIN = config.ContainsKey ("ENABLE_XAMARIN") && !string.IsNullOrEmpty (config ["ENABLE_XAMARIN"]);
 			DOTNET = config ["DOTNET"];
 
-			Console.WriteLine ("!@#!@#!@#!@#!@#!@#!@#@!# " + IOS_DESTDIR);
-			Console.WriteLine ("!@#!@#!@#!@#!@#!@#!@#@!# " + config ["XCODE_DEVELOPER_ROOT"]);
-
 			if (string.IsNullOrEmpty (SdkRoot))
 				SdkRoot = config ["XCODE_DEVELOPER_ROOT"] ?? configuration.SdkRoot;
 			
@@ -264,10 +261,6 @@ namespace Xharness
 
 				path = Path.GetDirectoryName (path);
 			} while (true);
-		}
-
-		void LoadConfig ()
-		{
 		}
 
 		int AutoConfigureMac (bool generate_projects)
