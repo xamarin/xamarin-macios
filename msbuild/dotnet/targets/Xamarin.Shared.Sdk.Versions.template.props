@@ -11,7 +11,7 @@
 		<_iOSPackageVersionRev>@IOS_PACKAGE_VERSION_REV@</_iOSPackageVersionRev>
 		<_iOSCommitDistance>@IOS_COMMIT_DISTANCE@</_iOSCommitDistance>
 		<_tvOSPackageVersionMajor>@TVOS_PACKAGE_VERSION_MAJOR@</_tvOSPackageVersionMajor>
-		<_tvosOSPackageVersionMinor>@TVOS_PACKAGE_VERSION_MINOR@</_tvosOSPackageVersionMinor>
+		<_tvOSPackageVersionMinor>@TVOS_PACKAGE_VERSION_MINOR@</_tvOSPackageVersionMinor>
 		<_tvOSPackageVersionRev>@TVOS_PACKAGE_VERSION_REV@</_tvOSPackageVersionRev>
 		<_tvOSCommitDistance>@TVOS_COMMIT_DISTANCE@</_tvOSCommitDistance>
 		<_watchOSPackageVersionMajor>@WATCHOS_PACKAGE_VERSION_MAJOR@</_watchOSPackageVersionMajor>
@@ -27,12 +27,12 @@
 
 		<_iOSShortPackageVersion>$(_iOSPackageVersionMajor).$(_iOSPackageVersionMinor).$(_iOSPackageVersionRev)-alpha.$(_iOSCommitDistance)</_iOSShortPackageVersion>
 		<_macOSShortPackageVersion>$(_macOSPackageVersionMajor).$(_macOSPackageVersionMinor).$(_macOSPackageVersionRev)-alpha.$(_macOSCommitDistance)</_macOSShortPackageVersion>
-		<_tvosOSShortPackageVersion>$(_tvosOSPackageVersionMajor).$(_tvosOSPackageVersionMinor).$(_tvosOSPackageVersionRev)-alpha.$(_tvosOSCommitDistance)</_tvosOSShortPackageVersion>
+		<_tvOSShortPackageVersion>$(_tvOSPackageVersionMajor).$(_tvOSPackageVersionMinor).$(_tvOSPackageVersionRev)-alpha.$(_tvOSCommitDistance)</_tvOSShortPackageVersion>
 		<_watchOSShortPackageVersion>$(_watchOSPackageVersionMajor).$(_watchOSPackageVersionMinor).$(_watchOSPackageVersionRev)-alpha.$(_watchOSCommitDistance)</_watchOSShortPackageVersion>
 
 		<_iOSPackageVersion>$(_iOSShortPackageVersion)+sha.$(CurrentHash)</_iOSPackageVersion>
 		<_macOSPackageVersion>$(_macOSShortPackageVersion)+sha.$(CurrentHash)</_macOSPackageVersion>
-		<_tvosOSPackageVersion>$(_tvosOSShortPackageVersion)+sha.$(CurrentHash)</_tvosOSPackageVersion>
+		<_tvOSPackageVersion>$(_tvOSShortPackageVersion)+sha.$(CurrentHash)</_tvOSPackageVersion>
 		<_watchOSPackageVersion>$(_watchOSShortPackageVersion)+sha.$(CurrentHash)</_watchOSPackageVersion>
 
 		<_ShortPackageVersion Condition=" '$(_PlatformName)' == 'macOS' ">$(_macOSShortPackageVersion)</_ShortPackageVersion>
@@ -49,7 +49,7 @@
 	<Target Name="PrintVersions">
 		<Exec Command="printf 'Xamarin.iOS PackageVersion: $(_iOSPackageVersion)' "/>
 		<Exec Command="printf 'Xamarin.macOS: PackageVersion: $(_macOSPackageVersion)' " />
-		<Exec Command="printf 'Xamarin.tvOS: PackageVersion: $(_tvosOSPackageVersion)' " />
+		<Exec Command="printf 'Xamarin.tvOS: PackageVersion: $(_tvOSPackageVersion)' " />
 		<Exec Command="printf 'Xamarin.watchOS: PackageVersion: $(_watchOSPackageVersion)' " />
 	</Target>
 </Project>
