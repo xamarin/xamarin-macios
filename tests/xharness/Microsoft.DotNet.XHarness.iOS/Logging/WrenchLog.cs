@@ -1,4 +1,4 @@
-﻿namespace Xharness.Logging {
+﻿namespace Microsoft.DotNet.XHarness.iOS.Logging {
 	public static class WrenchLog {
 
 		public static void WriteLine (string message, params object [] args)

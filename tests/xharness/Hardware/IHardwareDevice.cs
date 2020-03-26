@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Xharness.Collections;
-using Xharness.Logging;
+using Microsoft.DotNet.XHarness.iOS.Logging;
 
 namespace Xharness.Hardware {
 	public interface IHardwareDevice : IDevice {

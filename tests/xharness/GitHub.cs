@@ -7,7 +7,7 @@ using System.Net;
 using System.Runtime.Serialization.Json;
 using System.Xml;
 using Xharness.Execution;
-using Xharness.Logging;
+using Microsoft.DotNet.XHarness.iOS.Logging;
 
 namespace Xharness
 {

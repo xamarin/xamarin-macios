@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xharness.Execution;
 using Xharness.Execution.Mlaunch;
-using Xharness.Logging;
+using Microsoft.DotNet.XHarness.iOS.Logging;
 
 namespace Xharness
 {

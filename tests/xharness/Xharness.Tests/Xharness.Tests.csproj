@@ -109,6 +109,10 @@
       <Project>{2318BC20-40F1-4A12-B695-10B0433CFB35}</Project>
       <Name>DummyTestProcess</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Microsoft.DotNet.XHarness.iOS\Microsoft.DotNet.XHarness.iOS.csproj">
+      <Project>{5be5cabf-8d6c-4f35-9e5b-505b4c40b2ac}</Project>
+      <Name>Microsoft.DotNet.XHarness.iOS</Name>
+    </ProjectReference>
     <ProjectReference Include="..\xharness.csproj">
       <Project>{e1f53f80-8399-499b-8017-c414b9cd263b}</Project>
       <Name>xharness</Name>

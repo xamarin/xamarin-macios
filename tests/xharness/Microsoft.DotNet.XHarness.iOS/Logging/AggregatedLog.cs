@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Xharness.Logging {
+namespace Microsoft.DotNet.XHarness.iOS.Logging {
 
 	public abstract partial class Log {
 

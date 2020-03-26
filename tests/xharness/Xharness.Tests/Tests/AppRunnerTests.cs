@@ -12,7 +12,7 @@ using Xharness.Execution;
 using Xharness.Execution.Mlaunch;
 using Xharness.Hardware;
 using Xharness.Listeners;
-using Xharness.Logging;
+using Microsoft.DotNet.XHarness.iOS.Logging;
 using Xharness.Utilities;
 
 namespace Xharness.Tests {

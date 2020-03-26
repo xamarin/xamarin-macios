@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using Xharness.Execution;
-using Xharness.Logging;
+using Microsoft.DotNet.XHarness.iOS.Logging;
 using Xharness.Utilities;
 
 namespace Xharness

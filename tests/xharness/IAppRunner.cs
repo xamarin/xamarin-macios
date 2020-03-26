@@ -1,7 +1,7 @@
 ﻿using System;
 using Xharness.Execution;
 using Xharness.Jenkins.TestTasks;
-using Xharness.Logging;
+using Microsoft.DotNet.XHarness.iOS.Logging;
 
 namespace Xharness {
 	// common interface that contains the basic info needed by the test result to be able to parse the results and 

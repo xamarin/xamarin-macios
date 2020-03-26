@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading;
-using Xharness.Logging;
+using Microsoft.DotNet.XHarness.iOS.Logging;
 
 namespace Xharness {
 	// Monitor the output from 'mlaunch --installdev' and cancel the installation if there's no output for 1 minute.

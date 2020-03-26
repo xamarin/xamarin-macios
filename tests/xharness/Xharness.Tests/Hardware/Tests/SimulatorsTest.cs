@@ -11,7 +11,7 @@ using Xamarin;
 using Xharness.Execution;
 using Xharness.Execution.Mlaunch;
 using Xharness.Hardware;
-using Xharness.Logging;
+using Microsoft.DotNet.XHarness.iOS.Logging;
 
 namespace Xharness.Tests.Hardware.Tests {
 

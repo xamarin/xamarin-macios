@@ -2,7 +2,7 @@
 using System.IO;
 using Moq;
 using NUnit.Framework;
-using Xharness.Logging;
+using Microsoft.DotNet.XHarness.iOS.Logging;
 
 namespace Xharness.Tests.Logging.Tests {
 

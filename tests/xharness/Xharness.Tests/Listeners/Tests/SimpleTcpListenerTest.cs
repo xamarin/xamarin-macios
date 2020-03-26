@@ -6,7 +6,7 @@ using System.Text;
 using Moq;
 using NUnit.Framework;
 using Xharness.Listeners;
-using Xharness.Logging;
+using Microsoft.DotNet.XHarness.iOS.Logging;
 
 namespace Xharness.Tests.Listeners.Tests {
 

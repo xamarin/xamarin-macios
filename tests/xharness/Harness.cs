@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using Xharness.BCLTestImporter;
-using Xharness.Logging;
+using Microsoft.DotNet.XHarness.iOS.Logging;
 using Xharness.Execution;
 using Xharness.Targets;
 using Xharness.Utilities;
@@ -103,6 +103,8 @@ namespace Xharness
 					root_directory = Path.GetFullPath (root_directory).TrimEnd ('/');
 			}
 		}
+
+		public static string XIBuildPath => Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "tools", "xibuild", "xibuild"));
 
 		string sdkRoot;
 		string SdkRoot {

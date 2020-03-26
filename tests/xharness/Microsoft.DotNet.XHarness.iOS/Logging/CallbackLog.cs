@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Xharness.Logging {
+namespace Microsoft.DotNet.XHarness.iOS.Logging {
 	// A log that forwards all written data to a callback
 	public class CallbackLog : Log {
 		readonly Action<string> onWrite;

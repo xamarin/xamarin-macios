@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Xharness.Logging {
+namespace Microsoft.DotNet.XHarness.iOS.Logging {
 	public class LogFile : Log, ILog {
 		readonly object lock_obj = new object ();
 

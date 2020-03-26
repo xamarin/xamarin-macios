@@ -7,7 +7,7 @@ using Xharness.Collections;
 using Xharness.Execution;
 using Xharness.Hardware;
 using Xharness.Listeners;
-using Xharness.Logging;
+using Microsoft.DotNet.XHarness.iOS.Logging;
 
 namespace Xharness.Jenkins.TestTasks
 {

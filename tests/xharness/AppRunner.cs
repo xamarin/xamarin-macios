@@ -10,7 +10,7 @@ using Xharness.Execution.Mlaunch;
 using Xharness.Hardware;
 using Xharness.Jenkins.TestTasks;
 using Xharness.Listeners;
-using Xharness.Logging;
+using Microsoft.DotNet.XHarness.iOS.Logging;
 using Xharness.Utilities;
 
 namespace Xharness {

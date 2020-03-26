@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text;
 
-namespace Xharness.Logging {
+namespace Microsoft.DotNet.XHarness.iOS.Logging {
 
 	// defines common log types
 	public enum LogType {

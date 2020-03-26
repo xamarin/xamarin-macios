@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Xharness;
 using Xharness.Collections;
 using Xharness.Execution;
-using Xharness.Logging;
+using Microsoft.DotNet.XHarness.iOS.Logging;
 
 namespace Xharness.Hardware {
 	public class SimRuntime {

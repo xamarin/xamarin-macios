@@ -6,7 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Text;
-using Xharness.Logging;
+using Microsoft.DotNet.XHarness.iOS.Logging;
 using Xharness.Execution;
 using Xharness.Jenkins.TestTasks;
 using Xharness.Hardware;

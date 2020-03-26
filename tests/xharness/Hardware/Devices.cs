@@ -9,7 +9,7 @@ using System.Xml;
 using Xharness.Collections;
 using Xharness.Execution;
 using Xharness.Execution.Mlaunch;
-using Xharness.Logging;
+using Microsoft.DotNet.XHarness.iOS.Logging;
 using Xharness.Utilities;
 
 namespace Xharness.Hardware {

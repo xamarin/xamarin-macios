@@ -5,7 +5,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Xml;
 using Xharness.Execution;
-using Xharness.Logging;
+using Microsoft.DotNet.XHarness.iOS.Logging;
 using Xharness.Utilities;
 
 namespace Xharness.Jenkins.TestTasks

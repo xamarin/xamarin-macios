@@ -2,7 +2,7 @@
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using Xharness.Logging;
+using Microsoft.DotNet.XHarness.iOS.Logging;
 
 namespace Xharness.Listeners
 {

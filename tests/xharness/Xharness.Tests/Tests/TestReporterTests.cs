@@ -7,7 +7,7 @@ using Moq;
 using NUnit.Framework;
 using Xharness.Execution;
 using Xharness.Listeners;
-using Xharness.Logging;
+using Microsoft.DotNet.XHarness.iOS.Logging;
 
 namespace Xharness.Tests.Tests {
 

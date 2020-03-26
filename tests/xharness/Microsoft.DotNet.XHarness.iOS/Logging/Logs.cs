@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Xharness.Utilities;
+using Microsoft.DotNet.XHarness.iOS.Tests.Utilities;
 
-namespace Xharness.Logging {
+namespace Microsoft.DotNet.XHarness.iOS.Logging {
 	public class Logs : List<ILog>, ILogs {
 		public string Directory { get; set; }
 

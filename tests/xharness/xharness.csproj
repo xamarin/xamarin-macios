@@ -77,8 +77,6 @@
     <Compile Include="AppInstallMonitorLog.cs" />
     <Compile Include="AppRunner.cs" />
     <Compile Include="Extension.cs" />
-    <Compile Include="Logging\AggregatedLog.cs" />
-    <Compile Include="Logging\MemoryLog.cs" />
     <Compile Include="RunMode.cs" />
     <Compile Include="TestTarget.cs" />
     <Compile Include="BCLTestImporter\BCLTestImportTargetFactory.cs" />
@@ -129,15 +127,6 @@
     <Compile Include="Listeners\SimpleListener.cs" />
     <Compile Include="Listeners\SimpleListenerFactory.cs" />
     <Compile Include="Listeners\SimpleTcpListener.cs" />
-    <Compile Include="Logging\CallbackLog.cs" />
-    <Compile Include="Logging\CaptureLog.cs" />
-    <Compile Include="Logging\ConsoleLog.cs" />
-    <Compile Include="Logging\ILog.cs" />
-    <Compile Include="Logging\ILogs.cs" />
-    <Compile Include="Logging\Log.cs" />
-    <Compile Include="Logging\LogFile.cs" />
-    <Compile Include="Logging\Logs.cs" />
-    <Compile Include="Logging\WrenchLog.cs" />
     <Compile Include="MakefileGenerator.cs" />
     <Compile Include="MonoNativeInfo.cs" />
     <Compile Include="NoDeviceFoundException.cs" />
@@ -192,7 +181,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="Microsoft.DotNet.XHarness.iOS\Microsoft.DotNet.XHarness.iOS.csproj">
+      <Project>{5be5cabf-8d6c-4f35-9e5b-505b4c40b2ac}</Project>
+      <Name>Microsoft.DotNet.XHarness.iOS</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.iOS.csproj.in" />
     <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.macOS.csproj.in" />

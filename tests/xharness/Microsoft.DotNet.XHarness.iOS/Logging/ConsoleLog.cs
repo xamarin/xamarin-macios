@@ -2,16 +2,15 @@
 using System.IO;
 using System.Text;
 
-namespace Xharness.Logging {
-	/// <summary>
-	/// Log that only writes to memory
-	/// </summary>
-	public class MemoryLog : Log {
+namespace Microsoft.DotNet.XHarness.iOS.Logging {
+	// A log that writes to standard output
+	public class ConsoleLog : Log {
 		readonly StringBuilder captured = new StringBuilder ();
 
 		protected override void WriteImpl (string value)
 		{
 			captured.Append (value);
+			Console.Write (value);
 		}
 
 		public override string FullPath => throw new NotSupportedException ();
@@ -29,7 +28,5 @@ namespace Xharness.Logging {
 		public override void Dispose ()
 		{
 		}
-
-		public override string ToString () => captured.ToString();
 	}
 }

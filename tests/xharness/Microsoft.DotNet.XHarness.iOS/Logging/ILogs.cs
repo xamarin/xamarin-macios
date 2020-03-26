@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Xharness.Logging {
+namespace Microsoft.DotNet.XHarness.iOS.Logging {
 	public interface ILogs : IList<ILog>, IDisposable {
 		string Directory { get; set; }
 
