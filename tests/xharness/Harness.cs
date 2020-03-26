@@ -116,8 +116,9 @@ namespace Xharness
 			}
 		}
 
-		string MlaunchPath =>
-			Path.Combine (IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current", "bin", "mlaunch");
+		string MlaunchPath => IOS_DESTDIR == null 
+			? null
+			: Path.Combine (IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current", "bin", "mlaunch");
 
 		public List<iOSTestProject> IOSTestProjects { get; }
 		public List<MacTestProject> MacTestProjects { get; } = new List<MacTestProject> ();
