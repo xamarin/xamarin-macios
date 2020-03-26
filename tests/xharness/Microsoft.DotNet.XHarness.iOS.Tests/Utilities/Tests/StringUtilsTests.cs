@@ -3,13 +3,13 @@ using System.Diagnostics;
 using NUnit.Framework;
 using Microsoft.DotNet.XHarness.iOS.Utilities;
 
-namespace Xharness.Tests.Utilities.Tests {
+namespace Microsoft.DotNet.XHarness.iOS.Tests.Utilities.Tests {
 
 	[TestFixture]
 	public class StringUtilsTests {
 
 		static readonly char shellQuoteChar =
-			(int)Environment.OSVersion.Platform != 128
+			(int) Environment.OSVersion.Platform != 128
 				&& Environment.OSVersion.Platform != PlatformID.Unix
 				&& Environment.OSVersion.Platform != PlatformID.MacOSX
 			? '"'   // Windows

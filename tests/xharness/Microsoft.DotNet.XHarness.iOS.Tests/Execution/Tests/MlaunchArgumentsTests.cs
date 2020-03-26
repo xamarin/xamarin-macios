@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using Microsoft.DotNet.XHarness.iOS.Execution.Mlaunch;
 using Microsoft.DotNet.XHarness.iOS.Utilities;
-using Microsoft.DotNet.XHarness.iOS.Execution.Mlaunch;
 
-namespace Xharness.Tests.Execution.Tests {
+namespace Microsoft.DotNet.XHarness.iOS.Tests.Execution.Tests {
 
 	[TestFixture]
 	public class MlaunchArgumentsTests {

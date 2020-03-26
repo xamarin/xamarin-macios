@@ -8,9 +8,8 @@ using Moq;
 using NUnit.Framework;
 using Microsoft.DotNet.XHarness.iOS.Execution;
 using Microsoft.DotNet.XHarness.iOS.Logging;
-using Microsoft.DotNet.XHarness.iOS.Execution;
 
-namespace Xharness.Tests.Execution.Tests {
+namespace Microsoft.DotNet.XHarness.iOS.Tests.Execution.Tests {
 
 	[TestFixture]
 	public class ProcessManagerTests {
@@ -65,7 +64,7 @@ namespace Xharness.Tests.Execution.Tests {
 				File.Delete (logPath);
 			if (File.Exists (stderrLogPath))
 				File.Delete (stderrLogPath);
-			if(File.Exists (stdoutLogPath))
+			if (File.Exists (stdoutLogPath))
 				File.Delete (stdoutLogPath);
 		}
 
@@ -89,7 +88,7 @@ namespace Xharness.Tests.Execution.Tests {
 
 		[TestCase (0, 1, true, false, Description = "Success")] // 0, short timeout, success, no timeout
 		[TestCase (1, 1, false, false, Description = "Failure")] // 1, short timeout, failure, no timeout
-		[TestCase (0, 60, false, true, Description = "Timeout" )] // 0, long timeout, failure, timeout
+		[TestCase (0, 60, false, true, Description = "Timeout")] // 0, long timeout, failure, timeout
 		public async Task ExecuteCommandAsyncTest (int resultCode, int timeoutCount, bool success, bool timeout)
 		{
 			var args = new List<string> ();
