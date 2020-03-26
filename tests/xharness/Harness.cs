@@ -110,7 +110,9 @@ namespace Xharness
 			set {
 				sdkRoot = value;
 				XcodeRoot = FindXcode (sdkRoot);
-				processManager = new ProcessManager (XcodeRoot, MlaunchPath);
+
+				if (XcodeRoot != null && MlaunchPath != null)
+					processManager = new ProcessManager (XcodeRoot, MlaunchPath);
 			}
 		}
 
