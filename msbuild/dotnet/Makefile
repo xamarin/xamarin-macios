@@ -41,7 +41,6 @@ IOS_TARGETS = \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.iOS.Sdk/targets/Xamarin.Shared.Sdk.DefaultItems.targets \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.iOS.Sdk/targets/Xamarin.Shared.Sdk.targets \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.iOS.Sdk/targets/Xamarin.Shared.Sdk.props \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.iOS.Sdk/lib/Xamarin.iOS/v1.0 \
 
 TVOS_TARGETS = \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.tvOS.Sdk/Sdk/Sdk.props \
@@ -55,7 +54,6 @@ TVOS_TARGETS = \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.tvOS.Sdk/targets/Xamarin.Shared.Sdk.DefaultItems.targets \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.tvOS.Sdk/targets/Xamarin.Shared.Sdk.targets \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.tvOS.Sdk/targets/Xamarin.Shared.Sdk.props \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.tvOS.Sdk/lib/Xamarin.TVOS/v1.0 \
 
 WATCHOS_TARGETS = \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.watchOS.Sdk/Sdk/Sdk.props \
@@ -69,7 +67,6 @@ WATCHOS_TARGETS = \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.watchOS.Sdk/targets/Xamarin.Shared.Sdk.DefaultItems.targets \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.watchOS.Sdk/targets/Xamarin.Shared.Sdk.targets \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.watchOS.Sdk/targets/Xamarin.Shared.Sdk.props \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Xamarin.watchOS.Sdk/lib/Xamarin.WatchOS/v1.0 \
 
 MACOS_TARGETS = \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/dotnet/Xamarin.macOS.Sdk/Sdk/Sdk.props \
@@ -83,7 +80,6 @@ MACOS_TARGETS = \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/dotnet/Xamarin.macOS.Sdk/targets/Xamarin.Shared.Sdk.DefaultItems.targets \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/dotnet/Xamarin.macOS.Sdk/targets/Xamarin.Shared.Sdk.targets \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/dotnet/Xamarin.macOS.Sdk/targets/Xamarin.Shared.Sdk.props \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/dotnet/Xamarin.macOS.Sdk/lib/Xamarin.Mac/v1.0 \
 
 TARGETS += $(IOS_TARGETS) $(TVOS_TARGETS) $(WATCHOS_TARGETS) $(MACOS_TARGETS)
 
@@ -142,8 +138,7 @@ TEMPLATED_FILES = \
 
 all-local:: $(TARGETS)
 
-pack: prepare
-	$(Q) $(MAKE) $(foreach var,iOS tvOS watchOS macOS,pack-$(var)) $(foreach var,iOS tvOS watchOS macOS,ref-pack-$(var))
+pack: $(foreach var,iOS tvOS watchOS macOS,pack-$(var)) $(foreach var,iOS tvOS watchOS macOS,ref-pack-$(var))
 
 # just a temporary target while debugging for faster turnaround
 pack-simple: prepare
