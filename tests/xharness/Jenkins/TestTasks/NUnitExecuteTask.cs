@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using Xharness.Execution;
 using Microsoft.DotNet.XHarness.iOS.Logging;
-using Xharness.Utilities;
+using Microsoft.DotNet.XHarness.iOS.Utilities;
 
 namespace Xharness.Jenkins.TestTasks
 {
@@ -132,7 +132,7 @@ namespace Xharness.Jenkins.TestTasks
 					args.Add ("-labels");
 				}
 
-				await ExecuteProcessAsync (log, DirectoryUtilities.XIBuildPath, args);
+				await ExecuteProcessAsync (log, Harness.XIBuildPath, args);
 
 				if (ProduceHtmlReport) {
 					try {

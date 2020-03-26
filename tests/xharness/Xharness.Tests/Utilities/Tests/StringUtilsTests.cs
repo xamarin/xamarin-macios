@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using NUnit.Framework;
-using Xharness.Utilities;
+using Microsoft.DotNet.XHarness.iOS.Utilities;
 
 namespace Xharness.Tests.Utilities.Tests {
 

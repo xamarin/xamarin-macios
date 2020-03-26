@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Microsoft.DotNet.XHarness.iOS.Tests.Utilities {
-	class StringUtils {
+namespace Microsoft.DotNet.XHarness.iOS.Utilities {
+	public class StringUtils {
 		static readonly char shellQuoteChar;
 		static readonly char [] mustQuoteCharacters = new char [] { ' ', '\'', ',', '$', '\\' };
 		static readonly char [] mustQuoteCharactersProcess = { ' ', '\\', '"', '\'' };

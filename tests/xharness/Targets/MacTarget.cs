@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Xharness.Utilities;
+using Microsoft.DotNet.XHarness.iOS.Utilities;
 
 namespace Xharness.Targets
 {

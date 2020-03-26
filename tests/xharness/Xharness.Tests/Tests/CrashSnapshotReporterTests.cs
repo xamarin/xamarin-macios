@@ -8,7 +8,7 @@ using NUnit.Framework;
 using Xharness.Execution;
 using Xharness.Execution.Mlaunch;
 using Microsoft.DotNet.XHarness.iOS.Logging;
-using Xharness.Utilities;
+using Microsoft.DotNet.XHarness.iOS.Utilities;
 
 namespace Xharness.Tests {
 	[TestFixture]

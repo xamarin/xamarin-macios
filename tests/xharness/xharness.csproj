@@ -76,9 +76,6 @@
     <Compile Include="AppBundleInformationParser.cs" />
     <Compile Include="AppInstallMonitorLog.cs" />
     <Compile Include="AppRunner.cs" />
-    <Compile Include="Extension.cs" />
-    <Compile Include="RunMode.cs" />
-    <Compile Include="TestTarget.cs" />
     <Compile Include="BCLTestImporter\BCLTestImportTargetFactory.cs" />
     <Compile Include="BCLTestImporter\BCLTestInfoPlistGenerator.cs" />
     <Compile Include="BCLTestImporter\BCLTestProjectDefinition.cs" />
@@ -143,12 +140,6 @@
     <Compile Include="TestExecutingResult.cs" />
     <Compile Include="TestPlatform.cs" />
     <Compile Include="TestProject.cs" />
-    <Compile Include="Utilities\Extensions.cs" />
-    <Compile Include="Utilities\Helpers.cs" />
-    <Compile Include="Utilities\PlistExtensions.cs" />
-    <Compile Include="Utilities\ProjectFileExtensions.cs" />
-    <Compile Include="Utilities\StringUtils.cs" />
-    <Compile Include="Utilities\DirectoryUtilities.cs" />
     <Compile Include="XmlResultParser.cs" />
     <Compile Include="BCLTestImporter\Templates\ITemplatedProject.cs" />
     <Compile Include="BCLTestImporter\Templates\Managed\XamariniOSTemplate.cs" />

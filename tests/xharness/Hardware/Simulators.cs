@@ -13,7 +13,8 @@ using Xharness.Collections;
 using Xharness.Execution;
 using Xharness.Execution.Mlaunch;
 using Microsoft.DotNet.XHarness.iOS.Logging;
-using Xharness.Utilities;
+using Microsoft.DotNet.XHarness.iOS.Utilities;
+using Microsoft.DotNet.XHarness.iOS;
 
 namespace Xharness.Hardware {
 	

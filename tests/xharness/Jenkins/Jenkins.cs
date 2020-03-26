@@ -10,8 +10,9 @@ using Microsoft.DotNet.XHarness.iOS.Logging;
 using Xharness.Execution;
 using Xharness.Jenkins.TestTasks;
 using Xharness.Hardware;
-using Xharness.Utilities;
+using Microsoft.DotNet.XHarness.iOS.Utilities;
 using Xharness.Collections;
+using Microsoft.DotNet.XHarness.iOS;
 
 namespace Xharness.Jenkins
 {

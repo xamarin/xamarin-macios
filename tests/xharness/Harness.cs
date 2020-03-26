@@ -7,9 +7,10 @@ using Xharness.BCLTestImporter;
 using Microsoft.DotNet.XHarness.iOS.Logging;
 using Xharness.Execution;
 using Xharness.Targets;
-using Xharness.Utilities;
+using Microsoft.DotNet.XHarness.iOS.Utilities;
 using Xharness.Hardware;
 using Xharness.Listeners;
+using Microsoft.DotNet.XHarness.iOS;
 
 namespace Xharness
 {

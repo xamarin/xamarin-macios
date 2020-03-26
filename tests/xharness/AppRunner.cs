@@ -11,7 +11,8 @@ using Xharness.Hardware;
 using Xharness.Jenkins.TestTasks;
 using Xharness.Listeners;
 using Microsoft.DotNet.XHarness.iOS.Logging;
-using Xharness.Utilities;
+using Microsoft.DotNet.XHarness.iOS.Utilities;
+using Microsoft.DotNet.XHarness.iOS;
 
 namespace Xharness {
 

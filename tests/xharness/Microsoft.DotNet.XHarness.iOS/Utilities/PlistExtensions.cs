@@ -1,8 +1,8 @@
 ﻿using System.IO;
 using System.Xml;
 
-namespace Microsoft.DotNet.XHarness.iOS.Tests.Utilities {
-	static class PListExtensions {
+namespace Microsoft.DotNet.XHarness.iOS.Utilities {
+	public static class PListExtensions {
 		public static void LoadWithoutNetworkAccess (this XmlDocument doc, string filename)
 		{
 			using (var fs = new FileStream (filename, FileMode.Open, FileAccess.Read)) {

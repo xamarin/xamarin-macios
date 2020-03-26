@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Reflection;
+using Microsoft.DotNet.XHarness.iOS;
 using NUnit.Framework;
 
 namespace Xharness.Tests {

@@ -3,9 +3,9 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Microsoft.DotNet.XHarness.iOS.Tests.Utilities {
+namespace Microsoft.DotNet.XHarness.iOS.Utilities {
 
-	static class Helpers {
+	public static class Helpers {
 
 		// We want guids that nobody else has, but we also want to generate the same guid
 		// on subsequent invocations (so that csprojs don't change unnecessarily, which is
@@ -31,7 +31,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Tests.Utilities {
 		[DllImport ("/usr/lib/libc.dylib")]
 		extern static IntPtr ttyname (int filedes);
 
-		internal static string GetTerminalName (int filedescriptor)
+		public static string GetTerminalName (int filedescriptor)
 		{
 			return Marshal.PtrToStringAuto (ttyname (filedescriptor));
 		}

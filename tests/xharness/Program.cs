@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Mono.Options;
 using Xharness.Execution;
-using Xharness.Utilities;
+using Microsoft.DotNet.XHarness.iOS.Utilities;
 
 namespace Xharness {
 	class MainClass {

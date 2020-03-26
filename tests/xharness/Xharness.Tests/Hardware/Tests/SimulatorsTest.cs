@@ -12,6 +12,7 @@ using Xharness.Execution;
 using Xharness.Execution.Mlaunch;
 using Xharness.Hardware;
 using Microsoft.DotNet.XHarness.iOS.Logging;
+using Microsoft.DotNet.XHarness.iOS;
 
 namespace Xharness.Tests.Hardware.Tests {
 

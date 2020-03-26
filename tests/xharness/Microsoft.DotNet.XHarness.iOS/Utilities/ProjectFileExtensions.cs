@@ -4,8 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 
-namespace Microsoft.DotNet.XHarness.iOS.Tests.Utilities {
-	static class ProjectFileExtensions {
+namespace Microsoft.DotNet.XHarness.iOS.Utilities {
+	public static class ProjectFileExtensions {
 		const string MSBuild_Namespace = "http://schemas.microsoft.com/developer/msbuild/2003";
 
 		public static void SetProjectTypeGuids (this XmlDocument csproj, string value)

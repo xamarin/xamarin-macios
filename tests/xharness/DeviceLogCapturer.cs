@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Threading;
 using Xharness.Execution;
 using Microsoft.DotNet.XHarness.iOS.Logging;
-using Xharness.Utilities;
+using Microsoft.DotNet.XHarness.iOS.Utilities;
 
 namespace Xharness
 {

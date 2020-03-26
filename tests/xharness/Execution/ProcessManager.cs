@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using Xharness.Execution.Mlaunch;
 using Microsoft.DotNet.XHarness.iOS.Logging;
-using Xharness.Utilities;
+using Microsoft.DotNet.XHarness.iOS.Utilities;
 
 namespace Xharness.Execution {
 	public class ProcessManager : IProcessManager {

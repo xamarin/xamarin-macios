@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.DotNet.XHarness.iOS;
 using Microsoft.DotNet.XHarness.iOS.Logging;
 
 namespace Xharness.Listeners {

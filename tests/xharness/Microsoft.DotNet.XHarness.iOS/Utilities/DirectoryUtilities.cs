@@ -2,7 +2,7 @@
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace Microsoft.DotNet.XHarness.iOS.Tests.Utilities {
+namespace Microsoft.DotNet.XHarness.iOS.Utilities {
 	// A class that creates temporary directories next to the test assembly, and cleans the output on startup
 	// Advantages:
 	// * The temporary directories are automatically cleaned on Wrench (unlike /tmp, which isn't)
