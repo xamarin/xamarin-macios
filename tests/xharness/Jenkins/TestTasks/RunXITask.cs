@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.DotNet.XHarness.iOS.Execution;
-using Xharness.Hardware;
 using Microsoft.DotNet.XHarness.iOS.Logging;
 using Microsoft.DotNet.XHarness.iOS;
 using Microsoft.DotNet.XHarness.iOS.Collections;
+using Microsoft.DotNet.XHarness.iOS.Hardware;
 
-namespace Xharness.Jenkins.TestTasks
-{
+namespace Xharness.Jenkins.TestTasks {
 	abstract class RunXITask<TDevice> : RunTestTask where TDevice : class, IDevice
 	{
 		public TestTarget AppRunnerTarget;

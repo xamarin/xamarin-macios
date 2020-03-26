@@ -9,13 +9,12 @@ using System.Text;
 using Microsoft.DotNet.XHarness.iOS.Logging;
 using Microsoft.DotNet.XHarness.iOS.Execution;
 using Xharness.Jenkins.TestTasks;
-using Xharness.Hardware;
 using Microsoft.DotNet.XHarness.iOS.Utilities;
 using Microsoft.DotNet.XHarness.iOS;
 using Microsoft.DotNet.XHarness.iOS.Collections;
+using Microsoft.DotNet.XHarness.iOS.Hardware;
 
-namespace Xharness.Jenkins
-{
+namespace Xharness.Jenkins {
 	public class Jenkins
 	{
 		readonly ISimulatorsLoader simulators;

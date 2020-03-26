@@ -11,8 +11,8 @@ using Microsoft.DotNet.XHarness.iOS.Execution.Mlaunch;
 using Microsoft.DotNet.XHarness.iOS.Logging;
 using Microsoft.DotNet.XHarness.iOS.Utilities;
 
-namespace Xharness.Hardware {
-	
+namespace Microsoft.DotNet.XHarness.iOS.Hardware {
+
 	public interface IDeviceLoaderFactory {
 		IDeviceLoader CreateLoader ();
 	}
@@ -96,14 +96,14 @@ namespace Xharness.Hardware {
 							var usable = dev.SelectSingleNode ("IsUsableForDebugging")?.InnerText;
 							Device d = new Device {
 								DeviceIdentifier = dev.SelectSingleNode ("DeviceIdentifier")?.InnerText,
-								DeviceClass = (DeviceClass) Enum.Parse(typeof(DeviceClass), dev.SelectSingleNode ("DeviceClass")?.InnerText, true),
+								DeviceClass = (DeviceClass) Enum.Parse (typeof (DeviceClass), dev.SelectSingleNode ("DeviceClass")?.InnerText, true),
 								CompanionIdentifier = dev.SelectSingleNode ("CompanionIdentifier")?.InnerText,
 								Name = dev.SelectSingleNode ("Name")?.InnerText,
 								BuildVersion = dev.SelectSingleNode ("BuildVersion")?.InnerText,
 								ProductVersion = dev.SelectSingleNode ("ProductVersion")?.InnerText,
 								ProductType = dev.SelectSingleNode ("ProductType")?.InnerText,
 								InterfaceType = dev.SelectSingleNode ("InterfaceType")?.InnerText,
-								IsUsableForDebugging = usable == null ? (bool?)null : ((bool?)(usable == "True")),
+								IsUsableForDebugging = usable == null ? null : (bool?) (usable == "True"),
 							};
 							bool.TryParse (dev.SelectSingleNode ("IsLocked")?.InnerText, out var locked);
 							d.IsLocked = locked;

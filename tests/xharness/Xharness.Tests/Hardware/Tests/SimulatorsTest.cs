@@ -10,11 +10,11 @@ using NUnit.Framework;
 using Xamarin;
 using Microsoft.DotNet.XHarness.iOS.Execution;
 using Microsoft.DotNet.XHarness.iOS.Execution.Mlaunch;
-using Xharness.Hardware;
 using Microsoft.DotNet.XHarness.iOS.Logging;
 using Microsoft.DotNet.XHarness.iOS;
 using Microsoft.DotNet.XHarness.iOS.Execution;
 using Microsoft.DotNet.XHarness.iOS.Execution.Mlaunch;
+using Microsoft.DotNet.XHarness.iOS.Hardware;
 
 namespace Xharness.Tests.Hardware.Tests {
 

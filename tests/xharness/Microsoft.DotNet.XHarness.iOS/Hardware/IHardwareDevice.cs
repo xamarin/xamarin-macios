@@ -2,7 +2,7 @@
 using Microsoft.DotNet.XHarness.iOS.Collections;
 using Microsoft.DotNet.XHarness.iOS.Logging;
 
-namespace Xharness.Hardware {
+namespace Microsoft.DotNet.XHarness.iOS.Hardware {
 	public interface IHardwareDevice : IDevice {
 		string DeviceIdentifier { get; set; }
 		DeviceClass DeviceClass { get; set; }

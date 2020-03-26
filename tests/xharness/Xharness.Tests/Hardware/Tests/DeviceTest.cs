@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using Microsoft.DotNet.XHarness.iOS.Hardware;
 using NUnit.Framework;
-using Xharness.Hardware;
 
 namespace Xharness.Tests.Hardware.Tests {
 	[TestFixture]

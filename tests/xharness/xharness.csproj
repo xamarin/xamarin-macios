@@ -85,14 +85,6 @@
     <Compile Include="DeviceLogCapturer.cs" />
     <Compile Include="GitHub.cs" />
     <Compile Include="Harness.cs" />
-    <Compile Include="Hardware\Simulators.cs" />
-    <Compile Include="Hardware\SimulatorDevice.cs" />
-    <Compile Include="Hardware\IDevice.cs" />
-    <Compile Include="Hardware\Device.cs" />
-    <Compile Include="Hardware\Devices.cs" />
-    <Compile Include="Hardware\IHardwareDevice.cs" />
-    <Compile Include="Hardware\ISimulatorDevice.cs" />
-    <Compile Include="Hardware\TCCDatabase.cs" />
     <Compile Include="Jenkins\Jenkins.cs" />
     <Compile Include="Jenkins\Resource.cs" />
     <Compile Include="Jenkins\Resources.cs" />

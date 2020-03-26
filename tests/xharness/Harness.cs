@@ -8,9 +8,9 @@ using Microsoft.DotNet.XHarness.iOS.Logging;
 using Microsoft.DotNet.XHarness.iOS.Execution;
 using Xharness.Targets;
 using Microsoft.DotNet.XHarness.iOS.Utilities;
-using Xharness.Hardware;
 using Microsoft.DotNet.XHarness.iOS;
 using Microsoft.DotNet.XHarness.iOS.Listeners;
+using Microsoft.DotNet.XHarness.iOS.Hardware;
 
 namespace Xharness {
 	public enum HarnessAction

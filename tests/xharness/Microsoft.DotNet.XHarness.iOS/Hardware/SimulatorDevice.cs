@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.DotNet.XHarness.iOS.Execution;
 using Microsoft.DotNet.XHarness.iOS.Logging;
 
-namespace Xharness.Hardware {
+namespace Microsoft.DotNet.XHarness.iOS.Hardware {
 
 	public class SimulatorDevice : ISimulatorDevice {
 		readonly IProcessManager processManager;
@@ -24,7 +24,7 @@ namespace Xharness.Hardware {
 		public SimulatorDevice (IProcessManager processManager, ITCCDatabase tccDatabase)
 		{
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
-			this.tCCDatabase = tccDatabase ?? throw new ArgumentNullException (nameof (tccDatabase));
+			tCCDatabase = tccDatabase ?? throw new ArgumentNullException (nameof (tccDatabase));
 		}
 
 		public bool IsWatchSimulator => SimRuntime.StartsWith ("com.apple.CoreSimulator.SimRuntime.watchOS", StringComparison.Ordinal);
@@ -84,9 +84,8 @@ namespace Xharness.Hardware {
 		{
 			string simulator_app;
 
-			if (IsWatchSimulator && processManager.XcodeVersion.Major < 9) {
-				simulator_app = Path.Combine (processManager.XcodeRoot, "Contents", "Developer", "Applications", "Simulator (Watch).app");
-			} else {
+			if (IsWatchSimulator && processManager.XcodeVersion.Major < 9) simulator_app = Path.Combine (processManager.XcodeRoot, "Contents", "Developer", "Applications", "Simulator (Watch).app");
+			else {
 				simulator_app = Path.Combine (processManager.XcodeRoot, "Contents", "Developer", "Applications", "Simulator.app");
 				if (!Directory.Exists (simulator_app))
 					simulator_app = Path.Combine (processManager.XcodeRoot, "Contents", "Developer", "Applications", "iOS Simulator.app");
@@ -113,14 +112,13 @@ namespace Xharness.Hardware {
 				var watch = new Stopwatch ();
 				watch.Start ();
 				while (!File.Exists (TCC_db) && watch.Elapsed.TotalSeconds < tcc_creation_timeout) {
-					log.WriteLine ("Waiting for simulator to create TCC.db... {0}", (int)(tcc_creation_timeout - watch.Elapsed.TotalSeconds));
+					log.WriteLine ("Waiting for simulator to create TCC.db... {0}", (int) (tcc_creation_timeout - watch.Elapsed.TotalSeconds));
 					await Task.Delay (TimeSpan.FromSeconds (0.250));
 				}
 			}
 
-			if (File.Exists (TCC_db)) {
-				await tCCDatabase.AgreeToPromptsAsync (SimRuntime, TCC_db, log, bundle_identifiers);
-			} else {
+			if (File.Exists (TCC_db)) await tCCDatabase.AgreeToPromptsAsync (SimRuntime, TCC_db, log, bundle_identifiers);
+			else {
 				log.WriteLine ("No TCC.db found for the simulator {0} (SimRuntime={1} and SimDeviceType={1})", UDID, SimRuntime, SimDeviceType);
 			}
 

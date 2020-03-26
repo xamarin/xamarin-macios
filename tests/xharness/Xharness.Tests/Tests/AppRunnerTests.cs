@@ -10,13 +10,13 @@ using Moq;
 using NUnit.Framework;
 using Microsoft.DotNet.XHarness.iOS.Execution;
 using Microsoft.DotNet.XHarness.iOS.Execution.Mlaunch;
-using Xharness.Hardware;
 using Microsoft.DotNet.XHarness.iOS.Logging;
 using Microsoft.DotNet.XHarness.iOS.Utilities;
 using Microsoft.DotNet.XHarness.iOS;
 using Microsoft.DotNet.XHarness.iOS.Execution;
 using Microsoft.DotNet.XHarness.iOS.Execution.Mlaunch;
 using Microsoft.DotNet.XHarness.iOS.Listeners;
+using Microsoft.DotNet.XHarness.iOS.Hardware;
 
 namespace Xharness.Tests {
 	[TestFixture]

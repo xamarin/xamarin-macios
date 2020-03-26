@@ -4,7 +4,7 @@ using Microsoft.DotNet.XHarness.iOS.Logging;
 using Microsoft.DotNet.XHarness.iOS;
 using Microsoft.DotNet.XHarness.iOS.Collections;
 
-namespace Xharness.Hardware {
+namespace Microsoft.DotNet.XHarness.iOS.Hardware {
 	public class SimRuntime {
 		public string Name;
 		public string Identifier;

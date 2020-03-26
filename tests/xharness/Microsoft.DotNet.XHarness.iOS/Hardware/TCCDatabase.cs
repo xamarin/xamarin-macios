@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.DotNet.XHarness.iOS.Execution;
 using Microsoft.DotNet.XHarness.iOS.Logging;
 
-namespace Xharness.Hardware {
+namespace Microsoft.DotNet.XHarness.iOS.Hardware {
 
 	public interface ITCCDatabase {
 		Task AgreeToPromptsAsync (string simRuntime, string dataPath, ILog log, params string [] bundle_identifiers);
@@ -24,32 +24,30 @@ namespace Xharness.Hardware {
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 		}
 
-		public int GetTCCFormat (string simRuntime) {
-			
+		public int GetTCCFormat (string simRuntime)
+		{
+
 			// v1: < iOS 9
 			// v2: >= iOS 9 && < iOS 12
 			// v3: >= iOS 12
 			if (simRuntime.StartsWith (iOSSimRuntimePrefix, StringComparison.Ordinal)) {
 				var v = Version.Parse (simRuntime.Substring (iOSSimRuntimePrefix.Length).Replace ('-', '.'));
-				if (v.Major >= 12) {
-					return 3;
-				} else if (v.Major >= 9) {
+				if (v.Major >= 12) return 3;
+				else if (v.Major >= 9) {
 					return 2;
 				} else {
 					return 1;
 				}
 			} else if (simRuntime.StartsWith (tvOSSimRuntimePrefix, StringComparison.Ordinal)) {
 				var v = Version.Parse (simRuntime.Substring (tvOSSimRuntimePrefix.Length).Replace ('-', '.'));
-				if (v.Major >= 12) {
-					return 3;
-				} else {
+				if (v.Major >= 12) return 3;
+				else {
 					return 2;
 				}
 			} else if (simRuntime.StartsWith (watchOSRuntimePrefix, StringComparison.Ordinal)) {
 				var v = Version.Parse (simRuntime.Substring (watchOSRuntimePrefix.Length).Replace ('-', '.'));
-				if (v.Major >= 5) {
-					return 3;
-				} else {
+				if (v.Major >= 5) return 3;
+				else {
 					return 2;
 				}
 			} else {
@@ -81,7 +79,7 @@ namespace Xharness.Hardware {
 
 			do {
 				if (failure) {
-					log.WriteLine ("Failed to edit TCC.db, trying again in 1 second... ", (int)(tcc_edit_timeout - watch.Elapsed.TotalSeconds));
+					log.WriteLine ("Failed to edit TCC.db, trying again in 1 second... ", (int) (tcc_edit_timeout - watch.Elapsed.TotalSeconds));
 					await Task.Delay (TimeSpan.FromSeconds (1));
 				}
 				failure = false;
@@ -103,7 +101,7 @@ namespace Xharness.Hardware {
 								sql.AppendFormat ("INSERT INTO access VALUES('{0}','{1}',0,1,0,NULL,NULL);\n", service, bundle_id);
 								break;
 							case 3: // Xcode 10+
-								// CREATE TABLE access (    service        TEXT        NOT NULL,     client         TEXT        NOT NULL,     client_type    INTEGER     NOT NULL,     allowed        INTEGER     NOT NULL,     prompt_count   INTEGER     NOT NULL,     csreq          BLOB,     policy_id      INTEGER,     indirect_object_identifier_type    INTEGER,     indirect_object_identifier         TEXT,     indirect_object_code_identity      BLOB,     flags          INTEGER,     last_modified  INTEGER     NOT NULL DEFAULT (CAST(strftime('%s','now') AS INTEGER)),     PRIMARY KEY (service, client, client_type, indirect_object_identifier),    FOREIGN KEY (policy_id) REFERENCES policies(id) ON DELETE CASCADE ON UPDATE CASCADE)
+									// CREATE TABLE access (    service        TEXT        NOT NULL,     client         TEXT        NOT NULL,     client_type    INTEGER     NOT NULL,     allowed        INTEGER     NOT NULL,     prompt_count   INTEGER     NOT NULL,     csreq          BLOB,     policy_id      INTEGER,     indirect_object_identifier_type    INTEGER,     indirect_object_identifier         TEXT,     indirect_object_code_identity      BLOB,     flags          INTEGER,     last_modified  INTEGER     NOT NULL DEFAULT (CAST(strftime('%s','now') AS INTEGER)),     PRIMARY KEY (service, client, client_type, indirect_object_identifier),    FOREIGN KEY (policy_id) REFERENCES policies(id) ON DELETE CASCADE ON UPDATE CASCADE)
 								sql.AppendFormat ("INSERT OR REPLACE INTO access VALUES('{0}','{1}',0,1,0,NULL,NULL,NULL,'UNUSED',NULL,NULL,{2});\n", service, bundle_id, DateTimeOffset.Now.ToUnixTimeSeconds ());
 								break;
 							default:
@@ -120,9 +118,8 @@ namespace Xharness.Hardware {
 				}
 			} while (failure && watch.Elapsed.TotalSeconds <= tcc_edit_timeout);
 
-			if (failure) {
-				log.WriteLine ("Failed to edit TCC.db, the test run might hang due to permission request dialogs");
-			} else {
+			if (failure) log.WriteLine ("Failed to edit TCC.db, the test run might hang due to permission request dialogs");
+			else {
 				log.WriteLine ("Successfully edited TCC.db");
 			}
 

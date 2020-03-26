@@ -5,10 +5,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
-using Xharness.Hardware;
 using Microsoft.DotNet.XHarness.iOS.Execution;
 using Microsoft.DotNet.XHarness.iOS.Logging;
 using Microsoft.DotNet.XHarness.iOS.Execution;
+using Microsoft.DotNet.XHarness.iOS.Hardware;
 
 namespace Xharness.Tests.Hardware.Tests {
 

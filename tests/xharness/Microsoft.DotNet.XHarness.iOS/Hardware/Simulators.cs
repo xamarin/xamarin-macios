@@ -16,8 +16,8 @@ using Microsoft.DotNet.XHarness.iOS.Utilities;
 using Microsoft.DotNet.XHarness.iOS;
 using Microsoft.DotNet.XHarness.iOS.Collections;
 
-namespace Xharness.Hardware {
-	
+namespace Microsoft.DotNet.XHarness.iOS.Hardware {
+
 	public interface ISimulatorsLoaderFactory {
 		ISimulatorsLoader CreateLoader ();
 	}
@@ -40,9 +40,9 @@ namespace Xharness.Hardware {
 		readonly BlockingEnumerableCollection<SimulatorDevice> available_devices = new BlockingEnumerableCollection<SimulatorDevice> ();
 		readonly BlockingEnumerableCollection<SimDevicePair> available_device_pairs = new BlockingEnumerableCollection<SimDevicePair> ();
 		readonly IProcessManager processManager;
-		
+
 		bool loaded;
-		
+
 		public IEnumerable<SimRuntime> SupportedRuntimes => supported_runtimes;
 		public IEnumerable<SimDeviceType> SupportedDeviceTypes => supported_device_types;
 		public IEnumerable<SimulatorDevice> AvailableDevices => available_devices;
@@ -73,8 +73,8 @@ namespace Xharness.Hardware {
 				try {
 					using (var process = new Process ()) {
 						var arguments = new MlaunchArguments (
-							new ListSimulatorsArgument(tmpfile),
-							new XmlOutputFormatArgument());
+							new ListSimulatorsArgument (tmpfile),
+							new XmlOutputFormatArgument ());
 
 						var task = processManager.ExecuteCommandAsync (arguments, log, timeout: TimeSpan.FromSeconds (30));
 						log.WriteLine ("Launching {0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments);
@@ -159,7 +159,7 @@ namespace Xharness.Hardware {
 			IEnumerable<ISimulatorDevice> devices = null;
 
 			if (!force) {
-				devices = AvailableDevices.Where ((SimulatorDevice v) => v.SimRuntime == runtime && v.SimDeviceType == devicetype);
+				devices = AvailableDevices.Where ((v) => v.SimRuntime == runtime && v.SimDeviceType == devicetype);
 				if (devices.Any ())
 					return devices;
 			}
@@ -186,11 +186,9 @@ namespace Xharness.Hardware {
 			if (create_device) {
 				// watch device is already paired to some other phone. Create a new watch device
 				var matchingDevices = await FindOrCreateDevicesAsync (log, runtime, devicetype, force: true);
-				var unPairedDevices = matchingDevices.Where ((v) => !AvailableDevicePairs.Any ((SimDevicePair p) => { return p.Gizmo == v.UDID; }));
-				if (device != null) {
-					// If we're creating a new watch device, assume that the one we were given is not usable.
+				var unPairedDevices = matchingDevices.Where ((v) => !AvailableDevicePairs.Any ((p) => { return p.Gizmo == v.UDID; }));
+				if (device != null)                     // If we're creating a new watch device, assume that the one we were given is not usable.
 					unPairedDevices = unPairedDevices.Where ((v) => v.UDID != device.UDID);
-				}
 				if (unPairedDevices?.Any () != true)
 					return false;
 				device = unPairedDevices.First ();
@@ -199,7 +197,7 @@ namespace Xharness.Hardware {
 			log.WriteLine ($"Creating device pair for '{device.Name}' and '{companion_device.Name}'");
 
 			var capturedLog = new StringBuilder ();
-			var pairLog = new CallbackLog ((string value) => {
+			var pairLog = new CallbackLog ((value) => {
 				log.Write (value);
 				capturedLog.Append (value);
 			});
@@ -225,7 +223,7 @@ namespace Xharness.Hardware {
 		async Task<SimDevicePair> FindOrCreateDevicePairAsync (ILog log, IEnumerable<ISimulatorDevice> devices, IEnumerable<ISimulatorDevice> companion_devices)
 		{
 			// Check if we already have a device pair with the specified devices
-			var pairs = AvailableDevicePairs.Where ((SimDevicePair pair) => {
+			var pairs = AvailableDevicePairs.Where ((pair) => {
 				if (!devices.Any ((v) => v.UDID == pair.Gizmo))
 					return false;
 				if (!companion_devices.Any ((v) => v.UDID == pair.Companion))
@@ -236,7 +234,7 @@ namespace Xharness.Hardware {
 			if (!pairs.Any ()) {
 				// No device pair. Create one.
 				// First check if the watch is already paired
-				var unPairedDevices = devices.Where ((v) => !AvailableDevicePairs.Any ((SimDevicePair p) => { return p.Gizmo == v.UDID; }));
+				var unPairedDevices = devices.Where ((v) => !AvailableDevicePairs.Any ((p) => { return p.Gizmo == v.UDID; }));
 				var unpairedDevice = unPairedDevices.FirstOrDefault ();
 				var companion_device = companion_devices.First ();
 				var device = devices.First ();
@@ -245,7 +243,7 @@ namespace Xharness.Hardware {
 
 				await LoadAsync (log, force: true);
 
-				pairs = AvailableDevicePairs.Where ((SimDevicePair pair) => {
+				pairs = AvailableDevicePairs.Where ((pair) => {
 					if (!devices.Any ((v) => v.UDID == pair.Gizmo))
 						return false;
 					if (!companion_devices.Any ((v) => v.UDID == pair.Companion))
@@ -301,9 +299,8 @@ namespace Xharness.Hardware {
 				return null;
 			}
 
-			if (companion_runtime == null) {
-				simulators = new ISimulatorDevice [] { devices.First () };
-			} else {
+			if (companion_runtime == null) simulators = new ISimulatorDevice [] { devices.First () };
+			else {
 				if (companion_devices?.Any () != true) {
 					log.WriteLine ($"Could not find or create companion devices runtime={companion_runtime} and device type={companion_devicetype}.");
 					return null;

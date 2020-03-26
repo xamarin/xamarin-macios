@@ -28,11 +28,10 @@ using System.IO;
 using System.Xml;
 
 using Xamarin;
-using Xharness.Hardware;
 using Microsoft.DotNet.XHarness.iOS.Utilities;
+using Microsoft.DotNet.XHarness.iOS.Hardware;
 
-namespace Xharness
-{
+namespace Xharness {
 	public enum MonoNativeFlavor
 	{
 		None,
