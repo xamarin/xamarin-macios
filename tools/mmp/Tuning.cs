@@ -135,7 +135,7 @@ namespace MonoMac.Tuner {
 
 				pipeline.Append (GetSubSteps (options));
 
-				pipeline.Append (new MonoMacPreserveCode (options));
+				pipeline.Append (new CorePreserveCode (options.I18nAssemblies));
 				pipeline.Append (new PreserveCrypto ());
 
 				pipeline.Append (new MonoMacMarkStep ());

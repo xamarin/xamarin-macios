@@ -251,9 +251,6 @@
     <Compile Include="linker\MonoMac.Tuner\OptimizeGeneratedCodeSubStep.cs">
       <Link>MonoMac.Tuner\OptimizeGeneratedCodeSubStep.cs</Link>
     </Compile>
-    <Compile Include="linker\MonoMac.Tuner\MonoMacPreserveCode.cs">
-      <Link>MonoMac.Tuner\MonoMacPreserveCode.cs</Link>
-    </Compile>
     <Compile Include="linker\MonoMac.Tuner\MacRemoveResources.cs">
       <Link>MonoMac.Tuner\MacRemoveResources.cs</Link>
     </Compile>
