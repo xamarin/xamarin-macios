@@ -320,6 +320,7 @@ class MyObjectErr : NSObject, IFoo1, IFoo2
 				mtouch.Linker = MTouchLinker.LinkSdk;
 				mtouch.Registrar = MTouchRegistrar.Static;
 				mtouch.AssertExecuteFailure (MTouchAction.BuildDev);
+				// the above MUST be kept in sync with new frameworks or it will fail.
 				var invalidFrameworks = new [] {
 					new { Framework = "IdentityLookup", Version = "11.0" },
 					new { Framework = "FileProviderUI", Version = "11.0" },
@@ -336,6 +337,15 @@ class MyObjectErr : NSObject, IFoo1, IFoo2
 					new { Framework = "CarPlay", Version = "12.0" },
 					new { Framework = "IdentityLookupUI", Version = "12.0" },
 					new { Framework = "NaturalLanguage", Version = "12.0" },
+					new { Framework = "VisionKit", Version = "13.0" },
+					new { Framework = "SoundAnalysis", Version = "13.0" },
+					new { Framework = "PencilKit", Version = "13.0" },
+					new { Framework = "MetricKit", Version = "13.0" },
+					new { Framework = "LinkPresentation", Version = "13.0" },
+					new { Framework = "CoreHaptics", Version = "13.0" },
+					new { Framework = "BackgroundTasks", Version = "13.0" },
+					new { Framework = "QuickLookThumbnailing", Version = "13.0" },
+					new { Framework = "AutomaticAssessmentConfiguration", Version = "13.4" },
 				};
 				foreach (var framework in invalidFrameworks)
 					mtouch.AssertError (4134, $"Your application is using the '{framework.Framework}' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS {framework.Version}, while you're building with the iOS {mtouch.Sdk} SDK.) Please select a newer SDK in your app's iOS Build options.");
