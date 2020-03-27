@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 using NUnit.Framework;
 
-namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Hardware.Tests {
+namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Hardware {
 	[TestFixture]
 	public class DeviceTest {
 

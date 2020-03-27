@@ -1,14 +1,11 @@
-﻿using System;
-using System.IO;
-using System.Net;
+﻿using System.IO;
 using System.Net.Sockets;
-using System.Text;
 using Moq;
 using NUnit.Framework;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
 
-namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Listeners.Tests {
+namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Listeners {
 
 	[TestFixture]
 	public class SimpleTcpListenerTest {

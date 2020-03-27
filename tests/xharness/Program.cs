@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Mono.Options;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
+using Microsoft.DotNet.XHarness.iOS.Shared;
 
 namespace Xharness {
 	class MainClass {

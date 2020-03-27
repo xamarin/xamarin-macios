@@ -9,7 +9,7 @@ using NUnit.Framework;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 
-namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Execution.Tests {
+namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Execution {
 
 	[TestFixture]
 	public class ProcessManagerTests {

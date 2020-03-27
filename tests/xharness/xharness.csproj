@@ -119,7 +119,6 @@
     <Compile Include="TestExecutingResult.cs" />
     <Compile Include="TestPlatform.cs" />
     <Compile Include="TestProject.cs" />
-    <Compile Include="XmlResultParser.cs" />
     <Compile Include="BCLTestImporter\Templates\ITemplatedProject.cs" />
     <Compile Include="BCLTestImporter\Templates\Managed\XamariniOSTemplate.cs" />
     <Compile Include="BCLTestImporter\BclTestProjectInfo.cs" />
@@ -133,7 +132,6 @@
     <Compile Include="BCLTestImporter\ITestAssemblyDefinition.cs" />
     <Compile Include="BCLTestImporter\Xamarin\AssemblyDefinitionFactory.cs" />
     <Compile Include="BCLTestImporter\Xamarin\TestAssemblyDefinition.cs" />
-    <Compile Include="IResultParser.cs" />
     <Compile Include="TestReporter.cs" />
     <Compile Include="IAppRunner.cs" />
     <Compile Include="ITestReporter.cs" />

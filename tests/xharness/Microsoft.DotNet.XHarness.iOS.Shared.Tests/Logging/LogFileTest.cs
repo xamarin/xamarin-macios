@@ -4,7 +4,7 @@ using Moq;
 using NUnit.Framework;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 
-namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Logging.Tests {
+namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Logging {
 
 	[TestFixture]
 	public class LogFileTest {

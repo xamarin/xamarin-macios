@@ -9,7 +9,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 
-namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Hardware.Tests {
+namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Hardware {
 
 	[TestFixture]
 	public class TCCDatabaseTests {

@@ -3,7 +3,7 @@ using System.Diagnostics;
 using NUnit.Framework;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
-namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Utilities.Tests {
+namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Utilities {
 
 	[TestFixture]
 	public class StringUtilsTests {

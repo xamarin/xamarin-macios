@@ -4,7 +4,7 @@ using NUnit.Framework;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution.Mlaunch;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
-namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Execution.Tests {
+namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Execution {
 
 	[TestFixture]
 	public class MlaunchArgumentsTests {
