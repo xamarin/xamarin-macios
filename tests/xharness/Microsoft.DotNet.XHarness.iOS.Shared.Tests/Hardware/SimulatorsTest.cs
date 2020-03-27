@@ -68,7 +68,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Hardware {
 			// validate the execution of mlaunch
 			MlaunchArgument sdkRootArg = passedArguments.Where (a => a is SdkRootArgument).FirstOrDefault ();
 			Assert.IsNotNull (sdkRootArg, "sdk arg missing");
-			AssertArgumentValue (sdkRootArg, sdkPath, "sdk arg wrong");
+			AssertArgumentValue (sdkRootArg, $"--sdkroot {sdkPath}", "sdk arg wrong");
 
 			MlaunchArgument listSimArg = passedArguments.Where (a => a is ListSimulatorsArgument).FirstOrDefault ();
 			Assert.IsNotNull (listSimArg, "list devices arg missing");
@@ -102,7 +102,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Hardware {
 
 					// we get the temp file that was passed as the args, and write our sample xml, which will be parsed to get the devices :)
 					var tempPath = args.Where (a => a is ListSimulatorsArgument).First ().AsCommandLineArgument ();
-					tempPath = tempPath.Substring (tempPath.IndexOf ('=') + 1);
+					tempPath = tempPath.Substring (tempPath.IndexOf ('=') + 1).Replace ("\"", string.Empty);
 
 					CopySampleData (tempPath);
 					return Task.FromResult (new ProcessExecutionResult { ExitCode = 0, TimedOut = false });
@@ -115,7 +115,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Hardware {
 
 			MlaunchArgument sdkRootArg = passedArguments.Where (a => a is SdkRootArgument).FirstOrDefault ();
 			Assert.IsNotNull (sdkRootArg, "sdk arg missing");
-			AssertArgumentValue (sdkRootArg, sdkPath, "sdk arg wrong");
+			AssertArgumentValue (sdkRootArg, $"--sdkroot {sdkPath}", "sdk arg wrong");
 
 			MlaunchArgument listSimArg = passedArguments.Where (a => a is ListSimulatorsArgument).FirstOrDefault ();
 			Assert.IsNotNull (listSimArg, "list devices arg missing");
@@ -148,7 +148,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Hardware {
 
 					// we get the temp file that was passed as the args, and write our sample xml, which will be parsed to get the devices :)
 					var tempPath = args.Where (a => a is ListSimulatorsArgument).First ().AsCommandLineArgument ();
-					tempPath = tempPath.Substring (tempPath.IndexOf ('=') + 1);
+					tempPath = tempPath.Substring (tempPath.IndexOf ('=') + 1).Replace ("\"", string.Empty);
 
 					CopySampleData (tempPath);
 					return Task.FromResult (new ProcessExecutionResult { ExitCode = 0, TimedOut = false });

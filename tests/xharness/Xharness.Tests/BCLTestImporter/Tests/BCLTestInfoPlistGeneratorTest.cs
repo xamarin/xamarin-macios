@@ -20,8 +20,11 @@ namespace Xharness.Tests.BCLTestImporter.Tests {
 		public void GenerateCodeNullProjectName ()
 		{
 			var tmp = Path.GetTempFileName ();
-			Assert.ThrowsAsync <ArgumentNullException> (() =>
-				BCLTestInfoPlistGenerator.GenerateCodeAsync (File.Create (tmp), null));
+			File.WriteAllText (tmp, "Hello");
+			using (var stream = new FileStream (tmp, FileMode.Open)) {
+				Assert.ThrowsAsync<ArgumentNullException> (() => BCLTestInfoPlistGenerator.GenerateCodeAsync (stream, null));
+			}
+
 			File.Delete (tmp);
 		}
 
