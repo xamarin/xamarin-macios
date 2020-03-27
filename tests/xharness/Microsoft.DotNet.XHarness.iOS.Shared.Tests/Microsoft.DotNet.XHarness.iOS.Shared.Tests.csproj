@@ -66,7 +66,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Microsoft.DotNet.XHarness.iOS\Microsoft.DotNet.XHarness.iOS.csproj" />
+    <ProjectReference Include="..\Microsoft.DotNet.XHarness.iOS.Shared\Microsoft.DotNet.XHarness.iOS.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>

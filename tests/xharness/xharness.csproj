@@ -147,9 +147,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="Microsoft.DotNet.XHarness.iOS\Microsoft.DotNet.XHarness.iOS.csproj">
+    <ProjectReference Include="Microsoft.DotNet.XHarness.iOS.Shared\Microsoft.DotNet.XHarness.iOS.Shared.csproj">
       <Project>{5be5cabf-8d6c-4f35-9e5b-505b4c40b2ac}</Project>
-      <Name>Microsoft.DotNet.XHarness.iOS</Name>
+      <Name>Microsoft.DotNet.XHarness.iOS.Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
