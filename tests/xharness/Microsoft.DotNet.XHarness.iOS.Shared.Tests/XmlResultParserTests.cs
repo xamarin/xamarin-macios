@@ -7,8 +7,7 @@ using Moq;
 using NUnit.Framework;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 
-namespace Xharness.Tests
-{
+namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests {
 
 	[TestFixture]
 	public class XmlResultParserTests {
@@ -55,9 +54,7 @@ namespace Xharness.Tests
 			var tempPath = Path.GetTempFileName ();
 			using (var outputStream = new StreamWriter (tempPath))
 			using (var sampleStream = new StreamReader (GetType ().Assembly.GetManifestResourceStream (name))) {
-				if (includePing) {
-					outputStream.WriteLine ("ping");
-				}
+				if (includePing) outputStream.WriteLine ("ping");
 				string line;
 				while ((line = sampleStream.ReadLine ()) != null)
 					outputStream.WriteLine (line);
@@ -113,7 +110,7 @@ namespace Xharness.Tests
 		}
 
 		[Test]
-		public void CleanXmlTouchUnitTest () 
+		public void CleanXmlTouchUnitTest ()
 		{
 			// similar to CleanXmlPingTest but using TouchUnit, so we do not want to see the extra nodes
 			var path = CreateResultSample (XmlResultJargon.TouchUnit, includePing: true);
@@ -293,7 +290,7 @@ namespace Xharness.Tests
 			ValidationMap [jargon] (src, appName, variation, title, message, stderrMessage, finalPath, failureLogs.Length);
 
 			// verify that we are correctly adding the logs
-			logs.Verify (l => l.Create (It.IsAny<string> (), It.IsAny<string> (), null), (jargon == XmlResultJargon.NUnitV3) ? Times.AtMost (2) : Times.AtMostOnce ());
+			logs.Verify (l => l.Create (It.IsAny<string> (), It.IsAny<string> (), null), jargon == XmlResultJargon.NUnitV3 ? Times.AtMost (2) : Times.AtMostOnce ());
 			if (jargon == XmlResultJargon.NUnitV3) {
 				logs.Verify (l => l.Directory, Times.Once);
 				tmpLogMock.Verify (l => l.FullPath, Times.AtLeastOnce);

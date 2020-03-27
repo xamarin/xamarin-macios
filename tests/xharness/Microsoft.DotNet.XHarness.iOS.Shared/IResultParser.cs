@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 
-namespace Xharness {
+namespace Microsoft.DotNet.XHarness.iOS.Shared {
 
 	// Interface that represents an object that know how to parse results and generate timeout/crash/build errors so
 	// that CIs like VSTS and helix can parse them.

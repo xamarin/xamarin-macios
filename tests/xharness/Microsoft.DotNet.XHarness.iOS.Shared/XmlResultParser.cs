@@ -7,7 +7,7 @@ using System.Xml.Linq;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
-namespace Xharness {
+namespace Microsoft.DotNet.XHarness.iOS.Shared {
 
 	public enum XmlResultJargon {
 		TouchUnit,
@@ -72,7 +72,7 @@ namespace Xharness {
 						var testCaseName = reader ["fullname"];
 						writer.WriteLine (testCaseName);
 						var time = reader.GetAttribute ("time") ?? "0"; // some nodes might not have the time :/
-												// get the first node and then move in the siblings of the same type
+																		// get the first node and then move in the siblings of the same type
 						reader.ReadToDescendant ("test-case");
 						do {
 							if (reader.Name != "test-case")
@@ -135,7 +135,7 @@ namespace Xharness {
 						long.TryParse (reader ["not-run"], out notRun);
 						long.TryParse (reader ["inconclusive"], out inconclusive);
 						long.TryParse (reader ["ignored"], out ignored);
-						long.TryParse (reader ["skipped"], out skipped );
+						long.TryParse (reader ["skipped"], out skipped);
 						long.TryParse (reader ["invalid"], out invalid);
 					}
 					if (reader.NodeType == XmlNodeType.Element && reader.Name == "TouchUnitExtraData") {
@@ -172,7 +172,7 @@ namespace Xharness {
 						var testCaseName = reader ["name"];
 						writer.WriteLine (testCaseName);
 						var time = reader.GetAttribute ("time") ?? "0"; // some nodes might not have the time :/
-												// get the first node and then move in the siblings of the same type
+																		// get the first node and then move in the siblings of the same type
 						reader.ReadToDescendant ("test-case");
 						do {
 							if (reader.Name != "test-case")
@@ -238,7 +238,7 @@ namespace Xharness {
 						var testCaseName = reader ["name"].Replace ("Test collection for ", "");
 						writer.WriteLine (testCaseName);
 						var time = reader.GetAttribute ("time") ?? "0"; // some nodes might not have the time :/
-												// get the first node and then move in the siblings of the same type
+																		// get the first node and then move in the siblings of the same type
 						reader.ReadToDescendant ("test");
 						do {
 							if (reader.Name != "test")
@@ -301,9 +301,7 @@ namespace Xharness {
 			using (var writer = new StreamWriter (destination)) {
 				string line;
 				while ((line = reader.ReadLine ()) != null) {
-					if (line.StartsWith ("ping", StringComparison.Ordinal) || line.Contains ("TouchUnitTestRun") || line.Contains ("NUnitOutput") || line.Contains ("<!--")) {
-						continue;
-					}
+					if (line.StartsWith ("ping", StringComparison.Ordinal) || line.Contains ("TouchUnitTestRun") || line.Contains ("NUnitOutput") || line.Contains ("<!--")) continue;
 					if (line == "") // remove white lines, some files have them
 						continue;
 					if (line.Contains ("TouchUnitExtraData")) // always last node in TouchUnit
@@ -316,7 +314,7 @@ namespace Xharness {
 		public (string resultLine, bool failed) GenerateHumanReadableResults (string source, string destination, XmlResultJargon xmlType)
 		{
 			(string resultLine, bool failed) parseData;
-			using (var reader = new StreamReader (source)) 
+			using (var reader = new StreamReader (source))
 			using (var writer = new StreamWriter (destination, true)) {
 				switch (xmlType) {
 				case XmlResultJargon.TouchUnit:
@@ -347,10 +345,8 @@ namespace Xharness {
 
 					long.TryParse (reader ["errors"], out var errors);
 					long.TryParse (reader ["failed"], out var failed);
-					if (errors == 0 && failed == 0) {
-						// if we do not have any errors, return, nothing to be written here
+					if (errors == 0 && failed == 0)                         // if we do not have any errors, return, nothing to be written here
 						return;
-					}
 					writer.WriteLine ("<div style='padding-left: 15px;'>");
 					writer.WriteLine ("<ul>");
 
@@ -410,7 +406,7 @@ namespace Xharness {
 							var message = reader.ReadElementContentAsString ();
 							failedTests.Add ((name, message));
 							break;
-						
+
 						}
 					} while (reader.ReadToNextSibling ("test-case"));
 				}
@@ -448,7 +444,7 @@ namespace Xharness {
 						var status = reader ["result"];
 						switch (status) {
 						case "Fail":
-							var name =  reader ["name"];
+							var name = reader ["name"];
 							reader.ReadToDescendant ("message");
 							var message = reader.ReadElementContentAsString ();
 							failedTests.Add ((name, message));
@@ -521,8 +517,8 @@ namespace Xharness {
 			foreach (var suite in testSuitesElements) {
 				suite.SetAttributeValue ("name", applicationName);
 				suite.SetAttributeValue ("fullname", applicationName); // docs say just name, but I've seen the fullname instead, docs usually lie
-				// add also the attachments to all the failing tests, this will make the life of the person monitoring easier, since
-				// he will see the logs directly from the attachment page
+																	   // add also the attachments to all the failing tests, this will make the life of the person monitoring easier, since
+																	   // he will see the logs directly from the attachment page
 				var tests = suite.Descendants ().Where (e => e.Name == "test-case" && e.Attribute ("result").Value == "Failed");
 				foreach (var t in tests) {
 					t.Add (attachmentsElement);
@@ -534,7 +530,7 @@ namespace Xharness {
 
 		static void WriteAttributes (XmlWriter writer, params (string name, string data) [] attrs)
 		{
-			foreach (var (name, data) in attrs ) {
+			foreach (var (name, data) in attrs) {
 				writer.WriteAttributeString (name, data);
 			}
 		}
@@ -550,7 +546,7 @@ namespace Xharness {
 		static void WriteNUnitV2TestCase (XmlWriter writer, string title, string message, StreamReader stderr)
 		{
 			writer.WriteStartElement ("test-case");
-			WriteAttributes (writer, 
+			WriteAttributes (writer,
 				("name", title),
 				("executed", "True"),
 				("result", "Failure"),
