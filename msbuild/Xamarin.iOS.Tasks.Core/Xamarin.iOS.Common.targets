@@ -113,7 +113,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<ComputedPlatform Condition="'$(ComputedPlatform)' == ''">$(Platform)</ComputedPlatform>
 		<ComputedPlatform Condition="'$(ComputedPlatform)' == 'AnyCPU'">iPhone</ComputedPlatform>
 
-		<_CanOutputAppBundle>False</_CanOutputAppBundle>
+		<_CanOutputAppBundle Condition="'$(_CanOutputAppBundle)' == ''">False</_CanOutputAppBundle>
 		<_CanOutputAppBundle Condition="'$(OutputType)' == 'Exe' Or '$(IsAppExtension)' == 'true' Or '$(IsWatchApp)' == 'true'">True</_CanOutputAppBundle>
 
 		<_CanArchive>False</_CanArchive>
