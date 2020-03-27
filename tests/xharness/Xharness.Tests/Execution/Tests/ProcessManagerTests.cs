@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Moq;
 using NUnit.Framework;
 using Xharness.Execution;
 using Xharness.Logging;
@@ -21,7 +20,6 @@ namespace Xharness.Tests.Execution.Tests {
 		string stderrLogPath;
 		string stdoutMessage;
 		string stderrMessage;
-		Mock<ILogs> logs;
 		ILog executionLog;
 		ILog stdoutLog;
 		ILog stderrLog;
@@ -38,7 +36,6 @@ namespace Xharness.Tests.Execution.Tests {
 			stdoutLogPath = Path.GetTempFileName ();
 			stdoutMessage = "Hola mundo!!!";
 			stderrMessage = "Adios mundo cruel";
-			logs = new Mock<ILogs> ();
 			executionLog = new LogFile ("my execution log", logPath);
 			stdoutLog = new LogFile ("my stdout log", stdoutLogPath);
 			stderrLog = new LogFile ("my stderr log", stderrLogPath);
@@ -91,12 +88,13 @@ namespace Xharness.Tests.Execution.Tests {
 		[TestCase (0, 60, false, true, Description = "Timeout" )] // 0, long timeout, failure, timeout
 		public async Task ExecuteCommandAsyncTest (int resultCode, int timeoutCount, bool success, bool timeout)
 		{
-			var args = new List<string> ();
-			args.Add (dummyProcess);
-			args.Add ($"--exit-code={resultCode}");
-			args.Add ($"--timeout={timeoutCount}");
-			args.Add ($"--stdout=\"{stdoutMessage}\"");
-			args.Add ($"--stderr=\"{stderrMessage}\"");
+			var args = new List<string> {
+				dummyProcess,
+				$"--exit-code={resultCode}",
+				$"--timeout={timeoutCount}",
+				$"--stdout=\"{stdoutMessage}\"",
+				$"--stderr=\"{stderrMessage}\""
+			};
 			var result = await manager.ExecuteCommandAsync ("mono", args, executionLog, new TimeSpan (0, 0, 5));
 			if (!timeout)
 				Assert.AreEqual (resultCode, result.ExitCode, "exit code");
