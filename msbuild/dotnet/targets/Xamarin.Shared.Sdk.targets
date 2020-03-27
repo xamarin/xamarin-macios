@@ -37,7 +37,7 @@
   <Target Name="BeforeILLink">
     <PropertyGroup>
       <_AdditionalTaskAssembly>$(XamarinSdkRootDirectory)/tools/dotnet-linker.dll</_AdditionalTaskAssembly>
-      <_ExtraTrimmerArgs>--custom-step "+MarkStep:Xamarin.Linker.Steps.MobileResolveMainAssemblyStep,$(_AdditionalTaskAssembly)"</_ExtraTrimmerArgs>
+      <!-- <_ExtraTrimmerArgs> - -custom-step "+MarkStep:Xamarin.Linker.Steps.MobileResolveMainAssemblyStep,$(_AdditionalTaskAssembly)"</_ExtraTrimmerArgs> -->
     </PropertyGroup>
   </Target>
 
