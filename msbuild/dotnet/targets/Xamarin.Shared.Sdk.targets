@@ -9,4 +9,35 @@
     <ProjectCapability Include="Apple" />
     <ProjectCapability Include="Mobile" />
   </ItemGroup>
+
+  <!-- VERY BIG HACK: redefine several tasks to insert Before* and After* tasks -->
+  <Target Name="ComputeFilesToPublish"
+          DependsOnTargets="ComputeResolvedFilesToPublishList;
+          					BeforeILLink;
+                            ILLink;
+                            AfterILLink;
+                            CreateReadyToRunImages;
+                            GeneratePublishDependencyFile;
+                            GenerateSingleFileBundle">
+  </Target>
+  <Target Name="BeforeILLink" />
+  <Target Name="AfterILLink" />
+
+
+
+  <Target Name="ComputeAndCopyFilesToPublishDirectory"
+          DependsOnTargets="BeforeComputeFilesToPublish;
+          					ComputeFilesToPublish;
+          					AfterComputeFilesToPublish;
+                            CopyFilesToPublishDirectory" />
+  <Target Name="BeforeComputeFilesToPublish" />
+  <Target Name="AfterComputeFilesToPublish" />
+
+  <!-- Inject a linker argument -->
+  <Target Name="BeforeILLink">
+  	<PropertyGroup>
+  		<_ExtraTrimmerArgs>--verbose</_ExtraTrimmerArgs>
+  	</PropertyGroup>
+  </Target>
+
 </Project>
