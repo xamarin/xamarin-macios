@@ -12,6 +12,8 @@ using Xharness.Listeners;
 using Xharness.Logging;
 using Xharness.Utilities;
 
+using ExceptionLogger = System.Action<int, string>;
+
 namespace Xharness {
 
 	public class TestReporterFactory : ITestReporterFactory {
@@ -32,9 +34,11 @@ namespace Xharness {
 			XmlResultJargon xmlJargon,
 			string device,
 			TimeSpan timeout,
-			double launchTimeout)
+			double launchTimeout,
+			string additionalLogsDirectory = null,
+			ExceptionLogger exceptionLogger = null)
 		{
-			return new TestReporter (processManager, mainLog, runLog, logs, simpleListener, parser, appInformation, runMode, xmlJargon, device, timeout, launchTimeout);
+			return new TestReporter (processManager, mainLog, runLog, logs, simpleListener, parser, appInformation, runMode, xmlJargon, device, timeout, launchTimeout, additionalLogsDirectory, exceptionLogger);
 		}
 	}
 
@@ -61,6 +65,17 @@ namespace Xharness {
 		readonly TimeSpan timeout;
 		readonly double launchTimeout;
 		readonly Stopwatch timeoutWatch;
+		
+		/// <summary>
+		/// Additional logs that will be sent with the report in case of a failure.
+		/// Used by the Xamarin.Xharness project to add BuildTask logs.
+		/// </summary>
+		readonly string additionalLogsDirectory;
+
+		/// <summary>
+		/// Callback needed for the Xamarin.Xharness project that does extra logging in case of a crash.
+		/// </summary>
+		readonly ExceptionLogger exceptionLogger;
 
 		bool waitedForExit = true;
 		bool launchFailure;
@@ -87,7 +102,9 @@ namespace Xharness {
 			XmlResultJargon xmlJargon,
 			string device,
 			TimeSpan timeout,
-			double launchTimeout)
+			double launchTimeout,
+			string additionalLogsDirectory = null,
+			ExceptionLogger exceptionLogger = null)
 		{
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 			this.deviceName = device; // can be null on simulators 
@@ -102,6 +119,8 @@ namespace Xharness {
 			this.xmlJargon = xmlJargon;
 			this.timeout = timeout;
 			this.launchTimeout = launchTimeout;
+			this.additionalLogsDirectory = additionalLogsDirectory;
+			this.exceptionLogger = exceptionLogger;
 			this.timeoutWatch  = Stopwatch.StartNew ();
 
 			CallbackLog = new CallbackLog ((line) => {
@@ -314,8 +333,8 @@ namespace Xharness {
 						var logFiles = new List<string> ();
 						// add our logs AND the logs of the previous task, which is the build task
 						logFiles.AddRange (Directory.GetFiles (crashLogs.Directory));
-						if (runner.BuildTask != null) // when using the run command, we do not have a build task, ergo, there are no logs to add.
-							logFiles.AddRange (Directory.GetFiles (runner.BuildTask.LogDirectory));
+						if (additionalLogsDirectory != null) // when using the run command, we do not have a build task, ergo, there are no logs to add.
+							logFiles.AddRange (Directory.GetFiles (additionalLogsDirectory));
 						// add the attachments and write in the new filename
 						// add a final prefix to the file name to make sure that the VSTS test uploaded just pick
 						// the final version, else we will upload tests more than once
@@ -502,7 +521,9 @@ namespace Xharness {
 						if (crashReason != null) 
 							break;
 					} catch (Exception e) {
-						runner.LogException (2, "Failed to process crash report '{1}': {0}", e.Message, crashLog.Description);
+						var message = string.Format ("Failed to process crash report '{1}': {0}", e.Message, crashLog.Description);
+						mainLog.WriteLine (message);
+						exceptionLogger?.Invoke (2, message);
 					}
 				}
 				if (!string.IsNullOrEmpty (crashReason)) {

@@ -11,7 +11,6 @@ namespace Xharness.Jenkins.TestTasks
 {
 	class RunDeviceTask : RunXITask<IHardwareDevice>
 	{
-		readonly IProcessManager processManager = new ProcessManager ();
 		readonly IResultParser resultParser = new XmlResultParser ();
 		readonly IDeviceLoader devices;
 		AppInstallMonitorLog install_log;
@@ -40,8 +39,8 @@ namespace Xharness.Jenkins.TestTasks
 			}
 		}
 
-		public RunDeviceTask (IDeviceLoader devices, MSBuildTask build_task, IProcessManager processManager, IEnumerable<IHardwareDevice> candidates)
-			: base (build_task, processManager, candidates.OrderBy ((v) => v.DebugSpeed))
+		public RunDeviceTask (IDeviceLoader devices, MSBuildTask build_task, IProcessManager ProcessManager, IEnumerable<IHardwareDevice> candidates)
+			: base (build_task, ProcessManager, candidates.OrderBy ((v) => v.DebugSpeed))
 		{
 			switch (build_task.Platform) {
 			case TestPlatform.iOS:
@@ -81,15 +80,15 @@ namespace Xharness.Jenkins.TestTasks
 						CompanionDevice = devices.FindCompanionDevice (Jenkins.DeviceLoadLog, Device);
 					Jenkins.MainLog.WriteLine ("Acquired device '{0}' for '{1}'", Device.Name, ProjectFile);
 
-					runner = new AppRunner (processManager,
+					runner = new AppRunner (ProcessManager,
 						new AppBundleInformationParser (),
-						new SimulatorsLoaderFactory (Harness, processManager),
+						new SimulatorsLoaderFactory (Harness, ProcessManager),
 						new SimpleListenerFactory (),
-						new DeviceLoaderFactory (Harness, processManager),
+						new DeviceLoaderFactory (Harness, ProcessManager),
 						new CrashSnapshotReporterFactory (ProcessManager, Harness.XcodeRoot, Harness.MlaunchPath),
 						new CaptureLogFactory (),
-						new DeviceLogCapturerFactory (processManager, Harness.XcodeRoot, Harness.MlaunchPath),
-						new TestReporterFactory (),
+						new DeviceLogCapturerFactory (ProcessManager, Harness.XcodeRoot, Harness.MlaunchPath),
+						new TestReporterFactory (ProcessManager),
 						AppRunnerTarget,
 						Harness,
 						projectFilePath: ProjectFile,
@@ -148,15 +147,15 @@ namespace Xharness.Jenkins.TestTasks
 							// nor will it close & reopen the today app (but launching the main app
 							// will do both of these things, preparing the device for launching the today extension).
 
-							AppRunner todayRunner = new AppRunner (processManager,
+							AppRunner todayRunner = new AppRunner (ProcessManager,
 								new AppBundleInformationParser (),
-								new SimulatorsLoaderFactory (Harness, processManager),
+								new SimulatorsLoaderFactory (Harness, ProcessManager),
 								new SimpleListenerFactory (),
-								new DeviceLoaderFactory (Harness, processManager),
+								new DeviceLoaderFactory (Harness, ProcessManager),
 								new CrashSnapshotReporterFactory (ProcessManager, Harness.XcodeRoot, Harness.MlaunchPath),
 								new CaptureLogFactory (),
-								new DeviceLogCapturerFactory (processManager, Harness.XcodeRoot, Harness.MlaunchPath),
-								new TestReporterFactory (),
+								new DeviceLogCapturerFactory (ProcessManager, Harness.XcodeRoot, Harness.MlaunchPath),
+								new TestReporterFactory (ProcessManager),
 								AppRunnerTarget,
 								Harness,
 								projectFilePath: ProjectFile,

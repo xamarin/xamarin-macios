@@ -18,7 +18,9 @@ namespace Xharness {
 			XmlResultJargon xmlJargon,
 			string device,
 			TimeSpan timeout,
-			double launchTimeout);
+			double launchTimeout,
+			string additionalLogsDirectory = null,
+			Action<int, string> exceptionLogger = null);
 	}
 
 	// interface that represents a class that know how to parse the results from an app run.

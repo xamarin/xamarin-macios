@@ -313,7 +313,8 @@ namespace Xharness {
 				deviceName,
 				testReporterTimeout,
 				harness.LaunchTimeout,
-				e => harness.Log ());
+				buildTask?.Logs?.Directory,
+				(level, message) => harness.Log (level, message));
 
 			listener.ConnectedTask
 				.TimeoutAfter (TimeSpan.FromMinutes (harness.LaunchTimeout))
