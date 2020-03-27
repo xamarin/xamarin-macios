@@ -13466,6 +13466,9 @@ namespace AppKit {
 
 		[Notification, Field ("NSScrollViewDidEndLiveMagnifyNotification")]
 		NSString DidEndLiveMagnifyNotification { get; }
+		
+		[Notification, Field ("NSScrollViewWillStartLiveScrollNotification")]
+		NSString WillStartLiveScrollNotification { get; }
 
 		[Mac (10,9), Notification, Field ("NSScrollViewDidLiveScrollNotification")]
 		NSString DidLiveScrollNotification { get; }
