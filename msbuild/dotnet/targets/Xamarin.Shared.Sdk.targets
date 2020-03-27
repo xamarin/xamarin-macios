@@ -41,4 +41,109 @@
     </PropertyGroup>
   </Target>
 
+  <Target Name="BeforeComputeFilesToPublish" DependsOnTargets="_EarlyAppBundleTasks" />
+
+  <Target Name="_EarlyAppBundleTasks" DependsOnTargets="
+		_CollectBundleResources;
+		_OptimizePngImages;
+		_OptimizePropertyLists;
+		_OptimizeLocalizationFiles;
+		_PackLibraryResources;
+		_UnpackLibraryResources;
+		_GenerateBundleName;
+		_DetectAppManifest;
+		_DetectSigningIdentity;
+		_CopyResourcesToBundle;
+		_CreateAssetPackManifest;
+		_SmeltMetal;
+		_ForgeMetal;
+		_TemperMetal;
+		_CompileCoreMLModels;
+		_PrepareResourceRules;
+		_CompileEntitlements;
+		_CompileAppManifest;
+		_GetNativeExecutableName;
+		_ParseExtraMtouchArgs;
+  	">
+  </Target>
+
+
+  <!-- Project types and how do we distinguish between them
+
+                                  OutputType   Custom variable
+    ==================================================================
+    iOS Executable Project        Exe
+    iOS App Extension Project     Library      IsAppExtension
+    iOS Binding Project           Library      IsBindingProject
+    iOS Class Library Project     Library
+
+    tvOS Executable Project       Exe
+    tvOS App Extension Project    Library      IsAppExtension
+    tvOS Binding Project          Library      IsBindingProject
+    tvOS Class Library Project    Library
+
+    watchOS App Project           Library      IsWatchOSApp
+    watchOS App Extension Project Library      IsAppExtension
+    watchOS Binding Project       Library      IsBindingProject
+    watchOS Class Library Project Library
+
+    macOS Executable Project        Exe
+    macOS App Extension Project     Library      IsAppExtension
+    macOS Binding Project           Library      IsBindingProject
+    macOS Class Library Project     Library
+
+  -->
+
+  <PropertyGroup>
+    <_ProjectType Condition="'$(_ProjectType)' == '' And '$(_PlatformName)' == 'iOS' And '$(OutputType)' == 'Exe'">iOSExecutableProject</_ProjectType>
+    <_ProjectType Condition="'$(_ProjectType)' == '' And '$(_PlatformName)' == 'iOS' And '$(OutputType)' == 'Library' And '$(IsAppExtension)' != ''">iOSAppExtensionProject</_ProjectType>
+    <_ProjectType Condition="'$(_ProjectType)' == '' And '$(_PlatformName)' == 'iOS' And '$(OutputType)' == 'Library' And '$(IsBindingProject)' != ''">iOSBindingProject</_ProjectType>
+    <_ProjectType Condition="'$(_ProjectType)' == '' And '$(_PlatformName)' == 'iOS' And '$(OutputType)' == 'Library'">iOSClassLibrary</_ProjectType>
+
+    <_ProjectType Condition="'$(_ProjectType)' == '' And '$(_PlatformName)' == 'tvOS' And '$(OutputType)' == 'Exe'">tvOSExecutableProject</_ProjectType>
+    <_ProjectType Condition="'$(_ProjectType)' == '' And '$(_PlatformName)' == 'tvOS' And '$(OutputType)' == 'Library' And '$(IsAppExtension)' != ''">tvOSAppExtensionProject</_ProjectType>
+    <_ProjectType Condition="'$(_ProjectType)' == '' And '$(_PlatformName)' == 'tvOS' And '$(OutputType)' == 'Library' And '$(IsBindingProject)' != ''">tvOSBindingProject</_ProjectType>
+    <_ProjectType Condition="'$(_ProjectType)' == '' And '$(_PlatformName)' == 'tvOS' And '$(OutputType)' == 'Library'">tvOSClassLibrary</_ProjectType>
+
+    <_ProjectType Condition="'$(_ProjectType)' == '' And '$(_PlatformName)' == 'watchOS' And '$(IsWatchOSApp)' != ''">watchOSAppProject</_ProjectType>
+    <_ProjectType Condition="'$(_ProjectType)' == '' And '$(_PlatformName)' == 'watchOS' And '$(IsAppExtension)' != ''">watchOSAppExtensionProject</_ProjectType>
+    <_ProjectType Condition="'$(_ProjectType)' == '' And '$(_PlatformName)' == 'watchOS' And '$(IsBindingProject)' != ''">watchOSBindingProject</_ProjectType>
+    <_ProjectType Condition="'$(_ProjectType)' == '' And '$(_PlatformName)' == 'watchOS'">watchOSClassLibrary</_ProjectType>
+
+    <_ProjectType Condition="'$(_ProjectType)' == '' And '$(_PlatformName)' == 'macOS' And '$(OutputType)' == 'Exe'">macOSExecutableProject</_ProjectType>
+    <_ProjectType Condition="'$(_ProjectType)' == '' And '$(_PlatformName)' == 'macOS' And '$(OutputType)' == 'Library' And '$(IsAppExtension)' != ''">macOSAppExtensionProject</_ProjectType>
+    <_ProjectType Condition="'$(_ProjectType)' == '' And '$(_PlatformName)' == 'macOS' And '$(OutputType)' == 'Library' And '$(IsBindingProject)' != ''">macOSBindingProject</_ProjectType>
+    <_ProjectType Condition="'$(_ProjectType)' == '' And '$(_PlatformName)' == 'macOS' And '$(OutputType)' == 'Library'">macOSClassLibrary</_ProjectType>
+
+    <_ProjectLanguage>$(Language)</_ProjectLanguage>
+    <_ProjectLanguage Condition="'$(_ProjectLanguage)' == '' Or '$(_ProjectLanguage)' == 'C#' ">CSharp</_ProjectLanguage>
+    <_ProjectLanguage Condition="'$(_ProjectLanguage)' == 'F#' ">FSharp</_ProjectLanguage>
+  </PropertyGroup>
+
+  <!-- Import existing targets -->
+
+  <PropertyGroup>
+    <_TargetsDiriOS>$(XamarinSdkRootDirectory)\tools\msbuild\iOS</_TargetsDiriOS>
+    <_TargetsDirtvOS>$(XamarinSdkRootDirectory)\tools\msbuild\TVOS</_TargetsDirtvOS>
+    <_TargetsDirwatchOS>$(XamarinSdkRootDirectory)\tools\msbuild\WatchOS</_TargetsDirwatchOS>
+    <_TargetsDirmacOS>$(XamarinSdkRootDirectory)\tools\msbuild</_TargetsDirmacOS>
+  </PropertyGroup>
+
+  <Import Project="$(_TargetsDiriOS)\Xamarin.iOS.$(_ProjectLanguage).targets"              Condition="'$(_ProjectType)' == 'iOSExecutableProject' Or '$(_ProjectType)' == 'iOSClassLibrary' " />
+  <Import Project="$(_TargetsDiriOS)\Xamarin.iOS.AppExtension.$(_ProjectLanguage).targets" Condition="'$(_ProjectType)' == 'iOSAppExtensionProject' " />
+  <Import Project="$(_TargetsDiriOS)\Xamarin.iOS.ObjCBinding.$(_ProjectLanguage).targets"  Condition="'$(_ProjectType)' == 'iOSBindingProject' " />
+
+  <Import Project="$(_TargetsDirtvOS)\Xamarin.TVOS.$(_ProjectLanguage).targets"              Condition="'$(_ProjectType)' == 'tvOSExecutableProject' Or '$(_ProjectType)' == 'tvOSClassLibrary' " />
+  <Import Project="$(_TargetsDirtvOS)\Xamarin.TVOS.AppExtension.$(_ProjectLanguage).targets" Condition="'$(_ProjectType)' == 'tvOSAppExtensionProject' " />
+  <Import Project="$(_TargetsDirtvOS)\Xamarin.TVOS.ObjCBinding.$(_ProjectLanguage).targets"  Condition="'$(_ProjectType)' == 'tvOSBindingProject' " />
+
+  <Import Project="$(_TargetsDirwatchOS)\Xamarin.WatchOS.$(_ProjectLanguage).targets"              Condition="'$(_ProjectType)' == 'watchOSClassLibrary' " />
+  <Import Project="$(_TargetsDirwatchOS)\Xamarin.WatchOS.App.$(_ProjectLanguage).targets"          Condition="'$(_ProjectType)' == 'watchOSAppProject' " />
+  <Import Project="$(_TargetsDirwatchOS)\Xamarin.WatchOS.AppExtension.$(_ProjectLanguage).targets" Condition="'$(_ProjectType)' == 'watchOSAppExtensionProject' " />
+  <Import Project="$(_TargetsDirwatchOS)\Xamarin.WatchOS.ObjCBinding.$(_ProjectLanguage).targets"  Condition="'$(_ProjectType)' == 'watchOSBindingProject' " />
+
+  <Import Project="$(_TargetsDirmacOS)\Xamarin.Mac.$(_ProjectLanguage).targets"              Condition="'$(_ProjectType)' == 'macOSExecutableProject' Or '$(_ProjectType)' == 'macOSClassLibrary' " />
+  <Import Project="$(_TargetsDirmacOS)\Xamarin.Mac.AppExtension.$(_ProjectLanguage).targets" Condition="'$(_ProjectType)' == 'macOSAppExtensionProject' " />
+  <Import Project="$(_TargetsDirmacOS)\Xamarin.Mac.ObjCBinding.$(_ProjectLanguage).targets"  Condition="'$(_ProjectType)' == 'macOSBindingProject' " />
+
 </Project>
