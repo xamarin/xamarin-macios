@@ -81,26 +81,21 @@ namespace Xamarin.iOS.Tasks
 					bundleResources.Add (bundleResource.GetMetadata ("LogicalName"));
 				}
 
-				string[] expected = { "LaunchScreen~ipad.nib/objects-8.0+.nib",
-					"LaunchScreen~ipad.nib/objects-13.0+.nib",
+				string[] expected = {
 					"LaunchScreen~ipad.nib/runtime.nib",
-					"LaunchScreen~iphone.nib/objects-13.0+.nib",
-					"LaunchScreen~iphone.nib/objects-8.0+.nib",
-					"LaunchScreen~iphone.nib/runtime.nib",
-					"Main.storyboardc/BYZ-38-t0r-view-8bC-Xf-vdC~ipad.nib/objects-13.0+.nib",
-					"Main.storyboardc/BYZ-38-t0r-view-8bC-Xf-vdC~ipad.nib/objects-8.0+.nib",
-					"Main.storyboardc/BYZ-38-t0r-view-8bC-Xf-vdC~ipad.nib/runtime.nib",
-					"Main.storyboardc/BYZ-38-t0r-view-8bC-Xf-vdC~iphone.nib/objects-13.0+.nib",
-					"Main.storyboardc/BYZ-38-t0r-view-8bC-Xf-vdC~iphone.nib/objects-8.0+.nib",
-					"Main.storyboardc/BYZ-38-t0r-view-8bC-Xf-vdC~iphone.nib/runtime.nib",
-					"Main.storyboardc/UIViewController-BYZ-38-t0r~ipad.nib/objects-13.0+.nib",
-					"Main.storyboardc/UIViewController-BYZ-38-t0r~ipad.nib/objects-8.0+.nib",
-					"Main.storyboardc/UIViewController-BYZ-38-t0r~ipad.nib/runtime.nib",
-					"Main.storyboardc/UIViewController-BYZ-38-t0r~iphone.nib/objects-13.0+.nib",
-					"Main.storyboardc/UIViewController-BYZ-38-t0r~iphone.nib/objects-8.0+.nib",
-					"Main.storyboardc/UIViewController-BYZ-38-t0r~iphone.nib/runtime.nib",
+					"LaunchScreen~ipad.nib/objects-8.0+.nib",
 					"Main~ipad.storyboardc/Info-8.0+.plist",
 					"Main~ipad.storyboardc/Info.plist",
+					"Main.storyboardc/UIViewController-BYZ-38-t0r~ipad.nib/runtime.nib",
+					"Main.storyboardc/UIViewController-BYZ-38-t0r~ipad.nib/objects-8.0+.nib",
+					"Main.storyboardc/BYZ-38-t0r-view-8bC-Xf-vdC~iphone.nib/runtime.nib",
+					"Main.storyboardc/BYZ-38-t0r-view-8bC-Xf-vdC~iphone.nib/objects-8.0+.nib",
+					"Main.storyboardc/UIViewController-BYZ-38-t0r~iphone.nib/runtime.nib",
+					"Main.storyboardc/UIViewController-BYZ-38-t0r~iphone.nib/objects-8.0+.nib",
+					"Main.storyboardc/BYZ-38-t0r-view-8bC-Xf-vdC~ipad.nib/runtime.nib",
+					"Main.storyboardc/BYZ-38-t0r-view-8bC-Xf-vdC~ipad.nib/objects-8.0+.nib",
+					"LaunchScreen~iphone.nib/runtime.nib",
+					"LaunchScreen~iphone.nib/objects-8.0+.nib",
 					"Main~iphone.storyboardc/Info-8.0+.plist",
 					"Main~iphone.storyboardc/Info.plist",
 				};
@@ -154,35 +149,23 @@ namespace Xamarin.iOS.Tasks
 				ibtool.EnableOnDemandResources = true;
 
 				string[] expected = {
-					"Base.lproj/LaunchScreen.storyboardc/01J-lp-oVM-view-Ze5-6b-2t3.nib/objects-13.0+.nib",
-					"Base.lproj/LaunchScreen.storyboardc/01J-lp-oVM-view-Ze5-6b-2t3.nib/runtime.nib",
-					"Base.lproj/LaunchScreen.storyboardc/Info.plist",
-					"Base.lproj/LaunchScreen.storyboardc/UIViewController-01J-lp-oVM.nib/objects-13.0+.nib",
-					"Base.lproj/LaunchScreen.storyboardc/UIViewController-01J-lp-oVM.nib/runtime.nib",
-					"Base.lproj/Linked.storyboardc/5xv-Yx-H4r-view-gMo-tm-chA.nib/objects-13.0+.nib",
-					"Base.lproj/Linked.storyboardc/5xv-Yx-H4r-view-gMo-tm-chA.nib/runtime.nib",
-					"Base.lproj/Linked.storyboardc/Info.plist",
-					"Base.lproj/Linked.storyboardc/MyLinkedViewController.nib/objects-13.0+.nib",
-					"Base.lproj/Linked.storyboardc/MyLinkedViewController.nib/runtime.nib",
-					"Base.lproj/Main.storyboardc/BYZ-38-t0r-view-8bC-Xf-vdC.nib/objects-13.0+.nib",
-					"Base.lproj/Main.storyboardc/BYZ-38-t0r-view-8bC-Xf-vdC.nib/runtime.nib",
-					"Base.lproj/Main.storyboardc/Info.plist",
-					"Base.lproj/Main.storyboardc/MyLinkedViewController.nib/objects-13.0+.nib",
-					"Base.lproj/Main.storyboardc/MyLinkedViewController.nib/runtime.nib",
-					"Base.lproj/Main.storyboardc/UIViewController-BYZ-38-t0r.nib/objects-13.0+.nib",
-					"Base.lproj/Main.storyboardc/UIViewController-BYZ-38-t0r.nib/runtime.nib",
-					"en.lproj/Linked.storyboardc/5xv-Yx-H4r-view-gMo-tm-chA.nib/objects-13.0+.nib",
-					"en.lproj/Linked.storyboardc/5xv-Yx-H4r-view-gMo-tm-chA.nib/runtime.nib",
-					"en.lproj/Linked.storyboardc/Info.plist",
-					"en.lproj/Linked.storyboardc/MyLinkedViewController.nib/objects-13.0+.nib",
-					"en.lproj/Linked.storyboardc/MyLinkedViewController.nib/runtime.nib",
-					"en.lproj/Main.storyboardc/BYZ-38-t0r-view-8bC-Xf-vdC.nib/objects-13.0+.nib",
-					"en.lproj/Main.storyboardc/BYZ-38-t0r-view-8bC-Xf-vdC.nib/runtime.nib",
+					"en.lproj/Main.storyboardc/UIViewController-BYZ-38-t0r.nib",
+					"en.lproj/Main.storyboardc/BYZ-38-t0r-view-8bC-Xf-vdC.nib",
 					"en.lproj/Main.storyboardc/Info.plist",
-					"en.lproj/Main.storyboardc/MyLinkedViewController.nib/objects-13.0+.nib",
-					"en.lproj/Main.storyboardc/MyLinkedViewController.nib/runtime.nib",
-					"en.lproj/Main.storyboardc/UIViewController-BYZ-38-t0r.nib/objects-13.0+.nib",
-					"en.lproj/Main.storyboardc/UIViewController-BYZ-38-t0r.nib/runtime.nib",
+					"en.lproj/Main.storyboardc/MyLinkedViewController.nib",
+					"en.lproj/Linked.storyboardc/5xv-Yx-H4r-view-gMo-tm-chA.nib",
+					"en.lproj/Linked.storyboardc/Info.plist",
+					"en.lproj/Linked.storyboardc/MyLinkedViewController.nib",
+					"Base.lproj/Main.storyboardc/UIViewController-BYZ-38-t0r.nib",
+					"Base.lproj/Main.storyboardc/BYZ-38-t0r-view-8bC-Xf-vdC.nib",
+					"Base.lproj/Main.storyboardc/Info.plist",
+					"Base.lproj/Main.storyboardc/MyLinkedViewController.nib",
+					"Base.lproj/Linked.storyboardc/5xv-Yx-H4r-view-gMo-tm-chA.nib",
+					"Base.lproj/Linked.storyboardc/Info.plist",
+					"Base.lproj/Linked.storyboardc/MyLinkedViewController.nib",
+					"Base.lproj/LaunchScreen.storyboardc/01J-lp-oVM-view-Ze5-6b-2t3.nib",
+					"Base.lproj/LaunchScreen.storyboardc/UIViewController-01J-lp-oVM.nib",
+					"Base.lproj/LaunchScreen.storyboardc/Info.plist",
 				};
 
 				var inexistentResource = bundleResources.Except (expected).ToArray ();
@@ -238,16 +221,14 @@ namespace Xamarin.iOS.Tasks
 					Assert.That (bundleResource.GetMetadata ("Optimize"), Is.Not.Null.Or.Empty, "The 'Optimize' metadata must be set.");
 
 					Assert.That (tag, Is.Not.Null.Or.Empty, "The 'ResourceTags' metadata should be set.");
-					Assert.AreEqual (Path.Combine (tmp, "ibtool", tag + ".nib", Path.GetFileName (bundleName)), bundleResource.ItemSpec, $"BundleResource {bundleName} is not at the expected location.");
+					Assert.AreEqual (Path.Combine (tmp, "ibtool", tag + ".nib"), bundleResource.ItemSpec, $"BundleResource {bundleName} is not at the expected location.");
 
 					bundleResources.Add (bundleName);
 				}
 
 				string[] expected = {
-					"View~ipad.nib/objects-13.0+.nib",
-					"View~ipad.nib/runtime.nib",
-					"View.nib/objects-13.0+.nib",
-					"View.nib/runtime.nib",
+					"View.nib",
+					"View~ipad.nib",
 				};
 
 				var inexistentResource = bundleResources.Except (expected).ToArray ();

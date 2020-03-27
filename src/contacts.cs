@@ -1443,7 +1443,7 @@ namespace Contacts {
 		[Export ("value", ArgumentSemantic.Strong)]
 		NSObject Value { get; }
 
-		[Export ("currentHistoryToken", ArgumentSemantic.Copy)]
+		[Export ("currentHistoryToken", ArgumentSemantic.Copy), NullAllowed]
 		NSData CurrentHistoryToken { get; }
 	}
 

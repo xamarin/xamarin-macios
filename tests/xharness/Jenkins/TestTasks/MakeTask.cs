@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Xharness.Execution;
 using Xharness.Logging;
 
 namespace Xharness.Jenkins.TestTasks
@@ -10,6 +11,10 @@ namespace Xharness.Jenkins.TestTasks
 		public string Target;
 		public string WorkingDirectory;
 		public TimeSpan Timeout = TimeSpan.FromMinutes (5);
+
+		public MakeTask (IProcessManager processManager) : base (processManager)
+		{
+		}
 
 		protected override async Task ExecuteAsync ()
 		{

@@ -81,3 +81,8 @@
 !missing-selector! UIBarAppearance::copy not bound
 !missing-selector! UIBarButtonItemAppearance::copy not bound
 !missing-selector! UITabBarItemAppearance::copy not bound
+
+## Xcode 11.4 Beta 2
+## Duplicated entry field UIKeyInputF1 FB66299477
+## https://github.com/xamarin/xamarin-macios/wiki/UIKit-iOS-xcode11.4-beta2
+!missing-field! UIKeyInputF1 not bound

@@ -19,7 +19,6 @@ namespace Xharness.Tests.Hardware.Tests {
 
 		string mlaunchPath;
 		string sdkPath;
-		Mock<IHarness> harness;
 		Mock<ILog> executionLog;
 		Mock<IProcessManager> processManager;
 		Simulators simulators;
@@ -29,10 +28,9 @@ namespace Xharness.Tests.Hardware.Tests {
 		{
 			mlaunchPath = "/usr/bin/mlaunch"; // any will be ok, is mocked
 			sdkPath = "/Applications/Xcode.app";
-			harness = new Mock<IHarness> ();
 			executionLog = new Mock<ILog> ();
 			processManager = new Mock<IProcessManager> ();
-			simulators = new Simulators (harness.Object, processManager.Object);
+			simulators = new Simulators (processManager.Object);
 		}
 
 		[TearDown]
@@ -49,10 +47,7 @@ namespace Xharness.Tests.Hardware.Tests {
 		{
 			string processPath = null;
 			MlaunchArguments passedArguments = null;
-			// set the expectations of the mocks to get an error when
-			// executing the process
-			harness.Setup (h => h.MlaunchPath).Returns (mlaunchPath);
-			harness.Setup (h => h.XcodeRoot).Returns (sdkPath);
+
 			// moq It.Is is not working as nicelly as we would like it, we capture data and use asserts
 			processManager.Setup (p => p.RunAsync (It.IsAny<Process> (), It.IsAny<MlaunchArguments> (), It.IsAny<ILog> (), It.IsAny<TimeSpan?> (), It.IsAny<Dictionary<string, string>> (), It.IsAny<CancellationToken?> (), It.IsAny<bool?> ()))
 				.Returns<Process, MlaunchArguments, ILog, TimeSpan?, Dictionary<string, string>, CancellationToken?, bool?> ((p, args, log, t, env, token, d) => {
@@ -97,10 +92,7 @@ namespace Xharness.Tests.Hardware.Tests {
 		{
 			string processPath = null;
 			MlaunchArguments passedArguments = null;
-			// set the expectations of the mocks to get an error when
-			// executing the process
-			harness.Setup (h => h.MlaunchPath).Returns (mlaunchPath);
-			harness.Setup (h => h.XcodeRoot).Returns (sdkPath);
+
 			// moq It.Is is not working as nicelly as we would like it, we capture data and use asserts
 			processManager.Setup (p => p.RunAsync (It.IsAny<Process> (), It.IsAny<MlaunchArguments> (), It.IsAny<ILog> (), It.IsAny<TimeSpan?> (), It.IsAny<Dictionary<string, string>> (), It.IsAny<CancellationToken?> (), It.IsAny<bool?> ()))
 				.Returns<Process, MlaunchArguments, ILog, TimeSpan?, Dictionary<string, string>, CancellationToken?, bool?> ((p, args, log, t, env, token, d) => {
@@ -141,12 +133,9 @@ namespace Xharness.Tests.Hardware.Tests {
 		{
 			string processPath = null;
 			MlaunchArguments passedArguments = null;
-			// set the expectations of the mocks to get an error when
-			// executing the process
-			harness.Setup (h => h.MlaunchPath).Returns (mlaunchPath);
-			harness.Setup (h => h.XcodeRoot).Returns (sdkPath);
-			harness
-				.Setup (h => h.ExecuteXcodeCommandAsync ("simctl", It.Is<string []> (args => args [0] == "create"), executionLog.Object, TimeSpan.FromMinutes (1)))
+
+			processManager
+				.Setup (h => h.ExecuteXcodeCommandAsync ("simctl", It.Is<string []> (args => args[0] == "create"), executionLog.Object, TimeSpan.FromMinutes (1)))
 				.ReturnsAsync (new ProcessExecutionResult () { ExitCode = 0 });
 
 			// moq It.Is is not working as nicelly as we would like it, we capture data and use asserts

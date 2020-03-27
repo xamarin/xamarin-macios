@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Threading.Tasks;
 using Xharness.Execution;
 using Xharness.Logging;
@@ -9,7 +8,6 @@ using Xharness.Logging;
 namespace Xharness.Hardware {
 
 	public interface ITCCDatabase {
-		IProcessManager ProcessManager { get; set; }
 		Task AgreeToPromptsAsync (string simRuntime, string dataPath, ILog log, params string [] bundle_identifiers);
 		int GetTCCFormat (string simRuntime);
 	}
@@ -19,7 +17,12 @@ namespace Xharness.Hardware {
 		static readonly string tvOSSimRuntimePrefix = "com.apple.CoreSimulator.SimRuntime.tvOS-";
 		static readonly string watchOSRuntimePrefix = "com.apple.CoreSimulator.SimRuntime.watchOS-";
 
-		public IProcessManager ProcessManager { get; set; } = new ProcessManager ();
+		readonly IProcessManager processManager;
+
+		public TCCDatabase (IProcessManager processManager)
+		{
+			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
+		}
 
 		public int GetTCCFormat (string simRuntime) {
 			
@@ -109,7 +112,7 @@ namespace Xharness.Hardware {
 						}
 					}
 					args.Add (sql.ToString ());
-					var rv = await ProcessManager.ExecuteCommandAsync ("sqlite3", args, log, TimeSpan.FromSeconds (5));
+					var rv = await processManager.ExecuteCommandAsync ("sqlite3", args, log, TimeSpan.FromSeconds (5));
 					if (!rv.Succeeded) {
 						failure = true;
 						break;
@@ -124,7 +127,7 @@ namespace Xharness.Hardware {
 			}
 
 			log.WriteLine ("Current TCC database contents:");
-			await ProcessManager.ExecuteCommandAsync ("sqlite3", new [] { TCCDb, ".dump" }, log, TimeSpan.FromSeconds (5));
+			await processManager.ExecuteCommandAsync ("sqlite3", new [] { TCCDb, ".dump" }, log, TimeSpan.FromSeconds (5));
 		}
 	}
 }

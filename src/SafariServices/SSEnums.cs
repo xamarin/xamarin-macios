@@ -27,7 +27,7 @@ namespace SafariServices {
 	[NoMac]
 	[iOS (9,0)]
 	[Deprecated (PlatformName.iOS, 10,0, message: "Use 'SFErrorCode' enum.")]
-	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
+	[Introduced (PlatformName.MacCatalyst, 13, 4)]
 	[Native]
 	[ErrorDomain ("SFContentBlockerErrorDomain")]
 	public enum SFContentBlockerErrorCode : long {

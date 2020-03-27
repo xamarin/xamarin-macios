@@ -57,6 +57,7 @@ using IUICoordinateSpace = Foundation.NSObjectProtocol;
 using UIActivity = Foundation.NSObject;
 using UICollectionViewLayout = Foundation.NSObject;
 using UITraitCollection = Foundation.NSObject;
+using UIButton = Foundation.NSObject;
 using UIBlurEffect = Foundation.NSObject;
 using UIViewController = Foundation.NSObject;
 using UIGestureRecognizer = Foundation.NSObject;
@@ -5995,6 +5996,14 @@ namespace UIKit {
 		[NullAllowed, Export ("name")]
 		string Name { get; set; }
 
+		[NoWatch, NoTV, iOS (13,4)]
+		[Export ("modifierFlags")]
+		UIKeyModifierFlags ModifierFlags { get; }
+
+		[NoWatch, NoTV, iOS (13,4)]
+		[Export ("buttonMask")]
+		UIEventButtonMask ButtonMask { get; }
+
 		//
 		// These come from the UIGestureRecognizerProtected category, and you should only call
 		// these methods from a subclass of UIGestureRecognizer, never externally
@@ -6036,6 +6045,10 @@ namespace UIKit {
 		[iOS (7,0)]
 		[Export ("shouldBeRequiredToFailByGestureRecognizer:")]
 		bool ShouldBeRequiredToFailByGestureRecognizer (UIGestureRecognizer otherGestureRecognizer);
+
+		[iOS (13,4), TV (13,4)]
+		[Export ("shouldReceiveEvent:")]
+		bool ShouldReceive (UIEvent @event);
 
 		[iOS (9,1)]
 		[Export ("touchesEstimatedPropertiesUpdated:")]
@@ -6098,6 +6111,10 @@ namespace UIKit {
 		[iOS (9,0)]
 		[Export ("gestureRecognizer:shouldReceivePress:"), DelegateName ("UIGesturesPress"), DefaultValue (false)]
 		bool ShouldReceivePress (UIGestureRecognizer gestureRecognizer, UIPress press);
+
+		[TV (13,4), iOS (13,4)]
+		[Export ("gestureRecognizer:shouldReceiveEvent:"), DelegateName ("UIGesturesEvent"), DefaultValue (false)]
+		bool ShouldReceiveEvent (UIGestureRecognizer gestureRecognizer, UIEvent @event);
 	}
 
 	[iOS (10,0), TV (10,0)]
@@ -6551,6 +6568,86 @@ namespace UIKit {
 		
 		[Field ("UIKeyInputEscape")]
 		NSString Escape { get; }
+
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[iOS (13,4), TV (13,4)]
+		[Field ("UIKeyInputPageUp")]
+		NSString PageUp { get; }
+
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[iOS (13,4), TV (13,4)]
+		[Field ("UIKeyInputPageDown")]
+		NSString PageDown { get; }
+
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[iOS (13,4), TV (13,4)]
+		[Field ("UIKeyInputHome")]
+		NSString Home { get; }
+
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[iOS (13,4), TV (13,4)]
+		[Field ("UIKeyInputEnd")]
+		NSString End { get; }
+
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[iOS (13,4), TV (13,4)]
+		[Field ("UIKeyInputF1")]
+		NSString F1 { get; }
+
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[iOS (13,4), TV (13,4)]
+		[Field ("UIKeyInputF2")]
+		NSString F2 { get; }
+
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[iOS (13,4), TV (13,4)]
+		[Field ("UIKeyInputF3")]
+		NSString F3 { get; }
+
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[iOS (13,4), TV (13,4)]
+		[Field ("UIKeyInputF4")]
+		NSString F4 { get; }
+
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[iOS (13,4), TV (13,4)]
+		[Field ("UIKeyInputF5")]
+		NSString F5 { get; }
+
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[iOS (13,4), TV (13,4)]
+		[Field ("UIKeyInputF6")]
+		NSString F6 { get; }
+
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[iOS (13,4), TV (13,4)]
+		[Field ("UIKeyInputF7")]
+		NSString F7 { get; }
+
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[iOS (13,4), TV (13,4)]
+		[Field ("UIKeyInputF8")]
+		NSString F8 { get; }
+
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[iOS (13,4), TV (13,4)]
+		[Field ("UIKeyInputF9")]
+		NSString F9 { get; }
+
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[iOS (13,4), TV (13,4)]
+		[Field ("UIKeyInputF10")]
+		NSString F10 { get; }
+
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[iOS (13,4), TV (13,4)]
+		[Field ("UIKeyInputF11")]
+		NSString F11 { get; }
+
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[iOS (13,4), TV (13,4)]
+		[Field ("UIKeyInputF12")]
+		NSString F12 { get; }
 
 		[iOS (9,0)]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'UIKeyCommand.Create (NSString, UIKeyModifierFlags, Selector)' overload instead.")]
@@ -7068,6 +7165,10 @@ namespace UIKit {
 		[NoTV]
 		[Export ("numberOfTouchesRequired")]
 		nuint NumberOfTouchesRequired { get; set; }
+
+		[NoTV, iOS (13,4)]
+		[Export ("buttonMaskRequired", ArgumentSemantic.Assign)]
+		UIEventButtonMask ButtonMaskRequired { get; set; }
 	}
 
 	[BaseType (typeof(UIGestureRecognizer))]
@@ -7091,6 +7192,10 @@ namespace UIKit {
 
 		[Export ("velocityInView:")]
 		CGPoint VelocityInView ([NullAllowed] UIView view);
+
+		[NoWatch, NoTV, iOS (13,4)]
+		[Export ("allowedScrollTypesMask", ArgumentSemantic.Assign)]
+		UIScrollTypeMask AllowedScrollTypesMask { get; set; }
 	}
 
 	[NoTV]
@@ -7834,6 +7939,14 @@ namespace UIKit {
 		[Export ("timestamp")]
 		double Timestamp { get; }
 
+		[TV (13,4), NoWatch, iOS (13,4)]
+		[Export ("modifierFlags")]
+		UIKeyModifierFlags ModifierFlags { get; }
+
+		[NoWatch, NoTV, iOS (13,4)]
+		[Export ("buttonMask")]
+		UIEventButtonMask ButtonMask { get; }
+
 		[Export ("allTouches")]
 		NSSet AllTouches { get; }
 
@@ -8177,6 +8290,9 @@ namespace UIKit {
 		[Export ("bezierPathByReversingPath")]
 		UIBezierPath BezierPathByReversingPath ();
 	}
+
+	[NoWatch, NoTV, iOS (13,4)]
+	delegate UIPointerStyle UIButtonPointerStyleProvider (UIButton button, UIPointerEffect proposedEffect, UIPointerShape proposedShape);
 	
 #if !WATCH
 	[BaseType (typeof (UIControl))]
@@ -8220,6 +8336,14 @@ namespace UIKit {
 
 		[Export ("buttonType")]
 		UIButtonType ButtonType { get; }
+
+		[NoWatch, NoTV, iOS (13,4)]
+		[Export ("pointerInteractionEnabled")]
+		bool PointerInteractionEnabled { [Bind ("isPointerInteractionEnabled")] get; set; }
+
+		[NoWatch, NoTV, iOS (13,4)]
+		[NullAllowed, Export ("pointerStyleProvider", ArgumentSemantic.Copy)]
+		UIButtonPointerStyleProvider PointerStyleProvider { get; set; }
 
 		[Export ("setTitle:forState:")]
 		void SetTitle ([NullAllowed] string title, UIControlState forState);
@@ -8539,7 +8663,16 @@ namespace UIKit {
 		
 		[Export ("setDate:animated:")]
 		void SetDate (NSDate date, bool animated);
-		
+
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[iOS (13,4)]
+		[Export ("preferredDatePickerStyle", ArgumentSemantic.Assign)]
+		UIDatePickerStyle PreferredDatePickerStyle { get; set; }
+
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[iOS (13,4)]
+		[Export ("datePickerStyle", ArgumentSemantic.Assign)]
+		UIDatePickerStyle DatePickerStyle { get; }
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -17686,6 +17819,11 @@ namespace UIKit {
 
 		[Export ("force")]
 		nfloat Force { get; }
+
+		[Introduced (PlatformName.MacCatalyst, 13, 4)]
+		[iOS (13,4), TV (13,4)]
+		[NullAllowed, Export ("key")]
+		UIKey Key { get; }
 	}
 
 	[NoWatch]
@@ -21041,6 +21179,188 @@ namespace UIKit {
 		[Abstract]
 		[Export ("addCompletion:")]
 		void AddCompletion (Action completion);
+	}
+
+	[Introduced (PlatformName.MacCatalyst, 13, 4)]
+	[iOS (13,4), NoWatch, TV (13,4)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface UIKey : NSCopying, NSCoding {
+
+		[Export ("characters")]
+		string Characters { get; }
+
+		[Export ("charactersIgnoringModifiers")]
+		string CharactersIgnoringModifiers { get; }
+
+		[Export ("modifierFlags")]
+		UIKeyModifierFlags ModifierFlags { get; }
+
+		[Export ("keyCode")]
+		UIKeyboardHidUsage KeyCode { get; }
+	}
+
+	[NoWatch, NoTV, iOS (13,4)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface UIPointerInteraction : UIInteraction {
+
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		IUIPointerInteractionDelegate Delegate { get; }
+
+		[Export ("enabled")]
+		bool Enabled { [Bind ("isEnabled")] get; set; }
+
+		[Export ("initWithDelegate:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] IUIPointerInteractionDelegate @delegate);
+
+		[Export ("invalidate")]
+		void Invalidate ();
+	}
+
+	interface IUIPointerInteractionDelegate { }
+
+	[NoWatch, NoTV, iOS (13,4)]
+	[Protocol, Model (AutoGeneratedName = true)]
+	[BaseType (typeof (NSObject))]
+	interface UIPointerInteractionDelegate {
+
+		[Export ("pointerInteraction:regionForRequest:defaultRegion:")]
+		[return: NullAllowed]
+		UIPointerRegion GetRegionForRequest (UIPointerInteraction interaction, UIPointerRegionRequest request, UIPointerRegion defaultRegion);
+
+		[Export ("pointerInteraction:styleForRegion:")]
+		[return: NullAllowed]
+		UIPointerStyle GetStyleForRegion (UIPointerInteraction interaction, UIPointerRegion region);
+
+		[Export ("pointerInteraction:willEnterRegion:animator:")]
+		void WillEnterRegion (UIPointerInteraction interaction, UIPointerRegion region, IUIPointerInteractionAnimating animator);
+
+		[Export ("pointerInteraction:willExitRegion:animator:")]
+		void WillExitRegion (UIPointerInteraction interaction, UIPointerRegion region, IUIPointerInteractionAnimating animator);
+	}
+
+	[NoWatch, NoTV, iOS (13,4)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface UIPointerRegionRequest {
+		
+		[Export ("location")]
+		CGPoint Location { get; }
+
+		[Export ("modifiers")]
+		UIKeyModifierFlags Modifiers { get; }
+	}
+
+	interface IUIPointerInteractionAnimating { }
+	
+	[NoWatch, NoTV, iOS (13,4)]
+	[Protocol]
+	interface UIPointerInteractionAnimating {
+
+		[Abstract]
+		[Export ("addAnimations:")]
+		void AddAnimations (Action animations);
+
+		[Abstract]
+		[Export ("addCompletion:")]
+		void AddCompletion (Action<bool> completion);
+	}
+
+	[NoWatch, NoTV, iOS (13,4)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface UIPointerRegion : NSCopying {
+
+		[Export ("rect")]
+		CGRect Rect { get; }
+
+		[NullAllowed, Export ("identifier")]
+		NSObject Identifier { get; }
+
+		[Static]
+		[Export ("regionWithRect:identifier:")]
+		UIPointerRegion Create (CGRect rect, [NullAllowed] NSObject identifier);
+	}
+
+	[NoWatch, NoTV, iOS (13,4)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface UIPointerStyle : NSCopying {
+
+		[Static]
+		[Export ("styleWithEffect:shape:")]
+		UIPointerStyle Create (UIPointerEffect effect, [NullAllowed] UIPointerShape shape);
+
+		[Static]
+		[Export ("styleWithShape:constrainedAxes:")]
+		UIPointerStyle Create (UIPointerShape shape, UIAxis axes);
+
+		[Static]
+		[Export ("hiddenPointerStyle")]
+		UIPointerStyle CreateHiddenPointerStyle ();
+	}
+
+	[NoWatch, NoTV, iOS (13,4)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface UIPointerEffect : NSCopying {
+
+		[Export ("preview", ArgumentSemantic.Copy)]
+		UITargetedPreview Preview { get; }
+
+		[Static]
+		[Export ("effectWithPreview:")]
+		UIPointerEffect Create (UITargetedPreview preview);
+	}
+
+	[NoWatch, NoTV, iOS (13,4)]
+	[BaseType (typeof (UIPointerEffect))]
+	interface UIPointerHighlightEffect {
+
+	}
+
+	[NoWatch, NoTV, iOS (13,4)]
+	[BaseType (typeof (UIPointerEffect))]
+	interface UIPointerLiftEffect {
+
+	}
+
+	[NoWatch, NoTV, iOS (13,4)]
+	[BaseType (typeof (UIPointerEffect))]
+	interface UIPointerHoverEffect {
+
+		[Export ("preferredTintMode", ArgumentSemantic.Assign)]
+		UIPointerEffectTintMode PreferredTintMode { get; set; }
+
+		[Export ("prefersShadow")]
+		bool PrefersShadow { get; set; }
+
+		[Export ("prefersScaledContent")]
+		bool PrefersScaledContent { get; set; }
+	}
+
+	[NoWatch, NoTV, iOS (13,4)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface UIPointerShape : NSCopying {
+
+		[Static]
+		[Export ("shapeWithPath:")]
+		UIPointerShape Create (UIBezierPath path);
+
+		[Static]
+		[Export ("shapeWithRoundedRect:")]
+		UIPointerShape CreateRounded (CGRect rect);
+
+		[Static]
+		[Export ("shapeWithRoundedRect:cornerRadius:")]
+		UIPointerShape CreateRounded (CGRect rect, nfloat cornerRadius);
+
+		[Static]
+		[Export ("beamWithPreferredLength:axis:")]
+		UIPointerShape CreateBeam (nfloat preferredLength, UIAxis axis);
 	}
 
 }

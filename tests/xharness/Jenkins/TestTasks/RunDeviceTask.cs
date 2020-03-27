@@ -13,6 +13,7 @@ namespace Xharness.Jenkins.TestTasks
 	{
 		readonly IResultParser resultParser = new XmlResultParser ();
 		readonly IDeviceLoader devices;
+
 		AppInstallMonitorLog install_log;
 
 		public override string ProgressMessage {
@@ -82,12 +83,12 @@ namespace Xharness.Jenkins.TestTasks
 
 					runner = new AppRunner (ProcessManager,
 						new AppBundleInformationParser (),
-						new SimulatorsLoaderFactory (Harness, ProcessManager),
+						new SimulatorsLoaderFactory (ProcessManager),
 						new SimpleListenerFactory (),
-						new DeviceLoaderFactory (Harness, ProcessManager),
-						new CrashSnapshotReporterFactory (ProcessManager, Harness.XcodeRoot, Harness.MlaunchPath),
+						new DeviceLoaderFactory (ProcessManager),
+						new CrashSnapshotReporterFactory (ProcessManager),
 						new CaptureLogFactory (),
-						new DeviceLogCapturerFactory (ProcessManager, Harness.XcodeRoot, Harness.MlaunchPath),
+						new DeviceLogCapturerFactory (ProcessManager),
 						new TestReporterFactory (ProcessManager),
 						AppRunnerTarget,
 						Harness,
@@ -149,12 +150,12 @@ namespace Xharness.Jenkins.TestTasks
 
 							AppRunner todayRunner = new AppRunner (ProcessManager,
 								new AppBundleInformationParser (),
-								new SimulatorsLoaderFactory (Harness, ProcessManager),
+								new SimulatorsLoaderFactory (ProcessManager),
 								new SimpleListenerFactory (),
-								new DeviceLoaderFactory (Harness, ProcessManager),
-								new CrashSnapshotReporterFactory (ProcessManager, Harness.XcodeRoot, Harness.MlaunchPath),
+								new DeviceLoaderFactory (ProcessManager),
+								new CrashSnapshotReporterFactory (ProcessManager),
 								new CaptureLogFactory (),
-								new DeviceLogCapturerFactory (ProcessManager, Harness.XcodeRoot, Harness.MlaunchPath),
+								new DeviceLogCapturerFactory (ProcessManager),
 								new TestReporterFactory (ProcessManager),
 								AppRunnerTarget,
 								Harness,

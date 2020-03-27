@@ -182,10 +182,6 @@ namespace Xharness {
 
 			var args = new MlaunchArguments ();
 
-			if (!string.IsNullOrEmpty (harness.XcodeRoot)) {
-				args.Add (new SdkRootArgument (harness.XcodeRoot));
-			}
-
 			for (int i = -1; i < harness.Verbosity; i++)
 				args.Add (new VerbosityArgument ());
 
@@ -199,7 +195,7 @@ namespace Xharness {
 			var totalSize = Directory.GetFiles (AppInformation.AppPath, "*", SearchOption.AllDirectories).Select ((v) => new FileInfo (v).Length).Sum ();
 			MainLog.WriteLine ($"Installing '{AppInformation.AppPath}' to '{companionDeviceName ?? deviceName}'. Size: {totalSize} bytes = {totalSize / 1024.0 / 1024.0:N2} MB");
 
-			return await processManager.ExecuteCommandAsync (harness.MlaunchPath, args, MainLog, TimeSpan.FromHours (1), cancellation_token: cancellation_token);
+			return await processManager.ExecuteCommandAsync (args, MainLog, TimeSpan.FromHours (1), cancellation_token: cancellation_token);
 		}
 
 		public async Task<ProcessExecutionResult> UninstallAsync ()
@@ -211,17 +207,13 @@ namespace Xharness {
 
 			var args = new MlaunchArguments ();
 
-			if (!string.IsNullOrEmpty (harness.XcodeRoot)) {
-				args.Add (new SdkRootArgument (harness.XcodeRoot));
-			}
-
 			for (int i = -1; i < harness.Verbosity; i++)
 				args.Add (new VerbosityArgument ());
 
 			args.Add (new UninstallAppFromDeviceArgument (AppInformation.BundleIdentifier));
 			args.Add (new DeviceNameArgument (companionDeviceName ?? deviceName));
 
-			return await processManager.ExecuteCommandAsync (harness.MlaunchPath, args, MainLog, TimeSpan.FromMinutes (1));
+			return await processManager.ExecuteCommandAsync (args, MainLog, TimeSpan.FromMinutes (1));
 		}
 
 		public async Task<int> RunAsync ()
@@ -230,10 +222,6 @@ namespace Xharness {
 				FindDevice ();
 
 			var args = new MlaunchArguments ();
-
-			if (!string.IsNullOrEmpty (harness.XcodeRoot)) {
-				args.Add (new SdkRootArgument (harness.XcodeRoot));
-			}
 
 			for (int i = -1; i < harness.Verbosity; i++)
 				args.Add (new VerbosityArgument ());
@@ -393,7 +381,7 @@ namespace Xharness {
 				MainLog.WriteLine ("Starting test run");
 
 				await testReporter.CollectSimulatorResult (
-					processManager.ExecuteCommandAsync (harness.MlaunchPath, args, runLog, testReporterTimeout, cancellation_token: testReporter.CancellationToken));
+					processManager.ExecuteCommandAsync (args, runLog, testReporterTimeout, cancellation_token: testReporter.CancellationToken));
 
 				// cleanup after us
 				if (EnsureCleanSimulatorState)
@@ -425,7 +413,6 @@ namespace Xharness {
 					// We need to check for MT1111 (which means that mlaunch won't wait for the app to exit).
 					var aggregatedLog = Log.CreateAggregatedLog (testReporter.CallbackLog, MainLog);
 					Task<ProcessExecutionResult> runTestTask = processManager.ExecuteCommandAsync (
-						harness.MlaunchPath,
 						args,
 						aggregatedLog,
 						testReporterTimeout,

@@ -14,19 +14,15 @@ namespace Xharness
 
 	public class DeviceLogCapturerFactory : IDeviceLogCapturerFactory {
 		readonly IProcessManager processManager;
-		readonly string xcodeRoot;
-		readonly string mlaunchPath;
 
-		public DeviceLogCapturerFactory (IProcessManager processManager, string xcodeRoot, string mlaunchPath)
+		public DeviceLogCapturerFactory (IProcessManager processManager)
 		{
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
-			this.xcodeRoot = xcodeRoot ?? throw new ArgumentNullException (nameof (xcodeRoot));
-			this.mlaunchPath = mlaunchPath ?? throw new ArgumentNullException (nameof (mlaunchPath));
 		}
 
 		public IDeviceLogCapturer Create (ILog mainLog, ILog deviceLog, string deviceName)
 		{
-			return new DeviceLogCapturer (processManager, mainLog, deviceLog, deviceName, xcodeRoot, mlaunchPath);
+			return new DeviceLogCapturer (processManager, mainLog, deviceLog, deviceName);
 		}
 	}
 
@@ -40,17 +36,13 @@ namespace Xharness
 		readonly ILog mainLog;
 		readonly ILog deviceLog;
 		readonly string deviceName;
-		readonly string xcodeRoot;
-		readonly string mlaunchPath;
 
-		public DeviceLogCapturer (IProcessManager processManager, ILog mainLog, ILog deviceLog, string deviceName, string xcodeRoot, string mlaunchPath)
+		public DeviceLogCapturer (IProcessManager processManager, ILog mainLog, ILog deviceLog, string deviceName)
 		{
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 			this.mainLog = mainLog ?? throw new ArgumentNullException (nameof (mainLog));
 			this.deviceLog = deviceLog ?? throw new ArgumentNullException (nameof (deviceLog));
 			this.deviceName = deviceName ?? throw new ArgumentNullException (nameof (deviceName));
-			this.xcodeRoot = xcodeRoot ?? throw new ArgumentNullException (nameof (xcodeRoot));
-			this.mlaunchPath = mlaunchPath ?? throw new ArgumentNullException (nameof (mlaunchPath));
 		}
 
 		Process process;
@@ -60,17 +52,17 @@ namespace Xharness
 		{
 			streamEnds = new CountdownEvent (2);
 
-			var sb = new List<string> {
+			var args = new List<string> {
 				"--logdev",
 				"--sdkroot",
-				xcodeRoot,
+				processManager.XcodeRoot,
 				"--devname",
 				deviceName
 			};
 
 			process = new Process ();
-			process.StartInfo.FileName = mlaunchPath;
-			process.StartInfo.Arguments = StringUtils.FormatArguments (sb);
+			process.StartInfo.FileName = processManager.MlaunchPath;
+			process.StartInfo.Arguments = StringUtils.FormatArguments (args);
 			process.StartInfo.UseShellExecute = false;
 			process.StartInfo.RedirectStandardOutput = true;
 			process.StartInfo.RedirectStandardError = true;

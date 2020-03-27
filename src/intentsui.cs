@@ -175,6 +175,7 @@ namespace IntentsUI {
 		[Unavailable (PlatformName.UIKitForMac)]
 		[Advice ("This API is not available when using UIKit on macOS.")]
 		[Export ("initWithStyle:")]
+		[DesignatedInitializer]
 		IntPtr Constructor (INUIAddVoiceShortcutButtonStyle style);
 
 		[Export ("style")]

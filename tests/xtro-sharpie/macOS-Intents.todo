@@ -1,5 +1,3 @@
-!missing-field! INPersonRelationshipDaughter not bound
-!missing-field! INPersonRelationshipSon not bound
 !unknown-field! INIntentErrorDomain bound
 !unknown-native-enum! INCallCapability bound
 !unknown-native-enum! INCallCapabilityOptions bound
@@ -58,3 +56,26 @@
 !unknown-type! INStartVideoCallIntent bound
 !unknown-type! INStartVideoCallIntentResponse bound
 !unknown-type! INStringResolutionResult bound
+
+## Xcode 11.4 b1
+!unknown-field! INPersonHandleLabelHome bound
+!unknown-field! INPersonHandleLabelHomeFax bound
+!unknown-field! INPersonHandleLabeliPhone bound
+!unknown-field! INPersonHandleLabelMain bound
+!unknown-field! INPersonHandleLabelMobile bound
+!unknown-field! INPersonHandleLabelOther bound
+!unknown-field! INPersonHandleLabelPager bound
+!unknown-field! INPersonHandleLabelWork bound
+!unknown-field! INPersonHandleLabelWorkFax bound
+!unknown-field! INPersonRelationshipAssistant bound
+!unknown-field! INPersonRelationshipBrother bound
+!unknown-field! INPersonRelationshipChild bound
+!unknown-field! INPersonRelationshipFather bound
+!unknown-field! INPersonRelationshipFriend bound
+!unknown-field! INPersonRelationshipManager bound
+!unknown-field! INPersonRelationshipMother bound
+!unknown-field! INPersonRelationshipParent bound
+!unknown-field! INPersonRelationshipPartner bound
+!unknown-field! INPersonRelationshipSister bound
+!unknown-field! INPersonRelationshipSpouse bound
+
