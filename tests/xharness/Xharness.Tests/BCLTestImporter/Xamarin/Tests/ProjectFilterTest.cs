@@ -1,10 +1,8 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using Moq;
 using NUnit.Framework;
 using Xharness.BCLTestImporter;
-using Xharness.BCLTestImporter.Templates;
 using Xharness.BCLTestImporter.Xamarin;
 
 namespace Xharness.Tests.BCLTestImporter.Xamarin.Tests {
@@ -67,11 +65,11 @@ namespace Xharness.Tests.BCLTestImporter.Xamarin.Tests {
 			Directory.CreateDirectory (ignoreFilesRootDir);
 			// create a few ignore files
 			foreach (var a in assemblies) {
-				File.Create (Path.Combine (ignoreRootDir, $"iOS-{a}.ignore"));
-				File.Create (Path.Combine (ignoreRootDir, $"macOSFull-{a}.ignore"));
-				File.Create (Path.Combine (ignoreRootDir, $"macOS-{a}.ignore"));
-				File.Create (Path.Combine (ignoreRootDir, $"tvOS-{a}.ignore"));
-				File.Create (Path.Combine (ignoreRootDir, $"watchOS-{a}.ignore"));
+				File.WriteAllText (Path.Combine (ignoreRootDir, $"iOS-{a}.ignore"), string.Empty);
+				File.WriteAllText (Path.Combine (ignoreRootDir, $"macOSFull-{a}.ignore"), string.Empty);
+				File.WriteAllText (Path.Combine (ignoreRootDir, $"macOS-{a}.ignore"), string.Empty);
+				File.WriteAllText (Path.Combine (ignoreRootDir, $"tvOS-{a}.ignore"), string.Empty);
+				File.WriteAllText (Path.Combine (ignoreRootDir, $"watchOS-{a}.ignore"), string.Empty);
 			}
 		}
 
@@ -82,7 +80,7 @@ namespace Xharness.Tests.BCLTestImporter.Xamarin.Tests {
 			Directory.CreateDirectory (traitsRootDir);
 			// create a few ignore files
 			foreach (var t in traitsFiles)
-				File.Create (Path.Combine (traitsRootDir, t));
+				File.WriteAllText (Path.Combine (traitsRootDir, t), string.Empty);
 		}
 
 		[SetUp]

@@ -60,13 +60,16 @@ namespace Xharness
 		{
 			streamEnds = new CountdownEvent (2);
 
+			var sb = new List<string> {
+				"--logdev",
+				"--sdkroot",
+				xcodeRoot,
+				"--devname",
+				deviceName
+			};
+
 			process = new Process ();
 			process.StartInfo.FileName = mlaunchPath;
-			var sb = new List<string> ();
-			sb.Add ("--logdev");
-			sb.Add ("--sdkroot");
-			sb.Add (xcodeRoot);
-			AppRunner.AddDeviceName (sb, deviceName);
 			process.StartInfo.Arguments = StringUtils.FormatArguments (sb);
 			process.StartInfo.UseShellExecute = false;
 			process.StartInfo.RedirectStandardOutput = true;

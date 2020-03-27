@@ -8,11 +8,14 @@ using Xharness.Logging;
 namespace Xharness {
 	// Monitor the output from 'mlaunch --installdev' and cancel the installation if there's no output for 1 minute.
 	class AppInstallMonitorLog : Log {
+		
+		readonly ILog copy_to;
+		readonly CancellationTokenSource cancellationSource;
+
 		public override string FullPath => copy_to.FullPath;
 
-		ILog copy_to;
-		CancellationTokenSource cancellation_source;
-		
+		public CancellationToken CancellationToken => cancellationSource.Token;
+
 		public bool CopyingApp;
 		public bool CopyingWatchApp;
 		public TimeSpan AppCopyDuration;
@@ -26,46 +29,37 @@ namespace Xharness {
 		public long AppTotalBytes;
 		public long WatchAppTotalBytes;
 
-		public CancellationToken CancellationToken {
-			get {
-				return cancellation_source.Token;
-			}
-		}
-
 		public AppInstallMonitorLog (ILog copy_to)
-				: base (copy_to.Logs, $"Watch transfer log for {copy_to.Description}")
+				: base ($"Watch transfer log for {copy_to.Description}")
 		{
 			this.copy_to = copy_to;
-			cancellation_source = new CancellationTokenSource ();
-			cancellation_source.Token.Register (() => {
+			cancellationSource = new CancellationTokenSource ();
+			cancellationSource.Token.Register (() => {
 				copy_to.WriteLine ("App installation cancelled: it timed out after no output for 1 minute.");
 			});
 		}
 
 		public override Encoding Encoding => copy_to.Encoding;
+
 		public override void Flush ()
 		{
 			copy_to.Flush ();
 		}
 
-		public override StreamReader GetReader ()
-		{
-			return copy_to.GetReader ();
-		}
+		public override StreamReader GetReader () => copy_to.GetReader ();
 
-		protected override void Dispose (bool disposing)
+		public override void Dispose ()
 		{
-			base.Dispose (disposing);
 			copy_to.Dispose ();
-			cancellation_source.Dispose ();
+			cancellationSource.Dispose ();
 		}
 
 		void ResetTimer ()
 		{
-			cancellation_source.CancelAfter (TimeSpan.FromMinutes (1));
+			cancellationSource.CancelAfter (TimeSpan.FromMinutes (1));
 		}
 
-		public override void WriteLine (string value)
+		protected override void WriteImpl (string value)
 		{
 			var v = value.Trim ();
 			if (v.StartsWith ("Installing application bundle", StringComparison.Ordinal)) {

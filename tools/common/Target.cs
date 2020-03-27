@@ -108,6 +108,11 @@ namespace Xamarin.Bundler {
 
 		public static string GetRealPath (string path)
 		{
+			// For some reason realpath doesn't always like filenames only, and will randomly fail.
+			// Prepend the current directory if there's no directory specified.
+			if (string.IsNullOrEmpty (Path.GetDirectoryName (path)))
+				path = Path.Combine (Environment.CurrentDirectory, path);
+
 			var rv = realpath (path, IntPtr.Zero);
 			if (rv != null)
 				return rv;

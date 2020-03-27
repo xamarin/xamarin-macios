@@ -60,7 +60,7 @@
     <Compile Include="BCLTestImporter\Tests\TestProjectDefinitionTest.cs" />
     <Compile Include="Tests\AppBundleInformationParserTests.cs" />
     <Compile Include="Tests\AppRunnerTests.cs" />
-    <Compile Include="Tests\CrashReportSnapshotTests.cs" />
+    <Compile Include="Tests\CrashSnapshotReporterTests.cs" />
     <Compile Include="Tests\XmlResultParserTests.cs" />
     <Compile Include="Logging\Tests\LogsTest.cs" />
     <Compile Include="Logging\Tests\LogFileTest.cs" />
@@ -71,7 +71,7 @@
     <Compile Include="Listeners\Tests\SimpleFileListenerTest.cs" />
     <Compile Include="Listeners\Tests\SimpleTcpListenerTest.cs" />
     <Compile Include="Execution\Tests\ProcessManagerTests.cs" />
-    <Compile Include="Execution\Tests\MlaunchArgumentsTest.cs" />
+    <Compile Include="Execution\Tests\MlaunchArgumentsTests.cs" />
     <Compile Include="Hardware\Tests\DeviceTest.cs" />
     <Compile Include="Hardware\Tests\DevicesTest.cs" />
     <Compile Include="Hardware\Tests\TCCDatabaseTests.cs" />

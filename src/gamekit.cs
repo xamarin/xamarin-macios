@@ -689,6 +689,9 @@ namespace GameKit {
 		GKLeaderboardTimeScope TimeScope { get; set; }
 	}
 
+	[Watch (6,2), TV (13,4), Mac (10,15,4), iOS (13,4)]
+	delegate void GKFetchItemsForIdentityVerificationSignatureCompletionHandler (NSUrl publicKeyUrl, NSData signature, NSData salt, ulong timestamp, NSError error);
+
 	[Watch (3,0)]
 	[BaseType (typeof (GKPlayer))]
 	interface GKLocalPlayer
@@ -791,10 +794,19 @@ namespace GameKit {
 		[Export ("unregisterAllListeners")]
 		void UnregisterAllListeners ();
 
+		[Deprecated (PlatformName.iOS, 13, 4, message: "Use 'FetchItemsForIdentityVerificationSignature' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 4, message: "Use 'FetchItemsForIdentityVerificationSignature' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, 4, message: "Use 'FetchItemsForIdentityVerificationSignature' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6, 2, message: "Use 'FetchItemsForIdentityVerificationSignature' instead.")]
 		[iOS (7,0), Mac (10,10)]
 		[Async (ResultTypeName = "GKIdentityVerificationSignatureResult")]
 		[Export ("generateIdentityVerificationSignatureWithCompletionHandler:")]
 		void GenerateIdentityVerificationSignature ([NullAllowed] GKIdentityVerificationSignatureHandler completionHandler);
+
+		[Watch (6,2), TV (13,4), Mac (10,15,4), iOS (13,4)]
+		[Async (ResultTypeName = "GKFetchItemsForIdentityVerificationSignature")]
+		[Export ("fetchItemsForIdentityVerificationSignature:")]
+		void FetchItemsForIdentityVerificationSignature ([NullAllowed] GKFetchItemsForIdentityVerificationSignatureCompletionHandler completionHandler);
 
 		[iOS (8,0), Mac (10,10)]
 		[Deprecated (PlatformName.iOS, 10, 0)]
