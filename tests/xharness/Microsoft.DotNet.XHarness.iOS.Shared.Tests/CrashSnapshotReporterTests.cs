@@ -9,10 +9,8 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution.Mlaunch;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
-using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
-using Microsoft.DotNet.XHarness.iOS.Shared.Execution.Mlaunch;
 
-namespace Xharness.Tests {
+namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests {
 	[TestFixture]
 	public class CrashReportSnapshotTests {
 
@@ -32,7 +30,7 @@ namespace Xharness.Tests {
 
 			tempXcodeRoot = Path.Combine (Path.GetTempPath (), Guid.NewGuid ().ToString ());
 			symbolicatePath = Path.Combine (tempXcodeRoot, "Contents", "SharedFrameworks", "DTDeviceKitBase.framework", "Versions", "A", "Resources");
-			
+
 			processManager.SetupGet (x => x.XcodeRoot).Returns (tempXcodeRoot);
 			processManager.SetupGet (x => x.MlaunchPath).Returns ("/var/bin/mlaunch");
 
@@ -57,7 +55,7 @@ namespace Xharness.Tests {
 
 			const string deviceName = "Sample-iPhone";
 			const string crashLogPath = "/path/to/crash.log";
-			const string symbolicateLogPath = "/path/to/" + deviceName+ ".symbolicated.log";
+			const string symbolicateLogPath = "/path/to/" + deviceName + ".symbolicated.log";
 
 			var crashReport = Mock.Of<ILog> (x => x.FullPath == crashLogPath);
 			var symbolicateReport = Mock.Of<ILog> (x => x.FullPath == symbolicateLogPath);
@@ -96,7 +94,7 @@ namespace Xharness.Tests {
 				x => x.ExecuteCommandAsync (
 					It.Is<MlaunchArguments> (args => args.AsCommandLine () ==
 						StringUtils.FormatArguments (
-							$"--list-crash-reports={tempFilePath}") + " " +						
+							$"--list-crash-reports={tempFilePath}") + " " +
 							$"--devname {StringUtils.FormatArguments (deviceName)}"),
 					log.Object,
 					TimeSpan.FromMinutes (1),

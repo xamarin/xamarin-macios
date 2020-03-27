@@ -60,7 +60,6 @@
     <Compile Include="BCLTestImporter\Tests\TestProjectDefinitionTest.cs" />
     <Compile Include="Tests\AppBundleInformationParserTests.cs" />
     <Compile Include="Tests\AppRunnerTests.cs" />
-    <Compile Include="Tests\CrashSnapshotReporterTests.cs" />
     <Compile Include="BCLTestImporter\Xamarin\Tests\ProjectFilterTest.cs" />
     <Compile Include="BCLTestImporter\Xamarin\Tests\AssemblyLocatorTest.cs" />
     <Compile Include="BCLTestImporter\Xamarin\Tests\XamariniOSTemplateTest.cs" />

@@ -9,24 +9,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution.Mlaunch;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 
-namespace Xharness
-{
-	public interface ICrashSnapshotReporterFactory {
-		ICrashSnapshotReporter Create (ILog log, ILogs logs, bool isDevice, string deviceName);
-	}
-
-	public class CrashSnapshotReporterFactory : ICrashSnapshotReporterFactory {
-		readonly IProcessManager processManager;
-
-		public CrashSnapshotReporterFactory (IProcessManager processManager)
-		{
-			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
-		}
-
-		public ICrashSnapshotReporter Create (ILog log, ILogs logs, bool isDevice, string deviceName) =>
-			new CrashSnapshotReporter (processManager, log, logs, isDevice, deviceName);
-	}
-
+namespace Microsoft.DotNet.XHarness.iOS.Shared {
 	public interface ICrashSnapshotReporter {
 		Task EndCaptureAsync (TimeSpan timeout);
 		Task StartCaptureAsync ();
@@ -79,13 +62,12 @@ namespace Xharness
 				newCrashFiles.ExceptWith (initialCrashes);
 
 				if (newCrashFiles.Count == 0) {
-					if (stopwatch.Elapsed.TotalSeconds > timeout.TotalSeconds) {
-						break;
-					} else {
+					if (stopwatch.Elapsed.TotalSeconds > timeout.TotalSeconds) break;
+					else {
 						log.WriteLine (
 							"No crash reports, waiting a second to see if the crash report service just didn't complete in time ({0})",
 							(int) (timeout.TotalSeconds - stopwatch.Elapsed.TotalSeconds));
-						
+
 						Thread.Sleep (TimeSpan.FromSeconds (1));
 					}
 
@@ -127,9 +109,7 @@ namespace Xharness
 				new DownloadCrashReportArgument (crashFile),
 				new DownloadCrashReportToArgument (crashReportFile.FullPath));
 
-			if (!string.IsNullOrEmpty (deviceName)) {
-				args.Add (new DeviceNameArgument(deviceName));
-			}
+			if (!string.IsNullOrEmpty (deviceName)) args.Add (new DeviceNameArgument (deviceName));
 
 			var result = await processManager.ExecuteCommandAsync (args, log, TimeSpan.FromMinutes (1));
 
@@ -175,9 +155,7 @@ namespace Xharness
 				try {
 					var args = new MlaunchArguments (new ListCrashReportsArgument (tempFile));
 
-					if (!string.IsNullOrEmpty (deviceName)) {
-						args.Add (new DeviceNameArgument(deviceName));
-					}
+					if (!string.IsNullOrEmpty (deviceName)) args.Add (new DeviceNameArgument (deviceName));
 
 					var result = await processManager.ExecuteCommandAsync (args, log, TimeSpan.FromMinutes (1));
 					if (result.Succeeded)

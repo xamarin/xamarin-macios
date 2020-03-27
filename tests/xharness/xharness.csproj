@@ -80,7 +80,7 @@
     <Compile Include="BCLTestImporter\BCLTestProjectDefinition.cs" />
     <Compile Include="BCLTestImporter\BCLTestProjectGenerator.cs" />
     <Compile Include="BCLTestImporter\Platform.cs" />
-    <Compile Include="CrashSnapshotReporter.cs" />
+    <Compile Include="CrashSnapshotReporterFactory.cs" />
     <Compile Include="DeviceLogCapturerFactory.cs" />
     <Compile Include="GitHub.cs" />
     <Compile Include="Harness.cs" />
