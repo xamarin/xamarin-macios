@@ -64,17 +64,38 @@
 	<Target Name="BeforePublish" />
 	<Target Name="AfterPublish" />
 
+	<!-- Override overridable targets -->
+
 	<!-- Inject linker arguments -->
-	<Target Name="BeforeILLink">
+	<Target Name="BeforeILLink" DependsOnTargets="_PreProcessAssemblies" />
+	<Target Name="AfterILLink" DependsOnTargets="_PostProcessAssemblies" />
+
+	<!-- Inject app bundle creation tasks -->
+	<Target Name="BeforeComputeFilesToPublish" DependsOnTargets="_EarlyAppBundleTasks" />
+	<Target Name="AfterComputeFilesToPublish" DependsOnTargets="_LateAppBundleTasks" />
+
+	<Target Name="BeforeMonoAOTCompilation" DependsOnTargets="" />
+	<Target Name="AfterMonoAOTCompilation" DependsOnTargets="_PostProcessAOTCompilation" />
+
+	<Target Name="BeforeGenerateSingleFileBundle" DependsOnTargets="_PreProcessNativeLinker" />
+	<Target Name="AfterGenerateSingleFileBundle" DependsOnTargets="_PostProcessNativeLinker" />
+
+	<Target Name="BeforePublish" DependsOnTargets="" />
+	<Target Name="AfterPublish" DependsOnTargets="Codesign;CreateIpa;Archive" />
+
+	<!-- Actual implementations for what we need to do -->
+
+	<!-- Linker targets -->
+	<Target Name="_PreProcessAssemblies" DependsOnTargets="_ComputeLinkerArguments;_ExtractNativeLibrariesFromBindingAssemblies;" />
+	<Target Name="_ComputeLinkerArguments">
 		<PropertyGroup>
 			<_AdditionalTaskAssembly>$(XamarinSdkRootDirectory)/tools/dotnet-linker.dll</_AdditionalTaskAssembly>
 			<!-- <_ExtraTrimmerArgs> - -custom-step "+MarkStep:Xamarin.Linker.Steps.MobileResolveMainAssemblyStep,$(_AdditionalTaskAssembly)"</_ExtraTrimmerArgs> -->
 		</PropertyGroup>
 	</Target>
-
-	<!-- Inject app bundle creation tasks -->
-	<Target Name="BeforeComputeFilesToPublish" DependsOnTargets="_EarlyAppBundleTasks" />
-	<Target Name="AfterComputeFilesToPublish" DependsOnTargets="_LateAppBundleTasks" />
+	<Target Name="_ExtractNativeLibrariesFromBindingAssemblies">
+		<Warning Text="_ExtractNativeLibrariesFromBindingAssemblies: Not implemented " />
+	</Target>
 
 	<!-- App bundle creation tasks -->
 	<Target Name="_EarlyAppBundleTasks" DependsOnTargets="
@@ -116,6 +137,51 @@
 		_GenerateDebugSymbols;
 		_ValidateAppBundle;
 		" />
+
+	<Target Name="_PostProcessAssemblies" DependsOnTargets="_GenerateRegistrarCode;_GeneratePInvokeWrapperCode;_CompilePInvokeWrappers" />
+	<Target Name="_PostProcessAOTCompilation" DependsOnTargets="_BuildMSymDirectories;_StripManagedAssemblies;" />
+	<Target Name="_PreProcessNativeLinker" DependsOnTargets="_SelectExecutableOutputMode;" />
+	<Target Name="_PostProcessNativeLinker" DependsOnTargets="_ComputeOutputLocation;_CreateUserFrameworks;_BuildDSymDirectories;_StripNativeCode;"/>
+
+	<Target Name="_GenerateRegistrarCode">
+		<Warning Text="_GenerateRegistrarCode: Not implemented " />
+	</Target>
+
+	<Target Name="_GeneratePInvokeWrapperCode">
+		<Warning Text="_GeneratePInvokeWrapperCode: Not implemented " />
+	</Target>
+
+	<Target Name="_CompilePInvokeWrappers">
+		<Warning Text="_CompilePInvokeWrappers: Not implemented " />
+	</Target>
+
+	<Target Name="_BuildMSymDirectories">
+		<Warning Text="_BuildMSymDirectories: Not implemented " />
+	</Target>
+
+	<Target Name="_StripManagedAssemblies">
+		<Warning Text="_StripManagedAssemblies: Not implemented " />
+	</Target>
+
+	<Target Name="_ComputeOutputLocation">
+		<Warning Text="_ComputeOutputLocation: Not implemented " />
+	</Target>
+
+	<Target Name="_CreateUserFrameworks">
+		<Warning Text="_CreateUserFrameworks: Not implemented " />
+	</Target>
+
+	<Target Name="_BuildDSymDirectories">
+		<Warning Text="_BuildDSymDirectories: Not implemented " />
+	</Target>
+
+	<Target Name="_StripNativeCode">
+		<Warning Text="_StripNativeCode: Not implemented " />
+	</Target>
+
+	<Target Name="_SelectExecutableOutputMode">
+		<Warning Text="_SelectExecutableOutputMode: Not implemented " />
+	</Target>
 
 	<!-- Project types and how do we distinguish between them
 

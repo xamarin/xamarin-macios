@@ -167,9 +167,9 @@ pack-%: prepare $(TEMPLATED_FILES)
 		NAME=$$(echo nupkgs/Xamarin.$*.Sdk.*nupkg     | sed -e 's/.nupkg$$//'); mv "$$NAME.nupkg" "$$NAME+sha.$$CURRENT_HASH.nupkg"
 	$(Q) echo "Created: $$(ls -1 nupkgs/Xamarin.$*.Sdk.*nupkg)"
 
-test/NuGet.config: $(TOP)/NuGet.config
+test/NuGet.config: $(TOP)/NuGet.config Makefile
 	$(Q) $(CP) $< $@.tmp
-	$(Q) nuget sources add -Name local-dotnet-feed -Source $(PWD)/$(TEST_FEED_PATH) -ConfigFile $@.tmp
+	$(Q) nuget sources add -Name local-dotnet-feed -Source $(abspath $(CURDIR)/$(TEST_FEED_PATH)) -ConfigFile $@.tmp
 	$(Q) mv $@.tmp $@
 
 test/global.json: Makefile $(TEMPLATED_FILES)
