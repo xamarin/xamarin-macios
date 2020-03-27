@@ -74,7 +74,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppBundleInformationParser.cs" />
-    <Compile Include="AppInstallMonitorLog.cs" />
     <Compile Include="AppRunner.cs" />
     <Compile Include="BCLTestImporter\BCLTestImportTargetFactory.cs" />
     <Compile Include="BCLTestImporter\BCLTestInfoPlistGenerator.cs" />

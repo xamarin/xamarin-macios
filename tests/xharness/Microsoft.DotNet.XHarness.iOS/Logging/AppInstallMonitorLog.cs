@@ -3,12 +3,11 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading;
-using Microsoft.DotNet.XHarness.iOS.Logging;
 
-namespace Xharness {
+namespace Microsoft.DotNet.XHarness.iOS.Logging {
 	// Monitor the output from 'mlaunch --installdev' and cancel the installation if there's no output for 1 minute.
-	class AppInstallMonitorLog : Log {
-		
+	public class AppInstallMonitorLog : Log {
+
 		readonly ILog copy_to;
 		readonly CancellationTokenSource cancellationSource;
 
