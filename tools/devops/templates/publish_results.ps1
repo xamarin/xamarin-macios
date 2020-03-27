@@ -25,8 +25,12 @@ Write-Host "^ ConvertToJson below is ConvertFromJson `n"
 
 $response | ConvertTo-Json | ConvertFrom-Json | Write-Host
 
-$status = $response | ConvertTo-Json | ConvertFrom-Json | Select-Object state
-$state = $status.state
+#$status = $response | ConvertTo-Json | ConvertFrom-Json | Select-Object state
+
+Write-Host "Raw response: " + $response
+
+Write-Host "Response.state: " + $response.state
+$state = $response.state
 
 
 # post status to github
