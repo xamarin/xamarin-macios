@@ -5,10 +5,10 @@ using System.Net.Sockets;
 using System.Text;
 using Moq;
 using NUnit.Framework;
-using Microsoft.DotNet.XHarness.iOS.Logging;
-using Microsoft.DotNet.XHarness.iOS.Listeners;
+using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
+using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
 
-namespace Microsoft.DotNet.XHarness.iOS.Tests.Listeners.Tests {
+namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Listeners.Tests {
 
 	[TestFixture]
 	public class SimpleTcpListenerTest {

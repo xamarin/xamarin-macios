@@ -6,13 +6,13 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Text;
-using Microsoft.DotNet.XHarness.iOS.Logging;
-using Microsoft.DotNet.XHarness.iOS.Execution;
+using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
+using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Xharness.Jenkins.TestTasks;
-using Microsoft.DotNet.XHarness.iOS.Utilities;
-using Microsoft.DotNet.XHarness.iOS;
-using Microsoft.DotNet.XHarness.iOS.Collections;
-using Microsoft.DotNet.XHarness.iOS.Hardware;
+using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
+using Microsoft.DotNet.XHarness.iOS.Shared;
+using Microsoft.DotNet.XHarness.iOS.Shared.Collections;
+using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 
 namespace Xharness.Jenkins {
 	public class Jenkins

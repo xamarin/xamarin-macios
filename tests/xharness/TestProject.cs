@@ -5,8 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
 using Xharness.Jenkins.TestTasks;
-using Microsoft.DotNet.XHarness.iOS.Utilities;
-using Microsoft.DotNet.XHarness.iOS.Hardware;
+using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
+using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 
 namespace Xharness
 {

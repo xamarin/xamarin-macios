@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Threading;
-using Microsoft.DotNet.XHarness.iOS.Logging;
+using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 
-namespace Microsoft.DotNet.XHarness.iOS.Listeners {
+namespace Microsoft.DotNet.XHarness.iOS.Shared.Listeners {
 	public class SimpleFileListener : SimpleListener {
 		Thread processor_thread;
 		bool cancel;

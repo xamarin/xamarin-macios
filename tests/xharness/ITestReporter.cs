@@ -2,9 +2,9 @@
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.DotNet.XHarness.iOS.Execution;
-using Microsoft.DotNet.XHarness.iOS.Logging;
-using Microsoft.DotNet.XHarness.iOS.Listeners;
+using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
+using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
+using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
 
 namespace Xharness {
 

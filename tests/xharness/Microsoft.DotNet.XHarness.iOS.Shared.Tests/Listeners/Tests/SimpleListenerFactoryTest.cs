@@ -1,11 +1,11 @@
 ﻿using System;
 using Moq;
 using NUnit.Framework;
-using Microsoft.DotNet.XHarness.iOS.Logging;
-using Microsoft.DotNet.XHarness.iOS;
-using Microsoft.DotNet.XHarness.iOS.Listeners;
+using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
+using Microsoft.DotNet.XHarness.iOS.Shared;
+using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
 
-namespace Microsoft.DotNet.XHarness.iOS.Tests.Listeners.Tests {
+namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Listeners.Tests {
 
 	[TestFixture]
 	public class SimpleListenerFactoryTest {

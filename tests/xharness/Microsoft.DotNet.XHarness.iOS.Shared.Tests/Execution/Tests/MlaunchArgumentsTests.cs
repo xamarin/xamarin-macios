@@ -1,10 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
-using Microsoft.DotNet.XHarness.iOS.Execution.Mlaunch;
-using Microsoft.DotNet.XHarness.iOS.Utilities;
+using Microsoft.DotNet.XHarness.iOS.Shared.Execution.Mlaunch;
+using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
-namespace Microsoft.DotNet.XHarness.iOS.Tests.Execution.Tests {
+namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Execution.Tests {
 
 	[TestFixture]
 	public class MlaunchArgumentsTests {

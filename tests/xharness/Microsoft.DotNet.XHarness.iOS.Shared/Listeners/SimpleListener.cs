@@ -2,9 +2,9 @@
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.DotNet.XHarness.iOS.Logging;
+using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 
-namespace Microsoft.DotNet.XHarness.iOS.Listeners {
+namespace Microsoft.DotNet.XHarness.iOS.Shared.Listeners {
 	public interface ISimpleListener {
 		Task CompletionTask { get; }
 		Task ConnectedTask { get; }

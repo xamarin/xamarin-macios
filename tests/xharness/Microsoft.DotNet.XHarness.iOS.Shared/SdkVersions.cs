@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Microsoft.DotNet.XHarness.iOS {
+namespace Microsoft.DotNet.XHarness.iOS.Shared {
 	public static class SdkVersions {
 		public const string Xcode = "11.3";
 		public const string OSX = "10.15";

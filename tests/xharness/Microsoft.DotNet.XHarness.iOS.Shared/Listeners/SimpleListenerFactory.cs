@@ -1,8 +1,8 @@
 ﻿using System;
-using Microsoft.DotNet.XHarness.iOS;
-using Microsoft.DotNet.XHarness.iOS.Logging;
+using Microsoft.DotNet.XHarness.iOS.Shared;
+using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 
-namespace Microsoft.DotNet.XHarness.iOS.Listeners {
+namespace Microsoft.DotNet.XHarness.iOS.Shared.Listeners {
 	public enum ListenerTransport {
 		Tcp,
 		Http,

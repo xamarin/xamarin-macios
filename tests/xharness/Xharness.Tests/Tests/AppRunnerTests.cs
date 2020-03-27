@@ -8,15 +8,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
-using Microsoft.DotNet.XHarness.iOS.Execution;
-using Microsoft.DotNet.XHarness.iOS.Execution.Mlaunch;
-using Microsoft.DotNet.XHarness.iOS.Logging;
-using Microsoft.DotNet.XHarness.iOS.Utilities;
-using Microsoft.DotNet.XHarness.iOS;
-using Microsoft.DotNet.XHarness.iOS.Execution;
-using Microsoft.DotNet.XHarness.iOS.Execution.Mlaunch;
-using Microsoft.DotNet.XHarness.iOS.Listeners;
-using Microsoft.DotNet.XHarness.iOS.Hardware;
+using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
+using Microsoft.DotNet.XHarness.iOS.Shared.Execution.Mlaunch;
+using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
+using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
+using Microsoft.DotNet.XHarness.iOS.Shared;
+using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
+using Microsoft.DotNet.XHarness.iOS.Shared.Execution.Mlaunch;
+using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
+using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 
 namespace Xharness.Tests {
 	[TestFixture]

@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Microsoft.DotNet.XHarness.iOS.Utilities {
+namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 
 	public static class Helpers {
 

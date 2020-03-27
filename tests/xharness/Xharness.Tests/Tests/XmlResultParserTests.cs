@@ -5,7 +5,7 @@ using System.Linq;
 using System.Xml.Linq;
 using Moq;
 using NUnit.Framework;
-using Microsoft.DotNet.XHarness.iOS.Logging;
+using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 
 namespace Xharness.Tests
 {

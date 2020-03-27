@@ -1,4 +1,4 @@
-﻿namespace Microsoft.DotNet.XHarness.iOS.Hardware {
+﻿namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 
 	public enum Architecture {
 		ARMv6,

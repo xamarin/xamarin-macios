@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Microsoft.DotNet.XHarness.iOS.Collections {
+namespace Microsoft.DotNet.XHarness.iOS.Shared.Collections {
 	// This is a collection whose enumerator will wait enumerating until 
 	// the collection has been marked as completed (but the enumerator can still
 	// be created; this allows the creation of linq queries whose execution is

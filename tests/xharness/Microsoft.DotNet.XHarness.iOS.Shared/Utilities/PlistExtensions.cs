@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Xml;
 
-namespace Microsoft.DotNet.XHarness.iOS.Utilities {
+namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 	public static class PListExtensions {
 		public static void LoadWithoutNetworkAccess (this XmlDocument doc, string filename)
 		{

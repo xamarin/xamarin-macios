@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.DotNet.XHarness.iOS.Execution;
-using Microsoft.DotNet.XHarness.iOS.Logging;
+using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
+using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 
 namespace Xharness.Jenkins.TestTasks {
 	class DotNetTestTask : RunTestTask {

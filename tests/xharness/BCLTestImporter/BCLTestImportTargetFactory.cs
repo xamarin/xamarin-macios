@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
-using Microsoft.DotNet.XHarness.iOS.Utilities;
+using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
 namespace Xharness.BCLTestImporter {
 	// Class that is use as the connection between xharness and the BCLImporter

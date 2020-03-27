@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 
-namespace Microsoft.DotNet.XHarness.iOS.Utilities {
+namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 	public static class ProjectFileExtensions {
 		const string MSBuild_Namespace = "http://schemas.microsoft.com/developer/msbuild/2003";
 

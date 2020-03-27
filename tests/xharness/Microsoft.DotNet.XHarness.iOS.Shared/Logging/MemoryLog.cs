@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text;
 
-namespace Microsoft.DotNet.XHarness.iOS.Logging {
+namespace Microsoft.DotNet.XHarness.iOS.Shared.Logging {
 	/// <summary>
 	/// Log that only writes to memory
 	/// </summary>

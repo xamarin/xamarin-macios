@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Xml;
-using Microsoft.DotNet.XHarness.iOS.Hardware;
-using Microsoft.DotNet.XHarness.iOS.Utilities;
+using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
+using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
 namespace Xharness.Targets {
 	public class UnifiedTarget : iOSTarget

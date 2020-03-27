@@ -4,11 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
-using Microsoft.DotNet.XHarness.iOS.Execution;
-using Microsoft.DotNet.XHarness.iOS.Logging;
-using Microsoft.DotNet.XHarness.iOS.Hardware;
+using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
+using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
+using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 
-namespace Microsoft.DotNet.XHarness.iOS.Tests.Hardware.Tests {
+namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Hardware.Tests {
 	[TestFixture]
 	public class SimulatorDeviceTest {
 

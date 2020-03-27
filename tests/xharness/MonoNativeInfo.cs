@@ -27,8 +27,8 @@ using System;
 using System.IO;
 using System.Xml;
 
-using Microsoft.DotNet.XHarness.iOS.Utilities;
-using Microsoft.DotNet.XHarness.iOS.Hardware;
+using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
+using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 
 namespace Xharness {
 	public enum MonoNativeFlavor

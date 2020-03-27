@@ -6,10 +6,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
-using Microsoft.DotNet.XHarness.iOS.Execution;
-using Microsoft.DotNet.XHarness.iOS.Logging;
+using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
+using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 
-namespace Microsoft.DotNet.XHarness.iOS.Tests.Execution.Tests {
+namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Execution.Tests {
 
 	[TestFixture]
 	public class ProcessManagerTests {

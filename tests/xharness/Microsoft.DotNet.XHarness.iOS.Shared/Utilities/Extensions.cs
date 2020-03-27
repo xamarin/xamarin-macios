@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Microsoft.DotNet.XHarness.iOS.Utilities {
+namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 	public static class Extensions {
 		public static string AsString (this TestTarget @this)
 		{

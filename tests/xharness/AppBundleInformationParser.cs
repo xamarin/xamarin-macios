@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Xml;
-using Microsoft.DotNet.XHarness.iOS;
-using Microsoft.DotNet.XHarness.iOS.Utilities;
+using Microsoft.DotNet.XHarness.iOS.Shared;
+using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
 namespace Xharness {
 

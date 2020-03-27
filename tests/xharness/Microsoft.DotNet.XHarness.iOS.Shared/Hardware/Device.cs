@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Microsoft.DotNet.XHarness.iOS.Hardware {
+namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 	public enum DeviceClass {
 		Unknown = 0,
 		iPhone,

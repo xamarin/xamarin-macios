@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using Microsoft.DotNet.XHarness.iOS.Collections;
-using Microsoft.DotNet.XHarness.iOS.Logging;
+using Microsoft.DotNet.XHarness.iOS.Shared.Collections;
+using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 
-namespace Microsoft.DotNet.XHarness.iOS.Hardware {
+namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 	public interface IHardwareDevice : IDevice {
 		string DeviceIdentifier { get; set; }
 		DeviceClass DeviceClass { get; set; }

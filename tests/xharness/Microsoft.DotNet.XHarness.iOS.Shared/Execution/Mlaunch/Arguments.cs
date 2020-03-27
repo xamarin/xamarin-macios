@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Microsoft.DotNet.XHarness.iOS.Execution.Mlaunch {
+namespace Microsoft.DotNet.XHarness.iOS.Shared.Execution.Mlaunch {
 
 	/// <summary>
 	/// Specify the location of Apple SDKs, default to 'xcode-select' value.

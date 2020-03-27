@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Microsoft.DotNet.XHarness.iOS.Logging {
+namespace Microsoft.DotNet.XHarness.iOS.Shared.Logging {
 	
 	public interface ICaptureLogFactory {
 		ICaptureLog Create (string logDirectory, string systemLogPath, bool entireFile, string description = null);

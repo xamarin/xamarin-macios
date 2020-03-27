@@ -6,8 +6,8 @@ using System.Linq;
 using System.Net;
 using System.Runtime.Serialization.Json;
 using System.Xml;
-using Microsoft.DotNet.XHarness.iOS.Execution;
-using Microsoft.DotNet.XHarness.iOS.Logging;
+using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
+using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 
 namespace Xharness
 {

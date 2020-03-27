@@ -2,9 +2,9 @@
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using Microsoft.DotNet.XHarness.iOS.Logging;
+using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 
-namespace Microsoft.DotNet.XHarness.iOS.Listeners {
+namespace Microsoft.DotNet.XHarness.iOS.Shared.Listeners {
 	public class SimpleHttpListener : SimpleListener {
 		readonly bool autoExit;
 		HttpListener server;

@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.DotNet.XHarness.iOS.Logging;
-using Microsoft.DotNet.XHarness.iOS;
-using Microsoft.DotNet.XHarness.iOS.Collections;
+using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
+using Microsoft.DotNet.XHarness.iOS.Shared;
+using Microsoft.DotNet.XHarness.iOS.Shared.Collections;
 
-namespace Microsoft.DotNet.XHarness.iOS.Hardware {
+namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 	public class SimRuntime {
 		public string Name;
 		public string Identifier;

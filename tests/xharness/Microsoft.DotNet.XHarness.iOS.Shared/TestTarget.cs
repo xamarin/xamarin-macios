@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Microsoft.DotNet.XHarness.iOS {
+namespace Microsoft.DotNet.XHarness.iOS.Shared {
 	public enum TestTarget {
 		None,
 		Simulator_iOS,
