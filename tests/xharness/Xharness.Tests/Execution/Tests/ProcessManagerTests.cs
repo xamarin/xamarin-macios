@@ -57,6 +57,7 @@ namespace Xharness.Tests.Execution.Tests {
 			testProcess?.Dispose ();
 			testProcess = null;
 			manager = null;
+
 			if (File.Exists (logPath))
 				File.Delete (logPath);
 			if (File.Exists (stderrLogPath))
@@ -69,6 +70,8 @@ namespace Xharness.Tests.Execution.Tests {
 		{
 			bool stdoutFound = false;
 			bool stderrFound = false;
+
+			executionLog?.Dispose ();
 
 			using (var reader = new StreamReader (logPath)) {
 				string line;
@@ -152,6 +155,9 @@ namespace Xharness.Tests.Execution.Tests {
 			// assert the diff logs have the correct line
 			bool stdoutFound = false;
 			bool stderrFound = false;
+
+			stdoutLog?.Dispose ();
+			stderrLog?.Dispose ();
 
 			using (var reader = new StreamReader (stdoutLogPath)) {
 				string line;
