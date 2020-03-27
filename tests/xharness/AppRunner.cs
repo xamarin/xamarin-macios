@@ -305,6 +305,7 @@ namespace Xharness {
 			var testReporter = testReporterFactory.Create (MainLog,
 				runLog,
 				Logs,
+				crashReporter,
 				listener,
 				new XmlResultParser (),
 				AppInformation,
@@ -448,14 +449,6 @@ namespace Xharness {
 
 			// check the final status, copy all the required data
 			(Result, FailureMessage) = await testReporter.ParseResult ();
-			
-			var crashLogWaitTime = 0;
-			if (!testReporter.Success.Value)
-				crashLogWaitTime = 5;
-			if (Result == TestExecutingResult.Crashed)
-				crashLogWaitTime = 30;
-
-			await crashReporter.EndCaptureAsync (TimeSpan.FromSeconds (crashLogWaitTime));
 
 			return testReporter.Success.Value ? 0 : 1;
 		}

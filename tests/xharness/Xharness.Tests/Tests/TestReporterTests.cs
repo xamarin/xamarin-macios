@@ -66,6 +66,7 @@ namespace Xharness.Tests.Tests {
 				mainLog.Object,
 				runLog.Object,
 				logs.Object,
+				crashReporter.Object,
 				listener.Object,
 				parser,
 				appInformation,
