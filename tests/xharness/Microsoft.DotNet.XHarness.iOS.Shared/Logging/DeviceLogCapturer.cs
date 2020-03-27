@@ -3,29 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
-using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
-namespace Xharness
-{
-	public interface IDeviceLogCapturerFactory {
-		IDeviceLogCapturer Create (ILog mainLog, ILog deviceLog, string deviceName);
-	}
-
-	public class DeviceLogCapturerFactory : IDeviceLogCapturerFactory {
-		readonly IProcessManager processManager;
-
-		public DeviceLogCapturerFactory (IProcessManager processManager)
-		{
-			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
-		}
-
-		public IDeviceLogCapturer Create (ILog mainLog, ILog deviceLog, string deviceName)
-		{
-			return new DeviceLogCapturer (processManager, mainLog, deviceLog, deviceName);
-		}
-	}
-
+namespace Microsoft.DotNet.XHarness.iOS.Shared.Logging {
 	public interface IDeviceLogCapturer {
 		void StartCapture ();
 		void StopCapture ();
@@ -67,19 +47,17 @@ namespace Xharness
 			process.StartInfo.RedirectStandardOutput = true;
 			process.StartInfo.RedirectStandardError = true;
 			process.StartInfo.RedirectStandardInput = true;
-			process.OutputDataReceived += (object sender, DataReceivedEventArgs e) => {
-				if (e.Data == null) {
-					streamEnds.Signal ();
-				} else {
+			process.OutputDataReceived += (sender, e) => {
+				if (e.Data == null) streamEnds.Signal ();
+				else {
 					lock (deviceLog) {
 						deviceLog.WriteLine (e.Data);
 					}
 				}
 			};
-			process.ErrorDataReceived += (object sender, DataReceivedEventArgs e) => {
-				if (e.Data == null) {
-					streamEnds.Signal ();
-				} else {
+			process.ErrorDataReceived += (sender, e) => {
+				if (e.Data == null) streamEnds.Signal ();
+				else {
 					lock (deviceLog) {
 						deviceLog.WriteLine (e.Data);
 					}
