@@ -109,7 +109,7 @@ namespace Xharness.Tests.Hardware.Tests {
 
 					// we get the temp file that was passed as the args, and write our sample xml, which will be parsed to get the devices :)
 					var tempPath = args.Where (a => a is ListSimulatorsArgument).First ().AsCommandLineArgument ();
-					tempPath = tempPath.Substring(tempPath.IndexOf('=') + 1).Replace("\"", string.Empty);
+					tempPath = tempPath.Substring (tempPath.IndexOf('=') + 1).Replace ("\"", string.Empty);
 
 					CopySampleData (tempPath);
 					return Task.FromResult (new ProcessExecutionResult { ExitCode = 0, TimedOut = false });
