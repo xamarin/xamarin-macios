@@ -346,14 +346,7 @@ namespace Xharness.Tests {
 				.Returns (captureLog.Object);
 			var testReporterFactory = new Mock<ITestReporterFactory> ();
 			var testReporter = new Mock<ITestReporter> ();
-			testReporterFactory.Setup (f => f.Create (
-				It.IsAny<IAppRunner> (),
-				It.IsAny<string> (),
-				It.IsAny<ISimpleListener> (),
-				It.IsAny<ILog> (),
-				It.IsAny<ICrashSnapshotReporter> (),
-				It.IsAny<IResultParser> ())).Returns (testReporter.Object);
-			testReporter.Setup (r => r.TimeoutWatch).Returns (new System.Diagnostics.Stopwatch ());
+			testReporterFactory.SetReturnsDefault (testReporter.Object);
 			testReporter.Setup (r => r.ParseResult ()).Returns (() => {
 				return Task.FromResult<(TestExecutingResult, string)> ((TestExecutingResult.Succeeded, null));
 			});
@@ -464,15 +457,7 @@ namespace Xharness.Tests {
 			var xmlResultFile = Path.ChangeExtension (testResultFilePath, "xml");
 			var testReporterFactory = new Mock<ITestReporterFactory> ();
 			var testReporter = new Mock<ITestReporter> ();
-			testReporterFactory.Setup (f => f.Create (
-				It.IsAny<IAppRunner> (),
-				It.IsAny<string> (),
-				It.IsAny<ISimpleListener> (),
-				It.IsAny<ILog> (),
-				It.IsAny<ICrashSnapshotReporter> (),
-				It.IsAny<IResultParser> ())).Returns (testReporter.Object);
-			testReporter.Setup (r => r.Timeout).Returns (TimeSpan.FromMinutes (harness.Timeout * 2));
-			testReporter.Setup (r => r.TimeoutWatch).Returns (new System.Diagnostics.Stopwatch ());
+			testReporterFactory.SetReturnsDefault (testReporter.Object);
 			testReporter.Setup (r => r.ParseResult ()).Returns (() => {
 				return Task.FromResult<(TestExecutingResult, string)> ((TestExecutingResult.Succeeded, null));
 			});
@@ -624,18 +609,10 @@ namespace Xharness.Tests {
 			var xmlResultFile = Path.ChangeExtension (testResultFilePath, "xml");
 			var testReporterFactory = new Mock<ITestReporterFactory> ();
 			var testReporter = new Mock<ITestReporter> ();
-			testReporterFactory
-				.Setup (f => f.Create (
-					It.IsAny<IAppRunner> (),
-					"Test iPad",
-					It.IsAny<ISimpleListener> (),
-					mainLog.Object,
-					snapshotReporter.Object,
-					It.IsAny<IResultParser> ()))
-				.Returns (testReporter.Object);
-			testReporter.Setup (r => r.Timeout).Returns (TimeSpan.FromMinutes (harness.Timeout * 2));
-			testReporter.Setup (r => r.TimeoutWatch).Returns (new System.Diagnostics.Stopwatch ());
-			testReporter.Setup (r => r.ParseResult ()).Returns (() => Task.FromResult<(TestExecutingResult, string)> ((TestExecutingResult.Succeeded, null)));
+			testReporterFactory.SetReturnsDefault (testReporter.Object);
+			testReporter.Setup (r => r.ParseResult ()).Returns (() => {
+				return Task.FromResult<(TestExecutingResult, string)> ((TestExecutingResult.Succeeded, null));
+			});
 			testReporter.Setup (r => r.Success).Returns (true);
 
 			// Act
@@ -739,17 +716,7 @@ namespace Xharness.Tests {
 			var xmlResultFile = Path.ChangeExtension (testResultFilePath, "xml");
 			var testReporterFactory = new Mock<ITestReporterFactory> ();
 			var testReporter = new Mock<ITestReporter> ();
-			testReporterFactory
-				.Setup (f => f.Create (
-					It.IsAny<IAppRunner> (),
-					"Test iPad",
-					It.IsAny<ISimpleListener> (),
-					mainLog.Object,
-					snapshotReporter.Object,
-					It.IsAny<IResultParser> ()))
-				.Returns (testReporter.Object);
-			testReporter.Setup (r => r.Timeout).Returns (TimeSpan.FromMinutes (harness.Timeout * 2));
-			testReporter.Setup (r => r.TimeoutWatch).Returns (new System.Diagnostics.Stopwatch ());
+			testReporterFactory.SetReturnsDefault (testReporter.Object);
 			testReporter.Setup (r => r.ParseResult ()).Returns (() => {
 				return Task.FromResult<(TestExecutingResult, string)> ((TestExecutingResult.Failed, null));
 			});
