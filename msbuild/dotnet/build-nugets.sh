@@ -66,25 +66,8 @@ copy_files ()
 
 	$cp -r "$destdir/lib/msbuild" "$dotnet_destdir/tools/"
 
-	# for arch in $arches; do
-	# 	case $arch in
-	# 	arm | armv7 | armv7s | armv7k | arm64_32 | x86)
-	# 		bitness=32
-	# 		;;
-	# 	arm64 | x64)
-	# 		bitness=64
-	# 		;;
-	# 	*)
-	# 		echo "Unknown arch: $arch"
-	# 		exit 1
-	# 		;;
-	# 	esac
-	# 	mkdir -p "$dotnet_destdir/runtimes/$platform_lower-$arch/lib/$framework"
-	# 	$cp "$TOP/src/build/dotnet/$platform_lower/$bitness/Xamarin.$assembly_infix.dll" "$dotnet_destdir/runtimes/$platform_lower-$arch/lib/$framework/"
-	# 	$cp "$TOP/src/build/dotnet/$platform_lower/$bitness/Xamarin.$assembly_infix.pdb" "$dotnet_destdir/runtimes/$platform_lower-$arch/lib/$framework/"
-	# done
 
-	cp "$TOP/src/build/dotnet/$platform_lower/ref/Xamarin.$assembly_infix.dll" "$dotnet_destdir/lib/Xamarin.$assembly_infix/v1.0/"
+	$cp "$TOP/src/build/dotnet/$platform_lower/ref/Xamarin.$assembly_infix.dll" "$dotnet_destdir/lib/Xamarin.$assembly_infix/v1.0/"
 
 	$cp "$TOP/src/build/dotnet/$platform_lower/ref/Xamarin.$assembly_infix.dll" "$dotnet_destdir/ref/netcoreapp5.0/"
 	$cp "$TOP/src/build/dotnet/$platform_lower/ref/Xamarin.$assembly_infix.dll" "$dotnet_destdir/lib/netcoreapp5.0/"
@@ -114,40 +97,8 @@ copy_files ()
 		done
 	fi
 
-	# $cp "$DOTNET_BCL_DIR/"* "$dotnet_destdir/lib/Xamarin.$assembly_infix/v1.0/"
-
 	$cp "$destdir/lib/mono/Xamarin.$assembly_infix/RedistList/FrameworkList.xml" "$dotnet_destdir/lib/Xamarin.$assembly_infix/v1.0/RedistList/"
 
-	# <!-- simlauncher -->
-	# <Content Include="$(_iOSCurrentPath)\bin\simlauncher-*" Condition=" '$(_PlatformName)' == 'iOS'">
-	#   <Pack>true</Pack>
-	#   <PackagePath>$(_BinDir)</PackagePath>
-	# </Content>
-	# if [[ "$platform" != "macOS" ]]; then
-	# 	$cp "$destdir/bin/simlauncher"* "$dotnet_destdir/tools/bin/"
-	# fi
-
-	# <!-- generator -->
-	# <Content Include="$(_iOSCurrentPath)\bin\bgen">
-	#   <Pack>true</Pack>
-	#   <PackagePath>$(_BinDir)</PackagePath>
-	# </Content>
-	# <Content Include="$(_iOSCurrentPath)\lib\bgen\**">
-	#   <Pack>true</Pack>
-	#   <PackagePath>tools\lib\bgen</PackagePath>
-	# </Content>
-	# <Content Include="$(_iOSCurrentPath)\bin\btouch" Condition=" '$(_PlatformName)' == 'iOS'">
-	#   <Pack>true</Pack>
-	#   <PackagePath>$(_BinDir)</PackagePath>
-	# </Content>
-	# <Content Include="$(_iOSCurrentPath)\bin\btv" Condition=" '$(_PlatformName)' == 'tvOS'">
-	#   <Pack>true</Pack>
-	#   <PackagePath>$(_BinDir)</PackagePath>
-	# </Content>
-	# <Content Include="$(_iOSCurrentPath)\bin\bwatch" Condition=" '$(_PlatformName)' == 'watchOS'">
-	#   <Pack>true</Pack>
-	#   <PackagePath>$(_BinDir)</PackagePath>
-	# </Content>
 	$cp "$destdir/bin/bgen" "$dotnet_destdir/tools/bin/"
 	$cp -r "$destdir/lib/bgen" "$dotnet_destdir/tools/lib/"
 	if [[ "$platform" == "iOS" ]]; then
@@ -162,79 +113,6 @@ copy_files ()
 	if [[ "$platform" == "macOS" ]]; then
 		$cp "$destdir/bin/bmac" "$dotnet_destdir/tools/bin/"
 	fi
-
-	# <!-- mtouch -->
-	# <Content Include="$(_iOSCurrentPath)\bin\mtouch" Condition=" '$(_PlatformName)' != 'macOS' ">
-	#   <Pack>true</Pack>
-	#   <PackagePath>$(_BinDir)</PackagePath>
-	# </Content>
-	# <Content Include="$(_iOSCurrentPath)\lib\mtouch\**" Condition=" '$(_PlatformName)' != 'macOS' ">
-	#   <Pack>true</Pack>
-	#   <PackagePath>tools\lib\mtouch</PackagePath>
-	# </Content>
-	if [[ "$platform" != "macOS" ]]; then
-		$cp "$destdir/bin/mtouch"* "$dotnet_destdir/tools/bin/"
-		$cp -r "$destdir/lib/mtouch" "$dotnet_destdir/tools/lib/"
-	fi
-
-	# <!-- mmp -->
-	# <Content Include="$(_macOSCurrentPath)\bin\mmp" Condition=" '$(_PlatformName)' == 'macOS' ">
-	#   <Pack>true</Pack>
-	#   <PackagePath>$(_BinDir)</PackagePath>
-	# </Content>
-	# <Content Include="$(_macOSCurrentPath)\lib\mmp\**" Condition=" '$(_PlatformName)' == 'macOS' ">
-	#   <Pack>true</Pack>
-	#   <PackagePath>tools\lib\mmp</PackagePath>
-	# </Content>
-	if [[ "$platform" == "macOS" ]]; then
-		$cp "$destdir/bin/mmp"* "$dotnet_destdir/tools/bin/"
-		$cp -r "$destdir/lib/mmp" "$dotnet_destdir/tools/lib/"
-	fi
-	# <!-- mlaunch -->
-	# <Content Include="$(_iOSCurrentPath)\bin\mlaunch" Condition=" '$(_PlatformName)' != 'macOS' ">
-	#   <Pack>true</Pack>
-	#   <PackagePath>$(_BinDir)</PackagePath>
-	# </Content>
-	# <Content Include="$(_iOSCurrentPath)\lib\mlaunch\**" Condition=" '$(_PlatformName)' != 'macOS' ">
-	#   <Pack>true</Pack>
-	#   <PackagePath>tools\lib\mlaunch</PackagePath>
-	# </Content>
- #   	if [[ "$platform" != "macOS" ]]; then
-	# 	$cp "$destdir/bin/mlaunch"* "$dotnet_destdir/tools/bin/"
-	# 	$cp -r "$destdir/lib/mlaunch" "$dotnet_destdir/tools/lib/"
-	# fi
-
-	# <!-- AOT compilers -->
-	# <Content Include="$(_iOSCurrentPath)\bin\arm64-darwin-mono-sgen" Condition=" '$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' ">
-	#   <Pack>true</Pack>
-	#   <PackagePath>$(_BinDir)</PackagePath>
-	# </Content>
-	# <Content Include="$(_iOSCurrentPath)\bin\arm-darwin-mono-sgen" Condition=" '$(_PlatformName)' == 'iOS' ">
-	#   <Pack>true</Pack>
-	#   <PackagePath>$(_BinDir)</PackagePath>
-	# </Content>
-	# <Content Include="$(_iOSCurrentPath)\bin\arm64_32-darwin-mono-sgen" Condition=" '$(_PlatformName)' == 'watchOS' ">
-	#   <Pack>true</Pack>
-	#   <PackagePath>$(_BinDir)</PackagePath>
-	# </Content>
-	# <Content Include="$(_iOSCurrentPath)\bin\armv7k-unknown-darwin-mono-sgen" Condition=" '$(_PlatformName)' == 'watchOS' ">
-	#   <Pack>true</Pack>
-	#   <PackagePath>$(_BinDir)</PackagePath>
-	# </Content>
-	# <Content Include="$(_iOSCurrentPath)\LLVM\bin\llc;$(_iOSCurrentPath)\LLVM\bin\opt">
-	#   <Pack>true</Pack>
-	#   <PackagePath>tools\LLVM\bin\</PackagePath>
-	# </Content>
-
-	# <!-- SDK frameworks -->
-	# <Content Include="$(_iOSCurrentPath)\SDKs\MonoTouch.iphonesimulator.sdk\**" Condition=" '$(_PlatformName)' == 'iOS'">
-	#   <Pack>true</Pack>
-	#   <PackagePath>tools\SDKS\MonoTouch.iphonesimulator.sdk</PackagePath>
-	# </Content>
-	# <Content Include="$(_iOSCurrentPath)\SDKs\MonoTouch.iphoneos.sdk\**" Condition=" '$(_PlatformName)' == 'iOS'">
-	#   <Pack>true</Pack>
-	#   <PackagePath>tools\SDKS\MonoTouch.iphoneos.sdk</PackagePath>
-	# </Content>
 
 	if [[ "$platform" == "iOS--disabled--" ]]; then
 		for arch in $arches; do
@@ -281,28 +159,6 @@ copy_files ()
 		$cp -r "$TOP"/runtime/xamarin "$dotnet_destdir/tools/include/"
 		rm -f "$dotnet_destdir/tools/include/launch.h" # this file is macOS only
 	fi
-
-
-	# <Content Include="$(_iOSCurrentPath)\SDKs\Xamarin.AppleTVSimulator.sdk\**" Condition=" '$(_PlatformName)' == 'tvOS'">
-	#   <Pack>true</Pack>
-	#   <PackagePath>tools\SDKS\Xamarin.AppleTVSimulator.sdk</PackagePath>
-	# </Content>
-	# <Content Include="$(_iOSCurrentPath)\SDKs\Xamarin.AppleTVOS.sdk\**" Condition=" '$(_PlatformName)' == 'tvOS'">
-	#   <Pack>true</Pack>
-	#   <PackagePath>tools\SDKS\Xamarin.AppleTVOS.sdk</PackagePath>
-	# </Content>
-	# <Content Include="$(_iOSCurrentPath)\SDKs\Xamarin.WatchSimulator.sdk\**" Condition=" '$(_PlatformName)' == 'watchOS'">
-	#   <Pack>true</Pack>
-	#   <PackagePath>tools\SDKS\Xamarin.WachSimulator.sdk</PackagePath>
-	# </Content>
-	# <Content Include="$(_iOSCurrentPath)\SDKs\Xamarin.WatchOS.sdk\**" Condition=" '$(_PlatformName)' == 'watchOS'">
-	#   <Pack>true</Pack>
-	#   <PackagePath>tools\SDKS\Xamarin.WatchOS.sdk</PackagePath>
-	# </Content>
-	# <Content Include="$(_macOSCurrentPath)\lib\*.dylib;$(_macOSCurrentPath)\lib\*.a" Condition=" '$(_PlatformName)' == 'macOS' ">
-	#   <Pack>true</Pack>
-	#   <PackagePath>tools\lib</PackagePath>
-	# </Content>
 
 	chmod -R +r "$dotnet_destdir"
 }
