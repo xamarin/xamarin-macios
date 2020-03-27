@@ -54,7 +54,8 @@ namespace Microsoft.DotNet.XHarness.iOS.Execution {
 			Dictionary<string, string> environmentVariables = null,
 			CancellationToken? cancellationToken = null)
 		{
-			return await RunAsync (new Process (), args, log, timeout, environmentVariables, cancellationToken);
+			using var p = new Process ();
+			return await RunAsync (p, args, log, timeout, environmentVariables, cancellationToken);
 		}
 
 		public Task<ProcessExecutionResult> ExecuteXcodeCommandAsync (string executable, IList<string> args, ILog log, TimeSpan timeout)

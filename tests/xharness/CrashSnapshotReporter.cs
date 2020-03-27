@@ -125,8 +125,7 @@ namespace Xharness
 			var crashReportFile = logs.Create (name, $"Crash report: {name}", timestamp: false);
 			var args = new MlaunchArguments (
 				new DownloadCrashReportArgument (crashFile),
-				new DownloadCrashReportToArgument (crashReportFile.FullPath),
-				new SdkRootArgument (xcodeRoot));
+				new DownloadCrashReportToArgument (crashReportFile.FullPath));
 
 			if (!string.IsNullOrEmpty (deviceName)) {
 				args.Add (new DeviceNameArgument(deviceName));
