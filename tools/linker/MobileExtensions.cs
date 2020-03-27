@@ -5,9 +5,11 @@ using System.Linq;
 using Mono.Cecil;
 using Mono.Tuner;
 
+#if !NET
 using ObjCRuntime;
 using Xamarin.Bundler;
 using Xamarin.Tuner;
+#endif
 
 namespace Xamarin.Linker {
 
@@ -23,6 +25,7 @@ namespace Xamarin.Linker {
 			return provider.ToString ();
 		}
 
+#if !NET
 		// This method will look in any stored attributes in the link context as well as the provider itself.
 		public static bool HasCustomAttribute (this ICustomAttributeProvider provider, DerivedLinkContext context, string @namespace, string name)
 		{
@@ -31,6 +34,7 @@ namespace Xamarin.Linker {
 			
 			return context?.GetCustomAttributes (provider, @namespace, name)?.Count > 0;
 		}
+#endif
 
 		public static bool HasCustomAttribute (this ICustomAttributeProvider provider, string @namespace, string name)
 		{
@@ -45,6 +49,7 @@ namespace Xamarin.Linker {
 			return false;
 		}
 
+#if !NET
 		static bool HasGeneratedCodeAttribute (ICustomAttributeProvider provider, DerivedLinkContext context)
 		{
 			return provider.HasCustomAttribute (context, "System.Runtime.CompilerServices", "CompilerGeneratedAttribute");
@@ -91,6 +96,7 @@ namespace Xamarin.Linker {
 
 			return GetBindingImplAttribute (provider, context?.GetCustomAttributes (provider, Namespaces.ObjCRuntime, "BindingImplAttribute"));
 		}
+#endif
 
 		public static PropertyDefinition GetPropertyByAccessor (this MethodDefinition method)
 		{
@@ -101,6 +107,7 @@ namespace Xamarin.Linker {
 			return null;
 		}
 
+#if !NET
 		public static bool IsGeneratedCode (this MethodDefinition self, DerivedLinkContext link_context)
 		{
 			// check the property too
@@ -137,5 +144,6 @@ namespace Xamarin.Linker {
 
 			return false;
 		}
+#endif
 	}
 }

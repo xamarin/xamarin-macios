@@ -210,6 +210,7 @@ namespace Xamarin.Linker {
 			}
 		}
 
+#if !NET
 		public static bool IsNSObject (this TypeReference type, DerivedLinkContext link_context)
 		{
 			return type.Resolve ().IsNSObject (link_context);
@@ -223,6 +224,7 @@ namespace Xamarin.Linker {
 
 			return type.Inherits (Namespaces.Foundation, "NSObject");
 		}
+#endif
 
 		public static bool IsNativeObject (this TypeDefinition type)
 		{

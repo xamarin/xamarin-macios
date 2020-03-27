@@ -66,6 +66,8 @@ copy_files ()
 
 	$cp -r "$destdir/lib/msbuild" "$dotnet_destdir/tools/"
 
+	# linker assembly
+	$cp "$TOP/tools/dotnet-linker/bin/Debug/netcoreapp3.0/dotnet-linker.dll" "$dotnet_destdir/tools/"
 
 	$cp "$TOP/src/build/dotnet/$platform_lower/ref/Xamarin.$assembly_infix.dll" "$dotnet_destdir/lib/Xamarin.$assembly_infix/v1.0/"
 

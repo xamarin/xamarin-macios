@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <RootNamespace>dotnet_linker</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DefineConstants>TRACE;DEBUG;NETCOREAPP;NETCOREAPP3_0;NET;IOS</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="$(HOME)/.nuget/packages/illink.tasks/0.1.6-prerelease.20175.2/tools/netcoreapp3.0/illink.dll" />
+    <Reference Include="$(HOME)/.nuget/packages/illink.tasks/0.1.6-prerelease.20175.2/tools/netcoreapp3.0/Mono.Cecil.dll" />
+    <PackageReference Include="ILLink.Tasks" Version="0.1.6-prerelease.20175.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\linker\MobileResolveMainAssemblyStep.cs">
+      <Link>MobileResolveMainAssemblyStep.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\MobileExtensions.cs">
+      <Link>MobileExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\MonoTouch.Tuner\MonoTouchProfile.cs">
+      <Link>MonoTouchProfile.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\MobileProfile.cs">
+      <Link>MobileProfile.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\BaseProfile.cs">
+      <Link>BaseProfile.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\ObjCExtensions.cs">
+      <Link>ObjCExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\external\linker\src\tuner\Mono.Tuner\CecilRocks.cs">
+      <Link>CecilRocks.cs</Link>
+    </Compile>
+    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\external\linker\src\tuner\Mono.Tuner\Extensions.cs">
+      <Link>Extensions.cs</Link>
+    </Compile>
+  </ItemGroup>
+</Project>

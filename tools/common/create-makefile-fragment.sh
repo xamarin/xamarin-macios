@@ -99,7 +99,7 @@ done
 # First add a dependency for the csproj.inc so that it's rebuilt if the project itself changes.
 echo "${PROJECT}.csproj.inc: ${PROJECT_FILE} $PWD/ProjectInspector.csproj" > "$FRAGMENT_PATH"
 # Now create the variable with all the input files.
-echo "${PROJECT}_dependencies = \\" >> "$FRAGMENT_PATH"
+echo "${PROJECT//-/_}_dependencies = \\" >> "$FRAGMENT_PATH"
 sort "${INPUT_PATHS[@]}" | uniq >> "$FRAGMENT_PATH"
 
 # Simplify paths somewhat by removing the current directory
