@@ -9,7 +9,7 @@ namespace Xharness.Listeners {
 	}
 
 	public interface ISimpleListenerFactory {
-		IMetro Metro { get; }
+		ITunnelBore TunnelBore { get; }
 		(ListenerTransport transport, ISimpleListener listener, string listenerTempFile) Create (string device,
 																								 RunMode mode,
 																								 ILog log,
@@ -21,11 +21,11 @@ namespace Xharness.Listeners {
 	}
 
 	public class SimpleListenerFactory : ISimpleListenerFactory {
-		public IMetro Metro { get; private set; }
+		public ITunnelBore TunnelBore { get; private set; }
 
-		public SimpleListenerFactory (IMetro metro)
+		public SimpleListenerFactory (ITunnelBore tunnelBore)
 		{
-			Metro = metro ?? throw new ArgumentNullException (nameof (metro));
+			TunnelBore = tunnelBore ?? throw new ArgumentNullException (nameof (tunnelBore));
 		}
 
 		public (ListenerTransport transport, ISimpleListener listener, string listenerTempFile) Create (string device,
@@ -56,12 +56,7 @@ namespace Xharness.Listeners {
 				listener = new SimpleHttpListener (log, listenerLog, autoExit, xmlOutput);
 				break;
 			case ListenerTransport.Tcp:
-				// if there is a tunnel, and we want to use it, re-use the port
-				if (Metro.HasTunnel (device, out var tunnel)) {
-					listener = new SimpleTcpListener (tunnel.Port, log, listenerLog, autoExit, xmlOutput, useTcpTunnel);
-				} else { 
-					listener = new SimpleTcpListener (log, listenerLog, autoExit, xmlOutput, useTcpTunnel);
-				}
+				listener = new SimpleTcpListener (log, listenerLog, autoExit, xmlOutput, useTcpTunnel);
 				break;
 			default:
 				throw new NotImplementedException ("Unknown type of listener");

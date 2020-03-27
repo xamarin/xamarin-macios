@@ -39,11 +39,11 @@ namespace Xharness.Tests.Execution.Tests {
 			stdoutMessage = "Hola mundo!!!";
 			stderrMessage = "Adios mundo cruel";
 			logs = new Mock<ILogs> ();
-			executionLog = new LogFile (logs.Object, "my execution log", logPath);
-			stdoutLog = new LogFile (logs.Object, "my stdout log", stdoutLogPath);
-			stderrLog = new LogFile (logs.Object, "my stderr log", stderrLogPath);
+			executionLog = new LogFile ("my execution log", logPath);
+			stdoutLog = new LogFile ("my stdout log", stdoutLogPath);
+			stderrLog = new LogFile ("my stderr log", stderrLogPath);
 			dummyProcess = Path.Combine (Path.GetDirectoryName (GetType ().Assembly.Location), "DummyTestProcess.exe");
-			manager = new ProcessManager ();
+			manager = new ProcessManager ("/path/to/xcode", "/path/to/mlaunch");
 			testProcess = new Process ();
 			testProcess.StartInfo.FileName = "mono";
 		}
@@ -111,7 +111,7 @@ namespace Xharness.Tests.Execution.Tests {
 		{
 			var source = new CancellationTokenSource ();
 			testProcess.StartInfo.Arguments = $"{dummyProcess} --exit-code={resultCode} --timeout={timeoutCount} --stdout=\"{stdoutMessage}\" --stderr=\"{stderrMessage}\"";
-			var result = await manager.RunAsync (testProcess, executionLog, source.Token);
+			var result = await manager.RunAsync (testProcess, executionLog, executionLog, executionLog, cancellationToken: source.Token);
 			if (!timeout)
 				Assert.AreEqual (resultCode, result.ExitCode, "exit code");
 			Assert.AreEqual (success, result.Succeeded, "success");

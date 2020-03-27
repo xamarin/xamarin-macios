@@ -35,6 +35,9 @@ namespace Xharness.Listeners
 
 		public override void Initialize ()
 		{
+			if (useTcpTunnel && Port != 0)
+				return;
+
 			server = new TcpListener (Address, Port);
 			server.Start ();
 

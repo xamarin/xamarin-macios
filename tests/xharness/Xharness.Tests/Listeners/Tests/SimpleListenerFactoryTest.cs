@@ -10,7 +10,7 @@ namespace Xharness.Tests.Listeners.Tests {
 	public class SimpleListenerFactoryTest {
 
 		Mock<ILog> log;
-		Mock<IMetro> metro;
+		Mock<ITunnelBore> tunnelBore;
 		SimpleListenerFactory factory;
 		string deviceName = "My IPhone";
 
@@ -18,8 +18,8 @@ namespace Xharness.Tests.Listeners.Tests {
 		public void SetUp ()
 		{
 			log = new Mock<ILog> ();
-			metro = new Mock<IMetro> ();
-			factory = new SimpleListenerFactory (metro.Object);
+			tunnelBore = new Mock<ITunnelBore> ();
+			factory = new SimpleListenerFactory (tunnelBore.Object);
 		}
 
 		[TearDown]

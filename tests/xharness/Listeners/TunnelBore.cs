@@ -9,27 +9,24 @@ namespace Xharness.Listeners {
 	// since we can only run one app per device, this should not be a problem.
 	//
 	// definition: 
-	// Metro: a subway system in a city, especially Paris.
-	public interface IMetro : IDisposable {
+	// A tunnel boring machine, also known as a "mole", is a machine used to excavate tunnels with a circular cross section
+	// through a variety of soil and rock strata. They may also be used for microtunneling. 
+	public interface ITunnelBore : IDisposable {
 
 		// create a new tunnel for the device with the given name.
 		TcpTunnel Create (string device, ILog mainLog);
 
 		// close a given tunnel
 		void Close (string device);
-
-		// return if a device has a tunnel, if it does, set the out param
-		bool HasTunnel (string device, out TcpTunnel tunnel);
 	}
 
-	public class Metro : IMetro {
+	public class Mole : ITunnelBore {
 
 		readonly object tunnelsLock = new object ();
-		readonly IHarness harness;
 		readonly IProcessManager processManager;
 		readonly Dictionary<string, TcpTunnel> tunnels = new Dictionary<string, TcpTunnel> ();
 
-		public Metro (IProcessManager processManager)
+		public Mole (IProcessManager processManager)
 		{
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 		}
@@ -56,21 +53,6 @@ namespace Xharness.Listeners {
 					tunnel.Close ();
 					tunnels.Remove (device);
 				}
-			}
-		}
-
-		// test if the device has a tunnel, if it does, set the simplet tcp listener to be a listener that is 
-		// using the tunnel and ready to listen to test result
-		public bool HasTunnel (string device, out TcpTunnel tunnel)
-		{
-			tunnel = null;
-			lock (tunnelsLock) {
-				if (tunnels.ContainsKey (device)) {
-					// create a tcp listener for a tunnel with the port
-					tunnel = tunnels [device];
-					return true;
-				}
-				return false;
 			}
 		}
 

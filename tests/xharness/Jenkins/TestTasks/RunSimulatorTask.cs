@@ -9,13 +9,10 @@ using Xharness.Hardware;
 using Xharness.Listeners;
 using Xharness.Logging;
 
-namespace Xharness.Jenkins.TestTasks
-{
-	class RunSimulatorTask : RunXITask<ISimulatorDevice>
-	{
-		readonly IProcessManager processManager = new ProcessManager ();
+namespace Xharness.Jenkins.TestTasks {
+	class RunSimulatorTask : RunXITask<ISimulatorDevice> {
 		readonly ISimulatorsLoader simulators;
-		readonly IMetro metro;
+		readonly ITunnelBore tunnelBore;
 		public IAcquiredResource AcquiredResource;
 
 		public ISimulatorDevice [] Simulators {
@@ -30,7 +27,7 @@ namespace Xharness.Jenkins.TestTasks
 			}
 		}
 
-		public RunSimulatorTask (ISimulatorsLoader simulators, MSBuildTask build_task, IProcessManager processManager, IMetro metro, IEnumerable<ISimulatorDevice> candidates = null)
+		public RunSimulatorTask (ISimulatorsLoader simulators, MSBuildTask build_task, IProcessManager processManager, ITunnelBore tunnelBore, IEnumerable<ISimulatorDevice> candidates = null)
 			: base (build_task, processManager, candidates)
 		{
 			var project = Path.GetFileNameWithoutExtension (ProjectFile);
@@ -43,7 +40,7 @@ namespace Xharness.Jenkins.TestTasks
 			}
 
 			this.simulators = simulators ?? throw new ArgumentNullException (nameof (simulators));
-			this.metro = metro ?? throw new ArgumentNullException (nameof (metro));
+			this.tunnelBore = tunnelBore ?? throw new ArgumentNullException (nameof (tunnelBore));
 		}
 
 		public async Task FindSimulatorAsync ()
@@ -79,20 +76,20 @@ namespace Xharness.Jenkins.TestTasks
 			await FindSimulatorAsync ();
 
 			var clean_state = false;//Platform == TestPlatform.watchOS;
-			runner = new AppRunner (processManager,
+			runner = new AppRunner (ProcessManager,
 				new AppBundleInformationParser (),
-				new SimulatorsLoaderFactory (Harness, processManager),
-				new SimpleListenerFactory (metro),
-				new DeviceLoaderFactory (Harness, processManager),
-				new CrashSnapshotReporterFactory (ProcessManager, Harness.XcodeRoot, Harness.MlaunchPath),
+				new SimulatorsLoaderFactory (ProcessManager),
+				new SimpleListenerFactory (tunnelBore),
+				new DeviceLoaderFactory (ProcessManager),
+				new CrashSnapshotReporterFactory (ProcessManager),
 				new CaptureLogFactory (),
-				new DeviceLogCapturerFactory (processManager, Harness.XcodeRoot, Harness.MlaunchPath),
+				new DeviceLogCapturerFactory (ProcessManager),
 				new TestReporterFactory (),
 				AppRunnerTarget,
 				Harness,
 				mainLog: Logs.Create ($"run-{Device.UDID}-{Timestamp}.log", "Run log"),
 				logs: Logs,
-				projectFilePath: ProjectFile,				
+				projectFilePath: ProjectFile,
 				ensureCleanSimulatorState: clean_state,
 				buildConfiguration: ProjectConfiguration,
 				timeoutMultiplier: TimeoutMultiplier,
@@ -139,8 +136,7 @@ namespace Xharness.Jenkins.TestTasks
 			}
 		}
 
-		class NondisposedResource : IAcquiredResource
-		{
+		class NondisposedResource : IAcquiredResource {
 			public IAcquiredResource Wrapped;
 
 			public Resource Resource {

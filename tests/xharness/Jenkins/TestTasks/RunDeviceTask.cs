@@ -7,14 +7,12 @@ using Xharness.Hardware;
 using Xharness.Listeners;
 using Xharness.Logging;
 
-namespace Xharness.Jenkins.TestTasks
-{
-	class RunDeviceTask : RunXITask<IHardwareDevice>
-	{
-		readonly IProcessManager processManager = new ProcessManager ();
-		readonly IMetro metro;
+namespace Xharness.Jenkins.TestTasks {
+	class RunDeviceTask : RunXITask<IHardwareDevice> {
+		readonly ITunnelBore tunnelBore;
 		readonly IResultParser resultParser = new XmlResultParser ();
 		readonly IDeviceLoader devices;
+
 		AppInstallMonitorLog install_log;
 
 		public override string ProgressMessage {
@@ -29,7 +27,7 @@ namespace Xharness.Jenkins.TestTasks
 				var elapsed = log.CopyingApp ? log.AppCopyDuration : log.WatchAppCopyDuration;
 				var speed_bps = elapsed.Ticks == 0 ? -1 : bytes / elapsed.TotalSeconds;
 				var estimated_left = TimeSpan.FromSeconds ((total_bytes - bytes) / speed_bps);
-				var transfer_percent = 100 * (double) bytes / total_bytes;
+				var transfer_percent = 100 * (double)bytes / total_bytes;
 				var str = log.CopyingApp ? "App" : "Watch App";
 				var rv = $"{str} installation: {percent_complete}% done.\n" +
 					$"\tApp size: {total_bytes:N0} bytes ({total_bytes / 1024.0 / 1024.0:N2} MB)\n" +
@@ -41,7 +39,7 @@ namespace Xharness.Jenkins.TestTasks
 			}
 		}
 
-		public RunDeviceTask (IDeviceLoader devices, MSBuildTask build_task, IProcessManager processManager, IMetro metro, IEnumerable<IHardwareDevice> candidates)
+		public RunDeviceTask (IDeviceLoader devices, MSBuildTask build_task, IProcessManager processManager, ITunnelBore tunnelBore, IEnumerable<IHardwareDevice> candidates)
 			: base (build_task, processManager, candidates.OrderBy ((v) => v.DebugSpeed))
 		{
 			switch (build_task.Platform) {
@@ -67,7 +65,7 @@ namespace Xharness.Jenkins.TestTasks
 			}
 
 			this.devices = devices ?? throw new ArgumentNullException (nameof (devices));
-			this.metro = metro ?? throw new ArgumentNullException (nameof (metro));
+			this.tunnelBore = tunnelBore ?? throw new ArgumentNullException (nameof (tunnelBore));
 		}
 
 		protected override async Task RunTestAsync ()
@@ -83,14 +81,14 @@ namespace Xharness.Jenkins.TestTasks
 						CompanionDevice = devices.FindCompanionDevice (Jenkins.DeviceLoadLog, Device);
 					Jenkins.MainLog.WriteLine ("Acquired device '{0}' for '{1}'", Device.Name, ProjectFile);
 
-					runner = new AppRunner (processManager,
+					runner = new AppRunner (ProcessManager,
 						new AppBundleInformationParser (),
-						new SimulatorsLoaderFactory (Harness, processManager),
-						new SimpleListenerFactory (metro),
-						new DeviceLoaderFactory (Harness, processManager),
-						new CrashSnapshotReporterFactory (ProcessManager, Harness.XcodeRoot, Harness.MlaunchPath),
+						new SimulatorsLoaderFactory (ProcessManager),
+						new SimpleListenerFactory (tunnelBore),
+						new DeviceLoaderFactory (ProcessManager),
+						new CrashSnapshotReporterFactory (ProcessManager),
 						new CaptureLogFactory (),
-						new DeviceLogCapturerFactory (processManager, Harness.XcodeRoot, Harness.MlaunchPath),
+						new DeviceLogCapturerFactory (ProcessManager),
 						new TestReporterFactory (),
 						AppRunnerTarget,
 						Harness,
@@ -103,6 +101,7 @@ namespace Xharness.Jenkins.TestTasks
 						timeoutMultiplier: TimeoutMultiplier,
 						variation: Variation,
 						buildTask: BuildTask);
+					runner.UseTcpTunnel = Device.DevicePlatform == DevicePlatform.iOS || Device.DevicePlatform == DevicePlatform.tvOS;
 
 					// Sometimes devices can't upgrade (depending on what has changed), so make sure to uninstall any existing apps first.
 					if (Jenkins.UninstallTestApp) {
@@ -150,14 +149,14 @@ namespace Xharness.Jenkins.TestTasks
 							// nor will it close & reopen the today app (but launching the main app
 							// will do both of these things, preparing the device for launching the today extension).
 
-							AppRunner todayRunner = new AppRunner (processManager,
+							AppRunner todayRunner = new AppRunner (ProcessManager,
 								new AppBundleInformationParser (),
-								new SimulatorsLoaderFactory (Harness, processManager),
-								new SimpleListenerFactory (metro),
-								new DeviceLoaderFactory (Harness, processManager),
-								new CrashSnapshotReporterFactory (ProcessManager, Harness.XcodeRoot, Harness.MlaunchPath),
+								new SimulatorsLoaderFactory (ProcessManager),
+								new SimpleListenerFactory (tunnelBore),
+								new DeviceLoaderFactory (ProcessManager),
+								new CrashSnapshotReporterFactory (ProcessManager),
 								new CaptureLogFactory (),
-								new DeviceLogCapturerFactory (processManager, Harness.XcodeRoot, Harness.MlaunchPath),
+								new DeviceLogCapturerFactory (ProcessManager),
 								new TestReporterFactory (),
 								AppRunnerTarget,
 								Harness,
@@ -170,6 +169,7 @@ namespace Xharness.Jenkins.TestTasks
 								timeoutMultiplier: TimeoutMultiplier,
 								variation: Variation,
 								buildTask: BuildTask);
+							todayRunner.UseTcpTunnel = Device.DevicePlatform == DevicePlatform.iOS || Device.DevicePlatform == DevicePlatform.tvOS;
 
 							additional_runner = todayRunner;
 							await todayRunner.RunAsync ();

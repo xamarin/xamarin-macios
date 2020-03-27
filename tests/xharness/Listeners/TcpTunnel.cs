@@ -9,6 +9,7 @@ namespace Xharness.Listeners {
 	// represents a tunnel created between a device and a host. This tunnel allows the communication between
 	// the host and the device via the usb cable.
 	public class TcpTunnel : IDisposable {
+		bool disposed = false;
 		readonly IProcessManager processManager;
 		CancellationTokenSource cancellationToken;
 		public TaskCompletionSource<bool> startedCompletionSource { get; private set; } = new TaskCompletionSource<bool> ();
@@ -49,14 +50,18 @@ namespace Xharness.Listeners {
 				}
 			});
 			// do not await, we are not going to block for a process
-			// TODO: var tcpTunnelExecutionTask = processManager.ExecuteCommandAsync (harness.MlaunchPath, tcpArgs, tunnelbackLog, timeout, cancellation_token: cancellationToken.Token);
+			// TODO: what to do with the task?
+			var tcpTunnelExecutionTask = processManager.ExecuteCommandAsync (tcpArgs, tunnelbackLog, timeout, cancellation_token: cancellationToken.Token);
 		}
 
 		public void Close () => cancellationToken.Cancel ();
 
-		public async Task Connect (SimpleTcpListener listener) {
+		public async Task Connect (SimpleTcpListener listener, ILog mainLog) {
 			if (listener.Port != Port)
 				throw new ArgumentException ($"Listener is not using the correct port. Found {listener.Port} when it should be using {Port}");
+			if (mainLog == null)
+				throw new ArgumentNullException (nameof (mainLog));
+			mainLog.WriteLine ($"Connecting to already existing tunnel at port {Port}");
 			// we cannot connect until we have started, we will block here until done
 			var canConnect = await Started;
 			if (canConnect)
@@ -65,7 +70,22 @@ namespace Xharness.Listeners {
 
 		public void Dispose ()
 		{
-			throw new NotImplementedException ();
+			Dispose (true);
+			GC.SuppressFinalize (this);
 		}
+
+		protected virtual void Dispose (bool disposing)
+		{
+			if (disposed)
+				return;
+
+			if (disposing) {
+				// cancel the process that started the tunnel, else we will leave processes alive
+				cancellationToken.Cancel ();
+			}
+
+			disposed = true;
+		}
+
 	}
 }

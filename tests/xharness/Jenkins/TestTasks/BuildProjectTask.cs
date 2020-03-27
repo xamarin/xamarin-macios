@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using System.Xml;
+using Xharness.Execution;
 using Xharness.Logging;
 using Xharness.Utilities;
 
@@ -12,6 +13,10 @@ namespace Xharness.Jenkins.TestTasks
 	abstract class BuildProjectTask : BuildToolTask
 	{
 		public string SolutionPath;
+
+		protected BuildProjectTask (IProcessManager processManager) : base (processManager)
+		{
+		}
 
 		public bool RestoreNugets {
 			get {

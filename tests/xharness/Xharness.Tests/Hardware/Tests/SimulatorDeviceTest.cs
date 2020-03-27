@@ -14,7 +14,6 @@ namespace Xharness.Tests.Hardware.Tests {
 
 		Mock<ILog> executionLog;
 		Mock<IProcessManager> processManager;
-		Mock<IHarness> harness;
 		SimulatorDevice simulator;
 
 		[SetUp]
@@ -22,8 +21,7 @@ namespace Xharness.Tests.Hardware.Tests {
 		{
 			executionLog = new Mock<ILog> ();
 			processManager = new Mock<IProcessManager> ();
-			harness = new Mock<IHarness> ();
-			simulator = new SimulatorDevice (harness.Object, processManager.Object) {
+			simulator = new SimulatorDevice (processManager.Object, new TCCDatabase (processManager.Object)) {
 				UDID = Guid.NewGuid ().ToString ()
 			};
 		}
@@ -57,10 +55,10 @@ namespace Xharness.Tests.Hardware.Tests {
 		{
 			// just call and verify the correct args are pass
 			await simulator.EraseAsync (executionLog.Object);
-			harness.Verify (h => h.ExecuteXcodeCommandAsync (It.Is<string> (s => s == "simctl"), It.Is<string []> (args => args.Where (a => a == simulator.UDID || a == "shutdown").Count () == 2), It.IsAny<ILog> (), It.IsAny<TimeSpan> ()));
-			harness.Verify (h => h.ExecuteXcodeCommandAsync (It.Is<string> (s => s == "simctl"), It.Is<string []> (args => args.Where (a => a == simulator.UDID || a == "erase").Count () == 2), It.IsAny<ILog> (), It.IsAny<TimeSpan> ()));
-			harness.Verify (h => h.ExecuteXcodeCommandAsync (It.Is<string> (s => s == "simctl"), It.Is<string []> (args => args.Where (a => a == simulator.UDID || a == "boot").Count () == 2), It.IsAny<ILog> (), It.IsAny<TimeSpan> ()));
-			harness.Verify (h => h.ExecuteXcodeCommandAsync (It.Is<string> (s => s == "simctl"), It.Is<string []> (args => args.Where (a => a == simulator.UDID || a == "shutdown").Count () == 2), It.IsAny<ILog> (), It.IsAny<TimeSpan> ()));
+			processManager.Verify (h => h.ExecuteXcodeCommandAsync (It.Is<string> (s => s == "simctl"), It.Is<string []> (args => args.Where (a => a == simulator.UDID || a == "shutdown").Count () == 2), It.IsAny<ILog> (), It.IsAny<TimeSpan> ()));
+			processManager.Verify (h => h.ExecuteXcodeCommandAsync (It.Is<string> (s => s == "simctl"), It.Is<string []> (args => args.Where (a => a == simulator.UDID || a == "erase").Count () == 2), It.IsAny<ILog> (), It.IsAny<TimeSpan> ()));
+			processManager.Verify (h => h.ExecuteXcodeCommandAsync (It.Is<string> (s => s == "simctl"), It.Is<string []> (args => args.Where (a => a == simulator.UDID || a == "boot").Count () == 2), It.IsAny<ILog> (), It.IsAny<TimeSpan> ()));
+			processManager.Verify (h => h.ExecuteXcodeCommandAsync (It.Is<string> (s => s == "simctl"), It.Is<string []> (args => args.Where (a => a == simulator.UDID || a == "shutdown").Count () == 2), It.IsAny<ILog> (), It.IsAny<TimeSpan> ()));
 
 		}
 
@@ -69,7 +67,7 @@ namespace Xharness.Tests.Hardware.Tests {
 		{
 			await simulator.ShutdownAsync (executionLog.Object);
 			// just call and verify the correct args are pass
-			harness.Verify (h => h.ExecuteXcodeCommandAsync (It.Is<string> (s => s == "simctl"), It.Is<string []> (args => args.Where (a => a == simulator.UDID || a == "shutdown").Count () == 2), It.IsAny<ILog> (), It.IsAny<TimeSpan> ()));
+			processManager.Verify (h => h.ExecuteXcodeCommandAsync (It.Is<string> (s => s == "simctl"), It.Is<string []> (args => args.Where (a => a == simulator.UDID || a == "shutdown").Count () == 2), It.IsAny<ILog> (), It.IsAny<TimeSpan> ()));
 		}
 
 		[Test]
@@ -81,7 +79,7 @@ namespace Xharness.Tests.Hardware.Tests {
 				return args.Where (a => toKill.Contains (a)).Count () == toKill.Count;
 			};
 
-			var simulator = new SimulatorDevice (Mock.Of<IHarness> (), processManager.Object);
+			var simulator = new SimulatorDevice (processManager.Object, new TCCDatabase (processManager.Object));
 			await simulator.KillEverythingAsync (executionLog.Object);
 
 			// verify that all the diff process have been killed making sure args are correct

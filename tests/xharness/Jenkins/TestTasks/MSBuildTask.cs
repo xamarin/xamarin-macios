@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Xml;
+using Xharness.Execution;
 using Xharness.Logging;
 using Xharness.Utilities;
 
@@ -29,6 +30,10 @@ namespace Xharness.Jenkins.TestTasks
 				args.Add (ProjectFile);
 				return args;
 			}
+		}
+
+		public MSBuildTask (IProcessManager processManager) : base (processManager)
+		{
 		}
 
 		protected override async Task ExecuteAsync ()

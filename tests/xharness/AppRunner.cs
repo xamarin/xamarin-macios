@@ -190,10 +190,6 @@ namespace Xharness {
 
 			var args = new MlaunchArguments ();
 
-			if (!string.IsNullOrEmpty (harness.XcodeRoot)) {
-				args.Add (new SdkRootArgument (harness.XcodeRoot));
-			}
-
 			for (int i = -1; i < harness.Verbosity; i++)
 				args.Add (new VerbosityArgument ());
 
@@ -207,7 +203,7 @@ namespace Xharness {
 			var totalSize = Directory.GetFiles (AppInformation.AppPath, "*", SearchOption.AllDirectories).Select ((v) => new FileInfo (v).Length).Sum ();
 			MainLog.WriteLine ($"Installing '{AppInformation.AppPath}' to '{companionDeviceName ?? deviceName}'. Size: {totalSize} bytes = {totalSize / 1024.0 / 1024.0:N2} MB");
 
-			return await ProcessManager.ExecuteCommandAsync (harness.MlaunchPath, args, MainLog, TimeSpan.FromHours (1), cancellation_token: cancellation_token);
+			return await ProcessManager.ExecuteCommandAsync (args, MainLog, TimeSpan.FromHours (1), cancellation_token: cancellation_token);
 		}
 
 		public async Task<ProcessExecutionResult> UninstallAsync ()
@@ -219,17 +215,13 @@ namespace Xharness {
 
 			var args = new MlaunchArguments ();
 
-			if (!string.IsNullOrEmpty (harness.XcodeRoot)) {
-				args.Add (new SdkRootArgument (harness.XcodeRoot));
-			}
-
 			for (int i = -1; i < harness.Verbosity; i++)
 				args.Add (new VerbosityArgument ());
 
 			args.Add (new UninstallAppFromDeviceArgument (AppInformation.BundleIdentifier));
 			args.Add (new DeviceNameArgument (companionDeviceName ?? deviceName));
 
-			return await ProcessManager.ExecuteCommandAsync (harness.MlaunchPath, args, MainLog, TimeSpan.FromMinutes (1));
+			return await ProcessManager.ExecuteCommandAsync (args, MainLog, TimeSpan.FromMinutes (1));
 		}
 
 		public TimeSpan GetNewTimeout () => TimeSpan.FromMinutes (harness.Timeout * timeoutMultiplier);
@@ -242,10 +234,6 @@ namespace Xharness {
 				FindDevice ();
 
 			var args = new MlaunchArguments ();
-
-			if (!string.IsNullOrEmpty (harness.XcodeRoot)) {
-				args.Add (new SdkRootArgument (harness.XcodeRoot));
-			}
 
 			for (int i = -1; i < harness.Verbosity; i++)
 				args.Add (new VerbosityArgument ());
@@ -342,6 +330,8 @@ namespace Xharness {
 			if (!isSimulator)
 				args.Add (new DisableMemoryLimitsArgument ());
 
+			// needed if a tunnel is used to connect to the device, but we cannot close it inside the else clause,
+			// we have to do it once the listener is completed
 			if (isSimulator) {
 				if (!await FindSimulatorAsync ())
 					return 1;
@@ -366,7 +356,7 @@ namespace Xharness {
 					bool isCompanion = sim != simulator;
 
 					var logDescription = isCompanion ? LogType.CompanionSystemLog.ToString () : LogType.SystemLog.ToString ();
-					var log = captureLogFactory.Create (Logs,
+					var log = captureLogFactory.Create (
 						Path.Combine (Logs.Directory, sim.Name + ".log"),
 						sim.SystemLog,
 						harness.Action != HarnessAction.Jenkins,
@@ -391,23 +381,8 @@ namespace Xharness {
 
 				MainLog.WriteLine ("Starting test run");
 
-				// if we want to use a tunnel, create or re-use one that is already present
-				if (transport == ListenerTransport.Tcp && UseTcpTunnel && listener is SimpleTcpListener tcpListener) {
-					// create or reuse a tunnel
-					TcpTunnel tunnel;
-					if (listenerFactory.Metro.HasTunnel (deviceName, out tunnel)) {
-						await tunnel.Connect (tcpListener);
-					} else {
-						// create a new tunnel using the listener
-						tunnel = listenerFactory.Metro.Create (deviceName, MainLog);
-						tunnel.Start (deviceName, tcpListener, testReporter.Timeout, MainLog);
-						// wait until we started the tunnel
-						await tunnel.Started; 
-					}
-				}
-
 				await testReporter.CollectSimulatorResult (
-					ProcessManager.ExecuteCommandAsync (harness.MlaunchPath, args, run_log, testReporter.Timeout, cancellation_token: testReporter.CancellationToken));
+					ProcessManager.ExecuteCommandAsync (args, run_log, testReporter.Timeout, cancellation_token: testReporter.CancellationToken));
 
 				// cleanup after us
 				if (EnsureCleanSimulatorState)
@@ -436,10 +411,20 @@ namespace Xharness {
 
 					MainLog.WriteLine ("Starting test run");
 
+					// if we want to use a tunnel, create or re-use one that is already present
+					if (transport == ListenerTransport.Tcp && UseTcpTunnel && listener is SimpleTcpListener tcpListener) {
+						// create a new tunnel using the listener
+						TcpTunnel tunnel = null;
+						tunnel = listenerFactory.Mole.Create (deviceName, MainLog);
+						tunnel.Start (deviceName, tcpListener, testReporter.Timeout, MainLog);
+						// wait until we started the tunnel
+						await tunnel.Started; 
+					}
+
 					// We need to check for MT1111 (which means that mlaunch won't wait for the app to exit).
 					var runLog = Log.CreateAggregatedLog (testReporter.CallbackLog, MainLog);
 					testReporter.TimeoutWatch.Start ();
-					await testReporter.CollectDeviceResult (ProcessManager.ExecuteCommandAsync (harness.MlaunchPath, args, runLog, testReporter.Timeout, cancellation_token: testReporter.CancellationToken));
+					await testReporter.CollectDeviceResult (ProcessManager.ExecuteCommandAsync (args, runLog, testReporter.Timeout, cancellation_token: testReporter.CancellationToken));
 				} finally {
 					deviceLogCapturer.StopCapture ();
 					deviceSystemLog.Dispose ();
@@ -454,6 +439,10 @@ namespace Xharness {
 
 			listener.Cancel ();
 			listener.Dispose ();
+
+			// close a tunnel if it was created
+			listenerFactory.Mole.Close (deviceName);
+				
 
 			// check the final status, copy all the required data
 			(Result, FailureMessage) = await testReporter.ParseResult ();
