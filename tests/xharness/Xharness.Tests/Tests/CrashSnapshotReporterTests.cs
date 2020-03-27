@@ -12,8 +12,8 @@ using Xharness.Utilities;
 
 namespace Xharness.Tests {
 	[TestFixture]
-	public class CrashSnapshotReporterTests {
-		readonly string mlaunchPath = "./mlaunch";
+	public class CrashReportSnapshotTests {
+
 		string tempXcodeRoot;
 		string symbolicatePath;
 
@@ -30,6 +30,9 @@ namespace Xharness.Tests {
 
 			tempXcodeRoot = Path.Combine (Path.GetTempPath (), Guid.NewGuid ().ToString ());
 			symbolicatePath = Path.Combine (tempXcodeRoot, "Contents", "SharedFrameworks", "DTDeviceKitBase.framework", "Versions", "A", "Resources");
+			
+			processManager.SetupGet (x => x.XcodeRoot).Returns (tempXcodeRoot);
+			processManager.SetupGet (x => x.MlaunchPath).Returns ("/var/bin/mlaunch");
 
 			// Create fake place for device logs
 			Directory.CreateDirectory (tempXcodeRoot);
@@ -71,8 +74,6 @@ namespace Xharness.Tests {
 			var snapshotReport = new CrashSnapshotReporter (processManager.Object,
 				log.Object,
 				logs.Object,
-				tempXcodeRoot,
-				mlaunchPath,
 				true,
 				deviceName,
 				() => tempFilePath);
@@ -91,11 +92,10 @@ namespace Xharness.Tests {
 			// List of crash reports is retrieved
 			processManager.Verify (
 				x => x.ExecuteCommandAsync (
-					mlaunchPath,
 					It.Is<MlaunchArguments> (args => args.AsCommandLine () ==
-						StringUtils.FormatArguments ($"--list-crash-reports={tempFilePath}") + " " +
-						$"--sdkroot {StringUtils.FormatArguments (tempXcodeRoot)} " +
-						$"--devname {StringUtils.FormatArguments (deviceName)}"),
+						StringUtils.FormatArguments (
+							$"--list-crash-reports={tempFilePath}") + " " +						
+							$"--devname {StringUtils.FormatArguments (deviceName)}"),
 					log.Object,
 					TimeSpan.FromMinutes (1),
 					null,
@@ -105,12 +105,11 @@ namespace Xharness.Tests {
 			// Device crash log is downloaded
 			processManager.Verify (
 				x => x.ExecuteCommandAsync (
-					mlaunchPath,
 					It.Is<MlaunchArguments> (args => args.AsCommandLine () ==
-						 StringUtils.FormatArguments ($"--download-crash-report={deviceName}") + " " +
-						 StringUtils.FormatArguments ($"--download-crash-report-to={crashLogPath}") + " " +
-						 $"--sdkroot {StringUtils.FormatArguments (tempXcodeRoot)} " +
-						 $"--devname {StringUtils.FormatArguments (deviceName)}"),
+						 StringUtils.FormatArguments (
+							 $"--download-crash-report={deviceName}") + " " +
+							 StringUtils.FormatArguments ($"--download-crash-report-to={crashLogPath}") + " " +
+							 $"--devname {StringUtils.FormatArguments (deviceName)}"),
 					log.Object,
 					TimeSpan.FromMinutes (1),
 					null,

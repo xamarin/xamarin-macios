@@ -7,84 +7,101 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml;
 using Xharness.Execution.Mlaunch;
 using Xharness.Logging;
 using Xharness.Utilities;
 
 namespace Xharness.Execution {
 	public class ProcessManager : IProcessManager {
-		public ProcessManager ()
+		public string XcodeRoot { get; }
+		public string MlaunchPath { get; }
+
+		Version xcode_version;
+		public Version XcodeVersion {
+			get {
+				if (xcode_version == null) {
+					var doc = new XmlDocument ();
+					doc.Load (Path.Combine (XcodeRoot, "Contents", "version.plist"));
+					xcode_version = Version.Parse (doc.SelectSingleNode ("//key[text() = 'CFBundleShortVersionString']/following-sibling::string").InnerText);
+				}
+				return xcode_version;
+			}
+		}
+
+		public ProcessManager (string xcodeRoot, string mlaunchPath)
 		{
+			XcodeRoot = xcodeRoot ?? throw new ArgumentNullException (nameof (xcodeRoot));
+			MlaunchPath = mlaunchPath ?? throw new ArgumentNullException (nameof (mlaunchPath));
 		}
 
 		public async Task<ProcessExecutionResult> ExecuteCommandAsync (string filename,
 			IList<string> args,
 			ILog log,
 			TimeSpan timeout,
-			Dictionary<string, string> environment_variables = null,
-			CancellationToken? cancellation_token = null)
+			Dictionary<string, string> environmentVariables = null,
+			CancellationToken? cancellationToken = null)
 		{
-			using (var p = new Process ()) {
-				p.StartInfo.FileName = filename;
-				p.StartInfo.Arguments = StringUtils.FormatArguments (args);
-				return await RunAsync (p, log, timeout, environment_variables, cancellation_token);
-			}
+			using var p = new Process ();
+			p.StartInfo.FileName = filename ?? throw new ArgumentNullException (nameof (filename));
+			p.StartInfo.Arguments = StringUtils.FormatArguments (args);
+			return await RunAsync (p, log, timeout, environmentVariables, cancellationToken);
 		}
 
-		public async Task<ProcessExecutionResult> ExecuteCommandAsync (string filename,
-			MlaunchArguments args,
+		public async Task<ProcessExecutionResult> ExecuteCommandAsync (MlaunchArguments args,
 			ILog log,
 			TimeSpan timeout,
-			Dictionary<string, string> environment_variables = null,
-			CancellationToken? cancellation_token = null)
+			Dictionary<string, string> environmentVariables = null,
+			CancellationToken? cancellationToken = null)
 		{
-			using (var p = new Process ()) {
-				p.StartInfo.FileName = filename;
-				p.StartInfo.Arguments = args.AsCommandLine ();
-				return await RunAsync (p, log, timeout, environment_variables, cancellation_token);
-			}
+			using var p = new Process ();
+			return await RunAsync (p, args, log, timeout, environmentVariables, cancellationToken);
+		}
+
+		public Task<ProcessExecutionResult> ExecuteXcodeCommandAsync (string executable, IList<string> args, ILog log, TimeSpan timeout)
+		{
+			string filename = Path.Combine (XcodeRoot, "Contents", "Developer", "usr", "bin", executable);
+			return ExecuteCommandAsync (filename, args, log, timeout: timeout);
 		}
 
 		[DllImport ("/usr/lib/libc.dylib")]
 		internal static extern int kill (int pid, int sig);
 
-		public static Task<bool> PollForExitAsync (int pid, TimeSpan timeout)
+		public Task<ProcessExecutionResult> RunAsync (Process process,
+			ILog log,
+			TimeSpan? timeout = null,
+			Dictionary<string, string> environment_variables = null,
+			CancellationToken? cancellationToken = null,
+			bool? diagnostics = null)
 		{
-			var rv = new TaskCompletionSource<bool> ();
-			var watch = new Stopwatch ();
-			watch.Start ();
-			Task.Run (async () => {
-				while (watch.ElapsedMilliseconds < timeout.TotalMilliseconds) {
-					if (kill (pid, 0) != 0) {
-						// pid is not valid anymore, program exited
-						rv.SetResult (true);
-						return;
-					}
-					await Task.Delay (TimeSpan.FromMilliseconds (100));
-				}
-
-				rv.SetResult (false);
-			});
-			return rv.Task;
+			return RunAsync (process, log, log, log, timeout, environment_variables, cancellationToken, diagnostics);
 		}
 
-		public async Task<ProcessExecutionResult> RunAsync (Process process, ILog log, CancellationToken? cancellation_token = null, bool? diagnostics = null)
+		public Task<ProcessExecutionResult> RunAsync (Process process,
+			MlaunchArguments args,
+			ILog log,
+			TimeSpan? timeout = null,
+			Dictionary<string, string> environmentVariables = null,
+			CancellationToken? cancellationToken = null,
+			bool? diagnostics = null)
 		{
-			return await RunAsync (process, log, log, log, cancellation_token: cancellation_token, diagnostics: diagnostics);
-		}
-
-		public Task<ProcessExecutionResult> RunAsync (Process process, ILog log, TimeSpan? timeout = null, Dictionary<string, string> environment_variables = null, CancellationToken? cancellation_token = null, bool? diagnostics = null)
-		{
-			return RunAsync (process, log, log, log, timeout, environment_variables, cancellation_token, diagnostics);
-		}
-
-		public Task<ProcessExecutionResult> RunAsync (Process process, MlaunchArguments args, ILog log, TimeSpan? timeout = null, Dictionary<string, string> environment_variables = null, CancellationToken? cancellation_token = null, bool? diagnostics = null)
-		{
+			if (!args.Any (a => a is SdkRootArgument))
+				args.Prepend (new SdkRootArgument (XcodeRoot));
+			
+			process.StartInfo.FileName = MlaunchPath;
 			process.StartInfo.Arguments = args.AsCommandLine ();
-			return RunAsync (process, log, timeout, environment_variables, cancellation_token, diagnostics);
+
+			return RunAsync (process, log, timeout, environmentVariables, cancellationToken, diagnostics);
 		}
 
-		public async Task<ProcessExecutionResult> RunAsync (Process process, ILog log, ILog StdoutStream, ILog StderrStream, TimeSpan? timeout = null, Dictionary<string, string> environment_variables = null, CancellationToken? cancellation_token = null, bool? diagnostics = null)
+		public async Task<ProcessExecutionResult> RunAsync (Process process,
+			ILog log,
+			ILog stdout,
+			ILog stderr,
+			TimeSpan? timeout = null,
+			Dictionary<string, string> environment_variables = null,
+			CancellationToken? cancellationToken = null,
+			bool? diagnostics = null)
 		{
 			var stdout_completion = new TaskCompletionSource<bool> ();
 			var stderr_completion = new TaskCompletionSource<bool> ();
@@ -105,9 +122,9 @@ namespace Xharness.Execution {
 			process.OutputDataReceived += (object sender, DataReceivedEventArgs e) =>
 			{
 				if (e.Data != null) {
-					lock (StdoutStream) {
-						StdoutStream.WriteLine (e.Data);
-						StdoutStream.Flush ();
+					lock (stdout) {
+						stdout.WriteLine (e.Data);
+						stdout.Flush ();
 					}
 				} else {
 					stdout_completion.TrySetResult (true);
@@ -117,9 +134,9 @@ namespace Xharness.Execution {
 			process.ErrorDataReceived += (object sender, DataReceivedEventArgs e) =>
 			{
 				if (e.Data != null) {
-					lock (StderrStream) {
-						StderrStream.WriteLine (e.Data);
-						StderrStream.Flush ();
+					lock (stderr) {
+						stderr.WriteLine (e.Data);
+						stderr.Flush ();
 					}
 				} else {
 					stderr_completion.TrySetResult (true);
@@ -148,7 +165,7 @@ namespace Xharness.Execution {
 			process.BeginErrorReadLine ();
 			process.BeginOutputReadLine ();
 
-			cancellation_token?.Register (() => {
+			cancellationToken?.Register (() => {
 				var hasExited = false;
 				try {
 					hasExited = process.HasExited;
@@ -159,7 +176,7 @@ namespace Xharness.Execution {
 					// processes behind).
 				}
 				if (!hasExited) {
-					StderrStream.WriteLine ($"Execution of {pid} was cancelled.");
+					stderr.WriteLine ($"Execution of {pid} was cancelled.");
 					kill (pid, 9);
 				}
 			});
@@ -168,7 +185,7 @@ namespace Xharness.Execution {
 				if (!await WaitForExitAsync (process, timeout.Value)) {
 					await KillTreeAsync (process, log, diagnostics ?? true);
 					rv.TimedOut = true;
-					lock (StderrStream)
+					lock (stderr)
 						log.WriteLine ($"{pid} Execution timed out after {timeout.Value.TotalSeconds} seconds and the process was killed.");
 				}
 			}
@@ -184,38 +201,6 @@ namespace Xharness.Execution {
 			return rv;
 		}
 
-		public async Task<bool> WaitForExitAsync (Process process, TimeSpan? timeout = null)
-		{
-			if (process.HasExited)
-				return true;
-
-			var tcs = new TaskCompletionSource<bool> ();
-
-			void ProcessExited (object sender, EventArgs ea)
-			{
-				process.Exited -= ProcessExited;
-				tcs.TrySetResult (true);
-			}
-
-			process.Exited += ProcessExited;
-			process.EnableRaisingEvents = true;
-
-			// Check if process exited again, in case it exited after we checked
-			// the last time, but before we attached the event handler.
-			if (process.HasExited) {
-				process.Exited -= ProcessExited;
-				tcs.TrySetResult (true);
-				return true;
-			}
-
-			if (timeout.HasValue) {
-				return await tcs.Task.TimeoutAfter (timeout.Value);
-			} else {
-				await tcs.Task;
-				return true;
-			}
-		}
-
 		public Task KillTreeAsync (Process process, ILog log, bool? diagnostics = true)
 		{
 			return KillTreeAsync (process.Id, log, diagnostics);
@@ -223,8 +208,8 @@ namespace Xharness.Execution {
 
 		public async Task KillTreeAsync (int pid, ILog log, bool? diagnostics = true)
 		{
-			var pids = new List<int> ();
-			GetChildrenPS (log, pids, pid);
+			var pids = GetChildrenPS (log, pid);			
+
 			if (diagnostics == true) {
 				log.WriteLine ($"Pids to kill: {string.Join (", ", pids.Select ((v) => v.ToString ()).ToArray ())}");
 				using (var ps = new Process ()) {
@@ -271,9 +256,41 @@ namespace Xharness.Execution {
 				kill (pids [i], 9);
 		}
 
-		public void GetChildrenPS (ILog log, List<int> list, int pid)
+		static async Task<bool> WaitForExitAsync (Process process, TimeSpan? timeout = null)
 		{
-			string stdout;
+			if (process.HasExited)
+				return true;
+
+			var tcs = new TaskCompletionSource<bool> ();
+
+			void ProcessExited (object sender, EventArgs ea)
+			{
+				process.Exited -= ProcessExited;
+				tcs.TrySetResult (true);
+			}
+
+			process.Exited += ProcessExited;
+			process.EnableRaisingEvents = true;
+
+			// Check if process exited again, in case it exited after we checked
+			// the last time, but before we attached the event handler.
+			if (process.HasExited) {
+				process.Exited -= ProcessExited;
+				tcs.TrySetResult (true);
+				return true;
+			}
+
+			if (timeout.HasValue) {
+				return await tcs.Task.TimeoutAfter (timeout.Value);
+			} else {
+				await tcs.Task;
+				return true;
+			}
+		}
+
+		static List<int> GetChildrenPS (ILog log, int pid)
+		{
+			var list = new List<int> ();
 
 			using (Process ps = new Process ()) {
 				ps.StartInfo.FileName = "ps";
@@ -281,20 +298,21 @@ namespace Xharness.Execution {
 				ps.StartInfo.UseShellExecute = false;
 				ps.StartInfo.RedirectStandardOutput = true;
 				ps.Start ();
-				stdout = ps.StandardOutput.ReadToEnd ();
+
+				string stdout = ps.StandardOutput.ReadToEnd ();
 
 				if (!ps.WaitForExit (1000)) {
 					log.WriteLine ("ps didn't finish in a reasonable amount of time (1 second).");
-					return;
+					return list;
 				}
 
 				if (ps.ExitCode != 0)
-					return;
+					return list;
 
 				stdout = stdout.Trim ();
 
 				if (string.IsNullOrEmpty (stdout))
-					return;
+					return list;
 
 				var dict = new Dictionary<int, List<int>> ();
 				foreach (string line in stdout.Split (new char [] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries)) {
@@ -305,12 +323,11 @@ namespace Xharness.Execution {
 				
 					var parent = l.Substring (0, space);
 					var process = l.Substring (space + 1);
-					int parent_id, process_id;
 
-					if (int.TryParse (parent, out parent_id) && int.TryParse (process, out process_id)) {
-						List<int> children;
-						if (!dict.TryGetValue (parent_id, out children))
+					if (int.TryParse (parent, out var parent_id) && int.TryParse (process, out var process_id)) {
+						if (!dict.TryGetValue (parent_id, out var children))
 							dict [parent_id] = children = new List<int> ();
+
 						children.Add (process_id);
 					}
 				}
@@ -319,15 +336,16 @@ namespace Xharness.Execution {
 				queue.Enqueue (pid);
 
 				do {
-					List<int> children;
 					var parent_id = queue.Dequeue ();
 					list.Add (parent_id);
-					if (dict.TryGetValue (parent_id, out children)) {
+					if (dict.TryGetValue (parent_id, out var children)) {
 						foreach (var child in children)
 							queue.Enqueue (child);
 					}
 				} while (queue.Count > 0);
 			}
+
+			return list;
 		}
 	}
 }
