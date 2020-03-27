@@ -72,7 +72,7 @@ namespace Xharness.Tests.Hardware.Tests {
 
 			MlaunchArgument sdkRootArg = passedArguments.Where (a => a is SdkRootArgument).FirstOrDefault();
 			Assert.IsNotNull (sdkRootArg, "sdk arg missing");
-			AssertArgumentValue (sdkRootArg, sdkPath, "sdk arg wrong");
+			AssertArgumentValue (sdkRootArg, $"--sdkroot {sdkPath}", "sdk arg wrong");
 
 			MlaunchArgument listDevArg = passedArguments.Where (a => a is ListDevicesArgument).FirstOrDefault();
 			Assert.IsNotNull (listDevArg, "list devices arg missing");
@@ -99,7 +99,7 @@ namespace Xharness.Tests.Hardware.Tests {
 					
 					// we get the temp file that was passed as the args, and write our sample xml, which will be parsed to get the devices :)
 					var tempPath = args.Where (a => a is ListDevicesArgument).First ().AsCommandLineArgument ();
-					tempPath = tempPath.Substring(tempPath.IndexOf('=') + 1);
+					tempPath = tempPath.Substring (tempPath.IndexOf('=') + 1).Replace ("\"", string.Empty);
 
 					var name = GetType ().Assembly.GetManifestResourceNames ().Where (a => a.EndsWith ("devices.xml", StringComparison.Ordinal)).FirstOrDefault ();
 					using (var outputStream = new StreamWriter (tempPath))
@@ -119,7 +119,7 @@ namespace Xharness.Tests.Hardware.Tests {
 
 			MlaunchArgument sdkRootArg = passedArguments.Where (a => a is SdkRootArgument).FirstOrDefault();
 			Assert.IsNotNull (sdkRootArg, "sdk arg missing");
-			AssertArgumentValue (sdkRootArg, sdkPath, "sdk arg wrong");
+			AssertArgumentValue (sdkRootArg, $"--sdkroot {sdkPath}", "sdk arg wrong");
 
 			MlaunchArgument listDevArg = passedArguments.Where (a => a is ListDevicesArgument).FirstOrDefault();
 			Assert.IsNotNull (listDevArg, "list devices arg missing");
