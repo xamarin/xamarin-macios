@@ -1,27 +1,8 @@
 ﻿using System.IO;
 using System.Xml;
-using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
-namespace Xharness {
-
-	public class AppBundleInformation {
-		public string AppName { get; }
-		public string BundleIdentifier { get; }
-		public string AppPath { get; }
-		public string Variation { get; set;  }
-		public string LaunchAppPath { get; }
-		public Extension? Extension { get; }
-
-		public AppBundleInformation (string appName, string bundleIdentifier, string appPath, string launchAppPath, Extension? extension)
-		{
-			AppName = appName;
-			BundleIdentifier = bundleIdentifier;
-			AppPath = appPath;
-			LaunchAppPath = launchAppPath;
-			Extension = extension;
-		}
-	}
+namespace Microsoft.DotNet.XHarness.iOS.Shared {
 
 	public interface IAppBundleInformationParser {
 		AppBundleInformation ParseFromProject (string projectFilePath, TestTarget target, string buildConfiguration);
@@ -56,7 +37,7 @@ namespace Xharness {
 			if (!Directory.Exists (appPath))
 				throw new DirectoryNotFoundException ($"The app bundle directory `{appPath}` does not exist");
 
-			string launchAppPath = (target.ToRunMode () == RunMode.WatchOS)
+			string launchAppPath = target.ToRunMode () == RunMode.WatchOS
 				? Directory.GetDirectories (Path.Combine (appPath, "Watch"), "*.app") [0]
 				: appPath;
 

@@ -1,15 +1,14 @@
 ﻿using System.IO;
 using System.Reflection;
-using Microsoft.DotNet.XHarness.iOS.Shared;
 using NUnit.Framework;
 
-namespace Xharness.Tests {
+namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests {
 	[TestFixture]
 	public class AppBundleInformationParserTests {
 
 		const string appName = "com.xamarin.bcltests.SystemXunit";
 
-		static readonly string outputPath = Path.GetDirectoryName (Assembly.GetAssembly (typeof (AppRunnerTests)).Location);
+		static readonly string outputPath = Path.GetDirectoryName (Assembly.GetAssembly (typeof (AppBundleInformationParser)).Location);
 		static readonly string sampleProjectPath = Path.Combine (outputPath, "Samples", "TestProject");
 		static readonly string appPath = Path.Combine (sampleProjectPath, "bin", appName + ".app");
 		static readonly string projectFilePath = Path.Combine (sampleProjectPath, "SystemXunit.csproj");

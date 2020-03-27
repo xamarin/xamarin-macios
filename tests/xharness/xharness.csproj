@@ -73,7 +73,6 @@
     <PackageReference Include="Mono.Options" Version="6.6.0.161" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppBundleInformationParser.cs" />
     <Compile Include="AppRunner.cs" />
     <Compile Include="BCLTestImporter\BCLTestImportTargetFactory.cs" />
     <Compile Include="BCLTestImporter\BCLTestInfoPlistGenerator.cs" />
