@@ -1,10 +1,9 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using NUnit.Framework;
-using Xharness.BCLTestImporter;
-using Xharness.BCLTestImporter.Xamarin;
+using Xharness.TestImporter;
+using Xharness.TestImporter.Xamarin;
 
-namespace Xharness.Tests.BCLTestImporter.Xamarin.Tests {
+namespace Xharness.Tests.TestImporter.Xamarin.Tests {
 
 	// very simple class, but we want to make sure that iOS, tvOS, watchOS get the iosDownload and the mac
 	// versions get the mac download

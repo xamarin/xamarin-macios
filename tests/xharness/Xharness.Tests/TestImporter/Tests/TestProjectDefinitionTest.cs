@@ -2,10 +2,9 @@ using System;
 using System.Collections.Generic;
 using Moq;
 using NUnit.Framework;
-using Xharness.BCLTestImporter;
-using Xharness.BCLTestImporter.Templates;
+using Xharness.TestImporter;
 
-namespace Xharness.Tests.BCLTestImporter.Tests {
+namespace Xharness.Tests.TestImporter.Tests {
 	public class TestProjectDefinitionTest {
 
 		Mock<IAssemblyLocator> assemblyLocator;
@@ -27,7 +26,7 @@ namespace Xharness.Tests.BCLTestImporter.Tests {
 		[Test]
 		public void GetTypeForAssembliesNullMonoPath ()
 		{
-			var projectDefinition = new BCLTestProjectDefinition ("MyProject", assemblyLocator.Object, factory.Object,  new List<ITestAssemblyDefinition> (), "");	
+			var projectDefinition = new Xharness.TestImporter.BCLTestProjectDefinition ("MyProject", assemblyLocator.Object, factory.Object,  new List<ITestAssemblyDefinition> (), "");	
 			Assert.Throws<ArgumentNullException> (() => projectDefinition.GetTypeForAssemblies (null, Platform.iOS));
 		}
 	}

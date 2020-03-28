@@ -3,11 +3,11 @@ using System.IO;
 using System.Text;
 using Moq;
 using NUnit.Framework;
-using Xharness.BCLTestImporter;
-using Xharness.BCLTestImporter.Templates;
-using Xharness.BCLTestImporter.Templates.Managed;
+using Xharness.TestImporter;
+using Xharness.TestImporter.Templates;
+using Xharness.TestImporter.Templates.Managed;
 
-namespace Xharness.Tests.BCLTestImporter.Xamarin.Tests {
+namespace Xharness.Tests.TestImporter.Xamarin.Tests {
 
 	[TestFixture]
 	public class XamariniOSTemplateTest {

@@ -1,18 +1,18 @@
 using System;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using Xharness.BCLTestImporter.Templates;
-using Xharness.BCLTestImporter.Templates.Managed;
-using Xharness.BCLTestImporter.Xamarin;
+using Xharness.TestImporter.Templates;
+using Xharness.TestImporter.Templates.Managed;
+using Xharness.TestImporter.Xamarin;
+using Xharness.Utilities;
+using Xharness.TestImporter;
 
-namespace Xharness.BCLTestImporter {
+namespace Xharness {
 	/// <summary>
 	/// Class that knows how to generate .csproj files based on a BCLTestProjectDefinition.
 	/// </summary>
-	public class BCLTestProjectGenerator {
+	public class BCLTestImportTargetFactory {
 
 		// less typing
 		class ProjectsDefinitions : Dictionary<string, (string ExtraArgs, double TimeoutMultiplier, (string Name, string [] Assemblies) [] Projects)> { } 
@@ -248,7 +248,17 @@ namespace Xharness.BCLTestImporter {
 		public ITemplatedProject TemplatedProject { get; set; }
 		public ITestAssemblyDefinitionFactory AssemblyDefinitionFactory { get; set; }
 
-		public BCLTestProjectGenerator (string outputDirectory)
+		public BCLTestImportTargetFactory (Harness harness) : this (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "bcl-test")), harness.MONO_PATH)
+		{
+			if (harness == null)
+				throw new ArgumentNullException (nameof (harness));
+			iOSMonoSDKPath = harness.MONO_IOS_SDK_DESTDIR;
+			MacMonoSDKPath = harness.MONO_MAC_SDK_DESTDIR;
+			GuidGenerator = Helpers.GenerateStableGuid;
+			GroupTests = harness.InCI || harness.UseGroupedApps;
+		}
+
+		public BCLTestImportTargetFactory (string outputDirectory)
 		{
 			OutputDirectoryPath = outputDirectory ?? throw new ArgumentNullException (nameof (outputDirectory));
 			AssemblyLocator = new AssemblyLocator ();
@@ -263,7 +273,7 @@ namespace Xharness.BCLTestImporter {
 			};
 		}
 		
-		public BCLTestProjectGenerator (string outputDirectory, string monoRootPath) : this (outputDirectory)
+		public BCLTestImportTargetFactory (string outputDirectory, string monoRootPath) : this (outputDirectory)
 		{
 			MonoRootPath = monoRootPath ?? throw new ArgumentNullException (nameof (monoRootPath));
 		}
@@ -336,5 +346,61 @@ namespace Xharness.BCLTestImporter {
 		public Task<GeneratedProjects> GenerateAllMacTestProjectsAsync (Platform platform) => GenerateTestProjectsAsync (GetProjectDefinitions (macTestProjects, platform), platform);
 
 		public GeneratedProjects GenerateAllMacTestProjects (Platform platform) => GenerateAllMacTestProjectsAsync (platform).Result;
+
+		// Map from the projects understood from the test importer to those that AppRunner and friends understand:
+		public List<iOSTestProject> GetiOSBclTargets ()
+		{
+			var result = new List<iOSTestProject> ();
+			// generate all projects, then create a new iOSTarget per project
+			foreach (var tp in GenerateAlliOSTestProjects ()) {
+				var prefix = tp.XUnit ? "xUnit" : "NUnit";
+				var finalName = tp.Name.StartsWith ("mscorlib", StringComparison.Ordinal) ? tp.Name : $"[{prefix}] Mono {tp.Name}"; // mscorlib is our special test
+				result.Add (new iOSTestProject (tp.Path) {
+					Name = finalName,
+					SkipiOSVariation = !tp.Platforms.Contains (Platform.iOS),
+					SkiptvOSVariation = !tp.Platforms.Contains (Platform.TvOS),
+					SkipwatchOS32Variation = tp.Name.StartsWith ("mscorlib", StringComparison.Ordinal), // mscorlib is our special test
+					SkipwatchOSVariation = !tp.Platforms.Contains (Platform.WatchOS),
+					FailureMessage = tp.Failure,
+					RestoreNugetsInProject = true,
+					MTouchExtraArgs = tp.ExtraArgs,
+					TimeoutMultiplier = tp.TimeoutMultiplier,
+				});
+			}
+			return result;
+		}
+
+		public List<MacTestProject> GetMacBclTargets (MacFlavors flavor)
+		{
+			Platform platform;
+			if (flavor == MacFlavors.Full)
+				platform = Platform.MacOSFull;
+			else
+				platform = Platform.MacOSModern;
+			var result = new List<MacTestProject> ();
+			foreach (var tp in GenerateAllMacTestProjects (platform)) {
+				var prefix = tp.XUnit ? "xUnit" : "NUnit";
+				var finalName = tp.Name.StartsWith ("mscorlib", StringComparison.Ordinal) ? tp.Name : $"[{prefix}] Mono {tp.Name}"; // mscorlib is our special test
+				result.Add (new MacTestProject (tp.Path, targetFrameworkFlavor: flavor) {
+					Name = finalName,
+					Platform = "AnyCPU",
+					IsExecutableProject = true,
+					FailureMessage = tp.Failure,
+					RestoreNugetsInProject = true,
+					MTouchExtraArgs = tp.ExtraArgs,
+				});
+			}
+			return result;
+		}
+
+		public List<MacTestProject> GetMacBclTargets ()
+		{
+			var result = new List<MacTestProject> ();
+			foreach (var flavor in new [] { MacFlavors.Full, MacFlavors.Modern }) {
+				result.AddRange (GetMacBclTargets (flavor));
+			}
+			return result;
+		}
+
 	}
 }

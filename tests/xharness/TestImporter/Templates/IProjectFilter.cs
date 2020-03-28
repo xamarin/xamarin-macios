@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace Xharness.BCLTestImporter.Templates {
+namespace Xharness.TestImporter.Templates {
 
 	/// <summary>
 	/// There are cases in which projects are ignored in certain platforms, either because

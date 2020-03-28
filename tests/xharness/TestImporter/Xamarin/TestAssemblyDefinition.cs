@@ -1,9 +1,7 @@
 using System;
 using System.IO;
-using System.Collections.Generic;
-using Xharness.BCLTestImporter.Templates;
 
-namespace Xharness.BCLTestImporter.Xamarin {
+namespace Xharness.TestImporter.Xamarin {
 	public class TestAssemblyDefinition : ITestAssemblyDefinition{
 		
 		#region properties
