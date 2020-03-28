@@ -9,8 +9,10 @@ using Xharness.Hardware;
 using Xharness.Listeners;
 using Xharness.Logging;
 
-namespace Xharness.Jenkins.TestTasks {
-	class RunSimulatorTask : RunXITask<ISimulatorDevice> {
+namespace Xharness.Jenkins.TestTasks
+{
+	class RunSimulatorTask : RunXITask<ISimulatorDevice>
+	{
 		readonly ISimulatorsLoader simulators;
 		readonly ITunnelBore tunnelBore;
 		public IAcquiredResource AcquiredResource;

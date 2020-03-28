@@ -294,7 +294,7 @@ namespace Xharness {
 			args.Add (new SetEnvVariableArgument ("NUNIT_HOSTPORT", listener.Port));
 
 			if (UseTcpTunnel)
-				args.Add (new SetEnvVariableArgument ("USE_TCP_TUNNEL", "true"));
+				args.Add (new SetEnvVariableArgument ("USE_TCP_TUNNEL", true));
 
 			listener.StartAsync ();
 
@@ -415,7 +415,7 @@ namespace Xharness {
 					if (transport == ListenerTransport.Tcp && UseTcpTunnel && listener is SimpleTcpListener tcpListener) {
 						// create a new tunnel using the listener
 						TcpTunnel tunnel = null;
-						tunnel = listenerFactory.Mole.Create (deviceName, MainLog);
+						tunnel = listenerFactory.TunnelBore.Create (deviceName, MainLog);
 						tunnel.Start (deviceName, tcpListener, testReporter.Timeout, MainLog);
 						// wait until we started the tunnel
 						await tunnel.Started; 
@@ -441,7 +441,7 @@ namespace Xharness {
 			listener.Dispose ();
 
 			// close a tunnel if it was created
-			listenerFactory.Mole.Close (deviceName);
+			listenerFactory.TunnelBore.Close (deviceName);
 				
 
 			// check the final status, copy all the required data

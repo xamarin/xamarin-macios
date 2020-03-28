@@ -488,6 +488,11 @@ namespace FileProvider {
 		[Export ("favoriteRank", ArgumentSemantic.Copy)]
 		NSNumber GetFavoriteRank ();
 
+#if XAMCORE_4_0 // Not available in mac
+		[NoMac]
+#elif MONOMAC
+		[Obsolete ("'IsTrashed' is not available in macOS and will be removed in the future.")]
+#endif
 		[Export ("isTrashed")]
 		bool IsTrashed ();
 

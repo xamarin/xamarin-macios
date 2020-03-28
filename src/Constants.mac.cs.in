@@ -169,5 +169,8 @@ namespace MonoMac {
 		public const string LinkPresentationLibrary = "/System/Library/Frameworks/LinkPresentation.framework/LinkPresentation";
 		// not clear if the api is available, issue: https://github.com/xamarin/maccore/issues/1951
 		//public const string CoreHapticsLibrary = "/System/Library/Frameworks/CoreHaptics.framework/CoreHaptics";
+
+		// macOS 10.15.4
+		public const string AutomaticAssessmentConfigurationLibrary = "/System/Library/Frameworks/AutomaticAssessmentConfiguration.framework/AutomaticAssessmentConfiguration";
 	}
 }

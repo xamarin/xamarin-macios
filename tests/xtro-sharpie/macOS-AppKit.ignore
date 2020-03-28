@@ -442,7 +442,6 @@
 !missing-field! NSRuleEditorPredicateOperatorType not bound
 !missing-field! NSRuleEditorPredicateOptions not bound
 !missing-field! NSRuleEditorPredicateRightExpression not bound
-!missing-field! NSScrollViewWillStartLiveScrollNotification not bound
 !missing-field! NSSelectedIdentifierBinding not bound
 !missing-field! NSSelectedIndexBinding not bound
 !missing-field! NSSelectedLabelBinding not bound

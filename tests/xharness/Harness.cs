@@ -73,7 +73,7 @@ namespace Xharness {
 		public HashSet<string> Labels { get; }
 		public XmlResultJargon XmlJargon { get; }
 		public IResultParser ResultParser { get; }
-		public IMole Mole { get; }
+		public ITunnelBore TunnelBore { get; }
 
 		// This is the maccore/tests directory.
 		static string root_directory;
@@ -195,7 +195,6 @@ namespace Xharness {
 				EnvironmentVariables = new Dictionary<string, string> (configuration.EnvironmentVariables);
 
 			LaunchTimeout = InCI ? 3 : 120;
-
 			var config = ParseConfigFiles ();
 			var src_root = Path.GetDirectoryName (Path.GetFullPath (RootDirectory));
 
@@ -216,9 +215,9 @@ namespace Xharness {
 
 			if (string.IsNullOrEmpty (SdkRoot))
 				SdkRoot = config ["XCODE_DEVELOPER_ROOT"] ?? configuration.SdkRoot;
-
+			
 			processManager = new ProcessManager (XcodeRoot, MlaunchPath);
-			Mole = new Mole (processManager);
+			TunnelBore = new TunnelBore (processManager);
 		}
 
 		public bool GetIncludeSystemPermissionTests (TestPlatform platform, bool device)
@@ -449,7 +448,7 @@ namespace Xharness {
 			return configuration;
 		}
 
-		IEnumerable<string> GetConfigFiles ()
+		IEnumerable <string> GetConfigFiles ()
 		{
 			return FindConfigFiles (useSystemXamarinIOSMac ? "test-system.config" : "test.config")
 				.Concat (FindConfigFiles ("Make.config"))
@@ -659,7 +658,7 @@ namespace Xharness {
 				AutoConfigureMac (false);
 			}
 
-			var jenkins = new Jenkins.Jenkins (this, processManager, ResultParser, Mole);
+			var jenkins = new Jenkins.Jenkins (this, processManager, ResultParser, TunnelBore);
 			return jenkins.Run ();
 		}
 
@@ -718,7 +717,7 @@ namespace Xharness {
 			return new AppRunner (processManager,
 				new AppBundleInformationParser (),
 				new SimulatorsLoaderFactory (processManager),
-				new SimpleListenerFactory (Mole),
+				new SimpleListenerFactory (TunnelBore),
 				new DeviceLoaderFactory (processManager),
 				new CrashSnapshotReporterFactory (processManager),
 				new CaptureLogFactory (),

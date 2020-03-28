@@ -7,8 +7,10 @@ using Xharness.Hardware;
 using Xharness.Listeners;
 using Xharness.Logging;
 
-namespace Xharness.Jenkins.TestTasks {
-	class RunDeviceTask : RunXITask<IHardwareDevice> {
+namespace Xharness.Jenkins.TestTasks
+{
+	class RunDeviceTask : RunXITask<IHardwareDevice>
+	{
 		readonly ITunnelBore tunnelBore;
 		readonly IResultParser resultParser = new XmlResultParser ();
 		readonly IDeviceLoader devices;

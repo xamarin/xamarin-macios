@@ -47,6 +47,7 @@ namespace VideoToolbox {
 		PixelTransferNotPermitted                 = -12218,
 		ColorCorrectionImageRotationFailed        = -12219,
 		VideoDecoderRemoved                       = -17690,
+		SessionMalfunction                        = -17691,
 	}
 
 	// uint32_t -> VTErrors.h

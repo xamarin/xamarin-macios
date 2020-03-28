@@ -20,13 +20,13 @@ namespace Xharness.Listeners {
 		void Close (string device);
 	}
 
-	public class Mole : ITunnelBore {
+	public class TunnelBore : ITunnelBore {
 
 		readonly object tunnelsLock = new object ();
 		readonly IProcessManager processManager;
 		readonly Dictionary<string, TcpTunnel> tunnels = new Dictionary<string, TcpTunnel> ();
 
-		public Mole (IProcessManager processManager)
+		public TunnelBore (IProcessManager processManager)
 		{
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 		}
@@ -50,7 +50,7 @@ namespace Xharness.Listeners {
 			// closes a tcp tunnel that was created for the given device.
 			lock (tunnelsLock) { 
 				if (tunnels.TryGetValue (device, out var tunnel)) {
-					tunnel.Close ();
+					tunnel.Dispose ();
 					tunnels.Remove (device);
 				}
 			}

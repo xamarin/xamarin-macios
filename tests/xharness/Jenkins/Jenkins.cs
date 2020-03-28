@@ -940,7 +940,8 @@ namespace Xharness.Jenkins {
 
 			var crashReportSnapshotFactory = new CrashSnapshotReporterFactory (processManager);
 
-			var buildiOSMSBuild_net461 = new MSBuildTask (processManager) {
+			var buildiOSMSBuild_net461 = new MSBuildTask (processManager)
+			{
 				Jenkins = this,
 				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "msbuild", "tests", "Xamarin.iOS.Tasks.Tests", "Xamarin.iOS.Tasks.Tests.csproj"))),
 				SpecifyPlatform = false,
@@ -986,7 +987,8 @@ namespace Xharness.Jenkins {
 			};
 			Tasks.Add (nunitExecutioniOSMSBuild_netstandard2);
 
-			var buildInstallSources = new MSBuildTask (processManager) {
+			var buildInstallSources = new MSBuildTask (processManager)
+			{
 				Jenkins = this,
 				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "tools", "install-source", "InstallSourcesTests", "InstallSourcesTests.csproj"))),
 				SpecifyPlatform = false,
@@ -1078,7 +1080,8 @@ namespace Xharness.Jenkins {
 				}
 			}
 
-			var buildMTouch = new MakeTask (processManager) {
+			var buildMTouch = new MakeTask (processManager)
+			{
 				Jenkins = this,
 				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "mtouch", "mtouch.sln"))),
 				SpecifyPlatform = false,
@@ -1134,7 +1137,8 @@ namespace Xharness.Jenkins {
 			};
 			Tasks.Add (runDotNetGenerator);
 
-			var run_mmp = new MakeTask (processManager) {
+			var run_mmp = new MakeTask (processManager)
+			{
 				Jenkins = this,
 				Platform = TestPlatform.Mac,
 				TestName = "MMP Regression Tests",
@@ -1151,7 +1155,8 @@ namespace Xharness.Jenkins {
 			run_mmp.Environment.Add ("BUILD_REVISION", "jenkins"); // This will print "@MonkeyWrench: AddFile: <log path>" lines, which we can use to get the log filenames.
 			Tasks.Add (run_mmp);
 
-			var runMacBindingProject = new MakeTask (processManager) {
+			var runMacBindingProject = new MakeTask (processManager)
+			{
 				Jenkins = this,
 				Platform = TestPlatform.Mac,
 				TestName = "Mac Binding Projects",
