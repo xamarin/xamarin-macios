@@ -1,20 +1,35 @@
 ﻿using System;
+using System.IO;
+
 namespace Xharness.Logging {
 	// A log that forwards all written data to a callback
 	public class CallbackLog : Log {
-		readonly Action<string> OnWrite;
+		readonly Action<string> onWrite;
 
 		public CallbackLog (Action<string> onWrite)
-			: base (null)
+			: base ("Callback log")
 		{
-			OnWrite = onWrite;
+			this.onWrite = onWrite;
 		}
 
 		public override string FullPath => throw new NotSupportedException ();
 
-		public override void WriteImpl (string value)
+		public override void Dispose ()
 		{
-			OnWrite (value);
+		}
+
+		public override void Flush ()
+		{
+		}
+
+		public override StreamReader GetReader ()
+		{
+			throw new NotSupportedException ();
+		}
+
+		protected override void WriteImpl (string value)
+		{
+			onWrite (value);
 		}
 	}
 }

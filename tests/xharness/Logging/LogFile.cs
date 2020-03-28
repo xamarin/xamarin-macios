@@ -2,16 +2,18 @@
 using System.IO;
 
 namespace Xharness.Logging {
-	public class LogFile : Log, ILogFile {
-		object lock_obj = new object ();
-		public string Path { get; private set; }
+	public class LogFile : Log, ILog {
+		readonly object lock_obj = new object ();
+
+		public override string FullPath { get; }
+
 		FileStream writer;
 		bool disposed;
 
-		public LogFile (ILogs logs, string description, string path, bool append = true)
-			: base (logs, description)
+		public LogFile (string description, string path, bool append = true)
+			: base (description)
 		{
-			Path = path ?? throw new ArgumentNullException (nameof (path));
+			FullPath = path ?? throw new ArgumentNullException (nameof (path));
 			if (!append)
 				File.WriteAllText (path, string.Empty);
 		}
@@ -23,11 +25,10 @@ namespace Xharness.Logging {
 				// variable until we're disposed. Due to the async nature of how we run tests, writes may still
 				// happen after we're disposed, in which case we create a temporary stream we close after writing
 				lock (lock_obj) {
-					var fs = writer;
-					if (fs == null) {
-						fs = new FileStream (Path, FileMode.Append, FileAccess.Write, FileShare.Read);
-					}
+					var fs = writer ?? new FileStream (FullPath, FileMode.Append, FileAccess.Write, FileShare.Read);
+
 					fs.Write (buffer, offset, count);
+
 					if (disposed) {
 						fs.Dispose ();
 					} else {
@@ -35,30 +36,30 @@ namespace Xharness.Logging {
 					}
 				}
 			} catch (Exception e) {
-				Console.Error.WriteLine ($"Failed to write to the file {Path}: {e}.");
+				Console.Error.WriteLine ($"Failed to write to the file {FullPath}: {e}.");
 				return;
 			}
 		}
 
 		public override void Flush ()
 		{
-			base.Flush ();
-
-			if (writer != null && !disposed)
-				writer.Flush ();
+			if (!disposed)
+				writer?.Flush ();
 		}
 
-		public override string FullPath => Path;
+		protected override void WriteImpl (string value)
+		{
+			var bytes = Encoding.GetBytes (value);
+			Write (bytes, 0, bytes.Length);
+		}
 
 		public override StreamReader GetReader ()
 		{
-			return new StreamReader (new FileStream (Path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
+			return new StreamReader (new FileStream (FullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
 		}
 
-		protected override void Dispose (bool disposing)
+		public override void Dispose ()
 		{
-			base.Dispose (disposing);
-
 			lock (lock_obj) {
 				writer?.Dispose ();
 				writer = null;
@@ -66,6 +67,5 @@ namespace Xharness.Logging {
 
 			disposed = true;
 		}
-
 	}
 }

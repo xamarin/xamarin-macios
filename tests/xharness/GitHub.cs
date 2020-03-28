@@ -6,15 +6,13 @@ using System.Linq;
 using System.Net;
 using System.Runtime.Serialization.Json;
 using System.Xml;
-using System.Text;
-using Xamarin;
 using Xharness.Execution;
+using Xharness.Logging;
 
 namespace Xharness
 {
 	public static class GitHub
 	{
-		static IProcessManager ProcessManager { get; set; } = new ProcessManager ();
 		static WebClient CreateClient ()
 		{
 			var client = new WebClient ();
@@ -55,11 +53,11 @@ namespace Xharness
 			}
 		}
 
-		public static IEnumerable<string> GetModifiedFiles (Harness harness, int pull_request)
+		public static IEnumerable<string> GetModifiedFiles (IProcessManager processManager, Harness harness, int pull_request)
 		{
 			var path = Path.Combine (harness.LogDirectory, "pr" + pull_request + "-files.log");
 			if (!File.Exists (path)) {
-				var rv = GetModifiedFilesLocally (harness, pull_request);
+				var rv = GetModifiedFilesLocally (processManager, harness, pull_request);
 				if (rv == null || rv.Count () == 0) {
 					rv = GetModifiedFilesRemotely (harness, pull_request);
 					if (rv == null)
@@ -140,7 +138,7 @@ namespace Xharness
 			return File.ReadAllLines (path);
 		}
 
-		static IEnumerable<string> GetModifiedFilesLocally (Harness harness, int pull_request)
+		static IEnumerable<string> GetModifiedFilesLocally (IProcessManager processManager, Harness harness, int pull_request)
 		{
 			var base_commit = $"origin/pr/{pull_request}/merge^";
 			var head_commit = $"origin/pr/{pull_request}/merge";
@@ -153,8 +151,8 @@ namespace Xharness
 			using (var git = new Process ()) {
 				git.StartInfo.FileName = "git";
 				git.StartInfo.Arguments = $"diff-tree --no-commit-id --name-only -r {base_commit}..{head_commit}";
-				var output = new StringWriter ();
-				var rv = ProcessManager.RunAsync (git, harness.HarnessLog, output, output).Result;
+				var output = new MemoryLog ();
+				var rv = processManager.RunAsync (git, harness.HarnessLog, stdoutLog: output, stderrLog: output).Result;
 				if (rv.Succeeded)
 					return output.ToString ().Split (new char [] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
 

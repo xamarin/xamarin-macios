@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Moq;
 using NUnit.Framework;
 using Xharness.Execution;
 using Xharness.Logging;
@@ -21,7 +20,6 @@ namespace Xharness.Tests.Execution.Tests {
 		string stderrLogPath;
 		string stdoutMessage;
 		string stderrMessage;
-		Mock<ILogs> logs;
 		ILog executionLog;
 		ILog stdoutLog;
 		ILog stderrLog;
@@ -38,12 +36,11 @@ namespace Xharness.Tests.Execution.Tests {
 			stdoutLogPath = Path.GetTempFileName ();
 			stdoutMessage = "Hola mundo!!!";
 			stderrMessage = "Adios mundo cruel";
-			logs = new Mock<ILogs> ();
-			executionLog = new LogFile (logs.Object, "my execution log", logPath);
-			stdoutLog = new LogFile (logs.Object, "my stdout log", stdoutLogPath);
-			stderrLog = new LogFile (logs.Object, "my stderr log", stderrLogPath);
+			executionLog = new LogFile ("my execution log", logPath);
+			stdoutLog = new LogFile ("my stdout log", stdoutLogPath);
+			stderrLog = new LogFile ("my stderr log", stderrLogPath);
 			dummyProcess = Path.Combine (Path.GetDirectoryName (GetType ().Assembly.Location), "DummyTestProcess.exe");
-			manager = new ProcessManager ();
+			manager = new ProcessManager ("/path/to/xcode", "/path/to/mlaunch");
 			testProcess = new Process ();
 			testProcess.StartInfo.FileName = "mono";
 		}
@@ -60,6 +57,7 @@ namespace Xharness.Tests.Execution.Tests {
 			testProcess?.Dispose ();
 			testProcess = null;
 			manager = null;
+
 			if (File.Exists (logPath))
 				File.Delete (logPath);
 			if (File.Exists (stderrLogPath))
@@ -72,6 +70,8 @@ namespace Xharness.Tests.Execution.Tests {
 		{
 			bool stdoutFound = false;
 			bool stderrFound = false;
+
+			executionLog?.Dispose ();
 
 			using (var reader = new StreamReader (logPath)) {
 				string line;
@@ -91,12 +91,13 @@ namespace Xharness.Tests.Execution.Tests {
 		[TestCase (0, 60, false, true, Description = "Timeout" )] // 0, long timeout, failure, timeout
 		public async Task ExecuteCommandAsyncTest (int resultCode, int timeoutCount, bool success, bool timeout)
 		{
-			var args = new List<string> ();
-			args.Add (dummyProcess);
-			args.Add ($"--exit-code={resultCode}");
-			args.Add ($"--timeout={timeoutCount}");
-			args.Add ($"--stdout=\"{stdoutMessage}\"");
-			args.Add ($"--stderr=\"{stderrMessage}\"");
+			var args = new List<string> {
+				dummyProcess,
+				$"--exit-code={resultCode}",
+				$"--timeout={timeoutCount}",
+				$"--stdout=\"{stdoutMessage}\"",
+				$"--stderr=\"{stderrMessage}\""
+			};
 			var result = await manager.ExecuteCommandAsync ("mono", args, executionLog, new TimeSpan (0, 0, 5));
 			if (!timeout)
 				Assert.AreEqual (resultCode, result.ExitCode, "exit code");
@@ -111,7 +112,7 @@ namespace Xharness.Tests.Execution.Tests {
 		{
 			var source = new CancellationTokenSource ();
 			testProcess.StartInfo.Arguments = $"{dummyProcess} --exit-code={resultCode} --timeout={timeoutCount} --stdout=\"{stdoutMessage}\" --stderr=\"{stderrMessage}\"";
-			var result = await manager.RunAsync (testProcess, executionLog, source.Token);
+			var result = await manager.RunAsync (testProcess, executionLog, executionLog, executionLog, cancellationToken: source.Token);
 			if (!timeout)
 				Assert.AreEqual (resultCode, result.ExitCode, "exit code");
 			Assert.AreEqual (success, result.Succeeded, "success");
@@ -154,6 +155,9 @@ namespace Xharness.Tests.Execution.Tests {
 			// assert the diff logs have the correct line
 			bool stdoutFound = false;
 			bool stderrFound = false;
+
+			stdoutLog?.Dispose ();
+			stderrLog?.Dispose ();
 
 			using (var reader = new StreamReader (stdoutLogPath)) {
 				string line;

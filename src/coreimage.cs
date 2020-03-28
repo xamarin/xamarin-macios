@@ -2863,10 +2863,9 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("outputImageNonMPS")]
 		CIImage OutputImageNonMps { get; }
 
-#if MONOMAC
+		[iOS (13,4)]
 		[CoreImageFilterProperty ("outputImageMPS")]
 		CIImage OutputImageMps { get; }
-#endif
 	}
 
 	[CoreImageFilter]
@@ -5331,10 +5330,9 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("outputImageNonMPS")]
 		CIImage OutputImageNonMps { get; }
 
-#if MONOMAC
+		[iOS (13,4)]
 		[CoreImageFilterProperty ("outputImageMPS")]
 		CIImage OutputImageMps { get; }
-#endif
 	}
 
 	[CoreImageFilter]

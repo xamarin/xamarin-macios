@@ -258,8 +258,8 @@ namespace Xharness.Tests
 
 			// create a path with data in it
 			var logs = new Mock<ILogs> ();
-			var tmpLogMock = new Mock<ILogFile> ();
-			var xmlLogMock = new Mock<ILogFile> ();
+			var tmpLogMock = new Mock<ILog> ();
+			var xmlLogMock = new Mock<ILog> ();
 
 			var tmpPath = Path.GetTempFileName ();
 			var finalPath = Path.GetTempFileName ();
@@ -272,7 +272,7 @@ namespace Xharness.Tests
 
 			foreach (var file in failureLogs) {
 				var path = Path.Combine (logsDir, file);
-				File.Create (path);
+				File.WriteAllText (path, "");
 			}
 
 			// expect the creation of the two diff xml file logs

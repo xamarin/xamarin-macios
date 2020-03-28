@@ -107,9 +107,7 @@ namespace Xamarin.Tests
 
 			try {
 #if MONOTOUCH_TV || MONOTOUCH_WATCH // on tvOS/watchOS we emit a native reference for P/Invokes in all assemblies, so we'll strip away the 'mono_native_initialize' symbol when we're linking statically (since we don't need the symbol).
-				// The 'strip' tool that comes with Xcode 11 has some black magic where it removes the symbol from the executable, yet tvOS is still able to lookup the address from the symbol.
-				// So apparently we'll always be able to find the symbol. Leaving the old logic as comments for a time, since I don't quite trust the new behavior.
-				var has_symbol = true; //MonoNativeConfig.LinkMode != MonoNativeLinkMode.Static || Runtime.Arch == Arch.SIMULATOR;
+				var has_symbol = MonoNativeConfig.LinkMode != MonoNativeLinkMode.Static || Runtime.Arch == Arch.SIMULATOR;
 #else
 				var has_symbol = true;
 #endif

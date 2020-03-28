@@ -7,7 +7,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
-using Xamarin;
 using Xharness.Execution;
 using Xharness.Execution.Mlaunch;
 using Xharness.Hardware;
@@ -20,7 +19,6 @@ namespace Xharness.Tests.Hardware.Tests {
 
 		string mlaunchPath;
 		string sdkPath;
-		Mock<IHarness> harness;
 		Mock<ILog> executionLog;
 		Mock<IProcessManager> processManager;
 		Simulators simulators;
@@ -30,10 +28,9 @@ namespace Xharness.Tests.Hardware.Tests {
 		{
 			mlaunchPath = "/usr/bin/mlaunch"; // any will be ok, is mocked
 			sdkPath = "/Applications/Xcode.app";
-			harness = new Mock<IHarness> ();
 			executionLog = new Mock<ILog> ();
 			processManager = new Mock<IProcessManager> ();
-			simulators = new Simulators (harness.Object, processManager.Object);
+			simulators = new Simulators (processManager.Object);
 		}
 
 		[TearDown]
@@ -50,10 +47,7 @@ namespace Xharness.Tests.Hardware.Tests {
 		{
 			string processPath = null;
 			MlaunchArguments passedArguments = null;
-			// set the expectations of the mocks to get an error when
-			// executing the process
-			harness.Setup (h => h.MlaunchPath).Returns (mlaunchPath);
-			harness.Setup (h => h.XcodeRoot).Returns (sdkPath);
+
 			// moq It.Is is not working as nicelly as we would like it, we capture data and use asserts
 			processManager.Setup (p => p.RunAsync (It.IsAny<Process> (), It.IsAny<MlaunchArguments> (), It.IsAny<ILog> (), It.IsAny<TimeSpan?> (), It.IsAny<Dictionary<string, string>> (), It.IsAny<CancellationToken?> (), It.IsAny<bool?> ()))
 				.Returns<Process, MlaunchArguments, ILog, TimeSpan?, Dictionary<string, string>, CancellationToken?, bool?> ((p, args, log, t, env, token, d) => {
@@ -71,14 +65,14 @@ namespace Xharness.Tests.Hardware.Tests {
 			});
 
 			// validate the execution of mlaunch
-			MlaunchArgument sdkRootArg = passedArguments.Where (a => a is SdkRootArgument).FirstOrDefault();
+			MlaunchArgument sdkRootArg = passedArguments.Where (a => a is SdkRootArgument).FirstOrDefault ();
 			Assert.IsNotNull (sdkRootArg, "sdk arg missing");
 			AssertArgumentValue (sdkRootArg, $"--sdkroot {sdkPath}", "sdk arg wrong");
 
-			MlaunchArgument listSimArg = passedArguments.Where (a => a is ListSimulatorsArgument).FirstOrDefault();
+			MlaunchArgument listSimArg = passedArguments.Where (a => a is ListSimulatorsArgument).FirstOrDefault ();
 			Assert.IsNotNull (listSimArg, "list devices arg missing");
-			
-			MlaunchArgument outputFormatArg = passedArguments.Where (a => a is XmlOutputFormatArgument).FirstOrDefault();
+
+			MlaunchArgument outputFormatArg = passedArguments.Where (a => a is XmlOutputFormatArgument).FirstOrDefault ();
 			Assert.IsNotNull (outputFormatArg, "output format arg missing");
 		}
 
@@ -98,10 +92,7 @@ namespace Xharness.Tests.Hardware.Tests {
 		{
 			string processPath = null;
 			MlaunchArguments passedArguments = null;
-			// set the expectations of the mocks to get an error when
-			// executing the process
-			harness.Setup (h => h.MlaunchPath).Returns (mlaunchPath);
-			harness.Setup (h => h.XcodeRoot).Returns (sdkPath);
+
 			// moq It.Is is not working as nicelly as we would like it, we capture data and use asserts
 			processManager.Setup (p => p.RunAsync (It.IsAny<Process> (), It.IsAny<MlaunchArguments> (), It.IsAny<ILog> (), It.IsAny<TimeSpan?> (), It.IsAny<Dictionary<string, string>> (), It.IsAny<CancellationToken?> (), It.IsAny<bool?> ()))
 				.Returns<Process, MlaunchArguments, ILog, TimeSpan?, Dictionary<string, string>, CancellationToken?, bool?> ((p, args, log, t, env, token, d) => {
@@ -110,28 +101,28 @@ namespace Xharness.Tests.Hardware.Tests {
 
 					// we get the temp file that was passed as the args, and write our sample xml, which will be parsed to get the devices :)
 					var tempPath = args.Where (a => a is ListSimulatorsArgument).First ().AsCommandLineArgument ();
-					tempPath = tempPath.Substring(tempPath.IndexOf('=') + 1);
+					tempPath = tempPath.Substring (tempPath.IndexOf ('=') + 1).Replace ("\"", string.Empty);
 
 					CopySampleData (tempPath);
 					return Task.FromResult (new ProcessExecutionResult { ExitCode = 0, TimedOut = false });
 				});
-			
+
 			await simulators.LoadAsync (executionLog.Object);
 
 			// validate the execution of mlaunch
 			Assert.AreEqual (mlaunchPath, processPath, "process path");
 
-			MlaunchArgument sdkRootArg = passedArguments.Where (a => a is SdkRootArgument).FirstOrDefault();
+			MlaunchArgument sdkRootArg = passedArguments.Where (a => a is SdkRootArgument).FirstOrDefault ();
 			Assert.IsNotNull (sdkRootArg, "sdk arg missing");
 			AssertArgumentValue (sdkRootArg, $"--sdkroot {sdkPath}", "sdk arg wrong");
 
-			MlaunchArgument listSimArg = passedArguments.Where (a => a is ListSimulatorsArgument).FirstOrDefault();
+			MlaunchArgument listSimArg = passedArguments.Where (a => a is ListSimulatorsArgument).FirstOrDefault ();
 			Assert.IsNotNull (listSimArg, "list devices arg missing");
-			
-			MlaunchArgument outputFormatArg = passedArguments.Where (a => a is XmlOutputFormatArgument).FirstOrDefault();
+
+			MlaunchArgument outputFormatArg = passedArguments.Where (a => a is XmlOutputFormatArgument).FirstOrDefault ();
 			Assert.IsNotNull (outputFormatArg, "output format arg missing");
 
-			Assert.AreEqual (75, simulators.AvailableDevices.Count());
+			Assert.AreEqual (75, simulators.AvailableDevices.Count ());
 		}
 
 		[TestCase (TestTarget.Simulator_iOS64, 1)]
@@ -142,11 +133,8 @@ namespace Xharness.Tests.Hardware.Tests {
 		{
 			string processPath = null;
 			MlaunchArguments passedArguments = null;
-			// set the expectations of the mocks to get an error when
-			// executing the process
-			harness.Setup (h => h.MlaunchPath).Returns (mlaunchPath);
-			harness.Setup (h => h.XcodeRoot).Returns (sdkPath);
-			harness
+
+			processManager
 				.Setup (h => h.ExecuteXcodeCommandAsync ("simctl", It.Is<string []> (args => args[0] == "create"), executionLog.Object, TimeSpan.FromMinutes (1)))
 				.ReturnsAsync (new ProcessExecutionResult () { ExitCode = 0 });
 
@@ -159,12 +147,12 @@ namespace Xharness.Tests.Hardware.Tests {
 
 					// we get the temp file that was passed as the args, and write our sample xml, which will be parsed to get the devices :)
 					var tempPath = args.Where (a => a is ListSimulatorsArgument).First ().AsCommandLineArgument ();
-					tempPath = tempPath.Substring(tempPath.IndexOf('=') + 1);
+					tempPath = tempPath.Substring (tempPath.IndexOf ('=') + 1).Replace ("\"", string.Empty);
 
 					CopySampleData (tempPath);
 					return Task.FromResult (new ProcessExecutionResult { ExitCode = 0, TimedOut = false });
 				});
-			
+
 			await simulators.LoadAsync (executionLog.Object);
 			var sims = await simulators.FindAsync (target, executionLog.Object, false, false);
 

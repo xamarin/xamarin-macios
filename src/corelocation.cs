@@ -92,10 +92,18 @@ namespace CoreLocation {
 		[Export ("course")]
 		double Course { get;  }
 
+		[Watch (6,2), TV (13,4), Mac (10,15,4), iOS (13,4)]
+		[Export ("courseAccuracy")]
+		double CourseAccuracy { get; }
+
 		[TV (13,0)] // API_UNAVAILABLE(tvos) removed in Xcode 11 beta 1
 		[Watch (3,0)] // __WATCHOS_PROHIBITED removed in Xcode 8 beta 3
 		[Export ("speed")]
 		double Speed { get;  }
+
+		[Watch (6,2), TV (13,4), Mac (10,15,4), iOS (13,4)]
+		[Export ("speedAccuracy")]
+		double SpeedAccuracy { get; }
 
 		[Export ("timestamp", ArgumentSemantic.Copy)]
 		NSDate Timestamp { get;  }
@@ -111,6 +119,10 @@ namespace CoreLocation {
 
 		[Export ("initWithCoordinate:altitude:horizontalAccuracy:verticalAccuracy:course:speed:timestamp:")]
 		IntPtr Constructor (CLLocationCoordinate2D coordinate, double altitude, double hAccuracy, double vAccuracy, double course, double speed, NSDate timestamp);
+
+		[Watch (6,2), TV (13,4), Mac (10,15,4), iOS (13,4)]
+		[Export ("initWithCoordinate:altitude:horizontalAccuracy:verticalAccuracy:course:courseAccuracy:speed:speedAccuracy:timestamp:")]
+		IntPtr Constructor (CLLocationCoordinate2D coordinate, double altitude, double hAccuracy, double vAccuracy, double course, double courseAccuracy, double speed, double speedAccuracy, NSDate timestamp);
 
 		// Apple keep changing the 'introduction' of this field (5.0->8.0->5.0) but it was not available in 6.1
 		// nor in 7.0 - but it works on my iPad3 running iOS 7.1
