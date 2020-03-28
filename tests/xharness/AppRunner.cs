@@ -441,7 +441,8 @@ namespace Xharness {
 			listener.Dispose ();
 
 			// close a tunnel if it was created
-			listenerFactory.TunnelBore.Close (deviceName);
+			if (!isSimulator)
+				listenerFactory.TunnelBore.Close (deviceName);
 				
 
 			// check the final status, copy all the required data
