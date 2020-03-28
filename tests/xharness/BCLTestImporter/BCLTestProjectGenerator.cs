@@ -14,122 +14,200 @@ namespace Xharness.BCLTestImporter {
 	/// </summary>
 	public class BCLTestProjectGenerator {
 
+		// less typing
+		class ProjectsDefinitions : Dictionary<string, (string ExtraArgs, double TimeoutMultiplier, (string Name, string [] Assemblies) [] Projects)> { } 
+
 		// we have two different types of list, those that are for the iOS like projects (ios, tvos and watch os) and those 
 		// for mac
-		static readonly List<BclTestProjectInfo> commoniOSTestProjects = new List<BclTestProjectInfo> {
+		static readonly ProjectsDefinitions commoniOSTestProjects = new ProjectsDefinitions { 
 			// NUNIT TESTS
 
-			// BCL tests group 1
-			new BclTestProjectInfo { Name = "SystemCoreTests", assemblies = new [] { "monotouch_System.Core_test.dll" }, Group = "BCL tests group 1" },
-			new BclTestProjectInfo { Name = "SystemNumericsTests", assemblies = new [] { "monotouch_System.Numerics_test.dll" }, Group = "BCL tests group 1" },
-			new BclTestProjectInfo { Name = "SystemRuntimeSerializationTests", assemblies = new [] { "monotouch_System.Runtime.Serialization_test.dll" }, Group = "BCL tests group 1" },
-			new BclTestProjectInfo { Name = "SystemTransactionsTests", assemblies = new [] { "monotouch_System.Transactions_test.dll" }, Group = "BCL tests group 1" },
-			new BclTestProjectInfo { Name = "SystemXmlTests", assemblies = new [] { "monotouch_System.Xml_test.dll" }, Group = "BCL tests group 1" },
-			new BclTestProjectInfo { Name = "SystemXmlLinqTests", assemblies = new [] { "monotouch_System.Xml.Linq_test.dll" }, Group = "BCL tests group 1" },
-			new BclTestProjectInfo { Name = "MonoSecurityTests", assemblies = new [] { "monotouch_Mono.Security_test.dll" }, Group = "BCL tests group 1" },
-			new BclTestProjectInfo { Name = "SystemComponentModelDataAnnotationsTests", assemblies = new [] { "monotouch_System.ComponentModel.DataAnnotations_test.dll" }, Group = "BCL tests group 1" },
-			new BclTestProjectInfo { Name = "SystemJsonTests", assemblies = new [] { "monotouch_System.Json_test.dll" }, Group = "BCL tests group 1" },
-			new BclTestProjectInfo { Name = "SystemServiceModelWebTests", assemblies = new [] { "monotouch_System.ServiceModel.Web_test.dll" }, Group = "BCL tests group 1" },
-			new BclTestProjectInfo { Name = "SystemIOCompressionTests", assemblies = new [] { "monotouch_System.IO.Compression_test.dll" }, Group = "BCL tests group 1" },
-			new BclTestProjectInfo { Name = "SystemIOCompressionFileSystemTests", assemblies = new [] { "monotouch_System.IO.Compression.FileSystem_test.dll" }, Group = "BCL tests group 1" },
-			new BclTestProjectInfo { Name = "MonoCSharpTests", assemblies = new [] { "monotouch_Mono.CSharp_test.dll" }, Group = "BCL tests group 1" },
-			new BclTestProjectInfo { Name = "SystemSecurityTests", assemblies = new [] { "monotouch_System.Security_test.dll" }, Group = "BCL tests group 1" },
-			new BclTestProjectInfo { Name = "MonoDataSqliteTests", assemblies = new [] { "monotouch_Mono.Data.Sqlite_test.dll" }, Group = "BCL tests group 1" },
-			new BclTestProjectInfo { Name = "MonoRuntimeTests", assemblies = new [] { "monotouch_Mono.Runtime.Tests_test.dll" }, Group = "BCL tests group 1" },
+			["BCL tests group 1"] = (
+				ExtraArgs: null,
+				TimeoutMultiplier: 1,
+				Projects: new [] {
+					(Name: "SystemCoreTests", Assemblies: new [] { "monotouch_System.Core_test.dll" }),
+					(Name: "SystemNumericsTests", Assemblies: new [] { "monotouch_System.Numerics_test.dll" }),
+					(Name: "SystemRuntimeSerializationTests", Assemblies: new [] { "monotouch_System.Runtime.Serialization_test.dll" }),
+					(Name: "SystemTransactionsTests", Assemblies: new [] { "monotouch_System.Transactions_test.dll" }),
+					(Name: "SystemXmlTests", Assemblies: new [] { "monotouch_System.Xml_test.dll" }),
+					(Name: "SystemXmlLinqTests", Assemblies: new [] { "monotouch_System.Xml.Linq_test.dll" }),
+					(Name: "MonoSecurityTests", Assemblies: new [] { "monotouch_Mono.Security_test.dll" }),
+					(Name: "SystemComponentModelDataAnnotationsTests", Assemblies: new [] { "monotouch_System.ComponentModel.DataAnnotations_test.dll" }),
+					(Name: "SystemJsonTests", Assemblies: new [] { "monotouch_System.Json_test.dll" }),
+					(Name: "SystemServiceModelWebTests", Assemblies: new [] { "monotouch_System.ServiceModel.Web_test.dll" }),
+					(Name: "SystemIOCompressionTests", Assemblies: new [] { "monotouch_System.IO.Compression_test.dll" }),
+					(Name: "SystemIOCompressionFileSystemTests", Assemblies: new [] { "monotouch_System.IO.Compression.FileSystem_test.dll" }),
+					(Name: "MonoCSharpTests", Assemblies: new [] { "monotouch_Mono.CSharp_test.dll" }),
+					(Name: "SystemSecurityTests", Assemblies: new [] { "monotouch_System.Security_test.dll" }),
+					(Name: "MonoDataSqliteTests", Assemblies: new [] { "monotouch_Mono.Data.Sqlite_test.dll" }),
+					(Name: "MonoRuntimeTests", Assemblies: new [] { "monotouch_Mono.Runtime.Tests_test.dll" }),
+			}),
 
-			// BCL tests group 2
-			new BclTestProjectInfo { Name = "SystemTests", assemblies = new[] {"monotouch_System_test.dll" }, Group = "BCL tests group 2" },
-			new BclTestProjectInfo { Name = "SystemDataTests", assemblies = new [] { "monotouch_System.Data_test.dll" }, Group = "BCL tests group 2" },
-			new BclTestProjectInfo { Name = "SystemDataDataSetExtensionsTests", assemblies = new [] { "monotouch_System.Data.DataSetExtensions_test.dll" }, Group = "BCL tests group 2" },
-			new BclTestProjectInfo { Name = "SystemNetHttpTests", assemblies = new [] { "monotouch_System.Net.Http_test.dll" }, Group = "BCL tests group 2" },
-			new BclTestProjectInfo { Name = "MonoDataTdsTests", assemblies = new [] { "monotouch_Mono.Data.Tds_test.dll" }, Group = "BCL tests group 2" },
-			new BclTestProjectInfo { Name = "SystemServiceModelTests", assemblies = new [] { "monotouch_System.ServiceModel_test.dll" }, Group = "BCL tests group 2" },
-			new BclTestProjectInfo { Name = "CorlibTests", assemblies = new [] { "monotouch_corlib_test.dll" }, Group = "BCL tests group 2", TimeoutMultiplier = 2 },
-			new BclTestProjectInfo { Name = "SystemWebServicesTests", assemblies = new [] { "monotouch_System.Web.Services_test.dll" }, Group = "BCL tests group 2" },
+			["BCL tests group 2"] = (
+				ExtraArgs: null,
+				TimeoutMultiplier: 2,
+				Projects: new [] {
+					( Name: "SystemTests", Assemblies: new[] {"monotouch_System_test.dll" }),
+					( Name: "SystemDataTests", Assemblies: new [] { "monotouch_System.Data_test.dll" }),
+					( Name: "SystemDataDataSetExtensionsTests", Assemblies: new [] { "monotouch_System.Data.DataSetExtensions_test.dll" }),
+					( Name: "SystemNetHttpTests", Assemblies: new [] { "monotouch_System.Net.Http_test.dll" }),
+					( Name: "MonoDataTdsTests", Assemblies: new [] { "monotouch_Mono.Data.Tds_test.dll" }),
+					( Name: "SystemServiceModelTests", Assemblies: new [] { "monotouch_System.ServiceModel_test.dll" }),
+					( Name: "CorlibTests", Assemblies: new [] { "monotouch_corlib_test.dll" }),
+					( Name: "SystemWebServicesTests", Assemblies: new [] { "monotouch_System.Web.Services_test.dll" }),
+			}),
 
 			// XUNIT TESTS 
 
-			// BCL tests group 3
-			new BclTestProjectInfo { Name = "SystemDataXunit", assemblies = new [] { "monotouch_System.Data_xunit-test.dll" }, Group = "BCL tests group 3" },
-			new BclTestProjectInfo { Name = "SystemJsonXunit", assemblies = new [] { "monotouch_System.Json_xunit-test.dll" }, Group = "BCL tests group 3" },
-			new BclTestProjectInfo { Name = "SystemSecurityXunit", assemblies = new [] { "monotouch_System.Security_xunit-test.dll" }, Group = "BCL tests group 3" },
-			new BclTestProjectInfo { Name = "SystemLinqXunit", assemblies = new [] { "monotouch_System.Xml.Linq_xunit-test.dll" }, Group = "BCL tests group 3" },
-			new BclTestProjectInfo { Name = "SystemComponentModelCompositionXunit", assemblies = new [] { "monotouch_System.ComponentModel.Composition_xunit-test.dll" }, Group = "BCL tests group 3" },
-			new BclTestProjectInfo { Name = "SystemRuntimeSerializationXunit", assemblies = new [] { "monotouch_System.Runtime.Serialization_xunit-test.dll" }, Group = "BCL tests group 3" },
-			new BclTestProjectInfo { Name = "SystemXmlXunit", assemblies = new [] { "monotouch_System.Xml_xunit-test.dll" }, Group = "BCL tests group 3" },
-			new BclTestProjectInfo { Name = "SystemRuntimeCompilerServicesUnsafeXunit", assemblies = new [] { "monotouch_System.Runtime.CompilerServices.Unsafe_xunit-test.dll" }, Group = "BCL tests group 3" },
+			["BCL tests group 3"] = (
+				ExtraArgs: null,
+				TimeoutMultiplier: 1,
+				Projects: new [] {
+					( Name: "SystemDataXunit", Assemblies: new [] { "monotouch_System.Data_xunit-test.dll" }),
+					( Name: "SystemJsonXunit", Assemblies: new [] { "monotouch_System.Json_xunit-test.dll" }),
+					( Name: "SystemSecurityXunit", Assemblies: new [] { "monotouch_System.Security_xunit-test.dll" }),
+					( Name: "SystemLinqXunit", Assemblies: new [] { "monotouch_System.Xml.Linq_xunit-test.dll" }),
+					( Name: "SystemComponentModelCompositionXunit", Assemblies: new [] { "monotouch_System.ComponentModel.Composition_xunit-test.dll" }),
+					( Name: "SystemRuntimeSerializationXunit", Assemblies: new [] { "monotouch_System.Runtime.Serialization_xunit-test.dll" }),
+					( Name: "SystemXmlXunit", Assemblies: new [] { "monotouch_System.Xml_xunit-test.dll" }),
+					( Name: "SystemRuntimeCompilerServicesUnsafeXunit", Assemblies: new [] { "monotouch_System.Runtime.CompilerServices.Unsafe_xunit-test.dll" }),
+			}),
 
-			// BCL tests group 4
-			new BclTestProjectInfo { Name = "SystemNumericsXunit", assemblies = new [] { "monotouch_System.Numerics_xunit-test.dll" }, Group = "BCL tests group 4" },
-			new BclTestProjectInfo { Name = "MicrosoftCSharpXunit", assemblies = new [] { "monotouch_Microsoft.CSharp_xunit-test.dll" }, Group = "BCL tests group 4" },
+			["BCL tests group 4"] = (
+				ExtraArgs: null,
+				TimeoutMultiplier: 1,
+				Projects: new [] {
+					( Name: "SystemNumericsXunit", Assemblies: new [] { "monotouch_System.Numerics_xunit-test.dll" }),
+					( Name: "MicrosoftCSharpXunit", Assemblies: new [] { "monotouch_Microsoft.CSharp_xunit-test.dll" }),
+			}),
 
 			// BCL tests group 5
-			new BclTestProjectInfo { Name = "SystemNetHttpUnitTestsXunit", assemblies = new [] { "monotouch_System.Net.Http.UnitTests_xunit-test.dll" }, Group = "BCL tests group 5" },
-			new BclTestProjectInfo { Name = "SystemNetHttpFunctionalTestsXunit", assemblies = new [] { "monotouch_System.Net.Http.FunctionalTests_xunit-test.dll" }, Group = "BCL tests group 5" },
+			["BCL tests group 5"] = (
+				ExtraArgs: null,
+				TimeoutMultiplier: 1,
+				Projects: new [] {
+					( Name: "SystemNetHttpUnitTestsXunit", Assemblies: new [] { "monotouch_System.Net.Http.UnitTests_xunit-test.dll" }),
+					( Name: "SystemNetHttpFunctionalTestsXunit", Assemblies: new [] { "monotouch_System.Net.Http.FunctionalTests_xunit-test.dll" }),
+			}),
 
 			// Special assemblies that are in a single application due to their size being to large for the iOS 32b.
-			new BclTestProjectInfo { Name = "mscorlib Part 1", assemblies = new [] { "monotouch_corlib_xunit-test.part1.dll" }, Group = "mscorlib Part 1" }, // special testcase for the corlib which is later used in xHarness for diff config options
-			new BclTestProjectInfo { Name = "mscorlib Part 2", assemblies = new [] { "monotouch_corlib_xunit-test.part2.dll" }, Group = "mscorlib Part 2" },
-			new BclTestProjectInfo { Name = "mscorlib Part 3", assemblies = new [] { "monotouch_corlib_xunit-test.part3.dll" }, Group = "mscorlib Part 3" },
-			new BclTestProjectInfo { Name = "SystemCoreXunit Part 1", assemblies = new [] { "monotouch_System.Core_xunit-test.part1.dll" }, Group = "SystemCoreXunit Part 1" },
-			new BclTestProjectInfo { Name = "SystemCoreXunit Part 2", assemblies = new [] { "monotouch_System.Core_xunit-test.part2.dll" }, Group = "SystemCoreXunit Part 2" },
-			new BclTestProjectInfo { Name = "SystemXunit", assemblies = new [] { "monotouch_System_xunit-test.dll" }, ExtraArgs = $"--xml={Path.Combine (Harness.RootDirectory, "bcl-test", "SystemXunitLinker.xml")} --optimize=-custom-attributes-removal", Group = "SystemXunit" }, // special case due to the need of the extra args
+			["mscorlib Part 1"] = (
+				ExtraArgs: null,
+				TimeoutMultiplier: 1,
+				Projects: new [] {
+				( Name: "mscorlib Part 1", Assemblies: new [] { "monotouch_corlib_xunit-test.part1.dll" }), // special testcase for the corlib which is later used in xHarness for diff config options
+			}),
+			["mscorlib Part 2"] = (
+				ExtraArgs: null,
+				TimeoutMultiplier: 1,
+				Projects: new [] {
+					( Name: "mscorlib Part 2", Assemblies: new [] { "monotouch_corlib_xunit-test.part2.dll" }),
+			}),
+			["mscorlib Part 3"] = (
+				ExtraArgs: null,
+				TimeoutMultiplier: 1,
+				Projects: new [] {
+					( Name: "mscorlib Part 3", Assemblies: new [] { "monotouch_corlib_xunit-test.part3.dll" }),
+			}),
+			["SystemCoreXunit Part 1"] = (
+				ExtraArgs: null,
+				TimeoutMultiplier: 1,
+				Projects: new [] {
+					( Name: "SystemCoreXunit Part 1", Assemblies: new [] { "monotouch_System.Core_xunit-test.part1.dll" }),
+			}),
+			["SystemCoreXunit Part 2"] = (
+				ExtraArgs: null,
+				TimeoutMultiplier: 1,
+				Projects: new [] {
+					( Name: "SystemCoreXunit Part 2", Assemblies: new [] { "monotouch_System.Core_xunit-test.part2.dll" }),
+			}),
+			["SystemXunit"] = (
+				ExtraArgs: $"--xml={Path.Combine (Harness.RootDirectory, "bcl-test", "SystemXunitLinker.xml")} --optimize=-custom-attributes-removal", // special case due to the need of the extra args,
+				TimeoutMultiplier: 1,
+				Projects: new [] {
+					( Name: "SystemXunit", Assemblies: new [] { "monotouch_System_xunit-test.dll" }), 
+			}),
 		};
 
-		private static readonly List<BclTestProjectInfo> macTestProjects = new List<BclTestProjectInfo> {
-		
+		private static readonly ProjectsDefinitions macTestProjects = new ProjectsDefinitions { 
+
 			// NUNIT Projects
-			new BclTestProjectInfo { Name = "MonoDataSqliteTests", assemblies = new [] { "xammac_net_4_5_Mono.Data.Sqlite_test.dll" }, Group = "Mac OS X BCL tests group 1" },
-			new BclTestProjectInfo { Name = "MonoDataTdsTests", assemblies = new [] { "xammac_net_4_5_Mono.Data.Tds_test.dll" }, Group = "Mac OS X BCL tests group 1" },
-			new BclTestProjectInfo { Name = "MonoMessagingTests", assemblies = new [] { "xammac_net_4_5_Mono.Messaging_test.dll" }, Group = "Mac OS X BCL tests group 1" },
-			new BclTestProjectInfo { Name = "MonoPoxisTests", assemblies = new [] { "xammac_net_4_5_Mono.Posix_test.dll" }, Group = "Mac OS X BCL tests group 1" },
-			new BclTestProjectInfo { Name = "MonoSecurityTests", assemblies = new [] { "xammac_net_4_5_Mono.Security_test.dll" }, Group = "Mac OS X BCL tests group 1" },
-			new BclTestProjectInfo { Name = "SystemConfigurationTests", assemblies = new [] { "xammac_net_4_5_System.Configuration_test.dll" }, Group = "Mac OS X BCL tests group 1" },
-			new BclTestProjectInfo { Name = "SystemDataLinqTests", assemblies = new [] { "xammac_net_4_5_System.Data.Linq_test.dll" }, Group = "Mac OS X BCL tests group 1" },
-			new BclTestProjectInfo { Name = "SystemDataTests", assemblies = new [] { "xammac_net_4_5_System.Data_test.dll" }, Group = "Mac OS X BCL tests group 1" },
-			new BclTestProjectInfo { Name = "SystemIOCompressionFileSystemTests", assemblies = new [] { "xammac_net_4_5_System.IO.Compression.FileSystem_test.dll" }, Group = "Mac OS X BCL tests group 1" },
-			new BclTestProjectInfo { Name = "SystemIOCompressionTests", assemblies = new [] { "xammac_net_4_5_System.IO.Compression_test.dll" }, Group = "Mac OS X BCL tests group 1" },
-			new BclTestProjectInfo { Name = "SystemIdentityModelTests", assemblies = new [] { "xammac_net_4_5_System.IdentityModel_test.dll" }, Group = "Mac OS X BCL tests group 1" },
-			new BclTestProjectInfo { Name = "SystemJsonTests", assemblies = new [] { "xammac_net_4_5_System.Json_test.dll" }, Group = "Mac OS X BCL tests group 1" },
-			new BclTestProjectInfo { Name = "SystemMessagingTests", assemblies = new [] { "xammac_net_4_5_System.Messaging_test.dll" }, Group = "Mac OS X BCL tests group 1" },
-			new BclTestProjectInfo { Name = "SystemNetHttpWebRequestTests", assemblies = new [] { "xammac_net_4_5_System.Net.Http.WebRequest_test.dll" }, Group = "Mac OS X BCL tests group 1" },
-			new BclTestProjectInfo { Name = "SystemNumericsTests", assemblies = new [] { "xammac_net_4_5_System.Numerics_test.dll" }, Group = "Mac OS X BCL tests group 1" },
-			new BclTestProjectInfo { Name = "SystemRuntimeSerializationFormattersSoapTests", assemblies = new [] { "xammac_net_4_5_System.Runtime.Serialization.Formatters.Soap_test.dll" }, Group = "Mac OS X BCL tests group 1" },
-			new BclTestProjectInfo { Name = "SystemRuntimeSerializationTests", assemblies = new [] { "xammac_net_4_5_System.Runtime.Serialization_test.dll" }, Group = "Mac OS X BCL tests group 1" },
-			new BclTestProjectInfo { Name = "SystemServiceModelWebTest", assemblies = new [] { "xammac_net_4_5_System.ServiceModel.Web_test.dll" }, Group = "Mac OS X BCL tests group 1" },
-			new BclTestProjectInfo { Name = "SystemServiceModelTests", assemblies = new [] { "xammac_net_4_5_System.ServiceModel_test.dll" }, Group = "Mac OS X BCL tests group 1" },
-			new BclTestProjectInfo { Name = "SystemTransactionsTests", assemblies = new [] { "xammac_net_4_5_System.Transactions_test.dll" }, Group = "Mac OS X BCL tests group 1" },
-			new BclTestProjectInfo { Name = "SystemWebServicesTests", assemblies = new [] { "xammac_net_4_5_System.Web.Services_test.dll" }, Group = "Mac OS X BCL tests group 1" },
-			new BclTestProjectInfo { Name = "SystemXmlLinqTests", assemblies = new [] { "xammac_net_4_5_System.Xml.Linq_test.dll" }, Group = "Mac OS X BCL tests group 1" },
-			new BclTestProjectInfo { Name = "SystemDataDataSetExtensionsTests", assemblies = new [] { "xammac_net_4_5_System.Data.DataSetExtensions_test.dll" }, Group = "Mac OS X BCL tests group 1" },
+			["Mac OS X BCL tests group 1"] = (
+				ExtraArgs: null,
+				TimeoutMultiplier: 1,
+				Projects: new [] {
+					( Name: "MonoDataSqliteTests", Assemblies: new [] { "xammac_net_4_5_Mono.Data.Sqlite_test.dll" }),
+					( Name: "MonoDataTdsTests", Assemblies: new [] { "xammac_net_4_5_Mono.Data.Tds_test.dll" }),
+					( Name: "MonoMessagingTests", Assemblies: new [] { "xammac_net_4_5_Mono.Messaging_test.dll" }),
+					( Name: "MonoPoxisTests", Assemblies: new [] { "xammac_net_4_5_Mono.Posix_test.dll" }),
+					( Name: "MonoSecurityTests", Assemblies: new [] { "xammac_net_4_5_Mono.Security_test.dll" }),
+					( Name: "SystemConfigurationTests", Assemblies: new [] { "xammac_net_4_5_System.Configuration_test.dll" }),
+					( Name: "SystemDataLinqTests", Assemblies: new [] { "xammac_net_4_5_System.Data.Linq_test.dll" }),
+					( Name: "SystemDataTests", Assemblies: new [] { "xammac_net_4_5_System.Data_test.dll" }),
+					( Name: "SystemIOCompressionFileSystemTests", Assemblies: new [] { "xammac_net_4_5_System.IO.Compression.FileSystem_test.dll" }),
+					( Name: "SystemIOCompressionTests", Assemblies: new [] { "xammac_net_4_5_System.IO.Compression_test.dll" }),
+					( Name: "SystemIdentityModelTests", Assemblies: new [] { "xammac_net_4_5_System.IdentityModel_test.dll" }),
+					( Name: "SystemJsonTests", Assemblies: new [] { "xammac_net_4_5_System.Json_test.dll" }),
+					( Name: "SystemMessagingTests", Assemblies: new [] { "xammac_net_4_5_System.Messaging_test.dll" }),
+					( Name: "SystemNetHttpWebRequestTests", Assemblies: new [] { "xammac_net_4_5_System.Net.Http.WebRequest_test.dll" }),
+					( Name: "SystemNumericsTests", Assemblies: new [] { "xammac_net_4_5_System.Numerics_test.dll" }),
+					( Name: "SystemRuntimeSerializationFormattersSoapTests", Assemblies: new [] { "xammac_net_4_5_System.Runtime.Serialization.Formatters.Soap_test.dll" }),
+					( Name: "SystemRuntimeSerializationTests", Assemblies: new [] { "xammac_net_4_5_System.Runtime.Serialization_test.dll" }),
+					( Name: "SystemServiceModelWebTest", Assemblies: new [] { "xammac_net_4_5_System.ServiceModel.Web_test.dll" }),
+					( Name: "SystemServiceModelTests", Assemblies: new [] { "xammac_net_4_5_System.ServiceModel_test.dll" }),
+					( Name: "SystemTransactionsTests", Assemblies: new [] { "xammac_net_4_5_System.Transactions_test.dll" }),
+					( Name: "SystemWebServicesTests", Assemblies: new [] { "xammac_net_4_5_System.Web.Services_test.dll" }),
+					( Name: "SystemXmlLinqTests", Assemblies: new [] { "xammac_net_4_5_System.Xml.Linq_test.dll" }),
+					( Name: "SystemDataDataSetExtensionsTests", Assemblies: new [] { "xammac_net_4_5_System.Data.DataSetExtensions_test.dll" }),
+			}),
 
-			new BclTestProjectInfo { Name = "SystemNetHttpTests", assemblies = new [] { "xammac_net_4_5_System.Net.Http_test.dll" }, Group = "Mac OS X BCL tests group 2" }, // do not mix with SystemNetHttpWebRequestTests since there is a type collision
-			new BclTestProjectInfo { Name = "SystemComponentModelDataAnnotationsTests", assemblies = new [] { "xammac_net_4_5_System.ComponentModel.DataAnnotations_test.dll" }, Group = "Mac OS X BCL tests group 2" },
-			new BclTestProjectInfo { Name = "SystemCoreTests", assemblies = new [] { "xammac_net_4_5_System.Core_test.dll" }, Group = "Mac OS X BCL tests group 2" },
-			new BclTestProjectInfo { Name = "SystemSecurityTests", assemblies = new [] { "xammac_net_4_5_System.Security_test.dll" }, Group = "Mac OS X BCL tests group 2" },
-			new BclTestProjectInfo { Name = "SystemXmlTests", assemblies = new [] { "xammac_net_4_5_System.Xml_test.dll" }, Group = "Mac OS X BCL tests group 2" },
-			new BclTestProjectInfo { Name = "SystemTests", assemblies = new [] { "xammac_net_4_5_System_test.dll" }, Group = "Mac OS X BCL tests group 2" },
-			new BclTestProjectInfo { Name = "MonoCSharpTests", assemblies = new [] { "xammac_net_4_5_Mono.CSharp_test.dll" }, Group = "Mac OS X BCL tests group 2" }, // if add to the first group, it blocks 'til a timeout, mono issue
-			
-			new BclTestProjectInfo { Name = "CorlibTests", assemblies = new [] { "xammac_net_4_5_corlib_test.dll" }, Group = "Mac OS X BCL tests group 3" },
-			
+			["Mac OS X BCL tests group 2"] = (
+				ExtraArgs: null,
+				TimeoutMultiplier: 1,
+				Projects: new [] {
+					( Name: "SystemNetHttpTests", Assemblies: new [] { "xammac_net_4_5_System.Net.Http_test.dll" }), // do not mix with SystemNetHttpWebRequestTests since there is a type collision
+					( Name: "SystemComponentModelDataAnnotationsTests", Assemblies: new [] { "xammac_net_4_5_System.ComponentModel.DataAnnotations_test.dll" }),
+					( Name: "SystemCoreTests", Assemblies: new [] { "xammac_net_4_5_System.Core_test.dll" }),
+					( Name: "SystemSecurityTests", Assemblies: new [] { "xammac_net_4_5_System.Security_test.dll" }),
+					( Name: "SystemXmlTests", Assemblies: new [] { "xammac_net_4_5_System.Xml_test.dll" }),
+					( Name: "SystemTests", Assemblies: new [] { "xammac_net_4_5_System_test.dll" }),
+					( Name: "MonoCSharpTests", Assemblies: new [] { "xammac_net_4_5_Mono.CSharp_test.dll" }), // if add to the first group, it blocks 'til a timeout, mono issue
+			}),
+
+			["Mac OS X BCL tests group 3"] = (
+				ExtraArgs: null,
+				TimeoutMultiplier: 1,
+				Projects: new [] {
+					( Name: "CorlibTests", Assemblies: new [] { "xammac_net_4_5_corlib_test.dll" }),
+			}),
+
 			// xUnit Projects
-			new BclTestProjectInfo { Name = "MicrosoftCSharpXunit", assemblies = new [] { "xammac_net_4_5_Microsoft.CSharp_xunit-test.dll" }, Group = "Mac OS X BCL tests group 4" },
-			new BclTestProjectInfo { Name = "SystemComponentModelCompositionXunit", assemblies = new [] { "xammac_net_4_5_System.ComponentModel.Composition_xunit-test.dll" }, Group = "Mac OS X BCL tests group 4" },
-			new BclTestProjectInfo { Name = "SystemCoreXunit", assemblies = new [] { "xammac_net_4_5_System.Core_xunit-test.dll" }, Group = "Mac OS X BCL tests group 4" },
-			new BclTestProjectInfo { Name = "SystemDataXunit", assemblies = new [] { "xammac_net_4_5_System.Data_xunit-test.dll" }, Group = "Mac OS X BCL tests group 4" },
-			new BclTestProjectInfo { Name = "SystemJsonXunit", assemblies = new [] { "xammac_net_4_5_System.Json_xunit-test.dll" }, Group = "Mac OS X BCL tests group 4" },
-			new BclTestProjectInfo { Name = "SystemNetHttpFunctionalTestsXunit", assemblies = new [] { "xammac_net_4_5_System.Net.Http.FunctionalTests_xunit-test.dll" }, Group = "Mac OS X BCL tests group 4" },
-			new BclTestProjectInfo { Name = "SystemNetHttpUnitTestsXunit", assemblies = new [] { "xammac_net_4_5_System.Net.Http.UnitTests_xunit-test.dll" }, Group = "Mac OS X BCL tests group 4" },
-			new BclTestProjectInfo { Name = "SystemNumericsXunit", assemblies = new [] { "xammac_net_4_5_System.Numerics_xunit-test.dll" }, Group = "Mac OS X BCL tests group 4" },
-			new BclTestProjectInfo { Name = "SystemRuntimeCompilerServicesUnsafeXunit", assemblies = new [] { "xammac_net_4_5_System.Runtime.CompilerServices.Unsafe_xunit-test.dll" }, Group = "Mac OS X BCL tests group 4" },
-			new BclTestProjectInfo { Name = "SystemSecurityXunit", assemblies = new [] { "xammac_net_4_5_System.Security_xunit-test.dll" }, Group = "Mac OS X BCL tests group 4" },
-			new BclTestProjectInfo { Name = "SystemXmlLinqXunit", assemblies = new [] { "xammac_net_4_5_System.Xml.Linq_xunit-test.dll" }, Group = "Mac OS X BCL tests group 4" },
-			new BclTestProjectInfo { Name = "SystemXmlXunit", assemblies = new [] { "xammac_net_4_5_System.Xml_xunit-test.dll" }, Group = "Mac OS X BCL tests group 4" },
-			new BclTestProjectInfo { Name = "SystemXunit", assemblies = new [] { "xammac_net_4_5_System_xunit-test.dll" }, Group = "Mac OS X BCL tests group 4" },
-			
-			new BclTestProjectInfo { Name = "mscorlib", assemblies = new [] { "xammac_net_4_5_corlib_xunit-test.dll" }, Group = "mscorlib" },// special testcase for the corlib which is later used in xHarness for diff config options
-
+			["Mac OS X BCL tests group 4"] = (
+				ExtraArgs: null,
+				TimeoutMultiplier: 1,
+				Projects: new [] {
+					( Name: "MicrosoftCSharpXunit", Assemblies: new [] { "xammac_net_4_5_Microsoft.CSharp_xunit-test.dll" }),
+					( Name: "SystemComponentModelCompositionXunit", Assemblies: new [] { "xammac_net_4_5_System.ComponentModel.Composition_xunit-test.dll" }),
+					( Name: "SystemCoreXunit", Assemblies: new [] { "xammac_net_4_5_System.Core_xunit-test.dll" }),
+					( Name: "SystemDataXunit", Assemblies: new [] { "xammac_net_4_5_System.Data_xunit-test.dll" }),
+					( Name: "SystemJsonXunit", Assemblies: new [] { "xammac_net_4_5_System.Json_xunit-test.dll" }),
+					( Name: "SystemNetHttpFunctionalTestsXunit", Assemblies: new [] { "xammac_net_4_5_System.Net.Http.FunctionalTests_xunit-test.dll" }),
+					( Name: "SystemNetHttpUnitTestsXunit", Assemblies: new [] { "xammac_net_4_5_System.Net.Http.UnitTests_xunit-test.dll" }),
+					( Name: "SystemNumericsXunit", Assemblies: new [] { "xammac_net_4_5_System.Numerics_xunit-test.dll" }),
+					( Name: "SystemRuntimeCompilerServicesUnsafeXunit", Assemblies: new [] { "xammac_net_4_5_System.Runtime.CompilerServices.Unsafe_xunit-test.dll" }),
+					( Name: "SystemSecurityXunit", Assemblies: new [] { "xammac_net_4_5_System.Security_xunit-test.dll" }),
+					( Name: "SystemXmlLinqXunit", Assemblies: new [] { "xammac_net_4_5_System.Xml.Linq_xunit-test.dll" }),
+					( Name: "SystemXmlXunit", Assemblies: new [] { "xammac_net_4_5_System.Xml_xunit-test.dll" }),
+					( Name: "SystemXunit", Assemblies: new [] { "xammac_net_4_5_System_xunit-test.dll" }),
+			}),
+			// special testcase for the corlib which is later used in xHarness for diff config options
+			["mscorlib"] = (
+				ExtraArgs: null,
+				TimeoutMultiplier: 1,
+				Projects: new [] {
+					( Name: "mscorlib", Assemblies: new [] { "xammac_net_4_5_corlib_xunit-test.dll" }),
+			}),
 		};
 
 		public bool GroupTests { get; set; }
@@ -198,42 +276,32 @@ namespace Xharness.BCLTestImporter {
 		/// has its own details.</param>
 		/// <param name="generatedDir">The dir where the projects will be saved.</param>
 		/// <returns></returns>
-		public Task<GeneratedProjects> GenerateTestProjectsAsync (IEnumerable<BclTestProjectInfo> projects, Platform platform)
+		public Task<GeneratedProjects> GenerateTestProjectsAsync (IEnumerable<(string Name, string [] Assemblies, string ExtraArgs, double TimeoutMultiplier)> projects, Platform platform)
 			=> TemplatedProject.GenerateTestProjectsAsync (projects, platform);
 		
-		List<BclTestProjectInfo> GetProjectDefinitions (List<BclTestProjectInfo> definitions, Platform platform)
+		List<(string Name, string [] Assemblies, string ExtraArgs, double TimeoutMultiplier)> GetProjectDefinitions (ProjectsDefinitions definitions, Platform platform)
 		{
-			var testProjects = new List<BclTestProjectInfo> ();
-			if (GroupTests && platform != Platform.WatchOS) {
-				// build the grouped apps 
-				var groupedApps = new Dictionary<string, List<string>> ();
-				var groupedAppsExtraArgs = new Dictionary<string, List<string>> ();
-				double timeoutMultiplier = 1;
-				foreach (var def in definitions) {
-					var validAssemblies = new List<string> ();
-					foreach (var a in def.assemblies) { // filter ignored assemblies
-						if (ProjectFilter == null || !ProjectFilter.ExcludeDll (platform, a))
-							validAssemblies.Add (a);
+			var testProjects = new List<(string Name, string [] Assemblies, string ExtraArgs, double TimeoutMultiplier)> ();
+			if (platform == Platform.WatchOS || !GroupTests) { 
+				// go over the keys which define the groups, and split them
+				foreach (var groupName in definitions.Keys) {
+					var (ExtraArgs, TimeoutMultiplier, Projects) = definitions [groupName];
+					foreach (var (Name, Assemblies) in Projects) { 
+						testProjects.Add ((Name, Assemblies, ExtraArgs, TimeoutMultiplier));
 					}
-					if (groupedApps.ContainsKey (def.Group)) {
-						groupedApps [def.Group].AddRange (validAssemblies);
-						if (def.ExtraArgs != null)
-							groupedAppsExtraArgs [def.Group].Add (def.ExtraArgs);
-					} else {
-						groupedApps [def.Group] = new List<string> (validAssemblies);
-						groupedAppsExtraArgs [def.Group] = new List<string> ();
-						if (def.ExtraArgs != null)
-							groupedAppsExtraArgs [def.Group].Add (def.ExtraArgs);
-					}
-					timeoutMultiplier += (def.TimeoutMultiplier - 1);
-				}
-				foreach (var group in groupedApps.Keys) {
-					var cleanedExtraArgs = groupedAppsExtraArgs [group].Distinct ();
-					testProjects.Add (new BclTestProjectInfo { Name = group, assemblies = groupedApps [group].ToArray (), ExtraArgs = string.Join (" ", cleanedExtraArgs), TimeoutMultiplier = timeoutMultiplier });
 				}
 			} else {
-				foreach (var def in definitions) {
-					testProjects.Add (new BclTestProjectInfo { Name = def.Name, assemblies = def.assemblies, ExtraArgs = def.ExtraArgs, TimeoutMultiplier = def.TimeoutMultiplier });
+				// go over the keys, which define the groups and join all the asseblies in a single array
+				foreach (var groupName in definitions.Keys) {
+					var groupedAssemblies = new List<string> ();
+					var (ExtraArgs, TimeoutMultiplier, Projects) = definitions [groupName];
+					foreach (var (_, Assemblies) in Projects) {
+						foreach (var a in Assemblies) {
+							if (ProjectFilter == null || !ProjectFilter.ExcludeDll (platform, a))
+								groupedAssemblies.AddRange (Assemblies);
+						}
+					}
+					testProjects.Add ((Name: groupName, Assemblies: groupedAssemblies.ToArray (), ExtraArgs, TimeoutMultiplier));
 				}
 			}
 			return testProjects;
