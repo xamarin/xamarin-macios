@@ -84,15 +84,9 @@ namespace Xharness.Tests.BCLTestImporter.Tests {
 		[Test]
 		public async Task GenerateTestProjectsAsyncTest ()
 		{
-			var projects = new List<BclTestProject> () {
-				new BclTestProject  {
-					Name = "First project",
-					XUnit = false,
-				},
-				new BclTestProject {
-					Name = "Second project",
-					XUnit = true,
-				},
+			var projects = new GeneratedProjects () {
+				( Name: "First project", Path: "", XUnit: false, ExtraArgs: "", Failure: "", TimeoutMultiplier: 1),
+				( Name: "Second project", Path: "", XUnit: true, ExtraArgs: "", Failure: "", TimeoutMultiplier: 1),
 			};
 			var infos = new List<BclTestProjectInfo> {
 				new BclTestProjectInfo {

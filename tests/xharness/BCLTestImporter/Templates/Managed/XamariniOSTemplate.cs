@@ -311,11 +311,11 @@ namespace Xharness.BCLTestImporter.Templates.Managed {
 			return contentFiles.ToString ();
 		}
 
-		public async Task<List<BclTestProject>> GenerateTestProjectsAsync (IEnumerable<BclTestProjectInfo> projects, Platform platform)
+		public async Task<GeneratedProjects> GenerateTestProjectsAsync (IEnumerable<BclTestProjectInfo> projects, Platform platform)
 		{
 			// generate the template c# code before we create the diff projects
 			await GenerateSource (Path.Combine (OutputDirectoryPath, "templates"));
-			var result = new List<BclTestProject> ();
+			var result = new GeneratedProjects ();
 			switch (platform) {
 			case Platform.WatchOS:
 				result = await GenerateWatchOSTestProjectsAsync (projects);
@@ -382,9 +382,9 @@ namespace Xharness.BCLTestImporter.Templates.Managed {
 		}
 
 		// internal implementations that generate each of the diff projects
-		async Task<List<BclTestProject>> GenerateWatchOSTestProjectsAsync (IEnumerable<BclTestProjectInfo> projects)
+		async Task<GeneratedProjects> GenerateWatchOSTestProjectsAsync (IEnumerable<BclTestProjectInfo> projects)
 		{
-			var projectPaths = new List<BclTestProject> ();
+			var projectPaths = new GeneratedProjects ();
 			foreach (var def in projects) {
 				// each watch os project requires 3 different ones:
 				// 1. The app
@@ -458,7 +458,7 @@ namespace Xharness.BCLTestImporter.Templates.Managed {
 					failure = e.Message;
 				}
 				// we have the 3 projects we depend on, we need the root one, the one that will be used by harness
-				projectPaths.Add (new BclTestProject { Name = projectDefinition.Name, Path = rootProjectPath, XUnit = projectDefinition.IsXUnit, ExtraArgs = projectDefinition.ExtraArgs, Failure = failure, TimeoutMultiplier = def.TimeoutMultiplier });
+				projectPaths.Add ((projectDefinition.Name, rootProjectPath, projectDefinition.IsXUnit, projectDefinition.ExtraArgs, failure, def.TimeoutMultiplier));
 			} // foreach project
 
 			return projectPaths;
@@ -507,13 +507,13 @@ namespace Xharness.BCLTestImporter.Templates.Managed {
 			}
 		}
 
-		async Task<List<BclTestProject>> GenerateiOSTestProjectsAsync (IEnumerable<BclTestProjectInfo> projects, Platform platform)
+		async Task<GeneratedProjects> GenerateiOSTestProjectsAsync (IEnumerable<BclTestProjectInfo> projects, Platform platform)
 		{
 			if (platform == Platform.WatchOS)
 				throw new ArgumentException (nameof (platform));
 			if (!projects.Any ()) // return an empty list
-				return new List<BclTestProject> ();
-			var projectPaths = new List<BclTestProject> ();
+				return new GeneratedProjects ();
+			var projectPaths = new GeneratedProjects ();
 			foreach (var def in projects) {
 				if (def.assemblies.Length == 0)
 					continue;
@@ -557,7 +557,7 @@ namespace Xharness.BCLTestImporter.Templates.Managed {
 				} catch (Exception e) {
 					failure = e.Message;
 				}
-				projectPaths.Add (new BclTestProject { Name = projectDefinition.Name, Path = projectPath, XUnit = projectDefinition.IsXUnit, ExtraArgs = projectDefinition.ExtraArgs, Failure = failure, TimeoutMultiplier = def.TimeoutMultiplier });
+				projectPaths.Add ((projectDefinition.Name, projectPath, projectDefinition.IsXUnit, projectDefinition.ExtraArgs, failure, def.TimeoutMultiplier));
 			} // foreach project
 
 			return projectPaths;
@@ -608,9 +608,9 @@ namespace Xharness.BCLTestImporter.Templates.Managed {
 			}
 		}
 
-		async Task<List<BclTestProject>> GenerateMacTestProjectsAsync (IEnumerable<BclTestProjectInfo> projects, Platform platform)
+		async Task<GeneratedProjects> GenerateMacTestProjectsAsync (IEnumerable<BclTestProjectInfo> projects, Platform platform)
 		{
-			var projectPaths = new List<BclTestProject> ();
+			var projectPaths = new GeneratedProjects ();
 			foreach (var def in projects) {
 				if (!def.assemblies.Any ())
 					continue;
@@ -652,7 +652,7 @@ namespace Xharness.BCLTestImporter.Templates.Managed {
 				} catch (Exception e) {
 					failure = e.Message;
 				}
-				projectPaths.Add (new BclTestProject { Name = projectDefinition.Name, Path = projectPath, XUnit = projectDefinition.IsXUnit, ExtraArgs = projectDefinition.ExtraArgs, Failure = failure, TimeoutMultiplier = def.TimeoutMultiplier });
+				projectPaths.Add ((projectDefinition.Name, projectPath, projectDefinition.IsXUnit, projectDefinition.ExtraArgs, failure, def.TimeoutMultiplier));
 
 			}
 			return projectPaths;

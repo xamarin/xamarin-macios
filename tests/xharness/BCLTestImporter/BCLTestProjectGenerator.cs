@@ -14,9 +14,6 @@ namespace Xharness.BCLTestImporter {
 	/// </summary>
 	public class BCLTestProjectGenerator {
 
-		static string NUnitPattern = "monotouch_*_test.dll"; 
-		static string xUnitPattern = "monotouch_*_xunit-test.dll";
-		
 		// we have two different types of list, those that are for the iOS like projects (ios, tvos and watch os) and those 
 		// for mac
 		static readonly List<BclTestProjectInfo> commoniOSTestProjects = new List<BclTestProjectInfo> {
@@ -201,7 +198,7 @@ namespace Xharness.BCLTestImporter {
 		/// has its own details.</param>
 		/// <param name="generatedDir">The dir where the projects will be saved.</param>
 		/// <returns></returns>
-		public Task<List<BclTestProject>> GenerateTestProjectsAsync (IEnumerable<BclTestProjectInfo> projects, Platform platform)
+		public Task<GeneratedProjects> GenerateTestProjectsAsync (IEnumerable<BclTestProjectInfo> projects, Platform platform)
 			=> TemplatedProject.GenerateTestProjectsAsync (projects, platform);
 		
 		List<BclTestProjectInfo> GetProjectDefinitions (List<BclTestProjectInfo> definitions, Platform platform)
@@ -242,35 +239,34 @@ namespace Xharness.BCLTestImporter {
 			return testProjects;
 		}
 
-		async Task<List<iOSBclTestProject>> GenerateAllCommonTestProjectsAsync ()
+		async Task<List<(string Name, string Path, bool XUnit, string ExtraArgs, List<Platform> Platforms, string Failure, double TimeoutMultiplier)>> GenerateAlliOSTestProjectsAsync ()
 		{
-			var projectPaths = new List<iOSBclTestProject> ();
-			var projects = new Dictionary<string, iOSBclTestProject> ();
+			var projectPaths = new List<(string Name, string Path, bool XUnit, string ExtraArgs, List<Platform> Platforms, string Failure, double TimeoutMultiplier)> ();
+			var projects = new Dictionary<string, (string Path, bool XUnit, string ExtraArgs, List<Platform> Platforms, string Failure, double TimeoutMultiplier)> ();
 			foreach (var platform in new [] { Platform.iOS, Platform.TvOS, Platform.WatchOS }) {
 				var generated = await GenerateTestProjectsAsync (GetProjectDefinitions (commoniOSTestProjects, platform), platform);
 				foreach (var tp in generated) {
 					if (!projects.ContainsKey (tp.Name)) {
-						projects [tp.Name] = new iOSBclTestProject { Path = tp.Path, XUnit = tp.XUnit, ExtraArgs = tp.ExtraArgs, Platforms = new List<Platform> { platform }, Failure = tp.Failure, TimeoutMultiplier = tp.TimeoutMultiplier };
+						projects [tp.Name] = (tp.Path, tp.XUnit, tp.ExtraArgs, new List<Platform> { platform }, tp.Failure, tp.TimeoutMultiplier);
 					} else {
-						projects [tp.Name].Platforms.Add (platform);
-						projects [tp.Name].TimeoutMultiplier += (tp.TimeoutMultiplier - 1);
+						var project = projects [tp.Name];
+						project.Platforms.Add (platform);
+						project.TimeoutMultiplier += (tp.TimeoutMultiplier - 1);
 					}
 				}
 			} // foreach platform
 
 			// return the grouped projects
 			foreach (var name in projects.Keys) {
-				projectPaths.Add (new iOSBclTestProject { Name = name, Path = projects [name].Path, XUnit = projects [name].XUnit, ExtraArgs = projects [name].ExtraArgs, Platforms = projects [name].Platforms, Failure = projects [name].Failure, TimeoutMultiplier = projects [name].TimeoutMultiplier });
+				projectPaths.Add ((name, projects [name].Path, projects [name].XUnit, projects [name].ExtraArgs, projects [name].Platforms, projects [name].Failure, projects [name].TimeoutMultiplier));
 			}
 			return projectPaths;
 		}
 
-		public Task<List<iOSBclTestProject>> GenerateAlliOSTestProjectsAsync () => GenerateAllCommonTestProjectsAsync ();
+		public List<(string Name, string Path, bool XUnit, string ExtraArgs, List<Platform> Platforms, string Failure, double TimeoutMultiplier)> GenerateAlliOSTestProjects () => GenerateAlliOSTestProjectsAsync ().Result;
 
-		public List<iOSBclTestProject> GenerateAlliOSTestProjects () => GenerateAlliOSTestProjectsAsync ().Result;
+		public Task<GeneratedProjects> GenerateAllMacTestProjectsAsync (Platform platform) => GenerateTestProjectsAsync (GetProjectDefinitions (macTestProjects, platform), platform);
 
-		public Task<List<BclTestProject>> GenerateAllMacTestProjectsAsync (Platform platform) => GenerateTestProjectsAsync (GetProjectDefinitions (macTestProjects, platform), platform);
-
-		public List<BclTestProject> GenerateAllMacTestProjects (Platform platform) => GenerateAllMacTestProjectsAsync (platform).Result;
+		public GeneratedProjects GenerateAllMacTestProjects (Platform platform) => GenerateAllMacTestProjectsAsync (platform).Result;
 	}
 }
