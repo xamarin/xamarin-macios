@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -91,7 +91,7 @@ namespace Xharness.Jenkins.TestTasks
 				Harness,
 				mainLog: Logs.Create ($"run-{Device.UDID}-{Timestamp}.log", "Run log"),
 				logs: Logs,
-				projectFilePath: ProjectFile,
+				projectFilePath: ProjectFile,				
 				ensureCleanSimulatorState: clean_state,
 				buildConfiguration: ProjectConfiguration,
 				timeoutMultiplier: TimeoutMultiplier,
@@ -138,7 +138,8 @@ namespace Xharness.Jenkins.TestTasks
 			}
 		}
 
-		class NondisposedResource : IAcquiredResource {
+		class NondisposedResource : IAcquiredResource
+		{
 			public IAcquiredResource Wrapped;
 
 			public Resource Resource {
