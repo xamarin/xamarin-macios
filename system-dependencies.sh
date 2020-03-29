@@ -4,6 +4,7 @@ set -o pipefail
 
 cd $(dirname $0)
 
+PASS=
 FAIL=
 PROVISION_DOWNLOAD_DIR=/tmp/x-provisioning
 SUDO=sudo
