@@ -6,14 +6,29 @@ using Xharness.Execution.Mlaunch;
 using Xharness.Logging;
 
 namespace Xharness.Listeners {
+
+	// interface to be implemented by those listener that can use a tcp tunnel
+	public interface ITunnelListener : ISimpleListener { 
+		TaskCompletionSource<bool> TunnelHoleThrough { get; }
+	}
+
+	// interface implemented by a tcp tunnel between the host and the device.
+	public interface ITcpTunnel : IDisposable {
+		public void Open (string device, ITunnelListener simpleListener, TimeSpan timeout, ILog mainLog);
+		public Task Close ();
+		public Task<bool> Started { get; }
+	}
+
 	// represents a tunnel created between a device and a host. This tunnel allows the communication between
 	// the host and the device via the usb cable.
-	public class TcpTunnel : IDisposable {
-		object processExecutionLock = new object ();
+	public class TcpTunnel : ITcpTunnel {
+		readonly object processExecutionLock = new object ();
+		readonly IProcessManager processManager;
+
 		bool disposed = false;
 		Task<ProcessExecutionResult> tcpTunnelExecutionTask = null; 
-		readonly IProcessManager processManager;
 		CancellationTokenSource cancellationToken;
+
 		public TaskCompletionSource<bool> startedCompletionSource { get; private set; } = new TaskCompletionSource<bool> ();
 		public Task<bool> Started => startedCompletionSource.Task;
 		public int Port { get; private set; }
@@ -23,7 +38,7 @@ namespace Xharness.Listeners {
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 		}
 
-		public void Start (string device, SimpleTcpListener simpleListener, TimeSpan timeout, ILog mainLog)
+		public void Open (string device, ITunnelListener simpleListener, TimeSpan timeout, ILog mainLog)
 		{
 			if (device == null)
 				throw new ArgumentNullException (nameof (device));
@@ -35,10 +50,10 @@ namespace Xharness.Listeners {
 			lock (processExecutionLock) {
 				// launch app, but do not await for the result, since we need to create the tunnel
 				var tcpArgs = new MlaunchArguments {
-				new TcpTunnelArgument (simpleListener.Port),
-				new VerbosityArgument (),
-				new DeviceNameArgument (device),
-			};
+					new TcpTunnelArgument (simpleListener.Port),
+					new VerbosityArgument (),
+					new DeviceNameArgument (device),
+				};
 
 				// use a cancelation token, later will be used to kill the tcp tunnel proces
 				cancellationToken = new CancellationTokenSource ();
@@ -59,22 +74,12 @@ namespace Xharness.Listeners {
 
 		public async Task Close ()
 		{
+			if (cancellationToken == null)
+				throw new InvalidOperationException ("Cannot close tunnel that was not opened.");
 			// cancel process and wait for it to terminate, else we might want to start a second tunnel to the same device
 			// which is going to give problems.
 			cancellationToken.Cancel ();
 			await tcpTunnelExecutionTask;
-		}
-
-		public async Task Connect (SimpleTcpListener listener, ILog mainLog) {
-			if (listener.Port != Port)
-				throw new ArgumentException ($"Listener is not using the correct port. Found {listener.Port} when it should be using {Port}");
-			if (mainLog == null)
-				throw new ArgumentNullException (nameof (mainLog));
-			mainLog.WriteLine ($"Connecting to already existing tunnel at port {Port}");
-			// we cannot connect until we have started, we will block here until done
-			var canConnect = await Started;
-			if (canConnect)
-				listener.TunnelHoleThrough.TrySetResult (true);
 		}
 
 		public void Dispose ()

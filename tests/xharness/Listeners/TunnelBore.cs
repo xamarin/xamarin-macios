@@ -15,7 +15,7 @@ namespace Xharness.Listeners {
 	public interface ITunnelBore : IDisposable {
 
 		// create a new tunnel for the device with the given name.
-		TcpTunnel Create (string device, ILog mainLog);
+		ITcpTunnel Create (string device, ILog mainLog);
 
 		// close a given tunnel
 		Task Close (string device);
@@ -33,7 +33,7 @@ namespace Xharness.Listeners {
 		}
 
 		// Creates a new tcp tunnel to the given device that will use the port from the passed listener. 
-		public TcpTunnel Create (string device, ILog mainLog)
+		public ITcpTunnel Create (string device, ILog mainLog)
 		{
 			lock (tunnelsLock) {
 				if (tunnels.ContainsKey (device)) {

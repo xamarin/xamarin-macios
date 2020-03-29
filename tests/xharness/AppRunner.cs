@@ -420,9 +420,8 @@ namespace Xharness {
 					// if we want to use a tunnel, create or re-use one that is already present
 					if (transport == ListenerTransport.Tcp && UseTcpTunnel && listener is SimpleTcpListener tcpListener) {
 						// create a new tunnel using the listener
-						TcpTunnel tunnel = null;
-						tunnel = listenerFactory.TunnelBore.Create (deviceName, MainLog);
-						tunnel.Start (deviceName, tcpListener, testReporterTimeout, MainLog);
+						var tunnel = listenerFactory.TunnelBore.Create (deviceName, MainLog);
+						tunnel.Open (deviceName, tcpListener, testReporterTimeout, MainLog);
 						// wait until we started the tunnel
 						await tunnel.Started; 
 					}

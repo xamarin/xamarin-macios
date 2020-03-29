@@ -8,7 +8,7 @@ using Xharness.Logging;
 
 namespace Xharness.Listeners
 {
-	public class SimpleTcpListener : SimpleListener
+	public class SimpleTcpListener : SimpleListener, ITunnelListener 
 	{
 		readonly bool autoExit;
 
@@ -20,7 +20,8 @@ namespace Xharness.Listeners
 
 		public SimpleTcpListener (ILog log, ILog testLog, bool autoExit, bool xmlOutput, bool tunnel = false) : base (log, testLog, xmlOutput)
 		{
-			useTcpTunnel = tunnel;
+			this.autoExit = autoExit;
+			this.useTcpTunnel = tunnel;
 		}
 
 		public SimpleTcpListener (int port, ILog log, ILog testLog, bool autoExit, bool xmlOutput, bool tunnel = false) : this (log, testLog, autoExit, xmlOutput, tunnel)

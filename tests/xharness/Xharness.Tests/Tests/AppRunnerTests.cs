@@ -57,6 +57,7 @@ namespace Xharness.Tests {
 		Mock<ISimulatorsLoader> simulators;
 		Mock<IDeviceLoader> devices;
 		Mock<ISimpleListener> simpleListener;
+		Mock<ITunnelBore> tunnelBore;
 		Mock<ICrashSnapshotReporter> snapshotReporter;
 		Mock<ILogs> logs;
 		Mock<ILog> mainLog;
@@ -77,6 +78,7 @@ namespace Xharness.Tests {
 			simulators = new Mock<ISimulatorsLoader> ();
 			devices = new Mock<IDeviceLoader> ();
 			simpleListener = new Mock<ISimpleListener> ();
+			tunnelBore = new Mock<ITunnelBore> ();
 			snapshotReporter = new Mock<ICrashSnapshotReporter> ();
 
 			var mock1 = new Mock<ISimulatorsLoaderFactory> ();
@@ -91,6 +93,7 @@ namespace Xharness.Tests {
 			mock3
 				.Setup (m => m.Create (It.IsAny<string> (), It.IsAny<RunMode> (), It.IsAny<ILog> (), It.IsAny<ILog> (), It.IsAny<bool> (), It.IsAny<bool> (), It.IsAny<bool> (), It.IsAny<bool> ()))
 				.Returns ((ListenerTransport.Tcp, simpleListener.Object, "listener-temp-file"));
+			mock3.Setup (m => m.TunnelBore).Returns (tunnelBore.Object);
 			listenerFactory = mock3.Object;
 			simpleListener.SetupGet (x => x.Port).Returns (1020);
 
@@ -646,6 +649,7 @@ namespace Xharness.Tests {
 			snapshotReporter.Verify (x => x.StartCaptureAsync (), Times.AtLeastOnce);
 
 			deviceSystemLog.Verify (x => x.Dispose (), Times.AtLeastOnce);
+			tunnelBore.Verify (t => t.Close (It.IsAny<string> ()), Times.AtLeastOnce);
 		}
 
 		[Test]
@@ -753,6 +757,7 @@ namespace Xharness.Tests {
 			snapshotReporter.Verify (x => x.StartCaptureAsync (), Times.AtLeastOnce);
 
 			deviceSystemLog.Verify (x => x.Dispose (), Times.AtLeastOnce);
+			tunnelBore.Verify (t => t.Close (It.IsAny<string> ()), Times.AtLeastOnce);
 		}
 
 		IHarness GetMockedHarness ()
