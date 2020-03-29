@@ -81,8 +81,7 @@
     <Compile Include="Logging\MemoryLog.cs" />
     <Compile Include="RunMode.cs" />
     <Compile Include="TestTarget.cs" />
-    <Compile Include="TestImporter\BCLTestInfoPlistGenerator.cs" />
-    <Compile Include="TestImporter\BCLTestProjectDefinition.cs" />
+    <Compile Include="TestImporter\ProjectDefinition.cs" />
     <Compile Include="TestImporter\Platform.cs" />
     <Compile Include="Collections\BlockingEnumerableCollection.cs" />
     <Compile Include="Collections\ILoadAsync.cs" />
@@ -174,6 +173,7 @@
     <Compile Include="IAppRunner.cs" />
     <Compile Include="ITestReporter.cs" />
     <Compile Include="BCLTestImportTargetFactory.cs" />
+    <Compile Include="TestImporter\Templates\Managed\InfoPlistGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\tools\mtouch\SdkVersions.cs">
