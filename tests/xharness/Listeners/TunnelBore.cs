@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Xharness.Execution;
 using Xharness.Logging;
 
@@ -17,7 +18,7 @@ namespace Xharness.Listeners {
 		TcpTunnel Create (string device, ILog mainLog);
 
 		// close a given tunnel
-		void Close (string device);
+		Task Close (string device);
 	}
 
 	public class TunnelBore : ITunnelBore {
@@ -45,12 +46,13 @@ namespace Xharness.Listeners {
 			}
 		}
 
-		public void Close (string device)
-		{ 
+		public async Task Close (string device)
+		{
 			// closes a tcp tunnel that was created for the given device.
-			lock (tunnelsLock) { 
-				if (tunnels.TryGetValue (device, out var tunnel)) {
-					tunnel.Dispose ();
+			if (tunnels.TryGetValue (device, out var tunnel)) {
+				await tunnel.Close ();
+				tunnel.Dispose ();
+				lock (tunnelsLock) {
 					tunnels.Remove (device);
 				}
 			}

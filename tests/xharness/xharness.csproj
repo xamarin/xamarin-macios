@@ -129,6 +129,8 @@
     <Compile Include="Listeners\SimpleListener.cs" />
     <Compile Include="Listeners\SimpleListenerFactory.cs" />
     <Compile Include="Listeners\SimpleTcpListener.cs" />
+    <Compile Include="Listeners\TunnelBore.cs" />
+    <Compile Include="Listeners\TcpTunnel.cs" />
     <Compile Include="Logging\CallbackLog.cs" />
     <Compile Include="Logging\CaptureLog.cs" />
     <Compile Include="Logging\ConsoleLog.cs" />
@@ -176,10 +178,7 @@
     <Compile Include="BCLTestImporter\Xamarin\TestAssemblyDefinition.cs" />
     <Compile Include="IResultParser.cs" />
     <Compile Include="TestReporter.cs" />
-    <Compile Include="IAppRunner.cs" />
     <Compile Include="ITestReporter.cs" />
-    <Compile Include="Listeners\TunnelBore.cs" />
-    <Compile Include="Listeners\TcpTunnel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\tools\mtouch\SdkVersions.cs">

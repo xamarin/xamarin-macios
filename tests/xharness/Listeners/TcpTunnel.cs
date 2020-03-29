@@ -9,7 +9,9 @@ namespace Xharness.Listeners {
 	// represents a tunnel created between a device and a host. This tunnel allows the communication between
 	// the host and the device via the usb cable.
 	public class TcpTunnel : IDisposable {
+		object processExecutionLock = new object ();
 		bool disposed = false;
+		Task<ProcessExecutionResult> tcpTunnelExecutionTask = null; 
 		readonly IProcessManager processManager;
 		CancellationTokenSource cancellationToken;
 		public TaskCompletionSource<bool> startedCompletionSource { get; private set; } = new TaskCompletionSource<bool> ();
@@ -30,31 +32,38 @@ namespace Xharness.Listeners {
 			if (mainLog == null)
 				throw new ArgumentNullException (nameof (mainLog));
 
-			// launch app, but do not await for the result, since we need to create the tunnel
-			var tcpArgs = new MlaunchArguments {
+			lock (processExecutionLock) {
+				// launch app, but do not await for the result, since we need to create the tunnel
+				var tcpArgs = new MlaunchArguments {
 				new TcpTunnelArgument (simpleListener.Port),
 				new VerbosityArgument (),
 				new DeviceNameArgument (device),
 			};
 
-			// use a cancelation token, later will be used to kill the tcp tunnel proces
-			cancellationToken = new CancellationTokenSource ();
-			mainLog.WriteLine ($"Starting tcp tunnel between mac port: {simpleListener.Port} and devie port {simpleListener.Port}.");
-			Port = simpleListener.Port;
-			var tunnelbackLog = new CallbackLog ((line) => {
-				mainLog.WriteLine ($"The tcp tunnel output is {line}");
-				if (line.Contains ("Tcp tunnel started on device")) {
-					mainLog.Write ($"Tcp tunnel created on port {simpleListener.Port}");
-					startedCompletionSource.TrySetResult (true);
-					simpleListener.TunnelHoleThrough.TrySetResult (true);
-				}
-			});
-			// do not await, we are not going to block for a process
-			// TODO: what to do with the task?
-			var tcpTunnelExecutionTask = processManager.ExecuteCommandAsync (tcpArgs, tunnelbackLog, timeout, cancellation_token: cancellationToken.Token);
+				// use a cancelation token, later will be used to kill the tcp tunnel proces
+				cancellationToken = new CancellationTokenSource ();
+				mainLog.WriteLine ($"Starting tcp tunnel between mac port: {simpleListener.Port} and devie port {simpleListener.Port}.");
+				Port = simpleListener.Port;
+				var tunnelbackLog = new CallbackLog ((line) => {
+					mainLog.WriteLine ($"The tcp tunnel output is {line}");
+					if (line.Contains ("Tcp tunnel started on device")) {
+						mainLog.Write ($"Tcp tunnel created on port {simpleListener.Port}");
+						startedCompletionSource.TrySetResult (true);
+						simpleListener.TunnelHoleThrough.TrySetResult (true);
+					}
+				});
+				// do not await since we are going to be running the process is parallel
+				tcpTunnelExecutionTask = processManager.ExecuteCommandAsync (tcpArgs, tunnelbackLog, timeout, cancellation_token: cancellationToken.Token);
+			}
 		}
 
-		public void Close () => cancellationToken.Cancel ();
+		public async Task Close ()
+		{
+			// cancel process and wait for it to terminate, else we might want to start a second tunnel to the same device
+			// which is going to give problems.
+			cancellationToken.Cancel ();
+			await tcpTunnelExecutionTask;
+		}
 
 		public async Task Connect (SimpleTcpListener listener, ILog mainLog) {
 			if (listener.Port != Port)
