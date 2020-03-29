@@ -308,5 +308,24 @@ namespace Xharness.Tests
 			File.Delete (finalPath);
 			Directory.Delete (logsDir, true);
 		}
+
+		[Test]
+		public void Issue8214Test ()
+		{
+			// get the sample that was added to the issue to validate that we do parse the resuls correctly and copy it to a local
+			// path to be parsed
+			var name = GetType ().Assembly.GetManifestResourceNames ().Where (a => a.EndsWith ("Issue8214.xml", StringComparison.Ordinal)).FirstOrDefault ();
+			var tempPath = Path.GetTempFileName ();
+			var destinationFile = Path.GetTempFileName ();
+			using (var outputStream = new StreamWriter (tempPath))
+			using (var sampleStream = new StreamReader (GetType ().Assembly.GetManifestResourceStream (name))) {
+				string line;
+				while ((line = sampleStream.ReadLine ()) != null)
+					outputStream.WriteLine (line);
+			}
+			var (resultLine, failed) = resultParser.GenerateHumanReadableResults (tempPath, destinationFile, XmlResultJargon.NUnitV3);
+			Assert.IsTrue (failed, "failed");
+			Assert.AreEqual ("Tests run: 2376 Passed: 2301 Inconclusive: 13 Failed: 1 Ignored: 74", resultLine, "resultLine");
+		}
 	}
 }
