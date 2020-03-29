@@ -1795,6 +1795,22 @@ namespace Xharness.Jenkins
 			}
 			return false;
 		}
+
+		public bool IsMonoMulti3Issue (ILog log) {
+			if (log == null)
+				return false;
+			if (File.Exists (log.FullPath) && new FileInfo (log.FullPath).Length > 0) {
+				using var reader = log.GetReader ();
+				while (!reader.EndOfStream) {
+					string line = reader.ReadLine ();
+					if (line == null)
+						continue;
+					if (line.Contains ("error MT5210: Native linking failed, undefined symbol: ___multi3"))
+						return true;
+				}
+			}
+			return false;
+		}
 		
 		string previous_test_runs;
 		void GenerateReportImpl (Stream stream, StreamWriter markdown_summary = null)

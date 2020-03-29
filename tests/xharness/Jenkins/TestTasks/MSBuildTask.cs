@@ -59,6 +59,9 @@ namespace Xharness.Jenkins.TestTasks
 							ExecutionResult = TestExecutingResult.Succeeded;
 						} else {
 							ExecutionResult = TestExecutingResult.Failed;
+							if (Jenkins.IsMonoMulti3Issue (BuildLog)) { 
+								KnownFailure = $"<a href='https://github.com/mono/mono/issues/18560'>Undefined symbol ___multi3 on Release Mode</a>";
+							}
 						}
 					}
 					Jenkins.MainLog.WriteLine ("Built {0} ({1})", TestName, Mode);
