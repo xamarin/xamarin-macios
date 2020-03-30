@@ -203,7 +203,9 @@ extern void mono_gc_init_finalizer_thread (void);
 {
 	// COOP: ?
 #if defined (__arm__) || defined(__aarch64__)
+	MONO_ENTER_GC_UNSAFE;
 	mono_gc_init_finalizer_thread ();
+	MONO_EXIT_GC_UNSAFE;
 #endif
 }
 
