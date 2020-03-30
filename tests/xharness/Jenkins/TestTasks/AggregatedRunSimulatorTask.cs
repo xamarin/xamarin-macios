@@ -81,7 +81,9 @@ namespace Xharness.Jenkins.TestTasks {
 				foreach (var dev in devices)
 					await dev.ShutdownAsync (Jenkins.MainLog);
 
-				await devices.FirstOrDefault()?.KillEverythingAsync (Jenkins.MainLog);
+				var device = devices.FirstOrDefault ();
+				if (device != null)
+					await device.KillEverythingAsync (Jenkins.MainLog);
 
 				run_timer.Stop ();
 			}
