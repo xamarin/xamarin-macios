@@ -96,7 +96,7 @@ namespace Xharness.BCLTestImporter {
 				ExtraArgs: null,
 				TimeoutMultiplier: 1,
 				Projects: new [] {
-				( Name: "mscorlib Part 1", Assemblies: new [] { "monotouch_corlib_xunit-test.part1.dll" }), // special testcase for the corlib which is later used in xHarness for diff config options
+					( Name: "mscorlib Part 1", Assemblies: new [] { "monotouch_corlib_xunit-test.part1.dll" }), // special testcase for the corlib which is later used in xHarness for diff config options
 			}),
 			["mscorlib Part 2"] = (
 				ExtraArgs: null,
