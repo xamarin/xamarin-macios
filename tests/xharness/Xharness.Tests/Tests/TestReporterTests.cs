@@ -14,7 +14,6 @@ namespace Xharness.Tests.Tests {
 	[TestFixture]
 	public class TestReporterTests {
 
-		Mock<IAppRunner> runner;
 		Mock<ICrashSnapshotReporter> crashReporter;
 		Mock<IProcessManager> processManager;
 		IResultParser parser;
@@ -29,7 +28,6 @@ namespace Xharness.Tests.Tests {
 		[SetUp]
 		public void SetUp ()
 		{
-			runner = new Mock<IAppRunner> ();
 			crashReporter = new Mock<ICrashSnapshotReporter> ();
 			processManager = new Mock<IProcessManager> ();
 			parser = new XmlResultParser (); 
@@ -46,7 +44,6 @@ namespace Xharness.Tests.Tests {
 		[TearDown]
 		public void TearDown ()
 		{
-			runner = null;
 			processManager = null;
 			runLog = null;
 			mainLog = null;
@@ -63,13 +60,21 @@ namespace Xharness.Tests.Tests {
 
 		TestReporter BuildTestResult ()
 		{
-			runner.Setup (r => r.Logs).Returns (logs.Object);
-			runner.Setup (r => r.MainLog).Returns (mainLog.Object);
-			runner.Setup (r => r.AppInformation).Returns (appInformation);
-			runner.Setup (r => r.XmlJargon).Returns (XmlResultJargon.NUnitV3);
-			runner.Setup (r => r.ProcessManager).Returns (processManager.Object);
 			logs.Setup (l => l.Directory).Returns (logsDirectory);
-			return new TestReporter (runner.Object, deviceName, listener.Object, runLog.Object, crashReporter.Object, parser);
+
+			return new TestReporter (processManager.Object,
+				mainLog.Object,
+				runLog.Object,
+				logs.Object,
+				crashReporter.Object,
+				listener.Object,
+				parser,
+				appInformation,
+				RunMode.Sim64,
+				XmlResultJargon.NUnitV3,
+				deviceName,
+				TimeSpan.FromSeconds (2),
+				0.2);
 		}
 
 		[Test]
@@ -248,7 +253,6 @@ namespace Xharness.Tests.Tests {
 			var listenerLog = new Mock<ILog> ();
 			listener.Setup (l => l.TestLog).Returns (listenerLog.Object);
 			listenerLog.Setup (l => l.FullPath).Returns (sample);
-			runner.Setup (r => r.AppInformation).Returns (appInformation);
 
 			var testResult = BuildTestResult ();
 			var (result, failure) = await testResult.ParseResult ();
@@ -267,7 +271,6 @@ namespace Xharness.Tests.Tests {
 			var listenerLog = new Mock<ILog> ();
 			listener.Setup (l => l.TestLog).Returns (listenerLog.Object);
 			listenerLog.Setup (l => l.FullPath).Returns (sample);
-			runner.Setup (r => r.AppInformation).Returns (appInformation);
 
 			var testResult = BuildTestResult ();
 			var (result, failure) = await testResult.ParseResult ();

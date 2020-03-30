@@ -173,7 +173,6 @@
     <Compile Include="BCLTestImporter\Xamarin\TestAssemblyDefinition.cs" />
     <Compile Include="IResultParser.cs" />
     <Compile Include="TestReporter.cs" />
-    <Compile Include="IAppRunner.cs" />
     <Compile Include="ITestReporter.cs" />
   </ItemGroup>
   <ItemGroup>
