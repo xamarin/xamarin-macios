@@ -7437,6 +7437,7 @@ namespace UIKit {
 
 		[Export ("CGImage")]
 		[ThreadSafe]
+		[NullAllowed]
 		CGImage CGImage { get; }
 
 		[Export ("imageOrientation")]
