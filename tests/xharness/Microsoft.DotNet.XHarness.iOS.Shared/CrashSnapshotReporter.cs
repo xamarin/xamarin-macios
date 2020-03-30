@@ -62,8 +62,9 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 				newCrashFiles.ExceptWith (initialCrashes);
 
 				if (newCrashFiles.Count == 0) {
-					if (stopwatch.Elapsed.TotalSeconds > timeout.TotalSeconds) break;
-					else {
+					if (stopwatch.Elapsed.TotalSeconds > timeout.TotalSeconds) {
+						break;
+					} else {
 						log.WriteLine (
 							"No crash reports, waiting a second to see if the crash report service just didn't complete in time ({0})",
 							(int) (timeout.TotalSeconds - stopwatch.Elapsed.TotalSeconds));
