@@ -104,7 +104,7 @@ namespace Xharness {
 			}
 		}
 
-		public static string XIBuildPath => Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "tools", "xibuild", "xibuild"));
+		public static string XIBuildPath => Path.GetFullPath (Path.Combine (RootDirectory, "..", "tools", "xibuild", "xibuild"));
 
 		string sdkRoot;
 		string SdkRoot {

@@ -517,8 +517,8 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 			foreach (var suite in testSuitesElements) {
 				suite.SetAttributeValue ("name", applicationName);
 				suite.SetAttributeValue ("fullname", applicationName); // docs say just name, but I've seen the fullname instead, docs usually lie
-																	   // add also the attachments to all the failing tests, this will make the life of the person monitoring easier, since
-																	   // he will see the logs directly from the attachment page
+				// add also the attachments to all the failing tests, this will make the life of the person monitoring easier, since
+				// he will see the logs directly from the attachment page
 				var tests = suite.Descendants ().Where (e => e.Name == "test-case" && e.Attribute ("result").Value == "Failed");
 				foreach (var t in tests) {
 					t.Add (attachmentsElement);

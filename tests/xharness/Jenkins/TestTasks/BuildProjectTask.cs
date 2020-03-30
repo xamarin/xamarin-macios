@@ -39,7 +39,7 @@ namespace Xharness.Jenkins.TestTasks
 					throw new FileNotFoundException ("Could not find the solution whose nugets to restore.", projectPath);
 
 				using (var nuget = new Process ()) {
-					nuget.StartInfo.FileName = useXIBuild && !isSolution ? DirectoryUtilities.XIBuildPath :
+					nuget.StartInfo.FileName = useXIBuild && !isSolution ? Harness.XIBuildPath :
 						"/Library/Frameworks/Mono.framework/Versions/Current/Commands/nuget";
 					var args = new List<string> ();
 					args.Add ((useXIBuild && !isSolution ? "/" : "") + "restore"); // diff param depending on the tool

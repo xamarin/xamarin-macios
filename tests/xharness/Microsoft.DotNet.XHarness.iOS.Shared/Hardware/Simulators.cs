@@ -297,8 +297,9 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 				return null;
 			}
 
-			if (companion_runtime == null) simulators = new ISimulatorDevice [] { devices.First () };
-			else {
+			if (companion_runtime == null) {
+				simulators = new ISimulatorDevice [] { devices.First () };
+			} else {
 				if (companion_devices?.Any () != true) {
 					log.WriteLine ($"Could not find or create companion devices runtime={companion_runtime} and device type={companion_devicetype}.");
 					return null;

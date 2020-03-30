@@ -41,8 +41,9 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Listeners {
 					string line;
 					while ((line = reader.ReadLine ()) != null) {
 						OutputWriter.WriteLine (line);
-						if (line.StartsWith ("[Runner executing:", StringComparison.Ordinal)) Log.WriteLine ("Tests have started executing");
-						else if (!XmlOutput && line.StartsWith ("Tests run: ", StringComparison.Ordinal)) {
+						if (line.StartsWith ("[Runner executing:", StringComparison.Ordinal)) {
+							Log.WriteLine ("Tests have started executing");
+						} else if (!XmlOutput && line.StartsWith ("Tests run: ", StringComparison.Ordinal)) {
 							Log.WriteLine ("Tests have finished executing");
 							Finished ();
 							return;

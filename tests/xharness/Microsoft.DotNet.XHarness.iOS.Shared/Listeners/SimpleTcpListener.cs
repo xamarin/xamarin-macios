@@ -67,10 +67,12 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Listeners {
 				fs.Flush ();
 				total += i;
 			}
-
-			if (total < 16)                 // This wasn't a test run, but a connection from the app (on device) to find
-											// the ip address we're reachable on.
+			
+			if (total < 16) {
+				// This wasn't a test run, but a connection from the app (on device) to find
+				// the ip address we're reachable on.
 				return false;
+			}
 			return true;
 		}
 	}

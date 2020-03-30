@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 
 namespace Microsoft.DotNet.XHarness.iOS.Shared.Listeners {
@@ -11,28 +10,29 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Listeners {
 
 	public interface ISimpleListenerFactory {
 		(ListenerTransport transport, ISimpleListener listener, string listenerTempFile) Create (RunMode mode,
-																								 ILog log,
-																								 ILog listenerLog,
-																								 bool isSimulator,
-																								 bool autoExit,
-																								 bool xmlOutput);
+			ILog log,
+			ILog listenerLog,
+			bool isSimulator,
+			bool autoExit,
+			bool xmlOutput);
 	}
 
 	public class SimpleListenerFactory : ISimpleListenerFactory {
 
 		public (ListenerTransport transport, ISimpleListener listener, string listenerTempFile) Create (RunMode mode,
-																										ILog log,
-																										ILog listenerLog,
-																										bool isSimulator,
-																										bool autoExit,
-																										bool xmlOutput)
+			ILog log,
+			ILog listenerLog,
+			bool isSimulator,
+			bool autoExit,
+			bool xmlOutput)
 		{
 			string listenerTempFile = null;
 			ISimpleListener listener;
 			ListenerTransport transport;
 
-			if (mode == RunMode.WatchOS) transport = isSimulator ? ListenerTransport.File : ListenerTransport.Http;
-			else {
+			if (mode == RunMode.WatchOS) {
+				transport = isSimulator ? ListenerTransport.File : ListenerTransport.Http;
+			} else {
 				transport = ListenerTransport.Tcp;
 			}
 

@@ -77,8 +77,9 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 		public static void SetPListStringValue (this XmlDocument plist, string node, string value)
 		{
 			var element = plist.SelectSingleNode ("//dict/key[text()='" + node + "']");
-			if (element == null) plist.AddPListStringValue (node, value);
-			else {
+			if (element == null) {
+				plist.AddPListStringValue (node, value);
+			} else {
 				element.NextSibling.InnerText = value;
 			}
 		}

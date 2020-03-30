@@ -54,7 +54,9 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests {
 			var tempPath = Path.GetTempFileName ();
 			using (var outputStream = new StreamWriter (tempPath))
 			using (var sampleStream = new StreamReader (GetType ().Assembly.GetManifestResourceStream (name))) {
-				if (includePing) outputStream.WriteLine ("ping");
+				if (includePing) {
+					outputStream.WriteLine ("ping");
+				}
 				string line;
 				while ((line = sampleStream.ReadLine ()) != null)
 					outputStream.WriteLine (line);
