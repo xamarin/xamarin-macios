@@ -312,6 +312,7 @@ namespace Xharness.Tests
 		[Test]
 		public void Issue8214Test ()
 		{
+			string expectedResultLine = "Tests run: 2376 Passed: 2301 Inconclusive: 13 Failed: 1 Ignored: 74";
 			// get the sample that was added to the issue to validate that we do parse the resuls correctly and copy it to a local
 			// path to be parsed
 			var name = GetType ().Assembly.GetManifestResourceNames ().Where (a => a.EndsWith ("Issue8214.xml", StringComparison.Ordinal)).FirstOrDefault ();
@@ -325,7 +326,20 @@ namespace Xharness.Tests
 			}
 			var (resultLine, failed) = resultParser.GenerateHumanReadableResults (tempPath, destinationFile, XmlResultJargon.NUnitV3);
 			Assert.IsTrue (failed, "failed");
-			Assert.AreEqual ("Tests run: 2376 Passed: 2301 Inconclusive: 13 Failed: 1 Ignored: 74", resultLine, "resultLine");
+			Assert.AreEqual (expectedResultLine, resultLine, "resultLine");
+			// verify that the destination does contain the result line
+			string resultLineInDestinationFile = null;
+			using (var resultReader = new StreamReader (destinationFile)) {
+				string line;
+				while ((line = resultReader.ReadLine ()) != null) {
+					if (line.Contains ("Tests run:")) {
+						resultLineInDestinationFile = line;
+						break;
+					}
+				}
+			}
+			Assert.IsNotNull (resultLineInDestinationFile, "result file result line");
+			Assert.AreEqual (expectedResultLine, resultLineInDestinationFile, "content result file result line");
 		}
 	}
 }
