@@ -120,7 +120,6 @@
     <Compile Include="TestProject.cs" />
     <Compile Include="BCLTestImporter\Templates\ITemplatedProject.cs" />
     <Compile Include="BCLTestImporter\Templates\Managed\XamariniOSTemplate.cs" />
-    <Compile Include="BCLTestImporter\BclTestProjectInfo.cs" />
     <Compile Include="BCLTestImporter\IAssemblyLocator.cs" />
     <Compile Include="BCLTestImporter\Templates\IProjectFilter.cs" />
     <Compile Include="BCLTestImporter\Xamarin\AssemblyLocator.cs" />
