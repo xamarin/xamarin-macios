@@ -8,8 +8,7 @@ using Xharness.Jenkins.TestTasks;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 
-namespace Xharness
-{
+namespace Xharness {
 	public class TestProject
 	{
 		XmlDocument xml;

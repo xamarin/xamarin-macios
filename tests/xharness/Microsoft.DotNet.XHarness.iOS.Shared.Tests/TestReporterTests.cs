@@ -7,11 +7,10 @@ using Moq;
 using NUnit.Framework;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
-using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 
-namespace Xharness.Tests.Tests {
+namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests {
 
 	[TestFixture]
 	public class TestReporterTests {
@@ -32,7 +31,7 @@ namespace Xharness.Tests.Tests {
 		{
 			crashReporter = new Mock<ICrashSnapshotReporter> ();
 			processManager = new Mock<IProcessManager> ();
-			parser = new XmlResultParser (); 
+			parser = new XmlResultParser ();
 			runLog = new Mock<ILog> ();
 			mainLog = new Mock<ILog> ();
 			logs = new Mock<ILogs> ();
@@ -105,7 +104,7 @@ namespace Xharness.Tests.Tests {
 		[TestCase ("Some Data")]
 		[TestCase (null)]
 		public async Task CollectSimulatorResultsLaunchFailureTest (string runLogData)
-		{ 
+		{
 			// similar to the above test, but in this case we ware going to fake a launch issue, that is, the runlog
 			// does not contain a PID that we can parse and later try to kill.
 
@@ -116,7 +115,7 @@ namespace Xharness.Tests.Tests {
 
 			// empty test file to be returned as the runlog stream
 			var tmpFile = Path.GetTempFileName ();
-			if (!string.IsNullOrEmpty (runLogData)) { 
+			if (!string.IsNullOrEmpty (runLogData)) {
 				using (var writer = new StreamWriter (tmpFile)) {
 					writer.Write (runLogData);
 				}
@@ -141,7 +140,7 @@ namespace Xharness.Tests.Tests {
 		[TestCase (0)]
 		[TestCase (1)]
 		public async Task CollectSimulatorResultsSuccessLaunchTest (int processExitCode)
-		{ 
+		{
 			// fake the best case scenario, we got the process to exit correctly
 			var cancellationTokenSource = new CancellationTokenSource ();
 			var tcs = new TaskCompletionSource<object> ();
@@ -161,14 +160,14 @@ namespace Xharness.Tests.Tests {
 
 			if (processExitCode != 0)
 				processManager.Verify (p => p.KillTreeAsync (It.IsAny<int> (), It.IsAny<ILog> (), true), Times.Once);
-			else 
+			else
 				// verify that we do not try to kill a process that never got started
 				processManager.Verify (p => p.KillTreeAsync (It.IsAny<int> (), It.IsAny<ILog> (), true), Times.Never);
 		}
 
 		[Test]
 		public async Task CollectDeviceResultTimeoutTest ()
-		{ 
+		{
 			// set the listener to return a task that we are not going to complete
 			var tcs = new TaskCompletionSource<object> ();
 			listener.Setup (l => l.CompletionTask).Returns (tcs.Task); // will never be set to be completed
@@ -187,7 +186,7 @@ namespace Xharness.Tests.Tests {
 		[TestCase (0)]
 		[TestCase (1)]
 		public async Task CollectDeviceResultSuccessTest (int processExitCode)
-		{ 
+		{
 			// fake the best case scenario, we got the process to exit correctly
 			var processResult = Task.FromResult (new ProcessExecutionResult () { TimedOut = false, ExitCode = processExitCode });
 
@@ -206,7 +205,7 @@ namespace Xharness.Tests.Tests {
 
 		[Test]
 		public void LaunchCallbackFaultedTest ()
-		{ 
+		{
 			var testResult = BuildTestResult ();
 			var t = Task.FromException<bool> (new Exception ("test"));
 			testResult.LaunchCallback (t);
@@ -217,7 +216,7 @@ namespace Xharness.Tests.Tests {
 
 		[Test]
 		public void LaunchCallbackCanceledTest ()
-		{ 
+		{
 			var testResult = BuildTestResult ();
 			var tcs = new TaskCompletionSource<bool> ();
 			tcs.TrySetCanceled ();
@@ -228,7 +227,7 @@ namespace Xharness.Tests.Tests {
 
 		[Test]
 		public void LaunchCallbackSuccessTest ()
-		{ 
+		{
 			var testResult = BuildTestResult ();
 			var t = Task.FromResult (true);
 			testResult.LaunchCallback (t);
@@ -250,7 +249,7 @@ namespace Xharness.Tests.Tests {
 
 		[Test]
 		public async Task ParseResultFailingTestsTest ()
-		{ 
+		{
 			var sample = CreateSampleFile ("NUnitV3SampleFailure.xml");
 			var listenerLog = new Mock<ILog> ();
 			listener.Setup (l => l.TestLog).Returns (listenerLog.Object);
@@ -260,7 +259,7 @@ namespace Xharness.Tests.Tests {
 			var (result, failure) = await testResult.ParseResult ();
 			Assert.AreEqual (TestExecutingResult.Failed, result, "execution result");
 			Assert.IsNull (failure, "failure message");
-			
+
 			// ensure that we do  call the crash reporter end capture but with 0, since it was a success
 			crashReporter.Verify (c => c.EndCaptureAsync (It.Is<TimeSpan> (t => t.TotalSeconds == 5)), Times.Once);
 		}
@@ -278,14 +277,14 @@ namespace Xharness.Tests.Tests {
 			var (result, failure) = await testResult.ParseResult ();
 			Assert.AreEqual (TestExecutingResult.Succeeded, result, "execution result");
 			Assert.IsNull (failure, "failure message");
-			
+
 			// ensure that we do  call the crash reporter end capture but with 0, since it was a success
 			crashReporter.Verify (c => c.EndCaptureAsync (It.Is<TimeSpan> (t => t.TotalSeconds == 0)), Times.Once);
 		}
 
 		[Test]
 		public async Task ParseResultTimeoutTestsTest ()
-		{ 
+		{
 			// more complicated test, we need to fake a process timeout, then ensure that the result is the expected one
 			var tcs = new TaskCompletionSource<object> ();
 			listener.Setup (l => l.CompletionTask).Returns (tcs.Task); // will never be set to be completed
@@ -325,7 +324,7 @@ namespace Xharness.Tests.Tests {
 			var isTimeoutFailure = false;
 			using (var reader = new StreamReader (failurePath)) {
 				string line = null;
-				while ((line = await reader.ReadLineAsync ()) != null) { 
+				while ((line = await reader.ReadLineAsync ()) != null) {
 					if (line.Contains ("App Timeout")) {
 						isTimeoutFailure = true;
 						break;

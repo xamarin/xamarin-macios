@@ -4,12 +4,12 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using System.Xml;
+using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
-namespace Xharness.Jenkins.TestTasks
-{
+namespace Xharness.Jenkins.TestTasks {
 	abstract class BuildProjectTask : BuildToolTask
 	{
 		public string SolutionPath;

@@ -11,38 +11,10 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
-using Microsoft.DotNet.XHarness.iOS.Shared;
 
 using ExceptionLogger = System.Action<int, string>;
 
-namespace Xharness {
-
-	public class TestReporterFactory : ITestReporterFactory {
-		readonly IProcessManager processManager;
-
-		public TestReporterFactory (IProcessManager processManager)
-		{
-			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
-		}
-
-		public ITestReporter Create (ILog mainLog,
-			ILog runLog,
-			ILogs logs,
-			ICrashSnapshotReporter crashReporter,
-			ISimpleListener simpleListener,
-			IResultParser parser,
-			AppBundleInformation appInformation,
-			RunMode runMode,
-			XmlResultJargon xmlJargon,
-			string device,
-			TimeSpan timeout,
-			double launchTimeout,
-			string additionalLogsDirectory = null,
-			ExceptionLogger exceptionLogger = null)
-		{
-			return new TestReporter (processManager, mainLog, runLog, logs, crashReporter, simpleListener, parser, appInformation, runMode, xmlJargon, device, timeout, launchTimeout, additionalLogsDirectory, exceptionLogger);
-		}
-	}
+namespace Microsoft.DotNet.XHarness.iOS.Shared {
 
 	// main class that gets the result of an executed test application, parses the results and provides information
 	// about the success or failure of the execution.
@@ -68,7 +40,7 @@ namespace Xharness {
 		readonly TimeSpan timeout;
 		readonly double launchTimeout;
 		readonly Stopwatch timeoutWatch;
-		
+
 		/// <summary>
 		/// Additional logs that will be sent with the report in case of a failure.
 		/// Used by the Xamarin.Xharness project to add BuildTask logs.

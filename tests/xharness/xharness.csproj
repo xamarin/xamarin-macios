@@ -83,6 +83,7 @@
     <Compile Include="DeviceLogCapturerFactory.cs" />
     <Compile Include="GitHub.cs" />
     <Compile Include="Harness.cs" />
+    <Compile Include="TestReporterFactory.cs" />
     <Compile Include="Jenkins\Jenkins.cs" />
     <Compile Include="Jenkins\Resource.cs" />
     <Compile Include="Jenkins\Resources.cs" />
@@ -115,7 +116,6 @@
     <Compile Include="Targets\TVOSTarget.cs" />
     <Compile Include="Targets\UnifiedTarget.cs" />
     <Compile Include="Targets\WatchOSTarget.cs" />
-    <Compile Include="TestExecutingResult.cs" />
     <Compile Include="TestPlatform.cs" />
     <Compile Include="TestProject.cs" />
     <Compile Include="BCLTestImporter\Templates\ITemplatedProject.cs" />
@@ -131,8 +131,6 @@
     <Compile Include="BCLTestImporter\ITestAssemblyDefinition.cs" />
     <Compile Include="BCLTestImporter\Xamarin\AssemblyDefinitionFactory.cs" />
     <Compile Include="BCLTestImporter\Xamarin\TestAssemblyDefinition.cs" />
-    <Compile Include="TestReporter.cs" />
-    <Compile Include="ITestReporter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="xharness.js">

@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Xml;
+using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
-namespace Xharness.Jenkins.TestTasks
-{
+namespace Xharness.Jenkins.TestTasks {
 	class MSBuildTask : BuildProjectTask
 	{
 		public ILog BuildLog;

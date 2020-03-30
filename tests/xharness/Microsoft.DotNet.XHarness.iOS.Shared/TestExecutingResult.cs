@@ -1,10 +1,8 @@
 ﻿using System;
 
-namespace Xharness
-{
+namespace Microsoft.DotNet.XHarness.iOS.Shared {
 	[Flags]
-	public enum TestExecutingResult
-	{
+	public enum TestExecutingResult {
 		NotStarted = 0,
 		InProgress = 0x1,
 		Finished = 0x2,
