@@ -3009,7 +3009,7 @@ public partial class Generator : IMemberGatherer {
 					if (null_allowed)
 						print ("if (value == IntPtr.Zero)\n\treturn null;");
 					else if (propertyType.IsArray)
-						print ("if (value == IntPtr.Zero)\n\treturn new {0} [0];", RenderType (et));
+						print ("if (value == IntPtr.Zero)\n\treturn Array.Empty<{0}> ();", RenderType (et));
 					else if (!is_property_wrapped_type && !is_property_array_wrapped_type)
 						print ("if (value == IntPtr.Zero)\n\treturn default({0});", RenderType (propertyType));
 
