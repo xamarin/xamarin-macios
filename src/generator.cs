@@ -782,6 +782,8 @@ public class NamespaceManager
 			ImplicitNamespaces.Add (Get ("FileProvider"));
 		if (Frameworks.HaveNetworkExtension)
 			ImplicitNamespaces.Add (Get ("NetworkExtension"));
+		if (Frameworks.HaveNetwork)
+			ImplicitNamespaces.Add (Get ("Network"));
 
 		// These are both types and namespaces
 		NamespacesThatConflictWithTypes = new HashSet<string> {

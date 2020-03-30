@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web.UI.WebControls;
 using System.Xml;
 using Xharness.Collections;
 using Xharness.Execution;
@@ -18,23 +19,19 @@ namespace Xharness.Hardware {
 	}
 
 	public class DeviceLoaderFactory : IDeviceLoaderFactory {
-		readonly IHarness harness;
 		readonly IProcessManager processManager;
 
-		public DeviceLoaderFactory (IHarness harness, IProcessManager processManager)
+		public DeviceLoaderFactory (IProcessManager processManager)
 		{
-			this.harness = harness ?? throw new ArgumentNullException (nameof (harness));
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 		}
 
-		public IDeviceLoader CreateLoader () => new Devices (harness, processManager);
+		public IDeviceLoader CreateLoader () => new Devices (processManager);
 	}
 
 	public class Devices : IDeviceLoader {
 		readonly IProcessManager processManager;
 		bool loaded;
-
-		public IHarness Harness { get; set; }
 
 		BlockingEnumerableCollection<IHardwareDevice> connected_devices = new BlockingEnumerableCollection<IHardwareDevice> ();
 
@@ -51,9 +48,8 @@ namespace Xharness.Hardware {
 			}
 		}
 
-		public Devices (IHarness harness, IProcessManager processManager)
+		public Devices (IProcessManager processManager)
 		{
-			Harness = harness ?? throw new ArgumentNullException (nameof (harness));
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 		}
 
@@ -76,18 +72,19 @@ namespace Xharness.Hardware {
 				var tmpfile = Path.GetTempFileName ();
 				try {
 					using (var process = new Process ()) {
-						process.StartInfo.FileName = Harness.MlaunchPath;
 						var arguments = new MlaunchArguments (
-							new SdkRootArgument (Harness.XcodeRoot),
 							new ListDevicesArgument (tmpfile),
 							new XmlOutputFormatArgument ());
 
 						if (extra_data)
 							arguments.Add (new ListExtraDataArgument ());
 
+						var task = processManager.ExecuteCommandAsync (arguments, log, timeout: TimeSpan.FromSeconds (120));
 						log.WriteLine ("Launching {0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments);
-						var rv = await processManager.RunAsync (process, arguments, log, timeout: TimeSpan.FromSeconds (120));
-						if (!rv.Succeeded)
+
+						var result = await task;
+
+						if (!result.Succeeded)
 							throw new Exception ("Failed to list devices.");
 						log.WriteLine ("Result:");
 						log.WriteLine (File.ReadAllText (tmpfile));

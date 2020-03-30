@@ -258,8 +258,8 @@ namespace Xharness.Tests
 
 			// create a path with data in it
 			var logs = new Mock<ILogs> ();
-			var tmpLogMock = new Mock<ILogFile> ();
-			var xmlLogMock = new Mock<ILogFile> ();
+			var tmpLogMock = new Mock<ILog> ();
+			var xmlLogMock = new Mock<ILog> ();
 
 			var tmpPath = Path.GetTempFileName ();
 			var finalPath = Path.GetTempFileName ();
@@ -272,7 +272,7 @@ namespace Xharness.Tests
 
 			foreach (var file in failureLogs) {
 				var path = Path.Combine (logsDir, file);
-				File.Create (path);
+				File.WriteAllText (path, "");
 			}
 
 			// expect the creation of the two diff xml file logs
@@ -307,6 +307,39 @@ namespace Xharness.Tests
 			File.Delete (tmpPath);
 			File.Delete (finalPath);
 			Directory.Delete (logsDir, true);
+		}
+
+		[Test]
+		public void Issue8214Test ()
+		{
+			string expectedResultLine = "Tests run: 2376 Passed: 2301 Inconclusive: 13 Failed: 1 Ignored: 74";
+			// get the sample that was added to the issue to validate that we do parse the resuls correctly and copy it to a local
+			// path to be parsed
+			var name = GetType ().Assembly.GetManifestResourceNames ().Where (a => a.EndsWith ("Issue8214.xml", StringComparison.Ordinal)).FirstOrDefault ();
+			var tempPath = Path.GetTempFileName ();
+			var destinationFile = Path.GetTempFileName ();
+			using (var outputStream = new StreamWriter (tempPath))
+			using (var sampleStream = new StreamReader (GetType ().Assembly.GetManifestResourceStream (name))) {
+				string line;
+				while ((line = sampleStream.ReadLine ()) != null)
+					outputStream.WriteLine (line);
+			}
+			var (resultLine, failed) = resultParser.GenerateHumanReadableResults (tempPath, destinationFile, XmlResultJargon.NUnitV3);
+			Assert.IsTrue (failed, "failed");
+			Assert.AreEqual (expectedResultLine, resultLine, "resultLine");
+			// verify that the destination does contain the result line
+			string resultLineInDestinationFile = null;
+			using (var resultReader = new StreamReader (destinationFile)) {
+				string line;
+				while ((line = resultReader.ReadLine ()) != null) {
+					if (line.Contains ("Tests run:")) {
+						resultLineInDestinationFile = line;
+						break;
+					}
+				}
+			}
+			Assert.IsNotNull (resultLineInDestinationFile, "result file result line");
+			Assert.AreEqual (expectedResultLine, resultLineInDestinationFile, "content result file result line");
 		}
 	}
 }

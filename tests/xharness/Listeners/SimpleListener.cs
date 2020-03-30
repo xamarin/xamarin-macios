@@ -10,6 +10,7 @@ namespace Xharness.Listeners
 		Task CompletionTask { get; }
 		Task ConnectedTask { get; }
 		int Port { get; }
+		ILog TestLog { get; }
 
 		void Cancel ();
 		void Dispose ();
@@ -21,7 +22,7 @@ namespace Xharness.Listeners
 	{
 		readonly TaskCompletionSource<bool> stopped = new TaskCompletionSource<bool> ();
 		readonly TaskCompletionSource<bool> connected = new TaskCompletionSource<bool> ();
-		readonly ILog testLog;
+		public ILog TestLog { get; private set; }
 
 		// TODO: This can be removed as it's commented out below
 		string xml_data;
@@ -40,17 +41,17 @@ namespace Xharness.Listeners
 		protected SimpleListener (ILog log, ILog testLog, bool xmlOutput)
 		{
 			Log = log ?? throw new ArgumentNullException (nameof (log));
-			this.testLog = testLog ?? throw new ArgumentNullException (nameof (testLog));
+			this.TestLog = testLog ?? throw new ArgumentNullException (nameof (testLog));
 			XmlOutput = xmlOutput;
 		}
 
 		protected void Connected (string remote)
 		{
-			Log.WriteLine ("Connection from {0} saving logs to {1}", remote, testLog.FullPath);
+			Log.WriteLine ("Connection from {0} saving logs to {1}", remote, TestLog.FullPath);
 			connected.TrySetResult (true);
 
 			if (OutputWriter == null) {
-				OutputWriter = testLog;
+				OutputWriter = TestLog;
 				// a few extra bits of data only available from this side
 				var local_data =
 $@"[Local Date/Time:	{DateTime.Now}]

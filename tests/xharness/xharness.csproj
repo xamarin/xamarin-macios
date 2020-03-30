@@ -73,9 +73,14 @@
     <PackageReference Include="Mono.Options" Version="5.3.0.1" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppBundleInformationParser.cs" />
     <Compile Include="AppInstallMonitorLog.cs" />
     <Compile Include="AppRunner.cs" />
-    <Compile Include="AppRunnerTarget.cs" />
+    <Compile Include="Extension.cs" />
+    <Compile Include="Logging\AggregatedLog.cs" />
+    <Compile Include="Logging\MemoryLog.cs" />
+    <Compile Include="RunMode.cs" />
+    <Compile Include="TestTarget.cs" />
     <Compile Include="BCLTestImporter\BCLTestImportTargetFactory.cs" />
     <Compile Include="BCLTestImporter\BCLTestInfoPlistGenerator.cs" />
     <Compile Include="BCLTestImporter\BCLTestProjectDefinition.cs" />
@@ -128,7 +133,6 @@
     <Compile Include="Logging\CaptureLog.cs" />
     <Compile Include="Logging\ConsoleLog.cs" />
     <Compile Include="Logging\ILog.cs" />
-    <Compile Include="Logging\ILogFile.cs" />
     <Compile Include="Logging\ILogs.cs" />
     <Compile Include="Logging\Log.cs" />
     <Compile Include="Logging\LogFile.cs" />
@@ -160,9 +164,7 @@
     <Compile Include="BCLTestImporter\Templates\ITemplatedProject.cs" />
     <Compile Include="BCLTestImporter\Templates\Managed\XamariniOSTemplate.cs" />
     <Compile Include="BCLTestImporter\BclTestProjectInfo.cs" />
-    <Compile Include="BCLTestImporter\iOSBclTestProject.cs" />
     <Compile Include="BCLTestImporter\IAssemblyLocator.cs" />
-    <Compile Include="BCLTestImporter\BclTestProject.cs" />
     <Compile Include="BCLTestImporter\Templates\IProjectFilter.cs" />
     <Compile Include="BCLTestImporter\Xamarin\AssemblyLocator.cs" />
     <Compile Include="BCLTestImporter\Xamarin\ProjectFilter.cs" />
@@ -171,6 +173,8 @@
     <Compile Include="BCLTestImporter\Xamarin\AssemblyDefinitionFactory.cs" />
     <Compile Include="BCLTestImporter\Xamarin\TestAssemblyDefinition.cs" />
     <Compile Include="IResultParser.cs" />
+    <Compile Include="TestReporter.cs" />
+    <Compile Include="ITestReporter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\tools\mtouch\SdkVersions.cs">

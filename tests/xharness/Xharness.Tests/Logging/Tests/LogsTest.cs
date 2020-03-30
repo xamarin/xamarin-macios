@@ -16,16 +16,15 @@ namespace Xharness.Tests.Logging.Tests {
 		[SetUp]
 		public void SetUp ()
 		{
-			directory = Path.GetTempFileName ();
-			fileName = "test-log.txt";
+			directory = Path.Combine (Path.GetTempPath (), Guid.NewGuid ().ToString ());
+			fileName = "test-file.txt";
 			description = "My description";
-			File.Delete (directory);
-			Directory.CreateDirectory (directory);
 
+			Directory.CreateDirectory (directory);
 		}
 
 		[TearDown]
-		public void TeatDown ()
+		public void TearDown ()
 		{
 			if (Directory.Exists (directory))
 				Directory.Delete (directory, true);
@@ -80,10 +79,11 @@ namespace Xharness.Tests.Logging.Tests {
 		public void AddFileTest ()
 		{
 			var fullPath = Path.Combine (directory, fileName);
-			File.Create (fullPath);
+			File.WriteAllText (fullPath, "foo");
+
 			using (var logs = new Logs (directory)) {
 				var fileLog = logs.AddFile (fullPath, description);
-				Assert.AreEqual (fullPath, fileLog.Path, "path"); // path && fullPath are the same
+				Assert.AreEqual (fullPath, fileLog.FullPath, "path"); // path && fullPath are the same
 				Assert.AreEqual (Path.Combine (directory, fileName), fileLog.FullPath, "full path");
 				Assert.AreEqual (description, fileLog.Description, "description");
 			}
@@ -92,16 +92,19 @@ namespace Xharness.Tests.Logging.Tests {
 		[Test]
 		public void AddFileNotInDirTest ()
 		{
-			var fullPath = Path.Combine (Path.GetDirectoryName (Assembly.GetExecutingAssembly ().Location), fileName);
-			using (var stream = File.Create (fullPath))
-			using (var writer = new StreamWriter (stream)){
-				writer.WriteLine ("Hello world!");
-			}
-			using (var logs = new Logs (directory)) {
-				var newPath = Path.Combine (directory, Path.GetFileNameWithoutExtension (fileName));
-				var fileLog = logs.AddFile (fileName, description);
-				StringAssert.StartsWith (newPath, fileLog.Path, "path"); // assert new path
-				StringAssert.StartsWith (newPath, fileLog.FullPath, "full path"); // assert new path is used
+			var dir1 = Path.Combine (directory, "dir1");
+			var dir2 = Path.Combine (directory, "dir2");
+			
+			Directory.CreateDirectory (dir1);
+			Directory.CreateDirectory (dir2);
+
+			var filePath = Path.Combine (dir1, "test-file.txt");
+			File.WriteAllText (filePath, "Hello world!");
+
+			using (var logs = new Logs (dir2)) {
+				var newPath = Path.Combine (dir2, Path.GetFileNameWithoutExtension (fileName));
+				var fileLog = logs.AddFile (filePath, description);
+				StringAssert.StartsWith (newPath, fileLog.FullPath, "path"); // assert new path
 				Assert.IsTrue (File.Exists (fileLog.FullPath), "copy");
 			}
 		}
@@ -118,12 +121,11 @@ namespace Xharness.Tests.Logging.Tests {
 		public void AddFileDescriptionNull ()
 		{
 			var fullPath = Path.Combine (directory, fileName);
-			File.Create (fullPath);
+			File.WriteAllText (fullPath, "foo");
 			using (var logs = new Logs (directory)) {
 				Assert.DoesNotThrow (() => logs.Create (fullPath, null), "throws");
 				Assert.AreEqual (1, logs.Count, "count");
 			}
 		}
-
 	}
 }

@@ -5,54 +5,54 @@ using System.Threading.Tasks;
 
 namespace Xharness.Utilities {
 	public static class Extensions {
-		public static string AsString (this AppRunnerTarget @this)
+		public static string AsString (this TestTarget @this)
 		{
 			switch (@this) {
-			case AppRunnerTarget.None:
+			case TestTarget.None:
 				return null;
-			case AppRunnerTarget.Device_iOS:
+			case TestTarget.Device_iOS:
 				return "ios-device";
-			case AppRunnerTarget.Device_tvOS:
+			case TestTarget.Device_tvOS:
 				return "tvos-device";
-			case AppRunnerTarget.Device_watchOS:
+			case TestTarget.Device_watchOS:
 				return "watchos-device";
-			case AppRunnerTarget.Simulator_iOS:
+			case TestTarget.Simulator_iOS:
 				return "ios-simulator";
-			case AppRunnerTarget.Simulator_iOS32:
+			case TestTarget.Simulator_iOS32:
 				return "ios-simulator-32";
-			case AppRunnerTarget.Simulator_iOS64:
+			case TestTarget.Simulator_iOS64:
 				return "ios-simulator-64";
-			case AppRunnerTarget.Simulator_tvOS:
+			case TestTarget.Simulator_tvOS:
 				return "tvos-simulator";
-			case AppRunnerTarget.Simulator_watchOS:
+			case TestTarget.Simulator_watchOS:
 				return "watchos-simulator";
 			default:
 				throw new NotImplementedException ();
 			}
 		}
 
-		public static AppRunnerTarget ParseAsAppRunnerTarget (this string @this)
+		public static TestTarget ParseAsAppRunnerTarget (this string @this)
 		{
 			switch (@this) {
 			case "ios-device":
-				return AppRunnerTarget.Device_iOS;
+				return TestTarget.Device_iOS;
 			case "tvos-device":
-				return AppRunnerTarget.Device_tvOS;
+				return TestTarget.Device_tvOS;
 			case "watchos-device":
-				return AppRunnerTarget.Device_watchOS;
+				return TestTarget.Device_watchOS;
 			case "ios-simulator":
-				return AppRunnerTarget.Simulator_iOS;
+				return TestTarget.Simulator_iOS;
 			case "ios-simulator-32":
-				return AppRunnerTarget.Simulator_iOS32;
+				return TestTarget.Simulator_iOS32;
 			case "ios-simulator-64":
-				return AppRunnerTarget.Simulator_iOS64;
+				return TestTarget.Simulator_iOS64;
 			case "tvos-simulator":
-				return AppRunnerTarget.Simulator_tvOS;
+				return TestTarget.Simulator_tvOS;
 			case "watchos-simulator":
-				return AppRunnerTarget.Simulator_watchOS;
+				return TestTarget.Simulator_watchOS;
 			case null:
 			case "":
-				return AppRunnerTarget.None;
+				return TestTarget.None;
 			default:
 				throw new NotImplementedException (@this);
 			}

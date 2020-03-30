@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Xml;
+using Xharness.Execution;
 using Xharness.Logging;
 using Xharness.Utilities;
 
@@ -31,6 +32,10 @@ namespace Xharness.Jenkins.TestTasks
 			}
 		}
 
+		public MSBuildTask (IProcessManager processManager) : base (processManager)
+		{
+		}
+
 		protected override async Task ExecuteAsync ()
 		{
 			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
@@ -54,6 +59,9 @@ namespace Xharness.Jenkins.TestTasks
 							ExecutionResult = TestExecutingResult.Succeeded;
 						} else {
 							ExecutionResult = TestExecutingResult.Failed;
+							if (Jenkins.IsMonoMulti3Issue (BuildLog)) { 
+								KnownFailure = $"<a href='https://github.com/mono/mono/issues/18560'>Undefined symbol ___multi3 on Release Mode</a>";
+							}
 						}
 					}
 					Jenkins.MainLog.WriteLine ("Built {0} ({1})", TestName, Mode);

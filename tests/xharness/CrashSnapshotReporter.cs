@@ -17,18 +17,14 @@ namespace Xharness
 
 	public class CrashSnapshotReporterFactory : ICrashSnapshotReporterFactory {
 		readonly IProcessManager processManager;
-		readonly string xcodeRoot;
-		readonly string mlaunchPath;
 
-		public CrashSnapshotReporterFactory (IProcessManager processManager, string xcodeRoot, string mlaunchPath)
+		public CrashSnapshotReporterFactory (IProcessManager processManager)
 		{
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
-			this.xcodeRoot = xcodeRoot ?? throw new ArgumentNullException (nameof (xcodeRoot));
-			this.mlaunchPath = mlaunchPath ?? throw new ArgumentNullException (nameof (mlaunchPath));
 		}
 
 		public ICrashSnapshotReporter Create (ILog log, ILogs logs, bool isDevice, string deviceName) =>
-			new CrashSnapshotReporter (processManager, log, logs, xcodeRoot, mlaunchPath, isDevice, deviceName);
+			new CrashSnapshotReporter (processManager, log, logs, isDevice, deviceName);
 	}
 
 	public interface ICrashSnapshotReporter {
@@ -40,8 +36,6 @@ namespace Xharness
 		readonly IProcessManager processManager;
 		readonly ILog log;
 		readonly ILogs logs;
-		readonly string xcodeRoot;
-		readonly string mlaunchPath;
 		readonly bool isDevice;
 		readonly string deviceName;
 		readonly Func<string> tempFileProvider;
@@ -52,8 +46,6 @@ namespace Xharness
 		public CrashSnapshotReporter (IProcessManager processManager,
 			ILog log,
 			ILogs logs,
-			string xcodeRoot,
-			string mlaunchPath,
 			bool isDevice,
 			string deviceName,
 			Func<string> tempFileProvider = null)
@@ -61,15 +53,13 @@ namespace Xharness
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 			this.log = log ?? throw new ArgumentNullException (nameof (log));
 			this.logs = logs ?? throw new ArgumentNullException (nameof (logs));
-			this.xcodeRoot = xcodeRoot ?? throw new ArgumentNullException (nameof (xcodeRoot));
-			this.mlaunchPath = mlaunchPath ?? throw new ArgumentNullException (nameof (mlaunchPath));
 			this.isDevice = isDevice;
 			this.deviceName = deviceName;
 			this.tempFileProvider = tempFileProvider ?? Path.GetTempFileName;
 
-			symbolicateCrashPath = Path.Combine (xcodeRoot, "Contents", "SharedFrameworks", "DTDeviceKitBase.framework", "Versions", "A", "Resources", "symbolicatecrash");
+			symbolicateCrashPath = Path.Combine (processManager.XcodeRoot, "Contents", "SharedFrameworks", "DTDeviceKitBase.framework", "Versions", "A", "Resources", "symbolicatecrash");
 			if (!File.Exists (symbolicateCrashPath))
-				symbolicateCrashPath = Path.Combine (xcodeRoot, "Contents", "SharedFrameworks", "DVTFoundation.framework", "Versions", "A", "Resources", "symbolicatecrash");
+				symbolicateCrashPath = Path.Combine (processManager.XcodeRoot, "Contents", "SharedFrameworks", "DVTFoundation.framework", "Versions", "A", "Resources", "symbolicatecrash");
 			if (!File.Exists (symbolicateCrashPath))
 				symbolicateCrashPath = null;
 		}
@@ -104,9 +94,9 @@ namespace Xharness
 
 				log.WriteLine ("Found {0} new crash report(s)", newCrashFiles.Count);
 
-				IEnumerable<ILogFile> crashReports;
+				IEnumerable<ILog> crashReports;
 				if (!isDevice) {
-					crashReports = new List<ILogFile> (newCrashFiles.Count);
+					crashReports = new List<ILog> (newCrashFiles.Count);
 					foreach (var path in newCrashFiles) {
 						logs.AddFile (path, $"Crash report: {Path.GetFileName (path)}");
 					}
@@ -120,8 +110,8 @@ namespace Xharness
 				}
 
 				foreach (var cp in crashReports) {
-					WrenchLog.WriteLine ("AddFile: {0}", cp.Path);
-					log.WriteLine ("    {0}", cp.Path);
+					WrenchLog.WriteLine ("AddFile: {0}", cp.FullPath);
+					log.WriteLine ("    {0}", cp.FullPath);
 				}
 
 				break;
@@ -129,23 +119,22 @@ namespace Xharness
 			} while (true);
 		}
 
-		async Task<ILogFile> ProcessCrash (string crashFile)
+		async Task<ILog> ProcessCrash (string crashFile)
 		{
 			var name = Path.GetFileName (crashFile);
 			var crashReportFile = logs.Create (name, $"Crash report: {name}", timestamp: false);
 			var args = new MlaunchArguments (
 				new DownloadCrashReportArgument (crashFile),
-				new DownloadCrashReportToArgument (crashReportFile.Path),
-				new SdkRootArgument (xcodeRoot));
+				new DownloadCrashReportToArgument (crashReportFile.FullPath));
 
 			if (!string.IsNullOrEmpty (deviceName)) {
 				args.Add (new DeviceNameArgument(deviceName));
 			}
 
-			var result = await processManager.ExecuteCommandAsync (mlaunchPath, args, log, TimeSpan.FromMinutes (1));
+			var result = await processManager.ExecuteCommandAsync (args, log, TimeSpan.FromMinutes (1));
 
 			if (result.Succeeded) {
-				log.WriteLine ("Downloaded crash report {0} to {1}", crashFile, crashReportFile.Path);
+				log.WriteLine ("Downloaded crash report {0} to {1}", crashFile, crashReportFile.FullPath);
 				return await GetSymbolicateCrashReportAsync (crashReportFile);
 			} else {
 				log.WriteLine ("Could not download crash report {0}", crashFile);
@@ -153,22 +142,22 @@ namespace Xharness
 			}
 		}
 
-		async Task<ILogFile> GetSymbolicateCrashReportAsync (ILogFile report)
+		async Task<ILog> GetSymbolicateCrashReportAsync (ILog report)
 		{
 			if (symbolicateCrashPath == null) {
-				log.WriteLine ("Can't symbolicate {0} because the symbolicatecrash script {1} does not exist", report.Path, symbolicateCrashPath);
+				log.WriteLine ("Can't symbolicate {0} because the symbolicatecrash script {1} does not exist", report.FullPath, symbolicateCrashPath);
 				return report;
 			}
 
-			var name = Path.GetFileName (report.Path);
+			var name = Path.GetFileName (report.FullPath);
 			var symbolicated = logs.Create (Path.ChangeExtension (name, ".symbolicated.log"), $"Symbolicated crash report: {name}", timestamp: false);
-			var environment = new Dictionary<string, string> { { "DEVELOPER_DIR", Path.Combine (xcodeRoot, "Contents", "Developer") } };
-			var result = await processManager.ExecuteCommandAsync (symbolicateCrashPath, new [] { report.Path }, symbolicated, TimeSpan.FromMinutes (1), environment);
+			var environment = new Dictionary<string, string> { { "DEVELOPER_DIR", Path.Combine (processManager.XcodeRoot, "Contents", "Developer") } };
+			var result = await processManager.ExecuteCommandAsync (symbolicateCrashPath, new [] { report.FullPath }, symbolicated, TimeSpan.FromMinutes (1), environment);
 			if (result.Succeeded) {
-				log.WriteLine ("Symbolicated {0} successfully.", report.Path);
+				log.WriteLine ("Symbolicated {0} successfully.", report.FullPath);
 				return symbolicated;
 			} else {
-				log.WriteLine ("Failed to symbolicate {0}.", report.Path);
+				log.WriteLine ("Failed to symbolicate {0}.", report.FullPath);
 				return report;
 			}
 		}
@@ -184,15 +173,13 @@ namespace Xharness
 			} else {
 				var tempFile = tempFileProvider ();
 				try {
-					var args = new MlaunchArguments (
-						new ListCrashReportsArgument (tempFile),
-						new SdkRootArgument (xcodeRoot));
+					var args = new MlaunchArguments (new ListCrashReportsArgument (tempFile));
 
 					if (!string.IsNullOrEmpty (deviceName)) {
 						args.Add (new DeviceNameArgument(deviceName));
 					}
 
-					var result = await processManager.ExecuteCommandAsync (mlaunchPath, args, log, TimeSpan.FromMinutes (1));
+					var result = await processManager.ExecuteCommandAsync (args, log, TimeSpan.FromMinutes (1));
 					if (result.Succeeded)
 						crashes.UnionWith (File.ReadAllLines (tempFile));
 				} finally {

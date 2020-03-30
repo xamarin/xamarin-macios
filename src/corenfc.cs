@@ -50,6 +50,12 @@ namespace CoreNFC {
 	[Native]
 	public enum NFCTagType : ulong {
 		Iso15693 = 1,
+		[iOS (13,0)]
+		FeliCa = 2,
+		[iOS (13,0)]
+		Iso7816Compatible = 3,
+		[iOS (13,0)]
+		MiFare = 4,
 	}
 
 	//[iOS (11,0), NoTV, NoWatch, NoMac]
