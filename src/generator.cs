@@ -3002,18 +3002,22 @@ public partial class Generator : IMemberGatherer {
 				if (probe_presence)
 					print ("return value != IntPtr.Zero;");
 				else {
+					var et = propertyType.GetElementType ();
+					bool is_property_array_wrapped_type = propertyType.IsArray && IsWrappedType (et);
+					bool is_property_wrapped_type = IsWrappedType (propertyType);
+
 					if (null_allowed)
 						print ("if (value == IntPtr.Zero)\n\treturn null;");
 					else if (propertyType.IsArray)
-						print ("if (value == IntPtr.Zero)\n\treturn new {0} [0];", RenderType (propertyType.GetElementType ()));
-					else
+						print ("if (value == IntPtr.Zero)\n\treturn new {0} [0];", RenderType (et));
+					else if (!is_property_wrapped_type && !is_property_array_wrapped_type)
 						print ("if (value == IntPtr.Zero)\n\treturn default({0});", RenderType (propertyType));
 
 					var fullname = propertyType.FullName;
 
-					if (propertyType.IsArray && IsWrappedType (propertyType.GetElementType ())) {
-						print ("return NSArray.ArrayFromHandle<{0}> (value);", RenderType (propertyType.GetElementType ()));
-					} else if (IsWrappedType (propertyType)){
+					if (is_property_array_wrapped_type) {
+						print ("return NSArray.ArrayFromHandle<{0}> (value);", RenderType (et));
+					} else if (is_property_wrapped_type) {
 						print ("return Runtime.GetNSObject<{0}> (value);", RenderType (propertyType));
 					} else if (propertyType == TypeManager.System_Double)
 						print (GenerateNSNumber ("", "DoubleValue"));
