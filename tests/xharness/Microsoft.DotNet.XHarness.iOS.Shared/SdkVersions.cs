@@ -1,56 +1,78 @@
-﻿using System;
-
-namespace Microsoft.DotNet.XHarness.iOS.Shared {
+﻿namespace Microsoft.DotNet.XHarness.iOS.Shared {
+	/// <summary>
+	/// This file is auto-generated from xamarin-macios/Make.config:
+	/// https://github.com/xamarin/xamarin-macios/blob/54194e71f17dcbba76e6ca6b079f347f13f36dcf/Make.config
+	/// It is generated on build time and thus tied to the MacOS where it's being built.
+	/// 
+	/// TODO: We will need to start syncing this file or make it dynamic based on the host.
+	/// </summary>
 	public static class SdkVersions {
-		public const string Xcode = "11.3";
-		public const string OSX = "10.15";
-		public const string iOS = "13.2";
-		public const string WatchOS = "6.1";
-		public const string TVOS = "13.2";
+		public static string Xcode { get; private set; } = "11.3";
+		public static string OSX { get; private set; } = "10.15";
+		public static string iOS { get; private set; } = "13.2";
+		public static string WatchOS { get; private set; } = "6.1";
+		public static string TVOS { get; private set; } = "13.2";
 
-		public const string MinOSX = "10.9";
-		public const string MiniOS = "7.0";
-		public const string MinWatchOS = "2.0";
-		public const string MinTVOS = "9.0";
+		public static string MinOSX { get; private set; } = "10.9";
+		public static string MiniOS { get; private set; } = "7.0";
+		public static string MinWatchOS { get; private set; } = "2.0";
+		public static string MinTVOS { get; private set; } = "9.0";
 
-		public const string MiniOSSimulator = "10.3";
-		public const string MinWatchOSSimulator = "3.2";
-		public const string MinWatchOSCompanionSimulator = "10.3";
-		public const string MinTVOSSimulator = "10.2";
+		public static string MiniOSSimulator { get; private set; } = "10.3";
+		public static string MinWatchOSSimulator { get; private set; } = "3.2";
+		public static string MinWatchOSCompanionSimulator { get; private set; } = "10.3";
+		public static string MinTVOSSimulator { get; private set; } = "10.2";
 
-		public const string MaxiOSSimulator = "13.3";
-		public const string MaxWatchOSSimulator = "6.1";
-		public const string MaxWatchOSCompanionSimulator = "13.3";
-		public const string MaxTVOSSimulator = "13.3";
+		public static string MaxiOSSimulator { get; private set; } = "13.3";
+		public static string MaxWatchOSSimulator { get; private set; } = "6.1";
+		public static string MaxWatchOSCompanionSimulator { get; private set; } = "13.3";
 
-		public const string MaxiOSDeploymentTarget = "13.3";
-		public const string MaxWatchDeploymentTarget = "6.1";
-		public const string MaxTVOSDeploymentTarget = "13.3";
+		public static string MaxTVOSSimulator { get; private set; } = "13.3";
+		public static string MaxiOSDeploymentTarget { get; private set; } = "13.3";
+		public static string MaxWatchDeploymentTarget { get; private set; } = "6.1";
+		public static string MaxTVOSDeploymentTarget { get; private set; } = "13.3";
 
-		public static Version OSXVersion => new Version (OSX);
-		public static Version iOSVersion => new Version (iOS);
-		public static Version WatchOSVersion => new Version (WatchOS);
-		public static Version TVOSVersion => new Version (TVOS);
-
-		public static Version iOSTargetVersion => new Version (MaxiOSDeploymentTarget);
-		public static Version WatchOSTargetVersion => new Version (MaxWatchDeploymentTarget);
-		public static Version TVOSTargetVersion => new Version (MaxTVOSDeploymentTarget);
-
-		public static Version MinOSXVersion => new Version (MinOSX);
-		public static Version MiniOSVersion => new Version (MiniOS);
-		public static Version MinWatchOSVersion => new Version (MinWatchOS);
-		public static Version MinTVOSVersion => new Version (MinTVOS);
-
-		public static Version MiniOSSimulatorVersion => new Version (MiniOSSimulator);
-		public static Version MinWatchOSSimulatorVersion => new Version (MinWatchOSSimulator);
-		public static Version MinWatchOSCompanionSimulatorVersion => new Version (MinWatchOSCompanionSimulator);
-		public static Version MinTVOSSimulatorVersion => new Version (MinTVOSSimulator);
-
-		public static Version MaxiOSSimulatorVersion => new Version (MaxiOSSimulator);
-		public static Version MaxWatchOSSimulatorVersion => new Version (MaxWatchOSSimulator);
-		public static Version MaxWatchOSCompanionSimulatorVersion => new Version (MaxWatchOSCompanionSimulator);
-		public static Version MaxTVOSSimulatorVersion => new Version (MaxTVOSSimulator);
-
-		public static Version XcodeVersion => new Version (Xcode);
+		public static void OverrideVersions (string xcode,
+			string oSX,
+			string iOS,
+			string watchOS,
+			string tVOS,
+			string minOSX,
+			string miniOS,
+			string minWatchOS,
+			string minTVOS,
+			string miniOSSimulator,
+			string minWatchOSSimulator,
+			string minWatchOSCompanionSimulator,
+			string minTVOSSimulator,
+			string maxiOSSimulator,
+			string maxWatchOSSimulator,
+			string maxWatchOSCompanionSimulator,
+			string maxTVOSSimulator,
+			string maxiOSDeploymentTarget,
+			string maxWatchDeploymentTarget,
+			string maxTVOSDeploymentTarget)
+		{
+			Xcode = xcode;
+			OSX = oSX;
+			SdkVersions.iOS = iOS;
+			WatchOS = watchOS;
+			TVOS = tVOS;
+			MinOSX = minOSX;
+			MiniOS = miniOS;
+			MinWatchOS = minWatchOS;
+			MinTVOS = minTVOS;
+			MiniOSSimulator = miniOSSimulator;
+			MinWatchOSSimulator = minWatchOSSimulator;
+			MinWatchOSCompanionSimulator = minWatchOSCompanionSimulator;
+			MinTVOSSimulator = minTVOSSimulator;
+			MaxiOSSimulator = maxiOSSimulator;
+			MaxWatchOSSimulator = maxWatchOSSimulator;
+			MaxWatchOSCompanionSimulator = maxWatchOSCompanionSimulator;
+			MaxTVOSSimulator = maxTVOSSimulator;
+			MaxiOSDeploymentTarget = maxiOSDeploymentTarget;
+			MaxWatchDeploymentTarget = maxWatchDeploymentTarget;
+			MaxTVOSDeploymentTarget = maxTVOSDeploymentTarget;
+		}
 	}
 }

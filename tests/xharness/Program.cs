@@ -1,6 +1,5 @@
 ﻿using System;
 using Mono.Options;
-using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 
@@ -8,6 +7,28 @@ namespace Xharness {
 	class MainClass {
 		public static int Main (string [] args)
 		{
+			Microsoft.DotNet.XHarness.iOS.Shared.SdkVersions.OverrideVersions (
+				xcode: Xamarin.SdkVersions.Xcode,
+				oSX: Xamarin.SdkVersions.OSX,
+				iOS: Xamarin.SdkVersions.iOS,
+				watchOS: Xamarin.SdkVersions.WatchOS,
+				tVOS: Xamarin.SdkVersions.TVOS,
+				minOSX: Xamarin.SdkVersions.MinOSX,
+				miniOS: Xamarin.SdkVersions.MiniOS,
+				minWatchOS: Xamarin.SdkVersions.MinWatchOS,
+				minTVOS: Xamarin.SdkVersions.MinTVOS,
+				miniOSSimulator: Xamarin.SdkVersions.MiniOSSimulator,
+				minWatchOSSimulator: Xamarin.SdkVersions.MinWatchOSSimulator,
+				minWatchOSCompanionSimulator: Xamarin.SdkVersions.MinWatchOSCompanionSimulator,
+				minTVOSSimulator: Xamarin.SdkVersions.MinTVOSSimulator,
+				maxiOSSimulator: Xamarin.SdkVersions.MaxiOSSimulator,
+				maxWatchOSSimulator: Xamarin.SdkVersions.MaxWatchOSSimulator,
+				maxWatchOSCompanionSimulator: Xamarin.SdkVersions.MaxWatchOSCompanionSimulator,
+				maxTVOSSimulator: Xamarin.SdkVersions.MaxTVOSSimulator,
+				maxiOSDeploymentTarget: Xamarin.SdkVersions.MaxiOSDeploymentTarget,
+				maxWatchDeploymentTarget: Xamarin.SdkVersions.MaxWatchDeploymentTarget,
+				maxTVOSDeploymentTarget: Xamarin.SdkVersions.MaxTVOSDeploymentTarget);
+
 			Action showHelp = null;
 
 			var action = HarnessAction.None;
