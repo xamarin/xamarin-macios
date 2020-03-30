@@ -67,7 +67,7 @@ namespace BCLTests {
 					writer = new TcpTextWriter (options.HostName, options.HostPort);
 				} catch (Exception ex) {
 					Console.WriteLine ("Network error: Cannot connect to {0}:{1}: {2}. Continuing on console.", options.HostName, options.HostPort, ex);
-					writer = null; // will default to the console
+					writer = Console.Out; // will default to the console
 				}
 			}
 
