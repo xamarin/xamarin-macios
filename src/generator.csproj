@@ -11,6 +11,7 @@
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <BuildDir Condition="'$(BUILD_DIR)' != ''">$(BUILD_DIR)\</BuildDir>
     <BuildDir Condition="'$(BUILD_DIR)' == ''">build\</BuildDir>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
@@ -22,6 +23,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Deterministic>True</Deterministic>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -79,6 +81,9 @@
   </PropertyGroup>
   <PropertyGroup>
        <UpdateXlfOnBuild>true</UpdateXlfOnBuild>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <None Include="..\docs\website\generator-errors.md">

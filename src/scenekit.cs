@@ -1759,7 +1759,8 @@ namespace SceneKit {
 		bool BoundingBoxOnly { get; set; }
 		bool IgnoreChildNodes { get; set; }
 		bool IgnoreHiddenNodes { get; set; }
-		SCNNode? RootNode { get; set; }
+		[NullAllowed]
+		SCNNode RootNode { get; set; }
 		SCNHitTestSearchMode SearchMode { get; set; }
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		bool IgnoreLightArea { get; set; }
