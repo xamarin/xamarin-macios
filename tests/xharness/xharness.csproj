@@ -70,41 +70,20 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Mono.Options" Version="5.3.0.1" />
+    <PackageReference Include="Mono.Options" Version="6.6.0.161" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppBundleInformationParser.cs" />
-    <Compile Include="AppInstallMonitorLog.cs" />
     <Compile Include="AppRunner.cs" />
-    <Compile Include="Extension.cs" />
-    <Compile Include="Logging\AggregatedLog.cs" />
-    <Compile Include="Logging\MemoryLog.cs" />
-    <Compile Include="RunMode.cs" />
-    <Compile Include="TestTarget.cs" />
     <Compile Include="BCLTestImporter\BCLTestImportTargetFactory.cs" />
     <Compile Include="BCLTestImporter\BCLTestInfoPlistGenerator.cs" />
     <Compile Include="BCLTestImporter\BCLTestProjectDefinition.cs" />
     <Compile Include="BCLTestImporter\BCLTestProjectGenerator.cs" />
     <Compile Include="BCLTestImporter\Platform.cs" />
-    <Compile Include="Collections\BlockingEnumerableCollection.cs" />
-    <Compile Include="Collections\ILoadAsync.cs" />
-    <Compile Include="Collections\IAsyncEnumerable.cs" />
-    <Compile Include="CrashSnapshotReporter.cs" />
-    <Compile Include="DeviceLogCapturer.cs" />
-    <Compile Include="Execution\IProcessManager.cs" />
-    <Compile Include="Execution\Mlaunch\Arguments.cs" />
-    <Compile Include="Execution\Mlaunch\MLaunchArguments.cs" />
-    <Compile Include="Execution\ProcessManager.cs" />
+    <Compile Include="CrashSnapshotReporterFactory.cs" />
+    <Compile Include="DeviceLogCapturerFactory.cs" />
     <Compile Include="GitHub.cs" />
     <Compile Include="Harness.cs" />
-    <Compile Include="Hardware\Simulators.cs" />
-    <Compile Include="Hardware\SimulatorDevice.cs" />
-    <Compile Include="Hardware\IDevice.cs" />
-    <Compile Include="Hardware\Device.cs" />
-    <Compile Include="Hardware\Devices.cs" />
-    <Compile Include="Hardware\IHardwareDevice.cs" />
-    <Compile Include="Hardware\ISimulatorDevice.cs" />
-    <Compile Include="Hardware\TCCDatabase.cs" />
+    <Compile Include="TestReporterFactory.cs" />
     <Compile Include="Jenkins\Jenkins.cs" />
     <Compile Include="Jenkins\Resource.cs" />
     <Compile Include="Jenkins\Resources.cs" />
@@ -124,20 +103,6 @@
     <Compile Include="Jenkins\TestTasks\RunXITask.cs" />
     <Compile Include="Jenkins\TestTasks\RunXtroTask.cs" />
     <Compile Include="Jenkins\TestTasks\TestTask.cs" />
-    <Compile Include="Listeners\SimpleFileListener.cs" />
-    <Compile Include="Listeners\SimpleHttpListener.cs" />
-    <Compile Include="Listeners\SimpleListener.cs" />
-    <Compile Include="Listeners\SimpleListenerFactory.cs" />
-    <Compile Include="Listeners\SimpleTcpListener.cs" />
-    <Compile Include="Logging\CallbackLog.cs" />
-    <Compile Include="Logging\CaptureLog.cs" />
-    <Compile Include="Logging\ConsoleLog.cs" />
-    <Compile Include="Logging\ILog.cs" />
-    <Compile Include="Logging\ILogs.cs" />
-    <Compile Include="Logging\Log.cs" />
-    <Compile Include="Logging\LogFile.cs" />
-    <Compile Include="Logging\Logs.cs" />
-    <Compile Include="Logging\WrenchLog.cs" />
     <Compile Include="MakefileGenerator.cs" />
     <Compile Include="MonoNativeInfo.cs" />
     <Compile Include="NoDeviceFoundException.cs" />
@@ -151,16 +116,8 @@
     <Compile Include="Targets\TVOSTarget.cs" />
     <Compile Include="Targets\UnifiedTarget.cs" />
     <Compile Include="Targets\WatchOSTarget.cs" />
-    <Compile Include="TestExecutingResult.cs" />
     <Compile Include="TestPlatform.cs" />
     <Compile Include="TestProject.cs" />
-    <Compile Include="Utilities\Extensions.cs" />
-    <Compile Include="Utilities\Helpers.cs" />
-    <Compile Include="Utilities\PlistExtensions.cs" />
-    <Compile Include="Utilities\ProjectFileExtensions.cs" />
-    <Compile Include="Utilities\StringUtils.cs" />
-    <Compile Include="Utilities\DirectoryUtilities.cs" />
-    <Compile Include="XmlResultParser.cs" />
     <Compile Include="BCLTestImporter\Templates\ITemplatedProject.cs" />
     <Compile Include="BCLTestImporter\Templates\Managed\XamariniOSTemplate.cs" />
     <Compile Include="BCLTestImporter\BclTestProjectInfo.cs" />
@@ -174,14 +131,6 @@
     <Compile Include="BCLTestImporter\ITestAssemblyDefinition.cs" />
     <Compile Include="BCLTestImporter\Xamarin\AssemblyDefinitionFactory.cs" />
     <Compile Include="BCLTestImporter\Xamarin\TestAssemblyDefinition.cs" />
-    <Compile Include="IResultParser.cs" />
-    <Compile Include="TestReporter.cs" />
-    <Compile Include="ITestReporter.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="..\..\tools\mtouch\SdkVersions.cs">
-      <Link>SdkVersions.cs</Link>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="xharness.js">
@@ -191,7 +140,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="Microsoft.DotNet.XHarness.iOS.Shared\Microsoft.DotNet.XHarness.iOS.Shared.csproj">
+      <Project>{5be5cabf-8d6c-4f35-9e5b-505b4c40b2ac}</Project>
+      <Name>Microsoft.DotNet.XHarness.iOS.Shared</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.iOS.csproj.in" />
     <EmbeddedResource Include="BCLTestImporter\Templates\Managed\Resources\Managed.macOS.csproj.in" />

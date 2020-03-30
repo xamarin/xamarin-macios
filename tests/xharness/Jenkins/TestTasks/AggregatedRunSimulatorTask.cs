@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using Xharness.Hardware;
+using Microsoft.DotNet.XHarness.iOS.Shared;
 
-namespace Xharness.Jenkins.TestTasks
-{
+namespace Xharness.Jenkins.TestTasks {
 	// This class groups simulator run tasks according to the
 	// simulator they'll run from, so that we minimize switching
 	// between different simulators (which is slow).

@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Xharness.Collections;
-using Xharness.Execution;
-using Xharness.Hardware;
-using Xharness.Logging;
+using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
+using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
+using Microsoft.DotNet.XHarness.iOS.Shared;
+using Microsoft.DotNet.XHarness.iOS.Shared.Collections;
+using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 
-namespace Xharness.Jenkins.TestTasks
-{
+namespace Xharness.Jenkins.TestTasks {
 	abstract class RunXITask<TDevice> : RunTestTask where TDevice : class, IDevice
 	{
 		public TestTarget AppRunnerTarget;

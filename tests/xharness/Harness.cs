@@ -4,15 +4,15 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using Xharness.BCLTestImporter;
-using Xharness.Logging;
-using Xharness.Execution;
+using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
+using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Xharness.Targets;
-using Xharness.Utilities;
-using Xharness.Hardware;
-using Xharness.Listeners;
+using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
+using Microsoft.DotNet.XHarness.iOS.Shared;
+using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
+using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 
-namespace Xharness
-{
+namespace Xharness {
 	public enum HarnessAction
 	{
 		None,
@@ -103,6 +103,8 @@ namespace Xharness
 					root_directory = Path.GetFullPath (root_directory).TrimEnd ('/');
 			}
 		}
+
+		public static string XIBuildPath => Path.GetFullPath (Path.Combine (RootDirectory, "..", "tools", "xibuild", "xibuild"));
 
 		string sdkRoot;
 		string SdkRoot {
