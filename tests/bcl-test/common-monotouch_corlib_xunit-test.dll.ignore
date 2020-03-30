@@ -429,3 +429,9 @@ Platform32:System.Reflection.Tests.RuntimeReflectionExtensionsTests.GetRuntimeMe
 Platform32:System.Reflection.Tests.RuntimeReflectionExtensionsTests.GetRuntimeField
 Platform32:System.Reflection.Tests.RuntimeReflectionExtensionsTests.GetRuntimeEvent
 Platform32:System.Reflection.Tests.RuntimeReflectionExtensionsTests.GetRuntimeProperty
+
+# 32bits device failures / https://github.com/mono/mono/issues/18616
+Platform32:System.Tests.ConvertToBooleanTests.FromDouble
+Platform32:System.Tests.ConvertToBooleanTests.FromSingle
+Platform32:System.Tests.BitConverterArray.ConvertFromFloat(num: 0, expected: [1, 0, 0, 0])
+Platform32:System.Tests.BitConverterSpan.ConvertFromFloat(num: 0, expected: [1, 0, 0, 0])
