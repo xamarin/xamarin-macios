@@ -83,7 +83,7 @@ namespace Xharness.Jenkins.TestTasks {
 
 					runner = new AppRunner (ProcessManager,
 						new AppBundleInformationParser (),
-						new SimulatorsLoaderFactory (Harness, ProcessManager),
+						new SimulatorsLoaderFactory (ProcessManager),
 						new SimpleListenerFactory (),
 						new DeviceLoaderFactory (ProcessManager),
 						new CrashSnapshotReporterFactory (ProcessManager),

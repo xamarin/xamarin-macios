@@ -294,6 +294,7 @@ namespace Xharness {
 			var testReporter = testReporterFactory.Create (MainLog,
 				runLog,
 				Logs,
+				crashReporter,
 				listener,
 				new XmlResultParser (),
 				AppInformation,
@@ -381,7 +382,7 @@ namespace Xharness {
 				MainLog.WriteLine ("Starting test run");
 
 				await testReporter.CollectSimulatorResult (
-					processManager.ExecuteCommandAsync (args, run_log, testReporter.Timeout, cancellation_token: testReporter.CancellationToken));
+					processManager.ExecuteCommandAsync (args, runLog, testReporterTimeout, cancellation_token: testReporter.CancellationToken));
 
 				// cleanup after us
 				if (EnsureCleanSimulatorState)
@@ -436,14 +437,6 @@ namespace Xharness {
 
 			// check the final status, copy all the required data
 			(Result, FailureMessage) = await testReporter.ParseResult ();
-			
-			var crashLogWaitTime = 0;
-			if (!testReporter.Success.Value)
-				crashLogWaitTime = 5;
-			if (Result == TestExecutingResult.Crashed)
-				crashLogWaitTime = 30;
-
-			await crashReporter.EndCaptureAsync (TimeSpan.FromSeconds (crashLogWaitTime));
 
 			return testReporter.Success.Value ? 0 : 1;
 		}

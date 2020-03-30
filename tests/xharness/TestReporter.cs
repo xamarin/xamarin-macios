@@ -28,6 +28,7 @@ namespace Xharness {
 		public ITestReporter Create (ILog mainLog,
 			ILog runLog,
 			ILogs logs,
+			ICrashSnapshotReporter crashReporter,
 			ISimpleListener simpleListener,
 			IResultParser parser,
 			AppBundleInformation appInformation,
@@ -39,7 +40,7 @@ namespace Xharness {
 			string additionalLogsDirectory = null,
 			ExceptionLogger exceptionLogger = null)
 		{
-			return new TestReporter (processManager, mainLog, runLog, logs, simpleListener, parser, appInformation, runMode, xmlJargon, device, timeout, launchTimeout, additionalLogsDirectory, exceptionLogger);
+			return new TestReporter (processManager, mainLog, runLog, logs, crashReporter, simpleListener, parser, appInformation, runMode, xmlJargon, device, timeout, launchTimeout, additionalLogsDirectory, exceptionLogger);
 		}
 	}
 
@@ -56,6 +57,7 @@ namespace Xharness {
 		readonly ILogs crashLogs;
 		readonly ILog runLog;
 		readonly ILogs logs;
+		readonly ICrashSnapshotReporter crashReporter;
 		readonly IResultParser resultParser;
 		readonly AppBundleInformation appInfo;
 		readonly RunMode runMode;
@@ -96,6 +98,7 @@ namespace Xharness {
 			ILog mainLog,
 			ILog runLog,
 			ILogs logs,
+			ICrashSnapshotReporter crashReporter,
 			ISimpleListener simpleListener,
 			IResultParser parser,
 			AppBundleInformation appInformation,
@@ -113,6 +116,7 @@ namespace Xharness {
 			this.mainLog = mainLog ?? throw new ArgumentNullException (nameof (mainLog));
 			this.runLog = runLog ?? throw new ArgumentNullException (nameof (runLog));
 			this.logs = logs ?? throw new ArgumentNullException (nameof (logs));
+			this.crashReporter = crashReporter ?? throw new ArgumentNullException (nameof (crashReporter));
 			this.crashLogs = new Logs (logs.Directory);
 			this.resultParser = parser ?? throw new ArgumentNullException (nameof (parser));
 			this.appInfo = appInformation ?? throw new ArgumentNullException (nameof (appInformation));

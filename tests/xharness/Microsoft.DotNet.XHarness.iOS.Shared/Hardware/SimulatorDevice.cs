@@ -24,7 +24,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 		public SimulatorDevice (IProcessManager processManager, ITCCDatabase tccDatabase)
 		{
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
-			tCCDatabase = tccDatabase ?? throw new ArgumentNullException (nameof (tccDatabase));
+			this.tCCDatabase = tccDatabase ?? throw new ArgumentNullException (nameof (tccDatabase));
 		}
 
 		public bool IsWatchSimulator => SimRuntime.StartsWith ("com.apple.CoreSimulator.SimRuntime.watchOS", StringComparison.Ordinal);
@@ -84,8 +84,9 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 		{
 			string simulator_app;
 
-			if (IsWatchSimulator && processManager.XcodeVersion.Major < 9) simulator_app = Path.Combine (processManager.XcodeRoot, "Contents", "Developer", "Applications", "Simulator (Watch).app");
-			else {
+			if (IsWatchSimulator && processManager.XcodeVersion.Major < 9) {
+				simulator_app = Path.Combine (processManager.XcodeRoot, "Contents", "Developer", "Applications", "Simulator (Watch).app");
+			} else {
 				simulator_app = Path.Combine (processManager.XcodeRoot, "Contents", "Developer", "Applications", "Simulator.app");
 				if (!Directory.Exists (simulator_app))
 					simulator_app = Path.Combine (processManager.XcodeRoot, "Contents", "Developer", "Applications", "iOS Simulator.app");
@@ -117,8 +118,9 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 				}
 			}
 
-			if (File.Exists (TCC_db)) await tCCDatabase.AgreeToPromptsAsync (SimRuntime, TCC_db, log, bundle_identifiers);
-			else {
+			if (File.Exists (TCC_db)) {
+				await tCCDatabase.AgreeToPromptsAsync (SimRuntime, TCC_db, log, bundle_identifiers);
+			} else {
 				log.WriteLine ("No TCC.db found for the simulator {0} (SimRuntime={1} and SimDeviceType={1})", UDID, SimRuntime, SimDeviceType);
 			}
 

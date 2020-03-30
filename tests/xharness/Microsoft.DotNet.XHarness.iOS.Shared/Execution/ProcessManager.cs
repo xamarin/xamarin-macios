@@ -278,8 +278,9 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Execution {
 				return true;
 			}
 
-			if (timeout.HasValue) return await tcs.Task.TimeoutAfter (timeout.Value);
-			else {
+			if (timeout.HasValue) {
+				return await tcs.Task.TimeoutAfter (timeout.Value);
+			} else {
 				await tcs.Task;
 				return true;
 			}

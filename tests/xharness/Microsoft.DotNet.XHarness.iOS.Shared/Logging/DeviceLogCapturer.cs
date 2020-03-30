@@ -47,17 +47,19 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Logging {
 			process.StartInfo.RedirectStandardOutput = true;
 			process.StartInfo.RedirectStandardError = true;
 			process.StartInfo.RedirectStandardInput = true;
-			process.OutputDataReceived += (sender, e) => {
-				if (e.Data == null) streamEnds.Signal ();
-				else {
+			process.OutputDataReceived += (object sender, DataReceivedEventArgs e) => {
+				if (e.Data == null) {
+					streamEnds.Signal ();
+				} else {
 					lock (deviceLog) {
 						deviceLog.WriteLine (e.Data);
 					}
 				}
 			};
-			process.ErrorDataReceived += (sender, e) => {
-				if (e.Data == null) streamEnds.Signal ();
-				else {
+			process.ErrorDataReceived += (object sender, DataReceivedEventArgs e) => {
+				if (e.Data == null) {
+					streamEnds.Signal ();
+				} else {
 					lock (deviceLog) {
 						deviceLog.WriteLine (e.Data);
 					}

@@ -30,7 +30,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests {
 
 			tempXcodeRoot = Path.Combine (Path.GetTempPath (), Guid.NewGuid ().ToString ());
 			symbolicatePath = Path.Combine (tempXcodeRoot, "Contents", "SharedFrameworks", "DTDeviceKitBase.framework", "Versions", "A", "Resources");
-
+			
 			processManager.SetupGet (x => x.XcodeRoot).Returns (tempXcodeRoot);
 			processManager.SetupGet (x => x.MlaunchPath).Returns ("/var/bin/mlaunch");
 

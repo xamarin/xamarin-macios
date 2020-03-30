@@ -1,0 +1,6 @@
+!missing-pinvoke! SecHostCreateGuest is not bound
+!missing-pinvoke! SecHostRemoveGuest is not bound
+!missing-pinvoke! SecHostSelectedGuest is not bound
+!missing-pinvoke! SecHostSelectGuest is not bound
+!missing-pinvoke! SecHostSetGuestStatus is not bound
+!missing-pinvoke! SecHostSetHostingPort is not bound

@@ -157,7 +157,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 			IEnumerable<ISimulatorDevice> devices = null;
 
 			if (!force) {
-				devices = AvailableDevices.Where ((v) => v.SimRuntime == runtime && v.SimDeviceType == devicetype);
+				devices = AvailableDevices.Where (v => v.SimRuntime == runtime && v.SimDeviceType == devicetype);
 				if (devices.Any ())
 					return devices;
 			}

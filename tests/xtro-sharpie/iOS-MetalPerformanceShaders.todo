@@ -595,3 +595,8 @@
 !missing-type! MPSTemporaryNDArray not bound
 !unknown-simd-type-mapping! The Simd type vector_uchar16 does not have a mapping to a managed type. Please add one in SimdCheck.cs
 !wrong-base-type! MPSTriangleAccelerationStructure expected MPSPolygonAccelerationStructure actual MPSAccelerationStructure
+
+## Xcode 11.4 b1
+!missing-selector! MPSImageGuidedFilter::encodeReconstructionToCommandBuffer:guidanceTexture:coefficientsTextureA:coefficientsTextureB:destinationTexture: not bound
+!missing-selector! MPSImageGuidedFilter::encodeRegressionToCommandBuffer:sourceTexture:guidanceTexture:weightsTexture:destinationCoefficientsTextureA:destinationCoefficientsTextureB: not bound
+

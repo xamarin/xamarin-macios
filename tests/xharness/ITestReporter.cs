@@ -12,6 +12,7 @@ namespace Xharness {
 		ITestReporter Create (ILog mainLog,
 			ILog runLog,
 			ILogs logs,
+			ICrashSnapshotReporter crashSnapshotReporter,
 			ISimpleListener simpleListener,
 			IResultParser parser,
 			AppBundleInformation appInformation,
