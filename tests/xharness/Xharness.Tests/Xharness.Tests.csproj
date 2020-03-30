@@ -102,6 +102,7 @@
     <EmbeddedResource Include="Samples\run-log.txt" />
     <EmbeddedResource Include="Samples\NUnitV3SampleSuccess.xml" />
     <EmbeddedResource Include="Samples\NUnitV3SampleFailure.xml" />
+    <EmbeddedResource Include="Samples\Issue8214.xml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../DummyTestProcess/DummyTestProcess.csproj">

@@ -40,8 +40,8 @@ namespace Xharness.Jenkins.TestTasks
 			}
 		}
 
-		public RunDeviceTask (IDeviceLoader devices, MSBuildTask build_task, IProcessManager processManager, IEnumerable<IHardwareDevice> candidates)
-			: base (build_task, processManager, candidates.OrderBy ((v) => v.DebugSpeed))
+		public RunDeviceTask (IDeviceLoader devices, MSBuildTask build_task, IProcessManager ProcessManager, IEnumerable<IHardwareDevice> candidates)
+			: base (build_task, ProcessManager, candidates.OrderBy ((v) => v.DebugSpeed))
 		{
 			switch (build_task.Platform) {
 			case TestPlatform.iOS:
@@ -89,7 +89,7 @@ namespace Xharness.Jenkins.TestTasks
 						new CrashSnapshotReporterFactory (ProcessManager),
 						new CaptureLogFactory (),
 						new DeviceLogCapturerFactory (ProcessManager),
-						new TestReporterFactory (),
+						new TestReporterFactory (ProcessManager),
 						AppRunnerTarget,
 						Harness,
 						projectFilePath: ProjectFile,
@@ -156,7 +156,7 @@ namespace Xharness.Jenkins.TestTasks
 								new CrashSnapshotReporterFactory (ProcessManager),
 								new CaptureLogFactory (),
 								new DeviceLogCapturerFactory (ProcessManager),
-								new TestReporterFactory (),
+								new TestReporterFactory (ProcessManager),
 								AppRunnerTarget,
 								Harness,
 								projectFilePath: ProjectFile,

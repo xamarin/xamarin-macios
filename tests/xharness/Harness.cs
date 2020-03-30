@@ -721,7 +721,7 @@ namespace Xharness {
 				new CrashSnapshotReporterFactory (processManager),
 				new CaptureLogFactory (),
 				new DeviceLogCapturerFactory (processManager),
-				new TestReporterFactory (),
+				new TestReporterFactory (processManager),
 				target,
 				this,
 				HarnessLog,
