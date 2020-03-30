@@ -55,9 +55,9 @@ namespace Xharness.Listeners {
 					new DeviceNameArgument (device),
 				};
 
-				// use a cancelation token, later will be used to kill the tcp tunnel proces
+				// use a cancelation token, later will be used to kill the tcp tunnel process
 				cancellationToken = new CancellationTokenSource ();
-				mainLog.WriteLine ($"Starting tcp tunnel between mac port: {simpleListener.Port} and devie port {simpleListener.Port}.");
+				mainLog.WriteLine ($"Starting tcp tunnel between mac port: {simpleListener.Port} and device port {simpleListener.Port}.");
 				Port = simpleListener.Port;
 				var tunnelbackLog = new CallbackLog ((line) => {
 					mainLog.WriteLine ($"The tcp tunnel output is {line}");
