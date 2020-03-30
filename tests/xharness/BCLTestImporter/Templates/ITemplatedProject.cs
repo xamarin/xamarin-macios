@@ -4,6 +4,11 @@ using System.IO;
 using System.Threading.Tasks;
 
 namespace Xharness.BCLTestImporter.Templates {
+
+	// less typing
+	public class GeneratedProjects : List<(string Name, string Path, bool XUnit, string ExtraArgs, string Failure, double TimeoutMultiplier)> {
+	}
+
 	// interface that represent a project that is created from a template.
 	// The interface should be able to generate a project that will later be
 	// used by the AppRunner to execute tests.
@@ -24,6 +29,6 @@ namespace Xharness.BCLTestImporter.Templates {
 		/// has its own details.</param>
 		/// <param name="generatedDir">The dir where the projects will be saved.</param>
 		/// <returns></returns>
-		Task<List<BclTestProject>> GenerateTestProjectsAsync (IEnumerable<BclTestProjectInfo> projects, Platform platform);
+		Task<GeneratedProjects> GenerateTestProjectsAsync (IEnumerable<BclTestProjectInfo> projects, Platform platform);
 	}
 }

@@ -118,6 +118,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 				}
 			}
 			var resultLine = $"Tests run: {testcasecount} Passed: {passed} Inconclusive: {inconclusive} Failed: {failed} Ignored: {skipped + inconclusive}";
+			writer.WriteLine (resultLine);
 			return (resultLine, failedTestRun);
 		}
 

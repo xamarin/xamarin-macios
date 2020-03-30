@@ -73,6 +73,8 @@ namespace Xharness.Jenkins.TestTasks {
 					ExecutionResult = TestExecutingResult.BuildFailure;
 				}
 				FailureMessage = BuildTask.FailureMessage;
+				if (!string.IsNullOrEmpty (BuildTask.KnownFailure))
+					KnownFailure = BuildTask.KnownFailure;
 				if (Harness.InCI && BuildTask is MSBuildTask projectTask)
 					ResultParser.GenerateFailure (Logs, "build", projectTask.TestName, projectTask.Variation, $"App Build {projectTask.TestName} {projectTask.Variation}", $"App could not be built {FailureMessage}.", projectTask.BuildLog.FullPath, Harness.XmlJargon);
 			} else {
