@@ -1,7 +1,7 @@
 # When this runs, a test failure has occurred
 # --state=<success|pending|error|failure>: The status state.
 
-
+Get-Location
 Set-Location Env:
 Get-ChildItem
 

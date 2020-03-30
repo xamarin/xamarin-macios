@@ -1,4 +1,5 @@
 # debugging code: print out all environment variables, including those passed in via yml
+Get-Location
 Set-Location Env:
 Get-ChildItem
 
@@ -68,7 +69,7 @@ Write-Host $params
 
 $response = Invoke-RestMethod @params
 
-$response | ConvertFrom-Json | Write-Host
+$response | Write-Host
 
 
 # https://api.github.com/xamarin/xamarin-macios/commits/eea6fd1f27ba9a0ac4fa09c8e57fc87d612b6340/status
