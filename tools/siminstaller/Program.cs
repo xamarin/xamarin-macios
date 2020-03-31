@@ -171,7 +171,7 @@ namespace xsiminstaller {
 				var versionNode = downloadable.SelectSingleNode ("key[text()='version']/following-sibling::string");
 				var sourceNode = downloadable.SelectSingleNode ("key[text()='source']/following-sibling::string");
 				var identifierNode = downloadable.SelectSingleNode ("key[text()='identifier']/following-sibling::string");
-				var fileSizeNode = downloadable.SelectSingleNode ("key[text()='fileSize']/following-sibling::integer");
+				var fileSizeNode = downloadable.SelectSingleNode ("key[text()='fileSize']/following-sibling::integer|key[text()='fileSize']/following-sibling::real");
 				var installPrefixNode = downloadable.SelectSingleNode ("key[text()='userInfo']/following-sibling::dict/key[text()='InstallPrefix']/following-sibling::string");
 
 				var version = versionNode.InnerText;
@@ -191,7 +191,8 @@ namespace xsiminstaller {
 				var name = Replace (nameNode.InnerText, dict);
 				var source = Replace (sourceNode.InnerText, dict);
 				var installPrefix = Replace (installPrefixNode.InnerText, dict);
-				var fileSize = long.Parse (fileSizeNode.InnerText);
+				double.TryParse (fileSizeNode?.InnerText, out var parsedFileSize);
+				var fileSize = (long) parsedFileSize;
 
 				var installed = false;
 				var updateAvailable = false;

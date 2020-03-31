@@ -311,7 +311,7 @@ namespace Xharness.BCLTestImporter.Templates.Managed {
 			return contentFiles.ToString ();
 		}
 
-		public async Task<GeneratedProjects> GenerateTestProjectsAsync (IEnumerable<BclTestProjectInfo> projects, Platform platform)
+		public async Task<GeneratedProjects> GenerateTestProjectsAsync (IEnumerable<(string Name, string [] Assemblies, string ExtraArgs, double TimeoutMultiplier)> projects, Platform platform)
 		{
 			// generate the template c# code before we create the diff projects
 			await GenerateSource (Path.Combine (OutputDirectoryPath, "templates"));
@@ -382,7 +382,7 @@ namespace Xharness.BCLTestImporter.Templates.Managed {
 		}
 
 		// internal implementations that generate each of the diff projects
-		async Task<GeneratedProjects> GenerateWatchOSTestProjectsAsync (IEnumerable<BclTestProjectInfo> projects)
+		async Task<GeneratedProjects> GenerateWatchOSTestProjectsAsync (IEnumerable<(string Name, string [] Assemblies, string ExtraArgs, double TimeoutMultiplier)> projects)
 		{
 			var projectPaths = new GeneratedProjects ();
 			foreach (var def in projects) {
@@ -391,7 +391,7 @@ namespace Xharness.BCLTestImporter.Templates.Managed {
 				// 2. The container
 				// 3. The extensions
 				// TODO: The following is very similar to what is done in the iOS generation. Must be grouped
-				var projectDefinition = new BCLTestProjectDefinition (def.Name, AssemblyLocator, AssemblyDefinitionFactory, def.assemblies, def.ExtraArgs);
+				var projectDefinition = new BCLTestProjectDefinition (def.Name, AssemblyLocator, AssemblyDefinitionFactory, def.Assemblies, def.ExtraArgs);
 				if (ProjectFilter != null && ProjectFilter.ExludeProject (projectDefinition, Platform.WatchOS)) // if it is ignored, continue
 					continue;
 
@@ -507,7 +507,7 @@ namespace Xharness.BCLTestImporter.Templates.Managed {
 			}
 		}
 
-		async Task<GeneratedProjects> GenerateiOSTestProjectsAsync (IEnumerable<BclTestProjectInfo> projects, Platform platform)
+		async Task<GeneratedProjects> GenerateiOSTestProjectsAsync (IEnumerable<(string Name, string [] Assemblies, string ExtraArgs, double TimeoutMultiplier)> projects, Platform platform)
 		{
 			if (platform == Platform.WatchOS)
 				throw new ArgumentException (nameof (platform));
@@ -515,9 +515,9 @@ namespace Xharness.BCLTestImporter.Templates.Managed {
 				return new GeneratedProjects ();
 			var projectPaths = new GeneratedProjects ();
 			foreach (var def in projects) {
-				if (def.assemblies.Length == 0)
+				if (def.Assemblies.Length == 0)
 					continue;
-				var projectDefinition = new BCLTestProjectDefinition (def.Name, AssemblyLocator, AssemblyDefinitionFactory, def.assemblies, def.ExtraArgs);
+				var projectDefinition = new BCLTestProjectDefinition (def.Name, AssemblyLocator, AssemblyDefinitionFactory, def.Assemblies, def.ExtraArgs);
 				if (ProjectFilter != null && ProjectFilter.ExludeProject (projectDefinition, Platform.WatchOS)) // if it is ignored, continue
 					continue;
 
@@ -608,13 +608,13 @@ namespace Xharness.BCLTestImporter.Templates.Managed {
 			}
 		}
 
-		async Task<GeneratedProjects> GenerateMacTestProjectsAsync (IEnumerable<BclTestProjectInfo> projects, Platform platform)
+		async Task<GeneratedProjects> GenerateMacTestProjectsAsync (IEnumerable<(string Name, string [] Assemblies, string ExtraArgs, double TimeoutMultiplier)> projects, Platform platform)
 		{
 			var projectPaths = new GeneratedProjects ();
 			foreach (var def in projects) {
-				if (!def.assemblies.Any ())
+				if (!def.Assemblies.Any ())
 					continue;
-				var projectDefinition = new BCLTestProjectDefinition (def.Name, AssemblyLocator, AssemblyDefinitionFactory, def.assemblies, def.ExtraArgs);
+				var projectDefinition = new BCLTestProjectDefinition (def.Name, AssemblyLocator, AssemblyDefinitionFactory, def.Assemblies, def.ExtraArgs);
 				if (ProjectFilter != null && ProjectFilter.ExludeProject (projectDefinition, platform))
 					continue;
 
