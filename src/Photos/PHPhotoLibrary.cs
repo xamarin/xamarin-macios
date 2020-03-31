@@ -6,9 +6,6 @@
 //
 // Copyright 2014 Xamarin Inc
 //
-
-#if !MONOMAC
-
 using ObjCRuntime;
 using Foundation;
 using System;
@@ -49,5 +46,3 @@ namespace Photos
 		}
 	}
 }
-
-#endif

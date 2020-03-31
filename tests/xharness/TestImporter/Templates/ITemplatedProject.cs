@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 
-namespace Xharness.BCLTestImporter.Templates {
+namespace Xharness.TestImporter.Templates {
 
 	// less typing
 	public class GeneratedProjects : List<(string Name, string Path, bool XUnit, string ExtraArgs, string Failure, double TimeoutMultiplier)> {
@@ -29,6 +28,6 @@ namespace Xharness.BCLTestImporter.Templates {
 		/// has its own details.</param>
 		/// <param name="generatedDir">The dir where the projects will be saved.</param>
 		/// <returns></returns>
-		Task<GeneratedProjects> GenerateTestProjectsAsync (IEnumerable<BclTestProjectInfo> projects, Platform platform);
+		Task<GeneratedProjects> GenerateTestProjectsAsync (IEnumerable<(string Name, string [] Assemblies, string ExtraArgs, double TimeoutMultiplier)> projects, Platform platform);
 	}
 }

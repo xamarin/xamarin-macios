@@ -1,4 +1,4 @@
-namespace Xharness.BCLTestImporter {
+namespace Xharness.TestImporter {
 	/// <summary>
 	/// Represents the supported platforms to which we can create projects.
 	/// </summary>

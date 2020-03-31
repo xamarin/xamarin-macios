@@ -1,12 +1,10 @@
 using System;
-using System.IO;
 using Moq;
 using NUnit.Framework;
-using Xharness.BCLTestImporter;
-using Xharness.BCLTestImporter.Templates;
-using Xharness.BCLTestImporter.Xamarin;
+using Xharness.TestImporter;
+using Xharness.TestImporter.Xamarin;
 
-namespace Xharness.Tests.BCLTestImporter.Tests {
+namespace Xharness.Tests.TestImporter.Tests {
 	public class TestAssemblyDefinitionTest {
 
 		Mock<IAssemblyLocator> assemblyLocator;
