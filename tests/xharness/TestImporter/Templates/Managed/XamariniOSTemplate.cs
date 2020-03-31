@@ -401,6 +401,7 @@ namespace Xharness.TestImporter.Templates.Managed {
 			using (var reader = new StreamReader (template)) {
 				var result = await reader.ReadToEndAsync ();
 				result = result.Replace (DownloadPathKey, rootAssembliesPath);
+				result = result.Replace (TestingFrameworksKey, GetTestingFrameworksImports (Platform.WatchOS));
 				result = result.Replace (NameKey, projectName);
 				result = result.Replace (WatchOSTemplatePathKey, WatchExtensionTemplatePath);
 				result = result.Replace (PlistKey, infoPlistPath);
