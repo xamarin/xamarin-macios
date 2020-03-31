@@ -2,6 +2,40 @@
 <MTouch Version="0" Revision="0">
   <SdkRoot>/Applications/Xcode113.app/Contents/Developer</SdkRoot>
   <Device>
+    <ActivationState />
+    <AmountDataAvailable />
+    <BatteryCurrentCapacity />
+    <BluetoothAddress />
+    <BuildVersion />
+    <ChipID />
+    <CPUArchitecture />
+    <DeveloperStatus />
+    <DeviceClass />
+    <DeviceColor />
+    <DeviceEnclosureColor />
+    <DeviceIdentifier>5696DC36EE3249859D465DA37E6EA912</DeviceIdentifier>
+    <DevToolsAvailable />
+    <EnableWifiDebugging />
+    <HardwareModel />
+    <InterfaceType>Wifi</InterfaceType>
+    <InternationalMobileEquipmentIdentity />
+    <IsPaired>False</IsPaired>
+    <IsUsableForDebugging />
+    <IsValid>True</IsValid>
+    <ModelNumber />
+    <Name>Office</Name>
+    <PasswordProtected />
+    <ProductionSOC />
+    <ProductType />
+    <ProductVersion />
+    <SerialNumber />
+    <TotalDataCapacity />
+    <UDID />
+    <UniqueChipID />
+    <WatchCompanionCapability />
+    <WiFiAddress />
+  </Device>
+  <Device>
     <ActivationState>Activated</ActivationState>
     <AmountDataAvailable>5650776064</AmountDataAvailable>
     <BatteryCurrentCapacity>100</BatteryCurrentCapacity>
