@@ -48,5 +48,43 @@ namespace Cecil.Tests {
 				}
 			}
 		}
+
+		[TestCaseSource (typeof (Helper), "PlatformAssemblies")]
+		// ref: https://github.com/xamarin/xamarin-macios/issues/8249
+		public void EnsureUIThreadOnInit (string assemblyPath)
+		{
+			var assembly = Helper.GetAssembly (assemblyPath);
+			if (assembly == null) {
+				Assert.Ignore ("{assemblyPath} could not be found (might be disabled in build)");
+				return; // just to help nullability
+			}
+
+			// `CNContactsUserDefaults` is `[ThreadSafe (false)]` and part of iOS and macOS
+			var t = assembly.MainModule.GetType ("Contacts.CNContactsUserDefaults");
+			if (t == null) {
+				// tvOS does not have the type so let's find an alternative
+				t = assembly.MainModule.GetType ("PhotosUI.PHLivePhotoView");
+			}
+			if (t == null) {
+				Assert.Fail ($"No type found for {assembly}");
+				return; // just to help nullability
+			}
+
+			foreach (var c in t.Methods) {
+				if (!c.IsConstructor || c.IsStatic || c.HasParameters)
+					continue;
+				// .ctor(IntPtr)
+				var found = false;
+				foreach (var ins in c.Body.Instructions) {
+					if (ins.OpCode.Code != Code.Call)
+						continue;
+					found |= (ins.Operand as MethodReference)?.Name == "EnsureUIThread";
+				}
+				if (!found)
+					Assert.Fail ("EnsureUIThread missing");
+				else
+					return; // single case, no point in iterating anymore
+			}
+		}
 	}
 }

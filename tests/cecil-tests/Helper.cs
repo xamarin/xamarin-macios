@@ -63,8 +63,11 @@ namespace Cecil.Tests {
 				yield return new TestCaseData (Path.Combine (Configuration.MonoTouchRootDirectory, "lib", "32bits", "Xamarin.iOS.dll"));
 				yield return new TestCaseData (Path.Combine (Configuration.MonoTouchRootDirectory, "lib", "64bits", "Xamarin.iOS.dll"));
 
-				yield return new TestCaseData (Configuration.XamarinWatchOSDll);
-				yield return new TestCaseData (Configuration.XamarinTVOSDll);
+				// XamarinWatchOSDll is stripped of its IL
+				yield return new TestCaseData (Path.Combine (Configuration.MonoTouchRootDirectory, "lib", "32bits", "Xamarin.WatchOS.dll"));
+				// XamarinTVOSDll is stripped of it's IL
+				yield return new TestCaseData (Path.Combine (Configuration.MonoTouchRootDirectory, "lib", "64bits", "Xamarin.TVOS.dll"));
+
 				yield return new TestCaseData (Configuration.XamarinMacMobileDll);
 				yield return new TestCaseData (Configuration.XamarinMacFullDll);
 			}
