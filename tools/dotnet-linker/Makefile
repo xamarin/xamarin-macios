@@ -14,4 +14,4 @@ dotnet-linker.csproj.inc: dotnet-linker.csproj Makefile ../common/create-makefil
 -include dotnet-linker.csproj.inc
 
 bin/Debug/netcoreapp3.0/dotnet-linker.dll: Makefile $(dotnet_linker_dependencies)
-	$(DOTNET) build
+	$(DOTNET) build $(XBUILD_VERBOSITY)

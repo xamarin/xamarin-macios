@@ -87,10 +87,18 @@
 
 	<!-- Linker targets -->
 	<Target Name="_PreProcessAssemblies" DependsOnTargets="_ComputeLinkerArguments;_ExtractNativeLibrariesFromBindingAssemblies;" />
-	<Target Name="_ComputeLinkerArguments">
+	<PropertyGroup>
+		<_AdditionalTaskAssemblyDirectory>$(XamarinSdkRootDirectory)/tools/</_AdditionalTaskAssemblyDirectory>
+		<_AdditionalTaskAssembly>$(_AdditionalTaskAssemblyDirectory)dotnet-linker.dll</_AdditionalTaskAssembly>
+	</PropertyGroup>
+	<Target Name="_ComputeLinkerSubstitutions">
+		<_LinkerSubstitutions Include="$(_AdditionalTaskAssemblyDirectory)/substitute-32bits.xml" Condition=" '$(_Is32BitBuild)' == 'true' " />
+		<_LinkerSubstitutions Include="$(_AdditionalTaskAssemblyDirectory)/substitute-64bits.xml" Condition=" '$(_Is64BitBuild)' == 'true' " />
+		<_LinkerSubstitutionsCommand>@(_LinkerSubstitutions -> '--substitution=%(Filename)', ' ')</_LinkerSubstitutionsCommand>
+	</Target>
+	<Target Name="_ComputeLinkerArguments" DependsOnTargets="_ComputeLinkerSubstitutions;">
 		<PropertyGroup>
-			<_AdditionalTaskAssembly>$(XamarinSdkRootDirectory)/tools/dotnet-linker.dll</_AdditionalTaskAssembly>
-			<!-- <_ExtraTrimmerArgs> - -custom-step "+MarkStep:Xamarin.Linker.Steps.MobileResolveMainAssemblyStep,$(_AdditionalTaskAssembly)"</_ExtraTrimmerArgs> -->
+			<_ExtraTrimmerArgs>--verbose $(_LinkerSubstitutionsCommand)</_ExtraTrimmerArgs>
 		</PropertyGroup>
 	</Target>
 	<Target Name="_ExtractNativeLibrariesFromBindingAssemblies">
