@@ -3,18 +3,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
-using Xharness.BCLTestImporter;
-using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
-using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
-using Xharness.Targets;
-using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using Microsoft.DotNet.XHarness.iOS.Shared;
-using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
+using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
+using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
+using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
+using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
+using Xharness.Targets;
 
 namespace Xharness {
-	public enum HarnessAction
-	{
+	public enum HarnessAction {
 		None,
 		Configure,
 		Run,
@@ -198,7 +196,7 @@ namespace Xharness {
 				EnvironmentVariables = new Dictionary<string, string> (configuration.EnvironmentVariables);
 
 			LaunchTimeout = InCI ? 3 : 120;
-			
+
 			var config = ParseConfigFiles ();
 			var src_root = Path.GetDirectoryName (Path.GetFullPath (RootDirectory));
 
@@ -219,7 +217,7 @@ namespace Xharness {
 
 			if (string.IsNullOrEmpty (SdkRoot))
 				SdkRoot = config ["XCODE_DEVELOPER_ROOT"] ?? configuration.SdkRoot;
-			
+
 			processManager = new ProcessManager (XcodeRoot, MlaunchPath);
 		}
 
@@ -355,7 +353,7 @@ namespace Xharness {
 					configureTarget (target, file, proj.IsNUnitProject, false);
 					unified_targets.Add (target);
 
-					var cloned_project = (MacTestProject) proj.Clone ();
+					var cloned_project = (MacTestProject)proj.Clone ();
 					cloned_project.TargetFrameworkFlavors = MacFlavors.Full;
 					cloned_project.Path = target.ProjectPath;
 					MacTestProjects.Add (cloned_project);
@@ -367,7 +365,7 @@ namespace Xharness {
 					configureTarget (target, file, proj.IsNUnitProject, false);
 					unified_targets.Add (target);
 
-					var cloned_project = (MacTestProject) proj.Clone ();
+					var cloned_project = (MacTestProject)proj.Clone ();
 					cloned_project.TargetFrameworkFlavors = MacFlavors.System;
 					cloned_project.Path = target.ProjectPath;
 					MacTestProjects.Add (cloned_project);
@@ -451,7 +449,7 @@ namespace Xharness {
 			return configuration;
 		}
 
-		IEnumerable <string> GetConfigFiles ()
+		IEnumerable<string> GetConfigFiles ()
 		{
 			return FindConfigFiles (useSystemXamarinIOSMac ? "test-system.config" : "test.config")
 				.Concat (FindConfigFiles ("Make.config"))

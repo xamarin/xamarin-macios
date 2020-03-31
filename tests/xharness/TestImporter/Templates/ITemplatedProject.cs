@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 
-namespace Xharness.BCLTestImporter.Templates {
+namespace Xharness.TestImporter.Templates {
 
 	// less typing
 	public class GeneratedProjects : List<(string Name, string Path, bool XUnit, string ExtraArgs, string Failure, double TimeoutMultiplier)> {

@@ -4,11 +4,11 @@ using System.IO;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
-using Xharness.BCLTestImporter;
-using Xharness.BCLTestImporter.Templates;
-using Xharness.BCLTestImporter.Xamarin;
+using Xharness.TestImporter;
+using Xharness.TestImporter.Templates;
+using Xharness.TestImporter.Xamarin;
 
-namespace Xharness.Tests.BCLTestImporter.Tests {
+namespace Xharness.Tests.TestImporter.Tests {
 
 
 	// test the class so that we ensure that we do call the template object and that we are correctly creating the
@@ -18,7 +18,7 @@ namespace Xharness.Tests.BCLTestImporter.Tests {
 		string outputdir;
 		AssemblyLocator assemblyLocator;
 		Mock<ITemplatedProject> template;
-		BCLTestProjectGenerator generator;
+		BCLTestImportTargetFactory generator;
 
 		[SetUp]
 		public void SetUp ()
@@ -28,7 +28,7 @@ namespace Xharness.Tests.BCLTestImporter.Tests {
 			Directory.CreateDirectory (outputdir);
 			assemblyLocator = new AssemblyLocator ();
 			template = new Mock<ITemplatedProject> ();
-			generator = new BCLTestProjectGenerator (outputdir) {
+			generator = new BCLTestImportTargetFactory (outputdir) {
 				AssemblyLocator = assemblyLocator,
 				TemplatedProject = template.Object
 			};
@@ -45,13 +45,13 @@ namespace Xharness.Tests.BCLTestImporter.Tests {
 		[Test]
 		public void ConstructorNullOutputDir ()
 		{
-			Assert.Throws<ArgumentNullException> (() => new BCLTestProjectGenerator (null));
-			Assert.Throws<ArgumentNullException> (() => new BCLTestProjectGenerator (null, ""));
+			Assert.Throws<ArgumentNullException> (() => new BCLTestImportTargetFactory ((string) null));
+			Assert.Throws<ArgumentNullException> (() => new BCLTestImportTargetFactory (null, ""));
 		}
 		
 		[Test]
 		public void ConstructorNullMonoDir () => 
-			Assert.Throws<ArgumentNullException> (() => new BCLTestProjectGenerator ("", null));
+			Assert.Throws<ArgumentNullException> (() => new BCLTestImportTargetFactory ("", null));
 
 		[Test]
 		public void iOSMonoSDKPathGetterTest ()

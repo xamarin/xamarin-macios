@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Xharness.BCLTestImporter.Templates.Managed {
+namespace Xharness.TestImporter.Templates.Managed {
 
 	// template project that uses the Xamarin.iOS and Xamarin.Mac frameworks
 	// to create a testing application for given xunit and nunit test assemblies
@@ -26,7 +26,7 @@ namespace Xharness.BCLTestImporter.Templates.Managed {
 		internal static readonly string DownloadPathKey = "%DOWNLOAD PATH%";
 
 		// resource related static vars used to copy the embedded src to the hd
-		static string srcResourcePrefix = "Xharness.BCLTestImporter.Templates.Managed.Resources.src.";
+		static string srcResourcePrefix = "Xharness.TestImporter.Templates.Managed.Resources.src.";
 		static string registerTemplateResourceName = "RegisterType.cs";
 		static string [] [] srcDirectories = new [] {
 			new [] { "common", },
@@ -80,7 +80,7 @@ namespace Xharness.BCLTestImporter.Templates.Managed {
 		public string OutputDirectoryPath { get; set; }
 		string GeneratedCodePathRoot => Path.Combine (OutputDirectoryPath, "generated");
 		public string IgnoreFilesRootDirectory { get; set; }
-		public IAssemblyLocator AssemblyLocator { get; set; } 
+		public IAssemblyLocator AssemblyLocator { get; set; }
 		public IProjectFilter ProjectFilter { get; set; }
 		public ITestAssemblyDefinitionFactory AssemblyDefinitionFactory { get; set; }
 
@@ -90,6 +90,9 @@ namespace Xharness.BCLTestImporter.Templates.Managed {
 		string WatchContainerTemplatePath => Path.Combine (OutputDirectoryPath, "templates", "watchOS", "Container").Replace ("/", "\\");
 		string WatchAppTemplatePath => Path.Combine (OutputDirectoryPath, "templates", "watchOS", "App").Replace ("/", "\\");
 		string WatchExtensionTemplatePath => Path.Combine (OutputDirectoryPath, "templates", "watchOS", "Extension").Replace ("/", "\\");
+
+		bool srcGenerated = false;
+		object srcGeneratedLock = new object ();
 
 		Stream GetTemplateStream (string templateName)
 		{
@@ -229,24 +232,39 @@ namespace Xharness.BCLTestImporter.Templates.Managed {
 			}
 		}
 
-		public async Task GenerateSource (string srcOuputPath)
+		// this method could be async, since we could be using async IO. The problem is that it might be called
+		// several times. The File and the Directory classes are not smart, and there is a possibility that we
+		// stop the thread between the Directory.Exist and the Directory.Delete. A nice way to solve this would be
+		// to set the src to get a AsyncLazy<bool> and generate the source only once on the first run, but AsyncLazy
+		// got move to target .netcore 5.0 (https://github.com/dotnet/runtime/issues/27510) yet we want to fix issue
+		// https://github.com/xamarin/xamarin-macios/issues/8240 so for the time being we lock, check, and generate
+		// if needed, which is better than:
+		//
+		// * Have a thread issue.
+		// * Generate the src EVERY SINGLE TIME for a list of projects.
+		public void GenerateSource (string srcOuputPath)
 		{
-			// mk the expected directories
-			if (Directory.Exists (srcOuputPath))
-				Directory.Delete (srcOuputPath, true); // delete, we always want to add the embeded src
-			BuildSrcTree (srcOuputPath);
-			// the code is simple, we are going to look for all the resources that we know are src and will write a
-			// copy of the stream in the designated output path
-			var resources = GetType ().Assembly.GetManifestResourceNames ().Where (a => a.StartsWith (srcResourcePrefix));
+			lock (srcGeneratedLock) {
+				if (srcGenerated)
+					return;
+				// mk the expected directories
+				if (Directory.Exists (srcOuputPath))
+					Directory.Delete (srcOuputPath, true); // delete, we always want to add the embedded src
+				BuildSrcTree (srcOuputPath);
+				// the code is simple, we are going to look for all the resources that we know are src and will write a
+				// copy of the stream in the designated output path
+				var resources = GetType ().Assembly.GetManifestResourceNames ().Where (a => a.StartsWith (srcResourcePrefix));
 
-			// we need to be smart, since the resource name != the path
-			foreach (var r in resources) {
-				var path = CalculateDestinationPath (srcOuputPath, r);
-				// copy the stream
-				using (var sourceReader = GetType ().Assembly.GetManifestResourceStream (r))
-				using (var destination = File.Create (path)) {
-					await sourceReader.CopyToAsync (destination);
+				// we need to be smart, since the resource name != the path
+				foreach (var r in resources) {
+					var path = CalculateDestinationPath (srcOuputPath, r);
+					// copy the stream
+					using (var sourceReader = GetType ().Assembly.GetManifestResourceStream (r))
+					using (var destination = File.Create (path)) {
+						sourceReader.CopyTo (destination);
+					}
 				}
+				srcGenerated = true;
 			}
 		}
 
@@ -314,7 +332,7 @@ namespace Xharness.BCLTestImporter.Templates.Managed {
 		public async Task<GeneratedProjects> GenerateTestProjectsAsync (IEnumerable<(string Name, string [] Assemblies, string ExtraArgs, double TimeoutMultiplier)> projects, Platform platform)
 		{
 			// generate the template c# code before we create the diff projects
-			await GenerateSource (Path.Combine (OutputDirectoryPath, "templates"));
+			GenerateSource (Path.Combine (OutputDirectoryPath, "templates"));
 			var result = new GeneratedProjects ();
 			switch (platform) {
 			case Platform.WatchOS:
@@ -625,7 +643,7 @@ namespace Xharness.BCLTestImporter.Templates.Managed {
 				Directory.CreateDirectory (generatedCodeDir);
 				var registerTypePath = Path.Combine (generatedCodeDir, "RegisterType-mac.cs");
 
-				var typesPerAssembly = projectDefinition.GetTypeForAssemblies (AssemblyLocator.GetAssembliesRootLocation  (platform), platform);
+				var typesPerAssembly = projectDefinition.GetTypeForAssemblies (AssemblyLocator.GetAssembliesRootLocation (platform), platform);
 				var registerCode = await RegisterTypeGenerator.GenerateCodeAsync (typesPerAssembly,
 					projectDefinition.IsXUnit, GetRegisterTypeTemplate ());
 
