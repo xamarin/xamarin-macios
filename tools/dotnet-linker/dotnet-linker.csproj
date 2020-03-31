@@ -9,9 +9,7 @@
     <DefineConstants>TRACE;DEBUG;NETCOREAPP;NETCOREAPP3_0;NET;IOS</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="$(HOME)/.nuget/packages/illink.tasks/0.1.6-prerelease.20175.2/tools/netcoreapp3.0/illink.dll" />
-    <Reference Include="$(HOME)/.nuget/packages/illink.tasks/0.1.6-prerelease.20175.2/tools/netcoreapp3.0/Mono.Cecil.dll" />
-    <PackageReference Include="ILLink.Tasks" Version="0.1.6-prerelease.20175.2" />
+    <PackageReference Include="Microsoft.NET.ILLink" Version="5.0.0-preview.3.20207.1" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\linker\MobileResolveMainAssemblyStep.cs">

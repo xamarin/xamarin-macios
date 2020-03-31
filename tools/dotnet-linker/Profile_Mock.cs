@@ -7,15 +7,6 @@ using Mono.Linker.Steps;
 
 namespace Xamarin.Tuner {
 
-	public class FooStep : IStep {
-
-		public void Process (LinkContext context)
-		{
-			foreach (IStep step in context.Pipeline.GetSteps ()) {
-				Console.WriteLine (step.GetType ().Name);
-			}
-		}
-	}
 }
 
 namespace Mono.Tuner {

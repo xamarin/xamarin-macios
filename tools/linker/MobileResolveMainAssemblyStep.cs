@@ -7,13 +7,20 @@ using Mono.Linker.Steps;
 using Xamarin.Tuner;
 
 namespace Xamarin.Linker.Steps {
-	
+
+#if NET
+	public class MobileResolveMainAssemblyStep : BaseStep {
+#else
 	public class MobileResolveMainAssemblyStep : ResolveFromAssemblyStep {
+#endif
 
 		AssemblyDefinition assembly;
 		bool embeddinator;
 
-		public MobileResolveMainAssemblyStep (AssemblyDefinition ad, bool embeddinator) : base (ad)
+		public MobileResolveMainAssemblyStep (AssemblyDefinition ad, bool embeddinator)
+#if !NET
+			: base (ad)
+#endif
 		{
 			assembly = ad;
 			this.embeddinator = embeddinator;
@@ -27,12 +34,17 @@ namespace Xamarin.Linker.Steps {
 				base.Process ();
 				return;
 			}
+
+#if !NET
 			// we have a watch extension which main project is a .dll and we have to tell the
 			// linker where to start (by marking the first, entry method)
 			Context.Resolver.CacheAssembly (assembly);
 			Context.SafeReadSymbols (assembly);
+#endif
 
+#if !NET
 			Context.Tracer.Push (assembly);
+#endif
 
 			var is_product_assembly = Mono.Tuner.Profile.IsProductAssembly (assembly);
 			foreach (var t in assembly.MainModule.Types) {
@@ -53,7 +65,9 @@ namespace Xamarin.Linker.Steps {
 				// should bring everything else that's required
 			}
 
+#if !NET
 			Context.Tracer.Pop ();
+#endif
 		}
 	}
 }
