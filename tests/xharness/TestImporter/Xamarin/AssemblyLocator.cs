@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using Xharness.BCLTestImporter.Templates;
 
-namespace Xharness.BCLTestImporter.Xamarin {
+namespace Xharness.TestImporter.Xamarin {
 
 	/// <summary>
 	/// Implemenation of the assembly locator that will return the root path of the mono bcl artifact.

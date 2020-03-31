@@ -4,9 +4,9 @@ using System.IO;
 using NUnit.Framework;
 
 using System.Threading.Tasks;
-using Xharness.BCLTestImporter;
+using Xharness.TestImporter;
 
-namespace Xharness.Tests.BCLTestImporter.Tests {
+namespace Xharness.Tests.TestImporter.Tests {
 	public class BCLTestInfoPlistGeneratorTest {
 
 		[Test]

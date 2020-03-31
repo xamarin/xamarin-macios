@@ -2,10 +2,10 @@
 using System.Linq;
 using Moq;
 using NUnit.Framework;
-using Xharness.BCLTestImporter;
-using Xharness.BCLTestImporter.Xamarin;
+using Xharness.TestImporter;
+using Xharness.TestImporter.Xamarin;
 
-namespace Xharness.Tests.BCLTestImporter.Xamarin.Tests {
+namespace Xharness.Tests.TestImporter.Xamarin.Tests {
 
 	[TestFixture]
 	public class ProjectFilterTest {
@@ -49,12 +49,13 @@ namespace Xharness.Tests.BCLTestImporter.Xamarin.Tests {
 		Mock<IAssemblyLocator> assemblyLocator;
 		ProjectFilter projectFilter;
 
-		string GetTraitExpectedPath (Platform platform) => platform switch {
+		string GetTraitExpectedPath (Platform platform) => platform switch
+		{
 			Platform.iOS => Path.Combine (traitsFilesRootDir, "ios-bcl", "monotouch", "tests"),
-			Platform.TvOS =>  Path.Combine (traitsFilesRootDir, "ios-bcl", "monotouch_tv", "tests"),
+			Platform.TvOS => Path.Combine (traitsFilesRootDir, "ios-bcl", "monotouch_tv", "tests"),
 			Platform.WatchOS => Path.Combine (traitsFilesRootDir, "ios-bcl", "monotouch_watch", "tests"),
 			Platform.MacOSFull => Path.Combine (traitsFilesRootDir, "mac-bcl", "xammac_net_4_5", "tests"),
-			Platform.MacOSModern =>  Path.Combine (traitsFilesRootDir, "mac-bcl", "xammac", "tests"),
+			Platform.MacOSModern => Path.Combine (traitsFilesRootDir, "mac-bcl", "xammac", "tests"),
 			_ => null,
 		};
 
@@ -113,10 +114,10 @@ namespace Xharness.Tests.BCLTestImporter.Xamarin.Tests {
 		{
 			// loop over the assemblies we know should be ignored per platform and assert the correct value is returned
 			foreach (var a in ProjectFilter.CommonIgnoredAssemblies) {
-				foreach (var p in new [] { Platform.iOS, Platform.TvOS, Platform.WatchOS, Platform.MacOSFull, Platform.MacOSModern})
+				foreach (var p in new [] { Platform.iOS, Platform.TvOS, Platform.WatchOS, Platform.MacOSFull, Platform.MacOSModern })
 					Assert.IsTrue (projectFilter.ExcludeDll (p, a), $"Common {p} {a}");
 			}
-			foreach (var a in ProjectFilter.iOSIgnoredAssemblies) 
+			foreach (var a in ProjectFilter.iOSIgnoredAssemblies)
 				Assert.IsTrue (projectFilter.ExcludeDll (Platform.iOS, a), $"{Platform.iOS} {a}");
 			foreach (var a in ProjectFilter.tvOSIgnoredAssemblies)
 				Assert.IsTrue (projectFilter.ExcludeDll (Platform.TvOS, a), $"{Platform.TvOS} {a}");
@@ -145,7 +146,7 @@ namespace Xharness.Tests.BCLTestImporter.Xamarin.Tests {
 		{
 			assemblyLocator.Setup (l => l.GetAssembliesRootLocation (It.IsAny<Platform> ())).Returns (traitsFilesRootDir);
 			// ensure that we do get the traits from the correct path
-			foreach (var p in new [] { Platform.iOS, Platform.MacOSFull, Platform.MacOSModern, Platform.TvOS, Platform.WatchOS}) {
+			foreach (var p in new [] { Platform.iOS, Platform.MacOSFull, Platform.MacOSModern, Platform.TvOS, Platform.WatchOS }) {
 				var rootPath = GetTraitExpectedPath (p);
 				var files = projectFilter.GetTraitsFiles (p);
 				Assert.AreEqual (2, files.Count (), "files count");
