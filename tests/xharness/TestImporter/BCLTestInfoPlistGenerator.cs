@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace Xharness.BCLTestImporter {
+namespace Xharness.TestImporter {
 	/// <summary>
 	/// Class that knows how to generate the plist of a test project.
 	/// </summary>

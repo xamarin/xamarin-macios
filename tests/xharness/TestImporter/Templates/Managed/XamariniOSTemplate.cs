@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Xharness.BCLTestImporter.Templates.Managed {
+namespace Xharness.TestImporter.Templates.Managed {
 
 	// template project that uses the Xamarin.iOS and Xamarin.Mac frameworks
 	// to create a testing application for given xunit and nunit test assemblies
@@ -26,7 +26,7 @@ namespace Xharness.BCLTestImporter.Templates.Managed {
 		internal static readonly string DownloadPathKey = "%DOWNLOAD PATH%";
 
 		// resource related static vars used to copy the embedded src to the hd
-		static string srcResourcePrefix = "Xharness.BCLTestImporter.Templates.Managed.Resources.src.";
+		static string srcResourcePrefix = "Xharness.TestImporter.Templates.Managed.Resources.src.";
 		static string registerTemplateResourceName = "RegisterType.cs";
 		static string [] [] srcDirectories = new [] {
 			new [] { "common", },
@@ -80,7 +80,7 @@ namespace Xharness.BCLTestImporter.Templates.Managed {
 		public string OutputDirectoryPath { get; set; }
 		string GeneratedCodePathRoot => Path.Combine (OutputDirectoryPath, "generated");
 		public string IgnoreFilesRootDirectory { get; set; }
-		public IAssemblyLocator AssemblyLocator { get; set; } 
+		public IAssemblyLocator AssemblyLocator { get; set; }
 		public IProjectFilter ProjectFilter { get; set; }
 		public ITestAssemblyDefinitionFactory AssemblyDefinitionFactory { get; set; }
 
@@ -643,7 +643,7 @@ namespace Xharness.BCLTestImporter.Templates.Managed {
 				Directory.CreateDirectory (generatedCodeDir);
 				var registerTypePath = Path.Combine (generatedCodeDir, "RegisterType-mac.cs");
 
-				var typesPerAssembly = projectDefinition.GetTypeForAssemblies (AssemblyLocator.GetAssembliesRootLocation  (platform), platform);
+				var typesPerAssembly = projectDefinition.GetTypeForAssemblies (AssemblyLocator.GetAssembliesRootLocation (platform), platform);
 				var registerCode = await RegisterTypeGenerator.GenerateCodeAsync (typesPerAssembly,
 					projectDefinition.IsXUnit, GetRegisterTypeTemplate ());
 

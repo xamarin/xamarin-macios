@@ -1,7 +1,4 @@
-﻿using System;
-using Xharness.BCLTestImporter.Templates;
-
-namespace Xharness.BCLTestImporter {
+﻿namespace Xharness.TestImporter {
 
 	// factory that hides the creation of the ITestAssemblyDefinition to hide the concreate class that is used by the
 	// template.

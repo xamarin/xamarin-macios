@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Xharness.BCLTestImporter.Templates;
+using Xharness.TestImporter.Templates;
 
-namespace Xharness.BCLTestImporter.Xamarin {
+namespace Xharness.TestImporter.Xamarin {
 	public class ProjectFilter : IProjectFilter {
 
 		static readonly string splitPattern = ".part";
