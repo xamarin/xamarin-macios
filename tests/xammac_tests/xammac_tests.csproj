@@ -34,6 +34,8 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <CodeSignEntitlements>Entitlements.plist</CodeSignEntitlements>
     <CodeSignProvision>Automatic</CodeSignProvision>
+    <AOTMode>None</AOTMode>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
@@ -51,6 +53,8 @@
     <LinkMode>None</LinkMode>
     <XamMacArch>x86_64</XamMacArch>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AOTMode>None</AOTMode>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

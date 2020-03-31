@@ -32,6 +32,7 @@
     <XamMacArch></XamMacArch>
     <AOTMode>None</AOTMode>
     <I18n>mideast,other</I18n>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugType></DebugType>
@@ -53,6 +54,7 @@
     <I18n>mideast,other</I18n>
     <CodeSigningKey>Mac Developer</CodeSigningKey>
     <PackageSigningKey>3rd Party Mac Developer Installer</PackageSigningKey>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

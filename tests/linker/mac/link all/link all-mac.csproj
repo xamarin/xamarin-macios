@@ -33,6 +33,10 @@
     <AOTMode>None</AOTMode>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <MonoBundlingExtraArgs>--optimize=all,-remove-uithread-checks</MonoBundlingExtraArgs>
+    <DelaySign>false</DelaySign>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <LangVersion>Default</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugType></DebugType>
@@ -53,6 +57,7 @@
     <AOTMode>None</AOTMode>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <MonoBundlingExtraArgs>--optimize=all</MonoBundlingExtraArgs>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
