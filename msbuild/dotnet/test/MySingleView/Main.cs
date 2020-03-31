@@ -11,9 +11,17 @@ namespace MySingleView
 		// This is the main entry point of the application.
 		static void Main (string[] args)
 		{
+			if (IntPtr.Size == 8)
+				Console.WriteLine ("64bit");
+			else
+				Console.WriteLine ("32bit");
 			// if you want to use a different Application Delegate class from "AppDelegate"
 			// you can specify it here.
 			UIApplication.Main (args, null, "AppDelegate");
+		}
+
+		static void MainUnused ()
+		{
 		}
 	}
 }
