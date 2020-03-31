@@ -1,57 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
-  <Import Project="..\..\packages\XliffTasks.1.0.0-beta.20078.1\build\XliffTasks.props" Condition="Exists('..\..\packages\XliffTasks.1.0.0-beta.20078.1\build\XliffTasks.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A737EFCC-4348-4EB1-9C14-4FDC0975388D}</ProjectGuid>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <LangVersion>latest</LangVersion>
+    <DefineConstants>MONOTOUCH;MTOUCH;XAMARIN_APPLETLS</DefineConstants>
+    <UpdateXlfOnBuild>true</UpdateXlfOnBuild>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <OutputType>Exe</OutputType>
-    <AssemblyName>mtouch</AssemblyName>
-    <RootNamespace>mtouch</RootNamespace>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <LangVersion>latest</LangVersion>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>True</DebugSymbols>
-    <DebugType>portable</DebugType>
-    <Optimize>False</Optimize>
-    <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>MONOTOUCH;MTOUCH;XAMARIN_APPLETLS</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Deterministic>True</Deterministic>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <LangVersion>latest</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>portable</DebugType>
-    <Optimize>False</Optimize>
-    <OutputPath>bin\Release</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <DefineConstants>MONOTOUCH;MTOUCH;XAMARIN_APPLETLS</DefineConstants>
-    <WarningLevel>4</WarningLevel>
-    <Deterministic>True</Deterministic>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <LangVersion>latest</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup>
-       <UpdateXlfOnBuild>true</UpdateXlfOnBuild>
-  </PropertyGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <Compile Include="Application.cs" />
-    <Compile Include="Assembly.cs" />
-    <Compile Include="AssemblyResolver.cs" />
-    <Compile Include="BitcodeConverter.cs" />
+    <PackageReference Include="XliffTasks" Version="1.0.0-beta.20154.1" />
+    <Reference Include="Mono.Cecil">
+      <HintPath>..\..\builds\mono-ios-sdk-destdir\ios-bcl\monotouch_tools\Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Mdb">
+      <HintPath>..\..\builds\mono-ios-sdk-destdir\ios-bcl\monotouch_tools\Mono.Cecil.Mdb.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="..\common\error.cs">
       <Link>external\error.cs</Link>
     </Compile>
-    <Compile Include="mtouch.cs" />
     <Compile Include="..\common\SdkVersions.cs" />
-    <Compile Include="Stripper.cs" />
-    <Compile Include="Target.cs" />
-    <Compile Include="Tuning.cs" />
     <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\Mono.Options\Mono.Options\Options.cs">
       <Link>Options.cs</Link>
     </Compile>
@@ -418,7 +389,6 @@
     <Compile Include="..\common\BuildTasks.cs">
       <Link>common\BuildTasks.cs</Link>
     </Compile>
-    <Compile Include="BuildTasks.mtouch.cs" />
     <Compile Include="..\common\Symbols.cs">
       <Link>external\Symbols.cs</Link>
     </Compile>
@@ -449,7 +419,7 @@
     <Compile Include="..\linker\CustomSymbolWriter.cs">
       <Link>Xamarin.Linker\CustomSymbolWriter.cs</Link>
     </Compile>
-    <Compile Include="Errors.Designer.cs">
+    <Compile Update="Errors.Designer.cs">
       <DependentUpon>Errors.resx</DependentUpon>
     </Compile>
     <Compile Include="..\linker\ScanTypeReferenceStep.cs">
@@ -461,18 +431,6 @@
     <Compile Include="..\linker\MonoTouch.Tuner\RemoveCodeBase.cs">
       <Link>MonoTouch.Tuner\RemoveCodeBase.cs</Link>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System.Core" />
-    <Reference Include="System" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="Mono.Cecil">
-      <HintPath>..\..\builds\mono-ios-sdk-destdir\ios-bcl\monotouch_tools\Mono.Cecil.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Cecil.Mdb">
-      <HintPath>..\..\builds\mono-ios-sdk-destdir\ios-bcl\monotouch_tools\Mono.Cecil.Mdb.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Makefile" />
@@ -493,7 +451,7 @@
     <Folder Include="Xamarin.Linker\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Errors.resx">
+    <EmbeddedResource Update="Errors.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <XlfSourceFormat>Resx</XlfSourceFormat>
       <XlfOutputItem>EmbeddedResource</XlfOutputItem>
@@ -509,5 +467,4 @@
     <!-- This makes sure that just building the csproj will install the updated mtouch.exe, so that tests get it without having to 'make mtouch' manually -->
     <Exec Command="make mtouch" />
   </Target>
-  <Import Project="..\..\packages\XliffTasks.1.0.0-beta.20078.1\build\XliffTasks.targets" Condition="Exists('..\..\packages\XliffTasks.1.0.0-beta.20078.1\build\XliffTasks.targets')" />
 </Project>

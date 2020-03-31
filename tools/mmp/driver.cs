@@ -619,7 +619,7 @@ namespace Xamarin.Bundler {
 					// to resolve from somewhere else). This makes it explicit that we look in the GAC, and we
 					// now also warn when using FullXamMac and finding assemblies in the GAC.
 					BuildTarget.Resolver.GlobalAssemblyCache = Path.Combine (SystemMonoDirectory, "lib", "mono", "gac");
-					var framework_dir = Path.GetDirectoryName (typeof (object).Module.FullyQualifiedName);
+					var framework_dir = Path.Combine (SystemMonoDirectory, "lib", "mono", "4.5");
 					BuildTarget.Resolver.SystemFrameworkDirectories = new [] {
 						framework_dir,
 						Path.Combine (framework_dir, "Facades")

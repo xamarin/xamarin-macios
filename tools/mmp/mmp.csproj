@@ -1,46 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\packages\XliffTasks.1.0.0-beta.20060.1\build\XliffTasks.props" Condition="Exists('..\..\packages\XliffTasks.1.0.0-beta.20060.1\build\XliffTasks.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F3232882-0FA0-4BB6-9D9C-E2CC779EAF0D}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <AssemblyName>mmp</AssemblyName>
-    <RootNamespace>mmp</RootNamespace>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <LangVersion>8.0</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>True</DebugSymbols>
-    <DebugType>portable</DebugType>
-    <Optimize>False</Optimize>
-    <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>MONOMAC;MMP;XAMARIN_APPLETLS;DEBUG</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Deterministic>True</Deterministic>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>portable</DebugType>
-    <Optimize>False</Optimize>
-    <OutputPath>bin\Release</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
     <DefineConstants>MONOMAC;MMP;XAMARIN_APPLETLS</DefineConstants>
-    <WarningLevel>4</WarningLevel>
-    <Deterministic>True</Deterministic>
+    <UpdateXlfOnBuild>true</UpdateXlfOnBuild>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup>
-       <UpdateXlfOnBuild>true</UpdateXlfOnBuild>
+    <OutputType>Exe</OutputType>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Core" />
-    <Reference Include="Mono.Security" />
+    <PackageReference Include="XliffTasks" Version="1.0.0-beta.20154.1" />
     <Reference Include="Mono.Cecil">
       <HintPath>..\..\builds\mono-ios-sdk-destdir\ios-bcl\monotouch_tools\Mono.Cecil.dll</HintPath>
     </Reference>
@@ -49,12 +19,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Application.cs" />
-    <Compile Include="driver.cs" />
-    <Compile Include="aot.cs" />
-    <Compile Include="resolver.cs" />
-    <Compile Include="Tuning.cs" />
-    <Compile Include="Assembly.cs" />
     <Compile Include="..\common\error.cs">
       <Link>external\error.cs</Link>
     </Compile>
@@ -242,21 +206,6 @@
     <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\Mono.Options\Mono.Options\Options.cs">
       <Link>Options.cs</Link>
     </Compile>
-    <Compile Include="linker\MonoMac.Tuner\MonoMacMarkStep.cs">
-      <Link>MonoMac.Tuner\MonoMacMarkStep.cs</Link>
-    </Compile>
-    <Compile Include="linker\MonoMac.Tuner\MonoMacNamespaces.cs">
-      <Link>MonoMac.Tuner\MonoMacNamespaces.cs</Link>
-    </Compile>
-    <Compile Include="linker\MonoMac.Tuner\OptimizeGeneratedCodeSubStep.cs">
-      <Link>MonoMac.Tuner\OptimizeGeneratedCodeSubStep.cs</Link>
-    </Compile>
-    <Compile Include="linker\MonoMac.Tuner\MacRemoveResources.cs">
-      <Link>MonoMac.Tuner\MacRemoveResources.cs</Link>
-    </Compile>
-    <Compile Include="linker\MonoMac.Tuner\MacMobileProfile.cs">
-      <Link>MonoMac.Tuner\MacMobileProfile.cs</Link>
-    </Compile>
     <Compile Include="..\linker\BaseProfile.cs">
       <Link>Xamarin.Linker\BaseProfile.cs</Link>
     </Compile>
@@ -416,12 +365,6 @@
     <Compile Include="..\linker\RemoveUserResourcesSubStep.cs">
       <Link>Xamarin.Linker\RemoveUserResourcesSubStep.cs</Link>
     </Compile>
-    <Compile Include="linker\MonoMac.Tuner\XamarinMacProfile.cs">
-      <Link>MonoMac.Tuner\XamarinMacProfile.cs</Link>
-    </Compile>
-    <Compile Include="linker\MonoMac.Tuner\MacBaseProfile.cs">
-      <Link>MonoMac.Tuner\MacBaseProfile.cs</Link>
-    </Compile>
     <Compile Include="..\common\FileCopier.cs">
       <Link>external\FileCopier.cs</Link>
     </Compile>
@@ -440,7 +383,6 @@
     <Compile Include="..\linker\CustomSymbolWriter.cs">
       <Link>Xamarin.Linker\CustomSymbolWriter.cs</Link>
     </Compile>
-    <Compile Include="Target.mmp.cs" />
     <Compile Include="..\mtouch\Errors.Designer.cs">
       <Link>Errors.Designer.cs</Link>
       <DependentUpon>Errors.resx</DependentUpon>
@@ -449,7 +391,6 @@
       <Link>Xamarin.Linker\ScanTypeReferenceStep.cs</Link>
     </Compile>
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <EmbeddedResource Include="config">
       <LogicalName>config</LogicalName>
@@ -485,7 +426,6 @@
     <None Include="Makefile" />
     <None Include="packages.config" />
   </ItemGroup>
-  <Import Project="..\..\packages\XliffTasks.1.0.0-beta.20060.1\build\XliffTasks.targets" Condition="Exists('..\..\packages\XliffTasks.1.0.0-beta.20060.1\build\XliffTasks.targets')" />
   <Target Name="BuildSdkVersions" Inputs="../common/SdkVersions.cs.in" Outputs="../common/SdkVersions.cs">
     <Exec Command="make ../common/SdkVersions.cs" />
   </Target>
