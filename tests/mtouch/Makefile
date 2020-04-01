@@ -29,8 +29,6 @@ run-tests: bin/Debug/mtouch.dll test.config
 	@[[ ! -e .failed-stamp ]] 
 
 # mtouch.csproj.inc contains the mtouch_dependencies variable used to determine if mtouch.dll needs to be rebuilt or not.
-mtouch.csproj.inc: $(TOP)/tools/common/create-makefile-fragment.sh Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk
-	$(Q_GEN) $< $(CURDIR)/mtouch.csproj
 -include mtouch.csproj.inc
 
 bin/Debug/mtouch.dll: $(mtouch_dependencies)
