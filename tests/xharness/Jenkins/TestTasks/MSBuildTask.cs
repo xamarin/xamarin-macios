@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Xml;
-using Xharness.Execution;
-using Xharness.Logging;
-using Xharness.Utilities;
+using Microsoft.DotNet.XHarness.iOS.Shared;
+using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
+using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
+using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
-namespace Xharness.Jenkins.TestTasks
-{
+namespace Xharness.Jenkins.TestTasks {
 	class MSBuildTask : BuildProjectTask
 	{
 		public ILog BuildLog;
 
-		protected virtual string ToolName => DirectoryUtilities.XIBuildPath;
+		protected virtual string ToolName => Harness.XIBuildPath;
 
 		protected virtual List<string> ToolArguments {
 			get {
@@ -75,7 +75,7 @@ namespace Xharness.Jenkins.TestTasks
 		{
 			// Don't require the desktop resource here, this shouldn't be that resource sensitive
 			using (var xbuild = new Process ()) {
-				xbuild.StartInfo.FileName = DirectoryUtilities.XIBuildPath;
+				xbuild.StartInfo.FileName = Harness.XIBuildPath;
 				var args = new List<string> ();
 				args.Add ("--");
 				args.Add ("/verbosity:diagnostic");
