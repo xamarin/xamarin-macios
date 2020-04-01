@@ -68,6 +68,7 @@ steps:
     GH_STATE: $(GH_STATE)
     GITHUB_TOKEN: $(GitHub.Token)
     CONTEXT: $(CONTEXT)
+    PIPELINE_WORKSPACE: $(Pipeline.Workspace)
 
 #    GITHUB_TOKEN: $(GITHUB_TOKEN)
 
