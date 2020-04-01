@@ -173,4 +173,4 @@ $(eval $(call NativeCompilationTemplate,-debug,-DDEBUG))
 	$(Q) mkdir -p $@
 
 %.csproj.inc: %.csproj $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/tools/common/create-makefile-fragment.sh
-	$(Q) $(TOP)/tools/common/create-makefile-fragment.sh $(abspath $<) $(abspath $@)
+	$(Q) export DOTNET=$(DOTNET); $(TOP)/tools/common/create-makefile-fragment.sh $(abspath $<) $(abspath $@)

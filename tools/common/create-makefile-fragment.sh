@@ -20,6 +20,20 @@ if test -z "$1"; then
 	exit 1
 fi
 
+if test -z "$DOTNET"; then
+	echo "The environment variable DOTNET must point to the dotnet executable."
+	exit 1
+elif ! test -x "$DOTNET"; then
+	echo "The environment variable DOTNET ($DOTNET) does not point to an executable file."
+	exit 1
+fi
+
+if grep "TargetFramework.*netcoreapp" "$1" &>/dev/null; then
+	BUILDER="$DOTNET build"
+else
+	BUILDER=msbuild
+fi
+
 # Input: the csproj file to process.
 # Output: /path/to/proj.csproj.inc
 
@@ -37,7 +51,7 @@ fi
 # (WriteProjectReferences) that takes another project file as input (the
 # ProjectFile variable) and writes all the project references (recursively) to
 # a file (the ReferenceListPath variable).
-msbuild ProjectInspector.csproj "/t:WriteProjectReferences" "/p:ProjectFile=$PROJECT_FILE" "/p:ReferenceListPath=$REFERENCES_PATH" /verbosity:quiet /nologo
+$BUILDER ProjectInspector.csproj "/t:WriteProjectReferences" "/p:ProjectFile=$PROJECT_FILE" "/p:ReferenceListPath=$REFERENCES_PATH" /verbosity:quiet /nologo
 
 # Now we have a list of all the project referenced by the input project. The
 # ProjectInspector.csproj also has a target (WriteInputs) that can list all
@@ -79,7 +93,7 @@ for proj in $(sort "$REFERENCES_PATH" | uniq); do
 	proj_dir=$(dirname "$proj")
 	inputs_path=$PWD/$proj_name.inputs
 	INPUT_PATHS+=("$inputs_path")
-	msbuild "$TMPPROJ" "/t:WriteInputs" "/p:ProjectFile=$proj" "/p:InputsPath=$inputs_path" /verbosity:quiet /nologo
+	$BUILDER "$TMPPROJ" "/t:WriteInputs" "/p:ProjectFile=$proj" "/p:InputsPath=$inputs_path" /verbosity:quiet /nologo
 
 	# The output contains relative paths, relative to the csproj directory
 	# Change those to full paths by prepending the csproj directory.
