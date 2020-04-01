@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -24,6 +24,7 @@ namespace Xharness.TestImporter.Templates.Managed {
 		internal static readonly string TargetExtraInfoKey = "%TARGET EXTRA INFO%";
 		internal static readonly string DefineConstantsKey = "%DEFINE CONSTANTS%";
 		internal static readonly string DownloadPathKey = "%DOWNLOAD PATH%";
+		internal static readonly string TestingFrameworksKey = "%TESTING FRAMEWORKS%";
 
 		// resource related static vars used to copy the embedded src to the hd
 		static string srcResourcePrefix = "Xharness.TestImporter.Templates.Managed.Resources.src.";
@@ -339,6 +340,17 @@ namespace Xharness.TestImporter.Templates.Managed {
 			return sb.ToString ();
 		}
 
+		string GetTestingFrameworksImports (Platform platform)
+		{
+			var sb = new StringBuilder ();
+			foreach (var assembly in new [] { "nunitlite.dll", "Xunit.NetCore.Extensions.dll", "xunit.execution.dotnet.dll" }) {
+				sb.AppendLine ($"<Reference Include=\"{assembly.Replace (".dll", "")}\">");
+				sb.AppendLine ($"<HintPath>{AssemblyLocator.GetTestingFrameworkDllPath (assembly, platform)}</HintPath>");
+				sb.AppendLine ("</Reference>");
+			}
+			return sb.ToString ();
+		}
+
 		string GenerateIncludeFilesNode (string projectName, (string FailureMessage, List<(string assembly, string hintPath)> Assemblies) info, Platform platform)
 		{
 			// all the data is provided by the filter, if we have no filter, return an empty string so that the project does not have any
@@ -416,6 +428,7 @@ namespace Xharness.TestImporter.Templates.Managed {
 			using (var reader = new StreamReader (template)) {
 				var result = await reader.ReadToEndAsync ();
 				result = result.Replace (DownloadPathKey, rootAssembliesPath);
+				result = result.Replace (TestingFrameworksKey, GetTestingFrameworksImports (Platform.WatchOS));
 				result = result.Replace (NameKey, projectName);
 				result = result.Replace (WatchOSTemplatePathKey, WatchExtensionTemplatePath);
 				result = result.Replace (PlistKey, infoPlistPath);
@@ -542,6 +555,7 @@ namespace Xharness.TestImporter.Templates.Managed {
 			using (var reader = new StreamReader (template)) {
 				var result = await reader.ReadToEndAsync ();
 				result = result.Replace (DownloadPathKey, downloadPath);
+				result = result.Replace (TestingFrameworksKey, GetTestingFrameworksImports (platform));
 				result = result.Replace (ProjectGuidKey, projectGuid.ToString ().ToUpperInvariant ());
 				result = result.Replace (NameKey, projectName);
 				result = result.Replace (ReferencesKey, sb.ToString ());
@@ -629,6 +643,7 @@ namespace Xharness.TestImporter.Templates.Managed {
 			using (var reader = new StreamReader (template)) {
 				var result = await reader.ReadToEndAsync ();
 				result = result.Replace (DownloadPathKey, downloadPath);
+				result = result.Replace (TestingFrameworksKey, GetTestingFrameworksImports (platform));
 				result = result.Replace (ProjectGuidKey, projectGuid.ToString ().ToUpperInvariant ());
 				result = result.Replace (NameKey, projectName);
 				result = result.Replace (ReferencesKey, sb.ToString ());

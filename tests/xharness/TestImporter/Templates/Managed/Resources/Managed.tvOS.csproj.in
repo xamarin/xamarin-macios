@@ -138,15 +138,7 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.TVOS" />
-    <Reference Include="nunitlite">
-      <HintPath>%DOWNLOAD PATH%\ios-bcl\monotouch\nunitlite.dll</HintPath>
-    </Reference>
-    <Reference Include="Xunit.NetCore.Extensions">
-      <HintPath>%DOWNLOAD PATH%\ios-bcl\monotouch\tests\Xunit.NetCore.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.execution.dotnet">
-      <HintPath>%DOWNLOAD PATH%\ios-bcl\monotouch\tests\xunit.execution.dotnet.dll</HintPath>
-    </Reference>
+    %TESTING FRAMEWORKS%
   </ItemGroup>
   <ItemGroup>
 %REFERENCES%

@@ -75,5 +75,26 @@ namespace Xharness.TestImporter.Xamarin {
 			return File.Exists (hintPath) ? hintPath : null;
 		}
 
+		public string GetTestingFrameworkDllPath (string assembly, Platform platform) {
+			var downloadPath = GetAssembliesRootLocation (platform);
+			switch (platform) {
+			case Platform.iOS:
+			case Platform.TvOS:
+			case Platform.WatchOS:
+				// depends of the assembly name:
+				if (assembly == "nunitlite.dll")
+					return Path.Combine (downloadPath, "ios-bcl", platformPathMatch [platform], assembly).Replace ('/', '\\');
+				else
+					return Path.Combine (downloadPath, "ios-bcl", platformPathMatch [platform], "tests", assembly).Replace ('/', '\\');
+			case Platform.MacOSFull:
+			case Platform.MacOSModern:
+				if (assembly == "nunitlite.dll")
+					return Path.Combine (downloadPath, "mac-bcl", platformPathMatch [platform], assembly).Replace ('/', '\\');
+				else
+					return Path.Combine (downloadPath, "mac-bcl", platformPathMatch [platform], "tests", assembly).Replace ('/', '\\');
+			}
+			return "";
+		} 
+
 	}
 }

@@ -73,15 +73,7 @@
       <HintPath>%DOWNLOAD PATH%\System.Xml.Linq.dll</HintPath>
     </Reference>
     <Reference Include="Xamarin.Mac" />
-    <Reference Include="nunitlite">
-      <HintPath>%DOWNLOAD PATH%\nunitlite.dll</HintPath>
-    </Reference>
-    <Reference Include="Xunit.NetCore.Extensions">
-      <HintPath>%DOWNLOAD PATH%\tests\Xunit.NetCore.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.execution.dotnet">
-      <HintPath>%DOWNLOAD PATH%\tests\xunit.execution.dotnet.dll</HintPath>
-    </Reference>
+    %TESTING FRAMEWORKS%
   </ItemGroup>
   <ItemGroup>
 %REFERENCES%

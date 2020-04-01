@@ -9,6 +9,7 @@
 		/// </summary>
 		/// <param name="platform">The platform whose asseblies we want to use.</param>
 		/// <returns>The root dir in which the precompiled assemblies can be found.</returns>
+		string GetTestingFrameworkDllPath (string assembly, Platform platform);
 		string GetAssembliesRootLocation (Platform platform);
 		string GetAssembliesLocation (Platform platform);
 		string GetHintPathForReferenceAssembly (string assembly, Platform platform);
