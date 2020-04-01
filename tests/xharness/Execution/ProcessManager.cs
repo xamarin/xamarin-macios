@@ -14,6 +14,9 @@ using Xharness.Utilities;
 
 namespace Xharness.Execution {
 	public class ProcessManager : IProcessManager {
+		const string xcodeDefaultPath = "/Applications/Xcode.app/";
+		const string mlaunchDefaultPath = "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/mlaunch";
+
 		public string XcodeRoot { get; }
 		public string MlaunchPath { get; }
 
@@ -28,6 +31,8 @@ namespace Xharness.Execution {
 				return xcode_version;
 			}
 		}
+
+		public ProcessManager () : this (xcodeDefaultPath, mlaunchDefaultPath) { }
 
 		public ProcessManager (string xcodeRoot, string mlaunchPath)
 		{
