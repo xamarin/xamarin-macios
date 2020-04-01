@@ -27,8 +27,14 @@ string FindConfigurationVariable (string variable, string hash = "HEAD")
 	if (!string.IsNullOrEmpty (value))
 		return value;
 
-	if (make_config == null)
-		make_config = Exec ("git", "show", $"{hash}:Make.config");
+	if (make_config == null) {
+		try {
+			make_config = Exec ("git", "show", $"{hash}:Make.config");
+		} catch {
+			Console.WriteLine ("Could not find a Make.config");
+			return null;	
+		}
+	}
 	foreach (var line in make_config) {
 		if (line.StartsWith (variable + "=", StringComparison.Ordinal))
 			return line.Substring (variable.Length + 1);
