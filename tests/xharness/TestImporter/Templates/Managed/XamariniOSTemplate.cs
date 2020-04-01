@@ -35,9 +35,13 @@ namespace Xharness.TestImporter.Templates.Managed {
 			new [] { "common", "TestRunner", "NUnit" },
 			new [] { "common", "TestRunner", "xUnit" },
 			new [] { "iOSApp" },
+			new [] { "iOSApp" , "Assets.xcassets" },
+			new [] { "iOSApp" , "Assets.xcassets", "AppIcon.appiconset"},
 			new [] { "macOS" },
 			new [] { "today" },
 			new [] { "tvOSApp" },
+			new [] { "tvOSApp" , "Assets.xcassets" },
+			new [] { "tvOSApp" , "Assets.xcassets", "AppIcon.appiconset"},
 			new [] { "watchOS" },
 			new [] { "watchOS", "App" },
 			new [] { "watchOS" ,"App", "Images.xcassets" },
@@ -121,6 +125,13 @@ namespace Xharness.TestImporter.Templates.Managed {
 			}
 		}
 
+		static string GetResourceFileName (string resourceName) {
+			var lastIndex = resourceName.LastIndexOf ('.');
+			var extension = resourceName.Substring (lastIndex + 1);
+			var tmp = resourceName.Substring (0, lastIndex);
+			var name = tmp.Substring (tmp.LastIndexOf ('.') + 1);
+			return $"{name}.{extension}";
+		}
 		/// <summary>
 		/// Decides what would be the final path of the src resources in the tree that will be used as the source of
 		/// the scaffold
@@ -133,12 +144,28 @@ namespace Xharness.TestImporter.Templates.Managed {
 			// we do know that we don't care about our prefix
 			var resourceName = resourceFullName.Substring (srcResourcePrefix.Length);
 			// icon sets are special, they have a dot, which is also a dot in the resources :/
-			var iconSetSubPath = "Images.xcassets.AppIcons.appiconset";
-			int lastIndex = resourceName.LastIndexOf (iconSetSubPath);
+			(string iconSet, string replace) iconSetSubPath = (iconSet: "", replace: "");
+			if (resourceFullName.Contains ("iOSApp") || resourceFullName.Contains ("tvOSApp")) {
+				if (resourceFullName.Contains ("AppIcon.appiconset")) {
+					iconSetSubPath.iconSet = "Assets.xcassets.AppIcon.appiconset";
+					iconSetSubPath.replace = "Assets.xcassets/AppIcon.appiconset";
+				} else {
+					iconSetSubPath.iconSet = "Assets.xcassets";
+					iconSetSubPath.replace = null;
+				}
+			} else {
+				iconSetSubPath.iconSet = "Images.xcassets.AppIcons.appiconset";
+				iconSetSubPath.replace = "Images.xcassets/AppIcons.appiconset";
+			}
+			int lastIndex = resourceName.LastIndexOf (iconSetSubPath.iconSet);
 			if (lastIndex >= 0) {
-				var partialPath = Path.Combine (resourceName.Substring (0, lastIndex).Replace ('.', Path.DirectorySeparatorChar), "Images.xcassets", "AppIcons.appiconset");
+				// all files have an extension and a file name, remove them
+				var fileName = GetResourceFileName (resourceName);
+				var partialPath = resourceName.Replace ("." + fileName, "");
+				partialPath = partialPath.Replace ('.', Path.DirectorySeparatorChar);
+				partialPath = partialPath.Replace (iconSetSubPath.iconSet.Replace ('.', Path.DirectorySeparatorChar), iconSetSubPath.replace ?? iconSetSubPath.iconSet);
 				// substring up to the iconset path, replace . for PathSeparator, add icon set + name
-				resourceName = Path.Combine (partialPath, resourceName.Substring (partialPath.Length + 1));
+				resourceName = Path.Combine (partialPath, fileName);
 			} else {
 				// replace all . for the path separator, since that is how resource names are built
 				lastIndex = resourceName.LastIndexOf ('.');

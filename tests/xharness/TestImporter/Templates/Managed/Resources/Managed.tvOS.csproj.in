@@ -152,8 +152,8 @@
 %REFERENCES%
   </ItemGroup>
   <ItemGroup>
-    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Contents.json" />
-    <ImageAsset Include="Assets.xcassets\Contents.json" />
+    <ImageAsset Include="templates\tvOSApp\Assets.xcassets\AppIcon.appiconset\Contents.json" />
+    <ImageAsset Include="templates\tvOSApp\Assets.xcassets\Contents.json" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
