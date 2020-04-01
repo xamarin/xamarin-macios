@@ -5,10 +5,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
 using Xharness.Jenkins.TestTasks;
-using Xharness.Utilities;
+using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
+using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 
-namespace Xharness
-{
+namespace Xharness {
 	public class TestProject
 	{
 		XmlDocument xml;
@@ -176,6 +176,14 @@ namespace Xharness
 			: base (path, isExecutableProject)
 		{
 			Name = System.IO.Path.GetFileNameWithoutExtension (path);
+		}
+
+		public bool IsSupported (DevicePlatform devicePlatform, string productVersion)
+		{
+			if (MonoNativeInfo == null)
+				return true;
+			var min_version = MonoNativeHelper.GetMinimumOSVersion (devicePlatform, MonoNativeInfo.Flavor);
+			return Version.Parse (productVersion) >= Version.Parse (min_version);
 		}
 	}
 

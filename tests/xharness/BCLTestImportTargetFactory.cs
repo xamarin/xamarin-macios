@@ -5,8 +5,8 @@ using System.Collections.Generic;
 using Xharness.TestImporter.Templates;
 using Xharness.TestImporter.Templates.Managed;
 using Xharness.TestImporter.Xamarin;
-using Xharness.Utilities;
 using Xharness.TestImporter;
+using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
 namespace Xharness {
 	/// <summary>
