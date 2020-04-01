@@ -64,8 +64,14 @@ namespace BCLTests {
 			base.ViewDidLoad ();
 			var options = ApplicationOptions.Current;
 			TcpTextWriter writer = null;
-			if (!string.IsNullOrEmpty (options.HostName))
-				writer = new TcpTextWriter (options.HostName, options.HostPort);
+			if (!string.IsNullOrEmpty (options.HostName)) {
+				try {
+					writer = new TcpTextWriter (options.HostName, options.HostPort);
+				} catch (Exception ex) {
+					Console.WriteLine ("Network error: Cannot connect to {0}:{1}: {2}. Continuing on console.", options.HostName, options.HostPort, ex);
+					writer = null; // will default to the console
+				}
+			}
 
 			// we generate the logs in two different ways depending if the generate xml flag was
 			// provided. If it was, we will write the xml file to the tcp writer if present, else
@@ -97,7 +103,7 @@ namespace BCLTests {
 				break;
 			}
 			if (options.EnableXml) {
-				runner.WriteResultsToFile (writer, jargon);
+				runner.WriteResultsToFile (writer ?? Console.Out, jargon);
 				logger.Info ("Xml file was written to the tcp listener.");
 			} else {
 				string resultsFilePath = runner.WriteResultsToFile (jargon);

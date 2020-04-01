@@ -102,7 +102,7 @@ namespace BCLTests {
 				break;
 			}
 			if (options.EnableXml) {
-				runner.WriteResultsToFile (writer, jargon);
+				runner.WriteResultsToFile (writer ?? Console.Out, jargon);
 				logger.Info ("Xml file was written to the tcp listener.");
 			} else {
 				string resultsFilePath = runner.WriteResultsToFile (jargon);
