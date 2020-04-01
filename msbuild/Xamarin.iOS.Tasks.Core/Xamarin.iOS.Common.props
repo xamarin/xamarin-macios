@@ -44,7 +44,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<IPhoneResourcePrefix Condition="'$(IPhoneResourcePrefix)' == ''">Resources</IPhoneResourcePrefix>
 
 		<MtouchDebug Condition="'$(MtouchDebug)' == ''">False</MtouchDebug>
-		<MtouchEnableGenericValueTypeSharing Condition="'$(MtouchEnableGenericValueTypeSharing)' == ''">True</MtouchEnableGenericValueTypeSharing>
 		<MtouchFastDev Condition="'$(MtouchFastDev)' == ''">False</MtouchFastDev>
 		<MtouchHttpClientHandler Condition="'$(MtouchHttpClientHandler)' == ''">NSUrlSessionHandler</MtouchHttpClientHandler>
 		<MtouchProfiling Condition="'$(MtouchProfiling)' == ''">False</MtouchProfiling>
