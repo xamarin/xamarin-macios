@@ -14,31 +14,24 @@ ifneq ($(SKIP_REGRESSION), 1)
 endif
 
 # example command to run a single test:
-#     make run TEST_FIXTURE=-test=Xamarin.MMP.Tests.MMPTests.AOT_SmokeTest
+#     make run TEST_FIXTURE="--filter Xamarin.MMP.Tests.MMPTests.AOT_SmokeTest"
 # or:
 #     make run XM_TEST_NAME=Xamarin.MMP.Tests.MMPTests.AOT_SmokeTest
 # to run multiple tests:
-#     make run TEST_FIXTURE="-test=Xamarin.MMP.Tests.MMPTests.AOT_32Bit_SmokeTest,Xamarin.MMP.Tests.MMPTests.AOT_SmokeTest"
+#     make run TEST_FIXTURE="--filter Xamarin.MMP.Tests.MMPTests.AOT_32Bit_SmokeTest --filter Xamarin.MMP.Tests.MMPTests.AOT_SmokeTest"
 #
 
 ifeq ($(TEST_FIXTURE),)
 ifneq ($(XM_TEST_NAME),)
-TEST_FIXTURE=-test=$(XM_TEST_NAME)
+TEST_FIXTURE=--filter $(XM_TEST_NAME)
 endif
 endif
 
 run: build
-	rm -f .failed-stamp
-	$(SYSTEM_MONO) --debug $(XIBUILD_EXE_PATH) -t -- $(TOP)/packages/NUnit.ConsoleRunner.3.9.0/tools/nunit3-console.exe $(abspath $(TOP)/tests/mmptest/bin/Debug/mmptest.dll) "--result=$(abspath $(CURDIR)/TestResult.xml);format=nunit2" $(TEST_FIXTURE) --labels=All || touch $(CURDIR)/.failed-stamp
-	@# Create an html file and tell MonkeyWrench to upload it (if we're running there)
-	@[[ -z "$$BUILD_REPOSITORY" ]] || \
-		( xsltproc $(TOP)/tests/HtmlTransform.xslt TestResult.xml  > index.html && \
-		echo "@MonkeyWrench: AddFile: $$PWD/index.html")
-	@[[ ! -e .failed-stamp ]]
+	$(Q) $(DOTNET) test *.csproj --results-directory:. "--logger:console;verbosity=detailed" "--logger:trx;LogFileName=$(CURDIR)/TestResult.trx" "--logger:html;LogFileName=$(CURDIR)/TestResult.html" $(TEST_FIXTURE)
 
 build:
-	$(Q_XBUILD) $(SYSTEM_XIBUILD) -t -- /Library/Frameworks/Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe restore ../tests-mac.sln
-	$(SYSTEM_XIBUILD) -- mmptest.csproj $(XBUILD_VERBOSITY)
+	$(Q) $(DOTNET) build *.csproj $(XBUILD_VERBOSITY)
 
 clean-local::
 	@rm -rf ./obj

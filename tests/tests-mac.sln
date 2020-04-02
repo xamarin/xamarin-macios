@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "link sdk-mac", "linker\mac\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bindings-test-mac", "bindings-test\bindings-test-mac.csproj", "{20BEA313-7E2D-4209-93C0-E4D99C72695A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mmp", "..\tools\mmp\mmp.csproj", "{45F62609-8E80-4674-AB7A-8DAB24319602}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,14 +35,14 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{6E5405EC-1F68-4CD8-AD4B-E4CCFBE47977}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{6E5405EC-1F68-4CD8-AD4B-E4CCFBE47977}.Debug|Any CPU.Build.0 = Debug|x86
-		{6E5405EC-1F68-4CD8-AD4B-E4CCFBE47977}.Release|Any CPU.ActiveCfg = Release|x86
-		{6E5405EC-1F68-4CD8-AD4B-E4CCFBE47977}.Release|Any CPU.Build.0 = Release|x86
+		{6E5405EC-1F68-4CD8-AD4B-E4CCFBE47977}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E5405EC-1F68-4CD8-AD4B-E4CCFBE47977}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E5405EC-1F68-4CD8-AD4B-E4CCFBE47977}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E5405EC-1F68-4CD8-AD4B-E4CCFBE47977}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6E5405EC-1F68-4CD8-AD4B-E4CCFBE47977}.Default|Any CPU.ActiveCfg = Debug|x86
 		{6E5405EC-1F68-4CD8-AD4B-E4CCFBE47977}.Default|Any CPU.Build.0 = Debug|x86
-		{6E5405EC-1F68-4CD8-AD4B-E4CCFBE47977}.AppStore|Any CPU.ActiveCfg = Debug|x86
-		{6E5405EC-1F68-4CD8-AD4B-E4CCFBE47977}.AppStore|Any CPU.Build.0 = Debug|x86
+		{6E5405EC-1F68-4CD8-AD4B-E4CCFBE47977}.AppStore|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E5405EC-1F68-4CD8-AD4B-E4CCFBE47977}.AppStore|Any CPU.Build.0 = Debug|Any CPU
 		{6E5405EC-1F68-4CD8-AD4B-E4CCFBE47977}.Debug|x86.ActiveCfg = Debug|x86
 		{6E5405EC-1F68-4CD8-AD4B-E4CCFBE47977}.Debug|x86.Build.0 = Debug|x86
 		{6E5405EC-1F68-4CD8-AD4B-E4CCFBE47977}.Release|x86.ActiveCfg = Release|x86
@@ -165,5 +167,17 @@ Global
 		{20BEA313-7E2D-4209-93C0-E4D99C72695A}.Debug|x86.Build.0 = Debug|Any CPU
 		{20BEA313-7E2D-4209-93C0-E4D99C72695A}.Release|x86.ActiveCfg = Release|Any CPU
 		{20BEA313-7E2D-4209-93C0-E4D99C72695A}.Release|x86.Build.0 = Release|Any CPU
+		{45F62609-8E80-4674-AB7A-8DAB24319602}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45F62609-8E80-4674-AB7A-8DAB24319602}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45F62609-8E80-4674-AB7A-8DAB24319602}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45F62609-8E80-4674-AB7A-8DAB24319602}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45F62609-8E80-4674-AB7A-8DAB24319602}.Default|Any CPU.ActiveCfg = Debug|Any CPU
+		{45F62609-8E80-4674-AB7A-8DAB24319602}.Default|Any CPU.Build.0 = Debug|Any CPU
+		{45F62609-8E80-4674-AB7A-8DAB24319602}.AppStore|Any CPU.ActiveCfg = Debug|Any CPU
+		{45F62609-8E80-4674-AB7A-8DAB24319602}.AppStore|Any CPU.Build.0 = Debug|Any CPU
+		{45F62609-8E80-4674-AB7A-8DAB24319602}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{45F62609-8E80-4674-AB7A-8DAB24319602}.Debug|x86.Build.0 = Debug|Any CPU
+		{45F62609-8E80-4674-AB7A-8DAB24319602}.Release|x86.ActiveCfg = Release|Any CPU
+		{45F62609-8E80-4674-AB7A-8DAB24319602}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

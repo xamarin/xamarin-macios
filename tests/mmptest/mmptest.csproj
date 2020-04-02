@@ -1,48 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\packages\NUnit.3.11.0\build\NUnit.props" Condition="Exists('..\..\packages\NUnit.3.11.0\build\NUnit.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{6E5405EC-1F68-4CD8-AD4B-E4CCFBE47977}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <RootNamespace>Xamarin.MMP.Tests</RootNamespace>
-    <AssemblyName>mmptest</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>__UNIFIED__;DEBUG;XAMCORE_2_0;MONOMAC;MMP_TEST;__MACOS__</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>0</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release</OutputPath>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <DefineConstants>__UNIFIED__;XAMCORE_2_0;MONOMAC;MMP_TEST;__MACOS__</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>0</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml" />
-    <Reference Include="nunit.framework">
-      <HintPath>..\..\packages\NUnit.3.11.0\lib\net40\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="mmp">
-      <HintPath>..\..\_mac-build\Library\Frameworks\Xamarin.Mac.framework\Versions\git\lib\mmp\mmp.exe</HintPath>
+    <PackageReference Include="NUnit" Version="3.11.0" />
+    <PackageReference Include="NUnit.ConsoleRunner" Version="3.10.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.15.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
+    <ProjectReference Include="..\..\tools\mmp\mmp.csproj" />
+    <Reference Include="Mono.Cecil">
+      <HintPath>..\..\builds\mono-ios-sdk-destdir\ios-bcl\monotouch_tools\Mono.Cecil.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Cecil.Mdb">
-      <HintPath>..\..\_mac-build\Library\Frameworks\Xamarin.Mac.framework\Versions\git\lib\mmp\Mono.Cecil.Mdb.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Cecil">
-      <HintPath>..\..\_mac-build\Library\Frameworks\Xamarin.Mac.framework\Versions\git\lib\mmp\Mono.Cecil.dll</HintPath>
+      <HintPath>..\..\builds\mono-ios-sdk-destdir\ios-bcl\monotouch_tools\Mono.Cecil.Mdb.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -50,8 +23,6 @@
     <Folder Include="unit\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="src\MMPTest.cs" />
-    <Compile Include="src\NativeReferencesTests.cs" />
     <Compile Include="..\common\mac\ProjectTestHelpers.cs">
       <Link>ProjectTestHelpers.cs</Link>
     </Compile>
@@ -64,20 +35,12 @@
     <Compile Include="..\..\src\ObjCRuntime\RuntimeException.cs">
       <Link>RuntimeException.cs</Link>
     </Compile>
-    <Compile Include="src\ExtensionTests.cs" />
-    <Compile Include="src\RemotingConfigurationTests.cs" />
-    <Compile Include="src\AOTTests.cs" />
     <Compile Include="..\..\tests\mmp-aot-tests\aot.cs">
       <Link>unit\aot.cs</Link>
     </Compile>
-    <Compile Include="src\FrameworkLinksTests.cs" />
-    <Compile Include="src\TargetFrameworkDetectionTests.cs" />
-    <Compile Include="src\LinkerTests.cs" />
-    <Compile Include="src\Extensions.cs" />
     <Compile Include="..\mtouch\Cache.cs">
       <Link>Cache.cs</Link>
     </Compile>
-    <Compile Include="src\NetStandardTests.cs" />
     <Compile Include="..\common\ProductTests.cs">
       <Link>ProductTests.cs</Link>
     </Compile>
@@ -93,29 +56,14 @@
     <Compile Include="..\common\Profile.cs">
       <Link>Profile.cs</Link>
     </Compile>
-    <Compile Include="src\MmpTool.cs" />
     <Compile Include="..\common\BundlerTool.cs">
       <Link>BundlerTool.cs</Link>
     </Compile>
-    <Compile Include="src\CodeStrippingTests.cs" />
     <Compile Include="..\..\tools\common\StringUtils.cs">
       <Link>StringUtils.cs</Link>
     </Compile>
-    <Compile Include="src\WarningTests.cs" />
-    <Compile Include="src\Unified45.cs" />
-    <Compile Include="src\System.ServiceModel\Net45.cs" />
-    <Compile Include="src\BindingProjectTests.cs" />
-    <Compile Include="src\SmokeTests.cs" />
-    <Compile Include="src\RegistrarTests.cs" />
-    <Compile Include="src\AssemblyReferencesTests.cs" />
-    <Compile Include="src\PackageReferenceTests.cs" />
-    <Compile Include="src\BindingProjectNoEmbeddingTests.cs" />
     <Compile Include="..\..\tools\common\SdkVersions.cs">
       <Link>SdkVersions.cs</Link>
-    </Compile>
-    <Compile Include="src\TargetFrameworkMutateTests.cs" />
-    <Compile Include="..\..\tools\common\MachO.cs">
-      <Link>MachO.cs</Link>
     </Compile>
     <Compile Include="..\..\tools\mtouch\Errors.Designer.cs">
       <Link>Errors.Designer.cs</Link>
@@ -136,6 +84,5 @@
       <Link>remoting.config</Link>
     </EmbeddedResource>
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="CustomBuildActions.targets" />
 </Project>
