@@ -12,8 +12,9 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 namespace Xharness.Jenkins.TestTasks {
 	public abstract class TestTask
 	{
+		static object counterLock = new object ();
 		static int counter;
-		public readonly int ID = counter++;
+		public readonly int ID;
 
 		bool? supports_parallel_execution;
 
@@ -31,6 +32,16 @@ namespace Xharness.Jenkins.TestTasks {
 
 		public bool BuildOnly;
 		public string KnownFailure;
+
+		public TestTask ()
+		{
+			// no, Interlocked.Increment is not going to do the samething, it is a two step, set and increment, 
+			// while Interlocked.Increment is just atomic for the increment. You might think that Interlocked.Ingrement 
+			// + Interlocked.Read will do the same, but no, that is two atomic operations, not a single one
+			lock (counterLock) {
+				ID = counter++;
+			}
+		}
 
 		// VerifyRun is called in RunInternalAsync/ExecuteAsync to verify that the task can be executed/run.
 		// Typically used to fail tasks that don't have an available device, or if there's not enough disk space.
