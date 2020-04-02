@@ -136,7 +136,7 @@ TEMPLATED_FILES = \
 	targets/Xamarin.Shared.Sdk.Versions.props \
 	targets/Xamarin.Shared.Legacy.Sdk.Versions.props \
 
-all-local:: $(TARGETS)
+all-local:: $(TARGETS) targets/Xamarin.Shared.Sdk.Versions.props
 
 pack: ref-pack sdk-pack runtime-pack
 

@@ -2,6 +2,7 @@
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
+make -C msbuild/dotnet
 make -C msbuild/dotnet pack legacy-pack -j8 -d
 
 mkdir -p ../package/
