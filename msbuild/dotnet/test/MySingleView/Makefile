@@ -12,5 +12,5 @@ build:
 	rm -Rf ~/.nuget/packages/xamarin.ios.*
 	git clean -xfd
 	make all install -j -C ../../..
-	make -C ../.. pack-simple test/global.json test/NuGet.config
+	make -C ../.. packsimple test/global.json test/NuGet.config
 

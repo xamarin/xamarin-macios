@@ -138,47 +138,50 @@ TEMPLATED_FILES = \
 
 all-local:: $(TARGETS)
 
-pack: \
-	$(foreach var,iOS tvOS watchOS macOS,pack-$(var)) \
-	$(foreach var,iOS tvOS watchOS macOS,ref-pack-$(var)) \
-	$(foreach var,iOS tvOS watchOS macOS,app-pack-$(var)) \
+pack: ref-pack sdk-pack runtime-pack
 
 # just a temporary target while debugging for faster turnaround
-pack-simple: prepare
+packsimple: prepare
 	$(Q) rm -Rf nupkgs
 	$(Q) mkdir -p nupkgs
 	$(Q) $(MAKE) pack-iOS ref-pack-iOS app-pack-iOS
 
-app-pack-%: prepare $(TEMPLATED_FILES)
-	$(Q) rm -Rf $(TEST_FEED_PATH)/xamarin.$(shell echo $* | tr '[:upper:]' '[:lower:]').app
-	$(Q) rm -f nupkgs/Xamarin.$*.App.[^Ref]*.nupkg
-	$(Q) rm -Rf $(HOME)/.nuget/packages/xamarin.*.app.sdk
-	$(if $(V),,@echo "PACK     nupkgs/Xamarin.$*.App.nupkg";) $(DOTNET) pack package/$*/Xamarin.$*.App.csproj --output nupkgs $(DOTNET_PACK_VERBOSITY)
-	$(if $(V),,@echo "ADD      nupkgs/Xamarin.$*.App.nupkg";) nuget add nupkgs/Xamarin.$*.App.[^Ref]*.nupkg -source $(TEST_FEED_PATH) $(NUGET_VERBOSITY)
-	$(Q) CURRENT_HASH=$(shell grep '<CurrentHash>' targets/Xamarin.Shared.Sdk.Versions.props | sed -e 's/<[/]*CurrentHash>//g' -e 's/[[:space:]]//g'); \
-		NAME=$$(echo nupkgs/Xamarin.$*.App.[^Ref]*.nupkg | sed -e 's/.nupkg$$//'); mv "$$NAME.nupkg" "$$NAME+sha.$$CURRENT_HASH.nupkg"
-	$(Q) echo "Created: $$(ls -1 nupkgs/Xamarin.$*.App.[^Ref]*.nupkg)"
+CURRENT_HASH=$(shell grep '<CurrentHash>' targets/Xamarin.Shared.Sdk.Versions.props | sed -e 's/<[/]*CurrentHash>//g' -e 's/[[:space:]]//g')
+CURRENT_IOS_VERSION=$(shell grep 'iOSPackageVersion:'     targets/Xamarin.Shared.Sdk.Versions.props | sed -e 's/.*PackageVersion://g' -e 's/.sha.*//' -e 's/[[:space:]]//g')
+CURRENT_TVOS_VERSION=$(shell grep 'tvOSPackageVersion:'    targets/Xamarin.Shared.Sdk.Versions.props | sed -e 's/.*PackageVersion://g' -e 's/.sha.*//' -e 's/[[:space:]]//g')
+CURRENT_WATCHOS_VERSION=$(shell grep 'watchOSPackageVersion:' targets/Xamarin.Shared.Sdk.Versions.props | sed -e 's/.*PackageVersion://g' -e 's/.sha.*//' -e 's/[[:space:]]//g')
+CURRENT_MACOS_VERSION=$(shell grep 'macOSPackageVersion:'   targets/Xamarin.Shared.Sdk.Versions.props | sed -e 's/.*PackageVersion://g' -e 's/.sha.*//' -e 's/[[:space:]]//g')
 
-ref-pack-%: prepare $(TEMPLATED_FILES)
-	$(Q) rm -Rf $(TEST_FEED_PATH)/xamarin.$(shell echo $* | tr '[:upper:]' '[:lower:]').app.ref
-	$(Q) rm -f nupkgs/Xamarin.$*.App.Ref.*.nupkg
-	$(Q) rm -Rf $(HOME)/.nuget/packages/xamarin.*.app.ref.sdk
-	$(if $(V),,@echo "PACK     nupkgs/Xamarin.$*.App.Ref.nupkg";) $(DOTNET) pack package/$*/Xamarin.$*.App.Ref.csproj --output nupkgs $(DOTNET_PACK_VERBOSITY)
-	$(if $(V),,@echo "ADD      nupkgs/Xamarin.$*.App.Ref.nupkg";) nuget add nupkgs/Xamarin.$*.App.Ref.*nupkg -source $(TEST_FEED_PATH) $(NUGET_VERBOSITY)
-	$(Q) CURRENT_HASH=$(shell grep '<CurrentHash>' targets/Xamarin.Shared.Sdk.Versions.props | sed -e 's/<[/]*CurrentHash>//g' -e 's/[[:space:]]//g'); \
-		NAME=$$(echo nupkgs/Xamarin.$*.App.Ref.*nupkg | sed -e 's/.nupkg$$//'); mv "$$NAME.nupkg" "$$NAME+sha.$$CURRENT_HASH.nupkg"
-	$(Q) echo "Created: $$(ls -1 nupkgs/Xamarin.$*.App.Ref.*nupkg)"
+nupkgs/Xamarin.iOS.%.nupkg: CURRENT_VERSION=$(CURRENT_IOS_VERSION)
+nupkgs/Xamarin.tvOS.%.nupkg: CURRENT_VERSION=$(CURRENT_TVOS_VERSION)
+nupkgs/Xamarin.watchOS.%.nupkg: CURRENT_VERSION=$(CURRENT_WATCHOS_VERSION)
+nupkgs/Xamarin.macOS.%.nupkg: CURRENT_VERSION=$(CURRENT_MACOS_VERSION)
 
-pack-%: prepare $(TEMPLATED_FILES)
-	$(Q) rm -Rf $(TEST_FEED_PATH)/xamarin.$(shell echo $* | tr '[:upper:]' '[:lower:]').sdk
-	$(Q) rm -f nupkgs/Xamarin.$*.Sdk.*.nupkg
-	$(Q) rm -Rf $(HOME)/.nuget/packages/xamarin.*.sdk
-	$(if $(V),,@echo "PACK     nupkgs/Xamarin.$*.Sdk.nupkg";) $(DOTNET) pack package/$*/Xamarin.$*.csproj --output nupkgs $(DOTNET_PACK_VERBOSITY)
-	$(if $(V),,@echo "ADD      nupkgs/Xamarin.$*.Sdk.nupkg";) nuget add nupkgs/Xamarin.$*.Sdk.*nupkg -source $(TEST_FEED_PATH) $(NUGET_VERBOSITY)
-	@# Add the hash to the filename
-	$(Q) CURRENT_HASH=$(shell grep '<CurrentHash>' targets/Xamarin.Shared.Sdk.Versions.props | sed -e 's/<[/]*CurrentHash>//g' -e 's/[[:space:]]//g'); \
-		NAME=$$(echo nupkgs/Xamarin.$*.Sdk.*nupkg     | sed -e 's/.nupkg$$//'); mv "$$NAME.nupkg" "$$NAME+sha.$$CURRENT_HASH.nupkg"
-	$(Q) echo "Created: $$(ls -1 nupkgs/Xamarin.$*.Sdk.*nupkg)"
+nupkgs/%.nupkg: prepare $(TEMPLATED_FILES)
+	$(Q) rm -f $@ nupkgs/$*.*.nupkg
+	$(Q) rm -Rf $(TEST_FEED_PATH)/$(shell echo $* | tr '[:upper:]' '[:lower:]')
+	$(Q) rm -Rf $(HOME)/.nuget/packages/$(shell echo $* | tr '[:upper:]' '[:lower:]')
+	$(if $(V),,@echo "PACK     $@";) $(DOTNET) pack package/$*/package.csproj --output nupkgs $(DOTNET_PACK_VERBOSITY)
+	$(if $(V),,@echo "ADD      $@";) nuget add nupkgs/$*.$(CURRENT_VERSION).nupkg -source $(TEST_FEED_PATH) $(NUGET_VERBOSITY)
+	@# Rename nuget to contain exact version
+	$(Q) mv "nupkgs/$*.$(CURRENT_VERSION).nupkg" "nupkgs/$*.$(CURRENT_VERSION)+sha.$(CURRENT_HASH).nupkg"
+	$(Q) echo "Created: nupkgs/$*+sha.$(CURRENT_HASH).nupkg"
+
+PLATFORMS=iOS tvOS watchOS macOS
+
+IOS_RIDS=arm64 arm x86 x64
+TVOS_RIDS=arm64 x64
+WATCHOS_RIDS=arm x86
+MACOS_RIDS=x64
+
+runtime-pack-iOS: $(foreach rid,$(IOS_RIDS),nupkgs/Xamarin.iOS.App.Runtime.ios-$(rid).nupkg)
+runtime-pack-tvOS: $(foreach rid,$(TVOS_RIDS),nupkgs/Xamarin.tvOS.App.Runtime.tvos-$(rid).nupkg)
+runtime-pack-watchOS: $(foreach rid,$(WATCHOS_RIDS),nupkgs/Xamarin.watchOS.App.Runtime.watchos-$(rid).nupkg)
+runtime-pack-macOS: $(foreach rid,$(MACOS_RIDS),nupkgs/Xamarin.macOS.App.Runtime.macos-$(rid).nupkg)
+
+ref-pack: $(foreach var,$(PLATFORMS),nupkgs/Xamarin.$(var).App.Ref.nupkg)
+sdk-pack: $(foreach var,$(PLATFORMS),nupkgs/Xamarin.$(var).Sdk.nupkg)
+runtime-pack: $(foreach var,$(PLATFORMS),runtime-pack-$(var))
 
 test/NuGet.config: $(TOP)/NuGet.config Makefile
 	$(Q) $(CP) $< $@.tmp
@@ -187,22 +190,17 @@ test/NuGet.config: $(TOP)/NuGet.config Makefile
 
 test/global.json: Makefile $(TEMPLATED_FILES)
 	$(Q_GEN) \
-		CURRENT_HASH=$(shell grep '<CurrentHash>' targets/Xamarin.Shared.Legacy.Sdk.Versions.props | sed -e 's/<[/]*CurrentHash>//g' -e 's/[[:space:]]//g'); \
-		export IOS_PACKAGE_VERSION='$(shell     grep iOSPackageVersion:     targets/Xamarin.Shared.Sdk.Versions.props | sed -e 's/.*iOSPackageVersion:[[:space:]]*//'     -e 's/[[:space:]]*-->.*//')'; \
-		MACOS_PACKAGE_VERSION='$(shell   grep macOSPackageVersion:   targets/Xamarin.Shared.Sdk.Versions.props | sed -e 's/.*macOSPackageVersion:[[:space:]]*//'   -e 's/[[:space:]]*-->.*//')'; \
-		TVOS_PACKAGE_VERSION='$(shell    grep tvOSPackageVersion:    targets/Xamarin.Shared.Sdk.Versions.props | sed -e 's/.*tvOSPackageVersion:[[:space:]]*//'    -e 's/[[:space:]]*-->.*//')'; \
-		WATCHOS_PACKAGE_VERSION='$(shell grep watchOSPackageVersion: targets/Xamarin.Shared.Sdk.Versions.props | sed -e 's/.*watchOSPackageVersion:[[:space:]]*//' -e 's/[[:space:]]*-->.*//')'; \
 		printf "{\n" > $@; \
 		printf "\t\"sdk\": { \"version\": \"5.0.100-dev\" },\n" >> $@; \
 		printf "\t\"msbuild-sdks\": {\n" >> $@; \
-		printf "\t\t\"Xamarin.iOS.Sdk\": \"$$IOS_PACKAGE_VERSION\",\n" >> $@; \
-		printf "\t\t\"Xamarin.tvOS.Sdk\": \"$$TVOS_PACKAGE_VERSION\",\n" >> $@; \
-		printf "\t\t\"Xamarin.watchOS.Sdk\": \"$$WATCHOS_PACKAGE_VERSION\",\n" >> $@; \
-		printf "\t\t\"Xamarin.macOS.Sdk\": \"$$MACOS_PACKAGE_VERSION\",\n" >> $@; \
-		printf "\t\t\"Xamarin.iOS.Legacy.Sdk\": \"$$IOS_PACKAGE_VERSION\",\n" >> $@; \
-		printf "\t\t\"Xamarin.tvOS.Legacy.Sdk\": \"$$TVOS_PACKAGE_VERSION\",\n" >> $@; \
-		printf "\t\t\"Xamarin.watchOS.Legacy.Sdk\": \"$$WATCHOS_PACKAGE_VERSION\",\n" >> $@; \
-		printf "\t\t\"Xamarin.macOS.Legacy.Sdk\": \"$$MACOS_PACKAGE_VERSION\"\n" >> $@; \
+		printf "\t\t\"Xamarin.iOS.Sdk\": \"$(CURRENT_IOS_VERSION)\",\n" >> $@; \
+		printf "\t\t\"Xamarin.tvOS.Sdk\": \"$(CURRENT_TVOS_VERSION)\",\n" >> $@; \
+		printf "\t\t\"Xamarin.watchOS.Sdk\": \"$(CURRENT_WATCHOS_VERSION)\",\n" >> $@; \
+		printf "\t\t\"Xamarin.macOS.Sdk\": \"$(CURRENT_MACOS_VERSION)\",\n" >> $@; \
+		printf "\t\t\"Xamarin.iOS.Legacy.Sdk\": \"$(CURRENT_IOS_VERSION)\",\n" >> $@; \
+		printf "\t\t\"Xamarin.tvOS.Legacy.Sdk\": \"$(CURRENT_TVOS_VERSION)\",\n" >> $@; \
+		printf "\t\t\"Xamarin.watchOS.Legacy.Sdk\": \"$(CURRENT_WATCHOS_VERSION)\",\n" >> $@; \
+		printf "\t\t\"Xamarin.macOS.Legacy.Sdk\": \"$(CURRENT_MACOS_VERSION)\"\n" >> $@; \
 		printf "\t}\n}\n" >> $@
 
 test-nuget: test/NuGet.config test/global.json
@@ -216,14 +214,9 @@ test-nuget: test/NuGet.config test/global.json
 prepare:
 	$(Q) V=$(V) \
 	TOP=$(TOP) \
-	DOTNET_BCL_DIR=$(DOTNET_BCL_DIR) \
-	MACOS_DOTNET_DESTDIR=$(MACOS_DOTNET_DESTDIR) \
-	IOS_DOTNET_DESTDIR=$(IOS_DOTNET_DESTDIR) \
-	TVOS_DOTNET_DESTDIR=$(TVOS_DOTNET_DESTDIR) \
-	WATCHOS_DOTNET_DESTDIR=$(WATCHOS_DOTNET_DESTDIR) \
+	DOTNET_DESTDIR=$(DOTNET_DESTDIR) \
 	MAC_DESTDIR=$(MAC_DESTDIR) \
 	IOS_DESTDIR=$(IOS_DESTDIR) \
 	MAC_FRAMEWORK_DIR=$(MAC_FRAMEWORK_DIR) \
 	MONOTOUCH_PREFIX=$(MONOTOUCH_PREFIX) \
-	DOTNET_IOS_SDK_DESTDIR=$(DOTNET_IOS_SDK_DESTDIR) \
 	./build-nugets.sh

@@ -1,0 +1,3 @@
+<FileList Name="Xamarin iOS - NET 5.0" TargetFrameworkIdentifier=".NETCoreApp" TargetFrameworkVersion="5.0" FrameworkName="Xamarin.iOS.App">
+  <File Type="Managed" Path="ref/netcoreapp5.0/Xamarin.iOS.dll" AssemblyName="Xamarin.iOS" PublicKeyToken="84e04ff9cfb79065" AssemblyVersion="0.0.0.0" FileVersion="0.0.0.0" Profile="iOS" />
+</FileList>
