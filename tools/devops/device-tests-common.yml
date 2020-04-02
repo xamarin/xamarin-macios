@@ -82,7 +82,7 @@ jobs:
 
       EC=0
 
-      ./xamarin-macios/system-dependencies.sh --ignore-all --provision-xcode --provision-xamarin-studio --provision-mono --provision-7z || EC=$?
+      ./xamarin-macios/system-dependencies.sh --ignore-all --provision-xcode --provision-xamarin-studio --provision-mono --provision-7z --provision-dotnet || EC=$?
       if [ $EC -eq 0 ]; then
         echo "##vso[task.setvariable variable=ProvisioningStatus]success"
       else

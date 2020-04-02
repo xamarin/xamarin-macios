@@ -62,5 +62,7 @@ Console.WriteLine ("Provisioning provisioning profiles...");
 Exec ($"../../../maccore/tools/install-qa-provisioning-profiles.sh");
 
 // .NET core
+// mtouch/mmp need dotnet 3.1.100
+DotNetCoreSdk ("3.1.100");
 // The version number here must match the one in Xamarin.Tests.Configuration:CreateGlobalConfig (tests/sampletester/Configuration.cs).
 DotNetCoreSdk ("2.2.204");
