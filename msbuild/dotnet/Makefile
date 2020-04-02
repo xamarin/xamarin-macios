@@ -138,19 +138,32 @@ TEMPLATED_FILES = \
 
 all-local:: $(TARGETS)
 
-pack: $(foreach var,iOS tvOS watchOS macOS,pack-$(var)) $(foreach var,iOS tvOS watchOS macOS,ref-pack-$(var))
+pack: \
+	$(foreach var,iOS tvOS watchOS macOS,pack-$(var)) \
+	$(foreach var,iOS tvOS watchOS macOS,ref-pack-$(var)) \
+	$(foreach var,iOS tvOS watchOS macOS,app-pack-$(var)) \
 
 # just a temporary target while debugging for faster turnaround
 pack-simple: prepare
 	$(Q) rm -Rf nupkgs
 	$(Q) mkdir -p nupkgs
-	$(Q) $(MAKE) pack-iOS ref-pack-iOS
+	$(Q) $(MAKE) pack-iOS ref-pack-iOS app-pack-iOS
+
+app-pack-%: prepare $(TEMPLATED_FILES)
+	$(Q) rm -Rf $(TEST_FEED_PATH)/xamarin.$(shell echo $* | tr '[:upper:]' '[:lower:]').app
+	$(Q) rm -f nupkgs/Xamarin.$*.App.[^Ref]*.nupkg
+	$(Q) rm -Rf $(HOME)/.nuget/packages/xamarin.*.app.sdk
+	$(if $(V),,@echo "PACK     nupkgs/Xamarin.$*.App.nupkg";) $(DOTNET) pack package/$*/Xamarin.$*.App.csproj --output nupkgs $(DOTNET_PACK_VERBOSITY)
+	$(if $(V),,@echo "ADD      nupkgs/Xamarin.$*.App.nupkg";) nuget add nupkgs/Xamarin.$*.App.[^Ref]*.nupkg -source $(TEST_FEED_PATH) $(NUGET_VERBOSITY)
+	$(Q) CURRENT_HASH=$(shell grep '<CurrentHash>' targets/Xamarin.Shared.Sdk.Versions.props | sed -e 's/<[/]*CurrentHash>//g' -e 's/[[:space:]]//g'); \
+		NAME=$$(echo nupkgs/Xamarin.$*.App.[^Ref]*.nupkg | sed -e 's/.nupkg$$//'); mv "$$NAME.nupkg" "$$NAME+sha.$$CURRENT_HASH.nupkg"
+	$(Q) echo "Created: $$(ls -1 nupkgs/Xamarin.$*.App.[^Ref]*.nupkg)"
 
 ref-pack-%: prepare $(TEMPLATED_FILES)
 	$(Q) rm -Rf $(TEST_FEED_PATH)/xamarin.$(shell echo $* | tr '[:upper:]' '[:lower:]').app.ref
 	$(Q) rm -f nupkgs/Xamarin.$*.App.Ref.*.nupkg
 	$(Q) rm -Rf $(HOME)/.nuget/packages/xamarin.*.app.ref.sdk
-	$(if $(V),,@echo "PACK     nupkgs/Xamarin.$*.App.Ref.nupkg";) $(DOTNET) pack package/$*/Xamarin.$*.App.ref.csproj --output nupkgs $(DOTNET_PACK_VERBOSITY)
+	$(if $(V),,@echo "PACK     nupkgs/Xamarin.$*.App.Ref.nupkg";) $(DOTNET) pack package/$*/Xamarin.$*.App.Ref.csproj --output nupkgs $(DOTNET_PACK_VERBOSITY)
 	$(if $(V),,@echo "ADD      nupkgs/Xamarin.$*.App.Ref.nupkg";) nuget add nupkgs/Xamarin.$*.App.Ref.*nupkg -source $(TEST_FEED_PATH) $(NUGET_VERBOSITY)
 	$(Q) CURRENT_HASH=$(shell grep '<CurrentHash>' targets/Xamarin.Shared.Sdk.Versions.props | sed -e 's/<[/]*CurrentHash>//g' -e 's/[[:space:]]//g'); \
 		NAME=$$(echo nupkgs/Xamarin.$*.App.Ref.*nupkg | sed -e 's/.nupkg$$//'); mv "$$NAME.nupkg" "$$NAME+sha.$$CURRENT_HASH.nupkg"

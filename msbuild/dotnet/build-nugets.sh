@@ -29,10 +29,20 @@ copy_files ()
 	local assembly_infix=$6
 	local framework=$7
 
+	# the Xamarin.*OS.App.Ref nuget
 	appref_destdir="$dotnet_destdir/../Xamarin.$platform.App.Ref"
+	rm -Rf "$appref_destdir"
 	mkdir -p "$appref_destdir/data"
 	mkdir -p "$appref_destdir/ref/netcoreapp5.0"
 
+	# the Xamarin.*OS.App nuget
+	app_destdir="$dotnet_destdir/../Xamarin.$platform.App"
+	rm -Rf "$app_destdir"
+	mkdir -p "$app_destdir/data"
+	mkdir -p "$app_destdir/lib/netcoreapp5.0"
+	$cp "$TOP/src/build/dotnet/$platform_lower/ref/Xamarin.$assembly_infix.dll" "$app_destdir/lib/netcoreapp5.0/"
+
+	# the Xamarin.*OS.Sdk nuget
 	rm -Rf "$dotnet_destdir"
 
 	mkdir -p "$dotnet_destdir"
