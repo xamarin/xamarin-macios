@@ -124,10 +124,10 @@
   <!-- HACK: Declare the XI/XM framework bundled with this version of the SDK. See Microsoft.NETCoreSdk.BundledVersions.props -->
   <PropertyGroup>
     <!-- Runtime pack identifiers -->
-    <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'macOS' ">osx.10.12-x64</_RuntimePackRuntimeIdentifiers>
-    <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'iOS' ">ios.13-x64;ios.13-arm64</_RuntimePackRuntimeIdentifiers>
-    <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'tvOS' ">tvos.13-x64;tvos.13-arm64</_RuntimePackRuntimeIdentifiers>
-    <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'watchOS' ">watchos.6-x86;watchis.6-arm64_32</_RuntimePackRuntimeIdentifiers>
+    <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'macOS' ">macos-x64</_RuntimePackRuntimeIdentifiers>
+    <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'iOS' ">ios-x64;ios-arm64;ios-arm;ios-x86</_RuntimePackRuntimeIdentifiers>
+    <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'tvOS' ">tvos-x64;tvos-arm64</_RuntimePackRuntimeIdentifiers>
+    <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'watchOS' ">watchos-x86;watchos-arm</_RuntimePackRuntimeIdentifiers>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(XamarinReplaceBuildTarget)' == 'false'">
