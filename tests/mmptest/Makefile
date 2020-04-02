@@ -10,7 +10,7 @@ all-local:: regression run
 
 regression::
 ifneq ($(SKIP_REGRESSION), 1)
-	$(MAKE) -C regression/
+	$(MAKE) -C ../mmp-regression/
 endif
 
 # example command to run a single test:
