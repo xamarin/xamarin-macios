@@ -63,7 +63,11 @@ namespace Xharness.Jenkins.TestTasks {
 					await task.SelectSimulatorAsync ();
 				}
 
-				var devices = executingTasks.First ().Simulators;
+				var devices = executingTasks.FirstOrDefault ()?.Simulators; 
+				if (devices == null) { 
+					ExecutionResult = TestExecutingResult.Ignored;
+					return;
+				}
 				Jenkins.MainLog.WriteLine ("Selected simulator: {0}", devices.Length > 0 ? devices [0].Name : "none");
 
 				foreach (var dev in devices)
