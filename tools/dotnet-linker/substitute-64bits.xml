@@ -1,5 +1,5 @@
 <linker>
-  <assembly fullname="mscorlib">
+  <assembly fullname="System.Private.CoreLib">
     <type fullname="System.IntPtr">
       <method signature="System.Int32 get_Size()" body="stub" value="8" />
     </type>

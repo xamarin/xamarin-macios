@@ -19,6 +19,12 @@
 
   <!-- Defaults -->
 
+  <!-- Default architecture -->
+  <PropertyGroup Condition=" '$(MtouchArch)' == '' ">
+    <MtouchArch Condition=" '$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'macOS' ">x86_64</MtouchArch>
+    <MtouchArch Condition=" '$(_PlatformName)' == 'watchOS' ">x86</MtouchArch>
+  </PropertyGroup>
+
   <!-- Default Asset Catalog file inclusion -->
   <ItemGroup Condition="'$(EnableDefaultXamarinAssetCatalogItems)' == 'true' ">
     <ImageAsset Include="**\*.xcassets\**\*.png;**\*.xcassets\*\*.jpg;**\*.xcassets\**\*.json" Exclude="$(DefaultItemExcludes);$(DefaultXamarinAssetCatalogItemExcludes)">

@@ -179,7 +179,9 @@ test/global.json: Makefile $(TEMPLATED_FILES)
 		MACOS_PACKAGE_VERSION='$(shell   grep macOSPackageVersion:   targets/Xamarin.Shared.Sdk.Versions.props | sed -e 's/.*macOSPackageVersion:[[:space:]]*//'   -e 's/[[:space:]]*-->.*//')'; \
 		TVOS_PACKAGE_VERSION='$(shell    grep tvOSPackageVersion:    targets/Xamarin.Shared.Sdk.Versions.props | sed -e 's/.*tvOSPackageVersion:[[:space:]]*//'    -e 's/[[:space:]]*-->.*//')'; \
 		WATCHOS_PACKAGE_VERSION='$(shell grep watchOSPackageVersion: targets/Xamarin.Shared.Sdk.Versions.props | sed -e 's/.*watchOSPackageVersion:[[:space:]]*//' -e 's/[[:space:]]*-->.*//')'; \
-		printf "{\n\t\"msbuild-sdks\": {\n" > $@; \
+		printf "{\n" > $@; \
+		printf "\t\"sdk\": { \"version\": \"5.0.100-dev\" },\n" >> $@; \
+		printf "\t\"msbuild-sdks\": {\n" >> $@; \
 		printf "\t\t\"Xamarin.iOS.Sdk\": \"$$IOS_PACKAGE_VERSION\",\n" >> $@; \
 		printf "\t\t\"Xamarin.tvOS.Sdk\": \"$$TVOS_PACKAGE_VERSION\",\n" >> $@; \
 		printf "\t\t\"Xamarin.watchOS.Sdk\": \"$$WATCHOS_PACKAGE_VERSION\",\n" >> $@; \

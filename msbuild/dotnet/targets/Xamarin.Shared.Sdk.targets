@@ -12,93 +12,47 @@
 		<ProjectCapability Include="Mobile" />
 	</ItemGroup>
 
-
-	<!-- VERY BIG HACK: redefine several tasks to insert Before* and After* tasks -->
-	<Target Name="ComputeFilesToPublish"
-				DependsOnTargets="
-					ComputeResolvedFilesToPublishList;
-					BeforeILLink;
-					ILLink;
-					AfterILLink;
-					CreateReadyToRunImages;
-					BeforeMonoAOTCompilation;
-					MonoAOTCompilation;
-					AfterMonoAOTCompilation;
-					GeneratePublishDependencyFile;
-					BeforeGenerateSingleFileBundle;
-					GenerateSingleFileBundle;
-					AfterGenerateSingleFileBundle;
-					" />
-	<Target Name="BeforeILLink" />
-	<Target Name="AfterILLink" />
-
-	<Target Name="ComputeAndCopyFilesToPublishDirectory"
-				DependsOnTargets="
-					BeforeComputeFilesToPublish;
-					ComputeFilesToPublish;
-					AfterComputeFilesToPublish;
-					CopyFilesToPublishDirectory;
-					" />
-	<Target Name="BeforeComputeFilesToPublish" />
-	<Target Name="AfterComputeFilesToPublish" />
-
-	<Target Name="MonoAOTCompilation" /> <!-- to be implemented by dotnet -->
-	<Target Name="BeforeMonoAOTCompilation" />
-	<Target Name="AfterMonoAOTCompilation" />
-
-	<Target Name="BeforeGenerateSingleFileBundle" />
-	<Target Name="AfterGenerateSingleFileBundle" />
-
+	<!-- Compute a few values -->
 	<PropertyGroup>
-		<_CorePublishTargets>
-			BeforePublish;
-			$(_CorePublishTargets);
-			AfterPublish;
-		</_CorePublishTargets>
-		<_PublishNoBuildAlternativeDependsOn>
-			BeforePublish;
-			$(_PublishNoBuildAlternativeDependsOn);
-			AfterPublish;
-		</_PublishNoBuildAlternativeDependsOn>
+		<_Is32BitBuild Condition=" '(MtouchArch)' == 'x86' Or '$(MtouchArch)' == 'ARMv7' Or '$(MtouchArch)' == 'ARMv7s' Or '$(MtouchArch)' == 'ARMv7k' Or '$(MtouchArch)' == 'ARM64_32'">true</_Is32BitBuild>
+		<_Is64BitBuild Condition=" '(_Is32BitBuild)' != 'true' ">true</_Is64BitBuild>
 	</PropertyGroup>
-	<Target Name="BeforePublish" />
-	<Target Name="AfterPublish" />
 
 	<!-- Override overridable targets -->
-
-	<!-- Inject linker arguments -->
-	<Target Name="BeforeILLink" DependsOnTargets="_PreProcessAssemblies" />
-	<Target Name="AfterILLink" DependsOnTargets="_PostProcessAssemblies" />
-
-	<!-- Inject app bundle creation tasks -->
-	<Target Name="BeforeComputeFilesToPublish" DependsOnTargets="_EarlyAppBundleTasks" />
-	<Target Name="AfterComputeFilesToPublish" DependsOnTargets="_LateAppBundleTasks" />
-
-	<Target Name="BeforeMonoAOTCompilation" DependsOnTargets="" />
-	<Target Name="AfterMonoAOTCompilation" DependsOnTargets="_PostProcessAOTCompilation" />
-
-	<Target Name="BeforeGenerateSingleFileBundle" DependsOnTargets="_PreProcessNativeLinker" />
-	<Target Name="AfterGenerateSingleFileBundle" DependsOnTargets="_PostProcessNativeLinker" />
-
-	<Target Name="BeforePublish" DependsOnTargets="" />
-	<Target Name="AfterPublish" DependsOnTargets="Codesign;CreateIpa;Archive" />
+	<PropertyGroup>
+		<BeforeComputeFilesToPublishTargets>_EarlyAppBundleTasks</BeforeComputeFilesToPublishTargets>
+		<AfterComputeFilesToPublishTargets>_LateAppBundleTasks</AfterComputeFilesToPublishTargets>
+		<BeforeILLinkTargets>_PreProcessAssemblies</BeforeILLinkTargets>
+		<AfterILLinkTargets>_PostProcessAssemblies</AfterILLinkTargets>
+		<BeforeMonoAOTCompilationTargets></BeforeMonoAOTCompilationTargets>
+		<AfterMonoAOTCompilationTargets>_PostProcessAOTCompilation</AfterMonoAOTCompilationTargets>
+		<BeforeGenerateSingleFileBundleTargets>_PreProcessNativeLinker</BeforeGenerateSingleFileBundleTargets>
+		<AfterGenerateSingleFileBundleTargets>_PostProcessNativeLinker</AfterGenerateSingleFileBundleTargets>
+		<!-- Codesign fails because there's no native binary yet -->
+		<!-- <AfterPublishTargets>Codesign;CreateIpa;Archive</AfterPublishTargets> -->
+	</PropertyGroup>
 
 	<!-- Actual implementations for what we need to do -->
 
 	<!-- Linker targets -->
 	<Target Name="_PreProcessAssemblies" DependsOnTargets="_ComputeLinkerArguments;_ExtractNativeLibrariesFromBindingAssemblies;" />
 	<PropertyGroup>
-		<_AdditionalTaskAssemblyDirectory>$(XamarinSdkRootDirectory)/tools/</_AdditionalTaskAssemblyDirectory>
+		<_AdditionalTaskAssemblyDirectory>$(XamarinSdkRootDirectory)/tools/dotnet-linker/</_AdditionalTaskAssemblyDirectory>
 		<_AdditionalTaskAssembly>$(_AdditionalTaskAssemblyDirectory)dotnet-linker.dll</_AdditionalTaskAssembly>
 	</PropertyGroup>
-	<Target Name="_ComputeLinkerSubstitutions">
+	<ItemGroup>
 		<_LinkerSubstitutions Include="$(_AdditionalTaskAssemblyDirectory)/substitute-32bits.xml" Condition=" '$(_Is32BitBuild)' == 'true' " />
 		<_LinkerSubstitutions Include="$(_AdditionalTaskAssemblyDirectory)/substitute-64bits.xml" Condition=" '$(_Is64BitBuild)' == 'true' " />
-		<_LinkerSubstitutionsCommand>@(_LinkerSubstitutions -> '--substitution=%(Filename)', ' ')</_LinkerSubstitutionsCommand>
+	</ItemGroup>
+	<Target Name="_ComputeLinkerSubstitutions">
+		<PropertyGroup>
+			<_LinkerSubstitutionsCommand>@(_LinkerSubstitutions -> '--substitutions %(FullPath)', '%0a')</_LinkerSubstitutionsCommand>
+		</PropertyGroup>
+		<Exec Command="ls -la $(_AdditionalTaskAssemblyDirectory)" />
 	</Target>
 	<Target Name="_ComputeLinkerArguments" DependsOnTargets="_ComputeLinkerSubstitutions;">
 		<PropertyGroup>
-			<_ExtraTrimmerArgs>--verbose $(_LinkerSubstitutionsCommand)</_ExtraTrimmerArgs>
+			<_ExtraTrimmerArgs>--verbose --skip-unresolved false $(_LinkerSubstitutionsCommand) -p link MySingleView</_ExtraTrimmerArgs>
 		</PropertyGroup>
 	</Target>
 	<Target Name="_ExtractNativeLibrariesFromBindingAssemblies">

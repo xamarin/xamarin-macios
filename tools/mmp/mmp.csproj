@@ -36,6 +36,9 @@
   <PropertyGroup>
        <UpdateXlfOnBuild>true</UpdateXlfOnBuild>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DefineConstants>MONOMAC;MMP;XAMARIN_APPLETLS;DEBUG;NETCOREAPP;NETCOREAPP3_1;DEV</DefineConstants>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
