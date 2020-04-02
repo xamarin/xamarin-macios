@@ -1,13 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Xml;
-using Xharness.Utilities;
+using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
+using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
-using Xamarin;
-using Xharness.Hardware;
-
-namespace Xharness.Targets
-{
+namespace Xharness.Targets {
 	public class UnifiedTarget : iOSTarget
 	{
 		// special cases for the BCL applications

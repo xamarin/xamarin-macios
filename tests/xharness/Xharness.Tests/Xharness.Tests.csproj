@@ -54,34 +54,14 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BCLTestImporter\Tests\BCLTestInfoPlistGeneratorTest.cs" />
-    <Compile Include="BCLTestImporter\Tests\BCLTestProjectGeneratorTest.cs" />
-    <Compile Include="BCLTestImporter\Tests\TestAssemblyDefinitionTest.cs" />
-    <Compile Include="BCLTestImporter\Tests\TestProjectDefinitionTest.cs" />
-    <Compile Include="Tests\AppBundleInformationParserTests.cs" />
+    <Compile Include="TestImporter\Tests\BCLTestInfoPlistGeneratorTest.cs" />
+    <Compile Include="TestImporter\Tests\BCLTestProjectGeneratorTest.cs" />
+    <Compile Include="TestImporter\Tests\TestAssemblyDefinitionTest.cs" />
+    <Compile Include="TestImporter\Tests\TestProjectDefinitionTest.cs" />
     <Compile Include="Tests\AppRunnerTests.cs" />
-    <Compile Include="Tests\CrashSnapshotReporterTests.cs" />
-    <Compile Include="Tests\XmlResultParserTests.cs" />
-    <Compile Include="Logging\Tests\LogsTest.cs" />
-    <Compile Include="Logging\Tests\LogFileTest.cs" />
-    <Compile Include="Logging\Tests\ConsoleLogTest.cs" />
-    <Compile Include="Logging\Tests\CallbackLogTest.cs" />
-    <Compile Include="Logging\Tests\CaptureLogTest.cs" />
-    <Compile Include="Listeners\Tests\SimpleListenerFactoryTest.cs" />
-    <Compile Include="Listeners\Tests\SimpleFileListenerTest.cs" />
-    <Compile Include="Listeners\Tests\SimpleTcpListenerTest.cs" />
-    <Compile Include="Execution\Tests\ProcessManagerTests.cs" />
-    <Compile Include="Execution\Tests\MlaunchArgumentsTests.cs" />
-    <Compile Include="Hardware\Tests\DeviceTest.cs" />
-    <Compile Include="Hardware\Tests\DevicesTest.cs" />
-    <Compile Include="Hardware\Tests\TCCDatabaseTests.cs" />
-    <Compile Include="Utilities\Tests\StringUtilsTests.cs" />
-    <Compile Include="Hardware\Tests\SimulatorsTest.cs" />
-    <Compile Include="Hardware\Tests\SimulatorDeviceTest.cs" />
-    <Compile Include="BCLTestImporter\Xamarin\Tests\ProjectFilterTest.cs" />
-    <Compile Include="BCLTestImporter\Xamarin\Tests\AssemblyLocatorTest.cs" />
-    <Compile Include="BCLTestImporter\Xamarin\Tests\XamariniOSTemplateTest.cs" />
-    <Compile Include="Tests\TestReporterTests.cs" />
+    <Compile Include="TestImporter\Xamarin\Tests\ProjectFilterTest.cs" />
+    <Compile Include="TestImporter\Xamarin\Tests\AssemblyLocatorTest.cs" />
+    <Compile Include="TestImporter\Xamarin\Tests\XamariniOSTemplateTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -102,6 +82,7 @@
     <EmbeddedResource Include="Samples\run-log.txt" />
     <EmbeddedResource Include="Samples\NUnitV3SampleSuccess.xml" />
     <EmbeddedResource Include="Samples\NUnitV3SampleFailure.xml" />
+    <EmbeddedResource Include="Samples\Issue8214.xml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../DummyTestProcess/DummyTestProcess.csproj">
@@ -109,12 +90,15 @@
       <Project>{2318BC20-40F1-4A12-B695-10B0433CFB35}</Project>
       <Name>DummyTestProcess</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Microsoft.DotNet.XHarness.iOS.Shared\Microsoft.DotNet.XHarness.iOS.Shared.csproj">
+      <Project>{5be5cabf-8d6c-4f35-9e5b-505b4c40b2ac}</Project>
+      <Name>Microsoft.DotNet.XHarness.iOS.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\xharness.csproj">
       <Project>{e1f53f80-8399-499b-8017-c414b9cd263b}</Project>
       <Name>xharness</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

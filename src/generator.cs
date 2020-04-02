@@ -3002,18 +3002,22 @@ public partial class Generator : IMemberGatherer {
 				if (probe_presence)
 					print ("return value != IntPtr.Zero;");
 				else {
+					var et = propertyType.GetElementType ();
+					bool is_property_array_wrapped_type = propertyType.IsArray && IsWrappedType (et);
+					bool is_property_wrapped_type = IsWrappedType (propertyType);
+
 					if (null_allowed)
 						print ("if (value == IntPtr.Zero)\n\treturn null;");
 					else if (propertyType.IsArray)
-						print ("if (value == IntPtr.Zero)\n\treturn new {0} [0];", RenderType (propertyType.GetElementType ()));
-					else
+						print ("if (value == IntPtr.Zero)\n\treturn Array.Empty<{0}> ();", RenderType (et));
+					else if (!is_property_wrapped_type && !is_property_array_wrapped_type)
 						print ("if (value == IntPtr.Zero)\n\treturn default({0});", RenderType (propertyType));
 
 					var fullname = propertyType.FullName;
 
-					if (propertyType.IsArray && IsWrappedType (propertyType.GetElementType ())) {
-						print ("return NSArray.ArrayFromHandle<{0}> (value);", RenderType (propertyType.GetElementType ()));
-					} else if (IsWrappedType (propertyType)){
+					if (is_property_array_wrapped_type) {
+						print ("return NSArray.ArrayFromHandle<{0}> (value);", RenderType (et));
+					} else if (is_property_wrapped_type) {
 						print ("return Runtime.GetNSObject<{0}> (value);", RenderType (propertyType));
 					} else if (propertyType == TypeManager.System_Double)
 						print (GenerateNSNumber ("", "DoubleValue"));
@@ -4180,20 +4184,25 @@ public partial class Generator : IMemberGatherer {
 
 	string CurrentMethod;
 
-	void GenerateThreadCheck ()
+	void GenerateThreadCheck (StreamWriter sw = null)
 	{
+		string s;
 		switch (CurrentPlatform) {
 			case PlatformName.iOS:
 			case PlatformName.WatchOS:
 			case PlatformName.TvOS:
-				print ("global::{0}.UIApplication.EnsureUIThread ();", ns.Get ("UIKit"));
+				s = $"global::{ns.Get ("UIKit")}.UIApplication.EnsureUIThread ();";
 				break;
 			case PlatformName.MacOSX:
-				print ("global::{0}.NSApplication.EnsureUIThread ();", ns.Get ("AppKit"));
+				s = $"global::{ns.Get ("AppKit")}.NSApplication.EnsureUIThread ();";
 				break;
 			default:
 				throw new BindingException (1047, CurrentPlatform);
 		}
+		if (sw == null)
+			print (s);
+		else
+			sw.WriteLine (s);
 	}
 
 	// Stret.NeedStret is shared between generator and X.I dll so in order to wrap the exception
@@ -4715,20 +4724,18 @@ public partial class Generator : IMemberGatherer {
 
 		string var_name = null;
 		
-		if (wrap == null) {
-			// [Model] has properties that only throws, so there's no point in adding unused backing fields
-			if (!is_model && DoesPropertyNeedBackingField (pi) && !is_interface_impl && !minfo.is_static && !DoesPropertyNeedDirtyCheck (pi, export)) {
-				var_name = string.Format ("__mt_{0}_var{1}", pi.Name, minfo.is_static ? "_static" : "");
+		// [Model] has properties that only throws, so there's no point in adding unused backing fields
+		if (!is_model && DoesPropertyNeedBackingField (pi) && !is_interface_impl && !minfo.is_static && !DoesPropertyNeedDirtyCheck (pi, export)) {
+			var_name = string.Format ("__mt_{0}_var{1}", pi.Name, minfo.is_static ? "_static" : "");
 
-				print_generated_code ();
+			print_generated_code ();
 
-				if (minfo.is_thread_static)
-					print ("[ThreadStatic]");
-				print ("{1}object {0};", var_name, minfo.is_static ? "static " : "");
+			if (minfo.is_thread_static)
+				print ("[ThreadStatic]");
+			print ("{1}object {0};", var_name, minfo.is_static ? "static " : "");
 
-				if (!minfo.is_static && !is_interface_impl){
-					instance_fields_to_clear_on_dispose.Add (var_name);
-				}
+			if (!minfo.is_static && !is_interface_impl){
+				instance_fields_to_clear_on_dispose.Add (var_name);
 			}
 		}
 
@@ -4759,21 +4766,7 @@ public partial class Generator : IMemberGatherer {
 		       use_underscore ? "_" : "");
 		indent++;
 
-		if (wrap != null) {
-			if (pi.CanRead) {
-				PrintPlatformAttributes (pi);
-				PrintPlatformAttributes (pi.GetGetMethod ());
-				print ("get {{ return {0} as {1}; }}", wrap, FormatType (pi.DeclaringType, GetCorrectGenericType (pi.PropertyType)));
-			}
-			if (pi.CanWrite) {
-				PrintPlatformAttributes (pi);
-				PrintPlatformAttributes (pi.GetSetMethod ());
-				print ("set {{ {0} = value; }}", wrap);
-			}
-			indent--;
-			print ("}\n");
-			return;			
-		} else if (minfo.has_inner_wrap_attribute) {
+		if (minfo.has_inner_wrap_attribute) {
 			// If property getter or setter has its own WrapAttribute we let the user do whatever their heart desires
 			if (pi.CanRead) {
 				PrintAttributes (pi, platform: true);
@@ -6463,6 +6456,10 @@ public partial class Generator : IMemberGatherer {
 								sw.WriteLine ("\tthrow new PlatformNotSupportedException (\"This API is not supported on this version of iOS\");");
 								sw.WriteLine ("\t\t#else");
 							}
+							if (type_needs_thread_checks) {
+								sw.Write ("\t\t\t");
+								GenerateThreadCheck (sw);
+							}
 							var indentation = 3;
 							WriteIsDirectBindingCondition (sw, ref indentation, is_direct_binding, is_direct_binding_value,
 							                               () => string.Format ("InitializeHandle (global::{1}.IntPtr_objc_msgSend (this.Handle, global::{2}.{0}), \"init\");", initSelector, ns.Messaging, ns.CoreObjCRuntime),
@@ -6490,7 +6487,10 @@ public partial class Generator : IMemberGatherer {
 							if (nscoding) {
 								if (debug)
 									sw.WriteLine ("\t\t\tConsole.WriteLine (\"{0}.ctor (NSCoder)\");", TypeName);
-								sw.WriteLine ();
+								if (type_needs_thread_checks) {
+									sw.Write ("\t\t\t");
+									GenerateThreadCheck (sw);
+								}
 								var indentation = 3;
 								WriteIsDirectBindingCondition (sw, ref indentation, is_direct_binding, is_direct_binding_value,
 								                               () => string.Format ("InitializeHandle (global::{1}.IntPtr_objc_msgSend_IntPtr (this.Handle, {0}, coder.Handle), \"initWithCoder:\");", initWithCoderSelector, ns.Messaging),

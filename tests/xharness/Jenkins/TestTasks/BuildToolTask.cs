@@ -1,14 +1,20 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Xharness.Execution;
+using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 
 namespace Xharness.Jenkins.TestTasks
 {
 	public abstract class BuildToolTask : TestTask
 	{
+		protected readonly IProcessManager ProcessManager;
+
 		public bool SpecifyPlatform = true;
 		public bool SpecifyConfiguration = true;
-		public IProcessManager ProcessManager { get; set; } = new ProcessManager ();
+
+		protected BuildToolTask (IProcessManager processManager)
+		{
+			ProcessManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
+		}
 
 		public override string Mode {
 			get { return Platform.ToString (); }

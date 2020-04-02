@@ -5,17 +5,19 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Xharness.Execution;
-using Xharness.Execution.Mlaunch;
-using Xharness.Hardware;
+using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
+using Microsoft.DotNet.XHarness.iOS.Shared.Execution.Mlaunch;
 using Xharness.Jenkins.TestTasks;
-using Xharness.Listeners;
-using Xharness.Logging;
-using Xharness.Utilities;
+using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
+using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
+using Microsoft.DotNet.XHarness.iOS.Shared;
+using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
+using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 
 namespace Xharness {
 
-	class AppRunner : IAppRunner {
+	class AppRunner {
+		readonly IProcessManager processManager;
 		readonly ISimulatorsLoaderFactory simulatorsLoaderFactory;
 		readonly ISimpleListenerFactory listenerFactory;
 		readonly IDeviceLoaderFactory devicesLoaderFactory;
@@ -23,11 +25,13 @@ namespace Xharness {
 		readonly ICaptureLogFactory captureLogFactory;
 		readonly IDeviceLogCapturerFactory deviceLogCapturerFactory;
 		readonly ITestReporterFactory testReporterFactory;
-
+		
+		readonly RunMode runMode;
 		readonly bool isSimulator;
 		readonly TestTarget target;
 		readonly IHarness harness;
 		readonly double timeoutMultiplier;
+		readonly BuildToolTask buildTask;
 
 		string deviceName;
 		string companionDeviceName;
@@ -40,15 +44,9 @@ namespace Xharness {
 			set => ensureCleanSimulatorState = value;
 		}
 
-		public IProcessManager ProcessManager { get; private set; }
-
-		public BuildToolTask BuildTask { get; private set; }
-
-		public RunMode RunMode { get; private set; }
+		public AppBundleInformation AppInformation { get; }
 
 		bool IsExtension => AppInformation.Extension.HasValue;
-
-		public AppBundleInformation AppInformation { get; }
 
 		public TestExecutingResult Result { get; private set; }
 
@@ -57,9 +55,6 @@ namespace Xharness {
 		public ILog MainLog { get; set; }
 
 		public ILogs Logs { get; }
-
-		public XmlResultJargon XmlJargon => harness.XmlJargon;
-		public double LaunchTimeout => harness.LaunchTimeout;
 
 		public AppRunner (IProcessManager processManager,
 						  IAppBundleInformationParser appBundleInformationParser,
@@ -87,7 +82,7 @@ namespace Xharness {
 			if (appBundleInformationParser is null)
 				throw new ArgumentNullException (nameof (appBundleInformationParser));
 
-			this.ProcessManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
+			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 			this.simulatorsLoaderFactory = simulatorsFactory ?? throw new ArgumentNullException (nameof (simulatorsFactory));
 			this.listenerFactory = simpleListenerFactory ?? throw new ArgumentNullException (nameof (simpleListenerFactory));
 			this.devicesLoaderFactory = devicesFactory ?? throw new ArgumentNullException (nameof (devicesFactory));
@@ -103,10 +98,10 @@ namespace Xharness {
 			this.companionDeviceName = companionDeviceName;
 			this.ensureCleanSimulatorState = ensureCleanSimulatorState;
 			this.simulators = simulators;
-			this.BuildTask = buildTask;
+			this.buildTask = buildTask;
 			this.target = target;
 
-			RunMode = target.ToRunMode ();
+			runMode = target.ToRunMode ();
 			isSimulator = target.IsSimulator ();
 			AppInformation = appBundleInformationParser.ParseFromProject (projectFilePath, target, buildConfiguration);
 			AppInformation.Variation = variation;
@@ -139,7 +134,7 @@ namespace Xharness {
 			}).Wait ();
 
 			DeviceClass [] deviceClasses;
-			switch (RunMode) {
+			switch (runMode) {
 			case RunMode.iOS:
 				deviceClasses = new [] { DeviceClass.iPhone, DeviceClass.iPad, DeviceClass.iPod };
 				break;
@@ -150,7 +145,7 @@ namespace Xharness {
 				deviceClasses = new [] { DeviceClass.AppleTV }; // Untested
 				break;
 			default:
-				throw new ArgumentException (nameof (RunMode));
+				throw new ArgumentException (nameof (runMode));
 			}
 
 			var selected = devs.ConnectedDevices.Where ((v) => deviceClasses.Contains (v.DeviceClass) && v.IsUsableForDebugging != false);
@@ -173,7 +168,7 @@ namespace Xharness {
 
 			deviceName = selected_data.Name;
 
-			if (RunMode == RunMode.WatchOS)
+			if (runMode == RunMode.WatchOS)
 				companionDeviceName = devs.FindCompanionDevice (MainLog, selected_data).Name;
 		}
 
@@ -188,24 +183,20 @@ namespace Xharness {
 
 			var args = new MlaunchArguments ();
 
-			if (!string.IsNullOrEmpty (harness.XcodeRoot)) {
-				args.Add (new SdkRootArgument (harness.XcodeRoot));
-			}
-
 			for (int i = -1; i < harness.Verbosity; i++)
 				args.Add (new VerbosityArgument ());
 
 			args.Add (new InstallAppOnDeviceArgument (AppInformation.AppPath));
 			args.Add (new DeviceNameArgument (companionDeviceName ?? deviceName));
 
-			if (RunMode == RunMode.WatchOS) {
+			if (runMode == RunMode.WatchOS) {
 				args.Add (new DeviceArgument ("ios,watchos"));
 			}
 
 			var totalSize = Directory.GetFiles (AppInformation.AppPath, "*", SearchOption.AllDirectories).Select ((v) => new FileInfo (v).Length).Sum ();
 			MainLog.WriteLine ($"Installing '{AppInformation.AppPath}' to '{companionDeviceName ?? deviceName}'. Size: {totalSize} bytes = {totalSize / 1024.0 / 1024.0:N2} MB");
 
-			return await ProcessManager.ExecuteCommandAsync (harness.MlaunchPath, args, MainLog, TimeSpan.FromHours (1), cancellation_token: cancellation_token);
+			return await processManager.ExecuteCommandAsync (args, MainLog, TimeSpan.FromHours (1), cancellation_token: cancellation_token);
 		}
 
 		public async Task<ProcessExecutionResult> UninstallAsync ()
@@ -217,22 +208,14 @@ namespace Xharness {
 
 			var args = new MlaunchArguments ();
 
-			if (!string.IsNullOrEmpty (harness.XcodeRoot)) {
-				args.Add (new SdkRootArgument (harness.XcodeRoot));
-			}
-
 			for (int i = -1; i < harness.Verbosity; i++)
 				args.Add (new VerbosityArgument ());
 
 			args.Add (new UninstallAppFromDeviceArgument (AppInformation.BundleIdentifier));
 			args.Add (new DeviceNameArgument (companionDeviceName ?? deviceName));
 
-			return await ProcessManager.ExecuteCommandAsync (harness.MlaunchPath, args, MainLog, TimeSpan.FromMinutes (1));
+			return await processManager.ExecuteCommandAsync (args, MainLog, TimeSpan.FromMinutes (1));
 		}
-
-		public TimeSpan GetNewTimeout () => TimeSpan.FromMinutes (harness.Timeout * timeoutMultiplier);
-
-		public void LogException (int minLevel, string message, params object [] args) => harness.Log (minLevel, message, args);
 
 		public async Task<int> RunAsync ()
 		{
@@ -240,10 +223,6 @@ namespace Xharness {
 				FindDevice ();
 
 			var args = new MlaunchArguments ();
-
-			if (!string.IsNullOrEmpty (harness.XcodeRoot)) {
-				args.Add (new SdkRootArgument (harness.XcodeRoot));
-			}
 
 			for (int i = -1; i < harness.Verbosity; i++)
 				args.Add (new VerbosityArgument ());
@@ -289,8 +268,8 @@ namespace Xharness {
 				args.Add (new SetEnvVariableArgument ("NUNIT_HOSTNAME", ipArg));
 			}
 
-			var listener_log = Logs.Create ($"test-{RunMode.ToString ().ToLowerInvariant ()}-{Helpers.Timestamp}.log", LogType.TestLog.ToString (), timestamp: !useXmlOutput);
-			var (transport, listener, listenerTmpFile) = listenerFactory.Create (RunMode, MainLog, listener_log, isSimulator, true, useXmlOutput);
+			var listener_log = Logs.Create ($"test-{runMode.ToString ().ToLowerInvariant ()}-{Helpers.Timestamp}.log", LogType.TestLog.ToString (), timestamp: !useXmlOutput);
+			var (transport, listener, listenerTmpFile) = listenerFactory.Create (runMode, MainLog, listener_log, isSimulator, true, useXmlOutput);
 
 			listener.Initialize ();
 
@@ -306,10 +285,26 @@ namespace Xharness {
 			listener.StartAsync ();
 
 			// object that will take care of capturing and parsing the results
-			ILog run_log = MainLog;
+			ILog runLog = MainLog;
 			var crashLogs = new Logs (Logs.Directory);
+
 			ICrashSnapshotReporter crashReporter = snapshotReporterFactory.Create (MainLog, crashLogs, isDevice: !isSimulator, deviceName);
-			var testReporter = testReporterFactory.Create (this, deviceName, listener, run_log, crashReporter, new XmlResultParser ());
+
+			var testReporterTimeout = TimeSpan.FromMinutes (harness.Timeout * timeoutMultiplier);
+			var testReporter = testReporterFactory.Create (MainLog,
+				runLog,
+				Logs,
+				crashReporter,
+				listener,
+				new XmlResultParser (),
+				AppInformation,
+				runMode,
+				harness.XmlJargon,
+				deviceName,
+				testReporterTimeout,
+				harness.LaunchTimeout,
+				buildTask?.Logs?.Directory,
+				(level, message) => harness.Log (level, message));
 
 			listener.ConnectedTask
 				.TimeoutAfter (TimeSpan.FromMinutes (harness.LaunchTimeout))
@@ -341,7 +336,7 @@ namespace Xharness {
 				if (!await FindSimulatorAsync ())
 					return 1;
 
-				if (RunMode != RunMode.WatchOS) {
+				if (runMode != RunMode.WatchOS) {
 					var stderr_tty = harness.GetStandardErrorTty ();
 					if (!string.IsNullOrEmpty (stderr_tty)) {
 						args.Add (new SetStdoutArgument (stderr_tty));
@@ -373,7 +368,7 @@ namespace Xharness {
 					WrenchLog.WriteLine ("AddFile: {0}", log.FullPath);
 				}
 
-				MainLog.WriteLine ("*** Executing {0}/{1} in the simulator ***", AppInformation.AppName, RunMode);
+				MainLog.WriteLine ("*** Executing {0}/{1} in the simulator ***", AppInformation.AppName, runMode);
 
 				if (EnsureCleanSimulatorState) {
 					foreach (var sim in simulators)
@@ -387,7 +382,7 @@ namespace Xharness {
 				MainLog.WriteLine ("Starting test run");
 
 				await testReporter.CollectSimulatorResult (
-					ProcessManager.ExecuteCommandAsync (harness.MlaunchPath, args, run_log, testReporter.Timeout, cancellation_token: testReporter.CancellationToken));
+					processManager.ExecuteCommandAsync (args, runLog, testReporterTimeout, cancellation_token: testReporter.CancellationToken));
 
 				// cleanup after us
 				if (EnsureCleanSimulatorState)
@@ -397,9 +392,9 @@ namespace Xharness {
 					log.StopCapture ();
 
 			} else {
-				MainLog.WriteLine ("*** Executing {0}/{1} on device '{2}' ***", AppInformation.AppName, RunMode, deviceName);
+				MainLog.WriteLine ("*** Executing {0}/{1} on device '{2}' ***", AppInformation.AppName, runMode, deviceName);
 
-				if (RunMode == RunMode.WatchOS) {
+				if (runMode == RunMode.WatchOS) {
 					args.Add (new AttachNativeDebuggerArgument ()); // this prevents the watch from backgrounding the app.
 				} else {
 					args.Add (new WaitForExitArgument ());
@@ -417,9 +412,14 @@ namespace Xharness {
 					MainLog.WriteLine ("Starting test run");
 
 					// We need to check for MT1111 (which means that mlaunch won't wait for the app to exit).
-					var runLog = Log.CreateAggregatedLog (testReporter.CallbackLog, MainLog);
-					testReporter.TimeoutWatch.Start ();
-					await testReporter.CollectDeviceResult (ProcessManager.ExecuteCommandAsync (harness.MlaunchPath, args, runLog, testReporter.Timeout, cancellation_token: testReporter.CancellationToken));
+					var aggregatedLog = Log.CreateAggregatedLog (testReporter.CallbackLog, MainLog);
+					Task<ProcessExecutionResult> runTestTask = processManager.ExecuteCommandAsync (
+						args,
+						aggregatedLog,
+						testReporterTimeout,
+						cancellation_token: testReporter.CancellationToken);
+
+					await testReporter.CollectDeviceResult (runTestTask);
 				} finally {
 					deviceLogCapturer.StopCapture ();
 					deviceSystemLog.Dispose ();
@@ -437,6 +437,7 @@ namespace Xharness {
 
 			// check the final status, copy all the required data
 			(Result, FailureMessage) = await testReporter.ParseResult ();
+
 			return testReporter.Success.Value ? 0 : 1;
 		}
 	}

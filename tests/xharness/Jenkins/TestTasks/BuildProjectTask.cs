@@ -4,14 +4,19 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using System.Xml;
-using Xharness.Logging;
-using Xharness.Utilities;
+using Microsoft.DotNet.XHarness.iOS.Shared;
+using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
+using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
+using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
-namespace Xharness.Jenkins.TestTasks
-{
+namespace Xharness.Jenkins.TestTasks {
 	abstract class BuildProjectTask : BuildToolTask
 	{
 		public string SolutionPath;
+
+		protected BuildProjectTask (IProcessManager processManager) : base (processManager)
+		{
+		}
 
 		public bool RestoreNugets {
 			get {
@@ -34,7 +39,7 @@ namespace Xharness.Jenkins.TestTasks
 					throw new FileNotFoundException ("Could not find the solution whose nugets to restore.", projectPath);
 
 				using (var nuget = new Process ()) {
-					nuget.StartInfo.FileName = useXIBuild && !isSolution ? DirectoryUtilities.XIBuildPath :
+					nuget.StartInfo.FileName = useXIBuild && !isSolution ? Harness.XIBuildPath :
 						"/Library/Frameworks/Mono.framework/Versions/Current/Commands/nuget";
 					var args = new List<string> ();
 					args.Add ((useXIBuild && !isSolution ? "/" : "") + "restore"); // diff param depending on the tool

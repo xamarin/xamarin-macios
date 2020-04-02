@@ -1,10 +1,10 @@
 using System.Collections.Generic;
-using System.Diagnostics;
+using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 
 namespace Xharness.Jenkins.TestTasks {
 	class DotNetBuildTask : MSBuildTask {
 
-		public DotNetBuildTask ()
+		public DotNetBuildTask (IProcessManager processManager) : base (processManager)
 		{
 			SetDotNetEnvironmentVariables (Environment);
 		}

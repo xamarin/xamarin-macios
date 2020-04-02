@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using Xharness.Execution;
-using Xharness.Logging;
-using Xharness.Utilities;
+using Microsoft.DotNet.XHarness.iOS.Shared;
+using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
+using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
+using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
-namespace Xharness.Jenkins.TestTasks
-{
+namespace Xharness.Jenkins.TestTasks {
 	internal abstract class RunTestTask : TestTask
 	{
 		protected IProcessManager ProcessManager { get; }
@@ -73,6 +73,8 @@ namespace Xharness.Jenkins.TestTasks
 					ExecutionResult = TestExecutingResult.BuildFailure;
 				}
 				FailureMessage = BuildTask.FailureMessage;
+				if (!string.IsNullOrEmpty (BuildTask.KnownFailure))
+					KnownFailure = BuildTask.KnownFailure;
 				if (Harness.InCI && BuildTask is MSBuildTask projectTask)
 					ResultParser.GenerateFailure (Logs, "build", projectTask.TestName, projectTask.Variation, $"App Build {projectTask.TestName} {projectTask.Variation}", $"App could not be built {FailureMessage}.", projectTask.BuildLog.FullPath, Harness.XmlJargon);
 			} else {

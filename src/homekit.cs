@@ -1815,9 +1815,12 @@ namespace HomeKit {
 		[Export ("significantEvent", ArgumentSemantic.Strong)]
 		NSString WeakSignificantEvent { get; [NotImplemented] set; }
 
-		// FIXME: Bug https://bugzilla.xamarin.com/show_bug.cgi?id=57870
-		// [Wrap ("HMSignificantEventExtensions.GetValue (WeakSignificantEvent)")]
-		// HMSignificantEvent SignificantEvent { get; [NotImplemented] set; }
+		HMSignificantEvent SignificantEvent {
+			[Wrap ("HMSignificantEventExtensions.GetValue (WeakSignificantEvent)")]
+			get;
+			[NotImplemented]
+			set;
+		}
 
 		[NullAllowed, Export ("offset", ArgumentSemantic.Strong)]
 		NSDateComponents Offset { get; [NotImplemented] set; }
@@ -1839,10 +1842,15 @@ namespace HomeKit {
 		[Export ("significantEvent", ArgumentSemantic.Strong)]
 		NSString WeakSignificantEvent { get; set; }
 
-		// FIXME: Bug https://bugzilla.xamarin.com/show_bug.cgi?id=57870
-		// [Override]
-		// [Wrap ("HMSignificantEventExtensions.GetValue (WeakSignificantEvent)")]
-		// HMSignificantEvent SignificantEvent { get; set; }
+#if XAMCORE_4_0
+		[Override]
+#endif
+		HMSignificantEvent SignificantEvent {
+			[Wrap ("HMSignificantEventExtensions.GetValue (WeakSignificantEvent)")]
+			get;
+			[Wrap ("WeakSignificantEvent = HMSignificantEventExtensions.GetConstant (value)")]
+			set;
+		}
 
 		[Override]
 		[Export ("offset", ArgumentSemantic.Strong)]
