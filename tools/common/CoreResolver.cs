@@ -103,7 +103,13 @@ namespace Xamarin.Bundler {
 			catch (Exception e) {
 				throw new ProductException (9, true, e, Errors.MX0009, fileName);
 			}
-			cache.Add (name, assembly);
+			CacheAssembly (assembly);
+			return assembly;
+		}
+
+		public AssemblyDefinition CacheAssembly (AssemblyDefinition assembly)
+		{
+			cache [assembly.Name.Name] = assembly;
 			return assembly;
 		}
 
