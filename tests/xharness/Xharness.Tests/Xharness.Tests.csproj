@@ -54,9 +54,8 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TestImporter\Tests\InfoPlistGeneratorTests.cs" />
-    <Compile Include="TestImporter\Tests\BCLTestImportTargetFactoryTest.cs" />
-    <Compile Include="TestImporter\Tests\TestAssemblyDefinitionTest.cs" />
+    <Compile Include="Tests\BCLTestImportTargetFactoryTest.cs" />
+    <Compile Include="TestImporter\Xamarin\Tests\TestAssemblyDefinitionTest.cs" />
     <Compile Include="Tests\AppRunnerTests.cs" />
     <Compile Include="TestImporter\Xamarin\Tests\ProjectFilterTest.cs" />
     <Compile Include="TestImporter\Xamarin\Tests\AssemblyLocatorTest.cs" />
