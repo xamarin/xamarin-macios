@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Collections.Generic;
 
-namespace Xharness.TestImporter {
+namespace Microsoft.DotNet.XHarness.iOS.Shared.TestImporter {
 	/// <summary>
 	/// Class that defines a bcl test project. A bcl test project by definition is the combination of the name
 	/// of the project and a set on assemblies to be tested.
@@ -14,7 +14,7 @@ namespace Xharness.TestImporter {
 		public string ExtraArgs { get; private set; }
 		public IAssemblyLocator AssemblyLocator { get; set; }
 		public ITestAssemblyDefinitionFactory AssemblyDefinitionFactory { get; set; }
-		public List<ITestAssemblyDefinition> TestAssemblies {get; private set; }
+		public List<ITestAssemblyDefinition> TestAssemblies { get; private set; }
 
 		public bool IsXUnit {
 			get {
@@ -38,7 +38,7 @@ namespace Xharness.TestImporter {
 				TestAssemblies.Add (factory.Create (assembly, AssemblyLocator));
 			}
 		}
-		
+
 		public ProjectDefinition (string name, IAssemblyLocator locator, ITestAssemblyDefinitionFactory factory, List<ITestAssemblyDefinition> assemblies, string extraArgs)
 		{
 			Name = name ?? throw new ArgumentNullException (nameof (locator));
@@ -50,8 +50,9 @@ namespace Xharness.TestImporter {
 			}
 			ExtraArgs = extraArgs;
 		}
-		
-		static (string FailureMessage, IEnumerable<string> References) GetAssemblyReferences (string assemblyPath) {
+
+		static (string FailureMessage, IEnumerable<string> References) GetAssemblyReferences (string assemblyPath)
+		{
 			if (!File.Exists (assemblyPath))
 				return ($"The file {assemblyPath} does not exist.", null);
 			var a = Assembly.LoadFile (assemblyPath);
@@ -67,7 +68,7 @@ namespace Xharness.TestImporter {
 			// what a lame way to test this!
 			var xUnitAssemblies = new List<ITestAssemblyDefinition> ();
 			var nUnitAssemblies = new List<ITestAssemblyDefinition> ();
-			
+
 			foreach (var assemblyDefinition in TestAssemblies) {
 				if (assemblyDefinition.IsXUnit)
 					xUnitAssemblies.Add (assemblyDefinition);
@@ -87,19 +88,19 @@ namespace Xharness.TestImporter {
 			string failureMessage = null;
 			foreach (var definition in TestAssemblies) {
 				var references = GetAssemblyReferences (definition.GetPath (platform));
-				if (references.FailureMessage != null) {
-					failureMessage = references.FailureMessage;
-				} else {
+				if (references.FailureMessage != null) failureMessage = references.FailureMessage;
+				else {
 					set.UnionWith (references.References);
 				}
 			}
 			return (failureMessage, set);
 		}
-		
-		public (string FailureMessage, Dictionary <string, Type> Types) GetTypeForAssemblies (string monoRootPath, Platform platform) {
+
+		public (string FailureMessage, Dictionary<string, Type> Types) GetTypeForAssemblies (string monoRootPath, Platform platform)
+		{
 			if (monoRootPath == null)
 				throw new ArgumentNullException (nameof (monoRootPath));
-			var dict = new Dictionary <string, Type> ();
+			var dict = new Dictionary<string, Type> ();
 			// loop over the paths, grab the assembly, find a type and then add it
 			foreach (var definition in TestAssemblies) {
 				var path = definition.GetPath (platform);
@@ -108,18 +109,14 @@ namespace Xharness.TestImporter {
 				var a = Assembly.LoadFile (path);
 				try {
 					var types = a.ExportedTypes;
-					if (!types.Any ()) {
-						continue;
-					}
-					dict[Path.GetFileName (path)] = types.First (t => !t.IsGenericType && (t.FullName.EndsWith ("Test") || t.FullName.EndsWith ("Tests")) && t.Namespace != null);
+					if (!types.Any ()) continue;
+					dict [Path.GetFileName (path)] = types.First (t => !t.IsGenericType && (t.FullName.EndsWith ("Test") || t.FullName.EndsWith ("Tests")) && t.Namespace != null);
 				} catch (ReflectionTypeLoadException e) { // ReflectionTypeLoadException
-					// we did get an exception, possible reason, the type comes from an assebly not loaded, but 
-					// nevertheless we can do something about it, get all the not null types in the exception
-					// and use one of them
+														  // we did get an exception, possible reason, the type comes from an assebly not loaded, but 
+														  // nevertheless we can do something about it, get all the not null types in the exception
+														  // and use one of them
 					var types = e.Types.Where (t => t != null).Where (t => !t.IsGenericType && (t.FullName.EndsWith ("Test") || t.FullName.EndsWith ("Tests")) && t.Namespace != null);
-					if (types.Any()) {
-						dict[Path.GetFileName (path)] = types.First ();
-					}
+					if (types.Any ()) dict [Path.GetFileName (path)] = types.First ();
 				}
 			}
 			return (null, dict);
@@ -137,7 +134,7 @@ namespace Xharness.TestImporter {
 			if (!string.IsNullOrEmpty (references.FailureMessage))
 				return (references.FailureMessage, null);
 			var asm = references.References.Select (
-					a => (assembly: a, 
+					a => (assembly: a,
 						hintPath: AssemblyLocator.GetHintPathForReferenceAssembly (a, platform))).Union (
 					TestAssemblies.Select (
 						definition => (assembly: definition.GetName (platform),

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Xharness.TestImporter.Templates.Managed {
+namespace Microsoft.DotNet.XHarness.iOS.Shared.TestImporter.Templates.Managed {
 
 	// template project that uses the Xamarin.iOS and Xamarin.Mac frameworks
 	// to create a testing application for given xunit and nunit test assemblies
@@ -126,7 +126,8 @@ namespace Xharness.TestImporter.Templates.Managed {
 			}
 		}
 
-		static string GetResourceFileName (string resourceName) {
+		static string GetResourceFileName (string resourceName)
+		{
 			var lastIndex = resourceName.LastIndexOf ('.');
 			var extension = resourceName.Substring (lastIndex + 1);
 			var tmp = resourceName.Substring (0, lastIndex);
@@ -186,7 +187,7 @@ namespace Xharness.TestImporter.Templates.Managed {
 		/// <param name="projectName">The name of the project being generated.</param>
 		/// <param name="platform">The supported platform by the project.</param>
 		/// <returns>The final path to which the project file should be written.</returns>
-		internal string GetProjectPath (string projectName, Platform platform)
+		public string GetProjectPath (string projectName, Platform platform)
 		{
 			switch (platform) {
 			case Platform.iOS:
@@ -211,7 +212,7 @@ namespace Xharness.TestImporter.Templates.Managed {
 		/// <param name="projectName">The name of the project being generated.</param>
 		/// <param name="appType">The typoe of watcOS application.</param>
 		/// <returns>The final path to which the project file should be written.</returns>
-		internal string GetProjectPath (string projectName, WatchAppType appType)
+		public string GetProjectPath (string projectName, WatchAppType appType)
 		{
 			switch (appType) {
 			case WatchAppType.App:
@@ -227,7 +228,7 @@ namespace Xharness.TestImporter.Templates.Managed {
 		/// <param name="rootDir">The root dir to use.</param>
 		/// <param name="platform">The platform that is supported by the project.</param>
 		/// <returns>The final path to which the plist should be written.</returns>
-		internal static string GetPListPath (string rootDir, Platform platform)
+		public static string GetPListPath (string rootDir, Platform platform)
 		{
 			switch (platform) {
 			case Platform.iOS:
@@ -250,7 +251,7 @@ namespace Xharness.TestImporter.Templates.Managed {
 		/// <param name="rootDir">The root dir to use.</param>
 		/// <param name="appType">The watchOS application path whose plist we want to generate.</param>
 		/// <returns></returns>
-		internal static string GetPListPath (string rootDir, WatchAppType appType)
+		public static string GetPListPath (string rootDir, WatchAppType appType)
 		{
 			switch (appType) {
 			case WatchAppType.App:
@@ -304,12 +305,11 @@ namespace Xharness.TestImporter.Templates.Managed {
 		}
 
 		// creates the reference node
-		internal static string GetReferenceNode (string assemblyName, string hintPath = null)
+		public static string GetReferenceNode (string assemblyName, string hintPath = null)
 		{
 			// lets not complicate our life with Xml, we just need to replace two things
-			if (string.IsNullOrEmpty (hintPath)) {
-				return $"<Reference Include=\"{assemblyName}\" />";
-			} else {
+			if (string.IsNullOrEmpty (hintPath)) return $"<Reference Include=\"{assemblyName}\" />";
+			else {
 				// the hint path is using unix separators, we need to use windows ones
 				hintPath = hintPath.Replace ('/', '\\');
 				var sb = new StringBuilder ();
@@ -320,7 +320,7 @@ namespace Xharness.TestImporter.Templates.Managed {
 			}
 		}
 
-		internal static string GetRegisterTypeNode (string registerPath)
+		public static string GetRegisterTypeNode (string registerPath)
 		{
 			var sb = new StringBuilder ();
 			sb.AppendLine ($"<Compile Include=\"{registerPath}\">");
@@ -329,7 +329,7 @@ namespace Xharness.TestImporter.Templates.Managed {
 			return sb.ToString ();
 		}
 
-		internal static string GetContentNode (string resourcePath)
+		public static string GetContentNode (string resourcePath)
 		{
 			var fixedPath = resourcePath.Replace ('/', '\\');
 			var sb = new StringBuilder ();
@@ -416,9 +416,8 @@ namespace Xharness.TestImporter.Templates.Managed {
 		{
 			var rootAssembliesPath = AssemblyLocator.GetAssembliesRootLocation (Platform.WatchOS).Replace ("/", "\\");
 			var sb = new StringBuilder ();
-			if (!string.IsNullOrEmpty (info.FailureMessage)) {
-				WriteReferenceFailure (sb, info.FailureMessage);
-			} else {
+			if (!string.IsNullOrEmpty (info.FailureMessage)) WriteReferenceFailure (sb, info.FailureMessage);
+			else {
 				foreach (var assemblyInfo in info.Assemblies) {
 					if (ProjectFilter == null || !ProjectFilter.ExcludeDll (Platform.WatchOS, assemblyInfo.assembly))
 						sb.AppendLine (GetReferenceNode (assemblyInfo.assembly, assemblyInfo.hintPath));
@@ -456,9 +455,7 @@ namespace Xharness.TestImporter.Templates.Managed {
 				if (!projectDefinition.Validate ())
 					throw new InvalidOperationException ("xUnit and NUnit assemblies cannot be mixed in a test project.");
 				var generatedCodeDir = Path.Combine (GeneratedCodePathRoot, projectDefinition.Name, "watch");
-				if (!Directory.Exists (generatedCodeDir)) {
-					Directory.CreateDirectory (generatedCodeDir);
-				}
+				if (!Directory.Exists (generatedCodeDir)) Directory.CreateDirectory (generatedCodeDir);
 				var registerTypePath = Path.Combine (generatedCodeDir, "RegisterType.cs");
 				string failure = null;
 				string rootProjectPath = GetProjectPath (projectDefinition.Name, Platform.WatchOS); ;
@@ -542,9 +539,8 @@ namespace Xharness.TestImporter.Templates.Managed {
 			// fix possible issues with the paths to be included in the msbuild xml
 			infoPlistPath = infoPlistPath.Replace ('/', '\\');
 			var sb = new StringBuilder ();
-			if (!string.IsNullOrEmpty (info.FailureMessage)) {
-				WriteReferenceFailure (sb, info.FailureMessage);
-			} else {
+			if (!string.IsNullOrEmpty (info.FailureMessage)) WriteReferenceFailure (sb, info.FailureMessage);
+			else {
 				foreach (var assemblyInfo in info.Assemblies) {
 					if (ProjectFilter == null || !ProjectFilter.ExcludeDll (Platform.iOS, assemblyInfo.assembly))
 						sb.AppendLine (GetReferenceNode (assemblyInfo.assembly, assemblyInfo.hintPath));
@@ -583,10 +579,8 @@ namespace Xharness.TestImporter.Templates.Managed {
 				if (!projectDefinition.Validate ())
 					throw new InvalidOperationException ("xUnit and NUnit assemblies cannot be mixed in a test project.");
 				// generate the required type registration info
-				var generatedCodeDir = Path.Combine (GeneratedCodePathRoot, projectDefinition.Name, (platform == Platform.iOS) ? "ios" : "tv");
-				if (!Directory.Exists (generatedCodeDir)) {
-					Directory.CreateDirectory (generatedCodeDir);
-				}
+				var generatedCodeDir = Path.Combine (GeneratedCodePathRoot, projectDefinition.Name, platform == Platform.iOS ? "ios" : "tv");
+				if (!Directory.Exists (generatedCodeDir)) Directory.CreateDirectory (generatedCodeDir);
 				var registerTypePath = Path.Combine (generatedCodeDir, "RegisterType.cs");
 
 				string projectPath = GetProjectPath (projectDefinition.Name, platform);
@@ -630,9 +624,8 @@ namespace Xharness.TestImporter.Templates.Managed {
 			var downloadPath = Path.Combine (AssemblyLocator.GetAssembliesRootLocation (platform), "mac-bcl", platform == Platform.MacOSFull ? "xammac_net_4_5" : "xammac").Replace ("/", "\\");
 			infoPlistPath = infoPlistPath.Replace ('/', '\\');
 			var sb = new StringBuilder ();
-			if (!string.IsNullOrEmpty (info.FailureMessage)) {
-				WriteReferenceFailure (sb, info.FailureMessage);
-			} else {
+			if (!string.IsNullOrEmpty (info.FailureMessage)) WriteReferenceFailure (sb, info.FailureMessage);
+			else {
 				foreach (var assemblyInfo in info.Assemblies) {
 					if (ProjectFilter == null || !ProjectFilter.ExcludeDll (platform, assemblyInfo.assembly))
 						sb.AppendLine (GetReferenceNode (assemblyInfo.assembly, assemblyInfo.hintPath));

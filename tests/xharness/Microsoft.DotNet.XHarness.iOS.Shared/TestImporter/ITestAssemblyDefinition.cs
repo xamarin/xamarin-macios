@@ -1,4 +1,4 @@
-﻿namespace Xharness.TestImporter {
+﻿namespace Microsoft.DotNet.XHarness.iOS.Shared.TestImporter {
 
 	// factory that hides the creation of the ITestAssemblyDefinition to hide the concreate class that is used by the
 	// template.
