@@ -167,7 +167,7 @@ nupkgs/%.nupkg: prepare $(TEMPLATED_FILES)
 	$(Q) rm -f $@ nupkgs/$*.*.nupkg
 	$(Q) rm -Rf $(TEST_FEED_PATH)/$(shell echo $* | tr '[:upper:]' '[:lower:]')
 	$(Q) rm -Rf $(HOME)/.nuget/packages/$(shell echo $* | tr '[:upper:]' '[:lower:]')
-	$(if $(V),,@echo "PACK     $@";) $(DOTNET) pack package/$*/package.csproj --output nupkgs $(DOTNET_PACK_VERBOSITY)
+	$(if $(V),,@echo "PACK     $@";) $(DOTNET) pack package/$*/package.csproj --output nupkgs $(DOTNET_PACK_VERBOSITY) /bl:package/$*/obj/$*.binlog
 	@# Rename nuget to contain exact version
 	$(Q) mv "nupkgs/$*.$(CURRENT_VERSION).nupkg" "nupkgs/$*.$(CURRENT_VERSION)+sha.$(CURRENT_HASH).nupkg"
 	$(Q) echo "Created: nupkgs/$*+sha.$(CURRENT_HASH).nupkg"

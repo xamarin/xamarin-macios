@@ -27,7 +27,8 @@ create_ref_nuget ()
 	mkdir -p "$destdir/ref/netcoreapp5.0"
 
 	$cp "$TOP/src/build/dotnet/$platform_lower/ref/Xamarin.$assembly_infix.dll" "$destdir/ref/netcoreapp5.0/"
-	$cp "$TOP/msbuild/dotnet/package/$packageid/FrameworkList.xml" "$destdir/data/"
+	# FrameworkList.xml is generated
+	#$cp "$TOP/msbuild/dotnet/package/$packageid/FrameworkList.xml" "$destdir/data/"
 
 	chmod -R +r "$destdir"
 }
@@ -69,7 +70,8 @@ create_runtime_packs ()
 		esac
 
 		$cp "$TOP/src/build/dotnet/$platform_lower/$bitsize/Xamarin.$assembly_infix.dll" "$destdir/runtimes/$rid/lib/netcoreapp5.0"
-		$cp "$TOP/msbuild/dotnet/package/$packageid/RuntimeList.xml" "$destdir/data/"
+		# RuntimeList.xml is generated
+		#$cp "$TOP/msbuild/dotnet/package/$packageid/RuntimeList.xml" "$destdir/data/"
 
 		chmod -R +r "$destdir"
 	done

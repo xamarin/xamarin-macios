@@ -1,0 +1,98 @@
+<Project>
+  <Import Project="../targets/Xamarin.Shared.Sdk.Versions.props" />
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp5.0</TargetFramework>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <PackageVersion>$(_PackageVersion)</PackageVersion>
+    <RepositoryUrl>https://github.com/xamarin/xamarin-macios</RepositoryUrl>
+    <RepositoryBranch>$(CurrentBranch)</RepositoryBranch>
+    <RepositoryCommit>$(CurrentHash)</RepositoryCommit>
+    <Authors>Xamarin</Authors>
+
+    <!-- NU5105: The package version '#.#.#-alpha.##+hash' uses SemVer 2.0.0 or components of SemVer 1.0.0 that are not supported on legacy clients. Change the package version to a SemVer 1.0.0 string. If the version contains a release label it must start with a letter. This message can be ignored if the package is not intended for older clients. -->
+    <NoWarn>$(NoWarn);NU5105</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <_RepositoryPath>$(MSBuildThisFileDirectory)/../../..</_RepositoryPath>
+    <_buildPath>$(_RepositoryPath)/_build</_buildPath>
+    <_packagePath>$(_buildPath)\$(PackageId)\</_packagePath>
+
+    <_AssemblyInfix Condition="'$(_PlatformName)' == 'iOS'">iOS</_AssemblyInfix>
+    <_AssemblyInfix Condition="'$(_PlatformName)' == 'tvOS'">TVOS</_AssemblyInfix>
+    <_AssemblyInfix Condition="'$(_PlatformName)' == 'watchOS'">WatchOS</_AssemblyInfix>
+    <_AssemblyInfix Condition="'$(_PlatformName)' == 'macOS'">Mac</_AssemblyInfix>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="$(_packagePath)**">
+      <Pack>true</Pack>
+      <PackagePath>\</PackagePath>
+    </Content>
+  </ItemGroup>
+
+  <!-- Code to automatically create FrameworkList.xml or RuntimeList.xml -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.DotNet.Build.Tasks.Packaging" Version="5.0.0-beta.20120.1" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk" Version="5.0.0-beta.20120.1" PrivateAssets="all" />
+  </ItemGroup>
+
+  <Import Project="Sdk.props" Sdk="Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk" />
+  <UsingTask TaskName="CreateFrameworkListFile" AssemblyFile="$(DotNetBuildTasksSharedFrameworkTaskFile)"/>
+
+  <Target Name="_GenerateFrameworkListFile" Condition=" '$(_CreateFrameworkList)' == 'true' Or '$(_CreateRuntimeList)' == 'true' ">
+    <!-- https://github.com/dotnet/runtime/blob/0647ec314948904319da5eb15e9931f7c85ed1e2/src/installer/pkg/projects/Directory.Build.targets#L281 -->
+    <PropertyGroup Condition="'$(_CreateFrameworkList)' == 'true'">
+      <_FrameworkListFile>$(IntermediateOutputPath)FrameworkList.xml</_FrameworkListFile>
+      <_PacketTargetPath>ref/netcoreapp5.0</_PacketTargetPath>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(_CreateRuntimeList)' == 'true'">
+      <_FrameworkListFile>$(IntermediateOutputPath)RuntimeList.xml</_FrameworkListFile>
+      <_PacketTargetPath>runtimes/$(_RuntimeIdentifier)/lib/netcoreapp5.0</_PacketTargetPath>
+    </PropertyGroup>
+    <ItemGroup>
+      <_PackageFiles Include="$(_packagePath)$(_PacketTargetPath)/Xamarin.$(_AssemblyInfix).dll" PackagePath="$(_PacketTargetPath)" TargetPath="$(_PacketTargetPath)" />
+      <_AppPackAssemblies Include="$(_packagePath)$(_PacketTargetPath)/Xamarin.$(_AssemblyInfix).dll" />
+      <_FrameworkListFileClass Include="@(_AppPackAssemblies->'%(Filename)%(Extension)')" Profile="$(_PlatformName)" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <!-- Hardcode framework attributes -->
+      <_FrameworkListRootAttributes Include="Name" Value="Xamarin $(_PlatformName) - NET 5.0" />
+      <_FrameworkListRootAttributes Include="TargetFrameworkIdentifier" Value=".NETCoreApp" />
+      <_FrameworkListRootAttributes Include="TargetFrameworkVersion" Value="5.0" />
+      <_FrameworkListRootAttributes Include="FrameworkName" Value="Xamarin.$(_PlatformName).App" />
+      <_PackageFiles Include="$(_FrameworkListFile)" PackagePath="data" />
+
+      <!-- The CreateFrameworkListFile task will add _PackageFiles to the files to pack, so remove them if they're already there -->
+      <Content Remove="@(_PackageFiles)" />
+    </ItemGroup>
+    <!-- https://github.com/dotnet/arcade/blob/1924d7ea148c9f26ca3d82b60f0a775a5389ed22/src/Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk/src/CreateFrameworkListFile.cs -->
+    <CreateFrameworkListFile
+        Files="@(_PackageFiles)"
+        FileClassifications="@(_FrameworkListFileClass)"
+        TargetFile="$(_FrameworkListFile)"
+        TargetFilePrefixes="ref;runtimes"
+        RootAttributes="@(_FrameworkListRootAttributes)"
+    />
+  </Target>
+
+  <PropertyGroup>
+    <BeforePack>
+      _GenerateFrameworkListFile;
+      $(BeforePack);
+    </BeforePack>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="$(IntermediateOutputPath)RuntimeList.xml" Condition="Exists ('$(IntermediateOutputPath)RuntimeList.xml')">
+      <Pack>true</Pack>
+      <PackagePath>data</PackagePath>
+    </Content>
+    <Content Include="$(IntermediateOutputPath)FrameworkList.xml" Condition="Exists ('$(IntermediateOutputPath)FrameworkList.xml')">
+      <Pack>true</Pack>
+      <PackagePath>data</PackagePath>
+    </Content>
+  </ItemGroup>
+</Project>
