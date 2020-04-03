@@ -23,7 +23,7 @@ namespace Xharness.TestImporter.Templates {
 		/// <param name="project">The project that is being generated.</param>
 		/// <param name="platform">The target platform of the project.</param>
 		/// <returns>True if the project should be ignored, false otherwise.</returns>
-		bool ExludeProject (BCLTestProjectDefinition project, Platform platform);
+		bool ExludeProject (ProjectDefinition project, Platform platform);
 
 		/// <summary>
 		/// Returns the list of ignore files that will be added to a project so that certain tests are ignored. This

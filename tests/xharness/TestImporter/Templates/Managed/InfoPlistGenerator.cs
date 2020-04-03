@@ -2,11 +2,11 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace Xharness.TestImporter {
+namespace Xharness.TestImporter.Templates.Managed {
 	/// <summary>
 	/// Class that knows how to generate the plist of a test project.
 	/// </summary>
-	public class BCLTestInfoPlistGenerator {
+	public class InfoPlistGenerator {
 		internal static string ApplicationNameReplacement = "%APPLICATION NAME%";
 		internal static string IndentifierReplacement = "%BUNDLE INDENTIFIER%";
 		internal static string WatchAppIndentifierReplacement = "%WATCHAPP INDENTIFIER%";

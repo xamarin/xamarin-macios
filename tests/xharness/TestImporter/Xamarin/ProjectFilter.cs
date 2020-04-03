@@ -93,7 +93,7 @@ namespace Xharness.TestImporter.Xamarin {
 			return false;
 		}
 
-		public bool ExludeProject (BCLTestProjectDefinition project, Platform platform)
+		public bool ExludeProject (ProjectDefinition project, Platform platform)
 		{
 			foreach (var a in project.TestAssemblies) {
 				if (CommonIgnoredAssemblies.Contains (a.Name))

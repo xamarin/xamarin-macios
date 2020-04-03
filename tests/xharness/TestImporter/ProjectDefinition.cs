@@ -9,7 +9,7 @@ namespace Xharness.TestImporter {
 	/// Class that defines a bcl test project. A bcl test project by definition is the combination of the name
 	/// of the project and a set on assemblies to be tested.
 	/// </summary>
-	public class BCLTestProjectDefinition {
+	public class ProjectDefinition {
 		public string Name { get; set; }
 		public string ExtraArgs { get; private set; }
 		public IAssemblyLocator AssemblyLocator { get; set; }
@@ -24,7 +24,7 @@ namespace Xharness.TestImporter {
 			}
 		}
 
-		public BCLTestProjectDefinition (string name, IAssemblyLocator locator, ITestAssemblyDefinitionFactory factory, string [] assemblies, string extraArgs)
+		public ProjectDefinition (string name, IAssemblyLocator locator, ITestAssemblyDefinitionFactory factory, string [] assemblies, string extraArgs)
 		{
 			if (assemblies.Length == 0)
 				throw new ArgumentException ("Most provide at least an assembly.");
@@ -39,7 +39,7 @@ namespace Xharness.TestImporter {
 			}
 		}
 		
-		public BCLTestProjectDefinition (string name, IAssemblyLocator locator, ITestAssemblyDefinitionFactory factory, List<ITestAssemblyDefinition> assemblies, string extraArgs)
+		public ProjectDefinition (string name, IAssemblyLocator locator, ITestAssemblyDefinitionFactory factory, List<ITestAssemblyDefinition> assemblies, string extraArgs)
 		{
 			Name = name ?? throw new ArgumentNullException (nameof (locator));
 			AssemblyLocator = locator ?? throw new ArgumentNullException (nameof (locator));

@@ -74,9 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppRunner.cs" />
-    <Compile Include="TestImporter\BCLTestInfoPlistGenerator.cs" />
-    <Compile Include="TestImporter\BCLTestProjectDefinition.cs" />
-    <Compile Include="TestImporter\Platform.cs" />
+    <Compile Include="BCLTestImportTargetFactory.cs" />
     <Compile Include="CrashSnapshotReporterFactory.cs" />
     <Compile Include="DeviceLogCapturerFactory.cs" />
     <Compile Include="GitHub.cs" />
@@ -126,7 +124,9 @@
     <Compile Include="TestImporter\ITestAssemblyDefinition.cs" />
     <Compile Include="TestImporter\Xamarin\AssemblyDefinitionFactory.cs" />
     <Compile Include="TestImporter\Xamarin\TestAssemblyDefinition.cs" />
-    <Compile Include="BCLTestImportTargetFactory.cs" />
+    <Compile Include="TestImporter\ProjectDefinition.cs" />
+    <Compile Include="TestImporter\Platform.cs" />
+    <Compile Include="TestImporter\Templates\Managed\InfoPlistGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\tools\mtouch\SdkVersions.cs">

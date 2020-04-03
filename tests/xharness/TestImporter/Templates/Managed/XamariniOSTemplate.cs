@@ -449,7 +449,7 @@ namespace Xharness.TestImporter.Templates.Managed {
 				// 2. The container
 				// 3. The extensions
 				// TODO: The following is very similar to what is done in the iOS generation. Must be grouped
-				var projectDefinition = new BCLTestProjectDefinition (def.Name, AssemblyLocator, AssemblyDefinitionFactory, def.Assemblies, def.ExtraArgs);
+				var projectDefinition = new ProjectDefinition (def.Name, AssemblyLocator, AssemblyDefinitionFactory, def.Assemblies, def.ExtraArgs);
 				if (ProjectFilter != null && ProjectFilter.ExludeProject (projectDefinition, Platform.WatchOS)) // if it is ignored, continue
 					continue;
 
@@ -467,7 +467,7 @@ namespace Xharness.TestImporter.Templates.Managed {
 					var projectData = new Dictionary<WatchAppType, (string plist, string project)> ();
 					foreach (var appType in new [] { WatchAppType.Extension, WatchAppType.App }) {
 						(string plist, string project) data;
-						var plist = await BCLTestInfoPlistGenerator.GenerateCodeAsync (GetPlistTemplate (appType), projectDefinition.Name);
+						var plist = await InfoPlistGenerator.GenerateCodeAsync (GetPlistTemplate (appType), projectDefinition.Name);
 						data.plist = GetPListPath (generatedCodeDir, appType);
 						using (var file = new StreamWriter (data.plist, false)) { // false is do not append
 							await file.WriteAsync (plist);
@@ -492,7 +492,7 @@ namespace Xharness.TestImporter.Templates.Managed {
 						projectData [appType] = data;
 					} // foreach app type
 
-					var rootPlist = await BCLTestInfoPlistGenerator.GenerateCodeAsync (GetPlistTemplate (Platform.WatchOS), projectDefinition.Name);
+					var rootPlist = await InfoPlistGenerator.GenerateCodeAsync (GetPlistTemplate (Platform.WatchOS), projectDefinition.Name);
 					var infoPlistPath = GetPListPath (generatedCodeDir, Platform.WatchOS);
 					using (var file = new StreamWriter (infoPlistPath, false)) { // false is do not append
 						await file.WriteAsync (rootPlist);
@@ -576,7 +576,7 @@ namespace Xharness.TestImporter.Templates.Managed {
 			foreach (var def in projects) {
 				if (def.Assemblies.Length == 0)
 					continue;
-				var projectDefinition = new BCLTestProjectDefinition (def.Name, AssemblyLocator, AssemblyDefinitionFactory, def.Assemblies, def.ExtraArgs);
+				var projectDefinition = new ProjectDefinition (def.Name, AssemblyLocator, AssemblyDefinitionFactory, def.Assemblies, def.ExtraArgs);
 				if (ProjectFilter != null && ProjectFilter.ExludeProject (projectDefinition, Platform.WatchOS)) // if it is ignored, continue
 					continue;
 
@@ -592,7 +592,7 @@ namespace Xharness.TestImporter.Templates.Managed {
 				string projectPath = GetProjectPath (projectDefinition.Name, platform);
 				string failure = null;
 				try {
-					var plist = await BCLTestInfoPlistGenerator.GenerateCodeAsync (GetPlistTemplate (platform), projectDefinition.Name);
+					var plist = await InfoPlistGenerator.GenerateCodeAsync (GetPlistTemplate (platform), projectDefinition.Name);
 					var infoPlistPath = GetPListPath (generatedCodeDir, platform);
 					using (var file = new StreamWriter (infoPlistPath, false)) { // false is do not append
 						await file.WriteAsync (plist);
@@ -674,7 +674,7 @@ namespace Xharness.TestImporter.Templates.Managed {
 			foreach (var def in projects) {
 				if (!def.Assemblies.Any ())
 					continue;
-				var projectDefinition = new BCLTestProjectDefinition (def.Name, AssemblyLocator, AssemblyDefinitionFactory, def.Assemblies, def.ExtraArgs);
+				var projectDefinition = new ProjectDefinition (def.Name, AssemblyLocator, AssemblyDefinitionFactory, def.Assemblies, def.ExtraArgs);
 				if (ProjectFilter != null && ProjectFilter.ExludeProject (projectDefinition, platform))
 					continue;
 
@@ -695,7 +695,7 @@ namespace Xharness.TestImporter.Templates.Managed {
 				var projectPath = GetProjectPath (projectDefinition.Name, platform);
 				string failure = null;
 				try {
-					var plist = await BCLTestInfoPlistGenerator.GenerateCodeAsync (GetPlistTemplate (platform), projectDefinition.Name);
+					var plist = await InfoPlistGenerator.GenerateCodeAsync (GetPlistTemplate (platform), projectDefinition.Name);
 					var infoPlistPath = GetPListPath (generatedCodeDir, platform);
 					using (var file = new StreamWriter (infoPlistPath, false)) { // false is do not append
 						await file.WriteAsync (plist);
