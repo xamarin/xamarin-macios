@@ -373,8 +373,8 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Execution {
 			process.StartInfo.Arguments = "-p";
 
 			var log = new MemoryLog ();
-			var stdout = new MemoryLog ();
-			var stderr = new MemoryLog ();
+			var stdout = new MemoryLog () { Timestamp = false };
+			var stderr = new ConsoleLog ();
 			var timeout = TimeSpan.FromSeconds (30);
 
 			var result = RunAsyncInternal (process, log, stdout, stderr, timeout).GetAwaiter ().GetResult ();
@@ -382,7 +382,14 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Execution {
 			if (!result.Succeeded)
 				throw new Exception ("Failed to detect Xcode path from xcode-select!");
 
-			return stdout.ToString ().Trim ();
+			// Something like /Applications/Xcode114.app/Contents/Developers
+			var xcodeRoot = stdout.ToString ().Trim ();
+
+			if (string.IsNullOrEmpty (xcodeRoot))
+				throw new Exception ("Failed to detect Xcode path from xcode-select!");
+
+			// We need /Applications/Xcode114.app only
+			return Path.GetDirectoryName(Path.GetDirectoryName(xcodeRoot));
 		}
 	}
 }
