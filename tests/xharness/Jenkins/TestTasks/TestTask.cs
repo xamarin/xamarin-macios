@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using Microsoft.DotNet.XHarness.iOS.Shared;
@@ -12,7 +13,6 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 namespace Xharness.Jenkins.TestTasks {
 	public abstract class TestTask
 	{
-		static object counterLock = new object ();
 		static int counter;
 		public readonly int ID;
 
@@ -35,12 +35,7 @@ namespace Xharness.Jenkins.TestTasks {
 
 		public TestTask ()
 		{
-			// no, Interlocked.Increment is not going to do the samething, it is a two step, set and increment, 
-			// while Interlocked.Increment is just atomic for the increment. You might think that Interlocked.Ingrement 
-			// + Interlocked.Read will do the same, but no, that is two atomic operations, not a single one
-			lock (counterLock) {
-				ID = counter++;
-			}
+			ID = Interlocked.Increment (ref counter);
 		}
 
 		// VerifyRun is called in RunInternalAsync/ExecuteAsync to verify that the task can be executed/run.
