@@ -13,6 +13,13 @@ endif
 
 TEST_FEED_PATH=test/feed
 
+PLATFORMS=iOS tvOS watchOS macOS
+
+IOS_RIDS=arm64 arm x86 x64
+TVOS_RIDS=arm64 x64
+WATCHOS_RIDS=arm x86
+MACOS_RIDS=x64
+
 include legacy.mk
 
 DIRECTORIES += \
@@ -146,7 +153,6 @@ packsimple: prepare
 	$(Q) mkdir -p nupkgs
 	$(Q) $(MAKE) pack-iOS ref-pack-iOS app-pack-iOS
 
-CURRENT_HASH=$(shell grep '<CurrentHash>' targets/Xamarin.Shared.Sdk.Versions.props | sed -e 's/<[/]*CurrentHash>//g' -e 's/[[:space:]]//g')
 CURRENT_IOS_VERSION=$(shell grep 'iOSPackageVersion:'     targets/Xamarin.Shared.Sdk.Versions.props | sed -e 's/.*PackageVersion://g' -e 's/.sha.*//' -e 's/[[:space:]]//g')
 CURRENT_TVOS_VERSION=$(shell grep 'tvOSPackageVersion:'    targets/Xamarin.Shared.Sdk.Versions.props | sed -e 's/.*PackageVersion://g' -e 's/.sha.*//' -e 's/[[:space:]]//g')
 CURRENT_WATCHOS_VERSION=$(shell grep 'watchOSPackageVersion:' targets/Xamarin.Shared.Sdk.Versions.props | sed -e 's/.*PackageVersion://g' -e 's/.sha.*//' -e 's/[[:space:]]//g')
@@ -162,17 +168,17 @@ nupkgs/%.nupkg: prepare $(TEMPLATED_FILES)
 	$(Q) rm -Rf $(TEST_FEED_PATH)/$(shell echo $* | tr '[:upper:]' '[:lower:]')
 	$(Q) rm -Rf $(HOME)/.nuget/packages/$(shell echo $* | tr '[:upper:]' '[:lower:]')
 	$(if $(V),,@echo "PACK     $@";) $(DOTNET) pack package/$*/package.csproj --output nupkgs $(DOTNET_PACK_VERBOSITY)
-	$(if $(V),,@echo "ADD      $@";) nuget add nupkgs/$*.$(CURRENT_VERSION).nupkg -source $(TEST_FEED_PATH) $(NUGET_VERBOSITY)
 	@# Rename nuget to contain exact version
 	$(Q) mv "nupkgs/$*.$(CURRENT_VERSION).nupkg" "nupkgs/$*.$(CURRENT_VERSION)+sha.$(CURRENT_HASH).nupkg"
 	$(Q) echo "Created: nupkgs/$*+sha.$(CURRENT_HASH).nupkg"
 
-PLATFORMS=iOS tvOS watchOS macOS
-
-IOS_RIDS=arm64 arm x86 x64
-TVOS_RIDS=arm64 x64
-WATCHOS_RIDS=arm x86
-MACOS_RIDS=x64
+install-nugets:
+	$(Q) rm -Rf $(TEST_FEED_PATH)
+	$(Q) mkdir -p $(TEST_FEED_PATH)
+	$(Q) for nupkg in nupkgs/*.nupkg; do \
+		echo "ADD `basename $$nupkg`"; \
+		nuget add "$$nupkg" -source $(TEST_FEED_PATH) $(NUGET_VERBOSITY); \
+	done
 
 runtime-pack-iOS: $(foreach rid,$(IOS_RIDS),nupkgs/Xamarin.iOS.App.Runtime.ios-$(rid).nupkg)
 runtime-pack-tvOS: $(foreach rid,$(TVOS_RIDS),nupkgs/Xamarin.tvOS.App.Runtime.tvos-$(rid).nupkg)

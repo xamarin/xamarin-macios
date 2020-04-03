@@ -123,23 +123,13 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/dotnet/Xamarin.macOS.Legacy.Sdk/t
 targets/Xamarin.Shared.Legacy.Sdk.Versions.props: targets/Xamarin.Shared.Sdk.Versions.props
 	$(Q) $(CP) $< $@
 
-legacy-pack: $(foreach var,iOS tvOS watchOS macOS,legacy-pack-$(var))
-
 # just a temporary target while debugging for faster turnaround
 legacy-pack-simple: legacy-prepare
 	$(Q) mkdir -p nupkgs
 	$(Q) $(MAKE) legacy-pack-iOS
 
-legacy-pack-%: legacy-prepare $(TEMPLATED_FILES)
-	$(Q) rm -Rf $(TEST_FEED_PATH)/xamarin.$(shell echo $* | tr '[:upper:]' '[:lower:]').legacy.sdk
-	$(Q) rm -f nupkgs/Xamarin.$*.Legacy.Sdk.*.nupkg
-	$(Q) rm -Rf $(HOME)/.nuget/packages/xamarin.*.legacy.sdk
-	$(if $(V),,@echo "PACK     nupkgs/Xamarin.$*.Legacy.Sdk.nupkg";) $(DOTNET) pack package/$*/Xamarin.$*.Legacy.csproj --output nupkgs $(DOTNET_PACK_VERBOSITY)
-	$(if $(V),,@echo "ADD      nupkgs/Xamarin.$*.Legacy.Sdk.nupkg";) nuget add nupkgs/Xamarin.$*.Legacy.Sdk.*nupkg -source $(TEST_FEED_PATH) $(NUGET_VERBOSITY)
-	@# Add the hash to the filename
-	$(Q) CURRENT_HASH=$(shell grep '<CurrentHash>' targets/Xamarin.Shared.Legacy.Sdk.Versions.props | sed -e 's/<[/]*CurrentHash>//g' -e 's/[[:space:]]//g'); \
-		NAME=$$(echo nupkgs/Xamarin.$*.Legacy.Sdk.*nupkg | sed -e 's/.nupkg$$//'); mv "$$NAME.nupkg" "$$NAME+sha.$$CURRENT_HASH.nupkg"
-	$(Q) echo "Created: $$(ls -1 nupkgs/Xamarin.$*.Legacy.Sdk.*nupkg)"
+legacy-pack: $(foreach var,$(PLATFORMS),nupkgs/Xamarin.$(var).Legacy.Sdk.nupkg)
+$(foreach var,$(PLATFORMS),nupkgs/Xamarin.$(var).Legacy.Sdk.nupkg): legacy-prepare
 
 test-legacy-nuget: test/NuGet.config test/global.json
 	$(Q) $(MAKE) legacy-pack-simple
