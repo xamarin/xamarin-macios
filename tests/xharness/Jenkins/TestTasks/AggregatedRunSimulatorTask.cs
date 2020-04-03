@@ -65,7 +65,7 @@ namespace Xharness.Jenkins.TestTasks {
 
 				var devices = executingTasks.FirstOrDefault ()?.Simulators; 
 				if (devices == null) { 
-					ExecutionResult = TestExecutingResult.Ignored;
+					ExecutionResult = TestExecutingResult.DeviceNotFound;
 					return;
 				}
 				Jenkins.MainLog.WriteLine ("Selected simulator: {0}", devices.Length > 0 ? devices [0].Name : "none");
