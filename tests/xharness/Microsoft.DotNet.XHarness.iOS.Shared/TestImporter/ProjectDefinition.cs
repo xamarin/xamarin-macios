@@ -88,8 +88,9 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.TestImporter {
 			string failureMessage = null;
 			foreach (var definition in TestAssemblies) {
 				var references = GetAssemblyReferences (definition.GetPath (platform));
-				if (references.FailureMessage != null) failureMessage = references.FailureMessage;
-				else {
+				if (references.FailureMessage != null) {
+					failureMessage = references.FailureMessage;
+				} else {
 					set.UnionWith (references.References);
 				}
 			}
@@ -109,14 +110,18 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.TestImporter {
 				var a = Assembly.LoadFile (path);
 				try {
 					var types = a.ExportedTypes;
-					if (!types.Any ()) continue;
+					if (!types.Any ()) {
+						continue;
+					}
 					dict [Path.GetFileName (path)] = types.First (t => !t.IsGenericType && (t.FullName.EndsWith ("Test") || t.FullName.EndsWith ("Tests")) && t.Namespace != null);
 				} catch (ReflectionTypeLoadException e) { // ReflectionTypeLoadException
-														  // we did get an exception, possible reason, the type comes from an assebly not loaded, but 
-														  // nevertheless we can do something about it, get all the not null types in the exception
-														  // and use one of them
+					// we did get an exception, possible reason, the type comes from an assebly not loaded, but 
+					// nevertheless we can do something about it, get all the not null types in the exception
+					// and use one of them
 					var types = e.Types.Where (t => t != null).Where (t => !t.IsGenericType && (t.FullName.EndsWith ("Test") || t.FullName.EndsWith ("Tests")) && t.Namespace != null);
-					if (types.Any ()) dict [Path.GetFileName (path)] = types.First ();
+					if (types.Any ()) {
+						dict [Path.GetFileName (path)] = types.First ();
+					}
 				}
 			}
 			return (null, dict);

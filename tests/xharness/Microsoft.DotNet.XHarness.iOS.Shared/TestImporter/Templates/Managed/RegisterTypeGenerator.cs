@@ -17,8 +17,9 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.TestImporter.Templates.Managed {
 			var importStringBuilder = new StringBuilder ();
 			var keyValuesStringBuilder = new StringBuilder ();
 			var namespaces = new List<string> ();  // keep track of the namespaces to remove warnings
-			if (!string.IsNullOrEmpty (typeRegistration.FailureMessage)) keyValuesStringBuilder.AppendLine ($"#error {typeRegistration.FailureMessage}");
-			else {
+			if (!string.IsNullOrEmpty (typeRegistration.FailureMessage)) {
+				keyValuesStringBuilder.AppendLine ($"#error {typeRegistration.FailureMessage}");
+			} else {
 				foreach (var a in typeRegistration.Types.Keys) {
 					var t = typeRegistration.Types [a];
 					if (!string.IsNullOrEmpty (t.Namespace)) {
