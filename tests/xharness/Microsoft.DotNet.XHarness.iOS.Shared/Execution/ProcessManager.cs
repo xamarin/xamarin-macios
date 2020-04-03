@@ -14,7 +14,10 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Execution.Mlaunch;
 
 namespace Microsoft.DotNet.XHarness.iOS.Shared.Execution {
 	public class ProcessManager : IProcessManager {
-		public string XcodeRoot { get; }
+		static readonly Lazy<string> autoDetectedXcodeRoot = new Lazy<string>(DetectXcodePath, LazyThreadSafetyMode.PublicationOnly);
+
+		readonly string xcodeRoot;
+		public string XcodeRoot => xcodeRoot ?? autoDetectedXcodeRoot.Value;
 		public string MlaunchPath { get; }
 
 		Version xcode_version;
@@ -29,10 +32,10 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Execution {
 			}
 		}
 
-		public ProcessManager (string xcodeRoot, string mlaunchPath)
+		public ProcessManager (string xcodeRoot = null, string mlaunchPath = "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/mlaunch")
 		{
-			XcodeRoot = xcodeRoot ?? throw new ArgumentNullException (nameof (xcodeRoot));
-			MlaunchPath = mlaunchPath ?? throw new ArgumentNullException (nameof (mlaunchPath));
+			this.xcodeRoot = xcodeRoot;
+			MlaunchPath = mlaunchPath;
 		}
 
 		public async Task<ProcessExecutionResult> ExecuteCommandAsync (string filename,
@@ -94,12 +97,34 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Execution {
 			return RunAsync (process, log, timeout, environmentVariables, cancellationToken, diagnostics);
 		}
 
-		public async Task<ProcessExecutionResult> RunAsync (Process process,
+		public Task<ProcessExecutionResult> RunAsync (Process process,
 			ILog log,
 			ILog stdout,
 			ILog stderr,
 			TimeSpan? timeout = null,
-			Dictionary<string, string> environment_variables = null,
+			Dictionary<string, string> environmentVariables = null,
+			CancellationToken? cancellationToken = null,
+			bool? diagnostics = null)
+		{
+			return RunAsyncInternal (process, log, stdout, stderr, timeout, environmentVariables, cancellationToken, diagnostics);
+		}
+
+		public Task KillTreeAsync (Process process, ILog log, bool? diagnostics = true)
+		{
+			return KillTreeAsyncInternal (process.Id, log, diagnostics);
+		}
+
+		public Task KillTreeAsync (int pid, ILog log, bool? diagnostics = true)
+		{
+			return KillTreeAsyncInternal (pid, log, diagnostics);
+		}
+
+		static async Task<ProcessExecutionResult> RunAsyncInternal (Process process,
+			ILog log,
+			ILog stdout,
+			ILog stderr,
+			TimeSpan? timeout = null,
+			Dictionary<string, string> environmentVariables = null,
 			CancellationToken? cancellationToken = null,
 			bool? diagnostics = null)
 		{
@@ -114,8 +139,8 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Execution {
 			process.StartInfo.StandardErrorEncoding = Encoding.UTF8;
 			process.StartInfo.UseShellExecute = false;
 
-			if (environment_variables != null) {
-				foreach (var kvp in environment_variables)
+			if (environmentVariables != null) {
+				foreach (var kvp in environmentVariables)
 					process.StartInfo.EnvironmentVariables [kvp.Key] = kvp.Value;
 			}
 
@@ -181,7 +206,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Execution {
 
 			if (timeout.HasValue) {
 				if (!await WaitForExitAsync (process, timeout.Value)) {
-					await KillTreeAsync (process, log, diagnostics ?? true);
+					await KillTreeAsyncInternal (process.Id, log, diagnostics ?? true);
 					rv.TimedOut = true;
 					lock (stderr)
 						log.WriteLine ($"{pid} Execution timed out after {timeout.Value.TotalSeconds} seconds and the process was killed.");
@@ -199,12 +224,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Execution {
 			return rv;
 		}
 
-		public Task KillTreeAsync (Process process, ILog log, bool? diagnostics = true)
-		{
-			return KillTreeAsync (process.Id, log, diagnostics);
-		}
-
-		public async Task KillTreeAsync (int pid, ILog log, bool? diagnostics = true)
+		static async Task KillTreeAsyncInternal (int pid, ILog log, bool? diagnostics = true)
 		{
 			var pids = GetChildrenPS (log, pid);
 
@@ -214,7 +234,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Execution {
 					log.WriteLine ("Writing process list:");
 					ps.StartInfo.FileName = "ps";
 					ps.StartInfo.Arguments = "-A -o pid,ruser,ppid,pgid,%cpu=%CPU,%mem=%MEM,flags=FLAGS,lstart,rss,vsz,tty,state,time,command";
-					await RunAsync (ps, log, TimeSpan.FromSeconds (5), diagnostics: false);
+					await RunAsyncInternal (ps, log, log, log, TimeSpan.FromSeconds (5), diagnostics: false);
 				}
 
 				foreach (var diagnose_pid in pids) {
@@ -232,7 +252,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Execution {
 							File.WriteAllText (template, commands.ToString ());
 
 							log.WriteLine ($"Printing backtrace for pid={pid}");
-							await RunAsync (dbg, log, TimeSpan.FromSeconds (30), diagnostics: false);
+							await RunAsyncInternal (dbg, log, log, log, TimeSpan.FromSeconds (30), diagnostics: false);
 						}
 					} finally {
 						try {
@@ -344,6 +364,32 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Execution {
 			}
 
 			return list;
+		}
+
+		static string DetectXcodePath ()
+		{
+			using var process = new Process ();
+			process.StartInfo.FileName = "xcode-select";
+			process.StartInfo.Arguments = "-p";
+
+			var log = new MemoryLog ();
+			var stdout = new MemoryLog () { Timestamp = false };
+			var stderr = new ConsoleLog ();
+			var timeout = TimeSpan.FromSeconds (30);
+
+			var result = RunAsyncInternal (process, log, stdout, stderr, timeout).GetAwaiter ().GetResult ();
+
+			if (!result.Succeeded)
+				throw new Exception ("Failed to detect Xcode path from xcode-select!");
+
+			// Something like /Applications/Xcode114.app/Contents/Developers
+			var xcodeRoot = stdout.ToString ().Trim ();
+
+			if (string.IsNullOrEmpty (xcodeRoot))
+				throw new Exception ("Failed to detect Xcode path from xcode-select!");
+
+			// We need /Applications/Xcode114.app only
+			return Path.GetDirectoryName(Path.GetDirectoryName(xcodeRoot));
 		}
 	}
 }
