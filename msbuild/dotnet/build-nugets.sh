@@ -81,6 +81,60 @@ create_runtime_packs  "tvOS"    "TVOS"    "arm64 x64"
 create_runtime_packs  "watchOS" "WatchOS" "arm x86"
 create_runtime_packs  "macOS"   "Mac"     "x64"
 
+copy_ios_native_libs_to_runtime_pack ()
+{
+	local platform=$1
+	local sdk=$2
+	local fat=$3
+	local rid=$4
+	local architectures=$5
+	local packageid=Xamarin.$platform.App.Runtime.$rid
+	local destdir=$DOTNET_DESTDIR/$packageid/runtimes/$rid/native
+	local sdk_dir="$TOP/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/SDKs/$sdk.sdk"
+	local lib_dir="$sdk_dir/usr/lib/"
+
+	mkdir -p "$destdir"
+
+	local thin=()
+	for arch in $architectures; do
+		thin+=(-extract_family "$arch")
+	done
+
+	local inputs=("$lib_dir"/libapp.a)
+	inputs+=("$lib_dir"/libextension.a)
+	inputs+=("$lib_dir"/libtvextension.a)
+	inputs+=("$lib_dir"/libwatchextension.a)
+	inputs+=("$lib_dir"/libxamarin*)
+	for element in "${inputs[@]}"; do
+		if [[ x$fat == x1 ]]; then
+			lipo "$element" "${thin[@]}" -output "$destdir/$(basename "$element")"
+		else
+			$cp "$element" "$destdir"
+		fi
+	done
+
+	mkdir -p "$destdir/Frameworks"
+	local frameworks=()
+	frameworks+=("$sdk_dir"/Frameworks/Xamarin.framework "$sdk_dir"/Frameworks/Xamarin-debug.framework)
+	for element in "${frameworks[@]}"; do
+		local fw_name
+		fw_name=$(basename "$element" .framework)
+		$cp -r "$element" "$destdir/Frameworks/"
+		if [[ x$fat == x1 ]]; then
+			lipo "$element/$fw_name" "${thin[@]}" -output "$destdir/Frameworks/$fw_name.framework/$fw_name"
+		fi
+	done
+
+}
+copy_ios_native_libs_to_runtime_pack "iOS"     "MonoTouch.iphoneos"        1 "arm64" "arm64"
+copy_ios_native_libs_to_runtime_pack "iOS"     "MonoTouch.iphoneos"        1 "arm"   "armv7 armv7s"
+copy_ios_native_libs_to_runtime_pack "iOS"     "MonoTouch.iphonesimulator" 1 "x64"   "x86_64"
+copy_ios_native_libs_to_runtime_pack "iOS"     "MonoTouch.iphonesimulator" 1 "x86"   "i386"
+copy_ios_native_libs_to_runtime_pack "tvOS"    "Xamarin.AppleTVOS"         0 "arm64" "arm64"
+copy_ios_native_libs_to_runtime_pack "tvOS"    "Xamarin.AppleTVSimulator"  0 "x64"   "x86_64"
+copy_ios_native_libs_to_runtime_pack "watchOS" "Xamarin.WatchOS"           0 "arm"   "armv7k arm64_32"
+copy_ios_native_libs_to_runtime_pack "watchOS" "Xamarin.WatchSimulator"    0 "x86"   "i386"
+
 # the Xamarin.*OS.Sdk nugets
 create_sdk_nugets ()
 {
