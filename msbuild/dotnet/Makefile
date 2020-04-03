@@ -149,9 +149,8 @@ pack: ref-pack sdk-pack runtime-pack
 
 # just a temporary target while debugging for faster turnaround
 packsimple: prepare
-	$(Q) rm -Rf nupkgs
-	$(Q) mkdir -p nupkgs
-	$(Q) $(MAKE) pack-iOS ref-pack-iOS app-pack-iOS
+	$(Q) rm -Rf nupkgs/*
+	$(Q) $(MAKE) pack-iOS
 
 CURRENT_IOS_VERSION=$(shell grep 'iOSPackageVersion:'     targets/Xamarin.Shared.Sdk.Versions.props | sed -e 's/.*PackageVersion://g' -e 's/.sha.*//' -e 's/[[:space:]]//g')
 CURRENT_TVOS_VERSION=$(shell grep 'tvOSPackageVersion:'    targets/Xamarin.Shared.Sdk.Versions.props | sed -e 's/.*PackageVersion://g' -e 's/.sha.*//' -e 's/[[:space:]]//g')
@@ -185,9 +184,14 @@ runtime-pack-tvOS: $(foreach rid,$(TVOS_RIDS),nupkgs/Xamarin.tvOS.App.Runtime.tv
 runtime-pack-watchOS: $(foreach rid,$(WATCHOS_RIDS),nupkgs/Xamarin.watchOS.App.Runtime.watchos-$(rid).nupkg)
 runtime-pack-macOS: $(foreach rid,$(MACOS_RIDS),nupkgs/Xamarin.macOS.App.Runtime.macos-$(rid).nupkg)
 
+ref-pack-%: nupkgs/Xamarin.%.App.Ref.nupkg;
 ref-pack: $(foreach var,$(PLATFORMS),nupkgs/Xamarin.$(var).App.Ref.nupkg)
+sdk-pack-%: nupkgs/Xamarin.%.Sdk.nupkg;
 sdk-pack: $(foreach var,$(PLATFORMS),nupkgs/Xamarin.$(var).Sdk.nupkg)
 runtime-pack: $(foreach var,$(PLATFORMS),runtime-pack-$(var))
+
+pack-%:
+	$(MAKE) ref-pack-$* runtime-pack-$* sdk-pack-$*
 
 test/NuGet.config: $(TOP)/NuGet.config Makefile
 	$(Q) $(CP) $< $@.tmp

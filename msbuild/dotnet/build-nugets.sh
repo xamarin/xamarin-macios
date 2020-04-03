@@ -86,8 +86,11 @@ copy_ios_native_libs_to_runtime_pack ()
 	local platform=$1
 	local sdk=$2
 	local fat=$3
-	local rid=$4
+	local rid_family=$4
 	local architectures=$5
+	#shellcheck disable=SC2155
+	local platform_lower=$(echo "$platform" | tr '[:upper:]' '[:lower:]')
+	local rid=$platform_lower-$rid_family
 	local packageid=Xamarin.$platform.App.Runtime.$rid
 	local destdir=$DOTNET_DESTDIR/$packageid/runtimes/$rid/native
 	local sdk_dir="$TOP/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/SDKs/$sdk.sdk"

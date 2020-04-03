@@ -45,16 +45,20 @@
     <!-- https://github.com/dotnet/runtime/blob/0647ec314948904319da5eb15e9931f7c85ed1e2/src/installer/pkg/projects/Directory.Build.targets#L281 -->
     <PropertyGroup Condition="'$(_CreateFrameworkList)' == 'true'">
       <_FrameworkListFile>$(IntermediateOutputPath)FrameworkList.xml</_FrameworkListFile>
-      <_PacketTargetPath>ref/netcoreapp5.0</_PacketTargetPath>
+      <_PackTargetPath>ref/netcoreapp5.0</_PackTargetPath>
+      <_PackNativePath>runtimes/$(_RuntimeIdentifier)/native</_PackNativePath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(_CreateRuntimeList)' == 'true'">
       <_FrameworkListFile>$(IntermediateOutputPath)RuntimeList.xml</_FrameworkListFile>
-      <_PacketTargetPath>runtimes/$(_RuntimeIdentifier)/lib/netcoreapp5.0</_PacketTargetPath>
+      <_PackTargetPath>runtimes/$(_RuntimeIdentifier)/lib/netcoreapp5.0</_PackTargetPath>
+      <_PackNativePath>runtimes/$(_RuntimeIdentifier)/native</_PackNativePath>
     </PropertyGroup>
     <ItemGroup>
-      <_PackageFiles Include="$(_packagePath)$(_PacketTargetPath)/Xamarin.$(_AssemblyInfix).dll" PackagePath="$(_PacketTargetPath)" TargetPath="$(_PacketTargetPath)" />
-      <_AppPackAssemblies Include="$(_packagePath)$(_PacketTargetPath)/Xamarin.$(_AssemblyInfix).dll" />
-      <_FrameworkListFileClass Include="@(_AppPackAssemblies->'%(Filename)%(Extension)')" Profile="$(_PlatformName)" />
+      <_PackageFiles Include="$(_packagePath)$(_PackTargetPath)/Xamarin.$(_AssemblyInfix).dll" PackagePath="$(_PackTargetPath)" TargetPath="$(_PackTargetPath)" />
+      <_PackageFiles Include="$(_packagePath)$(_PackNativePath)/*.a" PackagePath="$(_PackNativePath)" TargetPath="$(_PackNativePath)" IsNative="true" />
+      <_PackageFiles Include="$(_packagePath)$(_PackNativePath)/*.dylib" PackagePath="$(_PackNativePath)" TargetPath="$(_PackNativePath)" IsNative="true" />
+      <_AppPackAssemblies Include="$(_packagePath)$(_PackTargetPath)/Xamarin.$(_AssemblyInfix).dll" />
+      <_FrameworkListFileClass Include="@(_PackageFiles->'%(Filename)%(Extension)')" Profile="$(_PlatformName)" />
     </ItemGroup>
 
     <ItemGroup>
