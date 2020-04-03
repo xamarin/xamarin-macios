@@ -81,8 +81,6 @@
     <Compile Include="Harness.cs" />
     <Compile Include="TestReporterFactory.cs" />
     <Compile Include="Jenkins\Jenkins.cs" />
-    <Compile Include="Jenkins\Resource.cs" />
-    <Compile Include="Jenkins\Resources.cs" />
     <Compile Include="Jenkins\TestTasks\AggregatedRunSimulatorTask.cs" />
     <Compile Include="Jenkins\TestTasks\BuildProjectTask.cs" />
     <Compile Include="Jenkins\TestTasks\BuildToolTask.cs" />
@@ -98,7 +96,7 @@
     <Compile Include="Jenkins\TestTasks\RunTestTask.cs" />
     <Compile Include="Jenkins\TestTasks\RunXITask.cs" />
     <Compile Include="Jenkins\TestTasks\RunXtroTask.cs" />
-    <Compile Include="Jenkins\TestTasks\TestTask.cs" />
+    <Compile Include="Jenkins\TestTasks\JenkinsTestTask.cs" />
     <Compile Include="MakefileGenerator.cs" />
     <Compile Include="MonoNativeInfo.cs" />
     <Compile Include="NoDeviceFoundException.cs" />
@@ -127,6 +125,10 @@
     <Compile Include="TestImporter\ProjectDefinition.cs" />
     <Compile Include="TestImporter\Platform.cs" />
     <Compile Include="TestImporter\Templates\Managed\InfoPlistGenerator.cs" />
+    <Compile Include="TestTasks\TestTask.cs" />
+    <Compile Include="TestTasks\IAcquiredResource.cs" />
+    <Compile Include="TestTasks\Resource.cs" />
+    <Compile Include="TestTasks\Resources.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\tools\mtouch\SdkVersions.cs">
@@ -238,6 +240,7 @@
     <Folder Include="TestImporter\Templates\Managed\Resources\src\iOSApp\Assets.xcassets\AppIcon.appiconset\" />
     <Folder Include="TestImporter\Templates\Managed\Resources\src\tvOSApp\Assets.xcassets\" />
     <Folder Include="TestImporter\Templates\Managed\Resources\src\tvOSApp\Assets.xcassets\AppIcon.appiconset\" />
+    <Folder Include="TestTasks\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

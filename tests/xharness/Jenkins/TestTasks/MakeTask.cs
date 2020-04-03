@@ -39,7 +39,7 @@ namespace Xharness.Jenkins.TestTasks {
 						}
 					}
 					using (var reader = log.GetReader ())
-						AddWrenchLogFiles (reader);
+						AddCILogFiles (reader);
 					Jenkins.MainLog.WriteLine ("Made {0} ({1})", TestName, Mode);
 				}
 			}
