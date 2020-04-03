@@ -163,7 +163,7 @@ create_sdk_nugets ()
 	$cp -r "$legacy_destdir/lib/msbuild" "$destdir/tools/"
 
 	# linker assembly
-	$cp "$TOP/tools/dotnet-linker/bin/Debug/netcoreapp3.0/dotnet-linker.dll" "$destdir/tools/"
+	$cp -r "$TOP/tools/dotnet-linker/bin/Debug/netcoreapp3.0" "$destdir/tools/dotnet-linker"
 
 	chmod -R +r "$destdir"
 }
