@@ -10,7 +10,8 @@ publish: build
 
 build:
 	rm -Rf ~/.nuget/packages/xamarin.ios.*
-	git clean -xfd
+	cd ../.. && git clean -xfd
+	rm -Rf $(TOP)/_build
 	make all install -j -C ../../..
-	make -C ../.. packsimple test/global.json test/NuGet.config
-
+	make -C ../.. packsimple test/global.json test/NuGet.config -j
+	make -C ../.. install-nugets
