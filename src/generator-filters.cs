@@ -83,9 +83,13 @@ public partial class Generator {
 		print_generated_code ();
 		print ("[EditorBrowsable (EditorBrowsableState.Advanced)]");
 		print ("[Export (\"initWithCoder:\")]");
-		print ("public {0} (NSCoder coder) : base (NSObjectFlag.Empty)", type_name);
+		print ("public {0} ([DisallowNull] NSCoder coder) : base (NSObjectFlag.Empty)", type_name);
 		print ("{");
 		indent++;
+		print ("if (coder == null)");
+		indent++;
+		print ("throw new ArgumentNullException (nameof (coder));");
+		indent--;
 		print ("IntPtr h;");
 		print ("if (IsDirectBinding) {");
 		indent++;
@@ -188,6 +192,12 @@ public partial class Generator {
 				if (!fromProtocol)
 					nullable = true;
 				break;
+			}
+			if (AttributeManager.HasAttribute<NullAllowedAttribute> (p)) {
+				print ("[AllowNull]");
+				nullable = true;
+			} else if (!p.PropertyType.IsValueType) {
+				print ("[DisallowNull]");
 			}
 			print ("public {0}{1} {2} {{", ptype, nullable ? "?" : "", p.Name);
 			indent++;

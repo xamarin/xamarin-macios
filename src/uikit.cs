@@ -2514,7 +2514,7 @@ namespace UIKit {
 		void OpenUrl (NSUrl url, NSDictionary options, [NullAllowed] Action<bool> completion);
 
 		[iOS (10,0), TV (10,0)]
-		[Wrap ("OpenUrl (url, options?.Dictionary, completion)")]
+		[Wrap ("OpenUrl (url, options.GetDictionary ()!, completion)")]
 		[Async]
 		void OpenUrl (NSUrl url, UIApplicationOpenUrlOptions options, [NullAllowed] Action<bool> completion);
 
@@ -3419,7 +3419,7 @@ namespace UIKit {
 		bool OpenUrl (UIApplication app, NSUrl url, NSDictionary options);
 
 		[iOS (9,0)]
-		[Wrap ("OpenUrl(app, url, options.Dictionary)")]
+		[Wrap ("OpenUrl(app, url, options.GetDictionary ())")]
 		bool OpenUrl (UIApplication app, NSUrl url, UIApplicationOpenUrlOptions options);
 		
 		[Export ("window", ArgumentSemantic.Retain), NullAllowed]
@@ -3591,9 +3591,11 @@ namespace UIKit {
 		[Export ("enabled")][Abstract]
 		bool Enabled { [Bind ("isEnabled")] get; set; }
 
+		[NullAllowed]
 		[Export ("title", ArgumentSemantic.Copy)][Abstract]
 		string Title { get;set; }
 
+		[NullAllowed]
 		[Export ("image", ArgumentSemantic.Retain)][Abstract]
 		UIImage Image { get; set; }
 
@@ -5789,7 +5791,7 @@ namespace UIKit {
 		[Static, Export ("fontDescriptorWithFontAttributes:")]
 		UIFontDescriptor FromAttributes (NSDictionary attributes);
 
-		[Static, Wrap ("FromAttributes (attributes == null ? null : attributes.Dictionary)")]
+		[Static, Wrap ("FromAttributes (attributes.GetDictionary ()!)")]
 		UIFontDescriptor FromAttributes (UIFontAttributes attributes);
 	
 		[Static, Export ("fontDescriptorWithName:size:")]
@@ -5802,7 +5804,7 @@ namespace UIKit {
 		UIFontDescriptor GetPreferredDescriptorForTextStyle (NSString uiFontTextStyle);
 
 		[Static]
-		[Wrap ("GetPreferredDescriptorForTextStyle (uiFontTextStyle.GetConstant ())")]
+		[Wrap ("GetPreferredDescriptorForTextStyle (uiFontTextStyle.GetConstant ()!)")]
 		UIFontDescriptor GetPreferredDescriptorForTextStyle (UIFontTextStyle uiFontTextStyle);
 
 		// FIXME [Watch (3,0)] the API is present but UITraitCollection is not exposed / rdar #27785753
@@ -5814,7 +5816,7 @@ namespace UIKit {
 
 		[iOS (10,0), TV (10,0)]
 		[Static]
-		[Wrap ("GetPreferredDescriptorForTextStyle (uiFontTextStyle.GetConstant (), traitCollection)")]
+		[Wrap ("GetPreferredDescriptorForTextStyle (uiFontTextStyle.GetConstant ()!, traitCollection)")]
 		UIFontDescriptor GetPreferredDescriptorForTextStyle (UIFontTextStyle uiFontTextStyle, [NullAllowed] UITraitCollection traitCollection);
 #endif
 	
@@ -5823,13 +5825,13 @@ namespace UIKit {
 		IntPtr Constructor (NSDictionary attributes);
 		
 		[DesignatedInitializer]
-		[Wrap ("this (attributes == null ? null : attributes.Dictionary)")]
+		[Wrap ("this (attributes.GetDictionary ()!)")]
 		IntPtr Constructor (UIFontAttributes attributes);
 
 		[Export ("fontDescriptorByAddingAttributes:")]
 		UIFontDescriptor CreateWithAttributes (NSDictionary attributes);
 		
-		[Wrap ("CreateWithAttributes (attributes == null ? null : attributes.Dictionary)")]
+		[Wrap ("CreateWithAttributes (attributes.GetDictionary ()!)")]
 		UIFontDescriptor CreateWithAttributes (UIFontAttributes attributes);
 
 		[Export ("fontDescriptorWithSymbolicTraits:")]
@@ -5845,7 +5847,7 @@ namespace UIKit {
 		[iOS (13,0), TV (13,0)]
 		[Watch (5,2)]
 		[return: NullAllowed]
-		[Wrap ("CreateWithDesign (design.GetConstant ())")]
+		[Wrap ("CreateWithDesign (design.GetConstant ()!)")]
 		UIFontDescriptor CreateWithDesign (UIFontDescriptorSystemDesign design);
 
 		[Export ("fontDescriptorWithSize:")]
@@ -9290,6 +9292,7 @@ namespace UIKit {
 		[NoTV]
 		[iOS (11,0)]
 		[Wrap ("_LargeTitleTextAttributes")]
+		[NullAllowed]
 		[Appearance]
 		UIStringAttributes LargeTitleTextAttributes { get; set; }
 	}
@@ -9876,7 +9879,7 @@ namespace UIKit {
 		
 #if !TVOS
 		[iOS (10,0)]
-		[Wrap ("SetItems (items, pasteboardOptions?.Dictionary)")]
+		[Wrap ("SetItems (items, pasteboardOptions.GetDictionary ()!)")]
 		void SetItems (NSDictionary<NSString, NSObject> [] items, UIPasteboardOptions pasteboardOptions);
 #endif
 		[NoWatch, NoTV, iOS (10, 0)]
@@ -12080,7 +12083,7 @@ namespace UIKit {
 		void SetBadgeTextAttributes ([NullAllowed] NSDictionary textAttributes, UIControlState state);
 
 		[iOS (10,0), TV (10,0)]
-		[Wrap ("SetBadgeTextAttributes (textAttributes == null ? null : textAttributes.Dictionary, state)")]
+		[Wrap ("SetBadgeTextAttributes (textAttributes.GetDictionary (), state)")]
 		void SetBadgeTextAttributes (UIStringAttributes textAttributes, UIControlState state);
 
 		[iOS (10,0), TV (10,0)]
@@ -16196,6 +16199,7 @@ namespace UIKit {
 		[Export ("initWithPresentedViewController:presentingViewController:")]
 		IntPtr Constructor (UIViewController presentedViewController, [NullAllowed] UIViewController presentingViewController);
 
+		[NullAllowed]
 		[Export ("delegate", ArgumentSemantic.UnsafeUnretained)]
 		NSObject WeakDelegate { get; set; }
 
@@ -16206,6 +16210,7 @@ namespace UIKit {
 #endif
 		
 		[Wrap ("WeakDelegate")]
+		[NullAllowed]
 		[Protocolize]
 		UIPopoverPresentationControllerDelegate Delegate { get; set; }
 	
@@ -16935,26 +16940,26 @@ namespace UIKit {
 	interface NSStringDrawing {
 		[iOS (7,0)]
 		[Export ("sizeWithAttributes:")]
-		CGSize WeakGetSizeUsingAttributes (NSDictionary attributes);
+		CGSize WeakGetSizeUsingAttributes ([NullAllowed] NSDictionary attributes);
 
 		[iOS (7,0)]
-		[Wrap ("WeakGetSizeUsingAttributes (This, attributes.Dictionary)")]
+		[Wrap ("WeakGetSizeUsingAttributes (This, attributes.GetDictionary ())")]
 		CGSize GetSizeUsingAttributes (UIStringAttributes attributes);
 
 		[iOS (7,0)]
 		[Export ("drawAtPoint:withAttributes:")]
-		void WeakDrawString (CGPoint point, NSDictionary attributes);
+		void WeakDrawString (CGPoint point, [NullAllowed] NSDictionary attributes);
 
 		[iOS (7,0)]
-		[Wrap ("WeakDrawString (This, point, attributes.Dictionary)")]
+		[Wrap ("WeakDrawString (This, point, attributes.GetDictionary ())")]
 		void DrawString (CGPoint point, UIStringAttributes attributes);
 
 		[iOS (7,0)]
 		[Export ("drawInRect:withAttributes:")]
-		void WeakDrawString (CGRect rect, NSDictionary attributes);
+		void WeakDrawString (CGRect rect, [NullAllowed] NSDictionary attributes);
 
 		[iOS (7,0)]
-		[Wrap ("WeakDrawString (This, rect, attributes.Dictionary)")]
+		[Wrap ("WeakDrawString (This, rect, attributes.GetDictionary ())")]
 		void DrawString (CGRect rect, UIStringAttributes attributes);
 	}
 
@@ -16962,18 +16967,18 @@ namespace UIKit {
 	interface NSExtendedStringDrawing {
 		[iOS (7,0)]
 		[Export ("drawWithRect:options:attributes:context:")]
-		void WeakDrawString (CGRect rect, NSStringDrawingOptions options, NSDictionary attributes, [NullAllowed] NSStringDrawingContext context);
+		void WeakDrawString (CGRect rect, NSStringDrawingOptions options, [NullAllowed] NSDictionary attributes, [NullAllowed] NSStringDrawingContext context);
 
 		[iOS (7,0)]
-		[Wrap ("WeakDrawString (This, rect, options, attributes == null ? null : attributes.Dictionary, context)")]
+		[Wrap ("WeakDrawString (This, rect, options, attributes.GetDictionary (), context)")]
 		void DrawString (CGRect rect, NSStringDrawingOptions options, UIStringAttributes attributes, [NullAllowed] NSStringDrawingContext context);
 		
 		[iOS (7,0)]
 		[Export ("boundingRectWithSize:options:attributes:context:")]
-		CGRect WeakGetBoundingRect (CGSize size, NSStringDrawingOptions options, NSDictionary attributes, [NullAllowed] NSStringDrawingContext context);
+		CGRect WeakGetBoundingRect (CGSize size, NSStringDrawingOptions options, [NullAllowed] NSDictionary attributes, [NullAllowed] NSStringDrawingContext context);
 
 		[iOS (7,0)]
-		[Wrap ("WeakGetBoundingRect (This, size, options, attributes == null ? null : attributes.Dictionary, context)")]
+		[Wrap ("WeakGetBoundingRect (This, size, options, attributes.GetDictionary (), context)")]
 		CGRect GetBoundingRect (CGSize size, NSStringDrawingOptions options, UIStringAttributes attributes, [NullAllowed] NSStringDrawingContext context);
 	}
 

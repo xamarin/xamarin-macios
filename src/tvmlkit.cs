@@ -979,7 +979,7 @@ namespace TVMLKit {
 		[NullAllowed, Export ("type", ArgumentSemantic.Strong)]
 		NSString /* NS_TYPED_EXTENSIBLE_ENUM */ WeakType { get; }
 
-		[Wrap ("TVMediaItemTypeExtensions.GetValue (WeakType)")]
+		[Wrap ("TVMediaItemTypeExtensions.GetValue (WeakType!)")]
 		TVMediaItemType Type { get; }
 
 		[NullAllowed, Export ("url", ArgumentSemantic.Strong)]

@@ -1808,7 +1808,7 @@ namespace HomeKit {
 		[Export ("initWithSignificantEvent:offset:")]
 		IntPtr Constructor (NSString significantEvent, [NullAllowed] NSDateComponents offset);
 
-		[Wrap ("this (HMSignificantEventExtensions.GetConstant (significantEvent), offset)")]
+		[Wrap ("this (HMSignificantEventExtensions.GetConstant (significantEvent)!, offset)")]
 		IntPtr Constructor (HMSignificantEvent significantEvent, [NullAllowed] NSDateComponents offset);
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
@@ -1819,7 +1819,8 @@ namespace HomeKit {
 		// [Wrap ("HMSignificantEventExtensions.GetValue (WeakSignificantEvent)")]
 		// HMSignificantEvent SignificantEvent { get; [NotImplemented] set; }
 
-		[NullAllowed, Export ("offset", ArgumentSemantic.Strong)]
+		// subclass does not allow null
+		[Export ("offset", ArgumentSemantic.Strong)]
 		NSDateComponents Offset { get; [NotImplemented] set; }
 	}
 
@@ -1831,7 +1832,7 @@ namespace HomeKit {
 		[Export ("initWithSignificantEvent:offset:")]
 		IntPtr Constructor (NSString significantEvent, [NullAllowed] NSDateComponents offset);
 
-		[Wrap ("this (HMSignificantEventExtensions.GetConstant (significantEvent), offset)")]
+		[Wrap ("this (HMSignificantEventExtensions.GetConstant (significantEvent)!, offset)")]
 		IntPtr Constructor (HMSignificantEvent significantEvent, [NullAllowed] NSDateComponents offset);
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]

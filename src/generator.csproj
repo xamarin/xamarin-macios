@@ -24,6 +24,7 @@
     <WarningLevel>4</WarningLevel>
     <Deterministic>True</Deterministic>
     <LangVersion>latest</LangVersion>
+    <NoWarn>8601,8618</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
