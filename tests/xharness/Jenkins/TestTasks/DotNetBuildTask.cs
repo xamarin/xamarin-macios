@@ -4,7 +4,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 namespace Xharness.Jenkins.TestTasks {
 	class DotNetBuildTask : MSBuildTask {
 
-		public DotNetBuildTask (IProcessManager processManager) : base (processManager)
+		public DotNetBuildTask (Jenkins jenkins, TestProject testProject, IProcessManager processManager) : base (jenkins, testProject, processManager)
 		{
 			SetDotNetEnvironmentVariables (Environment);
 		}
