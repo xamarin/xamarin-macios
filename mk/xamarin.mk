@@ -7,8 +7,8 @@ MONO_BRANCH    := $(shell cd $(MONO_PATH) 2> /dev/null && git symbolic-ref --sho
 endif
 
 ifdef ENABLE_XAMARIN
-NEEDED_MACCORE_VERSION := fdeec0f4ccdfdb9111d594b7f7189cd58e06216d
-NEEDED_MACCORE_BRANCH := master
+NEEDED_MACCORE_VERSION := b76c082e5f64ea030ee5a1bcb6186ee7ba3d1fd7
+NEEDED_MACCORE_BRANCH := alex-revert-localization
 
 MACCORE_DIRECTORY := maccore
 MACCORE_MODULE    := git@github.com:xamarin/maccore.git
