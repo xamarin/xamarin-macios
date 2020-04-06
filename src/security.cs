@@ -343,7 +343,6 @@ namespace Security {
 
 		bool IsPermanent { get; set; }
 
-		[NullAllowed]
 		NSData ApplicationTag { get; set; }
 
 		int EffectiveKeySize { get; set; }
@@ -441,7 +440,6 @@ namespace Security {
 
 		bool IsPermanent { get; set; }
 
-		[NullAllowed]
 		NSData ApplicationTag { get; set; }
 
 		int EffectiveKeySize { get; set; }
@@ -475,7 +473,6 @@ namespace Security {
 
 		bool IsPermanent { get; set; }
 
-		[NullAllowed]
 		NSData ApplicationTag { get; set; }
 
 		int EffectiveKeySize { get; set; }
@@ -1100,7 +1097,6 @@ namespace Security {
 
 		int RequestedSize { get; set; }
 
-		[NullAllowed]
 		NSData SharedInfo { get; set; }
 	}
 

@@ -188,12 +188,8 @@ namespace CoreMedia {
 		NSDictionary TrimDurationAtStart { get; set; }
 		NSDictionary TrimDurationAtEnd { get; set; }
 		float SpeedMultiplier { get; set; }
-
-		[NullAllowed]
 		NSUrl SampleReferenceUrl { get; set; }
 		int SampleReferenceByteOffset { get; set; }
-
-		[NullAllowed]
 		NSNumber GradualDecoderRefresh { get; set; }
 
 		[iOS (11,0), Mac (10,13), TV (11,0)]
@@ -210,7 +206,6 @@ namespace CoreMedia {
 		int HevcSyncSampleNalUnitType { get; set; }
 
 		[iOS (11,0), Mac (10,13), TV (11,0)]
-		[NullAllowed]
 		NSData CameraIntrinsicMatrix { get; set; }
 
 		[iOS (13,0), Mac (10,15), TV (13,0), Watch (6,0)]
@@ -255,9 +250,7 @@ namespace CoreMedia {
 		int ProfileSpace { get; set; }
 		int TierFlag { get; set; }
 		int ProfileIndex { get; set; }
-		[NullAllowed]
 		NSData ProfileCompatibilityFlags { get; set; }
-		[NullAllowed]
 		NSData ConstraintIndicatorFlags { get; set; }
 		int LevelIndex { get; set; }
 	}
