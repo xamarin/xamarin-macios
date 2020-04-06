@@ -18,8 +18,6 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Hardware {
 	public class DevicesTest {
 
 		Devices devices;
-		string mlaunchPath;
-		string sdkPath;
 		Mock<IProcessManager> processManager;
 		Mock<ILog> executionLog;
 
@@ -29,8 +27,6 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Hardware {
 			processManager = new Mock<IProcessManager> ();
 			devices = new Devices (processManager.Object);
 			executionLog = new Mock<ILog> ();
-			mlaunchPath = "/usr/bin/mlaunch"; // any will be ok, is mocked
-			sdkPath = "/Applications/Xcode.app";
 		}
 
 		[TearDown]
@@ -63,10 +59,6 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Hardware {
 			Assert.ThrowsAsync<Exception> (async () => {
 				await devices.LoadAsync (executionLog.Object);
 			});
-
-			MlaunchArgument sdkRootArg = passedArguments.Where (a => a is SdkRootArgument).FirstOrDefault ();
-			Assert.IsNotNull (sdkRootArg, "sdk arg missing");
-			AssertArgumentValue (sdkRootArg, $"--sdkroot {sdkPath}", "sdk arg wrong");
 
 			MlaunchArgument listDevArg = passedArguments.Where (a => a is ListDevicesArgument).FirstOrDefault ();
 			Assert.IsNotNull (listDevArg, "list devices arg missing");
@@ -105,13 +97,6 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Hardware {
 			await devices.LoadAsync (executionLog.Object, extraData);
 
 			// assert the devices that are expected from the sample xml
-			// validate the execution of mlaunch
-			Assert.AreEqual (mlaunchPath, processPath, "process path");
-
-			MlaunchArgument sdkRootArg = passedArguments.Where (a => a is SdkRootArgument).FirstOrDefault ();
-			Assert.IsNotNull (sdkRootArg, "sdk arg missing");
-			AssertArgumentValue (sdkRootArg, $"--sdkroot {sdkPath}", "sdk arg wrong");
-
 			MlaunchArgument listDevArg = passedArguments.Where (a => a is ListDevicesArgument).FirstOrDefault ();
 			Assert.IsNotNull (listDevArg, "list devices arg missing");
 

@@ -4,15 +4,15 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 
 namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 	public interface IHardwareDevice : IDevice {
-		string DeviceIdentifier { get; set; }
-		DeviceClass DeviceClass { get; set; }
-		string CompanionIdentifier { get; set; }
-		string BuildVersion { get; set; }
-		string ProductVersion { get; set; }
-		string ProductType { get; set; }
-		string InterfaceType { get; set; }
-		bool? IsUsableForDebugging { get; set; }
-		bool IsLocked { get; set; }
+		string DeviceIdentifier { get; }
+		DeviceClass DeviceClass { get; }
+		string CompanionIdentifier { get; }
+		string BuildVersion { get; }
+		string ProductVersion { get; }
+		string ProductType { get; }
+		string InterfaceType { get; }
+		bool? IsUsableForDebugging { get; }
+		bool IsLocked { get; }
 		int DebugSpeed { get; }
 		DevicePlatform DevicePlatform { get; }
 		bool Supports64Bit { get; }

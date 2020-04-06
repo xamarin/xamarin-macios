@@ -78,7 +78,7 @@ namespace Xharness.Jenkins {
 			}
 		}
 
-		List<JenkinsTestTask> Tasks = new List<JenkinsTestTask> ();
+		List<AppleTestTask> Tasks = new List<AppleTestTask> ();
 		Dictionary<string, MakeTask> DependencyTasks = new Dictionary<string, MakeTask> ();
 
 		internal static Resource DesktopResource = new Resource ("Desktop", Environment.ProcessorCount);
@@ -504,7 +504,7 @@ namespace Xharness.Jenkins {
 			return rv;
 		}
 
-		async Task<IEnumerable<JenkinsTestTask>> CreateRunSimulatorTasksAsync ()
+		async Task<IEnumerable<AppleTestTask>> CreateRunSimulatorTasksAsync ()
 		{
 			var runSimulatorTasks = new List<RunSimulatorTask> ();
 
@@ -570,7 +570,7 @@ namespace Xharness.Jenkins {
 			return rv;
 		}
 
-		Task<IEnumerable<JenkinsTestTask>> CreateRunDeviceTasksAsync ()
+		Task<IEnumerable<AppleTestTask>> CreateRunDeviceTasksAsync ()
 		{
 			var rv = new List<RunDeviceTask> ();
 			var projectTasks = new List<RunDeviceTask> ();
@@ -664,7 +664,7 @@ namespace Xharness.Jenkins {
 				rv.AddRange (projectTasks);
 			}
 
-			return Task.FromResult<IEnumerable<JenkinsTestTask>> (CreateTestVariations (rv, (buildTask, test, candidates) => new RunDeviceTask (devices, buildTask, processManager, candidates?.Cast<IHardwareDevice> () ?? test.Candidates)));
+			return Task.FromResult<IEnumerable<AppleTestTask>> (CreateTestVariations (rv, (buildTask, test, candidates) => new RunDeviceTask (devices, buildTask, processManager, candidates?.Cast<IHardwareDevice> () ?? test.Candidates)));
 		}
 
 		static string AddSuffixToPath (string path, string suffix)
@@ -1373,7 +1373,7 @@ namespace Xharness.Jenkins {
 					try {
 						var allTasks = Tasks.SelectMany ((v) =>
 						{
-							var rv = new List<JenkinsTestTask> ();
+							var rv = new List<AppleTestTask> ();
 							var runsim = v as AggregatedRunSimulatorTask;
 							if (runsim != null)
 								rv.AddRange (runsim.Tasks);
@@ -1381,9 +1381,9 @@ namespace Xharness.Jenkins {
 							return rv;
 						});
 
-						IEnumerable<JenkinsTestTask> find_tasks (StreamWriter writer, string ids)
+						IEnumerable<AppleTestTask> find_tasks (StreamWriter writer, string ids)
 						{
-							IEnumerable<JenkinsTestTask> tasks;
+							IEnumerable<AppleTestTask> tasks;
 							switch (request.Url.Query) {
 							case "?all":
 								tasks = Tasks;
@@ -1396,10 +1396,10 @@ namespace Xharness.Jenkins {
 								break;
 							case "?":
 								writer.WriteLine ("No tasks specified");
-								return Array.Empty<JenkinsTestTask> ();
+								return Array.Empty<AppleTestTask> ();
 							default:
 								var id_inputs = ids.Substring (1).Split (',');
-								var rv = new List<JenkinsTestTask> (id_inputs.Length);
+								var rv = new List<AppleTestTask> (id_inputs.Length);
 								foreach (var id_input in id_inputs) {
 									if (int.TryParse (id_input, out var id)) {
 										var task = Tasks.FirstOrDefault ((t) => t.ID == id);
@@ -1679,7 +1679,7 @@ namespace Xharness.Jenkins {
 			return tcs.Task;
 		}
 
-		string GetTestColor (IEnumerable<JenkinsTestTask> tests)
+		string GetTestColor (IEnumerable<AppleTestTask> tests)
 		{
 			if (!tests.Any ())
 				return "black";
@@ -1709,7 +1709,7 @@ namespace Xharness.Jenkins {
 				return "black";
 		}
 
-		string GetTestColor (JenkinsTestTask test)
+		string GetTestColor (AppleTestTask test)
 		{
 			if (test.NotStarted) {
 				return "black";
@@ -1863,7 +1863,7 @@ namespace Xharness.Jenkins {
 				throw new NotImplementedException ();
 			}
 
-			var allTasks = new List<JenkinsTestTask> ();
+			var allTasks = new List<AppleTestTask> ();
 			if (!populating) {
 				allTasks.AddRange (allExecuteTasks);
 				allTasks.AddRange (allSimulatorTasks);
@@ -2117,7 +2117,7 @@ namespace Xharness.Jenkins {
 
 				writer.WriteLine ("<div id='test-table' style='width: 100%; display: flex;'>");
 				writer.WriteLine ("<div id='test-list'>");
-				var orderedTasks = allTasks.GroupBy ((JenkinsTestTask v) => v.TestName);
+				var orderedTasks = allTasks.GroupBy ((AppleTestTask v) => v.TestName);
 
 				if (IsServerMode) {
 					// In server mode don't take into account anything that can change during a test run
@@ -2406,7 +2406,7 @@ namespace Xharness.Jenkins {
 					writer.WriteLine ("<div id='test-status' style='margin-left: 100px;' class='autorefreshable'>");
 					if (failedTests.Count () == 0) {
 						foreach (var group in failedTests.GroupBy ((v) => v.TestName)) {
-							var enumerableGroup = group as IEnumerable<JenkinsTestTask>;
+							var enumerableGroup = group as IEnumerable<AppleTestTask>;
 							if (enumerableGroup != null) {
 								writer.WriteLine ("<a href='#test_{2}'>{0}</a> ({1})<br />", group.Key, string.Join (", ", enumerableGroup.Select ((v) => string.Format ("<span style='color: {0}'>{1}</span>", GetTestColor (v), string.IsNullOrEmpty (v.Mode) ? v.ExecutionResult.ToString () : v.Mode)).ToArray ()), group.Key.Replace (' ', '-'));
 								continue;
@@ -2469,11 +2469,11 @@ namespace Xharness.Jenkins {
 			return System.Web.HttpUtility.UrlEncode (path).Replace ("%2f", "/").Replace ("+", "%20");
 		}
 
-		string RenderTextStates (IEnumerable<JenkinsTestTask> tests)
+		string RenderTextStates (IEnumerable<AppleTestTask> tests)
 		{
 			// Create a collection of all non-ignored tests in the group (unless all tests were ignored).
 			var allIgnored = tests.All ((v) => v.ExecutionResult == TestExecutingResult.Ignored);
-			IEnumerable<JenkinsTestTask> relevantGroup;
+			IEnumerable<AppleTestTask> relevantGroup;
 			if (allIgnored) {
 				relevantGroup = tests;
 			} else {

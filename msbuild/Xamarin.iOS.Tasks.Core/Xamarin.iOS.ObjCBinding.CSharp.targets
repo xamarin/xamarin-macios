@@ -51,6 +51,7 @@ Copyright (C) 2013-2016 Xamarin Inc. All rights reserved.
 	<Target Name="_GenerateBindings"
 		Inputs="$(MSBuildAllProjects);@(ObjcBindingApiDefinition);@(ObjcBindingCoreSource);@(ReferencePath);@(ObjcBindingNativeLibrary)"
 		Outputs="$(_GeneratedSourcesFileList)"
+		DependsOnTargets="_ComputeTargetFrameworkMoniker"
 		Condition="'$(DesignTimeBuild)' != 'true'">
 
 		<PropertyGroup>

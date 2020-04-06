@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
+using Microsoft.DotNet.XHarness.iOS.Shared.TestImporter;
 using Moq;
 using NUnit.Framework;
-using Xharness.TestImporter;
 
-namespace Xharness.Tests.TestImporter.Tests {
-	public class TestProjectDefinitionTest {
+namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.TestImporter {
+	public class ProjectDefinitionTests {
 
 		Mock<IAssemblyLocator> assemblyLocator;
 		Mock<ITestAssemblyDefinitionFactory> factory;
@@ -26,7 +26,7 @@ namespace Xharness.Tests.TestImporter.Tests {
 		[Test]
 		public void GetTypeForAssembliesNullMonoPath ()
 		{
-			var projectDefinition = new ProjectDefinition ("MyProject", assemblyLocator.Object, factory.Object,  new List<ITestAssemblyDefinition> (), "");	
+			var projectDefinition = new ProjectDefinition ("MyProject", assemblyLocator.Object, factory.Object, new List<ITestAssemblyDefinition> (), "");
 			Assert.Throws<ArgumentNullException> (() => projectDefinition.GetTypeForAssemblies (null, Platform.iOS));
 		}
 	}

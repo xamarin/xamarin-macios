@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using Microsoft.DotNet.XHarness.iOS.Shared.TestImporter;
 
 namespace Xharness.TestImporter.Xamarin {
 	public class TestAssemblyDefinition : ITestAssemblyDefinition{

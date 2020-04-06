@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
-namespace Xharness.TestImporter.Templates.Managed {
+namespace Microsoft.DotNet.XHarness.iOS.Shared.TestImporter.Templates.Managed {
 	public static class RegisterTypeGenerator {
 
 		static readonly string UsingReplacement = "%USING%";
@@ -31,13 +31,13 @@ namespace Xharness.TestImporter.Templates.Managed {
 					}
 				}
 			}
-			
+
 			// got the lines we want to add, read the template and substitute
-			using (var reader = new StreamReader(template)) {
+			using (var reader = new StreamReader (template)) {
 				var result = await reader.ReadToEndAsync ();
 				result = result.Replace (UsingReplacement, importStringBuilder.ToString ());
 				result = result.Replace (KeysReplacement, keyValuesStringBuilder.ToString ());
-				result = result.Replace (IsxUnitReplacement, (isXunit)? "true" : "false");
+				result = result.Replace (IsxUnitReplacement, isXunit ? "true" : "false");
 				return result;
 			}
 		}

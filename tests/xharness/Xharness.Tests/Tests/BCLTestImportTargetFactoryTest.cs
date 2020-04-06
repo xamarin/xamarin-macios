@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.DotNet.XHarness.iOS.Shared.TestImporter;
+using Microsoft.DotNet.XHarness.iOS.Shared.TestImporter.Templates;
 using Moq;
 using NUnit.Framework;
-using Xharness.TestImporter;
-using Xharness.TestImporter.Templates;
 using Xharness.TestImporter.Xamarin;
 
 namespace Xharness.Tests.TestImporter.Tests {
@@ -13,7 +13,7 @@ namespace Xharness.Tests.TestImporter.Tests {
 
 	// test the class so that we ensure that we do call the template object and that we are correctly creating the
 	// default projects.
-	public class BCLTestProjectGeneratorTest
+	public class BCLTestImportTargetFactoryTest
 	{
 		string outputdir;
 		AssemblyLocator assemblyLocator;
