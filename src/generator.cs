@@ -4206,20 +4206,25 @@ public partial class Generator : IMemberGatherer {
 
 	string CurrentMethod;
 
-	void GenerateThreadCheck ()
+	void GenerateThreadCheck (StreamWriter sw = null)
 	{
+		string s;
 		switch (CurrentPlatform) {
 			case PlatformName.iOS:
 			case PlatformName.WatchOS:
 			case PlatformName.TvOS:
-				print ("global::{0}.UIApplication.EnsureUIThread ();", ns.Get ("UIKit"));
+				s = $"global::{ns.Get ("UIKit")}.UIApplication.EnsureUIThread ();";
 				break;
 			case PlatformName.MacOSX:
-				print ("global::{0}.NSApplication.EnsureUIThread ();", ns.Get ("AppKit"));
+				s = $"global::{ns.Get ("AppKit")}.NSApplication.EnsureUIThread ();";
 				break;
 			default:
 				throw new BindingException (1047, CurrentPlatform);
 		}
+		if (sw == null)
+			print (s);
+		else
+			sw.WriteLine (s);
 	}
 
 	// Stret.NeedStret is shared between generator and X.I dll so in order to wrap the exception
@@ -6495,6 +6500,10 @@ public partial class Generator : IMemberGatherer {
 								sw.WriteLine ("\tthrow new PlatformNotSupportedException (\"This API is not supported on this version of iOS\");");
 								sw.WriteLine ("\t\t#else");
 							}
+							if (type_needs_thread_checks) {
+								sw.Write ("\t\t\t");
+								GenerateThreadCheck (sw);
+							}
 							var indentation = 3;
 							WriteIsDirectBindingCondition (sw, ref indentation, is_direct_binding, is_direct_binding_value,
 							                               () => string.Format ("InitializeHandle (global::{1}.IntPtr_objc_msgSend (this.Handle, global::{2}.{0}), \"init\");", initSelector, ns.Messaging, ns.CoreObjCRuntime),
@@ -6522,7 +6531,10 @@ public partial class Generator : IMemberGatherer {
 							if (nscoding) {
 								if (debug)
 									sw.WriteLine ("\t\t\tConsole.WriteLine (\"{0}.ctor (NSCoder)\");", TypeName);
-								sw.WriteLine ();
+								if (type_needs_thread_checks) {
+									sw.Write ("\t\t\t");
+									GenerateThreadCheck (sw);
+								}
 								var indentation = 3;
 								WriteIsDirectBindingCondition (sw, ref indentation, is_direct_binding, is_direct_binding_value,
 								                               () => string.Format ("InitializeHandle (global::{1}.IntPtr_objc_msgSend_IntPtr (this.Handle, {0}, coder.Handle), \"initWithCoder:\");", initWithCoderSelector, ns.Messaging),

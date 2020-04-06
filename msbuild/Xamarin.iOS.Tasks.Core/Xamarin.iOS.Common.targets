@@ -223,7 +223,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<Message Importance="Low" Text="Including @(ReferencePath)" Condition="'%(ReferencePath.ResolvedFrom)' == 'ImplicitlyExpandDesignTimeFacades'" />
 	</Target>
 
-	<Target Name="_ComputeTargetArchitectures">
+	<Target Name="_ComputeTargetArchitectures" DependsOnTargets="_ComputeTargetFrameworkMoniker">
 		<ParseDeviceSpecificBuildInformation
 			SessionId="$(BuildSessionId)"
 			Condition="'$(DeviceSpecificBuild)' == 'true' And '$(TargetiOSDevice)' != '' And '$(_CanDeployToDeviceOrSimulator)' == 'true'"
@@ -421,7 +421,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</ArchiveDependsOn>
 	</PropertyGroup>
 
-	<Target Name="ValidateAppStoreBundle" DependsOnTargets="_DetectSdkLocations">
+	<Target Name="ValidateAppStoreBundle" DependsOnTargets="_DetectSdkLocations;_ComputeTargetFrameworkMoniker">
 		<ALToolValidate
 			SessionId="$(BuildSessionId)"
 			Username="$(Username)"
@@ -432,7 +432,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		/>
 	</Target>
 
-	<Target Name="UploadAppStoreBundle" DependsOnTargets="_DetectSdkLocations">
+	<Target Name="UploadAppStoreBundle" DependsOnTargets="_DetectSdkLocations;_ComputeTargetFrameworkMoniker">
 		<ALToolUpload
 			SessionId="$(BuildSessionId)"
 			Username="$(Username)"
@@ -601,7 +601,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<Error Condition="'$(_AppManifest)' == '' And '$(_CanOutputAppBundle)' == 'true'" Text="Info.plist not found."/>
 	</Target>
 
-	<Target Name="_SmeltMetal" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(Metal)' != ''" DependsOnTargets="_DetectSdkLocations">
+	<Target Name="_SmeltMetal" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(Metal)' != ''" DependsOnTargets="_DetectSdkLocations;_ComputeTargetFrameworkMoniker">
 		<Metal
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true' and '%(Metal.Identity)' != ''"
@@ -676,7 +676,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</UnpackLibraryResources>
 	</Target>
 
-	<Target Name="_DetectSdkLocations" DependsOnTargets="_ComputeTargetArchitectures">
+	<Target Name="_DetectSdkLocations" DependsOnTargets="_ComputeTargetArchitectures;_ComputeTargetFrameworkMoniker">
 		<DetectSdkLocations
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
@@ -697,7 +697,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</DetectSdkLocations>
 	</Target>
 
-	<Target Name="_DetectSigningIdentity" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations">
+	<Target Name="_DetectSigningIdentity" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_ComputeTargetFrameworkMoniker">
 		<DetectSigningIdentity
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
@@ -767,7 +767,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<Target Name="GetAppBundleDir" DependsOnTargets="_GenerateBundleName" Returns="$(AppBundleDir)"/>
 
 	<Target Name="_CompileAppManifest"
-		DependsOnTargets="_DetectSdkLocations;_DetectAppManifest;_GenerateBundleName;_DetectSigningIdentity;_PrepareResourceRules;_ResolveWatchAppReferences;_DetectDebugNetworkConfiguration"
+		DependsOnTargets="_DetectSdkLocations;_DetectAppManifest;_GenerateBundleName;_DetectSigningIdentity;_PrepareResourceRules;_ResolveWatchAppReferences;_DetectDebugNetworkConfiguration;_ComputeTargetFrameworkMoniker"
 		Inputs="$(_AppManifest);@(_PartialAppManifest)"
 		Outputs="$(_AppBundlePath)Info.plist" >
 		<CompileAppManifest
@@ -848,6 +848,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 	<PropertyGroup>
 		<_CompileToNativeDependsOn>
+			_ComputeTargetFrameworkMoniker;
 			_DetectAppManifest;
 			_DetectSdkLocations;
 			_GenerateBundleName;
@@ -891,7 +892,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			ExecutableName="$(_ExecutableName)"
 			CompiledEntitlements="$(_CompiledEntitlements)"
 			Debug="$(MtouchDebug)"
-			EnableGenericValueTypeSharing="$(MtouchEnableGenericValueTypeSharing)"
 			ExtraArgs="$(MtouchExtraArgs)"
 			FastDev="$(MtouchFastDev)"
 			HttpClientHandler="$(MtouchHttpClientHandler)"
@@ -1249,7 +1249,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	</Target>
 
 	<Target Name="_CoreCompileColladaAssets"
-		DependsOnTargets="_CollectColladaAssets;_DetectSdkLocations"
+		DependsOnTargets="_CollectColladaAssets;_DetectSdkLocations;_ComputeTargetFrameworkMoniker"
 		Inputs="@(_ColladaAssetWithLogicalName)"
 		Outputs="$(DeviceSpecificIntermediateOutputPath)%(_ColladaAssetWithLogicalName.LogicalName)"
 		>
@@ -1366,7 +1366,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<Target Name="_CoreCompileSceneKitAssets"
 		Inputs="@(SceneKitAsset)"
 		Outputs="$(_SceneKitCache)"
-		DependsOnTargets="_BeforeCoreCompileSceneKitAssets;_GenerateBundleName">
+		DependsOnTargets="_BeforeCoreCompileSceneKitAssets;_GenerateBundleName;_ComputeTargetFrameworkMoniker">
 
 		<CompileSceneKitAssets
 			SessionId="$(BuildSessionId)"
@@ -1576,7 +1576,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</EmbedMobileProvision>
 	</Target>
 
-	<Target Name="_CompileEntitlements" Condition="'$(_RequireCodeSigning)' == 'true' Or '$(CodesignEntitlements)' != ''" DependsOnTargets="_DetectSdkLocations;_GenerateBundleName;_DetectSigningIdentity"
+	<Target Name="_CompileEntitlements" Condition="'$(_RequireCodeSigning)' == 'true' Or '$(CodesignEntitlements)' != ''" DependsOnTargets="_DetectSdkLocations;_GenerateBundleName;_DetectSigningIdentity;_ComputeTargetFrameworkMoniker"
 		Outputs="$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent">
 		<CompileEntitlements
 			SessionId="$(BuildSessionId)"
@@ -1725,7 +1725,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			$(_AppBundlePath)..\%(_ResolvedAppExtensionReferences.FileName)%(_ResolvedAppExtensionReferences.Extension).dSYM" />
 	</Target>
 
-	<Target Name="_ValidateAppBundle" Condition="'$(IsAppExtension)' == 'false' And '$(IsWatchApp)' == 'false'" DependsOnTargets="_DetectSdkLocations">
+	<Target Name="_ValidateAppBundle" Condition="'$(IsAppExtension)' == 'false' And '$(IsWatchApp)' == 'false'" DependsOnTargets="_DetectSdkLocations;_ComputeTargetFrameworkMoniker">
 		<ValidateAppBundleTask
 			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using System.Text;
-using Xharness.Utilities;
+using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using Xharness.Targets;
 
 namespace Xharness

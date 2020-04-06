@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using Xharness.Hardware;
+using Microsoft.DotNet.XHarness.iOS.Shared;
 
-namespace Xharness.Jenkins.TestTasks
-{
+namespace Xharness.Jenkins.TestTasks {
 	// This class groups simulator run tasks according to the
 	// simulator they'll run from, so that we minimize switching
 	// between different simulators (which is slow).
@@ -64,7 +63,11 @@ namespace Xharness.Jenkins.TestTasks
 					await task.SelectSimulatorAsync ();
 				}
 
-				var devices = executingTasks.First ().Simulators;
+				var devices = executingTasks.FirstOrDefault ()?.Simulators; 
+				if (devices == null) { 
+					ExecutionResult = TestExecutingResult.DeviceNotFound;
+					return;
+				}
 				Jenkins.MainLog.WriteLine ("Selected simulator: {0}", devices.Length > 0 ? devices [0].Name : "none");
 
 				foreach (var dev in devices)
@@ -82,7 +85,9 @@ namespace Xharness.Jenkins.TestTasks
 				foreach (var dev in devices)
 					await dev.ShutdownAsync (Jenkins.MainLog);
 
-				await devices.FirstOrDefault()?.KillEverythingAsync (Jenkins.MainLog);
+				var device = devices.FirstOrDefault ();
+				if (device != null)
+					await device.KillEverythingAsync (Jenkins.MainLog);
 
 				run_timer.Stop ();
 			}

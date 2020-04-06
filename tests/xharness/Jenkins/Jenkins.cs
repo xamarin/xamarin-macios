@@ -6,15 +6,15 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Text;
-using Xharness.Logging;
-using Xharness.Execution;
+using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
+using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Xharness.Jenkins.TestTasks;
-using Xharness.Hardware;
-using Xharness.Utilities;
-using Xharness.Collections;
+using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
+using Microsoft.DotNet.XHarness.iOS.Shared;
+using Microsoft.DotNet.XHarness.iOS.Shared.Collections;
+using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 
-namespace Xharness.Jenkins
-{
+namespace Xharness.Jenkins {
 	public class Jenkins
 	{
 		readonly ISimulatorsLoader simulators;
@@ -183,13 +183,13 @@ namespace Xharness.Jenkins
 			case TestPlatform.iOS_TodayExtension64:
 			case TestPlatform.iOS_Unified32:
 			case TestPlatform.iOS_Unified64:
-				return "iOS " + Xamarin.SdkVersions.MiniOSSimulator;
+				return "iOS " + SdkVersions.MiniOSSimulator;
 			case TestPlatform.tvOS:
-				return "tvOS " + Xamarin.SdkVersions.MinTVOSSimulator;
+				return "tvOS " + SdkVersions.MinTVOSSimulator;
 			case TestPlatform.watchOS:
 			case TestPlatform.watchOS_32:
 			case TestPlatform.watchOS_64_32:
-				return "watchOS " + Xamarin.SdkVersions.MinWatchOSSimulator;
+				return "watchOS " + SdkVersions.MinWatchOSSimulator;
 			default:
 				throw new NotImplementedException (platform.ToString ());
 			}
@@ -592,7 +592,7 @@ namespace Xharness.Jenkins
 						TestName = project.Name,
 					};
 					build64.CloneTestProject (project);
-					projectTasks.Add (new RunDeviceTask (devices, build64, processManager, devices.Connected64BitIOS.Where (d => d.IsSupported (project))) { Ignored = !IncludeiOS64 });
+					projectTasks.Add (new RunDeviceTask (devices, build64, processManager, devices.Connected64BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !IncludeiOS64 });
 
 					var build32 = new MSBuildTask (processManager) {
 						Jenkins = this,
@@ -602,7 +602,7 @@ namespace Xharness.Jenkins
 						TestName = project.Name,
 					};
 					build32.CloneTestProject (project);
-					projectTasks.Add (new RunDeviceTask (devices, build32, processManager, devices.Connected32BitIOS.Where (d => d.IsSupported (project))) { Ignored = !IncludeiOS32 });
+					projectTasks.Add (new RunDeviceTask (devices, build32, processManager, devices.Connected32BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !IncludeiOS32 });
 
 					var todayProject = project.AsTodayExtensionProject ();
 					var buildToday = new MSBuildTask (processManager) {
@@ -613,7 +613,7 @@ namespace Xharness.Jenkins
 						TestName = project.Name,
 					};
 					buildToday.CloneTestProject (todayProject);
-					projectTasks.Add (new RunDeviceTask (devices, buildToday, processManager, devices.Connected64BitIOS.Where (d => d.IsSupported (project))) { Ignored = !IncludeiOSExtensions, BuildOnly = ForceExtensionBuildOnly });
+					projectTasks.Add (new RunDeviceTask (devices, buildToday, processManager, devices.Connected64BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !IncludeiOSExtensions, BuildOnly = ForceExtensionBuildOnly });
 				}
 
 				if (!project.SkiptvOSVariation) {
@@ -626,7 +626,7 @@ namespace Xharness.Jenkins
 						TestName = project.Name,
 					};
 					buildTV.CloneTestProject (tvOSProject);
-					projectTasks.Add (new RunDeviceTask (devices, buildTV, processManager, devices.ConnectedTV.Where (d => d.IsSupported (project))) { Ignored = !IncludetvOS });
+					projectTasks.Add (new RunDeviceTask (devices, buildTV, processManager, devices.ConnectedTV.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !IncludetvOS });
 				}
 
 				if (!project.SkipwatchOSVariation) {
@@ -652,7 +652,7 @@ namespace Xharness.Jenkins
 							TestName = project.Name,
 						};
 						buildWatch64_32.CloneTestProject (watchOSProject);
-						projectTasks.Add (new RunDeviceTask (devices, buildWatch64_32, processManager, devices.ConnectedWatch32_64.Where (d => d.IsSupported (project))) { Ignored = !IncludewatchOS });
+						projectTasks.Add (new RunDeviceTask (devices, buildWatch64_32, processManager, devices.ConnectedWatch32_64.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !IncludewatchOS });
 					}
 				}
 				foreach (var task in projectTasks) {

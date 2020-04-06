@@ -6115,7 +6115,7 @@ namespace UIKit {
 		bool ShouldReceivePress (UIGestureRecognizer gestureRecognizer, UIPress press);
 
 		[TV (13,4), iOS (13,4)]
-		[Export ("gestureRecognizer:shouldReceiveEvent:"), DelegateName ("UIGesturesEvent"), DefaultValue (false)]
+		[Export ("gestureRecognizer:shouldReceiveEvent:"), DelegateName ("UIGesturesEvent"), DefaultValue (true)]
 		bool ShouldReceiveEvent (UIGestureRecognizer gestureRecognizer, UIEvent @event);
 	}
 

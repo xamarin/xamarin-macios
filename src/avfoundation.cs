@@ -2918,7 +2918,7 @@ namespace AVFoundation {
 		[Export ("metadataForFormat:")]
 		AVMetadataItem [] GetMetadataForFormat (NSString format);
 
-		[Wrap ("GetMetadataForFormat (new NSString (format.GetConstant ()))")]
+		[Wrap ("GetMetadataForFormat (format.GetConstant ())")]
 		AVMetadataItem [] GetMetadataForFormat (AVMetadataFormat format);
 
 		[Export ("hasProtectedContent")]
