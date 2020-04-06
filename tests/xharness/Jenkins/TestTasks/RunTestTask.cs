@@ -10,7 +10,8 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
 namespace Xharness.Jenkins.TestTasks {
-	internal abstract class RunTestTask : JenkinsTestTask {
+	internal abstract class RunTestTask : AppleTestTask
+	{
 		protected IProcessManager ProcessManager { get; }
 		IResultParser ResultParser { get; } = new XmlResultParser ();
 

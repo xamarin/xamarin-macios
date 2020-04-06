@@ -20,8 +20,8 @@
 	}
 
 	public interface IDevice {
-		string Name { get; set; }
-		string UDID { get; set; }
+		string Name { get; }
+		string UDID { get; }
 		string OSVersion { get; }
 	}
 }

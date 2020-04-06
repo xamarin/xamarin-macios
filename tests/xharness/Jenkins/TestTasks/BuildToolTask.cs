@@ -3,7 +3,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 
 namespace Xharness.Jenkins.TestTasks
 {
-	public abstract class BuildToolTask : JenkinsTestTask
+	public abstract class BuildToolTask : AppleTestTask
 	{
 		readonly Xharness.TestTasks.BuildToolTask buildToolTask;
 

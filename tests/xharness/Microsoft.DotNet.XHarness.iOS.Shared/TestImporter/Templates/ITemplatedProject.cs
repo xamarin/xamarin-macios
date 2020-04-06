@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Xharness.TestImporter.Templates {
+namespace Microsoft.DotNet.XHarness.iOS.Shared.TestImporter.Templates {
 
 	// less typing
 	public class GeneratedProjects : List<(string Name, string Path, bool XUnit, string ExtraArgs, string Failure, double TimeoutMultiplier)> {
