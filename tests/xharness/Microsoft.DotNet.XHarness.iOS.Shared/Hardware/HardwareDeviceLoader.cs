@@ -13,22 +13,20 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
 namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 
-	public interface IDeviceLoaderFactory {
-		IDeviceLoader CreateLoader ();
+	public interface IHardwareDeviceLoader : IDeviceLoader {
+		IEnumerable<IHardwareDevice> ConnectedDevices { get; }
+		IEnumerable<IHardwareDevice> Connected64BitIOS { get; }
+		IEnumerable<IHardwareDevice> Connected32BitIOS { get; }
+		IEnumerable<IHardwareDevice> ConnectedTV { get; }
+		IEnumerable<IHardwareDevice> ConnectedWatch { get; }
+		IEnumerable<IHardwareDevice> ConnectedWatch32_64 { get; }
+
+		Task<IHardwareDevice> FindCompanionDevice (ILog log, IHardwareDevice device);
+
+		Task<IHardwareDevice> FindDevice (RunMode runMode, ILog log, bool includeLocked, bool force);
 	}
 
-	public class DeviceLoaderFactory : IDeviceLoaderFactory {
-		readonly IProcessManager processManager;
-
-		public DeviceLoaderFactory (IProcessManager processManager)
-		{
-			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
-		}
-
-		public IDeviceLoader CreateLoader () => new Devices (processManager);
-	}
-
-	public class Devices : IDeviceLoader {
+	public class HardwareDeviceLoader : IHardwareDeviceLoader {
 		readonly IProcessManager processManager;
 		bool loaded;
 
@@ -41,14 +39,14 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 		public IEnumerable<IHardwareDevice> ConnectedWatch => connected_devices.Where (x => x.DevicePlatform == DevicePlatform.watchOS && x.Architecture == Architecture.ARMv7k);
 		public IEnumerable<IHardwareDevice> ConnectedWatch32_64 => connected_devices.Where (x => x.DevicePlatform == DevicePlatform.watchOS && x.Architecture == Architecture.ARM64_32);
 
-		public Devices (IProcessManager processManager)
+		public HardwareDeviceLoader (IProcessManager processManager)
 		{
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 		}
 
-		public Task LoadAsync (ILog log, bool includeLocked = false, bool forceRefresh = false, bool listExtraData = false)
+		public Task LoadDevices (ILog log, bool includeLocked = false, bool forceRefresh = false, bool listExtraData = false)
 		{
-			return LoadDevices (log, listExtraData: listExtraData, removedLocked: !includeLocked, forceRefresh: forceRefresh);
+			return LoadDevicesInternal (log, listExtraData: listExtraData, removedLocked: !includeLocked, forceRefresh: forceRefresh);
 		}
 
 		public async Task<IHardwareDevice> FindDevice (RunMode runMode, ILog log, bool includeLocked, bool force)
@@ -61,7 +59,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 				_ => throw new ArgumentException (nameof (runMode)),
 			};
 
-			await LoadDevices (log, false, false);
+			await LoadDevicesInternal (log, false, false);
 
 			IEnumerable<IHardwareDevice> compatibleDevices = ConnectedDevices.Where (v => deviceClasses.Contains (v.DeviceClass) && v.IsUsableForDebugging != false);
 			IHardwareDevice device;
@@ -86,7 +84,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 
 		public async Task<IHardwareDevice> FindCompanionDevice (ILog log, IHardwareDevice device)
 		{
-			await LoadDevices (log, false, false);
+			await LoadDevicesInternal (log, false, false);
 
 			var companion = ConnectedDevices.Where ((v) => v.DeviceIdentifier == device.CompanionIdentifier);
 			if (companion.Count () == 0)
@@ -98,7 +96,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 			return companion.First ();
 		}
 
-		async Task LoadDevices (ILog log, bool removedLocked, bool forceRefresh, bool listExtraData = false)
+		async Task LoadDevicesInternal (ILog log, bool removedLocked, bool forceRefresh, bool listExtraData = false)
 		{
 			if (loaded) {
 				if (!forceRefresh)

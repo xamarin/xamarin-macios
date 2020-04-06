@@ -18,7 +18,7 @@ namespace Xharness {
 
 	class AppRunner {
 		readonly IProcessManager processManager;
-		readonly ISimulatorsLoaderFactory simulatorsLoaderFactory;
+		readonly ISimulatorLoaderFactory simulatorsLoaderFactory;
 		readonly ISimpleListenerFactory listenerFactory;
 		readonly IDeviceLoaderFactory devicesLoaderFactory;
 		readonly ICrashSnapshotReporterFactory snapshotReporterFactory;
@@ -58,7 +58,7 @@ namespace Xharness {
 
 		public AppRunner (IProcessManager processManager,
 						  IAppBundleInformationParser appBundleInformationParser,
-						  ISimulatorsLoaderFactory simulatorsFactory,
+						  ISimulatorLoaderFactory simulatorsFactory,
 						  ISimpleListenerFactory simpleListenerFactory,
 						  IDeviceLoaderFactory devicesFactory,
 						  ICrashSnapshotReporterFactory snapshotReporterFactory,
@@ -113,7 +113,7 @@ namespace Xharness {
 				return true;
 
 			var sims = simulatorsLoaderFactory.CreateLoader ();
-			await sims.LoadAsync (Logs.Create ($"simulator-list-{Helpers.Timestamp}.log", "Simulator list"), false, false);
+			await sims.LoadDevices (Logs.Create ($"simulator-list-{Helpers.Timestamp}.log", "Simulator list"), false, false);
 			simulators = await sims.FindAsync (target, MainLog);
 
 			return simulators != null;
@@ -129,7 +129,7 @@ namespace Xharness {
 				return;
 
 			var devs = devicesLoaderFactory.CreateLoader ();
-			await devs.LoadAsync (MainLog, false, false);
+			await devs.LoadDevices (MainLog, false, false);
 
 			var device = await devs.FindDevice (runMode, MainLog, false, false);
 

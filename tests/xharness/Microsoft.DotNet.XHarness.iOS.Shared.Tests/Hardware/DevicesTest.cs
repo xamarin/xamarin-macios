@@ -17,7 +17,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Hardware {
 	[TestFixture]
 	public class DevicesTest {
 
-		Devices devices;
+		HardwareDeviceLoader devices;
 		Mock<IProcessManager> processManager;
 		Mock<ILog> executionLog;
 
@@ -25,7 +25,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Hardware {
 		public void SetUp ()
 		{
 			processManager = new Mock<IProcessManager> ();
-			devices = new Devices (processManager.Object);
+			devices = new HardwareDeviceLoader (processManager.Object);
 			executionLog = new Mock<ILog> ();
 		}
 
@@ -57,7 +57,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Hardware {
 				});
 
 			Assert.ThrowsAsync<Exception> (async () => {
-				await devices.LoadAsync (executionLog.Object);
+				await devices.LoadDevices (executionLog.Object);
 			});
 
 			MlaunchArgument listDevArg = passedArguments.Where (a => a is ListDevicesArgument).FirstOrDefault ();
@@ -94,7 +94,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Hardware {
 					return Task.FromResult (new ProcessExecutionResult { ExitCode = 0, TimedOut = false });
 				});
 
-			await devices.LoadAsync (executionLog.Object, listExtraData: extraData);
+			await devices.LoadDevices (executionLog.Object, listExtraData: extraData);
 
 			// assert the devices that are expected from the sample xml
 			MlaunchArgument listDevArg = passedArguments.Where (a => a is ListDevicesArgument).FirstOrDefault ();

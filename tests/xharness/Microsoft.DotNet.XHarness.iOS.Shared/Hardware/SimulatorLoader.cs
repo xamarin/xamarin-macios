@@ -16,22 +16,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Collections;
 
 namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 
-	public interface ISimulatorsLoaderFactory {
-		ISimulatorsLoader CreateLoader ();
-	}
-
-	public class SimulatorsLoaderFactory : ISimulatorsLoaderFactory {
-		readonly IProcessManager processManager;
-
-		public SimulatorsLoaderFactory (IProcessManager processManager)
-		{
-			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
-		}
-
-		public ISimulatorsLoader CreateLoader () => new Simulators (processManager);
-	}
-
-	public class Simulators : ISimulatorsLoader {
+	public class SimulatorLoader : ISimulatorLoader {
 		readonly SemaphoreSlim semaphore = new SemaphoreSlim (1);
 		readonly BlockingEnumerableCollection<SimRuntime> supported_runtimes = new BlockingEnumerableCollection<SimRuntime> ();
 		readonly BlockingEnumerableCollection<SimDeviceType> supported_device_types = new BlockingEnumerableCollection<SimDeviceType> ();
@@ -46,12 +31,12 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 		public IEnumerable<SimulatorDevice> AvailableDevices => available_devices;
 		public IEnumerable<SimDevicePair> AvailableDevicePairs => available_device_pairs;
 
-		public Simulators (IProcessManager processManager)
+		public SimulatorLoader (IProcessManager processManager)
 		{
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 		}
 
-		public async Task LoadAsync (ILog log, bool includeLocked = false, bool forceRefresh = false, bool listExtraData = false)
+		public async Task LoadDevices (ILog log, bool includeLocked = false, bool forceRefresh = false, bool listExtraData = false)
 		{
 			await semaphore.WaitAsync ();
 			if (loaded) {
@@ -168,7 +153,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 				return null;
 			}
 
-			await LoadAsync (log, forceRefresh: true);
+			await LoadDevices (log, forceRefresh: true);
 
 			devices = AvailableDevices.Where ((ISimulatorDevice v) => v.SimRuntime == runtime && v.SimDeviceType == devicetype);
 			if (!devices.Any ()) {
@@ -239,7 +224,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 				if (!await CreateDevicePair (log, unpairedDevice, companion_device, device.SimRuntime, device.SimDeviceType, unpairedDevice == null))
 					return null;
 
-				await LoadAsync (log, forceRefresh: true);
+				await LoadDevices (log, forceRefresh: true);
 
 				pairs = AvailableDevicePairs.Where ((pair) => {
 					if (!devices.Any ((v) => v.UDID == pair.Gizmo))
@@ -358,7 +343,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 		}
 
 		class SimulatorEnumerable : IEnumerable<ISimulatorDevice>, IAsyncEnumerable {
-			public Simulators Simulators;
+			public SimulatorLoader Simulators;
 			public TestTarget Target;
 			public bool MinVersion;
 			public ILog Log;

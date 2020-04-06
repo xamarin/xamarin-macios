@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
-using Microsoft.DotNet.XHarness.iOS.Shared;
-using Microsoft.DotNet.XHarness.iOS.Shared.Collections;
 
 namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 	public class SimRuntime {
@@ -44,7 +42,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 		Task KillEverythingAsync (ILog log);
 	}
 
-	public interface ISimulatorsLoader : ILoadAsync {
+	public interface ISimulatorLoader : IDeviceLoader {
 		IEnumerable<SimRuntime> SupportedRuntimes { get; }
 		IEnumerable<SimDeviceType> SupportedDeviceTypes { get; }
 		IEnumerable<SimulatorDevice> AvailableDevices { get; }
@@ -53,5 +51,4 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 		ISimulatorDevice FindCompanionDevice (ILog log, ISimulatorDevice device);
 		IEnumerable<ISimulatorDevice> SelectDevices (TestTarget target, ILog log, bool min_version);
 	}
-
 }
