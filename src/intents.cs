@@ -3497,7 +3497,7 @@ namespace Intents {
 		[Unavailable (PlatformName.MacOSX)]
 		[Wrap ("INIntentIdentifierExtensions.GetValue (IdentifierString)")]
 		[NullAllowed]
-		INIntentIdentifier Identifier { get; }
+		INIntentIdentifier? Identifier { get; }
 
 		[Watch (4,0), Mac (10,13), iOS (11,0)]
 		[NullAllowed, Export ("intentDescription")]
