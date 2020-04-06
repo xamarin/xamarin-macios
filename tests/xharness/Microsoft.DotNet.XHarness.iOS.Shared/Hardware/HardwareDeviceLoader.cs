@@ -30,14 +30,14 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 		readonly IProcessManager processManager;
 		bool loaded;
 
-		BlockingEnumerableCollection<IHardwareDevice> connected_devices = new BlockingEnumerableCollection<IHardwareDevice> ();
+		readonly BlockingEnumerableCollection<IHardwareDevice> connectedDevices = new BlockingEnumerableCollection<IHardwareDevice> ();
 
-		public IEnumerable<IHardwareDevice> ConnectedDevices => connected_devices;
-		public IEnumerable<IHardwareDevice> Connected64BitIOS => connected_devices.Where (x => x.DevicePlatform == DevicePlatform.iOS && x.Supports64Bit);
-		public IEnumerable<IHardwareDevice> Connected32BitIOS => connected_devices.Where (x => x.DevicePlatform == DevicePlatform.iOS && x.Supports32Bit);
-		public IEnumerable<IHardwareDevice> ConnectedTV => connected_devices.Where (x => x.DevicePlatform == DevicePlatform.tvOS);
-		public IEnumerable<IHardwareDevice> ConnectedWatch => connected_devices.Where (x => x.DevicePlatform == DevicePlatform.watchOS && x.Architecture == Architecture.ARMv7k);
-		public IEnumerable<IHardwareDevice> ConnectedWatch32_64 => connected_devices.Where (x => x.DevicePlatform == DevicePlatform.watchOS && x.Architecture == Architecture.ARM64_32);
+		public IEnumerable<IHardwareDevice> ConnectedDevices => connectedDevices;
+		public IEnumerable<IHardwareDevice> Connected64BitIOS => connectedDevices.Where (x => x.DevicePlatform == DevicePlatform.iOS && x.Supports64Bit);
+		public IEnumerable<IHardwareDevice> Connected32BitIOS => connectedDevices.Where (x => x.DevicePlatform == DevicePlatform.iOS && x.Supports32Bit);
+		public IEnumerable<IHardwareDevice> ConnectedTV => connectedDevices.Where (x => x.DevicePlatform == DevicePlatform.tvOS);
+		public IEnumerable<IHardwareDevice> ConnectedWatch => connectedDevices.Where (x => x.DevicePlatform == DevicePlatform.watchOS && x.Architecture == Architecture.ARMv7k);
+		public IEnumerable<IHardwareDevice> ConnectedWatch32_64 => connectedDevices.Where (x => x.DevicePlatform == DevicePlatform.watchOS && x.Architecture == Architecture.ARM64_32);
 
 		public HardwareDeviceLoader (IProcessManager processManager)
 		{
@@ -49,7 +49,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 			if (loaded) {
 				if (!forceRefresh)
 					return;
-				connected_devices.Reset ();
+				connectedDevices.Reset ();
 			}
 
 			loaded = true;
@@ -90,11 +90,11 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 							log.WriteLine ($"Skipping device {d.Name} ({d.DeviceIdentifier}) because it's not usable for debugging.");
 							continue;
 						}
-						connected_devices.Add (d);
+						connectedDevices.Add (d);
 					}
 				}
 			} finally {
-				connected_devices.SetCompleted ();
+				connectedDevices.SetCompleted ();
 				File.Delete (tmpfile);
 				log.Flush ();
 			}
