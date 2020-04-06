@@ -7063,11 +7063,6 @@ public partial class Generator : IMemberGatherer {
 								eaname = "<NOTREACHED>";
 							
 							print ("var handler = {0};", PascalCase (miname));
-							// if (bta.Singleton || mi.GetParameters ().Length == 1)
-							// 	print ("EventHandler? handler = {0};", PascalCase (miname));
-							// else
-							// 	print ("EventHandler<{0}>? handler = {1};", GetEventArgName (mi), miname);
-
 							print ("if (handler != null){");
 							indent++;
 							string eventArgs;
