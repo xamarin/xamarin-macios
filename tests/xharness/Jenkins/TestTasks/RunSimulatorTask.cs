@@ -13,7 +13,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 namespace Xharness.Jenkins.TestTasks {
 	class RunSimulatorTask : RunXITask<ISimulatorDevice>
 	{
-		readonly ISimulatorsLoader simulators;
+		readonly ISimulatorLoader simulators;
 		public IAcquiredResource AcquiredResource;
 
 		public ISimulatorDevice [] Simulators {
@@ -28,7 +28,7 @@ namespace Xharness.Jenkins.TestTasks {
 			}
 		}
 
-		public RunSimulatorTask (ISimulatorsLoader simulators, MSBuildTask build_task, IProcessManager ProcessManager, IEnumerable<ISimulatorDevice> candidates = null)
+		public RunSimulatorTask (ISimulatorLoader simulators, MSBuildTask build_task, IProcessManager ProcessManager, IEnumerable<ISimulatorDevice> candidates = null)
 			: base (build_task, ProcessManager, candidates)
 		{
 			var project = Path.GetFileNameWithoutExtension (ProjectFile);
@@ -78,7 +78,7 @@ namespace Xharness.Jenkins.TestTasks {
 			var clean_state = false;//Platform == TestPlatform.watchOS;
 			runner = new AppRunner (ProcessManager,
 				new AppBundleInformationParser (),
-				new SimulatorsLoaderFactory (ProcessManager),
+				new SimulatorLoaderFactory (ProcessManager),
 				new SimpleListenerFactory (),
 				new DeviceLoaderFactory (ProcessManager),
 				new CrashSnapshotReporterFactory (ProcessManager),

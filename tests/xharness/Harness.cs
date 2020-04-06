@@ -717,7 +717,7 @@ namespace Xharness {
 		{
 			return new AppRunner (processManager,
 				new AppBundleInformationParser (),
-				new SimulatorsLoaderFactory (processManager),
+				new SimulatorLoaderFactory (processManager),
 				new SimpleListenerFactory (),
 				new DeviceLoaderFactory (processManager),
 				new CrashSnapshotReporterFactory (processManager),

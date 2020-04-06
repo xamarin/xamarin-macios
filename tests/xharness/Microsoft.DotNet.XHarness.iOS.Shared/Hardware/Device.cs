@@ -11,18 +11,41 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 	}
 
 	public class Device : IHardwareDevice {
-		public string DeviceIdentifier { get; set; }
-		public DeviceClass DeviceClass { get; set; }
-		public string CompanionIdentifier { get; set; }
-		public string Name { get; set; }
-		public string BuildVersion { get; set; }
-		public string ProductVersion { get; set; }
-		public string ProductType { get; set; }
-		public string InterfaceType { get; set; }
-		public bool? IsUsableForDebugging { get; set; }
-		public bool IsLocked { get; set; }
+		public Device (string deviceIdentifier,
+			DeviceClass deviceClass,
+			string name,
+			string buildVersion,
+			string productVersion,
+			string productType,
+			string interfaceType,
+			string companionIdentifier = null,
+			bool? isUsableForDebugging = null,
+			bool isLocked = false)
+		{
+			DeviceIdentifier = deviceIdentifier;
+			DeviceClass = deviceClass;
+			CompanionIdentifier = companionIdentifier;
+			Name = name;
+			BuildVersion = buildVersion;
+			ProductVersion = productVersion;
+			ProductType = productType;
+			InterfaceType = interfaceType;
+			IsUsableForDebugging = isUsableForDebugging;
+			IsLocked = isLocked;
+		}
 
-		public string UDID { get { return DeviceIdentifier; } set { DeviceIdentifier = value; } }
+		public string DeviceIdentifier { get; }
+		public DeviceClass DeviceClass { get; }
+		public string CompanionIdentifier { get; }
+		public string Name { get; }
+		public string BuildVersion { get; }
+		public string ProductVersion { get; }
+		public string ProductType { get; }
+		public string InterfaceType { get; }
+		public bool? IsUsableForDebugging { get; }
+		public bool IsLocked { get; }
+
+		public string UDID => DeviceIdentifier;
 
 		public string OSVersion => ProductVersion;
 

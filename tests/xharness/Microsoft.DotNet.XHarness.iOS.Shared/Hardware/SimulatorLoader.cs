@@ -16,22 +16,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Collections;
 
 namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 
-	public interface ISimulatorsLoaderFactory {
-		ISimulatorsLoader CreateLoader ();
-	}
-
-	public class SimulatorsLoaderFactory : ISimulatorsLoaderFactory {
-		readonly IProcessManager processManager;
-
-		public SimulatorsLoaderFactory (IProcessManager processManager)
-		{
-			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
-		}
-
-		public ISimulatorsLoader CreateLoader () => new Simulators (processManager);
-	}
-
-	public class Simulators : ISimulatorsLoader {
+	public class SimulatorLoader : ISimulatorLoader {
 		readonly SemaphoreSlim semaphore = new SemaphoreSlim (1);
 		readonly BlockingEnumerableCollection<SimRuntime> supported_runtimes = new BlockingEnumerableCollection<SimRuntime> ();
 		readonly BlockingEnumerableCollection<SimDeviceType> supported_device_types = new BlockingEnumerableCollection<SimDeviceType> ();
@@ -46,16 +31,16 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 		public IEnumerable<SimulatorDevice> AvailableDevices => available_devices;
 		public IEnumerable<SimDevicePair> AvailableDevicePairs => available_device_pairs;
 
-		public Simulators (IProcessManager processManager)
+		public SimulatorLoader (IProcessManager processManager)
 		{
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 		}
 
-		public async Task LoadAsync (ILog log, bool include_locked = false, bool force = false)
+		public async Task LoadDevices (ILog log, bool includeLocked = false, bool forceRefresh = false, bool listExtraData = false)
 		{
 			await semaphore.WaitAsync ();
 			if (loaded) {
-				if (!force) {
+				if (!forceRefresh) {
 					semaphore.Release ();
 					return;
 				}
@@ -74,7 +59,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 							new ListSimulatorsArgument (tmpfile),
 							new XmlOutputFormatArgument ());
 
-						var task = processManager.ExecuteCommandAsync (arguments, log, timeout: TimeSpan.FromSeconds (30));
+						var task = processManager.RunAsync (process, arguments, log, timeout: TimeSpan.FromSeconds (30));
 						log.WriteLine ("Launching {0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments);
 
 						var result = await task;
@@ -168,7 +153,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 				return null;
 			}
 
-			await LoadAsync (log, force: true);
+			await LoadDevices (log, forceRefresh: true);
 
 			devices = AvailableDevices.Where ((ISimulatorDevice v) => v.SimRuntime == runtime && v.SimDeviceType == devicetype);
 			if (!devices.Any ()) {
@@ -239,7 +224,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 				if (!await CreateDevicePair (log, unpairedDevice, companion_device, device.SimRuntime, device.SimDeviceType, unpairedDevice == null))
 					return null;
 
-				await LoadAsync (log, force: true);
+				await LoadDevices (log, forceRefresh: true);
 
 				pairs = AvailableDevicePairs.Where ((pair) => {
 					if (!devices.Any ((v) => v.UDID == pair.Gizmo))
@@ -253,7 +238,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 			return pairs.FirstOrDefault ();
 		}
 
-		public async Task<ISimulatorDevice []> FindAsync (TestTarget target, ILog log, bool create_if_needed = true, bool min_version = false)
+		public async Task<ISimulatorDevice []> FindSimulators (TestTarget target, ILog log, bool create_if_needed = true, bool min_version = false)
 		{
 			ISimulatorDevice [] simulators = null;
 
@@ -358,7 +343,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 		}
 
 		class SimulatorEnumerable : IEnumerable<ISimulatorDevice>, IAsyncEnumerable {
-			public Simulators Simulators;
+			public SimulatorLoader Simulators;
 			public TestTarget Target;
 			public bool MinVersion;
 			public ILog Log;
@@ -386,7 +371,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 			{
 				lock (lock_obj) {
 					if (findTask == null)
-						findTask = Simulators.FindAsync (Target, Log, min_version: MinVersion);
+						findTask = Simulators.FindSimulators (Target, Log, min_version: MinVersion);
 					return findTask;
 				}
 			}
