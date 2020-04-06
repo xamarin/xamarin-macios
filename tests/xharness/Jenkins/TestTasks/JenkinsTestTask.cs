@@ -6,7 +6,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 using Xharness.TestTasks;
 
 namespace Xharness.Jenkins.TestTasks {
-	public abstract class JenkinsTestTask : Xharness.TestTasks.TestTasks
+	public abstract class AppleTestTask : Xharness.TestTasks.TestTasks
 	{
 		public Jenkins Jenkins;
 		public Harness Harness { get { return Jenkins.Harness; } }
