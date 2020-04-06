@@ -1,4 +1,4 @@
-namespace Xharness.TestImporter {
+namespace Microsoft.DotNet.XHarness.iOS.Shared.TestImporter {
 	/// <summary>
 	/// Represents the supported platforms to which we can create projects.
 	/// </summary>

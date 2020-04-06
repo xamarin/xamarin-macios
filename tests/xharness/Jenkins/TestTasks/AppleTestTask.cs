@@ -6,7 +6,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 using Xharness.TestTasks;
 
 namespace Xharness.Jenkins.TestTasks {
-	public abstract class JenkinsTestTask : Xharness.TestTasks.TestTasks
+	public abstract class AppleTestTask : Xharness.TestTasks.TestTasks
 	{
 		public Jenkins Jenkins { get; private set; }
 		public Harness Harness { get { return Jenkins.Harness; } }
@@ -21,7 +21,7 @@ namespace Xharness.Jenkins.TestTasks {
 			}
 		}
 
-		public JenkinsTestTask (Jenkins jenkins) : base ()
+		public AppleTestTask (Jenkins jenkins) : base ()
 		{
 			Jenkins = jenkins ?? throw new ArgumentNullException (nameof (jenkins));
 		}

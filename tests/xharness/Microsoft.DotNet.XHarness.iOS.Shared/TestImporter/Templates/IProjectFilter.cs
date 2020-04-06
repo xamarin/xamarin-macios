@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using Microsoft.DotNet.XHarness.iOS.Shared.TestImporter;
 
-namespace Xharness.TestImporter.Templates {
+namespace Microsoft.DotNet.XHarness.iOS.Shared.TestImporter.Templates {
 
 	/// <summary>
 	/// There are cases in which projects are ignored in certain platforms, either because

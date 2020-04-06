@@ -74,6 +74,7 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 
 	<!-- Override the CoreCompile Target to use btouch -->
 	<Target Name="_GenerateBindings"
+		DependsOnTargets="_ComputeTargetFrameworkMoniker"
 		Inputs="$(MSBuildAllProjects);@(ObjcBindingApiDefinition);@(ObjcBindingCoreSource);@(ReferencePath);@(ObjcBindingNativeLibrary)"
 		Outputs="$(_GeneratedSourcesFileList)"
 		Condition="'$(DesignTimeBuild)' != 'true'">

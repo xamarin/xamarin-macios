@@ -64,21 +64,18 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 			// of exceptions. We do know that we will have issues with the parsing of the DeviceClass, check
 			// the value, and if is there, get the rest, else return null
 			var usable = deviceNone.SelectSingleNode ("IsUsableForDebugging")?.InnerText;
-			if (Enum.TryParse<DeviceClass> (deviceNone.SelectSingleNode ("DeviceClass")?.InnerText, true, out var deviceClass)) { 
-				var device = new Device {
-					DeviceIdentifier = deviceNone.SelectSingleNode ("DeviceIdentifier")?.InnerText,
-					DeviceClass = deviceClass,
-					CompanionIdentifier = deviceNone.SelectSingleNode ("CompanionIdentifier")?.InnerText,
-					Name = deviceNone.SelectSingleNode ("Name")?.InnerText,
-					BuildVersion = deviceNone.SelectSingleNode ("BuildVersion")?.InnerText,
-					ProductVersion = deviceNone.SelectSingleNode ("ProductVersion")?.InnerText,
-					ProductType = deviceNone.SelectSingleNode ("ProductType")?.InnerText,
-					InterfaceType = deviceNone.SelectSingleNode ("InterfaceType")?.InnerText,
-					IsUsableForDebugging = usable == null ? (bool?) null : ((bool?) (usable == "True")),
-				};
-				bool.TryParse (deviceNone.SelectSingleNode ("IsLocked")?.InnerText, out var locked);
-				device.IsLocked = locked;
-				return device;
+			if (Enum.TryParse<DeviceClass> (deviceNone.SelectSingleNode ("DeviceClass")?.InnerText, true, out var deviceClass)) {
+				return new Device (
+					deviceIdentifier: deviceNone.SelectSingleNode ("DeviceIdentifier")?.InnerText,
+					deviceClass: deviceClass,
+					companionIdentifier: deviceNone.SelectSingleNode ("CompanionIdentifier")?.InnerText,
+					name: deviceNone.SelectSingleNode ("Name")?.InnerText,
+					buildVersion: deviceNone.SelectSingleNode ("BuildVersion")?.InnerText,
+					productVersion: deviceNone.SelectSingleNode ("ProductVersion")?.InnerText,
+					productType: deviceNone.SelectSingleNode ("ProductType")?.InnerText,
+					interfaceType: deviceNone.SelectSingleNode ("InterfaceType")?.InnerText,
+					isUsableForDebugging: usable == null ? (bool?) null : usable == "True",
+					isLocked: bool.TryParse (deviceNone.SelectSingleNode ("IsLocked")?.InnerText, out var locked) && locked);
 			} else {
 				return null;
 			}
@@ -105,7 +102,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 						if (extra_data)
 							arguments.Add (new ListExtraDataArgument ());
 
-						var task = processManager.ExecuteCommandAsync (arguments, log, timeout: TimeSpan.FromSeconds (120));
+						var task = processManager.RunAsync (process, arguments, log, timeout: TimeSpan.FromSeconds (120));
 						log.WriteLine ("Launching {0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments);
 
 						var result = await task;

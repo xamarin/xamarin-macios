@@ -2,15 +2,15 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace Xharness.TestImporter.Templates.Managed {
+namespace Microsoft.DotNet.XHarness.iOS.Shared.TestImporter.Templates.Managed {
 	/// <summary>
 	/// Class that knows how to generate the plist of a test project.
 	/// </summary>
 	public class InfoPlistGenerator {
-		internal static string ApplicationNameReplacement = "%APPLICATION NAME%";
-		internal static string IndentifierReplacement = "%BUNDLE INDENTIFIER%";
-		internal static string WatchAppIndentifierReplacement = "%WATCHAPP INDENTIFIER%";
-	
+		public static readonly string ApplicationNameReplacement = "%APPLICATION NAME%";
+		public static readonly string IndentifierReplacement = "%BUNDLE INDENTIFIER%";
+		public static readonly string WatchAppIndentifierReplacement = "%WATCHAPP INDENTIFIER%";
+
 		public static async Task<string> GenerateCodeAsync (Stream template, string projectName)
 		{
 			if (template == null)
@@ -18,7 +18,7 @@ namespace Xharness.TestImporter.Templates.Managed {
 			if (projectName == null)
 				throw new ArgumentNullException (nameof (projectName));
 			// got the lines we want to add, read the template and substitute
-			using (var reader = new StreamReader(template)) {
+			using (var reader = new StreamReader (template)) {
 				var result = await reader.ReadToEndAsync ();
 				result = result.Replace (ApplicationNameReplacement, projectName);
 				result = result.Replace (IndentifierReplacement, $"com.xamarin.bcltests.{projectName}");

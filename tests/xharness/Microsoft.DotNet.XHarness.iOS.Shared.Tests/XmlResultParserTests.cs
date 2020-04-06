@@ -308,6 +308,9 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests {
 			Directory.Delete (logsDir, true);
 		}
 
+		/// <summary>
+		/// https://github.com/xamarin/xamarin-macios/issues/8214
+		/// </summary>
 		[Test]
 		public void Issue8214Test ()
 		{
