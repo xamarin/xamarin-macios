@@ -66,10 +66,6 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Hardware {
 			});
 
 			// validate the execution of mlaunch
-			MlaunchArgument sdkRootArg = passedArguments.Where (a => a is SdkRootArgument).FirstOrDefault ();
-			Assert.IsNotNull (sdkRootArg, "sdk arg missing");
-			AssertArgumentValue (sdkRootArg, $"--sdkroot {sdkPath}", "sdk arg wrong");
-
 			MlaunchArgument listSimArg = passedArguments.Where (a => a is ListSimulatorsArgument).FirstOrDefault ();
 			Assert.IsNotNull (listSimArg, "list devices arg missing");
 
@@ -109,13 +105,6 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Hardware {
 				});
 
 			await simulators.LoadAsync (executionLog.Object);
-
-			// validate the execution of mlaunch
-			Assert.AreEqual (mlaunchPath, processPath, "process path");
-
-			MlaunchArgument sdkRootArg = passedArguments.Where (a => a is SdkRootArgument).FirstOrDefault ();
-			Assert.IsNotNull (sdkRootArg, "sdk arg missing");
-			AssertArgumentValue (sdkRootArg, $"--sdkroot {sdkPath}", "sdk arg wrong");
 
 			MlaunchArgument listSimArg = passedArguments.Where (a => a is ListSimulatorsArgument).FirstOrDefault ();
 			Assert.IsNotNull (listSimArg, "list devices arg missing");
