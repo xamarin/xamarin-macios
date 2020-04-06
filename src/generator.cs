@@ -4514,7 +4514,6 @@ public partial class Generator : IMemberGatherer {
 			} else {
 				// we can't be 100% confident that the ObjC API annotations are correct so we always null check inside generated code
 				print ("return ret!;");
-//				print ("#pragma warning restore 8600");
 			}
 		}
 		if (minfo.is_ctor)
@@ -5032,7 +5031,7 @@ public partial class Generator : IMemberGatherer {
 		if (attr.ResultType != null)
 			return FormatType (minfo.type, attr.ResultType);
 
-		Console.WriteLine ("{0}", minfo.MethodInfo.GetParameters ().Last ().ParameterType);
+		//Console.WriteLine ("{0}", minfo.MethodInfo.GetParameters ().Last ().ParameterType);
 		throw new BindingException (1077, true, minfo.mi);
 	}
 
@@ -5126,8 +5125,6 @@ public partial class Generator : IMemberGatherer {
 			if (tuple)
 				ttype = "Tuple<bool,NSError>";
 		}
-		if (ttype == "global::FileProvider.INSFileProviderItem")
-			Console.WriteLine ();
 		print ("var tcs = new TaskCompletionSource<{0}> ();", ttype);
 		bool ignoreResult = !is_void &&
 			asyncKind == AsyncMethodKind.Plain &&
