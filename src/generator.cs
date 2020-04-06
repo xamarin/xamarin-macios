@@ -4372,10 +4372,8 @@ public partial class Generator : IMemberGatherer {
 				var bindAsAttrib = GetBindAsAttribute (minfo.mi);
 				// tricky, e.g. when an nullable `NSNumber[]` is bound as a `float[]`, since FormatType and bindAsAttrib have not clue about the original nullability 
 				print ("{0} ret;", FormatType (bindAsAttrib.Type.DeclaringType, GetCorrectGenericType (bindAsAttrib.Type)));
-//				print ("#pragma warning disable 8600");
 			} else {
 				print ("{0} ret;", FormatType (mi.DeclaringType, GetCorrectGenericType (mi.ReturnType))); //  = new {0} ();"
-//				print ("#pragma warning disable 8600");
 			}
 		}
 		
@@ -6703,7 +6701,6 @@ public partial class Generator : IMemberGatherer {
 						print_generated_code ();
 						PrintPreserveAttribute (field_pi);
 						print ("static {0}? _{1};", fieldTypeName, field_pi.Name);
-						//nullable = true;
 					}
 
 					PrintAttributes (field_pi, preserve:true, advice:true);
