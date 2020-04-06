@@ -12,6 +12,14 @@
 		<ProjectCapability Include="Mobile" />
 	</ItemGroup>
 
+	<PropertyGroup>
+		<!-- Disable symbol stripping for now, since we're not generating the list of symbols to keep yet -->
+		<MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
+	</PropertyGroup>
+
+	<!-- Big hack: disable app host verifications -->
+	<Target Name="_CheckForUnsupportedAppHostUsage" />
+
 	<!-- Compute a few values -->
 	<PropertyGroup>
 		<_Is32BitBuild Condition=" '(MtouchArch)' == 'x86' Or '$(MtouchArch)' == 'ARMv7' Or '$(MtouchArch)' == 'ARMv7s' Or '$(MtouchArch)' == 'ARMv7k' Or '$(MtouchArch)' == 'ARM64_32'">true</_Is32BitBuild>
@@ -28,7 +36,7 @@
 		<AfterMonoAOTCompilationTargets>_PostProcessAOTCompilation</AfterMonoAOTCompilationTargets>
 		<BeforeGenerateSingleFileBundleTargets>_PreProcessNativeLinker</BeforeGenerateSingleFileBundleTargets>
 		<AfterGenerateSingleFileBundleTargets>_PostProcessNativeLinker</AfterGenerateSingleFileBundleTargets>
-		<!-- Codesign fails because there's no native binary yet -->
+		<!-- Codesign fails for unknown reasons -->
 		<!-- <AfterPublishTargets>Codesign;CreateIpa;Archive</AfterPublishTargets> -->
 	</PropertyGroup>
 
@@ -102,7 +110,7 @@
 
 	<Target Name="_PostProcessAssemblies" DependsOnTargets="_GenerateRegistrarCode;_GeneratePInvokeWrapperCode;_CompilePInvokeWrappers" />
 	<Target Name="_PostProcessAOTCompilation" DependsOnTargets="_BuildMSymDirectories;_StripManagedAssemblies;" />
-	<Target Name="_PreProcessNativeLinker" DependsOnTargets="_SelectExecutableOutputMode;" />
+	<Target Name="_PreProcessNativeLinker" DependsOnTargets="_SelectExecutableOutputMode;_CompileLauncher" />
 	<Target Name="_PostProcessNativeLinker" DependsOnTargets="_ComputeOutputLocation;_CreateUserFrameworks;_BuildDSymDirectories;_StripNativeCode;"/>
 
 	<Target Name="_GenerateRegistrarCode">
@@ -125,8 +133,245 @@
 		<Warning Text="_StripManagedAssemblies: Not implemented " />
 	</Target>
 
+	<Target Name="_SetVariables">
+		<Warning Text="_SetVariables: implementing... " />
+		<PropertyGroup>
+			<_LibXamarinName Condition="'$(MtouchDebug)' == 'true'">libxamarin-debug.a</_LibXamarinName>
+			<_LibXamarinName Condition="'$(MtouchDebug)' != 'true'">libxamarin.a</_LibXamarinName>
+			<_LibXamarin Condition="'%(DestinationSubPath)' == '$(_LibXamarinName)'">@(RuntimePackAsset)</_LibXamarin>
+			<_LibMonoName>libmono.a</_LibMonoName>
+			<_LibMono Condition="'%(DestinationSubPath)' == '$(_LibMonoName)'">@(RuntimePackAsset)</_LibMono>
+			<_LibRegistrarName>Xamarin.iOS.registrar.a</_LibRegistrarName>
+			<_LibRegistrar Condition="'%(DestinationSubPath)' == '$(_LibRegistrarName)'">@(RuntimePackAsset)</_LibRegistrar>
+			<_LibAppName>libapp.a</_LibAppName>
+			<_LibApp Condition="'%(DestinationSubPath)' == '$(_LibAppName)'">@(RuntimePackAsset)</_LibApp>
+
+			<_MonoLibDir Condition="'%(DestinationSubPath)' == '$(_LibMonoName)'">@(RuntimePackAsset -> '%(RootDir)%(Directory)')</_MonoLibDir>
+			<_RuntimeToolsDir Condition="'%(DestinationSubPath)' == '$(_LibXamarinName)'">@(RuntimePackAsset -> '%(RootDir)%(Directory)')</_RuntimeToolsDir>
+			<_RuntimeIncludeDir>$(_RuntimeToolsDir)/include/</_RuntimeIncludeDir>
+
+			<_IntermediateNativeLibraryDir>$(IntermediateOutputPath)nativelibraries/</_IntermediateNativeLibraryDir>
+		</PropertyGroup>
+		<ItemGroup>
+			<_UnreferencedSymbol Include="_xamarin_dyn_objc_msgSend" />
+			<_UnreferencedSymbol Include="_xamarin_dyn_objc_msgSendSuper" />
+			<_UnreferencedSymbol Include="_xamarin_dyn_objc_msgSend_stret" />
+			<_UnreferencedSymbol Include="_xamarin_dyn_objc_msgSendSuper_stret" />
+			<_UnreferencedSymbol Include="_xamarin_init_nsthread" />
+			<_UnreferencedSymbol Include="_xamarin_get_block_descriptor" />
+			<_UnreferencedSymbol Include="_xamarin_get_locale_country_code" />
+			<_UnreferencedSymbol Include="_xamarin_log" />
+			<_UnreferencedSymbol Include="_xamarin_localized_string_format" />
+			<_UnreferencedSymbol Include="_xamarin_localized_string_format_1" />
+			<_UnreferencedSymbol Include="_xamarin_localized_string_format_2" />
+			<_UnreferencedSymbol Include="_xamarin_localized_string_format_3" />
+			<_UnreferencedSymbol Include="_xamarin_localized_string_format_4" />
+			<_UnreferencedSymbol Include="_xamarin_localized_string_format_5" />
+			<_UnreferencedSymbol Include="_xamarin_localized_string_format_6" />
+			<_UnreferencedSymbol Include="_xamarin_localized_string_format_7" />
+			<_UnreferencedSymbol Include="_xamarin_localized_string_format_8" />
+			<_UnreferencedSymbol Include="_xamarin_localized_string_format_9" />
+			<_UnreferencedSymbol Include="_xamarin_start_wwan" />
+			<_UnreferencedSymbol Include="_xamarin_timezone_get_data" />
+			<_UnreferencedSymbol Include="_xamarin_timezone_get_names" />
+			<_UnreferencedSymbol Include="_xamarin_timezone_get_local_name" />
+			<_UnreferencedSymbol Include="_xamarin_IntPtr_objc_msgSend_IntPtr" />
+			<_UnreferencedSymbol Include="_xamarin_IntPtr_objc_msgSendSuper_IntPtr" />
+			<_UnreferencedSymbol Include="_xamarin_release_managed_ref" />
+			<_UnreferencedSymbol Include="_xamarin_create_managed_ref" />
+			<_UnreferencedSymbol Include="_xamarin_CGPoint__VNNormalizedFaceBoundingBoxPointForLandmarkPoint_Vector2_CGRect_nuint_nuint_string" />
+			<_UnreferencedSymbol Include="_xamarin_CGPoint__VNImagePointForFaceLandmarkPoint_Vector2_CGRect_nuint_nuint_string" />
+<!-- 			<_UnreferencedSymbol Include="_CloseZStream" />
+			<_UnreferencedSymbol Include="_CreateZStream" />
+			<_UnreferencedSymbol Include="_Flush" />
+			<_UnreferencedSymbol Include="_ReadZStream" />
+			<_UnreferencedSymbol Include="_WriteZStream" /> -->
+
+			<_Framework Include="Accelerate" />
+			<_Framework Include="AddressBook" />
+			<_Framework Include="AddressBookUI" />
+			<_Framework Include="AudioToolbox" />
+			<_Framework Include="AVFoundation" />
+			<_Framework Include="CFNetwork" />
+			<_Framework Include="CoreAudio" />
+			<_Framework Include="CoreData" />
+			<_Framework Include="CoreFoundation" />
+			<_Framework Include="CoreGraphics" />
+			<_Framework Include="CoreLocation" />
+			<_Framework Include="CoreText" />
+			<_Framework Include="ExternalAccessory" />
+			<_Framework Include="Foundation" />
+			<_Framework Include="GameKit" />
+			<_Framework Include="MapKit" />
+			<_Framework Include="MediaPlayer" />
+			<_Framework Include="MessageUI" />
+			<_Framework Include="MobileCoreServices" />
+			<_Framework Include="OpenAL" />
+			<_Framework Include="OpenGLES" />
+			<_Framework Include="StoreKit" />
+			<_Framework Include="SystemConfiguration" />
+			<_Framework Include="UIKit" />
+
+
+			<_WeakFramework Include="Accounts" />
+			<_WeakFramework Include="AdSupport" />
+			<_WeakFramework Include="ARKit" />
+			<_WeakFramework Include="AssetsLibrary" />
+			<_WeakFramework Include="AuthenticationServices" />
+			<_WeakFramework Include="AutomaticAssessmentConfiguration" />
+			<_WeakFramework Include="AVKit" />
+			<_WeakFramework Include="BackgroundTasks" />
+			<_WeakFramework Include="BusinessChat" />
+			<_WeakFramework Include="CallKit" />
+			<_WeakFramework Include="CarPlay" />
+			<_WeakFramework Include="ClassKit" />
+			<_WeakFramework Include="CloudKit" />
+			<_WeakFramework Include="Contacts" />
+			<_WeakFramework Include="ContactsUI" />
+			<_WeakFramework Include="CoreAudioKit" />
+			<_WeakFramework Include="CoreBluetooth" />
+			<_WeakFramework Include="CoreHaptics" />
+			<_WeakFramework Include="CoreImage" />
+			<_WeakFramework Include="CoreMedia" />
+			<_WeakFramework Include="CoreMidi" />
+			<_WeakFramework Include="CoreMotion" />
+			<_WeakFramework Include="CoreSpotlight" />
+			<_WeakFramework Include="CoreTelephony" />
+			<_WeakFramework Include="CoreVideo" />
+			<_WeakFramework Include="EventKit" />
+			<_WeakFramework Include="EventKitUI" />
+			<_WeakFramework Include="FileProvider" />
+			<_WeakFramework Include="FileProviderUI" />
+			<_WeakFramework Include="GameplayKit" />
+			<_WeakFramework Include="GLKit" />
+			<_WeakFramework Include="HealthKit" />
+			<_WeakFramework Include="HealthKitUI" />
+			<_WeakFramework Include="HomeKit" />
+			<_WeakFramework Include="iAd" />
+			<_WeakFramework Include="IdentityLookup" />
+			<_WeakFramework Include="IdentityLookupUI" />
+			<_WeakFramework Include="IdentityLookupUI" />
+			<_WeakFramework Include="ImageIO" />
+			<_WeakFramework Include="Intents" />
+			<_WeakFramework Include="IntentsUI" />
+			<_WeakFramework Include="JavaScriptCore" />
+			<_WeakFramework Include="LinkPresentation" />
+			<_WeakFramework Include="LocalAuthentication" />
+			<_WeakFramework Include="Messages" />
+			<_WeakFramework Include="Metal" />
+			<_WeakFramework Include="Metal" />
+			<_WeakFramework Include="MetalKit" />
+			<_WeakFramework Include="MetalPerformanceShaders" />
+			<_WeakFramework Include="MetricKit" />
+			<_WeakFramework Include="ModelIO" />
+			<_WeakFramework Include="MultipeerConnectivity" />
+			<_WeakFramework Include="NaturalLanguage" />
+			<_WeakFramework Include="Network" />
+			<_WeakFramework Include="NetworkExtension" />
+			<_WeakFramework Include="NewsstandKit" />
+			<_WeakFramework Include="NotificationCenter" />
+			<_WeakFramework Include="PassKit" />
+			<_WeakFramework Include="PencilKit" />
+			<_WeakFramework Include="Photos" />
+			<_WeakFramework Include="PhotosUI" />
+			<_WeakFramework Include="PushKit" />
+			<_WeakFramework Include="QuickLook" />
+			<_WeakFramework Include="QuickLookThumbnailing" />
+			<_WeakFramework Include="ReplayKit" />
+			<_WeakFramework Include="SafariServices" />
+			<_WeakFramework Include="SceneKit" />
+			<_WeakFramework Include="Security" />
+			<_WeakFramework Include="Social" />
+			<_WeakFramework Include="SoundAnalysis" />
+			<_WeakFramework Include="Speech" />
+			<_WeakFramework Include="SpriteKit" />
+			<_WeakFramework Include="Twitter" />
+			<_WeakFramework Include="UserNotifications" />
+			<_WeakFramework Include="UserNotificationsUI" />
+			<_WeakFramework Include="VideoSubscriberAccount" />
+			<_WeakFramework Include="VisionKit" />
+			<_WeakFramework Include="VisionKit" />
+			<_WeakFramework Include="WatchConnectivity" />
+			<_WeakFramework Include="WebKit" />
+
+			<_NativeDynamicLibrary Include="@(ResolvedFileToPublish)" Condition="'%(Extension)' == '.dylib' And '%(RootDir)%(Directory)' == '$(_MonoLibDir)'" />
+			<_NativeDynamicLibrary Update="@(_NativeDynamicLibrary)">
+				<LibraryName>$([System.String]::new('%(Filename)').Substring(3))</LibraryName>
+			</_NativeDynamicLibrary>
+			<_NativeDynamicLibraryPathAll Include="@(_NativeDynamicLibrary -> '%(RootDir)%(Directory)')" />
+			<_NativeDynamicLibraryPath Include="@(_NativeDynamicLibraryPathAll->Distinct ())" />
+		</ItemGroup>
+	</Target>
+
+	<Target Name="_CompileLauncher" DependsOnTargets="_SetVariables;_UpdateDynamicLibraryId">
+		<Warning Text="_CompileLauncher: implementing... " />
+		<PropertyGroup>
+			<_LibXamarinName Condition="'$(MtouchDebug)' == 'true'">libxamarin-debug.a</_LibXamarinName>
+			<_LibXamarinName Condition="'$(MtouchDebug)' != 'true'">libxamarin.a</_LibXamarinName>
+			<_LibXamarin Condition="'%(DestinationSubPath)' == '$(_LibXamarinName)'">@(RuntimePackAsset)</_LibXamarin>
+			<_LibMonoName>libmono.a</_LibMonoName>
+			<_LibMono Condition="'%(DestinationSubPath)' == '$(_LibMonoName)'">@(RuntimePackAsset)</_LibMono>
+			<_LibRegistrarName>Xamarin.iOS.registrar.a</_LibRegistrarName>
+			<_LibRegistrar Condition="'%(DestinationSubPath)' == '$(_LibRegistrarName)'">@(RuntimePackAsset)</_LibRegistrar>
+			<_LibAppName>libapp.a</_LibAppName>
+			<_LibApp Condition="'%(DestinationSubPath)' == '$(_LibAppName)'">@(RuntimePackAsset)</_LibApp>
+
+			<_RuntimeToolsDir Condition="'%(DestinationSubPath)' == '$(_LibXamarinName)'">@(RuntimePackAsset -> '%(RootDir)%(Directory)')</_RuntimeToolsDir>
+			<_RuntimeIncludeDir>$(_RuntimeToolsDir)/include/</_RuntimeIncludeDir>
+
+			<_Clang>$(_SdkDevPath)/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang</_Clang>
+			<_SimLauncher>$(_RuntimeToolsDir)simlauncher.mm</_SimLauncher>
+			<_UnreferencedSymbols>@(_UnreferencedSymbol -> '-u %(Identity)', ' ')</_UnreferencedSymbols>
+			<_Frameworks>@(_Framework -> '-framework %(Identity)', ' ')</_Frameworks>
+			<_WeakFrameworks>@(_WeakFramework -> '-weak_framework %(Identity)', ' ')</_WeakFrameworks>
+			<_Defines>-DDEBUG -DSIMLAUNCHER -DNET -DMONOTOUCH -DXAMARIN_EXECUTABLE_NAME=$(AssemblyName).dll</_Defines>
+			<_Warnings>-Wl,-w -Wall -Werror -Wconversion -Wdeprecated -Wuninitialized</_Warnings>
+			<_Includes>-I$(_RuntimeIncludeDir)</_Includes>
+			<_LinkerFlags>-lz -liconv @(_NativeDynamicLibraryPath -> '-L%(FullPath)', ' ') @(_NativeDynamicLibrary -> '-l%(LibraryName)', ' ')</_LinkerFlags>
+			<_ISysRoot>-isysroot $(_SdkRoot)</_ISysRoot>
+			<_Arch>-arch x86_64</_Arch>
+			<_OtherFlags>-gdwarf-2 -fobjc-abi-version=2 -fobjc-legacy-dispatch -fms-extensions -fstack-protector-strong -ObjC++ -std=c++14 -fno-exceptions -stdlib=libc++ -mios-simulator-version-min=7.0 -g -Wl,-rpath -Wl,@executable_path/</_OtherFlags>
+			<_LauncherCmd>$(_Clang) $(_UnreferencedSymbols) $(_Frameworks) $(_WeakFrameworks) $(_Defines) $(_Warnings) $(_Includes) $(_LinkerFlags) $(_ISysRoot) $(_Arch) $(_OtherFlags) $(_LibMono) $(_LibXamarin) $(_LibRegistrar) $(_LibApp) $(_SimLauncher)	-o $(_AppBundlePath)$(_AppBundleName)</_LauncherCmd>
+		</PropertyGroup>
+		<Warning Text="RuntimePackAsset: @(RuntimePackAsset)" />
+		<Warning Text="_LauncherCmd: $(_LauncherCmd)" />
+		<Exec Command="$(_LauncherCmd)" />
+	</Target>
+
 	<Target Name="_ComputeOutputLocation">
-		<Warning Text="_ComputeOutputLocation: Not implemented " />
+		<Warning Text="_ComputeOutputLocation: implementing... " />
+		<!-- Put .dll, .pdb, .exe and .dylib in the .app -->
+		<ItemGroup>
+			<ResolvedFileToPublish
+				Update="@(ResolvedFileToPublish)"
+				RelativePath="$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(MSBuildProjectDirectory)$(_AppBundlePath)))\%(Filename)%(Extension)"
+				Condition=" '%(Extension)' == '.dll' Or '%(Extension)' == '.pdb' Or '$(Extension)' == '.exe' Or '%(Extension)' == '.dylib'" />
+			<Whatever Include="@(ResolvedFileToPublish)" />
+			<Whatever2 Include="@(ResolvedFileToPublish)" Condition="'%(Extension)' == '.dylib'" />
+		</ItemGroup>
+		<Warning Text="_ComputeOutputLocation: @(ResolvedFileToPublish) " />
+	</Target>
+
+	<!-- The .dylibs shipped with mono comes with the original identity:
+
+	$ otool -l ~/.nuget/packages/microsoft.netcore.app.runtime.ios-x64/5.0.0-*/runtimes/ios-x64/native/libSystem.IO.Compression.Native.dylib | grep LC_ID_DYLIB -A 2
+          cmd LC_ID_DYLIB
+      cmdsize 184
+         name /Users/runner/runners/2.165.2/work/1/s/artifacts/obj/native/netcoreapp5.0-iOS-Release-x64/System.IO.Compression.Native/libSystem.IO.Compression.Native.dylib (offset 24)
+
+	This doesn't work after linking with these libraries, so this must be fixed to be @executable_path/. Eventually mono should ship dylibs we don't have to fix.
+	-->
+	<Target Name="_UpdateDynamicLibraryId" DependsOnTargets="_SetVariables" Inputs="@(_NativeDynamicLibrary)" Outputs="@(_NativeDynamicLibrary -> '$(_IntermediateNativeLibraryDir)%(Filename)%(Extension)')">
+		<!-- install_name_tool modifies the file in-place, so copy it first to a temporary directory before we fix it -->
+		<Copy SourceFiles="%(_NativeDynamicLibrary.FullPath)" DestinationFolder="$(_IntermediateNativeLibraryDir)" />
+		<Exec Command="install_name_tool -id @executable_path/%(_NativeDynamicLibrary.Filename)%(_NativeDynamicLibrary.Extension) $(_IntermediateNativeLibraryDir)%(_NativeDynamicLibrary.Filename)%(_NativeDynamicLibrary.Extension)" />
+		<ItemGroup>
+			<_NativeDynamicLibraryFixed Include="@(_NativeDynamicLibrary -> '$(_IntermediateNativeLibraryDir)%(Filename)%(Extension)')" />
+			<_NativeDynamicLibraryPath Remove="@(_NativeDynamicLibrary -> '%(RootDir)%(Directory)')" />
+			<_NativeDynamicLibraryPath Include="@(_NativeDynamicLibraryFixed -> '%(RootDir)%(Directory)')" />
+			<ResolvedFileToPublish Remove="@(_NativeDynamicLibrary)" />
+			<ResolvedFileToPublish Include="@(_NativeDynamicLibraryFixed)" />
+		</ItemGroup>
 	</Target>
 
 	<Target Name="_CreateUserFrameworks">
