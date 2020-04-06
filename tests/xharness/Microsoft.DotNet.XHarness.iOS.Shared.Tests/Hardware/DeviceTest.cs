@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
+using Moq;
 using NUnit.Framework;
 
 namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Hardware {
@@ -20,7 +21,17 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Hardware {
 						(interfaceType: "HOLA", result: 3),
 					};
 					foreach (var (interfaceType, result) in data) {
-						yield return new TestCaseData (new Device { InterfaceType = interfaceType }).Returns (result);
+						yield return new TestCaseData (
+							new Device (
+								buildVersion: "17A577",
+								deviceClass: DeviceClass.iPhone,
+								deviceIdentifier: "8A450AA31EA94191AD6B02455F377CC1",
+								interfaceType: interfaceType,
+								isUsableForDebugging: true,
+								name: "Test iPhone",
+								productType: "iPhone12,1",
+								productVersion: "13.0"))
+							.Returns (result);
 					}
 				}
 			}
@@ -36,8 +47,17 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Hardware {
 						(deviceClass: DeviceClass.Unknown, result: DevicePlatform.Unknown),
 					};
 					foreach (var (deviceClass, result) in data) {
-						yield return new TestCaseData (new Device { DeviceClass = deviceClass }).Returns (result);
-
+						yield return new TestCaseData (
+							new Device (
+								buildVersion: "17A577",
+								deviceClass: deviceClass,
+								deviceIdentifier: "8A450AA31EA94191AD6B02455F377CC1",
+								interfaceType: "USB",
+								isUsableForDebugging: true,
+								name: "Test iPhone",
+								productType: "iPhone12,1",
+								productVersion: "13.0"))
+							.Returns (result);
 					}
 				}
 			}
@@ -110,10 +130,21 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Hardware {
 						}
 					};
 
-
 					foreach (var product in data.Keys) {
-						foreach (var (version, result) in data [product])
-							yield return new TestCaseData (new Device { ProductType = $"{product}{version}" }).Returns (result).SetDescription ($"{product} {version}");
+						foreach (var (version, result) in data [product]) {
+							yield return new TestCaseData (
+								new Device (
+									buildVersion: "17A577",
+									deviceClass: DeviceClass.iPhone,
+									deviceIdentifier: "8A450AA31EA94191AD6B02455F377CC1",
+									interfaceType: "USB",
+									isUsableForDebugging: true,
+									name: "Test iPhone",
+									productType: $"{product}{version}",
+									productVersion: "13.0"))
+								.Returns (result)
+								.SetDescription ($"{product} {version}");
+						}
 					}
 				}
 			}
@@ -153,25 +184,33 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Hardware {
 
 					foreach (var deviceClass in data.Keys) {
 						foreach (var (version, result) in data [deviceClass]) {
-							yield return new TestCaseData (new Device { DeviceClass = deviceClass, ProductVersion = version.ToString () }).Returns (result);
+							yield return new TestCaseData (
+								new Device (
+									buildVersion: "17A577",
+									deviceClass: deviceClass,
+									deviceIdentifier: "8A450AA31EA94191AD6B02455F377CC1",
+									interfaceType: "USB",
+									isUsableForDebugging: true,
+									name: "Test iPhone",
+									productType: "iPhone12,1",
+									productVersion: version.ToString ()))
+								.Returns (result);
 						}
 					}
-
-
 				}
 			}
 
 			[TestCaseSource (typeof (DevicesDataTestSource), "DebugSpeedDevices")]
-			public int DebugSpeedTest (Device device) => device.DebugSpeed;
+			public int DebugSpeedTest (IHardwareDevice device) => device.DebugSpeed;
 
 			[TestCaseSource (typeof (DevicesDataTestSource), "DevicePlatformDevices")]
-			public DevicePlatform DevicePlatformTest (Device device) => device.DevicePlatform;
+			public DevicePlatform DevicePlatformTest (IHardwareDevice device) => device.DevicePlatform;
 
 			[TestCaseSource (typeof (DevicesDataTestSource), "Supports64bDevices")]
-			public bool Supports64bTest (Device device) => device.Supports64Bit;
+			public bool Supports64bTest (IHardwareDevice device) => device.Supports64Bit;
 
 			[TestCaseSource (typeof (DevicesDataTestSource), "Supports32bDevices")]
-			public bool Supports32BTest (Device device) => device.Supports32Bit;
+			public bool Supports32BTest (IHardwareDevice device) => device.Supports32Bit;
 		}
 	}
 }
