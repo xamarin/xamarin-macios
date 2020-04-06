@@ -95,6 +95,7 @@ copy_ios_native_libs_to_runtime_pack ()
 	local destdir=$DOTNET_DESTDIR/$packageid/runtimes/$rid/native
 	local sdk_dir="$TOP/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/SDKs/$sdk.sdk"
 	local lib_dir="$sdk_dir/usr/lib/"
+	local include_dir="$sdk_dir/usr/include/"
 
 	mkdir -p "$destdir"
 
@@ -108,6 +109,7 @@ copy_ios_native_libs_to_runtime_pack ()
 	inputs+=("$lib_dir"/libtvextension.a)
 	inputs+=("$lib_dir"/libwatchextension.a)
 	inputs+=("$lib_dir"/libxamarin*)
+	inputs+=("$lib_dir"/*registrar.a)
 	for element in "${inputs[@]}"; do
 		if [[ x$fat == x1 ]]; then
 			lipo "$element" "${thin[@]}" -output "$destdir/$(basename "$element")"
@@ -128,6 +130,9 @@ copy_ios_native_libs_to_runtime_pack ()
 		fi
 	done
 
+	$cp "$TOP"/tools/mtouch/simlauncher.mm "$destdir"
+
+	$cp -r "$include_dir/xamarin" "$destdir/"
 }
 copy_ios_native_libs_to_runtime_pack "iOS"     "MonoTouch.iphoneos"        1 "arm64" "arm64"
 copy_ios_native_libs_to_runtime_pack "iOS"     "MonoTouch.iphoneos"        1 "arm"   "armv7 armv7s"
