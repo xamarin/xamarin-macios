@@ -312,7 +312,7 @@ namespace Xharness.Tests {
 
 			// Mock finding simulators
 			simulators
-				.Setup (x => x.LoadAsync (It.IsAny<ILog> (), false, false))
+				.Setup (x => x.LoadAsync (It.IsAny<ILog> (), false, false, false))
 				.Returns (Task.CompletedTask);
 
 			string simulatorLogPath = Path.Combine (Path.GetTempPath (), "simulator-logs");
@@ -394,7 +394,7 @@ namespace Xharness.Tests {
 
 			// Mock finding simulators
 			simulators
-				.Setup (x => x.LoadAsync (It.IsAny<ILog> (), false, false))
+				.Setup (x => x.LoadAsync (It.IsAny<ILog> (), false, false, false))
 				.Returns (Task.CompletedTask);
 
 			string simulatorLogPath = Path.Combine (Path.GetTempPath (), "simulator-logs");

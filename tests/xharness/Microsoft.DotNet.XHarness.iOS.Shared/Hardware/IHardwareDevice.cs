@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.DotNet.XHarness.iOS.Shared.Collections;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 
@@ -27,6 +28,9 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 		IEnumerable<IHardwareDevice> ConnectedTV { get; }
 		IEnumerable<IHardwareDevice> ConnectedWatch { get; }
 		IEnumerable<IHardwareDevice> ConnectedWatch32_64 { get; }
-		IHardwareDevice FindCompanionDevice (ILog log, IHardwareDevice device);
+
+		Task<IHardwareDevice> FindCompanionDevice (ILog log, IHardwareDevice device);
+
+		Task<IHardwareDevice> FindDevice (RunMode runMode, ILog log, bool includeLocked, bool force);
 	}
 }

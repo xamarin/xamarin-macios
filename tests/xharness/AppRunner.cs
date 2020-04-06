@@ -119,7 +119,7 @@ namespace Xharness {
 			return simulators != null;
 		}
 
-		void FindDevice ()
+		async Task FindDevice ()
 		{
 			if (deviceName != null)
 				return;
@@ -129,47 +129,14 @@ namespace Xharness {
 				return;
 
 			var devs = devicesLoaderFactory.CreateLoader ();
-			Task.Run (async () => {
-				await devs.LoadAsync (MainLog, false, false);
-			}).Wait ();
+			await devs.LoadAsync (MainLog, false, false);
 
-			DeviceClass [] deviceClasses;
-			switch (runMode) {
-			case RunMode.iOS:
-				deviceClasses = new [] { DeviceClass.iPhone, DeviceClass.iPad, DeviceClass.iPod };
-				break;
-			case RunMode.WatchOS:
-				deviceClasses = new [] { DeviceClass.Watch };
-				break;
-			case RunMode.TvOS:
-				deviceClasses = new [] { DeviceClass.AppleTV }; // Untested
-				break;
-			default:
-				throw new ArgumentException (nameof (runMode));
-			}
+			var device = await devs.FindDevice (runMode, MainLog, false, false);
 
-			var selected = devs.ConnectedDevices.Where ((v) => deviceClasses.Contains (v.DeviceClass) && v.IsUsableForDebugging != false);
-			IHardwareDevice selected_data;
-			if (selected.Count () == 0) {
-				throw new NoDeviceFoundException ($"Could not find any applicable devices with device class(es): {string.Join (", ", deviceClasses)}");
-			} else if (selected.Count () > 1) {
-				selected_data = selected
-					.OrderBy ((dev) => {
-						Version v;
-						if (Version.TryParse (dev.ProductVersion, out v))
-							return v;
-						return new Version ();
-					})
-					.First ();
-				MainLog.WriteLine ("Found {0} devices for device class(es) '{1}': '{2}'. Selected: '{3}' (because it has the lowest version).", selected.Count (), string.Join ("', '", deviceClasses), string.Join ("', '", selected.Select ((v) => v.Name).ToArray ()), selected_data.Name);
-			} else {
-				selected_data = selected.First ();
-			}
-
-			deviceName = selected_data.Name;
+			deviceName = device.Name;
 
 			if (runMode == RunMode.WatchOS)
-				companionDeviceName = devs.FindCompanionDevice (MainLog, selected_data).Name;
+				companionDeviceName = (await devs.FindCompanionDevice (MainLog, device)).Name;
 		}
 
 		public async Task<ProcessExecutionResult> InstallAsync (CancellationToken cancellation_token)
@@ -179,7 +146,7 @@ namespace Xharness {
 				throw new InvalidOperationException ("Installing to a simulator is not supported.");
 			}
 
-			FindDevice ();
+			await FindDevice ();
 
 			var args = new MlaunchArguments ();
 
@@ -204,7 +171,7 @@ namespace Xharness {
 			if (isSimulator)
 				throw new InvalidOperationException ("Uninstalling from a simulator is not supported.");
 
-			FindDevice ();
+			await FindDevice ();
 
 			var args = new MlaunchArguments ();
 
@@ -220,7 +187,7 @@ namespace Xharness {
 		public async Task<int> RunAsync ()
 		{
 			if (!isSimulator)
-				FindDevice ();
+				await FindDevice ();
 
 			var args = new MlaunchArguments ();
 

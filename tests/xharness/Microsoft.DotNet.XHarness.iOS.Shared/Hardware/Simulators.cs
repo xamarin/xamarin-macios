@@ -51,11 +51,11 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 		}
 
-		public async Task LoadAsync (ILog log, bool include_locked = false, bool force = false)
+		public async Task LoadAsync (ILog log, bool includeLocked = false, bool forceRefresh = false, bool listExtraData = false)
 		{
 			await semaphore.WaitAsync ();
 			if (loaded) {
-				if (!force) {
+				if (!forceRefresh) {
 					semaphore.Release ();
 					return;
 				}
@@ -168,7 +168,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 				return null;
 			}
 
-			await LoadAsync (log, force: true);
+			await LoadAsync (log, forceRefresh: true);
 
 			devices = AvailableDevices.Where ((ISimulatorDevice v) => v.SimRuntime == runtime && v.SimDeviceType == devicetype);
 			if (!devices.Any ()) {
@@ -239,7 +239,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 				if (!await CreateDevicePair (log, unpairedDevice, companion_device, device.SimRuntime, device.SimDeviceType, unpairedDevice == null))
 					return null;
 
-				await LoadAsync (log, force: true);
+				await LoadAsync (log, forceRefresh: true);
 
 				pairs = AvailableDevicePairs.Where ((pair) => {
 					if (!devices.Any ((v) => v.UDID == pair.Gizmo))

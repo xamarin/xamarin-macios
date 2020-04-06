@@ -94,7 +94,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Hardware {
 					return Task.FromResult (new ProcessExecutionResult { ExitCode = 0, TimedOut = false });
 				});
 
-			await devices.LoadAsync (executionLog.Object, extraData);
+			await devices.LoadAsync (executionLog.Object, listExtraData: extraData);
 
 			// assert the devices that are expected from the sample xml
 			MlaunchArgument listDevArg = passedArguments.Where (a => a is ListDevicesArgument).FirstOrDefault ();

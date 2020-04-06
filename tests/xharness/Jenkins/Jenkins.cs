@@ -115,7 +115,7 @@ namespace Xharness.Jenkins {
 			log.Description = $"{name} Listing (in progress)";
 
 			var capturedLog = log;
-			return loadable.LoadAsync (capturedLog, include_locked: false, force: true).ContinueWith ((v) => {
+			return loadable.LoadAsync (capturedLog, includeLocked: false, forceRefresh: true).ContinueWith ((v) => {
 				if (v.IsFaulted) {
 					capturedLog.WriteLine ("Failed to load:");
 					capturedLog.WriteLine (v.Exception.ToString ());

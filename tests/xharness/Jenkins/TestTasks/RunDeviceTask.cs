@@ -78,7 +78,7 @@ namespace Xharness.Jenkins.TestTasks {
 					// Set the device we acquired.
 					Device = Candidates.First ((d) => d.UDID == device_resource.Resource.Name);
 					if (Device.DevicePlatform == DevicePlatform.watchOS)
-						CompanionDevice = devices.FindCompanionDevice (Jenkins.DeviceLoadLog, Device);
+						CompanionDevice = await devices.FindCompanionDevice (Jenkins.DeviceLoadLog, Device);
 					Jenkins.MainLog.WriteLine ("Acquired device '{0}' for '{1}'", Device.Name, ProjectFile);
 
 					runner = new AppRunner (ProcessManager,
