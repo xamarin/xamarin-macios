@@ -44,9 +44,60 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 		}
 
-		public Task LoadDevices (ILog log, bool includeLocked = false, bool forceRefresh = false, bool listExtraData = false)
+		public async Task LoadDevices (ILog log, bool includeLocked = false, bool forceRefresh = false, bool listExtraData = false)
 		{
-			return LoadDevicesInternal (log, listExtraData: listExtraData, removedLocked: !includeLocked, forceRefresh: forceRefresh);
+			if (loaded) {
+				if (!forceRefresh)
+					return;
+				connected_devices.Reset ();
+			}
+
+			loaded = true;
+
+			var tmpfile = Path.GetTempFileName ();
+			try {
+				using (var process = new Process ()) {
+					var arguments = new MlaunchArguments (
+						new ListDevicesArgument (tmpfile),
+						new XmlOutputFormatArgument ());
+
+					if (listExtraData)
+						arguments.Add (new ListExtraDataArgument ());
+
+					var task = processManager.RunAsync (process, arguments, log, timeout: TimeSpan.FromSeconds (120));
+					log.WriteLine ("Launching {0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments);
+
+					var result = await task;
+
+					if (!result.Succeeded)
+						throw new Exception ("Failed to list devices.");
+					log.WriteLine ("Result:");
+					log.WriteLine (File.ReadAllText (tmpfile));
+					log.Flush ();
+
+					var doc = new XmlDocument ();
+					doc.LoadWithoutNetworkAccess (tmpfile);
+
+					foreach (XmlNode dev in doc.SelectNodes ("/MTouch/Device")) {
+						var d = GetDevice (dev);
+						if (d == null)
+							continue;
+						if (!includeLocked && d.IsLocked) {
+							log.WriteLine ($"Skipping device {d.Name} ({d.DeviceIdentifier}) because it's locked.");
+							continue;
+						}
+						if (d.IsUsableForDebugging.HasValue && !d.IsUsableForDebugging.Value) {
+							log.WriteLine ($"Skipping device {d.Name} ({d.DeviceIdentifier}) because it's not usable for debugging.");
+							continue;
+						}
+						connected_devices.Add (d);
+					}
+				}
+			} finally {
+				connected_devices.SetCompleted ();
+				File.Delete (tmpfile);
+				log.Flush ();
+			}
 		}
 
 		public async Task<IHardwareDevice> FindDevice (RunMode runMode, ILog log, bool includeLocked, bool force)
@@ -59,7 +110,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 				_ => throw new ArgumentException (nameof (runMode)),
 			};
 
-			await LoadDevicesInternal (log, false, false);
+			await LoadDevices (log, false, false);
 
 			IEnumerable<IHardwareDevice> compatibleDevices = ConnectedDevices.Where (v => deviceClasses.Contains (v.DeviceClass) && v.IsUsableForDebugging != false);
 			IHardwareDevice device;
@@ -84,7 +135,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 
 		public async Task<IHardwareDevice> FindCompanionDevice (ILog log, IHardwareDevice device)
 		{
-			await LoadDevicesInternal (log, false, false);
+			await LoadDevices (log, false, false);
 
 			var companion = ConnectedDevices.Where ((v) => v.DeviceIdentifier == device.CompanionIdentifier);
 			if (companion.Count () == 0)
@@ -94,64 +145,6 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 				log.WriteLine ("Found {0} companion devices for {1}?!?", companion.Count (), device.Name);
 
 			return companion.First ();
-		}
-
-		async Task LoadDevicesInternal (ILog log, bool removedLocked, bool forceRefresh, bool listExtraData = false)
-		{
-			if (loaded) {
-				if (!forceRefresh)
-					return;
-				connected_devices.Reset ();
-			}
-
-			loaded = true;
-
-			await Task.Run (async () => {
-				var tmpfile = Path.GetTempFileName ();
-				try {
-					using (var process = new Process ()) {
-						var arguments = new MlaunchArguments (
-							new ListDevicesArgument (tmpfile),
-							new XmlOutputFormatArgument ());
-
-						if (listExtraData)
-							arguments.Add (new ListExtraDataArgument ());
-
-						var task = processManager.RunAsync (process, arguments, log, timeout: TimeSpan.FromSeconds (120));
-						log.WriteLine ("Launching {0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments);
-
-						var result = await task;
-
-						if (!result.Succeeded)
-							throw new Exception ("Failed to list devices.");
-						log.WriteLine ("Result:");
-						log.WriteLine (File.ReadAllText (tmpfile));
-						log.Flush ();
-
-						var doc = new XmlDocument ();
-						doc.LoadWithoutNetworkAccess (tmpfile);
-
-						foreach (XmlNode dev in doc.SelectNodes ("/MTouch/Device")) {
-							var d = GetDevice (dev);
-							if (d == null)
-								continue;
-							if (removedLocked && d.IsLocked) {
-								log.WriteLine ($"Skipping device {d.Name} ({d.DeviceIdentifier}) because it's locked.");
-								continue;
-							}
-							if (d.IsUsableForDebugging.HasValue && !d.IsUsableForDebugging.Value) {
-								log.WriteLine ($"Skipping device {d.Name} ({d.DeviceIdentifier}) because it's not usable for debugging.");
-								continue;
-							}
-							connected_devices.Add (d);
-						}
-					}
-				} finally {
-					connected_devices.SetCompleted ();
-					File.Delete (tmpfile);
-					log.Flush ();
-				}
-			});
 		}
 
 		Device GetDevice (XmlNode deviceNone)
