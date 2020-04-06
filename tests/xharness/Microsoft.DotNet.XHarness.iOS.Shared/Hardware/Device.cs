@@ -11,7 +11,16 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 	}
 
 	public class Device : IHardwareDevice {
-		public Device (string deviceIdentifier, DeviceClass deviceClass, string name, string buildVersion, string productVersion, string productType, string interfaceType, string companionIdentifier = null, bool? isUsableForDebugging = null, bool isLocked = false)
+		public Device (string deviceIdentifier,
+			DeviceClass deviceClass,
+			string name,
+			string buildVersion,
+			string productVersion,
+			string productType,
+			string interfaceType,
+			string companionIdentifier = null,
+			bool? isUsableForDebugging = null,
+			bool isLocked = false)
 		{
 			DeviceIdentifier = deviceIdentifier;
 			DeviceClass = deviceClass;
