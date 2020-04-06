@@ -3,9 +3,6 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp5.0</TargetFramework>
     <RuntimeIdentifier>ios.13-x64</RuntimeIdentifier>
-    <!-- <OutputType>Exe</OutputType> -->
-    <_CanOutputAppBundle>true</_CanOutputAppBundle> <!-- temporary hack since Exe doesn't work yet with Publish -->
-    <MtouchNoDSymUtil>true</MtouchNoDSymUtil> <!-- disable bits that don't work: there's no native binary yet, so nothing to dsymutil -->
-    <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip> <!-- disable bits that don't work: there's no native binary yet, so nothing to strip -->
+    <OutputType>Exe</OutputType>
   </PropertyGroup>
 </Project>
