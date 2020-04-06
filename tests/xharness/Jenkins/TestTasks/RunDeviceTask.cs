@@ -12,7 +12,7 @@ namespace Xharness.Jenkins.TestTasks {
 	class RunDeviceTask : RunXITask<IHardwareDevice>
 	{
 		readonly IResultParser resultParser = new XmlResultParser ();
-		readonly IDeviceLoader devices;
+		readonly IHardwareDeviceLoader devices;
 
 		AppInstallMonitorLog install_log;
 
@@ -40,7 +40,7 @@ namespace Xharness.Jenkins.TestTasks {
 			}
 		}
 
-		public RunDeviceTask (IDeviceLoader devices, MSBuildTask build_task, IProcessManager ProcessManager, IEnumerable<IHardwareDevice> candidates)
+		public RunDeviceTask (IHardwareDeviceLoader devices, MSBuildTask build_task, IProcessManager ProcessManager, IEnumerable<IHardwareDevice> candidates)
 			: base (build_task, ProcessManager, candidates.OrderBy ((v) => v.DebugSpeed))
 		{
 			switch (build_task.Platform) {
@@ -78,12 +78,12 @@ namespace Xharness.Jenkins.TestTasks {
 					// Set the device we acquired.
 					Device = Candidates.First ((d) => d.UDID == device_resource.Resource.Name);
 					if (Device.DevicePlatform == DevicePlatform.watchOS)
-						CompanionDevice = devices.FindCompanionDevice (Jenkins.DeviceLoadLog, Device);
+						CompanionDevice = await devices.FindCompanionDevice (Jenkins.DeviceLoadLog, Device);
 					Jenkins.MainLog.WriteLine ("Acquired device '{0}' for '{1}'", Device.Name, ProjectFile);
 
 					runner = new AppRunner (ProcessManager,
 						new AppBundleInformationParser (),
-						new SimulatorsLoaderFactory (ProcessManager),
+						new SimulatorLoaderFactory (ProcessManager),
 						new SimpleListenerFactory (),
 						new DeviceLoaderFactory (ProcessManager),
 						new CrashSnapshotReporterFactory (ProcessManager),
@@ -150,7 +150,7 @@ namespace Xharness.Jenkins.TestTasks {
 
 							AppRunner todayRunner = new AppRunner (ProcessManager,
 								new AppBundleInformationParser (),
-								new SimulatorsLoaderFactory (ProcessManager),
+								new SimulatorLoaderFactory (ProcessManager),
 								new SimpleListenerFactory (),
 								new DeviceLoaderFactory (ProcessManager),
 								new CrashSnapshotReporterFactory (ProcessManager),

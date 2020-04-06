@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
-using Microsoft.DotNet.XHarness.iOS.Shared;
-using Microsoft.DotNet.XHarness.iOS.Shared.Collections;
 
 namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 	public class SimRuntime {
@@ -38,20 +36,19 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 		string LogPath { get; set; }
 		string SystemLog { get; }
 		bool IsWatchSimulator { get; }
-		Task EraseAsync (ILog log);
-		Task ShutdownAsync (ILog log);
-		Task PrepareSimulatorAsync (ILog log, params string [] bundle_identifiers);
-		Task KillEverythingAsync (ILog log);
+		Task Erase (ILog log);
+		Task Shutdown (ILog log);
+		Task PrepareSimulator (ILog log, params string [] bundle_identifiers);
+		Task KillEverything (ILog log);
 	}
 
-	public interface ISimulatorsLoader : ILoadAsync {
+	public interface ISimulatorLoader : IDeviceLoader {
 		IEnumerable<SimRuntime> SupportedRuntimes { get; }
 		IEnumerable<SimDeviceType> SupportedDeviceTypes { get; }
 		IEnumerable<SimulatorDevice> AvailableDevices { get; }
 		IEnumerable<SimDevicePair> AvailableDevicePairs { get; }
-		Task<ISimulatorDevice []> FindAsync (TestTarget target, ILog log, bool create_if_needed = true, bool min_version = false);
+		Task<ISimulatorDevice []> FindSimulators (TestTarget target, ILog log, bool create_if_needed = true, bool min_version = false);
 		ISimulatorDevice FindCompanionDevice (ILog log, ISimulatorDevice device);
 		IEnumerable<ISimulatorDevice> SelectDevices (TestTarget target, ILog log, bool min_version);
 	}
-
 }

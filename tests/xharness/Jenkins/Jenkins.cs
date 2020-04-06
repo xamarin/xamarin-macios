@@ -11,14 +11,13 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Xharness.Jenkins.TestTasks;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using Microsoft.DotNet.XHarness.iOS.Shared;
-using Microsoft.DotNet.XHarness.iOS.Shared.Collections;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 
 namespace Xharness.Jenkins {
 	public class Jenkins
 	{
-		readonly ISimulatorsLoader simulators;
-		readonly IDeviceLoader devices;
+		readonly ISimulatorLoader simulators;
+		readonly IHardwareDeviceLoader devices;
 		readonly IProcessManager processManager;
 		readonly IResultParser resultParser;
 		bool populating = true;
@@ -103,11 +102,11 @@ namespace Xharness.Jenkins {
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 			this.resultParser = resultParser ?? throw new ArgumentNullException (nameof (resultParser));
 			Harness = harness ?? throw new ArgumentNullException (nameof (harness));
-			simulators = new Simulators (processManager);
-			devices = new Devices (processManager);
+			simulators = new SimulatorLoader (processManager);
+			devices = new HardwareDeviceLoader (processManager);
 		}
 
-		Task LoadAsync (ref ILog log, ILoadAsync loadable, string name)
+		Task LoadAsync (ref ILog log, IDeviceLoader deviceManager, string name)
 		{
 			if (log == null)
 				log = Logs.Create ($"{name}-list-{Helpers.Timestamp}.log", $"{name} Listing");
@@ -115,13 +114,13 @@ namespace Xharness.Jenkins {
 			log.Description = $"{name} Listing (in progress)";
 
 			var capturedLog = log;
-			return loadable.LoadAsync (capturedLog, include_locked: false, force: true).ContinueWith ((v) => {
+			return deviceManager.LoadDevices (capturedLog, includeLocked: false, forceRefresh: true).ContinueWith ((v) => {
 				if (v.IsFaulted) {
 					capturedLog.WriteLine ("Failed to load:");
 					capturedLog.WriteLine (v.Exception.ToString ());
 					capturedLog.Description = $"{name} Listing {v.Exception.Message})";
 				} else if (v.IsCompleted) {
-					if (loadable is Devices devices) {
+					if (deviceManager is HardwareDeviceLoader devices) {
 						var devicesTypes = new StringBuilder ();
 						if (devices.Connected32BitIOS.Any ()) {
 							devicesTypes.Append ("iOS 32 bit");
@@ -137,7 +136,7 @@ namespace Xharness.Jenkins {
 						}
 						capturedLog.Description = (devicesTypes.Length == 0) ? $"{name} Listing (ok - no devices found)." : $"{name} Listing (ok). Devices types are: {devicesTypes.ToString ()}";
 					}
-					if (loadable is Simulators simulators) {
+					if (deviceManager is SimulatorLoader simulators) {
 						var simCount = simulators.AvailableDevices.Count ();
 						capturedLog.Description = ( simCount == 0) ? $"{name} Listing (ok - no simulators found)." : $"{name} Listing (ok - Found {simCount} simulators).";
 					}
@@ -1294,7 +1293,7 @@ namespace Xharness.Jenkins {
 				// We can populate and build test-libraries in parallel.
 				var populate = Task.Run (async () => {
 					var simulator = new SimulatorDevice (processManager, new TCCDatabase (processManager));
-					await simulator.KillEverythingAsync (MainLog);
+					await simulator.KillEverything (MainLog);
 					await PopulateTasksAsync ();
 					populating = false;
 				});
