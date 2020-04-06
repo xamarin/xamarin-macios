@@ -15,11 +15,19 @@ namespace Xharness.Jenkins.TestTasks {
 
 		Xharness.TestTasks.BuildProjectTask buildProjectTask;
 
+		public override TestProject TestProject { 
+			get => base.TestProject;
+			set {
+				base.TestProject = value;
+				buildProjectTask.TestProject = value;
+			}
+		}
+
 
 		protected BuildProjectTask (Jenkins jenkins, TestProject testProject, IProcessManager processManager) : base (jenkins, processManager)
 		{
+			buildProjectTask = new Xharness.TestTasks.BuildProjectTask (processManager, Jenkins, this, this);
 			TestProject = testProject ?? throw new ArgumentNullException (nameof (testProject));
-			buildProjectTask = new Xharness.TestTasks.BuildProjectTask (TestProject, processManager, Jenkins, this, this);
 		}
 
 		public bool RestoreNugets => buildProjectTask.RestoreNugets;
@@ -28,7 +36,7 @@ namespace Xharness.Jenkins.TestTasks {
 
 		// This method must be called with the desktop resource acquired
 		// (which is why it takes an IAcquiredResources as a parameter without using it in the function itself).
-		protected async Task RestoreNugetsAsync (ILog log, IAcquiredResource resource, bool useXIBuild = false) =>
+		protected async Task RestoreNugetsAsync (ILog log, IAcquiredResource resource, bool useXIBuild = false) => 	
 			ExecutionResult = await buildProjectTask.RestoreNugetsAsync (log, resource, useXIBuild);
 	}
 }

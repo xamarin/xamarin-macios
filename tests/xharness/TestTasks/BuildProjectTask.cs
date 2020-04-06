@@ -17,9 +17,8 @@ namespace Xharness.TestTasks {
 
 		public string SolutionPath { get; set; }
 
-		public BuildProjectTask (TestProject project, IProcessManager processManager, IResourceManager resourceManager, IEventLogger eventLogger, IEnvManager envManager) : base (processManager)
+		public BuildProjectTask (IProcessManager processManager, IResourceManager resourceManager, IEventLogger eventLogger, IEnvManager envManager) : base (processManager)
 		{
-			TestProject = project ?? throw new ArgumentNullException (nameof (project));
 			ResourceManager = resourceManager ?? throw new ArgumentNullException (nameof (resourceManager));
 			EventLogger = eventLogger ?? throw new ArgumentNullException (nameof (eventLogger));
 			EnviromentManager = envManager ?? throw new ArgumentNullException (nameof (envManager));
