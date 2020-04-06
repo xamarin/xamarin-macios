@@ -114,7 +114,7 @@ namespace Xharness {
 
 			var sims = simulatorsLoaderFactory.CreateLoader ();
 			await sims.LoadDevices (Logs.Create ($"simulator-list-{Helpers.Timestamp}.log", "Simulator list"), false, false);
-			simulators = await sims.FindAsync (target, MainLog);
+			simulators = await sims.FindSimulators (target, MainLog);
 
 			return simulators != null;
 		}
@@ -339,7 +339,7 @@ namespace Xharness {
 
 				if (EnsureCleanSimulatorState) {
 					foreach (var sim in simulators)
-						await sim.PrepareSimulatorAsync (MainLog, AppInformation.BundleIdentifier);
+						await sim.PrepareSimulator (MainLog, AppInformation.BundleIdentifier);
 				}
 
 				args.Add (new SimulatorUDIDArgument (simulator.UDID));
@@ -353,7 +353,7 @@ namespace Xharness {
 
 				// cleanup after us
 				if (EnsureCleanSimulatorState)
-					await simulator.KillEverythingAsync (MainLog);
+					await simulator.KillEverything (MainLog);
 
 				foreach (var log in systemLogs)
 					log.StopCapture ();

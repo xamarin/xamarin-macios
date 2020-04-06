@@ -238,7 +238,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 			return pairs.FirstOrDefault ();
 		}
 
-		public async Task<ISimulatorDevice []> FindAsync (TestTarget target, ILog log, bool create_if_needed = true, bool min_version = false)
+		public async Task<ISimulatorDevice []> FindSimulators (TestTarget target, ILog log, bool create_if_needed = true, bool min_version = false)
 		{
 			ISimulatorDevice [] simulators = null;
 
@@ -371,7 +371,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 			{
 				lock (lock_obj) {
 					if (findTask == null)
-						findTask = Simulators.FindAsync (Target, Log, min_version: MinVersion);
+						findTask = Simulators.FindSimulators (Target, Log, min_version: MinVersion);
 					return findTask;
 				}
 			}

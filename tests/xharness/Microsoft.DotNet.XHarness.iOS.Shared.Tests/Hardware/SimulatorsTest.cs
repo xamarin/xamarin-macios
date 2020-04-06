@@ -144,7 +144,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Hardware {
 				});
 
 			await simulators.LoadDevices (executionLog.Object);
-			var sims = await simulators.FindAsync (target, executionLog.Object, false, false);
+			var sims = await simulators.FindSimulators (target, executionLog.Object, false, false);
 
 			Assert.AreEqual (expected, sims.Count (), $"{target} simulators count");
 		}

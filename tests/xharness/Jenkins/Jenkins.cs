@@ -1293,7 +1293,7 @@ namespace Xharness.Jenkins {
 				// We can populate and build test-libraries in parallel.
 				var populate = Task.Run (async () => {
 					var simulator = new SimulatorDevice (processManager, new TCCDatabase (processManager));
-					await simulator.KillEverythingAsync (MainLog);
+					await simulator.KillEverything (MainLog);
 					await PopulateTasksAsync ();
 					populating = false;
 				});

@@ -318,7 +318,7 @@ namespace Xharness.Tests {
 			string simulatorLogPath = Path.Combine (Path.GetTempPath (), "simulator-logs");
 
 			simulators
-				.Setup (x => x.FindAsync (TestTarget.Simulator_tvOS, mainLog.Object, true, false))
+				.Setup (x => x.FindSimulators (TestTarget.Simulator_tvOS, mainLog.Object, true, false))
 				.ReturnsAsync ((ISimulatorDevice []) null);
 
 			var listenerLogFile = new Mock<ILog> ();
@@ -406,7 +406,7 @@ namespace Xharness.Tests {
 			simulator.SetupGet (x => x.SystemLog).Returns (Path.Combine (simulatorLogPath, "system.log"));
 
 			simulators
-				.Setup (x => x.FindAsync (TestTarget.Simulator_iOS64, mainLog.Object, true, false))
+				.Setup (x => x.FindSimulators (TestTarget.Simulator_iOS64, mainLog.Object, true, false))
 				.ReturnsAsync (new ISimulatorDevice [] { simulator.Object });
 
 			var testResultFilePath = Path.GetTempFileName ();
@@ -494,8 +494,8 @@ namespace Xharness.Tests {
 			captureLog.Verify (x => x.StopCapture (), Times.AtLeastOnce);
 
 			// When ensureCleanSimulatorState == true
-			simulator.Verify (x => x.PrepareSimulatorAsync (mainLog.Object, appName));
-			simulator.Verify (x => x.KillEverythingAsync (mainLog.Object));
+			simulator.Verify (x => x.PrepareSimulator (mainLog.Object, appName));
+			simulator.Verify (x => x.KillEverything (mainLog.Object));
 		}
 
 		[Test]

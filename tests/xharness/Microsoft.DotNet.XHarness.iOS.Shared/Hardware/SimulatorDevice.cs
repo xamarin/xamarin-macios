@@ -37,7 +37,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 			}
 		}
 
-		public async Task EraseAsync (ILog log)
+		public async Task Erase (ILog log)
 		{
 			// here we don't care if execution fails.
 			// erase the simulator (make sure the device isn't running first)
@@ -49,12 +49,12 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 			await processManager.ExecuteXcodeCommandAsync ("simctl", new [] { "shutdown", UDID }, log, TimeSpan.FromMinutes (1));
 		}
 
-		public async Task ShutdownAsync (ILog log)
+		public async Task Shutdown (ILog log)
 		{
 			await processManager.ExecuteXcodeCommandAsync ("simctl", new [] { "shutdown", UDID }, log, TimeSpan.FromMinutes (1));
 		}
 
-		public async Task KillEverythingAsync (ILog log)
+		public async Task KillEverything (ILog log)
 		{
 			await processManager.ExecuteCommandAsync ("launchctl", new [] { "remove", "com.apple.CoreSimulator.CoreSimulatorService" }, log, TimeSpan.FromSeconds (10));
 
@@ -95,13 +95,13 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 			await processManager.ExecuteCommandAsync ("open", new [] { "-a", simulator_app, "--args", "-CurrentDeviceUDID", UDID }, log, TimeSpan.FromSeconds (15));
 		}
 
-		public async Task PrepareSimulatorAsync (ILog log, params string [] bundle_identifiers)
+		public async Task PrepareSimulator (ILog log, params string [] bundle_identifiers)
 		{
 			// Kill all existing processes
-			await KillEverythingAsync (log);
+			await KillEverything (log);
 
 			// We shutdown and erase all simulators.
-			await EraseAsync (log);
+			await Erase (log);
 
 			// Edit the permissions to prevent dialog boxes in the test app
 			var TCC_db = Path.Combine (DataPath, "data", "Library", "TCC", "TCC.db");
@@ -125,10 +125,10 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 			}
 
 			// Make sure we're in a clean state
-			await KillEverythingAsync (log);
+			await KillEverything (log);
 
 			// Make 100% sure we're shutdown
-			await ShutdownAsync (log);
+			await Shutdown (log);
 		}
 
 	}
