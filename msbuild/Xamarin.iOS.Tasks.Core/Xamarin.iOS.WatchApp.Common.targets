@@ -38,7 +38,7 @@ Copyright (C) 2015-2016 Xamarin. All rights reserved.
 	<Target Name="Build"   Condition="'$(_InvalidConfigurationWarning)' != 'true'" DependsOnTargets="_GetWatchAppBundlePath;$(BuildDependsOn)" Outputs="@(_WatchAppBundlePath)" />
 	<Target Name="Rebuild" Condition="'$(_InvalidConfigurationWarning)' != 'true'" DependsOnTargets="_GetWatchAppBundlePath;$(RebuildDependsOn)" Outputs="@(_WatchAppBundlePath)" />
 
-	<Target Name="_ResolveNativeWatchApp" DependsOnTargets="_DetectSdkLocations;_GenerateBundleName">
+	<Target Name="_ResolveNativeWatchApp" DependsOnTargets="_DetectSdkLocations;_GenerateBundleName;_ComputeTargetFrameworkMoniker">
 		<ResolveNativeWatchApp
 			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
