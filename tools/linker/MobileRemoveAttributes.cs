@@ -37,6 +37,22 @@ namespace Xamarin.Linker {
 			case "DebuggerTypeProxyAttribute":
 			case "DebuggerVisualizerAttribute":
 				return !DebugBuild && attr_type.Namespace == "System.Diagnostics";
+			// compiler nullability attributes are not used at runtime so they can be removed by the linker
+			case "NullableAttribute":
+			case "NullableContextAttribute":
+				return attr_type.Namespace == "System.Runtime.CompilerServices";
+			// _manual_ nullability attributes are not used at runtime so they can be removed by the linker
+			case "AllowNullAttribute":
+			case "DisallowNullAttribute":
+			case "DoesNotReturnAttribute":
+			case "DoesNotReturnIfAttribute":
+			case "ExcludeFromCodeCoverageAttribute":
+			case "MaybeNullAttribute":
+			case "MaybeNullWhenAttribute":
+			case "NotNullAttribute":
+			case "NotNullIfNotNullAttribute":
+			case "NotNullWhenAttribute":
+				return attr_type.Namespace == "System.Diagnostics.CodeAnalysis";
 			default:
 				return false;
 			}
