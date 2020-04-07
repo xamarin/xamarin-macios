@@ -22,7 +22,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Hardware {
 		string sdkPath;
 		Mock<ILog> executionLog;
 		Mock<IProcessManager> processManager;
-		Simulators simulators;
+		SimulatorLoader simulators;
 
 		[SetUp]
 		public void SetUp ()
@@ -31,7 +31,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Hardware {
 			sdkPath = "/Applications/Xcode.app";
 			executionLog = new Mock<ILog> ();
 			processManager = new Mock<IProcessManager> ();
-			simulators = new Simulators (processManager.Object);
+			simulators = new SimulatorLoader (processManager.Object);
 		}
 
 		[TearDown]
@@ -62,7 +62,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Hardware {
 				});
 
 			Assert.ThrowsAsync<Exception> (async () => {
-				await simulators.LoadAsync (executionLog.Object);
+				await simulators.LoadDevices (executionLog.Object);
 			});
 
 			// validate the execution of mlaunch
@@ -104,7 +104,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Hardware {
 					return Task.FromResult (new ProcessExecutionResult { ExitCode = 0, TimedOut = false });
 				});
 
-			await simulators.LoadAsync (executionLog.Object);
+			await simulators.LoadDevices (executionLog.Object);
 
 			MlaunchArgument listSimArg = passedArguments.Where (a => a is ListSimulatorsArgument).FirstOrDefault ();
 			Assert.IsNotNull (listSimArg, "list devices arg missing");
@@ -143,8 +143,8 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Hardware {
 					return Task.FromResult (new ProcessExecutionResult { ExitCode = 0, TimedOut = false });
 				});
 
-			await simulators.LoadAsync (executionLog.Object);
-			var sims = await simulators.FindAsync (target, executionLog.Object, false, false);
+			await simulators.LoadDevices (executionLog.Object);
+			var sims = await simulators.FindSimulators (target, executionLog.Object, false, false);
 
 			Assert.AreEqual (expected, sims.Count (), $"{target} simulators count");
 		}
