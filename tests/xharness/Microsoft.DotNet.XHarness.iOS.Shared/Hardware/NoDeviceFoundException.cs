@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Xharness {
+namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 	public class NoDeviceFoundException : Exception {
 		public NoDeviceFoundException ()
 		{

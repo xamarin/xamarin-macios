@@ -71,7 +71,7 @@ namespace Xharness.Jenkins.TestTasks {
 				Jenkins.MainLog.WriteLine ("Selected simulator: {0}", devices.Length > 0 ? devices [0].Name : "none");
 
 				foreach (var dev in devices)
-					await dev.PrepareSimulatorAsync (Jenkins.MainLog, executingTasks.Select ((v) => v.BundleIdentifier).ToArray ());
+					await dev.PrepareSimulator (Jenkins.MainLog, executingTasks.Select ((v) => v.BundleIdentifier).ToArray ());
 
 				foreach (var task in executingTasks) {
 					task.AcquiredResource = desktop;
@@ -83,11 +83,11 @@ namespace Xharness.Jenkins.TestTasks {
 				}
 
 				foreach (var dev in devices)
-					await dev.ShutdownAsync (Jenkins.MainLog);
+					await dev.Shutdown (Jenkins.MainLog);
 
 				var device = devices.FirstOrDefault ();
 				if (device != null)
-					await device.KillEverythingAsync (Jenkins.MainLog);
+					await device.KillEverything (Jenkins.MainLog);
 
 				run_timer.Stop ();
 			}
