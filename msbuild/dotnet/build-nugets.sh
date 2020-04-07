@@ -173,6 +173,6 @@ create_sdk_nugets ()
 	chmod -R +r "$destdir"
 }
 create_sdk_nugets  "iOS"     "$IOS_DESTDIR$MONOTOUCH_PREFIX"
-create_sdk_nugets  "tvOS"    "$MAC_DESTDIR$MAC_FRAMEWORK_DIR/Versions/Current"
+create_sdk_nugets  "tvOS"    "$IOS_DESTDIR$MONOTOUCH_PREFIX"
 create_sdk_nugets  "watchOS" "$IOS_DESTDIR$MONOTOUCH_PREFIX"
-create_sdk_nugets  "macOS"   "$IOS_DESTDIR$MONOTOUCH_PREFIX"
+create_sdk_nugets  "macOS"   "$MAC_DESTDIR$MAC_FRAMEWORK_DIR/Versions/Current"
