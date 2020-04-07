@@ -19,7 +19,7 @@ namespace Xharness.Jenkins.TestTasks {
 		{
 		}
 
-		public bool RestoreNugets {
+		public virtual bool RestoreNugets {
 			get {
 				return TestProject.RestoreNugetsInProject || !string.IsNullOrEmpty (SolutionPath);
 			}
