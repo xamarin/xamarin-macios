@@ -3,9 +3,9 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 
 namespace Xharness.Jenkins.TestTasks
 {
-	public abstract class BuildToolTask : AppleTestTask
+	public abstract class BuildToolTask: AppleTestTask
 	{
-		readonly Xharness.TestTasks.BuildToolTask buildToolTask;
+		protected Xharness.TestTasks.BuildToolTask buildToolTask;
 
 		public IProcessManager ProcessManager => buildToolTask.ProcessManager;
 
@@ -36,7 +36,7 @@ namespace Xharness.Jenkins.TestTasks
 		}
 
 		protected BuildToolTask (Jenkins jenkins, IProcessManager processManager) : base (jenkins)
-			=> buildToolTask = new Xharness.TestTasks.BuildToolTask (processManager);
+			=> InitializeTool ();
 
 		public override TestPlatform Platform { 
 			get => base.Platform;
@@ -51,6 +51,7 @@ namespace Xharness.Jenkins.TestTasks
 			set => buildToolTask.Mode = value;
 		}
 
+		protected virtual void InitializeTool () => buildToolTask = new Xharness.TestTasks.BuildToolTask (ProcessManager);
 		public virtual Task CleanAsync () => buildToolTask.CleanAsync ();
 	}
 }
