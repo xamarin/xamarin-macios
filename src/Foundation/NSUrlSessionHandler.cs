@@ -334,7 +334,7 @@ namespace Foundation {
 		// in certain cases the user does that on purpose (BeingBackgroundTask) and wants to be able
 		// to use the network. In those cases, which are few, we want the developer to explicitly 
 		// bypass the check when there are not request in flight 
-		bool bypassBackgroundCheck;
+		bool bypassBackgroundCheck = true;
 
 		public bool BypassBackgroundSessionCheck {
 			get {
