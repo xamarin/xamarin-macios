@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 
 namespace Xharness.Jenkins.TestTasks
@@ -7,7 +8,7 @@ namespace Xharness.Jenkins.TestTasks
 	{
 		protected Xharness.TestTasks.BuildToolTask buildToolTask;
 
-		public IProcessManager ProcessManager => buildToolTask.ProcessManager;
+		public IProcessManager ProcessManager { get; private set; }
 
 		public override string TestName {
 			get => base.TestName;
@@ -35,8 +36,10 @@ namespace Xharness.Jenkins.TestTasks
 			}
 		}
 
-		protected BuildToolTask (Jenkins jenkins, IProcessManager processManager) : base (jenkins)
-			=> InitializeTool ();
+		protected BuildToolTask (Jenkins jenkins, IProcessManager processManager) : base (jenkins) {
+			ProcessManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
+			InitializeTool ();
+		}
 
 		public override TestPlatform Platform { 
 			get => base.Platform;
