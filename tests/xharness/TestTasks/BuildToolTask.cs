@@ -6,7 +6,7 @@ namespace Xharness.TestTasks {
 
 	public class BuildToolTask
 	{
-		public IProcessManager ProcessManager { get; private set; }
+		public IProcessManager ProcessManager { get; }
 		public TestPlatform Platform { get; set; }
 
 		public bool SpecifyPlatform { get; set; } = true;
