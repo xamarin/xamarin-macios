@@ -71,13 +71,6 @@ $response = Invoke-RestMethod @params
 
 $response | Write-Host
 
-Get-Location | Get-ChildItem
-
-$testsummary_location = Get-Location + "/TestSummary.md"
-Write-Host $testsummary_location
-Get-Content $testsummary_location
-Get-Content $testsummary_location | Write-Host
-
 
 # https://api.github.com/xamarin/xamarin-macios/commits/eea6fd1f27ba9a0ac4fa09c8e57fc87d612b6340/status
 
