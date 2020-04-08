@@ -1155,7 +1155,7 @@ namespace Xharness.Jenkins {
 				Platform = TestPlatform.Mac,
 				TestName = "MMP Regression Tests",
 				Target = "all", // -j" + Environment.ProcessorCount,
-				WorkingDirectory = Path.Combine (Harness.RootDirectory, "mmptest", "regression"),
+				WorkingDirectory = Path.Combine (Harness.RootDirectory, "mmp-regression"),
 				Ignored = !IncludeMmpTest || !IncludeMac,
 				Timeout = TimeSpan.FromMinutes (30),
 				SupportsParallelExecution = false, // Already doing parallel execution by running "make -jX"

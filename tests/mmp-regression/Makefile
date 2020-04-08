@@ -1,4 +1,4 @@
-TOP = ../../..
+TOP = ../..
 
 include $(TOP)/Make.config
 
