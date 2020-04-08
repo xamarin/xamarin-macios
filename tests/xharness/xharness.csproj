@@ -121,7 +121,7 @@
     <Compile Include="TestTasks\Resources.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\tools\mtouch\SdkVersions.cs">
+    <Compile Include="..\..\tools\common\SdkVersions.cs">
       <Link>SdkVersions.cs</Link>
     </Compile>
   </ItemGroup>
