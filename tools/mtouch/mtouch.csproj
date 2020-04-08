@@ -16,7 +16,7 @@
     <DebugType>portable</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>MONOTOUCH;MTOUCH;XAMARIN_APPLETLS;DEV</DefineConstants>
+    <DefineConstants>MONOTOUCH;MTOUCH;XAMARIN_APPLETLS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Deterministic>True</Deterministic>
