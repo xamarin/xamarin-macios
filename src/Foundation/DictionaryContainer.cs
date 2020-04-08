@@ -239,11 +239,9 @@ namespace Foundation {
 			var dict = GetNSDictionary (key);
 			if (dict == null)
 				return null;
-			T value = (T)Activator.CreateInstance (typeof(T),
+			return (T?) Activator.CreateInstance (typeof(T),
 				new object[] { dict }
 			);
-
-			return value;
 		}
 
 		protected NSString? GetNSStringValue (NSString key)
