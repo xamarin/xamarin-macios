@@ -204,6 +204,7 @@ $(IOS_BUILD_DIR)/native-$(1)%Xamarin.iOS.dll $(IOS_BUILD_DIR)/native-$(1)%Xamari
 		$$(ARGS_$(1)) \
 		-publicsign -keyfile:$(PRODUCT_KEY_PATH) $$(IOS_DEFINES) \
 		-nowarn:219,618,114,414,1635,3021,$$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
+		-warnaserror:$(NULLABILITY_WARNINGS) \
 		$$(IOS_CSC_FLAGS_XI) \
 		$$(IOS_SOURCES) @$(IOS_BUILD_DIR)/native/generated_sources
 
@@ -500,6 +501,7 @@ $(MAC_BUILD_DIR)/$(1)-64/Xamarin.Mac.dll: $(MAC_BUILD_DIR)/$(1)/generated-source
 		$$(ARGS_64) \
 		-publicsign -keyfile:$(SN_KEY) \
 		-nowarn:3021,1635,612,618,0219,0414,$(MAC_WARNINGS_TO_FIX) \
+		-warnaserror:$(NULLABILITY_WARNINGS) \
 		$$(MAC_CSC_FLAGS_XM) \
 		$(MAC_CFNETWORK_SOURCES) $(MAC_HTTP_SOURCES) \
 		$(2) \
@@ -777,6 +779,7 @@ $(WATCHOS_DOTNET_BUILD_DIR)/32/Xamarin.WatchOS.dll: $(WATCHOS_DOTNET_BUILD_DIR)/
 		$(WATCH_DEFINES) \
 		$(ARGS_32) \
 		$(WATCHOS_WARNINGS_TO_FIX) \
+		-warnaserror:$(NULLABILITY_WARNINGS) \
 		$(IOS_CSC_FLAGS_XI) \
 		$(WATCHOS_SOURCES) \
 		@$<
@@ -993,6 +996,7 @@ $(TVOS_DOTNET_BUILD_DIR)/64/Xamarin.TVOS.dll: $(TVOS_DOTNET_BUILD_DIR)/tvos-gene
 		$(TVOS_DEFINES) \
 		$(ARGS_64) \
 		$(TVOS_WARNINGS_TO_FIX) \
+		-warnaserror:$(NULLABILITY_WARNINGS) \
 		$(IOS_CSC_FLAGS_XI) \
 		$(TVOS_SOURCES) \
 		@$<
