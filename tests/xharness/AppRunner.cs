@@ -269,7 +269,6 @@ namespace Xharness {
 				harness.XmlJargon,
 				deviceName,
 				testReporterTimeout,
-				harness.LaunchTimeout,
 				buildTask?.Logs?.Directory,
 				(level, message) => harness.Log (level, message));
 
