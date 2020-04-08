@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -197,7 +197,7 @@ namespace Xharness.TestTasks {
 
 		protected virtual void PropagateResults () { }
 
-		public virtual void LogEvent (ILog log, string text, params object [] args) => log.WriteLine (text, args);
+		protected virtual void LogEvent (ILog log, string text, params object [] args) => log.WriteLine (text, args);
 
 		public virtual void Reset ()
 		{
