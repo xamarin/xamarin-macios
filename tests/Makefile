@@ -191,14 +191,14 @@ Makefile-mac.inc: xharness/xharness.exe
 
 -include Makefile-mac.inc
 
-$(TOP)/tools/mtouch/SdkVersions.cs: $(TOP)/tools/common/SdkVersions.cs.in
-	@$(MAKE) -C $(TOP)/tools/mtouch SdkVersions.cs
+$(TOP)/tools/common/SdkVersions.cs: $(TOP)/tools/common/SdkVersions.cs.in
+	@$(MAKE) -C $(TOP)/tools/mtouch ../common/SdkVersions.cs
 
 .stamp-src-project-files:
 	@$(MAKE) -C $(TOP)/src project-files
 	@touch $@
 
-xharness/xharness.exe: $(wildcard xharness/*.cs) $(wildcard $(TOP)/tools/bcl-test-importer/BCLTestImporter/*.cs) xharness/xharness.csproj $(TOP)/tools/mtouch/SdkVersions.cs test.config test-system.config .stamp-src-project-files
+xharness/xharness.exe: $(wildcard xharness/*.cs) $(wildcard $(TOP)/tools/bcl-test-importer/BCLTestImporter/*.cs) xharness/xharness.csproj $(TOP)/tools/common/SdkVersions.cs test.config test-system.config .stamp-src-project-files
 	$(Q_GEN) $(SYSTEM_MSBUILD) /restore $(MSBUILD_VERBOSITY_QUIET) xharness/xharness.csproj
 
 killall:

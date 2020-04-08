@@ -58,7 +58,7 @@
     <Compile Include="..\common\error.cs">
       <Link>external\error.cs</Link>
     </Compile>
-    <Compile Include="SdkVersions.cs" />
+    <Compile Include="..\common\SdkVersions.cs" />
     <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\external\linker\src\tuner\Mono.Tuner\ApplyPreserveAttributeBase.cs">
       <Link>Mono.Tuner\ApplyPreserveAttributeBase.cs</Link>
     </Compile>
@@ -480,4 +480,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="..\..\packages\XliffTasks.1.0.0-beta.20060.1\build\XliffTasks.targets" Condition="Exists('..\..\packages\XliffTasks.1.0.0-beta.20060.1\build\XliffTasks.targets')" />
+  <Target Name="BuildSdkVersions" Inputs="../common/SdkVersions.cs.in" Outputs="../common/SdkVersions.cs">
+    <Exec Command="make ../common/SdkVersions.cs" />
+  </Target>
 </Project>
