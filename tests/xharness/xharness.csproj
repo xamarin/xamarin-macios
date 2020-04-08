@@ -119,6 +119,7 @@
     <Compile Include="TestTasks\IAcquiredResource.cs" />
     <Compile Include="TestTasks\Resource.cs" />
     <Compile Include="TestTasks\Resources.cs" />
+    <Compile Include="TestTasks\BuildToolTask.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\tools\mtouch\SdkVersions.cs">

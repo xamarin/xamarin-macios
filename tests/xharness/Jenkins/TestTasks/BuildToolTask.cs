@@ -1,30 +1,40 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 
 namespace Xharness.Jenkins.TestTasks
 {
 	public abstract class BuildToolTask : AppleTestTask
 	{
-		protected readonly IProcessManager ProcessManager;
+		readonly Xharness.TestTasks.BuildToolTask buildToolTask;
 
-		public bool SpecifyPlatform = true;
-		public bool SpecifyConfiguration = true;
+		public IProcessManager ProcessManager => buildToolTask.ProcessManager;
 
-		protected BuildToolTask (IProcessManager processManager)
-		{
-			ProcessManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
+		public bool SpecifyPlatform { 
+			get => buildToolTask.SpecifyPlatform;
+			set => buildToolTask.SpecifyPlatform = value;
+		}
+
+		public bool SpecifyConfiguration {
+			get => buildToolTask.SpecifyConfiguration;
+			set => buildToolTask.SpecifyConfiguration = value;
+		}
+
+		protected BuildToolTask (IProcessManager processManager) 
+			=> buildToolTask = new Xharness.TestTasks.BuildToolTask (processManager);
+
+		public override TestPlatform Platform { 
+			get => base.Platform;
+			set {
+				base.Platform = value;
+				buildToolTask.Platform = value;
+			}
 		}
 
 		public override string Mode {
-			get { return Platform.ToString (); }
-			set { throw new NotSupportedException (); }
+			get => buildToolTask.Mode;
+			set => buildToolTask.Mode = value;
 		}
 
-		public virtual Task CleanAsync ()
-		{
-			Console.WriteLine ("Clean is not implemented for {0}", GetType ().Name);
-			return Task.CompletedTask;
-		}
+		public virtual Task CleanAsync () => buildToolTask.CleanAsync ();
 	}
 }

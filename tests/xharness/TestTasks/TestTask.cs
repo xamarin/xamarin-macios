@@ -37,7 +37,6 @@ namespace Xharness.TestTasks {
 		protected static string Timestamp => Helpers.Timestamp;
 		public string ProjectFile => TestProject?.Path;
 		public bool HasCustomTestName => test_name != null;
-		public TestPlatform Platform { get; set; }
 
 		public bool NotStarted => (ExecutionResult & TestExecutingResult.StateMask) == TestExecutingResult.NotStarted;
 		public bool InProgress => (ExecutionResult & TestExecutingResult.InProgress) == TestExecutingResult.InProgress;
@@ -138,6 +137,7 @@ namespace Xharness.TestTasks {
 
 		#region Virtual
 
+		public virtual TestPlatform Platform { get; set; }
 		public virtual string ProgressMessage { get; }
 		public virtual string Mode { get; set; }
 		public virtual string Variation { get; set; }
