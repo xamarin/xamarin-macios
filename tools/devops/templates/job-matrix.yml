@@ -11,6 +11,7 @@
 # timeout: The timeout of the jobs in minutes.
 # maxParallel: The amount of parallel jobs to be used
 
+
 parameters:
 - name: variation 
   type: string 
@@ -60,18 +61,18 @@ jobs:
         CONTEXT: '${{ parameters.variation }}-monotouch-DDFun'
         TESTS_EXTRA_ARGUMENTS: '--label=${{ parameters.deviceLabel }},run-monotouch-tests' # run all tests but the bcl ones
         TESTS: 'Monotouch'
-      xUnitBCL:
-        CONTEXT: '${{ parameters.variation }}-xUnit-BCL-DDFun'
-        TESTS_EXTRA_ARGUMENTS: '--label=${{ parameters.deviceLabel }},run-bcl-xunit-tests' # run only the new bcl tests
-        TESTS: 'xUnitBCL'
-      nUnitBCL:
-        CONTEXT: '${{ parameters.variation }}-NUnit-BCL-DDFun'
-        TESTS_EXTRA_ARGUMENTS: '--label=${{ parameters.deviceLabel }},run-bcl-nunit-tests' # run only the new bcl tests
-        TESTS: 'NUnitBCL'
-      Mscorlib:
-        CONTEXT: '${{ parameters.variation }}-mscorlib-DDFun'
-        TESTS_EXTRA_ARGUMENTS: '--label=${{ parameters.deviceLabel }},run-mscorlib-tests' # run only the new bcl tests
-        TESTS: 'mscorlib'
+      # xUnitBCL:
+      #   CONTEXT: '${{ parameters.variation }}-xUnit-BCL-DDFun'
+      #   TESTS_EXTRA_ARGUMENTS: '--label=${{ parameters.deviceLabel }},run-new-bcl-tests,skip-mscorlib-tests' # run only the new bcl tests
+      #   TESTS: 'xUnitBCL'
+      # nUnitBCL:
+      #   CONTEXT: '${{ parameters.variation }}-NUnit-BCL-DDFun'
+      #   TESTS_EXTRA_ARGUMENTS: '--label=${{ parameters.deviceLabel }},run-old-bcl-tests' # run only the new bcl tests
+      #   TESTS: 'NUnitBCL'
+      # Mscorlib:
+      #   CONTEXT: '${{ parameters.variation }}-mscorlib-DDFun'
+      #   TESTS_EXTRA_ARGUMENTS: '--label=${{ parameters.deviceLabel }},run-mscorlib-tests' # run only the new bcl tests
+      #   TESTS: 'mscorlib'
 
   steps:
   - template: device-tests.yml # all the smart stuff happens in the template, just needed to set the params

@@ -90,10 +90,27 @@ steps:
 ### Run the device tests
 ###
 
+  # move this to in-line code, should be very short
 - bash: ./xamarin-macios/tools/devops/run-tests.sh
   displayName: 'Run tests'
   timeoutInMinutes: 600
 
+
+# if there's a failure:
+# - update GH commit status
+# - add commit comment
+# grab env variables to add test specific text
+# pwsh for PowerShell Core
+# powershell is for Win only PowerShell
+- pwsh: ./xamarin-macios/tools/devops/templates/publish_failure.ps1
+  condition: failed()
+  env:
+    BUILD_REVISION: $(BUILD_REVISION)
+    GH_STATE: $(GH_STATE)
+    GITHUB_TOKEN: $(GitHub.Token)
+    CONTEXT: $(CONTEXT)
+    TESTS: $(TESTS)
+    TESTSARGS: $(TESTS_EXTRA_ARGUMENTS)
 
 - bash: ./xamarin-macios/tools/devops/add-summaries.sh
   displayName: 'Add summaries'
@@ -126,6 +143,8 @@ steps:
 ###
 ### Push the HTML report to Azure DevOps (shows up in Summary tab as Build Artifact)
 ###
+- bash: |
+    echo "$CONTEXT" >> TestSummary-$CONTEXT.md
 
 - task: PublishPipelineArtifact@1
   displayName: 'Publish Artifact: HtmlReport'
@@ -138,10 +157,11 @@ steps:
 - task: PublishPipelineArtifact@1
   displayName: 'Publish Artifact: TestSummary'
   inputs:
-    targetPath: 'xamarin-macios/tests/TestSummary.md'
+#    targetPath: 'xamarin-macios/tests/TestSummary.md'
+    targetPath: TestSummary-$(CONTEXT).md
     artifactName: TestSummary-$(CONTEXT)
   continueOnError: true
-  condition: and(succeededOrFailed(), eq(variables['ProvisioningProfiles'], 'success'))
+#  condition: and(succeededOrFailed(), eq(variables['ProvisioningProfiles'], 'success'))
 
 ###
 ### Cleanup after us, not having that can lead to VSMac install issues
