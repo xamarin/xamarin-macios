@@ -3470,6 +3470,8 @@ public partial class Generator : IMemberGatherer {
 
 				var bindAsAttrib = GetBindAsAttribute (minfo.mi);
 				sb.Append (prefix + FormatType (bindAsAttrib.Type.DeclaringType, GetCorrectGenericType (bindAsAttrib.Type)));
+				if (!bindAsAttrib.Type.IsValueType && AttributeManager.HasAttribute<NullAllowedAttribute> (mi.ReturnParameter))
+					sb.Append ('?');
 			} else {
 				sb.Append (prefix);
 				sb.Append (FormatType (mi.DeclaringType, GetCorrectGenericType (mi.ReturnType)));
@@ -4784,7 +4786,7 @@ public partial class Generator : IMemberGatherer {
 			var bindAsAttrib = GetBindAsAttribute (minfo.mi);
 			propertyTypeName = FormatType (bindAsAttrib.Type.DeclaringType, GetCorrectGenericType (bindAsAttrib.Type));
 			// it remains nullable only if the BindAs type can be null (i.e. a reference type)
-			nullable = !bindAsAttrib.Type.IsValueType;
+			nullable = !bindAsAttrib.Type.IsValueType && AttributeManager.HasAttribute<NullAllowedAttribute> (pi);
 		} else {
 			propertyTypeName = FormatType (pi.DeclaringType, GetCorrectGenericType (pi.PropertyType));
 		}
