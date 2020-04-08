@@ -47,7 +47,7 @@ namespace Xharness.Jenkins.TestTasks {
 					xbuild.StartInfo.FileName = ToolName;
 					xbuild.StartInfo.Arguments = StringUtils.FormatArguments (ToolArguments);
 					SetEnvironmentVariables (xbuild);
-					xbuild.StartInfo.EnvironmentVariables ["MSBuildExtensionsPath"] = null;
+					xbuild.StartInfo.EnvironmentVariables.Remove ("MSBuildExtensionsPath");
 					LogEvent (BuildLog, "Building {0} ({1})", TestName, Mode);
 					if (!Harness.DryRun) {
 						var timeout = TimeSpan.FromMinutes (60);

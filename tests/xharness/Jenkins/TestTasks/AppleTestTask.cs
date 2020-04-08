@@ -68,8 +68,13 @@ namespace Xharness.Jenkins.TestTasks {
 				throw new NotImplementedException ();
 			}
 
-			foreach (var kvp in Environment)
-				process.StartInfo.EnvironmentVariables [kvp.Key] = kvp.Value;
+			foreach (var kvp in Environment) {
+				if (kvp.Value == null) {
+					process.StartInfo.EnvironmentVariables.Remove (kvp.Key);
+				} else {
+					process.StartInfo.EnvironmentVariables [kvp.Key] = kvp.Value;
+				}
+			}
 		}
 
 
