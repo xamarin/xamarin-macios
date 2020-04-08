@@ -197,7 +197,7 @@ namespace Xharness.TestTasks {
 
 		protected virtual void PropagateResults () { }
 
-		protected virtual void LogEvent (ILog log, string text, params object [] args) => log.WriteLine (text, args);
+		public virtual void LogEvent (ILog log, string text, params object [] args) => log.WriteLine (text, args);
 
 		public virtual void Reset ()
 		{

@@ -30,7 +30,7 @@ namespace Xharness.Jenkins.TestTasks {
 			TestProject = testProject ?? throw new ArgumentNullException (nameof (testProject));
 		}
 
-		public bool RestoreNugets => buildProjectTask.RestoreNugets;
+		public virtual bool RestoreNugets => buildProjectTask.RestoreNugets;
 
 		public override bool SupportsParallelExecution => buildProjectTask.SupportsParallelExecution;
 

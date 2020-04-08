@@ -171,3 +171,6 @@ $(eval $(call NativeCompilationTemplate,-debug,-DDEBUG))
 
 .libs/iphoneos .libs/iphonesimulator .libs/watchos .libs/watchsimulator .libs/tvos .libs/tvsimulator .libs/iosmac:
 	$(Q) mkdir -p $@
+
+%.csproj.inc: %.csproj $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/tools/common/create-makefile-fragment.sh
+	$(Q) $(TOP)/tools/common/create-makefile-fragment.sh $(abspath $<) $(abspath $@)
