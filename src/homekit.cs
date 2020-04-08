@@ -1849,7 +1849,7 @@ namespace HomeKit {
 		HMSignificantEvent SignificantEvent {
 			[Wrap ("HMSignificantEventExtensions.GetValue (WeakSignificantEvent)")]
 			get;
-			[Wrap ("WeakSignificantEvent = HMSignificantEventExtensions.GetConstant (value)")]
+			[Wrap ("WeakSignificantEvent = HMSignificantEventExtensions.GetConstant (value)!")]
 			set;
 		}
 
