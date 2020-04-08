@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Xharness.Jenkins
+namespace Xharness.TestTasks
 {
 	class Resources
 	{

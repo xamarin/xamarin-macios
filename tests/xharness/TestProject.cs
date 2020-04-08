@@ -112,14 +112,14 @@ namespace Xharness {
 			return rv;
 		}
 
-		internal async Task<TestProject> CreateCloneAsync (TestTask test)
+		internal async Task<TestProject> CreateCloneAsync (AppleTestTask test)
 		{
 			var rv = Clone ();
 			await rv.CreateCopyAsync (test);
 			return rv;
 		}
 
-		internal async Task CreateCopyAsync (TestTask test = null)
+		internal async Task CreateCopyAsync (AppleTestTask test = null)
 		{
 			var directory = DirectoryUtilities.CreateTemporaryDirectory (test?.TestName ?? System.IO.Path.GetFileNameWithoutExtension (Path));
 			Directory.CreateDirectory (directory);
