@@ -2590,6 +2590,13 @@
 		</comment>
 	</data>
 	
+    <data name="MX5222" xml:space="preserve">
+        <value>The native linker failed to execute: {0}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+        </value>
+        <comment>
+        </comment>
+    </data>
+
 	<data name="MT5301" xml:space="preserve">
 		<value>Missing 'strip' tool. Please install Xcode 'Command-Line Tools' component
 		</value>

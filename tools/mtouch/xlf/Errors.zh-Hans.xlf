@@ -2994,6 +2994,14 @@
         <note>
 		</note>
       </trans-unit>
+      <trans-unit id="MX5222">
+        <source>The native linker failed to execute: {0}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+        </source>
+        <target state="new">The native linker failed to execute: {0}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+        </target>
+        <note>
+        </note>
+      </trans-unit>
       <trans-unit id="MX5305">
         <source>Missing 'lipo' tool. Please install Xcode 'Command-Line Tools' component
 		</source>
