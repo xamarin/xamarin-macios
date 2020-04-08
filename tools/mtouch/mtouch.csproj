@@ -48,7 +48,7 @@
       <Link>external\error.cs</Link>
     </Compile>
     <Compile Include="mtouch.cs" />
-    <Compile Include="SdkVersions.cs" />
+    <Compile Include="..\common\SdkVersions.cs" />
     <Compile Include="Stripper.cs" />
     <Compile Include="Target.cs" />
     <Compile Include="Tuning.cs" />
@@ -496,6 +496,9 @@
       <LogicalName>Errors.mtouch.resources</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
+  <Target Name="BuildSdkVersions" Inputs="../common/SdkVersions.cs.in" Outputs="../common/SdkVersions.cs">
+    <Exec Command="make ../common/SdkVersions.cs" />
+  </Target>
   <Target Name="AfterBuild">
     <!-- This makes sure that just building the csproj will install the updated mtouch.exe, so that tests get it without having to 'make mtouch' manually -->
     <Exec Command="make mtouch" />

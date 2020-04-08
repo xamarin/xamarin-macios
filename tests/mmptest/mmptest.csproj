@@ -110,7 +110,7 @@
     <Compile Include="src\AssemblyReferencesTests.cs" />
     <Compile Include="src\PackageReferenceTests.cs" />
     <Compile Include="src\BindingProjectNoEmbeddingTests.cs" />
-    <Compile Include="..\..\tools\mmp\SdkVersions.cs">
+    <Compile Include="..\..\tools\common\SdkVersions.cs">
       <Link>SdkVersions.cs</Link>
     </Compile>
     <Compile Include="src\TargetFrameworkMutateTests.cs" />
