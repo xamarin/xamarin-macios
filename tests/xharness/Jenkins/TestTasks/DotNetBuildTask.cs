@@ -13,6 +13,8 @@ namespace Xharness.Jenkins.TestTasks {
 			get { return Harness.DOTNET; }
 		}
 
+		public override bool RestoreNugets => false; // 'dotnet build' will restore
+
 		protected override List<string> ToolArguments {
 			get {
 				var args = base.ToolArguments;
