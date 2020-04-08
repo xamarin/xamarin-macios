@@ -4,7 +4,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 
 namespace Xharness.Jenkins.TestTasks
 {
-	public abstract class BuildToolTask : TestTask
+	public abstract class BuildToolTask : AppleTestTask
 	{
 		protected readonly IProcessManager ProcessManager;
 

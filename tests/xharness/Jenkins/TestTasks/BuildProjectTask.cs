@@ -8,6 +8,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
+using Xharness.TestTasks;
 
 namespace Xharness.Jenkins.TestTasks {
 	abstract class BuildProjectTask : BuildToolTask

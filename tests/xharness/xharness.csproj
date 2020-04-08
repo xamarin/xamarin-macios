@@ -81,8 +81,6 @@
     <Compile Include="Harness.cs" />
     <Compile Include="TestReporterFactory.cs" />
     <Compile Include="Jenkins\Jenkins.cs" />
-    <Compile Include="Jenkins\Resource.cs" />
-    <Compile Include="Jenkins\Resources.cs" />
     <Compile Include="Jenkins\TestTasks\AggregatedRunSimulatorTask.cs" />
     <Compile Include="Jenkins\TestTasks\BuildProjectTask.cs" />
     <Compile Include="Jenkins\TestTasks\BuildToolTask.cs" />
@@ -98,7 +96,7 @@
     <Compile Include="Jenkins\TestTasks\RunTestTask.cs" />
     <Compile Include="Jenkins\TestTasks\RunXITask.cs" />
     <Compile Include="Jenkins\TestTasks\RunXtroTask.cs" />
-    <Compile Include="Jenkins\TestTasks\TestTask.cs" />
+    <Compile Include="Jenkins\TestTasks\AppleTestTask.cs" />
     <Compile Include="MakefileGenerator.cs" />
     <Compile Include="MonoNativeInfo.cs" />
     <Compile Include="Program.cs" />
@@ -117,6 +115,10 @@
     <Compile Include="TestImporter\Xamarin\ProjectFilter.cs" />
     <Compile Include="TestImporter\Xamarin\AssemblyDefinitionFactory.cs" />
     <Compile Include="TestImporter\Xamarin\TestAssemblyDefinition.cs" />
+    <Compile Include="TestTasks\TestTask.cs" />
+    <Compile Include="TestTasks\IAcquiredResource.cs" />
+    <Compile Include="TestTasks\Resource.cs" />
+    <Compile Include="TestTasks\Resources.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\tools\mtouch\SdkVersions.cs">
