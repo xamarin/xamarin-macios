@@ -13,9 +13,6 @@ LOCAL_MMP=$(MMP_DIR)/mmp.exe
 LOCAL_MMP_COMMAND=$(SYSTEM_MONO) --debug $(LOCAL_MMP)
 
 # mmp.csproj.inc contains the mmp_dependencies variable used to determine if mmp needs to be rebuilt or not.
-mmp.csproj.inc: Makefile ../common/create-makefile-fragment.sh $(TOP)/Make.config $(TOP)/mk/mono.mk
-	$(Q_GEN) ../common/create-makefile-fragment.sh $(CURDIR)/mmp.csproj
-
 -include mmp.csproj.inc
 
 $(MMP_DIR)/mmp.exe: $(mmp_dependencies)
