@@ -33,6 +33,7 @@ namespace MonoTouch.Tuner {
 		public bool DumpDependencies { get; set; }
 		internal PInvokeWrapperGenerator MarshalNativeExceptionsState { get; set; }
 		internal RuntimeOptions RuntimeOptions { get; set; }
+		public List<string> WarnOnTypeRef { get; set; }
 
 		public MonoTouchLinkContext LinkContext { get; set; }
 		public Target Target { get; set; }
@@ -145,6 +146,9 @@ namespace MonoTouch.Tuner {
 			if (options.LinkMode != LinkMode.None)
 				pipeline.Append (new BlacklistStep ());
 
+			if (options.WarnOnTypeRef.Count > 0)
+				pipeline.Append (new PreLinkScanTypeReferenceStep (options.WarnOnTypeRef));
+
 			pipeline.Append (new CustomizeIOSActions (options.LinkMode, options.SkippedAssemblies));
 
 			// We need to store the Field attribute in annotations, since it may end up removed.
@@ -170,13 +174,13 @@ namespace MonoTouch.Tuner {
 				// after the mark step. If we remove any incompatible code, we'll mark
 				// the NotSupportedException constructor we need, so we need to do this before the sweep step.
 				if (remove_incompatible_bitcode != null)
-					pipeline.AppendStep (new SubStepDispatcher { remove_incompatible_bitcode });
+					pipeline.Append (new SubStepDispatcher { remove_incompatible_bitcode });
 				
 				pipeline.Append (new MonoTouchSweepStep (options));
 				pipeline.Append (new CleanStep ());
 
 				if (!options.DebugBuild)
-					pipeline.AppendStep (GetPostLinkOptimizations (options));
+					pipeline.Append (GetPostLinkOptimizations (options));
 
 				pipeline.Append (new FixModuleFlags ());
 			} else {
@@ -192,14 +196,11 @@ namespace MonoTouch.Tuner {
 
 			pipeline.Append (new OutputStep ());
 
-			return pipeline;
-		}
+			// expect that changes can occur until it's all saved back to disk
+			if (options.WarnOnTypeRef.Count > 0)
+				pipeline.Append (new PostLinkScanTypeReferenceStep (options.WarnOnTypeRef));
 
-		static void Append (this Pipeline self, IStep step)
-		{
-			self.AppendStep (step);
-			if (Driver.WatchLevel > 0)
-				self.AppendStep (new TimeStampStep (step));
+			return pipeline;
 		}
 
 		static List<AssemblyDefinition> ListAssemblies (MonoTouchLinkContext context)
@@ -230,20 +231,6 @@ namespace MonoTouch.Tuner {
 			catch (Exception e) {
 				throw new MonoTouchException (2005, true, e, Errors.MX2005, filename);
 			}
-		}
-	}
-
-	public class TimeStampStep : IStep {
-		string message;
-
-		public TimeStampStep (IStep step)
-		{
-			message = step.ToString ();
-		}
-
-		public void Process (LinkContext context)
-		{
-			Driver.Watch (message, 2);
 		}
 	}
 

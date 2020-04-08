@@ -55,8 +55,8 @@ jobs:
     matrix:
       Xamarin:
         CONTEXT: '${{ parameters.variation }}'
-        TESTS_EXTRA_ARGUMENTS: '--label=${{ parameters.deviceLabel }},run-xamarin-tests' # run all tests but the bcl ones
-        TESTS: 'Xamarin'
+        TESTS_EXTRA_ARGUMENTS: '--label=${{ parameters.deviceLabel }},run-non-monotouch-tests' # run all tests but the bcl ones
+        TESTS: 'Non Monotouch'
       Monotouch:
         CONTEXT: '${{ parameters.variation }}-monotouch-DDFun'
         TESTS_EXTRA_ARGUMENTS: '--label=${{ parameters.deviceLabel }},run-monotouch-tests' # run all tests but the bcl ones

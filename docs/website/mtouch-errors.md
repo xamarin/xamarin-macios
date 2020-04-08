@@ -1561,6 +1561,32 @@ Things to try to solve this:
 
 <!--- 1407 used by mmp -->
 
+<!--- 1501 used by mmp -->
+
+<a name="MT1502" />
+
+#### MT1502: One or more reference(s) to type '{0}' already exists inside '{1}' before linking
+
+This warning might be reported when using `--warn-on-type-ref=X` if any loaded (unmodified) assembly has a type reference to the type `X`.
+
+This can be used along with `--warnaserror:1502` to ensure a reference to a specific type (e.g. `UIKit.UIWebView`) is not being used by any assembly used the application.
+
+Notes:
+* Custom attributes are encoded differently and not included inside an assembly type references metadata.
+* Assembly that define a type `X` do not have a reference (but the definition) of the type (and won't be reported).
+
+<a name="MT1503" />
+
+#### MT1503: One or more reference(s) to type '{0}' still exists inside '{1}' after linking
+
+This warning might be reported when using `--warn-on-type-ref=X` if any linked (modified) assembly has a type reference to the type `X`.
+
+This can be used along with `--warnaserror:1503` to ensure a reference to a specific type (e.g. `UIKit.UIWebView`) will not be part of (the managed side of) the application.
+
+Notes:
+* Custom attributes are encoded differently and not included inside an assembly type references metadata.
+* Assembly that define a type `X` do not have a reference (but the definition) of the type (and won't be reported).
+
 ### MT16xx: MachO
 
 <!--
@@ -2977,6 +3003,8 @@ An error occurred when signing the application. Please review the build log to s
 <!-- 5310 is used by mmp -->
 <!-- 5311 is used by mmp -->
 <!-- 5312 is used by mmp -->
+<!-- 5313 is used by mmp -->
+<!-- 5314 is used by mmp -->
 
 ## MT6xxx: mtouch internal tools error messages
 

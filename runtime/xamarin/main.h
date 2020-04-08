@@ -51,6 +51,7 @@ extern bool xamarin_gc_pump;
 #endif
 extern bool xamarin_debug_mode;
 extern bool xamarin_disable_lldb_attach;
+extern bool xamarin_disable_omit_fp;
 #if MONOMAC
 extern bool xamarin_mac_hybrid_aot;
 extern bool xamarin_mac_modern;
