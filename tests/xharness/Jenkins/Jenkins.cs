@@ -1085,7 +1085,7 @@ namespace Xharness.Jenkins {
 					}
 
 					foreach (var e in execs)
-						e.Variation = config;
+						e.Variation = string.IsNullOrEmpty (e.Variation) ? config : e.Variation;
 
 					Tasks.AddRange (execs);
 				}
