@@ -12,6 +12,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <OutputPath>bin\$(Configuration)</OutputPath>
+    <LangVersion>latest</LangVersion>
 %TARGETFRAMEWORKVERSION%
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
