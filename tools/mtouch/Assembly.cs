@@ -295,7 +295,7 @@ namespace Xamarin.Bundler {
 				// Visual Studio for Mac sets this environment variable, and it confuses the AOT compiler.
 				// So unset it.
 				// See https://github.com/mono/mono/issues/11765
-				task.ProcessStartInfo.EnvironmentVariables ["MONO_THREADS_SUSPEND"] = null;
+				task.ProcessStartInfo.EnvironmentVariables.Remove ("MONO_THREADS_SUSPEND");
 			}
 
 			aotInfo.Task = task;
