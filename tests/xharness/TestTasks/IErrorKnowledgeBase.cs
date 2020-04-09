@@ -7,7 +7,7 @@ namespace Xharness.TestTasks {
 	/// those that are monitoring the result.
 	/// </summary>
 	public interface IErrorKnowledgeBase {
-		bool IsKnonwBuildIssue (ILog buildLog, out string knonwFailureMessage);
-		bool IsKnonwTestIssue (ILog runLog, out string knonwFailureMessage);
+		bool IsKnownBuildIssue (ILog buildLog, out string knownFailureMessage);
+		bool IsKnownTestIssue (ILog runLog, out string knownFailureMessage);
 	}
 }

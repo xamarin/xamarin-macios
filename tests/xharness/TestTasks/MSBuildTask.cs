@@ -48,7 +48,7 @@ namespace Xharness.TestTasks {
 																									ILog buildLog,
 																									ILog mainLog)
 		{
-			(TestExecutingResult ExecutionResult, string KnonwFailure) result = (TestExecutingResult.NotStarted, (string) null);
+			(TestExecutingResult ExecutionResult, string KnownFailure) result = (TestExecutingResult.NotStarted, (string) null);
 			await RestoreNugetsAsync (buildLog, resource, useXIBuild: true);
 
 			using (var xbuild = new Process ()) {
@@ -67,7 +67,7 @@ namespace Xharness.TestTasks {
 						result.ExecutionResult = TestExecutingResult.Succeeded;
 					} else {
 						result.ExecutionResult = TestExecutingResult.Failed;
-						if (errorKnowledgeBase.IsKnonwBuildIssue (buildLog, out result.KnonwFailure))
+						if (errorKnowledgeBase.IsKnownBuildIssue (buildLog, out result.KnownFailure))
 							buildLog.WriteLine ($"Build has a known failure: '{result.KnonwFailure}'");
 					}
 				}

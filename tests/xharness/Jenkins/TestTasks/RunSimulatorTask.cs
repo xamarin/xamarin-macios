@@ -127,7 +127,7 @@ namespace Xharness.Jenkins.TestTasks {
 			ExecutionResult = runner.Result;
 
 			KnownFailure = null;
-			if (Jenkins.IsKnonwTestIssue (runner.MainLog, out KnownFailure))
+			if (Jenkins.IsKnownTestIssue (runner.MainLog, out KnownFailure))
 				Jenkins.MainLog.WriteLine ($"Test run has a known failure: '{KnownFailure}'");
 		}
 

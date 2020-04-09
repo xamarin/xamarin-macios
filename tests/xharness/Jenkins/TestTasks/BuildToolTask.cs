@@ -4,11 +4,11 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 
 namespace Xharness.Jenkins.TestTasks
 {
-	public abstract class BuildToolTask: AppleTestTask
+	public abstract class BuildToolTask : AppleTestTask
 	{
 		protected Xharness.TestTasks.BuildToolTask buildToolTask;
 
-		public IProcessManager ProcessManager { get; private set; }
+		public IProcessManager ProcessManager { get; }
 
 		public override string TestName {
 			get => base.TestName;

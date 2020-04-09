@@ -1792,21 +1792,21 @@ namespace Xharness.Jenkins {
 		}
 
 
-		public bool IsKnonwBuildIssue (ILog buildLog, out string knonwFailureMessage)
+		public bool IsKnownBuildIssue (ILog buildLog, out string knownFailureMessage)
 		{
-			knonwFailureMessage = null;
+			knownFailureMessage = null;
 			if (IsMonoMulti3Issue (buildLog)) {
-				knonwFailureMessage = $"<a href='https://github.com/mono/mono/issues/18560'>Undefined symbol ___multi3 on Release Mode</a>";
+				knownFailureMessage = $"<a href='https://github.com/mono/mono/issues/18560'>Undefined symbol ___multi3 on Release Mode</a>";
 				return true;
 			}
 			return false;
 		}
 
-		public bool IsKnonwTestIssue (ILog runLog, out string knonwFailureMessage)
+		public bool IsKnownTestIssue (ILog runLog, out string knownFailureMessage)
 		{
-			knonwFailureMessage = null;
+			knownFailureMessage = null;
 			if (IsHE0038Error (runLog)) {
-				knonwFailureMessage = $"<a href='https://github.com/xamarin/maccore/issues/581'>HE0038</a>";
+				knownFailureMessage = $"<a href='https://github.com/xamarin/maccore/issues/581'>HE0038</a>";
 				return true;
 			}
 			return false;
