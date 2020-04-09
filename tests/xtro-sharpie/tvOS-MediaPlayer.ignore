@@ -13,3 +13,9 @@
 ## In reality it's only available in the simulator, not on AppleTV devices (all fields are null)
 !missing-field! MPMediaPlaylistPropertyAuthorDisplayName not bound
 !missing-field! MPMediaPlaylistPropertyDescriptionText not bound
+
+# Initial result from new rule missing-null-allowed
+!missing-null-allowed! 'Foundation.NSString MediaPlayer.NSUserActivity_MediaPlayerAdditions::GetExternalMediaContentIdentifier(Foundation.NSUserActivity)' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'System.Void MediaPlayer.MPContentItem::set_Artwork(MediaPlayer.MPMediaItemArtwork)' is missing an [NullAllowed] on parameter #0
+!missing-null-allowed! 'System.Void MediaPlayer.MPContentItem::set_Subtitle(System.String)' is missing an [NullAllowed] on parameter #0
+!missing-null-allowed! 'System.Void MediaPlayer.MPContentItem::set_Title(System.String)' is missing an [NullAllowed] on parameter #0
