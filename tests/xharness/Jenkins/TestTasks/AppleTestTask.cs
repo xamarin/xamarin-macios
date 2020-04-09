@@ -8,9 +8,10 @@ using Xharness.TestTasks;
 namespace Xharness.Jenkins.TestTasks {
 	public abstract class AppleTestTask : Xharness.TestTasks.TestTasks
 	{
-		public Jenkins Jenkins;
+		public Jenkins Jenkins { get; private set; }
 		public Harness Harness { get { return Jenkins.Harness; } }
 
+		public override IResourceManager ResourceManager => Jenkins;
 
 		public override string LogDirectory {
 			get {
@@ -20,11 +21,16 @@ namespace Xharness.Jenkins.TestTasks {
 			}
 		}
 
+		public AppleTestTask (Jenkins jenkins) : base ()
+		{
+			Jenkins = jenkins ?? throw new ArgumentNullException (nameof (jenkins));
+		}
+
 		public override void GenerateReport () => Jenkins.GenerateReport ();
 
 		protected override void WriteLineToRunnerLog (string message) => Harness.HarnessLog.WriteLine (message);
 
-		protected override void SetEnvironmentVariables (Process process)
+		public override void SetEnvironmentVariables (Process process)
 		{
 			var xcodeRoot = Harness.XcodeRoot;
 
@@ -77,8 +83,7 @@ namespace Xharness.Jenkins.TestTasks {
 			}
 		}
 
-
-		protected override void LogEvent (ILog log, string text, params object [] args)
+		public override void LogEvent (ILog log, string text, params object [] args)
 		{
 			base.LogEvent (log, text, args);
 			Jenkins.MainLog.WriteLine (text, args);

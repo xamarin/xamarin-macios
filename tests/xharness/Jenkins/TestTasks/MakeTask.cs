@@ -12,7 +12,7 @@ namespace Xharness.Jenkins.TestTasks {
 		public string WorkingDirectory;
 		public TimeSpan Timeout = TimeSpan.FromMinutes (5);
 
-		public MakeTask (IProcessManager processManager) : base (processManager)
+		public MakeTask (Jenkins jenkins, IProcessManager processManager) : base (jenkins, processManager)
 		{
 		}
 
