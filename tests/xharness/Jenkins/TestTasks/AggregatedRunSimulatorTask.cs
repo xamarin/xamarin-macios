@@ -22,7 +22,7 @@ namespace Xharness.Jenkins.TestTasks {
 		Stopwatch run_timer = new Stopwatch ();
 		public TimeSpan RunDuration { get { return run_timer.Elapsed; } }
 
-		public AggregatedRunSimulatorTask (IEnumerable<RunSimulatorTask> tasks)
+		public AggregatedRunSimulatorTask (Jenkins jenkins, IEnumerable<RunSimulatorTask> tasks) : base (jenkins)
 		{
 			this.Tasks = tasks;
 		}

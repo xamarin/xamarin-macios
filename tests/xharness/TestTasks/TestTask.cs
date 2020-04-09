@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -11,7 +11,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
 namespace Xharness.TestTasks {
-	public abstract class TestTasks 
+	public abstract class TestTasks : IEnvManager, IEventLogger
 	{
 		static int counter;
 		static DriveInfo RootDrive;
@@ -27,7 +27,6 @@ namespace Xharness.TestTasks {
 		public Func<Task> Dependency; // a task that's feteched and awaited before this task's ExecuteAsync method
 		public Task InitialTask; // a task that's executed before this task's ExecuteAsync method.
 		public Task CompletedTask; // a task that's executed after this task's ExecuteAsync method.
-		public TestProject TestProject;
 		public List<Resource> Resources = new List<Resource> ();
 
 		#endregion
@@ -126,10 +125,11 @@ namespace Xharness.TestTasks {
 
 		#region Abstract
 
+		public abstract IResourceManager ResourceManager { get; }
 		public abstract void GenerateReport ();
 		public abstract string LogDirectory { get; }
+		public abstract void SetEnvironmentVariables (Process process);
 		protected abstract Task ExecuteAsync ();
-		protected abstract void SetEnvironmentVariables (Process process);
 		protected abstract Task<IAcquiredResource> NotifyAndAcquireDesktopResourceAsync ();
 		protected abstract void WriteLineToRunnerLog (string message);
 
@@ -137,6 +137,7 @@ namespace Xharness.TestTasks {
 
 		#region Virtual
 
+		public virtual TestProject TestProject { get; set; }
 		public virtual TestPlatform Platform { get; set; }
 		public virtual string ProgressMessage { get; }
 		public virtual string Mode { get; set; }
@@ -196,7 +197,7 @@ namespace Xharness.TestTasks {
 
 		protected virtual void PropagateResults () { }
 
-		protected virtual void LogEvent (ILog log, string text, params object [] args) => log.WriteLine (text, args);
+		public virtual void LogEvent (ILog log, string text, params object [] args) => log.WriteLine (text, args);
 
 		public virtual void Reset ()
 		{
