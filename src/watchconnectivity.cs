@@ -47,6 +47,7 @@ namespace WatchConnectivity {
 		bool ComplicationEnabled { [Bind ("isComplicationEnabled")] get; }
 
 		[Export ("watchDirectoryURL")]
+		[NullAllowed]
 		NSUrl WatchDirectoryUrl { get; }
 #endif
 
@@ -147,7 +148,7 @@ namespace WatchConnectivity {
 		void DidReceiveUserInfo (WCSession session, NSDictionary<NSString, NSObject> userInfo);
 
 		[Export ("session:didFinishFileTransfer:error:")]
-		void DidFinishFileTransfer (WCSession session, WCSessionFileTransfer fileTransfer, NSError error);
+		void DidFinishFileTransfer (WCSession session, WCSessionFileTransfer fileTransfer, [NullAllowed] NSError error);
 
 		[Export ("session:didReceiveFile:")]
 		void DidReceiveFile (WCSession session, WCSessionFile file);

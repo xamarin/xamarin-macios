@@ -209,6 +209,7 @@ namespace GameplayKit {
 		void SetObject (NSNumber weight, GKGoal goal);
 
 		[Internal]
+		[return: NullAllowed]
 		[Export ("objectForKeyedSubscript:")]
 		NSNumber ObjectForKeyedSubscript (GKGoal goal);
 	}
@@ -1887,22 +1888,24 @@ namespace GameplayKit {
 		//[Export ("obstaclesFromNodePhysicsBodies:")]
 		//GKPolygonObstacle [] ObstaclesFromNodePhysicsBodies (SKNode [] nodes);
 
+		[return: NullAllowed]
 		[Export ("entity")]
 		GKEntity GetEntity ();
 
 		[Export ("setEntity:")]
-		void SetEntity (GKEntity entity);
+		void SetEntity ([NullAllowed] GKEntity entity);
 	}
 
 	[iOS (11,0), TV (11,0), Mac (10,13)]
 	[Category]
 	[BaseType (typeof (SCNNode))]
 	interface SCNNode_GameplayKit {
+		[return: NullAllowed]
 		[Export ("entity")]
 		GKEntity GetEntity ();
 
 		[Export ("setEntity:")]
-		void SetEntity (GKEntity entity);
+		void SetEntity ([NullAllowed] GKEntity entity);
 	}
 
 	[iOS (10,0), TV (10,0), Mac (10,12)]

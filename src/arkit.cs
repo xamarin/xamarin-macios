@@ -249,7 +249,7 @@ namespace ARKit {
 	[DisableDefaultCtor]
 	interface ARAnchor : ARAnchorCopying, NSSecureCoding {
 
-		[NullAllowed, Export ("identifier")]
+		[Export ("identifier")]
 		NSUuid Identifier { get; }
 
 		[iOS (12,0)]
@@ -930,7 +930,8 @@ namespace ARKit {
 		ARWorldMap InitialWorldMap { get; set; }
 
 		[iOS (11,3)]
-		[NullAllowed, Export ("detectionImages", ArgumentSemantic.Copy)]
+		[NullAllowed] //null_resettable
+		[Export ("detectionImages", ArgumentSemantic.Copy)]
 		NSSet<ARReferenceImage> DetectionImages { get; set; }
 
 		[iOS (13,0)]

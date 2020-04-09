@@ -328,10 +328,12 @@ namespace Contacts {
 		ICNKeyDescriptor GetDescriptorForRequiredKeys (CNContactFormatterStyle style);
 
 		[Static]
+		[return: NullAllowed]
 		[Export ("stringFromContact:style:")]
 		string GetStringFrom (CNContact contact, CNContactFormatterStyle style);
 
 		[Static]
+		[return: NullAllowed]
 		[Export ("attributedStringFromContact:style:defaultAttributes:")]
 		NSAttributedString GetAttributedStringFrom (CNContact contact, CNContactFormatterStyle style, [NullAllowed] NSDictionary attributes);
 
@@ -346,9 +348,11 @@ namespace Contacts {
 		[Export ("style")]
 		CNContactFormatterStyle Style { get; set; }
 
+		[return: NullAllowed]
 		[Export ("stringFromContact:")]
 		string GetString (CNContact contact);
 
+		[return: NullAllowed]
 		[Export ("attributedStringFromContact:defaultAttributes:")]
 		NSAttributedString GetAttributedString (CNContact contact, [NullAllowed] NSDictionary attributes);
 
@@ -1432,6 +1436,7 @@ namespace Contacts {
 		[Export ("includeGroupChanges")]
 		bool IncludeGroupChanges { get; set; }
 
+		[NullAllowed]
 		[Export ("excludedTransactionAuthors", ArgumentSemantic.Copy)]
 		string[] ExcludedTransactionAuthors { get; set; }
 	}
@@ -1443,7 +1448,7 @@ namespace Contacts {
 		[Export ("value", ArgumentSemantic.Strong)]
 		NSObject Value { get; }
 
-		[Export ("currentHistoryToken", ArgumentSemantic.Copy), NullAllowed]
+		[Export ("currentHistoryToken", ArgumentSemantic.Copy)]
 		NSData CurrentHistoryToken { get; }
 	}
 
@@ -1510,6 +1515,7 @@ namespace Contacts {
 		bool ExecuteSaveRequest (CNSaveRequest saveRequest, [NullAllowed] out NSError error);
 #endif
 		[Watch (6, 0), Mac (10, 15), iOS (13, 0)]
+		[NullAllowed]
 		[Export ("currentHistoryToken", ArgumentSemantic.Copy)]
 		NSData CurrentHistoryToken { get; }
 
@@ -1547,10 +1553,12 @@ namespace Contacts {
 		ICNKeyDescriptor GetDescriptorFromRequiredKeys ();
 
 		[Static]
+		[return: NullAllowed]
 		[Export ("dataWithContacts:error:")]
 		NSData GetDataFromContacts (CNContact [] contacts, out NSError error);
 
 		[Static]
+		[return: NullAllowed]
 		[Export ("contactsWithData:error:")]
 		CNContact [] GetContactsFromData (NSData data, out NSError error);
 	}

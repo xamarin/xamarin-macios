@@ -226,12 +226,12 @@ namespace CallKit {
 		[iOS (11,0)]
 		[Async]
 		[Export ("requestTransactionWithActions:completion:")]
-		void RequestTransaction ([NullAllowed] CXAction[] actions, [NullAllowed] Action<NSError> completion);
+		void RequestTransaction (CXAction[] actions, Action<NSError> completion);
 
 		[iOS (11,0)]
 		[Async]
 		[Export ("requestTransactionWithAction:completion:")]
-		void RequestTransaction ([NullAllowed] CXAction action, [NullAllowed] Action<NSError> completion);
+		void RequestTransaction (CXAction action, Action<NSError> completion);
 	}
 
 	[iOS (10, 0)]

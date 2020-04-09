@@ -59,6 +59,7 @@ namespace CoreMotion {
 		[Export ("accelerometerActive")]
 		bool AccelerometerActive { [Bind ("isAccelerometerActive")] get;  }
 
+		[NullAllowed]
 		[Export ("accelerometerData")]
 		CMAccelerometerData AccelerometerData { get;  }
 
@@ -83,6 +84,7 @@ namespace CoreMotion {
 		[Export ("deviceMotionActive")]
 		bool DeviceMotionActive { [Bind ("isDeviceMotionActive")] get;  }
 
+		[NullAllowed]
 		[Export ("deviceMotion")]
 		CMDeviceMotion DeviceMotion { get;  }
 
@@ -95,6 +97,7 @@ namespace CoreMotion {
 		[Export ("gyroActive")]
 		bool GyroActive { [Bind ("isGyroActive")] get;  }
 
+		[NullAllowed]
 		[Export ("gyroData")]
 		CMGyroData GyroData { get;  }
 
@@ -125,6 +128,7 @@ namespace CoreMotion {
 		[Export ("magnetometerActive")]
 		bool MagnetometerActive { [Bind ("isMagnetometerActive")] get; }
 
+		[NullAllowed]
 		[Export ("magnetometerData")]
 		CMMagnetometerData MagnetometerData { get; }
 
@@ -263,12 +267,15 @@ namespace CoreMotion {
 		[Export ("numberOfSteps")]
 		NSNumber NumberOfSteps { get; }
 
+		[NullAllowed]
 		[Export ("distance")]
 		NSNumber Distance { get; }
 
+		[NullAllowed]
 		[Export ("floorsAscended")]
 		NSNumber FloorsAscended { get; }
 
+		[NullAllowed]
 		[Export ("floorsDescended")]
 		NSNumber FloorsDescended { get; }
 

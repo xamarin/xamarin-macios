@@ -51,11 +51,12 @@ namespace PushKit
 		NSSet DesiredPushTypes { get; set; }
 
 		[Export ("pushTokenForType:")]
+		[return: NullAllowed]
 		NSData PushToken (string type);
 
 		[DesignatedInitializer]
 		[Export ("initWithQueue:")]
-		IntPtr Constructor (DispatchQueue queue);
+		IntPtr Constructor ([NullAllowed] DispatchQueue queue);
 	}
 	
 	[iOS (8,0)]
