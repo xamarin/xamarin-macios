@@ -6,3 +6,25 @@
 
 !missing-field! kCLHeadingFilterNone not bound
 !missing-field! kCLLocationCoordinate2DInvalid not bound
+
+# Initial result from new rule missing-null-allowed
+!missing-null-allowed! 'CoreLocation.CLFloor CoreLocation.CLLocation::get_Floor()' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'CoreLocation.CLLocation CoreLocation.CLLocationManager::get_Location()' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'CoreLocation.CLLocation CoreLocation.CLPlacemark::get_Location()' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'CoreLocation.CLRegion CoreLocation.CLPlacemark::get_Region()' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'Foundation.NSDictionary CoreLocation.CLPlacemark::get_AddressDictionary()' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'Foundation.NSTimeZone CoreLocation.CLPlacemark::get_TimeZone()' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'System.String CoreLocation.CLPlacemark::get_AdministrativeArea()' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'System.String CoreLocation.CLPlacemark::get_Country()' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'System.String CoreLocation.CLPlacemark::get_InlandWater()' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'System.String CoreLocation.CLPlacemark::get_IsoCountryCode()' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'System.String CoreLocation.CLPlacemark::get_Locality()' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'System.String CoreLocation.CLPlacemark::get_Name()' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'System.String CoreLocation.CLPlacemark::get_Ocean()' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'System.String CoreLocation.CLPlacemark::get_PostalCode()' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'System.String CoreLocation.CLPlacemark::get_SubAdministrativeArea()' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'System.String CoreLocation.CLPlacemark::get_SubLocality()' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'System.String CoreLocation.CLPlacemark::get_SubThoroughfare()' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'System.String CoreLocation.CLPlacemark::get_Thoroughfare()' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'System.String[] CoreLocation.CLPlacemark::get_AreasOfInterest()' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'System.Void CoreLocation.CLGeocoder::GeocodeAddress(System.String,CoreLocation.CLRegion,CoreLocation.CLGeocodeCompletionHandler)' is missing an [NullAllowed] on parameter #1

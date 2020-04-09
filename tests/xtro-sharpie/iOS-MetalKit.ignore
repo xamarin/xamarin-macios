@@ -1,0 +1,3 @@
+
+# Initial result from new rule missing-null-allowed
+!missing-null-allowed! 'ModelIO.IMDLMeshBufferZone MetalKit.MTKMeshBuffer::get_Zone()' is missing an [NullAllowed] on return type

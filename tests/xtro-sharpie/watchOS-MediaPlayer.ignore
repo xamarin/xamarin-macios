@@ -1,0 +1,4 @@
+
+# Initial result from new rule missing-null-allowed
+!missing-null-allowed! 'Foundation.NSObject MediaPlayer.MPMediaEntity::GetObject(Foundation.NSObject)' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'Foundation.NSObject MediaPlayer.MPMediaEntity::ValueForProperty(Foundation.NSString)' is missing an [NullAllowed] on return type
