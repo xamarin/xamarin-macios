@@ -13152,14 +13152,18 @@ namespace AppKit {
 
 	[BaseType (typeof (NSObject))]
 	partial interface NSScreen {
+
+		[ThreadSafe]
 		[Static]
 		[Export ("screens", ArgumentSemantic.Copy)]
 		NSScreen [] Screens { get; }
 
+		[ThreadSafe]
 		[Static]
 		[Export ("mainScreen")]
 		NSScreen MainScreen { get; }
 
+		[ThreadSafe]
 		[Static]
 		[Export ("deepestScreen")]
 		NSScreen DeepestScreen { get; }
