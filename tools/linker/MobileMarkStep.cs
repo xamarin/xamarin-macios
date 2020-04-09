@@ -50,10 +50,10 @@ namespace Xamarin.Linker.Steps {
 
 		protected override void EnqueueMethod (MethodDefinition method)
 		{
-			// workaround, this can be re-introduced into the queue and keep the processing going forever
-			if ((_methods.Count == 0) && (method.IsConstructor && method.DeclaringType.FullName == "System.Runtime.CompilerServices.NullableAttribute"))
-				return;
-			base.EnqueueMethod (method);
+			// workaround for "System.Void System.Runtime.CompilerServices.NullableAttribute::.ctor(System.Byte)"
+			// that keep being re-introduced into the queue and keep the processing going forever
+			if (!_methods.Contains (method))
+				base.EnqueueMethod (method);
 		}
 
 		protected AssemblyDefinition GetAssembly (string assemblyName)
