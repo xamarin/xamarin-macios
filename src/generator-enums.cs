@@ -114,9 +114,9 @@ public partial class Generator {
 		if (error != null) {
 			// this attribute is important for our tests
 			print ("[Field (\"{0}\", \"{1}\")]", error.ErrorDomain, library_name);
-			print ("static NSString _domain;");
+			print ("static NSString? _domain;");
 			print ("");
-			print ("public static NSString GetDomain (this {0} self)", type.Name);
+			print ("public static NSString? GetDomain (this {0} self)", type.Name);
 			print ("{");
 			indent++;
 			print ("if (_domain == null)");
@@ -161,7 +161,7 @@ public partial class Generator {
 				print ("");
 			}
 			
-			print ("public static NSString GetConstant (this {0} self)", type.Name);
+			print ("public static NSString? GetConstant (this {0} self)", type.Name);
 			print ("{");
 			indent++;
 			print ("IntPtr ptr = IntPtr.Zero;");
@@ -187,14 +187,15 @@ public partial class Generator {
 			print ("}");
 			
 			print ("");
-			
-			print ("public static {0} GetValue (NSString constant)", type.Name);
+
+			var nullable = null_field != null;
+			print ("public static {0} GetValue (NSString{1} constant)", type.Name, nullable ? "?" : "");
 			print ("{");
 			indent++;
 			print ("if (constant == null)");
 			indent++;
 			// if we do not have a enum value that maps to a null field then we throw
-			if (null_field == null)
+			if (!nullable)
 				print ("throw new ArgumentNullException (nameof (constant));");
 			else
 				print ("return {0}.{1};", type.Name, null_field.Item1.Name);

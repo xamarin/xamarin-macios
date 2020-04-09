@@ -243,21 +243,21 @@ namespace MetalKit {
 		[Export ("newTextureWithContentsOfURL:options:completionHandler:"), Internal]
 		void FromUrl (NSUrl url, [NullAllowed] NSDictionary options, MTKTextureLoaderCallback completionHandler);
 
-		[Wrap ("FromUrl (url, options == null ? null : options.Dictionary, completionHandler)")]
+		[Wrap ("FromUrl (url, options.GetDictionary (), completionHandler)")]
 		[Async]
 		void FromUrl (NSUrl url, [NullAllowed] MTKTextureLoaderOptions options, MTKTextureLoaderCallback completionHandler);
 
 		[Export ("newTextureWithData:options:completionHandler:"), Internal]
 		void FromData (NSData data, [NullAllowed] NSDictionary options, MTKTextureLoaderCallback completionHandler);
 
-		[Wrap ("FromData (data, options == null ? null : options.Dictionary, completionHandler)")]
+		[Wrap ("FromData (data, options.GetDictionary (), completionHandler)")]
 		[Async]
 		void FromData (NSData data, [NullAllowed] MTKTextureLoaderOptions options, MTKTextureLoaderCallback completionHandler);
 
 		[Export ("newTextureWithCGImage:options:completionHandler:"), Internal]
 		void FromCGImage (CGImage cgImage, [NullAllowed] NSDictionary options, MTKTextureLoaderCallback completionHandler);
 
-		[Wrap ("FromCGImage (cgImage, options == null ? null : options.Dictionary, completionHandler)")]
+		[Wrap ("FromCGImage (cgImage, options.GetDictionary (), completionHandler)")]
 		[Async]
 		void FromCGImage (CGImage cgImage, [NullAllowed] MTKTextureLoaderOptions options, MTKTextureLoaderCallback completionHandler);
 
@@ -265,7 +265,7 @@ namespace MetalKit {
 		[return: NullAllowed]
 		IMTLTexture FromUrl (NSUrl url, [NullAllowed] NSDictionary options, out NSError error);
 
-		[Wrap ("FromUrl (url, options == null ? null : options.Dictionary, out error)")]
+		[Wrap ("FromUrl (url, options.GetDictionary (), out error)")]
 		[return: NullAllowed]
 		IMTLTexture FromUrl (NSUrl url, [NullAllowed] MTKTextureLoaderOptions options, out NSError error);
 
@@ -275,7 +275,7 @@ namespace MetalKit {
 		void FromUrls (NSUrl[] urls, [NullAllowed] NSDictionary options, MTKTextureLoaderArrayCallback completionHandler);
 
 		[iOS (10,0)][Mac (10,12)]
-		[Wrap ("FromUrls (urls, options == null ? null : options.Dictionary, completionHandler)")]
+		[Wrap ("FromUrls (urls, options.GetDictionary (), completionHandler)")]
 		[Async]
 		void FromUrls (NSUrl[] urls, [NullAllowed] MTKTextureLoaderOptions options, MTKTextureLoaderArrayCallback completionHandler);
 
@@ -284,14 +284,14 @@ namespace MetalKit {
 		IMTLTexture[] FromUrls (NSUrl[] urls, [NullAllowed] NSDictionary options, out NSError error);
 
 		[iOS (10,0)][Mac (10,12)]
-		[Wrap ("FromUrls (urls, options == null ? null : options.Dictionary, out error)")]
+		[Wrap ("FromUrls (urls, options.GetDictionary (), out error)")]
 		IMTLTexture[] FromUrls (NSUrl[] urls, [NullAllowed] MTKTextureLoaderOptions options, out NSError error);
 
 		[Export ("newTextureWithData:options:error:"), Internal]
 		[return: NullAllowed]
 		IMTLTexture FromData (NSData data, [NullAllowed] NSDictionary options, out NSError error);
 
-		[Wrap ("FromData (data, options == null ? null : options.Dictionary, out error)")]
+		[Wrap ("FromData (data, options.GetDictionary (), out error)")]
 		[return: NullAllowed]
 		IMTLTexture FromData (NSData data, [NullAllowed] MTKTextureLoaderOptions options, out NSError error);
 
@@ -299,7 +299,7 @@ namespace MetalKit {
 		[return: NullAllowed]
 		IMTLTexture FromCGImage (CGImage cgImage, [NullAllowed] NSDictionary options, out NSError error);
 
-		[Wrap ("FromCGImage (cgImage, options == null ? null : options.Dictionary, out error)")]
+		[Wrap ("FromCGImage (cgImage, options.GetDictionary (), out error)")]
 		[return: NullAllowed]
 		IMTLTexture FromCGImage (CGImage cgImage, [NullAllowed] MTKTextureLoaderOptions options, out NSError error);
 
@@ -309,7 +309,7 @@ namespace MetalKit {
 		void FromName (string name, nfloat scaleFactor, [NullAllowed] NSBundle bundle, [NullAllowed] NSDictionary options, MTKTextureLoaderCallback completionHandler);
 
 		[iOS (10,0)][Mac (10,12)]
-		[Wrap ("FromName (name, scaleFactor, bundle, options == null ? null : options.Dictionary, completionHandler)")]
+		[Wrap ("FromName (name, scaleFactor, bundle, options.GetDictionary (), completionHandler)")]
 		[Async]
 		void FromName (string name, nfloat scaleFactor, [NullAllowed] NSBundle bundle, [NullAllowed] MTKTextureLoaderOptions options, MTKTextureLoaderCallback completionHandler);
 
@@ -323,7 +323,7 @@ namespace MetalKit {
 		[NoiOS]
 		[NoTV]
 		[Mac (10,12)]
-		[Wrap ("FromName (name, scaleFactor, displayGamut, bundle, options == null ? null : options.Dictionary, completionHandler)")]
+		[Wrap ("FromName (name, scaleFactor, displayGamut, bundle, options.GetDictionary (), completionHandler)")]
 		[Async]
 		void FromName (string name, nfloat scaleFactor, NSDisplayGamut displayGamut, [NullAllowed] NSBundle bundle, [NullAllowed] MTKTextureLoaderOptions options, MTKTextureLoaderCallback completionHandler);
 
@@ -333,7 +333,7 @@ namespace MetalKit {
 		void FromNames (string[] names, nfloat scaleFactor, [NullAllowed] NSBundle bundle, [NullAllowed] NSDictionary options, MTKTextureLoaderArrayCallback completionHandler);
 
 		[iOS (10,0)][Mac (10,12)]
-		[Wrap ("FromNames (names, scaleFactor, bundle, options == null ? null : options.Dictionary, completionHandler)")]
+		[Wrap ("FromNames (names, scaleFactor, bundle, options.GetDictionary (), completionHandler)")]
 		[Async]
 		void FromNames (string[] names, nfloat scaleFactor, [NullAllowed] NSBundle bundle, [NullAllowed] MTKTextureLoaderOptions options, MTKTextureLoaderArrayCallback completionHandler);
 
@@ -347,7 +347,7 @@ namespace MetalKit {
 		[NoiOS]
 		[NoTV]
 		[Mac (10,12)]
-		[Wrap ("FromNames (names, scaleFactor, displayGamut, bundle, options == null ? null : options.Dictionary, completionHandler)")]
+		[Wrap ("FromNames (names, scaleFactor, displayGamut, bundle, options.GetDictionary (), completionHandler)")]
 		[Async]
 		void FromNames (string[] names, nfloat scaleFactor, NSDisplayGamut displayGamut, [NullAllowed] NSBundle bundle, [NullAllowed] MTKTextureLoaderOptions options, MTKTextureLoaderArrayCallback completionHandler);
 
@@ -357,7 +357,7 @@ namespace MetalKit {
 		void FromTexture (MDLTexture texture, [NullAllowed] NSDictionary options, MTKTextureLoaderCallback completionHandler);
 
 		[iOS (10,0)][Mac (10,12)]
-		[Wrap ("FromTexture (texture, options == null ? null : options.Dictionary, completionHandler)")]
+		[Wrap ("FromTexture (texture, options.GetDictionary (), completionHandler)")]
 		[Async]
 		void FromTexture (MDLTexture texture, [NullAllowed] MTKTextureLoaderOptions options, MTKTextureLoaderCallback completionHandler);
 
@@ -367,7 +367,7 @@ namespace MetalKit {
 		IMTLTexture FromTexture (MDLTexture texture, [NullAllowed] NSDictionary options, out NSError error);
 
 		[iOS (10,0)][Mac (10,12)]
-		[Wrap ("FromTexture (texture, options == null ? null : options.Dictionary, out error)")]
+		[Wrap ("FromTexture (texture, options.GetDictionary (), out error)")]
 		[return: NullAllowed]
 		IMTLTexture FromTexture (MDLTexture texture, [NullAllowed] MTKTextureLoaderOptions options, out NSError error);
 
@@ -377,7 +377,7 @@ namespace MetalKit {
 		IMTLTexture FromName (string name, nfloat scaleFactor, [NullAllowed] NSBundle bundle, [NullAllowed] NSDictionary options, out NSError error);
 
 		[iOS (10,0)][Mac (10,12)]
-		[Wrap ("FromName (name, scaleFactor, bundle, options == null ? null : options.Dictionary, out error)")]
+		[Wrap ("FromName (name, scaleFactor, bundle, options.GetDictionary (), out error)")]
 		[return: NullAllowed]
 		IMTLTexture FromName (string name, nfloat scaleFactor, [NullAllowed] NSBundle bundle, [NullAllowed] MTKTextureLoaderOptions options, out NSError error);
 
@@ -391,7 +391,7 @@ namespace MetalKit {
 		[NoiOS]
 		[NoTV]
 		[Mac (10,12)]
-		[Wrap ("FromName (name, scaleFactor, displayGamut, bundle, options == null ? null : options.Dictionary, out error)")]
+		[Wrap ("FromName (name, scaleFactor, displayGamut, bundle, options.GetDictionary (), out error)")]
 		[return: NullAllowed]
 		IMTLTexture FromName (string name, nfloat scaleFactor, NSDisplayGamut displayGamut, [NullAllowed] NSBundle bundle, [NullAllowed] MTKTextureLoaderOptions options, [NullAllowed] out NSError error);
 	}

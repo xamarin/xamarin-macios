@@ -547,7 +547,7 @@ namespace PdfKit {
 		IntPtr Constructor (CGRect bounds, NSString annotationType, [NullAllowed] NSDictionary properties);
 
 		[Mac (10,13)]
-		[Wrap ("this (bounds, annotationType.GetConstant (), properties)")]
+		[Wrap ("this (bounds, annotationType.GetConstant ()!, properties)")]
 		IntPtr Constructor (CGRect bounds, PdfAnnotationKey annotationType, [NullAllowed] NSDictionary properties);
 
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use '.ctor (CGRect, PDFAnnotationKey, NSDictionary)' instead.")]
@@ -648,7 +648,7 @@ namespace PdfKit {
 		bool SetValue (bool boolean, NSString key);
 
 		[Mac (10,12)]
-		[Wrap ("SetValue (boolean, key.GetConstant ())")]
+		[Wrap ("SetValue (boolean, key.GetConstant ()!)")]
 		bool SetValue (bool boolean, PdfAnnotationKey key);
 
 		[Protected]
@@ -657,7 +657,7 @@ namespace PdfKit {
 		bool SetValue (CGRect rect, NSString key);
 
 		[Mac (10,12)]
-		[Wrap ("SetValue (rect, key.GetConstant ())")]
+		[Wrap ("SetValue (rect, key.GetConstant ()!)")]
 		bool SetValue (CGRect rect, PdfAnnotationKey key);
 
 		[Mac (10,13)]
@@ -670,7 +670,7 @@ namespace PdfKit {
 		void RemoveValue (NSString key);
 
 		[Mac (10,12)]
-		[Wrap ("RemoveValue (key.GetConstant ())")]
+		[Wrap ("RemoveValue (key.GetConstant ()!)")]
 		void RemoveValue (PdfAnnotationKey key);
 
 		// PDFAnnotation (PDFAnnotationUtilities) Category
@@ -1179,7 +1179,7 @@ namespace PdfKit {
 		[Wrap ("new PdfDocumentAttributes (DocumentAttributes)")]
 		PdfDocumentAttributes GetDocumentAttributes ();
 
-		[Wrap ("DocumentAttributes = attributes?.Dictionary")]
+		[Wrap ("DocumentAttributes = attributes.GetDictionary ()!")]
 		void SetDocumentAttributes (PdfDocumentAttributes attributes);
 
 #if XAMCORE_4_0 || IOS
@@ -1257,7 +1257,7 @@ namespace PdfKit {
 		bool Write (string path, NSDictionary options);
 
 		[Mac (10,13)]
-		[Wrap ("Write (path, options.Dictionary)")]
+		[Wrap ("Write (path, options.GetDictionary ()!)")]
 		bool Write (string path, PdfDocumentWriteOptions options);
 
 		[Export ("writeToURL:")]
@@ -1267,7 +1267,7 @@ namespace PdfKit {
 		bool Write (NSUrl url, NSDictionary options);
 
 		[Mac (10,13)]
-		[Wrap ("Write (url, options?.Dictionary)")]
+		[Wrap ("Write (url, options.GetDictionary ()!)")]
 		bool Write (NSUrl url, PdfDocumentWriteOptions options);
 
 		[NullAllowed]

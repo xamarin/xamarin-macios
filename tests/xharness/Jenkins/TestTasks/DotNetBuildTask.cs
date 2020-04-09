@@ -15,11 +15,11 @@ namespace Xharness.Jenkins.TestTasks {
 			base.SetEnvironmentVariables (process);
 			// modify those env vars that we do care about
 
-			process.StartInfo.EnvironmentVariables ["MSBUILD_EXE_PATH"] = null;
-			process.StartInfo.EnvironmentVariables ["MSBuildExtensionsPathFallbackPathsOverride"] = null;
-			process.StartInfo.EnvironmentVariables ["MSBuildSDKsPath"] = null;
-			process.StartInfo.EnvironmentVariables ["TargetFrameworkFallbackSearchPaths"] = null;
-			process.StartInfo.EnvironmentVariables ["MSBuildExtensionsPathFallbackPathsOverride"] = null;
+			process.StartInfo.EnvironmentVariables.Remove ("MSBUILD_EXE_PATH");
+			process.StartInfo.EnvironmentVariables.Remove ("MSBuildExtensionsPathFallbackPathsOverride");
+			process.StartInfo.EnvironmentVariables.Remove ("MSBuildSDKsPath");
+			process.StartInfo.EnvironmentVariables.Remove ("TargetFrameworkFallbackSearchPaths");
+			process.StartInfo.EnvironmentVariables.Remove ("MSBuildExtensionsPathFallbackPathsOverride");
 		}
 
 		protected override void InitializeTool () =>

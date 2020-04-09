@@ -483,7 +483,7 @@ namespace PassKit {
 
 		[Watch (4,0)][iOS (11,0)]
 		[Static]
-		[Wrap ("CreatePaymentContactInvalidError (contactField.GetConstant (), localizedDescription)")]
+		[Wrap ("CreatePaymentContactInvalidError (contactField.GetConstant ()!, localizedDescription)")]
 		NSError CreatePaymentContactInvalidError (PKContactFields contactField, [NullAllowed] string localizedDescription);
 
 		[Watch (4,0)][iOS (11,0)]
@@ -495,7 +495,7 @@ namespace PassKit {
 #if XAMCORE_2_0
 		[Watch (4,0)][iOS (11,0)]
 		[Static]
-		[Wrap ("CreatePaymentShippingAddressInvalidError (postalAddress.GetConstant (), localizedDescription)")]
+		[Wrap ("CreatePaymentShippingAddressInvalidError (postalAddress.GetConstant ()!, localizedDescription)")]
 		NSError CreatePaymentShippingAddressInvalidError (CNPostalAddressKeyOption postalAddress, [NullAllowed] string localizedDescription);
 #endif
 
@@ -508,7 +508,7 @@ namespace PassKit {
 #if XAMCORE_2_0
 		[Watch (4,0)][iOS (11,0)]
 		[Static]
-		[Wrap ("CreatePaymentBillingAddressInvalidError (postalAddress.GetConstant (), localizedDescription)")]
+		[Wrap ("CreatePaymentBillingAddressInvalidError (postalAddress.GetConstant ()!, localizedDescription)")]
 		NSError CreatePaymentBillingAddressInvalidError (CNPostalAddressKeyOption postalAddress, [NullAllowed] string localizedDescription);
 #endif
 

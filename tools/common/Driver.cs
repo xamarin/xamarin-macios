@@ -799,7 +799,7 @@ namespace Xamarin.Bundler {
 					if (!string.IsNullOrEmpty (env_framework_dir)) {
 						framework_dir = env_framework_dir;
 					} else {
-#if DEV
+#if DEBUG
 						// when launched from Visual Studio, the executable is not in the final install location,
 						// so walk the directory hierarchy to find the root source directory.
 						framework_dir = WalkUpDirHierarchyLookingForLocalBuild ();

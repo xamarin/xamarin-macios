@@ -68,7 +68,7 @@ namespace Xharness.TestTasks {
 					} else {
 						result.ExecutionResult = TestExecutingResult.Failed;
 						if (errorKnowledgeBase.IsKnownBuildIssue (buildLog, out result.KnownFailure))
-							buildLog.WriteLine ($"Build has a known failure: '{result.KnonwFailure}'");
+							buildLog.WriteLine ($"Build has a known failure: '{result.KnownFailure}'");
 					}
 				}
 				mainLog.WriteLine ("Built {0} ({1})", TestName, Mode);

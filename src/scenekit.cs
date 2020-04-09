@@ -229,7 +229,6 @@ namespace SceneKit {
 #if XAMCORE_4_0
 		[Abstract]
 #endif
-		[return: NullAllowed]
 		[iOS (11,0), TV (11,0), Watch (4,0), Mac (10,13)]
 		[Export ("removeAnimationForKey:blendOutDuration:")]
 		void RemoveAnimationUsingBlendOutDuration (NSString key, nfloat blendOutDuration);
@@ -1759,6 +1758,7 @@ namespace SceneKit {
 		bool BoundingBoxOnly { get; set; }
 		bool IgnoreChildNodes { get; set; }
 		bool IgnoreHiddenNodes { get; set; }
+		[NullAllowed]
 		SCNNode RootNode { get; set; }
 		SCNHitTestSearchMode SearchMode { get; set; }
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
@@ -1962,7 +1962,7 @@ namespace SceneKit {
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		SCNHitTestResult [] HitTest (SCNVector3 pointA, SCNVector3 pointB, [NullAllowed] NSDictionary options);
 
-		[Wrap ("HitTest (pointA, pointB, options == null ? null : options.Dictionary)")]
+		[Wrap ("HitTest (pointA, pointB, options.GetDictionary ())")]
 		SCNHitTestResult [] HitTest (SCNVector3 pointA, SCNVector3 pointB, SCNHitTestOptions options);
 
 		[Mac (10,10)]
@@ -2442,7 +2442,7 @@ namespace SceneKit {
 
 #if !WATCH
 		[NoWatch]
-		[Wrap ("SetSemantic (geometrySourceSemantic, symbol, options == null ? null : options.Dictionary)")]
+		[Wrap ("SetSemantic (geometrySourceSemantic, symbol, options.GetDictionary ())")]
 		void SetSemantic (NSString geometrySourceSemantic, string symbol, SCNProgramSemanticOptions options);
 #endif
 
@@ -2652,7 +2652,7 @@ namespace SceneKit {
 		SCNScene FromUrl (NSUrl url, [NullAllowed] NSDictionary options, out NSError error);
 
 		[Static]
-		[Wrap ("FromUrl (url, options == null ? null : options.Dictionary, out error)")]
+		[Wrap ("FromUrl (url, options.GetDictionary (), out error)")]
 		SCNScene FromUrl (NSUrl url, [NullAllowed] SCNSceneLoadingOptions options, out NSError error);
 
 		
@@ -2703,7 +2703,7 @@ namespace SceneKit {
 		SCNScene FromFile (string name, [NullAllowed] string directory, [NullAllowed] NSDictionary options);
 
 		[Mac (10,10), iOS (8,0)]
-		[Static, Wrap ("FromFile (name, directory, options == null ? null : options.Dictionary)")]
+		[Static, Wrap ("FromFile (name, directory, options.GetDictionary ())")]
 		SCNScene FromFile (string name, string directory, SCNSceneLoadingOptions options);
 
 		// Keeping here the same name WriteToUrl for iOS and friends because it is how it was bound
@@ -2717,7 +2717,7 @@ namespace SceneKit {
 			[NullAllowed] SCNSceneExportProgressHandler exportProgressHandler);
 
 		[TV (10, 0), NoWatch, Mac (10, 9), iOS (10, 0)]
-		[Wrap ("WriteToUrl (url, options == null ? null : options.Dictionary, handler, exportProgressHandler)")]
+		[Wrap ("WriteToUrl (url, options.GetDictionary (), handler, exportProgressHandler)")]
 		bool WriteToUrl (NSUrl url, SCNSceneLoadingOptions options, ISCNSceneExportDelegate handler, SCNSceneExportProgressHandler exportProgressHandler);
 
 		#region SCNParticleSystemSupport (SCNNode) category
@@ -2805,7 +2805,7 @@ namespace SceneKit {
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		SCNSceneSource FromUrl (NSUrl url, [NullAllowed] NSDictionary options);
 
-		[Wrap ("FromUrl (url, options == null ? null : options.Dictionary)")]
+		[Wrap ("FromUrl (url, options.GetDictionary ())")]
 		SCNSceneSource FromUrl (NSUrl url, SCNSceneLoadingOptions options);
 
 		[Static]
@@ -2814,35 +2814,35 @@ namespace SceneKit {
 		SCNSceneSource FromData (NSData data, [NullAllowed] NSDictionary options);
 
 		[Static]
-		[Wrap ("FromData (data, options == null ? null : options.Dictionary)")]
+		[Wrap ("FromData (data, options.GetDictionary ())")]
 		SCNSceneSource FromData (NSData data, SCNSceneLoadingOptions options);
 
 		[Export ("initWithURL:options:")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		IntPtr Constructor (NSUrl url, [NullAllowed] NSDictionary options);
 
-		[Wrap ("this (url, options == null ? null : options.Dictionary)")]
+		[Wrap ("this (url, options.GetDictionary ())")]
 		IntPtr Constructor (NSUrl url, SCNSceneLoadingOptions options);
 
 		[Export ("initWithData:options:")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		IntPtr Constructor (NSData data, [NullAllowed] NSDictionary options);
 
-		[Wrap ("this (data, options == null ? null : options.Dictionary)")]
+		[Wrap ("this (data, options.GetDictionary ())")]
 		IntPtr Constructor (NSData data, SCNSceneLoadingOptions options);
 		
 		[Export ("sceneWithOptions:statusHandler:")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		SCNScene SceneFromOptions ([NullAllowed] NSDictionary options, SCNSceneSourceStatusHandler statusHandler);
 
-		[Wrap ("SceneFromOptions (options == null ? null : options.Dictionary, statusHandler)")]
+		[Wrap ("SceneFromOptions (options.GetDictionary (), statusHandler)")]
 		SCNScene SceneFromOptions (SCNSceneLoadingOptions options, SCNSceneSourceStatusHandler statusHandler);
 
 		[Export ("sceneWithOptions:error:")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		SCNScene SceneWithOption ([NullAllowed] NSDictionary options, out NSError error);
 
-		[Wrap ("SceneWithOption (options == null ? null : options.Dictionary, out error)")]
+		[Wrap ("SceneWithOption (options.GetDictionary (), out error)")]
 		SCNScene SceneWithOption (SCNSceneLoadingOptions options, out NSError error);
 
 		[Export ("propertyForKey:")]
@@ -3060,7 +3060,7 @@ namespace SceneKit {
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		SCNHitTestResult [] HitTest (CGPoint thePoint, [NullAllowed] NSDictionary options);
 
-		[Wrap ("HitTest (thePoint, options == null ? null : options.Dictionary)")]
+		[Wrap ("HitTest (thePoint, options.GetDictionary ())")]
 		SCNHitTestResult [] HitTest (CGPoint thePoint, SCNHitTestOptions options);
 
 #if XAMCORE_2_0
@@ -3527,7 +3527,7 @@ namespace SceneKit {
 
 #if !WATCH
 		[iOS (9,0)][Mac (10,11)]
-		[Wrap ("this (frame, options != null ? options.Dictionary : null)")]
+		[Wrap ("this (frame, options.GetDictionary ())")]
 		IntPtr Constructor (CGRect frame, [NullAllowed] SCNRenderingOptions options);
 #endif
 
@@ -4031,6 +4031,7 @@ namespace SceneKit {
 		NSDictionary WeakShaderModifiers { get; set; }
 
 		[Mac (10,9)] // Not marked, but crashes 32-bit - 17695192
+		[NullAllowed] // by default this property is null
 		[Wrap ("WeakShaderModifiers")]
 		SCNShaderModifiers ShaderModifiers { get; set; }
 
@@ -4378,28 +4379,28 @@ namespace SceneKit {
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		SCNHitTestResult [] RayTestWithSegmentFromPoint (SCNVector3 origin, SCNVector3 dest, [NullAllowed] NSDictionary options);
 
-		[Wrap ("RayTestWithSegmentFromPoint (origin, dest, options != null ? options.Dictionary : null)")]
+		[Wrap ("RayTestWithSegmentFromPoint (origin, dest, options.GetDictionary ())")]
 		SCNHitTestResult [] RayTestWithSegmentFromPoint (SCNVector3 origin, SCNVector3 dest, [NullAllowed] SCNPhysicsTest options);
 
 		[Export ("contactTestBetweenBody:andBody:options:")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		SCNPhysicsContact [] ContactTest (SCNPhysicsBody bodyA, SCNPhysicsBody bodyB, [NullAllowed] NSDictionary options);
 
-		[Wrap ("ContactTest (bodyA, bodyB, options != null ? options.Dictionary : null)")]
+		[Wrap ("ContactTest (bodyA, bodyB, options.GetDictionary ())")]
 		SCNPhysicsContact [] ContactTest (SCNPhysicsBody bodyA, SCNPhysicsBody bodyB, [NullAllowed] SCNPhysicsTest options);
 
 		[Export ("contactTestWithBody:options:")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		SCNPhysicsContact [] ContactTest (SCNPhysicsBody body, [NullAllowed] NSDictionary options);
 
-		[Wrap ("ContactTest (body, options != null ? options.Dictionary : null)")]
+		[Wrap ("ContactTest (body, options.GetDictionary ())")]
 		SCNPhysicsContact [] ContactTest (SCNPhysicsBody body, [NullAllowed] SCNPhysicsTest options);
 
 		[Export ("convexSweepTestWithShape:fromTransform:toTransform:options:")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		SCNPhysicsContact [] ConvexSweepTest (SCNPhysicsShape shape, SCNMatrix4 from, SCNMatrix4 to, [NullAllowed] NSDictionary options);
 
-		[Wrap ("ConvexSweepTest (shape, from, to, options != null ? options.Dictionary : null)")]
+		[Wrap ("ConvexSweepTest (shape, from, to, options.GetDictionary ())")]
 		SCNPhysicsContact [] ConvexSweepTest (SCNPhysicsShape shape, SCNMatrix4 from, SCNMatrix4 to, [NullAllowed] SCNPhysicsTest options);
 
 		[Export ("updateCollisionPairs")]

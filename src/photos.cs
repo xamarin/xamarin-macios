@@ -1229,14 +1229,14 @@ namespace Photos
 		void PrepareLivePhotoForPlayback (CGSize targetSize, Action<PHLivePhoto, NSError> handler);
 
 		[Async]
-		[Wrap ("_PrepareLivePhotoForPlayback (targetSize, (NSDictionary)options, handler)", IsVirtual = true)]
+		[Wrap ("_PrepareLivePhotoForPlayback (targetSize, (options as NSDictionary), handler)", IsVirtual = true)]
 		void PrepareLivePhotoForPlayback (CGSize targetSize, [NullAllowed] NSDictionary<NSString, NSObject> options, Action<PHLivePhoto, NSError> handler);
 
 #if XAMCORE_2_0
 		// the API existed earlier but the key needed to create the strong dictionary did not work
 		[iOS (11,0)][TV (11,0)][Mac (10,12)]
 		[Async]
-		[Wrap ("_PrepareLivePhotoForPlayback (targetSize, options?.Dictionary, handler)")]
+		[Wrap ("_PrepareLivePhotoForPlayback (targetSize, options.GetDictionary (), handler)")]
 		void PrepareLivePhotoForPlayback (CGSize targetSize, [NullAllowed] PHLivePhotoEditingOption options, Action<PHLivePhoto, NSError> handler);
 #endif
 
@@ -1256,7 +1256,7 @@ namespace Photos
 		// the API existed earlier but the key needed to create the strong dictionary did not work
 		[iOS (11,0)][TV (11,0)][Mac (10,12)]
 		[Async]
-		[Wrap ("_SaveLivePhoto (output, options?.Dictionary, handler)")]
+		[Wrap ("_SaveLivePhoto (output, options.GetDictionary (), handler)")]
 		void SaveLivePhoto (PHContentEditingOutput output, [NullAllowed] PHLivePhotoEditingOption options, Action<bool, NSError> handler);
 #endif
 

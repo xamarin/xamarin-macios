@@ -1,14 +1,14 @@
-TOP=../../..
+TOP=../..
 include $(TOP)/Make.config
 
-PACKAGE_PATH = ../../../packages
+PACKAGE_PATH = $(TOP)/packages
 NUGET_CONSOLE = $(PACKAGE_PATH)/NUnit.Runners.2.6.4/tools/nunit-console.exe
 NUGET_LIB = $(PACKAGE_PATH)/NUnit.2.6.4/lib/nunit.framework.dll
 CECIL_LIB = $(PACKAGE_PATH)/Mono.Cecil.0.10.3/lib/net40/Mono.Cecil.dll
 
 test_sources = \
 	aot.cs \
-	../../common/StringUtils.cs
+	$(TOP)/tools/common/StringUtils.cs
 
 ifdef INCLUDE_MAC
 all-local:: run
@@ -17,8 +17,11 @@ endif
 run:: tests.dll $(NUGET_CONSOLE)
 	$(Q_NUNIT) mono --runtime=v4.0 $(NUGET_CONSOLE) -noshadow -nologo tests.dll
 
-mmp.exe: ../mmp.exe
-	$(Q) $(CP) ../mmp.exe mmp.exe
+$(TOP)/tools/mmp/bin/Release/mmp.exe:
+	$(Q) $(MAKE) -C $(TOP)/tools/mmp
+
+mmp.exe: $(TOP)/tools/mmp/bin/Release/mmp.exe
+	$(Q) $(CP) $< $@
  
 nunit.framework.dll nunit-console.exe Mono.Cecil.dll:
 	$(SYSTEM_XIBUILD) -t -- /Library/Frameworks//Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe restore packages.config

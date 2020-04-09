@@ -140,8 +140,13 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Execution {
 			process.StartInfo.UseShellExecute = false;
 
 			if (environmentVariables != null) {
-				foreach (var kvp in environmentVariables)
-					process.StartInfo.EnvironmentVariables [kvp.Key] = kvp.Value;
+				foreach (var kvp in environmentVariables) {
+					if (kvp.Value == null) {
+						process.StartInfo.EnvironmentVariables.Remove (kvp.Key);
+					} else {
+						process.StartInfo.EnvironmentVariables [kvp.Key] = kvp.Value;
+					}
+				}
 			}
 
 			process.OutputDataReceived += (sender, e) => {

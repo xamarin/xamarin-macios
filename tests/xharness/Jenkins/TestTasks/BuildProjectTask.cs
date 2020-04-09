@@ -7,7 +7,6 @@ using Xharness.TestTasks;
 namespace Xharness.Jenkins.TestTasks {
 	abstract class BuildProjectTask : BuildToolTask
 	{
-
 		Xharness.TestTasks.BuildProjectTask BuildProject => buildToolTask as Xharness.TestTasks.BuildProjectTask; 
 
 		public string SolutionPath {
@@ -18,7 +17,7 @@ namespace Xharness.Jenkins.TestTasks {
 		protected BuildProjectTask (Jenkins jenkins, TestProject testProject, IProcessManager processManager) : base (jenkins, processManager)
 			=> TestProject = testProject ?? throw new ArgumentNullException (nameof (testProject));
 
-		public bool RestoreNugets => BuildProject.RestoreNugets;
+		public virtual bool RestoreNugets => BuildProject.RestoreNugets;
 
 		public override bool SupportsParallelExecution => BuildProject.SupportsParallelExecution;
 

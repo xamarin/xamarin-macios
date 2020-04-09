@@ -9,6 +9,7 @@
     <RootNamespace>BindingProjectWithNoTag</RootNamespace>
     <MacResourcePrefix>Resources</MacResourcePrefix>
     <AssemblyName>BindingProjectWithNoTag</AssemblyName>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

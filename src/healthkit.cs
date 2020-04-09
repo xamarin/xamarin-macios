@@ -271,7 +271,7 @@ namespace HealthKit {
 		HKCategorySample FromType (HKCategoryType type, nint value, NSDate startDate, NSDate endDate, [NullAllowed] NSDictionary metadata);
 
 		[Static]
-		[Wrap ("FromType (type, value, startDate, endDate, metadata != null ? metadata.Dictionary : null)")]
+		[Wrap ("FromType (type, value, startDate, endDate, metadata.GetDictionary ())")]
 		HKCategorySample FromType (HKCategoryType type, nint value, NSDate startDate, NSDate endDate, HKMetadata metadata);
 
 		[Static]
@@ -309,7 +309,8 @@ namespace HealthKit {
 		[return: NullAllowed]
 		HKCdaDocumentSample Create (NSData documentData, NSDate startDate, NSDate endDate, [NullAllowed] NSDictionary metadata, out NSError validationError);
 
-		[Static, Wrap ("Create (documentData, startDate, endDate, metadata != null ? metadata.Dictionary : null, out validationError)")]
+		[Static, Wrap ("Create (documentData, startDate, endDate, metadata.GetDictionary (), out validationError)")]
+		[return: NullAllowed]
 		HKCdaDocumentSample Create (NSData documentData, NSDate startDate, NSDate endDate, HKMetadata metadata, out NSError validationError);
 	}
 
@@ -353,7 +354,7 @@ namespace HealthKit {
 		[EditorBrowsable (EditorBrowsableState.Advanced)] // this is not the one we want to be seen (compat only)
 		HKCorrelation Create (HKCorrelationType correlationType, NSDate startDate, NSDate endDate, NSSet objects, [NullAllowed] NSDictionary metadata);
 
-		[Static, Wrap ("Create (correlationType, startDate, endDate, objects, metadata != null ? metadata.Dictionary : null)")]
+		[Static, Wrap ("Create (correlationType, startDate, endDate, objects, metadata.GetDictionary ())")]
 		HKCorrelation Create (HKCorrelationType correlationType, NSDate startDate, NSDate endDate, NSSet objects, HKMetadata metadata);
 
 		[Static, Export ("correlationWithType:startDate:endDate:objects:")]
@@ -1017,7 +1018,8 @@ namespace HealthKit {
 
 		[Watch (5,0), iOS (12,0)]
 		[Static]
-		[Wrap ("GetClinicalType (identifier.GetConstant ())")]
+		[Wrap ("GetClinicalType (identifier.GetConstant ()!)")]
+		[return: NullAllowed]
 		HKClinicalType GetClinicalType (HKClinicalTypeIdentifier identifier);
 
 		[Watch (6, 0), iOS (13, 0)]
@@ -1154,7 +1156,7 @@ namespace HealthKit {
 		HKQuantitySample FromType (HKQuantityType quantityType, HKQuantity quantity, NSDate startDate, NSDate endDate, [NullAllowed] NSDictionary metadata);
 
 		[Static]
-		[Wrap ("FromType (quantityType, quantity, startDate, endDate, metadata != null ? metadata.Dictionary : null)")]
+		[Wrap ("FromType (quantityType, quantity, startDate, endDate, metadata.GetDictionary ())")]
 		HKQuantitySample FromType (HKQuantityType quantityType, HKQuantity quantity, NSDate startDate, NSDate endDate, HKMetadata metadata);
 
 		[iOS (9,0)]
@@ -1301,7 +1303,7 @@ namespace HealthKit {
 
 		[NoWatch, iOS (12,0)]
 		[Static]
-		[Wrap ("GetPredicateForClinicalRecords (resourceType.GetConstant ())")]
+		[Wrap ("GetPredicateForClinicalRecords (resourceType.GetConstant ()!)")]
 		NSPredicate GetPredicateForClinicalRecords (HKFhirResourceType resourceType);
 
 		[NoWatch, iOS (12,0)]
@@ -2211,14 +2213,14 @@ namespace HealthKit {
 		[EditorBrowsable (EditorBrowsableState.Advanced)] // this is not the one we want to be seen (compat only)
 		HKWorkout Create (HKWorkoutActivityType workoutActivityType, NSDate startDate, NSDate endDate, [NullAllowed] HKWorkoutEvent [] workoutEvents, [NullAllowed] HKQuantity totalEnergyBurned, [NullAllowed] HKQuantity totalDistance, [NullAllowed] NSDictionary metadata);
 
-		[Static, Wrap ("Create (workoutActivityType, startDate, endDate, workoutEvents, totalEnergyBurned, totalDistance, metadata == null ? null : metadata.Dictionary)")]
+		[Static, Wrap ("Create (workoutActivityType, startDate, endDate, workoutEvents, totalEnergyBurned, totalDistance, metadata.GetDictionary ())")]
 		HKWorkout Create (HKWorkoutActivityType workoutActivityType, NSDate startDate, NSDate endDate, HKWorkoutEvent [] workoutEvents, HKQuantity totalEnergyBurned, HKQuantity totalDistance, HKMetadata metadata);
 		
 		[Static, Export ("workoutWithActivityType:startDate:endDate:duration:totalEnergyBurned:totalDistance:metadata:")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)] // this is not the one we want to be seen (compat only)
 		HKWorkout Create (HKWorkoutActivityType workoutActivityType, NSDate startDate, NSDate endDate, double duration, [NullAllowed] HKQuantity totalEnergyBurned, [NullAllowed] HKQuantity totalDistance, [NullAllowed] NSDictionary metadata);
 
-		[Static, Wrap ("Create (workoutActivityType, startDate, endDate, duration, totalEnergyBurned, totalDistance, metadata == null ? null : metadata.Dictionary)")]
+		[Static, Wrap ("Create (workoutActivityType, startDate, endDate, duration, totalEnergyBurned, totalDistance, metadata.GetDictionary ())")]
 		HKWorkout Create (HKWorkoutActivityType workoutActivityType, NSDate startDate, NSDate endDate, double duration, HKQuantity totalEnergyBurned, HKQuantity totalDistance, HKMetadata metadata);
 
 		[iOS (9,0)]
@@ -2228,7 +2230,7 @@ namespace HealthKit {
 
 		[iOS (9,0)]
 		[Static]
-		[Wrap ("Create (workoutActivityType, startDate, endDate, workoutEvents, totalEnergyBurned, totalDistance, device, metadata == null ? null : metadata.Dictionary)")]
+		[Wrap ("Create (workoutActivityType, startDate, endDate, workoutEvents, totalEnergyBurned, totalDistance, device, metadata.GetDictionary ())")]
 		HKWorkout Create (HKWorkoutActivityType workoutActivityType, NSDate startDate, NSDate endDate, HKWorkoutEvent[] workoutEvents, HKQuantity totalEnergyBurned, HKQuantity totalDistance, HKDevice device, HKMetadata metadata);
 
 		[iOS (9,0)]
@@ -2238,7 +2240,7 @@ namespace HealthKit {
 
 		[iOS (9,0)]
 		[Static]
-		[Wrap ("Create (workoutActivityType, startDate, endDate, duration, totalEnergyBurned, totalDistance, device, metadata == null ? null : metadata.Dictionary)")]
+		[Wrap ("Create (workoutActivityType, startDate, endDate, duration, totalEnergyBurned, totalDistance, device, metadata.GetDictionary ())")]
 		HKWorkout Create (HKWorkoutActivityType workoutActivityType, NSDate startDate, NSDate endDate, double duration, HKQuantity totalEnergyBurned, HKQuantity totalDistance, HKDevice device, HKMetadata metadata);
 
 		[Watch (3,0), iOS (10,0)]
@@ -2248,7 +2250,7 @@ namespace HealthKit {
 
 		[Watch (3,0), iOS (10,0)]
 		[Static]
-		[Wrap ("Create (workoutActivityType, startDate, endDate, workoutEvents, totalEnergyBurned, totalDistance, totalSwimmingStrokeCount, device, metadata == null ? null : metadata.Dictionary)")]
+		[Wrap ("Create (workoutActivityType, startDate, endDate, workoutEvents, totalEnergyBurned, totalDistance, totalSwimmingStrokeCount, device, metadata.GetDictionary ())")]
 		HKWorkout Create (HKWorkoutActivityType workoutActivityType, NSDate startDate, NSDate endDate, HKWorkoutEvent[] workoutEvents, HKQuantity totalEnergyBurned, HKQuantity totalDistance, HKQuantity totalSwimmingStrokeCount, HKDevice device, HKMetadata metadata);
 
 		[Watch (4, 0), iOS (11, 0)]
@@ -2258,7 +2260,7 @@ namespace HealthKit {
 
 		[Watch (4, 0), iOS (11, 0)]
 		[Static]
-		[Wrap ("CreateFlightsClimbedWorkout (workoutActivityType, startDate, endDate, workoutEvents, totalEnergyBurned, totalDistance, totalFlightsClimbed, device, metadata == null ? null : metadata.Dictionary)")]
+		[Wrap ("CreateFlightsClimbedWorkout (workoutActivityType, startDate, endDate, workoutEvents, totalEnergyBurned, totalDistance, totalFlightsClimbed, device, metadata.GetDictionary ())")]
 		HKWorkout CreateFlightsClimbedWorkout (HKWorkoutActivityType workoutActivityType, NSDate startDate, NSDate endDate, [NullAllowed] HKWorkoutEvent [] workoutEvents, [NullAllowed] HKQuantity totalEnergyBurned, [NullAllowed] HKQuantity totalDistance, [NullAllowed] HKQuantity totalFlightsClimbed, [NullAllowed] HKDevice device, [NullAllowed] HKMetadata metadata);
 
 		// TODO: where is this thing used?
@@ -2324,7 +2326,7 @@ namespace HealthKit {
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'Create (HKWorkoutEventType, NSDateInterval, HKMetadata)' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'Create (HKWorkoutEventType, NSDateInterval, HKMetadata)' instead.")]
 		[Static]
-		[Wrap ("Create (type, date, metadata != null ? metadata.Dictionary : null)")]
+		[Wrap ("Create (type, date, metadata.GetDictionary ()!)")]
 		HKWorkoutEvent Create (HKWorkoutEventType type, NSDate date, HKMetadata metadata);
 
 		[Watch (4, 0), iOS (11, 0)]
@@ -2334,7 +2336,7 @@ namespace HealthKit {
 
 		[Watch (4, 0), iOS (11, 0)]
 		[Static]
-		[Wrap ("Create (type, dateInterval, metadata != null ? metadata.Dictionary : null)")]
+		[Wrap ("Create (type, dateInterval, metadata.GetDictionary ())")]
 		HKWorkoutEvent Create (HKWorkoutEventType type, NSDateInterval dateInterval, HKMetadata metadata);
 
 		[Watch (4, 0), iOS (11, 0)]
@@ -2734,7 +2736,7 @@ namespace HealthKit {
 		[Async, Protected, Export ("finishRouteWithWorkout:metadata:completion:")]
 		void FinishRoute (HKWorkout workout, [NullAllowed] NSDictionary metadata, Action<HKWorkoutRoute, NSError> completion);
 
-		[Async, Wrap ("FinishRoute (workout, metadata != null ? metadata.Dictionary : null, completion)")]
+		[Async, Wrap ("FinishRoute (workout, metadata.GetDictionary (), completion)")]
 		void FinishRoute (HKWorkout workout, HKMetadata metadata, Action<HKWorkoutRoute, NSError> completion);
 
 		[Watch (5, 0), iOS (12, 0)]
@@ -2743,7 +2745,7 @@ namespace HealthKit {
 		void AddMetadata (NSDictionary metadata, HKWorkoutRouteBuilderAddMetadataHandler completion);
 
 		[Watch (5, 0), iOS (12, 0)]
-		[Async, Wrap ("AddMetadata (metadata != null ? metadata.Dictionary : null, completion)")]
+		[Async, Wrap ("AddMetadata (metadata.GetDictionary ()!, completion)")]
 		void AddMetadata (HKMetadata metadata, HKWorkoutRouteBuilderAddMetadataHandler completion);
 	}
 
@@ -2803,7 +2805,7 @@ namespace HealthKit {
 		void Add (NSDictionary metadata, HKWorkoutBuilderCompletionHandler completionHandler);
 
 		[Async]
-		[Wrap ("Add (metadata.Dictionary, completionHandler)")]
+		[Wrap ("Add (metadata.GetDictionary ()!, completionHandler)")]
 		void Add (HKMetadata metadata, HKWorkoutBuilderCompletionHandler completionHandler);
 
 		[Async]
@@ -2880,7 +2882,7 @@ namespace HealthKit {
 		void FinishSeries ([NullAllowed] NSDictionary metadata, HKQuantitySeriesSampleBuilderFinishSeriesDelegate completionHandler);
 
 		[Async]
-		[Wrap ("FinishSeries (metadata?.Dictionary, completionHandler)")]
+		[Wrap ("FinishSeries (metadata.GetDictionary (), completionHandler)")]
 		void FinishSeries ([NullAllowed] HKMetadata metadata, HKQuantitySeriesSampleBuilderFinishSeriesDelegate completionHandler);
 
 		[Watch (6,0), iOS (13,0)]
@@ -2890,7 +2892,7 @@ namespace HealthKit {
 
 		[Watch (6,0), iOS (13,0)]
 		[Async]
-		[Wrap ("FinishSeries (metadata?.Dictionary, endDate, completionHandler)")]
+		[Wrap ("FinishSeries (metadata.GetDictionary (), endDate, completionHandler)")]
 		void FinishSeries ([NullAllowed] HKMetadata metadata, [NullAllowed] NSDate endDate, HKQuantitySeriesSampleBuilderFinishSeriesDelegate completionHandler);
 
 

@@ -110,6 +110,7 @@ namespace StoreKit {
 		string ProductIdentifier { get; }
 
 		[Export ("requestData", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		NSData RequestData { get; [NotImplemented ("Not available on SKPayment, only available on SKMutablePayment")] set;  }
 
 		[Export ("quantity")]
@@ -420,7 +421,7 @@ namespace StoreKit {
 		[Export ("initWithReceiptProperties:")]
 		IntPtr Constructor ([NullAllowed] NSDictionary properties);
 
-		[Wrap ("this (receiptProperties == null ? null : receiptProperties.Dictionary)")]
+		[Wrap ("this (receiptProperties.GetDictionary ())")]
 		IntPtr Constructor ([NullAllowed] SKReceiptProperties receiptProperties);
 
 		[Export ("receiptProperties")]
@@ -503,7 +504,7 @@ namespace StoreKit {
 		[Async]
 		void LoadProduct (NSDictionary parameters, [NullAllowed] Action<bool,NSError> callback);
 
-		[Wrap ("LoadProduct (parameters == null ? null : parameters.Dictionary, callback)")]
+		[Wrap ("LoadProduct (parameters.GetDictionary ()!, callback)")]
 		[Async]
 		void LoadProduct (StoreProductParameters parameters, [NullAllowed] Action<bool,NSError> callback);
 	}
@@ -664,7 +665,7 @@ namespace StoreKit {
 		void Load (NSDictionary options, [NullAllowed] Action<bool, NSError> completionHandler);
 
 		[Async]
-		[Wrap ("Load (options == null ? null : options.Dictionary, completionHandler)")]
+		[Wrap ("Load (options.GetDictionary ()!, completionHandler)")]
 		void Load (SKCloudServiceSetupOptions options, Action<bool, NSError> completionHandler);
 	}
 
