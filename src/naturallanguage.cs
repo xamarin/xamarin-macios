@@ -422,7 +422,12 @@ namespace NaturalLanguage {
 
 		[Export ("vectorForString:")]
 		[return: NullAllowed]
-		[return: BindAs (typeof (float[]))] // doc says "array of double" but other API uses float ?!?
+#if XAMCORE_4_0
+		[return: BindAs (typeof (float[]?))]
+#else
+		[return: BindAs (typeof (float[]))]
+#endif
+		// doc says "array of double" but other API uses float ?!?
 		NSNumber[] GetVector (string @string);
 
 		[Internal] // can't bind float[] without NSArray but it will be better bound using .net pattern `bool TryGetVector (string, out float[] vector)`

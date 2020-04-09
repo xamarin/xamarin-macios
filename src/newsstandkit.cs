@@ -17,12 +17,14 @@ namespace NewsstandKit {
 	// init returns NIL
 	[DisableDefaultCtor]
 	interface NKAssetDownload {
+		[NullAllowed]
 		[Export ("issue", ArgumentSemantic.Weak)]
 		NKIssue Issue { get;  }
 
 		[Export ("identifier", ArgumentSemantic.Copy)]
 		string Identifier { get;  }
 
+		[NullAllowed]
 		[Export ("userInfo", ArgumentSemantic.Copy)]
 		NSDictionary UserInfo { get; set;  }
 
@@ -75,13 +77,16 @@ namespace NewsstandKit {
 		[Export ("downloadingAssets", ArgumentSemantic.Strong)]
 		NKAssetDownload [] DownloadingAssets { get;  }
 
+		[NullAllowed]
 		[Export ("currentlyReadingIssue", ArgumentSemantic.Strong)]
 		NKIssue CurrentlyReadingIssue { get; set;  }
 
 		[Static]
+		[NullAllowed]
 		[Export ("sharedLibrary")]
 		NKLibrary SharedLibrary { get; }
 
+		[return: NullAllowed]
 		[Export ("issueWithName:")]
 		NKIssue GetIssue (string name);
 

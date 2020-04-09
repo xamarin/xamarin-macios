@@ -15,6 +15,7 @@ namespace FinderSync {
 		[Export("defaultController")]
 		FIFinderSyncController DefaultController { get; }
 
+		[NullAllowed] // null_resettable
 		[Export ("directoryURLs", ArgumentSemantic.Copy)]
 		NSSet DirectoryUrls { get; set; }
 

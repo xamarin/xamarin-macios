@@ -241,6 +241,7 @@ namespace CarPlay {
 		void DismissTemplate (bool animated);
 
 		[Export ("presentedTemplate")]
+		[NullAllowed]
 		CPTemplate PresentedTemplate { get; }
 
 		[Export ("rootTemplate")]
@@ -731,9 +732,11 @@ namespace CarPlay {
 		string [] SummaryVariants { get; }
 
 		[Export ("selectionSummaryVariants", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		string [] SelectionSummaryVariants { get; }
 
 		[Export ("additionalInformationVariants", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		string [] AdditionalInformationVariants { get; }
 
 		[NullAllowed, Export ("userInfo", ArgumentSemantic.Strong)]

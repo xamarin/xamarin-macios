@@ -81,6 +81,7 @@ namespace EventKit {
 		[Export ("URL", ArgumentSemantic.Copy)]
 		NSUrl Url { get; set;  }
 
+		[NullAllowed]
 		[Export ("lastModifiedDate")]
 		NSDate LastModifiedDate { get;  }
 
@@ -103,6 +104,7 @@ namespace EventKit {
 		[Export ("hasNotes")]
 		bool HasNotes { get;  }
 
+		[NullAllowed]
 		[Export ("attendees")]
 		EKParticipant [] Attendees { get;  }
 
@@ -110,6 +112,7 @@ namespace EventKit {
 		[Export ("alarms", ArgumentSemantic.Copy)]
 		EKAlarm [] Alarms { get; set;  }
 
+		[NullAllowed]
 		[Export ("recurrenceRules", ArgumentSemantic.Copy)]
 		EKRecurrenceRule [] RecurrenceRules { get; set;  }
 
@@ -206,13 +209,16 @@ namespace EventKit {
 		[Export ("type")]
 		EKAlarmType Type { get; }
 
+		[NullAllowed]
 		[Export ("emailAddress")]
 		string EmailAddress { get; set; }
 
+		[NullAllowed]
 		[Export ("soundName")]
 		string SoundName { get; set; }
 
 		[Deprecated (PlatformName.MacOSX, 10, 9)]
+		[NullAllowed]
 		[Export ("url", ArgumentSemantic.Copy)]
 		NSUrl Url { get; set; }
 #endif
@@ -283,6 +289,7 @@ namespace EventKit {
 		[Export ("endDate", ArgumentSemantic.Copy)]
 		NSDate EndDate { get; set;  }
 
+		[NullAllowed]
 		[Export ("organizer")]
 		EKParticipant Organizer { get;  }
 
@@ -314,6 +321,7 @@ namespace EventKit {
 
 #if MONOMAC
 		[Availability (Deprecated = Platform.Mac_10_11, Message = "Replaced by 'BirthdayContactIdentifier'.")]
+		[NullAllowed]
 		[Export ("birthdayPersonUniqueID")]
 		string BirthdayPersonUniqueID { get; }
 #else
@@ -334,6 +342,7 @@ namespace EventKit {
 		[Export ("URL")]
 		NSUrl Url { get;  }
 
+		[NullAllowed]
 		[Export ("name")]
 		string Name { get;  }
 
@@ -353,6 +362,7 @@ namespace EventKit {
 #else
 #if !WATCH
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Replaced by 'ContactPredicate'.")]
+		[return: NullAllowed]
 		[Export ("ABRecordWithAddressBook:")]
 		ABRecord GetRecord (ABAddressBook addressBook);
 #endif // !WATCH
@@ -369,6 +379,7 @@ namespace EventKit {
 
 	[BaseType (typeof (NSObject))]
 	interface EKRecurrenceEnd : NSCopying, NSSecureCoding {
+		[NullAllowed]
 		[Export ("endDate")]
 		NSDate EndDate { get;  }
 
@@ -451,21 +462,27 @@ namespace EventKit {
 		EKDay FirstDayOfTheWeek { get;  }
 #endif
 
+		[NullAllowed]
 		[Export ("daysOfTheWeek")]
 		EKRecurrenceDayOfWeek [] DaysOfTheWeek { get;  }
 
+		[NullAllowed]
 		[Export ("daysOfTheMonth")]
 		NSNumber [] DaysOfTheMonth { get;  }
 
+		[NullAllowed]
 		[Export ("daysOfTheYear")]
 		NSNumber [] DaysOfTheYear { get;  }
 
+		[NullAllowed]
 		[Export ("weeksOfTheYear")]
 		NSNumber [] WeeksOfTheYear { get;  }
 
+		[NullAllowed]
 		[Export ("monthsOfTheYear")]
 		NSNumber [] MonthsOfTheYear { get;  }
 
+		[NullAllowed]
 		[Export ("setPositions")]
 #if XAMCORE_4_0
 		NSNumber [] SetPositions { get; }
@@ -508,6 +525,7 @@ namespace EventKit {
 		[Export ("removeEvent:span:error:")]
 		bool RemoveEvents (EKEvent theEvent, EKSpan span, out NSError error);
 
+		[return: NullAllowed]
 		[Export ("eventWithIdentifier:")]
 		EKEvent EventFromIdentifier (string identifier);
 
@@ -531,6 +549,7 @@ namespace EventKit {
 		[Export ("sourceWithIdentifier:")]
 		EKSource GetSource (string identifier);
 
+		[return: NullAllowed]
 		[Export ("calendarWithIdentifier:")]
 		EKCalendar GetCalendar (string identifier);
 

@@ -31,6 +31,7 @@ namespace GameController {
 
 		// NOTE: ArgumentSemantic.Weak if ARC, ArgumentSemantic.Assign otherwise;
 		// currently MonoTouch is not ARC, neither is Xammac, so go with assign.
+		[NullAllowed]
 		[Export ("collection", ArgumentSemantic.Assign)]
 		GCControllerElement Collection { get; }
 
@@ -46,6 +47,7 @@ namespace GameController {
 	[DisableDefaultCtor] // return nil handle -> only exposed as getter
 	partial interface GCControllerAxisInput {
 
+		[NullAllowed]
 		[Export ("valueChangedHandler", ArgumentSemantic.Copy)]
 		GCControllerAxisValueChangedHandler ValueChangedHandler { get; set; }
 
@@ -105,6 +107,7 @@ namespace GameController {
 	[DisableDefaultCtor] // return nil handle -> only exposed as getter
 	partial interface GCControllerDirectionPad {
 
+		[NullAllowed]
 		[Export ("valueChangedHandler", ArgumentSemantic.Copy)]
 		GCControllerDirectionPadValueChangedHandler ValueChangedHandler { get; set; }
 
@@ -143,9 +146,11 @@ namespace GameController {
 	[DisableDefaultCtor] // return nil handle -> only exposed as getter
 	partial interface GCGamepad {
 
+		[NullAllowed]
 		[Export ("controller", ArgumentSemantic.Assign)]
 		GCController Controller { get; }
 
+		[NullAllowed]
 		[Export ("valueChangedHandler", ArgumentSemantic.Copy)]
 		GCGamepadValueChangedHandler ValueChangedHandler { get; set; }
 
@@ -204,6 +209,7 @@ namespace GameController {
 		[Export ("controller", ArgumentSemantic.Assign)]
 		GCController Controller { get; }
 
+		[NullAllowed]
 		[Export ("valueChangedHandler", ArgumentSemantic.Copy)]
 		GCExtendedGamepadValueChangedHandler ValueChangedHandler { get; set; }
 
@@ -305,6 +311,7 @@ namespace GameController {
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use the Menu button found on the controller's profile, if it exists.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use the Menu button found on the controller's profile, if it exists.")]
 
+		[NullAllowed]
 		[Export ("controllerPausedHandler", ArgumentSemantic.Copy)]
 #if XAMCORE_2_0
 		Action<GCController> ControllerPausedHandler { get; set; }
@@ -312,6 +319,7 @@ namespace GameController {
 		GCControllerPausedHandler ControllerPausedHandler { get; set; }
 #endif
 
+		[NullAllowed]
 		[Export ("vendorName", ArgumentSemantic.Copy)]
 		string VendorName { get; }
 
@@ -329,9 +337,11 @@ namespace GameController {
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Deprecated (PlatformName.TvOS, 10, 0)]
+		[NullAllowed]
 		[Export ("gamepad", ArgumentSemantic.Retain)]
 		GCGamepad Gamepad { get; }
 
+		[NullAllowed]
 		[Export ("extendedGamepad", ArgumentSemantic.Retain)]
 		GCExtendedGamepad ExtendedGamepad { get; }
 
@@ -357,6 +367,7 @@ namespace GameController {
 		NSString DidDisconnectNotification { get; }
 
 		[iOS (8,0), Mac (10,10)]
+		[NullAllowed]
 		[Export ("motion", ArgumentSemantic.Retain)]
 		GCMotion Motion { get; }
 

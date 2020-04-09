@@ -69,6 +69,7 @@ namespace EventKitUI {
 		[Export ("eventStore")]
 		EKEventStore EventStore { get; set;  }
 
+		[NullAllowed]
 		[Export ("event")]
 		EKEvent Event { get; set;  }
 
