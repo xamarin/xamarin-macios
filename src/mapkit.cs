@@ -927,7 +927,7 @@ namespace MapKit {
 
 #if IOS
 		// This requires the AddressBook framework, which afaict isn't bound on Mac, tvOS and watchOS yet
-		[Wrap ("this (coordinate, addressDictionary == null ? null : addressDictionary.Dictionary)")]
+		[Wrap ("this (coordinate, addressDictionary.GetDictionary ())")]
 		IntPtr Constructor (CLLocationCoordinate2D coordinate, MKPlacemarkAddress addressDictionary);
 #endif // !MONOMAC && !WATCH
 
