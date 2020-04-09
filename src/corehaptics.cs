@@ -391,7 +391,7 @@ namespace CoreHaptics {
 		[Export ("initWithDictionary:error:")]
 		IntPtr Constructor (NSDictionary patternDict, [NullAllowed] out NSError outError);
 
-		[Wrap ("this (patternDefinition?.Dictionary, out outError)")]
+		[Wrap ("this (patternDefinition.GetDictionary ()!, out outError)")]
 		IntPtr Constructor (CHHapticPatternDefinition patternDefinition, [NullAllowed] out NSError outError);
 
 		[Internal]
@@ -399,7 +399,8 @@ namespace CoreHaptics {
 		[return: NullAllowed]
 		NSDictionary<NSString, NSObject> _ExportDictionary ([NullAllowed] out NSError outError);
 
-		[Wrap ("new CHHapticPatternDefinition (_ExportDictionary (out outError))")]
+		[Wrap ("new CHHapticPatternDefinition (_ExportDictionary (out outError)!)")]
+		[return: NullAllowed]
 		CHHapticPatternDefinition Export ([NullAllowed] out NSError outError);
 	}
 }

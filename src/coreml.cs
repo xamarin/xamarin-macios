@@ -247,7 +247,7 @@ namespace CoreML {
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Static]
-		[Wrap ("Create (url, pixelsWide, pixelsHigh, pixelFormatType, imageOptions?.Dictionary, out error)")]
+		[Wrap ("Create (url, pixelsWide, pixelsHigh, pixelFormatType, imageOptions.GetDictionary (), out error)")]
 		[return: NullAllowed]
 		MLFeatureValue Create (NSUrl url, nint pixelsWide, nint pixelsHigh, CVPixelFormatType pixelFormatType, [NullAllowed] MLFeatureValueImageOption imageOptions, [NullAllowed] out NSError error);
 
@@ -259,7 +259,7 @@ namespace CoreML {
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Static]
-		[Wrap ("Create (url, constraint, imageOptions?.Dictionary, out error)")]
+		[Wrap ("Create (url, constraint, imageOptions.GetDictionary (), out error)")]
 		[return: NullAllowed]
 		MLFeatureValue Create (NSUrl url, MLImageConstraint constraint, [NullAllowed] MLFeatureValueImageOption imageOptions, [NullAllowed] out NSError error);
 
@@ -271,7 +271,7 @@ namespace CoreML {
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Static]
-		[Wrap ("Create (image, pixelsWide, pixelsHigh, pixelFormatType, imageOptions?.Dictionary, out error)")]
+		[Wrap ("Create (image, pixelsWide, pixelsHigh, pixelFormatType, imageOptions.GetDictionary (), out error)")]
 		[return: NullAllowed]
 		MLFeatureValue Create (CGImage image, nint pixelsWide, nint pixelsHigh, CVPixelFormatType pixelFormatType, [NullAllowed] MLFeatureValueImageOption imageOptions, [NullAllowed] out NSError error);
 
@@ -283,7 +283,7 @@ namespace CoreML {
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Static]
-		[Wrap ("Create (image, constraint, imageOptions?.Dictionary, out error)")]
+		[Wrap ("Create (image, constraint, imageOptions.GetDictionary (), out error)")]
 		[return: NullAllowed]
 		MLFeatureValue Create (CGImage image, MLImageConstraint constraint, [NullAllowed] MLFeatureValueImageOption imageOptions, [NullAllowed] out NSError error);
 
@@ -295,7 +295,7 @@ namespace CoreML {
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Static]
-		[Wrap ("Create (url, orientation, pixelsWide, pixelsHigh, pixelFormatType, imageOptions?.Dictionary, out error)")]
+		[Wrap ("Create (url, orientation, pixelsWide, pixelsHigh, pixelFormatType, imageOptions.GetDictionary (), out error)")]
 		[return: NullAllowed]
 		MLFeatureValue Create (NSUrl url, CGImagePropertyOrientation orientation, nint pixelsWide, nint pixelsHigh, CVPixelFormatType pixelFormatType, [NullAllowed] MLFeatureValueImageOption imageOptions, [NullAllowed] out NSError error);
 
@@ -307,7 +307,7 @@ namespace CoreML {
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Static]
-		[Wrap ("Create (url, orientation, constraint, imageOptions?.Dictionary, out error)")]
+		[Wrap ("Create (url, orientation, constraint, imageOptions.GetDictionary (), out error)")]
 		[return: NullAllowed]
 		MLFeatureValue Create (NSUrl url, CGImagePropertyOrientation orientation, MLImageConstraint constraint, [NullAllowed] MLFeatureValueImageOption imageOptions, [NullAllowed] out NSError error);
 
@@ -319,7 +319,7 @@ namespace CoreML {
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Static]
-		[Wrap ("Create (image, orientation, pixelsWide, pixelsHigh, pixelFormatType, imageOptions?.Dictionary, out error)")]
+		[Wrap ("Create (image, orientation, pixelsWide, pixelsHigh, pixelFormatType, imageOptions.GetDictionary (), out error)")]
 		[return: NullAllowed]
 		MLFeatureValue Create (CGImage image, CGImagePropertyOrientation orientation, nint pixelsWide, nint pixelsHigh, CVPixelFormatType pixelFormatType, [NullAllowed] MLFeatureValueImageOption imageOptions, [NullAllowed] out NSError error);
 
@@ -331,7 +331,7 @@ namespace CoreML {
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Static]
-		[Wrap ("Create (image, orientation, constraint, imageOptions?.Dictionary, out error)")]
+		[Wrap ("Create (image, orientation, constraint, imageOptions.GetDictionary (), out error)")]
 		[return: NullAllowed]
 		MLFeatureValue Create (CGImage image, CGImagePropertyOrientation orientation, MLImageConstraint constraint, [NullAllowed] MLFeatureValueImageOption imageOptions, [NullAllowed] out NSError error);
 	}

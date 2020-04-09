@@ -156,7 +156,8 @@ namespace ModelIO {
 		IMDLComponent GetComponent (Protocol protocol);
 
 		[iOS (10,3), TV (10,2), Mac (10,12,4)]
-		[Wrap ("GetComponent (new Protocol (type))")]
+		[Wrap ("GetComponent (new Protocol (type!))")]
+		[return: NullAllowed]
 		IMDLComponent GetComponent (Type type);
 
 		[iOS (10,0)]
@@ -1181,7 +1182,7 @@ namespace ModelIO {
 		[Export ("setComponent:forProtocol:")]
 		void SetComponent (IMDLComponent component, Protocol protocol);
 
-		[Wrap ("SetComponent (component, new Protocol (type))")]
+		[Wrap ("SetComponent (component, new Protocol (type!))")]
 		void SetComponent (IMDLComponent component, Type type);
 
 #if XAMCORE_4_0
@@ -1193,10 +1194,12 @@ namespace ModelIO {
 		IMDLComponent IsComponentConforming (Protocol protocol);
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
-		[Wrap ("IsComponentConforming (protocol)")]
+		[Wrap ("IsComponentConforming (protocol!)")]
+		[return: NullAllowed]
 		IMDLComponent GetComponent (Protocol protocol);
 
-		[Wrap ("GetComponent (new Protocol (type))")]
+		[Wrap ("GetComponent (new Protocol (type!))")]
+		[return: NullAllowed]
 		IMDLComponent GetComponent (Type type);
 
 		[NullAllowed, Export ("parent", ArgumentSemantic.Weak)]

@@ -9,6 +9,7 @@
     <RootNamespace>bindingstestmac</RootNamespace>
     <AssemblyName>bindings-test-mac</AssemblyName>
     <MacResourcePrefix>Resources</MacResourcePrefix>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
