@@ -20,12 +20,11 @@ namespace Xharness.Jenkins.TestTasks {
 		public double TimeoutMultiplier { get; set; } = 1;
 		public string WorkingDirectory;
 
-		public RunTestTask (BuildToolTask build_task, IProcessManager processManager)
+		public RunTestTask (BuildToolTask build_task, IProcessManager processManager) : base (build_task.Jenkins)
 		{
 			this.BuildTask = build_task;
 			this.ProcessManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 
-			Jenkins = build_task.Jenkins;
 			TestProject = build_task.TestProject;
 			Platform = build_task.Platform;
 			ProjectPlatform = build_task.ProjectPlatform;

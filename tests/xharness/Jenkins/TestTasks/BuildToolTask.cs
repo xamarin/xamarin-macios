@@ -9,6 +9,14 @@ namespace Xharness.Jenkins.TestTasks
 
 		public IProcessManager ProcessManager => buildToolTask.ProcessManager;
 
+		public override string TestName {
+			get => base.TestName;
+			set {
+				base.TestName = value;
+				buildToolTask.TestName = value; 
+			}
+		}
+
 		public bool SpecifyPlatform { 
 			get => buildToolTask.SpecifyPlatform;
 			set => buildToolTask.SpecifyPlatform = value;
@@ -19,7 +27,15 @@ namespace Xharness.Jenkins.TestTasks
 			set => buildToolTask.SpecifyConfiguration = value;
 		}
 
-		protected BuildToolTask (IProcessManager processManager) 
+		public override TestProject TestProject {
+			get => base.TestProject;
+			set {
+				base.TestProject = value;
+				buildToolTask.TestProject = value;
+			}
+		}
+
+		protected BuildToolTask (Jenkins jenkins, IProcessManager processManager) : base (jenkins)
 			=> buildToolTask = new Xharness.TestTasks.BuildToolTask (processManager);
 
 		public override TestPlatform Platform { 

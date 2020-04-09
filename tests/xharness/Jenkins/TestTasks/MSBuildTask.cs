@@ -32,7 +32,7 @@ namespace Xharness.Jenkins.TestTasks {
 			}
 		}
 
-		public MSBuildTask (IProcessManager processManager) : base (processManager)
+		public MSBuildTask (Jenkins jenkins, TestProject testProject, IProcessManager processManager) : base (jenkins, testProject, processManager)
 		{
 		}
 
