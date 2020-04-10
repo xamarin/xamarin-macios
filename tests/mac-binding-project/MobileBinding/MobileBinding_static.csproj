@@ -9,7 +9,6 @@
     <RootNamespace>MobileBinding</RootNamespace>
     <MacResourcePrefix>Resources</MacResourcePrefix>
     <AssemblyName>MobileBinding</AssemblyName>
-    <BaseIntermediateOutputPath>..\obj\Mobile-static</BaseIntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
