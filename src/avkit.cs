@@ -151,12 +151,13 @@ namespace AVKit {
 		[Export ("videoBounds")]
 		CGRect VideoBounds { get; }
 
+		[NullAllowed]
 		[Export ("contentOverlayView")]
 		UIView ContentOverlayView { get; }
 
 		[TV (11,0)]
 		[NoiOS]
-		[NullAllowed, Export ("unobscuredContentGuide")]
+		[Export ("unobscuredContentGuide")]
 		UILayoutGuide UnobscuredContentGuide { get; }
 
 		[NoTV]
@@ -205,6 +206,7 @@ namespace AVKit {
 		bool RequiresFullSubtitles { get; set; }
 #endregion
 #if !MONOMAC
+		[NullAllowed]
 		[NoiOS, TV (10, 0), NoWatch, NoMac]
 		[Export ("contentProposalViewController", ArgumentSemantic.Assign)]
 		AVContentProposalViewController ContentProposalViewController { get; set; }
@@ -231,6 +233,7 @@ namespace AVKit {
 		[Export ("playbackControlsIncludeInfoViews")]
 		bool PlaybackControlsIncludeInfoViews { get; set; }
 
+		[NullAllowed]
 		[NoiOS, TV (11, 0), NoWatch, NoMac]
 		[Export ("customInfoViewController", ArgumentSemantic.Assign)]
 		UIViewController CustomInfoViewController { get; set; }
@@ -289,17 +292,17 @@ namespace AVKit {
 		[NoiOS][NoMac]
 		[TV (11,0)]
 		[Export ("playerViewControllerShouldDismiss:")]
-		bool ShouldDismiss ([NullAllowed] AVPlayerViewController playerViewController);
+		bool ShouldDismiss (AVPlayerViewController playerViewController);
 
 		[NoiOS][NoMac]
 		[TV (11,0)]
 		[Export ("playerViewControllerWillBeginDismissalTransition:")]
-		void WillBeginDismissalTransition ([NullAllowed] AVPlayerViewController playerViewController);
+		void WillBeginDismissalTransition (AVPlayerViewController playerViewController);
 
 		[NoiOS][NoMac]
 		[TV (11,0)]
 		[Export ("playerViewControllerDidEndDismissalTransition:")]
-		void DidEndDismissalTransition ([NullAllowed] AVPlayerViewController playerViewController);
+		void DidEndDismissalTransition (AVPlayerViewController playerViewController);
 
 		[NoiOS][NoMac]
 		[TV (9,0)]
@@ -347,7 +350,7 @@ namespace AVKit {
 
 		[NoiOS, TV (11,0), NoWatch, NoMac]
 		[Export ("playerViewController:willTransitionToVisibilityOfTransportBar:withAnimationCoordinator:")]
-		void WillTransitionToVisibilityOfTransportBar ([NullAllowed] AVPlayerViewController playerViewController, bool visible, [NullAllowed] IAVPlayerViewControllerAnimationCoordinator coordinator);
+		void WillTransitionToVisibilityOfTransportBar (AVPlayerViewController playerViewController, bool visible, [NullAllowed] IAVPlayerViewControllerAnimationCoordinator coordinator);
 		
 		[iOS (13,0), NoTV, NoWatch, NoMac]
 		[Export ("playerViewController:willBeginFullScreenPresentationWithAnimationCoordinator:"), EventArgs ("AVPlayerViewFullScreenPresentationWillBegin")]
@@ -402,6 +405,7 @@ namespace AVKit {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frameRect);
 
+		[NullAllowed]
 		[Export ("player")]
 		AVPlayer Player { get; set; }
 
@@ -420,6 +424,7 @@ namespace AVKit {
 		[Export ("videoBounds")]
 		CGRect VideoBounds { get; }
 
+		[NullAllowed]
 		[Mac (10,10)]
 		[Export ("contentOverlayView")]
 		NSView ContentOverlayView { get; }
@@ -429,12 +434,13 @@ namespace AVKit {
 		bool UpdatesNowPlayingInfoCenter { get; set; }
 
 		[Mac (10,9)]
+		[NullAllowed]
 		[Export ("actionPopUpButtonMenu")]
 		NSMenu ActionPopUpButtonMenu { get; set; }
 
 		[Mac (10,9)] // No async
 		[Export ("beginTrimmingWithCompletionHandler:")]
-		void BeginTrimming (Action<AVPlayerViewTrimResult> handler);
+		void BeginTrimming ([NullAllowed] Action<AVPlayerViewTrimResult> handler);
 
 		[Mac (10,9)]
 		[Export ("canBeginTrimming")]

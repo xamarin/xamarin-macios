@@ -68,6 +68,7 @@ namespace AddressBookUI {
 		[PostGet ("ViewControllers")] // that will PostGet TopViewController and VisibleViewController too
 		IntPtr Constructor (UIViewController rootViewController);
 
+		[NullAllowed]
 		[Export ("displayedProperties", ArgumentSemantic.Copy), Internal]
 		NSNumber[] _DisplayedProperties {get; set;}
 
@@ -148,6 +149,7 @@ namespace AddressBookUI {
 		[Export ("displayedPerson"), Internal]
 		IntPtr _DisplayedPerson {get; set;}
 
+		[NullAllowed]
 		[Export ("displayedProperties", ArgumentSemantic.Copy), Internal]
 		NSNumber[] _DisplayedProperties { get; set; }
 
@@ -311,19 +313,11 @@ namespace AddressBookUI {
 	[Protocol]
 	interface ABUnknownPersonViewControllerDelegate {
 		[Export ("unknownPersonViewController:didResolveToPerson:")]
-#if XAMCORE_2_0
 		[Abstract]
-		void DidResolveToPerson (ABUnknownPersonViewController unknownPersonView, ABPerson person);
-#else
-		void DidResolveToPerson (ABUnknownPersonViewController unknownPersonView, IntPtr person);
-#endif
+		void DidResolveToPerson (ABUnknownPersonViewController unknownPersonView, [NullAllowed] ABPerson person);
 
 		[Export ("unknownPersonViewController:shouldPerformDefaultActionForPerson:property:identifier:")]
-#if XAMCORE_2_0
 		bool ShouldPerformDefaultActionForPerson (ABUnknownPersonViewController personViewController, ABPerson person, int /* ABPropertyID = int32 */ propertyId, int /* ABMultiValueIdentifier = int32 */ identifier);
-#else
-		bool ShouldPerformDefaultActionForPerson (ABUnknownPersonViewController personViewController, IntPtr person, int /* ABPropertyID = int32 */ propertyId, int /* ABMultiValueIdentifier = int32 */ identifier);
-#endif
 	}
 }
 

@@ -3403,6 +3403,7 @@ namespace Intents {
 
 		[Static]
 		[MarshalNativeExceptions]
+		[return: NullAllowed]
 		[Export ("imageWithURL:")]
 		INImage FromUrl (NSUrl url);
 
@@ -3513,6 +3514,7 @@ namespace Intents {
 		INImage GetImage (string parameterName);
 
 		[Watch (5,0), Mac (10,14), iOS (12,0)]
+		[return: NullAllowed]
 		[Export ("keyImage")]
 		INImage GetKeyImage ();
 	}
@@ -7071,6 +7073,7 @@ namespace Intents {
 	[BaseType (typeof (NSUserActivity))]
 	interface NSUserActivity_IntentsAdditions {
 
+		[return: NullAllowed]
 		[Export ("interaction")]
 		INInteraction GetInteraction ();
 	}

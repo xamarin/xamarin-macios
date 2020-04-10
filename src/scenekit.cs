@@ -3081,6 +3081,7 @@ namespace SceneKit {
 		[Abstract]
 #endif
 		[Mac (10,10)]
+		[NullAllowed]
 		[Export ("scene", ArgumentSemantic.Retain)]
 		SCNScene Scene { get; set; }
 

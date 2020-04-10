@@ -335,7 +335,7 @@ namespace CoreNFC {
 		[iOS (13,0)]
 		[Export ("wellKnownTypeTextPayloadWithLocale:")]
 		[return: NullAllowed]
-		string GetWellKnownTypeTextPayload ([NullAllowed] out NSLocale locale);
+		string GetWellKnownTypeTextPayload (out NSLocale locale);
 
 		[iOS (13,0)]
 		[Export ("initWithFormat:type:identifier:payload:")]

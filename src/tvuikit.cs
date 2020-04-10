@@ -34,9 +34,11 @@ namespace TVUIKit {
 		CGSize ContentSize { get; set; }
 
 		[Export ("headerView", ArgumentSemantic.Strong)]
+		[NullAllowed]
 		TVLockupHeaderFooterView HeaderView { get; set; }
 
 		[Export ("footerView", ArgumentSemantic.Strong)]
+		[NullAllowed]
 		TVLockupHeaderFooterView FooterView { get; set; }
 
 		[Export ("contentViewInsets", ArgumentSemantic.Assign)]

@@ -56,22 +56,24 @@ namespace FileProvider {
 		NSUrl DocumentStorageUrl { get; }
 
 		[NoMac]
+		[return: NullAllowed]
 		[Export ("URLForItemWithPersistentIdentifier:")]
 		NSUrl GetUrlForItem (string persistentIdentifier);
 
 		[NoMac]
+		[return: NullAllowed]
 		[Export ("persistentIdentifierForItemAtURL:")]
 		string GetPersistentIdentifier (NSUrl itemUrl);
 
 		[NoMac]
 		[Export ("providePlaceholderAtURL:completionHandler:")]
 		[Async]
-		void ProvidePlaceholderAtUrl (NSUrl url, [NullAllowed] Action<NSError> completionHandler);
+		void ProvidePlaceholderAtUrl (NSUrl url, Action<NSError> completionHandler);
 
 		[NoMac]
 		[Export ("startProvidingItemAtURL:completionHandler:")]
 		[Async]
-		void StartProvidingItemAtUrl (NSUrl url, [NullAllowed] Action<NSError> completionHandler);
+		void StartProvidingItemAtUrl (NSUrl url, Action<NSError> completionHandler);
 
 		[NoMac]
 		[Export ("itemChangedAtURL:")]
