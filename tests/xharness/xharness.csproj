@@ -123,6 +123,9 @@
     <Compile Include="TestTasks\BuildProjectTask.cs" />
     <Compile Include="TestTasks\IResourceManager.cs" />
     <Compile Include="TestTasks\IEnvManager.cs" />
+    <Compile Include="TestTasks\MSBuildTask.cs" />
+    <Compile Include="TestTasks\IErrorKnowledgeBase.cs" />
+    <Compile Include="TestTasks\DotNetBuildTask.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\tools\mtouch\SdkVersions.cs">

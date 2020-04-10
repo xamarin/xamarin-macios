@@ -1,13 +1,14 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 
 namespace Xharness.Jenkins.TestTasks
 {
 	public abstract class BuildToolTask : AppleTestTask
 	{
-		readonly Xharness.TestTasks.BuildToolTask buildToolTask;
+		protected Xharness.TestTasks.BuildToolTask buildToolTask;
 
-		public IProcessManager ProcessManager => buildToolTask.ProcessManager;
+		public IProcessManager ProcessManager { get; }
 
 		public override string TestName {
 			get => base.TestName;
@@ -35,8 +36,10 @@ namespace Xharness.Jenkins.TestTasks
 			}
 		}
 
-		protected BuildToolTask (Jenkins jenkins, IProcessManager processManager) : base (jenkins)
-			=> buildToolTask = new Xharness.TestTasks.BuildToolTask (processManager);
+		protected BuildToolTask (Jenkins jenkins, IProcessManager processManager) : base (jenkins) {
+			ProcessManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
+			InitializeTool ();
+		}
 
 		public override TestPlatform Platform { 
 			get => base.Platform;
@@ -51,6 +54,7 @@ namespace Xharness.Jenkins.TestTasks
 			set => buildToolTask.Mode = value;
 		}
 
+		protected virtual void InitializeTool () => buildToolTask = new Xharness.TestTasks.BuildToolTask (ProcessManager);
 		public virtual Task CleanAsync () => buildToolTask.CleanAsync ();
 	}
 }
