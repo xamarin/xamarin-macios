@@ -9,6 +9,7 @@
     <RootNamespace>MobileBinding</RootNamespace>
     <MacResourcePrefix>Resources</MacResourcePrefix>
     <AssemblyName>MobileBinding</AssemblyName>
+    <BaseIntermediateOutputPath>..\obj\Mobile-static</BaseIntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -20,6 +21,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
