@@ -1,0 +1,23 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UiImageViewAnimatedGIF", "UiImageViewAnimatedGIF\UiImageViewAnimatedGIF.csproj", "{8C1C366C-E8CF-48E1-A0B5-204856DA4521}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|iPhoneSimulator = Debug|iPhoneSimulator
+		Release|iPhoneSimulator = Release|iPhoneSimulator
+		Debug|iPhone = Debug|iPhone
+		Release|iPhone = Release|iPhone
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8C1C366C-E8CF-48E1-A0B5-204856DA4521}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
+		{8C1C366C-E8CF-48E1-A0B5-204856DA4521}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
+		{8C1C366C-E8CF-48E1-A0B5-204856DA4521}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
+		{8C1C366C-E8CF-48E1-A0B5-204856DA4521}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
+		{8C1C366C-E8CF-48E1-A0B5-204856DA4521}.Debug|iPhone.ActiveCfg = Debug|iPhone
+		{8C1C366C-E8CF-48E1-A0B5-204856DA4521}.Debug|iPhone.Build.0 = Debug|iPhone
+		{8C1C366C-E8CF-48E1-A0B5-204856DA4521}.Release|iPhone.ActiveCfg = Release|iPhone
+		{8C1C366C-E8CF-48E1-A0B5-204856DA4521}.Release|iPhone.Build.0 = Release|iPhone
+	EndGlobalSection
+EndGlobal
