@@ -1,4 +1,4 @@
- // Copyright 2011-2012 Xamarin, Inc.
+// Copyright 2011-2012 Xamarin, Inc.
 // Copyright 2010, 2011, Novell, Inc.
 // Copyright 2010, Kenneth Pouncey
 // Coprightt 2010, James Clancey
@@ -13168,18 +13168,23 @@ namespace AppKit {
 		[Export ("deepestScreen")]
 		NSScreen DeepestScreen { get; }
 
+		[ThreadSafe]
 		[Export ("depth")]
 		NSWindowDepth Depth { get; }
 
+		[ThreadSafe]
 		[Export ("frame")]
 		CGRect Frame { get; }
 
+		[ThreadSafe]
 		[Export ("visibleFrame")]
 		CGRect VisibleFrame { get; }
 
+		[ThreadSafe]
 		[Export ("deviceDescription")]
 		NSDictionary DeviceDescription { get; }
 
+		[ThreadSafe]
 		[Export ("colorSpace")]
 		NSColorSpace ColorSpace { get; }
 
@@ -13199,9 +13204,11 @@ namespace AppKit {
 		[Export ("backingAlignedRect:options:")]
 		CGRect GetBackingAlignedRect (CGRect globalScreenCoordRect, NSAlignmentOptions options);
 
+		[ThreadSafe]
 		[Export ("backingScaleFactor")]
 		nfloat BackingScaleFactor { get; }
 
+		[ThreadSafe]
 		[Mac (10,9)]
 		[Static, Export ("screensHaveSeparateSpaces")]
 		bool ScreensHaveSeparateSpaces ();
@@ -13211,18 +13218,22 @@ namespace AppKit {
 		bool CanRepresentDisplayGamut (NSDisplayGamut displayGamut);
 
 		// Inlined from unnamed category.
+		[ThreadSafe]
 		[Mac (10,11)]
 		[Export ("maximumExtendedDynamicRangeColorComponentValue")]
 		nfloat MaximumExtendedDynamicRangeColorComponentValue { get; }
 
+		[ThreadSafe]
 		[Mac (10, 15)]
 		[Export ("maximumPotentialExtendedDynamicRangeColorComponentValue")]
 		nfloat MaximumPotentialExtendedDynamicRangeColorComponentValue { get; }
 
+		[ThreadSafe]
 		[Mac (10, 15)]
 		[Export ("maximumReferenceExtendedDynamicRangeColorComponentValue")]
 		nfloat MaximumReferenceExtendedDynamicRangeColorComponentValue { get; }
 
+		[ThreadSafe]
 		[Mac (10, 15)]
 		[Export ("localizedName", ArgumentSemantic.Copy)]
 		string LocalizedName { get; }
