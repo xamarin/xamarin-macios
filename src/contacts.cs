@@ -1604,7 +1604,7 @@ namespace Contacts {
 #if XAMCORE_4_0
 		[Export ("predicateForContainersWithIdentifiers:")]
 #else
-		[Wrap ("(null as CNContainer).GetPredicateForContainers (identifiers)")]
+		[Wrap ("CNContainer_PredicatesExtension.GetPredicateForContainers (null!, identifiers)")]
 #endif
 		NSPredicate CreatePredicateForContainers (string [] identifiers);
 
@@ -1612,7 +1612,7 @@ namespace Contacts {
 #if XAMCORE_4_0
 		[Export ("predicateForContainerOfContactWithIdentifier:")]
 #else
-		[Wrap ("(null as CNContainer).GetPredicateForContainerOfContact (contactIdentifier)")]
+		[Wrap ("CNContainer_PredicatesExtension.GetPredicateForContainerOfContact (null!, contactIdentifier)")]
 #endif
 		NSPredicate CreatePredicateForContainerOfContact (string contactIdentifier);
 
@@ -1620,7 +1620,7 @@ namespace Contacts {
 #if XAMCORE_4_0
 		[Export ("predicateForContainerOfGroupWithIdentifier:")]
 #else
-		[Wrap ("(null as CNContainer).GetPredicateForContainerOfGroup (groupIdentifier)")]
+		[Wrap ("CNContainer_PredicatesExtension.GetPredicateForContainerOfGroup (null!, groupIdentifier)")]
 #endif
 		NSPredicate CreatePredicateForContainerOfGroup (string groupIdentifier);
 #endregion
@@ -1698,7 +1698,7 @@ namespace Contacts {
 #if XAMCORE_4_0
 		[Export ("predicateForGroupsWithIdentifiers:")]
 #else
-		[Wrap ("(null as CNGroup).GetPredicateForGroups (identifiers)")]
+		[Wrap ("CNGroup_PredicatesExtension.GetPredicateForGroups (null!, identifiers)")]
 #endif
 		NSPredicate CreatePredicateForGroups (string [] identifiers);
 
@@ -1707,7 +1707,7 @@ namespace Contacts {
 #if XAMCORE_4_0
 		[Export ("predicateForSubgroupsInGroupWithIdentifier:")]
 #else
-		[Wrap ("(null as CNGroup).GetPredicateForSubgroupsInGroup (parentGroupIdentifier)")]
+		[Wrap ("CNGroup_PredicatesExtension.GetPredicateForSubgroupsInGroup (null!, parentGroupIdentifier)")]
 #endif
 		NSPredicate CreatePredicateForSubgroupsInGroup (string parentGroupIdentifier);
 
@@ -1715,7 +1715,7 @@ namespace Contacts {
 #if XAMCORE_4_0
 		[Export ("predicateForGroupsInContainerWithIdentifier:")]
 #else
-		[Wrap ("(null as CNGroup).GetPredicateForGroupsInContainer (containerIdentifier)")]
+		[Wrap ("CNGroup_PredicatesExtension.GetPredicateForGroupsInContainer (null!, containerIdentifier)")]
 #endif
 		NSPredicate CreatePredicateForGroupsInContainer (string containerIdentifier);
 #endregion
@@ -2117,7 +2117,7 @@ namespace Contacts {
 		string LocalizeProperty (NSString property);
 
 		[Static]
-		[Wrap ("LocalizeProperty (option.GetConstant ())")]
+		[Wrap ("LocalizeProperty (option.GetConstant ()!)")]
 		string LocalizeProperty (CNPostalAddressKeyOption option);
 	}
 
@@ -2275,7 +2275,7 @@ namespace Contacts {
 		string LocalizeProperty (NSString key);
 
 		[Static]
-		[Wrap ("LocalizeProperty (key.GetConstant ())")]
+		[Wrap ("LocalizeProperty (key.GetConstant ()!)")]
 		string LocalizeProperty (CNPostalAddressKeyOption key);
 
 		[Static]

@@ -1839,6 +1839,9 @@ namespace Intents {
 	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	public enum INIntentIdentifier {
+		[Field (null)]
+		None = -1,
+
 		[Unavailable (PlatformName.MacOSX)]
 		[Field ("INStartAudioCallIntentIdentifier")]
 		StartAudioCall,
@@ -3494,6 +3497,7 @@ namespace Intents {
 
 		[Unavailable (PlatformName.MacOSX)]
 		[Wrap ("INIntentIdentifierExtensions.GetValue (IdentifierString)")]
+		[NullAllowed]
 		INIntentIdentifier? Identifier { get; }
 
 		[Watch (4,0), Mac (10,13), iOS (11,0)]
@@ -6390,7 +6394,7 @@ namespace Intents {
 	interface INSpeakable {
 
 		[Abstract]
-		[NullAllowed, Export ("spokenPhrase")]
+		[Export ("spokenPhrase")]
 		string SpokenPhrase { get; }
 
 		[Abstract]

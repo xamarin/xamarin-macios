@@ -567,7 +567,7 @@ namespace AppKit {
 #endif
 
 		// NSEventMask must be casted to nuint to preserve the NSEventMask.Any special value on 64 bit systems. NSEventMask is not [Native].
-		[Wrap ("NextEvent (mask, expiration, runLoopMode.GetConstant (), deqFlag)")]
+		[Wrap ("NextEvent (mask, expiration, runLoopMode.GetConstant ()!, deqFlag)")]
 		NSEvent NextEvent (NSEventMask mask, NSDate expiration, NSRunLoopMode runLoopMode, bool deqFlag);
 
 		[Export ("discardEventsMatchingMask:beforeEvent:"), Protected]
@@ -8822,7 +8822,7 @@ namespace AppKit {
 		bool ShouldEnableUrl (NSSavePanel panel, NSUrl url);
 
 		[Export ("panel:validateURL:error:"), DelegateName ("NSOpenSavePanelValidate"), DefaultValue (true)]
-		bool ValidateUrl (NSSavePanel panel, NSUrl url, out NSError outError);
+		bool ValidateUrl (NSSavePanel panel, NSUrl url, [NullAllowed] out NSError outError);
 
 		[Export ("panel:didChangeToDirectoryURL:"), EventArgs ("NSOpenSavePanelUrl")]
 		void DidChangeToDirectory (NSSavePanel panel, NSUrl newDirectoryUrl);
@@ -9837,19 +9837,19 @@ namespace AppKit {
 		[Export ("sizeWithAttributes:")]
 		CGSize StringSize (NSDictionary attributes);
 
-		[Wrap ("This.StringSize (attributes == null ? null : attributes.Dictionary)")]
+		[Wrap ("This.StringSize (attributes.GetDictionary ()!)")]
 		CGSize StringSize (AppKit.NSStringAttributes attributes);
 
 		[Export ("drawAtPoint:withAttributes:")]
 		void DrawAtPoint (CGPoint point, NSDictionary attributes);
 
-		[Wrap ("This.DrawAtPoint (point, attributes == null ? null : attributes.Dictionary)")]
+		[Wrap ("This.DrawAtPoint (point, attributes.GetDictionary ()!)")]
 		void DrawAtPoint (CGPoint point, AppKit.NSStringAttributes attributes);
 
 		[Export ("drawInRect:withAttributes:")]
 		void DrawInRect (CGRect rect, NSDictionary attributes);
 
-		[Wrap ("This.DrawInRect (rect, attributes == null ? null : attributes.Dictionary)")]
+		[Wrap ("This.DrawInRect (rect, attributes.GetDictionary ()!)")]
 		void DrawInRect (CGRect rect, AppKit.NSStringAttributes attributes);
 	}
 
@@ -9874,7 +9874,7 @@ namespace AppKit {
 		void WeakDrawString (CGRect rect, NSStringDrawingOptions options, [NullAllowed] NSDictionary attributes, [NullAllowed] NSStringDrawingContext context);
 
 		[Mac (10,11)]
-		[Wrap ("WeakDrawString (This, rect, options, attributes == null ? null : attributes.Dictionary, context)")]
+		[Wrap ("WeakDrawString (This, rect, options, attributes.GetDictionary (), context)")]
 		void DrawString (CGRect rect, NSStringDrawingOptions options, [NullAllowed] NSStringAttributes attributes, [NullAllowed] NSStringDrawingContext context);
 
 		[Mac (10,11)]
@@ -9882,7 +9882,7 @@ namespace AppKit {
 		CGRect WeakGetBoundingRect (CGSize size, NSStringDrawingOptions options, [NullAllowed] NSDictionary attributes, [NullAllowed] NSStringDrawingContext context);
 
 		[Mac (10,11)]
-		[Wrap ("WeakGetBoundingRect (This, size, options, attributes == null ? null : attributes.Dictionary, context)")]
+		[Wrap ("WeakGetBoundingRect (This, size, options, attributes.GetDictionary (), context)")]
 		CGRect GetBoundingRect (CGSize size, NSStringDrawingOptions options, [NullAllowed] NSStringAttributes attributes, [NullAllowed] NSStringDrawingContext context);
 	}
 
@@ -9908,25 +9908,25 @@ namespace AppKit {
 		[Export ("readFromURL:options:documentAttributes:error:")]
 		bool ReadFromURL (NSUrl url, NSDictionary options, out NSDictionary returnOptions, out NSError error);
 
-		[Wrap ("This.ReadFromURL (url, options == null ? null : options.Dictionary, out returnOptions, out error)")]
+		[Wrap ("This.ReadFromURL (url, options.GetDictionary ()!, out returnOptions, out error)")]
 		bool ReadFromURL (NSUrl url, NSAttributedStringDocumentAttributes options, out NSDictionary returnOptions, out NSError error);
 
 		[Export ("readFromURL:options:documentAttributes:")]
 		bool ReadFromURL (NSUrl url, NSDictionary options, out NSDictionary returnOptions);
 
-		[Wrap ("This.ReadFromURL (url, options == null ? null : options.Dictionary, out returnOptions)")]
+		[Wrap ("This.ReadFromURL (url, options.GetDictionary ()!, out returnOptions)")]
 		bool ReadFromURL (NSUrl url, NSAttributedStringDocumentAttributes options, out NSDictionary returnOptions);
 
 		[Export ("readFromData:options:documentAttributes:error:")]
 		bool ReadFromData (NSData data, NSDictionary options, out NSDictionary returnOptions, out NSError error);
 
-		[Wrap ("This.ReadFromData (data, options == null ? null : options.Dictionary, out returnOptions, out error)")]
+		[Wrap ("This.ReadFromData (data, options.GetDictionary ()!, out returnOptions, out error)")]
 		bool ReadFromData (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary returnOptions, out NSError error);
 
 		[Export ("readFromData:options:documentAttributes:")]
 		bool ReadFromData (NSData data, NSDictionary options, out NSDictionary dict);
 
-		[Wrap ("This.ReadFromData (data, options == null ? null : options.Dictionary, out returnOptions)")]
+		[Wrap ("This.ReadFromData (data, options.GetDictionary ()!, out returnOptions)")]
 		bool ReadFromData (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary returnOptions);
 
 		[Export ("superscriptRange:")]
@@ -14265,19 +14265,19 @@ namespace AppKit {
 		[Export ("checkString:range:types:options:inSpellDocumentWithTag:orthography:wordCount:")]
 		NSTextCheckingResult [] CheckString (string stringToCheck, NSRange range, NSTextCheckingTypes checkingTypes, [NullAllowed] NSDictionary options, nint tag, out NSOrthography orthography, out nint wordCount);
 
-		[Wrap ("CheckString (stringToCheck, range, checkingTypes, options == null ? null : options.Dictionary, tag, out orthography, out wordCount)")]
+		[Wrap ("CheckString (stringToCheck, range, checkingTypes, options.GetDictionary (), tag, out orthography, out wordCount)")]
 		NSTextCheckingResult [] CheckString (string stringToCheck, NSRange range, NSTextCheckingTypes checkingTypes, NSTextCheckingOptions options, nint tag, out NSOrthography orthography, out nint wordCount);
 
 		[Export ("requestCheckingOfString:range:types:options:inSpellDocumentWithTag:completionHandler:")]
 		nint RequestChecking (string stringToCheck, NSRange range, NSTextCheckingTypes checkingTypes, [NullAllowed] NSDictionary options, nint tag, Action<nint, NSTextCheckingResult [], NSOrthography, nint> completionHandler);
 
-		[Wrap ("RequestChecking (stringToCheck, range, checkingTypes, options == null ? null : options.Dictionary, tag, completionHandler)")]
+		[Wrap ("RequestChecking (stringToCheck, range, checkingTypes, options.GetDictionary (), tag, completionHandler)")]
 		nint RequestChecking (string stringToCheck, NSRange range, NSTextCheckingTypes checkingTypes, NSTextCheckingOptions options, nint tag, Action<nint, NSTextCheckingResult [], NSOrthography, nint> completionHandler);
 		
 		[Export ("menuForResult:string:options:atLocation:inView:")]
 		NSMenu MenuForResults (NSTextCheckingResult result, string checkedString, NSDictionary options, CGPoint location, NSView view);
 
-		[Wrap ("MenuForResults (result, checkedString, options == null ? null : options.Dictionary, location, view)")]
+		[Wrap ("MenuForResults (result, checkedString, options.GetDictionary ()!, location, view)")]
 		NSMenu MenuForResults (NSTextCheckingResult result, string checkedString, NSTextCheckingOptions options, CGPoint location, NSView view);
 
 		[Export ("userQuotesArrayForLanguage:")]
@@ -27756,7 +27756,7 @@ namespace AppKit {
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		void CheckText (NSRange range, NSTextCheckingTypes checkingTypes, NSDictionary options);
 
-		[Wrap ("CheckText (range, checkingTypes, options?.Dictionary)")]
+		[Wrap ("CheckText (range, checkingTypes, options.GetDictionary ()!)")]
 		void CheckText (NSRange range, NSTextCheckingTypes checkingTypes, NSTextCheckingOptions options);
 
 		[Export ("checkTextInSelection:")]

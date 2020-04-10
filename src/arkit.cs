@@ -1365,7 +1365,7 @@ namespace ARKit {
 		[Export ("initWithBlendShapes:")]
 		IntPtr Constructor (NSDictionary blendShapes);
 
-		[Wrap ("this ((NSDictionary)blendShapes?.Dictionary)")]
+		[Wrap ("this (blendShapes.GetDictionary ()!)")]
 		IntPtr Constructor (ARBlendShapeLocationOptions blendShapes);
 
 		[Export ("vertexCount")]

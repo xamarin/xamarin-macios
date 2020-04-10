@@ -125,7 +125,7 @@ namespace IOSurface {
 		[Internal, Export ("initWithProperties:")]
 		IntPtr Constructor (NSDictionary properties);
 
-		[Wrap ("this (properties == null ? null : properties.Dictionary)")]
+		[Wrap ("this (properties.GetDictionary ()!)")]
 		IntPtr Constructor (IOSurfaceOptions properties);
 	
 		[Internal, Export ("lockWithOptions:seed:")]
