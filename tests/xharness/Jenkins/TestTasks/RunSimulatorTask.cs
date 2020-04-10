@@ -127,8 +127,8 @@ namespace Xharness.Jenkins.TestTasks {
 			ExecutionResult = runner.Result;
 
 			KnownFailure = null;
-			if (Jenkins.IsHE0038Error (runner.MainLog))
-				KnownFailure = $"<a href='https://github.com/xamarin/maccore/issues/581'>HE0038</a>";
+			if (Jenkins.IsKnownTestIssue (runner.MainLog, out KnownFailure))
+				Jenkins.MainLog.WriteLine ($"Test run has a known failure: '{KnownFailure}'");
 		}
 
 		protected override string XIMode {
