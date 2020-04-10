@@ -1079,6 +1079,7 @@ namespace NetworkExtension {
 		[Export ("onDemandEnabled")]
 		bool OnDemandEnabled { [Bind ("isOnDemandEnabled")] get; set; }
 
+		[NullAllowed]
 		[Export ("localizedDescription")]
 		string LocalizedDescription { get; set; }
 

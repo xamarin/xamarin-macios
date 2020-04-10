@@ -295,9 +295,11 @@ namespace SafariServices {
 	[BaseType (typeof(NSObject))]
 	interface SFSafariPageProperties
 	{
+		[NullAllowed]
 		[Export ("url")]
 		NSUrl Url { get; }
 
+		[NullAllowed]
 		[Export ("title")]
 		string Title { get; }
 

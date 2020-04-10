@@ -191,15 +191,19 @@ namespace NotificationCenter {
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		INCWidgetSearchViewDelegate Delegate { get; set; }
 
+		[NullAllowed]
 		[Export ("searchResults", ArgumentSemantic.Copy)]
 		NSObject[] SearchResults { get; set; }
 	
+		[NullAllowed]
 		[Export ("searchDescription")]
 		string SearchDescription { get; set; }
 
+		[NullAllowed]
 		[Export ("searchResultsPlaceholderString")]
 		string SearchResultsPlaceholderString { get; set; }
 
+		[NullAllowed]
 		[Export ("searchResultKeyPath")]
 		string SearchResultKeyPath { get; set; }
 	}

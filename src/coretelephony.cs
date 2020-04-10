@@ -82,6 +82,7 @@ namespace CoreTelephony {
 	interface CTTelephonyNetworkInfo {
 		[Deprecated (PlatformName.iOS, 12,0, message: "Use 'ServiceSubscriberCellularProviders' instead.")]
 		[Export ("subscriberCellularProvider", ArgumentSemantic.Retain)]
+		[NullAllowed]
 		CTCarrier SubscriberCellularProvider { get; }
 
 		[Deprecated (PlatformName.iOS, 12,0, message: "Use 'ServiceSubscriberCellularProvidersDidUpdateNotifier' instead.")]
@@ -95,6 +96,7 @@ namespace CoreTelephony {
 
 		[Deprecated (PlatformName.iOS, 12,0, message: "Use 'ServiceCurrentRadioAccessTechnology' instead.")]
 		[iOS (7,0), Export ("currentRadioAccessTechnology")]
+		[NullAllowed]
 		NSString CurrentRadioAccessTechnology { get; }
 
 		[iOS (12,0)]
@@ -149,24 +151,29 @@ namespace CoreTelephony {
 
 		[Availability (Deprecated = Platform.iOS_10_0, Message = "Use 'CallKit' instead.")]
 		[Export ("currentCalls")]
+		[NullAllowed]
 		NSSet CurrentCalls { get; }
 
 	}
 
 	[BaseType (typeof (NSObject))]
 	interface CTCarrier {
+		[NullAllowed]
 		[Export ("mobileCountryCode")]
 		string MobileCountryCode { get;  }
 
+		[NullAllowed]
 		[Export ("mobileNetworkCode")]
 		string MobileNetworkCode { get;  }
 
+		[NullAllowed]
 		[Export ("isoCountryCode")]
 		string IsoCountryCode { get;  }
 
 		[Export ("allowsVOIP")]
 		bool AllowsVoip { get;  }
 
+		[NullAllowed]
 		[Export ("carrierName")]
 		string CarrierName { get; }
 	}
@@ -184,7 +191,8 @@ namespace CoreTelephony {
 	[BaseType (typeof (NSObject))]
 	[iOS (7,0)]
 	partial interface CTSubscriber {
-		[iOS (7,0), Export ("carrierToken")]
+		[Export ("carrierToken")]
+		[NullAllowed]
 		[Deprecated (PlatformName.iOS, 11, 0)]
 		NSData CarrierToken { get; }
 

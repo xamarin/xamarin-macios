@@ -198,7 +198,9 @@ namespace IOSurface {
 		[Export ("removeAttachmentForKey:")]
 		void RemoveAttachment (NSString key);
 	
-		[NullAllowed, Export ("allAttachments")]
+		// in ObjC it's not defined as a `@property` and the getter can return null but the setter does not accept it
+		[return: MaybeNull]
+		[Export ("allAttachments")]
 		NSDictionary<NSString, NSObject> AllAttachments { get; set; }
 	
 		[Export ("removeAllAttachments")]
