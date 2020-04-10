@@ -13,9 +13,11 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 using Xharness.TestTasks;
+using MSBuildTask = Xharness.Jenkins.TestTasks.MSBuildTask;
+using DotNetBuildTask = Xharness.Jenkins.TestTasks.DotNetBuildTask;
 
 namespace Xharness.Jenkins {
-	public class Jenkins : IResourceManager
+	public class Jenkins : IResourceManager, IErrorKnowledgeBase
 	{
 		readonly ISimulatorLoader simulators;
 		readonly IHardwareDeviceLoader devices;
@@ -1765,7 +1767,7 @@ namespace Xharness.Jenkins {
 			}
 		}
 
-		public bool IsHE0038Error (ILog log) {
+		bool IsHE0038Error (ILog log) {
 			if (log == null)
 				return false;
 			if (File.Exists (log.FullPath) && new FileInfo (log.FullPath).Length > 0) {
@@ -1782,7 +1784,7 @@ namespace Xharness.Jenkins {
 			return false;
 		}
 
-		public bool IsMonoMulti3Issue (ILog log) {
+		bool IsMonoMulti3Issue (ILog log) {
 			if (log == null)
 				return false;
 			if (File.Exists (log.FullPath) && new FileInfo (log.FullPath).Length > 0) {
@@ -1794,6 +1796,27 @@ namespace Xharness.Jenkins {
 					if (line.Contains ("error MT5210: Native linking failed, undefined symbol: ___multi3"))
 						return true;
 				}
+			}
+			return false;
+		}
+
+
+		public bool IsKnownBuildIssue (ILog buildLog, out string knownFailureMessage)
+		{
+			knownFailureMessage = null;
+			if (IsMonoMulti3Issue (buildLog)) {
+				knownFailureMessage = $"<a href='https://github.com/mono/mono/issues/18560'>Undefined symbol ___multi3 on Release Mode</a>";
+				return true;
+			}
+			return false;
+		}
+
+		public bool IsKnownTestIssue (ILog runLog, out string knownFailureMessage)
+		{
+			knownFailureMessage = null;
+			if (IsHE0038Error (runLog)) {
+				knownFailureMessage = $"<a href='https://github.com/xamarin/maccore/issues/581'>HE0038</a>";
+				return true;
 			}
 			return false;
 		}
