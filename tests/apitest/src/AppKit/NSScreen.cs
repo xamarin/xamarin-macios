@@ -195,7 +195,10 @@ namespace Xamarin.Mac.Tests
 
 		[Test]
 		public void MaximumExtendedDynamicRangeColorComponentValueNoMainThread ()
-		{ 
+		{
+			// fails in earlier versions with missing selector
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 15);
+
 			if (NSScreen.MainScreen == null)
 				Assert.Inconclusive ("Could not find main screen.");
 
