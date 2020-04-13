@@ -10,13 +10,12 @@ namespace MonoTouch.Tuner {
 	
 	public class OptimizeGeneratedCodeSubStep : CoreOptimizeGeneratedCode {
 		
-		public OptimizeGeneratedCodeSubStep (LinkerOptions options)
-			: base (options)
+		public OptimizeGeneratedCodeSubStep ()
 		{
 		}
 
 		public bool Device {
-			get { return Options.Device; }
+			get { return LinkContext.App.IsDeviceBuild; }
 		}
 
 		// https://app.asana.com/0/77259014252/77812690163

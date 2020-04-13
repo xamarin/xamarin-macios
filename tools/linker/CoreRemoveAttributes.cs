@@ -15,6 +15,13 @@ namespace Xamarin.Linker {
 			}
 		}
 
+		public override bool IsActiveFor (AssemblyDefinition assembly)
+		{
+			if (LinkContext.App.Optimizations.CustomAttributesRemoval != true)
+				return false;
+			return base.IsActiveFor (assembly);
+		}
+
 		protected override bool IsRemovedAttribute (CustomAttribute attribute)
 		{
 			// note: this also avoid calling FullName (which allocates a string)

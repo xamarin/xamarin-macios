@@ -4,12 +4,27 @@ using Mono.Linker;
 
 using Mono.Cecil;
 
+using Xamarin.Bundler;
+using Xamarin.Tuner;
+
 namespace Mono.Tuner {
 
 	public class CoreRemoveSecurity : RemoveSecurity {
 
+		protected DerivedLinkContext LinkContext {
+			get {
+				return (DerivedLinkContext) base.context;
+			}
+		}
+
 		public override bool IsActiveFor (AssemblyDefinition assembly)
 		{
+#if MMP
+			// CoreRemoveSecurity can modify non-linked assemblies
+			// but the conditions for this cannot happen if only the platform assembly is linked
+			if (LinkContext.App.LinkMode == LinkMode.Platform)
+				return false;
+#endif
 			// if we run the linker then we can't ignore any assemblies since the security 
 			// declarations can refers to types that would not be marked (and preserved)
 			// leading to invalid binaries (that even Cecil won't be able to read back)

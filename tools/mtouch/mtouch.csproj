@@ -455,6 +455,9 @@
     <Compile Include="..\linker\MonoTouch.Tuner\RemoveCodeBase.cs">
       <Link>MonoTouch.Tuner\RemoveCodeBase.cs</Link>
     </Compile>
+    <Compile Include="..\linker\MobileSubStepDispatcher.cs">
+      <Link>Xamarin.Linker\MobileSubStepDispatcher.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Core" />

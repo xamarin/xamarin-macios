@@ -10,8 +10,7 @@ namespace MonoMac.Tuner {
 	
 	public class OptimizeGeneratedCodeSubStep : CoreOptimizeGeneratedCode {
 		
-		public OptimizeGeneratedCodeSubStep (LinkerOptions options)
-			: base (options)
+		public OptimizeGeneratedCodeSubStep ()
 		{
 		}
 	}
