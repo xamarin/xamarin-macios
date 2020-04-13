@@ -12,7 +12,7 @@ namespace Xamarin.Linker {
 	public class MobileSubStepDispatcher : SubStepsDispatcher {
 		public MobileSubStepDispatcher ()
 #if NET
-			: base ()
+			: base (Xamarin.Linker.DotNetLinker.GetSubSteps ())
 #else
 			: base (MonoTouch.Tuner.Linker.GetSubSteps ())
 #endif
