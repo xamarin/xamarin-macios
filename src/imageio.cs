@@ -2325,11 +2325,9 @@ namespace ImageIO {
 		[Field ("kCGImageAnimationDelayTime")]
 		NSString DelayTime { get; }
 
-		// extern const CFStringRef _Nonnull kCGImageAnimationLoopCount __attribute__((visibility("default"))) __attribute__((availability(macos, introduced=10.15))) __attribute__((availability(ios, introduced=13.0)));
 		[Field ("kCGImageAnimationLoopCount")]
 		NSString LoopCount { get; }
 
-		// extern const CFStringRef _Nonnull kCGImageAnimationStartIndex __attribute__((visibility("default"))) __attribute__((availability(macos, introduced=10.15))) __attribute__((availability(ios, introduced=13.0)));
 		[Field ("kCGImageAnimationStartIndex")]
 		NSString StartIndex { get; }
 	}
