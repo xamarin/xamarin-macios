@@ -208,7 +208,6 @@ test/global.json: Makefile $(TEMPLATED_FILES)
 		printf "{\n" > $@; \
 		printf "\t\"sdk\": { \"version\": \"5.0.100-dev\" },\n" >> $@; \
 		printf "\t\"msbuild-sdks\": {\n" >> $@; \
-		printf "\t\t\"Microsoft.NETCore.App.Runtime.ios-arm64\": \"5.0.0-preview.4.20202.18\",\n" >> $@; \
 		printf "\t\t\"Microsoft.iOS.Sdk\": \"$(CURRENT_IOS_VERSION)\",\n" >> $@; \
 		printf "\t\t\"Microsoft.tvOS.Sdk\": \"$(CURRENT_TVOS_VERSION)\",\n" >> $@; \
 		printf "\t\t\"Microsoft.watchOS.Sdk\": \"$(CURRENT_WATCHOS_VERSION)\",\n" >> $@; \
