@@ -20,18 +20,16 @@ namespace ImageIO {
 
         public delegate void CGImageSourceAnimationBlock (nint arg0, CGImage arg1, out bool done /*check*/ );
 
-        //IMAGEIO_EXTERN OSStatus CGAnimateImageAtURLWithBlock(CFURLRef url, CFDictionaryRef _iio_Nullable options, CGImageSourceAnimationBlock block)
         [DllImport (Constants.ImageIOLibrary)]
         static extern unsafe int CGAnimateImageAtURLWithBlock (/* CFURLRef */ IntPtr url, /* CFDictionaryRef _iio_Nullable */ IntPtr options, /* CGImageSourceAnimationBlock */ IntPtr block);
 
-        // extern OSStatus CGAnimateImageDataWithBlock (CFDataRef _Nonnull data, CFDictionaryRef _Nullable options, CGImageSourceAnimationBlock _Nonnull block) __attribute__((visibility("default"))) __attribute__((availability(macos, introduced=10.15))) __attribute__((availability(ios, introduced=13.0))) __attribute__((cf_audited_transfer));
         [DllImport (Constants.ImageIOLibrary)]
-        static extern int CGAnimateImageDataWithBlock ( /* CFDataRef _Nonnull */ IntPtr data, /* CFDictionaryRef _Nullable */ IntPtr options, /* _Nonnull */ IntPtr block);
+        static extern int CGAnimateImageDataWithBlock ( /* CFDataRef _Nonnull */ IntPtr data, /* CFDictionaryRef _Nullable */ IntPtr options, /* CGImageSourceAnimationBlock _Nonnull */ IntPtr block);
 
         [Introduced (PlatformName.MacOSX, 10, 15, PlatformArchitecture.All)]
         [Introduced (PlatformName.iOS, 13, 0, PlatformArchitecture.All)]
         [BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
-        public virtual int CGAnimateImageAtUrl (NSUrl url, NSDictionary options, [BlockProxy (typeof (NIDCGImageSourceAnimationBlock))] CGImageSourceAnimationBlock block) {
+        public virtual int CGAnimateImage (NSUrl url, NSDictionary options, [BlockProxy (typeof (NIDCGImageSourceAnimationBlock))] CGImageSourceAnimationBlock block) {
             if (url == null)
                 throw new ArgumentNullException ("url");
             if (block == null)
@@ -58,7 +56,7 @@ namespace ImageIO {
         [Introduced (PlatformName.MacOSX, 10, 15, PlatformArchitecture.All)]
         [Introduced (PlatformName.iOS, 13, 0, PlatformArchitecture.All)]
         [BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
-        public virtual int CGAnimateImageData (NSData data, NSDictionary options, [BlockProxy (typeof (NIDCGImageSourceAnimationBlock))] CGImageSourceAnimationBlock block) {
+        public virtual int CGAnimateImage (NSData data, NSDictionary options, [BlockProxy (typeof (NIDCGImageSourceAnimationBlock))] CGImageSourceAnimationBlock block) {
             if (data == null)
                 throw new ArgumentNullException ("data");
             if (block == null)
