@@ -198,8 +198,10 @@ $(TOP)/tools/common/SdkVersions.cs: $(TOP)/tools/common/SdkVersions.cs.in
 	@$(MAKE) -C $(TOP)/src project-files
 	@touch $@
 
-xharness/xharness.exe: $(wildcard xharness/*.cs) $(wildcard $(TOP)/tools/bcl-test-importer/BCLTestImporter/*.cs) xharness/xharness.csproj $(TOP)/tools/common/SdkVersions.cs test.config test-system.config .stamp-src-project-files
+xharness/xharness.exe: $(xharness_dependencies) test.config test-system.config .stamp-src-project-files
 	$(Q_GEN) $(SYSTEM_MSBUILD) /restore $(MSBUILD_VERBOSITY_QUIET) xharness/xharness.csproj
+xharness/xharness.csproj.inc: export ABSOLUTE_PATHS=1
+-include xharness/xharness.csproj.inc
 
 killall:
 	@killall "iPhone Simulator" >/dev/null 2>&1 || true

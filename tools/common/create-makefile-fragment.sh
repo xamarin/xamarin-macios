@@ -86,7 +86,7 @@ for proj in $(sort "$REFERENCES_PATH" | uniq); do
 	sed -i '' "s@^@$proj_dir/@" "$inputs_path"
 
 	# Change to Make syntax. This is horrifically difficult in MSBuild,
-	# because MSBuild blindly replaces backslashes with forword slashes (i.e.
+	# because MSBuild blindly replaces backslashes with forward slashes (i.e.
 	# windows paths to unix paths...)
 	sed -i '' "s_^\\(.*\\)\$_    \\1 \\\\_" "$inputs_path"
 
@@ -103,7 +103,9 @@ echo "${PROJECT}_dependencies = \\" >> "$FRAGMENT_PATH"
 sort "${INPUT_PATHS[@]}" | uniq >> "$FRAGMENT_PATH"
 
 # Simplify paths somewhat by removing the current directory
-sed -i '' "s@$PROJECT_DIR/@@" "$FRAGMENT_PATH"
+if test -z "$ABSOLUTE_PATHS"; then
+	sed -i '' "s@$PROJECT_DIR/@@" "$FRAGMENT_PATH"
+fi
 
 # Cleanup
 rm -f "${INPUT_PATHS[@]}"
