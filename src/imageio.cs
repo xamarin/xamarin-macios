@@ -250,17 +250,14 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyExifGamma")]
 		NSString ExifGamma { get; }
 
-		// extern const CFStringRef _Nonnull kCGImagePropertyExifCompositeImage __attribute__((visibility("default"))) __attribute__((availability(macos, introduced=10.15.1))) __attribute__((availability(ios, introduced=13.1)));
 		[Mac (10, 15, 1), iOS (13, 1), TV (13, 1), Watch (6, 1)]
 		[Field ("kCGImagePropertyExifCompositeImage")]
 		NSString ExifCompositeImage { get; }
 
-		// extern const CFStringRef _Nonnull kCGImagePropertyExifSourceImageNumberOfCompositeImage __attribute__((visibility("default"))) __attribute__((availability(macos, introduced=10.15.1))) __attribute__((availability(ios, introduced=13.1)));
 		[Mac (10, 15, 1), iOS (13, 1), TV (13, 1), Watch (6, 1)]
 		[Field ("kCGImagePropertyExifSourceImageNumberOfCompositeImage")]
 		NSString ExifSourceImageNumberOfCompositeImage { get; }
 
-		// extern const CFStringRef _Nonnull kCGImagePropertyExifSourceExposureTimesOfCompositeImage __attribute__((visibility("default"))) __attribute__((availability(macos, introduced=10.15.1))) __attribute__((availability(ios, introduced=13.1)));
 		[Mac (10, 15, 1), iOS (13, 1), TV (13, 1), Watch (6, 1)]
 		[Field ("kCGImagePropertyExifSourceExposureTimesOfCompositeImage")]
 		NSString ExifSourceExposureTimesOfCompositeImage { get; }
@@ -2325,16 +2322,15 @@ namespace ImageIO {
 	[Partial]
 	[Mac (10, 15), iOS (13, 0), TV (13, 0), Watch (6, 0)]
 	interface CGImageAnimationOptions {
-		// extern const CFStringRef _Nonnull kCGImageAnimationDelayTime __attribute__((visibility("default"))) __attribute__((availability(macos, introduced=10.15))) __attribute__((availability(ios, introduced=13.0)));
 		[Field ("kCGImageAnimationDelayTime")]
-		NSString AnimationDelayTime { get; }
+		NSString DelayTime { get; }
 
 		// extern const CFStringRef _Nonnull kCGImageAnimationLoopCount __attribute__((visibility("default"))) __attribute__((availability(macos, introduced=10.15))) __attribute__((availability(ios, introduced=13.0)));
 		[Field ("kCGImageAnimationLoopCount")]
-		NSString AnimationLoopCount { get; }
+		NSString LoopCount { get; }
 
 		// extern const CFStringRef _Nonnull kCGImageAnimationStartIndex __attribute__((visibility("default"))) __attribute__((availability(macos, introduced=10.15))) __attribute__((availability(ios, introduced=13.0)));
 		[Field ("kCGImageAnimationStartIndex")]
-		NSString AnimationStartIndex { get; }
+		NSString StartIndex { get; }
 	}
 }
