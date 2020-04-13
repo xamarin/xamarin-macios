@@ -67,7 +67,7 @@
     <Compile Include="src\ExtensionTests.cs" />
     <Compile Include="src\RemotingConfigurationTests.cs" />
     <Compile Include="src\AOTTests.cs" />
-    <Compile Include="..\..\tools\mmp\tests\aot.cs">
+    <Compile Include="..\..\tests\mmp-aot-tests\aot.cs">
       <Link>unit\aot.cs</Link>
     </Compile>
     <Compile Include="src\FrameworkLinksTests.cs" />
@@ -110,7 +110,7 @@
     <Compile Include="src\AssemblyReferencesTests.cs" />
     <Compile Include="src\PackageReferenceTests.cs" />
     <Compile Include="src\BindingProjectNoEmbeddingTests.cs" />
-    <Compile Include="..\..\tools\mmp\SdkVersions.cs">
+    <Compile Include="..\..\tools\common\SdkVersions.cs">
       <Link>SdkVersions.cs</Link>
     </Compile>
     <Compile Include="src\TargetFrameworkMutateTests.cs" />

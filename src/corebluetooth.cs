@@ -137,7 +137,7 @@ namespace CoreBluetooth {
 		IntPtr Constructor ([NullAllowed, Protocolize] CBCentralManagerDelegate centralDelegate, [NullAllowed] DispatchQueue queue, [NullAllowed] NSDictionary options);
 
 		[iOS (7,0), Mac (10,9)]
-		[Wrap ("this (centralDelegate, queue, options == null ? null : options.Dictionary)")]
+		[Wrap ("this (centralDelegate, queue, options.GetDictionary ())")]
 		IntPtr Constructor ([NullAllowed, Protocolize] CBCentralManagerDelegate centralDelegate, [NullAllowed] DispatchQueue queue, CBCentralInitOptions options);
 
 		[NoTV]
@@ -162,7 +162,7 @@ namespace CoreBluetooth {
 		[Export ("connectPeripheral:options:")]
 		void ConnectPeripheral (CBPeripheral peripheral, [NullAllowed] NSDictionary options);
 
-		[Wrap ("ConnectPeripheral (peripheral, options?.Dictionary)")]
+		[Wrap ("ConnectPeripheral (peripheral, options.GetDictionary ())")]
 		void ConnectPeripheral (CBPeripheral peripheral, [NullAllowed] CBConnectPeripheralOptions options);
 
 		[Export ("cancelPeripheralConnection:")]
@@ -242,7 +242,7 @@ namespace CoreBluetooth {
 		void RegisterForConnectionEvents ([NullAllowed] NSDictionary options);
 
 		[iOS (13,0), TV (13,0), Watch (6,0), NoMac]
-		[Wrap ("RegisterForConnectionEvents (options?.Dictionary)")]
+		[Wrap ("RegisterForConnectionEvents (options.GetDictionary ())")]
 		void RegisterForConnectionEvents ([NullAllowed] CBConnectionEventMatchingOptions options);
 	}
 
@@ -411,9 +411,11 @@ namespace CoreBluetooth {
 		[Export ("properties")]
 		CBCharacteristicProperties Properties { get; [NotImplemented ("Not available on CBCharacteristic, only available on CBMutableCharacteristic")] set; }
 
+		[NullAllowed]
 		[Export ("value", ArgumentSemantic.Retain)]
 		NSData Value { get; [NotImplemented ("Not available on CBCharacteristic, only available on CBMutableCharacteristic")] set;  }
 
+		[NullAllowed]
 		[Export ("descriptors", ArgumentSemantic.Retain)]
 		CBDescriptor [] Descriptors { get; [NotImplemented ("Not available on CBCharacteristic, only available on CBMutableCharacteristic")] set; }
 
@@ -915,7 +917,7 @@ namespace CoreBluetooth {
 		[Export ("startAdvertising:")]
 		void StartAdvertising ([NullAllowed] NSDictionary options);
 
-		[Wrap ("StartAdvertising (options == null ? null : options.Dictionary)")]
+		[Wrap ("StartAdvertising (options.GetDictionary ())")]
 		void StartAdvertising ([NullAllowed] StartAdvertisingOptions options);
 
 		[Export ("stopAdvertising")]

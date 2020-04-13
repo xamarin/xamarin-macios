@@ -154,7 +154,7 @@ namespace Xamarin.Tests
 				if (tests_dir == null)
 					throw new Exception ($"Could not find the directory 'tests'. Please run 'make' in the tests/ directory.");
 				// Run make
-				ExecutionHelper.Execute ("make", new string[] { "-C", tests_dir }, "test.config");
+				ExecutionHelper.Execute ("make", new string [] { "-C", tests_dir, "test.config" });
 				test_config = FindConfigFiles ("test.config");
 			}
 			ParseConfigFiles (test_config);

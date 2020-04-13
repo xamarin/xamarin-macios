@@ -6,17 +6,15 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Moq;
-using NUnit.Framework;
-using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
-using Microsoft.DotNet.XHarness.iOS.Shared.Execution.Mlaunch;
-using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
-using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution.Mlaunch;
-using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
+using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
+using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
+using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
+using Moq;
+using NUnit.Framework;
 
 namespace Xharness.Tests {
 	[TestFixture]
@@ -32,39 +30,37 @@ namespace Xharness.Tests {
 		static readonly string projectFilePath = Path.Combine (sampleProjectPath, "SystemXunit.csproj");
 
 		static readonly IHardwareDevice [] mockDevices = new IHardwareDevice [] {
-			new Device() {
-				BuildVersion = "17A577",
-				DeviceClass = DeviceClass.iPhone,
-				DeviceIdentifier = "8A450AA31EA94191AD6B02455F377CC1",
-				InterfaceType = "Usb",
-				IsUsableForDebugging = true,
-				Name = "Test iPhone",
-				ProductType = "iPhone12,1",
-				ProductVersion = "13.0",
-				UDID = "58F21118E4D34FD69EAB7860BB9B38A0",
-			},
-			new Device() {
-				BuildVersion = "13G36",
-				DeviceClass = DeviceClass.iPad,
-				DeviceIdentifier = "E854B2C3E7C8451BAF8053EC4DAAEE49",
-				InterfaceType = "Usb",
-				IsUsableForDebugging = true,
-				Name = "Test iPad",
-				ProductType = "iPad2,1",
-				ProductVersion = "9.3.5",
-				UDID = "51F3354D448D4814825D07DC5658C19B",
-			}
+			new Device(
+				buildVersion: "17A577",
+				deviceClass: DeviceClass.iPhone,
+				deviceIdentifier: "8A450AA31EA94191AD6B02455F377CC1",
+				interfaceType: "Usb",
+				isUsableForDebugging: true,
+				name: "Test iPhone",
+				productType: "iPhone12,1",
+				productVersion: "13.0"
+			),
+			new Device(
+				buildVersion: "13G36",
+				deviceClass: DeviceClass.iPad,
+				deviceIdentifier: "E854B2C3E7C8451BAF8053EC4DAAEE49",
+				interfaceType: "Usb",
+				isUsableForDebugging: true,
+				name: "Test iPad",
+				productType: "iPad2,1",
+				productVersion: "9.3.5"
+			)
 		};
 
 		Mock<IProcessManager> processManager;
-		Mock<ISimulatorsLoader> simulators;
-		Mock<IDeviceLoader> devices;
+		Mock<ISimulatorLoader> simulators;
+		Mock<IHardwareDeviceLoader> devices;
 		Mock<ISimpleListener> simpleListener;
 		Mock<ICrashSnapshotReporter> snapshotReporter;
 		Mock<ILogs> logs;
 		Mock<ILog> mainLog;
 
-		ISimulatorsLoaderFactory simulatorsFactory;
+		ISimulatorLoaderFactory simulatorsFactory;
 		IDeviceLoaderFactory devicesFactory;
 		ISimpleListenerFactory listenerFactory;
 		ICrashSnapshotReporterFactory snapshotReporterFactory;
@@ -77,12 +73,12 @@ namespace Xharness.Tests {
 			logs.SetupGet (x => x.Directory).Returns (Path.Combine (outputPath, "logs"));
 
 			processManager = new Mock<IProcessManager> ();
-			simulators = new Mock<ISimulatorsLoader> ();
-			devices = new Mock<IDeviceLoader> ();
+			simulators = new Mock<ISimulatorLoader> ();
+			devices = new Mock<IHardwareDeviceLoader> ();
 			simpleListener = new Mock<ISimpleListener> ();
 			snapshotReporter = new Mock<ICrashSnapshotReporter> ();
 
-			var mock1 = new Mock<ISimulatorsLoaderFactory> ();
+			var mock1 = new Mock<ISimulatorLoaderFactory> ();
 			mock1.Setup (m => m.CreateLoader ()).Returns (simulators.Object);
 			simulatorsFactory = mock1.Object;
 
@@ -254,7 +250,7 @@ namespace Xharness.Tests {
 			var expectedArgs = $"-v -v -v --installdev {StringUtils.FormatArguments (appPath)} --devname \"Test iPad\"";
 
 			processManager.Verify (x => x.ExecuteCommandAsync (
-				It.Is<MlaunchArguments> (args => args.AsCommandLine() == expectedArgs),
+				It.Is<MlaunchArguments> (args => args.AsCommandLine () == expectedArgs),
 				mainLog.Object,
 				TimeSpan.FromHours (1),
 				null,
@@ -296,7 +292,7 @@ namespace Xharness.Tests {
 			var expectedArgs = $"-v -v --uninstalldevbundleid {StringUtils.FormatArguments (appName)} --devname \"Test iPad\"";
 
 			processManager.Verify (x => x.ExecuteCommandAsync (
-				It.Is<MlaunchArguments> (args => args.AsCommandLine() == expectedArgs),
+				It.Is<MlaunchArguments> (args => args.AsCommandLine () == expectedArgs),
 				mainLog.Object,
 				TimeSpan.FromMinutes (1),
 				null,
@@ -316,13 +312,13 @@ namespace Xharness.Tests {
 
 			// Mock finding simulators
 			simulators
-				.Setup (x => x.LoadAsync (It.IsAny<ILog> (), false, false))
+				.Setup (x => x.LoadDevices (It.IsAny<ILog> (), false, false, false))
 				.Returns (Task.CompletedTask);
 
 			string simulatorLogPath = Path.Combine (Path.GetTempPath (), "simulator-logs");
 
 			simulators
-				.Setup (x => x.FindAsync (TestTarget.Simulator_tvOS, mainLog.Object, true, false))
+				.Setup (x => x.FindSimulators (TestTarget.Simulator_tvOS, mainLog.Object, true, false))
 				.ReturnsAsync ((ISimulatorDevice []) null);
 
 			var listenerLogFile = new Mock<ILog> ();
@@ -398,7 +394,7 @@ namespace Xharness.Tests {
 
 			// Mock finding simulators
 			simulators
-				.Setup (x => x.LoadAsync (It.IsAny<ILog> (), false, false))
+				.Setup (x => x.LoadDevices (It.IsAny<ILog> (), false, false, false))
 				.Returns (Task.CompletedTask);
 
 			string simulatorLogPath = Path.Combine (Path.GetTempPath (), "simulator-logs");
@@ -410,7 +406,7 @@ namespace Xharness.Tests {
 			simulator.SetupGet (x => x.SystemLog).Returns (Path.Combine (simulatorLogPath, "system.log"));
 
 			simulators
-				.Setup (x => x.FindAsync (TestTarget.Simulator_iOS64, mainLog.Object, true, false))
+				.Setup (x => x.FindSimulators (TestTarget.Simulator_iOS64, mainLog.Object, true, false))
 				.ReturnsAsync (new ISimulatorDevice [] { simulator.Object });
 
 			var testResultFilePath = Path.GetTempFileName ();
@@ -447,7 +443,7 @@ namespace Xharness.Tests {
 
 			processManager
 				.Setup (x => x.ExecuteCommandAsync (
-					It.Is<MlaunchArguments> (args => args.AsCommandLine() == expectedArgs),
+					It.Is<MlaunchArguments> (args => args.AsCommandLine () == expectedArgs),
 					mainLog.Object,
 					TimeSpan.FromMinutes (harness.Timeout * 2),
 					null,
@@ -498,8 +494,8 @@ namespace Xharness.Tests {
 			captureLog.Verify (x => x.StopCapture (), Times.AtLeastOnce);
 
 			// When ensureCleanSimulatorState == true
-			simulator.Verify (x => x.PrepareSimulatorAsync (mainLog.Object, appName));
-			simulator.Verify (x => x.KillEverythingAsync (mainLog.Object));
+			simulator.Verify (x => x.PrepareSimulator (mainLog.Object, appName));
+			simulator.Verify (x => x.KillEverything (mainLog.Object));
 		}
 
 		[Test]

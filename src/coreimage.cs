@@ -298,15 +298,18 @@ namespace CoreImage {
 
 		[Export ("createCGImage:fromRect:")]
 		[return: Release ()]
+		[return: NullAllowed]
 		CGImage CreateCGImage (CIImage image, CGRect fromRectangle);
 
 		[Export ("createCGImage:fromRect:format:colorSpace:")]
 		[return: Release ()]
+		[return: NullAllowed]
 		CGImage CreateCGImage (CIImage image, CGRect fromRect, int /* CIFormat = int */ ciImageFormat, [NullAllowed] CGColorSpace colorSpace);
 
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
 		[Export ("createCGImage:fromRect:format:colorSpace:deferred:")]
+		[return: Release]
 		[return: NullAllowed]
 		CGImage CreateCGImage (CIImage image, CGRect fromRect, CIFormat format, [NullAllowed] CGColorSpace colorSpace, bool deferred);
 
@@ -413,7 +416,7 @@ namespace CoreImage {
 		NSData GetTiffRepresentation (CIImage image, CIFormat format, CGColorSpace colorSpace, NSDictionary options);
 
 		[iOS (10,0)][Mac (10,12)]
-		[Wrap ("GetTiffRepresentation (This, image, format, colorSpace, options?.Dictionary)")]
+		[Wrap ("GetTiffRepresentation (This, image, format, colorSpace, options.GetDictionary ()!)")]
 		[return: NullAllowed]
 		NSData GetTiffRepresentation (CIImage image, CIFormat format, CGColorSpace colorSpace, CIImageRepresentationOptions options);
 
@@ -423,7 +426,7 @@ namespace CoreImage {
 		NSData GetJpegRepresentation (CIImage image, CGColorSpace colorSpace, NSDictionary options);
 
 		[iOS (10,0)][Mac (10,12)]
-		[Wrap ("GetJpegRepresentation (This, image, colorSpace, options?.Dictionary)")]
+		[Wrap ("GetJpegRepresentation (This, image, colorSpace, options.GetDictionary ()!)")]
 		[return: NullAllowed]
 		NSData GetJpegRepresentation (CIImage image, CGColorSpace colorSpace, CIImageRepresentationOptions options);
 
@@ -433,7 +436,7 @@ namespace CoreImage {
 		NSData GetHeifRepresentation (CIImage image, CIFormat format, CGColorSpace colorSpace, NSDictionary options);
 
 		[iOS (11,0)][TV (11,0)][Mac (10,13)]
-		[Wrap ("GetHeifRepresentation (This, image, format, colorSpace, options?.Dictionary)")]
+		[Wrap ("GetHeifRepresentation (This, image, format, colorSpace, options.GetDictionary ()!)")]
 		[return: NullAllowed]
 		NSData GetHeifRepresentation (CIImage image, CIFormat format, CGColorSpace colorSpace, CIImageRepresentationOptions options);
 
@@ -443,7 +446,7 @@ namespace CoreImage {
 		NSData GetPngRepresentation (CIImage image, CIFormat format, CGColorSpace colorSpace, NSDictionary options);
 
 		[iOS (11,0)][TV (11,0)][Mac (10,13)]
-		[Wrap ("GetPngRepresentation (This, image, format, colorSpace, options?.Dictionary)")]
+		[Wrap ("GetPngRepresentation (This, image, format, colorSpace, options.GetDictionary ()!)")]
 		[return: NullAllowed]
 		NSData GetPngRepresentation (CIImage image, CIFormat format, CGColorSpace colorSpace, CIImageRepresentationOptions options);
 
@@ -452,7 +455,7 @@ namespace CoreImage {
 		bool WriteTiffRepresentation (CIImage image, NSUrl url, CIFormat format, CGColorSpace colorSpace, NSDictionary options, out NSError error);
 
 		[iOS (10,0)][Mac (10,12)]
-		[Wrap ("WriteTiffRepresentation (This, image, url, format, colorSpace, options?.Dictionary, out error)")]
+		[Wrap ("WriteTiffRepresentation (This, image, url, format, colorSpace, options.GetDictionary ()!, out error)")]
 		bool WriteTiffRepresentation (CIImage image, NSUrl url, CIFormat format, CGColorSpace colorSpace, CIImageRepresentationOptions options, out NSError error);
 
 		[iOS (10,0)][Mac (10,12)]
@@ -460,7 +463,7 @@ namespace CoreImage {
 		bool WriteJpegRepresentation (CIImage image, NSUrl url, CGColorSpace colorSpace, NSDictionary options, [NullAllowed] out NSError error);
 
 		[iOS (10,0)][Mac (10,12)]
-		[Wrap ("WriteJpegRepresentation (This, image, url, colorSpace, options?.Dictionary, out error)")]
+		[Wrap ("WriteJpegRepresentation (This, image, url, colorSpace, options.GetDictionary ()!, out error)")]
 		bool WriteJpegRepresentation (CIImage image, NSUrl url, CGColorSpace colorSpace, CIImageRepresentationOptions options, [NullAllowed] out NSError error);
 
 		[iOS (11,0)][TV (11,0)][Mac (10,13,4)]
@@ -468,7 +471,7 @@ namespace CoreImage {
 		bool WriteHeifRepresentation (CIImage image, NSUrl url, CIFormat format, CGColorSpace colorSpace, NSDictionary options, [NullAllowed] out NSError error);
 
 		[iOS (11,0)][TV (11,0)][Mac (10,13)]
-		[Wrap ("WriteHeifRepresentation (This, image, url, format, colorSpace, options?.Dictionary, out error)")]
+		[Wrap ("WriteHeifRepresentation (This, image, url, format, colorSpace, options.GetDictionary ()!, out error)")]
 		bool WriteHeifRepresentation (CIImage image, NSUrl url, CIFormat format, CGColorSpace colorSpace, CIImageRepresentationOptions options, [NullAllowed] out NSError error);
 
 		[iOS (11,0)][TV (11,0)][Mac (10,13)]
@@ -476,7 +479,7 @@ namespace CoreImage {
 		bool WritePngRepresentation (CIImage image, NSUrl url, CIFormat format, CGColorSpace colorSpace, NSDictionary options, [NullAllowed] out NSError error);
 
 		[iOS (11,0)][TV (11,0)][Mac (10,13)]
-		[Wrap ("WritePngRepresentation (This, image, url, format, colorSpace, options?.Dictionary, out error)")]
+		[Wrap ("WritePngRepresentation (This, image, url, format, colorSpace, options.GetDictionary ()!, out error)")]
 		bool WritePngRepresentation (CIImage image, NSUrl url, CIFormat format, CGColorSpace colorSpace, CIImageRepresentationOptions options, [NullAllowed] out NSError error);
 	}
 
@@ -620,7 +623,7 @@ namespace CoreImage {
 		[iOS (10,0)]
 		[TV (10,0)]
 		[Static]
-		[Wrap ("CreateRawFilter (url, options?.Dictionary)")]
+		[Wrap ("CreateRawFilter (url, options.GetDictionary ()!)")]
 		CIFilter CreateRawFilter (NSUrl url, CIRawFilterOptions options);
 
 		[iOS (10,0)]
@@ -632,7 +635,7 @@ namespace CoreImage {
 		[iOS (10,0)]
 		[TV (10,0)]
 		[Static]
-		[Wrap ("CreateRawFilter (data, options?.Dictionary)")]
+		[Wrap ("CreateRawFilter (data, options.GetDictionary ()!)")]
 		CIFilter CreateRawFilter (NSData data, CIRawFilterOptions options);
 
 		[iOS (10,0)][Mac (10,12)]
@@ -644,7 +647,7 @@ namespace CoreImage {
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
 		[Static]
-		[Wrap ("CreateRawFilter (pixelBuffer, properties, options?.Dictionary)")]
+		[Wrap ("CreateRawFilter (pixelBuffer, properties, options.GetDictionary ()!)")]
 		CIFilter CreateRawFilter (CVPixelBuffer pixelBuffer, NSDictionary properties, CIRawFilterOptions options);
 	}
 
@@ -1385,7 +1388,7 @@ namespace CoreImage {
 		CIImage FromCGImage (CGImage image, [NullAllowed] NSDictionary d);
 
 		[Static]
-		[Wrap ("FromCGImage (image, options?.Dictionary)")]
+		[Wrap ("FromCGImage (image, options.GetDictionary ())")]
 		CIImage FromCGImage (CGImage image, [NullAllowed] CIImageInitializationOptionsWithMetadata options);
 
 		[iOS (13,0)][TV (13,0)][Mac (10,15)]
@@ -1396,7 +1399,7 @@ namespace CoreImage {
 
 		[iOS (13,0)][TV (13,0)][Mac (10,15)]
 		[Static]
-		[Wrap ("FromCGImageSource (source, index, options?.Dictionary)")]
+		[Wrap ("FromCGImageSource (source, index, options.GetDictionary ())")]
 		CIImage FromCGImageSource (CGImageSource source, nuint index, [NullAllowed] CIImageInitializationOptionsWithMetadata options);
 
 #if MONOMAC
@@ -1436,7 +1439,7 @@ namespace CoreImage {
 		CIImage FromUrl (NSUrl url, [NullAllowed] NSDictionary d);
 
 		[Static]
-		[Wrap ("FromUrl (url, options?.Dictionary)")]
+		[Wrap ("FromUrl (url, options.GetDictionary ())")]
 		CIImage FromUrl (NSUrl url, [NullAllowed] CIImageInitializationOptions options);
 
 		[Static]
@@ -1449,7 +1452,7 @@ namespace CoreImage {
 		CIImage FromData (NSData data, [NullAllowed] NSDictionary d);
 
 		[Static]
-		[Wrap ("FromData (data, options?.Dictionary)")]
+		[Wrap ("FromData (data, options.GetDictionary ())")]
 		CIImage FromData (NSData data, [NullAllowed] CIImageInitializationOptionsWithMetadata options);
 
 		[Static]
@@ -1479,7 +1482,7 @@ namespace CoreImage {
 #endif
 
 		[Static][iOS(9,0)]
-		[Wrap ("FromImageBuffer (imageBuffer, options?.Dictionary)")]
+		[Wrap ("FromImageBuffer (imageBuffer, options.GetDictionary ())")]
 		CIImage FromImageBuffer (CVImageBuffer imageBuffer, CIImageInitializationOptions options);
 		
 #if !MONOMAC
@@ -1493,7 +1496,7 @@ namespace CoreImage {
 		CIImage FromImageBuffer (CVPixelBuffer buffer, [NullAllowed] NSDictionary dict);
 
 		[Static]
-		[Wrap ("FromImageBuffer (buffer, options?.Dictionary)")]
+		[Wrap ("FromImageBuffer (buffer, options.GetDictionary ())")]
 		CIImage FromImageBuffer (CVPixelBuffer buffer, [NullAllowed] CIImageInitializationOptions options);
 #endif
 		[iOS (11,0)]
@@ -1515,7 +1518,7 @@ namespace CoreImage {
 		[TV (11,0)]
 		[Mac (10,13)]
 		[Static]
-		[Wrap ("FromSurface (surface, options?.Dictionary)")]
+		[Wrap ("FromSurface (surface, options.GetDictionary ()!)")]
 		CIImage FromSurface (IOSurface.IOSurface surface, CIImageInitializationOptions options);
 
 		[Static]
@@ -1533,7 +1536,7 @@ namespace CoreImage {
 		[Export ("initWithCGImage:options:")]
 		IntPtr Constructor (CGImage image, [NullAllowed] NSDictionary d);
 
-		[Wrap ("this (image, options?.Dictionary)")]
+		[Wrap ("this (image, options.GetDictionary ())")]
 		IntPtr Constructor (CGImage image, [NullAllowed] CIImageInitializationOptionsWithMetadata options);
 
 		[iOS (13,0)][TV (13,0)][Mac (10,15)]
@@ -1542,7 +1545,7 @@ namespace CoreImage {
 		IntPtr Constructor (CGImageSource source, nuint index, [NullAllowed] NSDictionary options);
 
 		[iOS (13,0)][TV (13,0)][Mac (10,15)]
-		[Wrap ("this (source, index, options?.Dictionary)")]
+		[Wrap ("this (source, index, options.GetDictionary ())")]
 		IntPtr Constructor (CGImageSource source, nuint index, CIImageInitializationOptionsWithMetadata options);
 
 #if MONOMAC
@@ -1555,7 +1558,7 @@ namespace CoreImage {
 		[Export ("initWithCGLayer:options:")]
 		IntPtr Constructor (CGLayer layer, [NullAllowed] NSDictionary d);
 
-		[Wrap ("this (layer, options?.Dictionary)")]
+		[Wrap ("this (layer, options.GetDictionary ())")]
 		IntPtr Constructor (CGLayer layer, [NullAllowed] CIImageInitializationOptions options);
 #endif
 
@@ -1565,7 +1568,7 @@ namespace CoreImage {
 		[Export ("initWithData:options:")]
 		IntPtr Constructor (NSData data, [NullAllowed] NSDictionary d);
 
-		[Wrap ("this (data, options?.Dictionary)")]
+		[Wrap ("this (data, options.GetDictionary ())")]
 		IntPtr Constructor (NSData data, [NullAllowed] CIImageInitializationOptionsWithMetadata options);
 
 		[Export ("initWithBitmapData:bytesPerRow:size:format:colorSpace:")]
@@ -1582,7 +1585,7 @@ namespace CoreImage {
 		[Export ("initWithContentsOfURL:options:")]
 		IntPtr Constructor (NSUrl url, [NullAllowed] NSDictionary d);
 
-		[Wrap ("this (url, options?.Dictionary)")]
+		[Wrap ("this (url, options.GetDictionary ())")]
 		IntPtr Constructor (NSUrl url, [NullAllowed] CIImageInitializationOptions options);
 
 		[iOS (11,0)] // IOSurface was not exposed before Xcode 9
@@ -1600,7 +1603,7 @@ namespace CoreImage {
 		[iOS (11,0)] // IOSurface was not exposed before Xcode 9
 		[TV (11,0)]
 		[Mac (10,13)]
-		[Wrap ("this (surface, options?.Dictionary)")]
+		[Wrap ("this (surface, options.GetDictionary ())")]
 		IntPtr Constructor (IOSurface.IOSurface surface, [NullAllowed] CIImageInitializationOptions options);
 
 		[iOS(9,0)]
@@ -1625,7 +1628,7 @@ namespace CoreImage {
 #endif
 
 		[iOS(9,0)]
-		[Wrap ("this (imageBuffer, options?.Dictionary)")]
+		[Wrap ("this (imageBuffer, options.GetDictionary ())")]
 		IntPtr Constructor (CVImageBuffer imageBuffer, [NullAllowed] CIImageInitializationOptions options);
 
 		[Mac (10,11)]
@@ -1637,7 +1640,7 @@ namespace CoreImage {
 		IntPtr Constructor (CVPixelBuffer buffer, [NullAllowed] NSDictionary dict);
 
 		[Mac (10,11)]
-		[Wrap ("this (buffer, options?.Dictionary)")]
+		[Wrap ("this (buffer, options.GetDictionary ())")]
 		IntPtr Constructor (CVPixelBuffer buffer, [NullAllowed] CIImageInitializationOptions options);
 
 		[Export ("initWithColor:")]
@@ -1795,7 +1798,7 @@ namespace CoreImage {
 		[Export ("initWithImage:options:")]
 		IntPtr Constructor (UIImage image, [NullAllowed] NSDictionary options);
 
-		[Wrap ("this (image, options?.Dictionary)")]
+		[Wrap ("this (image, options.GetDictionary ())")]
 		IntPtr Constructor (UIImage image, [NullAllowed] CIImageInitializationOptions options);
 #endif
 	

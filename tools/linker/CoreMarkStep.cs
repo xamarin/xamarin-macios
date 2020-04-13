@@ -325,8 +325,11 @@ namespace Xamarin.Linker.Steps {
 				// If we're using the dynamic registrar, we need to mark interfaces that represent protocols
 				// even if it doesn't look like the interfaces are used, since we need them at runtime.
 				var isProtocol = type.IsNSObject (LinkContext) && resolvedInterfaceType.HasCustomAttribute (LinkContext, Namespaces.Foundation, "ProtocolAttribute");
-				if (isProtocol)
-					return true;
+				if (isProtocol) {
+					// return true only if not already marked (same check as `base` would do)
+					// otherwise we can enqueue something everytime and never get an empty queue
+					return !Annotations.IsMarked (iface);
+				}
 			}
 
 			return base.ShouldMarkInterfaceImplementation (type, iface, resolvedInterfaceType);

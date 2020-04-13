@@ -58,12 +58,14 @@ namespace StoreKit {
 		[Export ("contentIdentifier")]
 		string ContentIdentifier { get;  }
 
+		[NullAllowed]
 		[Export ("contentURL", ArgumentSemantic.Copy)]
 		NSUrl ContentUrl { get;  }
 
 		[Export ("contentVersion", ArgumentSemantic.Copy)]
 		string ContentVersion { get;  }
 
+		[NullAllowed]
 		[Export ("error", ArgumentSemantic.Copy)]
 		NSError Error { get;  }
 
@@ -74,6 +76,7 @@ namespace StoreKit {
 		double TimeRemaining { get;  }
 
 #if MONOMAC
+		[return: NullAllowed]
 		[Export ("contentURLForProductID:")]
 		[Static]
 		NSUrl GetContentUrlForProduct (string productId);
@@ -94,6 +97,9 @@ namespace StoreKit {
 
 	[Watch (6, 2)]
 	[BaseType (typeof (NSObject))]
+#if XAMCORE_4_0
+	[DisableDefaultCtor]
+#endif
 	partial interface SKPayment : NSMutableCopying {
 		[Static]
 		[Export("paymentWithProduct:")]
@@ -110,12 +116,14 @@ namespace StoreKit {
 		string ProductIdentifier { get; }
 
 		[Export ("requestData", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		NSData RequestData { get; [NotImplemented ("Not available on SKPayment, only available on SKMutablePayment")] set;  }
 
 		[Export ("quantity")]
 		nint Quantity { get; }
 
 		[iOS (7,0), Mac (10, 9)]
+		[NullAllowed]
 		[Export ("applicationUsername", ArgumentSemantic.Copy)]
 		string ApplicationUsername { get; }
 
@@ -132,6 +140,9 @@ namespace StoreKit {
 
 	[Watch (6, 2)]
 	[BaseType (typeof (SKPayment))]
+#if XAMCORE_4_0
+	[DisableDefaultCtor]
+#endif
 	interface SKMutablePayment {
 		[Static]
 		[Export("paymentWithProduct:")]
@@ -143,14 +154,13 @@ namespace StoreKit {
 		[Availability (Deprecated = Platform.iOS_5_0, Message = "Use 'PaymentWithProduct (SKProduct)' after fetching the list of available products from 'SKProductRequest' instead.")]
 		SKMutablePayment PaymentWithProduct (string identifier);
 
-		[NullAllowed] // by default this property is null
 		[Export ("productIdentifier", ArgumentSemantic.Copy)][New]
 		string ProductIdentifier { get; set; }
 
 		[Export ("quantity")][New]
 		nint Quantity { get; set; }
 
-		[NullAllowed] // by default this property is null
+		[NullAllowed]
 		[Export ("requestData", ArgumentSemantic.Copy)]
 		[Override]
 		NSData RequestData { get; set; }
@@ -354,24 +364,29 @@ namespace StoreKit {
 	[Watch (6, 2)]
 	[BaseType (typeof (NSObject))]
 	interface SKPaymentTransaction {
+		[NullAllowed]
 		[Export ("error")]
 		NSError Error { get; }
 
+		[NullAllowed]
 		[Export ("originalTransaction")]
 		SKPaymentTransaction OriginalTransaction { get; }
 
 		[Export ("payment")]
 		SKPayment Payment { get; } 
 
+		[NullAllowed]
 		[Export ("transactionDate")]
 		NSDate TransactionDate { get; }
 
+		[NullAllowed]
 		[Export ("transactionIdentifier")]
 		string TransactionIdentifier { get; }
 
 #if !MONOMAC
 		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'NSBundle.AppStoreReceiptUrl' instead.")]
+		[NullAllowed]
 		[Export ("transactionReceipt")]
 		NSData TransactionReceipt { get; }
 #endif
@@ -420,12 +435,14 @@ namespace StoreKit {
 		[Export ("initWithReceiptProperties:")]
 		IntPtr Constructor ([NullAllowed] NSDictionary properties);
 
-		[Wrap ("this (receiptProperties == null ? null : receiptProperties.Dictionary)")]
+		[Wrap ("this (receiptProperties.GetDictionary ())")]
 		IntPtr Constructor ([NullAllowed] SKReceiptProperties receiptProperties);
 
+		[NullAllowed]
 		[Export ("receiptProperties")]
 		NSDictionary WeakReceiptProperties { get; }
 
+		[NullAllowed]
 		[Wrap ("WeakReceiptProperties")]
 		SKReceiptProperties ReceiptProperties { get; }
 	}
@@ -503,7 +520,7 @@ namespace StoreKit {
 		[Async]
 		void LoadProduct (NSDictionary parameters, [NullAllowed] Action<bool,NSError> callback);
 
-		[Wrap ("LoadProduct (parameters == null ? null : parameters.Dictionary, callback)")]
+		[Wrap ("LoadProduct (parameters.GetDictionary ()!, callback)")]
 		[Async]
 		void LoadProduct (StoreProductParameters parameters, [NullAllowed] Action<bool,NSError> callback);
 	}
@@ -664,7 +681,7 @@ namespace StoreKit {
 		void Load (NSDictionary options, [NullAllowed] Action<bool, NSError> completionHandler);
 
 		[Async]
-		[Wrap ("Load (options == null ? null : options.Dictionary, completionHandler)")]
+		[Wrap ("Load (options.GetDictionary ()!, completionHandler)")]
 		void Load (SKCloudServiceSetupOptions options, Action<bool, NSError> completionHandler);
 	}
 

@@ -1,0 +1,3 @@
+
+# Initial result from new rule missing-null-allowed
+!missing-null-allowed! 'CoreLocation.CLHeading CoreLocation.CLLocationManager::get_Heading()' is missing an [NullAllowed] on return type

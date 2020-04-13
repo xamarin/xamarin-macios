@@ -1262,9 +1262,11 @@ namespace GameKit {
 		[Export ("initWithNibName:bundle:")]
 		IntPtr Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
 		
+		[NullAllowed]
 		[Export ("matchmakerDelegate", ArgumentSemantic.Assign)]
 		NSObject WeakMatchmakerDelegate { get; set; }
 		
+		[NullAllowed]
 		[Wrap ("WeakMatchmakerDelegate")]
 		[Protocolize]
 		GKMatchmakerViewControllerDelegate MatchmakerDelegate { get; set;  }
@@ -1391,7 +1393,7 @@ namespace GameKit {
 		void ResetAchivements ([NullAllowed] GKNotificationHandler completionHandler);
 #endif
 
-		[Wrap ("this ((string) null)")]
+		[Wrap ("this ((string) null!)")]
 		IntPtr Constructor ();
 
 		[Export ("initWithIdentifier:")]

@@ -5,4 +5,10 @@
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
+  <ItemGroup>
+    <!-- Do not compile code that is packaged inside the app bundle -->
+    <Compile Remove="TestImporter\Templates\Managed\Resources\**\*.cs" />
+    <EmbeddedResource Include="TestImporter\Templates\Managed\Resources\**\*" />
+  </ItemGroup>
+
 </Project>

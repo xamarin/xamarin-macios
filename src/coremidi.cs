@@ -46,9 +46,11 @@ namespace CoreMidi {
 		[Export ("port")]
 		nint Port { get;  }
 
+		[NullAllowed]
 		[Export ("netServiceName", ArgumentSemantic.Retain)]
 		string NetServiceName { get;  }
 
+		[NullAllowed]
 		[Export ("netServiceDomain", ArgumentSemantic.Retain)]
 		string NetServiceDomain { get;  }
 

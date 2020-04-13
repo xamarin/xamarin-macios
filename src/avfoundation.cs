@@ -1137,13 +1137,13 @@ namespace AVFoundation {
 		[Export ("initForWriting:settings:error:"), Internal]
 		IntPtr Constructor (NSUrl fileUrl, NSDictionary settings, out NSError outError);
 
-		[Wrap ("this (fileUrl, settings == null ? null : settings.Dictionary, out outError)")]
+		[Wrap ("this (fileUrl, settings.GetDictionary ()!, out outError)")]
 		IntPtr Constructor (NSUrl fileUrl, AudioSettings settings, out NSError outError);
 
 		[Export ("initForWriting:settings:commonFormat:interleaved:error:"), Internal]
 		IntPtr Constructor (NSUrl fileUrl, NSDictionary settings, AVAudioCommonFormat format, bool interleaved, out NSError outError);
 		
-		[Wrap ("this (fileUrl, settings == null ? null : settings.Dictionary, format, interleaved, out outError)")]
+		[Wrap ("this (fileUrl, settings.GetDictionary ()!, format, interleaved, out outError)")]
 		IntPtr Constructor (NSUrl fileUrl, AudioSettings settings, AVAudioCommonFormat format, bool interleaved, out NSError outError);
 
 		[Export ("url")]
@@ -1196,7 +1196,7 @@ namespace AVFoundation {
 		[Export ("initWithSettings:")]
 		IntPtr Constructor (NSDictionary settings);
 
-		[Wrap ("this (settings.Dictionary)")]
+		[Wrap ("this (settings.GetDictionary ()!)")]
 		IntPtr Constructor (AudioSettings settings);
 
 		[iOS (9,0)][Mac (10,11)][Watch (6,0)]
@@ -2918,7 +2918,7 @@ namespace AVFoundation {
 		[Export ("metadataForFormat:")]
 		AVMetadataItem [] GetMetadataForFormat (NSString format);
 
-		[Wrap ("GetMetadataForFormat (new NSString (format.GetConstant ()))")]
+		[Wrap ("GetMetadataForFormat (format.GetConstant ()!)")]
 		AVMetadataItem [] GetMetadataForFormat (AVMetadataFormat format);
 
 		[Export ("hasProtectedContent")]
@@ -2964,7 +2964,8 @@ namespace AVFoundation {
 		[Export ("mediaSelectionGroupForMediaCharacteristic:")]
 		AVMediaSelectionGroup MediaSelectionGroupForMediaCharacteristic (string avMediaCharacteristic);
 
-		[Wrap ("MediaSelectionGroupForMediaCharacteristic (avMediaCharacteristic.GetConstant ())")]
+		[Wrap ("MediaSelectionGroupForMediaCharacteristic (avMediaCharacteristic.GetConstant ()!)")]
+		[return: NullAllowed]
 		AVMediaSelectionGroup GetMediaSelectionGroupForMediaCharacteristic (AVMediaCharacteristics avMediaCharacteristic);
 
 		[Export ("statusOfValueForKey:error:")]
@@ -3172,6 +3173,7 @@ namespace AVFoundation {
 #if !XAMCORE_4_0
 		[Obsolete ("Use 'GetSynchronizedData' instead.")]
 		[Wrap ("GetSynchronizedData (captureOutput)", isVirtual: true)]
+		[return: NullAllowed]
 		AVCaptureSynchronizedData From (AVCaptureOutput captureOutput);
 
 		// This is not reexposed because it is not needed you can use 'GetSynchronizedData' instead, also from docs:
@@ -3477,6 +3479,7 @@ namespace AVFoundation {
 		IntPtr Constructor (AVAsset asset);
 
 		[Export ("copyCGImageAtTime:actualTime:error:")]
+		[return: NullAllowed]
 		[return: Release ()]
 		CGImage CopyCGImageAtTime (CMTime requestedTime, out CMTime actualTime, out NSError outError);
 
@@ -3636,20 +3639,20 @@ namespace AVFoundation {
 		[Static, Export ("assetReaderTrackOutputWithTrack:outputSettings:")]
 		AVAssetReaderTrackOutput FromTrack (AVAssetTrack track, [NullAllowed] NSDictionary outputSettings);
 
-		[Static, Wrap ("FromTrack (track, settings == null ? null : settings.Dictionary)")]
+		[Static, Wrap ("FromTrack (track, settings.GetDictionary ())")]
 		AVAssetReaderTrackOutput Create (AVAssetTrack track, [NullAllowed] AudioSettings settings);
 
-		[Static, Wrap ("FromTrack (track, settings == null ? null : settings.Dictionary)")]
+		[Static, Wrap ("FromTrack (track, settings.GetDictionary ())")]
 		AVAssetReaderTrackOutput Create (AVAssetTrack track, [NullAllowed] AVVideoSettingsUncompressed settings);		
 
 		[DesignatedInitializer]
 		[Export ("initWithTrack:outputSettings:")]
 		IntPtr Constructor (AVAssetTrack track, [NullAllowed] NSDictionary outputSettings);
 
-		[Wrap ("this (track, settings == null ? null : settings.Dictionary)")]		
+		[Wrap ("this (track, settings.GetDictionary ())")]		
 		IntPtr Constructor (AVAssetTrack track, [NullAllowed] AudioSettings settings);
 
-		[Wrap ("this (track, settings == null ? null : settings.Dictionary)")]		
+		[Wrap ("this (track, settings.GetDictionary ())")]		
 		IntPtr Constructor (AVAssetTrack track, [NullAllowed] AVVideoSettingsUncompressed settings);
 
 		[Export ("outputSettings"), NullAllowed]
@@ -3680,14 +3683,14 @@ namespace AVFoundation {
 		[Static, Export ("assetReaderAudioMixOutputWithAudioTracks:audioSettings:")]
 		AVAssetReaderAudioMixOutput FromTracks (AVAssetTrack [] audioTracks, [NullAllowed] NSDictionary audioSettings);
 
-		[Wrap ("FromTracks (audioTracks, settings == null ? null : settings.Dictionary)")]
+		[Wrap ("FromTracks (audioTracks, settings.GetDictionary ())")]
 		AVAssetReaderAudioMixOutput Create (AVAssetTrack [] audioTracks, [NullAllowed] AudioSettings settings);
 
 		[DesignatedInitializer]
 		[Export ("initWithAudioTracks:audioSettings:")]
 		IntPtr Constructor (AVAssetTrack [] audioTracks, [NullAllowed] NSDictionary audioSettings);
 
-		[Wrap ("this (audioTracks, settings == null ? null : settings.Dictionary)")]
+		[Wrap ("this (audioTracks, settings.GetDictionary ())")]
 		IntPtr Constructor (AVAssetTrack [] audioTracks, [NullAllowed] AudioSettings settings);
 
 #if XAMCORE_2_0
@@ -3726,7 +3729,7 @@ namespace AVFoundation {
 		[Export ("assetReaderVideoCompositionOutputWithVideoTracks:videoSettings:")]
 		AVAssetReaderVideoCompositionOutput WeakFromTracks (AVAssetTrack [] videoTracks, [NullAllowed] NSDictionary videoSettings);
 
-		[Wrap ("WeakFromTracks (videoTracks, settings == null ? null : settings.Dictionary)")]
+		[Wrap ("WeakFromTracks (videoTracks, settings.GetDictionary ())")]
 		[Static]
 		AVAssetReaderVideoCompositionOutput Create (AVAssetTrack [] videoTracks, [NullAllowed] CVPixelBufferAttributes settings);
 
@@ -3734,7 +3737,7 @@ namespace AVFoundation {
 		[Export ("initWithVideoTracks:videoSettings:")]
 		IntPtr Constructor (AVAssetTrack [] videoTracks, [NullAllowed] NSDictionary videoSettings);
 
-		[Wrap ("this (videoTracks, settings == null ? null : settings.Dictionary)")]
+		[Wrap ("this (videoTracks, settings.GetDictionary ())")]
 		IntPtr Constructor (AVAssetTrack [] videoTracks, [NullAllowed] CVPixelBufferAttributes settings);		
 
 		[Export ("videoSettings"), NullAllowed]
@@ -3967,10 +3970,10 @@ namespace AVFoundation {
 		[Export ("canApplyOutputSettings:forMediaType:")]
 		bool CanApplyOutputSettings ([NullAllowed] NSDictionary outputSettings, string mediaType);
 
-		[Wrap ("CanApplyOutputSettings (outputSettings == null ? null : outputSettings.Dictionary, mediaType)")]
+		[Wrap ("CanApplyOutputSettings (outputSettings.GetDictionary (), mediaType)")]
 		bool CanApplyOutputSettings (AudioSettings outputSettings, string mediaType);
 
-		[Wrap ("CanApplyOutputSettings (outputSettings == null ? null : outputSettings.Dictionary, mediaType)")]
+		[Wrap ("CanApplyOutputSettings (outputSettings.GetDictionary (), mediaType)")]
 		bool CanApplyOutputSettings (AVVideoSettingsCompressed outputSettings, string mediaType);
 
 		[Export ("canAddInput:")]
@@ -4033,10 +4036,10 @@ namespace AVFoundation {
 		[Export ("initWithMediaType:outputSettings:sourceFormatHint:")]
 		IntPtr Constructor (string mediaType, [NullAllowed] NSDictionary outputSettings, [NullAllowed] CMFormatDescription sourceFormatHint);
 
-		[Wrap ("this (mediaType, outputSettings == null ? null : outputSettings.Dictionary, sourceFormatHint)")]
+		[Wrap ("this (mediaType, outputSettings.GetDictionary (), sourceFormatHint)")]
 		IntPtr Constructor (string mediaType, [NullAllowed] AudioSettings outputSettings, [NullAllowed] CMFormatDescription sourceFormatHint);
 
-		[Wrap ("this (mediaType, outputSettings == null ? null : outputSettings.Dictionary, sourceFormatHint)")]
+		[Wrap ("this (mediaType, outputSettings.GetDictionary (), sourceFormatHint)")]
 		IntPtr Constructor (string mediaType, [NullAllowed] AVVideoSettingsCompressed outputSettings, [NullAllowed] CMFormatDescription sourceFormatHint);
 
 		[Static, Internal]
@@ -4044,11 +4047,11 @@ namespace AVFoundation {
 		AVAssetWriterInput Create (string mediaType, [NullAllowed] NSDictionary outputSettings, [NullAllowed] CMFormatDescription sourceFormatHint);
 
 		[Static]
-		[Wrap ("Create(mediaType, outputSettings == null ? null : outputSettings.Dictionary, sourceFormatHint)")]
+		[Wrap ("Create(mediaType, outputSettings.GetDictionary (), sourceFormatHint)")]
 		AVAssetWriterInput Create (string mediaType, [NullAllowed] AudioSettings outputSettings, [NullAllowed] CMFormatDescription sourceFormatHint);
 
 		[Static]
-		[Wrap ("Create(mediaType, outputSettings == null ? null : outputSettings.Dictionary, sourceFormatHint)")]
+		[Wrap ("Create(mediaType, outputSettings.GetDictionary (), sourceFormatHint)")]
 		AVAssetWriterInput Create (string mediaType, [NullAllowed] AVVideoSettingsCompressed outputSettings, [NullAllowed] CMFormatDescription sourceFormatHint);
 
 		[Export ("mediaType")]
@@ -4076,10 +4079,10 @@ namespace AVFoundation {
 		[Static, Export ("assetWriterInputWithMediaType:outputSettings:")]
 		AVAssetWriterInput FromType (string mediaType, [NullAllowed] NSDictionary outputSettings);
 
-		[Static, Wrap ("FromType (mediaType, outputSettings == null ? null : outputSettings.Dictionary)")]
+		[Static, Wrap ("FromType (mediaType, outputSettings.GetDictionary ())")]
 		AVAssetWriterInput Create (string mediaType, [NullAllowed] AudioSettings outputSettings);
 
-		[Static, Wrap ("FromType (mediaType, outputSettings == null ? null : outputSettings.Dictionary)")]
+		[Static, Wrap ("FromType (mediaType, outputSettings.GetDictionary ())")]
 		AVAssetWriterInput Create (string mediaType, [NullAllowed] AVVideoSettingsCompressed outputSettings);
 
 #if XAMCORE_2_0
@@ -4089,10 +4092,10 @@ namespace AVFoundation {
 		[Export ("initWithMediaType:outputSettings:")]
 		IntPtr Constructor (string mediaType, [NullAllowed] NSDictionary outputSettings);
 
-		[Wrap ("this (mediaType, outputSettings == null ? null : outputSettings.Dictionary)")]		
+		[Wrap ("this (mediaType, outputSettings.GetDictionary ())")]		
 		IntPtr Constructor (string mediaType, [NullAllowed] AudioSettings outputSettings);
 
-		[Wrap ("this (mediaType, outputSettings == null ? null : outputSettings.Dictionary)")]		
+		[Wrap ("this (mediaType, outputSettings.GetDictionary ())")]		
 		IntPtr Constructor (string mediaType, [NullAllowed] AVVideoSettingsCompressed outputSettings);
 
 		[Export ("requestMediaDataWhenReadyOnQueue:usingBlock:")]
@@ -4252,14 +4255,14 @@ namespace AVFoundation {
 		[Static, Export ("assetWriterInputPixelBufferAdaptorWithAssetWriterInput:sourcePixelBufferAttributes:")]
 		AVAssetWriterInputPixelBufferAdaptor FromInput (AVAssetWriterInput input, [NullAllowed] NSDictionary sourcePixelBufferAttributes);
 
-		[Static, Wrap ("FromInput (input, attributes == null ? null : attributes.Dictionary)")]
+		[Static, Wrap ("FromInput (input, attributes.GetDictionary ())")]
 		AVAssetWriterInputPixelBufferAdaptor Create (AVAssetWriterInput input, [NullAllowed] CVPixelBufferAttributes attributes);
 
 		[DesignatedInitializer]
 		[Export ("initWithAssetWriterInput:sourcePixelBufferAttributes:")]
 		IntPtr Constructor (AVAssetWriterInput input, [NullAllowed] NSDictionary sourcePixelBufferAttributes);
 
-		[Wrap ("this (input, attributes == null ? null : attributes.Dictionary)")]
+		[Wrap ("this (input, attributes.GetDictionary ())")]
 		IntPtr Constructor (AVAssetWriterInput input, [NullAllowed] CVPixelBufferAttributes attributes);		
 
 		[Export ("appendPixelBuffer:withPresentationTime:")]
@@ -4299,21 +4302,21 @@ namespace AVFoundation {
 		AVUrlAsset FromUrl (NSUrl url, [NullAllowed] NSDictionary options);
 
 		[Static]
-		[Wrap ("FromUrl (url, options == null ? null : options.Dictionary)")]
+		[Wrap ("FromUrl (url, options.GetDictionary ())")]
 		AVUrlAsset Create (NSUrl url, [NullAllowed] AVUrlAssetOptions options);
 
 		[Static]
-		[Wrap ("FromUrl (url, (NSDictionary) null)")]
+		[Wrap ("FromUrl (url, (NSDictionary) null!)")]
 		AVUrlAsset Create (NSUrl url);
 
 		[DesignatedInitializer]
 		[Export ("initWithURL:options:")]
 		IntPtr Constructor (NSUrl url, [NullAllowed] NSDictionary options);
 
-		[Wrap ("this (url, options == null ? null : options.Dictionary)")]
+		[Wrap ("this (url, options.GetDictionary ())")]
 		IntPtr Constructor (NSUrl url, [NullAllowed] AVUrlAssetOptions options);
 
-		[Wrap ("this (url, (NSDictionary) null)")]
+		[Wrap ("this (url, (NSDictionary) null!)")]
 		IntPtr Constructor (NSUrl url);
 
 		[return: NullAllowed]
@@ -7925,6 +7928,7 @@ namespace AVFoundation {
 		bool GetVolumeRamp (CMTime forTime, ref float /* defined as 'float*' */ startVolume, ref float /* defined as 'float*' */ endVolume, ref CMTimeRange timeRange);
 
 		[Mac (10,9), NoWatch]
+		[NullAllowed]
 		[Export ("audioTapProcessor", ArgumentSemantic.Retain)]
 		MTAudioProcessingTap AudioTapProcessor { get; [NotImplemented] set;}
 
@@ -8186,6 +8190,7 @@ namespace AVFoundation {
 		}
 
 		[NoWatch]
+		[NullAllowed]
 		[Export ("layerInstructions", ArgumentSemantic.Copy)]
 		AVVideoCompositionLayerInstruction [] LayerInstructions { get; [NotImplemented ("Not available on AVVideoCompositionInstruction, only available on AVMutableVideoCompositionInstruction")]set; }
 
@@ -9042,7 +9047,8 @@ namespace AVFoundation {
 		NSDictionary GetWeakRecommendedVideoSettings (string videoCodecType, string outputFileType);
 
 		[iOS (11,0), Mac (10,15)]
-		[Wrap ("new AVPlayerItemVideoOutputSettings (GetWeakRecommendedVideoSettings (videoCodecType, outputFileType))")]
+		[Wrap ("new AVPlayerItemVideoOutputSettings (GetWeakRecommendedVideoSettings (videoCodecType, outputFileType)!)")]
+		[return: NullAllowed]
 		AVPlayerItemVideoOutputSettings GetRecommendedVideoSettings (string videoCodecType, string outputFileType);
 
 		[NoWatch, NoTV, NoMac, iOS (13,0)]
@@ -10049,7 +10055,7 @@ namespace AVFoundation {
 
 		[NoWatch]
 		[Static]
-		[Wrap ("GetDefaultDevice (mediaType.GetConstant ())")]
+		[Wrap ("GetDefaultDevice (mediaType.GetConstant ()!)")]
 		AVCaptureDevice GetDefaultDevice (AVMediaTypes mediaType);
 
 #if !XAMCORE_4_0
@@ -10255,7 +10261,7 @@ namespace AVFoundation {
 		// Either AVMediaTypeVideo or AVMediaTypeAudio.
 		[iOS (7,0), NoWatch]
 		[Static]
-		[Wrap ("RequestAccessForMediaType (mediaType == AVAuthorizationMediaType.Video ? AVMediaTypes.Video.GetConstant () : AVMediaTypes.Audio.GetConstant (), completion)")]
+		[Wrap ("RequestAccessForMediaType (mediaType == AVAuthorizationMediaType.Video ? AVMediaTypes.Video.GetConstant ()! : AVMediaTypes.Audio.GetConstant ()!, completion)")]
 		[Async]
 		void RequestAccessForMediaType (AVAuthorizationMediaType mediaType, AVRequestAccessStatus completion);
 
@@ -10271,7 +10277,7 @@ namespace AVFoundation {
 		[iOS (7,0)]
 		[Mac (10,14)]
 		[Static]
-		[Wrap ("GetAuthorizationStatus (mediaType == AVAuthorizationMediaType.Video ? AVMediaTypes.Video.GetConstant () : AVMediaTypes.Audio.GetConstant ())")]
+		[Wrap ("GetAuthorizationStatus (mediaType == AVAuthorizationMediaType.Video ? AVMediaTypes.Video.GetConstant ()! : AVMediaTypes.Audio.GetConstant ()!)")]
 		AVAuthorizationStatus GetAuthorizationStatus (AVAuthorizationMediaType mediaType);
 
 		[NoWatch]
@@ -10377,7 +10383,7 @@ namespace AVFoundation {
 
 		[iOS (10,0), Mac (10,15), NoWatch]
 		[Static]
-		[Wrap ("AVCaptureDevice._DefaultDeviceWithDeviceType (deviceType.GetConstant (), mediaType, position)")]
+		[Wrap ("AVCaptureDevice._DefaultDeviceWithDeviceType (deviceType.GetConstant ()!, mediaType, position)")]
 		AVCaptureDevice GetDefaultDevice (AVCaptureDeviceType deviceType, string mediaType, AVCaptureDevicePosition position);
 
 		//
@@ -11008,7 +11014,7 @@ namespace AVFoundation {
 
 		[return: NullAllowed]
 		[Static]
-		[Wrap ("FromTextMarkupAttributes (textMarkupAttributes == null ? null : textMarkupAttributes.Dictionary)")]
+		[Wrap ("FromTextMarkupAttributes (textMarkupAttributes.GetDictionary ()!)")]
 		AVTextStyleRule FromTextMarkupAttributes (CMTextMarkupAttributes textMarkupAttributes);
 
 		[return: NullAllowed]
@@ -11018,14 +11024,14 @@ namespace AVFoundation {
 
 		[return: NullAllowed]
 		[Static]
-		[Wrap ("FromTextMarkupAttributes (textMarkupAttributes == null ? null : textMarkupAttributes.Dictionary, textSelector)")]
+		[Wrap ("FromTextMarkupAttributes (textMarkupAttributes.GetDictionary ()!, textSelector)")]
 		AVTextStyleRule FromTextMarkupAttributes (CMTextMarkupAttributes textMarkupAttributes, [NullAllowed] string textSelector);
 
 		[Export ("initWithTextMarkupAttributes:")]
 		[Protected]
 		IntPtr Constructor (NSDictionary textMarkupAttributes);
 
-		[Wrap ("this (attributes == null ? null : attributes.Dictionary)")]
+		[Wrap ("this (attributes.GetDictionary ()!)")]
 		IntPtr Constructor (CMTextMarkupAttributes attributes);
 
 		[DesignatedInitializer]
@@ -11033,7 +11039,7 @@ namespace AVFoundation {
 		[Protected]
 		IntPtr Constructor (NSDictionary textMarkupAttributes, [NullAllowed] string textSelector);
 	
-		[Wrap ("this (attributes == null ? null : attributes.Dictionary, textSelector)")]
+		[Wrap ("this (attributes.GetDictionary ()!, textSelector)")]
 		IntPtr Constructor (CMTextMarkupAttributes attributes, string textSelector);
 	}
 
@@ -11081,7 +11087,7 @@ namespace AVFoundation {
 	[Watch (6,0)]
 	[BaseType (typeof (AVTimedMetadataGroup))]
 	interface AVMutableTimedMetadataGroup {
-		[NullAllowed] // by default this property is null
+
 		[Export ("items", ArgumentSemantic.Copy)]
 		[Override]
 		AVMetadataItem [] Items { get; set;  }
@@ -11734,12 +11740,12 @@ namespace AVFoundation {
 		IntPtr _FromOutputSettings ([NullAllowed] NSDictionary outputSettings);
 
 		[DesignatedInitializer]
-		[Wrap ("this (attributes == null ? null : attributes.Dictionary, AVPlayerItemVideoOutput.InitMode.PixelAttributes)")]
+		[Wrap ("this (attributes.GetDictionary (), AVPlayerItemVideoOutput.InitMode.PixelAttributes)")]
 		IntPtr Constructor (CVPixelBufferAttributes attributes);
 		
 		[DesignatedInitializer]
 		[iOS (10,0), TV (10,0), Mac (10,12)]
-		[Wrap ("this (settings == null ? null : settings.Dictionary, AVPlayerItemVideoOutput.InitMode.OutputSettings)")]
+		[Wrap ("this (settings.GetDictionary (), AVPlayerItemVideoOutput.InitMode.OutputSettings)")]
 		IntPtr Constructor (AVPlayerItemVideoOutputSettings settings);
 
 		[Export ("hasNewPixelBufferForItemTime:")]
@@ -12640,7 +12646,8 @@ namespace AVFoundation {
 		[return: NullAllowed]
 		AVAssetDownloadTask GetAssetDownloadTask (AVUrlAsset urlAsset, NSUrl destinationUrl, [NullAllowed] NSDictionary options);
 
-		[Wrap ("GetAssetDownloadTask (urlAsset, destinationUrl, options != null ? options.Dictionary : null)")]
+		[Wrap ("GetAssetDownloadTask (urlAsset, destinationUrl, options.GetDictionary ())")]
+		[return: NullAllowed]
 		AVAssetDownloadTask GetAssetDownloadTask (AVUrlAsset urlAsset, NSUrl destinationUrl, AVAssetDownloadOptions options);
 
 		[iOS (10,0)]
@@ -12649,7 +12656,8 @@ namespace AVFoundation {
 		AVAssetDownloadTask GetAssetDownloadTask (AVUrlAsset urlAsset, string title, [NullAllowed] NSData artworkData, [NullAllowed] NSDictionary options);
 
 		[iOS (10,0)]
-		[Wrap ("GetAssetDownloadTask (urlAsset, title, artworkData, options != null ? options.Dictionary : null)")]
+		[Wrap ("GetAssetDownloadTask (urlAsset, title, artworkData, options.GetDictionary ())")]
+		[return: NullAllowed]
 		AVAssetDownloadTask GetAssetDownloadTask (AVUrlAsset urlAsset, string title, [NullAllowed] NSData artworkData, AVAssetDownloadOptions options);
 
 		[NoMac, NoTV, NoWatch, iOS (11,0)]
@@ -13186,7 +13194,7 @@ namespace AVFoundation {
 		AVContentKeySession Create (NSString keySystem, [NullAllowed] NSUrl storageUrl);
 
 		[Static]
-		[Wrap ("Create (keySystem.GetConstant (), storageUrl)")]
+		[Wrap ("Create (keySystem.GetConstant ()!, storageUrl)")]
 		AVContentKeySession Create (AVContentKeySystem keySystem, [NullAllowed] NSUrl storageUrl);
 
 		[Export ("setDelegate:queue:")]
@@ -13232,7 +13240,7 @@ namespace AVFoundation {
 
 		[Async]
 		[NoTV, NoMac, iOS (12, 2)]
-		[Wrap ("InvalidatePersistableContentKey (persistableContentKeyData, options?.Dictionary, handler)")]
+		[Wrap ("InvalidatePersistableContentKey (persistableContentKeyData, options.GetDictionary (), handler)")]
 		void InvalidatePersistableContentKey (NSData persistableContentKeyData, [NullAllowed] AVContentKeySessionServerPlaybackContextOptions options, Action<NSData, NSError> handler);
 
 		[Async]
@@ -13242,7 +13250,7 @@ namespace AVFoundation {
 
 		[Async]
 		[NoTV, NoMac, iOS (12, 2)]
-		[Wrap ("InvalidateAllPersistableContentKeys (appIdentifier, options?.Dictionary, handler)")]
+		[Wrap ("InvalidateAllPersistableContentKeys (appIdentifier, options.GetDictionary (), handler)")]
 		void InvalidateAllPersistableContentKeys (NSData appIdentifier, [NullAllowed] AVContentKeySessionServerPlaybackContextOptions options, Action<NSData, NSError> handler);
 
 		#region AVContentKeySession_AVContentKeySessionPendingExpiredSessionReports
@@ -13488,7 +13496,7 @@ namespace AVFoundation {
 		[NullAllowed, Export ("sourceDeviceType")]
 		NSString WeakSourceDeviceType { get; }
 
-		[Wrap ("AVCaptureDeviceTypeExtensions.GetValue (WeakSourceDeviceType)")]
+		[Wrap ("AVCaptureDeviceTypeExtensions.GetValue (WeakSourceDeviceType!)")]
 		AVCaptureDeviceType SourceDeviceType { get; }
 
 		// From @interface AVCapturePhotoBracketedCapture (AVCapturePhoto)

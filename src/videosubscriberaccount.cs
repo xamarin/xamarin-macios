@@ -302,12 +302,14 @@ namespace VideoSubscriberAccount {
 	[Mac (10,14)]
 	[BaseType (typeof (NSObject))]
 	interface VSSubscription {
+		[NullAllowed] // null_resettable
 		[Export ("expirationDate", ArgumentSemantic.Copy)]
 		NSDate ExpirationDate { get; set; }
 
 		[Export ("accessLevel", ArgumentSemantic.Assign)]
 		VSSubscriptionAccessLevel AccessLevel { get; set; }
 
+		[NullAllowed] // null_resettable
 		[Export ("tierIdentifiers", ArgumentSemantic.Copy)]
 		string[] TierIdentifiers { get; set; }
 

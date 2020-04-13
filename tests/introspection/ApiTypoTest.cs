@@ -483,6 +483,7 @@ namespace Introspection
 			"Seekable",
 			"Shadable",
 			"Sharegroup",
+			"Sha", //  Secure Hash Algorithm
 			"Siemen",
 			"simd",
 			"Sinh",

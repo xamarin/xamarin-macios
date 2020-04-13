@@ -71,7 +71,9 @@ include $(TOP)/opentk/Makefile.include
 # It takes a comma separated list, but an empty list means
 # reporting all warnings as errors.
 #
-GENERATOR_WARNASERROR=
+# https://cezarypiatek.github.io/post/non-nullable-references-in-dotnet-core/
+NULLABILITY_WARNINGS=8073,8597,8600,8601,8602,8603,8604,8605,8606,8607,8608,8609,8610,8610,87611,8612,8613,8614,8615,8616,8617,8618,8619,8620,8621,8622,8624,8625,8626,8629,8631,8632,8633,8634,8638,8343,8644,8645,8653,8654,8655,8667,8714
+GENERATOR_WARNASERROR=$(NULLABILITY_WARNINGS)
 IOS_GENERATOR_WARNASERROR=$(GENERATOR_WARNASERROR)
 WATCH_GENERATOR_WARNASERROR=$(GENERATOR_WARNASERROR)
 TVOS_GENERATOR_WARNASERROR=$(GENERATOR_WARNASERROR)
@@ -200,6 +202,7 @@ $(IOS_BUILD_DIR)/native-$(1)%Xamarin.iOS.dll $(IOS_BUILD_DIR)/native-$(1)%Xamari
 		$$(ARGS_$(1)) \
 		-publicsign -keyfile:$(PRODUCT_KEY_PATH) $$(IOS_DEFINES) \
 		-nowarn:219,618,114,414,1635,3021,$$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
+		-warnaserror:$(NULLABILITY_WARNINGS) \
 		$$(IOS_CSC_FLAGS_XI) \
 		$$(IOS_SOURCES) @$(IOS_BUILD_DIR)/native/generated_sources
 
@@ -498,6 +501,7 @@ $(MAC_BUILD_DIR)/$(1)-64/Xamarin.Mac.dll: $(MAC_BUILD_DIR)/$(1)/generated-source
 		$$(ARGS_64) \
 		-publicsign -keyfile:$(SN_KEY) \
 		-nowarn:3021,1635,612,618,0219,0414,$(MAC_WARNINGS_TO_FIX) \
+		-warnaserror:$(NULLABILITY_WARNINGS) \
 		$$(MAC_CSC_FLAGS_XM) \
 		$(MAC_CFNETWORK_SOURCES) $(MAC_HTTP_SOURCES) \
 		$(2) \
@@ -775,6 +779,7 @@ $(WATCHOS_DOTNET_BUILD_DIR)/32/Xamarin.WatchOS%dll $(WATCHOS_DOTNET_BUILD_DIR)/r
 		$(WATCH_DEFINES) \
 		$(ARGS_32) \
 		$(WATCHOS_WARNINGS_TO_FIX) \
+		-warnaserror:$(NULLABILITY_WARNINGS) \
 		$(IOS_CSC_FLAGS_XI) \
 		$(WATCHOS_SOURCES) \
 		@$<
@@ -990,6 +995,7 @@ $(TVOS_DOTNET_BUILD_DIR)/64/Xamarin.TVOS%dll $(TVOS_DOTNET_BUILD_DIR)/ref/Xamari
 		$(TVOS_DEFINES) \
 		$(ARGS_64) \
 		$(TVOS_WARNINGS_TO_FIX) \
+		-warnaserror:$(NULLABILITY_WARNINGS) \
 		$(IOS_CSC_FLAGS_XI) \
 		$(TVOS_SOURCES) \
 		@$<

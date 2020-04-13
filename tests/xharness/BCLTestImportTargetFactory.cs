@@ -2,11 +2,11 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using Xharness.TestImporter.Templates;
-using Xharness.TestImporter.Templates.Managed;
 using Xharness.TestImporter.Xamarin;
-using Xharness.TestImporter;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
+using Microsoft.DotNet.XHarness.iOS.Shared.TestImporter;
+using Microsoft.DotNet.XHarness.iOS.Shared.TestImporter.Templates;
+using Microsoft.DotNet.XHarness.iOS.Shared.TestImporter.Templates.Managed;
 
 namespace Xharness {
 	/// <summary>

@@ -73,7 +73,7 @@ namespace NaturalLanguage {
 		NLLanguage[] LanguageConstraints {
 			[Wrap ("Array.ConvertAll (_LanguageConstraints, e => NLLanguageExtensions.GetValue (e))")]
 			get;
-			[Wrap ("_LanguageConstraints = Array.ConvertAll (value, e => NLLanguageExtensions.GetConstant (e))")]
+			[Wrap ("_LanguageConstraints = Array.ConvertAll (value, e => NLLanguageExtensions.GetConstant (e)!)")]
 			set;
 		}
 	}
@@ -148,7 +148,7 @@ namespace NaturalLanguage {
 		[Export ("setLanguage:")]
 		void _SetLanguage (NSString language);
 
-		[Wrap ("_SetLanguage (language.GetConstant ())")]
+		[Wrap ("_SetLanguage (language.GetConstant ()!)")]
 		void SetLanguage (NLLanguage language);
 
 		[Export ("tokenRangeAtIndex:")]
@@ -173,7 +173,7 @@ namespace NaturalLanguage {
 		[DesignatedInitializer]
 		IntPtr Constructor ([Params] NSString[] tagSchemes);
 
-		[Wrap ("this (Array.ConvertAll (tagSchemes, e => e.GetConstant ()))")]
+		[Wrap ("this (Array.ConvertAll (tagSchemes, e => e.GetConstant ()!))")]
 		IntPtr Constructor ([Params] NLTagScheme[] tagSchemes);
 
 		[Internal]
@@ -192,7 +192,7 @@ namespace NaturalLanguage {
 		NSString[] GetAvailableTagSchemes (NLTokenUnit unit, NSString language);
 
 		[Static]
-		[Wrap ("Array.ConvertAll (GetAvailableTagSchemes (unit, language.GetConstant()), e => NLTagSchemeExtensions.GetValue (e))")]
+		[Wrap ("Array.ConvertAll (GetAvailableTagSchemes (unit, language.GetConstant()!), e => NLTagSchemeExtensions.GetValue (e))")]
 		NLTagScheme[] GetAvailableTagSchemes (NLTokenUnit unit, NLLanguage language);
 
 		[Export ("tokenRangeAtIndex:unit:")]
@@ -209,7 +209,7 @@ namespace NaturalLanguage {
 		[Export ("enumerateTagsInRange:unit:scheme:options:usingBlock:")]
 		void EnumerateTags (NSRange range, NLTokenUnit unit, NSString scheme, NLTaggerOptions options, NLTaggerEnumerateTagsContinuationHandler handler);
 
-		[Wrap ("EnumerateTags (range, unit, scheme.GetConstant (), options, handler)")]
+		[Wrap ("EnumerateTags (range, unit, scheme.GetConstant ()!, options, handler)")]
 		void EnumerateTags (NSRange range, NLTokenUnit unit, NLTagScheme scheme, NLTaggerOptions options, NLTaggerEnumerateTagsContinuationHandler handler);
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
@@ -218,21 +218,21 @@ namespace NaturalLanguage {
 		NSString GetTag (nuint characterIndex, NLTokenUnit unit, NSString scheme, out NSRange tokenRange);
 
 		[return: NullAllowed]
-		[Wrap ("GetTag (characterIndex, unit, scheme.GetConstant (), out tokenRange)")]
+		[Wrap ("GetTag (characterIndex, unit, scheme.GetConstant ()!, out tokenRange)")]
 		NSString GetTag (nuint characterIndex, NLTokenUnit unit, NLTagScheme scheme, out NSRange tokenRange);
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("tagsInRange:unit:scheme:options:tokenRanges:")]
 		NSString[] GetTags (NSRange range, NLTokenUnit unit, NSString scheme, NLTaggerOptions options, [NullAllowed] out NSValue[] tokenRanges);
 
-		[Wrap ("GetTags (range, unit, scheme.GetConstant (), options, out tokenRanges)")]
+		[Wrap ("GetTags (range, unit, scheme.GetConstant ()!, options, out tokenRanges)")]
 		NSString[] GetTags (NSRange range, NLTokenUnit unit, NLTagScheme scheme, NLTaggerOptions options, [NullAllowed] out NSValue[] tokenRanges);
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("setLanguage:range:")]
 		void SetLanguage (NSString language, NSRange range);
 
-		[Wrap ("SetLanguage (language.GetConstant (), range)")]
+		[Wrap ("SetLanguage (language.GetConstant ()!, range)")]
 		void SetLanguage (NLLanguage language, NSRange range);
 
 		[Export ("setOrthography:range:")]
@@ -242,14 +242,14 @@ namespace NaturalLanguage {
 		[Export ("setModels:forTagScheme:")]
 		void SetModels (NLModel[] models, NSString tagScheme);
 
-		[Wrap ("SetModels (models, tagScheme.GetConstant ())")]
+		[Wrap ("SetModels (models, tagScheme.GetConstant ()!)")]
 		void SetModels (NLModel[] models, NLTagScheme tagScheme);
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("modelsForTagScheme:")]
 		NLModel[] GetModels (NSString tagScheme);
 
-		[Wrap ("GetModels (tagScheme.GetConstant ())")]
+		[Wrap ("GetModels (tagScheme.GetConstant ()!)")]
 		NLModel[] GetModels (NLTagScheme tagScheme);
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
@@ -258,7 +258,7 @@ namespace NaturalLanguage {
 		void SetGazetteers (NLGazetteer[] gazetteers, NSString tagScheme);
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
-		[Wrap ("SetGazetteers (gazetteers, tagScheme.GetConstant ())")]
+		[Wrap ("SetGazetteers (gazetteers, tagScheme.GetConstant ()!)")]
 		void SetGazetteers (NLGazetteer[] gazetteers, NLTagScheme tagScheme);
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
@@ -267,7 +267,7 @@ namespace NaturalLanguage {
 		NLGazetteer[] GetGazetteers (NSString tagScheme);
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
-		[Wrap ("GetGazetteers (tagScheme.GetConstant ())")]
+		[Wrap ("GetGazetteers (tagScheme.GetConstant ()!)")]
 		NLGazetteer[] GetGazetteers (NLTagScheme tagScheme);
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
@@ -280,7 +280,7 @@ namespace NaturalLanguage {
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Static]
 		[Async]
-		[Wrap ("RequestAssets (language.GetConstant (), tagScheme.GetConstant (), completionHandler)")]
+		[Wrap ("RequestAssets (language.GetConstant ()!, tagScheme.GetConstant ()!, completionHandler)")]
 		void RequestAssets (NLLanguage language, NLTagScheme tagScheme, Action<NLTaggerAssetsResult, NSError> completionHandler);
 	}
 
@@ -380,7 +380,7 @@ namespace NaturalLanguage {
 		NLEmbedding GetWordEmbedding (NSString language);
 
 		[Static]
-		[Wrap ("GetWordEmbedding (language.GetConstant ())")]
+		[Wrap ("GetWordEmbedding (language.GetConstant ()!)")]
 		[return: NullAllowed]
 		NLEmbedding GetWordEmbedding (NLLanguage language);
 
@@ -391,7 +391,7 @@ namespace NaturalLanguage {
 		NLEmbedding GetWordEmbedding (NSString language, nuint revision);
 
 		[Static]
-		[Wrap ("GetWordEmbedding (language.GetConstant ())")]
+		[Wrap ("GetWordEmbedding (language.GetConstant ()!)")]
 		[return: NullAllowed]
 		NLEmbedding GetWordEmbedding (NLLanguage language, nuint revision);
 
@@ -422,7 +422,12 @@ namespace NaturalLanguage {
 
 		[Export ("vectorForString:")]
 		[return: NullAllowed]
-		[return: BindAs (typeof (float[]))] // doc says "array of double" but other API uses float ?!?
+#if XAMCORE_4_0
+		[return: BindAs (typeof (float[]?))]
+#else
+		[return: BindAs (typeof (float[]))]
+#endif
+		// doc says "array of double" but other API uses float ?!?
 		NSNumber[] GetVector (string @string);
 
 		[Internal] // can't bind float[] without NSArray but it will be better bound using .net pattern `bool TryGetVector (string, out float[] vector)`
@@ -460,7 +465,7 @@ namespace NaturalLanguage {
 		NSIndexSet GetSupportedRevisions (NSString language);
 
 		[Static]
-		[Wrap ("GetSupportedRevisions (language.GetConstant ())")]
+		[Wrap ("GetSupportedRevisions (language.GetConstant ()!)")]
 		NSIndexSet GetSupportedRevisions (NLLanguage language);
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
@@ -469,7 +474,7 @@ namespace NaturalLanguage {
 		nuint GetCurrentRevision (NSString language);
 
 		[Static]
-		[Wrap ("GetCurrentRevision (language.GetConstant ())")]
+		[Wrap ("GetCurrentRevision (language.GetConstant ()!)")]
 		nuint GetCurrentRevision (NLLanguage language);
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
@@ -478,7 +483,7 @@ namespace NaturalLanguage {
 		bool Write (NSDictionary dictionary, [NullAllowed] NSString language, nuint revision, NSUrl url, [NullAllowed] out NSError error);
 
 		[Static]
-		[Wrap ("Write (dictionary.GetDictionary (), language.HasValue ? language.Value.GetConstant () : null, revision, url, out error)")]
+		[Wrap ("Write (dictionary.GetDictionary ()!, language.HasValue ? language.Value.GetConstant () : null, revision, url, out error)")]
 		bool Write (NLVectorDictionary dictionary, NLLanguage? language, nuint revision, NSUrl url, [NullAllowed] out NSError error);
 	}
 
@@ -507,7 +512,7 @@ namespace NaturalLanguage {
 
 		// sadly `language?.GetConstant ()` does not cut it :(
 		// error CS1929: 'NLLanguage?' does not contain a definition for 'GetConstant' and the best extension method overload 'NLLanguageExtensions.GetConstant(NLLanguage)' requires a receiver of type 'NLLanguage'
-		[Wrap ("this (dictionary.GetDictionary (), language.HasValue ? language.Value.GetConstant () : null, out error)")]
+		[Wrap ("this (dictionary.GetDictionary ()!, language.HasValue ? language.Value.GetConstant () : null, out error)")]
 		IntPtr Constructor (NLStrongDictionary dictionary, NLLanguage? language, [NullAllowed] out NSError error);
 
 		[Export ("labelForString:")]
@@ -527,7 +532,7 @@ namespace NaturalLanguage {
 		bool Write (NSDictionary dictionary, [NullAllowed] NSString language, NSUrl url, [NullAllowed] out NSError error);
 
 		[Static]
-		[Wrap ("Write (dictionary.GetDictionary (), language.HasValue ? language.Value.GetConstant () : null, url, out error)")]
+		[Wrap ("Write (dictionary.GetDictionary ()!, language.HasValue ? language.Value.GetConstant () : null, url, out error)")]
 		bool Write (NLStrongDictionary dictionary, NLLanguage? language, NSUrl url, [NullAllowed] out NSError error);
 	}
 }

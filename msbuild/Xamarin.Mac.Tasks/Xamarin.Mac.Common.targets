@@ -330,7 +330,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<Error Condition="'$(_AppManifest)' == ''" Text="Info.plist not found."/>
 	</Target>
 
-	<Target Name="_SmeltMetal" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(Metal)' != ''" DependsOnTargets="_DetectSdkLocations">
+	<Target Name="_SmeltMetal" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(Metal)' != ''" DependsOnTargets="_DetectSdkLocations;_ComputeTargetFrameworkMoniker">
 		<Metal
 			Condition="'$(IsMacEnabled)' == 'true' and '%(Metal.Identity)' != ''"
 			SessionId="$(BuildSessionId)"
@@ -508,6 +508,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	
 	<PropertyGroup>
 		<CompileToNativeDependsOn>
+			_ComputeTargetFrameworkMoniker;
 			_DetectAppManifest;
 			_DetectSdkLocations;
 			_GenerateBundleName;
@@ -577,7 +578,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	</Target>
 
 	<Target Name="_CoreCompileColladaAssets"
-		DependsOnTargets="_CollectColladaAssets;_DetectSdkLocations"
+		DependsOnTargets="_CollectColladaAssets;_DetectSdkLocations;_ComputeTargetFrameworkMoniker"
 		Inputs="@(_ColladaAssetWithLogicalName)"
 		Outputs="$(IntermediateOutputPath)%(_ColladaAssetWithLogicalName.LogicalName)"
 		>
@@ -669,7 +670,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 
 	<Target Name="_CompileSceneKitAssets" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_CoreCompileSceneKitAssets" />
 
-	<Target Name="_CoreCompileSceneKitAssets" DependsOnTargets="_GenerateBundleName">
+	<Target Name="_CoreCompileSceneKitAssets" DependsOnTargets="_GenerateBundleName;_ComputeTargetFrameworkMoniker">
 		<CompileSceneKitAssets
 			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"

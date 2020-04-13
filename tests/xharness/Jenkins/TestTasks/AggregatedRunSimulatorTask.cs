@@ -9,7 +9,7 @@ namespace Xharness.Jenkins.TestTasks {
 	// This class groups simulator run tasks according to the
 	// simulator they'll run from, so that we minimize switching
 	// between different simulators (which is slow).
-	class AggregatedRunSimulatorTask : TestTask
+	class AggregatedRunSimulatorTask : AppleTestTask
 	{
 		public IEnumerable<RunSimulatorTask> Tasks;
 
@@ -20,7 +20,7 @@ namespace Xharness.Jenkins.TestTasks {
 		Stopwatch run_timer = new Stopwatch ();
 		public TimeSpan RunDuration { get { return run_timer.Elapsed; } }
 
-		public AggregatedRunSimulatorTask (IEnumerable<RunSimulatorTask> tasks)
+		public AggregatedRunSimulatorTask (Jenkins jenkins, IEnumerable<RunSimulatorTask> tasks) : base (jenkins)
 		{
 			this.Tasks = tasks;
 		}
@@ -63,11 +63,15 @@ namespace Xharness.Jenkins.TestTasks {
 					await task.SelectSimulatorAsync ();
 				}
 
-				var devices = executingTasks.First ().Simulators;
+				var devices = executingTasks.FirstOrDefault ()?.Simulators; 
+				if (devices == null) { 
+					ExecutionResult = TestExecutingResult.DeviceNotFound;
+					return;
+				}
 				Jenkins.MainLog.WriteLine ("Selected simulator: {0}", devices.Length > 0 ? devices [0].Name : "none");
 
 				foreach (var dev in devices)
-					await dev.PrepareSimulatorAsync (Jenkins.MainLog, executingTasks.Select ((v) => v.BundleIdentifier).ToArray ());
+					await dev.PrepareSimulator (Jenkins.MainLog, executingTasks.Select ((v) => v.BundleIdentifier).ToArray ());
 
 				foreach (var task in executingTasks) {
 					task.AcquiredResource = desktop;
@@ -79,11 +83,11 @@ namespace Xharness.Jenkins.TestTasks {
 				}
 
 				foreach (var dev in devices)
-					await dev.ShutdownAsync (Jenkins.MainLog);
+					await dev.Shutdown (Jenkins.MainLog);
 
 				var device = devices.FirstOrDefault ();
 				if (device != null)
-					await device.KillEverythingAsync (Jenkins.MainLog);
+					await device.KillEverything (Jenkins.MainLog);
 
 				run_timer.Stop ();
 			}

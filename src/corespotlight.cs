@@ -847,7 +847,6 @@ namespace CoreSpotlight {
 		[Export ("instantMessageAddresses")]
 		string [] InstantMessageAddresses { get; set; }
 
-		[NullAllowed]
 		[Export ("likelyJunk", ArgumentSemantic.Strong)]
 		NSNumber LikelyJunk { [Bind ("isLikelyJunk")] get; set; }
 

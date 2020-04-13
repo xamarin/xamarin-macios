@@ -17,9 +17,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Hardware {
 	[TestFixture]
 	public class DevicesTest {
 
-		Devices devices;
-		string mlaunchPath;
-		string sdkPath;
+		HardwareDeviceLoader devices;
 		Mock<IProcessManager> processManager;
 		Mock<ILog> executionLog;
 
@@ -27,10 +25,8 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Hardware {
 		public void SetUp ()
 		{
 			processManager = new Mock<IProcessManager> ();
-			devices = new Devices (processManager.Object);
+			devices = new HardwareDeviceLoader (processManager.Object);
 			executionLog = new Mock<ILog> ();
-			mlaunchPath = "/usr/bin/mlaunch"; // any will be ok, is mocked
-			sdkPath = "/Applications/Xcode.app";
 		}
 
 		[TearDown]
@@ -61,12 +57,8 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Hardware {
 				});
 
 			Assert.ThrowsAsync<Exception> (async () => {
-				await devices.LoadAsync (executionLog.Object);
+				await devices.LoadDevices (executionLog.Object);
 			});
-
-			MlaunchArgument sdkRootArg = passedArguments.Where (a => a is SdkRootArgument).FirstOrDefault ();
-			Assert.IsNotNull (sdkRootArg, "sdk arg missing");
-			AssertArgumentValue (sdkRootArg, $"--sdkroot {sdkPath}", "sdk arg wrong");
 
 			MlaunchArgument listDevArg = passedArguments.Where (a => a is ListDevicesArgument).FirstOrDefault ();
 			Assert.IsNotNull (listDevArg, "list devices arg missing");
@@ -102,16 +94,9 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Hardware {
 					return Task.FromResult (new ProcessExecutionResult { ExitCode = 0, TimedOut = false });
 				});
 
-			await devices.LoadAsync (executionLog.Object, extraData);
+			await devices.LoadDevices (executionLog.Object, listExtraData: extraData);
 
 			// assert the devices that are expected from the sample xml
-			// validate the execution of mlaunch
-			Assert.AreEqual (mlaunchPath, processPath, "process path");
-
-			MlaunchArgument sdkRootArg = passedArguments.Where (a => a is SdkRootArgument).FirstOrDefault ();
-			Assert.IsNotNull (sdkRootArg, "sdk arg missing");
-			AssertArgumentValue (sdkRootArg, $"--sdkroot {sdkPath}", "sdk arg wrong");
-
 			MlaunchArgument listDevArg = passedArguments.Where (a => a is ListDevicesArgument).FirstOrDefault ();
 			Assert.IsNotNull (listDevArg, "list devices arg missing");
 

@@ -115,15 +115,19 @@ namespace WatchKit {
 		[Export ("dismissTextInputController")]
 		void DismissTextInputController ();
 
+		[return: NullAllowed]
 		[Export ("contextForSegueWithIdentifier:")]
 		NSObject GetContextForSegue (string segueIdentifier);
 
+		[return: NullAllowed]
 		[Export ("contextsForSegueWithIdentifier:")]
 		NSObject [] GetContextsForSegue (string segueIdentifier);
 
+		[return: NullAllowed]
 		[Export ("contextForSegueWithIdentifier:inTable:rowIndex:")]
 		NSObject GetContextForSegue (string segueIdentifier, WKInterfaceTable table, nint rowIndex);
 
+		[return: NullAllowed]
 		[Export ("contextsForSegueWithIdentifier:inTable:rowIndex:")]
 		NSObject [] GetContextsForSegue (string segueIdentifier, WKInterfaceTable table, nint rowIndex);
 
@@ -663,6 +667,7 @@ namespace WatchKit {
 		[Export ("setNumberOfRows:withRowType:")]
 		void SetNumberOfRows (nint numberOfRows, string rowType);
 
+		[return: NullAllowed]
 		[Export ("rowControllerAtIndex:")]
 		NSObject GetRowController (nint index);
 
@@ -787,7 +792,6 @@ namespace WatchKit {
 		[Export ("frame")]
 		CGRect Frame { get; set; }
 
-		[NullAllowed]
 		[Export ("label")]
 		string Label { get; set; }
 	}

@@ -54,10 +54,8 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TestImporter\Tests\BCLTestInfoPlistGeneratorTest.cs" />
-    <Compile Include="TestImporter\Tests\BCLTestProjectGeneratorTest.cs" />
-    <Compile Include="TestImporter\Tests\TestAssemblyDefinitionTest.cs" />
-    <Compile Include="TestImporter\Tests\TestProjectDefinitionTest.cs" />
+    <Compile Include="Tests\BCLTestImportTargetFactoryTest.cs" />
+    <Compile Include="TestImporter\Xamarin\Tests\TestAssemblyDefinitionTest.cs" />
     <Compile Include="Tests\AppRunnerTests.cs" />
     <Compile Include="TestImporter\Xamarin\Tests\ProjectFilterTest.cs" />
     <Compile Include="TestImporter\Xamarin\Tests\AssemblyLocatorTest.cs" />
@@ -82,7 +80,6 @@
     <EmbeddedResource Include="Samples\run-log.txt" />
     <EmbeddedResource Include="Samples\NUnitV3SampleSuccess.xml" />
     <EmbeddedResource Include="Samples\NUnitV3SampleFailure.xml" />
-    <EmbeddedResource Include="Samples\Issue8214.xml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../DummyTestProcess/DummyTestProcess.csproj">
