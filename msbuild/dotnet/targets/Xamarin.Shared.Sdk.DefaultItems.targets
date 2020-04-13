@@ -21,8 +21,10 @@
 
   <!-- Default architecture -->
   <PropertyGroup Condition=" '$(MtouchArch)' == '' ">
-    <MtouchArch Condition=" '$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'macOS' ">x86_64</MtouchArch>
-    <MtouchArch Condition=" '$(_PlatformName)' == 'watchOS' ">x86</MtouchArch>
+    <MtouchArch Condition=" '$(RuntimeIdentifier)' == 'ios-arm64' ">ARM64</MtouchArch>
+    <MtouchArch Condition=" '$(RuntimeIdentifier)' == 'ios-x64' ">x86_64</MtouchArch>
+<!--     <MtouchArch Condition=" '$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'macOS' ">x86_64</MtouchArch>
+    <MtouchArch Condition=" '$(_PlatformName)' == 'watchOS' ">x86</MtouchArch> -->
   </PropertyGroup>
 
   <!-- Default Asset Catalog file inclusion -->

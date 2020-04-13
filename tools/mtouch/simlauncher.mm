@@ -57,9 +57,23 @@ main (int argc, char** argv)
 	@autoreleasepool { return xamarin_main (argc, argv, XamarinLaunchModeApp); }
 }
 
+void
+xamarin_register_assemblies_impl ()
+{
+	NSLog (@"xamarin_register_assemblies ()\n");
+}
+
+void
+xamarin_register_modules_impl ()
+{
+	NSLog (@"xamarin_register_modules ()\n");
+}
+
 
 void xamarin_initialize_callbacks () __attribute__ ((constructor));
 void xamarin_initialize_callbacks ()
 {
 	xamarin_setup = xamarin_setup_impl;
+	xamarin_register_assemblies = xamarin_register_assemblies_impl;
+	xamarin_register_modules = xamarin_register_modules_impl;
 }

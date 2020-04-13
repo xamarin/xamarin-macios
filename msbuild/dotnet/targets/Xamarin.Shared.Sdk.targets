@@ -36,8 +36,8 @@
 		<AfterMonoAOTCompilationTargets>_PostProcessAOTCompilation</AfterMonoAOTCompilationTargets>
 		<BeforeGenerateSingleFileBundleTargets>_PreProcessNativeLinker</BeforeGenerateSingleFileBundleTargets>
 		<AfterGenerateSingleFileBundleTargets>_PostProcessNativeLinker</AfterGenerateSingleFileBundleTargets>
-		<!-- Codesign fails for unknown reasons -->
-		<!-- <AfterPublishTargets>Codesign;CreateIpa;Archive</AfterPublishTargets> -->
+		<!-- Codesign fails for unknown reasons for simulator builds -->
+		<AfterPublishTargets Condition=" '$(_SdkIsSimulator)' == 'true' ">Codesign;CreateIpa;Archive</AfterPublishTargets>
 	</PropertyGroup>
 
 	<!-- Actual implementations for what we need to do -->
@@ -109,8 +109,20 @@
 		" />
 
 	<Target Name="_PostProcessAssemblies" DependsOnTargets="_GenerateRegistrarCode;_GeneratePInvokeWrapperCode;_CompilePInvokeWrappers" />
-	<Target Name="_PostProcessAOTCompilation" DependsOnTargets="_BuildMSymDirectories;_StripManagedAssemblies;" />
-	<Target Name="_PreProcessNativeLinker" DependsOnTargets="_SelectExecutableOutputMode;_CompileLauncher" />
+	<Target Name="_PreAOTCompile" DependsOnTargets="_SetVariables">
+		<Copy SourceFiles="@(_AssembliesToAOT)" DestinationFolder="$(_AOTInputDirectory)" />
+	</Target>
+	<Target Name="_AOTCompile"
+			Condition="'$(_SdkIsSimulator)' != 'true'"
+			DependsOnTargets="_SetVariables;_PreAOTCompile;"
+			Inputs="@(_AssembliesToAOT)"
+			Outputs="@(_AssembliesToAOT->'$(_AOTOutputDirectory)%(Filename)%(Extension).s')">
+		<Exec Command="$(_AOTCompiler) --debug -O=gsharedvt -O=-float32  --aot=mtriple=arm64-ios,data-outfile=$(_AOTOutputDirectory)%(_AssembliesToAOT.Filename).aotdata.arm64,static,asmonly,direct-icalls,full,soft-debug,dwarfdebug,no-direct-icalls,outfile=$(_AOTOutputDirectory)%(_AssembliesToAOT.Filename)%(_AssembliesToAOT.Extension).s $(_AOTInputDirectory)%(_AssembliesToAOT.Filename)%(_AssembliesToAOT.Extension)" />
+		<Warning Text="_AOTCompile: @(_AssembliesToAOT) " />
+	</Target>
+	<Target Name="_PostProcessAOTCompilation" DependsOnTargets="_BuildMSymDirectories;_StripManagedAssemblies;_AOTCompile;">
+	</Target>
+	<Target Name="_PreProcessNativeLinker" DependsOnTargets="_SelectExecutableOutputMode;_CompileLauncher;_PostProcessAOTCompilation" />
 	<Target Name="_PostProcessNativeLinker" DependsOnTargets="_ComputeOutputLocation;_CreateUserFrameworks;_BuildDSymDirectories;_StripNativeCode;"/>
 
 	<Target Name="_GenerateRegistrarCode">
@@ -150,13 +162,21 @@
 			<_RuntimeToolsDir Condition="'%(DestinationSubPath)' == '$(_LibXamarinName)'">@(RuntimePackAsset -> '%(RootDir)%(Directory)')</_RuntimeToolsDir>
 			<_RuntimeIncludeDir>$(_RuntimeToolsDir)/include/</_RuntimeIncludeDir>
 
+			<_AOTCompiler>$(_MonoLibDir)/cross/mono-aot-cross</_AOTCompiler>
+
 			<_IntermediateNativeLibraryDir>$(IntermediateOutputPath)nativelibraries/</_IntermediateNativeLibraryDir>
+			<_AOTInputDirectory>$(_IntermediateNativeLibraryDir)aot-input/</_AOTInputDirectory>
+			<_AOTOutputDirectory>$(_IntermediateNativeLibraryDir)</_AOTOutputDirectory>
 		</PropertyGroup>
 		<ItemGroup>
-			<_UnreferencedSymbol Include="_xamarin_dyn_objc_msgSend" />
-			<_UnreferencedSymbol Include="_xamarin_dyn_objc_msgSendSuper" />
-			<_UnreferencedSymbol Include="_xamarin_dyn_objc_msgSend_stret" />
-			<_UnreferencedSymbol Include="_xamarin_dyn_objc_msgSendSuper_stret" />
+			<_AssembliesToAOT Include="@(ResolvedFileToPublish)" Condition="'%(Extension)' == '.dll' Or '%(Extension)' == '.exe' ">
+				<_AOTOutputDirectory>$(_IntermediateNativeLibraryDir)</_AOTOutputDirectory>
+			</_AssembliesToAOT>
+
+			<_UnreferencedSymbol Condition=" '$(_SdkIsSimulator)' == 'true'" Include="_xamarin_dyn_objc_msgSend" />
+			<_UnreferencedSymbol Condition=" '$(_SdkIsSimulator)' == 'true'" Include="_xamarin_dyn_objc_msgSendSuper" />
+			<_UnreferencedSymbol Condition=" '$(_SdkIsSimulator)' == 'true'" Include="_xamarin_dyn_objc_msgSend_stret" />
+			<_UnreferencedSymbol Condition=" '$(_SdkIsSimulator)' == 'true'" Include="_xamarin_dyn_objc_msgSendSuper_stret" />
 			<_UnreferencedSymbol Include="_xamarin_init_nsthread" />
 			<_UnreferencedSymbol Include="_xamarin_get_block_descriptor" />
 			<_UnreferencedSymbol Include="_xamarin_get_locale_country_code" />
@@ -329,8 +349,11 @@
 			<_Includes>-I$(_RuntimeIncludeDir)</_Includes>
 			<_LinkerFlags>-lz -liconv @(_NativeDynamicLibraryPath -> '-L%(FullPath)', ' ') @(_NativeDynamicLibrary -> '-l%(LibraryName)', ' ')</_LinkerFlags>
 			<_ISysRoot>-isysroot $(_SdkRoot)</_ISysRoot>
-			<_Arch>-arch x86_64</_Arch>
-			<_OtherFlags>-gdwarf-2 -fobjc-abi-version=2 -fobjc-legacy-dispatch -fms-extensions -fstack-protector-strong -ObjC++ -std=c++14 -fno-exceptions -stdlib=libc++ -mios-simulator-version-min=7.0 -g -Wl,-rpath -Wl,@executable_path/</_OtherFlags>
+			<_Arch Condition=" '$(_SdkIsSimulator)' == 'true'">-arch x86_64</_Arch>
+			<_Arch Condition=" '$(_SdkIsSimulator)' != 'true'">-arch arm64</_Arch>
+			<_MinOSVersion Condition=" '$(_SdkIsSimulator)' == 'true'">-mios-simulator-version-min=7.0</_MinOSVersion>
+			<_MinOSVersion Condition=" '$(_SdkIsSimulator)' != 'true'">-miphoneos-version-min=7.0</_MinOSVersion>
+			<_OtherFlags>-gdwarf-2 -fobjc-abi-version=2 -fobjc-legacy-dispatch -fms-extensions -fstack-protector-strong -ObjC++ -std=c++14 -fno-exceptions -stdlib=libc++ $(_MinOSVersion) -g -Wl,-rpath -Wl,@executable_path/</_OtherFlags>
 			<_LauncherCmd>$(_Clang) $(_UnreferencedSymbols) $(_Frameworks) $(_WeakFrameworks) $(_Defines) $(_Warnings) $(_Includes) $(_LinkerFlags) $(_ISysRoot) $(_Arch) $(_OtherFlags) $(_LibMono) $(_LibXamarin) $(_LibRegistrar) $(_LibApp) $(_SimLauncher)	-o $(_AppBundlePath)$(_AppBundleName)</_LauncherCmd>
 		</PropertyGroup>
 		<Warning Text="RuntimePackAsset: @(RuntimePackAsset)" />
