@@ -1,9 +1,0 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <_PlatformName>macOS</_PlatformName>
-    <_RuntimeIdentifier>macos-x64</_RuntimeIdentifier>
-  </PropertyGroup>
-
-  <Import Project="../xamarin.app.runtime.csproj" />
-</Project>

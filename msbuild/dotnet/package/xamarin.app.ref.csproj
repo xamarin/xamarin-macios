@@ -1,8 +1,0 @@
-<Project>
-  <PropertyGroup>
-    <PackageId>Xamarin.$(_PlatformName).App.Ref</PackageId>
-    <Description>Xamarin $(_PlatformName) reference assemblies. Please do not reference directly.</Description>
-    <_CreateFrameworkList>true</_CreateFrameworkList>
-  </PropertyGroup>
-  <Import Project="common.csproj" />
-</Project>

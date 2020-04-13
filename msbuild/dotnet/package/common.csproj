@@ -63,10 +63,10 @@
 
     <ItemGroup>
       <!-- Hardcode framework attributes -->
-      <_FrameworkListRootAttributes Include="Name" Value="Xamarin $(_PlatformName) - NET 5.0" />
+      <_FrameworkListRootAttributes Include="Name" Value="Microsoft $(_PlatformName) - NET 5.0" />
       <_FrameworkListRootAttributes Include="TargetFrameworkIdentifier" Value=".NETCoreApp" />
       <_FrameworkListRootAttributes Include="TargetFrameworkVersion" Value="5.0" />
-      <_FrameworkListRootAttributes Include="FrameworkName" Value="Xamarin.$(_PlatformName).App" />
+      <_FrameworkListRootAttributes Include="FrameworkName" Value="Microsoft.$(_PlatformName)" />
       <_PackageFiles Include="$(_FrameworkListFile)" PackagePath="data" />
 
       <!-- The CreateFrameworkListFile task will add _PackageFiles to the files to pack, so remove them if they're already there -->

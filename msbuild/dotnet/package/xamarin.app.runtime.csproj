@@ -1,8 +1,0 @@
-<Project>
-  <PropertyGroup>
-    <PackageId>Xamarin.$(_PlatformName).App.Runtime.$(_RuntimeIdentifier)</PackageId>
-    <Description>Xamarin $(_PlatformName) runtime pack for $(_RuntimeIdentifier). Please do not reference directly.</Description>
-    <_CreateRuntimeList>true</_CreateRuntimeList>
-  </PropertyGroup>
-  <Import Project="common.csproj" />
-</Project>

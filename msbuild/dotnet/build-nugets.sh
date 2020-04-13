@@ -12,14 +12,14 @@ if test -z "$MONOTOUCH_PREFIX"; then echo "MONOTOUCH_PREFIX not set"; exit 1; fi
 
 cp="cp -c"
 
-# the Xamarin.*OS.App.Ref nuget
+# the Xamarin.*OS.Ref nuget
 create_ref_nuget ()
 {
 	local platform=$1
 	local assembly_infix=$2
 	#shellcheck disable=SC2155
 	local platform_lower=$(echo "$platform" | tr '[:upper:]' '[:lower:]')
-	local packageid=Xamarin.$platform.App.Ref
+	local packageid=Microsoft.$platform.Ref
 	local destdir=$DOTNET_DESTDIR/$packageid
 
 	rm -Rf "$destdir"
@@ -37,7 +37,7 @@ create_ref_nuget "tvOS"    "TVOS"
 create_ref_nuget "watchOS" "WatchOS"
 create_ref_nuget "macOS"   "Mac"
 
-# the Xamarin.*OS.App.Runtime.<RID> nugets
+# the Microsoft.*OS.Runtime.<RID> nugets
 create_runtime_packs ()
 {
 	local platform=$1
@@ -48,7 +48,7 @@ create_runtime_packs ()
 
 	for arch in $arches; do
 		local rid=$platform_lower-$arch
-		local packageid=Xamarin.$platform.App.Runtime.$rid
+		local packageid=Microsoft.$platform.Runtime.$rid
 		local destdir=$DOTNET_DESTDIR/$packageid
 
 		rm -Rf "$destdir"
@@ -91,7 +91,7 @@ copy_ios_native_libs_to_runtime_pack ()
 	#shellcheck disable=SC2155
 	local platform_lower=$(echo "$platform" | tr '[:upper:]' '[:lower:]')
 	local rid=$platform_lower-$rid_family
-	local packageid=Xamarin.$platform.App.Runtime.$rid
+	local packageid=Microsoft.$platform.Runtime.$rid
 	local destdir=$DOTNET_DESTDIR/$packageid/runtimes/$rid/native
 	local sdk_dir="$TOP/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/SDKs/$sdk.sdk"
 	local lib_dir="$sdk_dir/usr/lib/"
@@ -150,7 +150,7 @@ create_sdk_nugets ()
 	local legacy_destdir=$2
 	#shellcheck disable=SC2155
 	local platform_lower=$(echo "$platform" | tr '[:upper:]' '[:lower:]')
-	local packageid=Xamarin.$platform.Sdk
+	local packageid=Microsoft.$platform.Sdk
 	local destdir=$DOTNET_DESTDIR/$packageid
 
 	rm -Rf "$destdir"
@@ -161,9 +161,9 @@ create_sdk_nugets ()
 	$cp "$legacy_destdir/Version" "$destdir/"
 	$cp "$legacy_destdir/buildinfo" "$destdir/tools/"
 
-	$cp "$TOP/msbuild/dotnet/Xamarin.$platform.Sdk/Sdk/"* "$destdir/Sdk/"
+	$cp "$TOP/msbuild/dotnet/Microsoft.$platform.Sdk/Sdk/"* "$destdir/Sdk/"
 	$cp "$TOP/msbuild/dotnet/targets/"* "$destdir/targets/"
-	$cp "$TOP/msbuild/dotnet/Xamarin.$platform.Sdk/targets/"* "$destdir/targets/"
+	$cp "$TOP/msbuild/dotnet/Microsoft.$platform.Sdk/targets/"* "$destdir/targets/"
 
 	$cp -r "$legacy_destdir/lib/msbuild" "$destdir/tools/"
 

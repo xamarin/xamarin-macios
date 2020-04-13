@@ -6,14 +6,14 @@
  The `TargetFramework` element is the only required `.csproj` file element.
 
  ```xml
-<Project Sdk="Xamarin.iOS.Sdk">
+<Project Sdk="Microsoft.iOS.Sdk">
   <PropertyGroup>
     <TargetFramework>xamarinios10</TargetFramework>
   </PropertyGroup>
 </Project>
  ```
 
-Default iOS related file globbing behavior is defined in `Xamarin.iOS.Sdk.DefaultItems.props`.
+Default iOS related file globbing behavior is defined in `Microsoft.iOS.Sdk.DefaultItems.props`.
 
 # How to get started
 

@@ -1,8 +1,0 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <_PlatformName>iOS</_PlatformName>
-  </PropertyGroup>
-
-  <Import Project="../xamarin.app.ref.csproj" />
-</Project>
