@@ -127,6 +127,8 @@
     <Compile Include="TestTasks\MSBuild.cs" />
     <Compile Include="TestTasks\IErrorKnowledgeBase.cs" />
     <Compile Include="TestTasks\DotNetBuild.cs" />
+    <Compile Include="TestTasks\IBuildToolTask.cs" />
+    <Compile Include="TestTasks\ITestTask.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\tools\common\SdkVersions.cs">
