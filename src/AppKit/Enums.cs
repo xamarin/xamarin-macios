@@ -1746,7 +1746,11 @@ namespace AppKit {
 	[Native]
 	public enum NSSpeechBoundary : ulong {
 		Immediate =  0,
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'Word' instead.")]
 		hWord,
+#endif
+		Word = 1,
 		Sentence
 	}
 
