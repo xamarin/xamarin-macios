@@ -19276,13 +19276,13 @@ namespace AppKit {
 		void ToggleSmartInsertDelete (NSObject sender);
 
 #if !XAMCORE_4_0
-		[Obsolete ("Use working version with out parmaters instead.")]
+		[Obsolete ("Use 'SmartInsert(string, NSRange, out string, out string)' overload instead.")]
 		[Export ("smartInsertForString:replacingRange:beforeString:afterString:")]
 		void SmartInsert (string pasteString, NSRange charRangeToReplace, string beforeString, string afterString);
 #endif
 
 #if !XAMCORE_4_0
-		[Sealed] // sealed until we the broken overload is gone
+		[Sealed] // sealed until the broken overload is gone
 #endif
 		[Export ("smartInsertForString:replacingRange:beforeString:afterString:")]
 		void SmartInsert (string pasteString, NSRange charRangeToReplace, [NullAllowed] out string beforeString, [NullAllowed] out string afterString);
