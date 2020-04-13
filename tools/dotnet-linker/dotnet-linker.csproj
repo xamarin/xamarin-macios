@@ -33,9 +33,6 @@
     <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\external\linker\src\tuner\Mono.Tuner\CecilRocks.cs">
       <Link>CecilRocks.cs</Link>
     </Compile>
-    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\external\linker\src\tuner\Mono.Tuner\Extensions.cs">
-      <Link>Extensions.cs</Link>
-    </Compile>
     <None Update="substitute-32bits.xml" CopyToOutputDirectory="Always" />
     <None Update="substitute-64bits.xml" CopyToOutputDirectory="Always" />
   </ItemGroup>
