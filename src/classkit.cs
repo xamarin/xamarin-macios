@@ -143,6 +143,7 @@ namespace ClassKit {
 		[Export ("duration")]
 		double Duration { get; }
 
+		[NullAllowed]
 		[Export ("primaryActivityItem", ArgumentSemantic.Strong)]
 		CLSActivityItem PrimaryActivityItem { get; set; }
 
@@ -281,6 +282,7 @@ namespace ClassKit {
 
 		[Abstract]
 		[Export ("createContextForIdentifier:parentContext:parentIdentifierPath:")]
+		[return: NullAllowed]
 		CLSContext CreateContext (string identifier, CLSContext parentContext, string [] parentIdentifierPath);
 	}
 

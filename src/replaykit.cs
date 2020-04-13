@@ -78,7 +78,7 @@ namespace ReplayKit {
 
 		[Async]
 		[Export ("discardRecordingWithHandler:")]
-		void DiscardRecording ([NullAllowed] Action handler);
+		void DiscardRecording (Action handler);
 
 		[Export ("delegate", ArgumentSemantic.Weak)][NullAllowed]
 		IRPScreenRecorderDelegate Delegate { get; set; }

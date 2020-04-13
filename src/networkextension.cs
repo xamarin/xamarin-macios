@@ -695,7 +695,7 @@ namespace NetworkExtension {
 		bool Register ([NullAllowed] NSDictionary options, DispatchQueue queue, NEHotspotHelperHandler handler);
 
 		[Static]
-		[Wrap ("Register (options == null ? null : options.Dictionary, queue, handler)")]
+		[Wrap ("Register (options.GetDictionary (), queue, handler)")]
 		bool Register ([NullAllowed] NEHotspotHelperOptions options, DispatchQueue queue, NEHotspotHelperHandler handler);
 
 		[Static]
@@ -1038,7 +1038,7 @@ namespace NetworkExtension {
 		NEAppRule[] AppRules { get; set; }
 #else
 		[Obsolete ("Use 'CopyAppRules' instead, this property will be removed in the future.")]
-		NEAppRule[] AppRules { [Wrap ("CopyAppRules ()", IsVirtual = true)] get; }
+		NEAppRule[] AppRules { [Wrap ("CopyAppRules ()!", IsVirtual = true)] get; }
 #endif
 
 		[Export ("routingMethod")]
@@ -1079,6 +1079,7 @@ namespace NetworkExtension {
 		[Export ("onDemandEnabled")]
 		bool OnDemandEnabled { [Bind ("isOnDemandEnabled")] get; set; }
 
+		[NullAllowed]
 		[Export ("localizedDescription")]
 		string LocalizedDescription { get; set; }
 
@@ -1149,7 +1150,7 @@ namespace NetworkExtension {
 		bool StartVpnTunnel ([NullAllowed] NSDictionary options, out NSError error);
 
 		[iOS (9,0)][Mac (10,11)]
-		[Wrap ("StartVpnTunnel (options == null ? null : options.Dictionary, out error);")]
+		[Wrap ("StartVpnTunnel (options.GetDictionary (), out error);")]
 		bool StartVpnTunnel ([NullAllowed] NEVpnConnectionStartOptions options, out NSError error);
 
 		[Export ("stopVPNTunnel")]

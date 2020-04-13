@@ -86,6 +86,10 @@ public partial class Generator {
 		print ("public {0} (NSCoder coder) : base (NSObjectFlag.Empty)", type_name);
 		print ("{");
 		indent++;
+		print ("if (coder == null)");
+		indent++;
+		print ("throw new ArgumentNullException (nameof (coder));");
+		indent--;
 		print ("IntPtr h;");
 		print ("if (IsDirectBinding) {");
 		indent++;
@@ -142,14 +146,14 @@ public partial class Generator {
 
 			print ("");
 			print ($"// {pname} protocol members ");
-			GenerateProperties (i);
+			GenerateProperties (i, fromProtocol: true);
 
 			// also include base interfaces/protocols
 			GenerateProtocolProperties (i, processed);
 		}
 	}
 
-	void GenerateProperties (Type type)
+	void GenerateProperties (Type type, bool fromProtocol = false)
 	{
 		foreach (var p in type.GetProperties (BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)) {
 			if (p.IsUnavailable (this))
@@ -162,6 +166,7 @@ public partial class Generator {
 			print_generated_code ();
 
 			var ptype = p.PropertyType.Name;
+			var nullable = false;
 			// keep C# names as they are reserved keywords (e.g. Boolean also exists in OpenGL for Mac)
 			switch (ptype) {
 			case "Boolean":
@@ -180,8 +185,17 @@ public partial class Generator {
 			case "CGImageMetadata":
 				ptype = "ImageIO.CGImageMetadata";
 				break;
+			case "CIVector":
+			case "CIColor":
+			case "CIImage":
+				// protocol-based bindings have annotations - but the older, key-based, versions did not
+				if (!fromProtocol)
+					nullable = true;
+				break;
 			}
-			print ("public {0} {1} {{", ptype, p.Name);
+			if (AttributeManager.HasAttribute<NullAllowedAttribute> (p))
+				nullable = true;
+			print ("public {0}{1} {2} {{", ptype, nullable ? "?" : "", p.Name);
 			indent++;
 
 			// an export will be present (only) if it's defined in a protocol
@@ -262,7 +276,8 @@ public partial class Generator {
 		case "CIColor":
 		case "CIImage":
 		case "CIVector":
-			print ($"return ValueForKey (\"{propertyName}\") as {propertyType};");
+			// `!` -> assume the method/property signature is correct (since it's based on headers)
+			print ($"return (ValueForKey (\"{propertyName}\") as {propertyType})!;");
 			break;
 		case "CGPoint":
 			print ("return GetPoint (\"{0}\");", propertyName);

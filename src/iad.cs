@@ -220,6 +220,7 @@ namespace iAd {
 		[iOS (7,0), Export ("setCanDisplayBannerAds:")]
 		void SetCanDisplayBannerAds (bool value);
 
+		[return: NullAllowed]
 		[iOS (7,0), Export ("originalContentView")]
 		UIView GetOriginalContentView ();
 
@@ -258,7 +259,7 @@ namespace iAd {
 		[iOS (8,0)]
 		[Deprecated (PlatformName.iOS, 13,0)]
 		[Export ("addClientToSegments:replaceExisting:")]
-		void AddClientToSegments ([NullAllowed] string [] segmentIdentifiers, bool replaceExisting);
+		void AddClientToSegments (string [] segmentIdentifiers, bool replaceExisting);
 
 		[iOS (9,0)]
 		[Export ("requestAttributionDetailsWithBlock:")]

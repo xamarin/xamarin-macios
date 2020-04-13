@@ -1839,6 +1839,9 @@ namespace Intents {
 	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	public enum INIntentIdentifier {
+		[Field (null)]
+		None = -1,
+
 		[Unavailable (PlatformName.MacOSX)]
 		[Field ("INStartAudioCallIntentIdentifier")]
 		StartAudioCall,
@@ -3403,6 +3406,7 @@ namespace Intents {
 
 		[Static]
 		[MarshalNativeExceptions]
+		[return: NullAllowed]
 		[Export ("imageWithURL:")]
 		INImage FromUrl (NSUrl url);
 
@@ -3493,6 +3497,7 @@ namespace Intents {
 
 		[Unavailable (PlatformName.MacOSX)]
 		[Wrap ("INIntentIdentifierExtensions.GetValue (IdentifierString)")]
+		[NullAllowed]
 		INIntentIdentifier? Identifier { get; }
 
 		[Watch (4,0), Mac (10,13), iOS (11,0)]
@@ -3513,6 +3518,7 @@ namespace Intents {
 		INImage GetImage (string parameterName);
 
 		[Watch (5,0), Mac (10,14), iOS (12,0)]
+		[return: NullAllowed]
 		[Export ("keyImage")]
 		INImage GetKeyImage ();
 	}
@@ -6388,7 +6394,7 @@ namespace Intents {
 	interface INSpeakable {
 
 		[Abstract]
-		[NullAllowed, Export ("spokenPhrase")]
+		[Export ("spokenPhrase")]
 		string SpokenPhrase { get; }
 
 		[Abstract]
@@ -7071,6 +7077,7 @@ namespace Intents {
 	[BaseType (typeof (NSUserActivity))]
 	interface NSUserActivity_IntentsAdditions {
 
+		[return: NullAllowed]
 		[Export ("interaction")]
 		INInteraction GetInteraction ();
 	}

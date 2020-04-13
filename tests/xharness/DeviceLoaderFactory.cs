@@ -1,7 +1,8 @@
 ﻿using System;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
+using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 
-namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
+namespace Xharness {
 
 	public interface IDeviceLoaderFactory {
 		IHardwareDeviceLoader CreateLoader ();

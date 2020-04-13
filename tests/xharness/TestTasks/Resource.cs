@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 
-namespace Xharness.Jenkins
+namespace Xharness.TestTasks
 {
 	// This is a very simple class to manage the general concept of 'resource'.
 	// Performance isn't important, so this is very simple.
@@ -89,10 +89,5 @@ namespace Xharness.Jenkins
 
 			public Resource Resource { get; }
 		}
-	}
-
-	public interface IAcquiredResource : IDisposable
-	{
-		Resource Resource { get; }
 	}
 }

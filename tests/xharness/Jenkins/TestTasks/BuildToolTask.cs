@@ -4,27 +4,57 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 
 namespace Xharness.Jenkins.TestTasks
 {
-	public abstract class BuildToolTask : TestTask
+	public abstract class BuildToolTask : AppleTestTask
 	{
-		protected readonly IProcessManager ProcessManager;
+		protected Xharness.TestTasks.BuildToolTask buildToolTask;
 
-		public bool SpecifyPlatform = true;
-		public bool SpecifyConfiguration = true;
+		public IProcessManager ProcessManager { get; }
 
-		protected BuildToolTask (IProcessManager processManager)
-		{
+		public override string TestName {
+			get => base.TestName;
+			set {
+				base.TestName = value;
+				buildToolTask.TestName = value; 
+			}
+		}
+
+		public bool SpecifyPlatform { 
+			get => buildToolTask.SpecifyPlatform;
+			set => buildToolTask.SpecifyPlatform = value;
+		}
+
+		public bool SpecifyConfiguration {
+			get => buildToolTask.SpecifyConfiguration;
+			set => buildToolTask.SpecifyConfiguration = value;
+		}
+
+		public override TestProject TestProject {
+			get => base.TestProject;
+			set {
+				base.TestProject = value;
+				buildToolTask.TestProject = value;
+			}
+		}
+
+		protected BuildToolTask (Jenkins jenkins, IProcessManager processManager) : base (jenkins) {
 			ProcessManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
+			InitializeTool ();
+		}
+
+		public override TestPlatform Platform { 
+			get => base.Platform;
+			set {
+				base.Platform = value;
+				buildToolTask.Platform = value;
+			}
 		}
 
 		public override string Mode {
-			get { return Platform.ToString (); }
-			set { throw new NotSupportedException (); }
+			get => buildToolTask.Mode;
+			set => buildToolTask.Mode = value;
 		}
 
-		public virtual Task CleanAsync ()
-		{
-			Console.WriteLine ("Clean is not implemented for {0}", GetType ().Name);
-			return Task.CompletedTask;
-		}
+		protected virtual void InitializeTool () => buildToolTask = new Xharness.TestTasks.BuildToolTask (ProcessManager);
+		public virtual Task CleanAsync () => buildToolTask.CleanAsync ();
 	}
 }

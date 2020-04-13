@@ -1888,7 +1888,7 @@ namespace CoreAnimation {
 
 		[Mac (10,13)]
 		[Static]
-		[Wrap ("Create (tex, options?.Dictionary)")]
+		[Wrap ("Create (tex, options.GetDictionary ())")]
 		CARenderer Create (IMTLTexture tex, [NullAllowed] CARendererOptions options);
 
 		[NullAllowed, Export ("layer", ArgumentSemantic.Strong)]

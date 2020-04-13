@@ -275,7 +275,7 @@ namespace Foundation
 #endif
 
 		[iOS (7,0)]
-		[Wrap ("this (url, options == null ? null : options.Dictionary, out resultDocumentAttributes, ref error)")]
+		[Wrap ("this (url, options.GetDictionary (), out resultDocumentAttributes, ref error)")]
 		IntPtr Constructor (NSUrl url, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, ref NSError error);
 
 		[iOS (7,0)]
@@ -283,7 +283,7 @@ namespace Foundation
 		IntPtr Constructor (NSData data, [NullAllowed] NSDictionary options, out NSDictionary resultDocumentAttributes, ref NSError error);
 
 		[iOS (7,0)]
-		[Wrap ("this (data, options == null ? null : options.Dictionary, out resultDocumentAttributes, ref error)")]
+		[Wrap ("this (data, options.GetDictionary (), out resultDocumentAttributes, ref error)")]
 		IntPtr Constructor (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, ref NSError error);
 
 		[iOS (7,0)]
@@ -291,7 +291,7 @@ namespace Foundation
 		NSData GetDataFromRange (NSRange range, NSDictionary attributes, ref NSError error);
 
 		[iOS (7,0)]
-		[Wrap ("GetDataFromRange (range, documentAttributes == null ? null : documentAttributes.Dictionary, ref error)")]
+		[Wrap ("GetDataFromRange (range, documentAttributes.GetDictionary ()!, ref error)")]
 		NSData GetDataFromRange (NSRange range, NSAttributedStringDocumentAttributes documentAttributes, ref NSError error);
 
 		[iOS (7,0)]
@@ -299,7 +299,7 @@ namespace Foundation
 		NSFileWrapper GetFileWrapperFromRange (NSRange range, NSDictionary attributes, ref NSError error);
 
 		[iOS (7,0)]
-		[Wrap ("GetFileWrapperFromRange (range, documentAttributes == null ? null : documentAttributes.Dictionary, ref error)")]
+		[Wrap ("GetFileWrapperFromRange (range, documentAttributes.GetDictionary ()!, ref error)")]
 		NSFileWrapper GetFileWrapperFromRange (NSRange range, NSAttributedStringDocumentAttributes documentAttributes, ref NSError error);
 
 #endif
@@ -417,10 +417,10 @@ namespace Foundation
 		[Export ("initWithURL:options:documentAttributes:error:")]
 		IntPtr Constructor (NSUrl url, [NullAllowed] NSDictionary options, out NSDictionary resultDocumentAttributes, out NSError error);
 
-		[Wrap ("this (url, options == null ? null : options.Dictionary, out resultDocumentAttributes, out error)")]
+		[Wrap ("this (url, options.GetDictionary (), out resultDocumentAttributes, out error)")]
 		IntPtr Constructor (NSUrl url, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, out NSError error);
 
-		[Wrap ("this (data, options == null ? null : options.Dictionary, out resultDocumentAttributes, out error)")]
+		[Wrap ("this (data, options.GetDictionary (), out resultDocumentAttributes, out error)")]
 		IntPtr Constructor (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, out NSError error);
 
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSAttributedString (NSUrl, NSDictionary, out NSDictionary, ref NSError)' instead.")]
@@ -443,7 +443,7 @@ namespace Foundation
 		[Export ("initWithHTML:options:documentAttributes:")]
 		IntPtr Constructor (NSData data, [NullAllowed]  NSDictionary options, out NSDictionary resultDocumentAttributes);
 
-		[Wrap ("this (data, options == null ? null : options.Dictionary, out resultDocumentAttributes)")]
+		[Wrap ("this (data, options.GetDictionary (), out resultDocumentAttributes)")]
 		IntPtr Constructor (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes);
 
 		[Export ("initWithRTFDFileWrapper:documentAttributes:")]
@@ -489,37 +489,37 @@ namespace Foundation
 		[Export ("dataFromRange:documentAttributes:error:")]
 		NSData GetData (NSRange range, [NullAllowed] NSDictionary options, out NSError error);
 
-		[Wrap ("this.GetData (range, options == null ? null : options.Dictionary, out error)")]
+		[Wrap ("this.GetData (range, options.GetDictionary (), out error)")]
 		NSData GetData (NSRange range, NSAttributedStringDocumentAttributes options, out NSError error);
 
 		[Export ("fileWrapperFromRange:documentAttributes:error:")]
 		NSFileWrapper GetFileWrapper (NSRange range, [NullAllowed] NSDictionary options, out NSError error);
 
-		[Wrap ("this.GetFileWrapper (range, options == null ? null : options.Dictionary, out error)")]
+		[Wrap ("this.GetFileWrapper (range, options.GetDictionary (), out error)")]
 		NSFileWrapper GetFileWrapper (NSRange range, NSAttributedStringDocumentAttributes options, out NSError error);
 
 		[Export ("RTFFromRange:documentAttributes:")]
 		NSData GetRtf (NSRange range, [NullAllowed] NSDictionary options);
 
-		[Wrap ("this.GetRtf (range, options == null ? null : options.Dictionary)")]
+		[Wrap ("this.GetRtf (range, options.GetDictionary ())")]
 		NSData GetRtf (NSRange range, NSAttributedStringDocumentAttributes options);
 
 		[Export ("RTFDFromRange:documentAttributes:")]
 		NSData GetRtfd (NSRange range, [NullAllowed] NSDictionary options);
 
-		[Wrap ("this.GetRtfd (range, options == null ? null : options.Dictionary)")]
+		[Wrap ("this.GetRtfd (range, options.GetDictionary ())")]
 		NSData GetRtfd (NSRange range, NSAttributedStringDocumentAttributes options);
 
 		[Export ("RTFDFileWrapperFromRange:documentAttributes:")]
 		NSFileWrapper GetRtfdFileWrapper (NSRange range, [NullAllowed] NSDictionary options);
 
-		[Wrap ("this.GetRtfdFileWrapper (range, options == null ? null : options.Dictionary)")]
+		[Wrap ("this.GetRtfdFileWrapper (range, options.GetDictionary ())")]
 		NSFileWrapper GetRtfdFileWrapper (NSRange range, NSAttributedStringDocumentAttributes options);
 
 		[Export ("docFormatFromRange:documentAttributes:")]
 		NSData GetDocFormat (NSRange range, [NullAllowed] NSDictionary options);
 
-		[Wrap ("this.GetDocFormat (range, options == null ? null : options.Dictionary)")]
+		[Wrap ("this.GetDocFormat (range, options.GetDictionary ())")]
 		NSData GetDocFormat (NSRange range, NSAttributedStringDocumentAttributes options);
 #else
 		[Export ("size")]
@@ -558,7 +558,7 @@ namespace Foundation
 		[Mac (10,15), iOS (13,0)]
 		[Static]
 		[Async (ResultTypeName = "NSLoadFromHtmlResult")]
-		[Wrap ("LoadFromHtml (request, options == null ? null : options.Dictionary, completionHandler)")]
+		[Wrap ("LoadFromHtml (request, options.GetDictionary ()!, completionHandler)")]
 		void LoadFromHtml (NSUrlRequest request, NSAttributedStringDocumentAttributes options, NSAttributedStringCompletionHandler completionHandler);
 
 		[NoWatch][NoTV] // really inside WKWebKit
@@ -574,7 +574,7 @@ namespace Foundation
 		[Mac (10,15), iOS (13,0)]
 		[Static]
 		[Async (ResultTypeName = "NSLoadFromHtmlResult")]
-		[Wrap ("LoadFromHtml (fileUrl, options == null ? null : options.Dictionary, completionHandler)")]
+		[Wrap ("LoadFromHtml (fileUrl, options.GetDictionary ()!, completionHandler)")]
 		void LoadFromHtml (NSUrl fileUrl, NSAttributedStringDocumentAttributes options, NSAttributedStringCompletionHandler completionHandler);
 
 		[NoWatch][NoTV] // really inside WKWebKit
@@ -590,7 +590,7 @@ namespace Foundation
 		[Mac (10,15), iOS (13,0)]
 		[Static]
 		[Async (ResultTypeName = "NSLoadFromHtmlResult")]
-		[Wrap ("LoadFromHtml (@string, options == null ? null : options.Dictionary, completionHandler)")]
+		[Wrap ("LoadFromHtml (@string, options.GetDictionary ()!, completionHandler)")]
 		void LoadFromHtml (string @string, NSAttributedStringDocumentAttributes options, NSAttributedStringCompletionHandler completionHandler);
 
 		[NoWatch][NoTV] // really inside WKWebKit
@@ -606,7 +606,7 @@ namespace Foundation
 		[Mac (10,15), iOS (13,0)]
 		[Static]
 		[Async (ResultTypeName = "NSLoadFromHtmlResult")]
-		[Wrap ("LoadFromHtml (data, options == null ? null : options.Dictionary, completionHandler)")]
+		[Wrap ("LoadFromHtml (data, options.GetDictionary ()!, completionHandler)")]
 		void LoadFromHtml (NSData data, NSAttributedStringDocumentAttributes options, NSAttributedStringCompletionHandler completionHandler);
 	}
 
@@ -2323,7 +2323,7 @@ namespace Foundation
 		[Export ("attributedStringForObjectValue:withDefaultAttributes:")]
 		NSAttributedString GetAttributedString (NSObject obj, NSDictionary<NSString, NSObject> defaultAttributes);
 
-		[Wrap ("GetAttributedString (obj, defaultAttributes == null ? null : defaultAttributes.Dictionary)")]
+		[Wrap ("GetAttributedString (obj, defaultAttributes.GetDictionary ()!)")]
 #if MONOMAC
 		NSAttributedString GetAttributedString (NSObject obj, NSStringAttributes defaultAttributes);
 #else
@@ -2598,6 +2598,7 @@ namespace Foundation
 		void SetClass (Class kls, string codedName);
 
 		[Export ("classForClassName:")]
+		[return: NullAllowed]
 		Class GetClass (string codedName);
 
 		[Export ("setRequiresSecureCoding:")]
@@ -3647,7 +3648,7 @@ namespace Foundation
 		void AddAttributes (NSDictionary attrs, NSRange range);
 
 #if MONOMAC
-		[Wrap ("AddAttributes (attributes == null ? null : attributes.Dictionary, range)")]
+		[Wrap ("AddAttributes (attributes.GetDictionary ()!, range)")]
 		void AddAttributes (NSStringAttributes attributes, NSRange range);
 #endif
 		[Export ("removeAttribute:range:")]
@@ -3683,14 +3684,14 @@ namespace Foundation
 
 		[NoTV]
 		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'ReadFromUrl' instead.")]
-		[Wrap ("ReadFromFile (url, options == null ? null : options.Dictionary, ref returnOptions, ref error)")]
+		[Wrap ("ReadFromFile (url, options.GetDictionary ()!, ref returnOptions, ref error)")]
 		bool ReadFromFile (NSUrl url, NSAttributedStringDocumentAttributes options, ref NSDictionary returnOptions, ref NSError error);
 
 		[iOS (7,0)]
 		[Export ("readFromData:options:documentAttributes:error:")]
 		bool ReadFromData (NSData data, NSDictionary options, ref NSDictionary returnOptions, ref NSError error);
 		
-		[Wrap ("ReadFromData (data, options == null ? null : options.Dictionary, ref returnOptions, ref error)")]
+		[Wrap ("ReadFromData (data, options.GetDictionary ()!, ref returnOptions, ref error)")]
 		bool ReadFromData (NSData data, NSAttributedStringDocumentAttributes options, ref NSDictionary returnOptions, ref NSError error);
 
 #endif
@@ -3708,7 +3709,7 @@ namespace Foundation
 		bool ReadFromUrl (NSUrl url, NSDictionary<NSString, NSObject> options, ref NSDictionary<NSString, NSObject> returnOptions, ref NSError error);
 
 		[iOS(9,0), Mac(10,11)]
-		[Wrap ("ReadFromUrl (url, options.Dictionary, ref returnOptions, ref error)")]
+		[Wrap ("ReadFromUrl (url, options.GetDictionary ()!, ref returnOptions, ref error)")]
 		bool ReadFromUrl (NSUrl url, NSAttributedStringDocumentAttributes options, ref NSDictionary<NSString, NSObject> returnOptions, ref NSError error);
 	}
 
@@ -4886,19 +4887,19 @@ namespace Foundation
 		[Export ("addTimer:forMode:")]
 		void AddTimer (NSTimer timer, NSString forMode);
 
-		[Wrap ("AddTimer (timer, forMode.GetConstant ())")]
+		[Wrap ("AddTimer (timer, forMode.GetConstant ()!)")]
 		void AddTimer (NSTimer timer, NSRunLoopMode forMode);
 
 		[Export ("limitDateForMode:")]
 		NSDate LimitDateForMode (NSString mode);
 
-		[Wrap ("LimitDateForMode (mode.GetConstant ())")]
+		[Wrap ("LimitDateForMode (mode.GetConstant ()!)")]
 		NSDate LimitDateForMode (NSRunLoopMode mode);
 
 		[Export ("acceptInputForMode:beforeDate:")]
 		void AcceptInputForMode (NSString mode, NSDate limitDate);
 
-		[Wrap ("AcceptInputForMode (mode.GetConstant (), limitDate)")]
+		[Wrap ("AcceptInputForMode (mode.GetConstant ()!, limitDate)")]
 		void AcceptInputForMode (NSRunLoopMode mode, NSDate limitDate);
 
 		[Export ("run")]
@@ -4910,7 +4911,7 @@ namespace Foundation
 		[Export ("runMode:beforeDate:")]
 		bool RunUntil (NSString runLoopMode, NSDate limitdate);
 
-		[Wrap ("RunUntil (runLoopMode.GetConstant (), limitDate)")]
+		[Wrap ("RunUntil (runLoopMode.GetConstant ()!, limitDate)")]
 		bool RunUntil (NSRunLoopMode runLoopMode, NSDate limitDate);
 
 		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
@@ -4922,7 +4923,7 @@ namespace Foundation
 		void Perform (NSString[] modes, Action block);
 
 		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
-		[Wrap ("Perform (modes.GetConstants (), block)")]
+		[Wrap ("Perform (modes.GetConstants ()!, block)")]
 		void Perform (NSRunLoopMode[] modes, Action block);
 
 #if !XAMCORE_4_0
@@ -6723,13 +6724,13 @@ namespace Foundation
 		[Export ("scheduleInRunLoop:forMode:")]
 		void Schedule (NSRunLoop aRunLoop, NSString forMode);
 
-		[Wrap ("Schedule (aRunLoop, forMode.GetConstant ())")]
+		[Wrap ("Schedule (aRunLoop, forMode.GetConstant ()!)")]
 		void Schedule (NSRunLoop aRunLoop, NSRunLoopMode forMode);
 	
 		[Export ("unscheduleFromRunLoop:forMode:")]
 		void Unschedule (NSRunLoop aRunLoop, NSString forMode);
 
-		[Wrap ("Unschedule (aRunLoop, forMode.GetConstant ())")]
+		[Wrap ("Unschedule (aRunLoop, forMode.GetConstant ()!)")]
 		void Unschedule (NSRunLoop aRunLoop, NSRunLoopMode forMode);
 
 #if !MONOMAC
@@ -6754,6 +6755,7 @@ namespace Foundation
 #if IOS
 		// Extension from iOS5, NewsstandKit
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use Background Remote Notifications instead.")]
+		[NullAllowed]
 		[Export ("newsstandAssetDownload", ArgumentSemantic.Weak)]
 		NewsstandKit.NKAssetDownload NewsstandAssetDownload { get; }
 #endif
@@ -7464,9 +7466,9 @@ namespace Foundation
 
 		[NoWatch]
 		ProxyConfigurationDictionary StrongConnectionProxyDictionary {
-			[Wrap ("new ProxyConfigurationDictionary (ConnectionProxyDictionary)")]
+			[Wrap ("new ProxyConfigurationDictionary (ConnectionProxyDictionary!)")]
 			get;
-			[Wrap ("ConnectionProxyDictionary = value?.Dictionary")]
+			[Wrap ("ConnectionProxyDictionary = value.GetDictionary ()")]
 			set;
 		}
 	
@@ -8479,7 +8481,7 @@ namespace Foundation
 		nuint DetectStringEncoding (NSData rawData, NSDictionary options, out string convertedString, out bool usedLossyConversion);
 
 		[iOS (8,0), Mac(10,10)]
-		[Static, Wrap ("DetectStringEncoding(rawData,options == null ? null : options.Dictionary, out convertedString, out usedLossyConversion)")]
+		[Static, Wrap ("DetectStringEncoding(rawData,options.GetDictionary ()!, out convertedString, out usedLossyConversion)")]
 		nuint DetectStringEncoding (NSData rawData, EncodingDetectionOptions options, out string convertedString, out bool usedLossyConversion);
 
 		[iOS (8,0),Mac(10,10)]
@@ -8639,7 +8641,7 @@ namespace Foundation
 		bool ApplyTransform (NSString transform, bool reverse, NSRange range, out NSRange resultingRange);
 
 		[iOS (9,0)][Mac (10,11)]
-		[Wrap ("ApplyTransform (transform.GetConstant (), reverse, range, out resultingRange)")]
+		[Wrap ("ApplyTransform (transform.GetConstant ()!, reverse, range, out resultingRange)")]
 		bool ApplyTransform (NSStringTransform transform, bool reverse, NSRange range, out NSRange resultingRange);
 
 		[Export ("replaceCharactersInRange:withString:")]
@@ -8747,7 +8749,7 @@ namespace Foundation
 		[Export ("linguisticTagsInRange:scheme:options:orthography:tokenRanges:")]
 		NSString[] GetLinguisticTags (NSRange range, NSString scheme, NSLinguisticTaggerOptions options, [NullAllowed] NSOrthography orthography, [NullAllowed] out NSValue[] tokenRanges);
 
-		[Wrap ("GetLinguisticTags (This, range, scheme.GetConstant (), options, orthography, out tokenRanges)")]
+		[Wrap ("GetLinguisticTags (This, range, scheme.GetConstant ()!, options, orthography, out tokenRanges)")]
 #if XAMCORE_4_0
 		NSLinguisticTag[] GetLinguisticTags (NSRange range, NSLinguisticTagScheme scheme, NSLinguisticTaggerOptions options, [NullAllowed] NSOrthography orthography, [NullAllowed] out NSValue[] tokenRanges);
 #else
@@ -8758,7 +8760,7 @@ namespace Foundation
 		[Export ("enumerateLinguisticTagsInRange:scheme:options:orthography:usingBlock:")]
 		void EnumerateLinguisticTags (NSRange range, NSString scheme, NSLinguisticTaggerOptions options, [NullAllowed] NSOrthography orthography, NSEnumerateLinguisticTagsEnumerator handler);
 
-		[Wrap ("EnumerateLinguisticTags (This, range, scheme.GetConstant (), options, orthography, handler)")]
+		[Wrap ("EnumerateLinguisticTags (This, range, scheme.GetConstant ()!, options, orthography, handler)")]
 		void EnumerateLinguisticTags (NSRange range, NSLinguisticTagScheme scheme, NSLinguisticTaggerOptions options, [NullAllowed] NSOrthography orthography, NSEnumerateLinguisticTagsEnumerator handler);
 	}
 
@@ -10593,10 +10595,10 @@ namespace Foundation
 		[Export ("removeFromRunLoop:forMode:")]
 		void Unschedule (NSRunLoop aRunLoop, string forMode);
 #endif
-		[Wrap ("Schedule (aRunLoop, forMode.GetConstant ())")]
+		[Wrap ("Schedule (aRunLoop, forMode.GetConstant ()!)")]
 		void Schedule (NSRunLoop aRunLoop, NSRunLoopMode forMode);
 
-		[Wrap ("Unschedule (aRunLoop, forMode.GetConstant ())")]
+		[Wrap ("Unschedule (aRunLoop, forMode.GetConstant ()!)")]
 		void Unschedule (NSRunLoop aRunLoop, NSRunLoopMode forMode);
 
 		[Export ("domain", ArgumentSemantic.Copy)]
@@ -11849,13 +11851,13 @@ namespace Foundation
 		[Export ("scheduleInRunLoop:forMode:")]
 		void ScheduleInRunLoop (NSRunLoop runLoop, NSString runLoopMode);
 
-		[Wrap ("ScheduleInRunLoop (runLoop, runLoopMode.GetConstant ())")]
+		[Wrap ("ScheduleInRunLoop (runLoop, runLoopMode.GetConstant ()!)")]
 		void ScheduleInRunLoop (NSRunLoop runLoop, NSRunLoopMode runLoopMode);
 
 		[Export ("removeFromRunLoop:forMode:")]
 		void RemoveFromRunLoop (NSRunLoop runLoop, NSString runLoopMode);
 
-		[Wrap ("RemoveFromRunLoop (runLoop, runLoopMode.GetConstant ())")]
+		[Wrap ("RemoveFromRunLoop (runLoop, runLoopMode.GetConstant ()!)")]
 		void RemoveFromRunLoop (NSRunLoop runLoop, NSRunLoopMode runLoopMode);
 
 		// Disable warning for NSMutableArray
@@ -12345,7 +12347,7 @@ namespace Foundation
 
 #if !XAMCORE_4_0
 		[Obsolete ("Use '.ctor(INSFilePresenter)' instead.")]
-		[Wrap ("this ((INSFilePresenter) filePresenterOrNil)")]
+		[Wrap ("this (filePresenterOrNil as INSFilePresenter)")]
 		IntPtr Constructor ([NullAllowed] NSFilePresenter filePresenterOrNil);
 #endif
 
@@ -12523,6 +12525,7 @@ namespace Foundation
 
 		[Wrap ("WeakDelegate")]
 		[Protocolize]
+		[NullAllowed]
 		NSFileManagerDelegate Delegate { get; set; }
 
 		[Export ("setAttributes:ofItemAtPath:error:")]
@@ -13565,7 +13568,7 @@ namespace Foundation
 		NSTextCheckingResult AddressCheckingResult (NSRange range, NSDictionary components);
 
 		[Static]
-		[Wrap ("AddressCheckingResult (range, components != null ? components.Dictionary : null)")]
+		[Wrap ("AddressCheckingResult (range, components.GetDictionary ()!)")]
 		NSTextCheckingResult AddressCheckingResult (NSRange range, NSTextCheckingAddressComponents components);
 
 		[Static]
@@ -13609,7 +13612,7 @@ namespace Foundation
 		NSTextCheckingResult TransitInformationCheckingResult (NSRange range, NSDictionary components);
 
 		[Static]
-		[Wrap ("TransitInformationCheckingResult (range, components != null ? components.Dictionary : null)")]
+		[Wrap ("TransitInformationCheckingResult (range, components.GetDictionary ()!)")]
 		NSTextCheckingResult TransitInformationCheckingResult (NSRange range, NSTextCheckingTransitComponents components);
 
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]

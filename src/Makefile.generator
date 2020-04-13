@@ -2,10 +2,12 @@
 # Generator
 #
 
-# generator.csproj.inc contains the generator_dependencies variable used to determine if the generator needs to be rebuilt or not.
-$(BUILD_DIR)/generator.csproj.inc: Makefile.generator $(TOP)/tools/common/create-makefile-fragment.sh $(TOP)/Make.config $(TOP)/mk/mono.mk | $(BUILD_DIR)
-	$(Q_GEN) $(TOP)/tools/common/create-makefile-fragment.sh $(abspath $(CURDIR)/generator.csproj) $(abspath $@)
+# copy generator.csproj to the build dir so that we can use our shared .csproj.inc target from rules.mk to create generator.csproj.inc
+# we need any generated files in this directory to go into the build directory, and the shared target will output the csproj.inc into the same directory as the csproj
+$(BUILD_DIR)/generator.csproj: generator.csproj | $(BUILD_DIR)
+	$(Q) $(CP) $< $@
 
+# generator.csproj.inc contains the generator_dependencies variable used to determine if the generator needs to be rebuilt or not.
 -include $(BUILD_DIR)/generator.csproj.inc
 
 $(BUILD_DIR)/common/bgen.exe: $(generator_dependencies) Makefile.generator $(BUILD_DIR)/generator-frameworks.g.cs

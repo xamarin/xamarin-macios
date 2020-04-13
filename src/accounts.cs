@@ -100,7 +100,7 @@ namespace Accounts {
 		[Async]
 		void RequestAccess (ACAccountType accountType, [NullAllowed] NSDictionary options, ACRequestCompletionHandler completion);
 
-		[Wrap ("RequestAccess (accountType, options == null ? null : options.Dictionary, completion)")]
+		[Wrap ("RequestAccess (accountType, options.GetDictionary (), completion)")]
 		[Async]
 		void RequestAccess (ACAccountType accountType, [NullAllowed] AccountStoreOptions options, ACRequestCompletionHandler completion);
 

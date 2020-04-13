@@ -8,7 +8,6 @@ using NUnit.Framework;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
-using Microsoft.DotNet.XHarness.iOS.Shared;
 
 namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests {
 
@@ -74,8 +73,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests {
 				RunMode.Sim64,
 				XmlResultJargon.NUnitV3,
 				deviceName,
-				TimeSpan.FromSeconds (2),
-				0.2);
+				TimeSpan.FromSeconds (2));
 		}
 
 		[Test]
