@@ -150,7 +150,7 @@ pack: ref-pack sdk-pack runtime-pack
 # just a temporary target while debugging for faster turnaround
 packsimple: prepare
 	$(Q) rm -Rf nupkgs/*
-	$(Q) $(MAKE) ref-pack-iOS sdk-pack-iOS nupkgs/Microsoft.iOS.Runtime.ios-x64.nupkg
+	$(Q) $(MAKE) ref-pack-iOS sdk-pack-iOS nupkgs/Microsoft.iOS.Runtime.ios-x64.nupkg nupkgs/Microsoft.iOS.Runtime.ios-arm64.nupkg
 
 CURRENT_IOS_VERSION=$(shell grep 'iOSPackageVersion:'     targets/Xamarin.Shared.Sdk.Versions.props | sed -e 's/.*PackageVersion://g' -e 's/.sha.*//' -e 's/[[:space:]]//g')
 CURRENT_TVOS_VERSION=$(shell grep 'tvOSPackageVersion:'    targets/Xamarin.Shared.Sdk.Versions.props | sed -e 's/.*PackageVersion://g' -e 's/.sha.*//' -e 's/[[:space:]]//g')
