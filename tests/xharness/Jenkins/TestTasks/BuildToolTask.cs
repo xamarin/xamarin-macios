@@ -6,7 +6,7 @@ namespace Xharness.Jenkins.TestTasks
 {
 	public abstract class BuildToolTask : AppleTestTask
 	{
-		protected Xharness.TestTasks.BuildToolTask buildToolTask;
+		protected Xharness.TestTasks.BuildTool buildToolTask;
 
 		public IProcessManager ProcessManager { get; }
 
@@ -54,7 +54,7 @@ namespace Xharness.Jenkins.TestTasks
 			set => buildToolTask.Mode = value;
 		}
 
-		protected virtual void InitializeTool () => buildToolTask = new Xharness.TestTasks.BuildToolTask (ProcessManager);
+		protected virtual void InitializeTool () => buildToolTask = new Xharness.TestTasks.BuildTool (ProcessManager);
 		public virtual Task CleanAsync () => buildToolTask.CleanAsync ();
 	}
 }
