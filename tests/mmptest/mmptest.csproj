@@ -67,7 +67,7 @@
     <Compile Include="src\ExtensionTests.cs" />
     <Compile Include="src\RemotingConfigurationTests.cs" />
     <Compile Include="src\AOTTests.cs" />
-    <Compile Include="..\..\tools\mmp\tests\aot.cs">
+    <Compile Include="..\..\tests\mmp-aot-tests\aot.cs">
       <Link>unit\aot.cs</Link>
     </Compile>
     <Compile Include="src\FrameworkLinksTests.cs" />
