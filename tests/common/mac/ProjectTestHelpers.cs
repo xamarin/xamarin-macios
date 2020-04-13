@@ -588,7 +588,7 @@ namespace TestCase
 			Environment.SetEnvironmentVariable ("XAMMAC_FRAMEWORK_PATH", rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current");
 			Environment.SetEnvironmentVariable ("XamarinMacFrameworkRoot", rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current");
 
-			var rv = ExecutionHelper.Execute (Configuration.XIBuildPath, new [] { $"--", "/restore", project}, out var output);
+			var rv = ExecutionHelper.Execute (Configuration.XIBuildPath, new [] { $"--", "/t:Restore", project}, out var output);
 			if (rv != 0) {
 				Console.WriteLine ("nuget restore failed:");
 				Console.WriteLine (output);
