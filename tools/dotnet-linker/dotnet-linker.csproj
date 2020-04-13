@@ -9,7 +9,7 @@
     <DefineConstants>TRACE;DEBUG;NETCOREAPP;NETCOREAPP3_0;NET;IOS</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.ILLink" Version="5.0.0-preview.3.20207.1" />
+    <PackageReference Include="Microsoft.NET.ILLink" Version="5.0.0-preview.3.20210.1" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\linker\MobileResolveMainAssemblyStep.cs">
@@ -35,5 +35,8 @@
     </Compile>
     <None Update="substitute-32bits.xml" CopyToOutputDirectory="Always" />
     <None Update="substitute-64bits.xml" CopyToOutputDirectory="Always" />
+    <Compile Include="..\linker\MobileSubStepDispatcher.cs">
+      <Link>MobileSubStepDispatcher.cs</Link>
+    </Compile>
   </ItemGroup>
 </Project>
