@@ -54,8 +54,6 @@ using ObjCRuntime;
 using Foundation;
 using Xamarin.Utils;
 
-// TODO: This comment was added by mandel to test jenkins and ensure we do select the correct
-// generator tests \o/ \o/ \o/
 public static class GeneratorExtensions
 {
 	public static StreamWriter Write (this StreamWriter sw, char c, int count)
