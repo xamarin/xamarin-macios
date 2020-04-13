@@ -8,7 +8,7 @@ publish: build
 	dotnet publish *.csproj /restore /p:PublishTrimmed=True /p:SelfContained=True $(XBUILD_VERBOSITY)
 
 build:
-	rm -Rf ~/.nuget/packages/xamarin.ios.*
+	rm -Rf ~/.nuget/packages/xamarin.ios.* ~/.nuget/packages/microsoft.ios.*
 	cd ../.. && git clean -xfd
 	rm -Rf $(TOP)/_build
 	make all install -j -C ../../..
