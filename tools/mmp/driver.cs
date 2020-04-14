@@ -628,7 +628,7 @@ namespace Xamarin.Bundler {
 				BuildTarget.Resolver.CommandLineAssemblies = references;
 
 				if (!UseLegacyAssemblyResolution && (IsUnifiedFullSystemFramework || IsUnifiedFullXamMacFramework)) {
-					// We need to look in the GAC/System mono for but FullSystem and FullXamMac, because that's
+					// We need to look in the GAC/System mono for both FullSystem and FullXamMac, because that's
 					// how we've been resolving assemblies in the past (Cecil has a fall-back mode where it looks
 					// in the GAC, and we never disabled that, meaning that we always looked in the GAC if failing
 					// to resolve from somewhere else). This makes it explicit that we look in the GAC, and we

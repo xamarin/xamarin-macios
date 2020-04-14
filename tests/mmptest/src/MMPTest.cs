@@ -665,7 +665,7 @@ namespace Xamarin.MMP.Tests
 				var test = new TI.UnifiedTestConfig (tmpDir) {
 					References = "<PackageReference Include=\"xunit.runner.utility\" Version=\"2.4.0\" />",
 					TestCode = "System.Console.WriteLine (typeof (Xunit.AfterTestFinished));",
-					XM45 = xm45, // test with mobile + why is this different than the mscorlib mac test failure (package resolves to different version of system.web.dll)
+					XM45 = xm45,
 				};
 				if (tfv != null)
 					test.TargetFrameworkVersion = $"<TargetFrameworkVersion>{tfv}</TargetFrameworkVersion>";
