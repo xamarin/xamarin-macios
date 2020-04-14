@@ -50,7 +50,7 @@ namespace Xharness.Jenkins.TestTasks {
 			}
 		}
 
-		protected override async Task RunTestAsync ()
+		public override async Task RunTestAsync ()
 		{
 			var projectDir = System.IO.Path.GetDirectoryName (ProjectFile);
 			var name = System.IO.Path.GetFileName (projectDir);

@@ -109,7 +109,7 @@ namespace Xharness.Jenkins.TestTasks {
 			}
 		}
 
-		protected override async Task RunTestAsync ()
+		public override async Task RunTestAsync ()
 		{
 			Jenkins.MainLog.WriteLine ("Running XI on '{0}' ({2}) for {1}", Device?.Name, ProjectFile, Device?.UDID);
 

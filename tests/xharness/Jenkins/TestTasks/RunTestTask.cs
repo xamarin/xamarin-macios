@@ -1,30 +1,46 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
-using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using Xharness.TestTasks;
 
 namespace Xharness.Jenkins.TestTasks {
-	internal abstract class RunTestTask : AppleTestTask
+	internal abstract class RunTestTask : AppleTestTask, IRunTestTask
 	{
-		protected IProcessManager ProcessManager { get; }
-		IResultParser ResultParser { get; } = new XmlResultParser ();
+		protected RunTest runTest;
+		protected IProcessManager ProcessManager => runTest.ProcessManager;
+		public IBuildToolTask BuildTask => runTest.BuildTask;
 
-		public readonly IBuildToolTask BuildTask;
-		public TimeSpan Timeout = TimeSpan.FromMinutes (10);
-		public double TimeoutMultiplier { get; set; } = 1;
-		public string WorkingDirectory;
+		public double TimeoutMultiplier {
+			get => runTest.TimeoutMultiplier;
+			set => runTest.TimeoutMultiplier = value;
+		}
+
+		public string WorkingDirectory {
+			get => runTest.WorkingDirectory;
+			set => runTest.WorkingDirectory = value;
+		}
+
+		public TimeSpan Timeout {
+			get => runTest.Timeout;
+			set => runTest.Timeout = value;
+		}
 
 		public RunTestTask (Jenkins jenkins, IBuildToolTask build_task, IProcessManager processManager) : base (jenkins)
 		{
-			this.BuildTask = build_task;
-			this.ProcessManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
+			runTest = new RunTest (
+				testTask: this,
+				buildTask: build_task,
+				processManager: processManager,
+				envManager: this,
+				mainLog: Jenkins.MainLog,
+				generateXmlFailures: Jenkins.Harness.InCI,
+				xmlResultJargon: Jenkins.Harness.XmlJargon,
+				dryRun: Jenkins.Harness.DryRun
+			);
 
 			TestProject = build_task.TestProject;
 			Platform = build_task.Platform;
@@ -37,8 +53,8 @@ namespace Xharness.Jenkins.TestTasks {
 		public override IEnumerable<ILog> AggregatedLogs {
 			get {
 				var rv = base.AggregatedLogs;
-				if (BuildTask != null)
-					rv = rv.Union (BuildTask.AggregatedLogs);
+				if (runTest.BuildAggregatedLogs != null)
+					rv = rv.Union (runTest.BuildAggregatedLogs);
 				return rv;
 			}
 		}
@@ -46,8 +62,8 @@ namespace Xharness.Jenkins.TestTasks {
 		public override TestExecutingResult ExecutionResult {
 			get {
 				// When building, the result is the build result.
-				if ((BuildTask.ExecutionResult & (TestExecutingResult.InProgress | TestExecutingResult.Waiting)) != 0)
-					return BuildTask.ExecutionResult & ~TestExecutingResult.InProgressMask | TestExecutingResult.Building;
+				if ((runTest.BuildResult & (TestExecutingResult.InProgress | TestExecutingResult.Waiting)) != 0)
+					return runTest.BuildResult & ~TestExecutingResult.InProgressMask | TestExecutingResult.Building;
 				return base.ExecutionResult;
 			}
 			set {
@@ -55,57 +71,12 @@ namespace Xharness.Jenkins.TestTasks {
 			}
 		}
 
-		public async Task<bool> BuildAsync ()
-		{
-			if (Finished)
-				return true;
+		public Task<bool> BuildAsync () => runTest.BuildAsync ();
 
-			await VerifyBuildAsync ();
-			if (Finished)
-				return BuildTask.Succeeded;
+		protected override Task ExecuteAsync () => runTest.ExecuteAsync ();
 
-			ExecutionResult = TestExecutingResult.Building;
-			await BuildTask.RunAsync ();
-			if (!BuildTask.Succeeded) {
-				if (BuildTask.TimedOut) {
-					ExecutionResult = TestExecutingResult.TimedOut;
-				} else {
-					ExecutionResult = TestExecutingResult.BuildFailure;
-				}
-				FailureMessage = BuildTask.FailureMessage;
-				if (!string.IsNullOrEmpty (BuildTask.KnownFailure))
-					KnownFailure = BuildTask.KnownFailure;
-				if (Harness.InCI && BuildTask is MSBuildTask projectTask)
-					ResultParser.GenerateFailure (Logs, "build", projectTask.TestName, projectTask.Variation, $"App Build {projectTask.TestName} {projectTask.Variation}", $"App could not be built {FailureMessage}.", projectTask.BuildLog.FullPath, Harness.XmlJargon);
-			} else {
-				ExecutionResult = TestExecutingResult.Built;
-			}
-			return BuildTask.Succeeded;
-		}
+		public abstract Task RunTestAsync ();
 
-		protected override async Task ExecuteAsync ()
-		{
-			if (Finished)
-				return;
-
-			await VerifyRunAsync ();
-			if (Finished)
-				return;
-
-			if (!await BuildAsync ())
-				return;
-
-			if (BuildOnly) {
-				ExecutionResult = TestExecutingResult.BuildSucceeded;
-				return;
-			}
-
-			ExecutionResult = TestExecutingResult.Running;
-			duration.Restart (); // don't count the build time.
-			await RunTestAsync ();
-		}
-
-		protected abstract Task RunTestAsync ();
 		// VerifyBuild is called in BuildAsync to verify that the task can be built.
 		// Typically used to fail tasks if there's not enough disk space.
 		public virtual Task VerifyBuildAsync ()
@@ -116,7 +87,7 @@ namespace Xharness.Jenkins.TestTasks {
 		public override void Reset ()
 		{
 			base.Reset ();
-			BuildTask.Reset ();
+			runTest.Reset ();
 		}
 
 		protected Task ExecuteProcessAsync (string filename, List<string> arguments)
@@ -124,35 +95,12 @@ namespace Xharness.Jenkins.TestTasks {
 			return ExecuteProcessAsync (null, filename, arguments);
 		}
 
-		protected async Task ExecuteProcessAsync (ILog log, string filename, List<string> arguments)
+		protected Task ExecuteProcessAsync (ILog log, string filename, List<string> arguments)
 		{
 			if (log == null)
 				log = Logs.Create ($"execute-{Timestamp}.txt", LogType.ExecutionLog.ToString ());
 
-			using var proc = new Process ();
-			proc.StartInfo.FileName = filename;
-			proc.StartInfo.Arguments = StringUtils.FormatArguments (arguments);
-			if (!string.IsNullOrEmpty (WorkingDirectory))
-				proc.StartInfo.WorkingDirectory = WorkingDirectory;
-			SetEnvironmentVariables (proc);
-			foreach (DictionaryEntry de in proc.StartInfo.EnvironmentVariables)
-				log.WriteLine ($"export {de.Key}={de.Value}");
-			Jenkins.MainLog.WriteLine ("Executing {0} ({1})", TestName, Mode);
-			if (!Harness.DryRun) {
-				ExecutionResult = TestExecutingResult.Running;
-				var result = await ProcessManager.RunAsync (proc, log, Timeout);
-				if (result.TimedOut) {
-					FailureMessage = $"Execution timed out after {Timeout.TotalMinutes} minutes.";
-					log.WriteLine (FailureMessage);
-					ExecutionResult = TestExecutingResult.TimedOut;
-				} else if (result.Succeeded) {
-					ExecutionResult = TestExecutingResult.Succeeded;
-				} else {
-					ExecutionResult = TestExecutingResult.Failed;
-					FailureMessage = $"Execution failed with exit code {result.ExitCode}";
-				}
-			}
-			Jenkins.MainLog.WriteLine ("Executed {0} ({1})", TestName, Mode);
+			return runTest.ExecuteProcessAsync (log, filename, arguments);
 		}
 	}
 }

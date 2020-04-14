@@ -48,6 +48,7 @@ namespace Xharness.TestTasks {
 																									ILog buildLog,
 																									ILog mainLog)
 		{
+			BuildLog = buildLog;
 			(TestExecutingResult ExecutionResult, string KnownFailure) result = (TestExecutingResult.NotStarted, (string) null);
 			await RestoreNugetsAsync (buildLog, resource, useXIBuild: true);
 

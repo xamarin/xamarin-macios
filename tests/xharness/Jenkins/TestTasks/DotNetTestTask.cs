@@ -12,7 +12,7 @@ namespace Xharness.Jenkins.TestTasks {
 			DotNetBuildTask.SetDotNetEnvironmentVariables (Environment);
 		}
 
-		protected override async Task RunTestAsync ()
+		public override async Task RunTestAsync ()
 		{
 			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
 				var trx = Logs.Create ($"results-{Timestamp}.trx", LogType.TrxLog.ToString ());
