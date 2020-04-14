@@ -12,6 +12,8 @@ namespace Xharness.Jenkins.TestTasks {
 
 		protected override string ToolName => Harness.DOTNET;
 
+		public override bool RestoreNugets => false; // 'dotnet build' will restore
+
 		public override void SetEnvironmentVariables (Process process)
 		{
 			base.SetEnvironmentVariables (process);
