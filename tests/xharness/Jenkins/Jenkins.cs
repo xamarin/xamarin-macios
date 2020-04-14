@@ -83,8 +83,8 @@ namespace Xharness.Jenkins {
 		public Resource DesktopResource { get; } = new Resource ("Desktop", Environment.ProcessorCount);
 		public Resource NugetResource { get;  } = new Resource ("Nuget", 1); // nuget is not parallel-safe :(
 
-		static Dictionary<string, Resource> device_resources = new Dictionary<string, Resource> ();
-		internal static Resources GetDeviceResources (IEnumerable<IHardwareDevice> devices)
+		Dictionary<string, Resource> device_resources = new Dictionary<string, Resource> ();
+		public Resources GetDeviceResources (IEnumerable<IHardwareDevice> devices)
 		{
 			List<Resource> resources = new List<Resource> ();
 			lock (device_resources) {

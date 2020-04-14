@@ -12,8 +12,6 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 namespace Xharness.TestTasks {
 	public class RunSimulator {
 
-		protected AppRunner runner;
-		protected AppRunner additional_runner;
 		readonly ILog mainLog;
 		readonly ILog simulatorLoadLog;
 		readonly ISimulatorLoader simulators;
@@ -87,7 +85,7 @@ namespace Xharness.TestTasks {
 			await FindSimulatorAsync ();
 
 			var clean_state = false;//Platform == TestPlatform.watchOS;
-			runner = new AppRunner (testTask.ProcessManager,
+			testTask.Runner = new AppRunner (testTask.ProcessManager,
 				new AppBundleInformationParser (),
 				new SimulatorLoaderFactory (testTask.ProcessManager),
 				new SimpleListenerFactory (),
@@ -120,14 +118,14 @@ namespace Xharness.TestTasks {
 				return;
 			}
 			using (var resource = await testTask.NotifyBlockingWaitAsync (testTask.AcquireResourceAsync ())) {
-				if (runner == null)
+				if (testTask.Runner == null)
 					await SelectSimulatorAsync ();
-				await runner.RunAsync ();
+				await testTask.Runner.RunAsync ();
 			}
-			testTask.ExecutionResult = runner.Result;
+			testTask.ExecutionResult = testTask.Runner.Result;
 
 			testTask.KnownFailure = null;
-			if (errorKnowledgeBase.IsKnownTestIssue (runner.MainLog, out var failure)) {
+			if (errorKnowledgeBase.IsKnownTestIssue (testTask.Runner.MainLog, out var failure)) {
 				testTask.KnownFailure = failure;
 				mainLog.WriteLine ($"Test run has a known failure: '{testTask.KnownFailure}'");
 			}

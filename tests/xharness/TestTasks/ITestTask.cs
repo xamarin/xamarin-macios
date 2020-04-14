@@ -24,7 +24,10 @@ namespace Xharness.TestTasks {
 		string Variation { get; set; }
 		string TestName { get; }
 		string FailureMessage { get; set; }
+		string LogDirectory { get; }
 
+
+		string GuessFailureReason (ILog log);
 		TimeSpan Duration { get; }
 		TestPlatform Platform { get; set; }
 		Task InitialTask { get; set; }

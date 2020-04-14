@@ -5,9 +5,12 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 namespace Xharness.TestTasks {
 	public interface IRunXITask<TDevice> : IRunTestTask where TDevice : class, IDevice {
 
+		AppRunner Runner { get; set; }
+		AppRunner AdditionalRunner { get; set; }
+
 		TestTarget AppRunnerTarget { get; set; }
-		public IEnumerable<TDevice> Candidates { get; }
-		public TDevice Device { get; set; }
-		public TDevice CompanionDevice { get; set; }
+		IEnumerable<TDevice> Candidates { get; }
+		TDevice Device { get; set; }
+		TDevice CompanionDevice { get; set; }
 	}
 }
