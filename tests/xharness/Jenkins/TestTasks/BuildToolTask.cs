@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
+using Xharness.TestTasks;
 
 namespace Xharness.Jenkins.TestTasks
 {
-	public abstract class BuildToolTask : AppleTestTask
+	public abstract class BuildToolTask : AppleTestTask, IBuildToolTask 
 	{
-		protected Xharness.TestTasks.BuildTool buildToolTask;
+		protected BuildTool buildToolTask;
 
 		public IProcessManager ProcessManager { get; }
 

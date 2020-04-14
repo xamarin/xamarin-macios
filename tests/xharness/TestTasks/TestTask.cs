@@ -11,7 +11,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
 namespace Xharness.TestTasks {
-	public abstract class TestTasks : IEnvManager, IEventLogger
+	public abstract class TestTasks : IEnvManager, IEventLogger, ITestTask 
 	{
 		static int counter;
 		static DriveInfo RootDrive;
@@ -20,12 +20,12 @@ namespace Xharness.TestTasks {
 
 		public readonly int ID;
 		public bool BuildOnly;
-		public string KnownFailure;
-		public string ProjectConfiguration;
-		public string ProjectPlatform;
+		public string KnownFailure { get; set; }
+		public string ProjectConfiguration { get; set; }
+		public string ProjectPlatform { get; set; }
 		public Dictionary<string, string> Environment = new Dictionary<string, string> ();
 		public Func<Task> Dependency; // a task that's feteched and awaited before this task's ExecuteAsync method
-		public Task InitialTask; // a task that's executed before this task's ExecuteAsync method.
+		public Task InitialTask { get; set; } // a task that's executed before this task's ExecuteAsync method.
 		public Task CompletedTask; // a task that's executed after this task's ExecuteAsync method.
 		public List<Resource> Resources = new List<Resource> ();
 

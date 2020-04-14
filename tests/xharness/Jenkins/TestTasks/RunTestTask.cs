@@ -8,6 +8,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
+using Xharness.TestTasks;
 
 namespace Xharness.Jenkins.TestTasks {
 	internal abstract class RunTestTask : AppleTestTask
@@ -15,12 +16,12 @@ namespace Xharness.Jenkins.TestTasks {
 		protected IProcessManager ProcessManager { get; }
 		IResultParser ResultParser { get; } = new XmlResultParser ();
 
-		public readonly BuildToolTask BuildTask;
+		public readonly IBuildToolTask BuildTask;
 		public TimeSpan Timeout = TimeSpan.FromMinutes (10);
 		public double TimeoutMultiplier { get; set; } = 1;
 		public string WorkingDirectory;
 
-		public RunTestTask (BuildToolTask build_task, IProcessManager processManager) : base (build_task.Jenkins)
+		public RunTestTask (Jenkins jenkins, IBuildToolTask build_task, IProcessManager processManager) : base (jenkins)
 		{
 			this.BuildTask = build_task;
 			this.ProcessManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
