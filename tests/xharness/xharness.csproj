@@ -119,13 +119,13 @@
     <Compile Include="TestTasks\IAcquiredResource.cs" />
     <Compile Include="TestTasks\Resource.cs" />
     <Compile Include="TestTasks\Resources.cs" />
-    <Compile Include="TestTasks\BuildToolTask.cs" />
-    <Compile Include="TestTasks\BuildProjectTask.cs" />
+    <Compile Include="TestTasks\BuildTool.cs" />
+    <Compile Include="TestTasks\BuildProject.cs" />
     <Compile Include="TestTasks\IResourceManager.cs" />
     <Compile Include="TestTasks\IEnvManager.cs" />
-    <Compile Include="TestTasks\MSBuildTask.cs" />
+    <Compile Include="TestTasks\MSBuild.cs" />
     <Compile Include="TestTasks\IErrorKnowledgeBase.cs" />
-    <Compile Include="TestTasks\DotNetBuildTask.cs" />
+    <Compile Include="TestTasks\DotNetBuild.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\tools\mtouch\SdkVersions.cs">
