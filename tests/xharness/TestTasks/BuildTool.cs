@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
+using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 
 namespace Xharness.TestTasks {
 
@@ -10,6 +11,7 @@ namespace Xharness.TestTasks {
 		public IProcessManager ProcessManager { get; }
 		public TestPlatform Platform { get; set; }
 		public TestProject TestProject { get; set; }
+		public ILog BuildLog { get; set; }
 
 		public bool SpecifyPlatform { get; set; } = true;
 		public bool SpecifyConfiguration { get; set; } = true;

@@ -19,10 +19,6 @@ namespace Xharness.TestTasks {
 		#region Public vars
 
 		public readonly int ID;
-		public bool BuildOnly;
-		public string KnownFailure { get; set; }
-		public string ProjectConfiguration { get; set; }
-		public string ProjectPlatform { get; set; }
 		public Dictionary<string, string> Environment = new Dictionary<string, string> ();
 		public Func<Task> Dependency; // a task that's feteched and awaited before this task's ExecuteAsync method
 		public Task InitialTask { get; set; } // a task that's executed before this task's ExecuteAsync method.
@@ -32,6 +28,11 @@ namespace Xharness.TestTasks {
 		#endregion
 
 		#region Properties
+
+		public bool BuildOnly { get; set; }
+		public string KnownFailure { get; set; }
+		public string ProjectConfiguration { get; set; }
+		public string ProjectPlatform { get; set; }
 
 		protected static string Timestamp => Helpers.Timestamp;
 		public string ProjectFile => TestProject?.Path;
@@ -64,10 +65,10 @@ namespace Xharness.TestTasks {
 		public bool BuildFailure => (ExecutionResult & TestExecutingResult.BuildFailure) == TestExecutingResult.BuildFailure;
 		public bool HarnessException => (ExecutionResult & TestExecutingResult.HarnessException) == TestExecutingResult.HarnessException;
 
-		protected Stopwatch duration = new Stopwatch ();
+		public Stopwatch DurationStopWatch { get;  } = new Stopwatch ();
 		public TimeSpan Duration {
 			get {
-				return duration.Elapsed;
+				return DurationStopWatch.Elapsed;
 			}
 		}
 
@@ -204,7 +205,7 @@ namespace Xharness.TestTasks {
 			test_log = null;
 			failure_message = null;
 			logs = null;
-			duration.Reset ();
+			DurationStopWatch.Reset ();
 			execution_result = TestExecutingResult.NotStarted;
 			execute_task = null;
 		}
@@ -275,7 +276,7 @@ namespace Xharness.TestTasks {
 				if (Finished)
 					return;
 
-				duration.Start ();
+				DurationStopWatch.Start ();
 
 				execute_task = ExecuteAsync ();
 				await execute_task;
@@ -298,7 +299,7 @@ namespace Xharness.TestTasks {
 				PropagateResults ();
 			} finally {
 				logs?.Dispose ();
-				duration.Stop ();
+				DurationStopWatch.Stop ();
 			}
 
 			GenerateReport ();
@@ -368,14 +369,14 @@ namespace Xharness.TestTasks {
 			var rv = new BlockingWait ();
 
 			// Stop the timer while we're waiting for a resource
-			duration.Stop ();
+			DurationStopWatch.Stop ();
 			waitingDuration.Start ();
 			ExecutionResult = ExecutionResult | TestExecutingResult.Waiting;
 			rv.Wrapped = await task;
 			ExecutionResult = ExecutionResult & ~TestExecutingResult.Waiting;
 			waitingDuration.Stop ();
-			duration.Start ();
-			rv.OnDispose = duration.Stop;
+			DurationStopWatch.Start ();
+			rv.OnDispose = DurationStopWatch.Stop;
 			return rv;
 		}
 

@@ -108,7 +108,7 @@ namespace Xharness.Jenkins.TestTasks
 			}
 		}
 
-		protected override async Task RunTestAsync ()
+		public override async Task RunTestAsync ()
 		{
 			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
 				var xmlLog = Logs.CreateFile ($"log-{Timestamp}.xml", LogType.XmlLog.ToString ());

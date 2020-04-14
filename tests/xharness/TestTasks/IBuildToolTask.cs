@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
+using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 
 namespace Xharness.TestTasks {
 
@@ -7,13 +8,15 @@ namespace Xharness.TestTasks {
 	/// Interface to be implemented by those tasks that represent a build execution. 
 	/// </summary>
 	public interface IBuildToolTask : ITestTask {
-		IProcessManager ProcessManager { get; }
-		string TestName { get; set; }
+		ILog BuildLog { get; }
 		bool SpecifyPlatform { get; set; }
 		bool SpecifyConfiguration { get; set; }
-		TestProject TestProject { get; set; }
+
+		IProcessManager ProcessManager { get; }
 		TestPlatform Platform { get; set; }
-		string Mode { get; set; }
-		public Task CleanAsync ();
+
+		TestProject TestProject { get; set; }
+
+		Task CleanAsync ();
 	}
 }
