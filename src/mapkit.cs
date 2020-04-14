@@ -1897,7 +1897,6 @@ namespace MapKit {
 
 	[TV (9,2)][NoWatch][iOS (9,3)][Mac(10,11,4)]
 	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor]
 	interface MKLocalSearchCompleter {
 		[Export ("queryFragment")]
 		string QueryFragment { get; set; }
