@@ -134,6 +134,7 @@ namespace Xamarin.Bundler {
 		public static bool IsUnifiedFullSystemFramework { get { return TargetFramework == TargetFramework.Xamarin_Mac_4_5_System; } }
 		public static bool IsUnifiedMobile { get { return TargetFramework == TargetFramework.Xamarin_Mac_2_0_Mobile; } }
 		public static bool LinkProhibitedFrameworks { get; private set; }
+		public static bool UseLegacyAssemblyResolution { get; private set; }
 
 		static string mono_prefix;
 		static string MonoPrefix {
@@ -338,6 +339,7 @@ namespace Xamarin.Bundler {
 						App.WarnOnTypeRef.AddRange (v.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries));
 					}
 				},
+				{ "legacy-assembly-resolution", "Use a legacy assembly resolution logic when using the Xamarin.Mac Full framework.", v => { UseLegacyAssemblyResolution = true; }, false /* hidden until we know if it's needed */ },
 			};
 
 			var extra_args = Environment.GetEnvironmentVariable ("MMP_ENV_OPTIONS");
@@ -624,6 +626,20 @@ namespace Xamarin.Bundler {
 
 				references.Add (root_assembly);
 				BuildTarget.Resolver.CommandLineAssemblies = references;
+
+				if (!UseLegacyAssemblyResolution && (IsUnifiedFullSystemFramework || IsUnifiedFullXamMacFramework)) {
+					// We need to look in the GAC/System mono for both FullSystem and FullXamMac, because that's
+					// how we've been resolving assemblies in the past (Cecil has a fall-back mode where it looks
+					// in the GAC, and we never disabled that, meaning that we always looked in the GAC if failing
+					// to resolve from somewhere else). This makes it explicit that we look in the GAC, and we
+					// now also warn when using FullXamMac and finding assemblies in the GAC.
+					BuildTarget.Resolver.GlobalAssemblyCache = Path.Combine (SystemMonoDirectory, "lib", "mono", "gac");
+					var framework_dir = Path.GetDirectoryName (typeof (object).Module.FullyQualifiedName);
+					BuildTarget.Resolver.SystemFrameworkDirectories = new [] {
+						framework_dir,
+						Path.Combine (framework_dir, "Facades")
+					};
+				}
 
 				if (string.IsNullOrEmpty (app_name))
 					app_name = root_wo_ext;
@@ -1270,9 +1286,17 @@ namespace Xamarin.Bundler {
 		static IDictionary<string,List<MethodDefinition>> Link ()
 		{
 			var cache = (Dictionary<string, AssemblyDefinition>) BuildTarget.Resolver.ResolverCache;
-			var resolver = cache != null
-				? new Mono.Linker.AssemblyResolver (cache)
-				: new Mono.Linker.AssemblyResolver ();
+			AssemblyResolver resolver;
+
+			if (UseLegacyAssemblyResolution) {
+				if (cache != null) {
+					resolver = new Mono.Linker.AssemblyResolver (cache);
+				} else {
+					resolver = new Mono.Linker.AssemblyResolver ();
+				}
+			} else { 
+				resolver = new MonoMacAssemblyResolver (BuildTarget.Resolver);
+			}
 
 			resolver.AddSearchDirectory (BuildTarget.Resolver.RootDirectory);
 			resolver.AddSearchDirectory (BuildTarget.Resolver.FrameworkDirectory);
@@ -1753,7 +1777,7 @@ namespace Xamarin.Bundler {
 			resolved_assemblies.Add (fqname);
 
 			foreach (AssemblyNameReference reference in assembly.MainModule.AssemblyReferences) {
-				AssemblyDefinition reference_assembly = AddAssemblyReferenceToResolver (reference.Name);
+				AssemblyDefinition reference_assembly = AddAssemblyReferenceToResolver (reference);
 				ProcessAssemblyReferences (reference_assembly);
 			}
 		}
@@ -1769,10 +1793,10 @@ namespace Xamarin.Bundler {
 			return assembly;
 		}
 
-		static AssemblyDefinition AddAssemblyReferenceToResolver (string reference)
+		static AssemblyDefinition AddAssemblyReferenceToResolver (AssemblyNameReference reference)
 		{
-			if (AssemblySwapInfo.ReferencedNeedsSwappedOut (reference))
-				return BuildTarget.Resolver.Load (AssemblySwapInfo.GetSwappedReference (reference));
+			if (AssemblySwapInfo.ReferencedNeedsSwappedOut (reference.Name))
+				return BuildTarget.Resolver.Load (AssemblySwapInfo.GetSwappedReference (reference.Name));
 
 			return BuildTarget.Resolver.Resolve (reference);
 		}

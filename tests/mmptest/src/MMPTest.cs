@@ -655,6 +655,38 @@ namespace Xamarin.MMP.Tests
 		}
 
 		[Test]
+		[TestCase (true, "v4.5.2")]
+		[TestCase (true, null)]
+		[TestCase (true, "v4.7.2")]
+		[TestCase (false, null)]
+		public void MM0176 (bool xm45, string tfv)
+		{
+			RunMMPTest (tmpDir => {
+				var test = new TI.UnifiedTestConfig (tmpDir) {
+					References = "<PackageReference Include=\"xunit.runner.utility\" Version=\"2.4.0\" />",
+					TestCode = "System.Console.WriteLine (typeof (Xunit.AfterTestFinished));",
+					XM45 = xm45,
+				};
+				if (tfv != null)
+					test.TargetFrameworkVersion = $"<TargetFrameworkVersion>{tfv}</TargetFrameworkVersion>";
+
+				string project = TI.GenerateUnifiedExecutableProject (test);
+				TI.NugetRestore (project);
+				var rv = new OutputText (TI.BuildProject (project), string.Empty);
+				Console.WriteLine (rv.BuildOutput);
+				if (xm45) {
+					var referenced_version = tfv == null ? "2.0.0.0" : "4.0.0.0";
+					rv.Messages.AssertWarningPattern (176, $"The assembly 'System.Web, Version={referenced_version}, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a' was resolved from the system's GAC: /Library/Frameworks/Mono.framework/Versions/.*/lib/mono/gac/System.Web/4.0.0.0__b03f5f7f11d50a3a/System.Web.dll. This could potentially be a problem in the future; to avoid such problems, please make sure to not use assemblies only available in the system's GAC.");
+					rv.Messages.AssertWarningPattern (176, $"The assembly 'System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a' was resolved from the system's GAC: /Library/Frameworks/Mono.framework/Versions/.*/lib/mono/gac/System.Drawing/4.0.0.0__b03f5f7f11d50a3a/System.Drawing.dll. This could potentially be a problem in the future; to avoid such problems, please make sure to not use assemblies only available in the system's GAC.");
+					rv.Messages.AssertWarningPattern (176, $"The assembly 'System.Web.ApplicationServices, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35' was resolved from the system's GAC: /Library/Frameworks/Mono.framework/Versions/.*/lib/mono/gac/System.Web.ApplicationServices/4.0.0.0__31bf3856ad364e35/System.Web.ApplicationServices.dll. This could potentially be a problem in the future; to avoid such problems, please make sure to not use assemblies only available in the system's GAC.");
+					// Don't assert number of warnings, because we get a few "MM2006: Native library 'foo.dll' was referenced but could not be found." warnings as well.
+				} else {
+					rv.Messages.AssertWarningCount (0);
+				}
+			});
+		}
+
+		[Test]
 		public void BuildingSameSolutionTwice_ShouldNotRunACToolTwice ()
 		{
 			RunMMPTest (tmpDir => {
