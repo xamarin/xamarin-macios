@@ -2667,7 +2667,7 @@
 	</data>
 
 	<data name="MX5313" xml:space="preserve">
-		<value>Could not find pkg-config. Please install the Mono.framework from https://mono-project.com/Downloads
+		<value>Could not find {0}. Please install the Mono.framework from https://mono-project.com/Downloads
 		</value>
 		<comment>
 		</comment>

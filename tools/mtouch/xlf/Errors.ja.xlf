@@ -3027,9 +3027,9 @@
 		</note>
       </trans-unit>
       <trans-unit id="MX5313">
-        <source>Could not find pkg-config. Please install the Mono.framework from https://mono-project.com/Downloads
+        <source>Could not find {0}. Please install the Mono.framework from https://mono-project.com/Downloads
 		</source>
-        <target state="new">Could not find pkg-config. Please install the Mono.framework from https://mono-project.com/Downloads
+        <target state="new">Could not find {0}. Please install the Mono.framework from https://mono-project.com/Downloads
 		</target>
         <note>
 		</note>
