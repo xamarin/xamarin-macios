@@ -45,7 +45,7 @@
 	<!-- Linker targets -->
 	<Target Name="_PreProcessAssemblies" DependsOnTargets="_ComputeLinkerArguments;_ExtractNativeLibrariesFromBindingAssemblies;" />
 	<PropertyGroup>
-		<_AdditionalTaskAssemblyDirectory>$(XamarinSdkRootDirectory)/tools/dotnet-linker/</_AdditionalTaskAssemblyDirectory>
+		<_AdditionalTaskAssemblyDirectory>$(XamarinSdkRootDirectory)tools/dotnet-linker/</_AdditionalTaskAssemblyDirectory>
 		<_AdditionalTaskAssembly>$(_AdditionalTaskAssemblyDirectory)dotnet-linker.dll</_AdditionalTaskAssembly>
 	</PropertyGroup>
 	<ItemGroup>
@@ -56,7 +56,6 @@
 		<PropertyGroup>
 			<_LinkerSubstitutionsCommand>@(_LinkerSubstitutions -> '--substitutions %(FullPath)', '%0a')</_LinkerSubstitutionsCommand>
 		</PropertyGroup>
-		<Exec Command="ls -la $(_AdditionalTaskAssemblyDirectory)" />
 	</Target>
 	<Target Name="_ComputeLinkerArguments" DependsOnTargets="_ComputeLinkerSubstitutions;">
 		<PropertyGroup>
