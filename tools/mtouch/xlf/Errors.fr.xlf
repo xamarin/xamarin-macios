@@ -2882,6 +2882,14 @@
         <note>
 		</note>
       </trans-unit>
+      <trans-unit id="MX0176">
+        <source>The assembly '{0}' was resolved from the system's GAC: {1}. This could potentially be a problem in the future; to avoid such problems, please make sure to not use assemblies only available in the system's GAC.
+        </source>
+        <target state="new">The assembly '{0}' was resolved from the system's GAC: {1}. This could potentially be a problem in the future; to avoid such problems, please make sure to not use assemblies only available in the system's GAC.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
       <trans-unit id="MX1009">
         <source>Could not copy the assembly '{0}' to '{1}': {2}
 		</source>
@@ -3035,9 +3043,9 @@
 		</note>
       </trans-unit>
       <trans-unit id="MX5313">
-        <source>Could not find pkg-config. Please install the Mono.framework from https://mono-project.com/Downloads
+        <source>Could not find {0}. Please install the Mono.framework from https://mono-project.com/Downloads
 		</source>
-        <target state="new">Could not find pkg-config. Please install the Mono.framework from https://mono-project.com/Downloads
+        <target state="new">Could not find {0}. Please install the Mono.framework from https://mono-project.com/Downloads
 		</target>
         <note>
 		</note>

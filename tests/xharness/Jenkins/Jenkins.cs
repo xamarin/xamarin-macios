@@ -13,8 +13,6 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 using Xharness.TestTasks;
-using MSBuildTask = Xharness.Jenkins.TestTasks.MSBuildTask;
-using DotNetBuildTask = Xharness.Jenkins.TestTasks.DotNetBuildTask;
 
 namespace Xharness.Jenkins {
 	public class Jenkins : IResourceManager, IErrorKnowledgeBase
@@ -782,7 +780,9 @@ namespace Xharness.Jenkins {
 
 		void SetEnabled (IEnumerable<string> files, string [] prefixes, string testname, ref bool value)
 		{
+			MainLog.WriteLine ($"Checking if test {testname} should be enabled according to the modified files.");
 			foreach (var file in files) {
+				MainLog.WriteLine ($"Checking for file {file}"); 
 				foreach (var prefix in prefixes) {
 					if (file.StartsWith (prefix, StringComparison.Ordinal)) {
 						value = true;

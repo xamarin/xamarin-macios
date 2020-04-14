@@ -1217,6 +1217,13 @@
 		</comment>
 	</data>
 
+    <data name="MX0176" xml:space="preserve">
+        <value>The assembly '{0}' was resolved from the system's GAC: {1}. This could potentially be a problem in the future; to avoid such problems, please make sure to not use assemblies only available in the system's GAC.
+        </value>
+        <comment>
+        </comment>
+    </data>
+
 	<data name="MX1009" xml:space="preserve">
 		<value>Could not copy the assembly '{0}' to '{1}': {2}
 		</value>
@@ -2674,7 +2681,7 @@
 	</data>
 
 	<data name="MX5313" xml:space="preserve">
-		<value>Could not find pkg-config. Please install the Mono.framework from https://mono-project.com/Downloads
+		<value>Could not find {0}. Please install the Mono.framework from https://mono-project.com/Downloads
 		</value>
 		<comment>
 		</comment>

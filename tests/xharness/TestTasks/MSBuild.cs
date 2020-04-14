@@ -10,7 +10,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
 namespace Xharness.TestTasks {
 
-	public class MSBuildTask : BuildProjectTask {
+	public class MSBuild : BuildProject {
 		readonly IErrorKnowledgeBase errorKnowledgeBase;
 		readonly string msbuildPath;
 
@@ -29,7 +29,7 @@ namespace Xharness.TestTasks {
 			return args;
 		}
 
-		public MSBuildTask (string msbuildPath,
+		public MSBuild (string msbuildPath,
 							IProcessManager processManager,
 							IResourceManager resourceManager,
 							IEventLogger eventLogger,

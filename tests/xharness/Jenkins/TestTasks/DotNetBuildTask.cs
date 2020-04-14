@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 
+using Xharness.TestTasks;
+
 namespace Xharness.Jenkins.TestTasks {
 	class DotNetBuildTask : MSBuildTask {
 
@@ -23,7 +25,7 @@ namespace Xharness.Jenkins.TestTasks {
 		}
 
 		protected override void InitializeTool () =>
-			buildToolTask = new Xharness.TestTasks.DotNetBuildTask (
+			buildToolTask = new DotNetBuild (
 				msbuildPath: ToolName,
 				processManager: ProcessManager,
 				resourceManager: Jenkins,

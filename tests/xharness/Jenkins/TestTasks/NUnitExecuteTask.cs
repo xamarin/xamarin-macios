@@ -141,7 +141,7 @@ namespace Xharness.Jenkins.TestTasks
 									using (var xri = XmlReader.Create (sri)) {
 										var xslt = new System.Xml.Xsl.XslCompiledTransform ();
 										xslt.Load (xrt);
-										using (var xwo = XmlWriter.Create (output as TextWriter, xslt.OutputSettings)) // use OutputSettings of xsl, so it can be output as HTML
+										using (var xwo = XmlWriter.Create (File.Create (output.FullPath), xslt.OutputSettings)) // use OutputSettings of xsl, so it can be output as HTML
 										{
 											xslt.Transform (xri, xwo);
 										}

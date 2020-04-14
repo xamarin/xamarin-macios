@@ -194,6 +194,8 @@ namespace MonoMac.Tuner {
 					continue;
 
 				list.Add (GetFullyQualifiedName (assembly));
+
+				Driver.Log (1, "Loaded assembly: {0}", assembly.MainModule.FileName);
 			}
 
 			return list;

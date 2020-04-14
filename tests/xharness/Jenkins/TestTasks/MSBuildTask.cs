@@ -14,13 +14,13 @@ namespace Xharness.Jenkins.TestTasks {
 		protected virtual List<string> ToolArguments => 
 				MSBuild.GetToolArguments (ProjectPlatform, ProjectConfiguration, ProjectFile, BuildLog);
 
-		Xharness.TestTasks.MSBuildTask MSBuild => buildToolTask as Xharness.TestTasks.MSBuildTask;
+		Xharness.TestTasks.MSBuild MSBuild => buildToolTask as Xharness.TestTasks.MSBuild;
 
 		public MSBuildTask (Jenkins jenkins, TestProject testProject, IProcessManager processManager)
 			: base (jenkins, testProject, processManager) { }
 
 		protected override void InitializeTool () => 
-			buildToolTask = new Xharness.TestTasks.MSBuildTask (
+			buildToolTask = new Xharness.TestTasks.MSBuild (
 				msbuildPath: ToolName,
 				processManager: ProcessManager,
 				resourceManager: Jenkins,
