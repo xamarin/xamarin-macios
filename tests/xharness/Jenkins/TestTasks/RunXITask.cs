@@ -11,16 +11,16 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 namespace Xharness.Jenkins.TestTasks {
 	abstract class RunXITask<TDevice> : RunTestTask where TDevice : class, IDevice
 	{
-		public TestTarget AppRunnerTarget;
+		public TestTarget AppRunnerTarget { get; set; }
 
 		protected AppRunner runner;
 		protected AppRunner additional_runner;
 
 		public IEnumerable<TDevice> Candidates { get; }
 
-		public TDevice Device { get; protected set; }
+		public TDevice Device { get; set; }
 
-		public TDevice CompanionDevice { get; protected set; }
+		public TDevice CompanionDevice { get; set; }
 
 		public string BundleIdentifier => runner.AppInformation.BundleIdentifier;
 

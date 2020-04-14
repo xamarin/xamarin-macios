@@ -25,8 +25,8 @@ namespace Xharness.TestTasks {
 		string TestName { get; }
 		string FailureMessage { get; set; }
 
-
 		TimeSpan Duration { get; }
+		TestPlatform Platform { get; set; }
 		Task InitialTask { get; set; }
 		TestExecutingResult ExecutionResult { get; set; }
 		IEnumerable<ILog> AggregatedLogs { get; }
@@ -37,5 +37,6 @@ namespace Xharness.TestTasks {
 		Task RunAsync ();
 		Task VerifyRunAsync ();
 		void Reset ();
+		Task<IAcquiredResource> NotifyBlockingWaitAsync (Task<IAcquiredResource> task);
 	}
 }
