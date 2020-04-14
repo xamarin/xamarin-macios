@@ -4,7 +4,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 
 namespace Xharness.TestTasks {
 
-	public class BuildToolTask
+	public class BuildTool
 	{
 		public string TestName { get; set; }
 		public IProcessManager ProcessManager { get; }
@@ -14,12 +14,12 @@ namespace Xharness.TestTasks {
 		public bool SpecifyPlatform { get; set; } = true;
 		public bool SpecifyConfiguration { get; set; } = true;
 
-		public BuildToolTask (IProcessManager processManager)
+		public BuildTool (IProcessManager processManager)
 		{ 
 			ProcessManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 		}
 
-		public BuildToolTask (IProcessManager processManager, TestPlatform platform) : this (processManager)
+		public BuildTool (IProcessManager processManager, TestPlatform platform) : this (processManager)
 		{
 			Platform = platform;
 		}
