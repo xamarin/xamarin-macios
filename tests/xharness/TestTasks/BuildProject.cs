@@ -10,14 +10,14 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
 namespace Xharness.TestTasks {
-	public class BuildProjectTask : BuildToolTask {
+	public class BuildProject : BuildTool {
 		public IResourceManager ResourceManager { get; set; }
 		public IEnvManager EnviromentManager { get; set; }
 		public IEventLogger EventLogger { get; set; }
 
 		public string SolutionPath { get; set; }
 
-		public BuildProjectTask (IProcessManager processManager, IResourceManager resourceManager, IEventLogger eventLogger, IEnvManager envManager) : base (processManager)
+		public BuildProject (IProcessManager processManager, IResourceManager resourceManager, IEventLogger eventLogger, IEnvManager envManager) : base (processManager)
 		{
 			ResourceManager = resourceManager ?? throw new ArgumentNullException (nameof (resourceManager));
 			EventLogger = eventLogger ?? throw new ArgumentNullException (nameof (eventLogger));

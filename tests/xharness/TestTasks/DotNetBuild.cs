@@ -3,9 +3,9 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 
 namespace Xharness.TestTasks {
-	public class DotNetBuildTask : MSBuildTask {
+	public class DotNetBuild : MSBuild {
 
-		public DotNetBuildTask (string msbuildPath,
+		public DotNetBuild (string msbuildPath,
 							IProcessManager processManager,
 							IResourceManager resourceManager,
 							IEventLogger eventLogger,
