@@ -43,11 +43,12 @@ create_runtime_packs ()
 	local platform=$1
 	local assembly_infix=$2
 	local arches=$3
+	local rid_platform=$4
 	#shellcheck disable=SC2155
 	local platform_lower=$(echo "$platform" | tr '[:upper:]' '[:lower:]')
 
 	for arch in $arches; do
-		local rid=$platform_lower-$arch
+		local rid=$rid_platform-$arch
 		local packageid=Microsoft.$platform.Runtime.$rid
 		local destdir=$DOTNET_DESTDIR/$packageid
 
@@ -76,10 +77,10 @@ create_runtime_packs ()
 		chmod -R +r "$destdir"
 	done
 }
-create_runtime_packs  "iOS"     "iOS"     "arm64 arm x64 x86"
-create_runtime_packs  "tvOS"    "TVOS"    "arm64 x64"
-create_runtime_packs  "watchOS" "WatchOS" "arm x86"
-create_runtime_packs  "macOS"   "Mac"     "x64"
+create_runtime_packs  "iOS"     "iOS"     "arm64 arm x64 x86" "ios"
+create_runtime_packs  "tvOS"    "TVOS"    "arm64 x64"         "tvos"
+create_runtime_packs  "watchOS" "WatchOS" "arm x86"           "watchos"
+create_runtime_packs  "macOS"   "Mac"     "x64"               "osx"
 
 copy_ios_native_libs_to_runtime_pack ()
 {

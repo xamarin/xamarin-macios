@@ -187,7 +187,7 @@ install-nugets:
 runtime-pack-iOS: $(foreach rid,$(IOS_RIDS),nupkgs/Microsoft.iOS.Runtime.ios-$(rid).nupkg)
 runtime-pack-tvOS: $(foreach rid,$(TVOS_RIDS),nupkgs/Microsoft.tvOS.Runtime.tvos-$(rid).nupkg)
 runtime-pack-watchOS: $(foreach rid,$(WATCHOS_RIDS),nupkgs/Microsoft.watchOS.Runtime.watchos-$(rid).nupkg)
-runtime-pack-macOS: $(foreach rid,$(MACOS_RIDS),nupkgs/Microsoft.macOS.Runtime.macos-$(rid).nupkg)
+runtime-pack-macOS: $(foreach rid,$(MACOS_RIDS),nupkgs/Microsoft.macOS.Runtime.osx-$(rid).nupkg)
 
 ref-pack-%: nupkgs/Microsoft.%.Ref.nupkg;
 ref-pack: $(foreach var,$(PLATFORMS),nupkgs/Microsoft.$(var).Ref.nupkg)
