@@ -789,7 +789,7 @@ namespace Xharness.Jenkins {
 
 		void SetEnabled (IEnumerable<string> files, string [] prefixes, string testname, ref bool value)
 		{
-			MainLog.WriteLine ($"Checking if test {testname} should be enabled accoding to the modified files.");
+			MainLog.WriteLine ($"Checking if test {testname} should be enabled according to the modified files.");
 			foreach (var file in files) {
 				MainLog.WriteLine ($"Checking for file {file}"); 
 				foreach (var prefix in prefixes) {
