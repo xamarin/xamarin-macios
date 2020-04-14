@@ -38,5 +38,8 @@
     <Compile Include="..\linker\MobileSubStepDispatcher.cs">
       <Link>MobileSubStepDispatcher.cs</Link>
     </Compile>
+    <Compile Include="..\linker\MonoTouch.Tuner\ProcessExportedFields.cs">
+      <Link>ProcessExportedFields.cs</Link>
+    </Compile>
   </ItemGroup>
 </Project>
