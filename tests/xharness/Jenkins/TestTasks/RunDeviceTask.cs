@@ -68,7 +68,7 @@ namespace Xharness.Jenkins.TestTasks {
 			this.devices = devices ?? throw new ArgumentNullException (nameof (devices));
 		}
 
-		protected override async Task RunTestAsync ()
+		public override async Task RunTestAsync ()
 		{
 			Jenkins.MainLog.WriteLine ("Running '{0}' on device (candidates: '{1}')", ProjectFile, string.Join ("', '", Candidates.Select ((v) => v.Name).ToArray ()));
 
