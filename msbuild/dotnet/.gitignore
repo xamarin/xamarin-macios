@@ -3,4 +3,5 @@ feed
 nupkgs
 _build
 tmp
+*.binlog
 

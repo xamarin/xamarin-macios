@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <_PlatformName>macOS</_PlatformName>
-    <_RuntimeIdentifier>macos-x64</_RuntimeIdentifier>
+    <_RuntimeIdentifier>osx-x64</_RuntimeIdentifier>
   </PropertyGroup>
 
   <Import Project="../microsoft.runtime.csproj" />
