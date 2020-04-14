@@ -103,8 +103,7 @@ namespace Xamarin.Bundler {
 			catch (Exception e) {
 				throw new ProductException (9, true, e, Errors.MX0009, fileName);
 			}
-			CacheAssembly (assembly);
-			return assembly;
+			return CacheAssembly (assembly);
 		}
 
 		public AssemblyDefinition CacheAssembly (AssemblyDefinition assembly)
