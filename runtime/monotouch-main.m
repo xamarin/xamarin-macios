@@ -271,6 +271,11 @@ xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode)
 	// take this line out once the bug is fixed
 	mini_parse_debug_option ("no-gdb-backtrace");
 
+#if !defined(__arm__) && !defined(__aarch64__)
+	/* force interpreter on simluator */
+	mono_jit_set_aot_mode ((MonoAotMode) 1000 /* MONO_EE_MODE_INTERP */)
+#endif
+
 	DEBUG_LAUNCH_TIME_PRINT ("Spin-up time");
 
 	{
