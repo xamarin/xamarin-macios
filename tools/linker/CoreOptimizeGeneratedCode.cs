@@ -47,6 +47,8 @@ namespace Xamarin.Linker {
 
 		public override void Initialize (LinkContext context)
 		{
+			base.Initialize (context);
+
 			if (Optimizations.InlineIsARM64CallingConvention == true) {
 				var target = LinkContext.Target;
 				if (target.Abis.Count == 1) {
