@@ -11,6 +11,13 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <_PlatformAssemblyName Condition=" '$(_PlatformName)' == 'iOS' ">Xamarin.iOS</_PlatformAssemblyName>
+    <_PlatformAssemblyName Condition=" '$(_PlatformName)' == 'tvOS' ">Xamarin.TVOS</_PlatformAssemblyName>
+    <_PlatformAssemblyName Condition=" '$(_PlatformName)' == 'watchOS' ">Xamarin.WatchOS</_PlatformAssemblyName>
+    <_PlatformAssemblyName Condition=" '$(_PlatformName)' == 'macOS' ">Xamarin.Mac</_PlatformAssemblyName>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <UsingXamarinSdk>true</UsingXamarinSdk>
     <UsingXamarinDotnetSdk>true</UsingXamarinDotnetSdk> <!-- need to come up with a better name, this is when using the .net5-style build -->
 

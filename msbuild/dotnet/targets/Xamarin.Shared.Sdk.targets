@@ -86,7 +86,15 @@
 			<_LinkerSubstitutionsCommand>@(_LinkerSubstitutions -> '--substitutions %(FullPath)', '%0a')</_LinkerSubstitutionsCommand>
 		</PropertyGroup>
 	</Target>
-	<Target Name="_ComputeLinkerArguments" DependsOnTargets="_ComputeLinkerSubstitutions;">
+	<Target Name="_SelectAssembliesToLink">
+		<ItemGroup>
+			<ResolvedFileToPublish Update="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.Filename)%(ResolvedFileToPublish.Extension)' == '$(_PlatformAssemblyName).dll'">
+				<!-- This doesn't actually make the linker link this assembly, still need to figure out how to do that -->
+				<IsTrimmable>true</IsTrimmable>
+			</ResolvedFileToPublish>
+		</ItemGroup>
+	</Target>
+	<Target Name="_ComputeLinkerArguments" DependsOnTargets="_ComputeLinkerSubstitutions;_SelectAssembliesToLink;">
 		<PropertyGroup>
 			<_ExtraTrimmerArgs>--verbose --skip-unresolved false $(_LinkerSubstitutionsCommand) -p link MySingleView --custom-step MonoTouch.Tuner.ProcessExportedFields,$(_AdditionalTaskAssembly)</_ExtraTrimmerArgs>
 		</PropertyGroup>
