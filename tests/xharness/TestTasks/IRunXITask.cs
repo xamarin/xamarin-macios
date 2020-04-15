@@ -7,7 +7,6 @@ namespace Xharness.TestTasks {
 
 		AppRunner Runner { get; set; }
 		AppRunner AdditionalRunner { get; set; }
-
 		TestTarget AppRunnerTarget { get; set; }
 		IEnumerable<TDevice> Candidates { get; }
 		TDevice Device { get; set; }
