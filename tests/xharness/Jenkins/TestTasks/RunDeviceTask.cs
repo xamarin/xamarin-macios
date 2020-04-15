@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -81,7 +81,7 @@ namespace Xharness.Jenkins.TestTasks {
 						CompanionDevice = await devices.FindCompanionDevice (Jenkins.DeviceLoadLog, Device);
 					Jenkins.MainLog.WriteLine ("Acquired device '{0}' for '{1}'", Device.Name, ProjectFile);
 
-					runner = new AppRunner (ProcessManager,
+					Runner = new AppRunner (ProcessManager,
 						new AppBundleInformationParser (),
 						new SimulatorLoaderFactory (ProcessManager),
 						new SimpleListenerFactory (),
@@ -104,8 +104,8 @@ namespace Xharness.Jenkins.TestTasks {
 
 					// Sometimes devices can't upgrade (depending on what has changed), so make sure to uninstall any existing apps first.
 					if (Jenkins.UninstallTestApp) {
-						runner.MainLog = uninstall_log;
-						var uninstall_result = await runner.UninstallAsync ();
+						Runner.MainLog = uninstall_log;
+						var uninstall_result = await Runner.UninstallAsync ();
 						if (!uninstall_result.Succeeded)
 							MainLog.WriteLine ($"Pre-run uninstall failed, exit code: {uninstall_result.ExitCode} (this hopefully won't affect the test result)");
 					} else {
@@ -116,13 +116,13 @@ namespace Xharness.Jenkins.TestTasks {
 						// Install the app
 						this.install_log = new AppInstallMonitorLog (Logs.Create ($"install-{Timestamp}.log", "Install log"));
 						try {
-							runner.MainLog = this.install_log;
-							var install_result = await runner.InstallAsync (install_log.CancellationToken);
+							Runner.MainLog = this.install_log;
+							var install_result = await Runner.InstallAsync (install_log.CancellationToken);
 							if (!install_result.Succeeded) {
 								FailureMessage = $"Install failed, exit code: {install_result.ExitCode}.";
 								ExecutionResult = TestExecutingResult.Failed;
 								if (Harness.InCI)
-									resultParser.GenerateFailure (Logs, "install", runner.AppInformation.AppName, Variation,
+									resultParser.GenerateFailure (Logs, "install", Runner.AppInformation.AppName, Variation,
 										$"AppInstallation on {Device.Name}", $"Install failed on {Device.Name}, exit code: {install_result.ExitCode}",
 										install_log.FullPath, Harness.XmlJargon);
 							}
@@ -134,15 +134,15 @@ namespace Xharness.Jenkins.TestTasks {
 
 					if (!Failed) {
 						// Run the app
-						runner.MainLog = Logs.Create ($"run-{Device.UDID}-{Timestamp}.log", "Run log");
-						await runner.RunAsync ();
+						Runner.MainLog = Logs.Create ($"run-{Device.UDID}-{Timestamp}.log", "Run log");
+						await Runner.RunAsync ();
 
-						if (!string.IsNullOrEmpty (runner.FailureMessage))
-							FailureMessage = runner.FailureMessage;
-						else if (runner.Result != TestExecutingResult.Succeeded)
-							FailureMessage = GuessFailureReason (runner.MainLog);
+						if (!string.IsNullOrEmpty (Runner.FailureMessage))
+							FailureMessage = Runner.FailureMessage;
+						else if (Runner.Result != TestExecutingResult.Succeeded)
+							FailureMessage = GuessFailureReason (Runner.MainLog);
 
-						if (runner.Result == TestExecutingResult.Succeeded && Platform == TestPlatform.iOS_TodayExtension64) {
+						if (Runner.Result == TestExecutingResult.Succeeded && Platform == TestPlatform.iOS_TodayExtension64) {
 							// For the today extension, the main app is just a single test.
 							// This is because running the today extension will not wake up the device,
 							// nor will it close & reopen the today app (but launching the main app
@@ -169,7 +169,7 @@ namespace Xharness.Jenkins.TestTasks {
 								variation: Variation,
 								buildTask: BuildTask);
 
-							additional_runner = todayRunner;
+							AdditionalRunner = todayRunner;
 							await todayRunner.RunAsync ();
 							foreach (var log in todayRunner.Logs.Where ((v) => !v.Description.StartsWith ("Extension ", StringComparison.Ordinal)))
 								log.Description = "Extension " + log.Description [0].ToString ().ToLower () + log.Description.Substring (1);
@@ -178,14 +178,14 @@ namespace Xharness.Jenkins.TestTasks {
 							if (!string.IsNullOrEmpty (todayRunner.FailureMessage))
 								FailureMessage = todayRunner.FailureMessage;
 						} else {
-							ExecutionResult = runner.Result;
+							ExecutionResult = Runner.Result;
 						}
 					}
 				} finally {
 					// Uninstall again, so that we don't leave junk behind and fill up the device.
 					if (Jenkins.UninstallTestApp) {
-						runner.MainLog = uninstall_log;
-						var uninstall_result = await runner.UninstallAsync ();
+						Runner.MainLog = uninstall_log;
+						var uninstall_result = await Runner.UninstallAsync ();
 						if (!uninstall_result.Succeeded)
 							MainLog.WriteLine ($"Post-run uninstall failed, exit code: {uninstall_result.ExitCode} (this won't affect the test result)");
 					} else {
