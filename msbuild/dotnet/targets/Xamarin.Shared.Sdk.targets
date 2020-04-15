@@ -40,6 +40,35 @@
 		<AfterPublishTargets Condition=" '$(_SdkIsSimulator)' == 'true' ">Codesign;CreateIpa;Archive</AfterPublishTargets>
 	</PropertyGroup>
 
+	<!-- Another big hack: inject our targets -->
+	<Target Name="ComputeAndCopyFilesToPublishDirectory"
+          DependsOnTargets="
+          $(BeforeComputeFilesToPublishTargets);
+          ComputeFilesToPublish;
+          $(AfterComputeFilesToPublishTargets);
+          CopyFilesToPublishDirectory">
+	</Target>
+	<Target Name="ComputeFilesToPublish"
+          DependsOnTargets="
+          	ComputeResolvedFilesToPublishList;
+          	$(BeforeILLinkTargets);
+            ILLink;
+            $(AfterILLinkTargets);
+            CreateReadyToRunImages;
+            $(BeforeMonoAOTCompilationTargets);
+            $(AfterMonoAOTCompilationTargets);
+            GeneratePublishDependencyFile;
+            $(BeforeGenerateSingleFileBundleTargets);
+            GenerateSingleFileBundle;
+            $(AfterGenerateSingleFileBundleTargets);">
+  	</Target>
+  	<PropertyGroup>
+    <_CorePublishTargets>
+    	$(_CorePublishTargets);
+    	$(AfterPublishTargets);
+    </_CorePublishTargets>
+
+  	</PropertyGroup>
 	<!-- Actual implementations for what we need to do -->
 
 	<!-- Linker targets -->
@@ -59,7 +88,7 @@
 	</Target>
 	<Target Name="_ComputeLinkerArguments" DependsOnTargets="_ComputeLinkerSubstitutions;">
 		<PropertyGroup>
-			<_ExtraTrimmerArgs>--verbose --skip-unresolved false $(_LinkerSubstitutionsCommand) -p link MySingleView</_ExtraTrimmerArgs>
+			<_ExtraTrimmerArgs>--verbose --skip-unresolved false $(_LinkerSubstitutionsCommand) -p link MySingleView --custom-step MonoTouch.Tuner.ProcessExportedFields,$(_AdditionalTaskAssembly)</_ExtraTrimmerArgs>
 		</PropertyGroup>
 	</Target>
 	<Target Name="_ExtractNativeLibrariesFromBindingAssemblies">

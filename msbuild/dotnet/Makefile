@@ -206,7 +206,7 @@ test/NuGet.config: $(TOP)/NuGet.config Makefile
 test/global.json: Makefile $(TEMPLATED_FILES)
 	$(Q_GEN) \
 		printf "{\n" > $@; \
-		printf "\t\"sdk\": { \"version\": \"5.0.100-dev\" },\n" >> $@; \
+		printf "\t\"sdk\": { \"version\": \"5.*\" },\n" >> $@; \
 		printf "\t\"msbuild-sdks\": {\n" >> $@; \
 		printf "\t\t\"Microsoft.iOS.Sdk\": \"$(CURRENT_IOS_VERSION)\",\n" >> $@; \
 		printf "\t\t\"Microsoft.tvOS.Sdk\": \"$(CURRENT_TVOS_VERSION)\",\n" >> $@; \

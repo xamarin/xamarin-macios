@@ -4,7 +4,7 @@ include $(TOP)/Make.config
 all: publish
 
 publish: build
-	dotnet publish -r ios-x64 --self-contained true -p:PublishTrimmed=false -p:MonoAOT=true /v:diag /bl:MySingleView-x64.binlog /p:UseAppHost=false
+	dotnet publish -r ios-x64 --self-contained true -p:PublishTrimmed=true -p:MonoAOT=true /v:diag /bl:MySingleView-x64.binlog /p:UseAppHost=false
 
 publish-dev: build
 	dotnet publish -r ios-arm64 --self-contained true -p:PublishTrimmed=false -p:MonoAOT=true /v:diag /bl:MySingleView-arm64.binlog /p:UseAppHost=false
