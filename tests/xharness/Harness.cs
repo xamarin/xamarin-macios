@@ -298,7 +298,7 @@ namespace Xharness {
 			}
 
 			foreach (var flavor in new MonoNativeFlavor [] { MonoNativeFlavor.Compat, MonoNativeFlavor.Unified }) {
-				var monoNativeInfo = new MacMonoNativeInfo (this, flavor);
+				var monoNativeInfo = new MacMonoNativeInfo (this, flavor, RootDirectory);
 				var macTestProject = new MacTestProject (monoNativeInfo.ProjectPath, targetFrameworkFlavor: MacFlavors.Modern | MacFlavors.Full) {
 					MonoNativeInfo = monoNativeInfo,
 					Name = monoNativeInfo.ProjectName,
@@ -404,7 +404,7 @@ namespace Xharness {
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link sdk", "link sdk.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
 
 			foreach (var flavor in new MonoNativeFlavor [] { MonoNativeFlavor.Compat, MonoNativeFlavor.Unified }) {
-				var monoNativeInfo = new MonoNativeInfo (this, flavor);
+				var monoNativeInfo = new MonoNativeInfo (this, flavor, RootDirectory);
 				var iosTestProject = new iOSTestProject (monoNativeInfo.ProjectPath) {
 					MonoNativeInfo = monoNativeInfo,
 					Name = monoNativeInfo.ProjectName,
@@ -661,28 +661,6 @@ namespace Xharness {
 
 			var jenkins = new Jenkins.Jenkins (this, processManager, ResultParser);
 			return jenkins.Run ();
-		}
-
-		public void Save (XmlDocument doc, string path)
-		{
-			if (!File.Exists (path)) {
-				doc.Save (path);
-				Log (1, "Created {0}", path);
-			} else {
-				var tmpPath = path + ".tmp";
-				doc.Save (tmpPath);
-				var existing = File.ReadAllText (path);
-				var updated = File.ReadAllText (tmpPath);
-
-				if (existing == updated) {
-					File.Delete (tmpPath);
-					Log (1, "Not saved {0}, no change", path);
-				} else {
-					File.Delete (path);
-					File.Move (tmpPath, path);
-					Log (1, "Updated {0}", path);
-				}
-			}
 		}
 
 		public void Save (StringWriter doc, string path)

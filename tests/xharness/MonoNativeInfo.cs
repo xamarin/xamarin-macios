@@ -143,21 +143,23 @@ namespace Xharness {
 
 	public class MonoNativeInfo
 	{
-		public Harness Harness { get; }
+		public IHarness Harness { get; }
 		public MonoNativeFlavor Flavor { get; }
 		protected virtual DevicePlatform DevicePlatform {  get { return DevicePlatform.iOS; } }
+		string rootDirectory;
 
-		public MonoNativeInfo (Harness harness, MonoNativeFlavor flavor)
+		public MonoNativeInfo (IHarness harness, MonoNativeFlavor flavor, string rootDirectory)
 		{
-			Harness = harness;
-			Flavor = flavor;
+			this.Harness = harness ?? throw new ArgumentNullException (nameof (rootDirectory));
+			this.rootDirectory = rootDirectory ?? throw new ArgumentNullException (nameof (rootDirectory));
+			this.Flavor = flavor;
 		}
 
 		public string FlavorSuffix => Flavor == MonoNativeFlavor.Compat ? "-compat" : "-unified";
 		public string ProjectName => "mono-native" + FlavorSuffix;
-		public string ProjectPath => Path.Combine (Harness.RootDirectory, "mono-native", TemplateName + FlavorSuffix + ".csproj");
+		public string ProjectPath => Path.Combine (rootDirectory, "mono-native", TemplateName + FlavorSuffix + ".csproj");
 		string TemplateName => "mono-native" + TemplateSuffix;
-		public string TemplatePath => Path.Combine (Harness.RootDirectory, "mono-native", TemplateName + ".csproj.template");
+		public string TemplatePath => Path.Combine (rootDirectory, "mono-native", TemplateName + ".csproj.template");
 		protected virtual string TemplateSuffix => string.Empty;
 
 		public void Convert ()
@@ -177,7 +179,7 @@ namespace Xharness {
 
 			AddProjectDefines (inputProject);
 
-			Harness.Save (inputProject, ProjectPath);
+			inputProject.Save (ProjectPath, Harness);
 		}
 
 		public void AddProjectDefines (XmlDocument project)
@@ -191,7 +193,7 @@ namespace Xharness {
 			var info_plist = new XmlDocument ();
 			info_plist.LoadWithoutNetworkAccess (template_info_plist);
 			SetInfoPListMinimumOSVersion (info_plist, MonoNativeHelper.GetMinimumOSVersion (DevicePlatform, Flavor));
-			Harness.Save (info_plist, target_plist);
+			info_plist.Save (target_plist, Harness);
 			return info_plist;
 		}
 
@@ -206,8 +208,8 @@ namespace Xharness {
 		protected override string TemplateSuffix => "-mac";
 		protected override DevicePlatform DevicePlatform { get { return DevicePlatform.macOS; } }
 
-		public MacMonoNativeInfo (Harness harness, MonoNativeFlavor flavor)
-			: base (harness, flavor)
+		public MacMonoNativeInfo (Harness harness, MonoNativeFlavor flavor, string rootDirectory)
+			: base (harness, flavor, rootDirectory)
 		{
 		}
 
