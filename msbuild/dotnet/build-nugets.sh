@@ -144,6 +144,41 @@ copy_ios_native_libs_to_runtime_pack "tvOS"    "Xamarin.AppleTVSimulator"  0 "x6
 copy_ios_native_libs_to_runtime_pack "watchOS" "Xamarin.WatchOS"           0 "arm"   "armv7k arm64_32"
 copy_ios_native_libs_to_runtime_pack "watchOS" "Xamarin.WatchSimulator"    0 "x86"   "i386"
 
+copy_macos_native_libs_to_runtime_pack ()
+{
+	local platform=macOS
+	local sdk=$2
+	local rid_family=osx
+	local architectures=x86_64
+	#shellcheck disable=SC2155
+	local platform_lower=$(echo "$platform" | tr '[:upper:]' '[:lower:]')
+	local rid=osx-x64
+	local packageid=Microsoft.$platform.Runtime.$rid
+	local destdir=$DOTNET_DESTDIR/$packageid/runtimes/$rid/native
+	local current_dir="$TOP/_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/"
+	local lib_dir="$current_dir/lib/"
+	local include_dir="$current_dir/include/"
+
+	mkdir -p "$destdir"
+
+	local inputs=()
+	inputs+=("$lib_dir"/libxammac.a)
+	inputs+=("$lib_dir"/libxammac.dylib)
+	inputs+=("$lib_dir"/libxammac-debug.a)
+	inputs+=("$lib_dir"/libxammac-debug.dylib)
+	inputs+=("$lib_dir"/mmp/Xamarin.Mac.registrar.mobile.a)
+	for element in "${inputs[@]}"; do
+		#shellcheck disable=SC2155
+		local filename=$(basename "$element")
+		$cp "$element" "$destdir/${filename/xammac/xamarin}"
+	done
+
+	$cp "$TOP"/tools/mtouch/simlauncher.mm "$destdir"
+
+	$cp -r "$include_dir/xamarin" "$destdir/"
+}
+copy_macos_native_libs_to_runtime_pack "macOS"     "MonoTouch.iphoneos"        1 "arm64" "arm64"
+
 # the Xamarin.*OS.Sdk nugets
 create_sdk_nugets ()
 {

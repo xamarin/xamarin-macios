@@ -66,46 +66,71 @@
 		<Warning Text="_ExtractNativeLibrariesFromBindingAssemblies: Not implemented " />
 	</Target>
 
-	<!-- App bundle creation tasks -->
-	<Target Name="_EarlyAppBundleTasks" DependsOnTargets="
-		_CollectBundleResources;
-		_OptimizePngImages;
-		_OptimizePropertyLists;
-		_OptimizeLocalizationFiles;
-		_PackLibraryResources;
-		_UnpackLibraryResources;
-		_GenerateBundleName;
-		_DetectAppManifest;
-		_DetectSigningIdentity;
-		_CopyResourcesToBundle;
-		_CreateAssetPackManifest;
-		_SmeltMetal;
-		_ForgeMetal;
-		_TemperMetal;
-		_CompileCoreMLModels;
-		_PrepareResourceRules;
-		_CompileEntitlements;
-		_CompileAppManifest;
-		_GetNativeExecutableName;
-		_ParseExtraMtouchArgs;
-		" />
+	<PropertyGroup Condition=" '$(_PlatformName)' != 'macOS' ">
+		<_EarlyAppBundleTasksDependsOn>
+			$(_PlatforName);
+			_CollectBundleResources;
+			_OptimizePngImages;
+			_OptimizePropertyLists;
+			_OptimizeLocalizationFiles;
+			_PackLibraryResources;
+			_UnpackLibraryResources;
+			_GenerateBundleName;
+			_DetectAppManifest;
+			_DetectSigningIdentity;
+			_CopyResourcesToBundle;
+			_CreateAssetPackManifest;
+			_SmeltMetal;
+			_ForgeMetal;
+			_TemperMetal;
+			_CompileCoreMLModels;
+			_PrepareResourceRules;
+			_CompileEntitlements;
+			_CompileAppManifest;
+			_GetNativeExecutableName;
+			_ParseExtraMtouchArgs;
+		</_EarlyAppBundleTasksDependsOn>
+		<_LateAppBundleTasksDependsOn>
+			_CompileITunesMetadata;
+			_CollectITunesArtwork;
+			_CopyITunesArtwork;
+			_CreateDebugSettings;
+			_CreateDebugConfiguration;
+			_CreatePkgInfo;
+			_CopyAppExtensionsToBundle;
+			_CopyWatchOS1AppsToBundle;
+			_CopyWatchOS2AppsToBundle;
+			_ReadAppExtensionDebugSymbolProperties;
+			_GenerateAppExtensionDebugSymbols;
+			_PrepareDebugSymbolGeneration;
+			_GenerateDebugSymbols;
+			_ValidateAppBundle;
+		</_LateAppBundleTasksDependsOn>
+	</PropertyGroup>
 
-	<Target Name="_LateAppBundleTasks" DependsOnTargets="
-		_CompileITunesMetadata;
-		_CollectITunesArtwork;
-		_CopyITunesArtwork;
-		_CreateDebugSettings;
-		_CreateDebugConfiguration;
-		_CreatePkgInfo;
-		_CopyAppExtensionsToBundle;
-		_CopyWatchOS1AppsToBundle;
-		_CopyWatchOS2AppsToBundle;
-		_ReadAppExtensionDebugSymbolProperties;
-		_GenerateAppExtensionDebugSymbols;
-		_PrepareDebugSymbolGeneration;
-		_GenerateDebugSymbols;
-		_ValidateAppBundle;
-		" />
+	<PropertyGroup Condition=" '$(_PlatformName)' == 'macOS' ">
+		<_EarlyAppBundleTasksDependsOn>
+			_CollectBundleResources;
+			_PackLibraryResources;
+			_UnpackLibraryResources;
+			_GenerateBundleName;
+			_DetectSigningIdentity;
+			_CopyContentToBundle;
+			_SmeltMetal;
+			_ForgeMetal;
+			_TemperMetal;
+			_CompileEntitlements;
+			_CompileAppManifest;
+		</_EarlyAppBundleTasksDependsOn>
+		<_LateAppBundleTasksDependsOn>
+			_CreatePkgInfo;
+			_CopyAppExtensionsToBundle;
+		</_LateAppBundleTasksDependsOn>
+	</PropertyGroup>
+
+	<!-- App bundle creation tasks -->
+	<Target Name="_EarlyAppBundleTasks" DependsOnTargets="$(_EarlyAppBundleTasksDependsOn)" />
+	<Target Name="_LateAppBundleTasks" DependsOnTargets="$(_LateAppBundleTasksDependsOn)" />
 
 	<Target Name="_PostProcessAssemblies" DependsOnTargets="_GenerateRegistrarCode;_GeneratePInvokeWrapperCode;_CompilePInvokeWrappers" />
 	<Target Name="_PreAOTCompile" DependsOnTargets="_SetVariables">
@@ -208,7 +233,7 @@
 
 			<_Framework Include="Accelerate" />
 			<_Framework Include="AddressBook" />
-			<_Framework Include="AddressBookUI" />
+			<_Framework Include="AddressBookUI" Condition="'$(_PlatformName)' != 'macOS' " />
 			<_Framework Include="AudioToolbox" />
 			<_Framework Include="AVFoundation" />
 			<_Framework Include="CFNetwork" />
@@ -223,27 +248,28 @@
 			<_Framework Include="GameKit" />
 			<_Framework Include="MapKit" />
 			<_Framework Include="MediaPlayer" />
-			<_Framework Include="MessageUI" />
-			<_Framework Include="MobileCoreServices" />
+			<_Framework Include="MessageUI" Condition="'$(_PlatformName)' != 'macOS' " />
+			<_Framework Include="MobileCoreServices" Condition="'$(_PlatformName)' != 'macOS' " />
 			<_Framework Include="OpenAL" />
-			<_Framework Include="OpenGLES" />
+			<_Framework Include="OpenGLES" Condition="'$(_PlatformName)' != 'macOS' " />
 			<_Framework Include="StoreKit" />
 			<_Framework Include="SystemConfiguration" />
-			<_Framework Include="UIKit" />
+			<_Framework Include="UIKit" Condition="'$(_PlatformName)' != 'macOS' " />
+			<_Framework Include="AppKit" Condition="'$(_PlatformName)' == 'macOS' " />
 
 
 			<_WeakFramework Include="Accounts" />
 			<_WeakFramework Include="AdSupport" />
-			<_WeakFramework Include="ARKit" />
-			<_WeakFramework Include="AssetsLibrary" />
+			<_WeakFramework Include="ARKit" Condition="'$(_PlatformName)' != 'macOS' " />
+			<_WeakFramework Include="AssetsLibrary" Condition="'$(_PlatformName)' != 'macOS' " />
 			<_WeakFramework Include="AuthenticationServices" />
 			<_WeakFramework Include="AutomaticAssessmentConfiguration" />
 			<_WeakFramework Include="AVKit" />
 			<_WeakFramework Include="BackgroundTasks" />
 			<_WeakFramework Include="BusinessChat" />
 			<_WeakFramework Include="CallKit" />
-			<_WeakFramework Include="CarPlay" />
-			<_WeakFramework Include="ClassKit" />
+			<_WeakFramework Include="CarPlay" Condition="'$(_PlatformName)' != 'macOS' " />
+			<_WeakFramework Include="ClassKit" Condition="'$(_PlatformName)' != 'macOS' " />
 			<_WeakFramework Include="CloudKit" />
 			<_WeakFramework Include="Contacts" />
 			<_WeakFramework Include="ContactsUI" />
@@ -258,25 +284,24 @@
 			<_WeakFramework Include="CoreTelephony" />
 			<_WeakFramework Include="CoreVideo" />
 			<_WeakFramework Include="EventKit" />
-			<_WeakFramework Include="EventKitUI" />
+			<_WeakFramework Include="EventKitUI" Condition="'$(_PlatformName)' != 'macOS' " />
 			<_WeakFramework Include="FileProvider" />
 			<_WeakFramework Include="FileProviderUI" />
 			<_WeakFramework Include="GameplayKit" />
 			<_WeakFramework Include="GLKit" />
-			<_WeakFramework Include="HealthKit" />
-			<_WeakFramework Include="HealthKitUI" />
-			<_WeakFramework Include="HomeKit" />
-			<_WeakFramework Include="iAd" />
+			<_WeakFramework Include="HealthKit" Condition="'$(_PlatformName)' != 'macOS' " />
+			<_WeakFramework Include="HealthKitUI" Condition="'$(_PlatformName)' != 'macOS' " />
+			<_WeakFramework Include="HomeKit" Condition="'$(_PlatformName)' != 'macOS' " />
+			<_WeakFramework Include="iAd" Condition="'$(_PlatformName)' != 'macOS' " />
 			<_WeakFramework Include="IdentityLookup" />
-			<_WeakFramework Include="IdentityLookupUI" />
-			<_WeakFramework Include="IdentityLookupUI" />
+			<_WeakFramework Include="IdentityLookupUI" Condition="'$(_PlatformName)' != 'macOS' " />
 			<_WeakFramework Include="ImageIO" />
 			<_WeakFramework Include="Intents" />
-			<_WeakFramework Include="IntentsUI" />
+			<_WeakFramework Include="IntentsUI" Condition="'$(_PlatformName)' != 'macOS' " />
 			<_WeakFramework Include="JavaScriptCore" />
 			<_WeakFramework Include="LinkPresentation" />
 			<_WeakFramework Include="LocalAuthentication" />
-			<_WeakFramework Include="Messages" />
+			<_WeakFramework Include="Messages" Condition="'$(_PlatformName)' != 'macOS' " />
 			<_WeakFramework Include="Metal" />
 			<_WeakFramework Include="Metal" />
 			<_WeakFramework Include="MetalKit" />
@@ -287,16 +312,16 @@
 			<_WeakFramework Include="NaturalLanguage" />
 			<_WeakFramework Include="Network" />
 			<_WeakFramework Include="NetworkExtension" />
-			<_WeakFramework Include="NewsstandKit" />
+			<_WeakFramework Include="NewsstandKit" Condition="'$(_PlatformName)' != 'macOS' " />
 			<_WeakFramework Include="NotificationCenter" />
-			<_WeakFramework Include="PassKit" />
+			<_WeakFramework Include="PassKit" Condition="'$(_PlatformName)' != 'macOS' " />
 			<_WeakFramework Include="PencilKit" />
 			<_WeakFramework Include="Photos" />
 			<_WeakFramework Include="PhotosUI" />
 			<_WeakFramework Include="PushKit" />
 			<_WeakFramework Include="QuickLook" />
 			<_WeakFramework Include="QuickLookThumbnailing" />
-			<_WeakFramework Include="ReplayKit" />
+			<_WeakFramework Include="ReplayKit" Condition="'$(_PlatformName)' != 'macOS' " />
 			<_WeakFramework Include="SafariServices" />
 			<_WeakFramework Include="SceneKit" />
 			<_WeakFramework Include="Security" />
@@ -304,13 +329,12 @@
 			<_WeakFramework Include="SoundAnalysis" />
 			<_WeakFramework Include="Speech" />
 			<_WeakFramework Include="SpriteKit" />
-			<_WeakFramework Include="Twitter" />
+			<_WeakFramework Include="Twitter" Condition="'$(_PlatformName)' != 'macOS' " />
 			<_WeakFramework Include="UserNotifications" />
-			<_WeakFramework Include="UserNotificationsUI" />
+			<_WeakFramework Include="UserNotificationsUI" Condition="'$(_PlatformName)' != 'macOS' " />
 			<_WeakFramework Include="VideoSubscriberAccount" />
-			<_WeakFramework Include="VisionKit" />
-			<_WeakFramework Include="VisionKit" />
-			<_WeakFramework Include="WatchConnectivity" />
+			<_WeakFramework Include="VisionKit" Condition="'$(_PlatformName)' != 'macOS' " />
+			<_WeakFramework Include="WatchConnectivity" Condition="'$(_PlatformName)' != 'macOS' " />
 			<_WeakFramework Include="WebKit" />
 
 			<_NativeDynamicLibrary Include="@(ResolvedFileToPublish)" Condition="'%(Extension)' == '.dylib' And '%(RootDir)%(Directory)' == '$(_MonoLibDir)'" />
@@ -348,10 +372,12 @@
 			<_Includes>-I$(_RuntimeIncludeDir)</_Includes>
 			<_LinkerFlags>-lz -liconv @(_NativeDynamicLibraryPath -> '-L%(FullPath)', ' ') @(_NativeDynamicLibrary -> '-l%(LibraryName)', ' ')</_LinkerFlags>
 			<_ISysRoot>-isysroot $(_SdkRoot)</_ISysRoot>
-			<_Arch Condition=" '$(_SdkIsSimulator)' == 'true'">-arch x86_64</_Arch>
-			<_Arch Condition=" '$(_SdkIsSimulator)' != 'true'">-arch arm64</_Arch>
-			<_MinOSVersion Condition=" '$(_SdkIsSimulator)' == 'true'">-mios-simulator-version-min=7.0</_MinOSVersion>
-			<_MinOSVersion Condition=" '$(_SdkIsSimulator)' != 'true'">-miphoneos-version-min=7.0</_MinOSVersion>
+			<_Arch Condition=" '$(_Arch)' == '' And '$(_PlatformName)' == 'macOS'">-arch x86_64</_Arch>
+			<_Arch Condition=" '$(_Arch)' == '' And '$(_SdkIsSimulator)' == 'true'">-arch x86_64</_Arch>
+			<_Arch Condition=" '$(_Arch)' == '' And '$(_SdkIsSimulator)' != 'true'">-arch arm64</_Arch>
+			<_MinOSVersion Condition=" '$(_MinOSVersion)' == '' And '$(_PlatformName)' == 'macOS'">-mmacosx-version-min=10.9</_MinOSVersion>
+			<_MinOSVersion Condition=" '$(_MinOSVersion)' == '' And '$(_SdkIsSimulator)' == 'true'">-mios-simulator-version-min=7.0</_MinOSVersion>
+			<_MinOSVersion Condition=" '$(_MinOSVersion)' == '' And '$(_SdkIsSimulator)' != 'true'">-miphoneos-version-min=7.0</_MinOSVersion>
 			<_OtherFlags>-gdwarf-2 -fobjc-abi-version=2 -fobjc-legacy-dispatch -fms-extensions -fstack-protector-strong -ObjC++ -std=c++14 -fno-exceptions -stdlib=libc++ $(_MinOSVersion) -g -Wl,-rpath -Wl,@executable_path/</_OtherFlags>
 			<_LauncherCmd>$(_Clang) $(_UnreferencedSymbols) $(_Frameworks) $(_WeakFrameworks) $(_Defines) $(_Warnings) $(_Includes) $(_LinkerFlags) $(_ISysRoot) $(_Arch) $(_OtherFlags) $(_LibMono) $(_LibXamarin) $(_LibRegistrar) $(_LibApp) $(_SimLauncher)	-o $(_AppBundlePath)$(_AppBundleName)</_LauncherCmd>
 		</PropertyGroup>
