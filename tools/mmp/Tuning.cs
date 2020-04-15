@@ -112,7 +112,7 @@ namespace MonoMac.Tuner {
 			pipeline.Append (options.LinkMode == LinkMode.None ? new LoadOptionalReferencesStep () : new LoadReferencesStep ());
 
 			if (options.I18nAssemblies != I18nAssemblies.None)
-				pipeline.Append (new LoadI18nAssemblies (options.I18nAssemblies));
+				pipeline.Append (new LoadI18nAssemblies ());
 
 			// that must be done early since the XML files can "add" new assemblies [#15878]
 			// and some of the assemblies might be (directly or referenced) SDK assemblies
