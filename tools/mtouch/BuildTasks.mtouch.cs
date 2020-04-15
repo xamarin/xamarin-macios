@@ -341,7 +341,7 @@ namespace Xamarin.Bundler
 							int arg_max;
 							if (int.TryParse (getconf_output.ToString ().Trim (' ', '\t', '\n', '\r'), out arg_max)) {
 								if (cmd_length > arg_max) {
-									linker_errors.Add (ErrorHelper.CreateWarning (5217, Errors.MT5217, cmd_length));
+									linker_errors.Add (ErrorHelper.CreateError (5217, Errors.MT5217, cmd_length));
 								} else {
 									Driver.Log (3, $"Linker failure is probably not due to command-line length (actual: {cmd_length} limit: {arg_max}");
 								}
@@ -355,9 +355,11 @@ namespace Xamarin.Bundler
 				}
 			} catch (System.ComponentModel.Win32Exception wex) {
 				/* This means we failed to execute the linker, not that the linker itself returned with a failure */
-				if (wex.NativeErrorCode == 7 /* E2BIG = Too many arguments */ )
-					linker_errors.Add (ErrorHelper.CreateWarning (5217, wex, Errors.MT5217, cmd_length));
-				linker_errors.Add (ErrorHelper.CreateError (5222, wex, Errors.MX5222, wex.Message));
+				if (wex.NativeErrorCode == 7 /* E2BIG = Too many arguments */ ) {
+					linker_errors.Add (ErrorHelper.CreateError (5217, wex, Errors.MT5217, cmd_length));
+				} else {
+					linker_errors.Add (ErrorHelper.CreateError (5222, wex, Errors.MX5222, wex.Message));
+				}
 			}
 
 			ErrorHelper.Show (linker_errors);

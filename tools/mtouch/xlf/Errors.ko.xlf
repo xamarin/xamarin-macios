@@ -2579,9 +2579,9 @@
 		</note>
       </trans-unit>
       <trans-unit id="MT5217">
-        <source>Native linking possibly failed because the linker command line was too long ({0} characters).
+        <source>Native linking failed because the linker command line was too long ({0} characters).
 		</source>
-        <target state="new">Native linking possibly failed because the linker command line was too long ({0} characters).
+        <target state="new">Native linking failed because the linker command line was too long ({0} characters).
 		</target>
         <note>
 		</note>
