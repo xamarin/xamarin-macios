@@ -232,7 +232,7 @@ namespace CoreAudioKit {
 		UIColor RecordButtonColor { get; set; }
 
 		[Export ("setOutputAudioUnit:")]
-		void SetOutputAudioUnit ([NullAllowed] AudioUnit.AudioUnit audioUnit);
+		void SetOutputAudioUnit (AudioUnit.AudioUnit audioUnit);
 	}
 #endif
 }

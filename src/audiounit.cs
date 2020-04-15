@@ -348,6 +348,7 @@ namespace AudioUnit {
 		[Export ("setOutputEnabled:")]
 		bool SetOutputEnabled (bool enabled);
 		
+		[return: NullAllowed]
 		[Export ("inputHandler", ArgumentSemantic.Copy)]
 		AUInputHandler GetInputHandler ();
 
@@ -360,6 +361,7 @@ namespace AudioUnit {
 		[Export ("stopHardware")]
 		void StopHardware ();
 
+		[return: NullAllowed]
 		[Export ("outputProvider", ArgumentSemantic.Copy)]
 		AURenderPullInputBlock GetOutputProvider ();
 

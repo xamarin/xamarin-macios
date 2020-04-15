@@ -191,15 +191,17 @@ Makefile-mac.inc: xharness/xharness.exe
 
 -include Makefile-mac.inc
 
-$(TOP)/tools/mtouch/SdkVersions.cs: $(TOP)/tools/common/SdkVersions.cs.in
-	@$(MAKE) -C $(TOP)/tools/mtouch SdkVersions.cs
+$(TOP)/tools/common/SdkVersions.cs: $(TOP)/tools/common/SdkVersions.cs.in
+	@$(MAKE) -C $(TOP)/tools/mtouch ../common/SdkVersions.cs
 
 .stamp-src-project-files:
 	@$(MAKE) -C $(TOP)/src project-files
 	@touch $@
 
-xharness/xharness.exe: $(wildcard xharness/*.cs) $(wildcard $(TOP)/tools/bcl-test-importer/BCLTestImporter/*.cs) xharness/xharness.csproj $(TOP)/tools/mtouch/SdkVersions.cs test.config test-system.config .stamp-src-project-files
+xharness/xharness.exe: $(xharness_dependencies) test.config test-system.config .stamp-src-project-files
 	$(Q_GEN) $(SYSTEM_MSBUILD) /restore $(MSBUILD_VERBOSITY_QUIET) xharness/xharness.csproj
+xharness/xharness.csproj.inc: export ABSOLUTE_PATHS=1
+-include xharness/xharness.csproj.inc
 
 killall:
 	@killall "iPhone Simulator" >/dev/null 2>&1 || true
@@ -391,6 +393,10 @@ wrench-launch-external wrench-report-external:
 # This will schedule a manual device test run for the current commit. The current commit must already have packages.
 launch-manual-device-tests:
 	./launch-manual-device-tests.sh
+
+# This will schedule a manual sample test run for the current commit. The current commit must already have packages.
+launch-manual-sample-tests:
+	./launch-manual-sample-tests.sh
 
 else
 wrench-launch-external wrench-report-external:

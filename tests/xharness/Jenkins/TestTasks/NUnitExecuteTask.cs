@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
-using Xharness.Execution;
-using Xharness.Logging;
-using Xharness.Utilities;
+using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
+using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
+using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
 namespace Xharness.Jenkins.TestTasks
 {
@@ -19,8 +17,8 @@ namespace Xharness.Jenkins.TestTasks
 		public bool ProduceHtmlReport = true;
 		public bool InProcess;
 
-		public NUnitExecuteTask (BuildToolTask build_task, IProcessManager processManager)
-			: base (build_task, processManager)
+		public NUnitExecuteTask (Jenkins jenkins, BuildToolTask build_task, IProcessManager processManager)
+			: base (jenkins, build_task, processManager)
 		{
 		}
 
@@ -110,7 +108,7 @@ namespace Xharness.Jenkins.TestTasks
 			}
 		}
 
-		protected override async Task RunTestAsync ()
+		public override async Task RunTestAsync ()
 		{
 			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
 				var xmlLog = Logs.CreateFile ($"log-{Timestamp}.xml", LogType.XmlLog.ToString ());
@@ -132,7 +130,7 @@ namespace Xharness.Jenkins.TestTasks
 					args.Add ("-labels");
 				}
 
-				await ExecuteProcessAsync (log, DirectoryUtilities.XIBuildPath, args);
+				await ExecuteProcessAsync (log, Harness.XIBuildPath, args);
 
 				if (ProduceHtmlReport) {
 					try {
@@ -143,7 +141,7 @@ namespace Xharness.Jenkins.TestTasks
 									using (var xri = XmlReader.Create (sri)) {
 										var xslt = new System.Xml.Xsl.XslCompiledTransform ();
 										xslt.Load (xrt);
-										using (var xwo = XmlWriter.Create (output as TextWriter, xslt.OutputSettings)) // use OutputSettings of xsl, so it can be output as HTML
+										using (var xwo = XmlWriter.Create (File.Create (output.FullPath), xslt.OutputSettings)) // use OutputSettings of xsl, so it can be output as HTML
 										{
 											xslt.Transform (xri, xwo);
 										}

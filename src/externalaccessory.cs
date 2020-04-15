@@ -124,15 +124,19 @@ namespace ExternalAccessory {
 		[Export ("initWithAccessory:forProtocol:")]
 		IntPtr Constructor (EAAccessory accessory, string protocol);
 
+		[NullAllowed]
 		[Export ("accessory")]
 		EAAccessory Accessory { get; }
 
+		[NullAllowed]
 		[Export ("protocolString")]
 		string ProtocolString { get; }
 
+		[NullAllowed]
 		[Export ("inputStream")]
 		NSInputStream InputStream { get; }
 
+		[NullAllowed]
 		[Export ("outputStream")]
 		NSOutputStream OutputStream { get; }
 	}

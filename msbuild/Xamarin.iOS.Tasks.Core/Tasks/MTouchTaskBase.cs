@@ -68,9 +68,6 @@ namespace Xamarin.iOS.Tasks
 		[Required]
 		public bool EnableBitcode { get; set; }
 
-		[Required]
-		public bool EnableGenericValueTypeSharing { get; set; }
-
 		public string License { get; set; }
 
 		[Required]
@@ -323,9 +320,6 @@ namespace Xamarin.iOS.Tasks
 				args.AddLine ("--aot-options=-O=float32");
 			else
 				args.AddLine ("--aot-options=-O=-float32");
-
-			if (!EnableGenericValueTypeSharing)
-				args.AddLine ("--gsharedvt=false");
 
 			if (LinkDescriptions != null) {
 				foreach (var desc in LinkDescriptions)

@@ -1,18 +1,18 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using Xharness.Execution;
-using Xharness.Logging;
+using Microsoft.DotNet.XHarness.iOS.Shared;
+using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
+using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 
-namespace Xharness.Jenkins.TestTasks
-{
+namespace Xharness.Jenkins.TestTasks {
 	class MakeTask : BuildToolTask
 	{
 		public string Target;
 		public string WorkingDirectory;
 		public TimeSpan Timeout = TimeSpan.FromMinutes (5);
 
-		public MakeTask (IProcessManager processManager) : base (processManager)
+		public MakeTask (Jenkins jenkins, IProcessManager processManager) : base (jenkins, processManager)
 		{
 		}
 
@@ -39,7 +39,7 @@ namespace Xharness.Jenkins.TestTasks
 						}
 					}
 					using (var reader = log.GetReader ())
-						AddWrenchLogFiles (reader);
+						AddCILogFiles (reader);
 					Jenkins.MainLog.WriteLine ("Made {0} ({1})", TestName, Mode);
 				}
 			}

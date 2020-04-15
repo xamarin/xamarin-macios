@@ -375,6 +375,14 @@ public class AttributeManager
 
 		List<T> list = null;
 		for (int i = 0; i < attributes.Count; i++) {
+
+			// special compiler attribtues not usable from C#
+			switch (attributes [i].AttributeType.FullName) {
+			case "System.Runtime.CompilerServices.NullableAttribute":
+			case "System.Runtime.CompilerServices.NullableContextAttribute":
+				continue;
+			}
+
 			foreach (var attrib in CreateAttributeInstance<T> (attributes [i], provider)) {
 				if (list == null)
 					list = new List<T> ();

@@ -456,6 +456,7 @@ namespace CloudKit {
 		[Export ("init")]
 		IntPtr Constructor ();
 
+		[NullAllowed]
 		[Export ("userRecordID", ArgumentSemantic.Copy)]
 		CKRecordID UserRecordId { get; }
 
@@ -463,6 +464,7 @@ namespace CloudKit {
 		[Mac (10, 10)]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'DisplayContact.GivenName'.")]
 		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'DisplayContact.GivenName'.")]
+		[NullAllowed]
 		[Export ("firstName", ArgumentSemantic.Copy)]
 		string FirstName { get; }
 
@@ -470,6 +472,7 @@ namespace CloudKit {
 		[Mac (10, 10)]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'DisplayContact.FamilyName'.")]
 		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'DisplayContact.FamilyName'.")]
+		[NullAllowed]
 		[Export ("lastName", ArgumentSemantic.Copy)]
 		string LastName { get; }
 
@@ -500,7 +503,7 @@ namespace CloudKit {
 		IntPtr Constructor ();
 
 		[Export ("initWithEmailAddresses:userRecordIDs:")]
-		IntPtr Constructor (string [] emailAddresses, CKRecordID [] userRecordIDs);
+		IntPtr Constructor ([NullAllowed] string [] emailAddresses, [NullAllowed] CKRecordID [] userRecordIDs);
 
 		[NullAllowed] // by default this property is null
 		[Export ("emailAddresses", ArgumentSemantic.Copy)]
@@ -895,6 +898,7 @@ namespace CloudKit {
 		[Export ("notificationIDs", ArgumentSemantic.Copy)]
 		CKNotificationID [] NotificationIds { get; set; }
 
+		[NullAllowed]
 		[Export ("markNotificationsReadCompletionBlock", ArgumentSemantic.Copy)]
 		CKMarkNotificationsReadHandler Completed {
 			get;
@@ -1067,6 +1071,7 @@ namespace CloudKit {
 		[Export ("notificationType", ArgumentSemantic.Assign)]
 		CKNotificationType NotificationType { get; }
 
+		[NullAllowed]
 		[Export ("notificationID", ArgumentSemantic.Copy)]
 		CKNotificationID NotificationId { get; }
 
@@ -1180,6 +1185,7 @@ namespace CloudKit {
 	[BaseType (typeof (CKNotification))]
 	interface CKRecordZoneNotification : NSCoding, NSSecureCoding {
 
+		[NullAllowed]
 		[Export ("recordZoneID", ArgumentSemantic.Copy)]
 		CKRecordZoneID RecordZoneId { get; }
 
@@ -1289,6 +1295,7 @@ namespace CloudKit {
 		Action LongLivedOperationWasPersistedCallback { get; set; }		
 
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[NullAllowed]
 		[Export ("configuration", ArgumentSemantic.Copy)]
 		CKOperationConfiguration Configuration { get; set; }
 
@@ -1305,6 +1312,7 @@ namespace CloudKit {
 		[Export ("operationGroupID")]
 		string OperationGroupId { get; }
 
+		[NullAllowed] // null_resettable
 		[Export ("defaultConfiguration", ArgumentSemantic.Copy)]
 		CKOperationConfiguration DefaultConfiguration { get; set; }
 
@@ -1457,6 +1465,7 @@ namespace CloudKit {
 		[NullAllowed, Export ("modificationDate", ArgumentSemantic.Copy)]
 		NSDate ModificationDate { get; }
 
+		[return: NullAllowed]
 		[Export ("objectForKey:")] [Internal]
 		NSObject _ObjectForKey (string key);
 
@@ -1683,12 +1692,14 @@ namespace CloudKit {
 		[NoWatch]
 		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'CKQuerySubscription'.")]
 		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use 'CKQuerySubscription'.")]
+		[NullAllowed]
 		[Export ("recordType")]
 		string RecordType { get; }
 
 		[NoWatch]
 		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'CKQuerySubscription'.")]
 		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use 'CKQuerySubscription'.")]
+		[NullAllowed]
 		[Export ("predicate", ArgumentSemantic.Copy)]
 		NSPredicate Predicate { get; }
 
@@ -1699,12 +1710,14 @@ namespace CloudKit {
 		CKSubscriptionOptions SubscriptionOptions { get; }
 
 		[TV (10,0), Watch (6,0)]
+		[NullAllowed]
 		[Export ("notificationInfo", ArgumentSemantic.Copy)]
 		CKNotificationInfo NotificationInfo { get; set; }
 
 		[NoWatch]
 		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'CKRecordZoneSubscription'.")]
 		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use 'CKRecordZoneSubscription'.")]
+		[NullAllowed]
 		[Export ("zoneID", ArgumentSemantic.Copy)]
 		CKRecordZoneID ZoneID { get; set; }
 	}

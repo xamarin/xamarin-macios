@@ -103,7 +103,6 @@ namespace Xamarin.Bundler {
 		static string resources_dir;
 		static string mmp_dir;
 		
-		static string mono_dir;
 		static string custom_bundle_name;
 
 		static string tls_provider;
@@ -121,8 +120,6 @@ namespace Xamarin.Bundler {
 		static bool frameworks_copied_to_bundle_dir;    // Have we copied any frameworks to Foo.app/Contents/Frameworks?
 		static bool dylibs_copied_to_bundle_dir => native_libraries_copied_in.Count > 0;
 
-		const string pkg_config = "/Library/Frameworks/Mono.framework/Commands/pkg-config";
-
 		static Version min_xcode_version = new Version (6, 0);
 
 		static void ShowHelp (OptionSet os) {
@@ -137,6 +134,28 @@ namespace Xamarin.Bundler {
 		public static bool IsUnifiedFullSystemFramework { get { return TargetFramework == TargetFramework.Xamarin_Mac_4_5_System; } }
 		public static bool IsUnifiedMobile { get { return TargetFramework == TargetFramework.Xamarin_Mac_2_0_Mobile; } }
 		public static bool LinkProhibitedFrameworks { get; private set; }
+		public static bool UseLegacyAssemblyResolution { get; private set; }
+
+		static string mono_prefix;
+		static string MonoPrefix {
+			get {
+				if (mono_prefix == null) {
+					mono_prefix = Environment.GetEnvironmentVariable ("MONO_PREFIX");
+					if (string.IsNullOrEmpty (mono_prefix))
+						mono_prefix = "/Library/Frameworks/Mono.framework/Versions/Current";
+				}
+				return mono_prefix;
+			}
+		}
+
+		static string PkgConfig {
+			get {
+				var pkg_config = Path.Combine (MonoPrefix, "bin", "pkg-config");
+				if (!File.Exists (pkg_config))
+					throw ErrorHelper.CreateError (5313, Errors.MX5313, pkg_config);
+				return pkg_config;
+			}
+		}
 
 		public static bool Is64Bit { 
 			get {
@@ -320,6 +339,7 @@ namespace Xamarin.Bundler {
 						App.WarnOnTypeRef.AddRange (v.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries));
 					}
 				},
+				{ "legacy-assembly-resolution", "Use a legacy assembly resolution logic when using the Xamarin.Mac Full framework.", v => { UseLegacyAssemblyResolution = true; }, false /* hidden until we know if it's needed */ },
 			};
 
 			var extra_args = Environment.GetEnvironmentVariable ("MMP_ENV_OPTIONS");
@@ -607,6 +627,20 @@ namespace Xamarin.Bundler {
 				references.Add (root_assembly);
 				BuildTarget.Resolver.CommandLineAssemblies = references;
 
+				if (!UseLegacyAssemblyResolution && (IsUnifiedFullSystemFramework || IsUnifiedFullXamMacFramework)) {
+					// We need to look in the GAC/System mono for both FullSystem and FullXamMac, because that's
+					// how we've been resolving assemblies in the past (Cecil has a fall-back mode where it looks
+					// in the GAC, and we never disabled that, meaning that we always looked in the GAC if failing
+					// to resolve from somewhere else). This makes it explicit that we look in the GAC, and we
+					// now also warn when using FullXamMac and finding assemblies in the GAC.
+					BuildTarget.Resolver.GlobalAssemblyCache = Path.Combine (SystemMonoDirectory, "lib", "mono", "gac");
+					var framework_dir = Path.GetDirectoryName (typeof (object).Module.FullyQualifiedName);
+					BuildTarget.Resolver.SystemFrameworkDirectories = new [] {
+						framework_dir,
+						Path.Combine (framework_dir, "Facades")
+					};
+				}
+
 				if (string.IsNullOrEmpty (app_name))
 					app_name = root_wo_ext;
 			
@@ -766,18 +800,20 @@ namespace Xamarin.Bundler {
 			Watch ("Extracted native link info", 1);
 		}
 
+		static string system_mono_directory;
+		static string SystemMonoDirectory {
+			get {
+				if (system_mono_directory == null)
+					system_mono_directory = RunPkgConfig ("--variable=prefix", force_system_mono: true);
+				return system_mono_directory;
+			}
+		}
+
 		static string MonoDirectory {
 			get {
-				if (mono_dir == null) {
-					if (IsUnifiedFullXamMacFramework || IsUnifiedMobile) {
-						mono_dir = FrameworkDirectory;
-					} else {
-						var dir = new StringBuilder ();
-						RunCommand (pkg_config, new [] { "--variable=prefix", "mono-2" }, dir);
-						mono_dir = Path.GetFullPath (dir.ToString ().Replace (Environment.NewLine, String.Empty));
-					}
-				}
-				return mono_dir;
+				if (IsUnifiedFullXamMacFramework || IsUnifiedMobile)
+					return FrameworkDirectory;
+				return SystemMonoDirectory;
 			}
 		}
 
@@ -937,7 +973,7 @@ namespace Xamarin.Bundler {
 		{
 			string mono_version;
 
-			var versionFile = "/Library/Frameworks/Mono.framework/Versions/Current/VERSION";
+			var versionFile = Path.Combine (SystemMonoDirectory, "VERSION");
 			if (File.Exists (versionFile)) {
 				mono_version = File.ReadAllText (versionFile);
 			} else {
@@ -1199,16 +1235,13 @@ namespace Xamarin.Bundler {
 		{
 			string [] env = null;
 
-			if (!File.Exists (pkg_config))
-				throw ErrorHelper.CreateError (5313, Errors.MX5313);
-
 			if (!IsUnifiedFullSystemFramework && !force_system_mono)
 				env = new [] { "PKG_CONFIG_PATH", Path.Combine (FrameworkLibDirectory, "pkgconfig") };
 
 			var sb = new StringBuilder ();
 			int rv;
 			try {
-				rv = RunCommand (pkg_config, new [] { option, "mono-2" }, env, sb);
+				rv = RunCommand (PkgConfig, new [] { option, "mono-2" }, env, sb);
 			} catch (Exception e) {
 				throw ErrorHelper.CreateError (5314, e, Errors.MX5314, e.Message);
 			}
@@ -1253,9 +1286,17 @@ namespace Xamarin.Bundler {
 		static IDictionary<string,List<MethodDefinition>> Link ()
 		{
 			var cache = (Dictionary<string, AssemblyDefinition>) BuildTarget.Resolver.ResolverCache;
-			var resolver = cache != null
-				? new Mono.Linker.AssemblyResolver (cache)
-				: new Mono.Linker.AssemblyResolver ();
+			AssemblyResolver resolver;
+
+			if (UseLegacyAssemblyResolution) {
+				if (cache != null) {
+					resolver = new Mono.Linker.AssemblyResolver (cache);
+				} else {
+					resolver = new Mono.Linker.AssemblyResolver ();
+				}
+			} else { 
+				resolver = new MonoMacAssemblyResolver (BuildTarget.Resolver);
+			}
 
 			resolver.AddSearchDirectory (BuildTarget.Resolver.RootDirectory);
 			resolver.AddSearchDirectory (BuildTarget.Resolver.FrameworkDirectory);
@@ -1354,7 +1395,7 @@ namespace Xamarin.Bundler {
 			var sb = new List<string> ();
 			foreach (string library in Directory.GetFiles (mmp_dir, "*.dylib")) {
 				foreach (string lib in Xamarin.MachO.GetNativeDependencies (library)) {
-					if (lib.StartsWith ("/Library/Frameworks/Mono.framework/Versions/", StringComparison.Ordinal)) {
+					if (lib.StartsWith (Path.GetDirectoryName (MonoPrefix), StringComparison.Ordinal)) {
 						string libname = Path.GetFileName (lib);
 						string real_lib = GetRealPath (lib);
 						string real_libname	= Path.GetFileName (real_lib);
@@ -1736,7 +1777,7 @@ namespace Xamarin.Bundler {
 			resolved_assemblies.Add (fqname);
 
 			foreach (AssemblyNameReference reference in assembly.MainModule.AssemblyReferences) {
-				AssemblyDefinition reference_assembly = AddAssemblyReferenceToResolver (reference.Name);
+				AssemblyDefinition reference_assembly = AddAssemblyReferenceToResolver (reference);
 				ProcessAssemblyReferences (reference_assembly);
 			}
 		}
@@ -1752,10 +1793,10 @@ namespace Xamarin.Bundler {
 			return assembly;
 		}
 
-		static AssemblyDefinition AddAssemblyReferenceToResolver (string reference)
+		static AssemblyDefinition AddAssemblyReferenceToResolver (AssemblyNameReference reference)
 		{
-			if (AssemblySwapInfo.ReferencedNeedsSwappedOut (reference))
-				return BuildTarget.Resolver.Load (AssemblySwapInfo.GetSwappedReference (reference));
+			if (AssemblySwapInfo.ReferencedNeedsSwappedOut (reference.Name))
+				return BuildTarget.Resolver.Load (AssemblySwapInfo.GetSwappedReference (reference.Name));
 
 			return BuildTarget.Resolver.Resolve (reference);
 		}

@@ -1,18 +1,18 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Xharness.Execution;
-using Xharness.Logging;
+using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
+using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 
 namespace Xharness.Jenkins.TestTasks {
 	class DotNetTestTask : RunTestTask {
-		public DotNetTestTask (DotNetBuildTask build_task, IProcessManager processManager)
-			: base (build_task, processManager)
+		public DotNetTestTask (Jenkins jenkins, DotNetBuildTask build_task, IProcessManager processManager)
+			: base (jenkins, build_task, processManager)
 		{
 			DotNetBuildTask.SetDotNetEnvironmentVariables (Environment);
 		}
 
-		protected override async Task RunTestAsync ()
+		public override async Task RunTestAsync ()
 		{
 			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
 				var trx = Logs.Create ($"results-{Timestamp}.trx", LogType.TrxLog.ToString ());

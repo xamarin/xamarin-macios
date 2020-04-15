@@ -7,7 +7,8 @@ jobs:
   timeoutInMinutes: 120
 
   pool:
-    name: "Hosted Mac Internal Mojave"
+    name: 'Azure Pipelines'
+    vmImage: 'internal-macos-10.15'
 
   steps:
   - task: InstallSSHKey@0

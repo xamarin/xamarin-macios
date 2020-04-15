@@ -29,6 +29,7 @@ namespace Extrospection {
 				new SimdCheck (),
 				new RequiresSuperCheck (),
 				new DeprecatedCheck (),
+				new NullabilityCheck (),
 //				new ListNative (), // for debug
 			};
 			foreach (var assemblyName in assemblyNames) {

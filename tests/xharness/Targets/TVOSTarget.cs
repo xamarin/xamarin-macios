@@ -1,12 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Xml;
-using Xamarin;
-using Xharness.Hardware;
-using Xharness.Utilities;
+using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
+using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 
-namespace Xharness.Targets
-{
+namespace Xharness.Targets {
 	public class TVOSTarget : iOSTarget
 	{
 		public override string Suffix {

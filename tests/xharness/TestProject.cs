@@ -5,10 +5,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
 using Xharness.Jenkins.TestTasks;
-using Xharness.Utilities;
+using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
+using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 
-namespace Xharness
-{
+namespace Xharness {
 	public class TestProject
 	{
 		XmlDocument xml;
@@ -112,14 +112,14 @@ namespace Xharness
 			return rv;
 		}
 
-		internal async Task<TestProject> CreateCloneAsync (TestTask test)
+		internal async Task<TestProject> CreateCloneAsync (AppleTestTask test)
 		{
 			var rv = Clone ();
 			await rv.CreateCopyAsync (test);
 			return rv;
 		}
 
-		internal async Task CreateCopyAsync (TestTask test = null)
+		internal async Task CreateCopyAsync (AppleTestTask test = null)
 		{
 			var directory = DirectoryUtilities.CreateTemporaryDirectory (test?.TestName ?? System.IO.Path.GetFileNameWithoutExtension (Path));
 			Directory.CreateDirectory (directory);
@@ -176,6 +176,14 @@ namespace Xharness
 			: base (path, isExecutableProject)
 		{
 			Name = System.IO.Path.GetFileNameWithoutExtension (path);
+		}
+
+		public bool IsSupported (DevicePlatform devicePlatform, string productVersion)
+		{
+			if (MonoNativeInfo == null)
+				return true;
+			var min_version = MonoNativeHelper.GetMinimumOSVersion (devicePlatform, MonoNativeInfo.Flavor);
+			return Version.Parse (productVersion) >= Version.Parse (min_version);
 		}
 	}
 

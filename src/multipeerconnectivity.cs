@@ -60,9 +60,11 @@ namespace MultipeerConnectivity {
 		MCPeerID [] ConnectedPeers { get; }
 
 		[Async]
+		[return: NullAllowed]
 		[Export ("sendResourceAtURL:withName:toPeer:withCompletionHandler:")]
 		NSProgress SendResource (NSUrl resourceUrl, string resourceName, MCPeerID peerID, [NullAllowed] Action<NSError> completionHandler);
 
+		[return: NullAllowed]
 		[Export ("startStreamWithName:toPeer:error:")]
 		NSOutputStream StartStream (string streamName, MCPeerID peerID, out NSError error);
 
@@ -77,6 +79,7 @@ namespace MultipeerConnectivity {
 		MCPeerID MyPeerID { get; }
 
 		// we use NSArray because, when non-null, it contains a SecIdentity followed by 0..n SecCertificate - none are NSObject
+		[NullAllowed]
 		[Export ("securityIdentity")]
 		NSArray SecurityIdentity { get; }
 
@@ -160,6 +163,7 @@ namespace MultipeerConnectivity {
 		[Export ("myPeerID")]
 		MCPeerID MyPeerID { get; }
 
+		[NullAllowed]
 		[Export ("discoveryInfo")]
 		NSDictionary DiscoveryInfo { get; }
 
@@ -281,6 +285,9 @@ namespace MultipeerConnectivity {
 		[Export ("maximumNumberOfPeers", ArgumentSemantic.Assign)]
 		nuint MaximumNumberOfPeers { get; set; }
 
+#if !MONOMAC
+		[NullAllowed]
+#endif
 		[Export ("browser")]
 		MCNearbyServiceBrowser Browser { get; }
 
@@ -323,6 +330,7 @@ namespace MultipeerConnectivity {
 		[Export ("initWithServiceType:discoveryInfo:session:")]
 		IntPtr Constructor (string serviceType, [NullAllowed] NSDictionary info, MCSession session);
 
+		[NullAllowed]
 		[Export ("discoveryInfo")]
 		NSDictionary DiscoveryInfo { get; }
 

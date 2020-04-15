@@ -66,6 +66,7 @@ namespace QuickLook {
 
 		[Export ("currentPreviewItem")]
 		[Protocolize]
+		[NullAllowed]
 		QLPreviewItem CurrentPreviewItem { get;  }
 
 		[Static]
@@ -151,6 +152,7 @@ namespace QuickLook {
 	[Protocol]
 	interface QLPreviewItem {
 		[Abstract]
+		[NullAllowed]
 		[Export ("previewItemURL")]
 #if XAMCORE_4_0
 		NSUrl PreviewItemUrl { get; }
@@ -159,6 +161,7 @@ namespace QuickLook {
 #endif
 
 		[Export ("previewItemTitle")]
+		[NullAllowed]
 #if !XAMCORE_4_0
 		[Abstract]
 		string ItemTitle { get; }

@@ -5,19 +5,21 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Xharness.Execution;
-using Xharness.Execution.Mlaunch;
-using Xharness.Hardware;
+using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
+using Microsoft.DotNet.XHarness.iOS.Shared.Execution.Mlaunch;
 using Xharness.Jenkins.TestTasks;
-using Xharness.Listeners;
-using Xharness.Logging;
-using Xharness.Utilities;
+using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
+using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
+using Microsoft.DotNet.XHarness.iOS.Shared;
+using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
+using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
+using Xharness.TestTasks;
 
 namespace Xharness {
 
 	class AppRunner {
 		readonly IProcessManager processManager;
-		readonly ISimulatorsLoaderFactory simulatorsLoaderFactory;
+		readonly ISimulatorLoaderFactory simulatorsLoaderFactory;
 		readonly ISimpleListenerFactory listenerFactory;
 		readonly IDeviceLoaderFactory devicesLoaderFactory;
 		readonly ICrashSnapshotReporterFactory snapshotReporterFactory;
@@ -30,7 +32,7 @@ namespace Xharness {
 		readonly TestTarget target;
 		readonly IHarness harness;
 		readonly double timeoutMultiplier;
-		readonly BuildToolTask buildTask;
+		readonly IBuildToolTask buildTask;
 
 		string deviceName;
 		string companionDeviceName;
@@ -57,7 +59,7 @@ namespace Xharness {
 
 		public AppRunner (IProcessManager processManager,
 						  IAppBundleInformationParser appBundleInformationParser,
-						  ISimulatorsLoaderFactory simulatorsFactory,
+						  ISimulatorLoaderFactory simulatorsFactory,
 						  ISimpleListenerFactory simpleListenerFactory,
 						  IDeviceLoaderFactory devicesFactory,
 						  ICrashSnapshotReporterFactory snapshotReporterFactory,
@@ -76,7 +78,7 @@ namespace Xharness {
 						  bool ensureCleanSimulatorState = false,
 						  double timeoutMultiplier = 1,
 						  string variation = null,
-						  BuildToolTask buildTask = null)
+						  IBuildToolTask buildTask = null)
 		{
 			if (appBundleInformationParser is null)
 				throw new ArgumentNullException (nameof (appBundleInformationParser));
@@ -112,13 +114,13 @@ namespace Xharness {
 				return true;
 
 			var sims = simulatorsLoaderFactory.CreateLoader ();
-			await sims.LoadAsync (Logs.Create ($"simulator-list-{Helpers.Timestamp}.log", "Simulator list"), false, false);
-			simulators = await sims.FindAsync (target, MainLog);
+			await sims.LoadDevices (Logs.Create ($"simulator-list-{Helpers.Timestamp}.log", "Simulator list"), false, false);
+			simulators = await sims.FindSimulators (target, MainLog);
 
 			return simulators != null;
 		}
 
-		void FindDevice ()
+		async Task FindDevice ()
 		{
 			if (deviceName != null)
 				return;
@@ -128,47 +130,14 @@ namespace Xharness {
 				return;
 
 			var devs = devicesLoaderFactory.CreateLoader ();
-			Task.Run (async () => {
-				await devs.LoadAsync (MainLog, false, false);
-			}).Wait ();
+			await devs.LoadDevices (MainLog, false, false);
 
-			DeviceClass [] deviceClasses;
-			switch (runMode) {
-			case RunMode.iOS:
-				deviceClasses = new [] { DeviceClass.iPhone, DeviceClass.iPad, DeviceClass.iPod };
-				break;
-			case RunMode.WatchOS:
-				deviceClasses = new [] { DeviceClass.Watch };
-				break;
-			case RunMode.TvOS:
-				deviceClasses = new [] { DeviceClass.AppleTV }; // Untested
-				break;
-			default:
-				throw new ArgumentException (nameof (runMode));
-			}
+			var device = await devs.FindDevice (runMode, MainLog, false, false);
 
-			var selected = devs.ConnectedDevices.Where ((v) => deviceClasses.Contains (v.DeviceClass) && v.IsUsableForDebugging != false);
-			IHardwareDevice selected_data;
-			if (selected.Count () == 0) {
-				throw new NoDeviceFoundException ($"Could not find any applicable devices with device class(es): {string.Join (", ", deviceClasses)}");
-			} else if (selected.Count () > 1) {
-				selected_data = selected
-					.OrderBy ((dev) => {
-						Version v;
-						if (Version.TryParse (dev.ProductVersion, out v))
-							return v;
-						return new Version ();
-					})
-					.First ();
-				MainLog.WriteLine ("Found {0} devices for device class(es) '{1}': '{2}'. Selected: '{3}' (because it has the lowest version).", selected.Count (), string.Join ("', '", deviceClasses), string.Join ("', '", selected.Select ((v) => v.Name).ToArray ()), selected_data.Name);
-			} else {
-				selected_data = selected.First ();
-			}
-
-			deviceName = selected_data.Name;
+			deviceName = device.Name;
 
 			if (runMode == RunMode.WatchOS)
-				companionDeviceName = devs.FindCompanionDevice (MainLog, selected_data).Name;
+				companionDeviceName = (await devs.FindCompanionDevice (MainLog, device)).Name;
 		}
 
 		public async Task<ProcessExecutionResult> InstallAsync (CancellationToken cancellation_token)
@@ -178,7 +147,7 @@ namespace Xharness {
 				throw new InvalidOperationException ("Installing to a simulator is not supported.");
 			}
 
-			FindDevice ();
+			await FindDevice ();
 
 			var args = new MlaunchArguments ();
 
@@ -203,7 +172,7 @@ namespace Xharness {
 			if (isSimulator)
 				throw new InvalidOperationException ("Uninstalling from a simulator is not supported.");
 
-			FindDevice ();
+			await FindDevice ();
 
 			var args = new MlaunchArguments ();
 
@@ -219,7 +188,7 @@ namespace Xharness {
 		public async Task<int> RunAsync ()
 		{
 			if (!isSimulator)
-				FindDevice ();
+				await FindDevice ();
 
 			var args = new MlaunchArguments ();
 
@@ -301,7 +270,6 @@ namespace Xharness {
 				harness.XmlJargon,
 				deviceName,
 				testReporterTimeout,
-				harness.LaunchTimeout,
 				buildTask?.Logs?.Directory,
 				(level, message) => harness.Log (level, message));
 
@@ -371,7 +339,7 @@ namespace Xharness {
 
 				if (EnsureCleanSimulatorState) {
 					foreach (var sim in simulators)
-						await sim.PrepareSimulatorAsync (MainLog, AppInformation.BundleIdentifier);
+						await sim.PrepareSimulator (MainLog, AppInformation.BundleIdentifier);
 				}
 
 				args.Add (new SimulatorUDIDArgument (simulator.UDID));
@@ -385,7 +353,7 @@ namespace Xharness {
 
 				// cleanup after us
 				if (EnsureCleanSimulatorState)
-					await simulator.KillEverythingAsync (MainLog);
+					await simulator.KillEverything (MainLog);
 
 				foreach (var log in systemLogs)
 					log.StopCapture ();

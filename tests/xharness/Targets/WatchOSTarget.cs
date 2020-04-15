@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
-using Xharness.Utilities;
+using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
+using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
-using Xharness.Hardware;
-
-namespace Xharness.Targets
-{
+namespace Xharness.Targets {
 	public class WatchOSTarget : iOSTarget
 	{
 		public string AppName { get; private set; }

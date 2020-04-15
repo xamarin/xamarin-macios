@@ -2,17 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Xharness.Execution;
-using Xharness.Hardware;
-using Xharness.Listeners;
-using Xharness.Logging;
+using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
+using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
+using Microsoft.DotNet.XHarness.iOS.Shared;
+using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
+using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 
-namespace Xharness.Jenkins.TestTasks
-{
+namespace Xharness.Jenkins.TestTasks {
 	class RunDeviceTask : RunXITask<IHardwareDevice>
 	{
 		readonly IResultParser resultParser = new XmlResultParser ();
-		readonly IDeviceLoader devices;
+		readonly IHardwareDeviceLoader devices;
 
 		AppInstallMonitorLog install_log;
 
@@ -40,10 +40,10 @@ namespace Xharness.Jenkins.TestTasks
 			}
 		}
 
-		public RunDeviceTask (IDeviceLoader devices, MSBuildTask build_task, IProcessManager ProcessManager, IEnumerable<IHardwareDevice> candidates)
-			: base (build_task, ProcessManager, candidates.OrderBy ((v) => v.DebugSpeed))
+		public RunDeviceTask (Jenkins jenkins, IHardwareDeviceLoader devices, MSBuildTask buildTask, IProcessManager processManager, IEnumerable<IHardwareDevice> candidates)
+			: base (jenkins, buildTask, processManager, candidates.OrderBy ((v) => v.DebugSpeed))
 		{
-			switch (build_task.Platform) {
+			switch (buildTask.Platform) {
 			case TestPlatform.iOS:
 			case TestPlatform.iOS_Unified:
 			case TestPlatform.iOS_Unified32:
@@ -68,7 +68,7 @@ namespace Xharness.Jenkins.TestTasks
 			this.devices = devices ?? throw new ArgumentNullException (nameof (devices));
 		}
 
-		protected override async Task RunTestAsync ()
+		public override async Task RunTestAsync ()
 		{
 			Jenkins.MainLog.WriteLine ("Running '{0}' on device (candidates: '{1}')", ProjectFile, string.Join ("', '", Candidates.Select ((v) => v.Name).ToArray ()));
 
@@ -78,12 +78,12 @@ namespace Xharness.Jenkins.TestTasks
 					// Set the device we acquired.
 					Device = Candidates.First ((d) => d.UDID == device_resource.Resource.Name);
 					if (Device.DevicePlatform == DevicePlatform.watchOS)
-						CompanionDevice = devices.FindCompanionDevice (Jenkins.DeviceLoadLog, Device);
+						CompanionDevice = await devices.FindCompanionDevice (Jenkins.DeviceLoadLog, Device);
 					Jenkins.MainLog.WriteLine ("Acquired device '{0}' for '{1}'", Device.Name, ProjectFile);
 
 					runner = new AppRunner (ProcessManager,
 						new AppBundleInformationParser (),
-						new SimulatorsLoaderFactory (ProcessManager),
+						new SimulatorLoaderFactory (ProcessManager),
 						new SimpleListenerFactory (),
 						new DeviceLoaderFactory (ProcessManager),
 						new CrashSnapshotReporterFactory (ProcessManager),
@@ -150,7 +150,7 @@ namespace Xharness.Jenkins.TestTasks
 
 							AppRunner todayRunner = new AppRunner (ProcessManager,
 								new AppBundleInformationParser (),
-								new SimulatorsLoaderFactory (ProcessManager),
+								new SimulatorLoaderFactory (ProcessManager),
 								new SimpleListenerFactory (),
 								new DeviceLoaderFactory (ProcessManager),
 								new CrashSnapshotReporterFactory (ProcessManager),

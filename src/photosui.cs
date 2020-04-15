@@ -44,7 +44,7 @@ namespace PhotosUI {
 
 		[Abstract]
 		[Export ("finishContentEditingWithCompletionHandler:")]
-		void FinishContentEditing ([NullAllowed] Action<PHContentEditingOutput> completionHandler);
+		void FinishContentEditing (Action<PHContentEditingOutput> completionHandler);
 
 		[Abstract]
 		[Export ("cancelContentEditing")]

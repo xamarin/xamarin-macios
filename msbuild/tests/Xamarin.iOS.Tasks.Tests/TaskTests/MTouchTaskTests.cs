@@ -15,7 +15,6 @@ namespace Xamarin.iOS.Tasks
 		{
 			Architectures = "Default";
 			Debug = false;
-			EnableGenericValueTypeSharing = true;
 			ExtraArgs = null;
 			FastDev = false;
 			I18n = null;
