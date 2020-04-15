@@ -19277,13 +19277,10 @@ namespace AppKit {
 
 #if !XAMCORE_4_0
 		[Obsolete ("Use 'SmartInsert(string, NSRange, out string, out string)' overload instead.")]
-		[Export ("smartInsertForString:replacingRange:beforeString:afterString:")]
+		[Wrap ("throw new NotSupportedException ()")]
 		void SmartInsert (string pasteString, NSRange charRangeToReplace, string beforeString, string afterString);
 #endif
 
-#if !XAMCORE_4_0
-		[Sealed] // sealed until the obsolete overload has been removed
-#endif
 		[Export ("smartInsertForString:replacingRange:beforeString:afterString:")]
 		void SmartInsert (string pasteString, NSRange charRangeToReplace, [NullAllowed] out string beforeString, [NullAllowed] out string afterString);
 
