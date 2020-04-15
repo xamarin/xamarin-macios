@@ -731,7 +731,7 @@ timestamps {
 
                             stage ('Install Provisioning Profiles') {
                                 currentStage = "${STAGE_NAME}"
-                                sh ("${workspace}/maccore/tools/install-qa-provisioning-profiles.sh")
+                                sh ("${workspace}/maccore/tools/install-qa-provisioning-profiles.sh -v")
                             }
 
                             stage ('Publish reports') {
