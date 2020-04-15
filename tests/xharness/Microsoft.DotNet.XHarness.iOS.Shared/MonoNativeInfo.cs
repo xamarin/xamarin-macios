@@ -30,7 +30,7 @@ using System.Xml;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 
-namespace Xharness {
+namespace Microsoft.DotNet.XHarness.iOS.Shared {
 	public enum MonoNativeFlavor
 	{
 		None,
@@ -143,14 +143,14 @@ namespace Xharness {
 
 	public class MonoNativeInfo
 	{
-		public IHarness Harness { get; }
+		Action<int, string> log;
 		public MonoNativeFlavor Flavor { get; }
 		protected virtual DevicePlatform DevicePlatform {  get { return DevicePlatform.iOS; } }
 		string rootDirectory;
 
-		public MonoNativeInfo (IHarness harness, MonoNativeFlavor flavor, string rootDirectory)
+		public MonoNativeInfo (MonoNativeFlavor flavor, string rootDirectory, Action<int, string> logAction = null)
 		{
-			this.Harness = harness ?? throw new ArgumentNullException (nameof (rootDirectory));
+			this.log = logAction;
 			this.rootDirectory = rootDirectory ?? throw new ArgumentNullException (nameof (rootDirectory));
 			this.Flavor = flavor;
 		}
@@ -179,7 +179,7 @@ namespace Xharness {
 
 			AddProjectDefines (inputProject);
 
-			inputProject.Save (ProjectPath, Harness);
+			inputProject.Save (ProjectPath, log);
 		}
 
 		public void AddProjectDefines (XmlDocument project)
@@ -193,7 +193,7 @@ namespace Xharness {
 			var info_plist = new XmlDocument ();
 			info_plist.LoadWithoutNetworkAccess (template_info_plist);
 			SetInfoPListMinimumOSVersion (info_plist, MonoNativeHelper.GetMinimumOSVersion (DevicePlatform, Flavor));
-			info_plist.Save (target_plist, Harness);
+			info_plist.Save (target_plist, log);
 			return info_plist;
 		}
 
@@ -208,8 +208,8 @@ namespace Xharness {
 		protected override string TemplateSuffix => "-mac";
 		protected override DevicePlatform DevicePlatform { get { return DevicePlatform.macOS; } }
 
-		public MacMonoNativeInfo (Harness harness, MonoNativeFlavor flavor, string rootDirectory)
-			: base (harness, flavor, rootDirectory)
+		public MacMonoNativeInfo (MonoNativeFlavor flavor, string rootDirectory, Action<int, string> logAction)
+			: base (flavor, rootDirectory, logAction)
 		{
 		}
 

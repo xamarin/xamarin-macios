@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 
-namespace Xharness.TestTasks
+namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks
 {
 	// This is a very simple class to manage the general concept of 'resource'.
 	// Performance isn't important, so this is very simple.

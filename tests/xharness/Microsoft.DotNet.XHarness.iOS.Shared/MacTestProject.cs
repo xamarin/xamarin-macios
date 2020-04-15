@@ -1,5 +1,5 @@
 ﻿using System;
-namespace Xharness {
+namespace Microsoft.DotNet.XHarness.iOS.Shared {
 
 	[Flags]
 	public enum MacFlavors {

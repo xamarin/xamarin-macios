@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 
-namespace Xharness {
+namespace Microsoft.DotNet.XHarness.iOS.Shared {
 
 	public class iOSTestProject : TestProject
 	{

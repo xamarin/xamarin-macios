@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using System.Xml;
-using Xharness.Jenkins.TestTasks;
+using Microsoft.DotNet.XHarness.iOS.Shared.Tasks;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
-namespace Xharness {
+namespace Microsoft.DotNet.XHarness.iOS.Shared {
 	public class TestProject
 	{
 		XmlDocument xml;
@@ -60,14 +60,14 @@ namespace Xharness {
 			return rv;
 		}
 
-		internal async Task<TestProject> CreateCloneAsync (AppleTestTask test)
+		internal async Task<TestProject> CreateCloneAsync (ITestTask test)
 		{
 			var rv = Clone ();
 			await rv.CreateCopyAsync (test);
 			return rv;
 		}
 
-		internal async Task CreateCopyAsync (AppleTestTask test = null)
+		public async Task CreateCopyAsync (ITestTask test = null)
 		{
 			var directory = DirectoryUtilities.CreateTemporaryDirectory (test?.TestName ?? System.IO.Path.GetFileNameWithoutExtension (Path));
 			Directory.CreateDirectory (directory);
