@@ -307,50 +307,61 @@ namespace Xamarin.Bundler
 			// and very hard to diagnose otherwise when hidden from the build output. Ref: bug #2430
 			var linker_errors = new List<Exception> ();
 			var output = new StringBuilder ();
-			var code = await Driver.RunCommandAsync (Target.App.CompilerPath, CompilerFlags.ToArray (), null, output, suppressPrintOnErrors: true);
+			var cmd_length = Target.App.CompilerPath.Length + 1 + CompilerFlags.ToString ().Length;
 
-			Application.ProcessNativeLinkerOutput (Target, output.ToString (), CompilerFlags.AllLibraries, linker_errors, code != 0);
+			try {
+				var code = await Driver.RunCommandAsync (Target.App.CompilerPath, CompilerFlags.ToArray (), null, output, suppressPrintOnErrors: true);
 
-			if (code != 0) {
-				Console.WriteLine ($"Process exited with code {code}, command:\n{Target.App.CompilerPath} {CompilerFlags.ToString ()}\n{output} ");
-				// if the build failed - it could be because of missing frameworks / libraries we identified earlier
-				foreach (var assembly in Target.Assemblies) {
-					if (assembly.UnresolvedModuleReferences == null)
-						continue;
+				Application.ProcessNativeLinkerOutput (Target, output.ToString (), CompilerFlags.AllLibraries, linker_errors, code != 0);
 
-					foreach (var mr in assembly.UnresolvedModuleReferences) {
-						// TODO: add more diagnose information on the warnings
-						var name = Path.GetFileNameWithoutExtension (mr.Name);
-						linker_errors.Add (new MonoTouchException (5215, false, Errors.MT5215, name));
+				if (code != 0) {
+					Console.WriteLine ($"Process exited with code {code}, command:\n{Target.App.CompilerPath} {CompilerFlags.ToString ()}\n{output} ");
+					// if the build failed - it could be because of missing frameworks / libraries we identified earlier
+					foreach (var assembly in Target.Assemblies) {
+						if (assembly.UnresolvedModuleReferences == null)
+							continue;
+
+						foreach (var mr in assembly.UnresolvedModuleReferences) {
+							// TODO: add more diagnose information on the warnings
+							var name = Path.GetFileNameWithoutExtension (mr.Name);
+							linker_errors.Add (new MonoTouchException (5215, false, Errors.MT5215, name));
+						}
 					}
-				}
-				// mtouch does not validate extra parameters given to GCC when linking (--gcc_flags)
-				if (Target.App.UserGccFlags?.Count > 0)
-					linker_errors.Add (new MonoTouchException (5201, true, Errors.MT5201, StringUtils.FormatArguments (Target.App.UserGccFlags)));
-				else
-					linker_errors.Add (new MonoTouchException (5202, true, Errors.MT5202));
+					// mtouch does not validate extra parameters given to GCC when linking (--gcc_flags)
+					if (Target.App.UserGccFlags?.Count > 0)
+						linker_errors.Add (new MonoTouchException (5201, true, Errors.MT5201, StringUtils.FormatArguments (Target.App.UserGccFlags)));
+					else
+						linker_errors.Add (new MonoTouchException (5202, true, Errors.MT5202));
 
-				if (code == 255) {
-					// check command length
-					// getconf ARG_MAX
-					StringBuilder getconf_output = new StringBuilder ();
-					if (Driver.RunCommand ("getconf", new [] { "ARG_MAX" }, output: getconf_output, suppressPrintOnErrors: true) == 0) {
-						int arg_max;
-						if (int.TryParse (getconf_output.ToString ().Trim (' ', '\t', '\n', '\r'), out arg_max)) {
-							var cmd_length = Target.App.CompilerPath.Length + 1 + CompilerFlags.ToString ().Length;
-							if (cmd_length > arg_max) {
-								linker_errors.Add (ErrorHelper.CreateWarning (5217, Errors.MT5217, cmd_length));
+					if (code == 255) {
+						// check command length
+						// getconf ARG_MAX
+						StringBuilder getconf_output = new StringBuilder ();
+						if (Driver.RunCommand ("getconf", new [] { "ARG_MAX" }, output: getconf_output, suppressPrintOnErrors: true) == 0) {
+							int arg_max;
+							if (int.TryParse (getconf_output.ToString ().Trim (' ', '\t', '\n', '\r'), out arg_max)) {
+								if (cmd_length > arg_max) {
+									linker_errors.Add (ErrorHelper.CreateError (5217, Errors.MT5217, cmd_length));
+								} else {
+									Driver.Log (3, $"Linker failure is probably not due to command-line length (actual: {cmd_length} limit: {arg_max}");
+								}
 							} else {
-								Driver.Log (3, $"Linker failure is probably not due to command-line length (actual: {cmd_length} limit: {arg_max}");
+								Driver.Log (3, "Failed to parse 'getconf ARG_MAX' output: {0}", getconf_output);
 							}
 						} else {
-							Driver.Log (3, "Failed to parse 'getconf ARG_MAX' output: {0}", getconf_output);
+							Driver.Log (3, "Failed to execute 'getconf ARG_MAX'\n{0}", getconf_output);
 						}
-					} else {
-						Driver.Log (3, "Failed to execute 'getconf ARG_MAX'\n{0}", getconf_output);
 					}
 				}
+			} catch (System.ComponentModel.Win32Exception wex) {
+				/* This means we failed to execute the linker, not that the linker itself returned with a failure */
+				if (wex.NativeErrorCode == 7 /* E2BIG = Too many arguments */ ) {
+					linker_errors.Add (ErrorHelper.CreateError (5217, wex, Errors.MT5217, cmd_length));
+				} else {
+					linker_errors.Add (ErrorHelper.CreateError (5222, wex, Errors.MX5222, wex.Message));
+				}
 			}
+
 			ErrorHelper.Show (linker_errors);
 
 			// the native linker can prefer private (and existing) over public (but non-existing) framework when weak_framework are used
