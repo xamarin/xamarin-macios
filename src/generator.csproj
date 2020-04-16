@@ -362,6 +362,7 @@
     <Compile Include="..\src\generator-filters.cs" />
     <Compile Include="..\src\generator-typemanager.cs" />
     <Compile Include="..\src\ObjCRuntime\Stret.cs" />
+    <Compile Include="..\tools\common\ApplePlatform.cs" />
     <Compile Include="..\tools\common\TargetFramework.cs" />
     <Compile Include="..\tools\common\StringUtils.cs" />
     <Compile Include="$(BuildDir)generator-frameworks.g.cs" />
