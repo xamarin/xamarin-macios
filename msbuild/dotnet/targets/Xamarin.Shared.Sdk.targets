@@ -121,6 +121,8 @@
 			<!-- add our custom steps -->
 			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) --custom-step MonoTouch.Tuner.ProcessExportedFields,$(_AdditionalTaskAssembly)</_ExtraTrimmerArgs>
 		</PropertyGroup>
+
+		<SetEnvironmentVariable Name="CUSTOM_LINKER_OPTIONS_FILE" Value="/path/to/linker.options.txt" />
 	</Target>
 	<Target Name="_ExtractNativeLibrariesFromBindingAssemblies">
 		<Warning Text="_ExtractNativeLibrariesFromBindingAssemblies: Not implemented " />
