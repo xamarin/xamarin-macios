@@ -7,6 +7,7 @@ using Xamarin.Utils;
 namespace Xamarin.Linker {
 	public class LinkerConfiguration {
 		public ApplePlatform Platform;
+		public string PlatformAssembly;
 		public LinkMode LinkMode;
 
 		static LinkerConfiguration linker_configuration;
@@ -71,6 +72,9 @@ namespace Xamarin.Linker {
 						break;
 					}
 					break;
+				case "PlatformAssembly":
+					PlatformAssembly = value;
+					break;
 				default:
 					throw new InvalidOperationException ($"Unknown key {key} in {linker_file}");
 				}
@@ -78,11 +82,12 @@ namespace Xamarin.Linker {
 
 			Console.WriteLine ($"LinkerConfiguration:");
 			Console.WriteLine ($"    Platform: {Platform}");
+			Console.WriteLine ($"    LinkMode: {LinkMode}");
+			Console.WriteLine ($"    PlatformAssembly: {PlatformAssembly}");
 		}
 
 		public void DoSomething ()
 		{
-			Console.WriteLine ("DoSomething");
 		}
 	}
 }

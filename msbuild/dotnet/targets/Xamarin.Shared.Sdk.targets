@@ -121,9 +121,10 @@
 			<!-- add our custom steps -->
 			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) --custom-step MonoTouch.Tuner.ProcessExportedFields,$(_AdditionalTaskAssembly)</_ExtraTrimmerArgs>
 
-			<_CustomLinkerOptionsFile>$([System.IO.Path]::GetFullPath('$(IntermediateOutputPath)'custom-linker-options.txt)</_CustomLinkerOptionsFile>
+			<_CustomLinkerOptionsFile>$([System.IO.Path]::GetFullPath('$(IntermediateOutputPath)custom-linker-options.txt')</_CustomLinkerOptionsFile>
 			<_CustomLinkerOptions>
 				Platform=$(_PlatformName)
+				PlatformAssembly=$(_PlatformAssemblyName).dll
 				MtouchLink=$(MtouchLink)
 			</_CustomLinkerOptions>
 		</PropertyGroup>
