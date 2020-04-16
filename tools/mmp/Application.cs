@@ -10,6 +10,7 @@ namespace Xamarin.Bundler {
 		public bool Is64Build => true;
 		public bool IsDualBuild => false;
 		public bool IsSimulatorBuild => false;
+		public bool IsDeviceBuild => false;
 
 		bool RequiresXcodeHeaders => Driver.Registrar == RegistrarMode.Static && LinkMode == LinkMode.None;
 

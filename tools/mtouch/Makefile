@@ -256,58 +256,58 @@ $(MTOUCH_DIR)/mtouch.exe: $(mtouch_dependencies)
 REGISTRAR_CFLAGS=-stdlib=libc++ -std=c++14
 
 %.registrar.ios.i386.a:   %.registrar.ios.i386.m      %.registrar.ios.i386.h
-	$(Q_CC) $(IOS_CC) -DDEBUG -g -gdwarf-2 $(SIMULATOR86_CFLAGS)    $(REGISTRAR_CFLAGS) -x objective-c++ -o $@ -c $< -Wall -Wno-unguarded-availability-new -I$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphonesimulator.sdk/usr/include
+	$(Q_CC) $(IOS_CC) -DDEBUG -g -gdwarf-2 $(SIMULATOR86_CFLAGS)    $(REGISTRAR_CFLAGS) -x objective-c++ -o $@ -c $< -Wall -Wno-unguarded-availability-new -I$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphonesimulator.sdk/include
 
 %.registrar.ios.x86_64.a: %.registrar.ios.x86_64.m    %.registrar.ios.x86_64.h
-	$(Q_CC) $(IOS_CC) -DDEBUG -g -gdwarf-2 $(SIMULATOR64_CFLAGS)    $(REGISTRAR_CFLAGS) -x objective-c++ -o $@ -c $< -Wall -Wno-unguarded-availability-new -I$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphonesimulator.sdk/usr/include
+	$(Q_CC) $(IOS_CC) -DDEBUG -g -gdwarf-2 $(SIMULATOR64_CFLAGS)    $(REGISTRAR_CFLAGS) -x objective-c++ -o $@ -c $< -Wall -Wno-unguarded-availability-new -I$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphonesimulator.sdk/include
 
 %.registrar.ios.armv7.a:   %.registrar.ios.armv7.m      %.registrar.ios.armv7.h
-	$(Q_CC) $(IOS_CC) -DDEBUG -g -gdwarf-2 $(DEVICE7_CFLAGS)        $(REGISTRAR_CFLAGS) -x objective-c++ -o $@ -c $< -Wall -Wno-unguarded-availability-new -I$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphoneos.sdk/usr/include
+	$(Q_CC) $(IOS_CC) -DDEBUG -g -gdwarf-2 $(DEVICE7_CFLAGS)        $(REGISTRAR_CFLAGS) -x objective-c++ -o $@ -c $< -Wall -Wno-unguarded-availability-new -I$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphoneos.sdk/include
 
 %.registrar.ios.armv7s.a:   %.registrar.ios.armv7s.m      %.registrar.ios.armv7s.h
-	$(Q_CC) $(IOS_CC) -DDEBUG -g -gdwarf-2 $(DEVICE7S_CFLAGS)       $(REGISTRAR_CFLAGS) -x objective-c++ -o $@ -c $< -Wall -Wno-unguarded-availability-new -I$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphoneos.sdk/usr/include
+	$(Q_CC) $(IOS_CC) -DDEBUG -g -gdwarf-2 $(DEVICE7S_CFLAGS)       $(REGISTRAR_CFLAGS) -x objective-c++ -o $@ -c $< -Wall -Wno-unguarded-availability-new -I$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphoneos.sdk/include
 
 %.registrar.ios.arm64.a:   %.registrar.ios.arm64.m      %.registrar.ios.arm64.h
-	$(Q_CC) $(IOS_CC) -DDEBUG -g -gdwarf-2 $(DEVICE64_CFLAGS)       $(REGISTRAR_CFLAGS) -x objective-c++ -o $@ -c $< -Wall -Wno-unguarded-availability-new -I$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphoneos.sdk/usr/include
+	$(Q_CC) $(IOS_CC) -DDEBUG -g -gdwarf-2 $(DEVICE64_CFLAGS)       $(REGISTRAR_CFLAGS) -x objective-c++ -o $@ -c $< -Wall -Wno-unguarded-availability-new -I$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphoneos.sdk/include
 
 %.registrar.watchos.i386.a:    %.registrar.watchos.i386.m  %.registrar.watchos.i386.h
-	$(Q_CC) $(IOS_CC) -DDEBUG -g -gdwarf-2 $(SIMULATORWATCH_CFLAGS) $(REGISTRAR_CFLAGS) -x objective-c++ -o $@ -c $< -Wall -Wno-unguarded-availability-new -I$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/include
+	$(Q_CC) $(IOS_CC) -DDEBUG -g -gdwarf-2 $(SIMULATORWATCH_CFLAGS) $(REGISTRAR_CFLAGS) -x objective-c++ -o $@ -c $< -Wall -Wno-unguarded-availability-new -I$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/include
 
 %.registrar.watchos.armv7k.a:    %.registrar.watchos.armv7k.m  %.registrar.watchos.armv7k.h
-	$(Q_CC) $(IOS_CC) -DDEBUG -g -gdwarf-2 $(DEVICEWATCH_CFLAGS)    $(REGISTRAR_CFLAGS) -x objective-c++ -o $@ -c $< -Wall -Wno-unguarded-availability-new -I$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/include
+	$(Q_CC) $(IOS_CC) -DDEBUG -g -gdwarf-2 $(DEVICEWATCH_CFLAGS)    $(REGISTRAR_CFLAGS) -x objective-c++ -o $@ -c $< -Wall -Wno-unguarded-availability-new -I$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/include
 
 %.registrar.tvos.x86_64.a:       %.registrar.tvos.x86_64.m     %.registrar.tvos.x86_64.h
-	$(Q_CC) $(IOS_CC) -DDEBUG -g -gdwarf-2 $(SIMULATORTV_CFLAGS)    $(REGISTRAR_CFLAGS) -x objective-c++ -o $@ -c $< -Wall -Wno-unguarded-availability-new -I$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/include
+	$(Q_CC) $(IOS_CC) -DDEBUG -g -gdwarf-2 $(SIMULATORTV_CFLAGS)    $(REGISTRAR_CFLAGS) -x objective-c++ -o $@ -c $< -Wall -Wno-unguarded-availability-new -I$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/include
 
 %.registrar.tvos.arm64.a:       %.registrar.tvos.arm64.m     %.registrar.tvos.arm64.h
-	$(Q_CC) $(IOS_CC) -DDEBUG -g -gdwarf-2 $(DEVICETV_CFLAGS)       $(REGISTRAR_CFLAGS) -x objective-c++ -o $@ -c $< -Wall -Wno-unguarded-availability-new -I$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/include
+	$(Q_CC) $(IOS_CC) -DDEBUG -g -gdwarf-2 $(DEVICETV_CFLAGS)       $(REGISTRAR_CFLAGS) -x objective-c++ -o $@ -c $< -Wall -Wno-unguarded-availability-new -I$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/include
 
 TARGETS = \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/mtouch                                          \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/mtouch.exe                               \
 	$(foreach launcher,$(SIMLAUNCHERS),$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/$(launcher)) \
-	$(IOS_DESTDIR)$(MONOTOUCH_SIMULATOR_SDK)/usr/lib/Xamarin.iOS.registrar.a       \
+	$(IOS_DESTDIR)$(MONOTOUCH_SIMULATOR_SDK)/lib/Xamarin.iOS.registrar.a                  \
 
 ifdef INCLUDE_DEVICE
-TARGETS += $(IOS_DESTDIR)$(MONOTOUCH_DEVICE_SDK)/usr/lib/Xamarin.iOS.registrar.a
+TARGETS += $(IOS_DESTDIR)$(MONOTOUCH_DEVICE_SDK)/lib/Xamarin.iOS.registrar.a
 endif
 
 ifdef INCLUDE_WATCH
 TARGETS += \
-	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/Xamarin.WatchOS.registrar.a \
+	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/lib/Xamarin.WatchOS.registrar.a \
 
 ifdef INCLUDE_DEVICE
-TARGETS += $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/Xamarin.WatchOS.registrar.a
+TARGETS += $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/lib/Xamarin.WatchOS.registrar.a
 endif
 endif
 
 
 ifdef INCLUDE_TVOS
 TARGETS +=	\
-	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/Xamarin.TVOS.registrar.a       \
+	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/lib/Xamarin.TVOS.registrar.a       \
 
 ifdef INCLUDE_DEVICE
-TARGETS += $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/Xamarin.TVOS.registrar.a
+TARGETS += $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/lib/Xamarin.TVOS.registrar.a
 endif
 endif
 
@@ -317,12 +317,12 @@ TARGET_DIRS = \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib                        \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch                 \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/etc/mono/assemblies/System \
-	$(IOS_DESTDIR)$(MONOTOUCH_SIMULATOR_SDK)/usr/lib             \
-	$(IOS_DESTDIR)$(MONOTOUCH_DEVICE_SDK)/usr/lib                \
-	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib          \
-	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib                 \
-	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib             \
-	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib                    \
+	$(IOS_DESTDIR)$(MONOTOUCH_SIMULATOR_SDK)/lib                 \
+	$(IOS_DESTDIR)$(MONOTOUCH_DEVICE_SDK)/lib                    \
+	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/lib              \
+	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/lib                     \
+	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/lib                 \
+	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/lib                        \
 
 $(TARGET_DIRS):
 	$(Q) mkdir -p $@
@@ -341,22 +341,22 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/%: % | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/b
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/%: % | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib
 	$(Q) $(CP) $< $@
 
-$(IOS_DESTDIR)$(MONOTOUCH_SIMULATOR_SDK)/usr/lib/%.registrar.a: %.registrar.ios.simulator.a | $(IOS_DESTDIR)$(MONOTOUCH_SIMULATOR_SDK)/usr/lib
+$(IOS_DESTDIR)$(MONOTOUCH_SIMULATOR_SDK)/lib/%.registrar.a: %.registrar.ios.simulator.a | $(IOS_DESTDIR)$(MONOTOUCH_SIMULATOR_SDK)/lib
 	$(Q) $(CP) $< $@
 
-$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/%.registrar.a: %.registrar.watchos.i386.a | $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib
+$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/lib/%.registrar.a: %.registrar.watchos.i386.a | $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/lib
 	$(Q) $(CP) $< $@
 
-$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/%.registrar.a: %.registrar.tvos.x86_64.a | $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib
+$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/lib/%.registrar.a: %.registrar.tvos.x86_64.a | $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/lib
 	$(Q) $(CP) $< $@
 
-$(IOS_DESTDIR)$(MONOTOUCH_DEVICE_SDK)/usr/lib/%.registrar.a: %.registrar.ios.device.a | $(IOS_DESTDIR)$(MONOTOUCH_DEVICE_SDK)/usr/lib
+$(IOS_DESTDIR)$(MONOTOUCH_DEVICE_SDK)/lib/%.registrar.a: %.registrar.ios.device.a | $(IOS_DESTDIR)$(MONOTOUCH_DEVICE_SDK)/lib
 	$(Q) $(CP) $< $@
 
-$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/%.registrar.a: %.registrar.watchos.armv7k.a | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib
+$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/lib/%.registrar.a: %.registrar.watchos.armv7k.a | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/lib
 	$(Q) $(CP) $< $@
 
-$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/%.registrar.a: %.registrar.tvos.arm64.a | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib
+$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/lib/%.registrar.a: %.registrar.tvos.arm64.a | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/lib
 	$(Q) $(CP) $< $@
 
 ifdef INCLUDE_IOS
