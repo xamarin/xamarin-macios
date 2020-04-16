@@ -131,6 +131,10 @@
     <Compile Include="TestTasks\ITestTask.cs" />
     <Compile Include="TestTasks\RunTest.cs" />
     <Compile Include="TestTasks\IRunTestTask.cs" />
+    <Compile Include="TestTasks\RunSimulator.cs" />
+    <Compile Include="TestTasks\IRunXITask.cs" />
+    <Compile Include="TestTasks\IRunSimulatorTask.cs" />
+    <Compile Include="TestTasks\RunDevice.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\tools\common\SdkVersions.cs">
