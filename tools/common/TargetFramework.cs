@@ -12,14 +12,6 @@ using System.Linq;
 
 namespace Xamarin.Utils
 {
-	public enum ApplePlatform {
-		None,
-		MacOSX,
-		iOS,
-		WatchOS,
-		TVOS,
-	}
-
 	public struct TargetFramework : IEquatable<TargetFramework>
 	{
 		public static readonly TargetFramework Empty = new TargetFramework ();

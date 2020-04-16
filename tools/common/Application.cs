@@ -34,15 +34,6 @@ namespace Xamarin.Bundler {
 		Trace = 1,
 	}
 
-	public enum LinkMode {
-		None,
-		SDKOnly,
-		All,
-#if !MONOTOUCH
-		Platform,
-#endif
-	}
-
 	public partial class Application
 	{
 		public Cache Cache;
