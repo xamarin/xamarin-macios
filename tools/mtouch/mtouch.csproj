@@ -319,6 +319,9 @@
     <Compile Include="..\linker\CoreTypeMapStep.cs">
       <Link>Xamarin.Linker\CoreTypeMapStep.cs</Link>
     </Compile>
+    <Compile Include="..\common\ApplePlatform.cs">
+      <Link>external\ApplePlatform.cs</Link>
+    </Compile>
     <Compile Include="..\common\Driver.cs">
       <Link>external\Driver.cs</Link>
     </Compile>
