@@ -41,5 +41,11 @@
     <Compile Include="..\linker\MonoTouch.Tuner\ProcessExportedFields.cs">
       <Link>ProcessExportedFields.cs</Link>
     </Compile>
+    <Compile Include="..\common\ApplePlatform.cs">
+      <Link>ApplePlatform.cs</Link>
+    </Compile>
+    <Compile Include="..\common\LinkMode.cs">
+      <Link>LinkMode.cs</Link>
+    </Compile>
   </ItemGroup>
 </Project>

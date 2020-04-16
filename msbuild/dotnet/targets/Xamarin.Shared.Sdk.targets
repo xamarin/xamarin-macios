@@ -120,9 +120,16 @@
 
 			<!-- add our custom steps -->
 			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) --custom-step MonoTouch.Tuner.ProcessExportedFields,$(_AdditionalTaskAssembly)</_ExtraTrimmerArgs>
+
+			<_CustomLinkerOptionsFile>$([System.IO.Path]::GetFullPath('$(IntermediateOutputPath)'custom-linker-options.txt)</_CustomLinkerOptionsFile>
+			<_CustomLinkerOptions>
+				Platform=$(_PlatformName)
+				MtouchLink=$(MtouchLink)
+			</_CustomLinkerOptions>
 		</PropertyGroup>
 
-		<SetEnvironmentVariable Name="CUSTOM_LINKER_OPTIONS_FILE" Value="/path/to/linker.options.txt" />
+		<SetEnvironmentVariable Name="CUSTOM_LINKER_OPTIONS_FILE" Value="$(_CustomLinkerOptionsFile)" />
+		<WriteLinesToFile File="$(_CustomLinkerOptionsFile)" Lines="$(_CustomLinkerOptions)" Overwrite="true" />
 	</Target>
 	<Target Name="_ExtractNativeLibrariesFromBindingAssemblies">
 		<Warning Text="_ExtractNativeLibrariesFromBindingAssemblies: Not implemented " />
