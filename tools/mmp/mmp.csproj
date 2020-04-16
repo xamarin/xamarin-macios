@@ -377,6 +377,9 @@
     <Compile Include="..\common\DerivedLinkContext.cs">
       <Link>external\DerivedLinkContext.cs</Link>
     </Compile>
+    <Compile Include="..\common\LinkMode.cs">
+      <Link>external\LinkMode.cs</Link>
+    </Compile>
     <Compile Include="..\common\Optimizations.cs">
       <Link>external\Optimizations.cs</Link>
     </Compile>

@@ -355,6 +355,9 @@
     <Compile Include="..\common\CompilerFlags.cs">
       <Link>external\CompilerFlags.cs</Link>
     </Compile>
+    <Compile Include="..\common\LinkMode.cs">
+      <Link>external\LinkMode.cs</Link>
+    </Compile>
     <Compile Include="..\common\Tuning.cs">
       <Link>external\Tuning.cs</Link>
     </Compile>
