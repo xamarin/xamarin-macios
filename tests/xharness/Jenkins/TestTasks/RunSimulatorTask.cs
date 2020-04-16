@@ -29,8 +29,8 @@ namespace Xharness.Jenkins.TestTasks {
 			}
 		}
 
-		public RunSimulatorTask (ISimulatorLoader simulators, MSBuildTask build_task, IProcessManager ProcessManager, IEnumerable<ISimulatorDevice> candidates = null)
-			: base (build_task, ProcessManager, candidates)
+		public RunSimulatorTask (Jenkins jenkins, ISimulatorLoader simulators, MSBuildTask buildTask, IProcessManager processManager, IEnumerable<ISimulatorDevice> candidates = null)
+			: base (jenkins, buildTask, processManager, candidates)
 		{
 			var project = Path.GetFileNameWithoutExtension (ProjectFile);
 			if (project.EndsWith ("-tvos", StringComparison.Ordinal)) {
@@ -109,7 +109,7 @@ namespace Xharness.Jenkins.TestTasks {
 			}
 		}
 
-		protected override async Task RunTestAsync ()
+		public override async Task RunTestAsync ()
 		{
 			Jenkins.MainLog.WriteLine ("Running XI on '{0}' ({2}) for {1}", Device?.Name, ProjectFile, Device?.UDID);
 
@@ -127,8 +127,10 @@ namespace Xharness.Jenkins.TestTasks {
 			ExecutionResult = runner.Result;
 
 			KnownFailure = null;
-			if (Jenkins.IsKnownTestIssue (runner.MainLog, out KnownFailure))
+			if (Jenkins.IsKnownTestIssue (runner.MainLog, out var failure)) {
+				KnownFailure = failure;
 				Jenkins.MainLog.WriteLine ($"Test run has a known failure: '{KnownFailure}'");
+			}
 		}
 
 		protected override string XIMode {

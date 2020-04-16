@@ -17,8 +17,8 @@ namespace Xharness.Jenkins.TestTasks
 		public bool ProduceHtmlReport = true;
 		public bool InProcess;
 
-		public NUnitExecuteTask (BuildToolTask build_task, IProcessManager processManager)
-			: base (build_task, processManager)
+		public NUnitExecuteTask (Jenkins jenkins, BuildToolTask build_task, IProcessManager processManager)
+			: base (jenkins, build_task, processManager)
 		{
 		}
 
@@ -108,7 +108,7 @@ namespace Xharness.Jenkins.TestTasks
 			}
 		}
 
-		protected override async Task RunTestAsync ()
+		public override async Task RunTestAsync ()
 		{
 			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
 				var xmlLog = Logs.CreateFile ($"log-{Timestamp}.xml", LogType.XmlLog.ToString ());

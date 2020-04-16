@@ -7,8 +7,6 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 namespace Xharness.Jenkins.TestTasks {
 	class MSBuildTask : BuildProjectTask
 	{
-		public ILog BuildLog;
-
 		protected virtual string ToolName => Harness.XIBuildPath;
 
 		protected virtual List<string> ToolArguments => 

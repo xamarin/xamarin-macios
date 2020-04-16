@@ -880,12 +880,16 @@ timestamps {
                 reportFinalStatus ("", "${gitHash}", "${currentStage}")
             } // timeout
         } catch (err) {
-            reportFinalStatus ("${err}", "${gitHash}", "${currentStage}")
+            timeout (time: 5, unit: 'MINUTES') { // Give 5 minutes to publish results to GitHub/Slack
+                reportFinalStatus ("${err}", "${gitHash}", "${currentStage}")
+            } // timeout
         } finally {
-            stage ('Final tasks') {
-                sh (script: "${workspace}/xamarin-macios/jenkins/publish-results.sh", returnStatus: true /* don't throw exceptions if something goes wrong */)
-                sh (script: "make git-clean-all -C ${workspace}/xamarin-macios", returnStatus: true /* don't throw exceptions if something goes wrong */)
-            }
-        }
+            timeout (time: 60, unit: 'MINUTES') { // Give an hour to publish and upload stuff
+                stage ('Final tasks') {
+                    sh (script: "${workspace}/xamarin-macios/jenkins/publish-results.sh", returnStatus: true /* don't throw exceptions if something goes wrong */)
+                    sh (script: "make git-clean-all -C ${workspace}/xamarin-macios", returnStatus: true /* don't throw exceptions if something goes wrong */)
+                }
+            } // timeout
+        } // try
     } // node
 } // timestamps

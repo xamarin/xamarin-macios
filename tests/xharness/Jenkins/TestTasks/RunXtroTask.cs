@@ -8,12 +8,12 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 namespace Xharness.Jenkins.TestTasks {
 	class RunXtroTask : MacExecuteTask
 	{
-		public RunXtroTask (BuildToolTask build_task, IProcessManager processManager, ICrashSnapshotReporterFactory crashReportSnapshotFactory)
-			: base (build_task, processManager, crashReportSnapshotFactory)
+		public RunXtroTask (Jenkins jenkins, BuildToolTask build_task, IProcessManager processManager, ICrashSnapshotReporterFactory crashReportSnapshotFactory)
+			: base (jenkins, build_task, processManager, crashReportSnapshotFactory)
 		{
 		}
 
-		protected override async Task RunTestAsync ()
+		public override async Task RunTestAsync ()
 		{
 			var projectDir = System.IO.Path.GetDirectoryName (ProjectFile);
 			var name = System.IO.Path.GetFileName (projectDir);

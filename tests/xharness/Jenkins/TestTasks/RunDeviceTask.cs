@@ -40,10 +40,10 @@ namespace Xharness.Jenkins.TestTasks {
 			}
 		}
 
-		public RunDeviceTask (IHardwareDeviceLoader devices, MSBuildTask build_task, IProcessManager ProcessManager, IEnumerable<IHardwareDevice> candidates)
-			: base (build_task, ProcessManager, candidates.OrderBy ((v) => v.DebugSpeed))
+		public RunDeviceTask (Jenkins jenkins, IHardwareDeviceLoader devices, MSBuildTask buildTask, IProcessManager processManager, IEnumerable<IHardwareDevice> candidates)
+			: base (jenkins, buildTask, processManager, candidates.OrderBy ((v) => v.DebugSpeed))
 		{
-			switch (build_task.Platform) {
+			switch (buildTask.Platform) {
 			case TestPlatform.iOS:
 			case TestPlatform.iOS_Unified:
 			case TestPlatform.iOS_Unified32:
@@ -68,7 +68,7 @@ namespace Xharness.Jenkins.TestTasks {
 			this.devices = devices ?? throw new ArgumentNullException (nameof (devices));
 		}
 
-		protected override async Task RunTestAsync ()
+		public override async Task RunTestAsync ()
 		{
 			Jenkins.MainLog.WriteLine ("Running '{0}' on device (candidates: '{1}')", ProjectFile, string.Join ("', '", Candidates.Select ((v) => v.Name).ToArray ()));
 
