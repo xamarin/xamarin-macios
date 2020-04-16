@@ -319,7 +319,6 @@ namespace Xamarin.Bundler {
 
 		public void InitializeCommon ()
 		{
-			Namespaces.Initialize ();
 			SelectRegistrar ();
 			foreach (var target in Targets)
 				target.SelectMonoNative ();
