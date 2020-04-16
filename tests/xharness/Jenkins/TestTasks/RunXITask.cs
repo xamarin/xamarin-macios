@@ -11,18 +11,18 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 namespace Xharness.Jenkins.TestTasks {
 	abstract class RunXITask<TDevice> : RunTestTask where TDevice : class, IDevice
 	{
-		public TestTarget AppRunnerTarget;
+		public TestTarget AppRunnerTarget { get; set; }
 
-		protected AppRunner runner;
-		protected AppRunner additional_runner;
+		public AppRunner Runner { get; set; }
+		public AppRunner AdditionalRunner { get; set; }
 
 		public IEnumerable<TDevice> Candidates { get; }
 
-		public TDevice Device { get; protected set; }
+		public TDevice Device { get; set; }
 
-		public TDevice CompanionDevice { get; protected set; }
+		public TDevice CompanionDevice { get; set; }
 
-		public string BundleIdentifier => runner.AppInformation.BundleIdentifier;
+		public string BundleIdentifier => Runner.AppInformation.BundleIdentifier;
 
 		public RunXITask (Jenkins jenkins, BuildToolTask build_task, IProcessManager processManager, IEnumerable<TDevice> candidates)
 			: base (jenkins, build_task, processManager)
@@ -33,10 +33,10 @@ namespace Xharness.Jenkins.TestTasks {
 		public override IEnumerable<ILog> AggregatedLogs {
 			get {
 				var rv = base.AggregatedLogs;
-				if (runner != null)
-					rv = rv.Union (runner.Logs);
-				if (additional_runner != null)
-					rv = rv.Union (additional_runner.Logs);
+				if (Runner != null)
+					rv = rv.Union (Runner.Logs);
+				if (AdditionalRunner != null)
+					rv = rv.Union (AdditionalRunner.Logs);
 				return rv;
 			}
 		}
@@ -88,8 +88,8 @@ namespace Xharness.Jenkins.TestTasks {
 		public override void Reset ()
 		{
 			base.Reset ();
-			runner = null;
-			additional_runner = null;
+			Runner = null;
+			AdditionalRunner = null;
 		}
 	}
 }

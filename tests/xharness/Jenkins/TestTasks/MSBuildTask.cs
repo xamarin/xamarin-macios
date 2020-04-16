@@ -7,7 +7,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 namespace Xharness.Jenkins.TestTasks {
 	class MSBuildTask : BuildProjectTask
 	{
-		protected virtual string ToolName => Harness.XIBuildPath;
+		protected virtual string ToolName => Jenkins.Harness.XIBuildPath;
 
 		protected virtual List<string> ToolArguments => 
 				MSBuild.GetToolArguments (ProjectPlatform, ProjectConfiguration, ProjectFile, BuildLog);
@@ -35,7 +35,7 @@ namespace Xharness.Jenkins.TestTasks {
 				projectConfiguration: ProjectConfiguration,
 				projectFile: ProjectFile,
 				resource: resource,
-				dryRun: Harness.DryRun,
+				dryRun: Jenkins.Harness.DryRun,
 				buildLog: BuildLog,
 				mainLog: Jenkins.MainLog);
 

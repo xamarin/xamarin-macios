@@ -126,6 +126,7 @@ namespace Xharness.TestTasks {
 
 		#region Abstract
 
+		public abstract string RootDirectory { get; }
 		public abstract IResourceManager ResourceManager { get; }
 		public abstract void GenerateReport ();
 		public abstract string LogDirectory { get; }

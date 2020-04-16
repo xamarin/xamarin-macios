@@ -28,7 +28,7 @@ namespace Xharness.Jenkins.TestTasks {
 					Jenkins.MainLog.WriteLine ("Executing {0} ({1})", TestName, Mode);
 					var log = Logs.Create ($"execute-xtro-{Timestamp}.txt", LogType.ExecutionLog.ToString ());
 					log.WriteLine ("{0} {1}", proc.StartInfo.FileName, proc.StartInfo.Arguments);
-					if (!Harness.DryRun) {
+					if (!Jenkins.Harness.DryRun) {
 						ExecutionResult = TestExecutingResult.Running;
 
 						var snapshot = CrashReportSnapshotFactory.Create (log, Logs, isDevice: false, deviceName: null);
