@@ -1371,7 +1371,7 @@ namespace Xamarin.Bundler {
 				UseMonoFramework = false;
 			
 			if (UseMonoFramework.Value)
-				Frameworks.Add (Path.Combine (Driver.GetProductFrameworksDirectory (this), "Mono.framework"));
+				Frameworks.Add (Path.Combine (Driver.GetMonoFrameworksDirectory (this), "Mono.framework"));
 
 			if (!PackageMonoFramework.HasValue) {
 				if (!IsExtension && Extensions.Count > 0 && !UseMonoFramework.Value) {
@@ -1667,7 +1667,7 @@ namespace Xamarin.Bundler {
 					BundleFileInfo info;
 					var lib_native_name = target.GetLibNativeName () + ".dylib";
 					bundle_files [lib_native_name] = info = new BundleFileInfo ();
-					var lib_native_path = Path.Combine (Driver.GetMonoTouchLibDirectory (this), lib_native_name);
+					var lib_native_path = Path.Combine (Driver.GetProductSdkLibDirectory (this), lib_native_name);
 					info.Sources.Add (lib_native_path);
 					Driver.Log (3, "Adding mono-native library {0} for {1}.", lib_native_name, target.MonoNativeMode);
 				}
@@ -1877,11 +1877,11 @@ namespace Xamarin.Bundler {
 		{
 			switch (build_target) {
 			case AssemblyBuildTarget.StaticObject:
-				return Path.Combine (Driver.GetMonoTouchLibDirectory (this), "libmonosgen-2.0.a");
+				return Path.Combine (Driver.GetMonoLibraryDirectory (this), "libmonosgen-2.0.a");
 			case AssemblyBuildTarget.DynamicLibrary:
-				return Path.Combine (Driver.GetMonoTouchLibDirectory (this), "libmonosgen-2.0.dylib");
+				return Path.Combine (Driver.GetMonoLibraryDirectory (this), "libmonosgen-2.0.dylib");
 			case AssemblyBuildTarget.Framework:
-				return Path.Combine (Driver.GetProductSdkDirectory (this), "Frameworks", "Mono.framework");
+				return Path.Combine (Driver.GetMonoFrameworksDirectory (this), "Mono.framework");
 			default:
 				throw ErrorHelper.CreateError (100, Errors.MT0100, build_target);
 			}
@@ -1891,11 +1891,11 @@ namespace Xamarin.Bundler {
 		{
 			switch (build_target) {
 			case AssemblyBuildTarget.StaticObject:
-				return Path.Combine (Driver.GetMonoTouchLibDirectory (this), EnableDebug ? "libxamarin-debug.a" : "libxamarin.a");
+				return Path.Combine (Driver.GetProductSdkLibDirectory (this), EnableDebug ? "libxamarin-debug.a" : "libxamarin.a");
 			case AssemblyBuildTarget.DynamicLibrary:
-				return Path.Combine (Driver.GetMonoTouchLibDirectory (this), EnableDebug ? "libxamarin-debug.dylib" : "libxamarin.dylib");
+				return Path.Combine (Driver.GetProductSdkLibDirectory (this), EnableDebug ? "libxamarin-debug.dylib" : "libxamarin.dylib");
 			case AssemblyBuildTarget.Framework:
-				return Path.Combine (Driver.GetProductSdkDirectory (this), "Frameworks", EnableDebug ? "Xamarin-debug.framework" : "Xamarin.framework");
+				return Path.Combine (Driver.GetProductSdkFrameworksDirectory (this), EnableDebug ? "Xamarin-debug.framework" : "Xamarin.framework");
 			default:
 				throw ErrorHelper.CreateError (100, Errors.MT0100, build_target);
 			}

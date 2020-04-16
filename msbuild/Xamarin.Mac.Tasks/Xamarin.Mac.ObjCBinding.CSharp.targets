@@ -61,6 +61,7 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 
 	<PropertyGroup>
 		<_GeneratedSourcesFileList>$(GeneratedSourcesDir)sources.list</_GeneratedSourcesFileList>
+		<LangVersion>latest</LangVersion>
 
 		<!-- Add our own pre and post build steps -->
 		<CompileDependsOn>

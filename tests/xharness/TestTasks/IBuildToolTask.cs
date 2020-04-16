@@ -13,7 +13,6 @@ namespace Xharness.TestTasks {
 		bool SpecifyConfiguration { get; set; }
 
 		IProcessManager ProcessManager { get; }
-
 		TestProject TestProject { get; set; }
 
 		Task CleanAsync ();
