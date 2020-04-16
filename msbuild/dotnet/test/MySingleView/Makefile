@@ -20,7 +20,7 @@ build: clean
 	make -C ../.. install-nugets
 
 run: publish
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/mlaunch --launchsim $(abspath $(CURDIR)/bin/Debug/netcoreapp5.0/ios-x64/MySingleView.app) --device=:v2:runtime=com.apple.CoreSimulator.SimRuntime.iOS-12-0,devicetype=com.apple.CoreSimulator.SimDeviceType.iPhone-6 --wait-for-exit --stderr="$(shell tty)" --stdout="$(shell tty)"
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/mlaunch --launchsim $(abspath $(CURDIR)/bin/Debug/netcoreapp5.0/ios-x64/MySingleView.app) --device=:v2:runtime=com.apple.CoreSimulator.SimRuntime.iOS-12-0,devicetype=com.apple.CoreSimulator.SimDeviceType.iPhone-6 --wait-for-exit --stderr="$(shell tty)" --stdout="$(shell tty)" "--setenv=MONO_TRACE=-E:all"
 
 run-dev: publish-dev
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/mlaunch --installdev $(abspath $(CURDIR)/bin/Debug/netcoreapp5.0/ios-arm64/MySingleView.app) $(DEVNAME) --wait-for-exit --stderr="$(shell tty)" --stdout="$(shell tty)"
