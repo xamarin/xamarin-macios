@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Xharness.TestTasks
 {
-	class Resources
+	public class Resources
 	{
 		readonly Resource [] resources;
 

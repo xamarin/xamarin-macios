@@ -11,7 +11,7 @@ namespace Xharness.Jenkins.TestTasks {
 	internal abstract class RunTestTask : AppleTestTask, IRunTestTask
 	{
 		protected RunTest runTest;
-		protected IProcessManager ProcessManager => runTest.ProcessManager;
+		public IProcessManager ProcessManager => runTest.ProcessManager;
 		public IBuildToolTask BuildTask => runTest.BuildTask;
 
 		public double TimeoutMultiplier {
