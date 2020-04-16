@@ -15,6 +15,7 @@ clean:
 	rm -Rf $(TOP)/_build
 
 build: clean
+	make all install -C $(TOP)/tools/dotnet-linker
 	make all install -j -C ../../..
 	make -C ../.. packsimple test/global.json test/NuGet.config -j
 	make -C ../.. install-nugets
