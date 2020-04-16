@@ -46,8 +46,11 @@ namespace Xamarin.Linker.Steps {
 			Context.Tracer.Push (assembly);
 #endif
 
+#if !NET
 			var is_product_assembly = Mono.Tuner.Profile.IsProductAssembly (assembly);
+#endif
 			foreach (var t in assembly.MainModule.Types) {
+#if !NET
 				if (embeddinator) {
 					if (t.IsPublic && !is_product_assembly) {
 						// Mark all public types when in embeddinator mode.
@@ -57,6 +60,7 @@ namespace Xamarin.Linker.Steps {
 					}
 					continue;
 				}
+#endif
 
 				if (!t.HasCustomAttribute (Namespaces.Foundation, "RegisterAttribute"))
 					continue;

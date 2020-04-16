@@ -4,6 +4,10 @@ using System.IO;
 using Xamarin.Bundler;
 using Xamarin.Utils;
 
+namespace Xamarin.Tuner {
+
+}
+
 namespace Xamarin.Linker {
 	public class LinkerConfiguration {
 		public ApplePlatform Platform;

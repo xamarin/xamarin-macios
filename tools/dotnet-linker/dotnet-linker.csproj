@@ -18,15 +18,6 @@
     <Compile Include="..\linker\MobileExtensions.cs">
       <Link>MobileExtensions.cs</Link>
     </Compile>
-    <Compile Include="..\linker\MonoTouch.Tuner\MonoTouchProfile.cs">
-      <Link>MonoTouchProfile.cs</Link>
-    </Compile>
-    <Compile Include="..\linker\MobileProfile.cs">
-      <Link>MobileProfile.cs</Link>
-    </Compile>
-    <Compile Include="..\linker\BaseProfile.cs">
-      <Link>BaseProfile.cs</Link>
-    </Compile>
     <Compile Include="..\linker\ObjCExtensions.cs">
       <Link>ObjCExtensions.cs</Link>
     </Compile>
