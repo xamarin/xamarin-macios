@@ -335,9 +335,9 @@ namespace Xamarin.Tests
 			Assert.AreEqual (1, Execute (), message);
 		}
 
-		public abstract void CreateTemporaryApp (Profile profile, string appName = "testApp", string code = null, IList<string> extraArgs = null, string extraCode = null, string usings = null, bool use_csc = true);
+		public abstract void CreateTemporaryApp (Profile profile, string appName = "testApp", string code = null, IList<string> extraArgs = null, string extraCode = null, string usings = null);
 
-		public static string CompileTestAppExecutable (string targetDirectory, string code = null, IList<string> extraArgs = null, Profile profile = Profile.iOS, string appName = "testApp", string extraCode = null, string usings = null, bool use_csc = true)
+		public static string CompileTestAppExecutable (string targetDirectory, string code = null, IList<string> extraArgs = null, Profile profile = Profile.iOS, string appName = "testApp", string extraCode = null, string usings = null)
 		{
 			if (code == null)
 				code = "public class TestApp { static void Main () { System.Console.WriteLine (typeof (ObjCRuntime.Runtime).ToString ()); } }";
@@ -346,7 +346,7 @@ namespace Xamarin.Tests
 			if (extraCode != null)
 				code += extraCode;
 
-			return CompileTestAppCode ("exe", targetDirectory, code, extraArgs, profile, appName, use_csc);
+			return CompileTestAppCode ("exe", targetDirectory, code, extraArgs, profile, appName);
 		}
 
 		public static string CompileTestAppLibrary (string targetDirectory, string code, IList<string> extraArgs = null, Profile profile = Profile.iOS, string appName = "testApp")
@@ -354,7 +354,7 @@ namespace Xamarin.Tests
 			return CompileTestAppCode ("library", targetDirectory, code, extraArgs, profile, appName);
 		}
 
-		public static string CompileTestAppCode (string target, string targetDirectory, string code, IList<string> extraArgs = null, Profile profile = Profile.iOS, string appName = "testApp", bool use_csc = true)
+		public static string CompileTestAppCode (string target, string targetDirectory, string code, IList<string> extraArgs = null, Profile profile = Profile.iOS, string appName = "testApp")
 		{
 			var ext = target == "exe" ? "exe" : "dll";
 			var cs = Path.Combine (targetDirectory, "testApp.cs");
@@ -365,7 +365,7 @@ namespace Xamarin.Tests
 
 			string output;
 			var args = new List<string> ();
-			string fileName = Configuration.GetCompiler (profile, args, use_csc);
+			string fileName = Configuration.GetCompiler (profile, args);
 			args.Add ("/noconfig");
 			args.Add ($"/t:{target}");
 			args.Add ("/nologo");
