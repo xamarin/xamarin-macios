@@ -144,41 +144,6 @@ namespace Xamarin.Bundler
 			set { force = value; }
 		}
 
-		public static string GetPlatform (Application app)
-		{
-			switch (app.Platform) {
-			case ApplePlatform.iOS:
-				return app.IsDeviceBuild ? "iPhoneOS" : "iPhoneSimulator";
-			case ApplePlatform.WatchOS:
-				return app.IsDeviceBuild ? "WatchOS" : "WatchSimulator";
-			case ApplePlatform.TVOS:
-				return app.IsDeviceBuild ? "AppleTVOS" : "AppleTVSimulator";
-			default:
-				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, "Xamarin.iOS");
-			}
-		}
-
-		public static string GetPlatformFrameworkDirectory (Application app)
-		{
-			string platform;
-			switch (app.Platform) {
-			case ApplePlatform.iOS:
-				platform = "Xamarin.iOS";
-				break;
-			case ApplePlatform.WatchOS:
-				platform = "Xamarin.WatchOS";
-				break;
-			case ApplePlatform.TVOS:
-				platform = "Xamarin.TVOS";
-				break;
-			default:
-				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, "Xamarin.iOS");
-			}
-			if (IsDotNet)
-				return Path.Combine (FrameworkLibDirectory, platform, "v1.0");
-			return Path.Combine (FrameworkLibDirectory, "mono", platform);
-		}
-
 		public static string GetArchDirectory (Application app, bool is64bit)
 		{
 			if (is64bit)
@@ -225,20 +190,6 @@ namespace Xamarin.Bundler
 			}
 		}
 
-		public static string GetProductAssembly (Application app)
-		{
-			switch (app.Platform) {
-			case ApplePlatform.iOS:
-				return "Xamarin.iOS";
-			case ApplePlatform.WatchOS:
-				return "Xamarin.WatchOS";
-			case ApplePlatform.TVOS:
-				return "Xamarin.TVOS";
-			default:
-				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, "Xamarin.iOS");
-			}
-		}
-
 		public static bool GetLLVMAsmWriter (Application app)
 		{
 			if (app.LLVMAsmWriter.HasValue)
@@ -254,25 +205,9 @@ namespace Xamarin.Bundler
 			}
 		}
 
-		public static string GetFrameworkDirectory (Application app)
-		{
-			return GetFrameworkDir (GetPlatform (app), app.SdkVersion);
-		}
-
 		public static bool IsUsingClang (Application app)
 		{
 			return app.CompilerPath.EndsWith ("clang", StringComparison.Ordinal) || app.CompilerPath.EndsWith ("clang++", StringComparison.Ordinal);
-		}
-
-		public static string PlatformsDirectory {
-			get {
-				return Path.Combine (DeveloperDirectory, "Platforms");
-			}
-		}
-
-		public static string GetPlatformDirectory (Application app)
-		{
-			return Path.Combine (PlatformsDirectory, GetPlatform (app) + ".platform");
 		}
 
 		public static string GetAotCompiler (Application app, Abi abi, bool is64bits)
@@ -1361,11 +1296,6 @@ namespace Xamarin.Bundler
 					throw new MonoTouchException (5103, true, Errors.MT5103, app.Compiler, original_compiler);
 				}
 			}
-		}
-
-		static string GetFrameworkDir (string platform, Version iphone_sdk)
-		{
-			return Path.Combine (PlatformsDirectory, platform + ".platform", "Developer", "SDKs", platform + iphone_sdk.ToString () + ".sdk");
 		}
 
 		static bool IsBoundAssembly (Assembly s)

@@ -1401,7 +1401,7 @@ namespace Xamarin.Bundler
 					throw ErrorHelper.CreateError (71, Errors.MX0071, App.Platform, "Xamarin.iOS");
 				}
 
-				var lib = Path.Combine (Driver.GetProductSdkDirectory (App), "usr", "lib", library);
+				var lib = Path.Combine (Driver.GetProductSdkLibDirectory (App), library);
 				if (File.Exists (lib)) {
 					registration_methods.Add (method);
 					foreach (var abi in Abis)
@@ -1546,7 +1546,6 @@ namespace Xamarin.Bundler
 				throw ErrorHelper.CreateError (99, Errors.MX0099, $"invalid symbol mode: {App.SymbolMode}");
 			}
 
-			var libdir = Driver.GetXamarinLibraryDirectory (App, abi);
 			if (App.Embeddinator) {
 				linker_flags.AddOtherFlag ("-shared");
 				linker_flags.AddOtherFlag ("-install_name", $"@rpath/{App.ExecutableName}.framework/{App.ExecutableName}");
@@ -1568,21 +1567,22 @@ namespace Xamarin.Bundler
 				} else {
 					mainlib = "libapp.a";
 				}
-				var libmain = Path.Combine (libdir, mainlib);
+				var libmain = Path.Combine (Driver.GetProductSdkLibDirectory (App), mainlib);
 				linker_flags.AddLinkWith (libmain, true);
 			}
 
+			var libmonodir = Driver.GetMonoLibraryDirectory (App);
 			if (App.EnableProfiling) {
 				string libprofiler;
 				switch (App.LibProfilerLinkMode) {
 				case AssemblyBuildTarget.DynamicLibrary:
-					libprofiler = Path.Combine (libdir, "libmono-profiler-log.dylib");
+					libprofiler = Path.Combine (libmonodir, "libmono-profiler-log.dylib");
 					linker_flags.AddLinkWith (libprofiler);
 					if (App.HasFrameworksDirectory)
 						AddToBundle (libprofiler);
 					break;
 				case AssemblyBuildTarget.StaticObject:
-					libprofiler = Path.Combine (libdir, "libmono-profiler-log.a");
+					libprofiler = Path.Combine (libmonodir, "libmono-profiler-log.a");
 					linker_flags.AddLinkWith (libprofiler);
 					break;
 				case AssemblyBuildTarget.Framework: // We don't ship the profiler as a framework, so this should be impossible.
@@ -1592,11 +1592,11 @@ namespace Xamarin.Bundler
 			}
 
 			if (App.UseInterpreter) {
-				string libinterp = Path.Combine (libdir, "libmono-ee-interp.a");
+				string libinterp = Path.Combine (libmonodir, "libmono-ee-interp.a");
 				linker_flags.AddLinkWith (libinterp);
-				string libicalltable = Path.Combine (libdir, "libmono-icall-table.a");
+				string libicalltable = Path.Combine (libmonodir, "libmono-icall-table.a");
 				linker_flags.AddLinkWith (libicalltable);
-				string libilgen = Path.Combine (libdir, "libmono-ilgen.a");
+				string libilgen = Path.Combine (libmonodir, "libmono-ilgen.a");
 				linker_flags.AddLinkWith (libilgen);
 			}
 
@@ -1691,7 +1691,7 @@ namespace Xamarin.Bundler
 			if (Driver.IsDotNet)
 				return;
 			var libnative = GetLibNativeName ();
-			var libdir = Driver.GetProductSdkLibDirectory (app);
+			var libdir = Driver.GetMonoLibraryDirectory (app);
 			Driver.Log (3, "Adding mono-native library {0} for {1}.", libnative, app);
 			switch (app.LibMonoNativeLinkMode) {
 			case AssemblyBuildTarget.DynamicLibrary:
@@ -1779,7 +1779,7 @@ namespace Xamarin.Bundler
 				var lib_native_target = Path.Combine (TargetDirectory, "libmono-native.dylib");
 
 				var lib_native_name = GetLibNativeName () + ".dylib";
-				var lib_native_path = Path.Combine (Driver.GetProductSdkLibDirectory (App), lib_native_name);
+				var lib_native_path = Path.Combine (Driver.GetMonoLibraryDirectory (App), lib_native_name);
 				Application.UpdateFile (lib_native_path, lib_native_target);
 				Driver.Log (3, "Added mono-native library {0} for {1}.", lib_native_name, MonoNativeMode);
 			}

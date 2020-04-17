@@ -162,25 +162,6 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		public static string GetProductAssembly (Application app)
-		{
-			return "Xamarin.Mac";
-		}
-
-		public static string GetPlatformFrameworkDirectory (Application app)
-		{
-			if (IsDotNet)
-				return Path.Combine (FrameworkLibDirectory, "Xamarin.Mac", "v1.0");
-
-			if (IsUnifiedMobile)
-				return Path.Combine (FrameworkLibDirectory, "mono", "Xamarin.Mac");
-			else if (IsUnifiedFullXamMacFramework)
-				return Path.Combine (FrameworkLibDirectory, "mono", "4.5");
-			else if (IsUnifiedFullSystemFramework)
-				return Path.Combine (FrameworkLibDirectory, "mono", "4.5");
-			throw new InvalidOperationException ("PlatformFrameworkDirectory when not Mobile or Full or System?");
-		}
-
 		public static string GetArch32Directory (Application app)
 		{
 			throw new InvalidOperationException ("Arch32Directory when not Mobile or Full?");
@@ -195,7 +176,6 @@ namespace Xamarin.Bundler {
 			throw new InvalidOperationException ("Arch64Directory when not Mobile or Full?");
 		}
 					
-
 		static AOTOptions aotOptions = null;
 
 		public static bool EnableDebug {
@@ -749,7 +729,7 @@ namespace Xamarin.Bundler {
 		static void CopyMonoNative ()
 		{
 			string name;
-			if (File.Exists (Path.Combine (MonoLibDirectory, "libmono-system-native.dylib"))) {
+			if (File.Exists (Path.Combine (GetMonoLibraryDirectory (App), "libmono-system-native.dylib"))) {
 				// legacy libmono-system-native.a needs to be included if it exists in the mono in question
 				name = "libmono-system-native";
 			} else {
@@ -766,7 +746,7 @@ namespace Xamarin.Bundler {
 				}
 			}
 
-			var src = Path.Combine (MonoLibDirectory, name + ".dylib");
+			var src = Path.Combine (GetMonoLibraryDirectory (App), name + ".dylib");
 			var dest = Path.Combine (mmp_dir, "libmono-native.dylib");
 			Watch ($"Adding mono-native library {name} for {BuildTarget.MonoNativeMode}.", 1);
 
@@ -814,34 +794,13 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		// This is the directory that contains the native libraries that come from mono.
-		// It can be:
-		// * System mono
-		// * Xamarin.Mac.framework
-		// * Xamarin.macOS.Sdk
-		static string mono_lib_directory;
-		static string MonoLibDirectory {
+		static string MonoDirectory {
 			get {
-				if (mono_lib_directory == null) {
-					if (IsDotNet) {
-						throw new NotImplementedException ();
-					} else if (IsUnifiedFullSystemFramework) {
-						mono_lib_directory = Path.Combine (SystemMonoDirectory, "lib");
-					} else {
-						mono_lib_directory = GetProductSdkLibDirectory (App);
-					}
-				}
-				return mono_lib_directory;
+				if (IsUnifiedFullXamMacFramework || IsUnifiedMobile)
+					return FrameworkDirectory;
+				return SystemMonoDirectory;
 			}
 		}
-
-		static string MonoEtcDirectory {
-			get {
-				// Assume the etc directory is next to the lib directory
-				return Path.Combine (Path.GetDirectoryName (MonoLibDirectory), "etc");
-			}
-		}
-
 
 		static void GeneratePList () {
 			var sr = new StreamReader (typeof (Driver).Assembly.GetManifestResourceStream (App.Embeddinator ? "Info-framework.plist.tmpl" : "Info.plist.tmpl"));
@@ -1527,7 +1486,7 @@ namespace Xamarin.Bundler {
 				src = library;
 
 			// Now let's check inside mono/lib
-			string monoDirPath = Path.Combine (MonoLibDirectory, libName);
+			string monoDirPath = Path.Combine (GetMonoLibraryDirectory (App), libName);
 			if (src == null && File.Exists (monoDirPath))
 				src = monoDirPath;
 
@@ -1679,7 +1638,7 @@ namespace Xamarin.Bundler {
 					CopyResourceFile ("machine.4_5.config", "machine.config");
 				}
 				else {
-					string machine_config = Path.Combine (MonoEtcDirectory, "mono", "4.5", "machine.config");
+					string machine_config = Path.Combine (MonoDirectory, "etc", "mono", "4.5", "machine.config");
 
 					if (!File.Exists (machine_config))
 						throw new MonoMacException (1403, true, Errors.MM1403, "File", machine_config, TargetFramework);

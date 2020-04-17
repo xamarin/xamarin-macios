@@ -1385,7 +1385,7 @@ namespace Xamarin.Bundler {
 				UseMonoFramework = false;
 			
 			if (UseMonoFramework.Value)
-				Frameworks.Add (Path.Combine (Driver.GetProductFrameworksDirectory (this), "Mono.framework"));
+				Frameworks.Add (Path.Combine (Driver.GetMonoFrameworksDirectory (this), "Mono.framework"));
 
 			if (!PackageMonoFramework.HasValue) {
 				if (!IsExtension && Extensions.Count > 0 && !UseMonoFramework.Value) {

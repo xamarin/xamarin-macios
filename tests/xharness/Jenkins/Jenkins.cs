@@ -83,8 +83,8 @@ namespace Xharness.Jenkins {
 		public Resource DesktopResource { get; } = new Resource ("Desktop", Environment.ProcessorCount);
 		public Resource NugetResource { get;  } = new Resource ("Nuget", 1); // nuget is not parallel-safe :(
 
-		static Dictionary<string, Resource> device_resources = new Dictionary<string, Resource> ();
-		internal static Resources GetDeviceResources (IEnumerable<IHardwareDevice> devices)
+		Dictionary<string, Resource> device_resources = new Dictionary<string, Resource> ();
+		public Resources GetDeviceResources (IEnumerable<IHardwareDevice> devices)
 		{
 			List<Resource> resources = new List<Resource> ();
 			lock (device_resources) {
@@ -246,18 +246,18 @@ namespace Xharness.Jenkins {
 			if (!project.IsExecutableProject)
 				return false;
 			
-			if (project.IsBclTest) {
-				if (!project.IsBclxUnit)
+			if (project.IsBclTest ()) {
+				if (!project.IsBclxUnit ())
 					return IncludeBcl || IncludeBCLNUnit;
-				if (project.IsMscorlib) 
+				if (project.IsMscorlib ()) 
 					return IncludeMscorlib;
 				return IncludeBcl || IncludeBCLxUnit;
 			}
 
-			if (!IncludeMonotouch && project.IsMonotouch)
+			if (!IncludeMonotouch && project.IsMonotouch ())
 				return false;
 
-			if (!IncludeNonMonotouch && !project.IsMonotouch)
+			if (!IncludeNonMonotouch && !project.IsMonotouch ())
 				return false;
 
 			if (Harness.IncludeSystemPermissionTests == false && project.Name == "introspection")
@@ -1101,7 +1101,7 @@ namespace Xharness.Jenkins {
 					} else {
 						exec = new MacExecuteTask (this, build, processManager, crashReportSnapshotFactory) {
 							Ignored = ignored_main,
-							BCLTest = project.IsBclTest,
+							BCLTest = project.IsBclTest (),
 							TestName = project.Name,
 							IsUnitTest = true,
 						};

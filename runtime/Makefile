@@ -113,17 +113,17 @@ $(2)_FRAMEWORKS    = $(MONOTOUCH_FRAMEWORKS)
 RUNTIME_$(2)_TARGETS_DIRS +=                                        \
 	$(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/Frameworks/Xamarin.framework \
 	$(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/Frameworks/Xamarin-debug.framework \
-	$(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/usr/lib             \
-	$(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/usr/include/xamarin \
+	$(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/lib                 \
+	$(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/include/xamarin     \
 
 RUNTIME_$(2)_TARGETS +=                                                                                \
 	$$(foreach file,$$($(2)_FRAMEWORKS),$(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/Frameworks/$$(file).framework/$$(file))   \
 	$$(foreach file,$$($(2)_FRAMEWORKS),$(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/Frameworks/$$(file).framework/Info.plist) \
 	$$(foreach file,$$($(2)_FRAMEWORKS),$(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/Frameworks/$$(file).framework.dSYM/Contents/Info.plist) \
-	$$(foreach file,$$($(2)_LIBRARIES),$(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/usr/lib/$$(file))   \
-	$(foreach file,$(SHIPPED_HEADERS),$(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/usr/include/$(file)) \
+	$$(foreach file,$$($(2)_LIBRARIES),$(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/lib/$$(file))       \
+	$(foreach file,$(SHIPPED_HEADERS),$(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/include/$(file))     \
 
-$(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/usr/lib/%.a: .libs/$(1)/%.a | $(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/usr/lib
+$(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/lib/%.a: .libs/$(1)/%.a | $(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/lib
 	$(Q) install -m 0644 $$< $$@
 
 $(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/Frameworks/Xamarin.framework/Xamarin: .libs/$(1)/Xamarin.framework | $(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/Frameworks/Xamarin.framework
@@ -141,10 +141,10 @@ $(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/Frameworks/Xamarin.framework.dSYM/Contents/In
 $(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/Frameworks/Xamarin-debug.framework.dSYM/Contents/Info.plist: $(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/Frameworks/Xamarin-debug.framework/Xamarin-debug $(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/Frameworks/Xamarin-debug.framework/Info.plist
 	$$(Q_GEN) dsymutil -j 4 $$< -o $$(abspath $$(dir $$<)/..)/Xamarin-debug.framework.dSYM
 
-$(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/usr/lib/%.dylib: .libs/$(1)/%.dylib | $(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/usr/lib
+$(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/lib/%.dylib: .libs/$(1)/%.dylib | $(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/lib
 	$$(Q_STRIP) $(DEVICE_BIN_PATH)/bitcode_strip $$< -m -o $$@
 
-$(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/usr/include/%.h: %.h | $(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/usr/include/xamarin
+$(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/include/%.h: %.h | $(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/include/xamarin
 	$(Q) install -m 0644 $$< $$@
 
 .libs/$(1)/Xamarin.framework:  $$(foreach arch,$$($(2)_ARCHITECTURES),.libs/$(1)/Xamarin.$$(arch).framework)

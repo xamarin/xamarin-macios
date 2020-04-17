@@ -673,36 +673,38 @@ all-local:: install-mac
 MAC_DIRECTORIES = \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/etc/mono/assemblies/System \
+	$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/etc/mono/assemblies/System \
 	$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/Frameworks \
-	$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/usr/lib \
+	$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/lib \
+	$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/lib/pkgconfig \
 
 MAC_TARGETS = \
-	$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/usr/lib/libmonosgen-2.0.a                        \
-	$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/usr/lib/libmono-profiler-log.a                   \
-	$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/usr/lib/libmono-native-compat.a                  \
-	$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/usr/lib/libmono-native-unified.a                 \
-	$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/usr/lib/libmonosgen-2.0.dylib                    \
-	$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/usr/lib/libMonoPosixHelper.dylib                 \
-	$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/usr/lib/libmono-native-compat.dylib              \
-	$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/usr/lib/libmono-native-unified.dylib             \
-	$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/usr/lib/libmono-2.0.dylib                        \
-	$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/usr/lib/libmono-2.0.a                            \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/pkgconfig/mono-2.pc                  \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/etc/mono/assemblies/System/System.config \
+	$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/lib/libmonosgen-2.0.a                            \
+	$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/lib/libmono-profiler-log.a                       \
+	$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/lib/libmono-native-compat.a                      \
+	$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/lib/libmono-native-unified.a                     \
+	$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/lib/libmonosgen-2.0.dylib                        \
+	$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/lib/libMonoPosixHelper.dylib                     \
+	$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/lib/libmono-native-compat.dylib                  \
+	$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/lib/libmono-native-unified.dylib                 \
+	$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/lib/libmono-2.0.dylib                            \
+	$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/lib/libmono-2.0.a                                \
+	$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/lib/pkgconfig/mono-2.pc                          \
+	$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/etc/mono/assemblies/System/System.config         \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/mono-sgen                            \
 
-$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/usr/lib/%: .stamp-$(MONO_BUILD_MODE) | $(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/usr/lib
+$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/lib/%: .stamp-$(MONO_BUILD_MODE) | $(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/lib
 	$(Q) $(CP) $(MONO_MAC_SDK_DESTDIR)/mac-libs/$(notdir $@) $@
 
-$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/usr/lib/libmono-2.0.dylib $(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/usr/lib/libmono-2.0.a: | $(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/usr/lib
+$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/lib/libmono-2.0.dylib $(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/lib/libmono-2.0.a: | $(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/lib
 	$(Q) ln -sf libmonosgen-2.0$(suffix $@) $@
 
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/pkgconfig/mono-2.pc: .stamp-$(MONO_BUILD_MODE) | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib
-	$(Q) mkdir -p $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/pkgconfig
-	$(Q) $(CP) $(MONO_MAC_SDK_DESTDIR)/mac-pkgconfig/mono-2.pc $@
+$(MONO_MAC_SDK_DESTDIR)/mac-pkgconfig/mono-2.pc: .stamp-$(MONO_BUILD_MODE)
 
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/etc/mono/assemblies/System/System.config: mac-System.config | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/etc/mono/assemblies/System
+$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/lib/pkgconfig/mono-2.pc: $(MONO_MAC_SDK_DESTDIR)/mac-pkgconfig/mono-2.pc | $(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/lib/pkgconfig
+	$(Q) $(CP) $< $@
+
+$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/etc/mono/assemblies/System/System.config: mac-System.config | $(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/etc/mono/assemblies/System
 	$(Q) $(CP) $< $@
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/mono-sgen: .stamp-$(MONO_BUILD_MODE) | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin
@@ -762,20 +764,20 @@ all-local:: install-iphonesimulator
 
 IPHONESIMULATOR_DIRECTORIES = \
 	$(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/Frameworks \
-	$(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/usr/lib
+	$(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/lib
 
 IPHONESIMULATOR_TARGETS = \
-	$(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/usr/lib/libmonosgen-2.0.a             \
-	$(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/usr/lib/libmono-profiler-log.a        \
-	$(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/usr/lib/libmono-native-compat.a       \
-	$(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/usr/lib/libmono-native-unified.a      \
-	$(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/usr/lib/libmonosgen-2.0.dylib         \
-	$(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/usr/lib/libmono-native-compat.dylib   \
-	$(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/usr/lib/libmono-native-unified.dylib  \
-	$(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/usr/lib/libmono-profiler-log.dylib    \
+	$(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/lib/libmonosgen-2.0.a                 \
+	$(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/lib/libmono-profiler-log.a            \
+	$(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/lib/libmono-native-compat.a           \
+	$(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/lib/libmono-native-unified.a          \
+	$(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/lib/libmonosgen-2.0.dylib             \
+	$(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/lib/libmono-native-compat.dylib       \
+	$(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/lib/libmono-native-unified.dylib      \
+	$(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/lib/libmono-profiler-log.dylib        \
 	$(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/Frameworks/Mono.framework/Mono        \
 
-$(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/usr/lib/%: .stamp-$(MONO_BUILD_MODE) | $(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/usr/lib
+$(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/lib/%: .stamp-$(MONO_BUILD_MODE) | $(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/lib
 	$(Q) $(CP) $(MONO_IOS_SDK_DESTDIR)/ios-libs/ios-sim/$(notdir $@) $@
 	$(Q) if test -d $(MONO_IOS_SDK_DESTDIR)/ios-libs/ios-sim/$(notdir $@).dSYM; then $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-libs/ios-sim/$(notdir $@).dSYM $(dir $@); fi
 
@@ -796,20 +798,20 @@ all-local:: install-watchsimulator
 
 WATCHSIMULATOR_DIRECTORIES = \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/Frameworks \
-	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib
+	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/lib
 
 WATCHSIMULATOR_TARGETS = \
-	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmonosgen-2.0.a            \
-	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmono-profiler-log.a       \
-	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmono-native-compat.a      \
-	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmono-native-unified.a     \
-	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmonosgen-2.0.dylib        \
-	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmono-native-compat.dylib  \
-	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmono-native-unified.dylib \
-	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmono-profiler-log.dylib   \
+	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/lib/libmonosgen-2.0.a                \
+	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/lib/libmono-profiler-log.a           \
+	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/lib/libmono-native-compat.a          \
+	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/lib/libmono-native-unified.a         \
+	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/lib/libmonosgen-2.0.dylib            \
+	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/lib/libmono-native-compat.dylib      \
+	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/lib/libmono-native-unified.dylib     \
+	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/lib/libmono-profiler-log.dylib       \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/Frameworks/Mono.framework/Mono       \
 
-$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/%: .stamp-$(MONO_BUILD_MODE) | $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib
+$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/lib/%: .stamp-$(MONO_BUILD_MODE) | $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/lib
 	$(Q) $(CP) $(MONO_IOS_SDK_DESTDIR)/ios-libs/watchos-sim/$(notdir $@) $@
 	$(Q) if test -d $(MONO_IOS_SDK_DESTDIR)/ios-libs/watchos-sim/$(notdir $@).dSYM; then $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-libs/watchos-sim/$(notdir $@).dSYM $(dir $@); fi
 
@@ -830,20 +832,20 @@ all-local:: install-tvsimulator
 
 TVSIMULATOR_DIRECTORIES = \
 	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/Frameworks \
-	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib
+	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/lib
 
 TVSIMULATOR_TARGETS = \
-	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmonosgen-2.0.a            \
-	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmono-profiler-log.a       \
-	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmono-native-compat.a      \
-	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmono-native-unified.a     \
-	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmonosgen-2.0.dylib        \
-	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmono-native-compat.dylib  \
-	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmono-native-unified.dylib \
-	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmono-profiler-log.dylib   \
+	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/lib/libmonosgen-2.0.a            \
+	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/lib/libmono-profiler-log.a       \
+	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/lib/libmono-native-compat.a      \
+	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/lib/libmono-native-unified.a     \
+	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/lib/libmonosgen-2.0.dylib        \
+	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/lib/libmono-native-compat.dylib  \
+	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/lib/libmono-native-unified.dylib \
+	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/lib/libmono-profiler-log.dylib   \
 	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/Frameworks/Mono.framework/Mono       \
 
-$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/%: .stamp-$(MONO_BUILD_MODE) | $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib
+$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/lib/%: .stamp-$(MONO_BUILD_MODE) | $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/lib
 	$(Q) $(CP) $(MONO_IOS_SDK_DESTDIR)/ios-libs/tvos-sim/$(notdir $@) $@
 	$(Q) if test -d $(MONO_IOS_SDK_DESTDIR)/ios-libs/tvos-sim/$(notdir $@).dSYM; then $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-libs/tvos-sim/$(notdir $@).dSYM $(dir $@); fi
 
@@ -864,23 +866,23 @@ all-local:: install-iphoneos
 
 IPHONEOS_DIRECTORIES = \
 	$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/Frameworks \
-	$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/usr/lib
+	$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/lib
 
 IPHONEOS_TARGETS =                                                     \
-	$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/usr/lib/libmonosgen-2.0.a            \
-	$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/usr/lib/libmono-profiler-log.a       \
-	$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/usr/lib/libmono-ee-interp.a          \
-	$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/usr/lib/libmono-icall-table.a        \
-	$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/usr/lib/libmono-ilgen.a              \
-	$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/usr/lib/libmono-native-compat.a      \
-	$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/usr/lib/libmono-native-unified.a     \
-	$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/usr/lib/libmonosgen-2.0.dylib        \
-	$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/usr/lib/libmono-native-compat.dylib  \
-	$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/usr/lib/libmono-native-unified.dylib \
-	$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/usr/lib/libmono-profiler-log.dylib   \
+	$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/lib/libmonosgen-2.0.a                \
+	$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/lib/libmono-profiler-log.a           \
+	$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/lib/libmono-ee-interp.a              \
+	$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/lib/libmono-icall-table.a            \
+	$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/lib/libmono-ilgen.a                  \
+	$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/lib/libmono-native-compat.a          \
+	$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/lib/libmono-native-unified.a         \
+	$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/lib/libmonosgen-2.0.dylib            \
+	$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/lib/libmono-native-compat.dylib      \
+	$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/lib/libmono-native-unified.dylib     \
+	$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/lib/libmono-profiler-log.dylib       \
 	$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/Frameworks/Mono.framework/Mono       \
 
-$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/usr/lib/%: .stamp-$(MONO_BUILD_MODE) $(X86_64_SLICE_ALL) | $(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/usr/lib
+$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/lib/%: .stamp-$(MONO_BUILD_MODE) $(X86_64_SLICE_ALL) | $(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/lib
 	@#$(Q) $(CP) $(MONO_IOS_SDK_DESTDIR)/ios-libs/ios/$(notdir $@) $@
 	$(Q_LIPO) lipo $(MONO_IOS_SDK_DESTDIR)/ios-libs/ios/$(notdir $@) $(X86_64_SLICE) -create -output $@
 	$(Q) if test -d $(MONO_IOS_SDK_DESTDIR)/ios-libs/ios/$(notdir $@).dSYM; then $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-libs/ios/$(notdir $@).dSYM $(dir $@); fi
@@ -908,23 +910,23 @@ all-local:: install-watchos
 
 WATCHOS_DIRECTORIES = \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks \
-	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib
+	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/lib
 
 WATCHOS_TARGETS =                                                             \
-	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmonosgen-2.0.a            \
-	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-profiler-log.a       \
-	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-ee-interp.a          \
-	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-icall-table.a        \
-	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-ilgen.a              \
-	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-native-compat.a      \
-	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-native-unified.a     \
-	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmonosgen-2.0.dylib        \
-	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-native-compat.dylib  \
-	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-native-unified.dylib \
-	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-profiler-log.dylib   \
+	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/lib/libmonosgen-2.0.a                \
+	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/lib/libmono-profiler-log.a           \
+	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/lib/libmono-ee-interp.a              \
+	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/lib/libmono-icall-table.a            \
+	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/lib/libmono-ilgen.a                  \
+	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/lib/libmono-native-compat.a          \
+	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/lib/libmono-native-unified.a         \
+	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/lib/libmonosgen-2.0.dylib            \
+	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/lib/libmono-native-compat.dylib      \
+	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/lib/libmono-native-unified.dylib     \
+	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/lib/libmono-profiler-log.dylib       \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework/Mono       \
 
-$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/%: .stamp-$(MONO_BUILD_MODE) $(X86_64_SLICE_ALL) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib
+$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/lib/%: .stamp-$(MONO_BUILD_MODE) $(X86_64_SLICE_ALL) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/lib
 	@#$(Q) $(CP) $(MONO_IOS_SDK_DESTDIR)/ios-libs/watchos/$(notdir $@) $@
 	$(Q_LIPO) lipo $(MONO_IOS_SDK_DESTDIR)/ios-libs/watchos/$(notdir $@) $(X86_64_SLICE) -create -output $@
 	$(Q) if test -d $(MONO_IOS_SDK_DESTDIR)/ios-libs/watchos/$(notdir $@).dSYM; then $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-libs/watchos/$(notdir $@).dSYM $(dir $@); fi
@@ -952,23 +954,23 @@ all-local:: install-tvos
 
 TVOS_DIRECTORIES = \
 	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks \
-	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib
+	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/lib
 
 TVOS_TARGETS =                                                             \
-	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmonosgen-2.0.a            \
-	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-profiler-log.a       \
-	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-ee-interp.a          \
-	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-icall-table.a        \
-	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-ilgen.a              \
-	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-native-compat.a      \
-	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-native-unified.a     \
-	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmonosgen-2.0.dylib        \
-	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-native-compat.dylib  \
-	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-native-unified.dylib \
-	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-profiler-log.dylib   \
+	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/lib/libmonosgen-2.0.a                \
+	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/lib/libmono-profiler-log.a           \
+	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/lib/libmono-ee-interp.a              \
+	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/lib/libmono-icall-table.a            \
+	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/lib/libmono-ilgen.a                  \
+	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/lib/libmono-native-compat.a          \
+	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/lib/libmono-native-unified.a         \
+	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/lib/libmonosgen-2.0.dylib            \
+	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/lib/libmono-native-compat.dylib      \
+	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/lib/libmono-native-unified.dylib     \
+	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/lib/libmono-profiler-log.dylib       \
 	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework/Mono       \
 
-$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/%: .stamp-$(MONO_BUILD_MODE) $(X86_64_SLICE_ALL) | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib
+$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/lib/%: .stamp-$(MONO_BUILD_MODE) $(X86_64_SLICE_ALL) | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/lib
 	@#$(Q) $(CP) $(MONO_IOS_SDK_DESTDIR)/ios-libs/tvos/$(notdir $@) $@
 	$(Q_LIPO) lipo $(MONO_IOS_SDK_DESTDIR)/ios-libs/tvos/$(notdir $@) $(X86_64_SLICE) -create -output $@
 	$(Q) if test -d $(MONO_IOS_SDK_DESTDIR)/ios-libs/tvos/$(notdir $@).dSYM; then $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-libs/tvos/$(notdir $@).dSYM $(dir $@); fi

@@ -26,7 +26,7 @@ namespace Xharness.Jenkins.TestTasks {
 					SetEnvironmentVariables (make);
 					var log = Logs.Create ($"make-{Platform}-{Timestamp}.txt", LogType.BuildLog.ToString ());
 					LogEvent (log, "Making {0} in {1}", Target, WorkingDirectory);
-					if (!Harness.DryRun) {
+					if (!Jenkins.Harness.DryRun) {
 						var timeout = Timeout;
 						var result = await ProcessManager.RunAsync (make, log, timeout);
 						if (result.TimedOut) {

@@ -281,7 +281,12 @@ namespace MonoMac.Tuner {
 
 			foreach (AssemblyNameReference reference in assembly.MainModule.AssemblyReferences) {
 				try {
-					ProcessReferences (Context.Resolve (reference));
+					var asm = Context.Resolve (reference);
+					if (asm == null) {
+						ErrorHelper.Warning (2013, Errors.MM2013, reference.FullName, assembly.Name.FullName);
+					} else {
+						ProcessReferences (asm);
+					}
 				} catch (AssemblyResolutionException fnfe) {
 					ErrorHelper.Warning (2013, fnfe, Errors.MM2013, fnfe.AssemblyReference.FullName, assembly.Name.FullName);
 				}
