@@ -1218,15 +1218,20 @@ namespace Xamarin.Bundler {
 
 		static string RunPkgConfig (string option, bool force_system_mono = false)
 		{
-			string [] env = null;
+			var env = new List<string> ();
 
-			if (!IsUnifiedFullSystemFramework && !force_system_mono)
-				env = new [] { "PKG_CONFIG_PATH", Path.Combine (FrameworkLibDirectory, "pkgconfig") };
+			if (!IsUnifiedFullSystemFramework && !force_system_mono) {
+				env.Add ("PKG_CONFIG_PATH");
+				env.Add (Path.Combine (FrameworkLibDirectory, "pkgconfig"));
+			}
+			// Remove any PKG_CONFIG_LIBDIR variables that may be set.
+			env.Add ("PKG_CONFIG_LIBDIR");
+			env.Add (null);
 
 			var sb = new StringBuilder ();
 			int rv;
 			try {
-				rv = RunCommand (PkgConfig, new [] { option, "mono-2" }, env, sb);
+				rv = RunCommand (PkgConfig, new [] { option, "mono-2" }, env.ToArray (), sb);
 			} catch (Exception e) {
 				throw ErrorHelper.CreateError (5314, e, Errors.MX5314, e.Message);
 			}
