@@ -30,7 +30,7 @@ namespace Xharness.Targets
 			BundleIdentifier = info_plist.GetCFBundleIdentifier ();
 			info_plist.SetMinimumOSVersion (GetMinimumOSVersion (info_plist.GetMinimumOSVersion ()));
 			info_plist.SetUIDeviceFamily (UIDeviceFamily);
-			Harness.Save (info_plist, target_info_plist);
+			info_plist.Save (target_info_plist, Harness);
 		}
 	}
 }

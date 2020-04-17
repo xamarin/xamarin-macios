@@ -134,6 +134,10 @@
     <Compile Include="TestTasks\IRunXITask.cs" />
     <Compile Include="TestTasks\IRunSimulatorTask.cs" />
     <Compile Include="TestTasks\RunDevice.cs" />
+    <Compile Include="TestProjectExtensions.cs" />
+    <Compile Include="iOSTestProject.cs" />
+    <Compile Include="MacTestProject.cs" />
+    <Compile Include="XmlDocumentExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\tools\mtouch\SdkVersions.cs">
