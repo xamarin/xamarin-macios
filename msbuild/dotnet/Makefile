@@ -20,8 +20,6 @@ TVOS_RIDS=arm64 x64
 WATCHOS_RIDS=arm x86
 MACOS_RIDS=x64
 
-include legacy.mk
-
 DIRECTORIES += \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Microsoft.iOS.Sdk/Sdk \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/dotnet/Microsoft.iOS.Sdk/targets \
@@ -141,7 +139,6 @@ targets/%.props: targets/%.template.props Makefile $(TOP)/Make.config.inc
 
 TEMPLATED_FILES = \
 	targets/Xamarin.Shared.Sdk.Versions.props \
-	targets/Xamarin.Shared.Legacy.Sdk.Versions.props \
 
 all-local:: $(TARGETS) targets/Xamarin.Shared.Sdk.Versions.props
 
@@ -212,14 +209,10 @@ test/global.json: Makefile $(TEMPLATED_FILES)
 		printf "\t\t\"Microsoft.tvOS.Sdk\": \"$(CURRENT_TVOS_VERSION)\",\n" >> $@; \
 		printf "\t\t\"Microsoft.watchOS.Sdk\": \"$(CURRENT_WATCHOS_VERSION)\",\n" >> $@; \
 		printf "\t\t\"Microsoft.macOS.Sdk\": \"$(CURRENT_MACOS_VERSION)\",\n" >> $@; \
-		printf "\t\t\"Xamarin.iOS.Legacy.Sdk\": \"$(CURRENT_IOS_VERSION)\",\n" >> $@; \
-		printf "\t\t\"Xamarin.tvOS.Legacy.Sdk\": \"$(CURRENT_TVOS_VERSION)\",\n" >> $@; \
-		printf "\t\t\"Xamarin.watchOS.Legacy.Sdk\": \"$(CURRENT_WATCHOS_VERSION)\",\n" >> $@; \
-		printf "\t\t\"Xamarin.macOS.Legacy.Sdk\": \"$(CURRENT_MACOS_VERSION)\"\n" >> $@; \
 		printf "\t}\n}\n" >> $@
 
 test-nuget: test/NuGet.config test/global.json
-	$(Q) $(MAKE) legacy-pack-simple
+	$(Q) $(MAKE) packsimple
 	@# Clear out anything from the nuget cache from previous tests
 	$(Q) rm -Rf $(HOME)/.nuget/packages/xamarin.*.sdk
 	@#$(if $(V),,@echo "BUILD    MySingleView.app";) $(DOTNET) build test/MySingleView/MySingleView.csproj /p:Platform=iPhone $(XBUILD_VERBOSITY)
