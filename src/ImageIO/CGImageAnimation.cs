@@ -25,7 +25,7 @@ namespace ImageIO
         [Introduced (PlatformName.MacOSX, 10, 15, PlatformArchitecture.All)]
         [Introduced (PlatformName.iOS, 13, 0, PlatformArchitecture.All)]
         [DllImport (Constants.ImageIOLibrary)]
-        static extern unsafe int CGAnimateImageAtURLWithBlock ( /* CFURLRef */ IntPtr url, /* CFDictionaryRef _iio_Nullable */ IntPtr options, /* CGImageSourceAnimationBlock */ ref BlockLiteral block);
+        static extern int CGAnimateImageAtURLWithBlock ( /* CFURLRef */ IntPtr url, /* CFDictionaryRef _iio_Nullable */ IntPtr options, /* CGImageSourceAnimationBlock */ ref BlockLiteral block);
 
         [Introduced (PlatformName.MacOSX, 10, 15, PlatformArchitecture.All)]
         [Introduced (PlatformName.iOS, 13, 0, PlatformArchitecture.All)]
@@ -50,12 +50,9 @@ namespace ImageIO
             block_block = new BlockLiteral ();
             block_block.SetupBlockUnsafe (SDCGImageSourceAnimationBlock.Handler, block);
 
-            try
-            {
+            try {
                 ret = CGAnimateImageAtURLWithBlock (url.Handle, options.GetHandle (), ref block_block);
-            }
-            finally
-            {
+            } finally {
                 block_block.CleanupBlock ();
             }
 
@@ -81,12 +78,9 @@ namespace ImageIO
             block_block = new BlockLiteral ();
             block_block.SetupBlockUnsafe (SDCGImageSourceAnimationBlock.Handler, block);
 
-            try
-            {
+            try {
                 ret = CGAnimateImageDataWithBlock (data.Handle, options.GetHandle (), ref block_block);
-            }
-            finally
-            {
+            } finally {
                 block_block.CleanupBlock ();
             }
 
@@ -116,32 +110,32 @@ namespace ImageIO
         {
             DCGImageSourceAnimationBlock invoker;
 
-            [BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
-            public unsafe NIDCGImageSourceAnimationBlock (BlockLiteral* block) : base (block)
+            [BindingImpl (BindingImplOptions.Optimizable)]
+            public unsafe NIDCGImageSourceAnimationBlock (BlockLiteral * block) : base (block)
             {
                 invoker = block->GetDelegateForBlock<DCGImageSourceAnimationBlock> ();
             }
 
             [Preserve (Conditional = true)]
-            [BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+            [BindingImpl (BindingImplOptions.Optimizable)]
             public unsafe static CGImageSourceAnimationBlock Create (IntPtr block)
             {
                 if (block == IntPtr.Zero)
                     return null;
                 var del = (CGImageSourceAnimationBlock) GetExistingManagedDelegate (block);
-                return del ?? new NIDCGImageSourceAnimationBlock ( (BlockLiteral*)block).Invoke;
+                return del ?? new NIDCGImageSourceAnimationBlock ( (BlockLiteral *) block).Invoke;
             }
 
-            [BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
-            unsafe void Invoke (nint arg0, CGImage arg1, out bool done)
+            [BindingImpl (BindingImplOptions.Optimizable)]
+            void Invoke (nint index, CGImage image, out bool stop)
             {
-                invoker (BlockPointer, arg0, arg1 == null ? IntPtr.Zero : arg1.Handle, out done);
+                invoker (BlockPointer, index, image == null ? IntPtr.Zero : image.Handle, out stop);
             }
         } /* class NIDCGImageSourceAnimationBlock */
 
         [UnmanagedFunctionPointerAttribute (CallingConvention.Cdecl)]
         [UserDelegateType (typeof (CGImageSourceAnimationBlock))]
-        internal delegate void DCGImageSourceAnimationBlock (IntPtr block, nint arg0, IntPtr arg1, [System.Runtime.InteropServices.MarshalAs (System.Runtime.InteropServices.UnmanagedType.I1)] out bool done);
+        internal delegate void DCGImageSourceAnimationBlock (IntPtr block, nint index, IntPtr imageHandle, [System.Runtime.InteropServices.MarshalAs (System.Runtime.InteropServices.UnmanagedType.I1)] out bool stop);
     }
 
 }
