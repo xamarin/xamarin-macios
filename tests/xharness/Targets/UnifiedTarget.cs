@@ -138,13 +138,13 @@ namespace Xharness.Targets {
 			inputProject.FixInfoPListInclude (Suffix);
 			inputProject.SetExtraLinkerDefs ("extra-linker-defs" + ExtraLinkerDefsSuffix + ".xml");
 
-			Harness.Save (inputProject, ProjectPath);
+			inputProject.Save (ProjectPath, Harness);
 
 			XmlDocument info_plist = new XmlDocument ();
 			var target_info_plist = Path.Combine (TargetDirectory, "Info" + Suffix + ".plist");
 			info_plist.LoadWithoutNetworkAccess (Path.Combine (TargetDirectory, "Info.plist"));
 			info_plist.SetMinimumOSVersion (GetMinimumOSVersion (info_plist.GetMinimumOSVersion ()));
-			Harness.Save (info_plist, target_info_plist);
+			info_plist.Save (target_info_plist, Harness);
 		}
 	}
 }

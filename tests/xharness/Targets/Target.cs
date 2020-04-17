@@ -121,7 +121,7 @@ namespace Xharness.Targets
 		{
 			ProcessProject ();
 			PostProcessExecutableProject ();
-			Harness.Save (inputProject, ProjectPath);
+			inputProject.Save (ProjectPath, Harness);
 
 			UpdateInfoPList ();
 		}
@@ -137,7 +137,7 @@ namespace Xharness.Targets
 		protected void CreateLibraryProject ()
 		{
 			ProcessProject ();
-			Harness.Save (inputProject, ProjectPath);
+			inputProject.Save (ProjectPath, Harness);
 
 			ProjectGuid = inputProject.GetProjectGuid ();
 		}
