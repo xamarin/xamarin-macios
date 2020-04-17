@@ -1422,8 +1422,6 @@ namespace Xamarin.Bundler {
 			if (EnableBitCode && IsSimulatorBuild)
 				throw ErrorHelper.CreateError (84, Errors.MT0084);
 
-			Namespaces.Initialize ();
-
 			if (Embeddinator) {
 				// The assembly we're embedding doesn't necessarily reference our platform assembly, but we still need it.
 				RootAssemblies.Add (Path.Combine (Driver.GetPlatformFrameworkDirectory (this), Driver.GetProductAssembly (this) + ".dll"));
