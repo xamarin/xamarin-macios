@@ -196,6 +196,10 @@ namespace Xamarin.Mac.Tests
 		[Test]
 		public void MaximumExtendedDynamicRangeColorComponentValueNoMainThread ()
 		{
+			// API states that it works since 10.11 but we have exceptions thrown in the 
+			// bots stating that the selector is missing: https://github.com/xamarin/xamarin-macios/issues/8395
+			// The test seems just to work on 10.15 and fails in older versions.
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 15);
 			if (NSScreen.MainScreen == null)
 				Assert.Inconclusive ("Could not find main screen.");
 
@@ -235,6 +239,8 @@ namespace Xamarin.Mac.Tests
 		[Test]
 		public void MaximumReferenceExtendedDynamicRangeColorComponentValueNoMainThread ()
 		{ 
+			// fails in earlier versions with missing selector
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 15);
 			if (NSScreen.MainScreen == null)
 				Assert.Inconclusive ("Could not find main screen.");
 

@@ -259,9 +259,6 @@ namespace Xamarin.Tests
 			mac_xcode_root = xcode_root;
 #endif
 
-			if (Directory.Exists (Path.Combine (mt_root, "usr")))
-				mt_root = Path.Combine (mt_root, "usr");
-
 			if (!string.IsNullOrEmpty (ios_destdir))
 				mt_root = Path.Combine (ios_destdir, mt_root.Substring (1));
 

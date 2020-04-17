@@ -3884,7 +3884,7 @@ public class TestApp {
 				mtouch.Abi = "x86_64";
 				mtouch.Linker = MTouchLinker.DontLink;
 				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "first build");
-				mtouch.AssertWarningPattern (5217, "Native linking possibly failed because the linker command line was too long .[0-9]* characters..");
+				mtouch.AssertErrorPattern (5217, "Native linking failed because the linker command line was too long .[0-9]* characters..");
 
 				mtouch.CustomArguments = new string [] { "--dynamic-symbol-mode=code" };
 				mtouch.AssertExecute (MTouchAction.BuildSim, "second build");
@@ -4068,7 +4068,7 @@ public class HandlerTest
 		[TestCase ("x86_64", "64-sgen")]
 		public void SimlauncherSymbols (string arch, string simlauncher_suffix)
 		{
-			var libxamarin_path = Path.Combine (Configuration.SdkRootXI, "SDKs", "MonoTouch.iphonesimulator.sdk", "usr", "lib", "libxamarin.a");
+			var libxamarin_path = Path.Combine (Configuration.SdkRootXI, "SDKs", "MonoTouch.iphonesimulator.sdk", "lib", "libxamarin.a");
 			var simlauncher_path = Path.Combine (Configuration.BinDirXI, "simlauncher" + simlauncher_suffix);
 
 			var libxamarin_symbols = new HashSet<string> (GetNativeSymbols (libxamarin_path, arch));
