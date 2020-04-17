@@ -246,18 +246,18 @@ namespace Xharness.Jenkins {
 			if (!project.IsExecutableProject)
 				return false;
 			
-			if (project.IsBclTest) {
-				if (!project.IsBclxUnit)
+			if (project.IsBclTest ()) {
+				if (!project.IsBclxUnit ())
 					return IncludeBcl || IncludeBCLNUnit;
-				if (project.IsMscorlib) 
+				if (project.IsMscorlib ()) 
 					return IncludeMscorlib;
 				return IncludeBcl || IncludeBCLxUnit;
 			}
 
-			if (!IncludeMonotouch && project.IsMonotouch)
+			if (!IncludeMonotouch && project.IsMonotouch ())
 				return false;
 
-			if (!IncludeNonMonotouch && !project.IsMonotouch)
+			if (!IncludeNonMonotouch && !project.IsMonotouch ())
 				return false;
 
 			if (Harness.IncludeSystemPermissionTests == false && project.Name == "introspection")
@@ -1108,7 +1108,7 @@ namespace Xharness.Jenkins {
 					} else {
 						exec = new MacExecuteTask (this, build, processManager, crashReportSnapshotFactory) {
 							Ignored = ignored_main,
-							BCLTest = project.IsBclTest,
+							BCLTest = project.IsBclTest (),
 							TestName = project.Name,
 							IsUnitTest = true,
 						};
