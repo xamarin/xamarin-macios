@@ -97,9 +97,7 @@ namespace Xamarin.Bundler {
 			}
 
 			if (SystemFrameworkDirectories?.Length > 0) {
-				var framework_dir = Path.GetDirectoryName (typeof (object).Module.FullyQualifiedName);
-				var framework_dirs = new [] { framework_dir, Path.Combine (framework_dir, "Facades") };
-				foreach (var dir in framework_dirs) {
+				foreach (var dir in SystemFrameworkDirectories) {
 					assembly = SearchDirectory (reference.Name, dir);
 					if (assembly != null) {
 						if (Driver.IsUnifiedFullXamMacFramework)
