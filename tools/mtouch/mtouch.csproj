@@ -319,6 +319,9 @@
     <Compile Include="..\linker\CoreTypeMapStep.cs">
       <Link>Xamarin.Linker\CoreTypeMapStep.cs</Link>
     </Compile>
+    <Compile Include="..\common\ApplePlatform.cs">
+      <Link>external\ApplePlatform.cs</Link>
+    </Compile>
     <Compile Include="..\common\Driver.cs">
       <Link>external\Driver.cs</Link>
     </Compile>
@@ -351,6 +354,9 @@
     </Compile>
     <Compile Include="..\common\CompilerFlags.cs">
       <Link>external\CompilerFlags.cs</Link>
+    </Compile>
+    <Compile Include="..\common\LinkMode.cs">
+      <Link>external\LinkMode.cs</Link>
     </Compile>
     <Compile Include="..\common\Tuning.cs">
       <Link>external\Tuning.cs</Link>
