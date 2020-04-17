@@ -19277,7 +19277,7 @@ namespace AppKit {
 
 #if !XAMCORE_4_0
 		[Obsolete ("Use 'SmartInsert(string, NSRange, out string, out string)' overload instead.")]
-		[Wrap ("throw new NotSupportedException ()")]
+		[Wrap ("throw new NotSupportedException ()", IsVirtual = true)]
 		void SmartInsert (string pasteString, NSRange charRangeToReplace, string beforeString, string afterString);
 #endif
 
