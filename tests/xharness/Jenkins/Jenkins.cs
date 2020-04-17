@@ -12,7 +12,7 @@ using Xharness.Jenkins.TestTasks;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
-using Xharness.TestTasks;
+using Microsoft.DotNet.XHarness.iOS.Shared.Tasks;
 
 namespace Xharness.Jenkins {
 	public class Jenkins : IResourceManager, IErrorKnowledgeBase

@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 
-namespace Xharness.TestTasks {
+namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 	public interface ITestTask {
 		bool HasCustomTestName { get; }
 		bool BuildSucceeded { get; }
