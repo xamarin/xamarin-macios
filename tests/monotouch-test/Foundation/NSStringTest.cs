@@ -69,6 +69,21 @@ namespace monotouchtest
 				NSString.ReleaseNative (substringHandle);
 			}
 		}
+
+		[TestCase (false)]
+		[TestCase (true)]
+		public void TestFromHandle_owns (bool owns)
+		{
+			const string testString = "a random and long string that should not be cached by the OS";
+			using var str = new NSString (testString);
+			for (var i = 0; i < 100; i++) {
+				if (owns)
+					str.DangerousRetain ();
+				Assert.AreEqual (testString, NSString.FromHandle (str.Handle, owns), $"true #{i}");
+			}
+			// If there was a leak, RetainCount would be 100+ because we looped 100 times above.
+			Assert.That (str.RetainCount, Is.LessThan (10), "RetainCount");
+		}
 	}
 }
 
