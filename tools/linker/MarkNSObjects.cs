@@ -157,7 +157,7 @@ namespace Xamarin.Linker.Steps {
 			var name = type.Module.Assembly.Name.Name;
 			switch (name) {
 			case "Xamarin.Forms.Platform.iOS":
-				return LinkContext.App.Optimizations.ExperimentalFormsProductType == true;
+				return true;
 			default:
 				return name == ProductAssembly;
 			}

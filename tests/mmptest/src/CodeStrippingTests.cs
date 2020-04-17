@@ -60,7 +60,7 @@ namespace Xamarin.MMP.Tests
 		[TestCase (false, false, false)]
 		public void ShouldStripMonoPosixHelper (bool? strip, bool debugStrips, bool releaseStrips)
 		{
-			var posixHelper = Path.Combine (Configuration.SdkRootXM, "lib", "libMonoPosixHelper.dylib");
+			var posixHelper = Path.Combine (Configuration.SdkRootXM, "SDKs","Xamarin.macOS.sdk", "lib", "libMonoPosixHelper.dylib");
 			if (Xamarin.MachO.GetArchitectures (posixHelper).Count < 2)
 				Assert.Ignore ($"libMonoPosixHelper.dylib is not a fat library.");
 

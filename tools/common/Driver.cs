@@ -772,6 +772,19 @@ namespace Xamarin.Bundler {
 			}
 		}
 
+		// This returns the /Applications/Xcode*.app/Contents/Developer/Platforms directory
+		public static string PlatformsDirectory {
+			get {
+				return Path.Combine (DeveloperDirectory, "Platforms");
+			}
+		}
+
+		// This returns the /Applications/Xcode*.app/Contents/Developer/Platforms/*.platform directory
+		public static string GetPlatformDirectory (Application app)
+		{
+			return Path.Combine (PlatformsDirectory, GetPlatform (app) + ".platform");
+		}
+
 		static string local_build;
 		public static string WalkUpDirHierarchyLookingForLocalBuild ()
 		{
@@ -813,15 +826,159 @@ namespace Xamarin.Bundler {
 			}
 		}
 
+		// This is the 'Current/bin' directory of the installed framework
+		// For XI/XM installed from package it's one of these two:
+		//    /Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin
+		//    /Library/Frameworks/Xamarin.Mac.framework/Versions/Current/bin
 		public static string FrameworkBinDirectory {
 			get {
 				return Path.Combine (FrameworkDirectory, "bin");
 			}
 		}
 
+		// This is the 'Current/lib' directory of the installed framework
+		// For XI/XM installed from package it's one of these two:
+		//    /Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib
+		//    /Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib
 		public static string FrameworkLibDirectory {
 			get {
 				return Path.Combine (FrameworkDirectory, "lib");
+			}
+		}
+
+		// This is the directory where the platform assembly (Xamarin.*.dll) can be found
+		public static string GetPlatformFrameworkDirectory (Application app)
+		{
+			switch (app.Platform) {
+			case ApplePlatform.iOS:
+				return Path.Combine (FrameworkLibDirectory, "mono", "Xamarin.iOS");
+			case ApplePlatform.WatchOS:
+				return Path.Combine (FrameworkLibDirectory, "mono", "Xamarin.WatchOS");
+			case ApplePlatform.TVOS:
+				return Path.Combine (FrameworkLibDirectory, "mono", "Xamarin.TVOS");
+			case ApplePlatform.MacOSX:
+#if MMP
+				if (IsUnifiedMobile)
+					return Path.Combine (FrameworkLibDirectory, "mono", "Xamarin.Mac");
+				return Path.Combine (FrameworkLibDirectory, "mono", "4.5");
+#endif
+			default:
+				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, PRODUCT);
+			}
+		}
+
+		// This is the directory that contains the native libraries (libmono*.[a|dylib]) that come from mono.
+		// For Xamarin.Mac it can be:
+		// * /Library/Frameworks/Mono.framework/Versions/Current/lib/ (when using system mono)
+		// * /Library/Frameworks/Xamarin.Mac.framework/Versions/Current/SDKs/*.sdk/lib
+		// For Xamarin.iOS it can be:
+		// * /Library/Frameworks/Xamarin.iOS.framework/Versions/Current/SDKs/*.sdk/lib
+		static string mono_lib_directory;
+		public static string GetMonoLibraryDirectory (Application app)
+		{
+			if (mono_lib_directory == null) {
+#if MMP
+				if (IsUnifiedFullSystemFramework) {
+					mono_lib_directory = RunPkgConfig ("--variable=libdir");
+				} else {
+					mono_lib_directory = GetProductSdkLibDirectory (app);
+				}
+#else
+				mono_lib_directory = GetProductSdkLibDirectory (app);
+#endif
+			}
+			return mono_lib_directory;
+		}
+
+		// /Library/Frameworks/Xamarin.*.framework/Versions/Current/SDKs/*.sdk/Frameworks
+		public static string GetMonoFrameworksDirectory (Application app)
+		{
+#if MMP
+			if (IsUnifiedFullSystemFramework)
+				throw ErrorHelper.CreateError (99, Errors.MX0099, "Calling 'GetMonoFrameworksDirectory' is not allowed when targetting the full system framework.");
+#endif
+			return Path.Combine (GetProductSdkDirectory (app), "Frameworks");
+		}
+
+		// /Library/Frameworks/Xamarin.*.framework/Versions/Current/SDKs/*.sdk/lib
+		public static string GetProductSdkLibDirectory (Application app)
+		{
+			return Path.Combine (GetProductSdkDirectory (app), "lib");
+		}
+
+		// /Library/Frameworks/Xamarin.*.framework/Versions/Current/SDKs/*.sdk/include
+		public static string GetProductSdkIncludeDirectory (Application app)
+		{
+			return Path.Combine (GetProductSdkDirectory (app), "include");
+		}
+
+		// /Library/Frameworks/Xamarin.*.framework/Versions/Current/SDKs/*.sdk/Frameworks
+		public static string GetProductSdkFrameworksDirectory (Application app)
+		{
+			return Path.Combine (GetProductSdkDirectory (app), "Frameworks");
+		}
+
+		// /Library/Frameworks/Xamarin.*.framework/Versions/Current/SDKs/*.sdk
+		public static string GetProductSdkDirectory (Application app)
+		{
+			var sdksDir = Path.Combine (FrameworkDirectory, "SDKs");
+			string sdkName;
+			switch (app.Platform) {
+			case ApplePlatform.iOS:
+				sdkName = app.IsDeviceBuild ? "MonoTouch.iphoneos.sdk" : "MonoTouch.iphonesimulator.sdk";
+				break;
+			case ApplePlatform.WatchOS:
+				sdkName = app.IsDeviceBuild ? "Xamarin.WatchOS.sdk" : "Xamarin.WatchSimulator.sdk";
+				break;
+			case ApplePlatform.TVOS:
+				sdkName = app.IsDeviceBuild ? "Xamarin.AppleTVOS.sdk" : "Xamarin.AppleTVSimulator.sdk";
+				break;
+			case ApplePlatform.MacOSX:
+				sdkName = "Xamarin.macOS.sdk";
+				break;
+			default:
+				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, PRODUCT);
+			}
+			return Path.Combine (sdksDir, sdkName);
+		}
+
+		// This returns the platform to use in /Applications/Xcode*.app/Contents/Developer/Platforms/*.platform
+		public static string GetPlatform (Application app)
+		{
+			switch (app.Platform) {
+			case ApplePlatform.iOS:
+				return app.IsDeviceBuild ? "iPhoneOS" : "iPhoneSimulator";
+			case ApplePlatform.WatchOS:
+				return app.IsDeviceBuild ? "WatchOS" : "WatchSimulator";
+			case ApplePlatform.TVOS:
+				return app.IsDeviceBuild ? "AppleTVOS" : "AppleTVSimulator";
+			case ApplePlatform.MacOSX:
+				return "MacOSX";
+			default:
+				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, PRODUCT);
+			}
+		}
+
+		// This returns the correct /Applications/Xcode*.app/Contents/Developer/Platforms/*.platform/Developer/SDKs/*X.Y.sdk directory
+		public static string GetFrameworkDirectory (Application app)
+		{
+			var platform = GetPlatform (app);
+			return Path.Combine (PlatformsDirectory, platform + ".platform", "Developer", "SDKs", platform + app.SdkVersion.ToString () + ".sdk");
+		}
+
+		public static string GetProductAssembly (Application app)
+		{
+			switch (app.Platform) {
+			case ApplePlatform.iOS:
+				return "Xamarin.iOS";
+			case ApplePlatform.WatchOS:
+				return "Xamarin.WatchOS";
+			case ApplePlatform.TVOS:
+				return "Xamarin.TVOS";
+			case ApplePlatform.MacOSX:
+				return "Xamarin.Mac";
+			default:
+				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, PRODUCT);
 			}
 		}
 

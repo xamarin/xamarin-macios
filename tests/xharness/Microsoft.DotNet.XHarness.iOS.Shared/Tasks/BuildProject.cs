@@ -4,21 +4,22 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using System.Xml;
-using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
-namespace Xharness.TestTasks {
+namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 	public class BuildProject : BuildTool {
 		public IResourceManager ResourceManager { get; set; }
 		public IEnvManager EnviromentManager { get; set; }
 		public IEventLogger EventLogger { get; set; }
+		string msbuildPath;
 
 		public string SolutionPath { get; set; }
 
-		public BuildProject (IProcessManager processManager, IResourceManager resourceManager, IEventLogger eventLogger, IEnvManager envManager) : base (processManager)
+		public BuildProject (string msbuildPath, IProcessManager processManager, IResourceManager resourceManager, IEventLogger eventLogger, IEnvManager envManager) : base (processManager)
 		{
+			this.msbuildPath = msbuildPath ?? throw new ArgumentNullException (nameof (msbuildPath));
 			ResourceManager = resourceManager ?? throw new ArgumentNullException (nameof (resourceManager));
 			EventLogger = eventLogger ?? throw new ArgumentNullException (nameof (eventLogger));
 			EnviromentManager = envManager ?? throw new ArgumentNullException (nameof (envManager));
@@ -45,7 +46,7 @@ namespace Xharness.TestTasks {
 					throw new FileNotFoundException ("Could not find the solution whose nugets to restore.", projectPath);
 
 				using (var nuget = new Process ()) {
-					nuget.StartInfo.FileName = useXIBuild && !isSolution ? Harness.XIBuildPath :
+					nuget.StartInfo.FileName = useXIBuild && !isSolution ? msbuildPath:
 						"/Library/Frameworks/Mono.framework/Versions/Current/Commands/nuget";
 					var args = new List<string> ();
 					args.Add ((useXIBuild && !isSolution ? "/" : "") + "restore"); // diff param depending on the tool

@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
+using Microsoft.DotNet.XHarness.iOS.Shared.Tasks;
 
 namespace Xharness.TestTasks {
 
@@ -13,8 +15,6 @@ namespace Xharness.TestTasks {
 		bool SpecifyConfiguration { get; set; }
 
 		IProcessManager ProcessManager { get; }
-		TestPlatform Platform { get; set; }
-
 		TestProject TestProject { get; set; }
 
 		Task CleanAsync ();

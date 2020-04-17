@@ -17,7 +17,7 @@ using Xharness.TestTasks;
 
 namespace Xharness {
 
-	class AppRunner {
+	public class AppRunner {
 		readonly IProcessManager processManager;
 		readonly ISimulatorLoaderFactory simulatorsLoaderFactory;
 		readonly ISimpleListenerFactory listenerFactory;

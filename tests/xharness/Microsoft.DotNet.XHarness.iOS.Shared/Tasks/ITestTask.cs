@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 
-namespace Xharness.TestTasks {
+namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 	public interface ITestTask {
 		bool HasCustomTestName { get; }
 		bool BuildSucceeded { get; }
@@ -24,9 +23,12 @@ namespace Xharness.TestTasks {
 		string Variation { get; set; }
 		string TestName { get; }
 		string FailureMessage { get; set; }
+		string LogDirectory { get; }
 
 
+		string GuessFailureReason (ILog log);
 		TimeSpan Duration { get; }
+		TestPlatform Platform { get; set; }
 		Task InitialTask { get; set; }
 		TestExecutingResult ExecutionResult { get; set; }
 		IEnumerable<ILog> AggregatedLogs { get; }
@@ -37,5 +39,6 @@ namespace Xharness.TestTasks {
 		Task RunAsync ();
 		Task VerifyRunAsync ();
 		void Reset ();
+		Task<IAcquiredResource> NotifyBlockingWaitAsync (Task<IAcquiredResource> task);
 	}
 }

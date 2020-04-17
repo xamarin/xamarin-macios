@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Xml;
-using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
-namespace Xharness.TestTasks {
+namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 
 	public class MSBuild : BuildProject {
 		readonly IErrorKnowledgeBase errorKnowledgeBase;
@@ -34,7 +33,7 @@ namespace Xharness.TestTasks {
 							IResourceManager resourceManager,
 							IEventLogger eventLogger,
 							IEnvManager envManager,
-							IErrorKnowledgeBase errorKnowledgeBase) : base (processManager, resourceManager, eventLogger, envManager)
+							IErrorKnowledgeBase errorKnowledgeBase) : base (msbuildPath, processManager, resourceManager, eventLogger, envManager)
 		{
 			this.msbuildPath = msbuildPath ?? throw new ArgumentNullException (nameof (msbuildPath));
 			this.errorKnowledgeBase = errorKnowledgeBase ?? throw new ArgumentNullException (nameof (errorKnowledgeBase));
@@ -81,7 +80,7 @@ namespace Xharness.TestTasks {
 		{
 			// Don't require the desktop resource here, this shouldn't be that resource sensitive
 			using (var xbuild = new Process ()) {
-				xbuild.StartInfo.FileName = Harness.XIBuildPath;
+				xbuild.StartInfo.FileName = msbuildPath;
 				var args = new List<string> ();
 				args.Add ("--");
 				args.Add ("/verbosity:diagnostic");

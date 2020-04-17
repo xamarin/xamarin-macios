@@ -6,11 +6,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
-using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
-namespace Xharness.TestTasks {
+namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 	public abstract class TestTasks : IEnvManager, IEventLogger, ITestTask 
 	{
 		static int counter;
@@ -126,6 +125,7 @@ namespace Xharness.TestTasks {
 
 		#region Abstract
 
+		public abstract string RootDirectory { get; }
 		public abstract IResourceManager ResourceManager { get; }
 		public abstract void GenerateReport ();
 		public abstract string LogDirectory { get; }
