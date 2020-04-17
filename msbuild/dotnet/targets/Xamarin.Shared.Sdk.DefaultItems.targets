@@ -19,16 +19,16 @@
 
   <!-- Defaults -->
 
-  <!-- Default architecture -->
-  <PropertyGroup Condition=" '$(MtouchArch)' == '' ">
-    <MtouchArch Condition=" '$(RuntimeIdentifier)' == 'ios-arm64' ">ARM64</MtouchArch>
-    <MtouchArch Condition=" '$(RuntimeIdentifier)' == 'ios-arm' ">ARMv7</MtouchArch> <!-- FIXME: how to enable ARMv7s? Ref: https://github.com/dotnet/runtime/issues/34121 -->
-    <MtouchArch Condition=" '$(RuntimeIdentifier)' == 'ios-x64' ">x86_64</MtouchArch>
-    <MtouchArch Condition=" '$(RuntimeIdentifier)' == 'tvos-x64' ">x86_64</MtouchArch>
-    <MtouchArch Condition=" '$(RuntimeIdentifier)' == 'tvos-arm64' ">ARM64</MtouchArch>
-    <MtouchArch Condition=" '$(RuntimeIdentifier)' == 'watchos-x86' ">i386</MtouchArch>
-    <MtouchArch Condition=" '$(RuntimeIdentifier)' == 'watchos-arm' ">ARM64_32</MtouchArch> <!-- FIXME: what about ARMv7k? -->
-    <MtouchArch Condition=" '$(RuntimeIdentifier)' == 'osx-x64' ">x86_64</MtouchArch>
+  <!-- Compute the architecture. This is a variation of https://github.com/dotnet/sdk/blob/873d79d861cbd001488414b9875e53acbeaed890/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.RuntimeIdentifierInference.targets#L68-L96 -->
+  <PropertyGroup Condition=" '$(MtouchArch)' == '' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS') ">
+    <MtouchArch Condition=" $(RuntimeIdentifier.EndsWith('-arm64')) Or $(RuntimeIdentifier.Contains('-arm64-')) ">ARM64</MtouchArch>
+    <MtouchArch Condition=" $(RuntimeIdentifier.EndsWith('-x64')) Or $(RuntimeIdentifier.Contains('-x64-')) ">x86_64</MtouchArch>
+    <MtouchArch Condition=" $(RuntimeIdentifier.EndsWith('-x84')) Or $(RuntimeIdentifier.Contains('-x86-')) ">i386</MtouchArch>
+    <MtouchArch Condition=" ($(RuntimeIdentifier.EndsWith('-arm')) Or $(RuntimeIdentifier.Contains('-arm-'))) And '$(_PlatformName)' == 'iOS' ">ARMv7</MtouchArch> <!-- FIXME: how to enable ARMv7s? Ref: https://github.com/dotnet/runtime/issues/34121 -->
+    <MtouchArch Condition=" ($(RuntimeIdentifier.EndsWith('-arm')) Or $(RuntimeIdentifier.Contains('-arm-'))) And '$(_PlatformName)' == 'watchOS' ">ARM64_32</MtouchArch> <!-- FIXME: what about ARMv7k? -->
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(XamMacArch)' == '' And '$(_PlatformName)' == 'macOS' ">
+    <XamMacArch Condition=" '$(RuntimeIdentifier)' == 'osx-x64' ">x86_64</XamMacArch>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(ComputedPlatform)' == '' ">
