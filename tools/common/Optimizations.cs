@@ -154,8 +154,8 @@ namespace Xamarin.Bundler
 		}
 
 		public bool? ExperimentalFormsProductType {
-			get { return values [(int) Opt.ExperimentalFormsProductType]; }
-			set { values [(int) Opt.ExperimentalFormsProductType] = value; }
+			get { return true; }
+			set { }
 		}
 
 #if MONOTOUCH
