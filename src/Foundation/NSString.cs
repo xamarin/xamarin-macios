@@ -174,7 +174,7 @@ namespace Foundation {
 			Handle = CreateWithCharacters (Handle, value, start, length);
 		}
 	
-		public unsafe override string ToString ()
+		public override string ToString ()
 		{
 			return FromHandle (Handle);
 		}
@@ -193,7 +193,7 @@ namespace Foundation {
 			return new NSString (str);
 		}
 
-		public unsafe static string FromHandle (IntPtr usrhandle)
+		public static string FromHandle (IntPtr usrhandle)
 		{
 			if (usrhandle == IntPtr.Zero)
 				return null;
