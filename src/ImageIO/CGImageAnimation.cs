@@ -14,16 +14,18 @@ using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
 
-namespace ImageIO {
+namespace ImageIO
+{
 
-    public partial class CGImageAnimation {
+    public partial class CGImageAnimation
+    {
 
         public delegate void CGImageSourceAnimationBlock (nint index, CGImage image, out bool stop);
 
         [Introduced (PlatformName.MacOSX, 10, 15, PlatformArchitecture.All)]
         [Introduced (PlatformName.iOS, 13, 0, PlatformArchitecture.All)]
         [DllImport (Constants.ImageIOLibrary)]
-        static extern unsafe int CGAnimateImageAtURLWithBlock (/* CFURLRef */ IntPtr url, /* CFDictionaryRef _iio_Nullable */ IntPtr options, /* CGImageSourceAnimationBlock */ ref BlockLiteral block);
+        static extern unsafe int CGAnimateImageAtURLWithBlock ( /* CFURLRef */ IntPtr url, /* CFDictionaryRef _iio_Nullable */ IntPtr options, /* CGImageSourceAnimationBlock */ ref BlockLiteral block);
 
         [Introduced (PlatformName.MacOSX, 10, 15, PlatformArchitecture.All)]
         [Introduced (PlatformName.iOS, 13, 0, PlatformArchitecture.All)]
@@ -33,7 +35,8 @@ namespace ImageIO {
         [Introduced (PlatformName.MacOSX, 10, 15, PlatformArchitecture.All)]
         [Introduced (PlatformName.iOS, 13, 0, PlatformArchitecture.All)]
         [BindingImpl (BindingImplOptions.Optimizable)]
-        public int AnimateImage (NSUrl url, NSDictionary options, [BlockProxy (typeof (NIDCGImageSourceAnimationBlock))] CGImageSourceAnimationBlock block) {
+        public int AnimateImage (NSUrl url, NSDictionary options, [BlockProxy (typeof (NIDCGImageSourceAnimationBlock))] CGImageSourceAnimationBlock block)
+        {
 #if IOS && ARCH_32
             throw new PlatformNotSupportedException ();
 #else
@@ -47,9 +50,12 @@ namespace ImageIO {
             block_block = new BlockLiteral ();
             block_block.SetupBlockUnsafe (SDCGImageSourceAnimationBlock.Handler, block);
 
-            try {
+            try
+            {
                 ret = CGAnimateImageAtURLWithBlock (url.Handle, options.GetHandle (), ref block_block);
-            } finally {
+            }
+            finally
+            {
                 block_block.CleanupBlock ();
             }
 
@@ -60,7 +66,8 @@ namespace ImageIO {
         [Introduced (PlatformName.MacOSX, 10, 15, PlatformArchitecture.All)]
         [Introduced (PlatformName.iOS, 13, 0, PlatformArchitecture.All)]
         [BindingImpl (BindingImplOptions.Optimizable)]
-        public int AnimateImage (NSData data, NSDictionary options, [BlockProxy (typeof (NIDCGImageSourceAnimationBlock))] CGImageSourceAnimationBlock block) {
+        public int AnimateImage (NSData data, NSDictionary options, [BlockProxy (typeof (NIDCGImageSourceAnimationBlock))] CGImageSourceAnimationBlock block)
+        {
 #if IOS && ARCH_32
             throw new PlatformNotSupportedException ();
 #else
@@ -74,12 +81,15 @@ namespace ImageIO {
             block_block = new BlockLiteral ();
             block_block.SetupBlockUnsafe (SDCGImageSourceAnimationBlock.Handler, block);
 
-            try {
+            try
+            {
                 ret = CGAnimateImageDataWithBlock (data.Handle, options.GetHandle (), ref block_block);
-            } finally {
+            }
+            finally
+            {
                 block_block.CleanupBlock ();
             }
- 
+
             return ret;
 #endif
         }
@@ -87,12 +97,14 @@ namespace ImageIO {
         //
         // This class bridges native block invocations that call into C#
         //
-        static internal class SDCGImageSourceAnimationBlock {
+        static internal class SDCGImageSourceAnimationBlock
+        {
             static internal readonly DCGImageSourceAnimationBlock Handler = Invoke;
 
             [MonoPInvokeCallback (typeof (DCGImageSourceAnimationBlock))]
-            static void Invoke (IntPtr block, nint index, IntPtr image, [System.Runtime.InteropServices.MarshalAs (System.Runtime.InteropServices.UnmanagedType.I1)] out bool stop) {
-                var del = BlockLiteral.GetTarget<CGImageSourceAnimationBlock>(block);
+            static void Invoke (IntPtr block, nint index, IntPtr image, [System.Runtime.InteropServices.MarshalAs (System.Runtime.InteropServices.UnmanagedType.I1)] out bool stop)
+            {
+                var del = BlockLiteral.GetTarget<CGImageSourceAnimationBlock> (block);
                 if (del != null)
                     del (index, new CoreGraphics.CGImage (image), out stop);
                 else
@@ -100,25 +112,29 @@ namespace ImageIO {
             }
         } /* class SDCGImageSourceAnimationBlock */
 
-        internal sealed class NIDCGImageSourceAnimationBlock : TrampolineBlockBase {
+        internal sealed class NIDCGImageSourceAnimationBlock : TrampolineBlockBase
+        {
             DCGImageSourceAnimationBlock invoker;
 
             [BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
-            public unsafe NIDCGImageSourceAnimationBlock (BlockLiteral * block) : base (block) {
-                invoker = block -> GetDelegateForBlock<DCGImageSourceAnimationBlock> ();
+            public unsafe NIDCGImageSourceAnimationBlock (BlockLiteral* block) : base (block)
+            {
+                invoker = block->GetDelegateForBlock<DCGImageSourceAnimationBlock> ();
             }
 
             [Preserve (Conditional = true)]
             [BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
-            public unsafe static CGImageSourceAnimationBlock Create (IntPtr block) {
+            public unsafe static CGImageSourceAnimationBlock Create (IntPtr block)
+            {
                 if (block == IntPtr.Zero)
                     return null;
                 var del = (CGImageSourceAnimationBlock) GetExistingManagedDelegate (block);
-                return del ?? new NIDCGImageSourceAnimationBlock ((BlockLiteral * ) block).Invoke;
+                return del ?? new NIDCGImageSourceAnimationBlock ( (BlockLiteral*)block).Invoke;
             }
 
             [BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
-            unsafe void Invoke (nint arg0, CGImage arg1, out bool done) {
+            unsafe void Invoke (nint arg0, CGImage arg1, out bool done)
+            {
                 invoker (BlockPointer, arg0, arg1 == null ? IntPtr.Zero : arg1.Handle, out done);
             }
         } /* class NIDCGImageSourceAnimationBlock */
