@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Xharness.TestTasks
+namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks
 {
 	public class Resources
 	{
