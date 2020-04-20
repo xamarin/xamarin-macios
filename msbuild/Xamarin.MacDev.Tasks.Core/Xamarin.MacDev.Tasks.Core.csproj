@@ -38,6 +38,9 @@
     <Compile Include="..\..\tools\common\Frameworks.cs">
       <Link>Frameworks.cs</Link>
     </Compile>
+    <Compile Include="..\..\tools\mtouch\UnresolvedSymbols.cs">
+      <Link>UnresolvedSymbols.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\tools\mtouch\errors.resx">

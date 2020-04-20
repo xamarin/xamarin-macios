@@ -46,6 +46,13 @@ namespace Xamarin.iOS.Tasks
 
 		public string ResourceRules { get; set; }
 
+		#region Outputs
+
+		[Output]
+		public string DeploymentTarget { get; set; }
+
+		#endregion
+
 		public ApplePlatform Framework {
 			get { return PlatformFrameworkHelper.GetFramework (TargetFrameworkMoniker); }
 		}
@@ -222,6 +229,7 @@ namespace Xamarin.iOS.Tasks
 			SetDeviceFamily (plist);
 
 			plist.SetIfNotPresent (ManifestKeys.MinimumOSVersion, minimumOSVersion.ToString ());
+			DeploymentTarget = plist.Get<PString> (ManifestKeys.MinimumOSVersion).Value;
 
 			if (IsWatchExtension) {
 				// Note: Only watchOS1 Extensions target Xamarin.iOS

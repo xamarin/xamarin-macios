@@ -6,6 +6,24 @@
 	<Import Project="Xamarin.Shared.Sdk.DefaultItems.targets" />
 	<Import Project="Xamarin.Shared.Sdk.TargetFrameworkInference.targets" />
 
+
+	<PropertyGroup>
+		<_TargetsDiriOS>$(XamarinSdkRootDirectory)\tools\msbuild\iOS</_TargetsDiriOS>
+		<_TargetsDirtvOS>$(XamarinSdkRootDirectory)\tools\msbuild\TVOS</_TargetsDirtvOS>
+		<_TargetsDirwatchOS>$(XamarinSdkRootDirectory)\tools\msbuild\WatchOS</_TargetsDirwatchOS>
+		<_TargetsDirmacOS>$(XamarinSdkRootDirectory)\tools\msbuild</_TargetsDirmacOS>
+		<_TargetsDir Condition="'$(_PlatformName)' == 'iOS'">$(_TargetsDiriOS)\</_TargetsDir>
+		<_TargetsDir Condition="'$(_PlatformName)' == 'tvOS'">$(_TargetsDirtvOS)\</_TargetsDir>
+		<_TargetsDir Condition="'$(_PlatformName)' == 'watchOS'">$(_TargetsDirwatchOS)\</_TargetsDir>
+		<_TargetsDir Condition="'$(_PlatformName)' == 'macOS'">$(_TargetsDirmacOS)\</_TargetsDir>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<_TaskAssemblyName Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">Xamarin.iOS.Tasks.dll</_TaskAssemblyName>
+		<_TaskAssemblyName Condition="'$(_PlatformName)' == 'macOS'">Xamarin.Mac.Tasks.dll</_TaskAssemblyName>
+	</PropertyGroup>
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.CompileExecutable" AssemblyFile="$(_TargetsDir)$(_TaskAssemblyName)" />
+
 	<!-- Automatically supply project capabilities for IDE use -->
 	<ItemGroup>
 		<ProjectCapability Include="Apple" />
@@ -211,8 +229,7 @@
 			DependsOnTargets="_SetVariables;_PreAOTCompile;"
 			Inputs="@(_AssembliesToAOT)"
 			Outputs="@(_AssembliesToAOT->'$(_AOTOutputDirectory)%(Filename)%(Extension).s')">
-		<Exec Command="$(_AOTCompiler) --debug -O=gsharedvt -O=-float32  --aot=mtriple=arm64-ios,data-outfile=$(_AOTOutputDirectory)%(_AssembliesToAOT.Filename).aotdata.arm64,static,asmonly,direct-icalls,full,soft-debug,dwarfdebug,no-direct-icalls,outfile=$(_AOTOutputDirectory)%(_AssembliesToAOT.Filename)%(_AssembliesToAOT.Extension).s $(_AOTInputDirectory)%(_AssembliesToAOT.Filename)%(_AssembliesToAOT.Extension)" />
-		<Warning Text="_AOTCompile: @(_AssembliesToAOT) " />
+		<Error Text="Files to AOT (which hasn't been implemented): @(_AssembliesToAOT) " />
 	</Target>
 	<Target Name="_PostProcessAOTCompilation" DependsOnTargets="_BuildMSymDirectories;_StripManagedAssemblies;_AOTCompile;">
 	</Target>
@@ -240,21 +257,9 @@
 	</Target>
 
 	<Target Name="_SetVariables">
-		<Warning Text="_SetVariables: implementing... " />
 		<PropertyGroup>
-			<_LibXamarinName Condition="'$(MtouchDebug)' == 'true'">libxamarin-debug.a</_LibXamarinName>
-			<_LibXamarinName Condition="'$(MtouchDebug)' != 'true'">libxamarin.a</_LibXamarinName>
-			<_LibXamarin Condition="'%(DestinationSubPath)' == '$(_LibXamarinName)'">@(RuntimePackAsset)</_LibXamarin>
 			<_LibMonoName>libmono.a</_LibMonoName>
-			<_LibMono Condition="'%(DestinationSubPath)' == '$(_LibMonoName)'">@(RuntimePackAsset)</_LibMono>
-			<_LibRegistrarName>Xamarin.iOS.registrar.a</_LibRegistrarName>
-			<_LibRegistrar Condition="'%(DestinationSubPath)' == '$(_LibRegistrarName)'">@(RuntimePackAsset)</_LibRegistrar>
-			<_LibAppName>libapp.a</_LibAppName>
-			<_LibApp Condition="'%(DestinationSubPath)' == '$(_LibAppName)'">@(RuntimePackAsset)</_LibApp>
-
 			<_MonoLibDir Condition="'%(DestinationSubPath)' == '$(_LibMonoName)'">@(RuntimePackAsset -> '%(RootDir)%(Directory)')</_MonoLibDir>
-			<_RuntimeToolsDir Condition="'%(DestinationSubPath)' == '$(_LibXamarinName)'">@(RuntimePackAsset -> '%(RootDir)%(Directory)')</_RuntimeToolsDir>
-			<_RuntimeIncludeDir>$(_RuntimeToolsDir)/include/</_RuntimeIncludeDir>
 
 			<_AOTCompiler>$(_MonoLibDir)/cross/mono-aot-cross</_AOTCompiler>
 
@@ -267,146 +272,6 @@
 				<_AOTOutputDirectory>$(_IntermediateNativeLibraryDir)</_AOTOutputDirectory>
 			</_AssembliesToAOT>
 
-			<_UnreferencedSymbol Condition=" '$(_SdkIsSimulator)' == 'true'" Include="_xamarin_dyn_objc_msgSend" />
-			<_UnreferencedSymbol Condition=" '$(_SdkIsSimulator)' == 'true'" Include="_xamarin_dyn_objc_msgSendSuper" />
-			<_UnreferencedSymbol Condition=" '$(_SdkIsSimulator)' == 'true'" Include="_xamarin_dyn_objc_msgSend_stret" />
-			<_UnreferencedSymbol Condition=" '$(_SdkIsSimulator)' == 'true'" Include="_xamarin_dyn_objc_msgSendSuper_stret" />
-			<_UnreferencedSymbol Include="_xamarin_init_nsthread" />
-			<_UnreferencedSymbol Include="_xamarin_get_block_descriptor" />
-			<_UnreferencedSymbol Include="_xamarin_get_locale_country_code" />
-			<_UnreferencedSymbol Include="_xamarin_log" />
-			<_UnreferencedSymbol Include="_xamarin_localized_string_format" />
-			<_UnreferencedSymbol Include="_xamarin_localized_string_format_1" />
-			<_UnreferencedSymbol Include="_xamarin_localized_string_format_2" />
-			<_UnreferencedSymbol Include="_xamarin_localized_string_format_3" />
-			<_UnreferencedSymbol Include="_xamarin_localized_string_format_4" />
-			<_UnreferencedSymbol Include="_xamarin_localized_string_format_5" />
-			<_UnreferencedSymbol Include="_xamarin_localized_string_format_6" />
-			<_UnreferencedSymbol Include="_xamarin_localized_string_format_7" />
-			<_UnreferencedSymbol Include="_xamarin_localized_string_format_8" />
-			<_UnreferencedSymbol Include="_xamarin_localized_string_format_9" />
-			<_UnreferencedSymbol Include="_xamarin_start_wwan" />
-			<_UnreferencedSymbol Include="_xamarin_timezone_get_data" />
-			<_UnreferencedSymbol Include="_xamarin_timezone_get_names" />
-			<_UnreferencedSymbol Include="_xamarin_timezone_get_local_name" />
-			<_UnreferencedSymbol Include="_xamarin_IntPtr_objc_msgSend_IntPtr" />
-			<_UnreferencedSymbol Include="_xamarin_IntPtr_objc_msgSendSuper_IntPtr" />
-			<_UnreferencedSymbol Include="_xamarin_release_managed_ref" />
-			<_UnreferencedSymbol Include="_xamarin_create_managed_ref" />
-			<_UnreferencedSymbol Include="_xamarin_CGPoint__VNNormalizedFaceBoundingBoxPointForLandmarkPoint_Vector2_CGRect_nuint_nuint_string" />
-			<_UnreferencedSymbol Include="_xamarin_CGPoint__VNImagePointForFaceLandmarkPoint_Vector2_CGRect_nuint_nuint_string" />
-<!-- 			<_UnreferencedSymbol Include="_CloseZStream" />
-			<_UnreferencedSymbol Include="_CreateZStream" />
-			<_UnreferencedSymbol Include="_Flush" />
-			<_UnreferencedSymbol Include="_ReadZStream" />
-			<_UnreferencedSymbol Include="_WriteZStream" /> -->
-
-			<_Framework Include="Accelerate" />
-			<_Framework Include="AddressBook" />
-			<_Framework Include="AddressBookUI" Condition="'$(_PlatformName)' != 'macOS' " />
-			<_Framework Include="AudioToolbox" />
-			<_Framework Include="AVFoundation" />
-			<_Framework Include="CFNetwork" />
-			<_Framework Include="CoreAudio" />
-			<_Framework Include="CoreData" />
-			<_Framework Include="CoreFoundation" />
-			<_Framework Include="CoreGraphics" />
-			<_Framework Include="CoreLocation" />
-			<_Framework Include="CoreText" />
-			<_Framework Include="ExternalAccessory" />
-			<_Framework Include="Foundation" />
-			<_Framework Include="GameKit" />
-			<_Framework Include="MapKit" />
-			<_Framework Include="MediaPlayer" />
-			<_Framework Include="MessageUI" Condition="'$(_PlatformName)' != 'macOS' " />
-			<_Framework Include="MobileCoreServices" Condition="'$(_PlatformName)' != 'macOS' " />
-			<_Framework Include="OpenAL" />
-			<_Framework Include="OpenGLES" Condition="'$(_PlatformName)' != 'macOS' " />
-			<_Framework Include="StoreKit" />
-			<_Framework Include="SystemConfiguration" />
-			<_Framework Include="UIKit" Condition="'$(_PlatformName)' != 'macOS' " />
-			<_Framework Include="AppKit" Condition="'$(_PlatformName)' == 'macOS' " />
-
-
-			<_WeakFramework Include="Accounts" />
-			<_WeakFramework Include="AdSupport" />
-			<_WeakFramework Include="ARKit" Condition="'$(_PlatformName)' != 'macOS' " />
-			<_WeakFramework Include="AssetsLibrary" Condition="'$(_PlatformName)' != 'macOS' " />
-			<_WeakFramework Include="AuthenticationServices" />
-			<_WeakFramework Include="AutomaticAssessmentConfiguration" />
-			<_WeakFramework Include="AVKit" />
-			<_WeakFramework Include="BackgroundTasks" />
-			<_WeakFramework Include="BusinessChat" />
-			<_WeakFramework Include="CallKit" />
-			<_WeakFramework Include="CarPlay" Condition="'$(_PlatformName)' != 'macOS' " />
-			<_WeakFramework Include="ClassKit" Condition="'$(_PlatformName)' != 'macOS' " />
-			<_WeakFramework Include="CloudKit" />
-			<_WeakFramework Include="Contacts" />
-			<_WeakFramework Include="ContactsUI" />
-			<_WeakFramework Include="CoreAudioKit" />
-			<_WeakFramework Include="CoreBluetooth" />
-			<_WeakFramework Include="CoreHaptics" />
-			<_WeakFramework Include="CoreImage" />
-			<_WeakFramework Include="CoreMedia" />
-			<_WeakFramework Include="CoreMidi" />
-			<_WeakFramework Include="CoreMotion" />
-			<_WeakFramework Include="CoreSpotlight" />
-			<_WeakFramework Include="CoreTelephony" />
-			<_WeakFramework Include="CoreVideo" />
-			<_WeakFramework Include="EventKit" />
-			<_WeakFramework Include="EventKitUI" Condition="'$(_PlatformName)' != 'macOS' " />
-			<_WeakFramework Include="FileProvider" />
-			<_WeakFramework Include="FileProviderUI" />
-			<_WeakFramework Include="GameplayKit" />
-			<_WeakFramework Include="GLKit" />
-			<_WeakFramework Include="HealthKit" Condition="'$(_PlatformName)' != 'macOS' " />
-			<_WeakFramework Include="HealthKitUI" Condition="'$(_PlatformName)' != 'macOS' " />
-			<_WeakFramework Include="HomeKit" Condition="'$(_PlatformName)' != 'macOS' " />
-			<_WeakFramework Include="iAd" Condition="'$(_PlatformName)' != 'macOS' " />
-			<_WeakFramework Include="IdentityLookup" />
-			<_WeakFramework Include="IdentityLookupUI" Condition="'$(_PlatformName)' != 'macOS' " />
-			<_WeakFramework Include="ImageIO" />
-			<_WeakFramework Include="Intents" />
-			<_WeakFramework Include="IntentsUI" Condition="'$(_PlatformName)' != 'macOS' " />
-			<_WeakFramework Include="JavaScriptCore" />
-			<_WeakFramework Include="LinkPresentation" />
-			<_WeakFramework Include="LocalAuthentication" />
-			<_WeakFramework Include="Messages" Condition="'$(_PlatformName)' != 'macOS' " />
-			<_WeakFramework Include="Metal" />
-			<_WeakFramework Include="Metal" />
-			<_WeakFramework Include="MetalKit" />
-			<_WeakFramework Include="MetalPerformanceShaders" />
-			<_WeakFramework Include="MetricKit" />
-			<_WeakFramework Include="ModelIO" />
-			<_WeakFramework Include="MultipeerConnectivity" />
-			<_WeakFramework Include="NaturalLanguage" />
-			<_WeakFramework Include="Network" />
-			<_WeakFramework Include="NetworkExtension" />
-			<_WeakFramework Include="NewsstandKit" Condition="'$(_PlatformName)' != 'macOS' " />
-			<_WeakFramework Include="NotificationCenter" />
-			<_WeakFramework Include="PassKit" Condition="'$(_PlatformName)' != 'macOS' " />
-			<_WeakFramework Include="PencilKit" />
-			<_WeakFramework Include="Photos" />
-			<_WeakFramework Include="PhotosUI" />
-			<_WeakFramework Include="PushKit" />
-			<_WeakFramework Include="QuickLook" />
-			<_WeakFramework Include="QuickLookThumbnailing" />
-			<_WeakFramework Include="ReplayKit" Condition="'$(_PlatformName)' != 'macOS' " />
-			<_WeakFramework Include="SafariServices" />
-			<_WeakFramework Include="SceneKit" />
-			<_WeakFramework Include="Security" />
-			<_WeakFramework Include="Social" />
-			<_WeakFramework Include="SoundAnalysis" />
-			<_WeakFramework Include="Speech" />
-			<_WeakFramework Include="SpriteKit" />
-			<_WeakFramework Include="Twitter" Condition="'$(_PlatformName)' != 'macOS' " />
-			<_WeakFramework Include="UserNotifications" />
-			<_WeakFramework Include="UserNotificationsUI" Condition="'$(_PlatformName)' != 'macOS' " />
-			<_WeakFramework Include="VideoSubscriberAccount" />
-			<_WeakFramework Include="VisionKit" Condition="'$(_PlatformName)' != 'macOS' " />
-			<_WeakFramework Include="WatchConnectivity" Condition="'$(_PlatformName)' != 'macOS' " />
-			<_WeakFramework Include="WebKit" />
-
 			<_NativeDynamicLibrary Include="@(ResolvedFileToPublish)" Condition="'%(Extension)' == '.dylib' And '%(RootDir)%(Directory)' == '$(_MonoLibDir)'" />
 			<_NativeDynamicLibrary Update="@(_NativeDynamicLibrary)">
 				<LibraryName>$([System.String]::new('%(Filename)').Substring(3))</LibraryName>
@@ -417,43 +282,25 @@
 	</Target>
 
 	<Target Name="_CompileLauncher" DependsOnTargets="_SetVariables;_UpdateDynamicLibraryId">
-		<Warning Text="_CompileLauncher: implementing... " />
-		<PropertyGroup>
-			<_LibXamarinName Condition="'$(MtouchDebug)' == 'true'">libxamarin-debug.a</_LibXamarinName>
-			<_LibXamarinName Condition="'$(MtouchDebug)' != 'true'">libxamarin.a</_LibXamarinName>
-			<_LibXamarin Condition="'%(DestinationSubPath)' == '$(_LibXamarinName)'">@(RuntimePackAsset)</_LibXamarin>
-			<_LibMonoName>libmono.a</_LibMonoName>
-			<_LibMono Condition="'%(DestinationSubPath)' == '$(_LibMonoName)'">@(RuntimePackAsset)</_LibMono>
-			<_LibRegistrarName>Xamarin.iOS.registrar.a</_LibRegistrarName>
-			<_LibRegistrar Condition="'%(DestinationSubPath)' == '$(_LibRegistrarName)'">@(RuntimePackAsset)</_LibRegistrar>
-			<_LibAppName>libapp.a</_LibAppName>
-			<_LibApp Condition="'%(DestinationSubPath)' == '$(_LibAppName)'">@(RuntimePackAsset)</_LibApp>
+		<!-- FIXME: Use _NativeDynamicLibrary instead of _NativeDynamicLibraryFixed -->
+		<CompileExecutable
+			SessionId="$(BuildSessionId)"
 
-			<_RuntimeToolsDir Condition="'%(DestinationSubPath)' == '$(_LibXamarinName)'">@(RuntimePackAsset -> '%(RootDir)%(Directory)')</_RuntimeToolsDir>
-			<_RuntimeIncludeDir>$(_RuntimeToolsDir)/include/</_RuntimeIncludeDir>
-
-			<_Clang>$(_SdkDevPath)/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang</_Clang>
-			<_SimLauncher>$(_RuntimeToolsDir)simlauncher.mm</_SimLauncher>
-			<_UnreferencedSymbols>@(_UnreferencedSymbol -> '-u %(Identity)', ' ')</_UnreferencedSymbols>
-			<_Frameworks>@(_Framework -> '-framework %(Identity)', ' ')</_Frameworks>
-			<_WeakFrameworks>@(_WeakFramework -> '-weak_framework %(Identity)', ' ')</_WeakFrameworks>
-			<_Defines>-DDEBUG -DSIMLAUNCHER -DNET -DMONOTOUCH -DXAMARIN_EXECUTABLE_NAME=$(AssemblyName).dll</_Defines>
-			<_Warnings>-Wl,-w -Wall -Werror -Wconversion -Wdeprecated -Wuninitialized</_Warnings>
-			<_Includes>-I$(_RuntimeIncludeDir)</_Includes>
-			<_LinkerFlags>-lz -liconv @(_NativeDynamicLibraryPath -> '-L%(FullPath)', ' ') @(_NativeDynamicLibrary -> '-l%(LibraryName)', ' ')</_LinkerFlags>
-			<_ISysRoot>-isysroot $(_SdkRoot)</_ISysRoot>
-			<_Arch Condition=" '$(_Arch)' == '' And '$(_PlatformName)' == 'macOS'">-arch x86_64</_Arch>
-			<_Arch Condition=" '$(_Arch)' == '' And '$(_SdkIsSimulator)' == 'true'">-arch x86_64</_Arch>
-			<_Arch Condition=" '$(_Arch)' == '' And '$(_SdkIsSimulator)' != 'true'">-arch arm64</_Arch>
-			<_MinOSVersion Condition=" '$(_MinOSVersion)' == '' And '$(_PlatformName)' == 'macOS'">-mmacosx-version-min=10.9</_MinOSVersion>
-			<_MinOSVersion Condition=" '$(_MinOSVersion)' == '' And '$(_SdkIsSimulator)' == 'true'">-mios-simulator-version-min=7.0</_MinOSVersion>
-			<_MinOSVersion Condition=" '$(_MinOSVersion)' == '' And '$(_SdkIsSimulator)' != 'true'">-miphoneos-version-min=7.0</_MinOSVersion>
-			<_OtherFlags>-gdwarf-2 -fobjc-abi-version=2 -fobjc-legacy-dispatch -fms-extensions -fstack-protector-strong -ObjC++ -std=c++14 -fno-exceptions -stdlib=libc++ $(_MinOSVersion) -g -Wl,-rpath -Wl,@executable_path/</_OtherFlags>
-			<_LauncherCmd>$(_Clang) $(_UnreferencedSymbols) $(_Frameworks) $(_WeakFrameworks) $(_Defines) $(_Warnings) $(_Includes) $(_LinkerFlags) $(_ISysRoot) $(_Arch) $(_OtherFlags) $(_LibMono) $(_LibXamarin) $(_LibRegistrar) $(_LibApp) $(_SimLauncher)	-o $(_AppBundlePath)$(_AppBundleName)</_LauncherCmd>
-		</PropertyGroup>
-		<Warning Text="RuntimePackAsset: @(RuntimePackAsset)" />
-		<Warning Text="_LauncherCmd: $(_LauncherCmd)" />
-		<Exec Command="$(_LauncherCmd)" />
+			Architecture="$(MtouchArch)"
+			AssemblyName="$(AssemblyName)"
+			DeploymentTarget="$(_DeploymentTarget)"
+			IsAppExtension="$(IsAppExtension)"
+			IsDebug="$(MtouchDebug)"
+			NativeDynamicLibraries="@(_NativeDynamicLibraryFixed)"
+			OutputPath="$(_AppBundlePath)$(_AppBundleName)"
+			ResolvedFileToPublish="@(ResolvedFileToPublish)"
+			RuntimePackAsset="@(RuntimePackAsset)"
+			SdkDevPath="$(_SdkDevPath)"
+			SdkIsSimulator="$(_SdkIsSimulator)"
+			SdkRoot="$(_SdkRoot)"
+			SdkVersion="$(MtouchSdkVersion)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+		/>
 	</Target>
 
 	<Target Name="_ComputeOutputLocation">
@@ -477,7 +324,7 @@
       cmdsize 184
          name /Users/runner/runners/2.165.2/work/1/s/artifacts/obj/native/netcoreapp5.0-iOS-Release-x64/System.IO.Compression.Native/libSystem.IO.Compression.Native.dylib (offset 24)
 
-	This doesn't work after linking with these libraries, so this must be fixed to be @executable_path/. Eventually mono should ship dylibs we don't have to fix.
+	This doesn't work after linking with these libraries, so this must be fixed to be @executable_path/. Eventually mono will ship dylibs we don't have to fix (https://github.com/dotnet/runtime/issues/34637).
 	-->
 	<Target Name="_UpdateDynamicLibraryId" DependsOnTargets="_SetVariables" Inputs="@(_NativeDynamicLibrary)" Outputs="@(_NativeDynamicLibrary -> '$(_IntermediateNativeLibraryDir)%(Filename)%(Extension)')">
 		<!-- install_name_tool modifies the file in-place, so copy it first to a temporary directory before we fix it -->
@@ -493,19 +340,15 @@
 	</Target>
 
 	<Target Name="_CreateUserFrameworks">
-		<Warning Text="_CreateUserFrameworks: Not implemented " />
 	</Target>
 
 	<Target Name="_BuildDSymDirectories">
-		<Warning Text="_BuildDSymDirectories: Not implemented " />
 	</Target>
 
 	<Target Name="_StripNativeCode">
-		<Warning Text="_StripNativeCode: Not implemented " />
 	</Target>
 
 	<Target Name="_SelectExecutableOutputMode">
-		<Warning Text="_SelectExecutableOutputMode: Not implemented " />
 	</Target>
 
 	<!-- Project types and how do we distinguish between them
@@ -569,22 +412,22 @@
 		<_TargetsDirmacOS>$(XamarinSdkRootDirectory)\tools\msbuild</_TargetsDirmacOS>
 	</PropertyGroup>
 
-	<Import Project="$(_TargetsDiriOS)\Xamarin.iOS.$(_ProjectLanguage).targets"              Condition="'$(_ProjectType)' == 'iOSExecutableProject' Or '$(_ProjectType)' == 'iOSClassLibrary' " />
-	<Import Project="$(_TargetsDiriOS)\Xamarin.iOS.AppExtension.$(_ProjectLanguage).targets" Condition="'$(_ProjectType)' == 'iOSAppExtensionProject' " />
-	<Import Project="$(_TargetsDiriOS)\Xamarin.iOS.ObjCBinding.$(_ProjectLanguage).targets"  Condition="'$(_ProjectType)' == 'iOSBindingProject' " />
+	<Import Project="$(_TargetsDir)Xamarin.iOS.$(_ProjectLanguage).targets"              Condition="'$(_ProjectType)' == 'iOSExecutableProject' Or '$(_ProjectType)' == 'iOSClassLibrary' " />
+	<Import Project="$(_TargetsDir)Xamarin.iOS.AppExtension.$(_ProjectLanguage).targets" Condition="'$(_ProjectType)' == 'iOSAppExtensionProject' " />
+	<Import Project="$(_TargetsDir)Xamarin.iOS.ObjCBinding.$(_ProjectLanguage).targets"  Condition="'$(_ProjectType)' == 'iOSBindingProject' " />
 
-	<Import Project="$(_TargetsDirtvOS)\Xamarin.TVOS.$(_ProjectLanguage).targets"              Condition="'$(_ProjectType)' == 'tvOSExecutableProject' Or '$(_ProjectType)' == 'tvOSClassLibrary' " />
-	<Import Project="$(_TargetsDirtvOS)\Xamarin.TVOS.AppExtension.$(_ProjectLanguage).targets" Condition="'$(_ProjectType)' == 'tvOSAppExtensionProject' " />
-	<Import Project="$(_TargetsDirtvOS)\Xamarin.TVOS.ObjCBinding.$(_ProjectLanguage).targets"  Condition="'$(_ProjectType)' == 'tvOSBindingProject' " />
+	<Import Project="$(_TargetsDir)Xamarin.TVOS.$(_ProjectLanguage).targets"              Condition="'$(_ProjectType)' == 'tvOSExecutableProject' Or '$(_ProjectType)' == 'tvOSClassLibrary' " />
+	<Import Project="$(_TargetsDir)Xamarin.TVOS.AppExtension.$(_ProjectLanguage).targets" Condition="'$(_ProjectType)' == 'tvOSAppExtensionProject' " />
+	<Import Project="$(_TargetsDir)Xamarin.TVOS.ObjCBinding.$(_ProjectLanguage).targets"  Condition="'$(_ProjectType)' == 'tvOSBindingProject' " />
 
-	<Import Project="$(_TargetsDirwatchOS)\Xamarin.WatchOS.$(_ProjectLanguage).targets"              Condition="'$(_ProjectType)' == 'watchOSClassLibrary' " />
-	<Import Project="$(_TargetsDirwatchOS)\Xamarin.WatchOS.App.$(_ProjectLanguage).targets"          Condition="'$(_ProjectType)' == 'watchOSAppProject' " />
-	<Import Project="$(_TargetsDirwatchOS)\Xamarin.WatchOS.AppExtension.$(_ProjectLanguage).targets" Condition="'$(_ProjectType)' == 'watchOSAppExtensionProject' " />
-	<Import Project="$(_TargetsDirwatchOS)\Xamarin.WatchOS.ObjCBinding.$(_ProjectLanguage).targets"  Condition="'$(_ProjectType)' == 'watchOSBindingProject' " />
+	<Import Project="$(_TargetsDir)Xamarin.WatchOS.$(_ProjectLanguage).targets"              Condition="'$(_ProjectType)' == 'watchOSClassLibrary' " />
+	<Import Project="$(_TargetsDir)Xamarin.WatchOS.App.$(_ProjectLanguage).targets"          Condition="'$(_ProjectType)' == 'watchOSAppProject' " />
+	<Import Project="$(_TargetsDir)Xamarin.WatchOS.AppExtension.$(_ProjectLanguage).targets" Condition="'$(_ProjectType)' == 'watchOSAppExtensionProject' " />
+	<Import Project="$(_TargetsDir)Xamarin.WatchOS.ObjCBinding.$(_ProjectLanguage).targets"  Condition="'$(_ProjectType)' == 'watchOSBindingProject' " />
 
-	<Import Project="$(_TargetsDirmacOS)\Xamarin.Mac.$(_ProjectLanguage).targets"              Condition="'$(_ProjectType)' == 'macOSExecutableProject' Or '$(_ProjectType)' == 'macOSClassLibrary' " />
-	<Import Project="$(_TargetsDirmacOS)\Xamarin.Mac.AppExtension.$(_ProjectLanguage).targets" Condition="'$(_ProjectType)' == 'macOSAppExtensionProject' " />
-	<Import Project="$(_TargetsDirmacOS)\Xamarin.Mac.ObjCBinding.$(_ProjectLanguage).targets"  Condition="'$(_ProjectType)' == 'macOSBindingProject' " />
+	<Import Project="$(_TargetsDir)Xamarin.Mac.$(_ProjectLanguage).targets"              Condition="'$(_ProjectType)' == 'macOSExecutableProject' Or '$(_ProjectType)' == 'macOSClassLibrary' " />
+	<Import Project="$(_TargetsDir)Xamarin.Mac.AppExtension.$(_ProjectLanguage).targets" Condition="'$(_ProjectType)' == 'macOSAppExtensionProject' " />
+	<Import Project="$(_TargetsDir)Xamarin.Mac.ObjCBinding.$(_ProjectLanguage).targets"  Condition="'$(_ProjectType)' == 'macOSBindingProject' " />
 
 
 	<Target Name="_CompileToNative" /> <!-- sledge hammer approach -->
