@@ -11993,7 +11993,7 @@ namespace AVFoundation {
 	}
 
 	[Watch (6,0)]
-	[iOS (9,3), Mac (10,11,3)]
+	[iOS (9,3), Mac (10,12)]
 	[TV (9,2)]
 	[BaseType (typeof(AVPlayerItemMediaDataCollector))]
 	interface AVPlayerItemMetadataCollector
