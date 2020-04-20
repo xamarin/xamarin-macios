@@ -11996,9 +11996,6 @@ namespace AVFoundation {
 	[iOS (9,3), Mac (10,11,3)]
 	[TV (9,2)]
 	[BaseType (typeof(AVPlayerItemMediaDataCollector))]
-#if MONOMAC || XAMCORE_3_0 // Avoid breaking change in iOS
-	[DisableDefaultCtor]
-#endif
 	interface AVPlayerItemMetadataCollector
 	{
 		[Export ("initWithIdentifiers:classifyingLabels:")]

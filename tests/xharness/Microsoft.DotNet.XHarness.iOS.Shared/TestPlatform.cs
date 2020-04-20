@@ -1,4 +1,4 @@
-﻿namespace Xharness
+﻿namespace Microsoft.DotNet.XHarness.iOS.Shared
 {
 	public enum TestPlatform
 	{

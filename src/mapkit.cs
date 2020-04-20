@@ -1897,9 +1897,6 @@ namespace MapKit {
 
 	[TV (9,2)][NoWatch][iOS (9,3)][Mac(10,11,4)]
 	[BaseType (typeof (NSObject))]
-#if MONOMAC || XAMCORE_3_0 // Avoid breaking change in iOS
-	[DisableDefaultCtor]
-#endif
 	interface MKLocalSearchCompleter {
 		[Export ("queryFragment")]
 		string QueryFragment { get; set; }
@@ -1953,7 +1950,7 @@ namespace MapKit {
 
 	[TV (9,2)][NoWatch][iOS (9,3)]
 	[BaseType (typeof(NSObject))]
-#if MONOMAC || XAMCORE_3_0 // Avoid breaking change in iOS
+#if MONOMAC || XAMCORE_3_0 // "You do not create instances of this class directly"
 	[DisableDefaultCtor]
 #endif
 	interface MKLocalSearchCompletion {
