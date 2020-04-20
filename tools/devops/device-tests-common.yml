@@ -58,7 +58,6 @@ jobs:
 
   - bash: |
       set -x
-      set -e
 
       rm -f ~/Library/Caches/com.xamarin.provisionator/Provisions/*p12
       rm -f ~/Library/Caches/com.xamarin.provisionator/Provisions/*mobileprovision
@@ -75,7 +74,6 @@ jobs:
 
   - bash: |
       set -x
-      set -e
 
       ./xamarin-macios/system-dependencies.sh --ignore-all --provision-xcode --provision-xamarin-studio --provision-mono --provision-7z
       if [ $? -eq 0 ]; then
