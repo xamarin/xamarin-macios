@@ -243,7 +243,6 @@ namespace ObjCRuntime {
 			Runtime.options = options;
 			delegates = new List<object> ();
 			object_map = new Dictionary <IntPtr, WeakReference> (IntPtrEqualityComparer);
-			block_to_delegate_cache = new Dictionary<IntPtrTypeValueTuple, Delegate> ();
 			intptr_ctor_cache = new Dictionary<Type, ConstructorInfo> (TypeEqualityComparer);
 			intptr_bool_ctor_cache = new Dictionary<Type, ConstructorInfo> (TypeEqualityComparer);
 			lock_obj = new object ();
@@ -945,6 +944,13 @@ namespace ObjCRuntime {
 #endif
 		static Delegate GetDelegateForBlock (IntPtr methodPtr, Type type)
 		{
+			if (block_to_delegate_cache == null) {
+				lock (lock_obj) {
+					if (block_to_delegate_cache == null)
+						block_to_delegate_cache = new Dictionary<IntPtrTypeValueTuple, Delegate> ();
+				}
+			}
+
 			// We do not care if there is a race condition and we initialize two caches
 			// since the worst that can happen is that we end up with an extra
 			// delegate->function pointer.
