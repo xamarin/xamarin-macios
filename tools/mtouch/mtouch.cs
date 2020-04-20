@@ -1353,20 +1353,6 @@ namespace Xamarin.Bundler
 			return (buf.st_mode & S_IFLNK) == S_IFLNK;
 		}
 
-		public static Frameworks GetFrameworks (Application app)
-		{
-			switch (app.Platform) {
-			case ApplePlatform.iOS:
-				return Frameworks.GetiOSFrameworks (app);
-			case ApplePlatform.WatchOS:
-				return Frameworks.GetwatchOSFrameworks (app);
-			case ApplePlatform.TVOS:
-				return Frameworks.TVOSFrameworks;
-			default:
-				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, "Xamarin.iOS");
-			}
-		}
-
 		public static bool IsFrameworkAvailableInSimulator (Application app, string framework)
 		{
 			if (!GetFrameworks (app).TryGetValue (framework, out var fw))

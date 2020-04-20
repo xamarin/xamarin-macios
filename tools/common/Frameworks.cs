@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 
+using Xamarin.Utils;
+
 #if MTOUCH || MMP
 using Mono.Cecil;
 
@@ -198,9 +200,15 @@ public class Frameworks : Dictionary <string, Framework>
 		}
 	}
 
-#if MTOUCH || __IOS__ || __TVOS__ || __WATCHOS__
-	static Frameworks ios_frameworks;
+#if MTOUCH
 	public static Frameworks GetiOSFrameworks (Application app)
+	{
+		return GetiOSFrameworks (app.IsSimulatorBuild);
+	}
+#endif
+
+	static Frameworks ios_frameworks;
+	public static Frameworks GetiOSFrameworks (bool is_simulator_build)
 	{
 		if (ios_frameworks == null) {
 			ios_frameworks = new Frameworks () {
@@ -269,7 +277,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "SceneKit", "SceneKit", 8 },
 				{ "CloudKit", "CloudKit", 8 },
 				{ "AVKit", "AVKit", 8 },
-				{ "CoreAudioKit", "CoreAudioKit", app.IsSimulatorBuild ? 9 : 8 },
+				{ "CoreAudioKit", "CoreAudioKit", is_simulator_build ? 9 : 8 },
 				{ "Metal", "Metal", new Version (8, 0), new Version (9, 0) },
 				{ "WebKit", "WebKit", 8 },
 				{ "NetworkExtension", "NetworkExtension", 8 },
@@ -340,8 +348,15 @@ public class Frameworks : Dictionary <string, Framework>
 		return ios_frameworks;
 	}
 
-	static Frameworks watch_frameworks;
+#if MTOUCH
 	public static Frameworks GetwatchOSFrameworks (Application app)
+	{
+		return GetwatchOSFrameworks (app.IsSimulatorBuild);
+	}
+#endif
+
+	static Frameworks watch_frameworks;
+	public static Frameworks GetwatchOSFrameworks (bool is_simulator_build)
 	{
 		if (watch_frameworks == null) {
 			watch_frameworks = new Frameworks {
@@ -371,7 +386,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "CoreText", "CoreText", 2,2 },
 
 				// AVFoundation was introduced in 3.0, but the simulator SDK was broken until 3.2.
-				{ "AVFoundation", "AVFoundation", 3, app.IsSimulatorBuild ? 2 : 0 },
+				{ "AVFoundation", "AVFoundation", 3, is_simulator_build ? 2 : 0 },
 				{ "CloudKit", "CloudKit", 3 },
 				{ "GameKit", "GameKit", new Version (3, 0), new Version (3, 2) /* No headers provided for watchOS/simulator until watchOS 3.2. */ },
 				{ "SceneKit", "SceneKit", 3 },
@@ -476,7 +491,22 @@ public class Frameworks : Dictionary <string, Framework>
 			return tvos_frameworks;
 		}
 	}
-#endif
+
+	public static Frameworks GetFrameworks (ApplePlatform platform, bool is_simulator_build)
+	{
+		switch (platform) {
+		case ApplePlatform.iOS:
+			return Frameworks.GetiOSFrameworks (is_simulator_build);
+		case ApplePlatform.WatchOS:
+			return Frameworks.GetwatchOSFrameworks (is_simulator_build);
+		case ApplePlatform.TVOS:
+			return Frameworks.TVOSFrameworks;
+		case ApplePlatform.MacOSX:
+			return Frameworks.MacFrameworks;
+		default:
+			return null;
+		}
+	}
 
 #if MMP
 	public static void Gather (Application app, AssemblyDefinition product_assembly, HashSet<string> frameworks, HashSet<string> weak_frameworks)
