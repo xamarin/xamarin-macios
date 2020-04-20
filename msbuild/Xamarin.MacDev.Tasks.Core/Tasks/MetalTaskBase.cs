@@ -58,24 +58,6 @@ namespace Xamarin.MacDev.Tasks
 			get;
 		}
 
-		protected virtual string OperatingSystem {
-			get {
-				switch (PlatformFrameworkHelper.GetFramework (TargetFrameworkMoniker)) {
-				case ApplePlatform.WatchOS:
-					return SdkIsSimulator ? "watchos-simulator" : "watchos";
-				case ApplePlatform.TVOS:
-					return SdkIsSimulator ? "tvos-simulator" : "tvos";
-				case ApplePlatform.MacOSX:
-					return "macosx";
-				case ApplePlatform.iOS:
-					return SdkIsSimulator ? "iphonesimulator" : "ios";
-				default:
-					Log.LogError (MSBStrings.E0169, TargetFrameworkMoniker);
-					return string.Empty;
-				}
-			}
-		}
-
 		protected abstract string DevicePlatformBinDir {
 			get;
 		}
@@ -141,7 +123,7 @@ namespace Xamarin.MacDev.Tasks
 			args.Add ("-o");
 			args.AddQuoted (Path.ChangeExtension (path, ".air"));
 
-			args.Add (string.Format ("-m{0}-version-min={1}", OperatingSystem, minimumDeploymentTarget));
+			args.Add (PlatformFrameworkHelper.GetMinimumVersionArgument (TargetFrameworkMoniker, SdkIsSimulator, minimumDeploymentTarget));
 
 			args.AddQuoted (SourceFile.ItemSpec);
 
