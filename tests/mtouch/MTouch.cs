@@ -3639,7 +3639,7 @@ public partial class NotificationService : UNNotificationServiceExtension
 
 				// Create a sample exe
 				var code = "public class TestApp { static void Main () { System.Console.WriteLine (typeof (ObjCRuntime.Runtime).ToString ()); } }";
-				var exe = MTouch.CompileTestAppExecutable (tmp, code, new [] { "/debug:full" });
+				var exe = MTouch.CompileTestAppExecutable (tmp, code, new [] { "/debug:full", "/deterministic" });
 
 				mtouch.AppPath = mtouch.CreateTemporaryDirectory ();
 				mtouch.RootAssembly = exe;
@@ -3650,21 +3650,21 @@ public partial class NotificationService : UNNotificationServiceExtension
 				mtouch.AssertExecute (MTouchAction.BuildSim);
 
 				var exePath = Path.Combine (mtouch.AppPath, Path.GetFileName (exe));
-				var mdbPath = exePath + ".mdb";
+				var pdbPath = Path.ChangeExtension (exePath, ".pdb");
 				var exeStamp = File.GetLastWriteTimeUtc (exePath);
-				var mdbStamp = File.GetLastWriteTimeUtc (mdbPath);
+				var pdbStamp = File.GetLastWriteTimeUtc (pdbPath);
 
 				EnsureFilestampChange ();
-				// Recompile the exe, adding only whitespace. This will only change the debug files
-				MTouch.CompileTestAppExecutable (tmp, "\n\n" + code + "\n\n", new [] { "/debug:full" });
+				// Recompile the exe, adding only whitespace. This will change both the debug file and the executable, because the executable contains a hash of the debug file.
+				MTouch.CompileTestAppExecutable (tmp, "\n\n" + code + "\n\n", new [] { "/debug:full", "/deterministic" });
 
 				// Rebuild the app
 				mtouch.AssertExecute (MTouchAction.BuildSim);
 
 				// The pdb files should be updated, but the exe should not.
-				Assert.AreEqual (exeStamp, File.GetLastWriteTimeUtc (exePath), "exe no change");
-				Assert.IsTrue (File.Exists (mdbPath), "mdb existence");
-				Assert.AreNotEqual (mdbStamp, File.GetLastWriteTimeUtc (mdbPath), "mdb changed");
+				Assert.AreNotEqual (exeStamp, File.GetLastWriteTimeUtc (exePath), $"exe change");
+				Assert.IsTrue (File.Exists (pdbPath), "csc existence");
+				Assert.AreNotEqual (pdbStamp, File.GetLastWriteTimeUtc (pdbPath), $"pdb changed");
 			}
 		}
 
