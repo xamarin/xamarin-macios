@@ -49,7 +49,7 @@ namespace Xamarin.MacDev.Tasks
 			case ApplePlatform.iOS:
 				return "ios";
 			default:
-				throw new InvalidOperationException (string.Format ("Unknown target framework {0} for target framework moniker {2}.", framework, targetFrameworkMoniker));
+				throw new InvalidOperationException (string.Format ("Unknown target framework {0} for target framework moniker {1}.", framework, targetFrameworkMoniker));
 			}
 		}
 	}
