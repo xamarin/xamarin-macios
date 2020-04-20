@@ -985,51 +985,27 @@ namespace Xharness.Jenkins {
 
 			var crashReportSnapshotFactory = new CrashSnapshotReporterFactory (processManager);
 
-			var net461Project = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "msbuild", "tests", "Xamarin.iOS.Tasks.Tests", "Xamarin.iOS.Tasks.Tests.csproj")));
-			var buildiOSMSBuild_net461 = new MSBuildTask (jenkins: this, testProject: net461Project, processManager: processManager)
-			{
-				SpecifyPlatform = false,
-				SpecifyConfiguration = true,
-				ProjectConfiguration = "Debug-net461",
-				Platform = TestPlatform.iOS,
-				SolutionPath = Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "msbuild", "Xamarin.MacDev.Tasks.sln")),
-				SupportsParallelExecution = false,
-			};
-			var nunitExecutioniOSMSBuild_net461 = new NUnitExecuteTask (this, buildiOSMSBuild_net461, processManager)
-			{
-				TestLibrary = Path.Combine (Harness.RootDirectory, "..", "msbuild", "tests", "Xamarin.iOS.Tasks.Tests", "bin", "Debug-net461", "net461", "Xamarin.iOS.Tasks.Tests.dll"),
-				TestProject = net461Project,
-				ProjectConfiguration = "Debug-net461",
-				Platform = TestPlatform.iOS,
-				TestName = "MSBuild tests",
-				Mode = "iOS (net461)",
-				Timeout = TimeSpan.FromMinutes (60),
-				Ignored = !IncludeiOSMSBuild,
-				SupportsParallelExecution = false,
-			};
-			Tasks.Add (nunitExecutioniOSMSBuild_net461);
-
 			var netstandard2Project = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "msbuild", "tests", "Xamarin.iOS.Tasks.Tests", "Xamarin.iOS.Tasks.Tests.csproj")));
-			var buildiOSMSBuild_netstandard2 = new MSBuildTask (jenkins: this, testProject: netstandard2Project, processManager: processManager) {
+			var buildiOSMSBuild = new MSBuildTask (jenkins: this, testProject: netstandard2Project, processManager: processManager) {
 				SpecifyPlatform = false,
 				SpecifyConfiguration = true,
-				ProjectConfiguration = "Debug-netstandard2.0",
+				ProjectConfiguration = "Debug",
 				Platform = TestPlatform.iOS,
 				SolutionPath = Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "msbuild", "Xamarin.MacDev.Tasks.sln")),
 				SupportsParallelExecution = false,
 			};
-			var nunitExecutioniOSMSBuild_netstandard2 = new NUnitExecuteTask (this, buildiOSMSBuild_netstandard2, processManager) {
-				TestLibrary = Path.Combine (Harness.RootDirectory, "..", "msbuild", "tests", "Xamarin.iOS.Tasks.Tests", "bin", "Debug-netstandard2.0", "net461", "Xamarin.iOS.Tasks.Tests.dll"),
+			var nunitExecutioniOSMSBuild = new NUnitExecuteTask (this, buildiOSMSBuild, processManager) {
+				TestLibrary = Path.Combine (Harness.RootDirectory, "..", "msbuild", "tests", "Xamarin.iOS.Tasks.Tests", "bin", "Debug", "net461", "Xamarin.iOS.Tasks.Tests.dll"),
 				TestProject = netstandard2Project,
-				ProjectConfiguration = "Debug-netstandard2.0",
+				ProjectConfiguration = "Debug",
 				Platform = TestPlatform.iOS,
 				TestName = "MSBuild tests",
-				Mode = "iOS (netstandard2.0)",
+				Mode = "iOS",
 				Timeout = TimeSpan.FromMinutes (60),
 				Ignored = !IncludeiOSMSBuild,
 				SupportsParallelExecution = false,
 			};
-			Tasks.Add (nunitExecutioniOSMSBuild_netstandard2);
+			Tasks.Add (nunitExecutioniOSMSBuild);
 
 			var installSourcesProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "tools", "install-source", "InstallSourcesTests", "InstallSourcesTests.csproj")));
 			var buildInstallSources = new MSBuildTask (jenkins: this, testProject: installSourcesProject, processManager: processManager)
