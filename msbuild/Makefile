@@ -310,7 +310,7 @@ Xamarin.Mac.Tasks/bin/$(CONFIG)/$(TARGETFRAMEWORK)/Xamarin.Localization.MSBuild.
 
 .build-stamp: $(ALL_SOURCES)
 	$(Q) $(SYSTEM_MONO) /Library/Frameworks/Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe restore
-	$(Q) $(SYSTEM_MSBUILD) $(XBUILD_VERBOSITY)
+	$(Q) $(SYSTEM_MSBUILD) $(XBUILD_VERBOSITY) /m
 	$(Q) touch $@
 
 # make all the target assemblies build when any of the sources have changed
