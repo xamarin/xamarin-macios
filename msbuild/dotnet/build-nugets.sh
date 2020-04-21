@@ -190,7 +190,8 @@ create_sdk_nugets ()
 	local destdir=$DOTNET_DESTDIR/$packageid
 
 	rm -Rf "$destdir"
-	mkdir -p "$destdir/tools"
+	mkdir -p "$destdir/tools/bin"
+	mkdir -p "$destdir/tools/lib"
 	mkdir -p "$destdir/targets"
 	mkdir -p "$destdir/Sdk"
 
@@ -205,6 +206,18 @@ create_sdk_nugets ()
 
 	# linker assembly
 	$cp -r "$TOP/tools/dotnet-linker/bin/Debug/netcoreapp3.0" "$destdir/tools/dotnet-linker"
+
+	# btouch
+	# FIXME: should this go into a separate package?
+	$cp -r "$legacy_destdir/lib/bgen" "$destdir/tools/lib/"
+	$cp "$legacy_destdir/bin/bgen" "$destdir/tools/bin/"
+
+	# mlaunch
+	# FIXME: should this go into a separate package?
+	if [[ "$platform" != "macOS" ]]; then
+		$cp -r "$legacy_destdir/lib/mlaunch" "$destdir/tools/lib/"
+		$cp "$legacy_destdir/bin/mlaunch" "$destdir/tools/bin/"
+	fi
 
 	chmod -R +r "$destdir"
 }
