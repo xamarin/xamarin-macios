@@ -11,7 +11,7 @@ publish-dev: build
 
 clean:
 	rm -Rf ~/.nuget/packages/xamarin.ios.* ~/.nuget/packages/microsoft.ios.*
-	cd ../.. && git clean -xfd
+	cd ../../.. && git clean -xfd
 	rm -Rf $(TOP)/_build
 
 build: clean
