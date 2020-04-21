@@ -49,7 +49,7 @@ namespace Foundation {
 
 	[StructLayout (LayoutKind.Sequential)]
 	public partial class NSObject 
-#if !COREBUILD && XAMCORE_2_0
+#if !COREBUILD
 		: IEquatable<NSObject> 
 #endif
 	{
@@ -92,14 +92,11 @@ namespace Foundation {
 			get { return ((flags & Flags.RegisteredToggleRef) == Flags.RegisteredToggleRef); } 
 			set { flags = value ? (flags | Flags.RegisteredToggleRef) : (flags & ~Flags.RegisteredToggleRef);	}
 		}
-#if XAMCORE_2_0
+
 		protected internal bool IsDirectBinding {
 			get { return ((flags & Flags.IsDirectBinding) == Flags.IsDirectBinding); }
 			set { flags = value ? (flags | Flags.IsDirectBinding) : (flags & ~Flags.IsDirectBinding); }
 		}
-#else
-		protected internal bool IsDirectBinding;
-#endif
 
 		internal bool InFinalizerQueue {
 			get { return ((flags & Flags.InFinalizerQueue) == Flags.InFinalizerQueue); }
@@ -235,31 +232,6 @@ namespace Foundation {
 			xamarin_release_managed_ref (handle, this);
 		}
 
-#if !XAMCORE_2_0
-		[Export ("encodeWithCoder:")]
-		public virtual void EncodeTo (NSCoder coder)
-		{
-			if (coder == null)
-				throw new ArgumentNullException ("coder");
-
-			if (!(this is INSCoding))
-				throw new InvalidOperationException ("Type does not conform to NSCoding");
-
-#if MONOMAC
-			if (IsDirectBinding) {
-				Messaging.void_objc_msgSend_intptr (this.Handle, selEncodeWithCoderHandle, coder.Handle);
-			} else {
-				Messaging.void_objc_msgSendSuper_intptr (this.SuperHandle, selEncodeWithCoderHandle, coder.Handle);
-			}
-#else
-			if (IsDirectBinding) {
-				Messaging.void_objc_msgSend_intptr (this.Handle, Selector.GetHandle (selEncodeWithCoder), coder.Handle);
-			} else {
-				Messaging.void_objc_msgSendSuper_intptr (this.SuperHandle, Selector.GetHandle (selEncodeWithCoder), coder.Handle);
-			}
-#endif
-		}
-#endif
 		static bool IsProtocol (Type type, IntPtr protocol)
 		{
 			while (type != typeof (NSObject) && type != null) {
@@ -356,15 +328,6 @@ namespace Foundation {
 
 			return false;
 		}
-			
-#if !XAMCORE_2_0
-		[Obsolete ("Low-level API warning: Use at your own risk: this calls the Release method on the underlying object;  Use DangerousRelease to avoid this warning.")]
-		[EditorBrowsable (EditorBrowsableState.Advanced)]
-		public void Release ()
-		{
-			DangerousRelease ();
-		}
-#endif
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		public void DangerousRelease ()
@@ -403,15 +366,6 @@ namespace Foundation {
 #endif
 		}
 
-#if !XAMCORE_2_0
-		[Obsolete ("Low-level API warning: Use at your own risk: this calls the Retain method on the underlying object; Use DangerousRetain to avoid this warning.")]
-		[EditorBrowsable (EditorBrowsableState.Advanced)]
-		public NSObject Retain ()
-		{
-			return DangerousRetain ();
-		}
-#endif
-
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		public NSObject DangerousRetain ()
 		{
@@ -422,15 +376,6 @@ namespace Foundation {
 #endif
 			return this;
 		}
-
-#if !XAMCORE_2_0
-		[Obsolete ("Low-level API warning: Use at your own risk: this calls the Retain method on the underlying object; Use DangerousAutorelease to avoid this warning.")]
-		[EditorBrowsable (EditorBrowsableState.Advanced)]
-		public NSObject Autorelease ()
-		{
-			return DangerousAutorelease ();
-		}
-#endif
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		public NSObject DangerousAutorelease ()
@@ -667,7 +612,6 @@ namespace Foundation {
 				else if (t == typeof (PointF))
 					return NSValue.FromPointF ((PointF) obj);
 #endif
-#if XAMCORE_2_0
 				if (t == typeof (nint))
 					return NSNumber.FromNInt ((nint) obj);
 				else if (t == typeof (nuint))
@@ -680,7 +624,6 @@ namespace Foundation {
 					return NSValue.FromCGRect ((CGRect) obj);
 				else if (t == typeof (CGPoint))
 					return NSValue.FromCGPoint ((CGPoint) obj);
-#endif
 
 #if !MONOMAC
 				if (t == typeof (CGAffineTransform))
@@ -720,7 +663,6 @@ namespace Foundation {
 #endif
 		}
 
-#if XAMCORE_2_0
 		// if IsDirectBinding is false then we _likely_ have managed state and it's up to the subclass to provide
 		// a correct implementation of GetHashCode / Equals. We default to Object.GetHashCode (like classic)
 
@@ -749,7 +691,6 @@ namespace Foundation {
 
 		// IEquatable<T>
 		public bool Equals (NSObject obj) => Equals ((object) obj);
-#endif
 
 		public override string ToString ()
 		{
