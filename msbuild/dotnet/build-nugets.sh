@@ -95,8 +95,8 @@ copy_ios_native_libs_to_runtime_pack ()
 	local packageid=Microsoft.$platform.Runtime.$rid
 	local destdir=$DOTNET_DESTDIR/$packageid/runtimes/$rid/native
 	local sdk_dir="$TOP/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/SDKs/$sdk.sdk"
-	local lib_dir="$sdk_dir/usr/lib/"
-	local include_dir="$sdk_dir/usr/include/"
+	local lib_dir="$sdk_dir/lib/"
+	local include_dir="$sdk_dir/include/"
 
 	mkdir -p "$destdir"
 
