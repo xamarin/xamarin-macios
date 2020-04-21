@@ -58,29 +58,33 @@ jobs:
 
   - bash: |
       set -x
+      EC=0
 
       rm -f ~/Library/Caches/com.xamarin.provisionator/Provisions/*p12
       rm -f ~/Library/Caches/com.xamarin.provisionator/Provisions/*mobileprovision
 
-      ./maccore/tools/install-qa-provisioning-profiles.sh -v
-      if [ $? -eq 0 ]; then
+      ./maccore/tools/install-qa-provisioning-profiles.sh -v || EC=$?
+      if [ $EC -eq 0 ]; then
         echo "##vso[task.setvariable variable=ProvisioningStatus]success"
       else
         echo "##vso[task.setvariable variable=ProvisioningStatus]failure"
       fi
+      exit $EC
     displayName: 'Add provisioning profiles'
     env:
       LOGIN_KEYCHAIN_PASSWORD: $(OSX_KEYCHAIN_PASS)
 
   - bash: |
       set -x
+      EC=0
 
-      ./xamarin-macios/system-dependencies.sh --ignore-all --provision-xcode --provision-xamarin-studio --provision-mono --provision-7z
-      if [ $? -eq 0 ]; then
+      ./xamarin-macios/system-dependencies.sh --ignore-all --provision-xcode --provision-xamarin-studio --provision-mono --provision-7z || EC=$?
+      if [ $EC -eq 0 ]; then
         echo "##vso[task.setvariable variable=ProvisioningStatus]success"
       else
         echo "##vso[task.setvariable variable=ProvisioningStatus]failure"
       fi
+      exit $EC
     displayName: 'Provision dependencies'
     timeoutInMinutes: 240
 
