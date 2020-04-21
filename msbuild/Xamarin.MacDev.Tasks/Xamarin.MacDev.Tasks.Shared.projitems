@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>{BD872FBC-908C-4908-B4BD-C75BB6573189}</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Xamarin.MacDev.Tasks.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\ArTool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\Codesign.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\CollectBundleResources.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\CompileExecutable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\ComputeBundleResourceOutputPaths.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\CoreMLCompiler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\CreateAssetPackManifest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\CreateInstallerPackage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\CreatePkgInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\Ditto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\DSymUtil.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\FindItemWithLogicalName.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\GenerateBundleName.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\GetNativeExecutableName.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\GetPropertyListValue.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\PackLibraryResources.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\PropertyListEditor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\ReadItemsFromFile.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\SetEnvironmentVariable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\SmartCopy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\SpotlightIndexer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\SymbolStrip.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\UnpackLibraryResources.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\WriteItemsToFile.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\Zip.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MsBuildTasks\Copy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MsBuildTasks\Delete.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MsBuildTasks\Exec.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MsBuildTasks\MakeDir.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MsBuildTasks\Move.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MsBuildTasks\RemoveDir.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MsBuildTasks\Touch.cs" />
+  </ItemGroup>
+</Project>

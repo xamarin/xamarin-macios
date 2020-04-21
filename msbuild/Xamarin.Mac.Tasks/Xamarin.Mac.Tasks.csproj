@@ -3,13 +3,57 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <IncludeMSBuildAssets Condition="'$(IncludeMSBuildAssets)' == ''">compile</IncludeMSBuildAssets>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\Xamarin.MacDev.csproj" />
-    <ProjectReference Include="..\Xamarin.MacDev.Tasks.Core\Xamarin.MacDev.Tasks.Core.csproj" />
-    <ProjectReference Include="..\Xamarin.MacDev.Tasks\Xamarin.MacDev.Tasks.csproj" />
-    <ProjectReference Include="..\Xamarin.Mac.Tasks.Core\Xamarin.Mac.Tasks.Core.csproj" />
+    <!-- Compile against Microsoft.Build* NuGet refs, but do not copy to OutputDir if IncludeMSBuildAssets was not set. -->
+    <PackageReference Include="Microsoft.Build" Version="15.9.20" IncludeAssets="$(IncludeMSBuildAssets)" />
+    <PackageReference Include="Microsoft.Build.Framework" Version="15.9.20" IncludeAssets="$(IncludeMSBuildAssets)" />
+    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="15.9.20" IncludeAssets="$(IncludeMSBuildAssets)" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.9.20" IncludeAssets="$(IncludeMSBuildAssets)" />
+    <PackageReference Include="System.Text.Json" Version="4.7.0" IncludeAssets="all" />
+    <PackageReference Include="Mono.Cecil" Version="0.11.1" IncludeAssets="all" />
+
+    <ProjectReference Include="..\Xamarin.Localization.MSBuild\Xamarin.Localization.MSBuild.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\tools\common\ApplePlatform.cs">
+      <Link>ApplePlatform.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\common\Frameworks.cs">
+      <Link>Frameworks.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\common\StringUtils.cs">
+      <Link>StringUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\common\TargetFramework.cs">
+      <Link>TargetFramework.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\common\FileCopier.cs">
+      <Link>FileCopier.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\mtouch\UnresolvedSymbols.cs">
+      <Link>UnresolvedSymbols.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\mtouch\Errors.designer.cs">
+      <Link>Errors.designer.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <Import Project="..\..\external\Xamarin.MacDev\Xamarin.MacDev\Xamarin.MacDev.Shared.projitems" Label="Shared" Condition="Exists('..\..\external\Xamarin.MacDev\Xamarin.MacDev\Xamarin.MacDev.Shared.projitems')" />
+  <Import Project="..\Xamarin.MacDev.Tasks.Core\Xamarin.MacDev.Tasks.Core.Shared.projitems" Label="Shared" Condition="Exists('..\Xamarin.MacDev.Tasks.Core\Xamarin.MacDev.Tasks.Core.Shared.projitems')" />
+  <Import Project="..\Xamarin.MacDev.Tasks\Xamarin.MacDev.Tasks.Shared.projitems" Label="Shared" Condition="Exists('..\Xamarin.MacDev.Tasks\Xamarin.MacDev.Tasks.Shared.projitems')" />
+  <Import Project="..\Xamarin.Mac.Tasks.Core\Xamarin.Mac.Tasks.Core.Shared.projitems" Label="Shared" Condition="Exists('..\Xamarin.Mac.Tasks.Core\Xamarin.Mac.Tasks.Core.Shared.projitems')" />
+
+  <Target Name="ChangeAliasesOfNugetRefs" BeforeTargets="FindReferenceAssembliesForReferences;ResolveReferences">
+    <ItemGroup>
+      <ReferencePath Condition="'%(FileName)' == 'Microsoft.Build.Tasks.Core'">
+        <Aliases>SystemMSBuild</Aliases>
+      </ReferencePath>
+    </ItemGroup>
+  </Target>
+
   <ItemGroup>
     <None Include="*.targets">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -22,5 +66,4 @@
     </None>
   </ItemGroup>
 
-  <Import Project="$(MSBuildThisFileDirectory)..\ILMerge.targets" />
 </Project>

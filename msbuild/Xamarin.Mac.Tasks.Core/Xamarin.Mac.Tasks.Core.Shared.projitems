@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>{C38535D9-E059-4934-9D86-E21147732F29}</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Xamarin.Mac.Tasks.Core.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\ALToolUploadTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\ALToolValidateTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\ArchiveTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\DetectSdkLocationsTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\EmbedProvisionProfileTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\MmpTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\XamMacArch.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MacOSXSdks.cs" />
+  </ItemGroup>
+</Project>

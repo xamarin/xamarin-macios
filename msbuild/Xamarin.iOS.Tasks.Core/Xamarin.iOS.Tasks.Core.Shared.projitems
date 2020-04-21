@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>{9D580281-4073-4463-AD83-CE64538CB8E6}</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Xamarin.iOS.Tasks.Core.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\ACToolTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\ALToolUploadTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\ALToolValidateTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\ArchiveTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\CodesignNativeLibrariesTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\CodesignVerifyTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\CollectAssetPacksTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\CollectITunesArtworkTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\CollectITunesSourceFilesTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\CompileAppManifestTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\CompileEntitlementsTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\CompileITunesMetadataTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\CompileSceneKitAssetsTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\CreateAssetPackTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\CreateDebugConfigurationTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\CreateDebugSettingsTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\DetectDebugNetworkConfigurationTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\DetectSdkLocationsTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\DetectSigningIdentityTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\EmbedMobileProvisionTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\FindWatchOS1AppExtensionBundleTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\FindWatchOS2AppBundleTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\GetDirectoriesTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\GetFilesTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\GetFullPathTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\GetPropertyValueTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\IBToolTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\MetalLibTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\MetalTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\MTouchTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\OptimizeImageTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\ParseDeviceSpecificBuildInformationTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\ParseExtraMtouchArgsTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\PrepareResourceRulesTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\ResolveNativeWatchAppTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\ScnToolTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\ValidateAppBundleTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\WriteAssetPackManifestTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IPhoneSdks.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NoCode.cs" />
+  </ItemGroup>
+</Project>

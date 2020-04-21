@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>{135D609C-544A-49E2-89BA-5D8B0F52B32E}</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Xamarin.MacDev.Tasks.Core.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)MsBuildTasks\CopyBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MsBuildTasks\DeleteBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MsBuildTasks\ExecBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MsBuildTasks\MakeDirBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MsBuildTasks\MoveTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MsBuildTasks\RemoveDirBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MsBuildTasks\TouchBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\ACToolTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\AlToolTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\ArchiveTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\ArToolTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\BTouchTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\BundlerToolTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\CodesignTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\CodesignVerifyTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\CollectBundleResourcesTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\CollectFrameworksBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\CompileAppManifestTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\CompileEntitlementsTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\CompileExecutableTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\CompileSceneKitAssetsTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\ComputeBundleResourceOutputPathsTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\CoreMLCompilerTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\CreateAssetPackManifestTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\CreateBindingResourcePackageBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\CreateEmbeddedResourcesTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\CreateInstallerPackageTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\CreatePkgInfoTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\DetectSigningIdentityTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\DittoTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\DSymUtilTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\FindItemWithLogicalNameTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\GenerateBundleNameTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\GetNativeExecutableNameTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\GetPropertyListValueTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\IBToolTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\MetalLibTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\MetalTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\OptimizePropertyListTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\PackLibraryResourcesTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\PrepareNativeReferencesTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\PropertyListEditorTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\ReadItemsFromFileBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\ScnToolTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\SetEnvironmentVariableTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\SmartCopyTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\SpotlightIndexerTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\SymbolStripTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\TextureAtlasTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\UnpackLibraryResourcesTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\WriteItemsToFileBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\XamarinToolTask.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\XcodeCompilerToolTask.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\XcodeToolTask.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\XcodeToolTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\ZipTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AssetPackUtils.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BundleResource.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandLineArgumentBuilder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LinkTarget.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LoggingExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NativeReferenceKind.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PathUtils.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PlatformFramework.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PlatformUtils.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ProcessUtils.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)StringParserService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)VerbosityUtils.cs" />
+  </ItemGroup>
+</Project>

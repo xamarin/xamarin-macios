@@ -1,11 +1,13 @@
-﻿using Microsoft.Build.Framework;
+extern alias SystemMSBuild;
+
+using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
 namespace Microsoft.Build.Tasks
 {
 	public abstract class DeleteBase : Task
 	{
-		readonly Delete delete = new Delete();
+		readonly SystemMSBuild.Microsoft.Build.Tasks.Delete delete = new SystemMSBuild.Microsoft.Build.Tasks.Delete ();
 
 		public string SessionId { get; set; }
 
@@ -36,3 +38,4 @@ namespace Microsoft.Build.Tasks
 		}
 	}
 }
+
