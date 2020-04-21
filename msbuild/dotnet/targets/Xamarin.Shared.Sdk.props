@@ -68,6 +68,8 @@
     Sdk.props at the top of this file), so we can't check if OutputType=''.
     Instead set OutputType to a sentinent value we can check for later -->
     <OutputType Condition=" '$(XamarinReplaceBuildTarget)' == 'true'">DefaultOutputType</OutputType>
+
+    <_XamarinSdkToolsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\tools'))</_XamarinSdkToolsDirectory>
   </PropertyGroup>
 
   <!-- Defaults -->

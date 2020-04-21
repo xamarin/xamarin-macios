@@ -6,7 +6,6 @@
 	<Import Project="Xamarin.Shared.Sdk.DefaultItems.targets" />
 	<Import Project="Xamarin.Shared.Sdk.TargetFrameworkInference.targets" />
 
-
 	<PropertyGroup>
 		<_TargetsDiriOS>$(XamarinSdkRootDirectory)\tools\msbuild\iOS</_TargetsDiriOS>
 		<_TargetsDirtvOS>$(XamarinSdkRootDirectory)\tools\msbuild\TVOS</_TargetsDirtvOS>
@@ -23,6 +22,7 @@
 		<_TaskAssemblyName Condition="'$(_PlatformName)' == 'macOS'">Xamarin.Mac.Tasks.dll</_TaskAssemblyName>
 	</PropertyGroup>
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CompileExecutable" AssemblyFile="$(_TargetsDir)$(_TaskAssemblyName)" />
+	<UsingTask TaskName="Xamarin.iOS.Tasks.Mlaunch" AssemblyFile="$(_TargetsDir)$(_TaskAssemblyName)" Condition=" '$(_PlatformName)' != 'macOS' " />
 
 	<!-- Automatically supply project capabilities for IDE use -->
 	<ItemGroup>
@@ -298,7 +298,7 @@
 			SdkDevPath="$(_SdkDevPath)"
 			SdkIsSimulator="$(_SdkIsSimulator)"
 			SdkRoot="$(_SdkRoot)"
-			SdkVersion="$(MtouchSdkVersion)"
+			SdkVersion="$(_SdkVersion)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 		/>
 	</Target>
@@ -349,6 +349,43 @@
 	</Target>
 
 	<Target Name="_SelectExecutableOutputMode">
+	</Target>
+
+	<Target Name="Install" DependsOnTargets="_DetectSdkLocations;_GenerateBundleName">
+		<Mlaunch
+			SessionId="$(BuildSessionId)"
+			AppBundlePath="$(_AppBundlePath)"
+			DeviceName="$(_DeviceName)"
+			InstallApp="$(_AppBundlePath)"
+			SdkIsSimulator="$(_SdkIsSimulator)"
+			SdkVersion="$(_SdkVersion)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+			ToolsDirectory="$(_XamarinSdkToolsDirectory)"
+		/>
+	</Target>
+
+	<Target Name="Run" DependsOnTargets="_DetectSdkLocations;_GenerateBundleName">
+		<PropertyGroup>
+			<!-- capture output by default -->
+			<_MlaunchCaptureOutput Condition=" '$(_MlaunchCaptureOutput)' == '' ">true</_MlaunchCaptureOutput>
+			<!-- wait for exit by default -->
+			<_MlaunchWaitForExit Condition=" '$(_MlaunchWaitForExit)' == '' ">true</_MlaunchWaitForExit>
+			<!-- don't set standard output/error path, the task will by default write to stdout/stderr -->
+		</PropertyGroup>
+		<Mlaunch
+			SessionId="$(BuildSessionId)"
+			AppBundlePath="$(_AppBundlePath)"
+			CaptureOutput="$(_MlaunchCaptureOutput)"
+			DeviceName="$(_DeviceName)"
+			LaunchApp="$(_AppBundlePath)"
+			SdkIsSimulator="$(_SdkIsSimulator)"
+			SdkVersion="$(_SdkVersion)"
+			StandardErrorPath="$(_MlaunchStandardErrorPath)"
+			StandardOutputPath="$(_MlaunchStandardOutputPath)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+			ToolsDirectory="$(_XamarinSdkToolsDirectory)"
+			WaitForExit="$(_MlaunchWaitForExit)"
+		/>
 	</Target>
 
 	<!-- Project types and how do we distinguish between them

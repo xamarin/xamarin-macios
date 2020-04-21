@@ -49,5 +49,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Tasks\WriteAssetPackManifestTaskBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IPhoneSdks.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NoCode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\MlaunchTaskBase.cs" />
   </ItemGroup>
 </Project>

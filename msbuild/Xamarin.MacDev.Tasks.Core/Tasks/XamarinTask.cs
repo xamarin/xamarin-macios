@@ -29,7 +29,7 @@ namespace Xamarin.MacDev.Tasks {
 				}
 			}
 		}
-		
+
 		ApplePlatform? platform;
 		public ApplePlatform Platform {
 			get {
