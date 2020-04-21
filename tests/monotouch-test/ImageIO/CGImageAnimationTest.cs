@@ -55,131 +55,102 @@ namespace MonoTouchFixtures.ImageIO {
 			TestRuntime.AssertXcodeVersion (11, 4);
 
 			imageUrl = NSBundle.MainBundle.GetUrlForResource ("hack", "gif"); // why not just initialize in declaration?
-			imageData = NSData.FromUrl(imageUrl);
+			imageData = NSData.FromUrl (imageUrl);
 			imageAnimation = new CGImageAnimation ();
 		}
 
-		[SetUp]
-		public void InitPerTest()
+		[TestFixtureTearDown]
+		public void Cleanup ()
 		{
-			TestRuntime.AssertXcodeVersion (11, 4);
+			imageUrl.Dispose ();
+			imageData.Dispose ();
+		}
+
+		[SetUp]
+		public void InitPerTest ()
+		{
 			testValue = -1;
 		}
 
 		[TearDown]
-		public void Dispose()
+		public void Dispose ()
 		{
-			TestRuntime.AssertXcodeVersion (11, 4); // this seems cleaner, but isn't strictly necessary?
 			testValue = -1;
+		}
+
+		private void CallAnimateImage (bool useUrl, CGImageAnimation.CGImageSourceAnimationBlock block)
+		{
+			TaskCompletionSource<bool> taskCompletionSource = new TaskCompletionSource<bool> ();
+			bool done = false;
+
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (30), async () => {
+				if (useUrl) {
+					imageAnimation.AnimateImage (imageUrl, null, block);
+				} else {
+					imageAnimation.AnimateImage (imageData, null, block);
+				}
+				await taskCompletionSource.Task;
+				done = true;
+			},
+				() => done);
 		}
 
 		[Test]
 		public void AnimateImageWithUrl ()
 		{
-			Assert.AreEqual(-1, testValue);
-			TaskCompletionSource<bool> taskCompletionSource = new TaskCompletionSource<bool> ();
-
-			bool done = false;
-			TestRuntime.RunAsync (TimeSpan.FromSeconds (30), async () => {
-				imageAnimation.AnimateImage(imageUrl, null, MyBlockSetValueZero);
-				await taskCompletionSource.Task;
-				done = true;
-			},
-				() => done);
-			Assert.AreEqual (0, testValue);
+			CallAnimateImage ( /* useUrl */ true, MyBlockSetValueZero);
+			Assert.AreEqual (0, testValue, "block called with url");
 		}
 
 		[Test]
 		public void AnimateImageWithData ()
 		{
-
-			Assert.AreEqual (-1, testValue);
-			TaskCompletionSource<bool> taskCompletionSource = new TaskCompletionSource<bool> ();
-
-			bool done = false;
-			TestRuntime.RunAsync (TimeSpan.FromSeconds (30), async () => {
-				imageAnimation.AnimateImage(imageData, null, MyBlockSetValueZero);
-				await taskCompletionSource.Task;
-				done = true;
-			},
-				() => done);
-			Assert.AreEqual (0, testValue);
+			CallAnimateImage ( /* useUrl */ false, MyBlockSetValueZero);
+			Assert.AreEqual (0, testValue, "block called with data");
 		}
 
 		[Test]
 		public void AnimateImageWithUrlChangeBlock ()
 		{
-			Assert.AreEqual (-1, testValue);
-			TaskCompletionSource<bool> taskCompletionSource = new TaskCompletionSource<bool> ();
+			CallAnimateImage ( /* useUrl */ true, MyBlockSetValueZero);
+			Assert.AreEqual (0, testValue, "first block called with url" );
 
-			bool done = false;
-			TestRuntime.RunAsync (TimeSpan.FromSeconds (30), async () => {
-				imageAnimation.AnimateImage (imageUrl, null, MyBlockSetValueZero);
-				await taskCompletionSource.Task;
-				done = true;
-			},
-				() => done);
-			Assert.AreEqual (0, testValue);
-
-			done = false; // reset after first call
-			TestRuntime.RunAsync (TimeSpan.FromSeconds (30), async () => {
-				imageAnimation.AnimateImage (imageUrl, null, MyBlockSetValueOne);
-				await taskCompletionSource.Task;
-				done = true;
-			},
-				() => done);
-			Assert.AreEqual (1, testValue);
+			CallAnimateImage ( /* useUrl */ true, MyBlockSetValueOne);
+			Assert.AreEqual (1, testValue, "second block called with url");
 		}
 
 		[Test]
 		public void AnimateImageWithDataChangeBlock ()
 		{
-			Assert.AreEqual (-1, testValue);
-			TaskCompletionSource<bool> taskCompletionSource = new TaskCompletionSource<bool> ();
+			CallAnimateImage ( /* useUrl */ false, MyBlockSetValueZero);
+			Assert.AreEqual (0, testValue, "first block called with data");
 
-			bool done = false;
-			TestRuntime.RunAsync (TimeSpan.FromSeconds (30), async () => {
-				imageAnimation.AnimateImage (imageData, null, MyBlockSetValueZero);
-				await taskCompletionSource.Task;
-				done = true;
-			},
-				() => done);
-			Assert.AreEqual (0, testValue);
-
-			done = false; // reset after first call
-			TestRuntime.RunAsync (TimeSpan.FromSeconds (30), async () => {
-				imageAnimation.AnimateImage (imageData, null, MyBlockSetValueOne);
-				await taskCompletionSource.Task;
-				done = true;
-			},
-				() => done);
-			Assert.AreEqual (1, testValue);
+			CallAnimateImage ( /* useUrl */ false, MyBlockSetValueOne);
+			Assert.AreEqual (1, testValue, "second block called with data");
 		}
 
 		[Test]
-		public void AnimateImageWithUrlNullUrl()
+		public void AnimateImageWithUrlNullUrl ()
 		{
-			NSUrl nullUrl = null;
-			Assert.Throws<ArgumentNullException>(() => imageAnimation.AnimateImage(nullUrl, null, MyBlockSetValueZero));
+			Assert.Throws<ArgumentNullException>( () => imageAnimation.AnimateImage ( (NSUrl) null, null, MyBlockSetValueZero), "null url");
 		}
 
 		[Test]
-		public void AnimateImageWithUrlNullBlock()
+		public void AnimateImageWithUrlNullBlock ()
 		{
-			Assert.Throws<ArgumentNullException>(() => imageAnimation.AnimateImage(imageUrl, null, /* CGImageSourceAnimationBlock */ null));
+			Assert.Throws<ArgumentNullException>( () => imageAnimation.AnimateImage (imageUrl, null, /* CGImageSourceAnimationBlock */ null), "null block called with url");
 		}
 
 		[Test]
-		public void AnimateImageWithDataNullData()
+		public void AnimateImageWithDataNullData ()
 		{
-			NSData nullData = null;
-			Assert.Throws<ArgumentNullException>(() => imageAnimation.AnimateImage(nullData, null, MyBlockSetValueZero));
+			Assert.Throws<ArgumentNullException>( () => imageAnimation.AnimateImage ( (NSData) null, null, MyBlockSetValueZero), "null data");
 		}
 
 		[Test]
-		public void AnimateImageWithDataNullBlock()
+		public void AnimateImageWithDataNullBlock ()
 		{
-			Assert.Throws<ArgumentNullException>(() => imageAnimation.AnimateImage(imageData, null, /* CGImageSourceAnimationBlock */ null));
+			Assert.Throws<ArgumentNullException>( () => imageAnimation.AnimateImage (imageData, null, /* CGImageSourceAnimationBlock */ null), "null block called with data");
 		}
 
 	}
