@@ -195,14 +195,24 @@ namespace Foundation {
 
 		public static string FromHandle (IntPtr usrhandle)
 		{
-			if (usrhandle == IntPtr.Zero)
+			return FromHandle (usrhandle, false);
+		}
+
+		public static string FromHandle (IntPtr handle, bool owns)
+		{
+			if (handle == IntPtr.Zero)
 				return null;
 
+			try {
 #if MONOMAC
-			return Marshal.PtrToStringAuto (Messaging.IntPtr_objc_msgSend (usrhandle, selUTF8StringHandle));
+				return Marshal.PtrToStringAuto (Messaging.IntPtr_objc_msgSend (handle, selUTF8StringHandle));
 #else
-			return Marshal.PtrToStringAuto (Messaging.IntPtr_objc_msgSend (usrhandle, Selector.GetHandle (selUTF8String)));
+				return Marshal.PtrToStringAuto (Messaging.IntPtr_objc_msgSend (handle, Selector.GetHandle (selUTF8String)));
 #endif
+			} finally {
+				if (owns)
+					DangerousRelease (handle);
+			}
 		}
 
 		public static bool Equals (NSString a, NSString b)

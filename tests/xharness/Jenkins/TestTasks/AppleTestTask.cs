@@ -2,11 +2,12 @@
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
-using Xharness.TestTasks;
+using Microsoft.DotNet.XHarness.iOS.Shared.Tasks;
 
 namespace Xharness.Jenkins.TestTasks {
-	public abstract class AppleTestTask : Xharness.TestTasks.TestTasks
+	public abstract class AppleTestTask : Microsoft.DotNet.XHarness.iOS.Shared.Tasks.TestTasks, ITestTask
 	{
 		public Jenkins Jenkins { get; private set; }
 		public IHarness Harness { get { return Jenkins.Harness; } }

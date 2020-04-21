@@ -2011,14 +2011,10 @@ public class TestApp {
 			return Configuration.GetBaseLibrary (profile);
 		}
 
-		public static string GetCompiler (Profile profile, IList<string> args, bool use_csc = true)
+		public static string GetCompiler (Profile profile, IList<string> args)
 		{
 			args.Add ($"-lib:{Path.GetDirectoryName (GetBaseLibrary (profile))}");
-			if (use_csc) {
-				return "/Library/Frameworks/Mono.framework/Commands/csc";
-			} else {
-				return "/Library/Frameworks/Mono.framework/Commands/mcs";
-			}
+			return "/Library/Frameworks/Mono.framework/Commands/csc";
 		}
 
 		static string GetConfiguration (Profile profile)
@@ -3643,7 +3639,7 @@ public partial class NotificationService : UNNotificationServiceExtension
 
 				// Create a sample exe
 				var code = "public class TestApp { static void Main () { System.Console.WriteLine (typeof (ObjCRuntime.Runtime).ToString ()); } }";
-				var exe = MTouch.CompileTestAppExecutable (tmp, code, new [] { "/debug:full" }, use_csc: false);
+				var exe = MTouch.CompileTestAppExecutable (tmp, code, new [] { "/debug:full", "/deterministic" });
 
 				mtouch.AppPath = mtouch.CreateTemporaryDirectory ();
 				mtouch.RootAssembly = exe;
@@ -3654,21 +3650,21 @@ public partial class NotificationService : UNNotificationServiceExtension
 				mtouch.AssertExecute (MTouchAction.BuildSim);
 
 				var exePath = Path.Combine (mtouch.AppPath, Path.GetFileName (exe));
-				var mdbPath = exePath + ".mdb";
+				var pdbPath = Path.ChangeExtension (exePath, ".pdb");
 				var exeStamp = File.GetLastWriteTimeUtc (exePath);
-				var mdbStamp = File.GetLastWriteTimeUtc (mdbPath);
+				var pdbStamp = File.GetLastWriteTimeUtc (pdbPath);
 
 				EnsureFilestampChange ();
-				// Recompile the exe, adding only whitespace. This will only change the debug files
-				MTouch.CompileTestAppExecutable (tmp, "\n\n" + code + "\n\n", new [] { "/debug:full" }, use_csc: false);
+				// Recompile the exe, adding only whitespace. This will change both the debug file and the executable, because the executable contains a hash of the debug file.
+				MTouch.CompileTestAppExecutable (tmp, "\n\n" + code + "\n\n", new [] { "/debug:full", "/deterministic" });
 
 				// Rebuild the app
 				mtouch.AssertExecute (MTouchAction.BuildSim);
 
 				// The pdb files should be updated, but the exe should not.
-				Assert.AreEqual (exeStamp, File.GetLastWriteTimeUtc (exePath), "exe no change");
-				Assert.IsTrue (File.Exists (mdbPath), "mdb existence");
-				Assert.AreNotEqual (mdbStamp, File.GetLastWriteTimeUtc (mdbPath), "mdb changed");
+				Assert.AreNotEqual (exeStamp, File.GetLastWriteTimeUtc (exePath), $"exe change");
+				Assert.IsTrue (File.Exists (pdbPath), "csc existence");
+				Assert.AreNotEqual (pdbStamp, File.GetLastWriteTimeUtc (pdbPath), $"pdb changed");
 			}
 		}
 
@@ -4013,13 +4009,11 @@ public class HandlerTest
 		}
 
 		[Test]
-		[TestCase (true)]
-		[TestCase (false)]
-		public void SymbolsOutOfDate1 (bool use_csc)
+		public void SymbolsOutOfDate1 ()
 		{
 			using (var mtouch = new MTouchTool ()) {
 				// Compile the managed executable twice, the second time without debugging symbols, which will cause the debugging symbols to become stale
-				mtouch.CreateTemporaryApp (extraArgs: new [] { "/debug:full" }, use_csc: use_csc);
+				mtouch.CreateTemporaryApp (extraArgs: new [] { "/debug:full" });
 				mtouch.CreateTemporaryApp ();
 				mtouch.Linker = MTouchLinker.DontLink; // makes the test faster
 				mtouch.Debug = true; // makes the test faster because it makes simlauncher possible
@@ -4028,16 +4022,14 @@ public class HandlerTest
 		}
 
 		[Test]
-		[TestCase (true)]
-		[TestCase (false)]
-		public void SymbolsOutOfDate2 (bool use_csc)
+		public void SymbolsOutOfDate2 ()
 		{
 			using (var mtouch = new MTouchTool ()) {
 				// Compile the managed executable twice, both times with debugging symbols, but restore the debugging symbols from the first build so that they're stale
-				mtouch.CreateTemporaryApp (extraArgs: new [] { "/debug:full" }, use_csc: use_csc);
-				var symbol_file = use_csc ? Path.ChangeExtension (mtouch.RootAssembly, "pdb") : mtouch.RootAssembly + ".mdb";
+				mtouch.CreateTemporaryApp (extraArgs: new [] { "/debug:full" });
+				var symbol_file = Path.ChangeExtension (mtouch.RootAssembly, "pdb");
 				var symbols = File.ReadAllBytes (symbol_file);
-				mtouch.CreateTemporaryApp (extraArgs: new [] { "/debug:full" }, use_csc: use_csc);
+				mtouch.CreateTemporaryApp (extraArgs: new [] { "/debug:full" });
 				File.WriteAllBytes (symbol_file, symbols);
 				mtouch.Linker = MTouchLinker.DontLink; // makes the test faster
 				mtouch.Debug = true; // makes the test faster because it makes simlauncher possible
@@ -4046,16 +4038,14 @@ public class HandlerTest
 		}
 
 		[Test]
-		[TestCase (true, true)]
-		[TestCase (false, true)]
-		[TestCase (true, false)]
-		[TestCase (false, false)]
-		public void SymbolsBroken1 (bool use_csc, bool compile_with_debug_symbols)
+		[TestCase (true)]
+		[TestCase (false)]
+		public void SymbolsBroken1 (bool compile_with_debug_symbols)
 		{
 			using (var mtouch = new MTouchTool ()) {
 				// (Over)write invalid data in the debug symbol file
-				mtouch.CreateTemporaryApp (use_csc, extraArgs: compile_with_debug_symbols ? new [] { "/debug:full" } : Array.Empty<string> ());
-				var symbol_file = use_csc ? Path.ChangeExtension (mtouch.RootAssembly, "pdb") : mtouch.RootAssembly + ".mdb";
+				mtouch.CreateTemporaryApp (extraArgs: compile_with_debug_symbols ? new [] { "/debug:full" } : Array.Empty<string> ());
+				var symbol_file = Path.ChangeExtension (mtouch.RootAssembly, "pdb");
 				File.WriteAllText (symbol_file, "invalid stuff");
 				mtouch.Linker = MTouchLinker.DontLink; // makes the test faster
 				mtouch.Debug = true; // makes the test faster because it makes simlauncher possible
@@ -4366,9 +4356,9 @@ public class Dummy {
 			ExecutionHelper.Execute ("mono", args, environmentVariables: environment_variables);
 		}
 
-		public static string CompileTestAppExecutable (string targetDirectory, string code = null, IList<string> extraArgs = null, Profile profile = Profile.iOS, string appName = "testApp", string extraCode = null, string usings = null, bool use_csc = true)
+		public static string CompileTestAppExecutable (string targetDirectory, string code = null, IList<string> extraArgs = null, Profile profile = Profile.iOS, string appName = "testApp", string extraCode = null, string usings = null)
 		{
-			return BundlerTool.CompileTestAppExecutable (targetDirectory, code, extraArgs, profile, appName, extraCode, usings, use_csc);
+			return BundlerTool.CompileTestAppExecutable (targetDirectory, code, extraArgs, profile, appName, extraCode, usings);
 		}
 
 		public static string CompileTestAppLibrary (string targetDirectory, string code, IList<string> extraArgs = null, Profile profile = Profile.iOS, string appName = "testApp")
@@ -4376,9 +4366,9 @@ public class Dummy {
 			return BundlerTool.CompileTestAppLibrary (targetDirectory, code, extraArgs, profile, appName);
 		}
 
-		public static string CompileTestAppCode (string target, string targetDirectory, string code, string extraArg = "", Profile profile = Profile.iOS, string appName = "testApp", bool use_csc = true)
+		public static string CompileTestAppCode (string target, string targetDirectory, string code, string extraArg = "", Profile profile = Profile.iOS, string appName = "testApp")
 		{
-			return BundlerTool.CompileTestAppCode (target, targetDirectory, code, new [] { extraArg }, profile, appName, use_csc);
+			return BundlerTool.CompileTestAppCode (target, targetDirectory, code, new [] { extraArg }, profile, appName);
 		}
 
 		static string CreateBindingLibrary (string targetDirectory, string nativeCode, string bindingCode, string linkWith = null, string extraCode = "", string name = "binding", string[] references = null, string arch = "armv7")

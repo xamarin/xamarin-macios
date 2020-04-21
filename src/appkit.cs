@@ -19275,8 +19275,14 @@ namespace AppKit {
 		[Export ("toggleSmartInsertDelete:")]
 		void ToggleSmartInsertDelete (NSObject sender);
 
-		[Export ("smartInsertForString:replacingRange:beforeString:afterString:")]
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'SmartInsert(string, NSRange, out string, out string)' overload instead.")]
+		[Wrap ("throw new NotSupportedException ()", IsVirtual = true)]
 		void SmartInsert (string pasteString, NSRange charRangeToReplace, string beforeString, string afterString);
+#endif
+
+		[Export ("smartInsertForString:replacingRange:beforeString:afterString:")]
+		void SmartInsert (string pasteString, NSRange charRangeToReplace, [NullAllowed] out string beforeString, [NullAllowed] out string afterString);
 
 		[Export ("smartInsertBeforeStringForString:replacingRange:")]
 		string SmartInsertBefore (string pasteString, NSRange charRangeToReplace);

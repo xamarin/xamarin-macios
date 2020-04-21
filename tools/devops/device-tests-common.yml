@@ -131,6 +131,7 @@ jobs:
     displayName: Set pending GitHub status
     continueOnError: true
     condition: succeededOrFailed()
+    timeoutInMinutes: 5
 
   ###
   ### Run the device tests
@@ -152,11 +153,13 @@ jobs:
     displayName: Report results to GitHub as comment / status
     continueOnError: true
     condition: succeededOrFailed()
+    timeoutInMinutes: 5
 
   - bash: ./xamarin-macios/tools/devops/add-summaries.sh
     displayName: 'Add summaries'
     continueOnError: true
     condition: and(succeededOrFailed(), eq(variables['ProvisioningStatus'], 'success')) # if profiles did not succeded we do not need to do a thing since we have no summaries
+    timeoutInMinutes: 5
 
   - task: ArchiveFiles@1
     displayName: 'Archive HtmlReport'
@@ -166,6 +169,7 @@ jobs:
       archiveFile: '$(Build.ArtifactStagingDirectory)/HtmlReport-$(Build.BuildId).zip'
     continueOnError: true
     condition: and(succeededOrFailed(), eq(variables['ProvisioningStatus'], 'success')) # if profiles did not succeded we do not need to do a thing since we have no summaries
+    timeoutInMinutes: 30
 
   ###
   ### Upload the xml results to vsts. We have two types, nunit and xunit. We want both
@@ -179,6 +183,7 @@ jobs:
       failTaskOnFailedTests: true
     continueOnError: true
     condition: and(succeededOrFailed(), eq(variables['ProvisioningStatus'], 'success')) # with no profiles we have no test results
+    timeoutInMinutes: 180
 
   ###
   ### Push the HTML report to Azure DevOps (shows up in Summary tab as Build Artifact)
@@ -191,6 +196,7 @@ jobs:
       artifactName: HtmlReport
     continueOnError: true
     condition: and(succeededOrFailed(), eq(variables['ProvisioningStatus'], 'success')) # with no profiles we have no test results
+    timeoutInMinutes: 30
 
   ###
   ### Cleanup after us, not having that can lead to VSMac install issues
