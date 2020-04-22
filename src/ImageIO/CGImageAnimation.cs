@@ -20,71 +20,73 @@ namespace ImageIO
     public partial class CGImageAnimation
     {
 
-        public delegate void CGImageSourceAnimationBlock (nint index, CGImage image, out bool stop);
+        public delegate void CGImageSourceAnimationHandler (nint index, CGImage image, out bool stop);
 
         [Introduced (PlatformName.MacOSX, 10, 15, PlatformArchitecture.All)]
         [Introduced (PlatformName.iOS, 13, 0, PlatformArchitecture.All)]
+        [Introduced (PlatformName.TvOS, 13, 0, PlatformArchitecture.All)]
+        [Introduced (PlatformName.WatchOS, 6, 0, PlatformArchitecture.All)]
         [DllImport (Constants.ImageIOLibrary)]
-        static extern int CGAnimateImageAtURLWithBlock ( /* CFURLRef */ IntPtr url, /* CFDictionaryRef _iio_Nullable */ IntPtr options, /* CGImageSourceAnimationBlock */ ref BlockLiteral block);
+        static extern int CGAnimateImageAtURLWithBlock ( /* CFURLRef */ IntPtr url, /* CFDictionaryRef _iio_Nullable */ IntPtr options, /* CGImageSourceAnimationHandler */ ref BlockLiteral block);
 
         [Introduced (PlatformName.MacOSX, 10, 15, PlatformArchitecture.All)]
         [Introduced (PlatformName.iOS, 13, 0, PlatformArchitecture.All)]
+        [Introduced (PlatformName.TvOS, 13, 0, PlatformArchitecture.All)]
+        [Introduced (PlatformName.WatchOS, 6, 0, PlatformArchitecture.All)]
         [DllImport (Constants.ImageIOLibrary)]
-        static extern int CGAnimateImageDataWithBlock ( /* CFDataRef _Nonnull */ IntPtr data, /* CFDictionaryRef _Nullable */ IntPtr options, /* CGImageSourceAnimationBlock _Nonnull */ ref BlockLiteral block);
+        static extern int CGAnimateImageDataWithBlock ( /* CFDataRef _Nonnull */ IntPtr data, /* CFDictionaryRef _Nullable */ IntPtr options, /* CGImageSourceAnimationHandler _Nonnull */ ref BlockLiteral block);
 
         [Introduced (PlatformName.MacOSX, 10, 15, PlatformArchitecture.All)]
         [Introduced (PlatformName.iOS, 13, 0, PlatformArchitecture.All)]
+        [Introduced (PlatformName.TvOS, 13, 0, PlatformArchitecture.All)]
+        [Introduced (PlatformName.WatchOS, 6, 0, PlatformArchitecture.All)]
         [BindingImpl (BindingImplOptions.Optimizable)]
-        public int AnimateImage (NSUrl url, NSDictionary options, [BlockProxy (typeof (NIDCGImageSourceAnimationBlock))] CGImageSourceAnimationBlock block)
+        public int AnimateImage (NSUrl url, NSDictionary options, [BlockProxy (typeof (NIDCGImageSourceAnimationBlock))] CGImageSourceAnimationHandler handler)
         {
 #if IOS && ARCH_32
             throw new PlatformNotSupportedException ();
 #else
             if (url == null)
                 throw new ArgumentNullException (nameof (url));
-            if (block == null)
-                throw new ArgumentNullException (nameof (block));
+            if (handler == null)
+                throw new ArgumentNullException (nameof (handler));
 
-            int ret;
             BlockLiteral block_block;
             block_block = new BlockLiteral ();
-            block_block.SetupBlockUnsafe (SDCGImageSourceAnimationBlock.Handler, block);
+            block_block.SetupBlockUnsafe (SDCGImageSourceAnimationBlock.Handler, handler);
 
             try {
-                ret = CGAnimateImageAtURLWithBlock (url.Handle, options.GetHandle (), ref block_block);
+                return CGAnimateImageAtURLWithBlock (url.Handle, options.GetHandle (), ref block_block);
             } finally {
                 block_block.CleanupBlock ();
             }
-
-            return ret;
 #endif
         }
 
         [Introduced (PlatformName.MacOSX, 10, 15, PlatformArchitecture.All)]
         [Introduced (PlatformName.iOS, 13, 0, PlatformArchitecture.All)]
+        [Introduced (PlatformName.TvOS, 13, 0, PlatformArchitecture.All)]
+        [Introduced (PlatformName.WatchOS, 6, 0, PlatformArchitecture.All)]
         [BindingImpl (BindingImplOptions.Optimizable)]
-        public int AnimateImage (NSData data, NSDictionary options, [BlockProxy (typeof (NIDCGImageSourceAnimationBlock))] CGImageSourceAnimationBlock block)
+        public int AnimateImage (NSData data, NSDictionary options, [BlockProxy (typeof (NIDCGImageSourceAnimationBlock))] CGImageSourceAnimationHandler handler)
         {
 #if IOS && ARCH_32
             throw new PlatformNotSupportedException ();
 #else
             if (data == null)
                 throw new ArgumentNullException (nameof (data));
-            if (block == null)
-                throw new ArgumentNullException (nameof (block));
+            if (handler == null)
+                throw new ArgumentNullException (nameof (handler));
 
-            int ret;
             BlockLiteral block_block;
             block_block = new BlockLiteral ();
-            block_block.SetupBlockUnsafe (SDCGImageSourceAnimationBlock.Handler, block);
+            block_block.SetupBlockUnsafe (SDCGImageSourceAnimationBlock.Handler, handler);
 
             try {
-                ret = CGAnimateImageDataWithBlock (data.Handle, options.GetHandle (), ref block_block);
+                return CGAnimateImageDataWithBlock (data.Handle, options.GetHandle (), ref block_block);
             } finally {
                 block_block.CleanupBlock ();
             }
-
-            return ret;
 #endif
         }
 
@@ -96,9 +98,9 @@ namespace ImageIO
             static internal readonly DCGImageSourceAnimationBlock Handler = Invoke;
 
             [MonoPInvokeCallback (typeof (DCGImageSourceAnimationBlock))]
-            static void Invoke (IntPtr block, nint index, IntPtr image, [System.Runtime.InteropServices.MarshalAs (System.Runtime.InteropServices.UnmanagedType.I1)] out bool stop)
+            static void Invoke (IntPtr block, nint index, IntPtr image, [MarshalAs (UnmanagedType.I1)] out bool stop)
             {
-                var del = BlockLiteral.GetTarget<CGImageSourceAnimationBlock> (block);
+                var del = BlockLiteral.GetTarget<CGImageSourceAnimationHandler> (block);
                 if (del != null)
                     del (index, new CoreGraphics.CGImage (image), out stop);
                 else
@@ -118,24 +120,24 @@ namespace ImageIO
 
             [Preserve (Conditional = true)]
             [BindingImpl (BindingImplOptions.Optimizable)]
-            public unsafe static CGImageSourceAnimationBlock Create (IntPtr block)
+            public unsafe static CGImageSourceAnimationHandler Create (IntPtr block)
             {
                 if (block == IntPtr.Zero)
                     return null;
-                var del = (CGImageSourceAnimationBlock) GetExistingManagedDelegate (block);
+                var del = (CGImageSourceAnimationHandler) GetExistingManagedDelegate (block);
                 return del ?? new NIDCGImageSourceAnimationBlock ( (BlockLiteral *) block).Invoke;
             }
 
             [BindingImpl (BindingImplOptions.Optimizable)]
             void Invoke (nint index, CGImage image, out bool stop)
             {
-                invoker (BlockPointer, index, image == null ? IntPtr.Zero : image.Handle, out stop);
+                invoker (BlockPointer, index, image.GetHandle (), out stop);
             }
         } /* class NIDCGImageSourceAnimationBlock */
 
         [UnmanagedFunctionPointerAttribute (CallingConvention.Cdecl)]
-        [UserDelegateType (typeof (CGImageSourceAnimationBlock))]
-        internal delegate void DCGImageSourceAnimationBlock (IntPtr block, nint index, IntPtr imageHandle, [System.Runtime.InteropServices.MarshalAs (System.Runtime.InteropServices.UnmanagedType.I1)] out bool stop);
+        [UserDelegateType (typeof (CGImageSourceAnimationHandler))]
+        internal delegate void DCGImageSourceAnimationBlock (IntPtr block, nint index, IntPtr imageHandle, [MarshalAs (UnmanagedType.I1)] out bool stop);
     }
 
 }
