@@ -3,6 +3,16 @@ Get-Location
 Set-Location Env:
 Get-ChildItem
 
+
+$testsummary_location = $Env:SYSTEM_DEFAULTWORKINGDIR
+Write-Host $testsummary_location
+Get-Content $testsummary_location
+Get-Content $testsummary_location | Write-Host
+
+$testsummary_location = $testsummary_location + "/TestSummary.md"
+Write-Host $testsummary_location
+Get-Content $testsummary_location
+
 # get combined status:
 # success only if every status is success
 # otherwise failure
@@ -17,7 +27,7 @@ $params = @{
     ContentType = 'application/json'
 }
 
-# 
+#
 $response = Invoke-RestMethod @params
 
 Write-Host $response
@@ -46,7 +56,7 @@ $json_payload = @"
 {
     "state" : "$state",
     "target_url" : "$target_url",
-    "description" : "description placeholder", 
+    "description" : "description placeholder",
     "context" : "VSTS: AGGREGATE device tests"
 }
 "@
@@ -85,7 +95,7 @@ $response | Write-Host
 # -Method Post
 # -Body $json_payload
 #$response = Invoke-RestMethod -Uri $url -ContentType application/json  -Method Post -Body @json_payload
-<# 
+<#
 (
 	printf '{\n'
 	printf "\t\"state\": \"%s\",\n" "$STATE"
