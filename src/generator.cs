@@ -3799,19 +3799,7 @@ public partial class Generator : IMemberGatherer {
 		int index64 = dual_enum ? 1 : 0;
 
 		if (CurrentPlatform == PlatformName.MacOSX) {
-			if (need_multi_path) {
-				print ("if (IntPtr.Size == 8) {");
-				indent++;
-				GenerateInvoke (x64_stret, supercall, mi, minfo, selector, args[index64], assign_to_temp, category_type, aligned && x64_stret, EnumMode.Bit64);
-				indent--;
-				print ("} else {");
-				indent++;
-				GenerateInvoke (x86_stret, supercall, mi, minfo, selector, args[0], assign_to_temp, category_type, aligned && x86_stret, EnumMode.Bit32);
-				indent--;
-				print ("}");
-			} else {
-				GenerateInvoke (x86_stret, supercall, mi, minfo, selector, args[0], assign_to_temp, category_type, aligned && x86_stret);
-			}
+			GenerateInvoke (x64_stret, supercall, mi, minfo, selector, args[index64], assign_to_temp, category_type, aligned && x64_stret, EnumMode.Bit64);
 			return;
 		}
 
