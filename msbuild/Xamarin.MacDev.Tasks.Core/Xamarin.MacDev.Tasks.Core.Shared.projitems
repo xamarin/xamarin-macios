@@ -78,5 +78,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ProcessUtils.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StringParserService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)VerbosityUtils.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\DetectSdkLocationCoreTaskBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tasks\XamarinTask.cs" />
   </ItemGroup>
 </Project>

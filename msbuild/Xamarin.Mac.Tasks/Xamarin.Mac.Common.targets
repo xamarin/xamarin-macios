@@ -241,7 +241,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			CompiledEntitlements="$(IntermediateOutputPath)Entitlements.xcent"
 			IsAppExtension="$(IsAppExtension)"
 			ProvisioningProfile="$(_ProvisioningProfile)"
-			SdkVersion="$(MacOSXSdkVersion)"
+			SdkVersion="$(_SdkVersion)"
 			SdkPlatform="MacOSX"
 			SdkDevPath="$(_SdkDevPath)"
 			Debug="$(DebugSymbols)"
@@ -342,7 +342,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			SdkDevPath="$(_SdkDevPath)"
 			SdkIsSimulator="false"
 			SdkRoot="$(_SdkRoot)"
-			SdkVersion="$(MacOSXSdkVersion)"
+			SdkVersion="$(_SdkVersion)"
 			SourceFile="@(Metal)">
 			<Output TaskParameter="OutputFile" ItemName="_SmeltedMetal" />
 		</Metal>
@@ -447,15 +447,20 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		</UnpackLibraryResources>
 	</Target>
 
-	<Target Name="_DetectSdkLocations">
+	<Target Name="_DetectSdkLocations" DependsOnTargets="_ComputeTargetFrameworkMoniker">
 		<DetectSdkLocations
+			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
-			SessionId="$(BuildSessionId)">
-			<Output TaskParameter="SdkVersion" PropertyName="MacOSXSdkVersion" />
+			SdkVersion="$(MacOSXSdkVersion)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+			>
+			<Output TaskParameter="SdkVersion" PropertyName="_SdkVersion" />
 			<Output TaskParameter="SdkRoot" PropertyName="_SdkRoot" />
 			<Output TaskParameter="SdkBinPath" PropertyName="_SdkBinPath" />
 			<Output TaskParameter="SdkDevPath" PropertyName="_SdkDevPath" />
 			<Output TaskParameter="SdkUsrPath" PropertyName="_SdkUsrPath" />
+			<Output TaskParameter="SdkPlatform" PropertyName="_SdkPlatform" />
+			<Output TaskParameter="SdkIsSimulator" PropertyName="_SdkIsSimulator" />
 			<Output TaskParameter="IsXcode8" PropertyName="_IsXcode8" />
 			<Output TaskParameter="XamarinSdkRoot" PropertyName="_XamarinSdkRoot" />
 		</DetectSdkLocations>
@@ -552,7 +557,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			SdkRoot="$(_SdkDevPath)"
 			IntermediateOutputPath="$(IntermediateOutputPath)mmp-cache"
 			AppManifest="$(_AppManifest)"
-			SdkVersion="$(MacOSXSdkVersion)"
+			SdkVersion="$(_SdkVersion)"
 			IsAppExtension="$(IsAppExtension)"
 			IsXPCService="$(IsXPCService)"
 			EnableSGenConc="$(EnableSGenConc)"
@@ -590,7 +595,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			ToolPath="$(ScnToolPath)"
 			SdkRoot="$(_SdkRoot)"
 			SdkDevPath="$(_SdkDevPath)"
-			SdkVersion="$(MacOSXSdkVersion)"
+			SdkVersion="$(_SdkVersion)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			IntermediateOutputPath="$(IntermediateOutputPath)"
 			InputScene="%(_ColladaAssetWithLogicalName.Identity)"
@@ -651,7 +656,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			SdkBinPath="$(_SdkBinPath)"
 			SdkUsrPath="$(_SdkUsrPath)"
 			SdkPlatform="MacOSX"
-			SdkVersion="$(MacOSXSdkVersion)">
+			SdkVersion="$(_SdkVersion)">
 			<Output TaskParameter="PartialAppManifest" ItemName="_PartialAppManifest" />
 			<Output TaskParameter="BundleResources" ItemName="_BundleResourceWithLogicalName" />
 
@@ -685,7 +690,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			SdkPlatform="MacOSX"
 			SdkDevPath="$(_SdkDevPath)"
 			SdkRoot="$(_SdkRoot)"
-			SdkVersion="$(MacOSXSdkVersion)">
+			SdkVersion="$(_SdkVersion)">
 			<Output TaskParameter="BundleResources" ItemName="FileWrites" />
 			<Output TaskParameter="BundleResources" ItemName="_BundleResourceWithLogicalName" />
 		</CompileSceneKitAssets>
@@ -710,7 +715,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			SdkBinPath="$(_SdkBinPath)"
 			SdkUsrPath="$(_SdkUsrPath)"
 			SdkRoot="$(_SdkRoot)"
-			SdkVersion="$(MacOSXSdkVersion)">
+			SdkVersion="$(_SdkVersion)">
 			<Output TaskParameter="OutputManifests" ItemName="FileWrites" />
 			<Output TaskParameter="BundleResources" ItemName="FileWrites" />
 			<Output TaskParameter="BundleResources" ItemName="_BundleResourceWithLogicalName" />

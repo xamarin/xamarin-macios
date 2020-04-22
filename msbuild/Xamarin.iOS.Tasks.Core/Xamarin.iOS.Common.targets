@@ -615,7 +615,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			SdkDevPath="$(_SdkDevPath)"
 			SdkIsSimulator="$(_SdkIsSimulator)"
 			SdkRoot="$(_SdkRoot)"
-			SdkVersion="$(MtouchSdkVersion)"
+			SdkVersion="$(_SdkVersion)"
 			SourceFile="@(Metal)">
 			<Output TaskParameter="OutputFile" ItemName="_SmeltedMetal" />
 		</Metal>
@@ -687,7 +687,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			TargetArchitectures="$(TargetArchitectures)"
 			>
 			
-			<Output TaskParameter="SdkVersion" PropertyName="MtouchSdkVersion" />
+			<Output TaskParameter="SdkVersion" PropertyName="_SdkVersion" />
 			<Output TaskParameter="SdkRoot" PropertyName="_SdkRoot" />
 			<Output TaskParameter="SdkBinPath" PropertyName="_SdkBinPath" />
 			<Output TaskParameter="SdkDevPath" PropertyName="_SdkDevPath" />
@@ -781,7 +781,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			AssemblyName="$(AssemblyName)"
 			BundleIdentifier="$(_BundleIdentifier)"
 			Debug="$(MtouchDebug)"
-			DefaultSdkVersion="$(MtouchSdkVersion)"
+			DefaultSdkVersion="$(_SdkVersion)"
 			IsAppExtension="$(IsAppExtension)"
 			IsWatchApp="$(IsWatchApp)"
 			IsWatchExtension="$(IsWatchExtension)"
@@ -913,7 +913,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			ResponseFilePath="$(DeviceSpecificIntermediateOutputPath)response-file.rsp"
 			SdkRoot="$(_SdkDevPath)"
 			SdkIsSimulator="$(_SdkIsSimulator)"
-			SdkVersion="$(MtouchSdkVersion)"
+			SdkVersion="$(_SdkVersion)"
 			SymbolsList="$(_MtouchSymbolsList)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			UseLlvm="$(MtouchUseLlvm)"
@@ -1264,7 +1264,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			ToolPath="$(ScnToolPath)"
 			SdkRoot="$(_SdkRoot)"
 			SdkDevPath="$(_SdkDevPath)"
-			SdkVersion="$(MtouchSdkVersion)"
+			SdkVersion="$(_SdkVersion)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
 			InputScene="%(_ColladaAssetWithLogicalName.Identity)"
@@ -1327,7 +1327,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			SdkBinPath="$(_SdkBinPath)"
 			SdkUsrPath="$(_SdkUsrPath)"
 			SdkPlatform="$(_SdkPlatform)"
-			SdkVersion="$(MtouchSdkVersion)">
+			SdkVersion="$(_SdkVersion)">
 			<Output TaskParameter="PartialAppManifest" ItemName="_PartialAppManifest" />
 			<Output TaskParameter="BundleResources" ItemName="_BundleResourceWithLogicalName" />
 
@@ -1386,7 +1386,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			SdkPlatform="$(_SdkPlatform)"
 			SdkDevPath="$(_SdkDevPath)"
 			SdkRoot="$(_SdkRoot)"
-			SdkVersion="$(MtouchSdkVersion)">
+			SdkVersion="$(_SdkVersion)">
 			<Output TaskParameter="BundleResources" ItemName="_BundleResourceWithLogicalName" />
 
 			<!-- Local items to be persisted to items files -->
@@ -1442,7 +1442,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			SdkUsrPath="$(_SdkUsrPath)"
 			SdkRoot="$(_SdkRoot)"
 			SdkPlatform="$(_SdkPlatform)"
-			SdkVersion="$(MtouchSdkVersion)">
+			SdkVersion="$(_SdkVersion)">
 			<Output TaskParameter="BundleResources" ItemName="_BundleResourceWithLogicalName" />
 
 			<!-- Local items to be persisted to items files -->
@@ -1593,7 +1593,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			ProvisioningProfile="$(_ProvisioningProfile)"
 			SdkIsSimulator="$(_SdkIsSimulator)"
 			SdkPlatform="$(_SdkPlatform)"
-			SdkVersion="$(MtouchSdkVersion)"
+			SdkVersion="$(_SdkVersion)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			>
 
@@ -1614,7 +1614,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			Condition="'$(IsMacEnabled)' == 'true' And '$(CodesignResourceRules)' != '' And '$(ComputedPlatform)' == 'iPhone'"
 			AppBundleDir="$(AppBundleDir)"
 			ResourceRules="$(CodesignResourceRules)"
-			SdkVersion="$(MtouchSdkVersion)"
+			SdkVersion="$(_SdkVersion)"
 			>
 			<Output TaskParameter="PreparedResourceRules" PropertyName="_PreparedResourceRules"/>
 		</PrepareResourceRules>
