@@ -42,7 +42,7 @@ def getRedirect () {
     if (response == 302) {
         return connection.getHeaderField("Location")
     } else {
-        throw new Exception("DL link failed ${response}: ${content}")
+        throw new Exception("Failed to get redirect link for Xamarin.Build.Tasks: ${response}")
     }
 }
 
@@ -556,6 +556,7 @@ timestamps {
                         // }
 
                         stage ('Generate Workspace Info') {
+                            currentStage = "${STAGE_NAME}"
                             withCredentials([string (credentialsId: '92cf81e5-6db5-408c-8a0d-192b36200a16', variable: 'GITHUB_AUTH_TOKEN'), string (credentialsId: 'xamarin-build-tasks', variable: 'XAMARIN_BUILD_TASKS')]) {
                                 def redirect = getRedirect ()
                                 sh "curl -o Xamarin.Build.Tasks.nupkg \"${redirect}\""
