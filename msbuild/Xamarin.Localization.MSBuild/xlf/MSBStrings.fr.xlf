@@ -114,122 +114,10 @@
         </target>
         <note></note>
       </trans-unit>
-      <trans-unit id="E0026">
-        <source>The Apple TVOS SDK is not installed.
-        </source>
-        <target state="new">The Apple TVOS SDK is not installed.
-        </target>
-        <note></note>
-      </trans-unit>
-      <trans-unit id="E0027">
-        <source>The TVOS SDK version '{0}' is not installed, and no newer version was found.
-        </source>
-        <target state="new">The TVOS SDK version '{0}' is not installed, and no newer version was found.
-        </target>
-        <note></note>
-      </trans-unit>
-      <trans-unit id="E0028">
-        <source>The TVOS SDK version '{0}' is not installed. Using newer version '{1}' instead'.
-        </source>
-        <target state="new">The TVOS SDK version '{0}' is not installed. Using newer version '{1}' instead'.
-        </target>
-        <note></note>
-      </trans-unit>
-      <trans-unit id="E0029">
-        <source>Could not locate the TVOS platform directory at path '{0}'
-        </source>
-        <target state="new">Could not locate the TVOS platform directory at path '{0}'
-        </target>
-        <note></note>
-      </trans-unit>
-      <trans-unit id="E0030">
-        <source>Could not locate the TVOS '{0}' SDK at path '{1}'
-        </source>
-        <target state="new">Could not locate the TVOS '{0}' SDK at path '{1}'
-        </target>
-        <note></note>
-      </trans-unit>
-      <trans-unit id="E0031">
-        <source>Could not locate the TVOS '{0}' SDK usr path at '{1}'
-        </source>
-        <target state="new">Could not locate the TVOS '{0}' SDK usr path at '{1}'
-        </target>
-        <note></note>
-      </trans-unit>
       <trans-unit id="E0032">
         <source>Could not locate SDK bin directory
         </source>
         <target state="new">Could not locate SDK bin directory
-        </target>
-        <note></note>
-      </trans-unit>
-      <trans-unit id="E0033">
-        <source>The Watch SDK version '{0}' is not installed, and no newer version was found.
-        </source>
-        <target state="new">The Watch SDK version '{0}' is not installed, and no newer version was found.
-        </target>
-        <note></note>
-      </trans-unit>
-      <trans-unit id="E0035">
-        <source>Could not locate the WatchOS platform directory at path '{0}'
-        </source>
-        <target state="new">Could not locate the WatchOS platform directory at path '{0}'
-        </target>
-        <note></note>
-      </trans-unit>
-      <trans-unit id="E0036">
-        <source>Could not locate the WatchOS '{0}' SDK at path '{1}'
-        </source>
-        <target state="new">Could not locate the WatchOS '{0}' SDK at path '{1}'
-        </target>
-        <note></note>
-      </trans-unit>
-      <trans-unit id="E0037">
-        <source>Could not locate the WatchOS '{0}' SDK usr path at '{1}'
-        </source>
-        <target state="new">Could not locate the WatchOS '{0}' SDK usr path at '{1}'
-        </target>
-        <note></note>
-      </trans-unit>
-      <trans-unit id="E0038">
-        <source>The Apple iOS SDK is not installed.
-        </source>
-        <target state="new">The Apple iOS SDK is not installed.
-        </target>
-        <note></note>
-      </trans-unit>
-      <trans-unit id="E0039">
-        <source>The iOS SDK version '{0}' is not installed, and no newer version was found.
-        </source>
-        <target state="new">The iOS SDK version '{0}' is not installed, and no newer version was found.
-        </target>
-        <note></note>
-      </trans-unit>
-      <trans-unit id="E0040">
-        <source>The iOS SDK version '{0}' is not installed. Using newer version '{1}' instead'.
-        </source>
-        <target state="new">The iOS SDK version '{0}' is not installed. Using newer version '{1}' instead'.
-        </target>
-        <note></note>
-      </trans-unit>
-      <trans-unit id="E0041">
-        <source>Could not locate the iOS platform directory at path '{0}'
-        </source>
-        <target state="new">Could not locate the iOS platform directory at path '{0}'
-        </target>
-        <note></note>
-      </trans-unit>
-      <trans-unit id="E0042">
-        <source>Could not locate the iOS '{0}' SDK at path '{1}'
-        </source>
-        <target state="new">Could not locate the iOS '{0}' SDK at path '{1}'
-        </target>
-        <note></note>
-      </trans-unit>
-      <trans-unit id="E0043">
-        <source>Could not locate the iOS '{0}' SDK usr path at '{1}'
-        </source>
-        <target state="new">Could not locate the iOS '{0}' SDK usr path at '{1}'
         </target>
         <note></note>
       </trans-unit>
@@ -248,11 +136,11 @@
         <note></note>
       </trans-unit>
       <trans-unit id="E0046">
-        <source>Could not find 'Xamarin.iOS'
+        <source>Could not find '{0}'
         </source>
-        <target state="new">Could not find 'Xamarin.iOS'
+        <target state="new">Could not find '{0}'
         </target>
-        <note></note>
+        <note />
       </trans-unit>
       <trans-unit id="E0048">
         <source>Unknown SDK platform: {0}
@@ -392,38 +280,24 @@
         </target>
         <note></note>
       </trans-unit>
-      <trans-unit id="E0083">
-        <source>The Apple macOS SDK is not installed.
-        </source>
-        <target state="new">The Apple macOS SDK is not installed.
-        </target>
-        <note></note>
-      </trans-unit>
       <trans-unit id="E0084">
-        <source>Could not locate the macOS '{0}' SDK at path '{1}'
+        <source>Could not locate the {0} '{1}' SDK at path '{}'
         </source>
-        <target state="new">Could not locate the macOS '{0}' SDK at path '{1}'
+        <target state="new">Could not locate the {0} '{1}' SDK at path '{}'
         </target>
-        <note></note>
+        <note />
       </trans-unit>
       <trans-unit id="E0085">
-        <source>Could not locate the macOS '{0}' SDK usr path at '{1}'
+        <source>Could not locate the {0} '{1}' SDK usr path at '{2}'
         </source>
-        <target state="new">Could not locate the macOS '{0}' SDK usr path at '{1}'
+        <target state="new">Could not locate the {0} '{1}' SDK usr path at '{2}'
         </target>
-        <note></note>
+        <note />
       </trans-unit>
       <trans-unit id="E0086">
         <source>Could not find a valid Xcode developer path
         </source>
         <target state="new">Could not find a valid Xcode developer path
-        </target>
-        <note></note>
-      </trans-unit>
-      <trans-unit id="E0087">
-        <source>Could not find 'Xamarin.Mac'
-        </source>
-        <target state="new">Could not find 'Xamarin.Mac'
         </target>
         <note></note>
       </trans-unit>
@@ -769,6 +643,34 @@
         <target state="new">Unknown target framework identifier: {0}.
         </target>
         <note></note>
+      </trans-unit>
+      <trans-unit id="E0170">
+        <source>Could not find {0} in {1}.
+        </source>
+        <target state="new">Could not find {0} in {1}.
+        </target>
+        <note />
+      </trans-unit>
+      <trans-unit id="E0171">
+        <source>The {0} SDK is not installed.
+        </source>
+        <target state="new">The {0} SDK is not installed.
+        </target>
+        <note />
+      </trans-unit>
+      <trans-unit id="E0172">
+        <source>The {0} SDK version '{1}' is not installed, and no newer version was found.
+        </source>
+        <target state="new">The {0} SDK version '{1}' is not installed, and no newer version was found.
+        </target>
+        <note />
+      </trans-unit>
+      <trans-unit id="E0173">
+        <source>The {0} SDK version '{1}' is not installed. Using newer version '{2}' instead'.
+        </source>
+        <target state="new">The {0} SDK version '{1}' is not installed. Using newer version '{2}' instead'.
+        </target>
+        <note />
       </trans-unit>
       <trans-unit id="E7001">
         <source>Could not resolve host IPs for WiFi debugger settings.
@@ -1509,13 +1411,6 @@
         <source>Supported iPad orientations are not matched pairs
         </source>
         <target state="new">Supported iPad orientations are not matched pairs
-        </target>
-        <note></note>
-      </trans-unit>
-      <trans-unit id="W0034">
-        <source>The Watch SDK version '{0}' is not installed. Using newer version '{1}' instead'.
-        </source>
-        <target state="new">The Watch SDK version '{0}' is not installed. Using newer version '{1}' instead'.
         </target>
         <note></note>
       </trans-unit>
