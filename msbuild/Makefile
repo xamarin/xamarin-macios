@@ -155,7 +155,7 @@ MAC_TASK_ASSEMBLIES = Xamarin.Mac.Tasks
 MAC_BINDING_TASK_ASSEMBLIES = 
 
 MAC_DIRECTORIES =                                                                                           \
-	$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin/Mac                            \
+	$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin                                \
 	$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks/Xamarin.Mac/v2.0/RedistList \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild                                                  \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/RedistList                                      \
@@ -163,11 +163,7 @@ MAC_DIRECTORIES =                                                               
 
 MAC_SYMLINKS =                                                                                                                                       \
 	$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks/Xamarin.Mac/v2.0/RedistList/FrameworkList.xml                        \
-	$(foreach target,$(MAC_TARGETS)               ,$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin/Mac/$(notdir $(target))) \
-	$(foreach target,$(MAC_BINDING_TARGETS)       ,$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin/Mac/$(notdir $(target))) \
-	$(foreach dll,$(MAC_TASK_ASSEMBLIES)          ,$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin/Mac/$(dll).dll)          \
-	$(foreach dll,$(LOCALIZATION_ASSEMBLIES)      ,$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin/Mac/$(dll).dll)          \
-	$(foreach dll,$(MAC_BINDING_TASK_ASSEMBLIES)  ,$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin/Mac/$(dll).dll)          \
+	$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin/Mac                                                                     \
 
 MAC_PRODUCTS =                                                                                                                 \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild/FrameworkList.xml                                                   \
@@ -276,7 +272,10 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/TVOS/%.dll: build/%.dll | $(IOS_DE
 # Everything in /Library/Frameworks/Mono.framework/External are links into /Library/Frameworks/Xamarin.Mac.framework/Versions/Current
 # This makes it easy to switch XM, by just pointing /Library/Frameworks/Xamarin.Mac.framework/Versions/Current somewhere else
 
-$(MAC_SYMLINKS): | $(MAC_DIRECTORIES)
+$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin/Mac: $(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin
+	$(Q) ln -Fhs $(MAC_TARGETDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/msbuild $@
+
+$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks/Xamarin.Mac/v2.0/RedistList/FrameworkList.xml: | $(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks/Xamarin.Mac/v2.0/RedistList
 	$(Q) ln -fs $(MAC_TARGETDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/msbuild/$(notdir $@) $@
 
 # The actual content goes into /Library/Frameworks/Xamarin.Mac.framework/Versions/Current
@@ -326,7 +325,8 @@ endef
 $(foreach dll,$(sort $(MSBUILD_TASK_ASSEMBLIES)),$(eval $(call copyToBuild,$(dll))))
 
 # this is a directory-creating target.
-$(MSBUILD_DIRECTORIES) build:
+# we sort to remove duplicates, which can happen if MAC_DESTDIR and IOS_DESTDIR are the same (both create a '/Library/Frameworks/Mono.framework/External/xbuild/Xamarin' target)
+$(sort $(MSBUILD_DIRECTORIES)) build:
 	$(Q) mkdir -p $@
 
 install-symlinks: $(MSBUILD_SYMLINKS)
