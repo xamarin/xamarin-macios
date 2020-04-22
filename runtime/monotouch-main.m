@@ -271,6 +271,10 @@ xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode)
 	// take this line out once the bug is fixed
 	mini_parse_debug_option ("no-gdb-backtrace");
 
+	/* EnC debugging */
+	setenv ("MONO_LOG_MASK", "asm,metadata-update", 1);
+	setenv ("MONO_LOG_LEVEL", "debug", 1);
+
 #if !defined(__arm__) && !defined(__aarch64__)
 	/* force interpreter on simluator */
 	mono_jit_set_aot_mode ((MonoAotMode) 1000 /* MONO_EE_MODE_INTERP */)
