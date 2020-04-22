@@ -27,21 +27,21 @@ namespace ImageIO
         [Introduced (PlatformName.TvOS, 13, 0, PlatformArchitecture.All)]
         [Introduced (PlatformName.WatchOS, 6, 0, PlatformArchitecture.All)]
         [DllImport (Constants.ImageIOLibrary)]
-        static extern int CGAnimateImageAtURLWithBlock ( /* CFURLRef */ IntPtr url, /* CFDictionaryRef _iio_Nullable */ IntPtr options, /* CGImageSourceAnimationHandler */ ref BlockLiteral block);
+        static extern /* OSStatus */ CGImageAnimationStatus CGAnimateImageAtURLWithBlock ( /* CFURLRef */ IntPtr url, /* CFDictionaryRef _iio_Nullable */ IntPtr options, /* CGImageSourceAnimationHandler */ ref BlockLiteral block);
 
         [Introduced (PlatformName.MacOSX, 10, 15, PlatformArchitecture.All)]
         [Introduced (PlatformName.iOS, 13, 0, PlatformArchitecture.All)]
         [Introduced (PlatformName.TvOS, 13, 0, PlatformArchitecture.All)]
         [Introduced (PlatformName.WatchOS, 6, 0, PlatformArchitecture.All)]
         [DllImport (Constants.ImageIOLibrary)]
-        static extern int CGAnimateImageDataWithBlock ( /* CFDataRef _Nonnull */ IntPtr data, /* CFDictionaryRef _Nullable */ IntPtr options, /* CGImageSourceAnimationHandler _Nonnull */ ref BlockLiteral block);
+        static extern /* OSStatus */ CGImageAnimationStatus CGAnimateImageDataWithBlock ( /* CFDataRef _Nonnull */ IntPtr data, /* CFDictionaryRef _Nullable */ IntPtr options, /* CGImageSourceAnimationHandler _Nonnull */ ref BlockLiteral block);
 
         [Introduced (PlatformName.MacOSX, 10, 15, PlatformArchitecture.All)]
         [Introduced (PlatformName.iOS, 13, 0, PlatformArchitecture.All)]
         [Introduced (PlatformName.TvOS, 13, 0, PlatformArchitecture.All)]
         [Introduced (PlatformName.WatchOS, 6, 0, PlatformArchitecture.All)]
         [BindingImpl (BindingImplOptions.Optimizable)]
-        public int AnimateImage (NSUrl url, NSDictionary options, [BlockProxy (typeof (NIDCGImageSourceAnimationBlock))] CGImageSourceAnimationHandler handler)
+        public CGImageAnimationStatus AnimateImage (NSUrl url, NSDictionary options, [BlockProxy (typeof (NIDCGImageSourceAnimationBlock))] CGImageSourceAnimationHandler handler)
         {
 #if IOS && ARCH_32
             throw new PlatformNotSupportedException ();
@@ -68,7 +68,7 @@ namespace ImageIO
         [Introduced (PlatformName.TvOS, 13, 0, PlatformArchitecture.All)]
         [Introduced (PlatformName.WatchOS, 6, 0, PlatformArchitecture.All)]
         [BindingImpl (BindingImplOptions.Optimizable)]
-        public int AnimateImage (NSData data, NSDictionary options, [BlockProxy (typeof (NIDCGImageSourceAnimationBlock))] CGImageSourceAnimationHandler handler)
+        public CGImageAnimationStatus AnimateImage (NSData data, NSDictionary options, [BlockProxy (typeof (NIDCGImageSourceAnimationBlock))] CGImageSourceAnimationHandler handler)
         {
 #if IOS && ARCH_32
             throw new PlatformNotSupportedException ();

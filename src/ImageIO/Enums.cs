@@ -65,6 +65,7 @@ namespace ImageIO {
 	[Mac (10, 15), iOS (13, 0), TV (13, 0), Watch (6, 0)]
 	public enum CGImageAnimationStatus
 	{
+		Ok = 0,
 		ParameterError = -22140,
 		CorruptInputImage = -22141,
 		UnsupportedFormat = -22142,
