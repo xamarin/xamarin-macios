@@ -138,20 +138,9 @@
         </value>
     </data>
     
-    <data name="E0026" xml:space="preserve">
-        <value>The Apple TVOS SDK is not installed.
-        </value>
-    </data>
-    
-    <data name="E0027" xml:space="preserve">
-        <value>The TVOS SDK version '{0}' is not installed, and no newer version was found.
-        </value>
-    </data>
-    
-    <data name="E0028" xml:space="preserve">
-        <value>The TVOS SDK version '{0}' is not installed. Using newer version '{1}' instead'.
-        </value>
-    </data>
+    <!-- E0026: not used anymore -->
+    <!-- E0027: not used anymore -->
+    <!-- E0028: not used anymore -->
     
     <data name="E0029" xml:space="preserve">
         <value>Could not locate the TVOS platform directory at path '{0}'
@@ -173,61 +162,18 @@
         </value>
     </data>
     
-    <data name="E0033" xml:space="preserve">
-        <value>The Watch SDK version '{0}' is not installed, and no newer version was found.
-        </value>
-    </data>
-    
-    <data name="W0034" xml:space="preserve">
-        <value>The Watch SDK version '{0}' is not installed. Using newer version '{1}' instead'.
-        </value>
-    </data>
-    
-    <data name="E0035" xml:space="preserve">
-        <value>Could not locate the WatchOS platform directory at path '{0}'
-        </value>
-    </data>
-    
-    <data name="E0036" xml:space="preserve">
-        <value>Could not locate the WatchOS '{0}' SDK at path '{1}'
-        </value>
-    </data>
-    
-    <data name="E0037" xml:space="preserve">
-        <value>Could not locate the WatchOS '{0}' SDK usr path at '{1}'
-        </value>
-    </data>
-    
-    <data name="E0038" xml:space="preserve">
-        <value>The Apple iOS SDK is not installed.
-        </value>
-    </data>
-    
-    <data name="E0039" xml:space="preserve">
-        <value>The iOS SDK version '{0}' is not installed, and no newer version was found.
-        </value>
-    </data>
-    
-    <data name="E0040" xml:space="preserve">
-        <value>The iOS SDK version '{0}' is not installed. Using newer version '{1}' instead'.
-        </value>
-    </data>
-    
-    <data name="E0041" xml:space="preserve">
-        <value>Could not locate the iOS platform directory at path '{0}'
-        </value>
-    </data>
-    
-    <data name="E0042" xml:space="preserve">
-        <value>Could not locate the iOS '{0}' SDK at path '{1}'
-        </value>
-    </data>
-    
-    <data name="E0043" xml:space="preserve">
-        <value>Could not locate the iOS '{0}' SDK usr path at '{1}'
-        </value>
-    </data>
-    
+    <!-- E0033: not used anymore -->
+    <!-- E0034: not used anymore -->
+    <!-- E0035: not used anymore -->
+    <!-- E0036: not used anymore -->
+    <!-- E0037: not used anymore -->
+    <!-- E0038: not used anymore -->
+    <!-- E0039: not used anymore -->
+    <!-- E0040: not used anymore -->
+    <!-- E0041: not used anymore -->
+    <!-- E0042: not used anymore -->
+    <!-- E0043: not used anymore -->
+
     <data name="E0044" xml:space="preserve">
         <value>Could not find a valid Xcode app bundle at '{0}'. Please update your Apple SDK location in Visual Studio's preferences {1}.
         </value>
@@ -239,7 +185,7 @@
     </data>
     
     <data name="E0046" xml:space="preserve">
-        <value>Could not find 'Xamarin.iOS'
+        <value>Could not find '{0}'
         </value>
     </data>
     
@@ -429,12 +375,12 @@
     </data>
     
     <data name="E0084" xml:space="preserve">
-        <value>Could not locate the macOS '{0}' SDK at path '{1}'
+        <value>Could not locate the {0} '{1}' SDK at path '{}'
         </value>
     </data>
     
     <data name="E0085" xml:space="preserve">
-        <value>Could not locate the macOS '{0}' SDK usr path at '{1}'
+        <value>Could not locate the {0} '{1}' SDK usr path at '{2}'
         </value>
     </data>
         
@@ -443,10 +389,7 @@
         </value>
     </data>
     
-    <data name="E0087" xml:space="preserve">
-        <value>Could not find 'Xamarin.Mac'
-        </value>
-    </data>
+    <!-- E0087: not used anymore -->
     
     <data name="E0088" xml:space="preserve">
         <value>Could not get native libraries: {0}
@@ -851,6 +794,26 @@
     
     <data name="E0169" xml:space="preserve">
         <value>Unknown target framework identifier: {0}.
+        </value>
+    </data>
+    
+    <data name="E0170" xml:space="preserve">
+        <value>Could not find {0} in {1}.
+        </value>
+    </data>
+    
+    <data name="E0171" xml:space="preserve">
+        <value>The {0} SDK is not installed.
+        </value>
+    </data>
+    
+    <data name="E0172" xml:space="preserve">
+        <value>The {0} SDK version '{1}' is not installed, and no newer version was found.
+        </value>
+    </data>
+    
+    <data name="E0173" xml:space="preserve">
+        <value>The {0} SDK version '{1}' is not installed. Using newer version '{2}' instead'.
         </value>
     </data>
     
