@@ -18,11 +18,6 @@ using UIKit;
 #endif
 using CoreGraphics;
 using ImageIO;
-#else
-using MonoTouch.CoreGraphics;
-using MonoTouch.Foundation;
-using MonoTouch.ImageIO;
-using MonoTouch.UIKit;
 #endif
 using NUnit.Framework;
 
@@ -37,13 +32,13 @@ namespace MonoTouchFixtures.ImageIO {
 		int testValue;
 		CGImageAnimation imageAnimation;
 
-		void MyBlockSetValueZero (nint index, CGImage image, out bool stop)
+		void MyHandlerSetValueZero (nint index, CGImage image, out bool stop)
 		{
 			stop = true;
 			testValue = 0;
 		}
 
-		void MyBlockSetValueOne (nint index, CGImage image, out bool stop)
+		void MyHandlerSetValueOne (nint index, CGImage image, out bool stop)
 		{
 			stop = true;
 			testValue = 1;
@@ -54,7 +49,7 @@ namespace MonoTouchFixtures.ImageIO {
 		{
 			TestRuntime.AssertXcodeVersion (11, 4);
 
-			imageUrl = NSBundle.MainBundle.GetUrlForResource ("hack", "gif"); // why not just initialize in declaration?
+			imageUrl = NSBundle.MainBundle.GetUrlForResource ("hack", "gif");
 			imageData = NSData.FromUrl (imageUrl);
 			imageAnimation = new CGImageAnimation ();
 		}
@@ -78,16 +73,16 @@ namespace MonoTouchFixtures.ImageIO {
 			testValue = -1;
 		}
 
-		private void CallAnimateImage (bool useUrl, CGImageAnimation.CGImageSourceAnimationBlock block)
+		private void CallAnimateImage (bool useUrl, CGImageAnimation.CGImageSourceAnimationHandler handler)
 		{
-			TaskCompletionSource<bool> taskCompletionSource = new TaskCompletionSource<bool> ();
+			var taskCompletionSource = new TaskCompletionSource<bool> ();
 			bool done = false;
 
 			TestRuntime.RunAsync (TimeSpan.FromSeconds (30), async () => {
 				if (useUrl) {
-					imageAnimation.AnimateImage (imageUrl, null, block);
+					imageAnimation.AnimateImage (imageUrl, null, handler);
 				} else {
-					imageAnimation.AnimateImage (imageData, null, block);
+					imageAnimation.AnimateImage (imageData, null, handler);
 				}
 				await taskCompletionSource.Task;
 				done = true;
@@ -98,59 +93,59 @@ namespace MonoTouchFixtures.ImageIO {
 		[Test]
 		public void AnimateImageWithUrl ()
 		{
-			CallAnimateImage ( /* useUrl */ true, MyBlockSetValueZero);
-			Assert.AreEqual (0, testValue, "block called with url");
+			CallAnimateImage ( /* useUrl */ true, MyHandlerSetValueZero);
+			Assert.AreEqual (0, testValue, "handler called with url");
 		}
 
 		[Test]
 		public void AnimateImageWithData ()
 		{
-			CallAnimateImage ( /* useUrl */ false, MyBlockSetValueZero);
-			Assert.AreEqual (0, testValue, "block called with data");
+			CallAnimateImage ( /* useUrl */ false, MyHandlerSetValueZero);
+			Assert.AreEqual (0, testValue, "handler called with data");
 		}
 
 		[Test]
-		public void AnimateImageWithUrlChangeBlock ()
+		public void AnimateImageWithUrlChangeHandler ()
 		{
-			CallAnimateImage ( /* useUrl */ true, MyBlockSetValueZero);
-			Assert.AreEqual (0, testValue, "first block called with url" );
+			CallAnimateImage ( /* useUrl */ true, MyHandlerSetValueZero);
+			Assert.AreEqual (0, testValue, "first handler called with url" );
 
-			CallAnimateImage ( /* useUrl */ true, MyBlockSetValueOne);
-			Assert.AreEqual (1, testValue, "second block called with url");
+			CallAnimateImage ( /* useUrl */ true, MyHandlerSetValueOne);
+			Assert.AreEqual (1, testValue, "second handler called with url");
 		}
 
 		[Test]
-		public void AnimateImageWithDataChangeBlock ()
+		public void AnimateImageWithDataChangeHandler ()
 		{
-			CallAnimateImage ( /* useUrl */ false, MyBlockSetValueZero);
-			Assert.AreEqual (0, testValue, "first block called with data");
+			CallAnimateImage ( /* useUrl */ false, MyHandlerSetValueZero);
+			Assert.AreEqual (0, testValue, "first handler called with data");
 
-			CallAnimateImage ( /* useUrl */ false, MyBlockSetValueOne);
-			Assert.AreEqual (1, testValue, "second block called with data");
+			CallAnimateImage ( /* useUrl */ false, MyHandlerSetValueOne);
+			Assert.AreEqual (1, testValue, "second handler called with data");
 		}
 
 		[Test]
 		public void AnimateImageWithUrlNullUrl ()
 		{
-			Assert.Throws<ArgumentNullException>( () => imageAnimation.AnimateImage ( (NSUrl) null, null, MyBlockSetValueZero), "null url");
+			Assert.Throws<ArgumentNullException> (() => imageAnimation.AnimateImage ( (NSUrl) null, null, MyHandlerSetValueZero), "null url");
 		}
 
 		[Test]
-		public void AnimateImageWithUrlNullBlock ()
+		public void AnimateImageWithUrlNullHandler ()
 		{
-			Assert.Throws<ArgumentNullException>( () => imageAnimation.AnimateImage (imageUrl, null, /* CGImageSourceAnimationBlock */ null), "null block called with url");
+			Assert.Throws<ArgumentNullException> (() => imageAnimation.AnimateImage (imageUrl, null, /* CGImageSourceAnimationHandler */ null), "null handler called with url");
 		}
 
 		[Test]
 		public void AnimateImageWithDataNullData ()
 		{
-			Assert.Throws<ArgumentNullException>( () => imageAnimation.AnimateImage ( (NSData) null, null, MyBlockSetValueZero), "null data");
+			Assert.Throws<ArgumentNullException> (() => imageAnimation.AnimateImage ( (NSData) null, null, MyHandlerSetValueZero), "null data");
 		}
 
 		[Test]
-		public void AnimateImageWithDataNullBlock ()
+		public void AnimateImageWithDataNullHandler ()
 		{
-			Assert.Throws<ArgumentNullException>( () => imageAnimation.AnimateImage (imageData, null, /* CGImageSourceAnimationBlock */ null), "null block called with data");
+			Assert.Throws<ArgumentNullException> (() => imageAnimation.AnimateImage (imageData, null, /* CGImageSourceAnimationHandler */ null), "null handler called with data");
 		}
 
 	}
