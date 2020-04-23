@@ -218,6 +218,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "AddressBookUI", "AddressBookUI", 3 },
 				{ "AudioToolbox", "AudioToolbox", 3 },
 				{ "AVFoundation", "AVFoundation", 3 },
+				{ "CFNetwork", "CFNetwork", 3 },
 				{ "CoreAnimation", "QuartzCore", 3 },
 				{ "CoreData", "CoreData", 3 },
 				{ "CoreGraphics", "CoreGraphics", 3 },
