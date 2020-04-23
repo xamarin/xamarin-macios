@@ -1,4 +1,4 @@
-# xamarin-macios device pipeline, this file sets the different parameters required by stages template which will create set of stages depending 
+# xamarin-macios device pipeline, this file sets the different parameters required by stages template which will create set of stages depending
 # on the configuration to run different device tests.
 #
 # lame! cannot have the resources in the template.. :/
@@ -14,6 +14,6 @@ resources:
 stages:
 - template: templates/stable-stages.yml # all the smart stuff happens in the template, just needed to set the params
   parameters:
-    pool: 'VSEng-Xamarin-Mac-Devices'
+    pool: 'VSEng-Xamarin-QA'
     timeout: 1000
     maxParallel: 5
