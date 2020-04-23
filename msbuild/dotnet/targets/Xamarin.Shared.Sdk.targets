@@ -346,7 +346,7 @@
 	<Target Name="Install" DependsOnTargets="_DetectSdkLocations;_GenerateBundleName">
 		<Mlaunch
 			SessionId="$(BuildSessionId)"
-			AppBundlePath="$(_AppBundlePath)"
+			AppBundlePath="$([System.IO.Path]::GetFullPath('$(_AppBundlePath)'))"
 			DeviceName="$(_DeviceName)"
 			InstallApp="$(_AppBundlePath)"
 			SdkIsSimulator="$(_SdkIsSimulator)"
@@ -366,7 +366,7 @@
 		</PropertyGroup>
 		<Mlaunch
 			SessionId="$(BuildSessionId)"
-			AppBundlePath="$(_AppBundlePath)"
+			AppBundlePath="$([System.IO.Path]::GetFullPath('$(_AppBundlePath)'))"
 			CaptureOutput="$(_MlaunchCaptureOutput)"
 			DeviceName="$(_DeviceName)"
 			LaunchApp="$(_AppBundlePath)"
