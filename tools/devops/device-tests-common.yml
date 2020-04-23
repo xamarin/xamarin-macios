@@ -58,6 +58,8 @@ jobs:
 
   - bash: |
       set -x
+      set -e
+
       EC=0
 
       rm -f ~/Library/Caches/com.xamarin.provisionator/Provisions/*p12
@@ -76,6 +78,8 @@ jobs:
 
   - bash: |
       set -x
+      set -e
+
       EC=0
 
       ./xamarin-macios/system-dependencies.sh --ignore-all --provision-xcode --provision-xamarin-studio --provision-mono --provision-7z || EC=$?
