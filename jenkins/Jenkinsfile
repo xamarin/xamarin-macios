@@ -737,7 +737,9 @@ timestamps {
                             stage ('Install Provisioning Profiles') {
                                 currentStage = "${STAGE_NAME}"
                                 echo ("Building on ${env.NODE_NAME}")
-                                sh ("${workspace}/maccore/tools/install-qa-provisioning-profiles.sh -v")
+                                withCredentials ([string (credentialsId: 'login-keychain-password', variable: "LOGIN_KEYCHAIN_PASSWORD")]) {
+                                    sh ("${workspace}/maccore/tools/install-qa-provisioning-profiles.sh -v")
+                                }
                             }
 
                             stage ('Publish reports') {
