@@ -14,6 +14,9 @@ namespace Xamarin.MacDev.Tasks {
 		#region Inputs
 
 		[Required]
+		public string AppBundlePath { get; set; }
+
+		[Required]
 		public string Architecture { get; set; }
 
 		[Required]
@@ -24,9 +27,6 @@ namespace Xamarin.MacDev.Tasks {
 
 		[Required]
 		public bool IsDebug { get; set; }
-
-		[Required]
-		public string DeploymentTarget { get; set; }
 
 		[Required]
 		public ITaskItem [] NativeDynamicLibraries { get; set; }
@@ -49,7 +49,8 @@ namespace Xamarin.MacDev.Tasks {
 			// Get frameworks
 			var frameworks = Frameworks.GetFrameworks (Platform, SdkIsSimulator);
 			var sdk_version = Version.Parse (SdkVersion);
-			var deployment_target = Version.Parse (DeploymentTarget);
+			var deployment_target_str = GetDeploymentTarget (AppBundlePath);
+			var deployment_target = Version.Parse (deployment_target_str);
 			foreach (var fw in frameworks) {
 				bool available;
 				if (SdkIsSimulator) {
@@ -121,7 +122,7 @@ namespace Xamarin.MacDev.Tasks {
 			arguments.Add ("-std=c++14");
 			arguments.Add ("-fno-exceptions");
 			arguments.Add ("-stdlib=libc++");
-			arguments.Add (PlatformFrameworkHelper.GetMinimumVersionArgument (TargetFrameworkMoniker, SdkIsSimulator, DeploymentTarget));
+			arguments.Add (PlatformFrameworkHelper.GetMinimumVersionArgument (TargetFrameworkMoniker, SdkIsSimulator, deployment_target_str));
 			arguments.Add ("-g");
 			arguments.Add ("-Wl,-rpath");
 			arguments.Add ("-Wl,@executable_path/");

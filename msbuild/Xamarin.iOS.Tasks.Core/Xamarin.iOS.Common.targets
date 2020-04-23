@@ -794,7 +794,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			DebugIPAddresses="$(_DebugIPAddresses)"
 			UseFakeWatchOS4_3Sdk="$(UseFakeWatchOS4_3Sdk)"
 			>
-			<Output TaskParameter="DeploymentTarget" PropertyName="_DeploymentTarget" />
 		</CompileAppManifest>
 
 		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(AppBundleDir).dSYM" />

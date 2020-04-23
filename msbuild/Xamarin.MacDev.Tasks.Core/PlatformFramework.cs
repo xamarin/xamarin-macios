@@ -73,7 +73,6 @@ namespace Xamarin.MacDev.Tasks
 		public static string GetMinimumVersionArgument (string targetFrameworkMoniker, bool is_simulator, string min_deployment_version)
 		{
 			return $"-m{GetMinimumVersionOperatingSystem (targetFrameworkMoniker, is_simulator)}-version-min={min_deployment_version}";
-
 		}
 	}
 }

@@ -287,8 +287,8 @@
 			SessionId="$(BuildSessionId)"
 
 			Architecture="$(MtouchArch)"
+			AppBundlePath="$(_AppBundlePath)"
 			AssemblyName="$(AssemblyName)"
-			DeploymentTarget="$(_DeploymentTarget)"
 			IsAppExtension="$(IsAppExtension)"
 			IsDebug="$(MtouchDebug)"
 			NativeDynamicLibraries="@(_NativeDynamicLibraryFixed)"

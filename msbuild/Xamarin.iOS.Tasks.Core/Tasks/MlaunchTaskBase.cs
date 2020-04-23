@@ -32,28 +32,13 @@ namespace Xamarin.iOS.Tasks {
 		public string StandardErrorPath { get; set; } // Set to a path to capture output there
 		public bool WaitForExit { get; set; } // Required for capturing stdout/stderr output
 
-		public string AppManifest {
-			get {
-				switch (Platform) {
-				case ApplePlatform.iOS:
-				case ApplePlatform.WatchOS:
-				case ApplePlatform.TVOS:
-					return Path.Combine (AppBundlePath, "Info.plist");
-				case ApplePlatform.MacOSX:
-					return Path.Combine (AppBundlePath, "Contents", "Info.plist");
-				default:
-					throw new NotImplementedException ($"Unknown platform: {Platform}"); // FIXME: better error
-				}
-			}
-		}
-
 		public IPhoneDeviceType DeviceType {
 			get {
 				switch (Platform) {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
 				case ApplePlatform.WatchOS:
-					var plist = PDictionary.FromFile (AppManifest);
+					var plist = PDictionary.FromFile (GetAppManifest (AppBundlePath));
 					return plist.GetUIDeviceFamily ();
 				default:
 					throw new NotImplementedException ($"Unknown platform: {Platform}"); // FIXME: better error

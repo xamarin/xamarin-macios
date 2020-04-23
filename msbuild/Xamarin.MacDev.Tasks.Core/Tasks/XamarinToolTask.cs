@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
@@ -63,6 +64,38 @@ namespace Xamarin.MacDev.Tasks {
 					// FIXME: better error
 					throw new NotImplementedException ($"Invalid platform: {Platform}");
 				}
+			}
+		}
+
+		public string GetAppManifest (string appBundlePath)
+		{
+			switch (Platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.WatchOS:
+			case ApplePlatform.TVOS:
+				return Path.Combine (appBundlePath, "Info.plist");
+			case ApplePlatform.MacOSX:
+				return Path.Combine (appBundlePath, "Contents", "Info.plist");
+			default:
+				throw new NotImplementedException ($"Unknown platform: {Platform}"); // FIXME: better error
+
+			}
+		}
+
+		public string GetDeploymentTarget (string appBundlePath)
+		{
+			var manifest = GetAppManifest (appBundlePath);
+			var plist = PDictionary.FromFile (manifest);
+			switch (Platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.WatchOS:
+			case ApplePlatform.TVOS:
+				return plist.GetMinimumOSVersion ();
+			case ApplePlatform.MacOSX:
+				return plist.GetMinimumSystemVersion ();
+			default:
+				throw new NotImplementedException ($"Unknown platform: {Platform}"); // FIXME: better error
+
 			}
 		}
 	}
