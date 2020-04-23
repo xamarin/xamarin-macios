@@ -151,7 +151,6 @@
 		<WriteLinesToFile File="$(_CustomLinkerOptionsFile)" Lines="$(_CustomLinkerOptions)" Overwrite="true" />
 	</Target>
 	<Target Name="_ExtractNativeLibrariesFromBindingAssemblies">
-		<Warning Text="_ExtractNativeLibrariesFromBindingAssemblies: Not implemented " />
 	</Target>
 
 	<PropertyGroup Condition=" '$(_PlatformName)' != 'macOS' ">
@@ -237,23 +236,18 @@
 	<Target Name="_PostProcessNativeLinker" DependsOnTargets="_ComputeOutputLocation;_CreateUserFrameworks;_BuildDSymDirectories;_StripNativeCode;"/>
 
 	<Target Name="_GenerateRegistrarCode">
-		<Warning Text="_GenerateRegistrarCode: Not implemented " />
 	</Target>
 
 	<Target Name="_GeneratePInvokeWrapperCode">
-		<Warning Text="_GeneratePInvokeWrapperCode: Not implemented " />
 	</Target>
 
 	<Target Name="_CompilePInvokeWrappers">
-		<Warning Text="_CompilePInvokeWrappers: Not implemented " />
 	</Target>
 
 	<Target Name="_BuildMSymDirectories">
-		<Warning Text="_BuildMSymDirectories: Not implemented " />
 	</Target>
 
 	<Target Name="_StripManagedAssemblies">
-		<Warning Text="_StripManagedAssemblies: Not implemented " />
 	</Target>
 
 	<Target Name="_SetVariables">
@@ -304,7 +298,6 @@
 	</Target>
 
 	<Target Name="_ComputeOutputLocation">
-		<Warning Text="_ComputeOutputLocation: implementing... " />
 		<!-- Put .dll, .pdb, .exe and .dylib in the .app -->
 		<ItemGroup>
 			<ResolvedFileToPublish
@@ -314,7 +307,6 @@
 			<Whatever Include="@(ResolvedFileToPublish)" />
 			<Whatever2 Include="@(ResolvedFileToPublish)" Condition="'%(Extension)' == '.dylib'" />
 		</ItemGroup>
-		<Warning Text="_ComputeOutputLocation: @(ResolvedFileToPublish) " />
 	</Target>
 
 	<!-- The .dylibs shipped with mono comes with the original identity:
