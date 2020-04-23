@@ -17,7 +17,7 @@ using ObjCRuntime;
 namespace ImageIO
 {
 
-    public partial class CGImageAnimation
+    public static partial class CGImageAnimation // should remove partial? or leave in case we need to add more to this class in other files later?
     {
 
         public delegate void CGImageSourceAnimationHandler (nint index, CGImage image, out bool stop);
@@ -41,24 +41,23 @@ namespace ImageIO
         [Introduced (PlatformName.TvOS, 13, 0, PlatformArchitecture.All)]
         [Introduced (PlatformName.WatchOS, 6, 0, PlatformArchitecture.All)]
         [BindingImpl (BindingImplOptions.Optimizable)]
-        public CGImageAnimationStatus AnimateImage (NSUrl url, NSDictionary options, [BlockProxy (typeof (NIDCGImageSourceAnimationBlock))] CGImageSourceAnimationHandler handler)
+        public static CGImageAnimationStatus AnimateImage (NSUrl url, NSDictionary options, [BlockProxy (typeof (NIDCGImageSourceAnimationBlock))] CGImageSourceAnimationHandler handler)
         {
 #if IOS && ARCH_32
-            throw new PlatformNotSupportedException ();
+            throw new PlatformNotSupportedException ("This API is not supported on this version of iOS");
 #else
             if (url == null)
                 throw new ArgumentNullException (nameof (url));
             if (handler == null)
                 throw new ArgumentNullException (nameof (handler));
 
-            BlockLiteral block_block;
-            block_block = new BlockLiteral ();
-            block_block.SetupBlockUnsafe (SDCGImageSourceAnimationBlock.Handler, handler);
+            var block = new BlockLiteral ();
+            block.SetupBlockUnsafe (SDCGImageSourceAnimationBlock.Handler, handler);
 
             try {
-                return CGAnimateImageAtURLWithBlock (url.Handle, options.GetHandle (), ref block_block);
+                return CGAnimateImageAtURLWithBlock (url.Handle, options.GetHandle (), ref block);
             } finally {
-                block_block.CleanupBlock ();
+                block.CleanupBlock ();
             }
 #endif
         }
@@ -68,24 +67,23 @@ namespace ImageIO
         [Introduced (PlatformName.TvOS, 13, 0, PlatformArchitecture.All)]
         [Introduced (PlatformName.WatchOS, 6, 0, PlatformArchitecture.All)]
         [BindingImpl (BindingImplOptions.Optimizable)]
-        public CGImageAnimationStatus AnimateImage (NSData data, NSDictionary options, [BlockProxy (typeof (NIDCGImageSourceAnimationBlock))] CGImageSourceAnimationHandler handler)
+        public static CGImageAnimationStatus AnimateImage (NSData data, NSDictionary options, [BlockProxy (typeof (NIDCGImageSourceAnimationBlock))] CGImageSourceAnimationHandler handler)
         {
 #if IOS && ARCH_32
-            throw new PlatformNotSupportedException ();
+            throw new PlatformNotSupportedException ("This API is not supported on this version of iOS");
 #else
             if (data == null)
                 throw new ArgumentNullException (nameof (data));
             if (handler == null)
                 throw new ArgumentNullException (nameof (handler));
 
-            BlockLiteral block_block;
-            block_block = new BlockLiteral ();
-            block_block.SetupBlockUnsafe (SDCGImageSourceAnimationBlock.Handler, handler);
+            var block = new BlockLiteral ();
+            block.SetupBlockUnsafe (SDCGImageSourceAnimationBlock.Handler, handler);
 
             try {
-                return CGAnimateImageDataWithBlock (data.Handle, options.GetHandle (), ref block_block);
+                return CGAnimateImageDataWithBlock (data.Handle, options.GetHandle (), ref block);
             } finally {
-                block_block.CleanupBlock ();
+                block.CleanupBlock ();
             }
 #endif
         }
@@ -104,7 +102,7 @@ namespace ImageIO
                 if (del != null)
                     del (index, new CoreGraphics.CGImage (image), out stop);
                 else
-                    stop = default (bool);
+                    stop = false;
             }
         } /* class SDCGImageSourceAnimationBlock */
 

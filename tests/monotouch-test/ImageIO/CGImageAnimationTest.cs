@@ -8,7 +8,6 @@
 //
 using System;
 using System.IO;
-#if XAMCORE_2_0
 using Foundation;
 using System.Threading.Tasks;
 #if MONOMAC
@@ -18,7 +17,6 @@ using UIKit;
 #endif
 using CoreGraphics;
 using ImageIO;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.ImageIO {
@@ -31,7 +29,6 @@ namespace MonoTouchFixtures.ImageIO {
 		NSData imageData;
 		TaskCompletionSource<bool> tcs;
 		int testValue;
-		CGImageAnimation imageAnimation;
 		CGImageAnimationStatus status;
 
 		void MyHandlerSetValueZero (nint index, CGImage image, out bool stop)
@@ -55,14 +52,13 @@ namespace MonoTouchFixtures.ImageIO {
 
 			imageUrl = NSBundle.MainBundle.GetUrlForResource ("hack", "gif");
 			imageData = NSData.FromUrl (imageUrl);
-			imageAnimation = new CGImageAnimation ();
 		}
 
 		[TestFixtureTearDown]
 		public void Cleanup ()
 		{
-			imageUrl.Dispose ();
-			imageData.Dispose ();
+			imageUrl?.Dispose ();
+			imageData?.Dispose ();
 		}
 
 		[SetUp]
@@ -77,7 +73,7 @@ namespace MonoTouchFixtures.ImageIO {
 			testValue = -1;
 		}
 
-		private void CallAnimateImage (bool useUrl, CGImageAnimation.CGImageSourceAnimationHandler handler)
+		void CallAnimateImage (bool useUrl, CGImageAnimation.CGImageSourceAnimationHandler handler)
 		{
 			tcs = new TaskCompletionSource<bool> ();
 			status = (CGImageAnimationStatus) 1; /* CGImageAnimationStatus.Ok == 0 */
@@ -85,9 +81,9 @@ namespace MonoTouchFixtures.ImageIO {
 
 			TestRuntime.RunAsync (TimeSpan.FromSeconds (30), async () => {
 				if (useUrl) {
-					status = imageAnimation.AnimateImage (imageUrl, null, handler);
+					status = CGImageAnimation.AnimateImage (imageUrl, null, handler);
 				} else {
-					status = imageAnimation.AnimateImage (imageData, null, handler);
+					status = CGImageAnimation.AnimateImage (imageData, null, handler);
 				}
 				await tcs.Task;
 				done = true;
@@ -140,25 +136,25 @@ namespace MonoTouchFixtures.ImageIO {
 		[Test]
 		public void AnimateImageWithUrlNullUrl ()
 		{
-			Assert.Throws<ArgumentNullException> (() => imageAnimation.AnimateImage ( (NSUrl) null, null, MyHandlerSetValueZero), "null url");
+			Assert.Throws<ArgumentNullException> (() => CGImageAnimation.AnimateImage ( (NSUrl) null, null, MyHandlerSetValueZero), "null url");
 		}
 
 		[Test]
 		public void AnimateImageWithUrlNullHandler ()
 		{
-			Assert.Throws<ArgumentNullException> (() => imageAnimation.AnimateImage (imageUrl, null, /* CGImageSourceAnimationHandler */ null), "null handler called with url");
+			Assert.Throws<ArgumentNullException> (() => CGImageAnimation.AnimateImage (imageUrl, null, /* CGImageSourceAnimationHandler */ null), "null handler called with url");
 		}
 
 		[Test]
 		public void AnimateImageWithDataNullData ()
 		{
-			Assert.Throws<ArgumentNullException> (() => imageAnimation.AnimateImage ( (NSData) null, null, MyHandlerSetValueZero), "null data");
+			Assert.Throws<ArgumentNullException> (() => CGImageAnimation.AnimateImage ( (NSData) null, null, MyHandlerSetValueZero), "null data");
 		}
 
 		[Test]
 		public void AnimateImageWithDataNullHandler ()
 		{
-			Assert.Throws<ArgumentNullException> (() => imageAnimation.AnimateImage (imageData, null, /* CGImageSourceAnimationHandler */ null), "null handler called with data");
+			Assert.Throws<ArgumentNullException> (() => CGImageAnimation.AnimateImage (imageData, null, /* CGImageSourceAnimationHandler */ null), "null handler called with data");
 		}
 
 	}
