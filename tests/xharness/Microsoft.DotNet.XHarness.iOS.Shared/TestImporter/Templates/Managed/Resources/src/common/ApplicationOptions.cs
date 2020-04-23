@@ -98,7 +98,7 @@ namespace BCLTests {
 		
 		public int HostPort { get; private set; }
 		
-		public bool UseTcpTunnel { get; set; } = true;
+		public bool UseTcpTunnel { get; set; } = false;
 
 		public bool AutoStart { get; set; }
 		
