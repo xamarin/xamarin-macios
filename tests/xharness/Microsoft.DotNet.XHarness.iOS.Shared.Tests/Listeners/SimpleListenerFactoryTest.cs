@@ -1,8 +1,6 @@
-﻿using System;
-using Moq;
+﻿using Moq;
 using NUnit.Framework;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
-using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
 
 namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Listeners {
@@ -11,13 +9,16 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Listeners {
 	public class SimpleListenerFactoryTest {
 
 		Mock<ILog> log;
+		Mock<ITunnelBore> tunnelBore;
 		SimpleListenerFactory factory;
+		string device = "device";
 
 		[SetUp]
 		public void SetUp ()
 		{
 			log = new Mock<ILog> ();
-			factory = new SimpleListenerFactory ();
+			tunnelBore = new Mock<ITunnelBore> ();
+			factory = new SimpleListenerFactory (tunnelBore.Object);
 		}
 
 		[TearDown]
@@ -30,7 +31,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Listeners {
 		[Test]
 		public void CreateNotWatchListener ()
 		{
-			var (transport, listener, listenerTmpFile) = factory.Create (RunMode.iOS, log.Object, log.Object, true, true, true);
+			var (transport, listener, listenerTmpFile) = factory.Create (device, RunMode.iOS, log.Object, log.Object, true, true, true, false);
 			Assert.AreEqual (ListenerTransport.Tcp, transport, "transport");
 			Assert.IsInstanceOf (typeof (SimpleTcpListener), listener, "listener");
 			Assert.IsNull (listenerTmpFile, "tmp file");
@@ -42,7 +43,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Listeners {
 			var logFullPath = "myfullpath.txt";
 			_ = log.Setup (l => l.FullPath).Returns (logFullPath);
 
-			var (transport, listener, listenerTmpFile) = factory.Create (RunMode.WatchOS, log.Object, log.Object, true, true, true);
+			var (transport, listener, listenerTmpFile) = factory.Create (device, RunMode.WatchOS, log.Object, log.Object, true, true, true, false);
 			Assert.AreEqual (ListenerTransport.File, transport, "transport");
 			Assert.IsInstanceOf (typeof (SimpleFileListener), listener, "listener");
 			Assert.IsNotNull (listenerTmpFile, "tmp file");
@@ -55,7 +56,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Listeners {
 		[Test]
 		public void CreateWatchOSDevice ()
 		{
-			var (transport, listener, listenerTmpFile) = factory.Create (RunMode.WatchOS, log.Object, log.Object, false, true, true);
+			var (transport, listener, listenerTmpFile) = factory.Create (device, RunMode.WatchOS, log.Object, log.Object, false, true, true, false);
 			Assert.AreEqual (ListenerTransport.Http, transport, "transport");
 			Assert.IsInstanceOf (typeof (SimpleHttpListener), listener, "listener");
 			Assert.IsNull (listenerTmpFile, "tmp file");

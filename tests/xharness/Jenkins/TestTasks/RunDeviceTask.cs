@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
+using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
 using Xharness.TestTasks;
 
 namespace Xharness.Jenkins.TestTasks {
@@ -35,8 +36,8 @@ namespace Xharness.Jenkins.TestTasks {
 			}
 		}
 
-		public RunDeviceTask (Jenkins jenkins, IHardwareDeviceLoader devices, MSBuildTask buildTask, IProcessManager processManager, IEnumerable<IHardwareDevice> candidates)
-			: base (jenkins, buildTask, processManager, candidates.OrderBy ((v) => v.DebugSpeed))
+		public RunDeviceTask (Jenkins jenkins, IHardwareDeviceLoader devices, MSBuildTask buildTask, IProcessManager processManager, ITunnelBore tunnelBore, bool useTcpTunnel, IEnumerable<IHardwareDevice> candidates)
+			: base (jenkins, buildTask, processManager, tunnelBore, candidates.OrderBy ((v) => v.DebugSpeed))
 		{
 			runDevice = new RunDevice (
 				testTask: this,
@@ -49,6 +50,7 @@ namespace Xharness.Jenkins.TestTasks {
 				cleanSuccessfulTestRuns: Jenkins.CleanSuccessfulTestRuns,
 				generateXmlFailures: Jenkins.Harness.InCI,
 				inCI: Jenkins.Harness.InCI,
+				useTcpTunnel: useTcpTunnel,
 				xmlResultJargon: Jenkins.Harness.XmlJargon
 			);
 		}

@@ -51,6 +51,7 @@ namespace Xharness {
 		Dictionary<string, string> EnvironmentVariables { get; }
 		ILog HarnessLog { get; set; }
 		bool InCI { get; }
+		bool UseTcpTunnel { get; }
 		double LaunchTimeout { get; }
 		double Timeout { get; }
 		int Verbosity { get; }
@@ -73,6 +74,7 @@ namespace Xharness {
 		public HashSet<string> Labels { get; }
 		public XmlResultJargon XmlJargon { get; }
 		public IResultParser ResultParser { get; }
+		public ITunnelBore TunnelBore { get; }
 
 		// This is the maccore/tests directory.
 		static string root_directory;
@@ -219,6 +221,7 @@ namespace Xharness {
 				SdkRoot = config ["XCODE_DEVELOPER_ROOT"] ?? configuration.SdkRoot;
 
 			processManager = new ProcessManager (XcodeRoot, MlaunchPath);
+			TunnelBore = new TunnelBore (processManager);
 		}
 
 		public bool GetIncludeSystemPermissionTests (TestPlatform platform, bool device)
@@ -627,6 +630,13 @@ namespace Xharness {
 			}
 		}
 
+		public bool UseTcpTunnel {
+			get {
+				// We use the 'USE_TCP_TUNNEL' variable to detect whether we're running CI or not.
+				return !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("USE_TCP_TUNNEL"));
+			}
+		}
+
 		public bool UseGroupedApps {
 			get {
 				var groupApps = Environment.GetEnvironmentVariable ("BCL_GROUPED_APPS");
@@ -659,7 +669,7 @@ namespace Xharness {
 				AutoConfigureMac (false);
 			}
 
-			var jenkins = new Jenkins.Jenkins (this, processManager, ResultParser);
+			var jenkins = new Jenkins.Jenkins (this, processManager, ResultParser, TunnelBore);
 			return jenkins.Run ();
 		}
 
@@ -696,7 +706,7 @@ namespace Xharness {
 			return new AppRunner (processManager,
 				new AppBundleInformationParser (),
 				new SimulatorLoaderFactory (processManager),
-				new SimpleListenerFactory (),
+				new SimpleListenerFactory (TunnelBore),
 				new DeviceLoaderFactory (processManager),
 				new CrashSnapshotReporterFactory (processManager),
 				new CaptureLogFactory (),

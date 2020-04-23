@@ -20,6 +20,7 @@ namespace Xharness.TestTasks {
 		readonly bool cleanSuccessfulTestRuns;
 		readonly bool generateXmlFailures;
 		readonly bool inCI;
+		readonly bool useTcpTunnel;
 		readonly string defaultLogDirectory;
 		readonly XmlResultJargon xmlResultJargon;
 
@@ -35,6 +36,7 @@ namespace Xharness.TestTasks {
 						  bool cleanSuccessfulTestRuns,
 						  bool generateXmlFailures,
 						  bool inCI,
+						  bool useTcpTunnel,
 						  XmlResultJargon xmlResultJargon)
 		{
 			this.testTask = testTask ?? throw new ArgumentNullException (nameof (testTask));
@@ -46,6 +48,7 @@ namespace Xharness.TestTasks {
 			this.cleanSuccessfulTestRuns = cleanSuccessfulTestRuns;
 			this.generateXmlFailures = generateXmlFailures;
 			this.inCI = inCI;
+			this.useTcpTunnel = useTcpTunnel;
 			this.defaultLogDirectory = defaultLogDirectory ?? throw new ArgumentNullException (nameof (defaultLogDirectory)); // default should not be null
 			this.xmlResultJargon = xmlResultJargon;
 
@@ -86,7 +89,7 @@ namespace Xharness.TestTasks {
 					testTask.Runner = new AppRunner (testTask.ProcessManager,
 						new AppBundleInformationParser (),
 						new SimulatorLoaderFactory (testTask.ProcessManager),
-						new SimpleListenerFactory (),
+						new SimpleListenerFactory (testTask.TunnelBore),
 						new DeviceLoaderFactory (testTask.ProcessManager),
 						new CrashSnapshotReporterFactory (testTask.ProcessManager),
 						new CaptureLogFactory (),
@@ -103,6 +106,7 @@ namespace Xharness.TestTasks {
 						timeoutMultiplier: testTask.TimeoutMultiplier,
 						variation: testTask.Variation,
 						buildTask: testTask.BuildTask);
+					testTask.Runner.UseTcpTunnel = useTcpTunnel;
 
 					// Sometimes devices can't upgrade (depending on what has changed), so make sure to uninstall any existing apps first.
 					if (uninstallTestApp) {
@@ -158,7 +162,7 @@ namespace Xharness.TestTasks {
 							AppRunner todayRunner = new AppRunner (testTask.ProcessManager,
 								new AppBundleInformationParser (),
 								new SimulatorLoaderFactory (testTask.ProcessManager),
-								new SimpleListenerFactory (),
+								new SimpleListenerFactory (testTask.TunnelBore),
 								new DeviceLoaderFactory (testTask.ProcessManager),
 								new CrashSnapshotReporterFactory (testTask.ProcessManager),
 								new CaptureLogFactory (),
@@ -175,6 +179,7 @@ namespace Xharness.TestTasks {
 								timeoutMultiplier: testTask.TimeoutMultiplier,
 								variation: testTask.Variation,
 								buildTask: testTask.BuildTask);
+							todayRunner.UseTcpTunnel = useTcpTunnel;
 
 							testTask.AdditionalRunner = todayRunner;
 							await todayRunner.RunAsync ();
