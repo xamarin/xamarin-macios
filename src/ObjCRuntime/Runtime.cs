@@ -944,22 +944,22 @@ namespace ObjCRuntime {
 #endif
 		static Delegate GetDelegateForBlock (IntPtr methodPtr, Type type)
 		{
-			if (block_to_delegate_cache == null)
-				block_to_delegate_cache = new Dictionary<IntPtrTypeValueTuple, Delegate> ();
-
 			// We do not care if there is a race condition and we initialize two caches
 			// since the worst that can happen is that we end up with an extra
 			// delegate->function pointer.
 			Delegate val;
 			var pair = new IntPtrTypeValueTuple (methodPtr, type);
-			lock (block_to_delegate_cache) {
+			lock (lock_obj) {
+				if (block_to_delegate_cache == null)
+					block_to_delegate_cache = new Dictionary<IntPtrTypeValueTuple, Delegate> ();
+
 				if (block_to_delegate_cache.TryGetValue (pair, out val))
 					return val;
 			}
 
 			val = Marshal.GetDelegateForFunctionPointer (methodPtr, type);
 
-			lock (block_to_delegate_cache){
+			lock (lock_obj) {
 				block_to_delegate_cache [pair] = val;
 			}
 			return val;
