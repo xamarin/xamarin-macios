@@ -106,7 +106,7 @@ namespace Xharness.TestTasks {
 						timeoutMultiplier: testTask.TimeoutMultiplier,
 						variation: testTask.Variation,
 						buildTask: testTask.BuildTask);
-					testTask.Runner.UseTcpTunnel = useTcpTunnel;
+					testTask.Runner.UseTcpTunnel = useTcpTunnel && testTask.Device.DevicePlatform == DevicePlatform.iOS || testTask.Device.DevicePlatform == DevicePlatform.tvOS;
 
 					// Sometimes devices can't upgrade (depending on what has changed), so make sure to uninstall any existing apps first.
 					if (uninstallTestApp) {
@@ -179,7 +179,7 @@ namespace Xharness.TestTasks {
 								timeoutMultiplier: testTask.TimeoutMultiplier,
 								variation: testTask.Variation,
 								buildTask: testTask.BuildTask);
-							todayRunner.UseTcpTunnel = useTcpTunnel;
+							todayRunner.UseTcpTunnel = useTcpTunnel && testTask.Device.DevicePlatform == DevicePlatform.iOS || testTask.Device.DevicePlatform == DevicePlatform.tvOS;
 
 							testTask.AdditionalRunner = todayRunner;
 							await todayRunner.RunAsync ();
