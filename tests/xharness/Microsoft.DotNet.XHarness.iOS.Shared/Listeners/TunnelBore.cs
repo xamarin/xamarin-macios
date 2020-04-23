@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
@@ -25,7 +26,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Listeners {
 
 		readonly object tunnelsLock = new object ();
 		readonly IProcessManager processManager;
-		readonly Dictionary<string, TcpTunnel> tunnels = new Dictionary<string, TcpTunnel> ();
+		readonly ConcurrentDictionary<string, TcpTunnel> tunnels = new ConcurrentDictionary<string, TcpTunnel> ();
 
 		public TunnelBore (IProcessManager processManager)
 		{
@@ -49,20 +50,19 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Listeners {
 		public async Task Close (string device)
 		{
 			// closes a tcp tunnel that was created for the given device.
-			if (tunnels.TryGetValue (device, out var tunnel)) {
+			if (tunnels.TryRemove (device, out var tunnel)) {
 				await tunnel.Close ();
 				tunnel.Dispose ();
-				lock (tunnelsLock) {
-					tunnels.Remove (device);
-				}
 			}
 		}
 
 		public void Dispose ()
 		{
-			lock (tunnelsLock) {
-				foreach (var t in tunnels.Values)
-					t.Dispose ();
+			var devices = tunnels.Keys.ToArray ();
+			foreach (var d in devices) { 
+				if (tunnels.TryRemove(d, out var tunnel)) {
+					tunnel.Dispose ();
+				}
 			}
 		}
 	}
