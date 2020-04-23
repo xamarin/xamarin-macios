@@ -231,7 +231,7 @@
 		},
 
 		new XDelegate ("char *", "IntPtr", "xamarin_reflection_type_get_full_name",
-			"MonoReflectionType *", "IntPtr", "type"
+			"GCHandle", "IntPtr", "type"
 		) {
 			WrappedManagedFunction = "TypeGetFullName",
 			OnlyDynamicUsage = false,

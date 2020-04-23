@@ -769,9 +769,9 @@ namespace ObjCRuntime {
 			return GCHandle.ToIntPtr (GCHandle.Alloc (ex, GCHandleType.Normal)).ToInt32 ();
 		}
 
-		static IntPtr TypeGetFullName (IntPtr type) 
+		static IntPtr TypeGetFullName (IntPtr gchandle) 
 		{	
-			return Marshal.StringToHGlobalAuto (((Type) ObjectWrapper.Convert (type)).FullName);
+			return Marshal.StringToHGlobalAuto (((Type) GCHandle.FromIntPtr (gchandle).Target).FullName);
 		}
 
 		static IntPtr LookupManagedTypeName (IntPtr klass)
