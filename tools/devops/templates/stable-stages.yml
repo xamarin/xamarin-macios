@@ -1,5 +1,5 @@
 # Template that contains the different stages to be executed in a pipeline
-#
+# 
 # The tamplate contains the following parameters
 #
 # include32b: Run tests on iOS 32b devices.
@@ -14,7 +14,7 @@ parameters:
 # set demands as possible parameters because we keep changing them from lab to lab :/
 - name: iOSDemand
   type: string
-  default: 'xismoke' #ios for ddfun pool
+  default: 'ios'
 
 - name: iOS32Demand
   type: string
@@ -22,10 +22,10 @@ parameters:
 
 - name: tvOSDemand
   type: string
-  default: 'xitvos' #tvos for ddfun
+  default: 'tvos'
 
 - name: pool
-  type: string
+  type: string 
   default: 'VSEng-Xamarin-Mac-Devices' # default ddfun pool
 
 - name: timeout
@@ -37,7 +37,7 @@ parameters:
   default: 5
 
 stages:
-# - stage: iOSDeviceTests
+# - stage: iOSDeviceTests 
 #   displayName: 'iOS Device Tests'
 #   dependsOn: []    # this removes the implicit dependency on previous stage and causes this to run in parallel
 #   jobs:
@@ -46,9 +46,9 @@ stages:
 #       demands:  ${{ parameters.iOSDemand }}
 #       deviceLabel: 'run-ios-64-tests'
 #       variation: "iOS"
-#       pool: ${{ parameters.pool }}
-#       timeout: ${{ parameters.timeout }}
-#       maxParallel: ${{ parameters.maxParallel}}
+#       pool: ${{ parameters.pool }} 
+#       timeout: ${{ parameters.timeout }} 
+#       maxParallel: ${{ parameters.maxParallel}} 
 
 - stage: tvOSDeviceTests
   displayName: 'tvOS Device Tests'
@@ -59,12 +59,12 @@ stages:
       demands: ${{ parameters.tvOSDemand }}
       deviceLabel: 'run-tvos-tests'
       variation: "tvOS"
-      pool: ${{ parameters.pool }}
-      timeout: ${{ parameters.timeout }}
-      maxParallel: ${{ parameters.maxParallel }}
+      pool: ${{ parameters.pool }} 
+      timeout: ${{ parameters.timeout }} 
+      maxParallel: ${{ parameters.maxParallel }} 
 
-# Wait for the lab to have devices, templates do not let me do what I want with expressions :/
-#- stage: iOS32DeviceTests
+# Wait for the lab to have devices, templates do not let me do what I want with expressions :/ 
+#- stage: iOS32DeviceTests 
 #  displayName: 'iOS32b Device Tests'
 #  dependsOn: []    # this removes the implicit dependency on previous stage and causes this to run in parallel
 #  jobs:
@@ -73,20 +73,20 @@ stages:
 #      demands: ${{ parameters.iOS32Demand }} # old QA lab capability, might change
 #      deviceLabel: 'run-ios-32-tests'
 #      variation: "iOS32b"
-#      pool: ${{ parameters.pool }}
-#      timeout: ${{ parameters.timeout }}
-#      maxParallel: ${{ parameters.maxParallel }}
+#      pool: ${{ parameters.pool }} 
+#      timeout: ${{ parameters.timeout }} 
+#      maxParallel: ${{ parameters.maxParallel }} 
 
 - stage: monitoring
   displayName: 'Device test monitoring'
   dependsOn:
 #  - iOSDeviceTests
   - tvOSDeviceTests
-# - iOS32DeviceTests
+# - iOS32DeviceTests 
 
   condition: always() # always notify of what happened.
 
-  pool:
+  pool: 
     name: ${{ parameters.pool }}
     demands: 'ios' # we should not have demands here, but the problem is that DDFun does not set all machines to be able to checout private repos :/
 
