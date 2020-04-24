@@ -5,9 +5,7 @@ Get-ChildItem
 
 
 $testsummary_location = $Env:SYSTEM_DEFAULTWORKINGDIRECTORY
-Write-Host $testsummary_location
-Get-Content $testsummary_location
-Get-Content $testsummary_location | Write-Host
+Get-ChildItem $testsummary_location
 
 $testsummary_location = $testsummary_location + "/TestSummary.md"
 Write-Host $testsummary_location
