@@ -7,7 +7,7 @@
 <#
 	var delegates = new XDelegates {
 		new XDelegate ("void", "void", "xamarin_register_nsobject",
-			"MonoObject *", "IntPtr", "managed_obj",
+			"GCHandle", "IntPtr", "managed_obj_handle",
 			"id", "IntPtr", "native_obj"
 		) {
 			WrappedManagedFunction = "RegisterNSObject",

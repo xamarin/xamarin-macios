@@ -38,7 +38,7 @@ namespace ObjCRuntime {
 
 		static List <object> delegates;
 		static List <Assembly> assemblies;
-		static Dictionary <IntPtr, WeakReference> object_map;
+		static Dictionary <IntPtr, GCHandle> object_map;
 		static object lock_obj;
 		static IntPtr NSObjectClass;
 		static bool initialized;
@@ -242,7 +242,7 @@ namespace ObjCRuntime {
 
 			Runtime.options = options;
 			delegates = new List<object> ();
-			object_map = new Dictionary <IntPtr, WeakReference> (IntPtrEqualityComparer);
+			object_map = new Dictionary <IntPtr, GCHandle> (IntPtrEqualityComparer);
 			intptr_ctor_cache = new Dictionary<Type, ConstructorInfo> (TypeEqualityComparer);
 			intptr_bool_ctor_cache = new Dictionary<Type, ConstructorInfo> (TypeEqualityComparer);
 			lock_obj = new object ();
@@ -390,9 +390,9 @@ namespace ObjCRuntime {
 		}
 
 #region Wrappers for delegate callbacks
-		static void RegisterNSObject (IntPtr managed_obj, IntPtr native_obj)
+		static void RegisterNSObject (IntPtr managed_obj_handle, IntPtr native_obj)
 		{
-			RegisterNSObject ((NSObject) ObjectWrapper.Convert (managed_obj), native_obj);
+			RegisterNSObject (GCHandle.FromIntPtr (managed_obj_handle), native_obj, null);
 		}
 
 		static void RegisterAssembly (IntPtr a)
@@ -1016,15 +1016,15 @@ namespace ObjCRuntime {
 
 		internal static void UnregisterNSObject (IntPtr ptr) {
 			lock (lock_obj) {
-				object_map.Remove (ptr);
+				if (object_map.Remove (ptr, out var value))
+					value.Free ();
 			}
 		}
 					
 		static void NativeObjectHasDied (IntPtr ptr, NSObject managed_obj)
 		{
 			lock (lock_obj) {
-				WeakReference wr;
-				if (object_map.TryGetValue (ptr, out wr)) {
+				if (object_map.TryGetValue (ptr, out var wr)) {
 					if (managed_obj == null || wr.Target == (object) managed_obj)
 						object_map.Remove (ptr);
 
@@ -1034,12 +1034,20 @@ namespace ObjCRuntime {
 					managed_obj.ClearHandle ();
 			}
 		}
-		
-		internal static void RegisterNSObject (NSObject obj, IntPtr ptr) {
+
+		// 'obj' can be provided if the caller has it, otherwise we'll fetch it from the GCHandle
+		internal static void RegisterNSObject (GCHandle handle, IntPtr ptr, NSObject obj)
+		{
+			if (obj == null)
+				obj = (NSObject) handle.Target;
 			lock (lock_obj) {
-				object_map [ptr] = new WeakReference (obj, true);
+				object_map [ptr] = handle;
 				obj.Handle = ptr;
 			}
+		}
+
+		internal static void RegisterNSObject (NSObject obj, IntPtr ptr) {
+			RegisterNSObject (GCHandle.Alloc (obj, GCHandleType.WeakTrackResurrection), ptr, obj);
 		}
 
 		internal static PropertyInfo FindPropertyInfo (MethodInfo accessor)
@@ -1201,8 +1209,7 @@ namespace ObjCRuntime {
 		internal static NSObject TryGetNSObject (IntPtr ptr, bool evenInFinalizerQueue = false)
 		{
 			lock (lock_obj) {
-				WeakReference reference;
-				if (object_map.TryGetValue (ptr, out reference)) {
+				if (object_map.TryGetValue (ptr, out var reference)) {
 					var target = (NSObject) reference.Target;
 					if (target == null)
 						return null;
