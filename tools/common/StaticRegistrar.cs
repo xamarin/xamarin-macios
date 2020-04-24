@@ -3906,17 +3906,22 @@ namespace Registrar {
 
 			// no locking should be required here, it doesn't matter if we overwrite the field (it'll be the same value).
 			body.WriteLine ("if (!managed_method) {");
+			if (isGeneric)
+				body.WriteLine ("GCHandle mthis_handle = xamarin_gchandle_new (mthis, false);");
 			body.Write ("MonoReflectionMethod *reflection_method = ");
 			if (isGeneric)
-				body.Write ("xamarin_get_generic_method_from_token (mthis, ");
+				body.Write ("xamarin_get_generic_method_from_token (mthis_handle, ");
 			else
-				body.Write ("xamarin_get_method_from_token (");
+				body.Write ("(MonoReflectionMethod *) xamarin_get_method_from_token (");
 
 			if (merge_bodies) {
 				body.WriteLine ("token_ref, &exception_gchandle);");
 			} else {
 				body.WriteLine ("0x{0:X}, &exception_gchandle);", token_ref);
 			}
+			if (isGeneric)
+				body.WriteLine ("xamarin_gchandle_free (mthis_handle);");
+
 			body.WriteLine ("if (exception_gchandle != 0) goto exception_handling;");
 			body.WriteLine ("managed_method = xamarin_get_reflection_method_method (reflection_method);");
 			if (merge_bodies)

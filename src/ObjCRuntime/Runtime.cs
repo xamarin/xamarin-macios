@@ -671,17 +671,17 @@ namespace ObjCRuntime {
 			return IntPtr.Zero;
 		}
 
-		static unsafe IntPtr GetGenericMethodFromToken (IntPtr obj, uint token_ref)
+		static unsafe IntPtr GetGenericMethodFromToken (IntPtr obj_handle, uint token_ref)
 		{
 			var method = Class.ResolveMethodTokenReference (token_ref);
 			if (method == null)
 				return IntPtr.Zero;
 
-			var nsobj = ObjectWrapper.Convert (obj) as NSObject;
+			var nsobj = GCHandle.FromIntPtr (obj_handle).Target as NSObject;
 			if (nsobj == null)
 				throw ErrorHelper.CreateError (8023, $"An instance object is required to construct a closed generic method for the open generic method: {method.DeclaringType.FullName}.{method.Name} (token reference: 0x{token_ref:X}). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.");
 
-			return ObjectWrapper.Convert (FindClosedMethod (nsobj.GetType (), method));
+			return GCHandle.ToIntPtr (GCHandle.Alloc (FindClosedMethod (nsobj.GetType (), method)));
 		}
 
 		static IntPtr TryGetOrConstructNSObjectWrapped (IntPtr ptr)
