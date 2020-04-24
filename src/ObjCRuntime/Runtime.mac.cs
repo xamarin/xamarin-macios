@@ -175,9 +175,12 @@ namespace ObjCRuntime {
 		}
 
 		[Preserve]
-		static IntPtr GetNullableType (IntPtr type)
+		static IntPtr GetNullableType (IntPtr type_handle)
 		{
-			return ObjectWrapper.Convert (Registrar.GetNullableType ((Type) ObjectWrapper.Convert (type)));
+			var handle = GCHandle.FromIntPtr (type_handle);
+			var type = (Type) handle.Target;
+			handle.Free ();
+			return GCHandle.ToIntPtr (GCHandle.Alloc (Registrar.GetNullableType (type)));
 		}
 #endif // !COREBUILD
 	}

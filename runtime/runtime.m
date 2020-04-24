@@ -461,9 +461,11 @@ xamarin_is_class_nullable (MonoClass *cls, MonoClass **element_type, guint32 *ex
 		if (get_nullable_type == NULL)
 			get_nullable_type = mono_class_get_method_from_name (runtime_class, "GetNullableType", 1);
 
-		void *args [1] { mono_type_get_object (mono_domain_get (), mono_class_get_type (cls)) };
+		void *args [1] { xamarin_gchandle_new ((MonoObject *) mono_type_get_object (mono_domain_get (), mono_class_get_type (cls)), false) };
 		MonoObject *exc = NULL;
-		MonoReflectionType *nullable_type = (MonoReflectionType *) mono_runtime_invoke (get_nullable_type, NULL, args, &exc);
+		GCHandle nullable_type_handle = (GCHandle) mono_runtime_invoke (get_nullable_type, NULL, args, &exc);
+		MonoReflectionType *nullable_type = (MonoReflectionType *) xamarin_gchandle_get_target (nullable_type_handle);
+		xamarin_gchandle_free (nullable_type_handle);
 		if (exc != NULL) {
 			*exception_gchandle = mono_gchandle_new (exc, FALSE);
 			return false;
