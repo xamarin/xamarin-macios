@@ -4,7 +4,7 @@
 #Get-ChildItem
 
 
-$testsummary_location = $Env:SYSTEM_DEFAULTWORKINGDIR
+$testsummary_location = $Env:SYSTEM_DEFAULTWORKINGDIRECTORY
 Write-Host $testsummary_location
 Get-Content $testsummary_location
 Get-Content $testsummary_location | Write-Host
