@@ -2691,6 +2691,15 @@ xamarin_get_managed_method_for_token (guint32 token_ref, guint32 *exception_gcha
 	return xamarin_get_reflection_method_method (reflection_method);
 }
 
+id
+xamarin_get_handle_for_inativeobject (MonoObject * obj, guint32 *exception_gchandle)
+{
+	id rv;
+	GCHandle obj_handle = xamarin_gchandle_new (obj, false);
+	rv = xamarin_get_handle_for_inativeobject2 (obj_handle, exception_gchandle);
+	xamarin_gchandle_free (obj_handle);
+	return rv;
+}
 /*
  * Object unregistration:
  *

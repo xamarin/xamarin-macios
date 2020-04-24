@@ -121,8 +121,8 @@
 			OnlyDynamicUsage = false,
 		},
 
-		new XDelegate ("id", "IntPtr", "xamarin_get_handle_for_inativeobject",
-			"MonoObject *", "IntPtr", "obj"
+		new XDelegate ("id", "IntPtr", "xamarin_get_handle_for_inativeobject2",
+			"GCHandle", "IntPtr", "obj_handle"
 		) {
 			WrappedManagedFunction = "GetHandleForINativeObject",
 			OnlyDynamicUsage = false,

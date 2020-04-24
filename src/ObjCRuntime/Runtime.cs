@@ -652,9 +652,10 @@ namespace ObjCRuntime {
 			return TryGetNSObject (ptr) != null;
 		}
 
-		static IntPtr GetHandleForINativeObject (IntPtr ptr)
+		static IntPtr GetHandleForINativeObject (IntPtr obj_handle)
 		{
-			return ((INativeObject) ObjectWrapper.Convert (ptr)).Handle;
+			var handle = GCHandle.FromIntPtr (obj_handle);
+			return ((INativeObject) handle.Target).Handle;
 		}
 
 		static void UnregisterNSObject (IntPtr native_obj, IntPtr managed_obj_handle) 
