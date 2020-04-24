@@ -22,7 +22,7 @@ extern "C" {
 		if (!d.OnlyDynamicUsage)
 			continue;
 #>
-<#= d.CReturnType #>
+<#= d.ConvertedCReturnType #>
 <#= d.EntryPoint #> (<#= d.CArgumentSignature #>);
 
 <# } #>

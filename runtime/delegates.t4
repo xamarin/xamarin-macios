@@ -343,6 +343,37 @@
 				});
 		}
 
+		public string ConvertedCReturnType {
+			get {
+				return CReturnType == "GCHandle" ? "MonoObject *" : CReturnType;
+			}
+		}
+
+		public string CInvokeStatement {
+			get {
+				var sb = new StringBuilder ();
+				sb.Append ("\t");
+				if (CReturnType != "void")
+					sb.Append ($"{CReturnType} rv = ");
+
+				sb.Append ("delegates.");
+				sb.Append (EntryPoint.Substring ("xamarin_".Length));
+				sb.Append (" (");
+				sb.Append (CArgumentNames);
+				sb.AppendLine (");");
+
+				if (CReturnType == "GCHandle") {
+					sb.AppendLine ("\tMonoObject *tmp_rv_value = xamarin_gchandle_get_target (rv);");
+					sb.AppendLine ("\txamarin_gchandle_free (rv);");
+					sb.AppendLine ("\treturn tmp_rv_value;");
+				} else if (CReturnType != "void") {
+					sb.AppendLine ("\treturn rv;");
+				}
+
+				return sb.ToString ();
+			}
+		}
+
 		public string SimpleEntryPoint {
 			get {
 				return EntryPoint.Substring ("xamarin_".Length);

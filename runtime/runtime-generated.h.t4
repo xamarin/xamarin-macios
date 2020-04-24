@@ -25,7 +25,7 @@ extern "C" {
 		if (d.OnlyDynamicUsage)
 			continue;
 #>
-<#= d.CReturnType #>
+<#= d.CReturnType == "GCHandle" ? "MonoObject *" : d.CReturnType #>
 <#= d.EntryPoint #> (<#= d.CArgumentSignature #>);
 
 <# } #>
