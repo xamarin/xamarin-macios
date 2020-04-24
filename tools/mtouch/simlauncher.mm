@@ -31,7 +31,7 @@ void xamarin_setup_impl ()
 #if DEBUG
 	xamarin_marshal_objectivec_exception_mode = MarshalObjectiveCExceptionModeUnwindManagedCode;
 #else
-	xamarin_marshal_objectivec_exception_mode = MarshalObjectiveCExceptionModeDisabled;
+	xamarin_marshal_objectivec_exception_mode = MarshalObjectiveCExceptionModeDisable;
 #endif
 
 #if NET
