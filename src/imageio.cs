@@ -2319,16 +2319,27 @@ namespace ImageIO {
 		NSDictionary DataDescription { get; set; }
 	}
 
-	[Partial]
 	[Mac (10, 15), iOS (13, 0), TV (13, 0), Watch (6, 0)]
-	interface CGImageAnimationOptions {
+	[Static]
+	[Internal]
+	interface CGImageAnimationOptionsKeys {
 		[Field ("kCGImageAnimationDelayTime")]
-		NSString DelayTime { get; }
+		NSString DelayTimeKey { get; }
 
 		[Field ("kCGImageAnimationLoopCount")]
-		NSString LoopCount { get; }
+		NSString LoopCountKey { get; }
 
 		[Field ("kCGImageAnimationStartIndex")]
-		NSString StartIndex { get; }
+		NSString StartIndexKey { get; }
+	}
+
+	[Mac (10, 15), iOS (13, 0), TV (13, 0), Watch (6, 0)]
+	[StrongDictionary ("CGImageAnimationOptionsKeys")]
+	interface CGImageAnimationOptions {
+		double DelayTime { get; set; }
+
+		NSNumber LoopCount { get; set; }
+
+		NSNumber StartIndex { get; set; }
 	}
 }
