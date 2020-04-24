@@ -476,9 +476,15 @@ namespace ObjCRuntime {
 			return GCHandle.ToIntPtr (GCHandle.Alloc (CreateBlockProxy (method, block)));
 		}
 			
-		static IntPtr CreateDelegateProxy (IntPtr method, IntPtr @delegate, IntPtr signature, uint token_ref)
+		static IntPtr CreateDelegateProxy (IntPtr method_gchandle, IntPtr @delegate_gchandle, IntPtr signature, uint token_ref)
 		{
-			return BlockLiteral.GetBlockForDelegate ((MethodInfo) ObjectWrapper.Convert (method), ObjectWrapper.Convert (@delegate), token_ref, Marshal.PtrToStringAuto (signature));
+			var method_handle = GCHandle.FromIntPtr (method_gchandle);
+			var method = (MethodInfo) method_handle.Target;
+			method_handle.Free ();
+			var delegate_handle = GCHandle.FromIntPtr (delegate_gchandle);
+			var @delegate = method_handle.Target;
+			delegate_handle.Free ();
+			return BlockLiteral.GetBlockForDelegate (method, @delegate, token_ref, Marshal.PtrToStringAuto (signature));
 		}
 
 		static unsafe Assembly GetEntryAssembly ()
