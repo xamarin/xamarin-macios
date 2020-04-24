@@ -294,6 +294,41 @@ bool
 <#= export.EntryPoint #>_exists ();
 
 <# } #>
+
+/*
+ * Wrapper GCHandle functions that takes pointer sized handles instead of ints,
+ * so that we can adapt our code incrementally to use pointers instead of ints
+ * until Mono's pointer-sized API is available for us.
+ * Ref: https://github.com/dotnet/runtime/commit/3886a63841434af716292172737a42757a15c6a6
+ */
+#define INVALID_GCHANDLE 0
+typedef void* GCHandle;
+inline GCHandle		xamarin_gchandle_new (MonoObject *obj, bool track_resurrection) __attribute__((always_inline));
+inline GCHandle		xamarin_gchandle_new_weakref (MonoObject *obj, bool pinned) __attribute__((always_inline));
+inline MonoObject *	xamarin_gchandle_get_target (GCHandle handle) __attribute__((always_inline));
+inline void			xamarin_gchandle_free (GCHandle handle) __attribute__((always_inline));
+
+GCHandle
+xamarin_gchandle_new (MonoObject *obj, bool track_resurrection)
+{
+	return GINT_TO_POINTER (mono_gchandle_new (obj, track_resurrection));
+}
+GCHandle
+xamarin_gchandle_new_weakref (MonoObject *obj, bool pinned)
+{
+	return GINT_TO_POINTER (mono_gchandle_new_weakref (obj, pinned));
+}
+MonoObject *
+xamarin_gchandle_get_target (GCHandle handle)
+{
+	return mono_gchandle_get_target (GPOINTER_TO_UINT (handle));
+}
+void
+xamarin_gchandle_free (GCHandle handle)
+{
+	mono_gchandle_free (GPOINTER_TO_UINT (handle));
+}
+
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
