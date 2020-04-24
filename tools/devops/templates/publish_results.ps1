@@ -1,7 +1,7 @@
 # debugging code: print out all environment variables, including those passed in via yml
-#Get-Location
-#Set-Location Env:
-#Get-ChildItem
+Get-Location
+Set-Location Env:
+Get-ChildItem
 
 
 $testsummary_location = $Env:SYSTEM_DEFAULTWORKINGDIRECTORY
