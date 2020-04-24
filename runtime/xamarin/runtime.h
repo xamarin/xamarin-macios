@@ -123,11 +123,11 @@ struct MTRegistrationMap {
 };
 
 typedef struct {
-	MonoReflectionType *original_type;
+	GCHandle original_type_handle;
 } BindAsData;
 
 typedef struct {
-	MonoReflectionMethod *method;
+	GCHandle method_handle;
 	int32_t semantic;
 	int32_t bindas_count; // The number of elements available in the bindas_types array.
 	// An array of BindAs original types. Element 0 is for the return value,
@@ -261,6 +261,7 @@ void			xamarin_printf (const char *format, ...);
 void			xamarin_vprintf (const char *format, va_list args);
 void			xamarin_install_log_callbacks ();
 
+id				xamarin_get_handle_for_inativeobject (MonoObject * obj, guint32 *exception_gchandle);
 /*
  * Look for an assembly in the app and open it.
  *

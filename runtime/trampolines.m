@@ -94,8 +94,9 @@ xamarin_marshal_return_value_impl (MonoType *mtype, const char *type, MonoObject
 		case _C_ID: {
 			MonoClass *r_klass = mono_object_get_class ((MonoObject *) retval);
 
-			if (desc && desc->bindas [0].original_type != NULL) {
-				return xamarin_generate_conversion_to_native (retval, mono_class_get_type (r_klass), mono_reflection_type_get_type (desc->bindas [0].original_type), method, (void *) INVALID_TOKEN_REF, exception_gchandle);
+			if (desc && desc->bindas [0].original_type_handle != INVALID_GCHANDLE) {
+				MonoReflectionType *original_type = (MonoReflectionType *) xamarin_gchandle_get_target (desc->bindas [0].original_type_handle);
+				return xamarin_generate_conversion_to_native (retval, mono_class_get_type (r_klass), mono_reflection_type_get_type (original_type), method, (void *) INVALID_TOKEN_REF, exception_gchandle);
 			} else if (r_klass == mono_get_string_class ()) {
 				return xamarin_string_to_nsstring ((MonoString *) retval, retain);
 			} else if (xamarin_is_class_array (r_klass)) {
@@ -662,12 +663,11 @@ xamarin_notify_dealloc (id self, uint32_t gchandle)
 	MONO_THREAD_ATTACH; // COOP: This will swith to GC_UNSAFE
 
 	/* Object is about to die. Unregister it and free any gchandles we may have */
-	MonoObject *mobj = mono_gchandle_get_target (gchandle);
 #if defined(DEBUG_REF_COUNTING)
-	PRINT ("xamarin_notify_dealloc (%p, %i) target: %p\n", self, gchandle, mobj);
+	PRINT ("xamarin_notify_dealloc (%p, %i)\n", self, gchandle);
 #endif
+	xamarin_unregister_nsobject (self, GINT_TO_POINTER (gchandle), &exception_gchandle);
 	xamarin_free_gchandle (self, gchandle);
-	xamarin_unregister_nsobject (self, mobj, &exception_gchandle);
 
 	MONO_THREAD_DETACH; // COOP: This will switch to GC_SAFE
 
@@ -1112,7 +1112,7 @@ void *
 xamarin_nsobject_to_inativeobject (id object, void *ptr, MonoClass *managedType, void *context, guint32 *exception_gchandle)
 {
 	struct conversion_data * data = (struct conversion_data *) context;
-	return xamarin_get_inative_object_dynamic (object, false, data->element_reflection_type, exception_gchandle);
+	return xamarin_get_inative_object_dynamic (object, false, xamarin_gchandle_new ((MonoObject *) data->element_reflection_type, false), exception_gchandle);
 }
 
 void *
@@ -1441,7 +1441,7 @@ xamarin_nsstring_to_smart_enum (id value, void *ptr, MonoClass *managedType, voi
 
 	if (context_ref == INVALID_TOKEN_REF) {
 		// This requires the dynamic registrar to invoke the correct conversion function
-		void *rv = xamarin_convert_nsstring_to_smart_enum (value, mono_type_get_object (mono_domain_get (), mono_class_get_type (managedType)), exception_gchandle);
+		void *rv = xamarin_convert_nsstring_to_smart_enum (value, xamarin_gchandle_new ((MonoObject *) mono_type_get_object (mono_domain_get (), mono_class_get_type (managedType)), false), exception_gchandle);
 		if (*exception_gchandle != 0)
 			return ptr;
 		gc_handle = GPOINTER_TO_UINT (rv);

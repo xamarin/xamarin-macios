@@ -37,12 +37,12 @@ create_linked_away_exception (const char *func)
 }
 
 <# foreach (var d in delegates) { #>
-<#= d.CReturnType #>
+<#= d.ConvertedCReturnType #>
 <#= d.EntryPoint #> (<#= d.CArgumentSignature #>)
 {
 <#if (d.ExceptionHandling && d.OnlyDynamicUsage) {#>	if (delegates.<#= d.EntryPoint.Substring ("xamarin_".Length) #> == NULL) {
 		*exception_gchandle = create_linked_away_exception ("<#= d.EntryPoint.Substring ("xamarin_".Length) #>");
-		return<# if (d.CReturnType != "void") { #> (<#= d.CReturnType #>) 0<# } #>;
+		return<# if (d.CReturnType == "GCHandle") { #> NULL<# } else if (d.CReturnType != "void") { #> (<#= d.CReturnType #>) 0<# } #>;
 	}
 <#} else {#>#if DEBUG
 	if (delegates.<#= d.EntryPoint.Substring ("xamarin_".Length) #> == NULL) {
@@ -51,7 +51,6 @@ create_linked_away_exception (const char *func)
 	}
 #endif
 <#}#>
-	<# if (d.CReturnType != "void") { #>return <# } #>delegates.<#= d.EntryPoint.Substring ("xamarin_".Length) #> (<#= d.CArgumentNames #>);
-}
+<#= d.CInvokeStatement #>}
 
 <# } #>

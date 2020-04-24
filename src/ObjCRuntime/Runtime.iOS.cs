@@ -53,21 +53,16 @@ namespace ObjCRuntime {
 			UIApplication.Initialize ();
 		}
 
+#if !XAMCORE_4_0
 		// This method is documented to be for diagnostic purposes only,
 		// and should not be considered stable API.
-		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		static public List<WeakReference> GetSurfacedObjects ()
 		{
-			lock (lock_obj){
-				var list = new List<WeakReference> (object_map.Count);
-
-				foreach (var kv in object_map)
-					list.Add (kv.Value);
-
-				return list;
-			}
+			throw new NotSupportedException ();
 		}
-			
+#endif
+
 #if TVOS || WATCH
 		[Advice ("This method is present only to help porting code.")]
 		public static void StartWWAN (Uri uri, Action<Exception> callback)

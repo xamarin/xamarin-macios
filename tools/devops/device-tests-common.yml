@@ -60,15 +60,18 @@ jobs:
       set -x
       set -e
 
+      EC=0
+
       rm -f ~/Library/Caches/com.xamarin.provisionator/Provisions/*p12
       rm -f ~/Library/Caches/com.xamarin.provisionator/Provisions/*mobileprovision
 
-      ./maccore/tools/install-qa-provisioning-profiles.sh -v
-      if [ $? -eq 0 ]; then
-        echo "##vso[task.setvariable variable=ProvisioningProfiles]success"
+      ./maccore/tools/install-qa-provisioning-profiles.sh -v || EC=$?
+      if [ $EC -eq 0 ]; then
+        echo "##vso[task.setvariable variable=ProvisioningStatus]success"
       else
-        echo "##vso[task.setvariable variable=ProvisioningProfiles]failure"
+        echo "##vso[task.setvariable variable=ProvisioningStatus]failure"
       fi
+      exit $EC
     displayName: 'Add provisioning profiles'
     env:
       LOGIN_KEYCHAIN_PASSWORD: $(OSX_KEYCHAIN_PASS)
@@ -77,7 +80,15 @@ jobs:
       set -x
       set -e
 
-      ./xamarin-macios/system-dependencies.sh --ignore-all --provision-xcode --provision-xamarin-studio --provision-mono --provision-7z
+      EC=0
+
+      ./xamarin-macios/system-dependencies.sh --ignore-all --provision-xcode --provision-xamarin-studio --provision-mono --provision-7z || EC=$?
+      if [ $EC -eq 0 ]; then
+        echo "##vso[task.setvariable variable=ProvisioningStatus]success"
+      else
+        echo "##vso[task.setvariable variable=ProvisioningStatus]failure"
+      fi
+      exit $EC
     displayName: 'Provision dependencies'
     timeoutInMinutes: 240
 
@@ -151,7 +162,7 @@ jobs:
   - bash: ./xamarin-macios/tools/devops/add-summaries.sh
     displayName: 'Add summaries'
     continueOnError: true
-    condition: and(succeededOrFailed(), eq(variables['ProvisioningProfiles'], 'success')) # if profiles did not succeded we do not need to do a thing since we have no summaries
+    condition: and(succeededOrFailed(), eq(variables['ProvisioningStatus'], 'success')) # if profiles did not succeded we do not need to do a thing since we have no summaries
     timeoutInMinutes: 5
 
   - task: ArchiveFiles@1
@@ -161,7 +172,7 @@ jobs:
       includeRootFolder: false
       archiveFile: '$(Build.ArtifactStagingDirectory)/HtmlReport-$(Build.BuildId).zip'
     continueOnError: true
-    condition: and(succeededOrFailed(), eq(variables['ProvisioningProfiles'], 'success')) # if profiles did not succeded we do not need to do a thing since we have no summaries
+    condition: and(succeededOrFailed(), eq(variables['ProvisioningStatus'], 'success')) # if profiles did not succeded we do not need to do a thing since we have no summaries
     timeoutInMinutes: 30
 
   ###
@@ -175,7 +186,7 @@ jobs:
       testResultsFiles: '**/vsts-*.xml'
       failTaskOnFailedTests: true
     continueOnError: true
-    condition: and(succeededOrFailed(), eq(variables['ProvisioningProfiles'], 'success')) # with no profiles we have no test results
+    condition: and(succeededOrFailed(), eq(variables['ProvisioningStatus'], 'success')) # with no profiles we have no test results
     timeoutInMinutes: 180
 
   ###
@@ -188,7 +199,7 @@ jobs:
       pathtoPublish: '$(Build.ArtifactStagingDirectory)/HtmlReport-$(Build.BuildId).zip'
       artifactName: HtmlReport
     continueOnError: true
-    condition: and(succeededOrFailed(), eq(variables['ProvisioningProfiles'], 'success')) # with no profiles we have no test results
+    condition: and(succeededOrFailed(), eq(variables['ProvisioningStatus'], 'success')) # with no profiles we have no test results
     timeoutInMinutes: 30
 
   ###

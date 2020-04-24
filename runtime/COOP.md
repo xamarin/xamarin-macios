@@ -94,14 +94,6 @@ This has the same problem as xamarin_invoke_trampoline,
 having to construct parameters to a managed function
 while at the same time being able to switch to safe mode.
 
-ObjectWrapper
--------------
-
-This is not safe, and must be replaced with safe alternatives:
-
-* icall
-* GCHandle
-
 Debugging tips
 ==============
 

@@ -848,7 +848,7 @@ namespace Registrar {
 				custom_type_map [type] = null;
 		}
 
-		public void GetMethodDescriptionAndObject (Type type, IntPtr selector, bool is_static, IntPtr obj, ref IntPtr mthis, IntPtr desc)
+		public void GetMethodDescriptionAndObject (Type type, IntPtr selector, bool is_static, IntPtr obj, ref IntPtr mthis_gchandle, IntPtr desc)
 		{
 			var sel = Selector.GetName (selector);
 			var res = GetMethodNoThrow (type, type, sel, is_static);
@@ -856,11 +856,11 @@ namespace Registrar {
 				throw ErrorHelper.CreateError (8006, "Failed to find the selector '{0}' on the type '{1}'", sel, type.FullName);
 
 			if (res.IsInstanceCategory) {
-				mthis = IntPtr.Zero;
+				mthis_gchandle = IntPtr.Zero;
 			} else {
 				try {
 					var nsobj = Runtime.GetNSObject (obj, Runtime.MissingCtorResolution.ThrowConstructor1NotFound, true);
-					mthis = ObjectWrapper.Convert (nsobj);
+					mthis_gchandle = GCHandle.ToIntPtr (GCHandle.Alloc (nsobj));
 					if (res.Method.ContainsGenericParameters) {
 						res.WriteUnmanagedDescription (desc, Runtime.FindClosedMethod (nsobj.GetType (), res.Method));
 						return;

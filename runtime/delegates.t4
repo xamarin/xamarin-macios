@@ -7,7 +7,7 @@
 <#
 	var delegates = new XDelegates {
 		new XDelegate ("void", "void", "xamarin_register_nsobject",
-			"MonoObject *", "IntPtr", "managed_obj",
+			"GCHandle", "IntPtr", "managed_obj_handle",
 			"id", "IntPtr", "native_obj"
 		) {
 			WrappedManagedFunction = "RegisterNSObject",
@@ -15,7 +15,7 @@
 		},
 
 		new XDelegate ("void", "void", "xamarin_register_assembly",
-			"MonoReflectionAssembly *", "IntPtr", "assembly"
+			"GCHandle", "IntPtr", "assembly"
 		) {
 			WrappedManagedFunction = "RegisterAssembly",
 			OnlyDynamicUsage = true,
@@ -50,16 +50,16 @@
 			OnlyDynamicUsage = false,
 		},
 
-		new XDelegate ("MonoObject *", "IntPtr", "xamarin_get_block_wrapper_creator",
-			"MonoObject *", "IntPtr", "method",
+		new XDelegate ("GCHandle", "IntPtr", "xamarin_get_block_wrapper_creator",
+			"GCHandle", "IntPtr", "method",
 			"int", "int", "parameter"
 		) {
 			WrappedManagedFunction = "GetBlockWrapperCreator",
 			OnlyDynamicUsage = true,
 		},
 
-		new XDelegate ("MonoObject *", "IntPtr", "xamarin_create_block_proxy",
-			"MonoObject *", "IntPtr", "method",
+		new XDelegate ("GCHandle", "IntPtr", "xamarin_create_block_proxy",
+			"GCHandle", "IntPtr", "method",
 			"void *", "IntPtr", "block"
 		) {
 			WrappedManagedFunction = "CreateBlockProxy",
@@ -67,8 +67,8 @@
 		},
 
 		new XDelegate ("id", "IntPtr", "xamarin_create_delegate_proxy",
-			"MonoObject *", "IntPtr", "method",
-			"MonoObject *", "IntPtr", "block",
+			"GCHandle", "IntPtr", "method",
+			"GCHandle", "IntPtr", "block",
 			"const char *", "IntPtr", "signature",
 			"unsigned int", "uint", "token_ref"
 		) {
@@ -77,20 +77,20 @@
 		},
 
 		new XDelegate ("void", "void", "xamarin_register_entry_assembly",
-			"MonoReflectionAssembly *", "IntPtr", "assembly"
+			"GCHandle", "IntPtr", "assembly"
 		) {
 			WrappedManagedFunction = "RegisterEntryAssembly",
 			OnlyDynamicUsage = true,
 		},
 
-		new XDelegate ("MonoObject *", "IntPtr", "xamarin_get_class",
+		new XDelegate ("GCHandle", "IntPtr", "xamarin_get_class",
 			"Class", "IntPtr", "ptr"
 		) {
 			WrappedManagedFunction = "GetClass",
 			OnlyDynamicUsage = false,
 		},
 
-		new XDelegate ("MonoObject *", "IntPtr", "xamarin_get_selector",
+		new XDelegate ("GCHandle", "IntPtr", "xamarin_get_selector",
 			"SEL", "IntPtr", "ptr"
 		) {
 			WrappedManagedFunction = "GetSelector",
@@ -107,7 +107,7 @@
 			OnlyDynamicUsage = true,
 		},
 
-		new XDelegate ("MonoObject *", "IntPtr", "xamarin_get_nsobject",
+		new XDelegate ("GCHandle", "IntPtr", "xamarin_get_nsobject",
 			"id", "IntPtr", "obj"
 		) {
 			WrappedManagedFunction = "GetNSObjectWrapped",
@@ -121,8 +121,8 @@
 			OnlyDynamicUsage = false,
 		},
 
-		new XDelegate ("id", "IntPtr", "xamarin_get_handle_for_inativeobject",
-			"MonoObject *", "IntPtr", "obj"
+		new XDelegate ("id", "IntPtr", "xamarin_get_handle_for_inativeobject2",
+			"GCHandle", "IntPtr", "obj_handle"
 		) {
 			WrappedManagedFunction = "GetHandleForINativeObject",
 			OnlyDynamicUsage = false,
@@ -130,44 +130,44 @@
 
 		new XDelegate ("void", "void", "xamarin_unregister_nsobject",
 			"id", "IntPtr", "native_obj",
-			"MonoObject *", "IntPtr", "managed_obj"
+			"GCHandle", "IntPtr", "managed_obj_handle"
 		) {
 			WrappedManagedFunction = "UnregisterNSObject",
 			OnlyDynamicUsage = false,
 		},
 
-		new XDelegate ("MonoObject *", "IntPtr", "xamarin_try_get_or_construct_nsobject",
+		new XDelegate ("GCHandle", "IntPtr", "xamarin_try_get_or_construct_nsobject",
 			"id", "IntPtr", "obj"
 		) {
 			WrappedManagedFunction = "TryGetOrConstructNSObjectWrapped",
 			OnlyDynamicUsage = false,
 		},
 
-		new XDelegate ("MonoObject *", "IntPtr", "xamarin_get_inative_object_dynamic",
+		new XDelegate ("GCHandle", "IntPtr", "xamarin_get_inative_object_dynamic",
 			"id", "IntPtr", "obj",
 			"bool", "bool", "owns",
-			"void *", "IntPtr", "type"
+			"GCHandle", "IntPtr", "type"
 		) {
 			WrappedManagedFunction = "GetINativeObject_Dynamic",
 			OnlyDynamicUsage = false,
 		},
 
-		new XDelegate ("MonoReflectionMethod *", "IntPtr", "xamarin_get_method_from_token",
+		new XDelegate ("GCHandle", "IntPtr", "xamarin_get_method_from_token",
 			"unsigned int", "uint", "token_ref"
 		) {
 			WrappedManagedFunction = "GetMethodFromToken",
 			OnlyDynamicUsage = false,
 		},
 
-		new XDelegate ("MonoReflectionMethod *", "IntPtr", "xamarin_get_generic_method_from_token",
-			"MonoObject *", "IntPtr", "obj",
+		new XDelegate ("GCHandle", "IntPtr", "xamarin_get_generic_method_from_token",
+			"GCHandle", "IntPtr", "obj_handle",
 			"unsigned int", "uint", "token_ref"
 		) {
 			WrappedManagedFunction = "GetGenericMethodFromToken",
 			OnlyDynamicUsage = false,
 		},
 
-		new XDelegate ("MonoObject *", "IntPtr", "xamarin_get_inative_object_static",
+		new XDelegate ("GCHandle", "IntPtr", "xamarin_get_inative_object_static",
 			"id", "IntPtr", "obj",
 			"bool", "bool", "owns",
 			"unsigned int", "uint", "iface_token_ref",
@@ -177,9 +177,9 @@
 			OnlyDynamicUsage = false,
 		},
 
-		new XDelegate ("MonoObject *", "IntPtr", "xamarin_get_nsobject_with_type",
+		new XDelegate ("GCHandle", "IntPtr", "xamarin_get_nsobject_with_type",
 			"id", "IntPtr", "obj",
-			"void *", "IntPtr", "type",
+			"GCHandle", "IntPtr", "type",
 			"int32_t *", "out bool", "created"
 		) {
 			WrappedManagedFunction = "GetNSObjectWithType",
@@ -187,14 +187,14 @@
 		},
 
 		new XDelegate ("void", "void", "xamarin_dispose",
-			"MonoObject *", "IntPtr", "mobj"
+			"GCHandle", "IntPtr", "mobj"
 		) {
 			WrappedManagedFunction = "Dispose",
 			OnlyDynamicUsage = false,
 		},
 
 		new XDelegate ("bool", "bool", "xamarin_is_parameter_transient",
-			"MonoReflectionMethod *", "IntPtr", "method",
+			"GCHandle", "IntPtr", "method",
 			"int", "int", "parameter"
 		) {
 			WrappedManagedFunction = "IsParameterTransient",
@@ -202,7 +202,7 @@
 		},
 
 		new XDelegate ("bool", "bool", "xamarin_is_parameter_out",
-			"MonoReflectionMethod *", "IntPtr", "method",
+			"GCHandle", "IntPtr", "method",
 			"int", "int", "parameter"
 		) {
 			WrappedManagedFunction = "IsParameterOut",
@@ -214,7 +214,7 @@
 			"SEL", "IntPtr", "sel",
 			"bool", "bool", "is_static",
 			"id", "IntPtr", "obj",
-			"MonoObject **", "ref IntPtr", "mthis",
+			"GCHandle *", "ref IntPtr", "mthis_gchandle",
 			"MethodDescription *", "IntPtr", "desc"
 		) {
 			WrappedManagedFunction = "GetMethodAndObjectForSelector",
@@ -231,7 +231,7 @@
 		},
 
 		new XDelegate ("char *", "IntPtr", "xamarin_reflection_type_get_full_name",
-			"MonoReflectionType *", "IntPtr", "type"
+			"GCHandle", "IntPtr", "type"
 		) {
 			WrappedManagedFunction = "TypeGetFullName",
 			OnlyDynamicUsage = false,
@@ -268,7 +268,7 @@
 
 		new XDelegate ("void *", "IntPtr", "xamarin_convert_nsstring_to_smart_enum",
 			"NSString *", "IntPtr", "value",
-			"MonoReflectionType *", "IntPtr", "type"
+			"GCHandle", "IntPtr", "type"
 		) {
 			WrappedManagedFunction = "ConvertNSStringToSmartEnum",
 			OnlyDynamicUsage = true,
@@ -341,6 +341,37 @@
 					MType = arguments [i + 1],
 					Name = arguments [i + 2]
 				});
+		}
+
+		public string ConvertedCReturnType {
+			get {
+				return CReturnType == "GCHandle" ? "MonoObject *" : CReturnType;
+			}
+		}
+
+		public string CInvokeStatement {
+			get {
+				var sb = new StringBuilder ();
+				sb.Append ("\t");
+				if (CReturnType != "void")
+					sb.Append ($"{CReturnType} rv = ");
+
+				sb.Append ("delegates.");
+				sb.Append (EntryPoint.Substring ("xamarin_".Length));
+				sb.Append (" (");
+				sb.Append (CArgumentNames);
+				sb.AppendLine (");");
+
+				if (CReturnType == "GCHandle") {
+					sb.AppendLine ("\tMonoObject *tmp_rv_value = xamarin_gchandle_get_target (rv);");
+					sb.AppendLine ("\txamarin_gchandle_free (rv);");
+					sb.AppendLine ("\treturn tmp_rv_value;");
+				} else if (CReturnType != "void") {
+					sb.AppendLine ("\treturn rv;");
+				}
+
+				return sb.ToString ();
+			}
 		}
 
 		public string SimpleEntryPoint {

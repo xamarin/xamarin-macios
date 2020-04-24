@@ -3645,7 +3645,7 @@ namespace Registrar {
 
 							if (HasAttribute (paramBase, ObjCRuntime, StringConstants.TransientAttribute)) {
 								copyback.AppendLine ("if (created{0}) {{", i);
-								copyback.AppendLine ("xamarin_dispose (mobj{0}, &exception_gchandle);", i);
+								copyback.AppendLine ("xamarin_dispose (xamarin_gchandle_new (mobj{0}, false), &exception_gchandle);", i);
 								copyback.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
 								copyback.AppendLine ("}");
 							}
@@ -3678,7 +3678,7 @@ namespace Registrar {
 								setup_call_stack.AppendLine ("inobj{0} = xamarin_get_inative_object_static (*p{0}, false, 0x{1:X} /* {2} */, 0x{3:X} /* {4} */, &exception_gchandle);", i, CreateTokenReference (td, TokenType.TypeDef), td.FullName, CreateTokenReference (nativeObjType, TokenType.TypeDef), nativeObjType.FullName);
 								setup_call_stack.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
 							} else {
-								setup_call_stack.AppendLine ("inobj{0} = xamarin_get_inative_object_dynamic (*p{0}, false, mono_type_get_object (mono_domain_get (), type{0}), &exception_gchandle);", i);
+								setup_call_stack.AppendLine ("inobj{0} = xamarin_get_inative_object_dynamic (*p{0}, false, xamarin_gchandle_new ((MonoObject *) mono_type_get_object (mono_domain_get (), type{0}), false), &exception_gchandle);", i);
 								setup_call_stack.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
 							}
 							setup_call_stack.AppendLine ("arg_ptrs [{0}] = &inobj{0};", i);
@@ -3691,7 +3691,7 @@ namespace Registrar {
 							if (td.IsInterface) {
 								setup_call_stack.AppendLine ("arg_ptrs [{0}] = xamarin_get_inative_object_static (p{0}, false, 0x{1:X} /* {2} */, 0x{3:X} /* {4} */, &exception_gchandle);", i, CreateTokenReference (td, TokenType.TypeDef), td.FullName, CreateTokenReference (nativeObjType, TokenType.TypeDef), nativeObjType.FullName);
 							} else {
-								setup_call_stack.AppendLine ("arg_ptrs [{0}] = xamarin_get_inative_object_dynamic (p{0}, false, mono_type_get_object (mono_domain_get (), type{0}), &exception_gchandle);", i);
+								setup_call_stack.AppendLine ("arg_ptrs [{0}] = xamarin_get_inative_object_dynamic (p{0}, false, xamarin_gchandle_new ((MonoObject *) mono_type_get_object (mono_domain_get (), type{0}), false), &exception_gchandle);", i);
 							}
 							setup_call_stack.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
 						}
@@ -3907,17 +3907,22 @@ namespace Registrar {
 
 			// no locking should be required here, it doesn't matter if we overwrite the field (it'll be the same value).
 			body.WriteLine ("if (!managed_method) {");
+			if (isGeneric)
+				body.WriteLine ("GCHandle mthis_handle = xamarin_gchandle_new (mthis, false);");
 			body.Write ("MonoReflectionMethod *reflection_method = ");
 			if (isGeneric)
-				body.Write ("xamarin_get_generic_method_from_token (mthis, ");
+				body.Write ("xamarin_get_generic_method_from_token (mthis_handle, ");
 			else
-				body.Write ("xamarin_get_method_from_token (");
+				body.Write ("(MonoReflectionMethod *) xamarin_get_method_from_token (");
 
 			if (merge_bodies) {
 				body.WriteLine ("token_ref, &exception_gchandle);");
 			} else {
 				body.WriteLine ("0x{0:X}, &exception_gchandle);", token_ref);
 			}
+			if (isGeneric)
+				body.WriteLine ("xamarin_gchandle_free (mthis_handle);");
+
 			body.WriteLine ("if (exception_gchandle != 0) goto exception_handling;");
 			body.WriteLine ("managed_method = xamarin_get_reflection_method_method (reflection_method);");
 			if (merge_bodies)

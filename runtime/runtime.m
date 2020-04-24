@@ -297,7 +297,7 @@ xamarin_get_nsobject_with_type_for_ptr_created (id self, bool owns, MonoType *ty
 			return mobj;
 	}
 
-	return xamarin_get_nsobject_with_type (self, mono_type_get_object (mono_domain_get (), type), created, exception_gchandle);
+	return xamarin_get_nsobject_with_type (self, xamarin_gchandle_new ((MonoObject *) mono_type_get_object (mono_domain_get (), type), false), created, exception_gchandle);
 }
 
 MonoObject *
@@ -461,9 +461,11 @@ xamarin_is_class_nullable (MonoClass *cls, MonoClass **element_type, guint32 *ex
 		if (get_nullable_type == NULL)
 			get_nullable_type = mono_class_get_method_from_name (runtime_class, "GetNullableType", 1);
 
-		void *args [1] { mono_type_get_object (mono_domain_get (), mono_class_get_type (cls)) };
+		void *args [1] { xamarin_gchandle_new ((MonoObject *) mono_type_get_object (mono_domain_get (), mono_class_get_type (cls)), false) };
 		MonoObject *exc = NULL;
-		MonoReflectionType *nullable_type = (MonoReflectionType *) mono_runtime_invoke (get_nullable_type, NULL, args, &exc);
+		GCHandle nullable_type_handle = (GCHandle) mono_runtime_invoke (get_nullable_type, NULL, args, &exc);
+		MonoReflectionType *nullable_type = (MonoReflectionType *) xamarin_gchandle_get_target (nullable_type_handle);
+		xamarin_gchandle_free (nullable_type_handle);
 		if (exc != NULL) {
 			*exception_gchandle = mono_gchandle_new (exc, FALSE);
 			return false;
@@ -972,7 +974,7 @@ register_assembly (MonoAssembly *assembly, guint32 *exception_gchandle)
 		LOG (PRODUCT ": Skipping assembly registration for %s since it's not needed (dynamic registration is not supported)", mono_assembly_name_get_name (mono_assembly_get_name (assembly)));
 		return true;
 	}
-	xamarin_register_assembly (mono_assembly_get_object (mono_domain_get (), assembly), exception_gchandle);
+	xamarin_register_assembly (xamarin_gchandle_new ((MonoObject *) mono_assembly_get_object (mono_domain_get (), assembly), false), exception_gchandle);
 	return *exception_gchandle == 0;
 }
 
@@ -1950,7 +1952,9 @@ xamarin_release_managed_ref (id self, MonoObject *managed_obj)
 		MONO_EXIT_GC_SAFE;
 	} else {
 		/* If we're a wrapper type, we need to unregister here, since we won't enter the release trampoline */
-		xamarin_unregister_nsobject (self, managed_obj, &exception_gchandle);
+		GCHandle managed_obj_handle = xamarin_gchandle_new (managed_obj, false);
+		xamarin_unregister_nsobject (self, managed_obj_handle, &exception_gchandle);
+		xamarin_gchandle_free (managed_obj_handle);
 
 		//
 		// This lock is needed so that we can safely call retainCount in the
@@ -2124,7 +2128,7 @@ get_method_block_wrapper_creator (MonoMethod *method, int par, guint32 *exceptio
 		return res;
 	}
 
-	res = xamarin_get_block_wrapper_creator ((MonoObject *) mono_method_get_object (mono_domain_get (), method, NULL), (int) par, exception_gchandle);
+	res = xamarin_get_block_wrapper_creator (xamarin_gchandle_new ((MonoObject *) mono_method_get_object (mono_domain_get (), method, NULL), false), (int) par, exception_gchandle);
 	if (*exception_gchandle != 0)
 		return NULL;
 	// PRINT ("New value: %x", (int) res);
@@ -2188,7 +2192,7 @@ xamarin_get_delegate_for_block_parameter (MonoMethod *method, guint32 token_ref,
 	/* retain or copy (if it's a stack block) the block */
 	nativeBlock = _Block_copy (nativeBlock);
 
-	delegate = delegates.create_block_proxy (obj, nativeBlock, exception_gchandle);
+	delegate = xamarin_create_block_proxy (xamarin_gchandle_new (obj, false), nativeBlock, exception_gchandle);
 	if (*exception_gchandle != 0) {
 		_Block_release (nativeBlock);
 		return NULL;
@@ -2211,7 +2215,7 @@ id
 xamarin_get_block_for_delegate (MonoMethod *method, MonoObject *delegate, const char *signature, guint32 token_ref, guint32 *exception_gchandle)
 {
 	// COOP: accesses managed memory: unsafe mode.
-	return delegates.create_delegate_proxy ((MonoObject *) mono_method_get_object (mono_domain_get (), method, NULL), delegate, signature, token_ref, exception_gchandle);
+	return delegates.create_delegate_proxy (xamarin_gchandle_new ((MonoObject *) mono_method_get_object (mono_domain_get (), method, NULL), false), xamarin_gchandle_new (delegate, false), signature, token_ref, exception_gchandle);
 }
 
 void
@@ -2683,12 +2687,21 @@ xamarin_get_managed_method_for_token (guint32 token_ref, guint32 *exception_gcha
 {
 	MonoReflectionMethod *reflection_method;
 
-	reflection_method = xamarin_get_method_from_token (token_ref, exception_gchandle);
+	reflection_method = (MonoReflectionMethod *) xamarin_get_method_from_token (token_ref, exception_gchandle);
 	if (*exception_gchandle != 0) return NULL;
 
 	return xamarin_get_reflection_method_method (reflection_method);
 }
 
+id
+xamarin_get_handle_for_inativeobject (MonoObject * obj, guint32 *exception_gchandle)
+{
+	id rv;
+	GCHandle obj_handle = xamarin_gchandle_new (obj, false);
+	rv = xamarin_get_handle_for_inativeobject2 (obj_handle, exception_gchandle);
+	xamarin_gchandle_free (obj_handle);
+	return rv;
+}
 /*
  * Object unregistration:
  *
