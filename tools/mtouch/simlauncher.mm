@@ -24,7 +24,9 @@ void xamarin_setup_impl ()
 #if DEBUG
 	xamarin_debug_mode = TRUE;
 #endif
+#if !NET
 	xamarin_create_classes_Xamarin_iOS ();
+#endif
 	xamarin_marshal_managed_exception_mode = MarshalManagedExceptionModeDisable;
 #if DEBUG
 	xamarin_marshal_objectivec_exception_mode = MarshalObjectiveCExceptionModeUnwindManagedCode;

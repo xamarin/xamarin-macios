@@ -138,26 +138,26 @@ namespace Xamarin.MacDev.Tasks {
 			arguments.Add (lib_xamarin.ItemSpec);
 
 			// _LibRegistrar
-			string lib_registrar_name;
-			switch (Platform) {
-			case ApplePlatform.iOS:
-				lib_registrar_name = "Xamarin.iOS.registrar.a";
-				break;
-			case ApplePlatform.TVOS:
-				lib_registrar_name = "Xamarin.TVOS.registrar.a";
-				break;
-			case ApplePlatform.WatchOS:
-				lib_registrar_name = "Xamarin.WatchOS.registrar.a";
-				break;
-			case ApplePlatform.MacOSX:
-				lib_registrar_name = "Xamarin.Mac.registrar.mobile.a";
-				break;
-			default:
-				// FIXME: Add error
-				throw new NotImplementedException ($"Unknown platform: {Platform}");
-			}
-			var lib_registrar = RuntimePackAsset.FirstOrDefault ((v) => v.GetMetadata ("DestinationSubPath") == lib_registrar_name);
-			arguments.Add (lib_registrar.ItemSpec);
+			//string lib_registrar_name;
+			//switch (Platform) {
+			//case ApplePlatform.iOS:
+			//	lib_registrar_name = "Xamarin.iOS.registrar.a";
+			//	break;
+			//case ApplePlatform.TVOS:
+			//	lib_registrar_name = "Xamarin.TVOS.registrar.a";
+			//	break;
+			//case ApplePlatform.WatchOS:
+			//	lib_registrar_name = "Xamarin.WatchOS.registrar.a";
+			//	break;
+			//case ApplePlatform.MacOSX:
+			//	lib_registrar_name = "Xamarin.Mac.registrar.mobile.a";
+			//	break;
+			//default:
+			//	// FIXME: Add error
+			//	throw new NotImplementedException ($"Unknown platform: {Platform}");
+			//}
+			//var lib_registrar = RuntimePackAsset.FirstOrDefault ((v) => v.GetMetadata ("DestinationSubPath") == lib_registrar_name);
+			//arguments.Add (lib_registrar.ItemSpec);
 
 			// _LibApp
 			var lib_app_name = "libapp.a"; // FIXME: extensions
