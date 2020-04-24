@@ -297,7 +297,7 @@ xamarin_get_nsobject_with_type_for_ptr_created (id self, bool owns, MonoType *ty
 			return mobj;
 	}
 
-	return xamarin_get_nsobject_with_type (self, mono_type_get_object (mono_domain_get (), type), created, exception_gchandle);
+	return xamarin_get_nsobject_with_type (self, xamarin_gchandle_new ((MonoObject *) mono_type_get_object (mono_domain_get (), type), false), created, exception_gchandle);
 }
 
 MonoObject *
