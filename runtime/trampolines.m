@@ -662,12 +662,11 @@ xamarin_notify_dealloc (id self, uint32_t gchandle)
 	MONO_THREAD_ATTACH; // COOP: This will swith to GC_UNSAFE
 
 	/* Object is about to die. Unregister it and free any gchandles we may have */
-	MonoObject *mobj = mono_gchandle_get_target (gchandle);
 #if defined(DEBUG_REF_COUNTING)
-	PRINT ("xamarin_notify_dealloc (%p, %i) target: %p\n", self, gchandle, mobj);
+	PRINT ("xamarin_notify_dealloc (%p, %i)\n", self, gchandle);
 #endif
+	xamarin_unregister_nsobject (self, GINT_TO_POINTER (gchandle), &exception_gchandle);
 	xamarin_free_gchandle (self, gchandle);
-	xamarin_unregister_nsobject (self, mobj, &exception_gchandle);
 
 	MONO_THREAD_DETACH; // COOP: This will switch to GC_SAFE
 

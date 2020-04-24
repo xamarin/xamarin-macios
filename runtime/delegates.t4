@@ -130,7 +130,7 @@
 
 		new XDelegate ("void", "void", "xamarin_unregister_nsobject",
 			"id", "IntPtr", "native_obj",
-			"MonoObject *", "IntPtr", "managed_obj"
+			"GCHandle", "IntPtr", "managed_obj_handle"
 		) {
 			WrappedManagedFunction = "UnregisterNSObject",
 			OnlyDynamicUsage = false,

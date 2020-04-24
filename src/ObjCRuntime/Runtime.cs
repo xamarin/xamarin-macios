@@ -657,9 +657,9 @@ namespace ObjCRuntime {
 			return ((INativeObject) ObjectWrapper.Convert (ptr)).Handle;
 		}
 
-		static void UnregisterNSObject (IntPtr native_obj, IntPtr managed_obj) 
+		static void UnregisterNSObject (IntPtr native_obj, IntPtr managed_obj_handle) 
 		{
-			NativeObjectHasDied (native_obj, ObjectWrapper.Convert (managed_obj) as NSObject);
+			NativeObjectHasDied (native_obj, managed_obj_handle);
 		}
 
 		static unsafe IntPtr GetMethodFromToken (uint token_ref)
@@ -1030,8 +1030,10 @@ namespace ObjCRuntime {
 			}
 		}
 					
-		static void NativeObjectHasDied (IntPtr ptr, NSObject managed_obj)
+		static void NativeObjectHasDied (IntPtr ptr, IntPtr managed_obj_handle)
 		{
+			GCHandle handle = GCHandle.FromIntPtr (managed_obj_handle);
+			var managed_obj = handle.Target as NSObject;
 			lock (lock_obj) {
 				if (object_map.TryGetValue (ptr, out var wr)) {
 					if (managed_obj == null || wr.Target == (object) managed_obj)
