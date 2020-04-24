@@ -195,7 +195,7 @@ runtime-pack: $(foreach var,$(PLATFORMS),runtime-pack-$(var))
 pack-%:
 	$(MAKE) ref-pack-$* runtime-pack-$* sdk-pack-$*
 
-test/NuGet.config: $(TOP)/NuGet.config Makefile
+test/NuGet.config: NuGet.config Makefile
 	$(Q) $(CP) $< $@.tmp
 	$(Q) nuget sources add -Name local-dotnet-feed -Source $(abspath $(CURDIR)/$(TEST_FEED_PATH)) -ConfigFile $@.tmp
 	$(Q) mv $@.tmp $@
