@@ -1440,7 +1440,7 @@ xamarin_nsstring_to_smart_enum (id value, void *ptr, MonoClass *managedType, voi
 
 	if (context_ref == INVALID_TOKEN_REF) {
 		// This requires the dynamic registrar to invoke the correct conversion function
-		void *rv = xamarin_convert_nsstring_to_smart_enum (value, mono_type_get_object (mono_domain_get (), mono_class_get_type (managedType)), exception_gchandle);
+		void *rv = xamarin_convert_nsstring_to_smart_enum (value, xamarin_gchandle_new ((MonoObject *) mono_type_get_object (mono_domain_get (), mono_class_get_type (managedType)), false), exception_gchandle);
 		if (*exception_gchandle != 0)
 			return ptr;
 		gc_handle = GPOINTER_TO_UINT (rv);
