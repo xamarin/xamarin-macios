@@ -972,7 +972,7 @@ register_assembly (MonoAssembly *assembly, guint32 *exception_gchandle)
 		LOG (PRODUCT ": Skipping assembly registration for %s since it's not needed (dynamic registration is not supported)", mono_assembly_name_get_name (mono_assembly_get_name (assembly)));
 		return true;
 	}
-	xamarin_register_assembly (mono_assembly_get_object (mono_domain_get (), assembly), exception_gchandle);
+	xamarin_register_assembly (xamarin_gchandle_new ((MonoObject *) mono_assembly_get_object (mono_domain_get (), assembly), false), exception_gchandle);
 	return *exception_gchandle == 0;
 }
 

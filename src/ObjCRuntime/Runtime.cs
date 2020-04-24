@@ -395,9 +395,12 @@ namespace ObjCRuntime {
 			RegisterNSObject (GCHandle.FromIntPtr (managed_obj_handle), native_obj, null);
 		}
 
-		static void RegisterAssembly (IntPtr a)
+		static void RegisterAssembly (IntPtr assembly_handle)
 		{
-			RegisterAssembly ((Assembly) ObjectWrapper.Convert (a));
+			var handle = GCHandle.FromIntPtr (assembly_handle);
+			var a = (Assembly) handle.Target;
+			handle.Free ();
+			RegisterAssembly (a);
 		}
 
 		static void RegisterEntryAssembly (IntPtr assembly_handle)
