@@ -17,7 +17,7 @@ using ObjCRuntime;
 namespace ImageIO
 {
 
-    public static partial class CGImageAnimation // should remove partial? or leave in case we need to add more to this class in other files later?
+    public static class CGImageAnimation
     {
 
         public delegate void CGImageSourceAnimationHandler (nint index, CGImage image, out bool stop);
@@ -41,7 +41,7 @@ namespace ImageIO
         [Introduced (PlatformName.TvOS, 13, 0, PlatformArchitecture.All)]
         [Introduced (PlatformName.WatchOS, 6, 0, PlatformArchitecture.All)]
         [BindingImpl (BindingImplOptions.Optimizable)]
-        public static CGImageAnimationStatus AnimateImage (NSUrl url, NSDictionary options, [BlockProxy (typeof (NIDCGImageSourceAnimationBlock))] CGImageSourceAnimationHandler handler)
+        public static CGImageAnimationStatus AnimateImage (NSUrl url, CGImageAnimationOptions options, [BlockProxy (typeof (NIDCGImageSourceAnimationBlock))] CGImageSourceAnimationHandler handler)
         {
 #if IOS && ARCH_32
             throw new PlatformNotSupportedException ("This API is not supported on this version of iOS");
@@ -67,7 +67,7 @@ namespace ImageIO
         [Introduced (PlatformName.TvOS, 13, 0, PlatformArchitecture.All)]
         [Introduced (PlatformName.WatchOS, 6, 0, PlatformArchitecture.All)]
         [BindingImpl (BindingImplOptions.Optimizable)]
-        public static CGImageAnimationStatus AnimateImage (NSData data, NSDictionary options, [BlockProxy (typeof (NIDCGImageSourceAnimationBlock))] CGImageSourceAnimationHandler handler)
+        public static CGImageAnimationStatus AnimateImage (NSData data, CGImageAnimationOptions options, [BlockProxy (typeof (NIDCGImageSourceAnimationBlock))] CGImageSourceAnimationHandler handler)
         {
 #if IOS && ARCH_32
             throw new PlatformNotSupportedException ("This API is not supported on this version of iOS");
