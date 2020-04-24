@@ -746,9 +746,9 @@ namespace ObjCRuntime {
 			return parameters [parameter].IsOut;
 		}
 
-		static void GetMethodAndObjectForSelector (IntPtr klass, IntPtr sel, bool is_static, IntPtr obj, ref IntPtr mthis, IntPtr desc)
+		static void GetMethodAndObjectForSelector (IntPtr klass, IntPtr sel, bool is_static, IntPtr obj, ref IntPtr mthis_gchandle, IntPtr desc)
 		{
-			Registrar.GetMethodDescriptionAndObject (Class.Lookup (klass), sel, is_static, obj, ref mthis, desc);
+			Registrar.GetMethodDescriptionAndObject (Class.Lookup (klass), sel, is_static, obj, ref mthis_gchandle, desc);
 		}
 
 		// If inner_exception_gchandle is provided, it will be freed.
