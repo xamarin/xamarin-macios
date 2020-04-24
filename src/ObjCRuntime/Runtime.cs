@@ -644,7 +644,7 @@ namespace ObjCRuntime {
 
 		static IntPtr GetNSObjectWrapped (IntPtr ptr)
 		{
-			return ObjectWrapper.Convert (TryGetNSObject (ptr, true));
+			return GCHandle.ToIntPtr (GCHandle.Alloc ((TryGetNSObject (ptr, true))));
 		}
 
 		static bool HasNSObject (IntPtr ptr)

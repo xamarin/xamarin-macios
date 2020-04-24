@@ -107,7 +107,7 @@
 			OnlyDynamicUsage = true,
 		},
 
-		new XDelegate ("MonoObject *", "IntPtr", "xamarin_get_nsobject",
+		new XDelegate ("GCHandle", "IntPtr", "xamarin_get_nsobject",
 			"id", "IntPtr", "obj"
 		) {
 			WrappedManagedFunction = "GetNSObjectWrapped",
