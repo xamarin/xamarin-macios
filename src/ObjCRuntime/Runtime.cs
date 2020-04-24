@@ -452,14 +452,20 @@ namespace ObjCRuntime {
 			}
 		}
 
-		static IntPtr GetBlockWrapperCreator (IntPtr method, int parameter)
+		static IntPtr GetBlockWrapperCreator (IntPtr method_handle, int parameter)
 		{
-			return ObjectWrapper.Convert (GetBlockWrapperCreator ((MethodInfo) ObjectWrapper.Convert (method), parameter));
+			var handle = GCHandle.FromIntPtr (method_handle);
+			var method = (MethodInfo) handle.Target;
+			handle.Free ();
+			return GCHandle.ToIntPtr (GCHandle.Alloc (GetBlockWrapperCreator (method, parameter)));
 		}
 
-		static IntPtr CreateBlockProxy (IntPtr method, IntPtr block)
+		static IntPtr CreateBlockProxy (IntPtr method_handle, IntPtr block)
 		{
-			return ObjectWrapper.Convert (CreateBlockProxy ((MethodInfo) ObjectWrapper.Convert (method), block));
+			var handle = GCHandle.FromIntPtr (method_handle);
+			var method = (MethodInfo) handle.Target;
+			handle.Free ();
+			return GCHandle.ToIntPtr (GCHandle.Alloc (CreateBlockProxy (method, block)));
 		}
 			
 		static IntPtr CreateDelegateProxy (IntPtr method, IntPtr @delegate, IntPtr signature, uint token_ref)

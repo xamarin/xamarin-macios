@@ -2126,7 +2126,7 @@ get_method_block_wrapper_creator (MonoMethod *method, int par, guint32 *exceptio
 		return res;
 	}
 
-	res = xamarin_get_block_wrapper_creator ((MonoObject *) mono_method_get_object (mono_domain_get (), method, NULL), (int) par, exception_gchandle);
+	res = xamarin_get_block_wrapper_creator (xamarin_gchandle_new ((MonoObject *) mono_method_get_object (mono_domain_get (), method, NULL), false), (int) par, exception_gchandle);
 	if (*exception_gchandle != 0)
 		return NULL;
 	// PRINT ("New value: %x", (int) res);
@@ -2190,7 +2190,7 @@ xamarin_get_delegate_for_block_parameter (MonoMethod *method, guint32 token_ref,
 	/* retain or copy (if it's a stack block) the block */
 	nativeBlock = _Block_copy (nativeBlock);
 
-	delegate = delegates.create_block_proxy (obj, nativeBlock, exception_gchandle);
+	delegate = xamarin_create_block_proxy (xamarin_gchandle_new (obj, false), nativeBlock, exception_gchandle);
 	if (*exception_gchandle != 0) {
 		_Block_release (nativeBlock);
 		return NULL;

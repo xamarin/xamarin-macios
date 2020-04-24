@@ -50,16 +50,16 @@
 			OnlyDynamicUsage = false,
 		},
 
-		new XDelegate ("MonoObject *", "IntPtr", "xamarin_get_block_wrapper_creator",
-			"MonoObject *", "IntPtr", "method",
+		new XDelegate ("GCHandle", "IntPtr", "xamarin_get_block_wrapper_creator",
+			"GCHandle", "IntPtr", "method",
 			"int", "int", "parameter"
 		) {
 			WrappedManagedFunction = "GetBlockWrapperCreator",
 			OnlyDynamicUsage = true,
 		},
 
-		new XDelegate ("MonoObject *", "IntPtr", "xamarin_create_block_proxy",
-			"MonoObject *", "IntPtr", "method",
+		new XDelegate ("GCHandle", "IntPtr", "xamarin_create_block_proxy",
+			"GCHandle", "IntPtr", "method",
 			"void *", "IntPtr", "block"
 		) {
 			WrappedManagedFunction = "CreateBlockProxy",
