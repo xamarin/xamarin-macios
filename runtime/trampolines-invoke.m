@@ -638,7 +638,7 @@ exception_handling:
 		SList *list = dispose_list;
 		while (list) {
 			guint32 dispose_exception_gchandle = 0;
-			xamarin_dispose ((MonoObject *) list->data, &dispose_exception_gchandle);
+			xamarin_dispose (xamarin_gchandle_new ((MonoObject *) list->data, false), &dispose_exception_gchandle);
 			if (dispose_exception_gchandle != 0) {
 				if (exception_gchandle == 0) {
 					// If we get an exception while disposing, and we don't already have an exception, then we need to throw the dispose exception (later, when done disposing)

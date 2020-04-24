@@ -187,7 +187,7 @@
 		},
 
 		new XDelegate ("void", "void", "xamarin_dispose",
-			"MonoObject *", "IntPtr", "mobj"
+			"GCHandle", "IntPtr", "mobj"
 		) {
 			WrappedManagedFunction = "Dispose",
 			OnlyDynamicUsage = false,

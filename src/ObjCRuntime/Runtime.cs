@@ -717,9 +717,11 @@ namespace ObjCRuntime {
 			return ObjectWrapper.Convert (GetNSObject (ptr, type, MissingCtorResolution.ThrowConstructor1NotFound, true, out created));
 		}
 
-		static void Dispose (IntPtr mobj)
+		static void Dispose (IntPtr gchandle)
 		{
-			((IDisposable) ObjectWrapper.Convert (mobj)).Dispose ();
+			var handle = GCHandle.FromIntPtr (gchandle);
+			((IDisposable) handle.Target).Dispose ();
+			handle.Free ();
 		}
 
 		static bool IsParameterTransient (IntPtr info, int parameter)
