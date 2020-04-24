@@ -3677,7 +3677,7 @@ namespace Registrar {
 								setup_call_stack.AppendLine ("inobj{0} = xamarin_get_inative_object_static (*p{0}, false, 0x{1:X} /* {2} */, 0x{3:X} /* {4} */, &exception_gchandle);", i, CreateTokenReference (td, TokenType.TypeDef), td.FullName, CreateTokenReference (nativeObjType, TokenType.TypeDef), nativeObjType.FullName);
 								setup_call_stack.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
 							} else {
-								setup_call_stack.AppendLine ("inobj{0} = xamarin_get_inative_object_dynamic (*p{0}, false, mono_type_get_object (mono_domain_get (), type{0}), &exception_gchandle);", i);
+								setup_call_stack.AppendLine ("inobj{0} = xamarin_get_inative_object_dynamic (*p{0}, false, xamarin_gchandle_new ((MonoObject *) mono_type_get_object (mono_domain_get (), type{0}), false), &exception_gchandle);", i);
 								setup_call_stack.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
 							}
 							setup_call_stack.AppendLine ("arg_ptrs [{0}] = &inobj{0};", i);
@@ -3690,7 +3690,7 @@ namespace Registrar {
 							if (td.IsInterface) {
 								setup_call_stack.AppendLine ("arg_ptrs [{0}] = xamarin_get_inative_object_static (p{0}, false, 0x{1:X} /* {2} */, 0x{3:X} /* {4} */, &exception_gchandle);", i, CreateTokenReference (td, TokenType.TypeDef), td.FullName, CreateTokenReference (nativeObjType, TokenType.TypeDef), nativeObjType.FullName);
 							} else {
-								setup_call_stack.AppendLine ("arg_ptrs [{0}] = xamarin_get_inative_object_dynamic (p{0}, false, mono_type_get_object (mono_domain_get (), type{0}), &exception_gchandle);", i);
+								setup_call_stack.AppendLine ("arg_ptrs [{0}] = xamarin_get_inative_object_dynamic (p{0}, false, xamarin_gchandle_new ((MonoObject *) mono_type_get_object (mono_domain_get (), type{0}), false), &exception_gchandle);", i);
 							}
 							setup_call_stack.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
 						}

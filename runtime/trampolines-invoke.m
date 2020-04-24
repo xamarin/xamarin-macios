@@ -282,7 +282,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 								}
 								LOGZ (" argument %i is a ref NSObject parameter: %p = %p\n", i + 1, arg, arg_frame [ofs]);
 							} else if (xamarin_is_class_inativeobject (p_klass)) {
-								arg_frame [ofs] = xamarin_get_inative_object_dynamic (*(NSObject **) arg, false, mono_type_get_object (domain, p), &exception_gchandle);
+								arg_frame [ofs] = xamarin_get_inative_object_dynamic (*(NSObject **) arg, false, xamarin_gchandle_new ((MonoObject *) mono_type_get_object (domain, p), false), &exception_gchandle);
 								if (exception_gchandle != 0)
 									goto exception_handling;
 								LOGZ (" argument %i is a ref ptr/INativeObject %p: %p\n", i + 1, arg, arg_frame [ofs]);
@@ -326,7 +326,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 									[id_arg autorelease];
 								}
 								MonoObject *obj;
-								obj = xamarin_get_inative_object_dynamic (id_arg, false, mono_type_get_object (domain, p), &exception_gchandle);
+								obj = xamarin_get_inative_object_dynamic (id_arg, false, xamarin_gchandle_new ((MonoObject *) mono_type_get_object (domain, p), false), &exception_gchandle);
 								if (exception_gchandle != 0)
 									goto exception_handling;
 								LOGZ (" argument %i is ptr/INativeObject %p: %p\n", i + 1, id_arg, obj);
@@ -437,7 +437,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 								[id_arg autorelease];
 							}
 							MonoObject *obj;
-							obj = xamarin_get_inative_object_dynamic (id_arg, false, mono_type_get_object (domain, p), &exception_gchandle);
+							obj = xamarin_get_inative_object_dynamic (id_arg, false, xamarin_gchandle_new ((MonoObject *) mono_type_get_object (domain, p), false), &exception_gchandle);
 							if (exception_gchandle != 0)
 								goto exception_handling;
 							LOGZ (" argument %i is NSObject/INativeObject %p: %p\n", i + 1, id_arg, obj);

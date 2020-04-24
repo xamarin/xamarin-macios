@@ -689,14 +689,15 @@ namespace ObjCRuntime {
 			return ObjectWrapper.Convert (GetNSObject (ptr, MissingCtorResolution.Ignore, true));
 		}
 
-		static IntPtr GetINativeObject_Dynamic (IntPtr ptr, bool owns, IntPtr type_ptr)
+		static IntPtr GetINativeObject_Dynamic (IntPtr ptr, bool owns, IntPtr type_handle)
 		{
 			/*
 			 * This method is called from marshalling bridge (dynamic mode).
 			 */
-			// It doesn't work to use System.Type in the signature, we get garbage.
-			var type = (System.Type) ObjectWrapper.Convert (type_ptr);
-			return ObjectWrapper.Convert (GetINativeObject (ptr, owns, type));
+			var handle = GCHandle.FromIntPtr (type_handle);
+			var type = (System.Type) handle.Target;
+			handle.Free ();
+			return GCHandle.ToIntPtr (GCHandle.Alloc (GetINativeObject (ptr, owns, type)));
 		}
 			
 		static IntPtr GetINativeObject_Static (IntPtr ptr, bool owns, uint iface_token, uint implementation_token)
@@ -707,7 +708,7 @@ namespace ObjCRuntime {
 
 			var iface = Class.ResolveTypeTokenReference (iface_token);
 			var type = Class.ResolveTypeTokenReference (implementation_token);
-			return ObjectWrapper.Convert (GetINativeObject (ptr, owns, iface, type));
+			return GCHandle.ToIntPtr (GCHandle.Alloc (GetINativeObject (ptr, owns, iface, type)));
 		}
 
 		static IntPtr GetNSObjectWithType (IntPtr ptr, IntPtr type_handle, out bool created)

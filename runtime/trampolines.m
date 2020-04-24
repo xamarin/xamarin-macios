@@ -1112,7 +1112,7 @@ void *
 xamarin_nsobject_to_inativeobject (id object, void *ptr, MonoClass *managedType, void *context, guint32 *exception_gchandle)
 {
 	struct conversion_data * data = (struct conversion_data *) context;
-	return xamarin_get_inative_object_dynamic (object, false, data->element_reflection_type, exception_gchandle);
+	return xamarin_get_inative_object_dynamic (object, false, xamarin_gchandle_new ((MonoObject *) data->element_reflection_type, false), exception_gchandle);
 }
 
 void *

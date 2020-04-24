@@ -143,10 +143,10 @@
 			OnlyDynamicUsage = false,
 		},
 
-		new XDelegate ("MonoObject *", "IntPtr", "xamarin_get_inative_object_dynamic",
+		new XDelegate ("GCHandle", "IntPtr", "xamarin_get_inative_object_dynamic",
 			"id", "IntPtr", "obj",
 			"bool", "bool", "owns",
-			"void *", "IntPtr", "type"
+			"GCHandle", "IntPtr", "type"
 		) {
 			WrappedManagedFunction = "GetINativeObject_Dynamic",
 			OnlyDynamicUsage = false,
@@ -167,7 +167,7 @@
 			OnlyDynamicUsage = false,
 		},
 
-		new XDelegate ("MonoObject *", "IntPtr", "xamarin_get_inative_object_static",
+		new XDelegate ("GCHandle", "IntPtr", "xamarin_get_inative_object_static",
 			"id", "IntPtr", "obj",
 			"bool", "bool", "owns",
 			"unsigned int", "uint", "iface_token_ref",
