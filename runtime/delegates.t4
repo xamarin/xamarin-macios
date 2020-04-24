@@ -136,7 +136,7 @@
 			OnlyDynamicUsage = false,
 		},
 
-		new XDelegate ("MonoObject *", "IntPtr", "xamarin_try_get_or_construct_nsobject",
+		new XDelegate ("GCHandle", "IntPtr", "xamarin_try_get_or_construct_nsobject",
 			"id", "IntPtr", "obj"
 		) {
 			WrappedManagedFunction = "TryGetOrConstructNSObjectWrapped",

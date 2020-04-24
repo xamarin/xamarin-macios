@@ -686,7 +686,7 @@ namespace ObjCRuntime {
 
 		static IntPtr TryGetOrConstructNSObjectWrapped (IntPtr ptr)
 		{
-			return ObjectWrapper.Convert (GetNSObject (ptr, MissingCtorResolution.Ignore, true));
+			return GCHandle.ToIntPtr (GCHandle.Alloc (GetNSObject (ptr, MissingCtorResolution.Ignore, true)));
 		}
 
 		static IntPtr GetINativeObject_Dynamic (IntPtr ptr, bool owns, IntPtr type_handle)
