@@ -152,7 +152,7 @@
 			OnlyDynamicUsage = false,
 		},
 
-		new XDelegate ("MonoReflectionMethod *", "IntPtr", "xamarin_get_method_from_token",
+		new XDelegate ("GCHandle", "IntPtr", "xamarin_get_method_from_token",
 			"unsigned int", "uint", "token_ref"
 		) {
 			WrappedManagedFunction = "GetMethodFromToken",

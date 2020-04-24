@@ -2683,7 +2683,7 @@ xamarin_get_managed_method_for_token (guint32 token_ref, guint32 *exception_gcha
 {
 	MonoReflectionMethod *reflection_method;
 
-	reflection_method = xamarin_get_method_from_token (token_ref, exception_gchandle);
+	reflection_method = (MonoReflectionMethod *) xamarin_get_method_from_token (token_ref, exception_gchandle);
 	if (*exception_gchandle != 0) return NULL;
 
 	return xamarin_get_reflection_method_method (reflection_method);

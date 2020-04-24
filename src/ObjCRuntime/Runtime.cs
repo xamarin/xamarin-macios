@@ -666,7 +666,7 @@ namespace ObjCRuntime {
 		{
 			var method = Class.ResolveMethodTokenReference (token_ref);
 			if (method != null)
-				return ObjectWrapper.Convert (method);
+				return GCHandle.ToIntPtr (GCHandle.Alloc (method));
 
 			return IntPtr.Zero;
 		}
