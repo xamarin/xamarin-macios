@@ -724,9 +724,11 @@ namespace ObjCRuntime {
 			handle.Free ();
 		}
 
-		static bool IsParameterTransient (IntPtr info, int parameter)
+		static bool IsParameterTransient (IntPtr info_handle, int parameter)
 		{
-			var minfo = ObjectWrapper.Convert (info) as MethodInfo;
+			var handle = GCHandle.FromIntPtr (info_handle);
+			var minfo = handle.Target as MethodInfo;
+			handle.Free ();
 			if (minfo == null)
 				return false; // might be a ConstructorInfo (bug #15583), but we don't care about that (yet at least).
 			minfo = minfo.GetBaseDefinition ();
@@ -736,9 +738,11 @@ namespace ObjCRuntime {
 			return parameters [parameter].IsDefined (typeof(TransientAttribute), false);
 		}
 
-		static bool IsParameterOut (IntPtr info, int parameter)
+		static bool IsParameterOut (IntPtr info_handle, int parameter)
 		{
-			var minfo = ObjectWrapper.Convert (info) as MethodInfo;
+			var handle = GCHandle.FromIntPtr (info_handle);
+			var minfo = handle.Target as MethodInfo;
+			handle.Free ();
 			if (minfo == null)
 				return false; // might be a ConstructorInfo (bug #15583), but we don't care about that (yet at least).
 			minfo = minfo.GetBaseDefinition ();

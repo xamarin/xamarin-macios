@@ -194,7 +194,7 @@
 		},
 
 		new XDelegate ("bool", "bool", "xamarin_is_parameter_transient",
-			"MonoReflectionMethod *", "IntPtr", "method",
+			"GCHandle", "IntPtr", "method",
 			"int", "int", "parameter"
 		) {
 			WrappedManagedFunction = "IsParameterTransient",
@@ -202,7 +202,7 @@
 		},
 
 		new XDelegate ("bool", "bool", "xamarin_is_parameter_out",
-			"MonoReflectionMethod *", "IntPtr", "method",
+			"GCHandle", "IntPtr", "method",
 			"int", "int", "parameter"
 		) {
 			WrappedManagedFunction = "IsParameterOut",
