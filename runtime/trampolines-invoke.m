@@ -167,7 +167,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 		goto exception_handling;
 	}
 
-	method = xamarin_get_reflection_method_method (desc->method);
+	method = xamarin_get_reflection_method_method ((MonoReflectionMethod *) xamarin_gchandle_get_target (desc->method_handle));
 	msig = mono_method_signature (method);
 	semantic = desc->semantic & ArgumentSemanticMask;
 	isCategoryInstance = (desc->semantic & ArgumentSemanticCategoryInstance) == ArgumentSemanticCategoryInstance;
@@ -233,8 +233,9 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 			iterator (IteratorIterate, context, type, size, &arg, &exception_gchandle);
 			if (exception_gchandle != 0)
 				goto exception_handling;
-			if (desc->bindas [i + 1].original_type != NULL) {
-				arg_ptrs [i + mofs] = xamarin_generate_conversion_to_managed ((id) arg, mono_reflection_type_get_type (desc->bindas [i + 1].original_type), p, method, &exception_gchandle, (void *) INVALID_TOKEN_REF, (void **) &free_list);
+			if (desc->bindas [i + 1].original_type_handle != INVALID_GCHANDLE) {
+				MonoReflectionType *original_type = (MonoReflectionType *) xamarin_gchandle_get_target (desc->bindas [i + 1].original_type_handle);
+				arg_ptrs [i + mofs] = xamarin_generate_conversion_to_managed ((id) arg, mono_reflection_type_get_type (original_type), p, method, &exception_gchandle, (void *) INVALID_TOKEN_REF, (void **) &free_list);
 				if (exception_gchandle != 0)
 					goto exception_handling;
 				ofs++;
@@ -654,6 +655,16 @@ exception_handling:
 		}
 		s_list_free (dispose_list);
 	}
+
+	if (desc != NULL) {
+		xamarin_gchandle_free (desc->method_handle);
+		for (int i = 0; i < desc->bindas_count; i++) {
+			GCHandle handle = desc->bindas [i].original_type_handle;
+			if (handle != INVALID_GCHANDLE)
+				xamarin_gchandle_free (handle);
+		}
+	}
+
 	if (free_list) {
 		SList *list = free_list;
 		while (list) {
