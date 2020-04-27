@@ -99,6 +99,7 @@ steps:
   ### If test summary does not exist, create test summary files so that we can notify
   ### that no results were published at the per-test AND final results steps
   ###
+  ### TODO if provisioning fails add a different error message
 - bash: |
     set -e
     set -x
@@ -108,6 +109,7 @@ steps:
     echo ":fire: Tests failed catastrophically (no summary found)" > $FILE
     fi
   displayName: "If test summary not found, create test summary"
+  condition: and(succeededOrFailed(), eq(variables['ProvisioningProfiles'], 'success'))
 
 - task: PublishPipelineArtifact@1
   displayName: 'Publish Artifact: TestSummary'
@@ -116,7 +118,7 @@ steps:
     targetPath: TestSummary-$(CONTEXT).md
     artifactName: TestSummary-$(CONTEXT)
   continueOnError: true
-#  condition: and(succeededOrFailed(), eq(variables['ProvisioningProfiles'], 'success'))
+  condition: and(succeededOrFailed(), eq(variables['ProvisioningProfiles'], 'success'))
 
 # if there's a failure:
 # - update GH commit status
@@ -133,6 +135,7 @@ steps:
     CONTEXT: $(CONTEXT)
     TESTS: $(TESTS)
     TESTSARGS: $(TESTS_EXTRA_ARGUMENTS)
+    condition: and(succeededOrFailed(), eq(variables['ProvisioningProfiles'], 'success'))
 
 - bash: ./xamarin-macios/tools/devops/add-summaries.sh
   displayName: 'Add summaries'
