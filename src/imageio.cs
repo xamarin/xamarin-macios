@@ -2338,8 +2338,8 @@ namespace ImageIO {
 	interface CGImageAnimationOptions {
 		double DelayTime { get; set; }
 
-		NSNumber LoopCount { get; set; }
+		nuint LoopCount { get; set; }
 
-		NSNumber StartIndex { get; set; }
+		nuint StartIndex { get; set; }
 	}
 }
