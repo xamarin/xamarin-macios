@@ -289,6 +289,8 @@ namespace Introspection
 				Check (a);
 		}
 
+#if !NET
+		// NET: error CS1069: The type name 'SqlCredential' could not be found in the namespace 'System.Data.SqlClient'. This type has been forwarded to assembly 'System.Data.SqlClient, Version=0.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a' Consider adding a reference to that assembly.
 		[Test]
 		public void SystemData ()
 		{
@@ -296,5 +298,6 @@ namespace Introspection
 			if (!SkipAssembly (a))
 				Check (a);
 		}
+#endif
 	}
 }
