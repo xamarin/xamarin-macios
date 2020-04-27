@@ -52,8 +52,6 @@ If ($Env:AGENT_JOBSTATUS -eq 'Failed')
 	$RESULT_EMOJI = ":white_check_mark: " # maybe remove this since we only add commit messages on failure?
 }
 
-#$MESSAGE_FILE = New-Item -Path . -Name "commit-message.txt" -ItemType "file"
-
 $HEADER = ""
 If ($Env:BUILD_DEFINITIONNAME -like '*DDFun*')
 {
@@ -69,6 +67,16 @@ $DESCRIPTION="Device test $Env:SYSTEM_JOBNAME $Env:AGENT_JOBSTATUS on $Env:CONTE
 
 # BUILD_DEFINITIONNAME: Pipeline name, e.g. "iOS Device Tests [DDFun]"
 $json_text = $HEADER + "$RESULT_EMOJI $DESCRIPTION on [Azure DevOps]($target_url) ($Env:BUILD_DEFINITIONNAME) $RESULT_EMOJI"
+
+# add contents of test summary to json_text
+$testsummary_location = $Env:SYSTEM_DEFAULTWORKINGDIRECTORY
+$testsummary_location = $testsummary_location + "/TestSummary.md"
+Write-Host $testsummary_location
+$test_summary = Get-Content $testsummary_location
+
+$json_text = $json_text + $test_summary
+
+
 
 $message_url = "https://api.github.com/repos/xamarin/xamarin-macios/commits/$Env:BUILD_REVISION/comments"
 
