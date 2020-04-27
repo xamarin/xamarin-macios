@@ -135,7 +135,8 @@ steps:
     CONTEXT: $(CONTEXT)
     TESTS: $(TESTS)
     TESTSARGS: $(TESTS_EXTRA_ARGUMENTS)
-    condition: and(succeededOrFailed(), eq(variables['ProvisioningProfiles'], 'success'))
+  displayName: 'add GH status & commit message'
+  condition: and(succeededOrFailed(), eq(variables['ProvisioningProfiles'], 'success'))
 
 - bash: ./xamarin-macios/tools/devops/add-summaries.sh
   displayName: 'Add summaries'
