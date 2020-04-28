@@ -26,8 +26,8 @@ steps:
     ls -la $PIPELINE_WORKSPACE
     ls -la $PIPELINE_WORKSPACE/Summaries
     pwd
-    cat $PIPELINE_WORKSPACE/Summaries/TestSummary-*
-    cat $PIPELINE_WORKSPACE/Summaries/TestSummary-*.md >> ./TestSummary.md
+    cat $PIPELINE_WORKSPACE/Summaries/TestSummary-*/TestSummary-*.md >> ./TestSummary.md
+    #cat $PIPELINE_WORKSPACE/Summaries/TestSummary-*.md >> ./TestSummary.md
     cat ./TestSummary.md
   displayName: 'Merge TestSummary files'
 
