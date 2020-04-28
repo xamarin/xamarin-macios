@@ -24,7 +24,7 @@ steps:
     set -e
     ls -la
     pwd
-    cat $PIPELINE_WORKSPACE/s/TestSummary-*.md >> ./TestSummary.md
+    cat $PIPELINE_WORKSPACE/Summaries/TestSummary-*.md >> ./TestSummary.md
     cat ./TestSummary.md
   displayName: 'Merge TestSummary files'
 
@@ -39,26 +39,6 @@ steps:
     artifactName: TestSummary
     continueOnError: true
 
-###
-### Report final results to GitHub
-###
-# - task: PowerShell@2
-#   inputs:
-#     targetType: #filePath
-#     script: @json_payload = @"{"token": $TOKEN, "target": $TARGET_URL}"
-
-###
-### Publish merged TestSummary file
-###
-- task: PublishPipelineArtifact@1
-  displayName: 'Publish Artifact: Aggregate TestSummary'
-  inputs:
-#    targetPath: 'xamarin-macios/tests/TestSummary.md'
-    targetPath: ./TestSummary.md
-    artifactName: TestSummary
-    continueOnError: true
-
-
 # pwsh for PowerShell Core
 # powershell is for Win PowerShell
 - pwsh: ./tools/devops/templates/publish_results.ps1
@@ -68,8 +48,6 @@ steps:
     GH_STATE: $(GH_STATE)
     GITHUB_TOKEN: $(GitHub.Token)
     CONTEXT: $(CONTEXT)
-
-#    GITHUB_TOKEN: $(GITHUB_TOKEN)
 
 #  VSTS_BUILD_URL='https://dev.azure.com/devdiv/ - SYSTEM_TEAMFOUNDATIONSERVERURI
 # DevDiv/_build/index?buildId=3521765&view=ms.vss-test-web.test-result-details'
