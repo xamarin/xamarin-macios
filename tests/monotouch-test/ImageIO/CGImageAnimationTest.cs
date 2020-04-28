@@ -50,7 +50,7 @@ namespace MonoTouchFixtures.ImageIO {
 		{
 			TestRuntime.AssertXcodeVersion (11, 4);
 
-			imageUrl = NSBundle.MainBundle.GetUrlForResource ("hack", "gif");
+			imageUrl = NSBundle.MainBundle.GetUrlForResource ("square", "gif");
 			imageData = NSData.FromUrl (imageUrl);
 		}
 
