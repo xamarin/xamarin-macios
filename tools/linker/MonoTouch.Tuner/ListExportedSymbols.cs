@@ -32,8 +32,6 @@ namespace MonoTouch.Tuner
 
 		protected override void ProcessAssembly (AssemblyDefinition assembly)
 		{
-			base.ProcessAssembly (assembly);
-
 			if (Context.Annotations.GetAction (assembly) == AssemblyAction.Delete)
 				return;
 

@@ -11,6 +11,11 @@ using MonoTouch.Tuner;
 
 using Xamarin.Bundler;
 
+#if NET
+using System.IO;
+using Mono.Linker.Steps;
+#endif
+
 namespace Xamarin.Linker.Steps
 {
 	public class PreserveSmartEnumConversionsSubStep : ExceptionalSubStep
@@ -25,10 +30,21 @@ namespace Xamarin.Linker.Steps
 			}
 		}
 
+#if NET
+		LinkContext context {
+			get { return Context; }
+		}
+#endif
+
 		public override bool IsActiveFor (AssemblyDefinition assembly)
 		{
+#if NET
+			if (assembly.Name.Name == Path.GetFileNameWithoutExtension (LinkerConfiguration.Instance.PlatformAssembly))
+				return true;
+#else
 			if (Profile.IsProductAssembly (assembly))
 				return true;
+#endif
 
 			// We don't need to process assemblies that don't reference ObjCRuntime.BindAsAttribute.
 			foreach (var tr in assembly.MainModule.GetTypeReferences ()) {
@@ -42,12 +58,12 @@ namespace Xamarin.Linker.Steps
 		void Preserve (Tuple<MethodDefinition, MethodDefinition> pair, MethodDefinition conditionA, MethodDefinition conditionB = null)
 		{
 			if (conditionA != null) {
-				context.Annotations.AddPreservedMethod (conditionA, pair.Item1);
-				context.Annotations.AddPreservedMethod (conditionA, pair.Item2);
+				context.Annotations.AddPreservedMethod (conditionA.DeclaringType, pair.Item1);
+				context.Annotations.AddPreservedMethod (conditionA.DeclaringType, pair.Item2);
 			}
 			if (conditionB != null) {
-				context.Annotations.AddPreservedMethod (conditionB, pair.Item1);
-				context.Annotations.AddPreservedMethod (conditionB, pair.Item2);
+				context.Annotations.AddPreservedMethod (conditionB.DeclaringType, pair.Item1);
+				context.Annotations.AddPreservedMethod (conditionB.DeclaringType, pair.Item2);
 			}
 		}
 
@@ -63,14 +79,22 @@ namespace Xamarin.Linker.Steps
 					continue;
 
 				if (ca.ConstructorArguments.Count != 1) {
+#if NET
+					ErrorHelper.Show (ErrorHelper.CreateWarning (4124, provider, "Errors.MT4124_E", provider.AsString (), ca.ConstructorArguments.Count));
+#else
 					ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.Target.App, 4124, provider, Errors.MT4124_E, provider.AsString (), ca.ConstructorArguments.Count));
+#endif
 					continue;
 				}
 
 				var managedType = ca.ConstructorArguments [0].Value as TypeReference;
 				var managedEnumType = managedType?.GetElementType ().Resolve ();
 				if (managedEnumType == null) {
+#if NET
+					ErrorHelper.Show (ErrorHelper.CreateWarning (4124, provider, "Errors.MT4124_H", provider.AsString (), managedType?.FullName));
+#else
 					ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.Target.App, 4124, provider, Errors.MT4124_H, provider.AsString (), managedType?.FullName));
+#endif
 					continue;
 				}
 

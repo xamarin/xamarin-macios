@@ -13,19 +13,24 @@ namespace Xamarin.Linker.Steps {
 
 	public class ApplyPreserveAttribute : ApplyPreserveAttributeBase {
 
+#if !NET
 		bool is_sdk;
+#endif
 		HashSet<TypeDefinition> preserve_synonyms;
 
+#if !NET
 		DerivedLinkContext LinkContext {
 			get { return (DerivedLinkContext) base.context; }
 		}
-
+#endif
 		// System.ServiceModel.dll is an SDK assembly but it does contain types with [DataMember] attributes
 		// just like System.Xml.dll contais [Xml*] attributes - we do not want to keep them unless the application
 		// shows the feature is being used
 		public override bool IsActiveFor (AssemblyDefinition assembly)
 		{
+#if !NET
 			is_sdk = Profile.IsSdkAssembly (assembly);
+#endif
 			return Annotations.GetAction (assembly) == AssemblyAction.Link;
 		}
 
@@ -33,10 +38,15 @@ namespace Xamarin.Linker.Steps {
 		{
 			base.Initialize (context);
 
-			// we cannot override ProcessAssembly as some decisions needs to be done before applyting the [Preserve]
+			// we cannot override ProcessAssembly as some decisions needs to be done before applying the [Preserve]
 			// synonyms
 
-			foreach (var assembly in context.GetAssemblies ()) {
+#if NET
+			var assemblies = LinkSdkStep.defs;
+#else
+			var assemblies = context.GetAssemblies ();
+#endif
+			foreach (var assembly in assemblies) {
 				if (!assembly.HasCustomAttributes)
 					continue;
 
@@ -79,6 +89,7 @@ namespace Xamarin.Linker.Steps {
 			TypeReference type = attribute.Constructor.DeclaringType;
 
 			switch (type.Namespace) {
+#if !NET
 			case "System.Runtime.Serialization":
 				bool srs = false;
 				// http://bugzilla.xamarin.com/show_bug.cgi?id=1415
@@ -105,6 +116,7 @@ namespace Xamarin.Linker.Steps {
 					}
 				}
 				break;
+#endif
 			default:
 				if (type.Name == "PreserveAttribute") {
 					// there's no need to keep the [Preserve] attribute in the assembly once it was processed
@@ -118,6 +130,7 @@ namespace Xamarin.Linker.Steps {
 			return false;
 		}
 
+#if !NET
 		// xml serialization requires the default .ctor to be present
 		void MarkDefautConstructor (ICustomAttributeProvider provider, IList<ICustomAttributeProvider> list)
 		{
@@ -169,5 +182,6 @@ namespace Xamarin.Linker.Steps {
 				Annotations.AddPreservedMethod (type, ctor);
 			}
 		}
+#endif
 	}
 }

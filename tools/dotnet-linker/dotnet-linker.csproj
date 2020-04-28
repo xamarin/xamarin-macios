@@ -6,10 +6,10 @@
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DefineConstants>TRACE;DEBUG;NETCOREAPP;NETCOREAPP3_0;NET;IOS</DefineConstants>
+    <DefineConstants>TRACE;NET;IOS;DEBUG;NETCOREAPP;NETCOREAPP3_0</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.ILLink" Version="5.0.0-preview.3.20210.1" />
+    <PackageReference Include="Microsoft.NET.ILLink" Version="5.0.0-preview.3.20215.1" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\linker\MobileResolveMainAssemblyStep.cs">
@@ -26,6 +26,9 @@
     </Compile>
     <None Update="substitute-32bits.xml" CopyToOutputDirectory="Always" />
     <None Update="substitute-64bits.xml" CopyToOutputDirectory="Always" />
+    <Compile Include="..\linker\ApplyPreserveAttribute.cs">
+      <Link>ApplyPreserveAttribute.cs</Link>
+    </Compile>
     <Compile Include="..\linker\MobileSubStepDispatcher.cs">
       <Link>MobileSubStepDispatcher.cs</Link>
     </Compile>
@@ -37,6 +40,15 @@
     </Compile>
     <Compile Include="..\common\LinkMode.cs">
       <Link>LinkMode.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\MarkNSObjects.cs">
+      <Link>MarkNSObjects.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\MonoTouch.Tuner\PreserveSmartEnumConversionsSubStep.cs">
+      <Link>PreserveSmartEnumConversionsSubStep.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\ExceptionalSubStep.cs">
+      <Link>ExceptionalSubStep.cs</Link>
     </Compile>
   </ItemGroup>
 </Project>

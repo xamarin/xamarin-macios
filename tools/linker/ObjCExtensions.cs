@@ -82,7 +82,12 @@ namespace Xamarin.Linker {
 	static class ObjCExtensions {
 
 		const string INativeObject = Namespaces.ObjCRuntime + ".INativeObject";
-#if !NET
+#if NET
+		public static bool IsNSObject (this TypeDefinition type)
+		{
+			return type.Inherits (Namespaces.Foundation, "NSObject");
+		}
+#else
 		public static bool IsNSObject (this TypeReference type, DerivedLinkContext link_context)
 		{
 			return type.Resolve ().IsNSObject (link_context);

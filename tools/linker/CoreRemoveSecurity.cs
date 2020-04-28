@@ -11,11 +11,13 @@ namespace Mono.Tuner {
 
 	public class CoreRemoveSecurity : RemoveSecurity {
 
+#if MMP
 		protected DerivedLinkContext LinkContext {
 			get {
 				return (DerivedLinkContext) base.context;
 			}
 		}
+#endif
 
 		public override bool IsActiveFor (AssemblyDefinition assembly)
 		{

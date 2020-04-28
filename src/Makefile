@@ -206,11 +206,10 @@ $(IOS_BUILD_DIR)/native-$(1)%Xamarin.iOS.dll $(IOS_BUILD_DIR)/native-$(1)%Xamari
 		$$(IOS_CSC_FLAGS_XI) \
 		$$(IOS_SOURCES) @$(IOS_BUILD_DIR)/native/generated_sources
 
-$(IOS_DOTNET_BUILD_DIR)/$(1)/Xamarin.iOS%dll $(2): $$(IOS_SOURCES) $$(IOS_DOTNET_BUILD_DIR)/ios-generated-sources $(PRODUCT_KEY_PATH) $(BUILD_DIR)/mtouch.Errors.resources | $(IOS_DOTNET_BUILD_DIR)/$(1) $(IOS_DOTNET_BUILD_DIR)/ref
+$(IOS_DOTNET_BUILD_DIR)/$(1)/Xamarin.iOS%dll $(2): $$(IOS_SOURCES) $$(IOS_DOTNET_BUILD_DIR)/ios-generated-sources $(PRODUCT_KEY_PATH) | $(IOS_DOTNET_BUILD_DIR)/$(1) $(IOS_DOTNET_BUILD_DIR)/ref
 	$$(call Q_PROF_CSC,dotnet/$(1)-bit) $(SYSTEM_CSC) $(DOTNET_FLAGS) -out:$(IOS_DOTNET_BUILD_DIR)/$(1)/Xamarin.iOS.dll -unsafe -optimize \
 		$$(ARGS_$(1)) \
 		-publicsign -keyfile:$(PRODUCT_KEY_PATH) \
-		-res:$(BUILD_DIR)/mtouch.Errors.resources,Errors.mtouch.resources \
 		$(3) \
 		$$(IOS_DEFINES) \
 		$$(IOS_native_DEFINES) \
@@ -219,9 +218,6 @@ $(IOS_DOTNET_BUILD_DIR)/$(1)/Xamarin.iOS%dll $(2): $$(IOS_SOURCES) $$(IOS_DOTNET
 		$$(IOS_SOURCES) @$(IOS_DOTNET_BUILD_DIR)/ios-generated-sources
 
 endef
-
-$(BUILD_DIR)/mtouch.Errors.resources: $(TOP)/tools/mtouch/Errors.resx
-	 resgen /useSourcePath /compile $(TOP)/tools/mtouch/Errors.resx,$@
 
 $(IOS_BUILD_DIR)/compat/%: $(MACIOS_BINARIES_PATH)/% | $(IOS_BUILD_DIR)/compat
 	$(Q) $(CP) $< $@

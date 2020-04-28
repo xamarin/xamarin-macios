@@ -28,5 +28,10 @@ namespace Mono.Tuner {
 		{
 			return ((type != null) && (type.Name == name) && (type.Namespace == @namespace));
 		}
+
+		public static bool IsPlatformType (this TypeReference type, string @namespace, string name)
+		{
+			return type.Is (@namespace, name);
+		}
 	}
 }

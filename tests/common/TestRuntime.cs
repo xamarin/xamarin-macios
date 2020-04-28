@@ -117,10 +117,6 @@ partial class TestRuntime
 	static AssemblyName assemblyName = new AssemblyName ("DynamicAssemblyExample"); 
 	public static bool CheckExecutingWithInterpreter ()
 	{
-#if NET
-		// error CS1061: 'AppDomain' does not contain a definition for 'DefineDynamicAssembly' and no accessible extension method 'DefineDynamicAssembly' accepting a first argument of type 'AppDomain' could be found (are you missing a using directive or an assembly reference?)
-		return false;
-#else
 		// until System.Runtime.CompilerServices.RuntimeFeature.IsSupported("IsDynamicCodeCompiled") returns a valid result, atm it
 		// always return true, try to build an object of a class that should fail without introspection, and catch the exception to do the
 		// right thing
@@ -131,7 +127,6 @@ partial class TestRuntime
 			// we do not have the interpreter, lets continue
 			return false;
 		}
-#endif
 	}
 
 	public static void AssertXcodeVersion (int major, int minor, int build = 0)

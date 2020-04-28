@@ -34,6 +34,10 @@ using Mono.Cecil;
 using Mono.Linker;
 using Mono.Tuner;
 using Xamarin.Bundler;
+#if NET
+using System.IO;
+using Mono.Linker.Steps;
+#endif
 
 namespace Xamarin.Linker.Steps {
 
@@ -51,9 +55,17 @@ namespace Xamarin.Linker.Steps {
 		protected override void Process (TypeDefinition type)
 		{
 			if (ProductAssembly == null)
+#if NET
+				ProductAssembly = Path.GetFileNameWithoutExtension (LinkerConfiguration.Instance.PlatformAssembly);
+#else
 				ProductAssembly = (Profile.Current as BaseProfile).ProductAssembly;
+#endif
 
+#if NET
+			bool nsobject = type.IsNSObject ();
+#else
 			bool nsobject = type.IsNSObject (LinkContext);
+#endif
 			if (!nsobject && !type.IsNativeObject ())
 				return;
 
@@ -98,7 +110,7 @@ namespace Xamarin.Linker.Steps {
 				return false;
 
 			var overrides = Annotations.GetOverrides (method);
-			if (overrides == null || overrides.Count == 0)
+			if (overrides == null)
 				return false;
 
 			foreach (var @override in overrides)

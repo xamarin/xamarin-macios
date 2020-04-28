@@ -25,9 +25,6 @@ namespace MonoTouch.Tuner {
 	public class ProcessExportedFields : BaseStep {
 		protected override void ProcessAssembly (AssemblyDefinition assembly)
 		{
-#if NET
-			LinkerConfiguration.Instance.DoSomething ();
-#endif
 			if (!assembly.MainModule.HasTypeReference (Namespaces.Foundation + ".FieldAttribute"))
 				return;
 
