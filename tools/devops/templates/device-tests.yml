@@ -124,6 +124,13 @@ steps:
   displayName: 'Add test summary for failed provisioning'
   condition: eq(variables['ProvisioningProfiles'], 'failure')
 
+###
+### Publish test summary
+### We should publish summary for the following cases:
+### 1) run-tests created summary files
+### 2) run-tests did not create summary files and we created them
+### 3) provisioning failed
+###
 - task: PublishPipelineArtifact@1
   displayName: 'Publish Artifact: TestSummary'
   inputs:
@@ -131,9 +138,9 @@ steps:
     targetPath: TestSummary-$(CONTEXT).md
     artifactName: TestSummary-$(CONTEXT)
   continueOnError: true
-  condition: and(succeededOrFailed(), eq(variables['ProvisioningProfiles'], 'success'))
+  condition: and(succeededOrFailed()) #, eq(variables['ProvisioningProfiles'], 'success'))
 
-# if there's a failure:
+# if there's a test failure || test summary not generated || provisioning failed:
 # - update GH commit status
 # - add commit comment
 # grab env variables to add test specific text
@@ -149,7 +156,7 @@ steps:
     TESTS: $(TESTS)
     TESTSARGS: $(TESTS_EXTRA_ARGUMENTS)
   displayName: 'add GH status & commit message'
-  condition: and(succeededOrFailed(), eq(variables['ProvisioningProfiles'], 'success'))
+  condition: and(succeededOrFailed()) #, eq(variables['ProvisioningProfiles'], 'success'))
 
 - bash: ./xamarin-macios/tools/devops/add-summaries.sh
   displayName: 'Add summaries'

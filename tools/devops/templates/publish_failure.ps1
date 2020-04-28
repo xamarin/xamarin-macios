@@ -5,6 +5,9 @@ Get-Location
 Set-Location Env:
 Get-ChildItem
 
+###
+### Construct status
+###
 
 $target_url = $Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI + "$Env:SYSTEM_TEAMPROJECT/_build/index?buildId=$Env:BUILD_BUILDID&view=ms.vss-test-web.test-result-details"
 
@@ -43,6 +46,10 @@ $response = Invoke-RestMethod @params
 
 $response | ConvertTo-Json | Write-Host
 
+
+###
+### Construct commit message
+###
 
 $RESULT_EMOJI
 If ($Env:AGENT_JOBSTATUS -eq 'Failed')

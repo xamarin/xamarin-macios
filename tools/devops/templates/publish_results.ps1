@@ -32,10 +32,6 @@ Write-Host $response
 $response | ConvertTo-Json | Write-Host
 Write-Host "^ ConvertToJson below is ConvertFromJson `n"
 
-#$response | ConvertTo-Json | ConvertFrom-Json | Write-Host
-
-#$status = $response | ConvertTo-Json | ConvertFrom-Json | Select-Object state
-
 Write-Host "Raw response: " + $response
 
 Write-Host "Response.state: " + $response.state
@@ -78,6 +74,72 @@ Write-Host $params
 $response = Invoke-RestMethod @params
 
 $response | Write-Host
+
+
+
+
+###
+### Construct commit message w/ aggregate test summary
+###
+
+$RESULT_EMOJI
+If ($Env:AGENT_JOBSTATUS -eq 'Failed')
+{
+	$RESULT_EMOJI = ":fire: "
+} Else {
+	$RESULT_EMOJI = ":white_check_mark: " # maybe remove this since we only add commit messages on failure?
+}
+
+$HEADER = ""
+If ($Env:BUILD_DEFINITIONNAME -like '*DDFun*')
+{
+	$HEADER = "### :bangbang: :construction: TESTING Experimental DDFun pipeline\\n"
+}
+#Else{
+#HTML Report jenkins stuff
+#}
+
+# SYSTEM_JOBNAME: Xamarin | Monotouch | xUnitBCL | NUnitBCL | mscorlib
+# CONTEXT: tvOS | iOS | iOS32
+$DESCRIPTION="Device test $Env:SYSTEM_JOBNAME $Env:AGENT_JOBSTATUS on $Env:CONTEXT"
+
+# BUILD_DEFINITIONNAME: Pipeline name, e.g. "iOS Device Tests [DDFun]"
+$json_text = $HEADER + "$RESULT_EMOJI $DESCRIPTION on [Azure DevOps]($target_url) ($Env:BUILD_DEFINITIONNAME) $RESULT_EMOJI"
+
+# add contents of test summary to json_text
+$testsummary_location = $Env:SYSTEM_DEFAULTWORKINGDIRECTORY
+$testsummary_location = $testsummary_location + "/TestSummary-$Env:CONTEXT.md"
+Write-Host $testsummary_location
+$test_summary = Get-Content $testsummary_location
+
+$json_text = $json_text + $test_summary
+
+
+
+$message_url = "https://api.github.com/repos/xamarin/xamarin-macios/commits/$Env:BUILD_REVISION/comments"
+
+$json_payload = @"
+{
+    "body" : "$json_text"
+}
+"@
+
+Write-Host $json_payload
+
+$params = @{
+    Uri = $message_url
+    Headers = @{'Authorization' = ("token {0}" -f $Env:GITHUB_TOKEN)}
+    Method = 'POST'
+    Body = $json_payload
+    ContentType = 'application/json'
+}
+
+Write-Host $params
+
+$response = Invoke-RestMethod @params
+
+$response | ConvertTo-Json | Write-Host
+
 
 
 # https://api.github.com/xamarin/xamarin-macios/commits/eea6fd1f27ba9a0ac4fa09c8e57fc87d612b6340/status
