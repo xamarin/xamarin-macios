@@ -487,10 +487,10 @@ namespace Xamarin
 			return MTouch.CompileTestAppLibrary (asm_dir, "class X {}", appName: Path.GetFileNameWithoutExtension (asm_name));
 		}
 
-		public override void CreateTemporaryApp (Profile profile, string appName = "testApp", string code = null, IList<string> extraArgs = null, string extraCode = null, string usings = null, bool use_csc = true)
+		public override void CreateTemporaryApp (Profile profile, string appName = "testApp", string code = null, IList<string> extraArgs = null, string extraCode = null, string usings = null)
 		{
 			Profile = profile;
-			CreateTemporaryApp (appName: appName, code: code, extraArgs: extraArgs, extraCode: extraCode, usings: usings, use_csc: use_csc);
+			CreateTemporaryApp (appName: appName, code: code, extraArgs: extraArgs, extraCode: extraCode, usings: usings);
 		}
 
 		public void CreateTemporaryApp ()
@@ -498,7 +498,7 @@ namespace Xamarin
 			CreateTemporaryApp (false, "testApp", null, (IList<string>) null);
 		}
 
-		public void CreateTemporaryApp (bool hasPlist = false, string appName = "testApp", string code = null, IList<string> extraArgs = null, string extraCode = null, string usings = null, bool use_csc = true)
+		public void CreateTemporaryApp (bool hasPlist = false, string appName = "testApp", string code = null, IList<string> extraArgs = null, string extraCode = null, string usings = null)
 		{
 			string testDir;
 			if (RootAssembly == null) {
@@ -510,7 +510,7 @@ namespace Xamarin
 			var app = AppPath ?? Path.Combine (testDir, appName + ".app");
 			Directory.CreateDirectory (app);
 			AppPath = app;
-			RootAssembly = CompileTestAppExecutable (testDir, code, extraArgs, Profile, appName, extraCode, usings, use_csc);
+			RootAssembly = CompileTestAppExecutable (testDir, code, extraArgs, Profile, appName, extraCode, usings);
 
 			if (hasPlist)
 				File.WriteAllText (Path.Combine (app, "Info.plist"), CreatePlist (Profile, appName));

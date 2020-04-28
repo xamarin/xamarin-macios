@@ -1645,9 +1645,10 @@ public partial class Generator : IMemberGatherer {
 			pars.Append (", ");
 			if (pi != parameters [0])
 				invoke.Append (", ");
-			
+
+			var safe_name = pi.Name.GetSafeParamName ();
+
 			if (IsWrappedType (pi.ParameterType)){
-				var safe_name = pi.Name.GetSafeParamName ();
 				pars.AppendFormat ("IntPtr {0}", safe_name);
 				if (IsProtocolInterface (pi.ParameterType)) {
 					invoke.AppendFormat (" Runtime.GetINativeObject<{1}> ({0}, false)", safe_name, pi.ParameterType);
@@ -1662,33 +1663,33 @@ public partial class Generator : IMemberGatherer {
 			if (Frameworks.HaveCoreMedia) {
 				// special case (false) so it needs to be before the _real_ INativeObject check
 				if (pi.ParameterType == TypeManager.CMSampleBuffer) {
-					pars.AppendFormat ("IntPtr {0}", pi.Name.GetSafeParamName ());
+					pars.AppendFormat ("IntPtr {0}", safe_name);
 					if (BindThirdPartyLibrary)
-						invoke.AppendFormat ("{0} == IntPtr.Zero ? null! : Runtime.GetINativeObject<CMSampleBuffer> ({0}, false)", pi.Name.GetSafeParamName ());
+						invoke.AppendFormat ("{0} == IntPtr.Zero ? null! : Runtime.GetINativeObject<CMSampleBuffer> ({0}, false)", safe_name);
 					else
-						invoke.AppendFormat ("{0} == IntPtr.Zero ? null! : new CMSampleBuffer ({0}, false)", pi.Name.GetSafeParamName ());
+						invoke.AppendFormat ("{0} == IntPtr.Zero ? null! : new CMSampleBuffer ({0}, false)", safe_name);
 					continue;
 				}
 			}
 
 			if (Frameworks.HaveAudioToolbox) {
 				if (pi.ParameterType == TypeManager.AudioBuffers){
-					pars.AppendFormat ("IntPtr {0}", pi.Name.GetSafeParamName ());
-					invoke.AppendFormat ("new global::AudioToolbox.AudioBuffers ({0})", pi.Name.GetSafeParamName ());
+					pars.AppendFormat ("IntPtr {0}", safe_name);
+					invoke.AppendFormat ("new global::AudioToolbox.AudioBuffers ({0})", safe_name);
 					continue;
 				}
 			}
 
 			if (TypeManager.INativeObject.IsAssignableFrom (pi.ParameterType)) {
-				pars.AppendFormat ("IntPtr {0}", pi.Name.GetSafeParamName ());
-				invoke.AppendFormat ("new {0} ({1})", pi.ParameterType, pi.Name.GetSafeParamName ());
+				pars.AppendFormat ("IntPtr {0}", safe_name);
+				invoke.AppendFormat ("new {0} ({1})", pi.ParameterType, safe_name);
 				continue;
 			}
 
 			if (pi.ParameterType.IsByRef){
 				var nt = pi.ParameterType.GetElementType ();
 				if (pi.IsOut){
-					clear.AppendFormat ("{0} = {1};", pi.Name.GetSafeParamName (), nt.IsValueType ? "default (" + FormatType (null, nt) + ")" : "null");
+					clear.AppendFormat ("{0} = {1};", safe_name, nt.IsValueType ? "default (" + FormatType (null, nt) + ")" : "null");
 				}
 				if (nt.IsValueType){
 					string marshal = string.Empty;
@@ -1707,47 +1708,46 @@ public partial class Generator : IMemberGatherer {
 						convert.Append ($"\t{invoke_name} = * ({nullable.Name} *) value;");
 					} else {
 						fnt = FormatType (null, nt);
-						invoke_name = pi.Name.GetSafeParamName ();
+						invoke_name = safe_name;
 					}
-					pars.AppendFormat ("{3}{0}{1} {2}", arg_byref, fnt, pi.Name.GetSafeParamName (), marshal);
+					pars.AppendFormat ("{3}{0}{1} {2}", arg_byref, fnt, safe_name, marshal);
 					invoke.AppendFormat ("{0} {1}", pi.IsOut ? "out" : "ref", invoke_name);
 					continue;
 				} else if (pi.ParameterType.IsByRef) {
-					var pname = pi.Name.GetSafeParamName ();
 					var refname = $"__xamarin_pref{pi.Position}";
-					convert.Append ($"var {refname} = Runtime.GetINativeObject<{RenderType (nt)}> ({pname}, false);");
-					pars.Append ($"ref IntPtr {pname}");
-					postConvert.Append ($"{pname} = {refname} == null ? IntPtr.Zero : {refname}.Handle;");
+					convert.Append ($"var {refname} = Runtime.GetINativeObject<{RenderType (nt)}> ({safe_name}, false);");
+					pars.Append ($"ref IntPtr {safe_name}");
+					postConvert.Append ($"{safe_name} = {refname} == null ? IntPtr.Zero : {refname}.Handle;");
 					invoke.Append ($"ref {refname}");
 					continue;
 				}
 			} else if (IsNativeEnum (pi.ParameterType)) {
 				Type underlyingEnumType = TypeManager.GetUnderlyingEnumType (pi.ParameterType);
-				pars.AppendFormat ("{0} {1}", GetNativeEnumType (pi.ParameterType), pi.Name.GetSafeParamName ());
-				invoke.AppendFormat ("({1}) ({2}) {0}", pi.Name.GetSafeParamName (), FormatType (null, pi.ParameterType), FormatType (null, underlyingEnumType));
+				pars.AppendFormat ("{0} {1}", GetNativeEnumType (pi.ParameterType), safe_name);
+				invoke.AppendFormat ("({1}) ({2}) {0}", safe_name, FormatType (null, pi.ParameterType), FormatType (null, underlyingEnumType));
 				continue;
 			} else if (pi.ParameterType.IsValueType){
-				pars.AppendFormat ("{0} {1}", FormatType (null, pi.ParameterType), pi.Name.GetSafeParamName ());
-				invoke.AppendFormat ("{0}", pi.Name.GetSafeParamName ());
+				pars.AppendFormat ("{0} {1}", FormatType (null, pi.ParameterType), safe_name);
+				invoke.AppendFormat ("{0}", safe_name);
 				continue;
 			}
 		
 			if (pi.ParameterType == TypeManager.System_String_Array){
-				pars.AppendFormat ("IntPtr {0}", pi.Name.GetSafeParamName ());
-				invoke.AppendFormat ("NSArray.StringArrayFromHandle ({0})", pi.Name.GetSafeParamName ());
+				pars.AppendFormat ("IntPtr {0}", safe_name);
+				invoke.AppendFormat ("NSArray.StringArrayFromHandle ({0})", safe_name);
 				continue;
 			}
 			if (pi.ParameterType == TypeManager.System_String){
-				pars.AppendFormat ("IntPtr {0}", pi.Name.GetSafeParamName ());
-				invoke.AppendFormat ("NSString.FromHandle ({0})", pi.Name.GetSafeParamName ());
+				pars.AppendFormat ("IntPtr {0}", safe_name);
+				invoke.AppendFormat ("NSString.FromHandle ({0})", safe_name);
 				continue;
 			}
 
 			if (pi.ParameterType.IsArray){
 				Type et = pi.ParameterType.GetElementType ();
 				if (IsWrappedType (et)){
-					pars.AppendFormat ("IntPtr {0}", pi.Name.GetSafeParamName ());
-					invoke.AppendFormat ("NSArray.ArrayFromHandle<{0}> ({1})", FormatType (null, et), pi.Name.GetSafeParamName ());
+					pars.AppendFormat ("IntPtr {0}", safe_name);
+					invoke.AppendFormat ("NSArray.ArrayFromHandle<{0}> ({1})", FormatType (null, et), safe_name);
 					continue;
 				}
 			}
@@ -1757,19 +1757,19 @@ public partial class Generator : IMemberGatherer {
 					delegate_types [pi.ParameterType.FullName] = pi.ParameterType.GetMethod ("Invoke");
 				}
 				if (AttributeManager.HasAttribute<BlockCallbackAttribute> (pi)) {
-					pars.AppendFormat ("IntPtr {0}", pi.Name.GetSafeParamName ());
-					invoke.AppendFormat ("NID{0}.Create ({1})!", MakeTrampolineName (pi.ParameterType), pi.Name.GetSafeParamName ());
+					pars.AppendFormat ("IntPtr {0}", safe_name);
+					invoke.AppendFormat ("NID{0}.Create ({1})!", MakeTrampolineName (pi.ParameterType), safe_name);
 					// The trampoline will eventually be generated in the final loop
 				} else {
 					if (!AttributeManager.HasAttribute<CCallbackAttribute> (pi)) {
 						if (t.FullName.StartsWith ("System.Action`", StringComparison.Ordinal) || t.FullName.StartsWith ("System.Func`", StringComparison.Ordinal)) {
-							ErrorHelper.Warning (1116, pi.Name.GetSafeParamName (), t.FullName);
+							ErrorHelper.Warning (1116, safe_name, t.FullName);
 						} else {
-							ErrorHelper.Warning (1115, pi.Name.GetSafeParamName (), t.FullName);
+							ErrorHelper.Warning (1115, safe_name, t.FullName);
 						}
 					}
-					pars.AppendFormat ("IntPtr {0}", pi.Name.GetSafeParamName ());
-					invoke.AppendFormat ("({0}) Marshal.GetDelegateForFunctionPointer ({1}, typeof ({0}))", pi.ParameterType, pi.Name.GetSafeParamName ());
+					pars.AppendFormat ("IntPtr {0}", safe_name);
+					invoke.AppendFormat ("({0}) Marshal.GetDelegateForFunctionPointer ({1}, typeof ({0}))", pi.ParameterType, safe_name);
 				}
 				continue;
 			}
@@ -1815,25 +1815,27 @@ public partial class Generator : IMemberGatherer {
 		if (propInfo != null && HasBindAsAttribute (propInfo))
 			return string.Format ("nsb_{0} == null ? IntPtr.Zero : nsb_{0}.Handle", propInfo.Name);
 
+		var safe_name = pi.Name.GetSafeParamName ();
+
 		if (IsWrappedType (pi.ParameterType)){
 			if (null_allowed_override || AttributeManager.HasAttribute<NullAllowedAttribute> (pi))
-				return String.Format ("{0} == null ? IntPtr.Zero : {0}.Handle", pi.Name.GetSafeParamName ());
-			return pi.Name.GetSafeParamName () + ".Handle";
+				return String.Format ("{0} == null ? IntPtr.Zero : {0}.Handle", safe_name);
+			return safe_name + ".Handle";
 		}
 		
 		if (enum_mode != EnumMode.Compat && enum_mode != EnumMode.NativeBits && pi.ParameterType.IsEnum)
-			return "(" + PrimitiveType (pi.ParameterType, enum_mode: enum_mode) + ")" + pi.Name.GetSafeParamName ();
+			return "(" + PrimitiveType (pi.ParameterType, enum_mode: enum_mode) + ")" + safe_name;
 
 		if (enum_mode == EnumMode.NativeBits && IsNativeEnum (pi.ParameterType))
-			return "(" + GetNativeEnumType (pi.ParameterType) + ") (" + PrimitiveType (TypeManager.GetUnderlyingEnumType (pi.ParameterType)) + ") " + pi.Name.GetSafeParamName ();
+			return "(" + GetNativeEnumType (pi.ParameterType) + ") (" + PrimitiveType (TypeManager.GetUnderlyingEnumType (pi.ParameterType)) + ") " + safe_name;
 		
 		if (IsNativeType (pi.ParameterType))
-			return pi.Name.GetSafeParamName ();
+			return safe_name;
 
 		if (pi.ParameterType == TypeManager.System_String){
 			var mai = new MarshalInfo (this, mi, pi);
 			if (mai.PlainString)
-				return pi.Name.GetSafeParamName ();
+				return safe_name;
 			else {
 				bool allow_null = null_allowed_override || AttributeManager.HasAttribute<NullAllowedAttribute> (pi);
 				
@@ -1849,13 +1851,13 @@ public partial class Generator : IMemberGatherer {
 		}
 
 		if (pi.ParameterType.IsValueType)
-			return pi.Name.GetSafeParamName ();
+			return safe_name;
 
 		MarshalType mt;
 		if (LookupMarshal (pi.ParameterType, out mt)){
-			string access = String.Format (mt.ParameterMarshal, pi.Name.GetSafeParamName ());
+			string access = String.Format (mt.ParameterMarshal, safe_name);
 			if (null_allowed_override || AttributeManager.HasAttribute<NullAllowedAttribute> (pi))
-				return String.Format ("{0} == null ? IntPtr.Zero : {1}", pi.Name.GetSafeParamName (), access);
+				return String.Format ("{0} == null ? IntPtr.Zero : {1}", safe_name, access);
 			return access;
 		}
 
@@ -1876,7 +1878,7 @@ public partial class Generator : IMemberGatherer {
 			if (nullable != null) {
 				return "converted";
 			} else if (et.IsValueType)
-				return (TypeManager.IsOutParameter (pi) ? "out " : "ref ") + pi.Name.GetSafeParamName ();
+				return (TypeManager.IsOutParameter (pi) ? "out " : "ref ") + safe_name;
 		}
 
 		if (pi.ParameterType.IsSubclassOf (TypeManager.System_Delegate)){
@@ -1885,14 +1887,14 @@ public partial class Generator : IMemberGatherer {
 
 		if (IsDictionaryContainerType(pi.ParameterType)){
 			if (null_allowed_override || AttributeManager.HasAttribute<NullAllowedAttribute> (pi))
-				return String.Format ("{0} == null ? IntPtr.Zero : {0}.Dictionary.Handle", pi.Name.GetSafeParamName ());
-			return pi.Name.GetSafeParamName () + ".Dictionary.Handle";
+				return String.Format ("{0} == null ? IntPtr.Zero : {0}.Dictionary.Handle", safe_name);
+			return safe_name + ".Dictionary.Handle";
 		}
 
 		if (pi.ParameterType.IsGenericParameter) {
 			if (null_allowed_override || AttributeManager.HasAttribute<NullAllowedAttribute> (pi))
-				return string.Format ("{0} == null ? IntPtr.Zero : {0}.Handle", pi.Name.GetSafeParamName ());
-			return pi.Name.GetSafeParamName () + ".Handle";
+				return string.Format ("{0} == null ? IntPtr.Zero : {0}.Handle", safe_name);
+			return safe_name + ".Handle";
 		}
 
 		// This means you need to add a new MarshalType in the method "Go"
@@ -2768,7 +2770,6 @@ public partial class Generator : IMemberGatherer {
 
 					PrintPlatformAttributes (pi);
 					string modifier = pi.IsInternal (this) ? "internal" : "public";
-					//bool nullable = AttributeManager.HasAttribute<NullAllowedAttribute> (pi);
 					
 					print ("{0} {1}? {2} {{",
 						modifier,
@@ -3799,19 +3800,7 @@ public partial class Generator : IMemberGatherer {
 		int index64 = dual_enum ? 1 : 0;
 
 		if (CurrentPlatform == PlatformName.MacOSX) {
-			if (need_multi_path) {
-				print ("if (IntPtr.Size == 8) {");
-				indent++;
-				GenerateInvoke (x64_stret, supercall, mi, minfo, selector, args[index64], assign_to_temp, category_type, aligned && x64_stret, EnumMode.Bit64);
-				indent--;
-				print ("} else {");
-				indent++;
-				GenerateInvoke (x86_stret, supercall, mi, minfo, selector, args[0], assign_to_temp, category_type, aligned && x86_stret, EnumMode.Bit32);
-				indent--;
-				print ("}");
-			} else {
-				GenerateInvoke (x86_stret, supercall, mi, minfo, selector, args[0], assign_to_temp, category_type, aligned && x86_stret);
-			}
+			GenerateInvoke (x64_stret, supercall, mi, minfo, selector, args[index64], assign_to_temp, category_type, aligned && x64_stret, EnumMode.Bit64);
 			return;
 		}
 
@@ -4186,19 +4175,21 @@ public partial class Generator : IMemberGatherer {
 					ErrorHelper.Warning (1106,
 						mi.DeclaringType, mi.Name, pi.Name, pi.ParameterType, pi.ParameterType.Namespace, pi.ParameterType.Name);
 			}
-			
+
+			var safe_name = pi.Name.GetSafeParamName ();
+
 			if (Protocolize (pi)) {
-				print ("if ({0} != null){{", pi.Name.GetSafeParamName ());
-				print ("\tif (!({0} is NSObject))\n", pi.Name.GetSafeParamName ());
-				print ("\t\tthrow new ArgumentException (\"The object passed of type \" + {0}.GetType () + \" does not derive from NSObject\");", pi.Name.GetSafeParamName ());
+				print ("if ({0} != null){{", safe_name);
+				print ("\tif (!({0} is NSObject))\n", safe_name);
+				print ("\t\tthrow new ArgumentException (\"The object passed of type \" + {0}.GetType () + \" does not derive from NSObject\");", safe_name);
 				if (needs_null_check){
 					print ("} else {");
-					print ("\tthrow new ArgumentNullException (\"{0}\");", pi.Name.GetSafeParamName ());
+					print ("\tthrow new ArgumentNullException (nameof ({0}));", safe_name);
 				}
 				print ("}");
 			} else {
-				print ("if ({0} == null)", pi.Name.GetSafeParamName ());
-				print ("\tthrow new ArgumentNullException (\"{0}\");", pi.Name.GetSafeParamName ());
+				print ("if ({0} == null)", safe_name);
+				print ("\tthrow new ArgumentNullException (nameof ({0}));", safe_name);
 			}
 		}
 	}
@@ -7429,21 +7420,23 @@ public partial class Generator : IMemberGatherer {
 
 				bool comma = false;
 				foreach (var pi in async_type.Item2) {
+					var safe_name = pi.Name.GetSafeParamName ();
 					print ("public {0} {1} {{ get; set; }}",
 						FormatType (type, pi.ParameterType),
-						Capitalize (pi.Name.GetSafeParamName ()));
+						Capitalize (safe_name));
 
 					if (comma)
 						ctor.Append (", ");
 					comma = true;
-					ctor.Append (FormatType (type, pi.ParameterType)).Append (" ").Append (pi.Name.GetSafeParamName ());
+					ctor.Append (FormatType (type, pi.ParameterType)).Append (" ").Append (safe_name);
 				}
 
 				print ("\npartial void Initialize ();");
 
 				print ("\npublic {0} ({1}) {{", async_type.Item1, ctor); indent++;
 				foreach (var pi in async_type.Item2) {
-					print ("this.{0} = {1};", Capitalize (pi.Name.GetSafeParamName ()), pi.Name.GetSafeParamName ());
+					var safe_name = pi.Name.GetSafeParamName ();
+					print ("this.{0} = {1};", Capitalize (safe_name), safe_name);
 				}
 				print ("Initialize ();");
 				indent--; print ("}");
@@ -7499,10 +7492,10 @@ public partial class Generator : IMemberGatherer {
 							props.Add (String.Format ("'{0}'", p.Name));
 						}
 					}
-					if (props.Count () == 1)
+					if (props.Count == 1)
 						throw new BindingException (1112, true,
 							 props[0], false);
-					else if (props.Count () > 1)
+					else if (props.Count > 1)
 						throw new BindingException (1112, true,
 							String.Join (", ", props.ToArray ()), false);
 					else
@@ -7625,10 +7618,7 @@ public partial class Generator : IMemberGatherer {
 	string GetNotificationCenter (PropertyInfo pi)
 	{
 		var a = AttributeManager.GetCustomAttributes<NotificationAttribute> (pi);
-		var str =  a [0].NotificationCenter;
-		if (str == null)
-			str = "NSNotificationCenter.DefaultCenter";
-		return str;
+		return a [0].NotificationCenter ?? "NSNotificationCenter.DefaultCenter";
 	}
 		
 	string GetNotificationName (PropertyInfo pi)

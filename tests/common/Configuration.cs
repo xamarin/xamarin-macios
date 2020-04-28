@@ -512,14 +512,10 @@ namespace Xamarin.Tests
 			}
 		}
 
-		public static string GetCompiler (Profile profile, IList<string> args, bool use_csc = true)
+		public static string GetCompiler (Profile profile, IList<string> args)
 		{
 			args.Add ($"-lib:{Path.GetDirectoryName (GetBaseLibrary (profile))}");
-			if (use_csc) {
-				return "/Library/Frameworks/Mono.framework/Commands/csc";
-			} else {
-				return "/Library/Frameworks/Mono.framework/Commands/mcs";
-			}
+			return "/Library/Frameworks/Mono.framework/Commands/csc";
 		}
 #endif // !XAMMAC_TESTS
 		
