@@ -138,7 +138,7 @@ steps:
     targetPath: TestSummary-$(CONTEXT).md
     artifactName: TestSummary-$(CONTEXT)
   continueOnError: true
-  condition: and(succeededOrFailed()) #, eq(variables['ProvisioningProfiles'], 'success'))
+  condition: (succeededOrFailed()) #, eq(variables['ProvisioningProfiles'], 'success'))
 
 # if there's a test failure || test summary not generated || provisioning failed:
 # - update GH commit status
@@ -156,7 +156,7 @@ steps:
     TESTS: $(TESTS)
     TESTSARGS: $(TESTS_EXTRA_ARGUMENTS)
   displayName: 'add GH status & commit message'
-  condition: and(succeededOrFailed()) #, eq(variables['ProvisioningProfiles'], 'success'))
+  condition: (succeededOrFailed()) #, eq(variables['ProvisioningProfiles'], 'success'))
 
 - bash: ./xamarin-macios/tools/devops/add-summaries.sh
   displayName: 'Add summaries'
