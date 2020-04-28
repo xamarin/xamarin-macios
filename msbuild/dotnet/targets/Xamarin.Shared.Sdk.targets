@@ -118,11 +118,8 @@
 	</Target>
 	<Target Name="_ComputeLinkerArguments" DependsOnTargets="_ComputeLinkerSubstitutions;_SelectAssembliesToLink;">
 		<PropertyGroup>
-			<!-- FIXME: using the _ExtraTrimmerArgs variable, it's used in Microsoft.NET.ILLink.targets, but we'll have to move to official MSBuild properties eventually -->
-
 			<!-- link the core assemblies when using 'sdkonly' -->
-			<!-- linksdk doesn't work because of https://github.com/mono/linker/issues/1107 -->
-			<!-- <_ExtraTrimmerArgs Condition="'$(MtouchLink)' == 'sdkonly'">$(_ExtraTrimmerArgs) -c link</_ExtraTrimmerArgs> -->
+			<_ExtraTrimmerArgs Condition="'$(MtouchLink)' == 'sdkonly'">$(_ExtraTrimmerArgs) -c link</_ExtraTrimmerArgs>
 
 			<!-- make the output verbose to see what the linker is doing. FIXME: make dependent upon verbosity level -->
 			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) --verbose</_ExtraTrimmerArgs>
@@ -136,9 +133,6 @@
 			<!-- due to https://github.com/mono/linker/issues/1108 we have to copy all assemblies :/ -->
 			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) -c copy</_ExtraTrimmerArgs>
 
-			<!-- add our custom steps -->
-			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) --custom-step MonoTouch.Tuner.ProcessExportedFields,$(_AdditionalTaskAssembly)</_ExtraTrimmerArgs>
-
 			<_CustomLinkerOptionsFile>$([System.IO.Path]::GetFullPath('$(IntermediateOutputPath)custom-linker-options.txt'))</_CustomLinkerOptionsFile>
 			<_CustomLinkerOptions>
 				Platform=$(_PlatformName)
@@ -146,6 +140,12 @@
 				MtouchLink=$(MtouchLink)
 			</_CustomLinkerOptions>
 		</PropertyGroup>
+		<ItemGroup>
+			<!-- add our custom steps -->
+			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)">
+				<Type>MonoTouch.Tuner.ProcessExportedFields</Type>
+			</_TrimmerCustomSteps>
+		</ItemGroup>
 
 		<SetEnvironmentVariable Name="CUSTOM_LINKER_OPTIONS_FILE" Value="$(_CustomLinkerOptionsFile)" />
 		<WriteLinesToFile File="$(_CustomLinkerOptionsFile)" Lines="$(_CustomLinkerOptions)" Overwrite="true" />
