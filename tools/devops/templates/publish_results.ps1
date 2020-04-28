@@ -76,39 +76,27 @@ $response = Invoke-RestMethod @params
 $response | Write-Host
 
 
-
-
 ###
 ### Construct commit message w/ aggregate test summary
 ###
 
-$RESULT_EMOJI
-If ($Env:AGENT_JOBSTATUS -eq 'Failed')
-{
-	$RESULT_EMOJI = ":fire: "
-} Else {
-	$RESULT_EMOJI = ":white_check_mark: " # maybe remove this since we only add commit messages on failure?
-}
-
 $HEADER = ""
 If ($Env:BUILD_DEFINITIONNAME -like '*DDFun*')
 {
-	$HEADER = "### :bangbang: :construction: TESTING Experimental DDFun pipeline\\n"
+	$HEADER = "### :boom: :construction: TESTING Experimental DDFun pipeline\\n"
 }
 #Else{
 #HTML Report jenkins stuff
 #}
 
-# SYSTEM_JOBNAME: Xamarin | Monotouch | xUnitBCL | NUnitBCL | mscorlib
-# CONTEXT: tvOS | iOS | iOS32
-$DESCRIPTION="Device test $Env:SYSTEM_JOBNAME $Env:AGENT_JOBSTATUS on $Env:CONTEXT"
+$DESCRIPTION="Device test aggregate results:"
 
 # BUILD_DEFINITIONNAME: Pipeline name, e.g. "iOS Device Tests [DDFun]"
-$json_text = $HEADER + "$RESULT_EMOJI $DESCRIPTION on [Azure DevOps]($target_url) ($Env:BUILD_DEFINITIONNAME) $RESULT_EMOJI"
+$json_text = $HEADER + "$DESCRIPTION on [Azure DevOps]($target_url)"
 
 # add contents of test summary to json_text
 $testsummary_location = $Env:SYSTEM_DEFAULTWORKINGDIRECTORY
-$testsummary_location = $testsummary_location + "/TestSummary-$Env:CONTEXT.md"
+$testsummary_location = $testsummary_location + "/TestSummary.md"
 Write-Host $testsummary_location
 $test_summary = Get-Content $testsummary_location
 
