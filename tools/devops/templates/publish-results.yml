@@ -23,6 +23,8 @@ steps:
     set -x
     set -e
     ls -la
+    ls -la $PIPELINE_WORKSPACE
+    ls -la $PIPELINE_WORKSPACE/Summaries
     pwd
     cat $PIPELINE_WORKSPACE/Summaries/TestSummary-*.md >> ./TestSummary.md
     cat ./TestSummary.md
