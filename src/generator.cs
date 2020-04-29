@@ -3790,12 +3790,8 @@ public partial class Generator : IMemberGatherer {
 	void GenerateNewStyleInvoke (bool supercall, MethodInfo mi, MemberInformation minfo, string selector, string[] args, bool assign_to_temp, Type category_type)
 	{
 		var returnType = mi.ReturnType;
-		bool arm_stret = Stret.ArmNeedStret (returnType, this);
-		bool x86_stret = Stret.X86NeedStret (returnType, this);
 		bool x64_stret = Stret.X86_64NeedStret (returnType, this);
 		bool dual_enum = HasNativeEnumInSignature (mi);
-		bool is_stret_multi = arm_stret || x86_stret || x64_stret;
-		bool need_multi_path = is_stret_multi || dual_enum;
 		bool aligned = AttributeManager.HasAttribute<AlignAttribute> (mi);
 		int index64 = dual_enum ? 1 : 0;
 
@@ -3803,6 +3799,11 @@ public partial class Generator : IMemberGatherer {
 			GenerateInvoke (x64_stret, supercall, mi, minfo, selector, args[index64], assign_to_temp, category_type, aligned && x64_stret, EnumMode.Bit64);
 			return;
 		}
+
+		bool arm_stret = Stret.ArmNeedStret (returnType, this);
+		bool x86_stret = Stret.X86NeedStret (returnType, this);
+		bool is_stret_multi = arm_stret || x86_stret || x64_stret;
+		bool need_multi_path = is_stret_multi || dual_enum;
 
 		if (need_multi_path) {
 			if (is_stret_multi) {
