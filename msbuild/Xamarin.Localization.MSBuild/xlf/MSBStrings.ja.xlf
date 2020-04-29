@@ -114,27 +114,6 @@
         </target>
         <note></note>
       </trans-unit>
-      <trans-unit id="E0029">
-        <source>Could not locate the TVOS platform directory at path '{0}'
-        </source>
-        <target state="new">Could not locate the TVOS platform directory at path '{0}'
-        </target>
-        <note></note>
-      </trans-unit>
-      <trans-unit id="E0030">
-        <source>Could not locate the TVOS '{0}' SDK at path '{1}'
-        </source>
-        <target state="new">Could not locate the TVOS '{0}' SDK at path '{1}'
-        </target>
-        <note></note>
-      </trans-unit>
-      <trans-unit id="E0031">
-        <source>Could not locate the TVOS '{0}' SDK usr path at '{1}'
-        </source>
-        <target state="new">Could not locate the TVOS '{0}' SDK usr path at '{1}'
-        </target>
-        <note></note>
-      </trans-unit>
       <trans-unit id="E0032">
         <source>Could not locate SDK bin directory
         </source>
@@ -298,13 +277,6 @@
         <source>Failed to locate the WatchKit launcher in the Xcode app bundle.
         </source>
         <target state="new">Failed to locate the WatchKit launcher in the Xcode app bundle.
-        </target>
-        <note></note>
-      </trans-unit>
-      <trans-unit id="E0083">
-        <source>The Apple macOS SDK is not installed.
-        </source>
-        <target state="new">The Apple macOS SDK is not installed.
         </target>
         <note></note>
       </trans-unit>

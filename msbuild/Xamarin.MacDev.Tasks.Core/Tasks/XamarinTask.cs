@@ -24,8 +24,7 @@ namespace Xamarin.MacDev.Tasks {
 				case ApplePlatform.MacOSX:
 					return "Xamarin.Mac";
 				default:
-					// FIXME: better error
-					throw new NotImplementedException ($"Invalid platform: {Platform}");
+					throw new InvalidOperationException ($"Invalid platform: {Platform}");
 				}
 			}
 		}
@@ -60,9 +59,24 @@ namespace Xamarin.MacDev.Tasks {
 				case ApplePlatform.MacOSX:
 					return "macOS";
 				default:
-					// FIXME: better error
-					throw new NotImplementedException ($"Invalid platform: {Platform}");
+					throw new InvalidOperationException ($"Invalid platform: {Platform}");
 				}
+			}
+		}
+
+		protected string GetSdkPlatform (bool isSimulator)
+		{
+			switch (Platform) {
+			case ApplePlatform.iOS:
+				return isSimulator ? "iPhoneSimulator" : "iPhoneOS";
+			case ApplePlatform.TVOS:
+				return isSimulator ? "AppleTVSimulator" : "AppleTVOS";
+			case ApplePlatform.WatchOS:
+				return isSimulator ? "WatchSimulator" : "WatchOS";
+			case ApplePlatform.MacOSX:
+				return "MacOSX";
+			default:
+				throw new InvalidOperationException ($"Invalid platform: {Platform}");
 			}
 		}
 	}

@@ -3,19 +3,12 @@ using System.IO;
 using System.Linq;
 
 using Microsoft.Build.Framework;
-using Microsoft.Build.Utilities;
 
-using Xamarin.MacDev.Tasks;
-using Xamarin.MacDev;
 using Xamarin.Localization.MSBuild;
 using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks {
 	public abstract class DetectSdkLocationsCoreTaskBase : XamarinTask {
-		#region Inputs
-
-		#endregion Inputs
-
 		#region Outputs
 
 		[Output]
@@ -69,12 +62,11 @@ namespace Xamarin.MacDev.Tasks {
 
 		protected abstract IAppleSdk CurrentSdk { get; }
 		protected abstract string GetDefaultXamarinSdkRoot ();
-		protected abstract string GetSdkPlatform ();
 		protected abstract IAppleSdkVersion GetDefaultSdkVersion ();
 
 		protected void EnsureSdkPath ()
 		{
-			SdkPlatform = GetSdkPlatform ();
+			SdkPlatform = GetSdkPlatform (SdkIsSimulator);
 
 			var currentSdk = CurrentSdk;
 			IAppleSdkVersion requestedSdkVersion;
@@ -82,8 +74,7 @@ namespace Xamarin.MacDev.Tasks {
 			if (string.IsNullOrEmpty (SdkVersion)) {
 				requestedSdkVersion = GetDefaultSdkVersion ();
 			} else if (!currentSdk.TryParseSdkVersion (SdkVersion, out requestedSdkVersion)) {
-			//} else if (!IPhoneSdkVersion.TryParse (SdkVersion, out requestedSdkVersion)) {
-				Log.LogError (MSBStrings.E0025, SdkVersion);
+				Log.LogError (MSBStrings.E0025 /* Could not parse the SDK version '{0}' */, SdkVersion);
 				return;
 			}
 
@@ -122,9 +113,9 @@ namespace Xamarin.MacDev.Tasks {
 				XamarinSdkRoot = GetDefaultXamarinSdkRoot ();
 
 			if (string.IsNullOrEmpty (XamarinSdkRoot))
-				Log.LogError (MSBStrings.E0046, Product);
+				Log.LogError (MSBStrings.E0046 /* Could not find '{0}' */, Product);
 			else if (!Directory.Exists (XamarinSdkRoot))
-				Log.LogError (MSBStrings.E0170, Product, XamarinSdkRoot);
+				Log.LogError (MSBStrings.E0170 /* Could not find {0} in {1}. */, Product, XamarinSdkRoot);
 		}
 
 		public override bool Execute ()
@@ -154,7 +145,7 @@ namespace Xamarin.MacDev.Tasks {
 
 			SdkDevPath = currentSdk.DeveloperRoot;
 			if (string.IsNullOrEmpty (SdkDevPath)) {
-				Log.LogError (MSBStrings.E0086);
+				Log.LogError (MSBStrings.E0086 /* Could not find a valid Xcode developer path */);
 				return false;
 			}
 			return true;
@@ -167,7 +158,7 @@ namespace Xamarin.MacDev.Tasks {
 					return null;
 
 				var path = Path.GetFullPath (Path.Combine (paths));
-				Log.LogMessage (MessageImportance.Low, MSBStrings.M0047, checkingFor, path);
+				Log.LogMessage (MessageImportance.Low, MSBStrings.M0047 /* Searching for '{0}' in '{1}' */, checkingFor, path);
 				return Directory.Exists (path) ? path : null;
 			} catch {
 				return null;

@@ -41,20 +41,6 @@ namespace Xamarin.iOS.Tasks
 			return base.Execute ();
 		}
 
-		protected override string GetSdkPlatform ()
-		{
-			switch (Platform) {
-			case ApplePlatform.iOS:
-				return SdkIsSimulator ? "iPhoneSimulator" : "iPhoneOS";
-			case ApplePlatform.TVOS:
-				return SdkIsSimulator ? "AppleTVSimulator" : "AppleTVOS";
-			case ApplePlatform.WatchOS:
-				return SdkIsSimulator ? "WatchSimulator" : "WatchOS";
-			default:
-				throw new InvalidOperationException (string.Format ("Invalid framework: {0}", Platform));
-			}
-		}
-
 		protected override string GetDefaultXamarinSdkRoot ()
 		{
 			return IPhoneSdks.MonoTouch.SdkDir;

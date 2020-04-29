@@ -16,11 +16,6 @@ namespace Xamarin.Mac.Tasks
 			return MacOSXSdkVersion.GetDefault (CurrentSdk);
 		}
 
-		protected override string GetSdkPlatform ()
-		{
-			return "MacOSX";
-		}
-
 		protected override string GetDefaultXamarinSdkRoot ()
 		{
 			return MacOSXSdks.XamMac.FrameworkDirectory;

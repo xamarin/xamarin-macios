@@ -141,21 +141,9 @@
     <!-- E0026: not used anymore -->
     <!-- E0027: not used anymore -->
     <!-- E0028: not used anymore -->
-    
-    <data name="E0029" xml:space="preserve">
-        <value>Could not locate the TVOS platform directory at path '{0}'
-        </value>
-    </data>
-    
-    <data name="E0030" xml:space="preserve">
-        <value>Could not locate the TVOS '{0}' SDK at path '{1}'
-        </value>
-    </data>
-    
-     <data name="E0031" xml:space="preserve">
-        <value>Could not locate the TVOS '{0}' SDK usr path at '{1}'
-        </value>
-    </data>
+    <!-- E0029: not used anymore -->
+    <!-- E0030: not used anymore -->
+    <!-- E0031: not used anymore -->
     
     <data name="E0032" xml:space="preserve">
         <value>Could not locate SDK bin directory
@@ -369,10 +357,7 @@
         </value>
     </data>
     
-    <data name="E0083" xml:space="preserve">
-        <value>The Apple macOS SDK is not installed.
-        </value>
-    </data>
+    <!-- E0083: not used anymore -->
     
     <data name="E0084" xml:space="preserve">
         <value>Could not locate the {0} '{1}' SDK at path '{}'
