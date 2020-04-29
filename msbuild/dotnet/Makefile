@@ -208,7 +208,7 @@ test/global.json: Makefile $(TEMPLATED_FILES)
 		printf "\t\t\"Microsoft.iOS.Sdk\": \"$(CURRENT_IOS_VERSION)\",\n" >> $@; \
 		printf "\t\t\"Microsoft.tvOS.Sdk\": \"$(CURRENT_TVOS_VERSION)\",\n" >> $@; \
 		printf "\t\t\"Microsoft.watchOS.Sdk\": \"$(CURRENT_WATCHOS_VERSION)\",\n" >> $@; \
-		printf "\t\t\"Microsoft.macOS.Sdk\": \"$(CURRENT_MACOS_VERSION)\",\n" >> $@; \
+		printf "\t\t\"Microsoft.macOS.Sdk\": \"$(CURRENT_MACOS_VERSION)\"\n" >> $@; \
 		printf "\t}\n}\n" >> $@
 
 test-nuget: test/NuGet.config test/global.json
