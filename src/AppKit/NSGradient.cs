@@ -43,32 +43,19 @@ namespace AppKit {
 		public NSGradient (NSColor[] colors, float[] locations, NSColorSpace colorSpace)
 		{
 			unsafe {
-#if ARCH_32
-				fixed (void * locationPtr = locations) {
-					Initialize (colors, locationPtr, colorSpace);
-				}
-#else
 				double[] converted = Array.ConvertAll<float, double> (locations, new Converter<float, double> (a => (double)a));
 				fixed (void * locationPtr = converted) {
 					Initialize (colors, locationPtr, colorSpace);
 				}
-#endif
 			}
 		}
 
 		public NSGradient (NSColor[] colors, double[] locations, NSColorSpace colorSpace) : base (NSObjectFlag.Empty)
 		{
 			unsafe {
-#if ARCH_64
 				fixed (void * locationPtr = locations) {
 					Initialize (colors, locationPtr, colorSpace);
 				}
-#else
-				float[] converted = Array.ConvertAll<double, float> (locations, new Converter<double, float> (a => (float)a));
-				fixed (void * locationPtr = converted) {
-					Initialize (colors, locationPtr, colorSpace);
-				}
-#endif
 			}
 		}
 
