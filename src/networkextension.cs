@@ -148,6 +148,12 @@ namespace NetworkExtension {
 		High,
 	}
 
+	[NoWatch, NoTV, NoiOS, Mac (10,15,5)]
+	[Native]
+	enum NEFilterDataAttribute : long {
+		HasIPHeader = 1,
+	}
+
 	[iOS (9,0)][Mac (10,11)]
 	[BaseType (typeof (NSObject))]
 	[Abstract] // documented as such and ...
