@@ -152,7 +152,6 @@
 
 	<PropertyGroup Condition=" '$(_PlatformName)' != 'macOS' ">
 		<_EarlyAppBundleTasksDependsOn>
-			$(_PlatforName);
 			_CollectBundleResources;
 			_OptimizePngImages;
 			_OptimizePropertyLists;
