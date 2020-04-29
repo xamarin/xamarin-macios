@@ -26,8 +26,13 @@ steps:
     ls -la $PIPELINE_WORKSPACE
     ls -la $PIPELINE_WORKSPACE/Summaries
     pwd
-    cat $PIPELINE_WORKSPACE/Summaries/TestSummary-*/TestSummary-*.md >> ./TestSummary.md
-    #cat $PIPELINE_WORKSPACE/Summaries/TestSummary-*.md >> ./TestSummary.md
+    #cat $PIPELINE_WORKSPACE/Summaries/TestSummary-*/TestSummary-*.md >> ./TestSummary.md
+
+    for f in $PIPELINE_WORKSPACE/Summaries/TestSummary-*/TestSummary-*.md;
+    do echo $f >> ./TestSummary.md
+    cat $f >> ./TestSummary.md
+    done
+
     cat ./TestSummary.md
   displayName: 'Merge TestSummary files'
 
@@ -51,16 +56,6 @@ steps:
     GH_STATE: $(GH_STATE)
     GITHUB_TOKEN: $(GitHub.Token)
     CONTEXT: $(CONTEXT)
-
-#  VSTS_BUILD_URL='https://dev.azure.com/devdiv/ - SYSTEM_TEAMFOUNDATIONSERVERURI
-# DevDiv/_build/index?buildId=3521765&view=ms.vss-test-web.test-result-details'
-#VSTS_BUILD_URL="${SYSTEM_TEAMFOUNDATIONCOLLECTIONURI}${SYSTEM_TEAMPROJECT}/_build/index?buildId=${BUILD_BUILDID}&view=ms.vss-test-web.test-result-details"
-# 	printf "\t\"state\": \"%s\",\n" "$STATE"
-#	printf "\t\"target_url\": \"%s\",\n" "$TARGET_URL"
-#	printf "\t\"description\": %s,\n" "$(echo -n "$DESCRIPTION" | python -c 'import json,sys; print(json.dumps(sys.stdin.read()))')"
-#	printf "\t\"context\": \"%s\"\n" "$CONTEXT"
-# ./jenkins/add-commit-status.sh --token="$TOKEN" --hash="$BUILD_REVISION" --state="$GH_STATE" --target-url="$VSTS_BUILD_URL" --description="$DESCRIPTION" --context="VSTS: device tests ($DEVICE_TYPE)"
-
 
 ###
 ### Report final results to GitHub
