@@ -28,6 +28,10 @@
 	<ItemGroup>
 		<ProjectCapability Include="Apple" />
 		<ProjectCapability Include="Mobile" />
+
+		// See https://work.azdo.io/1112733
+		<!-- Conflicts with our targets generator in VS+CPS -->
+		<ProjectCapability Remove="LaunchProfiles" />
 	</ItemGroup>
 
 	<PropertyGroup>
