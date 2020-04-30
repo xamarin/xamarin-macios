@@ -197,111 +197,9 @@ namespace Xamarin.Localization.MSBuild {
             }
         }
         
-        public static string E0026 {
-            get {
-                return ResourceManager.GetString("E0026", resourceCulture);
-            }
-        }
-        
-        public static string E0027 {
-            get {
-                return ResourceManager.GetString("E0027", resourceCulture);
-            }
-        }
-        
-        public static string E0028 {
-            get {
-                return ResourceManager.GetString("E0028", resourceCulture);
-            }
-        }
-        
-        public static string E0029 {
-            get {
-                return ResourceManager.GetString("E0029", resourceCulture);
-            }
-        }
-        
-        public static string E0030 {
-            get {
-                return ResourceManager.GetString("E0030", resourceCulture);
-            }
-        }
-        
-        public static string E0031 {
-            get {
-                return ResourceManager.GetString("E0031", resourceCulture);
-            }
-        }
-        
         public static string E0032 {
             get {
                 return ResourceManager.GetString("E0032", resourceCulture);
-            }
-        }
-        
-        public static string E0033 {
-            get {
-                return ResourceManager.GetString("E0033", resourceCulture);
-            }
-        }
-        
-        public static string W0034 {
-            get {
-                return ResourceManager.GetString("W0034", resourceCulture);
-            }
-        }
-        
-        public static string E0035 {
-            get {
-                return ResourceManager.GetString("E0035", resourceCulture);
-            }
-        }
-        
-        public static string E0036 {
-            get {
-                return ResourceManager.GetString("E0036", resourceCulture);
-            }
-        }
-        
-        public static string E0037 {
-            get {
-                return ResourceManager.GetString("E0037", resourceCulture);
-            }
-        }
-        
-        public static string E0038 {
-            get {
-                return ResourceManager.GetString("E0038", resourceCulture);
-            }
-        }
-        
-        public static string E0039 {
-            get {
-                return ResourceManager.GetString("E0039", resourceCulture);
-            }
-        }
-        
-        public static string E0040 {
-            get {
-                return ResourceManager.GetString("E0040", resourceCulture);
-            }
-        }
-        
-        public static string E0041 {
-            get {
-                return ResourceManager.GetString("E0041", resourceCulture);
-            }
-        }
-        
-        public static string E0042 {
-            get {
-                return ResourceManager.GetString("E0042", resourceCulture);
-            }
-        }
-        
-        public static string E0043 {
-            get {
-                return ResourceManager.GetString("E0043", resourceCulture);
             }
         }
         
@@ -539,12 +437,6 @@ namespace Xamarin.Localization.MSBuild {
             }
         }
         
-        public static string E0083 {
-            get {
-                return ResourceManager.GetString("E0083", resourceCulture);
-            }
-        }
-        
         public static string E0084 {
             get {
                 return ResourceManager.GetString("E0084", resourceCulture);
@@ -560,12 +452,6 @@ namespace Xamarin.Localization.MSBuild {
         public static string E0086 {
             get {
                 return ResourceManager.GetString("E0086", resourceCulture);
-            }
-        }
-        
-        public static string E0087 {
-            get {
-                return ResourceManager.GetString("E0087", resourceCulture);
             }
         }
         
@@ -1052,6 +938,30 @@ namespace Xamarin.Localization.MSBuild {
         public static string E0169 {
             get {
                 return ResourceManager.GetString("E0169", resourceCulture);
+            }
+        }
+        
+        public static string E0170 {
+            get {
+                return ResourceManager.GetString("E0170", resourceCulture);
+            }
+        }
+        
+        public static string E0171 {
+            get {
+                return ResourceManager.GetString("E0171", resourceCulture);
+            }
+        }
+        
+        public static string E0172 {
+            get {
+                return ResourceManager.GetString("E0172", resourceCulture);
+            }
+        }
+        
+        public static string E0173 {
+            get {
+                return ResourceManager.GetString("E0173", resourceCulture);
             }
         }
         

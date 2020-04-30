@@ -8,55 +8,27 @@
 
   <!--
 
-    NUnit doesn't support executing a test library built for netstandard2.0,
-    which means we need some custom logicto build the test library (this
-    csproj) for net461 while at the same time building the code we want to
-    test for netstandard2.0.
-
-    We use the configuration to distinguish between them: A
-    Debug-netstandard2.0 and Debug-net461 configuration, which indicates how
-    the code we want to test is built (not how the test library itself is
-    built).
-
-    Another problem is that the task assembly (Xamarin.iOS.Tasks.dll) is
-    ILMerged, which really confuses VSfM when using a project reference to the
-    task assembly project file, so instead use a reference to the final
-    Xamarin.iOS.Tasks.dll assembly instead. This is where we specify which
-    Xamarin.iOS.Tasks.dll we want to test (which target framework it was built
-    with), by using the TasksAssemblyTargetFramework variable. We also need to
-    map our custom configurations to the ones used in the task library project
-    file (the TasksAssemblyConfiguration variable). This approach also
-    requires us to manually build the task assembly before building the test
-    assembly (the BuildTasksAssembly target).
+    The task assembly (Xamarin.iOS.Tasks.dll) is ILMerged, which really
+    confuses VSfM when using a project reference to the task assembly project
+    file, so instead use a reference to the final Xamarin.iOS.Tasks.dll
+    assembly instead. This approach requires us to manually build the task
+    assembly before building the test assembly (the BuildTasksAssembly
+    target).
 
   -->
-
-  <PropertyGroup Condition="'$(Configuration)' == 'Debug-netstandard2.0'">
-    <TasksAssemblyTargetFramework>netstandard2.0</TasksAssemblyTargetFramework>
-    <TasksAssemblyConfiguration>Debug</TasksAssemblyConfiguration>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)' == 'Debug-net461'">
-    <TasksAssemblyTargetFramework>net461</TasksAssemblyTargetFramework>
-    <TasksAssemblyConfiguration>Debug</TasksAssemblyConfiguration>
-  </PropertyGroup>
-  <PropertyGroup>
-    <!-- Set some default values -->
-    <TasksAssemblyTargetFramework Condition="'$(TasksAssemblyTargetFramework)' == ''">netstandard2.0</TasksAssemblyTargetFramework>
-    <TasksAssemblyConfiguration Condition="'$(TasksAssemblyConfiguration)' == ''">Debug</TasksAssemblyConfiguration>
-  </PropertyGroup>
 
   <ItemGroup>
     <Reference Include="Microsoft.Build" HintPath="$(MSBuildBinPath)\Microsoft.Build.dll" />
     <Reference Include="Microsoft.Build.Framework" HintPath="$(MSBuildBinPath)\Microsoft.Build.Framework.dll" />
     <Reference Include="Microsoft.Build.Tasks.Core" HintPath="$(MSBuildBinPath)\Microsoft.Build.Tasks.Core.dll" />
     <Reference Include="Microsoft.Build.Utilities.Core" HintPath="$(MSBuildBinPath)\Microsoft.Build.Utilities.Core.dll" />
-    <Reference Include="Xamarin.iOS.Tasks" HintPath="..\..\Xamarin.iOS.Tasks\bin\$(TasksAssemblyConfiguration)\$(TasksAssemblyTargetFramework)\Xamarin.iOS.Tasks.dll" />
+    <Reference Include="Xamarin.iOS.Tasks" HintPath="..\..\Xamarin.iOS.Tasks\bin\$(Configuration)\netstandard2.0\Xamarin.iOS.Tasks.dll" />
     <PackageReference Include="NUnit" Version="3.11.0" />
     <PackageReference Include="NUnit.ConsoleRunner" Version="3.10.0" />
   </ItemGroup>
 
   <Target Name="BuildTasksAssembly" AfterTargets="BeforeBuild">
-    <MSBuild Projects="..\..\Xamarin.iOS.Tasks\Xamarin.iOS.Tasks.csproj" Properties="TargetFramework=$(TasksAssemblyTargetFramework);Configuration=$(TasksAssemblyConfiguration)" />
+    <MSBuild Projects="..\..\Xamarin.iOS.Tasks\Xamarin.iOS.Tasks.csproj" />
   </Target>
 
   <ItemGroup>

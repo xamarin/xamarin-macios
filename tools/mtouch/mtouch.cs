@@ -144,39 +144,6 @@ namespace Xamarin.Bundler
 			set { force = value; }
 		}
 
-		public static string GetPlatform (Application app)
-		{
-			switch (app.Platform) {
-			case ApplePlatform.iOS:
-				return app.IsDeviceBuild ? "iPhoneOS" : "iPhoneSimulator";
-			case ApplePlatform.WatchOS:
-				return app.IsDeviceBuild ? "WatchOS" : "WatchSimulator";
-			case ApplePlatform.TVOS:
-				return app.IsDeviceBuild ? "AppleTVOS" : "AppleTVSimulator";
-			default:
-				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, "Xamarin.iOS");
-			}
-		}
-
-		public static string GetMonoTouchLibDirectory (Application app)
-		{
-			return Path.Combine (GetProductSdkDirectory (app), "usr", "lib");
-		}
-
-		public static string GetPlatformFrameworkDirectory (Application app)
-		{
-			switch (app.Platform) {
-			case ApplePlatform.iOS:
-				return Path.Combine (FrameworkLibDirectory, "mono", "Xamarin.iOS");
-			case ApplePlatform.WatchOS:
-				return Path.Combine (FrameworkLibDirectory, "mono", "Xamarin.WatchOS");
-			case ApplePlatform.TVOS:
-				return Path.Combine (FrameworkLibDirectory, "mono", "Xamarin.TVOS");
-			default:
-				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, "Xamarin.iOS");
-			}
-		}
-
 		public static string GetArch32Directory (Application app)
 		{
 			switch (app.Platform) {
@@ -197,30 +164,6 @@ namespace Xamarin.Bundler
 			}
 		}
 
-		public static string GetProductSdkDirectory (Application app)
-		{
-			string sdkName;
-			switch (app.Platform) {
-			case ApplePlatform.iOS:
-				sdkName = app.IsDeviceBuild ? "MonoTouch.iphoneos.sdk" : "MonoTouch.iphonesimulator.sdk";
-				break;
-			case ApplePlatform.WatchOS:
-				sdkName = app.IsDeviceBuild ? "Xamarin.WatchOS.sdk" : "Xamarin.WatchSimulator.sdk";
-				break;
-			case ApplePlatform.TVOS:
-				sdkName = app.IsDeviceBuild ? "Xamarin.AppleTVOS.sdk" : "Xamarin.AppleTVSimulator.sdk";
-				break;
-			default:
-				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, "Xamarin.iOS");
-			}
-			return Path.Combine (FrameworkDirectory, "SDKs", sdkName);
-		}
-
-		public static string GetProductFrameworksDirectory (Application app)
-		{
-			return Path.Combine (GetProductSdkDirectory (app), "Frameworks");
-		}
-
 		// This is for the -mX-version-min=A.B compiler flag
 		public static string GetTargetMinSdkName (Application app)
 		{
@@ -231,20 +174,6 @@ namespace Xamarin.Bundler
 				return app.IsDeviceBuild ? "watchos" : "watchos-simulator";
 			case ApplePlatform.TVOS:
 				return app.IsDeviceBuild ? "tvos" : "tvos-simulator";
-			default:
-				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, "Xamarin.iOS");
-			}
-		}
-
-		public static string GetProductAssembly (Application app)
-		{
-			switch (app.Platform) {
-			case ApplePlatform.iOS:
-				return "Xamarin.iOS";
-			case ApplePlatform.WatchOS:
-				return "Xamarin.WatchOS";
-			case ApplePlatform.TVOS:
-				return "Xamarin.TVOS";
 			default:
 				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, "Xamarin.iOS");
 			}
@@ -265,25 +194,9 @@ namespace Xamarin.Bundler
 			}
 		}
 
-		public static string GetFrameworkDirectory (Application app)
-		{
-			return GetFrameworkDir (GetPlatform (app), app.SdkVersion);
-		}
-
 		public static bool IsUsingClang (Application app)
 		{
 			return app.CompilerPath.EndsWith ("clang", StringComparison.Ordinal) || app.CompilerPath.EndsWith ("clang++", StringComparison.Ordinal);
-		}
-
-		public static string PlatformsDirectory {
-			get {
-				return Path.Combine (DeveloperDirectory, "Platforms");
-			}
-		}
-
-		public static string GetPlatformDirectory (Application app)
-		{
-			return Path.Combine (PlatformsDirectory, GetPlatform (app) + ".platform");
 		}
 
 		public static string GetAotCompiler (Application app, Abi abi, bool is64bits)
@@ -1366,11 +1279,6 @@ namespace Xamarin.Bundler
 					throw new MonoTouchException (5103, true, Errors.MT5103, app.Compiler, original_compiler);
 				}
 			}
-		}
-
-		static string GetFrameworkDir (string platform, Version iphone_sdk)
-		{
-			return Path.Combine (PlatformsDirectory, platform + ".platform", "Developer", "SDKs", platform + iphone_sdk.ToString () + ".sdk");
 		}
 
 		static bool IsBoundAssembly (Assembly s)

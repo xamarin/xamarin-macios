@@ -1,12 +1,13 @@
 ﻿using System;
+using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 
 namespace Xharness.Jenkins.TestTasks
 {
 	abstract class MacTask : RunTestTask
 	{
-		public MacTask (BuildToolTask build_task, IProcessManager processManager)
-			: base (build_task, processManager)
+		public MacTask (Jenkins jenkins, BuildToolTask build_task, IProcessManager processManager)
+			: base (jenkins, build_task, processManager)
 		{
 		}
 

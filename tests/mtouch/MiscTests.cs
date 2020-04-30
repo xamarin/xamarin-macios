@@ -24,7 +24,7 @@ namespace Xamarin.Tests
 
 			foreach (var sdk in new string [] { "iphoneos", "iphonesimulator"}) {
 				foreach (var ext in new string [] { "dylib", "a" }) {
-					var fn = Path.Combine (Configuration.MonoTouchRootDirectory, "SDKs", "MonoTouch." + sdk + ".sdk", "usr", "lib", "libmonosgen-2.0." + ext);
+					var fn = Path.Combine (Configuration.MonoTouchRootDirectory, "SDKs", "MonoTouch." + sdk + ".sdk", "lib", "libmonosgen-2.0." + ext);
 					Assert.IsFalse (Contains (fn, contents), "Found \"{0}\" in {1}", str, fn);
 				}
 			}
@@ -70,7 +70,7 @@ namespace Xamarin.Tests
 			foreach (var symbol in prohibited_symbols) {
 				var contents = ASCIIEncoding.ASCII.GetBytes (symbol);
 				var sdk = "iphoneos"; // we don't care about private symbols for simulator builds
-				foreach (var static_lib in Directory.EnumerateFiles (Path.Combine (Configuration.MonoTouchRootDirectory, "SDKs", "MonoTouch." + sdk + ".sdk", "usr", "lib"), "*.a")) {
+				foreach (var static_lib in Directory.EnumerateFiles (Path.Combine (Configuration.MonoTouchRootDirectory, "SDKs", "MonoTouch." + sdk + ".sdk", "lib"), "*.a")) {
 					Assert.IsFalse (Contains (static_lib, contents), "Found \"{0}\" in {1}", symbol, static_lib);
 				}
 			}

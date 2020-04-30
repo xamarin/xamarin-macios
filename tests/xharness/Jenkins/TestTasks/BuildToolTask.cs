@@ -1,14 +1,23 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
+using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
+using Microsoft.DotNet.XHarness.iOS.Shared.Tasks;
+using Xharness.TestTasks;
 
 namespace Xharness.Jenkins.TestTasks
 {
-	public abstract class BuildToolTask : AppleTestTask
+	public abstract class BuildToolTask : AppleTestTask, IBuildToolTask 
 	{
-		protected Xharness.TestTasks.BuildToolTask buildToolTask;
+		protected BuildTool buildToolTask;
 
 		public IProcessManager ProcessManager { get; }
+
+		public ILog BuildLog {
+			get => buildToolTask.BuildLog;
+			set => buildToolTask.BuildLog = value;
+		}
 
 		public override string TestName {
 			get => base.TestName;
@@ -54,7 +63,7 @@ namespace Xharness.Jenkins.TestTasks
 			set => buildToolTask.Mode = value;
 		}
 
-		protected virtual void InitializeTool () => buildToolTask = new Xharness.TestTasks.BuildToolTask (ProcessManager);
+		protected virtual void InitializeTool () => buildToolTask = new BuildTool (ProcessManager);
 		public virtual Task CleanAsync () => buildToolTask.CleanAsync ();
 	}
 }

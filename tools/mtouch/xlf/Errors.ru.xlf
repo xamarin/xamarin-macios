@@ -2579,9 +2579,9 @@
 		</note>
       </trans-unit>
       <trans-unit id="MT5217">
-        <source>Native linking possibly failed because the linker command line was too long ({0} characters).
+        <source>Native linking failed because the linker command line was too long ({0} characters).
 		</source>
-        <target state="new">Native linking possibly failed because the linker command line was too long ({0} characters).
+        <target state="new">Native linking failed because the linker command line was too long ({0} characters).
 		</target>
         <note>
 		</note>
@@ -2882,6 +2882,14 @@
         <note>
 		</note>
       </trans-unit>
+      <trans-unit id="MX0176">
+        <source>The assembly '{0}' was resolved from the system's GAC: {1}. This could potentially be a problem in the future; to avoid such problems, please make sure to not use assemblies only available in the system's GAC.
+        </source>
+        <target state="new">The assembly '{0}' was resolved from the system's GAC: {1}. This could potentially be a problem in the future; to avoid such problems, please make sure to not use assemblies only available in the system's GAC.
+        </target>
+        <note>
+        </note>
+      </trans-unit>
       <trans-unit id="MX1009">
         <source>Could not copy the assembly '{0}' to '{1}': {2}
 		</source>
@@ -2986,6 +2994,14 @@
         <note>
 		</note>
       </trans-unit>
+      <trans-unit id="MX5222">
+        <source>The native linker failed to execute: {0}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+        </source>
+        <target state="new">The native linker failed to execute: {0}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+        </target>
+        <note>
+        </note>
+      </trans-unit>
       <trans-unit id="MX5305">
         <source>Missing 'lipo' tool. Please install Xcode 'Command-Line Tools' component
 		</source>
@@ -3027,9 +3043,9 @@
 		</note>
       </trans-unit>
       <trans-unit id="MX5313">
-        <source>Could not find pkg-config. Please install the Mono.framework from https://mono-project.com/Downloads
+        <source>Could not find {0}. Please install the Mono.framework from https://mono-project.com/Downloads
 		</source>
-        <target state="new">Could not find pkg-config. Please install the Mono.framework from https://mono-project.com/Downloads
+        <target state="new">Could not find {0}. Please install the Mono.framework from https://mono-project.com/Downloads
 		</target>
         <note>
 		</note>

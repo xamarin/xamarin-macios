@@ -7,6 +7,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using Microsoft.DotNet.XHarness.iOS.Shared.TestImporter;
 using Microsoft.DotNet.XHarness.iOS.Shared.TestImporter.Templates;
 using Microsoft.DotNet.XHarness.iOS.Shared.TestImporter.Templates.Managed;
+using Microsoft.DotNet.XHarness.iOS.Shared;
 
 namespace Xharness {
 	/// <summary>

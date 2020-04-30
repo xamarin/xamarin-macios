@@ -153,7 +153,7 @@ namespace CoreLocation {
 
 		[Mac (10,15)]
 		[iOS (8,0)]
-		[Export ("floor", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("floor", ArgumentSemantic.Copy)]
 		CLFloor Floor { get; }
 	}
 
@@ -180,7 +180,7 @@ namespace CoreLocation {
 		[Export ("desiredAccuracy", ArgumentSemantic.Assign)]
 		double DesiredAccuracy { get; set;  }
 	
-		[Export ("location", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("location", ArgumentSemantic.Copy)]
 		CLLocation Location { get;  }
 	
 		 // __WATCHOS_PROHIBITED removed in Xcode 8.0 beta 2, assuming it's valid for 3.0+
@@ -568,58 +568,58 @@ namespace CoreLocation {
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'CLPlacemark' properties to access data.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'CLPlacemark' properties to access data.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'CLPlacemark' properties to access data.")]
-		[Export("addressDictionary", ArgumentSemantic.Copy)]
+		[NullAllowed, Export("addressDictionary", ArgumentSemantic.Copy)]
 		NSDictionary AddressDictionary { get; }
 
-		[Export("administrativeArea")]
+		[NullAllowed, Export("administrativeArea")]
 		string AdministrativeArea { get; }
 
-		[Export("subAdministrativeArea")]
+		[NullAllowed, Export("subAdministrativeArea")]
 		string SubAdministrativeArea { get; }
 
-		[Export("subLocality")]
+		[NullAllowed, Export("subLocality")]
 		string SubLocality { get; }
 
-		[Export("locality")]
+		[NullAllowed, Export("locality")]
 		string Locality { get; }
 
-		[Export("country")]
+		[NullAllowed, Export("country")]
 		string Country { get; }
 	
-		[Export("postalCode")]
+		[NullAllowed, Export("postalCode")]
 		string PostalCode { get; }
 
-		[Export("thoroughfare")]
+		[NullAllowed, Export("thoroughfare")]
 		string Thoroughfare { get; }
 
-		[Export("subThoroughfare")]
+		[NullAllowed, Export("subThoroughfare")]
 		string SubThoroughfare { get; }
 
-		[Export ("ISOcountryCode")]
+		[NullAllowed, Export ("ISOcountryCode")]
 		string IsoCountryCode { get;  }
 
-		[Export ("areasOfInterest")]
+		[NullAllowed, Export ("areasOfInterest")]
 		string [] AreasOfInterest { get;  }
 
 		[Export ("initWithPlacemark:")]
 		IntPtr Constructor (CLPlacemark placemark);
 
-		[Export ("inlandWater")]
+		[NullAllowed, Export ("inlandWater")]
 		string InlandWater { get;  }
 
-		[Export ("location", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("location", ArgumentSemantic.Copy)]
 		CLLocation Location { get; }
 
-		[Export ("name")]
+		[NullAllowed, Export ("name")]
 		string Name { get;  }
 
-		[Export ("ocean")]
+		[NullAllowed, Export ("ocean")]
 		string Ocean { get;  }
 
-		[Export ("region", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("region", ArgumentSemantic.Copy)]
 		CLRegion Region { get; }
 
-		[Export ("timeZone")]
+		[NullAllowed, Export ("timeZone")]
 		[iOS (9,0), Mac(10,11)]
 		NSTimeZone TimeZone { get; }
 #if XAMCORE_2_0 && !TVOS
@@ -775,7 +775,7 @@ namespace CoreLocation {
 
 		[Export ("geocodeAddressString:inRegion:completionHandler:")]
 		[Async]
-		void GeocodeAddress (string addressString, CLRegion region, CLGeocodeCompletionHandler completionHandler);
+		void GeocodeAddress (string addressString, [NullAllowed] CLRegion region, CLGeocodeCompletionHandler completionHandler);
 
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Async]

@@ -38,7 +38,7 @@ namespace ObjCRuntime {
 
 		static List <object> delegates;
 		static List <Assembly> assemblies;
-		static Dictionary <IntPtr, WeakReference> object_map;
+		static Dictionary <IntPtr, GCHandle> object_map;
 		static object lock_obj;
 		static IntPtr NSObjectClass;
 		static bool initialized;
@@ -242,7 +242,7 @@ namespace ObjCRuntime {
 
 			Runtime.options = options;
 			delegates = new List<object> ();
-			object_map = new Dictionary <IntPtr, WeakReference> (IntPtrEqualityComparer);
+			object_map = new Dictionary <IntPtr, GCHandle> (IntPtrEqualityComparer);
 			intptr_ctor_cache = new Dictionary<Type, ConstructorInfo> (TypeEqualityComparer);
 			intptr_bool_ctor_cache = new Dictionary<Type, ConstructorInfo> (TypeEqualityComparer);
 			lock_obj = new object ();
@@ -642,11 +642,6 @@ namespace ObjCRuntime {
 			Registrar.GetMethodDescription (Class.Lookup (cls), sel, is_static, desc);
 		}
 
-		static IntPtr GetNSObjectWrapped (IntPtr ptr)
-		{
-			return ObjectWrapper.Convert (TryGetNSObject (ptr, true));
-		}
-
 		static bool HasNSObject (IntPtr ptr)
 		{
 			return TryGetNSObject (ptr) != null;
@@ -944,22 +939,22 @@ namespace ObjCRuntime {
 #endif
 		static Delegate GetDelegateForBlock (IntPtr methodPtr, Type type)
 		{
-			if (block_to_delegate_cache == null)
-				block_to_delegate_cache = new Dictionary<IntPtrTypeValueTuple, Delegate> ();
-
 			// We do not care if there is a race condition and we initialize two caches
 			// since the worst that can happen is that we end up with an extra
 			// delegate->function pointer.
 			Delegate val;
 			var pair = new IntPtrTypeValueTuple (methodPtr, type);
-			lock (block_to_delegate_cache) {
+			lock (lock_obj) {
+				if (block_to_delegate_cache == null)
+					block_to_delegate_cache = new Dictionary<IntPtrTypeValueTuple, Delegate> ();
+
 				if (block_to_delegate_cache.TryGetValue (pair, out val))
 					return val;
 			}
 
 			val = Marshal.GetDelegateForFunctionPointer (methodPtr, type);
 
-			lock (block_to_delegate_cache){
+			lock (lock_obj) {
 				block_to_delegate_cache [pair] = val;
 			}
 			return val;
@@ -1016,15 +1011,15 @@ namespace ObjCRuntime {
 
 		internal static void UnregisterNSObject (IntPtr ptr) {
 			lock (lock_obj) {
-				object_map.Remove (ptr);
+				if (object_map.Remove (ptr, out var value))
+					value.Free ();
 			}
 		}
 					
 		static void NativeObjectHasDied (IntPtr ptr, NSObject managed_obj)
 		{
 			lock (lock_obj) {
-				WeakReference wr;
-				if (object_map.TryGetValue (ptr, out wr)) {
+				if (object_map.TryGetValue (ptr, out var wr)) {
 					if (managed_obj == null || wr.Target == (object) managed_obj)
 						object_map.Remove (ptr);
 
@@ -1037,7 +1032,7 @@ namespace ObjCRuntime {
 		
 		internal static void RegisterNSObject (NSObject obj, IntPtr ptr) {
 			lock (lock_obj) {
-				object_map [ptr] = new WeakReference (obj, true);
+				object_map [ptr] = GCHandle.Alloc (obj, GCHandleType.WeakTrackResurrection);
 				obj.Handle = ptr;
 			}
 		}
@@ -1201,8 +1196,7 @@ namespace ObjCRuntime {
 		internal static NSObject TryGetNSObject (IntPtr ptr, bool evenInFinalizerQueue = false)
 		{
 			lock (lock_obj) {
-				WeakReference reference;
-				if (object_map.TryGetValue (ptr, out reference)) {
+				if (object_map.TryGetValue (ptr, out var reference)) {
 					var target = (NSObject) reference.Target;
 					if (target == null)
 						return null;

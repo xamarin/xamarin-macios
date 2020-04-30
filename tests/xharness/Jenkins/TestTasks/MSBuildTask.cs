@@ -1,26 +1,25 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
+using Microsoft.DotNet.XHarness.iOS.Shared.Tasks;
 
 namespace Xharness.Jenkins.TestTasks {
 	class MSBuildTask : BuildProjectTask
 	{
-		public ILog BuildLog;
-
-		protected virtual string ToolName => Harness.XIBuildPath;
+		protected virtual string ToolName => Jenkins.Harness.XIBuildPath;
 
 		protected virtual List<string> ToolArguments => 
 				MSBuild.GetToolArguments (ProjectPlatform, ProjectConfiguration, ProjectFile, BuildLog);
 
-		Xharness.TestTasks.MSBuildTask MSBuild => buildToolTask as Xharness.TestTasks.MSBuildTask;
+		MSBuild MSBuild => buildToolTask as MSBuild;
 
 		public MSBuildTask (Jenkins jenkins, TestProject testProject, IProcessManager processManager)
 			: base (jenkins, testProject, processManager) { }
 
 		protected override void InitializeTool () => 
-			buildToolTask = new Xharness.TestTasks.MSBuildTask (
+			buildToolTask = new MSBuild (
 				msbuildPath: ToolName,
 				processManager: ProcessManager,
 				resourceManager: Jenkins,
@@ -37,7 +36,7 @@ namespace Xharness.Jenkins.TestTasks {
 				projectConfiguration: ProjectConfiguration,
 				projectFile: ProjectFile,
 				resource: resource,
-				dryRun: Harness.DryRun,
+				dryRun: Jenkins.Harness.DryRun,
 				buildLog: BuildLog,
 				mainLog: Jenkins.MainLog);
 

@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
+using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
+
+using Xharness.TestTasks;
 
 namespace Xharness.Jenkins.TestTasks {
 	class DotNetBuildTask : MSBuildTask {
@@ -8,7 +11,9 @@ namespace Xharness.Jenkins.TestTasks {
 		public DotNetBuildTask (Jenkins jenkins, TestProject testProject, IProcessManager processManager) 
 			: base (jenkins, testProject, processManager) { }
 
-		protected override string ToolName => Harness.DOTNET;
+		protected override string ToolName => Jenkins.Harness.DOTNET;
+
+		public override bool RestoreNugets => false; // 'dotnet build' will restore
 
 		public override void SetEnvironmentVariables (Process process)
 		{
@@ -23,7 +28,7 @@ namespace Xharness.Jenkins.TestTasks {
 		}
 
 		protected override void InitializeTool () =>
-			buildToolTask = new Xharness.TestTasks.DotNetBuildTask (
+			buildToolTask = new DotNetBuild (
 				msbuildPath: ToolName,
 				processManager: ProcessManager,
 				resourceManager: Jenkins,

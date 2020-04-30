@@ -162,10 +162,6 @@ namespace MonoMac.Tuner {
 			if (options.WarnOnTypeRef.Count > 0)
 				pipeline.Append (new PostLinkScanTypeReferenceStep (options.WarnOnTypeRef));
 
-			// expect that changes can occur until it's all saved back to disk
-			if (options.WarnOnTypeRef.Count > 0)
-				pipeline.AppendStep (new PostLinkScanTypeReferenceStep (options.WarnOnTypeRef));
-
 			return pipeline;
 		}
 
@@ -198,6 +194,8 @@ namespace MonoMac.Tuner {
 					continue;
 
 				list.Add (GetFullyQualifiedName (assembly));
+
+				Driver.Log (1, "Loaded assembly: {0}", assembly.MainModule.FileName);
 			}
 
 			return list;
@@ -287,7 +285,12 @@ namespace MonoMac.Tuner {
 
 			foreach (AssemblyNameReference reference in assembly.MainModule.AssemblyReferences) {
 				try {
-					ProcessReferences (Context.Resolve (reference));
+					var asm = Context.Resolve (reference);
+					if (asm == null) {
+						ErrorHelper.Warning (2013, Errors.MM2013, reference.FullName, assembly.Name.FullName);
+					} else {
+						ProcessReferences (asm);
+					}
 				} catch (AssemblyResolutionException fnfe) {
 					ErrorHelper.Warning (2013, fnfe, Errors.MM2013, fnfe.AssemblyReference.FullName, assembly.Name.FullName);
 				}

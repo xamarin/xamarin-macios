@@ -1,13 +1,15 @@
 using System;
 using System.Threading.Tasks;
+using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
+using Microsoft.DotNet.XHarness.iOS.Shared.Tasks;
 using Xharness.TestTasks;
 
 namespace Xharness.Jenkins.TestTasks {
 	abstract class BuildProjectTask : BuildToolTask
 	{
-		Xharness.TestTasks.BuildProjectTask BuildProject => buildToolTask as Xharness.TestTasks.BuildProjectTask; 
+		BuildProject BuildProject => buildToolTask as BuildProject; 
 
 		public string SolutionPath {
 			get => BuildProject.SolutionPath;
@@ -22,7 +24,7 @@ namespace Xharness.Jenkins.TestTasks {
 		public override bool SupportsParallelExecution => BuildProject.SupportsParallelExecution;
 
 		protected override void InitializeTool () 
-			=> buildToolTask = new Xharness.TestTasks.BuildProjectTask (ProcessManager, Jenkins, this, this);
+			=> buildToolTask = new BuildProject (Jenkins.Harness.XIBuildPath, ProcessManager, Jenkins, this, this);
 
 		// This method must be called with the desktop resource acquired
 		// (which is why it takes an IAcquiredResources as a parameter without using it in the function itself).

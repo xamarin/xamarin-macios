@@ -13,10 +13,11 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
+using Xharness.TestTasks;
 
 namespace Xharness {
 
-	class AppRunner {
+	public class AppRunner {
 		readonly IProcessManager processManager;
 		readonly ISimulatorLoaderFactory simulatorsLoaderFactory;
 		readonly ISimpleListenerFactory listenerFactory;
@@ -31,7 +32,7 @@ namespace Xharness {
 		readonly TestTarget target;
 		readonly IHarness harness;
 		readonly double timeoutMultiplier;
-		readonly BuildToolTask buildTask;
+		readonly IBuildToolTask buildTask;
 
 		string deviceName;
 		string companionDeviceName;
@@ -77,7 +78,7 @@ namespace Xharness {
 						  bool ensureCleanSimulatorState = false,
 						  double timeoutMultiplier = 1,
 						  string variation = null,
-						  BuildToolTask buildTask = null)
+						  IBuildToolTask buildTask = null)
 		{
 			if (appBundleInformationParser is null)
 				throw new ArgumentNullException (nameof (appBundleInformationParser));

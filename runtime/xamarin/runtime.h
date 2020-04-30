@@ -166,7 +166,6 @@ void			xamarin_assertion_message (const char *msg, ...) __attribute__((__noretur
 const char *	xamarin_get_bundle_path (); /* Public API */
 // Sets the bundle path (where the managed executable is). By default APP/Contents/MonoBundle.
 void			xamarin_set_bundle_path (const char *path); /* Public API */
-MonoObject *	xamarin_get_managed_object_for_ptr (id self, guint32 *exception_gchandle);
 MonoObject *	xamarin_get_managed_object_for_ptr_fast (id self, guint32 *exception_gchandle);
 void			xamarin_check_for_gced_object (MonoObject *obj, SEL sel, id self, MonoMethod *method, guint32 *exception_gchandle);
 unsigned long 	xamarin_objc_type_size (const char *type);
@@ -181,7 +180,7 @@ MonoClass *		xamarin_get_nullable_type (MonoClass *cls, guint32 *exception_gchan
 MonoType *		xamarin_get_parameter_type (MonoMethod *managed_method, int index);
 MonoObject *	xamarin_get_nsobject_with_type_for_ptr (id self, bool owns, MonoType* type, guint32 *exception_gchandle);
 MonoObject *	xamarin_get_nsobject_with_type_for_ptr_created (id self, bool owns, MonoType *type, int32_t *created, guint32 *exception_gchandle);
-int *			xamarin_get_delegate_for_block_parameter (MonoMethod *method, guint32 token_ref, int par, void *nativeBlock, guint32 *exception_gchandle);
+MonoObject *	xamarin_get_delegate_for_block_parameter (MonoMethod *method, guint32 token_ref, int par, void *nativeBlock, guint32 *exception_gchandle);
 id              xamarin_get_block_for_delegate (MonoMethod *method, MonoObject *delegate, const char *signature /* NULL allowed, but requires the dynamic registrar at runtime to compute */, guint32 token_ref /* INVALID_TOKEN_REF allowed, but requires the dynamic registrar at runtime */, guint32 *exception_gchandle);
 id				xamarin_get_nsobject_handle (MonoObject *obj);
 void			xamarin_set_nsobject_handle (MonoObject *obj, id handle);

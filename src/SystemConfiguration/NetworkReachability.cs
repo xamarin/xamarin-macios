@@ -30,9 +30,8 @@ namespace SystemConfiguration {
 		ConnectionOnDemand = 1<<5,
 		IsLocalAddress = 1<<16,
 		IsDirect = 1<<17,
-#if !MONOMAC
+		[Unavailable (PlatformName.MacOSX)]
 		IsWWAN = 1<<18,
-#endif
 		ConnectionAutomatic = ConnectionOnTraffic
 	}
 	
