@@ -2142,7 +2142,7 @@ xamarin_release_block_on_main_thread (void *obj)
  *
  * Returns: the instantiated delegate.
  */
-int *
+MonoObject *
 xamarin_get_delegate_for_block_parameter (MonoMethod *method, guint32 token_ref, int par, void *nativeBlock, guint32 *exception_gchandle)
 {
 	// COOP: accesses managed memory: unsafe mode.
@@ -2181,7 +2181,7 @@ xamarin_get_delegate_for_block_parameter (MonoMethod *method, guint32 token_ref,
 	mono_gc_reference_queue_add (block_wrapper_queue, delegate, nativeBlock);
 	pthread_mutex_unlock (&wrapper_hash_lock);
 
-	return (int *) delegate;
+	return delegate;
 }
 
 id
