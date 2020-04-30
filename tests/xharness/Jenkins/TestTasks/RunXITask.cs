@@ -25,8 +25,8 @@ namespace Xharness.Jenkins.TestTasks {
 
 		public string BundleIdentifier => Runner.AppInformation.BundleIdentifier;
 
-		public RunXITask (Jenkins jenkins, BuildToolTask build_task, IProcessManager processManager, ITunnelBore tunnelBore, IEnumerable<TDevice> candidates)
-			: base (jenkins, build_task, processManager, tunnelBore)
+		public RunXITask (Jenkins jenkins, BuildToolTask build_task, IProcessManager processManager, IEnumerable<TDevice> candidates)
+			: base (jenkins, build_task, processManager)
 		{
 			this.Candidates = candidates;
 		}

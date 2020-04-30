@@ -12,7 +12,6 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 namespace Xharness.TestTasks {
 	public class RunTest {
 		public IProcessManager ProcessManager { get; private set; }
-		public ITunnelBore TunnelBore { get; private set; }
 		public IBuildToolTask BuildTask { get; private set; }
 		IResultParser ResultParser { get; } = new XmlResultParser ();
 
@@ -30,7 +29,6 @@ namespace Xharness.TestTasks {
 		public RunTest (IRunTestTask testTask, 
 						IBuildToolTask buildTask,
 						IProcessManager processManager,
-						ITunnelBore tunnelBore,
 						IEnvManager envManager,
 						ILog mainLog,
 						bool generateXmlFailures,
@@ -39,7 +37,6 @@ namespace Xharness.TestTasks {
 			this.testTask = testTask ?? throw new ArgumentNullException (nameof (testTask));
 			this.BuildTask = buildTask ?? throw new ArgumentNullException (nameof (buildTask));
 			this.ProcessManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
-			this.TunnelBore = tunnelBore; // can be null since some tests do not need tunnel
 			this.envManager = envManager ?? throw new ArgumentNullException (nameof (envManager));
 			this.mainLog = mainLog ?? throw new ArgumentNullException (nameof (mainLog));
 			this.generateXmlFailures = generateXmlFailures;

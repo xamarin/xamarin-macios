@@ -115,6 +115,7 @@
     <Compile Include="TestImporter\Xamarin\TestAssemblyDefinition.cs" />
     <Compile Include="TestTasks\DotNetBuild.cs" />
     <Compile Include="TestTasks\IBuildToolTask.cs" />
+    <Compile Include="TestTasks\IRunDeviceTask.cs" />
     <Compile Include="TestTasks\RunTest.cs" />
     <Compile Include="TestTasks\IRunTestTask.cs" />
     <Compile Include="TestTasks\RunSimulator.cs" />

@@ -13,7 +13,6 @@ namespace Xharness.Jenkins.TestTasks {
 	{
 		protected RunTest runTest;
 		public IProcessManager ProcessManager => runTest.ProcessManager;
-		public ITunnelBore TunnelBore => runTest.TunnelBore;
 		public IBuildToolTask BuildTask => runTest.BuildTask;
 
 		public double TimeoutMultiplier {
@@ -31,13 +30,12 @@ namespace Xharness.Jenkins.TestTasks {
 			set => runTest.Timeout = value;
 		}
 
-		public RunTestTask (Jenkins jenkins, IBuildToolTask build_task, IProcessManager processManager, ITunnelBore tunnelBore) : base (jenkins)
+		public RunTestTask (Jenkins jenkins, IBuildToolTask build_task, IProcessManager processManager) : base (jenkins)
 		{
 			runTest = new RunTest (
 				testTask: this,
 				buildTask: build_task,
 				processManager: processManager,
-				tunnelBore: tunnelBore,
 				envManager: this,
 				mainLog: Jenkins.MainLog,
 				generateXmlFailures: Jenkins.Harness.InCI,

@@ -8,9 +8,10 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
 using Xharness.TestTasks;
 
 namespace Xharness.Jenkins.TestTasks {
-	class RunDeviceTask : RunXITask<IHardwareDevice>, IRunXITask<IHardwareDevice>
+	class RunDeviceTask : RunXITask<IHardwareDevice>, IRunDeviceTask
 	{
-
+		public ITunnelBore TunnelBore { get; private set; }
+		
 		RunDevice runDevice;
 		public override string ProgressMessage {
 			get {
@@ -37,8 +38,9 @@ namespace Xharness.Jenkins.TestTasks {
 		}
 
 		public RunDeviceTask (Jenkins jenkins, IHardwareDeviceLoader devices, MSBuildTask buildTask, IProcessManager processManager, ITunnelBore tunnelBore, bool useTcpTunnel, IEnumerable<IHardwareDevice> candidates)
-			: base (jenkins, buildTask, processManager, tunnelBore, candidates.OrderBy ((v) => v.DebugSpeed))
+			: base (jenkins, buildTask, processManager, candidates.OrderBy ((v) => v.DebugSpeed))
 		{
+			TunnelBore = tunnelBore;
 			runDevice = new RunDevice (
 				testTask: this,
 				devices: devices,

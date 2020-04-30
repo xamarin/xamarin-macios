@@ -10,7 +10,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
 namespace Xharness.TestTasks {
 	public class RunDevice {
-		readonly IRunXITask<IHardwareDevice> testTask;
+		readonly IRunDeviceTask testTask;
 		readonly IHardwareDeviceLoader devices;
 		readonly IResultParser resultParser = new XmlResultParser ();
 		readonly IResourceManager resourceManager;
@@ -26,7 +26,7 @@ namespace Xharness.TestTasks {
 
 		public AppInstallMonitorLog InstallLog { get; private set; }
 
-		public RunDevice (IRunXITask<IHardwareDevice> testTask,
+		public RunDevice (IRunDeviceTask testTask,
 					  	  IHardwareDeviceLoader devices,
 						  IResourceManager resourceManager,
 						  ILog mainLog,
@@ -86,10 +86,19 @@ namespace Xharness.TestTasks {
 						testTask.CompanionDevice = await devices.FindCompanionDevice (deviceLoadLog, testTask.Device);
 					mainLog.WriteLine ("Acquired device '{0}' for '{1}'", testTask.Device.Name, testTask.ProjectFile);
 
+					ITunnelBore tunnelBore = null;
+					if (useTcpTunnel && testTask.Device.DevicePlatform != DevicePlatform.iOS &&
+					    testTask.Device.DevicePlatform != DevicePlatform.tvOS) {
+						mainLog.WriteLine ("Ignoring request to use a tunnel because it is not supported by the specified platform");
+					} else if (useTcpTunnel && (testTask.Device.DevicePlatform == DevicePlatform.iOS ||
+					                            testTask.Device.DevicePlatform == DevicePlatform.tvOS)) {
+						tunnelBore = testTask.TunnelBore;
+						mainLog.WriteLine ("Using tunnel to communicate with device.");
+					}
 					testTask.Runner = new AppRunner (testTask.ProcessManager,
 						new AppBundleInformationParser (),
 						new SimulatorLoaderFactory (testTask.ProcessManager),
-						new SimpleListenerFactory (testTask.TunnelBore),
+						new SimpleListenerFactory (tunnelBore),
 						new DeviceLoaderFactory (testTask.ProcessManager),
 						new CrashSnapshotReporterFactory (testTask.ProcessManager),
 						new CaptureLogFactory (),
@@ -106,7 +115,6 @@ namespace Xharness.TestTasks {
 						timeoutMultiplier: testTask.TimeoutMultiplier,
 						variation: testTask.Variation,
 						buildTask: testTask.BuildTask);
-					testTask.Runner.UseTcpTunnel = useTcpTunnel && testTask.Device.DevicePlatform == DevicePlatform.iOS || testTask.Device.DevicePlatform == DevicePlatform.tvOS;
 
 					// Sometimes devices can't upgrade (depending on what has changed), so make sure to uninstall any existing apps first.
 					if (uninstallTestApp) {
@@ -162,7 +170,7 @@ namespace Xharness.TestTasks {
 							AppRunner todayRunner = new AppRunner (testTask.ProcessManager,
 								new AppBundleInformationParser (),
 								new SimulatorLoaderFactory (testTask.ProcessManager),
-								new SimpleListenerFactory (testTask.TunnelBore),
+								new SimpleListenerFactory (tunnelBore),
 								new DeviceLoaderFactory (testTask.ProcessManager),
 								new CrashSnapshotReporterFactory (testTask.ProcessManager),
 								new CaptureLogFactory (),
@@ -179,7 +187,6 @@ namespace Xharness.TestTasks {
 								timeoutMultiplier: testTask.TimeoutMultiplier,
 								variation: testTask.Variation,
 								buildTask: testTask.BuildTask);
-							todayRunner.UseTcpTunnel = useTcpTunnel && testTask.Device.DevicePlatform == DevicePlatform.iOS || testTask.Device.DevicePlatform == DevicePlatform.tvOS;
 
 							testTask.AdditionalRunner = todayRunner;
 							await todayRunner.RunAsync ();

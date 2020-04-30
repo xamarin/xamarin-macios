@@ -18,7 +18,7 @@ namespace Xharness.Jenkins.TestTasks
 		public bool InProcess;
 
 		public NUnitExecuteTask (Jenkins jenkins, BuildToolTask build_task, IProcessManager processManager)
-			: base (jenkins, build_task, processManager, null)
+			: base (jenkins, build_task, processManager)
 		{
 		}
 

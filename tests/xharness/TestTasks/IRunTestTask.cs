@@ -8,7 +8,6 @@ namespace Xharness.TestTasks {
 		IHarness Harness { get; }
 		double TimeoutMultiplier { get; }
 		IProcessManager ProcessManager { get; }
-		ITunnelBore TunnelBore { get; }
 		IBuildToolTask BuildTask { get; }
 		Task RunTestAsync ();
 		Task VerifyBuildAsync ();

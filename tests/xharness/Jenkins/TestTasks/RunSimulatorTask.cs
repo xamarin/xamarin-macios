@@ -16,7 +16,7 @@ namespace Xharness.Jenkins.TestTasks {
 		public ISimulatorDevice [] Simulators => runSimulator.Simulators;
 
 		public RunSimulatorTask (Jenkins jenkins, ISimulatorLoader simulators, MSBuildTask buildTask, IProcessManager processManager, ITunnelBore tunnelBore, IEnumerable<ISimulatorDevice> candidates = null)
-			: base (jenkins, buildTask, processManager, tunnelBore, candidates) =>  runSimulator = new RunSimulator (
+			: base (jenkins, buildTask, processManager, candidates) =>  runSimulator = new RunSimulator (
 				testTask: this,
 				simulators: simulators,
 				errorKnowledgeBase: Jenkins,
