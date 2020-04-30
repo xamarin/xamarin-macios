@@ -28,8 +28,25 @@ steps:
     pwd
     #cat $PIPELINE_WORKSPACE/Summaries/TestSummary-*/TestSummary-*.md >> ./TestSummary.md
 
-    for f in $PIPELINE_WORKSPACE/Summaries/TestSummary-*/*;
-    do echo $f >> ./TestSummary.md
+    for f in $PIPELINE_WORKSPACE/Summaries/TestSummary-*/TestSummary.md;
+
+    prefix=$PIPELINE_WORKSPACE/Summaries/
+    prefix_len = ${#prefix}
+    echo $prefix_len
+    suffix = "/TestSummary.md"
+    suffix_len = ${#suffix}
+    echo $suffix_len
+
+    s=${f:$prefix_len}
+    echo $s
+    s_len=${#s}
+    diff=$((s_len - suffix_len))
+
+    echo $diff
+    s=${s:0:$diff}
+    echo $s
+
+    do echo $s >> ./TestSummary.md
     cat $f >> ./TestSummary.md
     done
 
