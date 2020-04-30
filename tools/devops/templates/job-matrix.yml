@@ -54,7 +54,7 @@ jobs:
     maxParallel: ${{ parameters.maxParallel }}
     matrix:
       Xamarin:
-        CONTEXT: '${{ parameters.variation }}'
+        CONTEXT: '${{ parameters.variation }}-xamarin-DDFun'
         TESTS_EXTRA_ARGUMENTS: '--label=${{ parameters.deviceLabel }},run-non-monotouch-tests' # run all tests but the bcl ones
         TESTS: 'Non Monotouch'
       Monotouch:

@@ -103,22 +103,21 @@ steps:
 - bash: |
     set -e
     set -x
-    FILE="TestSummary-${CONTEXT}.md"
+    FILE="xamarin-macios/tests/TestSummary.md"
     echo $FILE
     if ! test -f $FILE; then
     echo ":fire: Tests failed catastrophically (no summary found)" > $FILE
     fi
-  displayName: "If test summary not found, create test summary"
+  displayName: "If test summary does not exist, create test summary"
   condition: and(succeededOrFailed(), eq(variables['ProvisioningProfiles'], 'success'))
 
-### TODO: can probably figure out way to do this in the bash script above for
-### test failures
+###
 ### If provisioning failed, create test summary files to indicate failure
 ###
 - bash: |
     set -e
     set -x
-    FILE="TestSummary-${CONTEXT}.md"
+    FILE="xamarin-macios/tests/TestSummary.md"
     echo $FILE
     echo ":fire: Provisioning step failed" > $FILE
   displayName: 'Add test summary for failed provisioning'
@@ -134,8 +133,8 @@ steps:
 - task: PublishPipelineArtifact@1
   displayName: 'Publish Artifact: TestSummary'
   inputs:
-#    targetPath: 'xamarin-macios/tests/TestSummary.md'
-    targetPath: TestSummary-$(CONTEXT).md
+    targetPath: 'xamarin-macios/tests/TestSummary.md'
+    #targetPath: TestSummary-$(CONTEXT).md
     artifactName: TestSummary-$(CONTEXT)
   continueOnError: true
   condition: succeededOrFailed() #, eq(variables['ProvisioningProfiles'], 'success'))
@@ -189,9 +188,6 @@ steps:
 ###
 ### Push the HTML report to Azure DevOps (shows up in Summary tab as Build Artifact)
 ###
-#- bash: |
-#    echo "$CONTEXT" >> TestSummary-$CONTEXT.md
-
 - task: PublishPipelineArtifact@1
   displayName: 'Publish Artifact: HtmlReport'
   inputs:
