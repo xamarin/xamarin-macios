@@ -301,29 +301,6 @@ xamarin_get_nsobject_with_type_for_ptr_created (id self, bool owns, MonoType *ty
 }
 
 MonoObject *
-xamarin_get_managed_object_for_ptr (id self, guint32 *exception_gchandle)
-{
-	// COOP: Reading managed data, must be in UNSAFE mode
-	MONO_ASSERT_GC_UNSAFE;
-	
-	MonoObject *mobj = NULL;
-	uint32_t gchandle = 0;
-
-	if (self == NULL)
-		return NULL;
-
-	gchandle = xamarin_get_gchandle (self);
-
-	if (gchandle == 0) {
-		mobj = (MonoObject *) xamarin_try_get_or_construct_nsobject (self, exception_gchandle);
-	} else {
-		mobj = mono_gchandle_get_target (gchandle);
-	}
-
-	return mobj;
-}
-
-MonoObject *
 xamarin_get_managed_object_for_ptr_fast (id self, guint32 *exception_gchandle)
 {
 	// COOP: Reading managed data, must be in UNSAFE mode

@@ -642,11 +642,6 @@ namespace ObjCRuntime {
 			Registrar.GetMethodDescription (Class.Lookup (cls), sel, is_static, desc);
 		}
 
-		static IntPtr GetNSObjectWrapped (IntPtr ptr)
-		{
-			return ObjectWrapper.Convert (TryGetNSObject (ptr, true));
-		}
-
 		static bool HasNSObject (IntPtr ptr)
 		{
 			return TryGetNSObject (ptr) != null;
