@@ -28,7 +28,7 @@ steps:
     pwd
     #cat $PIPELINE_WORKSPACE/Summaries/TestSummary-*/TestSummary-*.md >> ./TestSummary.md
 
-    for f in $PIPELINE_WORKSPACE/Summaries/TestSummary-*/TestSummary-*.md;
+    for f in $PIPELINE_WORKSPACE/Summaries/TestSummary-*/*;
     do echo $f >> ./TestSummary.md
     cat $f >> ./TestSummary.md
     done
