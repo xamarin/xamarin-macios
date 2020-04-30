@@ -30,7 +30,7 @@ steps:
 
     for f in $PIPELINE_WORKSPACE/Summaries/TestSummary-*/TestSummary.md;
 
-    prefix=$PIPELINE_WORKSPACE/Summaries/
+    prefix="$PIPELINE_WORKSPACE/Summaries/"
     prefix_len = ${#prefix}
     echo $prefix_len
     suffix = "/TestSummary.md"
