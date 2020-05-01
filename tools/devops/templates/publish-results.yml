@@ -48,7 +48,10 @@ steps:
         echo $s
 
         echo $s >> ./TestSummary.md
-        echo "$f" >> ./TestSummary.md
+        #echo "$f" >> ./TestSummary.md
+
+        python -c 'import json,sys; print(json.dumps(sys.stdin.read()))' < "$f" >> ./TestSummary.md
+
     done
 
     cat ./TestSummary.md
