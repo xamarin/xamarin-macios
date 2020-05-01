@@ -198,7 +198,7 @@ $(TOP)/tools/common/SdkVersions.cs: $(TOP)/tools/common/SdkVersions.cs.in
 	@$(MAKE) -C $(TOP)/src project-files
 	@touch $@
 
-xharness/xharness.exe: $(xharness_dependencies) test.config test-system.config .stamp-src-project-files
+xharness/xharness.exe: $(xharness_dependencies) test.config test-system.config .stamp-src-project-files ../tools/common/SdkVersions.cs
 	$(Q_GEN) $(SYSTEM_MSBUILD) /restore $(MSBUILD_VERBOSITY_QUIET) xharness/xharness.csproj
 xharness/xharness.csproj.inc: export ABSOLUTE_PATHS=1
 -include xharness/xharness.csproj.inc
