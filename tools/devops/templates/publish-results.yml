@@ -32,10 +32,10 @@ steps:
     do
 
         prefix="${PIPELINE_WORKSPACE}/Summaries/"
-        prefix_len = ${#prefix}
+        prefix_len=${#prefix}
         echo $prefix_len
-        suffix = "/TestSummary.md"
-        suffix_len = ${#suffix}
+        suffix="/TestSummary.md"
+        suffix_len=${#suffix}
         echo $suffix_len
 
         s=${f:$prefix_len}
