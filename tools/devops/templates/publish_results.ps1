@@ -115,7 +115,7 @@ $message_url = "https://api.github.com/repos/xamarin/xamarin-macios/commits/$Env
 
 $json_payload = @"
 {
-    "body" : "$json_text"
+    "body" : $json_text
 }
 "@
 
