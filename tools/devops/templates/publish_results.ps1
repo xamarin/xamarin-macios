@@ -105,6 +105,10 @@ $json_text = $json_text + $test_summary
 Write-Host "json_text + test_summary"
 Write-Host $json_text
 
+$json_text = $json_text | ConvertTo-Json
+Write-Host "Convert to json"
+Write-Host $json_text
+
 
 
 $message_url = "https://api.github.com/repos/xamarin/xamarin-macios/commits/$Env:BUILD_REVISION/comments"
