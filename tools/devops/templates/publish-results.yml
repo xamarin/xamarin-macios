@@ -48,7 +48,7 @@ steps:
         echo $s
 
         echo $s >> ./TestSummary.md
-        cat $f >> ./TestSummary.md
+        echo "$f" >> ./TestSummary.md
     done
 
     cat ./TestSummary.md
