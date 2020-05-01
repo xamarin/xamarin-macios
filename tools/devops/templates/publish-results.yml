@@ -47,10 +47,10 @@ steps:
         s=${s:0:$diff}
         echo $s
 
-        echo $s >> ./TestSummary.md
+        echo $s >> ./TestSummary
         #echo "$f" >> ./TestSummary.md
 
-        python -c 'import json,sys; print(json.dumps(sys.stdin.read()))' < "$f" >> ./TestSummary.md
+        python -c 'import json,sys; print(json.dumps(sys.stdin.read()))' < "$f" >> ./TestSummary
 
     done
 

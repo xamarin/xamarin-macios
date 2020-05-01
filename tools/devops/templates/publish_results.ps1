@@ -96,11 +96,14 @@ $json_text = $HEADER + "$DESCRIPTION on [Azure DevOps]($target_url)"
 
 # add contents of test summary to json_text
 $testsummary_location = $Env:SYSTEM_DEFAULTWORKINGDIRECTORY
-$testsummary_location = $testsummary_location + "/TestSummary.md"
+$testsummary_location = $testsummary_location + "/TestSummary"
 Write-Host $testsummary_location
 $test_summary = Get-Content $testsummary_location
 
 $json_text = $json_text + $test_summary
+
+Write-Host "json_text + test_summary"
+Write-Host $json_text
 
 
 
