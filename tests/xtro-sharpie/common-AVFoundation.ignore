@@ -62,6 +62,10 @@
 !extra-null-allowed! 'System.Void AVFoundation.AVAudioFormat::.ctor(AudioToolbox.AudioStreamBasicDescription&,AVFoundation.AVAudioChannelLayout)' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void AVFoundation.AVAudioTime::.ctor(AudioToolbox.AudioTimeStamp&,System.Double)' has a extraneous [NullAllowed] on parameter #0
 
+# Keep [NullAllowed] on FromAsset to keep existing tests passing and allow backwards compatibility
+!extra-null-allowed! 'AVFoundation.AVPlayerItem AVFoundation.AVPlayerItem::FromAsset(AVFoundation.AVAsset)' has a extraneous [NullAllowed] on parameter #0
+!extra-null-allowed! 'AVFoundation.AVPlayerItem AVFoundation.AVPlayerItem::FromAsset(AVFoundation.AVAsset,Foundation.NSString[])' has a extraneous [NullAllowed] on parameter #0
+
 # Initial result from new rule missing-null-allowed
 !missing-null-allowed! 'System.Boolean AVFoundation.AVPlayerItem::Seek(Foundation.NSDate,AVFoundation.AVCompletion)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Void AVFoundation.AVPlayerMediaSelectionCriteria::.ctor(AVFoundation.AVMediaCharacteristics[],AVFoundation.AVMediaCharacteristics[],System.String[])' is missing an [NullAllowed] on parameter #0
