@@ -11190,7 +11190,7 @@ namespace AVFoundation {
 
 		[Static]
 		[Export ("playerItemWithAsset:")]
-		AVPlayerItem FromAsset (AVAsset asset);
+		AVPlayerItem FromAsset ([NullAllowed] AVAsset asset);
 
 		[Export ("initWithURL:")]
 		IntPtr Constructor (NSUrl URL);
@@ -11335,7 +11335,7 @@ namespace AVFoundation {
 
 		[iOS (7,0), Mac (10, 9)]
 		[Static, Export ("playerItemWithAsset:automaticallyLoadedAssetKeys:")]
-		AVPlayerItem FromAsset (AVAsset asset, [NullAllowed] NSString [] automaticallyLoadedAssetKeys);
+		AVPlayerItem FromAsset ([NullAllowed] AVAsset asset, [NullAllowed] NSString [] automaticallyLoadedAssetKeys);
 
 		[iOS (7,0), Mac (10, 9)]
 		[DesignatedInitializer]
