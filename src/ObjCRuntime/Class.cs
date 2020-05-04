@@ -186,7 +186,6 @@ namespace ObjCRuntime {
 			return Messaging.IntPtr_objc_msgSend (obj, Selector.GetHandle (Selector.Class));
 		}
 
-		// note: PreserveCode.cs keep this around only for debug builds (see: monotouch-glue.m)
 		internal static string LookupFullName (IntPtr klass)
 		{
 			Type type = Lookup (klass);

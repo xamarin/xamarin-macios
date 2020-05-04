@@ -25,9 +25,6 @@ namespace MonoTouch.Tuner {
 
 			PreserveDictionaryConstructor ();
 			PreserveQueryableEnumerable ();
-
-			if (context.GetParameter ("debug-build") == "True")
-				PreserveDebugFeatures ();
 		}
 
 		void PreserveDictionaryConstructor ()
@@ -61,38 +58,6 @@ namespace MonoTouch.Tuner {
 			var queryable = core.MainModule.GetType ("System.Linq", "Queryable");
 			foreach (MethodDefinition method in queryable.Methods)
 				a.AddPreservedMethod (queryable_enumerable, method);
-		}
-
-		void PreserveDebugFeatures ()
-		{
-			AssemblyDefinition monotouch;
-			if (!Context.TryGetLinkedAssembly ((Profile.Current as BaseProfile).ProductAssembly, out monotouch))
-				return;
-
-			var klass = monotouch.MainModule.GetType (Namespaces.ObjCRuntime, "Class");
-			if (klass == null || !klass.HasMethods)
-				return;
-
-			foreach (MethodDefinition method in klass.Methods) {
-				if (method.Name == "LookupFullName")
-					Context.Annotations.AddPreservedMethod (klass, method);
-			}
-		}
-
-		void PreserveType (TypeDefinition type)
-		{
-			if (type == null)
-				return;
-
-			Context.Annotations.Mark (type);
-			foreach (var method in type.Methods)
-				Context.Annotations.AddPreservedMethod (type, method);
-
-			if (!type.HasNestedTypes)
-				return;
-
-			foreach (var nested in type.NestedTypes)
-				PreserveType (nested);
 		}
 	}
 }
