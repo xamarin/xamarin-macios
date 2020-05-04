@@ -96,7 +96,7 @@
 			OnlyDynamicUsage = false,
 		},
 
-		new XDelegate ("MonoObject *", "IntPtr", "xamarin_get_selector",
+		new XDelegate ("GCHandle->MonoObject *", "IntPtr", "xamarin_get_selector",
 			"SEL", "IntPtr", "ptr"
 		) {
 			WrappedManagedFunction = "GetSelector",
