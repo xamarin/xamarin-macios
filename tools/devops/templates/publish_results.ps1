@@ -83,7 +83,7 @@ $response | Write-Host
 $HEADER = ""
 If ($Env:BUILD_DEFINITIONNAME -like '*DDFun*')
 {
-	$HEADER = "### :boom: :construction: TESTING Experimental DDFun pipeline\\n"
+	$HEADER = "### :boom: :construction: TESTING Experimental DDFun pipeline\n"
 }
 #Else{
 #HTML Report jenkins stuff
@@ -98,7 +98,7 @@ $json_text = $HEADER + "$DESCRIPTION on [Azure DevOps]($target_url)"
 $testsummary_location = $Env:SYSTEM_DEFAULTWORKINGDIRECTORY
 $testsummary_location = $testsummary_location + "/TestSummary"
 Write-Host $testsummary_location
-$test_summary = Get-Content $testsummary_location
+$test_summary = Get-Content "$testsummary_location"
 
 $json_text = $json_text + $test_summary
 
