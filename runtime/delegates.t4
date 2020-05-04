@@ -89,7 +89,7 @@
 			OnlyDynamicUsage = true,
 		},
 
-		new XDelegate ("MonoObject *", "IntPtr", "xamarin_get_class",
+		new XDelegate ("GCHandle->MonoObject *", "IntPtr", "xamarin_get_class",
 			"Class", "IntPtr", "ptr"
 		) {
 			WrappedManagedFunction = "GetClass",
