@@ -16,8 +16,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Tasks;
 using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
 
 namespace Xharness.Jenkins {
-	public class Jenkins : IResourceManager, IErrorKnowledgeBase
-	{
+	public class Jenkins : IResourceManager {
 		readonly ISimulatorLoader simulators;
 		readonly IHardwareDeviceLoader devices;
 		readonly IProcessManager processManager;
@@ -84,6 +83,8 @@ namespace Xharness.Jenkins {
 
 		public Resource DesktopResource { get; } = new Resource ("Desktop", Environment.ProcessorCount);
 		public Resource NugetResource { get;  } = new Resource ("Nuget", 1); // nuget is not parallel-safe :(
+		
+		public IErrorKnowledgeBase ErrorKnowledgeBase => new ErrorKnowledgeBase ();
 
 		Dictionary<string, Resource> device_resources = new Dictionary<string, Resource> ();
 		public Resources GetDeviceResources (IEnumerable<IHardwareDevice> devices)
