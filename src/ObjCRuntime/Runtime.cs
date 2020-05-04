@@ -719,7 +719,7 @@ namespace ObjCRuntime {
 
 		static bool IsParameterTransient (IntPtr info, int parameter)
 		{
-			var minfo = ObjectWrapper.Convert (info) as MethodInfo;
+			var minfo = GetGCHandleTarget (info) as MethodInfo;
 			if (minfo == null)
 				return false; // might be a ConstructorInfo (bug #15583), but we don't care about that (yet at least).
 			minfo = minfo.GetBaseDefinition ();
@@ -731,7 +731,7 @@ namespace ObjCRuntime {
 
 		static bool IsParameterOut (IntPtr info, int parameter)
 		{
-			var minfo = ObjectWrapper.Convert (info) as MethodInfo;
+			var minfo = GetGCHandleTarget (info) as MethodInfo;
 			if (minfo == null)
 				return false; // might be a ConstructorInfo (bug #15583), but we don't care about that (yet at least).
 			minfo = minfo.GetBaseDefinition ();
