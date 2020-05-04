@@ -363,7 +363,7 @@ namespace ObjCRuntime {
 		// returns: a handle to a native NSString *
 		static IntPtr ConvertSmartEnumToNSString (IntPtr value_handle)
 		{
-			var value = GCHandle.FromIntPtr (value_handle).Target;
+			var value = GetGCHandleTarget (value_handle);
 			var smart_type = value.GetType ();
 			MethodBase getConstantMethod, getValueMethod;
 			if (!Registrar.IsSmartEnum (smart_type, out getConstantMethod, out getValueMethod))
@@ -380,13 +380,13 @@ namespace ObjCRuntime {
 		// returns: GCHandle to a (smart) enum value. Caller must free the GCHandle.
 		static IntPtr ConvertNSStringToSmartEnum (IntPtr value, IntPtr type)
 		{
-			var smart_type = (Type) ObjectWrapper.Convert (type);
+			var smart_type = (Type) GetGCHandleTarget (type);
 			var str = GetNSObject<NSString> (value);
 			MethodBase getConstantMethod, getValueMethod;
 			if (!Registrar.IsSmartEnum (smart_type, out getConstantMethod, out getValueMethod))
 				throw ErrorHelper.CreateError (8024, $"Could not find a valid extension type for the smart enum '{smart_type.FullName}'. Please file a bug at https://github.com/xamarin/xamarin-macios/issues/new.");
 			var rv = ((MethodInfo) getValueMethod).Invoke (null, new object [] { str });
-			return GCHandle.ToIntPtr (GCHandle.Alloc (rv));
+			return AllocGCHandle (rv);
 		}
 
 #region Wrappers for delegate callbacks

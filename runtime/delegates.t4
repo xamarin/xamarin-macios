@@ -264,15 +264,15 @@
 		},
 
 		new XDelegate ("NSString *", "IntPtr", "xamarin_convert_smart_enum_to_nsstring",
-			"void *", "IntPtr", "value"
+			"GCHandle->MonoObject *", "IntPtr", "value"
 		) {
 			WrappedManagedFunction = "ConvertSmartEnumToNSString",
 			OnlyDynamicUsage = true,
 		},
 
-		new XDelegate ("void *", "IntPtr", "xamarin_convert_nsstring_to_smart_enum",
+		new XDelegate ("GCHandle->MonoObject *", "IntPtr", "xamarin_convert_nsstring_to_smart_enum",
 			"NSString *", "IntPtr", "value",
-			"MonoReflectionType *", "IntPtr", "type"
+			"GCHandle->MonoReflectionType *", "IntPtr", "type"
 		) {
 			WrappedManagedFunction = "ConvertNSStringToSmartEnum",
 			OnlyDynamicUsage = true,
