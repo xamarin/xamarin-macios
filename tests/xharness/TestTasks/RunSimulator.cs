@@ -88,7 +88,7 @@ namespace Xharness.TestTasks {
 			testTask.Runner = new AppRunner (testTask.ProcessManager,
 				new AppBundleInformationParser (),
 				new SimulatorLoaderFactory (testTask.ProcessManager),
-				new SimpleListenerFactory (),
+				new SimpleListenerFactory (null), // sims cannot use tunnels
 				new DeviceLoaderFactory (testTask.ProcessManager),
 				new CrashSnapshotReporterFactory (testTask.ProcessManager),
 				new CaptureLogFactory (),
