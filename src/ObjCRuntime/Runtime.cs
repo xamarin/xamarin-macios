@@ -654,7 +654,7 @@ namespace ObjCRuntime {
 
 		static void UnregisterNSObject (IntPtr native_obj, IntPtr managed_obj) 
 		{
-			NativeObjectHasDied (native_obj, ObjectWrapper.Convert (managed_obj) as NSObject);
+			NativeObjectHasDied (native_obj, GetGCHandleTarget (managed_obj) as NSObject);
 		}
 
 		static unsafe IntPtr GetMethodFromToken (uint token_ref)

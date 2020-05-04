@@ -1927,7 +1927,9 @@ xamarin_release_managed_ref (id self, MonoObject *managed_obj)
 		MONO_EXIT_GC_SAFE;
 	} else {
 		/* If we're a wrapper type, we need to unregister here, since we won't enter the release trampoline */
-		xamarin_unregister_nsobject (self, managed_obj, &exception_gchandle);
+		GCHandle managed_obj_handle = xamarin_gchandle_new (managed_obj, false);
+		xamarin_unregister_nsobject (self, managed_obj_handle, &exception_gchandle);
+		xamarin_gchandle_free (managed_obj_handle);
 
 		//
 		// This lock is needed so that we can safely call retainCount in the
