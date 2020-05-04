@@ -16,7 +16,7 @@ cd "$DIR"
 # the xml from all the bots together into a single enormous xml file, because
 # it'll be close to GitHub's size limit per file (limit is 100mb, the enormous
 # xml file would be ~80mb now), and might very well pass that one day.
-for job in *-*-*-*-*; do
+for job in ????????-????-????-????-????????????; do
 {
 	echo '<?xml version="1.0" encoding="utf-8" standalone="yes"?>'
 	echo '<performance version="1.0">'
