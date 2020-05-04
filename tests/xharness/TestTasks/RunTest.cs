@@ -5,12 +5,13 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
+using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
 namespace Xharness.TestTasks {
 	public class RunTest {
-		public IProcessManager ProcessManager { get; }
+		public IProcessManager ProcessManager { get; private set; }
 		public IBuildToolTask BuildTask { get; private set; }
 		IResultParser ResultParser { get; } = new XmlResultParser ();
 
