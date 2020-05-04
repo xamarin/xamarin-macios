@@ -2666,6 +2666,48 @@ xamarin_get_managed_method_for_token (guint32 token_ref, guint32 *exception_gcha
 	return xamarin_get_reflection_method_method (reflection_method);
 }
 
+GCHandle
+xamarin_gchandle_new (MonoObject *obj, bool track_resurrection)
+{
+	if (obj == NULL)
+		return INVALID_GCHANDLE;
+	return GINT_TO_POINTER (mono_gchandle_new (obj, track_resurrection));
+}
+
+GCHandle
+xamarin_gchandle_new_weakref (MonoObject *obj, bool pinned)
+{
+	if (obj == NULL)
+		return INVALID_GCHANDLE;
+	return GINT_TO_POINTER (mono_gchandle_new_weakref (obj, pinned));
+}
+
+MonoObject *
+xamarin_gchandle_get_target (GCHandle handle)
+{
+	if (handle == INVALID_GCHANDLE)
+		return NULL;
+	return mono_gchandle_get_target (GPOINTER_TO_UINT (handle));
+}
+
+void
+xamarin_gchandle_free (GCHandle handle)
+{
+	if (handle == INVALID_GCHANDLE)
+		return;
+	mono_gchandle_free (GPOINTER_TO_UINT (handle));
+}
+
+MonoObject *
+xamarin_gchandle_unwrap (GCHandle handle)
+{
+	if (handle == INVALID_GCHANDLE)
+		return NULL;
+	MonoObject *rv = mono_gchandle_get_target (GPOINTER_TO_UINT (handle));
+	mono_gchandle_free (GPOINTER_TO_UINT (handle));
+	return rv;
+}
+
 /*
  * Object unregistration:
  *

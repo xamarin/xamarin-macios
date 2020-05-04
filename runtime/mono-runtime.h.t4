@@ -294,6 +294,16 @@ bool
 <#= export.EntryPoint #>_exists ();
 
 <# } #>
+
+/*
+ * Wrapper GCHandle functions that takes pointer sized handles instead of ints,
+ * so that we can adapt our code incrementally to use pointers instead of ints
+ * until Mono's pointer-sized API is available for us.
+ * Ref: https://github.com/dotnet/runtime/commit/3886a63841434af716292172737a42757a15c6a6
+ */
+#define INVALID_GCHANDLE 0
+typedef void* GCHandle;
+
 #ifdef __cplusplus
 } /* extern "C" */
 #endif

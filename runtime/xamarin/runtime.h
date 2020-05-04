@@ -261,6 +261,18 @@ void			xamarin_vprintf (const char *format, va_list args);
 void			xamarin_install_log_callbacks ();
 
 /*
+ * Wrapper GCHandle functions that takes pointer sized handles instead of ints,
+ * so that we can adapt our code incrementally to use pointers instead of ints
+ * until Mono's pointer-sized API is available for us.
+ * Ref: https://github.com/dotnet/runtime/commit/3886a63841434af716292172737a42757a15c6a6
+ */
+GCHandle		xamarin_gchandle_new (MonoObject *obj, bool track_resurrection);
+GCHandle		xamarin_gchandle_new_weakref (MonoObject *obj, bool pinned);
+MonoObject *	xamarin_gchandle_get_target (GCHandle handle);
+void			xamarin_gchandle_free (GCHandle handle);
+MonoObject *	xamarin_gchandle_unwrap (GCHandle handle); // Will get the target and free the GCHandle
+
+/*
  * Look for an assembly in the app and open it.
  *
  * Stable API.
