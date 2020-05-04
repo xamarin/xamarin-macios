@@ -207,7 +207,7 @@
 			"SEL", "IntPtr", "sel",
 			"bool", "bool", "is_static",
 			"id", "IntPtr", "obj",
-			"MonoObject **", "ref IntPtr", "mthis",
+			"GCHandle *", "ref IntPtr", "mthis",
 			"MethodDescription *", "IntPtr", "desc"
 		) {
 			WrappedManagedFunction = "GetMethodAndObjectForSelector",

@@ -860,7 +860,7 @@ namespace Registrar {
 			} else {
 				try {
 					var nsobj = Runtime.GetNSObject (obj, Runtime.MissingCtorResolution.ThrowConstructor1NotFound, true);
-					mthis = ObjectWrapper.Convert (nsobj);
+					mthis = Runtime.AllocGCHandle (nsobj);
 					if (res.Method.ContainsGenericParameters) {
 						res.WriteUnmanagedDescription (desc, Runtime.FindClosedMethod (nsobj.GetType (), res.Method));
 						return;

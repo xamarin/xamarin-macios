@@ -155,7 +155,10 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 	if (is_ctor || is_static) {
 		xamarin_get_method_for_selector ([self class], sel, is_static, desc, &exception_gchandle);
 	} else {
-		xamarin_get_method_and_object_for_selector ([self class], sel, is_static, self, &mthis, desc, &exception_gchandle);
+		GCHandle mthis_handle = INVALID_GCHANDLE;
+		xamarin_get_method_and_object_for_selector ([self class], sel, is_static, self, &mthis_handle, desc, &exception_gchandle);
+		mthis = xamarin_gchandle_get_target (mthis_handle);
+		xamarin_gchandle_free (mthis_handle);
 	}
 	if (exception_gchandle != 0) {
 		exception_gchandle = xamarin_get_exception_for_method (8034, exception_gchandle, "Failed to lookup the required marshalling information.", sel, self);
