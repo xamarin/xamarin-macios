@@ -402,7 +402,7 @@ namespace ObjCRuntime {
 
 		static void RegisterEntryAssembly (IntPtr a)
 		{
-			RegisterEntryAssembly ((Assembly) ObjectWrapper.Convert (a));
+			RegisterEntryAssembly ((Assembly) GetGCHandleTarget (a));
 		}
 
 		static void ThrowNSException (IntPtr ns_exception)

@@ -83,7 +83,7 @@
 		},
 
 		new XDelegate ("void", "void", "xamarin_register_entry_assembly",
-			"MonoReflectionAssembly *", "IntPtr", "assembly"
+			"GCHandle->MonoReflectionAssembly *", "IntPtr", "assembly"
 		) {
 			WrappedManagedFunction = "RegisterEntryAssembly",
 			OnlyDynamicUsage = true,
