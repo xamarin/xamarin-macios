@@ -221,7 +221,7 @@ namespace CoreLocation {
 		[Availability (Deprecated = Platform.iOS_6_0)]
 		// Default property value is null but it cannot be set to that value
 		// it crash when a null is provided
-		[Export ("purpose")]
+		[NullAllowed, Export ("purpose")]
 		string Purpose { get; set; }
 
 		[NoTV]
@@ -253,7 +253,7 @@ namespace CoreLocation {
 
 		[NoTV]
 		[Watch (6,0)]
-		[Export ("heading", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("heading", ArgumentSemantic.Copy)]
 		CLHeading Heading { get; }
 #endif
 
@@ -449,7 +449,7 @@ namespace CoreLocation {
 
 		[NoWatch][NoTV]
 		[Export ("locationManager:monitoringDidFailForRegion:withError:"), EventArgs ("CLRegionError")]
-		void MonitoringFailed (CLLocationManager manager, CLRegion region, NSError error);
+		void MonitoringFailed (CLLocationManager manager, [NullAllowed] CLRegion region, NSError error);
 
 		[NoWatch][NoTV]
 		[Export ("locationManager:didStartMonitoringForRegion:"), EventArgs ("CLRegion")]
@@ -509,7 +509,7 @@ namespace CoreLocation {
 
 		[NoWatch][NoTV]
 		[Export ("locationManager:didFinishDeferredUpdatesWithError:"), EventArgs ("NSError", true)]
-		void DeferredUpdatesFinished (CLLocationManager manager, NSError error);
+		void DeferredUpdatesFinished (CLLocationManager manager, [NullAllowed] NSError error);
 	}
 
 	[Static]
@@ -698,10 +698,10 @@ namespace CoreLocation {
 		[Export ("UUID", ArgumentSemantic.Copy)]
 		NSUuid Uuid { get; }
 
-		[Export ("major", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("major", ArgumentSemantic.Copy)]
 		NSNumber Major { get; }
 
-		[Export ("minor", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("minor", ArgumentSemantic.Copy)]
 		NSNumber Minor { get; }
 
 		[Export ("notifyEntryStateOnDisplay", ArgumentSemantic.Assign)]
