@@ -1777,6 +1777,20 @@ namespace ObjCRuntime {
 #error Unknown platform
 #endif
 		}
+
+		// Get the GCHandle from the IntPtr value and get the wrapped object.
+		internal static object GetGCHandleTarget (IntPtr ptr)
+		{
+			if (ptr == IntPtr.Zero)
+				return null;
+			return GCHandle.FromIntPtr (ptr).Target;
+		}
+
+		// Allocate a GCHandle and return the IntPtr to it.
+		internal static IntPtr AllocGCHandle (object value)
+		{
+			return GCHandle.ToIntPtr (GCHandle.Alloc (value));
+		}
 	}
 	
 	internal class IntPtrEqualityComparer : IEqualityComparer<IntPtr>
