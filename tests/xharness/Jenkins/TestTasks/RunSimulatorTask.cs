@@ -19,7 +19,7 @@ namespace Xharness.Jenkins.TestTasks {
 			: base (jenkins, buildTask, processManager, candidates) =>  runSimulator = new RunSimulator (
 				testTask: this,
 				simulators: simulators,
-				errorKnowledgeBase: Jenkins,
+				errorKnowledgeBase: Jenkins.ErrorKnowledgeBase,
 				mainLog: Jenkins.MainLog,
 				simulatorLoadLog: Jenkins.SimulatorLoadLog);
 

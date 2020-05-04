@@ -54,6 +54,7 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Jenkins\ErrorKnowledgeBaseTests.cs" />
     <Compile Include="Tests\BCLTestImportTargetFactoryTest.cs" />
     <Compile Include="TestImporter\Xamarin\Tests\TestAssemblyDefinitionTest.cs" />
     <Compile Include="Tests\AppRunnerTests.cs" />

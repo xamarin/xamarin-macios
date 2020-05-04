@@ -25,7 +25,7 @@ namespace Xharness.Jenkins.TestTasks {
 				resourceManager: Jenkins,
 				eventLogger: this,
 				envManager: this,
-				errorKnowledgeBase: Jenkins);
+				errorKnowledgeBase: Jenkins.ErrorKnowledgeBase);
 
 		protected override async Task ExecuteAsync ()
 		{
