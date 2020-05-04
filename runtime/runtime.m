@@ -312,7 +312,7 @@ xamarin_get_managed_object_for_ptr_fast (id self, guint32 *exception_gchandle)
 	gchandle = xamarin_get_gchandle (self);
 
 	if (gchandle == 0) {
-		mobj = (MonoObject *) xamarin_try_get_or_construct_nsobject (self, exception_gchandle);
+		mobj = xamarin_try_get_or_construct_nsobject (self, exception_gchandle);
 	} else {
 		mobj = mono_gchandle_get_target (gchandle);
 #if DEBUG
