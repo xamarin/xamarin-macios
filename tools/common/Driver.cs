@@ -272,6 +272,10 @@ namespace Xamarin.Bundler {
 
 		public const bool IsXAMCORE_4_0 = false;
 
+		public static bool IsDotNet {
+			get { return TargetFramework.IsDotNet; }
+		}
+
 		static TargetFramework targetFramework;
 
 		public static TargetFramework TargetFramework {
@@ -1259,6 +1263,14 @@ namespace Xamarin.Bundler {
 		public static void RunStrip (IList<string> options)
 		{
 			RunXcodeTool ("strip", options);
+		}
+
+		public static string CorlibName {
+			get {
+				if (IsDotNet)
+					return "System.Private.CoreLib";
+				return "mscorlib";
+			}
 		}
 	}
 }

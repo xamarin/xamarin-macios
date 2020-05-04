@@ -1595,6 +1595,8 @@
 		</comment>
 	</data>
 
+	<!-- 2020 -> 2099 is used by the linker -->
+
 	<data name="MT2101" xml:space="preserve">
 		<value>Can't resolve the reference '{0}', referenced from the method '{1}' in '{2}'.
 		</value>
@@ -1716,6 +1718,13 @@
 	
 	<data name="MM2110" xml:space="preserve">
 		<value>Xamarin.Mac 'Partial Static' registrar does not support linking. Disable linking or use another registrar mode.
+		</value>
+		<comment>
+		</comment>
+	</data>
+
+	<data name="MX2111" xml:space="preserve">
+		<value>Can not find the corlib assembly '{0}' in the list of loaded assemblies.
 		</value>
 		<comment>
 		</comment>
