@@ -73,8 +73,8 @@
 		},
 
 		new XDelegate ("id", "IntPtr", "xamarin_create_delegate_proxy",
-			"MonoObject *", "IntPtr", "method",
-			"MonoObject *", "IntPtr", "block",
+			"GCHandle->MonoReflectionMethod *", "IntPtr", "method",
+			"GCHandle->MonoObject *", "IntPtr", "block",
 			"const char *", "IntPtr", "signature",
 			"unsigned int", "uint", "token_ref"
 		) {
