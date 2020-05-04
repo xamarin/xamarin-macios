@@ -511,7 +511,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 			goto exception_handling;
 		xamarin_create_managed_ref (self, retval, true);
 
-		xamarin_register_nsobject (retval, self, &exception_gchandle);
+		xamarin_register_nsobject (xamarin_gchandle_new_weakref (retval, false), self, &exception_gchandle);
 		if (exception_gchandle != 0)
 			goto exception_handling;
 	} else {
