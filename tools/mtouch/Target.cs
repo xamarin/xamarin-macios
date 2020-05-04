@@ -1570,8 +1570,7 @@ namespace Xamarin.Bundler
 				case AssemblyBuildTarget.DynamicLibrary:
 					libprofiler = Path.Combine (libmonodir, "libmono-profiler-log.dylib");
 					linker_flags.AddLinkWith (libprofiler);
-					if (App.HasFrameworksDirectory)
-						AddToBundle (libprofiler);
+					AddToBundle (libprofiler);
 					break;
 				case AssemblyBuildTarget.StaticObject:
 					libprofiler = Path.Combine (libmonodir, "libmono-profiler-log.a");
