@@ -1,8 +1,0 @@
-
-# Initial result from new rule missing-null-allowed
-!missing-null-allowed! 'CoreLocation.CLHeading CoreLocation.CLLocationManager::get_Heading()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSNumber CoreLocation.CLBeaconRegion::get_Major()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSNumber CoreLocation.CLBeaconRegion::get_Minor()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.Void CoreLocation.CLLocationManager::set_Purpose(System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void CoreLocation.CLLocationManagerDelegate::DeferredUpdatesFinished(CoreLocation.CLLocationManager,Foundation.NSError)' is missing an [NullAllowed] on parameter #1
-!missing-null-allowed! 'System.Void CoreLocation.CLLocationManagerDelegate::MonitoringFailed(CoreLocation.CLLocationManager,CoreLocation.CLRegion,Foundation.NSError)' is missing an [NullAllowed] on parameter #1
