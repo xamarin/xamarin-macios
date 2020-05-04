@@ -707,9 +707,8 @@ namespace ObjCRuntime {
 
 		static IntPtr GetNSObjectWithType (IntPtr ptr, IntPtr type_ptr, out bool created)
 		{
-			// It doesn't work to use System.Type in the signature, we get garbage.
-			var type = (System.Type) ObjectWrapper.Convert (type_ptr);
-			return ObjectWrapper.Convert (GetNSObject (ptr, type, MissingCtorResolution.ThrowConstructor1NotFound, true, out created));
+			var type = (System.Type) GetGCHandleTarget (type_ptr);
+			return AllocGCHandle (GetNSObject (ptr, type, MissingCtorResolution.ThrowConstructor1NotFound, true, out created));
 		}
 
 		static void Dispose (IntPtr gchandle)
