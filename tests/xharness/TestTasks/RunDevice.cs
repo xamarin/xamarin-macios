@@ -10,7 +10,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
 namespace Xharness.TestTasks {
 	public class RunDevice {
-		readonly IRunXITask<IHardwareDevice> testTask;
+		readonly IRunDeviceTask testTask;
 		readonly IHardwareDeviceLoader devices;
 		readonly IResultParser resultParser = new XmlResultParser ();
 		readonly IResourceManager resourceManager;
@@ -20,12 +20,13 @@ namespace Xharness.TestTasks {
 		readonly bool cleanSuccessfulTestRuns;
 		readonly bool generateXmlFailures;
 		readonly bool inCI;
+		readonly bool useTcpTunnel;
 		readonly string defaultLogDirectory;
 		readonly XmlResultJargon xmlResultJargon;
 
 		public AppInstallMonitorLog InstallLog { get; private set; }
 
-		public RunDevice (IRunXITask<IHardwareDevice> testTask,
+		public RunDevice (IRunDeviceTask testTask,
 					  	  IHardwareDeviceLoader devices,
 						  IResourceManager resourceManager,
 						  ILog mainLog,
@@ -35,6 +36,7 @@ namespace Xharness.TestTasks {
 						  bool cleanSuccessfulTestRuns,
 						  bool generateXmlFailures,
 						  bool inCI,
+						  bool useTcpTunnel,
 						  XmlResultJargon xmlResultJargon)
 		{
 			this.testTask = testTask ?? throw new ArgumentNullException (nameof (testTask));
@@ -46,6 +48,7 @@ namespace Xharness.TestTasks {
 			this.cleanSuccessfulTestRuns = cleanSuccessfulTestRuns;
 			this.generateXmlFailures = generateXmlFailures;
 			this.inCI = inCI;
+			this.useTcpTunnel = useTcpTunnel;
 			this.defaultLogDirectory = defaultLogDirectory ?? throw new ArgumentNullException (nameof (defaultLogDirectory)); // default should not be null
 			this.xmlResultJargon = xmlResultJargon;
 
@@ -83,10 +86,19 @@ namespace Xharness.TestTasks {
 						testTask.CompanionDevice = await devices.FindCompanionDevice (deviceLoadLog, testTask.Device);
 					mainLog.WriteLine ("Acquired device '{0}' for '{1}'", testTask.Device.Name, testTask.ProjectFile);
 
+					ITunnelBore tunnelBore = null;
+					if (useTcpTunnel && testTask.Device.DevicePlatform != DevicePlatform.iOS &&
+					    testTask.Device.DevicePlatform != DevicePlatform.tvOS) {
+						mainLog.WriteLine ("Ignoring request to use a tunnel because it is not supported by the specified platform");
+					} else if (useTcpTunnel && (testTask.Device.DevicePlatform == DevicePlatform.iOS ||
+					                            testTask.Device.DevicePlatform == DevicePlatform.tvOS)) {
+						tunnelBore = testTask.TunnelBore;
+						mainLog.WriteLine ("Using tunnel to communicate with device.");
+					}
 					testTask.Runner = new AppRunner (testTask.ProcessManager,
 						new AppBundleInformationParser (),
 						new SimulatorLoaderFactory (testTask.ProcessManager),
-						new SimpleListenerFactory (),
+						new SimpleListenerFactory (tunnelBore),
 						new DeviceLoaderFactory (testTask.ProcessManager),
 						new CrashSnapshotReporterFactory (testTask.ProcessManager),
 						new CaptureLogFactory (),
@@ -158,7 +170,7 @@ namespace Xharness.TestTasks {
 							AppRunner todayRunner = new AppRunner (testTask.ProcessManager,
 								new AppBundleInformationParser (),
 								new SimulatorLoaderFactory (testTask.ProcessManager),
-								new SimpleListenerFactory (),
+								new SimpleListenerFactory (tunnelBore),
 								new DeviceLoaderFactory (testTask.ProcessManager),
 								new CrashSnapshotReporterFactory (testTask.ProcessManager),
 								new CaptureLogFactory (),

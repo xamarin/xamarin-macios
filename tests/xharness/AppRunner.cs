@@ -237,7 +237,7 @@ namespace Xharness {
 			}
 
 			var listener_log = Logs.Create ($"test-{runMode.ToString ().ToLowerInvariant ()}-{Helpers.Timestamp}.log", LogType.TestLog.ToString (), timestamp: !useXmlOutput);
-			var (transport, listener, listenerTmpFile) = listenerFactory.Create (runMode, MainLog, listener_log, isSimulator, true, useXmlOutput);
+			var (transport, listener, listenerTmpFile) = listenerFactory.Create (deviceName, runMode, MainLog, listener_log, isSimulator, true, useXmlOutput);
 
 			listener.Initialize ();
 
@@ -249,6 +249,9 @@ namespace Xharness {
 
 			args.Add (new SetAppArgumentArgument ($"-hostport:{listener.Port}", true));
 			args.Add (new SetEnvVariableArgument ("NUNIT_HOSTPORT", listener.Port));
+
+			if (listenerFactory.UseTcpTunnel)
+				args.Add (new SetEnvVariableArgument ("USE_TCP_TUNNEL", true));
 
 			listener.StartAsync ();
 
@@ -378,6 +381,14 @@ namespace Xharness {
 
 					MainLog.WriteLine ("Starting test run");
 
+					if (transport == ListenerTransport.Tcp && listenerFactory.UseTcpTunnel && listener is SimpleTcpListener tcpListener) {
+						// create a new tunnel using the listener
+						var tunnel = listenerFactory.TunnelBore.Create (deviceName, MainLog);
+						tunnel.Open (deviceName, tcpListener, testReporterTimeout, MainLog);
+						// wait until we started the tunnel
+						await tunnel.Started; 
+					}
+
 					// We need to check for MT1111 (which means that mlaunch won't wait for the app to exit).
 					var aggregatedLog = Log.CreateAggregatedLog (testReporter.CallbackLog, MainLog);
 					Task<ProcessExecutionResult> runTestTask = processManager.ExecuteCommandAsync (
@@ -401,6 +412,10 @@ namespace Xharness {
 
 			listener.Cancel ();
 			listener.Dispose ();
+
+			// close a tunnel if it was created
+			if (!isSimulator && listenerFactory.UseTcpTunnel)
+				await listenerFactory.TunnelBore.Close (deviceName);
 
 			// check the final status, copy all the required data
 			(Result, FailureMessage) = await testReporter.ParseResult ();

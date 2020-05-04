@@ -4,6 +4,7 @@
 // https://github.com/spouliot/Touch.Unit/blob/master/NUnitLite/TouchRunner/TcpTextWriter.cs
 using System;
 using System.IO;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -16,6 +17,7 @@ namespace BCLTests.TestRunner.Core {
 	public class TcpTextWriter : TextWriter {
 		
 		TcpClient client;
+		TcpListener server;
 		StreamWriter writer;
 		
 		static string SelectHostName (string[] names, int port)
@@ -62,14 +64,15 @@ namespace BCLTests.TestRunner.Core {
 			return result;
 		}
 
-		public TcpTextWriter (string hostName, int port)
+		public TcpTextWriter (string hostName, int port, bool isTunnel = false)
 		{
 			if ((port < 0) || (port > ushort.MaxValue))
 				throw new ArgumentOutOfRangeException (nameof (port), $"Port must be between 0 and {ushort.MaxValue}" );
 
-			if (hostName == null)
+			if (!isTunnel && hostName == null)
 				throw new ArgumentNullException (nameof (hostName));
-			HostName = SelectHostName (hostName.Split (','), port);
+			if (!isTunnel)
+				HostName = SelectHostName (hostName.Split (','), port);
 			Port = port;
 
 #if __IOS__
@@ -77,7 +80,23 @@ namespace BCLTests.TestRunner.Core {
 #endif
 
 			try {
-				client = new TcpClient (HostName, port);
+				if (isTunnel) {
+					server = new TcpListener (IPAddress.Any, Port);
+					server.Server.ReceiveTimeout = 5000;
+					server.Start ();
+					client = server.AcceptTcpClient ();
+					// block until we have the ping from the client side
+					int i;
+					byte [] buffer = new byte [16 * 1024];
+					var stream = client.GetStream ();
+					while ((i = stream.Read (buffer, 0, buffer.Length)) != 0) {
+						var message = Encoding.UTF8.GetString (buffer);
+						if (message.Contains ("ping"))
+							break;
+					}
+				} else {
+					client = new TcpClient (HostName, port);
+				}
 				writer = new StreamWriter (client.GetStream ());
 			}
 			catch {
