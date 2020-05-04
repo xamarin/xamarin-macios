@@ -94,8 +94,9 @@ xamarin_marshal_return_value_impl (MonoType *mtype, const char *type, MonoObject
 		case _C_ID: {
 			MonoClass *r_klass = mono_object_get_class ((MonoObject *) retval);
 
-			if (desc && desc->bindas [0].original_type != NULL) {
-				return xamarin_generate_conversion_to_native (retval, mono_class_get_type (r_klass), mono_reflection_type_get_type (desc->bindas [0].original_type), method, (void *) INVALID_TOKEN_REF, exception_gchandle);
+			if (desc && desc->bindas [0].original_type_handle != INVALID_GCHANDLE) {
+				MonoReflectionType *original_type = (MonoReflectionType *) xamarin_gchandle_get_target (desc->bindas [0].original_type_handle);
+				return xamarin_generate_conversion_to_native (retval, mono_class_get_type (r_klass), mono_reflection_type_get_type (original_type), method, (void *) INVALID_TOKEN_REF, exception_gchandle);
 			} else if (r_klass == mono_get_string_class ()) {
 				return xamarin_string_to_nsstring ((MonoString *) retval, retain);
 			} else if (xamarin_is_class_array (r_klass)) {
