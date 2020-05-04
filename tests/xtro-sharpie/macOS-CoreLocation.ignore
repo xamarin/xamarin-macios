@@ -2,8 +2,3 @@
 !extra-protocol-member! unexpected selector CLLocationManagerDelegate::locationManagerDidPauseLocationUpdates: found
 !extra-protocol-member! unexpected selector CLLocationManagerDelegate::locationManagerDidResumeLocationUpdates: found
 !extra-protocol-member! unexpected selector CLLocationManagerDelegate::locationManagerShouldDisplayHeadingCalibration: found
-
-# Initial result from new rule missing-null-allowed
-!missing-null-allowed! 'System.Void CoreLocation.CLLocationManager::set_Purpose(System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void CoreLocation.CLLocationManagerDelegate::DeferredUpdatesFinished(CoreLocation.CLLocationManager,Foundation.NSError)' is missing an [NullAllowed] on parameter #1
-!missing-null-allowed! 'System.Void CoreLocation.CLLocationManagerDelegate::MonitoringFailed(CoreLocation.CLLocationManager,CoreLocation.CLRegion,Foundation.NSError)' is missing an [NullAllowed] on parameter #1
