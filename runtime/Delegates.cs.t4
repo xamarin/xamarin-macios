@@ -26,7 +26,7 @@ namespace ObjCRuntime {
 	public unsafe partial class Runtime {
 		
 <# foreach (var d in delegates) { #>
-		internal delegate <#= d.MReturnType #> <#= d.SimpleEntryPoint #>_delegate (<#= d.MArgumentSignature #>);
+		internal delegate <#= d.ReturnType.MType #> <#= d.SimpleEntryPoint #>_delegate (<#= d.MArgumentSignature #>);
 <# } #>
 
 		internal struct Delegates {
@@ -37,7 +37,7 @@ namespace ObjCRuntime {
 
 <# 		foreach (var d in delegates) { #>
 		[MonoPInvokeCallback (typeof (<#= d.SimpleEntryPoint #>_delegate))]
-		static <#= d.MReturnType #> <#= d.SimpleEntryPoint #> (<#= d.MArgumentSignature #>)
+		static <#= d.ReturnType.MType #> <#= d.SimpleEntryPoint #> (<#= d.MArgumentSignature #>)
 <# if (d.ExceptionHandling) { #>
 		{	
 			exception_gchandle = 0;
@@ -45,14 +45,14 @@ namespace ObjCRuntime {
 <# if (string.IsNullOrEmpty (d.WrappedManagedFunction)) { #>
 				throw new NotImplementedException ();
 <# } else { #>
-				<# if (d.MReturnType != "void") { #>return <# } #><#=d.WrappedManagedFunction#> (<#=d.MArgumentNames#>);
+				<# if (d.ReturnType.MType != "void") { #>return <# } #><#=d.WrappedManagedFunction#> (<#=d.MArgumentNames#>);
 <# } #>
 			} catch (Exception ex) {
 				var handle = GCHandle.Alloc (ex, GCHandleType.Normal);
 				exception_gchandle = GCHandle.ToIntPtr (handle).ToInt32 ();
 <# if (d.SimpleEntryPoint == "get_nsobject_with_type") { #>				created = false;
 <# } #>
-<# if (d.MReturnType != "void") { #>				return default (<#= d.MReturnType #>);
+<# if (d.ReturnType.MType != "void") { #>				return default (<#= d.ReturnType.MType #>);
 <# } #>
 			}
 		}
@@ -61,7 +61,7 @@ namespace ObjCRuntime {
 <# if (string.IsNullOrEmpty (d.WrappedManagedFunction)) { #>
 			throw new NotImplementedException ();
 <# } else { #>
-			<# if (d.MReturnType != "void") { #>return <# } #><#=d.WrappedManagedFunction#> (<#=d.MArgumentNames#>);
+			<# if (d.ReturnType.MType != "void") { #>return <# } #><#=d.WrappedManagedFunction#> (<#=d.MArgumentNames#>);
 <# } #>
 		}
 <# } #>
