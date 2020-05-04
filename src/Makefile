@@ -491,10 +491,10 @@ $(eval $(call MAC_GENERATOR_template,full,-d:NO_SYSTEM_DRAWING))
 $(eval $(call MAC_GENERATOR_template,mobile,$(SHARED_SYSTEM_DRAWING_SOURCES)))
 
 define MAC_TARGETS_template
-$(MAC_BUILD_DIR)/$(1)-64/Xamarin.Mac.dll: $(MAC_BUILD_DIR)/$(1)/generated-sources $(MAC_SOURCES) $(MAC_CFNETWORK_SOURCES) $(MAC_CLASSIC_SOURCES) $(SN_KEY)
+$(MAC_BUILD_DIR)/$(1)-64/Xamarin.Mac%dll $(MAC_BUILD_DIR)/$(1)-64/Xamarin.Mac%pdb: $(MAC_BUILD_DIR)/$(1)/generated-sources $(MAC_SOURCES) $(MAC_CFNETWORK_SOURCES) $(MAC_CLASSIC_SOURCES) $(SN_KEY)
 	@mkdir -p $(MAC_BUILD_DIR)/$(1)-64
 	$$(call Q_PROF_CSC,mac/$(1)-64) \
-		$$(MAC_$(1)_CSC) -nologo -out:$$@ -target:library -debug -unsafe \
+		$$(MAC_$(1)_CSC) -nologo -out:$$(basename $$@).dll -target:library -debug -unsafe \
 		-deterministic \
 		$$(MAC_COMMON_DEFINES) \
 		$$(MAC_$(1)_ARGS) \
@@ -507,8 +507,6 @@ $(MAC_BUILD_DIR)/$(1)-64/Xamarin.Mac.dll: $(MAC_BUILD_DIR)/$(1)/generated-source
 		$(2) \
 		$$(MAC_SOURCES) \
 		@$$<
-
-$(MAC_BUILD_DIR)/$(1)-64/Xamarin.Mac.pdb: $(MAC_BUILD_DIR)/$(1)-64/Xamarin.Mac.dll
 
 endef
 
