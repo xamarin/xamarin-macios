@@ -454,12 +454,12 @@ namespace ObjCRuntime {
 
 		static IntPtr GetBlockWrapperCreator (IntPtr method, int parameter)
 		{
-			return ObjectWrapper.Convert (GetBlockWrapperCreator ((MethodInfo) ObjectWrapper.Convert (method), parameter));
+			return AllocGCHandle (GetBlockWrapperCreator ((MethodInfo) GetGCHandleTarget (method), parameter));
 		}
 
 		static IntPtr CreateBlockProxy (IntPtr method, IntPtr block)
 		{
-			return ObjectWrapper.Convert (CreateBlockProxy ((MethodInfo) ObjectWrapper.Convert (method), block));
+			return AllocGCHandle (CreateBlockProxy ((MethodInfo) GetGCHandleTarget (method), block));
 		}
 			
 		static IntPtr CreateDelegateProxy (IntPtr method, IntPtr @delegate, IntPtr signature, uint token_ref)
@@ -661,7 +661,7 @@ namespace ObjCRuntime {
 		{
 			var method = Class.ResolveMethodTokenReference (token_ref);
 			if (method != null)
-				return ObjectWrapper.Convert (method);
+				return AllocGCHandle (method);
 
 			return IntPtr.Zero;
 		}
@@ -672,11 +672,11 @@ namespace ObjCRuntime {
 			if (method == null)
 				return IntPtr.Zero;
 
-			var nsobj = ObjectWrapper.Convert (obj) as NSObject;
+			var nsobj = GetGCHandleTarget (obj) as NSObject;
 			if (nsobj == null)
 				throw ErrorHelper.CreateError (8023, $"An instance object is required to construct a closed generic method for the open generic method: {method.DeclaringType.FullName}.{method.Name} (token reference: 0x{token_ref:X}). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.");
 
-			return ObjectWrapper.Convert (FindClosedMethod (nsobj.GetType (), method));
+			return AllocGCHandle (FindClosedMethod (nsobj.GetType (), method));
 		}
 
 		static IntPtr TryGetOrConstructNSObjectWrapped (IntPtr ptr)
