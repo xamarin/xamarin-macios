@@ -14,7 +14,7 @@ namespace Xharness.Tests.Jenkins {
 		public void SetUp ()
 		{
 			errorKnowledgeBase = new ErrorKnowledgeBase ();
-			testFile = Path.GetTempPath ();
+			testFile = Path.GetTempFileName ();
 		}
 
 		[TearDown]
