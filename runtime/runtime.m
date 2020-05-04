@@ -2148,7 +2148,7 @@ xamarin_get_delegate_for_block_parameter (MonoMethod *method, guint32 token_ref,
 	// COOP: accesses managed memory: unsafe mode.
 	MONO_ASSERT_GC_UNSAFE;
 	
-	MonoObject *delegate;
+	MonoObject *delegate = NULL;
 
 	if (nativeBlock == NULL)
 		return NULL;
@@ -2160,7 +2160,7 @@ xamarin_get_delegate_for_block_parameter (MonoMethod *method, guint32 token_ref,
 		obj = get_method_block_wrapper_creator (method, par, exception_gchandle);
 	}
 	if (*exception_gchandle != 0)
-		return NULL;
+		goto cleanup;
 
 	/* retain or copy (if it's a stack block) the block */
 	nativeBlock = _Block_copy (nativeBlock);
@@ -2168,7 +2168,8 @@ xamarin_get_delegate_for_block_parameter (MonoMethod *method, guint32 token_ref,
 	delegate = xamarin_create_block_proxy (obj, nativeBlock, exception_gchandle);
 	if (*exception_gchandle != 0) {
 		_Block_release (nativeBlock);
-		return NULL;
+		delegate = NULL;
+		goto cleanup;
 	}
 
 	MONO_ENTER_GC_SAFE;
@@ -2181,6 +2182,7 @@ xamarin_get_delegate_for_block_parameter (MonoMethod *method, guint32 token_ref,
 	mono_gc_reference_queue_add (block_wrapper_queue, delegate, nativeBlock);
 	pthread_mutex_unlock (&wrapper_hash_lock);
 
+cleanup:
 	return delegate;
 }
 
