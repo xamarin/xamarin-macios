@@ -123,6 +123,13 @@ namespace Xamarin.Bundler {
 					else if (stage == CopyFileStep.Err) {
 						Log (1, "Could not copy the file '{0}' to '{1}'", source, target);
 						return CopyFileResult.Quit;
+					} else if (stage == CopyFileStep.Start) {
+						if (File.Exists (target) || Directory.Exists (target)) {
+							Log (1, "Deleted target {0}, it's not up-to-date", target);
+							// This callback won't be called for directories, but we can get here for symlinks to directories.
+							// This means that File.Delete should always work (no need to check for a directory to call Directory.Delete)
+							File.Delete (target);
+						}
 					}
 					return CopyFileResult.Continue;
 				} else {
