@@ -56,35 +56,21 @@
 !missing-release-attribute-on-return-value! CoreMedia.CMFormatDescription AVFoundation.AVTimedMetadataGroup::CopyFormatDescription()'s selector's ('copyFormatDescription') Objective-C method family ('copy') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
 
 # Initial result from new rule extra-null-allowed
-!extra-null-allowed! 'AVFoundation.AVAudioConnectionPoint[] AVFoundation.AVAudioEngine::OutputConnectionPoints(AVFoundation.AVAudioNode,System.nuint)' has a extraneous [NullAllowed] on return type
-!extra-null-allowed! 'AVFoundation.AVAudioInputNode AVFoundation.AVAudioEngine::get_InputNode()' has a extraneous [NullAllowed] on return type
 !extra-null-allowed! 'AVFoundation.AVAudioTime AVFoundation.AVAudioTime::FromAudioTimeStamp(AudioToolbox.AudioTimeStamp&,System.Double)' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'AVFoundation.AVMutableAudioMixInputParameters AVFoundation.AVMutableAudioMixInputParameters::Create()' has a extraneous [NullAllowed] on return type
-!extra-null-allowed! 'AVFoundation.AVPlayerItem AVFoundation.AVPlayerItem::FromAsset(AVFoundation.AVAsset)' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'AVFoundation.AVPlayerItem AVFoundation.AVPlayerItem::FromAsset(AVFoundation.AVAsset,Foundation.NSString[])' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'AVFoundation.AVSpeechSynthesisVoice AVFoundation.AVSpeechSynthesisVoice::FromIdentifier(System.String)' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'Foundation.NSValue[] AVFoundation.AVPlayerItem::get_SeekableTimeRanges()' has a extraneous [NullAllowed] on return type
 !extra-null-allowed! 'System.Void AVFoundation.AVAudioFormat::.ctor(AudioToolbox.AudioStreamBasicDescription&)' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void AVFoundation.AVAudioFormat::.ctor(AudioToolbox.AudioStreamBasicDescription&,AVFoundation.AVAudioChannelLayout)' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void AVFoundation.AVAudioTime::.ctor(AudioToolbox.AudioTimeStamp&,System.Double)' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'System.Void AVFoundation.AVMutableAudioMix::set_InputParameters(AVFoundation.AVAudioMixInputParameters[])' has a extraneous [NullAllowed] on parameter #0
+
+# Swift Docs and Obj-C are out of sync
+# https://developer.apple.com/documentation/avfoundation/avvideocompositioninstructionprotocol/1388661-requiredsourcetrackids
+# https://developer.apple.com/documentation/avfoundation/1386654-avvideocompositioninstruction/1388661-requiredsourcetrackids?language=objc
+!extra-null-allowed! 'Foundation.NSNumber[] AVFoundation.AVVideoCompositionInstruction::get_RequiredSourceTrackIDs()' has a extraneous [NullAllowed] on return type
+
+# Keep [NullAllowed] on FromAsset to keep existing tests passing and allow backwards compatibility
+!extra-null-allowed! 'AVFoundation.AVPlayerItem AVFoundation.AVPlayerItem::FromAsset(AVFoundation.AVAsset)' has a extraneous [NullAllowed] on parameter #0
+!extra-null-allowed! 'AVFoundation.AVPlayerItem AVFoundation.AVPlayerItem::FromAsset(AVFoundation.AVAsset,Foundation.NSString[])' has a extraneous [NullAllowed] on parameter #0
 
 # Initial result from new rule missing-null-allowed
-!missing-null-allowed! 'AVFoundation.AVAsset AVFoundation.AVAssetTrack::get_Asset()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'AVFoundation.AVAssetTrack AVFoundation.AVPlayerItemTrack::get_AssetTrack()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'AVFoundation.AVAudioTime AVFoundation.AVAudioTime::ExtrapolateTimeFromAnchor(AVFoundation.AVAudioTime)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'AVFoundation.AVMetadataItem[] AVFoundation.AVMetadataItem::FilterWithKey(AVFoundation.AVMetadataItem[],Foundation.NSObject,System.String)' is missing an [NullAllowed] on parameter #1
-!missing-null-allowed! 'AVFoundation.AVMetadataItem[] AVFoundation.AVMetadataItem::FilterWithKey(AVFoundation.AVMetadataItem[],Foundation.NSObject,System.String)' is missing an [NullAllowed] on parameter #2
-!missing-null-allowed! 'AVFoundation.AVMutableCompositionTrack AVFoundation.AVMutableComposition::AddMutableTrack(System.String,System.Int32)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'AVFoundation.AVMutableCompositionTrack AVFoundation.AVMutableComposition::CreateMutableTrack(AVFoundation.AVAssetTrack)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.Boolean AVFoundation.AVPlayerItem::Seek(Foundation.NSDate,AVFoundation.AVCompletion)' is missing an [NullAllowed] on parameter #1
-!missing-null-allowed! 'System.String AVFoundation.AVAssetTrack::get_ExtendedLanguageTag()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String AVFoundation.AVAssetTrack::get_LanguageCode()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String AVFoundation.AVAudioNode::GetNameForInputBus(System.nuint)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String AVFoundation.AVAudioNode::GetNameForOutputBus(System.nuint)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.Void AVFoundation.AVAudioConverter::set_SampleRateConverterAlgorithm(System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void AVFoundation.AVPlayerItemMetadataOutput::SetDelegate(AVFoundation.IAVPlayerItemMetadataOutputPushDelegate,CoreFoundation.DispatchQueue)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void AVFoundation.AVPlayerItemMetadataOutput::SetDelegate(AVFoundation.IAVPlayerItemMetadataOutputPushDelegate,CoreFoundation.DispatchQueue)' is missing an [NullAllowed] on parameter #1
-!missing-null-allowed! 'System.Void AVFoundation.AVPlayerItemMetadataOutputPushDelegate::DidOutputTimedMetadataGroups(AVFoundation.AVPlayerItemMetadataOutput,AVFoundation.AVTimedMetadataGroup[],AVFoundation.AVPlayerItemTrack)' is missing an [NullAllowed] on parameter #2
 !missing-null-allowed! 'System.Void AVFoundation.AVPlayerMediaSelectionCriteria::.ctor(AVFoundation.AVMediaCharacteristics[],AVFoundation.AVMediaCharacteristics[],System.String[])' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AVFoundation.AVPlayerMediaSelectionCriteria::.ctor(AVFoundation.AVMediaCharacteristics[],AVFoundation.AVMediaCharacteristics[],System.String[])' is missing an [NullAllowed] on parameter #1

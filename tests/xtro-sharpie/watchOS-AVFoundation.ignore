@@ -20,12 +20,3 @@
 
 # headers say it is present, but AVMetadataItemFilter is not
 !missing-selector! +AVMetadataItem::metadataItemsFromArray:filteredByMetadataItemFilter: not bound
-
-# Initial result from new rule missing-null-allowed
-!missing-null-allowed! 'AVFoundation.AVAudioSessionDataSourceDescription AVFoundation.AVAudioSession::get_InputDataSource()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'AVFoundation.AVAudioSessionDataSourceDescription AVFoundation.AVAudioSession::get_OutputDataSource()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'AVFoundation.AVAudioSessionPortDescription[] AVFoundation.AVAudioSession::get_AvailableInputs()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'AVFoundation.AVMutableMovieTrack AVFoundation.AVMutableMovie_AVMutableMovieTrackLevelEditing::AddMutableTrack(AVFoundation.AVMutableMovie,System.String,AVFoundation.AVAssetTrack,Foundation.NSDictionary`2<Foundation.NSString,Foundation.NSObject>)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSString AVFoundation.AVAudioSessionDataSourceDescription::get_Location_()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSString AVFoundation.AVAudioSessionDataSourceDescription::get_Orientation_()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.Void AVFoundation.AVMutableMovie::set_DefaultMediaDataStorage(AVFoundation.AVMediaDataStorage)' is missing an [NullAllowed] on parameter #0
