@@ -312,7 +312,7 @@ xamarin_get_managed_object_for_ptr_fast (id self, guint32 *exception_gchandle)
 	gchandle = xamarin_get_gchandle (self);
 
 	if (gchandle == 0) {
-		mobj = (MonoObject *) xamarin_try_get_or_construct_nsobject (self, exception_gchandle);
+		mobj = xamarin_try_get_or_construct_nsobject (self, exception_gchandle);
 	} else {
 		mobj = mono_gchandle_get_target (gchandle);
 #if DEBUG
@@ -438,9 +438,11 @@ xamarin_is_class_nullable (MonoClass *cls, MonoClass **element_type, guint32 *ex
 		if (get_nullable_type == NULL)
 			get_nullable_type = mono_class_get_method_from_name (runtime_class, "GetNullableType", 1);
 
-		void *args [1] { mono_type_get_object (mono_domain_get (), mono_class_get_type (cls)) };
+		GCHandle type_handle = xamarin_gchandle_new ((MonoObject *) mono_type_get_object (mono_domain_get (), mono_class_get_type (cls)), false);
+		void *args [1] { type_handle };
 		MonoObject *exc = NULL;
-		MonoReflectionType *nullable_type = (MonoReflectionType *) mono_runtime_invoke (get_nullable_type, NULL, args, &exc);
+		MonoReflectionType *nullable_type = (MonoReflectionType *) xamarin_gchandle_unwrap (mono_runtime_invoke (get_nullable_type, NULL, args, &exc));
+		xamarin_gchandle_free (type_handle);
 		if (exc != NULL) {
 			*exception_gchandle = mono_gchandle_new (exc, FALSE);
 			return false;
@@ -1927,7 +1929,9 @@ xamarin_release_managed_ref (id self, MonoObject *managed_obj)
 		MONO_EXIT_GC_SAFE;
 	} else {
 		/* If we're a wrapper type, we need to unregister here, since we won't enter the release trampoline */
-		xamarin_unregister_nsobject (self, managed_obj, &exception_gchandle);
+		GCHandle managed_obj_handle = xamarin_gchandle_new (managed_obj, false);
+		xamarin_unregister_nsobject (self, managed_obj_handle, &exception_gchandle);
+		xamarin_gchandle_free (managed_obj_handle);
 
 		//
 		// This lock is needed so that we can safely call retainCount in the
@@ -2074,7 +2078,7 @@ static MonoReferenceQueue *block_wrapper_queue;
  * that can be used to create a new delegate, this returns the method that can
  * create the method
  */
-static MonoObject *
+static GCHandle
 get_method_block_wrapper_creator (MonoMethod *method, int par, guint32 *exception_gchandle)
 {
 	// COOP: accesses managed memory: unsafe mode.
@@ -2098,12 +2102,12 @@ get_method_block_wrapper_creator (MonoMethod *method, int par, guint32 *exceptio
 	pthread_mutex_unlock (&wrapper_hash_lock);
 	if (res != NULL){
 		// PRINT ("Found match: %x", (int) res);
-		return res;
+		return xamarin_gchandle_new (res, false);
 	}
 
-	res = xamarin_get_block_wrapper_creator ((MonoObject *) mono_method_get_object (mono_domain_get (), method, NULL), (int) par, exception_gchandle);
+	res = xamarin_get_block_wrapper_creator (mono_method_get_object (mono_domain_get (), method, NULL), (int) par, exception_gchandle);
 	if (*exception_gchandle != 0)
-		return NULL;
+		return INVALID_GCHANDLE;
 	// PRINT ("New value: %x", (int) res);
 
 	nmp = (MethodAndPar *) malloc (sizeof (MethodAndPar));
@@ -2114,7 +2118,7 @@ get_method_block_wrapper_creator (MonoMethod *method, int par, guint32 *exceptio
 	MONO_EXIT_GC_SAFE;
 	mono_g_hash_table_insert (xamarin_wrapper_hash, nmp, res);
 	pthread_mutex_unlock (&wrapper_hash_lock);
-	return res;
+	return xamarin_gchandle_new (res, false);
 }
 
 void
@@ -2148,27 +2152,28 @@ xamarin_get_delegate_for_block_parameter (MonoMethod *method, guint32 token_ref,
 	// COOP: accesses managed memory: unsafe mode.
 	MONO_ASSERT_GC_UNSAFE;
 	
-	MonoObject *delegate;
+	MonoObject *delegate = NULL;
+	GCHandle obj_handle = INVALID_GCHANDLE;
 
 	if (nativeBlock == NULL)
 		return NULL;
 
-	MonoObject *obj;
 	if (token_ref != INVALID_TOKEN_REF) {
-		obj = (MonoObject *) xamarin_get_method_from_token (token_ref, exception_gchandle);
+		obj_handle = xamarin_get_method_from_token (token_ref, exception_gchandle);
 	} else {
-		obj = get_method_block_wrapper_creator (method, par, exception_gchandle);
+		obj_handle = get_method_block_wrapper_creator (method, par, exception_gchandle);
 	}
 	if (*exception_gchandle != 0)
-		return NULL;
+		goto cleanup;
 
 	/* retain or copy (if it's a stack block) the block */
 	nativeBlock = _Block_copy (nativeBlock);
 
-	delegate = delegates.create_block_proxy (obj, nativeBlock, exception_gchandle);
+	delegate = xamarin_create_block_proxy (obj_handle, nativeBlock, exception_gchandle);
 	if (*exception_gchandle != 0) {
 		_Block_release (nativeBlock);
-		return NULL;
+		delegate = NULL;
+		goto cleanup;
 	}
 
 	MONO_ENTER_GC_SAFE;
@@ -2181,6 +2186,8 @@ xamarin_get_delegate_for_block_parameter (MonoMethod *method, guint32 token_ref,
 	mono_gc_reference_queue_add (block_wrapper_queue, delegate, nativeBlock);
 	pthread_mutex_unlock (&wrapper_hash_lock);
 
+cleanup:
+	xamarin_gchandle_free (obj_handle);
 	return delegate;
 }
 
@@ -2188,7 +2195,7 @@ id
 xamarin_get_block_for_delegate (MonoMethod *method, MonoObject *delegate, const char *signature, guint32 token_ref, guint32 *exception_gchandle)
 {
 	// COOP: accesses managed memory: unsafe mode.
-	return delegates.create_delegate_proxy ((MonoObject *) mono_method_get_object (mono_domain_get (), method, NULL), delegate, signature, token_ref, exception_gchandle);
+	return xamarin_create_delegate_proxy (mono_method_get_object (mono_domain_get (), method, NULL), delegate, signature, token_ref, exception_gchandle);
 }
 
 void
@@ -2660,10 +2667,52 @@ xamarin_get_managed_method_for_token (guint32 token_ref, guint32 *exception_gcha
 {
 	MonoReflectionMethod *reflection_method;
 
-	reflection_method = xamarin_get_method_from_token (token_ref, exception_gchandle);
+	reflection_method = (MonoReflectionMethod *) xamarin_gchandle_unwrap (xamarin_get_method_from_token (token_ref, exception_gchandle));
 	if (*exception_gchandle != 0) return NULL;
 
 	return xamarin_get_reflection_method_method (reflection_method);
+}
+
+GCHandle
+xamarin_gchandle_new (MonoObject *obj, bool track_resurrection)
+{
+	if (obj == NULL)
+		return INVALID_GCHANDLE;
+	return GINT_TO_POINTER (mono_gchandle_new (obj, track_resurrection));
+}
+
+GCHandle
+xamarin_gchandle_new_weakref (MonoObject *obj, bool pinned)
+{
+	if (obj == NULL)
+		return INVALID_GCHANDLE;
+	return GINT_TO_POINTER (mono_gchandle_new_weakref (obj, pinned));
+}
+
+MonoObject *
+xamarin_gchandle_get_target (GCHandle handle)
+{
+	if (handle == INVALID_GCHANDLE)
+		return NULL;
+	return mono_gchandle_get_target (GPOINTER_TO_UINT (handle));
+}
+
+void
+xamarin_gchandle_free (GCHandle handle)
+{
+	if (handle == INVALID_GCHANDLE)
+		return;
+	mono_gchandle_free (GPOINTER_TO_UINT (handle));
+}
+
+MonoObject *
+xamarin_gchandle_unwrap (GCHandle handle)
+{
+	if (handle == INVALID_GCHANDLE)
+		return NULL;
+	MonoObject *rv = mono_gchandle_get_target (GPOINTER_TO_UINT (handle));
+	mono_gchandle_free (GPOINTER_TO_UINT (handle));
+	return rv;
 }
 
 /*

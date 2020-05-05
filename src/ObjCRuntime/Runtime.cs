@@ -363,7 +363,7 @@ namespace ObjCRuntime {
 		// returns: a handle to a native NSString *
 		static IntPtr ConvertSmartEnumToNSString (IntPtr value_handle)
 		{
-			var value = GCHandle.FromIntPtr (value_handle).Target;
+			var value = GetGCHandleTarget (value_handle);
 			var smart_type = value.GetType ();
 			MethodBase getConstantMethod, getValueMethod;
 			if (!Registrar.IsSmartEnum (smart_type, out getConstantMethod, out getValueMethod))
@@ -380,29 +380,29 @@ namespace ObjCRuntime {
 		// returns: GCHandle to a (smart) enum value. Caller must free the GCHandle.
 		static IntPtr ConvertNSStringToSmartEnum (IntPtr value, IntPtr type)
 		{
-			var smart_type = (Type) ObjectWrapper.Convert (type);
+			var smart_type = (Type) GetGCHandleTarget (type);
 			var str = GetNSObject<NSString> (value);
 			MethodBase getConstantMethod, getValueMethod;
 			if (!Registrar.IsSmartEnum (smart_type, out getConstantMethod, out getValueMethod))
 				throw ErrorHelper.CreateError (8024, $"Could not find a valid extension type for the smart enum '{smart_type.FullName}'. Please file a bug at https://github.com/xamarin/xamarin-macios/issues/new.");
 			var rv = ((MethodInfo) getValueMethod).Invoke (null, new object [] { str });
-			return GCHandle.ToIntPtr (GCHandle.Alloc (rv));
+			return AllocGCHandle (rv);
 		}
 
 #region Wrappers for delegate callbacks
 		static void RegisterNSObject (IntPtr managed_obj, IntPtr native_obj)
 		{
-			RegisterNSObject ((NSObject) ObjectWrapper.Convert (managed_obj), native_obj);
+			RegisterNSObject (GCHandle.FromIntPtr (managed_obj), native_obj, null);
 		}
 
 		static void RegisterAssembly (IntPtr a)
 		{
-			RegisterAssembly ((Assembly) ObjectWrapper.Convert (a));
+			RegisterAssembly ((Assembly) GetGCHandleTarget (a));
 		}
 
 		static void RegisterEntryAssembly (IntPtr a)
 		{
-			RegisterEntryAssembly ((Assembly) ObjectWrapper.Convert (a));
+			RegisterEntryAssembly ((Assembly) GetGCHandleTarget (a));
 		}
 
 		static void ThrowNSException (IntPtr ns_exception)
@@ -454,17 +454,17 @@ namespace ObjCRuntime {
 
 		static IntPtr GetBlockWrapperCreator (IntPtr method, int parameter)
 		{
-			return ObjectWrapper.Convert (GetBlockWrapperCreator ((MethodInfo) ObjectWrapper.Convert (method), parameter));
+			return AllocGCHandle (GetBlockWrapperCreator ((MethodInfo) GetGCHandleTarget (method), parameter));
 		}
 
 		static IntPtr CreateBlockProxy (IntPtr method, IntPtr block)
 		{
-			return ObjectWrapper.Convert (CreateBlockProxy ((MethodInfo) ObjectWrapper.Convert (method), block));
+			return AllocGCHandle (CreateBlockProxy ((MethodInfo) GetGCHandleTarget (method), block));
 		}
 			
 		static IntPtr CreateDelegateProxy (IntPtr method, IntPtr @delegate, IntPtr signature, uint token_ref)
 		{
-			return BlockLiteral.GetBlockForDelegate ((MethodInfo) ObjectWrapper.Convert (method), ObjectWrapper.Convert (@delegate), token_ref, Marshal.PtrToStringAuto (signature));
+			return BlockLiteral.GetBlockForDelegate ((MethodInfo) GetGCHandleTarget (method), GetGCHandleTarget (@delegate), token_ref, Marshal.PtrToStringAuto (signature));
 		}
 
 		static unsafe Assembly GetEntryAssembly ()
@@ -628,12 +628,12 @@ namespace ObjCRuntime {
 
 		static IntPtr GetClass (IntPtr klass)
 		{
-			return ObjectWrapper.Convert (new Class (klass));
+			return AllocGCHandle (new Class (klass));
 		}
 
 		static IntPtr GetSelector (IntPtr sel)
 		{
-			return ObjectWrapper.Convert (new Selector (sel));
+			return AllocGCHandle (new Selector (sel));
 		}
 
 		static void GetMethodForSelector (IntPtr cls, IntPtr sel, bool is_static, IntPtr desc)
@@ -649,19 +649,19 @@ namespace ObjCRuntime {
 
 		static IntPtr GetHandleForINativeObject (IntPtr ptr)
 		{
-			return ((INativeObject) ObjectWrapper.Convert (ptr)).Handle;
+			return ((INativeObject) GetGCHandleTarget (ptr)).Handle;
 		}
 
 		static void UnregisterNSObject (IntPtr native_obj, IntPtr managed_obj) 
 		{
-			NativeObjectHasDied (native_obj, ObjectWrapper.Convert (managed_obj) as NSObject);
+			NativeObjectHasDied (native_obj, GetGCHandleTarget (managed_obj) as NSObject);
 		}
 
 		static unsafe IntPtr GetMethodFromToken (uint token_ref)
 		{
 			var method = Class.ResolveMethodTokenReference (token_ref);
 			if (method != null)
-				return ObjectWrapper.Convert (method);
+				return AllocGCHandle (method);
 
 			return IntPtr.Zero;
 		}
@@ -672,16 +672,16 @@ namespace ObjCRuntime {
 			if (method == null)
 				return IntPtr.Zero;
 
-			var nsobj = ObjectWrapper.Convert (obj) as NSObject;
+			var nsobj = GetGCHandleTarget (obj) as NSObject;
 			if (nsobj == null)
 				throw ErrorHelper.CreateError (8023, $"An instance object is required to construct a closed generic method for the open generic method: {method.DeclaringType.FullName}.{method.Name} (token reference: 0x{token_ref:X}). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.");
 
-			return ObjectWrapper.Convert (FindClosedMethod (nsobj.GetType (), method));
+			return AllocGCHandle (FindClosedMethod (nsobj.GetType (), method));
 		}
 
 		static IntPtr TryGetOrConstructNSObjectWrapped (IntPtr ptr)
 		{
-			return ObjectWrapper.Convert (GetNSObject (ptr, MissingCtorResolution.Ignore, true));
+			return AllocGCHandle (GetNSObject (ptr, MissingCtorResolution.Ignore, true));
 		}
 
 		static IntPtr GetINativeObject_Dynamic (IntPtr ptr, bool owns, IntPtr type_ptr)
@@ -689,9 +689,8 @@ namespace ObjCRuntime {
 			/*
 			 * This method is called from marshalling bridge (dynamic mode).
 			 */
-			// It doesn't work to use System.Type in the signature, we get garbage.
-			var type = (System.Type) ObjectWrapper.Convert (type_ptr);
-			return ObjectWrapper.Convert (GetINativeObject (ptr, owns, type));
+			var type = (System.Type) GetGCHandleTarget (type_ptr);
+			return AllocGCHandle (GetINativeObject (ptr, owns, type));
 		}
 			
 		static IntPtr GetINativeObject_Static (IntPtr ptr, bool owns, uint iface_token, uint implementation_token)
@@ -702,24 +701,23 @@ namespace ObjCRuntime {
 
 			var iface = Class.ResolveTypeTokenReference (iface_token);
 			var type = Class.ResolveTypeTokenReference (implementation_token);
-			return ObjectWrapper.Convert (GetINativeObject (ptr, owns, iface, type));
+			return AllocGCHandle (GetINativeObject (ptr, owns, iface, type));
 		}
 
 		static IntPtr GetNSObjectWithType (IntPtr ptr, IntPtr type_ptr, out bool created)
 		{
-			// It doesn't work to use System.Type in the signature, we get garbage.
-			var type = (System.Type) ObjectWrapper.Convert (type_ptr);
-			return ObjectWrapper.Convert (GetNSObject (ptr, type, MissingCtorResolution.ThrowConstructor1NotFound, true, out created));
+			var type = (System.Type) GetGCHandleTarget (type_ptr);
+			return AllocGCHandle (GetNSObject (ptr, type, MissingCtorResolution.ThrowConstructor1NotFound, true, out created));
 		}
 
-		static void Dispose (IntPtr mobj)
+		static void Dispose (IntPtr gchandle)
 		{
-			((IDisposable) ObjectWrapper.Convert (mobj)).Dispose ();
+			((IDisposable) GetGCHandleTarget (gchandle)).Dispose ();
 		}
 
 		static bool IsParameterTransient (IntPtr info, int parameter)
 		{
-			var minfo = ObjectWrapper.Convert (info) as MethodInfo;
+			var minfo = GetGCHandleTarget (info) as MethodInfo;
 			if (minfo == null)
 				return false; // might be a ConstructorInfo (bug #15583), but we don't care about that (yet at least).
 			minfo = minfo.GetBaseDefinition ();
@@ -731,7 +729,7 @@ namespace ObjCRuntime {
 
 		static bool IsParameterOut (IntPtr info, int parameter)
 		{
-			var minfo = ObjectWrapper.Convert (info) as MethodInfo;
+			var minfo = GetGCHandleTarget (info) as MethodInfo;
 			if (minfo == null)
 				return false; // might be a ConstructorInfo (bug #15583), but we don't care about that (yet at least).
 			minfo = minfo.GetBaseDefinition ();
@@ -766,7 +764,7 @@ namespace ObjCRuntime {
 
 		static IntPtr TypeGetFullName (IntPtr type) 
 		{	
-			return Marshal.StringToHGlobalAuto (((Type) ObjectWrapper.Convert (type)).FullName);
+			return Marshal.StringToHGlobalAuto (((Type) GetGCHandleTarget (type)).FullName);
 		}
 
 		static IntPtr LookupManagedTypeName (IntPtr klass)
@@ -1031,8 +1029,17 @@ namespace ObjCRuntime {
 		}
 		
 		internal static void RegisterNSObject (NSObject obj, IntPtr ptr) {
+			RegisterNSObject (GCHandle.Alloc (obj, GCHandleType.WeakTrackResurrection), ptr, obj);
+		}
+
+		// 'obj' can be provided if the caller has it, otherwise we'll fetch it from the GCHandle
+		// The GCHandle must be a WeakTracResurrection GCHandle, and the caller must not free it
+		internal static void RegisterNSObject (GCHandle handle, IntPtr ptr, NSObject obj)
+		{
+			if (obj == null)
+				obj = (NSObject) handle.Target;
 			lock (lock_obj) {
-				object_map [ptr] = GCHandle.Alloc (obj, GCHandleType.WeakTrackResurrection);
+				object_map [ptr] = handle;
 				obj.Handle = ptr;
 			}
 		}
@@ -1776,6 +1783,20 @@ namespace ObjCRuntime {
 #else
 #error Unknown platform
 #endif
+		}
+
+		// Get the GCHandle from the IntPtr value and get the wrapped object.
+		internal static object GetGCHandleTarget (IntPtr ptr)
+		{
+			if (ptr == IntPtr.Zero)
+				return null;
+			return GCHandle.FromIntPtr (ptr).Target;
+		}
+
+		// Allocate a GCHandle and return the IntPtr to it.
+		internal static IntPtr AllocGCHandle (object value)
+		{
+			return GCHandle.ToIntPtr (GCHandle.Alloc (value));
 		}
 	}
 	

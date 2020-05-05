@@ -123,11 +123,11 @@ struct MTRegistrationMap {
 };
 
 typedef struct {
-	MonoReflectionType *original_type;
+	GCHandle original_type_handle;
 } BindAsData;
 
 typedef struct {
-	MonoReflectionMethod *method;
+	GCHandle method_handle;
 	int32_t semantic;
 	int32_t bindas_count; // The number of elements available in the bindas_types array.
 	// An array of BindAs original types. Element 0 is for the return value,
@@ -259,6 +259,18 @@ bool			xamarin_locate_assembly_resource (const char *assembly_name, const char *
 void			xamarin_printf (const char *format, ...);
 void			xamarin_vprintf (const char *format, va_list args);
 void			xamarin_install_log_callbacks ();
+
+/*
+ * Wrapper GCHandle functions that takes pointer sized handles instead of ints,
+ * so that we can adapt our code incrementally to use pointers instead of ints
+ * until Mono's pointer-sized API is available for us.
+ * Ref: https://github.com/dotnet/runtime/commit/3886a63841434af716292172737a42757a15c6a6
+ */
+GCHandle		xamarin_gchandle_new (MonoObject *obj, bool track_resurrection);
+GCHandle		xamarin_gchandle_new_weakref (MonoObject *obj, bool pinned);
+MonoObject *	xamarin_gchandle_get_target (GCHandle handle);
+void			xamarin_gchandle_free (GCHandle handle);
+MonoObject *	xamarin_gchandle_unwrap (GCHandle handle); // Will get the target and free the GCHandle
 
 /*
  * Look for an assembly in the app and open it.

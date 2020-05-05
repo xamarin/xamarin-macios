@@ -155,14 +155,17 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 	if (is_ctor || is_static) {
 		xamarin_get_method_for_selector ([self class], sel, is_static, desc, &exception_gchandle);
 	} else {
-		xamarin_get_method_and_object_for_selector ([self class], sel, is_static, self, &mthis, desc, &exception_gchandle);
+		GCHandle mthis_handle = INVALID_GCHANDLE;
+		xamarin_get_method_and_object_for_selector ([self class], sel, is_static, self, &mthis_handle, desc, &exception_gchandle);
+		mthis = xamarin_gchandle_get_target (mthis_handle);
+		xamarin_gchandle_free (mthis_handle);
 	}
 	if (exception_gchandle != 0) {
 		exception_gchandle = xamarin_get_exception_for_method (8034, exception_gchandle, "Failed to lookup the required marshalling information.", sel, self);
 		goto exception_handling;
 	}
 
-	method = xamarin_get_reflection_method_method (desc->method);
+	method = xamarin_get_reflection_method_method ((MonoReflectionMethod *) xamarin_gchandle_get_target (desc->method_handle));
 	msig = mono_method_signature (method);
 	semantic = desc->semantic & ArgumentSemanticMask;
 	isCategoryInstance = (desc->semantic & ArgumentSemanticCategoryInstance) == ArgumentSemanticCategoryInstance;
@@ -228,8 +231,9 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 			iterator (IteratorIterate, context, type, size, &arg, &exception_gchandle);
 			if (exception_gchandle != 0)
 				goto exception_handling;
-			if (desc->bindas [i + 1].original_type != NULL) {
-				arg_ptrs [i + mofs] = xamarin_generate_conversion_to_managed ((id) arg, mono_reflection_type_get_type (desc->bindas [i + 1].original_type), p, method, &exception_gchandle, (void *) INVALID_TOKEN_REF, (void **) &free_list);
+			if (desc->bindas [i + 1].original_type_handle != INVALID_GCHANDLE) {
+				MonoReflectionType *original_type = (MonoReflectionType *) xamarin_gchandle_get_target (desc->bindas [i + 1].original_type_handle);
+				arg_ptrs [i + mofs] = xamarin_generate_conversion_to_managed ((id) arg, mono_reflection_type_get_type (original_type), p, method, &exception_gchandle, (void *) INVALID_TOKEN_REF, (void **) &free_list);
 				if (exception_gchandle != 0)
 					goto exception_handling;
 				ofs++;
@@ -508,7 +512,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 			goto exception_handling;
 		xamarin_create_managed_ref (self, retval, true);
 
-		xamarin_register_nsobject (retval, self, &exception_gchandle);
+		xamarin_register_nsobject (xamarin_gchandle_new_weakref (retval, false), self, &exception_gchandle);
 		if (exception_gchandle != 0)
 			goto exception_handling;
 	} else {
@@ -648,6 +652,13 @@ exception_handling:
 		}
 		s_list_free (dispose_list);
 	}
+
+	if (desc != NULL) {
+		xamarin_gchandle_free (desc->method_handle);
+		for (int i = 0; i < desc->bindas_count; i++)
+			xamarin_gchandle_free (desc->bindas [i].original_type_handle);
+	}
+
 	if (free_list) {
 		SList *list = free_list;
 		while (list) {
