@@ -82,6 +82,7 @@
     <Compile Include="Harness.cs" />
     <Compile Include="Jenkins\ErrorKnowledgeBase.cs" />
     <Compile Include="Jenkins\Jenkins.cs" />
+    <Compile Include="Jenkins\TestSelector.cs" />
     <Compile Include="Jenkins\TestTasks\AggregatedRunSimulatorTask.cs" />
     <Compile Include="Jenkins\TestTasks\BuildProjectTask.cs" />
     <Compile Include="Jenkins\TestTasks\BuildToolTask.cs" />
