@@ -453,7 +453,13 @@ namespace Xamarin.Bundler {
 				throw ErrorHelper.CreateError (131, Errors.MX0131, productAssembly, string.Join ("', '", RootAssemblies.ToArray ()));
 
 #if MONOTOUCH
-			BuildTarget = BuildTarget.Simulator;
+			if (SelectAbis (Abis, Abi.SimulatorArchMask).Count > 0) {
+				BuildTarget = BuildTarget.Simulator;
+			} else if (SelectAbis (Abis, Abi.DeviceArchMask).Count > 0) {
+				BuildTarget = BuildTarget.Device;
+			} else {
+				throw ErrorHelper.CreateError (99, Errors.MX0099, "No valid ABI");
+			}
 #endif
 			var registrar = new Registrar.StaticRegistrar (this);
 			if (RootAssemblies.Count == 1)
