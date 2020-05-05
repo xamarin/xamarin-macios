@@ -46,7 +46,7 @@ $(MMP_DIRECTORIES):
 # Partial static registrar libraries
 #
 
-GENERATE_PART_REGISTRAR = $(Q_GEN) $(LOCAL_MMP_COMMAND) --xamarin-framework-directory=$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR) -q --runregistrar:$(abspath $@) --sdkroot $(XCODE_DEVELOPER_ROOT) --sdk $(OSX_SDK_VERSION)   $< --registrar:static
+GENERATE_PART_REGISTRAR = $(Q_GEN) $(LOCAL_MMP_COMMAND) --xamarin-framework-directory=$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR) -q --runregistrar:$(abspath $@) --sdkroot $(XCODE_DEVELOPER_ROOT) --sdk $(OSX_SDK_VERSION) $(abspath $<) --registrar:static
 
 Xamarin.Mac.registrar.mobile.x86_64.m: $(TOP)/src/build/mac/mobile-64/Xamarin.Mac.dll $(LOCAL_MMP)
 	$(GENERATE_PART_REGISTRAR) --target-framework Xamarin.Mac,Version=v2.0,Profile=Mobile --arch=x86_64
