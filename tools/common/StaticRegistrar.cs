@@ -2686,7 +2686,7 @@ namespace Registrar {
 #if !MONOMAC
 				var isPlatformType = IsPlatformType (@class.Type);
 				if (isPlatformType && IsSimulatorOrDesktop && !IsTypeAllowedInSimulator (@class)) {
-					Driver.Log (5, "The static registrar won't generate code for {0} because its framework is not supported in the simulator.", @class.ExportedName);
+					ErrorHelper.Warning (4186, Errors.MX4186, /* The static registrar won't generate code for {0} because its framework is not supported in the simulator. */ @class.ExportedName);
 					continue; // Some types are not supported in the simulator.
 				}
 #else

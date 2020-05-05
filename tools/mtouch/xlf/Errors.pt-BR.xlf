@@ -3002,6 +3002,14 @@
         <note>
 		</note>
       </trans-unit>
+      <trans-unit id="MX4186">
+        <source>The static registrar won't generate code for {0} because its framework is not supported in the simulator.
+		</source>
+        <target state="new">The static registrar won't generate code for {0} because its framework is not supported in the simulator.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
       <trans-unit id="MX5222">
         <source>The native linker failed to execute: {0}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
         </source>

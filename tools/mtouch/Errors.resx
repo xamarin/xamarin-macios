@@ -2403,6 +2403,13 @@
 		</comment>
 	</data>
 
+	<data name="MX4186" xml:space="preserve">
+		<value>The static registrar won't generate code for {0} because its framework is not supported in the simulator.
+		</value>
+		<comment>
+		</comment>
+	</data>
+
 	<data name="MT5101" xml:space="preserve">
 		<value>Missing '{0}' compiler. Please install Xcode 'Command-Line Tools' component
 		</value>
