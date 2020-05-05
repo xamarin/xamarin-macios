@@ -22,6 +22,8 @@ namespace Xharness.Jenkins {
 		readonly IProcessManager processManager;
 		readonly IResultParser resultParser;
 		readonly ITunnelBore tunnelBore;
+		readonly TestSelector testSelector;
+		
 		bool populating = true;
 
 		public Harness Harness { get; }
@@ -109,6 +111,7 @@ namespace Xharness.Jenkins {
 			Harness = harness ?? throw new ArgumentNullException (nameof (harness));
 			simulators = new SimulatorLoader (processManager);
 			devices = new HardwareDeviceLoader (processManager);
+			testSelector = new TestSelector (this, processManager);
 		}
 
 		Task LoadAsync (ref ILog log, IDeviceLoader deviceManager, string name)
@@ -732,269 +735,15 @@ namespace Xharness.Jenkins {
 		{
 			return Path.Combine (Path.GetDirectoryName (path), Path.GetFileNameWithoutExtension (path) + suffix + Path.GetExtension (path));
 		}
-
-		void SelectTests ()
-		{
-			int pull_request;
-
-			if (!int.TryParse (Environment.GetEnvironmentVariable ("ghprbPullId"), out pull_request))
-				MainLog.WriteLine ("The environment variable 'ghprbPullId' was not found, so no pull requests will be checked for test selection.");
-
-			// First check if can auto-select any tests based on which files were modified.
-			// This will only enable additional tests, never disable tests.
-			if (pull_request > 0)
-				SelectTestsByModifiedFiles (pull_request);
-			
-			// Then we check for labels. Labels are manually set, so those override
-			// whatever we did automatically.
-			SelectTestsByLabel (pull_request);
-
-			DisableKnownFailingDeviceTests ();
-
-			if (!Harness.INCLUDE_IOS) {
-				MainLog.WriteLine ("The iOS build is disabled, so any iOS tests will be disabled as well.");
-				IncludeiOS = false;
-				IncludeiOS64 = false;
-				IncludeiOS32 = false;
-			}
-
-			if (!Harness.INCLUDE_WATCH) {
-				MainLog.WriteLine ("The watchOS build is disabled, so any watchOS tests will be disabled as well.");
-				IncludewatchOS = false;
-			}
-
-			if (!Harness.INCLUDE_TVOS) {
-				MainLog.WriteLine ("The tvOS build is disabled, so any tvOS tests will be disabled as well.");
-				IncludetvOS = false;
-			}
-
-			if (!Harness.INCLUDE_MAC) {
-				MainLog.WriteLine ("The macOS build is disabled, so any macOS tests will be disabled as well.");
-				IncludeMac = false;
-			}
-		}
-
-		void DisableKnownFailingDeviceTests ()
-		{
-			// https://github.com/xamarin/maccore/issues/1008
-			ForceExtensionBuildOnly = true;
-		}
-
-		void SelectTestsByModifiedFiles (int pull_request)
-		{
-			var files = GitHub.GetModifiedFiles (processManager, Harness, pull_request);
-
-			MainLog.WriteLine ("Found {0} modified file(s) in the pull request #{1}.", files.Count (), pull_request);
-			foreach (var f in files)
-				MainLog.WriteLine ("    {0}", f);
-
-			// We select tests based on a prefix of the modified files.
-			// Add entries here to check for more prefixes.
-			var mtouch_prefixes = new string [] {
-				"tests/mtouch",
-				"tests/common",
-				"tools/mtouch",
-				"tools/common",
-				"tools/linker",
-				"src/ObjCRuntime/Registrar.cs",
-				"mk/mono.mk",
-				"msbuild",
-				"runtime",
-			};
-			var mmp_prefixes = new string [] {
-				"tests/mmptest",
-				"tests/common",
-				"tools/mmp",
-				"tools/common",
-				"tools/linker",
-				"src/ObjCRuntime/Registrar.cs",
-				"mk/mono.mk",
-				"msbuild",
-			};
-			var bcl_prefixes = new string [] {
-				"tests/bcl-test",
-				"tests/common",
-				"mk/mono.mk",
-			};
-			var btouch_prefixes = new string [] {
-				"src/btouch.cs",
-				"src/generator.cs",
-				"src/generator-",
-				"src/Makefile.generator",
-				"tests/bgen",
-				"tests/generator",
-				"tests/common",
-			};
-			var mac_binding_project = new string [] {
-				"msbuild",
-				"tests/mac-binding-project",
-				"tests/common/mac",
-			}.Intersect (btouch_prefixes).ToArray ();
-			var xtro_prefixes = new string [] {
-				"tests/xtro-sharpie",
-				"src",
-				"Make.config",
-			};
-			var cecil_prefixes = new string [] {
-				"tests/cecil-tests",
-				"src",
-				"Make.config",
-			};
-
-			SetEnabled (files, mtouch_prefixes, "mtouch", ref IncludeMtouch);
-			SetEnabled (files, mmp_prefixes, "mmp", ref IncludeMmpTest);
-			SetEnabled (files, bcl_prefixes, "bcl", ref IncludeBcl);
-			SetEnabled (files, btouch_prefixes, "btouch", ref IncludeBtouch);
-			SetEnabled (files, mac_binding_project, "mac-binding-project", ref IncludeMacBindingProject);
-			SetEnabled (files, xtro_prefixes, "xtro", ref IncludeXtro);
-			SetEnabled (files, cecil_prefixes, "cecil", ref IncludeCecil);
-		}
-
-		void SetEnabled (IEnumerable<string> files, string [] prefixes, string testname, ref bool value)
-		{
-			MainLog.WriteLine ($"Checking if test {testname} should be enabled according to the modified files.");
-			foreach (var file in files) {
-				MainLog.WriteLine ($"Checking for file {file}"); 
-				foreach (var prefix in prefixes) {
-					if (file.StartsWith (prefix, StringComparison.Ordinal)) {
-						value = true;
-						MainLog.WriteLine ("Enabled '{0}' tests because the modified file '{1}' matches prefix '{2}'", testname, file, prefix);
-						return;
-					}
-				}
-			}
-		}
-
-		void SelectTestsByLabel (int pull_request)
-		{
-			var labels = new HashSet<string> ();
-			if (Harness.Labels.Any ()) {
-				labels.UnionWith (Harness.Labels);
-				MainLog.WriteLine ($"{Harness.Labels.Count} label(s) were passed on the command line.");
-			} else {
-				MainLog.WriteLine ($"No labels were passed on the command line.");
-			}
-			if (pull_request > 0) {
-				var lbls = GitHub.GetLabels (Harness, pull_request);
-				if (lbls.Any ()) {
-					labels.UnionWith (lbls);
-					MainLog.WriteLine ($"Found {lbls.Count ()} label(s) in the pull request #{pull_request}: {string.Join (", ", lbls)}");
-				} else {
-					MainLog.WriteLine ($"No labels were found in the pull request #{pull_request}.");
-				}
-			}
-			var env_labels = Environment.GetEnvironmentVariable ("XHARNESS_LABELS");
-			if (!string.IsNullOrEmpty (env_labels)) {
-				var lbls = env_labels.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-				labels.UnionWith (lbls);
-				MainLog.WriteLine ($"Found {lbls.Count ()} label(s) in the environment variable XHARNESS_LABELS: {string.Join (", ", lbls)}");
-			} else {
-				MainLog.WriteLine ($"No labels were in the environment variable XHARNESS_LABELS.");
-			}
-			MainLog.WriteLine ($"In total found {labels.Count ()} label(s): {string.Join (", ", labels.ToArray ())}");
-
-			// disabled by default
-			SetEnabled (labels, "mtouch", ref IncludeMtouch);
-			SetEnabled (labels, "mmp", ref IncludeMmpTest);
-			SetEnabled (labels, "bcl", ref IncludeBcl);
-			SetEnabled (labels, "bcl-xunit", ref IncludeBCLxUnit);
-			SetEnabled (labels, "bcl-nunit", ref IncludeBCLNUnit);
-			SetEnabled (labels, "mscorlib", ref IncludeMscorlib);
-			SetEnabled (labels, "btouch", ref IncludeBtouch);
-			SetEnabled (labels, "mac-binding-project", ref IncludeMacBindingProject);
-			SetEnabled (labels, "ios-extensions", ref IncludeiOSExtensions);
-			SetEnabled (labels, "device", ref IncludeDevice);
-			SetEnabled (labels, "xtro", ref IncludeXtro);
-			SetEnabled (labels, "cecil", ref IncludeCecil);
-			SetEnabled (labels, "old-simulator", ref IncludeOldSimulatorTests);
-			SetEnabled (labels, "all", ref IncludeAll);
-
-			// enabled by default
-			SetEnabled (labels, "ios-32", ref IncludeiOS32);
-			SetEnabled (labels, "ios-64", ref IncludeiOS64);
-			SetEnabled (labels, "ios", ref IncludeiOS); // Needs to be set after `ios-32` and `ios-64` (because it can reset them)
-			SetEnabled (labels, "tvos", ref IncludetvOS);
-			SetEnabled (labels, "watchos", ref IncludewatchOS);
-			SetEnabled (labels, "mac", ref IncludeMac);
-			SetEnabled (labels, "ios-msbuild", ref IncludeiOSMSBuild);
-			SetEnabled (labels, "ios-simulator", ref IncludeSimulator);
-			SetEnabled (labels, "non-monotouch", ref IncludeNonMonotouch);
-			SetEnabled (labels, "monotouch", ref IncludeMonotouch);
-
-			bool inc_permission_tests = false;
-			if (SetEnabled (labels, "system-permission", ref inc_permission_tests))
-				Harness.IncludeSystemPermissionTests = inc_permission_tests;
-
-			// docs is a bit special:
-			// - can only be executed if the Xamarin-specific parts of the build is enabled
-			// - enabled by default if the current branch is master (or, for a pull request, if the target branch is master)
-			var changed = SetEnabled (labels, "docs", ref IncludeDocs);
-			if (Harness.ENABLE_XAMARIN) {
-				if (!changed) { // don't override any value set using labels
-					var branchName = Environment.GetEnvironmentVariable ("BRANCH_NAME");
-					if (!string.IsNullOrEmpty (branchName)) {
-						IncludeDocs = branchName == "master";
-						if (IncludeDocs)
-							MainLog.WriteLine ("Enabled 'docs' tests because the current branch is 'master'.");
-					} else if (pull_request > 0) {
-						IncludeDocs = GitHub.GetPullRequestTargetBranch (Harness, pull_request) == "master";
-						if (IncludeDocs)
-							MainLog.WriteLine ("Enabled 'docs' tests because the target branch is 'master'.");
-					}
-				}
-			} else {
-				if (IncludeDocs) {
-					IncludeDocs = false; // could have been enabled by 'run-all-tests', so disable it if we can't run it.
-					MainLog.WriteLine ("Disabled 'docs' tests because the Xamarin-specific parts of the build are not enabled.");
-				}
-			}
-
-			// old simulator tests is also a bit special:
-			// - enabled by default if using a beta Xcode, otherwise disabled by default
-			changed = SetEnabled (labels, "old-simulator", ref IncludeOldSimulatorTests);
-			if (!changed && IsBetaXcode) {
-				IncludeOldSimulatorTests = true;
-				MainLog.WriteLine ("Enabled 'old-simulator' tests because we're using a beta Xcode.");
-			}
-		}
-
-		bool IsBetaXcode => Harness.XcodeRoot.IndexOf ("beta", StringComparison.OrdinalIgnoreCase) >= 0;
-
-		// Returns true if the value was changed.
-		bool SetEnabled (HashSet<string> labels, string testname, ref bool value)
-		{
-			if (labels.Contains ("skip-" + testname + "-tests")) {
-				MainLog.WriteLine ("Disabled '{0}' tests because the label 'skip-{0}-tests' is set.", testname);
-				if (testname == "ios")
-					IncludeiOS32 = IncludeiOS64 = false;
-				value = false;
-				return true;
-			} else if (labels.Contains ("run-" + testname + "-tests")) {
-				MainLog.WriteLine ("Enabled '{0}' tests because the label 'run-{0}-tests' is set.", testname);
-				if (testname == "ios")
-					IncludeiOS64 = true;
-				// removed 'IncludeiOS32' as it's broken in xcode 12 beta 3, not possible with DTK
-				value = true;
-				return true;
-			} else if (labels.Contains ("skip-all-tests")) {
-				MainLog.WriteLine ("Disabled '{0}' tests because the label 'skip-all-tests' is set.", testname);
-				value = false;
-				return true;
-			} else if (labels.Contains ("run-all-tests")) {
-				MainLog.WriteLine ("Enabled '{0}' tests because the label 'run-all-tests' is set.", testname);
-				value = true;
-				return true;
-			}
-			// respect any default value
-			return false;
-		}
-
+		
+		public bool IsBetaXcode => Harness.XcodeRoot.IndexOf ("beta", StringComparison.OrdinalIgnoreCase) >= 0;
+		
 		Task PopulateTasksAsync ()
 		{
 			// Missing:
 			// api-diff
 
-			SelectTests ();
+			testSelector.SelectTests ();
 
 			LoadSimulatorsAndDevicesAsync ().DoNotAwait ();
 
