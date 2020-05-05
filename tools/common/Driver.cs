@@ -323,7 +323,7 @@ namespace Xamarin.Bundler {
 				bool force45From40UnifiedSystemFull = false;
 
 				// Detect Classic usage, and show an error.
-				if (references.Any ((v) => Path.GetFileName (v) == "XamMac.dll"))
+				if (App.References.Any ((v) => Path.GetFileName (v) == "XamMac.dll"))
 					throw ErrorHelper.CreateError (143, Errors.MM0143 /* Projects using the Classic API are not supported anymore. Please migrate the project to the Unified API. */);
 
 				if (targetFramework == TargetFramework.Net_2_0
@@ -352,7 +352,7 @@ namespace Xamarin.Bundler {
 				} else {
 					// This is a total hack. Instead of passing in an argument, we walk the references looking for
 					// the "right" Xamarin.Mac and assume you are doing something
-					foreach (var asm in references) {
+					foreach (var asm in App.References) {
 						if (asm.EndsWith ("reference/full/Xamarin.Mac.dll", StringComparison.Ordinal)) {
 							force45From40UnifiedSystemFull = TargetFramework == TargetFramework.Net_4_0;
 							TargetFramework = TargetFramework.Xamarin_Mac_4_5_System;
