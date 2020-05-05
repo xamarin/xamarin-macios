@@ -16,6 +16,16 @@ using System.Text;
 using Xamarin.Bundler;
 using Xamarin.Linker;
 
+#if MONOTOUCH
+using PlatformResolver = MonoTouch.Tuner.MonoTouchResolver;
+#elif MMP
+using PlatformResolver = Xamarin.Bundler.MonoMacResolver;
+#elif NET
+using PlatformResolver = Xamarin.Linker.DotNetResolver;
+#else
+#error Invalid defines
+#endif
+
 using Registrar;
 using Foundation;
 using ObjCRuntime;
@@ -571,6 +581,9 @@ namespace Registrar {
 		IEnumerable<AssemblyDefinition> input_assemblies;
 		Dictionary<IMetadataTokenProvider, object> availability_annotations;
 
+		PlatformResolver resolver;
+		PlatformResolver Resolver { get { return resolver ?? Target.Resolver; } }
+
 #if MONOMAC
 		readonly Version MacOSTenTwelveVersion = new Version (10,12);
 #endif
@@ -975,23 +988,31 @@ namespace Registrar {
 			// find corlib
 			var corlib_name = Driver.CorlibName;
 			AssemblyDefinition corlib = null;
-			AssemblyDefinition first = null;
+			IEnumerable<AssemblyDefinition> candidates = null;
 
 			foreach (var assembly in input_assemblies) {
-				if (first == null)
-					first = assembly;
-				if (assembly.Name.Name == corlib_name) {
+				if (corlib_name == assembly.Name.Name) {
 					corlib = assembly;
 					break;
 				}
 			}
 
-			if (corlib == null) {
-				corlib = first.MainModule.AssemblyResolver.Resolve (AssemblyNameReference.Parse (corlib_name), new ReaderParameters ());
+			if (corlib == null)
+				corlib = Resolver.Resolve (AssemblyNameReference.Parse (corlib_name), new ReaderParameters ());
+
+			if (corlib != null) {
+				candidates = new AssemblyDefinition [] { corlib };
+			} else if (Resolver != null) {
+				candidates = Resolver.ToResolverCache ().Values.Cast<AssemblyDefinition> ();
 			}
-			foreach (var type in corlib.MainModule.Types) {
-				if (type.Namespace == "System" && type.Name == "Void")
-					return system_void = type;
+
+			if (candidates != null) {
+				foreach (var candidate in candidates) {
+					foreach (var type in candidate.MainModule.Types) {
+						if (type.Namespace == "System" && type.Name == "Void")
+							return system_void = type;
+					}
+				}
 			}
 
 			throw ErrorHelper.CreateError (4165, Errors.MT4165);
@@ -4757,9 +4778,10 @@ namespace Registrar {
 			pinfo.EntryPoint = wrapperName;
 		}
 
-		public void GenerateSingleAssembly (IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, string assembly)
+		public void GenerateSingleAssembly (PlatformResolver resolver, IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, string assembly)
 		{
 			single_assembly = assembly;
+			this.resolver = resolver;
 			Generate (assemblies, header_path, source_path);
 		}
 
