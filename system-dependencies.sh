@@ -321,24 +321,8 @@ function run_xcode_first_launch ()
 		return
 	fi
 
-	# Delete any cached files by xcodebuild, because other branches'
-	# system-dependencies.sh keep installing earlier versions of these
-	# packages manually, which means subsequent first launch checks will
-	# succeed because we've successfully run the first launch tasks once
-	# (and this is cached), while someone else (we!) overwrote with
-	# earlier versions (bypassing the cache).
-	#
-	# Removing the cache will make xcodebuild realize older packages are installed,
-	# and (re-)install any newer packages.
-	#
-	# We'll be able to remove this logic one day, when all branches in use are
-	# using 'xcodebuild -runFirstLaunch' instead of manually installing
-	# packages.
-	find /var/folders -name '*com.apple.dt.Xcode.InstallCheckCache*' -print -delete 2>/dev/null | sed 's/^\(.*\)$/        Deleted Xcode cache file: \1 (this is normal)/' || true
 	if ! "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -checkFirstLaunchStatus; then
 		if ! test -z "$PROVISION_XCODE"; then
-			# Remove sudo's cache as well, otherwise nothing will happen.
-			$SUDO find /var/folders -name '*com.apple.dt.Xcode.InstallCheckCache*' -print -delete 2>/dev/null | sed 's/^\(.*\)$/        Deleted Xcode cache file: \1 (this is normal)/' || true
 			# Run the first launch tasks
 			log "Executing '$SUDO $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -runFirstLaunch'"
 			$SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -runFirstLaunch
