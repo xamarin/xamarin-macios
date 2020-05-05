@@ -31,4 +31,4 @@ tests/bcl-test/mscorlib*.csproj
 tests/bcl-test/SystemCoreXunit*.csproj
 tests/bcl-test/SystemXunit.csproj
 global.json
-
+.idea
