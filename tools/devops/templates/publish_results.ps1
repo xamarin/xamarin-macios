@@ -28,10 +28,6 @@ $params = @{
 #
 $response = Invoke-RestMethod @params
 
-Write-Host $response
-$response | ConvertTo-Json | Write-Host
-Write-Host "^ ConvertToJson below is ConvertFromJson `n"
-
 Write-Host "Raw response: " + $response
 
 Write-Host "Response.state: " + $response.state
@@ -91,7 +87,7 @@ $json_text = "### :boom: :construction: TESTING Experimental DDFun pipeline: Dev
 
 
 # Get all test summary files
-$files = Get-ChildItem "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/TestSummary-*/TestSummary.md"
+$files = Get-ChildItem "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/Summaries/TestSummary-*/TestSummary.md"
 
 # stringbuilder for extra flavor
 $msg = [System.Text.StringBuilder]::new()
