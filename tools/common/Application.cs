@@ -402,7 +402,6 @@ namespace Xamarin.Bundler {
 			var RootAssembly = RootAssemblies [0];
 			var resolvedAssemblies = new Dictionary<string, AssemblyDefinition> ();
 			var resolver = new PlatformResolver () {
-				FrameworkDirectory = Driver.GetPlatformFrameworkDirectory (this),
 				RootDirectory = Path.GetDirectoryName (RootAssembly),
 #if MMP
 				CommandLineAssemblies = RootAssemblies,
@@ -419,7 +418,11 @@ namespace Xamarin.Bundler {
 
 			var ps = new ReaderParameters ();
 			ps.AssemblyResolver = resolver;
-			resolvedAssemblies.Add ("mscorlib", ps.AssemblyResolver.Resolve (AssemblyNameReference.Parse ("mscorlib"), new ReaderParameters ()));
+			foreach (var reference in References) {
+				var r = resolver.Load (reference);
+				if (r == null)
+					throw ErrorHelper.CreateError (2002, Errors.MT2002, reference);
+			}
 
 			var productAssembly = Driver.GetProductAssembly (this);
 			bool foundProductAssembly = false;

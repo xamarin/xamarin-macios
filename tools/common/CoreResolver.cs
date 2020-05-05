@@ -114,6 +114,9 @@ namespace Xamarin.Bundler {
 
 		protected AssemblyDefinition SearchDirectory (string name, string directory, string extension = ".dll")
 		{
+			if (!Directory.Exists (directory))
+				return null;
+
 			var file = DirectoryGetFile (directory, name + extension);
 			if (file.Length > 0)
 				return Load (file);
