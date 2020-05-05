@@ -74,7 +74,6 @@ namespace Xamarin.Bundler {
 		const string FRAMEWORK_LOCATION_VARIABLE = "XAMMAC_FRAMEWORK_PATH";
 		internal static Application App = new Application (Environment.GetCommandLineArgs ());
 		static Target BuildTarget;
-		static List<string> references = new List<string> ();
 		static List<string> resources = new List<string> ();
 		static List<string> resolved_assemblies = new List<string> ();
 		static List<string> ignored_assemblies = new List<string> ();
@@ -188,7 +187,7 @@ namespace Xamarin.Bundler {
 			var os = new OptionSet () {
 				{ "f|force", "Forces the recompilation of code, regardless of timestamps", v=> Force = true },
 				{ "cache=", "Specify the directory where temporary build files will be cached", v => App.Cache.Location = v },
-				{ "a|assembly=", "Add an assembly to be processed", v => references.Add (v) },
+				{ "a|assembly=", "Add an assembly to be processed", v => App.References.Add (v) },
 				{ "r|resource=", "Add a resource to be included", v => resources.Add (v) },
 				{ "o|output=", "Specify the output path", v => output_dir = v },
 				{ "n|name=", "Specify the application name", v => app_name = v },
@@ -441,7 +440,7 @@ namespace Xamarin.Bundler {
 			// Many Xamarin.Mac references are technically valid, so whitelisting risks breaking working project
 			// However, passing in Mobile / Xamarin.Mac folders and resolving full/4.5 or vice versa is 
 			// far from expected. So catch the common cases if we can
-			string reference = references.FirstOrDefault (x => x.EndsWith ("Xamarin.Mac.dll", StringComparison.Ordinal));
+			string reference = App.References.FirstOrDefault (x => x.EndsWith ("Xamarin.Mac.dll", StringComparison.Ordinal));
 			if (reference != null) {
 				bool valid = true;
 				if (IsUnifiedMobile)
@@ -455,10 +454,10 @@ namespace Xamarin.Bundler {
 
 		static void FixReferences (Func<string, bool> match, Func<string, string> fix)
 		{
-			var assembliesToFix = references.Where (x => match(x)).ToList ();
-			references = references.Except (assembliesToFix).ToList ();
-			var fixedAssemblies = assembliesToFix.Select (x => fix(x));
-			references.AddRange (fixedAssemblies);
+			for (var i = 0; i < App.References.Count; i++) {
+				if (match (App.References [i]))
+					App.References [i] = fix (App.References [i]);
+			}
 		}
 
 		// SDK versions are only passed in as X.Y but some frameworks/APIs require X.Y.Z
@@ -593,7 +592,7 @@ namespace Xamarin.Bundler {
 				if (Profile.IsSdkAssembly (root_wo_ext) || Profile.IsProductAssembly (root_wo_ext))
 					throw new MonoMacException (3, true, Errors.MX0003, root_wo_ext);
 
-				if (references.Exists (a => Path.GetFileNameWithoutExtension (a).Equals (root_wo_ext)))
+				if (App.References.Exists (a => Path.GetFileNameWithoutExtension (a).Equals (root_wo_ext)))
 					throw new MonoMacException (23, true, Errors.MM0023, root_wo_ext);
 
 				string monoFrameworkDirectory;
@@ -609,8 +608,8 @@ namespace Xamarin.Bundler {
 				if (!Directory.Exists (fx_dir))
 					throw new MonoMacException (1403, true, Errors.MM1403, "Directory", fx_dir, TargetFramework);
 
-				references.Add (root_assembly);
-				BuildTarget.Resolver.CommandLineAssemblies = references;
+				App.References.Add (root_assembly);
+				BuildTarget.Resolver.CommandLineAssemblies = App.References;
 
 				if (!UseLegacyAssemblyResolution && (IsUnifiedFullSystemFramework || IsUnifiedFullXamMacFramework)) {
 					// We need to look in the GAC/System mono for both FullSystem and FullXamMac, because that's
@@ -814,7 +813,7 @@ namespace Xamarin.Bundler {
 					Replace ("@BUNDLEID@", string.Format ("org.mono.bundler.{0}", app_name)).  
 					Replace ("@BUNDLEICON@", icon_str).
 					Replace ("@BUNDLENAME@", app_name).
-					Replace ("@ASSEMBLY@", references.Where (e => Path.GetExtension (e) == ".exe").FirstOrDefault ()));
+					Replace ("@ASSEMBLY@", App.References.Where (e => Path.GetExtension (e) == ".exe").FirstOrDefault ()));
 			}
 		}	
 
@@ -1287,7 +1286,7 @@ namespace Xamarin.Bundler {
 			resolver.AddSearchDirectory (BuildTarget.Resolver.FrameworkDirectory);
 
 			var options = new LinkerOptions {
-				MainAssembly = BuildTarget.Resolver.GetAssembly (references [references.Count - 1]),
+				MainAssembly = BuildTarget.Resolver.GetAssembly (App.References [App.References.Count - 1]),
 				OutputDirectory = mmp_dir,
 				LinkSymbols = App.EnableDebug,
 				LinkMode = App.LinkMode,
@@ -1736,7 +1735,7 @@ namespace Xamarin.Bundler {
 		}
 
 		static void GatherAssemblies () {
-			foreach (string asm in references) {
+			foreach (string asm in App.References) {
 				AssemblyDefinition assembly = AddAssemblyPathToResolver (asm);
 				ProcessAssemblyReferences (assembly);
 			}

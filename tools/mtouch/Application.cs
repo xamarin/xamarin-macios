@@ -127,7 +127,6 @@ namespace Xamarin.Bundler {
 
 		public bool LinkAway = true;
 		public bool LinkerDumpDependencies { get; set; }
-		public List<string> References = new List<string> ();
 		
 		public bool? BuildDSym;
 

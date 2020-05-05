@@ -70,6 +70,7 @@ namespace Xamarin.Bundler {
 			set { is_default_marshal_managed_exception_mode = value; }
 		}
 		public List<string> RootAssemblies = new List<string> ();
+		public List<string> References = new List<string> ();
 		public List<Application> SharedCodeApps = new List<Application> (); // List of appexes we're sharing code with.
 		public string RegistrarOutputLibrary;
 
