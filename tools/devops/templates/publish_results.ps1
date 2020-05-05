@@ -80,44 +80,57 @@ $response | Write-Host
 ### Construct commit message w/ aggregate test summary
 ###
 
-$HEADER = ""
 If ($Env:BUILD_DEFINITIONNAME -like '*DDFun*')
 {
-	$HEADER = "### :boom: :construction: TESTING Experimental DDFun pipeline\n"
+	# do stuff
 }
-#Else{
-#HTML Report jenkins stuff
-#}
 
-$DESCRIPTION="Device test aggregate results:"
 
 # BUILD_DEFINITIONNAME: Pipeline name, e.g. "iOS Device Tests [DDFun]"
-$json_text = $HEADER + "$DESCRIPTION on [Azure DevOps]($target_url)"
+$json_text = "### :boom: :construction: TESTING Experimental DDFun pipeline: Device test aggregate results: on [Azure DevOps]($target_url)"
 
-# add contents of test summary to json_text
-$testsummary_location = $Env:SYSTEM_DEFAULTWORKINGDIRECTORY
-$testsummary_location = $testsummary_location + "/TestSummary"
-Write-Host $testsummary_location
-$test_summary = Get-Content "$testsummary_location"
 
-$json_text = $json_text + $test_summary
+# Get all test summary files
+$files = Get-ChildItem "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/TestSummary-*/TestSummary.md"
 
-Write-Host "json_text + test_summary"
-Write-Host $json_text
+# stringbuilder for extra flavor
+$msg = [System.Text.StringBuilder]::new()
+$msg.AppendLine($json_text)
+$msg.AppendLine()
 
-$json_text = $json_text | ConvertTo-Json
-Write-Host "Convert to json"
-Write-Host $json_text
+foreach ($file in $files)
+{
+	Write-Host $file
+	Write-Host Get-Content $file
+
+	$msg.AppendLine("blah title from filename")
+	$msg.AppendLine()
+
+	# read each line of the summary file, append it with correct \n at the end
+	foreach ($line in Get-Content -Path $file)
+	{
+		$msg.AppendLine($line)
+	}
+
+	# new line to separate file contents
+	$msg.AppendLine()
+}
+
+
+
+
 
 
 
 $message_url = "https://api.github.com/repos/xamarin/xamarin-macios/commits/$Env:BUILD_REVISION/comments"
 
-$json_payload = @"
-{
-    "body" : $json_text
+# create pwsh object to store payload
+$payload = @{
+	body = $msg.ToString()
 }
-"@
+
+# convert payload to json
+$json_payload = $payload | ConvertTo-json
 
 Write-Host $json_payload
 
@@ -134,47 +147,3 @@ Write-Host $params
 $response = Invoke-RestMethod @params
 
 $response | ConvertTo-Json | Write-Host
-
-
-
-# https://api.github.com/xamarin/xamarin-macios/commits/eea6fd1f27ba9a0ac4fa09c8e57fc87d612b6340/status
-
-#GET /projects/:id/repository/commits/:sha/refs
-
-
-#https://api.github.com/repos/xamarin/xamarin-macios/statuses/$Env:BUILD_REVISION
-
-
-
-# -Uri $url
-# -Method Post
-# -Body $json_payload
-#$response = Invoke-RestMethod -Uri $url -ContentType application/json  -Method Post -Body @json_payload
-<#
-(
-	printf '{\n'
-	printf "\t\"state\": \"%s\",\n" "$STATE"
-	printf "\t\"target_url\": \"%s\",\n" "$TARGET_URL"
-	printf "\t\"description\": %s,\n" "$(echo -n "$DESCRIPTION" | python -c 'import json,sys; print(json.dumps(sys.stdin.read()))')"
-	printf "\t\"context\": \"%s\"\n" "$CONTEXT"
-	printf "}\n"
-) > "$JSONFILE"
-
-if test -n "$VERBOSE"; then
-	echo "JSON file:"
-	sed 's/^/    /' "$JSONFILE";
-fi
-
-if ! curl -f -v -H "Authorization: token $TOKEN" -H "User-Agent: command line tool" -d "@$JSONFILE" "https://api.github.com/repos/xamarin/xamarin-macios/statuses/$HASH" > "$LOGFILE" 2>&1; then
-	echo "Failed to add status."
-	echo "curl output:"
-	sed 's/^/    /' "$LOGFILE"
-	echo "Json body:"
-	sed 's/^/    /' "$JSONFILE"
-	exit 1 #>
-
-# 	printf "\t\"state\": \"%s\",\n" "$STATE"
-#	printf "\t\"target_url\": \"%s\",\n" "$TARGET_URL"
-#	printf "\t\"description\": %s,\n" "$(echo -n "$DESCRIPTION" | python -c 'import json,sys; print(json.dumps(sys.stdin.read()))')"
-#	printf "\t\"context\": \"%s\"\n" "$CONTEXT"
-# ./jenkins/add-commit-status.sh --token="$TOKEN" --hash="$BUILD_REVISION" --state="$GH_STATE" --target-url="$VSTS_BUILD_URL" --description="$DESCRIPTION" --context="VSTS: device tests ($DEVICE_TYPE)"
