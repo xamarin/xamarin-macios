@@ -205,23 +205,7 @@ namespace Registrar {
 		}
 	}
 
-	interface IStaticRegistrar
-	{
-		bool HasAttribute (ICustomAttributeProvider provider, string @namespace, string name, bool inherits = false);
-		bool HasProtocolAttribute (TypeReference type);
-		RegisterAttribute GetRegisterAttribute (TypeReference type);
-		ProtocolAttribute GetProtocolAttribute (TypeReference type);
-		string GetExportedTypeName (TypeReference type, RegisterAttribute register_attribute);
-		void GenerateSingleAssembly (IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, string assembly);
-		void Generate (IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path);
-		string ComputeSignature (TypeReference DeclaringType, MethodDefinition Method, Registrar.ObjCMember member = null, bool isCategoryInstance = false, bool isBlockSignature = false);
-		string ComputeSignature (TypeReference declaring_type, bool is_ctor, TypeReference return_type, TypeReference [] parameters, MethodDefinition mi = null, Registrar.ObjCMember member = null, bool isCategoryInstance = false, bool isBlockSignature = false);
-		bool MapProtocolMember (MethodDefinition method, out MethodDefinition extensionMethod);
-		string PlatformAssembly { get; }
-		Dictionary<ICustomAttribute, MethodDefinition> ProtocolMemberMethodMap { get; }
-	}
-
-	class StaticRegistrar : Registrar, IStaticRegistrar
+	class StaticRegistrar : Registrar
 	{
 		Dictionary<ICustomAttribute, MethodDefinition> protocol_member_method_map;
 
