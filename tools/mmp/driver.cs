@@ -520,11 +520,6 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		public static Frameworks GetFrameworks (Application app)
-		{
-			return Frameworks.MacFrameworks;
-		}
-
 		static void CheckForUnknownCommandLineArguments (IList<Exception> exceptions, IList<string> arguments)
 		{
 			for (int i = arguments.Count - 1; i >= 0; i--) {

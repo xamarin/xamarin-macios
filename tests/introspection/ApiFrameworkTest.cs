@@ -92,11 +92,11 @@ namespace Introspection {
 		Frameworks GetFrameworks ()
 		{
 #if __IOS__
-			return Frameworks.GetiOSFrameworks (app);
+			return Frameworks.GetiOSFrameworks (app.IsSimulatorBuild);
 #elif __TVOS__
 			return Frameworks.TVOSFrameworks;
 #elif __WATCHOS__
-			return Frameworks.GetwatchOSFrameworks (app);
+			return Frameworks.GetwatchOSFrameworks (app.IsSimulatorBuild);
 #elif __MACOS__
 			return Frameworks.MacFrameworks;
 #else

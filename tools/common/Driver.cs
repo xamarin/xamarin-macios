@@ -1272,5 +1272,13 @@ namespace Xamarin.Bundler {
 				return "mscorlib";
 			}
 		}
+
+		public static Frameworks GetFrameworks (Application app)
+		{
+			var rv = Frameworks.GetFrameworks (app.Platform, app.IsSimulatorBuild);
+			if (rv == null)
+				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, PRODUCT);
+			return rv;
+		}
 	}
 }
