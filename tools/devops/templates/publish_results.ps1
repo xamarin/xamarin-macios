@@ -85,9 +85,10 @@ If ($Env:BUILD_DEFINITIONNAME -like '*DDFun*')
 # BUILD_DEFINITIONNAME: Pipeline name, e.g. "iOS Device Tests [DDFun]"
 $json_text = "### :boom: :construction: TESTING Experimental DDFun pipeline: Device test aggregate results: on [Azure DevOps]($target_url)"
 
-
+$dir = $Env:SYSTEM_DEFAULTWORKINGDIRECTORY
+$dir = $dir + "/Summaries/*"
 # Get all test summary files
-$files = Get-ChildItem -Path $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/Summaries/TestSummary-*/TestSummary.md
+$files = Get-ChildItem -Path $dir -Include TestSummary.md
 
 # stringbuilder for extra flavor
 $msg = [System.Text.StringBuilder]::new()
