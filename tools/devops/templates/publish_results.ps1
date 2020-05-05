@@ -87,7 +87,7 @@ $json_text = "### :boom: :construction: TESTING Experimental DDFun pipeline: Dev
 
 
 # Get all test summary files
-$files = Get-ChildItem "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/Summaries/TestSummary-*/TestSummary.md"
+$files = Get-ChildItem -Path $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/Summaries/TestSummary-*/TestSummary.md
 
 # stringbuilder for extra flavor
 $msg = [System.Text.StringBuilder]::new()
