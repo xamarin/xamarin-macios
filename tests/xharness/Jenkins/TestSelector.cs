@@ -21,59 +21,59 @@ namespace Xharness.Jenkins {
 		ILog MainLog => jenkins.MainLog;
 		Harness Harness => jenkins.Harness;
 		
-			// We select tests based on a prefix of the modified files.
-			// Add entries here to check for more prefixes.
-			static readonly string [] mtouchPrefixes = {
-				"tests/mtouch",
-				"tests/common",
-				"tools/mtouch",
-				"tools/common",
-				"tools/linker",
-				"src/ObjCRuntime/Registrar.cs",
-				"mk/mono.mk",
-				"msbuild",
-				"runtime",
-			};
-			static readonly string[] mmpPrefixes = {
-				"tests/mmptest",
-				"tests/common",
-				"tools/mmp",
-				"tools/common",
-				"tools/linker",
-				"src/ObjCRuntime/Registrar.cs",
-				"mk/mono.mk",
-				"msbuild",
-			};
-			static readonly string[] bclPrefixes = {
-				"tests/bcl-test",
-				"tests/common",
-				"mk/mono.mk",
-			};
-			static readonly string [] btouchPrefixes = {
-				"src/btouch.cs",
-				"src/generator.cs",
-				"src/generator-",
-				"src/Makefile.generator",
-				"tests/bgen",
-				"tests/generator",
-				"tests/common",
-			};
-			static readonly string [] macBindingProject = new [] {
-				"msbuild",
-				"tests/mac-binding-project",
-				"tests/common/mac",
-			}.Intersect (btouchPrefixes).ToArray ();
-			
-			static readonly string [] xtroPrefixes = {
-				"tests/xtro-sharpie",
-				"src",
-				"Make.config",
-			};
-			static readonly string [] cecilPrefixes = {
-				"tests/cecil-tests",
-				"src",
-				"Make.config",
-			};
+		// We select tests based on a prefix of the modified files.
+		// Add entries here to check for more prefixes.
+		static readonly string [] mtouchPrefixes = {
+			"tests/mtouch",
+			"tests/common",
+			"tools/mtouch",
+			"tools/common",
+			"tools/linker",
+			"src/ObjCRuntime/Registrar.cs",
+			"mk/mono.mk",
+			"msbuild",
+			"runtime",
+		};
+		static readonly string[] mmpPrefixes = {
+			"tests/mmptest",
+			"tests/common",
+			"tools/mmp",
+			"tools/common",
+			"tools/linker",
+			"src/ObjCRuntime/Registrar.cs",
+			"mk/mono.mk",
+			"msbuild",
+		};
+		static readonly string[] bclPrefixes = {
+			"tests/bcl-test",
+			"tests/common",
+			"mk/mono.mk",
+		};
+		static readonly string [] btouchPrefixes = {
+			"src/btouch.cs",
+			"src/generator.cs",
+			"src/generator-",
+			"src/Makefile.generator",
+			"tests/bgen",
+			"tests/generator",
+			"tests/common",
+		};
+		static readonly string [] macBindingProject = new [] {
+			"msbuild",
+			"tests/mac-binding-project",
+			"tests/common/mac",
+		}.Intersect (btouchPrefixes).ToArray ();
+		
+		static readonly string [] xtroPrefixes = {
+			"tests/xtro-sharpie",
+			"src",
+			"Make.config",
+		};
+		static readonly string [] cecilPrefixes = {
+			"tests/cecil-tests",
+			"src",
+			"Make.config",
+		};
 
 		#endregion
 
