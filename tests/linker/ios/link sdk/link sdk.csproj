@@ -45,7 +45,7 @@
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <DefineConstants>DEBUG;XAMARIN_APPLETLS;;$(DefineConstants)</DefineConstants>
+    <DefineConstants>DEBUG;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchDebug>True</MtouchDebug>
@@ -60,7 +60,7 @@
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <DefineConstants>DEBUG;XAMARIN_APPLETLS;;$(DefineConstants)</DefineConstants>
+    <DefineConstants>DEBUG;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchDebug>True</MtouchDebug>
@@ -75,7 +75,7 @@
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <DefineConstants>DEBUG;XAMARIN_APPLETLS;;$(DefineConstants)</DefineConstants>
+    <DefineConstants>DEBUG;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchDebug>True</MtouchDebug>
@@ -95,7 +95,7 @@
     <MtouchExtraArgs>-v -v -xml=${ProjectDir}/extra-linker-defs.xml "--dlsym:-link sdk"</MtouchExtraArgs>
     <MtouchUseLlvm>True</MtouchUseLlvm>
     <MtouchArch>ARMv7, ARM64</MtouchArch>
-    <DefineConstants>DO_NOT_REMOVE;XAMARIN_APPLETLS;;$(DefineConstants)</DefineConstants>
+    <DefineConstants>DO_NOT_REMOVE;$(DefineConstants)</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release32|iPhone' ">
@@ -108,7 +108,7 @@
     <MtouchExtraArgs>-v -v -xml=${ProjectDir}/extra-linker-defs.xml "--dlsym:-link sdk"</MtouchExtraArgs>
     <MtouchUseLlvm>True</MtouchUseLlvm>
     <MtouchArch>ARMv7</MtouchArch>
-    <DefineConstants>DO_NOT_REMOVE;XAMARIN_APPLETLS;;$(DefineConstants)</DefineConstants>
+    <DefineConstants>DO_NOT_REMOVE;$(DefineConstants)</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release64|iPhone' ">
@@ -121,7 +121,7 @@
     <MtouchExtraArgs>-v -v -xml=${ProjectDir}/extra-linker-defs.xml "--dlsym:-link sdk"</MtouchExtraArgs>
     <MtouchUseLlvm>True</MtouchUseLlvm>
     <MtouchArch>ARM64</MtouchArch>
-    <DefineConstants>DO_NOT_REMOVE;XAMARIN_APPLETLS;;$(DefineConstants)</DefineConstants>
+    <DefineConstants>DO_NOT_REMOVE;$(DefineConstants)</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-bitcode|iPhone' ">
@@ -134,7 +134,7 @@
     <MtouchExtraArgs>-v -v -xml=${ProjectDir}/extra-linker-defs.xml "--dlsym:-link sdk" --bitcode:full</MtouchExtraArgs>
     <MtouchUseLlvm>true</MtouchUseLlvm>
     <MtouchArch>ARMv7, ARM64</MtouchArch>
-    <DefineConstants>DO_NOT_REMOVE;XAMARIN_APPLETLS;;$(DefineConstants)</DefineConstants>
+    <DefineConstants>DO_NOT_REMOVE;$(DefineConstants)</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>

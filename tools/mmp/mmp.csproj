@@ -16,7 +16,7 @@
     <DebugType>portable</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>MONOMAC;MMP;XAMARIN_APPLETLS;DEBUG</DefineConstants>
+    <DefineConstants>MONOMAC;MMP;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Deterministic>True</Deterministic>
@@ -28,7 +28,7 @@
     <Optimize>False</Optimize>
     <OutputPath>bin\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
-    <DefineConstants>MONOMAC;MMP;XAMARIN_APPLETLS</DefineConstants>
+    <DefineConstants>MONOMAC;MMP</DefineConstants>
     <WarningLevel>4</WarningLevel>
     <Deterministic>True</Deterministic>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>

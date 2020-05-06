@@ -28,7 +28,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#if (XAMARIN_APPLETLS || WATCH) && !NET
+#if !NET
 #define NATIVE_APPLE_CERTIFICATE
 #endif
 
@@ -91,13 +91,6 @@ namespace Security {
 				throw new ArgumentNullException ("certificate");
 
 #if NATIVE_APPLE_CERTIFICATE
-			/*
-			 * This requires a recent Mono runtime which has the lazily-initialized
-			 * certifciates in mscorlib.dll, so we can't use it on XM classic.
-			 *
-			 * Using 'XAMARIN_APPLETLS' as a conditional because 'XAMCORE_2_0' is
-			 * defined for tvos and watch, which have a recent-enough runtime.
-			 */
 			handle = certificate.Impl.GetNativeAppleCertificate ();
 			if (handle != IntPtr.Zero) {
 				CFObject.CFRetain (handle);
