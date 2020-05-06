@@ -241,9 +241,6 @@ namespace LinkAll {
 			// since we're linking the attributes will NOT be available - even if they are used
 #if !XAMCORE_3_0
 			Assert.Null (Helper.GetType (prefix + "ObjCRuntime.AvailabilityAttribute, " + suffix), "AvailabilityAttribute");
-			Assert.Null (Helper.GetType (prefix + "ObjCRuntime.iOSAttribute, " + suffix), "AvailabilityAttribute");
-			Assert.Null (Helper.GetType (prefix + "ObjCRuntime.AvailabilityAttribute, " + suffix), "AvailabilityAttribute");
-			Assert.Null (Helper.GetType (prefix + "ObjCRuntime.SinceAttribute, " + suffix), "SinceAttribute");
 #endif
 			Assert.Null (Helper.GetType (prefix + "ObjCRuntime.IntroducedAttribute, " + suffix), "IntroducedAttribute");
 			Assert.Null (Helper.GetType (prefix + "ObjCRuntime.DeprecatedAttribute, " + suffix), "DeprecatedAttribute");

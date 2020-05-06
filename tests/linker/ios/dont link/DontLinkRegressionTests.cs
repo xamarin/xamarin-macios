@@ -57,13 +57,8 @@ namespace DontLink {
 		public void RemovedAttributes ()
 		{
 			// since we do not link the attributes will be available - used or not by the application
-#if XAMCORE_2_0
 			var fullname = typeof (NSObject).Assembly.FullName;
 			Assert.NotNull (Type.GetType ("ObjCRuntime.ThreadSafeAttribute, " + fullname), "ThreadSafeAttribute");
-#else
-			Assert.NotNull (Type.GetType ("MonoTouch.ObjCRuntime.SinceAttribute, monotouch"), "SinceAttribute");
-			Assert.NotNull (Type.GetType ("MonoTouch.ObjCRuntime.ThreadSafeAttribute, monotouch"), "ThreadSafeAttribute");
-#endif
 		}
 
 		[Test]
