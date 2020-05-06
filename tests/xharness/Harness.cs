@@ -706,7 +706,7 @@ namespace Xharness {
 			return new AppRunner (processManager,
 				new AppBundleInformationParser (),
 				new SimulatorLoaderFactory (processManager),
-				new SimpleListenerFactory (TunnelBore),
+				new SimpleListenerFactory (UseTcpTunnel ? TunnelBore : null),
 				new DeviceLoaderFactory (processManager),
 				new CrashSnapshotReporterFactory (processManager),
 				new CaptureLogFactory (),
