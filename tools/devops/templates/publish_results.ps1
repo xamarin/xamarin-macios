@@ -86,12 +86,17 @@ If ($Env:BUILD_DEFINITIONNAME -like '*DDFun*')
 $json_text = "### :boom: :construction: TESTING Experimental DDFun pipeline: Device test aggregate results: on [Azure DevOps]($target_url)"
 
 $dir = $Env:PIPELINE_WORKSPACE
-$dir = "$dir/Summaries/*"
+$dir = "$dir/Summaries/TestSummary-*/TestSummary.md"
 
 Write-Host $dir
 Get-ChildItem $dir | Write-Host
+
+# Test summary filepath follows the format:
+# /Users/xamarinqa/azdo/_work/15/Summaries/TestSummary-DEVICE-TESTNAME/TestSummary.md
+# /Users/xamarinqa/azdo/_work/15/Summaries/TestSummary-tvOS-monotouch-DDFun/TestSummary.md
+# /Users/xamarinqa/azdo/_work/15/Summaries/TestSummary-tvOS-xamarin-DDFun/TestSummary.md
 # Get all test summary files
-$files = Get-ChildItem -Path $dir -Recurse -Include TestSummary.md
+$files = Get-ChildItem -Path $dir
 
 
 # stringbuilder for extra flavor
