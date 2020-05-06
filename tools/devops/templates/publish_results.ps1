@@ -91,7 +91,7 @@ $dir = "$dir/Summaries/*"
 Write-Host $dir
 Get-ChildItem $dir | Write-Host
 # Get all test summary files
-$files = Get-ChildItem $dir
+$files = Get-ChildItem -Path $dir -Recurse -Include TestSummary.md
 
 
 # stringbuilder for extra flavor
