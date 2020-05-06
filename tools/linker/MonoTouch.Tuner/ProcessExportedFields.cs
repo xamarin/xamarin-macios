@@ -57,7 +57,7 @@ namespace MonoTouch.Tuner {
 			if (symbol == null)
 				return;
 
-			Context.Annotations.GetCustomAnnotations ("ExportedFields").Add (property, symbol);
+			Annotations.GetCustomAnnotations ("ExportedFields").Add (property, symbol);
 		}
 
 		internal static string GetFieldSymbol (PropertyDefinition property)
