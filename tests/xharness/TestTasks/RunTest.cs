@@ -67,16 +67,18 @@ namespace Xharness.TestTasks {
 				testTask.FailureMessage = BuildTask.FailureMessage;
 				if (!string.IsNullOrEmpty (BuildTask.KnownFailure))
 					testTask.KnownFailure = BuildTask.KnownFailure;
-				if (generateXmlFailures)
+				if (generateXmlFailures) {
+					var logReader = BuildTask.BuildLog.GetReader ();
 					ResultParser.GenerateFailure (
-						logs: testTask.Logs, 
+						logs: testTask.Logs,
 						source: "build",
 						appName: testTask.TestName,
 						variation: testTask.Variation,
 						title: $"App Build {testTask.TestName} {testTask.Variation}",
 						message: $"App could not be built {testTask.FailureMessage}.",
-						stderrPath: BuildTask.BuildLog.FullPath,
+						stderrReader: logReader,
 						jargon: xmlResultJargon);
+				}
 			} else {
 				testTask.ExecutionResult = TestExecutingResult.Built;
 			}
