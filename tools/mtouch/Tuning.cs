@@ -29,7 +29,6 @@ namespace MonoTouch.Tuner {
 		public bool Device { get; set; }
 		public IList<string> ExtraDefinitions { get; set; }
 		public bool DebugBuild { get; set; }
-		public bool IsDualBuild { get; set; }
 		public bool DumpDependencies { get; set; }
 		internal PInvokeWrapperGenerator MarshalNativeExceptionsState { get; set; }
 		internal RuntimeOptions RuntimeOptions { get; set; }
