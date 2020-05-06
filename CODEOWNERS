@@ -14,7 +14,7 @@
 
 /mk @rolfbjarne
 
-/msbuild @kzu @jstedfast @emaf @rolfbjarne @VincentDondain @chamons
+/msbuild @kzu @jstedfast @emaf @rolfbjarne @chamons
 
 /runtime @rolfbjarne
 
@@ -22,8 +22,8 @@
 /src/addressbook.cs @dalexsoto
 /src/AppKit @chamons @dalexsoto
 /src/appkit.cs @chamons @dalexsoto
-/src/ARKit @VincentDondain
-/src/arkit.cs @VincentDondain
+/src/ARKit
+/src/arkit.cs
 /src/AudioToolbox @dalexsoto
 /src/audiotoolbox.cs @dalexsoto
 /src/AudioUnit @dalexsoto
@@ -46,8 +46,8 @@
 /src/contacts.cs @dalexsoto @spouliot
 /src/CoreAudio @dalexsoto
 /src/coreaudio.cs @dalexsoto
-/src/CoreBluetooth @VincentDondain @dalexsoto
-/src/corebluetooth.cs @VincentDondain @dalexsoto
+/src/CoreBluetooth @dalexsoto
+/src/corebluetooth.cs @dalexsoto
 /src/CoreData @mandel-macaque
 /src/coredata.cs @mandel-macaque
 /src/CoreFoundation @rolfbjarne @spouliot
@@ -70,8 +70,8 @@
 /src/corespotlight.cs @dalexsoto @spouliot
 /src/CoreTelephony @spouliot
 /src/coretelephony.cs @spouliot
-/src/CoreText @VincentDondain
-/src/coretext.cs @VincentDondain
+/src/CoreText
+/src/coretext.cs
 /src/CoreVideo @dalexsoto @spouliot @rolfbjarne
 /src/corevideo.cs @dalexsoto @spouliot @rolfbjarne
 /src/EventKit @dalexsoto @spouliot
@@ -80,19 +80,19 @@
 /src/externalaccessory.cs @dalexsoto @spouliot
 /src/Foundation @spouliot @rolfbjarne @chamons
 /src/foundation.cs @spouliot @rolfbjarne @chamons
-/src/GameController @VincentDondain @spouliot
-/src/gamecontroller.cs @VincentDondain @spouliot
-/src/GameKit @VincentDondain
-/src/gamekit.cs @VincentDondain
+/src/GameController @spouliot
+/src/gamecontroller.cs @spouliot
+/src/GameKit
+/src/gamekit.cs
 /src/GameplayKit @dalexsoto
 /src/gameplaykit.cs @dalexsoto
-/src/generator* @dalexsoto @spouliot @rolf @VincentDondain
+/src/generator* @dalexsoto @spouliot @rolf
 /src/GLKit @dalexsoto @spouliot
 /src/glkit.cs @dalexsoto @spouliot
-/src/HealthKit @VincentDondain
-/src/healthkit.cs @VincentDondain
-/src/HomeKit @VincentDondain
-/src/homekit.cs @VincentDondain
+/src/HealthKit
+/src/healthkit.cs
+/src/HomeKit
+/src/homekit.cs
 /src/iad.cs @spouliot
 /src/iAd.framework @spouliot
 /src/identitylookup.cs @dalexsoto
@@ -113,12 +113,12 @@
 /src/localauthentication.cs @spouliot
 /src/MapKit @spouliot
 /src/mapkit.cs @spouliot
-/src/MediaPlayer @VincentDondain
-/src/mediaplayer.cs @VincentDondain
-/src/Messages @VincentDondain
-/src/messages.cs @VincentDondain
-/src/MessageUI @VincentDondain
-/src/messageui.cs @VincentDondain
+/src/MediaPlayer
+/src/mediaplayer.cs
+/src/Messages
+/src/messages.cs
+/src/MessageUI
+/src/messageui.cs
 /src/Metal @mandel-macaque
 /src/metal.cs @mandel-macaque
 /src/MetalKit @spouliot
@@ -127,8 +127,8 @@
 /src/metalperformanceshaders.cs @spouliot
 /src/MobileCoreServices @spouliot
 /src/mobilecoreservices.cs @spouliot
-/src/ModelIO @VincentDondain
-/src/modelio.cs @VincentDondain
+/src/ModelIO
+/src/modelio.cs
 /src/MultipeerConnectivity @spouliot
 /src/multipeerconnectivity.cs @spouliot
 /src/naturallanguage.cs @mandel-macaque
@@ -156,18 +156,18 @@
 /src/replaykit.cs @dalexsoto @spouliot
 /src/SafariServices @chamons @spouliot
 /src/safariservices.cs @chamons @spouliot
-/src/SceneKit @dalexsoto @VincentDondain
-/src/scenekit.cs @dalexsoto @VincentDondain
+/src/SceneKit @dalexsoto
+/src/scenekit.cs @dalexsoto
 /src/Security @dalexsoto @spouliot
 /src/security.cs @dalexsoto @spouliot
 /src/Speech @dalexsoto
 /src/speech.cs @dalexsoto
-/src/SpriteKit @VincentDondain
-/src/spritekit.cs @VincentDondain
+/src/SpriteKit
+/src/spritekit.cs
 /src/SystemConfiguration @spouliot
 /src/systemconfiguration.cs @spouliot
-/src/UIKit @dalexsoto @spouliot @rolfbjarne @VincentDondain
-/src/uikit.cs @dalexsoto @spouliot @rolfbjarne @VincentDondain
+/src/UIKit @dalexsoto @spouliot @rolfbjarne
+/src/uikit.cs @dalexsoto @spouliot @rolfbjarne
 /src/UserNotifications @dalexsoto
 /src/usernotifications.cs @dalexsoto
 /src/UserNotificationsUI @dalexsoto
