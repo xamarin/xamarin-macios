@@ -13,5 +13,10 @@ namespace Bindings.Test
 		[DllImport ("__Internal")]
 		public static extern int ar_theUltimateAnswer ();
 	}
+
+	// Verify that System.Drawing.Color usage compiles
+	public class Foo {
+		public void Bar (System.Drawing.Color color) { }
+	}
 }
 
