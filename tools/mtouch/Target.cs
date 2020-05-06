@@ -577,7 +577,6 @@ namespace Xamarin.Bundler
 				ExtraDefinitions = App.Definitions,
 				Device = App.IsDeviceBuild,
 				DebugBuild = App.EnableDebug,
-				IsDualBuild = App.IsDualBuild,
 				DumpDependencies = App.LinkerDumpDependencies,
 				RuntimeOptions = App.RuntimeOptions,
 				MarshalNativeExceptionsState = MarshalNativeExceptionsState,
