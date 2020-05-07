@@ -89,7 +89,6 @@ namespace Xamarin.Bundler {
 		static bool embed_mono = true;
 		static bool? profiling = false;
 		static List<string> link_flags;
-		static LinkerOptions linker_options;
 		static bool? disable_lldb_attach = null;
 		static bool? disable_omit_fp = null;
 		static string machine_config_path = null;
@@ -1194,7 +1193,7 @@ namespace Xamarin.Bundler {
 				}
 
 				if (App.RequiresPInvokeWrappers) {
-					var state = linker_options.MarshalNativeExceptionsState;
+					var state = BuildTarget.LinkerOptions.MarshalNativeExceptionsState;
 					state.End ();
 					args.Add (state.SourcePath);
 				}
@@ -1303,7 +1302,7 @@ namespace Xamarin.Bundler {
 				WarnOnTypeRef = App.WarnOnTypeRef,
 			};
 
-			linker_options = options;
+			BuildTarget.LinkerOptions = options;
 
 			MonoMac.Tuner.Linker.Process (options, out var context, out resolved_assemblies);
 
