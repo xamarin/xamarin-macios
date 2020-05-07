@@ -13,6 +13,7 @@ using System.Linq;
 using System.IO;
 
 using NUnit.Framework;
+using System.Net;
 using System.Net.Http.Headers;
 using System.Security.Authentication;
 using System.Text;
@@ -491,5 +492,106 @@ namespace MonoTests.System.Net.Http
 			}
 		}
 
+		[TestCase (HttpStatusCode.OK, "mandel", "1234", "mandel", "1234")]
+		[TestCase (HttpStatusCode.Unauthorized, "mandel", "1234", "mandel", "4321")]
+		[TestCase (HttpStatusCode.Unauthorized, "mandel", "1234", "", "")]
+		public void GHIssue8342 (HttpStatusCode expectedStatus, string validUsername, string validPassword, string username, string password)
+		{ 
+			// create a http client to use with some creds that we do know are not valid
+			var handler = new NSUrlSessionHandler () {
+				Credentials = new NetworkCredential (username, password, "")
+			};
+
+			var client = new HttpClient (handler);
+
+			bool done = false;
+			HttpStatusCode httpStatus = HttpStatusCode.NotFound;
+			Exception ex = null;
+			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
+				try {
+
+					var result = await client.GetAsync ($"https://httpbin.org/basic-auth/{validUsername}/{validPassword}");
+					httpStatus = result.StatusCode;
+				} catch (Exception e) {
+					ex = e;
+				} finally {
+					done = true;
+				}
+			}, () => done);
+
+			if (!done) { // timeouts happen in the bots due to dns issues, connection issues etc.. we do not want to fail
+				Assert.Inconclusive ("Request timedout.");
+			} else {
+				Assert.IsNull (ex, "Exception not null");
+				Assert.AreEqual (expectedStatus, httpStatus, "Status not ok");
+			}
+		}
+
+		[TestCase]
+		public void GHIssue8344 ()
+		{
+			var username = "mandel";
+			var password = "1234";
+			var url = $"https://httpbin.org/basic-auth/{username}/{password}";
+			// perform two requests, one that will get a 200 with valid creds, one that wont and assert that
+			// the second call does get a 401
+			// create a http client to use with some creds that we do know are not valid
+			var firstHandler = new NSUrlSessionHandler () {
+				Credentials = new NetworkCredential (username, password, "")
+			};
+
+			var firstClient = new HttpClient (firstHandler);
+
+			bool done = false;
+			HttpStatusCode httpStatus = HttpStatusCode.NotFound;
+			Exception ex = null;
+			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
+				try {
+
+					var result = await firstClient.GetAsync (url);
+					httpStatus = result.StatusCode;
+				} catch (Exception e) {
+					ex = e;
+				} finally {
+					done = true;
+				}
+			}, () => done);
+
+			if (!done) { // timeouts happen in the bots due to dns issues, connection issues etc.. we do not want to fail
+				Assert.Inconclusive ("First request timedout.");
+			} else {
+				Assert.IsNull (ex, "First request exception not null");
+				Assert.AreEqual (HttpStatusCode.OK, httpStatus, "First status not ok");
+			}
+			// exactly same operation, diff handler, wrong password, should fail
+
+			var secondHandler = new NSUrlSessionHandler () {
+				Credentials = new NetworkCredential (username, password + password, "")
+			};
+
+			var secondClient = new HttpClient (secondHandler);
+
+			done = false;
+			httpStatus = HttpStatusCode.NotFound;
+			ex = null;
+			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
+				try {
+
+					var result = await secondClient.GetAsync (url);
+					httpStatus = result.StatusCode;
+				} catch (Exception e) {
+					ex = e;
+				} finally {
+					done = true;
+				}
+			}, () => done);
+
+			if (!done) { // timeouts happen in the bots due to dns issues, connection issues etc.. we do not want to fail
+				Assert.Inconclusive ("Second request timedout.");
+			} else {
+				Assert.IsNull (ex, "Second request exception not null");
+				Assert.AreEqual (HttpStatusCode.Unauthorized, httpStatus, "Second status not ok");
+			}
+		}
 	}
 }
