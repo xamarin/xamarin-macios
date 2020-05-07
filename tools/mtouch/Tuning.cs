@@ -107,8 +107,7 @@ namespace MonoTouch.Tuner {
 			sub.Add (new CoreRemoveSecurity ());
 			sub.Add (new OptimizeGeneratedCodeSubStep (options));
 			sub.Add (new RemoveUserResourcesSubStep (options));
-			if (options.Application.Optimizations.CustomAttributesRemoval == true)
-				sub.Add (new RemoveAttributes ());
+			sub.Add (new RemoveAttributes ());
 			// http://bugzilla.xamarin.com/show_bug.cgi?id=1408
 			if (options.LinkAway)
 				sub.Add (new RemoveCode (options));

@@ -172,8 +172,7 @@ namespace MonoMac.Tuner {
 			sub.Add (new OptimizeGeneratedCodeSubStep (options));
 			sub.Add (new RemoveUserResourcesSubStep ());
 			// OptimizeGeneratedCodeSubStep and RemoveUserResourcesSubStep needs [GeneratedCode] so it must occurs before RemoveAttributes
-			if (options.Application.Optimizations.CustomAttributesRemoval == true)
-				sub.Add (new CoreRemoveAttributes ());
+			sub.Add (new CoreRemoveAttributes ());
 
 			sub.Add (new CoreHttpMessageHandler ());
 			sub.Add (new MarkNSObjects ());
