@@ -169,7 +169,7 @@ namespace MonoMac.Tuner {
 		{
 			SubStepDispatcher sub = new SubStepDispatcher ();
 			sub.Add (new ApplyPreserveAttribute ());
-			sub.Add (new OptimizeGeneratedCodeSubStep (options));
+			sub.Add (new OptimizeGeneratedCodeSubStep ());
 			sub.Add (new RemoveUserResourcesSubStep ());
 			// OptimizeGeneratedCodeSubStep and RemoveUserResourcesSubStep needs [GeneratedCode] so it must occurs before RemoveAttributes
 			sub.Add (new CoreRemoveAttributes ());

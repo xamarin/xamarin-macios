@@ -105,7 +105,7 @@ namespace MonoTouch.Tuner {
 			SubStepDispatcher sub = new SubStepDispatcher ();
 			sub.Add (new ApplyPreserveAttribute ());
 			sub.Add (new CoreRemoveSecurity ());
-			sub.Add (new OptimizeGeneratedCodeSubStep (options));
+			sub.Add (new OptimizeGeneratedCodeSubStep ());
 			sub.Add (new RemoveUserResourcesSubStep ());
 			sub.Add (new RemoveAttributes ());
 			// http://bugzilla.xamarin.com/show_bug.cgi?id=1408
