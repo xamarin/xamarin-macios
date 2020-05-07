@@ -175,7 +175,7 @@ namespace MonoMac.Tuner {
 			if (options.Application.Optimizations.CustomAttributesRemoval == true)
 				sub.Add (new CoreRemoveAttributes ());
 
-			sub.Add (new CoreHttpMessageHandler (options));
+			sub.Add (new CoreHttpMessageHandler ());
 			sub.Add (new MarkNSObjects ());
 
 			// CoreRemoveSecurity can modify non-linked assemblies

@@ -114,7 +114,7 @@ namespace MonoTouch.Tuner {
 				sub.Add (new RemoveCode (options));
 			sub.Add (new MarkNSObjects ());
 			sub.Add (new PreserveSoapHttpClients ());
-			sub.Add (new CoreHttpMessageHandler (options));
+			sub.Add (new CoreHttpMessageHandler ());
 			sub.Add (new InlinerSubStep ());
 			sub.Add (new PreserveSmartEnumConversionsSubStep ());
 			return sub;
