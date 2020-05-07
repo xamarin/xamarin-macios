@@ -27,7 +27,7 @@ namespace Xamarin.Linker {
 
 		public bool Device { get; private set; }
 
-		protected override string Name { get; } = " Removing User Resources";
+		protected override string Name { get; } = "Removing User Resources";
 		protected override int ErrorCode { get; } = 2030;
 
 		protected override void Process (AssemblyDefinition assembly)
