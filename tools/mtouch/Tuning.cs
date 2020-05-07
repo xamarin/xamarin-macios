@@ -100,7 +100,7 @@ namespace MonoTouch.Tuner {
 			return context;
 		}
 		
-		static SubStepDispatcher GetSubSteps (LinkerOptions options)
+		static SubStepDispatcher GetSubSteps ()
 		{
 			SubStepDispatcher sub = new SubStepDispatcher ();
 			sub.Add (new ApplyPreserveAttribute ());
@@ -164,7 +164,7 @@ namespace MonoTouch.Tuner {
 			if (options.LinkMode != LinkMode.None) {
 				pipeline.Append (new CoreTypeMapStep ());
 
-				pipeline.Append (GetSubSteps (options));
+				pipeline.Append (GetSubSteps ());
 
 				pipeline.Append (new PreserveCode (options));
 

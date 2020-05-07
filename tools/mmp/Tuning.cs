@@ -133,7 +133,7 @@ namespace MonoMac.Tuner {
 			if (options.LinkMode != LinkMode.None) {
 				pipeline.Append (new CoreTypeMapStep ());
 
-				pipeline.Append (GetSubSteps (options));
+				pipeline.Append (GetSubSteps ());
 
 				pipeline.Append (new CorePreserveCode (options.I18nAssemblies));
 				pipeline.Append (new PreserveCrypto ());
@@ -165,7 +165,7 @@ namespace MonoMac.Tuner {
 			return pipeline;
 		}
 
-		static SubStepDispatcher GetSubSteps (LinkerOptions options)
+		static SubStepDispatcher GetSubSteps ()
 		{
 			SubStepDispatcher sub = new SubStepDispatcher ();
 			sub.Add (new ApplyPreserveAttribute ());
