@@ -992,7 +992,7 @@ namespace Xamarin.Bundler {
 				throw ErrorHelper.CreateError (147, ex, Errors.MM0147, str_cflags, ex.Message);
 
 			var libmain = embed_mono ? "libxammac" : "libxammac-system";
-			var libxammac = Path.Combine (FrameworkLibDirectory, libmain + (App.EnableDebug ? "-debug" : "") + ".a");
+			var libxammac = Path.Combine (GetXamarinLibraryDirectory (App), libmain + (App.EnableDebug ? "-debug" : "") + ".a");
 
 			if (!File.Exists (libxammac))
 				throw new MonoMacException (5203, true, Errors.MM5203, libxammac);

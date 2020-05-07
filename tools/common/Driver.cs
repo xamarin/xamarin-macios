@@ -850,6 +850,32 @@ namespace Xamarin.Bundler {
 			}
 		}
 
+		// This is the directory where the libxamarin*.[a|dylib] and libxammac*.[a|dylib] libraries are
+		public static string GetXamarinLibraryDirectory (Application app)
+		{
+			switch (app.Platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
+				return GetProductSdkLibDirectory (app);
+			case ApplePlatform.MacOSX:
+				return FrameworkLibDirectory;
+			default:
+				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, PRODUCT);
+			}
+		}
+
+		// This is the directory where the Xamarin[-debug].framework frameworks are
+		public static string GetXamarinFrameworkDirectory (Application app)
+		{
+			return GetProductFrameworksDirectory (app);
+		}
+
+		public static string GetProductFrameworksDirectory (Application app)
+		{
+			return Path.Combine (GetProductSdkDirectory (app), "Frameworks");
+		}
+
 		// This is the directory where the platform assembly (Xamarin.*.dll) can be found
 		public static string GetPlatformFrameworkDirectory (Application app)
 		{

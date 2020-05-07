@@ -1888,11 +1888,11 @@ namespace Xamarin.Bundler {
 		{
 			switch (build_target) {
 			case AssemblyBuildTarget.StaticObject:
-				return Path.Combine (Driver.GetProductSdkLibDirectory (this), EnableDebug ? "libxamarin-debug.a" : "libxamarin.a");
+				return Path.Combine (Driver.GetXamarinLibraryDirectory (this), EnableDebug ? "libxamarin-debug.a" : "libxamarin.a");
 			case AssemblyBuildTarget.DynamicLibrary:
-				return Path.Combine (Driver.GetProductSdkLibDirectory (this), EnableDebug ? "libxamarin-debug.dylib" : "libxamarin.dylib");
+				return Path.Combine (Driver.GetXamarinLibraryDirectory (this), EnableDebug ? "libxamarin-debug.dylib" : "libxamarin.dylib");
 			case AssemblyBuildTarget.Framework:
-				return Path.Combine (Driver.GetProductSdkFrameworksDirectory (this), EnableDebug ? "Xamarin-debug.framework" : "Xamarin.framework");
+				return Path.Combine (Driver.GetXamarinFrameworkDirectory (this), EnableDebug ? "Xamarin-debug.framework" : "Xamarin.framework");
 			default:
 				throw ErrorHelper.CreateError (100, Errors.MT0100, build_target);
 			}
