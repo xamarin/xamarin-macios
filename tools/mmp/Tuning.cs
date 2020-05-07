@@ -177,10 +177,7 @@ namespace MonoMac.Tuner {
 			sub.Add (new CoreHttpMessageHandler ());
 			sub.Add (new MarkNSObjects ());
 
-			// CoreRemoveSecurity can modify non-linked assemblies
-			// but the conditions for this cannot happen if only the platform assembly is linked
-			if (options.LinkMode != LinkMode.Platform)
-				sub.Add (new CoreRemoveSecurity ());
+			sub.Add (new CoreRemoveSecurity ());
 
 			return sub;
 		}
