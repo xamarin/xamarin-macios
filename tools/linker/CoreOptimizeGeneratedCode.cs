@@ -26,19 +26,17 @@ namespace Xamarin.Linker {
 		protected bool HasOptimizableCode { get; private set; }
 		protected bool IsExtensionType { get; private set; }
 
-		protected LinkerOptions Options { get; set; }
-
 		public bool IsDualBuild {
-			get { return Options.Application.IsDualBuild; }
+			get { return LinkContext.App.IsDualBuild; }
 		}
 
 		public int Arch {
-			get { return Options.Target.Is64Build ? 8 : 4; }
+			get { return LinkContext.Target.Is64Build ? 8 : 4; }
 		}
 
 		protected Optimizations Optimizations {
 			get {
-				return Options.Application.Optimizations;
+				return LinkContext.App.Optimizations;
 			}
 		}
 
@@ -47,14 +45,15 @@ namespace Xamarin.Linker {
 
 		bool? is_arm64_calling_convention;
 
-		public CoreOptimizeGeneratedCode (LinkerOptions options)
+		public override void Initialize (LinkContext context)
 		{
-			Options = options;
+			base.Initialize (context);
 
-			if (Optimizations.InlineIsARM64CallingConvention == true) { 
-				if (options.Target.Abis.Count == 1) {
+			if (Optimizations.InlineIsARM64CallingConvention == true) {
+				var target = LinkContext.Target;
+				if (target.Abis.Count == 1) {
 					// We can usually inline Runtime.InlineIsARM64CallingConvention if the generated code will execute on a single architecture
-					switch ((options.Target.Abis [0] & Abi.ArchMask)) {
+					switch ((target.Abis [0] & Abi.ArchMask)) {
 					case Abi.i386:
 					case Abi.ARMv7:
 					case Abi.ARMv7s:
@@ -70,10 +69,10 @@ namespace Xamarin.Linker {
 						// ARMv7k binaries can run on ARM64_32, so this can't be inlined :/
 						break;
 					default:
-						options.LinkContext.Exceptions.Add (ErrorHelper.CreateWarning (99, Errors.MX0099, $"unknown abi: {options.Target.Abis[0]}"));
+						LinkContext.Exceptions.Add (ErrorHelper.CreateWarning (99, Errors.MX0099, $"unknown abi: {target.Abis[0]}"));
 						break;
 					}
-				} else if (options.Target.Abis.Count == 2 && options.Target.Is32Build && options.Target.Abis.Contains (Abi.ARMv7) && options.Target.Abis.Contains (Abi.ARMv7s)) {
+				} else if (target.Abis.Count == 2 && target.Is32Build && target.Abis.Contains (Abi.ARMv7) && target.Abis.Contains (Abi.ARMv7s)) {
 					// We know we won't be running on arm64 if we're building for armv7+armv7s.
 					is_arm64_calling_convention = false;
 				}
@@ -839,10 +838,10 @@ namespace Xamarin.Linker {
 					prev = prev.Previous; // Skip any nops.
 				if (prev.OpCode.StackBehaviourPush != StackBehaviour.Push1) {
 					//todo: localize mmp error 2106
-					ErrorHelper.Show (ErrorHelper.CreateWarning (Options.Application, 2106, caller, ins, Errors.MM2106, caller, ins.Offset, mr.Name, prev));
+					ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.App, 2106, caller, ins, Errors.MM2106, caller, ins.Offset, mr.Name, prev));
 					return 0;
 				} else if (prev.OpCode.StackBehaviourPop != StackBehaviour.Pop0) {
-					ErrorHelper.Show (ErrorHelper.CreateWarning (Options.Application, 2106, caller, ins, Errors.MM2106, caller, ins.Offset, mr.Name, prev));
+					ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.App, 2106, caller, ins, Errors.MM2106, caller, ins.Offset, mr.Name, prev));
 					return 0;
 				}
 
@@ -853,12 +852,12 @@ namespace Xamarin.Linker {
 				// Then find the type of the previous instruction (the first argument to SetupBlock[Unsafe])
 				var trampolineDelegateType = GetPushedType (caller, loadTrampolineInstruction);
 				if (trampolineDelegateType == null) {
-					ErrorHelper.Show (ErrorHelper.CreateWarning (Options.Application, 2106, caller, ins, Errors.MM2106_A, caller, ins.Offset, mr.Name, loadTrampolineInstruction));
+					ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.App, 2106, caller, ins, Errors.MM2106_A, caller, ins.Offset, mr.Name, loadTrampolineInstruction));
 					return 0;
 				}
 
 				if (trampolineDelegateType.Is ("System", "Delegate") || trampolineDelegateType.Is ("System", "MulticastDelegate")) {
-					ErrorHelper.Show (ErrorHelper.CreateWarning (Options.Application, 2106, caller, ins, Errors.MM2106_B, caller, trampolineDelegateType.FullName, mr.Name));
+					ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.App, 2106, caller, ins, Errors.MM2106_B, caller, trampolineDelegateType.FullName, mr.Name));
 					return 0;
 				}
 
@@ -881,7 +880,7 @@ namespace Xamarin.Linker {
 
 				// No luck finding the signature, so give up.
 				if (userMethod == null) {
-					ErrorHelper.Show (ErrorHelper.CreateWarning (Options.Application, 2106, caller, ins, Errors.MM2106_C, caller, ins.Offset, trampolineDelegateType.FullName));
+					ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.App, 2106, caller, ins, Errors.MM2106_C, caller, ins.Offset, trampolineDelegateType.FullName));
 					return 0;
 				}
 
@@ -890,7 +889,7 @@ namespace Xamarin.Linker {
 					parameters [p] = userMethod.Parameters [p].ParameterType;
 				signature = LinkContext.Target.StaticRegistrar.ComputeSignature (userMethod.DeclaringType, false, userMethod.ReturnType, parameters, userMethod.Resolve (), isBlockSignature: blockSignature);
 			} catch (Exception e) {
-				ErrorHelper.Show (ErrorHelper.CreateWarning (Options.Application, 2106, e, caller, ins, Errors.MM2106_D, caller, ins.Offset, e.Message));
+				ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.App, 2106, e, caller, ins, Errors.MM2106_D, caller, ins.Offset, e.Message));
 				return 0;
 			}
 
@@ -1031,7 +1030,7 @@ namespace Xamarin.Linker {
 					break;
 				}
 				if (setupblock_def == null)
-					throw ErrorHelper.CreateError (Options.Application, 99, caller, ins, Errors.MX0099, $"could not find the method {Namespaces.ObjCRuntime}.BlockLiteral.SetupBlockImpl");
+					throw ErrorHelper.CreateError (LinkContext.App, 99, caller, ins, Errors.MX0099, $"could not find the method {Namespaces.ObjCRuntime}.BlockLiteral.SetupBlockImpl");
 			}
 			return caller.Module.ImportReference (setupblock_def);
 		}

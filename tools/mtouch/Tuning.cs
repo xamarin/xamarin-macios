@@ -100,21 +100,19 @@ namespace MonoTouch.Tuner {
 			return context;
 		}
 		
-		static SubStepDispatcher GetSubSteps (LinkerOptions options)
+		static SubStepDispatcher GetSubSteps ()
 		{
 			SubStepDispatcher sub = new SubStepDispatcher ();
 			sub.Add (new ApplyPreserveAttribute ());
 			sub.Add (new CoreRemoveSecurity ());
-			sub.Add (new OptimizeGeneratedCodeSubStep (options));
-			sub.Add (new RemoveUserResourcesSubStep (options));
-			if (options.Application.Optimizations.CustomAttributesRemoval == true)
-				sub.Add (new RemoveAttributes ());
+			sub.Add (new OptimizeGeneratedCodeSubStep ());
+			sub.Add (new RemoveUserResourcesSubStep ());
+			sub.Add (new RemoveAttributes ());
 			// http://bugzilla.xamarin.com/show_bug.cgi?id=1408
-			if (options.LinkAway)
-				sub.Add (new RemoveCode (options));
+			sub.Add (new RemoveCode ());
 			sub.Add (new MarkNSObjects ());
 			sub.Add (new PreserveSoapHttpClients ());
-			sub.Add (new CoreHttpMessageHandler (options));
+			sub.Add (new CoreHttpMessageHandler ());
 			sub.Add (new InlinerSubStep ());
 			sub.Add (new PreserveSmartEnumConversionsSubStep ());
 			return sub;
@@ -166,7 +164,7 @@ namespace MonoTouch.Tuner {
 			if (options.LinkMode != LinkMode.None) {
 				pipeline.Append (new CoreTypeMapStep ());
 
-				pipeline.Append (GetSubSteps (options));
+				pipeline.Append (GetSubSteps ());
 
 				pipeline.Append (new PreserveCode (options));
 
@@ -188,7 +186,7 @@ namespace MonoTouch.Tuner {
 				pipeline.Append (new FixModuleFlags ());
 			} else {
 				SubStepDispatcher sub = new SubStepDispatcher () {
-					new RemoveUserResourcesSubStep (options),
+					new RemoveUserResourcesSubStep (),
 				};
 				if (options.Application.Optimizations.ForceRejectedTypesRemoval == true)
 					sub.Add (new RemoveRejectedTypesStep ());
