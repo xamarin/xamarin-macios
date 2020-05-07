@@ -60,6 +60,13 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<RemoveDir Directories="$(BindingResourcePath);" />  
 	</Target>
 	
+	<Target Name="_AddExtraReferences" BeforeTargets="ResolveAssemblyReferences" Condition="'$(DisableExtraReferences)' != 'true'">
+		<ItemGroup>
+			<!-- https://github.com/mono/mono/issues/13483 -->
+			<Reference Include="System.Drawing.Common.dll" />
+		</ItemGroup>
+	</Target>
+
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets')"/>
 </Project>
