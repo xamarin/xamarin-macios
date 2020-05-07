@@ -13,6 +13,7 @@ using System.Linq;
 using System.IO;
 
 using NUnit.Framework;
+using System.Net;
 using System.Net.Http.Headers;
 using System.Security.Authentication;
 using System.Text;
@@ -491,5 +492,39 @@ namespace MonoTests.System.Net.Http
 			}
 		}
 
+		[TestCase (HttpStatusCode.OK, "mandel", "1234", "mandel", "1234")]
+		[TestCase (HttpStatusCode.Unauthorized, "mandel", "1234", "mandel", "4321")]
+		[TestCase (HttpStatusCode.Unauthorized, "mandel", "1234", "", "")]
+		public void GHIssue8342 (HttpStatusCode expectedStatus, string validUsername, string validPassword, string username, string password)
+		{ 
+			// create a http client to use with some creds that we do know are not valid
+			var handler = new NSUrlSessionHandler () {
+				Credentials = new NetworkCredential (username, password, "")
+			};
+
+			var client = new HttpClient (handler);
+
+			bool done = false;
+			HttpStatusCode httpStatus = HttpStatusCode.NotFound;
+			Exception ex = null;
+			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
+				try {
+
+					var result = await client.GetAsync ($"https://httpbin.org/basic-auth/{validUsername}/{validPassword}");
+					httpStatus = result.StatusCode;
+				} catch (Exception e) {
+					ex = e;
+				} finally {
+					done = true;
+				}
+			}, () => done);
+
+			if (!done) { // timeouts happen in the bots due to dns issues, connection issues etc.. we do not want to fail
+				Assert.Inconclusive ("Request timedout.");
+			} else {
+				Assert.IsNull (ex, "Exception not null");
+				Assert.AreEqual (expectedStatus, httpStatus, "Status not ok");
+			}
+		}
 	}
 }
