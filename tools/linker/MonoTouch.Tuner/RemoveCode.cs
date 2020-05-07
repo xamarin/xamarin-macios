@@ -11,18 +11,12 @@ namespace MonoTouch.Tuner {
 
 		bool product;
 
-		public RemoveCode (LinkerOptions options)
-		{
-			Device = options.Device;
-			Debug = options.DebugBuild;
-		}
-
 		protected override string Name { get; } = "Code Remover";
 		protected override int ErrorCode { get; } = 2050;
 
-		public bool Device { get; set; }
+		public bool Device { get { return LinkContext.App.IsDeviceBuild; } }
 
-		public bool Debug { get; set; }
+		public bool Debug { get { return LinkContext.App.EnableDebug; } }
 
 		public override SubStepTargets Targets {
 			get { return SubStepTargets.Assembly | SubStepTargets.Type; }
@@ -30,6 +24,9 @@ namespace MonoTouch.Tuner {
 
 		public override bool IsActiveFor (AssemblyDefinition assembly)
 		{
+			if (!LinkContext.Target.LinkerOptions.LinkAway)
+				return false;
+
 			switch (assembly.Name.Name) {
 			case "mscorlib":
 				product = false;

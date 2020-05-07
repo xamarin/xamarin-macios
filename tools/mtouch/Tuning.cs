@@ -109,8 +109,7 @@ namespace MonoTouch.Tuner {
 			sub.Add (new RemoveUserResourcesSubStep (options));
 			sub.Add (new RemoveAttributes ());
 			// http://bugzilla.xamarin.com/show_bug.cgi?id=1408
-			if (options.LinkAway)
-				sub.Add (new RemoveCode (options));
+			sub.Add (new RemoveCode ());
 			sub.Add (new MarkNSObjects ());
 			sub.Add (new PreserveSoapHttpClients ());
 			sub.Add (new CoreHttpMessageHandler ());
