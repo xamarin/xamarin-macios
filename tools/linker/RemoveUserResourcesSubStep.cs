@@ -12,11 +12,6 @@ namespace Xamarin.Linker {
 #if MTOUCH
 		const string Content = "__monotouch_content_";
 		const string Page = "__monotouch_page_";
-
-		public RemoveUserResourcesSubStep (MonoTouch.Tuner.LinkerOptions options)
-		{
-			Device = options.Device;
-		}
 #else
 		const string Content = "__xammac_content_";
 		const string Page = "__xammac_page_";
@@ -25,7 +20,7 @@ namespace Xamarin.Linker {
 			get { return SubStepTargets.Assembly; }
 		}
 
-		public bool Device { get; private set; }
+		public bool Device { get { return LinkContext.App.IsDeviceBuild; } }
 
 		protected override string Name { get; } = "Removing User Resources";
 		protected override int ErrorCode { get; } = 2030;

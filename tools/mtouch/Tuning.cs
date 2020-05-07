@@ -106,7 +106,7 @@ namespace MonoTouch.Tuner {
 			sub.Add (new ApplyPreserveAttribute ());
 			sub.Add (new CoreRemoveSecurity ());
 			sub.Add (new OptimizeGeneratedCodeSubStep (options));
-			sub.Add (new RemoveUserResourcesSubStep (options));
+			sub.Add (new RemoveUserResourcesSubStep ());
 			sub.Add (new RemoveAttributes ());
 			// http://bugzilla.xamarin.com/show_bug.cgi?id=1408
 			sub.Add (new RemoveCode ());
@@ -186,7 +186,7 @@ namespace MonoTouch.Tuner {
 				pipeline.Append (new FixModuleFlags ());
 			} else {
 				SubStepDispatcher sub = new SubStepDispatcher () {
-					new RemoveUserResourcesSubStep (options),
+					new RemoveUserResourcesSubStep (),
 				};
 				if (options.Application.Optimizations.ForceRejectedTypesRemoval == true)
 					sub.Add (new RemoveRejectedTypesStep ());
