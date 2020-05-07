@@ -69,8 +69,8 @@ namespace Xamarin.Bundler {
 			if (assembly != null)
 				return assembly;
 
-			var pclPath = Path.Combine (FrameworkDirectory, "Facades");
-			if (Directory.Exists (pclPath)) {
+			if (FrameworkDirectory != null) {
+				var pclPath = Path.Combine (FrameworkDirectory, "Facades");
 				assembly = SearchDirectory (name, pclPath);
 				if (assembly != null)
 					return assembly;
