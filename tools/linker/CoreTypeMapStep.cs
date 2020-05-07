@@ -51,7 +51,7 @@ namespace MonoTouch.Tuner {
 
 			// The product assembly itself is safe as long as it's linked
 			if (Profile.IsProductAssembly (assembly))
-				return LinkContext.Annotations.GetAction (assembly) != Mono.Linker.AssemblyAction.Link;
+				return Annotations.GetAction (assembly) != Mono.Linker.AssemblyAction.Link;
 
 			// Can't touch the forbidden fruit in the product assembly unless there's a reference to it
 			var hasProductReference = false;
@@ -112,7 +112,7 @@ namespace MonoTouch.Tuner {
 							// Fortunately the linker is able to rewrite calls to SetupBlock[Unsafe] to call
 							// SetupBlockImpl (which doesn't need the dynamic registrar), which means we only have
 							// to look in assemblies that aren't linked.
-							if (LinkContext.Annotations.GetAction (assembly) == Mono.Linker.AssemblyAction.Link && LinkContext.App.Optimizations.OptimizeBlockLiteralSetupBlock == true)
+							if (Annotations.GetAction (assembly) == Mono.Linker.AssemblyAction.Link && LinkContext.App.Optimizations.OptimizeBlockLiteralSetupBlock == true)
 								break;
 
 							if (warnIfRequired)
