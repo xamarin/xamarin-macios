@@ -154,7 +154,7 @@ steps:
     CONTEXT: $(CONTEXT)
     TESTS: $(TESTS)
     TESTSARGS: $(TESTS_EXTRA_ARGUMENTS)
-  displayName: 'add GH status & commit message'
+  displayName: 'Powershell: Add GH status & commit message'
   condition: succeededOrFailed() #, eq(variables['ProvisioningProfiles'], 'success'))
 
 - bash: ./xamarin-macios/tools/devops/add-summaries.sh

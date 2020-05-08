@@ -80,6 +80,10 @@ $DESCRIPTION="Device test $Env:SYSTEM_JOBNAME $Env:AGENT_JOBSTATUS on $Env:CONTE
 $json_text = "$RESULT_EMOJI $DESCRIPTION on [Azure DevOps]($target_url) ($Env:BUILD_DEFINITIONNAME) $RESULT_EMOJI"
 
 $file = $Env:PIPELINE_WORKSPACE
+Get-ChildItem $file | Write-Host
+$file = "$file/Summaries/TestSummary-$Env:CONTEXT"
+Get-ChildItem $file | Write-Host
+
 $file = "$file/Summaries/TestSummary-$Env:CONTEXT/TestSummary.md"
 
 Write-Host $file
