@@ -53,13 +53,6 @@ using Registrar;
 using ObjCRuntime;
 
 namespace Xamarin.Bundler {
-	public enum RegistrarMode {
-		Default,
-		Dynamic,
-		PartialStatic,
-		Static,
-	}
-
 	enum Action {
 		None,
 		Help,
