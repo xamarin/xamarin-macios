@@ -81,8 +81,9 @@ EXTRA_DEPENDENCIES = libtest.h $(GENERATED_FILES) rename.h
 	$$(call Q_2,LIPO   [$(1)]) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo $$^ -create -output $$@
 
 COMMON_DYLIB_ARGS=-g -dynamiclib -gdwarf-2 -fms-extensions libframework.m -o $$@ -Wall -framework Foundation -lz
-.libs/$(1)/libtest.%.dylib: libframework.m | .libs/$(1)
-	$$(call Q_2,CC,    [$(1)]) $$(XCODE_CC) $$(COMMON_DYLIB_ARGS) -arch $$(if $$(filter x86,$$*),i386,$$*) $(5) -isysroot $(XCODE_DEVELOPER_ROOT)/Platforms/$(4).platform/Developer/SDKs/$(4)$$($(6)_SDK_VERSION).sdk
+.libs/$(1)/libtest.x86.dylib: ARCH=i386
+$$(foreach arch,$(3),.libs/$(1)/libtest.$$(arch).dylib): libframework.m | .libs/$(1)
+	$$(call Q_2,CC,    [$(1)]) $$(XCODE_CC) $$(COMMON_DYLIB_ARGS) -arch $$(if $$(ARCH),i386,$$(subst libtest.,,$$(basename $$(notdir $$@)))) $(5) -isysroot $(XCODE_DEVELOPER_ROOT)/Platforms/$(4).platform/Developer/SDKs/$(4)$$($(6)_SDK_VERSION).sdk
 	$$(Q) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/install_name_tool -id @rpath/XTest.framework/XTest $$@
 
 .libs/$(1)/libtest.dylib: $$(foreach arch,$(3),.libs/$(1)/libtest.$$(arch).dylib)
@@ -215,3 +216,5 @@ MAC_LDFLAGS = -mmacosx-version-min=$(MIN_OSX_SDK_VERSION) -framework AppKit
 clean-local:: $(CLEAN_TARGETS)
 
 include $(TOP)/mk/rules.mk
+
+.SECONDARY:
