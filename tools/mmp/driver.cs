@@ -1178,7 +1178,7 @@ namespace Xamarin.Bundler {
 					// Xcode 10 doesn't ship with libstdc++
 					args.Add ("-stdlib=libc++");
 				}
-				args.Add ($"-I{Path.Combine (FrameworkDirectory, "include")}");
+				args.Add ($"-I{GetProductSdkIncludeDirectory (App)}");
 				if (registrarPath != null)
 					args.Add (registrarPath);
 				args.Add ("-fno-caret-diagnostics");
