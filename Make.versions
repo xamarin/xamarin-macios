@@ -1,8 +1,13 @@
 #
-# A release branch requires updating the following two variables at the bottom of this file:
+# A release branch requires updating the following six variables at the bottom of this file:
 #
 # IOS_PACKAGE_VERSION (major/minor/revision #)
 # MAC_PACKAGE_VERSION (major/minor/revision #)
+#
+# IOS_NUGET_VERSION (major/minor/patch #)
+# TVOS_NUGET_VERSION (major/minor/patch #)
+# WATCHOS_NUGET_VERSION (major/minor/patch #)
+# MACOS_NUGET_VERSION (major/minor/patch #)
 #
 # Update version numbers on master as well, to the next version
 #
@@ -45,3 +50,23 @@
 
 IOS_PACKAGE_VERSION=13.21.0.$(IOS_COMMIT_DISTANCE)
 MAC_PACKAGE_VERSION=6.21.0.$(MAC_COMMIT_DISTANCE)
+
+#
+# ** NuGet package version numbers **
+#
+# See dotnet/VERSIONS.md.
+#
+# Rules:
+# * The first two numbers represent the major and minor version of the corresponding OS.
+# * Reset patch version (third number) to 100 every time either major or minor version is bumped.
+# * Bump last two digits of the patch version for service releases.
+# * Bump first digit of the patch version for feature releases (and reset the first two digits to 0)
+#
+
+# WARNING: Do **not** use versions higher than the available Xcode SDK or else we will have issues with mtouch (See https://github.com/xamarin/xamarin-macios/issues/7705)
+# When bumping the major macOS version in MACOS_NUGET_VERSION also update the macOS version where we execute on bots in jenkins/Jenkinsfile (in the 'node' element)
+
+IOS_NUGET_VERSION=13.4.100
+TVOS_NUGET_VERSION=13.4.100
+WATCHOS_NUGET_VERSION=6.2.100
+MACOS_NUGET_VERSION=10.15.100

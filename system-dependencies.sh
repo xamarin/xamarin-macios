@@ -548,11 +548,12 @@ function check_xcode () {
 	check_specific_xcode
 	install_coresimulator
 
+	local IOS_SDK_VERSION OSX_SDK_VERSION WATCH_SDK_VERSION TVOS_SDK_VERSION
 	local XCODE_DEVELOPER_ROOT=`grep ^XCODE_DEVELOPER_ROOT= Make.config | sed 's/.*=//'`
-	local IOS_SDK_VERSION=`grep ^IOS_SDK_VERSION= Make.config | sed 's/.*=//'`
-	local OSX_SDK_VERSION=`grep ^OSX_SDK_VERSION= Make.config | sed 's/.*=//'`
-	local WATCH_SDK_VERSION=`grep ^WATCH_SDK_VERSION= Make.config | sed 's/.*=//'`
-	local TVOS_SDK_VERSION=`grep ^TVOS_SDK_VERSION= Make.config | sed 's/.*=//'`
+	IOS_SDK_VERSION=$(grep ^IOS_NUGET_VERSION= Make.versions | sed -e 's/.*=//' -e 's/.[0-9]*$//')
+	OSX_SDK_VERSION=$(grep ^MACOS_NUGET_VERSION= Make.versions | sed -e 's/.*=//' -e 's/.[0-9]*$//')
+	WATCH_SDK_VERSION=$(grep ^WATCHOS_NUGET_VERSION= Make.versions | sed -e 's/.*=//' -e 's/.[0-9]*$//')
+	TVOS_SDK_VERSION=$(grep ^TVOS_NUGET_VERSION= Make.versions | sed -e 's/.*=//' -e 's/.[0-9]*$//')
 
 	local D=$XCODE_DEVELOPER_ROOT/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator${IOS_SDK_VERSION}.sdk
 	if test ! -d $D -a -z "$FAIL"; then

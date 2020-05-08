@@ -1,0 +1,8 @@
+<Project>
+  <PropertyGroup>
+    <PackageId>Microsoft.$(_PlatformName).Ref</PackageId>
+    <Description>Microsoft $(_PlatformName) reference assemblies. Please do not reference directly.</Description>
+    <_CreateFrameworkList>true</_CreateFrameworkList>
+  </PropertyGroup>
+  <Import Project="common.csproj" />
+</Project>

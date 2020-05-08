@@ -1,5 +1,5 @@
 TOP=.
-SUBDIRS=builds runtime fsharp src msbuild tools
+SUBDIRS=builds runtime fsharp src msbuild tools dotnet
 include $(TOP)/Make.config
 include $(TOP)/mk/versions.mk
 
@@ -30,7 +30,14 @@ check-system:
 		exit 1; \
 	fi
 	@./system-dependencies.sh
-	@echo "Building Xamarin.iOS $(IOS_PACKAGE_VERSION) and Xamarin.Mac $(MAC_PACKAGE_VERSION)"
+	@echo "Building the packages:"
+	@echo "    Xamarin.iOS $(IOS_PACKAGE_VERSION)"
+	@echo "    Xamarin.Mac $(MAC_PACKAGE_VERSION)"
+	@echo "and the NuGets:"
+	@echo "    Xamarin.iOS $(IOS_NUGET_VERSION_FULL)"
+	@echo "    Xamarin.tvOS $(TVOS_NUGET_VERSION_FULL)"
+	@echo "    Xamarin.watchOS $(WATCHOS_NUGET_VERSION_FULL)"
+	@echo "    Xamarin.macOS $(MACOS_NUGET_VERSION_FULL)"
 
 check-permissions:
 ifdef INCLUDE_MAC
