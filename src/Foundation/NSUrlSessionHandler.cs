@@ -758,8 +758,26 @@ namespace Foundation {
 				if (sessionHandler.Credentials != null && TryGetAuthenticationType (challenge.ProtectionSpace, out string authType)) {
 					NetworkCredential credentialsToUse = null;
 					if (authType != RejectProtectionSpaceAuthType) {
-						var uri = inflight.Request.RequestUri;
-						credentialsToUse = sessionHandler.Credentials.GetCredential (uri, authType);
+						// interesting situation, when we use a credential that we created that is empty, we are not getting the RejectProtectionSpaceAuthType,
+						// nevertheless, we need to check is not the first challenge we will continue trusting the 
+						// TryGetAuthenticationType method, but we will also check that the status response in not a 401
+						// look like we do get an exception from the credentials db:
+						//  TestiOSHttpClient[28769:26371051] CredStore - performQuery - Error copying matching creds.  Error=-25300, query={
+						// class = inet;
+						// "m_Limit" = "m_LimitAll";
+						// ptcl = htps;
+						// "r_Attributes" = 1;
+						// sdmn = test;
+						// srvr = "jigsaw.w3.org";
+						// sync = syna;
+						// }
+						// do remember that we ALWAYS get a challenge, so the failure count has to be 1 or more for this check, 1 would be the first time
+						var nsurlRespose = challenge.FailureResponse as NSHttpUrlResponse;
+						var responseIsUnauthorized = (nsurlRespose == null) ? false : nsurlRespose.StatusCode == (int) HttpStatusCode.Unauthorized && challenge.PreviousFailureCount > 0;
+						if (!responseIsUnauthorized) {
+							var uri = inflight.Request.RequestUri;
+							credentialsToUse = sessionHandler.Credentials.GetCredential (uri, authType);
+						}
 					}
 
 					if (credentialsToUse != null) {
