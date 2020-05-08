@@ -139,7 +139,7 @@ namespace MonoTouch.Tuner {
 				return true;
 
 			var type = attribute.Constructor.DeclaringType;
-			if (type.Namespace.StartsWith ("System.", StringComparison.Ordinal)) {
+			if (type.Namespace.StartsWith ("System", StringComparison.Ordinal)) {
 				// FullName can allocate memory, precheck avoids it
 				if (attribute_types.Contains (type.FullName))
 					return true;
