@@ -468,8 +468,8 @@ timestamps {
                     }
 
                     if (isPr) {
-                        def hasBuildPackage = githubGetPullRequestLabels ().contains ("build-package")
-                        def hasRunInternalTests = githubGetPullRequestLabels ().contains ("run-internal-tests")
+                        def hasBuildPackage = getLabels ().contains ("build-package")
+                        def hasRunInternalTests = getLabels ().contains ("run-internal-tests")
 
                         if (!hasBuildPackage && !hasRunInternalTests) {
                             // don't add a comment to the pull request, since the public jenkins will also add comments, which ends up being too much.
@@ -477,7 +477,6 @@ timestamps {
                             echo ("Build skipped because the pull request doesn't have either of the labels 'build-package' or 'run-internal-tests'.")
                             return
                         }
-
 
                         if (!hasRunInternalTests)
                             skipLocalTestRunReason = "Not running tests here because they're run on public Jenkins."
@@ -510,70 +509,80 @@ timestamps {
                         stage ('Packaging') {
                             currentStage = "${STAGE_NAME}"
                             echo ("Building on ${env.NODE_NAME}")
-                            sh ("${workspace}/xamarin-macios/jenkins/build-package.sh")
-                            sh (script: "ls -la ${workspace}/package", returnStatus: true /* don't throw exceptions if something goes wrong */)
+                            def skipPackages = getLabels ().contains ("skip-packages")
+                            if (!skipPackages) {
+                                sh ("${workspace}/xamarin-macios/jenkins/build-package.sh")
+                                sh (script: "ls -la ${workspace}/package", returnStatus: true /* don't throw exceptions if something goes wrong */)
+                            } else {
+                                echo ("Packaging skipped because the label 'skip-packages' was found")
+                            }
                         }
 
                         stage ('Signing') {
                             def entitlements = "${workspace}/xamarin-macios/mac-entitlements.plist"
                             currentStage = "${STAGE_NAME}"
                             echo ("Building on ${env.NODE_NAME}")
-                            def xiPackages = findFiles (glob: "package/xamarin.ios-*.pkg")
-                            if (xiPackages.length > 0) {
-                                xiPackageFilename = xiPackages [0].name
-                                echo ("Created Xamarin.iOS package: ${xiPackageFilename}")
-                            }
-                            def xmPackages = findFiles (glob: "package/xamarin.mac-*.pkg")
-                            if (xmPackages.length > 0) {
-                                xmPackageFilename = xmPackages [0].name
-                                echo ("Created Xamarin.Mac package: ${xmPackageFilename}")
-                            }
-                            def msbuildZip = findFiles (glob: "package/msbuild.zip")
-                            if (msbuildZip.length > 0)
-                                msbuildZipFilename = msbuildZip [0].name
-                            def bundleZip = findFiles (glob: "package/bundle.zip")
-                            if (bundleZip.length > 0)
-                                bundleZipFilename = bundleZip [0].name
-
-                            if (isPr) {
-                              withCredentials ([string (credentialsId: 'codesign_keychain_pw', variable: 'PRODUCTSIGN_KEYCHAIN_PASSWORD')]) {
-                                sh ("${workspace}/xamarin-macios/jenkins/productsign.sh")
-                              }
-                            } else {
-                                try {
-                                    pkgs = xiPackages + xmPackages
-                                    if (fileExists('release-scripts')) {
-                                        dir('release-scripts') {
-                                            sh ('git checkout sign-and-notarized && git pull')
-                                        }
-                                    } else {
-                                        sh ('git clone git@github.com:xamarin/release-scripts -b sign-and-notarized')
-                                    }
-                                    withCredentials([string(credentialsId: 'codesign_keychain_pw', variable: 'KEYCHAIN_PASS'), string(credentialsId: 'team_id', variable: 'TEAM_ID'), string(credentialsId: 'application_id', variable: 'APP_ID'), string(credentialsId: 'installer_id', variable: 'INSTALL_ID'), usernamePassword(credentialsId: 'apple_account', passwordVariable: 'APPLE_PASS', usernameVariable: 'APPLE_ACCOUNT')]) {
-                                        sh (returnStatus: true, script: "security create-keychain -p ${env.KEYCHAIN_PASS} login.keychain") // needed to repopulate the keychain
-                                        sh ("security unlock-keychain -p ${env.KEYCHAIN_PASS} login.keychain")
-                                        timeout (time: 90, unit: 'MINUTES') {
-                                          sh ("python release-scripts/sign_and_notarize.py -a ${env.APP_ID} -i ${env.INSTALL_ID} -u ${env.APPLE_ACCOUNT} -p ${env.APPLE_PASS} -t ${env.TEAM_ID} -d package/notarized -e ${entitlements} -k login.keychain " + pkgs.flatten ().join (" "))
-                                        }
-                                    }
-
-                                    def xiNotarizedPackages = findFiles (glob: "package/notarized/xamarin.ios-*.pkg")
-                                    if (xiNotarizedPackages.length > 0) {
-                                        xiNotarizedPkgFilename = xiNotarizedPackages [0].name
-                                        echo ("Created notarized Xamarin.iOS package: ${xiNotarizedPkgFilename}")
-                                    }
-                                    def xmNotarizedPackages = findFiles (glob: "package/notarized/xamarin.mac-*.pkg")
-                                    if (xmNotarizedPackages.length > 0) {
-                                        xmNotarizedPkgFilename = xmNotarizedPackages [0].name
-                                        echo ("Created notarized Xamarin.Mac package: ${xmNotarizedPkgFilename}")
-                                    }
-                                } catch (ex) {
-                                    echo "Notarization failed:\n${ex.getMessage()}"
-                                    for (def stack : ex.getStackTrace()) {
-                                        echo "\t${stack}"
-                                    }
-                                    manager.addWarningBadge("PKGs are not notarized")
+                            def skipSigning = getLabels ().contains ("skip-signing")
+                            if (!skipSigning) {
+                                def xiPackages = findFiles (glob: "package/xamarin.ios-*.pkg")
+                                if (xiPackages.length > 0) {
+                                    xiPackageFilename = xiPackages [0].name
+                                    echo ("Created Xamarin.iOS package: ${xiPackageFilename}")
                                 }
+                                def xmPackages = findFiles (glob: "package/xamarin.mac-*.pkg")
+                                if (xmPackages.length > 0) {
+                                    xmPackageFilename = xmPackages [0].name
+                                    echo ("Created Xamarin.Mac package: ${xmPackageFilename}")
+                                }
+                                def msbuildZip = findFiles (glob: "package/msbuild.zip")
+                                if (msbuildZip.length > 0)
+                                    msbuildZipFilename = msbuildZip [0].name
+                                def bundleZip = findFiles (glob: "package/bundle.zip")
+                                if (bundleZip.length > 0)
+                                    bundleZipFilename = bundleZip [0].name
+
+                                if (isPr) {
+                                  withCredentials ([string (credentialsId: 'codesign_keychain_pw', variable: 'PRODUCTSIGN_KEYCHAIN_PASSWORD')]) {
+                                    sh ("${workspace}/xamarin-macios/jenkins/productsign.sh")
+                                  }
+                                } else {
+                                    try {
+                                        pkgs = xiPackages + xmPackages
+                                        if (fileExists('release-scripts')) {
+                                            dir('release-scripts') {
+                                                sh ('git checkout sign-and-notarized && git pull')
+                                            }
+                                        } else {
+                                            sh ('git clone git@github.com:xamarin/release-scripts -b sign-and-notarized')
+                                        }
+                                        withCredentials([string(credentialsId: 'codesign_keychain_pw', variable: 'KEYCHAIN_PASS'), string(credentialsId: 'team_id', variable: 'TEAM_ID'), string(credentialsId: 'application_id', variable: 'APP_ID'), string(credentialsId: 'installer_id', variable: 'INSTALL_ID'), usernamePassword(credentialsId: 'apple_account', passwordVariable: 'APPLE_PASS', usernameVariable: 'APPLE_ACCOUNT')]) {
+                                            sh (returnStatus: true, script: "security create-keychain -p ${env.KEYCHAIN_PASS} login.keychain") // needed to repopulate the keychain
+                                            sh ("security unlock-keychain -p ${env.KEYCHAIN_PASS} login.keychain")
+                                            timeout (time: 90, unit: 'MINUTES') {
+                                              sh ("python release-scripts/sign_and_notarize.py -a ${env.APP_ID} -i ${env.INSTALL_ID} -u ${env.APPLE_ACCOUNT} -p ${env.APPLE_PASS} -t ${env.TEAM_ID} -d package/notarized -e ${entitlements} -k login.keychain " + pkgs.flatten ().join (" "))
+                                            }
+                                        }
+
+                                        def xiNotarizedPackages = findFiles (glob: "package/notarized/xamarin.ios-*.pkg")
+                                        if (xiNotarizedPackages.length > 0) {
+                                            xiNotarizedPkgFilename = xiNotarizedPackages [0].name
+                                            echo ("Created notarized Xamarin.iOS package: ${xiNotarizedPkgFilename}")
+                                        }
+                                        def xmNotarizedPackages = findFiles (glob: "package/notarized/xamarin.mac-*.pkg")
+                                        if (xmNotarizedPackages.length > 0) {
+                                            xmNotarizedPkgFilename = xmNotarizedPackages [0].name
+                                            echo ("Created notarized Xamarin.Mac package: ${xmNotarizedPkgFilename}")
+                                        }
+                                    } catch (ex) {
+                                        echo "Notarization failed:\n${ex.getMessage()}"
+                                        for (def stack : ex.getStackTrace()) {
+                                            echo "\t${stack}"
+                                        }
+                                        manager.addWarningBadge("PKGs are not notarized")
+                                    }
+                                }
+                            } else {
+                                echo ("Signing skipped because the label 'skip-signing' was found")
                             }
                         }
 
@@ -693,8 +702,11 @@ timestamps {
                                 // Since pull requests don't create branches in the xamarin org (that VSTS sees at least),
                                 // I've created a 'pull-request' branch which we'll use for pull requests.
                                 def vsts_branch = isPr ? "pull-request" : branchName;
-                                if (isPr && !githubGetPullRequestLabels ().contains ("trigger-device-tests")) {
-                                    echo "Currently not launching external tests for pull requests"
+                                def skipExternalTests = getLabels ().contains ("skip-external-tests")
+                                if (skipExternalTests) {
+                                    echo ("Skipping external tests because the label 'skip-external-tests' was found")
+                                } else if (isPr && !getLabels ().contains ("trigger-device-tests")) {
+                                    echo ("Skipping external tests because the label 'trigger-device-tests' was not found and it's required for external tests to run for pull requests")
                                 } else {
                                     def outputFile = "${workspace}/xamarin-macios/wrench-launch-external.output.tmp"
                                     try {
@@ -710,7 +722,7 @@ timestamps {
                                     }
                                 }
 
-                                if (isPr && githubGetPullRequestLabels ().contains ("run-sample-tests")) {
+                                if (getLabels ().contains ("run-sample-tests")) {
                                     def outputFile = "${workspace}/xamarin-macios/wrench-launch-external.output.tmp"
                                     try {
                                         withCredentials ([string (credentialsId: 'macios_provisionator_pat', variable: 'PROVISIONATOR_VSTS_PAT')]) {
