@@ -3,14 +3,6 @@ Get-Location
 Set-Location Env:
 Get-ChildItem
 
-
-$testsummary_location = $Env:SYSTEM_DEFAULTWORKINGDIRECTORY
-Get-ChildItem $testsummary_location
-
-$testsummary_location = $testsummary_location + "/TestSummary.md"
-Write-Host $testsummary_location
-Get-Content $testsummary_location
-
 # get combined status:
 # success only if every status is success
 # otherwise failure

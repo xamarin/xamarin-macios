@@ -83,7 +83,7 @@ $file = $Env:PIPELINE_WORKSPACE
 $file = "$file/Summaries/TestSummary-$Env:CONTEXT/TestSummary.md"
 
 Write-Host $file
-Get-ChildItem $file | Write-Host
+Get-Content $file | Write-Host
 
 
 
