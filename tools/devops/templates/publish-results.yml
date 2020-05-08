@@ -19,54 +19,16 @@ steps:
     allowFailedBuilds: true
     path: $(Pipeline.Workspace)/Summaries
 
-- bash: |
-    set -x
-    set -e
-    ls -la
-    ls -la $PIPELINE_WORKSPACE
-    ls -la $PIPELINE_WORKSPACE/Summaries
-    pwd
-    #cat $PIPELINE_WORKSPACE/Summaries/TestSummary-*/TestSummary-*.md >> ./TestSummary.md
-
-    for f in $PIPELINE_WORKSPACE/Summaries/TestSummary-*/TestSummary.md;
-    do
-
-        prefix="${PIPELINE_WORKSPACE}/Summaries/"
-        prefix_len=${#prefix}
-        echo $prefix_len
-        suffix="/TestSummary.md"
-        suffix_len=${#suffix}
-        echo $suffix_len
-
-        s=${f:$prefix_len}
-        echo $s
-        s_len=${#s}
-        diff=$((s_len - suffix_len))
-
-        echo $diff
-        s=${s:0:$diff}
-        echo $s
-
-        echo $s >> ./TestSummary
-        echo "$f" >> ./TestSummary.md
-
-        #python -c 'import json,sys; print(json.dumps(sys.stdin.read()))' < "$f" >> ./TestSummary
-
-    done
-
-    cat ./TestSummary.md
-  displayName: 'Merge TestSummary files'
-
 ###
 ### Publish merged TestSummary file
 ###
-- task: PublishPipelineArtifact@1
-  displayName: 'Publish Artifact: Aggregate TestSummary'
-  inputs:
-#    targetPath: 'xamarin-macios/tests/TestSummary.md'
-    targetPath: ./TestSummary.md
-    artifactName: TestSummary
-    continueOnError: true
+# - task: PublishPipelineArtifact@1
+#   displayName: 'Publish Artifact: Aggregate TestSummary'
+#   inputs:
+# #    targetPath: 'xamarin-macios/tests/TestSummary.md'
+#     targetPath: ./TestSummary.md
+#     artifactName: TestSummary
+#     continueOnError: true
 
 # pwsh for PowerShell Core
 # powershell is for Win PowerShell
