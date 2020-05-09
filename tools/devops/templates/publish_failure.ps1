@@ -83,9 +83,12 @@ $file = $Env:SYSTEM_DEFAULTWORKINGDIRECTORY
 #$Env:PIPELINE_WORKSPACE
 Get-ChildItem $file | Write-Host
 
-$file = "$file/xamarin-macios"
 
-Write-Host "xamarin-macios children"
+
+
+$file = "$file/xamarin-macios/tests"
+
+Write-Host "xamarin-macios tests children"
 Get-ChildItem $file | Write-Host
 
 $file = "$file/TestSummary-$Env:CONTEXT.md"
