@@ -265,7 +265,7 @@ namespace Xharness.Tests {
 			var processResult = new ProcessExecutionResult () { ExitCode = 3, TimedOut = false };
 			processManager.SetReturnsDefault (Task.FromResult (processResult));
 
-			devices.Setup (d => d.FindDevice(It.IsAny<RunMode>(), It.IsAny<ILog>(), false, false)).ReturnsAsync (mockDevices[1]);
+			devices.Setup (d => d.FindDevice(It.IsAny<RunMode> (), It.IsAny<ILog> (), false, false)).ReturnsAsync (mockDevices[1]);
 
 			// Act
 			var appRunner = new AppRunner (processManager.Object,
@@ -501,8 +501,8 @@ namespace Xharness.Tests {
 		[Test]
 		public void RunOnDeviceWithNoAvailableSimulatorTest ()
 		{
-			devices.Setup (d => d.FindDevice (It.IsAny<RunMode>(), It.IsAny<ILog>(), false, false)).ReturnsAsync ((IHardwareDevice)null);
-			simulators.Setup (s => s.FindSimulators (It.IsAny<TestTarget> (), It.IsAny<ILog> (), true, false)).ReturnsAsync((ISimulatorDevice []) null);
+			devices.Setup (d => d.FindDevice (It.IsAny<RunMode> (), It.IsAny<ILog> (), false, false)).ReturnsAsync ((IHardwareDevice)null);
+			simulators.Setup (s => s.FindSimulators (It.IsAny<TestTarget> (), It.IsAny<ILog> (), true, false)).ReturnsAsync ((ISimulatorDevice []) null);
 
 			// Crash reporter
 			var crashReporterFactory = new Mock<ICrashSnapshotReporterFactory> ();
@@ -553,7 +553,7 @@ namespace Xharness.Tests {
 		{
 			var harness = GetMockedHarness ();
 
-			devices.Setup (d => d.FindDevice(It.IsAny<RunMode>(), It.IsAny<ILog>(), false, false)).ReturnsAsync (mockDevices[1]);
+			devices.Setup (d => d.FindDevice(It.IsAny<RunMode> (), It.IsAny<ILog> (), false, false)).ReturnsAsync (mockDevices[1]);
 
 			// Crash reporter
 			var crashReporterFactory = new Mock<ICrashSnapshotReporterFactory> ();
@@ -660,7 +660,7 @@ namespace Xharness.Tests {
 		{
 			var harness = GetMockedHarness ();
 
-			devices.Setup (d => d.FindDevice(It.IsAny<RunMode>(), It.IsAny<ILog>(), false, false)).ReturnsAsync (mockDevices[1]);
+			devices.Setup (d => d.FindDevice(It.IsAny<RunMode> (), It.IsAny<ILog> (), false, false)).ReturnsAsync (mockDevices[1]);
 
 			// Crash reporter
 			var crashReporterFactory = new Mock<ICrashSnapshotReporterFactory> ();
