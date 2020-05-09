@@ -82,7 +82,7 @@ $json_text = "$RESULT_EMOJI $DESCRIPTION on [Azure DevOps]($target_url) ($Env:BU
 $file = $Env:SYSTEM_DEFAULTWORKINGDIRECTORY
 #$Env:PIPELINE_WORKSPACE
 Get-ChildItem $file | Write-Host
-$file = "$file/Summaries/TestSummary-$Env:CONTEXT.md"
+$file = "$file/TestSummary-$Env:CONTEXT.md"
 
 Write-Host $file
 Get-Content $file | Write-Host
