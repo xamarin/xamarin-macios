@@ -35,6 +35,7 @@ namespace Xamarin.Linker {
 			// compiler nullability attributes are not used at runtime so they can be removed by the linker
 			case "NullableAttribute":
 			case "NullableContextAttribute":
+			case "NullablePublicOnlyAttribute":
 				return attr_type.Namespace == "System.Runtime.CompilerServices";
 			// _manual_ nullability attributes are not used at runtime so they can be removed by the linker
 			case "AllowNullAttribute":
