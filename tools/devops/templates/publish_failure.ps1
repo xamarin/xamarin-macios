@@ -91,7 +91,7 @@ $file = "$file/xamarin-macios/tests"
 Write-Host "xamarin-macios tests children"
 Get-ChildItem $file | Write-Host
 
-$file = "$file/TestSummary-$Env:CONTEXT.md"
+$file = "$file/TestSummary.md"
 
 Write-Host $file
 Get-Content $file | Write-Host
