@@ -47,7 +47,6 @@ namespace Xamarin.Bundler {
 		public BuildTarget BuildTarget;
 
 		public bool EnableCxx;
-		public bool EnableProfiling;
 		bool? package_managed_debug_symbols;
 		public bool PackageManagedDebugSymbols {
 			get { return package_managed_debug_symbols.Value; }

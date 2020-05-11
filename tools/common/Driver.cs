@@ -190,6 +190,7 @@ namespace Xamarin.Bundler {
 					(v) => {
 						app.Optimizations.Parse (v);
 					});
+			options.Add ("profiling:", "Enable profiling", v => app.EnableProfiling = ParseBool (v, "profiling"));
 			options.Add (new Mono.Options.ResponseFileSource ());
 
 			try {

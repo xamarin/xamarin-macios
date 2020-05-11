@@ -80,7 +80,6 @@ namespace Xamarin.Bundler {
 		public static RegistrarMode Registrar { get { return App.Registrar; } private set { App.Registrar = value; } }
 		static bool no_executable;
 		static bool embed_mono = true;
-		static bool? profiling = false;
 		static List<string> link_flags;
 		static bool? disable_lldb_attach = null;
 		static bool? disable_omit_fp = null;
@@ -276,7 +275,6 @@ namespace Xamarin.Bundler {
 							App.Frameworks.Add (v);
 					}
 				},
-				{ "profiling:", "Enable profiling", v => profiling = ParseBool (v, "profiling") },
 				{ "custom_bundle_name=", "Specify a custom name for the MonoBundle folder.", v => custom_bundle_name = v, true }, // Hidden hack for "universal binaries"
 				{ "tls-provider=", "Specify the default TLS provider", v => { tls_provider = v; }},
 				{ "http-message-handler=", "Specify the default HTTP Message Handler", v => { http_message_provider = v; }},
@@ -1133,7 +1131,7 @@ namespace Xamarin.Bundler {
 						args.Add ("GSS");
 					}
 
-					if (profiling.HasValue && profiling.Value) {
+					if (App.EnableProfiling) {
 						args.Add (Path.Combine (libdir, "libmono-profiler-log.a"));
 						args.Add ("-u");
 						args.Add ("_mono_profiler_init_log");
