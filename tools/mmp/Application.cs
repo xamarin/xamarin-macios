@@ -12,6 +12,7 @@ namespace Xamarin.Bundler {
 		public bool IsDualBuild => false;
 		public bool IsSimulatorBuild => false;
 		public bool IsDeviceBuild => false;
+		public bool IsTodayExtension => false;
 
 		bool RequiresXcodeHeaders => Driver.Registrar == RegistrarMode.Static && LinkMode == LinkMode.None;
 
