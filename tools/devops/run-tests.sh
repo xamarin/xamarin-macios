@@ -12,6 +12,6 @@ fi
 #make $DEBUG -C xamarin-macios/builds download -j
 #make $DEBUG -C xamarin-macios/builds .stamp-mono-ios-sdk-destdir -j
 #make $DEBUG -C xamarin-macios/tests vsts-device-tests
-echo "exit 1" > bar.sh
+echo "exit 0" > bar.sh
 chmod a+x bar.sh
 ./bar.sh
