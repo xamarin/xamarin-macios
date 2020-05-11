@@ -1678,7 +1678,7 @@ namespace Xamarin.Bundler {
 
 				Log (1, "Added assembly {0}", asm);
 
-				if (App.EnableDebug) {
+				if (App.PackageManagedDebugSymbols) {
 					var mdbfile = asm + ".mdb";
 					if (File.Exists (mdbfile))
 						CopyFileAndRemoveReadOnly (mdbfile, Path.Combine (mmp_dir, Path.GetFileName (mdbfile)));

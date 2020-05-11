@@ -89,10 +89,17 @@ namespace Xamarin.Bundler {
 		public Version SdkVersion;
 	
 		List<Abi> abis;
+		public bool IsLLVM { get { return IsArchEnabled (Abi.LLVM); } }
 
 		public bool Embeddinator { get; set; }
 
 		public List<Target> Targets = new List<Target> ();
+
+		bool? package_managed_debug_symbols;
+		public bool PackageManagedDebugSymbols {
+			get { return package_managed_debug_symbols.Value; }
+			set { package_managed_debug_symbols = value; }
+		}
 
 		public Application (string[] arguments)
 		{
@@ -402,6 +409,12 @@ namespace Xamarin.Bundler {
 				DebugTrack = false;
 			} else if (DebugTrack.Value && !EnableDebug) {
 				ErrorHelper.Warning (32, Errors.MT0032);
+			}
+
+			if (!package_managed_debug_symbols.HasValue) {
+				package_managed_debug_symbols = EnableDebug;
+			} else if (package_managed_debug_symbols.Value && IsLLVM) {
+				ErrorHelper.Warning (3007, Errors.MX3007);
 			}
 
 			Optimizations.Initialize (this);
