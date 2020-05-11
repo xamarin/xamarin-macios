@@ -42,12 +42,6 @@ namespace Xamarin.Bundler {
 		}
 	}
 
-	public enum RegistrarMode {
-		Default,
-		Dynamic,
-		Static,
-	}
-
 	public enum BuildTarget {
 		Simulator,
 		Device,
