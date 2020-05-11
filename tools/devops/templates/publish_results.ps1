@@ -96,6 +96,15 @@ $msg = [System.Text.StringBuilder]::new()
 $msg.AppendLine($json_text)
 $msg.AppendLine()
 
+
+
+# Grab the test name + device info string from filepath
+$prefix="$Env:PIPELINE_WORKSPACE/Summaries/TestSummary-"
+$prefix_len=$prefix.length
+$suffix="/TestSummary.md"
+$suffix_len=$suffix.length
+
+
 foreach ($file in $files)
 {
 	Write-Host $file
@@ -103,6 +112,12 @@ foreach ($file in $files)
 
 	$msg.AppendLine("blah title from filename")
 	$msg.AppendLine()
+
+
+    $info = $file.Substring($prefix.Length, $file.Length - $suffix.Length)
+
+    $msg.AppendLine($info);
+
 
 	# read each line of the summary file, append it with correct \n at the end
 	foreach ($line in Get-Content -Path $file)
