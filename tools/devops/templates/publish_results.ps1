@@ -113,8 +113,10 @@ foreach ($file in $files)
 	$msg.AppendLine("blah title from filename")
 	$msg.AppendLine()
 
+    Write-Host $file.FullName
+    Write-Host $file.FullName.Length
 
-    $info = $file.FullName.Substring($prefix.Length, $file.Length - $suffix.Length - $prefix.Length)
+    $info = $file.FullName.Substring($prefix.Length, $file.FullName.Length - $suffix.Length - $prefix.Length)
     $msg.AppendLine($info);
 
 
