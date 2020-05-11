@@ -91,7 +91,17 @@ steps:
 ###
 
   # move this to in-line code, should be very short
-- bash: ./xamarin-macios/tools/devops/run-tests.sh
+- bash: |
+    set -x
+    set -e
+
+    ./xamarin-macios/tools/devops/run-tests.sh
+
+    if [ $? -eq 0 ]; then
+      echo "##vso[task.setvariable variable=TestState]success"
+    else
+      echo "##vso[task.setvariable variable=TestState]failure"
+    fi
   displayName: 'Run tests'
   timeoutInMinutes: 600
 
@@ -99,7 +109,6 @@ steps:
   ### If test summary does not exist, create test summary files so that we can notify
   ### that no results were published at the per-test AND final results steps
   ###
-  ### TODO if provisioning fails add a different error message
 - bash: |
     set -e
     set -x
@@ -134,10 +143,9 @@ steps:
   displayName: 'Publish Artifact: TestSummary'
   inputs:
     targetPath: 'xamarin-macios/tests/TestSummary.md'
-    #targetPath: TestSummary-$(CONTEXT).md
     artifactName: TestSummary-$(CONTEXT)
   continueOnError: true
-  condition: succeededOrFailed() #, eq(variables['ProvisioningProfiles'], 'success'))
+  condition: succeededOrFailed(), eq(variables['TestState'], 'failure'))
 
 # if there's a test failure || test summary not generated || provisioning failed:
 # - update GH commit status

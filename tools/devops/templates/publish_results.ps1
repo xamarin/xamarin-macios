@@ -20,9 +20,6 @@ $params = @{
 #
 $response = Invoke-RestMethod @params
 
-Write-Host "Raw response: " + $response
-
-Write-Host "Response.state: " + $response.state
 $state = $response.state
 
 
@@ -43,7 +40,6 @@ $json_payload = @"
 }
 "@
 
-
 $url = "https://api.github.com/repos/xamarin/xamarin-macios/statuses/$Env:BUILD_REVISION"
 
 Write-Host $json_payload
@@ -63,7 +59,6 @@ $response = Invoke-RestMethod @params
 
 $response | Write-Host
 
-
 ###
 ### Construct commit message w/ aggregate test summary
 ###
@@ -72,7 +67,6 @@ If ($Env:BUILD_DEFINITIONNAME -like '*DDFun*')
 {
 	# do stuff
 }
-
 
 # BUILD_DEFINITIONNAME: Pipeline name, e.g. "iOS Device Tests [DDFun]"
 $json_text = "### :boom: :construction: TESTING Experimental DDFun pipeline: Device test aggregate results: on [Azure DevOps]($target_url)"
@@ -90,35 +84,27 @@ Get-ChildItem $dir | Write-Host
 # Get all test summary files
 $files = Get-ChildItem -Path $dir
 
-
 # stringbuilder for extra flavor
 $msg = [System.Text.StringBuilder]::new()
 $msg.AppendLine($json_text)
 $msg.AppendLine()
 
-
-
 # Grab the test name + device info string from filepath
 $prefix="$Env:PIPELINE_WORKSPACE/Summaries/TestSummary-"
-$prefix_len=$prefix.length
 $suffix="/TestSummary.md"
-$suffix_len=$suffix.length
-
 
 foreach ($file in $files)
 {
-	Write-Host $file
-	Write-Host Get-Content $file
-
-
     $info = $file.FullName.Substring($prefix.Length, $file.FullName.Length - $suffix.Length - $prefix.Length)
-    #$msg.AppendLine($info);
 
+    # switch to keep track of when we are reading the first line of a summary
     $first_line = 1
 
 	# read each line of the summary file, append it with correct \n at the end
 	foreach ($line in Get-Content -Path $file)
 	{
+        # if reading the first line, append test + device info to the header
+        # $msg will look like: "Test results: tvOS-monotouch-DDFun"
         if ($first_line)
         {
             $msg.Append($line + ": ")
@@ -133,12 +119,6 @@ foreach ($file in $files)
 	# new line to separate file contents
 	$msg.AppendLine()
 }
-
-
-
-
-
-
 
 $message_url = "https://api.github.com/repos/xamarin/xamarin-macios/commits/$Env:BUILD_REVISION/comments"
 
