@@ -48,6 +48,9 @@ else
 	grep "\"name\":" "$TMPFILE.dl" | sed -e 's/name": \"//' -e 's/.*\"\(.*\)\".*/\1/'> "$TMPFILE" || true
 fi
 
+# Find any custom labels
+grep -v '^[[:space:]]*#' custom-labels.txt | grep -v '^[[:space:]]*$' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' >> "$TMPFILE" || true
+
 if test -z "$CHECK"; then
 	echo "Labels found:"
 	sed 's/^/    /' "$TMPFILE"

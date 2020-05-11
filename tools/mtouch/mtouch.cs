@@ -144,10 +144,18 @@ namespace Xamarin.Bundler
 			set { force = value; }
 		}
 
+		public static string GetArchDirectory (Application app, bool is64bit)
+		{
+			if (is64bit)
+				return GetArch64Directory (app);
+			return GetArch32Directory (app);
+		}
+
 		public static string GetArch32Directory (Application app)
 		{
 			switch (app.Platform) {
 			case ApplePlatform.iOS:
+			case ApplePlatform.WatchOS:
 				return Path.Combine (GetPlatformFrameworkDirectory (app), "..", "..", "32bits");
 			default:
 				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, "Xamarin.iOS");
@@ -158,6 +166,7 @@ namespace Xamarin.Bundler
 		{
 			switch (app.Platform) {
 			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
 				return Path.Combine (GetPlatformFrameworkDirectory (app), "..", "..", "64bits");
 			default:
 				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, "Xamarin.iOS");

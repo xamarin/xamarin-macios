@@ -484,26 +484,27 @@ RUNTIME_MAC_TARGETS_DIRS +=                                    \
 	.libs/mac                                                  \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib             \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono        \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/include/xamarin \
+	$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/lib                     \
+	$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/include/xamarin         \
 
 RUNTIME_MAC_TARGETS +=                                                                                \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/XamMacLauncher                                     \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/XamMacLauncher                                \
-	$(foreach file,$(SHIPPED_HEADERS),$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/include/$(file))     \
-	$(foreach file,$(MAC_SHIPPED_HEADERS),$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/include/$(file)) \
-	$(foreach file,$(MAC_LIBS),$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/$(file))                \
+	$(foreach file,$(SHIPPED_HEADERS),$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/include/$(file))             \
+	$(foreach file,$(MAC_SHIPPED_HEADERS),$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/include/$(file))         \
+	$(foreach file,$(MAC_LIBS),$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/lib/$(file))                        \
 
 # The XamMacLauncher file must exist for VSfM to be able to open XM/Classic projects (so that people can use the migration wizard)
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/XamMacLauncher: | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib
 	$(Q) touch $@
 
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/%: .libs/mac/% | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib
+$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/lib/%: .libs/mac/% | $(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/lib
 	$(Q) $(CP) $< $@
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/XamMacLauncher: | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono
 	$(Q) ln -sF ../XamMacLauncher $@
 
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/include/%.h: %.h | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/include/xamarin
+$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/include/%.h: %.h | $(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/include/xamarin
 	$(Q) install -m 0644 $< $@
 
 $(RUNTIME_MAC_TARGETS_DIRS):

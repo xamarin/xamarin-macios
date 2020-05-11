@@ -477,7 +477,7 @@
   <ItemGroup>
     <None Include="Makefile" />
     <None Include="monotouch-fixes.c" />
-    <None Include="simlauncher.m" />
+    <None Include="simlauncher.mm" />
     <None Include="..\..\docs\website\mtouch-errors.md">
       <Link>mtouch-errors.md</Link>
     </None>

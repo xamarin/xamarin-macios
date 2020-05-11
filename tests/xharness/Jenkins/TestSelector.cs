@@ -1,6 +1,7 @@
 #nullable enable
 
 using System;
+using System.IO;
 using System.Linq;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using System.Collections.Generic;
@@ -176,6 +177,20 @@ namespace Xharness.Jenkins {
 			} else {
 				MainLog.WriteLine ($"No labels were in the environment variable XHARNESS_LABELS.");
 			}
+
+			var custom_labels_file = Path.Combine (Harness.RootDirectory, "..", "jenkins", "custom-labels.txt");
+			if (File.Exists (custom_labels_file)) {
+				var custom_labels = File.ReadAllLines (custom_labels_file).Select ((v) => v.Trim ()).Where (v => v.Length > 0 && v [0] != '#');
+				if (custom_labels.Count () > 0) {
+					labels.UnionWith (custom_labels);
+					MainLog.WriteLine ($"Found {custom_labels.Count ()} label(s) in {custom_labels_file}: {string.Join (", ", custom_labels)}");
+				} else {
+					MainLog.WriteLine ($"No labels were in {custom_labels_file}.");
+				}
+			} else {
+				MainLog.WriteLine ($"The custom labels file {custom_labels_file} does not exist.");
+			}
+
 			MainLog.WriteLine ($"In total found {labels.Count ()} label(s): {string.Join (", ", labels.ToArray ())}");
 
 			// disabled by default
