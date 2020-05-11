@@ -1,5 +1,8 @@
 #r "_provisionator/provisionator.dll"
 
+using System.IO;
+using System.Linq;
+
 using static Xamarin.Provisioning.ProvisioningScript;
 
 Exec (ExecFlags.Elevate, "defaults", "write", "com.apple.LaunchServices", "LSQuarantine", "-bool", "NO");
