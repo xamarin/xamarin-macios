@@ -134,7 +134,7 @@ namespace Xharness {
 
 			var device = await devs.FindDevice (runMode, MainLog, false, false);
 
-			deviceName = device.Name;
+			deviceName = device?.Name;
 
 			if (runMode == RunMode.WatchOS)
 				companionDeviceName = (await devs.FindCompanionDevice (MainLog, device)).Name;
@@ -148,6 +148,9 @@ namespace Xharness {
 			}
 
 			await FindDevice ();
+
+			if (string.IsNullOrEmpty (deviceName))
+				throw new NoDeviceFoundException ();
 
 			var args = new MlaunchArguments ();
 
@@ -187,8 +190,12 @@ namespace Xharness {
 
 		public async Task<int> RunAsync ()
 		{
-			if (!isSimulator)
+			if (!isSimulator) {
 				await FindDevice ();
+
+				if (deviceName == null)
+					throw new NoDeviceFoundException ();
+			}
 
 			var args = new MlaunchArguments ();
 
