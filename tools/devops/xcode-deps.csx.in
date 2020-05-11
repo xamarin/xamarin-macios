@@ -2,6 +2,7 @@
 
 using static Xamarin.Provisioning.ProvisioningScript;
 
+Exec (ExecFlags.Elevate, "defaults", "write", "com.apple.LaunchServices", "LSQuarantine", "-bool", "NO");
 Xcode ("@XCODE_VERSION@").XcodeSelect ();
 
 // provisionator knows how to deal with this items
