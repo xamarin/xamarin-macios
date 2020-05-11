@@ -9,6 +9,9 @@ resources:
     ref: refs/heads/device-tests-yaml # should this be on a branch and not on master???
     endpoint: xamarin
 
+variables:
+    - group: xamops-azdev-secrets
+
 jobs:
 - template: device-tests-common.yml # all the smart stuff happens in the template, just needed to set the params
   parameters:

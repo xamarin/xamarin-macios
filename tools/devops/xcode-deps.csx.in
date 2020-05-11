@@ -1,0 +1,20 @@
+#r "_provisionator/provisionator.dll"
+
+using static Xamarin.Provisioning.ProvisioningScript;
+
+Xcode ("@XCODE_VERSION@").XcodeSelect ();
+
+// provisionator knows how to deal with this items
+Item ("https://xamjenkinsartifact.azureedge.net/build-package-osx-mono/2020-02/76/d6f0c25d34da7512639346828ef368ff65a25003/MonoFramework-MDK-6.12.0.73.macos10.xamarin.universal.pkg", kind: ItemDependencyKind.AtLeast);
+Item("https://dl.xamarin.com/VsMac/VisualStudioForMac-8.5.5.7.dmg");
+Item("@XI_PACKAGE@");
+
+BrewPackage("p7zip");
+
+void BrewPackage(string name)
+{
+  // Assumes brew is already installed. 
+  // All Macs provisioned by Xamarin, VSEng, or DDFUN should have brew by default!
+  Item(name)
+    .Action(i => Exec("brew", "install", i.Name));
+}
