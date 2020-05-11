@@ -34,6 +34,23 @@ namespace Xamarin
 		Arch32Mask = i386 | ARMv6 | ARMv7 | ARMv7s | ARMv7k | ARM64_32 /* This is a 32-bit arch for our purposes */,
 	}
 
+	public static class AbiExtensions {
+		public static string AsString (this Abi self)
+		{
+			var rv = (self & Abi.ArchMask).ToString ();
+			if ((self & Abi.LLVM) == Abi.LLVM)
+				rv += "+LLVM";
+			if ((self & Abi.Thumb) == Abi.Thumb)
+				rv += "+Thumb";
+			return rv;
+		}
+
+		public static string AsArchString (this Abi self)
+		{
+			return (self & Abi.ArchMask).ToString ().ToLowerInvariant ();
+		}
+	}
+
 	public class MachO
 	{
 		/* definitions from: /usr/include/mach-o/loader.h */

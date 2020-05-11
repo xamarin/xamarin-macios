@@ -85,6 +85,8 @@ namespace Xamarin.Bundler {
 		public Version DeploymentTarget;
 		public Version SdkVersion;
 	
+		List<Abi> abis;
+
 		public bool Embeddinator { get; set; }
 
 		public List<Target> Targets = new List<Target> ();
@@ -477,6 +479,204 @@ namespace Xamarin.Bundler {
 				registrar.GenerateSingleAssembly (resolvedAssemblies.Values, Path.ChangeExtension (registrar_m, "h"), registrar_m, Path.GetFileNameWithoutExtension (RootAssembly));
 			else
 				registrar.Generate (resolvedAssemblies.Values, Path.ChangeExtension (registrar_m, "h"), registrar_m);
+		}
+
+		public IEnumerable<Abi> Abis {
+			get { return abis; }
+		}
+
+		public bool IsArchEnabled (Abi arch)
+		{
+			return IsArchEnabled (abis, arch);
+		}
+
+		public static bool IsArchEnabled (IEnumerable<Abi> abis, Abi arch)
+		{
+			foreach (var abi in abis) {
+				if ((abi & arch) != 0)
+					return true;
+			}
+			return false;
+		}
+
+		public void SetDefaultAbi ()
+		{
+			if (abis == null)
+				abis = new List<Abi> ();
+
+			switch (Platform) {
+			case ApplePlatform.iOS:
+				if (abis.Count == 0) {
+					if (DeploymentTarget == null || DeploymentTarget.Major >= 11) {
+						abis.Add (IsDeviceBuild ? Abi.ARM64 : Abi.x86_64);
+					} else {
+						abis.Add (IsDeviceBuild ? Abi.ARMv7 : Abi.i386);
+					}
+				}
+				break;
+			case ApplePlatform.WatchOS:
+				if (abis.Count == 0)
+					throw ErrorHelper.CreateError (76, Errors.MT0076, "Xamarin.WatchOS");
+				break;
+			case ApplePlatform.TVOS:
+				if (abis.Count == 0)
+					throw ErrorHelper.CreateError (76, Errors.MT0076, "Xamarin.TVOS");
+				break;
+			case ApplePlatform.MacOSX:
+				if (abis.Count == 0)
+					abis.Add (Abi.x86_64);
+				break;
+			default:
+				throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
+			}
+		}
+
+		public void ValidateAbi ()
+		{
+			var validAbis = new List<Abi> ();
+			switch (Platform) {
+			case ApplePlatform.iOS:
+				if (IsDeviceBuild) {
+					validAbis.Add (Abi.ARMv7);
+					validAbis.Add (Abi.ARMv7 | Abi.Thumb);
+					validAbis.Add (Abi.ARMv7 | Abi.LLVM);
+					validAbis.Add (Abi.ARMv7 | Abi.LLVM | Abi.Thumb);
+					validAbis.Add (Abi.ARMv7s);
+					validAbis.Add (Abi.ARMv7s | Abi.Thumb);
+					validAbis.Add (Abi.ARMv7s | Abi.LLVM);
+					validAbis.Add (Abi.ARMv7s | Abi.LLVM | Abi.Thumb);
+				} else {
+					validAbis.Add (Abi.i386);
+				}
+				if (IsDeviceBuild) {
+					validAbis.Add (Abi.ARM64);
+					validAbis.Add (Abi.ARM64 | Abi.LLVM);
+				} else {
+					validAbis.Add (Abi.x86_64);
+				}
+				break;
+			case ApplePlatform.WatchOS:
+				if (IsDeviceBuild) {
+					validAbis.Add (Abi.ARMv7k);
+					validAbis.Add (Abi.ARMv7k | Abi.LLVM);
+					validAbis.Add (Abi.ARM64_32);
+					validAbis.Add (Abi.ARM64_32 | Abi.LLVM);
+				} else {
+					validAbis.Add (Abi.i386);
+				}
+				break;
+			case ApplePlatform.TVOS:
+				if (IsDeviceBuild) {
+					validAbis.Add (Abi.ARM64);
+					validAbis.Add (Abi.ARM64 | Abi.LLVM);
+				} else {
+					validAbis.Add (Abi.x86_64);
+				}
+				break;
+			case ApplePlatform.MacOSX:
+				validAbis.Add (Abi.x86_64);
+				break;
+			default:
+				throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
+			}
+
+#if MMP
+			// This is technically not needed, because we'll fail the validation just below, but this handles
+			// a common case (existing 32-bit projects) and shows a better error message.
+			if (abis.Count == 1 && abis [0] == Abi.i386)
+				throw ErrorHelper.CreateError (144, Errors.MM0144);
+#endif
+
+			foreach (var abi in abis) {
+				if (!validAbis.Contains (abi))
+					throw ErrorHelper.CreateError (75, Errors.MT0075, abi, Platform, string.Join (", ", validAbis.Select ((v) => v.AsString ()).ToArray ()));
+			}
+		}
+
+		public void ClearAbi ()
+		{
+			abis = null;
+		}
+
+		public void ParseAbi (string abi)
+		{
+			var res = new List<Abi> ();
+			foreach (var str in abi.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries)) {
+				Abi value;
+				switch (str) {
+				case "i386":
+					value = Abi.i386;
+					break;
+				case "x86_64":
+					value = Abi.x86_64;
+					break;
+				case "armv7":
+					value = Abi.ARMv7;
+					break;
+				case "armv7+llvm":
+					value = Abi.ARMv7 | Abi.LLVM;
+					break;
+				case "armv7+llvm+thumb2":
+					value = Abi.ARMv7 | Abi.LLVM | Abi.Thumb;
+					break;
+				case "armv7s":
+					value = Abi.ARMv7s;
+					break;
+				case "armv7s+llvm":
+					value = Abi.ARMv7s | Abi.LLVM;
+					break;
+				case "armv7s+llvm+thumb2":
+					value = Abi.ARMv7s | Abi.LLVM | Abi.Thumb;
+					break;
+				case "arm64":
+					value = Abi.ARM64;
+					break;
+				case "arm64+llvm":
+					value = Abi.ARM64 | Abi.LLVM;
+					break;
+				case "arm64_32":
+					value = Abi.ARM64_32;
+					break;
+				case "arm64_32+llvm":
+					value = Abi.ARM64_32 | Abi.LLVM;
+					break;
+				case "armv7k":
+					value = Abi.ARMv7k;
+					break;
+				case "armv7k+llvm":
+					value = Abi.ARMv7k | Abi.LLVM;
+					break;
+				default:
+					throw ErrorHelper.CreateError (15, Errors.MT0015, str);
+				}
+
+				// merge this value with any existing ARMv? already specified.
+				// this is so that things like '--armv7 --thumb' work correctly.
+				if (abis != null) {
+					for (int i = 0; i < abis.Count; i++) {
+						if ((abis [i] & Abi.ArchMask) == (value & Abi.ArchMask)) {
+							value |= abis [i];
+							break;
+						}
+					}
+				}
+
+				res.Add (value);
+			}
+
+			// We replace any existing abis, to keep the old behavior where '--armv6 --armv7' would 
+			// enable only the last abi specified and disable the rest.
+			abis = res;
+		}
+
+		public static string GetArchitectures (IEnumerable<Abi> abis)
+		{
+			var res = new List<string> ();
+
+			foreach (var abi in abis)
+				res.Add (abi.AsArchString ());
+
+			return string.Join (", ", res.ToArray ());
 		}
 	}
 }
