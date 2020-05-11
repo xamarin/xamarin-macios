@@ -675,9 +675,6 @@ namespace Foundation {
 				if (inflight.CancellationTokenSource.Token.IsCancellationRequested)
 					return;
 
-				if (inflight.CompletionSource.Task.IsCompleted)
-					return;
-
 				inflight.CompletionSource.TrySetResult (inflight.Response);
 			}
 
