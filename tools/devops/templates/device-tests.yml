@@ -145,7 +145,7 @@ steps:
     targetPath: 'xamarin-macios/tests/TestSummary.md'
     artifactName: TestSummary-$(CONTEXT)
   continueOnError: true
-  condition: succeededOrFailed(), eq(variables['TestState'], 'failure'))
+  condition: and(succeededOrFailed(), eq(variables['TestState'], 'failure'))
 
 # if there's a test failure || test summary not generated || provisioning failed:
 # - update GH commit status
