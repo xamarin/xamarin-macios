@@ -110,20 +110,24 @@ foreach ($file in $files)
 	Write-Host $file
 	Write-Host Get-Content $file
 
-	$msg.AppendLine("blah title from filename")
-	$msg.AppendLine()
-
-    Write-Host $file.FullName
-    Write-Host $file.FullName.Length
 
     $info = $file.FullName.Substring($prefix.Length, $file.FullName.Length - $suffix.Length - $prefix.Length)
-    $msg.AppendLine($info);
+    #$msg.AppendLine($info);
 
+    $first_line = 1
 
 	# read each line of the summary file, append it with correct \n at the end
 	foreach ($line in Get-Content -Path $file)
 	{
-		$msg.AppendLine($line)
+        if ($first_line)
+        {
+            $msg.Append($line + ": ")
+            $msg.AppendLine($info)
+            $first_line = 0
+        }
+        else {
+            $msg.AppendLine($line)
+        }
 	}
 
 	# new line to separate file contents
