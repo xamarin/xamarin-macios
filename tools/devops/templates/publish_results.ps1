@@ -114,7 +114,7 @@ foreach ($file in $files)
 	$msg.AppendLine()
 
 
-    $info = $file.FullName.Substring($prefix.Length, $file.Length - $suffix.Length)
+    $info = $file.FullName.Substring($prefix.Length, $file.Length - $suffix.Length - $prefix.Length)
     $msg.AppendLine($info);
 
 
