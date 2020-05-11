@@ -712,21 +712,12 @@ namespace Xamarin.Bundler {
 				name = "libmono-system-native";
 			} else {
 				// use modern libmono-native
-				switch (BuildTarget.MonoNativeMode) {
-				case MonoNativeMode.Unified:
-					name = "libmono-native-unified";
-					break;
-				case MonoNativeMode.Compat:
-					name = "libmono-native-compat";
-					break;
-				default:
-					throw ErrorHelper.CreateError (99, Errors.MX0099, $"Invalid mono native type: '{BuildTarget.MonoNativeMode}'");
-				}
+				name = App.GetLibNativeName ();
 			}
 
 			var src = Path.Combine (GetMonoLibraryDirectory (App), name + ".dylib");
 			var dest = Path.Combine (mmp_dir, "libmono-native.dylib");
-			Watch ($"Adding mono-native library {name} for {BuildTarget.MonoNativeMode}.", 1);
+			Watch ($"Adding mono-native library {name} for {App.MonoNativeMode}.", 1);
 
 			if (App.Optimizations.TrimArchitectures == true) {
 				// copy to temp directory and lipo there to avoid touching the final dest file if it's up to date
@@ -1114,19 +1105,7 @@ namespace Xamarin.Bundler {
 						args.Add ("_SystemNative_RealPath"); // This keeps libmono_system_native_la-pal_io.o symbols
 					} else {
 						// add modern libmono-native
-						string libmono_native_name;
-						switch (BuildTarget.MonoNativeMode) {
-						case MonoNativeMode.Unified:
-							libmono_native_name = "libmono-native-unified";
-							break;
-						case MonoNativeMode.Compat:
-							libmono_native_name = "libmono-native-compat";
-							break;
-						default:
-							throw ErrorHelper.CreateError (99, Errors.MX0099, $"Invalid mono native type: '{BuildTarget.MonoNativeMode}'");
-						}
-
-						args.Add (Path.Combine (libdir, libmono_native_name + ".a"));
+						args.Add (Path.Combine (libdir, App.GetLibNativeName () + ".a"));
 						args.Add ("-framework");
 						args.Add ("GSS");
 					}
