@@ -16,6 +16,8 @@ namespace Xamarin.Bundler {
 
 		public string CustomBundleName = "MonoBundle";
 		public AOTOptions AOTOptions;
+		public bool? DisableLldbAttach = null;
+		public bool? DisableOmitFramePointer = null;
 
 		bool RequiresXcodeHeaders => Driver.Registrar == RegistrarMode.Static && LinkMode == LinkMode.None;
 

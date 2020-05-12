@@ -81,8 +81,6 @@ namespace Xamarin.Bundler {
 		static bool no_executable;
 		static bool embed_mono = true;
 		static List<string> link_flags;
-		static bool? disable_lldb_attach = null;
-		static bool? disable_omit_fp = null;
 		static string machine_config_path = null;
 		static bool bypass_linking_checks = false;
 
@@ -277,8 +275,8 @@ namespace Xamarin.Bundler {
 				{ "xpc", "Specifies an XPC service", v => { is_extension = true; is_xpc_service = true; }},
 				{ "allow-unsafe-gac-resolution", "Allow MSBuild to resolve from the System GAC", v => {} , true }, // Used in Xamarin.Mac.XM45.targets and must be ignored here. Hidden since it is a total hack. If you can use it, you don't need support
 				{ "force-unsupported-linker", "Bypass safety checkes preventing unsupported linking options.", v => bypass_linking_checks = true , true }, // Undocumented option for a reason, You get to keep the pieces when it breaks
-				{ "disable-lldb-attach=", "Disable automatic lldb attach on crash", v => disable_lldb_attach = ParseBool (v, "disable-lldb-attach")},
-				{ "disable-omit-fp=", "Disable a JIT optimization where the frame pointer is omitted from the stack. This is optimization is disabled by default for debug builds.", v => disable_omit_fp = ParseBool (v, "disable-omit-fp") },
+				{ "disable-lldb-attach=", "Disable automatic lldb attach on crash", v => App.DisableLldbAttach = ParseBool (v, "disable-lldb-attach")},
+				{ "disable-omit-fp=", "Disable a JIT optimization where the frame pointer is omitted from the stack. This is optimization is disabled by default for debug builds.", v => App.DisableOmitFramePointer = ParseBool (v, "disable-omit-fp") },
 				{ "machine-config=", "Custom machine.config file to copy into MonoBundle/mono/4.5/machine.config. Pass \"\" to copy in a valid \"empty\" config file.", v => machine_config_path = v },
 				{ "runregistrar:", "Runs the registrar on the input assembly and outputs a corresponding native library.",
 					v => {
@@ -843,9 +841,9 @@ namespace Xamarin.Bundler {
 				if (!App.IsDefaultMarshalManagedExceptionMode)
 					sw.WriteLine ("\txamarin_marshal_managed_exception_mode = MarshalManagedExceptionMode{0};", App.MarshalManagedExceptions);
 				sw.WriteLine ("\txamarin_marshal_objectivec_exception_mode = MarshalObjectiveCExceptionMode{0};", App.MarshalObjectiveCExceptions);
-				if (disable_lldb_attach.HasValue ? disable_lldb_attach.Value : !App.EnableDebug)
+				if (App.DisableLldbAttach.HasValue ? App.DisableLldbAttach.Value : !App.EnableDebug)
 					sw.WriteLine ("\txamarin_disable_lldb_attach = true;");
-				if (disable_omit_fp ?? App.EnableDebug)
+				if (App.DisableOmitFramePointer ?? App.EnableDebug)
 					sw.WriteLine ("\txamarin_disable_omit_fp = true;");
 				sw.WriteLine ();
 
