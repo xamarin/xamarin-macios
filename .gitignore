@@ -32,3 +32,4 @@ tests/bcl-test/SystemCoreXunit*.csproj
 tests/bcl-test/SystemXunit.csproj
 global.json
 .idea
+device-tests-provisioning.csx
