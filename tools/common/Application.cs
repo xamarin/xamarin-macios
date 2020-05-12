@@ -88,6 +88,7 @@ namespace Xamarin.Bundler {
 		public Version DeploymentTarget;
 		public Version SdkVersion;
 	
+		public MonoNativeMode MonoNativeMode { get; set; }
 		List<Abi> abis;
 
 		public bool Embeddinator { get; set; }
@@ -324,8 +325,7 @@ namespace Xamarin.Bundler {
 		public void InitializeCommon ()
 		{
 			SelectRegistrar ();
-			foreach (var target in Targets)
-				target.SelectMonoNative ();
+			SelectMonoNative ();
 
 			if (RequiresXcodeHeaders && SdkVersion < SdkVersions.GetVersion (Platform)) {
 				throw ErrorHelper.CreateError (91, Errors.MX0091, ProductName, PlatformName, SdkVersions.GetVersion (Platform), SdkVersions.Xcode, Error91LinkerSuggestion);
@@ -405,6 +405,43 @@ namespace Xamarin.Bundler {
 			}
 
 			Optimizations.Initialize (this);
+		}
+
+		void SelectMonoNative ()
+		{
+			switch (Platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+				MonoNativeMode = DeploymentTarget.Major >= 10 ? MonoNativeMode.Unified : MonoNativeMode.Compat;
+				break;
+			case ApplePlatform.WatchOS:
+				if (IsArchEnabled (Abis, Abi.ARM64_32)) {
+					MonoNativeMode = MonoNativeMode.Unified;
+				} else {
+					MonoNativeMode = DeploymentTarget.Major >= 3 ? MonoNativeMode.Unified : MonoNativeMode.Compat;
+				}
+				break;
+			case ApplePlatform.MacOSX:
+				if (DeploymentTarget >= new Version (10, 12))
+					MonoNativeMode = MonoNativeMode.Unified;
+				else
+					MonoNativeMode = MonoNativeMode.Compat;
+				break;
+			default:
+				throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
+			}
+		}
+
+		public string GetLibNativeName ()
+		{
+			switch (MonoNativeMode) {
+			case MonoNativeMode.Unified:
+				return "libmono-native-unified";
+			case MonoNativeMode.Compat:
+				return "libmono-native-compat";
+			default:
+				throw ErrorHelper.CreateError (99, Errors.MX0099, $"Invalid mono native type: '{MonoNativeMode}'");
+			}
 		}
 
 		public void RunRegistrar ()
