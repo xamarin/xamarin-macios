@@ -19,6 +19,8 @@ namespace Xharness.Jenkins {
 		
 		readonly Jenkins jenkins;
 		readonly IProcessManager processManager;
+		readonly IVersionControlSystem vcs;
+
 		ILog MainLog => jenkins.MainLog;
 		Harness Harness => jenkins.Harness;
 		
@@ -78,10 +80,11 @@ namespace Xharness.Jenkins {
 
 		#endregion
 
-		public TestSelector (Jenkins jenkins, IProcessManager processManager)
+		public TestSelector (Jenkins jenkins, IProcessManager processManager, IVersionControlSystem versionControlSystem)
 		{
 			this.jenkins = jenkins;
 			this.processManager = processManager;
+			this.vcs = versionControlSystem;
 		}
 		
 		void DisableKnownFailingDeviceTests ()
@@ -136,7 +139,7 @@ namespace Xharness.Jenkins {
 		void SelectTestsByModifiedFiles (int pullRequest)
 		{
 			// toArray so that we do not always enumerate all the time.
-			var files = GitHub.GetModifiedFiles (processManager, Harness, pullRequest).ToArray ();
+			var files = vcs.GetModifiedFiles (pullRequest).ToArray ();
 
 			MainLog.WriteLine ("Found {0} modified file(s) in the pull request #{1}.", files.Count (), pullRequest);
 			foreach (var f in files)
@@ -161,7 +164,7 @@ namespace Xharness.Jenkins {
 				MainLog.WriteLine ($"No labels were passed on the command line.");
 			}
 			if (pullRequest > 0) {
-				var lbls = GitHub.GetLabels (Harness, pullRequest);
+				var lbls = vcs.GetLabels (pullRequest);
 				if (lbls.Any ()) {
 					labels.UnionWith (lbls);
 					MainLog.WriteLine ($"Found {lbls.Count ()} label(s) in the pull request #{pullRequest}: {string.Join (", ", lbls)}");
@@ -237,7 +240,7 @@ namespace Xharness.Jenkins {
 						if (jenkins.IncludeDocs)
 							MainLog.WriteLine ("Enabled 'docs' tests because the current branch is 'master'.");
 					} else if (pullRequest > 0) {
-						jenkins.IncludeDocs = GitHub.GetPullRequestTargetBranch (Harness, pullRequest) == "master";
+						jenkins.IncludeDocs = vcs.GetPullRequestTargetBranch (pullRequest) == "master";
 						if (jenkins.IncludeDocs)
 							MainLog.WriteLine ("Enabled 'docs' tests because the target branch is 'master'.");
 					}
