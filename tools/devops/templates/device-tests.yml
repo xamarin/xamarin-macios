@@ -132,7 +132,7 @@ steps:
     FILE="xamarin-macios/tests/TestSummary.md"
     echo $FILE
     echo ":fire: Provisioning step failed" > $FILE
-  displayName: 'Add test summary for failed provisioning'
+  displayName: 'Provisioning failed: create test summary'
   condition: and (succeededOrFailed(), eq(variables['ProvisioningProfiles'], 'failure'))
 
 ###
