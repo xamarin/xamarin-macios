@@ -11,10 +11,7 @@ Get-ChildItem
 
 $target_url = $Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI + "$Env:SYSTEM_TEAMPROJECT/_build/index?buildId=$Env:BUILD_BUILDID&view=ms.vss-test-web.test-result-details"
 
-## don't need context here b/c we are combining all device tests into one post?
-#$json_payload = @"{"token": $TOKEN, "hash":$BUILD_REVISION "state": $GH_STATE, "target-url": $TARGET_URL, "description": $DESCRIPTION, "context": "VSTS: device tests $DEVICE_TYPE"}"
-
-# state: only report failure, so state is always failure but we can also use AGENT_JOBSTATUS to avoid hardcoding values
+# state: we only report failures
 $json_payload = @"
 {
     "state" : "failure",
@@ -23,7 +20,6 @@ $json_payload = @"
     "context" : "VSTS: $Env:SYSTEM_JOBNAME"
 }
 "@
-
 
 $url = "https://api.github.com/repos/xamarin/xamarin-macios/statuses/$Env:BUILD_REVISION"
 
