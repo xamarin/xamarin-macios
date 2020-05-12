@@ -111,7 +111,7 @@ namespace Xharness.Jenkins {
 			Harness = harness ?? throw new ArgumentNullException (nameof (harness));
 			simulators = new SimulatorLoader (processManager);
 			devices = new HardwareDeviceLoader (processManager);
-			testSelector = new TestSelector (this, processManager);
+			testSelector = new TestSelector (this, processManager, new GitHub (harness, processManager));
 		}
 
 		Task LoadAsync (ref ILog log, IDeviceLoader deviceManager, string name)
