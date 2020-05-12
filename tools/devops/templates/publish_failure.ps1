@@ -68,7 +68,7 @@ $HEADER = "### :bangbang: :construction: TESTING Experimental DDFun pipeline"
 
 # SYSTEM_JOBNAME: Xamarin | Monotouch | xUnitBCL | NUnitBCL | mscorlib
 # CONTEXT: tvOS | iOS | iOS32
-$DESCRIPTION="Device test $Env:SYSTEM_JOBNAME $Env:AGENT_JOBSTATUS on $Env:CONTEXT"
+$DESCRIPTION="Device test **$Env:SYSTEM_JOBNAME** $Env:AGENT_JOBSTATUS on **$Env:CONTEXT**"
 
 # BUILD_DEFINITIONNAME: Pipeline name, e.g. "iOS Device Tests [DDFun]"
 $json_text = "$RESULT_EMOJI $DESCRIPTION on [Azure DevOps]($target_url) ($Env:BUILD_DEFINITIONNAME) $RESULT_EMOJI"

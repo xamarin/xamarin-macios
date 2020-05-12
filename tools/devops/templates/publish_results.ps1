@@ -1,3 +1,4 @@
+# TODO: set up so that we only log debugging
 # debugging code: print out all environment variables, including those passed in via yml
 Get-Location
 Set-Location Env:
