@@ -123,10 +123,6 @@ fi
 # Enable dotnet bits on the bots
 CONFIGURE_FLAGS="$CONFIGURE_FLAGS --enable-dotnet"
 
-make reset
-make git-clean-all
-make print-versions
-
 echo "Configuring the build with: $CONFIGURE_FLAGS"
 # shellcheck disable=SC2086
 ./configure $CONFIGURE_FLAGS
