@@ -5,7 +5,7 @@ using System.Linq;
 
 using static Xamarin.Provisioning.ProvisioningScript;
 
-Xcode ("@XCODE_VERSION@").XcodeSelectUntrusted ();
+Xcode ("@XCODE_VERSION@").XcodeSelect (allowUntrusted: true);
 
 // provisionator knows how to deal with this items
 Item ("@MONO_PACKAGE@", kind: ItemDependencyKind.AtLeast);
