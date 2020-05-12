@@ -97,7 +97,7 @@ steps:
     set -x
     set -e
 
-    EC = 0
+    EC=0
     ./xamarin-macios/tools/devops/run-tests.sh || EC=$?
 
     if [ $EC -eq 0 ]; then
