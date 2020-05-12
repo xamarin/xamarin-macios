@@ -492,9 +492,9 @@ namespace MonoTests.System.Net.Http
 			}
 		}
 
-		[TestCase (HttpStatusCode.OK, "mandel", "1234", "mandel", "1234")]
-		[TestCase (HttpStatusCode.Unauthorized, "mandel", "1234", "mandel", "4321")]
-		[TestCase (HttpStatusCode.Unauthorized, "mandel", "1234", "", "")]
+		[TestCase (HttpStatusCode.OK, "mandel", "12345678", "mandel", "12345678")]
+		[TestCase (HttpStatusCode.Unauthorized, "mandel", "12345678", "mandel", "87654321")]
+		[TestCase (HttpStatusCode.Unauthorized, "mandel", "12345678", "", "")]
 		public void GHIssue8342 (HttpStatusCode expectedStatus, string validUsername, string validPassword, string username, string password)
 		{ 
 			// create a http client to use with some creds that we do know are not valid
@@ -531,7 +531,7 @@ namespace MonoTests.System.Net.Http
 		public void GHIssue8344 ()
 		{
 			var username = "mandel";
-			var password = "1234";
+			var password = "12345678";
 			var url = $"https://httpbin.org/basic-auth/{username}/{password}";
 			// perform two requests, one that will get a 200 with valid creds, one that wont and assert that
 			// the second call does get a 401
