@@ -92,12 +92,9 @@ namespace Xamarin.Bundler {
 		static string resources_dir;
 		static string mmp_dir;
 		
-		static string custom_bundle_name;
-
 		static string tls_provider;
 		static string http_message_provider;
 
-		static string BundleName { get { return custom_bundle_name != null ? custom_bundle_name : "MonoBundle"; } }
 		static string AppPath { get { return Path.Combine (macos_dir, app_name); } }
 
 		static string icon;
@@ -275,7 +272,7 @@ namespace Xamarin.Bundler {
 							App.Frameworks.Add (v);
 					}
 				},
-				{ "custom_bundle_name=", "Specify a custom name for the MonoBundle folder.", v => custom_bundle_name = v, true }, // Hidden hack for "universal binaries"
+				{ "custom_bundle_name=", "Specify a custom name for the MonoBundle folder.", v => App.CustomBundleName = v, true }, // Hidden hack for "universal binaries"
 				{ "tls-provider=", "Specify the default TLS provider", v => { tls_provider = v; }},
 				{ "http-message-handler=", "Specify the default HTTP Message Handler", v => { http_message_provider = v; }},
 				{ "extension", "Specifies an app extension", v => is_extension = true },
@@ -841,9 +838,9 @@ namespace Xamarin.Bundler {
 				sw.WriteLine ("extern \"C\" int xammac_setup ()");
 
 				sw.WriteLine ("{");
-				if (custom_bundle_name != null) {
+				if (App.CustomBundleName != null) {
 					sw.WriteLine ("extern NSString* xamarin_custom_bundle_name;");
-					sw.WriteLine ("\txamarin_custom_bundle_name = @\"" + custom_bundle_name + "\";");
+					sw.WriteLine ("\txamarin_custom_bundle_name = @\"" + App.CustomBundleName + "\";");
 				}
 				if (!App.IsDefaultMarshalManagedExceptionMode)
 					sw.WriteLine ("\txamarin_marshal_managed_exception_mode = MarshalManagedExceptionMode{0};", App.MarshalManagedExceptions);
@@ -1038,7 +1035,7 @@ namespace Xamarin.Bundler {
 				}
 				if (dylibs_copied_to_bundle_dir) {
 					args.Add ("-rpath");
-					args.Add ($"@loader_path/../{BundleName}");
+					args.Add ($"@loader_path/../{App.CustomBundleName}");
 				}
 
 				if (is_extension && !is_xpc_service) {
@@ -1309,7 +1306,7 @@ namespace Xamarin.Bundler {
 					string libName = Path.GetFileName (linkWith);
 					string finalLibPath = Path.Combine (mmp_dir, libName);
 					Application.UpdateFile (linkWith, finalLibPath);
-					RunInstallNameTool (new [] { "-id", "@executable_path/../" + BundleName + "/" + libName, finalLibPath });
+					RunInstallNameTool (new [] { "-id", "@executable_path/../" + App.CustomBundleName + "/" + libName, finalLibPath });
 					native_libraries_copied_in.Add (libName);
 				}
 			}
@@ -1332,7 +1329,7 @@ namespace Xamarin.Bundler {
 							CreateSymLink (mmp_dir, real_libname, libname);
 						sb.Add ("-change");
 						sb.Add (lib);
-						sb.Add ("@executable_path/../" + BundleName + "/" + libname);
+						sb.Add ("@executable_path/../" + App.CustomBundleName + "/" + libname);
 					}
 				}
 				// if required update the paths inside the .dylib that was copied
@@ -1476,7 +1473,7 @@ namespace Xamarin.Bundler {
 
 			if (native_references.Contains (real_src)) {
 				if (!isStaticLib)
-					RunInstallNameTool (new [] { "-id", "@executable_path/../" + BundleName + "/" + name, dest });
+					RunInstallNameTool (new [] { "-id", "@executable_path/../" + App.CustomBundleName + "/" + name, dest });
 				native_libraries_copied_in.Add (name);
 			}
 
@@ -1544,7 +1541,7 @@ namespace Xamarin.Bundler {
 
 			frameworks_dir = Path.Combine (contents_dir, "Frameworks");
 			resources_dir = Path.Combine (contents_dir, "Resources");
-			mmp_dir = Path.Combine (contents_dir, BundleName);
+			mmp_dir = Path.Combine (contents_dir, App.CustomBundleName);
 
 			CreateDirectoryIfNeeded (App.AppDirectory);
 			CreateDirectoryIfNeeded (contents_dir);
