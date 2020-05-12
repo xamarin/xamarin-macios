@@ -10,11 +10,9 @@ using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks {
 	// A class to express what's shared/common between mtouch and mmp.
-	public abstract class BundlerToolTaskBase : ToolTask {
+	public abstract class BundlerToolTaskBase : XamarinToolTask {
 
 		#region Inputs
-		public string SessionId { get; set; }
-
 		[Required]
 		public string AppBundleDir { get; set; }
 
@@ -67,24 +65,11 @@ namespace Xamarin.MacDev.Tasks {
 		[Required]
 		public string SdkVersion { get; set; }
 
-		[Required]
-		public string TargetFrameworkMoniker { get; set; }
-
 		public int Verbosity { get; set; }
 
 		[Required]
 		public string XamarinSdkRoot { get; set; }
 		#endregion
-
-		public ApplePlatform Framework {
-			get { return PlatformFrameworkHelper.GetFramework (TargetFrameworkMoniker); }
-		}
-
-		public string TargetFrameworkIdentifier { get { return TargetFramework.Identifier; } }
-
-		public TargetFramework TargetFramework { get { return TargetFramework.Parse (TargetFrameworkMoniker); } }
-
-		public string TargetFrameworkVersion { get { return TargetFramework.Version.ToString (); } }
 
 		protected override string GenerateFullPathToTool ()
 		{

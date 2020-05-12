@@ -8,10 +8,8 @@ using Xamarin.MacDev.Tasks;
 
 namespace Xamarin.iOS.Tasks
 {
-	public abstract class ParseExtraMtouchArgsTaskBase : Task
+	public abstract class ParseExtraMtouchArgsTaskBase : XamarinTask
 	{
-		public string SessionId { get; set; }
-
 		public string ExtraArgs { get; set; }
 
 		[Output]

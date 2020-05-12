@@ -6,11 +6,9 @@ using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.MacDev.Tasks
 {
-	public abstract class FindItemWithLogicalNameTaskBase : Task
+	public abstract class FindItemWithLogicalNameTaskBase : XamarinTask
 	{
 		#region Inputs
-
-		public string SessionId { get; set; }
 
 		[Required]
 		public string ProjectDir { get; set; }

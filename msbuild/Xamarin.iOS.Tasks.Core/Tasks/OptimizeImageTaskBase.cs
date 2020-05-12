@@ -8,14 +8,12 @@ using Xamarin.MacDev.Tasks;
 
 namespace Xamarin.iOS.Tasks
 {
-	public abstract class OptimizeImageTaskBase : ToolTask
+	public abstract class OptimizeImageTaskBase : XamarinToolTask
 	{
 		ITaskItem inputImage;
 		ITaskItem outputImage;
 
 		#region Inputs
-
-		public string SessionId { get; set; }
 
 		[Required]
 		public ITaskItem[] InputImages { get; set; }

@@ -9,11 +9,9 @@ using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.iOS.Tasks
 {
-	public class CollectFrameworksBase : Task
+	public class CollectFrameworksBase : XamarinTask
 	{
 		#region Inputs
-
-		public string SessionId { get; set; }
 
 		[Required]
 		public string AppBundlePath { get; set; }

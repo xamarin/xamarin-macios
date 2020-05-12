@@ -10,7 +10,7 @@ using System.Xml.Linq;
 
 namespace Xamarin.MacDev.Tasks
 {
-	public abstract class ReadItemsFromFileBase : Task
+	public abstract class ReadItemsFromFileBase : XamarinTask
 	{
 		static readonly XNamespace XmlNs = XNamespace.Get("http://schemas.microsoft.com/developer/msbuild/2003");
 
@@ -18,8 +18,6 @@ namespace Xamarin.MacDev.Tasks
 		const string IncludeAttributeName = "Include";
 
 		#region Inputs
-
-		public string SessionId { get; set; }
 
 		[Output]
 		[Required]

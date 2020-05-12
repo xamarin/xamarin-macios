@@ -9,11 +9,9 @@ using Xamarin.MacDev;
 
 namespace Xamarin.MacDev.Tasks
 {
-	public abstract class CodesignVerifyTaskBase : ToolTask
+	public abstract class CodesignVerifyTaskBase : XamarinToolTask
 	{
 		#region Inputs
-
-		public string SessionId { get; set; }
 
 		[Required]
 		public string CodesignAllocate { get; set; }

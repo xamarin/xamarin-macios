@@ -8,11 +8,9 @@ using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.MacDev.Tasks
 {
-	public abstract class CollectBundleResourcesTaskBase : Task
+	public abstract class CollectBundleResourcesTaskBase : XamarinTask
 	{
 		#region Inputs
-
-		public string SessionId { get; set; }
 
 		public ITaskItem[] BundleResources { get; set; }
 

@@ -6,13 +6,11 @@ using Microsoft.Build.Framework;
 
 namespace Xamarin.MacDev.Tasks
 {
-	public abstract class ScnToolTaskBase : ToolTask
+	public abstract class ScnToolTaskBase : XamarinToolTask
 	{
 		string sdkDevPath;
 
 		#region Inputs
-
-		public string SessionId { get; set; }
 
 		[Required]
 		public string IntermediateOutputPath { get; set; }
@@ -38,9 +36,6 @@ namespace Xamarin.MacDev.Tasks
 				SetEnvironmentVariable ("DEVELOPER_DIR", sdkDevPath);
 			}
 		}
-
-		[Required]
-		public string TargetFrameworkMoniker { get; set; }
 
 		#endregion
 

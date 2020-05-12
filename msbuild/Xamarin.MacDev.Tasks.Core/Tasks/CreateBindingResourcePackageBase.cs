@@ -10,9 +10,7 @@ using Microsoft.Build.Utilities;
 using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.MacDev.Tasks {
-	public abstract class CreateBindingResourcePackageBase : Task {
-		public string SessionId { get; set; }
-		
+	public abstract class CreateBindingResourcePackageBase : XamarinTask {
 		[Required]
 		public string OutputPath { get; set; }
 		

@@ -12,13 +12,11 @@ using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.MacDev.Tasks
 {
-	public abstract class CompileSceneKitAssetsTaskBase : Task
+	public abstract class CompileSceneKitAssetsTaskBase : XamarinTask
 	{
 		string toolExe;
 
 		#region Inputs
-
-		public string SessionId { get; set; }
 
 		[Required]
 		public string AppBundleName { get; set; }
@@ -48,11 +46,6 @@ namespace Xamarin.MacDev.Tasks
 
 		[Required]
 		public string SdkVersion { get; set; }
-
-		public TargetFramework TargetFramework { get { return TargetFramework.Parse (TargetFrameworkMoniker); } }
-
-		[Required]
-		public string TargetFrameworkMoniker { get; set; }
 
 		public string ToolExe {
 			get { return toolExe ?? ToolName; }

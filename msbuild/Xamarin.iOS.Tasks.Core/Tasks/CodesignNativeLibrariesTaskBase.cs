@@ -16,14 +16,12 @@ using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.iOS.Tasks
 {
-	public abstract class CodesignNativeLibrariesTaskBase : Task
+	public abstract class CodesignNativeLibrariesTaskBase : XamarinTask
 	{
 		const string ToolName = "codesign";
 		string toolExe;
 
 		#region Inputs
-
-		public string SessionId { get; set; }
 
 		[Required]
 		public string AppBundleDir { get; set; }

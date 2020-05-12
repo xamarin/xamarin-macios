@@ -12,13 +12,11 @@ using Xamarin.MacDev;
 
 namespace Xamarin.MacDev.Tasks
 {
-	public abstract class XcodeToolTaskBase : Task
+	public abstract class XcodeToolTaskBase : XamarinTask
 	{
 		string toolExe;
 
 		#region Inputs
-
-		public string SessionId { get; set; }
 
 		[Required]
 		public string IntermediateOutputPath { get; set; }

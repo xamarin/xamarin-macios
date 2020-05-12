@@ -14,7 +14,7 @@ using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.MacDev.Tasks
 {
-	public abstract class CodesignTaskBase : Task
+	public abstract class CodesignTaskBase : XamarinTask
 	{
 		const string ToolName = "codesign";
 		const string MacOSDirName = "MacOS";
@@ -22,8 +22,6 @@ namespace Xamarin.MacDev.Tasks
 		string toolExe;
 
 		#region Inputs
-
-		public string SessionId { get; set; }
 
 		[Required]
 		public string CodesignAllocate { get; set; }

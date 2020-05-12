@@ -9,11 +9,9 @@ using Xamarin.MacDev.Tasks;
 
 namespace Xamarin.iOS.Tasks
 {
-	public class CollectAssetPacksTaskBase : Task
+	public class CollectAssetPacksTaskBase : XamarinTask
 	{
 		#region Inputs
-
-		public string SessionId { get; set; }
 
 		[Required]
 		public string OnDemandResourcesPath { get; set; }

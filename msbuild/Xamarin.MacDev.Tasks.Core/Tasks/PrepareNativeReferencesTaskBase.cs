@@ -8,10 +8,8 @@ using Microsoft.Build.Utilities;
 
 namespace Xamarin.MacDev.Tasks
 {
-	public abstract class PrepareNativeReferencesTaskBase : Task
+	public abstract class PrepareNativeReferencesTaskBase : XamarinTask
 	{
-		public string SessionId { get; set; }
-
 		[Required]
 		public string IntermediateOutputPath { get; set; }
 
