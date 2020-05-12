@@ -469,12 +469,12 @@ namespace Xamarin.Bundler
 						}
 					}
 
-					if (target.MonoNativeMode != MonoNativeMode.None) {
+					if (app.MonoNativeMode != MonoNativeMode.None) {
 						string mono_native_lib;
 						if (app.LibMonoNativeLinkMode == AssemblyBuildTarget.StaticObject)
 							mono_native_lib = "__Internal";
 						else
-							mono_native_lib = target.GetLibNativeName () + ".dylib";
+							mono_native_lib = app.GetLibNativeName () + ".dylib";
 						sw.WriteLine ();
 						sw.WriteLine ($"\tmono_dllmap_insert (NULL, \"System.Native\", NULL, \"{mono_native_lib}\", NULL);");
 						sw.WriteLine ($"\tmono_dllmap_insert (NULL, \"System.Security.Cryptography.Native.Apple\", NULL, \"{mono_native_lib}\", NULL);");
