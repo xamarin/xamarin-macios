@@ -104,6 +104,28 @@ namespace Xamarin.Bundler {
 			set { package_managed_debug_symbols = value; }
 		}
 
+		// If we're targetting a 32 bit arch.
+		bool? is32bits;
+		public bool Is32Build {
+			get {
+				if (!is32bits.HasValue)
+					is32bits = IsArchEnabled (Abi.Arch32Mask);
+				return is32bits.Value;
+			}
+		}
+
+		// If we're targetting a 64 bit arch.
+		bool? is64bits;
+		public bool Is64Build {
+			get {
+				if (!is64bits.HasValue)
+					is64bits = IsArchEnabled (Abi.Arch64Mask);
+				return is64bits.Value;
+			}
+		}
+
+		public bool IsDualBuild { get { return Is32Build && Is64Build; } } // if we're building both a 32 and a 64 bit version.
+
 		public Application (string[] arguments)
 		{
 			Cache = new Cache (arguments);
