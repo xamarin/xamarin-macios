@@ -15,6 +15,7 @@ namespace Xamarin.Bundler {
 		public bool IsTodayExtension => false;
 
 		public string CustomBundleName = "MonoBundle";
+		public AOTOptions AOTOptions;
 
 		bool RequiresXcodeHeaders => Driver.Registrar == RegistrarMode.Static && LinkMode == LinkMode.None;
 

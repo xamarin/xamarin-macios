@@ -156,8 +156,6 @@ namespace Xamarin.Bundler {
 			throw new InvalidOperationException ("Arch64Directory when not Mobile or Full?");
 		}
 					
-		static AOTOptions aotOptions = null;
-
 		public static bool EnableDebug {
 			get { return App.EnableDebug; }
 		}
@@ -294,7 +292,7 @@ namespace Xamarin.Bundler {
 				{ "xamarin-system-framework", "Used with --target-framework=4.5 to select XM Full Target Framework. Deprecated, use --target-framework=Xamarin.Mac,Version=v4.0,Profile=System instead.", v => { TargetFramework = TargetFramework.Xamarin_Mac_4_5_System; }, true },
 				{ "aot:", "Specify assemblies that should be AOT compiled\n- none - No AOT (default)\n- all - Every assembly in MonoBundle\n- core - Xamarin.Mac, System, mscorlib\n- sdk - Xamarin.Mac.dll and BCL assemblies\n- |hybrid after option enables hybrid AOT which allows IL stripping but is slower (only valid for 'all')\n - Individual files can be included for AOT via +FileName.dll and excluded via -FileName.dll\n\nExamples:\n  --aot:all,-MyAssembly.dll\n  --aot:core,+MyOtherAssembly.dll,-mscorlib.dll",
 					v => {
-						aotOptions = new AOTOptions (v);
+						App.AOTOptions = new AOTOptions (v);
 					}
 				},
 				{ "link-prohibited-frameworks", "Natively link against prohibited (rejected by AppStore) frameworks", v => { LinkProhibitedFrameworks = true; } },
@@ -315,10 +313,10 @@ namespace Xamarin.Bundler {
 			if (ParseOptions (App, os, args, ref action))
 				return 0;
 
-			if (aotOptions == null) {
+			if (App.AOTOptions == null) {
 				string forceAotVariable = Environment.GetEnvironmentVariable ("XM_FORCE_AOT");
 				if (forceAotVariable != null)
-					aotOptions = new AOTOptions (forceAotVariable);
+					App.AOTOptions = new AOTOptions (forceAotVariable);
 			}
 
 			App.RuntimeOptions = RuntimeOptions.Create (App, http_message_provider, tls_provider);
@@ -681,7 +679,7 @@ namespace Xamarin.Bundler {
 			if (App.LinkMode != LinkMode.All && App.RuntimeOptions != null)
 				App.RuntimeOptions.Write (resources_dir);
 
-			if (aotOptions != null && aotOptions.IsAOT) {
+			if (App.AOTOptions != null && App.AOTOptions.IsAOT) {
 				AOTCompilerType compilerType;
 				if (IsUnifiedMobile || IsUnifiedFullXamMacFramework)
 					compilerType = AOTCompilerType.Bundled64;
@@ -690,7 +688,7 @@ namespace Xamarin.Bundler {
 				else
 					throw ErrorHelper.CreateError (0099, Errors.MX0099, "\"AOT with unexpected profile.\"");
 
-				AOTCompiler compiler = new AOTCompiler (aotOptions, compilerType, IsUnifiedMobile, !EnableDebug);
+				AOTCompiler compiler = new AOTCompiler (App.AOTOptions, compilerType, IsUnifiedMobile, !EnableDebug);
 				compiler.Compile (mmp_dir);
 				Watch ("AOT Compile", 1);
 			}
@@ -864,7 +862,7 @@ namespace Xamarin.Bundler {
 
 				sw.WriteLine ("\txamarin_supports_dynamic_registration = {0};", App.DynamicRegistrationSupported ? "TRUE" : "FALSE");
 
-				if (aotOptions != null && aotOptions.IsHybridAOT)
+				if (App.AOTOptions != null && App.AOTOptions.IsHybridAOT)
 					sw.WriteLine ("\txamarin_mac_hybrid_aot = TRUE;");
 
 				if (IsUnifiedMobile)
