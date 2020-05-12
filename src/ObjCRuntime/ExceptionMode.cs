@@ -7,7 +7,6 @@
 // Copyright 2016 Xamarin Inc.
 
 using System;
-using Foundation;
 
 namespace ObjCRuntime {
 	/* This enum must always match the identical enum in runtime/xamarin/main.h */
