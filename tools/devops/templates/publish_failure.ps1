@@ -14,14 +14,12 @@ $target_url = $Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI + "$Env:SYSTEM_TEAMPROJECT
 ## don't need context here b/c we are combining all device tests into one post?
 #$json_payload = @"{"token": $TOKEN, "hash":$BUILD_REVISION "state": $GH_STATE, "target-url": $TARGET_URL, "description": $DESCRIPTION, "context": "VSTS: device tests $DEVICE_TYPE"}"
 
-# add real device type here
-# add description back in
 # state: only report failure, so state is always failure but we can also use AGENT_JOBSTATUS to avoid hardcoding values
 $json_payload = @"
 {
     "state" : "failure",
     "target_url" : "$target_url",
-    "description" : "$Env:SYSTEM_JOBNAME", 
+    "description" : "VSTS: $Env:SYSTEM_JOBNAME",
     "context" : "$Env:SYSTEM_STAGEDISPLAYNAME"
 }
 "@
@@ -80,11 +78,7 @@ $DESCRIPTION="Device test $Env:SYSTEM_JOBNAME $Env:AGENT_JOBSTATUS on $Env:CONTE
 $json_text = "$RESULT_EMOJI $DESCRIPTION on [Azure DevOps]($target_url) ($Env:BUILD_DEFINITIONNAME) $RESULT_EMOJI"
 
 $file = $Env:SYSTEM_DEFAULTWORKINGDIRECTORY
-#$Env:PIPELINE_WORKSPACE
 Get-ChildItem $file | Write-Host
-
-
-
 
 $file = "$file/xamarin-macios/tests"
 
@@ -111,8 +105,6 @@ foreach ($line in Get-Content -Path $file)
 	$msg.AppendLine($line)
 }
 
-
-
 $message_url = "https://api.github.com/repos/xamarin/xamarin-macios/commits/$Env:BUILD_REVISION/comments"
 
 
@@ -120,7 +112,6 @@ $message_url = "https://api.github.com/repos/xamarin/xamarin-macios/commits/$Env
 $payload = @{
 	body = $msg.ToString()
 }
-
 
 # convert payload to json
 $json_payload = $payload | ConvertTo-json

@@ -20,19 +20,13 @@ steps:
     path: $(Pipeline.Workspace)/Summaries
 
 ###
-### Publish merged TestSummary file
+### Publish commit message and status
 ###
-# - task: PublishPipelineArtifact@1
-#   displayName: 'Publish Artifact: Aggregate TestSummary'
-#   inputs:
-# #    targetPath: 'xamarin-macios/tests/TestSummary.md'
-#     targetPath: ./TestSummary.md
-#     artifactName: TestSummary
-#     continueOnError: true
 
 # pwsh for PowerShell Core
 # powershell is for Win PowerShell
 - pwsh: ./tools/devops/templates/publish_results.ps1
+  displayName: Publish commit message + status
   condition: succeededOrFailed()
   env:
     BUILD_REVISION: $(BUILD_REVISION)

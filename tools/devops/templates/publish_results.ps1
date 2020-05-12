@@ -3,6 +3,11 @@ Get-Location
 Set-Location Env:
 Get-ChildItem
 
+###
+### Construct commit status with combined test results
+###
+
+
 # get combined status:
 # success only if every status is success
 # otherwise failure
@@ -26,17 +31,12 @@ $state = $response.state
 # post status to github
 $target_url = $Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI + "$Env:SYSTEM_TEAMPROJECT/_build/index?buildId=$Env:BUILD_BUILDID&view=ms.vss-test-web.test-result-details"
 
-## don't need context here b/c we are combining all device tests into one post?
-#$json_payload = @"{"token": $TOKEN, "hash":$BUILD_REVISION "state": $GH_STATE, "target-url": $TARGET_URL, "description": $DESCRIPTION, "context": "VSTS: device tests $DEVICE_TYPE"}"
-
-# add real device type here
-# add description back in
 $json_payload = @"
 {
     "state" : "$state",
     "target_url" : "$target_url",
-    "description" : "description placeholder",
-    "context" : "VSTS: AGGREGATE device tests"
+    "description" : "$state",
+    "context" : "VSTS: All device tests"
 }
 "@
 
