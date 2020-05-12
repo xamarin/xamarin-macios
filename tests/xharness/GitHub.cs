@@ -11,8 +11,33 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 
 namespace Xharness
 {
-	public static class GitHub
+	/// <summary>
+	/// API to interact with the vcs used in the project. It is used to indentify those modified files in a PR and
+	/// choose which tests to execute.
+	/// </summary>
+	public interface IVersionControlSystem {
+
+		string GetPullRequestTargetBranch (int pullRequest);
+		IEnumerable<string> GetLabels (int pullRequest);
+		IEnumerable<string> GetModifiedFiles (int pullRequest);
+	}
+
+	public class GitHub : IVersionControlSystem
 	{
+
+		readonly Harness harness;
+		readonly IProcessManager processManager;
+
+		public GitHub (Harness harness, IProcessManager processManager)
+		{
+			if (harness == null)
+				throw new ArgumentNullException (nameof (harness));
+			if (processManager == null)
+				throw new ArgumentNullException (nameof (processManager));
+			this.harness = harness;
+			this.processManager = processManager;
+		}
+
 		static WebClient CreateClient ()
 		{
 			var client = new WebClient ();
@@ -23,12 +48,12 @@ namespace Xharness
 			return client;
 		}
 
-		public static string GetPullRequestTargetBranch (Harness harness, int pull_request)
+		public string GetPullRequestTargetBranch (int pullRequest)
 		{
-			if (pull_request <= 0)
+			if (pullRequest <= 0)
 				return string.Empty;
 
-			var info = DownloadPullRequestInfo (harness, pull_request);
+			var info = DownloadPullRequestInfo (pullRequest);
 			if (info.Length == 0)
 				return string.Empty;
 
@@ -39,9 +64,9 @@ namespace Xharness
 			}
 		}
 
-		public static IEnumerable<string> GetLabels (Harness harness, int pull_request)
+		public IEnumerable<string> GetLabels (int pullRequest)
 		{
-			var info = DownloadPullRequestInfo (harness, pull_request);
+			var info = DownloadPullRequestInfo (pullRequest);
 			using (var reader = JsonReaderWriterFactory.CreateJsonReader (info, new XmlDictionaryReaderQuotas ())) {
 				var doc = new XmlDocument ();
 				doc.Load (reader);
@@ -53,13 +78,13 @@ namespace Xharness
 			}
 		}
 
-		public static IEnumerable<string> GetModifiedFiles (IProcessManager processManager, Harness harness, int pull_request)
+		public IEnumerable<string> GetModifiedFiles (int pullRequest)
 		{
-			var path = Path.Combine (harness.LogDirectory, "pr" + pull_request + "-files.log");
+			var path = Path.Combine (harness.LogDirectory, "pr" + pullRequest + "-files.log");
 			if (!File.Exists (path)) {
-				var rv = GetModifiedFilesLocally (processManager, harness, pull_request);
+				var rv = GetModifiedFilesLocally (pullRequest);
 				if (rv == null || rv.Count () == 0) {
-					rv = GetModifiedFilesRemotely (harness, pull_request);
+					rv = GetModifiedFilesRemotely (pullRequest);
 					if (rv == null)
 						rv = new string [] { };
 				}
@@ -71,14 +96,14 @@ namespace Xharness
 			return File.ReadAllLines (path);
 		}
 
-		static IEnumerable<string> GetModifiedFilesRemotely (Harness harness, int pull_request)
+		IEnumerable<string> GetModifiedFilesRemotely (int pullRequest)
 		{
-			var path = Path.Combine (harness.LogDirectory, "pr" + pull_request + "-remote-files.log");
+			var path = Path.Combine (harness.LogDirectory, "pr" + pullRequest + "-remote-files.log");
 			if (!File.Exists (path)) {
 				Directory.CreateDirectory (harness.LogDirectory);
 				using (var client = CreateClient ()) {
 					var rv = new List<string> ();
-					var url = $"https://api.github.com/repos/xamarin/xamarin-macios/pulls/{pull_request}/files?per_page=100"; // 100 items per page is max
+					var url = $"https://api.github.com/repos/xamarin/xamarin-macios/pulls/{pullRequest}/files?per_page=100"; // 100 items per page is max
 					do {
 						byte [] data;
 						try {
@@ -138,10 +163,10 @@ namespace Xharness
 			return File.ReadAllLines (path);
 		}
 
-		static IEnumerable<string> GetModifiedFilesLocally (IProcessManager processManager, Harness harness, int pull_request)
+		IEnumerable<string> GetModifiedFilesLocally (int pullRequest)
 		{
-			var base_commit = $"origin/pr/{pull_request}/merge^";
-			var head_commit = $"origin/pr/{pull_request}/merge";
+			var base_commit = $"origin/pr/{pullRequest}/merge^";
+			var head_commit = $"origin/pr/{pullRequest}/merge";
 
 			harness.Log ("Fetching modified files for commit range {0}..{1}", base_commit, head_commit);
 
@@ -165,15 +190,15 @@ namespace Xharness
 			}
 		}
 
-		static byte[] DownloadPullRequestInfo (Harness harness, int pull_request)
+		byte[] DownloadPullRequestInfo (int pullRequest)
 		{
-			var path = Path.Combine (harness.LogDirectory, "pr" + pull_request + ".log");
+			var path = Path.Combine (harness.LogDirectory, "pr" + pullRequest + ".log");
 			if (!File.Exists (path)) {
 				Directory.CreateDirectory (harness.LogDirectory);
 				using (var client = CreateClient ()) {
 					byte [] data;
 					try {
-						data = client.DownloadData ($"https://api.github.com/repos/xamarin/xamarin-macios/pulls/{pull_request}");
+						data = client.DownloadData ($"https://api.github.com/repos/xamarin/xamarin-macios/pulls/{pullRequest}");
 						File.WriteAllBytes (path, data);
 						return data;
 					} catch (WebException we) {
