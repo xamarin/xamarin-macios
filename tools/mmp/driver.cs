@@ -77,7 +77,6 @@ namespace Xamarin.Bundler {
 		static string output_dir;
 		static string app_name;
 		static bool generate_plist;
-		public static RegistrarMode Registrar { get { return App.Registrar; } private set { App.Registrar = value; } }
 		static bool no_executable;
 		static bool embed_mono = true;
 		static List<string> link_flags;
@@ -215,20 +214,20 @@ namespace Xamarin.Bundler {
 				{ "registrar:", "Specify the registrar to use (dynamic [default], static, partial)", v => {
 						switch (v) {
 						case "static":
-							Registrar = RegistrarMode.Static;
+							App.Registrar = RegistrarMode.Static;
 							break;
 						case "dynamic":
-							Registrar = RegistrarMode.Dynamic;
+							App.Registrar = RegistrarMode.Dynamic;
 							break;
 						case "partial":
 						case "partial-static":
-							Registrar = RegistrarMode.PartialStatic;
+							App.Registrar = RegistrarMode.PartialStatic;
 							break;
 						case "il":
-							Registrar = RegistrarMode.Dynamic;
+							App.Registrar = RegistrarMode.Dynamic;
 							break;
 						case "default":
-							Registrar = RegistrarMode.Default;
+							App.Registrar = RegistrarMode.Default;
 							break;
 						default:
 							throw new MonoMacException (20, true, Errors.MX0020, "--registrar", "dynamic, static, partial, or default");
@@ -329,7 +328,7 @@ namespace Xamarin.Bundler {
 				FixReferences (x => monoAPIRegex.IsMatch (x) && !monoAPIFacadesRegex.IsMatch (x), x => x.Replace(monoAPIRegex.Match(x).Value, "lib/mono/4.5/"));
 			}
 
-			if (Registrar == RegistrarMode.PartialStatic && App.LinkMode != LinkMode.None)
+			if (App.Registrar == RegistrarMode.PartialStatic && App.LinkMode != LinkMode.None)
 				throw new MonoMacException (2110, true, Errors.MM2110);
 
 			// sanity check as this should never happen: we start out by not setting any
@@ -503,14 +502,14 @@ namespace Xamarin.Bundler {
 
 		public static void SelectRegistrar ()
 		{
-			if (Registrar == RegistrarMode.Default) {
+			if (App.Registrar == RegistrarMode.Default) {
 				if (!App.EnableDebug)
-					Registrar = RegistrarMode.Static;
+					App.Registrar = RegistrarMode.Static;
 				else if (App.LinkMode == LinkMode.None && embed_mono && App.IsDefaultMarshalManagedExceptionMode && File.Exists (PartialStaticLibrary))
-					Registrar = RegistrarMode.PartialStatic;
+					App.Registrar = RegistrarMode.PartialStatic;
 				else
-					Registrar = RegistrarMode.Dynamic;
-				Log (1, $"Defaulting registrar to '{Registrar}'");
+					App.Registrar = RegistrarMode.Dynamic;
+				Log (1, $"Defaulting registrar to '{App.Registrar}'");
 			}
 		}
 
@@ -826,7 +825,7 @@ namespace Xamarin.Bundler {
 				sw.WriteLine ("#include <xamarin/xamarin.h>");
 				sw.WriteLine ("#import <AppKit/NSAlert.h>");
 				sw.WriteLine ("#import <Foundation/NSDate.h>"); // 10.7 wants this even if not needed on 10.9
-				if (Driver.Registrar == RegistrarMode.PartialStatic)
+				if (App.Registrar == RegistrarMode.PartialStatic)
 					sw.WriteLine ("extern \"C\" void xamarin_create_classes_Xamarin_Mac ();");
 				sw.WriteLine ();
 				sw.WriteLine ();
@@ -848,9 +847,9 @@ namespace Xamarin.Bundler {
 				sw.WriteLine ();
 
 
-				if (Driver.Registrar == RegistrarMode.Static)
+				if (App.Registrar == RegistrarMode.Static)
 					sw.WriteLine ("\txamarin_create_classes ();");
-				else if (Driver.Registrar == RegistrarMode.PartialStatic)
+				else if (App.Registrar == RegistrarMode.PartialStatic)
 					sw.WriteLine ("\txamarin_create_classes_Xamarin_Mac ();");
 
 				if (App.EnableDebug)
@@ -933,7 +932,7 @@ namespace Xamarin.Bundler {
 
 			CheckSystemMonoVersion ();
 
-			if (Registrar == RegistrarMode.Static) {
+			if (App.Registrar == RegistrarMode.Static) {
 				registrarPath = Path.Combine (App.Cache.Location, "registrar.m");
 				var registrarH = Path.Combine (App.Cache.Location, "registrar.h");
 				BuildTarget.StaticRegistrar.Generate (BuildTarget.Resolver.ResolverCache.Values, registrarH, registrarPath);
@@ -1108,7 +1107,7 @@ namespace Xamarin.Bundler {
 					args.Add ("-lz");
 				}
 
-				if (Registrar == RegistrarMode.PartialStatic) {
+				if (App.Registrar == RegistrarMode.PartialStatic) {
 					args.Add (PartialStaticLibrary);
 					args.Add ("-framework");
 					args.Add ("Quartz");
