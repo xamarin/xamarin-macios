@@ -97,13 +97,15 @@ steps:
     set -x
     set -e
 
-    ./xamarin-macios/tools/devops/run-tests.sh
+    EC = 0
+    ./xamarin-macios/tools/devops/run-tests.sh || EC=$?
 
-    if [ $? -eq 0 ]; then
+    if [ $EC -eq 0 ]; then
       echo "##vso[task.setvariable variable=TestState]success"
     else
       echo "##vso[task.setvariable variable=TestState]failure"
     fi
+    exit $EC
   displayName: 'Run tests'
   timeoutInMinutes: 600
 

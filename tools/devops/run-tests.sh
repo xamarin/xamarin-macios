@@ -1,6 +1,4 @@
-#!/bin/bash -x
-
-# we do not want errors to fail the script, we want to print as much info as possible, so we don't pass -e to bash
+#!/bin/bash -ex
 
 ls -l
 pwd
