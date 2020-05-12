@@ -9,6 +9,8 @@
 #
 # CONTEXT: The context that is used to set the status of the commit in github.
 # TESTS_EXTRA_ARGUMENTS: the extra arguments passed to the runner to decide which tests need to be ran.
+#
+# Condition: succeededOrFailed() - true even if a previous dependency has failed, unless the run was canceled.
 
 steps:
 
@@ -115,7 +117,8 @@ steps:
     FILE="xamarin-macios/tests/TestSummary.md"
     echo $FILE
     if ! test -f $FILE; then
-    echo ":fire: Tests failed catastrophically (no summary found)" > $FILE
+      echo ":fire: Tests failed catastrophically (no summary found)" > $FILE
+      echo "##vso[task.setvariable variable=TestState]failure"
     fi
   displayName: "If test summary does not exist, create test summary"
   condition: and(succeededOrFailed(), eq(variables['ProvisioningProfiles'], 'success'))
@@ -130,7 +133,7 @@ steps:
     echo $FILE
     echo ":fire: Provisioning step failed" > $FILE
   displayName: 'Add test summary for failed provisioning'
-  condition: eq(variables['ProvisioningProfiles'], 'failure')
+  condition: and (succeededOrFailed(), eq(variables['ProvisioningProfiles'], 'failure'))
 
 ###
 ### Publish test summary
@@ -151,7 +154,7 @@ steps:
 # - update GH commit status
 # - add commit comment
 # grab env variables to add test specific text
-# pwsh for PowerShell Core
+# pwsh for PowerShell Core (Win + Mac)
 # powershell is for Win only PowerShell
 - pwsh: ./xamarin-macios/tools/devops/templates/publish_failure.ps1
   env:
@@ -162,7 +165,7 @@ steps:
     TESTS: $(TESTS)
     TESTSARGS: $(TESTS_EXTRA_ARGUMENTS)
   displayName: 'Powershell: Add GH status & commit message'
-  condition: and(succeededOrFailed(), eq(variables['TestState'], 'failure'))
+  condition: and(succeededOrFailed(), or (eq(variables['TestState'], 'failure'), eq(variables['ProvisioningProfiles'], 'failure')))
 
 - bash: ./xamarin-macios/tools/devops/add-summaries.sh
   displayName: 'Add summaries'
