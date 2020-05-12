@@ -505,24 +505,6 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		public string MonoGCParams {
-			get {
-				// Configure sgen to use a small nursery
-				string ret = "nursery-size=512k";
-				if (IsTodayExtension || Platform == ApplePlatform.WatchOS) {
-					// A bit test shows different behavior
-					// Sometimes apps are killed with ~100mb allocated,
-					// but I've seen apps allocate up to 240+mb as well
-					ret += ",soft-heap-limit=8m";
-				}
-				if (EnableSGenConc)
-					ret += ",major=marksweep-conc";
-				else
-					ret += ",major=marksweep";
-				return ret;
-			}
-		}
-
 		public bool IsDeviceBuild { 
 			get { return BuildTarget == BuildTarget.Device; } 
 		}
