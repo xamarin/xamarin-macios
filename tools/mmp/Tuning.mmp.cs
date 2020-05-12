@@ -29,7 +29,6 @@ namespace MonoMac.Tuner {
 		public IEnumerable<string> SkippedAssemblies { get; set; }
 		public I18nAssemblies I18nAssemblies { get; set; }
 		public IList<string> ExtraDefinitions { get; set; }
-		public string Architecture { get; set; }
 		internal PInvokeWrapperGenerator MarshalNativeExceptionsState { get; set; }
 		internal RuntimeOptions RuntimeOptions { get; set; }
 		public bool SkipExportedSymbolsInSdkAssemblies { get; set; }

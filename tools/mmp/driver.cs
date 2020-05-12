@@ -80,14 +80,12 @@ namespace Xamarin.Bundler {
 		public static RegistrarMode Registrar { get { return App.Registrar; } private set { App.Registrar = value; } }
 		static bool no_executable;
 		static bool embed_mono = true;
-		static bool? profiling = false;
 		static List<string> link_flags;
 		static bool? disable_lldb_attach = null;
 		static bool? disable_omit_fp = null;
 		static string machine_config_path = null;
 		static bool bypass_linking_checks = false;
 
-		static string arch = "x86_64";
 		static string contents_dir;
 		static string frameworks_dir;
 		static string macos_dir;
@@ -101,7 +99,6 @@ namespace Xamarin.Bundler {
 
 		static string BundleName { get { return custom_bundle_name != null ? custom_bundle_name : "MonoBundle"; } }
 		static string AppPath { get { return Path.Combine (macos_dir, app_name); } }
-		public static string Arch => arch;
 
 		static string icon;
 		static string certificate_name;
@@ -145,12 +142,6 @@ namespace Xamarin.Bundler {
 				if (!File.Exists (pkg_config))
 					throw ErrorHelper.CreateError (5313, Errors.MX5313, pkg_config);
 				return pkg_config;
-			}
-		}
-
-		public static bool Is64Bit { 
-			get {
-				return arch == "x86_64";
 			}
 		}
 
@@ -224,7 +215,7 @@ namespace Xamarin.Bundler {
 				{ "i|icon=", "Use the specified file as the bundle icon", v => { icon = v; }},
 				{ "xml=", "Provide an extra XML definition file to the linker", v => App.Definitions.Add (v) },
 				{ "time", v => WatchLevel++ },
-				{ "arch=", "Specify the architecture ('x86_64') of the native runtime (default to 'x86_64', which is the only valid value)", v => { arch = v; } },
+				{ "arch=", "Specify the architecture ('x86_64') of the native runtime (default to 'x86_64', which is the only valid value) [DEPRECATED, use --abi instead]", v => { App.ParseAbi (v); }, true},
 				{ "profile=", "(Obsoleted in favor of --target-framework) Specify the .NET profile to use", v => SetTargetFramework (v), true },
 				{ "force-thread-check", "Keep UI thread checks inside (even release) builds [DEPRECATED, use --optimize=-remove-uithread-checks instead]", v => { App.Optimizations.RemoveUIThreadChecks = false; }, true},
 				{ "disable-thread-check", "Remove UI thread checks inside (even debug) builds [DEPRECATED, use --optimize=remove-uithread-checks instead]", v => { App.Optimizations.RemoveUIThreadChecks = true; }, true},
@@ -284,7 +275,6 @@ namespace Xamarin.Bundler {
 							App.Frameworks.Add (v);
 					}
 				},
-				{ "profiling:", "Enable profiling", v => profiling = ParseBool (v, "profiling") },
 				{ "custom_bundle_name=", "Specify a custom name for the MonoBundle folder.", v => custom_bundle_name = v, true }, // Hidden hack for "universal binaries"
 				{ "tls-provider=", "Specify the default TLS provider", v => { tls_provider = v; }},
 				{ "http-message-handler=", "Specify the default HTTP Message Handler", v => { http_message_provider = v; }},
@@ -381,9 +371,6 @@ namespace Xamarin.Bundler {
 
 			// InitializeCommon needs SdkVersion set to something valid
 			ValidateSDKVersion ();
-
-			if (!Is64Bit)
-				throw ErrorHelper.CreateError (144, Errors.MM0144);
 
 			// InitializeCommon needs the current profile
 			if (IsUnifiedFullXamMacFramework || IsUnifiedFullSystemFramework)
@@ -621,13 +608,9 @@ namespace Xamarin.Bundler {
 
 			CreateDirectoriesIfNeeded ();
 
-			switch (arch) {
-			case "x86_64":
-				BuildTarget.Abis = new List<Abi> { Abi.x86_64 };
-				break;
-			default:
-				throw new MonoMacException (5205, true, Errors.MM5205, arch);
-			}
+			App.SetDefaultAbi ();
+			App.ValidateAbi ();
+			BuildTarget.Abis = App.Abis.ToList ();
 
 			Watch ("Setup", 1);
 
@@ -729,21 +712,12 @@ namespace Xamarin.Bundler {
 				name = "libmono-system-native";
 			} else {
 				// use modern libmono-native
-				switch (BuildTarget.MonoNativeMode) {
-				case MonoNativeMode.Unified:
-					name = "libmono-native-unified";
-					break;
-				case MonoNativeMode.Compat:
-					name = "libmono-native-compat";
-					break;
-				default:
-					throw ErrorHelper.CreateError (99, Errors.MX0099, $"Invalid mono native type: '{BuildTarget.MonoNativeMode}'");
-				}
+				name = App.GetLibNativeName ();
 			}
 
 			var src = Path.Combine (GetMonoLibraryDirectory (App), name + ".dylib");
 			var dest = Path.Combine (mmp_dir, "libmono-native.dylib");
-			Watch ($"Adding mono-native library {name} for {BuildTarget.MonoNativeMode}.", 1);
+			Watch ($"Adding mono-native library {name} for {App.MonoNativeMode}.", 1);
 
 			if (App.Optimizations.TrimArchitectures == true) {
 				// copy to temp directory and lipo there to avoid touching the final dest file if it's up to date
@@ -889,10 +863,7 @@ namespace Xamarin.Bundler {
 				if (App.EnableDebug)
 					sw.WriteLine ("\txamarin_debug_mode = TRUE;");
 
-				if (App.EnableSGenConc)
-					sw.WriteLine ("\tsetenv (\"MONO_GC_PARAMS\", \"major=marksweep-conc\", 1);");
-				else
-					sw.WriteLine ("\tsetenv (\"MONO_GC_PARAMS\", \"major=marksweep\", 1);");
+				sw.WriteLine ($"\tsetenv (\"MONO_GC_PARAMS\", \"{App.MonoGCParams}\", 1);");
 
 				sw.WriteLine ("\txamarin_supports_dynamic_registration = {0};", App.DynamicRegistrationSupported ? "TRUE" : "FALSE");
 
@@ -1001,9 +972,8 @@ namespace Xamarin.Bundler {
 				}
 				args.Add ($"-mmacosx-version-min={App.DeploymentTarget.ToString ()}");
 				args.Add ("-arch");
-				args.Add (arch);
-				if (arch == "x86_64")
-					args.Add ($"-fobjc-runtime=macosx-{App.DeploymentTarget.ToString ()}");
+				args.Add (App.Abi.AsArchString ());
+				args.Add ($"-fobjc-runtime=macosx-{App.DeploymentTarget.ToString ()}");
 				if (!embed_mono)
 					args.Add ("-DDYNAMIC_MONO_RUNTIME");
 
@@ -1132,24 +1102,12 @@ namespace Xamarin.Bundler {
 						args.Add ("_SystemNative_RealPath"); // This keeps libmono_system_native_la-pal_io.o symbols
 					} else {
 						// add modern libmono-native
-						string libmono_native_name;
-						switch (BuildTarget.MonoNativeMode) {
-						case MonoNativeMode.Unified:
-							libmono_native_name = "libmono-native-unified";
-							break;
-						case MonoNativeMode.Compat:
-							libmono_native_name = "libmono-native-compat";
-							break;
-						default:
-							throw ErrorHelper.CreateError (99, Errors.MX0099, $"Invalid mono native type: '{BuildTarget.MonoNativeMode}'");
-						}
-
-						args.Add (Path.Combine (libdir, libmono_native_name + ".a"));
+						args.Add (Path.Combine (libdir, App.GetLibNativeName () + ".a"));
 						args.Add ("-framework");
 						args.Add ("GSS");
 					}
 
-					if (profiling.HasValue && profiling.Value) {
+					if (App.EnableProfiling) {
 						args.Add (Path.Combine (libdir, "libmono-profiler-log.a"));
 						args.Add ("-u");
 						args.Add ("_mono_profiler_init_log");
@@ -1281,7 +1239,6 @@ namespace Xamarin.Bundler {
 				SkippedAssemblies = App.LinkSkipped,
 				I18nAssemblies = App.I18n,
 				ExtraDefinitions = App.Definitions,
-				Architecture = arch,
 				RuntimeOptions = App.RuntimeOptions,
 				MarshalNativeExceptionsState = !App.RequiresPInvokeWrappers ? null : new PInvokeWrapperGenerator ()
 				{
@@ -1551,6 +1508,7 @@ namespace Xamarin.Bundler {
 			if (existingArchs.Count () < 2)
 				return;
 
+			var arch = App.Abi.AsString ();
 			RunLipo (new [] { dest, "-thin", arch, "-output", dest });
 			if (name != "MonoPosixHelper" && name != "libmono-native-unified" && name != "libmono-native-compat")
 				ErrorHelper.Warning (2108, Errors.MM2108, name, arch);
@@ -1797,11 +1755,13 @@ namespace Xamarin.Bundler {
 		static string GetSwappedPathCore (string name)
 		{
 			string flavor = (Driver.IsUnifiedFullSystemFramework || Driver.IsUnifiedFullXamMacFramework) ? "full" : "mobile";
-			switch (Driver.Arch) {
-				case "x86_64":
-					return Path.Combine (Driver.FrameworkLibDirectory, Driver.Arch, flavor, name + ".dll");
+			var abi = Driver.App.Abi;
+			var arch = abi.AsArchString ();
+			switch (abi) {
+				case Abi.x86_64:
+					return Path.Combine (Driver.FrameworkLibDirectory, arch, flavor, name + ".dll");
 				default:
-					throw new MonoMacException (5205, true, Errors.MM5205, Driver.Arch);
+					throw new MonoMacException (5205, true, Errors.MM5205, arch);
 			}
 		}
 	}

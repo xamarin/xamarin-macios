@@ -241,8 +241,11 @@ def reportFinalStatus (err, gitHash, currentStage)
         comment += "🔥 [Jenkins job](${env.RUN_DISPLAY_URL}) (on internal Jenkins) failed"
         if (currentStage != "" && !failedStages.contains (currentStage))
             failedStages.add (currentStage)
-        if (failedStages.size () > 0)
+        if (failedStages.size () > 0) {
+            // Somehow the same stage can end up in the list of failed stages multiple times. Avoid showing that to the user.
+            failedStages.unique ()
             comment += " in stage(s) '${failedStages.join (', ')}'"
+        }
         comment += " 🔥"
         if (!manualException && err != "")
             comment += " : ${err}"

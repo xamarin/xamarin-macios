@@ -25,23 +25,6 @@ namespace Xamarin.Bundler {
 		MarkerOnly = 3,
 	}
 
-	public static class AbiExtensions {
-		public static string AsString (this Abi self)
-		{
-			var rv = (self & Abi.ArchMask).ToString ();
-			if ((self & Abi.LLVM) == Abi.LLVM)
-				rv += "+LLVM";
-			if ((self & Abi.Thumb) == Abi.Thumb)
-				rv += "+Thumb";
-			return rv;
-		}
-
-		public static string AsArchString (this Abi self)
-		{
-			return (self & Abi.ArchMask).ToString ().ToLowerInvariant ();
-		}
-	}
-
 	public enum BuildTarget {
 		Simulator,
 		Device,
@@ -64,7 +47,6 @@ namespace Xamarin.Bundler {
 		public BuildTarget BuildTarget;
 
 		public bool EnableCxx;
-		public bool EnableProfiling;
 		bool? package_managed_debug_symbols;
 		public bool PackageManagedDebugSymbols {
 			get { return package_managed_debug_symbols.Value; }
@@ -100,8 +82,6 @@ namespace Xamarin.Bundler {
 		// The list of assemblies that we do generate debugging info for.
 		public bool DebugAll;
 		public List<string> DebugAssemblies = new List<string> ();
-
-		public bool? DebugTrack;
 
 		public string Compiler = string.Empty;
 		public string CompilerPath;
@@ -200,7 +180,6 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		List<Abi> abis;
 		HashSet<Abi> all_architectures; // all Abis used in the app, including extensions.
 
 		BuildTasks build_tasks;
@@ -524,34 +503,12 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		public string MonoGCParams {
-			get {
-				// Configure sgen to use a small nursery
-				string ret = "nursery-size=512k";
-				if (IsTodayExtension || Platform == ApplePlatform.WatchOS) {
-					// A bit test shows different behavior
-					// Sometimes apps are killed with ~100mb allocated,
-					// but I've seen apps allocate up to 240+mb as well
-					ret += ",soft-heap-limit=8m";
-				}
-				if (EnableSGenConc)
-					ret += ",major=marksweep-conc";
-				else
-					ret += ",major=marksweep";
-				return ret;
-			}
-		}
-
 		public bool IsDeviceBuild { 
 			get { return BuildTarget == BuildTarget.Device; } 
 		}
 
 		public bool IsSimulatorBuild { 
 			get { return BuildTarget == BuildTarget.Simulator; } 
-		}
-
-		public IEnumerable<Abi> Abis {
-			get { return abis; }
 		}
 
 		public BitCodeMode BitCodeMode { get; set; }
@@ -643,192 +600,12 @@ namespace Xamarin.Bundler {
 			return plist.GetString (key);
 		}
 
-		public void SetDefaultAbi ()
-		{
-			if (abis == null)
-				abis = new List<Abi> ();
-			
-			switch (Platform) {
-			case ApplePlatform.iOS:
-				if (abis.Count == 0) {
-					if (DeploymentTarget == null || DeploymentTarget.Major >= 11) {
-						abis.Add (IsDeviceBuild ? Abi.ARM64 : Abi.x86_64);
-					} else {
-						abis.Add (IsDeviceBuild ? Abi.ARMv7 : Abi.i386);
-					}
-				}
-				break;
-			case ApplePlatform.WatchOS:
-				if (abis.Count == 0)
-					throw ErrorHelper.CreateError (76, Errors.MT0076, "Xamarin.WatchOS");
-				break;
-			case ApplePlatform.TVOS:
-				if (abis.Count == 0)
-					throw ErrorHelper.CreateError (76, Errors.MT0076, "Xamarin.TVOS");
-				break;
-			default:
-				throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, "Xamarin.iOS");
-			}
-		}
-
-		public void ValidateAbi ()
-		{
-			var validAbis = new List<Abi> ();
-			switch (Platform) {
-			case ApplePlatform.iOS:
-				if (IsDeviceBuild) {
-					validAbis.Add (Abi.ARMv7);
-					validAbis.Add (Abi.ARMv7 | Abi.Thumb);
-					validAbis.Add (Abi.ARMv7 | Abi.LLVM);
-					validAbis.Add (Abi.ARMv7 | Abi.LLVM | Abi.Thumb);
-					validAbis.Add (Abi.ARMv7s);
-					validAbis.Add (Abi.ARMv7s | Abi.Thumb);
-					validAbis.Add (Abi.ARMv7s | Abi.LLVM);
-					validAbis.Add (Abi.ARMv7s | Abi.LLVM | Abi.Thumb);
-				} else {
-					validAbis.Add (Abi.i386);
-				}
-				if (IsDeviceBuild) {
-					validAbis.Add (Abi.ARM64);
-					validAbis.Add (Abi.ARM64 | Abi.LLVM);
-				} else {
-					validAbis.Add (Abi.x86_64);
-				}
-				break;
-			case ApplePlatform.WatchOS:
-				if (IsDeviceBuild) {
-					validAbis.Add (Abi.ARMv7k);
-					validAbis.Add (Abi.ARMv7k | Abi.LLVM);
-					validAbis.Add (Abi.ARM64_32);
-					validAbis.Add (Abi.ARM64_32 | Abi.LLVM);
-				} else {
-					validAbis.Add (Abi.i386);
-				}
-				break;
-			case ApplePlatform.TVOS:
-				if (IsDeviceBuild) {
-					validAbis.Add (Abi.ARM64);
-					validAbis.Add (Abi.ARM64 | Abi.LLVM);
-				} else {
-					validAbis.Add (Abi.x86_64);
-				}
-				break;
-			default:
-				throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, "Xamarin.iOS");
-			}
-
-			foreach (var abi in abis) {
-				if (!validAbis.Contains (abi))
-					throw ErrorHelper.CreateError (75, Errors.MT0075, abi, Platform, string.Join (", ", validAbis.Select ((v) => v.AsString ()).ToArray ()));
-			}
-		}
-
-		public void ClearAbi ()
-		{
-			abis = null;
-		}
-
 		// This is to load the symbols for all assemblies, so that we can give better error messages
 		// (with file name / line number information).
 		public void LoadSymbols ()
 		{
 			foreach (var t in Targets)
 				t.LoadSymbols ();
-		}
-
-		public void ParseAbi (string abi)
-		{
-			var res = new List<Abi> ();
-			foreach (var str in abi.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries)) {
-				Abi value;
-				switch (str) {
-				case "i386":
-					value = Abi.i386;
-					break;
-				case "x86_64":
-					value = Abi.x86_64;
-					break;
-				case "armv7":
-					value = Abi.ARMv7;
-					break;
-				case "armv7+llvm":
-					value = Abi.ARMv7 | Abi.LLVM;
-					break;
-				case "armv7+llvm+thumb2":
-					value = Abi.ARMv7 | Abi.LLVM | Abi.Thumb;
-					break;
-				case "armv7s":
-					value = Abi.ARMv7s;
-					break;
-				case "armv7s+llvm":
-					value = Abi.ARMv7s | Abi.LLVM;
-					break;
-				case "armv7s+llvm+thumb2":
-					value = Abi.ARMv7s | Abi.LLVM | Abi.Thumb;
-					break;
-				case "arm64":
-					value = Abi.ARM64;
-					break;
-				case "arm64+llvm":
-					value = Abi.ARM64 | Abi.LLVM;
-					break;
-				case "arm64_32":
-					value = Abi.ARM64_32;
-					break;
-				case "arm64_32+llvm":
-					value = Abi.ARM64_32 | Abi.LLVM;
-					break;
-				case "armv7k":
-					value = Abi.ARMv7k;
-					break;
-				case "armv7k+llvm":
-					value = Abi.ARMv7k | Abi.LLVM;
-					break;
-				default:
-					throw new MonoTouchException (15, true, Errors.MT0015, str);
-				}
-
-				// merge this value with any existing ARMv? already specified.
-				// this is so that things like '--armv7 --thumb' work correctly.
-				if (abis != null) {
-					for (int i = 0; i < abis.Count; i++) {
-						if ((abis [i] & Abi.ArchMask) == (value & Abi.ArchMask)) {
-							value |= abis [i];
-							break;
-						}
-					}
-				}
-
-				res.Add (value);
-			}
-
-			// We replace any existing abis, to keep the old behavior where '--armv6 --armv7' would 
-			// enable only the last abi specified and disable the rest.
-			abis = res;
-		}
-
-		public static string GetArchitectures (IEnumerable<Abi> abis)
-		{
-			var res = new List<string> ();
-
-			foreach (var abi in abis)
-				res.Add (abi.AsArchString ());
-
-			return string.Join (", ", res.ToArray ());
-		}
-
-		public bool IsArchEnabled (Abi arch)
-		{
-			return IsArchEnabled (abis, arch);
-		}
-
-		public static bool IsArchEnabled (IEnumerable<Abi> abis, Abi arch)
-		{
-			foreach (var abi in abis) {
-				if ((abi & arch) != 0)
-					return true;
-			}
-			return false;
 		}
 
 		public void BuildAll ()
@@ -1197,12 +974,6 @@ namespace Xamarin.Bundler {
 			if (IsLLVM && Platform == ApplePlatform.WatchOS && BitCodeMode != BitCodeMode.LLVMOnly) {
 				ErrorHelper.Warning (111, Errors.MT0111);
 				BitCodeMode = BitCodeMode.LLVMOnly;
-			}
-
-			if (!DebugTrack.HasValue) {
-				DebugTrack = false;
-			} else if (DebugTrack.Value && !EnableDebug) {
-				ErrorHelper.Warning (32, Errors.MT0032);
 			}
 
 			if (EnableAsmOnlyBitCode)
@@ -1656,11 +1427,11 @@ namespace Xamarin.Bundler {
 			if (require_mono_native && LibMonoNativeLinkMode == AssemblyBuildTarget.DynamicLibrary) {
 				foreach (var target in Targets) {
 					BundleFileInfo info;
-					var lib_native_name = target.GetLibNativeName () + ".dylib";
+					var lib_native_name = GetLibNativeName () + ".dylib";
 					bundle_files [lib_native_name] = info = new BundleFileInfo ();
 					var lib_native_path = Path.Combine (Driver.GetProductSdkLibDirectory (this), lib_native_name);
 					info.Sources.Add (lib_native_path);
-					Driver.Log (3, "Adding mono-native library {0} for {1}.", lib_native_name, target.MonoNativeMode);
+					Driver.Log (3, "Adding mono-native library {0} for {1}.", lib_native_name, MonoNativeMode);
 				}
 			}
 

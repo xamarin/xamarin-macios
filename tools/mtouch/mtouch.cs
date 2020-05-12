@@ -469,12 +469,12 @@ namespace Xamarin.Bundler
 						}
 					}
 
-					if (target.MonoNativeMode != MonoNativeMode.None) {
+					if (app.MonoNativeMode != MonoNativeMode.None) {
 						string mono_native_lib;
 						if (app.LibMonoNativeLinkMode == AssemblyBuildTarget.StaticObject)
 							mono_native_lib = "__Internal";
 						else
-							mono_native_lib = target.GetLibNativeName () + ".dylib";
+							mono_native_lib = app.GetLibNativeName () + ".dylib";
 						sw.WriteLine ();
 						sw.WriteLine ($"\tmono_dllmap_insert (NULL, \"System.Native\", NULL, \"{mono_native_lib}\", NULL);");
 						sw.WriteLine ($"\tmono_dllmap_insert (NULL, \"System.Security.Cryptography.Native.Apple\", NULL, \"{mono_native_lib}\", NULL);");
@@ -764,7 +764,6 @@ namespace Xamarin.Bundler
 			{ "nodevcodeshare", "Do not share native code between extensions and main app.", v => app.NoDevCodeShare = true },
 			{ "nolink", "Do not link the assemblies", v => app.LinkMode = LinkMode.None },
 			{ "nodebugtrack", "Disable debug tracking of object resurrection bugs [DEPRECATED - already disabled by default]", v => app.DebugTrack = false, true },
-			{ "debugtrack:", "Enable debug tracking of object resurrection bugs", v => { app.DebugTrack = ParseBool (v, "--debugtrack"); } },
 			{ "linkerdumpdependencies", "Dump linker dependencies for linker-analyzer tool", v => app.LinkerDumpDependencies = true },
 			{ "linksdkonly", "Link only the SDK assemblies", v => app.LinkMode = LinkMode.SDKOnly },
 			{ "linkskip=", "Skip linking of the specified assembly", v => app.LinkSkipped.Add (v) },
@@ -890,7 +889,6 @@ namespace Xamarin.Bundler
 				},
 				true // do not show the option anymore
 			},
-			{ "abi=", "Comma-separated list of ABIs to target. Currently supported: armv7, armv7+llvm, armv7+llvm+thumb2, armv7s, armv7s+llvm, armv7s+llvm+thumb2, arm64, arm64+llvm, arm64_32, arm64_32+llvm, i386, x86_64", v => app.ParseAbi (v) },
 			{ "override-abi=", "Override any previous abi. Only used for testing.", v => { app.ClearAbi (); app.ParseAbi (v); }, true }, // Temporary command line arg until XS has better support for 64bit architectures.
 			{ "cxx", "Enable C++ support", v => { app.EnableCxx = true; }},
 			{ "enable-repl:", "Enable REPL support. For simulator only and disabling linking is recommended.", v => { app.EnableRepl = ParseBool (v, "enable-repl"); } },
@@ -916,7 +914,6 @@ namespace Xamarin.Bundler
 			{ "msym:", "Specify whether managed symbolication files (*.msym) should be created. Default is 'false' for debug builds and 'true' for release builds.", v => app.EnableMSym = ParseBool (v, "msym") },
 			{ "extension", v => app.IsExtension = true },
 			{ "app-extension=", "The path of app extensions that are included in the app. This must be specified once for each app extension.", v => app.Extensions.Add (v), true /* MSBuild-internal for now */ },
-			{ "profiling:", "Enable profiling", v => app.EnableProfiling = ParseBool (v, "profiling") },
 			{ "registrar:", "Specify the registrar to use (dynamic, static or default (dynamic in the simulator, static on device))", v =>
 				{
 					var split = v.Split ('=');
