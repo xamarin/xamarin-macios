@@ -145,7 +145,7 @@ steps:
     targetPath: 'xamarin-macios/tests/TestSummary.md'
     artifactName: TestSummary-$(CONTEXT)
   continueOnError: true
-  condition: and(succeededOrFailed(), eq(variables['TestState'], 'failure'))
+  condition: succeededOrFailed()
 
 # if there's a test failure || test summary not generated || provisioning failed:
 # - update GH commit status
@@ -154,7 +154,6 @@ steps:
 # pwsh for PowerShell Core
 # powershell is for Win only PowerShell
 - pwsh: ./xamarin-macios/tools/devops/templates/publish_failure.ps1
-#  condition: failed()
   env:
     BUILD_REVISION: $(BUILD_REVISION)
     GH_STATE: $(GH_STATE)
@@ -163,7 +162,7 @@ steps:
     TESTS: $(TESTS)
     TESTSARGS: $(TESTS_EXTRA_ARGUMENTS)
   displayName: 'Powershell: Add GH status & commit message'
-  condition: succeededOrFailed() #, eq(variables['ProvisioningProfiles'], 'success'))
+  condition: and(succeededOrFailed(), eq(variables['TestState'], 'failure'))
 
 - bash: ./xamarin-macios/tools/devops/add-summaries.sh
   displayName: 'Add summaries'
