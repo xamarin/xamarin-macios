@@ -8,7 +8,7 @@ using static Xamarin.Provisioning.ProvisioningScript;
 Xcode ("@XCODE_VERSION@").XcodeSelect (allowUntrusted: true);
 
 // provisionator knows how to deal with this items
-Item ("@MONO_PACKAGE@", kind: ItemDependencyKind.AtLeast);
+Item ("@MONO_PACKAGE@");
 Item ("@VS_PACKAGE@");
 Item ("@XI_PACKAGE@");
 

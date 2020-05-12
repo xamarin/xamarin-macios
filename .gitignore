@@ -32,4 +32,4 @@ tests/bcl-test/SystemCoreXunit*.csproj
 tests/bcl-test/SystemXunit.csproj
 global.json
 .idea
-xcode-deps.csx
+device-tests-provisioning.csx
