@@ -884,8 +884,8 @@ namespace Xamarin.Bundler {
 		void BuildInitialize ()
 		{
 			SelectRegistrar ();
-			Initialize ();
 			ValidateAbi ();
+			Initialize ();
 			ExtractNativeLinkInfo ();
 			SelectNativeCompiler ();
 		}
