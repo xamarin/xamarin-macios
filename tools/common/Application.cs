@@ -69,6 +69,8 @@ namespace Xamarin.Bundler {
 		public bool? EnableCoopGC;
 		public bool EnableSGenConc;
 		public bool EnableProfiling;
+		public bool? DebugTrack;
+
 		public MarshalObjectiveCExceptionMode MarshalObjectiveCExceptions;
 		public MarshalManagedExceptionMode MarshalManagedExceptions;
 
@@ -395,6 +397,12 @@ namespace Xamarin.Bundler {
 				ErrorHelper.Warning (115, Errors.MT0115);
 			}
 #endif
+
+			if (!DebugTrack.HasValue) {
+				DebugTrack = false;
+			} else if (DebugTrack.Value && !EnableDebug) {
+				ErrorHelper.Warning (32, Errors.MT0032);
+			}
 
 			Optimizations.Initialize (this);
 		}

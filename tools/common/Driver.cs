@@ -191,6 +191,7 @@ namespace Xamarin.Bundler {
 						app.Optimizations.Parse (v);
 					});
 			options.Add ("profiling:", "Enable profiling", v => app.EnableProfiling = ParseBool (v, "profiling"));
+			options.Add ("debugtrack:", "Enable debug tracking of object resurrection bugs", v => { app.DebugTrack = ParseBool (v, "--debugtrack"); });
 			options.Add (new Mono.Options.ResponseFileSource ());
 
 			try {
