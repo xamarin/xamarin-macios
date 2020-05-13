@@ -249,10 +249,6 @@ namespace Xamarin.Bundler {
 					}
 				},
 				{ "link-prohibited-frameworks", "Natively link against prohibited (rejected by AppStore) frameworks", v => { LinkProhibitedFrameworks = true; } },
-				{ "warn-on-type-ref=", "Warn if any of the comma-separated types is referenced by assemblies - both before and after linking", v => {
-						App.WarnOnTypeRef.AddRange (v.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries));
-					}
-				},
 				{ "legacy-assembly-resolution", "Use a legacy assembly resolution logic when using the Xamarin.Mac Full framework.", v => { UseLegacyAssemblyResolution = true; }, false /* hidden until we know if it's needed */ },
 			};
 

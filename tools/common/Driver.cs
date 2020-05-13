@@ -266,6 +266,9 @@ namespace Xamarin.Bundler {
 				},
 				true /* this is an internal option */
 			);
+			options.Add ("warn-on-type-ref=", "Warn if any of the comma-separated types is referenced by assemblies - both before and after linking", v => {
+				app.WarnOnTypeRef.AddRange (v.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries));
+			});
 			// Keep the ResponseFileSource option at the end.
 			options.Add (new Mono.Options.ResponseFileSource ());
 
