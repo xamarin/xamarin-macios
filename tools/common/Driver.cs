@@ -58,6 +58,13 @@ namespace Xamarin.Bundler {
 			options.Add ("v|verbose", "Specify how verbose the output should be. This can be passed multiple times to increase the verbosity.", v => Verbosity++);
 			options.Add ("q|quiet", "Specify how quiet the output should be. This can be passed multiple times to increase the silence.", v => Verbosity--);
 			options.Add ("sdkroot=", "Specify the location of Apple SDKs, default to 'xcode-select' value.", v => sdk_root = v);
+			options.Add ("sdk=", "Specifies the SDK version to compile against (version, for example \"10.9\")", v => {
+				try {
+					app.SdkVersion = StringUtils.ParseVersion (v);
+				} catch (Exception ex) {
+					ErrorHelper.Error (26, ex, Errors.MX0026, $"sdk:{v}", ex.Message);
+				}
+			});
 			options.Add ("target-framework=", "Specify target framework to use. Currently supported: '" + string.Join ("', '", TargetFramework.ValidFrameworks.Select ((v) => v.ToString ())) + "'.", v => SetTargetFramework (v));
 #if MMP
 			options.Add ("abi=", "Comma-separated list of ABIs to target. x86_64", v => app.ParseAbi (v));

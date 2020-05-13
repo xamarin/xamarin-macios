@@ -794,15 +794,6 @@ namespace Xamarin.Bundler
 				}
 			},
 			// Configures the tooling used to build code.
-			{ "sdk=", "Specifies the name of the SDK to compile against (version, for example \"3.2\")",
-				v => {
-					try {
-						app.SdkVersion = StringUtils.ParseVersion (v);
-					} catch (Exception ex) {
-						ErrorHelper.Error (26, ex, Errors.MX0026, "sdk:" + v, ex.Message);
-					}
-				}
-			},
 			{ "targetver=", "Specifies the name of the minimum deployment target (version, for example \"" + Xamarin.SdkVersions.iOS.ToString () + "\")",
 				v => {
 					try {

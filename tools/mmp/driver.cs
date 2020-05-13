@@ -199,15 +199,6 @@ namespace Xamarin.Bundler {
 				{ "profile=", "(Obsoleted in favor of --target-framework) Specify the .NET profile to use", v => SetTargetFramework (v), true },
 				{ "force-thread-check", "Keep UI thread checks inside (even release) builds [DEPRECATED, use --optimize=-remove-uithread-checks instead]", v => { App.Optimizations.RemoveUIThreadChecks = false; }, true},
 				{ "disable-thread-check", "Remove UI thread checks inside (even debug) builds [DEPRECATED, use --optimize=remove-uithread-checks instead]", v => { App.Optimizations.RemoveUIThreadChecks = true; }, true},
-				{ "sdk=", "Specifies the SDK version to compile against (version, for example \"10.9\")",
-					v => {
-						try {
-							App.SdkVersion = StringUtils.ParseVersion (v);
-						} catch (Exception ex) {
-							ErrorHelper.Error (26, ex, Errors.MX0026, $"sdk:{v}", ex.Message);
-						}
-					}
-				},
 				{ "no-root-assembly", "Specifies that mmp will not process a root assembly. This is if the app needs to be packaged with a different directory structure than what mmp supports.", v => no_executable = true },
 				{ "embed-mono:", "Specifies whether the app will embed the Mono runtime, or if it will use the system Mono found at runtime (default: true).", v => {
 						embed_mono = ParseBool (v, "embed-mono");
