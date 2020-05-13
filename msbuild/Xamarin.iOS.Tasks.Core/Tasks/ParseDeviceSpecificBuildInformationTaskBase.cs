@@ -11,11 +11,9 @@ using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.iOS.Tasks
 {
-	public abstract class ParseDeviceSpecificBuildInformationTaskBase : Task
+	public abstract class ParseDeviceSpecificBuildInformationTaskBase : XamarinTask
 	{
 		#region Inputs
-
-		public string SessionId { get; set; }
 
 		[Required]
 		public string Architectures { get; set; }
@@ -25,11 +23,6 @@ namespace Xamarin.iOS.Tasks
 
 		[Required]
 		public string OutputPath { get; set; }
-
-		public TargetFramework TargetFramework { get { return TargetFramework.Parse (TargetFrameworkMoniker); } }
-
-		[Required]
-		public string TargetFrameworkMoniker { get; set; }
 
 		[Required]
 		public string TargetiOSDevice { get; set; }
@@ -62,7 +55,7 @@ namespace Xamarin.iOS.Tasks
 			PDictionary plist, device;
 			PString value, os;
 
-			switch (PlatformFrameworkHelper.GetFramework (TargetFrameworkMoniker)) {
+			switch (Platform) {
 			case ApplePlatform.WatchOS:
 				targetOperatingSystem = "watchOS";
 				break;

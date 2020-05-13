@@ -10,11 +10,9 @@ using Xamarin.MacDev.Tasks;
 
 namespace Xamarin.iOS.Tasks
 {
-	public abstract class CreateDebugConfigurationTaskBase : Task
+	public abstract class CreateDebugConfigurationTaskBase : XamarinTask
 	{
 		#region Inputs
-
-		public string SessionId { get; set; }
 
 		[Required]
 		public string AppBundleDir { get; set; }

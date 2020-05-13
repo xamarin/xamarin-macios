@@ -10,7 +10,7 @@ using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.MacDev.Tasks
 {
-	public abstract class CompileEntitlementsTaskBase : Task
+	public abstract class CompileEntitlementsTaskBase : XamarinTask
 	{
 		static readonly byte[] XcentMagic = { 0xfa, 0xde, 0x71, 0x71 };
 
@@ -18,8 +18,6 @@ namespace Xamarin.MacDev.Tasks
 		bool warnedAppIdentifierPrefix;
 
 		#region Inputs
-
-		public string SessionId { get; set; }
 
 		[Required]
 		public string AppBundleDir { get; set; }

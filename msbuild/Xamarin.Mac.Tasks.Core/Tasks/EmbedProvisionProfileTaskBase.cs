@@ -11,11 +11,9 @@ using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.Mac.Tasks
 {
-	public class EmbedProvisionProfileTaskBase : Task
+	public class EmbedProvisionProfileTaskBase : XamarinTask
 	{
 		#region Inputs
-
-		public string SessionId { get; set; }
 
 		[Required]
 		public string AppBundleDir { get; set; }

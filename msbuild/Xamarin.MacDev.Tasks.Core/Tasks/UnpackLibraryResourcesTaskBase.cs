@@ -9,13 +9,11 @@ using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.MacDev.Tasks
 {
-	public abstract class UnpackLibraryResourcesTaskBase : Task
+	public abstract class UnpackLibraryResourcesTaskBase : XamarinTask
 	{
 		List<ITaskItem> unpackedResources = new List<ITaskItem> ();
 		
 		#region Inputs
-
-		public string SessionId { get; set; }
 
 		[Required]
 		public string Prefix { get; set; }

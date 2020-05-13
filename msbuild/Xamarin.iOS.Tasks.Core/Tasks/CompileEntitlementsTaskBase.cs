@@ -13,11 +13,6 @@ namespace Xamarin.iOS.Tasks
 	{
 		public bool SdkIsSimulator { get; set; }
 		
-		public TargetFramework TargetFramework { get { return TargetFramework.Parse (TargetFrameworkMoniker); } }
-
-		[Required]
-		public string TargetFrameworkMoniker { get; set; }
-
 		static readonly HashSet<string> allowedProvisioningKeys = new HashSet<string> {
 			"application-identifier",
 			"aps-environment",

@@ -8,11 +8,9 @@ using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks
 {
-	public abstract class MetalLibTaskBase : ToolTask
+	public abstract class MetalLibTaskBase : XamarinToolTask
 	{
 		#region Inputs
-
-		public string SessionId { get; set; }
 
 		[Required]
 		public ITaskItem[] Items { get; set; }

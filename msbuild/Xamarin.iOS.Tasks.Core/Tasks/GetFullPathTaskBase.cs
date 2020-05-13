@@ -7,10 +7,8 @@ using Xamarin.MacDev.Tasks;
 
 namespace Xamarin.iOS.Tasks
 {
-	public abstract class GetFullPathTaskBase : Task
+	public abstract class GetFullPathTaskBase : XamarinTask
 	{
-		public string SessionId { get; set; }
-
 		[Required]
 		public string RelativePath { get; set; }
 

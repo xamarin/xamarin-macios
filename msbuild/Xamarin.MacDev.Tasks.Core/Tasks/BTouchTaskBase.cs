@@ -11,9 +11,7 @@ using Xamarin.Utils;
 using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.MacDev.Tasks {
-	public abstract class BTouchTaskBase : ToolTask {
-
-		public string SessionId { get; set; }
+	public abstract class BTouchTaskBase : XamarinToolTask {
 
 		public string OutputPath { get; set; }
 
@@ -65,13 +63,6 @@ namespace Xamarin.MacDev.Tasks {
 		public ITaskItem[] Resources { get; set; }
 
 		public ITaskItem[] Sources { get; set; }
-
-		public string TargetFrameworkIdentifier { get { return TargetFramework.Identifier; } }
-
-		public TargetFramework TargetFramework { get { return TargetFramework.Parse (TargetFrameworkMoniker); } }
-
-		[Required]
-		public string TargetFrameworkMoniker { get; set; }
 
 		protected override string ToolName {
 			get { return Path.GetFileNameWithoutExtension (ToolExe); }

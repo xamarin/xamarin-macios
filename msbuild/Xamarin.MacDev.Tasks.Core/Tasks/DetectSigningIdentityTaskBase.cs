@@ -14,7 +14,7 @@ using SecKeychain = Xamarin.MacDev.Keychain;
 
 namespace Xamarin.MacDev.Tasks
 {
-	public abstract class DetectSigningIdentityTaskBase : Task
+	public abstract class DetectSigningIdentityTaskBase : XamarinTask
 	{
 		const string AutomaticProvision = "Automatic";
 		const string AutomaticAdHocProvision = "Automatic:AdHoc";
@@ -25,16 +25,12 @@ namespace Xamarin.MacDev.Tasks
 		protected abstract string[] DevelopmentPrefixes { get; }
 		protected abstract string[] DirectDistributionPrefixes { get; }
 		protected abstract string[] AppStoreDistributionPrefixes { get; }
-		protected abstract ApplePlatform Framework { get; }
-		protected abstract string PlatformName { get; }
 		protected abstract string ApplicationIdentifierKey { get; }
 
 		string provisioningProfileName;
 		string codesignCommonName;
 
 		#region Inputs
-
-		public string SessionId { get; set; }
 
 		[Required]
 		public string AppBundleName { get; set; }
@@ -459,7 +455,7 @@ namespace Xamarin.MacDev.Tasks
 				return false;
 			}
 
-			if (Framework == ApplePlatform.MacOSX) {
+			if (Platform == ApplePlatform.MacOSX) {
 				if (!RequireCodeSigning) {
 					DetectedBundleId = identity.BundleId;
 					DetectedAppId = DetectedBundleId;

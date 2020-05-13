@@ -7,11 +7,9 @@ using Xamarin.MacDev.Tasks;
 
 namespace Xamarin.iOS.Tasks
 {
-	public class WriteAssetPackManifestTaskBase : Task
+	public class WriteAssetPackManifestTaskBase : XamarinTask
 	{
 		#region Inputs
-
-		public string SessionId { get; set; }
 
 		[Required]
 		public ITaskItem OutputFile { get; set; }

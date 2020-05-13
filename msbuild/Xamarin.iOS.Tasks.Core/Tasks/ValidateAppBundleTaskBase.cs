@@ -12,11 +12,9 @@ using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.iOS.Tasks
 {
-	public abstract class ValidateAppBundleTaskBase : Task
+	public abstract class ValidateAppBundleTaskBase : XamarinTask
 	{
 		#region Inputs
-
-		public string SessionId { get; set; }
 
 		[Required]
 		public string AppBundlePath { get; set; }
@@ -24,14 +22,7 @@ namespace Xamarin.iOS.Tasks
 		[Required]
 		public bool SdkIsSimulator { get; set; }
 
-		[Required]
-		public string TargetFrameworkMoniker { get; set; }
-
 		#endregion
-
-		public ApplePlatform Framework {
-			get { return PlatformFrameworkHelper.GetFramework (TargetFrameworkMoniker); }
-		}
 
 		void ValidateAppExtension (string path, string mainBundleIdentifier, string mainShortVersionString, string mainVersion)
 		{
@@ -403,7 +394,7 @@ namespace Xamarin.iOS.Tasks
 			var deviceFamilies = deviceTypes.ToDeviceFamily ();
 			AppleDeviceFamily[] validFamilies = null;
 
-			switch (Framework) {
+			switch (Platform) {
 			case ApplePlatform.iOS:
 				validFamilies = new AppleDeviceFamily[] {
 					AppleDeviceFamily.IPhone,
@@ -418,7 +409,7 @@ namespace Xamarin.iOS.Tasks
 				validFamilies = new AppleDeviceFamily[] { AppleDeviceFamily.TV };
 				break;
 			default:
-				Log.LogError ("Invalid framework: {0}", Framework);
+				Log.LogError ("Invalid platform: {0}", Platform);
 				break;
 			}
 

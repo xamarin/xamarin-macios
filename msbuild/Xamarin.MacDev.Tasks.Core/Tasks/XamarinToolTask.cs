@@ -6,8 +6,8 @@ using Microsoft.Build.Utilities;
 using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks {
-	// This is the same as XamarinToolTask, except that it subclasses Task instead.
-	public abstract class XamarinTask : Task {
+	// This is the same as XamarinTask, except that it subclasses ToolTask instead.
+	public abstract class XamarinToolTask : ToolTask {
 
 		public string SessionId { get; set; }
 
@@ -38,10 +38,8 @@ namespace Xamarin.MacDev.Tasks {
 		ApplePlatform? platform;
 		public ApplePlatform Platform {
 			get {
-				if (!platform.HasValue) {
-					VerifyTargetFrameworkMoniker ();
+				if (!platform.HasValue)
 					platform = PlatformFrameworkHelper.GetFramework (TargetFrameworkMoniker);
-				}
 				return platform.Value;
 			}
 		}
@@ -71,22 +69,6 @@ namespace Xamarin.MacDev.Tasks {
 				default:
 					throw new InvalidOperationException ($"Invalid platform: {Platform}");
 				}
-			}
-		}
-
-		protected string GetSdkPlatform (bool isSimulator)
-		{
-			switch (Platform) {
-			case ApplePlatform.iOS:
-				return isSimulator ? "iPhoneSimulator" : "iPhoneOS";
-			case ApplePlatform.TVOS:
-				return isSimulator ? "AppleTVSimulator" : "AppleTVOS";
-			case ApplePlatform.WatchOS:
-				return isSimulator ? "WatchSimulator" : "WatchOS";
-			case ApplePlatform.MacOSX:
-				return "MacOSX";
-			default:
-				throw new InvalidOperationException ($"Invalid platform: {Platform}");
 			}
 		}
 	}

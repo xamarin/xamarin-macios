@@ -6,11 +6,9 @@ using Microsoft.Build.Utilities;
 
 namespace Xamarin.MacDev.Tasks
 {
-	public abstract class DittoTaskBase : ToolTask
+	public abstract class DittoTaskBase : XamarinToolTask
 	{
 		#region Inputs
-
-		public string SessionId { get; set; }
 
 		[Required]
 		public ITaskItem Source { get; set; }

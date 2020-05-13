@@ -7,10 +7,8 @@ using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.MacDev.Tasks
 {
-	public abstract class GenerateBundleNameTaskBase : Task
+	public abstract class GenerateBundleNameTaskBase : XamarinTask
 	{
-		public string SessionId { get; set; }
-
 		[Required]
 		public string ProjectName { get; set; }
 

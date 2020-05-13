@@ -11,23 +11,15 @@ using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.iOS.Tasks
 {
-	public abstract class ResolveNativeWatchAppTaskBase : Task
+	public abstract class ResolveNativeWatchAppTaskBase : XamarinTask
 	{
-
 		#region Inputs
-
-		public string SessionId { get; set; }
 
 		[Required]
 		public bool SdkIsSimulator { get; set; }
 
 		[Required]
 		public string SdkVersion { get; set; }
-
-		public TargetFramework TargetFramework { get { return TargetFramework.Parse (TargetFrameworkMoniker); } }
-
-		[Required]
-		public string TargetFrameworkMoniker { get; set; }
 
 		#endregion
 
@@ -40,7 +32,7 @@ namespace Xamarin.iOS.Tasks
 
 		bool IsWatchFramework {
 			get {
-				return PlatformFrameworkHelper.GetFramework (TargetFrameworkMoniker) == Utils.ApplePlatform.WatchOS;
+				return Platform == ApplePlatform.WatchOS;
 			}
 		}
 

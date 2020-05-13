@@ -11,15 +11,13 @@ using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.MacDev.Tasks
 {
-	public abstract class CoreMLCompilerTaskBase : Task
+	public abstract class CoreMLCompilerTaskBase : XamarinTask
 	{
 		string toolExe;
 
 		public string ToolName { get { return "coremlc"; } }
 
 		#region Inputs
-
-		public string SessionId { get; set; }
 
 		public bool EnableOnDemandResources { get; set; }
 

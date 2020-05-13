@@ -9,13 +9,11 @@ using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.MacDev.Tasks
 {
-	public abstract class SmartCopyTaskBase : Task
+	public abstract class SmartCopyTaskBase : XamarinTask
 	{
 		readonly List<ITaskItem> copied = new List<ITaskItem> ();
 
 		#region Inputs
-
-		public string SessionId { get; set; }
 
 		public ITaskItem[] DestinationFiles { get; set; }
 

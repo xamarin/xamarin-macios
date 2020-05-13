@@ -9,10 +9,8 @@ using Xamarin.MacDev;
 
 namespace Xamarin.MacDev.Tasks
 {
-	public abstract class ComputeBundleResourceOutputPathsTaskBase : Task
+	public abstract class ComputeBundleResourceOutputPathsTaskBase : XamarinTask
 	{
-		public string SessionId { get; set; }
-
 		[Required]
 		public ITaskItem AppBundleDir { get; set; }
 

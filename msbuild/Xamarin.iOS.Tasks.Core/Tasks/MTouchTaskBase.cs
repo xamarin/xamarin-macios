@@ -327,7 +327,7 @@ namespace Xamarin.iOS.Tasks
 			}
 
 			if (EnableBitcode) {
-				switch (Framework) {
+				switch (Platform) {
 				case ApplePlatform.WatchOS:
 					args.AddLine ("--bitcode=full");
 					break;
@@ -335,7 +335,7 @@ namespace Xamarin.iOS.Tasks
 					args.AddLine ("--bitcode=asmonly");
 					break;
 				default:
-					throw new InvalidOperationException (string.Format ("Bitcode is currently not supported on {0}.", Framework));
+					throw new InvalidOperationException (string.Format ("Bitcode is currently not supported on {0}.", Platform));
 				}
 			}
 
@@ -515,7 +515,7 @@ namespace Xamarin.iOS.Tasks
 					return false;
 				}
 			} else {
-				switch (Framework) {
+				switch (Platform) {
 				case ApplePlatform.iOS:
 					IPhoneSdkVersion sdkVersion;
 					if (!IPhoneSdkVersion.TryParse (SdkVersion, out sdkVersion)) {
@@ -530,7 +530,7 @@ namespace Xamarin.iOS.Tasks
 					minimumOSVersion = IPhoneSdkVersion.UseDefault;
 					break;
 				default:
-					throw new InvalidOperationException (string.Format ("Invalid framework: {0}", Framework));
+					throw new InvalidOperationException (string.Format ("Invalid framework: {0}", Platform));
 				}
 			}
 
@@ -576,7 +576,7 @@ namespace Xamarin.iOS.Tasks
 			if (File.Exists (fullName))
 				return fullName;
 
-			var frameworkDir = TargetFrameworkIdentifier;
+			var frameworkDir = TargetFramework.Identifier;
 			var fileName = Path.GetFileName (fullName);
 
 			return ResolveFrameworkFileOrFacade (frameworkDir, fileName) ?? fullName;

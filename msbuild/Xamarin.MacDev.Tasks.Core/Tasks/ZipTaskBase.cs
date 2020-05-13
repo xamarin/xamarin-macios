@@ -6,11 +6,9 @@ using Microsoft.Build.Utilities;
 
 namespace Xamarin.MacDev.Tasks
 {
-	public abstract class ZipTaskBase : ToolTask
+	public abstract class ZipTaskBase : XamarinToolTask
 	{
 		#region Inputs
-
-		public string SessionId { get; set; }
 
 		[Output]
 		[Required]

@@ -9,14 +9,12 @@ using Xamarin.MacDev.Tasks;
 
 namespace Xamarin.iOS.Tasks
 {
-	public abstract class GetPropertyValueTaskBase : Task
+	public abstract class GetPropertyValueTaskBase : XamarinTask
 	{
 		public GetPropertyValueTaskBase ()
 		{
 			PropertyValue = string.Empty;
 		}
-
-		public string SessionId { get; set; }
 
 		[Required]
 		public ITaskItem FileName { get; set; }

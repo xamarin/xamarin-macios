@@ -8,11 +8,9 @@ using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.MacDev.Tasks
 {
-	public abstract class GetNativeExecutableNameTaskBase : Task
+	public abstract class GetNativeExecutableNameTaskBase : XamarinTask
 	{
 		#region Inputs
-
-		public string SessionId { get; set; }
 
 		[Required]
 		public string AppManifest { get; set; }

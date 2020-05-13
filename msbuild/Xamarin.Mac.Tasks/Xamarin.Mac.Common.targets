@@ -459,7 +459,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		</DetectSdkLocations>
 	</Target>
 
-	<Target Name="_DetectSigningIdentity" DependsOnTargets="_DetectAppManifest">
+	<Target Name="_DetectSigningIdentity" DependsOnTargets="_DetectAppManifest;_ComputeTargetFrameworkMoniker">
 		<DetectSigningIdentity
 			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
@@ -470,7 +470,9 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			RequireProvisioningProfile="$(_RequireProvisioningProfile)"
 			SdkPlatform="MacOSX"
 			ProvisioningProfile="$(CodeSignProvision)"
-			SigningKey="$(CodeSigningKey)">
+			SigningKey="$(CodeSigningKey)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+			>
 			<Output TaskParameter="DetectedAppId" PropertyName="_AppIdentifier" />
 			<Output TaskParameter="DetectedBundleId" PropertyName="_BundleIdentifier" />
 			<Output TaskParameter="DetectedCodeSigningKey" PropertyName="_CodeSigningKey" />

@@ -6,11 +6,9 @@ using Microsoft.Build.Utilities;
 
 namespace Xamarin.MacDev.Tasks
 {
-	public abstract class SymbolStripTaskBase : ToolTask
+	public abstract class SymbolStripTaskBase : XamarinToolTask
 	{
 		#region Inputs
-
-		public string SessionId { get; set; }
 
 		[Required]
 		public string Executable { get; set; }

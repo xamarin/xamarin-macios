@@ -11,12 +11,10 @@ using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.MacDev.Tasks
 {
-	public abstract class CreateAssetPackManifestTaskBase : Task
+	public abstract class CreateAssetPackManifestTaskBase : XamarinTask
 	{
 		const double DownloadPriorityInterval = 0.90;
 		const double TopDownloadPriority = 0.95;
-
-		public string SessionId { get; set; }
 
 		[Required]
 		public ITaskItem AppBundleDir { get; set; }

@@ -12,11 +12,9 @@ using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.iOS.Tasks
 {
-	public abstract class CollectITunesArtworkTaskBase : Task
+	public abstract class CollectITunesArtworkTaskBase : XamarinTask
 	{
 		#region Inputs
-
-		public string SessionId { get; set; }
 
 		public ITaskItem[] ITunesArtwork { get; set; }
 

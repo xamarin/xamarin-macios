@@ -13,11 +13,9 @@ using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.MacDev.Tasks
 {
-	public class CreateInstallerPackageTaskBase : ToolTask
+	public class CreateInstallerPackageTaskBase : XamarinToolTask
 	{
 		#region Inputs
-		public string SessionId { get; set; }
-
 		[Required]
 		public string OutputDirectory { get; set; }
 

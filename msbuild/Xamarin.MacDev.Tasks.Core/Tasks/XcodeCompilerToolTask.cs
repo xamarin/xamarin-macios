@@ -13,15 +13,13 @@ using Xamarin.MacDev;
 
 namespace Xamarin.MacDev.Tasks
 {
-	public abstract class XcodeCompilerToolTask : Task
+	public abstract class XcodeCompilerToolTask : XamarinTask
 	{
 		protected bool Link { get; set; }
 		IList<string> prefixes;
 		string toolExe;
 
 		#region Inputs
-
-		public string SessionId { get; set; }
 
 		public ITaskItem AppManifest { get; set; }
 

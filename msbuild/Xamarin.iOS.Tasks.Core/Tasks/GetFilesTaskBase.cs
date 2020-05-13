@@ -10,10 +10,8 @@ using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.iOS.Tasks
 {
-	public abstract class GetFilesTaskBase : Task
+	public abstract class GetFilesTaskBase : XamarinTask
 	{
-		public string SessionId { get; set; }
-
 		[Required]
 		public string Path { get; set; }
 

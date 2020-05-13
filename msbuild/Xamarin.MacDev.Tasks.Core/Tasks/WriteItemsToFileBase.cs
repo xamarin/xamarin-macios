@@ -10,7 +10,7 @@ using System.Xml.Linq;
 
 namespace Xamarin.MacDev.Tasks
 {
-	public abstract class WriteItemsToFileBase : Task
+	public abstract class WriteItemsToFileBase : XamarinTask
 	{
 		static readonly XNamespace XmlNs = XNamespace.Get("http://schemas.microsoft.com/developer/msbuild/2003");
 
@@ -19,8 +19,6 @@ namespace Xamarin.MacDev.Tasks
 		const string IncludeAttributeName = "Include";
 
 		#region Inputs
-
-		public string SessionId { get; set; }
 
 		public ITaskItem[] Items { get; set; }
         

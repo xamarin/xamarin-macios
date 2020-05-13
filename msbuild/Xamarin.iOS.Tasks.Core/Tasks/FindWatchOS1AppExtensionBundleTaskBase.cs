@@ -9,11 +9,9 @@ using Xamarin.MacDev;
 
 namespace Xamarin.iOS.Tasks
 {
-	public abstract class FindWatchOS1AppExtensionBundleTaskBase : Task
+	public abstract class FindWatchOS1AppExtensionBundleTaskBase : XamarinTask
 	{
 		#region Inputs
-
-		public string SessionId { get; set; }
 
 		[Required]
 		public ITaskItem[] AppExtensionReferences { get; set; }
