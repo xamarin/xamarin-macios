@@ -713,9 +713,6 @@ namespace Xamarin.Bundler
 				args = l.ToArray ();
 			}
 
-			string tls_provider = null;
-			string http_message_handler = null;
-
 			Action<Action> SetAction = (Action value) =>
 			{
 				switch (action) {
@@ -1004,12 +1001,10 @@ namespace Xamarin.Bundler
 					}
 				}
 			},
-			{ "http-message-handler=", "Specify the default HTTP message handler for HttpClient", v => { http_message_handler = v; }},
 			{ "output-format=", "Specify the output format for some commands. Possible values: Default, XML", v =>
 				{
 				}
 			},
-			{ "tls-provider=", "Specify the default TLS provider", v => { tls_provider = v; }},
 			{ "xamarin-framework-directory=", "The framework directory", v => { framework_dir = v; }, true },
 			{ "assembly-build-target=", "Specifies how to compile assemblies to native code. Possible values: 'staticobject' (default), 'dynamiclibrary' and 'framework'. " +
 					"Each option also takes an assembly and a potential name (defaults to the name of the assembly). Example: --assembly-build-target=mscorlib.dll=framework[=name]." +
@@ -1030,8 +1025,6 @@ namespace Xamarin.Bundler
 			a = action;
 
 			app.SetDefaultAbi ();
-
-			app.RuntimeOptions = RuntimeOptions.Create (app, http_message_handler, tls_provider);
 
 			if (action == Action.Build || action == Action.RunRegistrar) {
 				if (app.RootAssemblies.Count == 0)

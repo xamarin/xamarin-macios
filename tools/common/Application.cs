@@ -104,6 +104,8 @@ namespace Xamarin.Bundler {
 			set { package_managed_debug_symbols = value; }
 		}
 
+		public string TlsProvider;
+		public string HttpMessageHandler;
 		// If we're targetting a 32 bit arch.
 		bool? is32bits;
 		public bool Is32Build {
@@ -357,6 +359,8 @@ namespace Xamarin.Bundler {
 		{
 			SelectRegistrar ();
 			SelectMonoNative ();
+
+			RuntimeOptions = RuntimeOptions.Create (this, HttpMessageHandler, TlsProvider);
 
 			if (RequiresXcodeHeaders && SdkVersion < SdkVersions.GetVersion (Platform)) {
 				throw ErrorHelper.CreateError (91, Errors.MX0091, ProductName, PlatformName, SdkVersions.GetVersion (Platform), SdkVersions.Xcode, Error91LinkerSuggestion);

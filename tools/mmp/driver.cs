@@ -89,9 +89,6 @@ namespace Xamarin.Bundler {
 		static string resources_dir;
 		static string mmp_dir;
 		
-		static string tls_provider;
-		static string http_message_provider;
-
 		static string AppPath { get { return Path.Combine (macos_dir, app_name); } }
 
 		static string icon;
@@ -268,8 +265,6 @@ namespace Xamarin.Bundler {
 					}
 				},
 				{ "custom_bundle_name=", "Specify a custom name for the MonoBundle folder.", v => App.CustomBundleName = v, true }, // Hidden hack for "universal binaries"
-				{ "tls-provider=", "Specify the default TLS provider", v => { tls_provider = v; }},
-				{ "http-message-handler=", "Specify the default HTTP Message Handler", v => { http_message_provider = v; }},
 				{ "extension", "Specifies an app extension", v => is_extension = true },
 				{ "xpc", "Specifies an XPC service", v => { is_extension = true; is_xpc_service = true; }},
 				{ "allow-unsafe-gac-resolution", "Allow MSBuild to resolve from the System GAC", v => {} , true }, // Used in Xamarin.Mac.XM45.targets and must be ignored here. Hidden since it is a total hack. If you can use it, you don't need support
@@ -315,9 +310,6 @@ namespace Xamarin.Bundler {
 				if (forceAotVariable != null)
 					App.AOTOptions = new AOTOptions (forceAotVariable);
 			}
-
-			App.RuntimeOptions = RuntimeOptions.Create (App, http_message_provider, tls_provider);
-
 
 			if (IsUnifiedFullSystemFramework) {
 				// With newer Mono builds, the system assemblies passed to us by msbuild are
