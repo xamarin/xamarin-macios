@@ -483,7 +483,7 @@ namespace Foundation {
 			var nsrequest = await CreateRequest (request).ConfigureAwait(false);
 			var dataTask = session.CreateDataTask (nsrequest);
 
-			var tcs = new TaskCompletionSource<HttpResponseMessage> ();
+			var tcs = new TaskCompletionSource<HttpResponseMessage> (TaskCreationOptions.RunContinuationsAsynchronously);
 
 			lock (inflightRequestsLock) {
 #if !MONOMAC  && !__WATCHOS__
@@ -672,10 +672,12 @@ namespace Foundation {
 
 			void SetResponse (InflightData inflight)
 			{
-				if (inflight.CancellationTokenSource.Token.IsCancellationRequested)
-					return;
+				lock (inflight.Lock) {
+					if (inflight.CancellationTokenSource.Token.IsCancellationRequested)
+						return;
 
-				inflight.CompletionSource.TrySetResult (inflight.Response);
+					inflight.CompletionSource.TrySetResult (inflight.Response);
+				}
 			}
 
 			[Preserve (Conditional = true)]
