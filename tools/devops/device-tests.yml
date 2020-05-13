@@ -3,8 +3,8 @@
 # lame! cannot have the resources in the template.. :/
 parameters:
 - name: disableProviCleanup
-  type: string
-  default: ''
+  type: boolean
+  default: false
 
 - name: clearProviCache
   type: boolean

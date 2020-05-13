@@ -37,8 +37,8 @@ parameters:
   default: 'ios' # default context, since we started dealing with iOS devices.
   
 - name: disableProviCleanup
-  type: string
-  default: '' # set to anything to disable clearing out the Provisionator cache cleanup
+  type: boolean
+  default: false
 
 - name: clearProviCache
   type: boolean
@@ -215,7 +215,7 @@ jobs:
       rm -rf ~/Library/Logs/VisualStudio
       rm -rf ~/Library/VisualStudio
       rm -rf ~/Library/Preferences/Xamarin/
-      if [ -z ${{ parameters.disableProviCleanup }} ]; then rm -rf ~/Library/Caches/com.xamarin.provisionator; fi
+      if [ ${{ parameters.disableProviCleanup }} = 'false' ]; then rm -rf ~/Library/Caches/com.xamarin.provisionator; fi
     displayName: 'Cleanup'
     continueOnError: true
     condition: always() # no matter what, includes cancellation
