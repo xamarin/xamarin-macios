@@ -47,11 +47,6 @@ namespace Xamarin.Bundler {
 		public BuildTarget BuildTarget;
 
 		public bool EnableCxx;
-		bool? package_managed_debug_symbols;
-		public bool PackageManagedDebugSymbols {
-			get { return package_managed_debug_symbols.Value; }
-			set { package_managed_debug_symbols = value; }
-		}
 		bool? enable_msym;
 		public bool EnableMSym {
 			get { return enable_msym.Value; }
@@ -92,8 +87,6 @@ namespace Xamarin.Bundler {
 		public Dictionary<string, string> LLVMOptimizations = new Dictionary<string, string> ();
 		public bool UseInterpreter;
 		public List<string> InterpretedAssemblies = new List<string> ();
-
-		public Dictionary<string, string> EnvironmentVariables = new Dictionary<string, string> ();
 
 		//
 		// Linker config
@@ -163,7 +156,6 @@ namespace Xamarin.Bundler {
 		}
 
 		public bool IsDualBuild { get { return Is32Build && Is64Build; } } // if we're building both a 32 and a 64 bit version.
-		public bool IsLLVM { get { return IsArchEnabled (Abi.LLVM); } }
 
 		bool RequiresXcodeHeaders => LinkMode == LinkMode.None;
 
@@ -661,8 +653,8 @@ namespace Xamarin.Bundler {
 		void BuildInitialize ()
 		{
 			SelectRegistrar ();
-			Initialize ();
 			ValidateAbi ();
+			Initialize ();
 			ExtractNativeLinkInfo ();
 			SelectNativeCompiler ();
 		}
@@ -1112,12 +1104,6 @@ namespace Xamarin.Bundler {
 				DeploymentTarget = new Version (8, 0);
 			}
 
-			if (!package_managed_debug_symbols.HasValue) {
-				package_managed_debug_symbols = EnableDebug;
-			} else if (package_managed_debug_symbols.Value && IsLLVM) {
-				ErrorHelper.Warning (3007, Errors.MT3007);
-			}
-
 			if (!enable_msym.HasValue)
 				enable_msym = !EnableDebug && IsDeviceBuild;
 
@@ -1427,11 +1413,11 @@ namespace Xamarin.Bundler {
 			if (require_mono_native && LibMonoNativeLinkMode == AssemblyBuildTarget.DynamicLibrary) {
 				foreach (var target in Targets) {
 					BundleFileInfo info;
-					var lib_native_name = target.GetLibNativeName () + ".dylib";
+					var lib_native_name = GetLibNativeName () + ".dylib";
 					bundle_files [lib_native_name] = info = new BundleFileInfo ();
 					var lib_native_path = Path.Combine (Driver.GetProductSdkLibDirectory (this), lib_native_name);
 					info.Sources.Add (lib_native_path);
-					Driver.Log (3, "Adding mono-native library {0} for {1}.", lib_native_name, target.MonoNativeMode);
+					Driver.Log (3, "Adding mono-native library {0} for {1}.", lib_native_name, MonoNativeMode);
 				}
 			}
 

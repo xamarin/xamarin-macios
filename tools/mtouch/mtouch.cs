@@ -469,12 +469,12 @@ namespace Xamarin.Bundler
 						}
 					}
 
-					if (target.MonoNativeMode != MonoNativeMode.None) {
+					if (app.MonoNativeMode != MonoNativeMode.None) {
 						string mono_native_lib;
 						if (app.LibMonoNativeLinkMode == AssemblyBuildTarget.StaticObject)
 							mono_native_lib = "__Internal";
 						else
-							mono_native_lib = target.GetLibNativeName () + ".dylib";
+							mono_native_lib = app.GetLibNativeName () + ".dylib";
 						sw.WriteLine ();
 						sw.WriteLine ($"\tmono_dllmap_insert (NULL, \"System.Native\", NULL, \"{mono_native_lib}\", NULL);");
 						sw.WriteLine ($"\tmono_dllmap_insert (NULL, \"System.Security.Cryptography.Native.Apple\", NULL, \"{mono_native_lib}\", NULL);");
@@ -859,16 +859,6 @@ namespace Xamarin.Bundler
 			{ "launch-for-background-fetch", "Launch due to a background fetch [DEPRECATED]", v => { }, true},
 			{ "debugsim=", "Debug the specified MonoTouch.app in the simulator [DEPRECATED]", v => { SetAction (Action.DebugSim); }, true },
 			{ "argument=", "Launch the app with this command line argument. This must be specified multiple times for multiple arguments [DEPRECATED]", v => { }, true },
-			{ "setenv=", "Set the environment variable in the application on startup", v =>
-				{
-					int eq = v.IndexOf ('=');
-					if (eq <= 0)
-						throw new MonoTouchException (2, true, Errors.MT0002, v);
-					string name = v.Substring (0, eq);
-					string value = v.Substring (eq + 1);
-					app.EnvironmentVariables.Add (name, value);
-				}
-			},
 			{ "sgen:", "Enable the SGen garbage collector",
 					v => {
 						if (!ParseBool (v, "sgen")) 
@@ -909,8 +899,7 @@ namespace Xamarin.Bundler
 					}
 				}
 			},
-			{ "package-mdb:", "Specify whether debug info files (*.mdb) should be packaged in the app. Default is 'true' for debug builds and 'false' for release builds.", v => app.PackageManagedDebugSymbols = ParseBool (v, "package-mdb"), true },
-			{ "package-debug-symbols:", "Specify whether debug info files (*.mdb / *.pdb) should be packaged in the app. Default is 'true' for debug builds and 'false' for release builds.", v => app.PackageManagedDebugSymbols = ParseBool (v, "package-debug-symbols") },
+			{ "package-mdb:", "Specify whether debug info files (*.mdb) should be packaged in the app. Default is 'true' for debug builds and 'false' for release builds. [DEPRECATED]", v => app.PackageManagedDebugSymbols = ParseBool (v, "package-mdb"), true },
 			{ "msym:", "Specify whether managed symbolication files (*.msym) should be created. Default is 'false' for debug builds and 'true' for release builds.", v => app.EnableMSym = ParseBool (v, "msym") },
 			{ "extension", v => app.IsExtension = true },
 			{ "app-extension=", "The path of app extensions that are included in the app. This must be specified once for each app extension.", v => app.Extensions.Add (v), true /* MSBuild-internal for now */ },

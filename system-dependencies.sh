@@ -7,6 +7,7 @@ cd $(dirname $0)
 FAIL=
 PROVISION_DOWNLOAD_DIR=/tmp/x-provisioning
 SUDO=sudo
+VERBOSE=
 
 OPTIONAL_SHARPIE=1
 OPTIONAL_SIMULATORS=1
@@ -176,6 +177,7 @@ while ! test -z $1; do
 		-v | --verbose)
 			set -x
 			shift
+			VERBOSE=1
 			;;
 		*)
 			echo "Unknown argument: $1"
@@ -1000,18 +1002,35 @@ function check_dotnet ()
 {
 	if test -n "$IGNORE_DOTNET"; then return; fi
 
+	local SUFFIX=$1
 	local DOTNET_VERSION
 	local DOTNET_INSTALL_DIR
 	local DOTNET_URL
+	local DOTNET_TARBALL
 	local DOTNET_FILENAME
+	local URL
+	local INSTALL_LOCALLY
+	local INSTALL_DIR
+	local CACHED_FILE
+	local DOWNLOADED_FILE
 
-	DOTNET_VERSION=$(grep ^DOTNET_VERSION= Make.config | sed 's/.*=//')
-	DOTNET_URL=$(grep ^DOTNET_URL= Make.config | sed 's/.*=//')
+	# If there's a TARBALL url, use that and install into builds/download, otherwise install the pkg.
+
+	DOTNET_VERSION=$(grep "^DOTNET${SUFFIX}_VERSION=" Make.config | sed 's/.*=//')
+	DOTNET_URL=$(grep "^DOTNET${SUFFIX}_URL"= Make.config | sed 's/.*=//')
+	DOTNET_TARBALL=$(grep "^DOTNET${SUFFIX}_TARBALL"= Make.config | sed 's/.*=//' || true) # this variable might not exist
 	DOTNET_INSTALL_DIR=/usr/local/share/dotnet/sdk/"$DOTNET_VERSION"
-	DOTNET_FILENAME=$(basename "$DOTNET_URL")
+	DOTNET_LOCAL_INSTALL_DIR="builds/downloads/dotnet/$DOTNET_VERSION"
+
+	if test -n "$DOTNET_TARBALL"; then
+		INSTALL_LOCALLY=1
+	fi
 
 	if test -d "$DOTNET_INSTALL_DIR"; then
-		ok "Found dotnet $DOTNET_VERSION (exactly $DOTNET_VERSION is required)."
+		ok "Found dotnet $DOTNET_VERSION in $DOTNET_INSTALL_DIR (exactly $DOTNET_VERSION is required)."
+		return
+	elif test -d "$DOTNET_LOCAL_INSTALL_DIR"; then
+		ok "Found dotnet $DOTNET_VERSION in $DOTNET_LOCAL_INSTALL_DIR (exactly $DOTNET_VERSION is required)."
 		return
 	fi
 
@@ -1021,14 +1040,43 @@ function check_dotnet ()
 		return
 	fi
 
-	log "Downloading dotnet $DOTNET_VERSION from $DOTNET_URL..."
-	mkdir -p "$PROVISION_DOWNLOAD_DIR"
-	curl -f -L "$DOTNET_URL" -o "$PROVISION_DOWNLOAD_DIR/$DOTNET_FILENAME"
+	if test -n "$INSTALL_LOCALLY"; then
+		URL=$DOTNET_TARBALL
+		INSTALL_DIR=$DOTNET_LOCAL_INSTALL_DIR
+	else
+		URL=$DOTNET_URL
+		INSTALL_DIR=$DOTNET_INSTALL_DIR
+	fi
+	DOTNET_FILENAME=$(basename "$URL")
 
-	log "Installing dotnet $DOTNET_VERSION..."
-	$SUDO installer -pkg "$PROVISION_DOWNLOAD_DIR/$DOTNET_FILENAME" -target /
+	CACHED_FILE=$HOME/Library/Caches/xamarin-macios/$DOTNET_FILENAME
+	if test -f "$CACHED_FILE"; then
+		log "Found cached version in $CACHED_FILE, will install from cache."
+		DOWNLOADED_FILE="$HOME/Library/Caches/xamarin-macios/$DOTNET_FILENAME"
+	else
+		log "Downloading dotnet $DOTNET_VERSION from $URL..."
+		mkdir -p "$PROVISION_DOWNLOAD_DIR"
+		DOWNLOADED_FILE="$PROVISION_DOWNLOAD_DIR/$DOTNET_FILENAME"
+		curl -f -L "$URL" -o "$DOWNLOADED_FILE"
+	fi
 
-	ok "Installed dotnet $DOTNET_VERSION."
+	log "Installing dotnet $DOTNET_VERSION into $INSTALL_DIR..."
+	if test -n "$INSTALL_LOCALLY"; then
+		rm -Rf "$INSTALL_DIR-tmp"
+		mkdir -p "$INSTALL_DIR-tmp"
+		local TAR_ARGS
+		if test -n "$VERBOSE"; then
+			TAR_ARGS=xvf
+		else
+			TAR_ARGS=xf
+		fi
+		tar $TAR_ARGS "$DOWNLOADED_FILE" -C "$INSTALL_DIR-tmp"
+		mv "$INSTALL_DIR-tmp" "$INSTALL_DIR"
+	else
+		$SUDO installer -pkg "$DOWNLOADED_FILE" -target /
+	fi
+
+	ok "Installed dotnet $DOTNET_VERSION into $INSTALL_DIR."
 }
 
 echo "Checking system..."
@@ -1044,7 +1092,12 @@ check_cmake
 check_7z
 check_objective_sharpie
 check_simulators
-check_dotnet
+check_dotnet ""
+check_dotnet "5"
+if test -z "$IGNORE_DOTNET"; then
+	ok "Installed .NET SDKs:"
+	(IFS=$'\n'; for i in $(/usr/local/share/dotnet/dotnet --list-sdks); do log "$i"; done)
+fi
 
 if test -z $FAIL; then
 	echo "System check succeeded"

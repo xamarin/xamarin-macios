@@ -16,6 +16,16 @@ if test -n "$ghprbPullId" && ./jenkins/fetch-pr-labels.sh --check=skip-public-je
 	exit 0
 fi
 
+# Get all our dependencies
+make reset
+
+# Make sure everything is pristine
+make git-clean-all
+
+# Print a list of our dpendencies
+make print-versions
+
+# Provision external dependencies
 ./system-dependencies.sh --provision-all
 
 sudo rm -Rf /Developer/MonoTouch

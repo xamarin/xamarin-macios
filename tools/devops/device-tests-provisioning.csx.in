@@ -1,0 +1,22 @@
+#r "_provisionator/provisionator.dll"
+
+using System.IO;
+using System.Linq;
+
+using static Xamarin.Provisioning.ProvisioningScript;
+
+Xcode ("@XCODE_VERSION@").XcodeSelect (allowUntrusted: true);
+
+// provisionator knows how to deal with this items
+Item ("@MONO_PACKAGE@");
+Item ("@VS_PACKAGE@");
+Item ("@XI_PACKAGE@");
+
+BrewPackage ("p7zip");
+
+void BrewPackage (string name)
+{
+	// Assumes brew is already installed. 
+	// All Macs provisioned by Xamarin, VSEng, or DDFUN should have brew by default!
+	Item (name).Action (i => Exec ("brew", "install", i.Name));
+}

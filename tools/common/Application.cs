@@ -71,6 +71,8 @@ namespace Xamarin.Bundler {
 		public bool EnableProfiling;
 		public bool? DebugTrack;
 
+		public Dictionary<string, string> EnvironmentVariables = new Dictionary<string, string> ();
+
 		public MarshalObjectiveCExceptionMode MarshalObjectiveCExceptions;
 		public MarshalManagedExceptionMode MarshalManagedExceptions;
 
@@ -88,11 +90,19 @@ namespace Xamarin.Bundler {
 		public Version DeploymentTarget;
 		public Version SdkVersion;
 	
+		public MonoNativeMode MonoNativeMode { get; set; }
 		List<Abi> abis;
+		public bool IsLLVM { get { return IsArchEnabled (Abi.LLVM); } }
 
 		public bool Embeddinator { get; set; }
 
 		public List<Target> Targets = new List<Target> ();
+
+		bool? package_managed_debug_symbols;
+		public bool PackageManagedDebugSymbols {
+			get { return package_managed_debug_symbols.Value; }
+			set { package_managed_debug_symbols = value; }
+		}
 
 		public Application (string[] arguments)
 		{
@@ -324,8 +334,7 @@ namespace Xamarin.Bundler {
 		public void InitializeCommon ()
 		{
 			SelectRegistrar ();
-			foreach (var target in Targets)
-				target.SelectMonoNative ();
+			SelectMonoNative ();
 
 			if (RequiresXcodeHeaders && SdkVersion < SdkVersions.GetVersion (Platform)) {
 				throw ErrorHelper.CreateError (91, Errors.MX0091, ProductName, PlatformName, SdkVersions.GetVersion (Platform), SdkVersions.Xcode, Error91LinkerSuggestion);
@@ -404,7 +413,50 @@ namespace Xamarin.Bundler {
 				ErrorHelper.Warning (32, Errors.MT0032);
 			}
 
+			if (!package_managed_debug_symbols.HasValue) {
+				package_managed_debug_symbols = EnableDebug;
+			} else if (package_managed_debug_symbols.Value && IsLLVM) {
+				ErrorHelper.Warning (3007, Errors.MX3007);
+			}
+
 			Optimizations.Initialize (this);
+		}
+
+		void SelectMonoNative ()
+		{
+			switch (Platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+				MonoNativeMode = DeploymentTarget.Major >= 10 ? MonoNativeMode.Unified : MonoNativeMode.Compat;
+				break;
+			case ApplePlatform.WatchOS:
+				if (IsArchEnabled (Abis, Abi.ARM64_32)) {
+					MonoNativeMode = MonoNativeMode.Unified;
+				} else {
+					MonoNativeMode = DeploymentTarget.Major >= 3 ? MonoNativeMode.Unified : MonoNativeMode.Compat;
+				}
+				break;
+			case ApplePlatform.MacOSX:
+				if (DeploymentTarget >= new Version (10, 12))
+					MonoNativeMode = MonoNativeMode.Unified;
+				else
+					MonoNativeMode = MonoNativeMode.Compat;
+				break;
+			default:
+				throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
+			}
+		}
+
+		public string GetLibNativeName ()
+		{
+			switch (MonoNativeMode) {
+			case MonoNativeMode.Unified:
+				return "libmono-native-unified";
+			case MonoNativeMode.Compat:
+				return "libmono-native-compat";
+			default:
+				throw ErrorHelper.CreateError (99, Errors.MX0099, $"Invalid mono native type: '{MonoNativeMode}'");
+			}
 		}
 
 		public void RunRegistrar ()

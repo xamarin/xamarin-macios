@@ -602,8 +602,8 @@ $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/bin/smcs:
 	@echo Installing smcs script
 	@echo "#!/bin/bash" > $@
 	@echo >> $@
-	@echo "echo 'This script ($$0) is obsolete. Use csc to compile instead."
-	@echo "exit 1"
+	@echo "echo 'This script ($$0) is obsolete. Use csc to compile instead.'" >> $@
+	@echo "exit 1" >> $@
 	@chmod +x $@
 
 install-smcs: $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/bin/smcs

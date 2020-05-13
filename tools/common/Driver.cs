@@ -190,8 +190,19 @@ namespace Xamarin.Bundler {
 					(v) => {
 						app.Optimizations.Parse (v);
 					});
+			options.Add ("package-debug-symbols:", "Specify whether debug info files (*.mdb / *.pdb) should be packaged in the app. Default is 'true' for debug builds and 'false' for release builds.", v => app.PackageManagedDebugSymbols = ParseBool (v, "package-debug-symbols"));
 			options.Add ("profiling:", "Enable profiling", v => app.EnableProfiling = ParseBool (v, "profiling"));
 			options.Add ("debugtrack:", "Enable debug tracking of object resurrection bugs", v => { app.DebugTrack = ParseBool (v, "--debugtrack"); });
+			options.Add ("setenv=", "Set the environment variable in the application on startup", v => {
+					int eq = v.IndexOf ('=');
+					if (eq <= 0)
+						throw ErrorHelper.CreateError (2, Errors.MT0002, v);
+					var name = v.Substring (0, eq);
+					var value = v.Substring (eq + 1);
+					app.EnvironmentVariables.Add (name, value);
+				}
+			);
+			// Keep the ResponseFileSource option at the end.
 			options.Add (new Mono.Options.ResponseFileSource ());
 
 			try {

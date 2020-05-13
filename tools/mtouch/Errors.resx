@@ -1765,7 +1765,7 @@
 		</comment>
 	</data>
 
-	<data name="MT3007" xml:space="preserve">
+	<data name="MX3007" xml:space="preserve">
 		<value>Debug info files (*.mdb / *.pdb) will not be loaded when llvm is enabled.
 		</value>
 		<comment>
