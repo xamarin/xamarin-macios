@@ -194,7 +194,6 @@ namespace Xamarin.Bundler {
 				{ "c|certificate=", "The Code Signing certificate for the application", v => { certificate_name = v; }},
 				{ "p", "Generate a plist for the application", v => { generate_plist = true; }},
 				{ "i|icon=", "Use the specified file as the bundle icon", v => { icon = v; }},
-				{ "xml=", "Provide an extra XML definition file to the linker", v => App.Definitions.Add (v) },
 				{ "time", v => WatchLevel++ },
 				{ "arch=", "Specify the architecture ('x86_64') of the native runtime (default to 'x86_64', which is the only valid value) [DEPRECATED, use --abi instead]", v => { App.ParseAbi (v); }, true},
 				{ "profile=", "(Obsoleted in favor of --target-framework) Specify the .NET profile to use", v => SetTargetFramework (v), true },
