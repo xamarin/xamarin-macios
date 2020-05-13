@@ -5,7 +5,8 @@ using System.Linq;
 
 using static Xamarin.Provisioning.ProvisioningScript;
 
-Xcode ("@XCODE_VERSION@").XcodeSelect (allowUntrusted: true);
+var xcodePath = Path.GetDirectoryName (Path.GetDirectoryName ("@XCODE_DEVELOPER_ROOT@"));
+Xcode ("@XCODE_VERSION@").XcodeSelect (allowUntrusted: true, allowSymlink: true, symlinkTarget: xcodePath);
 
 // provisionator knows how to deal with this items
 Item ("@MONO_PACKAGE@");
