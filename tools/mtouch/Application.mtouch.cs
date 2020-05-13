@@ -88,6 +88,11 @@ namespace Xamarin.Bundler {
 		public bool UseInterpreter;
 		public List<string> InterpretedAssemblies = new List<string> ();
 
+		// Xamarin.Mac options available here to minimize ifdefs
+		public string CustomBundleName { get { throw ErrorHelper.CreateError (99, Errors.MX0099, "Not supported on this platform"); } }
+		public bool? DisableLldbAttach { get { throw ErrorHelper.CreateError (99, Errors.MX0099, "Not supported on this platform"); } }
+		public bool? DisableOmitFramePointer { get { throw ErrorHelper.CreateError (99, Errors.MX0099, "Not supported on this platform"); } }
+
 		//
 		// Linker config
 		//
