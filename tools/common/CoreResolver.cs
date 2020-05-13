@@ -6,12 +6,6 @@ using System.IO;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
-#if MTOUCH
-using ProductException=Xamarin.Bundler.MonoTouchException;
-#else
-using ProductException=Xamarin.Bundler.MonoMacException;
-#endif
-
 namespace Xamarin.Bundler {
 
 	public abstract class CoreResolver : IAssemblyResolver {

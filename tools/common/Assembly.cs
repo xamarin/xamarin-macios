@@ -11,13 +11,6 @@ using ObjCRuntime;
 using Xamarin;
 using Xamarin.Utils;
 
-#if MONOTOUCH
-using PlatformException = Xamarin.Bundler.MonoTouchException;
-#else
-using PlatformException = Xamarin.Bundler.MonoMacException;
-#endif
-
-
 namespace Xamarin.Bundler {
 
 	struct NativeReferenceMetadata

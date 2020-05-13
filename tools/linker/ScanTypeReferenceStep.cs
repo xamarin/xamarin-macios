@@ -4,12 +4,6 @@ using Mono.Cecil;
 using Mono.Linker.Steps;
 using Xamarin.Bundler;
 
-#if MTOUCH
-using ProductException = Xamarin.Bundler.MonoTouchException;
-#else
-using ProductException = Xamarin.Bundler.MonoMacException;
-#endif
-
 namespace Xamarin.Linker.Steps {
 
 	abstract public class ScanTypeReferenceStep : BaseStep {

@@ -450,5 +450,14 @@ namespace Xamarin.Bundler {
 			return reference_m;
 #endif
 		}
+
+		// This is to load the symbols for all assemblies, so that we can give better error messages
+		// (with file name / line number information).
+		public void LoadSymbols ()
+		{
+			foreach (var a in Assemblies)
+				a.LoadSymbols ();
+		}
+
 	}
 }

@@ -41,26 +41,8 @@ using TField=System.Reflection.FieldInfo;
 using R=ObjCRuntime.Runtime;
 #endif
 
-#if MONOTOUCH
-#if MTOUCH
-using ProductException=Xamarin.Bundler.MonoTouchException;
-#else
-#if XAMCORE_2_0
+#if !(MTOUCH || MMP)
 using ProductException=ObjCRuntime.RuntimeException;
-#else
-using ProductException=MonoTouch.RuntimeException;
-#endif
-#endif
-#elif MONOMAC
-#if MMP
-using ProductException=Xamarin.Bundler.MonoMacException;
-#elif XAMCORE_2_0
-using ProductException=ObjCRuntime.RuntimeException;
-#else
-using ProductException=MonoMac.RuntimeException;
-#endif
-#else
-#error Only XI and XM
 #endif
 
 //

@@ -103,7 +103,7 @@ namespace Xamarin.Bundler {
 				if (option.Contains ("|")) {
 					string [] optionTypeParts = option.Split ('|');
 					if (optionTypeParts.Length != 2)
-						throw new MonoMacException (20, true, Errors.MX0020, "--aot", "{none, all, core, sdk}{|hybrid}, then an optional explicit list of assemblies.");
+						throw new ProductException (20, true, Errors.MX0020, "--aot", "{none, all, core, sdk}{|hybrid}, then an optional explicit list of assemblies.");
 					switch (optionTypeParts [0]) {
 					case "none":
 					case "core":
@@ -113,14 +113,14 @@ namespace Xamarin.Bundler {
 						switch (optionTypeParts [1]) {
 						case "hybrid":
 							if (option != "all")
-								throw new MonoMacException (114, true, Errors.MM0114);
+								throw new ProductException (114, true, Errors.MM0114);
 							kind = AOTKind.Hybrid;
 							break;
 						case "standard":
 							kind = AOTKind.Standard;
 							break;
 						default:
-							throw new MonoMacException (20, true, Errors.MX0020, "--aot", "{none, all, core, sdk}{|hybrid}, then an optional explicit list of assemblies.");
+							throw new ProductException (20, true, Errors.MX0020, "--aot", "{none, all, core, sdk}{|hybrid}, then an optional explicit list of assemblies.");
 						}
 						break;
 					}
@@ -164,10 +164,10 @@ namespace Xamarin.Bundler {
 					ExcludedAssemblies.Add (option.Substring (1));
 					continue;
 				}
-				throw new MonoMacException (20, true, Errors.MX0020, "--aot", "{none, all, core, sdk}{|hybrid}, then an optional explicit list of assemblies.");
+				throw new ProductException (20, true, Errors.MX0020, "--aot", "{none, all, core, sdk}{|hybrid}, then an optional explicit list of assemblies.");
 			}
 			if (CompilationType == AOTCompilationType.Default)
-				throw new MonoMacException (20, true, Errors.MX0020, "--aot", "{none, all, core, sdk}{|hybrid}, then an optional explicit list of assemblies.");
+				throw new ProductException (20, true, Errors.MX0020, "--aot", "{none, all, core, sdk}{|hybrid}, then an optional explicit list of assemblies.");
 
 		}
 	}

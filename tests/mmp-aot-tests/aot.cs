@@ -164,18 +164,18 @@ namespace Xamarin.MMP.Tests.Unit
 			try {
 				action ();
 			}
-			catch (MonoMacException e) {
+			catch (ProductException e) {
 				Assert.AreEqual (e.Code, code, $"Got code {e.Code} but expected {code}");
 				return;
 			}
 			catch (AggregateException e) {
 				Assert.AreEqual (e.InnerExceptions.Count, 1, "Got AggregateException but more than one exception");
-				MonoMacException innerException = e.InnerExceptions[0] as MonoMacException;
-				Assert.IsNotNull (innerException, "Got AggregateException but inner not MonoMacException");
+				ProductException innerException = e.InnerExceptions[0] as ProductException;
+				Assert.IsNotNull (innerException, "Got AggregateException but inner not ProductException");
 				Assert.AreEqual (innerException.Code, code, $"Got code {innerException.Code} but expected {code}");
 				return;
 			}
-			Assert.Fail ($"We should have thrown MonoMacException with code: {code}");
+			Assert.Fail ($"We should have thrown ProductException with code: {code}");
 		}
 
 		readonly string [] FullAppFileList = { 

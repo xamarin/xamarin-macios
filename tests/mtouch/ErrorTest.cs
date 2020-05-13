@@ -4,12 +4,6 @@ using NUnit.Framework;
 
 using Xamarin.Bundler;
 
-#if MONOTOUCH
-using ProductException = Xamarin.Bundler.MonoTouchException;
-#else
-using ProductException = Xamarin.Bundler.MonoMacException;
-#endif
-
 namespace Xamarin.Test.Bundler {
 
 	[TestFixture]

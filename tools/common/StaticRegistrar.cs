@@ -16,12 +16,6 @@ using System.Text;
 using Xamarin.Bundler;
 using Xamarin.Linker;
 
-#if MTOUCH
-using ProductException=Xamarin.Bundler.MonoTouchException;
-#else
-using ProductException=Xamarin.Bundler.MonoMacException;
-#endif
-
 using Registrar;
 using Foundation;
 using ObjCRuntime;
@@ -2177,7 +2171,7 @@ namespace Registrar {
 			case "Accounts":
 				var compiler = Path.GetFileName (App.CompilerPath);
 				if (compiler == "gcc" || compiler == "g++") {
-					exceptions.Add (new MonoTouchException (4121, true, "Cannot use GCC/G++ to compile the generated code from the static registrar when using the Accounts framework (the header files provided by Apple used during the compilation require Clang). Either use Clang (--compiler:clang) or the dynamic registrar (--registrar:dynamic)."));
+					exceptions.Add (new ProductException (4121, true, "Cannot use GCC/G++ to compile the generated code from the static registrar when using the Accounts framework (the header files provided by Apple used during the compilation require Clang). Either use Clang (--compiler:clang) or the dynamic registrar (--registrar:dynamic)."));
 					return;
 				}
 				goto default;

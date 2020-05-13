@@ -90,7 +90,7 @@ namespace Xamarin.Bundler {
 				}
 
 				if (!found) {
-					warnings.Add (new MonoTouchException (3005, false, Errors.MT3005, ar.FullName, AssemblyDefinition.FullName));
+					warnings.Add (new ProductException (3005, false, Errors.MT3005, ar.FullName, AssemblyDefinition.FullName));
 					has_dependency_map = false;
 				}
 			}
@@ -137,7 +137,7 @@ namespace Xamarin.Bundler {
 
 				CopyConfigToDirectory (Path.GetDirectoryName (target));
 			} catch (Exception e) {
-				throw new MonoTouchException (1009, true, e, Errors.MX1009, source, target, e.Message);
+				throw new ProductException (1009, true, e, Errors.MX1009, source, target, e.Message);
 			}
 
 			return copied;
@@ -253,7 +253,7 @@ namespace Xamarin.Bundler {
 			Directory.CreateDirectory (asm_dir);
 
 			if (!File.Exists (assembly_path))
-				throw new MonoTouchException (3004, true, Errors.MT3004, assembly_path);
+				throw new ProductException (3004, true, Errors.MT3004, assembly_path);
 
 			var aotInfo = new AotInfo ();
 			AotInfos.Add (abi, aotInfo);
@@ -353,7 +353,7 @@ namespace Xamarin.Bundler {
 				Driver.Log (3, "Loaded '{0}'", FullPath);
 			} catch (Exception e) {
 				// cecil might not be able to load the assembly, e.g. bug #758
-				throw new MonoTouchException (1010, true, e, Errors.MT1010, FullPath, e.Message);
+				throw new ProductException (1010, true, e, Errors.MT1010, FullPath, e.Message);
 			}
 		}
 	}

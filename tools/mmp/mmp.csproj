@@ -446,6 +446,9 @@
     <Compile Include="..\linker\ScanTypeReferenceStep.cs">
       <Link>tools\linker\ScanTypeReferenceStep.cs</Link>
     </Compile>
+    <Compile Include="..\common\ErrorHelper.tools.cs">
+      <Link>tools\common\ErrorHelper.tools.cs</Link>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
