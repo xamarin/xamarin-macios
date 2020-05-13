@@ -181,7 +181,6 @@ namespace Xamarin.Bundler {
 					},
 					true // do not show this option anymore
 				},
-				{ "nolink", "Do not link the assemblies", v => App.LinkMode = LinkMode.None },
 				{ "mapinject", "Inject a fast method map [deprecated]", v => { ErrorHelper.Show (new MonoMacException (16, false, Errors.MX0016,  "--mapinject")); } },
 				{ "minos=", "Minimum supported version of Mac OS X", 
 					v => {
@@ -192,9 +191,6 @@ namespace Xamarin.Bundler {
 						}
 					}
 				},
-				{ "linkplatform", "Link only the Xamarin.Mac.dll platform assembly", v => App.LinkMode = LinkMode.Platform },
-				{ "linksdkonly", "Link only the SDK assemblies", v => App.LinkMode = LinkMode.SDKOnly },
-				{ "linkskip=", "Skip linking of the specified assembly", v => App.LinkSkipped.Add (v) },
 				{ "i18n=", "List of i18n assemblies to copy to the output directory, separated by commas (none,all,cjk,mideast,other,rare,west)", v => App.I18n = LinkerOptions.ParseI18nAssemblies (v) },
 				{ "c|certificate=", "The Code Signing certificate for the application", v => { certificate_name = v; }},
 				{ "p", "Generate a plist for the application", v => { generate_plist = true; }},

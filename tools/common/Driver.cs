@@ -63,6 +63,12 @@ namespace Xamarin.Bundler {
 			options.Add ("abi=", "Comma-separated list of ABIs to target. Currently supported: armv7, armv7+llvm, armv7+llvm+thumb2, armv7s, armv7s+llvm, armv7s+llvm+thumb2, arm64, arm64+llvm, arm64_32, arm64_32+llvm, i386, x86_64", v => app.ParseAbi (v));
 #endif
 			options.Add ("no-xcode-version-check", "Ignores the Xcode version check.", v => { min_xcode_version = null; }, true /* This is a non-documented option. Please discuss any customers running into the xcode version check on the maciosdev@ list before giving this option out to customers. */);
+			options.Add ("nolink", "Do not link the assemblies", v => app.LinkMode = LinkMode.None);
+#if MMP
+			options.Add ("linkplatform", "Link only the Xamarin.Mac.dll platform assembly", v => app.LinkMode = LinkMode.Platform);
+#endif
+			options.Add ("linksdkonly", "Link only the SDK assemblies", v => app.LinkMode = LinkMode.SDKOnly);
+			options.Add ("linkskip=", "Skip linking of the specified assembly", v => app.LinkSkipped.Add (v));
 			options.Add ("warnaserror:", "An optional comma-separated list of warning codes that should be reported as errors (if no warnings are specified all warnings are reported as errors).", v =>
 			{
 				try {
