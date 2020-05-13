@@ -51,6 +51,7 @@ namespace Xamarin.Bundler {
 
 			options.Add ("h|?|help", "Displays the help", v => a = Action.Help);
 			options.Add ("f|force", "Forces the recompilation of code, regardless of timestamps", v => Force = true);
+			options.Add ("cache=", "Specify the directory where temporary build files will be cached", v => app.Cache.Location = v);
 			options.Add ("version", "Output version information and exit.", v => a = Action.Version);
 			options.Add ("v|verbose", "Specify how verbose the output should be. This can be passed multiple times to increase the verbosity.", v => Verbosity++);
 			options.Add ("q|quiet", "Specify how quiet the output should be. This can be passed multiple times to increase the silence.", v => Verbosity--);
