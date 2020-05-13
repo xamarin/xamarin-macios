@@ -793,15 +793,6 @@ namespace Xamarin.Bundler
 				}
 			},
 			// Configures the tooling used to build code.
-			{ "targetver=", "Specifies the name of the minimum deployment target (version, for example \"" + Xamarin.SdkVersions.iOS.ToString () + "\")",
-				v => {
-					try {
-						app.DeploymentTarget = StringUtils.ParseVersion (v);
-					} catch (Exception ex) {
-						throw new MonoTouchException (26, true, ex, Errors.MX0026, "targetver:" + v, ex.Message);
-					}
-				}
-			},
 			{ "device=", "Specifies the device type to launch the simulator as [DEPRECATED]", v => { }, true },
 			
 			// Launch/debug options

@@ -180,15 +180,6 @@ namespace Xamarin.Bundler {
 					true // do not show this option anymore
 				},
 				{ "mapinject", "Inject a fast method map [deprecated]", v => { ErrorHelper.Show (new MonoMacException (16, false, Errors.MX0016,  "--mapinject")); } },
-				{ "minos=", "Minimum supported version of Mac OS X", 
-					v => {
-						try {
-							App.DeploymentTarget = StringUtils.ParseVersion (v);
-						} catch (Exception ex) {
-							ErrorHelper.Error (26, ex, Errors.MX0026, $"minos:{v}", ex.Message);
-						}
-					}
-				},
 				{ "c|certificate=", "The Code Signing certificate for the application", v => { certificate_name = v; }},
 				{ "p", "Generate a plist for the application", v => { generate_plist = true; }},
 				{ "i|icon=", "Use the specified file as the bundle icon", v => { icon = v; }},
