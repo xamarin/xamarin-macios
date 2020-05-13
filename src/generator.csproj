@@ -401,7 +401,8 @@
     </EmbeddedResource>
   </ItemGroup>
   <Target Name="AfterBuild">
-    <Exec Command="make bgen" />
+    <!-- Only run 'make bgen' if we're not executed as part of 'make' (i.e. MAKEFLAGS is empty) -->
+    <Exec Command="make bgen" Condition="'$(MAKEFLAGS)' == ''"/>
   </Target>
   <Import Project="..\packages\XliffTasks.1.0.0-beta.19607.1\build\XliffTasks.targets" Condition="Exists('..\packages\XliffTasks.1.0.0-beta.19607.1\build\XliffTasks.targets')" />
 </Project>
