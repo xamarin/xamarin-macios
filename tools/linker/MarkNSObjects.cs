@@ -33,7 +33,6 @@ using System;
 using Mono.Cecil;
 using Mono.Linker;
 using Mono.Tuner;
-using Xamarin.Bundler;
 
 namespace Xamarin.Linker.Steps {
 
@@ -59,7 +58,7 @@ namespace Xamarin.Linker.Steps {
 
 			if (!IsProductType (type)) {
 				// we need to annotate the parent type(s) of a nested type
-				// otherwise the sweeper will not keep the parents (nor the childs)
+				// otherwise the sweeper will not keep the parents (nor the children)
 				if (type.IsNested) {
 					var parent = type.DeclaringType;
 					while (parent != null) {
@@ -69,7 +68,7 @@ namespace Xamarin.Linker.Steps {
 				}
 				Annotations.Mark (type);
 				Annotations.SetPreserve (type, TypePreserve.All);
-			} else {
+			} else if (type.HasMethods) {
 				PreserveIntPtrConstructor (type);
 				if (nsobject)
 					PreserveExportedMethods (type);
@@ -78,17 +77,15 @@ namespace Xamarin.Linker.Steps {
 
 		void PreserveExportedMethods (TypeDefinition type)
 		{
-			if (!type.HasMethods)
-				return;
-
 			foreach (var method in type.Methods) {
 				if (!IsExportedMethod (method))
 					continue;
 
+				// not optimal if "Link all" is used as the override might be removed later
 				if (!IsOverridenInUserCode (method))
 					continue;
 
-				PreserveMethod (type, method);
+				Annotations.AddPreservedMethod (type, method);
 			}
 		}
 
@@ -108,17 +105,12 @@ namespace Xamarin.Linker.Steps {
 			return false;
 		}
 
-		bool IsExportedMethod (MethodDefinition method)
+		static bool IsExportedMethod (MethodDefinition method)
 		{
-			return HasExportAttribute (method);
-		}
-
-		bool HasExportAttribute (ICustomAttributeProvider provider)
-		{
-			if (!provider.HasCustomAttributes)
+			if (!method.HasCustomAttributes)
 				return false;
 
-			foreach (CustomAttribute attribute in provider.CustomAttributes)
+			foreach (CustomAttribute attribute in method.CustomAttributes)
 				if (attribute.Constructor.DeclaringType.Inherits (Namespaces.Foundation, "ExportAttribute"))
 					return true;
 
@@ -127,9 +119,6 @@ namespace Xamarin.Linker.Steps {
 
 		void PreserveIntPtrConstructor (TypeDefinition type)
 		{
-			if (!type.HasMethods)
-				return;
-
 			foreach (MethodDefinition constructor in type.GetConstructors ()) {
 				if (!constructor.HasParameters)
 					continue;
@@ -137,14 +126,9 @@ namespace Xamarin.Linker.Steps {
 				if (constructor.Parameters.Count != 1 || !constructor.Parameters [0].ParameterType.Is ("System", "IntPtr"))
 					continue;
 
-				PreserveMethod (type, constructor);
+				Annotations.AddPreservedMethod (type, constructor);
 				break; // only one .ctor can match this
 			}
-		}
-
-		void PreserveMethod (TypeDefinition type, MethodDefinition method)
-		{
-			Annotations.AddPreservedMethod (type, method);
 		}
 
 		static bool IsProductMethod (MethodDefinition method)
@@ -152,7 +136,7 @@ namespace Xamarin.Linker.Steps {
 			return (method.DeclaringType.Module.Assembly.Name.Name == ProductAssembly);
 		}
 
-		bool IsProductType (TypeDefinition type)
+		static bool IsProductType (TypeDefinition type)
 		{
 			var name = type.Module.Assembly.Name.Name;
 			switch (name) {
