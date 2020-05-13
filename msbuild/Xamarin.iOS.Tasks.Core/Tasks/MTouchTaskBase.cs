@@ -471,9 +471,9 @@ namespace Xamarin.iOS.Tasks
 
 			foreach (var asm in References) {
 				if (IsFrameworkItem(asm)) {
-					args.AddQuotedLine ($"-r={ResolveFrameworkFile (asm.ItemSpec)}");
+					args.AddQuotedLine ($"--reference={ResolveFrameworkFile (asm.ItemSpec)}");
 				} else {
-					args.AddQuotedLine ($"-r={Path.GetFullPath (asm.ItemSpec)}");
+					args.AddQuotedLine ($"--reference={Path.GetFullPath (asm.ItemSpec)}");
 				}
 			}
 

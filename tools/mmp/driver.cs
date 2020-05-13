@@ -156,7 +156,6 @@ namespace Xamarin.Bundler {
 		static int Main2 (string [] args)
 		{
 			var os = new OptionSet () {
-				{ "a|assembly=", "Add an assembly to be processed", v => App.References.Add (v) },
 				{ "r|resource=", "Add a resource to be included", v => resources.Add (v) },
 				{ "o|output=", "Specify the output path", v => output_dir = v },
 				{ "n|name=", "Specify the application name", v => app_name = v },

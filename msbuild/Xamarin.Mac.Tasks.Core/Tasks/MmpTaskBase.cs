@@ -114,7 +114,7 @@ namespace Xamarin.Mac.Tasks
 
 			if (References != null) {
 				foreach (var asm in References)
-					args.AddQuotedLine ("/assembly:" + Path.GetFullPath (asm.ItemSpec));
+					args.AddQuotedLine ("/reference:" + Path.GetFullPath (asm.ItemSpec));
 			}
 
 			if (NativeReferences != null) {

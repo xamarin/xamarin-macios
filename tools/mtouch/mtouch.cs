@@ -766,7 +766,6 @@ namespace Xamarin.Bundler
 				} },
 			{ "dsym:", "Turn on (default for device) or off (default for simulator) .dSYM symbols.", v => app.BuildDSym = ParseBool (v, "dsym") },
 			{ "dlsym:", "Use dlsym to resolve pinvokes in AOT compiled assemblies", v => app.ParseDlsymOptions (v) },
-			{ "r|ref=", "Add an assembly to the resolver", v => app.References.Add (v) },
 			{ "gcc_flags=", "Set flags to be passed along to gcc at link time", v =>
 				{
 					if (!StringUtils.TryParseArguments (v, out var gcc_flags, out var ex))
