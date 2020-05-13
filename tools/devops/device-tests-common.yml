@@ -8,6 +8,7 @@
 # testsLabels: Contains the labels that are going to be passed to the test runner to device which of the tests to be ran, that means
 #              that the caller can configure which tests to call, for example, just the ios 64b device tests.
 # demands: The capabilities that the bots need.
+# disableProviCleanup: Prevents the provisioning cache from being cleared if set
 
 parameters:
 
@@ -33,7 +34,11 @@ parameters:
 
 - name: demands
   type: string 
-  default: 'ios' # default context, since we started dealing with iOS devices. 
+  default: 'ios' # default context, since we started dealing with iOS devices.
+  
+- name: disableProviCleanup
+  type: string
+  default: '' # set to anything to disable clearing out the Provisionator cache cleanup
 
 jobs:
 - job: ${{ parameters.name }}
@@ -202,7 +207,7 @@ jobs:
       rm -rf ~/Library/Logs/VisualStudio
       rm -rf ~/Library/VisualStudio
       rm -rf ~/Library/Preferences/Xamarin/
-      rm -rf ~/Library/Caches/com.xamarin.provisionator
+      if [ -z ${{ parameters.disableProviCleanup }} ]; then rm -rf ~/Library/Caches/com.xamarin.provisionator; fi
     displayName: 'Cleanup'
     continueOnError: true
     condition: always() # no matter what, includes cancellation
