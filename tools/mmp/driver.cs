@@ -199,29 +199,6 @@ namespace Xamarin.Bundler {
 				{ "profile=", "(Obsoleted in favor of --target-framework) Specify the .NET profile to use", v => SetTargetFramework (v), true },
 				{ "force-thread-check", "Keep UI thread checks inside (even release) builds [DEPRECATED, use --optimize=-remove-uithread-checks instead]", v => { App.Optimizations.RemoveUIThreadChecks = false; }, true},
 				{ "disable-thread-check", "Remove UI thread checks inside (even debug) builds [DEPRECATED, use --optimize=remove-uithread-checks instead]", v => { App.Optimizations.RemoveUIThreadChecks = true; }, true},
-				{ "registrar:", "Specify the registrar to use (dynamic [default], static, partial)", v => {
-						switch (v) {
-						case "static":
-							App.Registrar = RegistrarMode.Static;
-							break;
-						case "dynamic":
-							App.Registrar = RegistrarMode.Dynamic;
-							break;
-						case "partial":
-						case "partial-static":
-							App.Registrar = RegistrarMode.PartialStatic;
-							break;
-						case "il":
-							App.Registrar = RegistrarMode.Dynamic;
-							break;
-						case "default":
-							App.Registrar = RegistrarMode.Default;
-							break;
-						default:
-							throw new MonoMacException (20, true, Errors.MX0020, "--registrar", "dynamic, static, partial, or default");
-						}
-					}
-				},
 				{ "sdk=", "Specifies the SDK version to compile against (version, for example \"10.9\")",
 					v => {
 						try {
@@ -263,13 +240,6 @@ namespace Xamarin.Bundler {
 				{ "disable-lldb-attach=", "Disable automatic lldb attach on crash", v => App.DisableLldbAttach = ParseBool (v, "disable-lldb-attach")},
 				{ "disable-omit-fp=", "Disable a JIT optimization where the frame pointer is omitted from the stack. This is optimization is disabled by default for debug builds.", v => App.DisableOmitFramePointer = ParseBool (v, "disable-omit-fp") },
 				{ "machine-config=", "Custom machine.config file to copy into MonoBundle/mono/4.5/machine.config. Pass \"\" to copy in a valid \"empty\" config file.", v => machine_config_path = v },
-				{ "runregistrar:", "Runs the registrar on the input assembly and outputs a corresponding native library.",
-					v => {
-						action = Action.RunRegistrar;
-						App.RegistrarOutputLibrary = v;
-					},
-					true /* this is an internal option */
-				},
 				{ "xamarin-framework-directory=", "The framework directory", v => { framework_dir = v; }, true },
 				{ "xamarin-full-framework", "Used with --target-framework=4.5 to select XM Full Target Framework. Deprecated, use --target-framework=Xamarin.Mac,Version=v4.0,Profile=Full instead.", v => { TargetFramework = TargetFramework.Xamarin_Mac_4_5_Full; }, true },
 				{ "xamarin-system-framework", "Used with --target-framework=4.5 to select XM Full Target Framework. Deprecated, use --target-framework=Xamarin.Mac,Version=v4.0,Profile=System instead.", v => { TargetFramework = TargetFramework.Xamarin_Mac_4_5_System; }, true },

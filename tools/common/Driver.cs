@@ -219,6 +219,53 @@ namespace Xamarin.Bundler {
 					app.EnvironmentVariables.Add (name, value);
 				}
 			);
+			options.Add ("registrar:", "Specify the registrar to use (dynamic, static or default (dynamic in the simulator, static on device))", v => {
+				var split = v.Split ('=');
+				var name = split [0];
+				var value = split.Length > 1 ? split [1] : string.Empty;
+
+				switch (name) {
+				case "static":
+					app.Registrar = RegistrarMode.Static;
+					break;
+				case "dynamic":
+					app.Registrar = RegistrarMode.Dynamic;
+					break;
+				case "default":
+					app.Registrar = RegistrarMode.Default;
+					break;
+#if MMP
+				case "partial":
+				case "partial-static":
+					app.Registrar = RegistrarMode.PartialStatic;
+					break;
+				case "il":
+					app.Registrar = RegistrarMode.Dynamic;
+					break;
+#endif
+				default:
+					throw ErrorHelper.CreateError (20, Errors.MX0020, "--registrar", "static, dynamic or default");
+				}
+
+				switch (value) {
+				case "trace":
+					app.RegistrarOptions = RegistrarOptions.Trace;
+					break;
+				case "default":
+				case "":
+					app.RegistrarOptions = RegistrarOptions.Default;
+					break;
+				default:
+					throw ErrorHelper.CreateError (20, Errors.MX0020, "--registrar", "static, dynamic or default");
+				}
+			});
+			options.Add ("runregistrar:", "Runs the registrar on the input assembly and outputs a corresponding native library.",
+				v => {
+					a = Action.RunRegistrar;
+					app.RegistrarOutputLibrary = v;
+				},
+				true /* this is an internal option */
+			);
 			// Keep the ResponseFileSource option at the end.
 			options.Add (new Mono.Options.ResponseFileSource ());
 
