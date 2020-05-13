@@ -49,7 +49,7 @@ nupkgs/$(MACOS_NUGET).%.nupkg: CURRENT_VERSION_FULL=$(MACOS_NUGET_VERSION_FULL)
 # Create the nuget in a temporary directory (nupkgs/)
 nupkgs/%.nupkg: $(TEMPLATED_FILES)
 	$(Q) rm -f $@
-	$(Q_PACK) $(DOTNET) pack package/$(shell echo $(notdir $@) | sed 's/[.]$(CURRENT_VERSION_FULL).*//')/package.csproj --output "$(dir $@)" $(DOTNET_PACK_VERBOSITY)
+	$(Q_PACK) $(DOTNET5) pack package/$(shell echo $(notdir $@) | sed 's/[.]$(CURRENT_VERSION_FULL).*//')/package.csproj --output "$(dir $@)" $(DOTNET_PACK_VERBOSITY)
 	@# Nuget pack doesn't add the metadata to the filename, but we want that, so rename nuget to contain the full name
 	$(Q) mv "nupkgs/$(shell echo $(notdir $@) | sed -e 's/[+]$(NUGET_BUILD_METADATA)//')" "$@"
 	@# Add the nupkg to our local feed
