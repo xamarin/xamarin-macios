@@ -48,6 +48,9 @@ namespace Xamarin.Bundler {
 		public string AppDirectory = ".";
 		public bool DeadStrip = true;
 		public bool EnableDebug;
+		// The list of assemblies that we do generate debugging info for.
+		public bool DebugAll;
+		public List<string> DebugAssemblies = new List<string> ();
 		internal RuntimeOptions RuntimeOptions;
 		public Optimizations Optimizations = new Optimizations ();
 		public RegistrarMode Registrar = RegistrarMode.Default;

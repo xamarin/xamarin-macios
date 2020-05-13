@@ -74,10 +74,6 @@ namespace Xamarin.Bundler {
 		public bool NoDevCodeShare;
 		public bool IsCodeShared { get; private set; }
 
-		// The list of assemblies that we do generate debugging info for.
-		public bool DebugAll;
-		public List<string> DebugAssemblies = new List<string> ();
-
 		public string Compiler = string.Empty;
 		public string CompilerPath;
 

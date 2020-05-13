@@ -57,6 +57,16 @@ namespace Xamarin.Bundler {
 			options.Add ("version", "Output version information and exit.", v => a = Action.Version);
 			options.Add ("v|verbose", "Specify how verbose the output should be. This can be passed multiple times to increase the verbosity.", v => Verbosity++);
 			options.Add ("q|quiet", "Specify how quiet the output should be. This can be passed multiple times to increase the silence.", v => Verbosity--);
+			options.Add ("debug:", "Build a debug app. If AOT-compiling, will also generate native debug code for the specified assembly (set to 'all' to generate debug code for all assemblies, the default is to generate debug code for user assemblies only)", v => {
+				app.EnableDebug = true;
+				if (v != null) {
+					if (v == "all") {
+						app.DebugAll = true;
+						return;
+					}
+					app.DebugAssemblies.Add (Path.GetFileName (v));
+				}
+			});
 			options.Add ("sdkroot=", "Specify the location of Apple SDKs, default to 'xcode-select' value.", v => sdk_root = v);
 			options.Add ("sdk=", "Specifies the SDK version to compile against (version, for example \"10.9\")", v => {
 				try {

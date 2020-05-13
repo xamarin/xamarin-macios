@@ -160,7 +160,6 @@ namespace Xamarin.Bundler {
 				{ "r|resource=", "Add a resource to be included", v => resources.Add (v) },
 				{ "o|output=", "Specify the output path", v => output_dir = v },
 				{ "n|name=", "Specify the application name", v => app_name = v },
-				{ "d|debug", "Build a debug bundle", v => App.EnableDebug = true },
 				{ "s|sgen:", "Use the SGen Garbage Collector",
 					v => {
 						if (!ParseBool (v, "sgen")) 
