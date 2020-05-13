@@ -5,7 +5,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 
-#if XAMCORE_2_0
 using CoreFoundation;
 using MapKit;
 #if !__TVOS__ && !__WATCHOS__ && !MONOMAC
@@ -36,35 +35,14 @@ using CoreLocation;
 using Contacts;
 #endif
 using WebKit;
-#else
-using MonoTouch;
-using MonoTouch.AddressBook;
-using MonoTouch.AddressBookUI;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.MapKit;
-using MonoTouch.CoreAnimation;
-using MonoTouch.CoreGraphics;
-using MonoTouch.CoreLocation;
-using MonoTouch.UIKit;
-using PlatformException=MonoTouch.RuntimeException;
-using NativeException=MonoTouch.Foundation.MonoTouchException;
-#endif
 using OpenTK;
 using NUnit.Framework;
 using Bindings.Test;
 
-#if XAMCORE_2_0
 using RectangleF = CoreGraphics.CGRect;
 using SizeF = CoreGraphics.CGSize;
 using PointF = CoreGraphics.CGPoint;
 using CategoryAttribute = ObjCRuntime.CategoryAttribute;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-using CategoryAttribute=MonoTouch.ObjCRuntime.CategoryAttribute;
-#endif
 
 using XamarinTests.ObjCRuntime;
 
@@ -73,13 +51,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class RegistrarTest {
-#if !XAMCORE_2_0
-		// This should throw an exception at build time (device) or at registration time (startup on simulator).
-		// Putting it here for now so I don't forget.
-		[Export ()]
-		public bool? IsRegistered  { get; set; }
-#endif
-
 		public static Registrars CurrentRegistrar {
 			get {
 				return RegistrarSharedTest.CurrentRegistrar;
@@ -1417,7 +1388,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 #if !__TVOS__ // No MapKit in TVOS
 #if !__WATCHOS__ // WatchOS has MapKit, but not MKMapView
-#if XAMCORE_2_0
 		[Test]
 		public void TestNativeObjectArray ()
 		{
@@ -1463,7 +1433,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				this.Annotations = annotations;
 			}
 		}
-#endif
 #endif // !__WATCHOS__
 #endif // !__TVOS__
 
@@ -2250,7 +2219,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 #endif // !__TVOS__
 
 #if !__TVOS__ // No Contacts framework in TVOS
-#if XAMCORE_2_0 // The Contacts framework is Unified only
 		[Test]
 		public void GenericAPI ()
 		{
@@ -2294,7 +2262,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				}
 			}
 		}
-#endif // XAMCORE_2_0
 #endif // !__TVOS__
 
 		[Test]
@@ -2468,17 +2435,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			{
 			}
 		}
-
-#if !XAMCORE_2_0
-		class Bug42454 : NSUrlProtocol
-		{
-			[Export ("initWithRequest:cachedResponse:client:")]
-			public Bug42454 (NSUrlRequest request, NSCachedUrlResponse response, NSUrlProtocolClient client)
-			{
-				throw new NotImplementedException ();
-			}
-		}
-#endif
 
 #if debug_code
 		static void DumpClass (Type type)
