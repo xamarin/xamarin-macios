@@ -1730,14 +1730,6 @@
         <note>
 		</note>
       </trans-unit>
-      <trans-unit id="MT3007">
-        <source>Debug info files (*.mdb / *.pdb) will not be loaded when llvm is enabled.
-		</source>
-        <target state="new">Debug info files (*.mdb / *.pdb) will not be loaded when llvm is enabled.
-		</target>
-        <note>
-		</note>
-      </trans-unit>
       <trans-unit id="MT3008">
         <source>Bitcode support requires the use of LLVM (--abi=arm64+llvm etc.)
 		</source>
@@ -2998,6 +2990,14 @@
         <source>Could not {0} the assembly '{1}'
 		</source>
         <target state="new">Could not {0} the assembly '{1}'
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX3007">
+        <source>Debug info files (*.mdb / *.pdb) will not be loaded when llvm is enabled.
+		</source>
+        <target state="new">Debug info files (*.mdb / *.pdb) will not be loaded when llvm is enabled.
 		</target>
         <note>
 		</note>
