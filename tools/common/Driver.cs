@@ -19,6 +19,8 @@ using Xamarin.MacDev;
 using Xamarin.Utils;
 using ObjCRuntime;
 
+using Mono.Linker;
+
 #if MTOUCH
 using ProductException = Xamarin.Bundler.MonoTouchException;
 #else
@@ -69,6 +71,7 @@ namespace Xamarin.Bundler {
 #endif
 			options.Add ("linksdkonly", "Link only the SDK assemblies", v => app.LinkMode = LinkMode.SDKOnly);
 			options.Add ("linkskip=", "Skip linking of the specified assembly", v => app.LinkSkipped.Add (v));
+			options.Add ("i18n=", "List of i18n assemblies to copy to the output directory, separated by commas (none, all, cjk, mideast, other, rare and/or west)", v => app.ParseI18nAssemblies (v));
 			options.Add ("warnaserror:", "An optional comma-separated list of warning codes that should be reported as errors (if no warnings are specified all warnings are reported as errors).", v =>
 			{
 				try {

@@ -36,25 +36,6 @@ namespace MonoMac.Tuner {
 		public Target Target { get; set; }
 		public Application Application { get { return Target.App; } }
 		public List<string> WarnOnTypeRef { get; set; }
-
-		public static I18nAssemblies ParseI18nAssemblies (string i18n)
-		{
-			var assemblies = I18nAssemblies.None;
-
-			foreach (var part in i18n.Split (',')) {
-				var assembly = part.Trim ();
-				if (string.IsNullOrEmpty (assembly))
-					continue;
-
-				try {
-					assemblies |= (I18nAssemblies) Enum.Parse (typeof (I18nAssemblies), assembly, true);
-				} catch {
-					throw new FormatException ("Unknown value for i18n: " + assembly);
-				}
-			}
-
-			return assemblies;
-		}
 	}
 
 	public class MonoMacLinkContext : DerivedLinkContext {

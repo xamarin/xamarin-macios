@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 
 using Mono.Cecil;
 using Mono.Cecil.Cil;
+using Mono.Linker;
 
 using Xamarin.Linker;
 using Xamarin.Utils;
@@ -63,7 +64,7 @@ namespace Xamarin.Bundler {
 		public LinkMode LinkMode = LinkMode.All;
 		public List<string> LinkSkipped = new List<string> ();
 		public List<string> Definitions = new List<string> ();
-		public Mono.Linker.I18nAssemblies I18n;
+		public I18nAssemblies I18n;
 		public List<string> WarnOnTypeRef = new List<string> ();
 
 		public bool? EnableCoopGC;
@@ -137,6 +138,25 @@ namespace Xamarin.Bundler {
 			get {
 				return Optimizations.RemoveDynamicRegistrar != true;
 			}
+		}
+
+		public void ParseI18nAssemblies (string i18n)
+		{
+			var assemblies = I18nAssemblies.None;
+
+			foreach (var part in i18n.Split (',')) {
+				var assembly = part.Trim ();
+				if (string.IsNullOrEmpty (assembly))
+					continue;
+
+				try {
+					assemblies |= (I18nAssemblies) Enum.Parse (typeof (I18nAssemblies), assembly, true);
+				} catch {
+					throw new FormatException ("Unknown value for i18n: " + assembly);
+				}
+			}
+
+			I18n = assemblies;
 		}
 
 		// This is just a name for this app to show in log/error messages, etc.
