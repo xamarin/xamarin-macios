@@ -152,12 +152,13 @@ steps:
   continueOnError: true
   condition: succeededOrFailed()
 
-# if there's a test failure || test summary not generated || provisioning failed:
-# - update GH commit status
-# - add commit comment
-# grab env variables to add test specific text
-# pwsh for PowerShell Core (Win + Mac)
-# powershell is for Win only PowerShell
+###
+### If there's a test failure || test summary not generated || provisioning failed:
+### - update GH commit status
+### - add commit comment
+###
+### Note: pwsh for PowerShell Core (Win + Mac), powershell is for Win only PowerShell
+###
 - pwsh: ./xamarin-macios/tools/devops/templates/publish_failure.ps1
   env:
     BUILD_REVISION: $(BUILD_REVISION)
