@@ -71,6 +71,8 @@ namespace Xamarin.Bundler {
 		public bool EnableProfiling;
 		public bool? DebugTrack;
 
+		public Dictionary<string, string> EnvironmentVariables = new Dictionary<string, string> ();
+
 		public MarshalObjectiveCExceptionMode MarshalObjectiveCExceptions;
 		public MarshalManagedExceptionMode MarshalManagedExceptions;
 

@@ -859,16 +859,6 @@ namespace Xamarin.Bundler
 			{ "launch-for-background-fetch", "Launch due to a background fetch [DEPRECATED]", v => { }, true},
 			{ "debugsim=", "Debug the specified MonoTouch.app in the simulator [DEPRECATED]", v => { SetAction (Action.DebugSim); }, true },
 			{ "argument=", "Launch the app with this command line argument. This must be specified multiple times for multiple arguments [DEPRECATED]", v => { }, true },
-			{ "setenv=", "Set the environment variable in the application on startup", v =>
-				{
-					int eq = v.IndexOf ('=');
-					if (eq <= 0)
-						throw new MonoTouchException (2, true, Errors.MT0002, v);
-					string name = v.Substring (0, eq);
-					string value = v.Substring (eq + 1);
-					app.EnvironmentVariables.Add (name, value);
-				}
-			},
 			{ "sgen:", "Enable the SGen garbage collector",
 					v => {
 						if (!ParseBool (v, "sgen")) 

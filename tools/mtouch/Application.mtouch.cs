@@ -88,8 +88,6 @@ namespace Xamarin.Bundler {
 		public bool UseInterpreter;
 		public List<string> InterpretedAssemblies = new List<string> ();
 
-		public Dictionary<string, string> EnvironmentVariables = new Dictionary<string, string> ();
-
 		//
 		// Linker config
 		//
