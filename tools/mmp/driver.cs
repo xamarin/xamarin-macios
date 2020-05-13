@@ -93,7 +93,6 @@ namespace Xamarin.Bundler {
 
 		static string icon;
 		static string certificate_name;
-		public static bool Force;
 
 		static bool is_extension, is_xpc_service;
 		static bool frameworks_copied_to_bundle_dir;    // Have we copied any frameworks to Foo.app/Contents/Frameworks?
@@ -157,7 +156,6 @@ namespace Xamarin.Bundler {
 		static int Main2 (string [] args)
 		{
 			var os = new OptionSet () {
-				{ "f|force", "Forces the recompilation of code, regardless of timestamps", v=> Force = true },
 				{ "cache=", "Specify the directory where temporary build files will be cached", v => App.Cache.Location = v },
 				{ "a|assembly=", "Add an assembly to be processed", v => App.References.Add (v) },
 				{ "r|resource=", "Add a resource to be included", v => resources.Add (v) },

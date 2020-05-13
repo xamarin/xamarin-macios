@@ -124,7 +124,6 @@ namespace Xamarin.Bundler
 
 		//
 		// Output generation
-		static bool force = false;
 		static string dotfile;
 		static string cross_prefix = Environment.GetEnvironmentVariable ("MONO_CROSS_PREFIX");
 		static string extra_args = Environment.GetEnvironmentVariable ("MTOUCH_ENV_OPTIONS");
@@ -137,11 +136,6 @@ namespace Xamarin.Bundler
 
 		public static bool IsUnified {
 			get { return true; }
-		}
-
-		public static bool Force {
-			get { return force; }
-			set { force = value; }
 		}
 
 		public static string GetArchDirectory (Application app, bool is64bit)
@@ -737,7 +731,6 @@ namespace Xamarin.Bundler
 			};
 
 			var os = new OptionSet () {
-			{ "f|force", "Forces the recompilation of code, regardless of timestamps", v=>force = true },
 			{ "dot:", "Generate a dot file to visualize the build tree.", v => dotfile = v ?? string.Empty },
 			{ "cache=", "Specify the directory where object files will be cached", v => app.Cache.Location = v },
 			{ "aot=", "Arguments to the static compiler",

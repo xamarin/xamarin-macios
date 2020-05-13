@@ -27,6 +27,9 @@ using ProductException=Xamarin.Bundler.MonoMacException;
 
 namespace Xamarin.Bundler {
 	public partial class Driver {
+
+		public static bool Force { get; set; }
+
 		public static int Main (string [] args)
 		{
 			try {
@@ -47,6 +50,7 @@ namespace Xamarin.Bundler {
 			Action a = Action.None; // Need a temporary local variable, since anonymous functions can't write directly to ref/out arguments.
 
 			options.Add ("h|?|help", "Displays the help", v => a = Action.Help);
+			options.Add ("f|force", "Forces the recompilation of code, regardless of timestamps", v => Force = true);
 			options.Add ("version", "Output version information and exit.", v => a = Action.Version);
 			options.Add ("v|verbose", "Specify how verbose the output should be. This can be passed multiple times to increase the verbosity.", v => Verbosity++);
 			options.Add ("q|quiet", "Specify how quiet the output should be. This can be passed multiple times to increase the silence.", v => Verbosity--);
