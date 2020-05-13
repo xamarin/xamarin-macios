@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.props" />
+  <Import Project="Xamarin.Shared.Sdk.Versions.props" />
+
+  <!-- Default item includes (globs and implicit references) -->
+  <Import Project="Microsoft.$(_PlatformName).Sdk.DefaultItems.props" />
+</Project>

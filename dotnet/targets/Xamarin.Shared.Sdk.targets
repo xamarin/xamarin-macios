@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<Import Sdk="Microsoft.NET.Sdk" Project="Sdk.targets" />
+
+	<!-- Default item includes (globs and implicit references) -->
+	<Import Project="Xamarin.Shared.Sdk.DefaultItems.targets" />
+	<Import Project="Xamarin.Shared.Sdk.TargetFrameworkInference.targets" />
+</Project>

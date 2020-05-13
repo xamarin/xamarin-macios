@@ -25,6 +25,8 @@ Q_LIPO= $(if $(V),,@echo "LIPO     $(@F)";)
 QT_LIPO= $(if $(V),,@echo "LIPO    $$(@F)";)
 Q_MDB=  $(if $(V),,@echo "MDB      $(@F)";)
 Q_NUNIT= $(if $(V),,@echo "NUNIT     $(@F)";)
+Q_PACK     =$(if $(V),,@echo "PACK      $(@F)";)
+Q_NUGET_ADD=$(if $(V),,@echo "NUGET ADD $(@F)";)
 
 Q_SN=   $(if $(V),,@echo "SN       $(@F)";)
 Q_XBUILD=$(if $(V),,@echo "XBUILD  $(@F)";)
@@ -66,13 +68,17 @@ XBUILD_VERBOSITY_QUIET=/nologo /verbosity:quiet
 MMP_VERBOSITY=-q
 MTOUCH_VERBOSITY=-q
 MDTOOL_VERBOSITY=
+DOTNET_PACK_VERBOSITY=--verbosity:quiet --nologo
+NUGET_VERBOSITY=-verbosity quiet
 else
-# wrench build
+# CI build
 XBUILD_VERBOSITY=/nologo /verbosity:normal
 XBUILD_VERBOSITY_QUIET=/nologo /verbosity:quiet
 MMP_VERBOSITY=-vvvv
 MTOUCH_VERBOSITY=-vvvv
 MDTOOL_VERBOSITY=-v -v -v -v
+DOTNET_PACK_VERBOSITY=
+NUGET_VERBOSITY=
 endif
 else
 # verbose build
@@ -81,6 +87,8 @@ XBUILD_VERBOSITY_QUIET=/verbosity:diagnostic
 MMP_VERBOSITY=-vvvv
 MTOUCH_VERBOSITY=-vvvv
 MDTOOL_VERBOSITY=-v -v -v -v
+DOTNET_PACK_VERBOSITY=--verbosity:detailed
+NUGET_VERBOSITY=-verbosity detailed
 endif
 MSBUILD_VERBOSITY=$(XBUILD_VERBOSITY)
 MSBUILD_VERBOSITY_QUIET=$(XBUILD_VERBOSITY_QUIET)

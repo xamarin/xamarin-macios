@@ -521,6 +521,18 @@ timestamps {
                             }
                         }
 
+                        stage ('Nugetizing') {
+                            currentStage = "${STAGE_NAME}"
+                            echo ("Building on ${env.NODE_NAME}")
+                            def skipNugets = getLabels ().contains ("skip-nugets")
+                            if (!skipNugets) {
+                                sh ("${workspace}/xamarin-macios/jenkins/build-nugets.sh")
+                                sh (script: "ls -la ${workspace}/package", returnStatus: true /* don't throw exceptions if something goes wrong */)
+                            } else {
+                                echo ("Nugetizing skipped because the label 'skip-nugets' was found")
+                            }
+                        }
+
                         stage ('Signing') {
                             def entitlements = "${workspace}/xamarin-macios/mac-entitlements.plist"
                             currentStage = "${STAGE_NAME}"
@@ -698,8 +710,34 @@ timestamps {
                                 utils.reportGitHubStatus (gitHash, "msbuild.zip", "${msbuildZipUrl}", 'SUCCESS', "${msbuildZipFilename}")
                             }
 
+                            def nupkgs = findFiles (glob: "package/*.nupkg")
+                            for (def i = 0; i < nupkgs.size (); i++) {
+                                def nupkg = nupkgs [i]
+                                def nupkg_name = nupkg.name
+                                def nupkgUrl = "${packagePrefix}/${nupkg_name}"
+                                utils.reportGitHubStatus (gitHash, nupkg_name, nupkgUrl, "SUCCESS", nupkg_name)
+                                packagesMessage += "* [${nupkg_name}](${nupkgUrl})\n"
+                            }
+
                             if (packagesMessage != "")
                                 appendFileComment ("✅ Packages: \n${packagesMessage}\n")
+                        }
+
+                        stage ('Publish Nugets') {
+                            currentStage = "${STAGE_NAME}"
+                            withCredentials ([string (credentialsId: 'azdo-package-feed-token', variable: 'AZDO_PACKAGE_FEED_TOKEN')]) {
+                                def nugetResult = sh (script: "${workspace}/xamarin-macios/jenkins/publish-to-nuget.sh --apikey=${AZDO_PACKAGE_FEED_TOKEN} --source=https://pkgs.dev.azure.com/azure-public/vside/_packaging/xamarin-impl/nuget/v3/index.json package/*.nupkg", returnStatus: true)
+                                if (nugetResult != 0) {
+                                    failedStages.add (currentStage)
+                                    manualException = true
+                                    def msg = "Failed to publish NuGet packages. Please review log for details."
+                                    echo ("⚠️ ${msg} ⚠️")
+                                    manager.addWarningBadge (msg)
+                                    appendFileComment ("⚠️ [${msg}](${env.RUN_DISPLAY_URL}) 🔥\n")
+                                } else {
+                                    echo ("${currentStage} succeeded")
+                                }
+                            }
                         }
 
                         dir ('xamarin-macios') {
@@ -820,7 +858,7 @@ timestamps {
                                         // The trims/splits/toIntegers at the end are to select the minor part of the macOS version number,
                                         // then we just loop from the minor part of the min version to the minor part of the current version.
                                         def firstOS = sh (returnStdout: true, script: "grep ^MIN_OSX_SDK_VERSION= '${workspace}/xamarin-macios/Make.config' | sed 's/.*=//'").trim ().split ("\\.")[1].toInteger ()
-                                        def lastOS = sh (returnStdout: true, script: "grep ^OSX_SDK_VERSION= '${workspace}/xamarin-macios/Make.config' | sed 's/.*=//'").trim ().split ("\\.")[1].toInteger ()
+                                        def lastOS = sh (returnStdout: true, script: "grep ^MACOS_NUGET_VERSION= '${workspace}/xamarin-macios/Make.versions' | sed -e 's/.*=//' -e 's/.[0-9]*\$//'").trim ().split ("\\.")[1].toInteger ()
                                         def macOSes = []
                                         def excludedOSes = []
                                         for (os = firstOS; os <= lastOS; os++)
