@@ -13,6 +13,7 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\product.snk</AssemblyOriginatorKeyFile>
     <IntermediateOutputPath>build\IDE\obj\tvOS\$(Configuration)</IntermediateOutputPath>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
