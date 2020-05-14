@@ -16,8 +16,8 @@ $json_payload = @"
 {
     "state" : "failure",
     "target_url" : "$target_url",
-    "description" : "$Env:SYSTEM_STAGEDISPLAYNAME",
-    "context" : "VSTS: $Env:SYSTEM_JOBNAME"
+    "description" : "$Env:AGENT_JOBSTATUS",
+    "context" : "VSTS: $Env:SYSTEM_JOBNAME $Env:SYSTEM_STAGEDISPLAYNAME"
 }
 "@
 
