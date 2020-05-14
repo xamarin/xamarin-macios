@@ -1071,6 +1071,7 @@ function check_dotnet ()
 			TAR_ARGS=xf
 		fi
 		tar $TAR_ARGS "$DOWNLOADED_FILE" -C "$INSTALL_DIR-tmp"
+		xattr -s -d -r com.apple.quarantine "$INSTALL_DIR-tmp"
 		mv "$INSTALL_DIR-tmp" "$INSTALL_DIR"
 	else
 		$SUDO installer -pkg "$DOWNLOADED_FILE" -target /
