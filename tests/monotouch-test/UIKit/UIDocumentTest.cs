@@ -13,17 +13,10 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Threading;
-#if XAMCORE_2_0
 using Foundation;
 using UIKit;
 using ObjCRuntime;
 using MonoTouchException=ObjCRuntime.RuntimeException;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-using MonoTouchException=MonoTouch.RuntimeException;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.UIKit {

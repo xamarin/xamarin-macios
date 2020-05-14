@@ -89,9 +89,9 @@ static class C {
 		new BindAsData { Managed = "CLLocationCoordinate2D", Native = "CLLocationCoordinate2D", ManagedNewExpression = "new CLLocationCoordinate2D (11, 12)", Map = ".CoordinateValue", MapFrom = "FromMKCoordinate", MinMacOSVersion = new Version (10, 9) },
 		new BindAsData { Managed = "SCNVector3", Native = "SCNVector3", ManagedNewExpression = "new SCNVector3 (13, 14, 15)", Map = ".Vector3Value", MapFrom = "FromVector", MinMacOSVersion = new Version (10, 8), MinXcodeVersion = new Version (8, 0) },
 		new BindAsData { Managed = "SCNVector4", Native = "SCNVector4", ManagedNewExpression = "new SCNVector4 (16, 17, 18, 19)", Map = ".Vector4Value", MapFrom = "FromVector", MinMacOSVersion = new Version (10, 8), MinXcodeVersion = new Version (8, 0) },
-		new BindAsData { Managed = "CGPoint", Native = "CGPoint", ManagedCondition = "XAMCORE_2_0 && !__MACOS__", ManagedNewExpression = "new CGPoint (19, 20)", Map = ".CGPointValue", MapFrom = "FromCGPoint" },
-		new BindAsData { Managed = "CGSize", Native = "CGSize", ManagedCondition = "XAMCORE_2_0 && !__MACOS__", ManagedNewExpression = "new CGSize (21, 22)", Map = ".CGSizeValue", MapFrom = "FromCGSize" },
-		new BindAsData { Managed = "CGRect", Native = "CGRect", ManagedCondition = "XAMCORE_2_0 && !__MACOS__", ManagedNewExpression = "new CGRect (23, 24, 25, 26)", Map = ".CGRectValue", MapFrom = "FromCGRect" },
+		new BindAsData { Managed = "CGPoint", Native = "CGPoint", ManagedCondition = "!__MACOS__", ManagedNewExpression = "new CGPoint (19, 20)", Map = ".CGPointValue", MapFrom = "FromCGPoint" },
+		new BindAsData { Managed = "CGSize", Native = "CGSize", ManagedCondition = "!__MACOS__", ManagedNewExpression = "new CGSize (21, 22)", Map = ".CGSizeValue", MapFrom = "FromCGSize" },
+		new BindAsData { Managed = "CGRect", Native = "CGRect", ManagedCondition = "!__MACOS__", ManagedNewExpression = "new CGRect (23, 24, 25, 26)", Map = ".CGRectValue", MapFrom = "FromCGRect" },
 		new BindAsData { Managed = "UIEdgeInsets", Native = "UIEdgeInsets", ManagedCondition = "HAVE_UIKIT", ManagedNewExpression = "new UIEdgeInsets (27, 28, 29, 30)", Map = ".UIEdgeInsetsValue", MapFrom = "FromUIEdgeInsets" },
 		new BindAsData { Managed = "UIOffset", Native = "UIOffset", ManagedCondition = "HAVE_UIKIT", ManagedNewExpression = "new UIOffset (31, 32)", Map = ".UIOffsetValue", MapFrom = "FromUIOffset" },
 		new BindAsData { Managed = "MKCoordinateSpan", Native = "MKCoordinateSpan", ManagedCondition = "HAVE_MAPKIT", ManagedNewExpression = "new MKCoordinateSpan (33, 34)", Map = ".CoordinateSpanValue", MapFrom = "FromMKCoordinateSpan", MinMacOSVersion = new Version (10, 9) },
@@ -327,10 +327,6 @@ static class C {
 	static void WriteFrameworkDefines (StringBuilder w)
 	{
 		w.AppendLine (@"
-#if __UNIFIED__
-#define XAMCORE_2_0
-#endif
-
 #if __IOS__ || __MACOS__ || __TVOS__
 #define HAVE_COREANIMATION
 #endif
@@ -343,9 +339,8 @@ static class C {
 #define HAVE_UIKIT
 #endif
 
-#if XAMCORE_2_0
 #define HAVE_MAPKIT
-#endif");
+");
 		
 	}
 
@@ -356,7 +351,6 @@ static class C {
 		w.AppendLine (@"
 using System;
 
-#if __UNIFIED__
 using AVFoundation;
 #if HAVE_COREANIMATION
 using CoreAnimation;
@@ -375,14 +369,6 @@ using SceneKit;
 using Security;
 #if HAVE_UIKIT
 using UIKit;
-#endif
-#else
-#if !__WATCHOS__
-using System.Drawing;
-#endif
-using MonoTouch.ObjCRuntime;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
 #endif
 
 namespace Bindings.Test {
@@ -739,10 +725,6 @@ namespace Bindings.Test {
 		w.AppendLine (@"using System;
 using System.Runtime.InteropServices;
 
-#if !__UNIFIED__
-using nint=System.Int32;
-#endif
-
 namespace Bindings.Test
 {
 ");
@@ -789,7 +771,6 @@ namespace Bindings.Test
 		WriteFrameworkDefines (w);
 		w.AppendLine (@"
 using System;
-#if XAMCORE_2_0
 using AVFoundation;
 #if HAVE_COREANIMATION
 using CoreAnimation;
@@ -814,13 +795,6 @@ using MonoTouchException=ObjCRuntime.RuntimeException;
 using NativeException=Foundation.ObjCException;
 #else
 using NativeException=Foundation.MonoTouchException;
-#endif
-#else
-using MonoTouch;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouchException=MonoTouch.RuntimeException;
-using NativeException=MonoTouch.Foundation.MonoTouchException;
 #endif
 using NUnit.Framework;
 using Bindings.Test;
@@ -1448,14 +1422,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 using System;
 using System.Runtime.InteropServices;
 
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 using NUnit.Framework;
 using Bindings.Test;
 
