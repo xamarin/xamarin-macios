@@ -54,6 +54,8 @@ steps:
     if grep ignore-python3 xamarin-macios/system-dependencies.sh 2>&1 > /dev/null; then
         CONFIGURE_ARGS="$CONFIGURE_ARGS --ignore-python3"
     fi
+
+    $EC=0
     ./xamarin-macios/system-dependencies.sh $CONFIGURE_ARGS || EC=$?
     if [ $EC -eq 0 ]; then
       echo "##vso[task.setvariable variable=ProvisioningProfiles]success"
