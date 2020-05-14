@@ -1,6 +1,7 @@
 TOP=../..
 
 include $(TOP)/Make.config
+include $(TOP)/mk/rules.mk
 
 export MD_MTOUCH_SDK_ROOT=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)
 export TargetFrameworkFallbackSearchPaths=$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks
