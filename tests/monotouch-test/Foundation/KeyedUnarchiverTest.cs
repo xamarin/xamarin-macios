@@ -11,7 +11,6 @@ using System;
 using System.Net;
 using System.IO;
 
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
 #if MONOMAC
@@ -20,12 +19,6 @@ using PlatformException=Foundation.ObjCException;
 #else
 using UIKit;
 using PlatformException=Foundation.MonoTouchException;
-#endif
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-using PlatformException=MonoTouch.Foundation.MonoTouchException;
 #endif
 
 using NUnit.Framework;
