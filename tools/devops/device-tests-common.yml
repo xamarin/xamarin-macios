@@ -88,7 +88,7 @@ jobs:
   - bash: make -C $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/ device-tests-provisioning.csx
     displayName: 'Generate Provisionator csx file'
 
-  - bash: rm "/Users/xamarinqa/azdo/_work/_tool/provisionator"
+  - bash: rm -rf "/Users/xamarinqa/azdo/_work/_tool/provisionator"
     displayName: 'Nuke Provisionator Tool Cache'
     condition: ${{ parameters.clearProviCache }}
 
