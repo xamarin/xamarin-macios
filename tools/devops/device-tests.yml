@@ -1,6 +1,15 @@
 # iOS device pipeline, this file sets the different parameters required by the device-tests-common-yml, which contains all the steps and the interesting logic.
 
 # lame! cannot have the resources in the template.. :/
+parameters:
+- name: disableProviCleanup
+  type: boolean
+  default: false
+
+- name: clearProviCache
+  type: boolean
+  default: false
+
 resources:
   repositories:
   - repository: maccore
@@ -21,3 +30,5 @@ jobs:
     demands: 'ios'
     statusContext: 'iOS-DDFun'
     testsLabels: '--label=run-ios-64-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
+    disableProviCleanup: ${{ parameters.disableProviCleanup }}
+    clearProviCache: ${{ parameters.clearProviCache }}
