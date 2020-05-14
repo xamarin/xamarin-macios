@@ -324,14 +324,14 @@ namespace Xamarin.Bundler
 						foreach (var mr in assembly.UnresolvedModuleReferences) {
 							// TODO: add more diagnose information on the warnings
 							var name = Path.GetFileNameWithoutExtension (mr.Name);
-							linker_errors.Add (new MonoTouchException (5215, false, Errors.MT5215, name));
+							linker_errors.Add (new ProductException (5215, false, Errors.MT5215, name));
 						}
 					}
 					// mtouch does not validate extra parameters given to GCC when linking (--gcc_flags)
 					if (Target.App.UserGccFlags?.Count > 0)
-						linker_errors.Add (new MonoTouchException (5201, true, Errors.MT5201, StringUtils.FormatArguments (Target.App.UserGccFlags)));
+						linker_errors.Add (new ProductException (5201, true, Errors.MT5201, StringUtils.FormatArguments (Target.App.UserGccFlags)));
 					else
-						linker_errors.Add (new MonoTouchException (5202, true, Errors.MT5202));
+						linker_errors.Add (new ProductException (5202, true, Errors.MT5202));
 
 					if (code == 255) {
 						// check command length

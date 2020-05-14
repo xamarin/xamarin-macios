@@ -13,10 +13,8 @@ using Xamarin.Utils;
 using ObjCRuntime;
 
 #if MONOTOUCH
-using PlatformException = Xamarin.Bundler.MonoTouchException;
 using PlatformResolver = MonoTouch.Tuner.MonoTouchResolver;
 #else
-using PlatformException = Xamarin.Bundler.MonoMacException;
 using PlatformResolver = Xamarin.Bundler.MonoMacResolver;
 #endif
 
@@ -244,7 +242,7 @@ namespace Xamarin.Bundler {
 			string max_s = null;
 
 			if (sources.Count () == 0 || targets.Count () == 0)
-				ErrorHelper.Error (1013, Errors.MT1013);
+				throw ErrorHelper.CreateError (1013, Errors.MT1013);
 
 			foreach (var s in sources) {
 				var sfi = new FileInfo (s);
@@ -342,9 +340,9 @@ namespace Xamarin.Bundler {
 
 			if (DeploymentTarget != null) {
 				if (DeploymentTarget < Xamarin.SdkVersions.GetMinVersion (Platform))
-					throw new PlatformException (73, true, Errors.MT0073, Constants.Version, DeploymentTarget, Xamarin.SdkVersions.GetMinVersion (Platform), PlatformName, ProductName);
+					throw new ProductException (73, true, Errors.MT0073, Constants.Version, DeploymentTarget, Xamarin.SdkVersions.GetMinVersion (Platform), PlatformName, ProductName);
 				if (DeploymentTarget > Xamarin.SdkVersions.GetVersion (Platform))
-					throw new PlatformException (74, true, Errors.MX0074, Constants.Version, DeploymentTarget, Xamarin.SdkVersions.GetVersion (Platform), PlatformName, ProductName);
+					throw new ProductException (74, true, Errors.MX0074, Constants.Version, DeploymentTarget, Xamarin.SdkVersions.GetVersion (Platform), PlatformName, ProductName);
 			}
 
 			if (Platform == ApplePlatform.WatchOS && EnableCoopGC.HasValue && !EnableCoopGC.Value)
@@ -463,7 +461,7 @@ namespace Xamarin.Bundler {
 		{
 			// The static registrar.
 			if (Registrar != RegistrarMode.Static)
-				throw new PlatformException (67, Errors.MT0067, Registrar); // this is only called during our own build
+				throw new ProductException (67, Errors.MT0067, Registrar); // this is only called during our own build
 
 			if (RootAssemblies.Count < 1)
 				throw ErrorHelper.CreateError (130, Errors.MX0130);
@@ -767,5 +765,12 @@ namespace Xamarin.Bundler {
 			}
 		}
 
+		// This is to load the symbols for all assemblies, so that we can give better error messages
+		// (with file name / line number information).
+		public void LoadSymbols ()
+		{
+			foreach (var t in Targets)
+				t.LoadSymbols ();
+		}
 	}
 }

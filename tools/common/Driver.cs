@@ -19,17 +19,16 @@ using Xamarin.MacDev;
 using Xamarin.Utils;
 using ObjCRuntime;
 
-#if MTOUCH
-using ProductException = Xamarin.Bundler.MonoTouchException;
-#else
-using ProductException=Xamarin.Bundler.MonoMacException;
-#endif
-
 namespace Xamarin.Bundler {
 	public partial class Driver {
 		public static int Main (string [] args)
 		{
 			try {
+#if MMP
+				ErrorHelper.Platform = ApplePlatform.MacOSX;
+#else
+				ErrorHelper.Platform = ApplePlatform.iOS;
+#endif
 				Console.OutputEncoding = new UTF8Encoding (false, false);
 				SetCurrentLanguage ();
 				return Main2 (args);
@@ -68,7 +67,7 @@ namespace Xamarin.Bundler {
 						ErrorHelper.SetWarningLevel (ErrorHelper.WarningLevel.Error);
 					}
 				} catch (Exception ex) {
-					ErrorHelper.Error (26, ex, Errors.MX0026, "--warnaserror", ex.Message);
+					throw ErrorHelper.CreateError (26, ex, Errors.MX0026, "--warnaserror", ex.Message);
 				}
 			});
 			options.Add ("nowarn:", "An optional comma-separated list of warning codes to ignore (if no warnings are specified all warnings are ignored).", v =>
@@ -81,7 +80,7 @@ namespace Xamarin.Bundler {
 						ErrorHelper.SetWarningLevel (ErrorHelper.WarningLevel.Disable);
 					}
 				} catch (Exception ex) {
-					ErrorHelper.Error (26, ex, Errors.MX0026, "--nowarn", ex.Message);
+					throw ErrorHelper.CreateError (26, ex, Errors.MX0026, "--nowarn", ex.Message);
 				}
 			});
 			options.Add ("coop:", "If the GC should run in cooperative mode.", v => { app.EnableCoopGC = ParseBool (v, "coop"); }, hidden: true);

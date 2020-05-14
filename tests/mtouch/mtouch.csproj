@@ -89,6 +89,9 @@
     <Compile Include="..\..\src\ObjCRuntime\ErrorHelper.cs">
       <Link>ErrorHelper.cs</Link>
     </Compile>
+    <Compile Include="..\..\tools\common\ErrorHelper.tools.cs">
+      <Link>tools\common\ErrorHelper.tools.cs</Link>
+    </Compile>
     <Compile Include="RuntimeException.cs" />
     <Compile Include="..\..\tools\common\SdkVersions.cs">
       <Link>SdkVersions.cs</Link>
@@ -100,6 +103,11 @@
       <Link>error.cs</Link>
     </Compile>
     <Compile Include="ErrorTest.cs" />
+    <Compile Include="..\..\tools\common\ApplePlatform.cs">
+      <Link>tools\common\ApplePlatform.cs</Link>
+    </Compile>
+    <Compile Include="Setup.cs" />
+    <Compile Include="Compat.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -536,10 +536,10 @@ namespace Xamarin.Bundler
 					}
 				}
 				WriteIfDifferent (main_source, sb.ToString (), true);
-			} catch (MonoTouchException) {
+			} catch (ProductException) {
 				throw;
 			} catch (Exception e) {
-				throw new MonoTouchException (4001, true, e, Errors.MT4001, main_source);
+				throw new ProductException (4001, true, e, Errors.MT4001, main_source);
 			}
 
 			return main_source;
@@ -735,7 +735,7 @@ namespace Xamarin.Bundler
 					}
 					goto default;
 				default:
-					throw new MonoTouchException (19, true, Errors.MT0019);
+					throw new ProductException (19, true, Errors.MT0019);
 				}
 			};
 
@@ -815,7 +815,7 @@ namespace Xamarin.Bundler
 					try {
 						app.SdkVersion = StringUtils.ParseVersion (v);
 					} catch (Exception ex) {
-						ErrorHelper.Error (26, ex, Errors.MX0026, "sdk:" + v, ex.Message);
+						throw ErrorHelper.CreateError (26, ex, Errors.MX0026, "sdk:" + v, ex.Message);
 					}
 				}
 			},
@@ -824,7 +824,7 @@ namespace Xamarin.Bundler
 					try {
 						app.DeploymentTarget = StringUtils.ParseVersion (v);
 					} catch (Exception ex) {
-						throw new MonoTouchException (26, true, ex, Errors.MX0026, "targetver:" + v, ex.Message);
+						throw new ProductException (26, true, ex, Errors.MX0026, "targetver:" + v, ex.Message);
 					}
 				}
 			},
@@ -920,7 +920,7 @@ namespace Xamarin.Bundler
 						app.Registrar = RegistrarMode.Default;
 						break;
 					default:
-						throw new MonoTouchException (20, true, Errors.MX0020, "--registrar", "static, dynamic or default");
+						throw new ProductException (20, true, Errors.MX0020, "--registrar", "static, dynamic or default");
 					}
 
 					switch (value) {
@@ -932,7 +932,7 @@ namespace Xamarin.Bundler
 						app.RegistrarOptions = RegistrarOptions.Default;
 						break;
 					default:
-						throw new MonoTouchException (20, true, Errors.MX0020, "--registrar", "static, dynamic or default");
+						throw new ProductException (20, true, Errors.MX0020, "--registrar", "static, dynamic or default");
 					}
 				}
 			},
@@ -963,7 +963,7 @@ namespace Xamarin.Bundler
 							app.PackageMonoFramework = false;
 							break;
 						default:
-							throw new MonoTouchException (20, true, Errors.MX0020, "--mono", "static, framework or [no-]package-framework");
+							throw new ProductException (20, true, Errors.MX0020, "--mono", "static, framework or [no-]package-framework");
 						}
 					}
 				}
@@ -981,7 +981,7 @@ namespace Xamarin.Bundler
 						app.BitCodeMode = BitCodeMode.MarkerOnly;
 						break;
 					default:
-						throw new MonoTouchException (20, true, Errors.MX0020, "--bitcode", "asmonly, full or marker");
+						throw new ProductException (20, true, Errors.MX0020, "--bitcode", "asmonly, full or marker");
 					}
 				}
 			},
@@ -1035,7 +1035,7 @@ namespace Xamarin.Bundler
 
 			if (action == Action.Build || action == Action.RunRegistrar) {
 				if (app.RootAssemblies.Count == 0)
-					throw new MonoTouchException (17, true, Errors.MX0017);
+					throw new ProductException (17, true, Errors.MX0017);
 			}
 
 			return app;
@@ -1077,22 +1077,22 @@ namespace Xamarin.Bundler
 			}
 
 			if (app.SdkVersion == null)
-				throw new MonoTouchException (25, true, Errors.MT0025, app.PlatformName);
+				throw new ProductException (25, true, Errors.MT0025, app.PlatformName);
 
 			var framework_dir = GetFrameworkDirectory (app);
 			Driver.Log ("Xamarin.iOS {0}.{1} using framework: {2}", Constants.Version, Constants.Revision, framework_dir);
 
 			if (action == Action.None)
-				throw new MonoTouchException (52, true, Errors.MT0052);
+				throw new ProductException (52, true, Errors.MT0052);
 
 			if (app.SdkVersion < new Version (6, 0) && app.IsArchEnabled (Abi.ARMv7s))
-				throw new MonoTouchException (14, true, Errors.MT0014, app.SdkVersion, "ARMv7s");
+				throw new ProductException (14, true, Errors.MT0014, app.SdkVersion, "ARMv7s");
 
 			if (app.SdkVersion < new Version (7, 0) && app.IsArchEnabled (Abi.ARM64))
-				throw new MonoTouchException (14, true, Errors.MT0014, app.SdkVersion, "ARM64");
+				throw new ProductException (14, true, Errors.MT0014, app.SdkVersion, "ARM64");
 
 			if (app.SdkVersion < new Version (7, 0) && app.IsArchEnabled (Abi.x86_64))
-				throw new MonoTouchException (14, true, Errors.MT0014, app.SdkVersion, "x86_64");
+				throw new ProductException (14, true, Errors.MT0014, app.SdkVersion, "x86_64");
 
 			if (!Directory.Exists (framework_dir)) {
 				Console.WriteLine ("Framework does not exist {0}", framework_dir);
@@ -1102,16 +1102,16 @@ namespace Xamarin.Bundler
 			}
 
 			if (!Directory.Exists (GetPlatformDirectory (app)))
-				throw new MonoTouchException (6, true, Errors.MT0006, GetPlatformDirectory (app));
+				throw new ProductException (6, true, Errors.MT0006, GetPlatformDirectory (app));
 
 			if (!Directory.Exists (app.AppDirectory))
 				Directory.CreateDirectory (app.AppDirectory);
 
 			if (app.EnableRepl && app.BuildTarget != BuildTarget.Simulator)
-				throw new MonoTouchException (29, true, Errors.MT0029);
+				throw new ProductException (29, true, Errors.MT0029);
 
 			if (app.EnableRepl && app.LinkMode != LinkMode.None)
-				throw new MonoTouchException (82, true, Errors.MT0082);
+				throw new ProductException (82, true, Errors.MT0082);
 
 			if (cross_prefix == null)
 				cross_prefix = FrameworkDirectory;
@@ -1269,9 +1269,9 @@ namespace Xamarin.Bundler
 					goto tryagain;
 				}
 				if (string.IsNullOrEmpty (original_compiler)) {
-					throw new MonoTouchException (5101, true, Errors.MT5101, app.Compiler);
+					throw new ProductException (5101, true, Errors.MT5101, app.Compiler);
 				} else {
-					throw new MonoTouchException (5103, true, Errors.MT5103, app.Compiler, original_compiler);
+					throw new ProductException (5103, true, Errors.MT5103, app.Compiler, original_compiler);
 				}
 			}
 		}

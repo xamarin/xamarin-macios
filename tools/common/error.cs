@@ -6,77 +6,40 @@ using System.Text;
 
 namespace Xamarin.Bundler {
 
-#if MTOUCH || MONOTOUCH
-	public class MonoTouchException : Exception {
-		public const string Prefix = "MT";
+	public class ProductException : Exception {
+		public static string Prefix => ErrorHelper.Prefix;
 
-		public MonoTouchException (int code, string message) :
+		public ProductException (int code, string message) :
 			this (code, false, message)
 		{
 		}
 
-		public MonoTouchException (int code, string message, params object[] args) : 
+		public ProductException (int code, string message, params object[] args) : 
 			this (code, false, message, args)
 		{
 		}
 
-		public MonoTouchException (int code, bool error, string message) :
+		public ProductException (int code, bool error, string message) :
 			this (code, error, null, message)
 		{
 		}
 
-		public MonoTouchException (int code, bool error, string message, params object[] args) : 
+		public ProductException (int code, bool error, string message, params object[] args) : 
 			this (code, error, null, message, args)
 		{
 		}
 
-		public MonoTouchException (int code, bool error, Exception innerException, string message) :
+		public ProductException (int code, bool error, Exception innerException, string message) :
 			base (message, innerException)
 		{
 			SetValues (code, error);
 		}
 
-		public MonoTouchException (int code, bool error, Exception innerException, string message, params object[] args) : 
+		public ProductException (int code, bool error, Exception innerException, string message, params object[] args) : 
 			base (Format (message, args), innerException)
 		{
 			SetValues (code, error);
 		}
-#else
-	public class MonoMacException : Exception {
-		public const string Prefix = "MM";
-
-		public MonoMacException (int code, string message) :
-			this (code, false, message)
-		{
-		}
-
-		public MonoMacException (int code, string message, params object[] args) :
-			this (code, false, message, args)
-		{
-		}
-
-		public MonoMacException (int code, bool error, string message) :
-			this (code, error, null, message)
-		{
-		}
-
-		public MonoMacException (int code, bool error, string message, params object[] args) :
-			this (code, error, null, message, args)
-		{
-		}
-
-		public MonoMacException (int code, bool error, Exception innerException, string message) :
-			base (message, innerException)
-		{
-			SetValues (code, error);
-		}
-
-		public MonoMacException (int code, bool error, Exception innerException, string message, params object[] args) :
-			base (Format (message, args), innerException)
-		{
-			SetValues (code, error);
-		}
-#endif
 
 		public string FileName { get; set; }
 

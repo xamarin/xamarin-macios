@@ -3,10 +3,7 @@
 using System;
 using System.Collections.Generic;
 
-#if XAMCORE_2_0
 namespace ObjCRuntime {
-#endif
-
 	public class RuntimeException : Exception {
 		public RuntimeException (string message, params object[] args)
 			: base (string.Format (message, args))
@@ -43,6 +40,4 @@ namespace ObjCRuntime {
 		}
 		*/
 	}
-#if XAMCORE_2_0
 }
-#endif

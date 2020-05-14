@@ -463,6 +463,9 @@
     <Compile Include="..\linker\MonoTouch.Tuner\RemoveCodeBase.cs">
       <Link>tools\linker\MonoTouch.Tuner\RemoveCodeBase.cs</Link>
     </Compile>
+    <Compile Include="..\common\ErrorHelper.tools.cs">
+      <Link>tools\common\ErrorHelper.tools.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Core" />
