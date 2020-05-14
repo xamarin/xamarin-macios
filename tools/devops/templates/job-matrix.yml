@@ -13,20 +13,20 @@
 
 
 parameters:
-- name: variation 
-  type: string 
+- name: variation
+  type: string
   default: iOS
 
 - name: pool
-  type: string 
+  type: string
   default: 'VSEng-Xamarin-Mac-Devices' # default ddfun pool
 
 - name: demands
-  type: string 
+  type: string
   default: 'ios' # we default to ios devices
 
 - name: deviceLabel
-  type: string 
+  type: string
   default: 'run-ios-64-tests' # default to iOS 64b devices
 
 - name: timeout
@@ -40,14 +40,14 @@ parameters:
 jobs:
 
 ###
-### Run all the xamarin tests, not bcl or mscorlib 
+### Run all the xamarin tests, not bcl or mscorlib
 ###
 
-- job: DDFun 
+- job: DDFun
   displayName: 'Run ${{ parameters.variation }} Device Tests'
-  timeoutInMinutes: ${{ parameters.timeout }} 
+  timeoutInMinutes: ${{ parameters.timeout }}
   pool:
-    name: ${{ parameters.pool }} 
+    name: ${{ parameters.pool }}
     demands: ${{ parameters.demands }}
 
   strategy:
@@ -61,18 +61,18 @@ jobs:
         CONTEXT: '${{ parameters.variation }}-monotouch-DDFun'
         TESTS_EXTRA_ARGUMENTS: '--label=${{ parameters.deviceLabel }},run-monotouch-tests' # run all tests but the bcl ones
         TESTS: 'Monotouch'
-      # xUnitBCL:
-      #   CONTEXT: '${{ parameters.variation }}-xUnit-BCL-DDFun'
-      #   TESTS_EXTRA_ARGUMENTS: '--label=${{ parameters.deviceLabel }},run-new-bcl-tests,skip-mscorlib-tests' # run only the new bcl tests
-      #   TESTS: 'xUnitBCL'
-      # nUnitBCL:
-      #   CONTEXT: '${{ parameters.variation }}-NUnit-BCL-DDFun'
-      #   TESTS_EXTRA_ARGUMENTS: '--label=${{ parameters.deviceLabel }},run-old-bcl-tests' # run only the new bcl tests
-      #   TESTS: 'NUnitBCL'
-      # Mscorlib:
-      #   CONTEXT: '${{ parameters.variation }}-mscorlib-DDFun'
-      #   TESTS_EXTRA_ARGUMENTS: '--label=${{ parameters.deviceLabel }},run-mscorlib-tests' # run only the new bcl tests
-      #   TESTS: 'mscorlib'
+      xUnitBCL:
+        CONTEXT: '${{ parameters.variation }}-xUnit-BCL-DDFun'
+        TESTS_EXTRA_ARGUMENTS: '--label=${{ parameters.deviceLabel }},run-new-bcl-tests,skip-mscorlib-tests' # run only the new bcl tests
+        TESTS: 'xUnitBCL'
+      nUnitBCL:
+        CONTEXT: '${{ parameters.variation }}-NUnit-BCL-DDFun'
+        TESTS_EXTRA_ARGUMENTS: '--label=${{ parameters.deviceLabel }},run-old-bcl-tests' # run only the new bcl tests
+        TESTS: 'NUnitBCL'
+      Mscorlib:
+        CONTEXT: '${{ parameters.variation }}-mscorlib-DDFun'
+        TESTS_EXTRA_ARGUMENTS: '--label=${{ parameters.deviceLabel }},run-mscorlib-tests' # run only the new bcl tests
+        TESTS: 'mscorlib'
 
   steps:
   - template: device-tests.yml # all the smart stuff happens in the template, just needed to set the params
