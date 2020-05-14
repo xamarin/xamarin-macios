@@ -25,7 +25,7 @@ namespace Xamarin.Bundler {
 				case ApplePlatform.None:
 					throw new InvalidOperationException ($"ErrorHelper.Platform has not been set.");
 				default:
-					// Do not use the ErrorHandler
+					// Do not use the ErrorHandler machinery, because it will probably end up recursing and eventually throwing a StackOverflowException.
 					throw new InvalidOperationException ($"Unknown platform: {Platform}");
 				}
 			}
