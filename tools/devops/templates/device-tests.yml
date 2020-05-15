@@ -48,7 +48,7 @@ steps:
 
 - bash: rm -rf "/Users/xamarinqa/azdo/_work/_tool/provisionator"
   displayName: 'Nuke Provisionator Tool Cache'
-  condition: $(clearProviCache)
+  condition: and(succeededOrFailed(), eq($(clearProviCache), 'true'))
 
 - task: xamops.azdevex.provisionator-task.provisionator@1
   displayName: 'Provision dependencies'
