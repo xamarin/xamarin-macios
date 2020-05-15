@@ -126,7 +126,8 @@
         </source>
         <target state="new">Could not find a valid Xcode app bundle at '{0}'. Please update your Apple SDK location in Visual Studio's preferences {1}.
         </target>
-        <note></note>
+        <note>The following are literal names and should not be translated: Xcode, Apple SDK, Visual Studio
+{0} - The selected Xcode / Apple SDK directory.</note>
       </trans-unit>
       <trans-unit id="E0045">
         <source>Could not find valid a usable Xcode developer path
@@ -341,14 +342,10 @@
         </source>
         <target state="new">Failed to load {0} log file `{1}`: {2}
         </target>
-        <note></note>
-      </trans-unit>
-      <trans-unit id="E0096">
-        <source>Unknown target framework identifier: {0}.
-        </source>
-        <target state="new">Unknown target framework identifier: {0}.
-        </target>
-        <note></note>
+        <note>A general failure message if a log file wasn't able to be loaded.
+{0} - The command-line tool that generated the log.
+{1} - The file path to the log.
+{2} - Further detail about the failure.</note>
       </trans-unit>
       <trans-unit id="E0097">
         <source>No API definition file specified.
@@ -362,7 +359,8 @@
         </source>
         <target state="new">{0} failed.
         </target>
-        <note></note>
+        <note>A general error message that a command-line tool failed.
+{0} - The file path to the command-line tool.</note>
       </trans-unit>
       <trans-unit id="E0099">
         <source>  Bundle Resource '{0}' not found on disk (should be at '{1}')
@@ -456,39 +454,47 @@
         <note></note>
       </trans-unit>
       <trans-unit id="E0124">
-        <source>The identity '{0}' doesn't match any valid certificate/private key pair in the default keychain
+        <source>The identity '{0}' doesn't match any valid certificate/private key pair in the default keychain.
         </source>
-        <target state="new">The identity '{0}' doesn't match any valid certificate/private key pair in the default keychain
+        <target state="new">The identity '{0}' doesn't match any valid certificate/private key pair in the default keychain.
         </target>
-        <note></note>
+        <note>A failure to sign the iOS application, due to a missing certificate/private key. Xcode has an identical error message, see: https://developer.apple.com/library/archive/technotes/tn2250/_index.html#//apple_ref/doc/uid/DTS40009933-CH1-TNTAG40-WHAT_DOES__VALID_SIGNING_IDENTITY_NOT_FOUND__MEAN_AND_HOW_DO_I_RESOLVE_IT_
+{0} - The name of the identity, such as 'iPhone Developer'.</note>
       </trans-unit>
       <trans-unit id="E0128">
         <source>No valid {0} code signing keys found in keychain. You need to request a codesigning certificate from https://developer.apple.com.
         </source>
         <target state="new">No valid {0} code signing keys found in keychain. You need to request a codesigning certificate from https://developer.apple.com.
         </target>
-        <note></note>
+        <note>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
+{0} - The platform name, such as 'iOS'.</note>
       </trans-unit>
       <trans-unit id="E0130">
         <source>{0} code signing key '{1}' not found in keychain.
         </source>
         <target state="new">{0} code signing key '{1}' not found in keychain.
         </target>
-        <note></note>
+        <note>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
+{0} - The platform name, such as 'iOS'.
+{1} - The name of the code signing key, such as 'Apple Development'.</note>
       </trans-unit>
       <trans-unit id="E0131">
         <source>Could not find any available provisioning profiles for {0} on {1}.
         </source>
         <target state="new">Could not find any available provisioning profiles for {0} on {1}.
         </target>
-        <note></note>
+        <note>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
+{0} - The app bundle name, such as 'YouriOSApp.app'
+{1} - The platform name, such as 'iOS'.</note>
       </trans-unit>
       <trans-unit id="E0133">
         <source>No installed provisioning profiles match the installed {0} {1} signing identities.
         </source>
         <target state="new">No installed provisioning profiles match the installed {0} {1} signing identities.
         </target>
-        <note></note>
+        <note>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
+{0} - The platform name, such as 'iOS'.
+{1} - The app bundle name, such as 'YouriOSApp.app'</note>
       </trans-unit>
       <trans-unit id="E0139">
         <source>{0} does not define CFBundleIdentifier
@@ -502,7 +508,9 @@
         </source>
         <target state="new">The specified {0} provisioning profile '{1}' could not be found
         </target>
-        <note></note>
+        <note>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
+{0} - The platform name, such as 'iOS'.
+{1} - The provisioning profile ID. A string such as: 'f35b0040-2be5-4b1c-a1d6-59ae85047fad'</note>
       </trans-unit>
       <trans-unit id="E0141">
         <source>Project bundle identifier '{0}' does not match specified provisioning profile '{1}'
@@ -586,7 +594,8 @@
         </source>
         <target state="new">{0} values do not support child properties.
         </target>
-        <note></note>
+        <note>The type of value in a '.plist' file (see: https://en.wikipedia.org/wiki/Property_list), such as a number or string cannot contain child values.
+{0} - The value type, such as 'NSString'.</note>
       </trans-unit>
       <trans-unit id="E0157">
         <source>Getting {0} values is not supported.
@@ -852,7 +861,8 @@
         </source>
         <target state="new">The Watch App '{0}' does not contain a Watch Extension.
         </target>
-        <note></note>
+        <note>The watchOS Application does not contain a watchOS extension, see: https://developer.apple.com/documentation/watchkit
+{0} - The app bundle name, such as 'YourWatchOSApp.app'</note>
       </trans-unit>
       <trans-unit id="E7023">
         <source>The Watch Extension '{0}' does not contain an Info.plist.
@@ -1132,7 +1142,7 @@
         </source>
         <target state="new">Merge: Can't Add array Entries to dict
         </target>
-        <note></note>
+        <note>Array entries in a '.plist' file (see: https://en.wikipedia.org/wiki/Property_list), cannot be added to a dictionary.</note>
       </trans-unit>
       <trans-unit id="E7058">
         <source>Merge: Specified Entry Must Be a Container
@@ -1244,7 +1254,9 @@
         </source>
         <target state="new">Skipping `{0}' as the output file, `{1}', is newer.
         </target>
-        <note></note>
+        <note>Skipping a build operation, since the destination file is newer than the source file.
+{0} - The destination file.
+{1} - The source file.</note>
       </trans-unit>
       <trans-unit id="M0121">
         <source>Creating binding resource package: {0}
@@ -1335,7 +1347,9 @@
         </source>
         <target state="new">  {0} found at: {1}
         </target>
-        <note></note>
+        <note>A file was found at a location.
+{0} - The '%(LogicalName)' of the file, or a relative path.
+{1} - The location the file was found.</note>
       </trans-unit>
       <trans-unit id="M0151">
         <source>Generated bundle name: {0}
@@ -1398,7 +1412,7 @@
         </source>
         <target state="new">Supported iPhone orientations are not matched pairs
         </target>
-        <note></note>
+        <note>The iPhone orientation settings do not match iPad, see: https://xamarin.github.io/bugzilla-archives/85/850/bug.html</note>
       </trans-unit>
       <trans-unit id="W0021">
         <source>Supported iPad orientations have not been set
@@ -1412,7 +1426,7 @@
         </source>
         <target state="new">Supported iPad orientations are not matched pairs
         </target>
-        <note></note>
+        <note>The iPad orientation settings do not match iPhone, see: https://xamarin.github.io/bugzilla-archives/85/850/bug.html</note>
       </trans-unit>
       <trans-unit id="W0051">
         <source>Unknown native reference type for '{0}'.

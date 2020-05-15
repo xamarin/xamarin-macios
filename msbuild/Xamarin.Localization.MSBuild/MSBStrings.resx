@@ -111,6 +111,7 @@
     <data name="W0020" xml:space="preserve">
         <value>Supported iPhone orientations are not matched pairs
         </value>
+        <comment>The iPhone orientation settings do not match iPad, see: https://xamarin.github.io/bugzilla-archives/85/850/bug.html</comment>
     </data>
     
     <data name="W0021" xml:space="preserve">
@@ -121,6 +122,7 @@
     <data name="W0022" xml:space="preserve">
         <value>Supported iPad orientations are not matched pairs
         </value>
+        <comment>The iPad orientation settings do not match iPhone, see: https://xamarin.github.io/bugzilla-archives/85/850/bug.html</comment>
     </data>
     
     <data name="E0023" xml:space="preserve">
@@ -165,6 +167,8 @@
     <data name="E0044" xml:space="preserve">
         <value>Could not find a valid Xcode app bundle at '{0}'. Please update your Apple SDK location in Visual Studio's preferences {1}.
         </value>
+        <comment>The following are literal names and should not be translated: Xcode, Apple SDK, Visual Studio
+{0} - The selected Xcode / Apple SDK directory.</comment>
     </data>
     
     <data name="E0045" xml:space="preserve">
@@ -409,6 +413,10 @@
     <data name="E0094" xml:space="preserve">
         <value>Failed to load {0} log file `{1}`: {2}
         </value>
+        <comment>A general failure message if a log file wasn't able to be loaded.
+{0} - The command-line tool that generated the log.
+{1} - The file path to the log.
+{2} - Further detail about the failure.</comment>
     </data>
     
     <data name="W0095" xml:space="preserve">
@@ -417,10 +425,7 @@
         </value>
     </data>
 
-    <data name="E0096" xml:space="preserve">
-        <value>Unknown target framework identifier: {0}.
-        </value>
-    </data>
+    <!-- E0096: not used anymore -->
     
     <data name="E0097" xml:space="preserve">
         <value>No API definition file specified.
@@ -430,6 +435,8 @@
     <data name="E0098" xml:space="preserve">
         <value>{0} failed.
         </value>
+        <comment>A general error message that a command-line tool failed.
+{0} - The file path to the command-line tool.</comment>
     </data>
     
     <data name="E0099" xml:space="preserve">
@@ -530,6 +537,9 @@
     <data name="M0119" xml:space="preserve">
         <value>Skipping `{0}' as the output file, `{1}', is newer.
         </value>
+        <comment>Skipping a build operation, since the destination file is newer than the source file.
+{0} - The destination file.
+{1} - The source file.</comment>
     </data>
     
     <data name="E0120" xml:space="preserve">
@@ -553,8 +563,10 @@
     </data>
     
     <data name="E0124" xml:space="preserve">
-        <value>The identity '{0}' doesn't match any valid certificate/private key pair in the default keychain
+        <value>The identity '{0}' doesn't match any valid certificate/private key pair in the default keychain.
         </value>
+        <comment>A failure to sign the iOS application, due to a missing certificate/private key. Xcode has an identical error message, see: https://developer.apple.com/library/archive/technotes/tn2250/_index.html#//apple_ref/doc/uid/DTS40009933-CH1-TNTAG40-WHAT_DOES__VALID_SIGNING_IDENTITY_NOT_FOUND__MEAN_AND_HOW_DO_I_RESOLVE_IT_
+{0} - The name of the identity, such as 'iPhone Developer'.</comment>
     </data>
     
     <data name="M0125" xml:space="preserve">
@@ -575,6 +587,8 @@
     <data name="E0128" xml:space="preserve">
         <value>No valid {0} code signing keys found in keychain. You need to request a codesigning certificate from https://developer.apple.com.
         </value>
+        <comment>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
+{0} - The platform name, such as 'iOS'.</comment>
     </data>
     
     <data name="M0129" xml:space="preserve">
@@ -585,11 +599,17 @@
     <data name="E0130" xml:space="preserve">
         <value>{0} code signing key '{1}' not found in keychain.
         </value>
+        <comment>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
+{0} - The platform name, such as 'iOS'.
+{1} - The name of the code signing key, such as 'Apple Development'.</comment>
     </data>
     
     <data name="E0131" xml:space="preserve">
         <value>Could not find any available provisioning profiles for {0} on {1}.
         </value>
+        <comment>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
+{0} - The app bundle name, such as 'YouriOSApp.app'
+{1} - The platform name, such as 'iOS'.</comment>
     </data>
     
     <data name="M0132" xml:space="preserve">
@@ -600,6 +620,9 @@
     <data name="E0133" xml:space="preserve">
         <value>No installed provisioning profiles match the installed {0} {1} signing identities.
         </value>
+        <comment>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
+{0} - The platform name, such as 'iOS'.
+{1} - The app bundle name, such as 'YouriOSApp.app'</comment>
     </data>
     
     <data name="M0134" xml:space="preserve">
@@ -635,6 +658,9 @@
     <data name="E0140" xml:space="preserve">
         <value>The specified {0} provisioning profile '{1}' could not be found
         </value>
+        <comment>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
+{0} - The platform name, such as 'iOS'.
+{1} - The provisioning profile ID. A string such as: 'f35b0040-2be5-4b1c-a1d6-59ae85047fad'</comment>
     </data>
     
     <data name="E0141" xml:space="preserve">
@@ -680,6 +706,9 @@
     <data name="M0149" xml:space="preserve">
         <value>  {0} found at: {1}
         </value>
+        <comment>A file was found at a location.
+{0} - The '%(LogicalName)' of the file, or a relative path.
+{1} - The location the file was found.</comment>
     </data>
     
     <data name="E0150" xml:space="preserve">
@@ -715,6 +744,8 @@
     <data name="E0156" xml:space="preserve">
         <value>{0} values do not support child properties.
         </value>
+        <comment>The type of value in a '.plist' file (see: https://en.wikipedia.org/wiki/Property_list), such as a number or string cannot contain child values.
+{0} - The value type, such as 'NSString'.</comment>
     </data>
     
     <data name="E0157" xml:space="preserve">
@@ -930,6 +961,8 @@
     <data name="E7022_A" xml:space="preserve">
         <value>The Watch App '{0}' does not contain a Watch Extension.
         </value>
+        <comment>The watchOS Application does not contain a watchOS extension, see: https://developer.apple.com/documentation/watchkit
+{0} - The app bundle name, such as 'YourWatchOSApp.app'</comment>
     </data>
     
     <data name="E7023" xml:space="preserve">
@@ -1130,6 +1163,7 @@
     <data name="E7057" xml:space="preserve">
         <value>Merge: Can't Add array Entries to dict
         </value>
+        <comment>Array entries in a '.plist' file (see: https://en.wikipedia.org/wiki/Property_list), cannot be added to a dictionary.</comment>
     </data>
 
     <data name="E7058" xml:space="preserve">
