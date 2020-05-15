@@ -46,9 +46,13 @@ steps:
 - bash: make -C $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/ device-tests-provisioning.csx
   displayName: 'Generate Provisionator csx file'
 
-- bash: rm -rf "/Users/xamarinqa/azdo/_work/_tool/provisionator"
+- bash: |
+    set -x
+    set -e
+
+    if [ $(clearProviCache) = 'true' ]; then rm -rf "/Users/xamarinqa/azdo/_work/_tool/provisionator"; fi
   displayName: 'Nuke Provisionator Tool Cache'
-  condition: and(succeededOrFailed(), eq($(clearProviCache), 'true'))
+  condition: succeededOrFailed()
 
 - task: xamops.azdevex.provisionator-task.provisionator@1
   displayName: 'Provision dependencies'
