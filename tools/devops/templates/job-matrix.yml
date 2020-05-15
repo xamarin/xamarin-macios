@@ -1,0 +1,81 @@
+# Common template that contains a matrix definition of the different jobs to be performed for device testing
+# in xamarin-macios. The template defines a number of jobs that contains the project tests devided in groups,
+# those are executed by different jobs in parallel (depending on agent availability).
+#
+# The template takes the following parameters:
+#
+# variation: Contains the string that will be used to identify the variation of the jobs executed. This is used to update the display names of the different jobs.
+# pool: The agent pool to be used.
+# demands: Contains the demands that the agents should have. This is used to state if the pipeline requires and iOS device, tvOS etc..
+# deviceLabel: Provide the device label used by xharness to decide what device type should be used in the tests execution.
+# timeout: The timeout of the jobs in minutes.
+# maxParallel: The amount of parallel jobs to be used
+
+
+parameters:
+- name: variation
+  type: string
+  default: iOS
+
+- name: pool
+  type: string
+  default: 'VSEng-Xamarin-Mac-Devices' # default ddfun pool
+
+- name: demands
+  type: string
+  default: 'ios' # we default to ios devices
+
+- name: deviceLabel
+  type: string
+  default: 'run-ios-64-tests' # default to iOS 64b devices
+
+- name: timeout
+  type: number
+  default: 1000
+
+- name: maxParallel
+  type: number
+  default: 5
+
+jobs:
+
+###
+### Run all the xamarin tests, not bcl or mscorlib
+###
+
+- job: DDFun
+  displayName: 'Run ${{ parameters.variation }} Device Tests'
+  timeoutInMinutes: ${{ parameters.timeout }}
+  pool:
+    name: ${{ parameters.pool }}
+    demands: ${{ parameters.demands }}
+  variables:
+    disableProviCleanup: false
+    clearProviCache: false
+
+  strategy:
+    maxParallel: ${{ parameters.maxParallel }}
+    matrix:
+      Xamarin:
+        CONTEXT: '${{ parameters.variation }}-xamarin-DDFun'
+        TESTS_EXTRA_ARGUMENTS: '--label=${{ parameters.deviceLabel }},run-non-monotouch-tests' # run all tests but the bcl ones
+        TESTS: 'Non Monotouch'
+      Monotouch:
+        CONTEXT: '${{ parameters.variation }}-monotouch-DDFun'
+        TESTS_EXTRA_ARGUMENTS: '--label=${{ parameters.deviceLabel }},run-monotouch-tests' # run all tests but the bcl ones
+        TESTS: 'Monotouch'
+      xUnitBCL:
+        CONTEXT: '${{ parameters.variation }}-xUnit-BCL-DDFun'
+        TESTS_EXTRA_ARGUMENTS: '--label=${{ parameters.deviceLabel }},run-new-bcl-tests,skip-mscorlib-tests' # run only the new bcl tests
+        TESTS: 'xUnitBCL'
+      nUnitBCL:
+        CONTEXT: '${{ parameters.variation }}-NUnit-BCL-DDFun'
+        TESTS_EXTRA_ARGUMENTS: '--label=${{ parameters.deviceLabel }},run-old-bcl-tests' # run only the new bcl tests
+        TESTS: 'NUnitBCL'
+      Mscorlib:
+        CONTEXT: '${{ parameters.variation }}-mscorlib-DDFun'
+        TESTS_EXTRA_ARGUMENTS: '--label=${{ parameters.deviceLabel }},run-mscorlib-tests' # run only the new bcl tests
+        TESTS: 'mscorlib'
+
+  steps:
+  - template: device-tests.yml # all the smart stuff happens in the template, just needed to set the params

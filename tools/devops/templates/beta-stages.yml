@@ -1,0 +1,76 @@
+# Template that contains the different stages to be executed in a pipeline
+# 
+# The tamplate contains the following parameters
+#
+# include32b: Run tests on iOS 32b devices.
+# useBetaDevices: Use beta devices instead of stable ones.
+# pool: The pool/lab to use
+# timeout: Timeout used in the different jobs.
+# maxParallel: Max number of parallel jobs to do in a stage.
+#
+parameters:
+
+# set demands as possible parameters because we keep changing them from lab to lab :/
+- name: iOSBetaDemand 
+  type: string
+  default: 'xismoke-beta' # old QA capability
+
+- name: tvOSBetaDemand
+  type: string
+  default: 'xitvos-beta' # old QA capability
+
+- name: pool
+  type: string 
+  default: 'VSEng-Xamarin-Mac-Devices' # default ddfun pool
+
+- name: timeout
+  type: number
+  default: 1000
+
+- name: maxParallel
+  type: number
+  default: 5
+
+stages:
+- stage: iOSDeviceTests 
+  displayName: 'iOS Device Tests'
+  dependsOn: []    # this removes the implicit dependency on previous stage and causes this to run in parallel
+  jobs:
+  - template: job-matrix.yml # all the smart stuff happens in the template, just needed to set the params
+    parameters:
+      demands:  ${{ parameters.iOSBetaDemand }} 
+      deviceLabel: 'run-ios-64-tests'
+      variation: "iOS"
+      pool: ${{ parameters.pool }} 
+      timeout: ${{ parameters.timeout }} 
+      maxParallel: ${{ parameters.maxParallel}} 
+
+- stage: tvOSDeviceTests
+  displayName: 'tvOS Device Tests'
+  dependsOn: []    # this removes the implicit dependency on previous stage and causes this to run in parallel
+  jobs:
+  - template: job-matrix.yml # all the smart stuff happens in the template, just needed to set the params
+    parameters:
+      demands: ${{ parameters.tvOSBetaDemand }}
+      deviceLabel: 'run-tvos-tests'
+      variation: "tvOS"
+      pool: ${{ parameters.pool }} 
+      timeout: ${{ parameters.timeout }} 
+      maxParallel: ${{ parameters.maxParallel }} 
+
+- stage: monitoring
+  displayName: 'Device test monitoring'
+  dependsOn:
+  - iOSDeviceTests
+  - tvOSDeviceTests
+
+  condition: always() # always notify of what happened.
+
+  pool: 
+    name: ${{ parameters.pool }}
+    demands: 'ios' # we should not have demands here, but the problem is that DDFun does not set all machines to be able to checout private repos :/
+
+  jobs:
+  - job:
+    steps:
+    - template: publish-results.yml # template contains the steps to get all test reports and upload them

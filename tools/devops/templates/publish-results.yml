@@ -1,0 +1,44 @@
+# Xamarin
+#
+# The following templates contains all the different steps that can be used to consume the tests results from a 
+# matrix job and will unzip the pipeline artifacts and upload the results to VSTS 
+#
+# The template takes the following env vars
+#
+# CONTEXT: The context that is used to set the status of the commit.
+
+steps:
+###
+### Download all test summaries
+###
+
+- task: DownloadPipelineArtifact@2
+  displayName: Download test summaries
+  inputs:
+    patterns: '**/TestSummary*'
+    allowFailedBuilds: true
+    path: $(Pipeline.Workspace)/Summaries
+
+###
+### Publish commit message and status
+###
+
+# pwsh for PowerShell Core
+# powershell is for Win PowerShell
+- pwsh: ./tools/devops/templates/publish_results.ps1
+  displayName: Publish commit message + status
+  condition: succeededOrFailed()
+  env:
+    BUILD_REVISION: $(BUILD_REVISION)
+    GH_STATE: $(GH_STATE)
+    GITHUB_TOKEN: $(GitHub.Token)
+    CONTEXT: $(CONTEXT)
+
+###
+### Report final results to GitHub
+###
+
+- bash: ./jenkins/vsts-device-tests-set-status.sh "--token=$(GitHub.Token)" --device="VSTS-DDFun"
+  displayName: Report results to GitHub as comment / status
+  continueOnError: true
+  condition: succeededOrFailed()
