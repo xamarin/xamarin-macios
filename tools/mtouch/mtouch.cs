@@ -766,6 +766,7 @@ namespace Xamarin.Bundler
 				} },
 			{ "dsym:", "Turn on (default for device) or off (default for simulator) .dSYM symbols.", v => app.BuildDSym = ParseBool (v, "dsym") },
 			{ "dlsym:", "Use dlsym to resolve pinvokes in AOT compiled assemblies", v => app.ParseDlsymOptions (v) },
+			{ "r|ref=", "Add an assembly to the resolver [DEPRECATED, use --reference instead]", v => app.References.Add (v), true /* Hide: this option is deprecated in favor of the shared --reference option instead */ },
 			{ "gcc_flags=", "Set flags to be passed along to gcc at link time", v =>
 				{
 					if (!StringUtils.TryParseArguments (v, out var gcc_flags, out var ex))
@@ -929,6 +930,7 @@ namespace Xamarin.Bundler
 						app.AddAssemblyBuildTarget (v);
 					}
 			},
+			/* Any new options that are identical between mtouch and mmp should be added to common/Driver.cs */
 		};
 
 			if (ParseOptions (app, os, args, ref action))

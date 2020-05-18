@@ -156,6 +156,7 @@ namespace Xamarin.Bundler {
 		static int Main2 (string [] args)
 		{
 			var os = new OptionSet () {
+				{ "a|assembly=", "Add an assembly to be processed [DEPRECATED, use --reference instead]", v => App.References.Add (v), true /* Hide: this option is deprecated in favor of the shared --reference option instead */ },
 				{ "r|resource=", "Add a resource to be included", v => resources.Add (v) },
 				{ "o|output=", "Specify the output path", v => output_dir = v },
 				{ "n|name=", "Specify the application name", v => app_name = v },
@@ -180,6 +181,15 @@ namespace Xamarin.Bundler {
 					true // do not show this option anymore
 				},
 				{ "mapinject", "Inject a fast method map [deprecated]", v => { ErrorHelper.Show (new ProductException (16, false, Errors.MX0016,  "--mapinject")); } },
+				{ "minos=", "Minimum supported version of Mac OS X [DEPRECATED, use --targetver instead]",
+					v => {
+						try {
+							App.DeploymentTarget = StringUtils.ParseVersion (v);
+						} catch (Exception ex) {
+							throw ErrorHelper.CreateError (26, ex, Errors.MX0026, $"minos:{v}", ex.Message);
+						}
+					}, true /* Hide: this option is deprecated in favor of the shared --targetver option instead */
+				},
 				{ "c|certificate=", "The Code Signing certificate for the application", v => { certificate_name = v; }},
 				{ "p", "Generate a plist for the application", v => { generate_plist = true; }},
 				{ "i|icon=", "Use the specified file as the bundle icon", v => { icon = v; }},
@@ -230,6 +240,7 @@ namespace Xamarin.Bundler {
 				},
 				{ "link-prohibited-frameworks", "Natively link against prohibited (rejected by AppStore) frameworks", v => { LinkProhibitedFrameworks = true; } },
 				{ "legacy-assembly-resolution", "Use a legacy assembly resolution logic when using the Xamarin.Mac Full framework.", v => { UseLegacyAssemblyResolution = true; }, false /* hidden until we know if it's needed */ },
+				/* Any new options that are identical between mtouch and mmp should be added to common/Driver.cs */
 			};
 
 			var extra_args = Environment.GetEnvironmentVariable ("MMP_ENV_OPTIONS");

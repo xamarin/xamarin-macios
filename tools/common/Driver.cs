@@ -69,12 +69,6 @@ namespace Xamarin.Bundler {
 			options.Add ("reference=", "Add an assembly to be processed.", v => app.References.Add (v));
 			// Unfortunately -r is used in mmp for something else (--resource), which means we can't use the same arguments for both mtouch and mmp.
 			// So add --reference, which is now used by both (and accepted by bgen as well), and deprecate -r|--ref for mtouch and -a|--assembly for mmp.
-#if MTOUCH
-			options.Add ("r|ref=", "Add an assembly to the resolver [DEPRECATED, use --reference instead]", v => app.References.Add (v), true);
-#endif
-#if MMP
-			options.Add ("a|assembly=", "Add an assembly to be processed [DEPRECATED, use --reference instead]", v => app.References.Add (v), true);
-#endif
 			options.Add ("targetver=", "Minimum supported version of the target OS.", v => {
 				try {
 					app.DeploymentTarget = StringUtils.ParseVersion (v);
@@ -82,15 +76,6 @@ namespace Xamarin.Bundler {
 					throw ErrorHelper.CreateError (26, ex, Errors.MX0026, "targetver:" + v, ex.Message);
 				}
 			});
-#if MMP
-			options.Add ("minos=", "Minimum supported version of Mac OS X [DEPRECATED, use --targetver instead]", v => {
-				try {
-					app.DeploymentTarget = StringUtils.ParseVersion (v);
-				} catch (Exception ex) {
-					throw ErrorHelper.CreateError (26, ex, Errors.MX0026, $"minos:{v}", ex.Message);
-				}
-			}, true);
-#endif
 			options.Add ("sdkroot=", "Specify the location of Apple SDKs, default to 'xcode-select' value.", v => sdk_root = v);
 			options.Add ("sdk=", "Specifies the SDK version to compile against (version, for example \"10.9\").", v => {
 				try {
