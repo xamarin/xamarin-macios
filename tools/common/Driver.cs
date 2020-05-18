@@ -57,7 +57,7 @@ namespace Xamarin.Bundler {
 			options.Add ("version", "Output version information and exit.", v => a = Action.Version);
 			options.Add ("v|verbose", "Specify how verbose the output should be. This can be passed multiple times to increase the verbosity.", v => Verbosity++);
 			options.Add ("q|quiet", "Specify how quiet the output should be. This can be passed multiple times to increase the silence.", v => Verbosity--);
-			options.Add ("debug:", "Build a debug app. If AOT-compiling, will also generate native debug code for the specified assembly (set to 'all' to generate debug code for all assemblies, the default is to generate debug code for user assemblies only)", v => {
+			options.Add ("debug:", "Build a debug app. If AOT-compiling, will also generate native debug code for the specified assembly (set to 'all' to generate debug code for all assemblies, the default is to generate debug code for user assemblies only).", v => {
 				app.EnableDebug = true;
 				if (v != null) {
 					if (v == "all") {
@@ -93,7 +93,7 @@ namespace Xamarin.Bundler {
 			}, true);
 #endif
 			options.Add ("sdkroot=", "Specify the location of Apple SDKs, default to 'xcode-select' value.", v => sdk_root = v);
-			options.Add ("sdk=", "Specifies the SDK version to compile against (version, for example \"10.9\")", v => {
+			options.Add ("sdk=", "Specifies the SDK version to compile against (version, for example \"10.9\").", v => {
 				try {
 					app.SdkVersion = StringUtils.ParseVersion (v);
 				} catch (Exception ex) {
@@ -107,7 +107,7 @@ namespace Xamarin.Bundler {
 			options.Add ("abi=", "Comma-separated list of ABIs to target. Currently supported: armv7, armv7+llvm, armv7+llvm+thumb2, armv7s, armv7s+llvm, armv7s+llvm+thumb2, arm64, arm64+llvm, arm64_32, arm64_32+llvm, i386, x86_64", v => app.ParseAbi (v));
 #endif
 			options.Add ("no-xcode-version-check", "Ignores the Xcode version check.", v => { min_xcode_version = null; }, true /* This is a non-documented option. Please discuss any customers running into the xcode version check on the maciosdev@ list before giving this option out to customers. */);
-			options.Add ("nolink", "Do not link the assemblies", v => app.LinkMode = LinkMode.None);
+			options.Add ("nolink", "Do not link the assemblies.", v => app.LinkMode = LinkMode.None);
 #if MMP
 			options.Add ("linkplatform", "Link only the Xamarin.Mac.dll platform assembly", v => app.LinkMode = LinkMode.Platform);
 #endif
