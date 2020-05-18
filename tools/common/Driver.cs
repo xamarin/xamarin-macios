@@ -281,9 +281,6 @@ namespace Xamarin.Bundler {
 				case "partial-static":
 					app.Registrar = RegistrarMode.PartialStatic;
 					break;
-				case "il":
-					app.Registrar = RegistrarMode.Dynamic;
-					break;
 #endif
 				default:
 					throw ErrorHelper.CreateError (20, Errors.MX0020, "--registrar", "static, dynamic or default");
