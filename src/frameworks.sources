@@ -1773,6 +1773,7 @@ SHARED_SOURCES = \
 	ObjCRuntime/Dlfcn.cs \
 	ObjCRuntime/DynamicRegistrar.cs \
 	ObjCRuntime/ErrorHelper.cs \
+	ObjCRuntime/ErrorHelper.runtime.cs \
 	ObjCRuntime/Exceptions.cs \
 	ObjCRuntime/ExceptionMode.cs \
 	ObjCRuntime/Method.cs \

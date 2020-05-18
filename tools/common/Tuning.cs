@@ -11,10 +11,8 @@ using Mono.Cecil.Cil;
 using Xamarin.Bundler;
 
 #if MONOTOUCH
-using PlatformException = Xamarin.Bundler.MonoTouchException;
 using PlatformLinkContext = MonoTouch.Tuner.MonoTouchLinkContext;
 #else
-using PlatformException = Xamarin.Bundler.MonoMacException;
 using PlatformLinkContext = MonoMac.Tuner.MonoMacLinkContext;
 #endif
 
@@ -48,10 +46,10 @@ namespace MonoMac.Tuner {
 		{
 			switch (e) {
 			case AssemblyResolutionException are:
-				return new PlatformException (2002, true, are, are.Message);
+				return new ProductException (2002, true, are, are.Message);
 			case AggregateException ae:
 				return ae;
-			case PlatformException pe:
+			case ProductException pe:
 				return pe;
 			case MarkException me:
 			{
@@ -72,10 +70,10 @@ namespace MonoMac.Tuner {
 			{
 				TypeReference tr = (re.Member as TypeReference);
 				IMetadataScope scope = tr == null ? re.Member.DeclaringType.Scope : tr.Scope;
-				return new PlatformException (2002, true, re, "Failed to resolve \"{0}\" reference from \"{1}\"", re.Member, scope);
+				return new ProductException (2002, true, re, "Failed to resolve \"{0}\" reference from \"{1}\"", re.Member, scope);
 			}
 			case XmlResolutionException ex:
-				return new PlatformException (2017, true, ex, Errors.MX2017, ex?.InnerException?.Message ?? ex.Message);
+				return new ProductException (2017, true, ex, Errors.MX2017, ex?.InnerException?.Message ?? ex.Message);
 			default:
 				if (e.InnerException != null)
 					return HandlePipelineProcessException (e.InnerException);
@@ -94,7 +92,7 @@ namespace MonoMac.Tuner {
 						message.AppendLine ($"\tAssembly: `{a}`");
 				}
 				message.Append ($"Reason: {e.Message}");
-				return new PlatformException (2001, true, e, Errors.MX2001, message);
+				return new ProductException (2001, true, e, Errors.MX2001, message);
 			}
 		}
 	}

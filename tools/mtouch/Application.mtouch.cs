@@ -571,14 +571,6 @@ namespace Xamarin.Bundler {
 			return plist.GetString (key);
 		}
 
-		// This is to load the symbols for all assemblies, so that we can give better error messages
-		// (with file name / line number information).
-		public void LoadSymbols ()
-		{
-			foreach (var t in Targets)
-				t.LoadSymbols ();
-		}
-
 		public void BuildAll ()
 		{
 			var allapps = new List<Application> ();
@@ -994,7 +986,7 @@ namespace Xamarin.Bundler {
 			foreach (var root in RootAssemblies) {
 				string root_wo_ext = Path.GetFileNameWithoutExtension (root);
 				if (Profile.IsSdkAssembly (root_wo_ext) || Profile.IsProductAssembly (root_wo_ext))
-					throw new MonoTouchException (3, true, Errors.MX0003, root_wo_ext);
+					throw new ProductException (3, true, Errors.MX0003, root_wo_ext);
 			}
 
 			if (IsDualBuild) {
@@ -1062,13 +1054,13 @@ namespace Xamarin.Bundler {
 					ExecutableName, Path.GetFileName (AppDirectory));
 			
 			if (IsExtension && Platform == ApplePlatform.iOS && SdkVersion < new Version (8, 0))
-				throw new MonoTouchException (45, true, Errors.MT0045);
+				throw new ProductException (45, true, Errors.MT0045);
 
 			if (IsExtension && Platform != ApplePlatform.iOS && Platform != ApplePlatform.WatchOS && Platform != ApplePlatform.TVOS)
-				throw new MonoTouchException (72, true, Errors.MT0072, Platform);
+				throw new ProductException (72, true, Errors.MT0072, Platform);
 
 			if (!IsExtension && Platform == ApplePlatform.WatchOS)
-				throw new MonoTouchException (77, true, Errors.MT0077);
+				throw new ProductException (77, true, Errors.MT0077);
 		
 #if ENABLE_BITCODE_ON_IOS
 			if (Platform == ApplePlatform.iOS)
@@ -1306,7 +1298,7 @@ namespace Xamarin.Bundler {
 		{
 			var path = Path.Combine (directory, "NOTICE");
 			if (Directory.Exists (path))
-				throw new MonoTouchException (1016, true, Errors.MT1016);
+				throw new ProductException (1016, true, Errors.MT1016);
 
 			try {
 				// write license information inside the .app
@@ -1316,7 +1308,7 @@ namespace Xamarin.Bundler {
 				sb.AppendLine ().AppendLine ().Append ("http://xamarin.com/mobile-licensing").AppendLine ();
 				Driver.WriteIfDifferent (path, sb.ToString ());
 			} catch (Exception ex) {
-				throw new MonoTouchException (1017, true, ex, Errors.MT1017, ex.Message);
+				throw new ProductException (1017, true, ex, Errors.MT1017, ex.Message);
 			}
 		}
 
@@ -1672,16 +1664,16 @@ namespace Xamarin.Bundler {
 
 						var symbol = line.Replace (", referenced from:", "").Trim ('\"', ' ');
 						if (symbol.StartsWith ("_OBJC_CLASS_$_", StringComparison.Ordinal)) {
-							errors.Add (new MonoTouchException (5211, error, Errors.MT5211, symbol.Replace ("_OBJC_CLASS_$_", ""), symbol));
+							errors.Add (new ProductException (5211, error, Errors.MT5211, symbol.Replace ("_OBJC_CLASS_$_", ""), symbol));
 						} else {
 							var members = target.GetAllSymbols ().Find (symbol.Substring (1))?.Members;
 							if (members != null && members.Any ()) {
 								var member = members.First (); // Just report the first one.
 								// Neither P/Invokes nor fields have IL, so we can't find the source code location.
-								errors.Add (new MonoTouchException (5214, error, Errors.MT5214,
+								errors.Add (new ProductException (5214, error, Errors.MT5214,
 									symbol, member.DeclaringType.FullName, member.Name));
 							} else {
-								errors.Add (new MonoTouchException (5210, error, Errors.MT5210, symbol));
+								errors.Add (new ProductException (5210, error, Errors.MT5210, symbol));
 							}
 						}
 
@@ -1697,7 +1689,7 @@ namespace Xamarin.Bundler {
 					}
 				} else if (line.StartsWith ("duplicate symbol", StringComparison.Ordinal) && line.EndsWith (" in:", StringComparison.Ordinal)) {
 					var symbol = line.Replace ("duplicate symbol ", "").Replace (" in:", "").Trim ();
-					errors.Add (new MonoTouchException (5212, error, Errors.MT5212, symbol));
+					errors.Add (new ProductException (5212, error, Errors.MT5212, symbol));
 
 					var indent = GetIndentation (line);
 					while (i + 1 < lines.Count) {
@@ -1705,7 +1697,7 @@ namespace Xamarin.Bundler {
 						if (GetIndentation (lines [i + 1]) <= indent)
 							break;
 						i++;
-						errors.Add (new MonoTouchException (5213, error, Errors.MT5213, line.Trim ()));
+						errors.Add (new ProductException (5213, error, Errors.MT5213, line.Trim ()));
 					}
 				} else {
 					if (line.StartsWith ("ld: ", StringComparison.Ordinal))
@@ -1714,9 +1706,9 @@ namespace Xamarin.Bundler {
 					line = line.Trim ();
 
 					if (error) {
-						errors.Add (new MonoTouchException (5209, error, Errors.MT5209, line));
+						errors.Add (new ProductException (5209, error, Errors.MT5209, line));
 					} else {
-						errors.Add (new MonoTouchException (5203, error, Errors.MT5203, line));
+						errors.Add (new ProductException (5203, error, Errors.MT5203, line));
 					}
 				}
 			}

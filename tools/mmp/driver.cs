@@ -179,7 +179,7 @@ namespace Xamarin.Bundler {
 					},
 					true // do not show this option anymore
 				},
-				{ "mapinject", "Inject a fast method map [deprecated]", v => { ErrorHelper.Show (new MonoMacException (16, false, Errors.MX0016,  "--mapinject")); } },
+				{ "mapinject", "Inject a fast method map [deprecated]", v => { ErrorHelper.Show (new ProductException (16, false, Errors.MX0016,  "--mapinject")); } },
 				{ "c|certificate=", "The Code Signing certificate for the application", v => { certificate_name = v; }},
 				{ "p", "Generate a plist for the application", v => { generate_plist = true; }},
 				{ "i|icon=", "Use the specified file as the bundle icon", v => { icon = v; }},
@@ -258,7 +258,7 @@ namespace Xamarin.Bundler {
 			}
 
 			if (App.Registrar == RegistrarMode.PartialStatic && App.LinkMode != LinkMode.None)
-				throw new MonoMacException (2110, true, Errors.MM2110);
+				throw new ProductException (2110, true, Errors.MM2110);
 
 			// sanity check as this should never happen: we start out by not setting any
 			// Unified/Classic properties, and only IsUnifiedMobile if we are are on the
@@ -282,7 +282,7 @@ namespace Xamarin.Bundler {
 				case LinkMode.Platform:
 					break;
 				default:
-					throw new MonoMacException (2007, true, Errors.MM2007);
+					throw new ProductException (2007, true, Errors.MM2007);
 				}
 			}
 
@@ -454,13 +454,13 @@ namespace Xamarin.Bundler {
 
 					CheckForUnknownCommandLineArguments (exceptions, unprocessed);
 
-					exceptions.Add (new MonoMacException (50, true, Errors.MM0050, unprocessed.Count, string.Join ("', '", unprocessed.ToArray ())));
+					exceptions.Add (new ProductException (50, true, Errors.MM0050, unprocessed.Count, string.Join ("', '", unprocessed.ToArray ())));
 
 					throw new AggregateException (exceptions);
 				}
 
 				if (string.IsNullOrEmpty (output_dir))
-					throw new MonoMacException (51, true, Errors.MM0051);
+					throw new ProductException (51, true, Errors.MM0051);
 
 				if (string.IsNullOrEmpty (app_name))
 					app_name = Path.GetFileNameWithoutExtension (output_dir);
@@ -481,14 +481,14 @@ namespace Xamarin.Bundler {
 
 				root_assembly = unprocessed [0];
 				if (!File.Exists (root_assembly))
-					throw new MonoMacException (7, true, Errors.MX0007, root_assembly);
+					throw new ProductException (7, true, Errors.MX0007, root_assembly);
 				
 				string root_wo_ext = Path.GetFileNameWithoutExtension (root_assembly);
 				if (Profile.IsSdkAssembly (root_wo_ext) || Profile.IsProductAssembly (root_wo_ext))
-					throw new MonoMacException (3, true, Errors.MX0003, root_wo_ext);
+					throw new ProductException (3, true, Errors.MX0003, root_wo_ext);
 
 				if (App.References.Exists (a => Path.GetFileNameWithoutExtension (a).Equals (root_wo_ext)))
-					throw new MonoMacException (23, true, Errors.MM0023, root_wo_ext);
+					throw new ProductException (23, true, Errors.MM0023, root_wo_ext);
 
 				string monoFrameworkDirectory;
 
@@ -501,7 +501,7 @@ namespace Xamarin.Bundler {
 				fx_dir = Path.Combine (MonoDirectory, "lib", "mono", monoFrameworkDirectory);
 
 				if (!Directory.Exists (fx_dir))
-					throw new MonoMacException (1403, true, Errors.MM1403, "Directory", fx_dir, TargetFramework);
+					throw new ProductException (1403, true, Errors.MM1403, "Directory", fx_dir, TargetFramework);
 
 				App.References.Add (root_assembly);
 				BuildTarget.Resolver.CommandLineAssemblies = App.References;
@@ -542,7 +542,7 @@ namespace Xamarin.Bundler {
 				CheckReferences ();
 
 				if (!is_extension && !resolved_assemblies.Exists (f => Path.GetExtension (f).ToLower () == ".exe") && !App.Embeddinator)
-					throw new MonoMacException (79, true, Errors.MM0079, "");
+					throw new ProductException (79, true, Errors.MM0079, "");
 
 				// i18n must be dealed outside linking too (e.g. bug 11448)
 				if (App.LinkMode == LinkMode.None)
@@ -880,7 +880,7 @@ namespace Xamarin.Bundler {
 			var libxammac = Path.Combine (GetXamarinLibraryDirectory (App), libmain + (App.EnableDebug ? "-debug" : "") + ".a");
 
 			if (!File.Exists (libxammac))
-				throw new MonoMacException (5203, true, Errors.MM5203, libxammac);
+				throw new ProductException (5203, true, Errors.MM5203, libxammac);
 
 			try {
 				var args = new List<string> ();
@@ -1011,7 +1011,7 @@ namespace Xamarin.Bundler {
 					string libmono = Path.Combine (libdir, "libmonosgen-2.0.a");
 
 					if (!File.Exists (libmono))
-						throw new MonoMacException (5202, true, Errors.MM5202);
+						throw new ProductException (5202, true, Errors.MM5202);
 
 					args.Add (libmono);
 
@@ -1077,7 +1077,7 @@ namespace Xamarin.Bundler {
 
 				RunClang (args);
 			} catch (Win32Exception e) {
-				throw new MonoMacException (5103, true, e, Errors.MM5103, "driver");
+				throw new ProductException (5103, true, e, Errors.MM5103, "driver");
 			}
 		}
 
@@ -1124,10 +1124,10 @@ namespace Xamarin.Bundler {
 			}
 
 			if (!haveValidReference)
-				exceptions.Add (new MonoMacException (1401, true, Errors.MM1401));
+				exceptions.Add (new ProductException (1401, true, Errors.MM1401));
 
 			foreach (var refName in incompatibleReferences)
-				exceptions.Add (new MonoMacException (1402, true, Errors.MM1402, refName + ".dll"));
+				exceptions.Add (new ProductException (1402, true, Errors.MM1402, refName + ".dll"));
 
 			if (exceptions.Count > 0)
 				throw new AggregateException (exceptions);
@@ -1364,7 +1364,7 @@ namespace Xamarin.Bundler {
 
 			// If we can't find it at this point, scream
 			if (src == null) {
-				ErrorHelper.Show (new MonoMacException (2006, false, Errors.MM2006, name));
+				ErrorHelper.Show (new ProductException (2006, false, Errors.MM2006, name));
 				if (used_by_methods != null && used_by_methods.Count > 0) {
 					const int referencedByLimit = 25;
 					bool limitReferencedByWarnings = used_by_methods.Count > referencedByLimit && Verbosity < 4;
@@ -1506,7 +1506,7 @@ namespace Xamarin.Bundler {
 					string machine_config = Path.Combine (MonoDirectory, "etc", "mono", "4.5", "machine.config");
 
 					if (!File.Exists (machine_config))
-						throw new MonoMacException (1403, true, Errors.MM1403, "File", machine_config, TargetFramework);
+						throw new ProductException (1403, true, Errors.MM1403, "File", machine_config, TargetFramework);
 
 					File.Copy (machine_config, Path.Combine (mmp_dir, "machine.config"), true);
 				}
@@ -1524,7 +1524,7 @@ namespace Xamarin.Bundler {
 				}
 				else {
 					if (!File.Exists (machine_config_path))
-						throw new MonoMacException (97, true, Errors.MM0097, machine_config_path);
+						throw new ProductException (97, true, Errors.MM0097, machine_config_path);
 					File.Copy (machine_config_path, machineConfigDestFile);
 				}
 			}
@@ -1682,7 +1682,7 @@ namespace Xamarin.Bundler {
 				case Abi.x86_64:
 					return Path.Combine (Driver.FrameworkLibDirectory, arch, flavor, name + ".dll");
 				default:
-					throw new MonoMacException (5205, true, Errors.MM5205, arch);
+					throw new ProductException (5205, true, Errors.MM5205, arch);
 			}
 		}
 	}

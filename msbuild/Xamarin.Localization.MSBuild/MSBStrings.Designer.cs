@@ -503,12 +503,6 @@ namespace Xamarin.Localization.MSBuild {
             }
         }
         
-        public static string E0096 {
-            get {
-                return ResourceManager.GetString("E0096", resourceCulture);
-            }
-        }
-        
         public static string E0097 {
             get {
                 return ResourceManager.GetString("E0097", resourceCulture);

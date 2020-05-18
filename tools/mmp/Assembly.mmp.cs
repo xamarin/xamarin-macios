@@ -16,7 +16,7 @@ namespace Xamarin.Bundler {
 					Application.CopyFile (source, target);
 				}
 			} catch (Exception e) {
-				throw new MonoMacException (1009, true, e, Errors.MX1009, source, target, e.Message);
+				throw new ProductException (1009, true, e, Errors.MX1009, source, target, e.Message);
 			}
 
 			return copied;

@@ -733,7 +733,7 @@ namespace Registrar {
 #else
 						const string msg = "Detected a protocol ({0}) inheriting from the JSExport protocol while using the dynamic registrar. It is not possible to export protocols to JavaScriptCore dynamically; the static registrar must be used (add '--registrar:static' to the additional mtouch arguments in the project's iOS Build options to select the static registrar).";
 #endif
-						ErrorHelper.Warning (4147, msg, GetTypeFullName (type.Type));
+						ErrorHelper.Show (ErrorHelper.CreateWarning (4147, msg, GetTypeFullName (type.Type)));
 					}
 					Protocol.protocol_addProtocol (protocol, proto.Handle);
 				}

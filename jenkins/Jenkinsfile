@@ -720,7 +720,7 @@ timestamps {
                             }
 
                             if (packagesMessage != "")
-                                appendFileComment ("✅ Packages: \n${packagesMessage}\n")
+                                appendFileComment ("✅ Packages built successfully\n<details><summary>View packages</summary>\n\n${packagesMessage}\n</details>\n\n")
                         }
 
                         stage ('Publish Nugets') {

@@ -240,7 +240,7 @@ namespace Xamarin.Bundler
 			var corlib_path = Path.Combine (Resolver.FrameworkDirectory, "mscorlib.dll");
 			var corlib = ManifestResolver.Load (corlib_path);
 			if (corlib == null)
-				throw new MonoTouchException (2006, true, Errors.MT2006, corlib_path);
+				throw new ProductException (2006, true, Errors.MT2006, corlib_path);
 
 			var roots = new List<AssemblyDefinition> ();
 			foreach (var root_assembly in App.RootAssemblies) {
@@ -255,7 +255,7 @@ namespace Xamarin.Bundler
 			foreach (var reference in App.References) {
 				var ad = ManifestResolver.Load (reference);
 				if (ad == null)
-					throw new MonoTouchException (2002, true, Errors.MT2002, reference);
+					throw new ProductException (2002, true, Errors.MT2002, reference);
 
 				var root_assembly = roots.FirstOrDefault ((v) => v.MainModule.FileName == ad.MainModule.FileName);
 				if (root_assembly != null) {
@@ -264,7 +264,7 @@ namespace Xamarin.Bundler
 				}
 				
 				if (ad.MainModule.Runtime > TargetRuntime.Net_4_0)
-					ErrorHelper.Show (new MonoTouchException (11, false, Errors.MT0011, Path.GetFileName (reference), ad.MainModule.Runtime));
+					ErrorHelper.Show (new ProductException (11, false, Errors.MT0011, Path.GetFileName (reference), ad.MainModule.Runtime));
 
 				// Figure out if we're referencing Xamarin.iOS or monotouch.dll
 				var filename = ad.MainModule.FileName;
@@ -317,14 +317,6 @@ namespace Xamarin.Bundler
 				}
 				ErrorHelper.ThrowIfErrors (exceptions);
 			}
-		}
-
-		// This is to load the symbols for all assemblies, so that we can give better error messages
-		// (with file name / line number information).
-		public void LoadSymbols ()
-		{
-			foreach (var a in Assemblies)
-				a.LoadSymbols ();
 		}
 
 		IEnumerable<AssemblyDefinition> GetAssemblies ()
@@ -380,10 +372,10 @@ namespace Xamarin.Bundler
 					var assembly = ManifestResolver.Load (root);
 					ComputeListOfAssemblies (assemblies, assembly, exceptions);
 				}
-			} catch (MonoTouchException mte) {
+			} catch (ProductException mte) {
 				exceptions.Add (mte);
 			} catch (Exception e) {
-				exceptions.Add (new MonoTouchException (9, true, e, Errors.MX0009, e.Message));
+				exceptions.Add (new ProductException (9, true, e, Errors.MX0009, e.Message));
 			}
 
 			if (App.LinkMode == LinkMode.None)
@@ -1723,10 +1715,10 @@ namespace Xamarin.Bundler
 					throw new ArgumentException ($"{targetExecutable} is a directory.");
 				File.Copy (launcher.ToString (), targetExecutable);
 				File.SetLastWriteTime (targetExecutable, DateTime.Now);
-			} catch (MonoTouchException) {
+			} catch (ProductException) {
 				throw;
 			} catch (Exception ex) {
-				throw new MonoTouchException (1015, true, ex, Errors.MT1015, targetExecutable, ex.Message);
+				throw new ProductException (1015, true, ex, Errors.MT1015, targetExecutable, ex.Message);
 			}
 
 			Symlinked = true;

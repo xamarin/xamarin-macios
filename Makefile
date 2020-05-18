@@ -8,7 +8,7 @@ include $(TOP)/mk/versions.mk
 #
 
 all-local:: check-system
-install-local:: check-system
+install-local::
 
 .PHONY: world
 world: check-system
