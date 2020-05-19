@@ -28,7 +28,7 @@ namespace UIKit {
 			if (GetType () == typeof(UIButton))
 				return;
 
-			Console.WriteLine ("The UIButton subclass {0} called the (UIButtonType) constructor, but this is not allowed. Please use the default UIButton constructor from subclasses.\n{1}", GetType (), Environment.StackTrace);
+			Runtime.NSLog ("The UIButton subclass {0} called the (UIButtonType) constructor, but this is not allowed. Please use the default UIButton constructor from subclasses.\n{1}", GetType (), Environment.StackTrace);
 		}
 	}
 }

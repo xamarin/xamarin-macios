@@ -818,7 +818,7 @@ namespace Foundation {
 					obj = null;
 					cback = null;
 				} else {
-					Console.Error.WriteLine ("Warning: observer object was not disposed manually with Dispose()");
+					Runtime.NSLog ("Warning: observer object was not disposed manually with Dispose()");
 				}
 				base.Dispose (disposing);
 			}

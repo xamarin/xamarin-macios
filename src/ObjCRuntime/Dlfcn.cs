@@ -116,7 +116,7 @@ namespace ObjCRuntime {
 			// "no cache image with name (<top>)"
 			if (path.IndexOf ('/') == -1){
 				if (!warningShown){
-					Console.WriteLine ("You are using dlopen without a full path, retrying by prepending /usr/lib");
+					Runtime.NSLog ("You are using dlopen without a full path, retrying by prepending /usr/lib");
 					warningShown = true;
 				}
 				

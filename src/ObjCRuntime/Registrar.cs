@@ -45,8 +45,14 @@ using R=ObjCRuntime.Runtime;
 using ProductException=ObjCRuntime.RuntimeException;
 #endif
 
+#if !MTOUCH && !MMP
+// static registrar needs them but they might not be marked (e.g. if System.Console is not used)
+[assembly: Preserve (typeof (System.Action))]
+[assembly: Preserve (typeof (System.Action<string>))]
+#endif
+
 //
-// This file cannot use any cecil code, since it's also compiled into monotouch.dll
+// This file cannot use any cecil code, since it's also compiled into Xamarin.[iOS|Mac].dll
 //
 
 #if MONOMAC
@@ -2455,8 +2461,8 @@ namespace Registrar {
 
 			if (exceptions.Count > 0) {
 				Exception ae = exceptions.Count == 1 ? exceptions [0] : new AggregateException (exceptions);
-#if !MTOUCH
-				Console.WriteLine (ae);
+#if !MTOUCH && !MMP
+				Runtime.NSLog (ae.ToString ());
 #endif
 				throw ae;
 			}

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 using NUnit.Framework;
 
@@ -85,6 +86,22 @@ namespace Cecil.Tests {
 				else
 					return; // single case, no point in iterating anymore
 			}
+		}
+
+		[TestCaseSource (typeof (Helper), "PlatformAssemblies")]
+		public void NoSystemConsoleReference (string assemblyPath)
+		{
+			if (Path.GetFileName (assemblyPath) == "Xamarin.Mac.dll")
+				Assert.Ignore ("Xamarin.Mac has a workaround for Sierra bug w/NSLog");
+
+			var assembly = Helper.GetAssembly (assemblyPath);
+			if (assembly == null) {
+				Assert.Ignore ("{assemblyPath} could not be found (might be disabled in build)");
+				return; // just to help nullability
+			}
+			// this has a quite noticable impact on (small) app size
+			if (assembly.MainModule.TryGetTypeReference ("System.Console", out var _))
+				Assert.Fail ($"{assemblyPath} has a reference to `System.Console`. Please use `Runtime.NSLog` inside the platform assemblies");
 		}
 	}
 }
