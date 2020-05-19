@@ -6,14 +6,30 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 
 namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 	public interface ITestTask {
-		bool HasCustomTestName { get; }
+
+		#region Status properties
+
+		bool NotStarted { get; }
+		bool Building { get; }
 		bool BuildSucceeded { get; }
+		bool BuildFailure { get; }
+		bool Waiting { get; }
+		bool InProgress { get; }
+		bool Running { get; }
+		bool Finished { get; }
+		bool HarnessException { get; }
+
 		bool Succeeded { get; }
 		bool Failed { get; }
-		bool Ignored { get; set; }
 		bool TimedOut { get; }
-		bool Finished { get; }
+		bool Crashed { get; }
+		bool DeviceNotFound { get; }
+
+		#endregion
+
+		bool HasCustomTestName { get; }
 		bool BuildOnly { get; set; }
+		bool Ignored { get; set; }
 
 		string KnownFailure { get; set; }
 		string ProjectConfiguration { get; set; }
