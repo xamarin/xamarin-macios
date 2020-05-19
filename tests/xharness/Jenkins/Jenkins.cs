@@ -17,12 +17,13 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
 
 namespace Xharness.Jenkins {
 	public class Jenkins : IResourceManager {
-		readonly ISimulatorLoader simulators;
+		public readonly ISimulatorLoader Simulators;
 		readonly IHardwareDeviceLoader devices;
 		readonly IProcessManager processManager;
 		readonly IResultParser resultParser;
 		readonly ITunnelBore tunnelBore;
 		readonly TestSelector testSelector;
+		readonly TestVariationsFactory testVariationsFactory;
 		
 		bool populating = true;
 
@@ -109,9 +110,10 @@ namespace Xharness.Jenkins {
 			this.resultParser = resultParser ?? throw new ArgumentNullException (nameof (resultParser));
 			this.tunnelBore = tunnelBore ?? throw new ArgumentNullException (nameof (tunnelBore));
 			Harness = harness ?? throw new ArgumentNullException (nameof (harness));
-			simulators = new SimulatorLoader (processManager);
+			Simulators = new SimulatorLoader (processManager);
 			devices = new HardwareDeviceLoader (processManager);
 			testSelector = new TestSelector (this, processManager, new GitHub (harness, processManager));
+			testVariationsFactory = new TestVariationsFactory (this, processManager);
 		}
 
 		Task LoadAsync (ref ILog log, IDeviceLoader deviceManager, string name)
@@ -156,57 +158,16 @@ namespace Xharness.Jenkins {
 		Task LoadSimulatorsAndDevicesAsync ()
 		{
 			var devs = LoadAsync (ref DeviceLoadLog, devices, "Device");
-			var sims = LoadAsync (ref SimulatorLoadLog, simulators, "Simulator");
+			var sims = LoadAsync (ref SimulatorLoadLog, Simulators, "Simulator");
 
 			return Task.WhenAll (devs, sims);
-		}
-
-		TestTarget[] GetAppRunnerTargets (TestPlatform platform)
-		{
-			switch (platform) {
-			case TestPlatform.tvOS:
-				return new TestTarget [] { TestTarget.Simulator_tvOS };
-			case TestPlatform.watchOS:
-			case TestPlatform.watchOS_32:
-			case TestPlatform.watchOS_64_32:
-				return new TestTarget [] { TestTarget.Simulator_watchOS };
-			case TestPlatform.iOS_Unified:
-				return new TestTarget [] { TestTarget.Simulator_iOS32, TestTarget.Simulator_iOS64 };
-			case TestPlatform.iOS_Unified32:
-				return new TestTarget [] { TestTarget.Simulator_iOS32 };
-			case TestPlatform.iOS_Unified64:
-			case TestPlatform.iOS_TodayExtension64:
-				return new TestTarget [] { TestTarget.Simulator_iOS64 };
-			default:
-				throw new NotImplementedException (platform.ToString ());
-			}
-		}
-
-		string GetSimulatorMinVersion (TestPlatform platform)
-		{
-			switch (platform) {
-			case TestPlatform.iOS:
-			case TestPlatform.iOS_Unified:
-			case TestPlatform.iOS_TodayExtension64:
-			case TestPlatform.iOS_Unified32:
-			case TestPlatform.iOS_Unified64:
-				return "iOS " + SdkVersions.MiniOSSimulator;
-			case TestPlatform.tvOS:
-				return "tvOS " + SdkVersions.MinTVOSSimulator;
-			case TestPlatform.watchOS:
-			case TestPlatform.watchOS_32:
-			case TestPlatform.watchOS_64_32:
-				return "watchOS " + SdkVersions.MinWatchOSSimulator;
-			default:
-				throw new NotImplementedException (platform.ToString ());
-			}
 		}
 
 		IEnumerable<RunSimulatorTask> CreateRunSimulatorTaskAsync (MSBuildTask buildTask)
 		{
 			var runtasks = new List<RunSimulatorTask> ();
 
-			TestTarget [] targets = GetAppRunnerTargets (buildTask.Platform);
+			TestTarget [] targets = buildTask.Platform.GetAppRunnerTargets ();
 			TestPlatform [] platforms;
 			bool [] ignored;
 
@@ -233,10 +194,10 @@ namespace Xharness.Jenkins {
 			}
 
 			for (int i = 0; i < targets.Length; i++) {
-				var sims = simulators.SelectDevices (targets [i], SimulatorLoadLog, false);
+				var sims = Simulators.SelectDevices (targets [i], SimulatorLoadLog, false);
 				runtasks.Add (new RunSimulatorTask (
 					jenkins: this,
-					simulators: simulators,
+					simulators: Simulators,
 					buildTask: buildTask,
 					processManager: processManager,
 					tunnelBore: tunnelBore,
@@ -272,252 +233,6 @@ namespace Xharness.Jenkins {
 				return false;
 
 			return true;
-		}
-
-		class TestData
-		{
-			public string Variation;
-			public string MTouchExtraArgs;
-			public string MonoBundlingExtraArgs; // mmp
-			public string KnownFailure;
-			public bool Debug;
-			public bool Profiling;
-			public string LinkMode;
-			public string Defines;
-			public string Undefines;
-			public bool? Ignored;
-			public bool EnableSGenConc;
-			public bool UseThumb;
-			public MonoNativeFlavor MonoNativeFlavor;
-			public MonoNativeLinkMode MonoNativeLinkMode;
-			public IEnumerable<IDevice> Candidates;
-		}
-
-		IEnumerable<TestData> GetTestData (RunTestTask test)
-		{
-			// This function returns additional test configurations (in addition to the default one) for the specific test
-
-			MonoNativeFlavor flavor;
-			switch (test.TestName) {
-			case "mono-native-compat":
-				flavor = MonoNativeFlavor.Compat;
-				break;
-			case "mono-native-unified":
-				flavor = MonoNativeFlavor.Unified;
-				break;
-			default:
-				flavor = MonoNativeFlavor.None;
-				break;
-			}
-
-			// 32-bit interpreter doesn't work yet: https://github.com/mono/mono/issues/9871
-			var supports_interpreter = test.Platform != TestPlatform.iOS_Unified32;
-			var supports_dynamic_registrar_on_device = test.Platform == TestPlatform.iOS_Unified64 || test.Platform == TestPlatform.tvOS;
-
-			switch (test.ProjectPlatform) {
-			case "iPhone":
-				// arm64_32 is only supported for Release builds for now.
-				// arm32 bits too big for debug builds - https://github.com/xamarin/maccore/issues/2080
-				var supports_debug = test.Platform != TestPlatform.watchOS_64_32 && !(test.TestName == "dont link" && test.Platform == TestPlatform.iOS_Unified32);
-
-				/* we don't add --assembly-build-target=@all=staticobject because that's the default in all our test projects */
-				if (supports_debug) {
-					yield return new TestData { Variation = "AssemblyBuildTarget: dylib (debug)", MTouchExtraArgs = $"--assembly-build-target=@all=dynamiclibrary {test.TestProject.MTouchExtraArgs}", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Dynamic, MonoNativeFlavor = flavor };
-					yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (debug)", MTouchExtraArgs = $"--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject {test.TestProject.MTouchExtraArgs}", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, MonoNativeFlavor = flavor };
-					yield return new TestData { Variation = "AssemblyBuildTarget: dylib (debug, profiling)", MTouchExtraArgs = $"--assembly-build-target=@all=dynamiclibrary {test.TestProject.MTouchExtraArgs}", Debug = true, Profiling = true, MonoNativeLinkMode = MonoNativeLinkMode.Dynamic, MonoNativeFlavor = flavor };
-					yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (debug, profiling)", MTouchExtraArgs = $"--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject {test.TestProject.MTouchExtraArgs}", Debug = true, Profiling = true, MonoNativeLinkMode = MonoNativeLinkMode.Static, MonoNativeFlavor = flavor };
-				}
-
-				if (test.ProjectConfiguration.Contains ("Debug"))
-					yield return new TestData { Variation = "Release", MTouchExtraArgs = test.TestProject.MTouchExtraArgs, Debug = false, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static };
-				if (test.Platform == TestPlatform.iOS_Unified32)
-					yield return new TestData { Variation = "Release: UseThumb", MTouchExtraArgs = test.TestProject.MTouchExtraArgs, Debug = false, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, UseThumb = true };
-				yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (release)", MTouchExtraArgs = $"--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject {test.TestProject.MTouchExtraArgs}", Debug = false, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, MonoNativeFlavor = flavor };
-
-				switch (test.TestName) {
-				case "monotouch-test":
-					if (supports_dynamic_registrar_on_device)
-						yield return new TestData { Variation = "Debug (dynamic registrar)", MTouchExtraArgs = "--registrar:dynamic", Debug = true, Profiling = false };
-					yield return new TestData { Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = false, Profiling = false, Defines = "OPTIMIZEALL" };
-					if (supports_debug) {
-						yield return new TestData { Variation = "Debug (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = true, Profiling = false, Defines = "OPTIMIZEALL" };
-						yield return new TestData { Variation = "Debug: SGenConc", MTouchExtraArgs = "", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, EnableSGenConc = true};
-					}
-					if (supports_interpreter) {
-						if (supports_debug) {
-							yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
-							yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
-						}
-						yield return new TestData { Variation = "Release (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = false, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
-					}
-					break;
-				case  string name when name.StartsWith ("mscorlib", StringComparison.Ordinal):
-					if (supports_debug)
-						yield return new TestData { Variation = "Debug: SGenConc", MTouchExtraArgs = "", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, EnableSGenConc = true};
-					if (supports_interpreter) {
-						if (supports_debug) {
-							yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME", KnownFailure = "<a href='https://github.com/xamarin/maccore/issues/1683'>#1683</a>" };
-							yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME", KnownFailure = "<a href='https://github.com/xamarin/maccore/issues/1682'>#1682</a>" };
-						}
-						yield return new TestData { Variation = "Release (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = false, Profiling = false, Undefines = "FULL_AOT_RUNTIME", KnownFailure = "<a href='https://github.com/xamarin/maccore/issues/1682'>#1682</a>" };
-					}
-					break;
-				}
-				break;
-			case "iPhoneSimulator":
-				switch (test.TestName) {
-				case "monotouch-test":
-					// Xcode 12 beta 3 broke iOS 32 bits simulators
-					if (test.Platform == TestPlatform.iOS_Unified32)
-						break;
-					// The default is to run monotouch-test with the dynamic registrar (in the simulator), so that's already covered
-					yield return new TestData { Variation = "Debug (LinkSdk)", Debug = true, Profiling = false, LinkMode = "LinkSdk" };
-					yield return new TestData { Variation = "Debug (static registrar)", MTouchExtraArgs = "--registrar:static", Debug = true, Profiling = false, Undefines = "DYNAMIC_REGISTRAR" };
-					yield return new TestData { Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = false, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL", Undefines = "DYNAMIC_REGISTRAR" };
-					yield return new TestData { Variation = "Debug (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all,-remove-uithread-checks", Debug = true, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL", Undefines = "DYNAMIC_REGISTRAR", Ignored = !IncludeAll };
-					break;
-				case "introspection":
-					// Xcode 12 beta 3 broke iOS 32 bits simulators
-					if (test.Platform == TestPlatform.iOS_Unified32)
-						break;
-					foreach (var target in GetAppRunnerTargets (test.Platform))
-						yield return new TestData {
-							Variation = $"Debug ({GetSimulatorMinVersion (test.Platform)})",
-							Debug = true,
-							Candidates = simulators.SelectDevices (target, SimulatorLoadLog, true),
-							Ignored = !IncludeOldSimulatorTests, 
-						};
-					break;
-				}
-				break;
-			case "AnyCPU":
-			case "x86":
-				switch (test.TestName) {
-				case "xammac tests":
-					switch (test.ProjectConfiguration) {
-					case "Release":
-						yield return new TestData { Variation = "Release (all optimizations)", MonoBundlingExtraArgs = "--registrar:static --optimize:all", Debug = false, LinkMode = "Full", Defines = "OPTIMIZEALL"};
-						break;
-					case "Debug":
-						yield return new TestData { Variation = "Debug (all optimizations)", MonoBundlingExtraArgs = "--registrar:static --optimize:all,-remove-uithread-checks", Debug = true, LinkMode = "Full", Defines = "OPTIMIZEALL", Ignored = !IncludeAll };
-						break;
-					}
-					break;
-				}
-				break;
-			default:
-				throw new NotImplementedException (test.ProjectPlatform);
-			}
-		}
-
-		IEnumerable<T> CreateTestVariations<T> (IEnumerable<T> tests, Func<MSBuildTask, T, IEnumerable<IDevice>, T> creator) where T: RunTestTask
-		{
-			foreach (var task in tests) {
-				if (string.IsNullOrEmpty (task.Variation))
-					task.Variation = task.ProjectConfiguration.Contains ("Debug") ? "Debug" : "Release";
-			}
-
-			var rv = new List<T> (tests);
-			foreach (var task in tests.ToArray ()) {
-				foreach (var test_data in GetTestData (task)) {
-					var variation = test_data.Variation;
-					var mtouch_extra_args = test_data.MTouchExtraArgs;
-					var bundling_extra_args = test_data.MonoBundlingExtraArgs;
-					var configuration = test_data.Debug ? task.ProjectConfiguration : task.ProjectConfiguration.Replace ("Debug", "Release");
-					var debug = test_data.Debug;
-					var profiling = test_data.Profiling;
-					var link_mode = test_data.LinkMode;
-					var defines = test_data.Defines;
-					var undefines = test_data.Undefines;
-					var ignored = test_data.Ignored;
-					var known_failure = test_data.KnownFailure;
-					var candidates = test_data.Candidates;
-
-					if (!string.IsNullOrEmpty (known_failure))
-						ignored = true;
-
-					var clone = task.TestProject.Clone ();
-					var clone_task = Task.Run (async () => {
-						await task.BuildTask.InitialTask; // this is the project cloning above
-						await clone.CreateCopyAsync (task);
-
-						var isMac = false;
-						var canSymlink = false;
-						switch (task.Platform) {
-						case TestPlatform.Mac:
-						case TestPlatform.Mac_Modern:
-						case TestPlatform.Mac_Full:
-						case TestPlatform.Mac_System:
-							isMac = true;
-							break;
-						case TestPlatform.iOS:
-						case TestPlatform.iOS_TodayExtension64:
-						case TestPlatform.iOS_Unified:
-						case TestPlatform.iOS_Unified32:
-						case TestPlatform.iOS_Unified64:
-							canSymlink = true;
-							break;
-						}
-
-						if (!string.IsNullOrEmpty (mtouch_extra_args))
-							clone.Xml.AddExtraMtouchArgs (mtouch_extra_args, task.ProjectPlatform, configuration);
-						if (!string.IsNullOrEmpty (bundling_extra_args))
-							clone.Xml.AddMonoBundlingExtraArgs (bundling_extra_args, task.ProjectPlatform, configuration);
-						if (!string.IsNullOrEmpty (link_mode))
-							clone.Xml.SetNode (isMac ? "LinkMode" : "MtouchLink", link_mode, task.ProjectPlatform, configuration);
-						if (!string.IsNullOrEmpty (defines)) {
-							clone.Xml.AddAdditionalDefines (defines, task.ProjectPlatform, configuration);
-							if (clone.ProjectReferences != null) {
-								foreach (var pr in clone.ProjectReferences) {
-									pr.Xml.AddAdditionalDefines (defines, task.ProjectPlatform, configuration);
-									pr.Xml.Save (pr.Path);
-								}
-							}
-						}
-						if (!string.IsNullOrEmpty (undefines)) {
-							clone.Xml.RemoveDefines (undefines, task.ProjectPlatform, configuration);
-							if (clone.ProjectReferences != null) {
-								foreach (var pr in clone.ProjectReferences) {
-									pr.Xml.RemoveDefines (undefines, task.ProjectPlatform, configuration);
-									pr.Xml.Save (pr.Path);
-								}
-							}
-						}
-						clone.Xml.SetNode (isMac ? "Profiling" : "MTouchProfiling", profiling ? "True" : "False", task.ProjectPlatform, configuration);
-						if (test_data.MonoNativeFlavor != MonoNativeFlavor.None) {
-							var mono_native_link = test_data.MonoNativeLinkMode;
-							if (!canSymlink && mono_native_link == MonoNativeLinkMode.Symlink)
-								mono_native_link = MonoNativeLinkMode.Static;
-							MonoNativeHelper.AddProjectDefines (clone.Xml, test_data.MonoNativeFlavor, mono_native_link, task.ProjectPlatform, configuration);
-						}
-						if (test_data.EnableSGenConc)
-							clone.Xml.SetNode ("MtouchEnableSGenConc", "true", task.ProjectPlatform, configuration);
-						if (test_data.UseThumb) // no need to check the platform, already done at the data iterator
-							clone.Xml.SetNode ("MtouchUseThumb", "true", task.ProjectPlatform, configuration);
-
-						if (!debug && !isMac)
-							clone.Xml.SetMtouchUseLlvm (true, task.ProjectPlatform, configuration);
-						clone.Xml.Save (clone.Path);
-					});
-
-					var build = new MSBuildTask (jenkins: this, testProject: clone, processManager: processManager) {
-						ProjectConfiguration = configuration,
-						ProjectPlatform = task.ProjectPlatform,
-						Platform = task.Platform,
-						InitialTask = clone_task,
-						TestName = clone.Name,
-					};
-					T newVariation = creator (build, task, candidates);
-					newVariation.Variation = variation;
-					newVariation.Ignored = ignored ?? task.Ignored;
-					newVariation.BuildOnly = task.BuildOnly;
-					newVariation.TimeoutMultiplier = task.TimeoutMultiplier;
-					newVariation.KnownFailure = known_failure;
-					rv.Add (newVariation);
-				}
-			}
-
-			return rv;
 		}
 
 		async Task<IEnumerable<AppleTestTask>> CreateRunSimulatorTasksAsync ()
@@ -567,10 +282,10 @@ namespace Xharness.Jenkins {
 				}
 			}
 
-			var testVariations = CreateTestVariations (runSimulatorTasks, (buildTask, test, candidates) =>
+			var testVariations = testVariationsFactory.CreateTestVariations (runSimulatorTasks, (buildTask, test, candidates) =>
 				new RunSimulatorTask (
 					jenkins: this,
-					simulators: simulators,
+					simulators: Simulators,
 					buildTask: buildTask,
 					processManager: processManager,
 					tunnelBore: tunnelBore,
@@ -720,7 +435,7 @@ namespace Xharness.Jenkins {
 				rv.AddRange (projectTasks);
 			}
 
-			return Task.FromResult<IEnumerable<AppleTestTask>> (CreateTestVariations (rv, (buildTask, test, candidates)
+			return Task.FromResult<IEnumerable<AppleTestTask>> (testVariationsFactory.CreateTestVariations (rv, (buildTask, test, candidates)
 				=> new RunDeviceTask (
 					jenkins: this, 
 					devices: devices,
@@ -857,7 +572,7 @@ namespace Xharness.Jenkins {
 							TestName = project.Name,
 							IsUnitTest = true,
 						};
-						execs = CreateTestVariations (new [] { exec }, (buildTask, test, candidates) =>
+						execs = testVariationsFactory.CreateTestVariations (new [] { exec }, (buildTask, test, candidates) =>
 							new MacExecuteTask (this, buildTask, processManager, crashReportSnapshotFactory) { IsUnitTest = true } );
 					}
 
@@ -1374,7 +1089,7 @@ namespace Xharness.Jenkins {
 							LoadAsync (ref DeviceLoadLog, devices, "Device").DoNotAwait ();
 							break;
 						case "/reload-simulators":
-							LoadAsync (ref SimulatorLoadLog, simulators, "Simulator").DoNotAwait ();
+							LoadAsync (ref SimulatorLoadLog, Simulators, "Simulator").DoNotAwait ();
 							break;
 						case "/quit":
 							using (var writer = new StreamWriter (response.OutputStream)) {
