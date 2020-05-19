@@ -89,14 +89,10 @@ namespace Xamarin.Bundler {
 		static string resources_dir;
 		static string mmp_dir;
 		
-		static string tls_provider;
-		static string http_message_provider;
-
 		static string AppPath { get { return Path.Combine (macos_dir, app_name); } }
 
 		static string icon;
 		static string certificate_name;
-		public static bool Force;
 
 		static bool is_extension, is_xpc_service;
 		static bool frameworks_copied_to_bundle_dir;    // Have we copied any frameworks to Foo.app/Contents/Frameworks?
@@ -160,13 +156,10 @@ namespace Xamarin.Bundler {
 		static int Main2 (string [] args)
 		{
 			var os = new OptionSet () {
-				{ "f|force", "Forces the recompilation of code, regardless of timestamps", v=> Force = true },
-				{ "cache=", "Specify the directory where temporary build files will be cached", v => App.Cache.Location = v },
-				{ "a|assembly=", "Add an assembly to be processed", v => App.References.Add (v) },
+				{ "a|assembly=", "Add an assembly to be processed [DEPRECATED, use --reference instead]", v => App.References.Add (v), true /* Hide: this option is deprecated in favor of the shared --reference option instead */ },
 				{ "r|resource=", "Add a resource to be included", v => resources.Add (v) },
 				{ "o|output=", "Specify the output path", v => output_dir = v },
 				{ "n|name=", "Specify the application name", v => app_name = v },
-				{ "d|debug", "Build a debug bundle", v => App.EnableDebug = true },
 				{ "s|sgen:", "Use the SGen Garbage Collector",
 					v => {
 						if (!ParseBool (v, "sgen")) 
@@ -187,62 +180,24 @@ namespace Xamarin.Bundler {
 					},
 					true // do not show this option anymore
 				},
-				{ "nolink", "Do not link the assemblies", v => App.LinkMode = LinkMode.None },
 				{ "mapinject", "Inject a fast method map [deprecated]", v => { ErrorHelper.Show (new ProductException (16, false, Errors.MX0016,  "--mapinject")); } },
-				{ "minos=", "Minimum supported version of Mac OS X", 
+				{ "minos=", "Minimum supported version of Mac OS X [DEPRECATED, use --targetver instead]",
 					v => {
 						try {
 							App.DeploymentTarget = StringUtils.ParseVersion (v);
 						} catch (Exception ex) {
 							throw ErrorHelper.CreateError (26, ex, Errors.MX0026, $"minos:{v}", ex.Message);
 						}
-					}
+					}, true /* Hide: this option is deprecated in favor of the shared --targetver option instead */
 				},
-				{ "linkplatform", "Link only the Xamarin.Mac.dll platform assembly", v => App.LinkMode = LinkMode.Platform },
-				{ "linksdkonly", "Link only the SDK assemblies", v => App.LinkMode = LinkMode.SDKOnly },
-				{ "linkskip=", "Skip linking of the specified assembly", v => App.LinkSkipped.Add (v) },
-				{ "i18n=", "List of i18n assemblies to copy to the output directory, separated by commas (none,all,cjk,mideast,other,rare,west)", v => App.I18n = LinkerOptions.ParseI18nAssemblies (v) },
 				{ "c|certificate=", "The Code Signing certificate for the application", v => { certificate_name = v; }},
 				{ "p", "Generate a plist for the application", v => { generate_plist = true; }},
 				{ "i|icon=", "Use the specified file as the bundle icon", v => { icon = v; }},
-				{ "xml=", "Provide an extra XML definition file to the linker", v => App.Definitions.Add (v) },
 				{ "time", v => WatchLevel++ },
 				{ "arch=", "Specify the architecture ('x86_64') of the native runtime (default to 'x86_64', which is the only valid value) [DEPRECATED, use --abi instead]", v => { App.ParseAbi (v); }, true},
 				{ "profile=", "(Obsoleted in favor of --target-framework) Specify the .NET profile to use", v => SetTargetFramework (v), true },
 				{ "force-thread-check", "Keep UI thread checks inside (even release) builds [DEPRECATED, use --optimize=-remove-uithread-checks instead]", v => { App.Optimizations.RemoveUIThreadChecks = false; }, true},
 				{ "disable-thread-check", "Remove UI thread checks inside (even debug) builds [DEPRECATED, use --optimize=remove-uithread-checks instead]", v => { App.Optimizations.RemoveUIThreadChecks = true; }, true},
-				{ "registrar:", "Specify the registrar to use (dynamic [default], static, partial)", v => {
-						switch (v) {
-						case "static":
-							App.Registrar = RegistrarMode.Static;
-							break;
-						case "dynamic":
-							App.Registrar = RegistrarMode.Dynamic;
-							break;
-						case "partial":
-						case "partial-static":
-							App.Registrar = RegistrarMode.PartialStatic;
-							break;
-						case "il":
-							App.Registrar = RegistrarMode.Dynamic;
-							break;
-						case "default":
-							App.Registrar = RegistrarMode.Default;
-							break;
-						default:
-							throw new ProductException (20, true, Errors.MX0020, "--registrar", "dynamic, static, partial, or default");
-						}
-					}
-				},
-				{ "sdk=", "Specifies the SDK version to compile against (version, for example \"10.9\")",
-					v => {
-						try {
-							App.SdkVersion = StringUtils.ParseVersion (v);
-						} catch (Exception ex) {
-							throw ErrorHelper.CreateError (26, ex, Errors.MX0026, $"sdk:{v}", ex.Message);
-						}
-					}
-				},
 				{ "no-root-assembly", "Specifies that mmp will not process a root assembly. This is if the app needs to be packaged with a different directory structure than what mmp supports.", v => no_executable = true },
 				{ "embed-mono:", "Specifies whether the app will embed the Mono runtime, or if it will use the system Mono found at runtime (default: true).", v => {
 						embed_mono = ParseBool (v, "embed-mono");
@@ -268,8 +223,6 @@ namespace Xamarin.Bundler {
 					}
 				},
 				{ "custom_bundle_name=", "Specify a custom name for the MonoBundle folder.", v => App.CustomBundleName = v, true }, // Hidden hack for "universal binaries"
-				{ "tls-provider=", "Specify the default TLS provider", v => { tls_provider = v; }},
-				{ "http-message-handler=", "Specify the default HTTP Message Handler", v => { http_message_provider = v; }},
 				{ "extension", "Specifies an app extension", v => is_extension = true },
 				{ "xpc", "Specifies an XPC service", v => { is_extension = true; is_xpc_service = true; }},
 				{ "allow-unsafe-gac-resolution", "Allow MSBuild to resolve from the System GAC", v => {} , true }, // Used in Xamarin.Mac.XM45.targets and must be ignored here. Hidden since it is a total hack. If you can use it, you don't need support
@@ -277,13 +230,6 @@ namespace Xamarin.Bundler {
 				{ "disable-lldb-attach=", "Disable automatic lldb attach on crash", v => App.DisableLldbAttach = ParseBool (v, "disable-lldb-attach")},
 				{ "disable-omit-fp=", "Disable a JIT optimization where the frame pointer is omitted from the stack. This is optimization is disabled by default for debug builds.", v => App.DisableOmitFramePointer = ParseBool (v, "disable-omit-fp") },
 				{ "machine-config=", "Custom machine.config file to copy into MonoBundle/mono/4.5/machine.config. Pass \"\" to copy in a valid \"empty\" config file.", v => machine_config_path = v },
-				{ "runregistrar:", "Runs the registrar on the input assembly and outputs a corresponding native library.",
-					v => {
-						action = Action.RunRegistrar;
-						App.RegistrarOutputLibrary = v;
-					},
-					true /* this is an internal option */
-				},
 				{ "xamarin-framework-directory=", "The framework directory", v => { framework_dir = v; }, true },
 				{ "xamarin-full-framework", "Used with --target-framework=4.5 to select XM Full Target Framework. Deprecated, use --target-framework=Xamarin.Mac,Version=v4.0,Profile=Full instead.", v => { TargetFramework = TargetFramework.Xamarin_Mac_4_5_Full; }, true },
 				{ "xamarin-system-framework", "Used with --target-framework=4.5 to select XM Full Target Framework. Deprecated, use --target-framework=Xamarin.Mac,Version=v4.0,Profile=System instead.", v => { TargetFramework = TargetFramework.Xamarin_Mac_4_5_System; }, true },
@@ -293,11 +239,8 @@ namespace Xamarin.Bundler {
 					}
 				},
 				{ "link-prohibited-frameworks", "Natively link against prohibited (rejected by AppStore) frameworks", v => { LinkProhibitedFrameworks = true; } },
-				{ "warn-on-type-ref=", "Warn if any of the comma-separated types is referenced by assemblies - both before and after linking", v => {
-						App.WarnOnTypeRef.AddRange (v.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries));
-					}
-				},
 				{ "legacy-assembly-resolution", "Use a legacy assembly resolution logic when using the Xamarin.Mac Full framework.", v => { UseLegacyAssemblyResolution = true; }, false /* hidden until we know if it's needed */ },
+				/* Any new options that are identical between mtouch and mmp should be added to common/Driver.cs */
 			};
 
 			var extra_args = Environment.GetEnvironmentVariable ("MMP_ENV_OPTIONS");
@@ -315,9 +258,6 @@ namespace Xamarin.Bundler {
 				if (forceAotVariable != null)
 					App.AOTOptions = new AOTOptions (forceAotVariable);
 			}
-
-			App.RuntimeOptions = RuntimeOptions.Create (App, http_message_provider, tls_provider);
-
 
 			if (IsUnifiedFullSystemFramework) {
 				// With newer Mono builds, the system assemblies passed to us by msbuild are

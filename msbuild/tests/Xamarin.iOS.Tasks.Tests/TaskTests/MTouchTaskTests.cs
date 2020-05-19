@@ -74,12 +74,12 @@ namespace Xamarin.iOS.Tasks
 		public void StandardCommandline ()
 		{
 			var args = Task.GenerateCommandLineCommands ();
-			// -r=*/a.dll
-			Assert.IsTrue (Task.ResponseFile.Contains ("-r=" + Path.GetFullPath ("a.dll")), "#1a");
-			// "-r=*/b with spaces.dll"
-			Assert.IsTrue (Task.ResponseFile.Contains ("\"-r=" + Path.GetFullPath ("b with spaces.dll") + "\""), "#1b");
-			// "-r=*/c\"quoted\".dll"
-			Assert.IsTrue (Task.ResponseFile.Contains ("\"-r=" + Path.GetFullPath ("c\\\"quoted\\\".dll") + "\""), "#1c");
+			// --reference=*/a.dll
+			Assert.IsTrue (Task.ResponseFile.Contains ("--reference=" + Path.GetFullPath ("a.dll")), "#1a");
+			// "--reference=*/b with spaces.dll"
+			Assert.IsTrue (Task.ResponseFile.Contains ("\"--reference=" + Path.GetFullPath ("b with spaces.dll") + "\""), "#1b");
+			// "--reference=*/c\"quoted\".dll"
+			Assert.IsTrue (Task.ResponseFile.Contains ("\"--reference=" + Path.GetFullPath ("c\\\"quoted\\\".dll") + "\""), "#1c");
 			Assert.IsTrue (Task.ResponseFile.Contains ("Main.exe"), "#2");
 
 			var expectedSimArg = $"--sim={Path.GetFullPath (AppBundlePath)}";

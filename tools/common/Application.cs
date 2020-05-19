@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 
 using Mono.Cecil;
 using Mono.Cecil.Cil;
+using Mono.Linker;
 
 using Xamarin.Linker;
 using Xamarin.Utils;
@@ -45,6 +46,9 @@ namespace Xamarin.Bundler {
 		public string AppDirectory = ".";
 		public bool DeadStrip = true;
 		public bool EnableDebug;
+		// The list of assemblies that we do generate debugging info for.
+		public bool DebugAll;
+		public List<string> DebugAssemblies = new List<string> ();
 		internal RuntimeOptions RuntimeOptions;
 		public Optimizations Optimizations = new Optimizations ();
 		public RegistrarMode Registrar = RegistrarMode.Default;
@@ -61,7 +65,7 @@ namespace Xamarin.Bundler {
 		public LinkMode LinkMode = LinkMode.All;
 		public List<string> LinkSkipped = new List<string> ();
 		public List<string> Definitions = new List<string> ();
-		public Mono.Linker.I18nAssemblies I18n;
+		public I18nAssemblies I18n;
 		public List<string> WarnOnTypeRef = new List<string> ();
 
 		public bool? EnableCoopGC;
@@ -102,6 +106,30 @@ namespace Xamarin.Bundler {
 			set { package_managed_debug_symbols = value; }
 		}
 
+		public string TlsProvider;
+		public string HttpMessageHandler;
+		// If we're targetting a 32 bit arch.
+		bool? is32bits;
+		public bool Is32Build {
+			get {
+				if (!is32bits.HasValue)
+					is32bits = IsArchEnabled (Abi.Arch32Mask);
+				return is32bits.Value;
+			}
+		}
+
+		// If we're targetting a 64 bit arch.
+		bool? is64bits;
+		public bool Is64Build {
+			get {
+				if (!is64bits.HasValue)
+					is64bits = IsArchEnabled (Abi.Arch64Mask);
+				return is64bits.Value;
+			}
+		}
+
+		public bool IsDualBuild { get { return Is32Build && Is64Build; } } // if we're building both a 32 and a 64 bit version.
+
 		public Application (string[] arguments)
 		{
 			Cache = new Cache (arguments);
@@ -111,6 +139,25 @@ namespace Xamarin.Bundler {
 			get {
 				return Optimizations.RemoveDynamicRegistrar != true;
 			}
+		}
+
+		public void ParseI18nAssemblies (string i18n)
+		{
+			var assemblies = I18nAssemblies.None;
+
+			foreach (var part in i18n.Split (',')) {
+				var assembly = part.Trim ();
+				if (string.IsNullOrEmpty (assembly))
+					continue;
+
+				try {
+					assemblies |= (I18nAssemblies) Enum.Parse (typeof (I18nAssemblies), assembly, true);
+				} catch {
+					throw new FormatException ("Unknown value for i18n: " + assembly);
+				}
+			}
+
+			I18n = assemblies;
 		}
 
 		// This is just a name for this app to show in log/error messages, etc.
@@ -333,6 +380,8 @@ namespace Xamarin.Bundler {
 		{
 			SelectRegistrar ();
 			SelectMonoNative ();
+
+			RuntimeOptions = RuntimeOptions.Create (this, HttpMessageHandler, TlsProvider);
 
 			if (RequiresXcodeHeaders && SdkVersion < SdkVersions.GetVersion (Platform)) {
 				throw ErrorHelper.CreateError (91, Errors.MX0091, ProductName, PlatformName, SdkVersions.GetVersion (Platform), SdkVersions.Xcode, Error91LinkerSuggestion);

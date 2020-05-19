@@ -80,7 +80,7 @@ namespace Xamarin.Mac.Tasks
 					else
 						minimumDeploymentTarget = v.Value;
 
-					args.AddLine (string.Format("/minos={0}", minimumDeploymentTarget));
+					args.AddLine (string.Format("/targetver={0}", minimumDeploymentTarget));
 				}
 				catch (Exception ex) {
 					Log.LogWarning (null, null, null, AppManifest.ItemSpec, 0, 0, 0, 0, MSBStrings.E0010, AppManifest.ItemSpec, ex.Message);
@@ -114,7 +114,7 @@ namespace Xamarin.Mac.Tasks
 
 			if (References != null) {
 				foreach (var asm in References)
-					args.AddQuotedLine ("/assembly:" + Path.GetFullPath (asm.ItemSpec));
+					args.AddQuotedLine ("/reference:" + Path.GetFullPath (asm.ItemSpec));
 			}
 
 			if (NativeReferences != null) {
