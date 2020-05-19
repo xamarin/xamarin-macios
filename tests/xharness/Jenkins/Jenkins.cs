@@ -446,11 +446,6 @@ namespace Xharness.Jenkins {
 					candidates: candidates?.Cast<IHardwareDevice> () ?? test.Candidates)));
 		}
 
-		static string AddSuffixToPath (string path, string suffix)
-		{
-			return Path.Combine (Path.GetDirectoryName (path), Path.GetFileNameWithoutExtension (path) + suffix + Path.GetExtension (path));
-		}
-		
 		public bool IsBetaXcode => Harness.XcodeRoot.IndexOf ("beta", StringComparison.OrdinalIgnoreCase) >= 0;
 		
 		Task PopulateTasksAsync ()
