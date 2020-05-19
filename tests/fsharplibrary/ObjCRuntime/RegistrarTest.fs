@@ -1,11 +1,7 @@
 ﻿namespace MonoTouchFixtures
 
 open System
-#if __UNIFIED__
 open Foundation
-#else
-open MonoTouch.Foundation
-#endif
 
 type Registrar_OutExportClass() = 
     inherit NSObject()

@@ -8,7 +8,6 @@
 // Copyright 2012-2014 Xamarin Inc. All rights reserved.
 //
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using CoreMedia;
 using ObjCRuntime;
@@ -16,11 +15,6 @@ using ObjCRuntime;
 using AppKit;
 #else
 using UIKit;
-#endif
-#else
-using MonoTouch.CoreMedia;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
 #endif
 using NUnit.Framework;
 
@@ -40,9 +34,6 @@ namespace MonoTouchFixtures.CoreMedia {
 			Assert.That (v.TimeScale, Is.EqualTo (2), "TimeScale");
 			Assert.That (!v.IsInvalid, "IsInvalid");
 			Assert.That (v.AbsoluteValue.Description, Is.EqualTo ("{1/2 = 0.500}"), "AbsoluteValue");
-#if !XAMCORE_2_0
-			Assert.That (v.AsDictionary != IntPtr.Zero, "AsDictionary");
-#endif
 			Assert.That (v.Description, Is.EqualTo ("{1/2 = 0.500}"), "Description");
 			Assert.That (!v.IsIndefinite, "IsIndefinite");
 			Assert.That (!v.IsNegativeInfinity, "IsNegativeInfinity");
@@ -97,7 +88,6 @@ namespace MonoTouchFixtures.CoreMedia {
 			// GetMinimum
 			Assert.That (CMTime.GetMinimum (v, y) == v, "GetMinimum #1");
 
-#if XAMCORE_2_0
 			using (var d = x.ToDictionary ()) {
 				Assert.That (d.RetainCount, Is.EqualTo ((nint) 1), "RetainCount");
 				Assert.That (d.Count, Is.EqualTo ((nuint) 4), "Count");
@@ -105,7 +95,6 @@ namespace MonoTouchFixtures.CoreMedia {
 				var time = CMTime.FromDictionary (d);
 				Assert.That (time, Is.EqualTo (x), "FromDictionary");
 			}
-#endif
 		}
 
 		[Test]
@@ -168,7 +157,7 @@ namespace MonoTouchFixtures.CoreMedia {
 			Assert.AreEqual (first.Start, second.Start, "CompareCMTimeRange - start - " + description);
 		}
 
-#if XAMCORE_2_0 && !__WATCHOS__
+#if !__WATCHOS__
 		[Test]
 		public void CMTimeStrongDictionary ()
 		{
@@ -187,6 +176,6 @@ namespace MonoTouchFixtures.CoreMedia {
 				set { SetCMTimeValue (TimeKey, value); }
 			}
 		}
-#endif // XAMCORE_2_0
+#endif // !__WATCHOS__
 	}
 }

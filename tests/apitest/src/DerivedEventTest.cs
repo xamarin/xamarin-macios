@@ -1,4 +1,3 @@
-#if XAMCORE_2_0
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -77,4 +76,3 @@ namespace Xamarin.Mac.Tests
 		}
 	}
 }
-#endif

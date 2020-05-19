@@ -10,15 +10,9 @@
 #if !__WATCHOS__
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using ModelIO;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ModelIO;
-using MonoTouch.ObjCRuntime;
-#endif
 using OpenTK;
 using NUnit.Framework;
 

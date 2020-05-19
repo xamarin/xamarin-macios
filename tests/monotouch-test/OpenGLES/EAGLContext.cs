@@ -10,13 +10,8 @@
 #if !__WATCHOS__ && !MONOMAC
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using OpenGLES;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.OpenGLES;
-#endif
 using OpenTK.Graphics.ES20;
 using NUnit.Framework;
 

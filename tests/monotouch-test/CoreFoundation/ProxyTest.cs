@@ -12,16 +12,9 @@ using System.Threading;
 using System.IO;
 using System.Net;
 
-#if XAMCORE_2_0
 using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
-#else
-using MonoTouch;
-using MonoTouch.CoreFoundation;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 using NUnit.Framework;
 using MonoTests.System.Net.Http;
 

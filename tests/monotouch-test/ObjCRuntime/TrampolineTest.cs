@@ -2,8 +2,8 @@ using System;
 using System.Drawing;
 using System.Globalization;
 using System.Runtime.InteropServices;
-#if XAMCORE_2_0
 using Foundation;
+using CoreGraphics;
 using ObjCRuntime;
 #if !__TVOS__
 using MapKit;
@@ -15,26 +15,8 @@ using CoreLocation;
 #if !__WATCHOS__
 using CoreMedia;
 #endif
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.MapKit;
-using MonoTouch.CoreAnimation;
-using MonoTouch.CoreLocation;
-using MonoTouch.CoreMedia;
-#endif
 using OpenTK;
 using NUnit.Framework;
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
 
 namespace MonoTouchFixtures.ObjCRuntime {
 	
@@ -167,16 +149,16 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		extern static void float_objc_msgSend_stret_out_float (out float retval, IntPtr receiver, IntPtr selector, out float arg1);
 		
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
-		extern static void PointF_objc_msgSend_stret_out_double (out PointF retval, IntPtr receiver, IntPtr selector, out double arg1);
+		extern static void CGPoint_objc_msgSend_stret_out_double (out CGPoint retval, IntPtr receiver, IntPtr selector, out double arg1);
 		
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
-		extern static void PointF_objc_msgSend_stret_out_float (out PointF retval, IntPtr receiver, IntPtr selector, out float arg1);
+		extern static void CGPoint_objc_msgSend_stret_out_float (out CGPoint retval, IntPtr receiver, IntPtr selector, out float arg1);
 		
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
-		extern static void RectangleF_objc_msgSend_stret_IntPtr_IntPtr_RectangleF (out RectangleF retval, IntPtr receiver, IntPtr selector, IntPtr a, IntPtr b, RectangleF c);
+		extern static void CGRect_objc_msgSend_stret_IntPtr_IntPtr_CGRect (out CGRect retval, IntPtr receiver, IntPtr selector, IntPtr a, IntPtr b, CGRect c);
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
-		extern static RectangleF RectangleF_objc_msgSend_IntPtr_IntPtr_RectangleF (IntPtr receiver, IntPtr selector, IntPtr a, IntPtr b, RectangleF c);
+		extern static CGRect CGRect_objc_msgSend_IntPtr_IntPtr_CGRect (IntPtr receiver, IntPtr selector, IntPtr a, IntPtr b, CGRect c);
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
 		extern static void void_objc_msgSend_out_NSError (IntPtr receiver, IntPtr selector, out IntPtr error, int arg1);
@@ -188,7 +170,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		extern static long long_objc_msgSend_long_long_out_long_out_long (IntPtr receiver, IntPtr selector, long arg1, long arg2, out long arg3, out long arg4);
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
-		extern static bool bool_objc_msgSend_out_PointF (IntPtr receiver, IntPtr selector, out PointF point);
+		extern static bool bool_objc_msgSend_out_CGPoint (IntPtr receiver, IntPtr selector, out CGPoint point);
 
 
 #if !__WATCHOS__
@@ -199,7 +181,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		extern static void CMTimeRange_objc_msgSend (out CMTimeRange retval, IntPtr receiver, IntPtr selector);
 #endif // !__WATCHOS__
 
-		void AreAlmostEqual (RectangleF left, RectangleF right, string message)
+		void AreAlmostEqual (CGRect left, CGRect right, string message)
 		{
 			var delta = 0.000001f;
 			Assert.AreEqual (left.X, right.X, delta, message);
@@ -211,7 +193,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void FloatingPointStretTrampolineTest ()
 		{
-			RectangleF rect, rect2, rect3, rect4;
+			CGRect rect, rect2, rect3, rect4;
 #if !__TVOS__
 			MKCoordinateRegion mkregion;
 			MKMapRect mkmaprect;
@@ -226,104 +208,104 @@ namespace MonoTouchFixtures.ObjCRuntime {
 #endif // !__WATCHOS__
 			int i;
 
-			rect2 = new RectangleF (1.2f, 2.3f, 3.4f, 4.5f);
+			rect2 = new CGRect (1.2f, 2.3f, 3.4f, 4.5f);
 			if (IsArm64CallingConvention || IsArmv7k) {
-				rect = RectangleF_objc_msgSend_IntPtr_IntPtr_RectangleF (obj.Handle, new Selector ("testRectangleF_string_string_RectangleF:b:c:").Handle, new NSString ("a").Handle, new NSString ("b").Handle, rect2);
+				rect = CGRect_objc_msgSend_IntPtr_IntPtr_CGRect (obj.Handle, new Selector ("testCGRect_string_string_CGRect:b:c:").Handle, new NSString ("a").Handle, new NSString ("b").Handle, rect2);
 			} else {
-				RectangleF_objc_msgSend_stret_IntPtr_IntPtr_RectangleF (out rect, obj.Handle, new Selector ("testRectangleF_string_string_RectangleF:b:c:").Handle, new NSString ("a").Handle, new NSString ("b").Handle, rect2);
+				CGRect_objc_msgSend_stret_IntPtr_IntPtr_CGRect (out rect, obj.Handle, new Selector ("testCGRect_string_string_CGRect:b:c:").Handle, new NSString ("a").Handle, new NSString ("b").Handle, rect2);
 			}
-			Assert.That (rect == new RectangleF (rect2.X * pi, rect2.Y * pi, rect2.Width * pi, rect2.Height * pi), "#testRectangleF_string_string_RectangleF:b:c:");
+			Assert.That (rect == new CGRect (rect2.X * pi, rect2.Y * pi, rect2.Width * pi, rect2.Height * pi), "#testCGRect_string_string_CGRect:b:c:");
 
 			if (IsArm64CallingConvention || IsArmv7k) {
-				rect = Messaging.RectangleF_objc_msgSend (obj.Handle, new Selector ("testRectangleF").Handle);
+				rect = Messaging.CGRect_objc_msgSend (obj.Handle, new Selector ("testCGRect").Handle);
 			} else {
-				Messaging.RectangleF_objc_msgSend_stret (out rect, obj.Handle, new Selector ("testRectangleF").Handle);
+				Messaging.CGRect_objc_msgSend_stret (out rect, obj.Handle, new Selector ("testCGRect").Handle);
 			}
-			Assert.That (rect == new RectangleF (1.2f, 2.3f, 3.4f, 4.5f), "#testRectangleF");
+			Assert.That (rect == new CGRect (1.2f, 2.3f, 3.4f, 4.5f), "#testCGRect");
 
 			if (IsArm64CallingConvention || IsArmv7k) {
-				rect = Messaging.RectangleF_objc_msgSend (class_ptr, new Selector ("staticTestRectangleF").Handle);
+				rect = Messaging.CGRect_objc_msgSend (class_ptr, new Selector ("staticTestCGRect").Handle);
 			} else {
-				Messaging.RectangleF_objc_msgSend_stret (out rect, class_ptr, new Selector ("staticTestRectangleF").Handle);
+				Messaging.CGRect_objc_msgSend_stret (out rect, class_ptr, new Selector ("staticTestCGRect").Handle);
 			}
-			Assert.That (rect == new RectangleF (1.2f, 2.3f, 3.4f, 4.5f), "#static testRectangleF");
+			Assert.That (rect == new CGRect (1.2f, 2.3f, 3.4f, 4.5f), "#static testCGRect");
 
 			i = 152;
 			if (IsArm64CallingConvention || IsArmv7k) {
-				rect = Messaging.RectangleF_objc_msgSend_int (obj.Handle, new Selector ("testRectangleF_int:").Handle, 152);
+				rect = Messaging.CGRect_objc_msgSend_int (obj.Handle, new Selector ("testCGRect_int:").Handle, 152);
 			} else {
-				Messaging.RectangleF_objc_msgSend_stret_int (out rect, obj.Handle, new Selector ("testRectangleF_int:").Handle, 152);
+				Messaging.CGRect_objc_msgSend_stret_int (out rect, obj.Handle, new Selector ("testCGRect_int:").Handle, 152);
 			}
-			Assert.That (rect == new RectangleF (i + .1f, i + .2f, i + .3f, i + .4f), "#ret RectF-int", "#testRectangleF_int:");
+			Assert.That (rect == new CGRect (i + .1f, i + .2f, i + .3f, i + .4f), "#ret RectF-int", "#testCGRect_int:");
 
 			if (IsArm64CallingConvention || IsArmv7k) {
-				rect = Messaging.RectangleF_objc_msgSend_IntPtr (obj.Handle, new Selector ("testRectangleF_IntPtr:").Handle, tmp_obj.Handle);
+				rect = Messaging.CGRect_objc_msgSend_IntPtr (obj.Handle, new Selector ("testCGRect_IntPtr:").Handle, tmp_obj.Handle);
 			} else {
-				Messaging.RectangleF_objc_msgSend_stret_IntPtr (out rect, obj.Handle, new Selector ("testRectangleF_IntPtr:").Handle, tmp_obj.Handle);
+				Messaging.CGRect_objc_msgSend_stret_IntPtr (out rect, obj.Handle, new Selector ("testCGRect_IntPtr:").Handle, tmp_obj.Handle);
 			}
-			AreAlmostEqual (rect, new RectangleF (pi + 0.4f, pi + 0.3f, pi + 0.2f, pi + 0.1f), "#ret RectF-IntPtr");
+			AreAlmostEqual (rect, new CGRect (pi + 0.4f, pi + 0.3f, pi + 0.2f, pi + 0.1f), "#ret RectF-IntPtr");
 
 #if !__TVOS__
 			mkregion = new MKCoordinateRegion (new CLLocationCoordinate2D (123.456, 345.678), new MKCoordinateSpan (987.654, 654.321));
 			if (IsArm64CallingConvention || IsArmv7k) {
-				rect = Messaging.RectangleF_objc_msgSend_MKCoordinateRegion_IntPtr (obj.Handle, new Selector ("testRectangleF_MCCoordinateRegion_IntPtr:str:").Handle, mkregion, tmp_obj.Handle);
+				rect = Messaging.CGRect_objc_msgSend_MKCoordinateRegion_IntPtr (obj.Handle, new Selector ("testCGRect_MCCoordinateRegion_IntPtr:str:").Handle, mkregion, tmp_obj.Handle);
 			} else {
-				Messaging.RectangleF_objc_msgSend_stret_MKCoordinateRegion_IntPtr (out rect, obj.Handle, new Selector ("testRectangleF_MCCoordinateRegion_IntPtr:str:").Handle, mkregion, tmp_obj.Handle);
+				Messaging.CGRect_objc_msgSend_stret_MKCoordinateRegion_IntPtr (out rect, obj.Handle, new Selector ("testCGRect_MCCoordinateRegion_IntPtr:str:").Handle, mkregion, tmp_obj.Handle);
 			}
-			Assert.That (rect == new RectangleF (123.456f+pi, 345.678f-pi, 987.654f*pi, 654.321f/pi), "#testRectangleF_MCCoordinateRegion_IntPtr:str:");
+			Assert.That (rect == new CGRect (123.456f+pi, 345.678f-pi, 987.654f*pi, 654.321f/pi), "#testCGRect_MCCoordinateRegion_IntPtr:str:");
 
 			mkmaprect = new MKMapRect (111.1, 222.2, 333.3, 444.4);
 			if (IsArm64CallingConvention || IsArmv7k) {
-				rect = Messaging.RectangleF_objc_msgSend_MKMapRect (obj.Handle, new Selector ("testRectangleF_MKMapRect:").Handle, mkmaprect);
+				rect = Messaging.CGRect_objc_msgSend_MKMapRect (obj.Handle, new Selector ("testCGRect_MKMapRect:").Handle, mkmaprect);
 			} else {
-				Messaging.RectangleF_objc_msgSend_stret_MKMapRect (out rect, obj.Handle, new Selector ("testRectangleF_MKMapRect:").Handle, mkmaprect);
+				Messaging.CGRect_objc_msgSend_stret_MKMapRect (out rect, obj.Handle, new Selector ("testCGRect_MKMapRect:").Handle, mkmaprect);
 			}
-			Assert.That (rect == new RectangleF (111.1f, 222.2f, 333.3f, 444.4f), "#testRectangleF_MKMapRect:");
+			Assert.That (rect == new CGRect (111.1f, 222.2f, 333.3f, 444.4f), "#testCGRect_MKMapRect:");
 #endif // !__TVOS__
 
-			rect2 = new RectangleF (9.9f, 8.8f, 7.7f, 6.6f);
+			rect2 = new CGRect (9.9f, 8.8f, 7.7f, 6.6f);
 			if (IsArm64CallingConvention || IsArmv7k) {
-				rect = Messaging.RectangleF_objc_msgSend_RectangleF (obj.Handle, new Selector ("testRectangleF_RectangleF:").Handle, rect2);
+				rect = Messaging.CGRect_objc_msgSend_CGRect (obj.Handle, new Selector ("testCGRect_CGRect:").Handle, rect2);
 			} else {
-				Messaging.RectangleF_objc_msgSend_stret_RectangleF (out rect, obj.Handle, new Selector ("testRectangleF_RectangleF:").Handle, rect2);
+				Messaging.CGRect_objc_msgSend_stret_CGRect (out rect, obj.Handle, new Selector ("testCGRect_CGRect:").Handle, rect2);
 			}
-			Assert.That (rect == rect2, "#testRectangleF_RectangleF:");
+			Assert.That (rect == rect2, "#testCGRect_CGRect:");
 
-			rect2 = new RectangleF (5.44f, 4.33f, 3.22f, 2.11f);
+			rect2 = new CGRect (5.44f, 4.33f, 3.22f, 2.11f);
 			i = 8;
 			if (IsArm64CallingConvention || IsArmv7k) {
-				rect = Messaging.RectangleF_objc_msgSend_RectangleF_int (obj.Handle, new Selector ("testRectangleF_RectangleF_int:i:").Handle, rect2, 8);
+				rect = Messaging.CGRect_objc_msgSend_CGRect_int (obj.Handle, new Selector ("testCGRect_CGRect_int:i:").Handle, rect2, 8);
 			} else {
-				Messaging.RectangleF_objc_msgSend_stret_RectangleF_int (out rect, obj.Handle, new Selector ("testRectangleF_RectangleF_int:i:").Handle, rect2, 8);
+				Messaging.CGRect_objc_msgSend_stret_CGRect_int (out rect, obj.Handle, new Selector ("testCGRect_CGRect_int:i:").Handle, rect2, 8);
 			}
-			AreAlmostEqual (rect, new RectangleF (5.44f*i, 4.33f+i, 3.22f-i, 2.11f/i), "testRectangleF_RectangleF_int:i:");
+			AreAlmostEqual (rect, new CGRect (5.44f*i, 4.33f+i, 3.22f-i, 2.11f/i), "testCGRect_CGRect_int:i:");
 
-			rect2 = new RectangleF (5.4f, 4.3f, 3.2f, 2.1f);
+			rect2 = new CGRect (5.4f, 4.3f, 3.2f, 2.1f);
 			if (IsArm64CallingConvention || IsArmv7k) {
-				rect = Messaging.RectangleF_objc_msgSend_RectangleF_IntPtr (obj.Handle, new Selector ("testRectangleF_RectangleF_IntPtr:str:").Handle, rect2, tmp_obj.Handle);
+				rect = Messaging.CGRect_objc_msgSend_CGRect_IntPtr (obj.Handle, new Selector ("testCGRect_CGRect_IntPtr:str:").Handle, rect2, tmp_obj.Handle);
 			} else {
-				Messaging.RectangleF_objc_msgSend_stret_RectangleF_IntPtr (out rect, obj.Handle, new Selector ("testRectangleF_RectangleF_IntPtr:str:").Handle, rect2, tmp_obj.Handle);
+				Messaging.CGRect_objc_msgSend_stret_CGRect_IntPtr (out rect, obj.Handle, new Selector ("testCGRect_CGRect_IntPtr:str:").Handle, rect2, tmp_obj.Handle);
 			}
-			Assert.That (rect == new RectangleF (5.4f*pi, 4.3f+pi, 3.2f-pi, 2.1f/pi));
+			Assert.That (rect == new CGRect (5.4f*pi, 4.3f+pi, 3.2f-pi, 2.1f/pi));
 
-			rect2 = new RectangleF (1, 2, 3, 4);
-			rect3 = new RectangleF (9, 8, 7, 6);
+			rect2 = new CGRect (1, 2, 3, 4);
+			rect3 = new CGRect (9, 8, 7, 6);
 			if (IsArm64CallingConvention || IsArmv7k) {
-				rect = Messaging.RectangleF_objc_msgSend_RectangleF_RectangleF_float ( obj.Handle, new Selector ("testRectangleF_RectangleF_RectangleF_float:b:c:").Handle, rect2, rect3, (float) pi);
+				rect = Messaging.CGRect_objc_msgSend_CGRect_CGRect_float ( obj.Handle, new Selector ("testCGRect_CGRect_CGRect_float:b:c:").Handle, rect2, rect3, (float) pi);
 			} else {
-				Messaging.RectangleF_objc_msgSend_stret_RectangleF_RectangleF_float (out rect, obj.Handle, new Selector ("testRectangleF_RectangleF_RectangleF_float:b:c:").Handle, rect2, rect3, (float) pi);
+				Messaging.CGRect_objc_msgSend_stret_CGRect_CGRect_float (out rect, obj.Handle, new Selector ("testCGRect_CGRect_CGRect_float:b:c:").Handle, rect2, rect3, (float) pi);
 			}
-			Assert.That (rect == new RectangleF (1 * 9 * pi, 2 * 8 * pi, 3 * 7 * pi, 4 * 6 * pi), "#testRectangleF_RectangleF_RectangleF_float:b:c:");
+			Assert.That (rect == new CGRect (1 * 9 * pi, 2 * 8 * pi, 3 * 7 * pi, 4 * 6 * pi), "#testCGRect_CGRect_CGRect_float:b:c:");
 
-			rect2 = new RectangleF (1, 2, 3, 4);
-			rect3 = new RectangleF (9, 8, 7, 6);
-			rect4 = new RectangleF (10, 20, 30, 40);
+			rect2 = new CGRect (1, 2, 3, 4);
+			rect3 = new CGRect (9, 8, 7, 6);
+			rect4 = new CGRect (10, 20, 30, 40);
 			if (IsArm64CallingConvention || IsArmv7k) {
-				rect = Messaging.RectangleF_objc_msgSend_RectangleF_RectangleF_RectangleF (obj.Handle, new Selector ("testRectangleF_RectangleF_RectangleF_RectangleF:b:c:").Handle, rect2, rect3, rect4);
+				rect = Messaging.CGRect_objc_msgSend_CGRect_CGRect_CGRect (obj.Handle, new Selector ("testCGRect_CGRect_CGRect_CGRect:b:c:").Handle, rect2, rect3, rect4);
 			} else {
-				Messaging.RectangleF_objc_msgSend_stret_RectangleF_RectangleF_RectangleF (out rect, obj.Handle, new Selector ("testRectangleF_RectangleF_RectangleF_RectangleF:b:c:").Handle, rect2, rect3, rect4);
+				Messaging.CGRect_objc_msgSend_stret_CGRect_CGRect_CGRect (out rect, obj.Handle, new Selector ("testCGRect_CGRect_CGRect_CGRect:b:c:").Handle, rect2, rect3, rect4);
 			}
-			Assert.That (rect == new RectangleF (20, 30, 40, 50), "#testRectangleF_RectangleF_RectangleF_RectangleF:b:c:");
+			Assert.That (rect == new CGRect (20, 30, 40, 50), "#testCGRect_CGRect_CGRect_CGRect:b:c:");
 
 #if !__WATCHOS__
 			if (IsArm64CallingConvention) {
@@ -353,32 +335,32 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			Assert.That (catransform3d.Equals (res), "#testCATransform3D");
 #endif // !__WATCHOS__
 			
-			PointF point;
-			SizeF size;
+			CGPoint point;
+			CGSize size;
 			
 			if (IsArm32) {
-				Messaging.PointF_objc_msgSend_stret (out point, obj.Handle, new Selector ("testPointF").Handle);
+				Messaging.CGPoint_objc_msgSend_stret (out point, obj.Handle, new Selector ("testCGPoint").Handle);
 			} else {
-				point = Messaging.PointF_objc_msgSend (obj.Handle, new Selector ("testPointF").Handle);
+				point = Messaging.CGPoint_objc_msgSend (obj.Handle, new Selector ("testCGPoint").Handle);
 			}
-			Assert.That (point == new PointF (pi*2, pi*20), "#testPointF");
+			Assert.That (point == new CGPoint (pi*2, pi*20), "#testCGPoint");
 			
 			if (IsArm32) {
-				Messaging.SizeF_objc_msgSend_stret (out size, obj.Handle, new Selector ("testSizeF").Handle);
+				Messaging.CGSize_objc_msgSend_stret (out size, obj.Handle, new Selector ("testCGSize").Handle);
 			} else {
-				size = Messaging.SizeF_objc_msgSend (obj.Handle, new Selector ("testSizeF").Handle);
+				size = Messaging.CGSize_objc_msgSend (obj.Handle, new Selector ("testCGSize").Handle);
 			}
-			Assert.That (size == new SizeF (pi*3, pi*30), "#testSizeF");
+			Assert.That (size == new CGSize (pi*3, pi*30), "#testCGSize");
 		}
 
 		[Test]
 		public void OutValueTypeTest ()
 		{
 			var obj = new OutParams ();
-			PointF point = new PointF (3, 14);
+			CGPoint point = new CGPoint (3, 14);
 			bool res;
 			
-			res = bool_objc_msgSend_out_PointF (obj.Handle, new Selector ("Test_PointF:").Handle, out point);
+			res = bool_objc_msgSend_out_CGPoint (obj.Handle, new Selector ("Test_CGPoint:").Handle, out point);
 			Assert.That (res, "#res");
 			Assert.That (point.X, Is.EqualTo ((nfloat) 3.1415f), "#x");
 			Assert.That (point.Y, Is.EqualTo ((nfloat) 0), "#y");
@@ -519,10 +501,10 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				throw new ArgumentOutOfRangeException ("arg1");
 			}
 		}
-		[Export ("Test_PointF:")]
-		bool Test_PointF (out PointF point)
+		[Export ("Test_CGPoint:")]
+		bool Test_CGPoint (out CGPoint point)
 		{
-			point = new PointF (3.1415f, 0);
+			point = new CGPoint (3.1415f, 0);
 			return true;
 		}
 	}
@@ -660,94 +642,90 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			return float.Parse (str, new CultureInfo ("en-US").NumberFormat);
 		}
 		
-		[Export ("testRectangleF")]
-		public RectangleF Test_RectangleF ()
+		[Export ("testCGRect")]
+		public CGRect Test_CGRect ()
 		{
-			return new RectangleF (1.2f, 2.3f, 3.4f, 4.5f);
+			return new CGRect (1.2f, 2.3f, 3.4f, 4.5f);
 		}
 		
-		[Export ("staticTestRectangleF")]
-		static public RectangleF StaticTest_RectangleF ()
+		[Export ("staticTestCGRect")]
+		static public CGRect StaticTest_CGRect ()
 		{
-			return new RectangleF (1.2f, 2.3f, 3.4f, 4.5f);
+			return new CGRect (1.2f, 2.3f, 3.4f, 4.5f);
 		}
 		
-		[Export ("testRectangleF_int:")]
-		public RectangleF Test_RectangleF_int (int a)
+		[Export ("testCGRect_int:")]
+		public CGRect Test_CGRect_int (int a)
 		{
-			return new RectangleF (a + 0.1f, a + 0.2f, a + 0.3f, a + 0.4f);
+			return new CGRect (a + 0.1f, a + 0.2f, a + 0.3f, a + 0.4f);
 		}
 		
-		[Export ("testRectangleF_IntPtr:")]
-		public RectangleF Test_RectangleF_IntPtr (NSString str)
+		[Export ("testCGRect_IntPtr:")]
+		public CGRect Test_CGRect_IntPtr (NSString str)
 		{
 			float pi = ParseString (str.ToString ());
 			if ((object) StringObj != (object) str)
-				return RectangleF.Empty;
-			return new RectangleF (pi + 0.4f, pi + 0.3f, pi + 0.2f, pi + 0.1f);
+				return CGRect.Empty;
+			return new CGRect (pi + 0.4f, pi + 0.3f, pi + 0.2f, pi + 0.1f);
 		}
 		
 #if !__TVOS__
-		[Export ("testRectangleF_MCCoordinateRegion_IntPtr:str:")]
-		public RectangleF Test_RectangleF_MKCoordinateRegion_IntPtr (MKCoordinateRegion a, NSString str)
+		[Export ("testCGRect_MCCoordinateRegion_IntPtr:str:")]
+		public CGRect Test_CGRect_MKCoordinateRegion_IntPtr (MKCoordinateRegion a, NSString str)
 		{
 			float pi = ParseString (str.ToString ());
 			if ((object) StringObj != (object) str)
-				return RectangleF.Empty;
-#if __UNIFIED__
-			return new RectangleF ((double)(float)a.Center.Latitude+pi, (double)(float)a.Center.Longitude-pi, (double)(float)a.Span.LatitudeDelta*pi, (double)(float)a.Span.LongitudeDelta/pi);
-#else
-			return new RectangleF ((float)a.Center.Latitude+pi, (float)a.Center.Longitude-pi, (float)a.Span.LatitudeDelta*pi, (float)a.Span.LongitudeDelta/pi);
-#endif
+				return CGRect.Empty;
+			return new CGRect ((double)(float)a.Center.Latitude+pi, (double)(float)a.Center.Longitude-pi, (double)(float)a.Span.LatitudeDelta*pi, (double)(float)a.Span.LongitudeDelta/pi);
 		}
 		
-		[Export ("testRectangleF_MKMapRect:")]
-		public RectangleF Test_RectangleF_MKMapRect (MKMapRect a)
+		[Export ("testCGRect_MKMapRect:")]
+		public CGRect Test_CGRect_MKMapRect (MKMapRect a)
 		{
-			return new RectangleF ((float) a.Origin.X, (float) a.Origin.Y, (float) a.Width, (float) a.Height);
+			return new CGRect ((float) a.Origin.X, (float) a.Origin.Y, (float) a.Width, (float) a.Height);
 		}
 #endif // !__TVOS__
 		
-		[Export ("testRectangleF_RectangleF:")]
-		public RectangleF Test_RectangleF_RectangleF (RectangleF a)
+		[Export ("testCGRect_CGRect:")]
+		public CGRect Test_CGRect_CGRect (CGRect a)
 		{
-			return new RectangleF (a.X, a.Y, a.Width, a.Height);
+			return new CGRect (a.X, a.Y, a.Width, a.Height);
 		}
 		
-		[Export ("testRectangleF_RectangleF_int:i:")]
-		public RectangleF Test_RectangleF_RectangleF_int (RectangleF a, int i)
+		[Export ("testCGRect_CGRect_int:i:")]
+		public CGRect Test_CGRect_CGRect_int (CGRect a, int i)
 		{
-			return new RectangleF (a.X*i, a.Y+i, a.Width-i, a.Height/i);
+			return new CGRect (a.X*i, a.Y+i, a.Width-i, a.Height/i);
 		}
 		
-		[Export ("testRectangleF_RectangleF_IntPtr:str:")]
-		public RectangleF Test_RectangleF_RectangleF_IntPtr (RectangleF a, NSString str)
+		[Export ("testCGRect_CGRect_IntPtr:str:")]
+		public CGRect Test_CGRect_CGRect_IntPtr (CGRect a, NSString str)
 		{
 			float pi = ParseString (str.ToString ());
 			if ((object) StringObj != (object) str)
-				return RectangleF.Empty;
-			return new RectangleF (a.X*pi, a.Y+pi, a.Width-pi, a.Height/pi);
+				return CGRect.Empty;
+			return new CGRect (a.X*pi, a.Y+pi, a.Width-pi, a.Height/pi);
 		}
 		
-		[Export ("testRectangleF_RectangleF_RectangleF_float:b:c:")]
-		public RectangleF Test_RectangleF_RectangleF_RectangleF_float (RectangleF a, RectangleF b, float c)
+		[Export ("testCGRect_CGRect_CGRect_float:b:c:")]
+		public CGRect Test_CGRect_CGRect_CGRect_float (CGRect a, CGRect b, float c)
 		{
-			return new RectangleF (a.X*b.X*c, a.Y*b.Y*c, a.Width*b.Width*c, a.Height*b.Height*c);
+			return new CGRect (a.X*b.X*c, a.Y*b.Y*c, a.Width*b.Width*c, a.Height*b.Height*c);
 		}
 
 
-		[Export ("testRectangleF_RectangleF_RectangleF_RectangleF:b:c:")]
-		public RectangleF Test_RectangleF_RectangleF_RectangleF_RectangleF (RectangleF a, RectangleF b, RectangleF c)
+		[Export ("testCGRect_CGRect_CGRect_CGRect:b:c:")]
+		public CGRect Test_CGRect_CGRect_CGRect_CGRect (CGRect a, CGRect b, CGRect c)
 		{
-			return new RectangleF (a.X+b.X+c.X, a.Y+b.Y+c.Y, a.Width+b.Width+c.Width, a.Height+b.Height+c.Height);
+			return new CGRect (a.X+b.X+c.X, a.Y+b.Y+c.Y, a.Width+b.Width+c.Width, a.Height+b.Height+c.Height);
 		}
 
-		[Export ("testRectangleF_string_string_RectangleF:b:c:")]
-		public RectangleF Test_RectangleF_string_string_RectangleF (NSString a, NSString b, RectangleF c)
+		[Export ("testCGRect_string_string_CGRect:b:c:")]
+		public CGRect Test_CGRect_string_string_CGRect (NSString a, NSString b, CGRect c)
 		{
 			Assert.That (Is.Equals (a.ToString (), "a"), "#a");
 			Assert.That (Is.Equals (b.ToString (), "b"), "#b");
-			return new RectangleF (c.X * pi, c.Y * pi, c.Width * pi, c.Height * pi);
+			return new CGRect (c.X * pi, c.Y * pi, c.Width * pi, c.Height * pi);
 		}
 
 #if !__WATCHOS__
@@ -775,30 +753,30 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 #endif // !__WATCHOS__
 		
-		[Export ("testPointF")]
-		public PointF Test_PointF ()
+		[Export ("testCGPoint")]
+		public CGPoint Test_CGPoint ()
 		{
-			return new PointF (pi*2, pi*20);
+			return new CGPoint (pi*2, pi*20);
 		}
 
-		[Export ("testSizeF")]
-		public SizeF Test_SizeF ()
+		[Export ("testCGSize")]
+		public CGSize Test_CGSize ()
 		{
-			return new SizeF (pi*3, pi*30);
+			return new CGSize (pi*3, pi*30);
 		}
 		
-		[Export ("Test_PointF_out_Double:")]
-		PointF Test_PointF_out_Double (out double foo)
+		[Export ("Test_CGPoint_out_Double:")]
+		CGPoint Test_CGPoint_out_Double (out double foo)
 		{
 			foo = 3.18f;
-			return new PointF (1, 2);
+			return new CGPoint (1, 2);
 		}
 		
-		[Export ("Test_StaticPointF_out_Float:")]
-		static PointF Test_StaticPointF_out_Float (out float foo)
+		[Export ("Test_StaticCGPoint_out_Float:")]
+		static CGPoint Test_StaticCGPoint_out_Float (out float foo)
 		{
 			foo = 3.20f;
-			return new PointF (10, 20);
+			return new CGPoint (10, 20);
 		}
 	}
 }

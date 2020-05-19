@@ -8,7 +8,6 @@
 //
 using System;
 using System.Collections.Generic;
-#if XAMCORE_2_0
 using Foundation;
 using CoreMedia;
 using AVFoundation;
@@ -17,13 +16,6 @@ using ObjCRuntime;
 using AppKit;
 #else
 using UIKit;
-#endif
-#else
-using MonoTouch.Foundation;
-using MonoTouch.CoreMedia;
-using MonoTouch.AVFoundation;
-using MonoTouch.UIKit;
-using nuint = global::System.UInt32;
 #endif
 using NUnit.Framework;
 
@@ -189,13 +181,8 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void VideoFormatDescriptionConstructors ()
 		{
-#if __UNIFIED__
 			using (var obj = new CMVideoFormatDescription (CMVideoCodecType.H264, new CMVideoDimensions (960, 540))) {
 			}
-#else
-			using (var obj = new CMVideoFormatDescription (CMVideoCodecType.H264, new System.Drawing.Size (960, 540))) {
-			}
-#endif
 		}
 	}
 }

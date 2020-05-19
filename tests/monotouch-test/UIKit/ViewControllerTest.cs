@@ -11,17 +11,11 @@
 
 using System;
 using System.Reflection;
-#if XAMCORE_2_0
 using Foundation;
 using UIKit;
 using ObjCRuntime;
 #if !__TVOS__
 using iAd;
-#endif
-#else
-using MonoTouch.Foundation;
-using MonoTouch.iAd;
-using MonoTouch.UIKit;
 #endif
 using NUnit.Framework;
 
@@ -40,13 +34,8 @@ namespace MonoTouchFixtures.UIKit {
 				a.PresentModalViewController (b, true);
 				b.PresentModalViewController (c, true);
 				
-#if XAMCORE_2_0
 				b.DismissModalViewController (true);
 				a.DismissModalViewController (true); //error
-#else
-				b.DismissModalViewControllerAnimated (true);
-				a.DismissModalViewControllerAnimated (true); //error
-#endif
 			}
 		}
 #endif
@@ -64,11 +53,7 @@ namespace MonoTouchFixtures.UIKit {
 				a.PresentModalViewController (wb, true);
 				b.PresentModalViewController (wc, true);
 
-#if XAMCORE_2_0
 				c.DismissModalViewController (true); //error
-#else
-				c.DismissModalViewControllerAnimated (true); //error
-#endif
 			}
 		}
 #endif

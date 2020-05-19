@@ -9,13 +9,8 @@
 //
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using Security;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.Security;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Security {

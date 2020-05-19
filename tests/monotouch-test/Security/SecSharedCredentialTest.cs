@@ -2,15 +2,9 @@
 using System;
 using System.Threading;
 
-#if XAMCORE_2_0
 using Foundation;
 using Security;
 using ObjCRuntime;
-#else
-using MonoTouch;
-using MonoTouch.Foundation;
-using MonoTouch.Security;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Security {

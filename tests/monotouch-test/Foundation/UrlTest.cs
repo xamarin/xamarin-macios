@@ -9,7 +9,6 @@
 
 using System;
 using System.IO;
-#if XAMCORE_2_0
 using Foundation;
 #if MONOMAC
 using AppKit;
@@ -17,11 +16,6 @@ using AppKit;
 using UIKit;
 #endif
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Foundation {
@@ -249,13 +243,7 @@ namespace MonoTouchFixtures.Foundation {
 			using (var url1 = NSUrl.FromString ("http://www.xamarin.com")) 
 			using (var url2 = new BadCustomUrl ("http://www.xamarin.com"))
 			using (var url3 = new GoodCustomUrl ("http://www.xamarin.com")) {
-#if XAMCORE_2_0
-				// for compatibility only unified has the correct behavior
 				Assert.That (url1.GetHashCode (), Is.Not.EqualTo (url2.GetHashCode ()), "GetHashCode 1-2");
-#else
-				// state is ignored in classic
-				Assert.That (url1.GetHashCode (), Is.EqualTo (url2.GetHashCode ()), "GetHashCode 1-2");
-#endif
 				Assert.That (url2.GetHashCode (), Is.Not.EqualTo (url3.GetHashCode ()), "GetHashCode 2-3");
 
 				Assert.False (url2.DirectBinding, "DirectBinding 2");
@@ -263,37 +251,16 @@ namespace MonoTouchFixtures.Foundation {
 				Assert.That (url2.GetHashCode (), Is.Not.EqualTo (url3.GetHashCode ()), "GetHashCode 2-3");
 
 				// NSObject
-#if XAMCORE_2_0
-				// for compatibility only unified has the correct behavior
 				Assert.False (url1.Equals ((NSObject) url2), "Equals(NSObject) 1-2");
 				Assert.False (url2.Equals ((NSObject) url3), "Equals(NSObject) 2-3");
-#else
-				// state is ignored in classic
-				Assert.True (url1.Equals ((NSObject) url2), "Equals(NSObject) 1-2");
-				Assert.True (url2.Equals ((NSObject) url3), "Equals(NSObject) 2-3");
-#endif
 
 				// NSUrl / IEquatable<NSUrl>
-#if XAMCORE_2_0
-				// for compatibility only unified has the correct behavior
 				Assert.False (url1.Equals (url2), "Equals(NSUrl) 1-2");
 				Assert.False (url2.Equals (url3), "Equals(NSUrl) 2-3");
-#else
-				// otherwise it's ObjC comparing the URL string
-				Assert.True (url1.Equals (url2), "Equals(NSUrl) 1-2");
-				Assert.True (url2.Equals (url3), "Equals(NSUrl) 2-3");
-#endif
 
 				// System.Object
-#if XAMCORE_2_0
-				// for compatibility only unified has the correct behavior
 				Assert.False (url1.Equals ((object) url2), "Equals(object) 1-2");
 				Assert.False (url2.Equals ((object) url3), "Equals(object) 2-3");
-#else
-				// state is ignored in classic
-				Assert.True (url1.Equals ((object) url2), "Equals(object) 1-2");
-				Assert.True (url2.Equals ((object) url3), "Equals(object) 2-3");
-#endif
 			}
 		}
 

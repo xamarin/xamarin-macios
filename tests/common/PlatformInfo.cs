@@ -12,19 +12,10 @@ using System.Linq;
 using System.Reflection;
 using System.Collections.Generic;
 
-#if XAMCORE_2_0 || __UNIFIED__
 using ObjCRuntime;
 using Foundation;
 #if !(MONOMAC || __MACOS__)
 using UIKit;
-#endif
-#elif MONOMAC || __MACOS__
-using MonoMac.ObjCRuntime;
-using MonoMac.Foundation;
-#else
-using MonoTouch.ObjCRuntime;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
 #endif
 
 namespace Xamarin.Tests 

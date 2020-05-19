@@ -14,28 +14,12 @@ using System.Drawing;
 using System.IO;
 using System.Reflection;
 using System.Threading;
-#if XAMCORE_2_0
+using CoreGraphics;
 using Foundation;
 using AVFoundation;
 using CoreMedia;
 using ObjCRuntime;
-#else
-using MonoTouch.AVFoundation;
-using MonoTouch.CoreMedia;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 using NUnit.Framework;
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
 
 namespace MonoTouchFixtures.AVFoundation {
 
@@ -47,7 +31,6 @@ namespace MonoTouchFixtures.AVFoundation {
 		public void Defaults ()
 		{
 			using (var obj = new AVCaptureMetadataOutput ()) {
-#if XAMCORE_2_0
 				Assert.AreEqual (AVMetadataObjectType.None, obj.AvailableMetadataObjectTypes, "AvailableMetadataObjectTypes");
 				Assert.AreEqual (AVMetadataObjectType.None, obj.MetadataObjectTypes, "MetadataObjectTypes");
 
@@ -55,25 +38,13 @@ namespace MonoTouchFixtures.AVFoundation {
 				Assert.AreEqual (0, obj.WeakAvailableMetadataObjectTypes.Length, "WeakAvailableMetadataObjectTypes#");
 				Assert.IsNotNull (obj.WeakMetadataObjectTypes, "WeakMetadataObjectTypes");
 				Assert.AreEqual (0, obj.WeakMetadataObjectTypes.Length, "WeakMetadataObjectTypes#");
-#else
-				Assert.IsNotNull (obj.AvailableMetadataObjectTypes, "AvailableMetadataObjectTypes");
-				Assert.AreEqual (0, obj.AvailableMetadataObjectTypes.Length, "AvailableMetadataObjectTypes#");
-				Assert.IsNotNull (obj.MetadataObjectTypes, "MetadataObjectTypes");
-				Assert.AreEqual (0, obj.MetadataObjectTypes.Length, "MetadataObjectTypes#");
-#endif
 				if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false))
-					Assert.AreEqual (new RectangleF (0, 0, 1, 1), obj.RectOfInterest, "RectOfInterest");
+					Assert.AreEqual (new CGRect (0, 0, 1, 1), obj.RectOfInterest, "RectOfInterest");
 
-#if XAMCORE_2_0
 				obj.WeakMetadataObjectTypes = null;
 				Assert.AreEqual (AVMetadataObjectType.None, obj.MetadataObjectTypes, "MetadataObjectTypes");
 				obj.MetadataObjectTypes = AVMetadataObjectType.None;
 				Assert.AreEqual (AVMetadataObjectType.None, obj.MetadataObjectTypes, "MetadataObjectTypes");
-#else
-				obj.MetadataObjectTypes = null;
-				Assert.IsNotNull (obj.MetadataObjectTypes, "MetadataObjectTypes");
-				Assert.AreEqual (0, obj.MetadataObjectTypes.Length, "MetadataObjectTypes#");
-#endif
 				obj.SetDelegate (null, null);
 			}
 		}
@@ -118,7 +89,6 @@ namespace MonoTouchFixtures.AVFoundation {
 			}
 		}
 
-#if XAMCORE_2_0
 		[Test]
 		public void MetadataObjectTypesTest ()
 		{
@@ -165,7 +135,6 @@ namespace MonoTouchFixtures.AVFoundation {
 				}
 			}
 		}
-#endif
 	}
 }
 

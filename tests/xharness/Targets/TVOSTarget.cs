@@ -84,7 +84,7 @@ namespace Xharness.Targets {
 
 		protected override string AdditionalDefines {
 			get {
-				return "XAMCORE_2_0;XAMCORE_3_0;MONOTOUCH_TV;";
+				return "XAMCORE_3_0;MONOTOUCH_TV;";
 			}
 		}
 

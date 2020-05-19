@@ -87,10 +87,10 @@ namespace Xharness.Targets
 
 		protected override string AdditionalDefines {
 			get {
-				var rv = "XAMCORE_2_0";
+				var rv = "";
 
 				if (Full)
-					rv += ";XAMMAC_4_5";
+					rv += "XAMMAC_4_5";
 
 				return rv;
 			}

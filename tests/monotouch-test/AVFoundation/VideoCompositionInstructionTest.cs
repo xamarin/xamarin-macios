@@ -10,7 +10,6 @@
 #if !__WATCHOS__
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 #if MONOMAC
 using AppKit;
@@ -18,11 +17,6 @@ using AppKit;
 using UIKit;
 #endif
 using AVFoundation;
-#else
-using MonoTouch.AVFoundation;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.AVFoundation {

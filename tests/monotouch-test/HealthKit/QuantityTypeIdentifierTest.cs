@@ -11,15 +11,9 @@
 
 using System;
 
-#if XAMCORE_2_0
 using Foundation;
 using HealthKit;
 using UIKit;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.HealthKit;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.HealthKit {

@@ -98,7 +98,7 @@ namespace Xharness.Targets {
 
 		protected override string AdditionalDefines {
 			get {
-				return "XAMCORE_2_0";
+				return "";
 			}
 		}
 

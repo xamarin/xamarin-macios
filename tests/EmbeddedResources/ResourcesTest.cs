@@ -15,13 +15,8 @@ using System.Reflection;
 using System.Reflection.Emit;
 using NUnit.Framework;
 
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 
 namespace EmbeddedResources {
 

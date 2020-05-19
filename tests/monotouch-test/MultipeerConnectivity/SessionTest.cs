@@ -10,7 +10,6 @@
 #if !__TVOS__ && !__WATCHOS__
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 #if !MONOMAC
 using UIKit;
@@ -18,26 +17,10 @@ using UIKit;
 using MultipeerConnectivity;
 using ObjCRuntime;
 using Security;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.MultipeerConnectivity;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.Security;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 using MonoTouchFixtures.Security;
 
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
 namespace MonoTouchFixtures.MultipeerConnectivity {
 
 	[TestFixture]

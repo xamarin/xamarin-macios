@@ -10,16 +10,9 @@
 
 using System;
 
-#if XAMCORE_2_0
 using Foundation;
 using SpriteKit;
 using ObjCRuntime;
-#else
-using MonoTouch;
-using MonoTouch.Foundation;
-using MonoTouch.SpriteKit;
-using MonoTouch.ObjCRuntime;
-#endif
 
 using NUnit.Framework;
 using System.Threading;

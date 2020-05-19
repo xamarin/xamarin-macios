@@ -11,13 +11,8 @@
 #if !__TVOS__ && !__WATCHOS__
 using System;
 
-#if XAMCORE_2_0
 using Foundation;
 using CoreMidi;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.CoreMidi;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreMidi {

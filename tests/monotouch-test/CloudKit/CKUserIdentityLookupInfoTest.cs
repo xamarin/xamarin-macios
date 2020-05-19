@@ -1,4 +1,3 @@
-#if XAMCORE_2_0
 using System;
 using NUnit.Framework;
 using Foundation;
@@ -70,4 +69,3 @@ namespace MonoTouchFixtures.CloudKit
 		}
 	}
 }
-#endif

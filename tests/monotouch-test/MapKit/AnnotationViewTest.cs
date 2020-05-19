@@ -5,9 +5,9 @@
 using System;
 using System.Drawing;
 using System.Reflection;
-#if XAMCORE_2_0
 using Foundation;
 using MapKit;
+using CoreGraphics;
 using ObjCRuntime;
 #if MONOMAC
 using PlatformImage = AppKit.NSImage;
@@ -17,22 +17,7 @@ using UIKit;
 using PlatformImage = UIKit.UIImage;
 using PlatformView = UIKit.UIView;
 #endif
-#else
-using MonoTouch.Foundation;
-using MonoTouch.MapKit;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
 
 namespace MonoTouchFixtures.MapKit {
 	
@@ -51,11 +36,7 @@ namespace MonoTouchFixtures.MapKit {
 			return NSObject.IsNewRefcountEnabled ();
 		}
 
-#if XAMCORE_2_0
 		public AnnotationViewPoker (IMKAnnotation annotation) : base (annotation, "reuse")
-#else
-		public AnnotationViewPoker (NSObject annotation) : base (annotation, "reuse")
-#endif
 		{
 		}
 		
@@ -79,7 +60,7 @@ namespace MonoTouchFixtures.MapKit {
 		[Test]
 		public void InitWithFrame ()
 		{
-			RectangleF frame = new RectangleF (10, 10, 100, 100);
+			var frame = new CGRect (10, 10, 100, 100);
 			using (MKAnnotationView av = new MKAnnotationView (frame)) {
 				Assert.That (av.Frame, Is.EqualTo (frame), "Frame");
 				Assert.Null (av.Annotation, "Annotation");
@@ -115,9 +96,9 @@ namespace MonoTouchFixtures.MapKit {
 		{
 			using (var def = new MKAnnotationView ()) {
 				Assert.IsNull (def.Annotation, "Annotation");
-				Assert.AreEqual (def.CalloutOffset, PointF.Empty, "CalloutOffset");
+				Assert.AreEqual (def.CalloutOffset, CGPoint.Empty, "CalloutOffset");
 				Assert.IsFalse (def.CanShowCallout, "CanShowCallout");
-				Assert.AreEqual (def.CenterOffset, PointF.Empty, "CenterOffset");
+				Assert.AreEqual (def.CenterOffset, CGPoint.Empty, "CenterOffset");
 				Assert.IsFalse (def.Draggable, "Draggable");
 				Assert.That (def.DragState, Is.EqualTo (MKAnnotationViewDragState.None), "DragState");
 				Assert.IsTrue (def.Enabled, "Enabled");

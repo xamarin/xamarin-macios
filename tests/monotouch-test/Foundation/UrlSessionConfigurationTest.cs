@@ -8,7 +8,6 @@
 //
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using Security;
 using ObjCRuntime;
@@ -16,12 +15,6 @@ using ObjCRuntime;
 using AppKit;
 #else
 using UIKit;
-#endif
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.Security;
-using MonoTouch.UIKit;
 #endif
 using NUnit.Framework;
 

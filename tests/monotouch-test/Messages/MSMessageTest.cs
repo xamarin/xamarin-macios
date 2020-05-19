@@ -10,13 +10,8 @@
 #if !__TVOS__ && !__WATCHOS__ && !MONOMAC
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using Messages;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.Messages;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Messages

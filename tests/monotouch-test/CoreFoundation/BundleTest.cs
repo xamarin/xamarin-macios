@@ -2,14 +2,8 @@
 // Copyright 2015 Xamarin Inc
 //
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using CoreFoundation;
-#else
-using MonoTouch.CoreFoundation;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreFoundation {

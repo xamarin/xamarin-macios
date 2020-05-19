@@ -13,7 +13,6 @@
 using System;
 using System.IO;
 
-#if XAMCORE_2_0
 using Foundation;
 using CoreImage;
 using CoreGraphics;
@@ -21,12 +20,6 @@ using CoreGraphics;
 using AppKit;
 #else
 using UIKit;
-#endif
-#else
-using MonoTouch.CoreImage;
-using MonoTouch.CoreGraphics;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
 #endif
 using NUnit.Framework;
 

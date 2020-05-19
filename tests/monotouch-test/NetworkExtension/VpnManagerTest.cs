@@ -10,15 +10,9 @@
 #if !__TVOS__ && !__WATCHOS__
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using NetworkExtension;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.NetworkExtension;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.NetworkExtension {

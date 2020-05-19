@@ -7,7 +7,7 @@
 // Copyright 2018 Microsoft. All rights reserved.
 //
 
-#if XAMCORE_2_0 && __IOS__
+#if __IOS__
 
 using System;
 using ARKit;

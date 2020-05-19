@@ -9,11 +9,7 @@
 
 using System;
 using System.Reflection;
-#if XAMCORE_2_0
 using Foundation;
-#else
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
 
 namespace LinkSdk {
@@ -50,11 +46,7 @@ namespace LinkSdk {
 		[Test]
 		public void MonoTouch ()
 		{
-#if XAMCORE_2_0
 			Type t = Type.GetType ("CoreBluetooth.CBUUID, " + typeof(NSObject).Assembly.ToString ());
-#else
-			Type t = Type.GetType ("MonoTouch.CoreBluetooth.CBUUID, monotouch, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null");
-#endif
 			Assert.NotNull (t, "[MonoTouch.]CoreBluetooth.CBUUID");
 			// check (generated) fields since we instructed the linker to keep them
 			var f = t.GetFields (BindingFlags.NonPublic | BindingFlags.Static);

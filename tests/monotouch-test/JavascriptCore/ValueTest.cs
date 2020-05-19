@@ -10,14 +10,8 @@
 #if !__WATCHOS__
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using JavaScriptCore;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.JavaScriptCore;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.JavascriptCore {
