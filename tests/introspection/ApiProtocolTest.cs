@@ -12,16 +12,8 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using NUnit.Framework;
 
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#elif MONOMAC
-using MonoMac.Foundation;
-using MonoMac.ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 
 namespace Introspection {
 
@@ -47,12 +39,6 @@ namespace Introspection {
 			case "JSExport":
 				return true;
 			default:
-#if !XAMCORE_2_0
-				// in Classic our internal delegates _inherits_ the type with the [Protocol] attribute
-				// in Unified our internal delegates _implements_ the interface that has the [Protocol] attribute
-				if (type.GetCustomAttribute<ProtocolAttribute> (true) != null)
-					return true;
-#endif
 				return SkipDueToAttribute (type);
 			}
 		}
@@ -458,13 +444,6 @@ namespace Introspection {
 						// we have special test cases for them
 						continue;
 					default:
-#if !XAMCORE_2_0
-						// in Classic our internal delegates _inherits_ the type with the [Protocol] attribute
-						// in Unified our internal delegates _implements_ the interface that has the [Protocol] attribute
-						var pt = Type.GetType (intf.Namespace + "." + protocolName + ", " + intf.Assembly.FullName);
-						if (SkipDueToAttribute (pt))
-							continue;
-#endif
 						if (Skip (t, protocolName))
 							continue;
 						break;

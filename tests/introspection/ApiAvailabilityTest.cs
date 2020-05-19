@@ -19,8 +19,6 @@
 // limitations under the License.
 //
 
-#if XAMCORE_2_0
-
 using System;
 using System.Reflection;
 using NUnit.Framework;
@@ -132,6 +130,3 @@ namespace Introspection {
 		}
 	}
 }
-
-#endif
-

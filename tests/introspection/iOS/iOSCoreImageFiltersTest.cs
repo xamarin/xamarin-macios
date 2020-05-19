@@ -12,15 +12,9 @@
 
 using System;
 using System.Reflection;
-#if XAMCORE_2_0
 using CoreImage;
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch.CoreImage;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 using NUnit.Framework;
 
 namespace Introspection {

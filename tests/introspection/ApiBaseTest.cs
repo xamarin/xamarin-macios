@@ -29,20 +29,10 @@ using Xamarin.Utils;
 using System.Linq;
 using Xamarin.Tests;
 
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
 #if MONOTOUCH
 using UIKit;
-#endif
-#else
-#if MONOMAC
-using MonoMac.Foundation;
-using MonoMac.ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-#endif
 #endif
 
 namespace Introspection {
