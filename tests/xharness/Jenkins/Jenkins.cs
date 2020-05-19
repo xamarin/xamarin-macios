@@ -1170,75 +1170,6 @@ namespace Xharness.Jenkins {
 			return tcs.Task;
 		}
 
-		string GetTestColor (IEnumerable<AppleTestTask> tests)
-		{
-			if (!tests.Any ())
-				return "black";
-
-			var first = tests.First ();
-			if (tests.All ((v) => v.ExecutionResult == first.ExecutionResult))
-				return GetTestColor (first);
-			if (tests.Any ((v) => v.Crashed))
-				return "maroon";
-			else if (tests.Any ((v) => v.TimedOut))
-				return "purple";
-			else if (tests.Any ((v) => v.BuildFailure))
-				return "darkred";
-			else if (tests.Any ((v) => v.Failed))
-				return "red";
-			else if (tests.Any ((v) => v.NotStarted))
-				return "black";
-			else if (tests.Any ((v) => v.Ignored))
-				return "gray";
-			else if (tests.Any ((v) => v.DeviceNotFound))
-				return "orangered";
-			else if (tests.All ((v) => v.BuildSucceeded))
-				return "lightgreen";
-			else if (tests.All ((v) => v.Succeeded))
-				return "green";
-			else
-				return "black";
-		}
-
-		string GetTestColor (AppleTestTask test)
-		{
-			if (test.NotStarted) {
-				return "black";
-			} else if (test.InProgress) {
-				if (test.Building) {
-					return "darkblue";
-				} else if (test.Running) {
-					return "lightblue";
-				} else {
-					return "blue";
-				}
-			} else {
-				if (test.Crashed) {
-					return "maroon";
-				} else if (test.HarnessException) {
-					return "orange";
-				} else if (test.TimedOut) {
-					return "purple";
-				} else if (test.BuildFailure) {
-					return "darkred";
-				} else if (test.Failed) {
-					return "red";
-				} else if (test.BuildSucceeded) {
-					return "lightgreen";
-				} else if (test.Succeeded) {
-					return "green";
-				} else if (test.Ignored) {
-					return "gray";
-				} else if (test.Waiting) {
-					return "darkgray";
-				} else if (test.DeviceNotFound) {
-					return "orangered";
-				} else {
-					return "pink";
-				}
-			}
-		}
-
 		object report_lock = new object ();
 		public void GenerateReport ()
 		{
@@ -1446,7 +1377,7 @@ namespace Xharness.Jenkins {
 					var list = new List<string> ();
 					var grouped = allTasks.GroupBy ((v) => v.ExecutionResult).OrderBy ((v) => (int) v.Key);
 					foreach (var @group in grouped)
-						list.Add ($"<span style='color: {GetTestColor (@group)}'>{@group.Key.ToString ()}: {@group.Count ()}</span>");
+						list.Add ($"<span style='color: {@group.GetTestColor ()}'>{@group.Key.ToString ()}: {@group.Count ()}</span>");
 					writer.Write (string.Join (", ", list));
 					writer.Write (")");
 				} else if (failedTests.Any ()) {
@@ -1664,7 +1595,7 @@ namespace Xharness.Jenkins {
 							var knownFailure = string.Empty;
 							if (!string.IsNullOrEmpty (test.KnownFailure))
 								knownFailure = $" {test.KnownFailure}";
-							writer.Write ($"<span id='x{id_counter++}' class='p3 autorefreshable' onclick='javascript: toggleLogVisibility (\"{log_id}\");'>{title} (<span style='color: {GetTestColor (test)}'>{state}{knownFailure}</span>{buildOnly}) </span>");
+							writer.Write ($"<span id='x{id_counter++}' class='p3 autorefreshable' onclick='javascript: toggleLogVisibility (\"{log_id}\");'>{title} (<span style='color: {test.GetTestColor ()}'>{state}{knownFailure}</span>{buildOnly}) </span>");
 							if (IsServerMode) {
 								writer.Write ($" <span id='x{id_counter++}' class='autorefreshable'>");
 								if (test.Waiting) {
@@ -1866,7 +1797,7 @@ namespace Xharness.Jenkins {
 						foreach (var group in failedTests.GroupBy ((v) => v.TestName)) {
 							var enumerableGroup = group as IEnumerable<AppleTestTask>;
 							if (enumerableGroup != null) {
-								writer.WriteLine ("<a href='#test_{2}'>{0}</a> ({1})<br />", group.Key, string.Join (", ", enumerableGroup.Select ((v) => string.Format ("<span style='color: {0}'>{1}</span>", GetTestColor (v), string.IsNullOrEmpty (v.Mode) ? v.ExecutionResult.ToString () : v.Mode)).ToArray ()), group.Key.Replace (' ', '-'));
+								writer.WriteLine ("<a href='#test_{2}'>{0}</a> ({1})<br />", group.Key, string.Join (", ", enumerableGroup.Select ((v) => string.Format ("<span style='color: {0}'>{1}</span>", v.GetTestColor (), string.IsNullOrEmpty (v.Mode) ? v.ExecutionResult.ToString () : v.Mode)).ToArray ()), group.Key.Replace (' ', '-'));
 								continue;
 							}
 
@@ -1944,7 +1875,7 @@ namespace Xharness.Jenkins {
 				.GroupBy ((v) => v.ExecutionResult)
 				.Select ((v) => v.First ()) // GroupBy + Select = Distinct (lambda)
 				.OrderBy ((v) => v.ID)
-				.Select ((v) => $"<span style='color: {GetTestColor (v)}'>{v.ExecutionResult.ToString ()}</span>")
+				.Select ((v) => $"<span style='color: {v.GetTestColor ()}'>{v.ExecutionResult.ToString ()}</span>")
 				.ToArray ();
 			return " (" + string.Join ("; ", results) + ")";
 		}

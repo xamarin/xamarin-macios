@@ -61,6 +61,7 @@
     <Compile Include="TestImporter\Xamarin\Tests\ProjectFilterTest.cs" />
     <Compile Include="TestImporter\Xamarin\Tests\AssemblyLocatorTest.cs" />
     <Compile Include="TestImporter\Xamarin\Tests\XamariniOSTemplateTest.cs" />
+    <Compile Include="Jenkins\ITestTaskExtensionsTests.cs" />
     <Compile Include="Tests\TestTargetExtensionsTests.cs" />
     <Compile Include="Tests\TestPlatformExtensionsTests.cs" />
   </ItemGroup>
