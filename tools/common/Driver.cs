@@ -19,8 +19,13 @@ using Xamarin.MacDev;
 using Xamarin.Utils;
 using ObjCRuntime;
 
+using Mono.Linker;
+
 namespace Xamarin.Bundler {
 	public partial class Driver {
+
+		public static bool Force { get; set; }
+
 		public static int Main (string [] args)
 		{
 			try {
@@ -46,10 +51,39 @@ namespace Xamarin.Bundler {
 			Action a = Action.None; // Need a temporary local variable, since anonymous functions can't write directly to ref/out arguments.
 
 			options.Add ("h|?|help", "Displays the help", v => a = Action.Help);
+			options.Add ("f|force", "Forces the recompilation of code, regardless of timestamps", v => Force = true);
+			options.Add ("cache=", "Specify the directory where temporary build files will be cached", v => app.Cache.Location = v);
 			options.Add ("version", "Output version information and exit.", v => a = Action.Version);
 			options.Add ("v|verbose", "Specify how verbose the output should be. This can be passed multiple times to increase the verbosity.", v => Verbosity++);
 			options.Add ("q|quiet", "Specify how quiet the output should be. This can be passed multiple times to increase the silence.", v => Verbosity--);
+			options.Add ("debug:", "Build a debug app. If AOT-compiling, will also generate native debug code for the specified assembly (set to 'all' to generate debug code for all assemblies, the default is to generate debug code for user assemblies only).", v => {
+				app.EnableDebug = true;
+				if (v != null) {
+					if (v == "all") {
+						app.DebugAll = true;
+						return;
+					}
+					app.DebugAssemblies.Add (Path.GetFileName (v));
+				}
+			});
+			options.Add ("reference=", "Add an assembly to be processed.", v => app.References.Add (v));
+			// Unfortunately -r is used in mmp for something else (--resource), which means we can't use the same arguments for both mtouch and mmp.
+			// So add --reference, which is now used by both (and accepted by bgen as well), and deprecate -r|--ref for mtouch and -a|--assembly for mmp.
+			options.Add ("targetver=", "Minimum supported version of the target OS.", v => {
+				try {
+					app.DeploymentTarget = StringUtils.ParseVersion (v);
+				} catch (Exception ex) {
+					throw ErrorHelper.CreateError (26, ex, Errors.MX0026, "targetver:" + v, ex.Message);
+				}
+			});
 			options.Add ("sdkroot=", "Specify the location of Apple SDKs, default to 'xcode-select' value.", v => sdk_root = v);
+			options.Add ("sdk=", "Specifies the SDK version to compile against (version, for example \"10.9\").", v => {
+				try {
+					app.SdkVersion = StringUtils.ParseVersion (v);
+				} catch (Exception ex) {
+					throw ErrorHelper.CreateError (26, ex, Errors.MX0026, $"sdk:{v}", ex.Message);
+				}
+			});
 			options.Add ("target-framework=", "Specify target framework to use. Currently supported: '" + string.Join ("', '", TargetFramework.ValidFrameworks.Select ((v) => v.ToString ())) + "'.", v => SetTargetFramework (v));
 #if MMP
 			options.Add ("abi=", "Comma-separated list of ABIs to target. x86_64", v => app.ParseAbi (v));
@@ -57,6 +91,14 @@ namespace Xamarin.Bundler {
 			options.Add ("abi=", "Comma-separated list of ABIs to target. Currently supported: armv7, armv7+llvm, armv7+llvm+thumb2, armv7s, armv7s+llvm, armv7s+llvm+thumb2, arm64, arm64+llvm, arm64_32, arm64_32+llvm, i386, x86_64", v => app.ParseAbi (v));
 #endif
 			options.Add ("no-xcode-version-check", "Ignores the Xcode version check.", v => { min_xcode_version = null; }, true /* This is a non-documented option. Please discuss any customers running into the xcode version check on the maciosdev@ list before giving this option out to customers. */);
+			options.Add ("nolink", "Do not link the assemblies.", v => app.LinkMode = LinkMode.None);
+#if MMP
+			options.Add ("linkplatform", "Link only the Xamarin.Mac.dll platform assembly", v => app.LinkMode = LinkMode.Platform);
+#endif
+			options.Add ("linksdkonly", "Link only the SDK assemblies", v => app.LinkMode = LinkMode.SDKOnly);
+			options.Add ("linkskip=", "Skip linking of the specified assembly", v => app.LinkSkipped.Add (v));
+			options.Add ("i18n=", "List of i18n assemblies to copy to the output directory, separated by commas (none, all, cjk, mideast, other, rare and/or west)", v => app.ParseI18nAssemblies (v));
+			options.Add ("xml=", "Provide an extra XML definition file to the linker", v => app.Definitions.Add (v));
 			options.Add ("warnaserror:", "An optional comma-separated list of warning codes that should be reported as errors (if no warnings are specified all warnings are reported as errors).", v =>
 			{
 				try {
@@ -192,6 +234,8 @@ namespace Xamarin.Bundler {
 			options.Add ("package-debug-symbols:", "Specify whether debug info files (*.mdb / *.pdb) should be packaged in the app. Default is 'true' for debug builds and 'false' for release builds.", v => app.PackageManagedDebugSymbols = ParseBool (v, "package-debug-symbols"));
 			options.Add ("profiling:", "Enable profiling", v => app.EnableProfiling = ParseBool (v, "profiling"));
 			options.Add ("debugtrack:", "Enable debug tracking of object resurrection bugs", v => { app.DebugTrack = ParseBool (v, "--debugtrack"); });
+			options.Add ("http-message-handler=", "Specify the default HTTP message handler for HttpClient", v => { app.HttpMessageHandler = v; });
+			options.Add ("tls-provider=", "Specify the default TLS provider", v => { app.TlsProvider = v; });
 			options.Add ("setenv=", "Set the environment variable in the application on startup", v => {
 					int eq = v.IndexOf ('=');
 					if (eq <= 0)
@@ -201,6 +245,53 @@ namespace Xamarin.Bundler {
 					app.EnvironmentVariables.Add (name, value);
 				}
 			);
+			options.Add ("registrar:", "Specify the registrar to use (dynamic, static or default (dynamic in the simulator, static on device))", v => {
+				var split = v.Split ('=');
+				var name = split [0];
+				var value = split.Length > 1 ? split [1] : string.Empty;
+
+				switch (name) {
+				case "static":
+					app.Registrar = RegistrarMode.Static;
+					break;
+				case "dynamic":
+					app.Registrar = RegistrarMode.Dynamic;
+					break;
+				case "default":
+					app.Registrar = RegistrarMode.Default;
+					break;
+#if MMP
+				case "partial":
+				case "partial-static":
+					app.Registrar = RegistrarMode.PartialStatic;
+					break;
+#endif
+				default:
+					throw ErrorHelper.CreateError (20, Errors.MX0020, "--registrar", "static, dynamic or default");
+				}
+
+				switch (value) {
+				case "trace":
+					app.RegistrarOptions = RegistrarOptions.Trace;
+					break;
+				case "default":
+				case "":
+					app.RegistrarOptions = RegistrarOptions.Default;
+					break;
+				default:
+					throw ErrorHelper.CreateError (20, Errors.MX0020, "--registrar", "static, dynamic or default");
+				}
+			});
+			options.Add ("runregistrar:", "Runs the registrar on the input assembly and outputs a corresponding native library.",
+				v => {
+					a = Action.RunRegistrar;
+					app.RegistrarOutputLibrary = v;
+				},
+				true /* this is an internal option */
+			);
+			options.Add ("warn-on-type-ref=", "Warn if any of the comma-separated types is referenced by assemblies - both before and after linking", v => {
+				app.WarnOnTypeRef.AddRange (v.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries));
+			});
 			// Keep the ResponseFileSource option at the end.
 			options.Add (new Mono.Options.ResponseFileSource ());
 

@@ -124,7 +124,6 @@ namespace Xamarin.Bundler
 
 		//
 		// Output generation
-		static bool force = false;
 		static string dotfile;
 		static string cross_prefix = Environment.GetEnvironmentVariable ("MONO_CROSS_PREFIX");
 		static string extra_args = Environment.GetEnvironmentVariable ("MTOUCH_ENV_OPTIONS");
@@ -137,11 +136,6 @@ namespace Xamarin.Bundler
 
 		public static bool IsUnified {
 			get { return true; }
-		}
-
-		public static bool Force {
-			get { return force; }
-			set { force = value; }
 		}
 
 		public static string GetArchDirectory (Application app, bool is64bit)
@@ -713,9 +707,6 @@ namespace Xamarin.Bundler
 				args = l.ToArray ();
 			}
 
-			string tls_provider = null;
-			string http_message_handler = null;
-
 			Action<Action> SetAction = (Action value) =>
 			{
 				switch (action) {
@@ -740,9 +731,7 @@ namespace Xamarin.Bundler
 			};
 
 			var os = new OptionSet () {
-			{ "f|force", "Forces the recompilation of code, regardless of timestamps", v=>force = true },
 			{ "dot:", "Generate a dot file to visualize the build tree.", v => dotfile = v ?? string.Empty },
-			{ "cache=", "Specify the directory where object files will be cached", v => app.Cache.Location = v },
 			{ "aot=", "Arguments to the static compiler",
 				v => app.AotArguments = v + (v.EndsWith (",", StringComparison.Ordinal) ? String.Empty : ",") + app.AotArguments
 			},
@@ -762,14 +751,9 @@ namespace Xamarin.Bundler
 			{ "executable=", "Specifies the native executable name to output", v => app.ExecutableName = v },
 			{ "nofastsim", "Do not run the simulator fast-path build", v => app.NoFastSim = true },
 			{ "nodevcodeshare", "Do not share native code between extensions and main app.", v => app.NoDevCodeShare = true },
-			{ "nolink", "Do not link the assemblies", v => app.LinkMode = LinkMode.None },
 			{ "nodebugtrack", "Disable debug tracking of object resurrection bugs [DEPRECATED - already disabled by default]", v => app.DebugTrack = false, true },
 			{ "linkerdumpdependencies", "Dump linker dependencies for linker-analyzer tool", v => app.LinkerDumpDependencies = true },
-			{ "linksdkonly", "Link only the SDK assemblies", v => app.LinkMode = LinkMode.SDKOnly },
-			{ "linkskip=", "Skip linking of the specified assembly", v => app.LinkSkipped.Add (v) },
 			{ "nolinkaway", "Disable the linker step which replace code with a 'Linked Away' exception.", v => app.LinkAway = false },
-			{ "xml=", "Provide an extra XML definition file to the linker", v => app.Definitions.Add (v) },
-			{ "i18n=", "List of i18n assemblies to copy to the output directory, separated by commas (none,all,cjk,mideast,other,rare,west)", v => app.I18n = LinkerOptions.ParseI18nAssemblies (v) },
 			{ "symbollist=", "Asks mtouch to create a file with all the symbols that should not be stripped instead of stripping.", v => app.SymbolList = v, true /* hidden, this is only used between mtouch and the MSBuild tasks, not for public consumption */ },
 			{ "nostrip", "Do not strip the AOT compiled assemblies", v => app.ManagedStrip = false },
 			{ "nosymbolstrip:", "A comma-separated list of symbols to not strip from the app (if the list is empty, stripping is disabled completely)", v =>
@@ -782,7 +766,7 @@ namespace Xamarin.Bundler
 				} },
 			{ "dsym:", "Turn on (default for device) or off (default for simulator) .dSYM symbols.", v => app.BuildDSym = ParseBool (v, "dsym") },
 			{ "dlsym:", "Use dlsym to resolve pinvokes in AOT compiled assemblies", v => app.ParseDlsymOptions (v) },
-			{ "r|ref=", "Add an assembly to the resolver", v => app.References.Add (v) },
+			{ "r|ref=", "Add an assembly to the resolver [DEPRECATED, use --reference instead]", v => app.References.Add (v), true /* Hide: this option is deprecated in favor of the shared --reference option instead */ },
 			{ "gcc_flags=", "Set flags to be passed along to gcc at link time", v =>
 				{
 					if (!StringUtils.TryParseArguments (v, out var gcc_flags, out var ex))
@@ -810,24 +794,6 @@ namespace Xamarin.Bundler
 				}
 			},
 			// Configures the tooling used to build code.
-			{ "sdk=", "Specifies the name of the SDK to compile against (version, for example \"3.2\")",
-				v => {
-					try {
-						app.SdkVersion = StringUtils.ParseVersion (v);
-					} catch (Exception ex) {
-						throw ErrorHelper.CreateError (26, ex, Errors.MX0026, "sdk:" + v, ex.Message);
-					}
-				}
-			},
-			{ "targetver=", "Specifies the name of the minimum deployment target (version, for example \"" + Xamarin.SdkVersions.iOS.ToString () + "\")",
-				v => {
-					try {
-						app.DeploymentTarget = StringUtils.ParseVersion (v);
-					} catch (Exception ex) {
-						throw new ProductException (26, true, ex, Errors.MX0026, "targetver:" + v, ex.Message);
-					}
-				}
-			},
 			{ "device=", "Specifies the device type to launch the simulator as [DEPRECATED]", v => { }, true },
 			
 			// Launch/debug options
@@ -887,62 +853,10 @@ namespace Xamarin.Bundler
 			{ "fastdev", "Build an app that supports fastdev (this app will only work when launched using Xamarin Studio)", v => { app.AddAssemblyBuildTarget ("@all=dynamiclibrary"); }},
 			{ "force-thread-check", "Keep UI thread checks inside (even release) builds [DEPRECATED, use --optimize=-remove-uithread-checks instead]", v => { app.Optimizations.RemoveUIThreadChecks = false; }, true},
 			{ "disable-thread-check", "Remove UI thread checks inside (even debug) builds [DEPRECATED, use --optimize=remove-uithread-checks instead]", v => { app.Optimizations.RemoveUIThreadChecks = true; }, true},
-			{ "debug:", "Generate debug code in Mono for the specified assembly (set to 'all' to generate debug code for all assemblies, the default is to generate debug code for user assemblies only)",
-				v => {
-					app.EnableDebug = true;
-					if (v != null){
-						if (v == "all"){
-							app.DebugAll = true;
-							return;
-						}
-						app.DebugAssemblies.Add (Path.GetFileName (v));
-					}
-				}
-			},
 			{ "package-mdb:", "Specify whether debug info files (*.mdb) should be packaged in the app. Default is 'true' for debug builds and 'false' for release builds. [DEPRECATED]", v => app.PackageManagedDebugSymbols = ParseBool (v, "package-mdb"), true },
 			{ "msym:", "Specify whether managed symbolication files (*.msym) should be created. Default is 'false' for debug builds and 'true' for release builds.", v => app.EnableMSym = ParseBool (v, "msym") },
 			{ "extension", v => app.IsExtension = true },
 			{ "app-extension=", "The path of app extensions that are included in the app. This must be specified once for each app extension.", v => app.Extensions.Add (v), true /* MSBuild-internal for now */ },
-			{ "registrar:", "Specify the registrar to use (dynamic, static or default (dynamic in the simulator, static on device))", v =>
-				{
-					var split = v.Split ('=');
-					var name = split [0];
-					var value = split.Length > 1 ? split [1] : string.Empty;
-
-					switch (name) {
-					case "static":
-						app.Registrar = RegistrarMode.Static;
-						break;
-					case "dynamic":
-						app.Registrar = RegistrarMode.Dynamic;
-						break;
-					case "default":
-						app.Registrar = RegistrarMode.Default;
-						break;
-					default:
-						throw new ProductException (20, true, Errors.MX0020, "--registrar", "static, dynamic or default");
-					}
-
-					switch (value) {
-					case "trace":
-						app.RegistrarOptions = RegistrarOptions.Trace;
-						break;
-					case "default":
-					case "":
-						app.RegistrarOptions = RegistrarOptions.Default;
-						break;
-					default:
-						throw new ProductException (20, true, Errors.MX0020, "--registrar", "static, dynamic or default");
-					}
-				}
-			},
-			{ "runregistrar:", "Runs the registrar on the input assembly and outputs a corresponding native library.",
-				v => {
-					SetAction (Action.RunRegistrar);
-					app.RegistrarOutputLibrary = v;
-				},
-				true /* this is an internal option */
-			},
 			{ "stderr=", "Redirect the standard error for the simulated application to the specified file [DEPRECATED]", v => { }, true },
 			{ "stdout=", "Redirect the standard output for the simulated application to the specified file [DEPRECATED]", v => { }, true },
 
@@ -1004,12 +918,10 @@ namespace Xamarin.Bundler
 					}
 				}
 			},
-			{ "http-message-handler=", "Specify the default HTTP message handler for HttpClient", v => { http_message_handler = v; }},
 			{ "output-format=", "Specify the output format for some commands. Possible values: Default, XML", v =>
 				{
 				}
 			},
-			{ "tls-provider=", "Specify the default TLS provider", v => { tls_provider = v; }},
 			{ "xamarin-framework-directory=", "The framework directory", v => { framework_dir = v; }, true },
 			{ "assembly-build-target=", "Specifies how to compile assemblies to native code. Possible values: 'staticobject' (default), 'dynamiclibrary' and 'framework'. " +
 					"Each option also takes an assembly and a potential name (defaults to the name of the assembly). Example: --assembly-build-target=mscorlib.dll=framework[=name]." +
@@ -1018,10 +930,7 @@ namespace Xamarin.Bundler
 						app.AddAssemblyBuildTarget (v);
 					}
 			},
-			{ "warn-on-type-ref=", "Warn if any of the comma-separated types is referenced by assemblies - both before and after linking", v => {
-					app.WarnOnTypeRef.AddRange (v.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries));
-				}
-			},
+			/* Any new options that are identical between mtouch and mmp should be added to common/Driver.cs */
 		};
 
 			if (ParseOptions (app, os, args, ref action))
@@ -1030,8 +939,6 @@ namespace Xamarin.Bundler
 			a = action;
 
 			app.SetDefaultAbi ();
-
-			app.RuntimeOptions = RuntimeOptions.Create (app, http_message_handler, tls_provider);
 
 			if (action == Action.Build || action == Action.RunRegistrar) {
 				if (app.RootAssemblies.Count == 0)

@@ -74,10 +74,6 @@ namespace Xamarin.Bundler {
 		public bool NoDevCodeShare;
 		public bool IsCodeShared { get; private set; }
 
-		// The list of assemblies that we do generate debugging info for.
-		public bool DebugAll;
-		public List<string> DebugAssemblies = new List<string> ();
-
 		public string Compiler = string.Empty;
 		public string CompilerPath;
 
@@ -139,28 +135,6 @@ namespace Xamarin.Bundler {
 
 			return !IsInterpreted (assembly);
 		}
-
-		// If we're targetting a 32 bit arch.
-		bool? is32bits;
-		public bool Is32Build {
-			get {
-				if (!is32bits.HasValue)
-					is32bits = IsArchEnabled (Abi.Arch32Mask);
-				return is32bits.Value;
-			}
-		}
-
-		// If we're targetting a 64 bit arch.
-		bool? is64bits;
-		public bool Is64Build {
-			get {
-				if (!is64bits.HasValue)
-					is64bits = IsArchEnabled (Abi.Arch64Mask);
-				return is64bits.Value;
-			}
-		}
-
-		public bool IsDualBuild { get { return Is32Build && Is64Build; } } // if we're building both a 32 and a 64 bit version.
 
 		bool RequiresXcodeHeaders => LinkMode == LinkMode.None;
 
