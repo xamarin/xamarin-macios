@@ -1568,6 +1568,22 @@ namespace ObjCRuntime {
 		extern static void NSLog (IntPtr format, [MarshalAs (UnmanagedType.LPStr)] string s);
 #endif
 
+#if MONOMAC
+		[DllImport ("__Internal")]
+		extern static void xamarin_log (string s);
+		internal static void NSLog (string s)
+		{
+			if (PlatformHelper.CheckSystemVersion (10, 12)) {
+				Console.WriteLine (s);
+			} else {
+				xamarin_log (s);
+			}
+		}
+#else
+		[DllImport ("__Internal", EntryPoint="xamarin_log", CharSet=CharSet.Unicode)]
+		internal extern static void NSLog (string s);
+#endif
+
 #if !MONOMAC
 		[DllImport (Constants.FoundationLibrary, EntryPoint = "NSLog")]
 		extern static void NSLog_arm64 (IntPtr format, IntPtr p2, IntPtr p3, IntPtr p4, IntPtr p5, IntPtr p6, IntPtr p7, IntPtr p8, [MarshalAs (UnmanagedType.LPStr)] string s);
