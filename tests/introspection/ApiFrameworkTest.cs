@@ -1,4 +1,3 @@
-﻿#if __UNIFIED__
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -203,4 +202,3 @@ namespace Introspection {
 #endif
 	}
 }
-#endif

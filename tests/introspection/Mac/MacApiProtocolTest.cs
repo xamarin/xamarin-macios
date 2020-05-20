@@ -9,14 +9,9 @@
 
 using System;
 
-#if XAMCORE_2_0
 using Foundation;
 using AppKit;
 using CoreImage;
-#else
-using MonoMac.AppKit;
-using MonoMac.CoreImage;
-#endif
 
 using NUnit.Framework;
 using Xamarin.Tests;
@@ -90,16 +85,6 @@ namespace Introspection {
 				case "NSPrintInfo": // Conformance not in headers
 				case "NSPrinter": // Conformance not in headers
 					return true;
-#if !__UNIFIED__
-				// existing classic/old binary is not updated
-				case "NSAppearance":
-				case "NSBezierPath":
-				case "NSFileWrapper":
-				case "NSGradient":
-				case "NSSound":
-				case "NSShadow":
-					return true;
-#endif
 				default:
 					// CIFilter started implementing NSSecureCoding in 10.11
 					if (!Mac.CheckSystemVersion (10, 11) && (type == typeof(CIFilter) || type.IsSubclassOf (typeof(CIFilter))))

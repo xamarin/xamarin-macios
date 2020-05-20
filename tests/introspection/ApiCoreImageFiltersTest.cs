@@ -29,21 +29,11 @@ using System.Text;
 
 using NUnit.Framework;
 
-#if XAMCORE_2_0
 using CoreImage;
 using Foundation;
 using ObjCRuntime;
 #if !MONOMAC
 using UIKit;
-#endif
-#elif MONOMAC
-using MonoMac.CoreImage;
-using MonoMac.Foundation;
-#else
-using MonoTouch.CoreImage;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
 #endif
 
 namespace Introspection {

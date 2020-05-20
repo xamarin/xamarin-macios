@@ -29,16 +29,8 @@ using NUnit.Framework;
 using ARKit;
 #endif
 
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#elif MONOMAC
-using MonoMac.Foundation;
-using MonoMac.ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 
 namespace Introspection {
 
@@ -62,16 +54,6 @@ namespace Introspection {
 			if (type.ContainsGenericParameters)
 				return true;
 
-#if !XAMCORE_2_0
-			// skip delegate (and other protocol references)
-			foreach (object ca in type.GetCustomAttributes (false)) {
-				if (ca is ProtocolAttribute)
-					return true;
-				if (ca is ModelAttribute)
-					return true;
-			}
-#endif
-
 			switch (type.Name) {
 			case "JSExport":
 				// This is interesting: Apple defines a private JSExport class - if you try to define your own in an Objective-C project you get this warning at startup:
@@ -80,11 +62,6 @@ namespace Introspection {
 				// see that there's an existing JSExport type, and use that one instead of creating a new type.
 				// This is problematic, because Apple's JSExport is completely unusable, and will crash if you try to do anything.
 				return true;
-#if !XAMCORE_2_0
-			case "AVAssetResourceLoader": // We have DisableDefaultCtor in XAMCORE_2_0 but can't change in compat because of backwards compat
-			case "AVAssetResourceLoadingRequest":
-			case "AVAssetResourceLoadingContentInformationRequest":
-#endif
 			// on iOS 8.2 (beta 1) we get:  NSInvalidArgumentException Caller did not provide an activityType, and this process does not have a NSUserActivityTypes in its Info.plist.
 			// even if we specify an NSUserActivityTypes in the Info.plist - might be a bug or there's a new (undocumented) requirement
 			case "NSUserActivity":
@@ -169,12 +146,8 @@ namespace Introspection {
 		
 		bool GetIsDirectBinding (NSObject obj)
 		{
-#if XAMCORE_2_0
 			int flags = (byte) typeof (NSObject).GetField ("flags", BindingFlags.Instance | BindingFlags.GetField | BindingFlags.NonPublic).GetValue (obj);
 			return (flags & 4) == 4;
-#else
-			return (bool) typeof (NSObject).GetField ("IsDirectBinding", BindingFlags.Instance | BindingFlags.GetField | BindingFlags.NonPublic).GetValue (obj);
-#endif
 		}
 
 		/// <summary>
@@ -343,18 +316,13 @@ namespace Introspection {
 
 		protected virtual bool Match (ConstructorInfo ctor, Type type)
 		{
-#if XAMCORE_2_0
-			string foundation_namespace = "Foundation";
-#elif MONOMAC
-			string foundation_namespace = "MonoMac.Foundation";
-#else
-			string foundation_namespace = "MonoTouch.Foundation";
-#endif
+			var cstr = ctor.ToString ();
+
 			switch (type.Name) {
 			case "MKTileOverlayRenderer":
 				// NSInvalidArgumentEception Expected a MKTileOverlay
 				// looks like Apple has not yet added a DI for this type, but it should be `initWithTileOverlay:`
-				if (ctor.ToString () == $"Void .ctor(MapKit.IMKOverlay)")
+				if (cstr == $"Void .ctor(MapKit.IMKOverlay)")
 					return true;
 				break;
 			case "MPSMatrixMultiplication":
@@ -362,18 +330,18 @@ namespace Introspection {
 			case "MPSImageHistogram":
 				// Could not initialize an instance of the type 'MetalPerformanceShaders.MPSImageHistogram': the native 'initWithDevice:' method returned nil.
 				// make sense: there's a `initWithDevice:histogramInfo:` DI
-				if (ctor.ToString () == $"Void .ctor(Metal.IMTLDevice)")
+				if (cstr == $"Void .ctor(Metal.IMTLDevice)")
 					return true;
 				break;
 			case "NSDataDetector":
 				// -[NSDataDetector initWithPattern:options:error:]: Not valid for NSDataDetector
-				if (ctor.ToString () == $"Void .ctor({foundation_namespace}.NSString, {foundation_namespace}.NSRegularExpressionOptions, {foundation_namespace}.NSError ByRef)")
+				if (cstr == $"Void .ctor(Foundation.NSString, Foundation.NSRegularExpressionOptions, Foundation.NSError ByRef)")
 					return true;
 				break;
 			case "SKStoreProductViewController":
 			case "SKCloudServiceSetupViewController":
 				// SKStoreProductViewController and SKCloudServiceSetupViewController are OS View Controllers which can't be customized. Therefore they shouldn't re-expose initWithNibName:bundle:
-				if (ctor.ToString () == $"Void .ctor(System.String, {foundation_namespace}.NSBundle)")
+				if (cstr == $"Void .ctor(System.String, Foundation.NSBundle)")
 					return true;
 				break;
 			case "MKCompassButton":
@@ -407,20 +375,16 @@ namespace Introspection {
 			case "PdfAnnotationTextWidget":
 				// This ctor was introduced in 10,13 but all of the above objects are deprecated in 10,12
 				// so it does not make much sense to expose this ctor in all the deprecated subclasses
-#if XAMCORE_2_0
-				if (ctor.ToString () == $"Void .ctor(CoreGraphics.CGRect, {foundation_namespace}.NSString, {foundation_namespace}.NSDictionary)")
-#else
-				if (ctor.ToString () == $"Void .ctor(System.Drawing.RectangleF, {foundation_namespace}.NSString, {foundation_namespace}.NSDictionary)")
-#endif
+				if (cstr == $"Void .ctor(CoreGraphics.CGRect, Foundation.NSString, Foundation.NSDictionary)")
 					return true;
 				break;
 			case "VNTargetedImageRequest": // Explicitly disabled
-				if (ctor.ToString () == $"Void .ctor(Vision.VNRequestCompletionHandler)")
+				if (cstr == $"Void .ctor(Vision.VNRequestCompletionHandler)")
 					return true;
 				break;
 			case "PKPaymentRequestShippingContactUpdate":
 				// a more precise designated initializer is provided
-				if (ctor.ToString () == $"Void .ctor(PassKit.PKPaymentSummaryItem[])")
+				if (cstr == $"Void .ctor(PassKit.PKPaymentSummaryItem[])")
 					return true;
 				break;
 			case "NSApplication": // Does not make sense, also it crashes
@@ -430,12 +394,12 @@ namespace Introspection {
 			case "NSCustomImageRep": // exception raised
 			case "NSEPSImageRep": // exception raised
 			case "NSPdfImageRep": // exception raised
-				if (ctor.ToString () == $"Void .ctor()")
+				if (cstr == $"Void .ctor()")
 					return true;
 				break;
 			case "AUPannerView": // Do not make sense without the AudioUnit
 			case "AUGenericView": // Do not make sense without the AudioUnit
-				if (ctor.ToString () == $"Void .ctor(CoreGraphics.CGRect)")
+				if (cstr == $"Void .ctor(CoreGraphics.CGRect)")
 					return true;
 				break;
 			case "MDLNoiseTexture":
@@ -450,7 +414,7 @@ namespace Introspection {
 			case "INUIAddVoiceShortcutViewController": // Doesn't make sense without INVoiceShortcut and there is no other way to set this unless you use the other only .ctor
 			case "INUIEditVoiceShortcutViewController": // Doesn't make sense without INVoiceShortcut and there is no other way to set this unless you use the other only .ctor
 			case "ILClassificationUIExtensionViewController": // Meant to be an extension
-				if (ctor.ToString () == $"Void .ctor(System.String, {foundation_namespace}.NSBundle)")
+				if (cstr == $"Void .ctor(System.String, Foundation.NSBundle)")
 					return true;
 				break;
 			case "MPSImageReduceUnary": // Not meant to be used, only subclasses
@@ -459,8 +423,7 @@ namespace Introspection {
 			case "MPSNNOptimizer": // Not meant to be used, only subclasses
 			case "MPSNNReduceBinary": // Not meant to be used, only subclasses
 			case "MPSNNReduceUnary": // Not meant to be used, only subclasses
-				var cstr = ctor.ToString ();
-				if (cstr == "Void .ctor(Metal.IMTLDevice)" || cstr == $"Void .ctor({foundation_namespace}.NSCoder, Metal.IMTLDevice)")
+				if (cstr == "Void .ctor(Metal.IMTLDevice)" || cstr == $"Void .ctor(Foundation.NSCoder, Metal.IMTLDevice)")
 					return true;
 				break;
 			case "MFMailComposeViewController": // You are meant to use the system provided one
@@ -472,28 +435,28 @@ namespace Introspection {
 			case "UIImagePickerController": // You are meant to use the system provided one
 			case "UIVideoEditorController": // You are meant to use the system provided one
 			case "VNDocumentCameraViewController": // Explicitly disabled on the headers
-				if (ctor.ToString () == $"Void .ctor(System.String, {foundation_namespace}.NSBundle)")
+				if (cstr == $"Void .ctor(System.String, Foundation.NSBundle)")
 					return true;
-				if (ctor.ToString () == $"Void .ctor(UIKit.UIViewController)")
+				if (cstr == $"Void .ctor(UIKit.UIViewController)")
 					return true;
 				break;
 			case "UICollectionViewCompositionalLayout":
 				// Explicitly disabled ctors - (instancetype)init NS_UNAVAILABLE;
 				return true;
 			case "NSPickerTouchBarItem": // You are meant to use the static factory methods
-				if (ctor.ToString () == $"Void .ctor(System.String)")
+				if (cstr == $"Void .ctor(System.String)")
 					return true;
 				break;
 			case "NSMenuToolbarItem": // No ctor specified
-				if (ctor.ToString () == $"Void .ctor(System.String)")
+				if (cstr == $"Void .ctor(System.String)")
 					return true;
 				break;
 			case "NSStepperTouchBarItem": // You are meant to use the static factory methods
-				if (ctor.ToString () == $"Void .ctor(System.String)")
+				if (cstr == $"Void .ctor(System.String)")
 					return true;
 				break;
 			case "NSSharingServicePickerToolbarItem": // This type doesn't have .ctors
-				if (ctor.ToString () == $"Void .ctor(System.String)")
+				if (cstr == $"Void .ctor(System.String)")
 					return true;
 				break;
 			}
