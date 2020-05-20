@@ -3,34 +3,37 @@
 function show_help () {
 cat <<EOL
 Usage: configure [options]
-    -h, --help              Displays this help
+    -h, --help                Displays this help
 
-    --disable-mac           Disable most of the Mac-related parts.
-    --disable-ios           Disable most of the iOS-related parts.
-                            The iOS build depend on some parts of the Mac build, so
-                            a complete separation is not possible (neither desirable,
-                            some parts will always be enabled to catch common programmer
-                            errors causing build breaks).
-                            The main reasons for disabling either part is to have faster
-                            builds and disable the non-relevant tests.
+    --disable-mac             Disable most of the Mac-related parts.
+    --disable-ios             Disable most of the iOS-related parts.
+                              The iOS build depend on some parts of the Mac build, so
+                              a complete separation is not possible (neither desirable,
+                              some parts will always be enabled to catch common programmer
+                              errors causing build breaks).
+                              The main reasons for disabling either part is to have faster
+                              builds and disable the non-relevant tests.
 
-    --disable-ios-device    Disables all device-related parts from the iOS build.
-                            This can be used to speed up the build.
+    --disable-ios-device      Disables all device-related parts from the iOS build.
+                              This can be used to speed up the build.
 
-    --disable-strip:        If executables should be stripped or not.
-                            Disable to make it easier to debug executables using lldb.
+    --disable-strip:          If executables should be stripped or not.
+                              Disable to make it easier to debug executables using lldb.
 
     --enable-ccache
-    --disable-ccache        Enable/disable ccache. Default: enabled if detected.
+    --disable-ccache          Enable/disable ccache. Default: enabled if detected.
 
-    --enable-xamarin        Enable additional Xamarin-specific parts of the build.
+    --enable-xamarin          Enable additional Xamarin-specific parts of the build.
 
-    --disable-packaged-llvm Compile LLVM instead of downloading a precompiled version.
+    --disable-packaged-llvm   Compile LLVM instead of downloading a precompiled version.
 
     --enable-packaged-mono
-    --disable-packaged-mono Enable/disable using the precompiled version of mono. If disabled mono will be compiled from source.
+    --disable-packaged-mono   Enable/disable using the precompiled version of mono. If disabled mono will be compiled from source.
 
-    --enable-dotnet         Enable building .NET 5 bits.
+    --enable-dotnet           Enable building .NET 5 bits.
+
+    --enable-sample-testing
+    --disable-sample-testing  Enable/disable the sample tests. If disable the tests are not compiled or run. Disabling saves HDD space.
 EOL
 }
 
@@ -111,6 +114,14 @@ while test x$1 != x; do
         ;;
     --disable-dotnet)
         echo "ENABLE_DOTNET=" >> "$CONFIGURED_FILE"
+        shift
+        ;;
+    --enable-sample-testing)
+        echo "ENABLE_SAMPLES_TESTING=1" >> "$CONFIGURED_FILE"
+        shift
+        ;;
+    --disable-sample-testing)
+        echo "ENABLE_SAMPLE_TESTING=" >> "$CONFIGURED_FILE"
         shift
         ;;
 	--help|-h)

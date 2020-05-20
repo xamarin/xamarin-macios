@@ -4,7 +4,9 @@ include $(TOP)/Make.config
 
 NUNIT_MSBUILD_DIR=$(TOP)/packages/NUnit.ConsoleRunner.3.9.0/tools/
 
+ifdef ENABLE_SAMPLE_TESTING 
 all-local:: run-tests
+endif
 
 ifneq ($(TEST_CATEGORY),)
 WHERE_CONDITION=/where "cat == $(TEST_CATEGORY)"
