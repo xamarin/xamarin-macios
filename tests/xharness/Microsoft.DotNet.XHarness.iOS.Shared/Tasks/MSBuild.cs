@@ -39,7 +39,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 			this.errorKnowledgeBase = errorKnowledgeBase ?? throw new ArgumentNullException (nameof (errorKnowledgeBase));
 		}
 
-		public async Task<(TestExecutingResult ExecutionResult, string KnownFailure)> ExecuteAsync (string projectPlatform, 
+		public async Task<(TestExecutingResult ExecutionResult, (string HumanMessage, string IssueLink)? KnownFailure)> ExecuteAsync (string projectPlatform, 
 																									string projectConfiguration,
 																									string projectFile,
 																									IAcquiredResource resource,
@@ -48,7 +48,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 																									ILog mainLog)
 		{
 			BuildLog = buildLog;
-			(TestExecutingResult ExecutionResult, string KnownFailure) result = (TestExecutingResult.NotStarted, (string) null);
+			(TestExecutingResult ExecutionResult, (string HumanMessage, string IssueLink)? KnownFailure) result = (TestExecutingResult.NotStarted, ((string HumanMessage, string IssueLink)?) null);
 			await RestoreNugetsAsync (buildLog, resource, useXIBuild: true);
 
 			using (var xbuild = new Process ()) {

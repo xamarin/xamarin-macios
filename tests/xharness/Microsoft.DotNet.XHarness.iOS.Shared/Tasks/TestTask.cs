@@ -29,7 +29,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 		#region Properties
 
 		public bool BuildOnly { get; set; }
-		public string KnownFailure { get; set; }
+		public (string HumanMessage, string IssueLink)? KnownFailure { get; set; }
 		public string ProjectConfiguration { get; set; }
 		public string ProjectPlatform { get; set; }
 
