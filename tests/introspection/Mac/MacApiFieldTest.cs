@@ -24,12 +24,6 @@ namespace Introspection {
 			ContinueOnFailure = true;
 		}
 
-		static bool IsUnified {
-			get {
-				return AppDomain.CurrentDomain.GetAssemblies ().Any (x => x.FullName.Contains ("Xamarin.Mac"));
-			}
-		}
-
 		protected override bool Skip (Type type)
 		{
 			switch (type.FullName) {
@@ -159,14 +153,6 @@ namespace Introspection {
 				if (Mac.CheckSystemVersion (10, 13)) // radar 32858911
 					return true;
 				goto default;
-#if !__UNIFIED__
-			case "InputRSSArticleDurationKey":
-			case "InputRSSFeedURLKey":
-			case "ProtocolRSSVisualizer":
-				if (Mac.CheckSystemVersion (10, 14))
-					return true;
-				goto default;
-#endif
 			default:
 				return base.Skip (p);
 			}
@@ -182,7 +168,7 @@ namespace Introspection {
 			// Only there for API compat
 			case "kSecUseNoAuthenticationUI":
 			case "kSecUseOperationPrompt":
-				return !IsUnified;
+				return false;
 			// MonoMac.CoreServices.CFHTTPMessage - document in 10.9 but returns null
 			case "kCFHTTPAuthenticationSchemeOAuth1":
 				return true;
@@ -194,14 +180,12 @@ namespace Introspection {
 				if (Mac.Is32BitMavericks)
 					return true;
 				goto default;
-#if !UNIFIED
 			case "QCCompositionInputRSSArticleDurationKey":
 			case "QCCompositionInputRSSFeedURLKey":
 			case "QCCompositionProtocolRSSVisualizer":
 				if (Mac.CheckSystemVersion (10, 14))
 					return true;
 				goto default;
-#endif
 			default:
 				return base.Skip (constantName, libraryName);
 			}

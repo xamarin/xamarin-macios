@@ -13,13 +13,8 @@ using System.Reflection;
 using NUnit.Framework;
 using Xamarin.Tests;
 
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoMac.Foundation;
-using MonoMac.ObjCRuntime;
-#endif
 
 namespace Introspection {
 	
@@ -159,23 +154,11 @@ namespace Introspection {
 		{
 			switch (structName) {
 			case "_NSPoint":
-#if XAMCORE_2_0
 				return type.FullName == "CoreGraphics.CGPoint";
-#else
-				return type.FullName == "System.Drawing.PointF";
-#endif
 			case "_NSRect":
-#if XAMCORE_2_0
 				return type.FullName == "CoreGraphics.CGRect";
-#else
-				return type.FullName == "System.Drawing.RectangleF";
-#endif
 			case "_NSSize":
-#if XAMCORE_2_0
 				return type.FullName == "CoreGraphics.CGSize";
-#else
-				return type.FullName == "System.Drawing.SizeF";
-#endif
 			case "_SCNVector3":
 				return type.Name == "SCNVector3";
 			case "_SCNVector4":

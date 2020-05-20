@@ -10,7 +10,6 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-#if XAMCORE_2_0
 #if !__TVOS__
 using PassKit;
 #endif
@@ -20,13 +19,6 @@ using Metal;
 #endif
 using ObjCRuntime;
 using UIKit;
-#else
-using MonoTouch.PassKit;
-using MonoTouch.Foundation;
-using MonoTouch.Metal;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-#endif
 
 using NUnit.Framework;
 
@@ -159,17 +151,6 @@ namespace Introspection {
 			case "CAMetalLayer":
 				return (Runtime.Arch == Arch.SIMULATOR) && !TestRuntime.CheckXcodeVersion (11, 0);
 
-#if !XAMCORE_2_0
-			// from iOS8 (beta4) they do not return a valid handle
-			case "AVAssetResourceLoader":
-			case "AVAssetResourceLoadingRequest":
-			case "AVAssetResourceLoadingContentInformationRequest":
-				return true;
-			// Started with iOS8 on simulator (always) but it looks like it can happen on devices too
-			// NSInvalidArgumentException Use initWithAccessibilityContainer:
-			case "UIAccessibilityElement":
-				return TestRuntime.CheckXcodeVersion (6, 0);
-#endif
 			// in 8.2 beta 1 this crash the app (simulator) without giving any details in the logs
 			case "WKUserNotificationInterfaceController":
 				return true;
