@@ -186,16 +186,16 @@ namespace ObjCRuntime {
 #endif
 			if (options->Size != Marshal.SizeOf (typeof (InitializationOptions))) {
 				string msg = "Version mismatch between the native " + ProductName + " runtime and " + AssemblyName + ". Please reinstall " + ProductName + ".";
-				Console.Error.WriteLine (msg);
+				NSLog (msg);
 #if MONOMAC
 				try {
 					// Print out where Xamarin.Mac.dll and the native runtime was loaded from.
-					Console.Error.WriteLine (AssemblyName + " was loaded from {0}", typeof (nint).Assembly.Location);
+					NSLog (AssemblyName + " was loaded from {0}", typeof (nint).Assembly.Location);
 
 					var sym2 = Dlfcn.dlsym (Dlfcn.RTLD.Default, "xamarin_initialize");
 					Dlfcn.Dl_info info2;
 					if (Dlfcn.dladdr (sym2, out info2) == 0) {
-						Console.Error.WriteLine ("The native runtime was loaded from {0}", Marshal.PtrToStringAuto (info2.dli_fname));
+						NSLog ("The native runtime was loaded from {0}", Marshal.PtrToStringAuto (info2.dli_fname));
 					} else if (Dlfcn.dlsym (Dlfcn.RTLD.MainOnly, "xamarin_initialize") != IntPtr.Zero) {
 						byte[] buf = new byte [128];
 						int length = buf.Length;
@@ -203,7 +203,7 @@ namespace ObjCRuntime {
 							Array.Resize (ref buf, length);
 							length = buf.Length;
 							if (_NSGetExecutablePath (buf, ref length) != 0) {
-								Console.Error.WriteLine ("Could not find out where the native runtime was loaded from.");
+								NSLog ("Could not find out where the native runtime was loaded from.");
 								buf = null;
 							}
 						}
@@ -211,10 +211,10 @@ namespace ObjCRuntime {
 							var strlength = 0;
 							for (int i = 0; i < buf.Length && buf [i] != 0; i++)
 								strlength++;
-							Console.Error.WriteLine ("The native runtime was loaded from {0}", System.Text.Encoding.UTF8.GetString (buf, 0, strlength));
+							NSLog ("The native runtime was loaded from {0}", System.Text.Encoding.UTF8.GetString (buf, 0, strlength));
 						}
 					} else {
-						Console.Error.WriteLine ("Could not find out where the native runtime was loaded from.");
+						NSLog ("Could not find out where the native runtime was loaded from.");
 					}
 				} catch {
 					// Just ignore any exceptions, the above code is just a debug help, and if it fails,
@@ -227,7 +227,7 @@ namespace ObjCRuntime {
 			if (IntPtr.Size != sizeof (nint)) {
 				string msg = string.Format ("Native type size mismatch between " + AssemblyName + " and the executing architecture. " + AssemblyName + " was built for {0}-bit, while the current process is {1}-bit.", 
 					IntPtr.Size == 4 ? "64" : "32", IntPtr.Size == 4 ? "32" : "64");
-				Console.Error.WriteLine (msg);
+				NSLog (msg);
 				throw ErrorHelper.CreateError (8010, msg);
 			}
 
@@ -505,7 +505,7 @@ namespace ObjCRuntime {
 				if (register_entry_assembly)
 					CollectReferencedAssemblies (assemblies, entry_assembly);
 			} else {
-				Console.WriteLine ("Could not find the entry assembly.");
+				NSLog ("Could not find the entry assembly.");
 			}
 
 #if MONOMAC
@@ -1566,6 +1566,22 @@ namespace ObjCRuntime {
 #else
 		[DllImport (Constants.FoundationLibrary)]
 		extern static void NSLog (IntPtr format, [MarshalAs (UnmanagedType.LPStr)] string s);
+#endif
+
+#if MONOMAC
+		[DllImport ("__Internal")]
+		extern static void xamarin_log (string s);
+		internal static void NSLog (string s)
+		{
+			if (PlatformHelper.CheckSystemVersion (10, 12)) {
+				Console.WriteLine (s);
+			} else {
+				xamarin_log (s);
+			}
+		}
+#else
+		[DllImport ("__Internal", EntryPoint="xamarin_log", CharSet=CharSet.Unicode)]
+		internal extern static void NSLog (string s);
 #endif
 
 #if !MONOMAC

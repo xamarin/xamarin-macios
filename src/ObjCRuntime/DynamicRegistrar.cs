@@ -684,7 +684,7 @@ namespace Registrar {
 
 		protected override void ReportError (int code, string message, params object[] args)
 		{
-			Console.WriteLine (message, args);
+			Runtime.NSLog (String.Format (message, args));
 		}
 
 		Class.objc_attribute_prop [] GetPropertyAttributes (ObjCProperty property, out int count, bool isProtocol)

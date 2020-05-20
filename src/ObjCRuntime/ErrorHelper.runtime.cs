@@ -19,7 +19,7 @@ namespace ObjCRuntime {
 				var pe = ex as ProductException;
 
 				// Show the exception
-				Console.Error.WriteLine (ex);
+				Runtime.NSLog (ex.ToString ());
 
 				// Add to list of errors if it's an error
 				if (pe?.Error == false) {

@@ -157,7 +157,7 @@ namespace ObjCRuntime {
 			var handler_name = options?.http_message_handler;
 #if __WATCHOS__
 			if (handler_name != null && handler_name != NSUrlSessionHandlerValue)
-				Console.WriteLine ($"{handler_name} is not a valid HttpMessageHandler, defaulting to NSUrlSessionHandler");
+				Runtime.NSLog ($"{handler_name} is not a valid HttpMessageHandler, defaulting to NSUrlSessionHandler");
 			return new NSUrlSessionHandler ();
 #else
 			switch (handler_name) {
@@ -167,7 +167,7 @@ namespace ObjCRuntime {
 					return new NSUrlSessionHandler ();
 				default:
 					if (handler_name != null && handler_name != HttpClientHandlerValue)
-						Console.WriteLine ($"{handler_name} is not a valid HttpMessageHandler, defaulting to System.Net.Http.HttpClientHandler");
+						Runtime.NSLog ($"{handler_name} is not a valid HttpMessageHandler, defaulting to System.Net.Http.HttpClientHandler");
 					return new HttpClientHandler ();
 			}
 #endif
