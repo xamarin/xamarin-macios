@@ -905,10 +905,10 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/Xamarin.WatchOS.dll: $(WATCH_BUILD_
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/Xamarin.WatchOS.pdb: $(WATCH_BUILD_DIR)/watch-32/Xamarin.WatchOS.pdb | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits
 	$(Q) install -m 0644 $< $@
 
-$(foreach rid,$(DOTNET_WATCHOS_RUNTIME_IDENTIFEIRS_32),$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net5.0/Xamarin.WatchOS.dll): $(WATCHOS_DOTNET_BUILD_DIR)/32/Xamarin.WatchOS.dll | $(foreach rid,$(DOTNET_WATCHOS_RUNTIME_IDENTIFEIRS_32),$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net5.0)
+$(foreach rid,$(DOTNET_WATCHOS_RUNTIME_IDENTIFIERS_32),$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net5.0/Xamarin.WatchOS.dll): $(WATCHOS_DOTNET_BUILD_DIR)/32/Xamarin.WatchOS.dll | $(foreach rid,$(DOTNET_WATCHOS_RUNTIME_IDENTIFIERS_32),$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net5.0)
 	$(Q) $(CP) $< $@
 
-$(foreach rid,$(DOTNET_WATCHOS_RUNTIME_IDENTIFEIRS_32),$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net5.0/Xamarin.WatchOS.pdb): $(WATCHOS_DOTNET_BUILD_DIR)/32/Xamarin.WatchOS.pdb | $(foreach rid,$(DOTNET_WATCHOS_RUNTIME_IDENTIFEIRS_32),$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net5.0)
+$(foreach rid,$(DOTNET_WATCHOS_RUNTIME_IDENTIFIERS_32),$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net5.0/Xamarin.WatchOS.pdb): $(WATCHOS_DOTNET_BUILD_DIR)/32/Xamarin.WatchOS.pdb | $(foreach rid,$(DOTNET_WATCHOS_RUNTIME_IDENTIFIERS_32),$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net5.0)
 	$(Q) $(CP) $< $@
 
 $(WATCH_TARGETS_DIRS):
