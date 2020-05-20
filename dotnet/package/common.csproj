@@ -18,6 +18,11 @@
     <_RepositoryPath>$(MSBuildThisFileDirectory)/../..</_RepositoryPath>
     <_buildPath>$(_RepositoryPath)/_build</_buildPath>
     <_packagePath>$(_buildPath)\$(PackageId)\</_packagePath>
+
+    <_AssemblyInfix Condition="'$(_PlatformName)' == 'iOS'">iOS</_AssemblyInfix>
+    <_AssemblyInfix Condition="'$(_PlatformName)' == 'tvOS'">TVOS</_AssemblyInfix>
+    <_AssemblyInfix Condition="'$(_PlatformName)' == 'watchOS'">WatchOS</_AssemblyInfix>
+    <_AssemblyInfix Condition="'$(_PlatformName)' == 'macOS'">Mac</_AssemblyInfix>
   </PropertyGroup>
 
   <ItemGroup>
@@ -49,6 +54,7 @@
       <_PackNativePath>runtimes/$(_RuntimeIdentifier)/native</_PackNativePath>
     </PropertyGroup>
     <ItemGroup>
+      <_PackageFiles Include="$(_packagePath)$(_PackTargetPath)/Xamarin.$(_AssemblyInfix).dll" PackagePath="$(_PackTargetPath)" TargetPath="$(_PackTargetPath)" />
       <_FrameworkListFileClass Include="@(_PackageFiles->'%(Filename)%(Extension)')" Profile="$(_PlatformName)" />
     </ItemGroup>
 
