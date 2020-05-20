@@ -39,12 +39,12 @@ string GetManifestUrl (string hash)
 	while (manifest_url == null && hasContent)
 	{
 		var url = $"https://api.github.com/repos/xamarin/xamarin-macios/statuses/{hash}?page={page}";
-		var content = DownloadWithGithubAuth (url);
-		hasContent &= !String.IsNullOrEmpty(content);
+		var json = JToken.Parse (DownloadWithGithubAuth (url));
+		var statuses = (JValue) ((JArray) json);
+		hasContent &= statuses.HasValues;
 		if (hasContent)
 		{
-			var json = JToken.Parse (content);
-			var value = (JValue) ((JArray) json).Where ((v) => v ["context"].ToString () == "manifest").Select ((v) => v ["target_url"]).FirstOrDefault ();
+			var value = statuses.Where ((v) => v ["context"].ToString () == "manifest").Select ((v) => v ["target_url"]).FirstOrDefault ();
 			manifest_url = (string) value?.Value;
 		}
 		page++;
