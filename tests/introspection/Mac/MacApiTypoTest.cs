@@ -1,4 +1,3 @@
-#if XAMCORE_2_0
 using System;
 using NUnit.Framework;
 
@@ -42,4 +41,3 @@ namespace Introspection
 		}
 	}
 }
-#endif

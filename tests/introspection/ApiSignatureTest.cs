@@ -27,16 +27,8 @@ using System.Text;
 using NUnit.Framework;
 using System.Linq;
 
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#elif MONOMAC
-using MonoMac.Foundation;
-using MonoMac.ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 
 namespace Introspection {
 
@@ -409,21 +401,12 @@ namespace Introspection {
 			// NSValue 'static MonoTouch.Foundation.NSValue FromCMTime(CMTime)' selector: valueWithCMTime: == @32@0:4{?=qiIq}8
 			case "?":
 				return type.IsValueType; // || (type.FullName == "System.IntPtr");
-#if XAMCORE_2_0
 			case "CGRect":
 				return type.FullName == "CoreGraphics.CGRect";
 			case "CGSize":
 				return type.FullName == "CoreGraphics.CGSize";
 			case "CGPoint":
 				return type.FullName == "CoreGraphics.CGPoint";
-#else
-			case "CGRect":
-				return type.FullName == "System.Drawing.RectangleF";
-			case "CGSize":
-				return type.FullName == "System.Drawing.SizeF";
-			case "CGPoint":
-				return type.FullName == "System.Drawing.PointF";
-#endif
 			case "opaqueCMFormatDescription":
 				switch (type.Name) {
 				case "CMFormatDescription":
@@ -541,18 +524,8 @@ namespace Introspection {
 			case "AudioChannelLayout":
 				// this is actually an `nint` used as a pointer (to get a unique signature for the .ctor)
 				// there's custom code in src/AVFoundation/AVAudioChannelLayout.cs to deal with this
-#if XAMCORE_2_0
 				structName = "nint";
-#else
-				structName = "Int32";
-#endif
 				break;
-#if !XAMCORE_2_0
-			// in compat it's a class (instead of a struct) hence this hack
-			case "AudioComponentDescription":
-				structName = "AudioComponentDescriptionNative";
-				break;
-#endif
 			}
 			return type.Name == structName;
 		}
@@ -807,9 +780,7 @@ namespace Introspection {
 			return false;
 		}
 
-#if XAMCORE_2_0
 		[Test]
-#endif
 		public void ManagedSignature ()
 		{
 			int n = 0;

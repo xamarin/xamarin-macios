@@ -31,6 +31,7 @@ Usage: configure [options]
     --disable-packaged-mono   Enable/disable using the precompiled version of mono. If disabled mono will be compiled from source.
 
     --enable-dotnet           Enable building .NET 5 bits.
+    --disable-dotnet          Disable building .NET 5 bits.
 
     --enable-sample-testing
     --disable-sample-testing  Enable/disable the sample tests. If disable the tests are not compiled or run. Disabling saves HDD space.

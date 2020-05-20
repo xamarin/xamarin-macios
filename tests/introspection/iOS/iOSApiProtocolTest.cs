@@ -8,18 +8,11 @@
 //
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
 using UIKit;
 #if !__TVOS__
 using WatchConnectivity;
-#endif
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-using MonoTouch.WatchConnectivity;
 #endif
 using NUnit.Framework;
 

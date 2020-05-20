@@ -10,18 +10,11 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
 using UIKit;
 #if !__TVOS__
 using WatchConnectivity;
-#endif
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-using MonoTouch.WatchConnectivity;
 #endif
 using NUnit.Framework;
 
@@ -375,29 +368,6 @@ namespace Introspection {
 				if (declaredType.Name == "UIResponder")
 					return true;
 				break;
-#if !XAMCORE_2_0
-			case "enableInputClicksWhenVisible":
-				// defined in UIInputViewAudioFeedback protocol
-				// meant to be added (not part of iOS) in custom UIView and defined (by default) by MonoTouch
-				if (declaredType.Name == "UIView")
-					return true;
-				break;
-			case "subtitle":
-				// exists because of MKAnnotation protocol
-				if (declaredType.Name == "MKPlacemark")
-					return true;
-				break;
-			case "setCoordinate:":
-				// exists because of MKAnnotation protocol
-				if (declaredType.Name == "MKShape" || declaredType.Name == "MKPlacemark")
-					return true;
-				break;
-			case "intersectsMapRect:":
-				// optional method of a protocol MKTileOverlay implements.
-				if (declaredType.Name == "MKTileOverlay")
-					return true;
-				break;
-#endif
 			case "autocapitalizationType":
 			case "setAutocapitalizationType:":
 			case "autocorrectionType":
@@ -750,7 +720,6 @@ namespace Introspection {
 				}
 				break;
 
-#if XAMCORE_2_0
 			// some types adopted NS[Secure]Coding after the type was added
 			// and for unified that's something we generate automatically (so we can't put [iOS] on them)
 			case "encodeWithCoder:":
@@ -777,15 +746,6 @@ namespace Introspection {
 #endif
 				}
 				break;
-#else
-			// that was a binding mistake - the API should not have been exposed (not in the header file)
-			// we'll ignore them for compat - but won't provide them in the new assemblies
-			case "backgroundImageForBarMetrics:":
-			case "setBackgroundImage:forBarMetrics:":
-				if (declaredType.Name == "UISearchBar" && TestRuntime.CheckXcodeVersion (6, 0))
-					return true;
-				break;
-#endif
 			case "mutableCopyWithZone:":
 				switch (declaredType.Name) {
 				case "HMLocationEvent":
