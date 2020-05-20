@@ -84,7 +84,9 @@ pack-macos: $(RUNTIME_PACKS_MACOS) $(REF_PACK_MACOS) $(SDK_PACK_MACOS)
 
 TARGETS += $(RUNTIME_PACKS) $(REF_PACKS) $(SDK_PACKS)
 
+ifdef ENABLE_DOTNET
 all-local:: $(TARGETS) targets/Xamarin.Shared.Sdk.Versions.props
+endif
 
 clean-local::
 	$(Q) rm -Rf $(DOTNET_DESTDIR) $(DOTNET_NUPKG_DIR) $(DOTNET_FEED_DIR)
