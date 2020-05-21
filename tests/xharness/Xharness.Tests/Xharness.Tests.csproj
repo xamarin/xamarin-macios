@@ -64,6 +64,7 @@
     <Compile Include="Jenkins\ITestTaskExtensionsTests.cs" />
     <Compile Include="Tests\TestTargetExtensionsTests.cs" />
     <Compile Include="Tests\TestPlatformExtensionsTests.cs" />
+    <Compile Include="Jenkins\MarkdownReportWriterTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

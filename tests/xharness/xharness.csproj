@@ -130,6 +130,9 @@
     <Compile Include="Jenkins\TestData.cs" />
     <Compile Include="TestTargetExtensions.cs" />
     <Compile Include="TestPlatformExtensions.cs" />
+    <Compile Include="Jenkins\IReportWriter.cs" />
+    <Compile Include="Jenkins\IEnumrable.cs" />
+    <Compile Include="Jenkins\MarkdownReportWriter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\tools\common\SdkVersions.cs">
