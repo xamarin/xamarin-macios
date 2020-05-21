@@ -73,17 +73,19 @@ jobs:
     env:
       LOGIN_KEYCHAIN_PASSWORD: $(OSX_KEYCHAIN_PASS)
 
-  - bash: |
-      set -x
-      set -e
+  - bash: make -C $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/ device-tests-provisioning.csx
+    displayName: 'Generate Provisionator csx file'
 
-      ./xamarin-macios/system-dependencies.sh --ignore-all --provision-xcode --provision-xamarin-studio --provision-mono --provision-7z
+  - bash: rm -rf "/Users/xamarinqa/azdo/_work/_tool/provisionator"
+    displayName: 'Nuke Provisionator Tool Cache'
+    condition: ${{ parameters.clearProviCache }}
+
+  - task: xamops.azdevex.provisionator-task.provisionator@1
     displayName: 'Provision dependencies'
-    timeoutInMinutes: 240
-
-  - bash: ./xamarin-macios/tools/devops/install-xi-pkg.sh
-    displayName: 'Install XI PKG'
-    timeoutInMinutes: 15
+    inputs:
+      provisioning_script: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/device-tests-provisioning.csx
+      provisioning_extra_args: '-vvvv'
+    timeoutInMinutes: 250
 
   - bash: |
       set -x
