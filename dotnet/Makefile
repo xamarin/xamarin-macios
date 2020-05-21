@@ -5,19 +5,53 @@ include $(TOP)/mk/rules.mk
 
 PLATFORMS=iOS tvOS watchOS macOS
 
-IOS_RIDS=arm64 arm x86 x64
-TVOS_RIDS=arm64 x64
-WATCHOS_RIDS=arm x86
-MACOS_RIDS=x64
+IOS_RIDS=$(subst ios-,,$(DOTNET_IOS_RUNTIME_IDENTIFIERS))
+TVOS_RIDS=$(subst tvos-,,$(DOTNET_TVOS_RUNTIME_IDENTIFIERS))
+WATCHOS_RIDS=$(subst watchos-,,$(DOTNET_WATCHOS_RUNTIME_IDENTIFIERS))
+MACOS_RIDS=$(subst osx-,,$(DOTNET_MACOS_RUNTIME_IDENTIFIERS))
+
+NUGET_TARGETS += \
+	$(foreach platform,$(PLATFORMS), \
+		$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/Sdk/Sdk.targets \
+		$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/Sdk/Sdk.props \
+		$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/targets/Microsoft.$(platform).Sdk.DefaultItems.props \
+		$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/targets/Microsoft.$(platform).Sdk.props \
+		$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/targets/Microsoft.$(platform).Sdk.targets \
+		$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/targets/Microsoft.$(platform).TargetFrameworkInference.targets \
+		$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/targets/Xamarin.Shared.Sdk.DefaultItems.props \
+		$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/targets/Xamarin.Shared.Sdk.DefaultItems.targets \
+		$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/targets/Xamarin.Shared.Sdk.props \
+		$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/targets/Xamarin.Shared.Sdk.TargetFrameworkInference.targets \
+		$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/targets/Xamarin.Shared.Sdk.targets \
+		$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/targets/Xamarin.Shared.Sdk.Versions.props \
+		$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/targets/Xamarin.Shared.Sdk.Versions.template.props \
+	)
 
 DIRECTORIES += \
 	$(DOTNET_NUPKG_DIR) \
 	$(DOTNET_FEED_DIR) \
+	$(foreach platform,$(PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/Sdk) \
+	$(foreach platform,$(PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/targets) \
 
 $(DIRECTORIES):
 	$(Q) mkdir -p $@
 
 CURRENT_HASH_LONG:=$(shell git log -1 --pretty=%H)
+
+$(DOTNET_DESTDIR)/Microsoft.%: Microsoft.% | $(foreach platform,$(PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/Sdk $(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/targets)
+	$(Q) $(CP) $< $@
+
+$(DOTNET_DESTDIR)/Microsoft.iOS.Sdk/targets/%: targets/% | $(DOTNET_DESTDIR)/Microsoft.iOS.Sdk/targets
+	$(Q) $(CP) $< $@
+
+$(DOTNET_DESTDIR)/Microsoft.tvOS.Sdk/targets/%: targets/% | $(DOTNET_DESTDIR)/Microsoft.tvOS.Sdk/targets
+	$(Q) $(CP) $< $@
+
+$(DOTNET_DESTDIR)/Microsoft.watchOS.Sdk/targets/%: targets/% | $(DOTNET_DESTDIR)/Microsoft.watchOS.Sdk/targets
+	$(Q) $(CP) $< $@
+
+$(DOTNET_DESTDIR)/Microsoft.macOS.Sdk/targets/%: targets/% | $(DOTNET_DESTDIR)/Microsoft.macOS.Sdk/targets
+	$(Q) $(CP) $< $@
 
 targets/%.props: targets/%.template.props Makefile $(TOP)/Make.config.inc
 	$(Q_GEN) sed \
@@ -47,7 +81,7 @@ nupkgs/$(WATCHOS_NUGET).%.nupkg: CURRENT_VERSION_FULL=$(WATCHOS_NUGET_VERSION_FU
 nupkgs/$(MACOS_NUGET).%.nupkg: CURRENT_VERSION_FULL=$(MACOS_NUGET_VERSION_FULL)
 
 # Create the nuget in a temporary directory (nupkgs/)
-nupkgs/%.nupkg: $(TEMPLATED_FILES)
+nupkgs/%.nupkg: $(TEMPLATED_FILES) $(NUGET_TARGETS)
 	$(Q) rm -f $@
 	$(Q_PACK) $(DOTNET5) pack package/$(shell echo $(notdir $@) | sed 's/[.]$(CURRENT_VERSION_FULL).*//')/package.csproj --output "$(dir $@)" $(DOTNET_PACK_VERBOSITY)
 	@# Nuget pack doesn't add the metadata to the filename, but we want that, so rename nuget to contain the full name
