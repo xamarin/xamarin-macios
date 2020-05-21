@@ -12,7 +12,6 @@ using System;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
 using Foundation;
-using CoreFoundation;
 
 namespace CoreFoundation {
 	//
@@ -78,12 +77,10 @@ namespace CoreFoundation {
 			this.handle = handle;
 		}
 
-		void Throw () => throw new ObjectDisposedException (GetType ().ToString ());
-
 		internal IntPtr GetCheckedHandle ()
 		{
 			if (handle == IntPtr.Zero)
-				Throw ();
+				throw new ObjectDisposedException (GetType ().ToString ());
 			return handle;
 		}
 	}
