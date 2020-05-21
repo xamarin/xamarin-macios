@@ -152,8 +152,6 @@ MAC_BINDING_TARGETS =
 
 MAC_TASK_ASSEMBLIES = Xamarin.Mac.Tasks
 
-MAC_BINDING_TASK_ASSEMBLIES = 
-
 MAC_DIRECTORIES =                                                                                           \
 	$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin                                \
 	$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks/Xamarin.Mac/v2.0/RedistList \
@@ -173,7 +171,6 @@ MAC_PRODUCTS =                                                                  
 	$(foreach target,$(MAC_BINDING_TARGETS)       ,$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild/$(notdir $(target))) \
 	$(foreach dll,$(MAC_TASK_ASSEMBLIES)          ,$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild/$(dll).dll)          \
 	$(foreach dll,$(LOCALIZATION_ASSEMBLIES)      ,$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild/$(dll).dll)          \
-	$(foreach dll,$(MAC_BINDING_TASK_ASSEMBLIES)  ,$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild/$(dll).dll)          \
 	$(MAC_SYMLINKS)                                                                                                            \
 
 all-mac: $(MAC_PRODUCTS)
@@ -183,7 +180,7 @@ ifdef INCLUDE_MAC
 MSBUILD_PRODUCTS += all-mac
 MSBUILD_DIRECTORIES += $(MAC_DIRECTORIES)
 MSBUILD_SYMLINKS += symlinks-mac
-MSBUILD_TASK_ASSEMBLIES += $(MAC_TASK_ASSEMBLIES) $(MAC_BINDING_TASK_ASSEMBLIES)
+MSBUILD_TASK_ASSEMBLIES += $(MAC_TASK_ASSEMBLIES)
 endif
 
 ##
