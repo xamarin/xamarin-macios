@@ -371,6 +371,10 @@
     <data name="E0085" xml:space="preserve">
         <value>Could not locate the {0} '{1}' SDK usr path at '{2}'
         </value>
+        <comment>The provided SDK path is missing a 'usr' directory. The following are literal names and should not be translated: SDK, usr
+{0} - The platform name, such as 'iOS'.
+{1} - The version number of the SDK.
+{2} - The file path of the SDK.</comment>
     </data>
         
     <data name="E0086" xml:space="preserve">
