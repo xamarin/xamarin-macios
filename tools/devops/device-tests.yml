@@ -12,6 +12,9 @@ resources:
     ref: refs/heads/device-tests-yaml
     endpoint: xamarin
 
+variables:
+    - group: xamops-azdev-secrets
+
 jobs:
 - job: macOS
   displayName: Run Device Tests
@@ -43,24 +46,15 @@ jobs:
     env:
       LOGIN_KEYCHAIN_PASSWORD: $(OSX_KEYCHAIN_PASS)
 
-  - bash: |
-      set -x
-      set -e
+  - bash: make -C $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/ device-tests-provisioning.csx
+    displayName: 'Generate Provisionator csx file'
 
-      CONFIGURE_ARGS="--provision-xcode --provision-xamarin-studio --provision-mono --ignore-osx --ignore-autotools --ignore-cmake"
-      if grep ignore-7z xamarin-macios/system-dependencies.sh 2>&1 > /dev/null; then
-         CONFIGURE_ARGS="$CONFIGURE_ARGS --provision-7z"
-      fi
-      if grep ignore-python3 xamarin-macios/system-dependencies.sh 2>&1 > /dev/null; then
-         CONFIGURE_ARGS="$CONFIGURE_ARGS --ignore-python3"
-      fi
-      ./xamarin-macios/system-dependencies.sh $CONFIGURE_ARGS
+  - task: xamops.azdevex.provisionator-task.provisionator@1
     displayName: 'Provision dependencies'
-    timeoutInMinutes: 240
-
-  - bash: ./xamarin-macios/tools/devops/install-xi-pkg.sh
-    displayName: 'Install XI PKG'
-    timeoutInMinutes: 15
+    inputs:
+      provisioning_script: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/device-tests-provisioning.csx
+      provisioning_extra_args: '-vvvv'
+    timeoutInMinutes: 250
 
   - bash: |
       set -x
