@@ -9,7 +9,7 @@ using Xharness.Jenkins;
 namespace Xharness.Tests.Jenkins {
 
 	[TestFixture]
-	public class MakeTestTaskFactoryTests {
+	public class MakeTestTaskEnumerableTests {
 
 		Mock<IProcessManager> processManager;
 		Mock<IResultParser> resultParser;
@@ -18,7 +18,7 @@ namespace Xharness.Tests.Jenkins {
 		Harness harness;
 		HarnessConfiguration configuration;
 		Xharness.Jenkins.Jenkins jenkins;
-		MakeTestTaskFactory factory;
+		MakeTestTaskEnumerable factory;
 
 		[SetUp]
 		public void SetUp ()
@@ -30,7 +30,7 @@ namespace Xharness.Tests.Jenkins {
 			harness = new Harness (resultParser.Object, HarnessAction.Jenkins, configuration);
 			jenkins = new Xharness.Jenkins.Jenkins (harness, processManager.Object, resultParser.Object, tunnel.Object);
 
-			factory = new MakeTestTaskFactory (jenkins, processManager.Object);
+			factory = new MakeTestTaskEnumerable (jenkins, processManager.Object);
 		}
 
 		[TearDown]

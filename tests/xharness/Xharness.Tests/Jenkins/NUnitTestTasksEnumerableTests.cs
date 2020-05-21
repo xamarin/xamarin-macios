@@ -10,7 +10,7 @@ using Xharness.Jenkins;
 namespace Xharness.Tests.Jenkins {
 
 	[TestFixture]
-	public class NUnitTestTasksFactoryTests {
+	public class NUnitTestTaskEnumerableTests {
 
 		Mock<IProcessManager> processManager;
 		Mock<IResultParser> resultParser;
@@ -20,7 +20,7 @@ namespace Xharness.Tests.Jenkins {
 		Harness harness;
 		HarnessConfiguration configuration;
 		Xharness.Jenkins.Jenkins jenkins;
-		NUnitTestTasksFactory factory;
+		NUnitTestTasksEnumerable factory;
 
 		[SetUp]
 		public void SetUp ()
@@ -34,7 +34,7 @@ namespace Xharness.Tests.Jenkins {
 			jenkins = new Xharness.Jenkins.Jenkins (harness, processManager.Object, resultParser.Object, tunnel.Object);
 			jenkins.MainLog = log.Object;
 
-			factory = new NUnitTestTasksFactory (jenkins, processManager.Object);
+			factory = new NUnitTestTasksEnumerable (jenkins, processManager.Object);
 		}
 
 		[TestCase ("MSBuild tests")]

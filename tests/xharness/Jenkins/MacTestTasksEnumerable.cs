@@ -8,14 +8,14 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using Xharness.Jenkins.TestTasks;
 
 namespace Xharness.Jenkins {
-	class MacTestTasksFactory : IEnumerable<RunTestTask> {
+	class MacTestTasksEnumerable : IEnumerable<RunTestTask> {
 
 		readonly Jenkins jenkins;
 		readonly IProcessManager processManager;
 		readonly ICrashSnapshotReporterFactory crashReportSnapshotFactory;
 		readonly ITestVariationsFactory testVariationsFactory;
 
-		public MacTestTasksFactory (Jenkins jenkins, 
+		public MacTestTasksEnumerable (Jenkins jenkins, 
 								    IProcessManager processManager,
 									ICrashSnapshotReporterFactory crashReportSnapshotFactory,
 									ITestVariationsFactory testVariationsFactory)

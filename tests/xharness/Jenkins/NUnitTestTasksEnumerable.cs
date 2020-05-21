@@ -7,12 +7,12 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Xharness.Jenkins.TestTasks;
 
 namespace Xharness.Jenkins {
-	class NUnitTestTasksFactory : IEnumerable<NUnitExecuteTask> {
+	class NUnitTestTasksEnumerable : IEnumerable<NUnitExecuteTask> {
 
 		readonly Jenkins jenkins;
 		readonly IProcessManager processManager;
 		
-		public NUnitTestTasksFactory (Jenkins jenkins, IProcessManager processManager)
+		public NUnitTestTasksEnumerable (Jenkins jenkins, IProcessManager processManager)
 		{
 			this.jenkins = jenkins ?? throw new ArgumentNullException (nameof (jenkins));
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));

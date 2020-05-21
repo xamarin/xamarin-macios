@@ -24,7 +24,7 @@ namespace Xharness.Jenkins {
 		readonly ITunnelBore tunnelBore;
 		readonly TestSelector testSelector;
 		readonly TestVariationsFactory testVariationsFactory;
-		
+
 		bool populating = true;
 
 		public Harness Harness { get; }
@@ -85,8 +85,8 @@ namespace Xharness.Jenkins {
 		Dictionary<string, MakeTask> DependencyTasks = new Dictionary<string, MakeTask> ();
 
 		public Resource DesktopResource { get; } = new Resource ("Desktop", Environment.ProcessorCount);
-		public Resource NugetResource { get;  } = new Resource ("Nuget", 1); // nuget is not parallel-safe :(
-		
+		public Resource NugetResource { get; } = new Resource ("Nuget", 1); // nuget is not parallel-safe :(
+
 		public IErrorKnowledgeBase ErrorKnowledgeBase => new ErrorKnowledgeBase ();
 
 		Dictionary<string, Resource> device_resources = new Dictionary<string, Resource> ();
@@ -148,7 +148,7 @@ namespace Xharness.Jenkins {
 					}
 					if (deviceManager is SimulatorLoader simulators) {
 						var simCount = simulators.AvailableDevices.Count ();
-						capturedLog.Description = ( simCount == 0) ? $"{name} Listing (ok - no simulators found)." : $"{name} Listing (ok - Found {simCount} simulators).";
+						capturedLog.Description = (simCount == 0) ? $"{name} Listing (ok - no simulators found)." : $"{name} Listing (ok - Found {simCount} simulators).";
 					}
 				}
 			});
@@ -182,11 +182,11 @@ namespace Xharness.Jenkins {
 				break;
 			case TestPlatform.iOS_Unified:
 				platforms = new TestPlatform [] { TestPlatform.iOS_Unified32, TestPlatform.iOS_Unified64 };
-				ignored = new [] { !IncludeiOS32, false};
+				ignored = new [] { !IncludeiOS32, false };
 				break;
 			case TestPlatform.iOS_TodayExtension64:
-				targets = new TestTarget[] { TestTarget.Simulator_iOS64 };
-				platforms = new TestPlatform[] { TestPlatform.iOS_TodayExtension64 };
+				targets = new TestTarget [] { TestTarget.Simulator_iOS64 };
+				platforms = new TestPlatform [] { TestPlatform.iOS_TodayExtension64 };
 				ignored = new [] { false };
 				break;
 			default:
@@ -203,7 +203,7 @@ namespace Xharness.Jenkins {
 					tunnelBore: tunnelBore,
 					candidates: sims) {
 					Platform = platforms [i],
-					Ignored = ignored[i] || buildTask.Ignored
+					Ignored = ignored [i] || buildTask.Ignored
 				});
 			}
 
@@ -214,11 +214,11 @@ namespace Xharness.Jenkins {
 		{
 			if (!project.IsExecutableProject)
 				return false;
-			
+
 			if (project.IsBclTest ()) {
 				if (!project.IsBclxUnit ())
 					return IncludeBcl || IncludeBCLNUnit;
-				if (project.IsMscorlib ()) 
+				if (project.IsMscorlib ())
 					return IncludeMscorlib;
 				return IncludeBcl || IncludeBCLxUnit;
 			}
@@ -256,7 +256,7 @@ namespace Xharness.Jenkins {
 					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project.AsTvOSProject (), TestPlatform.tvOS, ignored || !IncludetvOS));
 				if (!project.SkipwatchOSVariation)
 					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project.AsWatchOSProject (), TestPlatform.watchOS, ignored || !IncludewatchOS));
-				
+
 				var configurations = project.Configurations;
 				if (configurations == null)
 					configurations = new string [] { "Debug" };
@@ -313,7 +313,7 @@ namespace Xharness.Jenkins {
 			foreach (var project in Harness.IOSTestProjects) {
 				if (!project.IsExecutableProject)
 					continue;
-				
+
 				bool ignored = !IncludeDevice;
 				if (!IsIncluded (project))
 					ignored = true;
@@ -437,7 +437,7 @@ namespace Xharness.Jenkins {
 
 			return Task.FromResult<IEnumerable<AppleTestTask>> (testVariationsFactory.CreateTestVariations (rv, (buildTask, test, candidates)
 				=> new RunDeviceTask (
-					jenkins: this, 
+					jenkins: this,
 					devices: devices,
 					buildTask: buildTask,
 					processManager: processManager,
@@ -466,9 +466,9 @@ namespace Xharness.Jenkins {
 
 			// al factories are enumberators \o/ 
 			var testFactories = new IEnumerable<AppleTestTask> [] {
-				new MacTestTasksFactory (this, processManager, crashReportSnapshotFactory, testVariationsFactory),
-				new NUnitTestTasksFactory (this, processManager),
-				new MakeTestTaskFactory (this, processManager)
+				new MacTestTasksEnumerable (this, processManager, crashReportSnapshotFactory, testVariationsFactory),
+				new NUnitTestTasksEnumerable (this, processManager),
+				new MakeTestTaskEnumerable (this, processManager)
 			};
 
 			// add all tests defined by the factorie
@@ -617,7 +617,7 @@ namespace Xharness.Jenkins {
 			// Try and find an unused port
 			int attemptsLeft = 50;
 			int port = 51234; // Try this port first, to try to not vary between runs just because.
-			Random r = new Random ((int) DateTime.Now.Ticks);
+			Random r = new Random ((int)DateTime.Now.Ticks);
 			while (attemptsLeft-- > 0) {
 				var newPort = port != 0 ? port : r.Next (49152, 65535); // The suggested range for dynamic ports is 49152-65535 (IANA)
 				server.Prefixes.Clear ();
@@ -634,16 +634,14 @@ namespace Xharness.Jenkins {
 			MainLog.WriteLine ($"Created server on localhost:{port}");
 
 			var tcs = new TaskCompletionSource<bool> ();
-			var thread = new System.Threading.Thread (() =>
-			{
+			var thread = new System.Threading.Thread (() => {
 				while (server.IsListening) {
 					var context = server.GetContext ();
 					var request = context.Request;
 					var response = context.Response;
 					var arguments = System.Web.HttpUtility.ParseQueryString (request.Url.Query);
 					try {
-						var allTasks = Tasks.SelectMany ((v) =>
-						{
+						var allTasks = Tasks.SelectMany ((v) => {
 							var rv = new List<AppleTestTask> ();
 							var runsim = v as AggregatedRunSimulatorTask;
 							if (runsim != null)
@@ -856,7 +854,7 @@ namespace Xharness.Jenkins {
 										rtt.BuildAsync ().ContinueWith ((z) => {
 											if (rtt.ExecutionResult == TestExecutingResult.Built)
 												rtt.ExecutionResult = TestExecutingResult.BuildSucceeded;
-										 });
+										});
 									} else {
 										writer.WriteLine ($"Test '{task.TestName}' is not a test that can be only built.");
 									}
@@ -890,7 +888,7 @@ namespace Xharness.Jenkins {
 						default:
 							var filename = Path.GetFileName (request.Url.LocalPath);
 							if (filename == "index.html" && Path.GetFileName (LogDirectory) == Path.GetFileName (Path.GetDirectoryName (request.Url.LocalPath))) {
-									// We're asked for the report for the current test run, so re-generate it.
+								// We're asked for the report for the current test run, so re-generate it.
 								GenerateReport ();
 							}
 
@@ -925,7 +923,7 @@ namespace Xharness.Jenkins {
 							} else {
 								Console.WriteLine ($"404: {request.Url.LocalPath}");
 								response.StatusCode = 404;
-								response.OutputStream.WriteByte ((byte) '?');
+								response.OutputStream.WriteByte ((byte)'?');
 							}
 							break;
 						}
@@ -937,8 +935,7 @@ namespace Xharness.Jenkins {
 					response.Close ();
 				}
 				tcs.SetResult (true);
-			})
-			{
+			}) {
 				IsBackground = true,
 			};
 			thread.Start ();
@@ -1066,7 +1063,7 @@ namespace Xharness.Jenkins {
 					markdown_summary.Write ($"Loading tests...");
 				} else if (unfinishedTests.Any ()) {
 					var list = new List<string> ();
-					var grouped = allTasks.GroupBy ((v) => v.ExecutionResult).OrderBy ((v) => (int) v.Key);
+					var grouped = allTasks.GroupBy ((v) => v.ExecutionResult).OrderBy ((v) => (int)v.Key);
 					foreach (var @group in grouped)
 						list.Add ($"{@group.Key.ToString ()}: {@group.Count ()}");
 					markdown_summary.Write ($"# Test run in progress: ");
@@ -1157,7 +1154,7 @@ namespace Xharness.Jenkins {
 				} else if (unfinishedTests.Any ()) {
 					writer.Write ($"Test run in progress (");
 					var list = new List<string> ();
-					var grouped = allTasks.GroupBy ((v) => v.ExecutionResult).OrderBy ((v) => (int) v.Key);
+					var grouped = allTasks.GroupBy ((v) => v.ExecutionResult).OrderBy ((v) => (int)v.Key);
 					foreach (var @group in grouped)
 						list.Add ($"<span style='color: {@group.GetTestColor ()}'>{@group.Key.ToString ()}: {@group.Count ()}</span>");
 					writer.Write (string.Join (", ", list));
@@ -1298,14 +1295,13 @@ namespace Xharness.Jenkins {
 				} else {
 					// Put failed tests at the top and ignored tests at the end.
 					// Then order alphabetically.
-					orderedTasks = orderedTasks.OrderBy ((v) =>
-					 {
-						 if (v.Any ((t) => t.Failed))
-							 return -1;
-						 if (v.All ((t) => t.Ignored))
-							 return 1;
-						 return 0;
-					 }).
+					orderedTasks = orderedTasks.OrderBy ((v) => {
+						if (v.Any ((t) => t.Failed))
+							return -1;
+						if (v.All ((t) => t.Ignored))
+							return 1;
+						return 0;
+					}).
 					ThenBy ((v) => v.Key, StringComparer.OrdinalIgnoreCase);
 				}
 				foreach (var group in orderedTasks) {
@@ -1475,7 +1471,7 @@ namespace Xharness.Jenkins {
 									}
 									if (!exists) {
 										// Don't try to parse files that don't exist
-									} else if (log.Description == LogType.TestLog.ToString () || log.Description ==  LogType.ExecutionLog.ToString () || log.Description == LogType.ExecutionLog.ToString ()) {
+									} else if (log.Description == LogType.TestLog.ToString () || log.Description == LogType.ExecutionLog.ToString () || log.Description == LogType.ExecutionLog.ToString ()) {
 										string summary;
 										List<string> fails;
 										try {
@@ -1495,7 +1491,7 @@ namespace Xharness.Jenkins {
 														}
 													}
 												} else {
-													var data_tuple = (Tuple<string, List<string>>) data.Item2;
+													var data_tuple = (Tuple<string, List<string>>)data.Item2;
 													summary = data_tuple.Item1;
 													fails = data_tuple.Item2;
 												}
@@ -1539,19 +1535,19 @@ namespace Xharness.Jenkins {
 													}
 													log_data [log] = new Tuple<long, object> (reader.BaseStream.Length, errors);
 												} else {
-													errors = (HashSet<string>) data.Item2;
+													errors = (HashSet<string>)data.Item2;
 												}
 											}
 											if (errors.Count > 0) {
 												writer.WriteLine ("<div style='padding-left: 15px;'>");
 												foreach (var error in errors)
-													writer.WriteLine ("{0} <br />",  error.AsHtml ());
+													writer.WriteLine ("{0} <br />", error.AsHtml ());
 												writer.WriteLine ("</div>");
 											}
 										} catch (Exception ex) {
 											writer.WriteLine ("<span style='padding-left: 15px;'>Could not parse log file: {0}</span><br />", ex.Message.AsHtml ());
 										}
-									} else if (log.Description == LogType.NUnitResult.ToString () || log.Description == LogType.XmlLog.ToString () ) {
+									} else if (log.Description == LogType.NUnitResult.ToString () || log.Description == LogType.XmlLog.ToString ()) {
 										try {
 											if (File.Exists (log.FullPath) && new FileInfo (log.FullPath).Length > 0) {
 												if (resultParser.IsValidXml (log.FullPath, out var jargon)) {
@@ -1652,7 +1648,7 @@ namespace Xharness.Jenkins {
 			}
 			if (!relevantGroup.Any ())
 				return string.Empty;
-			
+
 			var results = relevantGroup
 				.GroupBy ((v) => v.ExecutionResult)
 				.Select ((v) => v.First ()) // GroupBy + Select = Distinct (lambda)
