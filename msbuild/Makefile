@@ -36,8 +36,8 @@ IOS_TARGETS =                                                      \
 
 IOS_BINDING_TARGETS = $(wildcard Xamarin.ObjcBinding.Tasks/*.targets)
 
-IOS_TASK_ASSEMBLIES = Xamarin.iOS.Tasks
 LOCALIZATION_ASSEMBLIES = Xamarin.Localization.MSBuild
+IOS_TASK_ASSEMBLIES = Xamarin.iOS.Tasks $(LOCALIZATION_ASSEMBLIES)
 
 IOS_DIRECTORIES =                                                                                           \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS                                                  \
@@ -60,7 +60,6 @@ IOS_PRODUCTS =                                                                  
 	$(foreach target,$(IOS_TARGETS)               ,$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/iOS/$(notdir $(target)))     \
 	$(foreach target,$(IOS_BINDING_TARGETS)       ,$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/iOS/$(notdir $(target)))     \
 	$(foreach dll,$(IOS_TASK_ASSEMBLIES)          ,$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/iOS/$(dll).dll)              \
-	$(foreach dll,$(LOCALIZATION_ASSEMBLIES)      ,$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/iOS/$(dll).dll)              \
 	$(IOS_SYMLINKS)
 
 all-ios: $(IOS_PRODUCTS)
@@ -71,7 +70,6 @@ MSBUILD_PRODUCTS += all-ios
 MSBUILD_DIRECTORIES += $(IOS_DIRECTORIES)
 MSBUILD_SYMLINKS += symlinks-ios
 MSBUILD_TASK_ASSEMBLIES += $(IOS_TASK_ASSEMBLIES)
-MSBUILD_TASK_ASSEMBLIES += $(LOCALIZATION_ASSEMBLIES)
 endif
 
 ##
@@ -150,7 +148,7 @@ endif
 MAC_TARGETS = $(wildcard Xamarin.Mac.Tasks/*.props) $(wildcard Xamarin.Mac.Tasks/*.targets) $(wildcard Xamarin.Shared/Xamarin.*.targets)
 MAC_BINDING_TARGETS =
 
-MAC_TASK_ASSEMBLIES = Xamarin.Mac.Tasks
+MAC_TASK_ASSEMBLIES = Xamarin.Mac.Tasks $(LOCALIZATION_ASSEMBLIES)
 
 MAC_DIRECTORIES =                                                                                           \
 	$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin                                \
@@ -170,7 +168,6 @@ MAC_PRODUCTS =                                                                  
 	$(foreach target,$(MAC_TARGETS)               ,$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild/$(notdir $(target))) \
 	$(foreach target,$(MAC_BINDING_TARGETS)       ,$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild/$(notdir $(target))) \
 	$(foreach dll,$(MAC_TASK_ASSEMBLIES)          ,$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild/$(dll).dll)          \
-	$(foreach dll,$(LOCALIZATION_ASSEMBLIES)      ,$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild/$(dll).dll)          \
 	$(MAC_SYMLINKS)                                                                                                            \
 
 all-mac: $(MAC_PRODUCTS)
