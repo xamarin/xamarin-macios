@@ -8,8 +8,8 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 	/// those that are monitoring the result.
 	/// </summary>
 	public interface IErrorKnowledgeBase {
-		bool IsKnownBuildIssue (ILog buildLog, out string? knownFailureMessage);
-		bool IsKnownTestIssue (ILog runLog, out string? knownFailureMessage);
-		bool IsKnownInstallIssue (ILog installLog, out string? knownFailureMessage);
+		bool IsKnownBuildIssue (ILog buildLog, out (string HumanMessage, string IssueLink)? knownFailureMessage);
+		bool IsKnownTestIssue (ILog runLog, out (string HumanMessage, string IssueLink)? knownFailureMessage);
+		bool IsKnownInstallIssue (ILog installLog, out (string HumanMessage, string IssueLink)? knownFailureMessage);
 	}
 }

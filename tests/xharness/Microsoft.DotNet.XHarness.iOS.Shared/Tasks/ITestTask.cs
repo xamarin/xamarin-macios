@@ -31,7 +31,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 		bool BuildOnly { get; set; }
 		bool Ignored { get; set; }
 
-		string KnownFailure { get; set; }
+		(string HumanMessage, string IssueLink)? KnownFailure { get; set; }
 		string ProjectConfiguration { get; set; }
 		string ProjectPlatform { get; set; }
 		string ProjectFile { get; }
