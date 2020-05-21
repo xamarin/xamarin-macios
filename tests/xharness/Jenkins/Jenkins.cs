@@ -464,14 +464,14 @@ namespace Xharness.Jenkins {
 
 			var crashReportSnapshotFactory = new CrashSnapshotReporterFactory (processManager);
 
-			// al factories are enumberators \o/ 
+			// all factories are enumerators \o/ 
 			var testFactories = new IEnumerable<AppleTestTask> [] {
 				new MacTestTasksEnumerable (this, processManager, crashReportSnapshotFactory, testVariationsFactory),
 				new NUnitTestTasksEnumerable (this, processManager),
 				new MakeTestTaskEnumerable (this, processManager)
 			};
 
-			// add all tests defined by the factorie
+			// add all tests defined by the factory
 			foreach (var f in testFactories) {
 				Tasks.AddRange (f);
 			}
