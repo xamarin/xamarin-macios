@@ -29,8 +29,6 @@ XreItem GetXcodeItem (string xipFileName)
 	var items = (XreItem []) Enum.GetValues (typeof (XreItem));
 	var xreItemType = typeof (XreItem);
 	var itemAttrType = typeof (Xamarin.Provisioning.Model.ItemAttribute);
-	bool found = false;
-	XreItem xcodeitem = default (XreItem);
 
 	foreach (var item in items) {
 		var attr = xreItemType
@@ -42,13 +40,8 @@ XreItem GetXcodeItem (string xipFileName)
 		if (attr == null)
 			continue;
 
-		xcodeitem = item;
-		found = true;
-		break;
+		return item;
 	}
 
-	if (!found)
-		throw new Xamarin.Provisioning.ProvisioningException ($"'{xipFileName}' not found in 'XreItem' members.");
-
-	return xcodeitem;
+	throw new Xamarin.Provisioning.ProvisioningException ($"'{xipFileName}' not found in 'XreItem' members.");
 }
