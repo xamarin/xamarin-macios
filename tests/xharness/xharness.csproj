@@ -131,8 +131,11 @@
     <Compile Include="TestTargetExtensions.cs" />
     <Compile Include="TestPlatformExtensions.cs" />
     <Compile Include="Jenkins\IReportWriter.cs" />
-    <Compile Include="Jenkins\IEnumrable.cs" />
     <Compile Include="Jenkins\MarkdownReportWriter.cs" />
+    <Compile Include="Jenkins\MacTestTasksEnumerable.cs" />
+    <Compile Include="MacFlavorsExtensions.cs" />
+    <Compile Include="Jenkins\NUnitTestTasksEnumerable.cs" />
+    <Compile Include="Jenkins\MakeTestTaskEnumerable.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\tools\common\SdkVersions.cs">

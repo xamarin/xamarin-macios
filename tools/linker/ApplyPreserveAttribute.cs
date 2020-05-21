@@ -33,7 +33,7 @@ namespace Xamarin.Linker.Steps {
 		{
 			base.Initialize (context);
 
-			// we cannot override ProcessAssembly as some decisions needs to be done before applyting the [Preserve]
+			// we cannot override ProcessAssembly as some decisions needs to be done before applying the [Preserve]
 			// synonyms
 
 			foreach (var assembly in context.GetAssemblies ()) {
