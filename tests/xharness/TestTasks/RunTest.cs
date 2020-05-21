@@ -65,7 +65,7 @@ namespace Xharness.TestTasks {
 					testTask.ExecutionResult = TestExecutingResult.BuildFailure;
 				}
 				testTask.FailureMessage = BuildTask.FailureMessage;
-				if (!string.IsNullOrEmpty (BuildTask.KnownFailure))
+				if (BuildTask.KnownFailure.HasValue)
 					testTask.KnownFailure = BuildTask.KnownFailure;
 				if (generateXmlFailures) {
 					var logReader = BuildTask.BuildLog.GetReader ();

@@ -1314,6 +1314,8 @@ namespace Xharness.Jenkins {
 						markdown_summary.Write ($": {t.ExecutionResult}");
 						if (!string.IsNullOrEmpty (t.FailureMessage))
 							markdown_summary.Write ($" ({t.FailureMessage})");
+						if (t.KnownFailure.HasValue)
+							markdown_summary.Write ($" Known issue: [{t.KnownFailure.Value.HumanMessage}]({t.KnownFailure.Value.IssueLink})");
 						markdown_summary.WriteLine ();
 					}
 				}
@@ -1536,7 +1538,7 @@ namespace Xharness.Jenkins {
 						writer.Write ($"<span id='button_container2_{groupId}' class='expander' onclick='javascript: toggleContainerVisibility2 (\"{groupId}\");'>{defaultExpander}</span>");
 						writer.Write ($"<span id='x{id_counter++}' class='p1 autorefreshable' onclick='javascript: toggleContainerVisibility2 (\"{groupId}\");'>{group.Key}{RenderTextStates (group)}</span>");
 						if (IsServerMode) {
-							var groupIds = string.Join (",", group.Where ((v) => string.IsNullOrEmpty (v.KnownFailure)).Select ((v) => v.ID.ToString ()));
+							var groupIds = string.Join (",", group.Where ((v) => !v.KnownFailure.HasValue).Select ((v) => v.ID.ToString ()));
 							writer.Write ($" <span class='runall'><a href='javascript: runtest (\"{groupIds}\");'>Run all</a> <a href='javascript: buildtest (\"{groupIds}\");'>Build all</a></span>");
 						}
 						writer.WriteLine ("</div>");
@@ -1557,7 +1559,7 @@ namespace Xharness.Jenkins {
 							writer.Write ($"<span id='button_container2_{modeGroupId}' class='expander' onclick='javascript: toggleContainerVisibility2 (\"{modeGroupId}\");'>{defaultExpander}</span>");
 							writer.Write ($"<span id='x{id_counter++}' class='p2 autorefreshable' onclick='javascript: toggleContainerVisibility2 (\"{modeGroupId}\");'>{modeGroup.Key}{RenderTextStates (modeGroup)}</span>");
 							if (IsServerMode) {
-								var modeGroupIds = string.Join (",", modeGroup.Where ((v) => string.IsNullOrEmpty (v.KnownFailure)).Select ((v) => v.ID.ToString ()));
+								var modeGroupIds = string.Join (",", modeGroup.Where ((v) => !v.KnownFailure.HasValue).Select ((v) => v.ID.ToString ()));
 								writer.Write ($" <span class='runall'><a href='javascript: runtest (\"{modeGroupIds}\");'>Run all</a> <a href='javascript: buildtest (\"{modeGroupIds}\");'>Build all</a></span>");
 							}
 							writer.WriteLine ("</div>");
@@ -1589,8 +1591,8 @@ namespace Xharness.Jenkins {
 							writer.Write ($"<span id='button_{log_id}' class='expander' onclick='javascript: toggleLogVisibility (\"{log_id}\");'>{defaultExpander}</span>");
 							// we have a very common error we want to make this easier for the person that is dealing with the results
 							var knownFailure = string.Empty;
-							if (!string.IsNullOrEmpty (test.KnownFailure))
-								knownFailure = $" {test.KnownFailure}";
+							if (test.KnownFailure.HasValue)
+								knownFailure = $" <a href='{test.KnownFailure.Value.IssueLink}'>{test.KnownFailure.Value.HumanMessage}</a>";
 							writer.Write ($"<span id='x{id_counter++}' class='p3 autorefreshable' onclick='javascript: toggleLogVisibility (\"{log_id}\");'>{title} (<span style='color: {test.GetTestColor ()}'>{state}{knownFailure}</span>{buildOnly}) </span>");
 							if (IsServerMode) {
 								writer.Write ($" <span id='x{id_counter++}' class='autorefreshable'>");
@@ -1611,8 +1613,8 @@ namespace Xharness.Jenkins {
 							if (testAssemblies.Any ())
 								writer.WriteLine ($"Test assemblies:<br/>- {String.Join ("<br/>- ", testAssemblies)}<br />");
 
-							if (!string.IsNullOrEmpty (test.KnownFailure))
-								writer.WriteLine ($"Known failure: {test.KnownFailure} <br />");
+							if (test.KnownFailure.HasValue)
+								writer.WriteLine ($"Known failure: <a href='{test.KnownFailure.Value.IssueLink}'>{test.KnownFailure.Value.HumanMessage}</a> <br />");
 
 							if (!string.IsNullOrEmpty (test.FailureMessage)) {
 								var msg = test.FailureMessage.AsHtml ();

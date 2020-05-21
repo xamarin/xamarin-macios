@@ -9,7 +9,7 @@ namespace Xharness.Jenkins {
 		public string Variation;
 		public string MTouchExtraArgs;
 		public string MonoBundlingExtraArgs; // mmp
-		public string KnownFailure;
+		public (string HumanMessage, string IssueLink)? KnownFailure;
 		public bool Debug;
 		public bool Profiling;
 		public string LinkMode;
