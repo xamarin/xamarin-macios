@@ -130,6 +130,10 @@
     <Compile Include="Jenkins\TestData.cs" />
     <Compile Include="TestTargetExtensions.cs" />
     <Compile Include="TestPlatformExtensions.cs" />
+    <Compile Include="Jenkins\MacTestTasksFactory.cs" />
+    <Compile Include="MacFlavorsExtensions.cs" />
+    <Compile Include="Jenkins\NUnitTestTasksFactory.cs" />
+    <Compile Include="Jenkins\MakeTestTaskFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\tools\common\SdkVersions.cs">
