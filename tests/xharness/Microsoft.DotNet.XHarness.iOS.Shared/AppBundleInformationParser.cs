@@ -1,15 +1,19 @@
-﻿using System.IO;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 using System.Xml;
+using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
+using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
 namespace Microsoft.DotNet.XHarness.iOS.Shared {
 
 	public interface IAppBundleInformationParser {
-		AppBundleInformation ParseFromProject (string projectFilePath, TestTarget target, string buildConfiguration);
+		Task<AppBundleInformation> ParseFromProjectAsync (ILog log, IProcessManager processManager, string projectFilePath, TestTarget target, string buildConfiguration);
 	}
 
 	public class AppBundleInformationParser : IAppBundleInformationParser {
-		public AppBundleInformation ParseFromProject (string projectFilePath, TestTarget target, string buildConfiguration)
+		public Task<AppBundleInformation> ParseFromProjectAsync (ILog log, IProcessManager processManager, string projectFilePath, TestTarget target, string buildConfiguration)
 		{
 			var csproj = new XmlDocument ();
 			csproj.LoadWithoutNetworkAccess (projectFilePath);
@@ -41,7 +45,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 				? Directory.GetDirectories (Path.Combine (appPath, "Watch"), "*.app") [0]
 				: appPath;
 
-			return new AppBundleInformation (appName, bundleIdentifier, appPath, launchAppPath, extension);
+			return Task.FromResult (new AppBundleInformation (appName, bundleIdentifier, appPath, launchAppPath, extension));
 		}
 	}
 }
