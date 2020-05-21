@@ -210,7 +210,7 @@ namespace Xharness.Jenkins {
 			return runtasks;
 		}
 
-		bool IsIncluded (TestProject project)
+		public bool IsIncluded (TestProject project)
 		{
 			if (!project.IsExecutableProject)
 				return false;
@@ -464,159 +464,35 @@ namespace Xharness.Jenkins {
 
 			var crashReportSnapshotFactory = new CrashSnapshotReporterFactory (processManager);
 
-			var netstandard2Project = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "msbuild", "tests", "Xamarin.iOS.Tasks.Tests", "Xamarin.iOS.Tasks.Tests.csproj")));
-			var buildiOSMSBuild = new MSBuildTask (jenkins: this, testProject: netstandard2Project, processManager: processManager) {
-				SpecifyPlatform = false,
-				SpecifyConfiguration = true,
-				ProjectConfiguration = "Debug",
-				Platform = TestPlatform.iOS,
-				SolutionPath = Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "msbuild", "Xamarin.MacDev.Tasks.sln")),
-				SupportsParallelExecution = false,
+			// all factories are enumerators \o/ 
+			var testFactories = new IEnumerable<AppleTestTask> [] {
+				new MacTestTasksEnumerable (this, processManager, crashReportSnapshotFactory, testVariationsFactory),
+				new NUnitTestTasksEnumerable (this, processManager),
+				new MakeTestTaskEnumerable (this, processManager)
 			};
-			var nunitExecutioniOSMSBuild = new NUnitExecuteTask (this, buildiOSMSBuild, processManager) {
-				TestLibrary = Path.Combine (Harness.RootDirectory, "..", "msbuild", "tests", "Xamarin.iOS.Tasks.Tests", "bin", "Debug", "net461", "Xamarin.iOS.Tasks.Tests.dll"),
-				TestProject = netstandard2Project,
-				ProjectConfiguration = "Debug",
-				Platform = TestPlatform.iOS,
-				TestName = "MSBuild tests",
-				Mode = "iOS",
-				Timeout = TimeSpan.FromMinutes (60),
-				Ignored = !IncludeiOSMSBuild,
-				SupportsParallelExecution = false,
-			};
-			Tasks.Add (nunitExecutioniOSMSBuild);
 
-			var installSourcesProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "tools", "install-source", "InstallSourcesTests", "InstallSourcesTests.csproj")));
-			var buildInstallSources = new MSBuildTask (jenkins: this, testProject: installSourcesProject, processManager: processManager)
-			{
-				SpecifyPlatform = false,
-				SpecifyConfiguration = false,
-				Platform = TestPlatform.iOS,
-			};
-			buildInstallSources.SolutionPath = Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "tools", "install-source", "install-source.sln")); // this is required for nuget restore to be executed
-			var nunitExecutionInstallSource = new NUnitExecuteTask (this, buildInstallSources, processManager)
-			{
-				TestLibrary = Path.Combine (Harness.RootDirectory, "..", "tools", "install-source", "InstallSourcesTests", "bin", "Release", "InstallSourcesTests.dll"),
-				TestProject = installSourcesProject,
-				Platform = TestPlatform.iOS,
-				TestName = "Install Sources tests",
-				Mode = "iOS",
-				Timeout = TimeSpan.FromMinutes (60),
-				Ignored = !IncludeMac && !IncludeSimulator,
-			};
-			Tasks.Add (nunitExecutionInstallSource);
-
-			foreach (var project in Harness.MacTestProjects) {
-				bool ignored = !IncludeMac;
-				if (!IncludeMmpTest && project.Path.Contains ("mmptest"))
-					ignored = true;
-
-				if (!IsIncluded (project))
-					ignored = true;
-
-				var configurations = project.Configurations;
-				if (configurations == null)
-					configurations = new string [] { "Debug" };
-
-				TestPlatform platform;
-				switch (project.TargetFrameworkFlavors) {
-				case MacFlavors.Console:
-					platform = TestPlatform.Mac;
-					break;
-				case MacFlavors.Full:
-					platform = TestPlatform.Mac_Full;
-					break;
-				case MacFlavors.Modern:
-					platform = TestPlatform.Mac_Modern;
-					break;
-				case MacFlavors.System:
-					platform = TestPlatform.Mac_System;
-					break;
-				default:
-					throw new NotImplementedException (project.TargetFrameworkFlavors.ToString ());
-				}
-				foreach (var config in configurations) {
-					MSBuildTask build = new MSBuildTask (jenkins: this, testProject: project, processManager: processManager);
-					build.Platform = platform;
-					build.CloneTestProject (project);
-					build.SolutionPath = project.SolutionPath;
-					build.ProjectConfiguration = config;
-					build.ProjectPlatform = project.Platform;
-					build.SpecifyPlatform = false;
-					build.SpecifyConfiguration = build.ProjectConfiguration != "Debug";
-					build.Dependency = project.Dependency;
-					RunTestTask exec;
-					IEnumerable<RunTestTask> execs;
-					var ignored_main = ignored;
-					if (project.IsNUnitProject) {
-						var dll = Path.Combine (Path.GetDirectoryName (build.TestProject.Path), project.Xml.GetOutputAssemblyPath (build.ProjectPlatform, build.ProjectConfiguration).Replace ('\\', '/'));
-						exec = new NUnitExecuteTask (this, build, processManager) {
-							Ignored = ignored_main,
-							TestLibrary = dll,
-							TestProject = project,
-							Platform = build.Platform,
-							TestName = project.Name,
-							Timeout = TimeSpan.FromMinutes (120),
-							Mode = "macOS",
-						};
-						execs = new [] { exec };
-					} else {
-						exec = new MacExecuteTask (this, build, processManager, crashReportSnapshotFactory) {
-							Ignored = ignored_main,
-							BCLTest = project.IsBclTest (),
-							TestName = project.Name,
-							IsUnitTest = true,
-						};
-						execs = testVariationsFactory.CreateTestVariations (new [] { exec }, (buildTask, test, candidates) =>
-							new MacExecuteTask (this, buildTask, processManager, crashReportSnapshotFactory) { IsUnitTest = true } );
-					}
-
-					foreach (var e in execs)
-						e.Variation = string.IsNullOrEmpty (e.Variation) ? config : e.Variation;
-
-					Tasks.AddRange (execs);
-				}
+			// add all tests defined by the factory
+			foreach (var f in testFactories) {
+				Tasks.AddRange (f);
 			}
 
-			var buildMTouch = new MakeTask (jenkins: this, processManager: processManager)
-			{
-				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "mtouch", "mtouch.sln"))),
-				SpecifyPlatform = false,
-				SpecifyConfiguration = false,
-				Platform = TestPlatform.iOS,
-				Target = "dependencies",
-				WorkingDirectory = Path.GetFullPath (Path.Combine (Harness.RootDirectory, "mtouch")),
+			// individual special tasks
+			var buildXtroTests = new MakeTask (jenkins: this, processManager: processManager) {
+				Platform = TestPlatform.All,
+				TestName = "Xtro",
+				Target = "wrench",
+				WorkingDirectory = Path.Combine (Harness.RootDirectory, "xtro-sharpie"),
+				Ignored = !IncludeXtro,
+				Timeout = TimeSpan.FromMinutes (15),
 			};
-			var nunitExecutionMTouch = new NUnitExecuteTask (this, buildMTouch, processManager)
-			{
-				TestLibrary = Path.Combine (Harness.RootDirectory, "mtouch", "bin", "Debug", "mtouch.dll"),
-				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "mtouch", "mtouch.csproj"))),
-				Platform = TestPlatform.iOS,
-				TestName = "MTouch tests",
-				Timeout = TimeSpan.FromMinutes (180),
-				Ignored = !IncludeMtouch,
-				InProcess = true,
-			};
-			Tasks.Add (nunitExecutionMTouch);
 
-			var buildGenerator = new MakeTask (jenkins: this, processManager: processManager) {
-				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "src", "generator.sln"))),
-				SpecifyPlatform = false,
-				SpecifyConfiguration = false,
-				Platform = TestPlatform.iOS,
-				Target = "build-unit-tests",
-				WorkingDirectory = Path.GetFullPath (Path.Combine (Harness.RootDirectory, "generator")),
+			var runXtroReporter = new RunXtroTask (this, buildXtroTests, processManager, crashReportSnapshotFactory) {
+				Platform = TestPlatform.Mac,
+				TestName = buildXtroTests.TestName,
+				Ignored = buildXtroTests.Ignored,
+				WorkingDirectory = buildXtroTests.WorkingDirectory,
 			};
-			var runGenerator = new NUnitExecuteTask (this, buildGenerator, processManager) {
-				TestLibrary = Path.Combine (Harness.RootDirectory, "generator", "bin", "Debug", "generator-tests.dll"),
-				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "generator", "generator-tests.csproj"))),
-				Platform = TestPlatform.iOS,
-				TestName = "Generator tests",
-				Mode = "NUnit",
-				Timeout = TimeSpan.FromMinutes (10),
-				Ignored = !IncludeBtouch,
-			};
-			Tasks.Add (runGenerator);
+			Tasks.Add (runXtroReporter);
 
 			var buildDotNetGeneratorProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "bgen", "bgen-tests.csproj")));
 			var buildDotNetGenerator = new DotNetBuildTask (jenkins: this, testProject: buildDotNetGeneratorProject, processManager: processManager) {
@@ -633,97 +509,6 @@ namespace Xharness.Jenkins {
 				Ignored = !IncludeBtouch,
 			};
 			Tasks.Add (runDotNetGenerator);
-
-			var run_mmp = new MakeTask (jenkins: this, processManager: processManager)
-			{
-				Platform = TestPlatform.Mac,
-				TestName = "MMP Regression Tests",
-				Target = "all", // -j" + Environment.ProcessorCount,
-				WorkingDirectory = Path.Combine (Harness.RootDirectory, "mmp-regression"),
-				Ignored = !IncludeMmpTest || !IncludeMac,
-				Timeout = TimeSpan.FromMinutes (30),
-				SupportsParallelExecution = false, // Already doing parallel execution by running "make -jX"
-			};
-			run_mmp.CompletedTask = new Task (() =>
-			{
-				foreach (var log in Directory.GetFiles (Path.GetFullPath (run_mmp.WorkingDirectory), "*.log", SearchOption.AllDirectories))
-					run_mmp.Logs.AddFile (log, log.Substring (run_mmp.WorkingDirectory.Length + 1));
-			});
-			run_mmp.Environment.Add ("BUILD_REVISION", "jenkins"); // This will print "@MonkeyWrench: AddFile: <log path>" lines, which we can use to get the log filenames.
-			Tasks.Add (run_mmp);
-
-			var runMacBindingProject = new MakeTask (jenkins: this, processManager: processManager)
-			{
-				Platform = TestPlatform.Mac,
-				TestName = "Mac Binding Projects",
-				Target = "all",
-				WorkingDirectory = Path.Combine (Harness.RootDirectory, "mac-binding-project"),
-				Ignored = !IncludeMacBindingProject || !IncludeMac,
-				Timeout = TimeSpan.FromMinutes (15),
-			};
-			Tasks.Add (runMacBindingProject);
-
-			var buildXtroTests = new MakeTask (jenkins: this, processManager: processManager) {
-				Platform = TestPlatform.All,
-				TestName = "Xtro",
-				Target = "wrench",
-				WorkingDirectory = Path.Combine (Harness.RootDirectory, "xtro-sharpie"),
-				Ignored = !IncludeXtro,
-				Timeout = TimeSpan.FromMinutes (15),
-			};
-			var runXtroReporter = new RunXtroTask (this, buildXtroTests, processManager, crashReportSnapshotFactory) {
-				Platform = TestPlatform.Mac,
-				TestName = buildXtroTests.TestName,
-				Ignored = buildXtroTests.Ignored,
-				WorkingDirectory = buildXtroTests.WorkingDirectory,
-			};
-			Tasks.Add (runXtroReporter);
-
-			var buildCecilTests = new MakeTask (jenkins: this, processManager: processManager) {
-				Platform = TestPlatform.All,
-				TestName = "Cecil",
-				Target = "build",
-				WorkingDirectory = Path.Combine (Harness.RootDirectory, "cecil-tests"),
-				Ignored = !IncludeCecil,
-				Timeout = TimeSpan.FromMinutes (5),
-			};
-			var runCecilTests = new NUnitExecuteTask (this, buildCecilTests, processManager) {
-				TestLibrary = Path.Combine (buildCecilTests.WorkingDirectory, "bin", "Debug", "cecil-tests.dll"),
-				TestProject = new TestProject (Path.Combine (buildCecilTests.WorkingDirectory, "cecil-tests.csproj")),
-				Platform = TestPlatform.iOS,
-				TestName = "Cecil-based tests",
-				Timeout = TimeSpan.FromMinutes (5),
-				Ignored = !IncludeCecil,
-				InProcess = true,
-			};
-			Tasks.Add (runCecilTests);
-
-			var runDocsTests = new MakeTask (jenkins: this, processManager: processManager) {
-				Platform = TestPlatform.All,
-				TestName = "Documentation",
-				Target = "wrench-docs",
-				WorkingDirectory = Harness.RootDirectory,
-				Ignored = !IncludeDocs,
-				Timeout = TimeSpan.FromMinutes (45),
-			};
-			Tasks.Add (runDocsTests);
-
-			var buildSampleTestsProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "sampletester", "sampletester.sln")));
-			var buildSampleTests = new MSBuildTask (jenkins: this, testProject: buildSampleTestsProject, processManager: processManager) {
-				SpecifyPlatform = false,
-				Platform = TestPlatform.All,
-				ProjectConfiguration = "Debug",
-			};
-			var runSampleTests = new NUnitExecuteTask (this, buildSampleTests, processManager) {
-				TestLibrary = Path.Combine (Harness.RootDirectory, "sampletester", "bin", "Debug", "sampletester.dll"),
-				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "sampletester", "sampletester.csproj"))),
-				Platform = TestPlatform.All,
-				TestName = "Sample tests",
-				Timeout = TimeSpan.FromDays (1), // These can take quite a while to execute.
-				InProcess = true,
-				Ignored = true, // Ignored by default, can be run manually. On CI will execute if the label 'run-sample-tests' is present on a PR (but in Azure Devops on a different bot).
-			};
-			Tasks.Add (runSampleTests);
 
 			var loaddev = CreateRunDeviceTasksAsync ().ContinueWith ((v) => {
 				Console.WriteLine ("Got device tasks completed");
@@ -832,7 +617,7 @@ namespace Xharness.Jenkins {
 			// Try and find an unused port
 			int attemptsLeft = 50;
 			int port = 51234; // Try this port first, to try to not vary between runs just because.
-			Random r = new Random ((int) DateTime.Now.Ticks);
+			Random r = new Random ((int)DateTime.Now.Ticks);
 			while (attemptsLeft-- > 0) {
 				var newPort = port != 0 ? port : r.Next (49152, 65535); // The suggested range for dynamic ports is 49152-65535 (IANA)
 				server.Prefixes.Clear ();
@@ -1071,7 +856,7 @@ namespace Xharness.Jenkins {
 										rtt.BuildAsync ().ContinueWith ((z) => {
 											if (rtt.ExecutionResult == TestExecutingResult.Built)
 												rtt.ExecutionResult = TestExecutingResult.BuildSucceeded;
-										 });
+										});
 									} else {
 										writer.WriteLine ($"Test '{task.TestName}' is not a test that can be only built.");
 									}
