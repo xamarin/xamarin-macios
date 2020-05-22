@@ -17,7 +17,6 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 
 		#region Public vars
 
-		public readonly int ID;
 		public Dictionary<string, string> Environment = new Dictionary<string, string> ();
 		public Func<Task> Dependency; // a task that's feteched and awaited before this task's ExecuteAsync method
 		public Task InitialTask { get; set; } // a task that's executed before this task's ExecuteAsync method.
@@ -28,6 +27,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 
 		#region Properties
 
+		public int ID { get; private set; }
 		public bool BuildOnly { get; set; }
 		public (string HumanMessage, string IssueLink)? KnownFailure { get; set; }
 		public string ProjectConfiguration { get; set; }
