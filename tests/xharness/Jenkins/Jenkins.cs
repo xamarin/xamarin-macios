@@ -1032,7 +1032,7 @@ namespace Xharness.Jenkins {
 				throw new NotImplementedException ();
 			}
 
-			var allTasks = new List<AppleTestTask> ();
+			var allTasks = new List<ITestTask> ();
 			if (!populating) {
 				allTasks.AddRange (allExecuteTasks);
 				allTasks.AddRange (allSimulatorTasks);
@@ -1052,60 +1052,8 @@ namespace Xharness.Jenkins {
 			var buildingQueuedTests = allTasks.Where ((v) => v.Building && v.Waiting);
 
 			if (markdown_summary != null) {
-				if (unfinishedTests.Any () || failedTests.Any () || deviceNotFound.Any ()) {
-					// Don't print when all tests succeed (cleaner)
-					markdown_summary.WriteLine ("# Test results");
-					markdown_summary.WriteLine ();
-				}
-				var details = failedTests.Any ();
-				if (details) {
-					markdown_summary.WriteLine ("<details>");
-					markdown_summary.Write ("<summary>");
-				}
-				if (allTasks.Count == 0) {
-					markdown_summary.Write ($"Loading tests...");
-				} else if (unfinishedTests.Any ()) {
-					var list = new List<string> ();
-					var grouped = allTasks.GroupBy ((v) => v.ExecutionResult).OrderBy ((v) => (int) v.Key);
-					foreach (var @group in grouped)
-						list.Add ($"{@group.Key.ToString ()}: {@group.Count ()}");
-					markdown_summary.Write ($"# Test run in progress: ");
-					markdown_summary.Write (string.Join (", ", list));
-				} else if (failedTests.Any ()) {
-					markdown_summary.Write ($"{failedTests.Count ()} tests failed, ");
-					if (deviceNotFound.Any ())
-						markdown_summary.Write ($"{deviceNotFound.Count ()} tests' device not found, ");
-					markdown_summary.Write ($"{passedTests.Count ()} tests passed.");
-				} else if (deviceNotFound.Any ()) {
-					markdown_summary.Write ($"{deviceNotFound.Count ()} tests' device not found, {passedTests.Count ()} tests passed.");
-				} else if (passedTests.Any ()) {
-					markdown_summary.Write ($"# :tada: All {passedTests.Count ()} tests passed :tada:");
-				} else {
-					markdown_summary.Write ($"# No tests selected.");
-				}
-				if (details)
-					markdown_summary.Write ("</summary>");
-				markdown_summary.WriteLine ();
-				markdown_summary.WriteLine ();
-				if (failedTests.Any ()) {
-					markdown_summary.WriteLine ("## Failed tests");
-					markdown_summary.WriteLine ();
-					foreach (var t in failedTests) {
-						markdown_summary.Write ($" * {t.TestName}");
-						if (!string.IsNullOrEmpty (t.Mode))
-							markdown_summary.Write ($"/{t.Mode}");
-						if (!string.IsNullOrEmpty (t.Variation))
-							markdown_summary.Write ($"/{t.Variation}");
-						markdown_summary.Write ($": {t.ExecutionResult}");
-						if (!string.IsNullOrEmpty (t.FailureMessage))
-							markdown_summary.Write ($" ({t.FailureMessage})");
-						if (t.KnownFailure.HasValue)
-							markdown_summary.Write ($" Known issue: [{t.KnownFailure.Value.HumanMessage}]({t.KnownFailure.Value.IssueLink})");
-						markdown_summary.WriteLine ();
-					}
-				}
-				if (details)
-					markdown_summary.WriteLine ("</details>");
+				var reportWriter = new MarkdownReportWriter ();
+				reportWriter.Write (allTasks, markdown_summary);
 			}
 
 			using (var writer = new StreamWriter (stream)) {
@@ -1289,7 +1237,7 @@ namespace Xharness.Jenkins {
 
 				writer.WriteLine ("<div id='test-table' style='width: 100%; display: flex;'>");
 				writer.WriteLine ("<div id='test-list'>");
-				var orderedTasks = allTasks.GroupBy ((AppleTestTask v) => v.TestName);
+				var orderedTasks = allTasks.GroupBy (v => v.TestName);
 
 				if (IsServerMode) {
 					// In server mode don't take into account anything that can change during a test run
@@ -1641,11 +1589,11 @@ namespace Xharness.Jenkins {
 			return System.Web.HttpUtility.UrlEncode (path).Replace ("%2f", "/").Replace ("+", "%20");
 		}
 
-		string RenderTextStates (IEnumerable<AppleTestTask> tests)
+		string RenderTextStates (IEnumerable<ITestTask> tests)
 		{
 			// Create a collection of all non-ignored tests in the group (unless all tests were ignored).
 			var allIgnored = tests.All ((v) => v.ExecutionResult == TestExecutingResult.Ignored);
-			IEnumerable<AppleTestTask> relevantGroup;
+			IEnumerable<ITestTask> relevantGroup;
 			if (allIgnored) {
 				relevantGroup = tests;
 			} else {

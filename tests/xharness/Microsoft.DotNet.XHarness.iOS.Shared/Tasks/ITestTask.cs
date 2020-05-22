@@ -18,12 +18,15 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 		bool Running { get; }
 		bool Finished { get; }
 		bool HarnessException { get; }
+		bool Built { get; }
 
 		bool Succeeded { get; }
 		bool Failed { get; }
 		bool TimedOut { get; }
 		bool Crashed { get; }
 		bool DeviceNotFound { get; }
+
+		public TimeSpan WaitingDuration { get; }
 
 		#endregion
 
@@ -41,6 +44,8 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 		string FailureMessage { get; set; }
 		string LogDirectory { get; }
 
+		public int ID { get; }
+
 
 		string GuessFailureReason (ILog log);
 		TimeSpan Duration { get; }
@@ -50,6 +55,8 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 		IEnumerable<ILog> AggregatedLogs { get; }
 		ILogs Logs { get; }
 		Stopwatch DurationStopWatch { get; }
+		IEnumerable<string> ReferencedNunitAndXunitTestAssemblies { get; }
+		string ProgressMessage { get; }
 
 
 		Task RunAsync ();
