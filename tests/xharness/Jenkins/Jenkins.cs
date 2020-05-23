@@ -517,26 +517,6 @@ namespace Xharness.Jenkins {
 			return Task.WhenAll (loadsim, loaddev);
 		}
 
-		async Task ExecutePeriodicCommandAsync (ILog periodic_loc)
-		{
-			periodic_loc.WriteLine ($"Starting periodic task with interval {Harness.PeriodicCommandInterval.TotalMinutes} minutes.");
-			while (true) {
-				var watch = Stopwatch.StartNew ();
-				using (var process = new Process ()) {
-					process.StartInfo.FileName = Harness.PeriodicCommand;
-					process.StartInfo.Arguments = Harness.PeriodicCommandArguments;
-					var rv = await processManager.RunAsync (process, periodic_loc, timeout: Harness.PeriodicCommandInterval);
-					if (!rv.Succeeded)
-						periodic_loc.WriteLine ($"Periodic command failed with exit code {rv.ExitCode} (Timed out: {rv.TimedOut})");
-				}
-				var ticksLeft = watch.ElapsedTicks - Harness.PeriodicCommandInterval.Ticks;
-				if (ticksLeft < 0)
-					ticksLeft = Harness.PeriodicCommandInterval.Ticks;
-				var wait = TimeSpan.FromTicks (ticksLeft);
-				await Task.Delay (wait);
-			}
-		}
-
 		public int Run ()
 		{
 			try {
@@ -559,8 +539,13 @@ namespace Xharness.Jenkins {
 					});
 				}
 				if (!string.IsNullOrEmpty (Harness.PeriodicCommand)) {
-					var periodic_log = Logs.Create ("PeriodicCommand.log", "Periodic command log");
-					Task.Run (async () => await ExecutePeriodicCommandAsync (periodic_log));
+					var periodicCommand = new PeriodicCommand (
+						command: Harness.PeriodicCommand,
+						processManager: processManager,
+						interval: Harness.PeriodicCommandInterval,
+						logs: logs,
+						arguments: string.IsNullOrEmpty (Harness.PeriodicCommandArguments) ? null : Harness.PeriodicCommandArguments);
+					periodicCommand.Execute ().DoNotAwait ();
 				}
 
 				// We can populate and build test-libraries in parallel.
