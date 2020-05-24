@@ -60,8 +60,8 @@ namespace Xharness.Jenkins {
 		public bool UninstallTestApp = true;
 
 		public ILog MainLog;
-		public ILog SimulatorLoadLog;
-		public ILog DeviceLoadLog;
+		public ILog SimulatorLoadLog => deviceLoader.SimulatorLoadLog;
+		public ILog DeviceLoadLog => deviceLoader.DeviceLoadLog;
 
 		string log_directory;
 		public string LogDirectory {

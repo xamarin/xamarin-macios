@@ -13,8 +13,8 @@ namespace Xharness.Jenkins {
 
 		readonly ISimulatorLoader simulators;
 		readonly IHardwareDeviceLoader devices;
-		readonly ILog simulatorsLog;
-		readonly ILog devicesLog;
+		public ILog SimulatorLoadLog { get; private set; }
+		public ILog DeviceLoadLog { get; private set; }
 
 		public JenkinsDeviceLoader (ISimulatorLoader simulators, IHardwareDeviceLoader devices, ILogs logs)
 		{
@@ -23,8 +23,8 @@ namespace Xharness.Jenkins {
 
 			this.simulators = simulators ?? throw new ArgumentNullException (nameof (simulators));
 			this.devices = devices ?? throw new ArgumentNullException (nameof (devices));
-			simulatorsLog = logs.Create ($"simulator-list-{Helpers.Timestamp}.log", $"Simulator Listing");
-			devicesLog = logs.Create ($"device-list-{Helpers.Timestamp}.log", $"Device Listing");
+			SimulatorLoadLog = logs.Create ($"simulator-list-{Helpers.Timestamp}.log", $"Simulator Listing");
+			DeviceLoadLog = logs.Create ($"device-list-{Helpers.Timestamp}.log", $"Device Listing");
 		}
 
 		static string BuildDevicesDescription (IHardwareDeviceLoader deviceLoader, string name)
@@ -73,10 +73,10 @@ namespace Xharness.Jenkins {
 		}
 
 		public Task LoadSimulatorsAsync ()
-			=> LoadAsync (simulatorsLog, simulators, simulatorsName);
+			=> LoadAsync (SimulatorLoadLog, simulators, simulatorsName);
 
 		public Task LoadDevicesAsync ()
-			=> LoadAsync (devicesLog, devices, devicesName);
+			=> LoadAsync (DeviceLoadLog, devices, devicesName);
 
 		public Task LoadAllAsync ()
 			=> Task.WhenAll (LoadDevicesAsync (), LoadSimulatorsAsync ());
