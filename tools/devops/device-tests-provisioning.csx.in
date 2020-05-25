@@ -1,12 +1,14 @@
 #r "_provisionator/provisionator.dll"
 
 using System.IO;
+using System.Reflection;
 using System.Linq;
 
 using static Xamarin.Provisioning.ProvisioningScript;
 
-var xcodePath = Path.GetDirectoryName (Path.GetDirectoryName ("@XCODE_DEVELOPER_ROOT@"));
-Xcode ("@XCODE_VERSION@").XcodeSelect (allowUntrusted: true, allowSymlink: true, symlinkTarget: xcodePath);
+// Provision Xcode using the xip name declared in Make.config
+var xcodeItem = GetXcodeItem ("@XCODE_XIP_NAME@");
+Item (xcodeItem).XcodeSelect (allowUntrusted: true);
 
 // provisionator knows how to deal with this items
 Item ("@MONO_PACKAGE@");
@@ -20,4 +22,26 @@ void BrewPackage (string name)
 	// Assumes brew is already installed. 
 	// All Macs provisioned by Xamarin, VSEng, or DDFUN should have brew by default!
 	Item (name).Action (i => Exec ("brew", "install", i.Name));
+}
+
+XreItem GetXcodeItem (string xipFileName)
+{
+	var items = (XreItem []) Enum.GetValues (typeof (XreItem));
+	var xreItemType = typeof (XreItem);
+	var itemAttrType = typeof (Xamarin.Provisioning.Model.ItemAttribute);
+
+	foreach (var item in items) {
+		var attr = xreItemType
+			.GetField (item.ToString ())
+			.GetCustomAttributes (itemAttrType, false)
+			?.Cast<Xamarin.Provisioning.Model.ItemAttribute> ()
+			.FirstOrDefault (a => a.Uri.EndsWith (xipFileName, StringComparison.Ordinal));
+
+		if (attr == null)
+			continue;
+
+		return item;
+	}
+
+	throw new Xamarin.Provisioning.ProvisioningException ($"'{xipFileName}' not found in 'XreItem' members.");
 }

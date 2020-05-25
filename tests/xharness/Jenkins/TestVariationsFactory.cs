@@ -10,7 +10,11 @@ using Xharness.Jenkins.TestTasks;
 
 namespace Xharness.Jenkins {
 
-	class TestVariationsFactory {
+	interface ITestVariationsFactory {
+		IEnumerable<T> CreateTestVariations<T> (IEnumerable<T> tests, Func<MSBuildTask, T, IEnumerable<IDevice>, T> creator) where T : RunTestTask;
+	}
+
+	class TestVariationsFactory : ITestVariationsFactory {
 
 		readonly Jenkins jenkins;
 		readonly IProcessManager processManager;
@@ -132,7 +136,7 @@ namespace Xharness.Jenkins {
 			}
 		}
 
-		internal IEnumerable<T> CreateTestVariations<T> (IEnumerable<T> tests, Func<MSBuildTask, T, IEnumerable<IDevice>, T> creator) where T : RunTestTask
+		public IEnumerable<T> CreateTestVariations<T> (IEnumerable<T> tests, Func<MSBuildTask, T, IEnumerable<IDevice>, T> creator) where T : RunTestTask
 		{
 			foreach (var task in tests) {
 				if (string.IsNullOrEmpty (task.Variation))

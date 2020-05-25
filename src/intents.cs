@@ -1471,6 +1471,8 @@ namespace Intents {
 		Music,
 		[Watch (6,0), iOS (13,0)]
 		AlgorithmicRadioStation,
+		[Watch (6,2,1), iOS (13,4,1)]
+		News,
 	}
 
 	[Watch (5,0), NoMac, iOS (12,0)]
