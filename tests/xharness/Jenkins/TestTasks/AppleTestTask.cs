@@ -13,7 +13,7 @@ namespace Xharness.Jenkins.TestTasks {
 		public IHarness Harness { get { return Jenkins.Harness; } }
 		public override string RootDirectory => Xharness.Harness.RootDirectory;
 
-		public override IResourceManager ResourceManager => Jenkins;
+		public override IResourceManager ResourceManager => Jenkins.ResourceManager;
 
 		public override string LogDirectory {
 			get {
@@ -93,7 +93,7 @@ namespace Xharness.Jenkins.TestTasks {
 
 		protected override Task<IAcquiredResource> NotifyAndAcquireDesktopResourceAsync ()
 		{
-			return NotifyBlockingWaitAsync (SupportsParallelExecution ? Jenkins.DesktopResource.AcquireConcurrentAsync () : Jenkins.DesktopResource.AcquireExclusiveAsync ());
+			return NotifyBlockingWaitAsync (SupportsParallelExecution ? ResourceManager.DesktopResource.AcquireConcurrentAsync () : ResourceManager.DesktopResource.AcquireExclusiveAsync ());
 		}
 
 	}

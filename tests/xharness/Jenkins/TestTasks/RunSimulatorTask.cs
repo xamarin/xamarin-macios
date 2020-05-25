@@ -33,7 +33,7 @@ namespace Xharness.Jenkins.TestTasks {
 				// We don't own the acquired resource, so wrap it in a class that won't dispose it.
 				return Task.FromResult<IAcquiredResource> (new NondisposedResource () { Wrapped = AcquiredResource });
 			} else {
-				return Jenkins.DesktopResource.AcquireExclusiveAsync ();
+				return ResourceManager.DesktopResource.AcquireExclusiveAsync ();
 			}
 		}
 

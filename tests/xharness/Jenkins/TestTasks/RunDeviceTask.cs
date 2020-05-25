@@ -44,7 +44,7 @@ namespace Xharness.Jenkins.TestTasks {
 			runDevice = new RunDevice (
 				testTask: this,
 				devices: devices,
-				resourceManager: Jenkins,
+				resourceManager: ResourceManager,
 				mainLog: Jenkins.MainLog,
 				deviceLoadLog: Jenkins.DeviceLoadLog,
 				defaultLogDirectory: Jenkins.Harness.LogDirectory,
