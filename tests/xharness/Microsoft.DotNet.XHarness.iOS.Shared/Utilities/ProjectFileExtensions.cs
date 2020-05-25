@@ -265,7 +265,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 			var compile_node = csproj.SelectSingleNode ("//*[local-name() = 'Compile']");
 			var item_group = compile_node.ParentNode;
 
-			var node = csproj.CreateElement (type, csproj.GetNamespace ());
+			var node = csproj.CreateElement ("Compile", csproj.GetNamespace ());
 			var include_attribute = csproj.CreateAttribute ("Include");
 			include_attribute.Value = include;
 			node.Attributes.Append (include_attribute);
