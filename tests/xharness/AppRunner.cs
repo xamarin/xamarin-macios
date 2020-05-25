@@ -26,6 +26,7 @@ namespace Xharness {
 		readonly ICaptureLogFactory captureLogFactory;
 		readonly IDeviceLogCapturerFactory deviceLogCapturerFactory;
 		readonly ITestReporterFactory testReporterFactory;
+		readonly IAppBundleInformationParser appBundleInformationParser;
 		
 		readonly RunMode runMode;
 		readonly bool isSimulator;
@@ -33,6 +34,9 @@ namespace Xharness {
 		readonly IHarness harness;
 		readonly double timeoutMultiplier;
 		readonly IBuildToolTask buildTask;
+		readonly string variation;
+		readonly string projectFilePath;
+		readonly string buildConfiguration;
 
 		string deviceName;
 		string companionDeviceName;
@@ -45,7 +49,7 @@ namespace Xharness {
 			set => ensureCleanSimulatorState = value;
 		}
 
-		public AppBundleInformation AppInformation { get; }
+		public AppBundleInformation AppInformation { get; private set;  }
 
 		bool IsExtension => AppInformation.Extension.HasValue;
 
@@ -80,9 +84,6 @@ namespace Xharness {
 						  string variation = null,
 						  IBuildToolTask buildTask = null)
 		{
-			if (appBundleInformationParser is null)
-				throw new ArgumentNullException (nameof (appBundleInformationParser));
-
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 			this.simulatorsLoaderFactory = simulatorsFactory ?? throw new ArgumentNullException (nameof (simulatorsFactory));
 			this.listenerFactory = simpleListenerFactory ?? throw new ArgumentNullException (nameof (simpleListenerFactory));
@@ -91,6 +92,7 @@ namespace Xharness {
 			this.captureLogFactory = captureLogFactory ?? throw new ArgumentNullException (nameof (captureLogFactory));
 			this.deviceLogCapturerFactory = deviceLogCapturerFactory ?? throw new ArgumentNullException (nameof (deviceLogCapturerFactory));
 			this.testReporterFactory = reporterFactory ?? throw new ArgumentNullException (nameof (testReporterFactory));
+			this.appBundleInformationParser = appBundleInformationParser ?? throw new ArgumentNullException (nameof (appBundleInformationParser));
 			this.harness = harness ?? throw new ArgumentNullException (nameof (harness));
 			this.MainLog = mainLog ?? throw new ArgumentNullException (nameof (mainLog));
 			this.Logs = logs ?? throw new ArgumentNullException (nameof (logs));
@@ -101,10 +103,17 @@ namespace Xharness {
 			this.simulators = simulators;
 			this.buildTask = buildTask;
 			this.target = target;
+			this.variation = variation;
+			this.projectFilePath = projectFilePath;
+			this.buildConfiguration = buildConfiguration;
 
 			runMode = target.ToRunMode ();
 			isSimulator = target.IsSimulator ();
-			AppInformation = appBundleInformationParser.ParseFromProject (projectFilePath, target, buildConfiguration);
+		}
+
+		public async Task InitializeAsync ()
+		{
+			AppInformation = await appBundleInformationParser.ParseFromProjectAsync (MainLog, processManager, projectFilePath, target, buildConfiguration);
 			AppInformation.Variation = variation;
 		}
 

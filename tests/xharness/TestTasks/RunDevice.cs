@@ -115,6 +115,7 @@ namespace Xharness.TestTasks {
 						timeoutMultiplier: testTask.TimeoutMultiplier,
 						variation: testTask.Variation,
 						buildTask: testTask.BuildTask);
+					await testTask.Runner.InitializeAsync ();
 
 					// Sometimes devices can't upgrade (depending on what has changed), so make sure to uninstall any existing apps first.
 					if (uninstallTestApp) {
@@ -188,6 +189,7 @@ namespace Xharness.TestTasks {
 								timeoutMultiplier: testTask.TimeoutMultiplier,
 								variation: testTask.Variation,
 								buildTask: testTask.BuildTask);
+							await todayRunner.InitializeAsync ();
 
 							testTask.AdditionalRunner = todayRunner;
 							await todayRunner.RunAsync ();
