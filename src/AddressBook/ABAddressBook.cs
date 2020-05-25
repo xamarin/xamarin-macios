@@ -183,11 +183,7 @@ namespace AddressBook {
 
 		public static ABAuthorizationStatus GetAuthorizationStatus ()
 		{
-#if ARCH_32			
-			return (ABAuthorizationStatus)(int)ABAddressBookGetAuthorizationStatus ();
-#else
 			return (ABAuthorizationStatus)(long)ABAddressBookGetAuthorizationStatus ();
-#endif
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
