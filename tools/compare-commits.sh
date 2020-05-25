@@ -241,7 +241,7 @@ find build build-new '(' \
 	-name '*.rsp' -or \
 	-name 'AssemblyInfo.cs' -or \
 	-name 'Constants.cs' -or \
-	-name 'generator.csproj.*' -or \
+	-name 'generator.csproj*' -or \
 	-name 'bgen.csproj.*' -or \
 	-name '*.cache' \
 	')' -delete
