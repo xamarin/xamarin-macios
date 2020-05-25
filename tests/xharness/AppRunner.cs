@@ -273,9 +273,7 @@ namespace Xharness {
 
 			// object that will take care of capturing and parsing the results
 			ILog runLog = MainLog;
-			var crashLogs = new Logs (Logs.Directory);
-
-			ICrashSnapshotReporter crashReporter = snapshotReporterFactory.Create (MainLog, crashLogs, isDevice: !isSimulator, deviceName);
+			ICrashSnapshotReporter crashReporter = snapshotReporterFactory.Create (MainLog, Logs, isDevice: !isSimulator, deviceName);
 
 			var testReporterTimeout = TimeSpan.FromMinutes (harness.Timeout * timeoutMultiplier);
 			var testReporter = testReporterFactory.Create (MainLog,
