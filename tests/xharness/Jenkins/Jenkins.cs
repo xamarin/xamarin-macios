@@ -255,7 +255,7 @@ namespace Xharness.Jenkins {
 							TestName = project.Name,
 							Dependency = project.Dependency,
 						};
-						derived.CloneTestProject (pair.Item1);
+						derived.CloneTestProject (MainLog, processManager, pair.Item1);
 						var simTasks = CreateRunSimulatorTaskAsync (derived);
 						runSimulatorTasks.AddRange (simTasks);
 						foreach (var task in simTasks) {
@@ -311,7 +311,7 @@ namespace Xharness.Jenkins {
 						Platform = TestPlatform.iOS_Unified64,
 						TestName = project.Name,
 					};
-					build64.CloneTestProject (project);
+					build64.CloneTestProject (MainLog, processManager, project);
 					projectTasks.Add (new RunDeviceTask (
 						jenkins: this,
 						devices: devices,
@@ -327,7 +327,7 @@ namespace Xharness.Jenkins {
 						Platform = TestPlatform.iOS_Unified32,
 						TestName = project.Name,
 					};
-					build32.CloneTestProject (project);
+					build32.CloneTestProject (MainLog, processManager, project);
 					projectTasks.Add (new RunDeviceTask (
 						jenkins: this,
 						devices: devices,
@@ -344,7 +344,7 @@ namespace Xharness.Jenkins {
 						Platform = TestPlatform.iOS_TodayExtension64,
 						TestName = project.Name,
 					};
-					buildToday.CloneTestProject (todayProject);
+					buildToday.CloneTestProject (MainLog, processManager, todayProject);
 					projectTasks.Add (new RunDeviceTask (
 						jenkins: this,
 						devices: devices,
@@ -363,7 +363,7 @@ namespace Xharness.Jenkins {
 						Platform = TestPlatform.tvOS,
 						TestName = project.Name,
 					};
-					buildTV.CloneTestProject (tvOSProject);
+					buildTV.CloneTestProject (MainLog, processManager, tvOSProject);
 					projectTasks.Add (new RunDeviceTask (
 						jenkins: this,
 						devices: devices,
@@ -383,7 +383,7 @@ namespace Xharness.Jenkins {
 							Platform = TestPlatform.watchOS_32,
 							TestName = project.Name,
 						};
-						buildWatch32.CloneTestProject (watchOSProject);
+						buildWatch32.CloneTestProject (MainLog, processManager, watchOSProject);
 						projectTasks.Add (new RunDeviceTask (
 							jenkins: this,
 							devices: devices,
@@ -401,7 +401,7 @@ namespace Xharness.Jenkins {
 							Platform = TestPlatform.watchOS_64_32,
 							TestName = project.Name,
 						};
-						buildWatch64_32.CloneTestProject (watchOSProject);
+						buildWatch64_32.CloneTestProject (MainLog, processManager, watchOSProject);
 						projectTasks.Add (new RunDeviceTask (
 							jenkins: this,
 							devices: devices,
@@ -502,26 +502,6 @@ namespace Xharness.Jenkins {
 			return Task.WhenAll (loadsim, loaddev);
 		}
 
-		async Task ExecutePeriodicCommandAsync (ILog periodic_loc)
-		{
-			periodic_loc.WriteLine ($"Starting periodic task with interval {Harness.PeriodicCommandInterval.TotalMinutes} minutes.");
-			while (true) {
-				var watch = Stopwatch.StartNew ();
-				using (var process = new Process ()) {
-					process.StartInfo.FileName = Harness.PeriodicCommand;
-					process.StartInfo.Arguments = Harness.PeriodicCommandArguments;
-					var rv = await processManager.RunAsync (process, periodic_loc, timeout: Harness.PeriodicCommandInterval);
-					if (!rv.Succeeded)
-						periodic_loc.WriteLine ($"Periodic command failed with exit code {rv.ExitCode} (Timed out: {rv.TimedOut})");
-				}
-				var ticksLeft = watch.ElapsedTicks - Harness.PeriodicCommandInterval.Ticks;
-				if (ticksLeft < 0)
-					ticksLeft = Harness.PeriodicCommandInterval.Ticks;
-				var wait = TimeSpan.FromTicks (ticksLeft);
-				await Task.Delay (wait);
-			}
-		}
-
 		public int Run ()
 		{
 			try {
@@ -544,8 +524,13 @@ namespace Xharness.Jenkins {
 					});
 				}
 				if (!string.IsNullOrEmpty (Harness.PeriodicCommand)) {
-					var periodic_log = Logs.Create ("PeriodicCommand.log", "Periodic command log");
-					Task.Run (async () => await ExecutePeriodicCommandAsync (periodic_log));
+					var periodicCommand = new PeriodicCommand (
+						command: Harness.PeriodicCommand,
+						processManager: processManager,
+						interval: Harness.PeriodicCommandInterval,
+						logs: logs,
+						arguments: string.IsNullOrEmpty (Harness.PeriodicCommandArguments) ? null : Harness.PeriodicCommandArguments);
+					periodicCommand.Execute ().DoNotAwait ();
 				}
 
 				// We can populate and build test-libraries in parallel.
@@ -1424,17 +1409,17 @@ namespace Xharness.Jenkins {
 														if (line.StartsWith ("Tests run:", StringComparison.Ordinal)) {
 															summary = line;
 														} else if (line.StartsWith ("[FAIL]", StringComparison.Ordinal)) {
-															fails.Add (line);
+															if (fails.Count < 100) {
+																fails.Add (line);
+															} else if (fails.Count == 100) {
+																fails.Add ("...");
+															}
 														}
 													}
 												} else {
 													var data_tuple = (Tuple<string, List<string>>) data.Item2;
 													summary = data_tuple.Item1;
 													fails = data_tuple.Item2;
-												}
-												if (fails.Count > 100) {
-													fails.Add ("...");
-													break;
 												}
 											}
 											if (fails.Count > 0) {

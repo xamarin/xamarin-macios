@@ -69,6 +69,7 @@
     <Compile Include="Jenkins\MakeTestTaskEnumerableTests.cs" />
     <Compile Include="Jenkins\NUnitTestTasksEnumerableTests.cs" />
     <Compile Include="Jenkins\ResourceManagerTests.cs" />
+    <Compile Include="Jenkins\PeriodicCommandTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

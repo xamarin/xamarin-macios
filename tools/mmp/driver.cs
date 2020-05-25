@@ -501,15 +501,7 @@ namespace Xamarin.Bundler {
 				if (App.References.Exists (a => Path.GetFileNameWithoutExtension (a).Equals (root_wo_ext)))
 					throw new ProductException (23, true, Errors.MM0023, root_wo_ext);
 
-				string monoFrameworkDirectory;
-
-				if (TargetFramework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
-					monoFrameworkDirectory = TargetFramework.Identifier;
-				} else {
-					monoFrameworkDirectory = "4.5";
-				}
-
-				fx_dir = Path.Combine (MonoDirectory, "lib", "mono", monoFrameworkDirectory);
+				fx_dir = GetPlatformFrameworkDirectory (App);
 
 				if (!Directory.Exists (fx_dir))
 					throw new ProductException (1403, true, Errors.MM1403, "Directory", fx_dir, TargetFramework);
