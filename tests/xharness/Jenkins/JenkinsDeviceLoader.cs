@@ -45,7 +45,7 @@ namespace Xharness.Jenkins {
 			return (devicesTypes.Length == 0) ? $"{name} Listing (ok - no devices found)." : $"{name} Listing (ok). Devices types are: {devicesTypes}";
 		}
 
-		static string BuildSimulatorsDescrition (ISimulatorLoader simulatorLoader, string name)
+		static string BuildSimulatorsDescription (ISimulatorLoader simulatorLoader, string name)
 		{
 			var simCount = simulatorLoader.AvailableDevices.Count ();
 			return ( simCount == 0) ? $"{name} Listing (ok - no simulators found)." : $"{name} Listing (ok - Found {simCount} simulators).";
@@ -65,7 +65,7 @@ namespace Xharness.Jenkins {
 					capturedLog.Description = deviceManager switch
 					{
 						IHardwareDeviceLoader d => BuildDevicesDescription (d, name),
-						ISimulatorLoader s => BuildSimulatorsDescrition (s, name),
+						ISimulatorLoader s => BuildSimulatorsDescription (s, name),
 						_ => throw new NotImplementedException (),
 					};
 				}
