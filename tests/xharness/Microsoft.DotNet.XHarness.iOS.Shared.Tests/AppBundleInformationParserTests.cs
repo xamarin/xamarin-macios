@@ -1,6 +1,10 @@
 ﻿using System.IO;
 using System.Reflection;
+using Moq;
 using NUnit.Framework;
+
+using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
+using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 
 namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests {
 	[TestFixture]
@@ -30,7 +34,9 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests {
 		{
 			var parser = new AppBundleInformationParser ();
 
-			var info = parser.ParseFromProject (projectFilePath, TestTarget.Simulator_iOS64, "Debug");
+			var log = new MemoryLog ();
+			var processManager = new Mock<IProcessManager> ();
+			var info = parser.ParseFromProjectAsync (log, processManager.Object, projectFilePath, TestTarget.Simulator_iOS64, "Debug").Result;
 
 			Assert.AreEqual (appName, info.AppName);
 			Assert.AreEqual (appPath, info.AppPath);

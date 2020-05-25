@@ -137,6 +137,7 @@
     <Compile Include="Jenkins\NUnitTestTasksEnumerable.cs" />
     <Compile Include="Jenkins\MakeTestTaskEnumerable.cs" />
     <Compile Include="Jenkins\JenkinsDeviceLoader.cs" />
+    <Compile Include="Jenkins\PeriodicCommand.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\tools\common\SdkVersions.cs">
