@@ -38,8 +38,8 @@ namespace Xharness.Tests.Jenkins {
 			// assert that both are present
 			Assert.NotNull (resources, "resources");
 			Assert.AreEqual (2, resources.Count ());
-			Assert.AreEqual (1, resources.Where (r => r.Name == "device1").Count ());
-			Assert.AreEqual (1, resources.Where (r => r.Name == "device2").Count ());
+			Assert.AreEqual (1, resources.Where (r => r.Name == "device1").Count (), "device1");
+			Assert.AreEqual (1, resources.Where (r => r.Name == "device2").Count (), "device2");
 		}
 
 		[Test]
@@ -59,16 +59,16 @@ namespace Xharness.Tests.Jenkins {
 			// assert that both are present
 			Assert.NotNull (resources, "resources");
 			Assert.AreEqual (2, resources.Count ());
-			Assert.AreEqual (1, resources.Where (r => r.Name == "device1").Count ());
-			Assert.AreEqual (1, resources.Where (r => r.Name == "device2").Count ());
+			Assert.AreEqual (1, resources.Where (r => r.Name == "device1").Count (), "first device1");
+			Assert.AreEqual (1, resources.Where (r => r.Name == "device2").Count (), "first device2");
 
 			var resources2 = resourceManager.GetDeviceResources (devices);
 
 			// assert that both are present
 			Assert.NotNull (resources2, "resources2");
 			Assert.AreEqual (2, resources2.Count ());
-			Assert.AreEqual (1, resources2.Where (r => r.Name == "device1").Count ());
-			Assert.AreEqual (1, resources2.Where (r => r.Name == "device2").Count ());
+			Assert.AreEqual (1, resources2.Where (r => r.Name == "device1").Count (), "second device1");
+			Assert.AreEqual (1, resources2.Where (r => r.Name == "device2").Count (), "decond device2");
 		}
 
 		[Test]
@@ -87,8 +87,8 @@ namespace Xharness.Tests.Jenkins {
 			// assert that both are present
 			Assert.NotNull (resources, "resources");
 			Assert.AreEqual (1, resources.Count ());
-			Assert.AreEqual (1, resources.Where (r => r.Name == "device1").Count ());
-			Assert.AreEqual (0, resources.Where (r => r.Name == "device2").Count ());
+			Assert.AreEqual (1, resources.Where (r => r.Name == "device1").Count (), "first device1");
+			Assert.AreEqual (0, resources.Where (r => r.Name == "device2").Count (), "first device2");
 
 			var devices2 = new List<IHardwareDevice> { device1.Object , device2.Object };
 			var resources2 = resourceManager.GetDeviceResources (devices2);
@@ -96,8 +96,8 @@ namespace Xharness.Tests.Jenkins {
 			// assert that both are present
 			Assert.NotNull (resources2, "resources2");
 			Assert.AreEqual (2, resources2.Count ());
-			Assert.AreEqual (1, resources2.Where (r => r.Name == "device1").Count ());
-			Assert.AreEqual (1, resources2.Where (r => r.Name == "device2").Count ());
+			Assert.AreEqual (1, resources2.Where (r => r.Name == "device1").Count (), "second device1");
+			Assert.AreEqual (1, resources2.Where (r => r.Name == "device2").Count (), "decond device2");
 		}
 
 		[Test]
