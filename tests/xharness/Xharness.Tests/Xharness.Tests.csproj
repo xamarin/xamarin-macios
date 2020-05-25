@@ -68,6 +68,7 @@
     <Compile Include="Tests\MacFlavorsExtensionsTests.cs" />
     <Compile Include="Jenkins\MakeTestTaskEnumerableTests.cs" />
     <Compile Include="Jenkins\NUnitTestTasksEnumerableTests.cs" />
+    <Compile Include="Jenkins\PeriodicCommandTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
