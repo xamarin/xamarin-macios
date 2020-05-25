@@ -98,17 +98,17 @@ namespace Xharness.Jenkins {
 			};
 			yield return runGenerator;
 
-			var buildCecilTests = new MakeTask (jenkins: jenkins, processManager: processManager) {
+			var buildCecilTestsProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "cecil-tests", "cecil-tests.csproj")));
+			buildCecilTestsProject.RestoreNugetsInProject = true;
+			var buildCecilTests = new MSBuildTask (jenkins: jenkins, testProject: buildCecilTestsProject, processManager: processManager) {
+				SpecifyPlatform = false,
 				Platform = TestPlatform.All,
-				TestName = "Cecil",
-				Target = "build",
-				WorkingDirectory = Path.Combine (Harness.RootDirectory, "cecil-tests"),
+				ProjectConfiguration = "Debug",
 				Ignored = !jenkins.IncludeCecil,
-				Timeout = TimeSpan.FromMinutes (5),
 			};
 			var runCecilTests = new NUnitExecuteTask (jenkins, buildCecilTests, processManager) {
-				TestLibrary = Path.Combine (buildCecilTests.WorkingDirectory, "bin", "Debug", "cecil-tests.dll"),
-				TestProject = new TestProject (Path.Combine (buildCecilTests.WorkingDirectory, "cecil-tests.csproj")),
+				TestLibrary = Path.Combine (Path.GetDirectoryName (buildCecilTestsProject.Path), "bin", "Debug", "net472", "cecil-tests.dll"),
+				TestProject = buildCecilTestsProject,
 				Platform = TestPlatform.iOS,
 				TestName = "Cecil-based tests",
 				Timeout = TimeSpan.FromMinutes (5),
