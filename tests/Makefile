@@ -1,5 +1,5 @@
 TOP = ..
-SUBDIRS=test-libraries
+SUBDIRS=test-libraries dotnet
 
 # disabled for now: mac-test
 
