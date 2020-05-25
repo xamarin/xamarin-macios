@@ -52,7 +52,7 @@ namespace Xharness.Jenkins.TestTasks {
 				return;
 			}
 
-			using (var desktop = await NotifyBlockingWaitAsync (Jenkins.DesktopResource.AcquireExclusiveAsync ())) {
+			using (var desktop = await NotifyBlockingWaitAsync (ResourceManager.DesktopResource.AcquireExclusiveAsync ())) {
 				run_timer.Start ();
 
 				// We need to set the dialog permissions for all the apps

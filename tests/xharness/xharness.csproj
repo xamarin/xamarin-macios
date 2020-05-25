@@ -136,6 +136,7 @@
     <Compile Include="MacFlavorsExtensions.cs" />
     <Compile Include="Jenkins\NUnitTestTasksEnumerable.cs" />
     <Compile Include="Jenkins\MakeTestTaskEnumerable.cs" />
+    <Compile Include="Jenkins\ResourceManager.cs" />
     <Compile Include="Jenkins\PeriodicCommand.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -12,5 +12,6 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 		Resource DesktopResource { get; }
 		Resource NugetResource { get; }
 		Resources GetDeviceResources (IEnumerable<IHardwareDevice> devices);
+		IEnumerable<Resource> GetAll ();
 	}
 }
