@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using System.Xml;
+using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
+using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Tasks;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
@@ -60,14 +62,14 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 			return rv;
 		}
 
-		internal async Task<TestProject> CreateCloneAsync (ITestTask test)
+		internal async Task<TestProject> CreateCloneAsync (ILog log, IProcessManager processManager, ITestTask test)
 		{
 			var rv = Clone ();
-			await rv.CreateCopyAsync (test);
+			await rv.CreateCopyAsync (log, processManager, test);
 			return rv;
 		}
 
-		public async Task CreateCopyAsync (ITestTask test = null)
+		public async Task CreateCopyAsync (ILog log, IProcessManager processManager, ITestTask test = null)
 		{
 			var directory = DirectoryUtilities.CreateTemporaryDirectory (test?.TestName ?? System.IO.Path.GetFileNameWithoutExtension (Path));
 			Directory.CreateDirectory (directory);
@@ -92,7 +94,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 			var projectReferences = new List<TestProject> ();
 			foreach (var pr in doc.GetProjectReferences ()) {
 				var tp = new TestProject (pr.Replace ('\\', '/'));
-				await tp.CreateCopyAsync (test);
+				await tp.CreateCopyAsync (log, processManager, test);
 				doc.SetProjectReferenceInclude (pr, tp.Path.Replace ('/', '\\'));
 				projectReferences.Add (tp);
 			}

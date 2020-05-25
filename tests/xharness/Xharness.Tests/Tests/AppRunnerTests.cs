@@ -99,8 +99,8 @@ namespace Xharness.Tests {
 
 			var mock5 = new Mock<IAppBundleInformationParser> ();
 			mock5
-				.Setup (x => x.ParseFromProject (projectFilePath, It.IsAny<TestTarget> (), "Debug"))
-				.Returns (new AppBundleInformation (appName, appName, appPath, appPath, null));
+				.Setup (x => x.ParseFromProjectAsync (It.IsAny<ILog> (), It.IsAny<IProcessManager> (), It.IsAny<string> (), It.IsAny<TestTarget> (), It.IsAny<string> ()))
+				.ReturnsAsync (new AppBundleInformation (appName, appName, appPath, appPath, null));
 
 			appBundleInformationParser = mock5.Object;
 
@@ -133,6 +133,7 @@ namespace Xharness.Tests {
 				logs.Object,
 				projectFilePath: projectFilePath,
 				buildConfiguration: "Debug");
+			appRunner.InitializeAsync ().Wait ();
 
 			Assert.AreEqual (appName, appRunner.AppInformation.AppName);
 			Assert.AreEqual (appPath, appRunner.AppInformation.AppPath);
@@ -158,6 +159,7 @@ namespace Xharness.Tests {
 				logs.Object,
 				projectFilePath: projectFilePath,
 				buildConfiguration: "Debug");
+			appRunner.InitializeAsync ().Wait ();
 
 			var exception = Assert.ThrowsAsync<InvalidOperationException> (
 				async () => await appRunner.InstallAsync (new CancellationToken ()),
@@ -182,6 +184,7 @@ namespace Xharness.Tests {
 				logs.Object,
 				projectFilePath: projectFilePath,
 				buildConfiguration: "Debug");
+			appRunner.InitializeAsync ().Wait ();
 
 			var exception = Assert.ThrowsAsync<InvalidOperationException> (
 				async () => await appRunner.UninstallAsync (),
@@ -206,6 +209,7 @@ namespace Xharness.Tests {
 				logs.Object,
 				projectFilePath: projectFilePath,
 				buildConfiguration: "Debug");
+			appRunner.InitializeAsync ().Wait ();
 
 			devices.Setup (x => x.ConnectedDevices).Returns (new IHardwareDevice [0]);
 
@@ -240,6 +244,7 @@ namespace Xharness.Tests {
 				logs.Object,
 				projectFilePath: projectFilePath,
 				buildConfiguration: "Debug");
+			appRunner.InitializeAsync ().Wait ();
 
 			CancellationToken cancellationToken = new CancellationToken ();
 			var result = await appRunner.InstallAsync (cancellationToken);
@@ -283,6 +288,7 @@ namespace Xharness.Tests {
 				logs.Object,
 				projectFilePath: Path.Combine (sampleProjectPath, "SystemXunit.csproj"),
 				buildConfiguration: "Debug");
+			appRunner.InitializeAsync ().Wait ();
 
 			var result = await appRunner.UninstallAsync ();
 
@@ -365,6 +371,7 @@ namespace Xharness.Tests {
 				projectFilePath: projectFilePath,
 				buildConfiguration: "Debug",
 				timeoutMultiplier: 2);
+			appRunner.InitializeAsync ().Wait ();
 
 			var result = await appRunner.RunAsync ();
 
@@ -477,6 +484,7 @@ namespace Xharness.Tests {
 				buildConfiguration: "Debug",
 				timeoutMultiplier: 2,
 				ensureCleanSimulatorState: true);
+			appRunner.InitializeAsync ().Wait ();
 
 			var result = await appRunner.RunAsync ();
 
@@ -542,6 +550,7 @@ namespace Xharness.Tests {
 				projectFilePath: projectFilePath,
 				buildConfiguration: "Debug",
 				timeoutMultiplier: 2);
+			appRunner.InitializeAsync ().Wait ();
 
 			Assert.ThrowsAsync<NoDeviceFoundException> (
 				async () => await appRunner.RunAsync (),
@@ -636,6 +645,7 @@ namespace Xharness.Tests {
 				projectFilePath: projectFilePath,
 				buildConfiguration: "Debug",
 				timeoutMultiplier: 2);
+			appRunner.InitializeAsync ().Wait ();
 
 			var result = await appRunner.RunAsync ();
 
@@ -743,6 +753,7 @@ namespace Xharness.Tests {
 				projectFilePath: projectFilePath,
 				buildConfiguration: "Debug",
 				timeoutMultiplier: 2);
+			appRunner.InitializeAsync ().Wait ();
 
 			var result = await appRunner.RunAsync ();
 
