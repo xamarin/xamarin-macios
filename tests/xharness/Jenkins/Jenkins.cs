@@ -16,7 +16,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Tasks;
 using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
 
 namespace Xharness.Jenkins {
-	public class Jenkins : IResourceManager {
+	public class Jenkins {
 		public readonly ISimulatorLoader Simulators;
 		readonly IHardwareDeviceLoader devices;
 		readonly IProcessManager processManager;
@@ -26,6 +26,8 @@ namespace Xharness.Jenkins {
 		readonly TestVariationsFactory testVariationsFactory;
 		readonly JenkinsDeviceLoader deviceLoader;
 
+		readonly ResourceManager resourceManager;
+		
 		bool populating = true;
 
 		public Harness Harness { get; }
@@ -85,25 +87,8 @@ namespace Xharness.Jenkins {
 		List<AppleTestTask> Tasks = new List<AppleTestTask> ();
 		Dictionary<string, MakeTask> DependencyTasks = new Dictionary<string, MakeTask> ();
 
-		public Resource DesktopResource { get; } = new Resource ("Desktop", Environment.ProcessorCount);
-		public Resource NugetResource { get;  } = new Resource ("Nuget", 1); // nuget is not parallel-safe :(
-		
 		public IErrorKnowledgeBase ErrorKnowledgeBase => new ErrorKnowledgeBase ();
-
-		Dictionary<string, Resource> device_resources = new Dictionary<string, Resource> ();
-		public Resources GetDeviceResources (IEnumerable<IHardwareDevice> devices)
-		{
-			List<Resource> resources = new List<Resource> ();
-			lock (device_resources) {
-				foreach (var device in devices) {
-					Resource res;
-					if (!device_resources.TryGetValue (device.UDID, out res))
-						device_resources.Add (device.UDID, res = new Resource (device.UDID, 1, device.Name));
-					resources.Add (res);
-				}
-			}
-			return new Resources (resources);
-		}
+		public IResourceManager ResourceManager => resourceManager;
 
 		public Jenkins (Harness harness, IProcessManager processManager, IResultParser resultParser, ITunnelBore tunnelBore)
 		{
@@ -116,6 +101,7 @@ namespace Xharness.Jenkins {
 			testSelector = new TestSelector (this, processManager, new GitHub (harness, processManager));
 			testVariationsFactory = new TestVariationsFactory (this, processManager);
 			deviceLoader = new JenkinsDeviceLoader (Simulators, devices, Logs);
+			resourceManager = new ResourceManager ();
 		}
 
 		IEnumerable<RunSimulatorTask> CreateRunSimulatorTaskAsync (MSBuildTask buildTask)
@@ -1507,7 +1493,7 @@ namespace Xharness.Jenkins {
 						}
 					}
 
-					var resources = device_resources.Values.Concat (new Resource [] { DesktopResource, NugetResource });
+					var resources = ResourceManager.GetAll ();
 					if (resources.Any ()) {
 						writer.WriteLine ($"<h3>Devices/Resources:</h3>");
 						foreach (var dr in resources.OrderBy ((v) => v.Description, StringComparer.OrdinalIgnoreCase)) {
