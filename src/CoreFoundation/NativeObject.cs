@@ -6,13 +6,12 @@
 //   Alex Soto
 //   Miguel de Icaza
 //
-// Copyrigh 2018 Microsoft Inc
+// Copyright 2018, 2020 Microsoft Corp
 //
 using System;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
 using Foundation;
-using CoreFoundation;
 
 namespace CoreFoundation {
 	//
@@ -64,8 +63,13 @@ namespace CoreFoundation {
 			}
 		}
 
-		protected virtual void Retain () => CFObject.CFRetain (Handle);
-		protected virtual void Release () => CFObject.CFRelease (Handle);
+		// <quote>If cf is NULL, this will cause a runtime error and your application will crash.</quote>
+		// https://developer.apple.com/documentation/corefoundation/1521269-cfretain?language=occ
+		protected virtual void Retain () => CFObject.CFRetain (GetCheckedHandle ());
+
+		// <quote>If cf is NULL, this will cause a runtime error and your application will crash.</quote>
+		// https://developer.apple.com/documentation/corefoundation/1521153-cfrelease
+		protected virtual void Release () => CFObject.CFRelease (GetCheckedHandle ());
 
 		protected virtual void InitializeHandle (IntPtr handle)
 		{
@@ -78,12 +82,10 @@ namespace CoreFoundation {
 			this.handle = handle;
 		}
 
-		void Throw () => throw new ObjectDisposedException (GetType ().ToString ());
-
-		internal IntPtr GetCheckedHandle ()
+		public IntPtr GetCheckedHandle ()
 		{
 			if (handle == IntPtr.Zero)
-				Throw ();
+				ObjCRuntime.ThrowHelper.ThrowObjectDisposedException (this);
 			return handle;
 		}
 	}
