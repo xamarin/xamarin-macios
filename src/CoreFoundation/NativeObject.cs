@@ -85,7 +85,7 @@ namespace CoreFoundation {
 		public IntPtr GetCheckedHandle ()
 		{
 			if (handle == IntPtr.Zero)
-				ObjCRuntime.ThrowHelper.ThrowObjectDisposedException (GetType ());
+				ObjCRuntime.ThrowHelper.ThrowObjectDisposedException (this);
 			return handle;
 		}
 	}
