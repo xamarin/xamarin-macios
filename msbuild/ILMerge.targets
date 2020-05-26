@@ -5,8 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ILRepack" Version="2.0.18" />
+    <!-- <PackageReference Include="ILRepack" Version="2.0.18" /> -->
+    <!-- The current version of ILRepack can't handle portable pdbs. This will be fixed when https://github.com/gluck/il-repack/pull/236 is merged and an updated NuGet is available -->
+    <!-- In the meantime use an ILRepack fork which has the fix already -->
+    <PackageReference Include="ILRepack.MSBuild.Task" Version="2.0.13" />
   </ItemGroup>
+  <PropertyGroup>
+    <!-- Unfortunately the ILRepack.MSBuild.Task package doesn't define any variables that help us find its ilrepack.exe executable, so manually create this variable (which the IRepack package defines, so remove this workaround can be removed once we switch back to ILRepack) -->
+    <ILRepack>$(HOME)/.nuget/packages/ilrepack.msbuild.task/2.0.13/tools/ilrepack.exe</ILRepack>
+  </PropertyGroup>
 
   <Target Name="ILRepack" BeforeTargets="CopyFilesToOutputDirectory" Inputs="@(IntermediateAssembly -&gt; '%(FullPath)')" Outputs="$(IntermediateOutputPath)ilrepack.txt" Returns="@(MergedAssemblies)" Condition="Exists(@(IntermediateAssembly -&gt; '%(FullPath)')) And '$(ILRepack)' != 'false'">
     <ItemGroup>
