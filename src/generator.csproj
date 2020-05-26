@@ -376,7 +376,6 @@
     <Compile Include="..\src\Foundation\ProtocolAttribute.cs" />
     <Compile Include="..\src\Foundation\RegisterAttribute.cs" />
     <Compile Include="..\src\Foundation\XpcInterfaceAttribute.cs" />
-    <Compile Include="..\src\ObjCRuntime\AlphaAttribute.cs" />
     <Compile Include="..\src\ObjCRuntime\ArgumentSemantic.cs" />
     <Compile Include="..\src\ObjCRuntime\BindAsAttribute.cs" />
     <Compile Include="..\src\ObjCRuntime\BindingImplAttribute.cs" />

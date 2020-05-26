@@ -314,7 +314,6 @@
     <Compile Include="$(RepositoryPath)\src\Foundation\ProtocolAttribute.cs" />
     <Compile Include="$(RepositoryPath)\src\Foundation\RegisterAttribute.cs" />
     <Compile Include="$(RepositoryPath)\src\Foundation\XpcInterfaceAttribute.cs" />
-    <Compile Include="$(RepositoryPath)\src\ObjCRuntime\AlphaAttribute.cs" />
     <Compile Include="$(RepositoryPath)\src\ObjCRuntime\ArgumentSemantic.cs" />
     <Compile Include="$(RepositoryPath)\src\ObjCRuntime\BindAsAttribute.cs" />
     <Compile Include="$(RepositoryPath)\src\ObjCRuntime\BindingImplAttribute.cs" />
