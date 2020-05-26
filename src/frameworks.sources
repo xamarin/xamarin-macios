@@ -1729,16 +1729,12 @@ SHARED_CORE_SOURCES = \
 	MonoPInvokeCallbackAttribute.cs \
 	$(BUILD_DIR)/common/NativeTypes/Drawing.cs \
 	$(BUILD_DIR)/common/NativeTypes/Primitives.cs \
-	ObjCRuntime/AlphaAttribute.cs \
 	ObjCRuntime/ArgumentSemantic.cs \
 	ObjCRuntime/BindAsAttribute.cs \
 	ObjCRuntime/Blocks.cs \
 	ObjCRuntime/Class.cs \
 	ObjCRuntime/INativeObject.cs \
 	ObjCRuntime/LinkWithAttribute.cs \
-	ObjCRuntime/Messaging.iOS.cs \
-	ObjCRuntime/Messaging.mac.cs \
-	ObjCRuntime/Messaging.watch.cs \
 	ObjCRuntime/NativeAttribute.cs \
 	ObjCRuntime/PlatformAvailability.cs \
 	ObjCRuntime/PlatformAvailability2.cs \
@@ -1767,7 +1763,6 @@ SHARED_SOURCES = \
 	ObjCRuntime/BindingImplAttribute.cs \
 	ObjCRuntime/CategoryAttribute.cs \
 	ObjCRuntime/Class.mac.cs \
-	ObjCRuntime/CompileFlagsAttribute.cs \
 	ObjCRuntime/DelayedRegistrationAttribute.cs \
 	ObjCRuntime/DesignatedInitializerAttribute.cs \
 	ObjCRuntime/Dlfcn.cs \
@@ -1777,8 +1772,6 @@ SHARED_SOURCES = \
 	ObjCRuntime/Exceptions.cs \
 	ObjCRuntime/ExceptionMode.cs \
 	ObjCRuntime/Method.cs \
-	ObjCRuntime/MethodDescription.cs \
-	ObjCRuntime/NSStringMarshal.cs \
 	ObjCRuntime/Registrar.cs \
 	ObjCRuntime/ReleaseAttribute.cs \
 	ObjCRuntime/RequiredFrameworkAttribute.cs \
@@ -1787,7 +1780,6 @@ SHARED_SOURCES = \
 	ObjCRuntime/Runtime.mac.cs \
 	ObjCRuntime/RuntimeException.cs \
 	ObjCRuntime/RuntimeOptions.cs \
-	ObjCRuntime/Selector.iOS.cs \
 	ObjCRuntime/Selector.mac.cs \
 	ObjCRuntime/SelectorMarshaler.cs \
 	ObjCRuntime/Stret.cs \

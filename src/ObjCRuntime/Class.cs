@@ -568,12 +568,7 @@ namespace ObjCRuntime {
 		Type must have been previously registered.
 		*/
 		[BindingImpl (BindingImplOptions.Optimizable)] // To inline the Runtime.DynamicRegistrationSupported code if possible.
-#if !XAMCORE_2_0 && !MONOTOUCH // Accidently exposed this to public, can't break API
-		public
-#else
-		internal
-#endif
-		static bool IsCustomType (Type type)
+		internal static bool IsCustomType (Type type)
 		{
 			bool is_custom_type;
 			var @class = GetClassHandle (type, false, out is_custom_type);

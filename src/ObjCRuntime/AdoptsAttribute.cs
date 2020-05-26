@@ -33,10 +33,7 @@ using System.Runtime.InteropServices;
 namespace ObjCRuntime {
 
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple=true)]
-#if XAMCORE_2_0
-	sealed
-#endif
-	public class AdoptsAttribute : Attribute {
+	public sealed class AdoptsAttribute : Attribute {
 #if !COREBUILD
 		IntPtr handle;
 

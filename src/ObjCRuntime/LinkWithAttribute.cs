@@ -48,10 +48,7 @@ namespace ObjCRuntime {
 	}
 
 	[AttributeUsage(AttributeTargets.Assembly, AllowMultiple=true)]
-#if XAMCORE_2_0
-	sealed
-#endif
-	public class LinkWithAttribute : Attribute {
+	public sealed class LinkWithAttribute : Attribute {
 		public LinkWithAttribute (string libraryName, LinkTarget target, string linkerFlags)
 		{
 			LibraryName = libraryName;

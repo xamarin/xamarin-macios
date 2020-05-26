@@ -16,10 +16,7 @@ using Foundation;
 
 namespace ObjCRuntime {
 	[AttributeUsage (AttributeTargets.Parameter, AllowMultiple=false)]
-#if XAMCORE_2_0
-	sealed
-#endif
-	public class BlockProxyAttribute : Attribute {
+	public sealed class BlockProxyAttribute : Attribute {
 		public BlockProxyAttribute (Type t) { Type = t; }
 		public Type Type { get; set; }
 	}
