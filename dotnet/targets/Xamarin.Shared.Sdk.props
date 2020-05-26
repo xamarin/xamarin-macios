@@ -3,6 +3,11 @@
   <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.props" />
   <Import Project="Xamarin.Shared.Sdk.Versions.props" />
 
+  <PropertyGroup>
+    <!-- This is the location of the Microsoft.<platform>.Sdk NuGet (/usr/local/share/dotnet/sdk/<version>/Sdks/Microsoft.[iOS/tvOS/watchOS/macOS].Sdk) -->
+    <_XamarinSdkRootDirectory>$([MSBuild]::NormalizePath('$(MSBuildThisFileDirectory)', '..'))\</_XamarinSdkRootDirectory>
+  </PropertyGroup>
+
   <!-- Default item includes (globs and implicit references) -->
   <Import Project="Microsoft.$(_PlatformName).Sdk.DefaultItems.props" />
 </Project>
