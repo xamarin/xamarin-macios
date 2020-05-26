@@ -274,6 +274,7 @@ namespace Xharness.Jenkins {
 						buildTask: build64,
 						processManager: processManager,
 						tunnelBore: tunnelBore,
+						errorKnowledgeBase: ErrorKnowledgeBase,
 						useTcpTunnel: Harness.UseTcpTunnel,
 						candidates: devices.Connected64BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !IncludeiOS64 });
 
@@ -290,6 +291,7 @@ namespace Xharness.Jenkins {
 						buildTask: build32,
 						processManager: processManager,
 						tunnelBore: tunnelBore,
+						errorKnowledgeBase: ErrorKnowledgeBase,
 						useTcpTunnel: Harness.UseTcpTunnel,
 						candidates: devices.Connected32BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !IncludeiOS32 });
 
@@ -307,6 +309,7 @@ namespace Xharness.Jenkins {
 						buildTask: buildToday,
 						processManager: processManager,
 						tunnelBore: tunnelBore,
+						errorKnowledgeBase: ErrorKnowledgeBase,
 						useTcpTunnel: Harness.UseTcpTunnel,
 						candidates: devices.Connected64BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !IncludeiOSExtensions, BuildOnly = ForceExtensionBuildOnly });
 				}
@@ -326,6 +329,7 @@ namespace Xharness.Jenkins {
 						buildTask: buildTV,
 						processManager: processManager,
 						tunnelBore: tunnelBore,
+						errorKnowledgeBase: ErrorKnowledgeBase,
 						useTcpTunnel: Harness.UseTcpTunnel,
 						candidates: devices.ConnectedTV.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !IncludetvOS });
 				}
@@ -346,6 +350,7 @@ namespace Xharness.Jenkins {
 							buildTask: buildWatch32,
 							processManager: processManager,
 							tunnelBore: tunnelBore,
+							errorKnowledgeBase: ErrorKnowledgeBase,
 							useTcpTunnel: Harness.UseTcpTunnel,
 							candidates: devices.ConnectedWatch) { Ignored = !IncludewatchOS });
 					}
@@ -364,6 +369,7 @@ namespace Xharness.Jenkins {
 							buildTask: buildWatch64_32,
 							processManager: processManager,
 							tunnelBore: tunnelBore,
+							errorKnowledgeBase: ErrorKnowledgeBase,
 							useTcpTunnel: Harness.UseTcpTunnel,
 							candidates: devices.ConnectedWatch32_64.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !IncludewatchOS });
 					}
@@ -383,6 +389,7 @@ namespace Xharness.Jenkins {
 					buildTask: buildTask,
 					processManager: processManager,
 					tunnelBore: tunnelBore,
+					errorKnowledgeBase: ErrorKnowledgeBase,
 					useTcpTunnel: Harness.UseTcpTunnel,
 					candidates: candidates?.Cast<IHardwareDevice> () ?? test.Candidates)));
 		}
