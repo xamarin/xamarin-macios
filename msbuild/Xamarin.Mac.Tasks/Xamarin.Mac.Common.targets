@@ -121,7 +121,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	<Target Name="_CompileColladaAssets" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="$(CompileColladaAssetsDependsOn)" />
 
 	<PropertyGroup>
-		<CreateAppBundleDependsOn>
+		<CreateAppBundleDependsOn Condition="'$(_UsingXamarinSdk)' != 'true'">
 			_DetectSigningIdentity;
 			_CopyContentToBundle;
 			_SmeltMetal;

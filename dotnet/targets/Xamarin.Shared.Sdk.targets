@@ -6,6 +6,41 @@
 	<Import Project="Xamarin.Shared.Sdk.DefaultItems.targets" />
 	<Import Project="Xamarin.Shared.Sdk.TargetFrameworkInference.targets" />
 
+	<!-- Inject our custom logic into *DependsOn variables -->
+	<PropertyGroup>
+		<BuildDependsOn>
+			$(BuildDependsOn);
+			_CreateAppBundle;
+		</BuildDependsOn>
+
+		<!-- We re-use ComputeFilesToPublish & CopyFilesToPublishDirectory to copy files to the .app -->
+		<CreateAppBundleDependsOn>
+			ComputeFilesToPublish;
+			_ComputePublishLocation;
+			CopyFilesToPublishDirectory;
+		</CreateAppBundleDependsOn>
+	</PropertyGroup>
+
+	<Target Name="_ComputePublishLocation" DependsOnTargets="_GenerateBundleName">
+		<!-- Put .dll, .pdb, .exe and .dylib in the .app -->
+		<PropertyGroup>
+			<_AssemblyPublishDir Condition="'$(_PlatformName)' != 'macOS'">$(MSBuildProjectDirectory)$(_AppBundlePath)\</_AssemblyPublishDir>
+			<_AssemblyPublishDir Condition="'$(_PlatformName)' == 'macOS'">$(MSBuildProjectDirectory)$(_AppBundlePath)\Contents\MonoBundle\</_AssemblyPublishDir>
+			<_DylibPublishDir Condition="'$(_PlatformName)' != 'macOS'">$(MSBuildProjectDirectory)$(_AppBundlePath)\</_DylibPublishDir>
+			<_DylibPublishDir Condition="'$(_PlatformName)' == 'macOS'">$(MSBuildProjectDirectory)$(_AppBundlePath)\Contents\MonoBundle\</_DylibPublishDir>
+		</PropertyGroup>
+		<ItemGroup>
+			<ResolvedFileToPublish
+				Update="@(ResolvedFileToPublish)"
+				RelativePath="$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(_AssemblyPublishDir)))%(Filename)%(Extension)"
+				Condition="'%(Extension)' == '.dll' Or '%(Extension)' == '.pdb' Or '$(Extension)' == '.exe'" />
+			<ResolvedFileToPublish
+				Update="@(ResolvedFileToPublish)"
+				RelativePath="$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(_DylibPublishDir)))%(Filename)%(Extension)"
+				Condition="'%(Extension)' == '.dylib'" />
+		</ItemGroup>
+	</Target>
+
 	<!-- Project types and how do we distinguish between them
 
 									  OutputType   Custom variable
