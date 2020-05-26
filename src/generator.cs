@@ -4182,10 +4182,8 @@ public partial class Generator : IMemberGatherer {
 				print ("if ({0} != null){{", safe_name);
 				print ("\tif (!({0} is NSObject))\n", safe_name);
 				print ("\t\tthrow new ArgumentException (\"The object passed of type \" + {0}.GetType () + \" does not derive from NSObject\");", safe_name);
-				if (needs_null_check){
-					print ("} else {");
-					print ("\tthrow new ArgumentNullException (nameof ({0}));", safe_name);
-				}
+				print ("} else {");
+				print ("\tthrow new ArgumentNullException (nameof ({0}));", safe_name);
 				print ("}");
 			} else {
 				print ("if ({0} == null)", safe_name);
