@@ -27,11 +27,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.IO;
 
-#if XAMCORE_2_0
 namespace ObjCRuntime {
-#else
-namespace MonoMac {
-#endif
 
 	[AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
 	public class RequiredFrameworkAttribute : Attribute

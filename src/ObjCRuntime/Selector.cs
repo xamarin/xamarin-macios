@@ -56,14 +56,6 @@ namespace ObjCRuntime {
 			name = GetName (sel);
 		}
 
-#if !XAMCORE_2_0
-		[Obsolete ("Use the (string) constructor.")]
-		public Selector (string name, bool alloc)
-			: this (name)
-		{
-		}
-#endif
-
 		public Selector (string name)
 		{
 			this.name = name;
