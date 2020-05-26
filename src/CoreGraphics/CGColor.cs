@@ -86,12 +86,9 @@ namespace CoreGraphics {
 		{
 			if (components == null)
 				throw new ArgumentNullException ("components");
-			if (colorspace == null)
-				throw new ArgumentNullException ("colorspace");
-			if (colorspace.handle == IntPtr.Zero)
-				throw new ObjectDisposedException ("colorspace");
+			var handleof_colorspace = colorspace.GetNonNullHandle ("colorspace");
 			
-			handle = CGColorCreate (colorspace.handle, components);
+			handle = CGColorCreate (handleof_colorspace, components);
 		}
 
 #if !XAMCORE_3_0 || MONOMAC
@@ -142,12 +139,11 @@ namespace CoreGraphics {
 				throw new ArgumentNullException ("colorspace");
 			if (colorspace.handle == IntPtr.Zero)
 				throw new ObjectDisposedException ("colorspace");
-			if (pattern == null)
-				throw new ArgumentNullException ("pattern");
 			if (components == null)
 				throw new ArgumentNullException ("components");
+			var handleof_pattern = pattern.GetNonNullHandle ("pattern");
 
-			handle = CGColorCreateWithPattern (colorspace.handle, pattern.Handle, components);
+			handle = CGColorCreateWithPattern (colorspace.handle, handleof_pattern, components);
 			if (handle == IntPtr.Zero)
 				throw new ArgumentException ();
 		}

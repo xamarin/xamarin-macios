@@ -20,6 +20,15 @@ namespace ObjCRuntime {
 		{
 			return self == null ? IntPtr.Zero : self.Handle;
 		}
+
+		static public IntPtr GetNonNullHandle (this INativeObject self, string argumentName)
+		{
+			if (self == null)
+				ThrowHelper.ThrowArgumentNullException (argumentName);
+			if (self.Handle == IntPtr.Zero)
+				ThrowHelper.ThrowObjectDisposedException (self);
+			return self.Handle;
+		}
 	}
 #endif
 }

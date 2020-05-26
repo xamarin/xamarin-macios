@@ -9,6 +9,12 @@ namespace ObjCRuntime {
 	static class ThrowHelper {
 
 		[DoesNotReturn]
+		static internal void ThrowArgumentNullException (string argumentName)
+		{
+			throw new ArgumentNullException (argumentName);
+		}
+
+		[DoesNotReturn]
 		static internal void ThrowObjectDisposedException (object o)
 		{
 			throw new ObjectDisposedException (o.GetType ().ToString ());
