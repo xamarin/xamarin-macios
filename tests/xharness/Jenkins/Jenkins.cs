@@ -24,6 +24,8 @@ namespace Xharness.Jenkins {
 		readonly ITunnelBore tunnelBore;
 		readonly TestSelector testSelector;
 		readonly TestVariationsFactory testVariationsFactory;
+		readonly JenkinsDeviceLoader deviceLoader;
+
 		readonly ResourceManager resourceManager;
 		
 		bool populating = true;
@@ -60,8 +62,8 @@ namespace Xharness.Jenkins {
 		public bool UninstallTestApp = true;
 
 		public ILog MainLog;
-		public ILog SimulatorLoadLog;
-		public ILog DeviceLoadLog;
+		public ILog SimulatorLoadLog => deviceLoader.SimulatorLoadLog;
+		public ILog DeviceLoadLog => deviceLoader.DeviceLoadLog;
 
 		string log_directory;
 		public string LogDirectory {
@@ -98,54 +100,8 @@ namespace Xharness.Jenkins {
 			devices = new HardwareDeviceLoader (processManager);
 			testSelector = new TestSelector (this, processManager, new GitHub (harness, processManager));
 			testVariationsFactory = new TestVariationsFactory (this, processManager);
+			deviceLoader = new JenkinsDeviceLoader (Simulators, devices, Logs);
 			resourceManager = new ResourceManager ();
-		}
-
-		Task LoadAsync (ref ILog log, IDeviceLoader deviceManager, string name)
-		{
-			if (log == null)
-				log = Logs.Create ($"{name}-list-{Helpers.Timestamp}.log", $"{name} Listing");
-
-			log.Description = $"{name} Listing (in progress)";
-
-			var capturedLog = log;
-			return deviceManager.LoadDevices (capturedLog, includeLocked: false, forceRefresh: true).ContinueWith ((v) => {
-				if (v.IsFaulted) {
-					capturedLog.WriteLine ("Failed to load:");
-					capturedLog.WriteLine (v.Exception.ToString ());
-					capturedLog.Description = $"{name} Listing {v.Exception.Message})";
-				} else if (v.IsCompleted) {
-					if (deviceManager is HardwareDeviceLoader devices) {
-						var devicesTypes = new StringBuilder ();
-						if (devices.Connected32BitIOS.Any ()) {
-							devicesTypes.Append ("iOS 32 bit");
-						}
-						if (devices.Connected64BitIOS.Any ()) {
-							devicesTypes.Append (devicesTypes.Length == 0 ? "iOS 64 bit" : ", iOS 64 bit");
-						}
-						if (devices.ConnectedTV.Any ()) {
-							devicesTypes.Append (devicesTypes.Length == 0 ? "tvOS" : ", tvOS");
-						}
-						if (devices.ConnectedWatch.Any ()) {
-							devicesTypes.Append (devicesTypes.Length == 0 ? "watchOS" : ", watchOS");
-						}
-						capturedLog.Description = (devicesTypes.Length == 0) ? $"{name} Listing (ok - no devices found)." : $"{name} Listing (ok). Devices types are: {devicesTypes.ToString ()}";
-					}
-					if (deviceManager is SimulatorLoader simulators) {
-						var simCount = simulators.AvailableDevices.Count ();
-						capturedLog.Description = ( simCount == 0) ? $"{name} Listing (ok - no simulators found)." : $"{name} Listing (ok - Found {simCount} simulators).";
-					}
-				}
-			});
-		}
-
-		// Loads both simulators and devices in parallel
-		Task LoadSimulatorsAndDevicesAsync ()
-		{
-			var devs = LoadAsync (ref DeviceLoadLog, devices, "Device");
-			var sims = LoadAsync (ref SimulatorLoadLog, Simulators, "Simulator");
-
-			return Task.WhenAll (devs, sims);
 		}
 
 		IEnumerable<RunSimulatorTask> CreateRunSimulatorTaskAsync (MSBuildTask buildTask)
@@ -440,7 +396,7 @@ namespace Xharness.Jenkins {
 
 			testSelector.SelectTests ();
 
-			LoadSimulatorsAndDevicesAsync ().DoNotAwait ();
+			deviceLoader.LoadAllAsync ().DoNotAwait ();
 
 			var loadsim = CreateRunSimulatorTasksAsync ()
 				.ContinueWith ((v) => { Console.WriteLine ("Simulator tasks created"); Tasks.AddRange (v.Result); });
@@ -836,10 +792,10 @@ namespace Xharness.Jenkins {
 							}
 							break;
 						case "/reload-devices":
-							LoadAsync (ref DeviceLoadLog, devices, "Device").DoNotAwait ();
+							deviceLoader.LoadDevicesAsync ().DoNotAwait ();
 							break;
 						case "/reload-simulators":
-							LoadAsync (ref SimulatorLoadLog, Simulators, "Simulator").DoNotAwait ();
+							deviceLoader.LoadSimulatorsAsync ().DoNotAwait ();
 							break;
 						case "/quit":
 							using (var writer = new StreamWriter (response.OutputStream)) {
