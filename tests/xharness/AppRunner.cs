@@ -321,16 +321,10 @@ namespace Xharness {
 					return 1;
 
 				if (runMode != RunMode.WatchOS) {
-					var stderr_tty = harness.GetStandardErrorTty ();
-					if (!string.IsNullOrEmpty (stderr_tty)) {
-						args.Add (new SetStdoutArgument (stderr_tty));
-						args.Add (new SetStderrArgument (stderr_tty));
-					} else {
-						var stdout_log = Logs.CreateFile ($"stdout-{Helpers.Timestamp}.log", "Standard output");
-						var stderr_log = Logs.CreateFile ($"stderr-{Helpers.Timestamp}.log", "Standard error");
-						args.Add (new SetStdoutArgument (stdout_log));
-						args.Add (new SetStderrArgument (stderr_log));
-					}
+					var stdout_log = Logs.CreateFile ($"stdout-{Helpers.Timestamp}.log", "Standard output");
+					var stderr_log = Logs.CreateFile ($"stderr-{Helpers.Timestamp}.log", "Standard error");
+					args.Add (new SetStdoutArgument (stdout_log));
+					args.Add (new SetStderrArgument (stderr_log));
 				}
 
 				var systemLogs = new List<ICaptureLog> ();

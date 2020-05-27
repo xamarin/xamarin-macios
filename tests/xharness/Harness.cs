@@ -58,7 +58,6 @@ namespace Xharness {
 		XmlResultJargon XmlJargon { get; }
 
 		bool GetIncludeSystemPermissionTests (TestPlatform platform, bool device);
-		string GetStandardErrorTty ();
 		void Log (int min_level, string message, params object [] args);
 	}
 
@@ -160,8 +159,6 @@ namespace Xharness {
 		public TimeSpan PeriodicCommandInterval { get; }
 		// whether tests that require access to system resources (system contacts, photo library, etc) should be executed or not
 		public bool? IncludeSystemPermissionTests { get; set; }
-
-		public string GetStandardErrorTty () => Helpers.GetTerminalName (2);
 
 		public Harness (IResultParser resultParser, HarnessAction action, HarnessConfiguration configuration)
 		{

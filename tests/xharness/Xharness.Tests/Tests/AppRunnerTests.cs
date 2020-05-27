@@ -783,8 +783,7 @@ namespace Xharness.Tests {
 					{ "env1", "value1" },
 					{ "env2", "value2" },
 				}
-				&& x.Timeout == 1d
-				&& x.GetStandardErrorTty () == "tty1");
+				&& x.Timeout == 1d);
 		}
 	}
 }
