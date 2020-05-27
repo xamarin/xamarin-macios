@@ -38,19 +38,16 @@ string GetManifestUrl (string hash)
 	var hasContent = true;
 	while (manifest_url == null && hasContent) {
 		var url = $"https://api.github.com/repos/xamarin/xamarin-macios/statuses/{hash}?page={page}";
-		var json = JToken.Parse (DownloadWithGithubAuth (url));
-		var statuses = (JValue) ((JArray) json);
-		hasContent &= statuses.HasValues;
+		var json = (JArray) JToken.Parse (DownloadWithGithubAuth (url));
+		hasContent &= json.HasValues;
 		if (hasContent) {
-			var value = statuses.Where ((v) => v ["context"].ToString () == "manifest").Select ((v) => v ["target_url"]).FirstOrDefault ();
-			manifest_url = (string) value?.Value;
+			manifest_url = (string) ((JValue) json.Where ((v) => v ["context"].ToString () == "manifest").Select ((v) => v ["target_url"]).FirstOrDefault ())?.Value;
 		}
 		page++;
 	}
 
 	if (manifest_url == null)
 		throw new Exception ($"Could not find the manifest for {hash}. Is the commit already built by CI?");
-
 	return manifest_url;
 }
 
