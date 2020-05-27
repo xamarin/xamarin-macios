@@ -1,8 +1,8 @@
 #!/bin/bash -ex
 
-DOTNET_NUPKG_DIR=$(make print-abspath-variable VARIABLE=DOTNET_NUPKG_DIR)
-
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
+
+DOTNET_NUPKG_DIR=$(make -C jenkins print-abspath-variable VARIABLE=DOTNET_NUPKG_DIR | grep "^DOTNET_NUPKG_DIR=" | sed -e 's/^DOTNET_NUPKG_DIR=//')
 
 mkdir -p ../package/
 rm -f ../package/*.nupkg
