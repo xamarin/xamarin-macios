@@ -16,19 +16,25 @@ namespace Xharness.Jenkins.Reports {
 			writer.WriteLine ("## Failed tests");
 			writer.WriteLine ();
 
-			foreach (var test in failedTests) {
-				writer.Write ($" * {test.TestName}");
-				if (!string.IsNullOrEmpty (test.Mode))
-					writer.Write ($"/{test.Mode}");
-				if (!string.IsNullOrEmpty (test.Variation))
-					writer.Write ($"/{test.Variation}");
-				writer.Write ($": {test.ExecutionResult}");
-				if (!string.IsNullOrEmpty (test.FailureMessage))
-					writer.Write ($" ({test.FailureMessage})");
-				if (test.KnownFailure.HasValue)
-					writer.Write ($" Known issue: [{test.KnownFailure.Value.HumanMessage}]({test.KnownFailure.Value.IssueLink})");
-				writer.WriteLine ();
+			foreach (var group in failedTests.GroupBy ((v) => v.TestName)) {
+				if (group is IEnumerable<ITestTask> enumerableGroup) {
+					foreach (var test in enumerableGroup) {
+						writer.Write ($" * {group.Key}");
+						if (!string.IsNullOrEmpty (test.Mode))
+							writer.Write ($"/{test.Mode}");
+						if (!string.IsNullOrEmpty (test.Variation))
+							writer.Write ($"/{test.Variation}");
+						writer.Write ($": {test.ExecutionResult}");
+						if (!string.IsNullOrEmpty (test.FailureMessage))
+							writer.Write ($" ({test.FailureMessage})");
+						if (test.KnownFailure.HasValue)
+							writer.Write ($" Known issue: [{test.KnownFailure.Value.HumanMessage}]({test.KnownFailure.Value.IssueLink})");
+						writer.WriteLine ();
+					}
+					continue;
+				}
 			}
+
 		}
 
 		public void Write (IList<ITestTask> allTasks, StreamWriter writer)
