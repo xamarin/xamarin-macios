@@ -28,7 +28,7 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.msbuild.targets"/>
 
 	<!-- Add our own pre-build steps -->
-	<PropertyGroup>
+	<PropertyGroup Condition="'$(_UsingXamarinSdk)' != 'true'">
 		<BuildDependsOn>
 			BuildOnlySettings;
 			_CreateGeneratedSourcesDir;
@@ -38,7 +38,7 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 	</PropertyGroup>
 
 	<!-- Add our own Clean steps -->
-	<PropertyGroup>
+	<PropertyGroup Condition="'$(_UsingXamarinSdk)' != 'true'">
 		<CleanDependsOn>
 			_CleanGeneratedSources;
 			$(CleanDependsOn)

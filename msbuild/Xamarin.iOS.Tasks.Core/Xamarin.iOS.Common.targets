@@ -263,7 +263,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	</Target>
 
 	<!-- Insert our app bundle generation step -->
-	<PropertyGroup>
+	<PropertyGroup Condition="'$(_UsingXamarinSdk)' != 'true'">
 		<BuildDependsOn>
 			BuildOnlySettings;
 			PrepareForBuild;
