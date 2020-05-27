@@ -9,9 +9,9 @@ using Xharness.Jenkins.TestTasks;
 
 namespace Xharness.Jenkins {
 	// lets try and keep this class stateless, will make our lifes better
-	static class RunSimulatorTasksFactory {
+	class RunSimulatorTasksFactory {
 
-		public static async Task<IEnumerable<AppleTestTask>> Create (Jenkins jenkins, IProcessManager processManager, TestVariationsFactory testVariationsFactory)
+		public async Task<IEnumerable<AppleTestTask>> Create (Jenkins jenkins, IProcessManager processManager, TestVariationsFactory testVariationsFactory)
 		{
 			var runSimulatorTasks = new List<RunSimulatorTask> ();
 
@@ -81,7 +81,7 @@ namespace Xharness.Jenkins {
 			return rv;
 		}
 
-		static IEnumerable<RunSimulatorTask> Create (Jenkins jenkins, IProcessManager processManager, MSBuildTask buildTask)
+		IEnumerable<RunSimulatorTask> Create (Jenkins jenkins, IProcessManager processManager, MSBuildTask buildTask)
 		{
 			var runtasks = new List<RunSimulatorTask> ();
 

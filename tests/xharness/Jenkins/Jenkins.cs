@@ -294,7 +294,8 @@ namespace Xharness.Jenkins {
 
 			deviceLoader.LoadAllAsync ().DoNotAwait ();
 
-			var loadsim = RunSimulatorTasksFactory.Create (this, processManager, testVariationsFactory)
+			var simTasksFactory = new RunSimulatorTasksFactory ();
+			var loadsim = simTasksFactory.Create (this, processManager, testVariationsFactory)
 				.ContinueWith ((v) => { Console.WriteLine ("Simulator tasks created"); Tasks.AddRange (v.Result); });
 			
 			//Tasks.AddRange (await CreateRunSimulatorTasksAsync ());
