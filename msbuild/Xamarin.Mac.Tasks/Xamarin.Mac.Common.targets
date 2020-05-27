@@ -135,8 +135,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		</CreateAppBundleDependsOn>
 	</PropertyGroup>
 
-	<Target Name="_CreateAppBundle" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="$(CreateAppBundleDependsOn)" />
-
 	<PropertyGroup>
 		<_CodesignAppBundleDependsOn>
 			_CreateAppBundle;
