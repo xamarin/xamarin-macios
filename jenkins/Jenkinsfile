@@ -834,8 +834,11 @@ timestamps {
                                     hasXamarinMacTests = false
                                     echoError ("Failed to package Xamarin.Mac tests (exit code: ${exitCode})")
                                     failedStages.add (currentStage)
+                                } else {
+                                    def packaged_xm_tests = findFiles (glob: "tests/*.7z")
+                                    if (packaged_xm_tests.size () > 0)
+                                        uploadFiles ("tests/*.7z", "wrench", virtualPath)
                                 }
-                                uploadFiles ("tests/*.7z", "wrench", virtualPath)
                             }
 
                             timeout (time: 13, unit: 'HOURS') {
