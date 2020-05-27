@@ -14,6 +14,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 using Microsoft.DotNet.XHarness.iOS.Shared.Tasks;
 using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
+using Xharness.Jenkins.Reports;
 
 namespace Xharness.Jenkins {
 	public class Jenkins {
@@ -25,10 +26,13 @@ namespace Xharness.Jenkins {
 		readonly TestSelector testSelector;
 		readonly TestVariationsFactory testVariationsFactory;
 		readonly JenkinsDeviceLoader deviceLoader;
-
 		readonly ResourceManager resourceManager;
+
+		// report writers, do need to be a class instance because the have state.
+		readonly HtmlReportWriter htmlReportWriter;
+		readonly MarkdownReportWriter markdownReportWriter;
 		
-		bool populating = true;
+		public bool Populating { get; private set; } = true;
 
 		public Harness Harness { get; }
 		public bool IncludeAll;
@@ -84,7 +88,7 @@ namespace Xharness.Jenkins {
 			}
 		}
 
-		List<AppleTestTask> Tasks = new List<AppleTestTask> ();
+		List<ITestTask> Tasks = new List<ITestTask> ();
 		Dictionary<string, MakeTask> DependencyTasks = new Dictionary<string, MakeTask> ();
 
 		public IErrorKnowledgeBase ErrorKnowledgeBase => new ErrorKnowledgeBase ();
@@ -102,6 +106,8 @@ namespace Xharness.Jenkins {
 			testVariationsFactory = new TestVariationsFactory (this, processManager);
 			deviceLoader = new JenkinsDeviceLoader (Simulators, devices, Logs);
 			resourceManager = new ResourceManager ();
+			htmlReportWriter = new HtmlReportWriter (jenkins: this, resourceManager: resourceManager, resultParser: resultParser);
+			markdownReportWriter = new MarkdownReportWriter ();
 		}
 
 		IEnumerable<RunSimulatorTask> CreateRunSimulatorTaskAsync (MSBuildTask buildTask)
@@ -501,7 +507,7 @@ namespace Xharness.Jenkins {
 					var simulator = new SimulatorDevice (processManager, new TCCDatabase (processManager));
 					await simulator.KillEverything (MainLog);
 					await PopulateTasksAsync ();
-					populating = false;
+					Populating = false;
 				});
 				var preparations = new List<Task> ();
 				preparations.Add (populate);
@@ -577,7 +583,7 @@ namespace Xharness.Jenkins {
 					try {
 						var allTasks = Tasks.SelectMany ((v) =>
 						{
-							var rv = new List<AppleTestTask> ();
+							var rv = new List<ITestTask> ();
 							var runsim = v as AggregatedRunSimulatorTask;
 							if (runsim != null)
 								rv.AddRange (runsim.Tasks);
@@ -585,9 +591,9 @@ namespace Xharness.Jenkins {
 							return rv;
 						});
 
-						IEnumerable<AppleTestTask> find_tasks (StreamWriter writer, string ids)
+						IEnumerable<ITestTask> find_tasks (StreamWriter writer, string ids)
 						{
-							IEnumerable<AppleTestTask> tasks;
+							IEnumerable<ITestTask> tasks;
 							switch (request.Url.Query) {
 							case "?all":
 								tasks = Tasks;
@@ -603,7 +609,7 @@ namespace Xharness.Jenkins {
 								return Array.Empty<AppleTestTask> ();
 							default:
 								var id_inputs = ids.Substring (1).Split (',');
-								var rv = new List<AppleTestTask> (id_inputs.Length);
+								var rv = new List<ITestTask> (id_inputs.Length);
 								foreach (var id_input in id_inputs) {
 									if (int.TryParse (id_input, out var id)) {
 										var task = Tasks.FirstOrDefault ((t) => t.ID == id);
@@ -628,7 +634,9 @@ namespace Xharness.Jenkins {
 						switch (request.Url.LocalPath) {
 						case "/":
 							response.ContentType = System.Net.Mime.MediaTypeNames.Text.Html;
-							GenerateReportImpl (response.OutputStream);
+							using (var writer = new StreamWriter (response.OutputStream)) {
+								htmlReportWriter.Write (Tasks, writer);
+							}
 							break;
 						case "/set-option":
 							response.ContentType = System.Net.Mime.MediaTypeNames.Text.Plain;
@@ -891,11 +899,20 @@ namespace Xharness.Jenkins {
 					var report = Path.Combine (LogDirectory, "index.html");
 					var tmpreport = Path.Combine (LogDirectory, $"index-{Helpers.Timestamp}.tmp.html");
 					var tmpmarkdown = string.IsNullOrEmpty (Harness.MarkdownSummaryPath) ? string.Empty : (Harness.MarkdownSummaryPath + $".{Helpers.Timestamp}.tmp");
-					using (var stream = new FileStream (tmpreport, FileMode.Create, FileAccess.ReadWrite)) {
-						using (var markdown_writer = (string.IsNullOrEmpty (tmpmarkdown) ? null : new StreamWriter (tmpmarkdown))) {
-							GenerateReportImpl (stream, markdown_writer);
+
+					// write the html
+					using (var stream = new FileStream (tmpreport, FileMode.Create, FileAccess.ReadWrite)) 
+					using (var writer = new StreamWriter (stream)) { 
+						htmlReportWriter.Write (Tasks, writer);
+					}
+
+					// optionally, write the markdown
+					if (!string.IsNullOrEmpty (tmpmarkdown)) {
+						using (var writer = new StreamWriter (tmpmarkdown)) {
+							markdownReportWriter.Write (Tasks, writer);
 						}
 					}
+
 					if (File.Exists (report))
 						File.Delete (report);
 					File.Move (tmpreport, report);
@@ -913,635 +930,6 @@ namespace Xharness.Jenkins {
 			} catch (Exception e) {
 				this.MainLog.WriteLine ("Failed to write log: {0}", e);
 			}
-		}
-
-		string previous_test_runs;
-		void GenerateReportImpl (Stream stream, StreamWriter markdown_summary = null)
-		{
-			var id_counter = 0;
-
-			var allSimulatorTasks = new List<RunSimulatorTask> ();
-			var allExecuteTasks = new List<MacExecuteTask> ();
-			var allNUnitTasks = new List<NUnitExecuteTask> ();
-			var allMakeTasks = new List<MakeTask> ();
-			var allDeviceTasks = new List<RunDeviceTask> ();
-			var allDotNetTestTasks = new List<DotNetTestTask> ();
-			foreach (var task in Tasks) {
-				var aggregated = task as AggregatedRunSimulatorTask;
-				if (aggregated != null) {
-					allSimulatorTasks.AddRange (aggregated.Tasks);
-					continue;
-				}
-
-				var execute = task as MacExecuteTask;
-				if (execute != null) {
-					allExecuteTasks.Add (execute);
-					continue;
-				}
-
-				var nunit = task as NUnitExecuteTask;
-				if (nunit != null) {
-					allNUnitTasks.Add (nunit);
-					continue;
-				}
-
-				var make = task as MakeTask;
-				if (make != null) {
-					allMakeTasks.Add (make);
-					continue;
-				}
-
-				var run_device = task as RunDeviceTask;
-				if (run_device != null) {
-					allDeviceTasks.Add (run_device);
-					continue;
-				}
-
-				if (task is DotNetTestTask dotnet) {
-					allDotNetTestTasks.Add (dotnet);
-					continue;
-				}
-
-				throw new NotImplementedException ();
-			}
-
-			var allTasks = new List<ITestTask> ();
-			if (!populating) {
-				allTasks.AddRange (allExecuteTasks);
-				allTasks.AddRange (allSimulatorTasks);
-				allTasks.AddRange (allNUnitTasks);
-				allTasks.AddRange (allMakeTasks);
-				allTasks.AddRange (allDeviceTasks);
-				allTasks.AddRange (allDotNetTestTasks);
-			}
-
-			var failedTests = allTasks.Where ((v) => v.Failed);
-			var deviceNotFound = allTasks.Where ((v) => v.DeviceNotFound);
-			var unfinishedTests = allTasks.Where ((v) => !v.Finished);
-			var passedTests = allTasks.Where ((v) => v.Succeeded);
-			var runningTests = allTasks.Where ((v) => v.Running && !v.Waiting);
-			var buildingTests = allTasks.Where ((v) => v.Building && !v.Waiting);
-			var runningQueuedTests = allTasks.Where ((v) => v.Running && v.Waiting);
-			var buildingQueuedTests = allTasks.Where ((v) => v.Building && v.Waiting);
-
-			if (markdown_summary != null) {
-				var reportWriter = new MarkdownReportWriter ();
-				reportWriter.Write (allTasks, markdown_summary);
-			}
-
-			using (var writer = new StreamWriter (stream)) {
-				writer.WriteLine ("<!DOCTYPE html>");
-				writer.WriteLine ("<html onkeypress='keyhandler(event)' lang='en'>");
-				writer.WriteLine ("<meta charset=\"utf-8\"/>");
-				if (IsServerMode && populating)
-					writer.WriteLine ("<meta http-equiv=\"refresh\" content=\"1\">");
-				writer.WriteLine ("<head>");
-				writer.WriteLine ("<link rel='stylesheet' href='xharness.css'>");
-				writer.WriteLine ("<title>Test results</title>");
-				writer.WriteLine (@"<script type='text/javascript' src='xharness.js'></script>");
-				if (IsServerMode) {
-					writer.WriteLine ("<script type='text/javascript'>");
-					writer.WriteLine ("setTimeout (autorefresh, 1000);");
-					writer.WriteLine ("</script>");
-				}
-				writer.WriteLine ("</head>");
-				writer.WriteLine ("<body onload='oninitialload ();'>");
-
-				if (IsServerMode) {
-					writer.WriteLine ("<div id='quit' style='position:absolute; top: 20px; right: 20px;'><a href='javascript:quit()'>Quit</a><br/><a id='ajax-log-button' href='javascript:toggleAjaxLogVisibility ();'>Show log</a></div>");
-					writer.WriteLine ("<div id='ajax-log' style='position:absolute; top: 200px; right: 20px; max-width: 100px; display: none;'></div>");
-				}
-
-				writer.WriteLine ("<h1>Test results</h1>");
-
-				writer.WriteLine ($"<span id='x{id_counter++}' class='autorefreshable'>");
-				foreach (var log in Logs)
-					writer.WriteLine ("<a href='{0}' type='text/plain;charset=UTF-8'>{1}</a><br />", log.FullPath.Substring (LogDirectory.Length + 1), log.Description);
-				writer.WriteLine ("</span>");
-
-				var headerColor = "black";
-				if (unfinishedTests.Any ()) {
-					; // default
-				} else if (failedTests.Any ()) {
-					headerColor = "red";
-				} else if (deviceNotFound.Any ()) {
-					headerColor = "orange";
-				} else if (passedTests.Any ()) {
-					headerColor = "green";
-				} else {
-					headerColor = "gray";
-				}
-
-				writer.Write ($"<h2 style='color: {headerColor}'>");
-				writer.Write ($"<span id='x{id_counter++}' class='autorefreshable'>");
-				if (allTasks.Count == 0) {
-					writer.Write ($"Loading tests...");
-				} else if (unfinishedTests.Any ()) {
-					writer.Write ($"Test run in progress (");
-					var list = new List<string> ();
-					var grouped = allTasks.GroupBy ((v) => v.ExecutionResult).OrderBy ((v) => (int) v.Key);
-					foreach (var @group in grouped)
-						list.Add ($"<span style='color: {@group.GetTestColor ()}'>{@group.Key.ToString ()}: {@group.Count ()}</span>");
-					writer.Write (string.Join (", ", list));
-					writer.Write (")");
-				} else if (failedTests.Any ()) {
-					writer.Write ($"{failedTests.Count ()} tests failed, ");
-					if (deviceNotFound.Any ())
-						writer.Write ($"{deviceNotFound.Count ()} tests' device not found, ");
-					writer.Write ($"{passedTests.Count ()} tests passed");
-				} else if (deviceNotFound.Any ()) {
-					writer.Write ($"{deviceNotFound.Count ()} tests' device not found, {passedTests.Count ()} tests passed");
-				} else if (passedTests.Any ()) {
-					writer.Write ($"All {passedTests.Count ()} tests passed");
-				} else {
-					writer.Write ($"No tests selected.");
-				}
-				writer.Write ("</span>");
-				writer.WriteLine ("</h2>");
-				if (allTasks.Count > 0) {
-					writer.WriteLine ($"<ul id='nav'>");
-					if (IsServerMode) {
-						writer.WriteLine (@"
-	<li>Select
-		<ul>
-			<li class=""adminitem""><a href='javascript:sendrequest (""/select?all"");'>All tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""/select?all-device"");'>All device tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""/select?all-simulator"");'>All simulator tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""/select?all-ios"");'>All iOS tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""/select?all-tvos"");'>All tvOS tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""/select?all-watchos"");'>All watchOS tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""/select?all-mac"");'>All Mac tests</a></li>
-		</ul>
-	</li>
-	<li>Deselect
-		<ul>
-			<li class=""adminitem""><a href='javascript:sendrequest (""/deselect?all"");'>All tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""/deselect?all-device"");'>All device tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""/deselect?all-simulator"");'>All simulator tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""/deselect?all-ios"");'>All iOS tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""/deselect?all-tvos"");'>All tvOS tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""/deselect?all-watchos"");'>All watchOS tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""/deselect?all-mac"");'>All Mac tests</a></li>
-		</ul>
-	</li>
-	<li>Execute
-		<ul>
-			<li class=""adminitem""><a href='javascript:sendrequest (""/run?alltests"");'>Run all tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""/run?selected"");'>Run all selected tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""/run?failed"");'>Run all failed tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""/build?all"");'>Build all tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""/build?selected"");'>Build all selected tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""/build?failed"");'>Build all failed tests</a></li>
-		</ul>
-	</li>");
-					}
-					writer.WriteLine (@"
-	<li>Toggle visibility
-		<ul>
-			<li class=""adminitem""><a href='javascript:toggleAll (true);'>Expand all</a></li>
-			<li class=""adminitem""><a href='javascript:toggleAll (false);'>Collapse all</a></li>
-			<li class=""adminitem""><a href='javascript:toggleVisibility (""toggleable-ignored"");'>Hide/Show ignored tests</a></li>
-		</ul>
-	</li>");
-					if (IsServerMode) {
-						var include_system_permission_option = string.Empty;
-						var include_system_permission_icon = string.Empty;
-						if (Harness.IncludeSystemPermissionTests == null) {
-							include_system_permission_option = "include-permission-tests";
-							include_system_permission_icon = "2753";
-						} else if (Harness.IncludeSystemPermissionTests.Value) {
-							include_system_permission_option = "skip-permission-tests";
-							include_system_permission_icon = "2705";
-						} else {
-							include_system_permission_option = "clear-permission-tests";
-							include_system_permission_icon = "274C";
-						}
-						writer.WriteLine ($@"
-	<li>Reload
-		<ul>
-			<li class=""adminitem""><a href='javascript:sendrequest (""/reload-devices"");'>Devices</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""/reload-simulators"");'>Simulators</a></li>
-		</ul>
-	</li>
-
-	<li>Options
-			<ul>
-				<li class=""adminitem""><span id='{id_counter++}' class='autorefreshable'><a href='javascript:sendrequest (""/set-option?{(CleanSuccessfulTestRuns ? "do-not-clean" : "clean")}"");'>&#x{(CleanSuccessfulTestRuns ? "2705" : "274C")} Clean successful test runs</a></span></li>
-				<li class=""adminitem""><span id='{id_counter++}' class='autorefreshable'><a href='javascript:sendrequest (""/set-option?{(UninstallTestApp ? "do-not-uninstall-test-app" : "uninstall-test-app")}"");'>&#x{(UninstallTestApp ? "2705" : "274C")} Uninstall the app from device before and after the test run</a></span></li>
-				<li class=""adminitem""><span id='{id_counter++}' class='autorefreshable'><a href='javascript:sendrequest (""/set-option?{include_system_permission_option}"");'>&#x{include_system_permission_icon} Run tests that require system permissions (might put up permission dialogs)</a></span></li>
-			</ul>
-	</li>
-	");
-						if (previous_test_runs == null) {
-							var sb = new StringBuilder ();
-							var previous = Directory.GetDirectories (Path.GetDirectoryName (LogDirectory)).
-									Select ((v) => Path.Combine (v, "index.html")).
-									    Where (File.Exists);
-							if (previous.Any ()) {
-								sb.AppendLine ("\t<li>Previous test runs");
-								sb.AppendLine ("\t\t<ul>");
-								foreach (var prev in previous.OrderBy ((v) => v).Reverse ()) {
-									var dir = Path.GetFileName (Path.GetDirectoryName (prev));
-									var ts = dir;
-									var description = File.ReadAllLines (prev).Where ((v) => v.StartsWith ("<h2", StringComparison.Ordinal)).FirstOrDefault ();
-									if (description != null) {
-										description = description.Substring (description.IndexOf ('>') + 1); // <h2 ...>
-										description = description.Substring (description.IndexOf ('>') + 1); // <span id= ...>
-
-										var h2end = description.LastIndexOf ("</h2>", StringComparison.Ordinal);
-										if (h2end > -1)
-											description = description.Substring (0, h2end);
-										description = description.Substring (0, description.LastIndexOf ('<'));
-									} else {
-										description = "<unknown state>";
-									}
-									sb.AppendLine ($"\t\t\t<li class=\"adminitem\"><a href='/{dir}/index.html'>{ts}: {description}</a></li>");
-								}
-								sb.AppendLine ("\t\t</ul>");
-								sb.AppendLine ("\t</li>");
-							}
-							previous_test_runs = sb.ToString ();
-						}
-						if (!string.IsNullOrEmpty (previous_test_runs))
-							writer.Write (previous_test_runs);
-					}
-					writer.WriteLine ("</ul>");
-				}
-
-				writer.WriteLine ("<div id='test-table' style='width: 100%; display: flex;'>");
-				writer.WriteLine ("<div id='test-list'>");
-				var orderedTasks = allTasks.GroupBy (v => v.TestName);
-
-				if (IsServerMode) {
-					// In server mode don't take into account anything that can change during a test run
-					// when ordering, since it's confusing to have the tests reorder by themselves while
-					// you're looking at the web page.
-					orderedTasks = orderedTasks.OrderBy ((v) => v.Key, StringComparer.OrdinalIgnoreCase);
-				} else {
-					// Put failed tests at the top and ignored tests at the end.
-					// Then order alphabetically.
-					orderedTasks = orderedTasks.OrderBy ((v) =>
-					 {
-						 if (v.Any ((t) => t.Failed))
-							 return -1;
-						 if (v.All ((t) => t.Ignored))
-							 return 1;
-						 return 0;
-					 }).
-					ThenBy ((v) => v.Key, StringComparer.OrdinalIgnoreCase);
-				}
-				foreach (var group in orderedTasks) {
-					var singleTask = group.Count () == 1;
-					var groupId = group.Key.Replace (' ', '-');
-
-					// Test header for multiple tests
-					if (!singleTask) {
-						var autoExpand = !IsServerMode && group.Any ((v) => v.Failed);
-						var ignoredClass = group.All ((v) => v.Ignored) ? "toggleable-ignored" : string.Empty;
-						var defaultExpander = autoExpand ? "-" : "+";
-						var defaultDisplay = autoExpand ? "block" : "none";
-						writer.Write ($"<div class='pdiv {ignoredClass}'>");
-						writer.Write ($"<span id='button_container2_{groupId}' class='expander' onclick='javascript: toggleContainerVisibility2 (\"{groupId}\");'>{defaultExpander}</span>");
-						writer.Write ($"<span id='x{id_counter++}' class='p1 autorefreshable' onclick='javascript: toggleContainerVisibility2 (\"{groupId}\");'>{group.Key}{RenderTextStates (group)}</span>");
-						if (IsServerMode) {
-							var groupIds = string.Join (",", group.Where ((v) => !v.KnownFailure.HasValue).Select ((v) => v.ID.ToString ()));
-							writer.Write ($" <span class='runall'><a href='javascript: runtest (\"{groupIds}\");'>Run all</a> <a href='javascript: buildtest (\"{groupIds}\");'>Build all</a></span>");
-						}
-						writer.WriteLine ("</div>");
-						writer.WriteLine ($"<div id='test_container2_{groupId}' class='togglable' style='display: {defaultDisplay}; margin-left: 20px;'>");
-					}
-
-					// Test data
-					var groupedByMode = group.GroupBy ((v) => v.Mode);
-					foreach (var modeGroup in groupedByMode) {
-						var multipleModes = modeGroup.Count () > 1;
-						if (multipleModes) {
-							var modeGroupId = id_counter++.ToString ();
-							var autoExpand = !IsServerMode && modeGroup.Any ((v) => v.Failed);
-							var ignoredClass = modeGroup.All ((v) => v.Ignored) ? "toggleable-ignored" : string.Empty;
-							var defaultExpander = autoExpand ? "-" : "+";
-							var defaultDisplay = autoExpand ? "block" : "none";
-							writer.Write ($"<div class='pdiv {ignoredClass}'>");
-							writer.Write ($"<span id='button_container2_{modeGroupId}' class='expander' onclick='javascript: toggleContainerVisibility2 (\"{modeGroupId}\");'>{defaultExpander}</span>");
-							writer.Write ($"<span id='x{id_counter++}' class='p2 autorefreshable' onclick='javascript: toggleContainerVisibility2 (\"{modeGroupId}\");'>{modeGroup.Key}{RenderTextStates (modeGroup)}</span>");
-							if (IsServerMode) {
-								var modeGroupIds = string.Join (",", modeGroup.Where ((v) => !v.KnownFailure.HasValue).Select ((v) => v.ID.ToString ()));
-								writer.Write ($" <span class='runall'><a href='javascript: runtest (\"{modeGroupIds}\");'>Run all</a> <a href='javascript: buildtest (\"{modeGroupIds}\");'>Build all</a></span>");
-							}
-							writer.WriteLine ("</div>");
-
-							writer.WriteLine ($"<div id='test_container2_{modeGroupId}' class='togglable' style='display: {defaultDisplay}; margin-left: 20px;'>");
-						}
-						foreach (var test in modeGroup.OrderBy ((v) => v.Variation, StringComparer.OrdinalIgnoreCase)) {
-							var runTest = test as RunTestTask;
-							string state;
-							state = test.ExecutionResult.ToString ();
-							var log_id = id_counter++;
-							var logs = test.AggregatedLogs.ToList ();
-							string title;
-							if (multipleModes) {
-								title = test.Variation ?? "Default";
-							} else if (singleTask) {
-								title = test.TestName;
-							} else {
-								title = test.Mode;
-							}
-
-							var autoExpand = !IsServerMode && test.Failed;
-							var ignoredClass = test.Ignored ? "toggleable-ignored" : string.Empty;
-							var defaultExpander = autoExpand ? "&nbsp;" : "+";
-							var defaultDisplay = autoExpand ? "block" : "none";
-							var buildOnly = test.BuildOnly ? ", BuildOnly" : string.Empty;
-
-							writer.Write ($"<div class='pdiv {ignoredClass}'>");
-							writer.Write ($"<span id='button_{log_id}' class='expander' onclick='javascript: toggleLogVisibility (\"{log_id}\");'>{defaultExpander}</span>");
-							// we have a very common error we want to make this easier for the person that is dealing with the results
-							var knownFailure = string.Empty;
-							if (test.KnownFailure.HasValue)
-								knownFailure = $" <a href='{test.KnownFailure.Value.IssueLink}'>{test.KnownFailure.Value.HumanMessage}</a>";
-							writer.Write ($"<span id='x{id_counter++}' class='p3 autorefreshable' onclick='javascript: toggleLogVisibility (\"{log_id}\");'>{title} (<span style='color: {test.GetTestColor ()}'>{state}{knownFailure}</span>{buildOnly}) </span>");
-							if (IsServerMode) {
-								writer.Write ($" <span id='x{id_counter++}' class='autorefreshable'>");
-								if (test.Waiting) {
-									writer.Write ($" <a class='runall' href='javascript:stoptest ({test.ID})'>Stop</a> ");
-								} else if (test.InProgress && !test.Built) {
-									// Stopping is not implemented for tasks that are already executing
-								} else {
-									writer.Write ($" <a class='runall' href='javascript:runtest ({test.ID})'>Run</a> ");
-									writer.Write ($" <a class='runall' href='javascript:buildtest ({test.ID})'>Build</a> ");
-								}
-								writer.Write ("</span> ");
-							}
-							writer.WriteLine ("</div>");
-							writer.WriteLine ($"<div id='logs_{log_id}' class='autorefreshable logs togglable' data-onautorefresh='{log_id}' style='display: {defaultDisplay};'>");
-
-							var testAssemblies = test.ReferencedNunitAndXunitTestAssemblies;
-							if (testAssemblies.Any ())
-								writer.WriteLine ($"Test assemblies:<br/>- {String.Join ("<br/>- ", testAssemblies)}<br />");
-
-							if (test.KnownFailure.HasValue)
-								writer.WriteLine ($"Known failure: <a href='{test.KnownFailure.Value.IssueLink}'>{test.KnownFailure.Value.HumanMessage}</a> <br />");
-
-							if (!string.IsNullOrEmpty (test.FailureMessage)) {
-								var msg = test.FailureMessage.AsHtml ();
-								var prefix = test.Ignored ? "Ignored" : "Failure";
-								if (test.FailureMessage.Contains ('\n')) {
-									writer.WriteLine ($"{prefix}:<br /> <div style='margin-left: 20px;'>{msg}</div>");
-								} else {
-									writer.WriteLine ($"{prefix}: {msg} <br />");
-								}
-							}
-							var progressMessage = test.ProgressMessage;
-							if (!string.IsNullOrEmpty (progressMessage))
-								writer.WriteLine (progressMessage.AsHtml () + " <br />");
-
-							if (runTest != null) {
-								if (runTest.BuildTask.Duration.Ticks > 0) {
-									writer.WriteLine ($"Project file: {runTest.BuildTask.ProjectFile} <br />");
-									writer.WriteLine ($"Platform: {runTest.BuildTask.ProjectPlatform} Configuration: {runTest.BuildTask.ProjectConfiguration} <br />");
-									IEnumerable<IDevice> candidates = (runTest as RunDeviceTask)?.Candidates;
-									if (candidates == null)
-										candidates = (runTest as RunSimulatorTask)?.Candidates;
-									if (candidates != null) {
-										writer.WriteLine ($"Candidate devices:<br />");
-										foreach (var candidate in candidates)
-											writer.WriteLine ($"&nbsp;&nbsp;&nbsp;&nbsp;{candidate.Name} (Version: {candidate.OSVersion})<br />");
-									}
-									writer.WriteLine ($"Build duration: {runTest.BuildTask.Duration} <br />");
-								}
-								if (test.Duration.Ticks > 0)
-									writer.WriteLine ($"Time Elapsed:  {test.TestName} - (waiting time : {test.WaitingDuration} , running time : {test.Duration}) <br />");
-								var runDeviceTest = runTest as RunDeviceTask;
-								if (runDeviceTest?.Device != null) {
-									if (runDeviceTest.CompanionDevice != null) {
-										writer.WriteLine ($"Device: {runDeviceTest.Device.Name} ({runDeviceTest.CompanionDevice.Name}) <br />");
-									} else {
-										writer.WriteLine ($"Device: {runDeviceTest.Device.Name} <br />");
-									}
-								}
-							} else {
-								if (test.Duration.Ticks > 0)
-									writer.WriteLine ($"Duration: {test.Duration} <br />");
-							}
-
-							if (logs.Count () > 0) {
-								foreach (var log in logs) {
-									log.Flush ();
-									var exists = File.Exists (log.FullPath);
-									string log_type = System.Web.MimeMapping.GetMimeMapping (log.FullPath);
-									string log_target;
-									switch (log_type) {
-									case "text/xml":
-										log_target = "_top";
-										break;
-									case "text/plain":
-										log_type += ";charset=UTF-8";
-										goto default;
-									default:
-										log_target = "_self";
-										break;
-									}
-									if (!exists) {
-										writer.WriteLine ("<a href='{0}' type='{2}' target='{3}'>{1}</a> (does not exist)<br />", LinkEncode (log.FullPath.Substring (LogDirectory.Length + 1)), log.Description, log_type, log_target);
-									} else if (log.Description == LogType.BuildLog.ToString ()) {
-										var binlog = log.FullPath.Replace (".txt", ".binlog");
-										if (File.Exists (binlog)) {
-											var textLink = string.Format ("<a href='{0}' type='{2}' target='{3}'>{1}</a>", LinkEncode (log.FullPath.Substring (LogDirectory.Length + 1)), log.Description, log_type, log_target);
-											var binLink = string.Format ("<a href='{0}' type='{2}' target='{3}' style='display:{4}'>{1}</a><br />", LinkEncode (binlog.Substring (LogDirectory.Length + 1)), "Binlog download", log_type, log_target, test.Building ? "none" : "inline");
-											writer.Write ("{0} {1}", textLink, binLink);
-										} else {
-											writer.WriteLine ("<a href='{0}' type='{2}' target='{3}'>{1}</a><br />", LinkEncode (log.FullPath.Substring (LogDirectory.Length + 1)), log.Description, log_type, log_target);
-										}
-									} else {
-										writer.WriteLine ("<a href='{0}' type='{2}' target='{3}'>{1}</a><br />", LinkEncode (log.FullPath.Substring (LogDirectory.Length + 1)), log.Description, log_type, log_target);
-									}
-									if (!exists) {
-										// Don't try to parse files that don't exist
-									} else if (log.Description == LogType.TestLog.ToString () || log.Description ==  LogType.ExecutionLog.ToString () || log.Description == LogType.ExecutionLog.ToString ()) {
-										string summary;
-										List<string> fails;
-										try {
-											using (var reader = log.GetReader ()) {
-												Tuple<long, object> data;
-												if (!log_data.TryGetValue (log, out data) || data.Item1 != reader.BaseStream.Length) {
-													summary = string.Empty;
-													fails = new List<string> ();
-													while (!reader.EndOfStream) {
-														string line = reader.ReadLine ()?.Trim ();
-														if (line == null)
-															continue;
-														if (line.StartsWith ("Tests run:", StringComparison.Ordinal)) {
-															summary = line;
-														} else if (line.StartsWith ("[FAIL]", StringComparison.Ordinal)) {
-															if (fails.Count < 100) {
-																fails.Add (line);
-															} else if (fails.Count == 100) {
-																fails.Add ("...");
-															}
-														}
-													}
-												} else {
-													var data_tuple = (Tuple<string, List<string>>) data.Item2;
-													summary = data_tuple.Item1;
-													fails = data_tuple.Item2;
-												}
-											}
-											if (fails.Count > 0) {
-												writer.WriteLine ("<div style='padding-left: 15px;'>");
-												foreach (var fail in fails)
-													writer.WriteLine ("{0} <br />", fail.AsHtml ());
-												writer.WriteLine ("</div>");
-											}
-											if (!string.IsNullOrEmpty (summary))
-												writer.WriteLine ("<span style='padding-left: 15px;'>{0}</span><br />", summary);
-										} catch (Exception ex) {
-											writer.WriteLine ("<span style='padding-left: 15px;'>Could not parse log file: {0}</span><br />", ex.Message.AsHtml ());
-										}
-									} else if (log.Description == LogType.BuildLog.ToString ()) {
-										HashSet<string> errors;
-										try {
-											using (var reader = log.GetReader ()) {
-												Tuple<long, object> data;
-												if (!log_data.TryGetValue (log, out data) || data.Item1 != reader.BaseStream.Length) {
-													errors = new HashSet<string> ();
-													while (!reader.EndOfStream) {
-														string line = reader.ReadLine ()?.Trim ();
-														if (line == null)
-															continue;
-														// Sometimes we put error messages in pull request descriptions
-														// Then Jenkins create environment variables containing the pull request descriptions (and other pull request data)
-														// So exclude any lines matching 'ghprbPull', to avoid reporting those environment variables as build errors.
-														if (line.Contains (": error") && !line.Contains ("ghprbPull")) {
-															errors.Add (line);
-															if (errors.Count > 20) {
-																errors.Add ("...");
-																break;
-															}
-														}
-													}
-													log_data [log] = new Tuple<long, object> (reader.BaseStream.Length, errors);
-												} else {
-													errors = (HashSet<string>) data.Item2;
-												}
-											}
-											if (errors.Count > 0) {
-												writer.WriteLine ("<div style='padding-left: 15px;'>");
-												foreach (var error in errors)
-													writer.WriteLine ("{0} <br />",  error.AsHtml ());
-												writer.WriteLine ("</div>");
-											}
-										} catch (Exception ex) {
-											writer.WriteLine ("<span style='padding-left: 15px;'>Could not parse log file: {0}</span><br />", ex.Message.AsHtml ());
-										}
-									} else if (log.Description == LogType.NUnitResult.ToString () || log.Description == LogType.XmlLog.ToString () ) {
-										try {
-											if (File.Exists (log.FullPath) && new FileInfo (log.FullPath).Length > 0) {
-												if (resultParser.IsValidXml (log.FullPath, out var jargon)) {
-													resultParser.GenerateTestReport (writer, log.FullPath, jargon);
-												}
-											}
-										} catch (Exception ex) {
-											writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {log.Description}: {ex.Message.AsHtml ()}</span><br />");
-										}
-									}
-								}
-							}
-							writer.WriteLine ("</div>");
-						}
-						if (multipleModes)
-							writer.WriteLine ("</div>");
-					}
-					if (!singleTask)
-						writer.WriteLine ("</div>");
-				}
-				writer.WriteLine ("</div>");
-				if (IsServerMode) {
-					writer.WriteLine ("<div id='test-status' style='margin-left: 100px;' class='autorefreshable'>");
-					if (failedTests.Count () == 0) {
-						foreach (var group in failedTests.GroupBy ((v) => v.TestName)) {
-							var enumerableGroup = group as IEnumerable<AppleTestTask>;
-							if (enumerableGroup != null) {
-								writer.WriteLine ("<a href='#test_{2}'>{0}</a> ({1})<br />", group.Key, string.Join (", ", enumerableGroup.Select ((v) => string.Format ("<span style='color: {0}'>{1}</span>", v.GetTestColor (), string.IsNullOrEmpty (v.Mode) ? v.ExecutionResult.ToString () : v.Mode)).ToArray ()), group.Key.Replace (' ', '-'));
-								continue;
-							}
-
-							throw new NotImplementedException ();
-						}
-					}
-
-					if (buildingTests.Any ()) {
-						writer.WriteLine ($"<h3>{buildingTests.Count ()} building tests:</h3>");
-						foreach (var test in buildingTests) {
-							var runTask = test as RunTestTask;
-							var buildDuration = string.Empty;
-							if (runTask != null)
-								buildDuration = runTask.BuildTask.Duration.ToString ();
-							writer.WriteLine ($"<a href='#test_{test.TestName}'>{test.TestName} ({test.Mode})</a> {buildDuration}<br />");
-						}
-					}
-
-					if (runningTests.Any ()) {
-						writer.WriteLine ($"<h3>{runningTests.Count ()} running tests:</h3>");
-						foreach (var test in runningTests) {
-							writer.WriteLine ($"<a href='#test_{test.TestName}'>{test.TestName} ({test.Mode})</a> {test.Duration.ToString ()} {("\n\t" + test.ProgressMessage).AsHtml ()}<br />");
-						}
-					}
-
-					if (buildingQueuedTests.Any ()) {
-						writer.WriteLine ($"<h3>{buildingQueuedTests.Count ()} tests in build queue:</h3>");
-						foreach (var test in buildingQueuedTests) {
-							writer.WriteLine ($"<a href='#test_{test.TestName}'>{test.TestName} ({test.Mode})</a><br />");
-						}
-					}
-
-					if (runningQueuedTests.Any ()) {
-						writer.WriteLine ($"<h3>{runningQueuedTests.Count ()} tests in run queue:</h3>");
-						foreach (var test in runningQueuedTests) {
-							writer.WriteLine ($"<a href='#test_{test.TestName}'>{test.TestName} ({test.Mode})</a><br />");
-						}
-					}
-
-					var resources = ResourceManager.GetAll ();
-					if (resources.Any ()) {
-						writer.WriteLine ($"<h3>Devices/Resources:</h3>");
-						foreach (var dr in resources.OrderBy ((v) => v.Description, StringComparer.OrdinalIgnoreCase)) {
-							writer.WriteLine ($"{dr.Description} - {dr.Users}/{dr.MaxConcurrentUsers} users - {dr.QueuedUsers} in queue<br />");
-						}
-					}
-				}
-				writer.WriteLine ("</div>");
-				writer.WriteLine ("</div>");
-				writer.WriteLine ("</body>");
-				writer.WriteLine ("</html>");
-			}
-		}
-		Dictionary<ILog, Tuple<long, object>> log_data = new Dictionary<ILog, Tuple<long, object>> ();
-
-		static string LinkEncode (string path)
-		{
-			return System.Web.HttpUtility.UrlEncode (path).Replace ("%2f", "/").Replace ("+", "%20");
-		}
-
-		string RenderTextStates (IEnumerable<ITestTask> tests)
-		{
-			// Create a collection of all non-ignored tests in the group (unless all tests were ignored).
-			var allIgnored = tests.All ((v) => v.ExecutionResult == TestExecutingResult.Ignored);
-			IEnumerable<ITestTask> relevantGroup;
-			if (allIgnored) {
-				relevantGroup = tests;
-			} else {
-				relevantGroup = tests.Where ((v) => v.ExecutionResult != TestExecutingResult.NotStarted);
-			}
-			if (!relevantGroup.Any ())
-				return string.Empty;
-			
-			var results = relevantGroup
-				.GroupBy ((v) => v.ExecutionResult)
-				.Select ((v) => v.First ()) // GroupBy + Select = Distinct (lambda)
-				.OrderBy ((v) => v.ID)
-				.Select ((v) => $"<span style='color: {v.GetTestColor ()}'>{v.ExecutionResult.ToString ()}</span>")
-				.ToArray ();
-			return " (" + string.Join ("; ", results) + ")";
 		}
 	}
 }

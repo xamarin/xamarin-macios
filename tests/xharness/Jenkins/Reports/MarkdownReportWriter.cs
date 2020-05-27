@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.DotNet.XHarness.iOS.Shared.Tasks;
 
 #nullable enable
-namespace Xharness.Jenkins {
+namespace Xharness.Jenkins.Reports {
 
 	/// <summary>
 	/// Knows how to write markdown reports of the executed tasks.
