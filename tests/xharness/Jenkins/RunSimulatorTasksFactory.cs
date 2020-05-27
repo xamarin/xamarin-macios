@@ -5,13 +5,14 @@ using System.Threading.Tasks;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
+using Microsoft.DotNet.XHarness.iOS.Shared.Tasks;
 using Xharness.Jenkins.TestTasks;
 
 namespace Xharness.Jenkins {
 	// lets try and keep this class stateless, will make our lifes better
 	class RunSimulatorTasksFactory {
 
-		public async Task<IEnumerable<AppleTestTask>> Create (Jenkins jenkins, IProcessManager processManager, TestVariationsFactory testVariationsFactory)
+		public async Task<IEnumerable<ITestTask>> CreateAsync (Jenkins jenkins, IProcessManager processManager, TestVariationsFactory testVariationsFactory)
 		{
 			var runSimulatorTasks = new List<RunSimulatorTask> ();
 
@@ -47,7 +48,7 @@ namespace Xharness.Jenkins {
 							Dependency = project.Dependency,
 						};
 						derived.CloneTestProject (jenkins.MainLog, processManager, pair.Item1);
-						var simTasks = Create (jenkins, processManager, derived);
+						var simTasks = CreateAsync (jenkins, processManager, derived);
 						runSimulatorTasks.AddRange (simTasks);
 						foreach (var task in simTasks) {
 							if (configurations.Length > 1)
@@ -81,7 +82,7 @@ namespace Xharness.Jenkins {
 			return rv;
 		}
 
-		IEnumerable<RunSimulatorTask> Create (Jenkins jenkins, IProcessManager processManager, MSBuildTask buildTask)
+		IEnumerable<RunSimulatorTask> CreateAsync (Jenkins jenkins, IProcessManager processManager, MSBuildTask buildTask)
 		{
 			var runtasks = new List<RunSimulatorTask> ();
 
