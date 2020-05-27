@@ -130,8 +130,6 @@
     <Compile Include="Jenkins\TestData.cs" />
     <Compile Include="TestTargetExtensions.cs" />
     <Compile Include="TestPlatformExtensions.cs" />
-    <Compile Include="Jenkins\IReportWriter.cs" />
-    <Compile Include="Jenkins\MarkdownReportWriter.cs" />
     <Compile Include="Jenkins\MacTestTasksEnumerable.cs" />
     <Compile Include="MacFlavorsExtensions.cs" />
     <Compile Include="Jenkins\NUnitTestTasksEnumerable.cs" />
@@ -139,6 +137,9 @@
     <Compile Include="Jenkins\JenkinsDeviceLoader.cs" />
     <Compile Include="Jenkins\ResourceManager.cs" />
     <Compile Include="Jenkins\PeriodicCommand.cs" />
+    <Compile Include="Jenkins\Reports\IReportWriter.cs" />
+    <Compile Include="Jenkins\Reports\MarkdownReportWriter.cs" />
+    <Compile Include="Jenkins\Reports\HtmlReportWriter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\tools\common\SdkVersions.cs">
@@ -160,5 +161,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Jenkins\Reports\" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

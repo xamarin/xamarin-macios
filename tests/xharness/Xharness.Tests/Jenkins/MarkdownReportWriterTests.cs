@@ -4,7 +4,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Tasks;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Moq;
 using NUnit.Framework;
-using Xharness.Jenkins;
+using Xharness.Jenkins.Reports;
 
 namespace Xharness.Tests.Jenkins {
 	[TestFixture]
