@@ -301,7 +301,7 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild/%: Xamarin.Localization.M
 DOTNET_SHARED_FILES = $(IOS_TARGETS) $(IOS_BINDING_TARGETS) $(foreach dll,$(IOS_TASK_ASSEMBLIES),$(dll).dll $(dll).pdb)
 DOTNET_IOS_FILES = $(DOTNET_SHARED_FILES) FrameworkList.xml
 DOTNET_TVOS_FILES = $(TVOS_TARGETS) FrameworkList.xml
-DOTNET_WATCHOS_FILES = $(WATCHOS_TARGETS) FrameworkList.xml
+DOTNET_WATCHOS_FILES = $(WATCH_TARGETS) FrameworkList.xml
 DOTNET_MACOS_FILES = $(MAC_TARGETS) $(MAC_BINDING_TARGETS) $(foreach dll,$(MAC_TASK_ASSEMBLIES),$(dll).dll $(dll).pdb) FrameworkList.xml
 
 # iOS
