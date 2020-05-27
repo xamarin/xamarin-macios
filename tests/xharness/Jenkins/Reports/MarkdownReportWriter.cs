@@ -17,8 +17,7 @@ namespace Xharness.Jenkins.Reports {
 			writer.WriteLine ();
 
 			foreach (var group in failedTests.GroupBy ((v) => v.TestName)) {
-				var enumerableGroup = group as IEnumerable<ITestTask>;
-				if (enumerableGroup != null) {
+				if (group is IEnumerable<ITestTask> enumerableGroup) {
 					foreach (var test in enumerableGroup) {
 						writer.Write ($" * {group.Key}");
 						if (!string.IsNullOrEmpty (test.Mode))
