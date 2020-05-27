@@ -5,11 +5,16 @@ using NUnit.Framework;
 namespace Xamarin.Tests {
 	[TestFixture]
 	public class DotNetProjectTest {
-		void Build (string project)
+		void Build (string project, string subdir = null)
 		{
-			var project_path = Path.Combine (Configuration.SourceRoot, "tests", "dotnet", project, project + ".csproj");
+			var project_dir = Path.Combine (Configuration.SourceRoot, "tests", "dotnet", project);
+			if (!string.IsNullOrEmpty (subdir))
+				project_dir = Path.Combine (project_dir, subdir);
+
+			var project_path = Path.Combine (project_dir, project + ".csproj");
 			if (!File.Exists (project_path))
 				project_path = Path.ChangeExtension (project_path, "sln");
+
 			DotNet.AssertBuild (project_path);
 		}
 
@@ -35,6 +40,15 @@ namespace Xamarin.Tests {
 		public void BuildMyWatchApp ()
 		{
 			Build ("MyWatchApp");
+		}
+
+		[TestCase ("iOS")]
+		[TestCase ("tvOS")]
+		[TestCase ("watchOS")]
+		[TestCase ("macOS")]
+		public void BuildMyClassLibrary (string platform)
+		{
+			Build ("MyClassLibrary", platform);
 		}
 	}
 }
