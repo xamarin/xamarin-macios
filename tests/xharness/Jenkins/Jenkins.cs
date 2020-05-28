@@ -21,7 +21,7 @@ namespace Xharness.Jenkins {
 		public readonly ISimulatorLoader Simulators;
 		readonly IHardwareDeviceLoader devices;
 		readonly IProcessManager processManager;
-		readonly ITunnelBore tunnelBore;
+		public ITunnelBore TunnelBore { get; private set; }
 		readonly TestSelector testSelector;
 		readonly TestVariationsFactory testVariationsFactory;
 		readonly JenkinsDeviceLoader deviceLoader;
@@ -96,7 +96,7 @@ namespace Xharness.Jenkins {
 		public Jenkins (Harness harness, IProcessManager processManager, IResultParser resultParser, ITunnelBore tunnelBore)
 		{
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
-			this.tunnelBore = tunnelBore ?? throw new ArgumentNullException (nameof (tunnelBore));
+			this.TunnelBore = tunnelBore ?? throw new ArgumentNullException (nameof (tunnelBore));
 			Harness = harness ?? throw new ArgumentNullException (nameof (harness));
 			Simulators = new SimulatorLoader (processManager);
 			devices = new HardwareDeviceLoader (processManager);
@@ -106,53 +106,6 @@ namespace Xharness.Jenkins {
 			resourceManager = new ResourceManager ();
 			htmlReportWriter = new HtmlReportWriter (jenkins: this, resourceManager: resourceManager, resultParser: resultParser);
 			markdownReportWriter = new MarkdownReportWriter ();
-		}
-
-		IEnumerable<RunSimulatorTask> CreateRunSimulatorTaskAsync (MSBuildTask buildTask)
-		{
-			var runtasks = new List<RunSimulatorTask> ();
-
-			TestTarget [] targets = buildTask.Platform.GetAppRunnerTargets ();
-			TestPlatform [] platforms;
-			bool [] ignored;
-
-			switch (buildTask.Platform) {
-			case TestPlatform.tvOS:
-				platforms = new TestPlatform [] { TestPlatform.tvOS };
-				ignored = new [] { false };
-				break;
-			case TestPlatform.watchOS:
-				platforms = new TestPlatform [] { TestPlatform.watchOS_32 };
-				ignored = new [] { false };
-				break;
-			case TestPlatform.iOS_Unified:
-				platforms = new TestPlatform [] { TestPlatform.iOS_Unified32, TestPlatform.iOS_Unified64 };
-				ignored = new [] { !IncludeiOS32, false};
-				break;
-			case TestPlatform.iOS_TodayExtension64:
-				targets = new TestTarget[] { TestTarget.Simulator_iOS64 };
-				platforms = new TestPlatform[] { TestPlatform.iOS_TodayExtension64 };
-				ignored = new [] { false };
-				break;
-			default:
-				throw new NotImplementedException ();
-			}
-
-			for (int i = 0; i < targets.Length; i++) {
-				var sims = Simulators.SelectDevices (targets [i], SimulatorLoadLog, false);
-				runtasks.Add (new RunSimulatorTask (
-					jenkins: this,
-					simulators: Simulators,
-					buildTask: buildTask,
-					processManager: processManager,
-					tunnelBore: tunnelBore,
-					candidates: sims) {
-					Platform = platforms [i],
-					Ignored = ignored[i] || buildTask.Ignored
-				});
-			}
-
-			return runtasks;
 		}
 
 		public bool IsIncluded (TestProject project)
@@ -178,76 +131,6 @@ namespace Xharness.Jenkins {
 				return false;
 
 			return true;
-		}
-
-		async Task<IEnumerable<AppleTestTask>> CreateRunSimulatorTasksAsync ()
-		{
-			var runSimulatorTasks = new List<RunSimulatorTask> ();
-
-			foreach (var project in Harness.IOSTestProjects) {
-				if (!project.IsExecutableProject)
-					continue;
-
-				bool ignored = !IncludeSimulator;
-				if (!IsIncluded (project))
-					ignored = true;
-
-				var ps = new List<Tuple<TestProject, TestPlatform, bool>> ();
-				if (!project.SkipiOSVariation)
-					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project, TestPlatform.iOS_Unified, ignored || !IncludeiOS64));
-				if (project.MonoNativeInfo != null)
-					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project, TestPlatform.iOS_TodayExtension64, ignored || !IncludeiOS64));
-				if (!project.SkiptvOSVariation)
-					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project.AsTvOSProject (), TestPlatform.tvOS, ignored || !IncludetvOS));
-				if (!project.SkipwatchOSVariation)
-					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project.AsWatchOSProject (), TestPlatform.watchOS, ignored || !IncludewatchOS));
-				
-				var configurations = project.Configurations;
-				if (configurations == null)
-					configurations = new string [] { "Debug" };
-				foreach (var config in configurations) {
-					foreach (var pair in ps) {
-						var derived = new MSBuildTask (jenkins: this, testProject: project, processManager: processManager) {
-							ProjectConfiguration = config,
-							ProjectPlatform = "iPhoneSimulator",
-							Platform = pair.Item2,
-							Ignored = pair.Item3,
-							TestName = project.Name,
-							Dependency = project.Dependency,
-						};
-						derived.CloneTestProject (MainLog, processManager, pair.Item1);
-						var simTasks = CreateRunSimulatorTaskAsync (derived);
-						runSimulatorTasks.AddRange (simTasks);
-						foreach (var task in simTasks) {
-							if (configurations.Length > 1)
-								task.Variation = config;
-							task.TimeoutMultiplier = project.TimeoutMultiplier;
-						}
-					}
-				}
-			}
-
-			var testVariations = testVariationsFactory.CreateTestVariations (runSimulatorTasks, (buildTask, test, candidates) =>
-				new RunSimulatorTask (
-					jenkins: this,
-					simulators: Simulators,
-					buildTask: buildTask,
-					processManager: processManager,
-					tunnelBore: tunnelBore,
-					candidates: candidates?.Cast<SimulatorDevice> () ?? test.Candidates)).ToList ();
-
-			foreach (var tv in testVariations) {
-				if (!tv.Ignored)
-					await tv.FindSimulatorAsync ();
-			}
-
-			var rv = new List<AggregatedRunSimulatorTask> ();
-			foreach (var taskGroup in testVariations.GroupBy ((RunSimulatorTask task) => task.Device?.UDID ?? task.Candidates.ToString ())) {
-				rv.Add (new AggregatedRunSimulatorTask (jenkins: this, tasks: taskGroup) {
-					TestName = $"Tests for {taskGroup.Key}",
-				});
-			}
-			return rv;
 		}
 
 		Task<IEnumerable<AppleTestTask>> CreateRunDeviceTasksAsync ()
@@ -277,7 +160,7 @@ namespace Xharness.Jenkins {
 						devices: devices,
 						buildTask: build64,
 						processManager: processManager,
-						tunnelBore: tunnelBore,
+						tunnelBore: TunnelBore,
 						errorKnowledgeBase: ErrorKnowledgeBase,
 						useTcpTunnel: Harness.UseTcpTunnel,
 						candidates: devices.Connected64BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !IncludeiOS64 });
@@ -294,7 +177,7 @@ namespace Xharness.Jenkins {
 						devices: devices,
 						buildTask: build32,
 						processManager: processManager,
-						tunnelBore: tunnelBore,
+						tunnelBore: TunnelBore,
 						errorKnowledgeBase: ErrorKnowledgeBase,
 						useTcpTunnel: Harness.UseTcpTunnel,
 						candidates: devices.Connected32BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !IncludeiOS32 });
@@ -312,7 +195,7 @@ namespace Xharness.Jenkins {
 						devices: devices,
 						buildTask: buildToday,
 						processManager: processManager,
-						tunnelBore: tunnelBore,
+						tunnelBore: TunnelBore,
 						errorKnowledgeBase: ErrorKnowledgeBase,
 						useTcpTunnel: Harness.UseTcpTunnel,
 						candidates: devices.Connected64BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !IncludeiOSExtensions, BuildOnly = ForceExtensionBuildOnly });
@@ -332,7 +215,7 @@ namespace Xharness.Jenkins {
 						devices: devices,
 						buildTask: buildTV,
 						processManager: processManager,
-						tunnelBore: tunnelBore,
+						tunnelBore: TunnelBore,
 						errorKnowledgeBase: ErrorKnowledgeBase,
 						useTcpTunnel: Harness.UseTcpTunnel,
 						candidates: devices.ConnectedTV.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !IncludetvOS });
@@ -353,7 +236,7 @@ namespace Xharness.Jenkins {
 							devices: devices,
 							buildTask: buildWatch32,
 							processManager: processManager,
-							tunnelBore: tunnelBore,
+							tunnelBore: TunnelBore,
 							errorKnowledgeBase: ErrorKnowledgeBase,
 							useTcpTunnel: Harness.UseTcpTunnel,
 							candidates: devices.ConnectedWatch) { Ignored = !IncludewatchOS });
@@ -372,7 +255,7 @@ namespace Xharness.Jenkins {
 							devices: devices,
 							buildTask: buildWatch64_32,
 							processManager: processManager,
-							tunnelBore: tunnelBore,
+							tunnelBore: TunnelBore,
 							errorKnowledgeBase: ErrorKnowledgeBase,
 							useTcpTunnel: Harness.UseTcpTunnel,
 							candidates: devices.ConnectedWatch32_64.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !IncludewatchOS });
@@ -392,7 +275,7 @@ namespace Xharness.Jenkins {
 					devices: devices,
 					buildTask: buildTask,
 					processManager: processManager,
-					tunnelBore: tunnelBore,
+					tunnelBore: TunnelBore,
 					errorKnowledgeBase: ErrorKnowledgeBase,
 					useTcpTunnel: Harness.UseTcpTunnel,
 					candidates: candidates?.Cast<IHardwareDevice> () ?? test.Candidates)));
@@ -409,7 +292,8 @@ namespace Xharness.Jenkins {
 
 			deviceLoader.LoadAllAsync ().DoNotAwait ();
 
-			var loadsim = CreateRunSimulatorTasksAsync ()
+			var simTasksFactory = new RunSimulatorTasksFactory ();
+			var loadsim = simTasksFactory.CreateAsync (this, processManager, testVariationsFactory)
 				.ContinueWith ((v) => { Console.WriteLine ("Simulator tasks created"); Tasks.AddRange (v.Result); });
 			
 			//Tasks.AddRange (await CreateRunSimulatorTasksAsync ());
