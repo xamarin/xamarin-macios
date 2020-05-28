@@ -556,34 +556,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</CollectBundleResources>
 	</Target>
 
-	<Target Name="_DetectAppManifest">
-		<FindItemWithLogicalName
-			SessionId="$(BuildSessionId)"
-			ProjectDir="$(MSBuildProjectDirectory)"
-			ResourcePrefix="$(_ResourcePrefix)"
-			LogicalName="Info.plist"
-			Items="@(None)">
-			<Output TaskParameter="Item" PropertyName="_AppManifest" />
-		</FindItemWithLogicalName>
-		<FindItemWithLogicalName Condition="'$(_AppManifest)' == '' And '$(_CanOutputAppBundle)' == 'true'"
-			SessionId="$(BuildSessionId)"
-			ProjectDir="$(MSBuildProjectDirectory)"
-			ResourcePrefix="$(_ResourcePrefix)"
-			LogicalName="Info.plist"
-			Items="@(BundleResource)">
-			<Output TaskParameter="Item" PropertyName="_AppManifest" />
-		</FindItemWithLogicalName>
-		<FindItemWithLogicalName Condition="'$(_AppManifest)' == '' And '$(_CanOutputAppBundle)' == 'true'"
-			SessionId="$(BuildSessionId)"
-			ProjectDir="$(MSBuildProjectDirectory)"
-			ResourcePrefix="$(_ResourcePrefix)"
-			LogicalName="Info.plist"
-			Items="@(Content)">
-			<Output TaskParameter="Item" PropertyName="_AppManifest" />
-		</FindItemWithLogicalName>
-		<Error Condition="'$(_AppManifest)' == '' And '$(_CanOutputAppBundle)' == 'true'" Text="Info.plist not found."/>
-	</Target>
-
 	<Target Name="_SmeltMetal" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(Metal)' != ''" DependsOnTargets="_DetectSdkLocations;_ComputeTargetFrameworkMoniker">
 		<Metal
 			SessionId="$(BuildSessionId)"

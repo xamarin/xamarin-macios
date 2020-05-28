@@ -69,6 +69,41 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 	<Target Name="_CreateAppBundle" Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsAppDistribution)' != 'true'" DependsOnTargets="$(CreateAppBundleDependsOn)" />
 
+	<Target Name="_DetectAppManifest">
+		<!--
+			This targets runs for Library projects as well, so that Library
+			projects can specify an Info.plist with MinimumOSVersion to pass
+			to actool, ibtool, and other Xcode tools.
+
+			Ref: https://bugzilla.xamarin.com/show_bug.cgi?id=34736
+		-->
+		<FindItemWithLogicalName
+			SessionId="$(BuildSessionId)"
+			ProjectDir="$(MSBuildProjectDirectory)"
+			ResourcePrefix="$(_ResourcePrefix)"
+			LogicalName="Info.plist"
+			Items="@(None)">
+			<Output TaskParameter="Item" PropertyName="_AppManifest" />
+		</FindItemWithLogicalName>
+		<FindItemWithLogicalName Condition="'$(_AppManifest)' == '' And '$(_CanOutputAppBundle)' == 'true'"
+			SessionId="$(BuildSessionId)"
+			ProjectDir="$(MSBuildProjectDirectory)"
+			ResourcePrefix="$(_ResourcePrefix)"
+			LogicalName="Info.plist"
+			Items="@(BundleResource)">
+			<Output TaskParameter="Item" PropertyName="_AppManifest" />
+		</FindItemWithLogicalName>
+		<FindItemWithLogicalName Condition="'$(_AppManifest)' == '' And '$(_CanOutputAppBundle)' == 'true'"
+			SessionId="$(BuildSessionId)"
+			ProjectDir="$(MSBuildProjectDirectory)"
+			ResourcePrefix="$(_ResourcePrefix)"
+			LogicalName="Info.plist"
+			Items="@(Content)">
+			<Output TaskParameter="Item" PropertyName="_AppManifest" />
+		</FindItemWithLogicalName>
+		<Error Condition="'$(_AppManifest)' == '' And '$(_CanOutputAppBundle)' == 'true'" Text="Info.plist not found."/>
+	</Target>
+
 	<!-- Code signing -->
 
 	<PropertyGroup>
