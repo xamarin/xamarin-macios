@@ -155,6 +155,33 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<Error Condition="'$(_AppManifest)' == '' And '$(_CanOutputAppBundle)' == 'true'" Text="Info.plist not found."/>
 	</Target>
 
+	<Target Name="_DetectSigningIdentity" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_ComputeTargetFrameworkMoniker">
+		<DetectSigningIdentity
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			AppBundleName="$(_AppBundleName)"
+			AppManifest="$(_AppManifest)"
+			Keychain="$(CodesignKeychain)"
+			RequireCodeSigning="$(_RequireCodeSigning)"
+			RequireProvisioningProfile="$(_RequireProvisioningProfile)"
+			SdkIsSimulator="$(_SdkIsSimulator)"
+			SdkPlatform="$(_SdkPlatform)"
+			ProvisioningProfile="$(CodesignProvision)"
+			SigningKey="$(_SpecifiedCodesignKey)"
+			DetectedCodeSigningKey="$(_CodeSigningKey)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+			>
+
+			<Output TaskParameter="DetectedAppId" PropertyName="_AppIdentifier" />
+			<Output TaskParameter="DetectedBundleId" PropertyName="_BundleIdentifier" />
+			<Output TaskParameter="DetectedBundleVersion" PropertyName="_BundleVersion" />
+			<Output TaskParameter="DetectedCodeSigningKey" PropertyName="_CodeSigningKey" />
+			<Output TaskParameter="DetectedCodesignAllocate" PropertyName="_CodesignAllocate" />
+			<Output TaskParameter="DetectedDistributionType" PropertyName="_DistributionType" />
+			<Output TaskParameter="DetectedProvisioningProfile" PropertyName="_ProvisioningProfile" />
+		</DetectSigningIdentity>
+	</Target>
+
 	<Target Name="_DetectSdkLocations" DependsOnTargets="_ComputeTargetArchitectures;_ComputeTargetFrameworkMoniker">
 		<DetectSdkLocations
 			SessionId="$(BuildSessionId)"
