@@ -8,19 +8,9 @@
 //
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using CoreGraphics;
-#else
-using MonoTouch.CoreGraphics;
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
-
-#if !XAMCORE_2_0
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-#endif
 
 namespace MonoTouchFixtures.CoreGraphics {
 

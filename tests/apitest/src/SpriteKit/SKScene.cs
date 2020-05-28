@@ -1,4 +1,3 @@
-#if XAMCORE_2_0
 using System;
 using System.Threading.Tasks;
 using NUnit.Framework;
@@ -49,4 +48,3 @@ namespace Xamarin.Mac.Tests
 		}
 	}
 }
-#endif

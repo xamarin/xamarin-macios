@@ -1,10 +1,6 @@
 ﻿namespace Test
 
-#if __UNIFIED__
 open UIKit
-#else
-open MonoTouch.UIKit
-#endif
 
 #if !__WATCHOS__ && !TODAY_EXTENSION
 

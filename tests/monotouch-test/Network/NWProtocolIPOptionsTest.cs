@@ -1,16 +1,10 @@
 #if !__WATCHOS__
 using System;
 using System.Threading;
-#if XAMCORE_2_0
 using Foundation;
 using Network;
 using ObjCRuntime;
 using CoreFoundation;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.Network;
-using MonoTouch.CoreFoundation;
-#endif
 
 using NUnit.Framework;
 using MonoTests.System.Net.Http;

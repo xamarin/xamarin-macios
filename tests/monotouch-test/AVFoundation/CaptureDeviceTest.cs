@@ -1,13 +1,8 @@
 ﻿#if __IOS__
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using AVFoundation;
 using ObjCRuntime;
-#else
-using MonoTouch.AVFoundation;
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
 namespace MonoTouchFixtures.AVFoundation {
 

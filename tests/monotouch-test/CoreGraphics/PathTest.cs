@@ -10,25 +10,10 @@
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
-#if XAMCORE_2_0
 using Foundation;
 using CoreGraphics;
-#else
-using MonoTouch.CoreGraphics;
-using MonoTouch.Foundation;
-#endif
 using ObjCRuntime;
 using NUnit.Framework;
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
 
 namespace MonoTouchFixtures.CoreGraphics {
 
@@ -42,7 +27,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 		[Test]
 		public void EllipseFromRect ()
 		{
-			var rect = new RectangleF (0, 0, 15, 15);
+			var rect = new CGRect (0, 0, 15, 15);
 			var matrix = CGAffineTransform.MakeIdentity ();
 			using (CGPath p = CGPath.EllipseFromRect (rect, matrix)) {
 				Assert.IsNotNull (p, "non-null");
@@ -53,7 +38,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 		public void CopyByDashingPath_18764 ()
 		{
 			var identity = CGAffineTransform.MakeIdentity ();
-			using (var path = CGPath.EllipseFromRect (RectangleF.Empty, identity)) {
+			using (var path = CGPath.EllipseFromRect (CGRect.Empty, identity)) {
 				var lengths = new nfloat[] { 10, 10 };
 				var phase = 2;
 				using (var d1 = path.CopyByDashingPath (lengths)) {
@@ -139,7 +124,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 		[Test]
 		public void AddRect ()
 		{
-			var rect = new RectangleF (0, 0, 15, 15);
+			var rect = new CGRect (0, 0, 15, 15);
 			var matrix = CGAffineTransform.MakeIdentity ();
 			using (CGPath p1 = new CGPath ())
 			using (CGPath p2 = new CGPath ()) {
@@ -154,7 +139,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 		[Test]
 		public void AddRects ()
 		{
-			var rect = new RectangleF (0, 0, 15, 15);
+			var rect = new CGRect (0, 0, 15, 15);
 			var matrix = CGAffineTransform.MakeIdentity ();
 			using (CGPath p1 = new CGPath ())
 			using (CGPath p2 = new CGPath ()) {
@@ -173,8 +158,8 @@ namespace MonoTouchFixtures.CoreGraphics {
 			using (CGPath p1 = new CGPath ())
 			using (CGPath p2 = new CGPath ()) {
 				Assert.IsTrue (p1.IsEmpty, "IsEmpty-1");
-				p1.AddLines (new [] { PointF.Empty });
-				p2.AddLines (matrix, new [] { PointF.Empty });
+				p1.AddLines (new [] { CGPoint.Empty });
+				p2.AddLines (matrix, new [] { CGPoint.Empty });
 				Assert.IsFalse (p1.IsEmpty, "IsEmpty-2");
 				Assert.That (p1, Is.EqualTo (p2), "CGPathEqualToPath");
 			}
@@ -183,7 +168,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 		[Test]
 		public void AddEllipseInRect ()
 		{
-			var rect = new RectangleF (0, 0, 15, 15);
+			var rect = new CGRect (0, 0, 15, 15);
 			var matrix = CGAffineTransform.MakeIdentity ();
 			using (CGPath p1 = new CGPath ())
 			using (CGPath p2 = new CGPath ()) {

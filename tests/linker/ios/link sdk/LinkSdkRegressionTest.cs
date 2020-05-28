@@ -20,7 +20,6 @@ using System.Threading;
 using System.Xml;
 using Mono.Data.Sqlite;
 using MonoTouch;
-#if XAMCORE_2_0
 #if !__TVOS__ && !__WATCHOS__
 using AddressBook;
 using AddressBookUI;
@@ -40,20 +39,6 @@ using UIKit;
 using OpenGLES;
 #endif
 using WebKit;
-#else
-using MonoTouch;
-using MonoTouch.AddressBook;
-using MonoTouch.AddressBookUI;
-using MonoTouch.CoreAnimation;
-using MonoTouch.CoreData;
-using MonoTouch.CoreFoundation;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.MapKit;
-using MonoTouch.UIKit;
-using MonoTouch.OpenGLES;
-using MonoTouch.WebKit;
-#endif
 using NUnit.Framework;
 using MonoTests.System.Net.Http;
 
@@ -434,11 +419,7 @@ namespace LinkSdk {
 		[Test]
 		public void OpenTk_Preserved ()
 		{
-#if XAMCORE_2_0
 			const string OpenTKAssembly = "OpenTK-1.0";
-#else
-			const string OpenTKAssembly = "OpenTK";
-#endif
 			var gl = GetTypeHelper ("OpenTK.Graphics.ES11.GL, " + OpenTKAssembly, false);
 			Assert.NotNull (gl, "ES11/GL");
 			var core = GetTypeHelper ("OpenTK.Graphics.ES11.GL/Core, " + OpenTKAssembly, false);
@@ -482,13 +463,8 @@ namespace LinkSdk {
 				a.PresentModalViewController (b, true);
 				b.PresentModalViewController (c, true);
 				
-#if XAMCORE_2_0
 				b.DismissModalViewController (true);
 				a.DismissModalViewController (true); //error
-#else
-				b.DismissModalViewControllerAnimated (true);
-				a.DismissModalViewControllerAnimated (true); //error
-#endif
 			}
 		}
 #endif // !__TVOS__ && !__WATCHOS__
@@ -967,22 +943,11 @@ namespace LinkSdk {
 				var value = fi.GetValue (tv.WeakDelegate);
 				Assert.NotNull (value, "value");
 
-#if XAMCORE_2_0
 				// and on the UIScrollView defined one
 				tv.Scrolled += (object sender, EventArgs e) => {};
 				// and the existing (initial field) is still set
 				fi = t.GetField ("editingEnded", BindingFlags.NonPublic | BindingFlags.Instance);
 				Assert.NotNull (fi, "editingEnded/scrollview");
-#else
-				// In Classic UITextView also defines a Scrolled event, so make sure we get the UIScrollView one.
-				((UIScrollView) tv).Scrolled += (object sender, EventArgs e) => {};
-
-				t = tv.WeakDelegate.GetType ();
-				Assert.That (t.Name, Is.EqualTo ("_UIScrollViewDelegate"), "scrollview");
-
-				fi = t.GetField ("editingEnded", BindingFlags.NonPublic | BindingFlags.Instance);
-				Assert.Null (fi, "editingEnded/scrollview");
-#endif
 			}
 		}
 #endif // !__WATCHOS__

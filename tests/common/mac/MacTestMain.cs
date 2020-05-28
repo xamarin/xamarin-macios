@@ -2,13 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
-#if XAMCORE_2_0 || __UNIFIED__
 using AppKit;
 using Foundation;
-#else
-using MonoMac.AppKit;
-using MonoMac.Foundation;
-#endif
 using GuiUnit;
 using NUnit.Framework;
 
@@ -114,7 +109,6 @@ namespace Xamarin.Mac.Tests
 	}
 }
 
-#if XAMCORE_2_0
 partial class TestRuntime {
 	public static bool RunAsync (TimeSpan timeout, Action action, Func<bool> check_completed, NSImage imageToShow = null)
 	{
@@ -133,4 +127,3 @@ partial class TestRuntime {
 		return true;
 	}
 }
-#endif

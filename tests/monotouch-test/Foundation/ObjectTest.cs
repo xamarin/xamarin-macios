@@ -74,7 +74,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void FromObject_INativeObject ()
 		{
 			// https://bugzilla.xamarin.com/show_bug.cgi?id=8458
-			using (CGPath p = CGPath.FromRect (new RectangleF (1, 2, 3, 4))) {
+			using (CGPath p = CGPath.FromRect (new CGRect (1, 2, 3, 4))) {
 				Assert.IsNotNull (NSObject.FromObject (p), "CGPath");
 			}
 			using (CGColor c = new CGColor (CGColorSpace.CreateDeviceRGB (), new nfloat [] { 0.1f, 0.2f, 0.3f, 1.0f })) {
@@ -95,7 +95,7 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void FromObject_Handle ()
 		{
-			using (CGPath p = CGPath.FromRect (new RectangleF (1, 2, 3, 4))) {
+			using (CGPath p = CGPath.FromRect (new CGRect (1, 2, 3, 4))) {
 				Assert.IsNotNull (NSObject.FromObject (p.Handle), "CGPath");
 			}
 			using (CGColor c = new CGColor (CGColorSpace.CreateDeviceRGB (), new nfloat [] { 0.1f, 0.2f, 0.3f, 1.0f })) {
@@ -272,7 +272,7 @@ namespace MonoTouchFixtures.Foundation {
 					Assert.AreEqual ("{X=0,Y=0,Width=123,Height=234}", @new.ToString (), "#new");
 					observed = true;
 				})) {
-					o.Frame = new RectangleF (0, 0, 123, 234);
+					o.Frame = new CGRect (0, 0, 123, 234);
 				}
 			}
 			Assert.IsTrue (observed, "observed");

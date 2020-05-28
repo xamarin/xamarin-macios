@@ -8,25 +8,9 @@ using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Runtime.CompilerServices;
-#if XAMCORE_2_0
 using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch.CoreGraphics;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
 
 using NUnit.Framework;
 
@@ -600,8 +584,8 @@ namespace LinkSdk.Aot {
 		[Test]
 		public void Bug26245 ()
 		{
-			var c = new Collection<PointF> ();
-			c.Add (new PointF (50, 50)); // crashed under ARM64
+			var c = new Collection<CGPoint> ();
+			c.Add (new CGPoint (50, 50)); // crashed under ARM64
 			Assert.That (c.Count, Is.EqualTo (1));
 		}
 

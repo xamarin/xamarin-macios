@@ -1,19 +1,10 @@
 using NUnit.Framework;
 using System;
 
-#if !XAMCORE_2_0
-using MonoMac.AppKit;
-using MonoMac.ObjCRuntime;
-using MonoMac.CoreImage;
-using MonoMac.CoreGraphics;
-using CGSize = System.Drawing.SizeF;
-using CGRect = System.Drawing.RectangleF;
-#else
 using AppKit;
 using ObjCRuntime;
 using CoreImage;
 using CoreGraphics;
-#endif
 
 namespace Xamarin.Mac.Tests
 {

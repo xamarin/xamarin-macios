@@ -11,17 +11,10 @@
 
 using System;
 using System.Globalization;
-#if XAMCORE_2_0
 using Foundation;
 using AddressBookUI;
 using ObjCRuntime;
 using UIKit;
-#else
-using MonoTouch.AddressBookUI;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.AddressBookUI {

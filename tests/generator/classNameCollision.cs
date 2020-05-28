@@ -1,15 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-#if !XAMCORE_2_0
-#if MONOMAC
-using MonoMac.Foundation;
-#else
 using Foundation;
-#endif
-#else
-using Foundation;
-#endif
 
 namespace AudioUnit {
 	[BaseType (typeof(NSObject))]

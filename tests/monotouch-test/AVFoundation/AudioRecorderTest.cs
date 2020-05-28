@@ -6,15 +6,9 @@
 #if !__TVOS__ && !__WATCHOS__
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using AudioToolbox;
 using AVFoundation;
-#else
-using MonoTouch.AVFoundation;
-using MonoTouch.Foundation;
-using MonoTouch.AudioToolbox;
-#endif
 using NUnit.Framework;
 namespace MonoTouchFixtures.AVFoundation {
 

@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\x86\Debug</OutputPath>
-    <DefineConstants>__UNIFIED__;DEBUG;MONOMAC;XAMCORE_2_0;XAMMAC_TESTS</DefineConstants>
+    <DefineConstants>DEBUG;MONOMAC;XAMMAC_TESTS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>0</WarningLevel>
     <EnableCodeSigning>false</EnableCodeSigning>
@@ -39,7 +39,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
     <OutputPath>bin\x86\Release</OutputPath>
-    <DefineConstants>__UNIFIED__;MONOMAC;XAMCORE_2_0;XAMMAC_TESTS</DefineConstants>
+    <DefineConstants>MONOMAC;XAMMAC_TESTS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>0</WarningLevel>
     <EnableCodeSigning>false</EnableCodeSigning>

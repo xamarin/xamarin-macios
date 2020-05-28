@@ -90,7 +90,7 @@ namespace Xharness.Targets {
 			csproj.SetImport (IsFSharp ? "$(MSBuildExtensionsPath)\\Xamarin\\iOS\\Xamarin.iOS.AppExtension.FSharp.targets" : "$(MSBuildExtensionsPath)\\Xamarin\\iOS\\Xamarin.iOS.AppExtension.CSharp.targets");
 			csproj.FixInfoPListInclude (suffix);
 			csproj.SetOutputType ("Library");
-			csproj.AddAdditionalDefines ("XAMCORE_2_0;XAMCORE_3_0;TODAY_EXTENSION");
+			csproj.AddAdditionalDefines ("XAMCORE_3_0;TODAY_EXTENSION");
 			var ext = IsFSharp ? "fs" : "cs";
 			// we have diff templates for the bcl tests because they use xunit/nunit and not monotouch nunit.
 			csproj.AddCompileInclude ("TodayExtensionMain." + ext, Path.Combine (IsGeneratedBclTest? GeneratedTemplatePath : Harness.TodayExtensionTemplate, "TodayExtensionMain." + ext), true);

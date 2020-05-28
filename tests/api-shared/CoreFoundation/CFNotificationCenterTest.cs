@@ -10,18 +10,8 @@
 using System;
 using System.Net;
 
-#if XAMCORE_2_0
 using Foundation;
 using CoreFoundation;
-#else
-#if MONOMAC
-using MonoMac.CoreFoundation;
-using MonoMac.Foundation;
-#else
-using MonoTouch.CoreFoundation;
-using MonoTouch.Foundation;
-#endif
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreFoundation

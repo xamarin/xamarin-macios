@@ -3,11 +3,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-#if XAMCORE_2_0
 using Metal;
-#else
-using MonoTouch.Metal;
-#endif
 
 using NUnit.Framework;
 

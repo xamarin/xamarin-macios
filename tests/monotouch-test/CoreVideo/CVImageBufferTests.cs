@@ -7,8 +7,6 @@
 // Copyright 2017 Xamarin Inc. All rights reserved.
 //
 
-#if XAMCORE_2_0
-
 using System;
 using Foundation;
 using NUnit.Framework;
@@ -97,4 +95,3 @@ namespace MonoTouchFixtures.CoreVideo {
 		}
 	}
 }
-#endif

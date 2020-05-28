@@ -10,14 +10,8 @@
 #if !__WATCHOS__
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using CoreBluetooth;
-#else
-using MonoTouch.CoreBluetooth;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-#endif
 
 using NUnit.Framework;
 

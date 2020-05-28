@@ -1,18 +1,8 @@
 using System;
 using System.Runtime.InteropServices;
 
-#if !XAMCORE_2_0
-#if MONOMAC
-using MonoMac.Foundation;
-using MonoMac.ObjCRuntime;
-#else
 using Foundation;
 using ObjCRuntime;
-#endif
-#else
-using Foundation;
-using ObjCRuntime;
-#endif
 
 namespace Test 
 {

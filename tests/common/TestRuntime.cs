@@ -1,9 +1,6 @@
 #if __MACOS__
 #define MONOMAC
 #endif
-#if __UNIFIED__
-#define XAMCORE_2_0
-#endif
 
 using System;
 using System.Collections.Generic;
@@ -12,7 +9,6 @@ using System.Runtime.InteropServices;
 using System.Reflection;
 using System.Reflection.Emit;
 
-#if XAMCORE_2_0
 using AVFoundation;
 using CoreBluetooth;
 using Foundation;
@@ -32,20 +28,6 @@ using MediaPlayer;
 using UIKit;
 #endif
 using ObjCRuntime;
-#else
-using nint=global::System.Int32;
-#if MONOMAC
-using MonoMac;
-using MonoMac.ObjCRuntime;
-using MonoMac.Foundation;
-using MonoMac.AppKit;
-using MonoMac.AVFoundation;
-#else
-using MonoTouch.ObjCRuntime;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-#endif
-#endif
 
 partial class TestRuntime
 {
@@ -789,7 +771,7 @@ partial class TestRuntime
 	}
 #endif // !!MONOMAC && !__TVOS__ && !__WATCHOS__
 
-#if XAMCORE_2_0 && !__TVOS__
+#if !__TVOS__
 	public static void CheckContactsPermission (bool assert_granted = false)
 	{
 		switch (CNContactStore.GetAuthorizationStatus (CNEntityType.Contacts)) {
@@ -826,7 +808,7 @@ partial class TestRuntime
 		CheckContactsPermission (assert_granted);
 	}
 
-#endif // XAMCORE_2_0
+#endif // !__TVOS__
 
 #if !MONOMAC && !__TVOS__ && !__WATCHOS__
 	public static void CheckAddressBookPermission (bool assert_granted = false)
@@ -936,7 +918,6 @@ partial class TestRuntime
 	}
 #endif
 
-#if __UNIFIED__
 #if __MACOS__
 	public static global::CoreGraphics.CGColor GetCGColor (NSColor color)
 #else
@@ -954,7 +935,6 @@ partial class TestRuntime
 		return color.CGColor;
 #endif
 	}
-#endif // __UNIFIED__
 	
 	// Determine if linkall was enabled by checking if an unused class in this assembly is still here.
 	static bool? link_all;

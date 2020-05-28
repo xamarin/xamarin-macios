@@ -11,7 +11,6 @@
 #if !__WATCHOS__
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using CoreBluetooth;
 using ObjCRuntime;
@@ -19,11 +18,6 @@ using ObjCRuntime;
 using AppKit;
 #else
 using UIKit;
-#endif
-#else
-using MonoTouch.CoreBluetooth;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
 #endif
 
 using NUnit.Framework;

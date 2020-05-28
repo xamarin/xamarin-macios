@@ -9,28 +9,13 @@
 
 using System;
 using System.Drawing;
-#if XAMCORE_2_0
 using Foundation;
 #if MONOMAC
 using AppKit;
 #else
 using UIKit;
 #endif
-#else
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
 
 namespace MonoTouchFixtures.Foundation {
 
@@ -63,11 +48,7 @@ namespace MonoTouchFixtures.Foundation {
 
 				var number = s.ReplaceOcurrences ((NSString)"World", (NSString)"Xamarin", 
 					NSStringCompareOptions.CaseInsensitiveSearch, new NSRange (0, s.Length));
-#if XAMCORE_2_0
 				Assert.That (number, Is.EqualTo ((nuint) 1), "Number of replacements");
-#else
-				Assert.That (number, Is.EqualTo (1), "Number of replacements");
-#endif
 				Assert.That (s.ToString (), Is.EqualTo ("Hello Xamarin"), "replaced");
 
 				Assert.Throws<ArgumentOutOfRangeException> (delegate {
