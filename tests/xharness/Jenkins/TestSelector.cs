@@ -13,7 +13,7 @@ namespace Xharness.Jenkins {
 	/// <summary>
 	/// Allows to select the tests to be ran depending on certain conditions such as labels of modified files.
 	/// </summary>
-	public class TestSelector {
+	class TestSelector {
 
 		#region private vars
 		
