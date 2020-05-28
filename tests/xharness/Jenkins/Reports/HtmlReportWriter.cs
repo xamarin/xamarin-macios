@@ -12,7 +12,7 @@ using Xharness.Jenkins.TestTasks;
 
 #nullable enable
 namespace Xharness.Jenkins.Reports {
-	public class HtmlReportWriter : IReportWriter {
+	class HtmlReportWriter : IReportWriter {
 
 		readonly Jenkins jenkins;
 		readonly IResourceManager resourceManager;

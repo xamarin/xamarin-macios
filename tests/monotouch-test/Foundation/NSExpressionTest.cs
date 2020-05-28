@@ -2,12 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
 
 [assembly: Preserve (typeof (NSExpression), AllMembers = true)]

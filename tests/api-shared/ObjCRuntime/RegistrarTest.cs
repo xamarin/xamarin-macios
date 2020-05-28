@@ -11,16 +11,8 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.InteropServices;
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#elif __IOS__
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#else
-using MonoMac.Foundation;
-using MonoMac.ObjCRuntime;
-#endif
 using NUnit.Framework;
 
 namespace XamarinTests.ObjCRuntime {
@@ -32,7 +24,6 @@ namespace XamarinTests.ObjCRuntime {
 			}
 		}
 
-#if __UNIFIED__
 		[Test]
 		public void IntPtrCtor ()
 		{
@@ -52,7 +43,6 @@ namespace XamarinTests.ObjCRuntime {
 				Messaging.void_objc_msgSend (ptr, Selector.GetHandle ("release"));
 			}
 		}
-#endif
 
 		[Register ("IntPtrCtorTestClass")]
 		class IntPtrCtorTestClass : NSObject {

@@ -8,19 +8,10 @@ using System;
 using NUnit.Framework;
 using System.Runtime.InteropServices;
 
-
-#if XAMCORE_2_0
 using Foundation;
 using AudioUnit;
 using AudioToolbox;
 using ObjCRuntime;
-#else
-using MonoTouch.AudioUnit;
-using MonoTouch.AudioToolbox;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch;
-#endif
 
 namespace MonoTouchFixtures.AudioUnit
 {

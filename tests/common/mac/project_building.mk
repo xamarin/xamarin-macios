@@ -32,4 +32,4 @@ run run-test run-tests:: $(TESTDLL) $(EXTRA_DEPS)
 
 $(TESTDLL): $(ALL_SOURCE_FILES) 
 	$(Q) mkdir -p build
-	$(Q) $(SYSTEM_CSC) /debug $(SOURCES) -d:MMP_TEST -d:XAMCORE_2_0 -d:MONOMAC -t:library -r:nunit.framework -features:strict -out:$(TESTDLL)
+	$(Q) $(SYSTEM_CSC) /debug $(SOURCES) -d:MMP_TEST -d:MONOMAC -t:library -r:nunit.framework -features:strict -out:$(TESTDLL)

@@ -7,7 +7,7 @@
 // Copyright 2017 Microsoft Inc.
 //
 
-#if (__IOS__ || MONOMAC) && XAMCORE_2_0
+#if __IOS__ || MONOMAC
 
 using System;
 
@@ -58,4 +58,4 @@ namespace MonoTouchFixtures.PdfKit
 	}
 }
 
-#endif // !__WATCHOS__
+#endif // __IOS__ || MONOMAC

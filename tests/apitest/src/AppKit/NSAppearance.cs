@@ -1,16 +1,9 @@
 ﻿using NUnit.Framework;
 using System;
 
-#if !XAMCORE_2_0
-using MonoMac.AppKit;
-using MonoMac.ObjCRuntime;
-using MonoMac.Foundation;
-using nfloat = System.Single;
-#else
 using AppKit;
 using ObjCRuntime;
 using Foundation;
-#endif
 
 namespace Xamarin.Mac.Tests
 {
@@ -55,7 +48,6 @@ namespace Xamarin.Mac.Tests
 			Assert.AreNotEqual (appearance, NSAppearance.CurrentAppearance, "NSAppearanceShouldChangeCurrentAppearance - Failed to change appearance.");
 		}
 
-#if XAMCORE_2_0
 		[Test]
 		public void NSAppearanceCustomizationNull ()
 		{
@@ -64,6 +56,5 @@ namespace Xamarin.Mac.Tests
 			using (NSButton b = new NSButton ())
 				b.SetAppearance (null);
 		}
-#endif
 	}
 }

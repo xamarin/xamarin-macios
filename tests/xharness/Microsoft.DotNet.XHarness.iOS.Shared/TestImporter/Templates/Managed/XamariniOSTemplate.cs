@@ -656,13 +656,13 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.TestImporter.Templates.Managed {
 					result = result.Replace (TargetFrameworkVersionKey, "v4.5.2");
 					result = result.Replace (TargetExtraInfoKey,
 						"<UseXamMacFullFramework>true</UseXamMacFullFramework>");
-					result = result.Replace (DefineConstantsKey, "XAMCORE_2_0;ADD_BCL_EXCLUSIONS;XAMMAC_4_5");
+					result = result.Replace (DefineConstantsKey, "ADD_BCL_EXCLUSIONS;XAMMAC_4_5");
 					break;
 				case Platform.MacOSModern:
 					result = result.Replace (TargetFrameworkVersionKey, "v2.0");
 					result = result.Replace (TargetExtraInfoKey,
 						"<TargetFrameworkIdentifier>Xamarin.Mac</TargetFrameworkIdentifier>");
-					result = result.Replace (DefineConstantsKey, "XAMCORE_2_0;ADD_BCL_EXCLUSIONS;MOBILE;XAMMAC");
+					result = result.Replace (DefineConstantsKey, "ADD_BCL_EXCLUSIONS;MOBILE;XAMMAC");
 					break;
 				}
 				return result;

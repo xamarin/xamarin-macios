@@ -1,13 +1,8 @@
 using NUnit.Framework;
 using System;
 
-#if !XAMCORE_2_0
-using MonoMac.AppKit;
-using MonoMac.ObjCRuntime;
-#else
 using AppKit;
 using ObjCRuntime;
-#endif
 
 namespace Xamarin.Mac.Tests
 {

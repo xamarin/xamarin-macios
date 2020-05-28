@@ -14,7 +14,6 @@ using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 
-#if XAMCORE_2_0
 using Foundation;
 using VideoToolbox;
 #if MONOMAC
@@ -28,29 +27,7 @@ using CoreFoundation;
 using CoreVideo;
 using CoreGraphics;
 using ObjCRuntime;
-#else
-using MonoTouch;
-using MonoTouch.Foundation;
-using MonoTouch.VideoToolbox;
-using MonoTouch.UIKit;
-using MonoTouch.CoreMedia;
-using MonoTouch.AVFoundation;
-using MonoTouch.CoreFoundation;
-using MonoTouch.CoreVideo;
-using MonoTouch.CoreGraphics;
-using MonoTouch.ObjCRuntime;
-#endif
 using NUnit.Framework;
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
 
 namespace MonoTouchFixtures.VideoToolbox {
 
@@ -86,7 +63,7 @@ namespace MonoTouchFixtures.VideoToolbox {
 			using (var ctx = new CGBitmapContext (pxbuffer.BaseAddress, originalCGImage.Width, originalCGImage.Height, 8, 
 				                 4 * originalCGImage.Width, colorSpace, CGBitmapFlags.NoneSkipLast)) {
 				ctx.RotateCTM (0);
-				ctx.DrawImage (new RectangleF (0, 0, originalCGImage.Width, originalCGImage.Height), originalCGImage);
+				ctx.DrawImage (new CGRect (0, 0, originalCGImage.Width, originalCGImage.Height), originalCGImage);
 #if !__TVOS__
 				pxbuffer.Unlock (CVOptionFlags.None);
 #else

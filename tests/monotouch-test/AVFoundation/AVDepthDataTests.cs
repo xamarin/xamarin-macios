@@ -8,7 +8,7 @@
 // Copyright 2017 Xamarin Inc. All rights reserved.
 //
 
-#if XAMCORE_2_0 && !__WATCHOS__
+#if !__WATCHOS__
 
 using System;
 using NUnit.Framework;

@@ -9,13 +9,8 @@
 
 using System;
 using System.Reflection;
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 using NUnit.Framework;
 using System.Threading;
 using System.Threading.Tasks;
@@ -58,7 +53,6 @@ namespace MonoTouchFixtures.Foundation {
 		{
 		}
 
-#if XAMCORE_2_0
 		[Test]
 		public void CreateTimer_NewSignature ()
 		{
@@ -86,6 +80,5 @@ namespace MonoTouchFixtures.Foundation {
 				thread.Join ();
 			}
 		}
-#endif
 	}
 }

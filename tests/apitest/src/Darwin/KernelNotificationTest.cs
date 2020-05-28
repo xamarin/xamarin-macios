@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-#if XAMCORE_2_0
 using Darwin;
-#else
-using MonoMac.Darwin;
-#endif
 
 using NUnit.Framework;
 

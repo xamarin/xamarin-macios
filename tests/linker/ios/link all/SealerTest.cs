@@ -1,11 +1,7 @@
 ﻿// Copyright 2016 Xamarin Inc. All rights reserved.
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
-#else
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
 
 namespace Linker.Sealer {

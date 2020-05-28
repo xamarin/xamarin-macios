@@ -4,26 +4,11 @@
 
 using System;
 using System.Drawing;
-#if XAMCORE_2_0
+using CoreGraphics;
 using Foundation;
 using UIKit;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
 
 namespace MonoTouchFixtures.UIKit {
 	
@@ -34,7 +19,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void InitWithFrame ()
 		{
-			RectangleF frame = new RectangleF (10, 10, 100, 100);
+			var frame = new CGRect (10, 10, 100, 100);
 			using (UIView v = new UIView (frame)) {
 				Assert.That (v.Frame, Is.EqualTo (frame), "Frame");
 			}
@@ -43,11 +28,11 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void HitTest_Null ()
 		{
-			RectangleF frame = new RectangleF (10, 10, 100, 100);
+			var frame = new CGRect (10, 10, 100, 100);
 			using (UIView v = new UIView (frame)) {
-				UIView result = v.HitTest (new PointF (-10, -10), null);
+				UIView result = v.HitTest (new CGPoint (-10, -10), null);
 				Assert.Null (result, "outside");
-				result = v.HitTest (new PointF (50, 50), null);
+				result = v.HitTest (new CGPoint (50, 50), null);
 				Assert.That (result.Handle, Is.EqualTo (v.Handle), "inside");
 			}
 		}
@@ -55,10 +40,10 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void PointInside_Null ()
 		{
-			RectangleF frame = new RectangleF (10, 10, 100, 100);
+			var frame = new CGRect (10, 10, 100, 100);
 			using (UIView v = new UIView (frame)) {
-				Assert.False (v.PointInside (new PointF (-10, -10), null), "outside");
-				Assert.True (v.PointInside (new PointF (50, 50), null), "inside");
+				Assert.False (v.PointInside (new CGPoint (-10, -10), null), "outside");
+				Assert.True (v.PointInside (new CGPoint (50, 50), null), "inside");
 			}
 		}
 
@@ -66,7 +51,7 @@ namespace MonoTouchFixtures.UIKit {
 		public void SizeThatFits ()
 		{
 			// same as LinkerTest in 'linksdk' project - but won't be linked here (for simulator)
-			SizeF empty = SizeF.Empty;
+			var empty = CGSize.Empty;
 			using (UIView v = new UIView ()) {
 				Assert.True (v.SizeThatFits (empty).IsEmpty, "Empty");
 			}
@@ -76,10 +61,10 @@ namespace MonoTouchFixtures.UIKit {
 		public void Convert_Null ()
 		{
 			using (UIView v = new UIView ()) {
-				Assert.That (v.ConvertPointFromView (PointF.Empty, null), Is.EqualTo (PointF.Empty), "ConvertPointFromView");
-				Assert.That (v.ConvertPointToView (PointF.Empty, null), Is.EqualTo (PointF.Empty), "ConvertPointToView");
-				Assert.That (v.ConvertRectFromView (RectangleF.Empty, null), Is.EqualTo (RectangleF.Empty), "ConvertRectFromView");
-				Assert.That (v.ConvertRectToView (RectangleF.Empty, null), Is.EqualTo (RectangleF.Empty), "ConvertRectToView");
+				Assert.That (v.ConvertPointFromView (CGPoint.Empty, null), Is.EqualTo (CGPoint.Empty), "ConvertPointFromView");
+				Assert.That (v.ConvertPointToView (CGPoint.Empty, null), Is.EqualTo (CGPoint.Empty), "ConvertPointToView");
+				Assert.That (v.ConvertRectFromView (CGRect.Empty, null), Is.EqualTo (CGRect.Empty), "ConvertRectFromView");
+				Assert.That (v.ConvertRectToView (CGRect.Empty, null), Is.EqualTo (CGRect.Empty), "ConvertRectToView");
 			}
 		}
 		

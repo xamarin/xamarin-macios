@@ -7,7 +7,7 @@
 // Copyright 2019 Microsoft. All rights reserved.
 //
 
-#if XAMCORE_2_0 && __IOS__
+#if __IOS__
 
 using System;
 using System.Runtime.InteropServices;
@@ -76,4 +76,4 @@ namespace MonoTouchFixtures.ARKit {
 	}
 }
 
-#endif // XAMCORE_2_0 && __IOS__
+#endif // __IOS__

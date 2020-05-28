@@ -8,7 +8,7 @@
 // Copyright 2018 Microsoft Corporation.
 //
 
-#if !__WATCHOS__ && XAMCORE_2_0
+#if !__WATCHOS__
 
 using System;
 using NUnit.Framework;

@@ -1,12 +1,6 @@
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
 using ScriptingBridge;
-#else
-using MonoMac.Foundation;
-using MonoMac.ObjCRuntime;
-using MonoMac.ScriptingBridge;
-#endif
 
 namespace Finder
 {

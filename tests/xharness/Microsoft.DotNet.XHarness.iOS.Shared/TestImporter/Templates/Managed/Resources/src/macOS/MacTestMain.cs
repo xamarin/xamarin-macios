@@ -4,13 +4,8 @@ using System.Reflection;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
-#if XAMCORE_2_0 || __UNIFIED__
 using AppKit;
 using Foundation;
-#else
-using MonoMac.AppKit;
-using MonoMac.Foundation;
-#endif
 using BCLTests;
 using Xamarin.iOS.UnitTests;
 using Xamarin.iOS.UnitTests.NUnit;

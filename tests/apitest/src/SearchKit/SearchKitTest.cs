@@ -4,7 +4,6 @@ using System.Runtime.InteropServices;
 
 using NUnit.Framework;
 
-#if XAMCORE_2_0
 using Foundation;
 using SearchKit;
 
@@ -158,4 +157,3 @@ namespace apitest {
 		}
 	}
 }
-#endif

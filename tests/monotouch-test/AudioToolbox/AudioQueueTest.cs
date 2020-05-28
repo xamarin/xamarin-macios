@@ -11,16 +11,9 @@
 
 using System;
 using System.Collections.Generic;
-#if XAMCORE_2_0
 using Foundation;
 using AVFoundation;
 using AudioToolbox;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.MediaPlayer;
-using MonoTouch.AudioToolbox;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.AudioToolbox {
