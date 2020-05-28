@@ -140,6 +140,7 @@
     <Compile Include="Jenkins\Reports\IReportWriter.cs" />
     <Compile Include="Jenkins\Reports\MarkdownReportWriter.cs" />
     <Compile Include="Jenkins\Reports\HtmlReportWriter.cs" />
+    <Compile Include="Jenkins\RunSimulatorTasksFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\tools\common\SdkVersions.cs">
