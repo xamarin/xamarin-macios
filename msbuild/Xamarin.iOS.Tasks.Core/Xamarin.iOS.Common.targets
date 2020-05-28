@@ -371,8 +371,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</CreateAppBundleDependsOn>
 	</PropertyGroup>
 
-	<Target Name="_CreateAppBundle" Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsAppDistribution)' != 'true'" DependsOnTargets="$(CreateAppBundleDependsOn)" />
-
 	<PropertyGroup>
 		<_CodesignAppBundleDependsOn>
 			_EmbedMobileProvision;
