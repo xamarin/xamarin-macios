@@ -3709,7 +3709,7 @@ public partial class Generator : IMemberGatherer {
 		string target_name = (category_type == null && !minfo.is_extension_method) ? "this" : "This";
 		string handle = supercall ? ".SuperHandle" : ".Handle";
 		
-		// If we have supercall == false, we can be a Bind methdo that has a [Target]
+		// If we have supercall == false, we can be a Bind method that has a [Target]
 		if (supercall == false && !minfo.is_static){
 			foreach (var pi in mi.GetParameters ()){
 				if (IsTarget (pi)){
@@ -7136,7 +7136,7 @@ public partial class Generator : IMemberGatherer {
 						++indent;
 						print ("return false;");
 						--indent;
-						print ("IntPtr selHandle = sel == null ? IntPtr.Zero : sel.Handle;");
+						print ("IntPtr selHandle = sel.Handle;");
 						foreach (var mi in noDefaultValue.OrderBy (m => m.Name, StringComparer.Ordinal)) {
 							if (InlineSelectors) {
 								var export = AttributeManager.GetCustomAttribute<ExportAttribute> (mi);
