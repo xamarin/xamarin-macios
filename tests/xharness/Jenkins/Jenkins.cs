@@ -21,7 +21,6 @@ namespace Xharness.Jenkins {
 		public readonly ISimulatorLoader Simulators;
 		readonly IHardwareDeviceLoader devices;
 		readonly IProcessManager processManager;
-		readonly IResultParser resultParser;
 		readonly ITunnelBore tunnelBore;
 		readonly TestSelector testSelector;
 		readonly TestVariationsFactory testVariationsFactory;
@@ -97,7 +96,6 @@ namespace Xharness.Jenkins {
 		public Jenkins (Harness harness, IProcessManager processManager, IResultParser resultParser, ITunnelBore tunnelBore)
 		{
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
-			this.resultParser = resultParser ?? throw new ArgumentNullException (nameof (resultParser));
 			this.tunnelBore = tunnelBore ?? throw new ArgumentNullException (nameof (tunnelBore));
 			Harness = harness ?? throw new ArgumentNullException (nameof (harness));
 			Simulators = new SimulatorLoader (processManager);
