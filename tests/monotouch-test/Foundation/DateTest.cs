@@ -9,13 +9,8 @@
 
 using System;
 using System.Net;
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Foundation {
@@ -41,7 +36,6 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void OutLimits ()
 		{
-#if XAMCORE_2_0
 			Assert.Throws<ArgumentOutOfRangeException> (() => { var tmp = (DateTime) NSDate.DistantPast; }, "distant past");
 			Assert.Throws<ArgumentOutOfRangeException> (() => { var tmp = (DateTime) NSDate.FromTimeIntervalSinceReferenceDate (-63113904001); }, "-63113904001");
 
@@ -50,15 +44,6 @@ namespace MonoTouchFixtures.Foundation {
 			// [Min|Max]Value are DateTimeKind.Unspecified
 			Assert.Throws<ArgumentException> (() => { var tmp = (NSDate) DateTime.MinValue; }, "MinValue");
 			Assert.Throws<ArgumentException> (() => { var tmp = (NSDate) DateTime.MaxValue; }, "MaxValue");
-#else
-			Assert.AreEqual (DateTime.MinValue, (DateTime)NSDate.DistantPast, "distant past");
-			Assert.AreEqual (DateTime.MinValue, (DateTime)NSDate.FromTimeIntervalSinceReferenceDate (-63113904001), "-63113904001");
-
-			Assert.AreEqual (DateTime.MaxValue, (DateTime)NSDate.FromTimeIntervalSinceReferenceDate (252423993600), "252423993600");
-
-			Assert.DoesNotThrow (() => { var tmp = (NSDate) DateTime.MinValue; }, "MinValue");
-			Assert.DoesNotThrow (() => { var tmp = (NSDate) DateTime.MaxValue; }, "MaxValue");
-#endif
 		}
 
 		[Test]

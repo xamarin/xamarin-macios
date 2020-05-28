@@ -11,29 +11,14 @@
 
 using System;
 using System.Drawing;
-#if XAMCORE_2_0
+using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
 #if !MONOMAC
 using UIKit;
 #endif
 using SpriteKit;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.SpriteKit;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
 
 namespace MonoTouchFixtures.SpriteKit {
 
@@ -69,10 +54,10 @@ namespace MonoTouchFixtures.SpriteKit {
 #if !MONOMAC
 					// FIXME: bug in iOS9 - it will randomly return 0,0 (but almost always on the first try)
 					if (!TestRuntime.CheckSystemVersion (PlatformName.iOS, 9, 0, throwIfOtherPlatform: false))
-						Assert.That (texture.Size, Is.EqualTo (new SizeF (128, 128)), "Size");
+						Assert.That (texture.Size, Is.EqualTo (new CGSize (128, 128)), "Size");
 #endif
 					
-					Assert.That (texture.TextureRect, Is.EqualTo (new RectangleF (0, 0, 1, 1)), "TextureRect");
+					Assert.That (texture.TextureRect, Is.EqualTo (new CGRect (0, 0, 1, 1)), "TextureRect");
 					Assert.False (texture.UsesMipmaps, "UsesMipmaps");
 				}
 			}

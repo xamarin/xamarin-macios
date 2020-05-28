@@ -1,11 +1,7 @@
 ﻿using System;
-#if XAMCORE_2_0
 #if !__WATCHOS__
 using ModelIO;
 using MetalPerformanceShaders;
-#endif
-#else
-using MonoTouch.ModelIO;
 #endif
 using OpenTK;
 using MatrixFloat2x2 = global::OpenTK.NMatrix2;

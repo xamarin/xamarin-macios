@@ -10,19 +10,12 @@
 #if !__WATCHOS__
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 #if !MONOMAC
 using UIKit;
 #endif
 using ObjCRuntime;
 using SystemConfiguration;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.SystemConfiguration;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 using System.Net;
 

@@ -5,11 +5,7 @@
 using System;
 using System.Net;
 using System.Net.Http;
-#if XAMCORE_2_0
 using Foundation;
-#else
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
 
 namespace LinkSdk.Net.Http {

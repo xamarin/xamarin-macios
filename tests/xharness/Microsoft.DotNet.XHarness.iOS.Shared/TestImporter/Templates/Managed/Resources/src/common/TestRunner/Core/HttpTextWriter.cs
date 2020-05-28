@@ -12,11 +12,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-#if __UNIFIED__
 using Foundation;
-#else
-using MonoTouch.Foundation;
-#endif
 
 namespace  BCLTests.TestRunner.Core {
 	class HttpTextWriter : TextWriter

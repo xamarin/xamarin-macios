@@ -10,26 +10,10 @@
 #if !MONOMAC
 using System;
 using System.Drawing;
-#if XAMCORE_2_0
 using Foundation;
 using CoreGraphics;
 using UIKit;
-#else
-using MonoTouch.CoreGraphics;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
 
 namespace MonoTouchFixtures.CoreGraphics {
 
@@ -56,10 +40,10 @@ namespace MonoTouchFixtures.CoreGraphics {
 
 		class CustomView : UIView {
 			public Action Shaded;
-			public unsafe override void Draw (RectangleF rect)
+			public unsafe override void Draw (CGRect rect)
 			{
-				var start = new PointF (rect.Left, rect.Bottom);
-				var end = new PointF (rect.Left, rect.Top);
+				var start = new CGPoint (rect.Left, rect.Bottom);
+				var end = new CGPoint (rect.Left, rect.Top);
 
 				var domain = new nfloat[] {0f, 1f};
 				var range = new nfloat[] {0f, 1f, 0f, 1f};
@@ -88,8 +72,6 @@ namespace MonoTouchFixtures.CoreGraphics {
 				return (nfloat)(p/(p + Math.Pow(1.0f-x, A)));
 			}
 		}
-
-#if XAMCORE_2_0
 
 		[Test]
 		public void CoreGraphicsStrongDictionary ()
@@ -133,7 +115,6 @@ namespace MonoTouchFixtures.CoreGraphics {
 			}
 		}
 
-#endif // XAMCORE_2_0
 #endif // !__WATCHOS__
 	}
 }

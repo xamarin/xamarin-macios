@@ -4,6 +4,7 @@
 
 using System;
 using System.Drawing;
+using CoreGraphics;
 using Foundation;
 using UIKit;
 using ObjCRuntime;
@@ -68,7 +69,7 @@ namespace MonoTouchFixtures.UIKit {
 			using (var bbi = new UIBarButtonItem (UIBarButtonSystemItem.Action))
 			using (var pc = new UIPopoverController (vc)) {
 				var view = UIApplication.SharedApplication.KeyWindow;
-				pc.PresentFromRect (new RectangleF (10, 10, 100, 100), view, UIPopoverArrowDirection.Down, true);
+				pc.PresentFromRect (new CGRect (10, 10, 100, 100), view, UIPopoverArrowDirection.Down, true);
 				pc.Dismiss (true);
 				// works (as long as we dismiss the popover before disposing)
 			}
@@ -88,7 +89,7 @@ namespace MonoTouchFixtures.UIKit {
 			using (var bbi = new UIBarButtonItem (UIBarButtonSystemItem.Action))
 			using (var pc = new UIPopoverController (vc)) {
 				// 'vc' has never been shown
-				pc.PresentFromRect (new RectangleF (10, 10, 100, 100), vc.View, UIPopoverArrowDirection.Down, true);
+				pc.PresentFromRect (new CGRect (10, 10, 100, 100), vc.View, UIPopoverArrowDirection.Down, true);
 				// fails with:
 				// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: -[UIPopoverController presentPopoverFromRect:inView:permittedArrowDirections:animated:]: Popovers cannot be presented from a view which does not have a window.
 			}

@@ -9,11 +9,7 @@
 
 using System;
 using System.Reflection;
-#if XAMCORE_2_0
 using Foundation;
-#else
-using MonoMac.Foundation;
-#endif
 using NUnit.Framework;
 
 namespace MonoMacFixtures {

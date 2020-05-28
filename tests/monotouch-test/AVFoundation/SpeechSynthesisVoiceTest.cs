@@ -10,7 +10,6 @@
 #if !MONOMAC
 using System;
 using System.Drawing;
-#if XAMCORE_2_0
 using AVFoundation;
 using Foundation;
 using ObjCRuntime;
@@ -18,12 +17,6 @@ using ObjCRuntime;
 using AppKit;
 #else
 using UIKit;
-#endif
-#else
-using MonoTouch.AVFoundation;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
 #endif
 using NUnit.Framework;
 

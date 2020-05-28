@@ -2,13 +2,8 @@
 
 using System;
 
-#if XAMCORE_2_0
 using ObjCRuntime;
 using Metal;
-#else
-using MonoTouch.ObjCRuntime;
-using MonoTouch.Metal;
-#endif
 
 using NUnit.Framework;
 

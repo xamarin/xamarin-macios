@@ -4,12 +4,8 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
 
 

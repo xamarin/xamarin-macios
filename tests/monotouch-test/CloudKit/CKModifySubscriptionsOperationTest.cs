@@ -1,14 +1,9 @@
 #if !__WATCHOS__
 using System;
 using NUnit.Framework;
-#if XAMCORE_2_0
 using Foundation;
 using CloudKit;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.CloudKit;
-#endif
 
 namespace MonoTouchFixtures.CloudKit
 {

@@ -2,36 +2,17 @@
 using System.Runtime.InteropServices;
 using System.Drawing;
 
-#if XAMCORE_2_0
 #if !__WATCHOS__
 using CoreAnimation;
 #endif
 #if !__TVOS__
 using MapKit;
 #endif
+using CoreGraphics;
 using Foundation;
-#else
-using MonoTouch.CoreAnimation;
-using MonoTouch.MapKit;
-using MonoTouch.Foundation;
-#endif
 using OpenTK;
 
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
-
-#if XAMCORE_2_0
 namespace ObjCRuntime
-#else
-namespace MonoTouch.ObjCRuntime
-#endif
 {
 	public static class Messaging
 	{
@@ -43,7 +24,7 @@ namespace MonoTouch.ObjCRuntime
 		}
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
-		public extern static void void_objc_msgSend_IntPtr_PointF_ref_PointF (IntPtr receiver, IntPtr selector, IntPtr scrollView, PointF velocity, ref PointF targetContentOffset);
+		public extern static void void_objc_msgSend_IntPtr_CGPoint_ref_CGPoint (IntPtr receiver, IntPtr selector, IntPtr scrollView, CGPoint velocity, ref CGPoint targetContentOffset);
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper")]
 		public extern static void void_objc_msgSendSuper (ref objc_super receiver, IntPtr selector);
@@ -145,48 +126,48 @@ namespace MonoTouch.ObjCRuntime
 		public extern static bool bool_objc_msgSend_IntPtr_int (IntPtr receiver, IntPtr selector, IntPtr p1, int p2);
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
-		public extern static IntPtr IntPtr_objc_msgSend_SizeF (IntPtr receiver, IntPtr selector, SizeF p1);
+		public extern static IntPtr IntPtr_objc_msgSend_CGSize (IntPtr receiver, IntPtr selector, CGSize p1);
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
-		public extern static PointF PointF_objc_msgSend (IntPtr receiver, IntPtr selector);
+		public extern static CGPoint CGPoint_objc_msgSend (IntPtr receiver, IntPtr selector);
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
-		public extern static SizeF SizeF_objc_msgSend (IntPtr receiver, IntPtr selector);
+		public extern static CGSize CGSize_objc_msgSend (IntPtr receiver, IntPtr selector);
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
-		public extern static void void_objc_msgSend_RectangleF (IntPtr receiver, IntPtr selector, RectangleF p1);
+		public extern static void void_objc_msgSend_CGRect (IntPtr receiver, IntPtr selector, CGRect p1);
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
-		public extern static RectangleF RectangleF_objc_msgSend (IntPtr receiver, IntPtr selector);
+		public extern static CGRect CGRect_objc_msgSend (IntPtr receiver, IntPtr selector);
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
-		public extern static RectangleF RectangleF_objc_msgSend_int (IntPtr receiver, IntPtr selector, int p1);
+		public extern static CGRect CGRect_objc_msgSend_int (IntPtr receiver, IntPtr selector, int p1);
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
-		public extern static RectangleF RectangleF_objc_msgSend_IntPtr (IntPtr receiver, IntPtr selector, IntPtr p1);
+		public extern static CGRect CGRect_objc_msgSend_IntPtr (IntPtr receiver, IntPtr selector, IntPtr p1);
 
 #if !__TVOS__
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
-		public extern static RectangleF RectangleF_objc_msgSend_MKCoordinateRegion_IntPtr (IntPtr receiver, IntPtr selector, MKCoordinateRegion p1, IntPtr p2);
+		public extern static CGRect CGRect_objc_msgSend_MKCoordinateRegion_IntPtr (IntPtr receiver, IntPtr selector, MKCoordinateRegion p1, IntPtr p2);
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
-		public extern static RectangleF RectangleF_objc_msgSend_MKMapRect (IntPtr receiver, IntPtr selector, MKMapRect p1);
+		public extern static CGRect CGRect_objc_msgSend_MKMapRect (IntPtr receiver, IntPtr selector, MKMapRect p1);
 #endif // !__TVOS__
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
-		public extern static RectangleF RectangleF_objc_msgSend_RectangleF (IntPtr receiver, IntPtr selector, RectangleF p1);
+		public extern static CGRect CGRect_objc_msgSend_CGRect (IntPtr receiver, IntPtr selector, CGRect p1);
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
-		public extern static RectangleF RectangleF_objc_msgSend_RectangleF_int (IntPtr receiver, IntPtr selector, RectangleF p1, int p2);
+		public extern static CGRect CGRect_objc_msgSend_CGRect_int (IntPtr receiver, IntPtr selector, CGRect p1, int p2);
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
-		public extern static RectangleF RectangleF_objc_msgSend_RectangleF_IntPtr (IntPtr receiver, IntPtr selector, RectangleF p1, IntPtr p2);
+		public extern static CGRect CGRect_objc_msgSend_CGRect_IntPtr (IntPtr receiver, IntPtr selector, CGRect p1, IntPtr p2);
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
-		public extern static RectangleF RectangleF_objc_msgSend_RectangleF_RectangleF_float (IntPtr receiver, IntPtr selector, RectangleF p1, RectangleF p2, float p3);
+		public extern static CGRect CGRect_objc_msgSend_CGRect_CGRect_float (IntPtr receiver, IntPtr selector, CGRect p1, CGRect p2, float p3);
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
-		public extern static RectangleF RectangleF_objc_msgSend_RectangleF_RectangleF_RectangleF (IntPtr receiver, IntPtr selector, RectangleF p1, RectangleF p2, RectangleF p3);
+		public extern static CGRect CGRect_objc_msgSend_CGRect_CGRect_CGRect (IntPtr receiver, IntPtr selector, CGRect p1, CGRect p2, CGRect p3);
 
 #if !__WATCHOS__
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
@@ -198,17 +179,17 @@ namespace MonoTouch.ObjCRuntime
 
 #if !__TVOS__
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
-		public extern static void RectangleF_objc_msgSend_stret_MKMapRect (out RectangleF buf, IntPtr receiver, IntPtr selector, MKMapRect p1);
+		public extern static void CGRect_objc_msgSend_stret_MKMapRect (out CGRect buf, IntPtr receiver, IntPtr selector, MKMapRect p1);
 #endif // !__TVOS__
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
-		public extern static void RectangleF_objc_msgSend_stret (out RectangleF buf, IntPtr receiver, IntPtr selector);
+		public extern static void CGRect_objc_msgSend_stret (out CGRect buf, IntPtr receiver, IntPtr selector);
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
-		public extern static void PointF_objc_msgSend_stret (out PointF buf, IntPtr receiver, IntPtr selector);
+		public extern static void CGPoint_objc_msgSend_stret (out CGPoint buf, IntPtr receiver, IntPtr selector);
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
-		public extern static void SizeF_objc_msgSend_stret (out SizeF buf, IntPtr receiver, IntPtr selector);
+		public extern static void CGSize_objc_msgSend_stret (out CGSize buf, IntPtr receiver, IntPtr selector);
 
 #if !__WATCHOS__
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
@@ -216,30 +197,30 @@ namespace MonoTouch.ObjCRuntime
 #endif // !__WATCHOS__
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
-		public extern static void RectangleF_objc_msgSend_stret_int (out RectangleF buf, IntPtr receiver, IntPtr selector, int p1);
+		public extern static void CGRect_objc_msgSend_stret_int (out CGRect buf, IntPtr receiver, IntPtr selector, int p1);
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
-		public extern static void RectangleF_objc_msgSend_stret_IntPtr (out RectangleF buf, IntPtr receiver, IntPtr selector, IntPtr p1);
+		public extern static void CGRect_objc_msgSend_stret_IntPtr (out CGRect buf, IntPtr receiver, IntPtr selector, IntPtr p1);
 
 #if !__TVOS__
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
-		public extern static void RectangleF_objc_msgSend_stret_MKCoordinateRegion_IntPtr (out RectangleF buf, IntPtr receiver, IntPtr selector, MKCoordinateRegion p1, IntPtr p2);
+		public extern static void CGRect_objc_msgSend_stret_MKCoordinateRegion_IntPtr (out CGRect buf, IntPtr receiver, IntPtr selector, MKCoordinateRegion p1, IntPtr p2);
 #endif // !__TVOS__
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
-		public extern static void RectangleF_objc_msgSend_stret_RectangleF (out RectangleF buf, IntPtr receiver, IntPtr selector, RectangleF p1);
+		public extern static void CGRect_objc_msgSend_stret_CGRect (out CGRect buf, IntPtr receiver, IntPtr selector, CGRect p1);
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
-		public extern static void RectangleF_objc_msgSend_stret_RectangleF_int (out RectangleF buf, IntPtr receiver, IntPtr selector, RectangleF p1, int p2);
+		public extern static void CGRect_objc_msgSend_stret_CGRect_int (out CGRect buf, IntPtr receiver, IntPtr selector, CGRect p1, int p2);
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
-		public extern static void RectangleF_objc_msgSend_stret_RectangleF_IntPtr (out RectangleF buf, IntPtr receiver, IntPtr selector, RectangleF p1, IntPtr p2);
+		public extern static void CGRect_objc_msgSend_stret_CGRect_IntPtr (out CGRect buf, IntPtr receiver, IntPtr selector, CGRect p1, IntPtr p2);
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
-		public extern static void RectangleF_objc_msgSend_stret_RectangleF_RectangleF_float (out RectangleF buf, IntPtr receiver, IntPtr selector, RectangleF p1, RectangleF p2, float p3);
+		public extern static void CGRect_objc_msgSend_stret_CGRect_CGRect_float (out CGRect buf, IntPtr receiver, IntPtr selector, CGRect p1, CGRect p2, float p3);
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
-		public extern static void RectangleF_objc_msgSend_stret_RectangleF_RectangleF_RectangleF (out RectangleF buf, IntPtr receiver, IntPtr selector, RectangleF p1, RectangleF p2, RectangleF p3);
+		public extern static void CGRect_objc_msgSend_stret_CGRect_CGRect_CGRect (out CGRect buf, IntPtr receiver, IntPtr selector, CGRect p1, CGRect p2, CGRect p3);
 
 #if !__WATCHOS__
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]

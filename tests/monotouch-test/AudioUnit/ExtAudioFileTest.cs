@@ -10,15 +10,9 @@
 #if !__WATCHOS__
 
 using NUnit.Framework;
-#if XAMCORE_2_0
 using Foundation;
 using AudioUnit;
 using CoreFoundation;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.AudioUnit;
-using MonoTouch.CoreFoundation;
-#endif
 using System.IO;
 
 namespace MonoTouchFixtures.AudioUnit {

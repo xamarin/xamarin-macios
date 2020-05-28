@@ -2,12 +2,7 @@ using System;
 using System.Threading.Tasks;
 using NUnit.Framework;
 
-#if !XAMCORE_2_0
-using MonoMac.AppKit;
-using nfloat = System.Single;
-#else
 using AppKit;
-#endif
 
 namespace Xamarin.Mac.Tests
 {

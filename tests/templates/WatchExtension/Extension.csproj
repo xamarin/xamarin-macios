@@ -12,7 +12,7 @@
     <AssemblyName>testextension</AssemblyName>
     <SignAssembly>True</SignAssembly>
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)-unified</IntermediateOutputPath>
-    <DefineConstants>XAMCORE_2_0</DefineConstants>
+    <DefineConstants></DefineConstants>
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)-watchos-extension</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">

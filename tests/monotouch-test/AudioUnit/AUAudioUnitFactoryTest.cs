@@ -7,7 +7,7 @@
 // Copyright 2016 Xamarin Inc. All rights reserved.
 //
 
-#if !__WATCHOS__ && XAMCORE_2_0
+#if !__WATCHOS__
 
 using System;
 
@@ -61,4 +61,4 @@ namespace MonoTouchFixtures.AudioUnit {
 	}
 }
 
-#endif // !__WATCHOS__ && XAMCORE_2_0
+#endif // !__WATCHOS__

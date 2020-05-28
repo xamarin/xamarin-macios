@@ -10,7 +10,6 @@
 #if !__WATCHOS__
 
 using System;
-#if XAMCORE_2_0
 using CoreGraphics;
 using Foundation;
 using ModelIO;
@@ -18,14 +17,6 @@ using ObjCRuntime;
 using SceneKit;
 #if !MONOMAC
 using UIKit;
-#endif
-#else
-using MonoTouch.CoreGraphics;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-using MonoTouch.ModelIO;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.SceneKit;
 #endif
 using OpenTK;
 using NUnit.Framework;

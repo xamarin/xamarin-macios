@@ -1,18 +1,12 @@
 // Copyright 2014-2015 Xamarin Inc. All rights reserved
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using Security;
 #if MONOMAC
 using AppKit;
 #else
 using UIKit;
-#endif
-#else
-using MonoTouch.Foundation;
-using MonoTouch.Security;
-using MonoTouch.UIKit;
 #endif
 using NUnit.Framework;
 using NUnit.Framework.Internal;

@@ -3,18 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Text;
-#if XAMCORE_2_0
 using CoreFoundation;
 using Foundation;
 using Network;
 using ObjCRuntime;
 using Security;
-#else
-using MonoTouch.CoreFoundation;
-using MonoTouch.Foundation;
-using MonoTouch.Network;
-using MonoTouch.Security;
-#endif
 
 using NUnit.Framework;
 

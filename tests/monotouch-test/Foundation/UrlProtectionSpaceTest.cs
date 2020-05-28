@@ -9,7 +9,6 @@
 
 using System;
 using System.Security.Cryptography.X509Certificates;
-#if XAMCORE_2_0
 using Foundation;
 using Security;
 #if MONOMAC
@@ -17,24 +16,9 @@ using AppKit;
 #else
 using UIKit;
 #endif
-#else
-using MonoTouch.Foundation;
-using MonoTouch.Security;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 using MonoTouchFixtures.Security;
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
 
 namespace MonoTouchFixtures.Foundation {
 

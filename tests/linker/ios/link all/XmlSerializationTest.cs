@@ -12,11 +12,7 @@ using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 
-#if XAMCORE_2_0
 using Foundation;
-#else
-using MonoTouch.Foundation;
-#endif
 
 using NUnit.Framework;
 

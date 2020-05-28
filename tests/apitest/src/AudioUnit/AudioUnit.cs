@@ -2,16 +2,9 @@ using System;
 using System.Threading.Tasks;
 using NUnit.Framework;
 
-#if !XAMCORE_2_0
-using MonoMac.AppKit;
-using MonoMac.AudioUnit;
-using theUnit = MonoMac.AudioUnit.AudioUnit; // Namespace fun
-#else
 using AppKit;
 using AudioUnit;
 using theUnit = AudioUnit.AudioUnit;
-
-#endif
 
 namespace Xamarin.Mac.Tests
 {

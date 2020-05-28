@@ -12,21 +12,12 @@
 
 using System;
 
-#if XAMCORE_2_0
 using Foundation;
 using VideoToolbox;
 using CoreMedia;
 using AVFoundation;
 using CoreFoundation;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.VideoToolbox;
-using MonoTouch.UIKit;
-using MonoTouch.CoreMedia;
-using MonoTouch.AVFoundation;
-using MonoTouch.CoreFoundation;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.VideoToolbox {

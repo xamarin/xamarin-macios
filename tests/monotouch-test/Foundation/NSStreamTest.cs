@@ -5,13 +5,8 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
-#if XAMCORE_2_0
 using CoreFoundation;
 using Foundation;
-#else
-using MonoTouch.CoreFoundation;
-using MonoTouch.Foundation;
-#endif
 
 namespace MonoTouchFixtures.Foundation {
 

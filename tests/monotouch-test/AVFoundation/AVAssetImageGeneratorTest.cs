@@ -13,27 +13,12 @@ using System;
 using System.Drawing;
 using System.IO;
 using System.Threading;
-#if XAMCORE_2_0
+using CoreGraphics;
 using Foundation;
 using AVFoundation;
 using CoreMedia;
 using ObjCRuntime;
-#else
-using MonoTouch.AVFoundation;
-using MonoTouch.CoreMedia;
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
 
 namespace MonoTouchFixtures.AVFoundation {
 	
@@ -49,7 +34,7 @@ namespace MonoTouchFixtures.AVFoundation {
 			using (AVAssetImageGenerator aig = new AVAssetImageGenerator (video_asset)) {
 				Assert.Null (aig.ApertureMode, "ApertureMode");
 				Assert.False (aig.AppliesPreferredTrackTransform, "AppliesPreferredTrackTransform");
-				Assert.That (aig.MaximumSize, Is.EqualTo (SizeF.Empty), "MaximumSize");
+				Assert.That (aig.MaximumSize, Is.EqualTo (CGSize.Empty), "MaximumSize");
 				Assert.True (aig.RequestedTimeToleranceAfter.IsPositiveInfinity, "RequestedTimeToleranceAfter");
 				Assert.True (aig.RequestedTimeToleranceBefore.IsPositiveInfinity, "RequestedTimeToleranceBefore");
 			}
@@ -133,27 +118,6 @@ namespace MonoTouchFixtures.AVFoundation {
 			Assert.True (mre.WaitOne (2000), "wait");
 			Assert.True (handled, "handled");
 		}
-
-#if !XAMCORE_2_0
-		[Test]
-		public void GenerateCGImagesAsynchronously_Compat ()
-		{
-			handled = false;
-			mre = new ManualResetEvent (false);
-			ThreadStart main = () => {
-				using (NSUrl video_url = NSUrl.FromFilename (video_asset_path))
-				using (AVAsset video_asset = AVAsset.FromUrl (video_url))
-				using (AVAssetImageGenerator aig = new AVAssetImageGenerator (video_asset)) {
-					aig.GenerateCGImagesAsynchronously (NSValue.FromCMTime (CMTime.Zero), handler);
-					mre.WaitOne ();
-				}
-			};
-			var asyncResult = main.BeginInvoke (null, null);
-			main.EndInvoke (asyncResult);
-			Assert.True (mre.WaitOne (2000));
-			Assert.True (handled, "handled");
-		}
-#endif
 
 		void handler (CMTime requestedTime, IntPtr imageRef, CMTime actualTime, AVAssetImageGeneratorResult result, NSError error) 
 		{

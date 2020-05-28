@@ -10,16 +10,10 @@
 #if !__TVOS__ && !__WATCHOS__ && !MONOMAC
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using MediaPlayer;
 using UIKit;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.MediaPlayer;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.MediaPlayer {
@@ -29,7 +23,6 @@ namespace MonoTouchFixtures.MediaPlayer {
 	public class PlayableContentManagerTest	{
 
 		class DataSource : MPPlayableContentDataSource {
-#if XAMCORE_2_0
 			#region implemented abstract members of MPPlayableContentDataSource
 			public override MPContentItem ContentItem (NSIndexPath indexPath)
 			{
@@ -40,7 +33,6 @@ namespace MonoTouchFixtures.MediaPlayer {
 				throw new NotImplementedException ();
 			}
 			#endregion
-#endif
 		}
 
 		class Delegate : MPPlayableContentDelegate {

@@ -13,13 +13,8 @@
 using System;
 using ObjCRuntime;
 
-#if XAMCORE_2_0
 using Foundation;
 using AVFoundation;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.AVFoundation;
-#endif
 using NUnit.Framework;
 using MonoTests.System.Net.Http;
 

@@ -5,17 +5,10 @@
 using System;
 using System.Drawing;
 using System.IO;
-#if XAMCORE_2_0
 using Foundation;
 using MediaPlayer;
 using ObjCRuntime;
 using UIKit;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.MediaPlayer;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.MediaPlayer

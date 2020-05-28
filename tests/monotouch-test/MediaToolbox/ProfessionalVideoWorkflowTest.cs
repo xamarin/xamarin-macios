@@ -1,13 +1,8 @@
 ﻿#if MONOMAC
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using MediaToolbox;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.MediaToolbox;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.MediaToolbox {

@@ -1,13 +1,7 @@
 ﻿using System;
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
 using Security;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.Security;
-#endif
 using NUnit.Framework;
 
 namespace monotouchtest

@@ -13,13 +13,8 @@
 using System;
 using OpenTK;
 
-#if XAMCORE_2_0
 using Foundation;
 using GameplayKit;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.GameplayKit;
-#endif
 
 using MatrixFloat2x2 = global::OpenTK.NMatrix2;
 using MatrixFloat3x3 = global::OpenTK.NMatrix3;
