@@ -2,20 +2,11 @@ using System;
 
 using Xamarin.MacDev.Tasks;
 using Xamarin.MacDev;
-using Xamarin.Utils;
 
 namespace Xamarin.iOS.Tasks
 {
 	public abstract class DetectSdkLocationsTaskBase : DetectSdkLocationsCoreTaskBase
 	{
-#region Inputs
-
-		public string TargetArchitectures {
-			get; set;
-		}
-
-#endregion Inputs
-
 		protected override IAppleSdk CurrentSdk {
 			get {
 				return IPhoneSdks.GetSdk (Platform);
