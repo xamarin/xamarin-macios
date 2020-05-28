@@ -15,6 +15,7 @@ namespace Xharness.Jenkins {
 		
 		static readonly Dictionary<string, (string HumanMessage, string IssueLink)> buildErrorMaps = new Dictionary<string, (string HumanMessage, string IssueLink)> {
 			["error MT5210: Native linking failed, undefined symbol: ___multi3"] = (HumanMessage: "Undefined symbol ___multi3 on Release Mode.", IssueLink:"https://github.com/mono/mono/issues/18560"),
+			["Also, tried to find \"Xamarin / Mac / Xamarin.Mac.CSharp.targets\" in the fallback search path(s)"] = (HumanMessage: "\"Xamarin.Mac.CSharp.targets\" could not be found.", IssueLink: "https://github.com/xamarin/maccore/issues/1488"),
 		};
 		
 		static bool TryFindErrors (ILog? log, Dictionary<string, (string HumanMessage, string IssueLink)> errorMap, out (string HumanMessage, string IssueLink)? failureMessage)
