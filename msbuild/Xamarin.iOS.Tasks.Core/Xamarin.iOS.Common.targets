@@ -549,7 +549,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			OptimizePNGs="$(OptimizePNGs)"
 			BundleResources="@(Content);@(BundleResource)"
 			ProjectDir="$(MSBuildProjectDirectory)"
-			ResourcePrefix="$(IPhoneResourcePrefix)"
+			ResourcePrefix="$(_ResourcePrefix)"
 			>
 
 			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="_BundleResourceWithLogicalName"/>
@@ -560,7 +560,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<FindItemWithLogicalName
 			SessionId="$(BuildSessionId)"
 			ProjectDir="$(MSBuildProjectDirectory)"
-			ResourcePrefix="$(IPhoneResourcePrefix)"
+			ResourcePrefix="$(_ResourcePrefix)"
 			LogicalName="Info.plist"
 			Items="@(None)">
 			<Output TaskParameter="Item" PropertyName="_AppManifest" />
@@ -568,7 +568,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<FindItemWithLogicalName Condition="'$(_AppManifest)' == '' And '$(_CanOutputAppBundle)' == 'true'"
 			SessionId="$(BuildSessionId)"
 			ProjectDir="$(MSBuildProjectDirectory)"
-			ResourcePrefix="$(IPhoneResourcePrefix)"
+			ResourcePrefix="$(_ResourcePrefix)"
 			LogicalName="Info.plist"
 			Items="@(BundleResource)">
 			<Output TaskParameter="Item" PropertyName="_AppManifest" />
@@ -576,7 +576,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<FindItemWithLogicalName Condition="'$(_AppManifest)' == '' And '$(_CanOutputAppBundle)' == 'true'"
 			SessionId="$(BuildSessionId)"
 			ProjectDir="$(MSBuildProjectDirectory)"
-			ResourcePrefix="$(IPhoneResourcePrefix)"
+			ResourcePrefix="$(_ResourcePrefix)"
 			LogicalName="Info.plist"
 			Items="@(Content)">
 			<Output TaskParameter="Item" PropertyName="_AppManifest" />
@@ -592,7 +592,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			AppManifest="$(_AppManifest)"
 			ProjectDir="$(MSBuildProjectDirectory)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
-			ResourcePrefix="$(IPhoneResourcePrefix)"
+			ResourcePrefix="$(_ResourcePrefix)"
 			SdkDevPath="$(_SdkDevPath)"
 			SdkIsSimulator="$(_SdkIsSimulator)"
 			SdkRoot="$(_SdkRoot)"
@@ -1226,7 +1226,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			Condition="'$(IsMacEnabled)' == 'true'"
 			BundleResources="@(Collada)"
 			ProjectDir="$(MSBuildProjectDirectory)"
-			ResourcePrefix="$(IPhoneResourcePrefix)">
+			ResourcePrefix="$(_ResourcePrefix)">
 			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="_ColladaAssetWithLogicalName" />
 		</CollectBundleResources>
 	</Target>
@@ -1302,7 +1302,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
 			IsWatchApp="$(IsWatchApp)"
 			ProjectDir="$(MSBuildProjectDirectory)"
-			ResourcePrefix="$(IPhoneResourcePrefix)"
+			ResourcePrefix="$(_ResourcePrefix)"
 			SdkDevPath="$(_SdkDevPath)"
 			SdkBinPath="$(_SdkBinPath)"
 			SdkUsrPath="$(_SdkUsrPath)"
@@ -1361,7 +1361,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			ProjectDir="$(MSBuildProjectDirectory)"
-			ResourcePrefix="$(IPhoneResourcePrefix)"
+			ResourcePrefix="$(_ResourcePrefix)"
 			IsWatchApp="$(IsWatchApp)"
 			SdkPlatform="$(_SdkPlatform)"
 			SdkDevPath="$(_SdkDevPath)"
@@ -1416,7 +1416,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			IsWatchApp="$(IsWatchApp)"
 			IsWatch2App="$(IsWatch2App)"
 			ProjectDir="$(MSBuildProjectDirectory)"
-			ResourcePrefix="$(IPhoneResourcePrefix)"
+			ResourcePrefix="$(_ResourcePrefix)"
 			SdkDevPath="$(_SdkDevPath)"
 			SdkBinPath="$(_SdkBinPath)"
 			SdkUsrPath="$(_SdkUsrPath)"
@@ -1471,7 +1471,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			AtlasTextures="@(AtlasTexture)"
 			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
 			ProjectDir="$(MSBuildProjectDirectory)"
-			ResourcePrefix="$(IPhoneResourcePrefix)"
+			ResourcePrefix="$(_ResourcePrefix)"
 			SdkDevPath="$(_SdkDevPath)"
 			SdkBinPath="$(_SdkBinPath)"
 			SdkUsrPath="$(_SdkUsrPath)">
@@ -1525,7 +1525,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			EnableOnDemandResources="$(EnableOnDemandResources)"
 			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
 			ProjectDir="$(MSBuildProjectDirectory)"
-			ResourcePrefix="$(IPhoneResourcePrefix)"
+			ResourcePrefix="$(_ResourcePrefix)"
 			SdkDevPath="$(_SdkDevPath)">
 			<Output TaskParameter="BundleResources" ItemName="_BundleResourceWithLogicalName" />
 			<Output TaskParameter="PartialAppManifests" ItemName="_PartialAppManifest" />

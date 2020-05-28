@@ -60,7 +60,7 @@ Copyright (C) 2013-2016 Xamarin Inc. All rights reserved.
 	</Target>
 
 	<Target Name="_AssignBundleResourceNames">
-		<AssignBundleResourceNames BundleResources="@(BundleResource)" ResourceDirectoryPrefixes="$(IPhoneResourcePrefix)">
+		<AssignBundleResourceNames BundleResources="@(BundleResource)" ResourceDirectoryPrefixes="$(_ResourcePrefix)">
 			<Output ItemName="_BundleResourceWithName" TaskParameter="BundleResourcesWithNames" />
 		</AssignBundleResourceNames>
 	</Target>
@@ -71,7 +71,7 @@ Copyright (C) 2013-2016 Xamarin Inc. All rights reserved.
 				OptimizePNGs="False"
 				BundleResources="@(Content);@(BundleResource)"
 				ProjectDir="$(MSBuildProjectDirectory)"
-				ResourcePrefix="$(IPhoneResourcePrefix)"
+				ResourcePrefix="$(_ResourcePrefix)"
 			>
 
 			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="_BundleResourceWithLogicalName"/>
