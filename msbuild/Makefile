@@ -32,6 +32,7 @@ IOS_TARGETS =                                                      \
 	$(wildcard Xamarin.iOS.Tasks.Core/Xamarin.MonoTouch.*.targets) \
 	$(wildcard Xamarin.iOS.Tasks.Core/Xamarin.iOS.*.props)         \
 	$(wildcard Xamarin.iOS.Tasks.Core/Xamarin.iOS.*.targets)       \
+	$(wildcard Xamarin.Shared/Xamarin.*.props)       \
 	$(wildcard Xamarin.Shared/Xamarin.*.targets)       \
 
 IOS_BINDING_TARGETS = $(wildcard Xamarin.ObjcBinding.Tasks/*.targets)
@@ -146,7 +147,12 @@ endif
 ## XM definitions
 ##
 
-MAC_TARGETS = $(wildcard Xamarin.Mac.Tasks/*.props) $(wildcard Xamarin.Mac.Tasks/*.targets) $(wildcard Xamarin.Shared/Xamarin.*.targets)
+MAC_TARGETS = \
+	$(wildcard Xamarin.Mac.Tasks/*.props) \
+	$(wildcard Xamarin.Mac.Tasks/*.targets) \
+	$(wildcard Xamarin.Shared/Xamarin.*.props) \
+	$(wildcard Xamarin.Shared/Xamarin.*.targets) \
+
 MAC_BINDING_TARGETS =
 
 MAC_TASK_ASSEMBLIES = Xamarin.Mac.Tasks $(LOCALIZATION_ASSEMBLIES)
