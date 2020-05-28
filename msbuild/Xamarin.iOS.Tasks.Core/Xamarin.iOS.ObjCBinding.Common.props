@@ -26,14 +26,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Shared.props" />
 
-	<Target Name="_ComputeTargetFrameworkMoniker">
-		<PropertyGroup Condition="'$(_ComputedTargetFrameworkMoniker)' == ''">
-			<!-- Get the TargetFrameworkMoniker and store it in our own variable so that it's overridable while only affecting the parts of the build that we care about.
-				 This is overridability is a workaround while we wait for .NET 5 to be able to give us the TFM we're supposed to get during the build. -->
-			<_ComputedTargetFrameworkMoniker Condition="'$(_ComputedTargetFrameworkMoniker)' == ''">$(TargetFrameworkMoniker)</_ComputedTargetFrameworkMoniker>
-		</PropertyGroup>
-	</Target>
-
 	<!-- This is used to determine if VS is connected to mac. -->
 	<PropertyGroup>
 		<IsMacEnabled>true</IsMacEnabled>
