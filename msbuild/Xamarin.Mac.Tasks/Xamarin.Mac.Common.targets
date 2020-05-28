@@ -425,7 +425,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<DetectSdkLocations
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
-			SdkVersion="$(MacOSXSdkVersion)"
+			SdkVersion="$(_SdkVersion)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			>
 			<Output TaskParameter="SdkVersion" PropertyName="_SdkVersion" />
