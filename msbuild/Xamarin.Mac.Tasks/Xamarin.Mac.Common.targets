@@ -175,7 +175,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		</_CollectBundleResourcesDependsOn>
 	</PropertyGroup>
 
-	<Target Name="_CodesignNativeLibraries" Condition="'$(EnableCodeSigning)'" DependsOnTargets="_DetectSigningIdentity">
+	<Target Name="_CodesignNativeLibraries" Condition="'$(_RequireCodeSigning)'" DependsOnTargets="_DetectSigningIdentity">
 		<Codesign
 			SessionId="$(BuildSessionId)"
 			ToolExe="$(CodesignExe)"
@@ -203,7 +203,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		</EmbedProvisionProfile>
 	</Target>
 
-	<Target Name="_CompileEntitlements" Condition="'$(EnableCodeSigning)'" DependsOnTargets="_GenerateBundleName"
+	<Target Name="_CompileEntitlements" Condition="'$(_RequireCodeSigning)'" DependsOnTargets="_GenerateBundleName"
 		Outputs="$(IntermediateOutputPath)Entitlements.xcent">
 		<CompileEntitlements
 			Condition="'$(IsMacEnabled)' == 'true'"
@@ -223,7 +223,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		</CompileEntitlements>
 	</Target>
 
-	<Target Name="_CodesignAppBundle" Condition="'$(EnableCodeSigning)'" DependsOnTargets="$(_CodesignAppBundleDependsOn)">
+	<Target Name="_CodesignAppBundle" Condition="'$(_RequireCodeSigning)'" DependsOnTargets="$(_CodesignAppBundleDependsOn)">
 		<Codesign
 			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
@@ -242,7 +242,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		</Codesign>
 	</Target>
 
-	<Target Name="_CodesignVerify" Condition="'$(EnableCodeSigning)'" DependsOnTargets="_CodesignAppBundle">
+	<Target Name="_CodesignVerify" Condition="'$(_RequireCodeSigning)'" DependsOnTargets="_CodesignAppBundle">
 		<CodesignVerify
 			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
@@ -447,7 +447,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			AppBundleName="$(_AppBundleName)"
 			AppManifest="$(_AppManifest)"
 			Keychain="$(CodesignKeychain)"
-			RequireCodeSigning="$(EnableCodeSigning)"
+			RequireCodeSigning="$(_RequireCodeSigning)"
 			RequireProvisioningProfile="$(_RequireProvisioningProfile)"
 			SdkPlatform="MacOSX"
 			ProvisioningProfile="$(CodeSignProvision)"
