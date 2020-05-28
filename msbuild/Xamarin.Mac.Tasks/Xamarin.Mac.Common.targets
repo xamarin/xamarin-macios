@@ -423,7 +423,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			RequireProvisioningProfile="$(_RequireProvisioningProfile)"
 			SdkPlatform="MacOSX"
 			ProvisioningProfile="$(CodeSignProvision)"
-			SigningKey="$(CodeSigningKey)"
+			SigningKey="$(_SpecifiedCodesignKey)"
 			DetectedCodeSigningKey="$(_CodeSigningKey)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			>
