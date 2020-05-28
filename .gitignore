@@ -34,3 +34,4 @@ global.json
 .idea
 device-tests-provisioning.csx
 mono_crash.*.json
+*.binlog
