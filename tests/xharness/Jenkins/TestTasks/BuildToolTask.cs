@@ -8,7 +8,7 @@ using Xharness.TestTasks;
 
 namespace Xharness.Jenkins.TestTasks
 {
-	public abstract class BuildToolTask : AppleTestTask, IBuildToolTask 
+	abstract class BuildToolTask : AppleTestTask, IBuildToolTask 
 	{
 		protected BuildTool buildToolTask;
 
