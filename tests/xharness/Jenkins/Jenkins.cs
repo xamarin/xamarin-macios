@@ -21,7 +21,6 @@ namespace Xharness.Jenkins {
 		public readonly ISimulatorLoader Simulators;
 		public readonly IHardwareDeviceLoader Devices;
 		readonly IProcessManager processManager;
-		readonly IResultParser resultParser;
 		public ITunnelBore TunnelBore { get; private set; }
 		readonly TestSelector testSelector;
 		readonly TestVariationsFactory testVariationsFactory;
@@ -97,7 +96,6 @@ namespace Xharness.Jenkins {
 		public Jenkins (Harness harness, IProcessManager processManager, IResultParser resultParser, ITunnelBore tunnelBore)
 		{
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
-			this.resultParser = resultParser ?? throw new ArgumentNullException (nameof (resultParser));
 			this.TunnelBore = tunnelBore ?? throw new ArgumentNullException (nameof (tunnelBore));
 			Harness = harness ?? throw new ArgumentNullException (nameof (harness));
 			Simulators = new SimulatorLoader (processManager);
@@ -753,16 +751,72 @@ namespace Xharness.Jenkins {
 					var tmpreport = Path.Combine (LogDirectory, $"index-{Helpers.Timestamp}.tmp.html");
 					var tmpmarkdown = string.IsNullOrEmpty (Harness.MarkdownSummaryPath) ? string.Empty : (Harness.MarkdownSummaryPath + $".{Helpers.Timestamp}.tmp");
 
+					var allSimulatorTasks = new List<RunSimulatorTask> ();
+					var allExecuteTasks = new List<MacExecuteTask> ();
+					var allNUnitTasks = new List<NUnitExecuteTask> ();
+					var allMakeTasks = new List<MakeTask> ();
+					var allDeviceTasks = new List<RunDeviceTask> ();
+					var allDotNetTestTasks = new List<DotNetTestTask> ();
+
+					foreach (var task in Tasks) {
+						var aggregated = task as AggregatedRunSimulatorTask;
+						if (aggregated != null) {
+							allSimulatorTasks.AddRange (aggregated.Tasks);
+							continue;
+						}
+
+						var execute = task as MacExecuteTask;
+						if (execute != null) {
+							allExecuteTasks.Add (execute);
+							continue;
+						}
+
+						var nunit = task as NUnitExecuteTask;
+						if (nunit != null) {
+							allNUnitTasks.Add (nunit);
+							continue;
+						}
+
+						var make = task as MakeTask;
+						if (make != null) {
+							allMakeTasks.Add (make);
+							continue;
+						}
+
+						var run_device = task as RunDeviceTask;
+						if (run_device != null) {
+							allDeviceTasks.Add (run_device);
+							continue;
+						}
+
+						if (task is DotNetTestTask dotnet) {
+							allDotNetTestTasks.Add (dotnet);
+							continue;
+						}
+
+						throw new NotImplementedException ();
+					}
+
+					var allTasks = new List<ITestTask> ();
+					if (!Populating) {
+						allTasks.AddRange (allExecuteTasks);
+						allTasks.AddRange (allSimulatorTasks);
+						allTasks.AddRange (allNUnitTasks);
+						allTasks.AddRange (allMakeTasks);
+						allTasks.AddRange (allDeviceTasks);
+						allTasks.AddRange (allDotNetTestTasks);
+					}
+
 					// write the html
 					using (var stream = new FileStream (tmpreport, FileMode.Create, FileAccess.ReadWrite)) 
 					using (var writer = new StreamWriter (stream)) { 
-						htmlReportWriter.Write (Tasks, writer);
+						htmlReportWriter.Write (allTasks, writer);
 					}
 
 					// optionally, write the markdown
 					if (!string.IsNullOrEmpty (tmpmarkdown)) {
 						using (var writer = new StreamWriter (tmpmarkdown)) {
-							markdownReportWriter.Write (Tasks, writer);
+							markdownReportWriter.Write (allTasks, writer);
 						}
 					}
 
