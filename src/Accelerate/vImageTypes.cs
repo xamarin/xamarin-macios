@@ -159,37 +159,25 @@ namespace Accelerate {
 	public struct PixelFFFF {
 		// all defined as 'float'
 		public float A, R, G, B;
-#if XAMCORE_2_0
-		readonly
-#endif
-		public static PixelFFFF Zero;
+		public readonly static PixelFFFF Zero;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
 	public struct Pixel8888 {
 		public byte A, R, G, B;
-#if XAMCORE_2_0
-		readonly
-#endif
-		public static Pixel8888 Zero;
+		public readonly static Pixel8888 Zero;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
 	public struct PixelARGB16U {
 		public Pixel16U A, R, G, B;
-#if XAMCORE_2_0
-		readonly
-#endif
-		public static PixelARGB16U Zero;
+		public readonly static PixelARGB16U Zero;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
 	public struct PixelARGB16S {
 		public Pixel16S A, R, G, B;
-#if XAMCORE_2_0
-		readonly
-#endif
-		public static PixelARGB16S Zero;
+		public readonly static PixelARGB16S Zero;
 	}
 
 	unsafe public static class vImage {
@@ -266,26 +254,6 @@ namespace Accelerate {
 									     Pixel8888 backgroundColor, 
 									     vImageFlags flags);
 
-#if !XAMCORE_2_0
-		[Obsolete ("Use the overload with 'short[][] kernels' instead.")]
-		public static vImageError ConvolveMultiKernelARGB8888 (ref vImageBuffer src, 
-			ref vImageBuffer dest, 
-			IntPtr tempBuffer, 
-			vImagePixelCount srcOffsetToROI_X, 
-			vImagePixelCount srcOffsetToROI_Y,  
-			short [] kernels, 		// must be 4
-			uint kernel_height, 
-			uint kernel_width, 
-			int [] divisors, 		// must be 4
-			int [] biases,		// must be 4
-			Pixel8888 backgroundColor, 
-			vImageFlags flags)
-		{
-			var kern = new short [] [] { kernels, kernels, kernels, kernels };
-			return ConvolveMultiKernelARGB8888 (ref src, ref dest, tempBuffer, srcOffsetToROI_X, srcOffsetToROI_Y, kern, kernel_height, kernel_width, divisors, biases, backgroundColor, flags);
-		}
-#endif
-
 		public static vImageError ConvolveMultiKernelARGB8888 (ref vImageBuffer src, 
 									ref vImageBuffer dest, 
 									IntPtr tempBuffer, 
@@ -343,43 +311,6 @@ namespace Accelerate {
 									     PixelFFFF backgroundColor,
 									     vImageFlags flags);
 
-#if !XAMCORE_2_0
-		[Obsolete ("Use the overload with 'float[][] kernels' instead.")]
-		public static vImageError ConvolveMultiKernelARGBFFFF (ref vImageBuffer src,
-			ref vImageBuffer dest, 
-			IntPtr tempBuffer, 
-			vImagePixelCount srcOffsetToROI_X, 
-			vImagePixelCount srcOffsetToROI_Y,  
-			float [] kernels,   //must be 4
-			uint kernel_height, 
-			uint kernel_width, 
-			float [] biases,    // must be 4
-			ref PixelFFFF backgroundColor,
-			vImageFlags flags)
-		{
-			var kern = new float [] [] { kernels, kernels, kernels, kernels };
-			return ConvolveMultiKernelARGBFFFF (ref src, ref dest, tempBuffer, srcOffsetToROI_X, srcOffsetToROI_Y, kern, kernel_height, kernel_width, biases, backgroundColor, flags);
-		}
-#endif
-
-#if !XAMCORE_2_0
-		[Obsolete ("Use the overload with 'float[][] kernels' instead.")]
-		public static vImageError ConvolveMultiKernelARGBFFFF (ref vImageBuffer src,
-			ref vImageBuffer dest, 
-			IntPtr tempBuffer, 
-			vImagePixelCount srcOffsetToROI_X, 
-			vImagePixelCount srcOffsetToROI_Y,  
-			float [] kernels,   //must be 4
-			uint kernel_height, 
-			uint kernel_width, 
-			float [] biases,    // must be 4
-			PixelFFFF backgroundColor,
-			vImageFlags flags)
-		{
-			var kern = new float [] [] { kernels, kernels, kernels, kernels };
-			return ConvolveMultiKernelARGBFFFF (ref src, ref dest, tempBuffer, srcOffsetToROI_X, srcOffsetToROI_Y, kern, kernel_height, kernel_width, biases, backgroundColor, flags);
-		}
-#endif
 		public static vImageError ConvolveMultiKernelARGBFFFF (ref vImageBuffer src,
 								       ref vImageBuffer dest, 
 								       IntPtr tempBuffer, 
