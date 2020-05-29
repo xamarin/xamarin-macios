@@ -17,21 +17,6 @@ namespace AppKit {
 		Vertical
 	}
 
-#if !XAMCORE_2_0
-	[Flags]
-	[Native]
-	public enum NSTableViewAnimationOptions : ulong {
-		EffectFade = 0x1,
-		EffectGap = 0x2,
-
-		// these cannot be combined
-		SlideUp = 0x10,
-		SlideDown = 0x20,
-		SlideLeft = 0x30,
-		SlideRight = 0x40,
-	}
-#endif
-
 	[Native]
 	public enum NSPrintRenderingQuality : long {
 		Best,

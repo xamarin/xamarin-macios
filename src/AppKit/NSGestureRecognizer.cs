@@ -15,11 +15,7 @@ namespace AppKit {
 	public partial class NSGestureRecognizer {
 		object recognizers;
 		static Selector tsel = new Selector ("target");
-#if XAMCORE_2_0
 		internal static Selector ParametrizedSelector = new Selector ("target:");
-#else
-		public static Selector ParametrizedSelector = new Selector ("target:");
-#endif
 
 		public NSGestureRecognizer (Action action) : this (tsel, new ParameterlessDispatch (action))
 		{
