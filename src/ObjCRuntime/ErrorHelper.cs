@@ -4,13 +4,13 @@ using System;
 using System.Collections.Generic;
 
 #if MONOTOUCH
-#if MTOUCH
+#if MTOUCH || MTOUCH_TESTS
 using ProductException=Xamarin.Bundler.MonoTouchException;
 #else
 using ProductException=ObjCRuntime.RuntimeException;
 #endif
 #elif MONOMAC
-#if MMP
+#if MMP || MMP_TEST
 using ProductException=Xamarin.Bundler.MonoMacException;
 #else
 using ProductException=ObjCRuntime.RuntimeException;
@@ -19,7 +19,7 @@ using ProductException=ObjCRuntime.RuntimeException;
 #error Only supports XI or XM
 #endif
 
-#if !MTOUCH && !MMP
+#if !MTOUCH && !MMP && !MTOUCH_TESTS && !MMP_TEST
 using ObjCRuntime;
 #else
 using System.Linq;
