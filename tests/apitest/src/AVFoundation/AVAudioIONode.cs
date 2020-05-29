@@ -1,19 +1,11 @@
 using System;
 using NUnit.Framework;
 
-#if !XAMCORE_2_0
-using MonoMac.AppKit;
-using MonoMac.Foundation;
-using MonoMac.AudioUnit;
-using MonoMac.AVFoundation;
-using AUUnit = MonoMac.AudioUnit.AudioUnit;
-#else
 using AppKit;
 using Foundation;
 using AudioUnit;
 using AUUnit = AudioUnit.AudioUnit;
 using AVFoundation;
-#endif
 
 namespace Xamarin.Mac.Tests
 {

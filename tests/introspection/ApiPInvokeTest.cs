@@ -18,16 +18,8 @@ using Xamarin.Tests;
 
 using NUnit.Framework;
 
-#if XAMCORE_2_0
 using ObjCRuntime;
 using Foundation;
-#elif MONOMAC
-using MonoMac.ObjCRuntime;
-using MonoMac.Foundation;
-#else
-using MonoTouch.ObjCRuntime;
-using MonoTouch.Foundation;
-#endif
 
 namespace Introspection
 {

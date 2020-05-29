@@ -10,13 +10,8 @@
 #if !MONOMAC
 using System;
 using System.Linq;
-#if XAMCORE_2_0
 using Foundation;
 using CoreData;
-#else
-using MonoTouch.CoreData;
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreData {

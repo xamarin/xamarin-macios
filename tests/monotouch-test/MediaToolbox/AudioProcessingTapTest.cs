@@ -11,29 +11,11 @@
 
 using System;
 using System.Runtime.InteropServices;
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
 using MediaToolbox;
 using AudioToolbox;
-#else
-using MonoTouch;
-using MonoTouch.Foundation;
-using MonoTouch.MediaToolbox;
-using MonoTouch.AudioToolbox;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
 
 namespace MonoTouchFixtures.MediaToolbox
 {
@@ -50,11 +32,7 @@ namespace MonoTouchFixtures.MediaToolbox
 			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			var cb = new MTAudioProcessingTapCallbacks (
-#if XAMCORE_2_0
 				delegate(MTAudioProcessingTap tap, nint numberFrames, MTAudioProcessingTapFlags flags, AudioBuffers bufferList, out nint numberFramesOut, out MTAudioProcessingTapFlags flagsOut) {
-#else
-				delegate(MTAudioProcessingTap tap, long numberFrames, MTAudioProcessingTapFlags flags, AudioBuffers bufferList, out long numberFramesOut, out MTAudioProcessingTapFlags flagsOut) {
-#endif
 					numberFramesOut = 2;
 					flagsOut = MTAudioProcessingTapFlags.StartOfStream;
 			});

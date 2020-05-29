@@ -10,15 +10,9 @@
 #if !__WATCHOS__
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using MediaAccessibility;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.MediaAccessibility;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.MediaAccessibility {

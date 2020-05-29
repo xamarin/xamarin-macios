@@ -11,27 +11,12 @@
 
 using System;
 using System.Linq;
-#if XAMCORE_2_0
 using Foundation;
 using UIKit;
 using ObjCRuntime;
 using Photos;
 using CoreGraphics;
 using AssetsLibrary;
-using RectangleF = CoreGraphics.CGRect;
-using SizeF = CoreGraphics.CGSize;
-using PointF = CoreGraphics.CGPoint;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-using MonoTouch.Photos;
-using System.Drawing;
-using MonoTouch.AssetsLibrary;
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Photos {
@@ -114,19 +99,19 @@ namespace MonoTouchFixtures.Photos {
 			context.RotateCTM (90.0f * (nfloat)Math.PI / 180.0f);
 
 			var polygonPath = new UIBezierPath();
-			polygonPath.MoveTo (new PointF (0.0f, -250.0f));
-			polygonPath.AddLineTo (new PointF (216.51f, -125.0f));
-			polygonPath.AddLineTo (new PointF (216.51f, 125.0f));
-			polygonPath.AddLineTo (new PointF (0.0f, 250.0f));
-			polygonPath.AddLineTo (new PointF (-216.51f, 125.0f));
-			polygonPath.AddLineTo (new PointF (-216.51f, -125.0f));
+			polygonPath.MoveTo (new CGPoint (0.0f, -250.0f));
+			polygonPath.AddLineTo (new CGPoint (216.51f, -125.0f));
+			polygonPath.AddLineTo (new CGPoint (216.51f, 125.0f));
+			polygonPath.AddLineTo (new CGPoint (0.0f, 250.0f));
+			polygonPath.AddLineTo (new CGPoint (-216.51f, 125.0f));
+			polygonPath.AddLineTo (new CGPoint (-216.51f, -125.0f));
 			polygonPath.ClosePath ();
 			color.SetFill ();
 			polygonPath.Fill ();
 
 			context.RestoreState();
 
-			var textRect = new RectangleF (0.0f, 0.0f, 512.0f, 512.0f);
+			var textRect = new CGRect (0.0f, 0.0f, 512.0f, 512.0f);
 			var textContent = "X";
 			UIColor.White.SetFill ();
 			var textFont = UIFont.FromName ("Helvetica", 350.0f);
@@ -141,7 +126,7 @@ namespace MonoTouchFixtures.Photos {
 				if (imageOfXamagram != null)
 					return imageOfXamagram;
 
-				UIGraphics.BeginImageContextWithOptions (new SizeF (512.0f, 512.0f), false, 0);
+				UIGraphics.BeginImageContextWithOptions (new CGSize (512.0f, 512.0f), false, 0);
 				DrawXamagram ();
 				imageOfXamagram = UIGraphics.GetImageFromCurrentImageContext ();
 				UIGraphics.EndImageContext ();

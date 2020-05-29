@@ -10,18 +10,10 @@
 #if !__TVOS__
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using CoreGraphics;
 using EventKit;
 using ObjCRuntime;
-#else
-using MonoTouch.CoreGraphics;
-using MonoTouch.EventKit;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.EventKit {

@@ -23,16 +23,8 @@ using System;
 using System.Reflection;
 using NUnit.Framework;
 
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#elif MONOMAC
-using MonoMac.Foundation;
-using MonoMac.ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 
 namespace Introspection {
 
@@ -57,11 +49,6 @@ namespace Introspection {
 
 		protected virtual bool Skip (Type type, string selectorName)
 		{
-#if !XAMCORE_2_0
-			// old binding mistake
-			if (selectorName == "subscribedCentrals")
-				return true;
-#else
 			// The MapKit types/selectors are optional protocol members pulled in from MKAnnotation/MKOverlay.
 			// These concrete (wrapper) subclasses do not implement all of those optional members, but we
 			// still need to provide a binding for them, so that user subclasses can implement those members.
@@ -201,7 +188,6 @@ namespace Introspection {
 				break;
 #endif
 			}
-#endif
 			// This ctors needs to be manually bound
 			switch (type.Name) {
 			case "AVCaptureVideoPreviewLayer":

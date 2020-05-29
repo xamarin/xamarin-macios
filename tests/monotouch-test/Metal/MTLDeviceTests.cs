@@ -8,11 +8,7 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
-#if XAMCORE_2_0
 using Metal;
-#else
-using MonoTouch.Metal;
-#endif
 
 using NUnit.Framework;
 

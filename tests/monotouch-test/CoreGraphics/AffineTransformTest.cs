@@ -11,25 +11,10 @@
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
-#if XAMCORE_2_0
 using Foundation;
 using CoreGraphics;
-#else
-using MonoTouch.CoreGraphics;
-using MonoTouch.Foundation;
-#endif
 
 using NUnit.Framework;
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
 
 namespace MonoTouchFixtures.CoreGraphics {
 
@@ -305,7 +290,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 		public void TransformPoint ()
 		{
 			var transform = new CGAffineTransform (1, 2, 3, 4, 5, 6);
-			var point = transform.TransformPoint (new PointF (4, 5));
+			var point = transform.TransformPoint (new CGPoint (4, 5));
 
 			Assert.AreEqual ((nfloat) 24, point.X, "X");
 			Assert.AreEqual ((nfloat) 34, point.Y, "Y");
@@ -315,7 +300,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 		public void TransformRect ()
 		{
 			var transform = new CGAffineTransform (1, 2, 3, 4, 5, 6);
-			var rect = transform.TransformRect (new RectangleF (4, 5, 6, 7));
+			var rect = transform.TransformRect (new CGRect (4, 5, 6, 7));
 
 			Assert.AreEqual ((nfloat) 24, rect.X, "X");
 			Assert.AreEqual ((nfloat) 34, rect.Y, "Y");

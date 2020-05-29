@@ -1,20 +1,11 @@
 ﻿using System;
 
-#if __UNIFIED__
 using ObjCRuntime;
 using Foundation;
 #if __MACOS__
 using AppKit;
 #else
 using UIKit;
-#endif
-#else
-#if !__WATCHOS__
-using System.Drawing;
-#endif
-using MonoTouch.ObjCRuntime;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
 #endif
 
 namespace Bindings.Test.Protocol {

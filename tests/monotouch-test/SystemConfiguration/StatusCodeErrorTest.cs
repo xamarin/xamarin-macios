@@ -10,13 +10,8 @@
 #if !__WATCHOS__
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using SystemConfiguration;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.SystemConfiguration;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.SystemConfiguration {

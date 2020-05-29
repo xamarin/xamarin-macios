@@ -5,15 +5,10 @@
 using System;
 using System.IO;
 using System.Drawing;
-#if XAMCORE_2_0
+using CoreGraphics;
 using Foundation;
 using MediaPlayer;
 using UIKit;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.MediaPlayer;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.MediaPlayer {
@@ -30,9 +25,9 @@ namespace MonoTouchFixtures.MediaPlayer {
 			using (var img = UIImage.FromFile (file))
 			using (var mia = new MPMediaItemArtwork (img)) {
 				Assert.That (img.Size.ToString (), Is.EqualTo ("{Width=32, Height=32}"), "original");
-				var upscale = mia.ImageWithSize (new SizeF (100, 100));
+				var upscale = mia.ImageWithSize (new CGSize (100, 100));
 				Assert.That (upscale.Size.ToString (), Is.EqualTo ("{Width=32, Height=32}"), "upscale");
-				var downscale = mia.ImageWithSize (new SizeF (16, 16));
+				var downscale = mia.ImageWithSize (new CGSize (16, 16));
 				Assert.That (downscale.Size.ToString (), Is.EqualTo ("{Width=32, Height=32}"), "downscale");
 			}
 		}

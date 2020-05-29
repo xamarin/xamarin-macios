@@ -13,14 +13,8 @@
 using System;
 using OpenTK;
 
-#if XAMCORE_2_0
 using Foundation;
 using GameplayKit;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.GameplayKit;
-using nuint = System.UInt32;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.GamePlayKit {

@@ -9,15 +9,9 @@
 
 using System;
 
-#if XAMCORE_2_0
 using Foundation;
 using CoreBluetooth;
 using ObjCRuntime;
-#else
-using MonoMac.Foundation;
-using MonoMac.CoreBluetooth;
-using MonoMac.ObjCRuntime;
-#endif
 
 using NUnit.Framework;
 using Xamarin.Mac.Tests;

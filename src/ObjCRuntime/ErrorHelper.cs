@@ -4,33 +4,23 @@ using System;
 using System.Collections.Generic;
 
 #if MONOTOUCH
-#if MTOUCH
+#if MTOUCH || MTOUCH_TESTS
 using ProductException=Xamarin.Bundler.MonoTouchException;
 #else
-#if XAMCORE_2_0
 using ProductException=ObjCRuntime.RuntimeException;
-#else
-using ProductException=MonoTouch.RuntimeException;
-#endif
 #endif
 #elif MONOMAC
-#if MMP
+#if MMP || MMP_TEST
 using ProductException=Xamarin.Bundler.MonoMacException;
 #else
-#if XAMCORE_2_0
 using ProductException=ObjCRuntime.RuntimeException;
-#else
-using ProductException=MonoMac.RuntimeException;
-#endif
 #endif
 #else
 #error Only supports XI or XM
 #endif
 
-#if !MTOUCH && !MMP
-#if XAMCORE_2_0
+#if !MTOUCH && !MMP && !MTOUCH_TESTS && !MMP_TEST
 using ObjCRuntime;
-#endif
 #else
 using System.Linq;
 using Mono.Cecil.Cil;

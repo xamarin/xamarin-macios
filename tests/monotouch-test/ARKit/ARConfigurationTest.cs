@@ -1,4 +1,4 @@
-﻿#if XAMCORE_2_0 && __IOS__
+#if __IOS__
 
 using System;
 using System.Reflection;

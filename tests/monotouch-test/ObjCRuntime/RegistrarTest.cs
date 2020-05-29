@@ -5,7 +5,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 
-#if XAMCORE_2_0
 using CoreFoundation;
 using MapKit;
 #if !__TVOS__ && !__WATCHOS__ && !MONOMAC
@@ -36,35 +35,14 @@ using CoreLocation;
 using Contacts;
 #endif
 using WebKit;
-#else
-using MonoTouch;
-using MonoTouch.AddressBook;
-using MonoTouch.AddressBookUI;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.MapKit;
-using MonoTouch.CoreAnimation;
-using MonoTouch.CoreGraphics;
-using MonoTouch.CoreLocation;
-using MonoTouch.UIKit;
-using PlatformException=MonoTouch.RuntimeException;
-using NativeException=MonoTouch.Foundation.MonoTouchException;
-#endif
 using OpenTK;
 using NUnit.Framework;
 using Bindings.Test;
 
-#if XAMCORE_2_0
 using RectangleF = CoreGraphics.CGRect;
 using SizeF = CoreGraphics.CGSize;
 using PointF = CoreGraphics.CGPoint;
 using CategoryAttribute = ObjCRuntime.CategoryAttribute;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-using CategoryAttribute=MonoTouch.ObjCRuntime.CategoryAttribute;
-#endif
 
 using XamarinTests.ObjCRuntime;
 
@@ -73,13 +51,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class RegistrarTest {
-#if !XAMCORE_2_0
-		// This should throw an exception at build time (device) or at registration time (startup on simulator).
-		// Putting it here for now so I don't forget.
-		[Export ()]
-		public bool? IsRegistered  { get; set; }
-#endif
-
 		public static Registrars CurrentRegistrar {
 			get {
 				return RegistrarSharedTest.CurrentRegistrar;
@@ -272,7 +243,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			var sel = new Selector ("testOutParametersWithStructs:in:out:");
 			NSError value = new NSError ();
 			IntPtr ptr;
-			SizeF size = new SizeF (1, 2);
+			SizeF size = new CGSize (1, 2);
 
 			void_objc_msgSend_SizeF_IntPtr_out_IntPtr (obj.Handle, sel.Handle, size, value.Handle, out ptr);
 
@@ -618,12 +589,12 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void TestGenericUIView ()
 		{
-			using (var iview = new NullableIntView (new RectangleF (0, 0, 100, 100))) {
-				using (var strview = new StringView (new RectangleF (0, 0, 100, 100))) {
-					Messaging.void_objc_msgSend_RectangleF (iview.Handle, Selector.GetHandle ("drawRect:"), RectangleF.Empty);
+			using (var iview = new NullableIntView (new CGRect (0, 0, 100, 100))) {
+				using (var strview = new StringView (new CGRect (0, 0, 100, 100))) {
+					Messaging.void_objc_msgSend_CGRect (iview.Handle, Selector.GetHandle ("drawRect:"), CGRect.Empty);
 					Assert.AreEqual (typeof(int?), iview.TypeT, "int?");
 					Assert.AreEqual ("NullableIntView", iview.TypeName, "int? typename");
-					Messaging.void_objc_msgSend_RectangleF (strview.Handle, Selector.GetHandle ("drawRect:"), RectangleF.Empty);
+					Messaging.void_objc_msgSend_CGRect (strview.Handle, Selector.GetHandle ("drawRect:"), CGRect.Empty);
 					Assert.AreEqual (typeof(string), strview.TypeT, "string");
 					Assert.AreEqual ("StringView", strview.TypeName, "string typename");
 				}
@@ -678,8 +649,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		public void TestCGPointParameter ()
 		{
 			using (var obj = new RegistrarTestClass ()) {
-				var pnt1 = new PointF (123, 456);
-				PointF pnt2 = new PointF ();
+				var pnt1 = new CGPoint (123, 456);
+				PointF pnt2 = new CGPoint ();
 				void_objc_msgSend_CGPoint_ref_CGPoint (obj.Handle, Selector.GetHandle ("testCGPoint:out:"), pnt1, ref pnt2);
 				Assert.AreEqual (123, pnt2.X, "X");
 				Assert.AreEqual (456, pnt2.Y, "Y");
@@ -1417,7 +1388,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 #if !__TVOS__ // No MapKit in TVOS
 #if !__WATCHOS__ // WatchOS has MapKit, but not MKMapView
-#if XAMCORE_2_0
 		[Test]
 		public void TestNativeObjectArray ()
 		{
@@ -1463,7 +1433,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				this.Annotations = annotations;
 			}
 		}
-#endif
 #endif // !__WATCHOS__
 #endif // !__TVOS__
 
@@ -2205,9 +2174,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		public void InOutProtocolMethodArgument ()
 		{
 			using (var obj = new Scroller ()) {
-				var velocity = new PointF (1, 2);
-				var targetContentOffset = new PointF (3, 4);
-				Messaging.void_objc_msgSend_IntPtr_PointF_ref_PointF (obj.Handle, Selector.GetHandle ("scrollViewWillEndDragging:withVelocity:targetContentOffset:"), IntPtr.Zero, velocity, ref targetContentOffset);
+				var velocity = new CGPoint (1, 2);
+				var targetContentOffset = new CGPoint (3, 4);
+				Messaging.void_objc_msgSend_IntPtr_CGPoint_ref_CGPoint (obj.Handle, Selector.GetHandle ("scrollViewWillEndDragging:withVelocity:targetContentOffset:"), IntPtr.Zero, velocity, ref targetContentOffset);
 				Console.WriteLine (targetContentOffset);
 				Assert.AreEqual ("{X=123, Y=345}", targetContentOffset.ToString (), "ref output");
 			}
@@ -2222,7 +2191,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			{
 				Assert.AreEqual ("{X=1, Y=2}", velocity.ToString (), "velocity");
 				Assert.AreEqual ("{X=3, Y=4}", targetContentOffset.ToString (), "targetContentOffset");
-				targetContentOffset = new PointF (123, 345);
+				targetContentOffset = new CGPoint (123, 345);
 			}
 		}
 #endif // !__WATCHOS__
@@ -2250,7 +2219,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 #endif // !__TVOS__
 
 #if !__TVOS__ // No Contacts framework in TVOS
-#if XAMCORE_2_0 // The Contacts framework is Unified only
 		[Test]
 		public void GenericAPI ()
 		{
@@ -2294,7 +2262,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				}
 			}
 		}
-#endif // XAMCORE_2_0
 #endif // !__TVOS__
 
 		[Test]
@@ -2468,17 +2435,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			{
 			}
 		}
-
-#if !XAMCORE_2_0
-		class Bug42454 : NSUrlProtocol
-		{
-			[Export ("initWithRequest:cachedResponse:client:")]
-			public Bug42454 (NSUrlRequest request, NSCachedUrlResponse response, NSUrlProtocolClient client)
-			{
-				throw new NotImplementedException ();
-			}
-		}
-#endif
 
 #if debug_code
 		static void DumpClass (Type type)

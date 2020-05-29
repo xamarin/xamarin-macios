@@ -9,7 +9,6 @@ using System.Security.Cryptography.X509Certificates;
 
 using NUnit.Framework;
 
-#if XAMCORE_2_0
 using AudioToolbox;
 using AudioUnit;
 using CoreMedia;
@@ -27,23 +26,6 @@ using Security;
 using VideoToolbox;
 using UIKit;
 using Network;
-#else
-using MonoTouch.AudioToolbox;
-using MonoTouch.CoreMedia;
-using MonoTouch.CoreFoundation;
-using MonoTouch.CoreGraphics;
-using MonoTouch.CoreServices;
-using MonoTouch.CoreText;
-using MonoTouch.CoreVideo;
-using MonoTouch.Foundation;
-using MonoTouch.ImageIO;
-using MonoTouch.SystemConfiguration;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.Security;
-using MonoTouch.VideoToolbox;
-using MonoTouch.UIKit;
-using MonoTouch.Network;
-#endif
 
 namespace Introspection {
 

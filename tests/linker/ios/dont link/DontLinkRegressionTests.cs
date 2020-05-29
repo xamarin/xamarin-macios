@@ -17,13 +17,9 @@ using System.Runtime.InteropServices;
 using System.Security.Permissions;
 
 using MonoTouch;
-#if XAMCORE_2_0
 using Foundation;
 using UIKit;
 using ObjCRuntime;
-#else
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 namespace DontLink {
@@ -57,13 +53,8 @@ namespace DontLink {
 		public void RemovedAttributes ()
 		{
 			// since we do not link the attributes will be available - used or not by the application
-#if XAMCORE_2_0
 			var fullname = typeof (NSObject).Assembly.FullName;
 			Assert.NotNull (Type.GetType ("ObjCRuntime.ThreadSafeAttribute, " + fullname), "ThreadSafeAttribute");
-#else
-			Assert.NotNull (Type.GetType ("MonoTouch.ObjCRuntime.SinceAttribute, monotouch"), "SinceAttribute");
-			Assert.NotNull (Type.GetType ("MonoTouch.ObjCRuntime.ThreadSafeAttribute, monotouch"), "ThreadSafeAttribute");
-#endif
 		}
 
 		[Test]

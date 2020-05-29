@@ -35,12 +35,9 @@ using System.Runtime.ExceptionServices;
 #if XAMCORE_4_0
 using CFNetwork;
 using CoreFoundation;
-#elif XAMCORE_2_0 || SYSTEM_NET_HTTP
+#else
 using CoreServices;
 using CoreFoundation;
-#else
-using MonoTouch.CoreServices;
-using MonoTouch.CoreFoundation;
 #endif
 
 namespace System.Net.Http

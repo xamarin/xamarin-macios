@@ -13,13 +13,8 @@
 using System;
 using NUnit.Framework;
 
-#if XAMCORE_2_0
 using Foundation;
 using CoreAnimation;
-#else
-using MonoTouch.CoreAnimation;
-using MonoTouch.Foundation;
-#endif
 
 namespace MonoTouchFixtures.CoreAnimation {
 	[TestFixture]

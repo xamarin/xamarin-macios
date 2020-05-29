@@ -1,16 +1,9 @@
 ﻿using System;
 using NUnit.Framework;
 
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
 using UIKit;
-#else
-using MonoTouch;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-#endif
 
 namespace Introspection {
 

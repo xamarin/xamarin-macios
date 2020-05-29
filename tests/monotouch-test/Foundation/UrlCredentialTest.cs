@@ -9,7 +9,6 @@
 
 using System;
 using System.Security.Cryptography.X509Certificates;
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
 using Security;
@@ -17,11 +16,6 @@ using Security;
 using AppKit;
 #else
 using UIKit;
-#endif
-#else
-using MonoTouch.Foundation;
-using MonoTouch.Security;
-using MonoTouch.UIKit;
 #endif
 using NUnit.Framework;
 

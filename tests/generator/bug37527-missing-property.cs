@@ -3,13 +3,8 @@
  * 
  */
 using System;
-#if !XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#else
-using Foundation;
-using ObjCRuntime;
-#endif
 
 namespace Test {
 	[BaseType (typeof (NSObject))]

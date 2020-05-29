@@ -1,13 +1,8 @@
 ﻿using System;
 using NUnit.Framework;
 
-#if !XAMCORE_2_0
-using MonoMac.Foundation;
-using MonoMac.AppKit;
-#else
 using Foundation;
 using AppKit;
-#endif
 
 namespace apitest
 {

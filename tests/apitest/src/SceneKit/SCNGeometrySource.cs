@@ -2,13 +2,8 @@ using System;
 using System.Threading.Tasks;
 using NUnit.Framework;
 
-#if !XAMCORE_2_0
-using MonoMac.Foundation;
-using MonoMac.SceneKit;
-#else
 using Foundation;
 using SceneKit;
-#endif
 
 namespace Xamarin.Mac.Tests
 {

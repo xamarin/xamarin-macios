@@ -1,8 +1,4 @@
-#if !XAMCORE_2_0
-using MonoMac.Foundation;
-#else
 using Foundation;
-#endif
 
 namespace Test
 {

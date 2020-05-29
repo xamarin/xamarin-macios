@@ -31,11 +31,11 @@ build/compat/finder.dll:
 
 build/mobile-%/test.app: build/mobile-%/finder.dll
 	rm -Rf $@
-	$(SYSTEM_CSC) "/out:build/mobile-$*/test.exe" "/r:build/mobile-$*/finder.dll" /r:$(TOP)/src/build/mac/mobile-$*/Xamarin.Mac.dll /t:exe "test.cs" -define:XAMCORE_2_0
+	$(SYSTEM_CSC) "/out:build/mobile-$*/test.exe" "/r:build/mobile-$*/finder.dll" /r:$(TOP)/src/build/mac/mobile-$*/Xamarin.Mac.dll /t:exe "test.cs"
 	$(MMP) -nolink "-minos=10.9" -o "build/mobile-$*" -n "test" --profile "4.5" -a $(TOP)/src/build/mac/mobile-$*/Xamarin.Mac.dll -a "build/mobile-$*/finder.dll" "build/mobile-$*/test.exe" --profile mobile --arch $(shell test '$*' == '32' && echo i386 || echo x86_64)
 
 build/mobile-%/finder.dll:
-	$(BMAC) --unified-mobile-profile --out=build/mobile-$*/finder.dll --outdir=build/mobile-$*/ -baselib:$(TOP)/src/build/mac/mobile-$*/Xamarin.Mac.dll -d=XAMCORE_2_0 finder.cs
+	$(BMAC) --unified-mobile-profile --out=build/mobile-$*/finder.dll --outdir=build/mobile-$*/ -baselib:$(TOP)/src/build/mac/mobile-$*/Xamarin.Mac.dll finder.cs
 
 clean-local::
 	@rm -rf build/

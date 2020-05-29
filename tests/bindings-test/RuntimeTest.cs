@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Threading;
 
-#if __UNIFIED__
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 
 using NUnit.Framework;
 

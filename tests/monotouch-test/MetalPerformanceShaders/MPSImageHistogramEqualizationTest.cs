@@ -5,13 +5,8 @@
 using System;
 using ObjCRuntime;
 
-#if XAMCORE_2_0
 using Metal;
 using MetalPerformanceShaders;
-#else
-using MonoTouch.Metal;
-using MonoTouch.MetalPerformanceShaders;
-#endif
 
 using NUnit.Framework;
 

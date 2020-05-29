@@ -11,19 +11,12 @@
 
 using System;
 using System.Threading;
-#if XAMCORE_2_0
 using Foundation;
 using CoreBluetooth;
 using CoreFoundation;
 using ObjCRuntime;
 #if !MONOMAC
 using UIKit;
-#endif
-#else
-using MonoTouch.CoreBluetooth;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-using MonoTouch.CoreFoundation;
 #endif
 using NUnit.Framework;
 

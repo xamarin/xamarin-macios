@@ -10,17 +10,10 @@
 #if !__WATCHOS__ && !MONOMAC && !__TVOS__
 
 using System;
-#if XAMCORE_2_0
 using AudioToolbox;
 using Foundation;
 using ObjCRuntime;
 using CoreMidi;
-#else
-using MonoTouch.AudioToolbox;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.CoreMidi;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.AudioToolbox {

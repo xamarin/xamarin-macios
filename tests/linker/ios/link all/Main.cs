@@ -1,10 +1,6 @@
 using System;
 
-#if XAMCORE_2_0
 using UIKit;
-#else
-using MonoTouch.UIKit;
-#endif
 
 namespace LinkAll
 {

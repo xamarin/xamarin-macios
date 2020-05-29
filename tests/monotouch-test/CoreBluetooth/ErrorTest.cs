@@ -11,13 +11,8 @@
 
 using System;
 
-#if XAMCORE_2_0
 using Foundation;
 using CoreBluetooth;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.CoreBluetooth;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreBluetooth {

@@ -13,16 +13,8 @@ using System.Runtime.InteropServices;
 
 using NUnit.Framework;
 
-#if XAMCORE_2_0
 using ObjCRuntime;
 using Foundation;
-#elif MONOMAC
-using MonoMac.ObjCRuntime;
-using MonoMac.Foundation;
-#else
-using MonoTouch.ObjCRuntime;
-using MonoTouch.Foundation;
-#endif
 
 namespace Introspection {
 
@@ -79,14 +71,12 @@ namespace Introspection {
 
 		protected virtual bool CheckField (Type type, FieldInfo fi)
 		{
-#if XAMCORE_2_0
 			if (fi.FieldType.IsEnum && fi.FieldType.GetCustomAttribute<NativeAttribute> () != null) {
 				if (LogProgress)
 					Console.Error.WriteLine ("{0} has a [Native] enum field in its definition: {1} {2}",
 						type.FullName, fi.FieldType, fi.Name);
 				return false;
 			}
-#endif
 			return true;
 		}
 	}

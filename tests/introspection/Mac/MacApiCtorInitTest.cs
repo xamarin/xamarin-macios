@@ -11,11 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-#if XAMCORE_2_0
 using Foundation;
-#else
-using MonoMac.Foundation;
-#endif
 
 using NUnit.Framework;
 using Xamarin.Tests;
@@ -98,12 +94,6 @@ namespace Introspection {
 			case "MonoMac.AppKit.NSWindow":
 			case "AppKit.NSWindow":
 				return true;
-#if !XAMCORE_2_0
-			case "MonoMac.AppKit.NSToolbar":   // mono[10518:626783] *** -[__NSDictionaryM removeObjectForKey:]: key cannot be nil
-			case "MonoMac.SceneKit.SCNRenderer": // -[SCNRenderer init]: unrecognized selector sent to instance 0x7c6446c0
-			case "MonoMac.SceneKit.SCNLookAtConstraint":
-				return true;
-#endif
 			case "MonoMac.Foundation.NSUrlSession":
 			case "Foundation.NSUrlSession":
 			case "MonoMac.Foundation.NSUrlSessionTask":

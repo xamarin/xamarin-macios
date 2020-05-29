@@ -1,12 +1,7 @@
 ﻿using System;
-#if XAMCORE_2_0
 using Foundation;
 using CoreMedia;
 using ObjCRuntime;
-#else
-using MonoTouch.CoreMedia;
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreMedia

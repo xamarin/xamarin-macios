@@ -12,7 +12,6 @@
 using System;
 using System.IO;
 using System.Threading;
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
 #if MONOMAC
@@ -21,11 +20,6 @@ using AppKit;
 using UIKit;
 #endif
 using GameKit;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.GameKit;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.GameKit {
