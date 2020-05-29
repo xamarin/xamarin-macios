@@ -82,9 +82,7 @@ APPKIT_SOURCES = \
 	AppKit/Functions.cs \
 	AppKit/NSActionCell.cs \
 	AppKit/NSAlert.cs \
-	AppKit/NSAppleEventManager.cs \
 	AppKit/NSApplication.cs \
-	AppKit/NSApplicationDelegate.cs \
 	AppKit/NSArrayController.cs \
 	AppKit/NSBezierPath.cs \
 	AppKit/NSBitmapImageRep.cs \
@@ -93,7 +91,6 @@ APPKIT_SOURCES = \
 	AppKit/NSCell.cs \
 	AppKit/NSColor.cs \
 	AppKit/NSComboBox.cs \
-	AppKit/NSComboBoxCell.cs \
 	AppKit/NSControl.cs \
 	AppKit/NSDraggingInfo.cs \
 	AppKit/NSDraggingSession.cs \
@@ -120,7 +117,6 @@ APPKIT_SOURCES = \
 	AppKit/NSPopUpButtonCell.cs \
 	AppKit/NSPredicateEditorRowTemplate.cs \
 	AppKit/NSPrintInfo.cs \
-	AppKit/NSResponder.cs \
 	AppKit/NSScreen.cs \
 	AppKit/NSSegmentedControl.cs \
 	AppKit/NSSharingService.cs \
