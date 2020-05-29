@@ -17,7 +17,7 @@ using Xharness.Jenkins.Reports;
 namespace Xharness.Jenkins {
 	class Jenkins {
 		public readonly ISimulatorLoader Simulators;
-		readonly IHardwareDeviceLoader devices;
+		public readonly IHardwareDeviceLoader Devices;
 		readonly IProcessManager processManager;
 		public ITunnelBore TunnelBore { get; private set; }
 		readonly TestSelector testSelector;
@@ -97,10 +97,10 @@ namespace Xharness.Jenkins {
 			this.TunnelBore = tunnelBore ?? throw new ArgumentNullException (nameof (tunnelBore));
 			Harness = harness ?? throw new ArgumentNullException (nameof (harness));
 			Simulators = new SimulatorLoader (processManager);
-			devices = new HardwareDeviceLoader (processManager);
+			Devices = new HardwareDeviceLoader (processManager);
 			testSelector = new TestSelector (this, processManager, new GitHub (harness, processManager));
 			testVariationsFactory = new TestVariationsFactory (this, processManager);
-			DeviceLoader = new JenkinsDeviceLoader (Simulators, devices, Logs);
+			DeviceLoader = new JenkinsDeviceLoader (Simulators, Devices, Logs);
 			resourceManager = new ResourceManager ();
 			htmlReportWriter = new HtmlReportWriter (jenkins: this, resourceManager: resourceManager, resultParser: resultParser);
 			markdownReportWriter = new MarkdownReportWriter ();
@@ -129,154 +129,6 @@ namespace Xharness.Jenkins {
 				return false;
 
 			return true;
-		}
-
-		Task<IEnumerable<AppleTestTask>> CreateRunDeviceTasksAsync ()
-		{
-			var rv = new List<RunDeviceTask> ();
-			var projectTasks = new List<RunDeviceTask> ();
-
-			foreach (var project in Harness.IOSTestProjects) {
-				if (!project.IsExecutableProject)
-					continue;
-				
-				bool ignored = !IncludeDevice;
-				if (!IsIncluded (project))
-					ignored = true;
-
-				projectTasks.Clear ();
-				if (!project.SkipiOSVariation) {
-					var build64 = new MSBuildTask (jenkins: this, testProject: project, processManager: processManager) {
-						ProjectConfiguration = "Debug64",
-						ProjectPlatform = "iPhone",
-						Platform = TestPlatform.iOS_Unified64,
-						TestName = project.Name,
-					};
-					build64.CloneTestProject (MainLog, processManager, project);
-					projectTasks.Add (new RunDeviceTask (
-						jenkins: this,
-						devices: devices,
-						buildTask: build64,
-						processManager: processManager,
-						tunnelBore: TunnelBore,
-						errorKnowledgeBase: ErrorKnowledgeBase,
-						useTcpTunnel: Harness.UseTcpTunnel,
-						candidates: devices.Connected64BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !IncludeiOS64 });
-
-					var build32 = new MSBuildTask (jenkins: this, testProject: project, processManager: processManager) {
-						ProjectConfiguration = project.Name != "dont link" ? "Debug32" : "Release32",
-						ProjectPlatform = "iPhone",
-						Platform = TestPlatform.iOS_Unified32,
-						TestName = project.Name,
-					};
-					build32.CloneTestProject (MainLog, processManager, project);
-					projectTasks.Add (new RunDeviceTask (
-						jenkins: this,
-						devices: devices,
-						buildTask: build32,
-						processManager: processManager,
-						tunnelBore: TunnelBore,
-						errorKnowledgeBase: ErrorKnowledgeBase,
-						useTcpTunnel: Harness.UseTcpTunnel,
-						candidates: devices.Connected32BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !IncludeiOS32 });
-
-					var todayProject = project.AsTodayExtensionProject ();
-					var buildToday = new MSBuildTask (jenkins: this, testProject: todayProject, processManager: processManager) {
-						ProjectConfiguration = "Debug64",
-						ProjectPlatform = "iPhone",
-						Platform = TestPlatform.iOS_TodayExtension64,
-						TestName = project.Name,
-					};
-					buildToday.CloneTestProject (MainLog, processManager, todayProject);
-					projectTasks.Add (new RunDeviceTask (
-						jenkins: this,
-						devices: devices,
-						buildTask: buildToday,
-						processManager: processManager,
-						tunnelBore: TunnelBore,
-						errorKnowledgeBase: ErrorKnowledgeBase,
-						useTcpTunnel: Harness.UseTcpTunnel,
-						candidates: devices.Connected64BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !IncludeiOSExtensions, BuildOnly = ForceExtensionBuildOnly });
-				}
-
-				if (!project.SkiptvOSVariation) {
-					var tvOSProject = project.AsTvOSProject ();
-					var buildTV = new MSBuildTask (jenkins: this, testProject: tvOSProject, processManager: processManager) {
-						ProjectConfiguration = "Debug",
-						ProjectPlatform = "iPhone",
-						Platform = TestPlatform.tvOS,
-						TestName = project.Name,
-					};
-					buildTV.CloneTestProject (MainLog, processManager, tvOSProject);
-					projectTasks.Add (new RunDeviceTask (
-						jenkins: this,
-						devices: devices,
-						buildTask: buildTV,
-						processManager: processManager,
-						tunnelBore: TunnelBore,
-						errorKnowledgeBase: ErrorKnowledgeBase,
-						useTcpTunnel: Harness.UseTcpTunnel,
-						candidates: devices.ConnectedTV.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !IncludetvOS });
-				}
-
-				if (!project.SkipwatchOSVariation) {
-					var watchOSProject = project.AsWatchOSProject ();
-					if (!project.SkipwatchOS32Variation) {
-						var buildWatch32 = new MSBuildTask (jenkins: this, testProject: watchOSProject, processManager: processManager) {
-							ProjectConfiguration = "Debug32",
-							ProjectPlatform = "iPhone",
-							Platform = TestPlatform.watchOS_32,
-							TestName = project.Name,
-						};
-						buildWatch32.CloneTestProject (MainLog, processManager, watchOSProject);
-						projectTasks.Add (new RunDeviceTask (
-							jenkins: this,
-							devices: devices,
-							buildTask: buildWatch32,
-							processManager: processManager,
-							tunnelBore: TunnelBore,
-							errorKnowledgeBase: ErrorKnowledgeBase,
-							useTcpTunnel: Harness.UseTcpTunnel,
-							candidates: devices.ConnectedWatch) { Ignored = !IncludewatchOS });
-					}
-
-					if (!project.SkipwatchOSARM64_32Variation) {
-						var buildWatch64_32 = new MSBuildTask (jenkins: this, testProject: watchOSProject, processManager: processManager) {
-							ProjectConfiguration = "Release64_32", // We don't support Debug for ARM64_32 yet.
-							ProjectPlatform = "iPhone",
-							Platform = TestPlatform.watchOS_64_32,
-							TestName = project.Name,
-						};
-						buildWatch64_32.CloneTestProject (MainLog, processManager, watchOSProject);
-						projectTasks.Add (new RunDeviceTask (
-							jenkins: this,
-							devices: devices,
-							buildTask: buildWatch64_32,
-							processManager: processManager,
-							tunnelBore: TunnelBore,
-							errorKnowledgeBase: ErrorKnowledgeBase,
-							useTcpTunnel: Harness.UseTcpTunnel,
-							candidates: devices.ConnectedWatch32_64.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !IncludewatchOS });
-					}
-				}
-				foreach (var task in projectTasks) {
-					task.TimeoutMultiplier = project.TimeoutMultiplier;
-					task.BuildOnly |= project.BuildOnly;
-					task.Ignored |= ignored;
-				}
-				rv.AddRange (projectTasks);
-			}
-
-			return Task.FromResult<IEnumerable<AppleTestTask>> (testVariationsFactory.CreateTestVariations (rv, (buildTask, test, candidates)
-				=> new RunDeviceTask (
-					jenkins: this, 
-					devices: devices,
-					buildTask: buildTask,
-					processManager: processManager,
-					tunnelBore: TunnelBore,
-					errorKnowledgeBase: ErrorKnowledgeBase,
-					useTcpTunnel: Harness.UseTcpTunnel,
-					candidates: candidates?.Cast<IHardwareDevice> () ?? test.Candidates)));
 		}
 
 		public bool IsBetaXcode => Harness.XcodeRoot.IndexOf ("beta", StringComparison.OrdinalIgnoreCase) >= 0;
@@ -344,7 +196,8 @@ namespace Xharness.Jenkins {
 			};
 			Tasks.Add (runDotNetGenerator);
 
-			var loaddev = CreateRunDeviceTasksAsync ().ContinueWith ((v) => {
+			var deviceTestFactory = new RunDeviceTasksFactory ();
+			var loaddev = deviceTestFactory.CreateAsync (this, processManager, testVariationsFactory).ContinueWith ((v) => {
 				Console.WriteLine ("Got device tasks completed");
 				Tasks.AddRange (v.Result);
 			});
