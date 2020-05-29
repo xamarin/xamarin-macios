@@ -3,15 +3,9 @@ using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework;
 
-#if !XAMCORE_2_0
-using MonoMac.AppKit;
-using MonoMac.ObjCRuntime;
-using MonoMac.Foundation;
-#else
 using AppKit;
 using ObjCRuntime;
 using Foundation;
-#endif
 
 namespace Xamarin.Mac.Tests
 {
@@ -86,7 +80,6 @@ namespace Xamarin.Mac.Tests
 			NSStatusBar.SystemStatusBar.CreateStatusItem (10).Menu = null;
 		}
 
-#if XAMCORE_2_0
 		[Test]
 		public void SubviewSort ()
 		{
@@ -134,6 +127,5 @@ namespace Xamarin.Mac.Tests
 				}
 			}
 		}
-#endif
 	}
 }

@@ -8,15 +8,9 @@
 //
 
 using System;
-#if XAMCORE_2_0
 using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch.CoreFoundation;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Foundation {
@@ -63,7 +57,6 @@ namespace MonoTouchFixtures.Foundation {
 			SetNumberValue (key, value);
 		}
 
-#if XAMCORE_2_0
 		public void SetNumberValue_ (NSString key, nint? value)
 		{
 			SetNumberValue (key, value);
@@ -73,7 +66,6 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			SetNumberValue (key, value);
 		}
-#endif
 
 		public void SetStringValue_ (NSString key, string value)
 		{

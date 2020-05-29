@@ -10,17 +10,11 @@
 #if !__TVOS__ && !__WATCHOS__ && !MONOMAC
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using UIKit;
 using ObjCRuntime;
 #if !__TVOS__
 using NotificationCenter;
-#endif
-#else
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-using MonoTouch.NotificationCenter;
 #endif
 using NUnit.Framework;
 

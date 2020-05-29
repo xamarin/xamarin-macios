@@ -11,17 +11,10 @@
 #if !__WATCHOS__
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using VideoToolbox;
 using CoreMedia;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.VideoToolbox;
-using MonoTouch.UIKit;
-using MonoTouch.CoreMedia;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.VideoToolbox {

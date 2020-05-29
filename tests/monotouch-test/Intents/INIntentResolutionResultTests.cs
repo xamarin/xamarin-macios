@@ -8,7 +8,7 @@
 // Copyright 2016 Xamarin Inc. All rights reserved.
 //
 
-#if !__TVOS__ && XAMCORE_2_0 && !MONOMAC
+#if !__TVOS__ && !MONOMAC
 
 using System;
 using NUnit.Framework;

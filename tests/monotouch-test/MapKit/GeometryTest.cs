@@ -1,14 +1,9 @@
 #if !__TVOS__
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using MapKit;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.MapKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.MapKit {

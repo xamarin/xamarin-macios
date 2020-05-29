@@ -8,7 +8,6 @@ using System.Collections;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
 #if !__TVOS__
@@ -19,15 +18,6 @@ using CoreAnimation;
 #endif
 using CoreGraphics;
 using CoreLocation;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.MapKit;
-using MonoTouch.CoreAnimation;
-using MonoTouch.CoreGraphics;
-using MonoTouch.CoreLocation;
-using MonoTouch.UIKit;
-#endif
 #if !__WATCHOS__
 using OpenTK;
 #endif

@@ -8,8 +8,6 @@
 // Copyright 2015 Xamarin Inc. All rights reserved.
 //
 
-#if XAMCORE_2_0
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -96,4 +94,3 @@ namespace MonoTouchFixtures.Foundation {
 		}
 	}
 }
-#endif // XAMCORE_2_0

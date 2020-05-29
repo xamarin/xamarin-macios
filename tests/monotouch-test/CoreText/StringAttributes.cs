@@ -8,7 +8,6 @@
 //
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 #if MONOMAC
 using AppKit;
@@ -18,24 +17,8 @@ using UIKit;
 #endif
 using CoreGraphics;
 using CoreText;
-#else
-using MonoTouch.CoreGraphics;
-using MonoTouch.CoreText;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 using System.Drawing;
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
 
 namespace MonoTouchFixtures.CoreText
 {
@@ -65,7 +48,7 @@ namespace MonoTouchFixtures.CoreText
 			if (TestRuntime.CheckXcodeVersion (11, 0))
 				sa.TrackingAdjustment = 1.0f;
 
-			var size = new SizeF (300, 300);
+			var size = new CGSize (300, 300);
 			UIGraphics.BeginImageContext (size);
 			var gctx = UIGraphics.GetCurrentContext ();
             

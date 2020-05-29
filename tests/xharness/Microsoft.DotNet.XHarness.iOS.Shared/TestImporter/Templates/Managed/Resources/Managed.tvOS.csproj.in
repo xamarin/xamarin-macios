@@ -12,7 +12,7 @@
     <NoWarn>67,168,169,219,414,612,618,649,672</NoWarn>
     <TargetFrameworkIdentifier>Xamarin.TVOS</TargetFrameworkIdentifier>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
-    <DefineConstants>XAMCORE_2_0;XAMCORE_2_0;XAMCORE_3_0;</DefineConstants>
+    <DefineConstants>XAMCORE_3_0;</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>True</DebugSymbols>

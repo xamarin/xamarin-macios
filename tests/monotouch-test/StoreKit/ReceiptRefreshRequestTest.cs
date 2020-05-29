@@ -11,20 +11,11 @@
 
 using System;
 using System.IO;
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
 using StoreKit;
 #if !MONOMAC
 using UIKit;
-#endif
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.StoreKit;
-#if !MONOMAC
-using MonoTouch.UIKit;
-#endif
 #endif
 using NUnit.Framework;
 

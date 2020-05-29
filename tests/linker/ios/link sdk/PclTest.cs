@@ -5,12 +5,8 @@ using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.Windows.Input;
 using System.Xml;
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
 
 namespace LinkSdk {

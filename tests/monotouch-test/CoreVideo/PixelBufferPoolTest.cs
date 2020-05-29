@@ -11,15 +11,9 @@
 
 using System;
 using System.Drawing;
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
 using CoreVideo;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.CoreVideo;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreVideo {

@@ -12,7 +12,7 @@
     <NoWarn>67,168,169,219,414,612,618,649,672</NoWarn>
     <TargetFrameworkIdentifier>Xamarin.Mac</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
-    <DefineConstants>MOBILE;XAMMAC;XAMCORE_2_0</DefineConstants>
+    <DefineConstants>MOBILE;XAMMAC</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <Optimize>false</Optimize>

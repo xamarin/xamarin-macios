@@ -11,16 +11,8 @@ using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-#if __UNIFIED__
 using Foundation;
 using ObjCRuntime;
-#elif __IOS__
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#else
-using MonoMac.Foundation;
-using MonoMac.ObjCRuntime;
-#endif
 
 namespace XamarinTests.ObjCRuntime {
 

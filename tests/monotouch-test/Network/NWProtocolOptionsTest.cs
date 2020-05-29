@@ -1,14 +1,8 @@
 #if !__WATCHOS__
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using Network;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.Network;
-#endif
-
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Network {

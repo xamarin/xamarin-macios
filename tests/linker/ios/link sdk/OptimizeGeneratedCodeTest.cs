@@ -14,24 +14,11 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-#if !__WATCHOS__
-using System.Drawing;
-#endif
-#if XAMCORE_2_0
+using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
 using UIKit;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
-
-#if XAMCORE_2_0
-using SizeF=CoreGraphics.CGSize;
-using RectangleF=CoreGraphics.CGRect;
-#endif
 
 namespace Linker.Shared {
 
@@ -103,10 +90,10 @@ namespace Linker.Shared {
 		[Test]
 		public void SingleRuntimeArchDevice ()
 		{
-			SizeF empty = SizeF.Empty;
+			var empty = CGRect.Empty;
 			using (UIView v = new UIView ())
 			using (UIFont font = UIFont.SystemFontOfSize (12f)) {
-				SizeF size = "MonoTouch".StringSize (font);
+				var size = "MonoTouch".StringSize (font);
 				Assert.False (size.IsEmpty, "!Empty");
 			}
 		}
@@ -120,7 +107,7 @@ namespace Linker.Shared {
 		[Test]
 		public void DoubleRuntimeArchDevice ()
 		{
-			SizeF empty = SizeF.Empty;
+			var empty = CGSize.Empty;
 			using (UIView v = new UIView ()) {
 				Assert.True (v.SizeThatFits (empty).IsEmpty, "Empty");
 			}

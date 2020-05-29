@@ -12,15 +12,9 @@
 using System;
 using System.Drawing;
 using System.Reflection;
-#if XAMCORE_2_0
 using Foundation;
 using MapKit;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.MapKit;
-using MonoTouch.ObjCRuntime;
-#endif
 
 using NUnit.Framework;
 

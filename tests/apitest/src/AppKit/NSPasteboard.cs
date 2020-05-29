@@ -1,15 +1,9 @@
 using System;
 using NUnit.Framework;
 
-#if !XAMCORE_2_0
-using MonoMac.AppKit;
-using MonoMac.ObjCRuntime;
-using MonoMac.Foundation;
-#else
 using AppKit;
 using ObjCRuntime;
 using Foundation;
-#endif
 
 namespace Xamarin.Mac.Tests
 {
@@ -22,10 +16,6 @@ namespace Xamarin.Mac.Tests
 			NSPasteboard b = NSPasteboard.CreateWithUniqueName();
 			b.WriteObjects (new INSPasteboardWriting [] { (NSString)"asfd" });
 			b.WriteObjects (new NSPasteboardWriting [] { new MyPasteboard () });
-#if !XAMCORE_2_0
-			// Awesome backwards compat API
-			b.WriteObjects (new NSPasteboardReading [] { new MyPasteboard2 () });
-#endif
 		}
 		
 		class MyPasteboard2 : NSPasteboardReading

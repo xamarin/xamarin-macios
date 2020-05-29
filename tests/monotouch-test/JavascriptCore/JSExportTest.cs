@@ -5,16 +5,9 @@
 #if !__WATCHOS__
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using JavaScriptCore;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.JavaScriptCore;
-using MonoTouch.UIKit;
-using MonoTouch.ObjCRuntime;
-#endif
 using NUnit.Framework;
 
 using XamarinTests.ObjCRuntime;

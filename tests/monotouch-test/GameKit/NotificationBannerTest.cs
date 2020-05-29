@@ -10,13 +10,8 @@
 #if !__WATCHOS__
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using GameKit;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.GameKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.GameKit {

@@ -13,17 +13,11 @@ using System;
 using System.Net;
 #if XAMCORE_4_0
 using CFNetwork;
-#elif XAMCORE_2_0
+#else
 using CoreServices;
 #endif
-#if XAMCORE_2_0
 using Foundation;
 using CoreFoundation;
-#else
-using MonoTouch.CoreServices;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 using MonoTests.System.Net.Http;
 using System.Threading;

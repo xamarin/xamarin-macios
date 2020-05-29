@@ -1,11 +1,6 @@
 ﻿using System;
-#if XAMCORE_2_0
 using CoreData;
 using Foundation;
-#else
-using MonoTouch.CoreData;
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreData

@@ -4,14 +4,9 @@
 
 using System;
 using System.Drawing;
-#if XAMCORE_2_0
 using Foundation;
 using GLKit;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.GLKit;
-#endif
 using OpenTK;
 using NUnit.Framework;
 

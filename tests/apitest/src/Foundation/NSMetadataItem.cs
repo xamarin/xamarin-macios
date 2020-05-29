@@ -1,10 +1,5 @@
-﻿#if !XAMCORE_2_0
-using MonoMac.AppKit;
-using MonoMac.Foundation;
-#else
 using AppKit;
 using Foundation;
-#endif
 using NUnit.Framework;
 
 namespace Xamarin.Mac.Tests {
@@ -25,9 +20,7 @@ namespace Xamarin.Mac.Tests {
 				Assert.NotNull (mi.FileSystemContentChangeDate, "FileSystemContentChangeDate");
 				Assert.NotNull (mi.FileSystemCreationDate, "FileSystemCreationDate");
 				Assert.That (mi.FileSystemName.ToString (), Is.EqualTo ("apitest.app"), "FileSystemName");
-#if XAMCORE_2_0
 				Assert.That (mi.FileSystemSize.UInt64Value, Is.GreaterThan (0), "FileSystemSize");
-#endif
 				Assert.False (mi.IsUbiquitous, "IsUbiquitous");
 				Assert.That (mi.Path.ToString (), Is.StringEnding ("/apitest.app"), "Path");
 				Assert.False (mi.UbiquitousItemHasUnresolvedConflicts, "UbiquitousItemHasUnresolvedConflicts");

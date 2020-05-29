@@ -11,13 +11,8 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using System.IO;
-#if XAMCORE_2_0
 using Foundation;
 using CoreFoundation;
-#else
-using MonoTouch.CoreFoundation;
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
 // Mac tries to use CFNetwork Namespace instead of Class for calls without this:
 #if !__WATCHOS__

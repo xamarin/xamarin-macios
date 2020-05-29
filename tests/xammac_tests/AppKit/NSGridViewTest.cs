@@ -3,7 +3,7 @@
 //
 
 
-#if XAMCORE_2_0 && __IOS__
+#if __IOS__
 
 using System;
 using AppKit;
@@ -135,4 +135,4 @@ namespace MonoTouchFixtures.AppKit {
 	}
 }
 
-#endif // XAMCORE_2_0 && __IOS__
+#endif // __IOS__

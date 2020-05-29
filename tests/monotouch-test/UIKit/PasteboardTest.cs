@@ -6,15 +6,9 @@ using System;
 using System.Drawing;
 using System.IO;
 
-#if XAMCORE_2_0
 using Foundation;
 using UIKit;
 using CoreGraphics;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-using MonoTouch.CoreGraphics;
-#endif
 
 using NUnit.Framework;
 

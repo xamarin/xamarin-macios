@@ -10,19 +10,11 @@
 #if !__WATCHOS__
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using MediaPlayer;
 using ObjCRuntime;
 #if !MONOMAC
 using UIKit;
-#endif
-#else
-using MonoTouch.Foundation;
-using MonoTouch.MediaPlayer;
-#if !MONOMAC
-using MonoTouch.UIKit;
-#endif
 #endif
 using NUnit.Framework;
 
