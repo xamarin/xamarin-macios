@@ -554,10 +554,6 @@
 			"mono_bool", "chain_signals"
 		),
 
-		new Export ("void", "mono_set_crash_chaining",
-			"mono_bool", "chain_signals"
-		),
-
 		new Export ("void", "mono_jit_set_trace_options",
 			"const char *", "option"
 		),

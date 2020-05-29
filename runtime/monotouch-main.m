@@ -416,7 +416,6 @@ xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode)
 #endif
 
 	mono_set_signal_chaining (TRUE);
-	mono_set_crash_chaining (TRUE);
 	mono_install_unhandled_exception_hook (xamarin_unhandled_exception_handler, NULL);
 	mono_install_ftnptr_eh_callback (xamarin_ftnptr_exception_handler);
 
