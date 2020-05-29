@@ -4165,9 +4165,13 @@ public partial class Generator : IMemberGatherer {
 
 		foreach (var pi in mi.GetParameters ()) {
 			if (!BindThirdPartyLibrary) {
-				if (!mi.IsSpecialName && IsModel (pi.ParameterType) && !Protocolize (pi))
-					ErrorHelper.Warning (1106,
-						mi.DeclaringType, mi.Name, pi.Name, pi.ParameterType, pi.ParameterType.Namespace, pi.ParameterType.Name);
+				if (!mi.IsSpecialName && IsModel (pi.ParameterType) && !Protocolize (pi)) {
+					// don't warn on obsoleted API, there's likely a new version that fix this
+					// any no good reason for using the obsolete API anyway
+					if (!AttributeManager.HasAttribute <ObsoleteAttribute> (mi) && !AttributeManager.HasAttribute<ObsoleteAttribute> (mi.DeclaringType))
+						ErrorHelper.Warning (1106,
+							mi.DeclaringType, mi.Name, pi.Name, pi.ParameterType, pi.ParameterType.Namespace, pi.ParameterType.Name);
+				}
 			}
 
 			if (null_allowed_override)
