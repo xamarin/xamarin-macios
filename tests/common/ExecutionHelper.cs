@@ -635,7 +635,11 @@ namespace Xamarin.Tests
 			if (environmentVariables != null) {
 				var envs = psi.EnvironmentVariables;
 				foreach (var kvp in environmentVariables) {
-					envs [kvp.Key] = kvp.Value;
+					if (kvp.Value == null) {
+						envs.Remove (kvp.Key);
+					} else {
+						envs [kvp.Key] = kvp.Value;
+					}
 				}
 			}
 

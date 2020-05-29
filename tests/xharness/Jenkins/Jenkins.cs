@@ -58,6 +58,7 @@ namespace Xharness.Jenkins {
 		public bool IncludeMscorlib;
 		public bool IncludeNonMonotouch = true;
 		public bool IncludeMonotouch = true;
+		public bool IncludeDotNet;
 
 		public bool CleanSuccessfulTestRuns = true;
 		public bool UninstallTestApp = true;
@@ -195,6 +196,22 @@ namespace Xharness.Jenkins {
 				Ignored = !IncludeBtouch,
 			};
 			Tasks.Add (runDotNetGenerator);
+
+			var buildDotNetTestsProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "dotnet", "UnitTests", "DotNetUnitTests.csproj")));
+			var buildDotNetTests = new DotNetBuildTask (this, testProject: buildDotNetTestsProject, processManager: processManager) {
+				SpecifyPlatform = false,
+				Platform = TestPlatform.All,
+				ProjectConfiguration = "Debug",
+				Ignored = !IncludeDotNet,
+			};
+			var runDotNetTests = new DotNetTestTask (this, buildDotNetTests, processManager) {
+				TestProject = buildDotNetTestsProject,
+				Platform = TestPlatform.All,
+				TestName = "DotNet tests",
+				Timeout = TimeSpan.FromMinutes (5),
+				Ignored = !IncludeDotNet,
+			};
+			Tasks.Add (runDotNetTests);
 
 			var deviceTestFactory = new RunDeviceTasksFactory ();
 			var loaddev = deviceTestFactory.CreateAsync (this, processManager, testVariationsFactory).ContinueWith ((v) => {

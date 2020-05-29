@@ -77,6 +77,11 @@ namespace Xharness.Jenkins {
 			"src",
 			"Make.config",
 		};
+		static readonly string [] dotnetPrefixes = {
+			"dotnet",
+			"msbuild",
+			"tests/dotnet",
+		};
 
 		#endregion
 
@@ -152,6 +157,7 @@ namespace Xharness.Jenkins {
 			SetEnabled (files, macBindingProject, "mac-binding-project", ref jenkins.IncludeMacBindingProject);
 			SetEnabled (files, xtroPrefixes, "xtro", ref jenkins.IncludeXtro);
 			SetEnabled (files, cecilPrefixes, "cecil", ref jenkins.IncludeCecil);
+			SetEnabled (files, dotnetPrefixes, "dotnet", ref jenkins.IncludeDotNet);
 		}
 
 		void SelectTestsByLabel (int pullRequest)
