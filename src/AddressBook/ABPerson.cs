@@ -768,14 +768,6 @@ namespace AddressBook {
 			set {SetValue (ABPersonPropertyId.ModificationDate, value);}
 		}
 
-#if !XAMCORE_2_0
-		[Advice ("Use GetAllAddresses")]
-		public ABMultiValue<NSDictionary> GetAddresses ()
-		{
-			return CreateDictionaryMultiValue (CopyValue (ABPersonPropertyId.Address));
-		}
-#endif
-
 		public ABMultiValue<PersonAddress> GetAllAddresses ()
 		{
 			return CreateDictionaryMultiValue<PersonAddress> (CopyValue (ABPersonPropertyId.Address), l => new PersonAddress (l));
@@ -843,9 +835,6 @@ namespace AddressBook {
 		}
 
 		[Advice ("Use GetInstantMessageServices")]
-#if !XAMCORE_2_0
-		public
-#endif
 		ABMultiValue<NSDictionary> GetInstantMessages ()
 		{
 			return CreateDictionaryMultiValue (CopyValue (ABPersonPropertyId.InstantMessage));
@@ -868,9 +857,6 @@ namespace AddressBook {
 		}
 
 		[Advice ("Use GetSocialProfiles")]
-#if !XAMCORE_2_0
-		public 
-#endif
 		ABMultiValue<NSDictionary> GetSocialProfile ()
 		{
 			return CreateDictionaryMultiValue (CopyValue (ABPersonPropertyId.SocialProfile));
@@ -1019,15 +1005,6 @@ namespace AddressBook {
 			}			
 		}
 
-#if !XAMCORE_2_0
-		// NSString from ABPersonSocialProfileService
-		public NSString Service {
-			set {
-				SetStringValue (ABPersonSocialProfile.ServiceKey, value);
-			}
-		}
-#endif
-
 		public string Username {
 			get {
 				return GetStringValue (ABPersonSocialProfile.UsernameKey);
@@ -1079,15 +1056,6 @@ namespace AddressBook {
 				SetStringValue (ABPersonInstantMessageKey.Service, value);
 			}
 		}
-
-#if !XAMCORE_2_0
-		// NSString from ABPersonInstantMessageService
-		public NSString Service {
-			set {
-				SetStringValue (ABPersonInstantMessageKey.Service, value);
-			}
-		}
-#endif
 
 		public string Username {
 			get {
