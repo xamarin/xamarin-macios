@@ -338,8 +338,13 @@ install-local:: $(MSBUILD_PRODUCTS)
 	@echo Targets files are valid XML
 	@touch $@
 
-test run-test:
+test run-test: run-test-ios run-test-mac
+
+run-test-ios:
 	$(MAKE) -C $(TOP)/tests test-ios-tasks
+
+run-test-mac:
+	$(MAKE) -C $(TOP)/tests run-mac-msbuild
 
 clean-local::
 	git clean -xfdq

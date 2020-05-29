@@ -110,7 +110,7 @@ namespace Xharness
 					writer.WriteTarget (MakeMacUnifiedTargetName (target, MacTargetNameType.Exec), "");
 					if (target.IsNUnitProject) {
 						writer.WriteLine ("\t$(Q)rm -f $(CURDIR)/.{0}-failed.stamp", make_escaped_name);
-						writer.WriteLine ("\t$(SYSTEM_MONO) --debug $(XIBUILD_EXE_PATH) -t -- $(TOP)/packages/NUnit.ConsoleRunner.3.9.0/tools/nunit3-console.exe \"{1}/bin/$(CONFIG)/mmptest.dll\" \"--result=$(abspath $(CURDIR)/{0}-TestResult.xml);format=nunit2\" $(TEST_FIXTURE) --labels=All || touch $(CURDIR)/.{0}-failed.stamp", make_escaped_name, Path.GetDirectoryName (target.ProjectPath));
+						writer.WriteLine ("\t$(SYSTEM_MONO) --debug $(XIBUILD_EXE_PATH) -t -- $(TOP)/packages/NUnit.ConsoleRunner.3.9.0/tools/nunit3-console.exe \"{1}/bin/$(CONFIG)/{0}.dll\" \"--result=$(abspath $(CURDIR)/{0}-TestResult.xml);format=nunit2\" $(TEST_FIXTURE) --labels=All || touch $(CURDIR)/.{0}-failed.stamp", make_escaped_name, Path.GetDirectoryName (target.ProjectPath));
 						writer.WriteLine ("\t$(Q)[[ -z \"$$BUILD_REPOSITORY\" ]] || ( xsltproc $(TOP)/tests/HtmlTransform.xslt {0}-TestResult.xml > {0}-index.html && echo \"@MonkeyWrench: AddFile: $$PWD/{0}-index.html\")", make_escaped_name);
 						writer.WriteLine ("\t$(Q)[[ ! -e .{0}-failed.stamp ]]", make_escaped_name);
 					} else if (target.IsBCLProject)
