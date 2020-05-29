@@ -53,6 +53,15 @@ namespace AppKit {
 			return new NSWindow (windowRef, NSObjectFlag.Empty);
 		}
 
+		/* NSWindow.Close by default calls [window release]
+		 * This will cause a double free in our code since we're not aware of this
+		 * and we end up GCing the proxy eventually and sending our own release
+		 *
+		 * However we want ObjC to call this custom method, which is why the
+		 * [Export] is here instead of inside `appkit.cs`. Otherwise close a Window
+		 * from the UI chrome would skip our additional logic.
+		 */
+		[Export ("close")]
 		public void Close ()
 		{
 			// Windows that do not have a WindowController use released_when_closed
@@ -70,6 +79,18 @@ namespace AppKit {
 					Dispose ();
 			} else
 				_Close ();
+		}
+
+		static readonly IntPtr selCloseHandle = Selector.GetHandle ("close");
+
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		internal void _Close ()
+		{
+			if (IsDirectBinding) {
+				global::ObjCRuntime.Messaging.void_objc_msgSend (this.Handle, selCloseHandle);
+			} else {
+				global::ObjCRuntime.Messaging.void_objc_msgSendSuper (this.SuperHandle, selCloseHandle);
+			}
 		}
 
 		// note: if needed override the protected Get|Set methods

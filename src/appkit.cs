@@ -20411,13 +20411,6 @@ namespace AppKit {
 		[Export ("keyDown:")]
 		void KeyDown (NSEvent  theEvent);
 	
-		/* NSWindow.Close by default calls [window release]
-		 * This will cause a double free in our code since we're not aware of this
-		 * and we end up GCing the proxy eventually and sending our own release
-		 */
-		[Internal, Export ("close")]
-		void _Close ();
-	
 		[Export ("releasedWhenClosed")]
 		bool ReleasedWhenClosed  { [Bind ("isReleasedWhenClosed")] get; set; }
 	
