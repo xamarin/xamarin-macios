@@ -39,14 +39,8 @@ namespace AddressBookUI {
 		}
 
 		[Preserve (Conditional = true)]
-#if XAMCORE_2_0
 		public override bool ShouldPerformDefaultActionForPerson (ABPersonViewController personViewController, ABPerson person, int propertyId, int identifier)
 		{
-#else
-		public override bool ShouldPerformDefaultActionForPerson (ABPersonViewController personViewController, IntPtr personId, int propertyId, int identifier)
-		{
-			ABPerson person = personId == IntPtr.Zero ? null : new ABPerson (personId, personViewController.AddressBook);
-#endif
 			ABPersonProperty property = ABPersonPropertyId.ToPersonProperty (propertyId);
 			int? id = identifier == ABRecord.InvalidPropertyId ? null : (int?) identifier;
 			
