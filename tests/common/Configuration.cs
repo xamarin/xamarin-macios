@@ -193,6 +193,18 @@ namespace Xamarin.Tests
 			return result;
 		}
 
+		public static string EvaluateVariable (string variable)
+		{
+			var output = new StringBuilder ();
+			var rv = ExecutionHelper.Execute ("/usr/bin/make", new string [] { "-C", Path.Combine (SourceRoot, "jenkins"), "print-abspath-variable", $"VARIABLE={variable}" }, environmentVariables: null, stdout: output, stderr: output, timeout: TimeSpan.FromSeconds (5));
+			if (rv != 0)
+				throw new Exception ($"Failed to evaluate variable '{variable}'. Exit code: {rv}. Output:\n{output}");
+			var result = output.ToString ().Split (new char [] { '\n' }, StringSplitOptions.RemoveEmptyEntries).Where (v => v.StartsWith (variable + "=", StringComparison.Ordinal)).SingleOrDefault ();
+			if (result == null)
+				throw new Exception ($"Could not find the variable '{variable}' to evaluate.");
+			return result.Substring (variable.Length + 1);
+		}
+
 		static string GetXcodeVersion (string xcode_path)
 		{
 			var version_plist = Path.Combine (xcode_path, "..", "version.plist");
