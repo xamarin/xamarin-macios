@@ -23,7 +23,6 @@
 using System;
 using ObjCRuntime;
 
-#if XAMCORE_2_0
 namespace MediaLibrary {
 	[Native]
 	public enum MLMediaSourceType : ulong
@@ -41,4 +40,3 @@ namespace MediaLibrary {
 		Movie = 1 << 2
 	}
 }
-#endif
