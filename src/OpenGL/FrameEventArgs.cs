@@ -25,8 +25,7 @@
 //
 #endregion
 
-#if OPENTK_DLL || !XAMCORE_2_0
-
+#if OPENTK_DLL
 using System;
 
 namespace OpenTK
@@ -70,4 +69,4 @@ namespace OpenTK
 	}
 }
 
-#endif // !XAMCORE_2_0
+#endif // OPENTK_DLL
