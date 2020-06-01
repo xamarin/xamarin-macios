@@ -1,7 +1,5 @@
 // Copyright 2015 Xamarin Inc.
 
-#if XAMCORE_2_0 || !MONOMAC
-
 using Foundation;
 using ModelIO;
 
@@ -18,5 +16,3 @@ namespace GLKit {
 		}
 	}
 }
-
-#endif
