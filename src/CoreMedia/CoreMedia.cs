@@ -25,13 +25,6 @@ namespace CoreMedia {
 		ClosedCaption = 1668047728, // 'clcp'
 		Subtitle      = 1935832172, // 'sbtl'
 		TimeCode      = 1953325924, // 'tmcd'
-#if !XAMCORE_2_0
-#if !WATCH
-		// not part of the header file anymore
-		[Obsolete ("Use 'Metadata' instead.")]
-		TimedMetadata = 1953326452, // 'tmet'
-#endif // !WATCH
-#endif // !XAMCORE_2_0
 		// note: the 4CC was obsoleted, i.e. Metadata is a new 4CC
 		Metadata      = 0x6D657461, // 'meta'
 	}
@@ -270,7 +263,6 @@ namespace CoreMedia {
 		Hevc             = 0x68766331
 	}
 
-#if XAMCORE_2_0
 	// CMVideoDimensions => int32_t width + int32_t height
 	[Watch (6,0)]
 	public struct CMVideoDimensions {
@@ -283,7 +275,6 @@ namespace CoreMedia {
 			Height = height;
 		}
 	}
-#endif
 
 	// UInt32 enum => CMFormatDescription.h
 	[Watch (6,0)]
