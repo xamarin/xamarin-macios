@@ -11,7 +11,6 @@ using System;
 using CoreGraphics;
 using ObjCRuntime;
 
-#if XAMCORE_2_0 || !MONOMAC
 namespace SpriteKit {
 	public partial class SKShapeNode : SKNode {
 
@@ -60,5 +59,3 @@ namespace SpriteKit {
 		}
 	}
 }
-
-#endif // XAMCORE_2_0 || !MONOMAC
