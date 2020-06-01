@@ -513,9 +513,6 @@ namespace AudioToolbox {
 
 	public class AudioFile : IDisposable, INativeObject {
 
-#if !XAMCORE_2_0
-		protected
-#endif
 		internal IntPtr handle;
 		
 		protected internal AudioFile (bool x)
@@ -793,22 +790,6 @@ namespace AudioToolbox {
 		{
 			return ReadPacketData (useCache, inStartingPacket, ref nPackets, buffer, offset, ref count, out error);
 		}
-
-#if !XAMCORE_2_0
-		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static AudioFileError AudioFileReadPackets (IntPtr inAudioFile, bool inUseCache, out int numBytes,
-			[MarshalAs (UnmanagedType.LPArray)] AudioStreamPacketDescription[] packetDescriptions, long startingPacket, ref int numPackets, IntPtr buffer);
-
-		[Obsolete ("Use 'ReadPacketData' instead.")]
-		public AudioFileError ReadPackets (bool useCache, out int numBytes,
-			AudioStreamPacketDescription[] packetDescriptions, long startingPacket, ref int numPackets, IntPtr buffer)
-		{
-			if (buffer == IntPtr.Zero)
-				throw new ArgumentException ("buffer");
-
-			return AudioFileReadPackets (handle, useCache, out numBytes, packetDescriptions, startingPacket, ref numPackets, buffer);
-		}
-#endif
 
 		static internal AudioStreamPacketDescription [] PacketDescriptionFrom (int nPackets, IntPtr b)
 		{
