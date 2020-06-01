@@ -13,7 +13,6 @@ using Foundation;
 
 namespace WebKit
 {
-#if XAMCORE_2_0 || !MONOMAC
 	public partial class WKWindowFeatures
 	{
 		public bool? MenuBarVisibility {
@@ -58,5 +57,4 @@ namespace WebKit
 			get { return NFloatValue (height); }
 		}
 	}
-#endif
 }
