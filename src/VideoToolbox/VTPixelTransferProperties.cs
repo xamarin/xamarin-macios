@@ -84,7 +84,6 @@ namespace VideoToolbox {
 			}
 		}
 
-#if XAMCORE_2_0
 		[iOS (10,0)]
 		public VTColorPrimaries DestinationColorPrimaries { 
 			get {
@@ -122,7 +121,6 @@ namespace VideoToolbox {
 				}
 			}
 		}
-#endif
 
 		[iOS (10,0)]
 		public VTTransferFunction DestinationTransferFunction { 
