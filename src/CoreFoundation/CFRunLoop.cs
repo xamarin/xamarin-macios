@@ -34,9 +34,7 @@ using System.Runtime.InteropServices;
 using ObjCRuntime;
 using Foundation;
 
-#if XAMCORE_2_0
 using CFIndex = System.nint;
-#endif
 
 namespace CoreFoundation {
 
@@ -130,11 +128,7 @@ namespace CoreFoundation {
 			GC.SuppressFinalize (this);
 		}
 
-#if XAMCORE_2_0
 		protected virtual void Dispose (bool disposing)
-#else
-		public virtual void Dispose (bool disposing)
-#endif
 		{
 			if (handle != IntPtr.Zero) {
 				CFObject.CFRelease (handle);
@@ -185,19 +179,11 @@ namespace CoreFoundation {
 
 			using (var loop = new CFRunLoop (runLoop))
 			using (var mstring = new NSString (mode)) {
-#if XAMCORE_2_0
 				source.OnSchedule (loop, mstring);
-#else
-				source.OnSchedule (loop, (string)mstring);
-#endif
 			}
 		}
 
-#if XAMCORE_2_0
 		protected abstract void OnSchedule (CFRunLoop loop, NSString mode);
-#else
-		protected abstract void OnSchedule (CFRunLoop loop, string mode);
-#endif
 
 		delegate void CancelCallback (IntPtr info, IntPtr runLoop, IntPtr mode);
 
@@ -208,19 +194,11 @@ namespace CoreFoundation {
 
 			using (var loop = new CFRunLoop (runLoop))
 			using (var mstring = new NSString (mode)) {
-#if XAMCORE_2_0
 				source.OnCancel (loop, mstring);
-#else
-				source.OnCancel (loop, (string)mstring);
-#endif
 			}
 		}
 
-#if XAMCORE_2_0
 		protected abstract void OnCancel (CFRunLoop loop, NSString mode);
-#else
-		protected abstract void OnCancel (CFRunLoop loop, string mode);
-#endif
 
 		delegate void PerformCallback (IntPtr info);
 
@@ -233,11 +211,7 @@ namespace CoreFoundation {
 
 		protected abstract void OnPerform ();
 
-#if XAMCORE_2_0
 		protected override void Dispose (bool disposing)
-#else
-		public override void Dispose (bool disposing)
-#endif
 		{
 			if (disposing) {
 				if (gch.IsAllocated)
@@ -256,16 +230,6 @@ namespace CoreFoundation {
 #if !COREBUILD
 		internal IntPtr handle;
 
-#if !XAMCORE_2_0
-		public static NSString CFDefaultRunLoopMode {
-			get { return ModeDefault; }
-		}
-
-		public static NSString CFRunLoopCommonModes {
-			get { return ModeCommon; }
-		}
-#endif
-		
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* CFRunLoopRef */ IntPtr CFRunLoopGetCurrent ();
 
@@ -331,17 +295,6 @@ namespace CoreFoundation {
 			return (CFRunLoopExitReason) CFRunLoopRunInMode (mode.Handle, seconds, returnAfterSourceHandled);
 		}
 
-#if !XAMCORE_2_0
-		[Obsolete ("Use the NSString version of CFRunLoop.RunInMode() instead.")]
-		public CFRunLoopExitReason RunInMode (string mode, double seconds, bool returnAfterSourceHandled)
-		{
-			// .ctor will check for ANE
-			using (CFString s = new CFString (mode)) {
-				return (CFRunLoopExitReason) CFRunLoopRunInMode (s.Handle, seconds, returnAfterSourceHandled);
-			}
-		}
-#endif
-
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static void CFRunLoopAddSource (/* CFRunLoopRef */ IntPtr rl, /* CFRunLoopSourceRef */ IntPtr source, /* CFStringRef */ IntPtr mode);
 
@@ -372,11 +325,7 @@ namespace CoreFoundation {
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static void CFRunLoopRemoveSource (/* CFRunLoopRef */ IntPtr rl, /* CFRunLoopSourceRef */ IntPtr source, /* CFStringRef */ IntPtr mode);
 
-#if XAMCORE_2_0
 		public void RemoveSource (CFRunLoopSource source, NSString mode)
-#else
-		public bool RemoveSource (CFRunLoopSource source, NSString mode)
-#endif
 		{
 			if (source == null)
 				throw new ArgumentNullException ("source");
@@ -384,9 +333,6 @@ namespace CoreFoundation {
 				throw new ArgumentNullException ("mode");
 
 			CFRunLoopRemoveSource (handle, source.Handle, mode.Handle);
-#if !XAMCORE_2_0
-			return true;
-#endif
 		}
 
 		internal CFRunLoop (IntPtr handle)
@@ -419,11 +365,7 @@ namespace CoreFoundation {
 			GC.SuppressFinalize (this);
 		}
 
-#if XAMCORE_2_0
 		protected virtual void Dispose (bool disposing)
-#else
-		public virtual void Dispose (bool disposing)
-#endif
 		{
 			if (handle != IntPtr.Zero){
 				CFObject.CFRelease (handle);
