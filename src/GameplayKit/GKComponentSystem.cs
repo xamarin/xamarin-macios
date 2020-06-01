@@ -6,7 +6,7 @@
 //
 // Copyright 2015 Xamarin Inc. All rights reserved.
 //
-#if XAMCORE_2_0 // GKComponentSystem is a generic type, which we only support in Unified (for now at least)
+
 using System;
 using Foundation;
 using ObjCRuntime;
@@ -28,4 +28,3 @@ namespace GameplayKit {
 		}
 	}
 }
-#endif
