@@ -1,5 +1,3 @@
-#if XAMCORE_2_0 || !MONOMAC
-
 using System;
 using System.Threading.Tasks;
 using Foundation;
@@ -50,5 +48,3 @@ namespace NetworkExtension {
 	}
 #endif
 }
-
-#endif
