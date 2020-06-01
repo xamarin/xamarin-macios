@@ -23,25 +23,6 @@ namespace CoreVideo {
 #endif
 		{
 #if !COREBUILD
-#if !XAMCORE_2_0
-		public static readonly NSString MinimumBufferCountKey;
-		public static readonly NSString MaximumBufferAgeKey;
-
-		static CVPixelBufferPool ()
-		{
-			var handle = Dlfcn.dlopen (Constants.CoreVideoLibrary, 0);
-			if (handle == IntPtr.Zero)
-				return;
-			try {
-				MinimumBufferCountKey = Dlfcn.GetStringConstant (handle, "kCVPixelBufferPoolMinimumBufferCountKey");
-				MaximumBufferAgeKey = Dlfcn.GetStringConstant (handle, "kCVPixelBufferPoolMaximumBufferAgeKey");
-			}
-			finally {
-				Dlfcn.dlclose (handle);
-			}
-		}
-#endif
-
 		IntPtr handle;
 
 		internal CVPixelBufferPool (IntPtr handle)
