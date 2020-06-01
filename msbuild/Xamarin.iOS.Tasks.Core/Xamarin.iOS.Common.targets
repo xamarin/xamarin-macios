@@ -383,24 +383,16 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			_CalculateCodesignAppBundleInputs;
 		</_CodesignAppBundleDependsOn>
 
-		<_CoreCodesignDependsOn>
+		<CoreCodesignDependsOn>
 			$(_CodesignAppBundleDependsOn);
-			_CodesignAppBundle;
-			_CodesignVerify;
-		</_CoreCodesignDependsOn>
+			$(CoreCodesignDependsOn);
+		</CoreCodesignDependsOn>
 
 		<CodesignDependsOn>
-			BeforeCodeSign;
-			CoreCodeSign;
-			AfterCodeSign;
+			_CreateAppBundle;
+			$(CodesignDependsOn);
 		</CodesignDependsOn>
 	</PropertyGroup>
-
-	<Target Name="BeforeCodesign" />
-	<Target Name="CoreCodesign" DependsOnTargets="$(_CoreCodesignDependsOn)" />
-	<Target Name="AfterCodesign" />
-
-	<Target Name="Codesign" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_CreateAppBundle;$(CodesignDependsOn)" />
 
 	<PropertyGroup>
 		<!-- Extensibility point for VS Publishing Workflow -->
