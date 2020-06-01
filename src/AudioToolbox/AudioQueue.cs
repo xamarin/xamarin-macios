@@ -303,7 +303,6 @@ namespace AudioToolbox {
 						      AudioTimeStamp *startTime, int descriptors, IntPtr AudioStreamPacketDescription_inPacketDesc);
 	delegate void AudioQueuePropertyListener (IntPtr userData, IntPtr AQ,  AudioQueueProperty id);
 
-#if XAMCORE_2_0
 	public class BufferCompletedEventArgs : EventArgs {
 		public BufferCompletedEventArgs (IntPtr audioQueueBuffer)
 		{
@@ -314,18 +313,6 @@ namespace AudioToolbox {
 		{
 			IntPtrBuffer = (IntPtr) audioQueueBuffer;
 		}
-#else
-	public class OutputCompletedEventArgs : EventArgs {
-		public OutputCompletedEventArgs (IntPtr audioQueueBuffer)
-		{
-			IntPtrBuffer = audioQueueBuffer;
-		}
-
-		public unsafe OutputCompletedEventArgs (AudioQueueBuffer *audioQueueBuffer)
-		{
-			IntPtrBuffer = (IntPtr) audioQueueBuffer;
-		}
-#endif
 
 		public IntPtr IntPtrBuffer { get; private set; }
 		public unsafe AudioQueueBuffer *UnsafeBuffer {
@@ -383,16 +370,12 @@ namespace AudioToolbox {
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static OSStatus AudioQueueDispose (IntPtr AQ, bool immediate);
 
-#if XAMCORE_2_0
 		protected virtual void Dispose (bool disposing)
 		{
 			Dispose (disposing, true);
 		}
 
 		void Dispose (bool disposing, bool immediate)
-#else
-		public virtual void Dispose (bool disposing, bool immediate)
-#endif
 		{
 			if (handle != IntPtr.Zero){
 				if (disposing){
@@ -1160,15 +1143,6 @@ namespace AudioToolbox {
 			IntPtr inClientData, AudioQueueProcessingTapFlags inFlags, out uint outMaxFrames,
 			out AudioStreamBasicDescription outProcessingFormat, out IntPtr outAQTap);
 
-#if !XAMCORE_2_0
-		[Obsolete ("Use 'CreateProcessingTap (AudioQueueProcessingTapDelegate, AudioQueueProcessingTapFlags, out AudioQueueStatus)' instead.", true)]
-		public AudioQueueProcessingTap CreateProcessingTap (AudioQueueProcessingTapCallback processingCallback, AudioQueueProcessingTapFlags flags,
-		                                                    out AudioQueueStatus status)
-		{
-			throw new NotSupportedException ();
-		}
-#endif
-
 		public AudioQueueProcessingTap CreateProcessingTap (AudioQueueProcessingTapDelegate processingCallback, AudioQueueProcessingTapFlags flags,
 		                                                    out AudioQueueStatus status)
 		{		
@@ -1195,13 +1169,6 @@ namespace AudioToolbox {
 	delegate void AudioQueueProcessingTapCallbackShared (IntPtr clientData, IntPtr tap, uint numberOfFrames,
 	                                                     ref AudioTimeStamp timeStamp, ref AudioQueueProcessingTapFlags flags,
 	                                                     out uint outNumberFrames, IntPtr data);
-
-#if !XAMCORE_2_0
-	[Obsolete ("Use 'AudioQueueProcessingTapDelegate'.")]
-	public delegate uint AudioQueueProcessingTapCallback (AudioQueueProcessingTap audioQueueTap, uint numberOfFrames,
-	                                                      ref AudioTimeStamp timeStamp, ref AudioQueueProcessingTapFlags flags,
-	                                                      AudioBufferList data);
-#endif
 
 	public delegate uint AudioQueueProcessingTapDelegate (AudioQueueProcessingTap audioQueueTap, uint numberOfFrames,
 	                                                      ref AudioTimeStamp timeStamp, ref AudioQueueProcessingTapFlags flags,
@@ -1256,25 +1223,6 @@ namespace AudioToolbox {
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static OSStatus AudioQueueProcessingTapDispose (IntPtr inAQTap);
 
-#if !XAMCORE_2_0
-		[Obsolete]
-		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static AudioQueueStatus AudioQueueProcessingTapGetSourceAudio (IntPtr inAQTap, uint inNumberFrames, ref AudioTimeStamp ioTimeStamp,
-		                                                               out AudioQueueProcessingTapFlags outFlags, out uint outNumberFrames,
-		                                                               AudioBufferList ioData);
-
-		[Obsolete ("Use overload with 'AudioBuffers'.")]
-		public AudioQueueStatus GetSourceAudio (uint numberOfFrames, ref AudioTimeStamp timeStamp,
-		                                        out AudioQueueProcessingTapFlags flags, out uint parentNumberOfFrames, AudioBufferList data)
-		{
-			if (data == null)
-				throw new ArgumentNullException ("data");
-
-			return AudioQueueProcessingTapGetSourceAudio (TapHandle, numberOfFrames, ref timeStamp,
-		                                                  out flags, out parentNumberOfFrames, data);
-		}
-#endif
-
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static AudioQueueStatus AudioQueueProcessingTapGetSourceAudio (IntPtr inAQTap, uint inNumberFrames, ref AudioTimeStamp ioTimeStamp,
 		                                                               out AudioQueueProcessingTapFlags outFlags, out uint outNumberFrames,
@@ -1324,14 +1272,9 @@ namespace AudioToolbox {
 		{
 			GCHandle gch = GCHandle.FromIntPtr (userData);
 			var aq = gch.Target as OutputAudioQueue;
-#if XAMCORE_2_0
 			aq.OnBufferCompleted (audioQueueBuffer);
-#else
-			aq.OnOutputCompleted (audioQueueBuffer);
-#endif
 		}
 
-#if XAMCORE_2_0
 		public event EventHandler<BufferCompletedEventArgs> BufferCompleted;
 
 		protected virtual void OnBufferCompleted (IntPtr audioQueueBuffer)
@@ -1340,16 +1283,6 @@ namespace AudioToolbox {
 			if (h != null)
 				h (this, new BufferCompletedEventArgs (audioQueueBuffer));
 		}
-#else
-		public event EventHandler<OutputCompletedEventArgs> OutputCompleted;
-		
-		protected virtual void OnOutputCompleted (IntPtr audioQueueBuffer)
-		{
-			var h = OutputCompleted;
-			if (h != null)
-				h (this, new OutputCompletedEventArgs (audioQueueBuffer));
-		}
-#endif
 
 		public OutputAudioQueue (AudioStreamBasicDescription desc) : this (desc, null, (CFString) null)
 		{
@@ -1496,11 +1429,7 @@ namespace AudioToolbox {
 			Dispose (true);
 		}
 	
-#if XAMCORE_2_0
 		protected virtual void Dispose (bool disposing)
-#else
-		public virtual void Dispose (bool disposing)
-#endif
 		{
 			if (timelineHandle != IntPtr.Zero){
 				AudioQueueDisposeTimeline (queueHandle, timelineHandle);
