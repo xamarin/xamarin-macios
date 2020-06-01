@@ -1,4 +1,3 @@
-#if XAMCORE_2_0
 using System;
 using System.Collections.Generic;
 using Foundation;
@@ -19,4 +18,3 @@ namespace BusinessChat {
 		}
 	}
 }
-#endif
