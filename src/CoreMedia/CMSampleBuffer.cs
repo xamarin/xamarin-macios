@@ -346,20 +346,6 @@ namespace CoreMedia {
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* CMFormatDescriptionRef */ IntPtr CMSampleBufferGetFormatDescription (/* CMSampleBufferRef */ IntPtr sbuf);
 
-#if !XAMCORE_2_0
-		[Advice ("Use 'GetAudioFormatDescription' or 'GetVideoFormatDescription'.")]
-		public CMFormatDescription GetFormatDescription ()
-		{
-			var desc = default(CMFormatDescription);
-			var descHandle = CMSampleBufferGetFormatDescription (handle);
-			if (descHandle != IntPtr.Zero)
-			{
-				desc = new CMFormatDescription (descHandle, false);
-			}
-			return desc;					
-		}
-#endif
-
 		public CMAudioFormatDescription GetAudioFormatDescription ()
 		{
 			var descHandle = CMSampleBufferGetFormatDescription (handle);
@@ -440,13 +426,6 @@ namespace CoreMedia {
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */ CMSampleBufferError CMSampleBufferSetOutputPresentationTimeStamp (/* CMSampleBufferRef */ IntPtr sbuf, CMTime outputPresentationTimeStamp);
 
-#if !XAMCORE_2_0
-		public int SetOutputPresentationTimeStamp (CMTime outputPresentationTimeStamp)
-		{
-			return (int)CMSampleBufferSetOutputPresentationTimeStamp (handle, outputPresentationTimeStamp);
-		}
-#endif
-
 		/*[DllImport(Constants.CoreMediaLibrary)]
 		int CMSampleBufferGetOutputSampleTimingInfoArray (
 		   CMSampleBufferRef sbuf,
@@ -462,13 +441,11 @@ namespace CoreMedia {
 			get {
 				return CMSampleBufferGetPresentationTimeStamp (handle);
 			}
-#if XAMCORE_2_0
 			set {
 				var result = CMSampleBufferSetOutputPresentationTimeStamp (handle, value);
 				if (result != 0)
 					throw new ArgumentException (result.ToString ());
 			}
-#endif
 		}
 
 		[DllImport(Constants.CoreMediaLibrary)]
@@ -575,17 +552,10 @@ namespace CoreMedia {
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */ CMSampleBufferError CMSampleBufferInvalidate (/* CMSampleBufferRef */ IntPtr sbuf);
 
-#if XAMCORE_2_0
 		public CMSampleBufferError Invalidate ()
 		{
 			return CMSampleBufferInvalidate (handle);
 		}
-#else
-		public int Invalidate()
-		{
-			return (int)CMSampleBufferInvalidate (handle);
-		}
-#endif
 		
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* Boolean */ bool CMSampleBufferIsValid (/* CMSampleBufferRef */ IntPtr sbuf);
@@ -601,38 +571,19 @@ namespace CoreMedia {
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */ CMSampleBufferError CMSampleBufferMakeDataReady (IntPtr handle);
 
-#if XAMCORE_2_0
 		public CMSampleBufferError MakeDataReady ()
 		{
 			return CMSampleBufferMakeDataReady (handle);
 		}
-#else
-		public int MakeDataReady ()
-		{
-			return (int)CMSampleBufferMakeDataReady (handle);
-		}
-#endif
 		
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */ CMSampleBufferError CMSampleBufferSetDataBuffer (IntPtr handle, IntPtr dataBufferHandle);
 		
-#if XAMCORE_2_0
 		public CMSampleBufferError SetDataBuffer (CMBlockBuffer dataBuffer)
 		{
 			var dataBufferHandle = dataBuffer == null ? IntPtr.Zero : dataBuffer.handle;
 			return CMSampleBufferSetDataBuffer (handle, dataBufferHandle);
 		}
-#else
-		public int /*CMSampleBufferError*/ SetDataBuffer (CMBlockBuffer dataBuffer)
-		{
-			var dataBufferHandle = IntPtr.Zero;
-			if (dataBuffer != null)
-			{
-				dataBufferHandle = dataBuffer.handle;
-			}
-			return (int)CMSampleBufferSetDataBuffer (handle, dataBufferHandle);
-		}
-#endif
 		
 		/*[DllImport(Constants.CoreMediaLibrary)]
 		int CMSampleBufferSetDataBufferFromAudioBufferList (
@@ -646,17 +597,10 @@ namespace CoreMedia {
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */ CMSampleBufferError CMSampleBufferSetDataReady (/* CMSampleBufferRef */ IntPtr sbuf);
 
-#if XAMCORE_2_0
 		public CMSampleBufferError SetDataReady ()
 		{
 			return CMSampleBufferSetDataReady (handle);
 		}
-#else
-		public int/*CMSampleBufferError*/ SetDataReady ()
-		{
-			return (int)CMSampleBufferSetDataReady (handle);
-		}
-#endif
 		
 #if false
 		// new in iOS 8 beta 5 - but the signature is not easy to bind with the AOT limitation, i.e. MonoPInvokeCallback
@@ -709,22 +653,11 @@ namespace CoreMedia {
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */ CMSampleBufferError CMSampleBufferTrackDataReadiness (/* CMSampleBufferRef */ IntPtr sbuf, /* CMSampleBufferRef */ IntPtr sbufToTrack);
 
-#if XAMCORE_2_0
 		public CMSampleBufferError TrackDataReadiness (CMSampleBuffer bufferToTrack)
 		{
 			var handleToTrack = bufferToTrack == null ? IntPtr.Zero : bufferToTrack.handle;
 			return CMSampleBufferTrackDataReadiness (handle, handleToTrack);
 		}
-#else
-		public int/*CMSampleBufferError*/ TrackDataReadiness (CMSampleBuffer bufferToTrack)
-		{
-			var handleToTrack = IntPtr.Zero;
-			if (bufferToTrack != null) {
-				handleToTrack = bufferToTrack.handle;
-			}
-			return (int)CMSampleBufferTrackDataReadiness (handle, handleToTrack);
-		}
-#endif
 
 		[iOS (7,0)][Mac (10,9)]
 		[DllImport(Constants.CoreMediaLibrary)]
