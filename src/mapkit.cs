@@ -10,7 +10,7 @@
 // Copyright 2011-2013 Xamarin Inc.
 // Copyright 2019 Microsoft Corp.
 //
-#if XAMCORE_2_0 || !MONOMAC
+
 using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
@@ -22,7 +22,7 @@ using UITraitCollection = System.Int32;
 #else
 using UIKit;
 #endif
-#if !TVOS && XAMCORE_2_0
+#if !TVOS
 using Contacts;
 #endif
 using System;
@@ -53,11 +53,7 @@ namespace MapKit {
 	[Mac (10,9)]
 	interface MKAnnotation {
 		[Export ("coordinate")][Abstract]
-		CLLocationCoordinate2D Coordinate { get;
-#if !MONOMAC && !XAMCORE_2_0
-			set;
-#endif
-		}
+		CLLocationCoordinate2D Coordinate { get; }
 
 		[Export ("title", ArgumentSemantic.Copy)]
 		string Title { get; }
@@ -65,11 +61,9 @@ namespace MapKit {
 		[Export ("subtitle", ArgumentSemantic.Copy)]
 		string Subtitle { get; } 
 
-#if MONOMAC || XAMCORE_2_0
 		[Export ("setCoordinate:")]
 		[Mac (10,9)]
 		void SetCoordinate (CLLocationCoordinate2D value);
-#endif
 	}
 
 	interface IMKAnnotation {}
@@ -80,22 +74,18 @@ namespace MapKit {
 	[Protocol]
 	[Mac (10,9)]
 	interface MKOverlay {
-#if MONOMAC || XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("boundingMapRect")]
 		MKMapRect BoundingMapRect { get; }
 
 		[Export ("intersectsMapRect:")]
 		bool Intersects (MKMapRect rect);
 
-#if MONOMAC || XAMCORE_2_0
 		// optional, not implemented by MKPolygon, MKPolyline and MKCircle
 		// implemented by MKTileOverlay (and defined there)
 		[OptionalImplementation]
 		[iOS (7,0), Export ("canReplaceMapContent")]
 		bool CanReplaceMapContent { get; }
-#endif
 	}
 
 	interface IMKOverlay {}
@@ -108,11 +98,7 @@ namespace MapKit {
 		[DesignatedInitializer]
 		[Export ("initWithAnnotation:reuseIdentifier:")]
 		[PostGet ("Annotation")]
-#if XAMCORE_2_0
 		IntPtr Constructor ([NullAllowed] IMKAnnotation annotation, [NullAllowed] string reuseIdentifier);
-#else
-		IntPtr Constructor ([NullAllowed] NSObject annotation, [NullAllowed] string reuseIdentifier);
-#endif
 	
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
@@ -126,11 +112,7 @@ namespace MapKit {
 		[Export ("annotation", ArgumentSemantic.Retain)]
 		[ThreadSafe] // Sometimes iOS will request the annotation from a non-UI thread (see https://bugzilla.xamarin.com/show_bug.cgi?27609)
 		[NullAllowed]
-#if XAMCORE_2_0
 		IMKAnnotation Annotation { get; set; }
-#else
-		NSObject Annotation { get; set; }
-#endif
 	
 		[Export ("image", ArgumentSemantic.Retain)]
 		[NullAllowed]
@@ -463,49 +445,25 @@ namespace MapKit {
 	
 		[Export ("addAnnotation:")]
 		[PostGet ("Annotations")]
-#if XAMCORE_2_0
 		void AddAnnotation (IMKAnnotation annotation);
-#else
-		void AddAnnotationObject (NSObject annotation);
-#endif
 	
 		[Export ("addAnnotations:")]
 		[PostGet ("Annotations")]
-#if XAMCORE_2_0
 		void AddAnnotations ([Params] IMKAnnotation [] annotations);
-#else
-		void AddAnnotationObjects ([Params] NSObject [] annotations);
-#endif
 	
 		[Export ("removeAnnotation:")]
 		[PostGet ("Annotations")]
-#if XAMCORE_2_0
 		void RemoveAnnotation (IMKAnnotation annotation);
-#else
-		void RemoveAnnotation (NSObject annotation);
-#endif
 	
 		[Export ("removeAnnotations:")]
 		[PostGet ("Annotations")]
-#if XAMCORE_2_0
 		void RemoveAnnotations ([Params] IMKAnnotation [] annotations);
-#else
-		void RemoveAnnotations ([Params] NSObject [] annotations);
-#endif
 	
 		[Export ("annotations")]
-#if XAMCORE_2_0
 		IMKAnnotation [] Annotations { get; }
-#else
-		NSObject [] Annotations { get; }
-#endif
 	
 		[Export ("viewForAnnotation:")]
-#if XAMCORE_2_0
 		MKAnnotationView ViewForAnnotation (IMKAnnotation annotation);
-#else
-		MKAnnotationView ViewForAnnotation (NSObject annotation);
-#endif
 	
 		[Export ("dequeueReusableAnnotationViewWithIdentifier:")]
 		[return: NullAllowed]
@@ -525,86 +483,42 @@ namespace MapKit {
 
 		[Export ("selectAnnotation:animated:")]
 		[PostGet ("SelectedAnnotations")]
-#if XAMCORE_2_0
 		void SelectAnnotation (IMKAnnotation annotation, bool animated);
-#else
-		void SelectAnnotation (NSObject annotation, bool animated);
-#endif
 	
 		[Export ("deselectAnnotation:animated:")]
 		[PostGet ("SelectedAnnotations")]
-#if XAMCORE_2_0
 		void DeselectAnnotation (IMKAnnotation annotation, bool animated);
-#else
-		void DeselectAnnotation (NSObject annotation, bool animated);
-#endif
 	
 		[NullAllowed] // by default this property is null
 		[Export ("selectedAnnotations", ArgumentSemantic.Copy)]
-#if XAMCORE_2_0
 		IMKAnnotation [] SelectedAnnotations { get; set;	}
-#else
-		NSObject [] SelectedAnnotations { get; set;	}
-#endif
 	
 		[Export ("annotationVisibleRect")]
 		CGRect AnnotationVisibleRect { get; }
 
 		[Export ("addOverlay:")][PostGet ("Overlays")]
-#if XAMCORE_2_0
 		void AddOverlay (IMKOverlay overlay);
-#else
-		void AddOverlay (NSObject overlay);
-#endif
 
 		[Export ("addOverlays:")][PostGet ("Overlays")]
-#if XAMCORE_2_0
 		void AddOverlays (IMKOverlay [] overlays);
-#else
-		void AddOverlays (NSObject [] overlays);
-#endif
 
 		[Export ("removeOverlay:")][PostGet ("Overlays")]
-#if XAMCORE_2_0
 		void RemoveOverlay (IMKOverlay overlay);
-#else
-		void RemoveOverlay (NSObject overlay);
-#endif
 
 		[Export ("removeOverlays:")][PostGet ("Overlays")]
-#if XAMCORE_2_0
 		void RemoveOverlays ([Params] IMKOverlay [] overlays);
-#else
-		void RemoveOverlays ([Params] NSObject [] overlays);
-#endif
 
 		[Export ("overlays")]
-#if XAMCORE_2_0
 		IMKOverlay [] Overlays { get;  }
-#else
-		NSObject [] Overlays { get;  }
-#endif
 
 		[Export ("insertOverlay:atIndex:")][PostGet ("Overlays")]
-#if XAMCORE_2_0
 		void InsertOverlay (IMKOverlay overlay, nint index);
-#else
-		void InsertOverlay (NSObject overlay, nint index);
-#endif
 
 		[Export ("insertOverlay:aboveOverlay:")][PostGet ("Overlays")]
-#if XAMCORE_2_0
 		void InsertOverlayAbove (IMKOverlay overlay, IMKOverlay sibling);
-#else
-		void InsertOverlayAbove (NSObject overlay, NSObject sibling);
-#endif
 
 		[Export ("insertOverlay:belowOverlay:")][PostGet ("Overlays")]
-#if XAMCORE_2_0
 		void InsertOverlayBelow (IMKOverlay overlay, IMKOverlay sibling);
-#else
-		void InsertOverlayBelow (NSObject overlay, NSObject sibling);
-#endif
 
 		[Export ("exchangeOverlayAtIndex:withOverlayAtIndex:")]
 		void ExchangeOverlays (nint index1, nint index2);
@@ -624,11 +538,7 @@ namespace MapKit {
 #if !MONOMAC && !TVOS
 		[Export ("viewForOverlay:")]
 		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'MKOverlayRenderer.RendererForOverlay' instead.")]
-#if XAMCORE_2_0
 		MKOverlayView ViewForOverlay (IMKOverlay overlay);
-#else
-		MKOverlayView ViewForOverlay (NSObject overlay);
-#endif
 #endif // !MONOMAC && !TVOS
 
 		[Export ("visibleMapRect")]
@@ -771,11 +681,7 @@ namespace MapKit {
 		void LoadingMapFailed (MKMapView mapView, NSError error);
 	
 		[Export ("mapView:viewForAnnotation:"), DelegateName ("MKMapViewAnnotation"), DefaultValue (null)]
-#if XAMCORE_2_0
 		MKAnnotationView GetViewForAnnotation (MKMapView mapView, IMKAnnotation annotation);
-#else
-		MKAnnotationView GetViewForAnnotation (MKMapView mapView, NSObject annotation);
-#endif // !XAMCORE_2_0
 	
 		[Export ("mapView:didAddAnnotationViews:"), EventArgs ("MKMapViewAnnotation")]
 		void DidAddAnnotationViews (MKMapView mapView, MKAnnotationView [] views);
@@ -793,11 +699,7 @@ namespace MapKit {
 #if !MONOMAC && !TVOS
 		[Export ("mapView:viewForOverlay:"), DelegateName ("MKMapViewOverlay"), DefaultValue (null)]
 		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'MKOverlayRenderer.RendererForOverlay' instead.")]
-#if XAMCORE_2_0
 		MKOverlayView GetViewForOverlay (MKMapView mapView, IMKOverlay overlay);
-#else
-		MKOverlayView GetViewForOverlay (MKMapView mapView, NSObject overlay);
-#endif // XAMCORE_2_0
 
 		[Export ("mapView:didAddOverlayViews:"), EventArgs ("MKOverlayViews")]
 		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'DidAddOverlayRenderers' instead.")]
@@ -824,11 +726,7 @@ namespace MapKit {
 
 #if !MONOMAC
 		[Export ("mapView:didChangeUserTrackingMode:animated:"), EventArgs ("MMapViewUserTracking")]
-#if XAMCORE_2_0
 		void DidChangeUserTrackingMode (MKMapView mapView, MKUserTrackingMode mode, bool animated);
-#else
-		void DidChageUserTrackingMode (MKMapView mapView, MKUserTrackingMode mode, bool animated);
-#endif // XAMCORE_2_0
 #endif // !MONOMAC
 
 		[iOS (7,0), Export ("mapView:rendererForOverlay:"), DelegateName ("MKRendererForOverlayDelegate"), DefaultValue (null)]
@@ -862,11 +760,7 @@ namespace MapKit {
 		IntPtr Constructor (CGRect frame);
 
 		[Export ("initWithAnnotation:reuseIdentifier:")]
-#if XAMCORE_2_0
 		IntPtr Constructor ([NullAllowed] IMKAnnotation annotation, [NullAllowed] string reuseIdentifier);
-#else
-		IntPtr Constructor ([NullAllowed] NSObject annotation, [NullAllowed] string reuseIdentifier);
-#endif
 
 		[NoTV]
 		[Export ("pinColor")]
@@ -936,7 +830,7 @@ namespace MapKit {
 		[Export ("initWithCoordinate:")]
 		IntPtr Constructor (CLLocationCoordinate2D coordinate);
 
-#if !TVOS && XAMCORE_2_0
+#if !TVOS
 		[Watch (3,0)][iOS (10,0)]
 		[Mac (10,12)]
 		[NoTV]
@@ -999,22 +893,14 @@ namespace MapKit {
 	[BaseType (typeof (UIView))]
 	interface MKOverlayView {
 		[Export ("overlay")]
-#if XAMCORE_2_0
 		IMKOverlay Overlay { get; }
-#else
-		NSObject Overlay { get; }
-#endif
 
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
 
 		[DesignatedInitializer]
 		[Export ("initWithOverlay:")]
-#if XAMCORE_2_0
 		IntPtr Constructor (IMKOverlay overlay);
-#else
-		IntPtr Constructor (NSObject overlay);
-#endif
 
 		[Export ("pointForMapPoint:")]
 		[ThreadSafe]
@@ -1050,11 +936,7 @@ namespace MapKit {
 	[BaseType (typeof (MKOverlayView))]
 	interface MKOverlayPathView {
 		[Export ("initWithOverlay:")]
-#if XAMCORE_2_0
 		IntPtr Constructor (IMKOverlay overlay);
-#else
-		IntPtr Constructor (NSObject overlay);
-#endif
 
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
@@ -1113,27 +995,16 @@ namespace MapKit {
 #if !WATCH
 	[TV (9,2)]
 	[Mac (10,9)]
-#if XAMCORE_2_0 || MONOMAC
 	[BaseType (typeof (NSObject))]
 	[Abstract]
 	interface MKShape : MKAnnotation {
-#else
-	[BaseType (typeof (MKAnnotation))]
-	interface MKShape {
-#endif
 		[NullAllowed] // by default this property is null
 		[Export ("title", ArgumentSemantic.Copy)]
-#if XAMCORE_2_0 || MONOMAC
-		new
-#endif
-		string Title { get; set; }
+		new string Title { get; set; }
 	
 		[NullAllowed] // by default this property is null
 		[Export ("subtitle", ArgumentSemantic.Copy)]
-#if XAMCORE_2_0 || MONOMAC
-		new
-#endif
-		string Subtitle { get; set; } 
+		new string Subtitle { get; set; } 
 	}
 
 	[TV (9,2)]
@@ -1183,9 +1054,7 @@ namespace MapKit {
 		MKPolygon _FromPoints (IntPtr points, nint count);
 
 		[Static]
-#if XAMCORE_2_0
 		[Internal]
-#endif
 		[Export ("polygonWithPoints:count:interiorPolygons:")]
 		MKPolygon _FromPoints (IntPtr points, nint count, MKPolygon [] interiorPolygons);
 
@@ -1304,9 +1173,6 @@ namespace MapKit {
 	[Mac (10,9)]
 	[BaseType (typeof (NSObject))]
 	[ThreadSafe]
-#if !XAMCORE_2_0 && !MONOMAC
-	[Protocol] // This isn't right
-#endif
 	[DisableDefaultCtor] // crash on iOS8 beta
 	interface MKLocalSearch {
 
@@ -1330,9 +1196,6 @@ namespace MapKit {
 	[BaseType (typeof (NSObject))]
 	[ThreadSafe]
 	[DesignatedDefaultCtor]
-#if !XAMCORE_2_0 && !MONOMAC
-	[Protocol] // This isn't right
-#endif
 	interface MKLocalSearchRequest : NSCopying {
 
 		[DesignatedInitializer]
@@ -1370,9 +1233,6 @@ namespace MapKit {
 	[ThreadSafe]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: *** setObjectForKey: object cannot be nil (key: mapItems)
 	[DisableDefaultCtor]
-#if !XAMCORE_2_0 && !MONOMAC
-	[Protocol] // This isn't right
-#endif
 	interface MKLocalSearchResponse {
 
 		[Export ("boundingRegion")]
@@ -1832,13 +1692,8 @@ namespace MapKit {
 	[ThreadSafe]
 	[TV (9,2)]
 	[Mac (10,9)]
-#if XAMCORE_2_0 || MONOMAC
 	[iOS (7,0), BaseType (typeof (NSObject))]
 	partial interface MKTileOverlay : MKOverlay {
-#else
-	[iOS (7,0), BaseType (typeof (MKOverlay))]
-	partial interface MKTileOverlay {
-#endif
 		[DesignatedInitializer]
 		[Export ("initWithURLTemplate:")]
 		IntPtr Constructor (string URLTemplate);
@@ -1859,10 +1714,7 @@ namespace MapKit {
 		string URLTemplate { get; }
 
 		[Export ("canReplaceMapContent")]
-#if XAMCORE_2_0 || MONOMAC
-		new
-#endif
-		bool CanReplaceMapContent { get; set; }
+		new bool CanReplaceMapContent { get; set; }
 
 		[Export ("URLForTilePath:")]
 		NSUrl URLForTilePath (MKTileOverlayPath path);
@@ -1870,10 +1722,8 @@ namespace MapKit {
 		[Export ("loadTileAtPath:result:")]
 		void LoadTileAtPath (MKTileOverlayPath path, MKTileOverlayLoadTileCompletionHandler result);
 
-#if MONOMAC || XAMCORE_2_0
 		[Export ("coordinate")]
 		CLLocationCoordinate2D Coordinate { get; }
-#endif
 	}
 
 	delegate void MKTileOverlayLoadTileCompletionHandler (NSData tileData, NSError error);
@@ -2237,4 +2087,3 @@ namespace MapKit {
 		MKMultiPolyline MultiPolyline { get; }
 	}
 }
-#endif // XAMCORE_2_0 || !MONOMAC
