@@ -13,7 +13,6 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
-#if XAMCORE_2_0
 namespace CallKit {
 
 	[iOS (10, 0)]
@@ -622,4 +621,3 @@ namespace CallKit {
 		void AddAction (CXAction action);
 	}
 }
-#endif // XAMCORE_2_0

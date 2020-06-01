@@ -11,7 +11,6 @@ using System;
 using Foundation;
 using ObjCRuntime;
 
-#if XAMCORE_2_0
 namespace CallKit {
 	public partial class CXProvider {
 
@@ -21,4 +20,3 @@ namespace CallKit {
 		}
 	}
 }
-#endif // XAMCORE_2_0
