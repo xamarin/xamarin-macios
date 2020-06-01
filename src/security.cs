@@ -640,10 +640,8 @@ namespace Security {
 		IntPtr Identity { get; }
 	}
 
-#if XAMCORE_2_0
 	// Technically the type could be static but Apple might had non static members in future releases and break out API
 	[DisableDefaultCtor] // not required, nor useful
-#endif
 	[Partial]
 	interface SecImportExport {
 		[Field ("kSecImportExportPassphrase")]
@@ -725,7 +723,7 @@ namespace Security {
 		[Field ("kSecUseDataProtectionKeychain")]
 		IntPtr UseDataProtectionKeychain { get; }
 
-#if !MONOMAC || !XAMCORE_2_0 // Don't break compat API
+#if !MONOMAC // Don't break compat API
 		[iOS (8,0)]
 		[Field ("kSecUseOperationPrompt")]
 		IntPtr UseOperationPrompt { get; }

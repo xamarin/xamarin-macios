@@ -78,7 +78,6 @@ namespace Security {
 		Ntlm, Msn, Dpa, Rpa, HttpBasic, HttpDigest, HtmlForm, Default
 	}
 
-#if XAMCORE_2_0
 	public class SecKeyChain : INativeObject {
 
 		internal SecKeyChain (IntPtr handle)
@@ -87,9 +86,6 @@ namespace Security {
 		}
 
 		public IntPtr Handle { get; internal set; }
-#else
-	public static class SecKeyChain {
-#endif
 
 		static NSNumber SetLimit (NSMutableDictionary dict, int max)
 		{
@@ -700,11 +696,7 @@ namespace Security {
 			GC.SuppressFinalize (this);
 		}
 
-#if XAMCORE_2_0
 		protected virtual void Dispose (bool disposing)
-#else
-		public virtual void Dispose (bool disposing)
-#endif
 		{
 			if (queryDict != null){
 				if (disposing){
@@ -941,7 +933,7 @@ namespace Security {
 			}
 		}
 
-#if !MONOMAC || !XAMCORE_2_0
+#if !MONOMAC
 		public string UseOperationPrompt {
 			get {
 				return FetchString (SecItem.UseOperationPrompt);
@@ -973,7 +965,7 @@ namespace Security {
 			}
 		}
 
-#if XAMCORE_2_0 && !WATCH && !TVOS
+#if !WATCH && !TVOS
 		[iOS (9, 0), Mac (10, 11)]
 		public LocalAuthentication.LAContext AuthenticationContext {
 			get {
@@ -1339,7 +1331,6 @@ namespace Security {
 			}
 		}
 
-#if XAMCORE_2_0
 		public SecKeyChain[] MatchItemList {
 			get {
 				return NSArray.ArrayFromHandle<SecKeyChain> (Fetch (SecItem.MatchItemList));
@@ -1352,19 +1343,6 @@ namespace Security {
 					SetValue (array, SecItem.MatchItemList);
 			}
 		}
-#else
-		public NSArray MatchItemList {
-			get {
-				return (NSArray) Runtime.GetNSObject (Fetch (SecItem.MatchItemList));
-			}
-
-			set {
-				if (value == null)
-					throw new ArgumentNullException ("value");
-				SetValue (value, SecItem.MatchItemList);
-			}
-		}
-#endif
 
 		public NSData [] MatchIssuers {
 			get {
@@ -1442,21 +1420,6 @@ namespace Security {
 			}
 		}
 
-#if !XAMCORE_2_0
-		[Obsolete ("Use 'GetValueRef<T>' and 'SetValueRef<T>' instead.")]
-		public NSObject ValueRef {
-			get {
-				return FetchObject (SecItem.ValueRef);
-			}
-
-			set {
-				if (value == null)
-					throw new ArgumentNullException ("value");
-				SetValue (value, SecItem.ValueRef);
-			}
-		}
-#endif
-			
 		public T GetValueRef<T> () where T : class, INativeObject
 		{
 			return Runtime.GetINativeObject<T> (queryDict.LowlevelObjectForKey (SecItem.ValueRef), false);

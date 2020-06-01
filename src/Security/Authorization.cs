@@ -82,11 +82,7 @@ namespace Security {
 	[StructLayout (LayoutKind.Sequential)]
 	struct AuthorizationItem {
 		public IntPtr /* AuthorizationString = const char * */ name;
-#if XAMCORE_2_0
 		public nint /* size_t */ valueLen;
-#else
-		public IntPtr /* size_t */ valueLen;
-#endif
 		public IntPtr /* void* */ value;
 		public int /* UInt32 */ flags;  // zero
 	}
@@ -149,11 +145,7 @@ namespace Security {
 			item.name = Marshal.StringToHGlobalAuto (key);
 			if (value != null){
 				item.value = Marshal.StringToHGlobalAuto (value);
-#if XAMCORE_2_0
 				item.valueLen = value.Length;
-#else
-				item.valueLen = (IntPtr) value.Length;
-#endif
 			}
 		}
 		
