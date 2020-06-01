@@ -7,7 +7,7 @@
 // Copyright 2018 Microsoft Corporation.
 //
 
-#if XAMCORE_2_0 && !MONOMAC
+#if !MONOMAC
 using System;
 using Foundation;
 using ObjCRuntime;

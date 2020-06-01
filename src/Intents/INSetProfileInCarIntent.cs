@@ -1,4 +1,4 @@
-#if XAMCORE_2_0 && IOS
+#if IOS
 
 using Foundation;
 using Intents;

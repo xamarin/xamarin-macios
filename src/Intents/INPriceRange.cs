@@ -7,7 +7,7 @@
 // Copyright 2016 Xamarin Inc. All rights reserved.
 //
 
-#if XAMCORE_2_0 && IOS
+#if IOS
 using System;
 using Foundation;
 
@@ -28,4 +28,4 @@ namespace Intents {
 		}
 	}
 }
-#endif // XAMCORE_2_0 && IOS
+#endif // IOS
