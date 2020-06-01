@@ -25,8 +25,6 @@ namespace EventKitUI {
 		AllCalendars, WritableCalendarsOnly
 	}
 
-	// note: old binding mistake - this should have been in EventKitUI (not EventKit)
-#if XAMCORE_2_0
 	// untyped enum -> EKEventViewController.h
 	// iOS 9 promoted this to an NSInteger - which breaks compatibility
 	[Native]
@@ -40,5 +38,4 @@ namespace EventKitUI {
 	public enum EKEventEditViewAction : long {
 		Canceled, Saved, Deleted
 	}
-#endif
 }
