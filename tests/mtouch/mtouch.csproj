@@ -92,7 +92,6 @@
     <Compile Include="..\..\tools\common\ErrorHelper.tools.cs">
       <Link>tools\common\ErrorHelper.tools.cs</Link>
     </Compile>
-    <Compile Include="RuntimeException.cs" />
     <Compile Include="..\..\tools\common\SdkVersions.cs">
       <Link>SdkVersions.cs</Link>
     </Compile>
