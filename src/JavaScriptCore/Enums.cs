@@ -9,7 +9,6 @@
 using System;
 
 namespace JavaScriptCore {
-#if !MONOMAC || XAMCORE_2_0
 	// untyped enum -> JSValueRef.h
 	public enum JSType {
 		Undefined,
@@ -37,5 +36,4 @@ namespace JavaScriptCore {
 		None = 0,
 		NoAutomaticPrototype = 1 << 1
 	}
-#endif
 }
