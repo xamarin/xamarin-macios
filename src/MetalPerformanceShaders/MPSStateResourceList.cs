@@ -7,7 +7,6 @@
 // Copyright 2019 Microsoft Corporation.
 //
 
-#if XAMCORE_2_0 || !MONOMAC
 using System;
 using System.Runtime.InteropServices;
 using Foundation;
@@ -75,4 +74,3 @@ namespace MetalPerformanceShaders {
 		static extern IntPtr IntPtr_objc_msgSend_IntPtrx13 (IntPtr receiver, IntPtr selector, IntPtr arg0, IntPtr arg1, IntPtr arg2, IntPtr arg3, IntPtr arg4, IntPtr arg5, IntPtr arg6, IntPtr arg7, IntPtr arg8, IntPtr arg9, IntPtr arg10);
 	}
 }
-#endif
