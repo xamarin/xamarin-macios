@@ -8,13 +8,8 @@
 //
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using CoreData;
-#else
-using MonoTouch.CoreData;
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreData {
@@ -36,11 +31,7 @@ namespace MonoTouchFixtures.CoreData {
 		{
 			using (var ad = new NSAttributeDescription ())
 			using (var o = new NSObject ()) {
-#if XAMCORE_2_0
 				ad.DefaultValue = o;
-#else
-				ad.SetDefaultValue (o);
-#endif
 				Assert.AreSame (o, ad.DefaultValue, "DefaultValue");
 			}
 		}

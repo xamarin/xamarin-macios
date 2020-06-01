@@ -17,13 +17,9 @@ using System.Runtime.InteropServices;
 using System.Security.Permissions;
 
 using MonoTouch;
-#if XAMCORE_2_0
 using Foundation;
 using UIKit;
 using ObjCRuntime;
-#else
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 namespace DontLink {

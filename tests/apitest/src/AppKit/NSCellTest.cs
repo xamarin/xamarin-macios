@@ -1,15 +1,9 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-#if XAMCORE_2_0
 using AppKit;
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoMac.AppKit;
-using MonoMac.Foundation;
-using MonoMac.ObjCRuntime;
-#endif
 
 using NUnit.Framework;
 

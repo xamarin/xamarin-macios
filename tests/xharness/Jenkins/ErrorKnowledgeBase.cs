@@ -10,6 +10,7 @@ namespace Xharness.Jenkins {
 		static readonly Dictionary<string, (string HumanMessage, string IssueLink)> testErrorMaps = new Dictionary<string, (string HumanMessage, string IssueLink)> {
 			["error HE0038: Failed to launch the app"] = (HumanMessage: "HE0038", IssueLink: "https://github.com/xamarin/maccore/issues/581)"),
 			["Couldn't establish a TCP connection with any of the hostnames"] = (HumanMessage: "Tcp Connection Error: Tests are reported as crashes when they succeeded.", IssueLink: "https://github.com/xamarin/maccore/issues/1741"),
+			["BCLTests.TestRunner.Core.TcpTextWriter..ctor"] = (HumanMessage: "Tcp Connection Error: Tests are reported as crashes when they succeeded.", IssueLink: "https://github.com/xamarin/maccore/issues/1741"),
 		};
 		
 		static readonly Dictionary<string, (string HumanMessage, string IssueLink)> buildErrorMaps = new Dictionary<string, (string HumanMessage, string IssueLink)> {

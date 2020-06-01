@@ -7,8 +7,6 @@
 // Copyright 2018 Microsoft Inc. All rights reserved.
 //
 
-#if XAMCORE_2_0
-
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -46,5 +44,3 @@ namespace MonoTouchFixtures.ObjCRuntime
 		}
 	}
 }
-
-#endif // XAMCORE_2_0

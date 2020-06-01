@@ -9,17 +9,9 @@
 
 using System;
 
-#if XAMCORE_2_0
 using Foundation;
 using MobileCoreServices;
 using ObjCRuntime;
-#else
-using MonoTouch;
-using MonoTouch.Foundation;
-using MonoTouch.MobileCoreServices;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.MobileCoreServices {

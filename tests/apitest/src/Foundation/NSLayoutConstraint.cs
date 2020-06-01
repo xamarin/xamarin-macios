@@ -1,8 +1,4 @@
-﻿#if !XAMCORE_2_0
-using MonoMac.AppKit;
-#else
 using AppKit;
-#endif
 using NUnit.Framework;
 
 namespace Xamarin.Mac.Tests

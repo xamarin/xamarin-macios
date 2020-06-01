@@ -10,18 +10,11 @@
 #if !__TVOS__ && !__WATCHOS__ && !MONOMAC
 
 using System;
-#if XAMCORE_2_0
 using AVKit;
 using Foundation;
 using UIKit;
 using iAd;
 using ObjCRuntime;
-#else
-using MonoTouch.AVKit;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-using MonoTouch.iAd;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.AVKit {

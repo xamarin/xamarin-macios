@@ -10,16 +10,10 @@
 #if !__WATCHOS__
 
 using System;
-#if XAMCORE_2_0
 using AVFoundation;
 using CoreVideo;
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch.AVFoundation;
-using MonoTouch.CoreVideo;
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.AVFoundation {

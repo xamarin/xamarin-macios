@@ -8,7 +8,6 @@
 //
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 #if MONOMAC
 using AppKit;
@@ -19,24 +18,8 @@ using UIKit;
 #endif
 using CoreGraphics;
 using CoreText;
-#else
-using MonoTouch.CoreGraphics;
-using MonoTouch.CoreText;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 using System.Drawing;
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
 
 namespace MonoTouchFixtures.CoreText
 {
@@ -61,11 +44,7 @@ namespace MonoTouchFixtures.CoreText
 
 			var line = new CTLine (attributedString);
 			bool executed = false;
-#if XAMCORE_2_0
 			line.EnumerateCaretOffsets ((double o, nint charIndex, bool leadingEdge, ref bool stop) => {
-#else
-			line.EnumerateCaretOffsets ((double o, int charIndex, bool leadingEdge, ref bool stop) => {
-#endif
 				executed = true;
 			});
 			Assert.IsTrue (executed);

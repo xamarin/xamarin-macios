@@ -7,7 +7,6 @@
 // Copyright 2012 Xamarin Inc. All rights reserved.
 //
 using System;
-#if XAMCORE_2_0
 using Foundation;
 #if !__TVOS__
 using EventKit;
@@ -15,13 +14,6 @@ using EventKit;
 using ObjCRuntime;
 using CoreVideo;
 using CoreMedia;
-#else
-using MonoTouch.EventKit;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.CoreVideo;
-using MonoTouch.CoreMedia;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreMedia {

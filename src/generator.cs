@@ -3709,7 +3709,7 @@ public partial class Generator : IMemberGatherer {
 		string target_name = (category_type == null && !minfo.is_extension_method) ? "this" : "This";
 		string handle = supercall ? ".SuperHandle" : ".Handle";
 		
-		// If we have supercall == false, we can be a Bind methdo that has a [Target]
+		// If we have supercall == false, we can be a Bind method that has a [Target]
 		if (supercall == false && !minfo.is_static){
 			foreach (var pi in mi.GetParameters ()){
 				if (IsTarget (pi)){
@@ -4160,22 +4160,26 @@ public partial class Generator : IMemberGatherer {
 
 	void GenerateArgumentChecks (MethodInfo mi, bool null_allowed_override, PropertyInfo propInfo = null)
 	{
-		if (null_allowed_override)
-			return;
-
 		if (AttributeManager.HasAttribute<NullAllowedAttribute> (mi))
 			ErrorHelper.Show (new BindingException (1118, false, mi));
 
 		foreach (var pi in mi.GetParameters ()) {
+			if (!BindThirdPartyLibrary) {
+				if (!mi.IsSpecialName && IsModel (pi.ParameterType) && !Protocolize (pi)) {
+					// don't warn on obsoleted API, there's likely a new version that fix this
+					// any no good reason for using the obsolete API anyway
+					if (!AttributeManager.HasAttribute <ObsoleteAttribute> (mi) && !AttributeManager.HasAttribute<ObsoleteAttribute> (mi.DeclaringType))
+						ErrorHelper.Warning (1106,
+							mi.DeclaringType, mi.Name, pi.Name, pi.ParameterType, pi.ParameterType.Namespace, pi.ParameterType.Name);
+				}
+			}
+
+			if (null_allowed_override)
+				continue;
+
 			var needs_null_check = ParameterNeedsNullCheck (pi, mi, propInfo);
 			if (!needs_null_check)
 				continue;
-
-			if (!BindThirdPartyLibrary) {
-				if (!mi.IsSpecialName && IsModel (pi.ParameterType) && !Protocolize (pi))
-					ErrorHelper.Warning (1106,
-						mi.DeclaringType, mi.Name, pi.Name, pi.ParameterType, pi.ParameterType.Namespace, pi.ParameterType.Name);
-			}
 
 			var safe_name = pi.Name.GetSafeParamName ();
 
@@ -7136,7 +7140,7 @@ public partial class Generator : IMemberGatherer {
 						++indent;
 						print ("return false;");
 						--indent;
-						print ("IntPtr selHandle = sel == null ? IntPtr.Zero : sel.Handle;");
+						print ("IntPtr selHandle = sel.Handle;");
 						foreach (var mi in noDefaultValue.OrderBy (m => m.Name, StringComparer.Ordinal)) {
 							if (InlineSelectors) {
 								var export = AttributeManager.GetCustomAttribute<ExportAttribute> (mi);

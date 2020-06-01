@@ -11,7 +11,7 @@
 
 using System;
 using System.Drawing;
-#if XAMCORE_2_0
+using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
 #if MONOMAC
@@ -21,22 +21,7 @@ using UIColor = AppKit.NSColor;
 using UIKit;
 #endif
 using SpriteKit;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.SpriteKit;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
 
 namespace MonoTouchFixtures.SpriteKit {
 
@@ -72,7 +57,7 @@ namespace MonoTouchFixtures.SpriteKit {
 		[Test]
 		public void CtorColor ()
 		{
-			using (var n = new SKSpriteNode ((UIColor) null, SizeF.Empty)) {
+			using (var n = new SKSpriteNode ((UIColor) null, CGSize.Empty)) {
 				CheckEmpty (n);
 			}
 		}
@@ -94,7 +79,7 @@ namespace MonoTouchFixtures.SpriteKit {
 		[Test]
 		public void CtorTextureColor ()
 		{
-			using (var n = new SKSpriteNode (null, null, SizeF.Empty)) {
+			using (var n = new SKSpriteNode (null, null, CGSize.Empty)) {
 				CheckEmpty (n);
 			}
 		}
@@ -102,7 +87,7 @@ namespace MonoTouchFixtures.SpriteKit {
 		[Test]
 		public void Color ()
 		{
-			using (var n = new SKSpriteNode (UIColor.Blue, SizeF.Empty)) {
+			using (var n = new SKSpriteNode (UIColor.Blue, CGSize.Empty)) {
 #if MONOMAC
 				Assert.That (n.Color.ToString (), Is.EqualTo ("Device RGB(0.016804177314043,0.198350995779037,1,1)").Or.EqualTo ("Device RGB(0,0,1,1)").Or.EqualTo ("Device RGB(0.016804177314043,0.198350965976715,1,1)"), "Color-1");
 #else

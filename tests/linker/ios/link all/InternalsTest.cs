@@ -11,13 +11,8 @@ using System;
 using System.Runtime.InteropServices;
 
 using MonoTouch;
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 using NUnit.Framework;
 
 namespace LinkAll.InernalCalls {
@@ -45,14 +40,6 @@ namespace LinkAll.InernalCalls {
 			xamarin_log ("ascii");
 			xamarin_log ("ЉЩщӃ");
 		}
-
-#if !XAMCORE_2_0
-		[Test]
-		public void MessagingApi ()
-		{
-			Messaging.monotouch_IntPtr_objc_msgSend_IntPtr (IntPtr.Zero, IntPtr.Zero, IntPtr.Zero);
-		}
-#endif
 
 		[DllImport ("__Internal")]
 		extern static IntPtr xamarin_timezone_get_names (ref int count);

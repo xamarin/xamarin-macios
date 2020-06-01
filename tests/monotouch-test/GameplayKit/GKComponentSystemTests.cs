@@ -9,18 +9,12 @@
 //
 
 #if !__WATCHOS__
-#if XAMCORE_2_0 // The GKComponentSystem framework is Unified only
 
 using System;
 using OpenTK;
 
-#if XAMCORE_2_0
 using Foundation;
 using GameplayKit;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.GameplayKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.GamePlayKit {
@@ -75,5 +69,4 @@ namespace MonoTouchFixtures.GamePlayKit {
 	}
 }
 
-#endif // XAMCORE_2_0
 #endif // !__WATCHOS__

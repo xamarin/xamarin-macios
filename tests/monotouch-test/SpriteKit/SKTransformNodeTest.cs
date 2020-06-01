@@ -1,19 +1,12 @@
 #if !__WATCHOS__ && !MONOMAC
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 #if !MONOMAC
 using UIKit;
 #endif
 using SpriteKit;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.SpriteKit;
-using MonoTouch.UIKit;
-using MonoTouch.ObjCRuntime;
-#endif
 using OpenTK;
 
 using MatrixFloat2x2 = global::OpenTK.NMatrix2;

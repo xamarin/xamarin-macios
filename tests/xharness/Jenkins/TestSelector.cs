@@ -13,7 +13,7 @@ namespace Xharness.Jenkins {
 	/// <summary>
 	/// Allows to select the tests to be ran depending on certain conditions such as labels of modified files.
 	/// </summary>
-	public class TestSelector {
+	class TestSelector {
 
 		#region private vars
 		
@@ -76,6 +76,11 @@ namespace Xharness.Jenkins {
 			"tests/cecil-tests",
 			"src",
 			"Make.config",
+		};
+		static readonly string [] dotnetPrefixes = {
+			"dotnet",
+			"msbuild",
+			"tests/dotnet",
 		};
 
 		#endregion
@@ -152,6 +157,7 @@ namespace Xharness.Jenkins {
 			SetEnabled (files, macBindingProject, "mac-binding-project", ref jenkins.IncludeMacBindingProject);
 			SetEnabled (files, xtroPrefixes, "xtro", ref jenkins.IncludeXtro);
 			SetEnabled (files, cecilPrefixes, "cecil", ref jenkins.IncludeCecil);
+			SetEnabled (files, dotnetPrefixes, "dotnet", ref jenkins.IncludeDotNet);
 		}
 
 		void SelectTestsByLabel (int pullRequest)

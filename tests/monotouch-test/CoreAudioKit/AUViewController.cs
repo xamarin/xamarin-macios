@@ -11,13 +11,8 @@
 
 using System;
 using System.Threading;
-#if XAMCORE_2_0
 using Foundation;
 using CoreAudioKit;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.CoreAudioKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreAudioKit {

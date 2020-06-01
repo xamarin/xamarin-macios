@@ -11,16 +11,10 @@
 
 using System;
 using System.Drawing;
-#if XAMCORE_2_0
 using Foundation;
 using UIKit;
 
 using MessageUI;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.MessageUI;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.MessageUI {

@@ -8,10 +8,10 @@
 //
 
 using System;
+using CoreGraphics;
 #if !__WATCHOS__
 using System.Drawing;
 #endif
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
 #if MONOMAC
@@ -21,21 +21,7 @@ using UIStringAttributes = AppKit.NSStringAttributes;
 #else
 using UIKit;
 #endif
-#else
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
 
 namespace MonoTouchFixtures.Foundation {
 	
@@ -127,13 +113,13 @@ namespace MonoTouchFixtures.Foundation {
 			var f = UIFont.BoldSystemFontOfSize (actualFontSize);
 			try {
 				using (NSString s = new NSString ("s")) {
-					SizeF size = s.DrawString (PointF.Empty, 20, f, 6, ref actualFontSize, UILineBreakMode.MiddleTruncation, UIBaselineAdjustment.None);
+					var size = s.DrawString (CGPoint.Empty, 20, f, 6, ref actualFontSize, UILineBreakMode.MiddleTruncation, UIBaselineAdjustment.None);
 					Assert.That (actualFontSize, Is.EqualTo ((nfloat) 12), "actualFontSize");
 					Assert.That (size.Width, Is.InRange ((nfloat) 6f, (nfloat) 7f), "Width");
 					Assert.That (size.Height, Is.InRange ((nfloat) 14f, (nfloat) 15f), "Height");
 				}
 				using (NSString s = new NSString ("saterlipopette")) {
-					SizeF size = s.DrawString (PointF.Empty, 20, f, 6, ref actualFontSize, UILineBreakMode.MiddleTruncation, UIBaselineAdjustment.None);
+					var size = s.DrawString (CGPoint.Empty, 20, f, 6, ref actualFontSize, UILineBreakMode.MiddleTruncation, UIBaselineAdjustment.None);
 					Assert.That (actualFontSize, Is.EqualTo ((nfloat) 6), "actualFontSize-2");
 					Assert.That (size.Width, Is.InRange ((nfloat) 17f, (nfloat) 19f), "Width-2");
 					Assert.That (size.Height, Is.InRange ((nfloat) 7f, (nfloat) 8f), "Height-2");
@@ -153,13 +139,13 @@ namespace MonoTouchFixtures.Foundation {
 			var f = UIFont.BoldSystemFontOfSize (actualFontSize);
 			try {
 				using (NSString s = new NSString ("s")) {
-					SizeF size = s.StringSize (f, 6, ref actualFontSize, 10, UILineBreakMode.MiddleTruncation);
+					var size = s.StringSize (f, 6, ref actualFontSize, 10, UILineBreakMode.MiddleTruncation);
 					Assert.That (actualFontSize, Is.EqualTo ((nfloat) 12), "actualFontSize");
 					Assert.That (size.Width, Is.InRange ((nfloat) 6f, (nfloat) 7f), "Width");
 					Assert.That (size.Height, Is.InRange ((nfloat) 14f, (nfloat) 15f), "Height");
 				}
 				using (NSString s = new NSString ("saterlipopette")) {
-					SizeF size = s.StringSize (f, 6, ref actualFontSize, 10, UILineBreakMode.MiddleTruncation);
+					var size = s.StringSize (f, 6, ref actualFontSize, 10, UILineBreakMode.MiddleTruncation);
 					Assert.That (actualFontSize, Is.EqualTo ((nfloat) 6), "actualFontSize-2");
 					Assert.That (size.Width, Is.InRange ((nfloat) 5f, (nfloat) 10f), "Width-2");
 					Assert.That (size.Height, Is.InRange ((nfloat) 14f, (nfloat) 15f), "Height-2");
@@ -195,13 +181,13 @@ namespace MonoTouchFixtures.Foundation {
 				NSStringDrawingOptions options = NSStringDrawingOptions.OneShot;
 				var attrib = new UIStringAttributes ();
 				using (var dict = new NSDictionary ()) {
-					Assert.DoesNotThrow (() => s.GetBoundingRect (new SizeF (5, 5), options, attrib, null), "GetBoundingRect 1");
-					Assert.DoesNotThrow (() => s.WeakGetBoundingRect (new SizeF (5, 5), options, dict, null), "WeakGetBoundingRect 1");
-					Assert.DoesNotThrow (() => s.DrawString (new RectangleF (0, 0, 10, 10), options, attrib, null), "DrawString 1");
-					Assert.DoesNotThrow (() => s.WeakDrawString (new RectangleF (0, 0, 10, 10), options, dict, null), "WeakDrawString 1");
+					Assert.DoesNotThrow (() => s.GetBoundingRect (new CGSize (5, 5), options, attrib, null), "GetBoundingRect 1");
+					Assert.DoesNotThrow (() => s.WeakGetBoundingRect (new CGSize (5, 5), options, dict, null), "WeakGetBoundingRect 1");
+					Assert.DoesNotThrow (() => s.DrawString (new CGRect (0, 0, 10, 10), options, attrib, null), "DrawString 1");
+					Assert.DoesNotThrow (() => s.WeakDrawString (new CGRect (0, 0, 10, 10), options, dict, null), "WeakDrawString 1");
 #if !MONOMAC //WeakDrawString on mac doesn't have versions with these parameters
-					Assert.DoesNotThrow (() => s.WeakDrawString (new RectangleF (0, 0, 10, 10), dict), "WeakDrawString 2");
-					Assert.DoesNotThrow (() => s.WeakDrawString (new PointF (0, 0), dict), "WeakDrawString 3");
+					Assert.DoesNotThrow (() => s.WeakDrawString (new CGRect (0, 0, 10, 10), dict), "WeakDrawString 2");
+					Assert.DoesNotThrow (() => s.WeakDrawString (new CGPoint (0, 0), dict), "WeakDrawString 3");
 #endif
 				}
 			}
@@ -216,11 +202,7 @@ namespace MonoTouchFixtures.Foundation {
 			NSString.Empty.DangerousRelease ();
 			NSString.Empty.DangerousRelease ();
 
-#if XAMCORE_2_0
 			Assert.That (NSString.Empty.RetainCount, Is.EqualTo (nuint.MaxValue), "RetainCount");
-#else
-			Assert.That (NSString.Empty.RetainCount, Is.EqualTo (-1), "RetainCount");
-#endif
 			Assert.That (NSString.Empty.Compare (new NSString (string.Empty)), Is.EqualTo (NSComparisonResult.Same), "Same");
 		}
 

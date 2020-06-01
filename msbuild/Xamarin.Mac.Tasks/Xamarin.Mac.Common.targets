@@ -96,7 +96,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<_ACTool_BundleResourceCache>$(IntermediateOutputPath)actool\_BundleResourceWithLogicalName.items</_ACTool_BundleResourceCache>
 	</PropertyGroup>
 
-	<PropertyGroup>
+	<PropertyGroup Condition="'$(_UsingXamarinSdk)' != 'true'">
 		<BuildDependsOn>
 			BuildOnlySettings;
 			_CollectBundleResources;
@@ -121,7 +121,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	<Target Name="_CompileColladaAssets" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="$(CompileColladaAssetsDependsOn)" />
 
 	<PropertyGroup>
-		<CreateAppBundleDependsOn>
+		<CreateAppBundleDependsOn Condition="'$(_UsingXamarinSdk)' != 'true'">
 			_DetectSigningIdentity;
 			_CopyContentToBundle;
 			_SmeltMetal;
@@ -135,34 +135,15 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		</CreateAppBundleDependsOn>
 	</PropertyGroup>
 
-	<Target Name="_CreateAppBundle" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="$(CreateAppBundleDependsOn)" />
-
 	<PropertyGroup>
 		<_CodesignAppBundleDependsOn>
 			_CreateAppBundle;
 			_EmbedProvisionProfile;
 			_CodesignNativeLibraries;
 		</_CodesignAppBundleDependsOn>
-
-		<CoreCodesignDependsOn>
-			_CodesignAppBundle;
-			_CodesignVerify;
-		</CoreCodesignDependsOn>
-
-		<CodesignDependsOn>
-			BeforeCodeSign;
-			CoreCodeSign;
-			AfterCodeSign;
-		</CodesignDependsOn>
 	</PropertyGroup>
 
-	<Target Name="BeforeCodesign" />
-	<Target Name="CoreCodesign" DependsOnTargets="$(CoreCodesignDependsOn)" />
-	<Target Name="AfterCodesign" />
-
-	<Target Name="Codesign" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="$(CodesignDependsOn)" />
-
-	<PropertyGroup>
+	<PropertyGroup Condition="'$(_UsingXamarinSdk)' != 'true'">
 		<CleanDependsOn>
 			$(CleanDependsOn);
 			_CleanAppBundle;

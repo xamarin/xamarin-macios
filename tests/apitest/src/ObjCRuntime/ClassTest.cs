@@ -10,13 +10,8 @@
 using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoMac.Foundation;
-using MonoMac.ObjCRuntime;
-#endif
 using NUnit.Framework;
 
 namespace MonoMacFixtures.ObjCRuntime {

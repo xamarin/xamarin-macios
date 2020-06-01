@@ -60,12 +60,37 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<RemoveDir Directories="$(BindingResourcePath);" />  
 	</Target>
 	
-	<Target Name="_AddExtraReferences" BeforeTargets="ResolveAssemblyReferences" Condition="'$(DisableExtraReferences)' != 'true'">
+	<Target Name="_AddExtraReferences" BeforeTargets="ResolveAssemblyReferences" Condition="'$(DisableExtraReferences)' != 'true' And '$(_UsingXamarinSdk)' != 'true'">
 		<ItemGroup>
 			<!-- https://github.com/mono/mono/issues/13483 -->
 			<Reference Include="System.Drawing.Common.dll" />
 		</ItemGroup>
 	</Target>
+
+	<Target Name="_CreateAppBundle" Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsAppDistribution)' != 'true'" DependsOnTargets="$(CreateAppBundleDependsOn)" />
+
+	<!-- Code signing -->
+
+	<PropertyGroup>
+		<CoreCodesignDependsOn>
+			$(CoreCodesignDependsOn);
+			_CodesignAppBundle;
+			_CodesignVerify;
+		</CoreCodesignDependsOn>
+
+		<CodesignDependsOn>
+			$(CodesignDependsOn);
+			BeforeCodeSign;
+			CoreCodeSign;
+			AfterCodeSign;
+		</CodesignDependsOn>
+	</PropertyGroup>
+
+	<Target Name="BeforeCodesign" />
+	<Target Name="CoreCodesign" DependsOnTargets="$(CoreCodesignDependsOn)" />
+	<Target Name="AfterCodesign" />
+
+	<Target Name="Codesign" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="$(CodesignDependsOn)" />
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets')"/>

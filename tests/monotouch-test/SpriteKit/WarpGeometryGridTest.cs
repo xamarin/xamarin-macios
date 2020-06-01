@@ -1,13 +1,8 @@
 ﻿#if !__WATCHOS__
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using SpriteKit;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.SpriteKit;
-#endif
 using OpenTK;
 using NUnit.Framework;
 

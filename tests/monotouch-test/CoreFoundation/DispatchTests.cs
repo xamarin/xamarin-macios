@@ -9,7 +9,7 @@
 
 using System;
 using System.IO;
-#if XAMCORE_2_0
+using CoreGraphics;
 using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
@@ -18,25 +18,9 @@ using AppKit;
 #else
 using UIKit;
 #endif
-#else
-using MonoTouch.CoreFoundation;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 using System.Drawing;
 using System.Threading;
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
 
 namespace MonoTouchFixtures.CoreFoundation {
 	
@@ -81,7 +65,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 			var defaultQ = DispatchQueue.GetGlobalQueue (DispatchQueuePriority.Default);
 			defaultQ.DispatchAsync (delegate {	
 				try {
-					NSStringDrawing.WeakDrawString (null, PointF.Empty, null);
+					NSStringDrawing.WeakDrawString (null, CGPoint.Empty, null);
 				} catch (Exception e) {
 					queue_ex = e;
 				}
@@ -91,7 +75,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 				mainQ.DispatchAsync (delegate {
 					mainQthread = Thread.CurrentThread;
 					try {
-						NSStringDrawing.WeakDrawString (null, PointF.Empty, null);
+						NSStringDrawing.WeakDrawString (null, CGPoint.Empty, null);
 					} catch (Exception e) {
 						ex = e;
 					} finally {
@@ -139,7 +123,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 			var defaultQ = DispatchQueue.GetGlobalQueue (DispatchQualityOfService.Default);
 			defaultQ.DispatchAsync (delegate {	
 				try {
-					NSStringDrawing.WeakDrawString (null, PointF.Empty, null);
+					NSStringDrawing.WeakDrawString (null, CGPoint.Empty, null);
 				} catch (Exception e) {
 					queue_ex = e;
 				}
@@ -149,7 +133,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 				mainQ.DispatchAsync (delegate {
 					mainQthread = Thread.CurrentThread;
 					try {
-						NSStringDrawing.WeakDrawString (null, PointF.Empty, null);
+						NSStringDrawing.WeakDrawString (null, CGPoint.Empty, null);
 					} catch (Exception e) {
 						ex = e;
 					} finally {
@@ -299,7 +283,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 			var defaultQ = DispatchQueue.GetGlobalQueue (DispatchQueuePriority.Default);
 			defaultQ.DispatchAfter (new DispatchTime (DispatchTime.Now, 1000), delegate {	
 				try {
-					NSStringDrawing.WeakDrawString (null, PointF.Empty, null);
+					NSStringDrawing.WeakDrawString (null, CGPoint.Empty, null);
 				} catch (Exception e) {
 					queue_ex = e;
 				}
@@ -309,7 +293,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 				mainQ.DispatchAfter (DispatchTime.Now, delegate {
 					mainQthread = Thread.CurrentThread;
 					try {
-						NSStringDrawing.WeakDrawString (null, PointF.Empty, null);
+						NSStringDrawing.WeakDrawString (null, CGPoint.Empty, null);
 					} catch (Exception e) {
 						ex = e;
 					} finally {
@@ -356,7 +340,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 			var defaultQ = DispatchQueue.GetGlobalQueue (DispatchQualityOfService.Default);
 			defaultQ.DispatchAfter (new DispatchTime (DispatchTime.Now, 1000), delegate {	
 				try {
-					NSStringDrawing.WeakDrawString (null, PointF.Empty, null);
+					NSStringDrawing.WeakDrawString (null, CGPoint.Empty, null);
 				} catch (Exception e) {
 					queue_ex = e;
 				}
@@ -366,7 +350,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 				mainQ.DispatchAfter (DispatchTime.Now, delegate {
 					mainQthread = Thread.CurrentThread;
 					try {
-						NSStringDrawing.WeakDrawString (null, PointF.Empty, null);
+						NSStringDrawing.WeakDrawString (null, CGPoint.Empty, null);
 					} catch (Exception e) {
 						ex = e;
 					} finally {

@@ -10,13 +10,8 @@
 #if !__WATCHOS__
 
 using System;
-#if XAMCORE_2_0
 using CoreAnimation;
 using Foundation;
-#else
-using MonoTouch.CoreAnimation;
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreAnimation {

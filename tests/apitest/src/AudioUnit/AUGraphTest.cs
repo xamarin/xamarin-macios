@@ -2,15 +2,9 @@ using System;
 using System.Threading.Tasks;
 using NUnit.Framework;
 
-#if !XAMCORE_2_0
-using MonoMac.AppKit;
-using MonoMac.AudioUnit;
-using MonoMac.AudioToolbox;
-#else
 using AppKit;
 using AudioUnit;
 using AudioToolbox;
-#endif
 
 namespace Xamarin.Mac.Tests
 {
@@ -20,11 +14,7 @@ namespace Xamarin.Mac.Tests
 		int graphRenderCallbackCount = 0;
 		int mixerRenderCallbackCount = 0;
 		AUGraph graph;
-#if XAMCORE_2_0
 		AudioUnit.AudioUnit mMixer;
-#else
-		AudioUnit mMixer;
-#endif
 
 		void SetupAUGraph ()
 		{
@@ -72,15 +62,6 @@ namespace Xamarin.Mac.Tests
 
 			await WaitOnGraphAndMixerCallbacks ();
 		}
-
-#if !XAMCORE_2_0
-#pragma warning disable 0612
-		void HandleRenderCallback (object sender, AudioGraphEventArgs e)
-		{
-			graphRenderCallbackCount++;
-		}
-#pragma warning restore 0612
-#endif
 
 		AudioUnitStatus GraphRenderCallback (AudioUnitRenderActionFlags actionFlags, AudioTimeStamp timeStamp, uint busNumber, uint numberFrames, AudioBuffers data)
 		{

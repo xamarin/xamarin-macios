@@ -10,15 +10,9 @@
 #if !__TVOS__
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
 using EventKit;
-#else
-using MonoTouch.EventKit;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 using NUnit.Framework;
 using System.Threading;
 using System.Linq;

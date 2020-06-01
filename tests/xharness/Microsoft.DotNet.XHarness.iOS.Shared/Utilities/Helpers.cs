@@ -27,13 +27,5 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 		}
 
 		public static string Timestamp => $"{DateTime.Now:yyyyMMdd_HHmmss}";
-
-		[DllImport ("/usr/lib/libc.dylib")]
-		extern static IntPtr ttyname (int filedes);
-
-		public static string GetTerminalName (int filedescriptor)
-		{
-			return Marshal.PtrToStringAuto (ttyname (filedescriptor));
-		}
 	}
 }

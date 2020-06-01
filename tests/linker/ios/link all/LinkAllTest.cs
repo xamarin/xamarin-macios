@@ -20,7 +20,6 @@ using System.Threading.Tasks;
 using System.Security.Cryptography.X509Certificates;
 
 using MonoTouch;
-#if XAMCORE_2_0
 using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
@@ -28,13 +27,6 @@ using ObjCRuntime;
 using StoreKit;
 #endif
 using UIKit;
-#else
-using MonoTouch.CoreGraphics;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.StoreKit;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 using MonoTests.System.Net.Http;
 
@@ -525,23 +517,11 @@ namespace LinkAll {
 				var value = fi.GetValue (pr.WeakDelegate);
 				Assert.NotNull (value, "value");
 
-#if XAMCORE_2_0
 				// and on the SKRequest defined one
 				pr.RequestFailed += (object sender, SKRequestErrorEventArgs e) => {};
 				// and the existing (initial field) is still set
 				fi = t.GetField ("receivedResponse", BindingFlags.NonPublic | BindingFlags.Instance);
 				Assert.NotNull (fi, "receivedResponse/SKRequest");
-#else
-				// In Classic SKRequest also defines a RequestFailed event, so make sure we get the SKRequest one
-				// that's because event are re-defined (new) in classic
-				((SKRequest) pr).RequestFailed += (object sender, SKRequestErrorEventArgs e) => {};
-
-				t = pr.WeakDelegate.GetType ();
-				Assert.That (t.Name, Is.EqualTo ("_SKRequestDelegate"), "delegate-2");
-
-				fi = t.GetField ("receivedResponse", BindingFlags.NonPublic | BindingFlags.Instance);
-				Assert.Null (fi, "receivedResponse/SKRequest");
-#endif
 			}
 		}
 #endif // !__WATCHOS__

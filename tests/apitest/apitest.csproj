@@ -13,7 +13,7 @@
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)</IntermediateOutputPath>
     <TargetFrameworkIdentifier>Xamarin.Mac</TargetFrameworkIdentifier>
     <XamMacArch>x86_64</XamMacArch>
-    <DefineConstants>XAMCORE_2_0</DefineConstants>
+    <DefineConstants></DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>

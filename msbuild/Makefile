@@ -294,6 +294,66 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild/%: Xamarin.Mac.Tasks/bin/
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild/%: Xamarin.Localization.MSBuild/bin/$(CONFIG)/$(TARGETFRAMEWORK)/% | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild
 	$(Q) install -m 644 $< $@
 ##
+## net5 targets ##
+##
+
+# tvOS and watchOS ships most of the iOS targets as well  (for now, we don't need all of these, so this is optimizable)
+DOTNET_SHARED_FILES = $(IOS_TARGETS) $(IOS_BINDING_TARGETS) $(foreach dll,$(IOS_TASK_ASSEMBLIES),$(dll).dll $(dll).pdb)
+DOTNET_IOS_FILES = $(DOTNET_SHARED_FILES) FrameworkList.xml
+DOTNET_TVOS_FILES = $(TVOS_TARGETS) FrameworkList.xml
+DOTNET_WATCHOS_FILES = $(WATCH_TARGETS) FrameworkList.xml
+DOTNET_MACOS_FILES = $(MAC_TARGETS) $(MAC_BINDING_TARGETS) $(foreach dll,$(MAC_TASK_ASSEMBLIES),$(dll).dll $(dll).pdb) FrameworkList.xml
+
+# iOS
+DOTNET_TARGETS += \
+	$(foreach target,$(DOTNET_IOS_FILES)          ,$(DOTNET_DESTDIR)/$(IOS_NUGET).Sdk/tools/msbuild/iOS/$(notdir $(target)))               \
+
+# tvOS: contains all of the files for iOS as well (for now, we don't need all of them, so this is optimizable)
+DOTNET_TARGETS += \
+	$(foreach target,$(DOTNET_SHARED_FILES)       ,$(DOTNET_DESTDIR)/$(TVOS_NUGET).Sdk/tools/msbuild/iOS/$(notdir $(target)))              \
+	$(foreach target,$(DOTNET_TVOS_FILES)         ,$(DOTNET_DESTDIR)/$(TVOS_NUGET).Sdk/tools/msbuild/tvOS/$(notdir $(target)))             \
+
+# watchOS: contains all of the files for iOS as well (for now, we don't need all of them, so this is optimizable)
+DOTNET_TARGETS += \
+	$(foreach target,$(DOTNET_SHARED_FILES)       ,$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Sdk/tools/msbuild/iOS/$(notdir $(target)))           \
+	$(foreach target,$(DOTNET_WATCHOS_FILES)      ,$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Sdk/tools/msbuild/watchOS/$(notdir $(target)))       \
+
+# macOS
+DOTNET_TARGETS += \
+	$(foreach target,$(DOTNET_MACOS_FILES)        ,$(DOTNET_DESTDIR)/$(MACOS_NUGET).Sdk/tools/msbuild/macOS/$(notdir $(target)))           \
+
+DOTNET_DIRECTORIES += \
+	$(DOTNET_DESTDIR)/$(IOS_NUGET).Sdk/tools/msbuild/iOS \
+	$(DOTNET_DESTDIR)/$(TVOS_NUGET).Sdk/tools/msbuild/iOS \
+	$(DOTNET_DESTDIR)/$(TVOS_NUGET).Sdk/tools/msbuild/tvOS \
+	$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Sdk/tools/msbuild/iOS \
+	$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Sdk/tools/msbuild/watchOS \
+	$(DOTNET_DESTDIR)/$(MACOS_NUGET).Sdk/tools/msbuild/macOS \
+
+$(DOTNET_DESTDIR)/$(MACOS_NUGET).Sdk/tools/msbuild/macOS/%: $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild/% | $(DOTNET_DIRECTORIES)
+	$(Q) $(CP) $< $@
+
+$(DOTNET_DESTDIR)/$(IOS_NUGET).Sdk/tools/msbuild/%: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/% | $(DOTNET_DIRECTORIES)
+	$(Q) $(CP) $< $@
+
+$(DOTNET_DESTDIR)/$(TVOS_NUGET).Sdk/tools/msbuild/%: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/% | $(DOTNET_DIRECTORIES)
+	$(Q) $(CP) $< $@
+
+$(DOTNET_DESTDIR)/$(TVOS_NUGET).Sdk/tools/msbuild/tvOS/%: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/TVOS/% | $(DOTNET_DIRECTORIES)
+	$(Q) $(CP) $< $@
+
+$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Sdk/tools/msbuild/%: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/% | $(DOTNET_DIRECTORIES)
+	$(Q) $(CP) $< $@
+
+$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Sdk/tools/msbuild/watchOS/%: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/WatchOS/% | $(DOTNET_DIRECTORIES)
+	$(Q) $(CP) $< $@
+
+MSBUILD_DIRECTORIES += $(DOTNET_DIRECTORIES)
+
+ifdef ENABLE_DOTNET
+MSBUILD_PRODUCTS += $(DOTNET_TARGETS)
+endif
+##
 ## Common targets ##
 ##
 
@@ -325,12 +385,19 @@ install-local:: $(MSBUILD_PRODUCTS)
 	@echo Targets files are valid XML
 	@touch $@
 
-test run-test:
+test run-test: run-test-ios run-test-mac
+
+run-test-ios:
 	$(MAKE) -C $(TOP)/tests test-ios-tasks
+
+run-test-mac:
+	$(MAKE) -C $(TOP)/tests run-mac-msbuild
 
 clean-local::
 	git clean -xfdq
 	cd $(XAMARIN_MACDEV_PATH) && git clean -xfdq
+
+dotnet: $(DOTNET_TARGETS)
 
 # make will automatically consider files created in chained implicit rules as temporary files, and delete them afterwards
 # marking those files as .SECONDARY will prevent that deletion.

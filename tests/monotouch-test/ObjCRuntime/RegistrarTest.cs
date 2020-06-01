@@ -243,7 +243,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			var sel = new Selector ("testOutParametersWithStructs:in:out:");
 			NSError value = new NSError ();
 			IntPtr ptr;
-			SizeF size = new SizeF (1, 2);
+			SizeF size = new CGSize (1, 2);
 
 			void_objc_msgSend_SizeF_IntPtr_out_IntPtr (obj.Handle, sel.Handle, size, value.Handle, out ptr);
 
@@ -589,12 +589,12 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void TestGenericUIView ()
 		{
-			using (var iview = new NullableIntView (new RectangleF (0, 0, 100, 100))) {
-				using (var strview = new StringView (new RectangleF (0, 0, 100, 100))) {
-					Messaging.void_objc_msgSend_RectangleF (iview.Handle, Selector.GetHandle ("drawRect:"), RectangleF.Empty);
+			using (var iview = new NullableIntView (new CGRect (0, 0, 100, 100))) {
+				using (var strview = new StringView (new CGRect (0, 0, 100, 100))) {
+					Messaging.void_objc_msgSend_CGRect (iview.Handle, Selector.GetHandle ("drawRect:"), CGRect.Empty);
 					Assert.AreEqual (typeof(int?), iview.TypeT, "int?");
 					Assert.AreEqual ("NullableIntView", iview.TypeName, "int? typename");
-					Messaging.void_objc_msgSend_RectangleF (strview.Handle, Selector.GetHandle ("drawRect:"), RectangleF.Empty);
+					Messaging.void_objc_msgSend_CGRect (strview.Handle, Selector.GetHandle ("drawRect:"), CGRect.Empty);
 					Assert.AreEqual (typeof(string), strview.TypeT, "string");
 					Assert.AreEqual ("StringView", strview.TypeName, "string typename");
 				}
@@ -649,8 +649,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		public void TestCGPointParameter ()
 		{
 			using (var obj = new RegistrarTestClass ()) {
-				var pnt1 = new PointF (123, 456);
-				PointF pnt2 = new PointF ();
+				var pnt1 = new CGPoint (123, 456);
+				PointF pnt2 = new CGPoint ();
 				void_objc_msgSend_CGPoint_ref_CGPoint (obj.Handle, Selector.GetHandle ("testCGPoint:out:"), pnt1, ref pnt2);
 				Assert.AreEqual (123, pnt2.X, "X");
 				Assert.AreEqual (456, pnt2.Y, "Y");
@@ -2174,9 +2174,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		public void InOutProtocolMethodArgument ()
 		{
 			using (var obj = new Scroller ()) {
-				var velocity = new PointF (1, 2);
-				var targetContentOffset = new PointF (3, 4);
-				Messaging.void_objc_msgSend_IntPtr_PointF_ref_PointF (obj.Handle, Selector.GetHandle ("scrollViewWillEndDragging:withVelocity:targetContentOffset:"), IntPtr.Zero, velocity, ref targetContentOffset);
+				var velocity = new CGPoint (1, 2);
+				var targetContentOffset = new CGPoint (3, 4);
+				Messaging.void_objc_msgSend_IntPtr_CGPoint_ref_CGPoint (obj.Handle, Selector.GetHandle ("scrollViewWillEndDragging:withVelocity:targetContentOffset:"), IntPtr.Zero, velocity, ref targetContentOffset);
 				Console.WriteLine (targetContentOffset);
 				Assert.AreEqual ("{X=123, Y=345}", targetContentOffset.ToString (), "ref output");
 			}
@@ -2191,7 +2191,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			{
 				Assert.AreEqual ("{X=1, Y=2}", velocity.ToString (), "velocity");
 				Assert.AreEqual ("{X=3, Y=4}", targetContentOffset.ToString (), "targetContentOffset");
-				targetContentOffset = new PointF (123, 345);
+				targetContentOffset = new CGPoint (123, 345);
 			}
 		}
 #endif // !__WATCHOS__

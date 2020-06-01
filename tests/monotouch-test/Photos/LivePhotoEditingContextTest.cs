@@ -2,25 +2,11 @@
 
 using System;
 using System.Reflection;
-#if XAMCORE_2_0
+using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
 using Photos;
 using CoreGraphics;
-using RectangleF = CoreGraphics.CGRect;
-using SizeF = CoreGraphics.CGSize;
-using PointF = CoreGraphics.CGPoint;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-using MonoTouch.Photos;
-using System.Drawing;
-using MonoTouch.AssetsLibrary;
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Photos {
