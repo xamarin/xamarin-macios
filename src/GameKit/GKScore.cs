@@ -63,11 +63,6 @@ namespace GameKit {
 				Handle = InitWithCategory (categoryOrIdentifier);
 #endif
 		}
-
-#if !XAMCORE_2_0
-		[Obsolete ("Use Date property")]
-		NSDate date { get { return Date; }}
-#endif
 	}
 }
 
