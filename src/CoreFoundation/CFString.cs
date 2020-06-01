@@ -72,13 +72,11 @@ namespace CoreFoundation {
 			this.len = (nint) len;
 		}
 
-#if XAMCORE_2_0
 		public CFRange (nint l, nint len)
 		{
 			this.loc = l;
 			this.len = len;
 		}
-#endif
 
 		public override string ToString ()
 		{
