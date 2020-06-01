@@ -25,7 +25,7 @@
 //
 #endregion
 
-#if OPENTK_DLL || !XAMCORE_2_0
+#if OPENTK_DLL
 
 using System;
 using System.Collections.Generic;
@@ -40,13 +40,6 @@ namespace OpenTK
     /// </summary>
     public interface INativeWindow : IDisposable
     {
-#if !XAMCORE_2_0
-        /// <summary>
-        /// Gets or sets the <see cref="System.Drawing.Icon"/> of the window.
-        /// </summary>
-        Icon Icon { get; set; }
-#endif
-
         /// <summary>
         /// Gets or sets the title of the window.
         /// </summary>
@@ -240,4 +233,4 @@ namespace OpenTK
     }
 }
 
-#endif // !XAMCORE_2_0
+#endif // OPENTK_DLL

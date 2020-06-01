@@ -24,7 +24,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // 
 
-#if OPENTK_DLL || !XAMCORE_2_0
+#if OPENTK_DLL
 
 using System;
 using System.Drawing;
@@ -313,13 +313,6 @@ namespace OpenTK.Platform.MacOS
 			get { throw new NotSupportedException ();}
 			set { throw new NotSupportedException ();}
 		}
-
-#if !XAMCORE_2_0
-		Icon INativeWindow.Icon {  
-			get { throw new NotSupportedException ();}
-			set { throw new NotSupportedException ();}		
-		}
-#endif
 
 		Size size;
 
@@ -644,4 +637,4 @@ namespace OpenTK.Platform.MacOS
 	}
 }
 
-#endif // !XAMCORE_2_0
+#endif // OPENTK_DLL
