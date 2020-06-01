@@ -7,7 +7,7 @@
 // Copyright 2016 Xamarin Inc. All rights reserved.
 //
 
-#if XAMCORE_2_0 && !TVOS
+#if !TVOS
 using System;
 using Foundation;
 
@@ -20,5 +20,5 @@ namespace UserNotifications {
 		}
 	}
 }
-#endif // XAMCORE_2_0 && !TVOS
+#endif // !TVOS
 
