@@ -21,9 +21,6 @@ using System;
 using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
-#if !XAMCORE_2_0
-using MonoMac;
-#endif
 
 using System.Runtime.InteropServices;
 
