@@ -1,9 +1,7 @@
-#if XAMCORE_2_0
-namespace ObjCRuntime {
-#elif MTOUCH
+#if MTOUCH
 namespace Xamarin.Bundler {
 #else
-namespace MonoTouch {
+namespace ObjCRuntime {
 #endif
 	public static partial class Constants {
 		public const string Version = "@VERSION@";
