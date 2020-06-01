@@ -542,7 +542,6 @@ app_initialize (xamarin_initialize_data *data)
 	xamarin_initialize_cocoa_threads (NULL);
 	init_logdir ();
 	mono_set_signal_chaining (TRUE);
-	mono_set_crash_chaining (TRUE);
 }
 
 #define __XAMARIN_MAC_RELAUNCH_APP__ "__XAMARIN_MAC_RELAUNCH_APP__"
