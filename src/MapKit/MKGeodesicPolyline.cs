@@ -25,7 +25,6 @@
 //
 
 #if !WATCH
-#if XAMCORE_2_0 || !MONOMAC
 using System;
 using System.Threading.Tasks;
 using System.Threading;
@@ -61,5 +60,4 @@ namespace MapKit {
 		}
 	}
 }
-#endif
 #endif // !WATCH

@@ -7,7 +7,7 @@
 // Copyright 2009 Novell, Inc.
 // Copyright 2014-2016 Xamarin Inc.
 //
-#if XAMCORE_2_0 || !MONOMAC
+
 using System;
 using System.Runtime.InteropServices;
 using CoreGraphics;
@@ -290,5 +290,3 @@ namespace MapKit {
 
 #endif
 }
-
-#endif

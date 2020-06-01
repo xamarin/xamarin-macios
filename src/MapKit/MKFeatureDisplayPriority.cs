@@ -1,4 +1,3 @@
-#if XAMCORE_2_0 || !MONOMAC
 using System;
 using ObjCRuntime;
 
@@ -12,5 +11,3 @@ namespace MapKit {
 		public const float DefaultLow = 250f;
 	}
 }
-
-#endif
