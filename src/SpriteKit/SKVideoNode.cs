@@ -11,7 +11,7 @@ using System;
 using Foundation;
 using ObjCRuntime;
 
-#if (XAMCORE_2_0 || !MONOMAC) && !WATCH
+#if !WATCH
 namespace SpriteKit {
 	public partial class SKVideoNode : SKNode {
 
@@ -77,4 +77,4 @@ namespace SpriteKit {
 		}
 	}
 }
-#endif // XAMCORE_2_0
+#endif // !WATCH

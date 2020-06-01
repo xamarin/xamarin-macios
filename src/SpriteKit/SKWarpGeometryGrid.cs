@@ -13,7 +13,6 @@ using ObjCRuntime;
 
 using Vector2 = global::OpenTK.Vector2;
 
-#if XAMCORE_2_0 || !MONOMAC
 namespace SpriteKit
 {
 	public partial class SKWarpGeometryGrid
@@ -76,4 +75,3 @@ namespace SpriteKit
 		}
 	}
 }
-#endif // XAMCORE_2_0
