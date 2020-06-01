@@ -87,20 +87,6 @@ namespace UIKit {
 			return scaledImage;			
 		}
 
-#if !XAMCORE_2_0
-		[Obsolete ("This is identical to FromFile. Caching is done when using FromBundle")]
-		public static UIImage FromFileUncached (string filename)
-		{
-			return FromFile (filename);
-		}
-
-		[Obsolete ("This always returns null. Use the overload that accept a System.String 'name' instead.")]
-		public static UIImage CreateAnimatedImage (UIImage [] images, UIEdgeInsets capInsets, double duration)
-		{
-			return null;
-		}
-#endif
-
 		// required because of GetCallingAssembly (if we ever inline across assemblies)
 		[MethodImpl (MethodImplOptions.NoInlining)]
 		public static UIImage FromResource (Assembly assembly, string name)

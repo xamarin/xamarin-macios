@@ -20,12 +20,5 @@ namespace UIKit {
 			return Runtime.CheckSystemVersion (major, minor, SystemVersion);
 #endif
 		}
-
-#if !XAMCORE_2_0
-		[Obsolete ("Deprecated in iOS 5.0. Apple now reject application using it the selector is removed and an empty string is returned")]
-		public virtual string UniqueIdentifier {
-			get { return string.Empty; }
-		}
-#endif
 	}
 }
