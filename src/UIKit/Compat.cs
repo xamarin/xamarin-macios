@@ -14,24 +14,6 @@ using Foundation;
 
 namespace UIKit {
 
-#if !XAMCORE_2_0
-	public partial class UIPrintFormatter {
-
-		[Obsolete ("This cannot be directly created. Use UISimpleTextPrintFormatter instead.")]
-		public UIPrintFormatter (string text)
-		{
-		}
-
-		[Obsolete ("This cannot be directly created. Use UISimpleTextPrintFormatter instead.")]
-		public UIPrintFormatter (MonoTouch.Foundation.NSAttributedString attributedText)
-		{
-		}
-
-		[Obsolete ("This cannot be used directly. Use UISimpleTextPrintFormatter instead.")]
-		public virtual MonoTouch.Foundation.NSAttributedString AttributedText { get; set; }
-	}
-#endif
-
 #if !XAMCORE_3_0
 	public partial class UIAdaptivePresentationControllerDelegate {
 
@@ -41,17 +23,6 @@ namespace UIKit {
 			return null;
 		}
 	}
-
-#if !XAMCORE_2_0
-	public partial class  UIPopoverPresentationControllerDelegate {
-
-		[Obsolete ("Incorrect signature. Use the overload with a UITraitCollection parameter.")]
-		public override UIViewController GetAdaptivePresentationStyle (UIPresentationController controller, UIModalPresentationStyle style)
-		{
-			return null;
-		}
-	}
-#endif
 
 	public partial class UIAdaptivePresentationControllerDelegate_Extensions {
 
