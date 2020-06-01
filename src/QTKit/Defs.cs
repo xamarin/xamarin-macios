@@ -34,7 +34,6 @@ namespace QTKit {
 		public static readonly QTTime Zero = new QTTime (0, 1, 0);
 		public static readonly QTTime IndefiniteTime = new QTTime (0, 1, TimeFlags.TimeIsIndefinite);
 
-#if XAMCORE_2_0
 		// QTKit/Headers/QTTime.h:
 		// typedef struct {
 		//     long long timeValue;
@@ -59,23 +58,12 @@ namespace QTKit {
 			get { return (TimeFlags)(long)flags; }
 			set { flags = (nint)(long)value; }
 		}
-#else
-		public long TimeValue;
-		public int  TimeScale;
-		public TimeFlags Flags;
-#endif
 
 		public QTTime (long timeValue, nint timeScale, TimeFlags flags)
 		{
-#if XAMCORE_2_0
 			this.timeValue = timeValue;
 			this.timeScale = timeScale;
 			this.flags = (nint)(long)flags;
-#else
-			TimeValue = timeValue;
-			TimeScale = timeScale;
-			Flags = flags;
-#endif
 		}
 
 		public QTTime (long timeValue, nint timeScale)
@@ -94,7 +82,6 @@ namespace QTKit {
 
 	[Deprecated (PlatformName.MacOSX, 10, 9)]
 	public struct QTTimeRange {
-#if XAMCORE_2_0
 		// QTKit/Headers/QTTime.h:
 		// typedef struct {
 		//     QTTime time;
@@ -112,20 +99,11 @@ namespace QTKit {
 			get { return duration; }
 			set { duration = value; }
 		}
-#else
-		public QTTime Time;
-		public QTTime Duration;
-#endif
 
 		public QTTimeRange (QTTime time, QTTime duration)
 		{
-#if XAMCORE_2_0
 			this.time = time;
 			this.duration = duration;
-#else
-			Time = time;
-			Duration = duration;
-#endif
 		}
 
 		public override string ToString ()
