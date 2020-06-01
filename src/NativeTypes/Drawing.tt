@@ -19,8 +19,6 @@
 // Copyright 2013 Xamarin, Inc. All rights reserved.
 //
 
-#if XAMCORE_2_0
-
 <#@ template language="C#v3.5" #>
 <#@ import namespace="System" #>
 <#@ import namespace="System.Collections.Generic" #>
@@ -30,10 +28,9 @@ using System.Drawing;
 #endif
 using System.Globalization;
 using System.Runtime.InteropServices;
-#if XAMCORE_2_0
+
 using Foundation;
 using ObjCRuntime;
-#endif
 
 namespace CoreGraphics
 {
@@ -164,7 +161,7 @@ namespace CoreGraphics
 			this.<#= type.Y_Height #> = <#= type.ArgName #>.<#= type.Y_Height #>;
 		}
 
-#if XAMCORE_2_0 && !COREBUILD
+#if !COREBUILD
 		public static bool TryParse (NSDictionary dictionaryRepresentation, out <#= type.Name #> <#= type.ArgName #>)
 		{
 			if (dictionaryRepresentation == null){
@@ -576,7 +573,7 @@ namespace CoreGraphics
 				x, y, width, height);
 		}
 
-#if XAMCORE_2_0 && !COREBUILD
+#if !COREBUILD
 		public static bool TryParse (NSDictionary dictionaryRepresentation, out CGRect rect)
 		{
 			if (dictionaryRepresentation == null){
@@ -593,7 +590,7 @@ namespace CoreGraphics
 #endif
 	}
 
-#if XAMCORE_2_0 && !COREBUILD
+#if !COREBUILD
 	internal static class NativeDrawingMethods {
 #if MONOMAC
 		internal const string CG = Constants.ApplicationServicesCoreGraphicsLibrary;
@@ -616,5 +613,3 @@ namespace CoreGraphics
 	}
 #endif
 }
-
-#endif
