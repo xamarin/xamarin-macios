@@ -6,7 +6,7 @@
 //
 // Copyright 2015 Xamarin Inc. All rights reserved.
 //
-#if XAMCORE_2_0 || !MONOMAC
+
 using System;
 using System.ComponentModel;
 using ObjCRuntime;
@@ -235,7 +235,6 @@ namespace GameplayKit {
 		void WillRemoveFromEntity ();
 	}
 
-#if XAMCORE_2_0 // GKComponentSystem is a generic type, which we only support in Unified (for now at least)
 	[iOS (9,0), Mac (10,11)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // We have a manual default ctor.
@@ -283,7 +282,6 @@ namespace GameplayKit {
 		[Wrap ("Class.Lookup (GetClassForGenericArgument (index))")]
 		Type GetTypeForGenericArgument (nuint index);
 	}
-#endif // XAMCORE_2_0
 
 	[iOS (10,0), TV (10,0), Mac (10,12)]
 	[BaseType (typeof (GKBehavior))]
@@ -355,11 +353,8 @@ namespace GameplayKit {
 		IntPtr Constructor (NSObject attribute);
 
 		[Export ("initWithExamples:actions:attributes:")]
-#if XAMCORE_2_0
 		IntPtr Constructor (NSArray<NSObject> [] examples, NSObject [] actions, NSObject [] attributes);
-#else
-		IntPtr Constructor (NSArray [] examples, NSObject [] actions, NSObject [] attributes);
-#endif
+
 		[Export ("findActionForAnswers:")]
 		[return: NullAllowed]
 		NSObject FindAction (NSDictionary<NSObject, NSObject> answers);
@@ -708,7 +703,6 @@ namespace GameplayKit {
 		Type GetTypeForGenericArgument (nuint index);
 	}
 
-#if XAMCORE_2_0
 	[iOS (10,0), TV (10,0), Mac (10,12)]
 	[BaseType (typeof (GKGraph))]
 	interface GKMeshGraph<NodeType> where NodeType : GKGraphNode2D {
@@ -773,7 +767,6 @@ namespace GameplayKit {
 		[Wrap ("Class.Lookup (GetClassForGenericArgument (index))")]
 		Type GetTypeForGenericArgument (nuint index);
 	}
-#endif
 
 	[iOS (9,0), Mac (10,11)]
 	[BaseType (typeof (NSObject))]
@@ -856,10 +849,6 @@ namespace GameplayKit {
 		Vector2i GridPosition { 
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 			get;
-#if !XAMCORE_2_0
-			// classic expose the xamarin_simd__void_objc_msgSend[Super]_Vector2i so it's a breaking change not to include the attribute
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-#endif
 #if !XAMCORE_4_0
 			[NotImplemented]
 			set; 
@@ -1727,7 +1716,6 @@ namespace GameplayKit {
 		}
 	}
 
-#if XAMCORE_2_0
 	[iOS (10,0), TV (10,0), Mac (10,12)]
 	[BaseType (typeof (NSObject))]
 	interface GKOctree <ElementType> where ElementType : NSObject {
@@ -1792,7 +1780,6 @@ namespace GameplayKit {
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		ElementType [] GetElements (Vector2 rectMin, Vector2 rectMax);
 	}
-#endif
 
 	[iOS (10,0), TV (10,0), Mac (10,12)]
 	[BaseType (typeof (GKComponent))]
@@ -1996,4 +1983,3 @@ namespace GameplayKit {
 #endif
 	}
 }
-#endif
