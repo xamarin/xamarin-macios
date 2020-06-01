@@ -1,5 +1,4 @@
 #if IOS || TVOS || MONOMAC
-#if XAMCORE_2_0
 //
 // MTAudioProcessingTap.cs: Type wrapper for MTAudioProcessingTap
 //
@@ -299,5 +298,4 @@ namespace MediaToolbox
 	public class AudioBufferList {}
 #endif
 }
-#endif // XAMCORE_2_0
 #endif // IOS || TVOS
