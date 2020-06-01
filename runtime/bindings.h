@@ -32,9 +32,6 @@ typedef float (*float_sendsuper) (struct objc_super *super, SEL sel);
 typedef xm_nfloat_t (*nfloat_send) (id self, SEL sel);
 typedef xm_nfloat_t (*nfloat_sendsuper) (struct objc_super *super, SEL sel);
 
-float xamarin_float_objc_msgSend (id self, SEL sel);
-float xamarin_float_objc_msgSendSuper (struct objc_super *super, SEL sel);
-
 xm_nfloat_t xamarin_nfloat_objc_msgSend (id self, SEL sel);
 xm_nfloat_t xamarin_nfloat_objc_msgSendSuper (struct objc_super *super, SEL sel);
 
@@ -273,21 +270,6 @@ void             xamarin_vector_float3__Vector3_objc_msgSendSuper_stret_Vector3 
 struct Vector3f  xamarin_vector_float3__Vector3_objc_msgSendSuper_Vector3 (struct objc_super *super, SEL sel, struct Vector3f p0);
 CGPoint          xamarin_CGPoint__VNNormalizedFaceBoundingBoxPointForLandmarkPoint_Vector2_CGRect_nuint_nuint_string (struct Vector2f faceLandmarkPoint, CGRect faceBoundingBox, xm_nuint_t imageWidth, xm_nuint_t imageHeight, const char **error_msg);
 CGPoint          xamarin_CGPoint__VNImagePointForFaceLandmarkPoint_Vector2_CGRect_nuint_nuint_string (struct Vector2f faceLandmarkPoint, CGRect faceBoundingBox, xm_nuint_t imageWidth, xm_nuint_t imageHeight, const char **error_msg);
-
-#ifndef XAMCORE_2_0
-#ifdef MONOMAC
-void *monomac_IntPtr_objc_msgSend_IntPtr (id self, SEL sel, void *a);
-void *monomac_IntPtr_objc_msgSendSuper_IntPtr (struct objc_super *super, SEL sel, void *a);
-float monomac_float_objc_msgSend (id self, SEL sel);
-float monomac_float_objc_msgSendSuper (struct objc_super *super, SEL sel);
-xm_nfloat_t monomac_nfloat_objc_msgSend (id self, SEL sel);
-xm_nfloat_t monomac_nfloat_objc_msgSendSuper (struct objc_super *super, SEL sel);
-#endif
-#ifdef MONOTOUCH
-void * monotouch_IntPtr_objc_msgSend_IntPtr (id self, SEL sel, void *a);
-void * monotouch_IntPtr_objc_msgSendSuper_IntPtr (struct objc_super *super, SEL sel, void *a);
-#endif
-#endif
 
 #ifdef __cplusplus
 } /* extern "C" */
