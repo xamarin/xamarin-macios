@@ -16,10 +16,6 @@ namespace Twitter {
 
 	delegate void TWRequestHandler (NSData responseData, NSHttpUrlResponse urlResponse, NSError error);
 
-#if !XAMCORE_2_0
-	delegate void TWTweetComposeHandler (TWTweetComposeViewControllerResult result);
-#endif
-	
 	[Availability (Deprecated = Platform.iOS_6_0, Message = "Use the 'Social' framework.")]
 	[BaseType (typeof (NSObject))]
 	interface TWRequest {
@@ -57,13 +53,8 @@ namespace Twitter {
 		[PostGet ("NibBundle")]
 		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 
-#if XAMCORE_2_0
 		[Export ("completionHandler")]
 		Action<TWTweetComposeViewControllerResult> CompletionHandler { get; set; }
-#else
-		[Export ("setCompletionHandler:")]
-		void SetCompletionHandler (TWTweetComposeHandler handler);
-#endif
 
 		[Static]
 		[Export ("canSendTweet")]
