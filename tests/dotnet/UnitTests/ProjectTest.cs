@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace Xamarin.Tests {
 	[TestFixture]
 	public class DotNetProjectTest {
-		void Build (string project, string subdir = null)
+		string GetProjectPath (string project, string subdir = null)
 		{
 			var project_dir = Path.Combine (Configuration.SourceRoot, "tests", "dotnet", project);
 			if (!string.IsNullOrEmpty (subdir))
@@ -15,31 +15,57 @@ namespace Xamarin.Tests {
 			if (!File.Exists (project_path))
 				project_path = Path.ChangeExtension (project_path, "sln");
 
-			DotNet.AssertBuild (project_path);
+			if (!File.Exists (project_path))
+				throw new FileNotFoundException ($"Could not find the project or solution {project}");
+
+			return project_path;
+		}
+
+		void Clean (string project_path)
+		{
+			var dirs = Directory.GetDirectories (Path.GetDirectoryName (project_path), "*", SearchOption.AllDirectories);
+			foreach (var dir in dirs) {
+				var name = Path.GetFileName (dir);
+				if (name != "bin" && name != "obj")
+					continue;
+				Directory.Delete (dir, true);
+			}
 		}
 
 		[Test]
 		public void BuildMySingleView ()
 		{
-			Build ("MySingleView");
+			var project_path = GetProjectPath ("MySingleView");
+			Clean (project_path);
+			var result = DotNet.AssertBuild (project_path);
+			AssertThatLinkerExecuted (result);
 		}
 
 		[Test]
 		public void BuildMyCocoaApp ()
 		{
-			Build ("MyCocoaApp");
+			var project_path = GetProjectPath ("MyCocoaApp");
+			Clean (project_path);
+			var result = DotNet.AssertBuild (project_path);
+			AssertThatLinkerExecuted (result);
 		}
 
 		[Test]
 		public void BuildMyTVApp ()
 		{
-			Build ("MyTVApp");
+			var project_path = GetProjectPath ("MyTVApp");
+			Clean (project_path);
+			var result = DotNet.AssertBuild (project_path);
+			AssertThatLinkerExecuted (result);
 		}
 
 		[Test]
 		public void BuildMyWatchApp ()
 		{
-			Build ("MyWatchApp");
+			var project_path = GetProjectPath ("MyWatchApp");
+			Clean (project_path);
+			var result = DotNet.AssertBuildFailure (project_path);
+			Assert.That (result.StandardOutput.ToString (), Does.Contain ("The specified RuntimeIdentifier 'watchos-x86' is not recognized."), "Missing runtime pack for watchOS");
 		}
 
 		[TestCase ("iOS")]
@@ -48,7 +74,17 @@ namespace Xamarin.Tests {
 		[TestCase ("macOS")]
 		public void BuildMyClassLibrary (string platform)
 		{
-			Build ("MyClassLibrary", platform);
+			var project_path = GetProjectPath ("MyClassLibrary", platform);
+			Clean (project_path);
+			var result = DotNet.AssertBuild (project_path);
+			Assert.That (result.StandardOutput.ToString (), Does.Not.Contain ("Task \"ILLink\""), "Linker executed unexpectedly.");
+		}
+
+		void AssertThatLinkerExecuted (ExecutionResult result)
+		{
+			var output = result.StandardOutput.ToString ();
+			Assert.That (output, Does.Contain ("Building target \"_RunILLink\" completely."), "Linker did not executed as expected.");
+			Assert.That (output, Does.Contain ("Hello SetupStep"), "Custom steps did not run as expected.");
 		}
 	}
 }
