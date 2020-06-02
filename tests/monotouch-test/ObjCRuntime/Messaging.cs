@@ -29,6 +29,9 @@ namespace ObjCRuntime
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper")]
 		public extern static void void_objc_msgSendSuper (ref objc_super receiver, IntPtr selector);
 
+		[DllImport (LIBOBJC_DYLIB, EntryPoint = "objc_msgSendSuper")]
+		public extern static void void_objc_msgSendSuper (IntPtr receiver, IntPtr selector);
+
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
 		public extern static void void_objc_msgSend_IntPtr (IntPtr receiver, IntPtr selector, IntPtr value);
 

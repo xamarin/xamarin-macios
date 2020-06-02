@@ -390,9 +390,6 @@ namespace Foundation {
 
 		public IntPtr SuperHandle {
 			get {
-				if (handle == IntPtr.Zero)
-					return IntPtr.Zero;
-
 				if (class_handle == IntPtr.Zero)
 					class_handle = ClassHandle;
 
