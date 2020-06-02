@@ -1,45 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<Import Sdk="Microsoft.NET.Sdk" Project="Sdk.targets" />
-
-	<!-- Default item includes (globs and implicit references) -->
-	<Import Project="Xamarin.Shared.Sdk.DefaultItems.targets" />
-	<Import Project="Xamarin.Shared.Sdk.TargetFrameworkInference.targets" />
-
-	<!-- Inject our custom logic into *DependsOn variables -->
-	<PropertyGroup>
-		<BuildDependsOn>
-			$(BuildDependsOn);
-			_CreateAppBundle;
-		</BuildDependsOn>
-
-		<!-- We re-use ComputeFilesToPublish & CopyFilesToPublishDirectory to copy files to the .app -->
-		<CreateAppBundleDependsOn>
-			ComputeFilesToPublish;
-			_ComputePublishLocation;
-			CopyFilesToPublishDirectory;
-		</CreateAppBundleDependsOn>
-	</PropertyGroup>
-
-	<Target Name="_ComputePublishLocation" DependsOnTargets="_GenerateBundleName">
-		<!-- Put .dll, .pdb, .exe and .dylib in the .app -->
-		<PropertyGroup>
-			<_AssemblyPublishDir Condition="'$(_PlatformName)' != 'macOS'">$(MSBuildProjectDirectory)$(_AppBundlePath)\</_AssemblyPublishDir>
-			<_AssemblyPublishDir Condition="'$(_PlatformName)' == 'macOS'">$(MSBuildProjectDirectory)$(_AppBundlePath)\Contents\MonoBundle\</_AssemblyPublishDir>
-			<_DylibPublishDir Condition="'$(_PlatformName)' != 'macOS'">$(MSBuildProjectDirectory)$(_AppBundlePath)\</_DylibPublishDir>
-			<_DylibPublishDir Condition="'$(_PlatformName)' == 'macOS'">$(MSBuildProjectDirectory)$(_AppBundlePath)\Contents\MonoBundle\</_DylibPublishDir>
-		</PropertyGroup>
-		<ItemGroup>
-			<ResolvedFileToPublish
-				Update="@(ResolvedFileToPublish)"
-				RelativePath="$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(_AssemblyPublishDir)))%(Filename)%(Extension)"
-				Condition="'%(Extension)' == '.dll' Or '%(Extension)' == '.pdb' Or '$(Extension)' == '.exe'" />
-			<ResolvedFileToPublish
-				Update="@(ResolvedFileToPublish)"
-				RelativePath="$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(_DylibPublishDir)))%(Filename)%(Extension)"
-				Condition="'%(Extension)' == '.dylib'" />
-		</ItemGroup>
-	</Target>
 
 	<!-- Project types and how do we distinguish between them
 
@@ -87,15 +47,66 @@
 		<_ProjectType Condition="'$(_ProjectType)' == '' And '$(_PlatformName)' == 'macOS' And '$(OutputType)' == 'Library' And '$(IsAppExtension)' != ''">macOSAppExtensionProject</_ProjectType>
 		<_ProjectType Condition="'$(_ProjectType)' == '' And '$(_PlatformName)' == 'macOS' And '$(OutputType)' == 'Library' And '$(IsBindingProject)' != ''">macOSBindingProject</_ProjectType>
 		<_ProjectType Condition="'$(_ProjectType)' == '' And '$(_PlatformName)' == 'macOS' And '$(OutputType)' == 'Library'">macOSClassLibrary</_ProjectType>
+	</PropertyGroup>
 
+	<PropertyGroup>
+		<!-- We must run the linker for executable projects and app extension projects. We must set PublishTrimmed before importing Microsoft.NET.Sdk, because it'll be evaluated there. -->
+		<PublishTrimmed Condition="'$(PublishTrimmed)' == '' And ($(_ProjectType.EndsWith ('ExecutableProject')) Or $(_ProjectType.EndsWith ('AppExtensionProject')))">true</PublishTrimmed>
+
+		<!-- App extensions are self-contained, even though their OutputType=Library -->
+		<SelfContained Condition="'$(SelfContained)' == '' And $(_ProjectType.EndsWith ('AppExtensionProject'))">true</SelfContained>
+	</PropertyGroup>
+
+	<Import Sdk="Microsoft.NET.Sdk" Project="Sdk.targets" />
+
+	<!-- Default item includes (globs and implicit references) -->
+	<Import Project="Xamarin.Shared.Sdk.DefaultItems.targets" />
+	<Import Project="Xamarin.Shared.Sdk.TargetFrameworkInference.targets" />
+
+	<!-- Inject our custom logic into *DependsOn variables -->
+	<PropertyGroup>
+		<BuildDependsOn>
+			$(BuildDependsOn);
+			_CreateAppBundle;
+		</BuildDependsOn>
+
+		<!-- We re-use ComputeFilesToPublish & CopyFilesToPublishDirectory to copy files to the .app -->
+		<CreateAppBundleDependsOn>
+			ComputeFilesToPublish;
+			_ComputePublishLocation;
+			CopyFilesToPublishDirectory;
+		</CreateAppBundleDependsOn>
+	</PropertyGroup>
+
+	<Target Name="_ComputePublishLocation" DependsOnTargets="_GenerateBundleName">
+		<!-- Put .dll, .pdb, .exe and .dylib in the .app -->
+		<PropertyGroup>
+			<_AssemblyPublishDir Condition="'$(_PlatformName)' != 'macOS'">$(MSBuildProjectDirectory)$(_AppBundlePath)\</_AssemblyPublishDir>
+			<_AssemblyPublishDir Condition="'$(_PlatformName)' == 'macOS'">$(MSBuildProjectDirectory)$(_AppBundlePath)\Contents\MonoBundle\</_AssemblyPublishDir>
+			<_DylibPublishDir Condition="'$(_PlatformName)' != 'macOS'">$(MSBuildProjectDirectory)$(_AppBundlePath)\</_DylibPublishDir>
+			<_DylibPublishDir Condition="'$(_PlatformName)' == 'macOS'">$(MSBuildProjectDirectory)$(_AppBundlePath)\Contents\MonoBundle\</_DylibPublishDir>
+		</PropertyGroup>
+		<ItemGroup>
+			<ResolvedFileToPublish
+				Update="@(ResolvedFileToPublish)"
+				RelativePath="$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(_AssemblyPublishDir)))%(Filename)%(Extension)"
+				Condition="'%(Extension)' == '.dll' Or '%(Extension)' == '.pdb' Or '$(Extension)' == '.exe'" />
+			<ResolvedFileToPublish
+				Update="@(ResolvedFileToPublish)"
+				RelativePath="$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(_DylibPublishDir)))%(Filename)%(Extension)"
+				Condition="'%(Extension)' == '.dylib'" />
+		</ItemGroup>
+	</Target>
+
+	<!-- Import existing targets -->
+
+	<PropertyGroup>
 		<_ProjectLanguage>$(Language)</_ProjectLanguage>
 		<_ProjectLanguage Condition="'$(_ProjectLanguage)' == '' Or '$(_ProjectLanguage)' == 'C#' ">CSharp</_ProjectLanguage>
 		<_ProjectLanguage Condition="'$(_ProjectLanguage)' == 'F#' ">FSharp</_ProjectLanguage>
 
 		<_TargetsDirectory>$(_XamarinSdkRootDirectory)\tools\msbuild\$(_PlatformName)\</_TargetsDirectory>
 	</PropertyGroup>
-
-	<!-- Import existing targets -->
 
 	<Import Project="$(_TargetsDirectory)Xamarin.iOS.$(_ProjectLanguage).targets"                  Condition="'$(_ProjectType)' == 'iOSExecutableProject' Or '$(_ProjectType)' == 'iOSClassLibrary' " />
 	<Import Project="$(_TargetsDirectory)Xamarin.iOS.AppExtension.$(_ProjectLanguage).targets"     Condition="'$(_ProjectType)' == 'iOSAppExtensionProject' " />
