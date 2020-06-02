@@ -4070,10 +4070,6 @@ public class HandlerTest
 				switch (symbol) {
 				case "_xamarin_fix_ranlib_warning_about_no_symbols": // Dummy symbol to fix linker warning
 				case "_xamarin_fix_ranlib_warning_about_no_symbols_v2": // Dummy symbol to fix linker warning
-				case "_monotouch_IntPtr_objc_msgSendSuper_IntPtr": // Classic only, this function can probably be removed when we switch to binary copy of a Classic version of libxamarin.a
-				case "_monotouch_IntPtr_objc_msgSend_IntPtr": // Classic only, this function can probably be removed when we switch to binary copy of a Classic version of libxamarin.a
-				case "_xamarin_float_objc_msgSend": // Classic only, this function can probably be removed when we switch to binary copy of a Classic version of libxamarin.a
-				case "_xamarin_float_objc_msgSendSuper": // Classic only, this function can probably be removed when we switch to binary copy of a Classic version of libxamarin.a
 				case "_xamarin_nfloat_objc_msgSend": // XM only
 				case "_xamarin_nfloat_objc_msgSendSuper": // Xm only
 					continue;
