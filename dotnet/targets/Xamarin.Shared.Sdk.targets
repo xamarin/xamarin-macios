@@ -71,12 +71,29 @@
 		</BuildDependsOn>
 
 		<!-- We re-use ComputeFilesToPublish & CopyFilesToPublishDirectory to copy files to the .app -->
+		<!-- ComputeFilesToPublish will run ILLink -->
 		<CreateAppBundleDependsOn>
+			_ComputeLinkerArguments;
 			ComputeFilesToPublish;
 			_ComputePublishLocation;
 			CopyFilesToPublishDirectory;
 		</CreateAppBundleDependsOn>
 	</PropertyGroup>
+
+	<!-- Linker -->
+	<PropertyGroup>
+		<_AdditionalTaskAssemblyDirectory>$(_XamarinSdkRootDirectory)tools/dotnet-linker/</_AdditionalTaskAssemblyDirectory>
+		<_AdditionalTaskAssembly>$(_AdditionalTaskAssemblyDirectory)dotnet-linker.dll</_AdditionalTaskAssembly>
+	</PropertyGroup>
+	<Target Name="_ComputeLinkerArguments">
+		<ItemGroup>
+			<!-- add our custom steps -->
+			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)">
+				<BeforeStep>LoadReferencesStep</BeforeStep>
+				<Type>Xamarin.SetupStep</Type>
+			</_TrimmerCustomSteps>
+		</ItemGroup>
+	</Target>
 
 	<Target Name="_ComputePublishLocation" DependsOnTargets="_GenerateBundleName">
 		<!-- Put .dll, .pdb, .exe and .dylib in the .app -->
