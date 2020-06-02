@@ -1931,9 +1931,27 @@ namespace Xamarin.Bundler {
             }
         }
         
-        internal static string MT4162 {
+        internal static string MT4162_BaseType {
             get {
-                return ResourceManager.GetString("MT4162", resourceCulture);
+                return ResourceManager.GetString("MT4162_BaseType", resourceCulture);
+            }
+        }
+        
+        internal static string MT4162_Parameter {
+            get {
+                return ResourceManager.GetString("MT4162_Parameter", resourceCulture);
+            }
+        }
+        
+        internal static string MT4162_ReturnType {
+            get {
+                return ResourceManager.GetString("MT4162_ReturnType", resourceCulture);
+            }
+        }
+        
+        internal static string MT4162_PropertyType {
+            get {
+                return ResourceManager.GetString("MT4162_PropertyType", resourceCulture);
             }
         }
         
