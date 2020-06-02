@@ -10,7 +10,7 @@ using Foundation;
 using ObjCRuntime;
 
 namespace AVFoundation {
-#if MONOMAC && XAMCORE_2_0 && !XAMCORE_4_0
+#if MONOMAC && !XAMCORE_4_0
 	[Obsolete ("This API is not available on this platform.")]
 	public partial class AVCaptureDataOutputSynchronizer : NSObject
 	{
@@ -89,16 +89,6 @@ namespace AVFoundation {
 		public abstract void DidOutputSynchronizedDataCollection (AVCaptureDataOutputSynchronizer synchronizer, AVCaptureSynchronizedDataCollection synchronizedDataCollection);
 	}
 #endif // MONOMAC && !XAMCORE_4_0
-
-#if !XAMCORE_2_0
-	partial class AVAssetResourceLoadingDataRequest {
-
-		[Obsolete ("Type is not meant to be created by user code.")]
-		public AVAssetResourceLoadingDataRequest ()
-		{
-		}
-	}
-#endif
 
 #if !XAMCORE_3_0
 	partial class AVAsset {
