@@ -806,7 +806,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			IsAppExtension="$(IsAppExtension)"
 			LinkDescriptions="@(LinkDescription)"
 			LinkerDumpDependencies="$(MtouchLinkerDumpDependencies)"
-			LinkMode="$(MtouchLink)"
+			LinkMode="$(_LinkMode)"
 			MainAssembly="$(TargetPath)"
 			NativeReferences="@(NativeReference)"
 			OutputPath="$(DeviceSpecificOutputPath)"
