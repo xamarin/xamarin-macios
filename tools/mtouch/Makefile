@@ -189,8 +189,8 @@ simlauncher$(3)-sgen: simlauncher.mm $(TOP)/runtime/.libs/iphonesimulator/libxam
 	$(Q) xcrun otool -L $$@ > $$@.frameworks
 endef
 
-$(eval $(call SimlauncherTemplate,-DXAMCORE_2_0 Xamarin.iOS.registrar.ios.simulator.a,86,32))
-$(eval $(call SimlauncherTemplate,-DXAMCORE_2_0 Xamarin.iOS.registrar.ios.simulator.a,64,64))
+$(eval $(call SimlauncherTemplate,Xamarin.iOS.registrar.ios.simulator.a,86,32))
+$(eval $(call SimlauncherTemplate,Xamarin.iOS.registrar.ios.simulator.a,64,64))
 
 #
 # mtouch
