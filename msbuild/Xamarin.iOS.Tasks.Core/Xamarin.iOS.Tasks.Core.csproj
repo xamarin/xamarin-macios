@@ -28,5 +28,8 @@
     <None Include="../Xamarin.Shared/Xamarin.Shared.targets">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="../Xamarin.Shared/Xamarin.Shared.props">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>
