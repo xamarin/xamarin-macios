@@ -51,8 +51,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<IPhoneResourcePrefix Condition="'$(IPhoneResourcePrefix)' == ''">Resources</IPhoneResourcePrefix>
-
 		<GeneratedSourcesDir Condition="'$(GeneratedSourcesDir)' == '' And '$(TargetFrameworkIdentifier)' == 'Xamarin.TVOS'">$(IntermediateOutputPath)tvos</GeneratedSourcesDir>
 		<GeneratedSourcesDir Condition="'$(GeneratedSourcesDir)' == '' And '$(TargetFrameworkIdentifier)' == 'Xamarin.WatchOS'">$(IntermediateOutputPath)watchos</GeneratedSourcesDir>
 		<GeneratedSourcesDir Condition="'$(GeneratedSourcesDir)' == ''">$(IntermediateOutputPath)ios</GeneratedSourcesDir>

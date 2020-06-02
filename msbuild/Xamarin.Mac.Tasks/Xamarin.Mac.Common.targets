@@ -271,7 +271,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			SessionId="$(BuildSessionId)"
 			BundleResources="@(Content);@(BundleResource)"
 			ProjectDir="$(MSBuildProjectDirectory)"
-			ResourcePrefix="$(XamMacResourcePrefix)">
+			ResourcePrefix="$(_ResourcePrefix)">
 			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="_BundleResourceWithLogicalName" />
 		</CollectBundleResources>
 	</Target>
@@ -280,7 +280,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<FindItemWithLogicalName
 			SessionId="$(BuildSessionId)"
 			ProjectDir="$(MSBuildProjectDirectory)"
-			ResourcePrefix="$(XamMacResourcePrefix)"
+			ResourcePrefix="$(_ResourcePrefix)"
 			LogicalName="Info.plist"
 			Items="@(None)">
 			<Output TaskParameter="Item" PropertyName="_AppManifest" />
@@ -288,7 +288,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<FindItemWithLogicalName Condition="'$(_AppManifest)' == ''"
 			SessionId="$(BuildSessionId)"
 			ProjectDir="$(MSBuildProjectDirectory)"
-			ResourcePrefix="$(XamMacResourcePrefix)"
+			ResourcePrefix="$(_ResourcePrefix)"
 			LogicalName="Info.plist"
 			Items="@(BundleResource)">
 			<Output TaskParameter="Item" PropertyName="_AppManifest" />
@@ -296,7 +296,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<FindItemWithLogicalName Condition="'$(_AppManifest)' == ''"
 			SessionId="$(BuildSessionId)"
 			ProjectDir="$(MSBuildProjectDirectory)"
-			ResourcePrefix="$(XamMacResourcePrefix)"
+			ResourcePrefix="$(_ResourcePrefix)"
 			LogicalName="Info.plist"
 			Items="@(Content)">
 			<Output TaskParameter="Item" PropertyName="_AppManifest" />
@@ -312,7 +312,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			AppManifest="$(_AppManifest)"
 			ProjectDir="$(MSBuildProjectDirectory)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
-			ResourcePrefix="$(XamMacResourcePrefix)"
+			ResourcePrefix="$(_ResourcePrefix)"
 			SdkDevPath="$(_SdkDevPath)"
 			SdkIsSimulator="false"
 			SdkRoot="$(_SdkRoot)"
@@ -371,7 +371,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			AtlasTextures="@(AtlasTexture)"
 			IntermediateOutputPath="$(IntermediateOutputPath)"
 			ProjectDir="$(MSBuildProjectDirectory)"
-			ResourcePrefix="$(XamMacResourcePrefix)"
+			ResourcePrefix="$(_ResourcePrefix)"
 			SdkDevPath="$(_SdkDevPath)"
 			SdkBinPath="$(_SdkBinPath)"
 			SdkUsrPath="$(_SdkUsrPath)">
@@ -553,7 +553,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			SessionId="$(BuildSessionId)"
 			BundleResources="@(Collada)"
 			ProjectDir="$(MSBuildProjectDirectory)"
-			ResourcePrefix="$(XamMacResourcePrefix)">
+			ResourcePrefix="$(_ResourcePrefix)">
 			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="_ColladaAssetWithLogicalName" />
 		</CollectBundleResources>
 	</Target>
@@ -626,7 +626,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			OutputPath="$(OutputPath)"
 			IntermediateOutputPath="$(IntermediateOutputPath)"
 			ProjectDir="$(MSBuildProjectDirectory)"
-			ResourcePrefix="$(XamMacResourcePrefix)"
+			ResourcePrefix="$(_ResourcePrefix)"
 
 			SdkDevPath="$(_SdkDevPath)"
 			SdkBinPath="$(_SdkBinPath)"
@@ -662,7 +662,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			IntermediateOutputPath="$(IntermediateOutputPath)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			ProjectDir="$(MSBuildProjectDirectory)"
-			ResourcePrefix="$(XamMacResourcePrefix)"
+			ResourcePrefix="$(_ResourcePrefix)"
 			SdkPlatform="MacOSX"
 			SdkDevPath="$(_SdkDevPath)"
 			SdkRoot="$(_SdkRoot)"
@@ -686,7 +686,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			IntermediateOutputPath="$(IntermediateOutputPath)"
 			SdkPlatform="MacOSX"
 			ProjectDir="$(MSBuildProjectDirectory)"
-			ResourcePrefix="$(XamMacResourcePrefix)"
+			ResourcePrefix="$(_ResourcePrefix)"
 			SdkDevPath="$(_SdkDevPath)"
 			SdkBinPath="$(_SdkBinPath)"
 			SdkUsrPath="$(_SdkUsrPath)"

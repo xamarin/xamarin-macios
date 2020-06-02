@@ -20,6 +20,24 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets')"/>
 
+	<PropertyGroup Condition="'$(_PlatformName)' == ''">
+		<_PlatformName Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.iOS'">iOS</_PlatformName>
+		<_PlatformName Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.TVOS'">tvOS</_PlatformName>
+		<_PlatformName Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.WatchOS'">watchOS</_PlatformName>
+		<_PlatformName Condition="'$(_PlatformName)' == ''">macOS</_PlatformName> <!-- detecting Xamarin.Mac is a bit more complicated, so just fall back to macOS if none of the others match -->
+	</PropertyGroup>
+
+	<!-- Sometimes we've used different variable names for the same thing for Xamarin.iOS and Xamarin.Mac projects. Here we try to unify those variables -->
+	<PropertyGroup>
+		<!-- ResourcePrefix -->
+		<MonoMacResourcePrefix Condition="'$(_PlatformName)' == 'macOS' And '$(MonoMacResourcePrefix)' == ''">Resources</MonoMacResourcePrefix>
+		<XamMacResourcePrefix Condition="'$(_PlatformName)' == 'macOS' And '$(XamMacResourcePrefix)' == ''">$(MonoMacResourcePrefix)</XamMacResourcePrefix>
+		<XamMacResourcePrefix Condition="'$(_PlatformName)' == 'macOS' And '$(XamMacResourcePrefix)' == ''">Resources</XamMacResourcePrefix>
+		<IPhoneResourcePrefix Condition="'$(_PlatformName)' != 'macOS' And '$(IPhoneResourcePrefix)' == ''">Resources</IPhoneResourcePrefix>
+		<_ResourcePrefix Condition="'$(_PlatformName)' == 'macOS'">$(XamMacResourcePrefix)</_ResourcePrefix>
+		<_ResourcePrefix Condition="'$(_PlatformName)' != 'macOS'">$(IPhoneResourcePrefix)</_ResourcePrefix>
+	</PropertyGroup>
+
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets')"/>
 </Project>

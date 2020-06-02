@@ -44,8 +44,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<XamMacResourcePrefix Condition="'$(XamMacResourcePrefix)' == ''">Resources</XamMacResourcePrefix>
-
 		<GeneratedSourcesDir Condition="'$(GeneratedSourcesDir)' == ''">$(IntermediateOutputPath)mac</GeneratedSourcesDir>
 		<GeneratedSourcesDir Condition="'$(GeneratedSourcesDir)' != '' and !HasTrailingSlash ('$(GeneratedSourcesDir)')">$(GeneratedSourcesDir)\</GeneratedSourcesDir>
 
