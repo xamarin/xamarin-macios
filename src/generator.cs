@@ -4185,7 +4185,7 @@ public partial class Generator : IMemberGatherer {
 			var cap = propInfo?.SetMethod == mi ? (ICustomAttributeProvider) propInfo : (ICustomAttributeProvider) pi;
 			var bind_as = GetBindAsAttribute (cap);
 			var pit = bind_as == null ? pi.ParameterType : bind_as.Type;
-			if (IsNSObject (pit) || TypeManager.INativeObject.IsAssignableFrom (pit)) {
+			if (IsWrappedType (pit) || TypeManager.INativeObject.IsAssignableFrom (pit)) {
 				if (needs_null_check) {
 					print ($"var {safe_name}__handle__ = {safe_name}.GetNonNullHandle (nameof ({safe_name}));");
 				} else {
@@ -5368,7 +5368,7 @@ public partial class Generator : IMemberGatherer {
 					if (pinfo != null)
 						null_allowed = AttributeManager.HasAttribute<NullAllowedAttribute> (pinfo);
 				}
-				GenerateMethodBody (minfo, minfo.method, minfo.selector, null_allowed, null, BodyOption.None, null);
+				GenerateMethodBody (minfo, minfo.method, minfo.selector, null_allowed, null, BodyOption.None, pinfo);
 				if (minfo.is_autorelease) {
 					print ("}");
 					indent--;
