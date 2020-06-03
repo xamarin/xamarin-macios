@@ -92,22 +92,22 @@ namespace CoreGraphics {
 			if (triples.Length > 3)
 				throw new ArgumentException ("A maximum of 3 triples are supported");
 			
-			IntPtr o = NativeObjectHelper.GetHandle (options);
+			IntPtr o = options.GetHandle ();
 			var first = triples [0]; // there's always one
 			var second = triples.Length > 1 ? triples [1] : empty; 
 			var third = triples.Length > 2 ? triples [2] : empty;
 #if !MONOMAC
 			if (Runtime.IsARM64CallingConvention) {
-				Handle = CGColorConversionInfoCreateFromList_arm64 (o, NativeObjectHelper.GetHandle (first.Space), (uint) first.Transform, (int) first.Intent,
+				Handle = CGColorConversionInfoCreateFromList_arm64 (o, first.Space.GetHandle (), (uint) first.Transform, (int) first.Intent,
 					IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero,
-					NativeObjectHelper.GetHandle (second.Space), (uint) second.Transform, (int) second.Intent,
-					NativeObjectHelper.GetHandle (third.Space), (uint) third.Transform, (int) third.Intent,
+					second.Space.GetHandle (), (uint) second.Transform, (int) second.Intent,
+					third.Space.GetHandle (), (uint) third.Transform, (int) third.Intent,
 					IntPtr.Zero);
 			} else {
 #endif
-				Handle = CGColorConversionInfoCreateFromList (o, NativeObjectHelper.GetHandle (first.Space), first.Transform, first.Intent,
-					NativeObjectHelper.GetHandle (second.Space), second.Transform, second.Intent,
-					NativeObjectHelper.GetHandle (third.Space), third.Transform, third.Intent,
+				Handle = CGColorConversionInfoCreateFromList (o, first.Space.GetHandle (), first.Transform, first.Intent,
+					second.Space.GetHandle (), second.Transform, second.Intent,
+					third.Space.GetHandle (), third.Transform, third.Intent,
 					IntPtr.Zero);
 #if !MONOMAC
 			}
