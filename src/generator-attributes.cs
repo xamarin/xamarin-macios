@@ -99,17 +99,6 @@ public class NeedsAuditAttribute : Attribute {
 public class MarshalNativeExceptionsAttribute : Attribute {
 }
 
-public class RetainListAttribute : Attribute {
-	public RetainListAttribute (bool doadd, string name)
-	{
-		Add = doadd;
-		WrapName = name;
-	}
-
-	public string WrapName { get; set; }
-	public bool Add { get; set; }
-}
-
 public class RetainAttribute : Attribute {
 	public RetainAttribute ()
 	{
