@@ -12,7 +12,7 @@ namespace ObjCRuntime {
 	}
 
 #if !COREBUILD
-	static class NativeObjectHelper {
+	public static class NativeObjectExtensions {
 
 		// help to avoid the (too common pattern)
 		// 	var p = x == null ? IntPtr.Zero : x.Handle;
