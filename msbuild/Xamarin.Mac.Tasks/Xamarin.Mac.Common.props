@@ -28,20 +28,6 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Shared.props" />
 
-	<Target Name="_ComputeTargetFrameworkMoniker">
-		<PropertyGroup Condition="'$(_ComputedTargetFrameworkMoniker)' == ''">
-			<!-- Get the TargetFrameworkMoniker and store it in our own variable so that it's overridable while only affecting the parts of the build that we care about.
-				 This is overridability is a workaround while we wait for .NET 5 to be able to give us the TFM we're supposed to get during the build. -->
-			<_ComputedTargetFrameworkMoniker>$(TargetFrameworkMoniker)</_ComputedTargetFrameworkMoniker>
-			<!-- Detect the Mobile condition and set the computed Mobile TFM our tooling expects -->
-			<_ComputedTargetFrameworkMoniker Condition="'$(_ComputedTargetFrameworkMoniker)' == 'Xamarin.Mac,Version=v2.0'">Xamarin.Mac,Version=v2.0,Profile=Mobile</_ComputedTargetFrameworkMoniker>
-			<!-- Detect the Full condition and set the computed TFM our tooling expects -->
-			<_ComputedTargetFrameworkMoniker Condition="'$(UseXamMacFullFramework)' == 'true' And $([MSBuild]::ValueOrDefault('$(_ComputedTargetFrameworkMoniker),', '').StartsWith('.NETFramework,', StringComparison.OrdinalIgnoreCase))">Xamarin.Mac,Version=v4.5,Profile=Full</_ComputedTargetFrameworkMoniker>
-			<!-- Detect the System condition and set the computed TFM our tooling expects -->
-			<_ComputedTargetFrameworkMoniker Condition="'$(UseXamMacFullFramework)' != 'true' And $([MSBuild]::ValueOrDefault('$(_ComputedTargetFrameworkMoniker),', '').StartsWith('.NETFramework,', StringComparison.OrdinalIgnoreCase))">Xamarin.Mac,Version=v4.5,Profile=System</_ComputedTargetFrameworkMoniker>
-		</PropertyGroup>
-	</Target>
-
 	<!-- Story-time! MigrateToNewXMIdentifier is special because it un-does a lie we started telling from the 
 	beginning of Full (called Xamarin.Mac 4.5 back then). Back then, we released Modern (called Mobile) and 
 	when many customers upgraded from Classic they broke in terrible ways as none of their nugets worked. 
