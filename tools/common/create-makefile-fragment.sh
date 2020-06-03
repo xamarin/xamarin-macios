@@ -27,17 +27,26 @@ PROJECT_FILE="$1"
 PROJECT=$(basename -s .csproj "$PROJECT_FILE")
 PROJECT_DIR=$(dirname "$PROJECT_FILE")
 FRAGMENT_PATH="$2"
-REFERENCES_PATH=$PROJECT-references.txt
+REFERENCES_PATH=$(pwd)/$PROJECT-references.txt
 
 if test -z "$FRAGMENT_PATH"; then
 	FRAGMENT_PATH=$PROJECT_FILE.inc
+fi
+
+if test -z "$BUILD_EXECUTABLE"; then
+	BUILD_EXECUTABLE=msbuild
 fi
 
 # ProjectInspector.csproj is an MSBuild file with a target
 # (WriteProjectReferences) that takes another project file as input (the
 # ProjectFile variable) and writes all the project references (recursively) to
 # a file (the ReferenceListPath variable).
-msbuild ProjectInspector.csproj "/t:WriteProjectReferences" "/p:ProjectFile=$PROJECT_FILE" "/p:ReferenceListPath=$REFERENCES_PATH" /verbosity:quiet /nologo
+(
+cp ProjectInspector.csproj "$PROJECT_DIR"
+cd "$PROJECT_DIR"
+$BUILD_EXECUTABLE ProjectInspector.csproj "/t:WriteProjectReferences" "/p:ProjectFile=$PROJECT_FILE" "/p:ReferenceListPath=$REFERENCES_PATH" /verbosity:quiet /nologo
+rm -f ProjectInspector.csproj
+)
 
 # Now we have a list of all the project referenced by the input project. The
 # ProjectInspector.csproj also has a target (WriteInputs) that can list all
@@ -79,7 +88,11 @@ for proj in $(sort "$REFERENCES_PATH" | uniq); do
 	proj_dir=$(dirname "$proj")
 	inputs_path=$PWD/$proj_name.inputs
 	INPUT_PATHS+=("$inputs_path")
-	msbuild "$TMPPROJ" "/t:WriteInputs" "/p:ProjectFile=$proj" "/p:InputsPath=$inputs_path" /verbosity:quiet /nologo
+
+	(
+	cd "$(dirname "$proj")"
+	$BUILD_EXECUTABLE "$TMPPROJ" "/t:WriteInputs" "/p:ProjectFile=$proj" "/p:InputsPath=$inputs_path" /verbosity:quiet /nologo
+	)
 
 	# The output contains relative paths, relative to the csproj directory
 	# Change those to full paths by prepending the csproj directory.
@@ -99,7 +112,7 @@ done
 # First add a dependency for the csproj.inc so that it's rebuilt if the project itself changes.
 echo "${PROJECT}.csproj.inc: ${PROJECT_FILE} $PWD/ProjectInspector.csproj" > "$FRAGMENT_PATH"
 # Now create the variable with all the input files.
-echo "${PROJECT}_dependencies = \\" >> "$FRAGMENT_PATH"
+echo "${PROJECT//-/_}_dependencies = \\" >> "$FRAGMENT_PATH"
 sort "${INPUT_PATHS[@]}" | uniq >> "$FRAGMENT_PATH"
 
 # Simplify paths somewhat by removing the current directory
