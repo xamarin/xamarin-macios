@@ -34,6 +34,8 @@ However, we provide links to older Xamarin.iOS and Mac packages for macOS downgr
 
 | Platform        | Link |
 |-----------------|--------|
+| Xamarin.iOS d16.6 | [13.18.2.1](https://download.visualstudio.microsoft.com/download/pr/68ffa29a-6a5b-41f7-af7b-506ddcf4bbfc/35159cac3be1910e87309c0094a8ec8a/xamarin.ios-13.18.2.1.pkg) |
+| Xamarin.Mac d16.6 | [6.18.2.1](https://download.visualstudio.microsoft.com/download/pr/68ffa29a-6a5b-41f7-af7b-506ddcf4bbfc/9e1be52d9bff3599b796cfbab3f3d463/xamarin.mac-6.18.2.1.pkg) |
 | Xamarin.iOS d16.5 | [13.16.0.13](https://download.visualstudio.microsoft.com/download/pr/fb168f8a-b44e-4582-8147-eefdf1562110/0a25988a5b9f502f4facd875c1b2072b/xamarin.ios-13.16.0.13.pkg) |
 | Xamarin.Mac d16.5 | [6.16.0.13](https://download.visualstudio.microsoft.com/download/pr/fb168f8a-b44e-4582-8147-eefdf1562110/30f09915995da752f30f432760e4ddbe/xamarin.mac-6.16.0.13.pkg) |
 | Xamarin.iOS d16.4 | [13.10.0.21](https://download.visualstudio.microsoft.com/download/pr/16ae715b-ae37-47be-a5dc-c7abd236fbef/185ba3460c06e3fa2e7aa4609e63d57a/xamarin.ios-13.10.0.21.pkg) |
