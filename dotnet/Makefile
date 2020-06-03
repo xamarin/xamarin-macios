@@ -123,7 +123,7 @@ all-local:: $(TARGETS) targets/Xamarin.Shared.Sdk.Versions.props
 endif
 
 clean-local::
-	$(Q) rm -Rf $(DOTNET_DESTDIR) $(DOTNET_NUPKG_DIR) $(DOTNET_FEED_DIR)
+	$(Q) rm -Rf $(DOTNET_NUPKG_DIR) $(DOTNET_FEED_DIR)
 	$(Q) git clean -xfdq
 
 .SECONDARY:
