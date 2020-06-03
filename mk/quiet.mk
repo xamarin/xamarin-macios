@@ -27,6 +27,7 @@ Q_MDB=  $(if $(V),,@echo "MDB      $(@F)";)
 Q_NUNIT= $(if $(V),,@echo "NUNIT     $(@F)";)
 Q_PACK     =$(if $(V),,@echo "PACK      $(@F)";)
 Q_NUGET_ADD=$(if $(V),,@echo "NUGET ADD $(@F)";)
+Q_NUGET_DEL=$(if $(V),,@echo "NUGET DEL $(@F)";)
 
 Q_SN=   $(if $(V),,@echo "SN       $(@F)";)
 Q_XBUILD=$(if $(V),,@echo "XBUILD  $(@F)";)
