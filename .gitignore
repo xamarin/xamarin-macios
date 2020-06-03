@@ -35,3 +35,4 @@ global.json
 device-tests-provisioning.csx
 mono_crash.*.json
 *.binlog
+.vscode
