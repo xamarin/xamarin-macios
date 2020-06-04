@@ -85,10 +85,10 @@ namespace CoreGraphics {
 		public CGColor (CGColorSpace colorspace, nfloat [] components)
 		{
 			if (components == null)
-				throw new ArgumentNullException ("components");
-			var handleof_colorspace = colorspace.GetNonNullHandle ("colorspace");
+				global::ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (components));
+			var colorspace_handle = colorspace.GetNonNullHandle (nameof (colorspace));
 			
-			handle = CGColorCreate (handleof_colorspace, components);
+			handle = CGColorCreate (colorspace_handle, components);
 		}
 
 #if !XAMCORE_3_0 || MONOMAC
@@ -135,15 +135,12 @@ namespace CoreGraphics {
 
 		public CGColor (CGColorSpace colorspace, CGPattern pattern, nfloat [] components)
 		{
-			if (colorspace == null)
-				throw new ArgumentNullException ("colorspace");
-			if (colorspace.handle == IntPtr.Zero)
-				throw new ObjectDisposedException ("colorspace");
 			if (components == null)
-				throw new ArgumentNullException ("components");
-			var handleof_pattern = pattern.GetNonNullHandle ("pattern");
+				global::ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (components));
+			var colorspace_handle = colorspace.GetNonNullHandle (nameof (colorspace));
+			var pattern_handle = pattern.GetNonNullHandle (nameof (pattern));
 
-			handle = CGColorCreateWithPattern (colorspace.handle, handleof_pattern, components);
+			handle = CGColorCreateWithPattern (colorspace_handle, pattern_handle, components);
 			if (handle == IntPtr.Zero)
 				throw new ArgumentException ();
 		}
