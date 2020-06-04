@@ -3,7 +3,6 @@ using Foundation;
 using ObjCRuntime;
 using AppKit;
 
-#if XAMCORE_2_0
 namespace FinderSync {
 	delegate void GetValuesCompletionHandler (NSDictionary<NSString, NSObject> values, NSError error);
 
@@ -107,4 +106,3 @@ namespace FinderSync {
 	{
 	}
 }
-#endif
