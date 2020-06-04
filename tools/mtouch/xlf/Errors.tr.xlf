@@ -167,7 +167,7 @@
 		</source>
         <target state="new">Xamarin.Mac Unified API against a full .NET framework does not support linking SDK or All assemblies. Pass either the `-nolink` or `-linkplatform` flag.
 		</target>
-        <note>
+        <note>Using the linker is not supported in certain situations in Xamarin.Mac, see: https://docs.microsoft.com/xamarin/mac/deploy-test/linker. The following are literal names and should not be translated: Xamarin.Mac Unified API, .NET, SDK, All, `-nolink`, and `-linkplatform`.
 		</note>
       </trans-unit>
       <trans-unit id="MM2009">
@@ -767,7 +767,12 @@
 		</source>
         <target state="new">{4} {0} does not support a deployment target of {1} for {3} (the minimum is {2}). Please select a newer deployment target in your project's Info.plist.
 		</target>
-        <note>
+        <note>The following are literal names and should not be translated: SDK, Xcode
+{0} - The version number of the Xamarin product.
+{1} - The name of the deployment target such as a device, simulator, etc.
+{2} - The minimum version number.
+{3} - The platform name, such as 'iOS'.
+{4} - The produce name such as Xamarin.iOS or Xamarin.Mac.
 		</note>
       </trans-unit>
       <trans-unit id="MT0075">
@@ -1031,7 +1036,8 @@
 		</source>
         <target state="new">the container app has custom xml definitions for the managed linker ({0}).
 		</target>
-        <note>
+        <note>A warning related to custom linker configuration, see: https://docs.microsoft.com/xamarin/cross-platform/deploy-test/linker. The following are literal names and should not be translated: xml, linker
+{0} - A list of xml file names.
 		</note>
       </trans-unit>
       <trans-unit id="MT0113">
@@ -1111,7 +1117,8 @@
 		</source>
         <target state="new">the extension has custom xml definitions for the managed linker ({0}).
 		</target>
-        <note>
+        <note>A warning related to custom linker configuration, see: https://docs.microsoft.com/xamarin/cross-platform/deploy-test/linker. The following are literal names and should not be translated: xml, linker
+{0} - A list of xml file names.
 		</note>
       </trans-unit>
       <trans-unit id="MT0113_j">
@@ -2095,7 +2102,8 @@
 		</source>
         <target state="new">Invalid enum '{0}': enums with the [Native] attribute must have a underlying enum type of either 'long' or 'ulong'.
 		</target>
-        <note>
+        <note>The following are literal names and should not be translated: enum, [Native], long, ulong.
+{0} - The full name of the C# enum.
 		</note>
       </trans-unit>
       <trans-unit id="MT4146">
@@ -2218,20 +2226,68 @@
         <note>
 		</note>
       </trans-unit>
-      <trans-unit id="MT4162">
-        <source>The type '{0}' (used as {1} {2}) is not available in {3} {4} (it was introduced in {3} {5}){6} Please build with a newer {3} SDK (usually done by using the most recent version of Xcode).
-		</source>
-        <target state="new">The type '{0}' (used as {1} {2}) is not available in {3} {4} (it was introduced in {3} {5}){6} Please build with a newer {3} SDK (usually done by using the most recent version of Xcode).
-		</target>
-        <note>
-		</note>
-      </trans-unit>
       <trans-unit id="MT4162_A">
         <source>The type '{0}' is not available in {3} {4} (it was introduced in {3} {5}){6} Please build with a newer {3} SDK (usually done by using the most recent version of Xcode).
 		</source>
         <target state="new">The type '{0}' is not available in {3} {4} (it was introduced in {3} {5}){6} Please build with a newer {3} SDK (usually done by using the most recent version of Xcode).
 		</target>
         <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4162_BaseType">
+        <source>The type '{0}' (used as a base type of {1}) is not available in {2} {3} (it was introduced in {2} {4}){5} Please build with a newer {2} SDK (usually done by using the most recent version of Xcode).
+		</source>
+        <target state="new">The type '{0}' (used as a base type of {1}) is not available in {2} {3} (it was introduced in {2} {4}){5} Please build with a newer {2} SDK (usually done by using the most recent version of Xcode).
+		</target>
+        <note>This is a message for usage of a type that is not available targeting older platform versions. The following are literal names and should not be translated: SDK, Xcode
+{0} - The full C# type name.
+{1} - The name of the base type.
+{2} - The platform name, such as 'iOS'.
+{3} - The current platform version number.
+{4} - The platform version where the type was introduced.
+{5} - An additional message about the platform version introducing the type.
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4162_Parameter">
+        <source>The type '{0}' (used as a parameter in {1}) is not available in {2} {3} (it was introduced in {2} {4}){5} Please build with a newer {2} SDK (usually done by using the most recent version of Xcode).
+		</source>
+        <target state="new">The type '{0}' (used as a parameter in {1}) is not available in {2} {3} (it was introduced in {2} {4}){5} Please build with a newer {2} SDK (usually done by using the most recent version of Xcode).
+		</target>
+        <note>This is a message for usage of a type that is not available targeting older platform versions. The following are literal names and should not be translated: SDK, Xcode
+{0} - The full C# type name.
+{1} - The name of the method.
+{2} - The platform name, such as 'iOS'.
+{3} - The current platform version number.
+{4} - The platform version where the type was introduced.
+{5} - An additional message about the platform version introducing the type.
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4162_PropertyType">
+        <source>The type '{0}' (used as the property type of {1}) is not available in {2} {3} (it was introduced in {2} {4}){5} Please build with a newer {2} SDK (usually done by using the most recent version of Xcode).
+		</source>
+        <target state="new">The type '{0}' (used as the property type of {1}) is not available in {2} {3} (it was introduced in {2} {4}){5} Please build with a newer {2} SDK (usually done by using the most recent version of Xcode).
+		</target>
+        <note>This is a message for usage of a type that is not available targeting older platform versions. The following are literal names and should not be translated: SDK, Xcode
+{0} - The full C# type name.
+{1} - The name of the property.
+{2} - The platform name, such as 'iOS'.
+{3} - The current platform version number.
+{4} - The platform version where the type was introduced.
+{5} - An additional message about the platform version introducing the type.
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4162_ReturnType">
+        <source>The type '{0}' (used as a return type in {1}) is not available in {2} {3} (it was introduced in {2} {4}){5} Please build with a newer {2} SDK (usually done by using the most recent version of Xcode).
+		</source>
+        <target state="new">The type '{0}' (used as a return type in {1}) is not available in {2} {3} (it was introduced in {2} {4}){5} Please build with a newer {2} SDK (usually done by using the most recent version of Xcode).
+		</target>
+        <note>This is a message for usage of a type that is not available targeting older platform versions. The following are literal names and should not be translated: SDK, Xcode
+{0} - The full C# type name.
+{1} - The name of the method.
+{2} - The platform name, such as 'iOS'.
+{3} - The current platform version number.
+{4} - The platform version where the type was introduced.
+{5} - An additional message about the platform version introducing the type.
 		</note>
       </trans-unit>
       <trans-unit id="MT4163">
@@ -2775,7 +2831,12 @@
 		</source>
         <target state="new">{4} {0} does not support a deployment target of {1} for {3} (the maximum is {2}). Please select an older deployment target in your project's Info.plist or upgrade to a newer version of {4}.
 		</target>
-        <note>
+        <note>The following are literal names and should not be translated: SDK, Xcode
+{0} - The version number of the Xamarin product.
+{1} - The name of the deployment target such as a device, simulator, etc.
+{2} - The maximum version number.
+{3} - The platform name, such as 'iOS'.
+{4} - The produce name such as Xamarin.iOS or Xamarin.Mac.
 		</note>
       </trans-unit>
       <trans-unit id="MX0080">

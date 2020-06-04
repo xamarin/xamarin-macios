@@ -66,6 +66,7 @@ namespace Xamarin.MacDev.Tasks
 		[Output]
 		public string DetectedBundleVersion { get; set; }
 
+		// This is input too
 		[Output]
 		public string DetectedCodeSigningKey { get; set; }
 
@@ -456,7 +457,7 @@ namespace Xamarin.MacDev.Tasks
 			}
 
 			if (Platform == ApplePlatform.MacOSX) {
-				if (!RequireCodeSigning) {
+				if (!RequireCodeSigning || !string.IsNullOrEmpty (DetectedCodeSigningKey)) {
 					DetectedBundleId = identity.BundleId;
 					DetectedAppId = DetectedBundleId;
 

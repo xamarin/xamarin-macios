@@ -300,11 +300,7 @@ namespace AppKit {
 
 	[Flags]
 	[Native]
-#if XAMCORE_2_0
 	public enum NSCellStyleMask : ulong {
-#else
-	public enum NSCellMask : ulong {
-#endif
 		NoCell = 0,
 		ContentsCell = 1 << 0,
 		PushInCell = 1 << 1, 
@@ -495,11 +491,7 @@ namespace AppKit {
 
 	[Flags]
 	[Native]
-#if XAMCORE_2_0
 	public enum NSEventButtonMask : ulong {
-#else
-	public enum NSPointingDeviceMask : ulong {
-#endif
 		Pen = 1, PenLower = 2, PenUpper = 4
 	}
 
@@ -598,7 +590,6 @@ namespace AppKit {
 		JISKeypadComma = 0x5F,
 		JISEisu        = 0x66,
 		JISKana        = 0x68,
-#if XAMCORE_2_0
 		F18            = 0x4F,
 		F19            = 0x50,
 		F20            = 0x5A,
@@ -627,79 +618,6 @@ namespace AppKit {
 		RightArrow     = 0x7C,
 		DownArrow      = 0x7D,
 		UpArrow        = 0x7E
-#else
-		UpArrow        = 0xF700,
-		DownArrow      = 0xF701,
-		LeftArrow      = 0xF702,
-		RightArrow     = 0xF703,
-		F1             = 0xF704,
-		F2             = 0xF705,
-		F3             = 0xF706,
-		F4             = 0xF707,
-		F5             = 0xF708,
-		F6             = 0xF709,
-		F7             = 0xF70A,
-		F8             = 0xF70B,
-		F9             = 0xF70C,
-		F10            = 0xF70D,
-		F11            = 0xF70E,
-		F12            = 0xF70F,
-		F13            = 0xF710,
-		F14            = 0xF711,
-		F15            = 0xF712,
-		F16            = 0xF713,
-		F17            = 0xF714,
-		F18            = 0xF715,
-		F19            = 0xF716,
-		F20            = 0xF717,
-		F21            = 0xF718,
-		F22            = 0xF719,
-		F23            = 0xF71A,
-		F24            = 0xF71B,
-		F25            = 0xF71C,
-		F26            = 0xF71D,
-		F27            = 0xF71E,
-		F28            = 0xF71F,
-		F29            = 0xF720,
-		F30            = 0xF721,
-		F31            = 0xF722,
-		F32            = 0xF723,
-		F33            = 0xF724,
-		F34            = 0xF725,
-		F35            = 0xF726,
-		Insert         = 0xF727,
-		Home           = 0xF729,
-		Begin          = 0xF72A,
-		End            = 0xF72B,
-		PageUp         = 0xF72C,
-		PageDown       = 0xF72D,
-		PrintScreen    = 0xF72E,
-		ScrollLock     = 0xF72F,
-		Pause          = 0xF730,
-		SysReq         = 0xF731,
-		Break          = 0xF732,
-		Reset          = 0xF733,
-		Stop           = 0xF734,
-		Menu           = 0xF735,
-		User           = 0xF736,
-		System         = 0xF737,
-		Print          = 0xF738,
-		ClearLine      = 0xF739,
-		ClearDisplay   = 0xF73A,
-		InsertLine     = 0xF73B,
-		DeleteLine     = 0xF73C,
-		InsertChar     = 0xF73D,
-		DeleteChar     = 0xF73E,
-		Prev           = 0xF73F,
-		Next           = 0xF740,
-		Select         = 0xF741,
-		Execute        = 0xF742,
-		Undo           = 0xF743,
-		Redo           = 0xF744,
-		Find           = 0xF745,
-		Help           = 0xF746,
-		ModeSwitch     = 0xF747
-#endif
 	}
 
 #if !XAMCORE_4_0
@@ -1846,17 +1764,10 @@ namespace AppKit {
 
 	[Native]
 	public enum NSPathStyle : long {
-#if XAMCORE_2_0
 		Standard,
 		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		NavigationBar,
 		PopUp
-#else
-		NSPathStyleStandard,
-		[Deprecated (PlatformName.MacOSX, 10, 7)]
-		NSPathStyleNavigationBar,
-		NSPathStylePopUp
-#endif
 	}
 
 	[Native]

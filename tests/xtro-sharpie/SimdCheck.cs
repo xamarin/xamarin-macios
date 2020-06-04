@@ -243,11 +243,17 @@ namespace Extrospection
 
 		string Undecorate (string native_name)
 		{
-			if (native_name.StartsWith ("const ", StringComparison.Ordinal))
-				return Undecorate (native_name.Substring ("const ".Length));
+			const string _const = "const ";
+			if (native_name.StartsWith (_const, StringComparison.Ordinal))
+				return Undecorate (native_name.Substring (_const.Length));
 
-			if (native_name.StartsWith ("struct ", StringComparison.Ordinal))
-				return Undecorate (native_name.Substring ("struct ".Length));
+			const string _struct = "struct ";
+			if (native_name.StartsWith (_struct, StringComparison.Ordinal))
+				return Undecorate (native_name.Substring (_struct.Length));
+
+			const string _nsrefinedforswift = "NS_REFINED_FOR_SWIFT ";
+			if (native_name.StartsWith (_nsrefinedforswift, StringComparison.Ordinal))
+				return Undecorate (native_name.Substring (_nsrefinedforswift.Length));
 
 			const string _Nonnull = " _Nonnull";
 			if (native_name.EndsWith (_Nonnull, StringComparison.Ordinal))

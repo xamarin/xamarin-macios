@@ -191,11 +191,7 @@ namespace AppKit {
 			
 			try {
 				pNativeFloatArray = Marshal.AllocHGlobal (components.Length * IntPtr.Size);
-#if XAMCORE_2_0
 				nfloat.CopyArray (components, 0, pNativeFloatArray, components.Length);
-#else
-				Marshal.Copy (components, 0, pNativeFloatArray, components.Length);
-#endif
 				return _FromColorSpace (space, pNativeFloatArray, components.Length);
 			} finally {
 				Marshal.FreeHGlobal (pNativeFloatArray);
@@ -212,11 +208,7 @@ namespace AppKit {
 				pNativeFloatArray = Marshal.AllocHGlobal (count * IntPtr.Size);
 				_GetComponents (pNativeFloatArray);
 
-#if XAMCORE_2_0
 				nfloat.CopyArray (pNativeFloatArray, components, 0, count);
-#else
-				Marshal.Copy (pNativeFloatArray, components, 0, count);
-#endif
 			} finally {
 				Marshal.FreeHGlobal (pNativeFloatArray);
 			}

@@ -359,7 +359,10 @@
 		</source>
         <target state="new">Limitation: can not automatically create strongly typed dictionary for ({0}) the value type of the {1}.{2} property
 		</target>
-        <note>
+        <note>Generating a strongly typed dictionary for type '{0}' is not supported.
+{0} - the property type.
+{1} - the dictionary type.
+{2} - the property name.
 		</note>
       </trans-unit>
       <trans-unit id="BI1034">
@@ -708,7 +711,8 @@
 		</source>
         <target state="new">Async method {0} with more than one result parameter in the callback by neither ResultTypeName or ResultType
 		</target>
-        <note>
+        <note>A message for an asynchronous method with more than one result parameter. The following are literal names and should not be translated: ResultTypeName, ResultType
+{0} - The method name.
 		</note>
       </trans-unit>
       <trans-unit id="BI1078">

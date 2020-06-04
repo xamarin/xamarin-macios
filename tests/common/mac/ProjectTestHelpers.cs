@@ -699,7 +699,7 @@ namespace Xamarin.Bundler {
 					// note: this repeat the failing command line. However we can't avoid this since we're often
 					// running commands in parallel (so the last one printed might not be the one failing)
 					if (!suppressPrintOnErrors)
-						Console.Error.WriteLine ("Process exited with code {0}, command:\n{1} {2}{3}", p.ExitCode, path, args, output.Length > 0 ? "\n" + output.ToString () : string.Empty);
+						Console.Error.WriteLine ("Process exited with code {0}, command:\n{1} {2}{3}", p.ExitCode, path, StringUtils.FormatArguments (args), output.Length > 0 ? "\n" + output.ToString () : string.Empty);
 					return p.ExitCode;
 				} else if (verbose > 0 && output.Length > 0 && !suppressPrintOnErrors) {
 					Console.WriteLine (output.ToString ());

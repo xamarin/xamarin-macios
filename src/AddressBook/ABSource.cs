@@ -54,11 +54,6 @@ namespace AddressBook {
 	
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	public class ABSource : ABRecord {
-#if !XAMCORE_2_0
-		[Advice ("Use ABSourceType.SearchableMask")]
-		public const int SearchableMask = 0x01000000;
-#endif
-
 		internal ABSource (IntPtr handle, bool owns)
 			: base (handle, owns)
 		{

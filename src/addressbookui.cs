@@ -49,12 +49,8 @@ namespace AddressBookUI {
 	interface ABNewPersonViewControllerDelegate {
 
 		[Export ("newPersonViewController:didCompleteWithNewPerson:")]
-#if XAMCORE_2_0
 		[Abstract]
 		void DidCompleteWithNewPerson (ABNewPersonViewController controller, [NullAllowed]ABPerson person);
-#else
-		void DidCompleteWithNewPerson (ABNewPersonViewController controller, IntPtr person);
-#endif
 	}
 
 	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
@@ -110,19 +106,11 @@ namespace AddressBookUI {
 	interface ABPeoplePickerNavigationControllerDelegate {
 		[Availability (Deprecated = Platform.iOS_8_0, Message = "Use 'DidSelectPerson' instead (or 'ABPeoplePickerNavigationController.PredicateForSelectionOfPerson').")]
 		[Export ("peoplePickerNavigationController:shouldContinueAfterSelectingPerson:")]
-#if XAMCORE_2_0
 		bool ShouldContinue (ABPeoplePickerNavigationController peoplePicker, ABPerson selectedPerson);
-#else
-		bool ShouldContinue (ABPeoplePickerNavigationController peoplePicker, IntPtr selectedPerson);
-#endif
 
 		[Availability (Deprecated = Platform.iOS_8_0, Message = "Use 'DidSelectPerson' instead (or 'ABPeoplePickerNavigationController.PredicateForSelectionOfProperty').")]
 		[Export ("peoplePickerNavigationController:shouldContinueAfterSelectingPerson:property:identifier:")]
-#if XAMCORE_2_0
 		bool ShouldContinue (ABPeoplePickerNavigationController peoplePicker, ABPerson selectedPerson, int /* ABPropertyId = int32 */ propertyId, int /* ABMultiValueIdentifier = int32 */ identifier);
-#else
-		bool ShouldContinue (ABPeoplePickerNavigationController peoplePicker, IntPtr selectedPerson, int /* ABPropertyId = int32 */ propertyId, int /* ABMultiValueIdentifier = int32 */ identifier);
-#endif
 
 		[Export ("peoplePickerNavigationControllerDidCancel:")]
 		void Cancelled (ABPeoplePickerNavigationController peoplePicker);
@@ -130,13 +118,8 @@ namespace AddressBookUI {
 		[Export ("peoplePickerNavigationController:didSelectPerson:")]
 		void DidSelectPerson (ABPeoplePickerNavigationController peoplePicker, ABPerson selectedPerson);
 
-#if XAMCORE_2_0
 		[Export ("peoplePickerNavigationController:didSelectPerson:property:identifier:")]
 		void DidSelectPerson (ABPeoplePickerNavigationController peoplePicker, ABPerson selectedPerson, int /* ABPropertyId = int32 */ propertyId, int /* ABMultiValueIdentifier = int32 */ identifier);
-#else
-		[Export ("peoplePickerNavigationController:didSelectPerson:property:identifier:")]
-		void DidSelectPerson (ABPeoplePickerNavigationController peoplePicker, ABPerson selectedPerson, int /* ABPropertyId = int32 */ propertyId, IntPtr abMultiValueIdentifier);
-#endif
 		}
 
 	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
@@ -175,9 +158,7 @@ namespace AddressBookUI {
 
 		// Obsolete for public use; we should "remove" this member by making
 		// it [Internal] in some future release, as it's needed internally.
-#if XAMCORE_2_0
 		[Internal]
-#endif
 		[Obsolete ("Use SetHighlightedItemForProperty(ABPersonProperty,int?).")]
 		[Export ("setHighlightedItemForProperty:withIdentifier:")]
 		void SetHighlightedItemForProperty (int /* ABPropertyId = int32 */ property, int /* ABMultiValueIdentifier = int32 */ identifier);
@@ -263,12 +244,8 @@ namespace AddressBookUI {
 	interface ABPersonViewControllerDelegate {
 
 		[Export ("personViewController:shouldPerformDefaultActionForPerson:property:identifier:")]
-#if XAMCORE_2_0
 		[Abstract]
 		bool ShouldPerformDefaultActionForPerson (ABPersonViewController personViewController, ABPerson person, int /* ABPropertyID = int32 */ propertyId, int /* ABMultiValueIdentifier = int32 */ identifier);
-#else
-		bool ShouldPerformDefaultActionForPerson (ABPersonViewController personViewController, IntPtr person, int /* ABPropertyID = int32 */ propertyId, int /* ABMultiValueIdentifier = int32 */ identifier);
-#endif
 	}
 
 	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]

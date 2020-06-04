@@ -7,8 +7,6 @@
 // Copyright 2019 Microsoft Inc. All rights reserved.
 //
 
-#if XAMCORE_2_0
-
 using System;
 using System.Runtime.InteropServices;
 using Matrix4 = global::OpenTK.NMatrix4;
@@ -39,5 +37,3 @@ namespace ARKit {
 		}
 	}
 }
-
-#endif

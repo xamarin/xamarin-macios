@@ -11,7 +11,22 @@ If changes are made to `MBStrings.resx`, you will hit:
 
 To regenerate the `.xlf` files run:
 
-    $ msbuild Xamarin.Localization.MSBuild.csproj -restore -t:UpdateXlf
+    $ msbuild msbuild/Xamarin.Localization.MSBuild/Xamarin.Localization.MSBuild.csproj -restore -t:UpdateXlf
+
+For `mtouch`, `Errors.resx` contains the localizable strings. Use
+these commands instead to update `.xlf` files:
+
+    $ nuget restore tools
+    $ msbuild tools/mtouch/mtouch.csproj -t:UpdateXlf
+
+For `generator`, `src/Resources.resx`, contains the localizable
+strings. To update the `.xlf` files:
+
+    $ nuget restore src
+    $ msbuild src/generator.csproj -t:UpdateXlf
+
+*NOTE: `nuget restore` can be used instead of the MSBuild `-restore`
+switch for projects using `packages.config`*
 
 See [dotnet/xliff-tasks][xliff-tasks] or [Xamarin.Android's
 documentation][xamarin-android] for details.

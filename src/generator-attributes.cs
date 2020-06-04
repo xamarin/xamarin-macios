@@ -99,17 +99,6 @@ public class NeedsAuditAttribute : Attribute {
 public class MarshalNativeExceptionsAttribute : Attribute {
 }
 
-public class RetainListAttribute : Attribute {
-	public RetainListAttribute (bool doadd, string name)
-	{
-		Add = doadd;
-		WrapName = name;
-	}
-
-	public string WrapName { get; set; }
-	public bool Add { get; set; }
-}
-
 public class RetainAttribute : Attribute {
 	public RetainAttribute ()
 	{
@@ -189,7 +178,7 @@ public class AdvancedAttribute : Attribute {
 }
 
 // When applied instructs the generator to call Release on the returned objects
-// this happens when factory methods in Objetive-C return objects with refcount=1
+// this happens when factory methods in Objective-C return objects with refcount=1
 public class FactoryAttribute : Attribute {
 	public FactoryAttribute () {}
 }
@@ -237,7 +226,7 @@ public class StaticAttribute : Attribute {
 	public StaticAttribute () {}
 }
 
-// When applied to a type generate a partial class even if the type does not subclasss NSObject
+// When applied to a type generate a partial class even if the type does not subclass NSObject
 // useful for Core* types that declare Fields
 public class PartialAttribute : Attribute {
 	public PartialAttribute () {}
@@ -413,7 +402,7 @@ public class NotificationAttribute : Attribute {
 
 //
 // Applied to attributes in the notification EventArgs
-// to generate code that merely probes for the existance of
+// to generate code that merely probes for the existence of
 // the key, instead of extracting a value out of the
 // userInfo dictionary
 //
@@ -478,7 +467,7 @@ public class DelegateNameAttribute : Attribute {
 //     bool Confirm (Some source);
 // }
 //
-// Generates propety in the host class:
+// Generates property in the host class:
 //	Func<bool> Confirmation { get; set; }
 //
 //
@@ -554,7 +543,7 @@ public class DisableZeroCopyAttribute : Attribute {
 // * Add the signature to runtime/bindings-generator.cs:GetFunctionData,
 //   and rebuild runtime/.
 //   * It is not necessary to add overloads for the super and stret 
-//     variations of objc_msgSend, those are created auomatically.
+//     variations of objc_msgSend, those are created automatically.
 // * Rebuild dontlink for device again, making sure the new signature is
 //   detected.
 // * Make sure to build all variants of dontlink (classic, 32bit, 64bit),
@@ -575,14 +564,14 @@ public class MarshalDirectiveAttribute : Attribute {
 // string properties and parameters copy parameters, instead many libraries
 // "retain" as a broken optimization [1].
 //
-// The consumer of the genertor can force this by passing
+// The consumer of the generator can force this by passing
 // --use-zero-copy or setting the [assembly:ZeroCopyStrings] attribute.
 // When these are set, the generator assumes the library perform
 // copies over any NSStrings it keeps instead of retains/assigns and
 // that any property that happens to be a retain/assign has the
 // [DisableZeroCopyAttribute] attribute applied.
 //
-// [1] It is broken becase consumer code can pass an NSMutableString, the
+// [1] It is broken because consumer code can pass an NSMutableString, the
 // library retains the value, but does not have a way of noticing changes
 // that might happen to the mutable string behind its back.
 //
@@ -635,7 +624,7 @@ public class DisposeAttribute : SnippetAttribute {
 // This attribute is used to flag properties that should be exposed on the strongly typed
 // nested Appearance class.   It is usually a superset of what Apple has labeled with
 // UI_APPEARANCE_SELECTOR because they do support more selectors than those flagged in
-// the UIApperance proxies, so we must label all the options.   This will be a list that
+// the UIAppearance proxies, so we must label all the options.   This will be a list that
 // is organically grown as we find them
 //
 [AttributeUsage (AttributeTargets.Property|AttributeTargets.Method, AllowMultiple=false)]
@@ -644,7 +633,7 @@ public class AppearanceAttribute : Attribute {
 }
 
 //
-// Apply this attribute to a class to add methods that in Objective-c
+// Apply this attribute to a class to add methods that in Objective-C
 // are added as categories
 //
 // Use the BaseType attribute to reference which class this is extending
@@ -671,10 +660,6 @@ public class CategoryAttribute : Attribute {
 
 //
 // Apply this attribute when an `init*` selector is decorated with NS_DESIGNATED_INITIALIZER
-//
-// FIXME: Right now this does nothing - but with some tooling we'll be able 
-// to spot binding mistakes and implement correct subclassing of ObjC types
-// from the IDE
 //
 [AttributeUsage (AttributeTargets.Constructor | AttributeTargets.Method, AllowMultiple = false)]
 public class DesignatedInitializerAttribute : Attribute {
@@ -813,7 +798,7 @@ public class CoreImageFilterAttribute : Attribute {
 
 		IntPtrCtorVisibility = MethodAttributes.PrivateScope;
 
-		// not needed by default, automaticly `protected` if the type is abstract
+		// not needed by default, automatically `protected` if the type is abstract
 		StringCtorVisibility = MethodAttributes.PrivateScope;
 	}
 

@@ -1526,31 +1526,30 @@ namespace Registrar {
 					if (attrib.Version <= sdk)
 						break;
 
-					string msg = Errors.MT4162;
+					string msg;
 					string zero = GetTypeFullName (type);
 					string one = string.Empty;
-					string two = string.Empty;
-					string three = PlatformName;
-					string four = sdk.ToString ();
-					string five = attrib.Version.ToString ();
-					string six = string.IsNullOrEmpty (attrib.Message) ? "." : ": '" + attrib.Message + "'.";
+					string two = PlatformName;
+					string three = sdk.ToString ();
+					string four = attrib.Version.ToString ();
+					string five = string.IsNullOrEmpty (attrib.Message) ? "." : ": '" + attrib.Message + "'.";
 					if (baseTypeOf != null) {
-						one = "a base type of";
-						two = GetTypeFullName (baseTypeOf);
+						msg = Errors.MT4162_BaseType;
+						one = GetTypeFullName (baseTypeOf);
 					} else if (parameterIn != null) {
-						one = "a parameter in";
-						two = parameterIn.DescriptiveMethodName;
+						msg = Errors.MT4162_Parameter;
+						one = parameterIn.DescriptiveMethodName;
 					} else if (returnTypeOf != null) {
-						one = "a return type in";
-						two = returnTypeOf.DescriptiveMethodName;
+						msg = Errors.MT4162_ReturnType;
+						one = returnTypeOf.DescriptiveMethodName;
 					} else if (propertyTypeOf != null) {
-						one = "the property type of";
-						two = propertyTypeOf.FullName;
+						msg = Errors.MT4162_PropertyType;
+						one = propertyTypeOf.FullName;
 					} else {
 						msg = Errors.MT4162_A;
 					}
 
-					msg = string.Format (msg, zero, one, two, three, four, five, six);
+					msg = string.Format (msg, zero, one, two, three, four, five);
 
 					Exception ex;
 

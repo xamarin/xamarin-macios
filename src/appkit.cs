@@ -334,12 +334,10 @@ namespace AppKit {
 		[Export ("beginSheetModalForWindow:modalDelegate:didEndSelector:contextInfo:")]
 		void BeginSheet ([NullAllowed] NSWindow  window, [NullAllowed] NSObject modalDelegate, [NullAllowed] Selector didEndSelector, IntPtr contextInfo);
 
-#if XAMCORE_2_0	// This conflicts with a BeginSheet override in src/AppKit/NSAlert.cs and requires a cast if you pass in delegate {}.
 		[Mac (10,9)]
 		[Export ("beginSheetModalForWindow:completionHandler:")]
 		[Async]
 		void BeginSheet ([NullAllowed]NSWindow Window, [NullAllowed] Action<NSModalResponse> handler);
-#endif
 
 		[Export ("window")]
 		NSPanel Window  { get; }
@@ -606,13 +604,6 @@ namespace AppKit {
 	
 		[Export ("updateWindows")]
 		void UpdateWindows ();
-	
-#if !XAMCORE_2_0
-		[Export ("setMainMenu:")]
-		[Obsolete ("Use 'MainMenu' property.")]
-		[Sealed]
-		void SetMainMenu (NSMenu  aMenu);
-#endif
 	
 		[Export ("mainMenu", ArgumentSemantic.Retain)]
 		NSMenu MainMenu { get; set; }
@@ -984,7 +975,6 @@ namespace AppKit {
 		[Export ("application:didDecodeRestorableState:"), EventArgs ("NSCoder")]
 		void DecodedRestorableState (NSApplication app, NSCoder state);
 
-#if XAMCORE_2_0
 		[Mac (10,10)]
 		[Export ("application:willContinueUserActivityWithType:"), DelegateName ("NSApplicationUserActivityType"), DefaultValue (false)]
 		bool WillContinueUserActivity (NSApplication application, string userActivityType);
@@ -992,13 +982,11 @@ namespace AppKit {
 		[Mac (10,10)]
 		[Export ("application:continueUserActivity:restorationHandler:"), DelegateName ("NSApplicationContinueUserActivity"), DefaultValue (false)]
 		bool ContinueUserActivity (NSApplication application, NSUserActivity userActivity, ContinueUserActivityRestorationHandler restorationHandler);
-#endif
 
 		[Mac (10,10)]
 		[Export ("application:didFailToContinueUserActivityWithType:error:"), EventArgs ("NSApplicationFailed"), DefaultValue (false)]
 		void FailedToContinueUserActivity (NSApplication application, string userActivityType, NSError error);
 
-#if XAMCORE_2_0
 		[Mac (10,10)]
 		[Export ("application:didUpdateUserActivity:"), EventArgs ("NSApplicationUpdatedUserActivity"), DefaultValue (false)]
 		void UpdatedUserActivity (NSApplication application, NSUserActivity userActivity);
@@ -1006,7 +994,6 @@ namespace AppKit {
 		[Mac (10,12)]
 		[Export ("application:userDidAcceptCloudKitShareWithMetadata:"), EventArgs ("NSApplicationUserAcceptedCloudKitShare")]
 		void UserDidAcceptCloudKitShare (NSApplication application, CKShareMetadata metadata);
-#endif
 
 		[Mac (10,13), EventArgs ("NSApplicationOpenUrls")]
 		[Export ("application:openURLs:")]
@@ -1764,13 +1751,6 @@ namespace AppKit {
 		[Export ("columnContentWidthForColumnWidth:")]
 		nfloat ColumnContentWidthForColumnWidth (nfloat columnWidth);
 
-#if !XAMCORE_2_0
-		[Export ("setColumnResizingType:")]
-		[Obsolete ("Use the 'ColumnResizingType' property instead.")]
-		[Sealed]
-		void SetColumnResizingType (NSBrowserColumnResizingType columnResizingType);
-#endif
-
 		[Export ("columnResizingType")]
 		NSBrowserColumnResizingType ColumnResizingType { get; set; }
 
@@ -1971,11 +1951,7 @@ namespace AppKit {
 		//NSImage DraggingImageForRowsWithIndexes (NSBrowser browser, NSIndexSet rowIndexes, int column, NSEvent theEvent, NSPointPointer dragImageOffset);
 
 		[Export ("browser:validateDrop:proposedRow:column:dropOperation:")]
-#if !XAMCORE_2_0
-		NSDragOperation ValidateDrop (NSBrowser browser, [Protocolize (4)] NSDraggingInfo info, ref nint row, ref nint column, NSBrowserDropOperation dropOperation);
-#else
 		NSDragOperation ValidateDrop (NSBrowser browser, [Protocolize (4)] NSDraggingInfo info, ref nint row, ref nint column, ref NSBrowserDropOperation dropOperation);
-#endif
 
 		[Export ("browser:acceptDrop:atRow:column:dropOperation:")]
 		bool AcceptDrop (NSBrowser browser, [Protocolize (4)] NSDraggingInfo info, nint row, nint column, NSBrowserDropOperation dropOperation);
@@ -2078,13 +2054,6 @@ namespace AppKit {
 	
 		[Export ("showsStateBy")]
 		nint ShowsStateBy { get; set; }
-	
-#if !XAMCORE_2_0
-		[Export ("setShowsStateBy:")]
-		[Obsolete ("Use the 'ShowsStateBy' property instead.")]
-		[Sealed]
-		void SetShowsStateBy (nint aType);
-#endif
 	
 		[Export ("setButtonType:")]
 		void SetButtonType (NSButtonType aType);
@@ -2271,14 +2240,7 @@ namespace AppKit {
 		void SetNextState ();
 
 		[Export ("showsBorderOnlyWhileMouseInside")]
-#if XAMCORE_2_0
 		bool ShowsBorderOnlyWhileMouseInside { get; set; }
-#else
-		bool ShowsBorderOnlyWhileMouseInside ();
-
-		[Export ("setShowsBorderOnlyWhileMouseInside:")]
-		void SetShowsBorderOnlyWhileMouseInside (bool showsBorder);
-#endif
 
 		[Export ("sound")]
 		NSSound Sound { get; set; }
@@ -3077,11 +3039,7 @@ namespace AppKit {
 		//NSImage DraggingImageForItems (NSCollectionView collectionView, NSIndexSet indexes, NSEvent evg, NSPointPointer dragImageOffset);
 
 		[Export ("collectionView:validateDrop:proposedIndex:dropOperation:")]
-#if !XAMCORE_2_0
-		NSDragOperation ValidateDrop (NSCollectionView collectionView, [Protocolize (4)] NSDraggingInfo draggingInfo, ref nint dropIndex, NSCollectionViewDropOperation dropOperation);
-#else
 		NSDragOperation ValidateDrop (NSCollectionView collectionView, [Protocolize (4)] NSDraggingInfo draggingInfo, ref nint dropIndex, ref NSCollectionViewDropOperation dropOperation);
-#endif
 
 		[Export ("collectionView:acceptDrop:index:dropOperation:")]
 		bool AcceptDrop (NSCollectionView collectionView, [Protocolize (4)] NSDraggingInfo draggingInfo, nint index, NSCollectionViewDropOperation dropOperation);
@@ -4845,13 +4803,9 @@ namespace AppKit {
 		[Export ("baseWritingDirection")]
 		NSWritingDirection BaseWritingDirection { get; set; }
 
-#if XAMCORE_2_0
 		[Export ("integerValue")]
 		nint NIntValue { get; set; }
-#else
-		[Export ("integerValue")]
-		nint IntegerValue { get; set; }
-#endif
+
 		[Export ("performClick:")]
 		void PerformClick (NSObject sender);
 
@@ -5681,13 +5635,6 @@ namespace AppKit {
 		[Export ("willNotPresentError:")]
 		void WillNotPresentError (NSError error);
 
-#if !XAMCORE_2_0
-		[Export ("setDisplayName:")]
-		[Obsolete ("Use the 'DisplayName' property instead.")]
-		[Sealed]
-		void SetDisplayName ([NullAllowed] string displayNameOrNull);
-#endif
-
 		[Export ("restoreDocumentWindowWithIdentifier:state:completionHandler:")]
 		void RestoreDocumentWindow (string identifier, NSCoder state, NSWindowCompletionHandler completionHandler);
 
@@ -5708,7 +5655,6 @@ namespace AppKit {
 		[Export ("restorableStateKeyPaths", ArgumentSemantic.Copy)]
 		string [] RestorableStateKeyPaths ();
 
-#if XAMCORE_2_0
 		[Mac (10,10)]
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
 		[Export ("userActivity", ArgumentSemantic.Strong)]
@@ -5722,7 +5668,6 @@ namespace AppKit {
 		[Mac (10,10)]
 		[Export ("restoreUserActivityState:")]
 		void RestoreUserActivityState (NSUserActivity userActivity);
-#endif
 
 		[Mac (10,12)]
 		[Export ("isBrowsingVersions")] 
@@ -7916,11 +7861,9 @@ namespace AppKit {
 		[Export ("rotateWithEvent:")]
 		void Rotate (NSEvent rotateEvent);
 
-#if XAMCORE_2_0
 		[Mac (10,10,3)]
 		[Export ("pressureChangeWithEvent:")]
 		void PressureChange (NSEvent pressureChangeEvent);
-#endif
 
 		[Mac (10,11)]
 		[Export ("pressureConfiguration", ArgumentSemantic.Strong)]
@@ -8530,13 +8473,6 @@ namespace AppKit {
 
 		[Export ("removeObject:")]
 		void RemoveObject (NSObject object1);
-
-#if !XAMCORE_2_0
-		[Export ("setEditable:")]
-		[Obsolete ("Use the 'Editable' property instead.")]
-		[Sealed]
-		void SetEditable (bool editable);
-#endif
 
 		[Export ("editable")]
 		bool Editable { [Bind ("isEditable")] get; set; }
@@ -9349,14 +9285,6 @@ namespace AppKit {
 
 		[Export ("template")]
 		bool Template { [Bind ("isTemplate")]get; set; }
-
-#if !XAMCORE_2_0
-		[Bind ("sizeWithAttributes:")]
-		CGSize StringSize ([Target] string str, NSDictionary attributes);
-
-		[Bind ("drawInRect:withAttributes:")]
-		void DrawInRect ([Target] string str, CGRect rect, NSDictionary attributes);
-#endif
 
 		[Export ("drawInRect:fromRect:operation:fraction:")]
 		[Sealed]
@@ -10558,7 +10486,6 @@ namespace AppKit {
 	}
 #endif
 
-#if XAMCORE_2_0 // NSLayoutAnchor is a generic type, which we only support in Unified (for now)
 	[Mac (10,11)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor] // Handle is nil
@@ -10652,7 +10579,6 @@ namespace AppKit {
 		[Export ("constraintLessThanOrEqualToAnchor:multiplier:constant:")]
 		NSLayoutConstraint ConstraintLessThanOrEqualToAnchor (NSLayoutDimension anchor, nfloat multiplier, nfloat constant);
 	}
-#endif // XAMCORE_2_0
 
 	[BaseType (typeof (NSObject))]
 	interface NSLayoutConstraint : NSAnimatablePropertyContainer {
@@ -10703,7 +10629,6 @@ namespace AppKit {
 		[Static, Export ("deactivateConstraints:")]
 		void DeactivateConstraints (NSLayoutConstraint [] constraints);
 
-#if XAMCORE_2_0
 		[Mac (10, 12)]
 		[Export ("firstAnchor", ArgumentSemantic.Copy)]
 		NSLayoutAnchor<NSObject> FirstAnchor { get; }
@@ -10711,7 +10636,6 @@ namespace AppKit {
 		[Mac (10, 12)]
 		[NullAllowed, Export ("secondAnchor", ArgumentSemantic.Copy)]
 		NSLayoutAnchor<NSObject> SecondAnchor { get; }
-#endif
 
 		[NullAllowed, Export ("identifier")]
 		string Identifier { get; set; }
@@ -10727,7 +10651,6 @@ namespace AppKit {
 		[NullAllowed, Export ("owningView", ArgumentSemantic.Weak)]
 		NSView OwningView { get; set; }
 
-#if XAMCORE_2_0 // NSLayoutXAxisAnchor is a generic type, only supported in Unified (for now)
 		[Export ("leadingAnchor", ArgumentSemantic.Strong)]
 		NSLayoutXAxisAnchor LeadingAnchor { get; }
 
@@ -10757,7 +10680,6 @@ namespace AppKit {
 
 		[Export ("centerYAnchor", ArgumentSemantic.Strong)]
 		NSLayoutYAxisAnchor CenterYAnchor { get; }
-#endif // XAMCORE_2_0
 
 		[Mac (10, 12)]
 		[Export ("hasAmbiguousLayout")]
@@ -10781,31 +10703,7 @@ namespace AppKit {
 	[Model]
 	[BaseType (typeof (NSObject))]
 	[Protocol]
-#if XAMCORE_2_0
 	interface NSMatrixDelegate : NSControlTextEditingDelegate {
-#else
-	interface NSMatrixDelegate {
-		[Export ("control:textShouldBeginEditing:"), DelegateName ("NSControlText"), DefaultValue (true)]
-		bool TextShouldBeginEditing (NSControl control, NSText fieldEditor);
-
-		[Export ("control:textShouldEndEditing:"), DelegateName ("NSControlText"), DefaultValue (true)]
-		bool TextShouldEndEditing (NSControl control, NSText fieldEditor);
-
-		[Export ("control:didFailToFormatString:errorDescription:"), DelegateName ("NSControlTextError"), DefaultValue (true)]
-		bool DidFailToFormatString (NSControl control, string str, string error);
-		
-		[Export ("control:didFailToValidatePartialString:errorDescription:"), EventArgs ("NSControlTextError")]
-		void DidFailToValidatePartialString (NSControl control, string str, string error);
-		
-		[Export ("control:isValidObject:"), DelegateName ("NSControlTextValidation"), DefaultValue (true)]
-		bool IsValidObject (NSControl control, NSObject objectToValidate);
-
-		[Export ("control:textView:doCommandBySelector:"), DelegateName ("NSControlCommand"), DefaultValue (false)]
-		bool DoCommandBySelector (NSControl control, NSTextView textView, Selector commandSelector);
-
-		[Export ("control:textView:completions:forPartialWordRange:indexOfSelectedItem:"), DelegateName ("NSControlTextCompletion"), DefaultValue (null)]
-		string [] GetCompletions (NSControl control, NSTextView textView, string [] words, NSRange charRange, ref nint index);
-#endif
 	}
 
 	[Model]
@@ -11606,33 +11504,18 @@ namespace AppKit {
 	[Model]
 	[Protocol]
 	interface NSPathControlDelegate {
-		#if !XAMCORE_2_0
-		[Abstract]
-		#endif
 		[Export ("pathControl:shouldDragPathComponentCell:withPasteboard:")]
 		bool ShouldDragPathComponentCell (NSPathControl pathControl, NSPathComponentCell pathComponentCell, NSPasteboard pasteboard);
 
-		#if !XAMCORE_2_0
-		[Abstract]
-		#endif
 		[Export ("pathControl:validateDrop:")]
 		NSDragOperation ValidateDrop (NSPathControl pathControl, [Protocolize (4)] NSDraggingInfo info);
 
-		#if !XAMCORE_2_0
-		[Abstract]
-		#endif
 		[Export ("pathControl:acceptDrop:")]
 		bool AcceptDrop (NSPathControl pathControl, [Protocolize (4)] NSDraggingInfo info);
 
-#if !XAMCORE_2_0
-		[Abstract]
-#endif
 		[Export ("pathControl:willDisplayOpenPanel:")]
 		void WillDisplayOpenPanel (NSPathControl pathControl, NSOpenPanel openPanel);
 
-#if !XAMCORE_2_0
-		[Abstract]
-#endif
 		[Export ("pathControl:willPopUpMenu:")]
 		void WillPopUpMenu (NSPathControl pathControl, NSMenu menu);
 
@@ -12663,12 +12546,7 @@ namespace AppKit {
 		bool PerformKeyEquivalent (NSEvent theEvent);
 
 		[Export ("validRequestorForSendType:returnType:")]
-#if XAMCORE_2_0
 		NSObject ValidRequestorForSendType ([NullAllowed] string sendType, [NullAllowed] string returnType);
-#else
-		[Obsolete ("Use 'ValidRequestorForSendType' instead.")]
-		NSObject ValidRequestorForSendTypereturnType (string sendType, string returnType);
-#endif
 
 		[Export ("mouseDown:")]
 		void MouseDown (NSEvent theEvent);
@@ -12806,7 +12684,6 @@ namespace AppKit {
 		[Export ("wantsForwardedScrollEventsForAxis:")]
 		bool WantsForwardedScrollEventsForAxis (NSEventGestureAxis axis);
 
-#if XAMCORE_2_0
 		[Mac (10,10)]
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
 		[Export ("userActivity", ArgumentSemantic.Strong)]
@@ -12824,7 +12701,6 @@ namespace AppKit {
 		[Mac (10,10,3)]
 		[Export ("pressureChangeWithEvent:")]
 		void PressureChange (NSEvent pressureChangeEvent);
-#endif
 
 		[Mac (10,12)]
 		[Export ("newWindowForTab:")]
@@ -14564,11 +14440,7 @@ namespace AppKit {
 		void RemoveArrangedSubview (NSView view);
 
 		[Export ("holdingPriorityForSubviewAtIndex:")]
-		#if XAMCORE_2_0
 				float /*NSLayoutPriority*/ HoldingPriorityForSubview (nint subviewIndex);
-#else
-		float /*NSLayoutPriority*/ HoldingPriorityForSubviewAtIndex (nint subviewIndex);
-		#endif
 
 		[Export ("setHoldingPriority:forSubviewAtIndex:")]
 		void SetHoldingPriority (float /*NSLayoutPriority*/ priority, nint subviewIndex);
@@ -16261,7 +16133,6 @@ namespace AppKit {
 
 		// NSConstraintBasedLayoutCoreMethods
 
-#if XAMCORE_2_0 // NSLayoutXAxisAnchor is a generic type, only supported in Unified (for now)
 		[Mac (10,11)]
 		[Export ("leadingAnchor", ArgumentSemantic.Strong)]
 		NSLayoutXAxisAnchor LeadingAnchor { get; }
@@ -16309,7 +16180,6 @@ namespace AppKit {
 		[Mac (10,11)]
 		[Export ("lastBaselineAnchor", ArgumentSemantic.Strong)]
 		NSLayoutYAxisAnchor LastBaselineAnchor { get; }
-#endif // XAMCORE_2_0
 
 		[Mac (10,11)]
 		[Export ("firstBaselineOffsetFromTop")]
@@ -16405,10 +16275,7 @@ namespace AppKit {
 	}
 
 	[BaseType (typeof (NSResponder))]
-	interface NSViewController : NSResponder, NSUserInterfaceItemIdentification, NSEditor, NSSeguePerforming
-#if XAMCORE_2_0
-	, NSExtensionRequestHandling 
-#endif
+	interface NSViewController : NSResponder, NSUserInterfaceItemIdentification, NSEditor, NSSeguePerforming , NSExtensionRequestHandling
 	{
 		[DesignatedInitializer]
 		[Export ("initWithNibName:bundle:")]
@@ -16545,7 +16412,6 @@ namespace AppKit {
 		[Export ("storyboard", ArgumentSemantic.Strong)]
 		NSStoryboard Storyboard { get; }
 
-#if XAMCORE_2_0
 		[Mac (10,10)]
 		[Export ("presentViewControllerInWidget:")]
 		void PresentViewControllerInWidget (NSViewController viewController);
@@ -16569,7 +16435,6 @@ namespace AppKit {
 		[Mac (10, 10)]
 		[Export ("preferredMaximumSize")]
 		CGSize PreferredMaximumSize { get; }
-#endif
 	}
 
 	[Mac (10,10)]
@@ -16684,12 +16549,6 @@ namespace AppKit {
 		[Export ("initWithIdentifier:")]
 		IntPtr Constructor (NSString identifier);
 
-#if !XAMCORE_2_0
-		[Obsolete, Export ("initWithIdentifier:")]
-		[Sealed]
-		IntPtr Constructor (NSObject identifier);
-#endif
-	
 		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Export ("dataCellForRow:")]
 		NSCell DataCellForRow (nint row);
@@ -17330,11 +17189,7 @@ namespace AppKit {
 		string [] FilesDropped (NSTableView tableView, NSUrl dropDestination, NSIndexSet indexSet );
 
 		[Export ("tableView:pasteboardWriterForRow:")]
-#if XAMCORE_2_0
 		INSPasteboardWriting GetPasteboardWriterForRow (NSTableView tableView, nint row);
-#else
-		NSPasteboardWriting GetPasteboardWriterForRow (NSTableView tableView, nint row);
-#endif
 
 		[Export ("tableView:draggingSession:willBeginAtPoint:forRowIndexes:")]
 		void DraggingSessionWillBegin (NSTableView tableView, NSDraggingSession draggingSession, CGPoint willBeginAtScreenPoint, NSIndexSet rowIndexes);
@@ -17468,11 +17323,7 @@ namespace AppKit {
 		void DidRemoveRowView (NSTableView tableView, NSTableRowView rowView, nint row);
 
 		[Export ("tableView:pasteboardWriterForRow:")]
-#if XAMCORE_2_0
 		INSPasteboardWriting GetPasteboardWriterForRow (NSTableView tableView, nint row);
-#else
-		NSPasteboardWriting GetPasteboardWriterForRow (NSTableView tableView, nint row);
-#endif
 
 		[Export ("tableView:draggingSession:willBeginAtPoint:forRowIndexes:")]
 		void DraggingSessionWillBegin (NSTableView tableView, NSDraggingSession draggingSession, CGPoint willBeginAtScreenPoint, NSIndexSet rowIndexes);
@@ -19626,15 +19477,12 @@ namespace AppKit {
 	}
 
 	[BaseType (typeof (NSObject), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NSToolbarDelegate)})]
-#if XAMCORE_2_0
 	[DisableDefaultCtor] // init was added in 10.13
-#endif
 	partial interface NSToolbar {
-#if XAMCORE_2_0
 		[Mac (10, 13)]
 		[Export ("init")]
 		IntPtr Constructor ();
-#endif
+
 		[DesignatedInitializer]
 		[Export ("initWithIdentifier:")]
 		IntPtr Constructor (string identifier);
@@ -21303,11 +21151,7 @@ namespace AppKit {
 		void WillMove (NSNotification  notification);
 	
 		[Export ("windowDidMove:"), EventArgs ("NSNotification")]
-#if XAMCORE_2_0
 		void DidMove (NSNotification  notification);
-#else
-		void DidMoved (NSNotification  notification);
-#endif
 	
 		[Export ("windowDidBecomeKey:"), EventArgs ("NSNotification")]
 		void DidBecomeKey (NSNotification  notification);
@@ -22033,11 +21877,7 @@ namespace AppKit {
 
 		//Detected properties
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
-#if XAMCORE_2_0
 		NSObject  WeakDelegate { get; set; }
-#else
-		NSRuleEditorDelegate WeakDelegate { get; set; }
-#endif
 
 		[Wrap ("WeakDelegate")]
 		[Protocolize]
@@ -22350,11 +22190,7 @@ namespace AppKit {
 		NSSharingService [] SharingServicesForItems (NSSharingServicePicker sharingServicePicker, NSObject [] items, NSSharingService [] proposedServices);
 		
 		[Export ("sharingServicePicker:delegateForSharingService:"), DelegateName ("NSSharingServicePickerDelegateForSharingService"), DefaultValue (null)]
-#if XAMCORE_2_0
 		INSSharingServiceDelegate DelegateForSharingService (NSSharingServicePicker sharingServicePicker, NSSharingService sharingService);
-#else
-		NSSharingServiceDelegate DelegateForSharingService (NSSharingServicePicker sharingServicePicker, NSSharingService sharingService);
-#endif
 		
 		[Export ("sharingServicePicker:didChooseSharingService:"), EventArgs ("NSSharingServicePickerDidChooseSharingService")]
 		void DidChooseSharingService (NSSharingServicePicker sharingServicePicker, NSSharingService service);
@@ -22558,11 +22394,7 @@ namespace AppKit {
 
 	partial interface NSCollectionViewDelegate {
 		[Export ("collectionView:pasteboardWriterForItemAtIndex:")]
-#if XAMCORE_2_0
 		INSPasteboardWriting PasteboardWriterForItem (NSCollectionView collectionView, nuint index);
-#else
-		NSPasteboardWriting PasteboardWriterForItemAtIndex (NSCollectionView collectionView, nuint index);
-#endif
 
 		[Export ("collectionView:updateDraggingItemsForDrag:")]
 		void UpdateDraggingItemsForDrag (NSCollectionView collectionView, [Protocolize (4)] NSDraggingInfo draggingInfo);
@@ -22591,14 +22423,6 @@ namespace AppKit {
 		[Export ("duplicateDocumentWithContentsOfURL:copying:displayName:error:")]
 		NSDocument DuplicateDocumentWithContentsOfUrl (NSUrl url, bool duplicateByCopying,
 			[NullAllowed] string displayName, out NSError error);
-
-#if !XAMCORE_2_0
-		[Export ("openDocumentWithContentsOfURL:display:completionHandler:")]
-		[Obsolete ("Use 'OpenDocument' instead.")]
-		[Sealed]
-		void OpenDocumentWithContentsOfUrl (NSUrl url, bool displayDocument,
-			OpenDocumentCompletionHandler completionHandler);
-#endif
 
 		[Export ("reopenDocumentForURL:withContentsOfURL:display:completionHandler:")]
 		void ReopenDocumentForUrl ([NullAllowed] NSUrl url, NSUrl contentsUrl,
@@ -22679,23 +22503,6 @@ namespace AppKit {
 		[Export ("moveItemAtIndex:inParent:toIndex:inParent:")]
 		void MoveItem (nint fromIndex, [NullAllowed] NSObject oldParent, nint toIndex, [NullAllowed] NSObject newParent);
 
-#if !XAMCORE_2_0
-		// - (void)insertItemsAtIndexes:(NSIndexSet *)indexes inParent:(id)parent withAnimation:(NSTableViewAnimationOptions)animationOptions NS_AVAILABLE_MAC(10_7);
-		[Export ("insertItemsAtIndexes:inParent:withAnimation:")]
-		void InsertItems (NSIndexSet indexes, [NullAllowed] NSObject parent, NSTableViewAnimationOptions animationOptions);
-
-		// - (void)removeItemsAtIndexes:(NSIndexSet *)indexes inParent:(id)parent withAnimation:(NSTableViewAnimationOptions)animationOptions NS_AVAILABLE_MAC(10_7);
-		[Export ("removeItemsAtIndexes:inParent:withAnimation:")]
-		void RemoveItems (NSIndexSet indexes, [NullAllowed] NSObject parent, NSTableViewAnimationOptions animationOptions);
-
-		// - (void)insertRowsAtIndexes:(NSIndexSet *)indexes withAnimation:(NSTableViewAnimationOptions)animationOptions UNAVAILABLE_ATTRIBUTE;
-		[Export ("insertRowsAtIndexes:withAnimation:")]
-		void InsertRows (NSIndexSet indexes, NSTableViewAnimationOptions animationOptions);
-
-		// - (void)removeRowsAtIndexes:(NSIndexSet *)indexes withAnimation:(NSTableViewAnimationOptions)animationOptions UNAVAILABLE_ATTRIBUTE;
-		[Export ("removeRowsAtIndexes:withAnimation:")]
-		void RemoveRows (NSIndexSet indexes, NSTableViewAnimationOptions animationOptions);
-#else
 		[Export ("insertItemsAtIndexes:inParent:withAnimation:")]
 		void InsertItems (NSIndexSet indexes, [NullAllowed] NSObject parent, NSTableViewAnimation animationOptions);
 
@@ -22707,7 +22514,6 @@ namespace AppKit {
 
 		[Export ("removeRowsAtIndexes:withAnimation:")]
 		void RemoveRows (NSIndexSet indexes, NSTableViewAnimation animationOptions);
-#endif
 
 		// - (void)moveRowAtIndex:(NSInteger)oldIndex toIndex:(NSInteger)newIndex UNAVAILABLE_ATTRIBUTE;
 		[Export ("moveRowAtIndex:toIndex:")]
@@ -22717,11 +22523,7 @@ namespace AppKit {
 	partial interface NSOutlineViewDataSource {
 		// - (id <NSPasteboardWriting>)outlineView:(NSOutlineView *)outlineView pasteboardWriterForItem:(id)item NS_AVAILABLE_MAC(10_7);
 		[Export ("outlineView:pasteboardWriterForItem:")]
-#if XAMCORE_2_0
 		INSPasteboardWriting PasteboardWriterForItem (NSOutlineView outlineView, NSObject item);
-#else
-		NSPasteboardWriting PasteboardWriterForItem (NSOutlineView outlineView, NSObject item);
-#endif
 
 		// - (void)outlineView:(NSOutlineView *)outlineView draggingSession:(NSDraggingSession *)session willBeginAtPoint:(NSPoint)screenPoint forItems:(NSArray *)draggedItems NS_AVAILABLE_MAC(10_7);
 		[Export ("outlineView:draggingSession:willBeginAtPoint:forItems:")]
@@ -23308,11 +23110,7 @@ namespace AppKit {
 	partial interface NSImage {
 
 		[Static, Export ("imageWithSize:flipped:drawingHandler:")]
-#if XAMCORE_2_0
 		NSImage ImageWithSize (CGSize size, bool flipped, NSCustomImageRepDrawingHandler drawingHandler);
-#else
-		NSObject ImageWithSize (CGSize size, bool flipped, NSCustomImageRepDrawingHandler drawingHandler);
-#endif
 	}
 
 	partial interface NSSplitViewDividerIndexEventArgs {
@@ -25925,7 +25723,6 @@ namespace AppKit {
 		nint Tag { get; }
 	}
 
-#if XAMCORE_2_0
 	[Protocol]
 	[Mac (10,12)]
 	interface NSCloudSharingValidation
@@ -25935,7 +25732,6 @@ namespace AppKit {
 		[return: NullAllowed]
 		CKShare GetCloudShare (INSValidatedUserInterfaceItem item);
 	}
-#endif
 
 	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")]
 	[BaseType (typeof(CAOpenGLLayer))]

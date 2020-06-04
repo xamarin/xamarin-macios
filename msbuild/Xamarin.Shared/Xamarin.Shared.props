@@ -1,0 +1,91 @@
+<!--
+***********************************************************************************************
+Xamarin.Shared.props
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+  created a backup copy.  Incorrect changes to this file will make it
+  impossible to load or build your projects from the command-line or the IDE.
+
+This file imports the version- and platform-specific targets for the project importing
+this file. This file also defines targets to produce an error if the specified targets
+file does not exist, but the project is built anyway (command-line or IDE build).
+
+Copyright (C) 2020 Microsoft. All rights reserved.
+***********************************************************************************************
+-->
+
+<!-- This is shared between Xamarin.iOS and Xamarin.Mac -->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets"
+			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets')"/>
+
+	<PropertyGroup Condition="'$(_PlatformName)' == ''">
+		<_PlatformName Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.iOS'">iOS</_PlatformName>
+		<_PlatformName Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.TVOS'">tvOS</_PlatformName>
+		<_PlatformName Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.WatchOS'">watchOS</_PlatformName>
+		<_PlatformName Condition="'$(_PlatformName)' == ''">macOS</_PlatformName> <!-- detecting Xamarin.Mac is a bit more complicated, so just fall back to macOS if none of the others match -->
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<!--
+		     We don't want to use the Platform variable for conditional logic.
+		     Switching to a new property allows us to potentially switch from
+		     device to simulator builds dynamically based on the user's
+		     selection when starting the project. This allows us to eventually
+		     even (optionally) switch back to AnyCPU platform in the IDE,
+		     therefore fixing a key pain point in managing solution
+		     configurations.
+		-->
+		<ComputedPlatform Condition="'$(ComputedPlatform)' == ''">$(Platform)</ComputedPlatform>
+		<ComputedPlatform Condition="'$(_PlatformName)' != 'macOS' And '$(ComputedPlatform)' == 'AnyCPU'">iPhone</ComputedPlatform>
+	</PropertyGroup>
+
+	<!-- Sometimes we've used different variable names for the same thing for Xamarin.iOS and Xamarin.Mac projects. Here we try to unify those variables -->
+	<PropertyGroup>
+		<!-- ResourcePrefix -->
+		<MonoMacResourcePrefix Condition="'$(_PlatformName)' == 'macOS' And '$(MonoMacResourcePrefix)' == ''">Resources</MonoMacResourcePrefix>
+		<XamMacResourcePrefix Condition="'$(_PlatformName)' == 'macOS' And '$(XamMacResourcePrefix)' == ''">$(MonoMacResourcePrefix)</XamMacResourcePrefix>
+		<XamMacResourcePrefix Condition="'$(_PlatformName)' == 'macOS' And '$(XamMacResourcePrefix)' == ''">Resources</XamMacResourcePrefix>
+		<IPhoneResourcePrefix Condition="'$(_PlatformName)' != 'macOS' And '$(IPhoneResourcePrefix)' == ''">Resources</IPhoneResourcePrefix>
+		<_ResourcePrefix Condition="'$(_PlatformName)' == 'macOS'">$(XamMacResourcePrefix)</_ResourcePrefix>
+		<_ResourcePrefix Condition="'$(_PlatformName)' != 'macOS'">$(IPhoneResourcePrefix)</_ResourcePrefix>
+
+		<!-- SdkVersion -->
+		<_SdkVersion Condition="'$(_PlatformName)' == 'macOS'">$(MacOSXSdkVersion)</_SdkVersion>
+		<_SdkVersion Condition="'$(_PlatformName)' != 'macOS'">$(MtouchSdkVersion)</_SdkVersion>
+
+		<!-- RequireCodeSigning -->
+		<!-- iOS/watchOS/tvOS is simple: device builds require code signing, simulator builds do not. This is a big lie, for some simulator builds need to be signed, but the _DetectCodeSigning task handles those cases. -->
+		<_RequireCodeSigning Condition="'$(_PlatformName)' != 'macOS' And '$(_RequireCodeSigning)' == ''">false</_RequireCodeSigning> <!-- Xamarin.iOS builds are not signed by default -->
+		<_RequireCodeSigning Condition="'$(_PlatformName)' != 'macOS' And '$(ComputedPlatform)' == 'iPhone'">true</_RequireCodeSigning> <!-- except that device builds must be signed -->
+		<!-- macOS is a bit more complicated:
+			* 'EnableCodeSigning' specifies whether the app is signed or not, and this defaults to false if it's not set.
+			* Extensions are special, because they must be signed. However, due to historical reasons, extension projects will have set EnableCodeSigning=false. So we do the following:
+			    * If we're an extension, and code signing is disabled: enable code signing, set the code signing key (_CodeSigningKey) to '-', and pass this value to the _DetectCodeSigning task.
+		-->
+		<_RequireCodeSigning Condition="'$(_PlatformName)' == 'macOS' And '$(_RequireCodeSigning)' == ''">$(EnableCodeSigning)</_RequireCodeSigning> <!-- Xamarin.Mac projects use the 'EnableCodeSigning' variable to enable code signing -->
+		<_RequireCodeSigning Condition="'$(_PlatformName)' == 'macOS' And '$(_RequireCodeSigning)' == ''">false</_RequireCodeSigning> <!-- Xamarin.Mac projects: disable by default -->
+		<_CodeSigningKey Condition="'$(_PlatformName)' == 'macOS' And '$(IsAppExtension)' == 'true' And '$(_CodeSigningKey)' == '' And '$(_RequireCodeSigning)' == 'false'">-</_CodeSigningKey> <!-- Set _CodeSigningKey to '-' if we're an extension where code signing is not requested -->
+		<_RequireCodeSigning Condition="'$(_PlatformName)' == 'macOS' And '$(IsAppExtension)' == 'true'">true</_RequireCodeSigning> <!-- But extensions must be signed, so make sure they are -->
+
+	</PropertyGroup>
+
+	<Target Name="_ComputeTargetFrameworkMoniker" Condition="'$(_ComputedTargetFrameworkMoniker)' == ''">
+		<PropertyGroup>
+			<!-- Get the TargetFrameworkMoniker and store it in our own variable so that it's overridable while only affecting the parts of the build that we care about.
+				 This is overridability is a workaround while we wait for .NET 5 to be able to give us the TFM we're supposed to get during the build. -->
+			<_ComputedTargetFrameworkMoniker>$(TargetFrameworkMoniker)</_ComputedTargetFrameworkMoniker>
+			<!-- Detect the Mobile condition and set the computed Mobile TFM our tooling expects -->
+			<_ComputedTargetFrameworkMoniker Condition="'$(_PlatformName)' == 'macOS' And '$(_ComputedTargetFrameworkMoniker)' == 'Xamarin.Mac,Version=v2.0'">Xamarin.Mac,Version=v2.0,Profile=Mobile</_ComputedTargetFrameworkMoniker>
+			<!-- Detect the Full condition and set the computed TFM our tooling expects -->
+			<_ComputedTargetFrameworkMoniker Condition="'$(_PlatformName)' == 'macOS' And '$(UseXamMacFullFramework)' == 'true' And $([MSBuild]::ValueOrDefault('$(_ComputedTargetFrameworkMoniker),', '').StartsWith('.NETFramework,', StringComparison.OrdinalIgnoreCase))">Xamarin.Mac,Version=v4.5,Profile=Full</_ComputedTargetFrameworkMoniker>
+			<!-- Detect the System condition and set the computed TFM our tooling expects -->
+			<_ComputedTargetFrameworkMoniker Condition="'$(_PlatformName)' == 'macOS' And '$(UseXamMacFullFramework)' != 'true' And $([MSBuild]::ValueOrDefault('$(_ComputedTargetFrameworkMoniker),', '').StartsWith('.NETFramework,', StringComparison.OrdinalIgnoreCase))">Xamarin.Mac,Version=v4.5,Profile=System</_ComputedTargetFrameworkMoniker>
+		</PropertyGroup>
+	</Target>
+
+	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets"
+			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets')"/>
+</Project>
+
