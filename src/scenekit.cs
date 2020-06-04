@@ -113,14 +113,23 @@ namespace SceneKit {
 	[iOS (8,0)]
 	delegate void SCNSceneSourceStatusHandler (float /* float, not CGFloat */ totalProgress, SCNSceneSourceStatus status, NSError error, ref bool stopLoading);
 
-#if !XAMCORE_4_0
+#if XAMCORE_4_0
+	delegate void SCNAnimationDidStartHandler (SCNAnimation animation, ISCNAnimatable receiver);
+#else
 	[Obsolete ("Use 'SCNAnimationDidStartHandler2' instead.")]
 	delegate void SCNAnimationDidStartHandler (SCNAnimation animation, SCNAnimatable receiver);
+
+	delegate void SCNAnimationDidStartHandler2 (SCNAnimation animation, ISCNAnimatable receiver);
+#endif
+
+#if XAMCORE_4_0
+	delegate void SCNAnimationDidStopHandler (SCNAnimation animation, ISCNAnimatable receiver, bool completed);
+#else
 	[Obsolete ("Use 'SCNAnimationDidStopHandler2' instead.")]
 	delegate void SCNAnimationDidStopHandler (SCNAnimation animation, SCNAnimatable receiver, bool completed);
-#endif
-	delegate void SCNAnimationDidStartHandler2 (SCNAnimation animation, ISCNAnimatable receiver);
+
 	delegate void SCNAnimationDidStopHandler2 (SCNAnimation animation, ISCNAnimatable receiver, bool completed);
+#endif
 
 	interface ISCNAnimatable {}
 
@@ -2435,17 +2444,21 @@ namespace SceneKit {
 		[Export ("fragmentFunctionName")]
 		string FragmentFunctionName { get; set; }
 
-#if !XAMCORE_4_0
+#if XAMCORE_4_0
+		[iOS (9,0)][Mac (10,11)]
+		[Export ("handleBindingOfBufferNamed:frequency:usingBlock:")]
+		void HandleBinding (string name, SCNBufferFrequency frequency, SCNBufferBindingHandler handler);
+#else
 		[Obsolete ("Use 'HandleBinding' overload with 'SCNBufferBindingHandler2' parameter instead.")]
 		[iOS (9,0)][Mac (10,11)]
 		[Export ("handleBindingOfBufferNamed:frequency:usingBlock:")]
 		void HandleBinding (string name, SCNBufferFrequency frequency, SCNBufferBindingHandler handler);
 
 		[Sealed]
-#endif
 		[iOS (9,0)][Mac (10,11)]
 		[Export ("handleBindingOfBufferNamed:frequency:usingBlock:")]
 		void HandleBinding (string name, SCNBufferFrequency frequency, SCNBufferBindingHandler2 handler);
+#endif
 
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
 		NSObject WeakDelegate { get; set;  }
@@ -5193,24 +5206,24 @@ namespace SceneKit {
 		bool UsesSceneTimeBase { get; set; }
 	
 #if !XAMCORE_4_0
-		[Obsolete ("Use 'AnimationDidStart2' instead.")]
-		[NullAllowed, Export ("animationDidStart", ArgumentSemantic.Copy)]
-		SCNAnimationDidStartHandler AnimationDidStart { get; set; }
-
 		[Sealed]
-#endif
 		[NullAllowed, Export ("animationDidStart", ArgumentSemantic.Copy)]
 		SCNAnimationDidStartHandler2 AnimationDidStart2 { get; set; }
+
+		[Obsolete ("Use 'AnimationDidStart2' instead.")]
+#endif
+		[NullAllowed, Export ("animationDidStart", ArgumentSemantic.Copy)]
+		SCNAnimationDidStartHandler AnimationDidStart { get; set; }
 	
 #if !XAMCORE_4_0
-		[Obsolete ("Use 'AnimationDidStop2' instead.")]
-		[NullAllowed, Export ("animationDidStop", ArgumentSemantic.Copy)]
-		SCNAnimationDidStopHandler AnimationDidStop { get; set; }
-	
 		[Sealed]
-#endif
 		[NullAllowed, Export ("animationDidStop", ArgumentSemantic.Copy)]
 		SCNAnimationDidStopHandler2 AnimationDidStop2 { get; set; }
+
+		[Obsolete ("Use 'AnimationDidStop2' instead.")]
+#endif
+		[NullAllowed, Export ("animationDidStop", ArgumentSemantic.Copy)]
+		SCNAnimationDidStopHandler AnimationDidStop { get; set; }
 
 		[NullAllowed, Export ("animationEvents", ArgumentSemantic.Copy)]
 		SCNAnimationEvent[] AnimationEvents { get; set; }
