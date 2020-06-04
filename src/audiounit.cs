@@ -33,7 +33,6 @@ using AUViewControllerBase = UIKit.UIViewController;
 #endif
 
 namespace AudioUnit {
-#if XAMCORE_2_0 || !MONOMAC
 	delegate AudioUnitStatus AUInternalRenderBlock (ref AudioUnitRenderActionFlags actionFlags, ref AudioTimeStamp timestamp, uint frameCount, nint outputBusNumber, AudioBuffers outputData, AURenderEventEnumerator realtimeEventListHead, [BlockCallback][NullAllowed]AURenderPullInputBlock pullInputBlock);
 	delegate AudioUnitStatus AURenderBlock (ref AudioUnitRenderActionFlags actionFlags, ref AudioTimeStamp timestamp, uint frameCount, nint outputBusNumber, AudioBuffers outputData, [BlockCallback][NullAllowed] AURenderPullInputBlock pullInputBlock);
 
@@ -74,7 +73,6 @@ namespace AudioUnit {
 	[DisableDefaultCtor]
 	interface AUAudioUnit
 	{
-#if XAMCORE_2_0 // AudioComponentDescription went under large changes between Classic and Unified. Since this is a new API, no reason to pollute it with the Classic hacks
 		[Static]
 		[Export ("registerSubclass:asComponentDescription:name:version:")] // AUAudioUnitImplementation
 		void RegisterSubclass (Class cls, AudioComponentDescription componentDescription, string name, uint version);
@@ -93,7 +91,6 @@ namespace AudioUnit {
 
 		[Export ("componentDescription")]
 		AudioComponentDescription ComponentDescription { get; }
-#endif
 
 		[Export ("renderBlock")]
 		AURenderBlock RenderBlock { get; }
@@ -671,7 +668,6 @@ namespace AudioUnit {
 		AUParameterTree CreateTree (AUParameterNode[] children);
 	}
 
-#if XAMCORE_2_0
 	[Protocol]
 	interface AUAudioUnitFactory : NSExtensionRequestHandling
 	{
@@ -680,6 +676,4 @@ namespace AudioUnit {
 		[return: NullAllowed]
 		AUAudioUnit CreateAudioUnit (AudioComponentDescription desc, [NullAllowed] out NSError error);
 	}
-#endif
-#endif
 }

@@ -74,28 +74,8 @@ namespace AudioUnit
 		internal AUGraph (IntPtr ptr)
 		{
 			handle = ptr;
-			
-#if !XAMCORE_2_0
-			int err = AUGraphAddRenderNotify(handle, oldRenderCallback, GCHandle.ToIntPtr(gcHandle));
-			if (err != 0)
-				throw new ArgumentException(String.Format("Error code: {0}", err));
-#endif
-
 			gcHandle = GCHandle.Alloc (this);
 		}
-
-#if !XAMCORE_2_0
-#pragma warning disable 612
-		public event EventHandler<AudioGraphEventArgs> RenderCallback;
-#pragma warning restore 612
-
-		[Obsolete ("Use 'Handle' property instead.")]
-		public IntPtr Handler {
-			get {
-				return handle;
-			}
-		}
-#endif
 
 		public IntPtr Handle {
 			get {
@@ -143,37 +123,6 @@ namespace AudioUnit
 				return AUGraphIsRunning (handle, out b) == AUGraphError.OK && b;
 			}
 		}
-
-#if !XAMCORE_2_0
-		// callback funtion should be static method and be attatched a MonoPInvokeCallback attribute.        
-#pragma warning disable 612
-		[MonoPInvokeCallback(typeof(AudioUnit.AURenderCallback))]
-		static int oldRenderCallback(IntPtr inRefCon,
-					  ref AudioUnitRenderActionFlags _ioActionFlags,
-					  ref AudioTimeStamp _inTimeStamp,
-					  int _inBusNumber,
-					  int _inNumberFrames,
-					  AudioBufferList _ioData)
-		{
-			// getting audiounit instance
-			var handler = GCHandle.FromIntPtr(inRefCon);
-			var inst = (AUGraph)handler.Target;
-			
-			// invoke event handler with an argument
-			if (inst.RenderCallback != null){
-				var args = new AudioGraphEventArgs(
-					_ioActionFlags,
-					_inTimeStamp,
-					_inBusNumber,
-					_inNumberFrames,
-					_ioData);
-				inst.RenderCallback(inst, args);
-			}
-
-			return 0; // noerror
-		}
-#pragma warning restore 612
-#endif
 
 		public AudioUnitStatus AddRenderNotify (RenderDelegate callback)
 		{
@@ -246,11 +195,7 @@ namespace AudioUnit
 		public int AddNode (AudioComponentDescription description)
 		{
 			int node;
-#if XAMCORE_2_0
 			var err = AUGraphAddNode (handle, ref description, out node);
-#else
-			var err = AUGraphAddNode (handle, description, out node);
-#endif
 			if (err != 0)
 				throw new ArgumentException (String.Format ("Error code: {0}", err));
 			
@@ -310,7 +255,6 @@ namespace AudioUnit
 			return new AudioUnit (ptr);
 		}
 
-#if XAMCORE_2_0
 		// AudioComponentDescription struct in only correctly fixed for unified
 		// Following current Api behaviour of returning an AudioUnit instead of an error
 		public AudioUnit GetNodeInfo (int node, out AudioComponentDescription cd, out AUGraphError error)
@@ -326,7 +270,6 @@ namespace AudioUnit
 
 			return new AudioUnit (ptr);
 		}
-#endif // XAMCORE_2_0
 
 		public AUGraphError GetNumberOfInteractions (out uint interactionsCount)
 		{
@@ -439,11 +382,7 @@ namespace AudioUnit
 			GC.SuppressFinalize (this);
 		}
 
-#if XAMCORE_2_0
 		protected virtual void Dispose (bool disposing)
-#else
-		public virtual void Dispose (bool disposing)
-#endif
 		{
 			if (handle != IntPtr.Zero){
 				AUGraphUninitialize (handle);
@@ -467,11 +406,7 @@ namespace AudioUnit
 		static extern int /* OSStatus */ AUGraphOpen(IntPtr inGraph);
 
 		[DllImport(Constants.AudioToolboxLibrary)]
-#if XAMCORE_2_0
 		static extern AUGraphError AUGraphAddNode(IntPtr inGraph, ref AudioComponentDescription inDescription, out int /* AUNode = SInt32* */ outNode);
-#else
-		static extern AUGraphError AUGraphAddNode(IntPtr inGraph, AudioComponentDescription inDescription, out int /* AUNode = SInt32* */ outNode);
-#endif
 
 		[DllImport(Constants.AudioToolboxLibrary)]
 		static extern AUGraphError AUGraphRemoveNode (IntPtr inGraph, int /* AUNode = SInt32 */ inNode);
@@ -505,13 +440,6 @@ namespace AudioUnit
 	
 		[DllImport(Constants.AudioToolboxLibrary)]
 		static extern AUGraphError AUGraphInitialize (IntPtr inGraph);
-
-#if !XAMCORE_2_0
-#pragma warning disable 612
-		[DllImport(Constants.AudioToolboxLibrary, EntryPoint = "AUGraphAddRenderNotify")]
-		static extern int AUGraphAddRenderNotify (IntPtr inGraph, AudioUnit.AURenderCallback inCallback, IntPtr inRefCon );
-#pragma warning restore 612
-#endif
 
 		[DllImport(Constants.AudioToolboxLibrary)]
 		static extern int AUGraphAddRenderNotify (IntPtr inGraph, CallbackShared inCallback, IntPtr inRefCon );
