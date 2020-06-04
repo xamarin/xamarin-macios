@@ -1,4 +1,3 @@
-#if XAMCORE_2_0
 using System;
 
 namespace Metal {
@@ -10,4 +9,3 @@ namespace Metal {
 		}
 	}
 }
-#endif
