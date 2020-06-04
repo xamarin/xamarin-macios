@@ -8,13 +8,4 @@ namespace WebKit {
 			LoadHtmlString ((NSString) htmlString, baseUrl);
 		}
 	}
-
-#if !XAMCORE_2_0
-	public partial class WebScriptObject {
-		public void SetWebScriptValueAtIndex (int /* unsigned int */ index, NSObject value)
-		{
-			SetWebScriptValueAtIndexvalue (index, value);
-		}
-	}
-#endif
 }
