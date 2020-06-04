@@ -1,6 +1,7 @@
 TOP=../..
 
 include $(TOP)/Make.config
+include $(TOP)/mk/rules.mk
 
 PLATFORMS=iOS tvOS watchOS macOS
 
@@ -13,6 +14,10 @@ DOTNET_TARGETS += \
 
 DOTNET_DIRECTORIES += \
 	$(foreach platform,$(PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/tools/dotnet-linker) \
+
+# dotnet-linker.csproj.inc contains the dotnet_linker_dependencies variable used to determine if mtouch needs to be rebuilt or not.
+dotnet-linker.csproj.inc: export BUILD_EXECUTABLE=$(DOTNET5) build
+-include dotnet-linker.csproj.inc
 
 $(BUILD_DIR)/dotnet-linker%dll $(BUILD_DIR)/dotnet-linker%pdb: Makefile $(dotnet_linker_dependencies)
 	$(Q_DOTNET_BUILD) $(DOTNET5) build $(XBUILD_VERBOSITY)
@@ -31,12 +36,6 @@ $(DOTNET_DESTDIR)/Microsoft.macOS.Sdk/tools/dotnet-linker/%: $(BUILD_DIR)/% | $(
 
 $(DOTNET_DIRECTORIES):
 	$(Q) mkdir -p $@
-
-# dotnet-linker.csproj.inc contains the dotnet_linker_dependencies variable used to determine if mtouch needs to be rebuilt or not.
-dotnet-linker.csproj.inc: export BUILD_EXECUTABLE=$(DOTNET5) build
-dotnet-linker.csproj.inc: dotnet-linker.csproj Makefile ../common/create-makefile-fragment.sh $(TOP)/Make.config $(TOP)/mk/mono.mk
-	$(Q_GEN) ../common/create-makefile-fragment.sh $(abspath $<)
--include dotnet-linker.csproj.inc
 
 all-local:: $(DOTNET_TARGETS)
 install-local:: $(DOTNET_TARGETS)
