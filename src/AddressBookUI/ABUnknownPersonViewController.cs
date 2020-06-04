@@ -34,28 +34,14 @@ namespace AddressBookUI {
 		}
 
 		[Preserve (Conditional = true)]
-#if XAMCORE_2_0
 		public override void DidResolveToPerson (ABUnknownPersonViewController personViewController, ABPerson person)
 		{
 			personViewController.OnPersonCreated (new ABUnknownPersonCreatedEventArgs (person));
 		}
-#else
-		public override void DidResolveToPerson (ABUnknownPersonViewController personViewController, IntPtr person)
-		{
-			personViewController.OnPersonCreated (
-				new ABUnknownPersonCreatedEventArgs (person == IntPtr.Zero ? null : new ABPerson (person, personViewController.AddressBook)));
-		}
-#endif
 
 		[Preserve (Conditional = true)]
-#if XAMCORE_2_0
 		public override bool ShouldPerformDefaultActionForPerson (ABUnknownPersonViewController personViewController, ABPerson person, int propertyId, int identifier)
 		{
-#else
-		public override bool ShouldPerformDefaultActionForPerson (ABUnknownPersonViewController personViewController, IntPtr personId, int propertyId, int identifier)
-		{
-			ABPerson person = personId == IntPtr.Zero ? null : new ABPerson (personId, personViewController.AddressBook);
-#endif
 			ABPersonProperty property = ABPersonPropertyId.ToPersonProperty (propertyId);
 			int? id = identifier == ABRecord.InvalidPropertyId ? null : (int?) identifier;
 			

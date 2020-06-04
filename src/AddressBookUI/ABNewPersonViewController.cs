@@ -38,19 +38,10 @@ namespace AddressBookUI {
 		}
 
 		[Preserve (Conditional = true)]
-#if XAMCORE_2_0
 		public override void DidCompleteWithNewPerson (ABNewPersonViewController controller, ABPerson person)
 		{
 			controller.OnNewPersonComplete (new ABNewPersonCompleteEventArgs (person));
 		}
-#else
-		public override void DidCompleteWithNewPerson (ABNewPersonViewController controller, IntPtr person)
-		{
-			controller.OnNewPersonComplete (
-					new ABNewPersonCompleteEventArgs (
-						person == IntPtr.Zero ? null : new ABPerson (person, controller.AddressBook)));
-		}
-#endif
 	}
 
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]

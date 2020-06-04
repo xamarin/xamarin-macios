@@ -7,8 +7,6 @@
 // Copyright 2017 Microsoft Inc. All rights reserved.
 //
 
-#if XAMCORE_2_0
-
 using System;
 using System.ComponentModel;
 using AVFoundation;
@@ -2089,5 +2087,3 @@ namespace ARKit {
 		ARGeometrySource Classification { get; }
 	}
 }
-
-#endif // XAMCORE_2_0

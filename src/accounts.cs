@@ -1,7 +1,7 @@
 //
 // Copyright 2011, 2013 Xamarin, Inc.
 //
-#if XAMCORE_2_0 || !MONOMAC
+
 using System;
 using ObjCRuntime;
 using Foundation;
@@ -203,4 +203,3 @@ namespace Accounts {
 	}
 #endif
 }
-#endif
