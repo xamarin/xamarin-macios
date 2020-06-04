@@ -452,6 +452,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			SdkPlatform="MacOSX"
 			ProvisioningProfile="$(CodeSignProvision)"
 			SigningKey="$(CodeSigningKey)"
+			DetectedCodeSigningKey="$(_CodeSigningKey)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			>
 			<Output TaskParameter="DetectedAppId" PropertyName="_AppIdentifier" />

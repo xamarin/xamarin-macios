@@ -34,8 +34,6 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
 
 	<Target Name="_EnabledLocalSigning" DependsOnTargets="_DetectSigningIdentity">
 		<PropertyGroup>
-			<EnableCodeSigning Condition="'$(EnableCodeSigning)' != 'true'">true</EnableCodeSigning>
-			<_CodeSigningKey Condition="'$(_CodeSigningKey)' == ''">-</_CodeSigningKey>
 			<CodeSignEntitlements Condition="'$(CodeSignEntitlements)' == ''">Entitlements.plist</CodeSignEntitlements>
 		</PropertyGroup>
 	</Target>
