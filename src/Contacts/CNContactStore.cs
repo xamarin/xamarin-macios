@@ -9,7 +9,6 @@ using Foundation;
 using ObjCRuntime;
 
 namespace Contacts {
-#if XAMCORE_2_0 // The Contacts framework uses generics heavily, which is only supported in Unified (for now at least)
 	public partial class CNContactStore {
 
 		public CNContact GetUnifiedContact<T> (string identifier, T [] keys, out NSError error)
@@ -36,5 +35,4 @@ namespace Contacts {
 #endif
 		
 	}
-#endif // XAMCORE_2_0
 }
