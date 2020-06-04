@@ -469,6 +469,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			_CompileEntitlements;
 			_CompileAppManifest;
 			_ExpandNativeReferences;
+			_ComputeTargetArchitectures;
 		</CompileToNativeDependsOn>
 	</PropertyGroup>
 
