@@ -9,8 +9,6 @@
 // Copyright 2019 Microsoft Corporation
 //
 
-#if XAMCORE_2_0
-
 using System;
 using ObjCRuntime;
 using CoreGraphics;
@@ -820,4 +818,3 @@ namespace FileProvider {
 		bool PathExtensionHidden { [Bind ("isPathExtensionHidden")] get; }
 	}
 }
-#endif
