@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -37,7 +37,7 @@ namespace Xharness.Jenkins {
 				TestName = "MSBuild tests",
 				Mode = "iOS",
 				Timeout = TimeSpan.FromMinutes (60),
-				Ignored = !jenkins.IncludeiOSMSBuild,
+				Ignored = !jenkins.TestSelection.HasFlag (TestSelection.iOSMSBuild),
 				SupportsParallelExecution = false,
 			};
 			yield return nunitExecutioniOSMSBuild;
@@ -56,7 +56,7 @@ namespace Xharness.Jenkins {
 				TestName = "Install Sources tests",
 				Mode = "iOS",
 				Timeout = TimeSpan.FromMinutes (60),
-				Ignored = !jenkins.IncludeMac && !jenkins.IncludeSimulator,
+				Ignored = !jenkins.TestSelection.HasFlag (TestSelection.Mac) && !jenkins.TestSelection.HasFlag (TestSelection.Simulator),
 			};
 			yield return nunitExecutionInstallSource;
 
@@ -74,7 +74,7 @@ namespace Xharness.Jenkins {
 				Platform = TestPlatform.iOS,
 				TestName = "MTouch tests",
 				Timeout = TimeSpan.FromMinutes (180),
-				Ignored = !jenkins.IncludeMtouch,
+				Ignored = !jenkins.TestSelection.HasFlag (TestSelection.Mtouch),
 				InProcess = true,
 			};
 			yield return nunitExecutionMTouch;
@@ -94,7 +94,7 @@ namespace Xharness.Jenkins {
 				TestName = "Generator tests",
 				Mode = "NUnit",
 				Timeout = TimeSpan.FromMinutes (10),
-				Ignored = !jenkins.IncludeBtouch,
+				Ignored = !jenkins.TestSelection.HasFlag (TestSelection.Btouch),
 			};
 			yield return runGenerator;
 
@@ -104,7 +104,7 @@ namespace Xharness.Jenkins {
 				SpecifyPlatform = false,
 				Platform = TestPlatform.All,
 				ProjectConfiguration = "Debug",
-				Ignored = !jenkins.IncludeCecil,
+				Ignored = !jenkins.TestSelection.HasFlag (TestSelection.Cecil),
 			};
 			var runCecilTests = new NUnitExecuteTask (jenkins, buildCecilTests, processManager) {
 				TestLibrary = Path.Combine (Path.GetDirectoryName (buildCecilTestsProject.Path), "bin", "Debug", "net472", "cecil-tests.dll"),
@@ -112,7 +112,7 @@ namespace Xharness.Jenkins {
 				Platform = TestPlatform.iOS,
 				TestName = "Cecil-based tests",
 				Timeout = TimeSpan.FromMinutes (5),
-				Ignored = !jenkins.IncludeCecil,
+				Ignored = !jenkins.TestSelection.HasFlag (TestSelection.Cecil),
 				InProcess = true,
 			};
 			yield return runCecilTests;

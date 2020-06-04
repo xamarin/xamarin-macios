@@ -15,6 +15,36 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
 using Xharness.Jenkins.Reports;
 
 namespace Xharness.Jenkins {
+	[Flags]
+	public enum TestSelection {
+		Mac = 0,
+		iOS32 = 1,
+		iOS64 = 2,
+		iOS = iOS32 | iOS64,
+		iOSExtensions = 8,
+		iOSMSBuild = 16,
+		tvOS = 32,
+		watchOs = 64,
+		Mmp = 128,
+		Mtouch = 256,
+		Btouch = 512,
+		MacBindingProject = 1024,
+		Simulator = 2048,
+		OldSimulator,
+		Device = 4096,
+		Xtro = 8192,
+		Cecil = 16384,
+		Docs = 32768,
+		BclXUnit = 65536,
+		BclNUnit = 131072,
+		Bcl = BclXUnit | BclNUnit,
+		Mscorlib = 262144,
+		NonMonotouch = 524288,
+		Monotouch = 1048576,
+		DotNet = 2097152,
+		SystemPermission = 4194304,
+		All = ~0,
+	}
 	class Jenkins {
 		public readonly ISimulatorLoader Simulators;
 		public readonly IHardwareDeviceLoader Devices;
@@ -31,34 +61,13 @@ namespace Xharness.Jenkins {
 		
 		public bool Populating { get; private set; } = true;
 
+		public TestSelection TestSelection { get; set; } = TestSelection.Mac | TestSelection.iOS | TestSelection.tvOS |
+		                                                   TestSelection.watchOs | TestSelection.iOSMSBuild |
+		                                                   TestSelection.Simulator | TestSelection.NonMonotouch |
+		                                                   TestSelection.Monotouch;
+
 		public Harness Harness { get; }
-		public bool IncludeAll;
-		public bool IncludeBcl;
-		public bool IncludeMac = true;
-		public bool IncludeiOS = true;
-		public bool IncludeiOS64 = true;
-		public bool IncludeiOS32 = true;
-		public bool IncludeiOSExtensions;
 		public bool ForceExtensionBuildOnly;
-		public bool IncludetvOS = true;
-		public bool IncludewatchOS = true;
-		public bool IncludeMmpTest;
-		public bool IncludeiOSMSBuild = true;
-		public bool IncludeMtouch;
-		public bool IncludeBtouch;
-		public bool IncludeMacBindingProject;
-		public bool IncludeSimulator = true;
-		public bool IncludeOldSimulatorTests;
-		public bool IncludeDevice;
-		public bool IncludeXtro;
-		public bool IncludeCecil;
-		public bool IncludeDocs;
-		public bool IncludeBCLxUnit;
-		public bool IncludeBCLNUnit;
-		public bool IncludeMscorlib;
-		public bool IncludeNonMonotouch = true;
-		public bool IncludeMonotouch = true;
-		public bool IncludeDotNet;
 
 		public bool CleanSuccessfulTestRuns = true;
 		public bool UninstallTestApp = true;
@@ -114,16 +123,16 @@ namespace Xharness.Jenkins {
 			
 			if (project.IsBclTest ()) {
 				if (!project.IsBclxUnit ())
-					return IncludeBcl || IncludeBCLNUnit;
+					return TestSelection.HasFlag(TestSelection.BclNUnit);
 				if (project.IsMscorlib ()) 
-					return IncludeMscorlib;
-				return IncludeBcl || IncludeBCLxUnit;
+					return TestSelection.HasFlag (TestSelection.Mscorlib);
+				return TestSelection.HasFlag (TestSelection.BclXUnit);
 			}
 
-			if (!IncludeMonotouch && project.IsMonotouch ())
+			if (!TestSelection.HasFlag (TestSelection.Monotouch) && project.IsMonotouch ())
 				return false;
 
-			if (!IncludeNonMonotouch && !project.IsMonotouch ())
+			if (!TestSelection.HasFlag (TestSelection.NonMonotouch) && !project.IsMonotouch ())
 				return false;
 
 			if (Harness.IncludeSystemPermissionTests == false && project.Name == "introspection")
@@ -169,7 +178,7 @@ namespace Xharness.Jenkins {
 				TestName = "Xtro",
 				Target = "wrench",
 				WorkingDirectory = Path.Combine (Harness.RootDirectory, "xtro-sharpie"),
-				Ignored = !IncludeXtro,
+				Ignored = !TestSelection.HasFlag (TestSelection.Xtro),
 				Timeout = TimeSpan.FromMinutes (15),
 			};
 
@@ -193,7 +202,7 @@ namespace Xharness.Jenkins {
 				Platform = TestPlatform.iOS,
 				TestName = "Generator tests",
 				Mode = ".NET",
-				Ignored = !IncludeBtouch,
+				Ignored = !TestSelection.HasFlag (TestSelection.Btouch),
 			};
 			Tasks.Add (runDotNetGenerator);
 
@@ -202,14 +211,14 @@ namespace Xharness.Jenkins {
 				SpecifyPlatform = false,
 				Platform = TestPlatform.All,
 				ProjectConfiguration = "Debug",
-				Ignored = !IncludeDotNet,
+				Ignored = !TestSelection.HasFlag (TestSelection.DotNet),
 			};
 			var runDotNetTests = new DotNetTestTask (this, buildDotNetTests, processManager) {
 				TestProject = buildDotNetTestsProject,
 				Platform = TestPlatform.All,
 				TestName = "DotNet tests",
 				Timeout = TimeSpan.FromMinutes (5),
-				Ignored = !IncludeDotNet,
+				Ignored = ! TestSelection.HasFlag (TestSelection.DotNet),
 			};
 			Tasks.Add (runDotNetTests);
 

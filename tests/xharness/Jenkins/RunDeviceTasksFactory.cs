@@ -19,7 +19,7 @@ namespace Xharness.Jenkins {
 				if (!project.IsExecutableProject)
 					continue;
 				
-				bool ignored = !jenkins.IncludeDevice;
+				bool ignored = !jenkins.TestSelection.HasFlag (TestSelection.Device);
 				if (!jenkins.IsIncluded (project))
 					ignored = true;
 
@@ -40,7 +40,7 @@ namespace Xharness.Jenkins {
 						tunnelBore: jenkins.TunnelBore,
 						errorKnowledgeBase: jenkins.ErrorKnowledgeBase,
 						useTcpTunnel: jenkins.Harness.UseTcpTunnel,
-						candidates: jenkins.Devices.Connected64BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.IncludeiOS64 });
+						candidates: jenkins.Devices.Connected64BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.TestSelection.HasFlag (TestSelection.iOS64) });
 
 					var build32 = new MSBuildTask (jenkins: jenkins, testProject: project, processManager: processManager) {
 						ProjectConfiguration = project.Name != "dont link" ? "Debug32" : "Release32",
@@ -57,7 +57,7 @@ namespace Xharness.Jenkins {
 						tunnelBore: jenkins.TunnelBore,
 						errorKnowledgeBase: jenkins.ErrorKnowledgeBase,
 						useTcpTunnel: jenkins.Harness.UseTcpTunnel,
-						candidates: jenkins.Devices.Connected32BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.IncludeiOS32 });
+						candidates: jenkins.Devices.Connected32BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.TestSelection.HasFlag (TestSelection.iOS32) });
 
 					var todayProject = project.AsTodayExtensionProject ();
 					var buildToday = new MSBuildTask (jenkins: jenkins, testProject: todayProject, processManager: processManager) {
@@ -75,7 +75,7 @@ namespace Xharness.Jenkins {
 						tunnelBore: jenkins.TunnelBore,
 						errorKnowledgeBase: jenkins.ErrorKnowledgeBase,
 						useTcpTunnel: jenkins.Harness.UseTcpTunnel,
-						candidates: jenkins.Devices.Connected64BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.IncludeiOSExtensions, BuildOnly = jenkins.ForceExtensionBuildOnly });
+						candidates: jenkins.Devices.Connected64BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.TestSelection.HasFlag (TestSelection.iOSExtensions), BuildOnly = jenkins.ForceExtensionBuildOnly });
 				}
 
 				if (!project.SkiptvOSVariation) {
@@ -95,7 +95,7 @@ namespace Xharness.Jenkins {
 						tunnelBore: jenkins.TunnelBore,
 						errorKnowledgeBase: jenkins.ErrorKnowledgeBase,
 						useTcpTunnel: jenkins.Harness.UseTcpTunnel,
-						candidates: jenkins.Devices.ConnectedTV.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.IncludetvOS });
+						candidates: jenkins.Devices.ConnectedTV.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.TestSelection.HasFlag (TestSelection.tvOS) });
 				}
 
 				if (!project.SkipwatchOSVariation) {
@@ -116,7 +116,7 @@ namespace Xharness.Jenkins {
 							tunnelBore: jenkins.TunnelBore,
 							errorKnowledgeBase: jenkins.ErrorKnowledgeBase,
 							useTcpTunnel: jenkins.Harness.UseTcpTunnel,
-							candidates: jenkins.Devices.ConnectedWatch) { Ignored = !jenkins.IncludewatchOS });
+							candidates: jenkins.Devices.ConnectedWatch) { Ignored = !jenkins.TestSelection.HasFlag (TestSelection.watchOs) });
 					}
 
 					if (!project.SkipwatchOSARM64_32Variation) {
@@ -135,7 +135,7 @@ namespace Xharness.Jenkins {
 							tunnelBore: jenkins.TunnelBore,
 							errorKnowledgeBase: jenkins.ErrorKnowledgeBase,
 							useTcpTunnel: jenkins.Harness.UseTcpTunnel,
-							candidates: jenkins.Devices.ConnectedWatch32_64.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.IncludewatchOS });
+							candidates: jenkins.Devices.ConnectedWatch32_64.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.TestSelection.HasFlag (TestSelection.watchOs) });
 					}
 				}
 				foreach (var task in projectTasks) {

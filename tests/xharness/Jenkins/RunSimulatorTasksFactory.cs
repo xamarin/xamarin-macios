@@ -20,19 +20,19 @@ namespace Xharness.Jenkins {
 				if (!project.IsExecutableProject)
 					continue;
 
-				bool ignored = !jenkins.IncludeSimulator;
+				bool ignored = !jenkins.TestSelection.HasFlag (TestSelection.Simulator);
 				if (!jenkins.IsIncluded (project))
 					ignored = true;
 
 				var ps = new List<Tuple<TestProject, TestPlatform, bool>> ();
 				if (!project.SkipiOSVariation)
-					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project, TestPlatform.iOS_Unified, ignored || !jenkins.IncludeiOS64));
+					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project, TestPlatform.iOS_Unified, ignored || !jenkins.TestSelection.HasFlag (TestSelection.iOS64)));
 				if (project.MonoNativeInfo != null)
-					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project, TestPlatform.iOS_TodayExtension64, ignored || !jenkins.IncludeiOS64));
+					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project, TestPlatform.iOS_TodayExtension64, ignored || !jenkins.TestSelection.HasFlag(TestSelection.iOS64)));
 				if (!project.SkiptvOSVariation)
-					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project.AsTvOSProject (), TestPlatform.tvOS, ignored || !jenkins.IncludetvOS));
+					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project.AsTvOSProject (), TestPlatform.tvOS, ignored || !jenkins.TestSelection.HasFlag (TestSelection.tvOS)));
 				if (!project.SkipwatchOSVariation)
-					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project.AsWatchOSProject (), TestPlatform.watchOS, ignored || !jenkins.IncludewatchOS));
+					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project.AsWatchOSProject (), TestPlatform.watchOS, ignored || !jenkins.TestSelection.HasFlag (TestSelection.watchOs)));
 
 				var configurations = project.Configurations;
 				if (configurations == null)
@@ -101,7 +101,7 @@ namespace Xharness.Jenkins {
 				break;
 			case TestPlatform.iOS_Unified:
 				platforms = new TestPlatform [] { TestPlatform.iOS_Unified32, TestPlatform.iOS_Unified64 };
-				ignored = new [] { !jenkins.IncludeiOS32, false };
+				ignored = new [] { !jenkins.TestSelection.HasFlag (TestSelection.iOS32) , false };
 				break;
 			case TestPlatform.iOS_TodayExtension64:
 				targets = new TestTarget [] { TestTarget.Simulator_iOS64 };
