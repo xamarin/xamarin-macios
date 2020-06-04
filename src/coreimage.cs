@@ -36,9 +36,7 @@ using CoreML;
 using CoreVideo;
 using ImageIO;
 using IOSurface;
-#if !MONOMAC || XAMCORE_2_0
 using Metal;
-#endif
 #if !MONOMAC
 using OpenGLES;
 using UIKit;
@@ -209,25 +207,21 @@ namespace CoreImage {
 		[Export ("init")]
 		IntPtr Constructor ();
 
-#if !MONOMAC || XAMCORE_2_0
 		[iOS (9,0)][Mac (10,11)]
 		[Static]
 		[Export ("contextWithMTLDevice:")]
 		CIContext FromMetalDevice (IMTLDevice device);
 
-#if XAMCORE_2_0
 		[iOS (9,0)][Mac (10,11)]
 		[Internal] // This overload is needed for our strong dictionary support (but only for Unified, since for Classic the generic version is transformed to this signature)
 		[Static]
 		[Export ("contextWithMTLDevice:options:")]
 		CIContext FromMetalDevice (IMTLDevice device, [NullAllowed] NSDictionary options);
-#endif
 
 		[iOS (9,0)][Mac (10,11)]
 		[Static]
 		[Export ("contextWithMTLDevice:options:")]
 		CIContext FromMetalDevice (IMTLDevice device, [NullAllowed] NSDictionary<NSString, NSObject> options);
-#endif
 
 		[iOS (9,0)]
 		[Internal, Static]
@@ -282,11 +276,9 @@ namespace CoreImage {
 		CGSize OutputImageMaximumSize { get; }
 #endif
 
-#if !MONOMAC || XAMCORE_2_0
 		[iOS (9,0)][Mac (10,11)]
 		[Export ("render:toMTLTexture:commandBuffer:bounds:colorSpace:")]
 		void Render (CIImage image, IMTLTexture texture, [NullAllowed] IMTLCommandBuffer commandBuffer, CGRect bounds, [NullAllowed] CGColorSpace colorSpace);
-#endif
 
 		[Deprecated (PlatformName.iOS, 6, 0, message : "Use 'DrawImage (image, CGRect, CGRect)' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 8, message : "Use 'DrawImage (image, CGRect, CGRect)' instead.")]
@@ -1416,11 +1408,7 @@ namespace CoreImage {
 
 		[Static]
 		[Export ("imageWithBitmapData:bytesPerRow:size:format:colorSpace:")]
-#if XAMCORE_2_0
 		[Internal] // there's a CIFormat enum that maps to the kCIFormatARGB8, kCIFormatRGBA16, kCIFormatRGBAf, kCIFormatRGBAh constants
-#else
-		[Obsolete ("Use the overload acceping a 'CIFormat' enum instead of an 'int'.")]
-#endif
 		CIImage FromData (NSData bitmapData, nint bytesPerRow, CGSize size, int /* CIFormat = int */ pixelFormat, [NullAllowed] CGColorSpace colorSpace);
 
 		[Deprecated (PlatformName.iOS, 12, 0)]
@@ -1466,14 +1454,13 @@ namespace CoreImage {
 		[Export ("imageWithCVImageBuffer:options:")]
 		CIImage FromImageBuffer (CVImageBuffer imageBuffer, [NullAllowed] NSDictionary dict);
 #else
-#if XAMCORE_2_0
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Static]
 		[iOS(9,0)]
 		[Internal] // This overload is needed for our strong dictionary support (but only for Unified, since for Classic the generic version is transformed to this signature)
 		[Export ("imageWithCVImageBuffer:options:")]
 		CIImage FromImageBuffer (CVImageBuffer imageBuffer, [NullAllowed] NSDictionary dict);
-#endif
+
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Static]
 		[iOS(9,0)]
@@ -1618,13 +1605,11 @@ namespace CoreImage {
 		[Export ("initWithCVImageBuffer:options:")]
 		IntPtr Constructor (CVImageBuffer imageBuffer, [NullAllowed] NSDictionary<NSString, NSObject> dict);
 
-#if XAMCORE_2_0
 		[iOS(9,0)]
 		[Internal] // This overload is needed for our strong dictionary support (but only for Unified, since for Classic the generic version is transformed to this signature)
 		[Sealed]
 		[Export ("initWithCVImageBuffer:options:")]
 		IntPtr Constructor (CVImageBuffer imageBuffer, [NullAllowed] NSDictionary dict);
-#endif
 #endif
 
 		[iOS(9,0)]
@@ -1646,11 +1631,9 @@ namespace CoreImage {
 		[Export ("initWithColor:")]
 		IntPtr Constructor (CIColor color);
 
-#if !MONOMAC || XAMCORE_2_0
 		[iOS (9,0)][Mac (10,11)]
 		[Export ("initWithMTLTexture:options:")]
 		IntPtr Constructor (IMTLTexture texture, [NullAllowed] NSDictionary options);
-#endif
 
 #if MONOMAC
 		[Export ("initWithBitmapImageRep:")]
@@ -1885,12 +1868,10 @@ namespace CoreImage {
 		[Export ("initWithImageProvider:size::format:colorSpace:options:")]
 		IntPtr Constructor (ICIImageProvider provider, nuint width, nuint height, int f, [NullAllowed] CGColorSpace colorSpace, [NullAllowed] NSDictionary options);
 
-#if !MONOMAC || XAMCORE_2_0
 		[iOS (9,0)][Mac (10,11)]
 		[Static]
 		[Export ("imageWithMTLTexture:options:")]
 		CIImage FromMetalTexture (IMTLTexture texture, [NullAllowed] NSDictionary<NSString, NSObject> options);
-#endif
 
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
@@ -2122,11 +2103,9 @@ namespace CoreImage {
 		[NullAllowed, Export ("pixelBuffer")]
 		CVPixelBuffer PixelBuffer { get; }
 
-#if !MONOMAC || XAMCORE_2_0
 		[Abstract]
 		[NullAllowed, Export ("metalTexture")]
 		IMTLTexture MetalTexture { get; }
-#endif
 
 #if XAMCORE_4_0
 		[Abstract] // @required but it was added in Xcode9
@@ -2163,7 +2142,6 @@ namespace CoreImage {
 		[NullAllowed, Export ("pixelBuffer")]
 		CVPixelBuffer PixelBuffer { get; }
 
-#if !MONOMAC || XAMCORE_2_0
 		[Abstract]
 		[NullAllowed, Export ("metalTexture")]
 		IMTLTexture MetalTexture { get; }
@@ -2171,7 +2149,6 @@ namespace CoreImage {
 		[Abstract]
 		[NullAllowed, Export ("metalCommandBuffer")]
 		IMTLCommandBuffer MetalCommandBuffer { get; }
-#endif
 
 #if XAMCORE_4_0
 		[Abstract] // @required but it was added in Xcode9
@@ -2217,15 +2194,6 @@ namespace CoreImage {
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // avoid crashes
 	interface CIKernel {
-#if !XAMCORE_2_0
-		[Obsolete ("Use 'FromProgramSingle'.")] // better API
-		[Static, Export ("kernelWithString:")]
-		CIKernel FromProgram (string coreImageShaderProgram);
-
-		[Obsolete ("Use 'FromProgramMultiple'.")] // better API
-		[Static, Export ("kernelsWithString:")]
-		CIKernel [] FromPrograms (string coreImageShaderProgram);
-#endif
 		[Deprecated (PlatformName.iOS, 12, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Static, Export ("kernelsWithString:")]
@@ -5153,13 +5121,11 @@ namespace CoreImage {
 		[Export ("initWithIOSurface:")]
 		IntPtr Constructor (IOSurface.IOSurface surface);
 
-#if XAMCORE_2_0
 		[Export ("initWithMTLTexture:commandBuffer:")]
 		IntPtr Constructor (IMTLTexture texture, [NullAllowed] IMTLCommandBuffer commandBuffer);
 
 		[Export ("initWithWidth:height:pixelFormat:commandBuffer:mtlTextureProvider:")]
 		IntPtr Constructor (nuint width, nuint height, MTLPixelFormat pixelFormat, [NullAllowed] IMTLCommandBuffer commandBuffer, Func<IMTLTexture> block);
-#endif
 
 		[Export ("initWithGLTexture:target:width:height:")]
 		IntPtr Constructor (uint texture, uint target, nuint width, nuint height);

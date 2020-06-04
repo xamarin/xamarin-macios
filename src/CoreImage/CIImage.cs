@@ -100,26 +100,6 @@ namespace CoreImage {
 
 	public partial class CIImage {
 
-#if !MONOMAC && !XAMCORE_2_0
-		[Obsolete ("A CIImage cannot be created from a CGLayer on iOS (only OSX)")]
-		public CIImage (CGLayer layer)
-		{
-			throw new NotSupportedException ();
-		}
-
-		[Obsolete ("A CIImage cannot be created from a CGLayer on iOS (only OSX)")]
-		public CIImage (CGLayer layer, NSDictionary d)
-		{
-			throw new NotSupportedException ();
-		}
-
-		[Obsolete ("A CIImage cannot be created from a CGLayer on iOS (only OSX)")]
-		public CIImage (CGLayer layer, CIImageInitializationOptions options)
-		{
-			throw new NotSupportedException ();
-		}
-#endif
-
 		static CIFilter [] WrapFilters (NSArray filters)
 		{
 			if (filters == null)
