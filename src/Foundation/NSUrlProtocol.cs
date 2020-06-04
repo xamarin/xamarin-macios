@@ -31,20 +31,7 @@ using ObjCRuntime;
 
 namespace Foundation {
 	public abstract partial class NSUrlProtocol : NSObject {
-#if !XAMCORE_2_0
-		NSUrlProtocolClient client;
-
-		public NSUrlProtocolClient Client {
-			get {
-				if (client == null) {
-					client = new NSUrlProtocolClient (WeakClient.Handle);
-					MarkDirty ();
-				}
-				return client;
-			}
-		}
-#endif
-#if XAMCORE_2_0 && MONOMAC && !XAMCORE_4_0
+#if MONOMAC && !XAMCORE_4_0
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		[Obsolete ("Use the overload that takes an 'INSUrlProtocolClient' instead.")]
 		public NSUrlProtocol (NSUrlRequest request, NSCachedUrlResponse cachedResponse, NSUrlProtocolClient client)

@@ -38,18 +38,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Text;
 
-#if XAMCORE_2_0
 using CoreFoundation;
 using Foundation;
 using Security;
-#else
-using MonoTouch.CoreFoundation;
-using MonoTouch.Foundation;
-using MonoTouch.Security;
-using System.Globalization;
-using nint = System.Int32;
-using nuint = System.UInt32;
-#endif
 
 #if !MONOMAC
 using UIKit;

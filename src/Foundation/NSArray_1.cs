@@ -7,8 +7,6 @@
 // Copyright 2015, Xamarin Inc.
 //
 
-#if XAMCORE_2_0
-
 using System;
 using System.Collections.Generic;
 using System.Collections;
@@ -82,4 +80,3 @@ namespace Foundation {
 		}
 	}
 }
-#endif // XAMCORE_2_0

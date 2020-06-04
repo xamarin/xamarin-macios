@@ -116,11 +116,7 @@ namespace Foundation {
 			if (!Dictionary.TryGetValue (key, out value))
 				return null;
 
-#if XAMCORE_2_0
 			return ((NSNumber) value).NIntValue;
-#else
-			return ((NSNumber) value).IntValue;
-#endif
 		}
 
 		protected nuint? GetNUIntValue (NSString key)
@@ -132,11 +128,7 @@ namespace Foundation {
 			if (!Dictionary.TryGetValue (key, out value))
 				return null;
 
-#if XAMCORE_2_0
 			return ((NSNumber) value).NUIntValue;
-#else
-			return ((NSNumber) value).UnsignedIntegerValue;
-#endif
 		}
 
 		protected long? GetLongValue (NSString key)
@@ -217,7 +209,6 @@ namespace Foundation {
 			return value as NSDictionary;
 		}
 		
-#if XAMCORE_2_0
 		protected NSDictionary <TKey, TValue>? GetNSDictionary <TKey, TValue> (NSString key)
 			where TKey : class, INativeObject
 			where TValue : class, INativeObject
@@ -229,7 +220,6 @@ namespace Foundation {
 			Dictionary.TryGetValue (key, out value);
 			return value as NSDictionary <TKey, TValue>;
 		}
-#endif
 
 		protected T? GetStrongDictionary<T> (NSString key) where T : DictionaryContainer
 		{
@@ -275,7 +265,7 @@ namespace Foundation {
 				return CFString.FetchString (CFDictionary.GetValue (Dictionary.Handle, str.Handle));
 			}
 		}
-#if XAMCORE_2_0
+
 		protected CGRect? GetCGRectValue (NSString key)
 		{
 			var dictValue = GetNSDictionary (key);
@@ -305,7 +295,7 @@ namespace Foundation {
 
 			return value;
 		}
-#endif // XAMCORE_2_0
+
 #if !WATCH
 		protected CMTime? GetCMTimeValue (NSString key)
 		{
@@ -376,7 +366,6 @@ namespace Foundation {
 				Dictionary [key!] = new NSNumber (value!.Value);				
 		}
 
-#if XAMCORE_2_0
 		protected void SetNumberValue (NSString key, nint? value)
 		{
 			if (NullCheckAndRemoveKey (key, !value.HasValue))
@@ -388,7 +377,6 @@ namespace Foundation {
 			if (NullCheckAndRemoveKey (key, !value.HasValue))
 				Dictionary [key!] = new NSNumber (value!.Value);	
 		}
-#endif
 
 		protected void SetNumberValue (NSString key, long? value)
 		{
@@ -445,7 +433,6 @@ namespace Foundation {
 
 		#region Sets structs values
 
-#if XAMCORE_2_0
 		protected void SetCGRectValue (NSString key, CGRect? value)
 		{
 			if (NullCheckAndRemoveKey (key, !value.HasValue))
@@ -463,7 +450,7 @@ namespace Foundation {
 			if (NullCheckAndRemoveKey (key, !value.HasValue))
 				Dictionary [key!] = value!.Value.ToDictionary ();
 		}
-#endif // XAMCORE_2_0
+
 #if !WATCH
 		protected void SetCMTimeValue (NSString key, CMTime? value)
 		{
