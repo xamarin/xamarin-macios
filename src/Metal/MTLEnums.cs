@@ -1,4 +1,3 @@
-#if XAMCORE_2_0 || !MONOMAC
 //
 // API for the Metal framework
 //
@@ -1144,4 +1143,3 @@ namespace Metal {
 
 #endif
 }
-#endif
