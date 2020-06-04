@@ -13,11 +13,7 @@ using ObjCRuntime;
 
 namespace CoreText {
 
-#if XAMCORE_2_0
 	[Static]
-#else
-	[Partial]
-#endif
 	interface CTFontFeatureKey {
 		[Field ("kCTFontFeatureTypeIdentifierKey")]
 		NSString Identifier { get; }
@@ -32,11 +28,7 @@ namespace CoreText {
 		NSString Selectors { get; }
 	}
 
-#if XAMCORE_2_0
 	[Static]
-#else
-	[Partial]
-#endif
 	interface CTFontFeatureSelectorKey {
 		[Field ("kCTFontFeatureSelectorIdentifierKey")]
 		NSString Identifier { get; }
