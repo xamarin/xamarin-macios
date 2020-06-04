@@ -109,7 +109,6 @@ IOS_EXTRA_SOURCES = \
 	$(IOS_OPENTK_1_0_CORE_SOURCES)   \
 	$(IOS_BUILD_DIR)/Constants.cs    \
 	$(IOS_BUILD_DIR)/AssemblyInfo.cs \
-	Compat.iOS.cs                    \
 	$(TOP)/tools/mtouch/Errors.Designer.cs \
 	$(SHARED_SYSTEM_DRAWING_SOURCES) \
 
@@ -428,7 +427,6 @@ MAC_CORE_SOURCES += \
 MAC_SOURCES += \
 	$(MAC_EXTRA_CORE_SOURCES) \
 	$(MAC_BUILD_DIR)/AssemblyInfo.cs \
-	Obsoletes.cs \
 	Darwin/KernelNotification.cs \
 	Darwin/SystemLog.cs \
 	$(TOP)/tools/mtouch/Errors.Designer.cs \

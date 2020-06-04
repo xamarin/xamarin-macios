@@ -167,7 +167,6 @@ ASSETSLIBRARY_API_SOURCES = \
 
 ASSETSLIBRARY_SOURCES = \
 	AssetsLibrary/ALAsset.cs \
-	AssetsLibrary/ALAssetsLibrary.cs \
 	AssetsLibrary/ALAssetsGroup.cs \
 
 # AudioToolbox
@@ -178,7 +177,6 @@ AUDIOTOOLBOX_CORE_SOURCES = \
 	AudioToolbox/AudioBuffers.cs \
 
 AUDIOTOOLBOX_SOURCES = \
-	AudioToolbox/AudioBufferList.cs \
 	AudioToolbox/AudioClassDescription.cs \
 	AudioToolbox/AudioConverter.cs \
 	AudioToolbox/AudioFile.cs \
@@ -205,13 +203,9 @@ AUDIOUNIT_CORE_SOURCES = \
 
 AUDIOUNIT_SOURCES = \
 	AudioUnit/AUGraph.cs \
-	AudioUnit/AudioGraphEventArgs.cs \
-	AudioUnit/AudioUnitEventArgs.cs \
 	AudioUnit/AudioUnitUtils.cs \
 	AudioUnit/ClassInfoDictionary.cs \
 	AudioUnit/ExtAudioFile.cs \
-	AudioUnit/_AudioConverter.cs \
-	AudioUnit/_AudioConverterEventArgs.cs \
 	AudioUnit/AUScheduledAudioFileRegion.cs \
 	AudioUnit/AUParameter.cs \
 	AudioUnit/AUParameterNode.cs \
@@ -259,7 +253,6 @@ AVFOUNDATION_SOURCES = \
 	AVFoundation/AVCaptureMetadataOutput.cs \
 	AVFoundation/AVCaptureSynchronizedDataCollection.cs \
 	AVFoundation/AVCaptureSynchronizedDepthData.cs \
-	AVFoundation/AVCaptureVideoDataOutput.cs \
 	AVFoundation/AVCaptureVideoPreviewLayer.cs \
 	AVFoundation/AVCompat.cs \
 	AVFoundation/AVContentKeyResponse.cs \
@@ -277,7 +270,6 @@ AVFOUNDATION_SOURCES = \
 	AVFoundation/AVPlayerLayer.cs \
 	AVFoundation/AVPlayerViewController.cs \
 	AVFoundation/AVTextStyleRule.cs \
-	AVFoundation/DescriptionHelpers.cs \
 	AVFoundation/Events.cs \
 	AVFoundation/AVPlayerLooper.cs \
 	AVFoundation/AudioRendererWasFlushedAutomaticallyEventArgs.cs \
@@ -407,14 +399,12 @@ COREDATA_API_SOURCES = \
 	CoreData/Enums.cs \
 
 COREDATA_SOURCES = \
-	CoreData/NSAttributeDescription.cs \
 	CoreData/NSEntityDescription.cs \
 	CoreData/Obsolete.cs \
 
 # CoreFoundation
 
 COREFOUNDATION_CORE_SOURCES = \
-	CoreFoundation/CFIndex.cs \
 	CoreFoundation/CFMutableString.cs \
 	CoreFoundation/CFRunLoop.cs \
 	CoreFoundation/CFString.cs \
@@ -527,8 +517,6 @@ CORELOCATION_SOURCES = \
 	CoreLocation/CLBeaconRegion.cs \
 	CoreLocation/CLCompat.cs \
 	CoreLocation/CLLocationManager.cs \
-	CoreLocation/CLLocationManagerDelegate.cs \
-	CoreLocation/CoreLocation2.cs \
 
 # CoreMedia
 
@@ -737,7 +725,6 @@ FOUNDATION_SOURCES = \
 	Foundation/NSBundleResourceRequest.cs \
 	Foundation/NSCalendar.cs \
 	Foundation/NSCoder.cs \
-	Foundation/NSCompoundPredicate.cs \
 	Foundation/NSConnection.cs \
 	Foundation/NSData.cs \
 	Foundation/NSDate.cs \
@@ -748,7 +735,6 @@ FOUNDATION_SOURCES = \
 	Foundation/NSEnumerator_1.cs \
 	Foundation/NSErrorException.cs \
 	Foundation/NSExpression.cs \
-	Foundation/NSExtension.cs \
 	Foundation/NSFastEnumerationState.cs \
 	Foundation/NSFastEnumerator.cs \
 	Foundation/NSFileManager.cs \
@@ -757,17 +743,14 @@ FOUNDATION_SOURCES = \
 	Foundation/NSFormatter.cs \
 	Foundation/NSHost.cs \
 	Foundation/NSHttpCookie.cs \
-	Foundation/NSHttpCookieStorage.cs \
 	Foundation/NSIndexPath.cs \
 	Foundation/NSIndexSet.cs \
 	Foundation/NSInputStream.cs \
-	Foundation/NSJsonSerialization.cs \
 	Foundation/NSKeyedArchiver.cs \
 	Foundation/NSKeyedUnarchiver.cs \
 	Foundation/NSLayoutConstraint.cs \
 	Foundation/NSLocale.cs \
 	Foundation/NSMetadataItem.cs \
-	Foundation/NSMutableArray.cs \
 	Foundation/NSMutableArray_1.cs \
 	Foundation/NSMutableAttributedString.cs \
 	Foundation/NSMutableAttributedString.iOS.cs \
@@ -785,7 +768,6 @@ FOUNDATION_SOURCES = \
 	Foundation/NSOrderedSet.cs \
 	Foundation/NSOrderedSet_1.cs \
 	Foundation/NSOutputStream.cs \
-	Foundation/NSPortMessage.cs \
 	Foundation/NSPredicate.cs \
 	Foundation/NSPropertyListSerialization.cs \
 	Foundation/NSProxy.cs \
@@ -832,7 +814,6 @@ GAMECONTROLLER_CORE_SOURCES = \
 	GameController/GCMotion.cs \
 
 GAMECONTROLLER_SOURCES = \
-	GameController/Compat.cs \
 	GameController/GCExtendedGamepadSnapshot.cs \
 	GameController/GCGamepadSnapshot.cs \
 	GameController/GCMicroGamepadSnapshot.cs \
@@ -1019,7 +1000,6 @@ MAPKIT_CORE_SOURCES = \
 	MapKit/MapKit.cs \
 
 MAPKIT_SOURCES = \
-	MapKit/MKCircle.cs \
 	MapKit/MKCompat.cs \
 	MapKit/MKDirections.cs \
 	MapKit/MKFeatureDisplayPriority.cs \
@@ -1027,7 +1007,6 @@ MAPKIT_SOURCES = \
 	MapKit/MKLocalSearch.cs \
 	MapKit/MKMapCameraZoomRange.cs \
 	MapKit/MKMapItem.cs \
-	MapKit/MKMapView.cs \
 	MapKit/MKMultiPoint.cs \
 	MapKit/MKOverlayView.cs \
 	MapKit/MKPointOfInterestFilter.cs \
@@ -1048,7 +1027,6 @@ MEDIAPLAYER_API_SOURCES = \
 MEDIAPLAYER_SOURCES = \
 	MediaPlayer/MPMediaItem.cs \
 	MediaPlayer/MPMediaItemArtwork.cs \
-	MediaPlayer/MPMediaItemProperty.cs \
 	MediaPlayer/MPMediaQuery.cs \
 	MediaPlayer/MPMoviePlayerController.cs \
 	MediaPlayer/MPNowPlayingInfoCenter.cs \
@@ -1544,7 +1522,6 @@ UIKIT_SOURCES = \
 	UIKit/UIAlertView.cs \
 	UIKit/UIAppearance.cs \
 	UIKit/UIApplication.cs \
-	UIKit/UIApplicationDelegate.cs \
 	UIKit/UIBarButtonItem.cs \
 	UIKit/UIBarItem.cs \
 	UIKit/UIBezierPath.cs \
@@ -1558,7 +1535,6 @@ UIKIT_SOURCES = \
 	UIKit/UIControl.cs \
 	UIKit/UIDevice.cs \
 	UIKit/UIDocumentBrowserViewController.cs \
-	UIKit/UIDocumentInteractionController.cs \
 	UIKit/UIDocumentMenuViewController.cs \
 	UIKit/UIDocumentPickerViewController.cs \
 	UIKit/UIDragDropSessionExtensions.cs \
@@ -1576,7 +1552,6 @@ UIKIT_SOURCES = \
 	UIKit/UIKitSynchronizationContext.cs \
 	UIKit/UINavigationBar.cs \
 	UIKit/UINavigationController.cs \
-	UIKit/UINib.cs \
 	UIKit/UIPageViewController.cs \
 	UIKit/UIPasteboard.cs \
 	UIKit/UIPickerView.cs \
@@ -1584,7 +1559,6 @@ UIKIT_SOURCES = \
 	UIKit/UIPopoverPresentationController.cs \
 	UIKit/UIPrint.cs \
 	UIKit/UIPushBehavior.cs \
-	UIKit/UIResponder.cs \
 	UIKit/UIScreen.cs \
 	UIKit/UIScrollView.cs \
 	UIKit/UISearchBar.cs \
