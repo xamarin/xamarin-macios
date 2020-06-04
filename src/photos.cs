@@ -1043,9 +1043,7 @@ namespace Photos
 	[BaseType (typeof (NSObject))]
 	interface PHPhotoLibraryChangeObserver {
 
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("photoLibraryDidChange:")]
 		void PhotoLibraryDidChange (PHChange changeInstance);
 	}
@@ -1232,13 +1230,11 @@ namespace Photos
 		[Wrap ("_PrepareLivePhotoForPlayback (targetSize, (options as NSDictionary), handler)", IsVirtual = true)]
 		void PrepareLivePhotoForPlayback (CGSize targetSize, [NullAllowed] NSDictionary<NSString, NSObject> options, Action<PHLivePhoto, NSError> handler);
 
-#if XAMCORE_2_0
 		// the API existed earlier but the key needed to create the strong dictionary did not work
 		[iOS (11,0)][TV (11,0)][Mac (10,12)]
 		[Async]
 		[Wrap ("_PrepareLivePhotoForPlayback (targetSize, options.GetDictionary (), handler)")]
 		void PrepareLivePhotoForPlayback (CGSize targetSize, [NullAllowed] PHLivePhotoEditingOption options, Action<PHLivePhoto, NSError> handler);
-#endif
 
 		[Internal]
 		[Export ("saveLivePhotoToOutput:options:completionHandler:")]
@@ -1252,13 +1248,11 @@ namespace Photos
 		[Wrap ("_SaveLivePhoto (output, options, handler)", IsVirtual = true)]
 		void SaveLivePhoto (PHContentEditingOutput output, [NullAllowed] NSDictionary<NSString, NSObject> options, Action<bool, NSError> handler);
 
-#if XAMCORE_2_0
 		// the API existed earlier but the key needed to create the strong dictionary did not work
 		[iOS (11,0)][TV (11,0)][Mac (10,12)]
 		[Async]
 		[Wrap ("_SaveLivePhoto (output, options.GetDictionary (), handler)")]
 		void SaveLivePhoto (PHContentEditingOutput output, [NullAllowed] PHLivePhotoEditingOption options, Action<bool, NSError> handler);
-#endif
 
 		[Export ("cancel")]
 		void Cancel ();
@@ -1288,7 +1282,6 @@ namespace Photos
 		nfloat RenderScale { get; }
 	}
 
-#if XAMCORE_2_0 // fails to build with mac/classic
 	[iOS (11,0)]
 	[TV (11,0)]
 	[Mac (10,12)]
@@ -1305,7 +1298,6 @@ namespace Photos
 	interface PHLivePhotoEditingOption {
 		bool ShouldRenderAtPlaybackTime { get; }
 	}
-#endif
 
 	[Mac (10,13)]
 	[NoiOS][NoTV]
