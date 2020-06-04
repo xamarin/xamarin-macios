@@ -45,9 +45,7 @@ using Foundation;
 using CoreImage;
 using CoreGraphics;
 using ObjCRuntime;
-#if XAMCORE_2_0 || !MONOMAC
 using Metal;
-#endif
 using SceneKit; // For SCNAnimationEvent
 
 namespace CoreAnimation {
@@ -56,51 +54,35 @@ namespace CoreAnimation {
 	[Model]
 	[Protocol]
 	interface CAMediaTiming {
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("beginTime")]
 		double BeginTime { get; set; }
 	
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("duration")]
 		double Duration { get; set; }
 	
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("speed")]
 		float Speed { get; set; } /* float, not CGFloat */
 	
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("timeOffset")]
 		double TimeOffset { get; set; }
 	
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("repeatCount")]
 		float RepeatCount { get; set; } /* float, not CGFloat */
 	
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("repeatDuration")]
 		double RepeatDuration { get; set; }
 	
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("autoreverses")]
 		bool AutoReverses { get;set; }
 	
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("fillMode", ArgumentSemantic.Copy)]
 		string FillMode { get; set; }
 	}
@@ -609,7 +591,6 @@ namespace CoreAnimation {
 		Continuous,
 	}
 
-#if XAMCORE_2_0 || !MONOMAC
 	interface ICAMetalDrawable {}
 
 	[Protocol]
@@ -679,7 +660,6 @@ namespace CoreAnimation {
 		[NullAllowed, Export ("EDRMetadata", ArgumentSemantic.Strong)]
 		CAEdrMetadata EdrMetadata { get; set; }
 	}
-#endif
 
 	[BaseType (typeof (CALayer))]
 	interface CATiledLayer {
@@ -1007,9 +987,7 @@ namespace CoreAnimation {
 	[Protocol]
 	[DisableDefaultCtor]
 	interface CAAction {
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("runActionForKey:object:arguments:")]
 		void RunAction (string eventKey, NSObject obj, [NullAllowed] NSDictionary arguments);
 	}
@@ -1223,11 +1201,7 @@ namespace CoreAnimation {
 	[BaseType (typeof (CAPropertyAnimation), Name="CAKeyframeAnimation")]
 	interface CAKeyFrameAnimation {
 		[Static, Export ("animationWithKeyPath:")]
-#if XAMCORE_2_0
 		CAKeyFrameAnimation FromKeyPath ([NullAllowed] string path);
-#else
-		CAKeyFrameAnimation GetFromKeyPath ([NullAllowed] string path);
-#endif
 
 		[NullAllowed] // by default this property is null
 		[Export ("values", ArgumentSemantic.Copy)]
@@ -1265,19 +1239,6 @@ namespace CoreAnimation {
 		[NullAllowed] // by default this property is null
 		[Export ("biasValues", ArgumentSemantic.Copy)]
 		NSNumber [] BiasValues { get; set; }
-		
-#if !XAMCORE_2_0
-		// duplicated, wrong prefix + missing members
-
-		[Field ("kCAAnimationLinear")]
-		NSString CalculationLinear { get; }
-
-		[Field ("kCAAnimationDiscrete")]
-		NSString CalculationDiscrete { get; }
-		
-		[Field ("kCAAnimationDiscrete")]
-		NSString CalculationPaced { get; }
-#endif
 	}
 	
 	[BaseType (typeof (CAAnimation))]
@@ -1300,19 +1261,9 @@ namespace CoreAnimation {
 	
 		[Export ("filter", ArgumentSemantic.Strong)][NullAllowed]
 		NSObject Filter { get; set; }
-
-#if !XAMCORE_2_0
-		[Wrap ("Filter")]
-		[Obsolete ("The name has been fixed, use 'Filter' instead.")]
-		NSObject filter { get; set; }
-#endif
 	}
 
-#if XAMCORE_2_0
 	[Static]
-#else
-	[Partial] // keep default .ctor for API compatibility
-#endif
 	interface CAFillMode {
 		[Field ("kCAFillModeForwards")]
 		NSString Forwards { get; }
@@ -1325,12 +1276,6 @@ namespace CoreAnimation {
 
 		[Field ("kCAFillModeRemoved")]
 		NSString Removed { get; }
-
-#if !XAMCORE_2_0
-		[Availability (Deprecated = Platform.iOS_4_0, Message = "Use 'CAFillMode.Forwards' instead.")]
-		[Field ("kCAFillModeFrozen")]
-		NSString Frozen { get; }
-#endif
 	}
 
 	[BaseType (typeof (NSObject))]
