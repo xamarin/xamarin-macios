@@ -27,6 +27,20 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<_PlatformName Condition="'$(_PlatformName)' == ''">macOS</_PlatformName> <!-- detecting Xamarin.Mac is a bit more complicated, so just fall back to macOS if none of the others match -->
 	</PropertyGroup>
 
+	<PropertyGroup>
+		<!--
+		     We don't want to use the Platform variable for conditional logic.
+		     Switching to a new property allows us to potentially switch from
+		     device to simulator builds dynamically based on the user's
+		     selection when starting the project. This allows us to eventually
+		     even (optionally) switch back to AnyCPU platform in the IDE,
+		     therefore fixing a key pain point in managing solution
+		     configurations.
+		-->
+		<ComputedPlatform Condition="'$(ComputedPlatform)' == ''">$(Platform)</ComputedPlatform>
+		<ComputedPlatform Condition="'$(_PlatformName)' != 'macOS' And '$(ComputedPlatform)' == 'AnyCPU'">iPhone</ComputedPlatform>
+	</PropertyGroup>
+
 	<!-- Sometimes we've used different variable names for the same thing for Xamarin.iOS and Xamarin.Mac projects. Here we try to unify those variables -->
 	<PropertyGroup>
 		<!-- ResourcePrefix -->
@@ -40,6 +54,21 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<!-- SdkVersion -->
 		<_SdkVersion Condition="'$(_PlatformName)' == 'macOS'">$(MacOSXSdkVersion)</_SdkVersion>
 		<_SdkVersion Condition="'$(_PlatformName)' != 'macOS'">$(MtouchSdkVersion)</_SdkVersion>
+
+		<!-- RequireCodeSigning -->
+		<!-- iOS/watchOS/tvOS is simple: device builds require code signing, simulator builds do not. This is a big lie, for some simulator builds need to be signed, but the _DetectCodeSigning task handles those cases. -->
+		<_RequireCodeSigning Condition="'$(_PlatformName)' != 'macOS' And '$(_RequireCodeSigning)' == ''">false</_RequireCodeSigning> <!-- Xamarin.iOS builds are not signed by default -->
+		<_RequireCodeSigning Condition="'$(_PlatformName)' != 'macOS' And '$(ComputedPlatform)' == 'iPhone'">true</_RequireCodeSigning> <!-- except that device builds must be signed -->
+		<!-- macOS is a bit more complicated:
+			* 'EnableCodeSigning' specifies whether the app is signed or not, and this defaults to false if it's not set.
+			* Extensions are special, because they must be signed. However, due to historical reasons, extension projects will have set EnableCodeSigning=false. So we do the following:
+			    * If we're an extension, and code signing is disabled: enable code signing, set the code signing key (_CodeSigningKey) to '-', and pass this value to the _DetectCodeSigning task.
+		-->
+		<_RequireCodeSigning Condition="'$(_PlatformName)' == 'macOS' And '$(_RequireCodeSigning)' == ''">$(EnableCodeSigning)</_RequireCodeSigning> <!-- Xamarin.Mac projects use the 'EnableCodeSigning' variable to enable code signing -->
+		<_RequireCodeSigning Condition="'$(_PlatformName)' == 'macOS' And '$(_RequireCodeSigning)' == ''">false</_RequireCodeSigning> <!-- Xamarin.Mac projects: disable by default -->
+		<_CodeSigningKey Condition="'$(_PlatformName)' == 'macOS' And '$(IsAppExtension)' == 'true' And '$(_CodeSigningKey)' == '' And '$(_RequireCodeSigning)' == 'false'">-</_CodeSigningKey> <!-- Set _CodeSigningKey to '-' if we're an extension where code signing is not requested -->
+		<_RequireCodeSigning Condition="'$(_PlatformName)' == 'macOS' And '$(IsAppExtension)' == 'true'">true</_RequireCodeSigning> <!-- But extensions must be signed, so make sure they are -->
+
 	</PropertyGroup>
 
 	<Target Name="_ComputeTargetFrameworkMoniker" Condition="'$(_ComputedTargetFrameworkMoniker)' == ''">
