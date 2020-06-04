@@ -24,7 +24,7 @@ namespace Xharness.Jenkins {
 		iOSExtensions = 8,
 		iOSMSBuild = 16,
 		tvOS = 32,
-		watchOs = 64,
+		watchOS = 64,
 		Mmp = 128,
 		Mtouch = 256,
 		Btouch = 512,
@@ -62,7 +62,7 @@ namespace Xharness.Jenkins {
 		public bool Populating { get; private set; } = true;
 
 		public TestSelection TestSelection { get; set; } = TestSelection.Mac | TestSelection.iOS | TestSelection.tvOS |
-		                                                   TestSelection.watchOs | TestSelection.iOSMSBuild |
+		                                                   TestSelection.watchOS | TestSelection.iOSMSBuild |
 		                                                   TestSelection.Simulator | TestSelection.NonMonotouch |
 		                                                   TestSelection.Monotouch;
 

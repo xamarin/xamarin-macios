@@ -116,7 +116,7 @@ namespace Xharness.Jenkins {
 							tunnelBore: jenkins.TunnelBore,
 							errorKnowledgeBase: jenkins.ErrorKnowledgeBase,
 							useTcpTunnel: jenkins.Harness.UseTcpTunnel,
-							candidates: jenkins.Devices.ConnectedWatch) { Ignored = !jenkins.TestSelection.HasFlag (TestSelection.watchOs) });
+							candidates: jenkins.Devices.ConnectedWatch) { Ignored = !jenkins.TestSelection.HasFlag (TestSelection.watchOS) });
 					}
 
 					if (!project.SkipwatchOSARM64_32Variation) {
@@ -135,7 +135,7 @@ namespace Xharness.Jenkins {
 							tunnelBore: jenkins.TunnelBore,
 							errorKnowledgeBase: jenkins.ErrorKnowledgeBase,
 							useTcpTunnel: jenkins.Harness.UseTcpTunnel,
-							candidates: jenkins.Devices.ConnectedWatch32_64.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.TestSelection.HasFlag (TestSelection.watchOs) });
+							candidates: jenkins.Devices.ConnectedWatch32_64.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.TestSelection.HasFlag (TestSelection.watchOS) });
 					}
 				}
 				foreach (var task in projectTasks) {

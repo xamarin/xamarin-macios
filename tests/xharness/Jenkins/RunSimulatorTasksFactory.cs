@@ -32,7 +32,7 @@ namespace Xharness.Jenkins {
 				if (!project.SkiptvOSVariation)
 					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project.AsTvOSProject (), TestPlatform.tvOS, ignored || !jenkins.TestSelection.HasFlag (TestSelection.tvOS)));
 				if (!project.SkipwatchOSVariation)
-					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project.AsWatchOSProject (), TestPlatform.watchOS, ignored || !jenkins.TestSelection.HasFlag (TestSelection.watchOs)));
+					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project.AsWatchOSProject (), TestPlatform.watchOS, ignored || !jenkins.TestSelection.HasFlag (TestSelection.watchOS)));
 
 				var configurations = project.Configurations;
 				if (configurations == null)

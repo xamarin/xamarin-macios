@@ -106,7 +106,7 @@ namespace Xharness.Jenkins {
 			["ios-64"] = TestSelection.iOS64,
 			["ios"] = TestSelection.iOS,
 			["tvos"] = TestSelection.tvOS,
-			["watchos"] = TestSelection.watchOs,
+			["watchos"] = TestSelection.watchOS,
 			["mac"] = TestSelection.Mac,
 			["ios-msbuild"] = TestSelection.iOSMSBuild,
 			["ios-simulator"] = TestSelection.Simulator,
@@ -302,7 +302,7 @@ namespace Xharness.Jenkins {
 
 			if (!Harness.INCLUDE_WATCH) {
 				MainLog.WriteLine ("The watchOS build is disabled, so any watchOS tests will be disabled as well.");
-				jenkins.TestSelection &= ~TestSelection.watchOs;
+				jenkins.TestSelection &= ~TestSelection.watchOS;
 			}
 
 			if (!Harness.INCLUDE_TVOS) {
