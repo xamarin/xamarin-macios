@@ -7,8 +7,6 @@
 // Copyright 2012-2014 Xamarin Inc
 //
 
-#if XAMCORE_2_0 || !MONOMAC
-
 using ObjCRuntime;
 
 namespace Social {
@@ -39,4 +37,3 @@ namespace Social {
 #endif
 	}
 }
-#endif
