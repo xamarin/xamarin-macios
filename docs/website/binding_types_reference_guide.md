@@ -1743,27 +1743,6 @@ differentiated from user bindings. The effect of this attribute is to flag the
 object as being a `DirectBinding` object. For a scenario in Xamarin.Mac, you can see
 the [discussion on this bug](https://bugzilla.novell.com/show_bug.cgi?id=670844).
 
-### RetainListAttribute
-
-Instructs the generator to keep a managed reference to the parameter or
-remove an internal reference to the parameter. This is used to keep objects
-referenced.
-
-Syntax:
-
-```csharp
-public class RetainListAttribute: Attribute {
-     public RetainListAttribute (bool doAdd, string listName);
-}
-```
-
-If the value of `doAdd` is true, then the parameter is added to the
-`__mt_{0}_var List<NSObject>;`. Where `{0}` is replaced with the given
-`listName`. You must declare this backing field in your complementary partial
-class to the API.
-
-For an example see [foundation.cs](https://github.com/mono/maccore/blob/master/src/foundation.cs) and [NSNotificationCenter.cs](https://github.com/mono/maccore/blob/master/src/Foundation/NSNotificationCenter.cs)
-
 ### ReleaseAttribute (Xamarin.iOS 6.0)
 
 This can be applied to return types to indicate that the generator should
