@@ -216,11 +216,6 @@ namespace Foundation  {
 
 		WithoutOverwriting  = 2,
 			
-#if !XAMCORE_2_0
-		[Obsolete ("No longer available.")]
-		Coordinated = 1 << 2,
-#endif
-			
 		FileProtectionNone = 0x10000000,
 		FileProtectionComplete = 0x20000000,
 		FileProtectionMask = 0xf0000000,
@@ -1159,11 +1154,7 @@ namespace Foundation  {
 	}
 
 	[Native]
-#if XAMCORE_2_0
 	public enum NSUrlRelationship : long {
-#else
-	public enum NSURLRelationship : long {
-#endif
 		Contains, Same, Other
 	}
 

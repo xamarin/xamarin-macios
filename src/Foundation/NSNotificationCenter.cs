@@ -72,14 +72,6 @@ namespace Foundation {
 
 		List <ObservedData> __mt_ObserverList_var = new List <ObservedData> ();
 
-#if !XAMCORE_2_0
-		[Advice ("Use 'AddObserver(NSString, Action<NSNotification>, NSObject)'.")]
-		public NSObject AddObserver (string aName, Action<NSNotification> notify, NSObject fromObject)
-		{
-			return AddObserver (new NSString (aName), notify, fromObject);
-		}
-#endif
-		
 		public NSObject AddObserver (NSString aName, Action<NSNotification> notify, NSObject fromObject)
 		{
 			if (notify == null)
@@ -96,20 +88,6 @@ namespace Foundation {
 		{
 			return AddObserver (aName, notify, null);
 		}
-
-#if !XAMCORE_2_0
-		[Advice ("Use 'AddObserver(NSString, Action<NSNotification>)' instead.")]
-		public NSObject AddObserver (string aName, Action<NSNotification> notify)
-		{
-			return AddObserver (aName, notify, null);
-		}
-
-		[Advice ("Use 'AddObserver(NSObject, Selector, NSString, NSObject)' instead.")]
-		public void AddObserver (NSObject observer, Selector aSelector, string aname, NSObject anObject)
-		{
-			AddObserver (observer, aSelector, new NSString (aname), anObject);
-		}
-#endif
 
 		public void RemoveObservers (IEnumerable<NSObject> keys)
 		{
