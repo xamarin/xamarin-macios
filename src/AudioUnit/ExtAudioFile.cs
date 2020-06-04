@@ -316,23 +316,6 @@ namespace AudioUnit
             return frame;
         }
 
-#if !XAMCORE_2_0
-        [Obsolete ("Use overload with 'AudioBuffers'.")]
-        public int Read(int numberFrames, AudioBufferList data)
-        {
-            if (data == null)
-                throw new ArgumentNullException ("data");
-
-            int err = ExtAudioFileRead(_extAudioFile, ref numberFrames, data);
-            if (err != 0)
-            {
-                throw new ArgumentException(String.Format("Error code:{0}", err));
-            }
-
-            return numberFrames;
-        }
-#endif
-
         public uint Read (uint numberFrames, AudioBuffers audioBufferList, out ExtAudioFileError status)
         {
             if (audioBufferList == null)
@@ -341,18 +324,6 @@ namespace AudioUnit
             status = ExtAudioFileRead (_extAudioFile, ref numberFrames, (IntPtr) audioBufferList);
             return numberFrames;
         }
-
-#if !XAMCORE_2_0
-        [Obsolete ("Use overload with 'AudioBuffers'.")]
-        public void WriteAsync(int numberFrames, AudioBufferList data)
-        {
-            int err = ExtAudioFileWriteAsync(_extAudioFile, numberFrames, data);
-            
-            if (err != 0) {
-                throw new ArgumentException(String.Format("Error code:{0}", err));
-            }        
-        }
-#endif
 
         public ExtAudioFileError WriteAsync (uint numberFrames, AudioBuffers audioBufferList)
         {
@@ -398,23 +369,11 @@ namespace AudioUnit
         [DllImport (Constants.AudioToolboxLibrary)]
         static extern ExtAudioFileError ExtAudioFileWrapAudioFileID (IntPtr inFileID, bool inForWriting, IntPtr outExtAudioFile);    
 
-#if !XAMCORE_2_0
-        [Obsolete]
-        [DllImport(Constants.AudioToolboxLibrary, EntryPoint = "ExtAudioFileRead")]
-        static extern int ExtAudioFileRead(IntPtr inExtAudioFile, ref int /* UInt32* */ ioNumberFrames, AudioBufferList ioData);
-#endif
-
         [DllImport(Constants.AudioToolboxLibrary)]
 		static extern ExtAudioFileError ExtAudioFileRead (IntPtr inExtAudioFile, ref uint /* UInt32* */ ioNumberFrames, IntPtr ioData);
 
         [DllImport(Constants.AudioToolboxLibrary)]
 		static extern ExtAudioFileError ExtAudioFileWrite (IntPtr inExtAudioFile, uint /* UInt32 */ inNumberFrames, IntPtr ioData);                 
-
-#if !XAMCORE_2_0
-        [Obsolete]
-        [DllImport(Constants.AudioToolboxLibrary, EntryPoint = "ExtAudioFileWriteAsync")]
-		static extern int /* OSStatus */ ExtAudioFileWriteAsync(IntPtr inExtAudioFile, int /* UInt32 */ inNumberFrames, AudioBufferList ioData);
-#endif
 
         [DllImport(Constants.AudioToolboxLibrary)]
 		static extern ExtAudioFileError ExtAudioFileWriteAsync(IntPtr inExtAudioFile, uint /* UInt32 */ inNumberFrames, IntPtr ioData);
