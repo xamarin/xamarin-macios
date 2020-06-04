@@ -93,7 +93,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<!-- Device-Specific Builds -->
 		<DeviceSpecificBuild Condition="'$(DeviceSpecificBuild)' == ''">$(MtouchDebug)</DeviceSpecificBuild>
 		<DeviceSpecificBuild Condition="'$(MtouchDebug)' != 'true'">False</DeviceSpecificBuild>
-		<TargetArchitectures>$(MtouchArch)</TargetArchitectures>
 	</PropertyGroup>
 
 	<ItemGroup>

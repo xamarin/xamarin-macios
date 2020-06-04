@@ -67,6 +67,57 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</ItemGroup>
 	</Target>
 
+	<Target Name="_ComputeTargetArchitectures" DependsOnTargets="_ComputeTargetFrameworkMoniker">
+		<!--
+			For now, this target is mostly for Xamarin.iOS, but in order to
+			use the same variables elsewhere, we have code for Xamarin.Mac
+			that outputs the same variables. However, as build logic between
+			Xamarin.iOS and Xamarin.Mac converges, more and more of this logic
+			will apply to Xamarin.Mac as well.
+		-->
+		<ParseDeviceSpecificBuildInformation
+			SessionId="$(BuildSessionId)"
+			Condition="'$(DeviceSpecificBuild)' == 'true' And '$(TargetiOSDevice)' != '' And '$(_CanDeployToDeviceOrSimulator)' == 'true' And '$(_PlatformName)' != 'macOS'"
+			Architectures="$(MtouchArch)"
+			IntermediateOutputPath="$(IntermediateOutputPath)"
+			OutputPath="$(OutputPath)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+			TargetiOSDevice="$(TargetiOSDevice)"
+		>
+			<Output TaskParameter="DeviceSpecificIntermediateOutputPath" PropertyName="DeviceSpecificIntermediateOutputPath" />
+			<Output TaskParameter="DeviceSpecificOutputPath" PropertyName="DeviceSpecificOutputPath" />
+			<Output TaskParameter="TargetArchitectures" PropertyName="TargetArchitectures" />
+			<Output TaskParameter="TargetDeviceModel" PropertyName="TargetDeviceModel" />
+			<Output TaskParameter="TargetDeviceOSVersion" PropertyName="TargetDeviceOSVersion" />
+		</ParseDeviceSpecificBuildInformation>
+
+		<PropertyGroup Condition="'$(_PlatformName)' != 'macOS'">
+			<_MtouchSymbolsList>$(DeviceSpecificIntermediateOutputPath)mtouch-symbols.list</_MtouchSymbolsList>
+
+			<!-- actool output caches -->
+			<_ACTool_PartialAppManifestCache>$(DeviceSpecificIntermediateOutputPath)actool\_PartialAppManifest.items</_ACTool_PartialAppManifestCache>
+			<_ACTool_BundleResourceCache>$(DeviceSpecificIntermediateOutputPath)actool\_BundleResourceWithLogicalName.items</_ACTool_BundleResourceCache>
+
+			<!-- coremlc output caches -->
+			<_CoreMLModel_PartialAppManifestCache>$(DeviceSpecificIntermediateOutputPath)coremlc\_PartialAppManifest.items</_CoreMLModel_PartialAppManifestCache>
+			<_CoreMLModel_BundleResourceCache>$(DeviceSpecificIntermediateOutputPath)coremlc\_BundleResourceWithLogicalName.items</_CoreMLModel_BundleResourceCache>
+
+			<!-- ibtool output caches -->
+			<_IBToolCache>$(DeviceSpecificIntermediateOutputPath)ibtool\_BundleResourceWithLogicalName.items</_IBToolCache>
+
+			<!-- scntool output caches -->
+			<_SceneKitCache>$(DeviceSpecificIntermediateOutputPath)copySceneKitAssets\_BundleResourceWithLogicalName.items</_SceneKitCache>
+
+			<!-- TextureAtlas output caches -->
+			<_TextureAtlasCache>$(DeviceSpecificIntermediateOutputPath)atlas\_BundleResourceWithLogicalName.items</_TextureAtlasCache>
+		</PropertyGroup>
+
+		<PropertyGroup Condition="'$(TargetArchitectures)' == ''">
+			<TargetArchitectures Condition="'$(_PlatformName)' == 'macOS'">$(XamMacArch)</TargetArchitectures>
+			<TargetArchitectures Condition="'$(_PlatformName)' != 'macOS'">$(MtouchArch)</TargetArchitectures>
+		</PropertyGroup>
+	</Target>
+
 	<Target Name="_CreateAppBundle" Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsAppDistribution)' != 'true'" DependsOnTargets="$(CreateAppBundleDependsOn)" />
 
 	<Target Name="_DetectAppManifest">
