@@ -161,17 +161,10 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static bool CGPDFDocumentUnlockWithPassword (/* CGPDFDocumentRef */ IntPtr document, /* const char* */ string password);
 
-#if XAMCORE_2_0
 		public bool Unlock (string password)
 		{
 			return CGPDFDocumentUnlockWithPassword (handle, password);
 		}
-#else
-		public bool UnlockWithPassword (string pass)
-		{
-			return CGPDFDocumentUnlockWithPassword (handle, pass);
-		}
-#endif
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static bool CGPDFDocumentIsUnlocked (/* CGPDFDocumentRef */ IntPtr document);
@@ -200,50 +193,6 @@ namespace CoreGraphics {
 			}
 		}
 
-#if !XAMCORE_2_0
-		// deprecated in OSX 10.5 in favor of CGPDFPage API and never part of iOS
-
-		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static CGRect CGPDFDocumentGetMediaBox (/* CGPDFDocumentRef */ IntPtr document, /* int */ int page);
-
-		public CGRect GetMediaBox (int page)
-		{
-			return CGPDFDocumentGetMediaBox (handle, page);
-		}
-
-		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static CGRect CGPDFDocumentGetCropBox (/* CGPDFDocumentRef */ IntPtr document, /* int */ int page);
-
-		public CGRect GetCropBox (int page)
-		{
-			return CGPDFDocumentGetCropBox (handle, page);
-		}
-		
-		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static CGRect CGPDFDocumentGetBleedBox (/* CGPDFDocumentRef */ IntPtr document, /* int */ int page);
-
-		public CGRect GetBleedBox (int page)
-		{
-			return CGPDFDocumentGetBleedBox (handle, page);
-		}
-		
-		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static CGRect CGPDFDocumentGetTrimBox (/* CGPDFDocumentRef */ IntPtr document, /* int */ int page);
-
-		public CGRect GetTrimBox (int page)
-		{
-			return CGPDFDocumentGetTrimBox (handle, page);
-		}
-		
-		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static CGRect CGPDFDocumentGetArtBox (/* CGPDFDocumentRef */ IntPtr document, /* int */ int page);
-
-		public CGRect GetArtBox (int page)
-		{
-			return CGPDFDocumentGetArtBox (handle, page);
-		}
-#endif
-		
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGPDFDictionaryRef */ IntPtr CGPDFDocumentGetCatalog (/* CGPDFDocumentRef */ IntPtr document);
 		public CGPDFDictionary GetCatalog ()
