@@ -191,14 +191,6 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		unsafe extern static void CGPathAddLineToPoint (/* CGMutablePathRef */ IntPtr path, CGAffineTransform *m, /* CGFloat */ nfloat x, /* CGFloat */ nfloat y);
 
-#if !XAMCORE_2_0
-		[Advice ("Use 'AddLineToPoint' instead.")] // Bad name
-		public void CGPathAddLineToPoint (nfloat x, nfloat y)
-		{
-			AddLineToPoint (x, y);
-		}
-#endif
-
 		public unsafe void AddLineToPoint (nfloat x, nfloat y)
 		{
 			CGPathAddLineToPoint (handle, null, x, y);
@@ -208,14 +200,6 @@ namespace CoreGraphics {
 		{
 			CGPathAddLineToPoint (handle, null, point.X, point.Y);
 		}
-		
-#if !XAMCORE_2_0
-		[Advice ("Use 'AddLineToPoint' instead.")] // Bad name
-		public void CGPathAddLineToPoint (CGAffineTransform transform, nfloat x, nfloat y)
-		{
-			AddLineToPoint (transform, x, y);
-		}
-#endif
 
 		public unsafe void AddLineToPoint (CGAffineTransform transform, nfloat x, nfloat y)
 		{
@@ -329,12 +313,7 @@ namespace CoreGraphics {
 			CGPathAddLines (handle, &m, points, points.Length);
 		}
 
-#if !XAMCORE_2_0
-		[Advice ("Misnamed method, it's 'AddLines'.")]
-		public unsafe void AddRects (CGAffineTransform m, CGPoint [] points, int count)
-#else
 		public unsafe void AddLines (CGAffineTransform m, CGPoint [] points, int count)
-#endif
 		{
 			if (points == null)
 				throw new ArgumentNullException ("points");
@@ -350,12 +329,7 @@ namespace CoreGraphics {
 			CGPathAddLines (handle, null, points, points.Length);
 		}
 
-#if !XAMCORE_2_0
-		[Advice ("Misnamed method, it's 'AddLines'.")]
-		public unsafe void AddRects (CGPoint [] points, int count)
-#else
 		public unsafe void AddLines (CGPoint [] points, int count)
-#endif
 		{
 			if (points == null)
 				throw new ArgumentNullException ("points");
@@ -371,25 +345,11 @@ namespace CoreGraphics {
 		{
 			CGPathAddEllipseInRect (handle, &m, rect);
 		}
-#if !XAMCORE_2_0
-		[Obsolete ("Use 'AddEllipseInRect' instead.")]
-		public unsafe void AddElipseInRect (CGAffineTransform m, CGRect rect)
-		{
-			CGPathAddEllipseInRect (handle, &m, rect);
-		}
-#endif
 		
 		public unsafe void AddEllipseInRect (CGRect rect)
 		{
 			CGPathAddEllipseInRect (handle, null, rect);
 		}
-#if !XAMCORE_2_0
-		[Obsolete ("Use 'AddEllipseInRect' instead.")]
-		public unsafe void AddElipseInRect (CGRect rect)
-		{
-			CGPathAddEllipseInRect (handle, null, rect);
-		}
-#endif
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		unsafe extern static void CGPathAddArc (/* CGMutablePathRef */ IntPtr path, CGAffineTransform *m, /* CGFloat */ nfloat x, /* CGFloat */ nfloat y, /* CGFloat */ nfloat radius, /* CGFloat */ nfloat startAngle, /* CGFloat */ nfloat endAngle, bool clockwise);
