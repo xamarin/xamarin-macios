@@ -29,18 +29,14 @@ namespace PassKit {
 		[NullAllowed, Export ("name", ArgumentSemantic.Strong)]
 		NSPersonNameComponents Name { get; set; }
 	
-#if XAMCORE_2_0 // The Contacts framework (CNPostalAddress) uses generics heavily, which is only supported in Unified (for now at least)
 		[NullAllowed, Export ("postalAddress", ArgumentSemantic.Retain)]
 		CNPostalAddress PostalAddress { get; set; }
-#endif // XAMCORE_2_0
 	
 		[NullAllowed, Export ("emailAddress", ArgumentSemantic.Strong)]
 		string EmailAddress { get; set; }
 	
-#if XAMCORE_2_0 // The Contacts framework (CNPhoneNumber) uses generics heavily, which is only supported in Unified (for now at least)
 		[NullAllowed, Export ("phoneNumber", ArgumentSemantic.Strong)]
 		CNPhoneNumber PhoneNumber { get; set; }
-#endif // XAMCORE_2_0
 
 		[iOS (9,2)]
 		[Deprecated (PlatformName.iOS, 10,3, message:"Use 'SubLocality' and 'SubAdministrativeArea' on 'PostalAddress' instead.")]
@@ -244,10 +240,6 @@ namespace PassKit {
 	delegate void PKPaymentShippingAddressSelected (PKPaymentAuthorizationStatus status, PKShippingMethod [] shippingMethods, PKPaymentSummaryItem [] summaryItems);
 	delegate void PKPaymentShippingMethodSelected (PKPaymentAuthorizationStatus status, PKPaymentSummaryItem[] summaryItems);
 
-#if !XAMCORE_2_0
-	delegate void PKPaymentAuthorizationHandler (PKPaymentAuthorizationStatus status);
-#endif
-
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface PKPaymentAuthorizationViewControllerDelegate {
@@ -258,12 +250,7 @@ namespace PassKit {
 #if !XAMCORE_4_0
 		[Abstract]
 #endif
-		void DidAuthorizePayment (PKPaymentAuthorizationViewController controller, PKPayment payment, 
-#if XAMCORE_2_0
-			Action<PKPaymentAuthorizationStatus> completion);
-#else
-			PKPaymentAuthorizationHandler completion);
-#endif
+		void DidAuthorizePayment (PKPaymentAuthorizationViewController controller, PKPayment payment, Action<PKPaymentAuthorizationStatus> completion);
 
 		[iOS (11,0)]
 		[Export ("paymentAuthorizationViewController:didAuthorizePayment:handler:")]
@@ -492,12 +479,10 @@ namespace PassKit {
 		[Export ("paymentShippingAddressInvalidErrorWithKey:localizedDescription:")]
 		NSError CreatePaymentShippingAddressInvalidError (NSString postalAddressKey, [NullAllowed] string localizedDescription);
 
-#if XAMCORE_2_0
 		[Watch (4,0)][iOS (11,0)]
 		[Static]
 		[Wrap ("CreatePaymentShippingAddressInvalidError (postalAddress.GetConstant ()!, localizedDescription)")]
 		NSError CreatePaymentShippingAddressInvalidError (CNPostalAddressKeyOption postalAddress, [NullAllowed] string localizedDescription);
-#endif
 
 		[Watch (4,0)][iOS (11,0)]
 		[Static]
@@ -505,12 +490,10 @@ namespace PassKit {
 		[Export ("paymentBillingAddressInvalidErrorWithKey:localizedDescription:")]
 		NSError CreatePaymentBillingAddressInvalidError (NSString postalAddressKey, [NullAllowed] string localizedDescription);
 
-#if XAMCORE_2_0
 		[Watch (4,0)][iOS (11,0)]
 		[Static]
 		[Wrap ("CreatePaymentBillingAddressInvalidError (postalAddress.GetConstant ()!, localizedDescription)")]
 		NSError CreatePaymentBillingAddressInvalidError (CNPostalAddressKeyOption postalAddress, [NullAllowed] string localizedDescription);
-#endif
 
 		[Watch (4,0)][iOS (11,0)]
 		[Static]
