@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!--  Default inclusion -->
+  <PropertyGroup>
+    <!-- Enable default inclusion behavior unless told otherwise, but default to the value for EnableDefaultItems -->
+    <EnableDefaultXamarinPlistItems Condition=" '$(EnableDefaultXamarinPlistItems)' == '' ">$(EnableDefaultItems)</EnableDefaultXamarinPlistItems>
+  </PropertyGroup>
+
+  <!-- Default plist file inclusion -->
+  <ItemGroup Condition="'$(EnableDefaultXamarinPlistItems)' == 'true' ">
+    <None Include="*.plist" Exclude="$(DefaultItemExcludes);$(DefaultXamarinPlistItemExcludes)">
+      <Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
+    </None>
+  </ItemGroup>
+
   <!-- Declare the XI/XM framework bundled with this version of the SDK. See Microsoft.NETCoreSdk.BundledVersions.props -->
   <PropertyGroup>
     <!-- Runtime pack identifiers -->

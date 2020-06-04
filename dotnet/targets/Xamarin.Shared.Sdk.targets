@@ -73,6 +73,8 @@
 		<!-- We re-use ComputeFilesToPublish & CopyFilesToPublishDirectory to copy files to the .app -->
 		<!-- ComputeFilesToPublish will run ILLink -->
 		<CreateAppBundleDependsOn>
+			_DetectAppManifest;
+			_CompileAppManifest;
 			_ComputeLinkerArguments;
 			ComputeFilesToPublish;
 			_ComputePublishLocation;
