@@ -2643,7 +2643,7 @@ public partial class Generator : IMemberGatherer {
 			string cast_a = "", cast_b = "";
 			bool use_temp_return;
 
-			GenerateArgumentChecks (mi);
+			GenerateArgumentChecks (mi, true);
 
 			StringBuilder args, convs, disposes, by_ref_processing, by_ref_init;
 			GenerateTypeLowering (mi,
@@ -4157,7 +4157,7 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 
-	void GenerateArgumentChecks (MethodInfo mi, PropertyInfo propInfo = null)
+	void GenerateArgumentChecks (MethodInfo mi, bool null_allowed_override, PropertyInfo propInfo = null)
 	{
 		if (AttributeManager.HasAttribute<NullAllowedAttribute> (mi))
 			ErrorHelper.Show (new BindingException (1118, false, mi));
@@ -4186,7 +4186,7 @@ public partial class Generator : IMemberGatherer {
 			var bind_as = GetBindAsAttribute (cap);
 			var pit = bind_as == null ? pi.ParameterType : bind_as.Type;
 			if (IsWrappedType (pit) || TypeManager.INativeObject.IsAssignableFrom (pit)) {
-				if (needs_null_check) {
+				if (needs_null_check && !null_allowed_override) {
 					print ($"var {safe_name}__handle__ = {safe_name}.GetNonNullHandle (nameof ({safe_name}));");
 				} else {
 					print ($"var {safe_name}__handle__ = {safe_name}.GetHandle ();");
@@ -4271,7 +4271,7 @@ public partial class Generator : IMemberGatherer {
 
 		Inject<PrologueSnippetAttribute> (mi);
 
-		GenerateArgumentChecks (mi, propInfo);
+		GenerateArgumentChecks (mi, false, propInfo);
 
 		// Collect all strings that can be fast-marshalled
 		List<string> stringParameters = CollectFastStringMarshalParameters (mi);
