@@ -2416,12 +2416,14 @@ namespace SceneKit {
 		nint CornerSegmentCount { get; set; }
 	}
 
-#if !XAMCORE_4_0
+#if XAMCORE_4_0
+	delegate void SCNBufferBindingHandler (ISCNBufferStream buffer, SCNNode node, SCNShadable shadable, SCNRenderer renderer);
+#else
 	[Obsolete ("Use 'SCNBufferBindingHandler2' instead.")]
 	delegate void SCNBufferBindingHandler (ISCNBufferStream buffer, SCNNode node, SCNShadable shadable, SCNRenderer renderer);
-#endif
 
 	delegate void SCNBufferBindingHandler2 (ISCNBufferStream buffer, SCNNode node, ISCNShadable shadable, SCNRenderer renderer);
+#endif
 
 	[iOS (8,0), NoWatch]
 	[BaseType (typeof (NSObject))]
