@@ -4,7 +4,6 @@ using ObjCRuntime;
 
 namespace AudioUnit
 {
-#if XAMCORE_2_0 || !MONOMAC
 	[iOS (9,0), Mac(10,11)]
 	public partial class AUParameter
 	{
@@ -31,5 +30,4 @@ namespace AudioUnit
 			SetValue (value, originator.ObserverToken, hostTime);
 		}
 	}
-#endif
 }

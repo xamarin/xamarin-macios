@@ -1214,7 +1214,6 @@ namespace AudioToolbox {
 		}
 	}
 
-#if XAMCORE_2_0
 	// CoreAudioClock.h (inside AudioToolbox)
 	// It was a confusion between CA (CoreAudio) and CA (CoreAnimation)
 	[StructLayout (LayoutKind.Sequential)]
@@ -1225,5 +1224,4 @@ namespace AudioToolbox {
 		public /* UInt16 */ ushort SubbeatDivisor;
 		public /* UInt16 */ ushort Reserved;
 	}
-#endif
 }
