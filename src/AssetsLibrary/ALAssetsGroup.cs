@@ -26,11 +26,7 @@ namespace AssetsLibrary {
 		
 		public ALAssetsGroupType Type {
 			get {
-#if XAMCORE_2_0
 				return (ALAssetsGroupType) (int) ((NSNumber) ValueForProperty (_Type)).NIntValue;
-#else
-				return (ALAssetsGroupType) (int) ((NSNumber) ValueForProperty (_Type)).IntValue;
-#endif
 			}
 		}
 

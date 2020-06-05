@@ -77,10 +77,6 @@ namespace AudioUnit
 	}
 
 	public enum AudioTypeMusicDevice { // OSType in AudioComponentDescription
-#if !XAMCORE_2_0
-		[Obsolete]
-		None,
-#endif
 #if MONOMAC
 		DlsSynth	= 0x646c7320, // 'dls '
 #endif
@@ -194,43 +190,8 @@ namespace AudioUnit
 		CanLoadInProcess			= 0x10
 	}
 
-
-#if !XAMCORE_2_0
-	[StructLayout(LayoutKind.Sequential, Pack=4)]
-	public struct AudioComponentDescriptionNative // AudioComponentDescription in AudioComponent.h
-	{
-		public AudioComponentType ComponentType;
-		public int ComponentSubType;
-		public AudioComponentManufacturerType ComponentManufacturer;
-		public AudioComponentFlag ComponentFlags;
-		public int ComponentFlagsMask;
-
-		public AudioComponentDescriptionNative (AudioComponentDescription other)
-		{
-			this.ComponentType = other.ComponentType;
-			this.ComponentSubType = other.ComponentSubType;
-			this.ComponentManufacturer = other.ComponentManufacturer;
-			this.ComponentFlags = other.ComponentFlags;
-			this.ComponentFlagsMask = other.ComponentFlagsMask;
-		}
-
-		public void CopyTo (AudioComponentDescription cd)
-		{
-			cd.ComponentType = ComponentType;
-			cd.ComponentSubType = ComponentSubType;
-			cd.ComponentManufacturer = ComponentManufacturer;
-			cd.ComponentFlags = ComponentFlags;
-			cd.ComponentFlagsMask = ComponentFlagsMask;
-		}
-	}
-#endif
-
 	[StructLayout(LayoutKind.Sequential)]
-#if XAMCORE_2_0
 	public struct AudioComponentDescription
-#else
-	public class AudioComponentDescription
-#endif
 	{
 		[MarshalAs(UnmanagedType.U4)] 
 		public AudioComponentType ComponentType;
@@ -244,10 +205,6 @@ namespace AudioUnit
 		public AudioComponentFlag ComponentFlags;
 		public int ComponentFlagsMask;
 
-#if !XAMCORE_2_0
-		public AudioComponentDescription () {}
-#endif
-
 		internal AudioComponentDescription (AudioComponentType type, int subType)
 		{
 			ComponentType = type;
@@ -256,18 +213,6 @@ namespace AudioUnit
 			ComponentFlags = (AudioComponentFlag) 0;
 			ComponentFlagsMask = 0;
 		}
-
-#if !XAMCORE_2_0
-		// Because someone made AudioComponentDescription a class
-		internal AudioComponentDescription (AudioComponentDescriptionNative native)
-		{
-			this.ComponentType = native.ComponentType;
-			this.ComponentSubType = native.ComponentSubType;
-			this.ComponentManufacturer = native.ComponentManufacturer;
-			this.ComponentFlags = native.ComponentFlags;
-			this.ComponentFlagsMask = native.ComponentFlagsMask;
-		}
-#endif
 
 		public static AudioComponentDescription CreateGeneric (AudioComponentType type, int subType)
 		{
