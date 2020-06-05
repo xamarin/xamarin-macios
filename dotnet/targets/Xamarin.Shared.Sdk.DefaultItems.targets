@@ -1,5 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!--  Default inclusion -->
+
+  <PropertyGroup>
+    <!-- Enable default inclusion behavior unless told otherwise, but default to the value for EnableDefaultItems -->
+    <!-- We have a public property for each platform, and unify them into a single private property for our own build logic -->
+    <EnableDefaultiOSItems Condition=" '$(_PlatformName)' == 'iOS' And '$(EnableDefaultiOSItems)' == '' ">$(EnableDefaultItems)</EnableDefaultiOSItems>
+    <EnableDefaulttvOSItems Condition=" '$(_PlatformName)' == 'tvOS' And '$(EnableDefaulttvOSItems)' == '' ">$(EnableDefaultItems)</EnableDefaulttvOSItems>
+    <EnableDefaultwatchOSItems Condition=" '$(_PlatformName)' == 'watchOS' And '$(EnableDefaultwatchOSItems)' == '' ">$(EnableDefaultItems)</EnableDefaultwatchOSItems>
+    <EnableDefaultmacOSItems Condition=" '$(_PlatformName)' == 'macOS' And '$(EnableDefaultmacOSItems)' == '' ">$(EnableDefaultItems)</EnableDefaultmacOSItems>
+    <_EnableDefaultXamarinItems Condition=" '$(_PlatformName)' == 'iOS' ">$(EnableDefaultiOSItems)</_EnableDefaultXamarinItems>
+    <_EnableDefaultXamarinItems Condition=" '$(_PlatformName)' == 'tvOS' ">$(EnableDefaulttvOSItems)</_EnableDefaultXamarinItems>
+    <_EnableDefaultXamarinItems Condition=" '$(_PlatformName)' == 'watchOS' ">$(EnableDefaultwatchOSItems)</_EnableDefaultXamarinItems>
+    <_EnableDefaultXamarinItems Condition=" '$(_PlatformName)' == 'macOS' ">$(EnableDefaultmacOSItems)</_EnableDefaultXamarinItems>
+  </PropertyGroup>
+
+  <!-- Default plist file inclusion -->
+  <ItemGroup Condition="'$(_EnableDefaultXamarinItems)' == 'true' ">
+    <None Include="*.plist">
+      <Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
+    </None>
+  </ItemGroup>
+
   <!-- Declare the XI/XM framework bundled with this version of the SDK. See Microsoft.NETCoreSdk.BundledVersions.props -->
   <PropertyGroup>
     <!-- Runtime pack identifiers -->
