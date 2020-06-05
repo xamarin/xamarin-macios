@@ -24,67 +24,18 @@ namespace Xharness.Jenkins {
 		ILog MainLog => jenkins.MainLog;
 		Harness Harness => jenkins.Harness;
 		
-		// We select tests based on a prefix of the modified files.
-		// Add entries here to check for more prefixes.
-		static readonly string [] mtouchPrefixes = {
-			"tests/mtouch",
-			"tests/common",
-			"tools/mtouch",
-			"tools/common",
-			"tools/linker",
-			"src/ObjCRuntime/Registrar.cs",
-			"mk/mono.mk",
-			"msbuild",
-			"runtime",
-		};
-		static readonly string[] mmpPrefixes = {
-			"tests/mmptest",
-			"tests/common",
-			"tools/mmp",
-			"tools/common",
-			"tools/linker",
-			"src/ObjCRuntime/Registrar.cs",
-			"mk/mono.mk",
-			"msbuild",
-		};
-		static readonly string[] bclPrefixes = {
-			"tests/bcl-test",
-			"tests/common",
-			"mk/mono.mk",
-		};
-		static readonly string [] btouchPrefixes = {
-			"src/btouch.cs",
-			"src/generator.cs",
-			"src/generator-",
-			"src/Makefile.generator",
-			"tests/bgen",
-			"tests/generator",
-			"tests/common",
-		};
-		static readonly string [] macBindingProject = new [] {
-			"msbuild",
-			"tests/mac-binding-project",
-			"tests/common/mac",
-		}.Intersect (btouchPrefixes).ToArray ();
-		
-		static readonly string [] xtroPrefixes = {
-			"tests/xtro-sharpie",
-			"src",
-			"Make.config",
-		};
-		static readonly string [] cecilPrefixes = {
-			"tests/cecil-tests",
-			"src",
-			"Make.config",
-		};
-		static readonly string [] dotnetPrefixes = {
-			"dotnet",
-			"msbuild",
-			"tests/dotnet",
-		};
-		
 		// disabled by default
-		static readonly Dictionary<string, TestSelection> disabledByDefault = new Dictionary<string, TestSelection> {
+		static readonly Dictionary<string, TestSelection> testNameSelectionMatch = new Dictionary<string, TestSelection> {
+			["ios-32"] = TestSelection.iOS32,
+			["ios-64"] = TestSelection.iOS64,
+			["ios"] = TestSelection.iOS,
+			["tvos"] = TestSelection.tvOS,
+			["watchos"] = TestSelection.watchOS,
+			["mac"] = TestSelection.MacOS,
+			["ios-msbuild"] = TestSelection.iOSMSBuild,
+			["ios-simulator"] = TestSelection.Simulator,
+			["non-monotouch"] =  TestSelection.NonMonotouch,
+			["monotouch"] = TestSelection.Monotouch,
 			["mtouch"] =  TestSelection.Mtouch,
 			["mmp"] = TestSelection.Mmp,
 			["bcl"] = TestSelection.Bcl,
@@ -99,18 +50,61 @@ namespace Xharness.Jenkins {
 			["cecil"] = TestSelection.Cecil,
 			["all"] = TestSelection.All,
 		};
+
+		static readonly string [] btouchPrefixes = {
+			"src/btouch.cs",
+			"src/generator.cs",
+			"src/generator-",
+			"src/Makefile.generator",
+			"tests/bgen",
+			"tests/generator",
+			"tests/common",
+		};
 		
-		static readonly Dictionary<string, TestSelection> enabledByDefault = new Dictionary<string, TestSelection> {
-			["ios-32"] = TestSelection.iOS32,
-			["ios-64"] = TestSelection.iOS64,
-			["ios"] = TestSelection.iOS,
-			["tvos"] = TestSelection.tvOS,
-			["watchos"] = TestSelection.watchOS,
-			["mac"] = TestSelection.MacOS,
-			["ios-msbuild"] = TestSelection.iOSMSBuild,
-			["ios-simulator"] = TestSelection.Simulator,
-			["non-monotouch"] =  TestSelection.NonMonotouch,
-			["monotouch"] = TestSelection.Monotouch,
+		static readonly string [] macBindingProject = new [] {
+			"msbuild",
+			"tests/mac-binding-project",
+			"tests/common/mac",
+		}.Intersect (btouchPrefixes).ToArray ();
+		
+		static readonly Dictionary<TestSelection, string[]> selectionPrefixesMap = new Dictionary<TestSelection, string []> {
+			[TestSelection.Mtouch] = new [] {
+				"tests/mtouch",
+				"tests/common",
+				"tools/mtouch",
+				"tools/common",
+				"tools/linker",
+				"src/ObjCRuntime/Registrar.cs",
+				"mk/mono.mk",
+				"msbuild",
+				"runtime"},
+			[TestSelection.Mmp] = new [] {
+				"tests/mmptest",
+				"tests/common",
+				"tools/mmp",
+				"tools/common",
+				"tools/linker",
+				"src/ObjCRuntime/Registrar.cs",
+				"mk/mono.mk",
+				"msbuild"},
+			[TestSelection.Bcl] = new [] {
+				"tests/bcl-test",
+				"tests/common",
+				"mk/mono.mk"},
+			[TestSelection.Btouch] = btouchPrefixes,
+			[TestSelection.MacBindingProject] = macBindingProject,
+			[TestSelection.Xtro] = new [] {
+				"tests/xtro-sharpie",
+				"src",
+				"Make.config"},
+			[TestSelection.Cecil] = new [] {
+				"tests/cecil-tests",
+				"src",
+				"Make.config"},
+			[TestSelection.DotNet] = new [] {
+				"dotnet",
+				"msbuild",
+				"tests/dotnet"},
 		};
 
 		#endregion
@@ -128,15 +122,15 @@ namespace Xharness.Jenkins {
 			jenkins.ForceExtensionBuildOnly = true;
 		}
 		
-		void SetEnabled (IEnumerable<string> files, string [] prefixes, string testname, TestSelection selection)
+		void SetEnabled (IEnumerable<string> files, TestSelection selection, string [] prefixes)
 		{
-			MainLog.WriteLine ($"Checking if test {testname} should be enabled according to the modified files.");
+			MainLog.WriteLine ($"Checking if test {selection.ToString ()} should be enabled according to the modified files.");
 			foreach (var file in files) {
 				MainLog.WriteLine ($"Checking for file {file}"); 
 				foreach (var prefix in prefixes) {
 					if (file.StartsWith (prefix, StringComparison.Ordinal)) {
 						jenkins.TestSelection |= selection;
-						MainLog.WriteLine ("Enabled '{0}' tests because the modified file '{1}' matches prefix '{2}'", testname, file, prefix);
+						MainLog.WriteLine ("Enabled '{0}' tests because the modified file '{1}' matches prefix '{2}'", selection.ToString (), file, prefix);
 						return;
 					}
 				}
@@ -167,20 +161,9 @@ namespace Xharness.Jenkins {
 			MainLog.WriteLine ("Found {0} modified file(s) in the pull request #{1}.", files.Count (), pullRequest);
 			foreach (var f in files)
 				MainLog.WriteLine ("    {0}", f);
-
-			var modifiedFiles = new Dictionary<string, (string [] Prefixes, TestSelection Selection)> {
-				["mtouch"] = (Prefixes: mtouchPrefixes, Selection: TestSelection.Mtouch),
-				["mmp"] = (Prefixes: mmpPrefixes, Selection: TestSelection.Mmp),
-				["bcl"] = (Prefixes: bclPrefixes, TestSelection.Bcl),
-				["btouch"] = (Prefixes: btouchPrefixes, TestSelection.Btouch),
-				["mac-binding-project"] = (Prefixes: macBindingProject, Selection: TestSelection.MacBindingProject),
-				["xtro"] = (Prefixes: xtroPrefixes, Selection: TestSelection.Xtro),
-				["cecil"] = (Prefixes: cecilPrefixes, Selection: TestSelection.Cecil),
-				["dotnet"] = (Prefixes: dotnetPrefixes, Selection: TestSelection.DotNet),
-			};
 			
-			foreach (var keyValuePair in modifiedFiles) {
-				SetEnabled (files, keyValuePair.Value.Prefixes, keyValuePair.Key, keyValuePair.Value.Selection);
+			foreach (var selection in selectionPrefixesMap.Keys) {
+				SetEnabled (files, selection, selectionPrefixesMap[selection]);
 			}
 		}
 
@@ -226,11 +209,7 @@ namespace Xharness.Jenkins {
 
 			MainLog.WriteLine ($"In total found {labels.Count ()} label(s): {string.Join (", ", labels.ToArray ())}");
 
-			foreach (var keyValuePair in  disabledByDefault) {
-				SetEnabled (labels, keyValuePair.Key, keyValuePair.Value);
-			}
-			
-			foreach (var keyValuePair in enabledByDefault) {
+			foreach (var keyValuePair in testNameSelectionMatch) {
 				SetEnabled (labels, keyValuePair.Key, keyValuePair.Value);
 			}
 
