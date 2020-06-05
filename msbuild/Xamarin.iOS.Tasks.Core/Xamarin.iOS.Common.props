@@ -42,7 +42,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<MtouchHttpClientHandler Condition="'$(MtouchHttpClientHandler)' == ''">NSUrlSessionHandler</MtouchHttpClientHandler>
 		<MtouchProfiling Condition="'$(MtouchProfiling)' == ''">False</MtouchProfiling>
 		<MtouchLinkerDumpDependencies Condition="'$(MtouchLinkerDumpDependencies)' == ''">False</MtouchLinkerDumpDependencies>
-		<MtouchLink Condition="'$(MtouchLink)' == ''">SdkOnly</MtouchLink>
 		<MtouchUseLlvm Condition="'$(MtouchUseLlvm)' == ''">False</MtouchUseLlvm>
 		<MtouchNoSymbolStrip Condition="'$(MtouchNoSymbolStrip)' == ''">False</MtouchNoSymbolStrip>
 		<MtouchFloat32 Condition="'$(MtouchFloat32)' == ''">False</MtouchFloat32>
