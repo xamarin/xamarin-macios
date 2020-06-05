@@ -56,12 +56,6 @@ namespace AVFoundation {
 			}
 		}
 
-#if !XAMCORE_2_0
-		[Advice ("Use InputPorts")]
-		public AVCaptureInputPort [] inputPorts { 
-			get { return InputPorts; }
-		}
-#endif
 		[Obsolete ("Use AvailableAudioChannels property instead.")]
 		public virtual AVCaptureAudioChannel AudioChannels { 
 			get { throw new NotSupportedException ("Use AvailableAudioChannels property instead."); }

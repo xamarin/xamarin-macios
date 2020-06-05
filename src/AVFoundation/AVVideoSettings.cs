@@ -262,7 +262,6 @@ namespace AVFoundation {
 		}
 			
 		// frame rate can be floating point (29.97 is common for instance)
-#if XAMCORE_2_0
 		[iOS (7,0)]
 		public float? ExpectedSourceFrameRate {
 			get {
@@ -272,20 +271,8 @@ namespace AVFoundation {
 				SetNumberValue (AVVideo.ExpectedSourceFrameRateKey, value);
 			}
 		}
-#else
-		[iOS (7,0)]
-		public int? ExpectedSourceFrameRate {
-			get {
-				return GetInt32Value (AVVideo.ExpectedSourceFrameRateKey);
-			}
-			set {
-				SetNumberValue (AVVideo.ExpectedSourceFrameRateKey, value);
-			}
-		}
-#endif
 
 		// frame rate can be floating point (29.97 is common for instance)
-#if XAMCORE_2_0
 		[iOS (7,0)]
 		public float? AverageNonDroppableFrameRate {
 			get {
@@ -295,17 +282,6 @@ namespace AVFoundation {
 				SetNumberValue (AVVideo.AverageNonDroppableFrameRateKey, value);
 			}
 		}
-#else
-		[iOS (7,0)]
-		public int? AverageNonDroppableFrameRate {
-			get {
-				return GetInt32Value (AVVideo.AverageNonDroppableFrameRateKey);
-			}
-			set {
-				SetNumberValue (AVVideo.AverageNonDroppableFrameRateKey, value);
-			}
-		}
-#endif
 #endif
 
 		public AVVideoScalingMode? ScalingMode {
