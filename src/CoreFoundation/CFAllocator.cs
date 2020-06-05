@@ -115,17 +115,10 @@ namespace CoreFoundation {
 		[DllImport (Constants.CoreFoundationLibrary)]
 		static extern /* void* */ IntPtr CFAllocatorAllocate (/* CFAllocatorRef*/ IntPtr allocator, /*CFIndex*/ nint size, /* CFOptionFlags */ nuint hint);
 
-#if XAMCORE_2_0
 		public IntPtr Allocate (long size)
 		{
 			return CFAllocatorAllocate (handle, (nint)size, 0);
 		}
-#else
-		public IntPtr Allocate (long size, CFAllocatorFlags hint = 0)
-		{
-			return CFAllocatorAllocate (handle, (nint)size, (nuint) hint);
-		}
-#endif
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		static extern void CFAllocatorDeallocate (/* CFAllocatorRef */ IntPtr allocator, /* void* */ IntPtr ptr);
@@ -138,17 +131,4 @@ namespace CoreFoundation {
 		[DllImport (Constants.CoreFoundationLibrary, EntryPoint="CFAllocatorGetTypeID")]
 		public extern static /* CFTypeID */ nint GetTypeID ();
 	}
-
-#if !XAMCORE_2_0
-	// XAMCORE 2.0: removing this enum, I can't find any documentation anywhere about it,
-	//              and in any case it seems to refer to the deprecated/deleted ObjC GC.
-	// Seems to be some sort of secret values
-	[Flags]
-	[Native]
-	public enum CFAllocatorFlags : ulong
-	{
-		GCScannedMemory	= 0x200,
-		GCObjectMemory	= 0x400,
-	}
-#endif
 }

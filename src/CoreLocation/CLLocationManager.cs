@@ -48,15 +48,4 @@ namespace CoreLocation {
 		}
 #endif
 	}
-
-#if !XAMCORE_2_0
-	[Obsolete ("Use 'CLAuthorizationChangedEventArgs'.")]
-	public class CLAuthroziationChangedEventArgs : CLAuthorizationChangedEventArgs
-	{
-		public CLAuthroziationChangedEventArgs (CLAuthorizationStatus status)
-			: base (status)
-		{
-		}
-	}
-#endif
 }
