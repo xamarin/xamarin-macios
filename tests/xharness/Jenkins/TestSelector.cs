@@ -83,7 +83,7 @@ namespace Xharness.Jenkins {
 			"tests/dotnet",
 		};
 		
-			// disabled by default
+		// disabled by default
 		static readonly Dictionary<string, TestSelection> disabledByDefault = new Dictionary<string, TestSelection> {
 			["mtouch"] =  TestSelection.Mtouch,
 			["mmp"] = TestSelection.Mmp,
@@ -97,7 +97,6 @@ namespace Xharness.Jenkins {
 			["device"] = TestSelection.Device,
 			["xtro"] = TestSelection.Xtro,
 			["cecil"] = TestSelection.Cecil,
-			["old-simulator"] = TestSelection.OldiOSSimulator,
 			["all"] = TestSelection.All,
 		};
 		
@@ -236,7 +235,7 @@ namespace Xharness.Jenkins {
 			}
 
 			// special case since we are not working with the TestSelection flag in jenkins
-			Harness.IncludeSystemPermissionTests = labels.Contains ("run-system-permission-tests");
+			Harness.IncludeSystemPermissionTests = labels.Contains ("run-system-permission-tests") || jenkins.TestSelection.HasFlag (TestSelection.All);
 
 			// docs is a bit special:
 			// - can only be executed if the Xamarin-specific parts of the build is enabled
@@ -272,6 +271,7 @@ namespace Xharness.Jenkins {
 
 			// old simulator tests is also a bit special:
 			// - enabled by default if using a beta Xcode, otherwise disabled by default
+			changed = SetEnabled (labels, "old-simulator", TestSelection.OldiOSSimulator);
 			if (!changed && jenkins.IsBetaXcode) {
 				jenkins.TestSelection |= TestSelection.OldiOSSimulator;
 				MainLog.WriteLine ("Enabled 'old-simulator' tests because we're using a beta Xcode.");
