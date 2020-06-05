@@ -42,9 +42,7 @@ using CoreServices;
 using ObjCRuntime;
 using Foundation;
 
-#if XAMCORE_2_0
 using CFIndex = System.nint;
-#endif
 
 namespace CoreFoundation {
 

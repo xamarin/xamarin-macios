@@ -65,16 +65,6 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CFDataRef */ IntPtr CGPDFStreamCopyData (/* CGPDFStreamRef */ IntPtr stream, /* CGPDFDataFormat* */ out CGPDFDataFormat format);
 
-#if !XAMCORE_2_0
-		[Obsolete ("Use 'GetData(out CGPDFDataFormat)' instead.")]
-		public NSData Data {
-			get {
-				CGPDFDataFormat format;
-				return GetData (out format);
-			}
-		}
-#endif
-
 		public NSData GetData (out CGPDFDataFormat format)
 		{
 			IntPtr obj = CGPDFStreamCopyData (handle, out format);

@@ -69,17 +69,6 @@ namespace CoreData {
 		NSCountResultType = 0x04
 	}
 
-#if !XAMCORE_2_0
-	// NUInteger -> NSKeyValueObserving.h in Foundation.framework (and it already exists there)
-	[Native]
-	public enum NSKeyValueSetMutationKind : ulong {
-		Union = 1,
-		Minus = 2,
-		Intersect = 3,
-		NSKeyValueSet = 4 // misnamed
-	}
-#endif
-
 	// NUInteger -> NSRelationshipDescription.h
 	[Native]
 	public enum NSDeleteRule : ulong {
