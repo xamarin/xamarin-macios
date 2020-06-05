@@ -154,7 +154,7 @@ namespace Xharness.Jenkins {
 				MainLog.WriteLine ("Enabled '{0}' tests because the label 'run-{0}-tests' is set.", testname);
 				jenkins.TestSelection |= selection;
 				return true;
-			} 
+			}
 			// respect any default value
 			return false;
 		}
@@ -312,7 +312,7 @@ namespace Xharness.Jenkins {
 			if (!Harness.INCLUDE_MAC) {
 				MainLog.WriteLine ("The macOS build is disabled, so any macOS tests will be disabled as well.");
 				jenkins.TestSelection &= ~TestSelection.MacOS;
-			} 
+			}
 		}
 	}
 }
