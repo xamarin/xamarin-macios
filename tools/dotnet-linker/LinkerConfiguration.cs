@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 
 using Mono.Linker;
 
+using Xamarin.Bundler;
 using Xamarin.Utils;
 
 namespace Xamarin.Linker {
@@ -68,6 +69,8 @@ namespace Xamarin.Linker {
 					throw new InvalidOperationException ($"Unknown key '{key}' in {linker_file}");
 				}
 			}
+
+			ErrorHelper.Platform = Platform;
 		}
 
 		public void Write ()
