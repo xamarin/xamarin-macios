@@ -13,7 +13,6 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <!--<UpdateXlfOnBuild>true</UpdateXlfOnBuild>-->
     <RepositoryPath>$(MSBuildThisFileDirectory)/../..</RepositoryPath>
     <DotNetBuildDir>$(MSBuildThisFileDirectory)/../build/dotnet</DotNetBuildDir>
     <BuildsDir>$(RepositoryPath)/builds</BuildsDir>
