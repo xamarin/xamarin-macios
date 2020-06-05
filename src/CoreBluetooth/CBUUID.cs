@@ -65,7 +65,6 @@ namespace CoreBluetooth {
 			return !(a == b);
 		}
 
-#if XAMCORE_2_0
 		// to satisfy IEquatable<T>
 		public unsafe bool Equals (CBUUID obj)
 		{
@@ -85,96 +84,6 @@ namespace CoreBluetooth {
 		{
 			return base.GetHashCode ();
 		}
-#else
-		public override bool Equals (object obj)
-		{
-			if (ReferenceEquals (this, obj)) {
-				return true;
-			}
-
-			var other = obj as CBUUID;
-			if (other != null) {
-				return Equals (other);
-			}
-
-			return false;
-		}
-
-		public unsafe bool Equals (CBUUID obj)
-		{
-			if (obj == null) {
-				return false;
-			} else if (Data == null && obj.Data == null) {
-				return true;
-			} else if (Data == null || obj.Data == null) {
-				return false;
-			}
-
-			var ad = Data;
-			var bd = obj.Data;
-
-			nuint a_len, b_len;
-			IntPtr a, b;
-
-			// Sort so that a is always smaller than b to reduce logic below
-			if (ad.Length < bd.Length) {
-				a_len = ad.Length;
-				a = ad.Bytes;
-				b_len = bd.Length;
-				b = bd.Bytes;
-			} else {
-				a_len = bd.Length;
-				a = bd.Bytes;
-				b_len = ad.Length;
-				b = ad.Bytes;
-			}
-
-			// If UUIDs are the same length, compare directly for each
-			// supported size, 16, 32, and 128 bits. If the sizes differ,
-			// one must be either 16 or 32 bits and the other 128 bits,
-			// so mask the 16 and 32 bit ones with the Bluetooth Base UUID
-			// (lowServiceMask . highServiceBits) and compare with the
-			// other 128 bit UUID. Comparing 16-bit vs 32-bit UUIDs is
-			// not supported.
-			//
-			// From what I gather from the googles and "Specification of
-			// the Bluetooth System", Supplement to the Bluetooth Core
-			// Specification, Version 1, 27 December 2011, 16 and 32 bit
-			// service UUIDs cannot be equal, given that "The Service UUID
-			// data types corresponding to 32-bit Service UUIDs shall not
-			// be sent in advertising data packets." Therefore we just
-			// return false, and we're really likely never to encounter a
-			// 32-bit Service UUID in this API... --abock
-
-			if (a_len == b_len) {
-				switch (a_len) {
-				case 2:
-					return *((ushort *)a) == *((ushort *)b);
-				case 4:
-					return *((uint *)a) == *((uint *)b);
-				case 16:
-					return *((ulong *)a) == *((ulong *)b) &&
-						*((ulong *)(a + 8)) == *((ulong *)(b + 8));
-				}
-			} else if (a_len == 2 && b_len == 16) {
-				return *((ulong *)(b + 8)) == highServiceBits &&
-					*((ulong *)b) == ((uint)(*((ushort *)a) << 16)
-						| lowServiceMask);
-			} else if (a_len == 4 && b_len == 16) {
-				return *((ulong *)(b + 8)) == highServiceBits &&
-					*((ulong *)b) == (*((uint *)a) | lowServiceMask);
-			}
-
-			return false;
-		}
-
-		public unsafe override int GetHashCode ()
-		{
-			// ensure we return something that satisfy:
-			// "Two objects that are equal return hash codes that are equal."
-			return (int) GetNativeHash ();
-		}
-#endif
 
 		public unsafe string ToString (bool fullUuid)
 		{

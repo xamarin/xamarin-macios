@@ -2,7 +2,7 @@
 
 // note: Contacts is not part of classic as several API requires generics
 
-#if XAMCORE_2_0 && !XAMCORE_3_0
+#if !XAMCORE_3_0
 
 using System;
 using Foundation;

@@ -20,7 +20,6 @@ using UIKit;
 
 namespace ContactsUI {
 
-#if XAMCORE_2_0 // The Contacts framework uses generics heavily, which is only supported in Unified (for now at least)
 #if !MONOMAC
 	[iOS (9,0)]
 	[BaseType (typeof (UIViewController))]
@@ -210,6 +209,5 @@ namespace ContactsUI {
 		void Close ();
 	}
 #endif // MONOMAC
-#endif // XAMCORE_2_0
 }
 

@@ -71,7 +71,6 @@ namespace CoreAnimation {
 		}
 	}
 
-#if XAMCORE_2_0
 	public partial class CAKeyFrameAnimation {
 
 		// For compatibility, as we told users to explicitly use this method before, or get a warning
@@ -80,25 +79,4 @@ namespace CoreAnimation {
 			return FromKeyPath (path);
 		}
 	}
-#else
-	// CoreAudioClock.h (inside AudioToolbox)
-	// It was a confusion between CA (CoreAudio) and CA (CoreAnimation)
-	[StructLayout (LayoutKind.Sequential)]
-	public struct CABarBeatTime {
-		public /* SInt32 */ int Bar;
-		public /* UInt16 */ ushort Beat;
-		public /* UInt16 */ ushort Subbeat;
-		public /* UInt16 */ ushort SubbeatDivisor;
-		public /* UInt16 */ ushort Reserved;
-	}
-
-	public partial class CAKeyFrameAnimation {
-
-		[Obsolete ("This method in the future will return a 'CAKeyFrameAnimation', update your source, or use 'GetFromKeyPath' to avoid this warning for now.")]
-		public static CAPropertyAnimation FromKeyPath (string path)
-		{
-			return GetFromKeyPath (path);
-		}
-	}
-#endif
 }
