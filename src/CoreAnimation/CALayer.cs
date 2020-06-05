@@ -107,20 +107,6 @@ namespace CoreAnimation {
 			}
 		}
 
-#if !XAMCORE_2_0
-		[Obsolete ("Use 'BeginTime' instead.")]
-		public double CFTimeInterval {
-			get { return BeginTime; }
-			set { BeginTime = value; }
-		}
-		
-		[Obsolete ("Use 'ConvertRectFromLayer' instead.")]
-		public CGRect ConvertRectfromLayer (CGRect rect, CALayer layer)
-		{
-			return ConvertRectFromLayer (rect, layer);
-		}
-#endif
-
 		public T GetContentsAs <T> () where T : NSObject
 		{
 			return Runtime.GetNSObject<T> (_Contents);
@@ -159,16 +145,6 @@ namespace CoreAnimation {
 			var rv = Create (dispatcher, NSActionDispatcher.Selector);
 			rv.dispatcher = dispatcher;
 			return rv;
-		}
-	}
-#endif
-
-#if !XAMCORE_2_0
-	public partial class CAAnimation {
-		[Obsolete ("Use 'BeginTime' instead.")]
-		public double CFTimeInterval {
-			get { return BeginTime; }
-			set { BeginTime = value; }
 		}
 	}
 #endif

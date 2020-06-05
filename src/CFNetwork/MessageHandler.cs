@@ -78,7 +78,7 @@ namespace CFNetwork {
 		CFHTTPAuthentication auth;
 
 		#region implemented abstract members of HttpMessageHandler
-#if (MONOMAC && XAMCORE_2_0) && !NET
+#if MONOMAC && !NET
 		internal
 #endif
 		protected override async Task<HttpResponseMessage> SendAsync (HttpRequestMessage request,
