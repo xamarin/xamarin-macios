@@ -5,10 +5,17 @@ using System.Linq;
 using Microsoft.Build.Framework;
 
 using Xamarin.Localization.MSBuild;
-using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks {
 	public abstract class DetectSdkLocationsCoreTaskBase : XamarinTask {
+		#region Inputs
+
+		public string TargetArchitectures {
+			get; set;
+		}
+
+		#endregion Inputs
+
 		#region Outputs
 
 		[Output]
