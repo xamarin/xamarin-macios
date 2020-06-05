@@ -42,7 +42,7 @@ namespace Xharness.Jenkins {
 				TestName = "Mac Binding Projects",
 				Target = "all",
 				WorkingDirectory = Path.Combine (Harness.RootDirectory, "mac-binding-project"),
-				Ignored = !jenkins.TestSelection.HasFlag (TestSelection.MacBindingProject) || !jenkins.TestSelection.HasFlag (TestSelection.Mac),
+				Ignored = !jenkins.TestSelection.HasFlag (TestSelection.MacBindingProject) || !jenkins.TestSelection.HasFlag (TestSelection.MacOS),
 				Timeout = TimeSpan.FromMinutes (15),
 			};
 			yield return runMacBindingProject;

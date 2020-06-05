@@ -97,7 +97,7 @@ namespace Xharness.Jenkins {
 			["device"] = TestSelection.Device,
 			["xtro"] = TestSelection.Xtro,
 			["cecil"] = TestSelection.Cecil,
-			["old-simulator"] = TestSelection.OldSimulator,
+			["old-simulator"] = TestSelection.OldiOSSimulator,
 			["all"] = TestSelection.All,
 		};
 		
@@ -107,7 +107,7 @@ namespace Xharness.Jenkins {
 			["ios"] = TestSelection.iOS,
 			["tvos"] = TestSelection.tvOS,
 			["watchos"] = TestSelection.watchOS,
-			["mac"] = TestSelection.Mac,
+			["mac"] = TestSelection.MacOS,
 			["ios-msbuild"] = TestSelection.iOSMSBuild,
 			["ios-simulator"] = TestSelection.Simulator,
 			["non-monotouch"] =  TestSelection.NonMonotouch,
@@ -272,9 +272,8 @@ namespace Xharness.Jenkins {
 
 			// old simulator tests is also a bit special:
 			// - enabled by default if using a beta Xcode, otherwise disabled by default
-			//changed = SetEnabled (labels, "old-simulator", ref jenkins.IncludeOldSimulatorTests);
 			if (!changed && jenkins.IsBetaXcode) {
-				jenkins.TestSelection |= TestSelection.OldSimulator;
+				jenkins.TestSelection |= TestSelection.OldiOSSimulator;
 				MainLog.WriteLine ("Enabled 'old-simulator' tests because we're using a beta Xcode.");
 			}
 		}
@@ -312,7 +311,7 @@ namespace Xharness.Jenkins {
 
 			if (!Harness.INCLUDE_MAC) {
 				MainLog.WriteLine ("The macOS build is disabled, so any macOS tests will be disabled as well.");
-				jenkins.TestSelection &= ~TestSelection.Mac;
+				jenkins.TestSelection &= ~TestSelection.MacOS;
 			} 
 		}
 	}

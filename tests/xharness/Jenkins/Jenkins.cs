@@ -15,9 +15,10 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
 using Xharness.Jenkins.Reports;
 
 namespace Xharness.Jenkins {
+	
 	[Flags]
-	public enum TestSelection {
-		Mac = 0,
+	public enum TestSelection : long {
+		MacOS = 0,
 		iOS32 = 1,
 		iOS64 = 2,
 		iOS = iOS32 | iOS64,
@@ -30,19 +31,18 @@ namespace Xharness.Jenkins {
 		Btouch = 512,
 		MacBindingProject = 1024,
 		Simulator = 2048,
-		OldSimulator,
-		Device = 4096,
-		Xtro = 8192,
-		Cecil = 16384,
-		Docs = 32768,
-		BclXUnit = 65536,
-		BclNUnit = 131072,
+		OldiOSSimulator = 4096,
+		Device = 8192,
+		Xtro = 16384,
+		Cecil = 32768,
+		Docs = 65536,
+		BclXUnit = 131072,
+		BclNUnit = 262144,
 		Bcl = BclXUnit | BclNUnit,
-		Mscorlib = 262144,
-		NonMonotouch = 524288,
-		Monotouch = 1048576,
-		DotNet = 2097152,
-		SystemPermission = 4194304,
+		Mscorlib = 524288,
+		NonMonotouch = 1048576,
+		Monotouch = 2097152,
+		DotNet = 4194304,
 		All = ~0,
 	}
 	class Jenkins {
@@ -61,7 +61,7 @@ namespace Xharness.Jenkins {
 		
 		public bool Populating { get; private set; } = true;
 
-		public TestSelection TestSelection { get; set; } = TestSelection.Mac | TestSelection.iOS | TestSelection.tvOS |
+		public TestSelection TestSelection { get; set; } = TestSelection.MacOS | TestSelection.iOS | TestSelection.tvOS |
 		                                                   TestSelection.watchOS | TestSelection.iOSMSBuild |
 		                                                   TestSelection.Simulator | TestSelection.NonMonotouch |
 		                                                   TestSelection.Monotouch;
@@ -123,7 +123,7 @@ namespace Xharness.Jenkins {
 			
 			if (project.IsBclTest ()) {
 				if (!project.IsBclxUnit ())
-					return TestSelection.HasFlag(TestSelection.BclNUnit);
+					return TestSelection.HasFlag (TestSelection.BclNUnit);
 				if (project.IsMscorlib ()) 
 					return TestSelection.HasFlag (TestSelection.Mscorlib);
 				return TestSelection.HasFlag (TestSelection.BclXUnit);
