@@ -18,9 +18,10 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 			var bytes = new byte [16];
 			if (seed == null) guid_generator.NextBytes (bytes);
 			else {
-				using (var provider = MD5.Create ()) {
+				using (var provider = SHA256.Create ()) {
 					var inputBytes = Encoding.UTF8.GetBytes (seed);
-					bytes = provider.ComputeHash (inputBytes);
+					var output = provider.ComputeHash (inputBytes);
+					Array.Copy (output, bytes, 16);
 				}
 			}
 			return new Guid (bytes);

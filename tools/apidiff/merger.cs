@@ -54,10 +54,10 @@ class Merger {
 		// https://github.com/MicrosoftDocs/xamarin-docs/blob/live/contributing-guidelines/template.md#file-name
 		var filename = $"{os}-{from}-{to}".Replace ('.', '-').ToLowerInvariant () + ".md";
 		byte[] digest = null;
-		using (var md = MD5.Create ())
+		using (var md = SHA256.Create ())
 			digest = md.ComputeHash (Encoding.UTF8.GetBytes (filename));
 		// (not cryptographically) unique (but good enough) for each filename - so document remains with the same id when it's updated/regenerated
-		var guid = new Guid (digest);
+		var guid = new Guid (digest[0..15]);
 
 		var headers = new StringWriter ();
 		var title = $"{platform} SDK API diff: {from} vs {to}";
