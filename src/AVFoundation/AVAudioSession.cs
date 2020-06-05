@@ -42,28 +42,6 @@ namespace AVFoundation {
 	}
 
 	public partial class AVAudioSession : NSObject {
-#if !XAMCORE_2_0
-		[Obsolete ("Please use the static SharedInstance property as this type is not meant to be created")]
-		[CompilerGenerated]
-		[EditorBrowsable (EditorBrowsableState.Never)]
-		[Export ("init")]
-		public AVAudioSession () : base (NSObjectFlag.Empty)
-		{
-			if (IsDirectBinding) {
-				Handle = ObjCRuntime.Messaging.IntPtr_objc_msgSend (this.Handle, Selector.GetHandle ("init"));
-			} else {
-				Handle = ObjCRuntime.Messaging.IntPtr_objc_msgSendSuper (this.SuperHandle, Selector.GetHandle ("init"));
-			}
-		}
-
-		[Obsolete ("Use 'SetActive(bool, out NSError)' instead.")]
-		public bool SetActive (bool beActive, NSError outError)
-		{
-			// Effectively discarded due to original binding error
-			return SetActive (beActive, out outError);
-		}
-#endif
-
 		public NSError SetActive (bool beActive)
 		{
 			NSError outError;
@@ -79,15 +57,6 @@ namespace AVFoundation {
 			if (SetActive (active, options, out outError))
 				return null;
 			return outError;
-		}
-#endif
-		
-#if !XAMCORE_2_0
-		[Obsolete ("Use 'SetCategory(bool, out NSError)' instead.")]
-		public bool SetCategory (NSString theCategory, NSError outError)
-		{
-			// Effectively discarded due to original binding error
-			return SetCategory (theCategory, out outError);
 		}
 #endif
 
@@ -135,22 +104,6 @@ namespace AVFoundation {
 				return null;
 			return error;
 		}
-
-#if !XAMCORE_2_0
-		[Obsolete ("Use 'SetPreferredSampleRate(bool, out NSError)' on iOS 6.0 instead.")]
-		public bool SetPreferredHardwareSampleRate (double sampleRate, NSError outError)
-		{
-			// Effectively discarded due to original binding error
-			return SetPreferredHardwareSampleRate (sampleRate, out outError);
-		}
-
-		[Obsolete ("Use 'SetPreferredIOBufferDuration(bool, out NSError)' instead.")]
-		public bool SetPreferredIOBufferDuration (double duration, NSError outError)
-		{
-			// Effectively discarded due to original binding error
-			return SetPreferredIOBufferDuration (duration, out outError);
-		}
-#endif
 	}
 #endif
 }

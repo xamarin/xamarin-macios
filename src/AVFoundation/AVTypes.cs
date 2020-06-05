@@ -8,18 +8,8 @@ using System.Runtime.InteropServices;
 using OpenTK;
 #endif
 
-#if XAMCORE_2_0
+using CoreGraphics;
 using ObjCRuntime;
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-#if MONOMAC
-using MonoMac.ObjCRuntime;
-#else
-using MonoTouch.ObjCRuntime;
-#endif
-#endif
 
 namespace AVFoundation {
 
@@ -257,9 +247,9 @@ namespace AVFoundation {
 	public static class AVUtilities {
 
 		[DllImport (Constants.AVFoundationLibrary)]
-		static extern /* CGRect */ RectangleF AVMakeRectWithAspectRatioInsideRect (/* CGSize */ SizeF aspectRatio, /* CGRect */ RectangleF boundingRect);
+		static extern /* CGRect */ CGRect AVMakeRectWithAspectRatioInsideRect (/* CGSize */ CGSize aspectRatio, /* CGRect */ CGRect boundingRect);
 
-		public static RectangleF WithAspectRatio (this RectangleF self, SizeF aspectRatio)
+		public static CGRect WithAspectRatio (this CGRect self, CGSize aspectRatio)
 		{
 			return AVMakeRectWithAspectRatioInsideRect (aspectRatio, self);
 		}
