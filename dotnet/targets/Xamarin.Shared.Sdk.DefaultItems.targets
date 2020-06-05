@@ -13,7 +13,6 @@
     <_EnableDefaultXamarinItems Condition=" '$(_PlatformName)' == 'tvOS' ">$(EnableDefaulttvOSItems)</_EnableDefaultXamarinItems>
     <_EnableDefaultXamarinItems Condition=" '$(_PlatformName)' == 'watchOS' ">$(EnableDefaultwatchOSItems)</_EnableDefaultXamarinItems>
     <_EnableDefaultXamarinItems Condition=" '$(_PlatformName)' == 'macOS' ">$(EnableDefaultmacOSItems)</_EnableDefaultXamarinItems>
-    <FooFoo>HelloWorld</FooFoo>
   </PropertyGroup>
 
   <!-- Default plist file inclusion -->
