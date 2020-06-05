@@ -8,18 +8,6 @@
     <_UsingXamarinSdk>true</_UsingXamarinSdk>
     <!-- This is the location of the Microsoft.<platform>.Sdk NuGet (/usr/local/share/dotnet/sdk/<version>/Sdks/Microsoft.[iOS/tvOS/watchOS/macOS].Sdk) -->
     <_XamarinSdkRootDirectory>$([MSBuild]::NormalizePath('$(MSBuildThisFileDirectory)', '..'))\</_XamarinSdkRootDirectory>
-
-    <!-- Enable default inclusion behavior unless told otherwise, but default to the value for EnableDefaultItems -->
-    <!-- We have a public property for each platform, and unify them into a single private property for our own build logic -->
-    <EnableDefaultiOSItems Condition=" '$(_PlatformName)' == 'iOS' And '$(EnableDefaultiOSItems)' == '' ">$(EnableDefaultItems)</EnableDefaultiOSItems>
-    <EnableDefaulttvOSItems Condition=" '$(_PlatformName)' == 'tvOS' And '$(EnableDefaulttvOSItems)' == '' ">$(EnableDefaultItems)</EnableDefaulttvOSItems>
-    <EnableDefaultwatchOSItems Condition=" '$(_PlatformName)' == 'watchOS' And '$(EnableDefaultwatchOSItems)' == '' ">$(EnableDefaultItems)</EnableDefaultwatchOSItems>
-    <EnableDefaultmacOSItems Condition=" '$(_PlatformName)' == 'macOS' And '$(EnableDefaultmacOSItems)' == '' ">$(EnableDefaultItems)</EnableDefaultmacOSItems>
-    <_EnableDefaultXamarinItems Condition=" '$(_PlatformName)' == 'iOS' ">$(EnableDefaultiOSItems)</_EnableDefaultXamarinItems>
-    <_EnableDefaultXamarinItems Condition=" '$(_PlatformName)' == 'tvOS' ">$(EnableDefaulttvOSItems)</_EnableDefaultXamarinItems>
-    <_EnableDefaultXamarinItems Condition=" '$(_PlatformName)' == 'watchOS' ">$(EnableDefaultwatchOSItems)</_EnableDefaultXamarinItems>
-    <_EnableDefaultXamarinItems Condition=" '$(_PlatformName)' == 'macOS' ">$(EnableDefaultmacOSItems)</_EnableDefaultXamarinItems>
-
   </PropertyGroup>
 
   <!-- Default item includes (globs and implicit references) -->
