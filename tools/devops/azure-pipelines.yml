@@ -82,13 +82,21 @@ jobs:
       git clone -b $branch $repo $SYSTEM_DEFAULTWORKINGDIRECTORY/../maccore
     displayName: "Setting up maccore..."
 
-  - task: securedevelopmentteam.vss-secure-development-tools.build-task-credscan.CredScan@2
+  - task: CredScan@3
     displayName: "Run CredScan"
     inputs:
-      suppressionsFile: "$(System.DefaultWorkingDirectory)/../maccore/tools/devops/CredScanSuppressions.json"
-      debugMode: false
+      suppressionsFile: '$(System.DefaultWorkingDirectory)/../maccore/tools/devops/CredScanSuppressions.json'
+
+  - task: PoliCheck@1
+    inputs:
+      inputType: 'Basic'
+      targetType: 'F'
+      targetArgument: '$(Build.SourcesDirectory)'
+      result: 'PoliCheck.xml'
+      optionsUEPATH: '$(System.DefaultWorkingDirectory)/../maccore/tools/devops/PoliCheckExclusions.xml'
 
   - task: securedevelopmentteam.vss-secure-development-tools.build-task-postanalysis.PostAnalysis@1
     displayName: 'Post Analysis'
     inputs:
       CredScan: true
+      PoliCheck: true
