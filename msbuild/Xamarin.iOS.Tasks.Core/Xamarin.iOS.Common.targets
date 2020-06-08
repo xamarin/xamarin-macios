@@ -582,32 +582,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</UnpackLibraryResources>
 	</Target>
 
-	<Target Name="_DetectSigningIdentity" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_ComputeTargetFrameworkMoniker">
-		<DetectSigningIdentity
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			AppBundleName="$(_AppBundleName)"
-			AppManifest="$(_AppManifest)"
-			Keychain="$(CodesignKeychain)"
-			RequireCodeSigning="$(_RequireCodeSigning)"
-			RequireProvisioningProfile="$(_RequireProvisioningProfile)"
-			SdkIsSimulator="$(_SdkIsSimulator)"
-			SdkPlatform="$(_SdkPlatform)"
-			ProvisioningProfile="$(CodesignProvision)"
-			SigningKey="$(_SpecifiedCodesignKey)"
-			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
-			>
-
-			<Output TaskParameter="DetectedAppId" PropertyName="_AppIdentifier" />
-			<Output TaskParameter="DetectedBundleId" PropertyName="_BundleIdentifier" />
-			<Output TaskParameter="DetectedBundleVersion" PropertyName="_BundleVersion" />
-			<Output TaskParameter="DetectedCodeSigningKey" PropertyName="_CodeSigningKey" />
-			<Output TaskParameter="DetectedCodesignAllocate" PropertyName="_CodesignAllocate" />
-			<Output TaskParameter="DetectedDistributionType" PropertyName="_DistributionType" />
-			<Output TaskParameter="DetectedProvisioningProfile" PropertyName="_ProvisioningProfile" />
-		</DetectSigningIdentity>
-	</Target>
-	
 	<Target Name="_GenerateBundleName" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_ComputeTargetArchitectures;_GenerateAppBundleName;_GenerateAppExBundleName" />
 
 	<Target Name="_GenerateAppBundleName" Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsAppExtension)' != 'true'" DependsOnTargets="_ComputeTargetArchitectures">
