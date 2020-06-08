@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
@@ -31,10 +32,10 @@ namespace Xamarin.MMP.Tests {
 
 			string netStandardProject = TI.GenerateNetStandardProject (config);
 
-			var environment = new string [] {
-				"MSBUILD_EXE_PATH", null,
-				"MSBuildExtensionsPathFallbackPathsOverride", null,
-				"MSBuildSDKsPath", null,
+			var environment = new Dictionary<string, string> {
+				{ "MSBUILD_EXE_PATH", null },
+				{ "MSBuildExtensionsPathFallbackPathsOverride", null },
+				{ "MSBuildSDKsPath", null },
 			};
 
 			TI.RunAndAssert("/usr/local/share/dotnet/dotnet", new [] { "restore", netStandardProject }, "Restore", environment: environment);

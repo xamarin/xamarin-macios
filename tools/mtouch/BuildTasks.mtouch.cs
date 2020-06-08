@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 using Xamarin.MacDev;
@@ -14,20 +12,22 @@ namespace Xamarin.Bundler
 {
 	public abstract class ProcessTask : BuildTask
 	{
-		public ProcessStartInfo ProcessStartInfo;
+		public string FileName;
+		public IList<string> Arguments;
+		public Dictionary<string, string> Environment = new Dictionary<string, string> ();
 		protected StringBuilder Output;
 
 		protected string Command {
 			get {
 				var result = new StringBuilder ();
-				if (ProcessStartInfo.EnvironmentVariables.ContainsKey ("MONO_PATH")) {
+				if (Environment.TryGetValue ("MONO_PATH", out var mono_path)) {
 					result.Append ("MONO_PATH=");
-					result.Append (StringUtils.Quote (ProcessStartInfo.EnvironmentVariables ["MONO_PATH"]));
+					result.Append (StringUtils.Quote (mono_path));
 					result.Append (' ');
 				}
-				result.Append (ProcessStartInfo.FileName);
+				result.Append (FileName);
 				result.Append (' ');
-				result.Append (ProcessStartInfo.Arguments);
+				result.Append (StringUtils.FormatArguments (Arguments));
 				return result.ToString ();
 			}
 		}
@@ -51,51 +51,13 @@ namespace Xamarin.Bundler
 			if (Driver.Verbosity > 0)
 				Console.WriteLine (Command);
 
-			var info = ProcessStartInfo;
-			var stdout_completed = new ManualResetEvent (false);
-			var stderr_completed = new ManualResetEvent (false);
-			var lockobj = new object ();
-
 			Output = new StringBuilder ();
 
-			using (var p = Process.Start (info)) {
-				p.OutputDataReceived += (sender, e) =>
-				{
-					if (e.Data != null) {
-						lock (lockobj)
-							OutputReceived (e.Data);
-					} else {
-						stdout_completed.Set ();
-					}
-				};
+			var rv = Execution.RunWithCallbacksAsync (FileName, Arguments, environment: Environment, standardOutput: OutputReceived, standardError: OutputReceived).Result;
 
-				p.ErrorDataReceived += (sender, e) =>
-				{
-					if (e.Data != null) {
-						lock (lockobj)
-							OutputReceived (e.Data);
-					} else {
-						stderr_completed.Set ();
-					}
-				};
+			OutputReceived (null);
 
-				p.BeginOutputReadLine ();
-				p.BeginErrorReadLine ();
-
-				p.WaitForExit ();
-
-				stderr_completed.WaitOne (TimeSpan.FromSeconds (1));
-				stdout_completed.WaitOne (TimeSpan.FromSeconds (1));
-
-				OutputReceived (null);
-
-				GC.Collect (); // Workaround for: https://bugzilla.xamarin.com/show_bug.cgi?id=43462#c14
-
-				if (Driver.Verbosity >= 2 && Output.Length > 0)
-					Console.Error.WriteLine (Output.ToString ());
-
-				return p.ExitCode;
-			}
+			return rv.ExitCode;
 		}
 	}
 
@@ -310,7 +272,7 @@ namespace Xamarin.Bundler
 			var cmd_length = Target.App.CompilerPath.Length + 1 + CompilerFlags.ToString ().Length;
 
 			try {
-				var code = await Driver.RunCommandAsync (Target.App.CompilerPath, CompilerFlags.ToArray (), null, output, suppressPrintOnErrors: true);
+				var code = await Driver.RunCommandAsync (Target.App.CompilerPath, CompilerFlags.ToArray (), output: output, suppressPrintOnErrors: true);
 
 				Application.ProcessNativeLinkerOutput (Target, output.ToString (), CompilerFlags.AllLibraries, linker_errors, code != 0);
 
@@ -589,7 +551,7 @@ namespace Xamarin.Bundler
 				CheckFor5107 (assembly_name, line, exceptions);
 			});
 
-			var rv = await Driver.RunCommandAsync (App.CompilerPath, CompilerFlags.ToArray (), null, output_received, suppressPrintOnErrors: true);
+			var rv = await Driver.RunCommandAsync (App.CompilerPath, CompilerFlags.ToArray (), output_received: output_received, suppressPrintOnErrors: true);
 
 			WriteLimitedOutput (rv != 0 ? $"Compilation failed with code {rv}, command:\n{App.CompilerPath} {CompilerFlags.ToString ()}" : null, output, exceptions);
 
