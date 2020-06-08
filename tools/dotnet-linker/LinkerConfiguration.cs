@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
 
@@ -9,6 +10,7 @@ using Xamarin.Utils;
 
 namespace Xamarin.Linker {
 	public class LinkerConfiguration {
+		public List<Abi> Abis;
 		public ApplePlatform Platform { get; private set; }
 		public string PlatformAssembly { get; private set; }
 
@@ -65,6 +67,17 @@ namespace Xamarin.Linker {
 				case "PlatformAssembly":
 					PlatformAssembly = Path.GetFileNameWithoutExtension (value);
 					break;
+				case "TargetArchitectures":
+					if (!Enum.TryParse<Abi> (value, out var arch))
+						throw new InvalidOperationException ($"Unknown target architectures: {value} in {linker_file}");
+					// Add to the list of Abis as separate entries (instead of a flags enum value), because that way it's easier to enumerate over them.
+					Abis = new List<Abi> ();
+					for (var b = 0; b < 32; b++) {
+						var a = (Abi) (1 << b);
+						if ((a & arch) == a)
+							Abis.Add (a);
+					}
+					break;
 				default:
 					throw new InvalidOperationException ($"Unknown key '{key}' in {linker_file}");
 				}
@@ -76,6 +89,7 @@ namespace Xamarin.Linker {
 		public void Write ()
 		{
 			Console.WriteLine ($"LinkerConfiguration:");
+			Console.WriteLine ($"    Abis: {string.Join (", ", Abis.Select (v => v.AsArchString ()))}");
 			Console.WriteLine ($"    Platform: {Platform}");
 			Console.WriteLine ($"    PlatformAssembly: {PlatformAssembly}.dll");
 		}
