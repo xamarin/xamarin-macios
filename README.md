@@ -25,12 +25,11 @@ If you are interested in fixing issues and contributing directly to the code bas
 
 ## Downloads
 
-The preferred method for installing Xamarin.iOS and Mac is to use the Visual Studio installers ([Windows](https://docs.microsoft.com/en-us/xamarin/ios/get-started/installation/windows/?pivots=windows), [Mac](https://docs.microsoft.com/en-us/visualstudio/mac/installation?view=vsmac-2019)). 
+The preferred method for installing Xamarin.iOS and Mac is to use the Visual Studio installers ([Windows](https://docs.microsoft.com/xamarin/ios/get-started/installation/windows/?pivots=windows), [Mac](https://docs.microsoft.com/visualstudio/mac/installation?view=vsmac-2019)).
 
-The team also [strongly recommends](https://docs.microsoft.com/en-us/xamarin/ios/troubleshooting/questions/old-version-xcode) using the latest Xamarin SDK and Xcode whenever possible.
+The team also [strongly recommends](https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/old-version-xcode) using the latest Xamarin SDK and Xcode whenever possible.
 
 However, we provide links to older Xamarin.iOS and Mac packages for macOS downgrades and build machine configuration.
-
 
 | Platform        | Link |
 |-----------------|--------|
