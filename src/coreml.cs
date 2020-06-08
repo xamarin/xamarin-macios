@@ -7,8 +7,6 @@
 // Copyright 2017 Xamarin Inc. All rights reserved.
 //
 
-#if XAMCORE_2_0
-
 using System;
 using ObjCRuntime;
 using CoreFoundation;
@@ -985,4 +983,3 @@ namespace CoreML {
 		bool Write (NSUrl url, [NullAllowed] out NSError error);
 	}
 }
-#endif // XAMCORE_2_0

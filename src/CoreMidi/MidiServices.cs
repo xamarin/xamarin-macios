@@ -161,17 +161,9 @@ namespace CoreMidi {
 	}
 	
 	public class MidiObject
-#if !XAMCORE_2_0
-  #if !COREBUILD
-	: IDisposable, INativeObject
-  #else
-	: INativeObject
-  #endif
-#else
-  #if !COREBUILD
+ #if !COREBUILD
 	: IDisposable
   #endif
-#endif
 	{
 #if !COREBUILD
 		internal const MidiObjectRef InvalidRef = 0;
@@ -280,15 +272,9 @@ namespace CoreMidi {
 			kMIDIPropertyNameConfigurationDictionary = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyNameConfigurationDictionary");
 		}
 	
-#if XAMCORE_2_0
 		public MidiObjectRef Handle {
 			get { return handle; }
 		}
-#else
-		public IntPtr Handle {
-			get { return (IntPtr) handle; }
-		}
-#endif
 
 		internal MidiObjectRef MidiHandle {
 			get { return handle; }
@@ -422,14 +408,6 @@ namespace CoreMidi {
 			return value;
 		}
 
-#if !XAMCORE_2_0
-		[Obsolete ("Use the (int) overload instead.")]
-		public MidiObject (IntPtr handle)
-			: this ((int) handle, true)
-		{
-		}
-#endif
-			
 		public MidiObject (MidiObjectRef handle)
 		: this (handle, true)
 		{
@@ -461,11 +439,7 @@ namespace CoreMidi {
 			GC.SuppressFinalize (this);
 		}
 		
-#if XAMCORE_2_0
 		protected virtual void Dispose (bool disposing)
-#else
-		public virtual void Dispose (bool disposing)
-#endif
 		{
 			DisposeHandle ();
 		}
@@ -568,24 +542,6 @@ namespace CoreMidi {
 		{
 			return Name;
 		}
-
-#if !XAMCORE_2_0
-		[Obsolete ("It is better to use 'CreateVirtualSource (string name, out MidiError statusCode)' to flag errors.")]
-		public MidiEndpoint CreateVirtualSource (string name)
-		{
-			using (var nsstr = new NSString (name)){
-				MidiObjectRef ret;
-				var code = MIDISourceCreate (handle, nsstr.Handle, out ret);
-				if (code != 0){
-					if (code == (int)MidiError.NotPermitted){
-						Console.WriteLine ("Does your Info.plist contain a UIBackgroundModes to contain the key 'audio'?");
-					}
-					return null;
-				}
-				return new MidiEndpoint (ret, true);
-			}			
-		}
-#endif
 
 		public MidiEndpoint CreateVirtualSource (string name, out MidiError statusCode)
 		{
@@ -691,11 +647,7 @@ namespace CoreMidi {
 			}
 		}
 
-#if XAMCORE_2_0
 		protected override void Dispose (bool disposing)
-#else
-		public override void Dispose (bool disposing)
-#endif
 		{
 			SetupChanged = null;
 			ObjectAdded = null;
@@ -965,11 +917,7 @@ namespace CoreMidi {
 				gch.Free ();
 		}
 
-#if XAMCORE_2_0
 		protected override void Dispose (bool disposing)
-#else
-		public override void Dispose (bool disposing)
-#endif
 		{
 			MessageReceived = null;
 			base.Dispose (disposing);
@@ -1169,7 +1117,6 @@ namespace CoreMidi {
 			}
 		}
 
-#if XAMCORE_2_0
 		public bool IsBroadcast {
 			get {
 				return GetInt (kMIDIPropertyIsBroadcast) != 0;
@@ -1178,16 +1125,6 @@ namespace CoreMidi {
 				SetInt (kMIDIPropertyIsBroadcast, value ? 1 : 0);
 			}
 		}
-#else
-		public int IsBroadcast {
-			get {
-				return GetInt (kMIDIPropertyIsBroadcast);
-			}
-			set {
-				SetInt (kMIDIPropertyIsBroadcast, value);
-			}
-		}
-#endif
 
 		public bool IsDrumMachine {
 			get {
@@ -2032,11 +1969,7 @@ namespace CoreMidi {
 			}
 		}
 
-#if XAMCORE_2_0
 		protected override void Dispose (bool disposing)
-#else
-		public override void Dispose (bool disposing)
-#endif
 		{
 			MessageReceived = null;
 			base.Dispose (disposing);
@@ -2152,7 +2085,6 @@ namespace CoreMidi {
 			}
 		}
 
-#if XAMCORE_2_0
 		public bool IsBroadcast {
 			get {
 				return GetInt (kMIDIPropertyIsBroadcast) != 0;
@@ -2161,16 +2093,6 @@ namespace CoreMidi {
 				SetInt (kMIDIPropertyIsBroadcast, value ? 1 : 0);
 			}
 		}
-#else
-		public int IsBroadcast {
-			get {
-				return GetInt (kMIDIPropertyIsBroadcast);
-			}
-			set {
-				SetInt (kMIDIPropertyIsBroadcast, value);
-			}
-		}
-#endif
 
 		public string Manufacturer {
 			get {

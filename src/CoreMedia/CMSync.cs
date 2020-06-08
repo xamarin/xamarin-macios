@@ -57,14 +57,7 @@ namespace CoreMedia {
 			}
 		}
 
-#if MONOMAC && !XAMCORE_2_0
-		// avoid breaking change on MonoMac.dll
-		[Obsolete ("The 'CMAudioClockCreate' API is only available on iOS.")]
-		public static CMClock CreateAudioClock (out CMClockError clockError)
-		{
-			throw new NotSupportedException ();
-		}
-#elif !MONOMAC
+#if !MONOMAC
 		// CMAudioClock.h
 		[Mac (10,10)]
 		[DllImport(Constants.CoreMediaLibrary)]

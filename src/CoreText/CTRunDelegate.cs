@@ -57,7 +57,6 @@ namespace CoreText {
 			handle = GCHandle.Alloc (this);
 		}
 
-#if XAMCORE_2_0
 		~CTRunDelegateOperations ()
 		{
 			Dispose (false);
@@ -72,11 +71,6 @@ namespace CoreText {
 		protected virtual void Dispose (bool disposing)
 		{
 		}
-#else
-		public virtual void Dispose ()
-		{
-		}
-#endif
 
 #if XAMCORE_4_0
 		public virtual nfloat GetAscent ()

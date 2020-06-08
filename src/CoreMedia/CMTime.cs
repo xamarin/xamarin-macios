@@ -28,33 +28,18 @@ namespace CoreMedia {
 		}
 #if !COREBUILD
 
-#if XAMCORE_2_0
-		readonly
-#endif
-		public static CMTime Invalid = new CMTime (0);
+		public readonly static CMTime Invalid = new CMTime (0);
 
 		const Flags kIndefinite = Flags.Valid | Flags.Indefinite;
-#if XAMCORE_2_0
-		readonly
-#endif
-		public static CMTime Indefinite = new CMTime (kIndefinite);
+		public readonly static CMTime Indefinite = new CMTime (kIndefinite);
 
 		const Flags kPositive = Flags.Valid | Flags.PositiveInfinity;
-#if XAMCORE_2_0
-		readonly
-#endif
-		public static CMTime PositiveInfinity = new CMTime (kPositive);
+		public readonly static CMTime PositiveInfinity = new CMTime (kPositive);
 
 		const Flags kNegative = Flags.Valid | Flags.NegativeInfinity;
-#if XAMCORE_2_0
-		readonly
-#endif
-		public static CMTime NegativeInfinity = new CMTime (kNegative);
+		public readonly static CMTime NegativeInfinity = new CMTime (kNegative);
 
-#if XAMCORE_2_0
-		readonly
-#endif
-		public static CMTime Zero = new CMTime (Flags.Valid, 1);
+		public readonly static CMTime Zero = new CMTime (Flags.Valid, 1);
 		
 		public const int MaxTimeScale = 0x7fffffff;
 
@@ -341,15 +326,6 @@ namespace CoreMedia {
 		{
 			return new NSDictionary (CMTimeCopyAsDictionary (this, IntPtr.Zero), true);
 		}
-			
-#if !XAMCORE_2_0
-		[Obsolete ("Use 'ToDictionary' instead.")]
-		public IntPtr AsDictionary {
-			get {
-				return CMTimeCopyAsDictionary (this, IntPtr.Zero);
-			}
-		}
-#endif
 		
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* CFStringRef */ IntPtr CMTimeCopyDescription (/* CFAllocatorRef */ IntPtr allocator, CMTime time);
@@ -374,16 +350,6 @@ namespace CoreMedia {
 				throw new ArgumentNullException ("dict");
 			return CMTimeMakeFromDictionary (dict.Handle);
 		}
-
-#if !XAMCORE_2_0
-#if !WATCH
-		[Obsolete ("Use 'FromDictionary (NSDictionary)' instead.")]
-		public static CMTime FromDictionary (IntPtr dict)
-		{
-			return CMTimeMakeFromDictionary (dict);
-		}
-#endif // !WATCH
-#endif	// !XAMCORE_2_0
 #endif // !COREBUILD
 	}
 }
