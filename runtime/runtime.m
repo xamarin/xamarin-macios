@@ -761,7 +761,7 @@ xamarin_type_get_full_name (MonoType *type, guint32 *exception_gchandle)
 /*
  * ToggleRef support
  */
-// #define DEBUG_TOGGLEREF 1
+#define DEBUG_TOGGLEREF 1
 static void
 gc_register_toggleref (MonoObject *obj, id self, bool isCustomType)
 {
@@ -1720,7 +1720,7 @@ xamarin_objc_type_size (const char *type)
  * we use one bit of the GCHandle to store whether there is a managed ref or not (MANAGED_REF_BIT).
  * 
  */
-//#define DEBUG_REF_COUNTING
+#define DEBUG_REF_COUNTING
 void
 xamarin_create_gchandle (id self, void *managed_object, uint32_t flags, bool force_weak)
 {
@@ -1889,7 +1889,7 @@ is_user_type (id self)
 }
 
 #if defined(DEBUG_REF_COUNTING)
-int
+int32_t
 get_safe_retainCount (id self)
 {
 	// COOP: no managed memory access: any mode
@@ -1899,7 +1899,7 @@ get_safe_retainCount (id self)
 		// NSCalendar/NSInputStream may end up with a stack overflow where CFGetRetainCount calls itself
 		return 666;
 	} else {
-		return [self retainCount];
+		return (int32_t)[self retainCount];
 	}
 }
 #endif

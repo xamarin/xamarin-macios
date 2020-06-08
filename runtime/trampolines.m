@@ -39,7 +39,7 @@
 #include "slinked-list.h"
 #include "trampolines-internal.h"
 #include "runtime-internal.h"
-//#define DEBUG_REF_COUNTING
+#define DEBUG_REF_COUNTING
 
 static pthread_mutex_t refcount_mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER;
 
@@ -685,9 +685,9 @@ xamarin_retain_trampoline (id self, SEL sel)
 	pthread_mutex_lock (&refcount_mutex);
 
 #if defined(DEBUG_REF_COUNTING)
-	int ref_count = [self retainCount];
+	uint32_t ref_count = (uint32_t)[self retainCount];
 	bool had_managed_ref = xamarin_has_managed_ref (self);
-	int pre_gchandle = xamarin_get_gchandle (self);
+	uint32_t pre_gchandle = xamarin_get_gchandle (self);
 #endif
 
 	/*
