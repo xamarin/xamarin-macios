@@ -2990,14 +2990,6 @@ public class TestApp {
 			}
 		}
 
-		[Test]
-		public void MT1211 ()
-		{
-			Assert.Ignore ("There are no device types in the iOS 9 simulator that the 8.1 simulator (earliest simulator Xcode 7 can run) doesn't support, so there's no way to produce the MT1211 error");
-			Asserts.Throws<TestExecutionException> (() => ExecutionHelper.Execute (TestTarget.ToolPath, new [] { "--sdkroot", Configuration.xcode_root, "--launchsim", "/path/to/somewhere", "--device=:v2;runtime=com.apple.CoreSimulator.SimRuntime.iOS-7-1,devicetype=com.apple.CoreSimulator.SimDeviceType.Apple-Watch-38mm" }),
-				"error MT1211: The simulator version '7.1' does not support the simulator type 'Resizable iPhone'\n");
-		}
-
 		// MT1213: unused
 		// MT1214: unused
 		// MT1215: unused
