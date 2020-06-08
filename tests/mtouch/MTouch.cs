@@ -928,16 +928,14 @@ public class B : A {}
 		[Test]
 		public void MT0051 ()
 		{
-			if (Directory.Exists ("/Applications/Xcode44.app/Contents/Developer")) {
-				Asserts.ThrowsPattern<TestExecutionException> (() => {
-					ExecutionHelper.Execute (TestTarget.ToolPath, new [] { "-sdkroot", "/Applications/Xcode44.app/Contents/Developer", "-sim", "/tmp/foo" });
-				}, "error MT0051: Xamarin.iOS .* requires Xcode 6.0 or later. The current Xcode version [(]found in /Applications/Xcode44.app/Contents/Developer[)] is 4.*");
-			}
-
-			if (Directory.Exists ("/Applications/Xcode511.app/Contents/Developer")) {
-				Asserts.ThrowsPattern<TestExecutionException> (() => {
-					ExecutionHelper.Execute (TestTarget.ToolPath, new [] { "-sdkroot", "/Applications/Xcode511.app/Contents/Developer", "-sim", "/tmp/foo" });
-				}, "error MT0051: Xamarin.iOS .* requires Xcode 6.0 or later. The current Xcode version [(]found in /Applications/Xcode511.app/Contents/Developer[)] is 6.0");
+			var xcode_path = "/Applications/Xcode511.app/Contents/Developer";
+			if (Directory.Exists (xcode_path)) {
+				using (var mtouch = new MTouchTool ()) {
+					mtouch.CreateTemporaryApp ();
+					mtouch.SdkRoot = xcode_path;
+					mtouch.AssertExecuteFailure (xcode_path);
+					mtouch.AssertErrorPattern (51, $"Xamarin.iOS .* requires Xcode 6.0 or later. The current Xcode version [(]found in {xcode_path}[)] is 5.1.1");
+				}
 			}
 		}
 
