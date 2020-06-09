@@ -1,4 +1,3 @@
-#if XAMCORE_2_0 || !MONOMAC
 using System;
 namespace ModelIO {
 	public partial class MDLAsset {
@@ -17,4 +16,3 @@ namespace ModelIO {
 #endif
 	}
 }
-#endif

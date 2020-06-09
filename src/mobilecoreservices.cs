@@ -486,8 +486,6 @@ namespace MobileCoreServices {
 		[Field ("kUTTypeSwiftSource", "+CoreServices")]
 		NSString SwiftSource { get; }
 
-// exclude from MonoMac classic
-#if (XAMCORE_2_0 || !MONOMAC)
 		[NoWatch]
 		[iOS (9,0)][Mac(10,11)]
 		[Field ("kUTTypeAlembic", "ModelIO")]
@@ -519,6 +517,5 @@ namespace MobileCoreServices {
 		[NoMac]
 		[Field ("kUTTypeLivePhoto", "+CoreServices")]
 		NSString LivePhoto { get; }
-#endif
 	}
 }

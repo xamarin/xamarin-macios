@@ -6,7 +6,6 @@
 //
 // Copyrigh 2014-2015, Xamarin Inc.
 //
-#if XAMCORE_2_0 || !MONOMAC
 
 using System;
 using System.ComponentModel;
@@ -214,4 +213,3 @@ namespace Metal {
 #endif
 	}
 }
-#endif

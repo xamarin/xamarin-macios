@@ -7,7 +7,6 @@
 //
 // Copyright 2013-2014, 2016 Xamarin, Inc.
 
-#if XAMCORE_2_0 || !MONOMAC // MultipeerConnectivity is 64-bit only on OS X
 using ObjCRuntime;
 
 namespace MultipeerConnectivity {
@@ -56,4 +55,3 @@ namespace MultipeerConnectivity {
 		Unavailable
 	}
 }
-#endif

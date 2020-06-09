@@ -26,7 +26,6 @@
 #pragma warning disable 414
 
 #if !WATCH // doesn't show up in watch headers
-#if XAMCORE_2_0 || !MONOMAC
 
 using System;
 using System.Threading.Tasks;
@@ -61,5 +60,4 @@ namespace MapKit {
 		}
 	}
 }
-#endif
 #endif // !WATCH

@@ -1,4 +1,3 @@
-#if XAMCORE_2_0 || !MONOMAC
 using System;
 using CoreGraphics;
 using Foundation;
@@ -8259,4 +8258,3 @@ namespace MetalPerformanceShaders {
 		MPSRnnMatrixTrainingLayer Copy ([NullAllowed] NSZone zone, [NullAllowed] IMTLDevice device);
 	}
 }
-#endif

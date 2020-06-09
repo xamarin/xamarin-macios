@@ -33,10 +33,7 @@ using Foundation;
 
 namespace MobileCoreServices {
 
-#if XAMCORE_2_0
-	static
-#endif
-	public partial class UTType {
+	public static partial class UTType {
 
 		[iOS (8,0)][Mac (10,10)]
 		[DllImport (Constants.CoreServicesLibrary)]
@@ -84,10 +81,7 @@ namespace MobileCoreServices {
 		[DllImport (Constants.CoreServicesLibrary)]
 		extern static IntPtr /* NSString Array */ UTTypeCreateAllIdentifiersForTag (IntPtr /* CFStringRef */ tagClassStr, IntPtr /* CFStringRef */ tagStr, IntPtr /* CFStringRef */ conformingToUtiStr);
 
-#if XAMCORE_2_0
-		static
-#endif
-		public string [] CreateAllIdentifiers (string tagClass, string tag, string conformingToUti)
+		public static string [] CreateAllIdentifiers (string tagClass, string tag, string conformingToUti)
 		{
 			if (tagClass == null)
 				throw new ArgumentNullException ("tagClass");
@@ -109,10 +103,7 @@ namespace MobileCoreServices {
 		extern static IntPtr /* NSString Array */ UTTypeCopyAllTagsWithClass (IntPtr /* CFStringRef */ utiStr, IntPtr /* CFStringRef */ tagClassStr);
 		
 		[iOS (8,0)][Mac (10,10)]
-#if XAMCORE_2_0
-		static
-#endif
-		public string [] CopyAllTags (string uti, string tagClass)
+		public static string [] CopyAllTags (string uti, string tagClass)
 		{
 			if (uti == null)
 				throw new ArgumentNullException ("uti");
@@ -130,10 +121,7 @@ namespace MobileCoreServices {
 		[DllImport (Constants.CoreServicesLibrary)]
 		extern static int /* Boolean */ UTTypeConformsTo (IntPtr /* CFStringRef */ utiStr, IntPtr /* CFStringRef */ conformsToUtiStr);
 
-#if XAMCORE_2_0
-		static
-#endif
-		public bool ConformsTo (string uti, string conformsToUti)
+		public static bool ConformsTo (string uti, string conformsToUti)
 		{
 			if (uti == null)
 				throw new ArgumentNullException ("uti");
@@ -151,10 +139,7 @@ namespace MobileCoreServices {
 		[DllImport (Constants.CoreServicesLibrary)]
 		extern static IntPtr /* NSString */ UTTypeCopyDescription (IntPtr /* CFStringRef */ utiStr);
 
-#if XAMCORE_2_0
-		static
-#endif
-		public string GetDescription (string uti)
+		public static string GetDescription (string uti)
 		{
 			if (uti == null)
 				throw new ArgumentNullException ("uti");
