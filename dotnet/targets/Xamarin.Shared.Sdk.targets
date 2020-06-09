@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
+	<PropertyGroup>
+		<_XamarinTaskAssembly Condition="'$(_PlatformName)' != 'macOS'">$(_XamarinSdkRootDirectory)\tools\msbuild\iOS\Xamarin.iOS.Tasks.dll</_XamarinTaskAssembly>
+		<_XamarinTaskAssembly Condition="'$(_PlatformName)' == 'macOS'">$(_XamarinSdkRootDirectory)\tools\msbuild\macOS\Xamarin.Mac.Tasks.dll</_XamarinTaskAssembly>
+	</PropertyGroup>
+
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.CompileNativeCode" AssemblyFile="$(_XamarinTaskAssembly)" />
+
 	<!-- Project types and how do we distinguish between them
 
 									  OutputType   Custom variable
@@ -83,6 +90,8 @@
 			_CompileAppManifest;
 			_ComputeLinkerArguments;
 			ComputeFilesToPublish;
+			_LoadLinkerOutput;
+			_CompileNativeExecutable;
 			_ComputePublishLocation;
 			CopyFilesToPublishDirectory;
 		</CreateAppBundleDependsOn>
@@ -137,6 +146,42 @@
 		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_MainFile.items" Condition="Exists('$(_LinkerItemsDirectory)/_MainFile.items')">
 			<Output TaskParameter="Items" ItemName="_MainFile" />
 		</ReadItemsFromFile>
+	</Target>
+
+	<!-- Native code -->
+
+	<Target Name="_ComputeVariables" DependsOnTargets="_GenerateBundleName">
+		<PropertyGroup>
+			<_IntermediateNativeLibraryDir>$(IntermediateOutputPath)nativelibraries/</_IntermediateNativeLibraryDir>
+			<_NativeExecutableName>$(_AppBundleName)</_NativeExecutableName>
+		</PropertyGroup>
+	</Target>
+
+	<Target Name="_CompileNativeExecutable"
+		DependsOnTargets="_DetectSdkLocations;_ComputeTargetArchitectures;_GenerateBundleName;_ComputeVariables;_GetMinimumOSVersion"
+		Inputs="@(_MainFile)"
+		Outputs="@(_MainFile -> '%(_IntermediateNativeLibraryDir)%(Filename).o')"
+		>
+
+		<ItemGroup>
+			<_MainFile Update="@(_MainFile)">
+				<OutputFile>$(_IntermediateNativeLibraryDir)%(Filename).o</OutputFile>
+			</_MainFile>
+		</ItemGroup>
+
+		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(_IntermediateNativeLibraryDir)" />
+
+		<CompileNativeCode
+			SessionId="$(BuildSessionId)"
+			CompileInfo="@(_MainFile)"
+			MinimumOSVersion="$(_MinimumOSVersion)"
+			SdkDevPath="$(_SdkDevPath)"
+			SdkIsSimulator="$(_SdkIsSimulator)"
+			SdkRoot="$(_SdkRoot)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+		>
+			<Output TaskParameter="ObjectFiles" ItemName="_NativeExecutableObjectFiles" />
+		</CompileNativeCode>
 	</Target>
 
 	<Target Name="_ComputePublishLocation" DependsOnTargets="_GenerateBundleName">
