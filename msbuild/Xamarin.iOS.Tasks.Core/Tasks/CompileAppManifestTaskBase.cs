@@ -35,8 +35,6 @@ namespace Xamarin.iOS.Tasks
 		[Required]
 		public bool Debug { get; set; }
 
-		public bool UseFakeWatchOS4_3Sdk { get; set; }
-
 		public string DebugIPAddresses { get; set; }
 
 		public string ResourceRules { get; set; }
@@ -179,26 +177,6 @@ namespace Xamarin.iOS.Tasks
 			if (!SdkIsSimulator) {
 				dtXcode = AppleSdkSettings.DTXcode;
 				dtXcodeBuild = dtSettings.DTXcodeBuild;
-			}
-
-			if (UseFakeWatchOS4_3Sdk) {
-				// This is a workaround for https://github.com/xamarin/xamarin-macios/issues/4810
-				if (Platform == ApplePlatform.WatchOS) {
-					if (dtPlatformBuild != null)
-						dtPlatformBuild = "15T212";
-					if (dtPlatformVersion != null)
-						dtPlatformVersion = "4.3";
-					if (dtSDKBuild != null)
-						dtSDKBuild = "15T212";
-					if (dtSDKName != null)
-						dtSDKName = "watchos4.3";
-					if (dtXcode != null)
-						dtXcode = "0940";
-					if (dtXcodeBuild != null)
-						dtXcodeBuild = "9F1027a";
-				} else {
-					Log.LogWarning (MSBStrings.W0016);
-				}
 			}
 
 			SetValueIfNotNull (plist, "DTCompiler", dtCompiler);
