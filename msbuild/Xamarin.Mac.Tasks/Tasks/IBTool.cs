@@ -7,9 +7,5 @@ namespace Xamarin.Mac.Tasks {
 		protected override bool AutoActivateCustomFonts {
 			get { return false; }
 		}
-
-		protected override string MinimumDeploymentTargetKey {
-			get { return ManifestKeys.LSMinimumSystemVersion; }
-		}
 	}
 }

@@ -221,11 +221,6 @@
         </value>
     </data>
     
-    <data name="E0056" xml:space="preserve">
-        <value>Could not parse SdkVersion '{0}'
-        </value>
-    </data>
-    
     <data name="E0057" xml:space="preserve">
         <value>Invalid architectures: '{0}'.
         </value>

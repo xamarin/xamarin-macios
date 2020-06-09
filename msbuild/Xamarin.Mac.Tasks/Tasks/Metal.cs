@@ -6,12 +6,6 @@ namespace Xamarin.Mac.Tasks
 {
 	public class Metal : MetalTaskBase
 	{
-#if !MTOUCH_TESTS
-		protected override string MinimumDeploymentTargetKey {
-			get { return ManifestKeys.LSMinimumSystemVersion; }
-		}
-#endif
-
 		protected override string DevicePlatformBinDir {
 			get {
 				return AppleSdkSettings.XcodeVersion.Major >= 10
