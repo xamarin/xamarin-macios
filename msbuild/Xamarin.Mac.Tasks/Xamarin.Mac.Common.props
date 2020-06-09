@@ -60,10 +60,10 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<CodeSignProvision Condition="'$(CodeSignProvision)' == ''"></CodeSignProvision>
-		<CodeSignEntitlements Condition="'$(CodeSignEntitlements)' == ''"></CodeSignEntitlements>
-		<CodeSignResourceRules Condition="'$(CodeSignResourceRules)' == ''"></CodeSignResourceRules>
-		<CodeSignExtraArgs Condition="'$(CodeSignExtraArgs)' == ''"></CodeSignExtraArgs>
+		<CodesignProvision Condition="'$(CodesignProvision)' == ''"></CodesignProvision>
+		<CodesignEntitlements Condition="'$(CodesignEntitlements)' == ''"></CodesignEntitlements>
+		<CodesignResourceRules Condition="'$(CodesignResourceRules)' == ''"></CodesignResourceRules>
+		<CodesignExtraArgs Condition="'$(CodesignExtraArgs)' == ''"></CodesignExtraArgs>
 		<CreatePackage Condition="'$(CreatePackage)' == ''">false</CreatePackage>
 		<HttpClientHandler Condition="'$(HttpClientHandler)' == ''">HttpClientHandler</HttpClientHandler>
 		<EnablePackageSigning Condition="'$(EnablePackageSigning)' == ''">false</EnablePackageSigning>
