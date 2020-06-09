@@ -75,6 +75,50 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</ItemGroup>
 	</Target>
 
+	<PropertyGroup>
+		<_CompileAppManifestDependsOn>
+			$(_CompileAppManifestDependsOn);
+			_DetectSdkLocations;
+			_GetMinimumOSVersion;
+			_GenerateBundleName;
+			_DetectSigningIdentity;
+			_ComputeTargetFrameworkMoniker;
+		</_CompileAppManifestDependsOn>
+	</PropertyGroup>
+
+	<Target Name="_CompileAppManifest"
+		DependsOnTargets="$(_CompileAppManifestDependsOn)"
+		Inputs="$(_AppManifest);@(_PartialAppManifest)"
+		Outputs="$(_AppBundlePath)$(_AppBundleManifestRelativePath)Info.plist" >
+		<CompileAppManifest
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			AppBundleName="$(_AppBundleName)"
+			AppManifest="$(_AppManifest)"
+			AppManifestBundleDirectory="$(_AppBundlePath)$(_AppBundleManifestRelativePath)"
+			AssemblyName="$(AssemblyName)"
+			BundleIdentifier="$(_BundleIdentifier)"
+			Debug="$(_BundlerDebug)"
+			DefaultSdkVersion="$(_SdkVersion)"
+			IsAppExtension="$(IsAppExtension)"
+			IsWatchApp="$(IsWatchApp)"
+			IsWatchExtension="$(IsWatchExtension)"
+			IsXPCService="$(IsXPCService)"
+			MinimumOSVersion="$(_MinimumOSVersion)"
+			PartialAppManifests="@(_PartialAppManifest)"
+			ResourceRules="$(_PreparedResourceRules)"
+			TargetArchitectures="$(TargetArchitectures)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+			SdkPlatform="$(_SdkPlatform)"
+			SdkIsSimulator="$(_SdkIsSimulator)"
+			DebugIPAddresses="$(_DebugIPAddresses)"
+			>
+		</CompileAppManifest>
+
+		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(AppBundleDir).dSYM" />
+		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(DeviceSpecificOutputPath)*.bcsymbolmap" />
+	</Target>
+
 	<Target Name="_ComputeTargetArchitectures" DependsOnTargets="_ComputeTargetFrameworkMoniker">
 		<!--
 			For now, this target is mostly for Xamarin.iOS, but in order to
