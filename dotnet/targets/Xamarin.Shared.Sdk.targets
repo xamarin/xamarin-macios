@@ -7,6 +7,7 @@
 	</PropertyGroup>
 
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CompileNativeCode" AssemblyFile="$(_XamarinTaskAssembly)" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.LinkNativeCode" AssemblyFile="$(_XamarinTaskAssembly)" />
 
 	<!-- Project types and how do we distinguish between them
 
@@ -92,6 +93,7 @@
 			ComputeFilesToPublish;
 			_LoadLinkerOutput;
 			_CompileNativeExecutable;
+			_LinkNativeExecutable;
 			_ComputePublishLocation;
 			CopyFilesToPublishDirectory;
 		</CreateAppBundleDependsOn>
@@ -182,6 +184,33 @@
 		>
 			<Output TaskParameter="ObjectFiles" ItemName="_NativeExecutableObjectFiles" />
 		</CompileNativeCode>
+	</Target>
+
+	<Target Name="_LinkNativeExecutable"
+			DependsOnTargets="_DetectSdkLocations;_ComputeTargetArchitectures;_GenerateBundleName;_CompileNativeExecutable;_CompileAppManifest"
+			Inputs="@(_NativeExecutableObjectFiles)"
+			Outputs="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)"
+		>
+
+		<LinkNativeCode
+			SessionId="$(BuildSessionId)"
+			Frameworks="@(_NativeExecutableFrameworks)"
+			MinimumOSVersion="$(_MinimumOSVersion)"
+			ObjectFiles="@(_NativeExecutableObjectFiles)"
+			OutputFile="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)"
+			SdkDevPath="$(_SdkDevPath)"
+			SdkIsSimulator="$(_SdkIsSimulator)"
+			SdkRoot="$(_SdkRoot)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+			WeakFrameworks="@(_NativeExecutableWeakFrameworks)"
+		/>
+
+		<ItemGroup>
+			<!-- Copy the executable from the intermediate directory to the .app -->
+			<ResolvedFileToPublish
+				Include="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)"
+				RelativePath="$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(MSBuildProjectDirectory)$(_AppBundlePath)))\$(_NativeExecutableName)"/>
+		</ItemGroup>
 	</Target>
 
 	<Target Name="_ComputePublishLocation" DependsOnTargets="_GenerateBundleName">
