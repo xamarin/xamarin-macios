@@ -24,8 +24,6 @@
 //
 //
 
-#if XAMCORE_2_0
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -130,5 +128,3 @@ namespace Foundation {
 #endregion
 	}
 }
-
-#endif // XAMCORE_2_0

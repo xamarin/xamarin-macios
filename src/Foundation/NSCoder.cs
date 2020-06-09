@@ -147,7 +147,6 @@ namespace Foundation {
 			return false;
 		}
 
-#if XAMCORE_2_0
 		public bool TryDecode (string key, out nint result)
 		{
 			if (ContainsKey (key)){
@@ -157,7 +156,6 @@ namespace Foundation {
 			result = 0;
 			return false;
 		}
-#endif
 
 		public bool TryDecode (string key, out NSObject result)
 		{
@@ -190,20 +188,12 @@ namespace Foundation {
 		[iOS (9,0), Mac (10,11)]
 		public NSObject DecodeTopLevelObject (Type[] types, string key, out NSError error)
 		{
-#if XAMCORE_2_0
 			NSSet<Class> typeSet = null;
-#else
-			NSSet typeSet = null;
-#endif
 			if (types != null) {
 				var classes = new Class [types.Length];
 				for (int i = 0; i < types.Length; i++)
 					classes [i] =  new Class (types [i]);
-#if XAMCORE_2_0
 				typeSet = new NSSet<Class> (classes);
-#else
-				typeSet = new NSSet (classes);
-#endif
 			}
 			return DecodeTopLevelObject (typeSet, key, out error);
 		}

@@ -127,7 +127,6 @@ namespace Foundation {
 			return source.BoolValue;
 		}
 
-#if XAMCORE_2_0
 		public NSNumber (nfloat value) :
 #if ARCH_64
 			this ((double)value)
@@ -136,7 +135,6 @@ namespace Foundation {
 #endif
 		{
 		}
-#endif
 
 		public nfloat NFloatValue {
 			get {
@@ -148,12 +146,7 @@ namespace Foundation {
 			}
 		}
 
-#if !XAMCORE_2_0
-		internal
-#else
-		public
-#endif
-		static NSNumber FromNFloat (nfloat value)
+		public static NSNumber FromNFloat (nfloat value)
 		{
 #if ARCH_64
 			return (FromDouble ((double)value));

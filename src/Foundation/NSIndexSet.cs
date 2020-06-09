@@ -73,7 +73,6 @@ namespace Foundation {
 			return indexes;
 		}
 
-#if XAMCORE_2_0
 		public static NSIndexSet FromArray (nuint[] items)
 		{
 			if (items == null)
@@ -84,7 +83,6 @@ namespace Foundation {
 				indexSet.Add (index);	
 			return indexSet;
 		}
-#endif
 
 		public static NSIndexSet FromArray (uint[] items)
 		{
@@ -111,7 +109,6 @@ namespace Foundation {
 			return indexSet;
 		}
 
-#if XAMCORE_2_0
 		public NSIndexSet (uint value) : this ((nuint)value)
 		{
 		}
@@ -122,7 +119,6 @@ namespace Foundation {
 				throw new ArgumentException ("value must be positive");
 			// init done by the base ctor
 		}
-#endif
 
 		public NSIndexSet (int value) : this ((nuint)(uint)value)
 		{

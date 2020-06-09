@@ -28,11 +28,7 @@ namespace Foundation {
 		public nint Location;
 		public nint Length;
 
-#if XAMCORE_2_0
 		public static readonly nint NotFound = nint.MaxValue;
-#else
-		public const int NotFound = Int32.MaxValue;
-#endif
 		
 		public NSRange (nint start, nint len)
 		{

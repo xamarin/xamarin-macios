@@ -39,11 +39,7 @@ namespace Foundation {
 		nint? GetNInt (NSString key)
 		{
 			var n = Runtime.GetNSObject<NSNumber> (GetHandle (key));
-#if XAMCORE_2_0
 			return n?.NIntValue;
-#else
-			return n?.IntValue;
-#endif
 		}
 
 		// same order as NSMetadataAttributes.h

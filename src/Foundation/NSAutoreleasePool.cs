@@ -64,11 +64,6 @@ namespace Foundation {
 #endif
 		NSAutoreleasePool (IntPtr handle) : base (handle) {}
 
-#if !XAMCORE_2_0
-		protected override void Dispose (bool disposing) {
-			base.Dispose (disposing);
-		}
-#endif
 #endif
 	}
 }

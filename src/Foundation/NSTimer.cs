@@ -34,7 +34,6 @@ namespace Foundation {
 		// The right selector signature is:
 		//		- (void)timerFireMethod:(NSTimer *)timer
 		// which does not match the (old) API we were provided
-#if XAMCORE_2_0
 		public static NSTimer CreateRepeatingScheduledTimer (TimeSpan when, Action<NSTimer> action)
 		{
 			return CreateScheduledTimer (when.TotalSeconds, new NSTimerActionDispatcher (action), NSTimerActionDispatcher.Selector, null, true);
@@ -79,59 +78,5 @@ namespace Foundation {
 			: this (date, when.TotalSeconds, new NSTimerActionDispatcher (action), NSTimerActionDispatcher.Selector, null, repeats)
 		{
 		}
-#else
-		public static NSTimer CreateRepeatingScheduledTimer (TimeSpan when, Action action)
-		{
-			return CreateScheduledTimer (when.TotalSeconds, new NSTimerActionDispatcher (action), NSTimerActionDispatcher.Selector, null, true);
-		}
-
-		public static NSTimer CreateRepeatingScheduledTimer (double seconds, Action action)
-		{
-			return CreateScheduledTimer (seconds, new NSTimerActionDispatcher (action), NSTimerActionDispatcher.Selector, null, true);
-		}
-		
-		public static NSTimer CreateScheduledTimer (TimeSpan when, Action action)
-		{
-			return CreateScheduledTimer (when.TotalSeconds, new NSTimerActionDispatcher (action), NSTimerActionDispatcher.Selector, null, false);
-		}
-
-		public static NSTimer CreateScheduledTimer (double seconds, Action action)
-		{
-			return CreateScheduledTimer (seconds, new NSTimerActionDispatcher (action), NSTimerActionDispatcher.Selector, null, false);
-		}
-
-		public static NSTimer CreateRepeatingTimer (TimeSpan when, Action action)
-		{
-			return CreateTimer (when.TotalSeconds, new NSTimerActionDispatcher (action), NSTimerActionDispatcher.Selector, null, true);
-		}
-
-		public static NSTimer CreateRepeatingTimer (double seconds, Action action)
-		{
-			return CreateTimer (seconds, new NSTimerActionDispatcher (action), NSTimerActionDispatcher.Selector, null, true);
-		}
-		
-		public static NSTimer CreateTimer (TimeSpan when, Action action)
-		{
-			return CreateTimer (when.TotalSeconds, new NSTimerActionDispatcher (action), NSTimerActionDispatcher.Selector, null, false);
-		}
-
-		public static NSTimer CreateTimer (double seconds, Action action)
-		{
-			return CreateTimer (seconds, new NSTimerActionDispatcher (action), NSTimerActionDispatcher.Selector, null, false);
-		}
-		
-		public NSTimer (NSDate date, TimeSpan when, Action action, System.Boolean repeats)
-			: this (date, when.TotalSeconds, new NSTimerActionDispatcher (action), NSTimerActionDispatcher.Selector, null, repeats)
-		{
-		}
-#endif
-
-#if !MONOMAC && !XAMCORE_2_0
-		[Obsolete ("This instance of NSTimer would be unusable. Symbol kept for binary compatibility", true)]
-		public NSTimer () : base (IntPtr.Zero)
-		{
-			IsDirectBinding = GetType () == typeof (NSTimer);
-		}
-#endif
 	}
 }
