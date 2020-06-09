@@ -138,10 +138,6 @@ namespace CoreWlan {
 		ScanCacheUpdated = 8,
 		VirtualInterfaceStateChanged = 9,
 		RangingReportEvent = 10,
-#if XAMCORE_2_0
 		Unknown = long.MaxValue
-#else
-		Unknown = int.MaxValue
-#endif
 	}
 }

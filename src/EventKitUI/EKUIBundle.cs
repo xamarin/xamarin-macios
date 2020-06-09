@@ -7,7 +7,6 @@
 // Copyright 2017 Xamarin Inc. All rights reserved.
 //
 
-#if XAMCORE_2_0
 using System;
 using System.Runtime.InteropServices;
 using Foundation;
@@ -27,4 +26,3 @@ namespace EventKitUI {
 		}
 	}
 }
-#endif

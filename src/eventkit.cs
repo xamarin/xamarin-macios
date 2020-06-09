@@ -16,9 +16,7 @@ using ObjCRuntime;
 using Foundation;
 using CoreGraphics;
 using CoreLocation;
-#if XAMCORE_2_0
 using MapKit;
-#endif
 using System;
 #if MONOMAC
 using AppKit;
@@ -29,9 +27,7 @@ using UIKit;
 namespace EventKit {
 
 	[BaseType (typeof (NSObject))]
-#if XAMCORE_2_0 || MONOMAC
 	[Abstract]
-#endif
 	interface EKObject {
 		[Export ("hasChanges")]
 		bool HasChanges { get; }
@@ -172,12 +168,10 @@ namespace EventKit {
 		[Export ("locationWithTitle:"), Static]
 		EKStructuredLocation FromTitle (string title);
 
-#if XAMCORE_2_0
 		[iOS (9,0), Mac(10,11)]
 		[Static]
 		[Export ("locationWithMapItem:")]
 		EKStructuredLocation FromMapItem (MKMapItem mapItem);
-#endif
 	}
 
 	[BaseType (typeof (EKObject))]
@@ -411,22 +405,18 @@ namespace EventKit {
 		[Export ("dayOfWeek:")]
 #if XAMCORE_4_0
 		EKRecurrenceDayOfWeek FromDay (EKWeekday dayOfTheWeek);
-#elif XAMCORE_2_0
+#else
 		[Internal]
 		EKRecurrenceDayOfWeek _FromDay (nint dayOfTheWeek);
-#else
-		EKRecurrenceDayOfWeek FromDay (EKDay dayOfTheWeek);
 #endif
 
 		[Static]
 		[Export ("dayOfWeek:weekNumber:")]
 #if XAMCORE_4_0
 		EKRecurrenceDayOfWeek FromDay (EKWeekday dayOfTheWeek, nint weekNumber);
-#elif XAMCORE_2_0
+#else
 		[Internal]
 		EKRecurrenceDayOfWeek _FromDay (nint dayOfTheWeek, nint weekNumber);
-#else
-		EKRecurrenceDayOfWeek FromDay (EKDay dayOfTheWeek, nint weekNumber);
 #endif
 
 		[Export ("initWithDayOfTheWeek:weekNumber:")]
@@ -455,11 +445,9 @@ namespace EventKit {
 		[Export ("firstDayOfTheWeek")]
 #if XAMCORE_4_0
 		EKWeekday FirstDayOfTheWeek { get; }
-#elif XAMCORE_2_0
+#else
 		[Internal]
 		nint _FirstDayOfTheWeek { get; }
-#else
-		EKDay FirstDayOfTheWeek { get;  }
 #endif
 
 		[NullAllowed]

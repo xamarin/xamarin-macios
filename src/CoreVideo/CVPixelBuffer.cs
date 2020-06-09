@@ -20,60 +20,6 @@ namespace CoreVideo {
 		[DllImport (Constants.CoreVideoLibrary, EntryPoint = "CVPixelBufferGetTypeID")]
 		public extern static /* CFTypeID */ nint GetTypeID ();
 
-#if !XAMCORE_2_0
-		public static readonly NSString PixelFormatTypeKey;
-		public static readonly NSString MemoryAllocatorKey;
-		public static readonly NSString WidthKey;
-		public static readonly NSString HeightKey;
-		public static readonly NSString ExtendedPixelsLeftKey;
-		public static readonly NSString ExtendedPixelsTopKey;
-		public static readonly NSString ExtendedPixelsRightKey;
-		public static readonly NSString ExtendedPixelsBottomKey;
-		public static readonly NSString BytesPerRowAlignmentKey;
-		public static readonly NSString CGBitmapContextCompatibilityKey;
-		public static readonly NSString CGImageCompatibilityKey;
-		public static readonly NSString OpenGLCompatibilityKey;
-		public static readonly NSString IOSurfacePropertiesKey;
-		public static readonly NSString PlaneAlignmentKey;
-#if !MONOMAC || !XAMCORE_2_0
-		public static readonly NSString MetalCompatibilityKey;
-		public static readonly NSString OpenGLESCompatibilityKey;
-#endif
-
-		public static readonly nint CVImageBufferType;
-
-		static CVPixelBuffer ()
-		{
-			var handle = Dlfcn.dlopen (Constants.CoreVideoLibrary, 0);
-			if (handle == IntPtr.Zero)
-				return;
-			try {
-				PixelFormatTypeKey = Dlfcn.GetStringConstant (handle, "kCVPixelBufferPixelFormatTypeKey");
-				MemoryAllocatorKey = Dlfcn.GetStringConstant (handle, "kCVPixelBufferMemoryAllocatorKey");
-				WidthKey = Dlfcn.GetStringConstant (handle, "kCVPixelBufferWidthKey");
-				HeightKey = Dlfcn.GetStringConstant (handle, "kCVPixelBufferHeightKey");
-				ExtendedPixelsLeftKey = Dlfcn.GetStringConstant (handle, "kCVPixelBufferExtendedPixelsLeftKey");
-				ExtendedPixelsTopKey = Dlfcn.GetStringConstant (handle, "kCVPixelBufferExtendedPixelsTopKey");
-				ExtendedPixelsRightKey = Dlfcn.GetStringConstant (handle, "kCVPixelBufferExtendedPixelsRightKey");
-				ExtendedPixelsBottomKey = Dlfcn.GetStringConstant (handle, "kCVPixelBufferExtendedPixelsBottomKey");
-				BytesPerRowAlignmentKey = Dlfcn.GetStringConstant (handle, "kCVPixelBufferBytesPerRowAlignmentKey");
-				CGBitmapContextCompatibilityKey = Dlfcn.GetStringConstant (handle, "kCVPixelBufferCGBitmapContextCompatibilityKey");
-				CGImageCompatibilityKey = Dlfcn.GetStringConstant (handle, "kCVPixelBufferCGImageCompatibilityKey");
-				OpenGLCompatibilityKey = Dlfcn.GetStringConstant (handle, "kCVPixelBufferOpenGLCompatibilityKey");
-				IOSurfacePropertiesKey = Dlfcn.GetStringConstant (handle, "kCVPixelBufferIOSurfacePropertiesKey");
-				PlaneAlignmentKey = Dlfcn.GetStringConstant (handle, "kCVPixelBufferPlaneAlignmentKey");
-				CVImageBufferType = GetTypeID ();
-				MetalCompatibilityKey = Dlfcn.GetStringConstant (handle, "kCVPixelBufferMetalCompatibilityKey");
-#if !MONOMAC
-				OpenGLESCompatibilityKey = Dlfcn.GetStringConstant (handle, "kCVPixelBufferOpenGLESCompatibilityKey");
-#endif
-			}
-			finally {
-				Dlfcn.dlclose (handle);
-			}
-		}
-#endif
-
 		internal CVPixelBuffer (IntPtr handle) : base (handle)
 		{
 		}
@@ -101,22 +47,7 @@ namespace CoreVideo {
 		{
 		}
 
-#if !XAMCORE_2_0
-		public CVPixelBuffer (System.Drawing.Size size, CVPixelFormatType pixelFormat)
-			: this (size.Width, size.Height, pixelFormat, (NSDictionary) null)
-		{
-		}
-
-		public CVPixelBuffer (System.Drawing.Size size, CVPixelFormatType pixelFormatType, CVPixelBufferAttributes attributes)
-			: this (size.Width, size.Height, pixelFormatType, attributes == null ? null : attributes.Dictionary)
-		{
-		}
-#endif
-
 		[Advice ("Use constructor with CVPixelBufferAttributes")]
-#if !XAMCORE_2_0
-		public
-#endif
 		CVPixelBuffer (nint width, nint height, CVPixelFormatType pixelFormatType, NSDictionary pixelBufferAttributes)
 		{
 			if (width <= 0)

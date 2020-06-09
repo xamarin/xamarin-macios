@@ -54,13 +54,6 @@ namespace CoreVideo {
 			Height = height;
 		}
 
-#if !XAMCORE_2_0
-		public CVPixelBufferAttributes (CVPixelFormatType pixelFormatType, System.Drawing.Size size)
-			: this (pixelFormatType, size.Width, size.Height)
-		{
-		}
-#endif
-
 		public CVPixelFormatType? PixelFormatType {
 			set {
 				SetNumberValue (CVPixelBuffer.PixelFormatTypeKey, (uint?)value);
@@ -179,7 +172,7 @@ namespace CoreVideo {
 		}
 
 		// TODO: kCVPixelBufferIOSurfacePropertiesKey
-#if !MONOMAC || !XAMCORE_2_0
+#if !MONOMAC
 		// The presence of the IOSurfacePropertiesKey mandates the allocation via IOSurfaceProperty
 		public bool? AllocateWithIOSurface {
 			set {

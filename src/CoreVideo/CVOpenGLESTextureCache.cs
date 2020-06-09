@@ -16,21 +16,12 @@ using System.Runtime.InteropServices;
 using OpenTK;
 using OpenTK.Graphics;
 
-#if XAMCORE_2_0
 using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
 using OpenGLES;
 
 namespace CoreVideo {
-#else
-using MonoTouch.ObjCRuntime;
-using MonoTouch.CoreFoundation;
-using MonoTouch.Foundation;
-using MonoTouch.OpenGLES;
-
-namespace MonoTouch.CoreVideo {
-#endif
 
 	// CVOpenGLESTextureCache.h
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'CVMetalTextureCache' instead.")]
@@ -53,12 +44,7 @@ namespace MonoTouch.CoreVideo {
 			GC.SuppressFinalize (this);
 		}
 
-#if XAMCORE_2_0
-		protected
-#else
-		public
-#endif
-		virtual void Dispose (bool disposing)
+		protected virtual void Dispose (bool disposing)
 		{
 			if (handle != IntPtr.Zero){
 				CVOpenGLESTexture.CFRelease (handle);

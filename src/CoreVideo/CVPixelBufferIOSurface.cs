@@ -6,7 +6,7 @@
 // Copyright 2017 Xamarin Inc.
 //
 
-#if XAMCORE_2_0 && !WATCH
+#if !WATCH
 using System;
 using System.Runtime.InteropServices;
 using CoreFoundation;
