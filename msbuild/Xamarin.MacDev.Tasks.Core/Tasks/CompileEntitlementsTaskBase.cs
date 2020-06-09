@@ -186,14 +186,6 @@ namespace Xamarin.MacDev.Tasks
 			var buf = doc.ToByteArray (false);
 
 			using (var stream = new MemoryStream ()) {
-				if (AppleSdkSettings.XcodeVersion < new Version (4, 4, 1)) {
-					// write the xcent file with the magic header, length, and the plist
-					var length = Mono.DataConverter.BigEndian.GetBytes ((uint) buf.Length + 8); // 8 = magic.length + magicLen.Length
-
-					stream.Write (XcentMagic, 0, XcentMagic.Length);
-					stream.Write (length, 0, length.Length);
-				}
-
 				stream.Write (buf, 0, buf.Length);
 
 				var src = stream.ToArray ();

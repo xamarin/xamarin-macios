@@ -261,9 +261,6 @@ namespace Xamarin.iOS.Tasks
 			
 			args.AddQuotedLine ((SdkIsSimulator ? "--sim=" : "--dev=") + Path.GetFullPath (AppBundleDir));
 
-			if (AppleSdkSettings.XcodeVersion.Major >= 5 && IPhoneSdks.MonoTouch.Version.CompareTo (new IPhoneSdkVersion (6, 3, 7)) < 0)
-				args.AddLine ("--compiler=clang");
-
 			args.AddQuotedLine ($"--executable={ExecutableName}");
 
 			if (IsAppExtension)

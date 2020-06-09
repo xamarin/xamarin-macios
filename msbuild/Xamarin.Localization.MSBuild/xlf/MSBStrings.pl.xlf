@@ -86,13 +86,6 @@
         </target>
         <note></note>
       </trans-unit>
-      <trans-unit id="E0015">
-        <source>Applications using a storyboard as the Main Interface must have a deployment target greater than 5.0
-        </source>
-        <target state="new">Applications using a storyboard as the Main Interface must have a deployment target greater than 5.0
-        </target>
-        <note></note>
-      </trans-unit>
       <trans-unit id="E0023">
         <source>Cannot have more than 1 iTunesMetadata.plist.
         </source>
