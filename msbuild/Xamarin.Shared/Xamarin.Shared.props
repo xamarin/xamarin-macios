@@ -36,6 +36,12 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		     even (optionally) switch back to AnyCPU platform in the IDE,
 		     therefore fixing a key pain point in managing solution
 		     configurations.
+
+		     Additionally, we cannot use $(Platform) in conditions on props,
+		     because VS interprets them as valid platforms for the current
+		     project and makes them available for solution configurations,
+		     which fails miserably for iOS class library projects. By using
+		     another property name, we "opt out" of this "smart" behavior
 		-->
 		<ComputedPlatform Condition="'$(ComputedPlatform)' == ''">$(Platform)</ComputedPlatform>
 		<ComputedPlatform Condition="'$(_PlatformName)' != 'macOS' And '$(ComputedPlatform)' == 'AnyCPU'">iPhone</ComputedPlatform>
@@ -85,10 +91,10 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<!-- The default architecture for Xamarin.Mac is x86_64 -->
 		<TargetArchitectures Condition="'$(TargetArchitectures)' == '' And '$(_PlatformName)' == 'macOS'">x86_64</TargetArchitectures>
 		<!-- There should always be an MtouchArch value in newer projects, but for older projects default to old values -->
-		<TargetArchitectures Condition="'$(TargetArchitectures)' == '' And '$(_PlatformName)' != 'macOS' And '$(_Platform)' == 'iPhoneSimulator'">i386</TargetArchitectures>
-		<TargetArchitectures Condition="'$(TargetArchitectures)' == '' And '$(_PlatformName)' != 'macOS' And '$(_Platform)' == 'iPhone' And '$(TargetFrameworkIdentifier)' == 'Xamarin.WatchOS'">ARMv7k</TargetArchitectures>
-		<TargetArchitectures Condition="'$(TargetArchitectures)' == '' And '$(_PlatformName)' != 'macOS' And '$(_Platform)' == 'iPhone' And '$(TargetFrameworkIdentifier)' == 'Xamarin.TVOS'">ARM64</TargetArchitectures>
-		<TargetArchitectures Condition="'$(TargetArchitectures)' == '' And '$(_PlatformName)' != 'macOS' And '$(_Platform)' == 'iPhone'">ARMv7</TargetArchitectures>
+		<TargetArchitectures Condition="'$(TargetArchitectures)' == '' And '$(_PlatformName)' != 'macOS' And '$(ComputedPlatform)' == 'iPhoneSimulator'">i386</TargetArchitectures>
+		<TargetArchitectures Condition="'$(TargetArchitectures)' == '' And '$(_PlatformName)' != 'macOS' And '$(ComputedPlatform)' == 'iPhone' And '$(TargetFrameworkIdentifier)' == 'Xamarin.WatchOS'">ARMv7k</TargetArchitectures>
+		<TargetArchitectures Condition="'$(TargetArchitectures)' == '' And '$(_PlatformName)' != 'macOS' And '$(ComputedPlatform)' == 'iPhone' And '$(TargetFrameworkIdentifier)' == 'Xamarin.TVOS'">ARM64</TargetArchitectures>
+		<TargetArchitectures Condition="'$(TargetArchitectures)' == '' And '$(_PlatformName)' != 'macOS' And '$(ComputedPlatform)' == 'iPhone'">ARMv7</TargetArchitectures>
 
 	</PropertyGroup>
 
