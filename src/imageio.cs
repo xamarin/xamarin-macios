@@ -2102,55 +2102,6 @@ namespace ImageIO {
 		IntPtr kCGImageMetadataEnumerateRecursively { get; }
 	}
 
-#if !XAMCORE_2_0
-	[Partial]
-	interface CGImageDestinationOptions {
-		[Internal][Field ("kCGImageDestinationLossyCompressionQuality")]
-		IntPtr kLossyCompressionQuality { get; }
-
-		[Internal][Field ("kCGImageDestinationBackgroundColor")]
-		IntPtr kBackgroundColor { get; }
-
-		[iOS (7,0)]
-		[Internal][Field ("kCGImageDestinationDateTime")]
-		IntPtr kDateTime { get; }
-
-		[iOS (7,0)]
-		[Internal][Field ("kCGImageDestinationMergeMetadata")]
-		IntPtr kMergeMetadata { get; }
-
-		[iOS (7,0)]
-		[Internal][Field ("kCGImageDestinationMetadata")]
-		IntPtr kMetadata { get; }
-
-		[iOS (7,0)]
-		[Internal][Field ("kCGImageDestinationOrientation")]
-		IntPtr kOrientation { get; }
-
-		[iOS (7,0)]
-		[Internal][Field ("kCGImageMetadataShouldExcludeXMP")]
-		IntPtr kShouldExcludeXMP { get; }
-
-		[iOS (8,0)][Mac (10,10)]
-		[Internal][Field ("kCGImageDestinationImageMaxPixelSize")]
-		IntPtr kImageMaxPixelSize { get; }
-
-		[iOS (8,0)][Mac (10,10)]
-		[Internal][Field ("kCGImageDestinationEmbedThumbnail")]
-		IntPtr kEmbedThumbnail { get; }
-
-		[iOS (8,0)][Mac (10,10)]
-		[Internal][Field ("kCGImageMetadataShouldExcludeGPS")]
-		IntPtr kShouldExcludeGPS { get; }
-
-		[iOS (9,3)][Mac (10,12)]
-		[TV (9,2)]
-		[Watch (2,3)]
-		[Internal][Field ("kCGImageDestinationOptimizeColorForSharing")]
-		IntPtr kOptimizeColorForSharing { get; }
-	}
-#else
-
 	// Defined in CGImageProperties.cs in CoreGraphics
 	interface CGImagePropertiesTiff { }
 	interface CGImagePropertiesExif { }
@@ -2320,7 +2271,6 @@ namespace ImageIO {
 		[Internal][Field ("kCGImageDestinationOrientation")]
 		IntPtr kOrientation { get; }
 	}
-#endif
 
 	[Mac (10, 13), iOS (11,0), TV (11,0), Watch (4,0)]
 	enum CGImageAuxiliaryDataType {

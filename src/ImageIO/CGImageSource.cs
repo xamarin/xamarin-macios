@@ -348,13 +348,6 @@ namespace ImageIO {
 			/* CGDataProviderRef __nonnull */ IntPtr dataProvider,
 			[MarshalAs (UnmanagedType.I1)] bool final);
 
-#if !XAMCORE_2_0
-		[Obsolete ("Use 'UpdateDataProvider(CGDataProvider,bool)'.")]
-		public void UpdateDataProvider (CGDataProvider provider)
-		{
-			UpdateDataProvider (provider, true);
-		}
-#endif
 		public void UpdateDataProvider (CGDataProvider provider, bool final)
 		{
 			if (provider == null)

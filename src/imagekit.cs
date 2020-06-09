@@ -292,11 +292,7 @@ namespace ImageKit {
 		// just turns ugly). So rename this for new-style assemblies to ProvideFilterUIView.
 		[Abstract]
 		[Export ("provideViewForUIConfiguration:excludedKeys:")]
-#if XAMCORE_2_0
 		IKFilterUIView ProvideFilterUIView (NSDictionary configurationOptions, [NullAllowed] NSArray excludedKeys);
-#else
-		IKFilterUIView GetFilterUIView (NSDictionary configurationOptions, [NullAllowed] NSArray excludedKeys);
-#endif
 
 		//UIConfiguration keys for NSDictionary
 		[Field ("IKUISizeFlavor")]
@@ -560,11 +556,7 @@ namespace ImageKit {
 
 		[Abstract]
 		[Export ("imageBrowser:itemAtIndex:")]
-#if XAMCORE_2_0
 		IIKImageBrowserItem GetItem (IKImageBrowserView aBrowser, nint index);
-#else
-		IKImageBrowserItem GetItem (IKImageBrowserView aBrowser, nint index);
-#endif
 
 		[Export ("imageBrowser:removeItemsAtIndexes:")]
 		void RemoveItems (IKImageBrowserView aBrowser, NSIndexSet indexes);

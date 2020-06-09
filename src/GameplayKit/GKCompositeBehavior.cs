@@ -7,7 +7,6 @@
 // Copyright 2016 Xamarin Inc. All rights reserved.
 //
 
-#if XAMCORE_2_0 || !MONOMAC
 using System;
 using Foundation;
 
@@ -24,4 +23,3 @@ namespace GameplayKit {
 		}
 	}
 }
-#endif
