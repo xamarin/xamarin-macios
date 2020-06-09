@@ -32,13 +32,6 @@ namespace Xamarin.iOS.Tasks
 		ARMv6_ARMv7  = ARMv6 | ARMv7,
 	}
 
-	enum NativeReferenceKind
-	{
-		Static,
-		Dynamic,
-		Framework
-	}
-
 	public abstract class MTouchTaskBase : BundlerToolTaskBase
 	{
 		class GccOptions
