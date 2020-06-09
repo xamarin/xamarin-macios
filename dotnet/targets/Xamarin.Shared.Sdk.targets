@@ -122,6 +122,10 @@
 				<BeforeStep>LoadReferencesStep</BeforeStep>
 				<Type>Xamarin.SetupStep</Type>
 			</_TrimmerCustomSteps>
+			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)">
+				<!-- At the end of the pipeline -->
+				<Type>Xamarin.GenerateMainStep</Type>
+			</_TrimmerCustomSteps>
 		</ItemGroup>
 
 		<!-- Create the file with our custom linker options -->
