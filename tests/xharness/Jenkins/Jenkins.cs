@@ -219,7 +219,7 @@ namespace Xharness.Jenkins {
 				Platform = TestPlatform.All,
 				TestName = "DotNet tests",
 				Timeout = TimeSpan.FromMinutes (5),
-				Ignored = ! TestSelection.HasFlag (TestSelection.DotNet),
+				Ignored = !TestSelection.HasFlag (TestSelection.DotNet),
 			};
 			Tasks.Add (runDotNetTests);
 
