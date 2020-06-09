@@ -637,7 +637,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			AppManifest="$(_AppManifest)"
 			AssemblyName="$(AssemblyName)"
 			BundleIdentifier="$(_BundleIdentifier)"
-			Debug="$(MtouchDebug)"
+			Debug="$(_Debug)"
 			DefaultSdkVersion="$(_SdkVersion)"
 			IsAppExtension="$(IsAppExtension)"
 			IsWatchApp="$(IsWatchApp)"
@@ -749,7 +749,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			Architectures="$(TargetArchitectures)"
 			ExecutableName="$(_ExecutableName)"
 			CompiledEntitlements="$(_CompiledEntitlements)"
-			Debug="$(MtouchDebug)"
+			Debug="$(_Debug)"
 			ExtraArgs="$(MtouchExtraArgs)"
 			FastDev="$(MtouchFastDev)"
 			HttpClientHandler="$(MtouchHttpClientHandler)"
@@ -965,7 +965,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</SpotlightIndexer>
 	</Target>
 
-	<Target Name="_CreateDebugSettings" Condition="'$(MtouchDebug)' == 'true' And '$(IsWatchApp)' == 'false'"
+	<Target Name="_CreateDebugSettings" Condition="'$(_Debug)' == 'true' And '$(IsWatchApp)' == 'false'"
 		DependsOnTargets="_CopyResourcesToBundle"
 		Outputs="$(_AppBundlePath)Settings.bundle\Root.plist" >
 		<CreateDebugSettings
@@ -977,7 +977,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</CreateDebugSettings>
 	</Target>
 
-	<Target Name="_CreateDebugConfiguration" Condition="'$(MtouchDebug)' == 'true' And '$(IsWatchApp)' == 'false'"
+	<Target Name="_CreateDebugConfiguration" Condition="'$(_Debug)' == 'true' And '$(IsWatchApp)' == 'false'"
 		DependsOnTargets="_CopyResourcesToBundle;_DetectDebugNetworkConfiguration"
 		Outputs="$(_AppBundlePath)MonoTouchDebugConfiguration.txt" >
 		<CreateDebugConfiguration
@@ -1710,7 +1710,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 		<PropertyGroup>
 			<_CodesignDisableTimestamp>False</_CodesignDisableTimestamp>
-			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(MtouchDebug)' == 'true'">True</_CodesignDisableTimestamp>
+			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(_Debug)' == 'true'">True</_CodesignDisableTimestamp>
 			<_LibraryCodeSigningKey>$(_CodeSigningKey)</_LibraryCodeSigningKey>
 			<_LibraryCodeSigningKey Condition="'$(_LibraryCodeSigningKey)' == ''">-</_LibraryCodeSigningKey>
 		</PropertyGroup>
@@ -1736,7 +1736,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 		<PropertyGroup>
 			<_CodesignDisableTimestamp>False</_CodesignDisableTimestamp>
-			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(MtouchDebug)' == 'true'">True</_CodesignDisableTimestamp>
+			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(_Debug)' == 'true'">True</_CodesignDisableTimestamp>
 			<_FrameworkCodeSigningKey>$(_CodeSigningKey)</_FrameworkCodeSigningKey>
 			<_FrameworkCodeSigningKey Condition="'$(_FrameworkCodeSigningKey)' == ''">-</_FrameworkCodeSigningKey>
 		</PropertyGroup>
@@ -1850,7 +1850,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			<_NativeExecutableFileName>$([System.IO.Path]::GetFileName('$(_NativeExecutable)'))</_NativeExecutableFileName>
 
 			<_CodesignDisableTimestamp>False</_CodesignDisableTimestamp>
-			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(MtouchDebug)' == 'true'">True</_CodesignDisableTimestamp>
+			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(_Debug)' == 'true'">True</_CodesignDisableTimestamp>
 
 			<_CodesignAppExtensionInputs>@(_AppExtensionBundleFiles);$(_EntitlementsFullPath)</_CodesignAppExtensionInputs>
 
@@ -1896,7 +1896,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 		<PropertyGroup>
 			<_CodesignDisableTimestamp>False</_CodesignDisableTimestamp>
-			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(MtouchDebug)' == 'true'">True</_CodesignDisableTimestamp>
+			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(_Debug)' == 'true'">True</_CodesignDisableTimestamp>
 		</PropertyGroup>
 
 		<Codesign
@@ -2057,7 +2057,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			<IsStreamable Condition="'$(EmbedOnDemandResources)' == 'false'">true</IsStreamable>
 
 			<_CodesignDisableTimestamp>False</_CodesignDisableTimestamp>
-			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(MtouchDebug)' == 'true'">True</_CodesignDisableTimestamp>
+			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(_Debug)' == 'true'">True</_CodesignDisableTimestamp>
 		</PropertyGroup>
 		
 		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(_IntermediateODRDir)" />
