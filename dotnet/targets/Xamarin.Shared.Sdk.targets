@@ -132,6 +132,13 @@
 		<WriteLinesToFile File="$(_CustomLinkerOptionsFile)" Lines="$(_CustomLinkerOptions)" Overwrite="true" />
 	</Target>
 
+	<Target Name="_LoadLinkerOutput">
+		<!-- Load _MainFile -->
+		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_MainFile.items" Condition="Exists('$(_LinkerItemsDirectory)/_MainFile.items')">
+			<Output TaskParameter="Items" ItemName="_MainFile" />
+		</ReadItemsFromFile>
+	</Target>
+
 	<Target Name="_ComputePublishLocation" DependsOnTargets="_GenerateBundleName">
 		<!-- Put .dll, .pdb, .exe and .dylib in the .app -->
 		<PropertyGroup>

@@ -22,7 +22,16 @@ main (int argc, char** argv)
 }
 ";
 				File.WriteAllText (file, contents);
+
+				items.Add (new MSBuildItem {
+					Include = file,
+					Metadata = {
+						{ "Arch", abi.AsArchString () },
+					},
+				});
 			}
+
+			Configuration.WriteOutputForMSBuild ("_MainFile", items);
 		}
 	}
 }

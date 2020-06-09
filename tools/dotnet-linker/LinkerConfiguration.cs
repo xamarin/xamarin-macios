@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Xml.Linq;
 
 using Mono.Linker;
 
@@ -103,5 +105,26 @@ namespace Xamarin.Linker {
 			Console.WriteLine ($"    Platform: {Platform}");
 			Console.WriteLine ($"    PlatformAssembly: {PlatformAssembly}.dll");
 		}
+
+		public void WriteOutputForMSBuild (string itemName, List<MSBuildItem> items)
+		{
+			var xmlNs = XNamespace.Get ("http://schemas.microsoft.com/developer/msbuild/2003");
+			var elements = items.Select (item =>
+				new XElement (xmlNs + itemName,
+					new XAttribute ("Include", item.Include),
+						item.Metadata.Select (metadata => new XElement (xmlNs + metadata.Key, metadata.Value))));
+
+			var document = new XDocument (
+				new XElement (xmlNs + "Project",
+					new XElement (xmlNs + "ItemGroup",
+						elements)));
+
+			document.Save (Path.Combine (ItemsDirectory, itemName + ".items"));
+		}
 	}
+}
+
+public class MSBuildItem {
+	public string Include;
+	public Dictionary<string, string> Metadata = new Dictionary<string, string> ();
 }
