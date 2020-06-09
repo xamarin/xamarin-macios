@@ -66,5 +66,27 @@ namespace Xamarin.MacDev.Tasks
 				throw new InvalidOperationException ($"Invalid platform: {platform}");
 			}
 		}
+
+		public static string GetMinimumVersionOperatingSystem (string targetFrameworkMoniker, bool is_simulator)
+		{
+			var framework = GetFramework (targetFrameworkMoniker);
+			switch (framework) {
+			case ApplePlatform.iOS:
+				return is_simulator ? "iphonesimulator" : "ios";
+			case ApplePlatform.TVOS:
+				return is_simulator ? "tvos-simulator" : "tvos";
+			case ApplePlatform.WatchOS:
+				return is_simulator ? "watchos-simulator" : "watchos";
+			case ApplePlatform.MacOSX:
+				return "macosx";
+			default:
+				throw new InvalidOperationException (string.Format ("Unknown target framework {0} for target framework moniker {1}.", framework, targetFrameworkMoniker));
+			}
+		}
+
+		public static string GetMinimumVersionArgument (string targetFrameworkMoniker, bool isSimulator, string minimumOSVersion)
+		{
+			return $"-m{GetMinimumVersionOperatingSystem (targetFrameworkMoniker, isSimulator)}-version-min={minimumOSVersion}";
+		}
 	}
 }
