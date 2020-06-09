@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 
 using Mono.Linker.Steps;
 
@@ -16,6 +17,8 @@ namespace Xamarin {
 			Configuration.Write ();
 
 			ErrorHelper.Platform = Configuration.Platform;
+			Directory.CreateDirectory (Configuration.ItemsDirectory);
+			Directory.CreateDirectory (Configuration.CacheDirectory);
 		}
 	}
 }

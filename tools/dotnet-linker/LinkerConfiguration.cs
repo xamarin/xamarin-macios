@@ -11,8 +11,10 @@ using Xamarin.Utils;
 namespace Xamarin.Linker {
 	public class LinkerConfiguration {
 		public List<Abi> Abis;
+		public string ItemsDirectory { get; private set; }
 		public ApplePlatform Platform { get; private set; }
 		public string PlatformAssembly { get; private set; }
+		public string CacheDirectory { get; private set; }
 
 		static ConditionalWeakTable<LinkContext, LinkerConfiguration> configurations = new ConditionalWeakTable<LinkContext, LinkerConfiguration> ();
 
@@ -46,6 +48,12 @@ namespace Xamarin.Linker {
 				var key = line [..eq];
 				var value = line [(eq + 1)..];
 				switch (key) {
+				case "CacheDirectory":
+					CacheDirectory = value;
+					break;
+				case "ItemsDirectory":
+					ItemsDirectory = value;
+					break;
 				case "Platform":
 					switch (value) {
 					case "iOS":
@@ -90,6 +98,8 @@ namespace Xamarin.Linker {
 		{
 			Console.WriteLine ($"LinkerConfiguration:");
 			Console.WriteLine ($"    Abis: {string.Join (", ", Abis.Select (v => v.AsArchString ()))}");
+			Console.WriteLine ($"    CacheDirectory: {CacheDirectory}");
+			Console.WriteLine ($"    ItemsDirectory: {ItemsDirectory}");
 			Console.WriteLine ($"    Platform: {Platform}");
 			Console.WriteLine ($"    PlatformAssembly: {PlatformAssembly}.dll");
 		}
