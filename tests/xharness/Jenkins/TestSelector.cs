@@ -210,8 +210,12 @@ namespace Xharness.Jenkins {
 			MainLog.WriteLine ($"In total found {labels.Count ()} label(s): {string.Join (", ", labels.ToArray ())}");
 
 			foreach (var keyValuePair in testNameSelectionMatch) {
+				if (keyValuePair.Key == "all")
+					continue; // all is special since it can enable or disable all tests, so we check its settings once we have checked all of the others
 				SetEnabled (labels, keyValuePair.Key, keyValuePair.Value);
 			}
+
+			SetEnabled (labels, "all", TestSelection.All);
 
 			// special case since we are not working with the TestSelection flag in jenkins
 			Harness.IncludeSystemPermissionTests = labels.Contains ("run-system-permission-tests") || jenkins.TestSelection.HasFlag (TestSelection.All);
@@ -219,9 +223,9 @@ namespace Xharness.Jenkins {
 			// docs is a bit special:
 			// - can only be executed if the Xamarin-specific parts of the build is enabled
 			// - enabled by default if the current branch is master (or, for a pull request, if the target branch is master)
-			var changed = SetEnabled (labels, "docs", TestSelection.Docs);
+			var changed = SetEnabled (labels, "docs", TestSelection.Docs) || jenkins.TestSelection.HasFlag (TestSelection.All);
 			if (Harness.ENABLE_XAMARIN) {
-				if (!changed) { // don't override any value set using labels
+				if (!changed) {
 					var branchName = Environment.GetEnvironmentVariable ("BRANCH_NAME");
 					if (!string.IsNullOrEmpty (branchName)) {
 						if (branchName == "master") {
@@ -250,7 +254,7 @@ namespace Xharness.Jenkins {
 
 			// old simulator tests is also a bit special:
 			// - enabled by default if using a beta Xcode, otherwise disabled by default
-			changed = SetEnabled (labels, "old-simulator", TestSelection.OldiOSSimulator);
+			changed = SetEnabled (labels, "old-simulator", TestSelection.OldiOSSimulator) || jenkins.TestSelection.HasFlag (TestSelection.All);
 			if (!changed && jenkins.IsBetaXcode) {
 				jenkins.TestSelection |= TestSelection.OldiOSSimulator;
 				MainLog.WriteLine ("Enabled 'old-simulator' tests because we're using a beta Xcode.");
