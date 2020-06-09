@@ -71,17 +71,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<IOSDebugOverWiFi Condition="'$(IOSDebugOverWiFi)' == '' And '$(IOSDebuggerConnectOverUsb)' == 'False'">True</IOSDebugOverWiFi>
 		<!--<IOSDebuggerHosts Condition="'$(IOSDebuggerHosts)' == ''">127.0.0.1</IOSDebuggerHosts>-->
 		<IOSDebuggerPort Condition="'$(IOSDebuggerPort)' == ''">10000</IOSDebuggerPort>
-		
-		<!-- We cannot use $(Platform) in conditions on props, because VS interprets them as valid platforms 
-			 for the current project and makes them available for solution configurations, which fails miserably 
-			 for iOS class library projects. By using another property name, we "opt out" of this "smart" behavior -->
-		<_Platform>$(Platform)</_Platform>
-
-		<!-- There should always be an MtouchArg value in newer projects, for older projects default to old values -->
-		<MtouchArch Condition="'$(MtouchArch)' == '' And '$(_Platform)' == 'iPhoneSimulator'">i386</MtouchArch>
-		<MtouchArch Condition="'$(MtouchArch)' == '' And '$(_Platform)' == 'iPhone' And '$(TargetFrameworkIdentifier)' == 'Xamarin.WatchOS'">ARMv7k</MtouchArch>
-		<MtouchArch Condition="'$(MtouchArch)' == '' And '$(_Platform)' == 'iPhone' And '$(TargetFrameworkIdentifier)' == 'Xamarin.TVOS'">ARM64</MtouchArch>
-		<MtouchArch Condition="'$(MtouchArch)' == '' And '$(_Platform)' == 'iPhone'">ARMv7</MtouchArch>
 
 		<!-- On-Demand Resources -->
 		<EnableOnDemandResources Condition="'$(EnableOnDemandResources)' == ''">true</EnableOnDemandResources>

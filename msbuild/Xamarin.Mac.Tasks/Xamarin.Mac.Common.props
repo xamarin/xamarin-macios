@@ -73,7 +73,6 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
 		<I18n Condition="'$(I18n)' == ''"></I18n>
 		<IncludeMonoRuntime Condition="'$(IncludeMonoRuntime)' == ''">true</IncludeMonoRuntime>
 		<MonoBundlingExtraArgs Condition="'$(MonoBundlingExtraArgs)' == ''"></MonoBundlingExtraArgs>
-		<XamMacArch Condition="'$(XamMacArch)' == ''">x86_64</XamMacArch>
 		<IsAppExtension Condition="'$(IsAppExtension)' == ''">False</IsAppExtension>
 		<EnableSGenConc Condition="'$(EnableSGenConc)' == ''">false</EnableSGenConc>
 		<AotScope Condition="'$(AotScope)' == ''">None</AotScope>
