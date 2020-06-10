@@ -26,10 +26,6 @@ namespace CoreTelephony {
 	}
 	
 
-#if !XAMCORE_2_0
-	delegate void CTCarrierEventHandler (CTCarrier call);
-#endif
-
 	[Static]
 	[iOS (7,0)]
 	interface CTRadioAccessTechnology {
@@ -88,11 +84,7 @@ namespace CoreTelephony {
 		[Deprecated (PlatformName.iOS, 12,0, message: "Use 'ServiceSubscriberCellularProvidersDidUpdateNotifier' instead.")]
 		[NullAllowed] // by default this property is null
 		[Export ("subscriberCellularProviderDidUpdateNotifier")]
-#if XAMCORE_2_0
 		Action<CTCarrier> CellularProviderUpdatedEventHandler { get; set; }
-#else
-		CTCarrierEventHandler CellularProviderUpdatedEventHandler { get; set; }
-#endif
 
 		[Deprecated (PlatformName.iOS, 12,0, message: "Use 'ServiceCurrentRadioAccessTechnology' instead.")]
 		[iOS (7,0), Export ("currentRadioAccessTechnology")]
@@ -133,21 +125,13 @@ namespace CoreTelephony {
 		NSObject WeakDelegate { get; set; }
 	}
 
-#if !XAMCORE_2_0
-	delegate void CTCallEventHandler (CTCall call);
-#endif
-
 	[Deprecated (PlatformName.iOS, 10, 0, message: "Replaced by 'CXCallObserver' from 'CallKit'.")]
 	[BaseType (typeof (NSObject))]
 	interface CTCallCenter {
 		[Availability (Deprecated = Platform.iOS_10_0, Message = "Use 'CallKit' instead.")]
 		[NullAllowed] // by default this property is null
 		[Export ("callEventHandler")]
-#if XAMCORE_2_0
 		Action<CTCall> CallEventHandler { get; set; }
-#else
-		CTCallEventHandler CallEventHandler { get; set; }
-#endif
 
 		[Availability (Deprecated = Platform.iOS_10_0, Message = "Use 'CallKit' instead.")]
 		[Export ("currentCalls")]
@@ -209,10 +193,6 @@ namespace CoreTelephony {
 		[NullAllowed]
 		ICTSubscriberDelegate Delegate { get; set; }
 	}
-
-#if !XAMCORE_2_0
-	delegate void SimAuthenticationCallback (NSDictionary dictionary);
-#endif
 
 	[BaseType (typeof (NSObject))]
 	partial interface CTSubscriberInfo {
