@@ -28,8 +28,6 @@ namespace ObjCRuntime {
 #else
 		#error Unknown platform
 #endif
-		internal const string CompatNamespace = "MonoTouch";
-#if XAMCORE_2_0
 #if WATCH
 		internal const string AssemblyName = "Xamarin.Watch.dll";
 #elif TVOS
@@ -38,9 +36,6 @@ namespace ObjCRuntime {
 		internal const string AssemblyName = "Xamarin.iOS.dll";
 #else
 		#error Unknown platform
-#endif
-#else
-		internal const string AssemblyName = "monotouch.dll";
 #endif
 
 		public static Arch Arch; // default: = Arch.DEVICE;

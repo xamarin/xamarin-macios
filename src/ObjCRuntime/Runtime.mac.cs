@@ -38,12 +38,7 @@ namespace ObjCRuntime {
 	public static partial class Runtime {
 #if !COREBUILD
 		internal const string ProductName = "Xamarin.Mac";
-		internal const string CompatNamespace = "MonoMac";
-#if XAMCORE_2_0
 		internal const string AssemblyName = "Xamarin.Mac.dll";
-#else
-		internal const string AssemblyName = "XamMac.dll";
-#endif
 
 		public static string FrameworksPath {
 			get; set;
