@@ -23,11 +23,6 @@ namespace Foundation {
 		public readonly static Assembly MonoTouchAssembly = typeof (NSObject).Assembly;
 #endif
 
-#if !XAMCORE_2_0
-		const string selAccessibilityDecrement = "accessibilityDecrement";
-		const string selAccessibilityIncrement = "accessibilityIncrement";
-		const string selAccessibilityScroll = "accessibilityScroll";
-#endif
 		public static NSObject Alloc (Class kls) {
 			var h = Messaging.IntPtr_objc_msgSend (kls.Handle, Selector.GetHandle (Selector.Alloc));
 			return new NSObject (h, true);
@@ -53,40 +48,6 @@ namespace Foundation {
 				IsBackground = true,
 			}.Start (action);
 		}
-
-#if !XAMCORE_2_0
-		[Export ("accessibilityDecrement")]
-		public virtual void AccessibilityDecrement () {
-			if (IsDirectBinding) {
-				Messaging.void_objc_msgSend (this.Handle, Selector.GetHandle (selAccessibilityDecrement));
-			} else {
-				Messaging.void_objc_msgSendSuper (this.SuperHandle, Selector.GetHandle (selAccessibilityDecrement));
-			}
-		}
-
-		[Export ("accessibilityIncrement")]
-		public virtual void AccessibilityIncrement () {
-			if (IsDirectBinding) {
-				Messaging.void_objc_msgSend (this.Handle, Selector.GetHandle (selAccessibilityIncrement));
-			} else {
-					Messaging.void_objc_msgSendSuper (this.SuperHandle, Selector.GetHandle (selAccessibilityIncrement));
-			}
-		}
-
-		[Export ("accessibilityScroll:")]
-		public virtual bool AccessibilityScroll (UIAccessibilityScrollDirection direction) {
-			if (IsDirectBinding) {
-				return Messaging.bool_objc_msgSend_int (this.Handle, Selector.GetHandle (selAccessibilityScroll), (int) direction);
-			} else {
-					return Messaging.bool_objc_msgSendSuper_int (this.SuperHandle, Selector.GetHandle (selAccessibilityScroll), (int) direction);
-			}
-		}
-	
-		public virtual void PerformSelector (Selector sel, NSObject obj, float delay)
-		{
-			PerformSelector (sel, obj, (double) delay);
-		}
-#endif
 #endif // !COREBUILD
 	}
 }
