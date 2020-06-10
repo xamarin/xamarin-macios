@@ -91,11 +91,7 @@ namespace WebKit
 		FlightNumber = 1 << 5,
 		LookupSuggestion = 1 << 6,
 		SpotlightSuggestion = LookupSuggestion,
-#if XAMCORE_2_0
 		All = UInt64.MaxValue
-#else
-		All = UInt32.MaxValue
-#endif
 	}
 
 	[iOS (10,0)][Mac (10,12)]
@@ -105,10 +101,6 @@ namespace WebKit
 		None = 0,
 		Audio = 1 << 0,
 		Video = 1 << 1,
-#if XAMCORE_2_0
 		All = UInt64.MaxValue
-#else
-		All = UInt32.MaxValue
-#endif
 	}
 }

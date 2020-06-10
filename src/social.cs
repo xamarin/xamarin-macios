@@ -6,7 +6,7 @@
 //
 // Copyright 2012-2013 Xamarin Inc
 //
-#if XAMCORE_2_0 || !MONOMAC
+
 using System;
 using ObjCRuntime;
 using Foundation;
@@ -135,15 +135,11 @@ namespace Social {
 #else
 	[BaseType (typeof (UIViewController))]
 #endif
-#if XAMCORE_2_0
 	#if MONOMAC
 	interface SLComposeServiceViewController : NSTextViewDelegate {
 	#else
 	interface SLComposeServiceViewController : UITextViewDelegate {
 	#endif
-#else
-	interface SLComposeServiceViewController {
-#endif
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
 		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
@@ -234,4 +230,3 @@ namespace Social {
 	}
 #endif
 }
-#endif

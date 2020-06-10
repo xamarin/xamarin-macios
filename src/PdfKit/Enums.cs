@@ -29,7 +29,7 @@
 using System;
 
 using ObjCRuntime;
-#if MONOMAC || (IOS && XAMCORE_2_0)
+#if MONOMAC || IOS
 
 namespace PdfKit {
 

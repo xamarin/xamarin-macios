@@ -26,7 +26,7 @@
 //
 // PdfKit.cs: Bindings for the PdfKit API
 //
-#if MONOMAC || (IOS && XAMCORE_2_0)
+#if MONOMAC || IOS
 
 using System;
 #if MONOMAC
@@ -454,9 +454,7 @@ namespace PdfKit {
 
 	[iOS (11,0)]
 	[BaseType (typeof (NSObject), Name = "PDFAction")]
-#if XAMCORE_2_0
 	[Abstract]
-#endif
 	interface PdfAction : NSCopying {
 		//This is an abstract superclass with no public init - should it have a private constructor??
 		//As it is, I can create instances, that segfault when you access the type method.
@@ -980,11 +978,7 @@ namespace PdfKit {
 	[BaseType (typeof (PdfAnnotation), Name = "PDFAnnotationMarkup")]
 	interface PdfAnnotationMarkup {
 		[Export ("quadrilateralPoints", ArgumentSemantic.Assign), NullAllowed]
-#if XAMCORE_2_0
 		NSArray WeakQuadrilateralPoints { get; set; }
-#else
-		NSArray QuadrilateralPoints { get; set; }
-#endif
 
 		[Export ("markupType")]
 		PdfMarkupType MarkupType { get; set; }
@@ -1067,11 +1061,7 @@ namespace PdfKit {
 		nfloat LineWidth { get; set; }
 
 		[Export ("dashPattern", ArgumentSemantic.Assign), NullAllowed]
-#if XAMCORE_2_0
 		NSArray WeakDashPattern { get; set; }
-#else
-		NSArray DashPattern { get; set; }
-#endif
 
 		[Mac (10,13)]
 		[Export ("borderKeyValues", ArgumentSemantic.Copy)]
@@ -2046,4 +2036,4 @@ namespace PdfKit {
 	}
 
 }
-#endif // MONOMAC || (IOS && XAMCORE_2_0)
+#endif // MONOMAC || IOS

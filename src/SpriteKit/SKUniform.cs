@@ -21,7 +21,7 @@ using MatrixFloat2x2 = global::OpenTK.NMatrix2;
 using MatrixFloat3x3 = global::OpenTK.NMatrix3;
 using MatrixFloat4x4 = global::OpenTK.NMatrix4;
 
-#if (XAMCORE_2_0 || !MONOMAC) && !WATCH
+#if !WATCH
 namespace SpriteKit {
 	public partial class SKUniform {
 
@@ -274,4 +274,4 @@ namespace SpriteKit {
 #endif // !XAMCORE_4_0
 	}
 }
-#endif // XAMCORE_2_0
+#endif // !WATCH
