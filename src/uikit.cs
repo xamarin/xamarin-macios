@@ -27,7 +27,6 @@ using CoreAnimation;
 using CoreData;
 using UserNotifications;
 
-#if XAMCORE_2_0
 #if IOS
 using FileProvider;
 using LinkPresentation;
@@ -77,7 +76,6 @@ using UITableViewCell = Foundation.NSObject;
 using UITableView = Foundation.NSObject;
 using UICollectionReusableView = Foundation.NSObject;
 #endif // WATCH
-#endif // XAMCORE_2_0
 
 using System;
 using System.ComponentModel;
@@ -210,11 +208,7 @@ namespace UIKit {
 	[Category (allowStaticMembers: true)] // Classic isn't internal so we need this
 	[BaseType (typeof (NSAttributedString))]
 	interface NSAttributedStringAttachmentConveniences {
-#if XAMCORE_2_0
 		[Internal]
-#else
-		[EditorBrowsable (EditorBrowsableState.Advanced)] // this is not the one we want to be seen (compat only)
-#endif
 		[Static, Export ("attributedStringWithAttachment:")]
 		NSAttributedString FromTextAttachment (NSTextAttachment attachment);
 	}
@@ -344,7 +338,6 @@ namespace UIKit {
 	}
 
 #if !WATCH
-#if XAMCORE_2_0 // NSLayoutAnchor is a generic type, which we only support in Unified (for now)
 	[NoWatch]
 	[iOS (9,0)]
 	[BaseType (typeof(NSObject))]
@@ -451,7 +444,6 @@ namespace UIKit {
 		[Export ("constraintLessThanOrEqualToAnchor:multiplier:constant:")]
 		NSLayoutConstraint ConstraintLessThanOrEqualTo (NSLayoutDimension anchor, nfloat multiplier, nfloat constant);
 	}
-#endif // XAMCORE_2_0
 
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
@@ -503,7 +495,6 @@ namespace UIKit {
 		[Static, Export ("deactivateConstraints:")]
 		void DeactivateConstraints (NSLayoutConstraint [] constraints);
 
-#if XAMCORE_2_0
 		[iOS (10,0), TV (10,0)]
 		[Export ("firstAnchor", ArgumentSemantic.Copy)]
 		[Internal]
@@ -513,7 +504,6 @@ namespace UIKit {
 		[Export ("secondAnchor", ArgumentSemantic.Copy)]
 		[Internal]
 		IntPtr _SecondAnchor<AnchorType> ();
-#endif
 	}
 
 	[NoWatch]
@@ -719,15 +709,11 @@ namespace UIKit {
 	[Protocol]
 	[BaseType (typeof (NSObject))]
 	partial interface NSTextAttachmentContainer {
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("imageForBounds:textContainer:characterIndex:")]
 		UIImage GetImageForBounds (CGRect bounds, NSTextContainer textContainer, nuint characterIndex);
 
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("attachmentBoundsForTextContainer:proposedLineFragment:glyphPosition:characterIndex:")]
 		CGRect GetAttachmentBounds (NSTextContainer textContainer, CGRect proposedLineFragment, CGPoint glyphPosition, nuint characterIndex);
 	}
@@ -1552,10 +1538,8 @@ namespace UIKit {
 	}
 	
 	[BaseType (typeof (UIResponder))]
-#if XAMCORE_2_0
 	// only happens on the simulator (not devices) on iOS8 (still make sense)
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: Use initWithAccessibilityContainer:
-#endif
 	interface UIAccessibilityElement : UIAccessibilityIdentification {
 		[Export ("initWithAccessibilityContainer:")]
 		IntPtr Constructor (NSObject container);
@@ -1606,21 +1590,12 @@ namespace UIKit {
 	}
 
 	interface UIAccessibilityAction {
-#if !XAMCORE_2_0
-		[New] // To avoid the warning that we are overwriting the method in NSObject.   
-#endif
 		[Export ("accessibilityIncrement")]
 		void AccessibilityIncrement ();
 
-#if !XAMCORE_2_0
-		[New] // To avoid the warning that we are overwriting the method in NSObject
-#endif
 		[Export ("accessibilityDecrement")]
 		void AccessibilityDecrement ();
 
-#if !XAMCORE_2_0
-		[New] // To avoid the warning that we are overwriting the method in NSObject
-#endif
 		[Export ("accessibilityScroll:")]
 		bool AccessibilityScroll (UIAccessibilityScrollDirection direction);
 
@@ -2717,11 +2692,7 @@ namespace UIKit {
 		[NoTV]
 		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UNUserNotificationCenter.AddNotificationRequest' instead.")]
 		[Export ("presentLocalNotificationNow:")]
-#if XAMCORE_2_0
 		void PresentLocalNotificationNow (UILocalNotification notification);
-#else
-		void PresentLocationNotificationNow (UILocalNotification notification);
-#endif
 
 		// from @interface UIApplication (UILocalNotifications)
 		[NoTV]
@@ -3017,13 +2988,11 @@ namespace UIKit {
 		[Export ("iconWithSystemImageName:")]
 		UIApplicationShortcutIcon FromSystemImageName (string systemImageName);
 
-#if XAMCORE_2_0
 #if IOS // This is inside ContactsUI.framework
 		[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
 		[Static, Export ("iconWithContact:")]
 		UIApplicationShortcutIcon FromContact (CNContact contact);
 #endif // IOS
-#endif
 	}
 
 	[NoTV]
@@ -3562,12 +3531,12 @@ namespace UIKit {
 		[Export ("application:userDidAcceptCloudKitShareWithMetadata:")]
 		void UserDidAcceptCloudKitShare (UIApplication application, CKShareMetadata cloudKitShareMetadata);
 
-#if XAMCORE_2_0 && !TVOS
+#if !TVOS
 		[NoTV]
 		[iOS (11,0), Watch (4,0)]
 		[Export ("application:handleIntent:completionHandler:")]
 		void HandleIntent (UIApplication application, INIntent intent, Action<INIntentResponse> completionHandler);
-#endif // XAMCORE_2_0 && !TVOS
+#endif // !TVOS
 
 		[iOS (13,0), TV (13,0), Watch (6,0)]
 		[Export ("application:configurationForConnectingSceneSession:options:")]
@@ -3867,20 +3836,10 @@ namespace UIKit {
 		void RegisterNibForSupplementaryView (UINib nib, NSString kind, NSString reuseIdentifier);
 
 		[Export ("dequeueReusableCellWithReuseIdentifier:forIndexPath:")]
-#if XAMCORE_2_0
-		UICollectionReusableView
-#else
-		NSObject
-#endif
-		DequeueReusableCell (NSString reuseIdentifier, NSIndexPath indexPath);
+		UICollectionReusableView DequeueReusableCell (NSString reuseIdentifier, NSIndexPath indexPath);
 
 		[Export ("dequeueReusableSupplementaryViewOfKind:withReuseIdentifier:forIndexPath:")]
-#if XAMCORE_2_0
-		UICollectionReusableView
-#else
-		NSObject
-#endif
-		DequeueReusableSupplementaryView (NSString kind, NSString identifier, NSIndexPath indexPath);
+		UICollectionReusableView DequeueReusableSupplementaryView (NSString kind, NSString identifier, NSIndexPath indexPath);
 
 		[Export ("indexPathsForSelectedItems")]
 		NSIndexPath [] GetIndexPathsForSelectedItems ();
@@ -5884,13 +5843,6 @@ namespace UIKit {
 		[Internal, Field ("UIFontDescriptorMatrixAttribute")]
 		NSString MatrixAttribute { get; }
 
-#if !XAMCORE_2_0
-		// that got removed in iOS7 betas... so we remove it from unified
-		// in case Apple starts to disallow it (and rejects apps that refers to it)
-		[Internal, Field ("UIFontDescriptorVariationAttribute")]
-		NSString VariationAttribute { get; }
-#endif
-		
 		[Internal, Field ("UIFontDescriptorCharacterSetAttribute")]
 		NSString CharacterSetAttribute { get; }
 		
@@ -6687,25 +6639,11 @@ namespace UIKit {
 		[Export ("isEmpty")]
 		bool IsEmpty { get; }
 
-#if XAMCORE_2_0
 		[Export ("start")]
 		UITextPosition Start { get;  }
 
 		[Export ("end")]
 		UITextPosition End { get;  }
-#else
-		[Export ("start"), Obsolete ("Use 'Start' instead.")]
-		UITextPosition start { get;  }
-
-		[Wrap ("start")]
-		UITextPosition Start { get; }
-
-		[Export ("end"), Obsolete ("Use 'End' instead.")]
-		UITextPosition end { get;  }
-
-		[Wrap ("end")]
-		UITextPosition End { get; }
-#endif
 	}
 
 	interface IUITextInput {}
@@ -6947,19 +6885,10 @@ namespace UIKit {
 
 	}
 
-#if XAMCORE_2_0
 	[BaseType (typeof (NSObject))]
 	interface UITextInputStringTokenizer : UITextInputTokenizer{
-#else
-	[BaseType (typeof (UITextInputTokenizer))]
-	interface UITextInputStringTokenizer {
-#endif
 		[Export ("initWithTextInput:")]
-#if XAMCORE_2_0
 		IntPtr Constructor (IUITextInput textInput);
-#else
-		IntPtr Constructor (NSObject /* UITextInput */ textInput);
-#endif
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -6968,35 +6897,19 @@ namespace UIKit {
 	interface UITextInputDelegate {
 		[Abstract]
 		[Export ("selectionWillChange:")]
-#if XAMCORE_2_0
 		void SelectionWillChange (IUITextInput uiTextInput);
-#else
-		void SelectionWillChange (NSObject /* UITextInput */ uiTextInput);
-#endif
 
 		[Abstract]
 		[Export ("selectionDidChange:")]
-#if XAMCORE_2_0
 		void SelectionDidChange (IUITextInput uiTextInput);
-#else
-		void SelectionDidChange (NSObject /* UITextInput */ uiTextInput);
-#endif
 
 		[Abstract]
 		[Export ("textWillChange:")]
-#if XAMCORE_2_0
 		void TextWillChange (IUITextInput textInput);
-#else
-		void TextWillChange (NSObject /* UITextInput */ textInput);
-#endif
 
 		[Abstract]
 		[Export ("textDidChange:")]
-#if XAMCORE_2_0
 		void TextDidChange (IUITextInput textInput);
-#else
-		void TextDidChange (NSObject /* UITextInput */ textInput);
-#endif
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -8154,9 +8067,7 @@ namespace UIKit {
 	[Model]
 	[Protocol]
 	interface UIBarPositioning {
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[iOS (7,0)]
 		[Export ("barPosition")]
 		UIBarPosition BarPosition { get; }
@@ -8968,7 +8879,6 @@ namespace UIKit {
 		[Export ("videoExportPreset")]
 		string VideoExportPreset { get; set; }
 
-#if XAMCORE_2_0
 		// manually bound (const fields) in monotouch.dll - unlike the newer fields (static properties)
 
 		[Field ("UIImagePickerControllerMediaType")]
@@ -8985,7 +8895,6 @@ namespace UIKit {
 
 		[Field ("UIImagePickerControllerMediaURL")]
 		NSString MediaURL { get; }
-#endif
 
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'UIImagePickerController.PHAsset' instead.")]
 		[Field ("UIImagePickerControllerReferenceURL")]
@@ -9176,11 +9085,7 @@ namespace UIKit {
 
 		[Export ("popNavigationItemAnimated:")]
 		[PostGet ("Items")] // that will [PostGet] TopItem too
-#if XAMCORE_2_0
 		UINavigationItem PopNavigationItem (bool animated);
-#else
-		UINavigationItem PopNavigationItemAnimated (bool animated);
-#endif
 
 		[Export ("topItem", ArgumentSemantic.Retain)]
 		UINavigationItem TopItem { get; }
@@ -9436,11 +9341,7 @@ namespace UIKit {
 
 		[Export ("popViewControllerAnimated:")]
 		[PostGet ("ViewControllers")] // that will PostGet TopViewController and VisibleViewController too
-#if XAMCORE_2_0
 		UIViewController PopViewController (bool animated);
-#else
-		UIViewController PopViewControllerAnimated (bool animated);
-#endif
 
 		[Export ("popToViewController:animated:")]
 		[PostGet ("ViewControllers")] // that will PostGet TopViewController and VisibleViewController too
@@ -11066,23 +10967,6 @@ namespace UIKit {
 		[Export ("backgroundImageForBarPosition:barMetrics:")]
 		[Appearance]
 		UIImage BackgroundImageForBarPosition (UIBarPosition barPosition, UIBarMetrics barMetrics);
-	
-#if !XAMCORE_2_0
-		// documented in https://developer.apple.com/library/prerelease/ios/releasenotes/General/iOS70APIDiffs/
-		// (but non-clickable) and NOT in the header files (or in the UISearchBar web documentation)
-		// that makes them private API
-
-		[iOS (7,0)]
-		[Export ("setBackgroundImage:forBarMetrics:")]
-		[Appearance]
-		void SetBackgroundImage ([NullAllowed] UIImage backgroundImage, UIBarMetrics barMetrics);
-	
-		// note that this one "work" on 7.x (i.e. as a private API) but does not on iOS8
-		[iOS (7,0)]
-		[Export ("backgroundImageForBarMetrics:")]
-		[Appearance]
-		UIImage BackgroundImageForBarMetrics (UIBarMetrics barMetrics);
-#endif
 
 		[iOS (7,0), Export ("barTintColor", ArgumentSemantic.Retain)]
 		[Appearance]
@@ -11369,9 +11253,7 @@ namespace UIKit {
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	partial interface UISearchResultsUpdating {
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 	    [Export ("updateSearchResultsForSearchController:")]
 	    void UpdateSearchResultsForSearchController (UISearchController searchController);
 	}
@@ -11812,11 +11694,7 @@ namespace UIKit {
 
 		[NoTV]
 		[Export ("endCustomizingAnimated:")]
-#if XAMCORE_2_0
 		bool EndCustomizing (bool animated);
-#else
-		bool EndCustomizingAnimated (bool animated);
-#endif
 
 		[NoTV]
 		[Export ("isCustomizing")]
@@ -12286,11 +12164,7 @@ namespace UIKit {
                 NSIndexPath [] IndexPathsForSelectedRows { get; }
 
 		[Export ("registerNib:forCellReuseIdentifier:")]
-#if XAMCORE_2_0
 		void RegisterNibForCellReuse ([NullAllowed] UINib nib, NSString reuseIdentifier);
-#else
-		void RegisterNibForCellReuse ([NullAllowed] UINib nib, string reuseIdentifier);
-#endif
 
 		[Field ("UITableViewSelectionDidChangeNotification")]
 		[Notification]
@@ -12325,11 +12199,7 @@ namespace UIKit {
 		void RegisterClassForCellReuse (IntPtr /*Class*/ cellClass, NSString reuseIdentifier);
 
 		[Export ("registerNib:forHeaderFooterViewReuseIdentifier:")]
-#if XAMCORE_2_0
 		void RegisterNibForHeaderFooterViewReuse (UINib nib, NSString reuseIdentifier);
-#else
-		void RegisterNibForHeaderFooterViewReuse (UINib nib, string reuseIdentifier);
-#endif
 
 		[Export ("registerClass:forHeaderFooterViewReuseIdentifier:"), Internal]
 		void RegisterClassForHeaderFooterViewReuse (IntPtr /*Class*/ aClass, NSString reuseIdentifier);
@@ -12701,11 +12571,7 @@ namespace UIKit {
 		UIView SelectedBackgroundView { get; set; }
 
 		[Export ("reuseIdentifier", ArgumentSemantic.Copy)]
-#if XAMCORE_2_0
 		NSString ReuseIdentifier { get; }
-#else
-		string ReuseIdentifier { get; }
-#endif
 
 		[RequiresSuper]
 		[Export ("prepareForReuse")]
@@ -13695,84 +13561,6 @@ namespace UIKit {
 		[Export ("bounds")]
 		new CGRect Bounds { get; set; }
 
-#if !XAMCORE_2_0
-		// note: duplicate from maccore's foundation.cs where it's binded on NSString2
-		[Bind ("drawAtPoint:withFont:")]
-			//[Obsolete ("Deprecated in iOS7.  Use NSString.DrawString(CGPoint, UIStringAttributes) instead")]
-		[ThreadSafe]
-		CGSize DrawString ([Target] string str, CGPoint point, UIFont font);
-
-		// note: duplicate from maccore's foundation.cs where it's binded on NSString2
-		[Bind ("drawAtPoint:forWidth:withFont:lineBreakMode:")]
-			//[Obsolete ("Deprecated in iOS7.  Use NSString.DrawString(CGRect, UIStringAttributes) instead")]
-		[ThreadSafe]
-		CGSize DrawString ([Target] string str, CGPoint point, nfloat width, UIFont font, UILineBreakMode breakMode);
-
-		// note: duplicate from maccore's foundation.cs where it's binded on NSString2
-		[Bind ("drawAtPoint:forWidth:withFont:fontSize:lineBreakMode:baselineAdjustment:")]
-			//[Obsolete ("Deprecated in iOS7.  Use NSString.DrawString(CGRect, UIStringAttributes) instead")]
-		[ThreadSafe]
-		CGSize DrawString ([Target] string str, CGPoint point, nfloat width, UIFont font, nfloat fontSize, UILineBreakMode breakMode, UIBaselineAdjustment adjustment);
-		
-		// note: duplicate from maccore's foundation.cs where it's binded on NSString2
-		[Bind ("drawAtPoint:forWidth:withFont:minFontSize:actualFontSize:lineBreakMode:baselineAdjustment:")]
-			//[Obsolete ("Deprecated in iOS7.  Use NSString.DrawString(CGRect, UIStringAttributes) instead")]
-		[ThreadSafe]
-		CGSize DrawString ([Target] string str, CGPoint point, nfloat width, UIFont font, nfloat minFontSize, ref nfloat actualFontSize, UILineBreakMode breakMode, UIBaselineAdjustment adjustment);
-		
-		// note: duplicate from maccore's foundation.cs where it's binded on NSString2
-		[Bind ("drawInRect:withFont:")]
-			//[Obsolete ("Deprecated in iOS7.  Use NSString.DrawString(CGRect, UIStringAttributes) instead")]
-		[ThreadSafe]
-		CGSize DrawString ([Target] string str, CGRect rect, UIFont font);
-
-		// note: duplicate from maccore's foundation.cs where it's binded on NSString2
-		[Bind ("drawInRect:withFont:lineBreakMode:")]
-			//[Obsolete ("Deprecated in iOS7.  Use NSString.DrawString(CGRect, UIStringAttributes) instead")]
-		[ThreadSafe]
-		CGSize DrawString ([Target] string str, CGRect rect, UIFont font, UILineBreakMode mode);
-
-		// note: duplicate from maccore's foundation.cs where it's binded on NSString2
-		[Bind ("drawInRect:withFont:lineBreakMode:alignment:")]
-			//[Obsolete ("Deprecated in iOS7.  Use NSString.DrawString(CGRect, UIStringAttributes) instead")]
-		[ThreadSafe]
-		CGSize DrawString ([Target] string str, CGRect rect, UIFont font, UILineBreakMode mode, UITextAlignment alignment);
-
-		[Bind ("endEditing:")]
-		bool EndEditing (bool force);
-		
-		// note: duplicate from maccore's foundation.cs where it's binded on NSString2
-		[Bind ("sizeWithFont:")]
-			//[Obsolete ("Deprecated in iOS7.  Use NSString.GetSizeUsingAttributes(UIStringAttributes) instead.")]
-		[ThreadSafe]
-		CGSize StringSize ([Target] string str, UIFont font);
-		
-		// note: duplicate from maccore's foundation.cs where it's binded on NSString2
-		[Bind ("sizeWithFont:forWidth:lineBreakMode:")]
-		[ThreadSafe]
-			//[Obsolete ("Deprecated in iOS7.   Use NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes,NSStringDrawingContext) instead.")]
-		CGSize StringSize ([Target] string str, UIFont font, nfloat forWidth, UILineBreakMode breakMode);
-					
-		// note: duplicate from maccore's foundation.cs where it's binded on NSString2
-		[Bind ("sizeWithFont:constrainedToSize:")]
-			//[Obsolete ("Deprecated in iOS7.   Use NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes,NSStringDrawingContext) instead.")]
-		[ThreadSafe]
-		CGSize StringSize ([Target] string str, UIFont font, CGSize constrainedToSize);
-		
-		// note: duplicate from maccore's foundation.cs where it's binded on NSString2
-		[Bind ("sizeWithFont:constrainedToSize:lineBreakMode:")]
-			//[Obsolete ("Deprecated in iOS7.   Use NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes,NSStringDrawingContext) instead.")]
-		[ThreadSafe]
-		CGSize StringSize ([Target] string str, UIFont font, CGSize constrainedToSize, UILineBreakMode lineBreakMode);
-
-		// note: duplicate from maccore's foundation.cs where it's binded on NSString2
-		[Bind ("sizeWithFont:minFontSize:actualFontSize:forWidth:lineBreakMode:")]
-		// Wait for guidance here: https://devforums.apple.com/thread/203655
-			//[Obsolete ("Deprecated on iOS7.   No guidance.")]
-		[ThreadSafe]
-		CGSize StringSize ([Target] string str, UIFont font, nfloat minFontSize, ref nfloat actualFontSize, nfloat forWidth, UILineBreakMode lineBreakMode);
-#endif // !XAMCORE_2_0
-
 		[Export ("userInteractionEnabled")]
 		bool UserInteractionEnabled { [Bind ("isUserInteractionEnabled")]get; set; }
 
@@ -14278,7 +14066,6 @@ namespace UIKit {
 		[Static]
 		double InheritedAnimationDuration { get; }
 
-#if XAMCORE_2_0 // NSLayoutXAxisAnchor is a generic type, only supported in Unified (for now)
 		[iOS (9,0)]
 		[Export ("leadingAnchor")]
 		NSLayoutXAxisAnchor LeadingAnchor { get; }
@@ -14326,7 +14113,6 @@ namespace UIKit {
 		[iOS (9,0)]
 		[Export ("lastBaselineAnchor")]
 		NSLayoutYAxisAnchor LastBaselineAnchor { get; }
-#endif // XAMCORE_2_0
 
 		[iOS (9,0)]
 		[Export ("layoutGuides")]
@@ -14483,11 +14269,7 @@ namespace UIKit {
 		[NoTV]
 		[Export ("dismissModalViewControllerAnimated:")]
 		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use 'DismissViewController (bool, NSAction)' instead.")]
-#if XAMCORE_2_0
 		void DismissModalViewController (bool animated);
-#else
-		void DismissModalViewControllerAnimated (bool animated);
-#endif
 		
 		[NoTV]
 		[Export ("modalViewController")]
@@ -15117,15 +14899,11 @@ namespace UIKit {
 		[Export ("finalFrameForViewController:")]
 		CGRect GetFinalFrameForViewController (UIViewController vc);
 
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("viewForKey:")]
 		UIView GetViewFor (NSString uiTransitionContextToOrFromKey);
 
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("targetTransform")]
 		CGAffineTransform TargetTransform { get; }
 
@@ -15147,16 +14925,12 @@ namespace UIKit {
 	[Protocol]
 	[iOS (8,0)]
 	partial interface UITraitEnvironment {
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[iOS (8,0)]
 		[Export ("traitCollection")]
 		UITraitCollection TraitCollection { get; }
 
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[iOS (8,0)]
 		[Export ("traitCollectionDidChange:")]
 		void TraitCollectionDidChange ([NullAllowed] UITraitCollection previousTraitCollection);
@@ -15358,11 +15132,7 @@ namespace UIKit {
 	[Protocol]
 	partial interface UIViewControllerTransitioningDelegate {
 		[Export ("animationControllerForPresentedController:presentingController:sourceController:")]
-#if XAMCORE_2_0
 		IUIViewControllerAnimatedTransitioning GetAnimationControllerForPresentedController (UIViewController presented, UIViewController presenting, UIViewController source);
-#else
-		IUIViewControllerAnimatedTransitioning PresentingController (UIViewController presented, UIViewController presenting, UIViewController source);
-#endif
 	
 		[Export ("animationControllerForDismissedController:")]
 		IUIViewControllerAnimatedTransitioning GetAnimationControllerForDismissedController (UIViewController dismissed);
@@ -15468,16 +15238,12 @@ namespace UIKit {
 		[Export ("containerView")]
 		UIView ContainerView { get; }
 
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[iOS (8,0)]
 		[Export ("targetTransform")]
 		CGAffineTransform TargetTransform ();
 
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[iOS (8,0)]
 		[Export ("viewForKey:")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)] // this is not the one we want to be seen (compat only)
@@ -16007,18 +15773,10 @@ namespace UIKit {
 		UIStoryboard FromName (string name, [NullAllowed] NSBundle storyboardBundleOrNil);
 
 		[Export ("instantiateInitialViewController")]
-#if XAMCORE_2_0
 		UIViewController InstantiateInitialViewController ();
-#else
-		NSObject InstantiateInitialViewController ();
-#endif
 
 		[Export ("instantiateViewControllerWithIdentifier:")]
-#if XAMCORE_2_0
 		UIViewController InstantiateViewController (string identifier);
-#else
-		NSObject InstantiateViewController (string identifier);
-#endif
 
 		[iOS (13,0), TV (13,0), NoWatch]
 		[Export ("instantiateInitialViewControllerWithCreator:")]
@@ -16203,12 +15961,6 @@ namespace UIKit {
 		[Export ("delegate", ArgumentSemantic.UnsafeUnretained)]
 		NSObject WeakDelegate { get; set; }
 
-#if !XAMCORE_2_0
-		[Wrap ("WeakDelegate")]
-		[Obsolete ("Use the Delegate property")]
-		UIPopoverPresentationControllerDelegate Delegat { get; set; }
-#endif
-		
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
 		[Protocolize]
@@ -16523,11 +16275,7 @@ namespace UIKit {
 
 		[iOS (7,0), Export ("printInteractionController:cutLengthForPaper:")]
 		[NoDefaultValue]
-#if XAMCORE_2_0
 		[DelegateName ("Func<UIPrintInteractionController,UIPrintPaper,nfloat>")]
-#else
-		[DelegateName ("Func<UIPrintInteractionController,UIPrintPaper,float>")]
-#endif
 		nfloat CutLengthForPaper (UIPrintInteractionController printInteractionController, UIPrintPaper paper);
 
 		[iOS (9, 0)]
@@ -16589,33 +16337,15 @@ namespace UIKit {
 
 		[Export ("presentAnimated:completionHandler:")]
 		[Async (ResultTypeName = "UIPrintInteractionResult")]
-		// documentation (and header) mistake that Apple corrected (IIRC I filled that issue)
-#if XAMCORE_2_0
-		bool
-#else
-		void
-#endif
-		Present (bool animated, UIPrintInteractionCompletionHandler completion);
+		bool Present (bool animated, UIPrintInteractionCompletionHandler completion);
 
 		[Export ("presentFromBarButtonItem:animated:completionHandler:")]
 		[Async (ResultTypeName = "UIPrintInteractionResult")]
-		// documentation (and header) mistake that Apple corrected (IIRC I filled that issue)
-#if XAMCORE_2_0
-		bool
-#else
-		void
-#endif
-		PresentFromBarButtonItem (UIBarButtonItem item, bool animated, UIPrintInteractionCompletionHandler completion);
+		bool PresentFromBarButtonItem (UIBarButtonItem item, bool animated, UIPrintInteractionCompletionHandler completion);
 
 		[Export ("presentFromRect:inView:animated:completionHandler:")]
 		[Async (ResultTypeName = "UIPrintInteractionResult")]
-		// documentation (and header) mistake that Apple corrected (IIRC I filled that issue)
-#if XAMCORE_2_0
-		bool
-#else
-		void
-#endif
-		PresentFromRectInView (CGRect rect, UIView view, bool animated, UIPrintInteractionCompletionHandler completion);
+		bool PresentFromRectInView (CGRect rect, UIView view, bool animated, UIPrintInteractionCompletionHandler completion);
 
 		[iOS (7,0), Export ("showsNumberOfCopies")]
 		bool ShowsNumberOfCopies { get; set; }
@@ -17141,7 +16871,6 @@ namespace UIKit {
 		[Export ("identifier")]
 		string Identifier { get; set; }
 	
-#if XAMCORE_2_0 // NSLayoutXAxisAnchor is a generic type, only supported in Unified (for now)
 		[Export ("leadingAnchor", ArgumentSemantic.Strong)]
 		NSLayoutXAxisAnchor LeadingAnchor { get; }
 	
@@ -17171,7 +16900,6 @@ namespace UIKit {
 	
 		[Export ("centerYAnchor", ArgumentSemantic.Strong)]
 		NSLayoutYAxisAnchor CenterYAnchor { get; }
-#endif // XAMCORE_2_0
 	}
 		
 	[NoWatch]
@@ -17184,7 +16912,6 @@ namespace UIKit {
 		[Abstract]
 		nfloat Length { get; }
 
-#if XAMCORE_2_0 // NSLayoutYAxisAnchor is generic, which is only supported in Unified (for now at least)
 		[iOS (9,0)]
 		[Export ("topAnchor", ArgumentSemantic.Strong)]
 #if XAMCORE_4_0
@@ -17208,7 +16935,6 @@ namespace UIKit {
 		[Abstract]
 #endif
 		NSLayoutDimension HeightAnchor { get; }
-#endif // XAMCORE_2_0
 	}
 
 	interface IUILayoutSupport {}

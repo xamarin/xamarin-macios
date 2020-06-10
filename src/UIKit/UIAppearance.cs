@@ -17,10 +17,6 @@ using ObjCRuntime;
 
 namespace UIKit {
 	public partial class UIAppearance {
-#if !XAMCORE_2_0
-		public readonly static IntPtr SelectorAppearance = Selector.GetHandle ("appearance");
-#endif
-
 		public override bool Equals (object other)
 		{
 			UIAppearance ao = other as UIAppearance;

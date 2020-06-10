@@ -95,20 +95,6 @@ namespace UIKit {
 #endif
 #endif // !COREBUILD
 	}
-
-#if !XAMCORE_2_0
-	[Obsolete ("Use IUIGuidedAccessRestrictionDelegate")]
-	public interface IUIGuidedAccessRestriction : INativeObject {
-
-		string [] GetGuidedAccessRestrictionIdentifiers { get; }
-
-		void GuidedAccessRestrictionChangedState (string restrictionIdentifier, UIGuidedAccessRestrictionState newRestrictionState);
-
-		string GetTextForGuidedAccessRestriction  (string restrictionIdentifier);
-
-		string GetDetailTextForGuidedAccessRestriction (string restrictionIdentifier);
-	}
-#endif
 }
 
 #endif // !WATCH

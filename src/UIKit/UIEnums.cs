@@ -773,11 +773,7 @@ namespace UIKit {
 		LookupSuggestion       = 1 << 6,
 
 		None          = 0,
-#if XAMCORE_2_0
 		All           = UInt64.MaxValue
-#else
-		All           = UInt32.MaxValue
-#endif
 	}
 
 	// NSInteger -> UIActionSheet.h
@@ -914,11 +910,7 @@ namespace UIKit {
 		Left = 1 << 2,
 		Right = 1 << 3,
 		Any = Up | Down | Left | Right,
-#if XAMCORE_2_0
 		Unknown = UInt64.MaxValue
-#else
-		Unknown = UInt32.MaxValue
-#endif
 	};
 
 	// NSInteger -> UIMenuController.h
@@ -1330,7 +1322,7 @@ namespace UIKit {
 	}
 
 	// uint64_t -> UIAccessibilityConstants.h
-	// note: IMO not really worth changing to ulong in XAMCORE_2_0
+	// note: IMO not really worth changing to ulong for backwards compatibility concerns
 	// This is not an enum in ObjC but several fields exported (and we have them too)
 	// Unit tests (ViewTest.cs) already ensure we expose the same value as iOS returns
 	[Flags]
@@ -1421,11 +1413,7 @@ namespace UIKit {
 	public enum UICollisionBehaviorMode : ulong  {
 		Items = 1,
 		Boundaries = 2,
-#if XAMCORE_2_0
 		Everything = UInt64.MaxValue
-#else
-		Everything = UInt32.MaxValue
-#endif
 	}
 
 	// uint32_t -> UIFontDescriptor.h
