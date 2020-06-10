@@ -29,8 +29,8 @@ using System.Runtime.InteropServices;
 
 namespace ObjCRuntime {
 	public partial class Selector {
-		public static readonly IntPtr Init = Selector.GetHandle ("init");
-		public static readonly IntPtr InitWithCoder = Selector.GetHandle ("initWithCoder:");
+		internal static readonly IntPtr Init = Selector.GetHandle ("init");
+		internal static readonly IntPtr InitWithCoder = Selector.GetHandle ("initWithCoder:");
 
 		internal static IntPtr AllocHandle = Selector.GetHandle (Alloc);
 		internal static IntPtr ReleaseHandle = Selector.GetHandle (Release);
