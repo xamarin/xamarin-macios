@@ -25,9 +25,6 @@ using NSViewController = Foundation.NSObject;
 
 namespace GameKit {
 
-#if !XAMCORE_2_0
-	delegate void GKNotificationHandler ([NullAllowed] NSError error);
-#endif
 	delegate void GKFriendsHandler      (string [] friends, NSError error);
 	delegate void GKPlayersHandler      (GKPlayer [] players, NSError error);
 	delegate void GKLeaderboardsHandler (GKLeaderboard [] leaderboards, NSError error);
@@ -150,21 +147,13 @@ namespace GameKit {
 		GKVoiceChatClient Client { get; set; }
 
 		[Export ("startVoiceChatWithParticipantID:error:")]
-#if XAMCORE_2_0
 		bool StartVoiceChat (string participantID, out NSError error);
-#else
-		bool StartVoiceChat (string participantID, IntPtr ns_error_out);
-#endif
 		
 		[Export ("stopVoiceChatWithParticipantID:")]
 		void StopVoiceChat (string participantID);
 
 		[Export ("acceptCallID:error:")]
-#if XAMCORE_2_0
 		bool AcceptCall (nint callID, out NSError error);
-#else
-		bool AcceptCall (nint callID, IntPtr ns_error_out);
-#endif
 
 		[Export ("denyCallID:")]
 		void DenyCall (nint callId);
@@ -243,20 +232,12 @@ namespace GameKit {
 		[Deprecated (PlatformName.iOS, 7, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Export ("sendData:toPeers:withDataMode:error:")]
-#if XAMCORE_2_0
 		bool SendData (NSData data, string [] peers, GKSendDataMode mode, out NSError error);
-#else
-		bool SendData (NSData data, string [] peers, GKSendDataMode mode, IntPtr ns_error_out);
-#endif
 
 		[Deprecated (PlatformName.iOS, 7, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Export ("sendDataToAllPeers:withDataMode:error:")]
-#if XAMCORE_2_0
 		bool SendDataToAllPeers (NSData data, GKSendDataMode mode, out NSError error);
-#else
-		bool SendDataToAllPeers (NSData data, GKSendDataMode mode, IntPtr ns_error_out);
-#endif
 
 		// // SEL = -receiveData:fromPeer:inSession:context:
 		[Export ("setDataReceiveHandler:withContext:")][Internal]
@@ -269,11 +250,7 @@ namespace GameKit {
 		void CancelConnect (string peerID);
 
 		[Export ("acceptConnectionFromPeer:error:")]
-#if XAMCORE_2_0
 		bool AcceptConnection (string peerID, out NSError error);
-#else
-		bool AcceptConnection (string peerID, IntPtr error_out);
-#endif
 		
 		[Export ("denyConnectionFromPeer:")]
 		void DenyConnection (string peerID);
@@ -348,11 +325,7 @@ namespace GameKit {
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'SetDefaultLeaderboard' on 'GKLocalPlayer' instead.")]
 		[Export ("setDefaultLeaderboard:withCompletionHandler:")]
 		[Async]
-#if XAMCORE_2_0
 		void SetDefaultLeaderboard ([NullAllowed] string leaderboardIdentifier, [NullAllowed] Action<NSError> notificationHandler);
-#else
-		void SetDefaultLeaderboard ([NullAllowed] string leaderboardIdentifier, [NullAllowed] GKNotificationHandler notificationHandler);
-#endif
 
 		[Export ("groupIdentifier", ArgumentSemantic.Retain)]
 		string GroupIdentifier { get; [NotImplemented] set; }
@@ -535,23 +508,10 @@ namespace GameKit {
 		[Export ("initWithLeaderboardIdentifier:")]
 		IntPtr InitWithLeaderboardIdentifier (string identifier);
 
-#if !XAMCORE_2_0
-		[NoWatch]
-		// [Deprecated (PlatformName.iOS, 8, 0, message : "Use 'Player' instead.")] - Unlike rest of deprecations we are just ripping out due to poor naming
-		// [Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'Player' instead.")] - Unlike rest of deprecations we are just ripping out due to poor naming
-		[Export ("playerID", ArgumentSemantic.Retain)]
-		string Player { get;  }
-
-		[NullAllowed]
-		[iOS (8,0)][Mac (10,10)]
-		[Export ("player", ArgumentSemantic.Retain)]
-		GKPlayer GamePlayer { get; }
-#else
 		[NullAllowed]
 		[iOS (8,0)][Mac (10,10)]
 		[Export ("player", ArgumentSemantic.Retain)]
 		GKPlayer Player { get; }
-#endif
 
 		[Export ("rank", ArgumentSemantic.Assign)]
 		nint Rank { get;  }
@@ -571,12 +531,7 @@ namespace GameKit {
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'LeaderboardIdentifier' instead.")]
 		[NullAllowed] // by default this property is null
 		[Export ("category", ArgumentSemantic.Copy)]
-#if XAMCORE_2_0
 		string Category { get; set;  }
-#else
-		[Obsolete ("Use the 'Category' property instead.")]
-		string category { get; set;  }
-#endif
 
 		[NoWatch]
 		[NoTV]
@@ -584,11 +539,7 @@ namespace GameKit {
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'ReportScores' instead.")]
 		[Export ("reportScoreWithCompletionHandler:")]
 		[Async]
-#if XAMCORE_2_0
 		void ReportScore ([NullAllowed] Action<NSError> errorHandler);
-#else
-		void ReportScore ([NullAllowed] GKNotificationHandler errorHandler);
-#endif
 
 		[Export ("context", ArgumentSemantic.Assign)]
 		ulong Context { get; set; }
@@ -649,9 +600,7 @@ namespace GameKit {
 	[Protocol]
 	[NoTV]
 	interface GKLeaderboardViewControllerDelegate {
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("leaderboardViewControllerDidFinish:")]
 		void DidFinish (GKLeaderboardViewController viewController);
 	}
@@ -721,11 +670,7 @@ namespace GameKit {
 		[Deprecated (PlatformName.MacOSX, 10, 8, message : "Set the 'AuthenticationHandler' instead.")]
 		[Export ("authenticateWithCompletionHandler:")]
 		[Async]
-#if XAMCORE_2_0
 		void Authenticate ([NullAllowed] Action<NSError> handler);
-#else
-		void Authenticate ([NullAllowed] GKNotificationHandler handler);
-#endif
 
 		[iOS (10,0)][Mac (10,12)]
 		[Async]
@@ -982,15 +927,6 @@ namespace GameKit {
 		[Export ("xamarin:selector:removed:"), EventArgs ("GKPlayerError")]
 		void ConnectionFailed (GKMatch match, string playerId, NSError error);
 #endif
-#elif !XAMCORE_2_0
-		// but Apple now reject applications using this selector
-		// it's not easy to remove from the bindings because it's a delegate, with events and *EventArgs
-		// so we fake a selector (that Apple won't check) and let the generator do it's job
-		// note: not worth throwing an exception using a [PreSnippet] since the code already throws a 
-		//       You_Should_Not_Call_base_In_This_Method (so it would not be generated)
-		[Obsolete ("It will never be called.")]
-		[Export ("xamarin:selector:removed:"), EventArgs ("GKPlayerError")]
-		void ConnectionFailed (GKMatch match, string playerId, NSError error);
 #endif
 
 		[Export ("match:didFailWithError:"), EventArgs ("GKError")]
@@ -1185,11 +1121,7 @@ namespace GameKit {
 
 		[Export ("addPlayersToMatch:matchRequest:completionHandler:")]
 		[Async]
-#if XAMCORE_2_0
 		void AddPlayers (GKMatch toMatch, GKMatchRequest matchRequest, [NullAllowed] Action<NSError> completionHandler);
-#else
-		void AddPlayers (GKMatch toMatch, GKMatchRequest matchRequest, [NullAllowed] GKNotificationHandler completionHandler);
-#endif
 
 		[Export ("cancel")]
 		void Cancel ();
@@ -1387,11 +1319,7 @@ namespace GameKit {
 		[Static]
 		[Export ("resetAchievementsWithCompletionHandler:")]
 		[Async]
-#if XAMCORE_2_0
 		void ResetAchivements ([NullAllowed] Action<NSError> completionHandler);
-#else
-		void ResetAchivements ([NullAllowed] GKNotificationHandler completionHandler);
-#endif
 
 		[Wrap ("this ((string) null!)")]
 		IntPtr Constructor ();
@@ -1408,17 +1336,11 @@ namespace GameKit {
 
 		[Export ("reportAchievementWithCompletionHandler:")]
 		[Async]
-#if XAMCORE_2_0
 		[NoWatch]
 		[NoTV]
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use ReportAchievements '(GKAchievement[] achievements, Action<NSError> completionHandler)' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use ReportAchievements '(GKAchievement[] achievements, Action<NSError> completionHandler)' instead.")]
 		void ReportAchievement ([NullAllowed] Action<NSError> completionHandler);
-#else
-		[Deprecated (PlatformName.iOS, 7, 0, message : "Use ReportAchievements '(GKAchievement[] achievements, GKNotificationHandler completionHandler)' instead.")]
-		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use ReportAchievements '(GKAchievement[] achievements, GKNotificationHandler completionHandler)' instead.")]
-		void ReportAchievement ([NullAllowed] GKNotificationHandler completionHandler);
-#endif
 
 		[Export ("showsCompletionBanner", ArgumentSemantic.Assign)]
 		bool ShowsCompletionBanner { get; set;  }
@@ -1426,11 +1348,7 @@ namespace GameKit {
 		[Static]
 		[Export ("reportAchievements:withCompletionHandler:")]
 		[Async]
-#if XAMCORE_2_0
 		void ReportAchievements (GKAchievement[] achievements, [NullAllowed] Action<NSError> completionHandler);
-#else
-		void ReportAchievements (GKAchievement[] achievements, [NullAllowed] GKNotificationHandler completionHandler);
-#endif
 
 		[NoTV]
 		[NoWatch]
@@ -1454,11 +1372,6 @@ namespace GameKit {
 		[Export ("playerID", ArgumentSemantic.Copy)]
 		string PlayerID { 
 			get;
-#if !XAMCORE_2_0
-			// binding bug - it should not have been exposed (and Apple now rejects it, desk #63237)
-			// using [NotImplemented] makes generator emit a throw *and* does not use the selector!
-			[NotImplemented] set;
-#endif
 		}
 #endif
 
@@ -1582,9 +1495,7 @@ namespace GameKit {
 	[Protocol]
 	[NoTV]
 	interface GKAchievementViewControllerDelegate {
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("achievementViewControllerDidFinish:")]
 		void DidFinish (GKAchievementViewController viewController);
 	}
@@ -1668,13 +1579,8 @@ namespace GameKit {
 		[Export ("addRecipientsWithPlayerIDs:")]
 		void AddRecipientsFromPlayerIDs (string [] playerIDs);
 
-#if XAMCORE_2_0
 		[Export ("setMessage:")]
 		void SetMessage ([NullAllowed] string message);
-#else
-		[Export ("message")]
-		string Message { set; }
-#endif
 	}
 
 	[NoWatch]
@@ -1736,15 +1642,7 @@ namespace GameKit {
 	[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'GKLocalPlayer.RegisterListener' with an object that implements 'IGKTurnBasedEventListener'.")]
 	[Watch (3,0)]
 	interface GKTurnBasedEventHandlerDelegate {
-#if !XAMCORE_2_0
-		[Export ("handleInviteFromGameCenterDoNotUse:")]
-		[Obsolete ("Use HandleInviteFromGameCenter(NSString[]).")]
-		void HandleInviteFromGameCenter (GKPlayer [] playersToInvite);
-#endif
-
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("handleInviteFromGameCenter:")]
 		[Deprecated (PlatformName.iOS, 7, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
@@ -1760,7 +1658,7 @@ namespace GameKit {
 		[Export ("handleMatchEnded:")]
 		void HandleMatchEnded (GKTurnBasedMatch match);
 
-#if (XAMCORE_2_0 && !MONOMAC) || XAMCORE_4_0
+#if !MONOMAC || XAMCORE_4_0
 		[Abstract]
 #endif
 		[Export ("handleTurnEventForMatch:didBecomeActive:")]
@@ -1830,11 +1728,7 @@ namespace GameKit {
 
 		[Export ("removeWithCompletionHandler:")]
 		[Async]
-#if XAMCORE_2_0
 		void Remove (Action<NSError> onCompletion);
-#else
-		void Remove (GKNotificationHandler onCompletion);
-#endif
 
 		[Export ("loadMatchDataWithCompletionHandler:")]
 		[Async]
@@ -1845,38 +1739,22 @@ namespace GameKit {
 		[Deprecated (PlatformName.MacOSX, 10, 9, message : "Use 'EndTurn' instead.")]
 		[Export ("endTurnWithNextParticipant:matchData:completionHandler:")]
 		[Async]
-#if XAMCORE_2_0
 		void EndTurnWithNextParticipant (GKTurnBasedParticipant nextParticipant, NSData matchData, [NullAllowed] Action<NSError> noCompletion);
-#else
-		void EndTurnWithNextParticipant (GKTurnBasedParticipant nextParticipant, NSData matchData, [NullAllowed] GKNotificationHandler noCompletion);
-#endif
 
 		[NoTV]
 		[Deprecated (PlatformName.iOS, 6, 0, message : "Use 'ParticipantQuitInTurn (GKTurnBasedMatchOutcome, GKTurnBasedParticipant[], double, NSData, Action<NSError>)' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 9, message : "Use 'ParticipantQuitInTurn (GKTurnBasedMatchOutcome, GKTurnBasedParticipant[], double, NSData, Action<NSError>)' instead.")]
 		[Export ("participantQuitInTurnWithOutcome:nextParticipant:matchData:completionHandler:")]
 		[Async]
-#if XAMCORE_2_0
 		void ParticipantQuitInTurn (GKTurnBasedMatchOutcome matchOutcome, GKTurnBasedParticipant nextParticipant, NSData matchData, [NullAllowed] Action<NSError> onCompletion);
-#else
-		void ParticipantQuitInTurn (GKTurnBasedMatchOutcome matchOutcome, GKTurnBasedParticipant nextParticipant, NSData matchData, [NullAllowed] GKNotificationHandler onCompletion);
-#endif
 
 		[Export ("participantQuitOutOfTurnWithOutcome:withCompletionHandler:")]
 		[Async]
-#if XAMCORE_2_0
 		void ParticipantQuitOutOfTurn (GKTurnBasedMatchOutcome matchOutcome, [NullAllowed] Action<NSError> onCompletion);
-#else
-		void ParticipantQuitOutOfTurn (GKTurnBasedMatchOutcome matchOutcome, [NullAllowed] GKNotificationHandler onCompletion);
-#endif
 
 		[Export ("endMatchInTurnWithMatchData:completionHandler:")]
 		[Async]
-#if XAMCORE_2_0
 		void EndMatchInTurn (NSData matchData, [NullAllowed] Action<NSError> onCompletion);
-#else
-		void EndMatchInTurn (NSData matchData, [NullAllowed] GKNotificationHandler onCompletion);
-#endif
 
 		[Static]
 		[Export ("loadMatchWithID:withCompletionHandler:")]
@@ -2146,9 +2024,7 @@ namespace GameKit {
 	[Protocol]
 	interface GKGameCenterControllerDelegate
 	{
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("gameCenterViewControllerDidFinish:")]
 		void Finished (GKGameCenterViewController controller);
 	}

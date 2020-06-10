@@ -172,39 +172,23 @@ namespace iAd {
 	[Obsoleted (PlatformName.iOS, 12,0)] // header removed in xcode10 beta5
 	partial interface IAdPreroll {
 
-#if XAMCORE_2_0
 		[Internal]
-#else
-		[EditorBrowsable (EditorBrowsableState.Advanced)] // this is not the one we want to be seen (compat only)
-#endif
 		[iOS (7,0), Static, Export ("preparePrerollAds")]
 		void PreparePrerollAds ();
 
 		[iOS (7,0), Export ("playPrerollAdWithCompletionHandler:")]
-#if XAMCORE_2_0
 		void PlayPrerollAd (Action<NSError> completionHandler);
-#else
-		void PlayPrerollAd (PlayPrerollAdCompletionHandler completionHandler);
-#endif
 
 		[iOS (8,0), Export ("cancelPreroll")]
 		void CancelPreroll ();
 	}
-
-#if !XAMCORE_2_0
-	delegate void PlayPrerollAdCompletionHandler (NSError error);
-#endif
 
 	[Deprecated (PlatformName.iOS, 10, 0)]
 	[Category (allowStaticMembers: true)] // Classic isn't internal so we need this
 	[BaseType (typeof (UIViewController))]
 	partial interface IAdAdditions {
 
-#if XAMCORE_2_0
 		[Internal]
-#else
-		[EditorBrowsable (EditorBrowsableState.Advanced)] // this is not the one we want to be seen (compat only)
-#endif
 		[iOS (7,0), Static, Export ("prepareInterstitialAds")]
 		void PrepareInterstitialAds ();
 
@@ -280,11 +264,7 @@ namespace iAd {
 	interface iAdPreroll_AVPlayerViewController {
 		[iOS (8,0)]
 		[Static, Export ("preparePrerollAds")]
-#if XAMCORE_2_0
 		[Internal]
-#else
-		[EditorBrowsable (EditorBrowsableState.Advanced)] // this is not the one we want to be seen (compat only)
-#endif
 		void PreparePrerollAds ();
 
 		[iOS (8,0)]

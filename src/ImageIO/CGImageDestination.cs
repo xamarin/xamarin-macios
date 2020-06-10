@@ -35,93 +35,6 @@ using CoreGraphics;
 
 namespace ImageIO {
 
-#if !XAMCORE_2_0
-	public partial class CGImageDestinationOptions {
-
-		public float? LossyCompressionQuality { get; set; }
-		public CGColor DestinationBackgroundColor { get; set; }
-
-		// new in iOS 7 and 10.8
-		[iOS (7,0)]
-		public CGImageMetadata Metadata { get; set; }
-
-		[iOS (7,0)]
-		public bool MergeMetadata { get; set; }
-
-		[iOS (7,0)]
-		public bool ShouldExcludeXMP { get; set; }
-
-		[iOS (7,0)]
-		public int? Orientation { get; set; }
-
-		[iOS (7,0)]
-		public DateTime? DateTime { get; set; }
-
-		[Mac (10, 10)]
-		[iOS (8, 0)]
-		public int? ImageMaxPixelSize { get; set; }
-
-		[Mac (10, 10)]
-		[iOS (8, 0)]
-		public bool EmbedThumbnail { get; set; }
-
-		[Mac (10, 10)]
-		[iOS (8, 0)]
-		public bool ShouldExcludeGPS { get; set; }
-
-		[iOS (9,3)][Mac (10,12)]
-		public bool OptimizeColorForSharing { get; set; }
-
-		internal NSMutableDictionary ToDictionary ()
-		{
-			var dict = new NSMutableDictionary ();
-
-			if (LossyCompressionQuality.HasValue)
-				dict.LowlevelSetObject (new NSNumber (LossyCompressionQuality.Value), kLossyCompressionQuality);
-			if (DestinationBackgroundColor != null)
-				dict.LowlevelSetObject (DestinationBackgroundColor.Handle, kBackgroundColor);
-
-			// new in iOS 7 and 10.8
-			if (Metadata != null) {
-				dict.LowlevelSetObject (Metadata.Handle, kMetadata);
-				// default are false
-				if (MergeMetadata)
-					dict.LowlevelSetObject (CFBoolean.TrueHandle, kMergeMetadata);
-				if (ShouldExcludeXMP)
-					dict.LowlevelSetObject (CFBoolean.TrueHandle, kShouldExcludeXMP);
-			} else {
-				// DateTime is exclusive of metadata (which includes its own)
-				if (DateTime.HasValue)
-					dict.LowlevelSetObject ((NSDate) DateTime, kDateTime);
-			}
-
-			if (Orientation.HasValue) {
-				using (var n = new NSNumber (Orientation.Value))
-					dict.LowlevelSetObject (n.Handle, kOrientation);
-			}
-
-			// new in iOS 8 and 10.10 
-			if (ImageMaxPixelSize.HasValue && (kImageMaxPixelSize != IntPtr.Zero)) {
-				using (var n = new NSNumber (ImageMaxPixelSize.Value))
-					dict.LowlevelSetObject (n.Handle, kOrientation);
-			}
-
-			// new in iOS 8 and 10.10 - default is false
-			if (EmbedThumbnail && (kEmbedThumbnail != IntPtr.Zero))
-				dict.LowlevelSetObject (CFBoolean.TrueHandle, kEmbedThumbnail);
-
-			// new in iOS 8 and 10.10 - default is false
-			if (ShouldExcludeGPS && (kShouldExcludeGPS != IntPtr.Zero))
-				dict.LowlevelSetObject (CFBoolean.TrueHandle, kShouldExcludeGPS);
-
-			if (OptimizeColorForSharing && (kOptimizeColorForSharing != IntPtr.Zero))
-				dict.LowlevelSetObject (CFBoolean.TrueHandle, kOptimizeColorForSharing);
-
-			return dict;
-		}
-	}
-
-#else
 	public partial class CGImageDestinationOptions
 	{
 		CGColor destinationBackgroundColor;
@@ -190,7 +103,6 @@ namespace ImageIO {
 			return dict;
 		}
 	}
-#endif
 
 	public partial class CGImageAuxiliaryDataInfo {
 
@@ -286,18 +198,7 @@ namespace ImageIO {
 			/* CFMutableDataRef __nonnull */ IntPtr data, /* CFStringRef __nonnull */ IntPtr stringType, 
 			/* size_t */ nint count, /* CFDictionaryRef __nullable */ IntPtr options);
 
-		// binding mistake -> NSMutableData, not NSData
-		// naming mistake -> it's not From since it will write into (not read from) 'data'
-#if XAMCORE_2_0
 		public static CGImageDestination Create (NSMutableData data, string typeIdentifier, int imageCount, CGImageDestinationOptions options = null)
-#else
-		public static CGImageDestination FromData (NSData data, string typeIdentifier, int imageCount)
-		{
-			return FromData (data, typeIdentifier, imageCount, null);
-		}
-
-		public static CGImageDestination FromData (NSData data, string typeIdentifier, int imageCount, CGImageDestinationOptions options)
-#endif
 		{
 			if (data == null)
 				throw new ArgumentNullException ("data");
@@ -319,22 +220,7 @@ namespace ImageIO {
 			/* CFURLRef __nonnull */ IntPtr url, /* CFStringRef __nonnull */ IntPtr stringType,
 			/* size_t */ nint count, /* CFDictionaryRef __nullable */ IntPtr options);
 
-		// naming mistake -> it's not From since it will write into (not read from) 'url'
-#if XAMCORE_2_0
-		//
-		// Dropped the CGImageDestinationOption parameter, as it turns out that for *creation* operations
-		// it was never supported to begin with (it is expected to be null).   The CGImageDestinationOption
-		// is actually just used for AddImage methods
-		//
 		public static CGImageDestination Create (NSUrl url, string typeIdentifier, int imageCount)
-#else
-		public static CGImageDestination FromUrl (NSUrl url, string typeIdentifier, int imageCount)
-		{
-			return FromUrl (url, typeIdentifier, imageCount, null);
-		}
-		
-		public static CGImageDestination FromUrl (NSUrl url, string typeIdentifier, int imageCount, CGImageDestinationOptions options)
-#endif
 		{
 			if (url == null)
 				throw new ArgumentNullException ("url");
@@ -469,11 +355,7 @@ namespace ImageIO {
 		}
 
 		[iOS (7,0)]
-#if XAMCORE_2_0
 		public bool CopyImageSource (CGImageSource image, CGCopyImageSourceOptions options, out NSError error)
-#else
-		public bool CopyImageSource (CGImageSource image, CGImageDestinationOptions options, out NSError error)
-#endif
 		{
 			NSDictionary o = null;
 			if (options != null)

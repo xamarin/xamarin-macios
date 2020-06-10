@@ -7,7 +7,7 @@
 // Copyright 2016 Xamarin Inc. All rights reserved.
 //
 
-#if XAMCORE_2_0 && IOS
+#if IOS
 
 using Foundation;
 using Intents;

@@ -7,7 +7,6 @@
 // Copyright 2016 Xamarin Inc. All rights reserved.
 //
 
-#if XAMCORE_2_0 || !MONOMAC
 using System;
 using ObjCRuntime;
 using Vector2i = global::OpenTK.Vector2i;
@@ -27,4 +26,3 @@ namespace GameplayKit {
 		}
 	}
 }
-#endif

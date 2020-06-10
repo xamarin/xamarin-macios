@@ -299,10 +299,6 @@ namespace GameController {
 		GCExtendedGamepadSnapshotDataVersion DataVersion { get; }
 	}
 
-#if !XAMCORE_2_0
-	delegate void GCControllerPausedHandler (GCController controller);
-#endif
-
 	[iOS (7,0), Mac (10,9)]
 	[BaseType (typeof (NSObject))]
 	partial interface GCController {
@@ -313,11 +309,7 @@ namespace GameController {
 
 		[NullAllowed]
 		[Export ("controllerPausedHandler", ArgumentSemantic.Copy)]
-#if XAMCORE_2_0
 		Action<GCController> ControllerPausedHandler { get; set; }
-#else
-		GCControllerPausedHandler ControllerPausedHandler { get; set; }
-#endif
 
 		[NullAllowed]
 		[Export ("vendorName", ArgumentSemantic.Copy)]
