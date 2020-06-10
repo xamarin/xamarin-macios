@@ -44,12 +44,12 @@ Conditional compilation
 
 These are the symbols defined for each platform assembly:
 
-| Assembly            | Symbols                                        |
-| ------------------  | -----------                                    |
-| Xamarin.iOS.dll     | IPHONE MONOTOUCH IOS XAMCORE_2_0               |
-| Xamarin.Mac.dll     | MONOMAC XAMCORE_2_0                            |
-| Xamarin.WatchOS.dll | IPHONE MONOTOUCH WATCH XAMCORE_2_0 XAMCORE_3_0 |
-| Xamarin.TVOS.dll    | IPHONE MONOTOUCH TVOS XAMCORE_2_0 XAMCORE_3_0  |
+| Assembly            | Symbols                            |
+| ------------------  | -----------                        |
+| Xamarin.iOS.dll     | IPHONE MONOTOUCH IOS               |
+| Xamarin.Mac.dll     | MONOMAC                            |
+| Xamarin.WatchOS.dll | IPHONE MONOTOUCH WATCH XAMCORE_3_0 |
+| Xamarin.TVOS.dll    | IPHONE MONOTOUCH TVOS XAMCORE_3_0  |
 
 To build core for only one platform, use the platform unique variables `IOS`, `MONOMAC`, `WATCH` or `TVOS`.
 
@@ -179,7 +179,6 @@ conditional compilation:
 | `MONOMAC` | defined for Xamarin.Mac builds; not defined for Xamarin.iOS |
 | `ARCH_32` | defined when the target architecture is 32-bit; this will be defined for Classic and the Unified 32-bit assemblies |
 | `ARCH_64` | defined when the target architecture is 64-bit; this will be defined only for the Unified 64-bit assembly |
-| `XAMCORE_2_0` | defined for the Unified assemblies; this should be used for most conditions dealing with API differences between Unified and Classic assemblies |
 | `COREBUILD` | defined when building the intermediate `core.dll` assembly against which the code generator will produce bindings |
 
 For example, to build an API for all of iOS but only 64-bit OS X (Xamarin.Mac):
