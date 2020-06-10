@@ -4,7 +4,7 @@
 // Unavailable.
 //
 // This addresses scalability issues with the AvailabilityAttribute
-// introduced originally for XAMCORE_2_0 where the Platform enum
+// introduced originally for the Unified profile where the Platform enum
 // cannot cleanly scale to other platforms (e.g. WatchOS).
 //
 // Used by unit tests to automatically skip selectors not available

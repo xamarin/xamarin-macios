@@ -22,10 +22,7 @@
 //
 using System;
 
-#if XAMCORE_2_0
 namespace ObjCRuntime {
-#endif
-
 	[AttributeUsage (AttributeTargets.Method)]
 	public sealed class MonoPInvokeCallbackAttribute : Attribute {
 		public MonoPInvokeCallbackAttribute (Type t)
@@ -35,7 +32,4 @@ namespace ObjCRuntime {
 
 		public Type DelegateType { get; set; }
 	}
-#if XAMCORE_2_0
 }
-#endif
-
