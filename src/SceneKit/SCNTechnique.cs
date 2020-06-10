@@ -19,12 +19,5 @@ namespace SceneKit
 			get { return _GetObject (key); }
 			set { _SetObject (value, key); }
 		}
-
-#if !XAMCORE_2_0
-		public NSDictionary ToDictionary ()
-		{
-			return DictionaryRepresentation;
-		}
-#endif
 	}
 }

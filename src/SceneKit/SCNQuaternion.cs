@@ -109,17 +109,6 @@ namespace SceneKit
 
         #region Properties
 
-#if !XAMCORE_2_0
-        /// <summary>
-        /// Gets or sets an OpenTK.Vector3 with the X, Y and Z components of this instance.
-        /// </summary>
-        [Obsolete("Use Xyz property instead.")]
-        [CLSCompliant(false)]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        [XmlIgnore]
-        public SCNVector3 XYZ { get { return Xyz; } set { Xyz = value; } }
-#endif
-
         /// <summary>
         /// Gets or sets an OpenTK.Vector3 with the X, Y and Z components of this instance.
         /// </summary>
@@ -262,10 +251,7 @@ namespace SceneKit
         /// <summary>
         /// Defines the identity quaternion.
         /// </summary>
-#if XAMCORE_2_0
-		readonly
-#endif
-        public static SCNQuaternion Identity = new SCNQuaternion(0, 0, 0, 1);
+        public readonly static SCNQuaternion Identity = new SCNQuaternion(0, 0, 0, 1);
 
         #endregion
 
@@ -331,36 +317,6 @@ namespace SceneKit
 
         #region Mult
 
-#if !XAMCORE_2_0
-        /// <summary>
-        /// Multiplies two instances.
-        /// </summary>
-        /// <param name="left">The first instance.</param>
-        /// <param name="right">The second instance.</param>
-        /// <returns>A new instance containing the result of the calculation.</returns>
-        [Obsolete("Use Multiply instead.")]
-        public static SCNQuaternion Mult(SCNQuaternion left, SCNQuaternion right)
-        {
-            return new SCNQuaternion(
-                right.W * left.Xyz + left.W * right.Xyz + SCNVector3.Cross(left.Xyz, right.Xyz),
-                left.W * right.W - SCNVector3.Dot(left.Xyz, right.Xyz));
-        }
-
-        /// <summary>
-        /// Multiplies two instances.
-        /// </summary>
-        /// <param name="left">The first instance.</param>
-        /// <param name="right">The second instance.</param>
-        /// <param name="result">A new instance containing the result of the calculation.</param>
-        [Obsolete("Use Multiply instead.")]
-        public static void Mult(ref SCNQuaternion left, ref SCNQuaternion right, out SCNQuaternion result)
-        {
-            result = new SCNQuaternion(
-                right.W * left.Xyz + left.W * right.Xyz + SCNVector3.Cross(left.Xyz, right.Xyz),
-                left.W * right.W - SCNVector3.Dot(left.Xyz, right.Xyz));
-        }
-#endif
-
         /// <summary>
         /// Multiplies two instances.
         /// </summary>
@@ -398,14 +354,6 @@ namespace SceneKit
             result = new SCNQuaternion(quaternion.X * scale, quaternion.Y * scale, quaternion.Z * scale, quaternion.W * scale);
         }
 
-#if !XAMCORE_2_0
-	[Obsolete ("Use the overload without the 'ref float scale'.")]
-        public static void Multiply(ref SCNQuaternion quaternion, ref float scale, out SCNQuaternion result)
-	{
-            result = new SCNQuaternion(quaternion.X * scale, quaternion.Y * scale, quaternion.Z * scale, quaternion.W * scale);		
-	}
-#endif
-	
         /// <summary>
         /// Multiplies an instance by a scalar.
         /// </summary>
