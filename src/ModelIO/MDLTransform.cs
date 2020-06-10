@@ -1,4 +1,3 @@
-#if XAMCORE_2_0 || !MONOMAC
 using System;
 using MatrixFloat4x4 = global::OpenTK.NMatrix4;
 
@@ -13,4 +12,3 @@ namespace ModelIO {
 #endif
 	}
 }
-#endif

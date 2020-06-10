@@ -1,5 +1,3 @@
-#if XAMCORE_2_0 || !MONOMAC
-
 using Foundation;
 
 namespace NetworkExtension {
@@ -30,5 +28,3 @@ namespace NetworkExtension {
 #endif
 	}
 }
-
-#endif

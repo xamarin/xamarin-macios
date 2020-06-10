@@ -1,7 +1,6 @@
 // Copyright 2014-2015 Xamarin Inc. All rights reserved.
 // Copyright 2019 Microsoft Corporation
 
-#if XAMCORE_2_0 || !MONOMAC
 using System;
 using CoreFoundation;
 using Foundation;
@@ -2100,4 +2099,3 @@ namespace NetworkExtension {
 		NENetworkRule[] ExcludedNetworkRules { get; set; }
 	}
 }
-#endif

@@ -22,7 +22,6 @@ using UIKit;
 using System;
 
 namespace MediaPlayer {
-#if XAMCORE_2_0 || !MONOMAC
 	[Mac (10,12,2)] // type exists only to expose fields
 	[BaseType (typeof (NSObject))]
 #if IOS || WATCH
@@ -279,13 +278,13 @@ namespace MediaPlayer {
 	[NoWatch]
 	// Objective-C exception thrown.  Name: MPMediaItemCollectionInitException Reason: -init is not supported, use -initWithItems:
 	[DisableDefaultCtor]
-#if XAMCORE_2_0 && IOS
+#if IOS
 	// introduced in 4.2 - but the type was never added to classic
 	[BaseType (typeof (MPMediaEntity))]
 #else
 	[BaseType (typeof (NSObject))]
 #endif
-#if XAMCORE_3_0 || !XAMCORE_2_0 || !IOS
+#if XAMCORE_3_0 || !IOS
 	interface MPMediaItemCollection : NSSecureCoding {
 #else
 	// part of the bug is that we inlined MPMediaEntity needlessly
@@ -347,8 +346,7 @@ namespace MediaPlayer {
 		[iOS (9,3)]
 		[Export ("addItemWithProductID:completionHandler:")]
 		[Async]
-#if XAMCORE_2_0 && IOS
-		// MPMediaEntity was not part of classic
+#if IOS
 		void AddItem (string productID, [NullAllowed] Action<MPMediaEntity[], NSError> completionHandler);
 #else
 		void AddItem (string productID, [NullAllowed] Action<MPMediaItem[], NSError> completionHandler);
@@ -510,7 +508,7 @@ namespace MediaPlayer {
 
 		[Export ("groupingType")]
 		MPMediaGrouping GroupingType { get; set; }
-#if XAMCORE_2_0
+
 		[Export ("albumsQuery")][Static]
 		MPMediaQuery AlbumsQuery { get; }
 
@@ -537,34 +535,7 @@ namespace MediaPlayer {
 
 		[Export ("genresQuery")][Static]
 		MPMediaQuery GenresQuery { get; }
-#else
-		[Export ("albumsQuery")][Static]
-		MPMediaQuery albumsQuery { get; }
-		
-		[Export ("artistsQuery")][Static]
-		MPMediaQuery artistsQuery { get; }
-		
-		[Export ("songsQuery")][Static]
-		MPMediaQuery songsQuery { get; }
-		
-		[Export ("playlistsQuery")][Static]
-		MPMediaQuery playlistsQuery { get; }
-		
-		[Export ("podcastsQuery")][Static]
-		MPMediaQuery podcastsQuery { get; }
-		
-		[Export ("audiobooksQuery")][Static]
-		MPMediaQuery audiobooksQuery { get; }
-		
-		[Export ("compilationsQuery")][Static]
-		MPMediaQuery compilationsQuery { get; }
-		
-		[Export ("composersQuery")][Static]
-		MPMediaQuery composersQuery { get; }
-		
-		[Export ("genresQuery")][Static]
-		MPMediaQuery genresQuery { get; }
-#endif
+
 		[Export ("collectionSections")]
 		MPMediaQuerySection [] CollectionSections { get; }
 
@@ -1518,9 +1489,7 @@ namespace MediaPlayer {
 	[Protocol]
 	interface MPPlayableContentDataSource {
 
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("contentItemAtIndexPath:")]
 #if XAMCORE_4_0
 		MPContentItem GetContentItem (NSIndexPath indexPath);
@@ -1534,9 +1503,7 @@ namespace MediaPlayer {
 		[Export ("childItemsDisplayPlaybackProgressAtIndexPath:")]
 		bool ChildItemsDisplayPlaybackProgress (NSIndexPath indexPath);
 
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("numberOfChildItemsAtIndexPath:")]
 		nint NumberOfChildItems (NSIndexPath indexPath);
 
@@ -1733,9 +1700,7 @@ namespace MediaPlayer {
 	[DisableDefaultCtor] // NSGenericException Reason: MPSkipIntervalCommands cannot be initialized externally.
 	interface MPSkipIntervalCommand {
 
-#if XAMCORE_2_0
 		[Internal] // -> we can't do double[] for an NSArray of NSTimeInterval
-#endif
 		[Export ("preferredIntervals")]
 		NSArray _PreferredIntervals { get; set; }
 	}
@@ -2213,7 +2178,7 @@ namespace MediaPlayer {
 		[Export ("setExternalMediaContentIdentifier:")]
 		void SetExternalMediaContentIdentifier ([NullAllowed] NSString identifier);
 	}
-#endif
+
 	[iOS (9,0)][TV (9,0)]
 	[Mac (10,12,1)]
 	[Watch (6,0)]

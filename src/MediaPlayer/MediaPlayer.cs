@@ -13,7 +13,6 @@ using Foundation;
 using ObjCRuntime;
 
 namespace MediaPlayer {
-#if XAMCORE_2_0 || !MONOMAC
 	// NSInteger -> MPMoviePlayerController.h
 	[Native]
 	[NoMac]
@@ -111,16 +110,6 @@ namespace MediaPlayer {
 	[NoWatch]
 	[Flags]
 	public enum MPMediaType : ulong {
-#if !XAMCORE_2_0
-		[Obsolete ("Use Shorter name Music")]
-		MPMediaTypeMusic        = 1 << 0,
-		[Obsolete ("Use Shorter name Podcast")]
-		MPMediaTypePodcast      = 1 << 1,
-		[Obsolete ("Use Shorter name AudioBook")]
-		MPMediaTypeAudioBook    = 1 << 2,
-		[Obsolete ("Use Shorter name AnyAudio")]
-		MPMediaTypeAnyAudio     = 0x00ff,
-#endif	
 		Music        = 1 << 0,
 		Podcast      = 1 << 1,
 		AudioBook    = 1 << 2,
@@ -142,11 +131,7 @@ namespace MediaPlayer {
 		HomeVideo = 1 << 13,
 		[Mac (10,12,2)]
 		TypeAnyVideo = 0xff00,
-#if XAMCORE_2_0
 		Any          = 0xFFFFFFFFFFFFFFFF
-#else
-		Any          = ~0
-#endif
 	}
 
 	// NSInteger -> MPMediaPlaylist.h
@@ -369,5 +354,4 @@ namespace MediaPlayer {
 		Stopped,
 		Interrupted,
 	}
-#endif
 }

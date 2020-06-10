@@ -7,8 +7,6 @@
 // Copyright 2011, Xamarin Inc
 //
 
-#if XAMCORE_2_0 || !MONOMAC
-
 using Foundation;
 using ObjCRuntime;
 
@@ -229,5 +227,3 @@ namespace MediaPlayer {
 		}
 	}
 }
-
-#endif

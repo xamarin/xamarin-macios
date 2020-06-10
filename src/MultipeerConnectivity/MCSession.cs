@@ -6,7 +6,6 @@
 //
 // Copyright 2013-2014 Xamarin Inc.
 //
-#if XAMCORE_2_0 || !MONOMAC // MultipeerConnectivity is 64-bit only on OS X
 
 using System;
 using System.Collections.Generic;
@@ -44,4 +43,3 @@ namespace MultipeerConnectivity {
 		}
 	}
 }
-#endif

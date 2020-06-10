@@ -6,7 +6,7 @@
 //
 // Copyright 2019 Microsoft Corporation.
 //
-#if XAMCORE_2_0 || !MONOMAC
+
 using System;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
@@ -109,4 +109,3 @@ namespace MetalPerformanceShaders {
 		//}
 	}
 }
-#endif

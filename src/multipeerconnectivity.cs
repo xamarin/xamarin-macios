@@ -5,7 +5,7 @@
 //   Aaron Bockover (abock@xamarin.com)
 //
 // Copyright 2013 Xamarin, Inc.
-#if XAMCORE_2_0 || !MONOMAC // MultipeerConnectivity is 64-bit only on OS X
+
 using System;
 
 using Foundation;
@@ -180,9 +180,7 @@ namespace MultipeerConnectivity {
 	[Protocol]
 	partial interface MCNearbyServiceAdvertiserDelegate {
 
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("advertiser:didReceiveInvitationFromPeer:withContext:invitationHandler:")]
 		void DidReceiveInvitationFromPeer (MCNearbyServiceAdvertiser advertiser, MCPeerID peerID, [NullAllowed] NSData context, MCNearbyServiceAdvertiserInvitationHandler invitationHandler);
 
@@ -230,16 +228,12 @@ namespace MultipeerConnectivity {
 	[Protocol]
 	partial interface MCNearbyServiceBrowserDelegate {
 
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Mac (10,9)]
 		[Export ("browser:foundPeer:withDiscoveryInfo:")]
 		void FoundPeer (MCNearbyServiceBrowser browser, MCPeerID peerID, [NullAllowed] NSDictionary info);
 
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Mac (10,9)]
 		[Export ("browser:lostPeer:")]
 		void LostPeer (MCNearbyServiceBrowser browser, MCPeerID peerID);
@@ -302,15 +296,11 @@ namespace MultipeerConnectivity {
 	[Protocol]
 	partial interface MCBrowserViewControllerDelegate {
 
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("browserViewControllerWasCancelled:")]
 		void WasCancelled (MCBrowserViewController browserViewController);
 
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("browserViewControllerDidFinish:")]
 		void DidFinish (MCBrowserViewController browserViewController);
 
@@ -368,4 +358,3 @@ namespace MultipeerConnectivity {
 		void WillPresentInvitation (MCAdvertiserAssistant advertiserAssistant);
 	}
 }
-#endif

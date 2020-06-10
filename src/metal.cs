@@ -11,7 +11,7 @@
 //    * MTLRenderPipelineReflection: the two arrays are NSObject
 //    * Make the *array classes implement all the ICollection methods.
 //
-#if XAMCORE_2_0 || !MONOMAC
+
 using System;
 using System.ComponentModel;
 
@@ -299,22 +299,16 @@ namespace Metal {
 		[Field ("MTLCommandBufferErrorDomain")]
 		NSString ErrorDomain { get; }
 
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("parallelRenderCommandEncoderWithDescriptor:")]
 		[return: NullAllowed]
 		IMTLParallelRenderCommandEncoder CreateParallelRenderCommandEncoder (MTLRenderPassDescriptor renderPassDescriptor);
 
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("presentDrawable:")]
 		void PresentDrawable (IMTLDrawable drawable);
 
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("presentDrawable:atTime:")]
 		void PresentDrawable (IMTLDrawable drawable, double presentationTime);
 
@@ -326,9 +320,7 @@ namespace Metal {
 		[Export ("presentDrawable:afterMinimumDuration:")]
 		void PresentDrawableAfter (IMTLDrawable drawable, double duration);
 
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("renderCommandEncoderWithDescriptor:")]
 		IMTLRenderCommandEncoder CreateRenderCommandEncoder (MTLRenderPassDescriptor renderPassDescriptor);
 
@@ -443,11 +435,7 @@ namespace Metal {
 		void SetThreadgroupMemoryLength (nuint length, nuint index);
 
 		[Abstract, Export ("dispatchThreadgroups:threadsPerThreadgroup:")]
-#if XAMCORE_2_0
 		void DispatchThreadgroups (MTLSize threadgroupsPerGrid, MTLSize threadsPerThreadgroup);
-#else
-		void SispatchThreadgroups (MTLSize threadgroupsPerGrid, MTLSize threadsPerThreadgroup);
-#endif
 
 #if XAMCORE_4_0
 		[Abstract]
@@ -456,27 +444,19 @@ namespace Metal {
 		[Export ("dispatchThreadgroupsWithIndirectBuffer:indirectBufferOffset:threadsPerThreadgroup:")]
 		void DispatchThreadgroups (IMTLBuffer indirectBuffer, nuint indirectBufferOffset, MTLSize threadsPerThreadgroup);
 
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("setBuffers:offsets:withRange:")]
 		void SetBuffers (IMTLBuffer [] buffers, IntPtr offsets, NSRange range);
 
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("setSamplerStates:lodMinClamps:lodMaxClamps:withRange:")]
 		void SetSamplerStates (IMTLSamplerState [] samplers, IntPtr floatArrayPtrLodMinClamps, IntPtr floatArrayPtrLodMaxClamps, NSRange range);
 
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("setSamplerStates:withRange:")]
 		void SetSamplerStates (IMTLSamplerState [] samplers, NSRange range);
 		
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("setTextures:withRange:")]
 		void SetTextures (IMTLTexture [] textures, NSRange range);
 
@@ -1013,29 +993,21 @@ namespace Metal {
 		[Abstract, Export ("newRenderPipelineStateWithDescriptor:completionHandler:")]
 		void CreateRenderPipelineState (MTLRenderPipelineDescriptor descriptor, Action<IMTLRenderPipelineState, NSError> completionHandler);
 
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("newRenderPipelineStateWithDescriptor:options:reflection:error:")]
 		[return: Release]
 		IMTLRenderPipelineState CreateRenderPipelineState (MTLRenderPipelineDescriptor descriptor, MTLPipelineOption options, out MTLRenderPipelineReflection reflection, out NSError error);
 
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("newRenderPipelineStateWithDescriptor:options:completionHandler:")]
 		void CreateRenderPipelineState (MTLRenderPipelineDescriptor descriptor, MTLPipelineOption options, Action<IMTLRenderPipelineState, MTLRenderPipelineReflection, NSError> completionHandler);
 
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("newComputePipelineStateWithFunction:options:reflection:error:")]
 		[return: Release]
 		IMTLComputePipelineState CreateComputePipelineState (IMTLFunction computeFunction, MTLPipelineOption options, out MTLComputePipelineReflection reflection, out NSError error);
 
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("newComputePipelineStateWithFunction:completionHandler:")]
 		void CreateComputePipelineState (IMTLFunction computeFunction, Action<IMTLComputePipelineState, NSError> completionHandler);
 
@@ -1570,27 +1542,19 @@ namespace Metal {
 		[return: Release]
 		IMTLTexture CreateTextureView (MTLPixelFormat pixelFormat, MTLTextureType textureType, NSRange levelRange, NSRange sliceRange);
 
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("getBytes:bytesPerRow:bytesPerImage:fromRegion:mipmapLevel:slice:")]
 		void GetBytes (IntPtr pixelBytes, nuint bytesPerRow, nuint bytesPerImage, MTLRegion region, nuint level, nuint slice);		
 
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("getBytes:bytesPerRow:fromRegion:mipmapLevel:")]
 		void GetBytes (IntPtr pixelBytes, nuint bytesPerRow,  MTLRegion region, nuint level);
 
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("replaceRegion:mipmapLevel:slice:withBytes:bytesPerRow:bytesPerImage:")]
 		void ReplaceRegion (MTLRegion region, nuint level, nuint slice, IntPtr pixelBytes, nuint bytesPerRow, nuint bytesPerImage);
 
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("replaceRegion:mipmapLevel:withBytes:bytesPerRow:")]
 		void ReplaceRegion (MTLRegion region, nuint level, IntPtr pixelBytes, nuint bytesPerRow);
 
@@ -2359,15 +2323,11 @@ namespace Metal {
 	[iOS (8,0)][Mac (10,11)]
 	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
 	partial interface MTLDepthStencilState  {
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("label")]
 		string Label { get; }
 
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("device")]
 		IMTLDevice Device { get; }
 	}
@@ -2630,9 +2590,7 @@ namespace Metal {
 		[Abstract, Export ("setVertexSamplerStates:withRange:")]
 		void SetVertexSamplerStates (IMTLSamplerState [] samplers, NSRange range);
 
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("setVertexTextures:withRange:")]
 		void SetVertexTextures (IMTLTexture [] textures, NSRange range);
 
@@ -4227,4 +4185,3 @@ namespace Metal {
 		nuint SampleCount { get; set; }
 	}
 }
-#endif
