@@ -64,16 +64,6 @@ namespace SystemConfiguration {
 		extern static IntPtr /* CFDictionaryRef __nullable */  CNCopyCurrentNetworkInfo (
 			/* CFStringRef __nonnull */ IntPtr interfaceName);
 
-#if !XAMCORE_2_0
-		[Obsolete ("Replaced by TryCopyCurrentNetworkInfo")]
-		static public NSDictionary CopyCurrentNetworkInfo (string interfaceName)
-		{
-			NSDictionary dict;
-			TryCopyCurrentNetworkInfo (interfaceName, out dict);
-			return dict ?? new NSDictionary ();
-		}
-#endif
-		
 		static public StatusCode TryCopyCurrentNetworkInfo (string interfaceName, out NSDictionary currentNetworkInfo)
 		{
 			using (var nss = new NSString (interfaceName)) {
@@ -94,16 +84,6 @@ namespace SystemConfiguration {
 #endif
 		[DllImport (Constants.SystemConfigurationLibrary)]
 		extern static IntPtr /* CFArrayRef __nullable */ CNCopySupportedInterfaces ();
-		
-#if !XAMCORE_2_0
-		[Obsolete ("Replaced by 'TryGetSupportedInterfaces'.")]
-		static public string[] GetSupportedInterfaces ()
-		{
-			string[] result;
-			TryGetSupportedInterfaces (out result);
-			return result;
-		}
-#endif
 		
 		static public StatusCode TryGetSupportedInterfaces (out string[] supportedInterfaces)
 		{

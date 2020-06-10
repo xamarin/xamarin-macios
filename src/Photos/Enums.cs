@@ -111,11 +111,7 @@ namespace Photos
 		[Obsolete ("Incorrect value (exists in 'PHAssetCollectionSubtype').")]
 		SmartAlbumScreenshots = 211,
 #endif
-#if XAMCORE_2_0
 		Any = Int64.MaxValue,
-#else
-		Any = Int32.MaxValue,
-#endif
 	}
 
 	// NSUInteger -> PhotosTypes.h
@@ -188,11 +184,7 @@ namespace Photos
 		SmartAlbumUnableToUpload = 216,
 
 
-#if XAMCORE_2_0
 		Any           = Int64.MaxValue
-#else
-		Any           = Int32.MaxValue
-#endif
 	}
 
 	// NSUInteger -> PhotosTypes.h

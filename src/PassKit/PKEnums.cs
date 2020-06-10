@@ -25,10 +25,6 @@ namespace PassKit {
 		InvalidData = 1,
 		UnsupportedVersion,
 		InvalidSignature,
-#if !XAMCORE_2_0
-		[Obsolete ("renamed to InvalidSignature")] // after betas?
-		CertificateRevoked = InvalidSignature,
-#endif
 		[iOS (8,0)]
 		NotEntitled
 	}
