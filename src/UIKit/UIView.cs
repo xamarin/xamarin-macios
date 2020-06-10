@@ -47,19 +47,6 @@ namespace UIKit {
 		{
 			BeginAnimations (animation, IntPtr.Zero);
 		}
-			
-#if !XAMCORE_2_0
-		[CompilerGenerated]
-		[iOS (4,2)]
-		public virtual bool EnableInputClicksWhenVisible {
-			[iOS (4,2)]
-			[Export ("enableInputClicksWhenVisible")]
-			get {
-				global::MonoTouch.UIKit.UIApplication.EnsureUIThread ();
-				return false;
-			}
-		}
-#endif
 
 		[Register]
 		class _UIViewStaticCallback : NSObject {
@@ -156,21 +143,6 @@ namespace UIKit {
 					completion (); 
 			});
 		}
-
-#if !XAMCORE_2_0
-		[Advice ("Use the version with a 'ref float actualFontSize'.")]
-		public CGSize DrawString (string str, CGPoint point, nfloat width, UIKit.UIFont font, nfloat minFontSize, nfloat actualFontSize, UIKit.UILineBreakMode breakMode, UIKit.UIBaselineAdjustment adjustment)
-		{
-			nfloat temp = actualFontSize;
-			return DrawString (str, point, width, font, minFontSize, ref temp, breakMode, adjustment);
-		}
-
-		[Obsolete ("Use 'TranslatesAutoresizingMaskIntoConstraints'.")]
-		bool TranslatesAutoresizingMaskIntoConstrainst { 
-			get { return TranslatesAutoresizingMaskIntoConstraints; }
-			set { TranslatesAutoresizingMaskIntoConstraints = value; }
-		}
-#endif
 
 		public static Task<bool> AnimateAsync (double duration, Action animation)
 		{

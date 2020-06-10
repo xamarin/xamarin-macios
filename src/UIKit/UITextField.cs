@@ -41,7 +41,6 @@ namespace UIKit {
 
 		internal _UITextFieldDelegate EnsureUITextFieldDelegate ()
 		{
-#if XAMCORE_2_0
 			if (Delegate != null)
 				UIApplication.EnsureEventAndDelegateAreNotMismatched (Delegate, GetInternalEventDelegateType);
 			_UITextFieldDelegate del = Delegate as _UITextFieldDelegate;
@@ -50,23 +49,11 @@ namespace UIKit {
 				Delegate = (IUITextFieldDelegate)del;
 			}
 			return del;
-#else
-			var del = Delegate;
-			if (del == null || (!(del is _UITextFieldDelegate))){
-				del = new _UITextFieldDelegate ();
-				Delegate = del;
-			}
-			return (_UITextFieldDelegate) del;
-#endif
 		}
 
 		#pragma warning disable 672
 		[Register]
-#if XAMCORE_2_0
 		internal class _UITextFieldDelegate : NSObject, IUITextFieldDelegate {
-#else
-		internal class _UITextFieldDelegate : UITextFieldDelegate {
-#endif
 			public _UITextFieldDelegate () { IsDirectBinding = false; }
 
 			internal EventHandler editingEnded;

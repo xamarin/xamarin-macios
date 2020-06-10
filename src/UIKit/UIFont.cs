@@ -15,12 +15,6 @@ using Foundation;
 
 namespace UIKit {
 	public partial class UIFont {
-#if !XAMCORE_2_0
-		[Obsolete ("This constructor does not return a valid, default, instance", true)]
-		public UIFont ()
-		{
-		}
-#endif
 		public override string ToString ()
 		{
 			return String.Format ("{0} {1}", Name, PointSize);
