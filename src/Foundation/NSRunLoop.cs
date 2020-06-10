@@ -25,39 +25,6 @@ using System.Runtime.InteropServices;
 namespace Foundation {
 	
 	public partial class NSRunLoop {
-#if !XAMCORE_2_0
-		static NSString GetRealMode (string mode)
-		{
-			if (mode == NSDefaultRunLoopMode)
-				return NSDefaultRunLoopMode;
-			else if (mode == NSRunLoopCommonModes)
-				return NSRunLoopCommonModes;
-#if IOS || TVOS
-			else if (mode == UITrackingRunLoopMode)
-				return UITrackingRunLoopMode;
-#endif
-			else
-				return new NSString (mode);
-		}
-
-		[Advice ("Use 'AddTimer (NSTimer, NSRunLoopMode)'.")]
-		public void AddTimer (NSTimer timer, string forMode)
-		{
-			AddTimer (timer, GetRealMode (forMode));
-		}
-
-		[Advice ("Use 'LimitDateForMode (NSRunLoopMode)' instead.")]
-		public NSDate LimitDateForMode (string mode)
-		{
-			return LimitDateForMode (GetRealMode (mode));
-		}
-
-		[Advice ("Use 'AcceptInputForMode (NSRunLoopMode, NSDate)'.")]
-		public void AcceptInputForMode (string mode, NSDate limitDate)
-		{
-			AcceptInputForMode (GetRealMode (mode), limitDate);
-		}
-#endif
 		
 		public void Stop ()
 		{

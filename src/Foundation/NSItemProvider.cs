@@ -5,7 +5,7 @@ using ObjCRuntime;
 
 namespace Foundation 
 {
-#if (MONOMAC || IOS) && XAMCORE_2_0 // Only 64-bit on mac
+#if MONOMAC || IOS
 	public partial class NSItemProvider
 	{
 #if !XAMCORE_4_0 && MONOMAC
@@ -67,5 +67,5 @@ namespace Foundation
 			});
 		}
 	}
-#endif // (MONOMAC || IOS) && XAMCORE_2_0
+#endif // MONOMAC || IOS
 }

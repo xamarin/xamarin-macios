@@ -23,13 +23,11 @@ using System;
 
 namespace Foundation {
 
-#if XAMCORE_2_0
 		// Equals(Object) and GetHashCode are provided by NSObject
 		// NSObject.GetHashCode calls GetNativeHash, which means it matches Equals (NSUrl)' behavior (which also calls the native implementation), so there's no need to override it.
 		// NSObject.Equals calls the native isEqual: implementation, so that's fine as well, and no need to override.
 #pragma warning disable 660 // `Foundation.NSUrl' defines operator == or operator != but does not override Object.Equals(object o)
 #pragma warning disable 661 // `Foundation.NSUrl' defines operator == or operator != but does not override Object.GetHashCode()
-#endif
 	public partial class NSUrl : IEquatable<NSUrl> {
 
 		public NSUrl (string path, string relativeToUrl)
@@ -37,23 +35,6 @@ namespace Foundation {
 		{
 		}
 
-#if !XAMCORE_2_0
-		public override bool Equals (object t)
-		{
-			if (t == null)
-				return false;
-			
-			if (t is NSUrl){
-				return IsEqual ((NSUrl) t);
-			}
-			return false;
-		}
-
-		public override int GetHashCode ()
-		{
-			return (int) GetNativeHash ();
-		}
-#endif
 		// but NSUrl has it's own isEqual: selector, which we re-expose in a more .NET-ish way
 		public bool Equals (NSUrl url)
 		{
@@ -95,37 +76,6 @@ namespace Foundation {
 			return AbsoluteString ?? base.ToString ();
 		}
 
-#if !XAMCORE_2_0
-		[Obsolete ("Use the overload with an 'NSString' constant.")]
-		public bool TryGetResource (string key, out NSObject value, out NSError error)
-		{
-			using (var nsKey = new NSString (key))
-				return GetResourceValue (out value, nsKey, out error);
-		}
-
-		[Obsolete ("Use the overload with an 'NSString' constant.")]
-		public bool TryGetResource (string key, out NSObject value)
-		{
-			NSError error;
-			using (var nsKey = new NSString (key))
-				return GetResourceValue (out value, nsKey, out error);
-		}
-
-		[Obsolete ("Use the overload with an 'NSString' constant.")]
-		public bool SetResource (string key, NSObject value, out NSError error)
-		{
-			using (var nsKey = new NSString (key))
-				return SetResourceValue (value, nsKey, out error);
-		}
-
-		[Obsolete ("Use the overload with an 'NSString' constant.")]
-		public bool SetResource (string key, NSObject value)
-		{
-			NSError error;
-			using (var nsKey = new NSString (key))
-				return SetResourceValue (value, nsKey, out error);
-		}
-#endif
 		public bool TryGetResource (NSString nsUrlResourceKey, out NSObject value, out NSError error)
 		{
 			return GetResourceValue (out value, nsUrlResourceKey, out error);

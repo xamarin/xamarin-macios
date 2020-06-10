@@ -46,40 +46,5 @@ namespace Foundation {
 			
 			return (NSData) Runtime.GetNSObject (res);
 		}
-#if !XAMCORE_2_0
-		[Advice ("Use 'Schedule (NSRunLoop, NSString)' instead.")]
-		public virtual void Schedule (NSRunLoop aRunLoop, string forMode)
-		{
-			if (aRunLoop == null)
-				throw new ArgumentNullException ("aRunLoop");
-			if (forMode == null)
-				throw new ArgumentNullException ("forMode");
-			var nsforMode = NSString.CreateNative (forMode);
-			
-			if (IsDirectBinding) {
-				Messaging.void_objc_msgSend_IntPtr_IntPtr (this.Handle, Selector.GetHandle ("scheduleInRunLoop:forMode:"), aRunLoop.Handle, nsforMode);
-			} else {
-				Messaging.void_objc_msgSendSuper_IntPtr_IntPtr (this.SuperHandle, Selector.GetHandle ("scheduleInRunLoop:forMode:"), aRunLoop.Handle, nsforMode);
-			}
-			NSString.ReleaseNative (nsforMode);
-		}
-
-		[Advice ("Use 'Unschedule (NSRunLoop, NSString)' instead.")]
-		public virtual void Unschedule (NSRunLoop aRunLoop, string forMode)
-		{
-			if (aRunLoop == null)
-				throw new ArgumentNullException ("aRunLoop");
-			if (forMode == null)
-				throw new ArgumentNullException ("forMode");
-			var nsforMode = NSString.CreateNative (forMode);
-			
-			if (IsDirectBinding) {
-				Messaging.void_objc_msgSend_IntPtr_IntPtr (this.Handle, Selector.GetHandle ("unscheduleFromRunLoop:forMode:"), aRunLoop.Handle, nsforMode);
-			} else {
-				Messaging.void_objc_msgSendSuper_IntPtr_IntPtr (this.SuperHandle, Selector.GetHandle ("unscheduleFromRunLoop:forMode:"), aRunLoop.Handle, nsforMode);
-			}
-			NSString.ReleaseNative (nsforMode);
-		}
-#endif
 	}
 }
