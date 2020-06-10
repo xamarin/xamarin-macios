@@ -88,7 +88,6 @@ namespace CoreVideo {
 			return null;
 		}
 
-#if XAMCORE_2_0
 		public CVMetalTextureCache (IMTLDevice metalDevice, CVMetalTextureAttributes textureAttributes)
 		{
 			if (metalDevice == null)
@@ -125,7 +124,6 @@ namespace CoreVideo {
 			CVReturn creationErr;
 			return FromDevice (metalDevice, textureAttributes, out creationErr);
 		}
-#endif
 
 		public CVMetalTexture TextureFromImage (CVImageBuffer imageBuffer, MTLPixelFormat format, nint width, nint height, nint planeIndex, out CVReturn errorCode)
 		{

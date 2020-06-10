@@ -74,21 +74,13 @@ namespace CoreVideo {
 		// CVHostTime.h
 
 		[DllImport (Constants.CoreVideoLibrary, EntryPoint = "CVGetCurrentHostTime")]
-#if XAMCORE_2_0
 		public static extern /* uint64_t */ ulong GetCurrentHostTime ();
-#else
-		public static extern /* uint64_t */ long GetCurrentHostTime ();
-#endif
 
 
 		[DllImport (Constants.CoreVideoLibrary, EntryPoint = "CVGetHostClockFrequency")]
 		public static extern /* double */ double GetHostClockFrequency ();
 
 		[DllImport (Constants.CoreVideoLibrary, EntryPoint = "CVGetHostClockMinimumTimeDelta")]
-#if XAMCORE_2_0
 		public static extern /* uint32_t */ uint GetHostClockMinimumTimeDelta ();
-#else
-		public static extern /* uint32_t */ int GetHostClockMinimumTimeDelta ();
-#endif
 	}
 }

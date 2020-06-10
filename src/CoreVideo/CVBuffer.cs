@@ -41,30 +41,6 @@ namespace CoreVideo {
 #endif
 		{
 #if !COREBUILD
-#if !XAMCORE_2_0
-		public static readonly NSString MovieTimeKey;
-		public static readonly NSString TimeValueKey;
-		public static readonly NSString TimeScaleKey;
-		public static readonly NSString PropagatedAttachmentsKey;
-		public static readonly NSString NonPropagatedAttachmentsKey;
-
-		static CVBuffer ()
-		{
-			var hlib = Dlfcn.dlopen (Constants.CoreVideoLibrary, 0);
-			if (hlib == IntPtr.Zero)
-				return;
-			try {
-				MovieTimeKey = Dlfcn.GetStringConstant (hlib, "kCVBufferMovieTimeKey");
-				TimeValueKey = Dlfcn.GetStringConstant (hlib, "kCVBufferTimeValueKey");
-				TimeScaleKey = Dlfcn.GetStringConstant (hlib, "kCVBufferTimeScaleKey");
-				PropagatedAttachmentsKey = Dlfcn.GetStringConstant (hlib, "kCVBufferPropagatedAttachmentsKey");
-				NonPropagatedAttachmentsKey = Dlfcn.GetStringConstant (hlib, "kCVBufferNonPropagatedAttachmentsKey");
-			}
-			finally {
-				Dlfcn.dlclose (hlib);
-			}
-		}
-#endif
 		internal IntPtr handle;
 
 		internal CVBuffer ()
@@ -141,7 +117,7 @@ namespace CoreVideo {
 		extern static /* CFTypeRef */ IntPtr CVBufferGetAttachment (/* CVBufferRef */ IntPtr buffer, /* CFStringRef */ IntPtr key, out CVAttachmentMode attachmentMode);
 
 // FIXME: we need to bring the new API to xamcore
-#if XAMCORE_2_0 && !MONOMAC
+#if !MONOMAC
 		// any CF object can be attached
 		public T GetAttachment<T> (NSString key, out CVAttachmentMode attachmentMode) where T : class, INativeObject
 		{
@@ -166,7 +142,6 @@ namespace CoreVideo {
 			return (NSDictionary) Runtime.GetNSObject (CVBufferGetAttachments (handle, attachmentMode));
 		}
 
-#if XAMCORE_2_0
 		// There is some API that needs a more strongly typed version of a NSDictionary
 		// and there is no easy way to downcast from NSDictionary to NSDictionary<TKey, TValue>
 		public NSDictionary<TKey, TValue> GetAttachments<TKey, TValue> (CVAttachmentMode attachmentMode)
@@ -175,7 +150,6 @@ namespace CoreVideo {
 		{
 			return Runtime.GetNSObject<NSDictionary<TKey, TValue>> (CVBufferGetAttachments (handle, attachmentMode));
 		}
-#endif
 
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static void CVBufferPropagateAttachments (/* CVBufferRef */ IntPtr sourceBuffer, /* CVBufferRef */ IntPtr destinationBuffer);
@@ -191,7 +165,6 @@ namespace CoreVideo {
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static void CVBufferSetAttachment (/* CVBufferRef */ IntPtr buffer, /* CFStringRef */ IntPtr key, /* CFTypeRef */ IntPtr @value, CVAttachmentMode attachmentMode);
 
-#if XAMCORE_2_0
 		public void SetAttachment (NSString key, INativeObject @value, CVAttachmentMode attachmentMode)
 		{
 			if (key == null)
@@ -200,16 +173,6 @@ namespace CoreVideo {
 				throw new ArgumentNullException ("value");
 			CVBufferSetAttachment (handle, key.Handle, @value.Handle, attachmentMode);
 		}
-#else
-		public void SetAttachment (NSString key, NSObject @value, CVAttachmentMode attachmentMode)
-		{
-			if (key == null)
-				throw new ArgumentNullException ("key");
-			if (@value == null)
-				throw new ArgumentNullException ("value");
-			CVBufferSetAttachment (handle, key.Handle, @value.Handle, attachmentMode);
-		}
-#endif
 
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static void CVBufferSetAttachments (/* CVBufferRef */ IntPtr buffer, /* CFDictionaryRef */ IntPtr theAttachments, CVAttachmentMode attachmentMode);
