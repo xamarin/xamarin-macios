@@ -306,7 +306,7 @@ namespace Xamarin.Tests
 			
 		static string TestAssemblyDirectory {
 			get {
-				return TestContext.CurrentContext.TestDirectory;
+				return TestContext.CurrentContext.WorkDirectory;
 			}
 		}
 
