@@ -82,7 +82,15 @@ namespace ObjCRuntime {
 #endif
 #pragma warning restore 169
 #if !COREBUILD
-		static IntPtr block_class = Class.GetHandle ("__NSStackBlock");
+		static IntPtr block_class;
+
+		static IntPtr NSConcreteStackBlock {
+			get {
+				if (block_class == IntPtr.Zero)
+					block_class = Dlfcn.dlsym (Libraries.System.Handle, "_NSConcreteStackBlock");
+				return block_class;
+			}
+		}
 
 		[DllImport ("__Internal")]
 		static extern IntPtr xamarin_get_block_descriptor ();
@@ -123,7 +131,7 @@ namespace ObjCRuntime {
 		// the linker will make it public so that it's callable from optimized user code.
 		unsafe void SetupBlockImpl (Delegate trampoline, Delegate userDelegate, bool safe, string signature)
 		{
-			isa = block_class;
+			isa = NSConcreteStackBlock;
 			invoke = Marshal.GetFunctionPointerForDelegate (trampoline);
 			object delegates;
 			if (safe) {
