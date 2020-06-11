@@ -76,7 +76,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<_CanArchive Condition="'$(OutputType)' == 'Exe'">true</_CanArchive>
 
 		<_RequireProvisioningProfile>False</_RequireProvisioningProfile>
-		<_RequireProvisioningProfile Condition="'$(CodeSignProvision)' != ''">True</_RequireProvisioningProfile>
+		<_RequireProvisioningProfile Condition="'$(CodesignProvision)' != ''">True</_RequireProvisioningProfile>
 
 		<_PreparedResourceRules></_PreparedResourceRules>
 		<_AppBundleName>$(AssemblyName)</_AppBundleName>
@@ -211,7 +211,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			AppBundleDir="$(AppBundleDir)"
 			AppIdentifier="$(_AppIdentifier)"
 			BundleIdentifier="$(_BundleIdentifier)"
-			Entitlements="$(CodeSignEntitlements)"
+			Entitlements="$(CodesignEntitlements)"
 			CompiledEntitlements="$(IntermediateOutputPath)Entitlements.xcent"
 			IsAppExtension="$(IsAppExtension)"
 			ProvisioningProfile="$(_ProvisioningProfile)"
