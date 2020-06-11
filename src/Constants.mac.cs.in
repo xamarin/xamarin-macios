@@ -22,12 +22,10 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#if XAMCORE_2_0
-namespace ObjCRuntime {
-#elif MMP
+#if MMP
 namespace Xamarin.Bundler {
 #else
-namespace MonoMac {
+namespace ObjCRuntime {
 #endif
 	public static partial class Constants {
 		public const string Version = "@VERSION@";

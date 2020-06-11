@@ -37,14 +37,10 @@ using System.Net;
 using CFNetwork;
 using CoreFoundation;
 using CF=CoreFoundation;
-#elif XAMCORE_2_0
+#else
 using CoreServices;
 using CoreFoundation;
 using CF=CoreFoundation;
-#else
-using MonoTouch.CoreServices;
-using MonoTouch.CoreFoundation;
-using CF=MonoTouch.CoreFoundation;
 #endif
 
 namespace System.Net.Http
@@ -248,11 +244,7 @@ namespace System.Net.Http
 			// Always schedule stream events handling on main-loop. Due to ConfigureAwait (false) we may end up
 			// on any thread-pool thread which may not have run-loop running
 			//
-#if XAMCORE_2_0
 			stream.EnableEvents (CF.CFRunLoop.Main, CF.CFRunLoop.ModeCommon);
-#else
-			stream.EnableEvents (CF.CFRunLoop.Main, CF.CFRunLoop.CFRunLoopCommonModes);
-#endif
 
 			stream.Open ();
 
