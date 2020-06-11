@@ -782,12 +782,14 @@ timestamps {
                                             }
                                             builders [nodeText] = {
                                                 try {
-                                                    if (excluded) {
-                                                        echo (nodeText)
-                                                    } else {
-                                                        node ("xamarin-macios && macos-10.${macOS}") {
-                                                            stage ("Running XM tests on '10.${macOS}'") {
-                                                                runXamarinMacTests (url, "macOS 10.${macOS}", maccore_hash, gitHash)
+                                                    timeout (time: 15, unit: 'MINUTES') {
+                                                        if (excluded) {
+                                                            echo (nodeText)
+                                                        } else {
+                                                            node ("xamarin-macios && macos-10.${macOS}") {
+                                                                stage ("Running XM tests on '10.${macOS}'") {
+                                                                    runXamarinMacTests (url, "macOS 10.${macOS}", maccore_hash, gitHash)
+                                                                }
                                                             }
                                                         }
                                                     }
