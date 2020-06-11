@@ -53,6 +53,12 @@ namespace governance {
 					yield return new ModuleInfo (name, hash, url);
 				}
 			}
+
+			Xamarin.Bundler.Driver.RunCommand ("/usr/bin/xcrun", new string [] { "git", "show", "HEAD:mk/mono.mk" }, new string [] { }, out StringBuilder monoOutput, true, 0);
+			var lines = monoOutput.ToString ().SplitLines ().ToArray ();
+			var version = lines [0].Split (' ').Last ();
+			var monoUrl = lines [3].Split (' ').Last ();
+			yield return new ModuleInfo ("mono", version, monoUrl);
 		}
 
 		static HashSet<string> KnownDevDependencies = new HashSet<string> () {
