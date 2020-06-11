@@ -12,7 +12,7 @@ NuGet.config: $(TOP)/NuGet.config Makefile
 	$(Q) mv $@.tmp $@
 
 # This tells NuGet to use the version we're building locally.
-global.json: $(TOP)/Make.config.inc Makefile
+global.json: $(TOP)/Make.config.inc Makefile $(TOP)/.git/HEAD $(TOP)/.git/index
 	$(Q_GEN) \
 		printf "{\n" > $@; \
 		printf "\t\"sdk\": { \"version\": \"5.*\" },\n" >> $@; \
