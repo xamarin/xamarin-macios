@@ -5,24 +5,6 @@ using System.Runtime.InteropServices;
 namespace ObjCRuntime {
 	internal static class Method {
 #if !COREBUILD
-		#if !XAMCORE_2_0
-		public static string Signature (MethodBase minfo) {
-			string signature = null;
-
-			if (minfo.IsConstructor)
-				signature = "@";
-			else if (minfo is MethodInfo)
-				signature = TypeConverter.ToNative ((minfo as MethodInfo).ReturnType);
-
-			signature += "@:";
-			foreach (ParameterInfo param in minfo.GetParameters ()) {
-				signature += TypeConverter.ToNative (param.ParameterType);
-			}
-
-			return signature;
-		}
-#endif
-
 		public unsafe static IntPtr Trampoline {
 			get {
 				return Runtime.options->Trampolines->tramp;
