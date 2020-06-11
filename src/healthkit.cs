@@ -72,6 +72,32 @@ namespace HealthKit {
 		Active,
 	}
 
+	[iOS (13,6), NoWatch]
+	[Native]
+	public enum HKCategoryValueSeverity : long {
+		Unspecified = 0,
+		NotPresent,
+		Mild,
+		Moderate,
+		Severe,
+	}
+
+	[iOS (13,6), NoWatch]
+	[Native]
+	public enum HKCategoryValueAppetiteChanges : long {
+		Unspecified = 0,
+		NoChange,
+		Decreased,
+		Increased,
+	}
+
+	[iOS (13,6), NoWatch]
+	[Native]
+	public enum HKCategoryValuePresence : long {
+		Present = 0,
+		NotPresent,
+	}
+
 	delegate void HKAnchoredObjectResultHandler2 (HKAnchoredObjectQuery query, HKSample[] results, nuint newAnchor, NSError error);
 
 	[Obsolete ("Use HKAnchoredObjectResultHandler2 instead")]
@@ -1857,7 +1883,141 @@ namespace HealthKit {
 
 		[Watch (6, 0), iOS (13, 0)]
 		[Field ("HKCategoryTypeIdentifierToothbrushingEvent")]
-	 	ToothbrushingEvent,
+		ToothbrushingEvent,
+
+#if IOS
+		[iOS (13,6), NoWatch]
+		[Field ("HKCategoryTypeIdentifierAbdominalCramps")]
+		AbdominalCramps,
+
+		[iOS (13,6), NoWatch]
+		[Field ("HKCategoryTypeIdentifierAcne")]
+		Acne,
+
+		[iOS (13,6), NoWatch]
+		[Field ("HKCategoryTypeIdentifierAppetiteChanges")]
+		AppetiteChanges,
+
+		[iOS (13,6), NoWatch]
+		[Field ("HKCategoryTypeIdentifierGeneralizedBodyAche")]
+		GeneralizedBodyAche,
+
+		[iOS (13,6), NoWatch]
+		[Field ("HKCategoryTypeIdentifierBloating")]
+		Bloating,
+
+		[iOS (13,6), NoWatch]
+		[Field ("HKCategoryTypeIdentifierBreastPain")]
+		BreastPain,
+
+		[iOS (13,6), NoWatch]
+		[Field ("HKCategoryTypeIdentifierChestTightnessOrPain")]
+		ChestTightnessOrPain,
+
+		[iOS (13,6), NoWatch]
+		[Field ("HKCategoryTypeIdentifierChills")]
+		Chills,
+
+		[iOS (13,6), NoWatch]
+		[Field ("HKCategoryTypeIdentifierConstipation")]
+		Constipation,
+
+		[iOS (13,6), NoWatch]
+		[Field ("HKCategoryTypeIdentifierCoughing")]
+		Coughing,
+
+		[iOS (13,6), NoWatch]
+		[Field ("HKCategoryTypeIdentifierDiarrhea")]
+		Diarrhea,
+
+		[iOS (13,6), NoWatch]
+		[Field ("HKCategoryTypeIdentifierDizziness")]
+		Dizziness,
+
+		[iOS (13,6), NoWatch]
+		[Field ("HKCategoryTypeIdentifierFainting")]
+		Fainting,
+
+		[iOS (13,6), NoWatch]
+		[Field ("HKCategoryTypeIdentifierFatigue")]
+		Fatigue,
+
+		[iOS (13,6), NoWatch]
+		[Field ("HKCategoryTypeIdentifierFever")]
+		Fever,
+
+		[iOS (13,6), NoWatch]
+		[Field ("HKCategoryTypeIdentifierHeadache")]
+		Headache,
+
+		[iOS (13,6), NoWatch]
+		[Field ("HKCategoryTypeIdentifierHeartburn")]
+		Heartburn,
+
+		[iOS (13,6), NoWatch]
+		[Field ("HKCategoryTypeIdentifierHotFlashes")]
+		HotFlashes,
+
+		[iOS (13,6), NoWatch]
+		[Field ("HKCategoryTypeIdentifierLowerBackPain")]
+		LowerBackPain,
+
+		[iOS (13,6), NoWatch]
+		[Field ("HKCategoryTypeIdentifierLossOfSmell")]
+		LossOfSmell,
+
+		[iOS (13,6), NoWatch]
+		[Field ("HKCategoryTypeIdentifierLossOfTaste")]
+		LossOfTaste,
+
+		[iOS (13,6), NoWatch]
+		[Field ("HKCategoryTypeIdentifierMoodChanges")]
+		MoodChanges,
+
+		[iOS (13,6), NoWatch]
+		[Field ("HKCategoryTypeIdentifierNausea")]
+		Nausea,
+
+		[iOS (13,6), NoWatch]
+		[Field ("HKCategoryTypeIdentifierPelvicPain")]
+		PelvicPain,
+
+		[iOS (13,6), NoWatch]
+		[Field ("HKCategoryTypeIdentifierRapidPoundingOrFlutteringHeartbeat")]
+		RapidPoundingOrFlutteringHeartbeat,
+
+		[iOS (13,6), NoWatch]
+		[Field ("HKCategoryTypeIdentifierRunnyNose")]
+		RunnyNose,
+
+		[iOS (13,6), NoWatch]
+		[Field ("HKCategoryTypeIdentifierShortnessOfBreath")]
+		ShortnessOfBreath,
+
+		[iOS (13,6), NoWatch]
+		[Field ("HKCategoryTypeIdentifierSinusCongestion")]
+		SinusCongestion,
+
+		[iOS (13,6), NoWatch]
+		[Field ("HKCategoryTypeIdentifierSkippedHeartbeat")]
+		SkippedHeartbeat,
+
+		[iOS (13,6), NoWatch]
+		[Field ("HKCategoryTypeIdentifierSleepChanges")]
+		SleepChanges,
+
+		[iOS (13,6), NoWatch]
+		[Field ("HKCategoryTypeIdentifierSoreThroat")]
+		SoreThroat,
+
+		[iOS (13,6), NoWatch]
+		[Field ("HKCategoryTypeIdentifierVomiting")]
+		Vomiting,
+
+		[iOS (13,6), NoWatch]
+		[Field ("HKCategoryTypeIdentifierWheezing")]
+		Wheezing,
+#endif
 	}
 
 	[Watch (2,0)]
