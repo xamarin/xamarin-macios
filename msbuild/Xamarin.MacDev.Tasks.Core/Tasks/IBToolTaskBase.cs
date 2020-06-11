@@ -55,8 +55,7 @@ namespace Xamarin.MacDev.Tasks
 			environment.Add ("IBSC_MINIMUM_COMPATIBILITY_VERSION", minimumDeploymentTarget);
 			environment.Add ("IBC_MINIMUM_COMPATIBILITY_VERSION", minimumDeploymentTarget);
 
-			if (AppleSdkSettings.XcodeVersion.Major >= 5)
-				args.Add ("--minimum-deployment-target", minimumDeploymentTarget);
+			args.Add ("--minimum-deployment-target", minimumDeploymentTarget);
 			
 			foreach (var targetDevice in GetTargetDevices (plist))
 				args.Add ("--target-device", targetDevice);

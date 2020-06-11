@@ -129,9 +129,6 @@ namespace Xamarin.iOS.Tasks
 			}
 
 			if (IsIOS) {
-				if (minimumOSVersion < IPhoneSdkVersion.V5_0 && plist.GetUIMainStoryboardFile (true) != null)
-					LogAppManifestError (MSBStrings.E0015);
-
 				if (!plist.ContainsKey (ManifestKeys.CFBundleName))
 					plist [ManifestKeys.CFBundleName] = plist.ContainsKey (ManifestKeys.CFBundleDisplayName) ? plist.GetString (ManifestKeys.CFBundleDisplayName).Clone () : new PString (AppBundleName);
 			} else {
@@ -347,7 +344,7 @@ namespace Xamarin.iOS.Tasks
 				if (!IsAppExtension)
 					plist.SetIfNotPresent (ManifestKeys.LSRequiresIPhoneOS, true);
 
-				if (minimumOSVersion >= IPhoneSdkVersion.V3_2 && supportedDevices == IPhoneDeviceType.NotSet)
+				if (supportedDevices == IPhoneDeviceType.NotSet)
 					plist.SetUIDeviceFamily (IPhoneDeviceType.IPhone);
 			}
 		}
