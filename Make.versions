@@ -66,7 +66,7 @@ MAC_PACKAGE_VERSION=6.21.1.$(MAC_COMMIT_DISTANCE)
 # WARNING: Do **not** use versions higher than the available Xcode SDK or else we will have issues with mtouch (See https://github.com/xamarin/xamarin-macios/issues/7705)
 # When bumping the major macOS version in MACOS_NUGET_VERSION also update the macOS version where we execute on bots in jenkins/Jenkinsfile (in the 'node' element)
 
-IOS_NUGET_VERSION=13.5.100
+IOS_NUGET_VERSION=13.6.100
 TVOS_NUGET_VERSION=13.4.100
 WATCHOS_NUGET_VERSION=6.2.100
 MACOS_NUGET_VERSION=10.15.100
