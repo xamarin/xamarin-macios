@@ -27,9 +27,7 @@ using Foundation;
 using AppKit;
 using CoreGraphics;
 using ObjCRuntime;
-#if XAMCORE_2_0
 using JavaScriptCore;
-#endif
 
 namespace WebKit {
 
@@ -1054,25 +1052,15 @@ namespace WebKit {
 	partial interface DomEventTarget : NSCopying
 	{
 		[Export ("addEventListener:listener:useCapture:")]
-#if XAMCORE_2_0
 		[Abstract]
 		void AddEventListener (string type, IDomEventListener listener, bool useCapture);
-#else
-		void AddEventListener (string type, DomEventListener listener, bool useCapture);
-#endif
 
 		[Export ("removeEventListener:listener:useCapture:")]
-#if XAMCORE_2_0
 		[Abstract]
 		void RemoveEventListener (string type, IDomEventListener listener, bool useCapture);
-#else
-		void RemoveEventListener (string type, DomEventListener listener, bool useCapture);
-#endif
 
 		[Export ("dispatchEvent:")]
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		bool DispatchEvent (DomEvent evt);
 	}
 
@@ -1941,11 +1929,9 @@ namespace WebKit {
 		[Export ("globalContext")]
 		/* JSGlobalContextRef */ IntPtr GlobalContext { get; }
 
-#if XAMCORE_2_0
 		[Mac (10,10)]
                 [Export ("javaScriptContext", ArgumentSemantic.Strong)]
                 JSContext JavaScriptContext { get; }
-#endif
 	}
 
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
@@ -1995,10 +1981,8 @@ namespace WebKit {
 		[Export ("webView:windowScriptObjectAvailable:"), EventArgs ("WebFrameScriptObject")]
 		void WindowScriptObjectAvailable (WebView webView, WebScriptObject windowScriptObject);
 
-#if XAMCORE_2_0
                 [Export ("webView:didCreateJavaScriptContext:forFrame:"), EventArgs ("WebFrameJavaScriptContext")]
                 void DidCreateJavaScriptContext (WebView webView, JSContext context, WebFrame frame);
-#endif
 	}
 
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
@@ -2373,11 +2357,7 @@ namespace WebKit {
 		bool UIRunBeforeUnload (WebView sender, string message, WebFrame initiatedByFrame);
 
 		[Export ("webView:runOpenPanelForFileButtonWithResultListener:"), EventArgs ("WebViewRunOpenPanel")]
-#if XAMCORE_2_0
 		void UIRunOpenPanelForFileButton (WebView sender, IWebOpenPanelResultListener resultListener);
-#else
-		void UIRunOpenPanelForFileButton (WebView sender, WebOpenPanelResultListener resultListener);
-#endif
 
 		[Export ("webView:mouseDidMoveOverElement:modifierFlags:"), EventArgs ("WebViewMouseMoved")]
 		void UIMouseDidMoveOverElement (WebView sender, NSDictionary elementInformation, NSEventModifierMask modifierFlags);
@@ -2465,21 +2445,14 @@ namespace WebKit {
 		NSObject WebScriptValueAtIndex (int /* unsigned int */ index);
 
 		[Export ("setWebScriptValueAtIndex:value:")]
-#if XAMCORE_2_0
 		void SetWebScriptValueAtIndex (int /* unsigned int */ index, NSObject value);
-#else
-		[Obsolete ("Use 'SetWebScriptValueAtIndex' instead.")]
-		void SetWebScriptValueAtIndexvalue (int /* unsigned int */ index, NSObject value);
-#endif
 
 		[Export ("setException:")]
 		void SetException (string description);
 
-#if XAMCORE_2_0
 		[Mac (10,10)]
                 [Export ("JSValue")]
                 JSValue JSValue { get; }
-#endif
 	}
 
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]

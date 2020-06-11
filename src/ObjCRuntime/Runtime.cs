@@ -26,12 +26,6 @@ namespace ObjCRuntime {
 	
 	public partial class Runtime {
 #if !COREBUILD
-#if XAMCORE_2_0
-		internal const bool IsUnifiedBuild = true;
-#else
-		internal const bool IsUnifiedBuild = false;
-#endif
-
 		static Dictionary<IntPtrTypeValueTuple,Delegate> block_to_delegate_cache;
 		static Dictionary<Type, ConstructorInfo> intptr_ctor_cache;
 		static Dictionary<Type, ConstructorInfo> intptr_bool_ctor_cache;
@@ -842,11 +836,6 @@ namespace ObjCRuntime {
 		// delegate
 		//
 		[EditorBrowsable (EditorBrowsableState.Never)]
-#if XAMCORE_2_0
-		internal
-#else
-		public 
-#endif
 		static MethodInfo GetBlockWrapperCreator (MethodInfo method, int parameter)
 		{
 			// A mirror of this method is also implemented in StaticRegistrar:FindBlockProxyCreatorMethod
@@ -927,22 +916,12 @@ namespace ObjCRuntime {
 		// objective c blocks into strongly typed delegates.
 		//
 		[EditorBrowsable (EditorBrowsableState.Never)]
-#if XAMCORE_2_0
-		internal
-#else
-		public 
-#endif
 		static Delegate CreateBlockProxy (MethodInfo method, IntPtr block)
 		{
 			return (Delegate) method.Invoke (null, new object [] { block } );
 		}
 
-#if XAMCORE_2_0
-		internal
-#else
-		public
-#endif
-		static Delegate GetDelegateForBlock (IntPtr methodPtr, Type type)
+		internal static Delegate GetDelegateForBlock (IntPtr methodPtr, Type type)
 		{
 			if (block_to_delegate_cache == null)
 				block_to_delegate_cache = new Dictionary<IntPtrTypeValueTuple, Delegate> ();

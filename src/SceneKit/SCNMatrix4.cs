@@ -74,10 +74,7 @@ namespace SceneKit
         /// <summary>
         /// The identity matrix
         /// </summary>
-#if XAMCORE_2_0
-		readonly
-#endif
-        public static SCNMatrix4 Identity = new SCNMatrix4(SCNVector4.UnitX, SCNVector4.UnitY, SCNVector4.UnitZ, SCNVector4.UnitW);
+        public readonly static SCNMatrix4 Identity = new SCNMatrix4(SCNVector4.UnitX, SCNVector4.UnitY, SCNVector4.UnitZ, SCNVector4.UnitW);
 
         #endregion
 
@@ -731,42 +728,6 @@ namespace SceneKit
         
         #endregion
 
-        #region Obsolete Functions
-
-#if !XAMCORE_2_0
-        #region Translation Functions
-
-        /// <summary>
-        /// Builds a translation matrix.
-        /// </summary>
-        /// <param name="trans">The translation vector.</param>
-        /// <returns>A new SCNMatrix4 instance.</returns>
-        [Obsolete("Use CreateTranslation instead.")]
-        public static SCNMatrix4 Translation(SCNVector3 trans)
-        {
-            return Translation(trans.X, trans.Y, trans.Z);
-        }
-
-        /// <summary>
-        /// Build a translation matrix with the given translation
-        /// </summary>
-        /// <param name="x">X translation</param>
-        /// <param name="y">Y translation</param>
-        /// <param name="z">Z translation</param>
-        /// <returns>A Translation matrix</returns>
-        [Obsolete("Use CreateTranslation instead.")]
-        public static SCNMatrix4 Translation(pfloat x, pfloat y, pfloat z)
-        {
-            SCNMatrix4 result = Identity;
-            result.Row3 = new SCNVector4(x, y, z, 1.0f);
-            return result;
-        }
-
-		#endregion
-#endif // !XAMCORE_2_0
-
-        #endregion
-
         #region Scale Functions
 
         /// <summary>
@@ -809,88 +770,6 @@ namespace SceneKit
         #endregion
 
         #region Rotation Functions
-
-#if !XAMCORE_2_0
-        /// <summary>
-        /// Build a rotation matrix that rotates about the x-axis
-        /// </summary>
-        /// <param name="angle">angle in radians to rotate counter-clockwise around the x-axis</param>
-        /// <returns>A rotation matrix</returns>
-        [Obsolete("Use CreateRotationX instead.")]
-        public static SCNMatrix4 RotateX(pfloat angle)
-        {
-            pfloat cos = (pfloat)System.Math.Cos(angle);
-            pfloat sin = (pfloat)System.Math.Sin(angle);
-
-            SCNMatrix4 result;
-            result.Row0 = SCNVector4.UnitX;
-            result.Row1 = new SCNVector4(0.0f, cos, sin, 0.0f);
-            result.Row2 = new SCNVector4(0.0f, -sin, cos, 0.0f);
-            result.Row3 = SCNVector4.UnitW;
-            return result;
-        }
-
-        /// <summary>
-        /// Build a rotation matrix that rotates about the y-axis
-        /// </summary>
-        /// <param name="angle">angle in radians to rotate counter-clockwise around the y-axis</param>
-        /// <returns>A rotation matrix</returns>
-        [Obsolete("Use CreateRotationY instead.")]
-        public static SCNMatrix4 RotateY(pfloat angle)
-        {
-            pfloat cos = (pfloat)System.Math.Cos(angle);
-            pfloat sin = (pfloat)System.Math.Sin(angle);
-
-            SCNMatrix4 result;
-            result.Row0 = new SCNVector4(cos, 0.0f, -sin, 0.0f);
-            result.Row1 = SCNVector4.UnitY;
-            result.Row2 = new SCNVector4(sin, 0.0f, cos, 0.0f);
-            result.Row3 = SCNVector4.UnitW;
-            return result;
-        }
-
-        /// <summary>
-        /// Build a rotation matrix that rotates about the z-axis
-        /// </summary>
-        /// <param name="angle">angle in radians to rotate counter-clockwise around the z-axis</param>
-        /// <returns>A rotation matrix</returns>
-        [Obsolete("Use CreateRotationZ instead.")]
-        public static SCNMatrix4 RotateZ(pfloat angle)
-        {
-            pfloat cos = (pfloat)System.Math.Cos(angle);
-            pfloat sin = (pfloat)System.Math.Sin(angle);
-
-            SCNMatrix4 result;
-            result.Row0 = new SCNVector4(cos, sin, 0.0f, 0.0f);
-            result.Row1 = new SCNVector4(-sin, cos, 0.0f, 0.0f);
-            result.Row2 = SCNVector4.UnitZ;
-            result.Row3 = SCNVector4.UnitW;
-            return result;
-        }
-
-        /// <summary>
-        /// Build a rotation matrix to rotate about the given axis
-        /// </summary>
-        /// <param name="axis">the axis to rotate about</param>
-        /// <param name="angle">angle in radians to rotate counter-clockwise (looking in the direction of the given axis)</param>
-        /// <returns>A rotation matrix</returns>
-        [Obsolete("Use CreateFromAxisAngle instead.")]
-        public static SCNMatrix4 Rotate(SCNVector3 axis, pfloat angle)
-        {
-            pfloat cos = (pfloat)System.Math.Cos(-angle);
-            pfloat sin = (pfloat)System.Math.Sin(-angle);
-            pfloat t = 1.0f - cos;
-
-            axis.Normalize();
-
-            SCNMatrix4 result;
-            result.Row0 = new SCNVector4(t * axis.X * axis.X + cos, t * axis.X * axis.Y - sin * axis.Z, t * axis.X * axis.Z + sin * axis.Y, 0.0f);
-            result.Row1 = new SCNVector4(t * axis.X * axis.Y + sin * axis.Z, t * axis.Y * axis.Y + cos, t * axis.Y * axis.Z - sin * axis.X, 0.0f);
-            result.Row2 = new SCNVector4(t * axis.X * axis.Z - sin * axis.Y, t * axis.Y * axis.Z + sin * axis.X, t * axis.Z * axis.Z + cos, 0.0f);
-            result.Row3 = SCNVector4.UnitW;
-            return result;
-        }
-#endif
 
         /// <summary>
         /// Build a rotation matrix from a quaternion
@@ -965,49 +844,6 @@ namespace SceneKit
         {
             return LookAt(new SCNVector3(eyeX, eyeY, eyeZ), new SCNVector3(targetX, targetY, targetZ), new SCNVector3(upX, upY, upZ));
         }
-
-#if !XAMCORE_2_0
-        /// <summary>
-        /// Build a projection matrix
-        /// </summary>
-        /// <param name="left">Left edge of the view frustum</param>
-        /// <param name="right">Right edge of the view frustum</param>
-        /// <param name="bottom">Bottom edge of the view frustum</param>
-        /// <param name="top">Top edge of the view frustum</param>
-        /// <param name="near">Distance to the near clip plane</param>
-        /// <param name="far">Distance to the far clip plane</param>
-        /// <returns>A projection matrix that transforms camera space to raster space</returns>
-        [Obsolete("Use CreatePerspectiveOffCenter instead.")]
-        public static SCNMatrix4 Frustum(pfloat left, pfloat right, pfloat bottom, pfloat top, pfloat near, pfloat far)
-        {
-            pfloat invRL = 1.0f / (right - left);
-            pfloat invTB = 1.0f / (top - bottom);
-            pfloat invFN = 1.0f / (far - near);
-            return new SCNMatrix4(new SCNVector4(2.0f * near * invRL, 0.0f, 0.0f, 0.0f),
-                               new SCNVector4(0.0f, 2.0f * near * invTB, 0.0f, 0.0f),
-                               new SCNVector4((right + left) * invRL, (top + bottom) * invTB, -(far + near) * invFN, -1.0f),
-                               new SCNVector4(0.0f, 0.0f, -2.0f * far * near * invFN, 0.0f));
-        }
-
-        /// <summary>
-        /// Build a projection matrix
-        /// </summary>
-        /// <param name="fovy">Angle of the field of view in the y direction (in radians)</param>
-        /// <param name="aspect">Aspect ratio of the view (width / height)</param>
-        /// <param name="near">Distance to the near clip plane</param>
-        /// <param name="far">Distance to the far clip plane</param>
-        /// <returns>A projection matrix that transforms camera space to raster space</returns>
-        [Obsolete("Use CreatePerspectiveFieldOfView instead.")]
-        public static SCNMatrix4 Perspective(pfloat fovy, pfloat aspect, pfloat near, pfloat far)
-        {
-            pfloat yMax = near * (float)System.Math.Tan(0.5f * fovy);
-            pfloat yMin = -yMax;
-            pfloat xMin = yMin * aspect;
-            pfloat xMax = yMax * aspect;
-
-            return Frustum(xMin, xMax, yMin, yMax, near, far);
-        }
-#endif
 
         #endregion
 

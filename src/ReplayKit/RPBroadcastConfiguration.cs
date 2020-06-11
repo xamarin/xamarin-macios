@@ -44,11 +44,7 @@ namespace ReplayKit {
 				return weak == null ? null : new AVVideoCodecSettings (new NSMutableDictionary (weak));
 			}
 			set {
-#if XAMCORE_2_0
 				WeakVideoCompressionProperties = value == null ? null : new NSDictionary<NSString, INSSecureCoding> (value.Dictionary.Handle);
-#else
-				WeakVideoCompressionProperties = value == null ? null : new NSDictionary (value.Dictionary.Handle);
-#endif
 			}
 		}		
 	}

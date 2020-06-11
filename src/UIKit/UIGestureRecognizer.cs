@@ -25,10 +25,7 @@ namespace UIKit {
 		Dictionary<Token,IntPtr> recognizers = new Dictionary<Token,IntPtr> ();
 		const string tsel = "target";
 		internal const string parametrized_selector = "target:";
-#if !XAMCORE_2_0
-		[Obsolete ("Don't use, this field has been removed the Unified API. Use 'Selector.GetHandle (<string>)' instead.")]
-		public static Selector ParametrizedSelector = new Selector ("target:");
-#endif
+
 		[DesignatedInitializer]
 		public UIGestureRecognizer (Action action) : this (Selector.GetHandle (tsel), new ParameterlessDispatch (action))
 		{

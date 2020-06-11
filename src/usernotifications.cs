@@ -264,10 +264,8 @@ namespace UserNotifications {
 		[Export ("ThumbnailHidden")]
 		bool ThumbnailHidden { get; set; }
 
-#if XAMCORE_2_0
 		[Export ("ThumbnailClippingRect")]
 		CGRect ThumbnailClippingRect { get; set; }
-#endif
 		// According to apple docs UNNotificationAttachmentOptionsThumbnailTimeKey
 		// can be either a CMTime or a NSNumber (in seconds). Exposing both options
 		// in the strong dictionary because watchOS does not have CMTime or

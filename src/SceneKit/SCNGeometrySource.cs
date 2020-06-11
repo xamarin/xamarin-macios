@@ -11,7 +11,7 @@ using System;
 
 using CoreGraphics;
 using Foundation;
-#if (XAMCORE_2_0 || !MONOMAC) && !WATCH
+#if !WATCH
 using Metal;
 #endif
 
@@ -74,7 +74,7 @@ namespace SceneKit {
 			return FromData (data, SemanticToToken (semantic), vectorCount, floatComponents, componentsPerVector, bytesPerComponent, offset, stride);
 		}
 
-#if (XAMCORE_2_0 || !MONOMAC) && !WATCH
+#if !WATCH
 		public static SCNGeometrySource FromMetalBuffer (IMTLBuffer mtlBuffer, MTLVertexFormat vertexFormat, SCNGeometrySourceSemantics semantic, nint vertexCount, nint offset, nint stride)
 		{
 			return FromMetalBuffer (mtlBuffer, vertexFormat, SemanticToToken (semantic), vertexCount, offset, stride);

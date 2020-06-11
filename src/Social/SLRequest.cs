@@ -6,7 +6,7 @@
 //
 // Copyright 2012-2013 Xamarin Inc
 //
-#if XAMCORE_2_0 || !MONOMAC
+
 using System;
 using ObjCRuntime;
 using Foundation;
@@ -40,4 +40,3 @@ namespace Social {
 		}
 	}
 }
-#endif

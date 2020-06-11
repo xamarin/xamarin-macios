@@ -91,11 +91,6 @@ namespace ObjCRuntime
 			
 		// NOTE: Update PlatformHelper.IsValid when adding a version
 
-#if !XAMCORE_2_0
-		[Obsolete ("Use iOS_Version")] iOS = 0x00000000ffffffff,
-		[Obsolete ("Use Mac_Version")] Mac = 0xffffffff00000000,
-#endif
-
 		iOS_Version = 0x0000000000ffffff,
 		Mac_Version = 0x00ffffff00000000,
 
@@ -116,9 +111,6 @@ namespace ObjCRuntime
 #pragma warning disable 0618
 			switch (ToMacVersion (platform)) {
 			case Platform.None:
-#if !XAMCORE_2_0
-			case Platform.Mac:
-#endif
 			case Platform.Mac_Version:
 			case Platform.Mac_10_0:
 			case Platform.Mac_10_1:
@@ -141,9 +133,6 @@ namespace ObjCRuntime
 
 			switch (ToIosVersion (platform)) {
 			case Platform.None:
-#if !XAMCORE_2_0
-			case Platform.iOS:
-#endif
 			case Platform.iOS_Version:
 			case Platform.iOS_2_0:
 			case Platform.iOS_2_2:
@@ -177,20 +166,6 @@ namespace ObjCRuntime
 #pragma warning restore 0618
 		}
 
-#if !XAMCORE_2_0
-		[Obsolete ("Use ToMacVersion")]
-		public static Platform ToMac (this Platform platform)
-		{
-			return platform & Platform.Mac_Version;
-		}
-
-		[Obsolete ("Use ToIosVersion")]
-		public static Platform ToIos (this Platform platform)
-		{
-			return platform & Platform.iOS_Version;
-		}
-#endif
-
 		public static Platform ToVersion (this Platform platform)
 		{
 			return platform & ~(Platform.Mac_Arch | Platform.iOS_Arch);
@@ -220,20 +195,6 @@ namespace ObjCRuntime
 		{
 			return platform & Platform.iOS_Arch;
 		}
-
-#if !XAMCORE_2_0
-		[Obsolete ("Use CompareMacVersion")]
-		public static int CompareMac (this Platform a, Platform b)
-		{
-			return CompareMacVersion (a, b);
-		}
-
-		[Obsolete ("UseCompareIosVersion")]
-		public static int CompareIos (this Platform a, Platform b)
-		{
-			return CompareIosVersion (a, b);
-		}
-#endif
 
 		public static int CompareMacVersion (this Platform a, Platform b)
 		{
@@ -446,13 +407,6 @@ namespace ObjCRuntime
 				case Platform.Mac_Version:
 				case Platform.iOS_Version:
 				case Platform.iOS_Version | Platform.Mac_Version:
-#if !XAMCORE_2_0
-#pragma warning disable 0618
-				case Platform.Mac:
-				case Platform.iOS:
-				case Platform.iOS | Platform.Mac:
-#pragma warning restore 0618
-#endif
 					unavailable = value;
 					break;
 				default:
