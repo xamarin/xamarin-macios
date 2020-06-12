@@ -218,7 +218,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			SdkVersion="$(_SdkVersion)"
 			SdkPlatform="MacOSX"
 			SdkDevPath="$(_SdkDevPath)"
-			Debug="$(_Debug)"
+			Debug="$(_BundlerDebug)"
 			>
 		</CompileEntitlements>
 	</Target>
@@ -454,7 +454,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			Architecture="$(TargetArchitectures)"
 			ArchiveSymbols="$(MonoSymbolArchive)"
 			LinkMode="$(_LinkMode)"
-			Debug="$(_Debug)"
+			Debug="$(_BundlerDebug)"
 			HttpClientHandler="$(HttpClientHandler)"
 			I18n="$(I18n)"
 			Profiling="$(Profiling)"
