@@ -35,7 +35,7 @@ namespace governance {
 		{
 			string currentDirectory = Environment.CurrentDirectory;
 
-			Xamarin.Bundler.Driver.RunCommand ("/usr/bin/xcrun", new string [] { "git", "submodule", "status" }, new string [] { }, out StringBuilder output, true, 0);
+			Xamarin.Bundler.Driver.RunCommand ("/usr/bin/git", new string [] { "submodule", "status" }, new string [] { }, out StringBuilder output, true, 0);
 			foreach (var line in output.ToString ().SplitLines ()) {
 				var bits = line.ToString ().Split (' ');
 				if (bits.Length >= 3) {
@@ -44,7 +44,7 @@ namespace governance {
 					var name = path.Split ('/').Last ();
 
 					Directory.SetCurrentDirectory (path);
-					Xamarin.Bundler.Driver.RunCommand ("/usr/bin/xcrun", new string [] { "git", "remote", "-v" }, new string [] { }, out StringBuilder remoteOutput, true, 0);
+					Xamarin.Bundler.Driver.RunCommand ("/usr/bin/git", new string [] { "remote", "-v" }, new string [] { }, out StringBuilder remoteOutput, true, 0);
 					var urlBits = remoteOutput.ToString ().SplitLines ().First ().Split (' ');
 					// Yes, git uses spaces and tabs in this line
 					var url = urlBits [0].Split ('\t') [1];
@@ -54,7 +54,7 @@ namespace governance {
 				}
 			}
 
-			Xamarin.Bundler.Driver.RunCommand ("/usr/bin/xcrun", new string [] { "git", "show", "HEAD:mk/mono.mk" }, new string [] { }, out StringBuilder monoOutput, true, 0);
+			Xamarin.Bundler.Driver.RunCommand ("/usr/bin/git", new string [] { "show", "HEAD:mk/mono.mk" }, new string [] { }, out StringBuilder monoOutput, true, 0);
 			var lines = monoOutput.ToString ().SplitLines ().ToArray ();
 			var version = lines [0].Split (' ').Last ();
 			var monoUrl = lines [3].Split (' ').Last ();
