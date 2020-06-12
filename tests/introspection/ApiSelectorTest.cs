@@ -54,7 +54,7 @@ namespace Introspection {
 			}
 
 			switch (type.FullName) {
-				case "MetalPerformanceShaders.MPSCommandBuffer":
+			case "MetalPerformanceShaders.MPSCommandBuffer":
 				// The reflectable type metadata contains no selectors.
 				return true;
 			}
