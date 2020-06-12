@@ -559,14 +559,26 @@ endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(eval $(call DotNetLibTemplate,$(platform),$(rid)))))
 
 # If the RID represents fewer architectures than the library in .libs, then use the LipoTemplate, otherwise the CopyTemplate
+ifdef INCLUDE_IOS
 $(eval $(call DotNetLipoLibTemplate,iOS,ios-x64,iphonesimulator,x86_64))
 $(eval $(call DotNetLipoLibTemplate,iOS,ios-x86,iphonesimulator,i386))
+ifdef INCLUDE_DEVICE
 $(eval $(call DotNetLipoLibTemplate,iOS,ios-arm64,iphoneos,arm64))
 $(eval $(call DotNetLipoLibTemplate,iOS,ios-arm,iphoneos,armv7 armv7s))
+endif
+endif
+ifdef INCLUDE_TVOS
 $(eval $(call DotNetCopyLibTemplate,tvOS,tvos-x64,tvsimulator,x86_64))
+ifdef INCLUDE_DEVICE
 $(eval $(call DotNetCopyLibTemplate,tvOS,tvos-arm64,tvos,arm64))
+endif
+endif
+ifdef INCLUDE_WATCH
 $(eval $(call DotNetCopyLibTemplate,watchOS,watchos-x86,watchsimulator,i386))
+ifdef INCLUDE_DEVICE
 $(eval $(call DotNetLipoLibTemplate,watchOS,watchos-arm,watchos,armv7k arm64_32))
+endif
+endif
 $(eval $(call DotNetCopyLibTemplate,macOS,osx-x64,mac,x86_64))
 
 define DotNetFrameworkTemplate
@@ -603,14 +615,26 @@ endef
 $(foreach platform,$(filter-out macOS,$(DOTNET_PLATFORMS)),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(eval $(call DotNetFrameworkTemplate,$(platform),$(rid)))))
 
 # If the RID represents fewer architectures than the library in .libs, then use the LipoTemplate, otherwise the CopyTemplate
+ifdef INCLUDE_IOS
 $(eval $(call DotNetLipoFrameworkTemplate,iOS,ios-x64,iphonesimulator,x86_64,$(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/Frameworks))
 $(eval $(call DotNetLipoFrameworkTemplate,iOS,ios-x86,iphonesimulator,i386,$(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/Frameworks))
+ifdef INCLUDE_DEVICE
 $(eval $(call DotNetLipoFrameworkTemplate,iOS,ios-arm64,iphoneos,arm64,$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/Frameworks))
 $(eval $(call DotNetLipoFrameworkTemplate,iOS,ios-arm,iphoneos,armv7 armv7s,$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/Frameworks))
+endif
+endif
+ifdef INCLUDE_TVOS
 $(eval $(call DotNetCopyFrameworkTemplate,tvOS,tvos-x64,tvsimulator,x86_64,$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/Frameworks))
+ifdef INCLUDE_DEVICE
 $(eval $(call DotNetCopyFrameworkTemplate,tvOS,tvos-arm64,tvos,arm64,$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks))
+endif
+endif
+ifdef INCLUDE_WATCH
 $(eval $(call DotNetCopyFrameworkTemplate,watchOS,watchos-x86,watchsimulator,i386,$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/Frameworks))
+ifdef INCLUDE_DEVICE
 $(eval $(call DotNetLipoFrameworkTemplate,watchOS,watchos-arm,watchos,armv7k arm64_32,$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks))
+endif
+endif
 
 dotnet: $(DOTNET_TARGETS)
 
