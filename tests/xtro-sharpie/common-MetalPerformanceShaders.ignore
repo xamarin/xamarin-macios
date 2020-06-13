@@ -44,5 +44,4 @@
 !unknown-type! MPSCNNConvolutionStateNode bound
 
 # Looks like the following selectors were released ahead of their time: Xcode 12 / iOS 13 / macOS 15
-!missing-selector! +MPSNNGraph::graphWithDevice:resultImages:resultsAreNeeded: not bound
 !missing-selector! MPSNNGraph::initWithDevice:resultImages:resultsAreNeeded: not bound
