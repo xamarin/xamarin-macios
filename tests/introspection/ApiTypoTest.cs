@@ -363,6 +363,7 @@ namespace Introspection
 			"Mps",
 			"Mtu", // acronym
 			"Mtc", // acronym
+			"Mtgp",
 			"Mul",
 			"Mult",
 			"Multipath",
@@ -414,6 +415,7 @@ namespace Introspection
 			"Persistance",
 			"Pesented",
 			"Pfs", // acronym
+			"Philox",
 			"Picometers",
 			"Picowatts",
 			"Pkcs",
