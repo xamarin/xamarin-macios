@@ -44,6 +44,13 @@ namespace Introspection {
 				if (ca is ModelAttribute)
 					return true;
 			}
+
+			switch (type.FullName) {
+			case "MetalPerformanceShaders.MPSCommandBuffer":
+				// The reflectable type metadata contains no selectors.
+				return true;
+			}
+
 			return SkipDueToAttribute (type);
 		}
 
