@@ -165,6 +165,11 @@
 			<_XamarinNativeLibraryDirectory>$(_XamarinSdkRuntimePackDirectory)/runtimes/$(RuntimeIdentifier)/native</_XamarinNativeLibraryDirectory>
 			<_XamarinIncludeDirectory>$(_XamarinSdkRuntimePackDirectory)/runtimes/$(RuntimeIdentifier)/native</_XamarinIncludeDirectory>
 
+			<_LibMonoLinkMode Condition="'$(_LibMonoLinkMode)' == '' And '$(ComputedPlatform)' != 'iPhone'">dylib</_LibMonoLinkMode>
+			<_LibMonoLinkMode Condition="'$(_LibMonoLinkMode)' == ''">static</_LibMonoLinkMode>
+			<_LibMonoExtension Condition="'$(_LibMonoLinkMode)' == 'dylib'">dylib</_LibMonoExtension>
+			<_LibMonoExtension Condition="'$(_LibMonoLinkMode)' == 'static'">a</_LibMonoExtension>
+
 			<_LibXamarinLinkMode Condition="'$(_LibXamarinLinkMode)' == '' And '$(ComputedPlatform)' != 'iPhone'">dylib</_LibXamarinLinkMode>
 			<_LibXamarinLinkMode Condition="'$(_LibXamarinLinkMode)' == ''">static</_LibXamarinLinkMode>
 			<_LibXamarinExtension Condition="'$(_LibXamarinLinkMode)' == 'dylib'">dylib</_LibXamarinExtension>
@@ -172,6 +177,18 @@
 			<_LibXamarinName Condition="'$(_LibXamarinName)' == '' And '$(_Debug)' == 'true'">libxamarin-debug.$(_LibXamarinExtension)</_LibXamarinName>
 			<_LibXamarinName Condition="'$(_LibXamarinName)' == '' And '$(_Debug)' != 'true'">libxamarin.$(_LibXamarinExtension)</_LibXamarinName>
 		</PropertyGroup>
+
+		<ItemGroup>
+			<!-- Select the native libraries from mono we need to link with and potentially copy into the app -->
+			<_MonoLibrary
+				Include="@(ResolvedFileToPublish)"
+				Condition=" '%(ResolvedFileToPublish.AssetType)' == 'native' And
+							'%(ResolvedFileToPublish.RuntimeIdentifier)' == '$(RuntimeIdentifier)' And
+							'%(ResolvedFileToPublish.Extension)' == '.$(_LibMonoExtension)' And
+							'%(ResolvedFileToPublish.NuGetPackageId)' == 'Microsoft.NETCore.App.Runtime.$(RuntimeIdentifier)'
+							"
+			/>
+		</ItemGroup>
 	</Target>
 
 	<Target Name="_CompileNativeExecutable"
@@ -211,6 +228,8 @@
 
 		<ItemGroup>
 			<_XamarinMainLibraries Include="$(_XamarinNativeLibraryDirectory)/$(_LibXamarinName)" />
+			<!-- Link with the libraries shipped with the mono runtime pack -->
+			<_XamarinMainLibraries Include="@(_MonoLibrary)" />
 		</ItemGroup>
 
 		<LinkNativeCode
