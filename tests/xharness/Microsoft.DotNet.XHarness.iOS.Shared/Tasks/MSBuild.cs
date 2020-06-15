@@ -49,7 +49,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 		{
 			BuildLog = buildLog;
 			(TestExecutingResult ExecutionResult, (string HumanMessage, string IssueLink)? KnownFailure) result = (TestExecutingResult.NotStarted, ((string HumanMessage, string IssueLink)?) null);
-			await RestoreNugetsAsync (buildLog, resource, useXIBuild: true);
+			await RestoreNugetsAsync (buildLog, resource);
 
 			using (var xbuild = new Process ()) {
 				xbuild.StartInfo.FileName = msbuildPath;

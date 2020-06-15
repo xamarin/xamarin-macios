@@ -25,10 +25,5 @@ namespace Xharness.Jenkins.TestTasks {
 
 		protected override void InitializeTool () 
 			=> buildToolTask = new BuildProject (Jenkins.Harness.XIBuildPath, ProcessManager, ResourceManager, this, this);
-
-		// This method must be called with the desktop resource acquired
-		// (which is why it takes an IAcquiredResources as a parameter without using it in the function itself).
-		protected async Task RestoreNugetsAsync (ILog log, IAcquiredResource resource, bool useXIBuild = false) => 	
-			ExecutionResult = await BuildProject.RestoreNugetsAsync (log, resource, useXIBuild);
 	}
 }
