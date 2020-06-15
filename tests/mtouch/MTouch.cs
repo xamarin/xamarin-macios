@@ -190,7 +190,6 @@ public class B : A {}
 
 				var expectedFiles = new string []
 				{
-					"NOTICE",
 					"testApp",
 					"testApp.aotdata.armv7",
 					"testApp.aotdata.arm64",
@@ -319,7 +318,6 @@ public class B : A {}
 				mtouch.GccFlags = "-v";
 				mtouch.AssertExecute (MTouchAction.BuildDev, "fourth build");
 				Console.WriteLine ("fourth build done");
-				mtouch.AssertAllModified (dt, name + " - fourth build", "NOTICE");
 			}
 		}
 
