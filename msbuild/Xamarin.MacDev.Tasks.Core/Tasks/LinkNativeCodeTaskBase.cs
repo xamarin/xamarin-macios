@@ -42,6 +42,7 @@ namespace Xamarin.MacDev.Tasks {
 			arguments.Add ("-isysroot");
 			arguments.Add (SdkRoot);
 
+			bool hasDylibs = false;
 			if (LinkWithLibraries != null) {
 				foreach (var libSpec in LinkWithLibraries) {
 					var lib = Path.GetFullPath (libSpec.ItemSpec);
@@ -56,6 +57,7 @@ namespace Xamarin.MacDev.Tasks {
 						if (libName.StartsWith ("lib", StringComparison.Ordinal))
 							libName = libName.Substring (3);
 						arguments.Add ("-l" + libName);
+						hasDylibs = true;
 						break;
 					case ".framework":
 						arguments.Add ("-F" + Path.GetDirectoryName (lib));
@@ -67,6 +69,11 @@ namespace Xamarin.MacDev.Tasks {
 						return false;
 					}
 				}
+			}
+
+			if (hasDylibs) {
+				arguments.Add ("-rpath");
+				arguments.Add ("@executable_path");
 			}
 
 			if (Frameworks != null) {
