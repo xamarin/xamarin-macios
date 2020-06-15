@@ -49,6 +49,11 @@
     <TargetArchitectures Condition=" '$(RuntimeIdentifier)' == 'osx-x64' ">x86_64</TargetArchitectures>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(ComputedPlatform)' == ''">
+    <ComputedPlatform Condition="'$(_PlatformName)' != 'macOS' And ($(TargetArchitectures.Contains('i386')) Or $(TargetArchitectures.Contains('x86_64')))">iPhoneSimulator</ComputedPlatform>
+    <ComputedPlatform Condition="'$(_PlatformName)' != 'macOS' And '$(ComputedPlatform)' == ''">iPhone</ComputedPlatform>
+  </PropertyGroup>
+
   <!-- Declare the XI/XM framework bundled with this version of the SDK. See Microsoft.NETCoreSdk.BundledVersions.props -->
   <PropertyGroup>
     <!-- Runtime pack identifiers -->
