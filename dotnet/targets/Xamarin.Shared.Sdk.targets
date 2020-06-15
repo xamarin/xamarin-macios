@@ -162,7 +162,15 @@
 			<_IntermediateNativeLibraryDir>$(IntermediateOutputPath)nativelibraries/</_IntermediateNativeLibraryDir>
 			<_NativeExecutableName>$(_AppBundleName)</_NativeExecutableName>
 			<_XamarinSdkRuntimePackDirectory>%(_XamarinFrameworkReference.RuntimePackPath)</_XamarinSdkRuntimePackDirectory>
+			<_XamarinNativeLibraryDirectory>$(_XamarinSdkRuntimePackDirectory)/runtimes/$(RuntimeIdentifier)/native</_XamarinNativeLibraryDirectory>
 			<_XamarinIncludeDirectory>$(_XamarinSdkRuntimePackDirectory)/runtimes/$(RuntimeIdentifier)/native</_XamarinIncludeDirectory>
+
+			<_LibXamarinLinkMode Condition="'$(_LibXamarinLinkMode)' == '' And '$(ComputedPlatform)' != 'iPhone'">dylib</_LibXamarinLinkMode>
+			<_LibXamarinLinkMode Condition="'$(_LibXamarinLinkMode)' == ''">static</_LibXamarinLinkMode>
+			<_LibXamarinExtension Condition="'$(_LibXamarinLinkMode)' == 'dylib'">dylib</_LibXamarinExtension>
+			<_LibXamarinExtension Condition="'$(_LibXamarinLinkMode)' == 'static'">a</_LibXamarinExtension>
+			<_LibXamarinName Condition="'$(_LibXamarinName)' == '' And '$(_Debug)' == 'true'">libxamarin-debug.$(_LibXamarinExtension)</_LibXamarinName>
+			<_LibXamarinName Condition="'$(_LibXamarinName)' == '' And '$(_Debug)' != 'true'">libxamarin.$(_LibXamarinExtension)</_LibXamarinName>
 		</PropertyGroup>
 	</Target>
 
@@ -201,9 +209,14 @@
 			Outputs="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)"
 		>
 
+		<ItemGroup>
+			<_XamarinMainLibraries Include="$(_XamarinNativeLibraryDirectory)/$(_LibXamarinName)" />
+		</ItemGroup>
+
 		<LinkNativeCode
 			SessionId="$(BuildSessionId)"
 			Frameworks="@(_NativeExecutableFrameworks)"
+			LinkWithLibraries="@(_XamarinMainLibraries)"
 			MinimumOSVersion="$(_MinimumOSVersion)"
 			ObjectFiles="@(_NativeExecutableObjectFiles)"
 			OutputFile="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)"
