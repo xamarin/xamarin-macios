@@ -230,6 +230,9 @@
 			<_XamarinMainLibraries Include="$(_XamarinNativeLibraryDirectory)/$(_LibXamarinName)" />
 			<!-- Link with the libraries shipped with the mono runtime pack -->
 			<_XamarinMainLibraries Include="@(_MonoLibrary)" />
+			<!-- Hardcode a few frameworks for now -->
+			<_NativeExecutableFrameworks Include="Foundation" />
+			<_NativeExecutableFrameworks Include="CoreFoundation" />
 		</ItemGroup>
 
 		<LinkNativeCode
