@@ -1100,9 +1100,13 @@ This indicates a bug in Xamarin.iOS. Please file a new issue on [github](https:/
 
 Remove the directory `NOTICE` from the project.
 
+Earlier versions of our tools generated a NOTICE file.
+
 <a name="MT1017" />
 
 ### MT1017: Failed to create the NOTICE file: *.
+
+Earlier versions of our tools generated a NOTICE file.
 
 <a name="MT1018" />
 
