@@ -190,7 +190,6 @@ public class B : A {}
 
 				var expectedFiles = new string []
 				{
-					"NOTICE",
 					"testApp",
 					"testApp.aotdata.armv7",
 					"testApp.aotdata.arm64",
@@ -319,7 +318,6 @@ public class B : A {}
 				mtouch.GccFlags = "-v";
 				mtouch.AssertExecute (MTouchAction.BuildDev, "fourth build");
 				Console.WriteLine ("fourth build done");
-				mtouch.AssertAllModified (dt, name + " - fourth build", "NOTICE");
 			}
 		}
 
@@ -2856,47 +2854,6 @@ public class TestApp {
 				Directory.CreateDirectory (Path.Combine (mtouch.AppPath, Path.GetFileNameWithoutExtension (mtouch.AppPath)));
 				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
 				mtouch.AssertErrorPattern (1015, "Failed to create the executable '.*/testApp.app/testApp': .*/testApp.app/testApp is a directory");
-			}
-		}
-
-		[Test]
-		public void MT1016 ()
-		{
-			AssertDeviceAvailable ();
-
-			// #20607
-
-			using (var tool = new MTouchTool ()) {
-				tool.CreateTemporaryCacheDirectory ();
-				tool.CreateTemporaryApp ();
-
-				// Create a NOTICE directory
-				var notice = Path.Combine (tool.AppPath, "NOTICE");
-				Directory.CreateDirectory (notice);
-
-				tool.AssertExecuteFailure (MTouchAction.BuildDev);
-				tool.AssertError (1016, "Failed to create the NOTICE file because a directory already exists with the same name.");
-			}
-		}
-
-		[Test]
-		public void MT1017 ()
-		{
-			AssertDeviceAvailable ();
-
-			// #20607
-
-			using (var tool = new MTouchTool ()) {
-				tool.CreateTemporaryCacheDirectory ();
-				tool.CreateTemporaryApp ();
-
-				// Create a readonly NOTICE file
-				var notice = Path.Combine (tool.AppPath, "NOTICE");
-				File.WriteAllText (notice, "contents");
-				new FileInfo (notice).IsReadOnly = true;
-
-				tool.AssertExecute (MTouchAction.BuildDev);
-				Assert.AreNotEqual ("contents", File.ReadAllText (notice), "NOTICE file written successfully");
 			}
 		}
 
