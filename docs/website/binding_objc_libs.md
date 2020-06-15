@@ -34,7 +34,7 @@ Mac bindings are very similar.
 **Sample Code for iOS**
 
 You can use the
-[iOS Binding Sample](https://github.com/xamarin/monotouch-samples/tree/master/BindingSample)
+[iOS Binding Sample](https://github.com/xamarin/monotouch-samples/tree/main/BindingSample)
 project to experiment with bindings.
 
 <a name="Getting_Started" />
