@@ -2860,47 +2860,6 @@ public class TestApp {
 		}
 
 		[Test]
-		public void MT1016 ()
-		{
-			AssertDeviceAvailable ();
-
-			// #20607
-
-			using (var tool = new MTouchTool ()) {
-				tool.CreateTemporaryCacheDirectory ();
-				tool.CreateTemporaryApp ();
-
-				// Create a NOTICE directory
-				var notice = Path.Combine (tool.AppPath, "NOTICE");
-				Directory.CreateDirectory (notice);
-
-				tool.AssertExecuteFailure (MTouchAction.BuildDev);
-				tool.AssertError (1016, "Failed to create the NOTICE file because a directory already exists with the same name.");
-			}
-		}
-
-		[Test]
-		public void MT1017 ()
-		{
-			AssertDeviceAvailable ();
-
-			// #20607
-
-			using (var tool = new MTouchTool ()) {
-				tool.CreateTemporaryCacheDirectory ();
-				tool.CreateTemporaryApp ();
-
-				// Create a readonly NOTICE file
-				var notice = Path.Combine (tool.AppPath, "NOTICE");
-				File.WriteAllText (notice, "contents");
-				new FileInfo (notice).IsReadOnly = true;
-
-				tool.AssertExecute (MTouchAction.BuildDev);
-				Assert.AreNotEqual ("contents", File.ReadAllText (notice), "NOTICE file written successfully");
-			}
-		}
-
-		[Test]
 		public void MT1202 ()
 		{
 			using (var mtouch = new MTouchTool ()) {
