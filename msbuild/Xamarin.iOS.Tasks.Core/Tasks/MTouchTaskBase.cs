@@ -544,7 +544,7 @@ namespace Xamarin.iOS.Tasks
 		{
 			// It may have been resolved to an existing local full path
 			// already, such as when building from XS on the Mac.
-			if (File.Exists (fullName))
+			if (Path.IsPathRooted (fullName) && File.Exists (fullName))
 				return fullName;
 
 			var frameworkDir = TargetFramework.Identifier;

@@ -6,6 +6,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using NUnit.Framework;
 
+using Xamarin.Tests;
+
 namespace Xamarin.iOS.Tasks
 {
 	[TestFixture (Description = @"Ensures that all non-abstract task classes have empty bodies, 
@@ -16,15 +18,7 @@ since all code must exist in the base classes instead, so it can be reused from 
 		static readonly Regex ClassNameExpr = new Regex (@"public class (?<name>[^\s]+)", RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.ExplicitCapture);
 		static readonly Regex AbstractClassExpr = new Regex (@"abstract class ", RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.ExplicitCapture);
 
-		static readonly string TasksPath;
-
-		static EnsureEmptyTasks()
-		{
-			if (Environment.OSVersion.Platform == PlatformID.Win32NT)
-				TasksPath = @"..\..\Xamarin.iOS.Tasks\Tasks";
-			else
-				TasksPath = @"../../Xamarin.iOS.Tasks/Tasks";
-		}
+		static readonly string TasksPath = Path.Combine (Configuration.SourceRoot, "msbuild", "Xamarin.iOS.Tasks", "Tasks");
 
 		[TestCaseSource ("TaskFiles")]
 		[Test]
