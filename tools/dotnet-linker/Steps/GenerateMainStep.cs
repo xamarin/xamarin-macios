@@ -20,6 +20,7 @@ namespace Xamarin {
 
 void xamarin_setup_impl ()
 {{
+	setenv (""DOTNET_SYSTEM_GLOBALIZATION_INVARIANT"", ""1"", 1); // https://github.com/xamarin/xamarin-macios/issues/8906
 	xamarin_executable_name = ""{Configuration.AssemblyName}"";
 }}
 
