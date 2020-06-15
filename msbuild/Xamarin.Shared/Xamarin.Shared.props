@@ -96,6 +96,14 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<TargetArchitectures Condition="'$(TargetArchitectures)' == '' And '$(_PlatformName)' != 'macOS' And '$(ComputedPlatform)' == 'iPhone' And '$(TargetFrameworkIdentifier)' == 'Xamarin.TVOS'">ARM64</TargetArchitectures>
 		<TargetArchitectures Condition="'$(TargetArchitectures)' == '' And '$(_PlatformName)' != 'macOS' And '$(ComputedPlatform)' == 'iPhone'">ARMv7</TargetArchitectures>
 
+		<!-- Debug -->
+		<!-- Xamarin.Mac: use MmpDebug, but if that isn't set, use DebugSymbols -->
+		<_BundlerDebug Condition="'$(_PlatformName)' == 'macOS'">$(MmpDebug)</_BundlerDebug>
+		<_BundlerDebug Condition="'$(_PlatformName)' == 'macOS' And '$(_BundlerDebug)' == ''">$(DebugSymbols)</_BundlerDebug>
+		<!-- Xamarin.iOS: Use MtouchDebug -->
+		<_BundlerDebug Condition="'$(_PlatformName)' != 'macOS'">$(MtouchDebug)</_BundlerDebug>
+		<!-- The default is false for all platforms -->
+		<_BundlerDebug Condition="'$(_BundlerDebug)' == ''">false</_BundlerDebug>
 	</PropertyGroup>
 
 	<Target Name="_ComputeTargetFrameworkMoniker" Condition="'$(_ComputedTargetFrameworkMoniker)' == ''">
