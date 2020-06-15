@@ -153,10 +153,16 @@
 
 	<!-- Native code -->
 
-	<Target Name="_ComputeVariables" DependsOnTargets="_GenerateBundleName">
+	<Target Name="_ComputeVariables" DependsOnTargets="_GenerateBundleName;ResolveRuntimePackAssets">
+		<ItemGroup>
+			<!-- Look in the ResolvedFrameworkReference for our Microsoft.* package. This should only find a single package. -->
+			<_XamarinFrameworkReference Include="@(ResolvedFrameworkReference)" Condition="'%(ResolvedFrameworkReference.Identity)' == 'Microsoft.$(_PlatformName)'" />
+		</ItemGroup>
 		<PropertyGroup>
 			<_IntermediateNativeLibraryDir>$(IntermediateOutputPath)nativelibraries/</_IntermediateNativeLibraryDir>
 			<_NativeExecutableName>$(_AppBundleName)</_NativeExecutableName>
+			<_XamarinSdkRuntimePackDirectory>%(_XamarinFrameworkReference.RuntimePackPath)</_XamarinSdkRuntimePackDirectory>
+			<_XamarinIncludeDirectory>$(_XamarinSdkRuntimePackDirectory)/runtimes/$(RuntimeIdentifier)/native</_XamarinIncludeDirectory>
 		</PropertyGroup>
 	</Target>
 
@@ -170,6 +176,7 @@
 			<_MainFile Update="@(_MainFile)">
 				<OutputFile>$(_IntermediateNativeLibraryDir)%(Filename).o</OutputFile>
 			</_MainFile>
+			<_XamarinMainIncludeDirectory Include="$(_XamarinIncludeDirectory)" />
 		</ItemGroup>
 
 		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(_IntermediateNativeLibraryDir)" />
@@ -178,6 +185,7 @@
 			SessionId="$(BuildSessionId)"
 			CompileInfo="@(_MainFile)"
 			MinimumOSVersion="$(_MinimumOSVersion)"
+			IncludeDirectories="@(_XamarinMainIncludeDirectory)"
 			SdkDevPath="$(_SdkDevPath)"
 			SdkIsSimulator="$(_SdkIsSimulator)"
 			SdkRoot="$(_SdkRoot)"
