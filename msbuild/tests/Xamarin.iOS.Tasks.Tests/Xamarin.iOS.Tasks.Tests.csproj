@@ -55,6 +55,9 @@
     <Compile Include="..\..\..\tools\common\Execution.cs">
       <Link>Execution.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\tests\mtouch\Cache.cs">
+      <Link>Cache.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Entitlements.plist">

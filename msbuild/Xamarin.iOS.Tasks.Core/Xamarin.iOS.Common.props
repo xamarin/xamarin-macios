@@ -37,7 +37,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<MtouchDebug Condition="'$(MtouchDebug)' == ''">False</MtouchDebug>
 		<MtouchFastDev Condition="'$(MtouchFastDev)' == ''">False</MtouchFastDev>
 		<MtouchHttpClientHandler Condition="'$(MtouchHttpClientHandler)' == ''">NSUrlSessionHandler</MtouchHttpClientHandler>
 		<MtouchProfiling Condition="'$(MtouchProfiling)' == ''">False</MtouchProfiling>
@@ -79,8 +78,8 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<EmbedOnDemandResources Condition="'$(EmbedOnDemandResources)' == ''">true</EmbedOnDemandResources>
 
 		<!-- Device-Specific Builds -->
-		<DeviceSpecificBuild Condition="'$(DeviceSpecificBuild)' == ''">$(MtouchDebug)</DeviceSpecificBuild>
-		<DeviceSpecificBuild Condition="'$(MtouchDebug)' != 'true'">False</DeviceSpecificBuild>
+		<DeviceSpecificBuild Condition="'$(DeviceSpecificBuild)' == ''">$(_BundlerDebug)</DeviceSpecificBuild>
+		<DeviceSpecificBuild Condition="'$(_BundlerDebug)' != 'true'">False</DeviceSpecificBuild>
 	</PropertyGroup>
 
 	<ItemGroup>

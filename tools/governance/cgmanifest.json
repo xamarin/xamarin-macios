@@ -1,0 +1,64 @@
+{
+   "Registrations": [
+       {
+           "Component": {
+               "Type": "git",
+               "Git": {
+                   "RepositoryUrl": "https://github.com/spouliot/Touch.Unit.git",
+                   "CommitHash": "6c5bb930b35cf326d1f650eac0a5ac9e679a4e09"
+               }
+           },
+           "DevelopmentDependency": true
+       },
+       {
+           "Component": {
+               "Type": "git",
+               "Git": {
+                   "RepositoryUrl": "https://github.com/xamarin/Xamarin.MacDev",
+                   "CommitHash": "45c5a680e20a209ac846a32e0f2f0f83e843ab76"
+               }
+           },
+           "DevelopmentDependency": false
+       },
+       {
+           "Component": {
+               "Type": "git",
+               "Git": {
+                   "RepositoryUrl": "https://github.com/mono/guiunit.git",
+                   "CommitHash": "9affe4813987b009022ab7b10e55f81f4a37344c"
+               }
+           },
+           "DevelopmentDependency": true
+       },
+       {
+           "Component": {
+               "Type": "git",
+               "Git": {
+                   "RepositoryUrl": "https://github.com/xamarin/macios-binaries",
+                   "CommitHash": "3fbdcdb97459ca2c699d47e33028a106b95a7f1f"
+               }
+           },
+           "DevelopmentDependency": false
+       },
+       {
+           "Component": {
+               "Type": "git",
+               "Git": {
+                   "RepositoryUrl": "https://github.com/mono/opentk.git",
+                   "CommitHash": "396bc90c7ac2e7ce442840a5e8bd91e5e79b381e"
+               }
+           },
+           "DevelopmentDependency": false
+       },
+       {
+           "Component": {
+               "Type": "git",
+               "Git": {
+                   "RepositoryUrl": "https://github.com/mono/mono",
+                   "CommitHash": "8c085a99b32e99ae2f0a6b3de61541fefb4d3389"
+               }
+           },
+           "DevelopmentDependency": false
+       }
+   ]
+}
