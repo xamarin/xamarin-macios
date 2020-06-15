@@ -116,6 +116,7 @@
 			<_LinkerCacheDirectory>$([System.IO.Path]::GetFullPath('$(IntermediateOutputPath)linker-cache'))</_LinkerCacheDirectory>
 
 			<_CustomLinkerOptions>
+				AssemblyName=$(AssemblyName).dll
 				CacheDirectory=$(_LinkerCacheDirectory)
 				ItemsDirectory=$(_LinkerItemsDirectory)
 				Platform=$(_PlatformName)
