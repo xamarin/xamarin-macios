@@ -169,12 +169,7 @@ get_mono_env_options (int *count)
 			while (*inptr && !isblank ((int) *inptr & 0xff))
 				inptr++;
 
-			// Note: Mac OS X <= 10.6.8 do not have strndup()
-			//value = strndup ((char *) start, (size_t) (inptr - start));
-			size = (size_t) (inptr - start);
-			value = (char *) malloc (size + 1);
-			memcpy (value, start, size);
-			value[size] = '\0';
+			value = strndup ((char *) start, (size_t) (inptr - start));
 			break;
 		}
 
