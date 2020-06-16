@@ -22,7 +22,7 @@ namespace Xharness.Jenkins.Reports {
 		string? previous_test_runs;
 
 		// convinient
-		Harness Harness => jenkins.Harness;
+		IHarness Harness => jenkins.Harness;
 
 		public HtmlReportWriter (Jenkins jenkins, IResourceManager resourceManager, IResultParser resultParser)
 		{

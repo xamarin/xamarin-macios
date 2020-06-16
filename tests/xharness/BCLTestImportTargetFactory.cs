@@ -124,7 +124,7 @@ namespace Xharness {
 					( Name: "SystemCoreXunit Part 2", Assemblies: new [] { "monotouch_System.Core_xunit-test.part2.dll" }),
 			}),
 			["SystemXunit"] = (
-				ExtraArgs: $"--xml={Path.Combine (Harness.RootDirectory, "bcl-test", "SystemXunitLinker.xml")} --optimize=-custom-attributes-removal", // special case due to the need of the extra args,
+				ExtraArgs: $"--xml={Path.Combine (HarnessConfiguration.RootDirectory, "bcl-test", "SystemXunitLinker.xml")} --optimize=-custom-attributes-removal", // special case due to the need of the extra args,
 				TimeoutMultiplier: 1,
 				Projects: new [] {
 					( Name: "SystemXunit", Assemblies: new [] { "monotouch_System_xunit-test.dll" }), 
@@ -249,7 +249,7 @@ namespace Xharness {
 		public ITemplatedProject TemplatedProject { get; set; }
 		public ITestAssemblyDefinitionFactory AssemblyDefinitionFactory { get; set; }
 
-		public BCLTestImportTargetFactory (Harness harness) : this (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "bcl-test")), harness.MONO_PATH)
+		public BCLTestImportTargetFactory (IHarness harness) : this (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "bcl-test")), harness.MONO_PATH)
 		{
 			if (harness == null)
 				throw new ArgumentNullException (nameof (harness));

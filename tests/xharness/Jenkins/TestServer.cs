@@ -288,7 +288,7 @@ namespace Xharness.Jenkins {
 							server.Stop ();
 							break;
 						case "/favicon.ico":
-							serveFile = Path.Combine (Harness.RootDirectory, "xharness", "favicon.ico");
+							serveFile = Path.Combine (HarnessConfiguration.RootDirectory, "xharness", "favicon.ico");
 							goto default;
 						case "/index.html":
 							var redirect_to = request.Url.AbsoluteUri.Replace ("/index.html", "/" + Path.GetFileName (jenkins.LogDirectory) + "/index.html");

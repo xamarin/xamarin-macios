@@ -80,6 +80,7 @@
     <Compile Include="DeviceLogCapturerFactory.cs" />
     <Compile Include="GitHub.cs" />
     <Compile Include="Harness.cs" />
+    <Compile Include="IHarness.cs" />
     <Compile Include="Jenkins\ErrorKnowledgeBase.cs" />
     <Compile Include="Jenkins\Jenkins.cs" />
     <Compile Include="Jenkins\TestSelector.cs" />

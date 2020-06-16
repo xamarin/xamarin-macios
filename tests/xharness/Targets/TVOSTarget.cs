@@ -112,7 +112,7 @@ namespace Xharness.Targets {
 				MonoNativeHelper.RemoveSymlinkMode (inputProject);
 			}
 
-			var srcDirectory = Path.Combine (Harness.RootDirectory, "..", "src");
+			var srcDirectory = Path.Combine (HarnessConfiguration.RootDirectory, "..", "src");
 
 			string project_guid;
 			var mt_nunitlite_project_path = Path.GetFullPath (Path.Combine (srcDirectory, "MonoTouch.NUnitLite.tvos.csproj"));
