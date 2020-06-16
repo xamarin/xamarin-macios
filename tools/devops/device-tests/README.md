@@ -47,7 +47,7 @@ The jobs are:
     the job that executes the tests on the correct devices. This job MUST be executed on a macOS bot that has
     the correct demand. The demands specify the expected device to be attached to the bot.
 * publish_html: This job depends on the 'tests' job and will get the html report from the tests and publish it
-    to a webpage. Since the job depends on vsdrops, the job must be executed on a Windows machine.
+    to a webpage. Since the job depends on vsdrop, the job must be executed on a Windows machine.
 
 ##### device-tests
 
@@ -56,18 +56,15 @@ Main template that contains all the steps to execute the device tests. The templ
 * statusContext: The context of the tests. Used to pair the status of the tests with an execution context, for example 'VSTS iOS device tests'
 * testsLabels: The labels to pass to xharness to decide which tests to be executed.
 * disableProviCleanup: Special parameter that allows to clean up the cache used by the provisionator.
-* htmlReportStorage: The storage to be used for the html report. There are two sotrages available:
+* htmlReportStorage: The storage to be used for the html report. There are two storages available:
     - xamarin-storage: Old storage used by xamarin, to be deprecated.
-    - vsdrops: New storage that uses azure blobs.
+    - vsdrop: New storage that uses azure blobs.
 
 ##### publish-html
 
-Conditional job that will be executed only when the pipeline has been configured to use the 'vsdrops' storage. If the storage selected is
-not 'vsdrops' this job is not executed. Its main task is to download the html report that was posted as a build artifact, upload it to vsdrops and
+Conditional job that will be executed only when the pipeline has been configured to use the 'vsdrop' storage. If the storage selected is
+not 'vsdrop' this job is not executed. Its main task is to download the html report that was posted as a build artifact, upload it to vsdrop and
 create a browsable static webpage.
-
-#### Parameters
-
 
 #### Variables
 
@@ -80,8 +77,8 @@ The are two main groups of variables used in the pipelines:
 
 All the steps of the device-tests.yml have been moved to different powershell scripts. This are grouped by their usage. They are grouped in
 
-* GitHub: cmdlets that allow to interact with the GitHub rest API.
-* VSTS: cmdlets that allow to interact with the VSTS rest API.
+* GitHub: cmdlets that allow to interact with the GitHub REST API.
+* VSTS: cmdlets that allow to interact with the VSTS REST API.
 * MLaunch: cmdlets that allow to interact with mlaunch.
 * System: cmdlets that provide information about the system as well as to cleanup certain resources used by the tests.
 
@@ -93,7 +90,7 @@ Tests are written with Pester and the execution will output the number of tests 
 
 ## Storage
 
-The html report can be stored in two different storages. The xamarin-maios one and the vsdrops one. A
+The html report can be stored in two different storages. The xamarin-macios one and the vsdrop one. A
 number of steps are executed depending on the storage, therefore, when modifying a step/task take into
 account the condition is used. If you look at the steps you might find coditions like the following one:
 

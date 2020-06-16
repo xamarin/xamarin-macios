@@ -3,8 +3,8 @@
 # The stage contains two different jobs
 # 
 # tests: Runs the tests on a pool that contains devices that are capable to run them.
-# publish_html: Because vsdrops is not supported on macOS we have an extra job that
-#   will run on a pool with Windows devices that will publish the results on VSDrops to
+# publish_html: Because vsdrop is not supported on macOS we have an extra job that
+#   will run on a pool with Windows devices that will publish the results on VSDrop to
 #   be browsable.
 
 parameters:
@@ -36,7 +36,7 @@ parameters:
 
 - name: htmlReportStorage
   type: string
-  default: xamarin-storage # takes two different values, 'xamarin-storage' or 'vsdrops'
+  default: xamarin-storage # takes two different values, 'xamarin-storage' or 'vsdrop'
 
 stages:
 - stage: device_tests
