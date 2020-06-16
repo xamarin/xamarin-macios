@@ -22,7 +22,7 @@ namespace Xharness.Jenkins {
 		readonly IVersionControlSystem vcs;
 
 		ILog MainLog => jenkins.MainLog;
-		Harness Harness => jenkins.Harness;
+		IHarness Harness => jenkins.Harness;
 		
 		// We select tests based on a prefix of the modified files.
 		// Add entries here to check for more prefixes.
@@ -187,7 +187,7 @@ namespace Xharness.Jenkins {
 				MainLog.WriteLine ($"No labels were in the environment variable XHARNESS_LABELS.");
 			}
 
-			var custom_labels_file = Path.Combine (Harness.RootDirectory, "..", "jenkins", "custom-labels.txt");
+			var custom_labels_file = Path.Combine (HarnessConfiguration.RootDirectory, "..", "jenkins", "custom-labels.txt");
 			if (File.Exists (custom_labels_file)) {
 				var custom_labels = File.ReadAllLines (custom_labels_file).Select ((v) => v.Trim ()).Where (v => v.Length > 0 && v [0] != '#');
 				if (custom_labels.Count () > 0) {
