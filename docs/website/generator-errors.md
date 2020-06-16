@@ -4,9 +4,9 @@ title: "Xamarin.iOS/Xamarin.Mac binding errors"
 dateupdated: 2017-06-26
 ---
 
-[//]: # (The original file resides under https://github.com/xamarin/xamarin-macios/tree/master/docs/website/)
+[//]: # (The original file resides under https://github.com/xamarin/xamarin-macios/tree/main/docs/website/)
 [//]: # (This allows all contributors (including external) to submit, using a PR, updates to the documentation that match the tools changes)
-[//]: # (Modifications outside of xamarin-macios/master will be lost on future updates)
+[//]: # (Modifications outside of xamarin-macios/main will be lost on future updates)
 
 # BI0xxx: binding error messages
 
