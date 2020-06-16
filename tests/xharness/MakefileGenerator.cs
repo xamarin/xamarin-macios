@@ -57,9 +57,9 @@ namespace Xharness
 			return path;
 		}
 
-		public static void CreateMacMakefile (Harness harness, IEnumerable<MacTarget> targets)
+		public static void CreateMacMakefile (IHarness harness, IEnumerable<MacTarget> targets)
 		{
-			var makefile = Path.Combine (Harness.RootDirectory, "Makefile-mac.inc");
+			var makefile = Path.Combine (HarnessConfiguration.RootDirectory, "Makefile-mac.inc");
 			using (var writer = new StreamWriter (makefile, false, new UTF8Encoding (false))) {
 				writer.WriteLine (".stamp-configure-projects-mac: Makefile xharness/xharness.exe");
 				writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug $(XIBUILD_EXE_PATH) -t -- $(CURDIR)/xharness/xharness.exe $(XHARNESS_VERBOSITY) --configure --autoconf --rootdir $(CURDIR)");
@@ -211,10 +211,10 @@ namespace Xharness
 			return rv;
 		}
 
-		public static void CreateMakefile (Harness harness, IEnumerable<UnifiedTarget> unified_targets, IEnumerable<TVOSTarget> tvos_targets, IEnumerable<WatchOSTarget> watchos_targets, IEnumerable<TodayExtensionTarget> today_targets)
+		public static void CreateMakefile (IHarness harness, IEnumerable<UnifiedTarget> unified_targets, IEnumerable<TVOSTarget> tvos_targets, IEnumerable<WatchOSTarget> watchos_targets, IEnumerable<TodayExtensionTarget> today_targets)
 		{
 			var executeSim32 = !harness.InCI; // Waiting for iOS 10.3 simulator to be installed on wrench
-			var makefile = Path.Combine (Harness.RootDirectory, "Makefile.inc");
+			var makefile = Path.Combine (HarnessConfiguration.RootDirectory, "Makefile.inc");
 			using (var writer = new StreamWriter (makefile, false, new UTF8Encoding (false))) {
 				writer.WriteLine (".stamp-configure-projects: Makefile xharness/xharness.exe");
 				writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug $(XIBUILD_EXE_PATH) -t -- $(CURDIR)/xharness/xharness.exe $(XHARNESS_VERBOSITY) --configure --autoconf --rootdir $(CURDIR)");
