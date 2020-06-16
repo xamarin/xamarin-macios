@@ -236,19 +236,19 @@ namespace Xharness.Jenkins {
 
 			// docs is a bit special:
 			// - can only be executed if the Xamarin-specific parts of the build is enabled
-			// - enabled by default if the current branch is master (or, for a pull request, if the target branch is master)
+			// - enabled by default if the current branch is main (or, for a pull request, if the target branch is main)
 			var changed = SetEnabled (labels, "docs", ref jenkins.IncludeDocs);
 			if (Harness.ENABLE_XAMARIN) {
 				if (!changed) { // don't override any value set using labels
 					var branchName = Environment.GetEnvironmentVariable ("BRANCH_NAME");
 					if (!string.IsNullOrEmpty (branchName)) {
-						jenkins.IncludeDocs = branchName == "master";
+						jenkins.IncludeDocs = branchName == "main";
 						if (jenkins.IncludeDocs)
-							MainLog.WriteLine ("Enabled 'docs' tests because the current branch is 'master'.");
+							MainLog.WriteLine ("Enabled 'docs' tests because the current branch is 'main'.");
 					} else if (pullRequest > 0) {
-						jenkins.IncludeDocs = vcs.GetPullRequestTargetBranch (pullRequest) == "master";
+						jenkins.IncludeDocs = vcs.GetPullRequestTargetBranch (pullRequest) == "main";
 						if (jenkins.IncludeDocs)
-							MainLog.WriteLine ("Enabled 'docs' tests because the target branch is 'master'.");
+							MainLog.WriteLine ("Enabled 'docs' tests because the target branch is 'main'.");
 					}
 				}
 			} else {

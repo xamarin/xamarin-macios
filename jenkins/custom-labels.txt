@@ -2,13 +2,13 @@
 # Each label must go on a separate line.
 # Lines starting with a hash are comments.
 #
-# ⚠️ Important: Do not merge this file into master (or any other release branch) if it has any labels in it ⚠️
+# ⚠️ Important: Do not merge this file into main (or any other release branch) if it has any labels in it ⚠️
 #
 # This is used when building in CI to adjust what we build when we're building
 # a branch (since we can't apply labels to branches), but if any labels are
-# merged into master, that adjustment will be permanent, and that's most likely
+# merged into main, that adjustment will be permanent, and that's most likely
 # not what we want. For this reason, replace any empty comment line with labels,
-# so that a merge attempt into master will fail with conflicts.
+# so that a merge attempt into main will fail with conflicts.
 #
 # ℹ️ Remove any empty comment lines with labels ℹ️ 
 #
