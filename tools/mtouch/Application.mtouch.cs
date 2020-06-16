@@ -662,7 +662,6 @@ namespace Xamarin.Bundler {
 			StripNativeCode ();
 			BundleAssemblies ();
 
-			WriteNotice ();
 			GenerateRuntimeOptions ();
 
 			if (Cache.IsCacheTemporary) {
@@ -1280,35 +1279,6 @@ namespace Xamarin.Bundler {
 					final_build_task.AddDependency (link_tasks);
 					build_tasks.Add (final_build_task);
 				}
-			}
-		}
-
-		void WriteNotice ()
-		{
-			if (!IsDeviceBuild || IsExtension)
-				return;
-
-			if (Embeddinator)
-				return;
-
-			WriteNotice (AppDirectory);
-		}
-
-		void WriteNotice (string directory)
-		{
-			var path = Path.Combine (directory, "NOTICE");
-			if (Directory.Exists (path))
-				throw new ProductException (1016, true, Errors.MT1016);
-
-			try {
-				// write license information inside the .app
-				StringBuilder sb = new StringBuilder ();
-				sb.Append ("Xamarin built applications contain open source software.  ");
-				sb.Append ("For detailed attribution and licensing notices, please visit...");
-				sb.AppendLine ().AppendLine ().Append ("http://xamarin.com/mobile-licensing").AppendLine ();
-				Driver.WriteIfDifferent (path, sb.ToString ());
-			} catch (Exception ex) {
-				throw new ProductException (1017, true, ex, Errors.MT1017, ex.Message);
 			}
 		}
 
@@ -2024,8 +1994,6 @@ namespace Xamarin.Bundler {
 		{
 			if (!Embeddinator)
 				return;
-
-			WriteNotice (output_path);
 		}
 
 		public void CreateFrameworkInfoPList (string output_path, string framework_name, string bundle_identifier, string bundle_name)
