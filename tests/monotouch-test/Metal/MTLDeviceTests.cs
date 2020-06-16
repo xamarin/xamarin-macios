@@ -272,9 +272,7 @@ namespace MonoTouchFixtures.Metal {
 			}
 
 			if (TestRuntime.CheckXcodeVersion (10, 0)) {
-#if __MACOS__
-				if (device.SupportsFeatureSet (MTLFeatureSet.macOS_GPUFamily2_v1))
-#endif
+				if (device.SupportsFamily (MTLGpuFamily.Common2))
 				using (var descriptor = new MTLIndirectCommandBufferDescriptor ()) {
 					using (var library = device.CreateIndirectCommandBuffer (descriptor, 1, MTLResourceOptions.CpuCacheModeDefault)) {
 						Assert.IsNotNull (library, "CreateIndirectCommandBuffer: NonNull");
