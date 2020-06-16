@@ -66,7 +66,6 @@ namespace CoreText {
 			return ((NSNumber) value).Int32Value;
 		}
 
-#if XAMCORE_2_0
 		public static nuint? GetUnsignedIntegerValue (IDictionary<NSObject, NSObject> dictionary, NSObject key)
 		{
 			var value = dictionary [key];
@@ -74,7 +73,6 @@ namespace CoreText {
 				return null;
 			return ((NSNumber) value).NUIntValue;
 		}
-#endif
 
 		public static T[] GetNativeArray<T> (NSDictionary dictionary, NSObject key, Converter<IntPtr, T> converter)
 		{
@@ -156,7 +154,6 @@ namespace CoreText {
 				dictionary.Remove (key);
 		}
 
-#if XAMCORE_2_0
 		public static void SetValue (IDictionary<NSObject, NSObject> dictionary, NSObject key, nuint? value)
 		{
 			if (value.HasValue)
@@ -164,7 +161,6 @@ namespace CoreText {
 			else
 				dictionary.Remove (key);
 		}
-#endif
 
 		public static void SetValue (IDictionary<NSObject, NSObject> dictionary, NSObject key, IEnumerable<string> value)
 		{

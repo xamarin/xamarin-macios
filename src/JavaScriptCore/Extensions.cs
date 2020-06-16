@@ -11,7 +11,6 @@ using Foundation;
 
 namespace JavaScriptCore {
 
-#if !MONOMAC || XAMCORE_2_0
 	public partial class JSContext {
 		
 		public JSValue this[NSObject key] {
@@ -44,5 +43,4 @@ namespace JavaScriptCore {
 			set { _SetObject (value, key); }
 		}
 	}
-#endif
 }

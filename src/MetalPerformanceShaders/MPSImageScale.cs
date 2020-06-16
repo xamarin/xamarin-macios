@@ -1,4 +1,3 @@
-#if XAMCORE_2_0 || !MONOMAC
 // Copyright 2015 Xamarin Inc. All rights reserved.
 
 using System;
@@ -36,4 +35,3 @@ namespace MetalPerformanceShaders {
 		}
 	}
 }
-#endif

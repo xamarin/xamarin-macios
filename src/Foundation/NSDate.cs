@@ -37,7 +37,6 @@ namespace Foundation {
 	public partial class NSDate {
 		const long NSDATE_TICKS = 631139040000000000;
 
-#if XAMCORE_2_0
 		// now explicit since data can be lost for small/large values of DateTime
 		public static explicit operator DateTime (NSDate d)
 		{
@@ -56,29 +55,5 @@ namespace Foundation {
 
 			return FromTimeIntervalSinceReferenceDate ((dt.ToUniversalTime ().Ticks - NSDATE_TICKS) / (double) TimeSpan.TicksPerSecond);
 		}
-#else
-		public static implicit operator DateTime (NSDate d)
-		{
-			double secs = d.SecondsSinceReferenceDate;
-
-			if (secs < -63113904000)
-				return DateTime.MinValue;
-
-			if (secs > 252423993599)
-				return DateTime.MaxValue;
-
-			return new DateTime ((long)(secs * TimeSpan.TicksPerSecond + NSDATE_TICKS), DateTimeKind.Utc);
-		}
-
-		public static implicit operator NSDate (DateTime dt)
-		{
-			return FromTimeIntervalSinceReferenceDate ((dt.ToUniversalTime ().Ticks - NSDATE_TICKS) / (double) TimeSpan.TicksPerSecond);
-		}
-
-		public override string ToString ()
-		{
-			return Description;
-		}
-#endif
 	}
 }

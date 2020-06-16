@@ -155,15 +155,9 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGBitmapInfo */ uint CGBitmapContextGetBitmapInfo (/* CGContextRef */ IntPtr context);
 
-#if XAMCORE_2_0
 		public CGBitmapFlags BitmapInfo {
 			get {return (CGBitmapFlags) CGBitmapContextGetBitmapInfo (Handle);}
 		}
-#else
-		public uint BitmapInfo {
-			get {return CGBitmapContextGetBitmapInfo (Handle);}
-		}
-#endif
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGImageRef */ IntPtr CGBitmapContextCreateImage (/* CGContextRef */ IntPtr context);

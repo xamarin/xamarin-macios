@@ -312,7 +312,6 @@ namespace CoreText {
 			}
 		}
 
-#if XAMCORE_2_0
 		public CTFontManagerScope? RegistrationScope {
 			get {
 				var value = Adapter.GetUnsignedIntegerValue (Dictionary, CTFontDescriptorAttributeKey.RegistrationScope);
@@ -323,13 +322,6 @@ namespace CoreText {
 				value.HasValue ? (nuint?) (ulong) value.Value : null);
 			}
 		}
-#else
-		// TODO: docs mention CTFontManagerScope values, but I don't see any such enumeration.
-		public NSNumber RegistrationScope {
-			get {return (NSNumber) Dictionary [CTFontDescriptorAttributeKey.RegistrationScope];}
-			set {Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.RegistrationScope, value);}
-		}
-#endif
 
 		public CTFontPriority? Priority {
 			get {
@@ -457,18 +449,6 @@ namespace CoreText {
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontDescriptorCreateCopyWithFeature (IntPtr original, IntPtr featureTypeIdentifier, IntPtr featureSelectorIdentifier);
 
-#if !XAMCORE_2_0
-		[Advice ("Use 'WithFeature' with specific selector.")]
-		public CTFontDescriptor WithFeature (NSNumber featureTypeIdentifier, NSNumber featureSelectorIdentifier)
-		{
-			if (featureTypeIdentifier == null)
-				throw new ArgumentNullException ("featureTypeIdentifier");
-			if (featureSelectorIdentifier == null)
-				throw new ArgumentNullException ("featureSelectorIdentifier");
-			return CreateDescriptor (CTFontDescriptorCreateCopyWithFeature (handle, featureTypeIdentifier.Handle, featureSelectorIdentifier.Handle));
-		}
-#endif
-
 		public CTFontDescriptor WithFeature (CTFontFeatureAllTypographicFeatures.Selector featureSelector)
 		{
 			return WithFeature (FontFeatureGroup.AllTypographicFeatures, (int) featureSelector);
@@ -483,14 +463,6 @@ namespace CoreText {
 		{
 			return WithFeature (FontFeatureGroup.CursiveConnection, (int) featureSelector);
 		}
-
-#if !XAMCORE_2_0
-		[Obsolete]
-		public CTFontDescriptor WithFeature (CTFontFeatureLetterCase.Selector featureSelector)
-		{
-			return WithFeature (FontFeatureGroup.LetterCase, (int) featureSelector);
-		}
-#endif
 
 		public CTFontDescriptor WithFeature (CTFontFeatureVerticalSubstitutionConnection.Selector featureSelector)
 		{

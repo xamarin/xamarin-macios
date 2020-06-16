@@ -477,13 +477,11 @@ namespace CloudKit {
 		string LastName { get; }
 
 
-#if XAMCORE_2_0 // The Contacts framework (CNContact) uses generics heavily, which is only supported in Unified (for now at least)
 #if MONOMAC || IOS
 		[iOS (9,0)][Mac (10,11)]
 		[NullAllowed, Export ("displayContact", ArgumentSemantic.Copy)]
 		CNContact DisplayContact { get; }
 #endif // MONOMAC || IOS
-#endif // XAMCORE_2_0
 	}
 
 	[NoWatch]
@@ -1443,12 +1441,7 @@ namespace CloudKit {
 		string RecordType { get; }
 
 		[Export ("recordID", ArgumentSemantic.Copy)]
-#if XAMCORE_2_0
 		CKRecordID Id { get; }
-#else
-		[Obsolete ("Use 'Id' instead.")]
-		CKRecordID RecordId { get; }
-#endif
 
 		[NullAllowed, Export ("recordChangeTag")]
 		string RecordChangeTag { get; }

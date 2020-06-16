@@ -96,33 +96,17 @@ namespace Foundation {
 
 		[DllImport (Constants.FoundationLibrary)]
 		static extern nuint NSDecimalPower (out NSDecimal result, ref NSDecimal number, nint power, nuint mode);
-#if XAMCORE_2_0
 		public static NSCalculationError Power (out NSDecimal result, ref NSDecimal number, nint power, NSRoundingMode mode)
 		{
 			return (NSCalculationError)(ulong)NSDecimalPower (out result, ref number, power, (nuint)(ulong)mode);
 		}
-#else
-		// Ugh: the compat build needs to retain the "had always been incorrect due to bad copy-paste" return type
-		public static NSComparisonResult Power (out NSDecimal result, ref NSDecimal number, nint power, NSRoundingMode mode)
-		{
-			return (NSComparisonResult)(long)NSDecimalPower (out result, ref number, power, (nuint)(ulong)mode);
-		}
-#endif
 
 		[DllImport (Constants.FoundationLibrary)]
 		static extern nuint NSDecimalMultiplyByPowerOf10 (out NSDecimal result, ref NSDecimal number, short power10, nuint mode);
-#if XAMCORE_2_0
 		public static NSCalculationError MultiplyByPowerOf10 (out NSDecimal result, ref NSDecimal number, short power10, NSRoundingMode mode)
 		{
 			return (NSCalculationError)(ulong)NSDecimalMultiplyByPowerOf10 (out result, ref number, power10, (nuint)(ulong)mode);
 		}
-#else
-		// Ugh: the compat build needs to retain the "had always been incorrect due to bad copy-paste" return type
-		public static NSComparisonResult MultiplyByPowerOf10 (out NSDecimal result, ref NSDecimal number, short power10, NSRoundingMode mode)
-		{
-			return (NSComparisonResult)(long)NSDecimalMultiplyByPowerOf10 (out result, ref number, power10, (nuint)(ulong)mode);
-		}
-#endif
 
 		[DllImport (Constants.FoundationLibrary)]
 		static extern IntPtr NSDecimalString (ref NSDecimal value, /* _Nullable */ IntPtr locale);

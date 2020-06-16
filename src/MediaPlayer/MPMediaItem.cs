@@ -19,23 +19,6 @@ using CoreGraphics;
 
 namespace MediaPlayer {
 	public partial class MPMediaItem {
-
-#if !XAMCORE_2_0
-		[Obsolete ("Use 'CanFilterByProperty (NSString)' instead.")]
-		public static bool CanFilterByProperty (string property)
-		{
-			using (NSString ns = new NSString (property))
-				return CanFilterByProperty (ns);
-		}
-
-		[Obsolete ("Use 'ValueForProperty (NSString)' instead.")]
-		public virtual NSObject ValueForProperty (string property)
-		{
-			using (NSString ns = new NSString (property))
-				return ValueForProperty (ns);
-		}
-#endif
-
 		ulong UInt64ForProperty (NSString property)
 		{
 			var prop = ValueForProperty (property) as NSNumber;

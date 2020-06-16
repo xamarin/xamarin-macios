@@ -1,4 +1,3 @@
-﻿#if XAMCORE_2_0 || !MONOMAC
 using System;
 using System.Runtime.InteropServices;
 
@@ -40,4 +39,4 @@ namespace Metal {
 		}
 	}
 }
-#endif
+

@@ -633,14 +633,6 @@ namespace CoreGraphics {
 			CGContextSetFillColorWithColor (handle, color == null ? IntPtr.Zero : color.handle);
 		}
 
-#if !XAMCORE_2_0
-		[Advice ("Use SetFillColor() instead.")]
-		public void SetFillColorWithColor (CGColor color)
-		{
-			SetFillColor (color);
-		}
-#endif
-		
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGContextSetStrokeColorWithColor (/* CGContextRef */ IntPtr c,
 			/* CGColorRef __nullable */ IntPtr color);
@@ -649,14 +641,6 @@ namespace CoreGraphics {
 		{
 			CGContextSetStrokeColorWithColor (handle, color == null ? IntPtr.Zero : color.handle);
 		}
-		
-#if !XAMCORE_2_0
-		[Advice ("Use SetStrokeColor() instead.")]
-		public void SetStrokeColorWithColor (CGColor color)
-		{
-			SetStrokeColor (color);
-		}
-#endif
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGContextSetFillColorSpace (/* CGContextRef */ IntPtr context,
@@ -728,14 +712,6 @@ namespace CoreGraphics {
 			CGContextSetGrayFillColor (handle, gray, alpha);
 		}
 
-#if !XAMCORE_2_0
-		[Advice ("Use SetFillColor() instead.")]
-		public void SetGrayFillColor (nfloat gray, nfloat alpha)
-		{
-			CGContextSetGrayFillColor (handle, gray, alpha);
-		}
-#endif
-		
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGContextSetGrayStrokeColor (/* CGContextRef */ IntPtr context, /* CGFloat */ nfloat gray, /* CGFloat */ nfloat alpha);
 
@@ -744,14 +720,6 @@ namespace CoreGraphics {
 			CGContextSetGrayStrokeColor (handle, gray, alpha);
 		}
 		
-#if !XAMCORE_2_0
-		[Advice ("Use SetStrokeColor() instead.")]
-		public void SetGrayStrokeColor (nfloat gray, nfloat alpha)
-		{
-			CGContextSetGrayStrokeColor (handle, gray, alpha);
-		}
-#endif
-		
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGContextSetRGBFillColor (/* CGContextRef */ IntPtr context, /* CGFloat */ nfloat red, /* CGFloat */ nfloat green, /* CGFloat */ nfloat blue, /* CGFloat */ nfloat alpha);
 
@@ -759,14 +727,6 @@ namespace CoreGraphics {
 		{
 			CGContextSetRGBFillColor (handle, red, green, blue, alpha);
 		}
-		
-#if !XAMCORE_2_0
-		[Advice ("Use SetFillColor() instead.")]
-		public void SetRGBFillColor (nfloat red, nfloat green, nfloat blue, nfloat alpha)
-		{
-			CGContextSetRGBFillColor (handle, red, green, blue, alpha);
-		}
-#endif
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGContextSetRGBStrokeColor (/* CGContextRef */ IntPtr context, /* CGFloat */ nfloat red, /* CGFloat */ nfloat green, /* CGFloat */ nfloat blue, /* CGFloat */ nfloat alpha);
@@ -775,14 +735,6 @@ namespace CoreGraphics {
 		{
 			CGContextSetRGBStrokeColor (handle, red, green, blue, alpha);
 		}
-		
-#if !XAMCORE_2_0
-		[Advice ("Use SetStrokeColor() instead.")]
-		public void SetRGBStrokeColor (nfloat red, nfloat green, nfloat blue, nfloat alpha)
-		{
-			CGContextSetRGBStrokeColor (handle, red, green, blue, alpha);
-		}
-#endif
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGContextSetCMYKFillColor (/* CGContextRef */ IntPtr context, /* CGFloat */ nfloat cyan, /* CGFloat */ nfloat magenta, /* CGFloat */ nfloat yellow, /* CGFloat */ nfloat black, /* CGFloat */ nfloat alpha);
@@ -791,14 +743,6 @@ namespace CoreGraphics {
 		{
 			CGContextSetCMYKFillColor (handle, cyan, magenta, yellow, black, alpha);
 		}
-		
-#if !XAMCORE_2_0
-		[Advice ("Use SetFillColor() instead.")]
-		public void SetCMYKFillColor (nfloat cyan, nfloat magenta, nfloat yellow, nfloat black, nfloat alpha)
-		{
-			CGContextSetCMYKFillColor (handle, cyan, magenta, yellow, black, alpha);
-		}
-#endif
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGContextSetCMYKStrokeColor (/* CGContextRef */ IntPtr context, /* CGFloat */ nfloat cyan, /* CGFloat */ nfloat magenta, /* CGFloat */ nfloat yellow, /* CGFloat */ nfloat black, /* CGFloat */ nfloat alpha);
@@ -807,14 +751,6 @@ namespace CoreGraphics {
 		{
 			CGContextSetCMYKStrokeColor (handle, cyan, magenta, yellow, black, alpha);
 		}
-		
-#if !XAMCORE_2_0
-		[Advice ("Use SetStrokeColor() instead.")]
-		public void SetCMYKStrokeColor (nfloat cyan, nfloat magenta, nfloat yellow, nfloat black, nfloat alpha)
-		{
-			CGContextSetCMYKStrokeColor (handle, cyan, magenta, yellow, black, alpha);
-		}
-#endif
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGContextSetRenderingIntent (/* CGContextRef */ IntPtr context, CGColorRenderingIntent intent);
@@ -865,7 +801,6 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGContextSetShadow (IntPtr context, CGSize offset, nfloat blur);
 
-#if XAMCORE_2_0
 		public void SetShadow (CGSize offset, nfloat blur, CGColor color = null)
 		{
 			if (color == null)
@@ -873,17 +808,6 @@ namespace CoreGraphics {
 			else
 				CGContextSetShadowWithColor (handle, offset, blur, color.handle);
 		}
-#else
-		public void SetShadowWithColor (CGSize offset, nfloat blur, CGColor color)
-		{
-			CGContextSetShadowWithColor (handle, offset, blur, color == null ? IntPtr.Zero : color.handle);
-		}
-		
-		public void SetShadow (CGSize offset, nfloat blur)
-		{
-			CGContextSetShadow (handle, offset, blur);
-		}
-#endif
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGContextDrawLinearGradient (/* CGContextRef __nullable */ IntPtr context,
@@ -993,7 +917,6 @@ namespace CoreGraphics {
 			/* const CGGlyph * __nullable */ ushort [] glyphs,
 			/* const CGPoint * __nullable */ CGPoint [] positions, /* size_t */ nint count);
 
-#if XAMCORE_2_0
 		public void ShowGlyphsAtPositions (ushort [] glyphs, CGPoint [] positions, int count = -1)
 		{
 			if (glyphs == null)
@@ -1002,14 +925,6 @@ namespace CoreGraphics {
 				count = glyphs.Length;
 			CGContextShowGlyphsAtPositions (handle, glyphs, positions, count);
 		}
-#else
-		public void ShowGlyphsAtPositions (ushort [] glyphs, CGPoint [] positions, int size_t_count)
-		{
-			if (size_t_count < 0 || size_t_count > glyphs.Length)
-				throw new ArgumentException ("size_t_count");
-			CGContextShowGlyphsAtPositions (handle, glyphs, positions, size_t_count);
-		}
-#endif
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGContextShowText (/* CGContextRef */ IntPtr c, /* const char* __nullable */ string s, /* size_t */ nint length);
@@ -1343,13 +1258,6 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGContextBeginTransparencyLayer (/* CGContextRef */ IntPtr context, /* CFDictionaryRef __nullable */ IntPtr auxiliaryInfo);
 
-#if !XAMCORE_2_0
-		public void BeginTransparencyLayer ()
-		{
-			CGContextBeginTransparencyLayer (handle, IntPtr.Zero);
-		}
-#endif
-		
 		public void BeginTransparencyLayer (NSDictionary auxiliaryInfo = null)
 		{
 			CGContextBeginTransparencyLayer (handle, auxiliaryInfo == null ? IntPtr.Zero : auxiliaryInfo.Handle);
@@ -1362,13 +1270,6 @@ namespace CoreGraphics {
 		{
 			CGContextBeginTransparencyLayerWithRect (handle, rectangle, auxiliaryInfo == null ? IntPtr.Zero : auxiliaryInfo.Handle);
 		}
-
-#if !XAMCORE_2_0
-		public void BeginTransparencyLayer (CGRect rectangle)
-		{
-			CGContextBeginTransparencyLayerWithRect (handle, rectangle, IntPtr.Zero);
-		}
-#endif
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGContextEndTransparencyLayer (/* CGContextRef */ IntPtr context);

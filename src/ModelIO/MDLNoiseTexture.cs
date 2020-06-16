@@ -1,4 +1,3 @@
-#if XAMCORE_2_0 || !MONOMAC
 using System;
 using ObjCRuntime;
 using Vector2i = global::OpenTK.Vector2i;
@@ -34,4 +33,3 @@ namespace ModelIO {
 		}
 	}
 }
-#endif

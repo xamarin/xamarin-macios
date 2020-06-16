@@ -7,7 +7,7 @@
 // Copyright 2015, Xamarin Inc
 //
 
-#if !WATCH && XAMCORE_2_0
+#if !WATCH
 
 using System;
 using Foundation;

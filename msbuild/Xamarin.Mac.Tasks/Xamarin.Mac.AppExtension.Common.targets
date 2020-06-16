@@ -34,7 +34,7 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
 
 	<Target Name="_EnabledLocalSigning" DependsOnTargets="_DetectSigningIdentity">
 		<PropertyGroup>
-			<CodeSignEntitlements Condition="'$(CodeSignEntitlements)' == ''">Entitlements.plist</CodeSignEntitlements>
+			<CodesignEntitlements Condition="'$(CodesignEntitlements)' == ''">Entitlements.plist</CodesignEntitlements>
 		</PropertyGroup>
 	</Target>
 

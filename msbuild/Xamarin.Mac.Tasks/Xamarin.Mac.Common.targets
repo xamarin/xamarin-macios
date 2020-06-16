@@ -76,7 +76,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<_CanArchive Condition="'$(OutputType)' == 'Exe'">true</_CanArchive>
 
 		<_RequireProvisioningProfile>False</_RequireProvisioningProfile>
-		<_RequireProvisioningProfile Condition="'$(CodeSignProvision)' != ''">True</_RequireProvisioningProfile>
+		<_RequireProvisioningProfile Condition="'$(CodesignProvision)' != ''">True</_RequireProvisioningProfile>
 
 		<_PreparedResourceRules></_PreparedResourceRules>
 		<_AppBundleName>$(AssemblyName)</_AppBundleName>
@@ -211,14 +211,14 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			AppBundleDir="$(AppBundleDir)"
 			AppIdentifier="$(_AppIdentifier)"
 			BundleIdentifier="$(_BundleIdentifier)"
-			Entitlements="$(CodeSignEntitlements)"
+			Entitlements="$(CodesignEntitlements)"
 			CompiledEntitlements="$(IntermediateOutputPath)Entitlements.xcent"
 			IsAppExtension="$(IsAppExtension)"
 			ProvisioningProfile="$(_ProvisioningProfile)"
 			SdkVersion="$(_SdkVersion)"
 			SdkPlatform="MacOSX"
 			SdkDevPath="$(_SdkDevPath)"
-			Debug="$(DebugSymbols)"
+			Debug="$(_BundlerDebug)"
 			>
 		</CompileEntitlements>
 	</Target>
@@ -393,48 +393,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		</UnpackLibraryResources>
 	</Target>
 
-	<Target Name="_DetectSdkLocations" DependsOnTargets="_ComputeTargetFrameworkMoniker">
-		<DetectSdkLocations
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			SdkVersion="$(_SdkVersion)"
-			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
-			>
-			<Output TaskParameter="SdkVersion" PropertyName="_SdkVersion" />
-			<Output TaskParameter="SdkRoot" PropertyName="_SdkRoot" />
-			<Output TaskParameter="SdkBinPath" PropertyName="_SdkBinPath" />
-			<Output TaskParameter="SdkDevPath" PropertyName="_SdkDevPath" />
-			<Output TaskParameter="SdkUsrPath" PropertyName="_SdkUsrPath" />
-			<Output TaskParameter="SdkPlatform" PropertyName="_SdkPlatform" />
-			<Output TaskParameter="SdkIsSimulator" PropertyName="_SdkIsSimulator" />
-			<Output TaskParameter="IsXcode8" PropertyName="_IsXcode8" />
-			<Output TaskParameter="XamarinSdkRoot" PropertyName="_XamarinSdkRoot" />
-		</DetectSdkLocations>
-	</Target>
-
-	<Target Name="_DetectSigningIdentity" DependsOnTargets="_DetectAppManifest;_ComputeTargetFrameworkMoniker">
-		<DetectSigningIdentity
-			Condition="'$(IsMacEnabled)' == 'true'"
-			SessionId="$(BuildSessionId)"
-			AppBundleName="$(_AppBundleName)"
-			AppManifest="$(_AppManifest)"
-			Keychain="$(CodesignKeychain)"
-			RequireCodeSigning="$(_RequireCodeSigning)"
-			RequireProvisioningProfile="$(_RequireProvisioningProfile)"
-			SdkPlatform="MacOSX"
-			ProvisioningProfile="$(CodeSignProvision)"
-			SigningKey="$(CodeSigningKey)"
-			DetectedCodeSigningKey="$(_CodeSigningKey)"
-			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
-			>
-			<Output TaskParameter="DetectedAppId" PropertyName="_AppIdentifier" />
-			<Output TaskParameter="DetectedBundleId" PropertyName="_BundleIdentifier" />
-			<Output TaskParameter="DetectedCodeSigningKey" PropertyName="_CodeSigningKey" />
-			<Output TaskParameter="DetectedCodesignAllocate" PropertyName="_CodesignAllocate" />
-			<Output TaskParameter="DetectedProvisioningProfile" PropertyName="_ProvisioningProfile" />
-		</DetectSigningIdentity>
-	</Target>
-
 	<Target Name="_GenerateBundleName">
 		<PropertyGroup>
 			<AppBundleDir>$(OutputPath)$(_AppBundleName)$(AppBundleExtension)</AppBundleDir>
@@ -495,8 +453,8 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			Architecture="$(TargetArchitectures)"
 			ArchiveSymbols="$(MonoSymbolArchive)"
-			LinkMode="$(LinkMode)"
-			Debug="$(MmpDebug)"
+			LinkMode="$(_LinkMode)"
+			Debug="$(_BundlerDebug)"
 			HttpClientHandler="$(HttpClientHandler)"
 			I18n="$(I18n)"
 			Profiling="$(Profiling)"

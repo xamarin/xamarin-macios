@@ -45,7 +45,7 @@ namespace AudioToolbox {
 // also AudioSession has been removed from TVOS already and AVAudioSession has been around since iOS 3.0
 #if !XAMCORE_3_0
 #if !TVOS
-#if !MONOMAC || !XAMCORE_2_0 // AudioSession isn't an OS X API, but can't remove from compat
+#if !MONOMAC // AudioSession isn't an OS X API, but can't remove from compat
 	public class AudioSessionException : Exception {
 		static string Lookup (int k)
 		{
@@ -894,7 +894,7 @@ namespace AudioToolbox {
 			}
 		}
 	}
-#endif // !MONOMAC || !XAMCORE_2_0
+#endif // !MONOMAC
 #endif // !TVOS
 #endif // !XAMCORE_3_0
 }

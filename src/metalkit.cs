@@ -1,5 +1,4 @@
-#if XAMCORE_2_0 || !MONOMAC
-﻿using System;
+using System;
 using CoreAnimation;
 using CoreGraphics;
 using Foundation;
@@ -471,4 +470,3 @@ namespace MetalKit {
 		string Name { get; set; }
 	}
 }
-#endif

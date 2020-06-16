@@ -35,11 +35,7 @@ using System.Diagnostics;
 using Foundation;
 using CoreFoundation;
 
-#if XAMCORE_2_0
 using CFRunLoopModeString = global::Foundation.NSString;
-#else
-using CFRunLoopModeString = global::System.String;
-#endif
 
 namespace CFNetwork {
 

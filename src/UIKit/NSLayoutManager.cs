@@ -51,7 +51,7 @@ namespace UIKit {
 
 			fixed (short* glyphs = glyphBuffer) {
 				nuint rv;
-#if XAMCORE_2_0 && ARCH_32
+#if ARCH_32
 				// Unified/32: the output array is not the correct size, it needs to be int[], and it's an array of NSGlyphProperty (which is long)
 				nint[] tmpArray = null;
 				if (props != null)
@@ -67,7 +67,7 @@ namespace UIKit {
 						}
 					}
 				}
-#if XAMCORE_2_0 && ARCH_32
+#if ARCH_32
 				// Marshal back from the tmpArray.
 				if (tmpArray != null) {
 					for (int i = 0; i < props.Length; i++)

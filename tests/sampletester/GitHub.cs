@@ -8,11 +8,11 @@ using NUnit.Framework;
 using Xamarin.Tests;
 
 public static class GitHub {
-	public static string [] GetProjects (string user, string repo, string hash)
+	public static string [] GetProjects (string user, string repo, string hash, string default_branch)
 	{
 		IEnumerable<string> files;
 
-		var dir = CloneRepository (user, repo, hash);
+		var dir = CloneRepository (user, repo, hash, default_branch);
 		files = Directory.GetFiles (dir, "*.*", SearchOption.AllDirectories);
 		files = files.Select ((v) => v.Substring (dir.Length).TrimStart ('/'));
 
@@ -23,7 +23,7 @@ public static class GitHub {
 			}).ToArray ();
 	}
 
-	public static string CloneRepository (string org, string repo, string hash, bool clean = true)
+	public static string CloneRepository (string org, string repo, string hash, string default_branch, bool clean = true)
 	{
 		var repo_dir = Path.Combine (Configuration.SampleRootDirectory, repo);
 
@@ -36,14 +36,14 @@ public static class GitHub {
 			Assert.AreEqual (0, ExecutionHelper.Execute ("git", new string [] { "checkout", "-b", "temporary-sample-testing-branch", hash }, working_directory: repo_dir, timeout: TimeSpan.FromMinutes (1)), "git checkout");
 			Assert.AreEqual (0, ExecutionHelper.Execute ("git", new string [] { "submodule", "update", "--init", "--recursive" }, working_directory: repo_dir, timeout: TimeSpan.FromMinutes (10)), "git submodule update");
 
-			ExecutionHelper.Execute ("git", new string [] { "log", "--oneline", "--pretty=* @%h %s", "HEAD", "^origin/master" }, out var output1, working_directory: repo_dir, timeout: TimeSpan.FromSeconds (10));
+			ExecutionHelper.Execute ("git", new string [] { "log", "--oneline", "--pretty=* @%h %s", "HEAD", $"^origin/{default_branch}" }, out var output1, working_directory: repo_dir, timeout: TimeSpan.FromSeconds (10));
 			if (output1.Length > 0) {
-				Console.WriteLine ("Commits not in origin/master:");
+				Console.WriteLine ($"Commits not in origin/{default_branch}:");
 				Console.WriteLine (output1.ToString ().TrimEnd ('\n'));
 			}
-			ExecutionHelper.Execute ("git", new string [] { "log", "--oneline", "--pretty=* %h %s", "origin/master", "^HEAD" }, out var output2, working_directory: repo_dir, timeout: TimeSpan.FromSeconds (10));
+			ExecutionHelper.Execute ("git", new string [] { "log", "--oneline", "--pretty=* %h %s", $"origin/{default_branch}", "^HEAD" }, out var output2, working_directory: repo_dir, timeout: TimeSpan.FromSeconds (10));
 			if (output2.Length > 0) {
-				Console.WriteLine ("Commits in origin/master not being tested:");
+				Console.WriteLine ($"Commits in origin/{default_branch} not being tested:");
 				Console.WriteLine (output2.ToString ().TrimEnd ('\n'));
 			}
 

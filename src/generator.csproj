@@ -79,9 +79,6 @@
       <Variable name="XamarinMacFrameworkRoot" value="../_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/Current" />
     </EnvironmentVariables>
   </PropertyGroup>
-  <PropertyGroup>
-       <UpdateXlfOnBuild>true</UpdateXlfOnBuild>
-  </PropertyGroup>
   <ItemGroup>
     <None Include="..\docs\website\generator-errors.md">
       <Link>generator-errors.md</Link>

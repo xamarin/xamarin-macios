@@ -5,16 +5,6 @@ using ObjCRuntime;
 
 namespace CoreLocation {
 
-#if !XAMCORE_2_0
-	public partial class CLBeaconRegion {
-
-		[Obsolete ("Does not return a valid instance on iOS 8.")]
-		public CLBeaconRegion ()
-		{
-		}
-	}
-#endif
-
 #if !XAMCORE_4_0 && !WATCH
 
 #if !TVOS

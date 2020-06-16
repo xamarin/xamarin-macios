@@ -48,7 +48,7 @@ XMAC_ARCH = x86_64
 XMAC_PCH = macosx$(OSX_SDK_VERSION)-$(XMAC_ARCH).pch
 
 $(XMAC_PCH): .stamp-check-sharpie
-	sharpie sdk-db --xcode $(XCODE) -s macosx$(OSX_SDK_VERSION) -a $(XMAC_ARCH) -exclude DriverKit -exclude IOUSBHost -exclude NetworkingDriverKit -exclude USBDriverKit -exclude USBSerialDriverKit -exclude HIDDriverKit -exclude PCIDriverKit -exclude PDFKit
+	sharpie sdk-db --xcode $(XCODE) -s macosx$(OSX_SDK_VERSION) -a $(XMAC_ARCH)
 
 
 

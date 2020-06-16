@@ -582,53 +582,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</UnpackLibraryResources>
 	</Target>
 
-	<Target Name="_DetectSdkLocations" DependsOnTargets="_ComputeTargetArchitectures;_ComputeTargetFrameworkMoniker">
-		<DetectSdkLocations
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			SdkVersion="$(_SdkVersion)"
-			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
-			TargetArchitectures="$(TargetArchitectures)"
-			>
-			
-			<Output TaskParameter="SdkVersion" PropertyName="_SdkVersion" />
-			<Output TaskParameter="SdkRoot" PropertyName="_SdkRoot" />
-			<Output TaskParameter="SdkBinPath" PropertyName="_SdkBinPath" />
-			<Output TaskParameter="SdkDevPath" PropertyName="_SdkDevPath" />
-			<Output TaskParameter="SdkUsrPath" PropertyName="_SdkUsrPath" />
-			<Output TaskParameter="SdkPlatform" PropertyName="_SdkPlatform" />
-			<Output TaskParameter="SdkIsSimulator" PropertyName="_SdkIsSimulator" />
-			<Output TaskParameter="IsXcode8" PropertyName="_IsXcode8" />
-			<Output TaskParameter="XamarinSdkRoot" PropertyName="_XamarinSdkRoot" />
-		</DetectSdkLocations>
-	</Target>
-
-	<Target Name="_DetectSigningIdentity" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_ComputeTargetFrameworkMoniker">
-		<DetectSigningIdentity
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			AppBundleName="$(_AppBundleName)"
-			AppManifest="$(_AppManifest)"
-			Keychain="$(CodesignKeychain)"
-			RequireCodeSigning="$(_RequireCodeSigning)"
-			RequireProvisioningProfile="$(_RequireProvisioningProfile)"
-			SdkIsSimulator="$(_SdkIsSimulator)"
-			SdkPlatform="$(_SdkPlatform)"
-			ProvisioningProfile="$(CodesignProvision)"
-			SigningKey="$(CodesignKey)"
-			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
-			>
-
-			<Output TaskParameter="DetectedAppId" PropertyName="_AppIdentifier" />
-			<Output TaskParameter="DetectedBundleId" PropertyName="_BundleIdentifier" />
-			<Output TaskParameter="DetectedBundleVersion" PropertyName="_BundleVersion" />
-			<Output TaskParameter="DetectedCodeSigningKey" PropertyName="_CodeSigningKey" />
-			<Output TaskParameter="DetectedCodesignAllocate" PropertyName="_CodesignAllocate" />
-			<Output TaskParameter="DetectedDistributionType" PropertyName="_DistributionType" />
-			<Output TaskParameter="DetectedProvisioningProfile" PropertyName="_ProvisioningProfile" />
-		</DetectSigningIdentity>
-	</Target>
-	
 	<Target Name="_GenerateBundleName" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_ComputeTargetArchitectures;_GenerateAppBundleName;_GenerateAppExBundleName" />
 
 	<Target Name="_GenerateAppBundleName" Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsAppExtension)' != 'true'" DependsOnTargets="_ComputeTargetArchitectures">
@@ -684,7 +637,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			AppManifest="$(_AppManifest)"
 			AssemblyName="$(AssemblyName)"
 			BundleIdentifier="$(_BundleIdentifier)"
-			Debug="$(MtouchDebug)"
+			Debug="$(_BundlerDebug)"
 			DefaultSdkVersion="$(_SdkVersion)"
 			IsAppExtension="$(IsAppExtension)"
 			IsWatchApp="$(IsWatchApp)"
@@ -696,7 +649,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			SdkPlatform="$(_SdkPlatform)"
 			SdkIsSimulator="$(_SdkIsSimulator)"
 			DebugIPAddresses="$(_DebugIPAddresses)"
-			UseFakeWatchOS4_3Sdk="$(UseFakeWatchOS4_3Sdk)"
 			>
 		</CompileAppManifest>
 
@@ -797,7 +749,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			Architectures="$(TargetArchitectures)"
 			ExecutableName="$(_ExecutableName)"
 			CompiledEntitlements="$(_CompiledEntitlements)"
-			Debug="$(MtouchDebug)"
+			Debug="$(_BundlerDebug)"
 			ExtraArgs="$(MtouchExtraArgs)"
 			FastDev="$(MtouchFastDev)"
 			HttpClientHandler="$(MtouchHttpClientHandler)"
@@ -806,7 +758,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			IsAppExtension="$(IsAppExtension)"
 			LinkDescriptions="@(LinkDescription)"
 			LinkerDumpDependencies="$(MtouchLinkerDumpDependencies)"
-			LinkMode="$(MtouchLink)"
+			LinkMode="$(_LinkMode)"
 			MainAssembly="$(TargetPath)"
 			NativeReferences="@(NativeReference)"
 			OutputPath="$(DeviceSpecificOutputPath)"
@@ -1013,7 +965,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</SpotlightIndexer>
 	</Target>
 
-	<Target Name="_CreateDebugSettings" Condition="'$(MtouchDebug)' == 'true' And '$(IsWatchApp)' == 'false'"
+	<Target Name="_CreateDebugSettings" Condition="'$(_BundlerDebug)' == 'true' And '$(IsWatchApp)' == 'false'"
 		DependsOnTargets="_CopyResourcesToBundle"
 		Outputs="$(_AppBundlePath)Settings.bundle\Root.plist" >
 		<CreateDebugSettings
@@ -1025,7 +977,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</CreateDebugSettings>
 	</Target>
 
-	<Target Name="_CreateDebugConfiguration" Condition="'$(MtouchDebug)' == 'true' And '$(IsWatchApp)' == 'false'"
+	<Target Name="_CreateDebugConfiguration" Condition="'$(_BundlerDebug)' == 'true' And '$(IsWatchApp)' == 'false'"
 		DependsOnTargets="_CopyResourcesToBundle;_DetectDebugNetworkConfiguration"
 		Outputs="$(_AppBundlePath)MonoTouchDebugConfiguration.txt" >
 		<CreateDebugConfiguration
@@ -1758,7 +1710,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 		<PropertyGroup>
 			<_CodesignDisableTimestamp>False</_CodesignDisableTimestamp>
-			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(MtouchDebug)' == 'true'">True</_CodesignDisableTimestamp>
+			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(_BundlerDebug)' == 'true'">True</_CodesignDisableTimestamp>
 			<_LibraryCodeSigningKey>$(_CodeSigningKey)</_LibraryCodeSigningKey>
 			<_LibraryCodeSigningKey Condition="'$(_LibraryCodeSigningKey)' == ''">-</_LibraryCodeSigningKey>
 		</PropertyGroup>
@@ -1784,7 +1736,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 		<PropertyGroup>
 			<_CodesignDisableTimestamp>False</_CodesignDisableTimestamp>
-			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(MtouchDebug)' == 'true'">True</_CodesignDisableTimestamp>
+			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(_BundlerDebug)' == 'true'">True</_CodesignDisableTimestamp>
 			<_FrameworkCodeSigningKey>$(_CodeSigningKey)</_FrameworkCodeSigningKey>
 			<_FrameworkCodeSigningKey Condition="'$(_FrameworkCodeSigningKey)' == ''">-</_FrameworkCodeSigningKey>
 		</PropertyGroup>
@@ -1898,7 +1850,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			<_NativeExecutableFileName>$([System.IO.Path]::GetFileName('$(_NativeExecutable)'))</_NativeExecutableFileName>
 
 			<_CodesignDisableTimestamp>False</_CodesignDisableTimestamp>
-			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(MtouchDebug)' == 'true'">True</_CodesignDisableTimestamp>
+			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(_BundlerDebug)' == 'true'">True</_CodesignDisableTimestamp>
 
 			<_CodesignAppExtensionInputs>@(_AppExtensionBundleFiles);$(_EntitlementsFullPath)</_CodesignAppExtensionInputs>
 
@@ -1944,7 +1896,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 		<PropertyGroup>
 			<_CodesignDisableTimestamp>False</_CodesignDisableTimestamp>
-			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(MtouchDebug)' == 'true'">True</_CodesignDisableTimestamp>
+			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(_BundlerDebug)' == 'true'">True</_CodesignDisableTimestamp>
 		</PropertyGroup>
 
 		<Codesign
@@ -2105,7 +2057,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			<IsStreamable Condition="'$(EmbedOnDemandResources)' == 'false'">true</IsStreamable>
 
 			<_CodesignDisableTimestamp>False</_CodesignDisableTimestamp>
-			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(MtouchDebug)' == 'true'">True</_CodesignDisableTimestamp>
+			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(_BundlerDebug)' == 'true'">True</_CodesignDisableTimestamp>
 		</PropertyGroup>
 		
 		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(_IntermediateODRDir)" />

@@ -23,7 +23,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#if OPENTK_DLL || !XAMCORE_2_0
+#if OPENTK_DLL
 
 using System;
 
@@ -14553,4 +14553,4 @@ namespace OpenTK.Graphics.OpenGL
 
 }
 
-#endif // !XAMCORE_2_0
+#endif // OPENTK_DLL

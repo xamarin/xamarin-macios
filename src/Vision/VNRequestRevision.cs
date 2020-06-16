@@ -7,8 +7,6 @@
 // Copyright 2018 Microsoft Corporation.
 //
 
-#if XAMCORE_2_0
-
 using System;
 using Foundation;
 using ObjCRuntime;
@@ -40,4 +38,3 @@ namespace Vision {
 		}
 	}
 }
-#endif

@@ -1,13 +1,9 @@
-﻿using Microsoft.Build.Framework;
-using Microsoft.Build.Utilities;
-
 using Xamarin.MacDev;
 using Xamarin.MacDev.Tasks;
-using Xamarin.Utils;
 
 namespace Xamarin.iOS.Tasks
 {
-	public abstract class DetectSigningIdentityTaskBase : Xamarin.MacDev.Tasks.DetectSigningIdentityTaskBase
+	public abstract class DetectSigningIdentityTaskCore : DetectSigningIdentityTaskBase
 	{
 		static readonly string[] directDistributionPrefixes = new string[0];
 
@@ -18,3 +14,4 @@ namespace Xamarin.iOS.Tasks
 		protected override string ApplicationIdentifierKey { get { return "application-identifier"; } }
 	}
 }
+

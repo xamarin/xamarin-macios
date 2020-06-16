@@ -7,8 +7,6 @@
 // Copyright 2016 Xamarin Inc. All rights reserved.
 //
 
-#if XAMCORE_2_0 // The Intents framework uses generics which is only supported in Unified
-
 using System;
 using System.ComponentModel;
 using CoreGraphics;
@@ -12828,4 +12826,3 @@ namespace Intents {
 		INIntent GetIntent ();
 	}
 }
-#endif // XAMCORE_2_0

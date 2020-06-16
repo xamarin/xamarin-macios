@@ -7,7 +7,7 @@
 // Copyright 2014 Xamarin Inc. All rights reserved.
 //
 
-#if (XAMCORE_2_0 || !MONOMAC) && !WATCH
+#if !WATCH
 
 using System;
 using System.Runtime.InteropServices;

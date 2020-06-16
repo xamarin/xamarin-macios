@@ -24,9 +24,6 @@ namespace CoreGraphics {
 		public delegate IntPtr CGEventTapCallback (IntPtr tapProxyEvent, CGEventType eventType, IntPtr eventRef, IntPtr userInfo);
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
-#if !XAMCORE_2_0 // Accidently exposed this to public, can't break API
-		public
-#endif
 		extern static IntPtr CGEventTapCreate (CGEventTapLocation location, CGEventTapPlacement place, CGEventTapOptions options, CGEventMask mask, CGEventTapCallback cback, IntPtr data);
 
 		public static CFMachPort CreateTap (CGEventTapLocation location, CGEventTapPlacement place, CGEventTapOptions options, CGEventMask mask, CGEventTapCallback cback, IntPtr data)

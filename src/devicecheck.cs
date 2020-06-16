@@ -8,7 +8,6 @@
 // Copyright 2019 Microsoft Corporation.
 //
 
-#if XAMCORE_2_0
 using System;
 using ObjCRuntime;
 using Foundation;
@@ -46,4 +45,3 @@ namespace DeviceCheck {
 		void GenerateToken (DCDeviceGenerateTokenCompletionHandler completion);
 	}
 }
-#endif

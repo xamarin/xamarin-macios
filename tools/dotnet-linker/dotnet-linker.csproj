@@ -6,4 +6,9 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.ILLink" Version="5.0.0-preview.3.20302.1" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\common\ApplePlatform.cs">
+      <Link>ApplePlatform.cs</Link>
+    </Compile>
+</ItemGroup>
 </Project>

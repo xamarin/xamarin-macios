@@ -24,8 +24,6 @@
 // Copyright 2013 Xamarin, Inc. All rights reserved.
 //
 
-#if XAMCORE_2_0
-
 <#@ template language="C#v3.5" #>
 <#@ import namespace="System" #>
 <#@ import namespace="System.Collections.Generic" #>
@@ -431,5 +429,3 @@ namespace System
 	}
 <# } #>
 }
-
-#endif

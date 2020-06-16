@@ -7,8 +7,6 @@
 // Copyright 2018-2019 Microsoft Corporation. All rights reserved.
 //
 
-#if XAMCORE_2_0
-
 using System;
 using Foundation;
 using ObjCRuntime;
@@ -1011,4 +1009,3 @@ namespace CarPlay {
 		UIWindow DashboardWindow { get; }
 	}
 }
-#endif // XAMCORE_2_0

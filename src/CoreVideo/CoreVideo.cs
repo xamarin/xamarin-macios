@@ -146,11 +146,7 @@ namespace CoreVideo {
 
 	[Flags]
 	[Watch (4,0)]
-#if XAMCORE_2_0
 	public enum CVTimeStampFlags : ulong {
-#else
-	public enum CVTimeStampFlags {
-#endif
 		VideoTimeValid              = (1 << 0),
 		HostTimeValid               = (1 << 1),
 		SMPTETimeValid              = (1 << 2),

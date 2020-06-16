@@ -283,15 +283,6 @@ namespace CoreGraphics {
 			return new CTFont (CTFontCreateWithGraphicsFont (handle, size, null, IntPtr.Zero), true);
 		}
 
-#if !XAMCORE_2_0
-		[Obsolete ("Use ToCTFont(GCFloat,CGAffineTransform)")]
-		public unsafe CTFont ToCTFont (nfloat size, ref CGAffineTransform matrix)
-		{
-			CGAffineTransform m = matrix;
-			return new CTFont (CTFontCreateWithGraphicsFont (handle, size, &m, IntPtr.Zero), true);
-		}
-#endif // !XAMCORE_2_0
-
 		public unsafe CTFont ToCTFont (nfloat size, CGAffineTransform matrix)
 		{
 			return new CTFont (CTFontCreateWithGraphicsFont (handle, size, &matrix, IntPtr.Zero), true);

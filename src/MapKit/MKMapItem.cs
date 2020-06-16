@@ -5,7 +5,7 @@
 // Copyright 2011-2014 Xamarin Inc.
 //
 
-#if !TVOS && (XAMCORE_2_0 || !MONOMAC)
+#if !TVOS
 
 using Foundation;
 using CoreLocation;

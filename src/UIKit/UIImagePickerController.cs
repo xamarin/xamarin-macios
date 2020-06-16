@@ -19,27 +19,6 @@ using System.Drawing;
 
 namespace UIKit {
 	public partial class UIImagePickerController {
-
-// the newer (4.1 fields) are defined in uikit.cs
-#if !XAMCORE_2_0
-		public readonly static NSString MediaType;
-		public readonly static NSString OriginalImage;
-		public readonly static NSString EditedImage;
-		public readonly static NSString CropRect;
-		public readonly static NSString MediaURL;
-		
-		static UIImagePickerController ()
-		{
-			var handle = Libraries.UIKit.Handle;
-
-			MediaType  = Dlfcn.GetStringConstant (handle, "UIImagePickerControllerMediaType");
-			OriginalImage = Dlfcn.GetStringConstant (handle, "UIImagePickerControllerOriginalImage");
-			EditedImage = Dlfcn.GetStringConstant (handle, "UIImagePickerControllerEditedImage");
-			CropRect = Dlfcn.GetStringConstant (handle, "UIImagePickerControllerCropRect");
-			MediaURL = Dlfcn.GetStringConstant (handle, "UIImagePickerControllerMediaURL");
-		}
-#endif
-		
 		//
 		// The following construct emulates the support for:
 		// id<UINavigationControllerDelegate, UIImagePickerControllerDelegate>

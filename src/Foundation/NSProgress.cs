@@ -1,4 +1,4 @@
-#if !COREBUILD && XAMCORE_2_0
+#if !COREBUILD
 using System;
 using Foundation;
 using ObjCRuntime;

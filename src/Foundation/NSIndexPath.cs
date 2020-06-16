@@ -17,18 +17,6 @@ using ObjCRuntime;
 namespace Foundation {
 
 	public partial class NSIndexPath {
-#if !XAMCORE_2_0
-		[Advice ("Use 'NSIndexPath.Create (int[])' instead.")]
-		public unsafe NSIndexPath FromIndexes (uint [] indexes)
-		{
-			if (indexes == null)
-				throw new ArgumentNullException ("indexes");
-
-			fixed (uint* ptr = indexes)
-				return _FromIndex ((IntPtr) ptr, indexes.Length);
-		}
-#endif
-
 		public unsafe static NSIndexPath Create (params nint [] indexes)
 		{
 			if (indexes == null)
@@ -47,7 +35,6 @@ namespace Foundation {
 				return _FromIndex ((IntPtr) ptr, indexes.Length);
 		}
 		
-#if XAMCORE_2_0
 		public unsafe static NSIndexPath Create (params int [] indexes)
 		{
 			if (indexes == null)
@@ -75,7 +62,6 @@ namespace Foundation {
 
 				return _FromIndex ((IntPtr) ptr, indexes.Length);
 		}
-#endif
 
 		public unsafe nuint [] GetIndexes ()
 		{
@@ -93,31 +79,5 @@ namespace Foundation {
 				_GetIndexes ((IntPtr) ptr, range);
 			return ret;
 		}
-
-#if !XAMCORE_2_0
-		// in unified NSObject has the correct logic to handle Equals and GetHashCode correctly
-		public override bool Equals (object obj)
-		{
-			if (obj == null)
-				return false;
-
-			NSIndexPath other = obj as NSIndexPath;
-			if (other == null)
-				return false;
-
-			if ((object) other == (object) this)
-				return true;
-
-			if (other.Handle == Handle)
-				return true;
-
-			return Compare (other) == 0;
-		}
-
-		public override int GetHashCode ()
-		{
-			return Length.GetHashCode ();
-		}
-#endif
 	}
 }

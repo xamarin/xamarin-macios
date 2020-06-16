@@ -251,12 +251,7 @@ namespace CoreBluetooth {
 	interface AdvertisementData {
 		string LocalName { get; set; }
 		NSData ManufacturerData { get; set; }
-		
-#if XAMCORE_2_0
 		NSDictionary <CBUUID, NSData> ServiceData { get; set; }
-#else
-		NSDictionary ServiceData { get; set; }
-#endif
 		CBUUID [] ServiceUuids { get; set; }
 		CBUUID [] OverflowServiceUuids { get; set; }
 		NSNumber TxPowerLevel { get; set; }
@@ -429,11 +424,6 @@ namespace CoreBluetooth {
 
 		[Export ("service", ArgumentSemantic.Weak)]
 		CBService Service { get; }
-
-#if !XAMCORE_2_0
-		[iOS (7,0), Export ("subscribedCentrals"), Mac (10,9)]
-		CBCentral [] SubscribedCentrals { get; }
-#endif
 	}
 
 	[Watch (4,0)]
@@ -467,10 +457,8 @@ namespace CoreBluetooth {
 		[Override]
 		CBDescriptor [] Descriptors { get; set; }
 
-#if XAMCORE_2_0
 		[iOS (7,0), Export ("subscribedCentrals"), Mac (10,9)]
 		CBCentral [] SubscribedCentrals { get; }
-#endif
 	}
 
 	[Watch (4,0)]
@@ -563,12 +551,6 @@ namespace CoreBluetooth {
 		[Export ("maximumWriteValueLengthForType:")]
 		nuint GetMaximumWriteValueLength (CBCharacteristicWriteType type);
 
-#if !XAMCORE_2_0
-		[Availability (Deprecated = Platform.iOS_7_0, Obsoleted = Platform.iOS_9_0)]
-		[Export ("UUID")]
-		System.IntPtr UUID { get; }
-#endif
-
 		[iOS (7,0), Mac (10,9)]
 		[Export ("state")]
 		CBPeripheralState State { get; }
@@ -609,11 +591,10 @@ namespace CoreBluetooth {
 		void DiscoveredIncludedService  (CBPeripheral peripheral, CBService service, NSError error);
 
 		[Export ("peripheral:didDiscoverCharacteristicsForService:error:"), EventArgs ("CBService")]
-#if XAMCORE_2_0
-		// FIXME: TYPO: missing 's' (plural)
-		void DiscoveredCharacteristic (CBPeripheral peripheral, CBService service, NSError error);
+#if XAMCORE_4_0
+		void DiscoveredCharacteristics (CBPeripheral peripheral, CBService service, NSError error);
 #else
-		void DiscoverCharacteristic (CBPeripheral peripheral, CBService service, NSError error);
+		void DiscoveredCharacteristic (CBPeripheral peripheral, CBService service, NSError error);
 #endif
 		
 		[Export ("peripheral:didUpdateValueForCharacteristic:error:"), EventArgs ("CBCharacteristic")]
@@ -846,12 +827,6 @@ namespace CoreBluetooth {
 	// `delloc` a default instance crash applications and a default instance, without the ability to change the UUID, does not make sense
 	[DisableDefaultCtor]
 	interface CBCentral : NSCopying {
-#if !XAMCORE_2_0
-		[Export ("UUID")]
-		[Availability (Deprecated = Platform.iOS_7_0, Obsoleted = Platform.iOS_9_0)]
-		IntPtr UUID { get; }
-#endif
-
 #if MONOMAC
 		// Introduced with iOS7, but does not have NS_AVAILABLE
 		// Moved to a new base class, CBPeer, in iOS 8.

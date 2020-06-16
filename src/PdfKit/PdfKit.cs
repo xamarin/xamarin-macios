@@ -3,7 +3,6 @@ using System;
 using CoreGraphics;
 using Foundation;
 
-#if XAMCORE_2_0
 namespace PdfKit {
 	partial class PdfBorder {
 		nfloat [] DashPattern {
@@ -55,4 +54,3 @@ namespace PdfKit {
 	}
 #endif // !IOS
 }
-#endif

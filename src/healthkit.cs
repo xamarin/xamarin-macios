@@ -73,12 +73,9 @@ namespace HealthKit {
 	}
 
 	delegate void HKAnchoredObjectResultHandler2 (HKAnchoredObjectQuery query, HKSample[] results, nuint newAnchor, NSError error);
-#if XAMCORE_2_0
+
 	[Obsolete ("Use HKAnchoredObjectResultHandler2 instead")]
 	delegate void HKAnchoredObjectResultHandler (HKAnchoredObjectQuery query, HKSampleType[] results, nuint newAnchor, NSError error);
-#else
-	delegate void HKAnchoredObjectResultHandler (HKAnchoredObjectQuery query, NSObject[] results, nuint newAnchor, NSError error);
-#endif
 
 	delegate void HKAnchoredObjectUpdateHandler (HKAnchoredObjectQuery query, HKSample[] addedObjects, HKDeletedObject[] deletedObjects, HKQueryAnchor newAnchor, NSError error);
 
@@ -91,9 +88,7 @@ namespace HealthKit {
 	interface HKAnchoredObjectQuery {
 
 		[NoWatch]
-#if XAMCORE_2_0
 		[Obsolete ("Use the overload that takes HKAnchoredObjectResultHandler2 instead")]
-#endif
 		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_9_0)]
 		[Export ("initWithType:predicate:anchor:limit:completionHandler:")]
 		IntPtr Constructor (HKSampleType type, [NullAllowed] NSPredicate predicate, nuint anchor, nuint limit, HKAnchoredObjectResultHandler completion);
@@ -1040,9 +1035,7 @@ namespace HealthKit {
 	[iOS (8,0)]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: The -init method is not available on HKSampleType
 	[BaseType (typeof (HKObjectType))]
-#if XAMCORE_2_0
 	[Abstract] // The HKSampleType class is an abstract subclass of the HKObjectType class, used to represent data samples. Never instantiate an HKSampleType object directly. Instead, you should always work with one of its concrete subclasses [...]
-#endif
 	interface HKSampleType {
 		[iOS (13,0), Watch (6,0)]
 		[Export ("isMaximumDurationRestricted")]
@@ -1097,12 +1090,7 @@ namespace HealthKit {
 		bool IsCompatible (HKUnit unit);
 	}
 
-#if XAMCORE_2_0
 	delegate void HKObserverQueryUpdateHandler (HKObserverQuery query, [BlockCallback] Action completion, NSError error);
-#else
-	delegate void HKObserverQueryCompletionHandler ();
-	delegate void HKObserverQueryUpdateHandler (HKObserverQuery query, [BlockCallback] HKObserverQueryCompletionHandler completion, NSError error);
-#endif
 
 	[Watch (2,0)]
 	[iOS (8,0)]

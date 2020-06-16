@@ -7,8 +7,6 @@
 // Copyright 2016 Xamarin Inc. All rights reserved.
 //
 
-#if XAMCORE_2_0 // The IntentsUI framework relies on Intents which is only available in Unified
-
 using System;
 using CoreGraphics;
 using Foundation;
@@ -216,5 +214,3 @@ namespace IntentsUI {
 		void PresentEditVoiceShortcut (INUIEditVoiceShortcutViewController editVoiceShortcutViewController, INUIAddVoiceShortcutButton addVoiceShortcutButton);
 	}
 }
-
-#endif

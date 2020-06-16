@@ -146,11 +146,7 @@ namespace UIKit {
 		public static UIFloatRange Zero;
 
 		[Field ("UIFloatRangeInfinite")] // fake (but helps testing and could also help documentation)
-#if !XAMCORE_2_0
-		public static UIFloatRange Infinite = new UIFloatRange (float.NegativeInfinity, float.PositiveInfinity);
-#else
 		public static UIFloatRange Infinite = new UIFloatRange (nfloat.NegativeInfinity, nfloat.PositiveInfinity);
-#endif
 	}
 #endif
 	

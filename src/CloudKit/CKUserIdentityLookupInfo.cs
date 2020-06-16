@@ -6,8 +6,6 @@ using System.Collections.Generic;
 
 namespace CloudKit
 {
-#if XAMCORE_2_0
-
 	public partial class CKUserIdentityLookupInfo
 	{
 		// extra parameter to get a unique signature for a string argument
@@ -31,5 +29,4 @@ namespace CloudKit
 			return new CKUserIdentityLookupInfo (phoneNumber, 1);
 		}
 	}
-#endif
 }

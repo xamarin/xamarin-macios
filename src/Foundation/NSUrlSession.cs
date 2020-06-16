@@ -3,46 +3,8 @@ using System;
 using System.IO;
 
 namespace Foundation {
-#if !XAMCORE_2_0
-	public partial class NSUrlSession {
-
-		NSUrlDownloadSessionResponse GetCompletionHandler (NSUrlSessionResponse completionHandler)
-		{
-			if (completionHandler == null)
-				return null;
-			// we can't return an NSData so we return null - just in case existing code did not use it (e.g. only error)
-			return delegate (NSUrl location, NSUrlResponse response, NSError error) {
-				completionHandler (null, response, error);
-			};
-		}
-
-		[Obsolete ("Use the override that accept an 'NSUrlDownloadSessionResponse' parameter.")]
-		public virtual NSUrlSessionDownloadTask CreateDownloadTask (NSUrlRequest request, NSUrlSessionResponse completionHandler)
-		{
-			return CreateDownloadTask (request, GetCompletionHandler (completionHandler));
-		}
-
-		[Obsolete ("Use the override that accept an 'NSUrlDownloadSessionResponse' parameter.")]
-		public virtual NSUrlSessionDownloadTask CreateDownloadTask (NSUrl url, NSUrlSessionResponse completionHandler)
-		{
-			return CreateDownloadTask (url, GetCompletionHandler (completionHandler));
-		}
-
-		[Obsolete ("Use the override that accept an 'NSUrlDownloadSessionResponse' parameter.")]
-		public virtual NSUrlSessionDownloadTask CreateDownloadTaskFromResumeData (NSData resumeData, NSUrlSessionResponse completionHandler)
-		{
-			return CreateDownloadTaskFromResumeData (resumeData, GetCompletionHandler (completionHandler));
-		}
-	}
-#endif
-
 	public partial class NSUrlSessionDownloadTaskRequest : IDisposable {
 		string tmpfile;
-
-#if !XAMCORE_2_0
-		[Obsolete ("Use the Location property")]
-		public NSData Data { get; set; }
-#endif
 
 		partial void Initialize ()
 		{

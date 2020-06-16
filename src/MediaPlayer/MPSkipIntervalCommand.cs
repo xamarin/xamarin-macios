@@ -12,7 +12,6 @@ using Foundation;
 using ObjCRuntime;
 
 namespace MediaPlayer {
-#if XAMCORE_2_0
 	public partial class MPSkipIntervalCommand {
 		public double[] PreferredIntervals {
 			get {
@@ -36,5 +35,4 @@ namespace MediaPlayer {
 			}
 		}
 	}
-#endif
 }

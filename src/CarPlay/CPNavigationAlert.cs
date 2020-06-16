@@ -11,7 +11,6 @@ using System;
 using Foundation;
 using ObjCRuntime;
 
-#if XAMCORE_2_0
 namespace CarPlay {
 	public partial class CPNavigationAlert {
 		// Defined inside CPNavigationAlert.h
@@ -19,4 +18,3 @@ namespace CarPlay {
 		public const double MinimumDuration = 5;
 	}
 }
-#endif // XAMCORE_2_0

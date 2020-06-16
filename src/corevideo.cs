@@ -7,7 +7,7 @@
 using System;
 using Foundation;
 using ObjCRuntime;
-#if XAMCORE_2_0 && !WATCH
+#if !WATCH
 using Metal;
 #endif
 
@@ -20,7 +20,6 @@ namespace CoreVideo {
 		NSString ThresholdKey { get; }
 	}
 
-#if XAMCORE_2_0
 	[Partial]
 	interface CVBuffer {
 
@@ -407,7 +406,7 @@ namespace CoreVideo {
 		[Field ("kCVPixelBufferPlaneAlignmentKey")]
 		NSString PlaneAlignmentKey { get; }
 
-#if !MONOMAC || !XAMCORE_2_0
+#if !MONOMAC
 		[NoWatch]
 		[Field ("kCVPixelBufferOpenGLESCompatibilityKey")]
 		NSString OpenGLESCompatibilityKey { get; }
@@ -476,5 +475,4 @@ namespace CoreVideo {
 	interface CVMetalTextureAttributes {
 		// Create stub DictionaryContainer class
 	}
-#endif
 }

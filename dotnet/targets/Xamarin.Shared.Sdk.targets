@@ -55,6 +55,12 @@
 
 		<!-- App extensions are self-contained, even though their OutputType=Library -->
 		<SelfContained Condition="'$(SelfContained)' == '' And $(_ProjectType.EndsWith ('AppExtensionProject'))">true</SelfContained>
+
+		<!-- Add a property that specifies the name of the platform assembly for each platform -->
+		<_PlatformAssemblyName Condition=" '$(_PlatformName)' == 'iOS' ">Xamarin.iOS</_PlatformAssemblyName>
+		<_PlatformAssemblyName Condition=" '$(_PlatformName)' == 'tvOS' ">Xamarin.TVOS</_PlatformAssemblyName>
+		<_PlatformAssemblyName Condition=" '$(_PlatformName)' == 'watchOS' ">Xamarin.WatchOS</_PlatformAssemblyName>
+		<_PlatformAssemblyName Condition=" '$(_PlatformName)' == 'macOS' ">Xamarin.Mac</_PlatformAssemblyName>
 	</PropertyGroup>
 
 	<Import Sdk="Microsoft.NET.Sdk" Project="Sdk.targets" />
@@ -73,6 +79,8 @@
 		<!-- We re-use ComputeFilesToPublish & CopyFilesToPublishDirectory to copy files to the .app -->
 		<!-- ComputeFilesToPublish will run ILLink -->
 		<CreateAppBundleDependsOn>
+			_DetectAppManifest;
+			_CompileAppManifest;
 			_ComputeLinkerArguments;
 			ComputeFilesToPublish;
 			_ComputePublishLocation;
@@ -86,6 +94,18 @@
 		<_AdditionalTaskAssembly>$(_AdditionalTaskAssemblyDirectory)dotnet-linker.dll</_AdditionalTaskAssembly>
 	</PropertyGroup>
 	<Target Name="_ComputeLinkerArguments">
+		<PropertyGroup>
+			<!-- Pass the custom options to our custom steps -->
+			<_CustomLinkerOptionsFile>$([System.IO.Path]::GetFullPath('$(IntermediateOutputPath)custom-linker-options.txt'))</_CustomLinkerOptionsFile>
+			<_CustomLinkerOptions>
+				Platform=$(_PlatformName)
+				PlatformAssembly=$(_PlatformAssemblyName).dll
+			</_CustomLinkerOptions>
+			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) --custom-data "LinkerOptionsFile=$(_CustomLinkerOptionsFile)"</_ExtraTrimmerArgs>
+
+			<!-- Verbose output, so that we get something to stdout when something goes wrong -->
+			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) --verbose</_ExtraTrimmerArgs>
+		</PropertyGroup>
 		<ItemGroup>
 			<!-- add our custom steps -->
 			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)">
@@ -93,6 +113,9 @@
 				<Type>Xamarin.SetupStep</Type>
 			</_TrimmerCustomSteps>
 		</ItemGroup>
+
+		<!-- Create the file with our custom linker options -->
+		<WriteLinesToFile File="$(_CustomLinkerOptionsFile)" Lines="$(_CustomLinkerOptions)" Overwrite="true" />
 	</Target>
 
 	<Target Name="_ComputePublishLocation" DependsOnTargets="_GenerateBundleName">

@@ -169,12 +169,7 @@ get_mono_env_options (int *count)
 			while (*inptr && !isblank ((int) *inptr & 0xff))
 				inptr++;
 
-			// Note: Mac OS X <= 10.6.8 do not have strndup()
-			//value = strndup ((char *) start, (size_t) (inptr - start));
-			size = (size_t) (inptr - start);
-			value = (char *) malloc (size + 1);
-			memcpy (value, start, size);
-			value[size] = '\0';
+			value = strndup ((char *) start, (size_t) (inptr - start));
 			break;
 		}
 
@@ -245,7 +240,7 @@ exit_with_message (const char *reason, const char *argv0, bool request_mono)
 	[alert release];
 	
 	if (request_mono && answer == NSAlertFirstButtonReturn) {
-		NSString *mono_download_url = @"http://www.mono-project.com/download/stable/";
+		NSString *mono_download_url = @"https://www.mono-project.com/download/stable/";
 		CFURLRef url = CFURLCreateWithString (NULL, (CFStringRef) mono_download_url, NULL);
 		LSOpenCFURLRef (url, NULL);
 		CFRelease (url);

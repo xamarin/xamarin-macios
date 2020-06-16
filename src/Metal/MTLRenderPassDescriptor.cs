@@ -1,4 +1,4 @@
-#if XAMCORE_2_0 && !COREBUILD
+#if !COREBUILD
 using System;
 
 namespace Metal {

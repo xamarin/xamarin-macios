@@ -1,6 +1,6 @@
 namespace Xamarin.iOS.Tasks
 {
-	public class DetectSigningIdentity : DetectSigningIdentityTaskBase
+	public class DetectSigningIdentity : DetectSigningIdentityTaskCore
 	{
 	}
 }

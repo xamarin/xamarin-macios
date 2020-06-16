@@ -89,6 +89,8 @@ void monotouch_dump_objc_api (Class klass);
 static struct timeval wait_tv;
 static struct timespec wait_ts;
 
+#if TARGET_OS_WATCH && !TARGET_OS_SIMULATOR
+
 static NSURLSessionConfiguration *http_session_config = NULL;
 static volatile int http_connect_counter = 0;
 
@@ -373,6 +375,8 @@ xamarin_http_send (void *c)
 	}
 }
 @end /* XamarinHttpConnection */
+
+#endif // TARGET_OS_WATCH && !TARGET_OS_SIMULATOR
 
 void
 monotouch_set_connection_mode (const char *mode)
@@ -696,8 +700,10 @@ void monotouch_configure_debugging ()
 				monotouch_connect_usb ();
 			} else if (debugging_mode == DebuggingModeWifi) {
 				monotouch_connect_wifi (hosts);
+#if TARGET_OS_WATCH && !TARGET_OS_SIMULATOR
 			} else if (debugging_mode == DebuggingModeHttp) {
 				xamarin_connect_http (hosts);
+#endif
 			}
 		}
 	}
@@ -791,6 +797,8 @@ static ssize_t sdb_recv (void *buf, size_t len)
 	return rv;
 }
 
+#if TARGET_OS_WATCH && !TARGET_OS_SIMULATOR
+
 static XamarinHttpConnection *connected_connection = NULL;
 static NSString *connected_ip = NULL;
 static pthread_cond_t connected_event = PTHREAD_COND_INITIALIZER;
@@ -873,6 +881,8 @@ xamarin_connect_http (NSMutableArray *ips)
 
 	return;
 }
+
+#endif // TARGET_OS_WATCH && !TARGET_OS_SIMULATOR
 
 void
 monotouch_connect_wifi (NSMutableArray *ips)

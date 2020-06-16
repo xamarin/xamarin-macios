@@ -293,11 +293,7 @@ namespace SceneKit {
 		None	= 0,
 		Default	= 1 << 0,
 		Static	= 1 << 1,
-#if XAMCORE_2_0
 		All		= UInt64.MaxValue
-#else
-		All		= UInt32.MaxValue
-#endif
 	}
 
 	[Watch (3,0)]

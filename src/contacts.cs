@@ -15,8 +15,6 @@ using Foundation;
 
 namespace Contacts {
 
-#if XAMCORE_2_0 // The Contacts framework uses generics heavily, which is only supported in Unified (for now at least)
-
 	interface ICNKeyDescriptor {}
 
 	[iOS (9,0), Mac (10,11)]
@@ -2333,7 +2331,4 @@ namespace Contacts {
 		[Field ("CNSocialProfileServiceGameCenter")]
 		NSString GameCenter { get; }
 	}
-#endif // XAMCORE_2_0
 }
-
-

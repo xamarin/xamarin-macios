@@ -13,32 +13,6 @@ using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.iOS.Tasks
 {
-	[Flags]
-	enum TargetArchitecture
-	{
-		Default      = 0,
-
-		i386         = 1,
-		x86_64       = 2,
-
-		ARMv6        = 4,
-		ARMv7        = 8,
-		ARMv7s       = 16,
-		ARMv7k       = 32,
-		ARM64        = 64,
-		ARM64_32     = 128,
-
-		// Note: needed for backwards compatability
-		ARMv6_ARMv7  = ARMv6 | ARMv7,
-	}
-
-	enum NativeReferenceKind
-	{
-		Static,
-		Dynamic,
-		Framework
-	}
-
 	public abstract class MTouchTaskBase : BundlerToolTaskBase
 	{
 		class GccOptions
@@ -286,9 +260,6 @@ namespace Xamarin.iOS.Tasks
 			}
 			
 			args.AddQuotedLine ((SdkIsSimulator ? "--sim=" : "--dev=") + Path.GetFullPath (AppBundleDir));
-
-			if (AppleSdkSettings.XcodeVersion.Major >= 5 && IPhoneSdks.MonoTouch.Version.CompareTo (new IPhoneSdkVersion (6, 3, 7)) < 0)
-				args.AddLine ("--compiler=clang");
 
 			args.AddQuotedLine ($"--executable={ExecutableName}");
 
@@ -573,7 +544,7 @@ namespace Xamarin.iOS.Tasks
 		{
 			// It may have been resolved to an existing local full path
 			// already, such as when building from XS on the Mac.
-			if (File.Exists (fullName))
+			if (Path.IsPathRooted (fullName) && File.Exists (fullName))
 				return fullName;
 
 			var frameworkDir = TargetFramework.Identifier;

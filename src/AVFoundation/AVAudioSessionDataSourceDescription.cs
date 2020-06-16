@@ -6,7 +6,7 @@
 using Foundation;
 using ObjCRuntime;
 using System;
-#if XAMCORE_2_0 && !MONOMAC
+#if !MONOMAC
 
 namespace AVFoundation {
 	public enum AVAudioDataSourceLocation {

@@ -1,5 +1,3 @@
-﻿#if XAMCORE_2_0 || !MONOMAC
-
 using System;
 
 namespace AudioUnit
@@ -37,4 +35,3 @@ namespace AudioUnit
 	}
 }
 
-#endif

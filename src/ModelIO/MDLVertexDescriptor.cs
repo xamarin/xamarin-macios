@@ -1,5 +1,4 @@
-﻿#if XAMCORE_2_0 || !MONOMAC
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 
 using Foundation;
@@ -37,4 +36,3 @@ namespace ModelIO {
 		}
 	}
 }
-#endif
