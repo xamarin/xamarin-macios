@@ -122,16 +122,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<_AppBundleName>$(AssemblyName)</_AppBundleName>
 
 		<AppBundleExtension Condition="'$(AppBundleExtension)' == ''">.app</AppBundleExtension>
-
-		<DeviceSpecificIntermediateOutputPath>$(IntermediateOutputPath)</DeviceSpecificIntermediateOutputPath>
-		<!-- Make sure DeviceSpecificOutputPath is a relative path, we depend
-		     on this elsewhere (we prepend the project's directory). When
-		     using dotnet IntermediateOutputPath (and thus
-		     DeviceSpecificIntermediateOutputPath) might be a full path, so
-		     handle this by calculating the corresponding relative path for
-		     DeviceSpecificOutputPath. -->
-		<DeviceSpecificOutputPath>$(OutputPath)</DeviceSpecificOutputPath>
-		<DeviceSpecificOutputPath Condition="$([System.IO.Path]::IsPathRooted ('$(DeviceSpecificOutputPath)')) == 'true'">$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)','$(OutputPath)'))</DeviceSpecificOutputPath>
 	</PropertyGroup>
 	
 	<PropertyGroup>
