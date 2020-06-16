@@ -45,10 +45,9 @@ function Get-SelectedXcode {
     [OutputType('String')]
     param()
 
-    # powershell does not have a nice way to execute a procss and read the stdout, we use .net
+    # powershell does not have a nice way to execute a process and read the stdout, we use .net
     $pinfo = New-Object System.Diagnostics.ProcessStartInfo
     $pinfo.FileName = "xcode-select"
-    $pinfo.RedirectStandardError = $true
     $pinfo.RedirectStandardOutput = $true
     $pinfo.UseShellExecute = $false
     $pinfo.Arguments = "-p"
@@ -56,8 +55,8 @@ function Get-SelectedXcode {
     $p = New-Object System.Diagnostics.Process
     $p.StartInfo = $pinfo
     $p.Start() | Out-Null
-    $p.WaitForExit()
     $path = $p.StandardOutput.ReadToEnd().Trim().Replace("/Contents/Developer", "")
+    $p.WaitForExit()
     return [System.IO.Path]::GetFileName($path)
 }
 
@@ -73,7 +72,6 @@ function Get-MonoVersion {
     # powershell does not have a nice way to execute a procss and read the stdout, we use .net
     $pinfo = New-Object System.Diagnostics.ProcessStartInfo
     $pinfo.FileName = "mono"
-    $pinfo.RedirectStandardError = $true
     $pinfo.RedirectStandardOutput = $true
     $pinfo.UseShellExecute = $false
     $pinfo.Arguments = "--version"
@@ -81,8 +79,9 @@ function Get-MonoVersion {
     $p = New-Object System.Diagnostics.Process
     $p.StartInfo = $pinfo
     $p.Start() | Out-Null
+    $rv = $p.StandardOutput.ReadToEnd().Trim()
     $p.WaitForExit()
-    return $p.StandardOutput.ReadToEnd().Trim()
+    return $rv
 }
 
 <#
@@ -90,8 +89,8 @@ function Get-MonoVersion {
         Returns the details of the system that is currently executing the
         pipeline.
     .DESCRIPTION
-        This function returns the following details of the systemt that is
-        being used to execute the pipepline. Those details include:
+        This function returns the following details of the system that is
+        being used to execute the pipeline. Those details include:
 
           * Runtime info
           * OS information
@@ -131,7 +130,6 @@ function Get-SystemInfo {
     }
 
     return $systemInfo
-
 }
 
 <#
@@ -179,22 +177,15 @@ function Clear-HD {
         "/Applications/Visual Studio (Preview).app"
     )
 
-    foreach ($dir in $directories)
-    {
+    foreach ($dir in $directories) {
         Write-Debug "Removing $dir"
-        try
-        {
-            if (Test-Path -Path $dir)
-            {
+        try {
+            if (Test-Path -Path $dir) {
                 Remove-Item –Path $dir -Recurse -ErrorAction SilentlyContinue -Force
-            }
-            else
-            {
+            } else {
                 Write-Debug "Path not found '$dir'"
             }
-        }
-        catch
-        {
+        } catch {
             Write-Error "Could not remove dir $dir - $_"
         }
     }

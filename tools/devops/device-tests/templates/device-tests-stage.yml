@@ -3,7 +3,7 @@
 # The stage contains two different jobs
 # 
 # tests: Runs the tests on a pool that contains devices that are capable to run them.
-# publish_html: Because vsdrops is not supported on Mac OS X we have an extra job that
+# publish_html: Because vsdrops is not supported on macOS we have an extra job that
 #   will run on a pool with Windows devices that will publish the results on VSDrops to
 #   be browsable.
 
@@ -57,9 +57,9 @@ stages:
   - job: publish_html
     displayName: 'Publish Html report in VSDrops'
     dependsOn: tests
-    condition: and(succeededOrFailed(), eq('${{ parameters.htmlReportStorage }}', 'vsdrops')) # wait for tests to execute, but execute always except if it has been canceled or we are not usign vsdrops 
+    condition: and(succeededOrFailed(), eq('${{ parameters.htmlReportStorage }}', 'vsdrops')) # wait for tests to execute, but execute always except if it has been canceled or we are not using vsdrops 
     pool:
       name: ${{ parameters.WindowsDevicePool }}
-      demands: agent.os -equals Windows_NT # we need to use a windows machien since vsdrops just works on them and the pool might have diff OS in the agents
+      demands: agent.os -equals Windows_NT # we need to use a windows machine since vsdrops just works on them and the pool might have diff OS in the agents
     steps:
     - template: publish-html.yml

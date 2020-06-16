@@ -15,12 +15,12 @@ function Get-BuildUrl {
         Stop-Pipeline
     
     .NOTES
-        The cmdlet depends on the following enviroment variables. If they are not present
+        The cmdlet depends on the following environment variables. If they are not present
         an InvalidOperationException will be thrown.
 
         * SYSTEM_TEAMFOUNDATIONCOLLECTIONURI: Contains the full uri of the VSTS for the team.
         * SYSTEM_TEAMPROJECT: Contains the name of the team in VSTS.
-        * BUILD_BUILDID: The id of th ebuild to cancelt.
+        * BUILD_BUILDID: The id of the build to cancel.
         * SYSTEM_ACCESSTOKEN: The PAT used to be able to perform the rest call to the VSTS API.
 #>
 function Stop-Pipeline {
@@ -34,15 +34,15 @@ function Stop-Pipeline {
 
     foreach ($key in $envVars.Keys) {
         if (-not($envVars[$key])) {
-            Write-Debug "Enviroment varible missing $key"
-            throw [System.InvalidOperationException]::new("Enviroment varible missing $key")
+            Write-Debug "Environment variable missing: $key"
+            throw [System.InvalidOperationException]::new("Environment variable missing: $key")
         }
     }
 
     $url = Get-BuildUrl
 
     $headers = @{
-        Authorization =  ("Bearer {0}" -f $Env:SYSTEM_ACCESSTOKEN)
+        Authorization = ("Bearer {0}" -f $Env:SYSTEM_ACCESSTOKEN)
     }
 
     $payload = @{

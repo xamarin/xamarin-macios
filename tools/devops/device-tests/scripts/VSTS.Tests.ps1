@@ -5,7 +5,7 @@ VSTS interaction unit tests.
 Import-Module ./VSTS -Force
 
 Describe 'Stop-Pipeline' {
-    Context 'wth all the env vars present' {
+    Context 'with all the env vars present' {
 
         BeforeAll {
             $Script:envVariables = @{

@@ -27,33 +27,33 @@ function Get-XamarinStorageIndexUrl {
     .DESCRIPTION
 
     .PARAMETER Status
-        The status value to be set in GitHub. The avaliable values are:
+        The status value to be set in GitHub. The available values are:
 
         * error
         * failure
         * pending
         * success
 
-        If the wrong value is thrown a validation error with be thrown.
+        If the wrong value is passed a validation error with be thrown.
 
     .PARAMETER Description
-        The description that will be added with the status update. This allows to add a human readable string
-        understand why the status was updated.
+        The description that will be added with the status update. This allows us to add a human readable string
+        to understand why the status was updated.
     
     .PARAMETER Context
-        The context to be used. A status can contain several context. The context must be passed to associate
+        The context to be used. A status can contain several contexts. The context must be passed to associate
         the status with a specific event.
 
     .EXAMPLE
         Set-GitHubStatus -Status "error" -Description "Not enough free space in the host." -Context "VSTS iOS device tests."
 
     .NOTES
-        This cmdlet depends on the following everioment variables. If one or more of the variables is missing an
+        This cmdlet depends on the following environment variables. If one or more of the variables is missing an
         InvalidOperationException will be thrown:
 
-        * SYSTEM_TEAMFOUNDATIONCOLLECTIONURI: The uri of the vsts collection. Needed to be able to canculate the target url.
-        * SYSTEM_TEAMPROJECT: The team project executing the build. Needed to be able to canculate the target url.
-        * BUILD_BUILDID: The current build id. Needed to be able to canculate the target url.
+        * SYSTEM_TEAMFOUNDATIONCOLLECTIONURI: The uri of the vsts collection. Needed to be able to calculate the target url.
+        * SYSTEM_TEAMPROJECT: The team project executing the build. Needed to be able to calculate the target url.
+        * BUILD_BUILDID: The current build id. Needed to be able to calculate the target url.
         * BUILD_REVISION: The revision of the current build. Needed to know the commit whose status to change.
         * GITHUB_TOKEN: OAuth or PAT token to interact with the GitHub API.
 #>
@@ -89,7 +89,7 @@ function Set-GitHubStatus {
     foreach ($key in $envVars.Keys) {
         if (-not($envVars[$key])) {
             Write-Debug "Enviroment varible missing $key"
-            throw [System.InvalidOperationException]::new("Enviroment varible missing $key")
+            throw [System.InvalidOperationException]::new("Environment variable missing: $key")
         }
     }
 
@@ -104,7 +104,7 @@ function Set-GitHubStatus {
     $url = "https://api.github.com/repos/xamarin/xamarin-macios/statuses/$Env:BUILD_REVISION"
 
     $headers = @{
-        Authorization =  ("token {0}" -f $Env:GITHUB_TOKEN)
+        Authorization = ("token {0}" -f $Env:GITHUB_TOKEN)
     }
 
     return Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body ($payload | ConvertTo-json) -ContentType 'application/json' -PreserveAuthorizationOnRedirect
@@ -118,7 +118,7 @@ function Set-GitHubStatus {
         The header to be used in the comment.
 
     .PARAMETER Description
-        A show description to be added in the comment, this will show as a shoert version of the comment on GitHub.
+        A show description to be added in the comment, this will show as a short version of the comment on GitHub.
     
     .PARAMETER Message
         A longer string that contains the full comment message. Will be shown when the comment is expanded.
@@ -130,12 +130,12 @@ function Set-GitHubStatus {
         New-GitHubComment -Header "Tests failed catastrophically" -Emoji ":fire:" -Description "Not enough free space in the host."
 
     .NOTES
-        This cmdlet depends on the following everioment variables. If one or more of the variables is missing an
+        This cmdlet depends on the following environment variables. If one or more of the variables is missing an
         InvalidOperationException will be thrown:
 
-        * SYSTEM_TEAMFOUNDATIONCOLLECTIONURI: The uri of the vsts collection. Needed to be able to canculate the target url.
-        * SYSTEM_TEAMPROJECT: The team project executing the build. Needed to be able to canculate the target url.
-        * BUILD_BUILDID: The current build id. Needed to be able to canculate the target url.
+        * SYSTEM_TEAMFOUNDATIONCOLLECTIONURI: The uri of the vsts collection. Needed to be able to calculate the target url.
+        * SYSTEM_TEAMPROJECT: The team project executing the build. Needed to be able to calculate the target url.
+        * BUILD_BUILDID: The current build id. Needed to be able to calculate the target url.
         * BUILD_REVISION: The revision of the current build. Needed to know the commit whose status to change.
         * GITHUB_TOKEN: OAuth or PAT token to interact with the GitHub API.
 #>
@@ -169,7 +169,7 @@ function New-GitHubComment {
     foreach ($key in $envVars.Keys) {
         if (-not($envVars[$key])) {
             Write-Debug "Enviroment varible missing $key"
-            throw [System.InvalidOperationException]::new("Enviroment varible missing $key")
+            throw [System.InvalidOperationException]::new("Environment variable missing: $key")
         }
     }
 
@@ -191,7 +191,7 @@ function New-GitHubComment {
     }
 
     $headers = @{
-        Authorization =  ("token {0}" -f $Env:GITHUB_TOKEN)
+        Authorization = ("token {0}" -f $Env:GITHUB_TOKEN)
     }
 
     return Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body ($payload | ConvertTo-Json) -ContentType 'application/json' -PreserveAuthorizationOnRedirect
@@ -205,7 +205,7 @@ function New-GitHubComment {
         The header to be used in the comment.
 
     .PARAMETER Description
-        A show description to be added in the comment, this will show as a shoert version of the comment on GitHub.
+        A show description to be added in the comment, this will show as a short version of the comment on GitHub.
     
     .PARAMETER Message
         A longer string that contains the full comment message. Will be shown when the comment is expanded.
@@ -217,12 +217,12 @@ function New-GitHubComment {
         New-GitHubComment -Header "Tests failed catastrophically" -Emoji ":fire:" -Description "Not enough free space in the host."
 
     .NOTES
-        This cmdlet depends on the following everioment variables. If one or more of the variables is missing an
+        This cmdlet depends on the following environment variables. If one or more of the variables is missing an
         InvalidOperationException will be thrown:
 
-        * SYSTEM_TEAMFOUNDATIONCOLLECTIONURI: The uri of the vsts collection. Needed to be able to canculate the target url.
-        * SYSTEM_TEAMPROJECT: The team project executing the build. Needed to be able to canculate the target url.
-        * BUILD_BUILDID: The current build id. Needed to be able to canculate the target url.
+        * SYSTEM_TEAMFOUNDATIONCOLLECTIONURI: The uri of the vsts collection. Needed to be able to calculate the target url.
+        * SYSTEM_TEAMPROJECT: The team project executing the build. Needed to be able to calculate the target url.
+        * BUILD_BUILDID: The current build id. Needed to be able to calculate the target url.
         * BUILD_REVISION: The revision of the current build. Needed to know the commit whose status to change.
         * GITHUB_TOKEN: OAuth or PAT token to interact with the GitHub API.
 #>
@@ -248,7 +248,7 @@ function New-GitHubCommentFromFile {
         $Emoji #optionally use an emoji
     )
 
-    # read the file, create a message and use the Ne-GithubComment function
+    # read the file, create a message and use the New-GithubComment function
     $msg = [System.Text.StringBuilder]::new()
     foreach ($line in Get-Content -Path $Path)
     {
@@ -273,12 +273,12 @@ function New-GitHubCommentFromFile {
     .EXAMPLE
         New-GitHubSummaryComment -Context "$Env:CONTEXT" -XamarinStoragePath "$Env:XAMARIN_STORAGE_PATH" -TestSummaryPath "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin/xamarin-macios/tests/TestSummary.md"
     .NOTES
-        This cmdlet depends on the following everioment variables. If one or more of the variables is missing an
+        This cmdlet depends on the following environment variables. If one or more of the variables is missing an
         InvalidOperationException will be thrown:
 
-        * SYSTEM_TEAMFOUNDATIONCOLLECTIONURI: The uri of the vsts collection. Needed to be able to canculate the target url.
-        * SYSTEM_TEAMPROJECT: The team project executing the build. Needed to be able to canculate the target url.
-        * BUILD_BUILDID: The current build id. Needed to be able to canculate the target url.
+        * SYSTEM_TEAMFOUNDATIONCOLLECTIONURI: The uri of the vsts collection. Needed to be able to calculate the target url.
+        * SYSTEM_TEAMPROJECT: The team project executing the build. Needed to be able to calculate the target url.
+        * BUILD_BUILDID: The current build id. Needed to be able to calculate the target url.
         * BUILD_REVISION: The revision of the current build. Needed to know the commit whose status to change.
         * GITHUB_TOKEN: OAuth or PAT token to interact with the GitHub API.
 
@@ -308,8 +308,8 @@ function New-GitHubSummaryComment {
 
     foreach ($key in $envVars.Keys) {
         if (-not($envVars[$key])) {
-            Write-Debug "Enviroment varible missing $key"
-            throw [System.InvalidOperationException]::new("Enviroment varible missing $key")
+            Write-Debug "Environment variable missing: $key"
+            throw [System.InvalidOperationException]::new("Environment variable missing: $key")
         }
     }
 
