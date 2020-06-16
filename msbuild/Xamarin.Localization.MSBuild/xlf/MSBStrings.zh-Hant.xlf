@@ -171,13 +171,6 @@
         </target>
         <note></note>
       </trans-unit>
-      <trans-unit id="E0056">
-        <source>Could not parse SdkVersion '{0}'
-        </source>
-        <target state="new">Could not parse SdkVersion '{0}'
-        </target>
-        <note></note>
-      </trans-unit>
       <trans-unit id="E0057">
         <source>Invalid architectures: '{0}'.
         </source>

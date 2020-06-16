@@ -6,10 +6,6 @@ namespace Xamarin.iOS.Tasks
 {
 	public abstract class MetalTaskBase : Xamarin.MacDev.Tasks.MetalTaskBase
 	{
-		protected override string MinimumDeploymentTargetKey {
-			get { return ManifestKeys.MinimumOSVersion; }
-		}
-
 		protected override string DevicePlatformBinDir {
 			get {
 				return AppleSdkSettings.XcodeVersion.Major >= 11
