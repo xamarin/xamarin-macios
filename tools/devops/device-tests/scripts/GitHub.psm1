@@ -1,3 +1,5 @@
+Import-Module ./VSTS -Force
+
 <#
     .SYNOPSIS
         Returns the target url to be used when setting the status. The target url allows users to get back to the CI event that updated the status.
