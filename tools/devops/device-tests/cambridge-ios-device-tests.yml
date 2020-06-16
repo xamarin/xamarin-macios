@@ -1,10 +1,10 @@
 # Runs the device tets on iOS stable devices using the cambridget pools.
 parameters:
-- name: disableProviCleanup
+- name: disableProvisionatorCache
   type: boolean
   default: false
 
-- name: clearProviCache
+- name: clearProvisionatorCache
   type: boolean
   default: false
 

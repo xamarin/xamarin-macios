@@ -1,10 +1,10 @@
 # Runs the device tests on tvOS beta devices.
 parameters:
-- name: disableProviCleanup
+- name: disableProvisionatorCache
   type: boolean
   default: false
 
-- name: clearProviCache
+- name: clearProvisionatorCache
   type: boolean
   default: false
 

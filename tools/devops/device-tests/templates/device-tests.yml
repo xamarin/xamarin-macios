@@ -14,11 +14,11 @@ parameters:
   type: string 
   default: '--label=run-ios-64-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests' # default context, since we started dealing with iOS devices. 
 
-- name: disableProviCleanup
+- name: disableProvisionatorCache
   type: boolean
   default: false
 
-- name: clearProviCache
+- name: clearProvisionatorCache
   type: boolean
   default: false
 
@@ -117,7 +117,7 @@ steps:
   env:
     TOOLS_DIR: $(Agent.ToolsDirectory)
   displayName: 'Nuke Provisionator Tool Cache'
-  condition: ${{ parameters.clearProviCache }}
+  condition: ${{ parameters.clearProvisionatorCache }}
 
 # Use the provisionator to install the test dependencies. Those have been generated in the 'Generate Provisionator csx file' step.
 - task: xamops.azdevex.provisionator-task.provisionator@1

@@ -55,7 +55,7 @@ Main template that contains all the steps to execute the device tests. The templ
 
 * statusContext: The context of the tests. Used to pair the status of the tests with an execution context, for example 'VSTS iOS device tests'
 * testsLabels: The labels to pass to xharness to decide which tests to be executed.
-* disableProviCleanup: Special parameter that allows to clean up the cache used by the provisionator.
+* disableProvisionatorCache: Special parameter that allows to clean up the cache used by the provisionator.
 * htmlReportStorage: The storage to be used for the html report. There are two storages available:
     - xamarin-storage: Old storage used by xamarin, to be deprecated.
     - vsdrop: New storage that uses azure blobs.
@@ -100,11 +100,11 @@ account the condition is used. If you look at the steps you might find coditions
     New-GitHubSummaryComment -Context "$Env:CONTEXT" 
   env:
     BUILD_REVISION: $(BUILD_REVISION)
-    CONTEXT: ${{ parameters.statusContext}}
+    CONTEXT: ${{ parameters.statusContext }}
     GITHUB_TOKEN: $(GitHub.Token)
     XAMARIN_STORAGE_PATH: $(XAMARIN_STORAGE_PATH) 
   displayName: 'Add summaries'
-  condition: and(always(), eq('${{ parameters.htmlReportStorage}}', 'xamarin-storage')) 
+  condition: and(always(), eq('${{ parameters.htmlReportStorage }}', 'xamarin-storage')) 
   timeoutInMinutes: 1
 ```
 
