@@ -2062,7 +2062,7 @@ If the value of `doAdd` is true, then the parameter is added to the
 `listName`. You must declare this backing field in your complementary partial
 class to the API.
 
-For an example see [foundation.cs](https://github.com/mono/maccore/blob/master/src/foundation.cs) and [NSNotificationCenter.cs](https://github.com/mono/maccore/blob/master/src/Foundation/NSNotificationCenter.cs)
+For an example see [foundation.cs](https://github.com/mono/maccore/blob/main/src/foundation.cs) and [NSNotificationCenter.cs](https://github.com/mono/maccore/blob/main/src/Foundation/NSNotificationCenter.cs)
 
 
 ### TransientAttribute
@@ -2288,7 +2288,7 @@ public class LinkWithAttribute : Attribute {
 ```
 
 This attribute is applied at the assembly level, for example, this is what
-the [CorePlot bindings](https://github.com/mono/monotouch-bindings/tree/master/CorePlot) use:
+the [CorePlot bindings](https://github.com/mono/monotouch-bindings/tree/main/CorePlot) use:
 
 ```csharp
 [assembly: LinkWith ("libCorePlot-CocoaTouch.a", LinkTarget.ArmV7 | LinkTarget.ArmV7s | LinkTarget.Simulator, Frameworks = "CoreGraphics QuartzCore", ForceLoad = true)]

@@ -183,14 +183,14 @@ namespace Samples {
 		}
 
 		static Dictionary<string, ProjectInfo []> projects = new Dictionary<string, ProjectInfo []> ();
-		protected static ProjectInfo [] GetExecutableProjects (string org, string repo, string hash)
+		protected static ProjectInfo [] GetExecutableProjects (string org, string repo, string hash, string default_branch)
 		{
 			if (!projects.TryGetValue (repo, out var rv)) {
-				var project_paths = GitHub.GetProjects (org, repo, hash);
+				var project_paths = GitHub.GetProjects (org, repo, hash, default_branch);
 
 				// We can filter out project we don't care about.
 				rv = project_paths.
-					Select ((v) => GetProjectInfo (v, Path.Combine (GitHub.CloneRepository (org, repo, hash, false), v))).
+					Select ((v) => GetProjectInfo (v, Path.Combine (GitHub.CloneRepository (org, repo, hash, default_branch, false), v))).
 					Where ((v) => v.IsApplicable (false)).
 					ToArray ();
 			
@@ -199,7 +199,7 @@ namespace Samples {
 			return rv;
 		}
 
-		protected static IEnumerable<SampleTestData> GetSampleTestData (Dictionary<string, SampleTest> samples, string org, string repo, string hash, TimeSpan timeout)
+		protected static IEnumerable<SampleTestData> GetSampleTestData (Dictionary<string, SampleTest> samples, string org, string repo, string hash, string default_branch, TimeSpan timeout)
 		{
 			var defaultDebugConfigurations = new string [] { "Debug" };
 			var defaultReleaseConfigurations = new string [] { "Release" };
@@ -212,7 +212,7 @@ namespace Samples {
 
 			// If a project's filename is unique in this repo, use the filename (without extension) as the name of the test.
 			// Otherwise use the project's relative path.
-			var executable_projects = GetExecutableProjects (org, repo, hash);
+			var executable_projects = GetExecutableProjects (org, repo, hash, default_branch);
 			var duplicateProjects = executable_projects.GroupBy ((v) => Path.GetFileNameWithoutExtension (v.RelativePath)).Where ((v) => v.Count () > 1);
 			foreach (var group in duplicateProjects) {
 				foreach (var proj in group) {
@@ -276,7 +276,7 @@ namespace Samples {
 
 		string CloneRepo ()
 		{
-			return GitHub.CloneRepository (Org, Repository, Hash);
+			return GitHub.CloneRepository (Org, Repository, Hash, DefaultBranch);
 		}
 	}
 
