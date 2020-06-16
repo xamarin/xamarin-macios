@@ -1,4 +1,4 @@
-Import-Module ./VSTS -Force
+Import-Module VSTS -Force
 
 <#
     .SYNOPSIS
