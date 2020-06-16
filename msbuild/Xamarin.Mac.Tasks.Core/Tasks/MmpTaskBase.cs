@@ -68,25 +68,6 @@ namespace Xamarin.Mac.Tasks
 			if (arch.HasFlag (XamMacArch.x86_64))
 				args.AddLine ("/arch:x86_64");
 
-			if (AppManifest != null) {
-				try {
-					var plist = PDictionary.FromFile (AppManifest.ItemSpec);
-
-					PString v;
-					string minimumDeploymentTarget;
-
-					if (!plist.TryGetValue (ManifestKeys.LSMinimumSystemVersion, out v) || string.IsNullOrEmpty (v.Value))
-						minimumDeploymentTarget = SdkVersion;
-					else
-						minimumDeploymentTarget = v.Value;
-
-					args.AddLine (string.Format("/targetver={0}", minimumDeploymentTarget));
-				}
-				catch (Exception ex) {
-					Log.LogWarning (null, null, null, AppManifest.ItemSpec, 0, 0, 0, 0, MSBStrings.E0010, AppManifest.ItemSpec, ex.Message);
-				}
-			}
-
 			switch ((LinkMode ?? string.Empty).ToLower ()) {
 			case "full":
 				break;

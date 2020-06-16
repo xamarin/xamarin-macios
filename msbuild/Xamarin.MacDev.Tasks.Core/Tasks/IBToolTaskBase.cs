@@ -13,7 +13,6 @@ namespace Xamarin.MacDev.Tasks
 	public abstract class IBToolTaskBase : XcodeCompilerToolTask
 	{
 		static readonly string[] WatchAppExtensions = { "-glance.plist", "-notification.plist" };
-		string minimumDeploymentTarget;
 		PDictionary plist;
 
 		#region Inputs
@@ -52,10 +51,10 @@ namespace Xamarin.MacDev.Tasks
 
 		protected override void AppendCommandLineArguments (IDictionary<string, string> environment, CommandLineArgumentBuilder args, ITaskItem[] items)
 		{
-			environment.Add ("IBSC_MINIMUM_COMPATIBILITY_VERSION", minimumDeploymentTarget);
-			environment.Add ("IBC_MINIMUM_COMPATIBILITY_VERSION", minimumDeploymentTarget);
+			environment.Add ("IBSC_MINIMUM_COMPATIBILITY_VERSION", MinimumOSVersion);
+			environment.Add ("IBC_MINIMUM_COMPATIBILITY_VERSION", MinimumOSVersion);
 
-			args.Add ("--minimum-deployment-target", minimumDeploymentTarget);
+			args.Add ("--minimum-deployment-target", MinimumOSVersion);
 			
 			foreach (var targetDevice in GetTargetDevices (plist))
 				args.Add ("--target-device", targetDevice);
@@ -417,14 +416,6 @@ namespace Xamarin.MacDev.Tasks
 			if (InterfaceDefinitions.Length > 0) {
 				if (AppManifest != null) {
 					plist = PDictionary.FromFile (AppManifest.ItemSpec);
-					PString value;
-
-					if (!plist.TryGetValue (MinimumDeploymentTargetKey, out value) || string.IsNullOrEmpty (value.Value))
-						minimumDeploymentTarget = SdkVersion;
-					else
-						minimumDeploymentTarget = value.Value;
-				} else {
-					minimumDeploymentTarget = SdkVersion;
 				}
 
 				Directory.CreateDirectory (ibtoolManifestDir);

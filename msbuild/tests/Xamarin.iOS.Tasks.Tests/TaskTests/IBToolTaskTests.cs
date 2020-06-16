@@ -51,6 +51,7 @@ namespace Xamarin.iOS.Tasks
 				InterfaceDefinitions = interfaceDefinitions.ToArray (),
 				IntermediateOutputPath = intermediateOutputPath,
 				BuildEngine = new TestEngine (),
+				MinimumOSVersion = PDictionary.FromFile (Path.Combine (projectDir, "Info.plist")).GetMinimumOSVersion (),
 				ResourcePrefix = "Resources",
 				ProjectDir = projectDir,
 				SdkPlatform = platform,

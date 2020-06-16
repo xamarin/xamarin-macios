@@ -16,9 +16,6 @@ namespace Xamarin.MacDev.Tasks {
 		[Required]
 		public string AppBundleDir { get; set; }
 
-		[Required]
-		public ITaskItem AppManifest { get; set; }
-
 		public string ArchiveSymbols { get; set; }
 
 		[Required]
@@ -43,6 +40,9 @@ namespace Xamarin.MacDev.Tasks {
 
 		[Required]
 		public ITaskItem MainAssembly { get; set; }
+
+		[Required]
+		public string MinimumOSVersion { get; set; }
 
 		public ITaskItem [] NativeReferences { get; set; }
 
@@ -112,6 +112,8 @@ namespace Xamarin.MacDev.Tasks {
 				args.AddLine ("--profiling");
 
 			args.AddQuotedLine ($"--sdkroot={SdkRoot}");
+
+			args.AddQuotedLine ($"--targetver={MinimumOSVersion}");
 
 			var v = VerbosityUtils.Merge (ExtraArgs, (LoggerVerbosity) Verbosity);
 			foreach (var arg in v)

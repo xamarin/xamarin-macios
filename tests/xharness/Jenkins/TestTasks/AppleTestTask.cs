@@ -11,7 +11,7 @@ namespace Xharness.Jenkins.TestTasks {
 	{
 		public Jenkins Jenkins { get; private set; }
 		public IHarness Harness { get { return Jenkins.Harness; } }
-		public override string RootDirectory => Xharness.Harness.RootDirectory;
+		public override string RootDirectory => HarnessConfiguration.RootDirectory;
 
 		public override IResourceManager ResourceManager => Jenkins.ResourceManager;
 

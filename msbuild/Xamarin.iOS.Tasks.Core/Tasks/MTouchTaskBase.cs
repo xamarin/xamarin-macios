@@ -30,9 +30,6 @@ namespace Xamarin.iOS.Tasks
 			}
 		}
 
-		IPhoneSdkVersion minimumOSVersion;
-//		IPhoneDeviceType deviceType;
-
 		#region Inputs
 
 		public string Architectures { get; set; }
@@ -284,9 +281,6 @@ namespace Xamarin.iOS.Tasks
 
 			args.AddQuotedLine ($"--sdk={SdkVersion}");
 
-			if (!minimumOSVersion.IsUseDefault)
-				args.AddQuotedLine ($"--targetver={minimumOSVersion.ToString ()}");
-
 			if (UseFloat32 /* We want to compile 32-bit floating point code to use 32-bit floating point operations */)
 				args.AddLine ("--aot-options=-O=float32");
 			else
@@ -468,43 +462,6 @@ namespace Xamarin.iOS.Tasks
 
 		public override bool Execute ()
 		{
-			PDictionary plist;
-			PString value;
-
-			try {
-				plist = PDictionary.FromFile (AppManifest.ItemSpec);
-			} catch (Exception ex) {
-				Log.LogError (null, null, null, AppManifest.ItemSpec, 0, 0, 0, 0, MSBStrings.E0055, ex.Message);
-				return false;
-			}
-
-//			deviceType = plist.GetUIDeviceFamily ();
-
-			if (plist.TryGetValue (ManifestKeys.MinimumOSVersion, out value)) {
-				if (!IPhoneSdkVersion.TryParse (value.Value, out minimumOSVersion)) {
-					Log.LogError (null, null, null, AppManifest.ItemSpec, 0, 0, 0, 0, MSBStrings.E0011, value);
-					return false;
-				}
-			} else {
-				switch (Platform) {
-				case ApplePlatform.iOS:
-					IPhoneSdkVersion sdkVersion;
-					if (!IPhoneSdkVersion.TryParse (SdkVersion, out sdkVersion)) {
-						Log.LogError (null, null, null, AppManifest.ItemSpec, 0, 0, 0, 0, MSBStrings.E0056, SdkVersion);
-						return false;
-					}
-
-					minimumOSVersion = sdkVersion;
-					break;
-				case ApplePlatform.WatchOS:
-				case ApplePlatform.TVOS:
-					minimumOSVersion = IPhoneSdkVersion.UseDefault;
-					break;
-				default:
-					throw new InvalidOperationException (string.Format ("Invalid framework: {0}", Platform));
-				}
-			}
-
 			Directory.CreateDirectory (AppBundleDir);
 
 			var executableLastWriteTime = default (DateTime);
