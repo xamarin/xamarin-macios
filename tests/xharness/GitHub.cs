@@ -25,10 +25,10 @@ namespace Xharness
 	public class GitHub : IVersionControlSystem
 	{
 
-		readonly Harness harness;
+		readonly IHarness harness;
 		readonly IProcessManager processManager;
 
-		public GitHub (Harness harness, IProcessManager processManager)
+		public GitHub (IHarness harness, IProcessManager processManager)
 		{
 			if (harness == null)
 				throw new ArgumentNullException (nameof (harness));

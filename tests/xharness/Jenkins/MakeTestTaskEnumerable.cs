@@ -25,7 +25,7 @@ namespace Xharness.Jenkins {
 				Platform = TestPlatform.Mac,
 				TestName = "MMP Regression Tests",
 				Target = "all", // -j" + Environment.ProcessorCount,
-				WorkingDirectory = Path.Combine (Harness.RootDirectory, "mmp-regression"),
+				WorkingDirectory = Path.Combine (HarnessConfiguration.RootDirectory, "mmp-regression"),
 				Ignored = !jenkins.IncludeMmpTest || !jenkins.IncludeMac,
 				Timeout = TimeSpan.FromMinutes (30),
 				SupportsParallelExecution = false, // Already doing parallel execution by running "make -jX"
@@ -41,7 +41,7 @@ namespace Xharness.Jenkins {
 				Platform = TestPlatform.Mac,
 				TestName = "Mac Binding Projects",
 				Target = "all",
-				WorkingDirectory = Path.Combine (Harness.RootDirectory, "mac-binding-project"),
+				WorkingDirectory = Path.Combine (HarnessConfiguration.RootDirectory, "mac-binding-project"),
 				Ignored = !jenkins.IncludeMacBindingProject || !jenkins.IncludeMac,
 				Timeout = TimeSpan.FromMinutes (15),
 			};
@@ -51,7 +51,7 @@ namespace Xharness.Jenkins {
 				Platform = TestPlatform.All,
 				TestName = "Documentation",
 				Target = "wrench-docs",
-				WorkingDirectory = Harness.RootDirectory,
+				WorkingDirectory = HarnessConfiguration.RootDirectory,
 				Ignored = !jenkins.IncludeDocs,
 				Timeout = TimeSpan.FromMinutes (45),
 			};
