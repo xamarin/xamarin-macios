@@ -6,7 +6,7 @@ Import-Module ./System -Force
 
 Describe 'Clear-HD' {
 
-    Context 'when there are not erros and all files are removed' {
+    Context 'when there are no errors and all files are removed' {
 
         It 'removes all files' {
             # call the method, and check that remove-item was correctly called with each of the files we want to remove
@@ -137,7 +137,7 @@ Describe 'Clear-XamarinProcesses' {
         It 'kills all processes' {
             Mock Start-Process
 
-            # ensure that all the processes are correctly killed vis pkill
+            # ensure that all the processes are correctly killed via pkill
             Clear-XamarinProcesses
 
             Assert-MockCalled -CommandName Start-Process -ParameterFilter { $FilePath -eq "pkill" -and $ArgumentList -eq "-9 mlaunch"} -Times 1 -Exactly

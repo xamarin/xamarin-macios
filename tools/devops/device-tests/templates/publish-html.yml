@@ -39,4 +39,4 @@ steps:
     allowFailedBuilds: true
     path: $(System.DefaultWorkingDirectory)/Reports
 
-# TODO: We need to find out how VSDrops can server the page. So we are doing nothing atm.
+# TODO: We need to find out how VSDrops can serve the page. So we are doing nothing atm.

@@ -1,20 +1,20 @@
 # Device test pipelines
 
-This directory contains the different yml pipelines that are will run the tests on devices. In order to 
+This directory contains the different yaml pipelines that are will run the tests on devices. In order to 
 fully understand the setup we have to take into account:
 
 ## Labs
 
-The team has access to two different labs, this labs use different setups and different pools. We have used
-their location to differenciate them:
+The team has access to two different labs, these labs use different setups and different pools. We have used
+their location to differentiate them:
 
-* cambridge: Lab based on crambridge that contains iOS, iOS32 and tvOS devices.
+* cambridge: Lab based in Cambridge that contains iOS, iOS32 and tvOS devices.
 * ddfun: Lab mantained by the DevDiv Fundamentals team. Contains iOS and tvOS devices. This labd **DOES NOT** have
-    iOS32 of beta devices.
+    iOS32 or beta devices.
 
 ## Pipelines
 
-Although we could parallalize the current pipelines, we have opted to have a pipeline per devices. Therefore,
+Although we could parallelize the current pipelines, we have opted to have a pipeline per device. Therefore,
 there is a pipeline per device in each of the supported labs. 
 
 * cambridge
@@ -44,8 +44,8 @@ be done in parallel if the dependencies are not correct.
 The jobs are:
 
 * tests: Executes the tests on devices. This job uses a template that takes a set of parameters to configure
-    the job execute the tests on the correct devices. This job MUST be executed on a Mac OS X bot that has
-    the correct demand. The demands specify the expected iOS device to be attached to the bot.
+    the job that executes the tests on the correct devices. This job MUST be executed on a macOS bot that has
+    the correct demand. The demands specify the expected device to be attached to the bot.
 * publish_html: This job depends on the 'tests' job and will get the html report from the tests and publish it
     to a webpage. Since the job depends on vsdrops, the job must be executed on a Windows machine.
 
@@ -78,24 +78,24 @@ The are two main groups of variables used in the pipelines:
 
 #### Scripts
 
-All the steps of the device-tests.yml have been moved to different powershell scripts. This are grouped by their usage. Their are gouped in
+All the steps of the device-tests.yml have been moved to different powershell scripts. This are grouped by their usage. They are grouped in
 
 * GitHub: cmdlets that allow to interact with the GitHub rest API.
 * VSTS: cmdlets that allow to interact with the VSTS rest API.
-* MLaumch: cmdlets that allow to interact with mlaunch.
+* MLaunch: cmdlets that allow to interact with mlaunch.
 * System: cmdlets that provide information about the system as well as to cleanup certain resources used by the tests.
 
 All cmdlets have unit tests. In order to run them locally the user has to execute
 
 make -C tools/devops/device-tests run-tests
 
-Tests are written with Pester and the execution will ouput the number of tests executed and their results.
+Tests are written with Pester and the execution will output the number of tests executed and their results.
 
 ## Storage
 
 The html report can be stored in two different storages. The xamarin-maios one and the vsdrops one. A
-number of steps are executed depending on the storage is, therefore, when modifying a step/task take into
-account the condition is used. If you look at the steps you might find coditions like the folloing one:
+number of steps are executed depending on the storage, therefore, when modifying a step/task take into
+account the condition is used. If you look at the steps you might find coditions like the following one:
 
 ```yml
 - pwsh: |
@@ -111,7 +111,7 @@ account the condition is used. If you look at the steps you might find coditions
   timeoutInMinutes: 1
 ```
 
-In the above example we are intereted in:
+In the above example we are interested in:
 
 ```yml
   condition: and(always(), eq('${{ parameters.htmlReportStorage}}', 'xamarin-storage')) 

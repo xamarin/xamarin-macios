@@ -3,7 +3,7 @@
         Set the mlaunch verbosity to the given value.
     .DESCRIPTION
         Set the mlaunch verbosity to the given value. This
-        function overwrittes any already present mlaunch 
+        function overwrites any already present mlaunch 
         configuration files.
 #>
 function Set-MLaunchVerbosity {
@@ -27,7 +27,7 @@ function Set-MLaunchVerbosity {
     .SYNOPSIS
         Ensures that device will be correctly found.
     .DESCRIPTION
-        This function re-starts the dameon that will be used
+        This function re-starts the daemon that will be used
         to find devices. Re-starting it will make sure that new
         devices are correctly found.
 #>
