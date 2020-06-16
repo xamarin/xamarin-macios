@@ -62,7 +62,7 @@ namespace Xharness.Jenkins {
 		public bool Populating { get; private set; } = true;
 
 		public TestSelection TestSelection { get; set; } = DefaultTestSelection;
-		const TestSelection DefaultTestSelection =  TestSelection.MacOS | TestSelection.iOS | TestSelection.tvOS |
+		internal const TestSelection DefaultTestSelection =  TestSelection.MacOS | TestSelection.iOS | TestSelection.tvOS |
 		                                                   TestSelection.watchOS | TestSelection.iOSMSBuild |
 		                                                   TestSelection.Simulator | TestSelection.NonMonotouch |
 		                                                   TestSelection.Monotouch;

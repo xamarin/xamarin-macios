@@ -153,7 +153,7 @@ namespace Xharness.Jenkins {
 			return false;
 		}
 
-		void SelectTestsByModifiedFiles (int pullRequest)
+		internal void SelectTestsByModifiedFiles (int pullRequest)
 		{
 			// toArray so that we do not always enumerate all the time.
 			var files = vcs.GetModifiedFiles (pullRequest).ToArray ();
@@ -167,7 +167,7 @@ namespace Xharness.Jenkins {
 			}
 		}
 
-		void SelectTestsByLabel (int pullRequest)
+		internal void SelectTestsByLabel (int pullRequest)
 		{
 			var labels = new HashSet<string> ();
 			if (Harness.Labels.Any ()) {
