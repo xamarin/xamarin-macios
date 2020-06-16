@@ -32,6 +32,26 @@ steps:
 - checkout: maccore
   persistCredentials: true  # hugely important, else there are some sccripts that check a single file from maccore that will fail
 
+# Run the pipeline script tests to ensure that we will have not have an unexpected behaviour.
+- bash: make -C $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/device-tests/scripts run-tets
+  displayName: 'Run pipeline script tests'
+
+# Executed ONLY when the scripts tests fail. We do not longer trust the pipeline, therefore stop it
+- pwsh: |
+    cd $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/device-tests/scripts/
+    Import-Module ./VSTS.psm1
+    Import-Module ./GitHub.psm1
+    Set-GitHubStatus -Status "error" -Description "Pipeline scripts tests failed." -Context "$Env:CONTEXT"
+    New-GitHubComment -Header "Pipeline scripts tests failed" -Emoji ":fire:" -Description "The tests of the scripts used in the pepeline failed. The build was cancelled."
+    Stop-Pipeline
+  env:
+    BUILD_REVISION: $(BUILD_REVISION)
+    CONTEXT: ${{ parameters.statusContext}}
+    GITHUB_TOKEN: $(GitHub.Token)
+    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+  displayName: 'Notify failed script tests'
+  condition: failed() # we failed running the tests, therefore stop the pipeline
+
 # Uses the powershell cmdlet to print useful information about the system. Will always be executed.
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/device-tests/scripts/System.psm1
