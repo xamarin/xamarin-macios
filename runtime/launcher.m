@@ -276,15 +276,11 @@ static int
 push_env (const char *variable, NSString *str_value)
 {
 	const char *current;
-	NSString *value;
 	
-	if ((current = getenv (variable)) && *current) {
-		value = [NSString stringWithFormat: @"%s:%@", current, str_value];
-	} else {
-		value = str_value;
-	}
+	if ((current = getenv (variable)) && *current)
+		str_value = [str_value stringByAppendingFormat: @":%s", current];
 	
-	return setenv (variable, [value UTF8String], 1);
+	return setenv (variable, [str_value UTF8String], 1);
 }
 #endif
 
