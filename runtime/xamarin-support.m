@@ -47,7 +47,7 @@ xamarin_log (const unsigned short *unicodeMessage)
 
 #if TARGET_OS_WATCH && defined (__arm__) // maybe make this configurable somehow?
 	const char *utf8 = [msg UTF8String];
-	size_t len = strlen (utf8);
+	NSUInteger len = [msg lengthOfBytesUsingEncoding:NSUTF8StringEncoding] + 1; // does not include NULL
 	fwrite (utf8, 1, len, stdout);
 	if (len == 0 || utf8 [len - 1] != '\n')
 		fwrite ("\n", 1, 1, stdout);
@@ -57,7 +57,7 @@ xamarin_log (const unsigned short *unicodeMessage)
 		// Write in chunks of max 4096 characters; older versions of iOS seems to have a bug where NSLog may hang with long strings (!).
 		// https://github.com/xamarin/maccore/issues/1014
 		const char *utf8 = [msg UTF8String];
-		size_t len = strlen (utf8);
+		NSUInteger len = [msg lengthOfBytesUsingEncoding:NSUTF8StringEncoding] + 1; // does not include NULL
 		const size_t max_size = 4096;
 		while (len > 0) {
 			size_t chunk_size = len > max_size ? max_size : len;
@@ -101,7 +101,7 @@ xamarin_timezone_get_data (const char *name, uint32_t *size)
 	NSData *data = [tz data];
 	*size = (uint32_t) [data length];
 	void* result = malloc (*size);
-	memcpy (result, data.bytes, *size);
+	[data getBytes: result length: *size];
 	return result;
 }
 
