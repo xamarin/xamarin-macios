@@ -9,7 +9,7 @@ resources:
   - repository: maccore
     type: github
     name: xamarin/maccore
-    ref: refs/heads/device-tests-yaml
+    ref: refs/heads/main
     endpoint: xamarin
 
 jobs:
