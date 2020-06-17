@@ -43,6 +43,11 @@ namespace Xamarin.Utils {
 					}
 				} catch (Exception e) {
 					tcs.TrySetException (e);
+				} finally {
+					// The Process instance doesn't dispose these streams, which means we need to do it,
+					// otherwise we can run out of file descriptors while waiting for the GC to kick in.
+					// Ref: https://bugzilla.xamarin.com/show_bug.cgi?id=43462
+					reader.Dispose ();
 				}
 			}) {
 				IsBackground = true,
