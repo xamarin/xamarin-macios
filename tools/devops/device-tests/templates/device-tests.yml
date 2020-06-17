@@ -243,13 +243,14 @@ steps:
     set -e
 
     cd $WORKING_DIR/xamarin-macios
-    make -C builds downloads -j || true
-    make -C builds .stamp-mono-ios-sdk-destdir -j || true
     if [[ "$HTML_STORAGE" == "xamarin-storage" ]]; then
-      echo "Using xamarin-storge!"
+      ssh builder@xamarin-storage "mkdir -p /volume1/storage/$XAMARIN_STORAGE_PATH"
       export TESTS_PERIODIC_COMMAND="--periodic-interval 10 --periodic-command rsync --periodic-command-arguments '-avz -e \"ssh\" $PWD/jenkins-results builder@xamarin-storage:/volume1/storage/$XAMARIN_STORAGE_PATH'"
     fi
 
+    make -C builds download -j || true
+    make -C builds downloads -j || true
+    make -C builds .stamp-mono-ios-sdk-destdir -j || true
     MONO_ENV_OPTIONS=--trace=E:all make -C tests vsts-device-tests
   env:
     WORKING_DIR: $(System.DefaultWorkingDirectory) 
