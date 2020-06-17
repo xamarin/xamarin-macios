@@ -69,11 +69,18 @@ namespace Xharness.Tests.Jenkins {
 					TestSelection expectedSelection = TestSelection.All;
 					yield return new TestCaseData ("testBranch", new List<string> {"run-all-tests"}, expectedSelection, true);
 
-					// all tests selected via tag, but we added some skips, therefore all are selected
+					// all tests selected via tag, but we added some skips, therefore we skip them
 					expectedSelection = TestSelection.All;
+					expectedSelection &= ~TestSelection.MacOS;
 					yield return new TestCaseData ("testBranch", 
 						new List<string> { "run-all-tests", "skip-mac-tests"},
-						TestSelection.All, true);
+						expectedSelection, true);
+					
+					// skip all ye select one of the tests
+					expectedSelection = TestSelection.MacOS;
+					yield return new TestCaseData ("testBranch",
+						new List<string> {"skip-all-tests", "run-mac-tests"},
+						expectedSelection, false);
 
 					// select the defaults + some additional ones
 					expectedSelection = Xharness.Jenkins.Jenkins.DefaultTestSelection | TestSelection.Bcl | TestSelection.Cecil;
@@ -144,7 +151,7 @@ namespace Xharness.Tests.Jenkins {
 			testSelector.SelectTestsByLabel (10);
 			Assert.AreEqual (expectedSelection, jenkins.TestSelection, $"Test selection for {string.Join (",", labels)}");
 			// verify that we did set the correct value in the xharness interface
-			harness.VerifySet (x => x.IncludeSystemPermissionTests = includeSystemPermission);
+			harness.VerifySet (x => x.IncludeSystemPermissionTests = includeSystemPermission, $"Setting system tests for {string.Join (",", labels)}");
 		}
 
 		[Test, TestCaseSource (typeof(TestCasesData), "SelectByModifiedFileTestData")]

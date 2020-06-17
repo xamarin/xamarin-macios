@@ -208,22 +208,34 @@ namespace Xharness.Jenkins {
 			}
 
 			MainLog.WriteLine ($"In total found {labels.Count ()} label(s): {string.Join (", ", labels.ToArray ())}");
+			
+			// first check if the all label is used, we either skip our run all, then check the skips, then run,
+			// if we skipped and add, we prefer to add
+			var skipLabels = labels.Where (l => l.StartsWith ("skip-") && !l.Contains ("all"))
+				?.Select (l => l.Replace ("skip-", "").Replace ("-tests", ""));
+			var runLabels = labels.Where (l => l.StartsWith ("run") && !l.Contains ("all"))
+				?.Select (l => l.Replace ("run-", "").Replace ("-tests", ""));
 
-			foreach (var keyValuePair in testNameSelectionMatch) {
-				if (keyValuePair.Key == "all")
-					continue; // all is special since it can enable or disable all tests, so we check its settings once we have checked all of the others
-				SetEnabled (labels, keyValuePair.Key, keyValuePair.Value);
-			}
+			SetEnabled (labels, "all", TestSelection.All); // we might add all or skip all
 
-			SetEnabled (labels, "all", TestSelection.All);
+			if (skipLabels != null) // if we have any skips & we added all, we skip them
+				foreach (var skip in skipLabels) {
+					if (testNameSelectionMatch.TryGetValue (skip, out var flag))
+						SetEnabled (labels, skip, flag);
+				}
+			if (runLabels != null) //  if we skipped all or skipped before but have an add, we add them back
+				foreach (var run in runLabels) {
+					if (testNameSelectionMatch.TryGetValue (run, out var flag))						
+						SetEnabled (labels, run, flag);
+				}
 
 			// special case since we are not working with the TestSelection flag in jenkins
-			Harness.IncludeSystemPermissionTests = labels.Contains ("run-system-permission-tests") || jenkins.TestSelection.HasFlag (TestSelection.All);
+			Harness.IncludeSystemPermissionTests = labels.Contains ("run-system-permission-tests") || labels.Contains ("run-all-tests");
 
 			// docs is a bit special:
 			// - can only be executed if the Xamarin-specific parts of the build is enabled
 			// - enabled by default if the current branch is main (or, for a pull request, if the target branch is main)
-			var changed = SetEnabled (labels, "docs", TestSelection.Docs) || jenkins.TestSelection.HasFlag (TestSelection.All);
+			var changed = SetEnabled (labels, "docs", TestSelection.Docs) || labels.Contains ("run-all-tests");
 			if (Harness.ENABLE_XAMARIN) {
 				if (!changed) {
 					var branchName = Environment.GetEnvironmentVariable ("BRANCH_NAME");
