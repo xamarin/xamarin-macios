@@ -53,14 +53,13 @@ init_logdir (void)
 	static int redirected_stdout = -1;
 	static int redirected_stderr = -1;
 	const char *env;
-	size_t dirlen;
-	char *path;
 
 	if ((env = getenv ("MONOMAC_LOGDIR")) != NULL && *env) {
+		NSString *logdir = [NSString stringWithUTF8String: env];
 		// Redirect stdout/err to log files...
 		NSError *error = nil;
 		if (![[NSFileManager defaultManager] 
-				createDirectoryAtPath: [NSString stringWithUTF8String: env] 
+				createDirectoryAtPath: logdir
 				withIntermediateDirectories: YES 
 				attributes: @{ NSFilePosixPermissions: [NSNumber numberWithInt: 0755] } 
 				error: &error]) {
@@ -68,24 +67,15 @@ init_logdir (void)
 			return;
 		}
 
-		dirlen = strlen (env);
-		path = (char *) malloc (dirlen + 12);
-		strcpy (path, env);
-
-		if (path[dirlen - 1] != '/')
-			path[dirlen++] = '/';
-
-		strcpy (path + dirlen, "stdout.log");
-		redirected_stdout = redirect_io (STDOUT_FILENO, path);
+		NSString *out = [logdir stringByAppendingPathComponent: @"stdout.log"];
+		redirected_stdout = redirect_io (STDOUT_FILENO, [out UTF8String]);
 		if (redirected_stdout == -1)
-			fprintf (stderr, PRODUCT ": Could not redirect %s to `%s': %s\n", "stdout", path, strerror (errno));
+			fprintf (stderr, PRODUCT ": Could not redirect %s to `%s': %s\n", "stdout", [out UTF8String], strerror (errno));
 
-		strcpy (path + dirlen, "stderr.log");
-		redirected_stderr = redirect_io (STDERR_FILENO, path);
+		NSString *err = [logdir stringByAppendingPathComponent: @"stderr.log"];
+		redirected_stderr = redirect_io (STDERR_FILENO, [err UTF8String]);
 		if (redirected_stderr == -1)
-			fprintf (stderr, PRODUCT ": Could not redirect %s to `%s': %s\n", "stderr", path, strerror (errno));
-
-		free (path);
+			fprintf (stderr, PRODUCT ": Could not redirect %s to `%s': %s\n", "stderr", [err UTF8String], strerror (errno));
 	}
 }
 
@@ -285,23 +275,12 @@ check_mono_version (const char *version, const char *req_version)
 static int
 push_env (const char *variable, NSString *str_value)
 {
-	const char *value = [str_value UTF8String];
-	size_t len = strlen (value);
 	const char *current;
-	int rv;
 	
-	if ((current = getenv (variable)) && *current) {
-		char *buf = (char *) malloc (len + strlen (current) + 2);
-		memcpy (buf, value, len);
-		buf[len] = ':';
-		strcpy (buf + len + 1, current);
-		rv = setenv (variable, buf, 1);
-		free (buf);
-	} else {
-		rv = setenv (variable, value, 1);
-	}
+	if ((current = getenv (variable)) && *current)
+		str_value = [str_value stringByAppendingFormat: @":%s", current];
 	
-	return rv;
+	return setenv (variable, [str_value UTF8String], 1);
 }
 #endif
 
