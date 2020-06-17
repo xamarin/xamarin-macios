@@ -10,6 +10,7 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Text;
 using Foundation;
 using CoreGraphics;
 using ObjCRuntime;
@@ -69,6 +70,24 @@ namespace MonoTouchFixtures.CoreGraphics {
 			}
 
 			Assert.AreEqual (IntPtr.Zero, memory, "mem freed");
+		}
+
+		[Test]
+		public void CreateWithUnownedMemory ()
+		{
+			const string canary = "canary";
+			var source = Encoding.UTF8.GetBytes (canary);
+			IntPtr memory = Marshal.AllocHGlobal (20);
+			Marshal.Copy (source, 0, memory, source.Length);
+			using (var provider = new CGDataProvider (memory, 20, false)) {
+				// `memory` is copied, but not freed (but the copy is freed)
+				Assert.That (provider.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
+			}
+			// so `memory` still accessible afterward and must be freed
+			// using `canary.Length` since the allocated memory might not be zero'ed
+			// so reading back the string would not hit a null after what we copied
+			Assert.That (Marshal.PtrToStringAuto (memory, canary.Length), Is.EqualTo (canary), "canary check");
+			Marshal.FreeHGlobal (memory);
 		}
 	}
 }
