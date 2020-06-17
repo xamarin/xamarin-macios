@@ -1433,22 +1433,6 @@
         <note>
 		</note>
       </trans-unit>
-      <trans-unit id="MT1016">
-        <source>Failed to create the NOTICE file because a directory already exists with the same name.
-		</source>
-        <target state="new">Failed to create the NOTICE file because a directory already exists with the same name.
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT1017">
-        <source>Failed to create the NOTICE file: {0}
-		</source>
-        <target state="new">Failed to create the NOTICE file: {0}
-		</target>
-        <note>
-		</note>
-      </trans-unit>
       <trans-unit id="MT1022">
         <source>Could not copy the directory '{0}' to '{1}': {2}
 		</source>

@@ -44,37 +44,7 @@ namespace Xharness {
 		public string WatchOSAppTemplate { get; set; }
 		public string WatchOSContainerTemplate { get; set; }
 		public XmlResultJargon XmlJargon { get; set; } = XmlResultJargon.NUnitV3;
-	}
-
-	public interface IHarness {
-		HarnessAction Action { get; }
-		Dictionary<string, string> EnvironmentVariables { get; }
-		ILog HarnessLog { get; set; }
-		bool InCI { get; }
-		bool UseTcpTunnel { get; }
-		double LaunchTimeout { get; }
-		double Timeout { get; }
-		int Verbosity { get; }
-		XmlResultJargon XmlJargon { get; }
-
-		bool GetIncludeSystemPermissionTests (TestPlatform platform, bool device);
-		void Log (int min_level, string message, params object [] args);
-	}
-
-	public class Harness : IHarness {
-		readonly TestTarget target;
-		readonly string buildConfiguration = "Debug";
-
-		IProcessManager processManager;
-
-		public HarnessAction Action { get; }
-		public int Verbosity { get; }
-		public ILog HarnessLog { get; set; }
-		public HashSet<string> Labels { get; }
-		public XmlResultJargon XmlJargon { get; }
-		public IResultParser ResultParser { get; }
-		public ITunnelBore TunnelBore { get; }
-
+		
 		// This is the maccore/tests directory.
 		static string root_directory;
 		public static string RootDirectory {
@@ -102,7 +72,22 @@ namespace Xharness {
 					root_directory = Path.GetFullPath (root_directory).TrimEnd ('/');
 			}
 		}
+	}
 
+	public class Harness : IHarness {
+		readonly TestTarget target;
+		readonly string buildConfiguration = "Debug";
+
+		IProcessManager processManager;
+
+		public HarnessAction Action { get; }
+		public int Verbosity { get; }
+		public ILog HarnessLog { get; set; }
+		public HashSet<string> Labels { get; }
+		public XmlResultJargon XmlJargon { get; }
+		public IResultParser ResultParser { get; }
+		public ITunnelBore TunnelBore { get; }
+		
 		public string XIBuildPath => Path.GetFullPath (Path.Combine (RootDirectory, "..", "tools", "xibuild", "xibuild"));
 
 		string sdkRoot;
@@ -159,6 +144,8 @@ namespace Xharness {
 		public TimeSpan PeriodicCommandInterval { get; }
 		// whether tests that require access to system resources (system contacts, photo library, etc) should be executed or not
 		public bool? IncludeSystemPermissionTests { get; set; }
+
+		string RootDirectory => HarnessConfiguration.RootDirectory;
 
 		public Harness (IResultParser resultParser, HarnessAction action, HarnessConfiguration configuration)
 		{

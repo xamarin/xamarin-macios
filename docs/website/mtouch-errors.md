@@ -17,7 +17,7 @@ E.g. parameters, environment, missing tools.
 
 <!--
  MT0xxx mtouch itself, e.g. parameters, environment (e.g. missing tools)
- https://github.com/xamarin/xamarin-macios/blob/master/tools/mtouch/error.cs
+ https://github.com/xamarin/xamarin-macios/blob/main/tools/mtouch/error.cs
 	-->
 
 <a name="MT0000" />
@@ -676,7 +676,7 @@ For further information see bug #[51634](https://bugzilla.xamarin.com/show_bug.c
 
 ### MT0112: Native code sharing has been disabled because *
 
-There are multiple reasons [native code sharing](https://github.com/xamarin/xamarin-macios/blob/master/docs/code-sharing-with-user-frameworks.md) can be disabled:
+There are multiple reasons [native code sharing](https://github.com/xamarin/xamarin-macios/blob/main/docs/code-sharing-with-user-frameworks.md) can be disabled:
 
 * because the container app's deployment target is earlier than iOS 8.0 (it's *)).
 
@@ -694,7 +694,7 @@ Native code sharing requires is not supported for projects that use custom xml d
 
 ### MT0113: Native code sharing has been disabled for the extension '*' because *.
 
-There are multiple reasons [native code sharing](https://github.com/xamarin/xamarin-macios/blob/master/docs/code-sharing-with-user-frameworks.md) can be disabled:
+There are multiple reasons [native code sharing](https://github.com/xamarin/xamarin-macios/blob/main/docs/code-sharing-with-user-frameworks.md) can be disabled:
 
 * because the bitcode options differ between the container app (\*) and the extension (\*).
 
@@ -1100,9 +1100,13 @@ This indicates a bug in Xamarin.iOS. Please file a new issue on [github](https:/
 
 Remove the directory `NOTICE` from the project.
 
+Earlier versions of our tools generated a NOTICE file.
+
 <a name="MT1017" />
 
 ### MT1017: Failed to create the NOTICE file: *.
+
+Earlier versions of our tools generated a NOTICE file.
 
 <a name="MT1018" />
 

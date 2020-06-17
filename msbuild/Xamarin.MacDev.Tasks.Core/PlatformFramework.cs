@@ -52,5 +52,19 @@ namespace Xamarin.MacDev.Tasks
 				throw new InvalidOperationException (string.Format ("Unknown target framework {0} for target framework moniker {1}.", framework, targetFrameworkMoniker));
 			}
 		}
+
+		public static string GetMinimumOSVersionKey (ApplePlatform platform)
+		{
+			switch (platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
+				return ManifestKeys.MinimumOSVersion;
+			case ApplePlatform.MacOSX:
+				return ManifestKeys.LSMinimumSystemVersion;
+			default:
+				throw new InvalidOperationException ($"Invalid platform: {platform}");
+			}
+		}
 	}
 }
