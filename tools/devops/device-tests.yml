@@ -6,7 +6,7 @@ resources:
   - repository: maccore
     type: github
     name: xamarin/maccore
-    ref: refs/heads/device-tests-yaml # should this be on a branch and not on master???
+    ref: refs/heads/main
     endpoint: xamarin
 
 variables:
