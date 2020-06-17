@@ -177,6 +177,7 @@ namespace Xamarin.Utils {
 				WorkingDirectory = workingDirectory,
 				CancellationToken = cancellationToken,
 				Timeout = timeout,
+				Log = log,
 			}.RunAsync ();
 		}
 
