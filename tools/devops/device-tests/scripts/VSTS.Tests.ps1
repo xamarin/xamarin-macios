@@ -91,19 +91,3 @@ Describe 'Stop-Pipeline' {
         }
     }
 }
-
-Describe 'Test-JobSuccess' {
-    Context 'seuccesfull' {
-        Test-JobSuccess -Status "Succeeded" | Should -Be $True
-    }
-
-    Context 'known failures' {
-        Test-JobSuccess -Status "Canceled" | Should -Be $False
-        Test-JobSuccess -Status "Failed" | Should -Be $False
-        Test-JobSuccess -Status "SucceededWithIssues" | Should -Be $False
-    }
-
-    Context 'unknonw value' {
-        Test-JobSuccess -Status "Random value" | Should -Be $False
-    }
-}

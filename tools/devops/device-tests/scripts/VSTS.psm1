@@ -52,22 +52,5 @@ function Stop-Pipeline {
     return Invoke-RestMethod -Uri $url -Headers $headers -Method "PATCH" -Body ($payload | ConvertTo-json) -ContentType 'application/json' -PreserveAuthorizationOnRedirect
 }
 
-<#
-    .SYNOPSIS
-        Test if the current job is successful or not.
-#>
-function Test-JobSuccess {
-
-    param (
-        [Parameter(Mandatory)]
-        [String]
-        $Status
-    )
-
-    # return if the status is one of the failure ones
-    return $Status -eq "Succeeded"
-}
-
 # export public functions, other functions are private and should not be used ouside the module.
 Export-ModuleMember -Function Stop-Pipeline
-Export-ModuleMember -Function Test-JobSuccess

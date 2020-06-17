@@ -1,5 +1,3 @@
-Import-Module VSTS -Force
-
 <#
     .SYNOPSIS
         Returns the target url to be used when setting the status. The target url allows users to get back to the CI event that updated the status.
@@ -259,6 +257,22 @@ function New-GitHubCommentFromFile {
     New-GithubComment -Header $Header -Description $Description -Message $msg.ToString() -Emoji $Emoji
 }
 
+<#
+    .SYNOPSIS
+        Test if the current job is successful or not.
+#>
+function Test-JobSuccess {
+
+    param (
+        [Parameter(Mandatory)]
+        [String]
+        $Status
+    )
+
+    # return if the status is one of the failure ones
+    return $Status -eq "Succeeded"
+}
+
 <# 
     .SYNOPSIS
         Add a new comment that contains the summaries to the Html Report as well as set the status accordingly.
@@ -340,3 +354,4 @@ Export-ModuleMember -Function Set-GitHubStatus
 Export-ModuleMember -Function New-GitHubComment
 Export-ModuleMember -Function New-GitHubCommentFromFile
 Export-ModuleMember -Function New-GitHubSummaryComment 
+Export-ModuleMember -Function Test-JobSuccess 
