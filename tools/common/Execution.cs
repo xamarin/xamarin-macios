@@ -92,29 +92,30 @@ namespace Xamarin.Utils {
 				StandardOutput ??= new StringWriter ();
 				StandardError ??= new StringWriter ();
 
-				if (Log != null) {
-					if (!string.IsNullOrEmpty (p.StartInfo.WorkingDirectory))
-						Log.Write ($"cd {StringUtils.Quote (p.StartInfo.WorkingDirectory)} && ");
-					Log.WriteLine ("{0} {1}", p.StartInfo.FileName, p.StartInfo.Arguments);
-				}
-				p.Start ();
-				var pid = p.Id;
-
-				var stdoutThread = StartOutputThread (tcs, lockobj, p.StandardOutput, StandardOutput, $"StandardOutput reader for {p.StartInfo.FileName} (PID: {pid})");
-				var stderrThread = StartOutputThread (tcs, lockobj, p.StandardError, StandardError, $"StandardError reader for {p.StartInfo.FileName} (PID: {pid})");
-
-				CancellationToken?.Register (() => {
-					// Don't call tcs.TrySetCanceled, that won't return an Execution result to the caller.
-					try {
-						p.Kill ();
-					} catch (Exception ex) {
-						// The process could be disposed already. Just ignore any exceptions here.
-						Log?.WriteLine ($"Failed to cancel and kill PID {pid}: {ex.Message}");
-					}
-				});
-
 				var thread = new Thread (() => {
 					try {
+						if (Log != null) {
+							if (!string.IsNullOrEmpty (p.StartInfo.WorkingDirectory))
+								Log.Write ($"cd {StringUtils.Quote (p.StartInfo.WorkingDirectory)} && ");
+							Log.WriteLine ("{0} {1}", p.StartInfo.FileName, p.StartInfo.Arguments);
+						}
+
+						p.Start ();
+						var pid = p.Id;
+
+						var stdoutThread = StartOutputThread (tcs, lockobj, p.StandardOutput, StandardOutput, $"StandardOutput reader for {p.StartInfo.FileName} (PID: {pid})");
+						var stderrThread = StartOutputThread (tcs, lockobj, p.StandardError, StandardError, $"StandardError reader for {p.StartInfo.FileName} (PID: {pid})");
+
+						CancellationToken?.Register (() => {
+							// Don't call tcs.TrySetCanceled, that won't return an Execution result to the caller.
+							try {
+								p.Kill ();
+							} catch (Exception ex) {
+								// The process could be disposed already. Just ignore any exceptions here.
+								Log?.WriteLine ($"Failed to cancel and kill PID {pid}: {ex.Message}");
+							}
+						});
+
 						if (Timeout.HasValue) {
 							if (!p.WaitForExit ((int) Timeout.Value.TotalMilliseconds)) {
 								Log?.WriteLine ($"Command '{p.StartInfo.FileName} {p.StartInfo.Arguments}' didn't finish in {Timeout.Value.TotalMilliseconds} minutes, and will be killed.");
@@ -143,7 +144,7 @@ namespace Xamarin.Utils {
 					}
 				}) {
 					IsBackground = true,
-					Name = $"Thread waiting for {p.StartInfo.FileName} (PID: {pid}) to finish",
+					Name = $"Thread waiting for {p.StartInfo.FileName} to finish",
 				};
 				thread.Start ();
 			} catch (Exception e) {
