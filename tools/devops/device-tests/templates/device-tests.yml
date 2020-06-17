@@ -246,7 +246,8 @@ steps:
     make -C builds downloads -j || true
     make -C builds .stamp-mono-ios-sdk-destdir -j || true
     if [[ "$HTML_STORAGE" == "xamarin-storage" ]]; then
-       export TESTS_PERIODIC_COMMAND="--periodic-interval 10 --periodic-command rsync --periodic-command-arguments '-avz -e \"ssh\" $PWD/jenkins-results builder@xamarin-storage:/volume1/storage/$XAMARIN_STORAGE_PATH'"
+      echo "Using xamarin-storge!"
+      export TESTS_PERIODIC_COMMAND="--periodic-interval 10 --periodic-command rsync --periodic-command-arguments '-avz -e \"ssh\" $PWD/jenkins-results builder@xamarin-storage:/volume1/storage/$XAMARIN_STORAGE_PATH'"
     fi
 
     MONO_ENV_OPTIONS=--trace=E:all make -C tests vsts-device-tests
