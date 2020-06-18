@@ -1,0 +1,9 @@
+variables:
+- name: iOSDevicePool
+  value: 'VSEng-Xamarin-QA'
+
+- name: WindowsDevicePool
+  value: 'VSEng-Xamarin-Win-XMA'
+
+- name: htmlReportStorage
+  value: 'xamarin-storage'

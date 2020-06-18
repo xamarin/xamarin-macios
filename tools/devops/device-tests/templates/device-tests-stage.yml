@@ -1,0 +1,65 @@
+# Main template that contains all the jobs that are required to run the device tests.
+#
+# The stage contains two different jobs
+# 
+# tests: Runs the tests on a pool that contains devices that are capable to run them.
+# publish_html: Because vsdrop is not supported on macOS we have an extra job that
+#   will run on a pool with Windows devices that will publish the results on VSDrop to
+#   be browsable.
+
+parameters:
+
+# string that is used to identify the status to be used to expose the result on GitHub
+- name: statusContext
+  type: string 
+  default: 'iOS Device Tests' # default context, since we started dealing with iOS devices. 
+
+# string that contains the extra labels to pass to xharness to select the tests to execute.
+- name: testsLabels
+  type: string 
+  default: '--label=run-ios-64-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests' # default context, since we started dealing with iOS devices. 
+
+# name of the pool that contains the iOS devices
+- name: iOSDevicePool
+  type: string
+  default: 'VSEng-Xamarin-QA'
+
+# demand that has to be matched by a bot to be able to run the tests.
+- name: iOSDeviceDemand
+  type: string
+  default: 'xismoke' 
+
+# name of the pool that contains the Windows devices
+- name: WindowsDevicePool
+  type: string
+  default: 'VSEng-Xamarin-Win-XMA'
+
+- name: htmlReportStorage
+  type: string
+  default: xamarin-storage # takes two different values, 'xamarin-storage' or 'vsdrop'
+
+stages:
+- stage: device_tests
+  jobs:
+  - job: tests
+    displayName: 'Run iOS Device Tests'
+    timeoutInMinutes: 1000
+    pool:
+      name: ${{ parameters.iOSDevicePool }}
+      demands: ${{ parameters.iOSDeviceDemand }}
+    steps:
+    - template: device-tests.yml
+      parameters:
+        testsLabels: ${{ parameters.testsLabels }}
+        statusContext: ${{ parameters.statusContext }}
+        htmlReportStorage: ${{ parameters.htmlReportStorage }}
+
+  - job: publish_html
+    displayName: 'Publish Html report in VSDrops'
+    dependsOn: tests
+    condition: and(succeededOrFailed(), eq('${{ parameters.htmlReportStorage }}', 'vsdrops')) # wait for tests to execute, but execute always except if it has been canceled or we are not using vsdrops 
+    pool:
+      name: ${{ parameters.WindowsDevicePool }}
+      demands: agent.os -equals Windows_NT # we need to use a windows machine since vsdrops just works on them and the pool might have diff OS in the agents
+    steps:
+    - template: publish-html.yml

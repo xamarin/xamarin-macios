@@ -1,0 +1,325 @@
+# Xamarin
+#
+# Template that contains the different steps required to run device
+# tests. The template takes a number of parameters so that it can
+# be configured for the different type of devices.
+#
+parameters:
+
+- name: statusContext
+  type: string 
+  default: 'iOS Device Tests' # default context, since we started dealing with iOS devices. 
+
+- name: testsLabels
+  type: string 
+  default: '--label=run-ios-64-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests' # default context, since we started dealing with iOS devices. 
+
+- name: disableProvisionatorCache
+  type: boolean
+  default: false
+
+- name: clearProvisionatorCache
+  type: boolean
+  default: false
+
+- name: htmlReportStorage
+  type: string
+  default: xamarin-storage # takes two different values, 'xamarin-storage' or 'vsdrops'
+
+steps:
+
+- checkout: self
+- checkout: maccore
+  persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
+
+# Run the pipeline script tests to ensure that we will have not have an unexpected behaviour.
+- bash: make -C $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/device-tests/scripts run-tests
+  displayName: 'Run pipeline script tests'
+
+# Executed ONLY when the scripts tests fail. We do not longer trust the pipeline, therefore stop it
+- pwsh: |
+    cd $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/device-tests/scripts/
+    Import-Module ./VSTS.psm1
+    Import-Module ./GitHub.psm1
+    Set-GitHubStatus -Status "error" -Description "Pipeline scripts tests failed." -Context "$Env:CONTEXT"
+    New-GitHubComment -Header "Pipeline scripts tests failed" -Emoji ":fire:" -Description "The tests of the scripts used in the pepeline failed. The build was cancelled."
+    Stop-Pipeline
+  env:
+    BUILD_REVISION: $(BUILD_REVISION)
+    CONTEXT: ${{ parameters.statusContext }}
+    GITHUB_TOKEN: $(GitHub.Token)
+    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+  displayName: 'Notify failed script tests'
+  condition: failed() # we failed running the tests, therefore stop the pipeline
+
+# Uses the powershell cmdlet to print useful information about the system. Will always be executed.
+- pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/device-tests/scripts/System.psm1
+    Get-SystemInfo | Format-Table -Wrap -HideTableHeaders
+    Write-Host "Env variables are:"
+    Get-ChildItem env:
+  displayName: 'Dump Environment'
+  timeoutInMinutes: 1
+
+# Uses the powershell cmdlet to remove known directories that are not needed and use space.
+- pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/device-tests/scripts/System.psm1
+    Clear-HD 
+  displayName: 'Disk cleanup'
+  timeoutInMinutes: 5
+
+# Use a cmdlet to check if the space available in the devices root system is larger than 50 gb. If there is not
+# enough space available it:
+# 1. Set the status of the build to error. It is not a failure since no tests have been ran.
+# 2. Set a comment stating the same as what was sent to the status.
+# 3. Cancel the pipeline and do not execute any of the following steps.
+- pwsh: |
+    cd $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/device-tests/scripts/
+    Import-Module ./System.psm1
+    Import-Module ./VSTS.psm1
+    Import-Module ./GitHub.psm1
+    if ( -not (Test-HDFreeSpace -Size 50)) {
+      Set-GitHubStatus -Status "error" -Description "Not enough free space in the host." -Context "$Env:CONTEXT"
+      New-GitHubComment -Header "Tests failed catastrophically" -Emoji ":fire:" -Description "Not enough free space in the host."
+      Stop-Pipeline
+    }
+  env:
+    BUILD_REVISION: $(BUILD_REVISION)
+    CONTEXT: ${{ parameters.statusContext }}
+    GITHUB_TOKEN: $(GitHub.Token)
+    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+  displayName: 'Check HD Free Space'
+  timeoutInMinutes: 5
+
+# if we got to this point, it means that we do have at least 50 Gb to run the test, should
+# be more than enough, else the above script would have stopped the pipeline
+- bash: cd xamarin-macios && ./configure --enable-xamarin
+  displayName: 'Enable Xamarin'
+  timeoutInMinutes: 1
+
+# Add the required provisioning profiles to be able to execute the tests.
+- bash: |
+    set -x
+    set -e
+    rm -f ~/Library/Caches/com.xamarin.provisionator/Provisions/*p12
+    rm -f ~/Library/Caches/com.xamarin.provisionator/Provisions/*mobileprovision
+    ./maccore/tools/install-qa-provisioning-profiles.sh -v 
+  displayName: 'Add provisioning profiles'
+  env:
+    LOGIN_KEYCHAIN_PASSWORD: $(OSX_KEYCHAIN_PASS)
+
+# Executed ONLY when the profisioning profiles step failed. At this point, we do know that 
+# we cannot run the tests, therefore:
+# 1. Set the status to error.
+# 2. Add a comment letting the monitoring person know that there was an issue with the profiles.
+# 3. Cancel the pipeline, we cannot run the tests.
+- pwsh: |
+    cd $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/device-tests/scripts/
+    Import-Module ./VSTS.psm1
+    Import-Module ./GitHub.psm1
+    Set-GitHubStatus -Status "error" -Description "Failed provisioning profiles." -Context "$Env:CONTEXT"
+    New-GitHubComment -Header "Tests failed catastrophically" -Emoji ":fire:" -Description "Failed provisioning profiles."
+    Stop-Pipeline
+  env:
+    BUILD_REVISION: $(BUILD_REVISION)
+    CONTEXT: ${{ parameters.statusContext }}
+    GITHUB_TOKEN: $(GitHub.Token)
+    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+  displayName: 'Notify failed provisioning'
+  condition: failed() # we could not provisiong, we stop the pipeline, there is not point in doing anything else
+  timeoutInMinutes: 5
+
+- bash: make -C $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/ device-tests-provisioning.csx
+  displayName: 'Generate Provisionator csx file'
+
+# Executed ONLY if we want to clear the provisionator cache.
+- bash: rm -rf "$TOOLS_DIR/provisionator"
+  env:
+    TOOLS_DIR: $(Agent.ToolsDirectory)
+  displayName: 'Nuke Provisionator Tool Cache'
+  condition: ${{ parameters.clearProvisionatorCache }}
+
+# Use the provisionator to install the test dependencies. Those have been generated in the 'Generate Provisionator csx file' step.
+- task: xamops.azdevex.provisionator-task.provisionator@1
+  displayName: 'Provision dependencies'
+  inputs:
+    provisioning_script: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/device-tests-provisioning.csx
+    provisioning_extra_args: '-vvvv'
+  timeoutInMinutes: 250
+
+# Executed ONLY when the provisioning of the bot failed, that means that we could not install one of our dependencies. If that is the case:
+# 1. Set the build to error.
+# 2. Add a comment letting the monitoring person know that we could not install the dependencies.
+# 3. Cancel the pipelines, we cannot run the tests.
+- pwsh: |
+    cd $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/device-tests/scripts/
+    Import-Module ./VSTS.psm1
+    Import-Module ./GitHub.psm1
+    Set-GitHubStatus -Status "error" -Description "Failed installing dependencies." -Context "$Env:CONTEXT"
+    New-GitHubComment -Header "Tests failed catastrophically" -Emoji ":fire:" -Description "Failed installing dependencies."
+    Stop-Pipeline
+  env:
+    BUILD_REVISION: $(BUILD_REVISION)
+    CONTEXT: ${{ parameters.statusContext }}
+    GITHUB_TOKEN: $(GitHub.Token)
+    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+  displayName: 'Notify failed installing dependecies'
+  condition: failed() # we could not install the deps, set comments and leave
+  timeoutInMinutes: 5
+
+# remove any old processes that might have been left behind.
+- pwsh : |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/device-tests/scripts/System.psm1
+    Clear-XamarinProcesses 
+  displayName: 'Process cleanup'
+
+- bash: |
+    security set-key-partition-list -S apple-tool:,apple: -s -k $(OSX_KEYCHAIN_PASS) login.keychain
+  displayName: 'Remove security UI-prompt (http://stackoverflow.com/a/40039594/183422)'
+  condition: succeededOrFailed() # we do not care about the previous process cleanup
+
+# Increase mlaunch verbosity. Will step on the old setting present.
+- pwsh : |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/device-tests/scripts/MLaunch.psm1
+    Set-MLaunchVerbosity -Verbosity 10
+  displayName: 'Make mlaunch verbose'
+  condition: succeededOrFailed() # we do not care about the previous step 
+
+# Re-start the daemon used to find the devices in the bot.
+- pwsh : |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/device-tests/scripts/MLaunch.psm1
+    Optimize-DeviceDiscovery 
+  displayName: 'Fix device discovery (reset launchctl)'
+  condition: succeededOrFailed() # making mlaunch verbose should be a non blocker
+
+# Update the status to pending, that way the monitoring person knows that we started running the tests. Up to this 
+# point we were just setting up the agent.
+- pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/device-tests/scripts/GitHub.psm1 
+    Set-GitHubStatus -Status "pending" -Context "$Env:CONTEXT" -Description "Running device tests on $Env:CONTEXT"
+  env:
+    BUILD_REVISION: $(BUILD_REVISION)
+    CONTEXT: ${{ parameters.statusContext }}
+    GITHUB_TOKEN: $(GitHub.Token)
+  displayName: Set pending GitHub status
+  continueOnError: true
+  condition: succeededOrFailed() # re-starting the daemon should not be an issue
+  timeoutInMinutes: 5
+
+# Executed ONLY if we are using the xamarin-storage. Calculate the path to be used and stores it in the XAMARIN_STORAGE_PATH
+# variable which later can be used by other steps.
+- bash: |
+    set -e
+    set -x
+
+    if test -n $BUILD_SOURCEBRANCHNAME; then
+        BUILD_LANE=$BUILD_SOURCEBRANCHNAME
+    else
+        BUILD_LANE=$(basename $(dirname $(dirname $(dirname $XI_PACKAGE))))
+    fi
+
+    ID=$BUILD_BUILDID
+    if test -z $ID; then
+        ID=$(openssl rand -hex 6)
+    fi
+
+    P=jenkins/xamarin-macios/$BUILD_LANE/$BUILD_REVISION/$ID/device-tests
+
+    echo "##vso[task.setvariable variable=XAMARIN_STORAGE_PATH]$P"
+
+    X="#vso"
+    set +x
+    echo "[Html report (Boston storage)](http://xamarin-storage/$P/jenkins-results/tests/index.html)" > HtmlReportBoston.md
+    echo "#$X[task.addattachment type=Distributedtask.Core.Summary;name=Html Report;]$PWD/HtmlReportBoston.md"
+    set -x
+
+    echo "Html Report: http://xamarin-storage/$P/jenkins-results/tests/index.html"
+  displayName: 'Print Html Report link'
+  condition: and(always(), eq('${{ parameters.htmlReportStorage }}', 'xamarin-storage')) # execute always but when we are using vsdrops since we want to send the message and the url at the same time
+
+# Run tests. If we are using xamarin-storage add a periodic command to be executed by xharness, else, since we are using vsdrops do nothing.
+- bash: |
+    set -x
+    set -e
+
+    cd $WORKING_DIR/xamarin-macios
+    if [[ "$HTML_STORAGE" == "xamarin-storage" ]]; then
+      ssh builder@xamarin-storage "mkdir -p /volume1/storage/$XAMARIN_STORAGE_PATH"
+      export TESTS_PERIODIC_COMMAND="--periodic-interval 10 --periodic-command rsync --periodic-command-arguments '-avz -e \"ssh\" $PWD/jenkins-results builder@xamarin-storage:/volume1/storage/$XAMARIN_STORAGE_PATH'"
+    fi
+
+    make -C builds download -j || true
+    make -C builds downloads -j || true
+    make -C builds .stamp-mono-ios-sdk-destdir -j || true
+    MONO_ENV_OPTIONS=--trace=E:all make -C tests vsts-device-tests
+  env:
+    WORKING_DIR: $(System.DefaultWorkingDirectory) 
+    XAMARIN_STORAGE_PATH: $(XAMARIN_STORAGE_PATH)
+    TESTS_EXTRA_ARGUMENTS: ${{ parameters.testsLabels }}
+    HTML_STORAGE: ${{ parameters.htmlReportStorage }}
+  displayName: 'Run tests'
+  timeoutInMinutes: 600
+
+# Upload TestSummary as an artifact.
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Artifact: TestSummary'
+  inputs:
+    targetPath: 'xamarin-macios/tests/TestSummary.md'
+    artifactName: TestSummary.md
+  continueOnError: true
+  condition: succeededOrFailed()
+
+# Use the cmdlet to post a new summary comment. The cmdlet checks if we have the TestSummary.md file or not. It will also add the appropiate links to the commnet. 
+# This step is ONLY executed when we selected the xamarin-storage option. If we use vsdrops we want to wait until the publish_html job to do it so that we can 
+# calculate the url of the html report based in the vsdrop path.
+- pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/device-tests/scripts/GitHub.psm1 
+    New-GitHubSummaryComment -Context "$Env:CONTEXT" -XamarinStoragePath "$Env:XAMARIN_STORAGE_PATH" -TestSummaryPath "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tests/TestSummary.md"
+  env:
+    BUILD_REVISION: $(BUILD_REVISION)
+    CONTEXT: ${{ parameters.statusContext }}
+    GITHUB_TOKEN: $(GitHub.Token)
+    XAMARIN_STORAGE_PATH: $(XAMARIN_STORAGE_PATH) # could be null if the step was not executed if we use vsdrops, the cmdlet will know how to handle that case
+  displayName: 'Add summaries'
+  condition: and(always(), eq('${{ parameters.htmlReportStorage }}', 'xamarin-storage')) # execute always but when we are using vsdrops since we want to send the message and the url at the same time from the pusblish_hml job
+  timeoutInMinutes: 1
+
+# Upload test results to vsts.
+- task: PublishTestResults@2
+  displayName: 'Publish NUnit Device Test Results'
+  inputs:
+    testResultsFormat: NUnit
+    testResultsFiles: '**/vsts-*.xml'
+    failTaskOnFailedTests: true
+  continueOnError: true
+  condition: succeededOrFailed()
+
+# Archive files for the Html Report so that the report can be easily uploaded as artifacts of the build.
+- task: ArchiveFiles@1
+  displayName: 'Archive HtmlReport'
+  inputs:
+    rootFolder: 'xamarin-macios/jenkins-results'
+    includeRootFolder: false
+    archiveFile: '$(Build.ArtifactStagingDirectory)/HtmlReport.zip'
+  continueOnError: true
+  condition: succeededOrFailed()
+
+# Create HtmlReport artifact. This serves two purposes:
+# 1. It is the way we are going to share the HtmlReport with the publish_html job that is executed on a Windows machine.
+# 2. Users can download this if they want.
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Artifact: HtmlReport'
+  inputs:
+    targetPath: '$(Build.ArtifactStagingDirectory)/HtmlReport.zip'
+    artifactName: HtmlReport
+  continueOnError: true
+  condition: succeededOrFailed()
+
+# Be nice and clean behind you
+- pwsh: |
+    cd $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/device-tests/scripts/
+    Import-Module ./System.psm1
+    Clear-AfterTests
+  displayName: 'Cleanup'
+  continueOnError: true
+  condition: always() # no matter what, includes cancellation

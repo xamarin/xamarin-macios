@@ -1,0 +1,9 @@
+variables:
+- name: iOSDevicePool
+  value: 'VSEng-Xamarin-Mac-Devices'
+
+- name: WindowsDevicePool
+  value: 'VSEng-Xamarin-Mac-Devices'
+
+- name: htmlReportStorage
+  value: 'vsdrops'
