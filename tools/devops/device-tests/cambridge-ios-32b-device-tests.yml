@@ -27,5 +27,5 @@ stages:
     WindowsDevicePool: ${{ variables.WindowsDevicePool }}
     htmlReportStorage: ${{ variables.htmlReportStorage }}
     testsLabels: '--label=run-ios-32-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
-    statusContext: 'VSTS: device tests iOS 32b'
+    statusContext: 'VSTS: device tests iOS32b (Cambridge)'
     iOSDeviceDemand: 'xismoke-32' 
