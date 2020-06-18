@@ -313,7 +313,7 @@ namespace Xharness.Jenkins {
 					var report = Path.Combine (LogDirectory, "index.html");
 					var vsdropsReport = Path.Combine (LogDirectory, "vsdrops_index.html");
 					var tmpreport = Path.Combine (LogDirectory, $"index-{Helpers.Timestamp}.tmp.html");
-					var tmpVsdropsReport= Path.Combine (LogDirectory, $"vsdrops_index-{Helpers.Timestamp}.tmp.html");
+					var tmpVsdropsReport = Path.Combine (LogDirectory, $"vsdrops_index-{Helpers.Timestamp}.tmp.html");
 					var tmpmarkdown = string.IsNullOrEmpty (Harness.MarkdownSummaryPath) ? string.Empty : (Harness.MarkdownSummaryPath + $".{Helpers.Timestamp}.tmp");
 
 					var allSimulatorTasks = new List<RunSimulatorTask> ();

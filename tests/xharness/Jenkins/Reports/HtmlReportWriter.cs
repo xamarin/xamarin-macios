@@ -18,7 +18,7 @@ namespace Xharness.Jenkins.Reports {
 		readonly Jenkins jenkins;
 		readonly IResourceManager resourceManager;
 		readonly IResultParser resultParser;
-		private readonly string? linksPrefix;
+		readonly string? linksPrefix;
 		private readonly bool embededResources;
 
 		Dictionary<ILog, Tuple<long, object>> log_data = new Dictionary<ILog, Tuple<long, object>> ();
@@ -41,7 +41,7 @@ namespace Xharness.Jenkins.Reports {
 
 		string GetResourcePath (string resource)
 		{
-			var executingDir= Path.GetDirectoryName (Assembly.GetExecutingAssembly ().Location);
+			var executingDir = Path.GetDirectoryName (Assembly.GetExecutingAssembly ().Location);
 			return Path.Combine (executingDir, resource); 
 		}
 		
