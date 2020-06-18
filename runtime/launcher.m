@@ -133,7 +133,6 @@ get_mono_env_options (int *count)
 	unsigned char *start, *inptr;
 	char *value, **argv;
 	int i, n = 0;
-	size_t size;
 
 	if (env == NULL) {
 		*count = 0;
