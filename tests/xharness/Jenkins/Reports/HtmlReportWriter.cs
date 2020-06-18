@@ -62,7 +62,7 @@ namespace Xharness.Jenkins.Reports {
 			}
 		}
 
-		void IncludeCSS (StreamWriter writer)
+		void IncludeCss (StreamWriter writer)
 		{
 			if (embededResources) {
 				var cssPath = GetResourcePath ("xharness.css");
@@ -96,7 +96,7 @@ namespace Xharness.Jenkins.Reports {
 			if (jenkins.IsServerMode && jenkins.Populating)
 				writer.WriteLine ("<meta http-equiv=\"refresh\" content=\"1\">");
 			writer.WriteLine ("<head>");
-			IncludeCSS (writer);
+			IncludeCss (writer);
 			writer.WriteLine ("<title>Test results</title>");
 			IncludeJavascript (writer);
 			if (jenkins.IsServerMode) {
