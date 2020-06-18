@@ -43,6 +43,7 @@ namespace Xharness.Jenkins {
 		NonMonotouch = 1 << 20,
 		Monotouch = 1 << 21,
 		DotNet = 1 << 22,
+		SystemPermissionTests = 1 << 23,
 		All = ~0,
 	}
 	class Jenkins {
@@ -109,7 +110,7 @@ namespace Xharness.Jenkins {
 			Harness = harness ?? throw new ArgumentNullException (nameof (harness));
 			Simulators = new SimulatorLoader (processManager);
 			Devices = new HardwareDeviceLoader (processManager);
-			testSelector = new TestSelector (this, processManager, new GitHub (harness, processManager));
+			testSelector = new TestSelector (this, new GitHub (harness, processManager));
 			testVariationsFactory = new TestVariationsFactory (this, processManager);
 			DeviceLoader = new JenkinsDeviceLoader (Simulators, Devices, Logs);
 			resourceManager = new ResourceManager ();

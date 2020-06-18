@@ -45,7 +45,7 @@ namespace Xharness.Tests.Jenkins {
 			jenkins = new Xharness.Jenkins.Jenkins (harness.Object, processManager.Object, resultParser.Object,
 				tunnelBore.Object);
 			jenkins.MainLog = log.Object;
-			testSelector = new TestSelector (jenkins, processManager.Object, versionControlSystem.Object);
+			testSelector = new TestSelector (jenkins, versionControlSystem.Object);
 		}
 
 		[TearDown]
@@ -67,49 +67,56 @@ namespace Xharness.Tests.Jenkins {
 
 					// all tests selected, not main branch
 					TestSelection expectedSelection = TestSelection.All;
-					yield return new TestCaseData ("testBranch", new List<string> {"run-all-tests"}, expectedSelection, true);
+					yield return new TestCaseData ("testBranch", new List<string> {"run-all-tests"}, expectedSelection);
 
 					// all tests selected via tag, but we added some skips, therefore we skip them
 					expectedSelection = TestSelection.All;
 					expectedSelection &= ~TestSelection.MacOS;
-					yield return new TestCaseData ("testBranch", 
+					yield return new TestCaseData ("testBranch",
 						new List<string> { "run-all-tests", "skip-mac-tests"},
-						expectedSelection, true);
+						expectedSelection);
 					
 					// skip all ye select one of the tests
 					expectedSelection = TestSelection.MacOS;
 					yield return new TestCaseData ("testBranch",
 						new List<string> {"skip-all-tests", "run-mac-tests"},
-						expectedSelection, false);
+						expectedSelection);
 
 					// select the defaults + some additional ones
 					expectedSelection = Xharness.Jenkins.Jenkins.DefaultTestSelection | TestSelection.Bcl | TestSelection.Cecil;
 					yield return new TestCaseData ("testBranch",
 						new List<string> {"run-bcl-tests", "run-cecil-tests"},
-						expectedSelection, false);
+						expectedSelection);
 
 					// de-select one of the default tests
 					expectedSelection = Xharness.Jenkins.Jenkins.DefaultTestSelection | TestSelection.Bcl;
 					expectedSelection &= ~TestSelection.iOSMSBuild;
 					yield return new TestCaseData ("testBranch",
 						new List<string> {"skip-ios-msbuild-tests", "run-bcl-tests"},
-						expectedSelection, false);
+						expectedSelection);
 
 					// select the special case of the docs, this happens when the branch is main
 					expectedSelection = Xharness.Jenkins.Jenkins.DefaultTestSelection | TestSelection.Docs;
-					yield return new TestCaseData ("main", new List<string>(), expectedSelection, false);
+					yield return new TestCaseData ("main", new List<string>(), expectedSelection);
 
 					// select the docs specifically
 					expectedSelection = Xharness.Jenkins.Jenkins.DefaultTestSelection | TestSelection.Docs;
-					yield return new TestCaseData ("testBranch", new List<string> {"run-docs-tests"}, expectedSelection, false);
+					yield return new TestCaseData ("testBranch",
+						new List<string> {"run-docs-tests"},
+						expectedSelection);
 
 					// select the system permission tests, this is a special case since we do not update the selection
 					// but we do check the value of the xharness propery
 					expectedSelection = Xharness.Jenkins.Jenkins.DefaultTestSelection;
-					yield return new TestCaseData ("testBranch", new List<string> { "run-system-permission-tests" }, expectedSelection, true);
+					expectedSelection |= TestSelection.SystemPermissionTests;
+					yield return new TestCaseData ("testBranch",
+						new List<string> { "run-system-permission-tests" },
+						expectedSelection);
 
 					expectedSelection &= ~TestSelection.All; // skip all
-					yield return new TestCaseData ("testBranch", new List<string> { "skip-all-tests" }, expectedSelection, false);
+					yield return new TestCaseData ("testBranch",
+						new List<string> { "skip-all-tests" },
+						expectedSelection);
 
 				}
 			}
@@ -144,14 +151,12 @@ namespace Xharness.Tests.Jenkins {
 		}
 		
 		[Test, TestCaseSource (typeof (TestCasesData), "SelectByLabelTestData")]
-		public void SelectTestByLabelTests (string branchName, List<string> labels, TestSelection expectedSelection, bool includeSystemPermission)
+		public void SelectTestByLabelTests (string branchName, List<string> labels, TestSelection expectedSelection)
 		{
 			versionControlSystem.Setup (vcs => vcs.GetLabels (It.IsAny<int> ())).Returns (labels);
 			Environment.SetEnvironmentVariable ("BRANCH_NAME", branchName);
 			testSelector.SelectTestsByLabel (10);
 			Assert.AreEqual (expectedSelection, jenkins.TestSelection, $"Test selection for {string.Join (",", labels)}");
-			// verify that we did set the correct value in the xharness interface
-			harness.VerifySet (x => x.IncludeSystemPermissionTests = includeSystemPermission, $"Setting system tests for {string.Join (",", labels)}");
 		}
 
 		[Test, TestCaseSource (typeof(TestCasesData), "SelectByModifiedFileTestData")]

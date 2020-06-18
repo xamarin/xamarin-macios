@@ -3,7 +3,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using System.Collections.Generic;
 
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
@@ -18,38 +17,10 @@ namespace Xharness.Jenkins {
 		#region private vars
 		
 		readonly Jenkins jenkins;
-		readonly IProcessManager processManager;
 		readonly IVersionControlSystem vcs;
 
 		ILog MainLog => jenkins.MainLog;
 		IHarness Harness => jenkins.Harness;
-		
-		// disabled by default
-		static readonly Dictionary<string, TestSelection> testNameSelectionMatch = new Dictionary<string, TestSelection> {
-			["ios-32"] = TestSelection.iOS32,
-			["ios-64"] = TestSelection.iOS64,
-			["ios"] = TestSelection.iOS,
-			["tvos"] = TestSelection.tvOS,
-			["watchos"] = TestSelection.watchOS,
-			["mac"] = TestSelection.MacOS,
-			["ios-msbuild"] = TestSelection.iOSMSBuild,
-			["ios-simulator"] = TestSelection.Simulator,
-			["non-monotouch"] =  TestSelection.NonMonotouch,
-			["monotouch"] = TestSelection.Monotouch,
-			["mtouch"] =  TestSelection.Mtouch,
-			["mmp"] = TestSelection.Mmp,
-			["bcl"] = TestSelection.Bcl,
-			["bcl-xunit"] = TestSelection.BclXUnit,
-			["bcl-nunit"] = TestSelection.BclNUnit,
-			["mscorlib"] = TestSelection.Mscorlib,
-			["btouch"] = TestSelection.Btouch,
-			["mac-binding-project"] = TestSelection.MacBindingProject,
-			["ios-extensions"] = TestSelection.iOSExtensions,
-			["device"] = TestSelection.Device,
-			["xtro"] = TestSelection.Xtro,
-			["cecil"] = TestSelection.Cecil,
-			["all"] = TestSelection.All,
-		};
 
 		static readonly string [] btouchPrefixes = {
 			"src/btouch.cs",
@@ -109,10 +80,9 @@ namespace Xharness.Jenkins {
 
 		#endregion
 
-		public TestSelector (Jenkins jenkins, IProcessManager processManager, IVersionControlSystem versionControlSystem)
+		public TestSelector (Jenkins jenkins, IVersionControlSystem versionControlSystem)
 		{
 			this.jenkins = jenkins;
-			this.processManager = processManager;
 			this.vcs = versionControlSystem;
 		}
 		
@@ -208,57 +178,57 @@ namespace Xharness.Jenkins {
 			}
 
 			MainLog.WriteLine ($"In total found {labels.Count ()} label(s): {string.Join (", ", labels.ToArray ())}");
-			
-			// first check if the all label is used, we either skip our run all, then check the skips, then run,
-			// if we skipped and add, we prefer to add
-			var skipLabels = labels.Where (l => l.StartsWith ("skip-") && !l.Contains ("all"))
-				?.Select (l => l.Replace ("skip-", "").Replace ("-tests", ""));
-			var runLabels = labels.Where (l => l.StartsWith ("run") && !l.Contains ("all"))
-				?.Select (l => l.Replace ("run-", "").Replace ("-tests", ""));
 
-			SetEnabled (labels, "all", TestSelection.All); // we might add all or skip all
+			// disabled by default
+			SetEnabled (labels, "mtouch", TestSelection.Mtouch);
+			SetEnabled (labels, "mmp", TestSelection.Mmp);
+			SetEnabled (labels, "bcl", TestSelection.Bcl);
+			SetEnabled (labels, "bcl-xunit", TestSelection.BclXUnit);
+			SetEnabled (labels, "bcl-nunit", TestSelection.BclNUnit);
+			SetEnabled (labels, "mscorlib", TestSelection.Mscorlib);
+			SetEnabled (labels, "btouch", TestSelection.Btouch);
+			SetEnabled (labels, "mac-binding-project", TestSelection.MacBindingProject);
+			SetEnabled (labels, "ios-extensions", TestSelection.iOSExtensions);
+			SetEnabled (labels, "device", TestSelection.Device);
+			SetEnabled (labels, "xtro", TestSelection.Xtro);
+			SetEnabled (labels, "cecil", TestSelection.Cecil);
+			SetEnabled (labels, "old-simulator", TestSelection.OldiOSSimulator);
+			SetEnabled (labels, "all", TestSelection.All);
 
-			if (skipLabels != null) // if we have any skips & we added all, we skip them
-				foreach (var skip in skipLabels) {
-					if (testNameSelectionMatch.TryGetValue (skip, out var flag))
-						SetEnabled (labels, skip, flag);
-				}
-			if (runLabels != null) //  if we skipped all or skipped before but have an add, we add them back
-				foreach (var run in runLabels) {
-					if (testNameSelectionMatch.TryGetValue (run, out var flag))						
-						SetEnabled (labels, run, flag);
-				}
+			// enabled by default
+			SetEnabled (labels, "ios-32", TestSelection.iOS32);
+			SetEnabled (labels, "ios-64", TestSelection.iOS64);
+			SetEnabled (labels, "ios", TestSelection.iOS); // Needs to be set after `ios-32` and `ios-64` (because it can reset them)
+			SetEnabled (labels, "tvos", TestSelection.tvOS);
+			SetEnabled (labels, "watchos", TestSelection.watchOS);
+			SetEnabled (labels, "mac", TestSelection.MacOS);
+			SetEnabled (labels, "ios-msbuild", TestSelection.iOSMSBuild);
+			SetEnabled (labels, "ios-simulator", TestSelection.Simulator);
+			SetEnabled (labels, "non-monotouch", TestSelection.NonMonotouch);
+			SetEnabled (labels, "monotouch", TestSelection.Monotouch);
 
-			// special case since we are not working with the TestSelection flag in jenkins
-			Harness.IncludeSystemPermissionTests = labels.Contains ("run-system-permission-tests") || labels.Contains ("run-all-tests");
+			if (SetEnabled (labels, "system-permission", TestSelection.SystemPermissionTests))
+				Harness.IncludeSystemPermissionTests = jenkins.TestSelection.HasFlag (TestSelection.SystemPermissionTests);
 
 			// docs is a bit special:
 			// - can only be executed if the Xamarin-specific parts of the build is enabled
 			// - enabled by default if the current branch is main (or, for a pull request, if the target branch is main)
-			var changed = SetEnabled (labels, "docs", TestSelection.Docs) || labels.Contains ("run-all-tests");
+			var changed = SetEnabled (labels, "docs", TestSelection.Docs);
 			if (Harness.ENABLE_XAMARIN) {
-				if (!changed) {
+				if (!changed) { // don't override any value set using labels
 					var branchName = Environment.GetEnvironmentVariable ("BRANCH_NAME");
-					if (!string.IsNullOrEmpty (branchName)) {
-						if (branchName == "main") {
+					var logMessage = "Enabled 'docs' tests because the current branch is 'main'.";
+					if (string.IsNullOrEmpty (branchName) && pullRequest > 0) {
+						branchName = vcs.GetPullRequestTargetBranch (pullRequest);
+						logMessage = "Enabled 'docs' tests because the target branch is 'main'.";
+					}
+					if (!string.IsNullOrEmpty(branchName) && branchName == "main") {
 							jenkins.TestSelection |= TestSelection.Docs;
-						} else {
-							jenkins.TestSelection &= ~TestSelection.Docs;
-						}
-						if (jenkins.TestSelection.HasFlag (TestSelection.Docs))
-							MainLog.WriteLine ("Enabled 'docs' tests because the current branch is 'main'.");
-					} else if (pullRequest > 0) {
-						if (vcs.GetPullRequestTargetBranch (pullRequest) == "main") {
-							jenkins.TestSelection |= TestSelection.Docs;
-						} else {
-							jenkins.TestSelection &= ~TestSelection.Docs;
-						}
-						if (jenkins.TestSelection.HasFlag (TestSelection.Docs))
-							MainLog.WriteLine ("Enabled 'docs' tests because the target branch is 'main'.");
+							MainLog.WriteLine (logMessage);
 					}
 				}
 			} else {
-				if (jenkins.TestSelection.HasFlag (TestSelection.Docs)) {
+				if (jenkins.TestSelection.HasFlag(TestSelection.Docs)) {
 					jenkins.TestSelection &= ~TestSelection.Docs; // could have been enabled by 'run-all-tests', so disable it if we can't run it.
 					MainLog.WriteLine ("Disabled 'docs' tests because the Xamarin-specific parts of the build are not enabled.");
 				}
@@ -266,7 +236,7 @@ namespace Xharness.Jenkins {
 
 			// old simulator tests is also a bit special:
 			// - enabled by default if using a beta Xcode, otherwise disabled by default
-			changed = SetEnabled (labels, "old-simulator", TestSelection.OldiOSSimulator) || jenkins.TestSelection.HasFlag (TestSelection.All);
+			changed = SetEnabled (labels, "old-simulator", TestSelection.OldiOSSimulator);
 			if (!changed && jenkins.IsBetaXcode) {
 				jenkins.TestSelection |= TestSelection.OldiOSSimulator;
 				MainLog.WriteLine ("Enabled 'old-simulator' tests because we're using a beta Xcode.");
