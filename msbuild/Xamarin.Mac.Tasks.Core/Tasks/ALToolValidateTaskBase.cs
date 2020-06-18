@@ -2,7 +2,7 @@ using System.Text;
 
 namespace Xamarin.Mac.Tasks
 {
-	public class ALToolValidateTaskBase : MacDev.Tasks.ALToolTaskBase
+	public abstract class ALToolValidateTaskBase : MacDev.Tasks.ALToolTaskBase
 	{
 		protected override string GenerateCommandLineCommands ()
 		{

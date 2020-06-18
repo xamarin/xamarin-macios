@@ -9,7 +9,7 @@ using Xamarin.MacDev.Tasks;
 
 namespace Xamarin.iOS.Tasks
 {
-	public class CollectITunesSourceFilesTaskBase : XamarinTask
+	public abstract class CollectITunesSourceFilesTaskBase : XamarinTask
 	{
 		static readonly string[] iTunesFileNames = { "iTunesMetadata.plist", "iTunesArtwork@2x", "iTunesArtwork" };
 

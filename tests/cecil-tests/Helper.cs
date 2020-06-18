@@ -18,12 +18,16 @@ namespace Cecil.Tests {
 		static Dictionary<string, AssemblyDefinition> cache = new Dictionary<string, AssemblyDefinition> ();
 
 		// make sure we load assemblies only once into memory
-		public static AssemblyDefinition? GetAssembly (string assembly)
+		public static AssemblyDefinition? GetAssembly (string assembly, ReaderParameters? parameters = null)
 		{
 			if (!File.Exists (assembly))
 				return null;
 			if (!cache.TryGetValue (assembly, out var ad)) {
-				ad = AssemblyDefinition.ReadAssembly (assembly);
+				if (parameters == null) {
+					ad = AssemblyDefinition.ReadAssembly (assembly);
+				} else {
+					ad = AssemblyDefinition.ReadAssembly (assembly, parameters);
+				}
 				cache.Add (assembly, ad);
 			}
 			return ad;
@@ -71,6 +75,20 @@ namespace Cecil.Tests {
 				yield return new TestCaseData (Configuration.XamarinMacMobileDll);
 				yield return new TestCaseData (Configuration.XamarinMacFullDll);
 			}
+		}
+
+		public static IEnumerable TaskAssemblies {
+			get {
+				yield return CreateTestFixtureDataFromPath (Path.Combine (Configuration.SdkRootXI, "lib", "msbuild", "iOS", "Xamarin.iOS.Tasks.dll"));
+				yield return CreateTestFixtureDataFromPath (Path.Combine (Configuration.SdkRootXM, "lib", "msbuild",  "Xamarin.Mac.Tasks.dll"));
+			}
+		}
+
+		static TestFixtureData CreateTestFixtureDataFromPath (string path)
+		{
+			var rv = new TestFixtureData (path);
+			rv.SetArgDisplayNames (Path.GetFileName (path));
+			return rv;
 		}
 	}
 }

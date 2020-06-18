@@ -9,7 +9,7 @@ using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.iOS.Tasks
 {
-	public class CollectFrameworksBase : XamarinTask
+	public abstract class CollectFrameworksBase : XamarinTask
 	{
 		#region Inputs
 
