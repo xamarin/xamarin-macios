@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
@@ -17,20 +18,66 @@ namespace Xharness.Jenkins.Reports {
 		readonly Jenkins jenkins;
 		readonly IResourceManager resourceManager;
 		readonly IResultParser resultParser;
+		readonly string? linksPrefix;
+		readonly bool embededResources;
 
 		Dictionary<ILog, Tuple<long, object>> log_data = new Dictionary<ILog, Tuple<long, object>> ();
 		string? previous_test_runs;
 
-		// convinient
+		// convenient
 		IHarness Harness => jenkins.Harness;
 
-		public HtmlReportWriter (Jenkins jenkins, IResourceManager resourceManager, IResultParser resultParser)
+		public HtmlReportWriter (Jenkins jenkins, IResourceManager resourceManager, IResultParser resultParser, string? linksPrefix = null, bool embeddedResources = false)
 		{
 			this.jenkins = jenkins ?? throw new ArgumentNullException (nameof (jenkins));
 			this.resourceManager = resourceManager ?? throw new ArgumentNullException (nameof (resourceManager));
 			this.resultParser = resultParser ?? throw new ArgumentNullException (nameof (resultParser));
+			this.linksPrefix = linksPrefix;
+			this.embededResources = embeddedResources;
 		}
 
+		string GetLinkPath (string path)
+			=> linksPrefix != null ? Path.Combine (linksPrefix, path) : path;
+
+		string GetResourcePath (string resource)
+		{
+			var executingDir = Path.GetDirectoryName (Assembly.GetExecutingAssembly ().Location);
+			return Path.Combine (executingDir, resource); 
+		}
+		
+		void IncludeJavascript (StreamWriter writer)
+		{
+			if (embededResources) {
+				var jsPath = GetResourcePath("xharness.js"); 
+				writer.WriteLine ("<script type='text/javascript'>");
+				using (var reader = new StreamReader (jsPath)) {
+					string? line = null;
+					while ((line = reader.ReadLine ()) != null) {
+						writer.WriteLine (line);
+					}
+				}
+				writer.WriteLine("</script>");
+			} else {
+				writer.WriteLine (@"<script type='text/javascript' src='xharness.js'></script>");
+			}
+		}
+
+		void IncludeCss (StreamWriter writer)
+		{
+			if (embededResources) {
+				var cssPath = GetResourcePath ("xharness.css");
+				writer.WriteLine("<style>");
+				using (var reader = new StreamReader (cssPath)) {
+					string? line = null;
+					while ((line = reader.ReadLine ()) != null) {
+						writer.WriteLine (line);
+					}
+				}
+				writer.WriteLine("</style>");
+			} else {
+				writer.WriteLine ("<link rel='stylesheet' href='xharness.css'>");
+			}
+		}
 		public void Write (IList<ITestTask> allTasks, StreamWriter writer)
 		{
 			var id_counter = 0;
@@ -49,9 +96,9 @@ namespace Xharness.Jenkins.Reports {
 			if (jenkins.IsServerMode && jenkins.Populating)
 				writer.WriteLine ("<meta http-equiv=\"refresh\" content=\"1\">");
 			writer.WriteLine ("<head>");
-			writer.WriteLine ("<link rel='stylesheet' href='xharness.css'>");
+			IncludeCss (writer);
 			writer.WriteLine ("<title>Test results</title>");
-			writer.WriteLine (@"<script type='text/javascript' src='xharness.js'></script>");
+			IncludeJavascript (writer);
 			if (jenkins.IsServerMode) {
 				writer.WriteLine ("<script type='text/javascript'>");
 				writer.WriteLine ("setTimeout (autorefresh, 1000);");
@@ -69,7 +116,7 @@ namespace Xharness.Jenkins.Reports {
 
 			writer.WriteLine ($"<span id='x{id_counter++}' class='autorefreshable'>");
 			foreach (var log in jenkins.Logs)
-				writer.WriteLine ("<a href='{0}' type='text/plain;charset=UTF-8'>{1}</a><br />", log.FullPath.Substring (jenkins.LogDirectory.Length + 1), log.Description);
+				writer.WriteLine ("<a href='{0}' type='text/plain;charset=UTF-8'>{1}</a><br />", GetLinkPath (log.FullPath.Substring (jenkins.LogDirectory.Length + 1)), log.Description);
 			writer.WriteLine ("</span>");
 
 			var headerColor = "black";
@@ -395,18 +442,18 @@ namespace Xharness.Jenkins.Reports {
 									break;
 								}
 								if (!exists) {
-									writer.WriteLine ("<a href='{0}' type='{2}' target='{3}'>{1}</a> (does not exist)<br />", LinkEncode (log.FullPath.Substring (jenkins.LogDirectory.Length + 1)), log.Description, log_type, log_target);
+									writer.WriteLine ("<a href='{0}' type='{2}' target='{3}'>{1}</a> (does not exist)<br />", LinkEncode (GetLinkPath (log.FullPath.Substring (jenkins.LogDirectory.Length + 1))), log.Description, log_type, log_target);
 								} else if (log.Description == LogType.BuildLog.ToString ()) {
 									var binlog = log.FullPath.Replace (".txt", ".binlog");
 									if (File.Exists (binlog)) {
-										var textLink = string.Format ("<a href='{0}' type='{2}' target='{3}'>{1}</a>", LinkEncode (log.FullPath.Substring (jenkins.LogDirectory.Length + 1)), log.Description, log_type, log_target);
-										var binLink = string.Format ("<a href='{0}' type='{2}' target='{3}' style='display:{4}'>{1}</a><br />", LinkEncode (binlog.Substring (jenkins.LogDirectory.Length + 1)), "Binlog download", log_type, log_target, test.Building ? "none" : "inline");
+										var textLink = string.Format ("<a href='{0}' type='{2}' target='{3}'>{1}</a>", LinkEncode (GetLinkPath (log.FullPath.Substring (jenkins.LogDirectory.Length + 1))), log.Description, log_type, log_target);
+										var binLink = string.Format ("<a href='{0}' type='{2}' target='{3}' style='display:{4}'>{1}</a><br />", LinkEncode (GetLinkPath (binlog.Substring (jenkins.LogDirectory.Length + 1))), "Binlog download", log_type, log_target, test.Building ? "none" : "inline");
 										writer.Write ("{0} {1}", textLink, binLink);
 									} else {
-										writer.WriteLine ("<a href='{0}' type='{2}' target='{3}'>{1}</a><br />", LinkEncode (log.FullPath.Substring (jenkins.LogDirectory.Length + 1)), log.Description, log_type, log_target);
+										writer.WriteLine ("<a href='{0}' type='{2}' target='{3}'>{1}</a><br />", LinkEncode (GetLinkPath (log.FullPath.Substring (jenkins.LogDirectory.Length + 1))), log.Description, log_type, log_target);
 									}
 								} else {
-									writer.WriteLine ("<a href='{0}' type='{2}' target='{3}'>{1}</a><br />", LinkEncode (log.FullPath.Substring (jenkins.LogDirectory.Length + 1)), log.Description, log_type, log_target);
+									writer.WriteLine ("<a href='{0}' type='{2}' target='{3}'>{1}</a><br />", LinkEncode (GetLinkPath (log.FullPath.Substring (jenkins.LogDirectory.Length + 1))), log.Description, log_type, log_target);
 								}
 								if (!exists) {
 									// Don't try to parse files that don't exist
