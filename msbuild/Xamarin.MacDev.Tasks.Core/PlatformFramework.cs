@@ -67,6 +67,7 @@ namespace Xamarin.MacDev.Tasks
 			}
 		}
 
+		// Get the operating system as it's used in the -m<operating-system>-version-min compiler flags.
 		public static string GetMinimumVersionOperatingSystem (string targetFrameworkMoniker, bool is_simulator)
 		{
 			var framework = GetFramework (targetFrameworkMoniker);
@@ -84,6 +85,7 @@ namespace Xamarin.MacDev.Tasks
 			}
 		}
 
+		// Get the -m<operating-system>-version-min compiler flag.
 		public static string GetMinimumVersionArgument (string targetFrameworkMoniker, bool isSimulator, string minimumOSVersion)
 		{
 			return $"-m{GetMinimumVersionOperatingSystem (targetFrameworkMoniker, isSimulator)}-version-min={minimumOSVersion}";
