@@ -288,14 +288,16 @@ namespace Xamarin.Bundler {
 				AssemblyName = assembly_path,
 				AddBitcodeMarkerSection = BuildTarget != AssemblyBuildTarget.StaticObject && App.EnableMarkerOnlyBitCode,
 				AssemblyPath = asm,
-				ProcessStartInfo = Driver.CreateStartInfo (App, aotCompiler, aotArgs, Path.GetDirectoryName (assembly_path)),
+				FileName = aotCompiler,
+				Arguments = aotArgs,
+				Environment = new Dictionary<string, string> { { "MONO_PATH", Path.GetDirectoryName (assembly_path) } },
 				AotInfo = aotInfo,
 			};
 			if (App.Platform == ApplePlatform.WatchOS) {
 				// Visual Studio for Mac sets this environment variable, and it confuses the AOT compiler.
 				// So unset it.
 				// See https://github.com/mono/mono/issues/11765
-				task.ProcessStartInfo.EnvironmentVariables.Remove ("MONO_THREADS_SUSPEND");
+				task.Environment ["MONO_THREADS_SUSPEND"] = null;
 			}
 
 			aotInfo.Task = task;

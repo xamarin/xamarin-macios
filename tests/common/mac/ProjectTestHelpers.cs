@@ -209,10 +209,11 @@ namespace Xamarin.MMP.Tests
 			return RunAndAssert (exe, args, "Command: " + exe);
 		}
 
-		public static string RunAndAssert (string exe, IList<string> args, string stepName, bool shouldFail = false, Func<string> getAdditionalFailInfo = null, string[] environment = null)
+		public static string RunAndAssert (string exe, IList<string> args, string stepName, bool shouldFail = false, Func<string> getAdditionalFailInfo = null, Dictionary<string, string> environment = null)
 		{
 			StringBuilder output = new StringBuilder ();
-			Environment.SetEnvironmentVariable ("MONO_PATH", null);
+			environment ??= new Dictionary<string, string> ();
+			environment ["MONO_PATH"] = null;
 			int compileResult = Xamarin.Bundler.Driver.RunCommand (exe, args, environment, output, suppressPrintOnErrors: shouldFail);
 			if (!shouldFail && compileResult != 0 && Xamarin.Bundler.Driver.Verbosity < 1) {
 				Console.WriteLine ($"Execution failed; exit code: {compileResult}");
@@ -247,29 +248,32 @@ namespace Xamarin.MMP.Tests
 
 			// TODO - This is not enough for MSBuild to really work. We need stuff to have it not use system targets!
 			// These are required to have xbuild use are local build instead of system install
-			Environment.SetEnvironmentVariable ("TargetFrameworkFallbackSearchPaths", rootDirectory + "/Library/Frameworks/Mono.framework/External/xbuild-frameworks");
-			Environment.SetEnvironmentVariable ("MSBuildExtensionsPathFallbackPathsOverride", rootDirectory + "/Library/Frameworks/Mono.framework/External/xbuild");
-			Environment.SetEnvironmentVariable ("XAMMAC_FRAMEWORK_PATH", rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current");
-			Environment.SetEnvironmentVariable ("XamarinMacFrameworkRoot", rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current");
+			var env = new Dictionary<string, string> {
+				{ "TargetFrameworkFallbackSearchPaths", rootDirectory + "/Library/Frameworks/Mono.framework/External/xbuild-frameworks" },
+				{ "MSBuildExtensionsPathFallbackPathsOverride", rootDirectory + "/Library/Frameworks/Mono.framework/External/xbuild" },
+				{ "XAMMAC_FRAMEWORK_PATH", rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current" },
+				{ "XamarinMacFrameworkRoot", rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current" },
+			};
 
 			// This is to force build to use our mmp and not system mmp
 			var buildArgs = new List<string> ();
 			buildArgs.Add ("build");
 			buildArgs.Add (csprojTarget);
 
-			return RunAndAssert ("/Applications/Visual Studio.app/Contents/MacOS/vstool", buildArgs, "Compile", shouldFail: true);
+			return RunAndAssert ("/Applications/Visual Studio.app/Contents/MacOS/vstool", buildArgs, "Compile", shouldFail: true, environment: env);
 		}
 
-		public static string BuildProject (string csprojTarget, bool shouldFail = false, bool release = false, string[] environment = null, IList<string> extraArgs = null)
+		public static string BuildProject (string csprojTarget, bool shouldFail = false, bool release = false, Dictionary<string, string> environment = null, IList<string> extraArgs = null)
 		{
 			string rootDirectory = FindRootDirectory ();
 
 			// TODO - This is not enough for MSBuild to really work. We need stuff to have it not use system targets!
 			// These are required to have xbuild use are local build instead of system install
-			Environment.SetEnvironmentVariable ("TargetFrameworkFallbackSearchPaths", rootDirectory + "/Library/Frameworks/Mono.framework/External/xbuild-frameworks");
-			Environment.SetEnvironmentVariable ("MSBuildExtensionsPathFallbackPathsOverride", rootDirectory + "/Library/Frameworks/Mono.framework/External/xbuild");
-			Environment.SetEnvironmentVariable ("XAMMAC_FRAMEWORK_PATH", rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current");
-			Environment.SetEnvironmentVariable ("XamarinMacFrameworkRoot", rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current");
+			environment ??= new Dictionary<string, string> ();
+			environment ["TargetFrameworkFallbackSearchPaths"] = rootDirectory + "/Library/Frameworks/Mono.framework/External/xbuild-frameworks";
+			environment ["MSBuildExtensionsPathFallbackPathsOverride"] = rootDirectory + "/Library/Frameworks/Mono.framework/External/xbuild";
+			environment ["XAMMAC_FRAMEWORK_PATH"] = rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current";
+			environment ["XamarinMacFrameworkRoot"] = rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current";
 
 			// This is to force build to use our mmp and not system mmp
 			var buildArgs = new List<string> ();
@@ -433,7 +437,7 @@ namespace Xamarin.MMP.Tests
 			return GenerateEXEProject (config);
 		}
 
-		public static string GenerateAndBuildUnifiedExecutable (UnifiedTestConfig config, bool shouldFail = false, string[] environment = null)
+		public static string GenerateAndBuildUnifiedExecutable (UnifiedTestConfig config, bool shouldFail = false, Dictionary<string, string> environment = null)
 		{
 			string csprojTarget = GenerateUnifiedExecutableProject (config);
 			return BuildProject (csprojTarget, shouldFail: shouldFail, release: config.Release, environment: environment);
@@ -444,7 +448,7 @@ namespace Xamarin.MMP.Tests
 			return RunEXEAndVerifyGUID (config.TmpDir, config.guid, config.ExecutablePath);
 		}
 
-		public static OutputText TestUnifiedExecutable (UnifiedTestConfig config, bool shouldFail = false, string[] environment = null)
+		public static OutputText TestUnifiedExecutable (UnifiedTestConfig config, bool shouldFail = false, Dictionary<string, string> environment = null)
 		{
 			AddGUIDTestCode (config);
 
@@ -583,12 +587,15 @@ namespace TestCase
 		{
 			string rootDirectory = FindRootDirectory ();
 
-			Environment.SetEnvironmentVariable ("TargetFrameworkFallbackSearchPaths", rootDirectory + "/Library/Frameworks/Mono.framework/External/xbuild-frameworks");
-			Environment.SetEnvironmentVariable ("MSBuildExtensionsPathFallbackPathsOverride", rootDirectory + "/Library/Frameworks/Mono.framework/External/xbuild");
-			Environment.SetEnvironmentVariable ("XAMMAC_FRAMEWORK_PATH", rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current");
-			Environment.SetEnvironmentVariable ("XamarinMacFrameworkRoot", rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current");
+			var env = new Dictionary<string, string> {
+				{ "TargetFrameworkFallbackSearchPaths", rootDirectory + "/Library/Frameworks/Mono.framework/External/xbuild-frameworks" },
+				{ "MSBuildExtensionsPathFallbackPathsOverride", rootDirectory + "/Library/Frameworks/Mono.framework/External/xbuild" },
+				{ "XAMMAC_FRAMEWORK_PATH", rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current" },
+				{ "XamarinMacFrameworkRoot", rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current" },
+			};
 
-			var rv = ExecutionHelper.Execute (Configuration.XIBuildPath, new [] { $"--", "/t:Restore", project}, out var output);
+			var output = new StringBuilder ();
+			var rv = ExecutionHelper.Execute (Configuration.XIBuildPath, new [] { $"--", "/t:Restore", project}, stdout: output, stderr: output, environmentVariables: env);
 			if (rv != 0) {
 				Console.WriteLine ("nuget restore failed:");
 				Console.WriteLine (output);
@@ -629,88 +636,3 @@ namespace TestCase
 		}
 	}
 }
-
-// A bit of a hack so we can reuse all of the RunCommand logic
-#if !MMP_TEST
-namespace Xamarin.Bundler {
-	public static partial class Driver
-	{
-		public static int verbose { get { return 0; } }
-		public static int Verbosity {  get { return verbose; }}
-		public static int RunCommand (string path, IList<string> args, string[] env = null, StringBuilder output = null, bool suppressPrintOnErrors = false)
-		{
-			Exception stdin_exc = null;
-			var info = new ProcessStartInfo (path, StringUtils.FormatArguments (args));
-			info.UseShellExecute = false;
-			info.RedirectStandardInput = false;
-			info.RedirectStandardOutput = true;
-			info.RedirectStandardError = true;
-			System.Threading.ManualResetEvent stdout_completed = new System.Threading.ManualResetEvent (false);
-			System.Threading.ManualResetEvent stderr_completed = new System.Threading.ManualResetEvent (false);
-
-			if (output == null)
-				output = new StringBuilder ();
-
-			if (env != null){
-				if (env.Length % 2 != 0)
-					throw new Exception ("You passed an environment key without a value");
-
-				for (int i = 0; i < env.Length; i += 2) {
-					if (env [i + 1] == null) {
-						info.EnvironmentVariables.Remove (env [i]);
-					} else {
-						info.EnvironmentVariables [env [i]] = env [i + 1];
-					}
-				}
-			}
-
-			if (verbose > 0)
-				Console.WriteLine ("{0} {1}", path, args);
-
-			using (var p = Process.Start (info)) {
-
-				p.OutputDataReceived += (s, e) => {
-					if (e.Data != null) {
-						lock (output)
-							output.AppendLine (e.Data);
-					} else {
-						stdout_completed.Set ();
-					}
-				};
-
-				p.ErrorDataReceived += (s, e) => {
-					if (e.Data != null) {
-						lock (output)
-							output.AppendLine (e.Data);
-					} else {
-						stderr_completed.Set ();
-					}
-				};
-
-				p.BeginOutputReadLine ();
-				p.BeginErrorReadLine ();
-
-				p.WaitForExit ();
-
-				stderr_completed.WaitOne (TimeSpan.FromSeconds (1));
-				stdout_completed.WaitOne (TimeSpan.FromSeconds (1));
-
-				if (p.ExitCode != 0) {
-					// note: this repeat the failing command line. However we can't avoid this since we're often
-					// running commands in parallel (so the last one printed might not be the one failing)
-					if (!suppressPrintOnErrors)
-						Console.Error.WriteLine ("Process exited with code {0}, command:\n{1} {2}{3}", p.ExitCode, path, StringUtils.FormatArguments (args), output.Length > 0 ? "\n" + output.ToString () : string.Empty);
-					return p.ExitCode;
-				} else if (verbose > 0 && output.Length > 0 && !suppressPrintOnErrors) {
-					Console.WriteLine (output.ToString ());
-				}
-
-				if (stdin_exc != null)
-					throw stdin_exc;
-			}
-
-			return 0;
-		}
-	}
-}
-#endif

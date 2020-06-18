@@ -490,174 +490,6 @@ namespace Xamarin.Bundler {
 				ErrorHelper.Warning (90, Errors.MX0090, /* The target framework '{0}' is deprecated. Use '{1}' instead. */ fx, TargetFramework);
 		}
 
-		public static int RunCommand (string path, params string [] args)
-		{
-			return RunCommand (path, args, null, (Action<string>) null, (Action<string>) null, false);
-		}
-
-		public static int RunCommand (string path, IList<string> args)
-		{
-			return RunCommand (path, args, null, (Action<string>) null, (Action<string>) null, false);
-		}
-
-		public static int RunCommand (string path, IList<string> args, StringBuilder output)
-		{
-			return RunCommand (path, args, null, output, output, false);
-		}
-
-		public static int RunCommand (string path, IList<string> args, StringBuilder output, bool suppressPrintOnErrors)
-		{
-			return RunCommand (path, args, null, output, output, suppressPrintOnErrors);
-		}
-
-		public static int RunCommand (string path, IList<string> args, string [] env, StringBuilder output)
-		{
-			return RunCommand (path, args, env, output, output, false);
-		}
-
-		public static int RunCommand (string path, IList<string> args, string [] env, StringBuilder output, bool suppressPrintOnErrors)
-		{
-			return RunCommand (path, args, env, output, output, suppressPrintOnErrors);
-		}
-
-		public static int RunCommand (string path, IList<string> args, string [] env, StringBuilder output, StringBuilder error)
-		{
-			return RunCommand (path, args, env, output, error, false);
-		}
-
-		public static int RunCommand (string path, IList<string> args, StringBuilder output, StringBuilder error)
-		{
-			return RunCommand (path, args, null, output, error, false);
-		}
-
-		public static int RunCommand (string path, IList<string> args, StringBuilder output, StringBuilder error, bool suppressPrintOnErrors)
-		{
-			return RunCommand (path, args, null, output, error, suppressPrintOnErrors);
-		}
-
-		public static int RunCommand (string path, IList<string> args, string [] env, StringBuilder output, StringBuilder error, bool suppressPrintOnErrors)
-		{
-			var output_received = output == null ? null : new Action<string> ((v) => { if (v != null) output.AppendLine (v); });
-			var error_received = error == null ? null : new Action<string> ((v) => { if (v != null) error.AppendLine (v); });
-			return RunCommand (path, args, env, output_received, error_received, suppressPrintOnErrors);
-		}
-
-		static int RunCommand (string path, IList<string> args, string [] env, Action<string> output_received, bool suppressPrintOnErrors)
-		{
-			return RunCommand (path, args, env, output_received, output_received, suppressPrintOnErrors);
-		}
-
-		static int RunCommand (string path, IList<string> args, string [] env, Action<string> output_received, Action<string> error_received)
-		{
-			return RunCommand (path, args, env, output_received, error_received, false);
-		}
-
-		static int RunCommand (string path, IList<string> args, string[] env, Action<string> output_received, Action<string> error_received, bool suppressPrintOnErrors)
-		{
-			Exception stdin_exc = null;
-			var info = new ProcessStartInfo (path, StringUtils.FormatArguments (args));
-			info.UseShellExecute = false;
-			info.RedirectStandardInput = false;
-			info.RedirectStandardOutput = true;
-			info.RedirectStandardError = true;
-			System.Threading.ManualResetEvent stdout_completed = new System.Threading.ManualResetEvent (false);
-			System.Threading.ManualResetEvent stderr_completed = new System.Threading.ManualResetEvent (false);
-
-			if (output_received == null ^ error_received == null)
-				throw new ArgumentException ("Either both or neither of 'output_received' and 'error_received' can be specified.");
-
-			var lockobj = new object ();
-			StringBuilder output = null;
-			if (output_received == null) {
-				output = new StringBuilder ();
-				output_received = (line) => {
-					if (line != null)
-						output.AppendLine (line);
-				};
-				error_received = output_received;
-			}
-
-			if (env != null){
-				if (env.Length % 2 != 0)
-					throw new Exception ("You passed an environment key without a value");
-
-				for (int i = 0; i < env.Length; i += 2) {
-					if (env [i + 1] == null) {
-						info.EnvironmentVariables.Remove (env [i]);
-					} else {
-						info.EnvironmentVariables [env [i]] = env [i + 1];
-					}
-				}
-			}
-
-			Log (1, "{0} {1}", info.FileName, info.Arguments);
-
-			using (var p = Process.Start (info)) {
-
-				p.OutputDataReceived += (s, e) => {
-					if (e.Data != null) {
-						lock (lockobj)
-							output_received (e.Data);
-					} else {
-						stdout_completed.Set ();
-					}
-				};
-
-				p.ErrorDataReceived += (s, e) => {
-					if (e.Data != null) {
-						lock (lockobj)
-							error_received (e.Data);
-					} else {
-						stderr_completed.Set ();
-					}
-				};
-
-				p.BeginOutputReadLine ();
-				p.BeginErrorReadLine ();
-
-				p.WaitForExit ();
-
-				stderr_completed.WaitOne (TimeSpan.FromSeconds (1));
-				stdout_completed.WaitOne (TimeSpan.FromSeconds (1));
-
-				output_received (null);
-
-				if (p.ExitCode != 0) {
-					// note: this repeat the failing command line. However we can't avoid this since we're often
-					// running commands in parallel (so the last one printed might not be the one failing)
-					if (!suppressPrintOnErrors) {
-						// We re-use the stringbuilder so that we avoid duplicating the amount of required memory,
-						// while only calling Console.WriteLine once to make it less probable that other threads
-						// also write to the Console, confusing the output.
-						if (output == null)
-							output = new StringBuilder ();
-						output.Insert (0, $"Process exited with code {p.ExitCode}, command:\n{path} {StringUtils.FormatArguments (args)}\n");
-						Console.Error.WriteLine (output);
-					}
-					return p.ExitCode;
-				} else if (Verbosity > 0 && output != null && output.Length > 0 && !suppressPrintOnErrors) {
-					Console.WriteLine (output.ToString ());
-				}
-
-				if (stdin_exc != null)
-					throw stdin_exc;
-			}
-
-			return 0;
-		}
-
-		public static Task<int> RunCommandAsync (string path, string[] args, string [] env = null, StringBuilder output = null, bool suppressPrintOnErrors = false)
-		{
-			if (output != null)
-				return RunCommandAsync (path, args, env, (v) => { if (v != null) output.AppendLine (v); }, suppressPrintOnErrors);
-			return RunCommandAsync (path, args, env, (Action<string>) null, suppressPrintOnErrors);
-		}
-
-		public static Task<int> RunCommandAsync (string path, string[] args, string [] env = null, Action<string> output_received = null, bool suppressPrintOnErrors = false)
-		{
-			return Task.Run (() => RunCommand (path, args, env, output_received, suppressPrintOnErrors));
-		}
-
 #if !MMP_TEST
 		static void FileMove (string source, string target)
 		{
@@ -1262,15 +1094,12 @@ namespace Xamarin.Bundler {
 
 		static bool XcrunFind (ApplePlatform platform, bool is_simulator, string tool, out string path)
 		{
-			var env = new List<string> ();
+			var env = new Dictionary<string, string> ();
 			// Unset XCODE_DEVELOPER_DIR_PATH. See https://github.com/xamarin/xamarin-macios/issues/3931.
-			env.Add ("XCODE_DEVELOPER_DIR_PATH");
-			env.Add (null);
+			env.Add ("XCODE_DEVELOPER_DIR_PATH", null);
 			// Set DEVELOPER_DIR if we have it
-			if (!string.IsNullOrEmpty (DeveloperDirectory)) {
-				env.Add ("DEVELOPER_DIR");
-				env.Add (DeveloperDirectory);
-			}
+			if (!string.IsNullOrEmpty (DeveloperDirectory))
+				env.Add ("DEVELOPER_DIR", DeveloperDirectory);
 
 			path = null;
 
@@ -1304,7 +1133,7 @@ namespace Xamarin.Bundler {
 			// We also want to print out what happened if something went wrong, and in that case we don't want stdout
 			// and stderr captured separately, because related lines could end up printed far from eachother in time,
 			// and that's confusing. So capture stdout and stderr by themselves, and also capture both together.
-			int ret = RunCommand ("xcrun", args, env.ToArray (),
+			int ret = RunCommand ("xcrun", args, env,
 				(v) => {
 					lock (both) {
 						both.AppendLine (v);

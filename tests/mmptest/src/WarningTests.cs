@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
 
@@ -20,7 +21,7 @@ namespace Xamarin.MMP.Tests
 
 			MMPTests.RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir);
-				var output = TI.TestUnifiedExecutable (test, environment: new string[] { "MD_APPLE_SDK_ROOT", Path.GetDirectoryName (Path.GetDirectoryName (oldXcode)) });
+				var output = TI.TestUnifiedExecutable (test, environment: new Dictionary<string, string> { { "MD_APPLE_SDK_ROOT", Path.GetDirectoryName (Path.GetDirectoryName (oldXcode)) } });
 				output.Messages.AssertWarningPattern (135, $"Did not link system framework");
 			});
 		}

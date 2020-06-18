@@ -29,6 +29,9 @@
     <Compile Include="..\..\..\tools\common\ApplePlatform.cs">
       <Link>external\ApplePlatform.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\tools\common\Execution.cs">
+      <Link>external\Execution.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="external\" />
