@@ -329,7 +329,7 @@ namespace CoreMidi {
 				if (connectionParams.NumControlTransforms > 0) {
 					unsafe {
 						fixed (void* arrAddr = &Controls[0])
-							Buffer.MemoryCopy ((void*) bufferEnd, arrAddr, controlsSize * connectionParams.NumControlTransforms, controlsSize * connectionParams.NumControlTransforms);
+							Buffer.MemoryCopy (arrAddr, (void*) bufferEnd, controlsSize * connectionParams.NumControlTransforms, controlsSize * connectionParams.NumControlTransforms);
 					}
 				}
 
@@ -339,7 +339,7 @@ namespace CoreMidi {
 					unsafe {
 						for (int i = 0; i < connectionParams.NumMaps; i++) {
 							fixed (void* arrAddr = &Maps[i].Value [0])
-								Buffer.MemoryCopy ((void*) bufferEnd, arrAddr, 128, 128);
+								Buffer.MemoryCopy (arrAddr, (void*) bufferEnd, 128, 128);
 							bufferEnd += 128;
 						}
 					}
