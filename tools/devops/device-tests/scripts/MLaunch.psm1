@@ -20,7 +20,8 @@ function Set-MLaunchVerbosity {
     }
 
     # do not confuse Set-Content with Add-Content, set will override the entire file
-    Set-Content -Path $mlaunchConfigPath -Value "$Verbosity"
+    $fileData = "#" * $Verbosity
+    Set-Content -Path $mlaunchConfigPath -Value $fileData
 }
 
 <#
