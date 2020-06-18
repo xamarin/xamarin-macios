@@ -24,7 +24,7 @@ namespace Xamarin.iOS.Tasks
 			get; set;
 		}
 
-		protected CompileAppManifestTaskBase Task {
+		protected CompileAppManifestTaskCore Task {
 			get; set;
 		}
 
@@ -33,7 +33,7 @@ namespace Xamarin.iOS.Tasks
 			Task = CreateTask<CompileAppManifest> ();
 
 			Task.AppBundleName = appBundleName;
-			Task.AppBundleDir = "AppBundlePath";
+			Task.AppManifestBundleDirectory = "AppBundlePath";
 			Task.AssemblyName = assemblyName;
 			Task.AppManifest = CreateTempFile ("foo.plist");
 			Task.BundleIdentifier = bundleIdentifier;

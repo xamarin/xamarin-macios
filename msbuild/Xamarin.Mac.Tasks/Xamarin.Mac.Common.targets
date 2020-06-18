@@ -401,24 +401,10 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		</PropertyGroup>
 	</Target>
 
-	<Target Name="_CompileAppManifest"
-		DependsOnTargets="_GetMinimumOSVersion;_GenerateBundleName;_DetectSigningIdentity;_ComputeTargetFrameworkMoniker"
-		Inputs="$(_AppManifest);@(_PartialAppManifest)"
-		Outputs="$(_AppBundlePath)Contents\Info.plist" >
-		<CompileAppManifest
-			Condition="'$(IsMacEnabled)' == 'true'"
-			SessionId="$(BuildSessionId)"
-			AppBundleName="$(_AppBundleName)"
-			AppBundleDir="$(AppBundleDir)"
-			AppManifest="$(_AppManifest)"
-			AssemblyName="$(TargetName)"
-			BundleIdentifier="$(_BundleIdentifier)"
-			IsAppExtension="$(IsAppExtension)"
-			IsXPCService="$(IsXPCService)"
-			MinimumOSVersion="$(_MinimumOSVersion)"
-			PartialAppManifests="@(_PartialAppManifest)" />
-	</Target>
-	
+	<PropertyGroup>
+		<_AppBundleManifestRelativePath>Contents/</_AppBundleManifestRelativePath>
+	</PropertyGroup>
+
 	<PropertyGroup>
 		<CompileToNativeDependsOn>
 			_ComputeTargetFrameworkMoniker;
