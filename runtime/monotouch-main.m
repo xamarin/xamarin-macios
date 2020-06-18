@@ -94,7 +94,9 @@ assembly_preload_hook (MonoAssemblyName *aname, char **assemblies_path, void* us
 
 	// LOG (PRODUCT ": Looking for assembly '%s' (culture: '%s')\n", name, culture);
 
-	size_t len = strlen (name);
+	size_t len = strnlen (name, sizeof (filename));
+	if (len == sizeof (filename))
+		return NULL;
 	int has_extension = len > 3 && name [len - 4] == '.' && (!strcmp ("exe", name + (len - 3)) || !strcmp ("dll", name + (len - 3)));
 	bool dual_check = false;
 
@@ -104,7 +106,10 @@ assembly_preload_hook (MonoAssemblyName *aname, char **assemblies_path, void* us
 		// Figure out if we need to append 'dll' or 'exe'
 		if (xamarin_executable_name != NULL) {
 			// xamarin_executable_name already has the ".exe", so only compare the rest of the filename.
-			if (culture == NULL && !strncmp (xamarin_executable_name, filename, strlen (xamarin_executable_name) - 4)) {
+			size_t exe_len = strnlen (name, PATH_MAX);
+			if (exe_len == PATH_MAX)
+				return NULL;
+			if (culture == NULL && !strncmp (xamarin_executable_name, filename, exe_len - 4)) {
 				strlcat (filename, ".exe", sizeof (filename));
 			} else {
 				strlcat (filename, ".dll", sizeof (filename));
@@ -122,7 +127,10 @@ assembly_preload_hook (MonoAssemblyName *aname, char **assemblies_path, void* us
 
 	bool found = xamarin_locate_assembly_resource_for_name (aname, filename, path, sizeof (path));
 	if (!found && dual_check) {
-		filename [strlen (filename) - 4] = 0;
+		size_t flen = strnlen (filename, sizeof (filename));
+		if (flen == sizeof (filename))
+			return NULL;
+		filename [flen - 4] = 0;
 		strlcat (filename, ".exe", sizeof (filename));
 		found = xamarin_locate_assembly_resource_for_name (aname, filename, path, sizeof (path));
 	}
