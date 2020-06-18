@@ -10,7 +10,7 @@ function Set-MLaunchVerbosity {
     param
     (
         [Parameter(Mandatory)]
-        [String]
+        [int]
         $Verbosity
     )
 
@@ -20,7 +20,7 @@ function Set-MLaunchVerbosity {
     }
 
     # do not confuse Set-Content with Add-Content, set will override the entire file
-    Set-Content -Path $mlaunchConfigPath -Value $Verbosity
+    Set-Content -Path $mlaunchConfigPath -Value "$Verbosity"
 }
 
 <#

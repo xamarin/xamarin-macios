@@ -57,7 +57,7 @@ function Get-SelectedXcode {
     $p.Start() | Out-Null
     $path = $p.StandardOutput.ReadToEnd().Trim().Replace("/Contents/Developer", "")
     $p.WaitForExit()
-    return [System.IO.Path]::GetFileName($path)
+    return $path
 }
 
 <#
@@ -209,22 +209,15 @@ function Clear-AfterTests {
         "~/Library/Caches/com.xamarin.provisionator"
     )
 
-    foreach ($dir in $directories)
-    {
+    foreach ($dir in $directories) {
         Write-Debug "Removing $dir"
-        try
-        {
-            if (Test-Path -Path $dir)
-            {
+        try {
+            if (Test-Path -Path $dir) {
                 Remove-Item –Path $dir -Recurse -ErrorAction SilentlyContinue -Force
-            }
-            else
-            {
+            } else {
                 Write-Debug "Path not found '$dir'"
             }
-        }
-        catch
-        {
+        } catch {
             Write-Error "Could not remove dir $dir - $_"
         }
     }

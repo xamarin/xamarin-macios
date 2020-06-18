@@ -181,7 +181,7 @@ steps:
 # Increase mlaunch verbosity. Will step on the old setting present.
 - pwsh : |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/device-tests/scripts/MLaunch.psm1
-    Set-MLaunchVerbosity -Verbosity "1234567890"
+    Set-MLaunchVerbosity -Verbosity 1234567890
   displayName: 'Make mlaunch verbose'
   condition: succeededOrFailed() # we do not care about the previous step 
 
