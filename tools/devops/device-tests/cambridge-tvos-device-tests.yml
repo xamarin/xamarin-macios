@@ -27,5 +27,5 @@ stages:
     WindowsDevicePool: ${{ variables.WindowsDevicePool }}
     htmlReportStorage: ${{ variables.htmlReportStorage }}
     testsLabels: '--label=run-tvos-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
-    statusContext: 'VSTS: device tests iOS'
+    statusContext: 'VSTS: device tests tvOS (Cambridge)'
     iOSDeviceDemand: 'xitvos' 
