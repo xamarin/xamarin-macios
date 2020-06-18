@@ -1644,10 +1644,10 @@ namespace ObjCRuntime {
 			return true;
 		}
 
-		internal static IntPtr CloneMemory (IntPtr source, nint length)
+		internal unsafe static IntPtr CloneMemory (IntPtr source, long length)
 		{
-			var rv = Marshal.AllocHGlobal (new IntPtr (length));
-			memcpy (rv, source, length);
+			var rv = Marshal.AllocHGlobal ((IntPtr) length);
+			Buffer.MemoryCopy ((void*) source, (void*) rv, length, length);
 			return rv;
 		}
 
