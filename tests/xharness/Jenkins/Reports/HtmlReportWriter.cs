@@ -19,7 +19,7 @@ namespace Xharness.Jenkins.Reports {
 		readonly IResourceManager resourceManager;
 		readonly IResultParser resultParser;
 		readonly string? linksPrefix;
-		private readonly bool embededResources;
+		readonly bool embededResources;
 
 		Dictionary<ILog, Tuple<long, object>> log_data = new Dictionary<ILog, Tuple<long, object>> ();
 		string? previous_test_runs;
