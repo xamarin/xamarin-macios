@@ -30,7 +30,7 @@ steps:
 
 - checkout: self
 - checkout: maccore
-  persistCredentials: true  # hugely important, else there are some sccripts that check a single file from maccore that will fail
+  persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
 
 # Run the pipeline script tests to ensure that we will have not have an unexpected behaviour.
 - bash: make -C $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/device-tests/scripts run-tests
@@ -46,7 +46,7 @@ steps:
     Stop-Pipeline
   env:
     BUILD_REVISION: $(BUILD_REVISION)
-    CONTEXT: ${{ parameters.statusContext}}
+    CONTEXT: ${{ parameters.statusContext }}
     GITHUB_TOKEN: $(GitHub.Token)
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
   displayName: 'Notify failed script tests'
@@ -122,7 +122,7 @@ steps:
     Stop-Pipeline
   env:
     BUILD_REVISION: $(BUILD_REVISION)
-    CONTEXT: ${{ parameters.statusContext}}
+    CONTEXT: ${{ parameters.statusContext }}
     GITHUB_TOKEN: $(GitHub.Token)
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
   displayName: 'Notify failed provisioning'
@@ -199,7 +199,7 @@ steps:
     Set-GitHubStatus -Status "pending" -Context "$Env:CONTEXT" -Description "Running device tests on $Env:CONTEXT"
   env:
     BUILD_REVISION: $(BUILD_REVISION)
-    CONTEXT: ${{ parameters.statusContext}}
+    CONTEXT: ${{ parameters.statusContext }}
     GITHUB_TOKEN: $(GitHub.Token)
   displayName: Set pending GitHub status
   continueOnError: true
@@ -235,7 +235,7 @@ steps:
 
     echo "Html Report: http://xamarin-storage/$P/jenkins-results/tests/index.html"
   displayName: 'Print Html Report link'
-  condition: and(always(), eq('${{ parameters.htmlReportStorage}}', 'xamarin-storage')) # execute always but when we are using vsdrops since we want to send the message and the url at the same time
+  condition: and(always(), eq('${{ parameters.htmlReportStorage }}', 'xamarin-storage')) # execute always but when we are using vsdrops since we want to send the message and the url at the same time
 
 # Run tests. If we are using xamarin-storage add a periodic command to be executed by xharness, else, since we are using vsdrops do nothing.
 - bash: |
@@ -294,7 +294,7 @@ steps:
   continueOnError: true
   condition: succeededOrFailed()
 
-# Archive files for the Html Report so that the can be easily uploaded as artifacts of the build.
+# Archive files for the Html Report so that the report can be easily uploaded as artifacts of the build.
 - task: ArchiveFiles@1
   displayName: 'Archive HtmlReport'
   inputs:
