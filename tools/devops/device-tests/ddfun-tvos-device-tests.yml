@@ -9,7 +9,7 @@ parameters:
   default: false
 
 variables:
-  - template: templates/variables.yml
+  - template: templates/common-variables.yml
   - template: templates/ddfun-variables.yml
 
 resources:
