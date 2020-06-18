@@ -177,7 +177,7 @@ function New-GitHubComment {
     # build the message, which will be sent to github, users can use markdown
     $fullDescription ="$Emoji $Description on [Azure DevOps]($targetUrl) ($Env:BUILD_DEFINITIONNAME) $Emoji"
     $msg = [System.Text.StringBuilder]::new()
-    $msg.AppendLine($Header)
+    $msg.AppendLine("### $Header")
     $msg.AppendLine()
     $msg.AppendLine($fullDescription)
     if ($Message) { # only if message is not null or empty
@@ -336,14 +336,14 @@ function New-GitHubSummaryComment {
 
     if (-not (Test-Path $TestSummaryPath -PathType Leaf)) {
         Set-GitHubStatus -Status "failure" -Description "Tests failed catastrophically on $CONTEXT (no summary found)." -Context "$CONTEXT"
-        $request = New-GitHubComment -Header "Tests failed catastrophically on $CONTEXT (no summary found). $headerLinks" -Emoji ":fire:" -Description "Result file $TestSummaryPath not found."
+        $request = New-GitHubComment -Header "Tests failed catastrophically on $CONTEXT (no summary found)." -Emoji ":fire:" -Description "Result file $TestSummaryPath not found. $headerLinks"
     } else {
         if (Test-JobSuccess -Status $Env:AGENT_JOBSTATUS) {
             Set-GitHubStatus -Status "success" -Description "Device tests passed on $CONTEXT." -Context "$CONTEXT"
-            $request = New-GitHubCommentFromFile -Header "Device tests passed on $CONTEXT $headerLinks" -Description "Device tests passed on $CONTEXT"  -Emoji ":white_check_mark:" -Path $TestSummaryPath
+            $request = New-GitHubCommentFromFile -Header "Device tests passed on $CONTEXT." -Description "Device tests passed on $CONTEXT. $headerLinks"  -Emoji ":white_check_mark:" -Path $TestSummaryPath
         } else {
             Set-GitHubStatus -Status "failure" -Description "Device tests failed on $CONTEXT." -Context "$CONTEXT"
-            $request = New-GitHubCommentFromFile -Header "Device tests failed on $CONTEXT $headerLinks" -Description "Device tests failed on $CONTEXT" -Emoji ":x:" -Path $TestSummaryPath
+            $request = New-GitHubCommentFromFile -Header "Device tests failed on $CONTEXT" -Description "Device tests failed on $CONTEXT. $headerLinks" -Emoji ":x:" -Path $TestSummaryPath
         }
     }
     return $request

@@ -42,7 +42,7 @@ steps:
     Import-Module ./VSTS.psm1
     Import-Module ./GitHub.psm1
     Set-GitHubStatus -Status "error" -Description "Pipeline scripts tests failed." -Context "$Env:CONTEXT"
-    New-GitHubComment -Header "Pipeline scripts tests failed" -Emoji ":fire:" -Description "The tests of the scripts used in the pepeline failed. The build was cancelled."
+    New-GitHubComment -Header "Pipeline scripts tests failed on $Env:CONTEXT" -Emoji ":fire:" -Description "The tests of the scripts used in the pepeline failed. The build was cancelled."
     Stop-Pipeline
   env:
     BUILD_REVISION: $(BUILD_REVISION)
@@ -80,7 +80,7 @@ steps:
     Import-Module ./GitHub.psm1
     if ( -not (Test-HDFreeSpace -Size 50)) {
       Set-GitHubStatus -Status "error" -Description "Not enough free space in the host." -Context "$Env:CONTEXT"
-      New-GitHubComment -Header "Tests failed catastrophically" -Emoji ":fire:" -Description "Not enough free space in the host."
+      New-GitHubComment -Header "Tests failed catastrophically on $Env:CONTEXT" -Emoji ":fire:" -Description "Not enough free space in the host."
       Stop-Pipeline
     }
   env:
@@ -118,7 +118,7 @@ steps:
     Import-Module ./VSTS.psm1
     Import-Module ./GitHub.psm1
     Set-GitHubStatus -Status "error" -Description "Failed provisioning profiles." -Context "$Env:CONTEXT"
-    New-GitHubComment -Header "Tests failed catastrophically" -Emoji ":fire:" -Description "Failed provisioning profiles."
+    New-GitHubComment -Header "Tests failed catastrophically on $Env:CONTEXT" -Emoji ":fire:" -Description "Failed provisioning profiles."
     Stop-Pipeline
   env:
     BUILD_REVISION: $(BUILD_REVISION)
@@ -156,7 +156,7 @@ steps:
     Import-Module ./VSTS.psm1
     Import-Module ./GitHub.psm1
     Set-GitHubStatus -Status "error" -Description "Failed installing dependencies." -Context "$Env:CONTEXT"
-    New-GitHubComment -Header "Tests failed catastrophically" -Emoji ":fire:" -Description "Failed installing dependencies."
+    New-GitHubComment -Header "Tests failed catastrophically on $Env:CONTEXT" -Emoji ":fire:" -Description "Failed installing dependencies."
     Stop-Pipeline
   env:
     BUILD_REVISION: $(BUILD_REVISION)

@@ -415,7 +415,7 @@ Describe 'New-GitHubSummaryComment' {
                     return $False
                 }
 
-                if ($Description -ne "Tests failed catastrophically on $Script:context (no summary found).") {
+                if (-not ($Description -like "Tests failed catastrophically on $Script:context (no summary found).")) {
                     return $False
                 }
 
@@ -423,11 +423,11 @@ Describe 'New-GitHubSummaryComment' {
             }
 
             Assert-MockCalled -CommandName New-GitHubComment -Times 1 -Scope It -ParameterFilter {
-                if (-not ($Header -like "Tests failed catastrophically on $Script:context (no summary found).*")) {
+                if ($Header -ne "Tests failed catastrophically on $Script:context (no summary found).") {
                     return $False
                 }
 
-                if ($Description -ne "Result file $Script:tempPath not found.") {
+                if (-not ($Description -like "Result file $Script:tempPath not found.*")) {
                     return $False
                 }
 
