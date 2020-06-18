@@ -77,6 +77,18 @@ namespace MonoTouchFixtures.Metal {
 			bool freed;
 			byte [] buffer_bytes;
 
+			// Apple claims that "Indirect command buffers" are available with MTLGPUFamilyCommon2, but it crashes on at least one machine.
+			// Log what the current device supports, just to have it in the log.
+			foreach (MTLFeatureSet fs in Enum.GetValues (typeof (MTLFeatureSet))) {
+				Console.WriteLine ($"This device supports feature set: {fs}: {device.SupportsFeatureSet (fs)}");
+			}
+			if (TestRuntime.CheckXcodeVersion (11, 0)) {
+				foreach (MTLGpuFamily gf in Enum.GetValues (typeof (MTLGpuFamily))) {
+					Console.WriteLine ($"This device supports Gpu family: {gf}: {device.SupportsFamily (gf)}");
+				}
+			}
+
+
 #if __MACOS__
 			string metal_code = File.ReadAllText (Path.Combine (NSBundle.MainBundle.ResourcePath, "metal-sample.metal"));
 			string metallib_path = Path.Combine (NSBundle.MainBundle.ResourcePath, "default.metallib");
@@ -271,7 +283,13 @@ namespace MonoTouchFixtures.Metal {
 				Assert.IsNotNull (library, "CreateArgumentEncoder (MTLArgumentDescriptor[]): NonNull");
 			}
 
-			if (TestRuntime.CheckXcodeVersion (11, 0) && device.SupportsFamily (MTLGpuFamily.Common2)) {
+			// Apple's charts say that "Indirect command buffers" are supported with MTLGpuFamilyCommon2
+			var supportsIndirectCommandBuffers = TestRuntime.CheckXcodeVersion (11, 0) && device.SupportsFamily (MTLGpuFamily.Common2);
+#if __MACOS__
+			// but something's not quite right somewhere, so on macOS verify that the device supports a bit more than what Apple says.
+			supportsIndirectCommandBuffers &= device.SupportsFeatureSet (MTLFeatureSet.macOS_GPUFamily2_v1);
+#endif
+			if (supportsIndirectCommandBuffers) {
 				using (var descriptor = new MTLIndirectCommandBufferDescriptor ()) {
 					using (var library = device.CreateIndirectCommandBuffer (descriptor, 1, MTLResourceOptions.CpuCacheModeDefault)) {
 						Assert.IsNotNull (library, "CreateIndirectCommandBuffer: NonNull");
