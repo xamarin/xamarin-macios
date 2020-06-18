@@ -12,7 +12,6 @@
 !unknown-pinvoke! dlerror bound
 !unknown-pinvoke! dlopen bound
 !unknown-pinvoke! dlsym bound
-!unknown-pinvoke! memcpy bound
 !unknown-pinvoke! NXGetLocalArchInfo bound
 !unknown-pinvoke! objc_allocateClassPair bound
 !unknown-pinvoke! objc_allocateProtocol bound
