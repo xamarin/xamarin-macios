@@ -262,10 +262,15 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 
 		public static void AddCompileInclude (this XmlDocument csproj, string link, string include, bool prepend = false)
 		{
-			var compile_node = csproj.SelectSingleNode ("//*[local-name() = 'Compile']");
-			var item_group = compile_node.ParentNode;
+			AddInclude (csproj, "Compile", link, include, prepend);
+		}
 
-			var node = csproj.CreateElement ("Compile", csproj.GetNamespace ());
+		public static void AddInclude (this XmlDocument csproj, string type, string link, string include, bool prepend = false)
+		{
+			var type_node = csproj.SelectSingleNode ($"//*[local-name() = '{type}']");
+			var item_group = type_node?.ParentNode ?? csproj.SelectSingleNode ($"//*[local-name() = 'ItemGroup'][last()]");
+
+			var node = csproj.CreateElement (type, csproj.GetNamespace ());
 			var include_attribute = csproj.CreateAttribute ("Include");
 			include_attribute.Value = include;
 			node.Attributes.Append (include_attribute);
