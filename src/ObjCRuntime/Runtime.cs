@@ -1651,12 +1651,6 @@ namespace ObjCRuntime {
 			return rv;
 		}
 
-		[DllImport (Constants.libSystemLibrary)]
-		extern internal static void memcpy (IntPtr target, IntPtr source, nint n);
-
-		[DllImport (Constants.libSystemLibrary)]
-		unsafe extern internal static void memcpy (byte * target, byte * source, nint n);
-
 		// This function will try to compare a native UTF8 string to a managed string without creating a temporary managed string for the native UTF8 string.
 		// Currently this only works if the UTF8 string only contains single-byte characters.
 		// If any multi-byte characters are found, the native utf8 string is converted to a managed string, and then normal managed comparison is done.

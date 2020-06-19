@@ -121,7 +121,7 @@ namespace AudioToolbox {
 				if (data != null)
 					Marshal.Copy (data, start, (IntPtr) rdata, len);
 				else
-					Runtime.memcpy (rdata, (byte *) buffer, len);
+					Buffer.MemoryCopy ((void*) buffer, (void*) rdata, len, len);
 				return (IntPtr) target;
 			}
 		}
@@ -166,7 +166,7 @@ namespace AudioToolbox {
 				if (data != null)
 					Marshal.Copy (data, start, (IntPtr) rdata, len);
 				else
-					Runtime.memcpy (rdata, (byte *) buffer, len);
+					Buffer.MemoryCopy ((void*) buffer, (void*) rdata, len, len);
 				return (IntPtr) target;
 			}
 		}

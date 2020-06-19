@@ -837,7 +837,7 @@ namespace CoreMidi {
 			return packets;
 		}
 
-		internal static IntPtr CreatePacketList (MidiPacket [] packets)
+		internal unsafe static IntPtr CreatePacketList (MidiPacket [] packets)
 		{
 			// calculate the total size of the data.
 			int size = 4;
@@ -849,16 +849,18 @@ namespace CoreMidi {
 			Marshal.WriteInt32 (buffer, 0, packets.Length);
 			int dest = 4;
 			for (int i = 0; i < packets.Length; i++) {
-				Marshal.WriteInt64 (buffer, dest, packets [i].TimeStamp);
+				var packet = packets [i];
+				var packet_size = packet.Length;
+				Marshal.WriteInt64 (buffer, dest, packet.TimeStamp);
 				dest += 8;
-				Marshal.WriteInt16 (buffer, dest, (short) packets [i].Length);
+				Marshal.WriteInt16 (buffer, dest, (short) packet_size);
 				dest += 2;
-				if (packets [i].ByteArray == null) {
-					Runtime.memcpy (buffer + dest, packets [i].BytePointer, packets [i].Length);
+				if (packet.ByteArray == null) {
+					Buffer.MemoryCopy ((void*) packet.BytePointer, (void*) (buffer + dest), packet_size, packet_size);
 				} else {
-					Marshal.Copy (packets [i].ByteArray, packets [i].start, buffer + dest, packets [i].Length);
+					Marshal.Copy (packet.ByteArray, packet.start, buffer + dest, packet_size);
 				}
-				dest += GetPacketLength (packets [i].Length) - 10;
+				dest += GetPacketLength (packet_size) - 10;
 			}
 			return buffer;
 		}

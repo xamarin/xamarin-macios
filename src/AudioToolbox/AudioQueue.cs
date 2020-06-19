@@ -253,9 +253,7 @@ namespace AudioToolbox {
 
 		public unsafe void CopyToAudioData (IntPtr source, int size)
 		{
-			byte *t = (byte *) AudioData;
-			byte *s = (byte *) source;
-			Runtime.memcpy (t, s, size);
+			Buffer.MemoryCopy ((void*) source, (void*) AudioData, AudioDataByteSize, size);
 		}
 	}
 
@@ -481,9 +479,7 @@ namespace AudioToolbox {
 		{
 			IntPtr target = Marshal.ReadIntPtr (audioQueueBuffer, IntPtr.Size);
 			unsafe {
-				byte *targetp = (byte *) target;
-				byte *sourcep = (byte *) source;
-				Runtime.memcpy (targetp + offset, sourcep + sourceOffset, size);
+				Buffer.MemoryCopy ((void*) (source + sourceOffset), (void*) (target + offset), size, size);
 			}
 		}
 		
