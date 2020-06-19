@@ -10,7 +10,7 @@ using Xamarin.MacDev.Tasks;
 
 namespace Xamarin.iOS.Tasks
 {
-	public class ArchiveTaskBase : Xamarin.MacDev.Tasks.ArchiveTaskBase
+	public abstract class ArchiveTaskBase : Xamarin.MacDev.Tasks.ArchiveTaskBase
 	{
 		[Required]
 		public ITaskItem[] ITunesSourceFiles { get; set; }

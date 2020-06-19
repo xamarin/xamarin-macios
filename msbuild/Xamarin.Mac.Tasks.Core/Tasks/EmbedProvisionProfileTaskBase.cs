@@ -11,7 +11,7 @@ using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.Mac.Tasks
 {
-	public class EmbedProvisionProfileTaskBase : XamarinTask
+	public abstract class EmbedProvisionProfileTaskBase : XamarinTask
 	{
 		#region Inputs
 
