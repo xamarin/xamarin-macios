@@ -519,6 +519,7 @@ namespace Xharness {
 						TemplateProjectPath = file,
 						Harness = this,
 						TestProject = proj,
+						ShouldSkipProjectGeneration = proj.IsDotNetProject,
 					};
 					unified.Execute ();
 					unified_targets.Add (unified);
@@ -528,6 +529,7 @@ namespace Xharness {
 							TemplateProjectPath = file,
 							Harness = this,
 							TestProject = proj,
+							ShouldSkipProjectGeneration = proj.IsDotNetProject,
 						};
 						today.Execute ();
 						today_targets.Add (today);
