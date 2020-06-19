@@ -18,6 +18,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 		public string Name;
 		public bool IsExecutableProject;
 		public bool IsNUnitProject;
+		public bool IsDotNetProject;
 		public string [] Configurations;
 		public Func<Task> Dependency;
 		public string FailureMessage;
@@ -55,6 +56,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 			TestProject rv = (TestProject) Activator.CreateInstance (GetType ());
 			rv.Path = Path;
 			rv.IsExecutableProject = IsExecutableProject;
+			rv.IsDotNetProject = IsDotNetProject;
 			rv.RestoreNugetsInProject = RestoreNugetsInProject;
 			rv.Name = Name;
 			rv.MTouchExtraArgs = MTouchExtraArgs;
