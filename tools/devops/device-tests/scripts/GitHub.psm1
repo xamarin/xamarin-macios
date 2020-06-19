@@ -335,14 +335,14 @@ function New-GitHubSummaryComment {
     # 2. We did reach the xamarin-storage, stored in the env var XAMARIN_STORAGE_REACHED
     $headerSb = [System.Text.StringBuilder]::new()
     $headerSb.AppendLine(); # new line to start the list
-    $headerSb.AppendLine ("* [Azure DevOps]($vstsTargetUrl)"
+    $headerSb.AppendLine("* [Azure DevOps]($vstsTargetUrl")
     if ($XamarinStoragePath -and $Env:XAMARIN_STORAGE_FAILED) { # if we do have the storage path but we failed. first part of the -and check string is not null or empty, second check presence of the env var
-        $headerSb.AppendLine ("* :warning: xamarin-storage could not be reached :warning:")
+        $headerSb.AppendLine("* :warning: xamarin-storage could not be reached :warning:")
     } else {
         $xamarinStorageUrl = Get-XamarinStorageIndexUrl -Path $XamarinStoragePath
-        $headerSb.AppendLine ("* [Html Report]($xamarinStorageUrl)")
+        $headerSb.AppendLine("* [Html Report]($xamarinStorageUrl)")
     }
-    $headerLinks = $headerSb.ToString ()
+    $headerLinks = $headerSb.ToString()
     $request = $null
 
     if (-not (Test-Path $TestSummaryPath -PathType Leaf)) {
