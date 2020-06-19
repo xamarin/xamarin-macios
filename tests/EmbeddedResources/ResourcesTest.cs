@@ -28,7 +28,8 @@ namespace EmbeddedResources {
 		public void Embedded ()
 		{
 
-#if __TVOS__
+#if __TVOS__ && !NET
+			// Don't know if this might fail with .NET, so don't disable it until we know otherwise (the TestRuntime.CheckExecutingWithInterpreter is not available for .NET, so if that's the case we might need different logic)
 			if (TestRuntime.CheckExecutingWithInterpreter ())
 				Assert.Ignore ("This test is disabled on TVOS."); // Randomly crashed on tvOS -> https://github.com/xamarin/maccore/issues/1909
 
