@@ -12,8 +12,8 @@ Describe 'Set-MLaunchVerbosity' {
                 return $False
             }
 
-            $expectedValue = "1234567"
-            Set-MLaunchVerbosity -Verbosity $expectedValue
+            $expectedValue = "#" * 10
+            Set-MLaunchVerbosity -Verbosity 10
 
             Assert-MockCalled -CommandName Set-Content -Times 1 -Scope It -ParameterFilter { $Path -eq "~/.mlaunch-verbosity" -and $Value -eq $expectedValue}
 
@@ -26,8 +26,8 @@ Describe 'Set-MLaunchVerbosity' {
                 return $True
             }
 
-            $expectedValue = "1234567"
-            Set-MLaunchVerbosity -Verbosity $expectedValue
+            $expectedValue = "#" * 10
+            Set-MLaunchVerbosity -Verbosity 10
 
             Assert-MockCalled -CommandName Set-Content -Times 1 -Scope It -ParameterFilter { $Path -eq "~/.mlaunch-verbosity" -and $Value -eq $expectedValue}
             Assert-MockCalled -CommandName Write-Debug -Times 1 
