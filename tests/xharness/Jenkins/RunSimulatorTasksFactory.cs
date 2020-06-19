@@ -39,14 +39,18 @@ namespace Xharness.Jenkins {
 					configurations = new string [] { "Debug" };
 				foreach (var config in configurations) {
 					foreach (var pair in ps) {
-						var derived = new MSBuildTask (jenkins: jenkins, testProject: project, processManager: processManager) {
-							ProjectConfiguration = config,
-							ProjectPlatform = "iPhoneSimulator",
-							Platform = pair.Item2,
-							Ignored = pair.Item3,
-							TestName = project.Name,
-							Dependency = project.Dependency,
-						};
+						MSBuildTask derived;
+						if (project.IsDotNetProject) {
+							derived = new DotNetBuildTask (jenkins: jenkins, testProject: project, processManager: processManager);
+						} else {
+							derived = new MSBuildTask (jenkins: jenkins, testProject: project, processManager: processManager);
+						}
+						derived.ProjectConfiguration = config;
+						derived.ProjectPlatform = "iPhoneSimulator";
+						derived.Platform = pair.Item2;
+						derived.Ignored = pair.Item3;
+						derived.TestName = project.Name;
+						derived.Dependency = project.Dependency;
 						derived.CloneTestProject (jenkins.MainLog, processManager, pair.Item1);
 						var simTasks = CreateAsync (jenkins, processManager, derived);
 						runSimulatorTasks.AddRange (simTasks);
