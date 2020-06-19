@@ -21,7 +21,5 @@ namespace AVFoundation {
 		{
 			return !a.Equals (b);
 		}
-		}
-		
 	}
 }
