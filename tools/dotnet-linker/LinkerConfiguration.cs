@@ -99,7 +99,7 @@ namespace Xamarin.Linker {
 		public void Write ()
 		{
 			Console.WriteLine ($"LinkerConfiguration:");
-			Console.WriteLine ($"    Abis: {string.Join (", ", Abis.Select (v => v.AsArchString ()))}");
+			Console.WriteLine ($"    ABIs: {string.Join (", ", Abis.Select (v => v.AsArchString ()))}");
 			Console.WriteLine ($"    CacheDirectory: {CacheDirectory}");
 			Console.WriteLine ($"    ItemsDirectory: {ItemsDirectory}");
 			Console.WriteLine ($"    Platform: {Platform}");
