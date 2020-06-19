@@ -13,7 +13,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 	}
 
 	public class AppBundleInformationParser : IAppBundleInformationParser {
-		public Task<AppBundleInformation> ParseFromProjectAsync (ILog log, IProcessManager processManager, string projectFilePath, TestTarget target, string buildConfiguration)
+		public async Task<AppBundleInformation> ParseFromProjectAsync (ILog log, IProcessManager processManager, string projectFilePath, TestTarget target, string buildConfiguration)
 		{
 			var csproj = new XmlDocument ();
 			csproj.LoadWithoutNetworkAccess (projectFilePath);
@@ -34,9 +34,17 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 
 			var platform = target.IsSimulator () ? "iPhoneSimulator" : "iPhone";
 
-			string appPath = Path.Combine (Path.GetDirectoryName (projectFilePath),
-				csproj.GetOutputPath (platform, buildConfiguration).Replace ('\\', Path.DirectorySeparatorChar),
-				appName + (extension != null ? ".appex" : ".app"));
+			string appBundlePath;
+			if (csproj.IsDotNetProject ()) {
+				var properties = new Dictionary<string, string> {
+					{ "Configuration", buildConfiguration },
+					{ "Platform", platform },
+				};
+				appBundlePath = await csproj.GetPropertyByMSBuildEvaluationAsync (log, processManager, projectFilePath, "OutputPath", "_GenerateAppBundleName;_GenerateAppExBundleName", properties);
+			} else {
+				appBundlePath = csproj.GetOutputPath (platform, buildConfiguration).Replace ('\\', Path.DirectorySeparatorChar);
+			}
+			var appPath = Path.Combine (Path.GetDirectoryName (projectFilePath), appBundlePath, appName + (extension != null ? ".appex" : ".app"));
 
 			if (!Directory.Exists (appPath))
 				throw new DirectoryNotFoundException ($"The app bundle directory `{appPath}` does not exist");
@@ -45,7 +53,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 				? Directory.GetDirectories (Path.Combine (appPath, "Watch"), "*.app") [0]
 				: appPath;
 
-			return Task.FromResult (new AppBundleInformation (appName, bundleIdentifier, appPath, launchAppPath, extension));
+			return new AppBundleInformation (appName, bundleIdentifier, appPath, launchAppPath, extension);
 		}
 	}
 }
