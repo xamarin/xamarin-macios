@@ -22,9 +22,9 @@ parameters:
   type: boolean
   default: false
 
-- name: htmlReportStorage
-  type: string
-  default: xamarin-storage # takes two different values, 'xamarin-storage' or 'vsdrops'
+- name: useXamarinStorage
+  type: boolean 
+  default: false  # xamarin-storage will disappear, so by default do not use it
 
 steps:
 
@@ -235,15 +235,16 @@ steps:
 
     echo "Html Report: http://xamarin-storage/$P/jenkins-results/tests/index.html"
   displayName: 'Print Html Report link'
-  condition: and(always(), eq('${{ parameters.htmlReportStorage }}', 'xamarin-storage')) # execute always but when we are using vsdrops since we want to send the message and the url at the same time
+  condition: and(always(), ${{ parameters.useXamarinStorage }})
 
 # Run tests. If we are using xamarin-storage add a periodic command to be executed by xharness, else, since we are using vsdrops do nothing.
 - bash: |
     set -x
     set -e
+    echo 'Use xamarin storage $USE_XAMARIN_STORAGE'
 
     cd $WORKING_DIR/xamarin-macios
-    if [[ "$HTML_STORAGE" == "xamarin-storage" ]]; then
+    if [[ "$USE_XAMARIN_STORAGE" == "True" ]]; then
       ssh builder@xamarin-storage "mkdir -p /volume1/storage/$XAMARIN_STORAGE_PATH"
       export TESTS_PERIODIC_COMMAND="--periodic-interval 10 --periodic-command rsync --periodic-command-arguments '-avz -e \"ssh\" $PWD/jenkins-results builder@xamarin-storage:/volume1/storage/$XAMARIN_STORAGE_PATH'"
     fi
@@ -256,7 +257,7 @@ steps:
     WORKING_DIR: $(System.DefaultWorkingDirectory) 
     XAMARIN_STORAGE_PATH: $(XAMARIN_STORAGE_PATH)
     TESTS_EXTRA_ARGUMENTS: ${{ parameters.testsLabels }}
-    HTML_STORAGE: ${{ parameters.htmlReportStorage }}
+    USE_XAMARIN_STORAGE: '${{ parameters.useXamarinStorage }}'
   displayName: 'Run tests'
   timeoutInMinutes: 600
 
@@ -281,7 +282,7 @@ steps:
     GITHUB_TOKEN: $(GitHub.Token)
     XAMARIN_STORAGE_PATH: $(XAMARIN_STORAGE_PATH) # could be null if the step was not executed if we use vsdrops, the cmdlet will know how to handle that case
   displayName: 'Add summaries'
-  condition: and(always(), eq('${{ parameters.htmlReportStorage }}', 'xamarin-storage')) # execute always but when we are using vsdrops since we want to send the message and the url at the same time from the pusblish_hml job
+  condition: and(always(), ${{ parameters.useXamarinStorage }}) # execute always except when we are
   timeoutInMinutes: 1
 
 # Upload test results to vsts.

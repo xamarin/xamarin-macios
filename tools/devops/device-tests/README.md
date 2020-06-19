@@ -90,28 +90,38 @@ Tests are written with Pester and the execution will output the number of tests 
 
 ## Storage
 
-The html report can be stored in two different storages. The xamarin-macios one and the vsdrop one. A
-number of steps are executed depending on the storage, therefore, when modifying a step/task take into
-account the condition is used. If you look at the steps you might find coditions like the following one:
+The html report can be stored in two different places:
+
+* vsdrops
+* xamarin-storage
+
+xamarin-storage has two important details to take into account:
+
+1 not all labs have access to it
+2 it will disappear in the future
+
+Until xamarin-storage is fully removed, we allow certain pipelines to use it. This is done via the 
+'useXamarinStorage' parameter in the templates. To make things easier to mantain, this value is set
+in the variable templates per lab. Unfortunatly, variables do not take types (boolean in this case)
+so we set a string to be 'true' or 'false' and we use eq to convert it to a boolean and pass it to
+the templates:
 
 ```yml
-- pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/cambridge/templates/scripts/GitHub.psm1 
-    New-GitHubSummaryComment -Context "$Env:CONTEXT" 
-  env:
-    BUILD_REVISION: $(BUILD_REVISION)
-    CONTEXT: ${{ parameters.statusContext }}
-    GITHUB_TOKEN: $(GitHub.Token)
-    XAMARIN_STORAGE_PATH: $(XAMARIN_STORAGE_PATH) 
-  displayName: 'Add summaries'
-  condition: and(always(), eq('${{ parameters.htmlReportStorage }}', 'xamarin-storage')) 
-  timeoutInMinutes: 1
+stages:
+- template: templates/device-tests-stage.yml
+  parameters:
+    iOSDevicePool: ${{ variables.iOSDevicePool }}
+    WindowsDevicePool: ${{ variables.WindowsDevicePool }}
+    useXamarinStorage: eq('${{ variables.useXamarinStorage }}', 'true')
+    testsLabels: '--label=run-tvos-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
+    statusContext: 'VSTS: device tests tvOS (DDFun)'
+    iOSDeviceDemand: 'tvos' 
 ```
 
 In the above example we are interested in:
 
 ```yml
-  condition: and(always(), eq('${{ parameters.htmlReportStorage}}', 'xamarin-storage')) 
+  useXamarinStorage: eq('${{ variables.useXamarinStorage }}', 'true')
 ```
 
-The condition states that the step should be executed always when the xamarin-storage is used, else do not execute the step.
+eq will return true of false in the string comparison and that way we do have the correct type.

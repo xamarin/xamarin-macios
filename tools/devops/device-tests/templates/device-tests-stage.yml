@@ -34,9 +34,9 @@ parameters:
   type: string
   default: 'VSEng-Xamarin-Win-XMA'
 
-- name: htmlReportStorage
-  type: string
-  default: xamarin-storage # takes two different values, 'xamarin-storage' or 'vsdrop'
+- name: useXamarinStorage
+  type: boolean
+  default: false
 
 stages:
 - stage: device_tests
@@ -52,12 +52,12 @@ stages:
       parameters:
         testsLabels: ${{ parameters.testsLabels }}
         statusContext: ${{ parameters.statusContext }}
-        htmlReportStorage: ${{ parameters.htmlReportStorage }}
+        useXamarinStorage: ${{ parameters.useXamarinStorage }}
 
   - job: publish_html
     displayName: 'Publish Html report in VSDrops'
     dependsOn: tests
-    condition: and(succeededOrFailed(), eq('${{ parameters.htmlReportStorage }}', 'vsdrops')) # wait for tests to execute, but execute always except if it has been canceled or we are not using vsdrops 
+    condition: succeededOrFailed()
     pool:
       name: ${{ parameters.WindowsDevicePool }}
       demands: agent.os -equals Windows_NT # we need to use a windows machine since vsdrops just works on them and the pool might have diff OS in the agents
