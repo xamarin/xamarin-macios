@@ -11,7 +11,7 @@ namespace Xharness.Jenkins.TestTasks {
 		public DotNetBuildTask (Jenkins jenkins, TestProject testProject, IProcessManager processManager) 
 			: base (jenkins, testProject, processManager) { }
 
-		protected override string ToolName => Jenkins.Harness.DOTNET;
+		protected override string ToolName => Jenkins.Harness.DOTNET5;
 
 		public override bool RestoreNugets => false; // 'dotnet build' will restore
 
