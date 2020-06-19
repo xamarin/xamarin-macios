@@ -207,7 +207,7 @@ namespace Xharness {
 			if (string.IsNullOrEmpty (SdkRoot))
 				SdkRoot = config ["XCODE_DEVELOPER_ROOT"] ?? configuration.SdkRoot;
 
-			processManager = new ProcessManager (XcodeRoot, MlaunchPath);
+			processManager = new ProcessManager (XcodeRoot, MlaunchPath, GetDotNetExecutable, XIBuildPath);
 			TunnelBore = new TunnelBore (processManager);
 		}
 
