@@ -19,6 +19,8 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Execution {
 		readonly string xcodeRoot;
 		public string XcodeRoot => xcodeRoot ?? autoDetectedXcodeRoot.Value;
 		public string MlaunchPath { get; }
+		public GetDotNetExecutableDelegate GetDotNetExecutable { get; private set; }
+		public string MSBuildPath { get; private set; }
 
 		Version xcode_version;
 		public Version XcodeVersion {
@@ -32,10 +34,12 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Execution {
 			}
 		}
 
-		public ProcessManager (string xcodeRoot = null, string mlaunchPath = "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/mlaunch")
+		public ProcessManager (string xcodeRoot = null, string mlaunchPath = "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/mlaunch", GetDotNetExecutableDelegate dotNetPath = null, string msBuildPath = null)
 		{
 			this.xcodeRoot = xcodeRoot;
 			MlaunchPath = mlaunchPath;
+			GetDotNetExecutable = dotNetPath;
+			MSBuildPath = msBuildPath;
 		}
 
 		public async Task<ProcessExecutionResult> ExecuteCommandAsync (string filename,
