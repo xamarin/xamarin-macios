@@ -236,6 +236,7 @@ AVFOUNDATION_SOURCES = \
 	AVFoundation/AVAssetResourceLoadingDataRequest.cs \
 	AVFoundation/AVAudioBuffer.cs \
 	AVFoundation/AVAudioChannelLayout.cs \
+	AVFoundation/AVAudioFormat.cs \
 	AVFoundation/AVAudioPlayer.cs \
 	AVFoundation/AVAudioRecorder.cs \
 	AVFoundation/AVAudioSession.cs \
