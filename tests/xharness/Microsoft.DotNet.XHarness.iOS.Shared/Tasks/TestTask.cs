@@ -252,7 +252,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 			// So we clone the project file to a separate directory and build there instead.
 			// This is done asynchronously to speed to the initial test load.
 			TestProject = project.Clone ();
-			InitialTask = TestProject.CreateCopyAsync (log, processManager);
+			InitialTask = TestProject.CreateCopyAsync (log, processManager, this);
 		}
 
 		protected Stopwatch waitingDuration = new Stopwatch ();
