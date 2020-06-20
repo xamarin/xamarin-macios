@@ -26,6 +26,9 @@ parameters:
   type: boolean 
   default: false  # xamarin-storage will disappear, so by default do not use it
 
+- name: vsdropsPrefix
+  type: string
+
 steps:
 
 - checkout: self
@@ -248,9 +251,12 @@ steps:
       EC=0
       ssh builder@xamarin-storage "mkdir -p /volume1/storage/$XAMARIN_STORAGE_PATH" || EC=$?
       if [ $EC -eq 0 ]; then
+        echo '##vso[task.setvariable variable=XAMARIN_STORAGE_FAILED;isOutput=true]false'
+        echo '##vso[task.setvariable variable=XAMARIN_STORAGE_PATH;isOutput=true]$XAMARIN_STORAGE_PATH'
         export TESTS_PERIODIC_COMMAND="--periodic-interval 10 --periodic-command rsync --periodic-command-arguments '-avz -e \"ssh\" $PWD/jenkins-results builder@xamarin-storage:/volume1/storage/$XAMARIN_STORAGE_PATH'"
       else
-        echo "##vso[task.setvariable variable=XAMARIN_STORAGE_FAILED]true"
+        echo '##vso[task.setvariable variable=XAMARIN_STORAGE_FAILED;isOutput=true]true'
+        echo '##vso[task.setvariable variable=XAMARIN_STORAGE_PATH;isOutput=true]""'
       fi
     fi
 
@@ -263,7 +269,9 @@ steps:
     XAMARIN_STORAGE_PATH: $(XAMARIN_STORAGE_PATH)
     TESTS_EXTRA_ARGUMENTS: ${{ parameters.testsLabels }}
     USE_XAMARIN_STORAGE: '${{ parameters.useXamarinStorage }}'
+    VSDROPS_URI: '${{ parameters.vsdropsPrefix }}/$(Build.BuildNumber)/$(Build.BuildId);/' # uri used to create the vsdrops index using full uri
   displayName: 'Run tests'
+  name: runTests # not to be confused with the displayName, this is used to later use the name of the step to access the output variables from an other job
   timeoutInMinutes: 600
 
 # Upload TestSummary as an artifact.
@@ -274,22 +282,6 @@ steps:
     artifactName: TestSummary.md
   continueOnError: true
   condition: succeededOrFailed()
-
-# Use the cmdlet to post a new summary comment. The cmdlet checks if we have the TestSummary.md file or not. It will also add the appropiate links to the commnet. 
-# This step is ONLY executed when we selected the xamarin-storage option. If we use vsdrops we want to wait until the publish_html job to do it so that we can 
-# calculate the url of the html report based in the vsdrop path.
-- pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/device-tests/scripts/GitHub.psm1 
-    New-GitHubSummaryComment -Context "$Env:CONTEXT" -XamarinStoragePath "$Env:XAMARIN_STORAGE_PATH" -TestSummaryPath "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tests/TestSummary.md"
-  env:
-    BUILD_REVISION: $(BUILD_REVISION)
-    CONTEXT: ${{ parameters.statusContext }}
-    GITHUB_TOKEN: $(GitHub.Token)
-    XAMARIN_STORAGE_PATH: $(XAMARIN_STORAGE_PATH) # could be null if the step was not executed if we use vsdrops, the cmdlet will know how to handle that case
-    XAMARIN_STORAGE_REACHED: $(XAMARIN_STORAGE_FAILED) # could not reach xamarin-storage, either the bot is not in the vpn or it finally failed
-  displayName: 'Add summaries'
-  condition: and(always(), ${{ parameters.useXamarinStorage }}) # execute always except when we are
-  timeoutInMinutes: 1
 
 # Upload test results to vsts.
 - task: PublishTestResults@2

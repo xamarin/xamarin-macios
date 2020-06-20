@@ -109,24 +109,32 @@ function Get-SystemInfo {
     [OutputType('Hashtable')]
     [CmdletBinding()]
     param ()
-    $xamariniOSVersions = Get-FrameworkVersions -Path "/Library/Frameworks/Xamarin.iOS.framework"
-    $xamarinMacVersions = Get-FrameworkVersions -Path "/Library/Frameworks/Xamarin.Mac.framework"
-    $drive = Get-PSDrive "/"
+    if ($IsMacOS) {
+        $drive = Get-PSDrive "/"
+    } else {
+        $drive = Get-PSDrive "C"
+    }
     # created and ordered dictionary with the data
     $systemInfo = [Ordered]@{
         OSDescription = [System.Runtime.InteropServices.RuntimeInformation]::OSDescription;
         OSArchitecture = [System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture;
         Runtime = [System.Runtime.InteropServices.RuntimeInformation]::FrameworkDescription;
-        XamariniOSVersions = $xamariniOSVersions.Versions
-        XamariniOSCurrentVersion = $xamariniOSVersions.Current
-        XamarinMacVersions = $xamarinMacVersions.Versions
-        XamarinMacCurrentVersion = $xamarinMacVersions.Current
-        XcodeVersions = Get-ChildItem "/Applications" -Include "Xcode*" -Name
-        XcodeSelected = Get-SelectedXcode 
-        MonoVersion = Get-MonoVersion
+        Uptime = Get-Uptime
         FreeStorage = "$($drive.Free / 1GB) GB";
         UsedStorage = "$($drive.Used / 1GB) GB";
-        Uptime = Get-Uptime
+    }
+
+    if ($IsMacOS) {
+        $xamariniOSVersions = Get-FrameworkVersions -Path "/Library/Frameworks/Xamarin.iOS.framework"
+        $xamarinMacVersions = Get-FrameworkVersions -Path "/Library/Frameworks/Xamarin.Mac.framework"
+
+        $systemInfo["XamariniOSVersions"] = $xamariniOSVersions.Versions
+        $systemInfo["XamariniOSCurrentVersion"] = $xamariniOSVersions.Current
+        $systemInfo["XamarinMacVersions"] = $xamarinMacVersions.Versions
+        $systemInfo["XamarinMacCurrentVersion"] = $xamarinMacVersions.Current
+        $systemInfo["XcodeVersions"] = Get-ChildItem "/Applications" -Include "Xcode*" -Name
+        $systemInfo["XcodeSelected"] = Get-SelectedXcode
+        $systemInfo["MonoVersion"] = Get-MonoVersion
     }
 
     return $systemInfo
@@ -235,7 +243,7 @@ function Test-HDFreeSpace {
         [int]
         $Size
     )
-    $drive = Get-PSDrive "/" 
+    $drive = Get-PSDrive "/"
     return $drive.Free / 1GB -gt $Size
 }
 

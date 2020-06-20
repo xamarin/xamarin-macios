@@ -38,6 +38,9 @@ parameters:
   type: boolean
   default: false
 
+- name: vsdropsPrefix 
+  type: string
+
 stages:
 - stage: device_tests
   jobs:
@@ -53,13 +56,22 @@ stages:
         testsLabels: ${{ parameters.testsLabels }}
         statusContext: ${{ parameters.statusContext }}
         useXamarinStorage: ${{ parameters.useXamarinStorage }}
+        vsdropsPrefix: ${{ parameters.vsdropsPrefix }} 
 
   - job: publish_html
     displayName: 'Publish Html report in VSDrops'
     dependsOn: tests
     condition: succeededOrFailed()
+    variables:
+      # Define the variable FOO from the previous job
+      # Note the use of single quotes!
+      XAMARIN_STORAGE_PATH: $[ dependencies.tests.outputs['runTests.XAMARIN_STORAGE_PATH'] ]
+      XAMARIN_STORAGE_FAILED: $[ dependencies.tests.outputs['runTests.XAMARIN_STORAGE_FAILED'] ]
     pool:
       name: ${{ parameters.WindowsDevicePool }}
       demands: agent.os -equals Windows_NT # we need to use a windows machine since vsdrops just works on them and the pool might have diff OS in the agents
     steps:
     - template: publish-html.yml
+      parameters:
+        statusContext: ${{ parameters.statusContext }}
+        vsdropsPrefix: ${{ parameters.vsdropsPrefix }} 

@@ -29,3 +29,4 @@ stages:
     testsLabels: '--label=run-tvos-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
     statusContext: 'VSTS: device tests tvOS Beta (Cambridge)'
     iOSDeviceDemand: 'xitvos-beta'
+    vsdropsPrefix: ${{ variables.vsdropsPrefix }} 

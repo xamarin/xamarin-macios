@@ -175,9 +175,9 @@ function New-GitHubComment {
 
     $targetUrl = Get-TargetUrl
     # build the message, which will be sent to github, users can use markdown
-    $fullDescription ="$Emoji $Description on [Azure DevOps]($targetUrl) ($Env:BUILD_DEFINITIONNAME) $Emoji"
+    $fullDescription ="$Description on Azure DevOps]($targetUrl) ($Env:BUILD_DEFINITIONNAME)"
     $msg = [System.Text.StringBuilder]::new()
-    $msg.AppendLine("### $Header")
+    $msg.AppendLine("### $Emoji $Header $Emoji")
     $msg.AppendLine()
     $msg.AppendLine($fullDescription)
     if ($Message) { # only if message is not null or empty
@@ -335,12 +335,17 @@ function New-GitHubSummaryComment {
     # 2. We did reach the xamarin-storage, stored in the env var XAMARIN_STORAGE_REACHED
     $headerSb = [System.Text.StringBuilder]::new()
     $headerSb.AppendLine(); # new line to start the list
-    $headerSb.AppendLine("* [Azure DevOps]($vstsTargetUrl")
+    $headerSb.AppendLine("* [Azure DevOps]($vstsTargetUrl)")
     if ($XamarinStoragePath -and $Env:XAMARIN_STORAGE_FAILED) { # if we do have the storage path but we failed. first part of the -and check string is not null or empty, second check presence of the env var
         $headerSb.AppendLine("* :warning: xamarin-storage could not be reached :warning:")
     } else {
         $xamarinStorageUrl = Get-XamarinStorageIndexUrl -Path $XamarinStoragePath
         $headerSb.AppendLine("* [Html Report]($xamarinStorageUrl)")
+    }
+    if ($Env:VSDROPS_INDEX) {
+        # we did generate an index with the files in vsdrops
+        $headerSb.AppendLine("* [Html Report (VSDrops)]($Env:VSDROPS_INDEX)")
+        Write-Host $Env:VSDROPS_INDEX
     }
     $headerLinks = $headerSb.ToString()
     $request = $null
