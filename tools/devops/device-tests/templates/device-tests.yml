@@ -244,8 +244,13 @@ steps:
 
     cd $WORKING_DIR/xamarin-macios
     if [[ "$HTML_STORAGE" == "xamarin-storage" ]]; then
-      ssh builder@xamarin-storage "mkdir -p /volume1/storage/$XAMARIN_STORAGE_PATH"
-      export TESTS_PERIODIC_COMMAND="--periodic-interval 10 --periodic-command rsync --periodic-command-arguments '-avz -e \"ssh\" $PWD/jenkins-results builder@xamarin-storage:/volume1/storage/$XAMARIN_STORAGE_PATH'"
+      EC=0
+      ssh builder@xamarin-storage "mkdir -p /volume1/storage/$XAMARIN_STORAGE_PATH" || EC=$?
+      if [ $EC -eq 0 ]; then
+        export TESTS_PERIODIC_COMMAND="--periodic-interval 10 --periodic-command rsync --periodic-command-arguments '-avz -e \"ssh\" $PWD/jenkins-results builder@xamarin-storage:/volume1/storage/$XAMARIN_STORAGE_PATH'"
+      else
+        echo "##vso[task.setvariable variable=XAMARIN_STORAGE_FAILED]true"
+      fi
     fi
 
     make -C builds download -j || true
@@ -280,6 +285,7 @@ steps:
     CONTEXT: ${{ parameters.statusContext }}
     GITHUB_TOKEN: $(GitHub.Token)
     XAMARIN_STORAGE_PATH: $(XAMARIN_STORAGE_PATH) # could be null if the step was not executed if we use vsdrops, the cmdlet will know how to handle that case
+    XAMARIN_STORAGE_REACHED: $(XAMARIN_STORAGE_FAILED) # could not reach xamarin-storage, either the bot is not in the vpn or it finally failed
   displayName: 'Add summaries'
   condition: and(always(), eq('${{ parameters.htmlReportStorage }}', 'xamarin-storage')) # execute always but when we are using vsdrops since we want to send the message and the url at the same time from the pusblish_hml job
   timeoutInMinutes: 1
