@@ -9,7 +9,7 @@ using Xamarin.MacDev.Tasks;
 
 namespace Xamarin.iOS.Tasks
 {
-	public class CollectAssetPacksTaskBase : XamarinTask
+	public abstract class CollectAssetPacksTaskBase : XamarinTask
 	{
 		#region Inputs
 

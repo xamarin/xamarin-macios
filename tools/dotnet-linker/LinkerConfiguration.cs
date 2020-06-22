@@ -1,15 +1,22 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Xml.Linq;
 
 using Mono.Linker;
 
+using Xamarin.Bundler;
 using Xamarin.Utils;
 
 namespace Xamarin.Linker {
 	public class LinkerConfiguration {
+		public List<Abi> Abis;
+		public string ItemsDirectory { get; private set; }
 		public ApplePlatform Platform { get; private set; }
 		public string PlatformAssembly { get; private set; }
+		public string CacheDirectory { get; private set; }
 
 		static ConditionalWeakTable<LinkContext, LinkerConfiguration> configurations = new ConditionalWeakTable<LinkContext, LinkerConfiguration> ();
 
@@ -43,6 +50,12 @@ namespace Xamarin.Linker {
 				var key = line [..eq];
 				var value = line [(eq + 1)..];
 				switch (key) {
+				case "CacheDirectory":
+					CacheDirectory = value;
+					break;
+				case "ItemsDirectory":
+					ItemsDirectory = value;
+					break;
 				case "Platform":
 					switch (value) {
 					case "iOS":
@@ -64,17 +77,54 @@ namespace Xamarin.Linker {
 				case "PlatformAssembly":
 					PlatformAssembly = Path.GetFileNameWithoutExtension (value);
 					break;
+				case "TargetArchitectures":
+					if (!Enum.TryParse<Abi> (value, out var arch))
+						throw new InvalidOperationException ($"Unknown target architectures: {value} in {linker_file}");
+					// Add to the list of Abis as separate entries (instead of a flags enum value), because that way it's easier to enumerate over them.
+					Abis = new List<Abi> ();
+					for (var b = 0; b < 32; b++) {
+						var a = (Abi) (1 << b);
+						if ((a & arch) == a)
+							Abis.Add (a);
+					}
+					break;
 				default:
 					throw new InvalidOperationException ($"Unknown key '{key}' in {linker_file}");
 				}
 			}
+
+			ErrorHelper.Platform = Platform;
 		}
 
 		public void Write ()
 		{
 			Console.WriteLine ($"LinkerConfiguration:");
+			Console.WriteLine ($"    ABIs: {string.Join (", ", Abis.Select (v => v.AsArchString ()))}");
+			Console.WriteLine ($"    CacheDirectory: {CacheDirectory}");
+			Console.WriteLine ($"    ItemsDirectory: {ItemsDirectory}");
 			Console.WriteLine ($"    Platform: {Platform}");
 			Console.WriteLine ($"    PlatformAssembly: {PlatformAssembly}.dll");
 		}
+
+		public void WriteOutputForMSBuild (string itemName, List<MSBuildItem> items)
+		{
+			var xmlNs = XNamespace.Get ("http://schemas.microsoft.com/developer/msbuild/2003");
+			var elements = items.Select (item =>
+				new XElement (xmlNs + itemName,
+					new XAttribute ("Include", item.Include),
+						item.Metadata.Select (metadata => new XElement (xmlNs + metadata.Key, metadata.Value))));
+
+			var document = new XDocument (
+				new XElement (xmlNs + "Project",
+					new XElement (xmlNs + "ItemGroup",
+						elements)));
+
+			document.Save (Path.Combine (ItemsDirectory, itemName + ".items"));
+		}
 	}
+}
+
+public class MSBuildItem {
+	public string Include;
+	public Dictionary<string, string> Metadata = new Dictionary<string, string> ();
 }

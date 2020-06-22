@@ -1,6 +1,6 @@
 namespace Xamarin.iOS.Tasks
 {
-	public class CompileAppManifest : CompileAppManifestTaskBase
+	public class CompileAppManifest : CompileAppManifestTaskCore
 	{
 	}
 }

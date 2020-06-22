@@ -300,20 +300,6 @@ namespace Xamarin.Bundler
 			return args;
 		}
 
-		public static ProcessStartInfo CreateStartInfo (Application app, string file_name, IList<string> arguments, string mono_path, string mono_debug = null)
-		{
-			var info = new ProcessStartInfo (file_name, StringUtils.FormatArguments (arguments));
-			info.UseShellExecute = false;
-			info.RedirectStandardOutput = true;
-			info.RedirectStandardError = true;
-
-			info.EnvironmentVariables ["MONO_PATH"] = mono_path;
-			if (mono_debug != null)
-				info.EnvironmentVariables ["MONO_DEBUG"] = mono_debug;
-
-			return info;
-		}
-
 		static string EncodeAotSymbol (string symbol)
 		{
 			var sb = new StringBuilder ();

@@ -328,6 +328,9 @@
     <Compile Include="..\Resources.Designer.cs">
       <DependentUpon>..\Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="..\..\tools\common\Driver.execution.cs">
+      <Link>Driver.execution.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\Resources.resx">

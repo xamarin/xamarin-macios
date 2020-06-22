@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
@@ -88,6 +89,22 @@ namespace Xamarin.MacDev.Tasks {
 			default:
 				throw new InvalidOperationException ($"Invalid platform: {Platform}");
 			}
+		}
+
+		protected async System.Threading.Tasks.Task<Execution> ExecuteAsync (string fileName, IList<string> arguments, string sdkDevPath)
+		{
+			var environment = new Dictionary<string, string> () {
+				{  "DEVELOPER_DIR", sdkDevPath },
+			};
+			Log.LogMessage (MessageImportance.Low, $"Executing '{fileName} {StringUtils.FormatArguments (arguments)}'");
+			var rv = await Execution.RunAsync ("xcrun", arguments, environment: environment, mergeOutput: true);
+			if (rv.ExitCode != 0) {
+				Log.LogMessage (MessageImportance.Normal, rv.StandardOutput.ToString ());
+				Log.LogError ($"Executing '{fileName} {StringUtils.FormatArguments (arguments)}' failed with exit code {rv.ExitCode}. Please review build log for more information.");
+			} else {
+				Log.LogMessage (MessageImportance.Low, rv.StandardOutput.ToString ());
+			}
+			return rv;
 		}
 	}
 }

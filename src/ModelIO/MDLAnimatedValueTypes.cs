@@ -749,126 +749,98 @@ namespace ModelIO {
 	}
 
 	static class MDLMemoryHelper {
-		static IntPtr GetAlignedPtrForArray (int typeSize, int managedArrayCount, out int nativeArrayLength, out IntPtr alignedPtr)
+		// you must free the returned `ptr` (if non null) but use the `alignedPtr` for native calls
+		static unsafe IntPtr GetAlignedPtrForArray (IntPtr arrptr, int size, bool copy, out IntPtr alignedPtr)
 		{
-			nativeArrayLength = typeSize * managedArrayCount;
-			var ptr = Marshal.AllocHGlobal (nativeArrayLength + 16);
+			// use the original pointer if it's already aligned on a 16 bytes boundary
+			if (((nuint) arrptr & 15) == 0) {
+				alignedPtr = arrptr;
+				// nothing to free
+				return IntPtr.Zero;
+			}
+			var ptr = Marshal.AllocHGlobal (size + 16);
 			alignedPtr = new IntPtr (((nint) (ptr + 15) >> 4) << 4);
+			if (copy)
+				Buffer.MemoryCopy ((void*) arrptr, (void*) alignedPtr, size, size);
 			return ptr;
 		}
 
 		internal static void SetValues (int typeSize, IntPtr arrptr, int arrLength, Action<IntPtr, nuint> setFunc)
 		{
-			int nativeArrayLength;
-			IntPtr aligned_ptr = arrptr;
-			var ptr = IntPtr.Zero;
-
-			if ((nuint) aligned_ptr % 16 != 0) {
-				ptr = GetAlignedPtrForArray (typeSize, arrLength, out nativeArrayLength, out aligned_ptr);
-				Runtime.memcpy (aligned_ptr, arrptr, nativeArrayLength);
-			}
-
+			var size = typeSize * arrLength;
+			// get a 16 bytes aligned pointer for `arrptr` and call native code using it
+			var allocated_ptr = GetAlignedPtrForArray (arrptr, size, copy: true, out var aligned_ptr);
 			setFunc (aligned_ptr, (nuint) arrLength);
-
-			if (ptr != IntPtr.Zero)
-				Marshal.FreeHGlobal (ptr);
+			// free the potentially allocated memory using to align memory
+			if (allocated_ptr != IntPtr.Zero)
+				Marshal.FreeHGlobal (allocated_ptr);
 		}
 
 		internal static void SetValues (int typeSize, IntPtr arrptr, int arrLength, double time, Action<IntPtr, nuint, double> setFunc)
 		{
-			int nativeArrayLength;
-			IntPtr aligned_ptr = arrptr;
-			var ptr = IntPtr.Zero;
-
-			if ((nuint) aligned_ptr % 16 != 0) {
-				ptr = GetAlignedPtrForArray (typeSize, arrLength, out nativeArrayLength, out aligned_ptr);
-				Runtime.memcpy (aligned_ptr, arrptr, nativeArrayLength);
-			}
-
+			var size = typeSize * arrLength;
+			// get a 16 bytes aligned pointer for `arrptr` and call native code using it
+			var allocated_ptr = GetAlignedPtrForArray (arrptr, size, copy: true, out var aligned_ptr);
 			setFunc (aligned_ptr, (nuint) arrLength, time);
-
-			if (ptr != IntPtr.Zero)
-				Marshal.FreeHGlobal (ptr);
+			// free the potentially allocated memory using to align memory
+			if (allocated_ptr != IntPtr.Zero)
+				Marshal.FreeHGlobal (allocated_ptr);
 		}
 
-		internal static nuint FetchValues (int typeSize, IntPtr arrptr, nuint count, Func<IntPtr, nuint, nuint> getFunc)
+		internal unsafe static nuint FetchValues (int typeSize, IntPtr arrptr, nuint count, Func<IntPtr, nuint, nuint> getFunc)
 		{
-			int nativeArrayLength;
-			IntPtr aligned_ptr = arrptr;
-			var ptr = IntPtr.Zero;
-			nuint retVal;
-
-			if ((nuint) aligned_ptr % 16 != 0) {
-				ptr = GetAlignedPtrForArray (typeSize, (int) count, out nativeArrayLength, out aligned_ptr);
-				retVal = getFunc (aligned_ptr, count);
-				Runtime.memcpy (arrptr, aligned_ptr, nativeArrayLength);
-			} else
-				retVal = getFunc (arrptr, count);
-
-			if (ptr != IntPtr.Zero)
-				Marshal.FreeHGlobal (ptr);
-
+			var size = typeSize * (int) count;
+			// get a 16 bytes aligned pointer for `arrptr` and call native code using it
+			var allocated_ptr = GetAlignedPtrForArray (arrptr, size, copy: false, out var aligned_ptr);
+			var retVal = getFunc (aligned_ptr, count);
+			if (allocated_ptr != IntPtr.Zero) {
+				// move memory back to the original pointer, then free the aligned memory
+				Buffer.MemoryCopy ((void*) aligned_ptr, (void*) arrptr, size, size);
+				Marshal.FreeHGlobal (allocated_ptr);
+			}
 			return retVal;
 		}
 
-		internal static nuint FetchValues (int typeSize, IntPtr arrptr, nuint count, double time, Func<IntPtr, nuint, double, nuint> getFunc)
+		internal unsafe static nuint FetchValues (int typeSize, IntPtr arrptr, nuint count, double time, Func<IntPtr, nuint, double, nuint> getFunc)
 		{
-			int nativeArrayLength;
-			IntPtr aligned_ptr = arrptr;
-			var ptr = IntPtr.Zero;
-			nuint retVal;
-
-			if ((nuint) aligned_ptr % 16 != 0) {
-				ptr = GetAlignedPtrForArray (typeSize, (int) count, out nativeArrayLength, out aligned_ptr);
-				retVal = getFunc (aligned_ptr, count, time);
-				Runtime.memcpy (arrptr, aligned_ptr, nativeArrayLength);
-			} else
-				retVal = getFunc (arrptr, count, time);
-
-			if (ptr != IntPtr.Zero)
-				Marshal.FreeHGlobal (ptr);
-
+			var size = typeSize * (int) count;
+			// get a 16 bytes aligned pointer for `arrptr` and call native code using it
+			var allocated_ptr = GetAlignedPtrForArray (arrptr, size, copy: false, out var aligned_ptr);
+			var retVal = getFunc (aligned_ptr, count, time);
+			if (allocated_ptr != IntPtr.Zero) {
+				// move memory back to the original pointer, then free the aligned memory
+				Buffer.MemoryCopy ((void*) aligned_ptr, (void*) arrptr, size, size);
+				Marshal.FreeHGlobal (allocated_ptr);
+			}
 			return retVal;
 		}
 
 		internal static void Reset (int typeSize, IntPtr valuesPtr, double [] times, Action<IntPtr, IntPtr, nuint> resetFunc)
 		{
-			int nativeArrayLength;
-			IntPtr aligned_ptr = valuesPtr;
-			var ptr = IntPtr.Zero;
-
-			if ((nuint) aligned_ptr % 16 != 0) {
-				ptr = GetAlignedPtrForArray (typeSize, times.Length, out nativeArrayLength, out aligned_ptr);
-				Runtime.memcpy (aligned_ptr, valuesPtr, nativeArrayLength);
-			}
-
+			var size = typeSize * times.Length;
+			// get a 16 bytes aligned pointer for `valuesPtr` and call native code using it
+			var allocated_ptr = GetAlignedPtrForArray (valuesPtr, size, copy: true, out var aligned_ptr);
 			unsafe {
 				fixed (double* timesPtr = times)
 					resetFunc (aligned_ptr, (IntPtr) timesPtr, (nuint) times.Length);
 			}
-
-			if (ptr != IntPtr.Zero)
-				Marshal.FreeHGlobal (ptr);
+			// free the potentially allocated memory using to align memory
+			if (allocated_ptr != IntPtr.Zero)
+				Marshal.FreeHGlobal (allocated_ptr);
 		}
 
 		internal static void Reset (int typeSize, IntPtr valuesPtr, int valuesLength, double [] times, Action<IntPtr, nuint, IntPtr, nuint> resetFunc)
 		{
-			int nativeArrayLength;
-			IntPtr aligned_ptr = valuesPtr;
-			var ptr = IntPtr.Zero;
-
-			if ((nuint) aligned_ptr % 16 != 0) {
-				ptr = GetAlignedPtrForArray (typeSize, valuesLength, out nativeArrayLength, out aligned_ptr);
-				Runtime.memcpy (aligned_ptr, valuesPtr, nativeArrayLength);
-			}
-
+			var size = typeSize * valuesLength;
+			// get a 16 bytes aligned pointer for `valuesPtr` and call native code using it
+			var allocated_ptr = GetAlignedPtrForArray (valuesPtr, size, copy: true, out var aligned_ptr);
 			unsafe {
 				fixed (double* timesPtr = times)
 					resetFunc (aligned_ptr, (nuint) valuesLength, (IntPtr) timesPtr, (nuint) times.Length);
 			}
-
-			if (ptr != IntPtr.Zero)
-				Marshal.FreeHGlobal (ptr);
+			// free the potentially allocated memory using to align memory
+			if (allocated_ptr != IntPtr.Zero)
+				Marshal.FreeHGlobal (allocated_ptr);
 		}
 	}
 }

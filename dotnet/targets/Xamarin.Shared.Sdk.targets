@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
+	<PropertyGroup>
+		<_XamarinTaskAssembly Condition="'$(_PlatformName)' != 'macOS'">$(_XamarinSdkRootDirectory)\tools\msbuild\iOS\Xamarin.iOS.Tasks.dll</_XamarinTaskAssembly>
+		<_XamarinTaskAssembly Condition="'$(_PlatformName)' == 'macOS'">$(_XamarinSdkRootDirectory)\tools\msbuild\macOS\Xamarin.Mac.Tasks.dll</_XamarinTaskAssembly>
+	</PropertyGroup>
+
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.CompileNativeCode" AssemblyFile="$(_XamarinTaskAssembly)" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.LinkNativeCode" AssemblyFile="$(_XamarinTaskAssembly)" />
+
 	<!-- Project types and how do we distinguish between them
 
 									  OutputType   Custom variable
@@ -83,6 +91,9 @@
 			_CompileAppManifest;
 			_ComputeLinkerArguments;
 			ComputeFilesToPublish;
+			_LoadLinkerOutput;
+			_CompileNativeExecutable;
+			_LinkNativeExecutable;
 			_ComputePublishLocation;
 			CopyFilesToPublishDirectory;
 		</CreateAppBundleDependsOn>
@@ -97,9 +108,19 @@
 		<PropertyGroup>
 			<!-- Pass the custom options to our custom steps -->
 			<_CustomLinkerOptionsFile>$([System.IO.Path]::GetFullPath('$(IntermediateOutputPath)custom-linker-options.txt'))</_CustomLinkerOptionsFile>
+
+			<!-- The directory where the linker puts *.items files that will be loaded in the _LoadLinkerOutput target -->
+			<_LinkerItemsDirectory>$([System.IO.Path]::GetFullPath('$(IntermediateOutputPath)linker-items'))</_LinkerItemsDirectory>
+
+			<!-- A temporary output directory for our linker steps -->
+			<_LinkerCacheDirectory>$([System.IO.Path]::GetFullPath('$(IntermediateOutputPath)linker-cache'))</_LinkerCacheDirectory>
+
 			<_CustomLinkerOptions>
+				CacheDirectory=$(_LinkerCacheDirectory)
+				ItemsDirectory=$(_LinkerItemsDirectory)
 				Platform=$(_PlatformName)
 				PlatformAssembly=$(_PlatformAssemblyName).dll
+				TargetArchitectures=$(TargetArchitectures)
 			</_CustomLinkerOptions>
 			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) --custom-data "LinkerOptionsFile=$(_CustomLinkerOptionsFile)"</_ExtraTrimmerArgs>
 
@@ -112,10 +133,84 @@
 				<BeforeStep>LoadReferencesStep</BeforeStep>
 				<Type>Xamarin.SetupStep</Type>
 			</_TrimmerCustomSteps>
+			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)">
+				<!-- At the end of the pipeline -->
+				<Type>Xamarin.GenerateMainStep</Type>
+			</_TrimmerCustomSteps>
 		</ItemGroup>
 
 		<!-- Create the file with our custom linker options -->
 		<WriteLinesToFile File="$(_CustomLinkerOptionsFile)" Lines="$(_CustomLinkerOptions)" Overwrite="true" />
+	</Target>
+
+	<Target Name="_LoadLinkerOutput">
+		<!-- Load _MainFile -->
+		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_MainFile.items" Condition="Exists('$(_LinkerItemsDirectory)/_MainFile.items')">
+			<Output TaskParameter="Items" ItemName="_MainFile" />
+		</ReadItemsFromFile>
+	</Target>
+
+	<!-- Native code -->
+
+	<Target Name="_ComputeVariables" DependsOnTargets="_GenerateBundleName">
+		<PropertyGroup>
+			<_IntermediateNativeLibraryDir>$(IntermediateOutputPath)nativelibraries/</_IntermediateNativeLibraryDir>
+			<_NativeExecutableName>$(_AppBundleName)</_NativeExecutableName>
+		</PropertyGroup>
+	</Target>
+
+	<Target Name="_CompileNativeExecutable"
+		DependsOnTargets="_DetectSdkLocations;_ComputeTargetArchitectures;_GenerateBundleName;_ComputeVariables;_GetMinimumOSVersion"
+		Inputs="@(_MainFile)"
+		Outputs="@(_MainFile -> '%(_IntermediateNativeLibraryDir)%(Filename).o')"
+		>
+
+		<ItemGroup>
+			<_MainFile Update="@(_MainFile)">
+				<OutputFile>$(_IntermediateNativeLibraryDir)%(Filename).o</OutputFile>
+			</_MainFile>
+		</ItemGroup>
+
+		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(_IntermediateNativeLibraryDir)" />
+
+		<CompileNativeCode
+			SessionId="$(BuildSessionId)"
+			CompileInfo="@(_MainFile)"
+			MinimumOSVersion="$(_MinimumOSVersion)"
+			SdkDevPath="$(_SdkDevPath)"
+			SdkIsSimulator="$(_SdkIsSimulator)"
+			SdkRoot="$(_SdkRoot)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+		>
+			<Output TaskParameter="ObjectFiles" ItemName="_NativeExecutableObjectFiles" />
+		</CompileNativeCode>
+	</Target>
+
+	<Target Name="_LinkNativeExecutable"
+			DependsOnTargets="_DetectSdkLocations;_ComputeTargetArchitectures;_GenerateBundleName;_CompileNativeExecutable;_CompileAppManifest"
+			Inputs="@(_NativeExecutableObjectFiles)"
+			Outputs="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)"
+		>
+
+		<LinkNativeCode
+			SessionId="$(BuildSessionId)"
+			Frameworks="@(_NativeExecutableFrameworks)"
+			MinimumOSVersion="$(_MinimumOSVersion)"
+			ObjectFiles="@(_NativeExecutableObjectFiles)"
+			OutputFile="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)"
+			SdkDevPath="$(_SdkDevPath)"
+			SdkIsSimulator="$(_SdkIsSimulator)"
+			SdkRoot="$(_SdkRoot)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+			WeakFrameworks="@(_NativeExecutableWeakFrameworks)"
+		/>
+
+		<ItemGroup>
+			<!-- Copy the executable from the intermediate directory to the .app -->
+			<ResolvedFileToPublish
+				Include="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)"
+				RelativePath="$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(MSBuildProjectDirectory)$(_AppBundlePath)))\$(_NativeExecutableName)"/>
+		</ItemGroup>
 	</Target>
 
 	<Target Name="_ComputePublishLocation" DependsOnTargets="_GenerateBundleName">

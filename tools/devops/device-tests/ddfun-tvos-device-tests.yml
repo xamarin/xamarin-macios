@@ -1,0 +1,31 @@
+# Runs the device tests on tvOS beta devices on the tuk 5 lab.
+parameters:
+- name: disableProvisionatorCache
+  type: boolean
+  default: false
+
+- name: clearProvisionatorCache
+  type: boolean
+  default: false
+
+variables:
+  - template: templates/common-variables.yml
+  - template: templates/ddfun-variables.yml
+
+resources:
+  repositories:
+  - repository: maccore
+    type: github
+    name: xamarin/maccore
+    ref: refs/heads/main
+    endpoint: xamarin
+
+stages:
+- template: templates/device-tests-stage.yml
+  parameters:
+    iOSDevicePool: ${{ variables.iOSDevicePool }}
+    WindowsDevicePool: ${{ variables.WindowsDevicePool }}
+    htmlReportStorage: ${{ variables.htmlReportStorage }}
+    testsLabels: '--label=run-tvos-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
+    statusContext: 'VSTS: device tests tvOS (DDFun)'
+    iOSDeviceDemand: 'tvos' 

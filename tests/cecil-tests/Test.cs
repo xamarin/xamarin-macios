@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 using NUnit.Framework;
@@ -102,6 +103,55 @@ namespace Cecil.Tests {
 			// this has a quite noticable impact on (small) app size
 			if (assembly.MainModule.TryGetTypeReference ("System.Console", out var _))
 				Assert.Fail ($"{assemblyPath} has a reference to `System.Console`. Please use `Runtime.NSLog` inside the platform assemblies");
+		}
+
+		// we should not p/invoke into API that are banned (by MS) from the C runtime
+		// list is copied from binscope for mac (not all of them actually exists on macOS)
+		static HashSet<string> BannedCApi = new HashSet<string> () {
+			"_alloca", "_ftcscat", "_ftcscpy", "_getts", "_gettws", "_i64toa",
+			"_i64tow", "_itoa", "_itow", "_makepath", "_mbccat", "_mbccpy",
+			"_mbscat", "_mbscpy", "_mbslen", "_mbsnbcat", "_mbsnbcpy", "_mbsncat",
+			"_mbsncpy", "_mbstok", "_mbstrlen", "_snprintf", "_sntprintf",
+			"_sntscanf", "_snwprintf", "_splitpath", "_stprintf", "_stscanf",
+			"_tccat", "_tccpy", "_tcscat", "_tcscpy", "_tcsncat", "_tcsncpy",
+			"_tcstok", "_tmakepath", "_tscanf", "_tsplitpath", "_ui64toa",
+			"_ui64tot", "_ui64tow", "_ultoa", "_ultot", "_ultow", "_vsnprintf",
+			"_vsntprintf", "_vsnwprintf", "_vstprintf", "_wmakepath", "_wsplitpath",
+			"alloca", "changewindowmessagefilter", "chartooem", "chartooema",
+			"chartooembuffa", "chartooembuffw", "chartooemw", "copymemory", "gets",
+			"isbadcodeptr", "isbadhugereadptr", "isbadhugewriteptr", "isbadreadptr",
+			"isbadstringptr", "isbadwriteptr", "lstrcat", "lstrcata", "lstrcatn",
+			"lstrcatna", "lstrcatnw", "lstrcatw", "lstrcpy", "lstrcpya", "lstrcpyn",
+			"lstrcpyna", "lstrcpynw", "lstrcpyw", "lstrlen", "lstrncat", "makepath",
+			"memcpy", "oemtochar", "oemtochara", "oemtocharw", "rtlcopymemory", "scanf",
+			"snscanf", "snwscanf", "sprintf", "sprintfa", "sprintfw", "sscanf", "strcat",
+			"strcata", "strcatbuff", "strcatbuffa", "strcatbuffw", "strcatchainw",
+			"strcatn", "strcatna", "strcatnw", "strcatw", "strcpy", "strcpya", "strcpyn",
+			"strcpyna", "strcpynw", "strcpyw", "strlen", "strncat", "strncata", "strncatw",
+			"strncpy", "strncpya", "strncpyw", "strtok", "swprintf", "swscanf", "vsnprintf",
+			"vsprintf", "vswprintf", "wcscat", "wcscpy", "wcslen", "wcsncat", "wcsncpy",
+			"wcstok", "wmemcpy", "wnsprintf", "wnsprintfa", "wnsprintfw", "wscanf", "wsprintf",
+			"wsprintfa", "wsprintfw", "wvnsprintf", "wvnsprintfa", "wvnsprintfw", "wvsprintf",
+			"wvsprintfa", "wvsprintfw"
+		};
+
+		[TestCaseSource (typeof (Helper), "PlatformAssemblies")]
+		public void NoBannedApi (string assemblyPath)
+		{
+			var assembly = Helper.GetAssembly (assemblyPath);
+			if (assembly == null) {
+				Assert.Ignore ("{assemblyPath} could not be found (might be disabled in build)");
+				return; // just to help nullability
+			}
+			List<string> found = new List<string> ();
+			foreach (var m in Helper.FilterMethods (assembly!, (m) => m.IsPInvokeImpl)) {
+				var symbol = m.PInvokeInfo.EntryPoint;
+				if (BannedCApi.Contains (symbol))
+					found.Add (symbol);
+			}
+			// if multiple p/invoke are defined then the same symbol will show multiple times
+			// it's a feature :)
+			Assert.That (found, Is.Empty, string.Join (", ", found));
 		}
 	}
 }

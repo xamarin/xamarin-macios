@@ -586,8 +586,8 @@ namespace AudioToolbox
 							inst.packetDescriptions = Marshal.AllocHGlobal (data.Length * size);
 						}
 						unsafe { 
-							fixed (AudioStreamPacketDescription* inptr = data) {
-								Runtime.memcpy ((byte *) inst.packetDescriptions, (byte *) inptr, data.Length * size);
+							fixed (void* source = data) {
+								Buffer.MemoryCopy (source, (void*) inst.packetDescriptions, inst.packetDescriptionSize * size, data.Length * size);
 							}
 						}
 						Marshal.WriteIntPtr (outDataPacketDescription, inst.packetDescriptions);

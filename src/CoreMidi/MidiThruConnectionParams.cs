@@ -270,9 +270,9 @@ namespace CoreMidi {
 				Controls = null;
 			else {
 				Controls = new MidiControlTransform[connectionParams.NumControlTransforms];
-				unsafe { // Lets use memcpy to avoid a for loop
-					fixed (MidiControlTransform* arrAddr = &Controls[0])
-						Runtime.memcpy ((IntPtr) arrAddr, bufferEnd, controlsSize * connectionParams.NumControlTransforms);
+				unsafe {
+					fixed (void* arrAddr = &Controls[0])
+						Buffer.MemoryCopy ((void*) bufferEnd, arrAddr, controlsSize * connectionParams.NumControlTransforms, controlsSize * connectionParams.NumControlTransforms);
 				}
 			}
 
@@ -281,11 +281,11 @@ namespace CoreMidi {
 			else {
 				Maps = new MidiValueMap [connectionParams.NumMaps];
 				bufferEnd = IntPtr.Add (bufferEnd, controlsSize * connectionParams.NumControlTransforms);
-				unsafe { // Lets use memcpy to avoid a for loop
+				unsafe {
 					for (int i = 0; i < connectionParams.NumMaps; i++) {
 						Maps [i].Value = new byte [128];
-						fixed (byte* arrAddr = &Maps[i].Value [0])
-							Runtime.memcpy ((IntPtr) arrAddr, bufferEnd, 128);
+						fixed (void* arrAddr = &Maps[i].Value [0])
+							Buffer.MemoryCopy ((void*) bufferEnd, arrAddr, 128, 128);
 					}
 				}
 			}
@@ -327,19 +327,19 @@ namespace CoreMidi {
 				Marshal.StructureToPtr (connectionParams, buffer, false);
 
 				if (connectionParams.NumControlTransforms > 0) {
-					unsafe { // Lets use memcpy to avoid a for loop
-						fixed (MidiControlTransform* arrAddr = &Controls[0])
-							Runtime.memcpy (bufferEnd, (IntPtr) arrAddr, controlsSize * connectionParams.NumControlTransforms);
+					unsafe {
+						fixed (void* arrAddr = &Controls[0])
+							Buffer.MemoryCopy (arrAddr, (void*) bufferEnd, controlsSize * connectionParams.NumControlTransforms, controlsSize * connectionParams.NumControlTransforms);
 					}
 				}
 
 				if (connectionParams.NumMaps > 0) {
 					// Set the destination buffer after controls arr if any
 					bufferEnd = IntPtr.Add (bufferEnd, controlsSize * connectionParams.NumControlTransforms);
-					unsafe { // Lets use memcpy to avoid a for loop
+					unsafe {
 						for (int i = 0; i < connectionParams.NumMaps; i++) {
-							fixed (byte* arrAddr = &Maps[i].Value [0])
-								Runtime.memcpy (bufferEnd, (IntPtr) arrAddr, 128);
+							fixed (void* arrAddr = &Maps[i].Value [0])
+								Buffer.MemoryCopy (arrAddr, (void*) bufferEnd, 128, 128);
 							bufferEnd += 128;
 						}
 					}

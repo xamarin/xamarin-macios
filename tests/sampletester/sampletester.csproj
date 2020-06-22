@@ -60,6 +60,9 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Samples.cs" />
+    <Compile Include="..\..\tools\common\Execution.cs">
+      <Link>external\Execution.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

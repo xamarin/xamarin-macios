@@ -18928,10 +18928,10 @@ namespace AppKit {
 		NSObject ValidRequestorForSendType (string sendType, string returnType);
 
 		[Export ("pasteAsPlainText:")]
-		void PasteAsPlainText (NSObject sender);
+		void PasteAsPlainText ([NullAllowed] NSObject sender);
 
 		[Export ("pasteAsRichText:")]
-		void PasteAsRichText (NSObject sender);
+		void PasteAsRichText ([NullAllowed] NSObject sender);
 
 		//
 		// Dragging support

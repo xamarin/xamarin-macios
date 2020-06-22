@@ -7,7 +7,7 @@ using Xamarin.MacDev.Tasks;
 
 namespace Xamarin.iOS.Tasks
 {
-	public class WriteAssetPackManifestTaskBase : XamarinTask
+	public abstract class WriteAssetPackManifestTaskBase : XamarinTask
 	{
 		#region Inputs
 

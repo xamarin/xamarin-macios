@@ -463,6 +463,9 @@
     <Compile Include="..\common\ErrorHelper.tools.cs">
       <Link>tools\common\ErrorHelper.tools.cs</Link>
     </Compile>
+    <Compile Include="..\common\Driver.execution.cs">
+      <Link>tools\common\Driver.execution.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Core" />
