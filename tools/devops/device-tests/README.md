@@ -73,7 +73,7 @@ The are two main groups of variables used in the pipelines:
 - common (under templates/common-variables.yml): Contains a set of group variables that have been created by release engineering and that contain all the different secrets needed by the pipeline.
 - lab (under templates/[ddfun|cambridge]-variables: Contains the different configurations per lab. That includes the pools to use and the type of storage.
 
-There are certain enviroment variables that are created by steps in the first job that are later shared with the second job. In order to do that you
+There are certain environment variables that are created by steps in the first job that are later shared with the second job. In order to do that you
 have to ensure that you do the following:
 
 ```yaml
@@ -161,7 +161,7 @@ xamarin-storage has two important details to take into account:
 2 it will disappear in the future
 
 Until xamarin-storage is fully removed, we allow certain pipelines to use it. This is done via the 
-'useXamarinStorage' parameter in the templates. To make things easier to mantain, this value is set
+'useXamarinStorage' parameter in the templates. To make things easier to maintain, this value is set
 in the variable templates per lab. Unfortunatly, variables do not take types (boolean in this case)
 so we set a string to be 'true' or 'false' and we use eq to convert it to a boolean and pass it to
 the templates:
@@ -184,4 +184,4 @@ In the above example we are interested in:
   useXamarinStorage: eq('${{ variables.useXamarinStorage }}', 'true')
 ```
 
-eq will return true of false in the string comparison and that way we do have the correct type.
+eq will return true or false in the string comparison and that way we do have the correct type.
