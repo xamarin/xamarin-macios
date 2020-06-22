@@ -1,0 +1,6 @@
+!missing-selector! AVPictureInPictureController::requiresLinearPlayback not bound
+!missing-selector! AVPictureInPictureController::setRequiresLinearPlayback: not bound
+!missing-selector! AVPlayerViewController::requiresLinearPlayback not bound
+!missing-selector! AVPlayerViewController::setRequiresLinearPlayback: not bound
+!missing-selector! AVPlayerViewController::setShowsTimecodes: not bound
+!missing-selector! AVPlayerViewController::showsTimecodes not bound

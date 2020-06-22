@@ -41,7 +41,6 @@
 
 ## NS_DEPRECATED(13_0, 13_0, 6_0, 6_0)
 !missing-selector! INMediaSearch::activityNames not bound
-!missing-selector! INMediaSearch::initWithMediaType:sortOrder:mediaName:artistName:albumName:genreNames:moodNames:activityNames:releaseDate:reference:mediaIdentifier: not bound
 
 ## unsorted
 

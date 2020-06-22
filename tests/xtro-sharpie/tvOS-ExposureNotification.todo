@@ -1,0 +1,3 @@
+!missing-enum! ENAuthorizationStatus not bound
+!missing-enum! ENErrorCode not bound
+!missing-enum! ENStatus not bound

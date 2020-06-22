@@ -1,0 +1,4 @@
+!missing-enum! CLKWatchFaceLibraryErrorCode not bound
+!missing-field! CLKWatchFaceLibraryErrorDomain not bound
+!missing-selector! CLKWatchFaceLibrary::addWatchFaceAtURL:completionHandler: not bound
+!missing-type! CLKWatchFaceLibrary not bound
