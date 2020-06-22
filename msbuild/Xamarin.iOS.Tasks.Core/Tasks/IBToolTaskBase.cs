@@ -10,10 +10,6 @@ namespace Xamarin.iOS.Tasks {
 			get { return true; }
 		}
 
-		protected override string MinimumDeploymentTargetKey {
-			get { return ManifestKeys.MinimumOSVersion; }
-		}
-
 		static bool IsWatchExtension (PDictionary plist)
 		{
 			PDictionary extension;

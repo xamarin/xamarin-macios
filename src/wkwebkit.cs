@@ -333,7 +333,6 @@ namespace WebKit
 		bool AfterScreenUpdates { get; set; }
 	}
 
-#if XAMCORE_2_0
 	interface IWKUrlSchemeHandler {}
 	[Mac (10,13), iOS (11,0)]
 	[Protocol (Name = "WKURLSchemeHandler")]
@@ -347,7 +346,7 @@ namespace WebKit
 		[Export ("webView:stopURLSchemeTask:")]
 		void StopUrlSchemeTask (WKWebView webView, IWKUrlSchemeTask urlSchemeTask);
 	}
-#endif
+
 	interface IWKUrlSchemeTask {}
 
 	[Mac (10,13), iOS (11,0)]
@@ -816,7 +815,6 @@ namespace WebKit
 		[Export ("ignoresViewportScaleLimits")]
 		bool IgnoresViewportScaleLimits { get; set; }
 
-#if XAMCORE_2_0
 		[Mac (10,13), iOS (11,0)]
 		[Export ("setURLSchemeHandler:forURLScheme:")]
 		void SetUrlSchemeHandler ([NullAllowed] IWKUrlSchemeHandler urlSchemeHandler, string urlScheme);
@@ -825,7 +823,6 @@ namespace WebKit
 		[Export ("urlSchemeHandlerForURLScheme:")]
 		[return: NullAllowed]
 		IWKUrlSchemeHandler GetUrlSchemeHandler (string urlScheme);
-#endif
 
 		[Mac (10,15)]
 		[iOS (13,0)]

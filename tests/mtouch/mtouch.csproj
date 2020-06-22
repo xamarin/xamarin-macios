@@ -107,6 +107,12 @@
     </Compile>
     <Compile Include="Setup.cs" />
     <Compile Include="Compat.cs" />
+    <Compile Include="..\..\tools\common\Driver.execution.cs">
+      <Link>Driver.execution.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\common\Execution.cs">
+      <Link>Execution.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

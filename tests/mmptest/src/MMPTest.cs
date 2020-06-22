@@ -26,7 +26,7 @@ namespace Xamarin.MMP.Tests
 			TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = projectConfig };
 			string buildOutput = TI.TestUnifiedExecutable (test).BuildOutput;
 			string [] splitBuildOutput = TI.TestUnifiedExecutable (test).BuildOutput.Split (new string[] { Environment.NewLine }, StringSplitOptions.None);
-			string clangInvocation = splitBuildOutput.Single (x => x.Contains ("usr/bin/clang"));
+			string clangInvocation = splitBuildOutput.Single (x => x.Contains ("usr/bin/clang") && x.Contains ("mmacosx-version-min"));
 			return clangInvocation.Split (new string[] { " " }, StringSplitOptions.None);
 		}
 
@@ -398,7 +398,7 @@ namespace Xamarin.MMP.Tests
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { XM45 = xm45 };
 				test.Release = true;
 				string buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
-				Assert.IsFalse (buildResults.Contains ("Xamarin.Mac.registrar"), "Release build should not use partial static registrar\n" + buildResults);
+				Assert.IsFalse (buildResults.Contains ("Xamarin.Mac.registrar"), "Release build should not use partial static registrar");
 			});
 		}
 
@@ -411,7 +411,7 @@ namespace Xamarin.MMP.Tests
 				test.Release = false;
 				test.CSProjConfig = "<DebugSymbols>true</DebugSymbols>";
 				var buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
-				Assert.IsTrue (buildResults.Contains ("Xamarin.Mac.registrar"), "Debug build should use partial static registrar\n" + buildResults);
+				Assert.IsTrue (buildResults.Contains ("Xamarin.Mac.registrar"), "Debug build should use partial static registrar");
 			});
 		}
 
@@ -424,7 +424,7 @@ namespace Xamarin.MMP.Tests
 				test.Release = false;
 				test.CSProjConfig = "<DebugSymbols>true</DebugSymbols><MonoBundlingExtraArgs>--registrar=dynamic</MonoBundlingExtraArgs><XamMacArch>x86_64</XamMacArch>";
 				var buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
-				Assert.IsFalse (buildResults.Contains ("Xamarin.Mac.registrar"), "registrar=dynamic build should not use partial static registrar\n" + buildResults);
+				Assert.IsFalse (buildResults.Contains ("Xamarin.Mac.registrar"), "registrar=dynamic build should not use partial static registrar");
 			});
 		}
 
@@ -437,7 +437,7 @@ namespace Xamarin.MMP.Tests
 				test.Release = false;
 				test.CSProjConfig = "<DebugSymbols>true</DebugSymbols><MonoBundlingExtraArgs>--registrar=partial</MonoBundlingExtraArgs><XamMacArch>x86_64</XamMacArch>";
 				var buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
-				Assert.IsTrue (buildResults.Contains ("Xamarin.Mac.registrar"), "registrar=partial build should use partial static registrar\n" + buildResults);
+				Assert.IsTrue (buildResults.Contains ("Xamarin.Mac.registrar"), "registrar=partial build should use partial static registrar");
 			});
 		}
 		//https://testrail.xamarin.com/index.php?/cases/view/234141&group_by=cases:section_id&group_order=asc&group_id=51097
@@ -548,7 +548,7 @@ namespace Xamarin.MMP.Tests
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 					CSProjConfig = "<DebugSymbols>True</DebugSymbols>", // This makes the msbuild tasks pass /debug to mmp
 				};
-				TI.TestUnifiedExecutable (test, shouldFail: false, environment: new [] { "MD_APPLE_SDK_ROOT", Path.GetDirectoryName (Path.GetDirectoryName (oldXcode)) });
+				TI.TestUnifiedExecutable (test, shouldFail: false, environment: new Dictionary<string, string> { { "MD_APPLE_SDK_ROOT", Path.GetDirectoryName (Path.GetDirectoryName (oldXcode)) } });
 			});
 		}
 

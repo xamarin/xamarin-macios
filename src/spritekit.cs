@@ -5,7 +5,7 @@
 //   Aaron Bockover (abock@xamarin.com)
 //
 // Copyright 2013-2015 Xamarin Inc
-#if XAMCORE_2_0 || !MONOMAC
+
 using System;
 using System.ComponentModel;
 
@@ -224,13 +224,8 @@ namespace SpriteKit {
 		[Export ("userData", ArgumentSemantic.Retain)]
 		NSMutableDictionary UserData { get; set; }
 
-#if XAMCORE_2_0
 		[Export ("setScale:")]
 		void SetScale (nfloat scale);
-#else
-		[Export ("scale")]
-		nfloat Scale { set; }
-#endif
 
 		[Export ("addChild:")]
 		[PostGet ("Children")]
@@ -535,7 +530,7 @@ namespace SpriteKit {
 	[iOS (7,0)]
 	[BaseType (typeof (SKEffectNode))]
 	interface SKScene
-#if (XAMCORE_2_0 || !MONOMAC) && !WATCH
+#if !WATCH
 		: GKSceneRootNodeType
 #endif
 	{
@@ -3516,4 +3511,3 @@ namespace SpriteKit {
 		}
 	}
 }
-#endif

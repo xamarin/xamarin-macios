@@ -99,22 +99,6 @@ namespace UIKit {
 			}
 		}
 
-#if !XAMCORE_2_0
-		public NSDictionary Variation {
-			get {
-				return GetNSDictionary (UIFontDescriptor.VariationAttribute);
-			}
-			set {
-				if (value == null){
-					RemoveValue (UIFontDescriptor.VariationAttribute);
-					return;
-				}
-				
-				Dictionary [UIFontDescriptor.VariationAttribute] = value;
-			}
-		}
-#endif
-
 		public NSCharacterSet CharacterSet {
 			get {
 				return Dictionary [UIFontDescriptor.CharacterSetAttribute] as NSCharacterSet;
@@ -364,14 +348,6 @@ namespace UIKit {
 				return GetStringValue (UIFontDescriptor.TextStyleAttribute);
 			}
 		}
-
-#if !XAMCORE_2_0
-		public NSDictionary Variation {
-			get {
-				return GetObject (UIFontDescriptor.VariationAttribute) as NSDictionary;
-			}
-		}
-#endif
 
 		public NSCharacterSet CharacterSet {
 			get {

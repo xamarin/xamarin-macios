@@ -36,6 +36,12 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		     even (optionally) switch back to AnyCPU platform in the IDE,
 		     therefore fixing a key pain point in managing solution
 		     configurations.
+
+		     Additionally, we cannot use $(Platform) in conditions on props,
+		     because VS interprets them as valid platforms for the current
+		     project and makes them available for solution configurations,
+		     which fails miserably for iOS class library projects. By using
+		     another property name, we "opt out" of this "smart" behavior
 		-->
 		<ComputedPlatform Condition="'$(ComputedPlatform)' == ''">$(Platform)</ComputedPlatform>
 		<ComputedPlatform Condition="'$(_PlatformName)' != 'macOS' And '$(ComputedPlatform)' == 'AnyCPU'">iPhone</ComputedPlatform>
@@ -55,6 +61,12 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<_SdkVersion Condition="'$(_PlatformName)' == 'macOS'">$(MacOSXSdkVersion)</_SdkVersion>
 		<_SdkVersion Condition="'$(_PlatformName)' != 'macOS'">$(MtouchSdkVersion)</_SdkVersion>
 
+		<!-- LinkMode -->
+		<_LinkMode Condition="'$(_LinkMode)' == '' And '$(_PlatformName)' == 'macOS'">$(LinkMode)</_LinkMode>
+		<_LinkMode Condition="'$(_LinkMode)' == '' And '$(_PlatformName)' != 'macOS'">$(MtouchLink)</_LinkMode>
+		<_LinkMode Condition="'$(_LinkMode)' == '' And '$(_PlatformName)' == 'macOS'">None</_LinkMode> <!-- Linking is off by default for macOS apps -->
+		<_LinkMode Condition="'$(_LinkMode)' == '' And '$(_PlatformName)' != 'macOS'">SdkOnly</_LinkMode> <!-- Default linking is SdkOnly for iOS/tvOS/watchOS apps -->
+
 		<!-- RequireCodeSigning -->
 		<!-- iOS/watchOS/tvOS is simple: device builds require code signing, simulator builds do not. This is a big lie, for some simulator builds need to be signed, but the _DetectCodeSigning task handles those cases. -->
 		<_RequireCodeSigning Condition="'$(_PlatformName)' != 'macOS' And '$(_RequireCodeSigning)' == ''">false</_RequireCodeSigning> <!-- Xamarin.iOS builds are not signed by default -->
@@ -69,6 +81,47 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<_CodeSigningKey Condition="'$(_PlatformName)' == 'macOS' And '$(IsAppExtension)' == 'true' And '$(_CodeSigningKey)' == '' And '$(_RequireCodeSigning)' == 'false'">-</_CodeSigningKey> <!-- Set _CodeSigningKey to '-' if we're an extension where code signing is not requested -->
 		<_RequireCodeSigning Condition="'$(_PlatformName)' == 'macOS' And '$(IsAppExtension)' == 'true'">true</_RequireCodeSigning> <!-- But extensions must be signed, so make sure they are -->
 
+		<!-- SpecifiedCodeSigningKey -->
+		<_SpecifiedCodesignKey Condition="'$(_PlatformName)' == 'macOS'">$(CodeSigningKey)</_SpecifiedCodesignKey> <!-- Xamarin.Mac projects use 'CodeSigningKey' -->
+		<_SpecifiedCodesignKey Condition="'$(_PlatformName)' != 'macOS'">$(CodesignKey)</_SpecifiedCodesignKey> <!-- Xamarin.iOS projects use 'CodesignKey' -->
+
+		<!-- TargetArchitectures -->
+		<TargetArchitectures Condition="'$(TargetArchitectures)' == '' And '$(_PlatformName)' == 'macOS'">$(XamMacArch)</TargetArchitectures>
+		<TargetArchitectures Condition="'$(TargetArchitectures)' == '' And '$(_PlatformName)' != 'macOS'">$(MtouchArch)</TargetArchitectures>
+		<!-- The default architecture for Xamarin.Mac is x86_64 -->
+		<TargetArchitectures Condition="'$(TargetArchitectures)' == '' And '$(_PlatformName)' == 'macOS'">x86_64</TargetArchitectures>
+		<!-- There should always be an MtouchArch value in newer projects, but for older projects default to old values -->
+		<TargetArchitectures Condition="'$(TargetArchitectures)' == '' And '$(_PlatformName)' != 'macOS' And '$(ComputedPlatform)' == 'iPhoneSimulator'">i386</TargetArchitectures>
+		<TargetArchitectures Condition="'$(TargetArchitectures)' == '' And '$(_PlatformName)' != 'macOS' And '$(ComputedPlatform)' == 'iPhone' And '$(TargetFrameworkIdentifier)' == 'Xamarin.WatchOS'">ARMv7k</TargetArchitectures>
+		<TargetArchitectures Condition="'$(TargetArchitectures)' == '' And '$(_PlatformName)' != 'macOS' And '$(ComputedPlatform)' == 'iPhone' And '$(TargetFrameworkIdentifier)' == 'Xamarin.TVOS'">ARM64</TargetArchitectures>
+		<TargetArchitectures Condition="'$(TargetArchitectures)' == '' And '$(_PlatformName)' != 'macOS' And '$(ComputedPlatform)' == 'iPhone'">ARMv7</TargetArchitectures>
+
+		<!-- Debug -->
+		<!-- Xamarin.Mac: use MmpDebug, but if that isn't set, use DebugSymbols -->
+		<_BundlerDebug Condition="'$(_PlatformName)' == 'macOS'">$(MmpDebug)</_BundlerDebug>
+		<_BundlerDebug Condition="'$(_PlatformName)' == 'macOS' And '$(_BundlerDebug)' == ''">$(DebugSymbols)</_BundlerDebug>
+		<!-- Xamarin.iOS: Use MtouchDebug -->
+		<_BundlerDebug Condition="'$(_PlatformName)' != 'macOS'">$(MtouchDebug)</_BundlerDebug>
+		<!-- The default is false for all platforms -->
+		<_BundlerDebug Condition="'$(_BundlerDebug)' == ''">false</_BundlerDebug>
+
+		<!-- DeviceSpecificIntermediateOutputPath -->
+		<!--
+			We don't need this value for Xamarin.Mac, but many of the targets
+			that can be shared need to use this for Xamarin.iOS, so set this
+			value for Xamarin.Mac as well. It will always be the default
+			IntermediateOutputPath for Xamarin.Mac, while for Xamarin.iOS it
+			might be changed in _ComputeTargetArchitectures.
+		-->
+		<DeviceSpecificIntermediateOutputPath>$(IntermediateOutputPath)</DeviceSpecificIntermediateOutputPath>
+		<!-- Make sure DeviceSpecificOutputPath is a relative path, we depend
+		     on this elsewhere (we prepend the project's directory). When
+		     using dotnet IntermediateOutputPath (and thus
+		     DeviceSpecificIntermediateOutputPath) might be a full path, so
+		     handle this by calculating the corresponding relative path for
+		     DeviceSpecificOutputPath. -->
+		<DeviceSpecificOutputPath>$(OutputPath)</DeviceSpecificOutputPath>
+		<DeviceSpecificOutputPath Condition="$([System.IO.Path]::IsPathRooted ('$(DeviceSpecificOutputPath)')) == 'true'">$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)','$(OutputPath)'))</DeviceSpecificOutputPath>
 	</PropertyGroup>
 
 	<Target Name="_ComputeTargetFrameworkMoniker" Condition="'$(_ComputedTargetFrameworkMoniker)' == ''">

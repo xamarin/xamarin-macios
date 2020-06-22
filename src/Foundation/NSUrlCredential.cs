@@ -11,18 +11,6 @@ using Security;
 namespace Foundation {
 
 	public partial class NSUrlCredential {
-#if !XAMCORE_2_0
-		[Obsolete ("Use 'NSUrlCredential(SecTrust)' constructor.")]
-		public NSUrlCredential (IntPtr trust, bool ignored) : base (NSObjectFlag.Empty)
-		{
-			if (IsDirectBinding) {
-				Handle = Messaging.IntPtr_objc_msgSend_IntPtr (this.Handle, Selector.GetHandle ("initWithTrust:"), trust);
-			} else {
-				Handle = Messaging.IntPtr_objc_msgSendSuper_IntPtr (this.SuperHandle, Selector.GetHandle ("initWithTrust:"), trust);
-			}
-		}
-#endif
-
 		public NSUrlCredential (SecIdentity identity, SecCertificate [] certificates, NSUrlCredentialPersistence persistence)
 			: this (identity.Handle, NSArray.FromNativeObjects (certificates).Handle, persistence)
 		{

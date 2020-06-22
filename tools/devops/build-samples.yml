@@ -19,12 +19,12 @@ resources:
   - repository: xamarin-macios-data
     type: github
     name: xamarin/xamarin-macios-data
-    ref: refs/heads/master
+    ref: refs/heads/main
     endpoint: xamarin
   - repository: maccore
     type: github
     name: xamarin/maccore
-    ref: refs/heads/master
+    ref: refs/heads/main
     endpoint: xamarin
 
 ###

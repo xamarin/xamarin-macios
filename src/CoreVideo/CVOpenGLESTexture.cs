@@ -17,21 +17,12 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.ES20;
 
-#if XAMCORE_2_0
 using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
 using OpenGLES;
 
 namespace CoreVideo {
-#else
-using MonoTouch.ObjCRuntime;
-using MonoTouch.CoreFoundation;
-using MonoTouch.Foundation;
-using MonoTouch.OpenGLES;
-
-namespace MonoTouch.CoreVideo {
-#endif
 
 	// CVOpenGLESTexture.h
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'CVMetalTexture' instead.")]
@@ -58,12 +49,7 @@ namespace MonoTouch.CoreVideo {
 			GC.SuppressFinalize (this);
 		}
 
-#if XAMCORE_2_0 
-		protected
-#else
-		public
-#endif
-		virtual void Dispose (bool disposing)
+		protected virtual void Dispose (bool disposing)
 		{
 			if (handle != IntPtr.Zero){
 				CFRelease (handle);
@@ -113,14 +99,6 @@ namespace MonoTouch.CoreVideo {
 				return CVOpenGLESTextureIsFlipped (handle);
 			}
 		}
-
-#if !XAMCORE_2_0
-		[Obsolete ("Use GetCleanTexCoords instead")]
-		public void GetCleanTextCoords (out float [] lowerLeft, out float [] lowerRight, out float [] upperRight, out float [] upperLeft)
-		{
-			GetCleanTexCoords (out lowerLeft, out lowerRight, out upperRight, out upperLeft);
-		}
-#endif
 
 		public void GetCleanTexCoords (out float [] lowerLeft, out float [] lowerRight, out float [] upperRight, out float [] upperLeft)
 		{

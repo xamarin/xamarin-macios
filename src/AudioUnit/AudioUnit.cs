@@ -443,29 +443,7 @@ namespace AudioUnit
 				throw new AudioUnitException (err);
 			
 			gcHandle = GCHandle.Alloc(this);
-
-#if !XAMCORE_2_0
-#pragma warning disable 612
-			BrokenSetRender ();
-#pragma warning restore 612
-#endif
 		}
-
-#if !XAMCORE_2_0
-		[Obsolete] 		// Broken only few AudioComponent types support this property
-		void BrokenSetRender ()
-		{
-			var callbackStruct = new AURenderCallbackStrct();
-			callbackStruct.inputProc = renderCallback; // setting callback function            
-			callbackStruct.inputProcRefCon = GCHandle.ToIntPtr(gcHandle); // a pointer that passed to the renderCallback (IntPtr inRefCon) 
-			AudioUnitSetProperty(handle,
-						   AudioUnitPropertyIDType.SetRenderCallback,
-						   AudioUnitScopeType.Input,
-						   0, // 0 == speaker                
-						   callbackStruct,
-						   (uint)Marshal.SizeOf(callbackStruct));
-		}
-#endif
 
 		public AudioComponent Component {
 			get {
@@ -473,43 +451,8 @@ namespace AudioUnit
 			}
 		}
 
-#if !XAMCORE_2_0
-		[Obsolete ("Use SetRenderCallback")]
-#pragma warning disable 612 // AudioUnitEventArgs is obsolete
-		public event EventHandler<AudioUnitEventArgs> RenderCallback;
-#pragma warning restore 612
-#endif
-
 		public bool IsPlaying { get { return _isPlaying; } }
 		
-#if !XAMCORE_2_0
-		[Obsolete]
-		// callback funtion should be static method and be attatched a MonoPInvokeCallback attribute.        
-		[MonoPInvokeCallback (typeof (AURenderCallback))]
-		static int renderCallback(IntPtr inRefCon, ref AudioUnitRenderActionFlags _ioActionFlags,
-					  ref AudioTimeStamp _inTimeStamp,
-					  int _inBusNumber,
-					  int _inNumberFrames,
-					  AudioBufferList _ioData)
-		{
-			// getting audiounit instance
-			var handler = GCHandle.FromIntPtr(inRefCon);
-			var inst = (AudioUnit)handler.Target;
-			
-			// evoke event handler with an argument
-			if (inst.RenderCallback != null)  { 
-				var args = new AudioUnitEventArgs(
-					_ioActionFlags,
-					_inTimeStamp,
-					_inBusNumber,
-					_inNumberFrames,
-					_ioData);
-				inst.RenderCallback(inst, args);
-			}
-			
-			return 0; // noerror
-		}
-#endif
 
 #if !XAMCORE_3_0
 		[Obsolete ("Use 'SetFormat' instead as it has the ability of returning a status code.")]
@@ -828,29 +771,17 @@ namespace AudioUnit
 #if !MONOMAC
 		[iOS (7,0)]
 		[DllImport (Constants.AudioUnitLibrary)]
-#if XAMCORE_2_0
 		static extern AudioComponentStatus AudioOutputUnitPublish (AudioComponentDescription inDesc, IntPtr /* CFStringRef */ inName, uint /* UInt32 */ inVersion, IntPtr /* AudioUnit */ inOutputUnit);
-#else
-		static extern AudioComponentStatus AudioOutputUnitPublish (ref AudioComponentDescription inDesc, IntPtr inName, uint inVersion, IntPtr inOutputUnit);
-#endif
 
 		[iOS (7,0)]
 		public AudioComponentStatus AudioOutputUnitPublish (AudioComponentDescription description, string name, uint version = 1)
 		{
-#if !XAMCORE_2_0
-			if (description == null)
-				throw new ArgumentNullException ("description");
-#endif
 
 			if (name == null)
 				throw new ArgumentNullException ("name");
 				
 			using (CFString n = name) {
-#if XAMCORE_2_0
 				return AudioOutputUnitPublish (description, n.Handle, version, handle);
-#else
-				return AudioOutputUnitPublish (ref description, n.Handle, version, handle);
-#endif
 			}
 		}
 
@@ -902,40 +833,6 @@ namespace AudioUnit
 			return AudioUnitRender (handle, ref actionFlags, ref timeStamp, busNumber, numberFrames, (IntPtr) data);
 		}
 
-#if !XAMCORE_2_0
-		[Obsolete]
-		public void Render(AudioUnitRenderActionFlags flags,
-				   AudioTimeStamp timeStamp,
-				   int outputBusnumber,
-				   int numberFrames, AudioBufferList data)
-		{
-			if (data == null)
-				throw new ArgumentNullException ("data");
-			int err = AudioUnitRender(handle,
-						  ref flags,
-						  ref timeStamp,
-						  outputBusnumber,
-						  numberFrames,
-						  data);
-			if (err != 0)
-				throw new AudioUnitException (err);
-		}
-
-		[Obsolete]
-		public AudioUnitStatus TryRender(AudioUnitRenderActionFlags flags,
-						AudioTimeStamp timeStamp,
-						int outputBusnumber,
-						int numberFrames, AudioBufferList data)
-		{
-			return (AudioUnitStatus) AudioUnitRender(handle,
-								ref flags,
-								ref timeStamp,
-								outputBusnumber,
-								numberFrames,
-								data);
-		}
-#endif
-
 		#endregion
 
 		public AudioUnitStatus SetParameter (AudioUnitParameterType type, float value, AudioUnitScopeType scope, uint audioUnitElement = 0)
@@ -957,11 +854,7 @@ namespace AudioUnit
 		[DllImport(Constants.AudioUnitLibrary)]
 		static extern int AudioComponentInstanceDispose(IntPtr inInstance);
 
-#if XAMCORE_2_0
 		protected virtual void Dispose (bool disposing)
-#else
-		public void Dispose (bool disposing)
-#endif
 		{
 			if (handle != IntPtr.Zero){
 				Stop ();
@@ -971,25 +864,6 @@ namespace AudioUnit
 				handle = IntPtr.Zero;
 			}
 		}
-
-#if !XAMCORE_2_0
-		[Obsolete]
-		internal delegate int AURenderCallback(IntPtr inRefCon,
-					      ref AudioUnitRenderActionFlags ioActionFlags,
-					      ref AudioTimeStamp inTimeStamp,
-					      int inBusNumber,
-					      int inNumberFrames,
-					      AudioBufferList ioData);
-		
-		[Obsolete]
-		[StructLayout(LayoutKind.Sequential)]
-		class AURenderCallbackStrct {
-			public AURenderCallback inputProc;
-			public IntPtr inputProcRefCon;
-			
-			public AURenderCallbackStrct() { }
-		}
-#endif
 
 		[DllImport(Constants.AudioUnitLibrary, EntryPoint = "AudioComponentInstanceNew")]
 		static extern int AudioComponentInstanceNew(IntPtr inComponent, out IntPtr inDesc);
@@ -1009,31 +883,9 @@ namespace AudioUnit
 		[DllImport(Constants.AudioUnitLibrary)]
 		static extern int AudioOutputUnitStop(IntPtr ci);
 
-#if !XAMCORE_2_0
-		[Obsolete]
-		[DllImport(Constants.AudioUnitLibrary)]
-		static extern int AudioUnitRender(IntPtr inUnit,
-						  ref AudioUnitRenderActionFlags ioActionFlags,
-						  ref AudioTimeStamp inTimeStamp,
-						  int inOutputBusNumber,
-						  int inNumberFrames,
-						  AudioBufferList ioData);
-#endif
-
 		[DllImport(Constants.AudioUnitLibrary)]
 		static extern AudioUnitStatus AudioUnitRender(IntPtr inUnit, ref AudioUnitRenderActionFlags ioActionFlags, ref AudioTimeStamp inTimeStamp,
 						  uint inOutputBusNumber, uint inNumberFrames, IntPtr ioData);
-
-#if !XAMCORE_2_0
-		[Obsolete]
-		[DllImport(Constants.AudioUnitLibrary)]
-		static extern int AudioUnitSetProperty(IntPtr inUnit,
-						       [MarshalAs(UnmanagedType.U4)] AudioUnitPropertyIDType inID,
-						       [MarshalAs(UnmanagedType.U4)] AudioUnitScopeType inScope,
-						       [MarshalAs(UnmanagedType.U4)] uint inElement,
-						       AURenderCallbackStrct inData,
-						       uint inDataSize);
-#endif
 
 		[DllImport(Constants.AudioUnitLibrary)]
 		static extern int AudioUnitSetProperty (IntPtr inUnit, AudioUnitPropertyIDType inID, AudioUnitScopeType inScope, uint inElement,
@@ -1254,11 +1106,9 @@ namespace AudioUnit
 
 #if XAMCORE_3_0
 	internal
-#elif XAMCORE_2_0
+#else
 	// TODO: Uncomment once bug https://bugzilla.xamarin.com/show_bug.cgi?id=27924 is fixed
 	//[Obsolete ("Please use the strongly typed properties instead.")]
-	public
-#else
 	public
 #endif
 	enum AudioUnitPropertyIDType { // UInt32 AudioUnitPropertyID
@@ -2154,7 +2004,7 @@ namespace AudioUnit
 #endif
 	}
 #if !XAMCORE_4_0 && !COREBUILD
-#if XAMCORE_2_0 || !MONOMAC
+#if !MONOMAC
 	[Obsolete ("Use 'AUImplementorStringFromValueCallback' instead.")]
 	public delegate NSString _AUImplementorStringFromValueCallback (AUParameter param, IntPtr value);
 #endif

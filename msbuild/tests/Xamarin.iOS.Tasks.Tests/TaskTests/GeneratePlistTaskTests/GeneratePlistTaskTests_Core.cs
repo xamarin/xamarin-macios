@@ -24,7 +24,7 @@ namespace Xamarin.iOS.Tasks
 			get; set;
 		}
 
-		protected CompileAppManifestTaskBase Task {
+		protected CompileAppManifestTaskCore Task {
 			get; set;
 		}
 
@@ -33,10 +33,11 @@ namespace Xamarin.iOS.Tasks
 			Task = CreateTask<CompileAppManifest> ();
 
 			Task.AppBundleName = appBundleName;
-			Task.AppBundleDir = "AppBundlePath";
+			Task.AppManifestBundleDirectory = "AppBundlePath";
 			Task.AssemblyName = assemblyName;
 			Task.AppManifest = CreateTempFile ("foo.plist");
 			Task.BundleIdentifier = bundleIdentifier;
+			Task.MinimumOSVersion = string.Empty;
 			Task.SdkPlatform = "iPhoneSimulator";
 
 			Plist = new PDictionary ();
@@ -59,7 +60,8 @@ namespace Xamarin.iOS.Tasks
 		{
 			base.Teardown ();
 
-			Directory.Delete ("AppBundlePath", true);
+			if (Directory.Exists ("AppBundlePath"))
+				Directory.Delete ("AppBundlePath", true);
 		}
 
 		#region General tests

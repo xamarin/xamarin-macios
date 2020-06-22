@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
 using System.Xml;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
@@ -49,11 +50,17 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 		{
 			BuildLog = buildLog;
 			(TestExecutingResult ExecutionResult, (string HumanMessage, string IssueLink)? KnownFailure) result = (TestExecutingResult.NotStarted, ((string HumanMessage, string IssueLink)?) null);
-			await RestoreNugetsAsync (buildLog, resource, useXIBuild: true);
+			var restoreResult = await RestoreNugetsAsync (buildLog, resource);
+			if ((restoreResult & TestExecutingResult.Failed) == TestExecutingResult.Failed) {
+				BuildLog.WriteLine ($"Failed to restore nugets: {restoreResult}");
+				result.ExecutionResult = restoreResult;
+				return result;
+			}
 
 			using (var xbuild = new Process ()) {
 				xbuild.StartInfo.FileName = msbuildPath;
 				xbuild.StartInfo.Arguments = StringUtils.FormatArguments (GetToolArguments (projectPlatform, projectConfiguration, projectFile, buildLog));
+				xbuild.StartInfo.WorkingDirectory = Path.GetDirectoryName (projectFile);
 				EnviromentManager.SetEnvironmentVariables (xbuild);
 				xbuild.StartInfo.EnvironmentVariables ["MSBuildExtensionsPath"] = null;
 				EventLogger.LogEvent (buildLog, "Building {0} ({1})", TestName, Mode);
@@ -91,6 +98,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 				args.Add (project_file);
 				args.Add ("/t:Clean");
 				xbuild.StartInfo.Arguments = StringUtils.FormatArguments (args);
+				xbuild.StartInfo.WorkingDirectory = Path.GetDirectoryName (project_file);
 				EnviromentManager.SetEnvironmentVariables (xbuild);
 				EventLogger.LogEvent (log, "Cleaning {0} ({1}) - {2}", TestName, Mode, project_file);
 				var timeout = TimeSpan.FromMinutes (1);

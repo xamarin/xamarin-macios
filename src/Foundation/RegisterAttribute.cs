@@ -25,11 +25,7 @@ using System;
 
 namespace Foundation {
 
-#if XAMCORE_2_0
 	[AttributeUsage (AttributeTargets.Class)]
-#else
-	[AttributeUsage (AttributeTargets.Method | AttributeTargets.Class)]
-#endif
 	public sealed class RegisterAttribute : Attribute {
 		string name;
 		bool is_wrapper;

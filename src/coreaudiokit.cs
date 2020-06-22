@@ -29,8 +29,6 @@ using NSViewController = Foundation.NSObject;
 #endif
 
 namespace CoreAudioKit {
-#if XAMCORE_2_0 || !MONOMAC
-
 	[NoiOS]
 	[Mac (10,11)]
 	[Flags]
@@ -149,7 +147,6 @@ namespace CoreAudioKit {
 		[Export ("isAVBSupported")]
 		bool IsAvbSupported { get; }
 	}
-#endif
 
 #if !MONOMAC
 	[iOS (8,0)]

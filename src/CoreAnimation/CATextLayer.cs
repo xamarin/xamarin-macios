@@ -43,9 +43,6 @@ namespace CoreAnimation {
 
 	public partial class CATextLayer {
 
-#if !XAMCORE_2_0
-		virtual
-#endif
 		public NSAttributedString AttributedString {
 			get {
 				return Runtime.GetNSObject (_AttributedString) as NSAttributedString;

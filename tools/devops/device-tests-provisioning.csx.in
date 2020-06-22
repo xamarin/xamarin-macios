@@ -21,7 +21,9 @@ void BrewPackage (string name)
 {
 	// Assumes brew is already installed. 
 	// All Macs provisioned by Xamarin, VSEng, or DDFUN should have brew by default!
-	Item (name).Action (i => Exec ("brew", "install", i.Name));
+	Item (name)
+		.Condition (i => !Exec ("brew", "list", "-1").Any (x => x.Trim () == i.Name))
+		.Action (i => Exec ("brew", "install", i.Name));
 }
 
 XreItem GetXcodeItem (string xipFileName)

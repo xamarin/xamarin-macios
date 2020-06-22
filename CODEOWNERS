@@ -37,8 +37,8 @@
 /src/callkit.cs @dalexsoto
 /src/CarPlay @dalexsoto
 /src/carplay.cs @dalexsoto
-/src/CFNetwork @spouliot
-/src/cfnetwork.cs @spouliot
+/src/CFNetwork @spouliot @mandel-macaque
+/src/cfnetwork.cs @spouliot @mandel-macaque
 /src/CloudKit @mandel-macaque
 /src/cloudkit.cs @mandel-macaque
 /src/Compression @mandel-macaque
@@ -79,6 +79,7 @@
 /src/ExternalAccessory @dalexsoto @spouliot
 /src/externalaccessory.cs @dalexsoto @spouliot
 /src/Foundation @spouliot @rolfbjarne @chamons
+/src/Foundation/NSUrl* @mandel-macaque
 /src/foundation.cs @spouliot @rolfbjarne @chamons
 /src/GameController @spouliot
 /src/gamecontroller.cs @spouliot
@@ -113,8 +114,8 @@
 /src/localauthentication.cs @spouliot
 /src/MapKit @spouliot
 /src/mapkit.cs @spouliot
-/src/MediaPlayer
-/src/mediaplayer.cs
+/src/MediaPlayer @mandel-macaque
+/src/mediaplayer.cs @mandel-macaque
 /src/Messages
 /src/messages.cs
 /src/MessageUI
@@ -133,7 +134,7 @@
 /src/multipeerconnectivity.cs @spouliot
 /src/naturallanguage.cs @mandel-macaque
 /src/NaturalLanguage @mandel-macaque
-/src/Network @migueldeicaza
+/src/Network @mandel-macaque
 /src/NetworkExtension @spouliot
 /src/networkextension.cs @spouliot
 /src/NotificationCenter @spouliot
@@ -166,6 +167,7 @@
 /src/spritekit.cs
 /src/SystemConfiguration @spouliot
 /src/systemconfiguration.cs @spouliot
+/src/System.Net.Http @mandel-macaque
 /src/UIKit @dalexsoto @spouliot @rolfbjarne
 /src/uikit.cs @dalexsoto @spouliot @rolfbjarne
 /src/UserNotifications @dalexsoto
@@ -187,12 +189,12 @@
 /src/WKWebKit @spouliot
 /src/wkwebkit.cs @spouliot
 
-/tests/xharness @rolfbjarne
+/tests/xharness @rolfbjarne @mandel-macaque
 /tests/xtro-sharpie @spouliot
 /tests/mmptest @chamons
 /tests/common/mac @chamons
 /tests/msbuild-mac @chamons
-
+/tests/bcl-tests @mandel-macaque
 
 /tools/common @rolfbjarne @chamons @spouliot
 /tools/common/StaticRegistrar.cs @rolfbjarne

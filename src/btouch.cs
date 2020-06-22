@@ -217,7 +217,6 @@ public class BindingTouch {
 		string tmpdir = null;
 		string ns = null;
 		bool delete_temp = true, debug = false;
-		bool verbose = false;
 		bool unsafef = true;
 		bool external = false;
 		bool public_mode = true;
@@ -256,8 +255,8 @@ public class BindingTouch {
 			{ "d=", "Defines a symbol", v => defines.Add (v) },
 			{ "api=", "Adds a API definition source file", v => api_sources.Add (v) },
 			{ "s=", "Adds a source file required to build the API", v => core_sources.Add (v) },
-			{ "q", "Quiet", v => verbose = false },
-			{ "v", "Sets verbose mode", v => verbose = true },
+			{ "q", "Quiet", v => Driver.Verbosity++ },
+			{ "v", "Sets verbose mode", v => Driver.Verbosity-- },
 			{ "x=", "Adds the specified file to the build, used after the core files are compiled", v => extra_sources.Add (v) },
 			{ "e", "Generates smaller classes that can not be subclassed (previously called 'external mode')", v => external = true },
 			{ "p", "Sets private mode", v => public_mode = false },
@@ -450,7 +449,7 @@ public class BindingTouch {
 			if (!string.IsNullOrEmpty (Path.GetDirectoryName (baselibdll)))
 				cargs.Add ("-lib:" + Path.GetDirectoryName (baselibdll));
 
-			if (Driver.RunCommand (compiler, cargs, null, out var compile_output, true, verbose ? 1 : 0) != 0)
+			if (Driver.RunCommand (compiler, cargs, null, out var compile_output, true, Driver.Verbosity) != 0)
 				throw ErrorHelper.CreateError (2, compile_output.ToString ().Replace ("\n", "\n\t"));
 				
 
@@ -493,7 +492,7 @@ public class BindingTouch {
 			try {
 				api = universe.LoadFile (tmpass);
 			} catch (Exception e) {
-				if (verbose)
+				if (Driver.Verbosity > 0)
 					Console.WriteLine (e);
 				
 				Console.Error.WriteLine ("Error loading API definition from {0}", tmpass);
@@ -504,7 +503,7 @@ public class BindingTouch {
 			try {
 				baselib = universe.LoadFile (baselibdll);
 			} catch (Exception e){
-				if (verbose)
+				if (Driver.Verbosity > 0)
 					Console.WriteLine (e);
 
 				Console.Error.WriteLine ("Error loading base library {0}", baselibdll);
@@ -604,7 +603,7 @@ public class BindingTouch {
 			if (!string.IsNullOrEmpty (Path.GetDirectoryName (baselibdll)))
 				cargs.Add ("-lib:" + Path.GetDirectoryName (baselibdll));
 
-			if (Driver.RunCommand (compiler, cargs, null, out var generated_compile_output, true, verbose ? 1 : 0) != 0)
+			if (Driver.RunCommand (compiler, cargs, null, out var generated_compile_output, true, Driver.Verbosity) != 0)
 				throw ErrorHelper.CreateError (1000, generated_compile_output.ToString ().Replace ("\n", "\n\t"));
 		} finally {
 			if (delete_temp)

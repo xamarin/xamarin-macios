@@ -27,60 +27,6 @@ using AudioToolbox;
 using System;
 
 namespace AVFoundation {
-#if !XAMCORE_2_0
-	[Advice ("Use 'AudioSettings' instead.")]
-	public class AVAudioPlayerSettings {
-		NSDictionary dict;
-		
-		internal AVAudioPlayerSettings (NSDictionary dictionary)
-		{
-			dict = dictionary;
-		}
-
-		public AudioChannelLayout AudioChannelLayout {
-			get {
-				var data = dict.ObjectForKey (AVAudioSettings.AVChannelLayoutKey) as NSData;
-				if (data == null)
-					return new AudioChannelLayout ();
-				return AudioChannelLayout.FromHandle (data.Bytes);
-			}
-		}
-
-		public int EncoderBitRateKey {
-			get {
-				var rate = dict.ObjectForKey (AVAudioSettings.AVEncoderBitRateKey) as NSNumber;
-				return rate == null ? 0 : rate.Int32Value;
-			}
-		}
-
-		public AudioFormatType AudioFormat {
-			get {
-				var ft = dict.ObjectForKey (AVAudioSettings.AVFormatIDKey) as NSNumber;
-				return (AudioFormatType) (ft == null ? -1 : ft.Int32Value);
-			}
-		}
-
-		public int NumberChannels {
-			get {
-				var n =  dict.ObjectForKey (AVAudioSettings.AVNumberOfChannelsKey) as NSNumber;
-				return n == null ? 1 : n.Int32Value;
-			}
-		}
-
-		public float SampleRate {
-			get {
-				var r = dict.ObjectForKey (AVAudioSettings.AVSampleRateKey) as NSNumber;
-				return r == null ? 0 : r.FloatValue;
-			}
-		}
-		
-		public static implicit operator NSDictionary (AVAudioPlayerSettings settings)
-		{
-			return settings.dict;
-		}
-	}
-#endif
-
 #if !WATCH
 	public partial class AVAudioPlayer {
 
@@ -137,33 +83,6 @@ namespace AVFoundation {
 				return ap;
 			}
 		}
-
-#if !XAMCORE_2_0
-		[Obsolete ("This method had an invalid signature in MonoMac 1.0.3, use 'AVAudioPlayer.FromUrl' instead.")]
-		public AVAudioPlayer (NSUrl url, NSError error) : this (url, IntPtr.Zero)
-		{
-			
-		}
-
-		[Obsolete ("This method had an invalid signature in MonoMac 1.0.3, use 'AVAudioPlayer.FromData' instead.")]
-		public AVAudioPlayer (NSData data, NSError error) : this (data, IntPtr.Zero)
-		{
-			
-		}
-
-		[Advice ("Use SoundSettings")]
-		public AVAudioPlayerSettings Settings {
-			get {
-				return new AVAudioPlayerSettings (WeakSettings);
-			}
-		}
-
-		[Advice ("This method was incorrectly named, use 'PlayAtTime' instead.")]
-		public bool PlayAtTimetime (double time)
-		{
-			return PlayAtTime (time);
-		}
-#endif
 	}
 #endif // !WATCH
 }

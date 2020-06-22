@@ -19,18 +19,17 @@ This repository is where we do development for the Xamarin.iOS and Xamarin.Mac S
 If you are interested in fixing issues and contributing directly to the code base, please see the document [How to Contribute](https://github.com/xamarin/xamarin-macios/wiki/How-to-Contribute), which covers the following:
 
 - How to [build and run](https://github.com/xamarin/xamarin-macios/wiki/Build-&-Run) from source
-- The [development workflow](https://github.com/xamarin/xamarin-macios/wiki/How-to-Contribute#work-branches), including [debugging](https://github.com/xamarin/xamarin-macios/wiki/Build-&-Run#debugging-applications-from-source) and [running tests](https://github.com/xamarin/xamarin-macios/blob/master/tests/README.md)
+- The [development workflow](https://github.com/xamarin/xamarin-macios/wiki/How-to-Contribute#work-branches), including [debugging](https://github.com/xamarin/xamarin-macios/wiki/Build-&-Run#debugging-applications-from-source) and [running tests](https://github.com/xamarin/xamarin-macios/blob/main/tests/README.md)
 - [Coding Guidelines](https://github.com/xamarin/xamarin-macios/wiki/How-to-Contribute#coding-guidelines)
 - [Submitting pull requests](https://github.com/xamarin/xamarin-macios/wiki/How-to-Contribute#pull-requests)
 
 ## Downloads
 
-The preferred method for installing Xamarin.iOS and Mac is to use the Visual Studio installers ([Windows](https://docs.microsoft.com/en-us/xamarin/ios/get-started/installation/windows/?pivots=windows), [Mac](https://docs.microsoft.com/en-us/visualstudio/mac/installation?view=vsmac-2019)). 
+The preferred method for installing Xamarin.iOS and Mac is to use the Visual Studio installers ([Windows](https://docs.microsoft.com/xamarin/ios/get-started/installation/windows/?pivots=windows), [Mac](https://docs.microsoft.com/visualstudio/mac/installation?view=vsmac-2019)).
 
-The team also [strongly recommends](https://docs.microsoft.com/en-us/xamarin/ios/troubleshooting/questions/old-version-xcode) using the latest Xamarin SDK and Xcode whenever possible.
+The team also [strongly recommends](https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/old-version-xcode) using the latest Xamarin SDK and Xcode whenever possible.
 
 However, we provide links to older Xamarin.iOS and Mac packages for macOS downgrades and build machine configuration.
-
 
 | Platform        | Link |
 |-----------------|--------|
@@ -62,4 +61,4 @@ However, we provide links to older Xamarin.iOS and Mac packages for macOS downgr
 ## License
 
 Copyright (c) .NET Foundation Contributors. All rights reserved.
-Licensed under the [MIT](https://github.com/xamarin/xamarin-macios/blob/master/LICENSE) License.
+Licensed under the [MIT](https://github.com/xamarin/xamarin-macios/blob/main/LICENSE) License.

@@ -26,12 +26,13 @@ namespace Xharness.Jenkins {
 		readonly ResourceManager resourceManager;
 
 		// report writers, do need to be a class instance because the have state.
-		readonly HtmlReportWriter htmlReportWriter;
+		readonly HtmlReportWriter xamarinStorageHtmlReportWriter;
+		readonly HtmlReportWriter vsdropsHtmlReportWriter;
 		readonly MarkdownReportWriter markdownReportWriter;
 		
 		public bool Populating { get; private set; } = true;
 
-		public Harness Harness { get; }
+		public IHarness Harness { get; }
 		public bool IncludeAll;
 		public bool IncludeBcl;
 		public bool IncludeMac = true;
@@ -92,7 +93,7 @@ namespace Xharness.Jenkins {
 		public IErrorKnowledgeBase ErrorKnowledgeBase => new ErrorKnowledgeBase ();
 		public IResourceManager ResourceManager => resourceManager;
 
-		public Jenkins (Harness harness, IProcessManager processManager, IResultParser resultParser, ITunnelBore tunnelBore)
+		public Jenkins (IHarness harness, IProcessManager processManager, IResultParser resultParser, ITunnelBore tunnelBore)
 		{
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 			this.TunnelBore = tunnelBore ?? throw new ArgumentNullException (nameof (tunnelBore));
@@ -103,7 +104,10 @@ namespace Xharness.Jenkins {
 			testVariationsFactory = new TestVariationsFactory (this, processManager);
 			DeviceLoader = new JenkinsDeviceLoader (Simulators, Devices, Logs);
 			resourceManager = new ResourceManager ();
-			htmlReportWriter = new HtmlReportWriter (jenkins: this, resourceManager: resourceManager, resultParser: resultParser);
+			xamarinStorageHtmlReportWriter = new HtmlReportWriter (jenkins: this, resourceManager: resourceManager, resultParser: resultParser);
+			// we only care about the vsdrops writer if we are in the CI, locally makes no sense
+			if (harness.InCI && !string.IsNullOrEmpty (Harness.VSDropsUri))
+				vsdropsHtmlReportWriter = new HtmlReportWriter (this, resourceManager, resultParser, linksPrefix: Harness.VSDropsUri, embeddedResources: true);
 			markdownReportWriter = new MarkdownReportWriter ();
 		}
 
@@ -168,7 +172,7 @@ namespace Xharness.Jenkins {
 				Platform = TestPlatform.All,
 				TestName = "Xtro",
 				Target = "wrench",
-				WorkingDirectory = Path.Combine (Harness.RootDirectory, "xtro-sharpie"),
+				WorkingDirectory = Path.Combine (HarnessConfiguration.RootDirectory, "xtro-sharpie"),
 				Ignored = !IncludeXtro,
 				Timeout = TimeSpan.FromMinutes (15),
 			};
@@ -181,9 +185,9 @@ namespace Xharness.Jenkins {
 			};
 			Tasks.Add (runXtroReporter);
 
-			var buildDotNetGeneratorProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "bgen", "bgen-tests.csproj")));
+			var buildDotNetGeneratorProject = new TestProject (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "bgen", "bgen-tests.csproj")));
 			var buildDotNetGenerator = new DotNetBuildTask (jenkins: this, testProject: buildDotNetGeneratorProject, processManager: processManager) {
-				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "bgen", "bgen-tests.csproj"))),
+				TestProject = new TestProject (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "bgen", "bgen-tests.csproj"))),
 				SpecifyPlatform = false,
 				SpecifyConfiguration = false,
 				Platform = TestPlatform.iOS,
@@ -197,7 +201,7 @@ namespace Xharness.Jenkins {
 			};
 			Tasks.Add (runDotNetGenerator);
 
-			var buildDotNetTestsProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "dotnet", "UnitTests", "DotNetUnitTests.csproj")));
+			var buildDotNetTestsProject = new TestProject (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "dotnet", "UnitTests", "DotNetUnitTests.csproj")));
 			var buildDotNetTests = new DotNetBuildTask (this, testProject: buildDotNetTestsProject, processManager: processManager) {
 				SpecifyPlatform = false,
 				Platform = TestPlatform.All,
@@ -233,7 +237,7 @@ namespace Xharness.Jenkins {
 				var tasks = new List<Task> ();
 				if (IsServerMode) {
 					var testServer = new TestServer ();
-					tasks.Add (testServer.RunAsync (this, htmlReportWriter));
+					tasks.Add (testServer.RunAsync (this, xamarinStorageHtmlReportWriter));
 				}
 
 				if (Harness.InCI) {
@@ -291,7 +295,7 @@ namespace Xharness.Jenkins {
 			var sb = new StringBuilder ();
 			var callback_log = new CallbackLog ((v) => sb.Append (v));
 			var log = Log.CreateAggregatedLog (callback_log, MainLog);
-			return processManager.ExecuteCommandAsync ("make", new [] { "all", $"-j{Environment.ProcessorCount}", "-C", Path.Combine (Harness.RootDirectory, "test-libraries") }, log, TimeSpan.FromMinutes (10)).ContinueWith ((v) => {
+			return processManager.ExecuteCommandAsync ("make", new [] { "all", $"-j{Environment.ProcessorCount}", "-C", Path.Combine (HarnessConfiguration.RootDirectory, "test-libraries") }, log, TimeSpan.FromMinutes (10)).ContinueWith ((v) => {
 				var per = v.Result;
 				if (!per.Succeeded) {
 					// Only show the log if something went wrong.
@@ -307,7 +311,9 @@ namespace Xharness.Jenkins {
 			try {
 				lock (report_lock) {
 					var report = Path.Combine (LogDirectory, "index.html");
+					var vsdropsReport = Path.Combine (LogDirectory, "vsdrops_index.html");
 					var tmpreport = Path.Combine (LogDirectory, $"index-{Helpers.Timestamp}.tmp.html");
+					var tmpVsdropsReport = Path.Combine (LogDirectory, $"vsdrops_index-{Helpers.Timestamp}.tmp.html");
 					var tmpmarkdown = string.IsNullOrEmpty (Harness.MarkdownSummaryPath) ? string.Empty : (Harness.MarkdownSummaryPath + $".{Helpers.Timestamp}.tmp");
 
 					var allSimulatorTasks = new List<RunSimulatorTask> ();
@@ -369,7 +375,15 @@ namespace Xharness.Jenkins {
 					// write the html
 					using (var stream = new FileStream (tmpreport, FileMode.Create, FileAccess.ReadWrite)) 
 					using (var writer = new StreamWriter (stream)) { 
-						htmlReportWriter.Write (allTasks, writer);
+						xamarinStorageHtmlReportWriter.Write (allTasks, writer);
+					}
+
+					// write the vsdrops report only if needed
+					if (vsdropsHtmlReportWriter != null) {
+						using (var stream = new FileStream (tmpVsdropsReport, FileMode.Create, FileAccess.ReadWrite)) 
+						using (var writer = new StreamWriter (stream)) { 
+							vsdropsHtmlReportWriter.Write (allTasks, writer);
+						}
 					}
 
 					// optionally, write the markdown
@@ -382,16 +396,24 @@ namespace Xharness.Jenkins {
 					if (File.Exists (report))
 						File.Delete (report);
 					File.Move (tmpreport, report);
+
+					if (vsdropsHtmlReportWriter != null) {
+						if (File.Exists (vsdropsReport))
+							File.Delete (vsdropsReport);
+						File.Move (tmpVsdropsReport, vsdropsReport);
+					}
+					
 					if (!string.IsNullOrEmpty (tmpmarkdown)) {
 						if (File.Exists (Harness.MarkdownSummaryPath))
 							File.Delete (Harness.MarkdownSummaryPath);
 						File.Move (tmpmarkdown, Harness.MarkdownSummaryPath);
 					}
+					
 					var dependentFileLocation = Path.GetDirectoryName (System.Reflection.Assembly.GetExecutingAssembly ().Location);
 					foreach (var file in new string [] { "xharness.js", "xharness.css" }) {
 						File.Copy (Path.Combine (dependentFileLocation, file), Path.Combine (LogDirectory, file), true);
 					}
-					File.Copy (Path.Combine (Harness.RootDirectory, "xharness", "favicon.ico"), Path.Combine (LogDirectory, "favicon.ico"), true);
+					File.Copy (Path.Combine (HarnessConfiguration.RootDirectory, "xharness", "favicon.ico"), Path.Combine (LogDirectory, "favicon.ico"), true);
 				}
 			} catch (Exception e) {
 				this.MainLog.WriteLine ("Failed to write log: {0}", e);

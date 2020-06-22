@@ -34,13 +34,13 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
 
 	<Target Name="_EnabledLocalSigning" DependsOnTargets="_DetectSigningIdentity">
 		<PropertyGroup>
-			<CodeSignEntitlements Condition="'$(CodeSignEntitlements)' == ''">Entitlements.plist</CodeSignEntitlements>
+			<CodesignEntitlements Condition="'$(CodesignEntitlements)' == ''">Entitlements.plist</CodesignEntitlements>
 		</PropertyGroup>
 	</Target>
 
 	<Target Name="_GenerateBundleName" DependsOnTargets="_DetectSigningIdentity">
 		<PropertyGroup>
-			<AppBundleDir Condition="'$(AppBundleDir)' == ''">$(OutputPath)$(DeviceSpecificOutputPath)$(_AppBundleName)$(_AppBundleDirExt)</AppBundleDir>
+			<AppBundleDir Condition="'$(AppBundleDir)' == ''">$(DeviceSpecificOutputPath)$(_AppBundleName)$(_AppBundleDirExt)</AppBundleDir>
 			<_AppBundlePath>$(AppBundleDir)\</_AppBundlePath>
 
 			<_AppResourcesPath>$(_AppBundlePath)Contents\Resources\</_AppResourcesPath>

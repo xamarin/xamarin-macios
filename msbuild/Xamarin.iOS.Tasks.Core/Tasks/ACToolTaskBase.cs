@@ -5,10 +5,6 @@ using Xamarin.MacDev;
 namespace Xamarin.iOS.Tasks {
 	public abstract class ACToolTaskBase : Xamarin.MacDev.Tasks.ACToolTaskBase
 	{
-		protected override string MinimumDeploymentTargetKey {
-			get { return ManifestKeys.MinimumOSVersion; }
-		}
-
 		static bool IsWatchExtension (PDictionary plist)
 		{
 			PDictionary extension;

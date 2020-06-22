@@ -48,10 +48,7 @@ namespace AudioToolbox {
 		public NSDictionary Dictionary { get; private set; }
 	}
 
-#if XAMCORE_2_0
-	static
-#endif
-	public class SoundBank {
+	public static class SoundBank {
 
 		[iOS (7,0)] // 10.5
 		[DllImport (Constants.AudioToolboxLibrary)]

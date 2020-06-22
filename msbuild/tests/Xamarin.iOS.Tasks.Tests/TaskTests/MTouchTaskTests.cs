@@ -58,7 +58,7 @@ namespace Xamarin.iOS.Tasks
 			Task.ToolExe = "/path/to/mtouch";
 
 			Task.AppBundleDir = AppBundlePath;
-			Task.AppManifest = new TaskItem (Path.Combine (MonoTouchProjectPath, "Info.plist"));
+			Task.MinimumOSVersion = PDictionary.FromFile (Path.Combine (MonoTouchProjectPath, "Info.plist")).GetMinimumOSVersion ();
 			Task.CompiledEntitlements = Path.Combine (Path.GetDirectoryName (GetType ().Assembly.Location), "Resources", "Entitlements.plist");
 			Task.IntermediateOutputPath = Path.Combine ("obj", "mtouch-cache");
 			Task.MainAssembly = new TaskItem ("Main.exe");
@@ -110,12 +110,11 @@ namespace Xamarin.iOS.Tasks
 		}
 
 		[Test]
-		public void StandardCommandline_NoMinimumOsVersion ()
+		public void StandardCommandline_MinimumOsVersion ()
 		{
-			var modifiedPListPath = SetPListKey ("MinimumOSVersion", null);
-			Task.AppManifest = new TaskItem (modifiedPListPath); 
-			var args = Task.GenerateCommandLineCommands ();
-			Assert.IsFalse (Task.ResponseFile.Contains ("--targetver"), "#1");
+			Task.MinimumOSVersion = "10.0";
+			Task.GenerateCommandLineCommands ();
+			Assert.That (Task.ResponseFile, Does.Contain ("--targetver=10.0"), "#1");
 		}
 
 		[Test]

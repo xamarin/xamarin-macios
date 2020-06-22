@@ -50,12 +50,5 @@ namespace Foundation {
 				SetObjectForKey (value, key);
 			}
 		}
-
-#if !XAMCORE_2_0
-		public NSDictionary ToDictionary ()
-		{
-			return AsDictionary ();
-		}
-#endif
 	}
 }

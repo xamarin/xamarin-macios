@@ -35,9 +35,6 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
-  <PropertyGroup>
-       <UpdateXlfOnBuild>true</UpdateXlfOnBuild>
-  </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Compile Include="Application.mtouch.cs" />
@@ -465,6 +462,9 @@
     </Compile>
     <Compile Include="..\common\ErrorHelper.tools.cs">
       <Link>tools\common\ErrorHelper.tools.cs</Link>
+    </Compile>
+    <Compile Include="..\common\Driver.execution.cs">
+      <Link>tools\common\Driver.execution.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>

@@ -208,10 +208,10 @@ namespace ObjCRuntime {
 							}
 						}
 						if (buf != null) {
-							var strlength = 0;
+							var str_length = 0;
 							for (int i = 0; i < buf.Length && buf [i] != 0; i++)
-								strlength++;
-							NSLog ("The native runtime was loaded from {0}", System.Text.Encoding.UTF8.GetString (buf, 0, strlength));
+								str_length++;
+							NSLog ("The native runtime was loaded from {0}", System.Text.Encoding.UTF8.GetString (buf, 0, str_length));
 						}
 					} else {
 						NSLog ("Could not find out where the native runtime was loaded from.");
@@ -1644,18 +1644,12 @@ namespace ObjCRuntime {
 			return true;
 		}
 
-		internal static IntPtr CloneMemory (IntPtr source, nint length)
+		internal unsafe static IntPtr CloneMemory (IntPtr source, long length)
 		{
-			var rv = Marshal.AllocHGlobal (new IntPtr (length));
-			memcpy (rv, source, length);
+			var rv = Marshal.AllocHGlobal ((IntPtr) length);
+			Buffer.MemoryCopy ((void*) source, (void*) rv, length, length);
 			return rv;
 		}
-
-		[DllImport (Constants.libSystemLibrary)]
-		extern internal static void memcpy (IntPtr target, IntPtr source, nint n);
-
-		[DllImport (Constants.libSystemLibrary)]
-		unsafe extern internal static void memcpy (byte * target, byte * source, nint n);
 
 		// This function will try to compare a native UTF8 string to a managed string without creating a temporary managed string for the native UTF8 string.
 		// Currently this only works if the UTF8 string only contains single-byte characters.

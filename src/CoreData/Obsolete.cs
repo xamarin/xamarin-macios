@@ -3,17 +3,6 @@
 using System;
 
 namespace CoreData {
-
-#if !XAMCORE_2_0
-	public partial class NSPersistentStoreCoordinator {
-
-		[Obsolete ("Use .ctor(NSManagedObjectModel)")]
-		public NSPersistentStoreCoordinator ()
-		{
-		}
-	}
-#endif
-	
 #if !XAMCORE_3_0
 	public partial class NSMergeConflict {
 

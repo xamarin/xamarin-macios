@@ -1,7 +1,7 @@
 //
 // MTKMesh.cs: just so we can implement IMDLMeshBufferAllocator
 //
-#if XAMCORE_2_0 || !MONOMAC
+
 using ModelIO;
 using Metal;
 using Foundation;
@@ -18,4 +18,3 @@ namespace MetalKit {
 		}
 	}
 }
-#endif

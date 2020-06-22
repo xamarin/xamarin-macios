@@ -7,8 +7,6 @@
 // Copyright 2016 Xamarin Inc. All rights reserved.
 //
 
-#if XAMCORE_2_0 || !MONOMAC
-
 using System;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
@@ -51,4 +49,3 @@ namespace GameplayKit {
 		}
 	}
 }
-#endif

@@ -11,8 +11,6 @@ using System;
 using ObjCRuntime;
 using Foundation;
 
-#if XAMCORE_2_0 // The Contacts framework uses generics heavily, which is only supported in Unified (for now at least)
-
 namespace Contacts {
 
 	// NSInteger -> CNContact.h
@@ -114,7 +112,3 @@ namespace Contacts {
 		MailingAddress,
 	}
 }
-
-#endif // XAMCORE_2_0
-
-

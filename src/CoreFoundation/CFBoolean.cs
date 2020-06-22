@@ -66,11 +66,7 @@ namespace CoreFoundation {
 			GC.SuppressFinalize (this);
 		}
 
-#if XAMCORE_2_0
 		protected virtual void Dispose (bool disposing)
-#else
-		public virtual void Dispose (bool disposing)
-#endif
 		{
 			if (handle != IntPtr.Zero){
 				CFObject.CFRelease (handle);

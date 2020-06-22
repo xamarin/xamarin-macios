@@ -321,13 +321,8 @@ namespace VideoToolbox {
 					var list = new List<VTDataRateLimit> ();
 					for (nuint i = 0; i < (nuint)arr.Count; i += 2) {
 						var rateLimit = new VTDataRateLimit (
-#if XAMCORE_2_0
 							arr.GetItem <NSNumber> (i).UInt32Value,
 							arr.GetItem <NSNumber> (i + 1).DoubleValue
-#else
-							arr.GetItem <NSNumber> ((nint)i).UInt32Value,
-							arr.GetItem <NSNumber> ((nint)(i + 1)).DoubleValue
-#endif
 						);
 						list.Add (rateLimit);
 					}
@@ -384,7 +379,7 @@ namespace VideoToolbox {
 				}
 			}
 		}
-#if XAMCORE_2_0
+
 		public VTColorPrimaries ColorPrimaries { 
 			get {
 				var key = GetNSStringValue (VTCompressionPropertyKey.ColorPrimaries);
@@ -421,7 +416,6 @@ namespace VideoToolbox {
 				}
 			}
 		}
-#endif
 
 		public VTTransferFunction TransferFunction { 
 			get {

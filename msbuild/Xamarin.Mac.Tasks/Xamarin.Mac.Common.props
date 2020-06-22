@@ -60,11 +60,10 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<CodeSigningKey Condition="'$(CodeSigningKey)' == ''"></CodeSigningKey>
-		<CodeSignProvision Condition="'$(CodeSignProvision)' == ''"></CodeSignProvision>
-		<CodeSignEntitlements Condition="'$(CodeSignEntitlements)' == ''"></CodeSignEntitlements>
-		<CodeSignResourceRules Condition="'$(CodeSignResourceRules)' == ''"></CodeSignResourceRules>
-		<CodeSignExtraArgs Condition="'$(CodeSignExtraArgs)' == ''"></CodeSignExtraArgs>
+		<CodesignProvision Condition="'$(CodesignProvision)' == ''"></CodesignProvision>
+		<CodesignEntitlements Condition="'$(CodesignEntitlements)' == ''"></CodesignEntitlements>
+		<CodesignResourceRules Condition="'$(CodesignResourceRules)' == ''"></CodesignResourceRules>
+		<CodesignExtraArgs Condition="'$(CodesignExtraArgs)' == ''"></CodesignExtraArgs>
 		<CreatePackage Condition="'$(CreatePackage)' == ''">false</CreatePackage>
 		<HttpClientHandler Condition="'$(HttpClientHandler)' == ''">HttpClientHandler</HttpClientHandler>
 		<EnablePackageSigning Condition="'$(EnablePackageSigning)' == ''">false</EnablePackageSigning>
@@ -74,16 +73,11 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
 		<I18n Condition="'$(I18n)' == ''"></I18n>
 		<IncludeMonoRuntime Condition="'$(IncludeMonoRuntime)' == ''">true</IncludeMonoRuntime>
 		<MonoBundlingExtraArgs Condition="'$(MonoBundlingExtraArgs)' == ''"></MonoBundlingExtraArgs>
-		<LinkMode Condition="'$(LinkMode)' == ''">None</LinkMode>
-		<XamMacArch Condition="'$(XamMacArch)' == ''">x86_64</XamMacArch>
 		<IsAppExtension Condition="'$(IsAppExtension)' == ''">False</IsAppExtension>
 		<EnableSGenConc Condition="'$(EnableSGenConc)' == ''">false</EnableSGenConc>
 		<AotScope Condition="'$(AotScope)' == ''">None</AotScope>
 		<ArchiveOnBuild Condition="'$(ArchiveOnBuild)' == ''">False</ArchiveOnBuild>
 		<Profiling Condition="'$(MtouchProfiling)' == ''">False</Profiling>
-		<!-- MmpDebug first checks $(DebugSymbols) and then defaults to False. We don't want to touch the DebugSymbols value, since it's used by other tasks. -->
-		<MmpDebug Condition="'$(MmpDebug)' == ''">$(DebugSymbols)</MmpDebug>
-		<MmpDebug Condition="'$(MmpDebug)' == ''">False</MmpDebug>
 	</PropertyGroup>
 
 	<PropertyGroup>

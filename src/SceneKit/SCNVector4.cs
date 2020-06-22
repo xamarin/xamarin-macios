@@ -74,42 +74,27 @@ namespace SceneKit
         /// <summary>
         /// Defines a unit-length SCNVector4 that points towards the X-axis.
         /// </summary>
-#if XAMCORE_2_0
-		readonly
-#endif
-        public static SCNVector4 UnitX = new SCNVector4(1, 0, 0, 0);
+        public readonly static SCNVector4 UnitX = new SCNVector4(1, 0, 0, 0);
 
         /// <summary>
         /// Defines a unit-length SCNVector4 that points towards the Y-axis.
         /// </summary>
-#if XAMCORE_2_0
-		readonly
-#endif
-        public static SCNVector4 UnitY = new SCNVector4(0, 1, 0, 0);
+        public readonly static SCNVector4 UnitY = new SCNVector4(0, 1, 0, 0);
 
         /// <summary>
         /// Defines a unit-length SCNVector4 that points towards the Z-axis.
         /// </summary>
-#if XAMCORE_2_0
-		readonly
-#endif
-        public static SCNVector4 UnitZ = new SCNVector4(0, 0, 1, 0);
+        public readonly static SCNVector4 UnitZ = new SCNVector4(0, 0, 1, 0);
 
         /// <summary>
         /// Defines a unit-length SCNVector4 that points towards the W-axis.
         /// </summary>
-#if XAMCORE_2_0
-		readonly
-#endif
-        public static SCNVector4 UnitW = new SCNVector4(0, 0, 0, 1);
+        public readonly static SCNVector4 UnitW = new SCNVector4(0, 0, 0, 1);
 
         /// <summary>
         /// Defines a zero-length SCNVector4.
         /// </summary>
-#if XAMCORE_2_0
-		readonly
-#endif
-        public static SCNVector4 Zero = new SCNVector4(0, 0, 0, 0);
+        public readonly static SCNVector4 Zero = new SCNVector4(0, 0, 0, 0);
 
         /// <summary>
         /// Defines an instance with all components set to 1.
@@ -212,93 +197,6 @@ namespace SceneKit
 
         #region Instance
 
-#if !XAMCORE_2_0
-        #region public void Add()
-
-        /// <summary>Add the Vector passed as parameter to this instance.</summary>
-        /// <param name="right">Right operand. This parameter is only read from.</param>
-        [Obsolete("Use static Add() method instead.")]
-        public void Add(SCNVector4 right)
-        {
-            this.X += right.X;
-            this.Y += right.Y;
-            this.Z += right.Z;
-            this.W += right.W;
-        }
-
-        /// <summary>Add the Vector passed as parameter to this instance.</summary>
-        /// <param name="right">Right operand. This parameter is only read from.</param>
-        [CLSCompliant(false)]
-        [Obsolete("Use static Add() method instead.")]
-        public void Add(ref SCNVector4 right)
-        {
-            this.X += right.X;
-            this.Y += right.Y;
-            this.Z += right.Z;
-            this.W += right.W;
-        }
-
-        #endregion public void Add()
-
-        #region public void Sub()
-
-        /// <summary>Subtract the Vector passed as parameter from this instance.</summary>
-        /// <param name="right">Right operand. This parameter is only read from.</param>
-        [Obsolete("Use static Subtract() method instead.")]
-        public void Sub(SCNVector4 right)
-        {
-            this.X -= right.X;
-            this.Y -= right.Y;
-            this.Z -= right.Z;
-            this.W -= right.W;
-        }
-
-        /// <summary>Subtract the Vector passed as parameter from this instance.</summary>
-        /// <param name="right">Right operand. This parameter is only read from.</param>
-        [CLSCompliant(false)]
-        [Obsolete("Use static Subtract() method instead.")]
-        public void Sub(ref SCNVector4 right)
-        {
-            this.X -= right.X;
-            this.Y -= right.Y;
-            this.Z -= right.Z;
-            this.W -= right.W;
-        }
-
-        #endregion public void Sub()
-
-        #region public void Mult()
-
-        /// <summary>Multiply this instance by a scalar.</summary>
-        /// <param name="f">Scalar operand.</param>
-        [Obsolete("Use static Multiply() method instead.")]
-        public void Mult(pfloat f)
-        {
-            this.X *= f;
-            this.Y *= f;
-            this.Z *= f;
-            this.W *= f;
-        }
-
-        #endregion public void Mult()
-
-        #region public void Div()
-
-        /// <summary>Divide this instance by a scalar.</summary>
-        /// <param name="f">Scalar operand.</param>
-        [Obsolete("Use static Divide() method instead.")]
-        public void Div(pfloat f)
-        {
-            pfloat mult = 1.0f / f;
-            this.X *= mult;
-            this.Y *= mult;
-            this.Z *= mult;
-            this.W *= mult;
-        }
-
-        #endregion public void Div()
-#endif // !XAMCORE_2_0
-
         #region public float Length
 
         /// <summary>
@@ -389,51 +287,6 @@ namespace SceneKit
         }
 
         #endregion
-
-#if !XAMCORE_2_0
-        #region public void Scale()
-
-        /// <summary>
-        /// Scales the current SCNVector4 by the given amounts.
-        /// </summary>
-        /// <param name="sx">The scale of the X component.</param>
-        /// <param name="sy">The scale of the Y component.</param>
-        /// <param name="sz">The scale of the Z component.</param>
-        /// <param name="sw">The scale of the Z component.</param>
-        [Obsolete("Use static Multiply() method instead.")]
-        public void Scale(pfloat sx, pfloat sy, pfloat sz, pfloat sw)
-        {
-            this.X = X * sx;
-            this.Y = Y * sy;
-            this.Z = Z * sz;
-            this.W = W * sw;
-        }
-
-        /// <summary>Scales this instance by the given parameter.</summary>
-        /// <param name="scale">The scaling of the individual components.</param>
-        [Obsolete("Use static Multiply() method instead.")]
-        public void Scale(SCNVector4 scale)
-        {
-            this.X *= scale.X;
-            this.Y *= scale.Y;
-            this.Z *= scale.Z;
-            this.W *= scale.W;
-        }
-
-        /// <summary>Scales this instance by the given parameter.</summary>
-        /// <param name="scale">The scaling of the individual components.</param>
-        [CLSCompliant(false)]
-        [Obsolete("Use static Multiply() method instead.")]
-        public void Scale(ref SCNVector4 scale)
-        {
-            this.X *= scale.X;
-            this.Y *= scale.Y;
-            this.Z *= scale.Z;
-            this.W *= scale.W;
-        }
-
-        #endregion public void Scale()
-#endif // !XAMCORE_2_0
 
         #endregion
 

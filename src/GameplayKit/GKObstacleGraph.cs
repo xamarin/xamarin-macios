@@ -7,8 +7,6 @@
 // Copyright 2016 Xamarin Inc. All rights reserved.
 //
 
-#if XAMCORE_2_0 || !MONOMAC
-
 using System;
 using Foundation;
 using ObjCRuntime;
@@ -26,7 +24,6 @@ namespace GameplayKit {
 		}
 	}
 
-#if XAMCORE_2_0
 	[iOS (10,0), TV (10,0), Mac (10,12)]
 	[Register ("GKObstacleGraph", SkipRegistration = true)]
 	public partial class GKObstacleGraph<NodeType> : GKObstacleGraph where NodeType : GKGraphNode2D {
@@ -54,6 +51,4 @@ namespace GameplayKit {
 			return NSArray.ArrayFromHandle<NodeType> (_GetNodes (obstacle));
 		}
 	}
-#endif
 }
-#endif

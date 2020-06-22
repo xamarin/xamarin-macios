@@ -16,7 +16,6 @@ using Foundation;
 using ObjCRuntime;
 
 namespace SpriteKit {
-#if XAMCORE_2_0 || !MONOMAC
 	public partial class SKKeyframeSequence {
 
 		[DesignatedInitializer]
@@ -57,5 +56,4 @@ namespace SpriteKit {
 			return array;
 		}
 	}
-#endif
 }

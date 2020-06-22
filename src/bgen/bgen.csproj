@@ -13,7 +13,6 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <!--<UpdateXlfOnBuild>true</UpdateXlfOnBuild>-->
     <RepositoryPath>$(MSBuildThisFileDirectory)/../..</RepositoryPath>
     <DotNetBuildDir>$(MSBuildThisFileDirectory)/../build/dotnet</DotNetBuildDir>
     <BuildsDir>$(RepositoryPath)/builds</BuildsDir>
@@ -328,6 +327,9 @@
     </Compile>
     <Compile Include="..\Resources.Designer.cs">
       <DependentUpon>..\Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\tools\common\Driver.execution.cs">
+      <Link>Driver.execution.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>

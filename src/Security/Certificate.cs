@@ -414,11 +414,7 @@ namespace Security {
 			GC.SuppressFinalize (this);
 		}
 
-#if XAMCORE_2_0
 		protected virtual void Dispose (bool disposing)
-#else
-		public virtual void Dispose (bool disposing)
-#endif
 		{
 			if (handle != IntPtr.Zero){
 				CFObject.CFRelease (handle);
@@ -514,11 +510,7 @@ namespace Security {
 			GC.SuppressFinalize (this);
 		}
 
-#if XAMCORE_2_0
 		protected virtual void Dispose (bool disposing)
-#else
-		public virtual void Dispose (bool disposing)
-#endif
 		{
 			if (handle != IntPtr.Zero){
 				CFObject.CFRelease (handle);
@@ -694,17 +686,6 @@ namespace Security {
 		[DllImport (Constants.SecurityLibrary)]
 		extern static SecStatusCode SecKeyEncrypt (IntPtr handle, SecPadding padding, IntPtr plainText, nint plainTextLen, IntPtr cipherText, ref nint cipherTextLengh);
 
-#if !XAMCORE_2_0
-		[Obsolete ("Use the 'Encrypt' overload which returns (out) the cipherTextLen value so you can adjust it if needed.")]
-		public unsafe SecStatusCode Encrypt (SecPadding padding, IntPtr plainText, int plainTextLen, IntPtr cipherText, int cipherTextLen)
-		{
-			if (handle == IntPtr.Zero)
-				throw new ObjectDisposedException ("SecKey");
-
-			nint len = (nint) cipherTextLen;
-			return SecKeyEncrypt (handle, padding, plainText, (nint) plainTextLen, cipherText, ref len);
-		}
-#endif
 		public unsafe SecStatusCode Encrypt (SecPadding padding, IntPtr plainText, nint plainTextLen, IntPtr cipherText, ref nint cipherTextLen)
 		{
 			if (handle == IntPtr.Zero)
@@ -740,17 +721,6 @@ namespace Security {
 		[DllImport (Constants.SecurityLibrary)]
 		extern static SecStatusCode SecKeyDecrypt (IntPtr handle, SecPadding padding, IntPtr cipherTextLen, nint cipherLen, IntPtr plainText, ref nint plainTextLen);
 
-#if !XAMCORE_2_0
-		[Obsolete ("Use the 'Decrypt' overload which returns (ref) the plainTextLen value so you can adjust it if needed.")]
-		public unsafe SecStatusCode Decrypt (SecPadding padding, IntPtr cipherText, int cipherTextLen, IntPtr plainText, int plainTextLen)
-		{
-			if (handle == IntPtr.Zero)
-				throw new ObjectDisposedException ("SecKey");
-
-			int len = plainTextLen;
-			return SecKeyDecrypt (handle, padding, cipherText, cipherTextLen, plainText, ref len);
-		}
-#endif
 		public unsafe SecStatusCode Decrypt (SecPadding padding, IntPtr cipherText, nint cipherTextLen, IntPtr plainText, ref nint plainTextLen)
 		{
 			if (handle == IntPtr.Zero)
@@ -782,16 +752,6 @@ namespace Security {
 			}
 		}
 
-#if !XAMCORE_2_0
-		[Obsolete ("Use the 'Decrypt' overload which returns (out) the plainText array so you can adjust it if needed.")]
-		public SecStatusCode Decrypt (SecPadding padding, byte [] cipherText, byte [] plainText)
-		{
-			if (plainText == null)
-				throw new ArgumentNullException ("plainText");
-
-			return _Decrypt (padding, cipherText, ref plainText);
-		}
-#endif
 		public SecStatusCode Decrypt (SecPadding padding, byte [] cipherText, out byte [] plainText)
 		{
 			plainText = null;
@@ -1028,11 +988,7 @@ namespace Security {
 			GC.SuppressFinalize (this);
 		}
 
-#if XAMCORE_2_0
 		protected virtual void Dispose (bool disposing)
-#else
-		public virtual void Dispose (bool disposing)
-#endif
 		{
 			if (handle != IntPtr.Zero){
 				CFObject.CFRelease (handle);

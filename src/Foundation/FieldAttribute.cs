@@ -30,10 +30,7 @@ using System;
 
 namespace Foundation {
 	[AttributeUsage (AttributeTargets.Property | AttributeTargets.Field)]
-#if XAMCORE_2_0
-	sealed
-#endif
-	public class FieldAttribute : Attribute {
+	public sealed class FieldAttribute : Attribute {
 		public FieldAttribute (string symbolName) {
 			SymbolName = symbolName;
 		}

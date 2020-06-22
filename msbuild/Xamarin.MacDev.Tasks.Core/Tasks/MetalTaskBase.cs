@@ -16,10 +16,11 @@ namespace Xamarin.MacDev.Tasks
 	{
 		#region Inputs
 
-		public ITaskItem AppManifest { get; set; }
-
 		[Required]
 		public string IntermediateOutputPath { get; set; }
+
+		[Required]
+		public string MinimumOSVersion { get; set; }
 
 		[Required]
 		public string ProjectDir { get; set; }
@@ -46,28 +47,6 @@ namespace Xamarin.MacDev.Tasks
 
 		[Output]
 		public ITaskItem OutputFile { get; set; }
-
-		protected abstract string MinimumDeploymentTargetKey {
-			get;
-		}
-
-		protected virtual string OperatingSystem {
-			get {
-				switch (Platform) {
-				case ApplePlatform.WatchOS:
-					return SdkIsSimulator ? "watchos-simulator" : "watchos";
-				case ApplePlatform.TVOS:
-					return SdkIsSimulator ? "tvos-simulator" : "tvos";
-				case ApplePlatform.MacOSX:
-					return "macosx";
-				case ApplePlatform.iOS:
-					return SdkIsSimulator ? "iphonesimulator" : "ios";
-				default:
-					Log.LogError (MSBStrings.E0169, TargetFrameworkMoniker);
-					return string.Empty;
-				}
-			}
-		}
 
 		protected abstract string DevicePlatformBinDir {
 			get;
@@ -102,22 +81,9 @@ namespace Xamarin.MacDev.Tasks
 			var path = Path.Combine (intermediate, logicalName);
 			var args = new CommandLineArgumentBuilder ();
 			var dir = Path.GetDirectoryName (path);
-			string minimumDeploymentTarget;
 
 			if (!Directory.Exists (dir))
 				Directory.CreateDirectory (dir);
-
-			if (AppManifest != null) {
-				var plist = PDictionary.FromFile (AppManifest.ItemSpec);
-				PString value;
-
-				if (!plist.TryGetValue (MinimumDeploymentTargetKey, out value) || string.IsNullOrEmpty (value.Value))
-					minimumDeploymentTarget = SdkVersion;
-				else
-					minimumDeploymentTarget = value.Value;
-			} else {
-				minimumDeploymentTarget = SdkVersion;
-			}
 
 			OutputFile = new TaskItem (Path.ChangeExtension (path, ".air"));
 			OutputFile.SetMetadata ("LogicalName", Path.ChangeExtension (logicalName, ".air"));
@@ -134,7 +100,7 @@ namespace Xamarin.MacDev.Tasks
 			args.Add ("-o");
 			args.AddQuoted (Path.ChangeExtension (path, ".air"));
 
-			args.Add (string.Format ("-m{0}-version-min={1}", OperatingSystem, minimumDeploymentTarget));
+			args.Add (PlatformFrameworkHelper.GetMinimumVersionArgument (TargetFrameworkMoniker, SdkIsSimulator, MinimumOSVersion));
 
 			args.AddQuoted (SourceFile.ItemSpec);
 

@@ -55,7 +55,7 @@ namespace Xamarin.Bundler {
 		}
 	}
 
-	public delegate int RunCommandDelegate (string path, IList<string> args, string[] env = null, StringBuilder output = null, bool suppressPrintOnErrors = false);
+	public delegate int RunCommandDelegate (string path, IList<string> args, Dictionary<string, string> env = null, StringBuilder output = null, bool suppressPrintOnErrors = false);
 
 	public enum AOTCompilerType {
 		Invalid,
@@ -202,7 +202,7 @@ namespace Xamarin.Bundler {
 			if (!options.IsAOT)
 				throw ErrorHelper.CreateError (0099, Errors.MX0099, $"\"AOTBundle with aot: {options.CompilationType}\" ");
 
-			var monoEnv = new string [] {"MONO_PATH", files.RootDir };
+			var monoEnv = new Dictionary<string, string> { { "MONO_PATH", files.RootDir } };
 
 			List<string> filesToAOT = GetFilesToAOT (files);
 			Parallel.ForEach (filesToAOT, ParallelOptions, file => {

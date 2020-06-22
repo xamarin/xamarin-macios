@@ -27,73 +27,8 @@ namespace GameKit {
 		public GKSession Session { get; private set; }
 	}
 
-#if !XAMCORE_2_0
-	public partial class GKVoiceChatService {
-		public bool StartVoiceChat (string participantID, out NSError error)
-		{
-			unsafe {
-				IntPtr errhandle;
-				IntPtr ptrtohandle = (IntPtr) (&errhandle);
-
-				var ret = StartVoiceChat (participantID, ptrtohandle);
-				if (errhandle != IntPtr.Zero)
-					error = (NSError) Runtime.GetNSObject (errhandle);
-				else
-					error = null;
-				return ret;
-			}
-		}
-
-		public bool AcceptCall (int callId, out NSError error)
-		{
-			unsafe {
-				IntPtr errhandle;
-				IntPtr ptrtohandle = (IntPtr) (&errhandle);
-
-				var ret = AcceptCall (callId, ptrtohandle);
-				if (errhandle != IntPtr.Zero)
-					error = (NSError) Runtime.GetNSObject (errhandle);
-				else
-					error = null;
-				return ret;
-			}
-		}
-	}
-#endif
-
 #if !TVOS && !WATCH
 	public partial class GKSession {
-#if !XAMCORE_2_0
-		public bool SendData (NSData data, string [] peers, GKSendDataMode mode, out NSError error)
-		{
-			unsafe {
-				IntPtr errhandle;
-				IntPtr ptrtohandle = (IntPtr) (&errhandle);
-
-				var ret = SendData (data, peers, mode, ptrtohandle);
-				if (errhandle != IntPtr.Zero)
-					error = (NSError) Runtime.GetNSObject (errhandle);
-				else
-					error = null;
-				return ret;
-			}
-		}
-
-		public bool SendDataToAllPeers (NSData data, GKSendDataMode mode, out NSError error)
-		{
-			unsafe {
-				IntPtr errhandle;
-				IntPtr ptrtohandle = (IntPtr) (&errhandle);
-
-				var ret = SendDataToAllPeers (data, mode, ptrtohandle);
-				if (errhandle != IntPtr.Zero)
-					error = (NSError) Runtime.GetNSObject (errhandle);
-				else
-					error = null;
-				return ret;
-			}
-		}
-#endif
 		[Register ("MonoTouch_GKSession_ReceivedObject")]
 		internal class ReceiverObject : NSObject {
 			internal EventHandler<GKDataReceivedEventArgs> receiver;
@@ -257,27 +192,8 @@ namespace GameKit {
 		public NSError Error { get; private set; }
 	}
 #endif
-	
-#if !XAMCORE_2_0
-	public partial class GKPlayer {
-		// mistake, non-static
-		public NSString DidChangeNotificationName {
-			get {
-				return DidChangeNotificationNameNotification;
-			}
-		}
-	}
-#endif
 
 	public partial class GKVoiceChat {
-
-#if !XAMCORE_2_0
-		[Obsolete ("Use 'PlayerStateUpdateHandler' property.")]
-		public virtual void SetPlayerStateUpdateHandler (GKPlayerStateUpdateHandler handler)
-		{
-			PlayerStateUpdateHandler = handler;
-		}
-#endif
 
 #if !XAMCORE_3_0
 		[Obsolete ("Use 'SetMute (bool, string)' method.")]
@@ -304,20 +220,6 @@ namespace GameKit {
 		}
 	}
 
-#if !XAMCORE_2_0
-	public partial class GKLeaderboardViewController {
-
-		[Obsolete ("Apple never shipped the `initWithTimeScope:playerScope:` selector. Use the default constructor.")]
-		public GKLeaderboardViewController (GKLeaderboardTimeScope timeScope, GKLeaderboardPlayerScope playerScope) : 
-			base (NSObjectFlag.Empty)
-		{
-			// we can't set `playerScope` with the existing API and
-			// setting `timeScope` does not work at this stage either so...
-			throw new NotSupportedException ();
-		}
-	}
-#endif
-
 	public partial class GKChallenge {
 
 		public override string ToString ()
@@ -334,35 +236,5 @@ namespace GameKit {
 			return SendData (data, players, mode, out error);
 		}
 #endif
-
-#if !XAMCORE_2_0
-		[Obsolete ("Use 'SendDataToAllPlayers'.")]
-		public virtual bool SendDataToAllPlayer (NSData data, GKMatchSendDataMode mode, out NSError error)
-		{
-			return SendDataToAllPlayers (data, mode, out error);
-		}
-
-#if MONOMAC
-		// never been released with XI
-		[Obsolete ("Use 'SendDataToAllPlayers' that takes out NSError.")]
-		public bool SendDataToAllPlayers (NSData data, GKMatchSendDataMode mode, IntPtr ptrToNSErrorHandle)
-		{
-			NSError error = new NSError (ptrToNSErrorHandle);
-			return SendDataToAllPlayers (data, mode, out error);
-		}
-#endif
-#endif
-
 	}
-
-#if !XAMCORE_2_0
-	public partial class GKScore {
-		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'LeaderboardIdentifier' instead.")]
-		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'LeaderboardIdentifier' instead.")]
-		public string Category {
-			get { return category; }
-			set { category = value; }
-		}
-	}
-#endif
 }

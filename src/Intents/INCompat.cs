@@ -1,6 +1,6 @@
 // Compatibility stubs
 
-#if XAMCORE_2_0 && IOS
+#if IOS
 
 using System;
 using Foundation;

@@ -220,20 +220,6 @@ namespace AudioToolbox {
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static /* OSStatus */ MusicPlayerStatus MusicSequenceGetTrackIndex (/* MusicSequence */ IntPtr inSequence, /* MusicTrack */ IntPtr inTrack, /* UInt32* */ out int outTrackIndex);
 
-#if !XAMCORE_2_0
-		[Obsolete ("Use GetTrackIndex(MusicTrack, out int) to distinguish between the track or an error code")]
-		public int GetTrackIndex (MusicTrack track)
-		{
-			int idx;
-			if (track == null)
-				throw new ArgumentNullException ("track");
-			var status = MusicSequenceGetTrackIndex (handle, track.Handle, out idx);
-			if (status == MusicPlayerStatus.Success)
-				return idx;
-			// that's never clear if the return value is the track or an error code
-			return (int) status;
-		}
-#endif
 		public MusicPlayerStatus GetTrackIndex (MusicTrack track, out int index)
 		{
 			if (track == null)
@@ -328,14 +314,6 @@ namespace AudioToolbox {
 		
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static /* OSStatus */ MusicPlayerStatus MusicSequenceBarBeatTimeToBeats (/* MusicSequence */ IntPtr inSequence, CABarBeatTime inBarBeatTime, /* MusicTimeStamp*/ out double outBeats);
-#if !XAMCORE_2_0
-		[Obsolete ("Use overload with an out 'double beats'")]
-		public MusicPlayerStatus BarBeatTimeToBeats (CABarBeatTime barBeatTime)
-		{
-			double d;
-			return MusicSequenceBarBeatTimeToBeats (handle, barBeatTime, out d);
-		}
-#endif
 		public MusicPlayerStatus BarBeatTimeToBeats (CABarBeatTime barBeatTime, out double beats)
 		{
 			return MusicSequenceBarBeatTimeToBeats (handle, barBeatTime, out beats);

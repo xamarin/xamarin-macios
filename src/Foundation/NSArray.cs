@@ -233,36 +233,20 @@ namespace Foundation {
 
 		internal static nuint GetCount (IntPtr handle)
 		{
-#if XAMCORE_2_0
 	#if MONOMAC
 			return Messaging.nuint_objc_msgSend (handle, selCountHandle);
 	#else
 			return Messaging.nuint_objc_msgSend (handle, Selector.GetHandle ("count"));
 	#endif
-#else
-	#if MONOMAC
-			return Messaging.UInt32_objc_msgSend (handle, selCountHandle);
-	#else
-			return Messaging.UInt32_objc_msgSend (handle, Selector.GetHandle ("count"));
-	#endif
-#endif
 		}
 
 		internal static IntPtr GetAtIndex (IntPtr handle, nuint i)
 		{
-#if XAMCORE_2_0
 	#if MONOMAC
 			return Messaging.IntPtr_objc_msgSend_nuint (handle, selObjectAtIndex_Handle, i);
 	#else
 			return Messaging.IntPtr_objc_msgSend_nuint (handle, Selector.GetHandle ("objectAtIndex:"), i);
 	#endif
-#else
-	#if MONOMAC
-			return Messaging.IntPtr_objc_msgSend_UInt32 (handle, selObjectAtIndex_Handle, i);
-	#else
-			return Messaging.IntPtr_objc_msgSend_UInt32 (handle, Selector.GetHandle ("objectAtIndex:"), i);
-	#endif
-#endif
 		}
 			
 		static public string [] StringArrayFromHandle (IntPtr handle)
@@ -385,7 +369,6 @@ namespace Foundation {
 		}
 
 		// can return an INativeObject or an NSObject
-#if XAMCORE_2_0
 		public T GetItem<T> (nuint index) where T : class, INativeObject
 		{
 			if (index >= GetCount (Handle))
@@ -393,15 +376,6 @@ namespace Foundation {
 
 			return UnsafeGetItem<T> (Handle, index);
 		}
-#else
-		public T GetItem<T> (int index) where T : class, INativeObject
-		{
-			if (index < 0 || index >= GetCount (Handle))
-				throw new ArgumentOutOfRangeException ("index");
-
-			return UnsafeGetItem<T> (Handle, (uint) index);
-		}
-#endif
 
 		public static NSObject[][] FromArrayOfArray (NSArray weakArray)
 		{
@@ -412,12 +386,7 @@ namespace Foundation {
 				nuint n = weakArray.Count;
 				var ret = new NSObject[n][];
 				for (nuint i = 0; i < n; i++)
-					ret [i] = NSArray.FromArray<NSObject> (weakArray.GetItem<NSArray> (
-#if !XAMCORE_2_0
-						(int)
-#endif
-						i
-					));
+					ret [i] = NSArray.FromArray<NSObject> (weakArray.GetItem<NSArray> (i));
 				return ret;
 			} catch {
 				return null;

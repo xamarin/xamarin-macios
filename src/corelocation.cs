@@ -17,7 +17,7 @@ using CoreLocation;
 #if !MONOMAC
 using UIKit;
 #endif
-#if XAMCORE_2_0 && !TVOS
+#if !TVOS
 using Contacts;
 #endif
 using System;
@@ -131,7 +131,6 @@ namespace CoreLocation {
 		[Field ("kCLErrorUserInfoAlternateRegionKey")]
 		NSString ErrorUserInfoAlternateRegionKey { get; }
 
-#if XAMCORE_2_0
 		[Field ("kCLLocationAccuracyBestForNavigation")]
 		double AccurracyBestForNavigation { get; }
 
@@ -149,7 +148,6 @@ namespace CoreLocation {
 
 		[Field ("kCLLocationAccuracyThreeKilometers")]
 		double AccuracyThreeKilometers { get; }
-#endif
 
 		[Mac (10,15)]
 		[iOS (8,0)]
@@ -622,7 +620,7 @@ namespace CoreLocation {
 		[NullAllowed, Export ("timeZone")]
 		[iOS (9,0), Mac(10,11)]
 		NSTimeZone TimeZone { get; }
-#if XAMCORE_2_0 && !TVOS
+#if !TVOS
 		// From CLPlacemark (ContactsAdditions) category.
 		[Watch (4,0), NoTV, Mac (10,13), iOS (11,0)]
 		[NullAllowed, Export ("postalAddress")]
@@ -785,7 +783,7 @@ namespace CoreLocation {
 		[Export ("cancelGeocode")]
 		void CancelGeocode ();
 
-#if XAMCORE_2_0 && !TVOS
+#if !TVOS
 		[Watch (4,0), NoTV, Mac (10,13), iOS (11,0)]
 		[Export ("geocodePostalAddress:completionHandler:")]
 		[Async]

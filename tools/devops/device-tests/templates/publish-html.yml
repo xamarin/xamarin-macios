@@ -1,0 +1,42 @@
+# Job that will download the other artifact from the tests job and will publish them in the 
+# vsdrops
+
+steps:
+
+- checkout: self
+  persistCredentials: true
+
+# Download the Html Report that was added by the tests job.
+- task: DownloadPipelineArtifact@2
+  displayName: Download html report 
+  inputs:
+    patterns: '**/HtmlReport.zip'
+    allowFailedBuilds: true
+    path: $(System.DefaultWorkingDirectory)/Reports
+
+# Unzip report.
+- task: ExtractFiles@1
+  displayName: 'Extract HmlReport'
+  inputs:
+    archiveFilePatterns: '$(System.DefaultWorkingDirectory)/Reports/HtmlReport/HtmlReport.zip'
+    destinationFolder: '$(System.DefaultWorkingDirectory)/HtmlReport'
+
+# Upload full report to vsdrops using the the build numer and id as uudis.
+- task: ms-vscs-artifact.build-tasks.artifactDropTask-1.artifactDropTask@0
+  displayName: 'Publish to Artifact Services Drop'
+  inputs:
+    dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'
+    buildNumber: 'xamarin-macios/device-tests/$(Build.BuildNumber)/$(Build.BuildId)'
+    sourcePath: '$(System.DefaultWorkingDirectory)\HtmlReport'
+    detailedLog: true
+    usePat: true 
+
+# Download the test report to write the comment.
+- task: DownloadPipelineArtifact@2
+  displayName: Download Test Summary
+  inputs:
+    patterns: '**/TestSummary.md'
+    allowFailedBuilds: true
+    path: $(System.DefaultWorkingDirectory)/Reports
+
+# TODO: We need to find out how VSDrops can serve the page. So we are doing nothing atm.

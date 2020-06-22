@@ -30,16 +30,12 @@ namespace Foundation {
 	}
 #endif
 
-#if !XAMCORE_4_0 && (XAMCORE_2_0 || !MONOMAC) && !WATCH
+#if !XAMCORE_4_0 && !WATCH
 	public partial class NSUserActivity {
 
 		[Obsolete ("Use the constructor that allows you to set an activity type.")]
 		public NSUserActivity ()
-#if XAMCORE_2_0
 			: this (String.Empty)
-#else
-			: this (NSString.Empty)
-#endif
 		{
 		}
 	}

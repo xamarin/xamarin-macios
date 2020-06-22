@@ -18,7 +18,7 @@ This is the scheme: `OsMajor.OsMinor.InternalRelease[-prereleaseX]+sha.1b2c3d4`.
     * For CI we use a `ci` prefix + the branch name (cleaned up to only be
       alphanumeric) + the commit distance (number of commits since any of the
       major.minor.patch versions changed).
-        * Example: `iOS 15.0.100-ci.master.1234`
+        * Example: `iOS 15.0.100-ci.main.1234`
         * Alphanumeric means `a-zA-Z0-9-`: any character not in this range
           will be replaced with a `-`.
     * Pull requests have `pr` prefix, followed by `gh`+ PR number + commit
@@ -38,7 +38,7 @@ This is the scheme: `OsMajor.OsMinor.InternalRelease[-prereleaseX]+sha.1b2c3d4`.
           cumbersome. This leaves the complete version open for duplication,
           but this is extremely unlikely.
     * Example: `iOS 14.0.100+sha.1a2b3c`
-    * Example (CI build): `iOS 15.0.100-ci.master.1234+sha.1a2b3c`
+    * Example (CI build): `iOS 15.0.100-ci.main.1234+sha.1a2b3c`
     * Since the build metadata is required for all builds, we're able to
       recognize incomplete version numbers and determine if a particular
       version string refers to a stable version or not.

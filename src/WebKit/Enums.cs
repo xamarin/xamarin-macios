@@ -79,11 +79,7 @@ namespace WebKit {
 		Image = 2, 
 		Link = 4,
 		Selection = 8,
-#if XAMCORE_2_0
 		Any = UInt64.MaxValue
-#else
-		Any = UInt32.MaxValue
-#endif
 	}
 
 	[Flags]
@@ -93,11 +89,7 @@ namespace WebKit {
 		Image = 2, 
 		Link = 4,
 		Selection = 8,
-#if XAMCORE_2_0
 		Any = UInt64.MaxValue
-#else
-		Any = UInt32.MaxValue
-#endif
 	}
 
 #if !XAMCORE_4_0

@@ -12,7 +12,6 @@ using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
 
-#if XAMCORE_2_0
 namespace PdfKit {
 	public partial class PdfAnnotation {
 
@@ -70,4 +69,3 @@ namespace PdfKit {
 		}
 	}
 }
-#endif // XAMCORE_2_0

@@ -58,11 +58,6 @@ using AppKit;
 using UIKit;
 #endif
 
-#if !XAMCORE_2_0
-using CMVideoDimensions = System.Drawing.Size;
-#endif
-
-
 #if WATCH
 using AVCaptureWhiteBalanceGains = Foundation.NSString;
 // stubs to ease compilation using [NoWatch]
@@ -887,10 +882,8 @@ namespace AVFoundation {
 		nuint Bus { get; }
 	}
 
-#if XAMCORE_2_0
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 	delegate AVAudioEngineManualRenderingStatus AVAudioEngineManualRenderingBlock (/* AVAudioFrameCount = uint */ uint numberOfFrames, AudioBuffers outBuffer, [NullAllowed] /* OSStatus */ ref int outError);
-#endif
 
 	[Watch (3,0)]
 	[iOS (8,0)][Mac (10,10)]
@@ -983,11 +976,9 @@ namespace AVFoundation {
 		[Export ("renderOffline:toBuffer:error:")]
 		AVAudioEngineManualRenderingStatus RenderOffline (uint numberOfFrames, AVAudioPcmBuffer buffer, [NullAllowed] out NSError outError);
 
-#if XAMCORE_2_0
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[Export ("manualRenderingBlock")]
 		AVAudioEngineManualRenderingBlock ManualRenderingBlock { get; }
-#endif
 
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[Export ("isInManualRenderingMode")]
@@ -1384,11 +1375,9 @@ namespace AVFoundation {
 		[Export ("removeTapOnBus:")]
 		void RemoveTapOnBus (nuint bus);
 
-#if XAMCORE_2_0
 		[NoWatch, TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[Export ("AUAudioUnit")]
 		AUAudioUnit AUAudioUnit { get; }
-#endif
 
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[Export ("latency")]
@@ -1446,10 +1435,8 @@ namespace AVFoundation {
 
 	}	
 
-#if XAMCORE_2_0
 	[Watch (4,0), TV (11,0), Mac (10,10), iOS (8,0)]
 	delegate AudioBuffers AVAudioIONodeInputBlock (uint frameCount);
-#endif
 
  	[Watch (4,0)]
  	[iOS (8,0)][Mac (10,10)][TV (11,0)]
@@ -1458,11 +1445,9 @@ namespace AVFoundation {
 	// note: sample source (header) suggest it comes from AVAudioEngine properties
 	interface AVAudioInputNode : AVAudioMixing {
 
-#if XAMCORE_2_0
 		[Mac (10,13), iOS (11,0), Watch (6,0)]
 		[Export ("setManualRenderingInputPCMFormat:inputBlock:")]
 		bool SetManualRenderingInputPcmFormat (AVAudioFormat format, AVAudioIONodeInputBlock block);
-#endif
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Export ("voiceProcessingBypassed")]
@@ -1751,20 +1736,11 @@ namespace AVFoundation {
 		[Export ("url")]
 		NSUrl Url { get;  }
 
-#if XAMCORE_2_0
 		[Export ("settings")]
 		NSDictionary WeakSettings { get;  }
 
 		[Wrap ("WeakSettings")]
 		AudioSettings Settings { get; }
-#else
-		[Export ("settings")]
-		[Advice ("Use 'AudioSettings' property instead.")]
-		NSDictionary Settings { get;  }
-
-		[Wrap ("Settings")]
-		AudioSettings AudioSettings { get; }
-#endif
 
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
 		NSObject WeakDelegate { get; set;  }
@@ -2284,7 +2260,6 @@ namespace AVFoundation {
 		[Export ("dataSourceName")]
 		string DataSourceName { get;  }
 
-#if XAMCORE_2_0
 		[iOS (7,0)]
 		[Export ("location", ArgumentSemantic.Copy), NullAllowed]
 		[Internal]
@@ -2294,15 +2269,6 @@ namespace AVFoundation {
 		[Export ("orientation", ArgumentSemantic.Copy), NullAllowed]
 		[Internal]
 		NSString Orientation_ { get; }
-#else
-		[iOS (7,0)]
-		[Export ("location", ArgumentSemantic.Copy), NullAllowed]
-		string Location { get; }
-	
-		[iOS (7,0)]
-		[Export ("orientation", ArgumentSemantic.Copy), NullAllowed]
-		string Orientation { get; }
-#endif
 
 		[NoWatch]
 		[iOS (7,0)]
@@ -2449,11 +2415,7 @@ namespace AVFoundation {
 	[DisableDefaultCtor] // returns a nil handle
 	interface AVAudioUnit {
 		[Export ("audioComponentDescription"), Internal]
-#if XAMCORE_2_0
 		AudioComponentDescription AudioComponentDescription { get; }
-#else
-		AudioComponentDescriptionNative _AudioComponentDescription { get; }
-#endif
 
 		[Export ("audioUnit")]
 		global::AudioUnit.AudioUnit AudioUnit { get; }
@@ -2470,7 +2432,6 @@ namespace AVFoundation {
 		[Export ("loadAudioUnitPresetAtURL:error:")]
 		bool LoadAudioUnitPreset (NSUrl url, out NSError error);
 
-#if XAMCORE_2_0
 		[iOS (9,0), Mac (10,11)]
 		[Static]
 		[Export ("instantiateWithComponentDescription:options:completionHandler:")]
@@ -2480,7 +2441,6 @@ namespace AVFoundation {
 		[NoWatch, iOS (9,0), Mac (10,11)]
 		[Export ("AUAudioUnit")]
 		AUAudioUnit AUAudioUnit { get; }
-#endif
 	}
 
 	[NoWatch, iOS (8,0)]
@@ -2518,12 +2478,7 @@ namespace AVFoundation {
 	[DisableDefaultCtor] // returns a nil handle
 	interface AVAudioUnitEffect {
 		[Export ("initWithAudioComponentDescription:")]
-#if XAMCORE_2_0
 		IntPtr Constructor (AudioComponentDescription audioComponentDescription);
-#else
-		[Internal]
-		IntPtr Constructor (AudioComponentDescriptionNative audioComponentDescription);
-#endif
 
 		[Export ("bypass")]
 		bool Bypass { get; set; }
@@ -2569,12 +2524,7 @@ namespace AVFoundation {
 	[DisableDefaultCtor] // returns a nil handle
 	interface AVAudioUnitGenerator : AVAudioMixing {
 		[Export ("initWithAudioComponentDescription:")]
-#if XAMCORE_2_0
 		IntPtr Constructor (AudioComponentDescription audioComponentDescription);
-#else
-		[Internal]
-		IntPtr Constructor (AudioComponentDescriptionNative audioComponentDescription);
-#endif
 
 		[Export ("bypass")]
 		bool Bypass { get; set; }
@@ -2585,12 +2535,7 @@ namespace AVFoundation {
 	[DisableDefaultCtor] // returns a nil handle
 	interface AVAudioUnitMidiInstrument : AVAudioMixing { 
 		[Export ("initWithAudioComponentDescription:")]
-#if XAMCORE_2_0
 		IntPtr Constructor (AudioComponentDescription audioComponentDescription);
-#else
-		[Internal]
-		IntPtr Constructor (AudioComponentDescriptionNative audioComponentDescription);
-#endif
 
 		[Export ("startNote:withVelocity:onChannel:")]
 		void StartNote (byte note, byte velocity, byte channel);
@@ -2665,12 +2610,7 @@ namespace AVFoundation {
 	[DisableDefaultCtor] // returns a nil handle
 	interface AVAudioUnitTimeEffect {
 		[Export ("initWithAudioComponentDescription:")]
-#if XAMCORE_2_0
 		IntPtr Constructor (AudioComponentDescription audioComponentDescription);
-#else
-		[Internal]
-		IntPtr Constructor (AudioComponentDescriptionNative audioComponentDescription);
-#endif
 
 		[Export ("bypass")]
 		bool Bypass { get; set; }
@@ -2680,12 +2620,7 @@ namespace AVFoundation {
 	[BaseType (typeof (AVAudioUnitTimeEffect))]
 	interface AVAudioUnitTimePitch {
 		[Export ("initWithAudioComponentDescription:")]
-#if XAMCORE_2_0
 		IntPtr Constructor (AudioComponentDescription audioComponentDescription);
-#else
-		[Internal]
-		IntPtr Constructor (AudioComponentDescriptionNative audioComponentDescription);
-#endif
 
 
 		[Export ("rate")]
@@ -2702,12 +2637,7 @@ namespace AVFoundation {
 	[BaseType (typeof (AVAudioUnitTimeEffect))]
 	interface AVAudioUnitVarispeed {
 		[Export ("initWithAudioComponentDescription:")]
-#if XAMCORE_2_0
 		IntPtr Constructor (AudioComponentDescription audioComponentDescription);
-#else
-		[Internal]
-		IntPtr Constructor (AudioComponentDescriptionNative audioComponentDescription);
-#endif
 
 		[Export ("rate")]
 		float Rate { get; set; } /* float, not CGFloat */
@@ -3636,9 +3566,7 @@ namespace AVFoundation {
 		[Export ("track")]
 		AVAssetTrack Track { get;  }
 
-#if XAMCORE_2_0
 		[Internal]
-#endif
 		[Advice ("Use 'Create' method.")]
 		[Static, Export ("assetReaderTrackOutputWithTrack:outputSettings:")]
 		AVAssetReaderTrackOutput FromTrack (AVAssetTrack track, [NullAllowed] NSDictionary outputSettings);
@@ -3680,9 +3608,7 @@ namespace AVFoundation {
 		[Export ("audioMix", ArgumentSemantic.Copy), NullAllowed]
 		AVAudioMix AudioMix { get; set;  }
 
-#if XAMCORE_2_0
 		[Internal]
-#endif
 		[Advice ("Use 'Create' method.")]
 		[Static, Export ("assetReaderAudioMixOutputWithAudioTracks:audioSettings:")]
 		AVAssetReaderAudioMixOutput FromTracks (AVAssetTrack [] audioTracks, [NullAllowed] NSDictionary audioSettings);
@@ -3697,9 +3623,7 @@ namespace AVFoundation {
 		[Wrap ("this (audioTracks, settings.GetDictionary ())")]
 		IntPtr Constructor (AVAssetTrack [] audioTracks, [NullAllowed] AudioSettings settings);
 
-#if XAMCORE_2_0
 		[Internal]
-#endif
 		[Advice ("Use 'Settings' property.")]
 		[Export ("audioSettings"), NullAllowed]
 		NSDictionary AudioSettings { get; }
@@ -3725,9 +3649,7 @@ namespace AVFoundation {
 		[Export ("videoComposition", ArgumentSemantic.Copy), NullAllowed]
 		AVVideoComposition VideoComposition { get; set;  }
 
-#if XAMCORE_2_0
 		[Internal]
-#endif
 		[Advice ("Use 'Create' method.")]
 		[Static]
 		[Export ("assetReaderVideoCompositionOutputWithVideoTracks:videoSettings:")]
@@ -3759,9 +3681,7 @@ namespace AVFoundation {
 
 	[Mac (10,9), NoWatch]
 	[BaseType (typeof (NSObject))]
-#if XAMCORE_2_0
 	[DisableDefaultCtor] // no valid handle, docs now says "You do not create resource loader objects yourself."
-#endif
 	interface AVAssetResourceLoader {
 		[Export ("delegate", ArgumentSemantic.Weak), NullAllowed]
 		[Protocolize]
@@ -3835,9 +3755,7 @@ namespace AVFoundation {
 	
 	[Mac (10, 9), NoWatch]
 	[BaseType (typeof (NSObject))]
-#if XAMCORE_2_0
 	[DisableDefaultCtor] // not meant be be user created (resource loader job, see documentation)
-#endif
 	interface AVAssetResourceLoadingRequest {
 		[Export ("request")]
 		NSUrlRequest Request { get;  }
@@ -3906,9 +3824,7 @@ namespace AVFoundation {
 
 	[iOS (7,0), Mac (10, 9), NoWatch]
 	[BaseType (typeof (NSObject))]
-#if XAMCORE_2_0
 	[DisableDefaultCtor] // no valid handle, the instance is received (not created) -> see doc
-#endif
 	interface AVAssetResourceLoadingContentInformationRequest {
 		[Export ("contentType"), NullAllowed]
 		string ContentType { get; set; }
@@ -4077,9 +3993,7 @@ namespace AVFoundation {
 		[Export ("expectsMediaDataInRealTime")]
 		bool ExpectsMediaDataInRealTime { get; set;  }
 
-#if XAMCORE_2_0
 		[Internal]
-#endif
 		[Advice ("Use constructor or 'Create' method instead.")]
 		[Static, Export ("assetWriterInputWithMediaType:outputSettings:")]
 		AVAssetWriterInput FromType (string mediaType, [NullAllowed] NSDictionary outputSettings);
@@ -4090,10 +4004,7 @@ namespace AVFoundation {
 		[Static, Wrap ("FromType (mediaType, outputSettings.GetDictionary ())")]
 		AVAssetWriterInput Create (string mediaType, [NullAllowed] AVVideoSettingsCompressed outputSettings);
 
-#if XAMCORE_2_0
 		[Protected]
-#endif
-		// Should be protected
 		[Export ("initWithMediaType:outputSettings:")]
 		IntPtr Constructor (string mediaType, [NullAllowed] NSDictionary outputSettings);
 
@@ -4254,9 +4165,7 @@ namespace AVFoundation {
 		[Export ("pixelBufferPool"), NullAllowed]
 		CVPixelBufferPool PixelBufferPool { get;  }
 
-#if XAMCORE_2_0
 		[Advice ("Use 'Create' method.")]
-#endif
 		[Static, Export ("assetWriterInputPixelBufferAdaptorWithAssetWriterInput:sourcePixelBufferAttributes:")]
 		AVAssetWriterInputPixelBufferAdaptor FromInput (AVAssetWriterInput input, [NullAllowed] NSDictionary sourcePixelBufferAttributes);
 
@@ -4299,9 +4208,7 @@ namespace AVFoundation {
 		[Export ("URL", ArgumentSemantic.Copy)]
 		NSUrl Url { get;  }
 
-#if XAMCORE_2_0
 		[Internal]
-#endif
 		[Advice ("Use constructor or 'Create' method instead.")]
 		[Static, Export ("URLAssetWithURL:options:")]
 		AVUrlAsset FromUrl (NSUrl url, [NullAllowed] NSDictionary options);
@@ -6616,11 +6523,7 @@ namespace AVFoundation {
 		CGRect Bounds { get;  }
 
 		[Export ("type")]
-#if XAMCORE_2_0
 		NSString WeakType { get;  }
-#else
-		NSString Type { get;  }
-#endif
 
 		[Export ("time")]
 		CMTime Time{ get;}
@@ -6826,11 +6729,7 @@ namespace AVFoundation {
 	[BaseType (typeof (AVMetadataObject))]
 	interface AVMetadataMachineReadableCodeObject {
 		[Export ("corners", ArgumentSemantic.Copy)]
-#if XAMCORE_2_0
 		NSDictionary [] WeakCorners { get; }
-#else
-		NSDictionary [] Corners { get; }
-#endif
 
 		[NullAllowed, Export ("stringValue", ArgumentSemantic.Copy)]
 		string StringValue { get; }
@@ -7747,11 +7646,7 @@ namespace AVFoundation {
 
 		[Export ("exportAsynchronouslyWithCompletionHandler:")]
 		[Async ("ExportTaskAsync")]
-#if XAMCORE_2_0
 		void ExportAsynchronously (Action handler);
-#else
-		void ExportAsynchronously (AVCompletionHandler handler);
-#endif
 
 		[Export ("cancelExport")]
 		void CancelExport ();
@@ -8911,12 +8806,6 @@ namespace AVFoundation {
 		[Export ("setSessionWithNoConnection:")]
 		void SetSessionWithNoConnection (AVCaptureSession session);
 
-#if !XAMCORE_2_0
-		[Advice ("Use 'LayerVideoGravity' property instead.")]
-		[Export ("videoGravity", ArgumentSemantic.Copy)][Sealed]
-		string VideoGravity { get; set; }
-#endif
-
 		[Export ("videoGravity", ArgumentSemantic.Copy)][Protected]
 		NSString WeakVideoGravity { get; set; }
 
@@ -9106,11 +8995,7 @@ namespace AVFoundation {
 
 		[Obsolete ("Use overload accepting a 'IAVCaptureVideoDataOutputSampleBufferDelegate'.")]
 		[Export ("setSampleBufferDelegate:queue:")]
-#if XAMCORE_2_0
 		void SetSampleBufferDelegateQueue ([NullAllowed] AVCaptureAudioDataOutputSampleBufferDelegate sampleBufferDelegate, [NullAllowed] DispatchQueue sampleBufferCallbackDispatchQueue);
-#else
-		void SetSampleBufferDelegatequeue ([NullAllowed] AVCaptureAudioDataOutputSampleBufferDelegate sampleBufferDelegate, [NullAllowed] DispatchQueue sampleBufferCallbackDispatchQueue);
-#endif
 #endif
 
 		[iOS (7,0), Mac (10,15)]
@@ -9145,9 +9030,7 @@ namespace AVFoundation {
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-#if XAMCORE_2_0
 	[Abstract]
-#endif
 	interface AVCaptureBracketedStillImageSettings {
 		// Abstract class in obJC
 	}
@@ -9243,9 +9126,7 @@ namespace AVFoundation {
 		[Export ("captureOutput:didStartRecordingToOutputFileAtURL:fromConnections:")]
 		void DidStartRecording (AVCaptureFileOutput captureOutput, NSUrl outputFileUrl, NSObject [] connections);
 
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("captureOutput:didFinishRecordingToOutputFileAtURL:fromConnections:error:"), CheckDisposed]
 		void FinishedRecording (AVCaptureFileOutput captureOutput, NSUrl outputFileUrl, NSObject [] connections, [NullAllowed] NSError error);
 
@@ -9274,19 +9155,11 @@ namespace AVFoundation {
 		DispatchQueue CallbackQueue { get;  }
 
 		[Export ("availableMetadataObjectTypes")]
-#if XAMCORE_2_0
 		NSString [] WeakAvailableMetadataObjectTypes { get;  }
-#else
-		NSString [] AvailableMetadataObjectTypes { get;  }
-#endif
 
 		[NullAllowed]
 		[Export ("metadataObjectTypes", ArgumentSemantic.Copy)]
-#if XAMCORE_2_0
 		NSString [] WeakMetadataObjectTypes { get; set;  }
-#else
-		NSString [] MetadataObjectTypes { get; set;  }
-#endif
 
 		[Export ("setMetadataObjectsDelegate:queue:")]
 		void SetDelegate ([NullAllowed][Protocolize] AVCaptureMetadataOutputObjectsDelegate objectsDelegate, [NullAllowed] DispatchQueue objectsCallbackQueue);
@@ -10748,9 +10621,6 @@ namespace AVFoundation {
 #endif
 	}
 
-#if !XAMCORE_2_0
-	delegate void AVCompletionHandler ();
-#endif
 	delegate void AVCaptureCompletionHandler (CMSampleBuffer imageDataSampleBuffer, NSError error);
 
 	[Watch (6,0)]
@@ -10809,11 +10679,7 @@ namespace AVFoundation {
 		void ReplaceCurrentItemWithPlayerItem ([NullAllowed] AVPlayerItem item);
 
 		[Export ("addPeriodicTimeObserverForInterval:queue:usingBlock:")]
-#if XAMCORE_2_0
 		NSObject AddPeriodicTimeObserver (CMTime interval, [NullAllowed] DispatchQueue queue, Action<CMTime> handler);
-#else
-		NSObject AddPeriodicTimeObserver (CMTime interval, [NullAllowed] DispatchQueue queue, AVTimeHandler handler);
-#endif
 
 		[Export ("addBoundaryTimeObserverForTimes:queue:usingBlock:")]
 		NSObject AddBoundaryTimeObserver (NSValue [] times, [NullAllowed] DispatchQueue queue, Action handler);
@@ -11112,10 +10978,6 @@ namespace AVFoundation {
 		[Override]
 		CMTimeRange TimeRange { get; set; }
 	}
-
-#if !XAMCORE_2_0
-	delegate void AVTimeHandler (CMTime time);
-#endif
 
 	interface AVPlayerItemErrorEventArgs {
 		[Export ("AVPlayerItemFailedToPlayToEndTimeErrorKey")]
@@ -12042,12 +11904,6 @@ namespace AVFoundation {
 
 		[Static, Export ("playerLayerWithPlayer:")]
 		AVPlayerLayer FromPlayer ([NullAllowed] AVPlayer player);
-
-#if !XAMCORE_2_0
-		[Advice ("Use 'LayerVideoGravity' property instead.")]
-		[Export ("videoGravity", ArgumentSemantic.Copy)][Sealed]
-		string VideoGravity { get; set; }
-#endif
 
 		[Export ("videoGravity", ArgumentSemantic.Copy)][Protected]
 		NSString WeakVideoGravity { get; set; }
@@ -13019,10 +12875,8 @@ namespace AVFoundation {
 		[Export ("allTagNames")]
 		string[] AllTagNames { get; }
 
-#if XAMCORE_2_0
 		[Export ("audioComponentDescription")]
 		AudioComponentDescription AudioComponentDescription { get; }
-#endif
 		[iOS (9,0), Mac (10,10)]
 		[Field ("AVAudioUnitComponentTagsDidChangeNotification")]
 		[Notification]
@@ -13052,10 +12906,8 @@ namespace AVFoundation {
 		[Export ("componentsPassingTest:")]
 		AVAudioUnitComponent[] GetComponents (AVAudioUnitComponentFilter testHandler);
 
-#if XAMCORE_2_0
 		[Export ("componentsMatchingDescription:")]
 		AVAudioUnitComponent[] GetComponents (AudioComponentDescription desc);
-#endif
 
 		[Notification]
 		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
@@ -13073,7 +12925,7 @@ namespace AVFoundation {
 		NSString Apple { get; }
 	}
 
-#if !MONOMAC && XAMCORE_2_0 // FIXME: Unsure about if CMMetadataFormatDescription will be an INativeObject and will need manual binding for Classic
+#if !MONOMAC // FIXME: Unsure about if CMMetadataFormatDescription will be an INativeObject and will need manual binding for Classic
 	[NoWatch]
 	[NoTV]
 	[iOS (9,0)]

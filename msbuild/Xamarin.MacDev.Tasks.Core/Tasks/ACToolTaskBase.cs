@@ -86,15 +86,8 @@ namespace Xamarin.MacDev.Tasks
 
 		protected override void AppendCommandLineArguments (IDictionary<string, string> environment, CommandLineArgumentBuilder args, ITaskItem[] items)
 		{
-			string minimumDeploymentTarget;
-
 			if (plist != null) {
 				PString value;
-
-				if (!plist.TryGetValue (MinimumDeploymentTargetKey, out value) || string.IsNullOrEmpty (value.Value))
-					minimumDeploymentTarget = SdkVersion;
-				else
-					minimumDeploymentTarget = value.Value;
 
 				var assetDirs = new HashSet<string> (items.Select (x => BundleResource.GetVirtualProjectPath (ProjectDir, x, !string.IsNullOrEmpty (SessionId))));
 
@@ -149,8 +142,6 @@ namespace Xamarin.MacDev.Tasks
 
 				if (plist.TryGetValue (ManifestKeys.CLKComplicationGroup, out value) && !string.IsNullOrEmpty (value.Value))
 					args.Add ("--complication", value);
-			} else {
-				minimumDeploymentTarget = SdkVersion;
 			}
 
 			if (OptimizePNGs)
@@ -177,7 +168,7 @@ namespace Xamarin.MacDev.Tasks
 					args.Add ("--target-device", targetDevice);
 			}
 
-			args.Add ("--minimum-deployment-target", minimumDeploymentTarget);
+			args.Add ("--minimum-deployment-target", MinimumOSVersion);
 
 			var platform = PlatformUtils.GetTargetPlatform (SdkPlatform, IsWatchApp);
 

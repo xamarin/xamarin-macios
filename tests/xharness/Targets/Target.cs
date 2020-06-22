@@ -10,7 +10,7 @@ namespace Xharness.Targets
 {
 	public abstract class Target
 	{
-		public Harness Harness;
+		public IHarness Harness;
 
 		protected XmlDocument inputProject;
 		string outputType;

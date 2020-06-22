@@ -7,21 +7,16 @@ using System.Reflection;
 using System.Text;
 using NUnit.Framework;
 
+using Xamarin;
+
 namespace Xamarin.MMP.Tests
 {
 	[TestFixture]
 	public partial class MMPTests
 	{
-		void RunMSBuildTest (Action <string> test)
+		void RunMSBuildTest (Action <string> test, string directory_name = null)
 		{
-			string tmpDir = Path.Combine (Path.GetTempPath (), "msbuild-tests");
-			try {
-				Directory.CreateDirectory (tmpDir);
-				test (tmpDir);
-			}
-			finally {
-				Directory.Delete (tmpDir, true);
-			}
+			test (Cache.CreateTemporaryDirectory (directory_name ?? "msbuild-tests"));
 		}
 
 		[Test]
@@ -135,7 +130,7 @@ namespace Xamarin.MMP.Tests
 				Assert.IsTrue (File.Exists (Path.Combine (tmpDir, "bin/Debug/UnifiedExample.app/Contents/MonoBundle/SimpleClassDylib.dylib")));
 
 				StringBuilder output = new StringBuilder ();
-				Xamarin.Bundler.Driver.RunCommand ("/usr/bin/otool", new [] { "-L", Path.Combine (tmpDir, "bin/Debug/UnifiedExample.app/Contents/MacOS/UnifiedExample") }, null, output);
+				Xamarin.Bundler.Driver.RunCommand ("/usr/bin/otool", new [] { "-L", Path.Combine (tmpDir, "bin/Debug/UnifiedExample.app/Contents/MacOS/UnifiedExample") }, output);
 				Assert.IsTrue (output.ToString ().Contains ("SimpleClassDylib.dylib"));
 			});
 		}

@@ -115,14 +115,14 @@ namespace Xamarin.MMP.Tests
 
 		void AssertNoLipoOrWarning (string buildOutput, string context)
 		{
-			Assert.False (DidAnyLipoStrip (buildOutput), "lipo incorrectly run in context: " + context + "\n" + buildOutput);
-			Assert.False (buildOutput.Contains ("MM2108"), "MM2108 incorrectly given in in context: " + context + "\n" + buildOutput);
+			Assert.False (DidAnyLipoStrip (buildOutput), "lipo incorrectly run in context: " + context);
+			Assert.False (buildOutput.Contains ("MM2108"), "MM2108 incorrectly given in in context: " + context);
 		}
 
 		void AssertLipoOnlyMonoPosixAndMonoNative (string buildOutput, string context)
 		{
-			Assert.False (DidAnyLipoStripSkipPosixAndMonoNative (buildOutput), "lipo incorrectly run in context outside of libMonoPosixHelper/libmono-native: " + context + "\n" + buildOutput);
-			Assert.False (buildOutput.Contains ("MM2108"), "MM2108 incorrectly given in in context: " + context + "\n" + buildOutput);
+			Assert.False (DidAnyLipoStripSkipPosixAndMonoNative (buildOutput), "lipo incorrectly run in context outside of libMonoPosixHelper/libmono-native: " + context);
+			Assert.False (buildOutput.Contains ("MM2108"), "MM2108 incorrectly given in in context: " + context);
 		}
 
 		[TestCase (false)]
@@ -142,8 +142,8 @@ namespace Xamarin.MMP.Tests
 				// Should always lipo/warn in Release
 				test.Release = true;
 				buildOutput = TI.TestUnifiedExecutable (test).BuildOutput;
-				Assert.True (DidAnyLipoStrip (buildOutput), $"lipo did not run in release\n{buildOutput}");
-				Assert.True (buildOutput.Contains ("MM2108"), $"MM2108 not given in release\n{buildOutput}");
+				Assert.True (DidAnyLipoStrip (buildOutput), $"lipo did not run in release");
+				Assert.True (buildOutput.Contains ("MM2108"), $"MM2108 not given in release");
 
 			});
 		}

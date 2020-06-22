@@ -1,6 +1,6 @@
 ﻿namespace Xamarin.MacDev.Tasks
 {
-	enum NativeReferenceKind {
+	public enum NativeReferenceKind {
 		Static,
 		Dynamic,
 		Framework

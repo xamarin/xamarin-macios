@@ -106,7 +106,7 @@ public partial class Generator {
 		print ("");
 
 		// string constructor
-		// default is protected (for abstract) but backward compatibility (XAMCORE_2_0) requires some hacks
+		// default is protected (for abstract)
 		v = GetVisibility (filter.StringCtorVisibility);
 		if (is_abstract && (v.Length == 0))
 			v = "protected ";

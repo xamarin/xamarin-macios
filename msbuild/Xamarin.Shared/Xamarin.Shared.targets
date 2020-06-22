@@ -17,6 +17,14 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 <!-- This is shared between Xamarin.iOS and Xamarin.Mac -->
 
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<PropertyGroup Condition="'$(_TaskAssemblyName)' == ''">
+		<_TaskAssemblyName Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">Xamarin.iOS.Tasks.dll</_TaskAssemblyName>
+		<_TaskAssemblyName Condition="'$(_PlatformName)' == 'macOS'">Xamarin.Mac.Tasks.dll</_TaskAssemblyName>
+	</PropertyGroup>
+
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.GetMinimumOSVersion" AssemblyFile="$(_TaskAssemblyName)" />
+
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets')"/>
 
@@ -67,6 +75,50 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</ItemGroup>
 	</Target>
 
+	<PropertyGroup>
+		<_CompileAppManifestDependsOn>
+			$(_CompileAppManifestDependsOn);
+			_DetectSdkLocations;
+			_GetMinimumOSVersion;
+			_GenerateBundleName;
+			_DetectSigningIdentity;
+			_ComputeTargetFrameworkMoniker;
+		</_CompileAppManifestDependsOn>
+	</PropertyGroup>
+
+	<Target Name="_CompileAppManifest"
+		DependsOnTargets="$(_CompileAppManifestDependsOn)"
+		Inputs="$(_AppManifest);@(_PartialAppManifest)"
+		Outputs="$(_AppBundlePath)$(_AppBundleManifestRelativePath)Info.plist" >
+		<CompileAppManifest
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			AppBundleName="$(_AppBundleName)"
+			AppManifest="$(_AppManifest)"
+			AppManifestBundleDirectory="$(_AppBundlePath)$(_AppBundleManifestRelativePath)"
+			AssemblyName="$(AssemblyName)"
+			BundleIdentifier="$(_BundleIdentifier)"
+			Debug="$(_BundlerDebug)"
+			DefaultSdkVersion="$(_SdkVersion)"
+			IsAppExtension="$(IsAppExtension)"
+			IsWatchApp="$(IsWatchApp)"
+			IsWatchExtension="$(IsWatchExtension)"
+			IsXPCService="$(IsXPCService)"
+			MinimumOSVersion="$(_MinimumOSVersion)"
+			PartialAppManifests="@(_PartialAppManifest)"
+			ResourceRules="$(_PreparedResourceRules)"
+			TargetArchitectures="$(TargetArchitectures)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+			SdkPlatform="$(_SdkPlatform)"
+			SdkIsSimulator="$(_SdkIsSimulator)"
+			DebugIPAddresses="$(_DebugIPAddresses)"
+			>
+		</CompileAppManifest>
+
+		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(AppBundleDir).dSYM" />
+		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(DeviceSpecificOutputPath)*.bcsymbolmap" />
+	</Target>
+
 	<Target Name="_ComputeTargetArchitectures" DependsOnTargets="_ComputeTargetFrameworkMoniker">
 		<!--
 			For now, this target is mostly for Xamarin.iOS, but in order to
@@ -78,7 +130,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<ParseDeviceSpecificBuildInformation
 			SessionId="$(BuildSessionId)"
 			Condition="'$(DeviceSpecificBuild)' == 'true' And '$(TargetiOSDevice)' != '' And '$(_CanDeployToDeviceOrSimulator)' == 'true' And '$(_PlatformName)' != 'macOS'"
-			Architectures="$(MtouchArch)"
+			Architectures="$(TargetArchitectures)"
 			IntermediateOutputPath="$(IntermediateOutputPath)"
 			OutputPath="$(OutputPath)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
@@ -110,11 +162,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 			<!-- TextureAtlas output caches -->
 			<_TextureAtlasCache>$(DeviceSpecificIntermediateOutputPath)atlas\_BundleResourceWithLogicalName.items</_TextureAtlasCache>
-		</PropertyGroup>
-
-		<PropertyGroup Condition="'$(TargetArchitectures)' == ''">
-			<TargetArchitectures Condition="'$(_PlatformName)' == 'macOS'">$(XamMacArch)</TargetArchitectures>
-			<TargetArchitectures Condition="'$(_PlatformName)' != 'macOS'">$(MtouchArch)</TargetArchitectures>
 		</PropertyGroup>
 	</Target>
 
@@ -153,6 +200,65 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<Output TaskParameter="Item" PropertyName="_AppManifest" />
 		</FindItemWithLogicalName>
 		<Error Condition="'$(_AppManifest)' == '' And '$(_CanOutputAppBundle)' == 'true'" Text="Info.plist not found."/>
+	</Target>
+
+	<Target Name="_GetMinimumOSVersion" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_ComputeTargetFrameworkMoniker">
+		<GetMinimumOSVersion
+			SessionId="$(BuildSessionId)"
+			AppManifest="$(_AppManifest)"
+			SdkVersion="$(_SdkVersion)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+			>
+			<Output TaskParameter="MinimumOSVersion" PropertyName="_MinimumOSVersion" />
+		</GetMinimumOSVersion>
+	</Target>
+
+	<Target Name="_DetectSigningIdentity" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_ComputeTargetFrameworkMoniker">
+		<DetectSigningIdentity
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			AppBundleName="$(_AppBundleName)"
+			AppManifest="$(_AppManifest)"
+			Keychain="$(CodesignKeychain)"
+			RequireCodeSigning="$(_RequireCodeSigning)"
+			RequireProvisioningProfile="$(_RequireProvisioningProfile)"
+			SdkIsSimulator="$(_SdkIsSimulator)"
+			SdkPlatform="$(_SdkPlatform)"
+			ProvisioningProfile="$(CodesignProvision)"
+			SigningKey="$(_SpecifiedCodesignKey)"
+			DetectedCodeSigningKey="$(_CodeSigningKey)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+			>
+
+			<Output TaskParameter="DetectedAppId" PropertyName="_AppIdentifier" />
+			<Output TaskParameter="DetectedBundleId" PropertyName="_BundleIdentifier" />
+			<Output TaskParameter="DetectedBundleVersion" PropertyName="_BundleVersion" />
+			<Output TaskParameter="DetectedCodeSigningKey" PropertyName="_CodeSigningKey" />
+			<Output TaskParameter="DetectedCodesignAllocate" PropertyName="_CodesignAllocate" />
+			<Output TaskParameter="DetectedDistributionType" PropertyName="_DistributionType" />
+			<Output TaskParameter="DetectedProvisioningProfile" PropertyName="_ProvisioningProfile" />
+		</DetectSigningIdentity>
+	</Target>
+
+	<Target Name="_DetectSdkLocations" DependsOnTargets="_ComputeTargetArchitectures;_ComputeTargetFrameworkMoniker">
+		<DetectSdkLocations
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			SdkVersion="$(_SdkVersion)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+			TargetArchitectures="$(TargetArchitectures)"
+			>
+
+			<Output TaskParameter="SdkVersion" PropertyName="_SdkVersion" />
+			<Output TaskParameter="SdkRoot" PropertyName="_SdkRoot" />
+			<Output TaskParameter="SdkBinPath" PropertyName="_SdkBinPath" />
+			<Output TaskParameter="SdkDevPath" PropertyName="_SdkDevPath" />
+			<Output TaskParameter="SdkUsrPath" PropertyName="_SdkUsrPath" />
+			<Output TaskParameter="SdkPlatform" PropertyName="_SdkPlatform" />
+			<Output TaskParameter="SdkIsSimulator" PropertyName="_SdkIsSimulator" />
+			<Output TaskParameter="IsXcode8" PropertyName="_IsXcode8" />
+			<Output TaskParameter="XamarinSdkRoot" PropertyName="_XamarinSdkRoot" />
+		</DetectSdkLocations>
 	</Target>
 
 	<!-- Code signing -->

@@ -25,7 +25,7 @@
 //
 #endregion
 
-#if OPENTK_DLL || !XAMCORE_2_0
+#if OPENTK_DLL
 
 using System;
 using System.Collections.Generic;
@@ -81,4 +81,4 @@ namespace OpenTK.Platform
 	}
 }
 
-#endif // !XAMCORE_2_0
+#endif // OPENTK_DLL

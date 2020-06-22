@@ -1,0 +1,31 @@
+# Runs the device tests on iOS 32b devices.
+parameters:
+- name: disableProvisionatorCache
+  type: boolean
+  default: false
+
+- name: clearProvisionatorCache
+  type: boolean
+  default: false
+
+variables:
+  - template: templates/common-variables.yml
+  - template: templates/cambridge-variables.yml
+
+resources:
+  repositories:
+  - repository: maccore
+    type: github
+    name: xamarin/maccore
+    ref: refs/heads/main
+    endpoint: xamarin
+
+stages:
+- template: templates/device-tests-stage.yml
+  parameters:
+    iOSDevicePool: ${{ variables.iOSDevicePool }}
+    WindowsDevicePool: ${{ variables.WindowsDevicePool }}
+    htmlReportStorage: ${{ variables.htmlReportStorage }}
+    testsLabels: '--label=run-ios-32-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
+    statusContext: 'VSTS: device tests iOS32b (Cambridge)'
+    iOSDeviceDemand: 'xismoke-32' 

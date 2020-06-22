@@ -35,7 +35,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Diagnostics;
 using System.ComponentModel;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -755,8 +754,6 @@ namespace Xamarin.Bundler {
 			using (var sw = new StringWriter (sb)) {
 				sw.WriteLine ("#define MONOMAC 1");
 				sw.WriteLine ("#include <xamarin/xamarin.h>");
-				sw.WriteLine ("#import <AppKit/NSAlert.h>");
-				sw.WriteLine ("#import <Foundation/NSDate.h>"); // 10.7 wants this even if not needed on 10.9
 				if (App.Registrar == RegistrarMode.PartialStatic)
 					sw.WriteLine ("extern \"C\" void xamarin_create_classes_Xamarin_Mac ();");
 				sw.WriteLine ();
@@ -766,7 +763,7 @@ namespace Xamarin.Bundler {
 
 				sw.WriteLine ("{");
 				if (App.CustomBundleName != null) {
-					sw.WriteLine ("extern NSString* xamarin_custom_bundle_name;");
+					sw.WriteLine ("\textern NSString* xamarin_custom_bundle_name;");
 					sw.WriteLine ("\txamarin_custom_bundle_name = @\"" + App.CustomBundleName + "\";");
 				}
 				if (!App.IsDefaultMarshalManagedExceptionMode)
@@ -1086,10 +1083,10 @@ namespace Xamarin.Bundler {
 
 		static string RunPkgConfig (string option, bool force_system_mono = false)
 		{
-			string [] env = null;
+			Dictionary<string, string> env = null;
 
 			if (!IsUnifiedFullSystemFramework && !force_system_mono)
-				env = new [] { "PKG_CONFIG_PATH", Path.Combine (FrameworkLibDirectory, "pkgconfig") };
+				env = new Dictionary<string, string> { { "PKG_CONFIG_PATH", Path.Combine (FrameworkLibDirectory, "pkgconfig") } };
 
 			var sb = new StringBuilder ();
 			int rv;

@@ -68,10 +68,7 @@ namespace CoreGraphics {
 
 #if !XAMCORE_3_0
 		[Obsolete ("Use a real 'null' value instead of this managed wrapper over a null native instance.")]
-#if XAMCORE_2_0
-		readonly
-#endif
-		public static CGColorSpace Null = new CGColorSpace (IntPtr.Zero);
+		public readonly static CGColorSpace Null = new CGColorSpace (IntPtr.Zero);
 #endif
 
 		// Invoked by the marshallers, we need to take a ref

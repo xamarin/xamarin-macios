@@ -2467,7 +2467,7 @@ xamarin_vprintf (const char *format, va_list args)
 	
 #if TARGET_OS_WATCH && defined (__arm__) // maybe make this configurable somehow?
 	const char *msg = [message UTF8String];
-	size_t len = strlen (msg);
+	NSUInteger len = [message lengthOfBytesUsingEncoding:NSUTF8StringEncoding] + 1; // does not include NULL
 	fwrite (msg, 1, len, stdout);
 	if (len == 0 || msg [len - 1] != '\n')
 		fwrite ("\n", 1, 1, stdout);
@@ -2499,7 +2499,9 @@ xamarin_vprintf (const char *format, va_list args)
 void
 xamarin_get_assembly_name_without_extension (const char *aname, char *name, size_t namelen)
 {
-	size_t len = strlen (aname);
+	size_t len = strnlen (aname, namelen);
+	if (len == namelen)
+		return;
 	strlcpy (name, aname, namelen);
 	if (namelen <= 4 || len <= 4)
 		return;

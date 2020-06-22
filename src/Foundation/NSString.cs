@@ -315,23 +315,8 @@ namespace Foundation {
 		
 		public override int GetHashCode ()
 		{
-#if XAMCORE_2_0
-			// for unified NSObject already deals with `hash` for both 32/64 bits
 			return base.GetHashCode ();
-#else
-			// for classic there's no GetHashCode override in NSObject, so Hash makes sense
-			return (int) GetNativeHash ();
-#endif
 		}
-
-#if !MONOMAC && !XAMCORE_2_0
-		[Advice ("Use the version with a `ref float actualFontSize`")]
-		public CGSize DrawString (CGPoint point, nfloat width, UIKit.UIFont font, nfloat minFontSize, nfloat actualFontSize, UIKit.UILineBreakMode breakMode, UIKit.UIBaselineAdjustment adjustment)
-		{
-			nfloat temp = actualFontSize;
-			return DrawString (point, width, font, minFontSize, ref temp, breakMode, adjustment);
-		}
-#endif
 #endif // !COREBUILD
 	}
 }

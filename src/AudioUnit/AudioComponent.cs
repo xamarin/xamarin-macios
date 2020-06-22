@@ -225,35 +225,13 @@ namespace AudioUnit
 			return new AudioUnit (this);
 		}
 
-#if !XAMCORE_2_0
-		[Obsolete ("Use the overload that accept a ref to the 'AudioComponentDescription' parameter.")]
-		public static AudioComponent FindNextComponent (AudioComponent cmp, AudioComponentDescription cd)
-		{
-			return FindNextComponent (cmp, ref cd);
-		}
-
-		[Obsolete ("Use the overload that accept a ref to the 'AudioComponentDescription' parameter.")]
-		public static AudioComponent FindComponent (AudioComponentDescription cd)
-		{
-			return FindNextComponent (null, ref cd);
-		}
-
-		public static AudioComponent FindNextComponent (AudioComponent cmp, ref AudioComponentDescription cd)
-		{
-			var handle = cmp == null ? IntPtr.Zero : cmp.Handle;
-			var cdn = new AudioComponentDescriptionNative (cd);
-			handle = AudioComponentFindNext (handle, ref cdn);
-			cdn.CopyTo (cd);
-			return  (handle != IntPtr.Zero) ? new AudioComponent (handle) : null;
-		}
-#else
 		public static AudioComponent FindNextComponent (AudioComponent cmp, ref AudioComponentDescription cd)
 		{
 			var handle = cmp == null ? IntPtr.Zero : cmp.Handle;
 			handle = AudioComponentFindNext (handle, ref cd);
 			return  (handle != IntPtr.Zero) ? new AudioComponent (handle) : null;
 		}
-#endif
+
 		public static AudioComponent FindComponent (ref AudioComponentDescription cd)
 		{
 			return FindNextComponent (null, ref cd);
@@ -302,11 +280,7 @@ namespace AudioUnit
 		}
 
 		[DllImport(Constants.AudioUnitLibrary)]
-#if XAMCORE_2_0
 		static extern IntPtr AudioComponentFindNext (IntPtr inComponent, ref AudioComponentDescription inDesc);
-#else
-		static extern IntPtr AudioComponentFindNext (IntPtr inComponent, ref AudioComponentDescriptionNative inDesc);
-#endif
 		
 		[DllImport(Constants.AudioUnitLibrary, EntryPoint = "AudioComponentCopyName")]
 		static extern int /* OSStatus */ AudioComponentCopyName (IntPtr component, out IntPtr cfstr);
@@ -320,7 +294,6 @@ namespace AudioUnit
 			}
 		}
 	
-#if XAMCORE_2_0
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern int /* OSStatus */ AudioComponentGetDescription (IntPtr component, out AudioComponentDescription desc);
 
@@ -334,20 +307,6 @@ namespace AudioUnit
 				return null;
 			}
 		}
-#else
-		[DllImport (Constants.AudioUnitLibrary)]
-		static extern int /* OSStatus */ AudioComponentGetDescription (IntPtr component, out AudioComponentDescriptionNative desc);
-		public AudioComponentDescription Description {
-			get {
-				AudioComponentDescriptionNative desc;
-
-				if (AudioComponentGetDescription (handle, out desc) == 0)
-					return new AudioComponentDescription (desc);
-
-				return null;
-			}
-		}
-#endif
 
 		[DllImport(Constants.AudioUnitLibrary)]
 		static extern int /* OSStatus */ AudioComponentGetVersion (IntPtr component, out int /* UInt32* */ version);

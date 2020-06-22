@@ -13,7 +13,7 @@ using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.MacDev.Tasks
 {
-	public class CreateInstallerPackageTaskBase : XamarinToolTask
+	public abstract class CreateInstallerPackageTaskBase : XamarinToolTask
 	{
 		#region Inputs
 		[Required]

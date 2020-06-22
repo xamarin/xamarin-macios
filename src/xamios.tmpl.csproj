@@ -20,7 +20,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>build\IDE\bin\iOS\Debug</OutputPath>
-    <DefineConstants>IPHONE;IOS;MINIMAL;XAMCORE_2_0;MONOTOUCH</DefineConstants>
+    <DefineConstants>IPHONE;IOS;MINIMAL;MONOTOUCH</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
@@ -32,7 +32,7 @@
     <DebugType>none</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>build\IDE\bin\iOS\Release</OutputPath>
-    <DefineConstants>IPHONE;IOS;MINIMAL;XAMCORE_2_0;MONOTOUCH</DefineConstants>
+    <DefineConstants>IPHONE;IOS;MINIMAL;MONOTOUCH</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>

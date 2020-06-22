@@ -85,7 +85,6 @@ namespace SceneKit {
 #endif
 
 #if !XAMCORE_4_0
-#if XAMCORE_2_0 || !MONOMAC
 	public abstract partial class SCNSceneRenderer : NSObject {
 		[Mac (10, 10)]
 		[Obsolete ("Use 'SCNSceneRenderer_Extensions.PrepareAsync' instead.")]
@@ -102,7 +101,6 @@ namespace SceneKit {
 			return SCNSceneRenderer_Extensions.PresentSceneAsync (this, scene, transition, pointOfView);
 		}
 	}
-#endif
 #endif
 
 

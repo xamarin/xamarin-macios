@@ -9,7 +9,6 @@ using Foundation;
 using ObjCRuntime;
 
 namespace Contacts {
-#if XAMCORE_2_0 // The Contacts framework uses generics heavily, which is only supported in Unified (for now at least)
 	public partial class CNContactFetchRequest {
 
 		public CNContactFetchRequest (params ICNKeyDescriptor [] keysToFetch)
@@ -60,5 +59,4 @@ namespace Contacts {
 			return NSArray.FromNativeObjects (keysToFetch);
 		}
 	}
-#endif // XAMCORE_2_0
 }

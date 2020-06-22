@@ -1,4 +1,3 @@
-#if XAMCORE_2_0 || !MONOMAC
 //
 // ModelIO/MIEnums.cs: enumerations and definitions
 //
@@ -235,4 +234,3 @@ namespace ModelIO {
 		}
 	}
 }
-#endif

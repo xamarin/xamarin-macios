@@ -6,7 +6,7 @@
 //
 // Copyright 2015 Xamarin Inc. All rights reserved.
 //
-#if XAMCORE_2_0 || !MONOMAC
+
 using System;
 using Foundation;
 using Metal;
@@ -97,4 +97,3 @@ namespace MetalKit {
 	}
 #endif
 }
-#endif

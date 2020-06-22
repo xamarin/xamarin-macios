@@ -4,7 +4,6 @@ using System.Linq;
 using System.Collections.Generic;
 
 using Microsoft.Build.Framework;
-using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev.Tasks;
 using Xamarin.MacDev;
@@ -13,85 +12,18 @@ using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.iOS.Tasks
 {
-	public abstract class CompileAppManifestTaskBase : Xamarin.MacDev.Tasks.CompileAppManifestTaskBase
+	public abstract class CompileAppManifestTaskCore : CompileAppManifestTaskBase
 	{
-		[Required]
-		public string DefaultSdkVersion { get; set; }
-
-		[Required]
-		public bool IsWatchApp { get; set; }
-
-		[Required]
-		public bool IsWatchExtension { get; set; }
-
-		[Required]
-		public string SdkPlatform { get; set; }
-
-		[Required]
-		public bool SdkIsSimulator { get; set; }
-
-		public string TargetArchitectures { get; set; }
-
-		[Required]
-		public bool Debug { get; set; }
-
-		public bool UseFakeWatchOS4_3Sdk { get; set; }
-
-		public string DebugIPAddresses { get; set; }
-
-		public string ResourceRules { get; set; }
-
-		TargetArchitecture architectures;
 		IPhoneDeviceType supportedDevices;
-		IPhoneSdkVersion minimumOSVersion;
 		IPhoneSdkVersion sdkVersion;
 
-		bool IsIOS;
+		bool IsIOS { get { return Platform == ApplePlatform.iOS; } }
 
-		public override bool Execute ()
-		{
-			PDictionary plist;
-
-			try {
-				plist = PDictionary.FromFile (AppManifest);
-			} catch (Exception ex) {
-				LogAppManifestError (MSBStrings.E0010, AppManifest, ex.Message);
-				return false;
-			}
-
-			sdkVersion = IPhoneSdkVersion.Parse (DefaultSdkVersion);
-			var text = plist.GetMinimumOSVersion ();
-			if (string.IsNullOrEmpty (text)) {
-				minimumOSVersion = sdkVersion;
-			} else if (!IPhoneSdkVersion.TryParse (text, out minimumOSVersion)) {
-				LogAppManifestError (MSBStrings.E0011, text);
-				return false;
-			}
-
-			switch (Platform) {
-			case ApplePlatform.iOS:
-				IsIOS = true;
-				break;
-			case ApplePlatform.WatchOS:
-				break;
-			case ApplePlatform.TVOS:
-				break;
-			default:
-				throw new InvalidOperationException (string.Format ("Invalid platform: {0}", Platform));
-			}
-
-			if (!string.IsNullOrEmpty (TargetArchitectures) && !Enum.TryParse (TargetArchitectures, out architectures)) {
-				LogAppManifestError (MSBStrings.E0012, TargetArchitectures);
-				return false;
-			}
-
-			return Compile (plist);
-		}
-
-		bool Compile (PDictionary plist)
+		protected override bool Compile (PDictionary plist)
 		{
 			var currentSDK = IPhoneSdks.GetSdk (Platform);
 
+			sdkVersion = IPhoneSdkVersion.Parse (DefaultSdkVersion);
 			if (!currentSDK.SdkIsInstalled (sdkVersion, SdkIsSimulator)) {
 				Log.LogError (null, null, null, null, 0, 0, 0, 0, MSBStrings.E0013, Platform, sdkVersion);
 				return false;
@@ -123,7 +55,6 @@ namespace Xamarin.iOS.Tasks
 			// This differs from iOS 10 where the presence of the CFBundleDevelopmentRegion key had no effect. Commenting this line out, ensures that CurrentCulture is correct and behaves like the iOS 10 version.
 			// plist.SetIfNotPresent (ManifestKeys.CFBundleDevelopmentRegion, "en");
 
-			plist.SetIfNotPresent (ManifestKeys.CFBundleExecutable, AssemblyName);
 			if (IsIOS) {
 				var executable = plist.GetCFBundleExecutable ();
 				if (executable.EndsWith (".app", StringComparison.Ordinal))
@@ -131,24 +62,16 @@ namespace Xamarin.iOS.Tasks
 			}
 
 			if (IsIOS) {
-				if (minimumOSVersion < IPhoneSdkVersion.V5_0 && plist.GetUIMainStoryboardFile (true) != null)
-					LogAppManifestError (MSBStrings.E0015);
-
 				if (!plist.ContainsKey (ManifestKeys.CFBundleName))
 					plist [ManifestKeys.CFBundleName] = plist.ContainsKey (ManifestKeys.CFBundleDisplayName) ? plist.GetString (ManifestKeys.CFBundleDisplayName).Clone () : new PString (AppBundleName);
 			} else {
 				plist.SetIfNotPresent (ManifestKeys.CFBundleName, AppBundleName);
 			}
 
-			plist.SetIfNotPresent (ManifestKeys.CFBundleIdentifier, BundleIdentifier);
-			plist.SetIfNotPresent (ManifestKeys.CFBundleInfoDictionaryVersion, "6.0");
-			plist.SetIfNotPresent (ManifestKeys.CFBundlePackageType, IsAppExtension ? "XPC!" : "APPL");
 			if (!string.IsNullOrEmpty (ResourceRules))
 				plist.SetIfNotPresent (ManifestKeys.CFBundleResourceSpecification, Path.GetFileName (ResourceRules));
-			plist.SetIfNotPresent (ManifestKeys.CFBundleSignature, "????");
 			if (!plist.ContainsKey (ManifestKeys.CFBundleSupportedPlatforms))
 				plist[ManifestKeys.CFBundleSupportedPlatforms] = new PArray { SdkPlatform };
-			plist.SetIfNotPresent (ManifestKeys.CFBundleVersion, "1.0");
 			plist.SetIfNotPresent (ManifestKeys.CFBundleShortVersionString, plist.GetCFBundleVersion ());
 
 			string dtCompiler = null;
@@ -181,26 +104,6 @@ namespace Xamarin.iOS.Tasks
 				dtXcodeBuild = dtSettings.DTXcodeBuild;
 			}
 
-			if (UseFakeWatchOS4_3Sdk) {
-				// This is a workaround for https://github.com/xamarin/xamarin-macios/issues/4810
-				if (Platform == ApplePlatform.WatchOS) {
-					if (dtPlatformBuild != null)
-						dtPlatformBuild = "15T212";
-					if (dtPlatformVersion != null)
-						dtPlatformVersion = "4.3";
-					if (dtSDKBuild != null)
-						dtSDKBuild = "15T212";
-					if (dtSDKName != null)
-						dtSDKName = "watchos4.3";
-					if (dtXcode != null)
-						dtXcode = "0940";
-					if (dtXcodeBuild != null)
-						dtXcodeBuild = "9F1027a";
-				} else {
-					Log.LogWarning (MSBStrings.W0016);
-				}
-			}
-
 			SetValueIfNotNull (plist, "DTCompiler", dtCompiler);
 			SetValueIfNotNull (plist, "DTPlatformBuild", dtPlatformBuild);
 			SetValueIfNotNull (plist, "DTSDKBuild", dtSDKBuild);
@@ -211,8 +114,6 @@ namespace Xamarin.iOS.Tasks
 			SetValueIfNotNull (plist, "DTXcodeBuild", dtXcodeBuild);
 
 			SetDeviceFamily (plist);
-
-			plist.SetIfNotPresent (ManifestKeys.MinimumOSVersion, minimumOSVersion.ToString ());
 
 			if (IsWatchExtension) {
 				// Note: Only watchOS1 Extensions target Xamarin.iOS
@@ -254,16 +155,10 @@ namespace Xamarin.iOS.Tasks
 			plist.Remove (ManifestKeys.XSLaunchImageAssets);
 			plist.Remove (ManifestKeys.XSAppIconAssets);
 
-			// Merge with any partial plists generated by the Asset Catalog compiler...
-			MergePartialPlistTemplates (plist);
-
 			SetRequiredArchitectures (plist);
 
 			if (IsIOS)
 				Validation (plist);
-
-			CompiledAppManifest = new TaskItem (Path.Combine (AppBundleDir, "Info.plist"));
-			plist.Save (CompiledAppManifest.ItemSpec, true, true);
 
 			return !Log.HasLoggedErrors;
 		}
@@ -369,7 +264,7 @@ namespace Xamarin.iOS.Tasks
 				if (!IsAppExtension)
 					plist.SetIfNotPresent (ManifestKeys.LSRequiresIPhoneOS, true);
 
-				if (minimumOSVersion >= IPhoneSdkVersion.V3_2 && supportedDevices == IPhoneDeviceType.NotSet)
+				if (supportedDevices == IPhoneDeviceType.NotSet)
 					plist.SetUIDeviceFamily (IPhoneDeviceType.IPhone);
 			}
 		}

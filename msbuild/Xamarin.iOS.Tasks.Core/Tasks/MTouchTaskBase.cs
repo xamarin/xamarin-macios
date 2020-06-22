@@ -13,32 +13,6 @@ using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.iOS.Tasks
 {
-	[Flags]
-	enum TargetArchitecture
-	{
-		Default      = 0,
-
-		i386         = 1,
-		x86_64       = 2,
-
-		ARMv6        = 4,
-		ARMv7        = 8,
-		ARMv7s       = 16,
-		ARMv7k       = 32,
-		ARM64        = 64,
-		ARM64_32     = 128,
-
-		// Note: needed for backwards compatability
-		ARMv6_ARMv7  = ARMv6 | ARMv7,
-	}
-
-	enum NativeReferenceKind
-	{
-		Static,
-		Dynamic,
-		Framework
-	}
-
 	public abstract class MTouchTaskBase : BundlerToolTaskBase
 	{
 		class GccOptions
@@ -55,9 +29,6 @@ namespace Xamarin.iOS.Tasks
 				Frameworks = new HashSet<string> ();
 			}
 		}
-
-		IPhoneSdkVersion minimumOSVersion;
-//		IPhoneDeviceType deviceType;
 
 		#region Inputs
 
@@ -287,9 +258,6 @@ namespace Xamarin.iOS.Tasks
 			
 			args.AddQuotedLine ((SdkIsSimulator ? "--sim=" : "--dev=") + Path.GetFullPath (AppBundleDir));
 
-			if (AppleSdkSettings.XcodeVersion.Major >= 5 && IPhoneSdks.MonoTouch.Version.CompareTo (new IPhoneSdkVersion (6, 3, 7)) < 0)
-				args.AddLine ("--compiler=clang");
-
 			args.AddQuotedLine ($"--executable={ExecutableName}");
 
 			if (IsAppExtension)
@@ -312,9 +280,6 @@ namespace Xamarin.iOS.Tasks
 			}
 
 			args.AddQuotedLine ($"--sdk={SdkVersion}");
-
-			if (!minimumOSVersion.IsUseDefault)
-				args.AddQuotedLine ($"--targetver={minimumOSVersion.ToString ()}");
 
 			if (UseFloat32 /* We want to compile 32-bit floating point code to use 32-bit floating point operations */)
 				args.AddLine ("--aot-options=-O=float32");
@@ -497,43 +462,6 @@ namespace Xamarin.iOS.Tasks
 
 		public override bool Execute ()
 		{
-			PDictionary plist;
-			PString value;
-
-			try {
-				plist = PDictionary.FromFile (AppManifest.ItemSpec);
-			} catch (Exception ex) {
-				Log.LogError (null, null, null, AppManifest.ItemSpec, 0, 0, 0, 0, MSBStrings.E0055, ex.Message);
-				return false;
-			}
-
-//			deviceType = plist.GetUIDeviceFamily ();
-
-			if (plist.TryGetValue (ManifestKeys.MinimumOSVersion, out value)) {
-				if (!IPhoneSdkVersion.TryParse (value.Value, out minimumOSVersion)) {
-					Log.LogError (null, null, null, AppManifest.ItemSpec, 0, 0, 0, 0, MSBStrings.E0011, value);
-					return false;
-				}
-			} else {
-				switch (Platform) {
-				case ApplePlatform.iOS:
-					IPhoneSdkVersion sdkVersion;
-					if (!IPhoneSdkVersion.TryParse (SdkVersion, out sdkVersion)) {
-						Log.LogError (null, null, null, AppManifest.ItemSpec, 0, 0, 0, 0, MSBStrings.E0056, SdkVersion);
-						return false;
-					}
-
-					minimumOSVersion = sdkVersion;
-					break;
-				case ApplePlatform.WatchOS:
-				case ApplePlatform.TVOS:
-					minimumOSVersion = IPhoneSdkVersion.UseDefault;
-					break;
-				default:
-					throw new InvalidOperationException (string.Format ("Invalid framework: {0}", Platform));
-				}
-			}
-
 			Directory.CreateDirectory (AppBundleDir);
 
 			var executableLastWriteTime = default (DateTime);
@@ -573,7 +501,7 @@ namespace Xamarin.iOS.Tasks
 		{
 			// It may have been resolved to an existing local full path
 			// already, such as when building from XS on the Mac.
-			if (File.Exists (fullName))
+			if (Path.IsPathRooted (fullName) && File.Exists (fullName))
 				return fullName;
 
 			var frameworkDir = TargetFramework.Identifier;

@@ -22,7 +22,7 @@ namespace Xharness.Jenkins {
 		readonly IVersionControlSystem vcs;
 
 		ILog MainLog => jenkins.MainLog;
-		Harness Harness => jenkins.Harness;
+		IHarness Harness => jenkins.Harness;
 		
 		// We select tests based on a prefix of the modified files.
 		// Add entries here to check for more prefixes.
@@ -187,7 +187,7 @@ namespace Xharness.Jenkins {
 				MainLog.WriteLine ($"No labels were in the environment variable XHARNESS_LABELS.");
 			}
 
-			var custom_labels_file = Path.Combine (Harness.RootDirectory, "..", "jenkins", "custom-labels.txt");
+			var custom_labels_file = Path.Combine (HarnessConfiguration.RootDirectory, "..", "jenkins", "custom-labels.txt");
 			if (File.Exists (custom_labels_file)) {
 				var custom_labels = File.ReadAllLines (custom_labels_file).Select ((v) => v.Trim ()).Where (v => v.Length > 0 && v [0] != '#');
 				if (custom_labels.Count () > 0) {
@@ -236,19 +236,19 @@ namespace Xharness.Jenkins {
 
 			// docs is a bit special:
 			// - can only be executed if the Xamarin-specific parts of the build is enabled
-			// - enabled by default if the current branch is master (or, for a pull request, if the target branch is master)
+			// - enabled by default if the current branch is main (or, for a pull request, if the target branch is main)
 			var changed = SetEnabled (labels, "docs", ref jenkins.IncludeDocs);
 			if (Harness.ENABLE_XAMARIN) {
 				if (!changed) { // don't override any value set using labels
 					var branchName = Environment.GetEnvironmentVariable ("BRANCH_NAME");
 					if (!string.IsNullOrEmpty (branchName)) {
-						jenkins.IncludeDocs = branchName == "master";
+						jenkins.IncludeDocs = branchName == "main";
 						if (jenkins.IncludeDocs)
-							MainLog.WriteLine ("Enabled 'docs' tests because the current branch is 'master'.");
+							MainLog.WriteLine ("Enabled 'docs' tests because the current branch is 'main'.");
 					} else if (pullRequest > 0) {
-						jenkins.IncludeDocs = vcs.GetPullRequestTargetBranch (pullRequest) == "master";
+						jenkins.IncludeDocs = vcs.GetPullRequestTargetBranch (pullRequest) == "main";
 						if (jenkins.IncludeDocs)
-							MainLog.WriteLine ("Enabled 'docs' tests because the target branch is 'master'.");
+							MainLog.WriteLine ("Enabled 'docs' tests because the target branch is 'main'.");
 					}
 				}
 			} else {

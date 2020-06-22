@@ -3,17 +3,15 @@ TOP=../..
 include $(TOP)/Make.config
 include $(TOP)/mk/rules.mk
 
-PLATFORMS=iOS tvOS watchOS macOS
-
 BUILD_DIR=bin/Debug/net5.0
 
 DOTNET_TARGETS += \
 	$(BUILD_DIR)/dotnet-linker.dll \
-	$(foreach platform,$(PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/tools/dotnet-linker/dotnet-linker.dll) \
-	$(foreach platform,$(PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/tools/dotnet-linker/dotnet-linker.pdb) \
+	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/tools/dotnet-linker/dotnet-linker.dll) \
+	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/tools/dotnet-linker/dotnet-linker.pdb) \
 
 DOTNET_DIRECTORIES += \
-	$(foreach platform,$(PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/tools/dotnet-linker) \
+	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/tools/dotnet-linker) \
 
 # dotnet-linker.csproj.inc contains the dotnet_linker_dependencies variable used to determine if mtouch needs to be rebuilt or not.
 dotnet-linker.csproj.inc: export BUILD_EXECUTABLE=$(DOTNET5) build

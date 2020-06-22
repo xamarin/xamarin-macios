@@ -33,7 +33,7 @@ using System;
 using System.Runtime.InteropServices;
 
 using ObjCRuntime;
-#if IOS && !COREBUILD && XAMCORE_2_0
+#if IOS && !COREBUILD
 using Contacts;
 using Intents;
 #endif
@@ -67,40 +67,8 @@ namespace CoreLocation {
 			return $"(Latitude={Latitude}, Longitude={Longitude}";
 		}
 	}
-	
-#if !MONOMAC && !COREBUILD && !XAMCORE_2_0
-	public partial class CLHeading {
 
-		[Obsolete ("This type is not meant to be created by application code")]
-		public CLHeading () : base (IntPtr.Zero)
-		{
-			// calling ToString, 'description' selector, would crash the application
-			IsDirectBinding = GetType () == typeof (CLHeading);
-		}
-	}
-
-	public partial class CLRegion {
-
-		[Obsolete ("This type is not meant to be created by application code")]
-		public CLRegion () : base (IntPtr.Zero)
-		{
-			// calling ToString, 'description' selector, would crash the application
-			IsDirectBinding = GetType () == typeof (CLRegion);
-		}
-	}
-
-	public partial class CLPlacemark {
-
-		[Obsolete ("This type is not meant to be created by application code")]
-		public CLPlacemark () : base (IntPtr.Zero)
-		{
-			// calling ToString, 'description' selector, or disposing the instance would crash the application
-			IsDirectBinding = GetType () == typeof (CLPlacemark);
-		}
-	}
-#endif
-
-#if IOS && !COREBUILD && XAMCORE_2_0 // This code comes from Intents.CLPlacemark_INIntentsAdditions Category
+#if IOS && !COREBUILD // This code comes from Intents.CLPlacemark_INIntentsAdditions Category
 	public partial class CLPlacemark {
 		[iOS (10, 0)]
 		static public CLPlacemark GetPlacemark (CLLocation location, string name, CNPostalAddress postalAddress)

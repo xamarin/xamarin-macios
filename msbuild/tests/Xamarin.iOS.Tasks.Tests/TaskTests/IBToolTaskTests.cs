@@ -10,6 +10,7 @@ using NUnit.Framework;
 
 using Xamarin.MacDev;
 using Xamarin.MacDev.Tasks;
+using Xamarin.Tests;
 using Xamarin.Utils;
 
 namespace Xamarin.iOS.Tasks
@@ -50,6 +51,7 @@ namespace Xamarin.iOS.Tasks
 				InterfaceDefinitions = interfaceDefinitions.ToArray (),
 				IntermediateOutputPath = intermediateOutputPath,
 				BuildEngine = new TestEngine (),
+				MinimumOSVersion = PDictionary.FromFile (Path.Combine (projectDir, "Info.plist")).GetMinimumOSVersion (),
 				ResourcePrefix = "Resources",
 				ProjectDir = projectDir,
 				SdkPlatform = platform,
@@ -68,7 +70,8 @@ namespace Xamarin.iOS.Tasks
 			Directory.CreateDirectory (tmp);
 
 			try {
-				var ibtool = CreateIBToolTask (ApplePlatform.iOS, "../MyIBToolLinkTest", tmp);
+				var srcdir = Path.Combine (Configuration.SourceRoot, "msbuild", "tests", "MyIBToolLinkTest");
+				var ibtool = CreateIBToolTask (ApplePlatform.iOS, srcdir, tmp);
 				var bundleResources = new HashSet<string> ();
 
 				Assert.IsTrue (ibtool.Execute (), "Execution of IBTool task failed.");
@@ -119,7 +122,8 @@ namespace Xamarin.iOS.Tasks
 			Directory.CreateDirectory (tmp);
 
 			try {
-				ibtool = CreateIBToolTask (ApplePlatform.iOS, "../IBToolTaskTests/LinkedAndTranslated", tmp);
+				var srcdir = Path.Combine (Configuration.SourceRoot, "msbuild", "tests", "IBToolTaskTests", "LinkedAndTranslated");
+				ibtool = CreateIBToolTask (ApplePlatform.iOS, srcdir, tmp);
 				var bundleResources = new HashSet<string> ();
 
 				// Add some ResourceTags...
@@ -199,7 +203,8 @@ namespace Xamarin.iOS.Tasks
 			Directory.CreateDirectory (tmp);
 
 			try {
-				ibtool = CreateIBToolTask (ApplePlatform.iOS, "../IBToolTaskTests/GenericAndDeviceSpecific", tmp, fileNames);
+				var srcdir = Path.Combine (Configuration.SourceRoot, "msbuild", "tests", "IBToolTaskTests", "GenericAndDeviceSpecific");
+				ibtool = CreateIBToolTask (ApplePlatform.iOS, srcdir, tmp, fileNames);
 				var bundleResources = new HashSet<string> ();
 
 				// Add some ResourceTags...

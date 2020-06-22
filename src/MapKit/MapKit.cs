@@ -7,7 +7,7 @@
 // Copyright 2009 Novell, Inc.
 // Copyright 2014-2015 Xamarin Inc.
 //
-#if XAMCORE_2_0 || !MONOMAC
+
 using System;
 using System.Runtime.InteropServices;
 using CoreGraphics;
@@ -394,22 +394,5 @@ namespace MapKit {
 #if COREBUILD
 	public partial class MKMapLaunchOptions :NSObject {
 	}
-#elif !XAMCORE_2_0
-	public partial class MKLocalSearch {
-
-		[Obsolete ("This will not work on iOS8+")]
-		public MKLocalSearch ()
-		{
-		}
-	}
-
-	public partial class MKTileOverlayRenderer {
-
-		[Obsolete ("This will not work on iOS8+")]
-		public MKTileOverlayRenderer ()
-		{
-		}
-	}
 #endif
 }
-#endif
