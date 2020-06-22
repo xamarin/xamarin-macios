@@ -254,7 +254,7 @@ function New-GitHubCommentFromFile {
     {
         $msg.AppendLine($line)
     }
-    New-GithubComment -Header $Header -Description $Description -Message $msg.ToString() -Emoji $Emoji
+    return New-GithubComment -Header $Header -Description $Description -Message $msg.ToString() -Emoji $Emoji
 }
 
 <#
@@ -351,17 +351,21 @@ function New-GitHubSummaryComment {
     $request = $null
 
     if (-not (Test-Path $TestSummaryPath -PathType Leaf)) {
-        Set-GitHubStatus -Status "failure" -Description "Tests failed catastrophically on $CONTEXT (no summary found)." -Context "$CONTEXT"
-        $request = New-GitHubComment -Header "Tests failed catastrophically on $CONTEXT (no summary found)." -Emoji ":fire:" -Description "Result file $TestSummaryPath not found. $headerLinks"
+        Set-GitHubStatus -Status "failure" -Description "Tests failed catastrophically on $Context (no summary found)." -Context "$Context"
+        $request = New-GitHubComment -Header "Tests failed catastrophically on $Context (no summary found)." -Emoji ":fire:" -Description "Result file $TestSummaryPath not found. $headerLinks"
+        Write-Host "Tests failed catastrophically on $Context (no summary found)."
     } else {
         if (Test-JobSuccess -Status $Env:AGENT_JOBSTATUS) {
-            Set-GitHubStatus -Status "success" -Description "Device tests passed on $CONTEXT." -Context "$CONTEXT"
-            $request = New-GitHubCommentFromFile -Header "Device tests passed on $CONTEXT." -Description "Device tests passed on $CONTEXT. $headerLinks"  -Emoji ":white_check_mark:" -Path $TestSummaryPath
+            Set-GitHubStatus -Status "success" -Description "Device tests passed on $Context." -Context "$Context"
+            $request = New-GitHubCommentFromFile -Header "Device tests passed on $Context." -Description "Device tests passed on $Context. $headerLinks"  -Emoji ":white_check_mark:" -Path $TestSummaryPath
+            Write-Host "Device tests passed on $Context."
         } else {
-            Set-GitHubStatus -Status "failure" -Description "Device tests failed on $CONTEXT." -Context "$CONTEXT"
-            $request = New-GitHubCommentFromFile -Header "Device tests failed on $CONTEXT" -Description "Device tests failed on $CONTEXT. $headerLinks" -Emoji ":x:" -Path $TestSummaryPath
+            Set-GitHubStatus -Status "failure" -Description "Device tests failed on $Context." -Context "$Context"
+            $request = New-GitHubCommentFromFile -Header "Device tests failed on $Context" -Description "Device tests failed on $Context. $headerLinks" -Emoji ":x:" -Path $TestSummaryPath
+            Write-Host "Device tests failed on $Context."
         }
     }
+    Write-Host $request
     return $request
 }
 
