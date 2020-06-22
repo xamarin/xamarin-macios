@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
@@ -7,7 +8,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Tasks;
 namespace Xharness.TestTasks {
 	public class DotNetBuild : MSBuild {
 
-		public DotNetBuild (string msbuildPath,
+		public DotNetBuild (Func<string> msbuildPath,
 							IProcessManager processManager,
 							IResourceManager resourceManager,
 							IEventLogger eventLogger,
