@@ -73,8 +73,8 @@ The are two main groups of variables used in the pipelines:
 - common (under templates/common-variables.yml): Contains a set of group variables that have been created by release engineering and that contain all the different secrets needed by the pipeline.
 - lab (under templates/[ddfun|cambridge]-variables: Contains the different configurations per lab. That includes the pools to use and the type of storage.
 
-There are vertain enviroment variables that are created by steps in the first job that are later shared with the second job. In order to do that you
-have to ensrue that you do the following:
+There are certain enviroment variables that are created by steps in the first job that are later shared with the second job. In order to do that you
+have to ensure that you do the following:
 
 ```yaml
 - bash: |
@@ -96,9 +96,7 @@ have to ensrue that you do the following:
       fi
     fi
 
-    make -C builds download -j || true
-    make -C builds downloads -j || true
-    make -C builds .stamp-mono-ios-sdk-destdir -j || true
+    make -C builds download .stamp-mono-ios-sdk-destdir -j
     MONO_ENV_OPTIONS=--trace=E:all make -C tests vsts-device-tests
   env:
     WORKING_DIR: $(System.DefaultWorkingDirectory) 
@@ -117,7 +115,7 @@ There are two details we have to pay attention here, first:
 name: runTests 
 ```
 
-We need to set the name of the step. This should not be confused with the dispplayName which is simply a string used in the vsts webpage.
+We need to set the name of the step. This should not be confused with the displayName which is simply a string used in the vsts webpage.
 Later we can access the output variables of the step in the following way:
 
 ```yaml
