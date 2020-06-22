@@ -131,7 +131,7 @@ echo '##vso[task.setvariable variable=XAMARIN_STORAGE_FAILED;isOutput=true]true'
 echo '##vso[task.setvariable variable=XAMARIN_STORAGE_PATH;isOutput=true]""'
 ```
 
-As you can see, we use **isOutput=true** which means that the enviroment variable will be registered as an output variable of the step.
+As you can see, we use **isOutput=true** which means that the environment variable will be registered as an output variable of the step.
 
 #### Scripts
 
