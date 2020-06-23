@@ -109,7 +109,7 @@ namespace CoreML {
 
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 	[BaseType (typeof (NSObject))]
-	interface MLDictionaryFeatureProvider : MLFeatureProvider {
+	interface MLDictionaryFeatureProvider : MLFeatureProvider, NSSecureCoding {
 
 		[Export ("dictionary")]
 		NSDictionary<NSString, MLFeatureValue> Dictionary { get; }
@@ -168,7 +168,7 @@ namespace CoreML {
 
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 	[BaseType (typeof (NSObject))]
-	interface MLFeatureValue : NSCopying {
+	interface MLFeatureValue : NSCopying, NSSecureCoding {
 
 		[Export ("type")]
 		MLFeatureType Type { get; }
@@ -480,7 +480,7 @@ namespace CoreML {
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
-	interface MLMultiArray {
+	interface MLMultiArray : NSSecureCoding {
 
 		[Export ("dataPointer")]
 		IntPtr DataPointer { get; }
@@ -710,7 +710,7 @@ namespace CoreML {
 	[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface MLSequence {
+	interface MLSequence : NSSecureCoding {
 
 		[Export ("type")]
 		MLFeatureType Type { get; }
