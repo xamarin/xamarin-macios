@@ -14,6 +14,8 @@ namespace Xamarin.MacDev.Tasks {
 		[Required]
 		public ITaskItem [] CompileInfo { get; set; }
 
+		public ITaskItem[] IncludeDirectories { get; set; }
+
 		[Required]
 		public string MinimumOSVersion { get; set; }
 
@@ -49,6 +51,11 @@ namespace Xamarin.MacDev.Tasks {
 
 				arguments.Add ("-isysroot");
 				arguments.Add (SdkRoot);
+
+				if (IncludeDirectories != null) {
+					foreach (var inc in IncludeDirectories)
+						arguments.Add ("-I" + Path.GetFullPath (inc.ItemSpec));
+				}
 
 				var args = info.GetMetadata ("Arguments");
 				if (!StringUtils.TryParseArguments (args, out var parsed_args, out var ex)) {

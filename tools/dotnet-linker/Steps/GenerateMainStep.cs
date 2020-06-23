@@ -13,13 +13,28 @@ namespace Xamarin {
 			var items = new List<MSBuildItem> ();
 
 			foreach (var abi in Configuration.Abis) {
+
 				var file = Path.Combine (Configuration.CacheDirectory, $"main.{abi.AsArchString ()}.m");
-				var contents = @"
+				var contents = $@"
+#include ""xamarin/xamarin.h""
+
+void xamarin_setup_impl ()
+{{
+	setenv (""DOTNET_SYSTEM_GLOBALIZATION_INVARIANT"", ""1"", 1); // https://github.com/xamarin/xamarin-macios/issues/8906
+	xamarin_executable_name = ""{Configuration.AssemblyName}"";
+}}
+
+void xamarin_initialize_callbacks () __attribute__ ((constructor));
+void xamarin_initialize_callbacks ()
+{{
+	xamarin_setup = xamarin_setup_impl;
+}}
+
 int
 main (int argc, char** argv)
-{
-	return 0;
-}
+{{
+	@autoreleasepool {{ return xamarin_main (argc, argv, XamarinLaunchModeApp); }}
+}}
 ";
 				File.WriteAllText (file, contents);
 
