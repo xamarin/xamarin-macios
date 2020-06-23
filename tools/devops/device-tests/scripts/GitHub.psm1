@@ -345,7 +345,6 @@ function New-GitHubSummaryComment {
     if ($Env:VSDROPS_INDEX) {
         # we did generate an index with the files in vsdrops
         $headerSb.AppendLine("* [Html Report (VSDrops)]($Env:VSDROPS_INDEX)")
-        Write-Host $Env:VSDROPS_INDEX
     }
     $headerLinks = $headerSb.ToString()
     $request = $null
@@ -353,19 +352,15 @@ function New-GitHubSummaryComment {
     if (-not (Test-Path $TestSummaryPath -PathType Leaf)) {
         Set-GitHubStatus -Status "failure" -Description "Tests failed catastrophically on $Context (no summary found)." -Context "$Context"
         $request = New-GitHubComment -Header "Tests failed catastrophically on $Context (no summary found)." -Emoji ":fire:" -Description "Result file $TestSummaryPath not found. $headerLinks"
-        Write-Host "Tests failed catastrophically on $Context (no summary found)."
     } else {
         if (Test-JobSuccess -Status $Env:AGENT_JOBSTATUS) {
             Set-GitHubStatus -Status "success" -Description "Device tests passed on $Context." -Context "$Context"
             $request = New-GitHubCommentFromFile -Header "Device tests passed on $Context." -Description "Device tests passed on $Context. $headerLinks"  -Emoji ":white_check_mark:" -Path $TestSummaryPath
-            Write-Host "Device tests passed on $Context."
         } else {
             Set-GitHubStatus -Status "failure" -Description "Device tests failed on $Context." -Context "$Context"
             $request = New-GitHubCommentFromFile -Header "Device tests failed on $Context" -Description "Device tests failed on $Context. $headerLinks" -Emoji ":x:" -Path $TestSummaryPath
-            Write-Host "Device tests failed on $Context."
         }
     }
-    Write-Host $request
     return $request
 }
 

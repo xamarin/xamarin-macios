@@ -9,7 +9,7 @@
 # bash or linux file paths on scripts. Another important
 # details is that System.DefaultWorkingDirectory
 # on mac os x points on the top dir while on windows 
-# is the checkedout dir
+# is the checked out dir
 
 parameters:
 
@@ -65,13 +65,6 @@ steps:
     patterns: '**/TestSummary.md'
     allowFailedBuilds: true
     path: $(System.DefaultWorkingDirectory)\Reports
-
-- pwsh: |
-    Get-ChildItem . -Recurse
-    Get-ChildItem $Env:REPORTS -Recurse
-  displayName: Debug
-  env:
-    REPORTS: $(System.DefaultWorkingDirectory)\Reports
 
 # Use the cmdlet to post a new summary comment. The cmdlet checks if we have the TestSummary.md file or not. It will also add the appropriate links to the commnet. 
 # this step uses variables that have been set by the tests job dependency via output variables, those variables contain if the xamarin-storage could be used and its path
