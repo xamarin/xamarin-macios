@@ -15,6 +15,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 		NUnitV2,
 		NUnitV3,
 		xUnit,
+		Trx,
 		Missing,
 	}
 
@@ -46,6 +47,10 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 					}
 					if (line.Contains ("<assemblies>")) { // first element of the xUnit test collection
 						type = XmlResultJargon.xUnit;
+						return true;
+					}
+					if (line.Contains ("<TestRun")) {
+						type = XmlResultJargon.Trx;
 						return true;
 					}
 				}
@@ -282,6 +287,118 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 			return (resultLine, total == 0 | errors != 0 || failed != 0);
 		}
 
+		static (string resultLine, bool failed) ParseTrxXml (StreamReader stream, StreamWriter writer)
+		{
+			using (var reader = XmlReader.Create (stream)) {
+				var tests = ParseTrxXml (reader);
+
+				foreach (var groupedByClass in tests.GroupBy (v => v.ClassName).OrderBy (v => v.Key)) {
+					var className = groupedByClass.Key;
+					var totalDuration = TimeSpan.FromTicks (groupedByClass.Select (v => v.Duration?.Ticks ?? 0).Sum ());
+					writer.WriteLine (className);
+					foreach (var test in groupedByClass) {
+						writer.Write ('\t');
+						switch (test.Outcome) {
+						case "Passed":
+							writer.Write ("[PASS]");
+							break;
+						default:
+							writer.Write ($"[UNKNOWN ({test.Outcome})]");
+							break;
+						}
+						writer.Write (' ');
+						writer.Write (test.TestName);
+						writer.Write (": ");
+						writer.Write (test.Duration?.ToString ());
+						writer.WriteLine ();
+
+					}
+					writer.WriteLine ($"{className} {totalDuration}");
+				}
+				string resultLine = $"Tests run: {tests.Total} Passed: {tests.Passed} Inconclusive: {tests.Inconclusive} Failed: {tests.Failed + tests.Error} Ignored: {tests.NotRunnable}";
+				writer.WriteLine (resultLine);
+
+				return (resultLine, !(tests.Error == 0 && tests.Aborted == 0 && tests.Timeout == 0 && tests.Failed == 0));
+			}
+		}
+
+		class TrxTests : List<TrxTest> {
+			public long Total;
+			public long Executed;
+			public long Passed;
+			public long Failed;
+			public long Error;
+			public long Timeout;
+			public long Aborted;
+			public long Inconclusive;
+			public long NotRunnable;
+			public long NotExecuted;
+
+		}
+
+		class TrxTest {
+			public string? Outcome;
+			public string? ClassName;
+			public string? TestName;
+			public TimeSpan? Duration;
+			public string? Message;
+		}
+
+		static TrxTests ParseTrxXml (XmlReader reader)
+		{
+			var rv = new TrxTests ();
+			var tests = new Dictionary<string, TrxTest> ();
+			TrxTest lastTest = null;
+			while (reader.Read ()) {
+				if (reader.NodeType != XmlNodeType.Element)
+					continue;
+
+				switch (reader.Name) {
+				case "Counters":
+					long.TryParse (reader ["total"], out rv.Total);
+					long.TryParse (reader ["executed"], out rv.Executed);
+					long.TryParse (reader ["passed"], out rv.Passed);
+					long.TryParse (reader ["failed"], out rv.Failed);
+					long.TryParse (reader ["error"], out rv.Error);
+					long.TryParse (reader ["timeout"], out rv.Timeout);
+					long.TryParse (reader ["aborted"], out rv.Aborted);
+					long.TryParse (reader ["inconclusive"], out rv.Inconclusive);
+					long.TryParse (reader ["notRunnable"], out rv.NotRunnable);
+					long.TryParse (reader ["notExecuted"], out rv.NotExecuted);
+					break;
+				case "UnitTestResult": {
+					var testId = reader ["testId"];
+					var outcome = reader ["outcome"];
+					var test = new TrxTest { Outcome = outcome };
+					if (TimeSpan.TryParse (reader ["duration"], out var duration))
+						test.Duration = duration;
+					tests [testId] = test;
+					rv.Add (test);
+					lastTest = test;
+					break;
+				}
+				case "Message":
+					if (lastTest != null) {
+						reader.Read ();
+						lastTest.Message = reader.Value;
+					}
+					break;
+				case "UnitTest": {
+					var id = reader ["id"];
+					var test = tests [id];
+					while (reader.Read () && !(reader.NodeType == XmlNodeType.Element && reader.Name == "TestMethod"))
+						;
+					test.ClassName = reader ["className"];
+					test.TestName = reader ["name"];
+					break;
+				}
+				default:
+					break;
+				}
+			}
+			return rv;
+		}
+
 		public string GetXmlFilePath (string path, XmlResultJargon xmlType)
 		{
 			var fileName = Path.GetFileName (path);
@@ -330,6 +447,9 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 					break;
 				case XmlResultJargon.xUnit:
 					parseData = ParsexUnitXml (reader, writer);
+					break;
+				case XmlResultJargon.Trx:
+					parseData = ParseTrxXml (reader, writer);
 					break;
 				default:
 					parseData = ("", true);
@@ -473,6 +593,29 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 			}
 		}
 
+		static void GenerateTrxTestReport (StreamWriter writer, XmlReader reader)
+		{
+			var tests = ParseTrxXml (reader);
+			var failedTests = tests.Where (v => v.Outcome != "Passed");
+			
+			if (failedTests.Any ()) {
+				writer.WriteLine ("<div style='padding-left: 15px;'>");
+				writer.WriteLine ("<ul>");
+				foreach (var test in failedTests) {
+					writer.WriteLine ("<li>");
+					writer.Write ($"{test.ClassName.AsHtml ()}.{test.TestName.AsHtml()}");
+					if (!string.IsNullOrEmpty (test.Message)) {
+						writer.Write (": ");
+						writer.Write (test.Message.AsHtml ());
+					}
+					writer.WriteLine ("<br />");
+					writer.WriteLine ("</li>");
+				}
+				writer.WriteLine ("</ul>");
+				writer.WriteLine ("</div>");
+			}
+		}
+
 		public void GenerateTestReport (StreamWriter writer, string resultsPath, XmlResultJargon xmlType)
 		{
 			using (var stream = new StreamReader (resultsPath))
@@ -487,6 +630,9 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 					break;
 				case XmlResultJargon.NUnitV3:
 					GenerateNUnitV3TestReport (writer, reader);
+					break;
+				case XmlResultJargon.Trx:
+					GenerateTrxTestReport (writer, reader);
 					break;
 				default:
 					writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {resultsPath}: Not supported format.</span><br />");

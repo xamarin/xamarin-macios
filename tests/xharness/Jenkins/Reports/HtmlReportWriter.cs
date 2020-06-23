@@ -543,6 +543,14 @@ namespace Xharness.Jenkins.Reports {
 									} catch (Exception ex) {
 										writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {log.Description}: {ex.Message.AsHtml ()}</span><br />");
 									}
+								} else if (log.Description == LogType.TrxLog.ToString ()) {
+									try {
+										if (resultParser.IsValidXml (log.FullPath, out var jargon)) {
+											resultParser.GenerateTestReport (writer, log.FullPath, jargon);
+										}
+									} catch (Exception ex) {
+										writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {log.Description}: {ex.Message.AsHtml ()}</span><br />");
+									}
 								}
 							}
 						}
