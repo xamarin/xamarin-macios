@@ -136,7 +136,7 @@ namespace CoreData
 
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 	[BaseType (typeof(NSObject))]
-	interface NSFetchIndexElementDescription : NSCoding
+	interface NSFetchIndexElementDescription : NSCoding, NSCopying
 	{
 		[Export ("initWithProperty:collationType:")]
 		IntPtr Constructor (NSPropertyDescription property, NSFetchIndexElementType collationType);
@@ -159,7 +159,7 @@ namespace CoreData
 
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 	[BaseType (typeof(NSObject))]
-	interface NSFetchIndexDescription : NSCoding
+	interface NSFetchIndexDescription : NSCoding, NSCopying
 	{
 		[Export ("initWithName:elements:")]
 		IntPtr Constructor (string name, [NullAllowed] NSFetchIndexElementDescription[] elements);
@@ -2493,7 +2493,7 @@ namespace CoreData
 
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 	[BaseType (typeof(NSPersistentStoreRequest))]
-	[DesignatedDefaultCtor]
+	[DisableDefaultCtor] // NSInternalInconsistencyException Reason: -init results in undefined behavior for NSBatchInsertRequest
 	interface NSBatchInsertRequest {
 
 		[Export ("entityName")]
