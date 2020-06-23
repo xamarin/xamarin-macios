@@ -90,10 +90,6 @@ namespace Xamarin.Mac.Linker.Test {
 				CheckPresence (type, "System.ObsoleteAttribute", false);
 				CheckPresence (type, "Foundation.AdviceAttribute", false);
 				CheckPresence (type, "ObjCRuntime.AvailabilityAttribute", false);
-				CheckPresence (type, "ObjCRuntime.LionAttribute", false);
-				CheckPresence (type, "ObjCRuntime.MountainLionAttribute", false);
-				CheckPresence (type, "ObjCRuntime.MavericksAttribute", false);
-				CheckPresence (type, "ObjCRuntime.SinceAttribute", false);
 				CheckPresence (type, "ObjCRuntime.ThreadSafeAttribute", false);
 				CheckPresence (type, "System.Diagnostics.DebuggerDisplay", debug);
 				CheckPresence (type, "System.Diagnostics.DebuggerNonUserCode", debug);

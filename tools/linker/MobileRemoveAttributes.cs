@@ -17,15 +17,10 @@ namespace Xamarin.Linker {
 			switch (attr_type.Name) {
 			case "ObsoleteAttribute":
 			// System.Mono*Attribute from mono/mcs/build/common/MonoTODOAttribute.cs
-			case "MonoDocumentationNoteAttribute":
-			case "MonoExtensionAttribute":
-			case "MonoInternalNoteAttribute":
 			case "MonoLimitationAttribute":
 			case "MonoNotSupportedAttribute":
 			case "MonoTODOAttribute":
 				return attr_type.Namespace == "System";
-			case "MonoFIXAttribute":
-				return attr_type.Namespace == "System.Xml";
 			// remove debugging-related attributes if we're not linking symbols (i.e. we're building release builds)
 			case "DebuggableAttribute":
 			case "DebuggerBrowsableAttribute":
@@ -40,6 +35,7 @@ namespace Xamarin.Linker {
 			// compiler nullability attributes are not used at runtime so they can be removed by the linker
 			case "NullableAttribute":
 			case "NullableContextAttribute":
+			case "NullablePublicOnlyAttribute":
 				return attr_type.Namespace == "System.Runtime.CompilerServices";
 			// _manual_ nullability attributes are not used at runtime so they can be removed by the linker
 			case "AllowNullAttribute":
@@ -53,6 +49,9 @@ namespace Xamarin.Linker {
 			case "NotNullIfNotNullAttribute":
 			case "NotNullWhenAttribute":
 				return attr_type.Namespace == "System.Diagnostics.CodeAnalysis";
+			// decorate the internalattributes (like nullability) that Roslyn inject into assemblies
+			case "EmbeddedAttribute":
+				return attr_type.Namespace == "Microsoft.CodeAnalysis";
 			default:
 				return false;
 			}
