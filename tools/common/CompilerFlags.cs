@@ -211,6 +211,9 @@ namespace Xamarin.Utils
 				Frameworks.ExceptWith (WeakFrameworks);
 			}
 
+			Frameworks?.RemoveWhere ((v) => global::Frameworks.IsFrameworkBroken (Application, v));
+			WeakFrameworks?.RemoveWhere ((v) => global::Frameworks.IsFrameworkBroken (Application, v));
+
 			// force_load libraries take precedence, so remove the libraries
 			// we need to force load from the list of libraries we just load.
 			if (LinkWithLibraries != null)

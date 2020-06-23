@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Mono.Cecil;
 
 using Xamarin.Bundler;
+using Xamarin.Utils;
 using Registrar;
 #endif
 
@@ -508,6 +509,27 @@ public class Frameworks : Dictionary <string, Framework>
 				}
 			}
 		}
+	}
+#endif
+
+#if MMP || MTOUCH
+	// This checks if a framework is unavailable due to bugs in Xcode (such as Apple forgetting to ship a library or headers for a framework, which seems to happen at least once a year).
+	public static bool IsFrameworkBroken (Application app, string framework)
+	{
+		if (app.Platform == ApplePlatform.WatchOS && app.IsSimulatorBuild && Driver.XcodeProductVersion == "12A6159" /* Xcode 12 beta 1 */) {
+			switch (framework) {
+			case "CoreAudioTypes":
+			case "CoreML":
+			case "CoreVideo":
+			case "MediaPlayer":
+				// Apple seems to have forgotten to ship the MediaPlayer library for the simulator in Xcode 12 beta 1 (it's still available for device builds).
+				// https://github.com/xamarin/maccore/issues/2244
+				Driver.Log (1, $"Can't use '{framework}' in the simulator because Apple didn't ship it with Xcode 12 beta 1");
+				return true;
+			}
+		}
+
+		return false;
 	}
 #endif
 }
