@@ -32,6 +32,12 @@ Usage: configure [options]
 
     --enable-dotnet         Enable building .NET 5 bits.
     --disable-dotnet        Disable building .NET 5 bits.
+
+    --enable-documentation  Enable building of API documentation
+    --disable-documentation Disable building of API documentation.
+
+    --enable-install-source  Enable building of API documentation
+    --disable-install-source Disable building of API documentation.
 EOL
 }
 
@@ -112,6 +118,14 @@ while test x$1 != x; do
         ;;
     --disable-dotnet)
         echo "ENABLE_DOTNET=" >> "$CONFIGURED_FILE"
+        shift
+        ;;
+    --enable-install-source)
+        echo "ENABLE_INSTALL_SOURCE=1" >> "$CONFIGURED_FILE"
+        shift
+        ;;
+    --disable-install-source)
+        echo "ENABLE_INSTALL_SOURCE=" >> "$CONFIGURED_FILE"
         shift
         ;;
 	--help|-h)

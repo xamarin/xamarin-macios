@@ -121,7 +121,7 @@ if test -z "$ENABLE_DEVICE_BUILD"; then
 fi
 
 # Enable dotnet bits on the bots
-CONFIGURE_FLAGS="$CONFIGURE_FLAGS --enable-dotnet"
+CONFIGURE_FLAGS="$CONFIGURE_FLAGS --enable-dotnet --enable-install-source"
 
 echo "Configuring the build with: $CONFIGURE_FLAGS"
 # shellcheck disable=SC2086
