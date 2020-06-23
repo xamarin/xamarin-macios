@@ -85,7 +85,7 @@ steps:
     XAMARIN_STORAGE_PATH: $(XAMARIN_STORAGE_PATH) # could be null if the step was not executed if we use vsdrops, the cmdlet will know how to handle that case
     XAMARIN_STORAGE_FAILED: $(XAMARIN_STORAGE_FAILED) # could not reach xamarin-storage, either the bot is not in the vpn or it finally failed
     VSDROPS_INDEX: '${{ parameters.vsdropsPrefix }}/$(Build.BuildNumber)/$(Build.BuildId);/tests/vsdrops_index.html' # url to the vsdrops generated index file
-    TESTS_SUMMARY: $(System.DefaultWorkingDirectory)\Reports\TestSummary.md
+    TESTS_SUMMARY: $(System.DefaultWorkingDirectory)\Reports\TestSummary\TestSummary.md
   displayName: 'Add summaries'
   condition: always()
   timeoutInMinutes: 1

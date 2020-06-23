@@ -279,7 +279,7 @@ steps:
   displayName: 'Publish Artifact: TestSummary'
   inputs:
     targetPath: 'xamarin-macios/tests/TestSummary.md'
-    artifactName: TestSummary.md
+    artifactName: TestSummary
   continueOnError: true
   condition: succeededOrFailed()
 
