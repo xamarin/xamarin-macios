@@ -116,6 +116,7 @@
 			<_LinkerCacheDirectory>$([System.IO.Path]::GetFullPath('$(IntermediateOutputPath)linker-cache'))</_LinkerCacheDirectory>
 
 			<_CustomLinkerOptions>
+				AssemblyName=$(AssemblyName).dll
 				CacheDirectory=$(_LinkerCacheDirectory)
 				ItemsDirectory=$(_LinkerItemsDirectory)
 				Platform=$(_PlatformName)
@@ -152,11 +153,42 @@
 
 	<!-- Native code -->
 
-	<Target Name="_ComputeVariables" DependsOnTargets="_GenerateBundleName">
+	<Target Name="_ComputeVariables" DependsOnTargets="_GenerateBundleName;ResolveRuntimePackAssets">
+		<ItemGroup>
+			<!-- Look in the ResolvedFrameworkReference for our Microsoft.* package. This should only find a single package. -->
+			<_XamarinFrameworkReference Include="@(ResolvedFrameworkReference)" Condition="'%(ResolvedFrameworkReference.Identity)' == 'Microsoft.$(_PlatformName)'" />
+		</ItemGroup>
 		<PropertyGroup>
 			<_IntermediateNativeLibraryDir>$(IntermediateOutputPath)nativelibraries/</_IntermediateNativeLibraryDir>
 			<_NativeExecutableName>$(_AppBundleName)</_NativeExecutableName>
+			<_XamarinSdkRuntimePackDirectory>%(_XamarinFrameworkReference.RuntimePackPath)</_XamarinSdkRuntimePackDirectory>
+			<_XamarinNativeLibraryDirectory>$(_XamarinSdkRuntimePackDirectory)/runtimes/$(RuntimeIdentifier)/native</_XamarinNativeLibraryDirectory>
+			<_XamarinIncludeDirectory>$(_XamarinSdkRuntimePackDirectory)/runtimes/$(RuntimeIdentifier)/native</_XamarinIncludeDirectory>
+
+			<_LibMonoLinkMode Condition="'$(_LibMonoLinkMode)' == '' And '$(ComputedPlatform)' != 'iPhone'">dylib</_LibMonoLinkMode>
+			<_LibMonoLinkMode Condition="'$(_LibMonoLinkMode)' == ''">static</_LibMonoLinkMode>
+			<_LibMonoExtension Condition="'$(_LibMonoLinkMode)' == 'dylib'">dylib</_LibMonoExtension>
+			<_LibMonoExtension Condition="'$(_LibMonoLinkMode)' == 'static'">a</_LibMonoExtension>
+
+			<_LibXamarinLinkMode Condition="'$(_LibXamarinLinkMode)' == '' And '$(ComputedPlatform)' != 'iPhone'">dylib</_LibXamarinLinkMode>
+			<_LibXamarinLinkMode Condition="'$(_LibXamarinLinkMode)' == ''">static</_LibXamarinLinkMode>
+			<_LibXamarinExtension Condition="'$(_LibXamarinLinkMode)' == 'dylib'">dylib</_LibXamarinExtension>
+			<_LibXamarinExtension Condition="'$(_LibXamarinLinkMode)' == 'static'">a</_LibXamarinExtension>
+			<_LibXamarinName Condition="'$(_LibXamarinName)' == '' And '$(_Debug)' == 'true'">libxamarin-debug.$(_LibXamarinExtension)</_LibXamarinName>
+			<_LibXamarinName Condition="'$(_LibXamarinName)' == '' And '$(_Debug)' != 'true'">libxamarin.$(_LibXamarinExtension)</_LibXamarinName>
 		</PropertyGroup>
+
+		<ItemGroup>
+			<!-- Select the native libraries from mono we need to link with and potentially copy into the app -->
+			<_MonoLibrary
+				Include="@(ResolvedFileToPublish)"
+				Condition=" '%(ResolvedFileToPublish.AssetType)' == 'native' And
+							'%(ResolvedFileToPublish.RuntimeIdentifier)' == '$(RuntimeIdentifier)' And
+							'%(ResolvedFileToPublish.Extension)' == '.$(_LibMonoExtension)' And
+							'%(ResolvedFileToPublish.NuGetPackageId)' == 'Microsoft.NETCore.App.Runtime.$(RuntimeIdentifier)'
+							"
+			/>
+		</ItemGroup>
 	</Target>
 
 	<Target Name="_CompileNativeExecutable"
@@ -169,6 +201,7 @@
 			<_MainFile Update="@(_MainFile)">
 				<OutputFile>$(_IntermediateNativeLibraryDir)%(Filename).o</OutputFile>
 			</_MainFile>
+			<_XamarinMainIncludeDirectory Include="$(_XamarinIncludeDirectory)" />
 		</ItemGroup>
 
 		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(_IntermediateNativeLibraryDir)" />
@@ -177,6 +210,7 @@
 			SessionId="$(BuildSessionId)"
 			CompileInfo="@(_MainFile)"
 			MinimumOSVersion="$(_MinimumOSVersion)"
+			IncludeDirectories="@(_XamarinMainIncludeDirectory)"
 			SdkDevPath="$(_SdkDevPath)"
 			SdkIsSimulator="$(_SdkIsSimulator)"
 			SdkRoot="$(_SdkRoot)"
@@ -186,15 +220,49 @@
 		</CompileNativeCode>
 	</Target>
 
+
+	<!-- The .dylibs shipped with mono comes with the original identity:
+
+	$ otool -l ~/.nuget/packages/microsoft.netcore.app.runtime.ios-x64/5.0.0-*/runtimes/ios-x64/native/libSystem.IO.Compression.Native.dylib | grep LC_ID_DYLIB -A 2
+          cmd LC_ID_DYLIB
+      cmdsize 184
+         name /Users/runner/runners/2.165.2/work/1/s/artifacts/obj/native/netcoreapp5.0-iOS-Release-x64/System.IO.Compression.Native/libSystem.IO.Compression.Native.dylib (offset 24)
+
+	This doesn't work after linking with these libraries, so this must be fixed to be @executable_path/. Eventually mono will ship dylibs we don't have to fix (https://github.com/dotnet/runtime/issues/34637).
+	-->
+	<Target Name="_UpdateDynamicLibraryId" DependsOnTargets="_ComputeVariables" Inputs="@(_MonoLibrary)" Outputs="@(_MonoLibrary -> '$(_IntermediateNativeLibraryDir)%(Filename)%(Extension)')">
+		<!-- install_name_tool modifies the file in-place, so copy it first to a temporary directory before we fix it -->
+		<Copy SourceFiles="%(_MonoLibrary.FullPath)" DestinationFolder="$(_IntermediateNativeLibraryDir)" />
+		<Exec Command="install_name_tool -id @executable_path/%(_MonoLibrary.Filename)%(_MonoLibrary.Extension) $(_IntermediateNativeLibraryDir)%(_MonoLibrary.Filename)%(_MonoLibrary.Extension)" />
+		<!-- Update our item groups -->
+		<ItemGroup>
+			<_MonoLibraryFixed Include="@(_MonoLibrary -> '$(_IntermediateNativeLibraryDir)%(Filename)%(Extension)')" />
+			<ResolvedFileToPublish Remove="@(_MonoLibrary)" />
+			<ResolvedFileToPublish Include="@(_MonoLibraryFixed)" />
+			<_MonoLibrary Remove="@(_MonoLibrary)" />
+			<_MonoLibrary Include="@(_MonoLibraryFixed)" />
+		</ItemGroup>
+	</Target>
+
 	<Target Name="_LinkNativeExecutable"
-			DependsOnTargets="_DetectSdkLocations;_ComputeTargetArchitectures;_GenerateBundleName;_CompileNativeExecutable;_CompileAppManifest"
+			DependsOnTargets="_DetectSdkLocations;_ComputeTargetArchitectures;_GenerateBundleName;_CompileNativeExecutable;_CompileAppManifest;_UpdateDynamicLibraryId"
 			Inputs="@(_NativeExecutableObjectFiles)"
 			Outputs="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)"
 		>
 
+		<ItemGroup>
+			<_XamarinMainLibraries Include="$(_XamarinNativeLibraryDirectory)/$(_LibXamarinName)" />
+			<!-- Link with the libraries shipped with the mono runtime pack -->
+			<_XamarinMainLibraries Include="@(_MonoLibrary)" />
+			<!-- Hardcode a few frameworks for now -->
+			<_NativeExecutableFrameworks Include="Foundation" />
+			<_NativeExecutableFrameworks Include="CoreFoundation" />
+		</ItemGroup>
+
 		<LinkNativeCode
 			SessionId="$(BuildSessionId)"
 			Frameworks="@(_NativeExecutableFrameworks)"
+			LinkWithLibraries="@(_XamarinMainLibraries)"
 			MinimumOSVersion="$(_MinimumOSVersion)"
 			ObjectFiles="@(_NativeExecutableObjectFiles)"
 			OutputFile="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)"

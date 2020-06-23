@@ -13,6 +13,8 @@ using Xamarin.Utils;
 namespace Xamarin.Linker {
 	public class LinkerConfiguration {
 		public List<Abi> Abis;
+		// This is the AssemblyName MSBuild property for the main project (which is also the root/entry assembly)
+		public string AssemblyName { get; private set; }
 		public string ItemsDirectory { get; private set; }
 		public ApplePlatform Platform { get; private set; }
 		public string PlatformAssembly { get; private set; }
@@ -50,6 +52,9 @@ namespace Xamarin.Linker {
 				var key = line [..eq];
 				var value = line [(eq + 1)..];
 				switch (key) {
+				case "AssemblyName":
+					AssemblyName = value;
+					break;
 				case "CacheDirectory":
 					CacheDirectory = value;
 					break;
@@ -100,6 +105,7 @@ namespace Xamarin.Linker {
 		{
 			Console.WriteLine ($"LinkerConfiguration:");
 			Console.WriteLine ($"    ABIs: {string.Join (", ", Abis.Select (v => v.AsArchString ()))}");
+			Console.WriteLine ($"    AssemblyName: {AssemblyName}");
 			Console.WriteLine ($"    CacheDirectory: {CacheDirectory}");
 			Console.WriteLine ($"    ItemsDirectory: {ItemsDirectory}");
 			Console.WriteLine ($"    Platform: {Platform}");
