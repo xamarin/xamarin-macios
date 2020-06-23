@@ -269,7 +269,7 @@ steps:
     XAMARIN_STORAGE_PATH: $(XAMARIN_STORAGE_PATH)
     TESTS_EXTRA_ARGUMENTS: ${{ parameters.testsLabels }}
     USE_XAMARIN_STORAGE: '${{ parameters.useXamarinStorage }}'
-    VSDROPS_URI: '${{ parameters.vsdropsPrefix }}/$(Build.BuildNumber)/$(Build.BuildId);/tests' # uri used to create the vsdrops index using full uri
+    VSDROPS_URI: '${{ parameters.vsdropsPrefix }}/$(Build.BuildNumber)/$(Build.BuildId);/tests/' # uri used to create the vsdrops index using full uri
   displayName: 'Run tests'
   name: runTests # not to be confused with the displayName, this is used to later use the name of the step to access the output variables from an other job
   timeoutInMinutes: 600
