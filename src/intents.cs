@@ -10943,7 +10943,7 @@ namespace Intents {
 	[Watch (6,0), NoTV, NoMac, iOS (13,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface INFile {
+	interface INFile : NSSecureCoding {
 
 		[Static]
 		[Export ("fileWithData:filename:typeIdentifier:")]
