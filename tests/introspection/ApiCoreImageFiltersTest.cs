@@ -45,7 +45,7 @@ namespace Introspection {
 
 		static Type CIFilterType = typeof (CIFilter);
 
-#if true
+#if false
 		static TextWriter BindingOutput;
 #else
 		static TextWriter BindingOutput = Console.Out;
@@ -503,6 +503,13 @@ namespace Introspection {
 						switch (key) {
 						case "outputImageV1":
 							// existed briefly in macOS 10.11, but neither before nor after.
+							continue;
+						}
+						break;
+					case "CIAreaAverage":
+						switch (key) {
+						case "outputImageNonMPS:":
+							// no doc for argument
 							continue;
 						}
 						break;

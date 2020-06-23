@@ -96,6 +96,12 @@ namespace Introspection {
 				// Xcode 11
 				case "NSFileProviderSearchQuery":
 					return true;
+				// Xcode 12 beta 1
+				case "ACAccountType":
+				case "AVAssetDownloadUrlSession":
+				case "NSUrlSession":
+				case "SNClassification":
+					return true;
 				}
 				break;
 			case "NSMutableCopying":
@@ -108,6 +114,9 @@ namespace Introspection {
 				case "UNNotificationSound":
 				// Xcode 11 - Conformance not in headers
 				case "UISceneSession":
+					return true;
+				// xocde 12 beta 1
+				case "NSUrlSessionConfiguration":
 					return true;
 				}
 				break;
@@ -160,6 +169,14 @@ namespace Introspection {
 					return true;
 				// Xcode 11.4, not documented
 				case "NSHttpCookie":
+					return true;
+				// Xcode 12 beta 1
+				case "GCController":
+				case "GCExtendedGamepad":
+				case "GCMicroGamepad":
+				case "GCMotion":
+				case "INFile":
+				case "SNClassification":
 					return true;
 				}
 				break;
@@ -222,6 +239,13 @@ namespace Introspection {
 					return true;
 				// Xcode 11.4, not documented
 				case "NSHttpCookie":
+					return true;
+				// Xcode 12 beta 1
+				case "GCController":
+				case "GCExtendedGamepad":
+				case "GCMicroGamepad":
+				case "GCMotion":
+				case "SNClassification":
 					return true;
 				}
 				break;
