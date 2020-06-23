@@ -263,7 +263,13 @@ steps:
     make -C builds download -j || true
     make -C builds downloads -j || true
     make -C builds .stamp-mono-ios-sdk-destdir -j || true
-    MONO_ENV_OPTIONS=--trace=E:all make -C tests vsts-device-tests
+    EC=0
+    MONO_ENV_OPTIONS=--trace=E:all make -C tests vsts-device-tests || EC=$?
+    if [ $EC -eq 0 ]; then
+      echo '##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Succeeded'
+    else
+      echo '##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Failed'
+    fi
   env:
     WORKING_DIR: $(System.DefaultWorkingDirectory) 
     XAMARIN_STORAGE_PATH: $(XAMARIN_STORAGE_PATH)
