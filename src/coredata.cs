@@ -2496,6 +2496,13 @@ namespace CoreData
 	[DisableDefaultCtor] // NSInternalInconsistencyException Reason: -init results in undefined behavior for NSBatchInsertRequest
 	interface NSBatchInsertRequest {
 
+		[Deprecated (PlatformName.iOS, 14,0, message: "Use 'no yet bound' instead.")]
+		[Deprecated (PlatformName.TvOS, 14,0, message: "Use 'no yet bound' instead.")]
+		[Deprecated (PlatformName.WatchOS, 7,0, message: "Use 'no yet bound' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10,16, message: "Use 'no yet bound' instead.")]
+		[Export ("init")]
+		IntPtr Constructor ();
+
 		[Export ("entityName")]
 		string EntityName { get; }
 
