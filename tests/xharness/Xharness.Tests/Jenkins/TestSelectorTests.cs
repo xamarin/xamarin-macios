@@ -76,6 +76,12 @@ namespace Xharness.Tests.Jenkins {
 						new List<string> { "run-all-tests", "skip-mac-tests"},
 						expectedSelection);
 					
+					expectedSelection = TestSelection.All;
+					expectedSelection &= ~TestSelection.iOS;
+					yield return new TestCaseData ("testBranch",
+						new List<string> { "run-all-tests", "skip-ios-tests" },
+						expectedSelection);
+
 					// skip all ye select one of the tests
 					expectedSelection = TestSelection.MacOS;
 					yield return new TestCaseData ("testBranch",
