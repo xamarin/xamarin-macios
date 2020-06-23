@@ -85,7 +85,7 @@ namespace Xharness.Tests.Jenkins {
 					// skip all ye select one of the tests
 					expectedSelection = TestSelection.MacOS;
 					yield return new TestCaseData ("testBranch",
-						new List<string> {"skip-all-tests", "run-mac-tests"},
+						new List<string> { "skip-all-tests", "run-mac-tests" },
 						expectedSelection);
 
 					// select the defaults + some additional ones
