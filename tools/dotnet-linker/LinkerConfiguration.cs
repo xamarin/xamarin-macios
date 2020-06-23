@@ -13,6 +13,7 @@ using Xamarin.Utils;
 namespace Xamarin.Linker {
 	public class LinkerConfiguration {
 		public List<Abi> Abis;
+		// This is the AssemblyName MSBuild property for the main project (which is also the root/entry assembly)
 		public string AssemblyName { get; private set; }
 		public string ItemsDirectory { get; private set; }
 		public ApplePlatform Platform { get; private set; }
