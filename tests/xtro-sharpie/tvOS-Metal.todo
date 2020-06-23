@@ -39,7 +39,6 @@
 !missing-protocol! MTLFunctionLog not bound
 !missing-protocol! MTLFunctionLogDebugLocation not bound
 !missing-protocol! MTLLogContainer not bound
-!missing-protocol-conformance! MTLIndirectCommandBufferDescriptor should conform to NSCopying
 !missing-protocol-member! MTLBlitCommandEncoder::resolveCounters:inRange:destinationBuffer:destinationOffset: not found
 !missing-protocol-member! MTLBlitCommandEncoder::sampleCountersInBuffer:atSampleIndex:withBarrier: not found
 !missing-protocol-member! MTLCommandBuffer::blitCommandEncoderWithDescriptor: not found

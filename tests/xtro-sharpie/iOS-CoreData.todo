@@ -1,5 +1,3 @@
-!deprecated-attribute-missing! NSBatchInsertRequest::init missing a [Deprecated] attribute
-!extra-designated-initializer! NSBatchInsertRequest::init is incorrectly decorated with an [DesignatedInitializer] attribute
 !missing-designated-initializer! NSBatchInsertRequest::initWithEntity:objects: is missing an [DesignatedInitializer] attribute
 !missing-designated-initializer! NSBatchInsertRequest::initWithEntityName:objects: is missing an [DesignatedInitializer] attribute
 !missing-enum! NSPersistentCloudKitContainerEventResultType not bound
@@ -13,8 +11,6 @@
 !missing-field! NSPersistentCloudKitContainerEventUserInfoKey not bound
 !missing-field! NSRefreshedObjectIDsKey not bound
 !missing-field! NSUpdatedObjectIDsKey not bound
-!missing-protocol-conformance! NSFetchIndexDescription should conform to NSCopying
-!missing-protocol-conformance! NSFetchIndexElementDescription should conform to NSCopying
 !missing-selector! +NSBatchInsertRequest::batchInsertRequestWithEntityName:dictionaryHandler: not bound
 !missing-selector! +NSBatchInsertRequest::batchInsertRequestWithEntityName:managedObjectHandler: not bound
 !missing-selector! +NSPersistentCloudKitContainerEventRequest::fetchEventsAfterDate: not bound

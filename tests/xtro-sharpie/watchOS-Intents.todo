@@ -21,7 +21,6 @@
 !missing-enum! INShortcutAvailabilityOptions not bound
 !missing-field! INPersonHandleLabelSchool not bound
 !missing-protocol! INListCarsIntentHandling not bound
-!missing-protocol-conformance! INFile should conform to NSSecureCoding
 !missing-protocol-member! INSendMessageIntentHandling::resolveOutgoingMessageTypeForSendMessage:withCompletion: not found
 !missing-selector! +INImage::systemImageNamed: not bound
 !missing-selector! +INOutgoingMessageTypeResolutionResult::confirmationRequiredWithOutgoingMessageTypeToConfirm: not bound

@@ -1,9 +1,5 @@
 !missing-enum! MLModelCollectionStatus not bound
 !missing-field! MLModelCollectionDidChangeNotification not bound
-!missing-protocol-conformance! MLDictionaryFeatureProvider should conform to NSSecureCoding
-!missing-protocol-conformance! MLFeatureValue should conform to NSSecureCoding
-!missing-protocol-conformance! MLMultiArray should conform to NSSecureCoding
-!missing-protocol-conformance! MLSequence should conform to NSSecureCoding
 !missing-selector! +MLModel::loadContentsOfURL:configuration:completionHandler: not bound
 !missing-selector! +MLModelCollection::modelCollectionWithIdentifier: not bound
 !missing-selector! +MLMultiArray::multiArrayByMLMultiArrayMultiArrays:alongAxis:dataType: not bound

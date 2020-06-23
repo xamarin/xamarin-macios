@@ -14,7 +14,6 @@
 !missing-field! INPersonHandleLabelSchool not bound
 !missing-protocol! INGetCarPowerLevelStatusIntentResponseObserver not bound
 !missing-protocol! INListCarsIntentHandling not bound
-!missing-protocol-conformance! INFile should conform to NSSecureCoding
 !missing-protocol-member! INGetCarPowerLevelStatusIntentHandling::startSendingUpdatesForGetCarPowerLevelStatus:toObserver: not found
 !missing-protocol-member! INGetCarPowerLevelStatusIntentHandling::stopSendingUpdatesForGetCarPowerLevelStatus: not found
 !missing-protocol-member! INSendMessageIntentHandling::resolveOutgoingMessageTypeForSendMessage:withCompletion: not found

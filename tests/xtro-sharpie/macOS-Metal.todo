@@ -25,7 +25,6 @@
 !missing-protocol! MTLIntersectionFunctionTable not bound
 !missing-protocol! MTLLogContainer not bound
 !missing-protocol! MTLVisibleFunctionTable not bound
-!missing-protocol-conformance! MTLIndirectCommandBufferDescriptor should conform to NSCopying
 !missing-protocol-member! MTLArgumentEncoder::setAccelerationStructure:atIndex: not found
 !missing-protocol-member! MTLArgumentEncoder::setIntersectionFunctionTable:atIndex: not found
 !missing-protocol-member! MTLArgumentEncoder::setIntersectionFunctionTables:withRange: not found
