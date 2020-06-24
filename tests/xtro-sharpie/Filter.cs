@@ -83,7 +83,7 @@ namespace Extrospection {
 			case "vecLib": // all
 				return true;
 			default:
-				return false;
+				return fx.EndsWith ("_SwiftUI", StringComparison.Ordinal);
 			}
 		}
 	}
