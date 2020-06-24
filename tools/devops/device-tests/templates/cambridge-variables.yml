@@ -5,5 +5,5 @@ variables:
 - name: WindowsDevicePool
   value: 'VSEng-Xamarin-Win-XMA'
 
-- name: htmlReportStorage
-  value: 'xamarin-storage'
+- name: useXamarinStorage
+  value: ${{ true }}  # the cambridge lab DOES have access to xamarin-storage

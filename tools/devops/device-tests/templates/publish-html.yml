@@ -1,10 +1,37 @@
 # Job that will download the other artifact from the tests job and will publish them in the 
 # vsdrops
 
+###########################################################
+# WARNING WARNING WARNING WARNING WARNING WARNING WARNING #
+###########################################################
+
+# This job is executed on WINDOWS! make sure you DO NOT USE
+# bash or linux file paths on scripts. Another important
+# details is that System.DefaultWorkingDirectory
+# on mac os x points on the top dir while on windows 
+# is the checked out dir
+
+parameters:
+
+- name: statusContext
+  type: string 
+  default: 'iOS Device Tests' # default context, since we started dealing with iOS devices. 
+
+- name: vsdropsPrefix
+  type: string
+
 steps:
 
 - checkout: self
   persistCredentials: true
+
+- pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\tools\devops\device-tests\scripts\System.psm1
+    Get-SystemInfo | Format-Table -Wrap -HideTableHeaders
+    Write-Host "Env variables are:"
+    Get-ChildItem env:
+  displayName: 'Dump Environment'
+  timeoutInMinutes: 1
 
 # Download the Html Report that was added by the tests job.
 - task: DownloadPipelineArtifact@2
@@ -37,6 +64,22 @@ steps:
   inputs:
     patterns: '**/TestSummary.md'
     allowFailedBuilds: true
-    path: $(System.DefaultWorkingDirectory)/Reports
+    path: $(System.DefaultWorkingDirectory)\Reports
 
-# TODO: We need to find out how VSDrops can serve the page. So we are doing nothing atm.
+# Use the cmdlet to post a new summary comment. The cmdlet checks if we have the TestSummary.md file or not. It will also add the appropriate links to the commnet. 
+# this step uses variables that have been set by the tests job dependency via output variables, those variables contain if the xamarin-storage could be used and its path
+- pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\tools\devops\device-tests\scripts\GitHub.psm1 
+    New-GitHubSummaryComment -Context "$Env:CONTEXT" -XamarinStoragePath "$Env:XAMARIN_STORAGE_PATH" -TestSummaryPath "$Env:TESTS_SUMMARY"
+  env:
+    BUILD_REVISION: $(BUILD_REVISION)
+    CONTEXT: ${{ parameters.statusContext }}
+    GITHUB_TOKEN: $(GitHub.Token)
+    XAMARIN_STORAGE_PATH: $(XAMARIN_STORAGE_PATH) # could be null if the step was not executed if we use vsdrops, the cmdlet will know how to handle that case
+    XAMARIN_STORAGE_FAILED: $(XAMARIN_STORAGE_FAILED) # could not reach xamarin-storage, either the bot is not in the vpn or it finally failed
+    TESTS_JOBSTATUS: $(TESTS_JOBSTATUS) # set by the runTests step
+    VSDROPS_INDEX: '${{ parameters.vsdropsPrefix }}/$(Build.BuildNumber)/$(Build.BuildId);/tests/vsdrops_index.html' # url to the vsdrops generated index file
+    TESTS_SUMMARY: $(System.DefaultWorkingDirectory)\Reports\TestSummary\TestSummary.md
+  displayName: 'Add summaries'
+  condition: always()
+  timeoutInMinutes: 1

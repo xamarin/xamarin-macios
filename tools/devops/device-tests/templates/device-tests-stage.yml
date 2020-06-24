@@ -34,9 +34,12 @@ parameters:
   type: string
   default: 'VSEng-Xamarin-Win-XMA'
 
-- name: htmlReportStorage
+- name: useXamarinStorage
+  type: boolean
+  default: false
+
+- name: vsdropsPrefix 
   type: string
-  default: xamarin-storage # takes two different values, 'xamarin-storage' or 'vsdrop'
 
 stages:
 - stage: device_tests
@@ -52,14 +55,25 @@ stages:
       parameters:
         testsLabels: ${{ parameters.testsLabels }}
         statusContext: ${{ parameters.statusContext }}
-        htmlReportStorage: ${{ parameters.htmlReportStorage }}
+        useXamarinStorage: ${{ parameters.useXamarinStorage }}
+        vsdropsPrefix: ${{ parameters.vsdropsPrefix }} 
 
   - job: publish_html
     displayName: 'Publish Html report in VSDrops'
+    timeoutInMinutes: 1000
     dependsOn: tests
-    condition: and(succeededOrFailed(), eq('${{ parameters.htmlReportStorage }}', 'vsdrops')) # wait for tests to execute, but execute always except if it has been canceled or we are not using vsdrops 
+    condition: succeededOrFailed()
+    variables:
+      # Define the variable FOO from the previous job
+      # Note the use of single quotes!
+      XAMARIN_STORAGE_PATH: $[ dependencies.tests.outputs['runTests.XAMARIN_STORAGE_PATH'] ]
+      XAMARIN_STORAGE_FAILED: $[ dependencies.tests.outputs['runTests.XAMARIN_STORAGE_FAILED'] ]
+      TESTS_JOBSTATUS: $[ dependencies.tests.outputs['runTests.TESTS_JOBSTATUS'] ]
     pool:
       name: ${{ parameters.WindowsDevicePool }}
       demands: agent.os -equals Windows_NT # we need to use a windows machine since vsdrops just works on them and the pool might have diff OS in the agents
     steps:
     - template: publish-html.yml
+      parameters:
+        statusContext: ${{ parameters.statusContext }}
+        vsdropsPrefix: ${{ parameters.vsdropsPrefix }} 

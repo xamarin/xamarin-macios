@@ -25,7 +25,8 @@ stages:
   parameters:
     iOSDevicePool: ${{ variables.iOSDevicePool }}
     WindowsDevicePool: ${{ variables.WindowsDevicePool }}
-    htmlReportStorage: ${{ variables.htmlReportStorage }}
+    useXamarinStorage: ${{ variables.useXamarinStorage }}
     testsLabels: '--label=run-tvos-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
     statusContext: 'VSTS: device tests tvOS (Cambridge)'
     iOSDeviceDemand: 'xitvos' 
+    vsdropsPrefix: ${{ variables.vsdropsPrefix }} 
