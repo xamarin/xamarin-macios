@@ -60,6 +60,7 @@ stages:
 
   - job: publish_html
     displayName: 'Publish Html report in VSDrops'
+    timeoutInMinutes: 1000
     dependsOn: tests
     condition: succeededOrFailed()
     variables:
