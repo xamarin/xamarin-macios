@@ -317,7 +317,7 @@ Describe 'New-GitHubSummaryComment' {
             Mock Test-Path { return $true }
 
             # set job as a success
-            Set-Item -Path "Env:AGENT_JOBSTATUS" -Value "Succeeded"
+            Set-Item -Path "Env:TESTS_JOBSTATUS" -Value "Succeeded"
 
             New-GitHubSummaryComment -Context $Script:context -XamarinStoragePath $Script:xamarinStoragePath -TestSummaryPath $Script:tempPath
 
@@ -360,7 +360,7 @@ Describe 'New-GitHubSummaryComment' {
             Mock New-GitHubCommentFromFile
             Mock Test-Path { return $true }
 
-            Set-Item -Path "Env:AGENT_JOBSTATUS" -Value "Failed"
+            Set-Item -Path "Env:TESTS_JOBSTATUS" -Value "Failed"
 
             New-GitHubSummaryComment -Context $Script:context -XamarinStoragePath $Script:xamarinStoragePath -TestSummaryPath $Script:tempPath
 
@@ -402,7 +402,7 @@ Describe 'New-GitHubSummaryComment' {
             Mock New-GitHubComment
             Mock Test-Path { return $false}
 
-            Set-Item -Path "Env:AGENT_JOBSTATUS" -Value "Failed"
+            Set-Item -Path "Env:TESTS_JOBSTATUS" -Value "Failed"
 
             New-GitHubSummaryComment -Context $Script:context -XamarinStoragePath $Script:xamarinStoragePath -TestSummaryPath $Script:tempPath
 

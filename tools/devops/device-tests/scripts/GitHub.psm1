@@ -175,15 +175,16 @@ function New-GitHubComment {
 
     $targetUrl = Get-TargetUrl
     # build the message, which will be sent to github, users can use markdown
-    $fullDescription ="$Description on Azure DevOps]($targetUrl) ($Env:BUILD_DEFINITIONNAME)"
     $msg = [System.Text.StringBuilder]::new()
     $msg.AppendLine("### $Emoji $Header $Emoji")
     $msg.AppendLine()
-    $msg.AppendLine($fullDescription)
+    $msg.AppendLine($Description)
     if ($Message) { # only if message is not null or empty
         $msg.AppendLine()
         $msg.AppendLine($Message)
     }
+    $msg.AppendLine()
+    $msg.AppendLine("[Pipeline](targetUrl)")
 
     $url = "https://api.github.com/repos/xamarin/xamarin-macios/commits/$Env:BUILD_REVISION/comments"
     $payload = @{
