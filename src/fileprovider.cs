@@ -548,11 +548,13 @@ namespace FileProvider {
 		[Export ("excludedFromSync")]
 		bool ExcludedFromSync { [Bind ("isExcludedFromSync")] get; }
 
+#if false
 		[NoiOS]
 		[NoMac]
 		[Export ("flags", ArgumentSemantic.Strong)]
 		[NullAllowed]
 		INSFileProviderItemFlags Flags { get; }
+#endif
 
 		[NoiOS]
 		[NoMac]
@@ -779,6 +781,8 @@ namespace FileProvider {
 		ExtendedAttributes = 1 << 10,
 	}
 
+// broken in xcode 12 beta 1 - can't build device apps (registrar related)
+#if false
 	[iOS (13,0)]
 	[NoMac]
 	[Protocol]
@@ -817,4 +821,5 @@ namespace FileProvider {
 		[Export ("pathExtensionHidden")]
 		bool PathExtensionHidden { [Bind ("isPathExtensionHidden")] get; }
 	}
+#endif
 }
