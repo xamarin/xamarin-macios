@@ -15,12 +15,13 @@ all-local install-local::
 endif
 
 ifdef ENABLE_XAMARIN
+MACCORE_HASH:=$(shell cd $(MACCORE_PATH) && git log -1 --pretty=%h)
 publish:
 	$(Q) mkdir -p $(MACIOS_BINARIES_PATH)/mlaunch/bin
 	$(Q) mkdir -p $(MACIOS_BINARIES_PATH)/mlaunch/lib
 	$(Q) $(CP) -R $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/mlaunch $(MACIOS_BINARIES_PATH)/mlaunch/bin
 	$(Q) $(CP) -R $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mlaunch $(MACIOS_BINARIES_PATH)/mlaunch/lib
-	$(Q) cd $(MACIOS_BINARIES_PATH) && git add mlaunch && git commit -q -m "Bump mlaunch to xamarin/maccore@$(shell cd $(MACCORE_PATH) && git log -1 --pretty=%h)" && git log -1 --pretty=short
+	$(Q) cd $(MACIOS_BINARIES_PATH) && git add mlaunch && git commit -q -m $$'Bump mlaunch to xamarin/maccore@$(MACCORE_HASH)\n\nRef: xamarin/maccore@$(MACCORE_HASH)' && git log -1 --pretty=short
 	$(Q) echo "$(COLOR_GREEN)A new version of mlaunch has been copied to $(MACIOS_BINARIES_PATH), and a commit created with the new version.$(COLOR_CLEAR)"
 	$(Q) echo "$(COLOR_GREEN)Please create pull request in the macios-binaries repository for the new mlaunch version, and once merged, bump the submodule in xamarin-macios.$(COLOR_CLEAR)"
 else
