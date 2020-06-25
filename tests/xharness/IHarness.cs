@@ -41,7 +41,6 @@ namespace Xharness {
 		string MONO_IOS_SDK_DESTDIR { get; }
 		string MONO_MAC_SDK_DESTDIR { get; }
 		bool ENABLE_XAMARIN { get; }
-		string DOTNET { get; }
 		string XcodeRoot { get; }
 		string LogDirectory { get; } 
 		double Timeout { get; }
@@ -69,6 +68,7 @@ namespace Xharness {
 		void Log (int minLevel, string message, params object [] args);
 		void Log (string message);
 		void Log (string message, params object [] args);
+		string GetDotNetExecutable (string directory);
 
 		#endregion
 	}

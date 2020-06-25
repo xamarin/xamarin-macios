@@ -13,11 +13,11 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 		public IResourceManager ResourceManager { get; set; }
 		public IEnvManager EnviromentManager { get; set; }
 		public IEventLogger EventLogger { get; set; }
-		string msbuildPath;
+		Func<string> msbuildPath;
 
 		public string SolutionPath { get; set; }
 
-		public BuildProject (string msbuildPath, IProcessManager processManager, IResourceManager resourceManager, IEventLogger eventLogger, IEnvManager envManager) : base (processManager)
+		public BuildProject (Func<string> msbuildPath, IProcessManager processManager, IResourceManager resourceManager, IEventLogger eventLogger, IEnvManager envManager) : base (processManager)
 		{
 			this.msbuildPath = msbuildPath ?? throw new ArgumentNullException (nameof (msbuildPath));
 			ResourceManager = resourceManager ?? throw new ArgumentNullException (nameof (resourceManager));
@@ -46,7 +46,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 					throw new FileNotFoundException ("Could not find the solution whose nugets to restore.", projectPath);
 
 				using (var nuget = new Process ()) {
-					nuget.StartInfo.FileName = msbuildPath;
+					nuget.StartInfo.FileName = msbuildPath ();
 					var args = new List<string> ();
 					args.Add ("-t");
 					args.Add ("--");
