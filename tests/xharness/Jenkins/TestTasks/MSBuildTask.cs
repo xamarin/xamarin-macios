@@ -20,7 +20,7 @@ namespace Xharness.Jenkins.TestTasks {
 
 		protected override void InitializeTool () => 
 			buildToolTask = new MSBuild (
-				msbuildPath: ToolName,
+				msbuildPath: () => ToolName,
 				processManager: ProcessManager,
 				resourceManager: ResourceManager,
 				eventLogger: this,
