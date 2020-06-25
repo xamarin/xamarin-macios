@@ -183,6 +183,9 @@
     <Content Include="..\monotouch-test\access-granted.html">
       <Link>access-granted.html</Link>
     </Content>
+    <Content Include="..\monotouch-test\Resources\square.gif">
+      <Link>Resources\square.gif</Link>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Metal Include="..\monotouch-test\Resources\metal-sample.metal">
