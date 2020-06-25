@@ -343,9 +343,30 @@ namespace Introspection {
 					break;
 				}
 				break;
-			}
+#if __TVOS__
+			// broken with Xcode 12 beta 1
+			case "CKDiscoveredUserInfo":
+				switch (name) {
+				case "copyWithZone:":
+				case "encodeWithCoder:":
+					if (TestRuntime.CheckXcodeVersion (12, 0))
+						return true;
+					break;
+				}
+				break;
+			case "CKSubscription":
+				switch (name) {
+				case "setZoneID:":
+					if (TestRuntime.CheckXcodeVersion (12, 0))
+						return true;
+					break;
+				}
+				break;
+#endif
+			break;
+		}
 
-			switch (name) {
+		switch (name) {
 			// UIResponderStandardEditActions - stuffed inside UIResponder
 			case "cut:":
 			case "copy:":
