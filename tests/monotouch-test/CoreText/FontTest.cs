@@ -11,6 +11,7 @@ using System;
 using CoreGraphics;
 using CoreText;
 using Foundation;
+using ObjCRuntime;
 #if MONOMAC
 using AppKit;
 #else
@@ -83,6 +84,11 @@ namespace MonoTouchFixtures.CoreText {
 		[Test]
 		public void GetGlyphsForCharacters_35048 ()
 		{
+#if __TVOS__
+			// https://github.com/xamarin/xamarin-macios/issues/8943
+			if (Runtime.Arch == Arch.SIMULATOR && (TestRuntime.CheckXcodeVersion (12, 0)))
+				Assert.Ignore ("AppleColorEmoji missing from tvOS 14 simulator");
+#endif
 			using (var font = CGFont.CreateWithFontName ("AppleColorEmoji"))
 			using (var ctfont = font.ToCTFont ((nfloat) 10.0)) {
 				ushort[] gid = new ushort [2];
