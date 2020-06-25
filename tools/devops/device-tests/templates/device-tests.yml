@@ -256,10 +256,11 @@ steps:
         eval $MKSTORAGE || EC=$?
         if [ $EC -eq 0 ]; then
           echo '##vso[task.setvariable variable=XAMARIN_STORAGE_PATH;isOutput=true]$XAMARIN_STORAGE_PATH'
-        else
           echo '##vso[task.setvariable variable=XAMARIN_STORAGE_FAILED;isOutput=true]false'
+          export TESTS_PERIODIC_COMMAND="--periodic-interval 10 --periodic-command rsync --periodic-command-arguments '-avz -e \"ssh\" $PWD/jenkins-results builder@xamarin-storage:/volume1/storage/$XAMARIN_STORAGE_PATH'"
+        else
+          echo '##vso[task.setvariable variable=XAMARIN_STORAGE_FAILED;isOutput=true]true'
         fi
-        export TESTS_PERIODIC_COMMAND="--periodic-interval 10 --periodic-command rsync --periodic-command-arguments '-avz -e \"ssh\" $PWD/jenkins-results builder@xamarin-storage:/volume1/storage/$XAMARIN_STORAGE_PATH'"
       else
         echo '##vso[task.setvariable variable=XAMARIN_STORAGE_FAILED;isOutput=true]true'
         echo '##vso[task.setvariable variable=XAMARIN_STORAGE_PATH;isOutput=true]""'
