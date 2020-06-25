@@ -14,8 +14,9 @@ extern "C" {
 //#endif
 
 #ifdef WATCH_EXTENSION
-// WatchKit.framework defines a main function.
-	int main (int argc, char **argv);	
+// Some versions of WatchKit.framework defines a main function, others don't.
+// We decide which one to use in our GenerateMain function
+	int xamarin_watch_extension_main (int argc, char **argv);
 #endif
 
 #ifdef TV_EXTENSION

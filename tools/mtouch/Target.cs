@@ -1543,9 +1543,8 @@ namespace Xamarin.Bundler
 				linker_flags.AddOtherFlag ("-shared");
 				linker_flags.AddOtherFlag ("-install_name", $"@rpath/{App.ExecutableName}.framework/{App.ExecutableName}");
 			} else {
-				string mainlib;
+				string mainlib = null;
 				if (App.IsWatchExtension) {
-					mainlib = "libwatchextension.a";
 					linker_flags.AddOtherFlag ("-e", "_xamarin_watchextension_main");
 					if (App.SdkVersion.Major >= 6 && App.DeploymentTarget.Major < 6) {
 						// watchOS 6.0's WatchKit contains a WKExtensionMain function, and that's the entry point for Xcode-compiled watch extensions.
@@ -1560,8 +1559,10 @@ namespace Xamarin.Bundler
 				} else {
 					mainlib = "libapp.a";
 				}
-				var libmain = Path.Combine (libdir, mainlib);
-				linker_flags.AddLinkWith (libmain, true);
+				if (mainlib != null) {
+					var libmain = Path.Combine (libdir, mainlib);
+					linker_flags.AddLinkWith (libmain, true);
+				}
 			}
 
 			if (App.EnableProfiling) {
