@@ -184,7 +184,7 @@ function New-GitHubComment {
         $msg.AppendLine($Message)
     }
     $msg.AppendLine()
-    $msg.AppendLine("[Pipeline](targetUrl)")
+    $msg.AppendLine("[Pipeline]($targetUrl)")
 
     $url = "https://api.github.com/repos/xamarin/xamarin-macios/commits/$Env:BUILD_REVISION/comments"
     $payload = @{
