@@ -12,7 +12,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 
 	public class MSBuild : BuildProject {
 		readonly IErrorKnowledgeBase errorKnowledgeBase;
-		readonly string msbuildPath;
+		readonly Func<string> msbuildPath;
 
 		public virtual List<string> GetToolArguments (string projectPlatform, string projectConfiguration, string projectFile, ILog buildLog) {
 			var binlogPath = buildLog.FullPath.Replace (".txt", ".binlog");
@@ -29,7 +29,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 			return args;
 		}
 
-		public MSBuild (string msbuildPath,
+		public MSBuild (Func<string> msbuildPath,
 							IProcessManager processManager,
 							IResourceManager resourceManager,
 							IEventLogger eventLogger,
@@ -58,7 +58,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 			}
 
 			using (var xbuild = new Process ()) {
-				xbuild.StartInfo.FileName = msbuildPath;
+				xbuild.StartInfo.FileName = msbuildPath ();
 				xbuild.StartInfo.Arguments = StringUtils.FormatArguments (GetToolArguments (projectPlatform, projectConfiguration, projectFile, buildLog));
 				xbuild.StartInfo.WorkingDirectory = Path.GetDirectoryName (projectFile);
 				EnviromentManager.SetEnvironmentVariables (xbuild);
@@ -87,7 +87,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 		{
 			// Don't require the desktop resource here, this shouldn't be that resource sensitive
 			using (var xbuild = new Process ()) {
-				xbuild.StartInfo.FileName = msbuildPath;
+				xbuild.StartInfo.FileName = msbuildPath ();
 				var args = new List<string> ();
 				args.Add ("--");
 				args.Add ("/verbosity:diagnostic");

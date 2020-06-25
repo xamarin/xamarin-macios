@@ -65,9 +65,11 @@ steps:
   timeoutInMinutes: 1
 
 # Uses the powershell cmdlet to remove known directories that are not needed and use space.
+# we might hit issue https://github.com/PowerShell/PowerShell/issues/9246, so we always do exit 0
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/device-tests/scripts/System.psm1
     Clear-HD 
+    exit 0  
   displayName: 'Disk cleanup'
   timeoutInMinutes: 5
 
