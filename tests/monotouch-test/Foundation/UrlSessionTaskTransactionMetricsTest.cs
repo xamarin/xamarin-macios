@@ -58,7 +58,7 @@ namespace MonoTouchFixtures.Foundation {
 					Assert.Null (sttm.ResponseEndDate, "ResponseEndDate");
 					Assert.Null (sttm.ResponseStartDate, "ResponseStartDate");
 				}
-				Assert.False (sttm.ReusedConnection, "ReusedConnection");
+				Assert.AreEqual (TestRuntime.CheckXcodeVersion (12,0), sttm.ReusedConnection, "ReusedConnection");
 				Assert.Null (sttm.SecureConnectionEndDate, "SecureConnectionEndDate");
 				Assert.Null (sttm.SecureConnectionStartDate, "SecureConnectionStartDate");
 			}
