@@ -160,6 +160,8 @@ SIMLAUNCHER_FRAMEWORKS =  \
 	-weak_framework VisionKit			\
 						\
 	-weak_framework AutomaticAssessmentConfiguration	\
+						\
+	-weak_framework AppClip	\
 
 # keep the above list of weak_framework
 # 1. grouped by iOS versions;
