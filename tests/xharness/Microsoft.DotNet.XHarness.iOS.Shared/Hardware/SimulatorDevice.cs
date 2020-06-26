@@ -95,7 +95,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 			await processManager.ExecuteCommandAsync ("open", new [] { "-a", simulator_app, "--args", "-CurrentDeviceUDID", UDID }, log, TimeSpan.FromSeconds (15));
 		}
 
-		public async Task PrepareSimulator (ILog log, params string [] bundle_identifiers)
+		public async Task<bool> PrepareSimulator (ILog log, params string [] bundle_identifiers)
 		{
 			// Kill all existing processes
 			await KillEverything (log);
@@ -118,8 +118,9 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 				}
 			}
 
+			bool rv = true;
 			if (File.Exists (TCC_db)) {
-				await tCCDatabase.AgreeToPromptsAsync (SimRuntime, TCC_db, log, bundle_identifiers);
+				rv &= await tCCDatabase.AgreeToPromptsAsync (SimRuntime, TCC_db, UDID, log, bundle_identifiers);
 			} else {
 				log.WriteLine ("No TCC.db found for the simulator {0} (SimRuntime={1} and SimDeviceType={1})", UDID, SimRuntime, SimDeviceType);
 			}
@@ -129,6 +130,8 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 
 			// Make 100% sure we're shutdown
 			await Shutdown (log);
+
+			return rv;
 		}
 
 	}

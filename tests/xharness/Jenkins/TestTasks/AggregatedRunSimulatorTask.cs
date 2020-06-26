@@ -4,6 +4,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.DotNet.XHarness.iOS.Shared;
+using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
+using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
 namespace Xharness.Jenkins.TestTasks {
 	// This class groups simulator run tasks according to the
@@ -70,8 +72,13 @@ namespace Xharness.Jenkins.TestTasks {
 				}
 				Jenkins.MainLog.WriteLine ("Selected simulator: {0}", devices.Length > 0 ? devices [0].Name : "none");
 
-				foreach (var dev in devices)
-					await dev.PrepareSimulator (Jenkins.MainLog, executingTasks.Select ((v) => v.BundleIdentifier).ToArray ());
+				foreach (var dev in devices) {
+					using var tcclog = Logs.Create ($"prepare-simulator-{Helpers.Timestamp}.log", "Simulator preparation");
+					var rv = await dev.PrepareSimulator (tcclog, executingTasks.Select ((v) => v.BundleIdentifier).ToArray ());
+					tcclog.Description += rv ? " ✅ " : " (failed) ⚠️";
+					foreach (var task in executingTasks.Where ((v) => v.Simulators.Contains (dev)))
+						task.Logs.Add (tcclog);
+				}
 
 				foreach (var task in executingTasks) {
 					task.AcquiredResource = desktop;

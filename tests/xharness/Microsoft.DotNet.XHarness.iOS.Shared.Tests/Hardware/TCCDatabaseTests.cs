@@ -45,6 +45,9 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Hardware {
 		[TestCase ("com.apple.CoreSimulator.SimRuntime.tvOS-8-1", 2)]
 		[TestCase ("com.apple.CoreSimulator.SimRuntime.watchOS-5-1", 3)]
 		[TestCase ("com.apple.CoreSimulator.SimRuntime.watchOS-4-1", 2)]
+		[TestCase ("com.apple.CoreSimulator.SimRuntime.iOS-14-0", 4)]
+		[TestCase ("com.apple.CoreSimulator.SimRuntime.tvOS-14-0", 4)]
+		[TestCase ("com.apple.CoreSimulator.SimRuntime.watchOS-7-0", 4)]
 		public void GetTCCFormatTest (string runtime, int expected)
 		{
 			Assert.AreEqual (expected, database.GetTCCFormat (runtime));
@@ -61,7 +64,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Hardware {
 		{
 			// we should write in the log that we did not managed to agree to it
 			executionLog.Setup (l => l.WriteLine (It.IsAny<string> ()));
-			await database.AgreeToPromptsAsync (simRuntime, dataPath, executionLog.Object);
+			await database.AgreeToPromptsAsync (simRuntime, dataPath, "udid", executionLog.Object);
 			executionLog.Verify (l => l.WriteLine ("No bundle identifiers given when requested permission editing."));
 		}
 
@@ -76,7 +79,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Hardware {
 					return Task.FromResult (new ProcessExecutionResult { ExitCode = 1, TimedOut = true });
 				});
 			// try to accept and fail because we always timeout
-			await database.AgreeToPromptsAsync (simRuntime, dataPath, executionLog.Object, "my-bundle-id", "your-bundle-id");
+			await database.AgreeToPromptsAsync (simRuntime, dataPath, "udid", executionLog.Object, "my-bundle-id", "your-bundle-id");;
 
 			// verify that we did write in the logs and that we did call sqlite3
 			Assert.AreEqual ("sqlite3", processName, "sqlite3 process");
@@ -86,10 +89,11 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Hardware {
 		[TestCase ("com.apple.CoreSimulator.SimRuntime.iOS-12-1", 3)]
 		[TestCase ("com.apple.CoreSimulator.SimRuntime.iOS-10-1", 2)]
 		[TestCase ("com.apple.CoreSimulator.SimRuntime.iOS-7-1", 1)]
-		public async Task AgreeToPropmtsAsyncSuccessTest (string runtime, int dbVersion)
+		public async Task AgreeToPromptsAsyncSuccessTest (string runtime, int dbVersion)
 		{
 			string bundleIdentifier = "my-bundle-identifier";
 			var services = new string [] {
+					"kTCCServiceAll",
 					"kTCCServiceAddressBook",
 					"kTCCServiceCalendar",
 					"kTCCServicePhotos",
@@ -130,7 +134,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Hardware {
 					return Task.FromResult (new ProcessExecutionResult { ExitCode = 0, TimedOut = false });
 				});
 
-			await database.AgreeToPromptsAsync (runtime, dataPath, executionLog.Object, bundleIdentifier);
+			await database.AgreeToPromptsAsync (runtime, dataPath, "you did, didn't you?", executionLog.Object, bundleIdentifier);
 
 			Assert.AreEqual ("sqlite3", processName, "sqlite3 process");
 			// assert that the sql is present

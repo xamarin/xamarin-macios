@@ -1940,6 +1940,7 @@ namespace Xharness.Jenkins {
 			using (var writer = new StreamWriter (stream)) {
 				writer.WriteLine ("<!DOCTYPE html>");
 				writer.WriteLine ("<html onkeypress='keyhandler(event)' lang='en'>");
+				writer.WriteLine ("<meta charset=\"utf-8\"/>");
 				if (IsServerMode && populating)
 					writer.WriteLine ("<meta http-equiv=\"refresh\" content=\"1\">");
 				writer.WriteLine ("<head>");
