@@ -61,10 +61,12 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Execution {
 			return await RunAsync (p, args, log, timeout, environmentVariables, cancellationToken);
 		}
 
-		public Task<ProcessExecutionResult> ExecuteXcodeCommandAsync (string executable, IList<string> args, ILog log, TimeSpan timeout)
+		public async Task<ProcessExecutionResult> ExecuteXcodeCommandAsync (string executable, IList<string> args, ILog log, TimeSpan timeout)
 		{
-			string filename = Path.Combine (XcodeRoot, "Contents", "Developer", "usr", "bin", executable);
-			return ExecuteCommandAsync (filename, args, log, timeout: timeout);
+			using var p = new Process ();
+			p.StartInfo.FileName = Path.Combine (XcodeRoot, "Contents", "Developer", "usr", "bin", executable);
+			p.StartInfo.Arguments = StringUtils.FormatArguments (args);
+			return await RunAsync (p, log, timeout, diagnostics: false);
 		}
 
 		[DllImport ("/usr/lib/libc.dylib")]
