@@ -92,5 +92,7 @@ namespace ObjCRuntime {
 		public const string SoundAnalysisLibrary = "/System/Library/Frameworks/SoundAnalysis.framework/SoundAnalysis";
 		public const string BackgroundTasksLibrary = "/System/Library/Frameworks/BackgroundTasks.framework/BackgroundTasks";
 
+		// tvOS 14.0
+		public const string LinkPresentationLibrary = "/System/Library/Frameworks/LinkPresentation.framework/LinkPresentation";
 	}
 }
