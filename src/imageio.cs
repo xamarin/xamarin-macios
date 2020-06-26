@@ -250,6 +250,18 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyExifGamma")]
 		NSString ExifGamma { get; }
 
+		[Mac (10, 15, 1), iOS (13, 1), TV (13, 1), Watch (6, 1)]
+		[Field ("kCGImagePropertyExifCompositeImage")]
+		NSString ExifCompositeImage { get; }
+
+		[Mac (10, 15, 1), iOS (13, 1), TV (13, 1), Watch (6, 1)]
+		[Field ("kCGImagePropertyExifSourceImageNumberOfCompositeImage")]
+		NSString ExifSourceImageNumberOfCompositeImage { get; }
+
+		[Mac (10, 15, 1), iOS (13, 1), TV (13, 1), Watch (6, 1)]
+		[Field ("kCGImagePropertyExifSourceExposureTimesOfCompositeImage")]
+		NSString ExifSourceExposureTimesOfCompositeImage { get; }
+
 		// misdocumented (first 4.3, then 5.0) but the constants were not present until 6.x
 
 		[Field ("kCGImagePropertyExifCameraOwnerName")]
@@ -2305,5 +2317,29 @@ namespace ImageIO {
 
 		NSData Data { get; set; }
 		NSDictionary DataDescription { get; set; }
+	}
+
+	[Mac (10, 15), iOS (13, 0), TV (13, 0), Watch (6, 0)]
+	[Static]
+	[Internal]
+	interface CGImageAnimationOptionsKeys {
+		[Field ("kCGImageAnimationDelayTime")]
+		NSString DelayTimeKey { get; }
+
+		[Field ("kCGImageAnimationLoopCount")]
+		NSString LoopCountKey { get; }
+
+		[Field ("kCGImageAnimationStartIndex")]
+		NSString StartIndexKey { get; }
+	}
+
+	[Mac (10, 15), iOS (13, 0), TV (13, 0), Watch (6, 0)]
+	[StrongDictionary ("CGImageAnimationOptionsKeys")]
+	interface CGImageAnimationOptions {
+		double DelayTime { get; set; }
+
+		nuint LoopCount { get; set; }
+
+		nuint StartIndex { get; set; }
 	}
 }

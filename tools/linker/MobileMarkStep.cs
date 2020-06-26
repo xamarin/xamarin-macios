@@ -28,34 +28,6 @@ namespace Xamarin.Linker.Steps {
 			}
 		}
 
-		public override void Process (LinkContext context)
-		{
-			base.Process (context);
-
-			// deal with [TypeForwardedTo] pseudo-attributes
-			foreach (AssemblyDefinition assembly in _context.GetAssemblies ()) {
-				if (!assembly.MainModule.HasExportedTypes)
-					continue;
-
-				foreach (var exported in assembly.MainModule.ExportedTypes) {
-					if (!exported.IsForwarder)
-						continue;
-					var type = exported.Resolve ();
-					if (!Annotations.IsMarked (type))
-						continue;
-					Annotations.Mark (exported);
-				}
-			}
-		}
-
-		protected override void EnqueueMethod (MethodDefinition method)
-		{
-			// workaround, this can be re-introduced into the queue and keep the processing going forever
-			if ((_methods.Count == 0) && (method.IsConstructor && method.DeclaringType.FullName == "System.Runtime.CompilerServices.NullableAttribute"))
-				return;
-			base.EnqueueMethod (method);
-		}
-
 		protected AssemblyDefinition GetAssembly (string assemblyName)
 		{
 			AssemblyDefinition ad;
