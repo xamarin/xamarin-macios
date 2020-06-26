@@ -343,5 +343,31 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests {
 			Assert.IsNotNull (resultLineInDestinationFile, "result file result line");
 			Assert.AreEqual (expectedResultLine, resultLineInDestinationFile, "content result file result line");
 		}
+
+		[Test]
+		public void NUnitV2GenerateTestReport ()
+		{
+			using var writer = new StringWriter ();
+			using var stream = GetType ().Assembly.GetManifestResourceStream ("Microsoft.DotNet.XHarness.iOS.Shared.Tests.Samples.NUnitV2SampleFailure.xml");
+			using var reader = new StreamReader (stream);
+			resultParser.GenerateTestReport (writer, reader, XmlResultJargon.NUnitV2);
+			var expectedOutput =
+@"<div style='padding-left: 15px;'>
+<ul>
+<li>
+ErrorTest1: <div style='padding-left: 15px;'>
+Multiline<br/>
+error<br/>
+message</div>
+</li>
+<li>
+ErrorTest2: SingleLineErrorMessage</li>
+<li>
+NUnit.Tests.Assemblies.MockTestFixture.FailingTest: Intentional failure</li>
+</ul>
+</div>
+";
+			Assert.AreEqual (expectedOutput, writer.ToString (), "Output");
+		}
 	}
 }
