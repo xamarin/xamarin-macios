@@ -363,6 +363,37 @@ namespace Introspection {
 				}
 				break;
 #endif
+#if __IOS__
+			// broken with Xcode 12 beta 1
+			case "MidiCISession":
+				switch (name) {
+				case "deviceIdentification":
+					if (TestRuntime.CheckXcodeVersion (12, 0))
+						return true;
+					break;
+				}
+				break;
+			case "ARBodyTrackingConfiguration":
+			case "ARImageTrackingConfiguration":
+			case "ARObjectScanningConfiguration":
+			case "ARWorldTrackingConfiguration":
+				switch (name) {
+				case "isAutoFocusEnabled":
+				case "setAutoFocusEnabled:":
+					if ((Runtime.Arch == Arch.SIMULATOR) && TestRuntime.CheckXcodeVersion (12, 0))
+						return true;
+					break;
+				}
+				break;
+			case "ARReferenceImage":
+				switch (name) {
+				case "copyWithZone:":
+					if ((Runtime.Arch == Arch.SIMULATOR) && TestRuntime.CheckXcodeVersion (12, 0))
+						return true;
+					break;
+				}
+				break;
+#endif
 			break;
 		}
 

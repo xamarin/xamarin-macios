@@ -507,7 +507,11 @@ namespace Introspection {
 						}
 						break;
 					case "CIAreaAverage":
+					case "CIAreaHistogram":
+					case "CIAreaMinMax":
 						switch (key) {
+						case "outputImageMPS":
+						case "outputImageMPS:":
 						case "outputImageNonMPS:":
 							// no doc for argument
 							continue;

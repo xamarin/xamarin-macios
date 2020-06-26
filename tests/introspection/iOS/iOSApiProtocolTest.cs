@@ -906,6 +906,10 @@ namespace Introspection {
 				case "PKAddPassButton":
 				case "INUIAddVoiceShortcutButton":
 					return true;
+				// xcode 12 beta 1
+				case "UIBarButtonItem":
+				case "MKUserTrackingBarButtonItem":
+					return true;
 				}
 				break;
 
