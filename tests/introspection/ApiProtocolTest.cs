@@ -400,6 +400,31 @@ namespace Introspection {
 				if (result) {
 					// check that +supportsSecureCoding returns YES
 					if (!supports) {
+#if __IOS__
+						// broken in xcode 12 beta 1 simulator (only)
+						if ((Runtime.Arch == Arch.SIMULATOR) && TestRuntime.CheckXcodeVersion (12,0)) {
+							switch (type.Name) {
+							case "ARFaceGeometry":
+							case "ARPlaneGeometry":
+							case "ARPointCloud":
+							case "ARAnchor":
+							case "ARBodyAnchor":
+							case "AREnvironmentProbeAnchor":
+							case "ARFaceAnchor":
+							case "ARGeometryElement":
+							case "ARGeometrySource":
+							case "ARImageAnchor":
+							case "ARMeshAnchor":
+							case "ARMeshGeometry":
+							case "ARObjectAnchor":
+							case "ARParticipantAnchor":
+							case "ARPlaneAnchor":
+							case "ARReferenceObject":
+							case "ARWorldMap":
+								return;
+							}
+						}
+#endif
 						ReportError ("{0} conforms to NSSecureCoding but SupportsSecureCoding returned false", type.Name);
 					}
 				} else if (type.IsPublic && supports) {
