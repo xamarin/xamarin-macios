@@ -1866,6 +1866,7 @@ MAC_FRAMEWORKS =            \
 	Speech                  \
 	SystemConfiguration     \
 	UserNotifications       \
+	UserNotificationsUI		\
 	VideoSubscriberAccount  \
 	VideoToolbox            \
 	Vision                  \
