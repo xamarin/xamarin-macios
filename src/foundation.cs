@@ -38,6 +38,7 @@ using CoreFoundation;
 using Foundation;
 using CoreGraphics;
 #if IOS
+using AppClip;
 using QuickLook;
 #endif
 #if !TVOS
@@ -91,6 +92,10 @@ using CMTimeRange = Foundation.NSObject;
 using CIBarcodeDescriptor = Foundation.NSObject;
 #else
 using CoreImage;
+#endif
+
+#if !IOS
+using APActivationPayload = Foundation.NSObject;
 #endif
 
 namespace Foundation {
@@ -5340,6 +5345,12 @@ namespace Foundation
 		[iOS (13,0), TV (13,0), Mac (10,15), Watch (6,0)]
 		[NullAllowed, Export ("targetContentIdentifier")]
 		string TargetContentIdentifier { get; set; }
+
+		// Inlined from NSUserActivity (AppClip)
+		[iOS (14,0)][NoTV][NoMac][NoWatch]
+		[Export ("appClipActivationPayload", ArgumentSemantic.Strong)]
+		[NullAllowed]
+		APActivationPayload AppClipActivationPayload { get; }
 	}
 
 	[iOS (8,0)][Mac (10,10)] // same as NSUserActivity
