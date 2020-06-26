@@ -1,8 +1,0 @@
-!deprecated-attribute-missing! WKExtension::isFrontmostTimeoutExtended missing a [Deprecated] attribute
-!deprecated-attribute-missing! WKExtension::setFrontmostTimeoutExtended: missing a [Deprecated] attribute
-!deprecated-attribute-missing! WKInterfaceController::addMenuItemWithImage:title:action: missing a [Deprecated] attribute
-!deprecated-attribute-missing! WKInterfaceController::addMenuItemWithImageNamed:title:action: missing a [Deprecated] attribute
-!deprecated-attribute-missing! WKInterfaceController::addMenuItemWithItemIcon:title:action: missing a [Deprecated] attribute
-!deprecated-attribute-missing! WKInterfaceController::clearAllMenuItems missing a [Deprecated] attribute
-!missing-protocol-member! WKExtensionDelegate::userDidAcceptCloudKitShareWithMetadata: not found
-!missing-selector! WKExtension::globalTintColor not bound
