@@ -1879,6 +1879,7 @@ IOS_FRAMEWORKS =         \
 	AdSupport \
 	AddressBook \
 	AddressBookUI \
+	AppClip \
 	ARKit \
 	AssetsLibrary \
 	AudioToolbox \
