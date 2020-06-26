@@ -84,10 +84,10 @@ namespace MonoTouchFixtures.CoreText {
 		[Test]
 		public void GetGlyphsForCharacters_35048 ()
 		{
-#if __TVOS__
+#if __TVOS__ || __WATCHOS__
 			// https://github.com/xamarin/xamarin-macios/issues/8943
 			if (Runtime.Arch == Arch.SIMULATOR && (TestRuntime.CheckXcodeVersion (12, 0)))
-				Assert.Ignore ("AppleColorEmoji missing from tvOS 14 simulator");
+				Assert.Ignore ("AppleColorEmoji missing from tvOS 14 and watchOS 7 simulator");
 #endif
 			using (var font = CGFont.CreateWithFontName ("AppleColorEmoji"))
 			using (var ctfont = font.ToCTFont ((nfloat) 10.0)) {
