@@ -69,6 +69,7 @@ namespace Security {
 		Pkcs12VerifyFailure 				= -25264,
 		NotSigner 							= -26267,
 		MissingEntitlement				= -34018,
+		RestrictedApi                       = -34020,
 		ServiceNotAvailable 				= -67585,
 		InsufficientClientID 				= -67586,
 		DeviceReset 						= -67587,

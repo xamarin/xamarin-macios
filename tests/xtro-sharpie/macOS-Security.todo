@@ -4,9 +4,3 @@
 !missing-pinvoke! SecHostSelectGuest is not bound
 !missing-pinvoke! SecHostSetGuestStatus is not bound
 !missing-pinvoke! SecHostSetHostingPort is not bound
-## appended from unclassified file
-!missing-field! kSecSharedPassword not bound
-!missing-pinvoke! SecAddSharedWebCredential is not bound
-!missing-pinvoke! SecCreateSharedWebCredentialPassword is not bound
-!missing-pinvoke! SecRequestSharedWebCredential is not bound
-!missing-pinvoke! SecTrustCopyKey is not bound
