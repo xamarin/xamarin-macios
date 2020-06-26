@@ -329,6 +329,8 @@ public class Frameworks : Dictionary <string, Framework>
 
 				{ "AutomaticAssessmentConfiguration", "AutomaticAssessmentConfiguration", 13, 4 },
 
+				{ "AppClip", "AppClip", 14,0 },
+
 				// the above MUST be kept in sync with simlauncher
 				// see tools/mtouch/Makefile
 				// please also keep it sorted to ease comparison

@@ -144,5 +144,7 @@ namespace ObjCRuntime {
 		public const string SoundAnalysisLibrary = "/System/Library/Frameworks/SoundAnalysis.framework/SoundAnalysis";
 		// iOS 13.4
 		public const string AutomaticAssessmentConfigurationLibrary = "/System/Library/Frameworks/AutomaticAssessmentConfiguration.framework/AutomaticAssessmentConfiguration";
+		// iOS 14.0
+		public const string AppClipLibrary = "/System/Library/Frameworks/AppClip.framework/AppClip";
 	}
 }
