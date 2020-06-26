@@ -308,11 +308,10 @@ function New-GitHubSummaryComment {
 
         [Parameter(Mandatory)]
         [String]
-        $XamarinStoragePath,
-
-        [Parameter(Mandatory)]
-        [String]
         $TestSummaryPath
+
+        [String]
+        $XamarinStoragePath,
     )
 
     $envVars = @{
