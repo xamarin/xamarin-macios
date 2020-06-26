@@ -1,0 +1,3 @@
+!deprecated-attribute-missing! NCWidgetController missing a [Deprecated] attribute
+!deprecated-attribute-missing! NCWidgetProviding::widgetActiveDisplayModeDidChange:withMaximumSize: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NCWidgetProviding::widgetPerformUpdateWithCompletionHandler: missing a [Deprecated] attribute

@@ -5,10 +5,6 @@
 !missing-selector! CKRecord::objectForKeyedSubscript: not bound
 !missing-selector! CKRecord::setObject:forKeyedSubscript: not bound
 
-## auto-generated attribute (but deprecated API where Apple removed it)
-!extra-designated-initializer! CKSubscription::initWithCoder: is incorrectly decorated with an [DesignatedInitializer] attribute
-!deprecated-attribute-missing! CKSubscription::initWithCoder: missing a [Deprecated] attribute
-
 ## Formalizes a protocol for getting and setting keys on a CKRecord.
 ## Not intended to be used directly by client code
 !missing-protocol! CKRecordKeyValueSetting not bound

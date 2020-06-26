@@ -1,0 +1,6 @@
+!missing-enum! CBCentralManagerFeature not bound
+!missing-field! CBConnectionEventMatchingOptionPeripheralUUIDs not bound
+!missing-field! CBConnectionEventMatchingOptionServiceUUIDs not bound
+!missing-protocol-member! CBCentralManagerDelegate::centralManager:connectionEventDidOccur:forPeripheral: not found
+!missing-selector! +CBCentralManager::supportsFeatures: not bound
+!missing-selector! CBCentralManager::registerForConnectionEventsWithOptions: not bound

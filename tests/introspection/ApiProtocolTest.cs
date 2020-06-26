@@ -96,6 +96,12 @@ namespace Introspection {
 				// Xcode 11
 				case "NSFileProviderSearchQuery":
 					return true;
+				// Xcode 12 beta 1
+				case "ACAccountType":
+				case "AVAssetDownloadUrlSession":
+				case "NSUrlSession":
+				case "SNClassification":
+					return true;
 				}
 				break;
 			case "NSMutableCopying":
@@ -108,6 +114,9 @@ namespace Introspection {
 				case "UNNotificationSound":
 				// Xcode 11 - Conformance not in headers
 				case "UISceneSession":
+					return true;
+				// xocde 12 beta 1
+				case "NSUrlSessionConfiguration":
 					return true;
 				}
 				break;
@@ -160,6 +169,14 @@ namespace Introspection {
 					return true;
 				// Xcode 11.4, not documented
 				case "NSHttpCookie":
+					return true;
+				// Xcode 12 beta 1
+				case "GCController":
+				case "GCExtendedGamepad":
+				case "GCMicroGamepad":
+				case "GCMotion":
+				case "INFile":
+				case "SNClassification":
 					return true;
 				}
 				break;
@@ -222,6 +239,13 @@ namespace Introspection {
 					return true;
 				// Xcode 11.4, not documented
 				case "NSHttpCookie":
+					return true;
+				// Xcode 12 beta 1
+				case "GCController":
+				case "GCExtendedGamepad":
+				case "GCMicroGamepad":
+				case "GCMotion":
+				case "SNClassification":
 					return true;
 				}
 				break;
@@ -376,6 +400,31 @@ namespace Introspection {
 				if (result) {
 					// check that +supportsSecureCoding returns YES
 					if (!supports) {
+#if __IOS__
+						// broken in xcode 12 beta 1 simulator (only)
+						if ((Runtime.Arch == Arch.SIMULATOR) && TestRuntime.CheckXcodeVersion (12,0)) {
+							switch (type.Name) {
+							case "ARFaceGeometry":
+							case "ARPlaneGeometry":
+							case "ARPointCloud":
+							case "ARAnchor":
+							case "ARBodyAnchor":
+							case "AREnvironmentProbeAnchor":
+							case "ARFaceAnchor":
+							case "ARGeometryElement":
+							case "ARGeometrySource":
+							case "ARImageAnchor":
+							case "ARMeshAnchor":
+							case "ARMeshGeometry":
+							case "ARObjectAnchor":
+							case "ARParticipantAnchor":
+							case "ARPlaneAnchor":
+							case "ARReferenceObject":
+							case "ARWorldMap":
+								return;
+							}
+						}
+#endif
 						ReportError ("{0} conforms to NSSecureCoding but SupportsSecureCoding returned false", type.Name);
 					}
 				} else if (type.IsPublic && supports) {

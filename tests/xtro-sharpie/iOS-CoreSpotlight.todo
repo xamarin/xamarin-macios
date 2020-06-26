@@ -1,0 +1,2 @@
+!deprecated-attribute-missing! CSSearchableItemAttributeSet::initWithItemContentType: missing a [Deprecated] attribute
+!missing-selector! CSSearchableItemAttributeSet::initWithContentType: not bound

@@ -23,7 +23,6 @@
 !extra-null-allowed! 'System.Void GameKit.GKAchievement::ReportAchievements(GameKit.GKAchievement[],GameKit.GKChallenge[],System.Action`1<Foundation.NSError>)' has a extraneous [NullAllowed] on parameter #1
 !extra-null-allowed! 'System.Void GameKit.GKFriendRequestComposeViewController::AddRecipientPlayers(GameKit.GKPlayer[])' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void GameKit.GKScore::ReportScores(GameKit.GKScore[],GameKit.GKChallenge[],System.Action`1<Foundation.NSError>)' has a extraneous [NullAllowed] on parameter #1
-!extra-null-allowed! 'System.Void GameKit.GKTurnBasedEventHandler::set_WeakDelegate(Foundation.NSObject)' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void GameKit.GKVoiceChat::set_PlayerStateUpdateHandler(GameKit.GKPlayerStateUpdateHandler)' has a extraneous [NullAllowed] on parameter #0
 
 # Initial result from new rule missing-null-allowed

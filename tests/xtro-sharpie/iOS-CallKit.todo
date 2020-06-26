@@ -1,0 +1,5 @@
+!deprecated-attribute-missing! CXProviderConfiguration::initWithLocalizedName: missing a [Deprecated] attribute
+!deprecated-attribute-missing! CXProviderConfiguration::localizedName missing a [Deprecated] attribute
+!extra-designated-initializer! CXProviderConfiguration::initWithLocalizedName: is incorrectly decorated with an [DesignatedInitializer] attribute
+!missing-null-allowed! 'System.String CallKit.CXProviderConfiguration::get_LocalizedName()' is missing an [NullAllowed] on return type
+!missing-selector! CXProviderConfiguration::init not bound

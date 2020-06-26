@@ -1,0 +1,3 @@
+!missing-field! kCTFontOpticalSizeAttribute not bound
+!missing-field! kCTFontVariationAxesAttribute not bound
+!missing-pinvoke! CTFontCopyNameForGlyph is not bound

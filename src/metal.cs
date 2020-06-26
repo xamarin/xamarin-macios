@@ -3816,7 +3816,7 @@ namespace Metal {
 
 	[Mac (10,14), iOS (12,0), TV (12,0)]
 	[BaseType (typeof(NSObject))]
-	interface MTLIndirectCommandBufferDescriptor {
+	interface MTLIndirectCommandBufferDescriptor : NSCopying {
 		[Export ("commandTypes", ArgumentSemantic.Assign)]
 		MTLIndirectCommandType CommandTypes { get; set; }
 

@@ -12,6 +12,7 @@
 using System;
 using ARKit;
 using Foundation;
+using ObjCRuntime;
 using NUnit.Framework;
 
 using VectorFloat3 = global::OpenTK.NVector3;
@@ -33,6 +34,8 @@ namespace MonoTouchFixtures.ARKit {
 		public void MarshallingTest ()
 		{
 			var probeAnchor = new AREnvironmentProbeAnchor (MatrixFloat4x4.Identity, new VectorFloat3 (1, 1, 1));
+			if ((Runtime.Arch == Arch.SIMULATOR) && TestRuntime.CheckXcodeVersion (12, 0))
+				Assert.Ignore ("broken with beta 1");
 			Assert.AreEqual (MatrixFloat4x4.Identity, probeAnchor.Transform, "Transform");
 			Assert.AreEqual (new VectorFloat3 (1, 1, 1), probeAnchor.Extent, "Extent");
 

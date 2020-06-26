@@ -1,0 +1,3 @@
+!missing-enum! HMCharacteristicValueCurrentHeatingCooling not bound
+!missing-enum! HMCharacteristicValueTargetDoorState not bound
+!missing-enum! HMCharacteristicValueTargetLockMechanismState not bound

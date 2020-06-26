@@ -1,0 +1,5 @@
+!missing-field! kCGColorSpaceITUR_2100_HLG not bound
+!missing-field! kCGColorSpaceITUR_2100_PQ not bound
+!missing-field! kCGPDFContextCreateLinearizedPDF not bound
+!missing-field! kCGPDFContextCreatePDFA not bound
+!missing-pinvoke! CGColorSpaceUsesExtendedRange is not bound

@@ -1,0 +1,7 @@
+!missing-enum! MPErrorCode not bound
+!missing-enum! MPMediaType not bound
+!missing-field! MPErrorDomain not bound
+!missing-field! MPMediaPlaylistPropertyCloudGlobalID not bound
+!unknown-field! MPMediaEntityPropertyPersistentID bound
+!unknown-protocol! MPMediaPlayback bound
+!unknown-type! MPMediaEntity bound

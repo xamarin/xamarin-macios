@@ -1,0 +1,2 @@
+!missing-selector! AVPictureInPictureController::requiresLinearPlayback not bound
+!missing-selector! AVPictureInPictureController::setRequiresLinearPlayback: not bound

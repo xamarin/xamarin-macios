@@ -1,0 +1,23 @@
+!missing-enum! NFCFeliCaEncryptionId not bound
+!missing-enum! NFCFeliCaPollingRequestCode not bound
+!missing-enum! NFCFeliCaPollingTimeSlot not bound
+!missing-enum! NFCISO15693RequestFlag not bound
+!missing-enum! NFCISO15693ResponseFlag not bound
+!missing-enum! NFCVASErrorCode not bound
+!missing-enum! NFCVASMode not bound
+!missing-protocol-member! NFCISO15693Tag::authenticateWithRequestFlags:cryptoSuiteIdentifier:message:completionHandler: not found
+!missing-protocol-member! NFCISO15693Tag::challengeWithRequestFlags:cryptoSuiteIdentifier:message:completionHandler: not found
+!missing-protocol-member! NFCISO15693Tag::extendedFastReadMultipleBlocksWithRequestFlag:blockRange:completionHandler: not found
+!missing-protocol-member! NFCISO15693Tag::extendedGetMultipleBlockSecurityStatusWithRequestFlag:blockRange:completionHandler: not found
+!missing-protocol-member! NFCISO15693Tag::extendedWriteMultipleBlocksWithRequestFlags:blockRange:dataBlocks:completionHandler: not found
+!missing-protocol-member! NFCISO15693Tag::fastReadMultipleBlocksWithRequestFlag:blockRange:completionHandler: not found
+!missing-protocol-member! NFCISO15693Tag::getSystemInfoAndUIDWithRequestFlag:completionHandler: not found
+!missing-protocol-member! NFCISO15693Tag::keyUpdateWithRequestFlags:keyIdentifier:message:completionHandler: not found
+!missing-protocol-member! NFCISO15693Tag::lockDSFIDWithRequestFlag:completionHandler: not found
+!missing-protocol-member! NFCISO15693Tag::readBufferWithRequestFlags:completionHandler: not found
+!missing-protocol-member! NFCISO15693Tag::sendRequestWithFlag:commandCode:data:completionHandler: not found
+!unknown-native-enum! EncryptionId bound
+!unknown-native-enum! PollingRequestCode bound
+!unknown-native-enum! PollingTimeSlot bound
+!unknown-native-enum! VasErrorCode bound
+!unknown-native-enum! VasMode bound

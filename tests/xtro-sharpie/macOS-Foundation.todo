@@ -28,3 +28,45 @@
 !missing-selector! NSOrderedSet::orderedSetByApplyingDifference: not bound
 !missing-type! NSOrderedCollectionChange not bound
 !missing-type! NSOrderedCollectionDifference not bound
+## appended from unclassified file
+!deprecated-attribute-missing! NSLinguisticTagger missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSLinguisticTagger::availableTagSchemesForLanguage: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSLinguisticTagger::availableTagSchemesForUnit:language: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSLinguisticTagger::dominantLanguage missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSLinguisticTagger::dominantLanguageForString: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSLinguisticTagger::enumerateTagsForString:range:unit:scheme:options:orthography:usingBlock: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSLinguisticTagger::enumerateTagsInRange:scheme:options:usingBlock: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSLinguisticTagger::enumerateTagsInRange:unit:scheme:options:usingBlock: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSLinguisticTagger::initWithTagSchemes:options: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSLinguisticTagger::orthographyAtIndex:effectiveRange: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSLinguisticTagger::sentenceRangeForRange: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSLinguisticTagger::setOrthography:range: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSLinguisticTagger::setString: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSLinguisticTagger::string missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSLinguisticTagger::stringEditedInRange:changeInLength: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSLinguisticTagger::tagAtIndex:scheme:tokenRange:sentenceRange: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSLinguisticTagger::tagAtIndex:unit:scheme:tokenRange: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSLinguisticTagger::tagForString:atIndex:unit:scheme:orthography:tokenRange: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSLinguisticTagger::tagSchemes missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSLinguisticTagger::tagsForString:range:unit:scheme:options:orthography:tokenRanges: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSLinguisticTagger::tagsInRange:unit:scheme:options:tokenRanges: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSLinguisticTagger::tokenRangeAtIndex:unit: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSUserNotificationCenterDelegate::userNotificationCenter:didActivateNotification: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSUserNotificationCenterDelegate::userNotificationCenter:didDeliverNotification: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSUserNotificationCenterDelegate::userNotificationCenter:shouldPresentNotification: missing a [Deprecated] attribute
+!missing-field! NSURLContentTypeKey not bound
+!missing-field! NSURLFileContentIdentifierKey not bound
+!missing-field! NSURLIsPurgeableKey not bound
+!missing-field! NSURLIsSparseKey not bound
+!missing-field! NSURLMayHaveExtendedAttributesKey not bound
+!missing-field! NSURLMayShareFileContentKey not bound
+!missing-selector! +NSKeyedUnarchiver::unarchivedArrayOfObjectsOfClass:fromData:error: not bound
+!missing-selector! +NSKeyedUnarchiver::unarchivedArrayOfObjectsOfClasses:fromData:error: not bound
+!missing-selector! +NSKeyedUnarchiver::unarchivedDictionaryWithKeysOfClass:objectsOfClass:fromData:error: not bound
+!missing-selector! +NSKeyedUnarchiver::unarchivedDictionaryWithKeysOfClasses:objectsOfClasses:fromData:error: not bound
+!missing-selector! NSCoder::decodeArrayOfObjectsOfClass:forKey: not bound
+!missing-selector! NSCoder::decodeArrayOfObjectsOfClasses:forKey: not bound
+!missing-selector! NSCoder::decodeDictionaryWithKeysOfClass:objectsOfClass:forKey: not bound
+!missing-selector! NSCoder::decodeDictionaryWithKeysOfClasses:objectsOfClasses:forKey: not bound
+!missing-selector! NSString::initWithBytesNoCopy:length:encoding:deallocator: not bound
+!missing-selector! NSString::initWithCharactersNoCopy:length:deallocator: not bound

@@ -628,6 +628,7 @@ namespace Xamarin.MMP.Tests
 		}
 
 		[Test]
+		[Ignore ("https://github.com/xamarin/xamarin-macios/issues/8939")]
 		public void MM0143 ()
 		{
 			MMPTests.RunMMPTest (tmpDir => {

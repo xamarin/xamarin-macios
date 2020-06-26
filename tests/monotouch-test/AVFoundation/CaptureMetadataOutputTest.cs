@@ -122,6 +122,9 @@ namespace MonoTouchFixtures.AVFoundation {
 									// fail *and crash* on iOS 8 (at least on 32bits devices)
 									if (!TestRuntime.CheckXcodeVersion (11, 0))
 										continue;
+									// xcode 12 beta 1 on device
+									if ((Runtime.Arch == Arch.DEVICE) && TestRuntime.CheckXcodeVersion (12, 0))
+										continue;
 									break;
 								}
 								metadataOutput.MetadataObjectTypes = val;

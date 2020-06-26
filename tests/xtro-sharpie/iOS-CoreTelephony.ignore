@@ -1,7 +1,0 @@
-## deprecated in iOS 10 (in favor of CallKit)
-!missing-field! CTCallStateConnected not bound
-!missing-field! CTCallStateDialing not bound
-!missing-field! CTCallStateDisconnected not bound
-!missing-field! CTCallStateIncoming not bound
-!missing-field! CTRadioAccessTechnologyDidChangeNotification not bound
-!missing-field! CTSubscriberTokenRefreshed not bound

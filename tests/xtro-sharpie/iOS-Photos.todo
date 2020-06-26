@@ -1,0 +1,6 @@
+!deprecated-attribute-missing! PHPhotoLibrary::authorizationStatus missing a [Deprecated] attribute
+!deprecated-attribute-missing! PHPhotoLibrary::requestAuthorization: missing a [Deprecated] attribute
+!missing-enum! PHAccessLevel not bound
+!missing-protocol-conformance! PHLivePhoto should conform to NSItemProviderReading (defined in 'NSItemProvider' category)
+!missing-selector! +PHPhotoLibrary::authorizationStatusForAccessLevel: not bound
+!missing-selector! +PHPhotoLibrary::requestAuthorizationForAccessLevel:handler: not bound

@@ -1,0 +1,6 @@
+!missing-selector! ENExposureConfiguration::attenuationDurationThresholds not bound
+!missing-selector! ENExposureConfiguration::minimumRiskScoreFullRange not bound
+!missing-selector! ENExposureConfiguration::setMinimumRiskScoreFullRange: not bound
+!missing-selector! ENExposureDetectionSummary::maximumRiskScoreFullRange not bound
+!missing-selector! ENExposureDetectionSummary::riskScoreSumFullRange not bound
+!missing-selector! ENExposureInfo::totalRiskScoreFullRange not bound
