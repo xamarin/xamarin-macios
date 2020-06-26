@@ -149,7 +149,14 @@ namespace Xharness.Jenkins {
 
 			var simTasksFactory = new RunSimulatorTasksFactory ();
 			var loadsim = simTasksFactory.CreateAsync (this, processManager, testVariationsFactory)
-				.ContinueWith ((v) => { Console.WriteLine ("Simulator tasks created"); Tasks.AddRange (v.Result); });
+				.ContinueWith ((v) => {
+					if (v.Status == TaskStatus.RanToCompletion) {
+						Console.WriteLine ("Simulator tasks created");
+						Tasks.AddRange (v.Result);
+					} else {
+						Console.WriteLine ($"Failed to create simulator tasks: {v.Exception}");
+					}
+				});
 			
 			//Tasks.AddRange (await CreateRunSimulatorTasksAsync ());
 
