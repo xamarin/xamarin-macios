@@ -14,6 +14,7 @@ namespace NotificationCenter {
 	[iOS (8,0)][Mac (10,10)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // not meant to be user created
+	[Deprecated (PlatformName.iOS, 14,0)]
 	interface NCWidgetController {
 
 		[Static]
@@ -25,6 +26,7 @@ namespace NotificationCenter {
 	}
 
 	[iOS (8,0)][Mac (10,10)]
+	[Deprecated (PlatformName.iOS, 14,0)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface NCWidgetProviding {
@@ -73,6 +75,7 @@ namespace NotificationCenter {
 		UIVibrancyEffect NotificationCenterVibrancyEffect ();
 	}
 
+	[Deprecated (PlatformName.iOS, 14,0)]
 	[Category]
 	[BaseType (typeof (NSExtensionContext))]
 	interface NSExtensionContext_NCWidgetAdditions {
@@ -95,6 +98,7 @@ namespace NotificationCenter {
 
 	[Category]
 	[Internal] // only static methods, which are not _nice_ to use as extension methods
+	[Deprecated (PlatformName.iOS, 14,0)]
 	[BaseType (typeof (UIVibrancyEffect))]
 	interface UIVibrancyEffect_NCWidgetAdditions {
 		[iOS (10,0)]
