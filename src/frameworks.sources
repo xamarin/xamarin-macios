@@ -2022,6 +2022,7 @@ TVOS_FRAMEWORKS =           \
 	ImageIO                 \
 	IOSurface				\
 	JavaScriptCore          \
+	LinkPresentation        \
 	MapKit                  \
 	MediaAccessibility      \
 	MediaPlayer             \
