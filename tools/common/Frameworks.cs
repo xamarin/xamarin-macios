@@ -193,6 +193,8 @@ public class Frameworks : Dictionary <string, Framework>
 					//{ "CoreHaptics", "CoreHaptics", 10,15 },
 
 					{ "AutomaticAssessmentConfiguration", "AutomaticAssessmentConfiguration", 10,15,4 },
+
+					{ "UserNotificationsUI", "UserNotificationsUI", 10,16 },
 				};
 			}
 			return mac_frameworks;
