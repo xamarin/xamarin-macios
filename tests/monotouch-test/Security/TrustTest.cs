@@ -295,6 +295,12 @@ namespace MonoTouchFixtures.Security {
 			using (SecKey pkey = trust.GetPublicKey ()) {
 				Assert.That (CFGetRetainCount (pkey.Handle), Is.GreaterThanOrEqualTo ((nint) 1), "RetainCount(pkey)");
 			}
+			if (TestRuntime.CheckXcodeVersion (12,0)) {
+				using (SecKey key = trust.GetKey ()) {
+					Assert.That (key.BlockSize, Is.EqualTo (128), "BlockSize");
+					Assert.That (CFGetRetainCount (key.Handle), Is.GreaterThanOrEqualTo ((nint) 1), "RetainCount(key)");
+				}
+			}
 			if (TestRuntime.CheckXcodeVersion (10,0)) {
 				Assert.False (trust.Evaluate (out var error), "Evaluate");
 				Assert.NotNull (error, "error");
