@@ -15,10 +15,13 @@ namespace Xamarin.Linker {
 		public List<Abi> Abis;
 		// This is the AssemblyName MSBuild property for the main project (which is also the root/entry assembly)
 		public string AssemblyName { get; private set; }
+		public string CacheDirectory { get; private set; }
+		public Version DeploymentTarget { get; private set; }
 		public string ItemsDirectory { get; private set; }
+		public bool IsSimulatorBuild { get; private set; }
 		public ApplePlatform Platform { get; private set; }
 		public string PlatformAssembly { get; private set; }
-		public string CacheDirectory { get; private set; }
+		public Version SdkVersion { get; private set; }
 
 		static ConditionalWeakTable<LinkContext, LinkerConfiguration> configurations = new ConditionalWeakTable<LinkContext, LinkerConfiguration> ();
 
@@ -58,8 +61,16 @@ namespace Xamarin.Linker {
 				case "CacheDirectory":
 					CacheDirectory = value;
 					break;
+				case "DeploymentTarget":
+					if (!Version.TryParse (value, out var deployment_target))
+						throw new InvalidOperationException ($"Unable to parse the {key} value: {value} in {linker_file}");
+					DeploymentTarget = deployment_target;
+					break;
 				case "ItemsDirectory":
 					ItemsDirectory = value;
+					break;
+				case "IsSimulatorBuild":
+					IsSimulatorBuild = string.Equals ("true", value, StringComparison.OrdinalIgnoreCase);
 					break;
 				case "Platform":
 					switch (value) {
@@ -81,6 +92,11 @@ namespace Xamarin.Linker {
 					break;
 				case "PlatformAssembly":
 					PlatformAssembly = Path.GetFileNameWithoutExtension (value);
+					break;
+				case "SdkVersion":
+					if (!Version.TryParse (value, out var sdk_version))
+						throw new InvalidOperationException ($"Unable to parse the {key} value: {value} in {linker_file}");
+					SdkVersion = sdk_version;
 					break;
 				case "TargetArchitectures":
 					if (!Enum.TryParse<Abi> (value, out var arch))
@@ -107,9 +123,12 @@ namespace Xamarin.Linker {
 			Console.WriteLine ($"    ABIs: {string.Join (", ", Abis.Select (v => v.AsArchString ()))}");
 			Console.WriteLine ($"    AssemblyName: {AssemblyName}");
 			Console.WriteLine ($"    CacheDirectory: {CacheDirectory}");
+			Console.WriteLine ($"    DeploymentTarget: {DeploymentTarget}");
 			Console.WriteLine ($"    ItemsDirectory: {ItemsDirectory}");
+			Console.WriteLine ($"    IsSimulatorBuild: {IsSimulatorBuild}");
 			Console.WriteLine ($"    Platform: {Platform}");
 			Console.WriteLine ($"    PlatformAssembly: {PlatformAssembly}.dll");
+			Console.WriteLine ($"    SdkVersion: {SdkVersion}");
 		}
 
 		public void WriteOutputForMSBuild (string itemName, List<MSBuildItem> items)
