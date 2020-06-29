@@ -216,6 +216,10 @@ namespace Introspection
 #endif
 						break;
 #if NET
+					case "libhostpolicy":
+						// There's no libhostpolicy library.
+						// https://github.com/dotnet/runtime/issues/38543
+						continue;
 					case "libSystem.Native":
 						path += ".dylib";
 						break;
