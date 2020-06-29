@@ -209,6 +209,11 @@ namespace Introspection
 					case "__Internal":
 						// load from executable
 						path = null;
+#if NET
+						// Globalization hasn't been implemented yet: https://github.com/xamarin/xamarin-macios/issues/8906
+						if (name.StartsWith ("GlobalizationNative_", StringComparison.Ordinal))
+							continue;
+#endif
 						break;
 #if NET
 					case "libSystem.Native":
