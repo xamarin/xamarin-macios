@@ -143,6 +143,10 @@
 				<!-- At the end of the pipeline -->
 				<Type>Xamarin.GenerateMainStep</Type>
 			</_TrimmerCustomSteps>
+			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)">
+				<!-- At the end of the pipeline -->
+				<Type>Xamarin.GatherFrameworksStep</Type>
+			</_TrimmerCustomSteps>
 		</ItemGroup>
 
 		<!-- Create the file with our custom linker options -->
@@ -153,6 +157,10 @@
 		<!-- Load _MainFile -->
 		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_MainFile.items" Condition="Exists('$(_LinkerItemsDirectory)/_MainFile.items')">
 			<Output TaskParameter="Items" ItemName="_MainFile" />
+		</ReadItemsFromFile>
+		<!-- Load _LinkerFrameworks -->
+		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_LinkerFrameworks.items" Condition="Exists('$(_LinkerItemsDirectory)/_LinkerFrameworks.items')">
+			<Output TaskParameter="Items" ItemName="_LinkerFrameworks" />
 		</ReadItemsFromFile>
 	</Target>
 
@@ -259,9 +267,8 @@
 			<_XamarinMainLibraries Include="$(_XamarinNativeLibraryDirectory)/$(_LibXamarinName)" />
 			<!-- Link with the libraries shipped with the mono runtime pack -->
 			<_XamarinMainLibraries Include="@(_MonoLibrary)" />
-			<!-- Hardcode a few frameworks for now -->
-			<_NativeExecutableFrameworks Include="Foundation" />
-			<_NativeExecutableFrameworks Include="CoreFoundation" />
+			<!-- The frameworks we need to link with (both weakly and normally) -->
+			<_NativeExecutableFrameworks Include="@(_LinkerFrameworks)" />
 		</ItemGroup>
 
 		<LinkNativeCode
