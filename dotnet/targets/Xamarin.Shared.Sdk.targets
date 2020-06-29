@@ -272,7 +272,6 @@
 			SdkIsSimulator="$(_SdkIsSimulator)"
 			SdkRoot="$(_SdkRoot)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
-			WeakFrameworks="@(_NativeExecutableWeakFrameworks)"
 		/>
 
 		<ItemGroup>
