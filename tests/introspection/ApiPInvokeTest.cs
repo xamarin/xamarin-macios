@@ -210,6 +210,11 @@ namespace Introspection
 						// load from executable
 						path = null;
 						break;
+#if NET
+					case "libSystem.Native":
+						path += ".dylib";
+						break;
+#endif
 					case "libc":
 						// we still have some rogue/not-fully-qualified DllImport
 						path = "/usr/lib/libSystem.dylib";
