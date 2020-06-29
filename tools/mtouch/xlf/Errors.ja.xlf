@@ -2927,6 +2927,11 @@
         <note>
         </note>
       </trans-unit>
+      <trans-unit id="MX0177">
+        <source>Unknown platform: {0}. This usually indicates a bug; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.</source>
+        <target state="new">Unknown platform: {0}. This usually indicates a bug; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.</target>
+        <note />
+      </trans-unit>
       <trans-unit id="MX1009">
         <source>Could not copy the assembly '{0}' to '{1}': {2}
 		</source>
