@@ -65,7 +65,6 @@ stages:
     condition: succeededOrFailed()
     pool:
       vmImage: ${{ parameters.WindowsDevicePool }}
-      demands: agent.os -equals Windows_NT # we need to use a windows machine since vsdrops just works on them and the pool might have diff OS in the agents
     steps:
     - template: upload-vsdrops.yml
       parameters:
@@ -78,7 +77,6 @@ stages:
     condition: succeededOrFailed()
     pool:
       vmImage: ${{ parameters.WindowsDevicePool }}
-      demands: agent.os -equals Windows_NT # we need to use a windows machine since vsdrops just works on them and the pool might have diff OS in the agents
     steps:
     - template: upload-vsts-tests.yml
 
@@ -99,7 +97,6 @@ stages:
       VSDROPS_INDEX: $[ dependencies.upload_vsdrops.outputs['vsdrops.VSDROPS_INDEX'] ]
     pool:
       vmImage: ${{ parameters.WindowsDevicePool }}
-      demands: agent.os -equals Windows_NT # we need to use a windows machine since vsdrops just works on them and the pool might have diff OS in the agents
     steps:
     - template: publish-html.yml
       parameters:
