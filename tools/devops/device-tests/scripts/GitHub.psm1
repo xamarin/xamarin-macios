@@ -311,6 +311,7 @@ function New-GitHubSummaryComment {
         $TestSummaryPath,
 
         [String]
+        [AllowEmptyString()]
         $XamarinStoragePath
     )
 
