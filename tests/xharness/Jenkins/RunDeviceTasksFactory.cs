@@ -19,6 +19,9 @@ namespace Xharness.Jenkins {
 				if (!project.IsExecutableProject)
 					continue;
 				
+				if (project.SkipDeviceVariations)
+					continue;
+
 				bool ignored = !jenkins.IncludeDevice;
 				if (!jenkins.IsIncluded (project))
 					ignored = true;
@@ -59,23 +62,25 @@ namespace Xharness.Jenkins {
 						useTcpTunnel: jenkins.Harness.UseTcpTunnel,
 						candidates: jenkins.Devices.Connected32BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.IncludeiOS32 });
 
-					var todayProject = project.AsTodayExtensionProject ();
-					var buildToday = new MSBuildTask (jenkins: jenkins, testProject: todayProject, processManager: processManager) {
-						ProjectConfiguration = "Debug64",
-						ProjectPlatform = "iPhone",
-						Platform = TestPlatform.iOS_TodayExtension64,
-						TestName = project.Name,
-					};
-					buildToday.CloneTestProject (jenkins.MainLog, processManager, todayProject);
-					projectTasks.Add (new RunDeviceTask (
-						jenkins: jenkins,
-						devices: jenkins.Devices,
-						buildTask: buildToday,
-						processManager: processManager,
-						tunnelBore: jenkins.TunnelBore,
-						errorKnowledgeBase: jenkins.ErrorKnowledgeBase,
-						useTcpTunnel: jenkins.Harness.UseTcpTunnel,
-						candidates: jenkins.Devices.Connected64BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.IncludeiOSExtensions, BuildOnly = jenkins.ForceExtensionBuildOnly });
+					if (!project.SkipTodayExtensionVariation) {
+						var todayProject = project.AsTodayExtensionProject ();
+						var buildToday = new MSBuildTask (jenkins: jenkins, testProject: todayProject, processManager: processManager) {
+							ProjectConfiguration = "Debug64",
+							ProjectPlatform = "iPhone",
+							Platform = TestPlatform.iOS_TodayExtension64,
+							TestName = project.Name,
+						};
+						buildToday.CloneTestProject (jenkins.MainLog, processManager, todayProject);
+						projectTasks.Add (new RunDeviceTask (
+							jenkins: jenkins,
+							devices: jenkins.Devices,
+							buildTask: buildToday,
+							processManager: processManager,
+							tunnelBore: jenkins.TunnelBore,
+							errorKnowledgeBase: jenkins.ErrorKnowledgeBase,
+							useTcpTunnel: jenkins.Harness.UseTcpTunnel,
+							candidates: jenkins.Devices.Connected64BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.IncludeiOSExtensions, BuildOnly = jenkins.ForceExtensionBuildOnly });
+					}
 				}
 
 				if (!project.SkiptvOSVariation) {

@@ -100,8 +100,21 @@ namespace Xharness.Jenkins {
 				ignored = new [] { false };
 				break;
 			case TestPlatform.iOS_Unified:
-				platforms = new TestPlatform [] { TestPlatform.iOS_Unified32, TestPlatform.iOS_Unified64 };
-				ignored = new [] { !jenkins.IncludeiOS32, false };
+				var iOSProject = (iOSTestProject) buildTask.TestProject;
+				if (iOSProject.SkipiOS32Variation && iOSProject.SkipiOS64Variation) {
+					return runtasks;
+				} else if (iOSProject.SkipiOS32Variation) {
+					targets = new TestTarget [] { TestTarget.Simulator_iOS64 };
+					platforms = new TestPlatform [] { TestPlatform.iOS_Unified64 };
+					ignored = new [] { false };
+				} else if (iOSProject.SkipiOS64Variation) {
+					targets = new TestTarget [] { TestTarget.Simulator_iOS32 };
+					platforms = new TestPlatform [] { TestPlatform.iOS_Unified32 };
+					ignored = new [] { !jenkins.IncludeiOS32 };
+				} else {
+					platforms = new TestPlatform [] { TestPlatform.iOS_Unified32, TestPlatform.iOS_Unified64 };
+					ignored = new [] { !jenkins.IncludeiOS32, false };
+				}
 				break;
 			case TestPlatform.iOS_TodayExtension64:
 				targets = new TestTarget [] { TestTarget.Simulator_iOS64 };

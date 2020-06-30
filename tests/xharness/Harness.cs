@@ -522,13 +522,15 @@ namespace Xharness {
 					unified.Execute ();
 					unified_targets.Add (unified);
 
-					var today = new TodayExtensionTarget {
-						TemplateProjectPath = file,
-						Harness = this,
-						TestProject = proj,
-					};
-					today.Execute ();
-					today_targets.Add (today);
+					if (!proj.SkipTodayExtensionVariation) {
+						var today = new TodayExtensionTarget {
+							TemplateProjectPath = file,
+							Harness = this,
+							TestProject = proj,
+						};
+						today.Execute ();
+						today_targets.Add (today);
+					}
 				}
 			}
 
