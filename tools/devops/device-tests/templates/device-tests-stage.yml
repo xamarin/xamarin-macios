@@ -64,7 +64,7 @@ stages:
     dependsOn: tests # can start as soon as the tests are done
     condition: succeededOrFailed()
     pool:
-      name: ${{ parameters.WindowsDevicePool }}
+      vmImage: ${{ parameters.WindowsDevicePool }}
       demands: agent.os -equals Windows_NT # we need to use a windows machine since vsdrops just works on them and the pool might have diff OS in the agents
     steps:
     - template: upload-vsdrops.yml
@@ -77,7 +77,7 @@ stages:
     dependsOn: tests # can start as soon as the tests are done
     condition: succeededOrFailed()
     pool:
-      name: ${{ parameters.WindowsDevicePool }}
+      vmImage: ${{ parameters.WindowsDevicePool }}
       demands: agent.os -equals Windows_NT # we need to use a windows machine since vsdrops just works on them and the pool might have diff OS in the agents
     steps:
     - template: upload-vsts-tests.yml
@@ -98,7 +98,7 @@ stages:
       TESTS_JOBSTATUS: $[ dependencies.tests.outputs['runTests.TESTS_JOBSTATUS'] ]
       VSDROPS_INDEX: $[ dependencies.upload_vsdrops.outputs['vsdrops.VSDROPS_INDEX'] ]
     pool:
-      name: ${{ parameters.WindowsDevicePool }}
+      vmImage: ${{ parameters.WindowsDevicePool }}
       demands: agent.os -equals Windows_NT # we need to use a windows machine since vsdrops just works on them and the pool might have diff OS in the agents
     steps:
     - template: publish-html.yml
