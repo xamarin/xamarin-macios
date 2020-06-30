@@ -141,6 +141,9 @@ namespace Xharness.Jenkins {
 			foreach (var task in tests) {
 				if (string.IsNullOrEmpty (task.Variation))
 					task.Variation = task.ProjectConfiguration.Contains ("Debug") ? "Debug" : "Release";
+
+				if (task.TestProject.IsDotNetProject)
+					task.Variation += " [dotnet]";
 			}
 
 			var rv = new List<T> (tests);
@@ -158,6 +161,9 @@ namespace Xharness.Jenkins {
 					var ignored = test_data.Ignored;
 					var known_failure = test_data.KnownFailure;
 					var candidates = test_data.Candidates;
+
+					if (task.TestProject.IsDotNetProject)
+						variation += " [dotnet]";
 
 					if (known_failure.HasValue)
 						ignored = true;
