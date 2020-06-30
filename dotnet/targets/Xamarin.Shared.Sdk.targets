@@ -130,6 +130,10 @@
 			</_CustomLinkerOptions>
 			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) --custom-data "LinkerOptionsFile=$(_CustomLinkerOptionsFile)"</_ExtraTrimmerArgs>
 
+			<!-- Work around a linker issue: https://github.com/mono/linker/issues/1304 -->
+			<!-- System.Runtime.dll isn't always copied to the .app -->
+			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) -p copy "System.Runtime"</_ExtraTrimmerArgs>
+
 			<!-- Verbose output, so that we get something to stdout when something goes wrong -->
 			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) --verbose</_ExtraTrimmerArgs>
 		</PropertyGroup>
