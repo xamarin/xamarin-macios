@@ -65,19 +65,6 @@ Copyright (C) 2013-2016 Xamarin Inc. All rights reserved.
 		</AssignBundleResourceNames>
 	</Target>
 
-	<Target Name="_CollectBundleResources">
-		<CollectBundleResources
-				SessionId="$(BuildSessionId)" 
-				OptimizePNGs="False"
-				BundleResources="@(Content);@(BundleResource)"
-				ProjectDir="$(MSBuildProjectDirectory)"
-				ResourcePrefix="$(_ResourcePrefix)"
-			>
-
-			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="_BundleResourceWithLogicalName"/>
-		</CollectBundleResources>
-	</Target>
-
 	<Target Name="_CreateEmbeddedResources" DependsOnTargets="_CollectBundleResources">
 		<CreateEmbeddedResources BundleResources="@(_BundleResourceWithLogicalName)" Prefix="monotouch">
 			<Output ItemName="EmbeddedResource" TaskParameter="EmbeddedResources" />

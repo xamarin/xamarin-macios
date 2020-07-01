@@ -164,17 +164,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<RemoveDir Directories="$(IntermediateOutputPath)" />
 	</Target>
 
-	<PropertyGroup>
-		<_CollectBundleResourcesDependsOn>
-			_CompileImageAssets;
-			_CompileInterfaceDefinitions;
-			_CompileSceneKitAssets;
-			_CompileColladaAssets;
-			_CompileTextureAtlases;
-			$(_CollectBundleResourcesDependsOn);
-		</_CollectBundleResourcesDependsOn>
-	</PropertyGroup>
-
 	<Target Name="_CodesignNativeLibraries" Condition="'$(_RequireCodeSigning)'" DependsOnTargets="_DetectSigningIdentity">
 		<Codesign
 			SessionId="$(BuildSessionId)"
@@ -263,17 +252,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			SessionId="$(BuildSessionId)"
 			SourceFiles = "@(_BundleResourceWithLogicalName)"
 			DestinationFiles = "@(_BundleResourceWithLogicalName -> '$(_AppResourcesPath)%(LogicalName)')"/>
-	</Target>
-
-	<Target Name="_CollectBundleResources" DependsOnTargets="$(_CollectBundleResourcesDependsOn)">
-		<CollectBundleResources
-			Condition="'$(IsMacEnabled)' == 'true'"
-			SessionId="$(BuildSessionId)"
-			BundleResources="@(Content);@(BundleResource)"
-			ProjectDir="$(MSBuildProjectDirectory)"
-			ResourcePrefix="$(_ResourcePrefix)">
-			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="_BundleResourceWithLogicalName" />
-		</CollectBundleResources>
 	</Target>
 
 	<Target Name="_SmeltMetal" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(Metal)' != ''" DependsOnTargets="_DetectSdkLocations;_ComputeTargetFrameworkMoniker;_GetMinimumOSVersion">
