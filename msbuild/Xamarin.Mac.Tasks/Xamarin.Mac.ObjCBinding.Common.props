@@ -24,6 +24,11 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<_XamarinCommonBindingPropsHasBeenImported>true</_XamarinCommonBindingPropsHasBeenImported>
 	</PropertyGroup>
 
+	<!-- This is used to set that we're a binding project. It must be set before including Xamarin.Shared.props -->
+	<PropertyGroup>
+		<IsBindingProject>true</IsBindingProject>
+	</PropertyGroup>
+
 	<PropertyGroup>
 		<BaseLibDllPath>$(MacBclPath)/Xamarin.Mac.dll</BaseLibDllPath>
 		<BTouchToolPath>$(XamarinMacFrameworkRoot)/bin/</BTouchToolPath>

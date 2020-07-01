@@ -123,11 +123,21 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<DeviceSpecificOutputPath>$(OutputPath)</DeviceSpecificOutputPath>
 		<DeviceSpecificOutputPath Condition="$([System.IO.Path]::IsPathRooted ('$(DeviceSpecificOutputPath)')) == 'true'">$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)','$(OutputPath)'))</DeviceSpecificOutputPath>
 
-		<!-- OptimizePNGs: default to true for Xamarin.iOS and false for Xamarin.Mac -->
+		<!-- OptimizePNGs:
+			default to false if a binding project (both XI and XM)
+			otherwise default to false if a Xamarin.Mac project
+			otherwise default to true for Xamarin.iOS
+		-->
+		<OptimizePNGs Condition="'$(IsBindingProject)' == 'true' And '$(OptimizePNGs)' == ''">false</OptimizePNGs>
 		<OptimizePNGs Condition="'$(_PlatformName)' == 'macOS' And '$(OptimizePNGs)' == ''">false</OptimizePNGs>
 		<OptimizePNGs Condition="'$(_PlatformName)' != 'macOS' And '$(OptimizePNGs)' == ''">true</OptimizePNGs>
 
-		<!-- OptimizePropertyLists: default to true for Xamarin.iOS and false for Xamarin.Mac -->
+		<!-- OptimizePropertyLists:
+			default to false if a binding project (both XI and XM)
+			otherwise default to false if a Xamarin.Mac project
+			otherwise default to true for Xamarin.iOS
+		-->
+		<OptimizePropertyLists Condition="'$(IsBindingProject)' == 'true' And '$(OptimizePropertyLists)' == ''">false</OptimizePropertyLists>
 		<OptimizePropertyLists Condition="'$(_PlatformName)' == 'macOS' And '$(OptimizePropertyLists)' == ''">false</OptimizePropertyLists>
 		<OptimizePropertyLists Condition="'$(_PlatformName)' != 'macOS' And '$(OptimizePropertyLists)' == ''">true</OptimizePropertyLists>
 	</PropertyGroup>
