@@ -17,7 +17,7 @@ namespace Xharness.Jenkins.TestTasks {
 
 		public override string LogDirectory {
 			get {
-				var rv = Path.Combine (Jenkins.LogDirectory, TestName, ID.ToString ());
+				var rv = Path.Combine (Jenkins.LogDirectory, TestName.Replace (" ", "-"), ID.ToString ());
 				Directory.CreateDirectory (rv);
 				return rv;
 			}
