@@ -6,7 +6,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 namespace Xharness.Targets
 {
 	// iOS here means Xamarin.iOS, not iOS as opposed to tvOS/watchOS.
-	public class iOSTarget : Target
+	public abstract class iOSTarget : Target
 	{
 		public iOSTestProject TestProject;
 
