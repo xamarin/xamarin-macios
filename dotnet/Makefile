@@ -76,7 +76,7 @@ nupkgs/$(MACOS_NUGET).%.nupkg: CURRENT_VERSION_FULL=$(MACOS_NUGET_VERSION_FULL)
 
 # Create the nuget in a temporary directory (nupkgs/)
 define CreateNuGetTemplate
-nupkgs/$(1).$(2)+$(NUGET_BUILD_METADATA).nupkg: $(TEMPLATED_FILES) $(3) package/$(1)/package.csproj $(wildcard package/*.csproj) $(wildcard $(DOTNET_DESTDIR)/$(1)/* $(DOTNET_DESTDIR)/$(1)/*/* $(DOTNET_DESTDIR)/$(1)/*/*/* $(DOTNET_DESTDIR)/$(1)/*/*/*/*)
+nupkgs/$(1).$(2)+$(NUGET_BUILD_METADATA).nupkg: $(TEMPLATED_FILES) $(3) package/$(1)/package.csproj $(wildcard package/*.csproj) $(wildcard $(DOTNET_DESTDIR)/$(1)/* $(DOTNET_DESTDIR)/$(1)/*/* $(DOTNET_DESTDIR)/$(1)/*/*/* $(DOTNET_DESTDIR)/$(1)/*/*/*/*) global.json
 	@# Delete any versions of the nuget we're building
 	$$(Q) rm -f nupkgs/$(1).*.nupkg
 	$$(Q_PACK) $(DOTNET5) pack package/$(1)/package.csproj --output "$$(dir $$@)" $(DOTNET_PACK_VERBOSITY)
@@ -128,6 +128,15 @@ TARGETS += $(RUNTIME_PACKS) $(REF_PACKS) $(SDK_PACKS)
 ifdef ENABLE_DOTNET
 all-local:: $(TARGETS) targets/Xamarin.Shared.Sdk.Versions.props
 endif
+
+# This tells NuGet to use the exact same dotnet version we've configured in Make.config
+global.json: $(TOP)/Make.config.inc Makefile $(TOP)/.git/HEAD $(TOP)/.git/index
+	$(Q_GEN) \
+		printf "{\n" > $@; \
+		printf "\t\"sdk\": { \"version\": \"$(DOTNET5_VERSION)\" },\n" >> $@; \
+		printf "\t\"msbuild-sdks\": {\n" >> $@; \
+		printf "\t\t\"Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk\": \"5.0.0-beta.20120.1\"\n" >> $@; \
+		printf "\t}\n}\n" >> $@
 
 clean-local::
 	$(Q) rm -Rf $(DOTNET_NUPKG_DIR) $(DOTNET_FEED_DIR)
