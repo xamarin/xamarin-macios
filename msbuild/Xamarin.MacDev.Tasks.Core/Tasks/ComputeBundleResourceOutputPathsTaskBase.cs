@@ -12,7 +12,7 @@ namespace Xamarin.MacDev.Tasks
 	public abstract class ComputeBundleResourceOutputPathsTaskBase : XamarinTask
 	{
 		[Required]
-		public ITaskItem AppBundleDir { get; set; }
+		public ITaskItem AppResourcesPath { get; set; }
 
 		[Required]
 		public string BundleIdentifier { get; set; }
@@ -71,7 +71,7 @@ namespace Xamarin.MacDev.Tasks
 
 						outputPath = Path.Combine (assetpack, logicalName);
 					} else if (string.IsNullOrEmpty (outputPath)) {
-						outputPath = Path.Combine (AppBundleDir.ItemSpec, logicalName);
+						outputPath = Path.Combine (AppResourcesPath.ItemSpec, logicalName);
 					}
 
 					var bundleResource = new TaskItem (item);

@@ -140,6 +140,10 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<OptimizePropertyLists Condition="'$(IsBindingProject)' == 'true' And '$(OptimizePropertyLists)' == ''">false</OptimizePropertyLists>
 		<OptimizePropertyLists Condition="'$(_PlatformName)' == 'macOS' And '$(OptimizePropertyLists)' == ''">false</OptimizePropertyLists>
 		<OptimizePropertyLists Condition="'$(_PlatformName)' != 'macOS' And '$(OptimizePropertyLists)' == ''">true</OptimizePropertyLists>
+
+		<!-- EnableOnDemandResources: default to true for Xamarin.iOS and false for Xamarin.Mac -->
+		<EnableOnDemandResources Condition="'$(_PlatformName)' == 'macOS' And '$(EnableOnDemandResources)' == ''">false</EnableOnDemandResources>
+		<EnableOnDemandResources Condition="'$(_PlatformName)' != 'macOS' And '$(EnableOnDemandResources)' == ''">true</EnableOnDemandResources>
 	</PropertyGroup>
 
 	<Target Name="_ComputeTargetFrameworkMoniker" Condition="'$(_ComputedTargetFrameworkMoniker)' == ''">
