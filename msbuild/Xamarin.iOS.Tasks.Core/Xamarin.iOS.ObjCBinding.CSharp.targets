@@ -32,62 +32,9 @@ Copyright (C) 2013-2016 Xamarin Inc. All rights reserved.
 	<Import Project="Xamarin.Shared.targets"/>
 
 	<PropertyGroup>
-		<_GeneratedSourcesFileList>$(GeneratedSourcesDir)sources.list</_GeneratedSourcesFileList>
-
 		<XamarinDefineConstants Condition="'$(XamarinDefineConstants)' == ''">__UNIFIED__;__MOBILE__;__IOS__</XamarinDefineConstants>
 		<DefineConstants>$(XamarinDefineConstants);$(DefineConstants)</DefineConstants>
-		<LangVersion>latest</LangVersion>
-
- 		<!-- Add our own pre and post build steps --> 
-		<CompileDependsOn>
-			_GenerateBindings;
-			_PrepareNativeReferences;
-			_CollectGeneratedSources;
-			$(CompileDependsOn)
- 			_CreateBindingResourcePackage; 
-		</CompileDependsOn>
 	</PropertyGroup>
-
-	<!-- Override the CoreCompile Target to use btouch -->
-	<Target Name="_GenerateBindings"
-		Inputs="$(MSBuildAllProjects);@(ObjcBindingApiDefinition);@(ObjcBindingCoreSource);@(ReferencePath);@(ObjcBindingNativeLibrary)"
-		Outputs="$(_GeneratedSourcesFileList)"
-		DependsOnTargets="_ComputeTargetFrameworkMoniker"
-		Condition="'$(DesignTimeBuild)' != 'true'">
-
-		<PropertyGroup>
-			<BTouchEmitDebugInformation>false</BTouchEmitDebugInformation>
-			<BTouchEmitDebugInformation Condition="'$(Debug)' != ''">true</BTouchEmitDebugInformation>
-		</PropertyGroup>
-
-		<Message Text="BTouchEmitDebugInformation: $(BTouchEmitDebugInformation)"/>
-
-		<BTouch
-			SessionId="$(BuildSessionId)"
-			OutputPath="$(OutputPath)"
-			ObjectiveCLibraries="@(ObjcBindingNativeLibrary)"
-			AdditionalLibPaths="$(AdditionalLibPaths)"
-			AllowUnsafeBlocks="$(AllowUnsafeBlocks)"
-			ApiDefinitions="@(ObjcBindingApiDefinition)"
-			BaseLibDll="$(BaseLibDllPath)"
-			CoreSources="@(ObjcBindingCoreSource)"
-			DefineConstants="$(DefineConstants)"
-			EmitDebugInformation="$(BTouchEmitDebugInformation)"
-			ExtraArgs="$(BTouchExtraArgs)"
-			GeneratedSourcesDir="$(GeneratedSourcesDir)"
-			GeneratedSourcesFileList="$(_GeneratedSourcesFileList)"
-			Namespace="$(Namespace)"
-			OutputAssembly="$(OutputAssembly)"
-			ProcessEnums="$(ProcessEnums)"
-			ProjectDir="$(MSBuildProjectDirectory)"
-			References="@(ReferencePath)"
-			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
-			BTouchToolPath="$(BTouchToolPath)"
-			BTouchToolExe="$(BTouchToolExe)"
-			StandardOutputImportance="High"
-			>
-		</BTouch>
-	</Target>
 
 	<Target Name="_PrepareNativeReferences" Condition="'$(DesignTimeBuild)' != 'true'">
 		<PrepareNativeReferences

@@ -25,8 +25,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-
 		<DefineConstants>__UNIFIED__;__MACOS__;$(DefineConstants)</DefineConstants>
 	</PropertyGroup>
 
@@ -39,21 +37,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			.pdb
 		</AllowedReferenceRelatedFileExtensions>
 	</PropertyGroup>
-
-	<PropertyGroup>
-		<GeneratedSourcesDir Condition="'$(GeneratedSourcesDir)' == ''">$(IntermediateOutputPath)mac</GeneratedSourcesDir>
-		<GeneratedSourcesDir Condition="'$(GeneratedSourcesDir)' != '' and !HasTrailingSlash ('$(GeneratedSourcesDir)')">$(GeneratedSourcesDir)\</GeneratedSourcesDir>
-
-		<ProcessEnums Condition="'$(ProcessEnums)' == ''">False</ProcessEnums>
-	</PropertyGroup>
-
-	<!-- Make our Build Actions show up in MonoDevelop -->
-	<ItemGroup>
-		<AvailableItemName Include="BundleResource" />
-		<AvailableItemName Include="ObjcBindingApiDefinition" />
-		<AvailableItemName Include="ObjcBindingCoreSource" />
-		<AvailableItemName Include="ObjcBindingNativeLibrary" />
-	</ItemGroup>
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.props"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.props')"/>
