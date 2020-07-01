@@ -435,11 +435,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 	<PropertyGroup>
 		<_CollectBundleResourcesDependsOn>
-			_CompileInterfaceDefinitions;
-			_CompileImageAssets;
-			_CompileColladaAssets;
-			_CompileSceneKitAssets;
-			_CompileTextureAtlases;
+			$(_CollectBundleResourcesDependsOn);
 			_CompileCoreMLModels;
 		</_CollectBundleResourcesDependsOn>
 	</PropertyGroup>
@@ -480,21 +476,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			PrefetchOrder="$(OnDemandResourcesPrefetchOrder)"
 			OutputPath="$(DeviceSpecificOutputPath)"
 		/>
-	</Target>
-
-	<Target Name="_CollectBundleResources" DependsOnTargets="$(_CollectBundleResourcesDependsOn)">
-		<CollectBundleResources
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			OptimizePropertyLists="$(OptimizePropertyLists)"
-			OptimizePNGs="$(OptimizePNGs)"
-			BundleResources="@(Content);@(BundleResource)"
-			ProjectDir="$(MSBuildProjectDirectory)"
-			ResourcePrefix="$(_ResourcePrefix)"
-			>
-
-			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="_BundleResourceWithLogicalName"/>
-		</CollectBundleResources>
 	</Target>
 
 	<Target Name="_SmeltMetal" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(Metal)' != ''" DependsOnTargets="_DetectSdkLocations;_ComputeTargetFrameworkMoniker;_GetMinimumOSVersion">

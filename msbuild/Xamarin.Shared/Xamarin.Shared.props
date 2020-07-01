@@ -122,6 +122,14 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		     DeviceSpecificOutputPath. -->
 		<DeviceSpecificOutputPath>$(OutputPath)</DeviceSpecificOutputPath>
 		<DeviceSpecificOutputPath Condition="$([System.IO.Path]::IsPathRooted ('$(DeviceSpecificOutputPath)')) == 'true'">$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)','$(OutputPath)'))</DeviceSpecificOutputPath>
+
+		<!-- OptimizePNGs: default to true for Xamarin.iOS and false for Xamarin.Mac -->
+		<OptimizePNGs Condition="'$(_PlatformName)' == 'macOS' And '$(OptimizePNGs)' == ''">false</OptimizePNGs>
+		<OptimizePNGs Condition="'$(_PlatformName)' != 'macOS' And '$(OptimizePNGs)' == ''">true</OptimizePNGs>
+
+		<!-- OptimizePropertyLists: default to true for Xamarin.iOS and false for Xamarin.Mac -->
+		<OptimizePropertyLists Condition="'$(_PlatformName)' == 'macOS' And '$(OptimizePropertyLists)' == ''">false</OptimizePropertyLists>
+		<OptimizePropertyLists Condition="'$(_PlatformName)' != 'macOS' And '$(OptimizePropertyLists)' == ''">true</OptimizePropertyLists>
 	</PropertyGroup>
 
 	<Target Name="_ComputeTargetFrameworkMoniker" Condition="'$(_ComputedTargetFrameworkMoniker)' == ''">
