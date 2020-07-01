@@ -17,59 +17,17 @@ parameters:
   type: string 
   default: 'iOS Device Tests' # default context, since we started dealing with iOS devices. 
 
-- name: vsdropsPrefix
-  type: string
-
 steps:
 
 - checkout: self
   persistCredentials: true
 
-- pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\tools\devops\device-tests\scripts\System.psm1
-    Get-SystemInfo | Format-Table -Wrap -HideTableHeaders
-    Write-Host "Env variables are:"
-    Get-ChildItem env:
-  displayName: 'Dump Environment'
-  timeoutInMinutes: 1
-
-# Download the Html Report that was added by the tests job.
-- task: DownloadPipelineArtifact@2
-  displayName: Download html report 
-  inputs:
-    patterns: '**/HtmlReport.zip'
-    allowFailedBuilds: true
-    path: $(System.DefaultWorkingDirectory)/Reports
-
-# Unzip report.
-- task: ExtractFiles@1
-  displayName: 'Extract HmlReport'
-  inputs:
-    archiveFilePatterns: '$(System.DefaultWorkingDirectory)/Reports/HtmlReport/HtmlReport.zip'
-    destinationFolder: '$(System.DefaultWorkingDirectory)/HtmlReport'
-
-# Upload full report to vsdrops using the the build numer and id as uudis.
-- task: ms-vscs-artifact.build-tasks.artifactDropTask-1.artifactDropTask@0
-  displayName: 'Publish to Artifact Services Drop'
-  inputs:
-    dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'
-    buildNumber: 'xamarin-macios/device-tests/$(Build.BuildNumber)/$(Build.BuildId)'
-    sourcePath: '$(System.DefaultWorkingDirectory)\HtmlReport'
-    detailedLog: true
-    usePat: true 
-
-# Download the test report to write the comment.
-- task: DownloadPipelineArtifact@2
-  displayName: Download Test Summary
-  inputs:
-    patterns: '**/TestSummary.md'
-    allowFailedBuilds: true
-    path: $(System.DefaultWorkingDirectory)\Reports
+- template: download-artifacts.yml 
 
 # Use the cmdlet to post a new summary comment. The cmdlet checks if we have the TestSummary.md file or not. It will also add the appropriate links to the commnet. 
 # this step uses variables that have been set by the tests job dependency via output variables, those variables contain if the xamarin-storage could be used and its path
 - pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\tools\devops\device-tests\scripts\GitHub.psm1 
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\device-tests\scripts\GitHub.psm1 
     New-GitHubSummaryComment -Context "$Env:CONTEXT" -XamarinStoragePath "$Env:XAMARIN_STORAGE_PATH" -TestSummaryPath "$Env:TESTS_SUMMARY"
   env:
     BUILD_REVISION: $(BUILD_REVISION)
@@ -78,8 +36,8 @@ steps:
     XAMARIN_STORAGE_PATH: $(XAMARIN_STORAGE_PATH) # could be null if the step was not executed if we use vsdrops, the cmdlet will know how to handle that case
     XAMARIN_STORAGE_FAILED: $(XAMARIN_STORAGE_FAILED) # could not reach xamarin-storage, either the bot is not in the vpn or it finally failed
     TESTS_JOBSTATUS: $(TESTS_JOBSTATUS) # set by the runTests step
-    VSDROPS_INDEX: '${{ parameters.vsdropsPrefix }}/$(Build.BuildNumber)/$(Build.BuildId);/tests/vsdrops_index.html' # url to the vsdrops generated index file
-    TESTS_SUMMARY: $(System.DefaultWorkingDirectory)\Reports\TestSummary\TestSummary.md
+    VSDROPS_INDEX: $(VSDROPS_INDEX)
+    TESTS_SUMMARY: $(TEST_SUMMARY_PATH)
   displayName: 'Add summaries'
   condition: always()
   timeoutInMinutes: 1
