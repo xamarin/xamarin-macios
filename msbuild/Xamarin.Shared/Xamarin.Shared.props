@@ -28,6 +28,18 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 	</PropertyGroup>
 
 	<PropertyGroup>
+		<!-- _XamarinSdkRoot
+			Xamarin.Mac: Defaults to XamarinMacFrameworkRoot, otherwise /Library/Frameworks/Xamarin.Mac.framework/Versions/Current
+			Xamarin.iOS: Defaults to MonoTouchSdkRoot, otherwise use MD_MTOUCH_SDK_ROOT, otherwise /Library/Frameworks/Xamarin.iOS.framework/Versions/Current
+		-->
+		<_XamarinSdkRoot Condition="'$(_XamarinSdkRoot)' == '' And '$(_PlatformName)' == 'macOS' ">$(XamarinMacFrameworkRoot)</_XamarinSdkRoot>
+		<_XamarinSdkRoot Condition="'$(_XamarinSdkRoot)' == '' And '$(_PlatformName)' == 'macOS' ">/Library/Frameworks/Xamarin.Mac.framework/Versions/Current</_XamarinSdkRoot>
+		<_XamarinSdkRoot Condition="'$(_XamarinSdkRoot)' == '' And '$(_PlatformName)' != 'macOS' ">$(MonoTouchSdkRoot)</_XamarinSdkRoot>
+		<_XamarinSdkRoot Condition="'$(_XamarinSdkRoot)' == '' And '$(_PlatformName)' != 'macOS' ">$(MD_MTOUCH_SDK_ROOT)</_XamarinSdkRoot>
+		<_XamarinSdkRoot Condition="'$(_XamarinSdkRoot)' == '' And '$(_PlatformName)' != 'macOS' ">/Library/Frameworks/Xamarin.iOS.framework/Versions/Current</_XamarinSdkRoot>
+	</PropertyGroup>
+
+	<PropertyGroup>
 		<!--
 		     We don't want to use the Platform variable for conditional logic.
 		     Switching to a new property allows us to potentially switch from
@@ -52,21 +64,21 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<When Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.Mac'">
 			<PropertyGroup>
 				<TargetFrameworkName>Modern</TargetFrameworkName>
-				<MacBclPath>$(XamarinMacFrameworkRoot)/lib/mono/Xamarin.Mac</MacBclPath>
+				<MacBclPath>$(_XamarinSdkRoot)/lib/mono/Xamarin.Mac</MacBclPath>
 			</PropertyGroup>
 		</When>
 		<!-- If TargetFrameworkIdentifier is not 'Xamarin.Mac', but we're still a macOS app and UseXamMacFullFramework is true, then we're in Full mode -->
 		<When Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.Mac' And '$(_PlatformName)' == 'macOS' And '$(UseXamMacFullFramework)' == 'true'">
 			<PropertyGroup>
 				<TargetFrameworkName>Full</TargetFrameworkName>
-				<MacBclPath>$(XamarinMacFrameworkRoot)/lib/mono/4.5</MacBclPath>
+				<MacBclPath>$(_XamarinSdkRoot)/lib/mono/4.5</MacBclPath>
 			</PropertyGroup>
 		</When>
 		<!-- If the two other conditions don't match, but we're still a macOS app, then we're in System mode -->
 		<When Condition="'$(_PlatformName)' == 'macOS'">
 			<PropertyGroup>
 				<TargetFrameworkName>System</TargetFrameworkName>
-				<MacBclPath>$(XamarinMacFrameworkRoot)/lib/mono/4.5</MacBclPath>
+				<MacBclPath>$(_XamarinSdkRoot)/lib/mono/4.5</MacBclPath>
 			</PropertyGroup>
 		</When>
 	</Choose>
@@ -171,13 +183,12 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(IsBindingProject)' == 'true'">
-		<BaseLibDllPath Condition="'$(OS)' == 'Unix' And '$(_PlatformName)' == 'iOS'">$(MonoTouchSdkRoot)/lib/mono/Xamarin.iOS/Xamarin.iOS.dll</BaseLibDllPath>
-		<BaseLibDllPath Condition="'$(OS)' == 'Unix' And '$(_PlatformName)' == 'tvOS'">$(MonoTouchSdkRoot)/lib/mono/Xamarin.TVOS/Xamarin.TVOS.dll</BaseLibDllPath>
-		<BaseLibDllPath Condition="'$(OS)' == 'Unix' And '$(_PlatformName)' == 'watchOS'">$(MonoTouchSdkRoot)/lib/mono/Xamarin.WatchOS/Xamarin.WatchOS.dll</BaseLibDllPath>
+		<BaseLibDllPath Condition="'$(OS)' == 'Unix' And '$(_PlatformName)' == 'iOS'">$(_XamarinSdkRoot)/lib/mono/Xamarin.iOS/Xamarin.iOS.dll</BaseLibDllPath>
+		<BaseLibDllPath Condition="'$(OS)' == 'Unix' And '$(_PlatformName)' == 'tvOS'">$(_XamarinSdkRoot)/lib/mono/Xamarin.TVOS/Xamarin.TVOS.dll</BaseLibDllPath>
+		<BaseLibDllPath Condition="'$(OS)' == 'Unix' And '$(_PlatformName)' == 'watchOS'">$(_XamarinSdkRoot)/lib/mono/Xamarin.WatchOS/Xamarin.WatchOS.dll</BaseLibDllPath>
 		<BaseLibDllPath Condition="'$(OS)' == 'Unix' And '$(_PlatformName)' == 'macOS'">$(MacBclPath)/Xamarin.Mac.dll</BaseLibDllPath>
 
-		<BTouchToolPath Condition="'$(OS)' == 'Unix' And '$(_PlatformName)' == 'macOS' And '$(BTouchToolPath)' == ''">$(XamarinMacFrameworkRoot)/bin/</BTouchToolPath>
-		<BTouchToolPath Condition="'$(OS)' == 'Unix' And '$(_PlatformName)' != 'macOS' And '$(BTouchToolPath)' == ''">$(MonoTouchSdkRoot)/bin/</BTouchToolPath>
+		<BTouchToolPath Condition="'$(OS)' == 'Unix' And '$(BTouchToolPath)' == ''">$(_XamarinSdkRoot)/bin/</BTouchToolPath>
 		<BTouchToolPath Condition="'$(OS)' != 'Unix' And '$(_PlatformName)' != 'macOS' And '$(BTouchToolPath)' == ''">$(MSBuildExtensionsPath)\Xamarin\iOS\</BTouchToolPath>
 
 		<BTouchToolExe  Condition="'$(OS)' == 'Unix' And '$(BTouchToolExe)' == ''">bgen</BTouchToolExe>
