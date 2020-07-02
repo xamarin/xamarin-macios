@@ -459,6 +459,10 @@ namespace Introspection {
 				if (cstr == $"Void .ctor(System.String)")
 					return true;
 				break;
+			case "UIRefreshControl": // init should be used instead.
+				if (cstr == $"Void .ctor(CoreGraphics.CGRect)")
+					return true;
+				break;
 			}
 
 			var ep = ctor.GetParameters ();

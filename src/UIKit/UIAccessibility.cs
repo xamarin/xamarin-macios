@@ -261,6 +261,13 @@ namespace UIKit {
 			}
 		}
 
+		[TV (14,0), iOS (14,0)]
+		[DllImport (Constants.UIKitLibrary)]
+		static extern bool UIAccessibilityButtonShapesEnabled ();
+
+		[TV (14,0), iOS (14,0)]
+		public static bool ButtonShapesEnabled => UIAccessibilityButtonShapesEnabled ();
+
 		[iOS (8,0)]
 		[DllImport (Constants.UIKitLibrary)]
 		static extern bool UIAccessibilityIsGrayscaleEnabled ();
@@ -282,6 +289,13 @@ namespace UIKit {
 				return UIAccessibilityIsReduceMotionEnabled ();
 			}
 		}
+
+		[TV (14,0), iOS (14,0)]
+		[DllImport (Constants.UIKitLibrary)]
+		static extern bool UIAccessibilityPrefersCrossFadeTransitions ();
+
+		[TV (14,0), iOS (14,0)]
+		public static bool PrefersCrossFadeTransitions => UIAccessibilityPrefersCrossFadeTransitions ();
 
 		[iOS (13,0), TV (13,0)]
 		[DllImport (Constants.UIKitLibrary)]

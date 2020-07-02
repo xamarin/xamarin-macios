@@ -60,3 +60,6 @@
 !missing-null-allowed! 'UIKit.UIImage UIKit.UIImage::LoadFromData(Foundation.NSData,System.nfloat)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIImage[] UIKit.UIImage::get_Images()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIImageConfiguration UIKit.UIImage::get_Configuration()' is missing an [NullAllowed] on return type
+
+## Removed from XAMCORE_4_0
+!unknown-field! UIUserNotificationActionResponseTypedTextKey bound

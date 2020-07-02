@@ -292,6 +292,18 @@ namespace MonoTouchFixtures.UIKit {
 			var r = new UIColor (nw, na);
 			Assert.That (r.ToString (), Is.EqualTo (c.ToString ()), c.ToString ());
 		}
+
+#if !__WATCHOS__
+		[Test]
+		public void UIConfigurationColorTransformerTest ()
+		{
+			TestRuntime.AssertXcodeVersion (12, 0);
+			var redColor = UIColor.Red;
+			var transformer = UIConfigurationColorTransformer.Grayscale;
+			var grayColor = transformer (redColor);
+			Assert.NotNull (grayColor, "Not null");
+		}
+#endif
 	}
 }
 #endif
