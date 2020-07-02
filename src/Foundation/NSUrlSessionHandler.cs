@@ -442,12 +442,13 @@ namespace Foundation {
 			// set header cookies if needed from the managed cookie container if we do use Cookies
 			if (session.Configuration.HttpCookieStorage != null) {
 				var cookies = cookieContainer?.GetCookieHeader (request.RequestUri); // as per docs: An HTTP cookie header, with strings representing Cookie instances delimited by semicolons.
-				if (!string.IsNullOrEmpty (cookies))
+				if (!string.IsNullOrEmpty (cookies)) {
 					var cookiePtr = NSString.CreateNative (Cookie);
 					var cookiesPtr = NSString.CreateNative (cookies);
 					nativeHeaders.LowlevelSetObject (cookiesPtr, cookiePtr);
 					NSString.ReleaseNative (cookiePtr);
 					NSString.ReleaseNative (cookiesPtr);
+				}
 			}
 
 			AddManagedHeaders (nativeHeaders, request.Headers);
