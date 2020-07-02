@@ -2,6 +2,7 @@
 // PencilKit C# bindings
 //
 // Authors:
+//	TJ Lambert  <t-anlamb@microsoft.com>
 //	Whitney Schmidt  <whschm@microsoft.com>
 //
 // Copyright 2020 Microsoft Corporation All rights reserved.
@@ -19,13 +20,14 @@ using UIResponder = Foundation.NSObject;
 using UIView = Foundation.NSObject;
 using UIWindow = Foundation.NSObject;
 using UIUserInterfaceStyle = Foundation.NSObject;
-using UIBezierPath = Foundation.NSObject;
+using BezierPath = AppKit.NSBezierPath;
 #else
 using UIKit;
-using NSBezierPath = Foundation.NSObject;
+using BezierPath = UIKit.UIBezierPath;
 #endif
 
 using System;
+using System.ComponentModel;
 using ObjCRuntime;
 using Foundation;
 using CoreGraphics;
@@ -120,7 +122,7 @@ namespace PencilKit {
 		bool AllowsFingerDrawing { get; set; }
 
 		[iOS (14, 0)]
-		[Unavailable (PlatformName.UIKitForMac), Advice ("This API is not available when using UIKit on macOS.")] // should this line be included? probably...
+		[Unavailable (PlatformName.UIKitForMac), Advice ("This API is not available when using UIKit on macOS.")]
 		[Export ("drawingPolicy", ArgumentSemantic.Assign)]
 		PKCanvasViewDrawingPolicy DrawingPolicy { get; set; }
 	}
@@ -312,11 +314,11 @@ namespace PencilKit {
 		[Export ("showsDrawingPolicyControls")]
 		bool ShowsDrawingPolicyControls { get; set; }
 
-		// !missing-null-allowed! 'System.Void PencilKit.PKToolPicker::set_AutosaveName(System.String)' is missing an [NullAllowed] on parameter #0
 		[iOS (14, 0)]
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
+		[NullAllowed]
 		[Export ("stateAutosaveName")]
-		string stateAutosaveName { get; set; }
+		string StateAutosaveName { get; set; }
 	}
 
 	[Mac (10, 16), iOS (14, 0)]
@@ -324,12 +326,20 @@ namespace PencilKit {
 	[BaseType (typeof(NSObject))]
 	interface PKInk : NSCopying
 	{
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("initWithInkType:color:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string type, UIColor color);
+		IntPtr Constructor (/* enum PKInkType */ string type, UIColor color);
 
+		[Wrap ("this (type.GetConstant (), color)")]
+		IntPtr Constructor (PKInkType type, UIColor color);
+
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("inkType")]
-		string InkType { get; }
+		NSString WeakInkType { get; }
+
+		[Wrap ("PKInkTypeExtensions.GetValue(WeakInkType)")]
+		PKInkType InkType { get; }
 
 		[Export ("color")]
 		UIColor Color { get; }
@@ -337,6 +347,7 @@ namespace PencilKit {
 
 	[Mac (10, 16), iOS (14, 0)]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof(NSObject))]
 	interface PKFloatRange : NSCopying
 	{
@@ -352,16 +363,12 @@ namespace PencilKit {
 
 	[Mac (10, 16), iOS (14, 0)]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof(NSObject))]
 	interface PKStroke : NSCopying
 	{
-		[NoMac]
 		[Export ("initWithInk:strokePath:transform:mask:")]
-		IntPtr Constructor (PKInk ink, PKStrokePath path, CGAffineTransform transform, [NullAllowed] UIBezierPath mask);
-
-		[NoiOS]
-		[Export ("initWithInk:strokePath:transform:mask:")]
-		IntPtr Constructor (PKInk ink, PKStrokePath path, CGAffineTransform transform, [NullAllowed] NSBezierPath mask);
+		IntPtr Constructor (PKInk ink, PKStrokePath path, CGAffineTransform transform, [NullAllowed] BezierPath mask);
 
 		[Export ("ink")]
 		PKInk Ink { get; }
@@ -372,21 +379,14 @@ namespace PencilKit {
 		[Export ("path")]
 		PKStrokePath Path { get; }
 
-#if MONOMAC
-		[NoiOS]
 		[NullAllowed, Export ("mask")]
-		NSBezierPath Mask { get; }
-#else
-		[NoMac]
-		[NullAllowed, Export ("mask")]
-		UIBezierPath Mask { get; }
-#endif
+		BezierPath Mask { get; }
 
 		[Export ("renderBounds")]
 		CGRect RenderBounds { get; }
 
 		[Export ("maskedPathRanges")]
-		PKFloatRange[] MaskedPath { get; }
+		PKFloatRange[] MaskedPathRanges { get; }
 	}
 
 	delegate void PKInterpolatedPointsEnumeratorHandler (PKStrokePoint strokePoint, out bool stop);
@@ -407,10 +407,10 @@ namespace PencilKit {
 		NSDate CreationDate { get; }
 
 		[Export ("pointAtIndex:")]
-		PKStrokePoint PointAtIndex (nuint i);
+		PKStrokePoint GetPoint (nuint index);
 
 		[Export ("objectAtIndexedSubscript:")]
-		PKStrokePoint GetObjectAtIndexedSubscript (nuint i);
+		PKStrokePoint GetObject (nuint indexedSubscript);
 
 		[Export ("interpolatedLocationAt:")]
 		CGPoint GetInterpolatedLocation (nfloat parametricValue);
@@ -418,8 +418,6 @@ namespace PencilKit {
 		[Export ("interpolatedPointAt:")]
 		PKStrokePoint GetInterpolatedPoint (nfloat parametricValue);
 
-		// option to add an enum since two of these enumerateInterpolates... share the same signature. Not sure whether this makes sense since only 2/3
-		// have the same sig + these aren't constructors.
 		[Export ("enumerateInterpolatedPointsInRange:strideByDistance:usingBlock:")]
 		void EnumerateInterpolatedPointsByDistance (PKFloatRange range, nfloat distanceStep, PKInterpolatedPointsEnumeratorHandler enumeratorHandler);
 

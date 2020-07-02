@@ -1273,6 +1273,10 @@ PASSKIT_API_SOURCES = \
 PASSKIT_SOURCES = \
 	PassKit/PKPaymentRequest.cs	\
 
+# PencilKit
+PENCILKIT_API_SOURCEs = \
+	PencilKit/Indexers.cs
+
 # PdfKit
 
 PDFKIT_API_SOURCES = \
