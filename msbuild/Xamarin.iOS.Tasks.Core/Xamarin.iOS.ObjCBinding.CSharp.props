@@ -29,21 +29,6 @@ Copyright (C) 2013-2016 Xamarin Inc. All rights reserved.
 		<!-- Version/fx properties -->
 		<TargetFrameworkIdentifier Condition="'$(TargetFrameworkIdentifier)' == ''">Xamarin.iOS</TargetFrameworkIdentifier>
 		<TargetFrameworkVersion Condition="'$(TargetFrameworkVersion)' == ''">v1.0</TargetFrameworkVersion>
-
-		<BaseLibDllPath Condition="'$(OS)' == 'Unix' And '$(TargetFrameworkIdentifier)' == 'Xamarin.iOS'">$(MonoTouchSdkRoot)/lib/mono/Xamarin.iOS/Xamarin.iOS.dll</BaseLibDllPath>
-		<BaseLibDllPath Condition="'$(OS)' != 'Unix' And '$(TargetFrameworkIdentifier)' == 'Xamarin.iOS'">$(MSBuildExtensionsPath)\Xamarin\DontKnowWhereYet\Xamarin.iOS.dll</BaseLibDllPath>
-		<BTouchToolPath Condition="'$(OS)' == 'Unix' And '$(TargetFrameworkIdentifier)' == 'Xamarin.iOS' And '$(BTouchToolPath)' == ''">$(MonoTouchSdkRoot)/bin/</BTouchToolPath>
-		<BTouchToolPath Condition="'$(OS)' != 'Unix' And '$(TargetFrameworkIdentifier)' == 'Xamarin.iOS' And '$(BTouchToolPath)' == ''">$(MSBuildExtensionsPath)\Xamarin\iOS\</BTouchToolPath>
-		<BTouchToolExe  Condition="'$(OS)' == 'Unix' And '$(TargetFrameworkIdentifier)' == 'Xamarin.iOS' And '$(BTouchToolExe)' == ''">btouch-native</BTouchToolExe>
-		<BTouchToolExe  Condition="'$(OS)' != 'Unix' And '$(TargetFrameworkIdentifier)' == 'Xamarin.iOS' And '$(BTouchToolExe)' == ''">btouch-native.exe</BTouchToolExe>
-
-		<BaseLibDllPath Condition="'$(OS)' == 'Unix' And '$(TargetFrameworkIdentifier)' == 'Xamarin.TVOS'">$(MonoTouchSdkRoot)/lib/mono/Xamarin.TVOS/Xamarin.TVOS.dll</BaseLibDllPath>
-		<BTouchToolPath Condition="'$(OS)' == 'Unix' And '$(TargetFrameworkIdentifier)' == 'Xamarin.TVOS' And '$(BTouchToolPath)' == ''">$(MonoTouchSdkRoot)/bin/</BTouchToolPath>
-		<BTouchToolExe  Condition="'$(OS)' == 'Unix' And '$(TargetFrameworkIdentifier)' == 'Xamarin.TVOS' And '$(BTouchToolExe)' == ''">btv</BTouchToolExe>
-
-		<BaseLibDllPath Condition="'$(OS)' == 'Unix' And '$(TargetFrameworkIdentifier)' == 'Xamarin.WatchOS'">$(MonoTouchSdkRoot)/lib/mono/Xamarin.WatchOS/Xamarin.WatchOS.dll</BaseLibDllPath>
-		<BTouchToolPath Condition="'$(OS)' == 'Unix' And '$(TargetFrameworkIdentifier)' == 'Xamarin.WatchOS' And '$(BTouchToolPath)' == ''">$(MonoTouchSdkRoot)/bin/</BTouchToolPath>
-		<BTouchToolExe  Condition="'$(OS)' == 'Unix' And '$(TargetFrameworkIdentifier)' == 'Xamarin.WatchOS' And '$(BTouchToolExe)' == ''">bwatch</BTouchToolExe>
 	</PropertyGroup>
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.props"
