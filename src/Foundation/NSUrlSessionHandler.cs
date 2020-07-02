@@ -427,9 +427,11 @@ namespace Foundation {
 		void AddManagedHeaders (NSMutableDictionary nativeHeaders, IEnumerable<KeyValuePair<string, IEnumerable<string>>> managedHeaders)
 		{
 			foreach (var keyValuePair in managedHeaders) {
-				var key = new NSString (keyValuePair.Key);
-				var value = new NSString (string.Join (GetHeaderSeparator (key), keyValuePair.Value));
-				nativeHeaders.Add (key, value);
+				var keyPtr = NSString.CreateNative (keyValuePair.Key);
+				var valuePtr = NSString.CreateNative (string.Join (GetHeaderSeparator (keyValuePair.Key), keyValuePair.Value));
+				nativeHeaders.LowlevelSetObject (valuePtr, keyPtr);
+				NSString.ReleaseNative (keyPtr);
+				NSString.ReleaseNative (valuePtr);
 			}
 		}
 
@@ -441,7 +443,11 @@ namespace Foundation {
 			if (session.Configuration.HttpCookieStorage != null) {
 				var cookies = cookieContainer?.GetCookieHeader (request.RequestUri); // as per docs: An HTTP cookie header, with strings representing Cookie instances delimited by semicolons.
 				if (!string.IsNullOrEmpty (cookies))
-					nativeHeaders.Add (new NSString (Cookie), new NSString (cookies));
+					var cookiePtr = NSString.CreateNative (Cookie);
+					var cookiesPtr = NSString.CreateNative (cookies);
+					nativeHeaders.LowlevelSetObject (cookiesPtr, cookiePtr);
+					NSString.ReleaseNative (cookiePtr);
+					NSString.ReleaseNative (cookiesPtr);
 			}
 
 			AddManagedHeaders (nativeHeaders, request.Headers);
