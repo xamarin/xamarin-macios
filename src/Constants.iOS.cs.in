@@ -8,11 +8,6 @@ namespace ObjCRuntime {
 		internal const string Revision = "@REVISION@";
 		public const string SdkVersion = "@IOS_SDK_VERSION@";
 
-		public const string libSystemLibrary = "/usr/lib/libSystem.dylib";
-		public const string libcLibrary = "/usr/lib/libc.dylib";
-#if !XAMCORE_4_0
-		public const string libdispatchLibrary = "/usr/lib/system/libdispatch.dylib";
-#endif
 		public const string AddressBookLibrary = "/System/Library/Frameworks/AddressBook.framework/AddressBook";
 		public const string AddressBookUILibrary = "/System/Library/Frameworks/AddressBookUI.framework/AddressBookUI";
 		public const string AudioToolboxLibrary = "/System/Library/Frameworks/AudioToolbox.framework/AudioToolbox";
@@ -20,11 +15,9 @@ namespace ObjCRuntime {
 		public const string CoreFoundationLibrary = "/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation";
 		public const string FoundationLibrary = "/System/Library/Frameworks/Foundation.framework/Foundation";
 		public const string CFNetworkLibrary = "/System/Library/Frameworks/CFNetwork.framework/CFNetwork";
-		public const string ObjectiveCLibrary = "/usr/lib/libobjc.dylib";
 		public const string OpenGLESLibrary = "/System/Library/Frameworks/OpenGLES.framework/OpenGLES";
 		public const string QuartzLibrary = "/System/Library/Frameworks/QuartzCore.framework/QuartzCore";
 		public const string CoreAnimationLibrary = "/System/Library/Frameworks/QuartzCore.framework/QuartzCore";
-		public const string SystemLibrary = "/usr/lib/libSystem.dylib";
 		public const string UIKitLibrary = "/System/Library/Frameworks/UIKit.framework/UIKit";
 		public const string SystemConfigurationLibrary = "/System/Library/Frameworks/SystemConfiguration.framework/SystemConfiguration";
 		public const string MediaPlayerLibrary = "/System/Library/Frameworks/MediaPlayer.framework/MediaPlayer";
@@ -99,9 +92,6 @@ namespace ObjCRuntime {
 		public const string ModelIOLibrary = "/System/Library/Frameworks/ModelIO.framework/ModelIO";
 		public const string GameplayKitLibrary = "/System/Library/Frameworks/GameplayKit.framework/GameplayKit";
 		public const string libcompressionLibrary = "/usr/lib/libcompression.dylib";
-#if !XAMCORE_4_0
-		public const string libcompression = "/usr/lib/libcompression.dylib";
-#endif
 		// iOS 9.3
 		public const string HealthKitUILibrary = "/System/Library/Frameworks/HealthKitUI.framework/HealthKitUI";
 		// iOS 10.0

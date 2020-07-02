@@ -325,6 +325,9 @@
     <Compile Include="..\..\src\build\mac\Constants.cs">
       <Link>src\build\mac\Constants.cs</Link>
     </Compile>
+    <Compile Include="..\..\src\ObjCRuntime\Constants.cs">
+      <Link>src\ObjCRuntime\Constants.cs</Link>
+    </Compile>
     <Compile Include="..\..\src\ObjCRuntime\ErrorHelper.cs">
       <Link>src\ObjCRuntime\ErrorHelper.cs</Link>
     </Compile>
