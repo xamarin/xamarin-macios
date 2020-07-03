@@ -4,6 +4,13 @@
 // Authors:
 //   Miguel de Icaza (miguel@xamarin.com)
 //
+
+// 'AVAudioChannelLayout' defines operator == or operator != but does not override Object.Equals(object o)
+#pragma warning disable 0660
+// 'AVAudioChannelLayout' defines operator == or operator != but does not override Object.GetHashCode()
+#pragma warning disable 0661
+// In both of these cases, the NSObject Equals/GetHashCode implementation works fine, so we can ignore these warnings.
+
 using Foundation;
 using ObjCRuntime;
 using AudioToolbox;
