@@ -23,6 +23,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<_TaskAssemblyName Condition="'$(_PlatformName)' == 'macOS'">Xamarin.Mac.Tasks.dll</_TaskAssemblyName>
 	</PropertyGroup>
 
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.ComputeBundleResourceOutputPaths" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.GetMinimumOSVersion" AssemblyFile="$(_TaskAssemblyName)" />
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets"
@@ -188,6 +189,33 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<!-- TextureAtlas output caches -->
 			<_TextureAtlasCache>$(DeviceSpecificIntermediateOutputPath)atlas\_BundleResourceWithLogicalName.items</_TextureAtlasCache>
 		</PropertyGroup>
+	</Target>
+
+	<!-- TODO: check for duplicate items -->
+	<Target Name="_ComputeBundleResourceOutputPaths" DependsOnTargets="_CollectBundleResources;_GenerateBundleName;_DetectSigningIdentity">
+		<ComputeBundleResourceOutputPaths
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			AppResourcesPath="$(_AppResourcesPath)"
+			BundleIdentifier="$(_BundleIdentifier)"
+			BundleResources="@(_BundleResourceWithLogicalName)"
+			EnableOnDemandResources="$(EnableOnDemandResources)"
+			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
+			OutputPath="$(DeviceSpecificOutputPath)"
+		>
+			<Output TaskParameter="BundleResourcesWithOutputPaths" ItemName="_BundleResourceWithOutputPath"/>
+		</ComputeBundleResourceOutputPaths>
+	</Target>
+
+	<Target Name="_CopyResourcesToBundle" DependsOnTargets="_ComputeBundleResourceOutputPaths"
+		Inputs = "@(_BundleResourceWithOutputPath)"
+		Outputs = "@(_BundleResourceWithOutputPath -> '%(OutputPath)')" >
+		<SmartCopy
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			SourceFiles = "@(_BundleResourceWithOutputPath)"
+			DestinationFiles = "@(_BundleResourceWithOutputPath -> '%(OutputPath)')"
+		/>
 	</Target>
 
 	<Target Name="_CreateAppBundle" Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsAppDistribution)' != 'true'" DependsOnTargets="$(CreateAppBundleDependsOn)" />

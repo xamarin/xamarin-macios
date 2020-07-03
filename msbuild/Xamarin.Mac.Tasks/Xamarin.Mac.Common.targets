@@ -123,7 +123,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	<PropertyGroup>
 		<CreateAppBundleDependsOn Condition="'$(_UsingXamarinSdk)' != 'true'">
 			_DetectSigningIdentity;
-			_CopyContentToBundle;
+			_CopyResourcesToBundle;
 			_SmeltMetal;
 			_ForgeMetal;
 			_TemperMetal;
@@ -241,17 +241,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			Resource="$(AppBundleDir)"
 		>
 		</CodesignVerify>
-	</Target>
-
-	<!-- TODO: check for duplicate items -->
-	<Target Name="_CopyContentToBundle"
-		Inputs="@(_BundleResourceWithLogicalName)"
-		Outputs="@(_BundleResourceWithLogicalName -> '$(_AppResourcesPath)%(LogicalName)')">
-		<SmartCopy
-			Condition="'$(IsMacEnabled)' == 'true'"
-			SessionId="$(BuildSessionId)"
-			SourceFiles = "@(_BundleResourceWithLogicalName)"
-			DestinationFiles = "@(_BundleResourceWithLogicalName -> '$(_AppResourcesPath)%(LogicalName)')"/>
 	</Target>
 
 	<Target Name="_SmeltMetal" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(Metal)' != ''" DependsOnTargets="_DetectSdkLocations;_ComputeTargetFrameworkMoniker;_GetMinimumOSVersion">
