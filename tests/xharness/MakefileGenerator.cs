@@ -227,6 +227,9 @@ namespace Xharness
 				allTargets.AddRange (watchos_targets);
 				allTargets.AddRange (today_targets);
 
+				// Don't generate makefile targets for .NET projects for now.
+				allTargets.RemoveAll (v => v.TestProject.IsDotNetProject);
+
 				// build/[install/]run targets for specific test projects.
 				foreach (var target in allTargets) {
 					if (!target.IsExe || target.Name.IndexOf ("bcl-test", 0, StringComparison.Ordinal) != -1)
