@@ -1109,18 +1109,6 @@ namespace Xamarin.Bundler {
             }
         }
         
-        internal static string MT1016 {
-            get {
-                return ResourceManager.GetString("MT1016", resourceCulture);
-            }
-        }
-        
-        internal static string MT1017 {
-            get {
-                return ResourceManager.GetString("MT1017", resourceCulture);
-            }
-        }
-        
         internal static string MT1022 {
             get {
                 return ResourceManager.GetString("MT1022", resourceCulture);
