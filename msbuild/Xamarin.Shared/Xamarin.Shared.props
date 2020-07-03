@@ -47,6 +47,30 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<ComputedPlatform Condition="'$(_PlatformName)' != 'macOS' And '$(ComputedPlatform)' == 'AnyCPU'">iPhone</ComputedPlatform>
 	</PropertyGroup>
 
+	<Choose>
+		<!-- If TargetFrameworkIdentifier is 'Xamarin.Mac', then we're in Modern mode -->
+		<When Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.Mac'">
+			<PropertyGroup>
+				<TargetFrameworkName>Modern</TargetFrameworkName>
+				<MacBclPath>$(XamarinMacFrameworkRoot)/lib/mono/Xamarin.Mac</MacBclPath>
+			</PropertyGroup>
+		</When>
+		<!-- If TargetFrameworkIdentifier is not 'Xamarin.Mac', but we're still a macOS app and UseXamMacFullFramework is true, then we're in Full mode -->
+		<When Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.Mac' And '$(_PlatformName)' == 'macOS' And '$(UseXamMacFullFramework)' == 'true'">
+			<PropertyGroup>
+				<TargetFrameworkName>Full</TargetFrameworkName>
+				<MacBclPath>$(XamarinMacFrameworkRoot)/lib/mono/4.5</MacBclPath>
+			</PropertyGroup>
+		</When>
+		<!-- If the two other conditions don't match, but we're still a macOS app, then we're in System mode -->
+		<When Condition="'$(_PlatformName)' == 'macOS'">
+			<PropertyGroup>
+				<TargetFrameworkName>System</TargetFrameworkName>
+				<MacBclPath>$(XamarinMacFrameworkRoot)/lib/mono/4.5</MacBclPath>
+			</PropertyGroup>
+		</When>
+	</Choose>
+
 	<!-- Sometimes we've used different variable names for the same thing for Xamarin.iOS and Xamarin.Mac projects. Here we try to unify those variables -->
 	<PropertyGroup>
 		<!-- ResourcePrefix -->
@@ -122,6 +146,42 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		     DeviceSpecificOutputPath. -->
 		<DeviceSpecificOutputPath>$(OutputPath)</DeviceSpecificOutputPath>
 		<DeviceSpecificOutputPath Condition="$([System.IO.Path]::IsPathRooted ('$(DeviceSpecificOutputPath)')) == 'true'">$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)','$(OutputPath)'))</DeviceSpecificOutputPath>
+
+		<!-- OptimizePNGs:
+			default to false if a binding project (both XI and XM)
+			otherwise default to false if a Xamarin.Mac project
+			otherwise default to true for Xamarin.iOS
+		-->
+		<OptimizePNGs Condition="'$(IsBindingProject)' == 'true' And '$(OptimizePNGs)' == ''">false</OptimizePNGs>
+		<OptimizePNGs Condition="'$(_PlatformName)' == 'macOS' And '$(OptimizePNGs)' == ''">false</OptimizePNGs>
+		<OptimizePNGs Condition="'$(_PlatformName)' != 'macOS' And '$(OptimizePNGs)' == ''">true</OptimizePNGs>
+
+		<!-- OptimizePropertyLists:
+			default to false if a binding project (both XI and XM)
+			otherwise default to false if a Xamarin.Mac project
+			otherwise default to true for Xamarin.iOS
+		-->
+		<OptimizePropertyLists Condition="'$(IsBindingProject)' == 'true' And '$(OptimizePropertyLists)' == ''">false</OptimizePropertyLists>
+		<OptimizePropertyLists Condition="'$(_PlatformName)' == 'macOS' And '$(OptimizePropertyLists)' == ''">false</OptimizePropertyLists>
+		<OptimizePropertyLists Condition="'$(_PlatformName)' != 'macOS' And '$(OptimizePropertyLists)' == ''">true</OptimizePropertyLists>
+
+		<!-- EnableOnDemandResources: default to true for Xamarin.iOS and false for Xamarin.Mac -->
+		<EnableOnDemandResources Condition="'$(_PlatformName)' == 'macOS' And '$(EnableOnDemandResources)' == ''">false</EnableOnDemandResources>
+		<EnableOnDemandResources Condition="'$(_PlatformName)' != 'macOS' And '$(EnableOnDemandResources)' == ''">true</EnableOnDemandResources>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(IsBindingProject)' == 'true'">
+		<BaseLibDllPath Condition="'$(OS)' == 'Unix' And '$(_PlatformName)' == 'iOS'">$(MonoTouchSdkRoot)/lib/mono/Xamarin.iOS/Xamarin.iOS.dll</BaseLibDllPath>
+		<BaseLibDllPath Condition="'$(OS)' == 'Unix' And '$(_PlatformName)' == 'tvOS'">$(MonoTouchSdkRoot)/lib/mono/Xamarin.TVOS/Xamarin.TVOS.dll</BaseLibDllPath>
+		<BaseLibDllPath Condition="'$(OS)' == 'Unix' And '$(_PlatformName)' == 'watchOS'">$(MonoTouchSdkRoot)/lib/mono/Xamarin.WatchOS/Xamarin.WatchOS.dll</BaseLibDllPath>
+		<BaseLibDllPath Condition="'$(OS)' == 'Unix' And '$(_PlatformName)' == 'macOS'">$(MacBclPath)/Xamarin.Mac.dll</BaseLibDllPath>
+
+		<BTouchToolPath Condition="'$(OS)' == 'Unix' And '$(_PlatformName)' == 'macOS' And '$(BTouchToolPath)' == ''">$(XamarinMacFrameworkRoot)/bin/</BTouchToolPath>
+		<BTouchToolPath Condition="'$(OS)' == 'Unix' And '$(_PlatformName)' != 'macOS' And '$(BTouchToolPath)' == ''">$(MonoTouchSdkRoot)/bin/</BTouchToolPath>
+		<BTouchToolPath Condition="'$(OS)' != 'Unix' And '$(_PlatformName)' != 'macOS' And '$(BTouchToolPath)' == ''">$(MSBuildExtensionsPath)\Xamarin\iOS\</BTouchToolPath>
+
+		<BTouchToolExe  Condition="'$(OS)' == 'Unix' And '$(BTouchToolExe)' == ''">bgen</BTouchToolExe>
+		<BTouchToolExe  Condition="'$(OS)' != 'Unix' And '$(BTouchToolExe)' == ''">bgen.exe</BTouchToolExe>
 	</PropertyGroup>
 
 	<Target Name="_ComputeTargetFrameworkMoniker" Condition="'$(_ComputedTargetFrameworkMoniker)' == ''">

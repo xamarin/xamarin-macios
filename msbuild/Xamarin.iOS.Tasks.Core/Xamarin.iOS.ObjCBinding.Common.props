@@ -24,6 +24,11 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<_XamarinCommonPropsHasBeenImported>true</_XamarinCommonPropsHasBeenImported>
 	</PropertyGroup>
 
+	<!-- This is used to set that we're a binding project. It must be set before including Xamarin.Shared.props -->
+	<PropertyGroup>
+		<IsBindingProject>true</IsBindingProject>
+	</PropertyGroup>
+
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Shared.props" />
 
 	<!-- This is used to determine if VS is connected to mac. -->

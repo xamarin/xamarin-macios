@@ -1,0 +1,43 @@
+# common steps to download the artifacts from the test results.
+
+steps:
+
+- checkout: self
+  persistCredentials: true
+
+- pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\device-tests\scripts\System.psm1
+    Get-SystemInfo | Format-Table -Wrap -HideTableHeaders
+    Write-Host "Env variables are:"
+    Get-ChildItem env:
+  displayName: 'Dump Environment'
+  timeoutInMinutes: 1
+
+# Download the Html Report that was added by the tests job.
+- task: DownloadPipelineArtifact@2
+  displayName: Download html report 
+  inputs:
+    patterns: '**/HtmlReport.zip'
+    allowFailedBuilds: true
+    path: $(System.DefaultWorkingDirectory)/Reports
+
+# Unzip report.
+- task: ExtractFiles@1
+  displayName: 'Extract HmlReport'
+  inputs:
+    archiveFilePatterns: '$(System.DefaultWorkingDirectory)/Reports/HtmlReport/HtmlReport.zip'
+    destinationFolder: '$(System.DefaultWorkingDirectory)/HtmlReport'
+
+# Download the test report to write the comment.
+- task: DownloadPipelineArtifact@2
+  displayName: Download Test Summary
+  inputs:
+    patterns: '**/TestSummary.md'
+    allowFailedBuilds: true
+    path: $(System.DefaultWorkingDirectory)\Reports
+
+- pwsh: |
+    echo "##vso[task.setvariable variable=TEST_SUMMARY_PATH]$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\Reports\TestSummary\TestSummary.md"
+    echo "##vso[task.setvariable variable=HTML_REPORT_PATH]$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\HtmlReport"
+  displayName: Pusblish artifact paths
+  name: artifacts # not to be confused with the displayName, this is used to later use the name of the step to access the output variables from an other job

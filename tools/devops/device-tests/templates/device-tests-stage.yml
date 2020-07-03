@@ -58,10 +58,35 @@ stages:
         useXamarinStorage: ${{ parameters.useXamarinStorage }}
         vsdropsPrefix: ${{ parameters.vsdropsPrefix }} 
 
+  - job: upload_vsdrops
+    displayName: 'Upload report to vsdrops'
+    timeoutInMinutes: 1000
+    dependsOn: tests # can start as soon as the tests are done
+    condition: succeededOrFailed()
+    pool:
+      vmImage: ${{ parameters.WindowsDevicePool }}
+    steps:
+    - template: upload-vsdrops.yml
+      parameters:
+        vsdropsPrefix: ${{ parameters.vsdropsPrefix }} 
+
+  - job: upload_vsts_tests
+    displayName: 'Upload xml to vsts'
+    timeoutInMinutes: 1000
+    dependsOn: tests # can start as soon as the tests are done
+    condition: succeededOrFailed()
+    pool:
+      vmImage: ${{ parameters.WindowsDevicePool }}
+    steps:
+    - template: upload-vsts-tests.yml
+
   - job: publish_html
     displayName: 'Publish Html report in VSDrops'
     timeoutInMinutes: 1000
-    dependsOn: tests
+    dependsOn: # has to wait for the tests to be done AND the data to be uploaded
+    - tests
+    - upload_vsdrops
+    - upload_vsts_tests 
     condition: succeededOrFailed()
     variables:
       # Define the variable FOO from the previous job
@@ -69,11 +94,10 @@ stages:
       XAMARIN_STORAGE_PATH: $[ dependencies.tests.outputs['runTests.XAMARIN_STORAGE_PATH'] ]
       XAMARIN_STORAGE_FAILED: $[ dependencies.tests.outputs['runTests.XAMARIN_STORAGE_FAILED'] ]
       TESTS_JOBSTATUS: $[ dependencies.tests.outputs['runTests.TESTS_JOBSTATUS'] ]
+      VSDROPS_INDEX: $[ dependencies.upload_vsdrops.outputs['vsdrops.VSDROPS_INDEX'] ]
     pool:
-      name: ${{ parameters.WindowsDevicePool }}
-      demands: agent.os -equals Windows_NT # we need to use a windows machine since vsdrops just works on them and the pool might have diff OS in the agents
+      vmImage: ${{ parameters.WindowsDevicePool }}
     steps:
     - template: publish-html.yml
       parameters:
         statusContext: ${{ parameters.statusContext }}
-        vsdropsPrefix: ${{ parameters.vsdropsPrefix }} 

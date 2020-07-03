@@ -61,20 +61,6 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 		</AssignBundleResourceNames>
 	</Target>
 
-	<Target Name="_CollectBundleResources">
-		<CollectBundleResources
-			Condition="'$(IsMacEnabled)' == 'true'"
-			SessionId="$(BuildSessionId)"
-			OptimizePNGs="False"
-			BundleResources="@(Content);@(BundleResource)"
-			ProjectDir="$(MSBuildProjectDirectory)"
-			ResourcePrefix="$(_ResourcePrefix)"
-			>
-
-			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="_BundleResourceWithLogicalName"/>
-		</CollectBundleResources>
-	</Target>
-
 	<Target Name="_CreateEmbeddedResources" DependsOnTargets="_CollectBundleResources">
 		<CreateEmbeddedResources BundleResources="@(_BundleResourceWithLogicalName)" Prefix="xammac">
 			<Output ItemName="EmbeddedResource" TaskParameter="EmbeddedResources" />

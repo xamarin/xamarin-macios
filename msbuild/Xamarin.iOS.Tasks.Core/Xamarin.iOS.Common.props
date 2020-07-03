@@ -56,8 +56,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<IsAppExtension Condition="'$(IsAppExtension)' == ''">False</IsAppExtension>
 		<IsWatchExtension Condition="'$(IsWatchExtension)' == ''">False</IsWatchExtension>
 		<IsWatchApp Condition="'$(IsWatchApp)' == ''">False</IsWatchApp>
-		<OptimizePNGs Condition="'$(OptimizePNGs)' == ''">True</OptimizePNGs>
-		<OptimizePropertyLists Condition="'$(OptimizePropertyLists)' == ''">True</OptimizePropertyLists>
 		<IpaIncludeArtwork Condition="'$(IpaIncludeArtwork)' == ''">False</IpaIncludeArtwork>
 		<ArchiveOnBuild Condition="'$(ArchiveOnBuild)' == ''">False</ArchiveOnBuild>
 		<BuildIpa Condition="'$(BuildIpa)' == ''">False</BuildIpa>
@@ -72,7 +70,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<IOSDebuggerPort Condition="'$(IOSDebuggerPort)' == ''">10000</IOSDebuggerPort>
 
 		<!-- On-Demand Resources -->
-		<EnableOnDemandResources Condition="'$(EnableOnDemandResources)' == ''">true</EnableOnDemandResources>
 		<OnDemandResourcesInitialInstallTags Condition="'$(OnDemandResourcesInitialInstallTags)' == '' Or '$(EnableOnDemandResources)' != 'true'"></OnDemandResourcesInitialInstallTags>
 		<OnDemandResourcesPrefetchOrder Condition="'$(OnDemandResourcesPrefetchOrder)' == '' Or '$(EnableOnDemandResources)' != 'true'"></OnDemandResourcesPrefetchOrder>
 		<EmbedOnDemandResources Condition="'$(EmbedOnDemandResources)' == ''">true</EmbedOnDemandResources>
