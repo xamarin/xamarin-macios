@@ -25,6 +25,11 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets')"/>
 	
+	<!-- This is used to set that we're a binding project. It must be set before including Xamarin.Shared.props -->
+	<PropertyGroup>
+		<IsBindingProject>true</IsBindingProject>
+	</PropertyGroup>
+
 	<!-- Due to IDE/template bugs, many bindings projects exist in the wild withtout correct TFI/TFV tags.
 	In addition, System is not supported, so treat System as Modern or Full, depending on TFV being set.
 	Microsoft.CSharp.targets gives TargetFrameworkVersion / TargetFrameworkIdentifier default values, so we _must_ do this _before_ 
