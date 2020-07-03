@@ -29,7 +29,7 @@ namespace UIKit {
 		public static UICellAccessoryPosition GetPositionBeforeAccessory (Class accessoryClass)
 		{
 			if (accessoryClass == null)
-				throw new ArgumentNullException ("accessoryClass");
+				throw new ArgumentNullException (nameof (accessoryClass));
 			var ret = UICellAccessoryPositionBeforeAccessoryOfClass (accessoryClass.Handle);
 			return NIDUICellAccessoryPosition.Create (ret)!;
 		}
@@ -49,7 +49,7 @@ namespace UIKit {
 		public static UICellAccessoryPosition GetPositionAfterAccessory (Class accessoryClass)
 		{
 			if (accessoryClass == null)
-				throw new ArgumentNullException ("accessoryClass");
+				throw new ArgumentNullException (nameof (accessoryClass));
 			var ret = UICellAccessoryPositionAfterAccessoryOfClass (accessoryClass.Handle);
 			return NIDUICellAccessoryPosition.Create (ret)!;
 		}
@@ -71,7 +71,8 @@ namespace UIKit {
 		static internal readonly DUICellAccessoryPosition Handler = Invoke;
 		
 		[MonoPInvokeCallback (typeof (DUICellAccessoryPosition))]
-		static unsafe nuint Invoke (IntPtr block, IntPtr accessories) {
+		static unsafe nuint Invoke (IntPtr block, IntPtr accessories)
+		{
 			var descriptor = (BlockLiteral *) block;
 			var del = (UICellAccessoryPosition) (descriptor->Target);
 			nuint retval = del (NSArray.ArrayFromHandle<UICellAccessory> (accessories));
@@ -101,13 +102,9 @@ namespace UIKit {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		unsafe nuint Invoke (UICellAccessory [] accessories)
 		{
-			var nsa_accessories = accessories == null ? null : NSArray.FromNSObjects (accessories);
+			using var nsa_accessories = accessories == null ? null : NSArray.FromNSObjects (accessories);
 			
-			var ret = invoker (BlockPointer, nsa_accessories == null ? IntPtr.Zero : nsa_accessories.Handle);
-			if (nsa_accessories != null)
-				nsa_accessories.Dispose ();
-			
-			return ret;
+			return invoker (BlockPointer, nsa_accessories.GetHandle ());
 		}
 	} /* class NIDUICellAccessoryPosition */
 }

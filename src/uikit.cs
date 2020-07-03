@@ -16030,7 +16030,7 @@ namespace UIKit {
 
 		[TV (14,0), iOS (14,0)]
 		[Export ("setViewController:forColumn:")]
-		void SetViewController ([NullAllowed] UIViewController vc, UISplitViewControllerColumn column);
+		void SetViewController ([NullAllowed] UIViewController viewController, UISplitViewControllerColumn column);
 
 		[TV (14,0), iOS (14,0)]
 		[Export ("viewControllerForColumn:")]
@@ -16203,27 +16203,27 @@ namespace UIKit {
 
 		[TV (14,0), iOS (14,0)]
 		[Export ("splitViewController:topColumnForCollapsingToProposedTopColumn:"), DelegateName ("UISplitViewControllerGetTopColumnForCollapsing"), DefaultValueFromArgument ("proposedTopColumn")]
-		UISplitViewControllerColumn GetTopColumnForCollapsing (UISplitViewController svc, UISplitViewControllerColumn proposedTopColumn);
+		UISplitViewControllerColumn GetTopColumnForCollapsing (UISplitViewController splitViewController, UISplitViewControllerColumn proposedTopColumn);
 
 		[TV (14,0), iOS (14,0)]
 		[Export ("splitViewController:displayModeForExpandingToProposedDisplayMode:"), DelegateName ("UISplitViewControllerGetDisplayModeForExpanding"), DefaultValueFromArgument ("proposedDisplayMode")]
-		UISplitViewControllerDisplayMode GetDisplayModeForExpanding (UISplitViewController svc, UISplitViewControllerDisplayMode proposedDisplayMode);
+		UISplitViewControllerDisplayMode GetDisplayModeForExpanding (UISplitViewController splitViewController, UISplitViewControllerDisplayMode proposedDisplayMode);
 
 		[TV (14,0), iOS (14,0)]
 		[Export ("splitViewControllerDidCollapse:"), EventArgs ("UISplitViewControllerDidExpandCollapse")]
-		void DidCollapse (UISplitViewController svc);
+		void DidCollapse (UISplitViewController splitViewController);
 
 		[TV (14,0), iOS (14,0)]
 		[Export ("splitViewControllerDidExpand:"), EventArgs ("UISplitViewControllerDidExpandCollapse")]
-		void DidExpand (UISplitViewController svc);
+		void DidExpand (UISplitViewController splitViewController);
 
 		[TV (14,0), iOS (14,0)]
 		[Export ("splitViewController:willShowColumn:"), EventArgs ("UISplitViewControllerWillShowHideColumn")]
-		void WillShowColumn (UISplitViewController svc, UISplitViewControllerColumn column);
+		void WillShowColumn (UISplitViewController splitViewController, UISplitViewControllerColumn column);
 
 		[TV (14,0), iOS (14,0)]
 		[Export ("splitViewController:willHideColumn:"), EventArgs ("UISplitViewControllerWillShowHideColumn")]
-		void WillHideColumn (UISplitViewController svc, UISplitViewControllerColumn column);
+		void WillHideColumn (UISplitViewController splitViewController, UISplitViewControllerColumn column);
 	}
 
 	[Category]
@@ -19500,7 +19500,7 @@ namespace UIKit {
 		[Export ("allowsPickingMultipleItems")]
 		bool AllowsPickingMultipleItems { get; set; }
 
-		[Deprecated (PlatformName.iOS, 14, 0, message: "no longer supported.")]
+		[Deprecated (PlatformName.iOS, 14, 0, message: "No longer supported.")]
 		[Export ("allowedContentTypes", ArgumentSemantic.Copy)]
 		string[] AllowedContentTypes { get; }
 
