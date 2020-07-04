@@ -13,6 +13,7 @@ using AVFoundation;
 using CoreFoundation;
 using CoreGraphics;
 using CoreMedia;
+using CoreLocation;
 using CoreVideo;
 using Foundation;
 using ObjCRuntime;
@@ -232,6 +233,55 @@ namespace ARKit {
 		Optional,
 	}
 
+
+	[iOS (14,0)]
+	[Native]
+	public enum ARAltitudeSource : long {
+		Unknown,
+		Coarse,
+		Precise,
+		UserDefined,
+	}
+
+	[iOS (14,0)]
+	[Native]
+	public enum ARConfidenceLevel : long {
+		Low,
+		Medium,
+		High,
+	}
+
+	[iOS (14,0)]
+	[Native]
+	public enum ARGeoTrackingAccuracy : long {
+		Undetermined,
+		Low,
+		Medium,
+		High,
+	}
+
+	[iOS (14,0)]
+	[Native]
+	public enum ARGeoTrackingState : long {
+		NotAvailable,
+		Initializing,
+		Localizing,
+		Localized,
+	}
+
+	[iOS (14,0)]
+	[Native]
+	public enum ARGeoTrackingStateReason : long {
+		None,
+		NotAvailableAtLocation,
+		NeedLocationPermissions,
+		WorldTrackingUnstable,
+		WaitingForLocation,
+		GeoDataNotLoaded,
+		DevicePointedTooLow,
+		VisualLocalizationFailed,
+	}
+
 	[iOS (12,0)]
 	[NoWatch, NoTV, NoMac]
 	[Protocol]
@@ -404,6 +454,7 @@ namespace ARKit {
 		[NullAllowed, Export ("detectedBody")]
 		ARBody2D DetectedBody { get; }
 
+		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'ARSession.Raycast' instead.")]
 		[Export ("hitTest:types:")]
 		ARHitTestResult[] HitTest (CGPoint point, ARHitTestResultType types);
 
@@ -413,9 +464,18 @@ namespace ARKit {
 
 		[Export ("displayTransformForOrientation:viewportSize:")]
 		CGAffineTransform GetDisplayTransform (UIInterfaceOrientation orientation, CGSize viewportSize);
+
+		[iOS (14, 0)]
+		[NullAllowed, Export ("geoTrackingStatus", ArgumentSemantic.Strong)]
+		ARGeoTrackingStatus GeoTrackingStatus { get; }
+
+		[iOS (14, 0)]
+		[NullAllowed, Export ("sceneDepth", ArgumentSemantic.Strong)]
+		ARDepthData SceneDepth { get; }
 	}
 
 	[iOS (11,0)]
+	[Deprecated (PlatformName.iOS, 14, 0, message: "Use Raycasting methods over HitTestResult ones.")]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -648,6 +708,7 @@ namespace ARKit {
 		SCNNode GetNode (ARAnchor anchor);
 
 		[Export ("hitTest:types:")]
+		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'CreateRaycastQuery' instead.")]
 		ARHitTestResult[] HitTest (CGPoint point, ARHitTestResultType types);
 
 		[iOS (12,0)]
@@ -706,6 +767,7 @@ namespace ARKit {
 		[return: NullAllowed]
 		SKNode GetNode (ARAnchor anchor);
 
+		[Deprecated (PlatformName.iOS, 14, 0, message: "Use Raycasting methods instead.")]
 		[Export ("hitTest:types:")]
 		ARHitTestResult[] HitTest (CGPoint point, ARHitTestResultType types);
 	}
@@ -800,6 +862,12 @@ namespace ARKit {
 		[iOS (13,0)]
 		[Export ("updateWithCollaborationData:")]
 		void Update (ARCollaborationData collaborationData);
+
+		[iOS (14,0)]
+		[Async (ResultTypeName="GeoLocationForPoint")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		[Export ("getGeoLocationForPoint:completionHandler:")]
+		void GetGeoLocation (Vector3 position, Action<CLLocationCoordinate2D, double, NSError> completionHandler);
 	}
 
 	[iOS (11,0)]
@@ -829,6 +897,10 @@ namespace ARKit {
 		[iOS (13,0)]
 		[Export ("session:didOutputCollaborationData:")]
 		void DidOutputCollaborationData (ARSession session, ARCollaborationData data);
+
+		[iOS (14,0)]
+		[Export ("session:didChangeGeoTrackingStatus:")]
+		void DidChangeGeoTrackingStatus (ARSession session, ARGeoTrackingStatus geoTrackingStatus);
 	}
 
 	interface IARSessionDelegate {}
@@ -1954,6 +2026,50 @@ namespace ARKit {
 
 		[Field ("ARSkeletonJointNameRightShoulder")]
 		RightShoulder,
+
+		[iOS (14, 0)]
+		[Field ("ARSkeletonJointNameNeck")]
+		Neck,
+
+		[iOS (14, 0)]
+		[Field ("ARSkeletonJointNameLeftForearm")]
+		LeftForearm,
+
+		[iOS (14, 0)]
+		[Field ("ARSkeletonJointNameRightForearm")]
+		RightForearm,
+
+		[iOS (14, 0)]
+		[Field ("ARSkeletonJointNameLeftUpLeg")]
+		LeftUpLeg,
+
+		[iOS (14, 0)]
+		[Field ("ARSkeletonJointNameRightUpLeg")]
+		RightUpLeg,
+
+		[iOS (14, 0)]
+		[Field ("ARSkeletonJointNameLeftLeg")]
+		LeftLeg,
+
+		[iOS (14, 0)]
+		[Field ("ARSkeletonJointNameRightLeg")]
+		RightLeg,
+
+		[iOS (14, 0)]
+		[Field ("ARSkeletonJointNameLeftEye")]
+		LeftEye,
+
+		[iOS (14, 0)]
+		[Field ("ARSkeletonJointNameRightEye")]
+		RightEye,
+
+		[iOS (14, 0)]
+		[Field ("ARSkeletonJointNameLeftEar")]
+		LeftEar,
+
+		[iOS (14, 0)]
+		[Field ("ARSkeletonJointNameRightEar")]
+		RightEar,
 	}
 
 	[iOS (13,0)]
@@ -2086,4 +2202,94 @@ namespace ARKit {
 		[NullAllowed]
 		ARGeometrySource Classification { get; }
 	}
+
+	[iOS (14,0)]
+	[BaseType (typeof(NSObject))]
+	interface ARDepthData {
+		[Export ("depthMap", ArgumentSemantic.Assign)]
+		CVPixelBuffer DepthMap { get; }
+
+		[NullAllowed, Export ("confidenceMap", ArgumentSemantic.Assign)]
+		CVPixelBuffer ConfidenceMap { get; }
+	}
+
+	[iOS (14,0)]
+	[BaseType (typeof(ARAnchor))]
+	interface ARGeoAnchor : ARTrackable {
+		[Export ("coordinate")]
+		CLLocationCoordinate2D Coordinate { get; }
+
+		[Export ("altitude")]
+		double Altitude { get; }
+
+		[Export ("altitudeSource", ArgumentSemantic.Assign)]
+		ARAltitudeSource AltitudeSource { get; }
+
+		[Export ("initWithCoordinate:")]
+		IntPtr Constructor (CLLocationCoordinate2D coordinate);
+
+		[Export ("initWithCoordinate:altitude:")]
+		IntPtr Constructor (CLLocationCoordinate2D coordinate, double altitude);
+
+		[Export ("initWithName:coordinate:")]
+		IntPtr Constructor (string name, CLLocationCoordinate2D coordinate);
+
+		[Export ("initWithName:coordinate:altitude:")]
+		IntPtr Constructor (string name, CLLocationCoordinate2D coordinate, double altitude);
+	}
+
+	[iOS (14,0)]
+	[BaseType (typeof(ARConfiguration))]
+	interface ARGeoTrackingConfiguration {
+		[Export ("environmentTexturing", ArgumentSemantic.Assign)]
+		AREnvironmentTexturing EnvironmentTexturing { get; set; }
+
+		[Export ("wantsHDREnvironmentTextures")]
+		bool WantsHDREnvironmentTextures { get; set; }
+
+		[Export ("planeDetection", ArgumentSemantic.Assign)]
+		ARPlaneDetection PlaneDetection { get; set; }
+
+		[NullAllowed, Export ("detectionImages", ArgumentSemantic.Copy)]
+		NSSet<ARReferenceImage> DetectionImages { get; set; }
+
+		[Export ("automaticImageScaleEstimationEnabled")]
+		bool AutomaticImageScaleEstimationEnabled { get; set; }
+
+		[Export ("maximumNumberOfTrackedImages")]
+		nint MaximumNumberOfTrackedImages { get; set; }
+
+		[Export ("detectionObjects", ArgumentSemantic.Copy)]
+		NSSet<ARReferenceObject> DetectionObjects { get; set; }
+
+		[Async]
+		[Static]
+		[Export ("checkAvailabilityWithCompletionHandler:")]
+		void CheckAvailability (Action<bool, NSError> completionHandler);
+
+		[Async]
+		[Static]
+		[Export ("checkAvailabilityAtCoordinate:completionHandler:")]
+		void CheckAvailability (CLLocationCoordinate2D coordinate, Action<bool, NSError> completionHandler);
+
+		[Static]
+		[Export ("new")]
+		[return: Release]
+		ARGeoTrackingConfiguration Create ();
+	}
+
+	[iOS (14,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface ARGeoTrackingStatus : NSCopying, NSSecureCoding {
+		[Export ("state")]
+		ARGeoTrackingState State { get; }
+
+		[Export ("accuracy")]
+		ARGeoTrackingAccuracy Accuracy { get; }
+
+		[Export ("stateReason")]
+		ARGeoTrackingStateReason StateReason { get; }
+	}
+
 }
