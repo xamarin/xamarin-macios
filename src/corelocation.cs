@@ -149,6 +149,10 @@ namespace CoreLocation {
 		[Field ("kCLLocationAccuracyThreeKilometers")]
 		double AccuracyThreeKilometers { get; }
 
+		[Watch (7, 0), TV (14, 0), Mac (10, 16), iOS (14, 0)]
+		[Field ("kCLLocationAccuracyReduced")]
+		double AccuracyReduced { get; }
+
 		[Mac (10,15)]
 		[iOS (8,0)]
 		[NullAllowed, Export ("floor", ArgumentSemantic.Copy)]
@@ -217,6 +221,7 @@ namespace CoreLocation {
 	
 		[NoWatch][NoTV]
 		[Availability (Deprecated = Platform.iOS_6_0)]
+		[Deprecated (PlatformName.MacOSX, 10, 16, message : "Set the purpose using the NSLocationUsageDescription key in the Info.plist instead.")]
 		// Default property value is null but it cannot be set to that value
 		// it crash when a null is provided
 		[NullAllowed, Export ("purpose")]
@@ -282,8 +287,19 @@ namespace CoreLocation {
 		[Export ("stopMonitoringForRegion:")]
 		void StopMonitoring (CLRegion region);
 
-		[Export ("authorizationStatus")][Static]
-		CLAuthorizationStatus Status { get; }
+		[Internal]
+		[Watch (7, 0), TV (14, 0), Mac (10, 16), iOS (14, 0)]
+		[Export ("authorizationStatus")]
+		CLAuthorizationStatus _IStatus { get; }
+
+		[Deprecated (PlatformName.iOS, 14, 0, message: "Use the instance property instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 16, message: "Use the instance property instead.")]
+		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use the instance property instead.")]
+		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Use instance property instead.")]
+		[Internal]
+		[Static]
+		[Export ("authorizationStatus")]
+		CLAuthorizationStatus _SStatus { get; }
 
 		[NoWatch][NoTV]
 		[Export ("startMonitoringForRegion:")]
@@ -407,6 +423,47 @@ namespace CoreLocation {
 		[Mac (10,14)]
 		[Export ("requestLocation")]
 		void RequestLocation ();
+
+		[Watch (7, 0), TV (14, 0), Mac (10, 16), iOS (14, 0)]
+		[Export ("accuracyAuthorization")]
+		CLAccuracyAuthorization AccuracyAuthorization { get; }
+
+		// TODO: Apple??? 
+		[Watch (7, 0), TV (14, 0), Mac (10, 16), iOS (14, 0)]
+		[Deprecated (PlatformName.WatchOS, 7, 0)]
+		[Deprecated (PlatformName.TvOS, 14, 0)]
+		[Deprecated (PlatformName.iOS, 14, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 16)]
+		[Export ("authorizedForPreciseLocation")]
+		bool AuthorizedForPreciseLocation { [Bind ("isAuthorizedForPreciseLocation")] get; }
+
+		[Async]
+		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Export ("requestTemporaryFullAccuracyAuthorizationWithPurposeKey:completion:")]
+		void RequestTemporaryFullAccuracyAuthorization (string purposeKey, [NullAllowed] Action<NSError> completion);
+
+		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Export ("requestTemporaryFullAccuracyAuthorizationWithPurposeKey:")]
+		void RequestTemporaryFullAccuracyAuthorization (string purposeKey);
+
+		// TODO: Apple??? 
+		[Async]
+		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Deprecated (PlatformName.WatchOS, 7, 0)]
+		[Deprecated (PlatformName.TvOS, 14, 0)]
+		[Deprecated (PlatformName.iOS, 14, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 16)]
+		[Export ("requestTemporaryPreciseLocationAuthorizationWithPurposeKey:completion:")]
+		void RequestTemporaryPreciseLocationAuthorization (string purposeKey, [NullAllowed] Action<NSError> completion);
+
+		// TODO: Apple??? 
+		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Deprecated (PlatformName.WatchOS, 7, 0)]
+		[Deprecated (PlatformName.TvOS, 14, 0)]
+		[Deprecated (PlatformName.iOS, 14, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 16)]
+		[Export ("requestTemporaryPreciseLocationAuthorizationWithPurposeKey:")]
+		void RequestTemporaryPreciseLocationAuthorization (string purposeKey);
 	}
 	
 	[BaseType (typeof (NSObject))]
@@ -485,6 +542,10 @@ namespace CoreLocation {
 		void DidVisit (CLLocationManager manager, CLVisit visit);
 #endif
 
+		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'LocationManagerDidChangeAuthorization' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 16, message: "Use 'LocationManagerDidChangeAuthorization' instead.")]
+		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use 'LocationManagerDidChangeAuthorization' instead.")]
+		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Use 'LocationManagerDidChangeAuthorization' instead.")]
 		[Export ("locationManager:didChangeAuthorizationStatus:"), EventArgs ("CLAuthorizationChanged")]
 		void AuthorizationChanged (CLLocationManager manager, CLAuthorizationStatus status);
 
@@ -508,6 +569,11 @@ namespace CoreLocation {
 		[NoWatch][NoTV]
 		[Export ("locationManager:didFinishDeferredUpdatesWithError:"), EventArgs ("NSError", true)]
 		void DeferredUpdatesFinished (CLLocationManager manager, [NullAllowed] NSError error);
+
+		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Export ("locationManagerDidChangeAuthorization:")]
+		void LocationManagerDidChangeAuthorization (CLLocationManager manager);
+
 	}
 
 	[Static]
