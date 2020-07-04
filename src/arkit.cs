@@ -2216,6 +2216,11 @@ namespace ARKit {
 	[iOS (14,0)]
 	[BaseType (typeof(ARAnchor))]
 	interface ARGeoAnchor : ARTrackable {
+		// Inlined from 'ARAnchorCopying' protocol (we can't have constructors in interfaces)
+		[iOS (14,0)]
+		[Export ("initWithAnchor:")]
+		IntPtr Constructor (ARAnchor anchor);
+
 		[Export ("coordinate")]
 		CLLocationCoordinate2D Coordinate { get; }
 
