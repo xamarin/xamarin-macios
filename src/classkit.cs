@@ -435,7 +435,7 @@ namespace ClassKit {
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch, NoTV, Mac (10,16), iOS (14,0)]
-	[BaseType (typeof(CLSObject))]
+	[BaseType (typeof (CLSObject))]
 	[DisableDefaultCtor]
 	interface CLSProgressReportingCapability {
 		[Export ("kind", ArgumentSemantic.Assign)]
