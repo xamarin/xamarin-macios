@@ -88,7 +88,7 @@ namespace CoreServices {
 			} else if (version.Major == 3 && version.Minor == 0) {
 				if (_HTTPVersion3_0 != null && _HTTPVersion3_0.Handle != IntPtr.Zero)
 					return _HTTPVersion3_0.Handle;
-				// HTTP 2.0 requires OS X 10.16 or later.
+				// HTTP 3.0 requires OS X 10.16 or later.
 				return _HTTPVersion1_1.Handle;
 			} else
 				throw new ArgumentException ();
