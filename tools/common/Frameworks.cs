@@ -195,6 +195,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "AutomaticAssessmentConfiguration", "AutomaticAssessmentConfiguration", 10,15,4 },
 
 					{ "UserNotificationsUI", "UserNotificationsUI", 10,16 },
+					{ "CallKit", "CallKit", 10,16 },
 				};
 			}
 			return mac_frameworks;
