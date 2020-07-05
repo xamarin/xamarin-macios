@@ -234,7 +234,7 @@ namespace ARKit {
 	}
 
 
-	[iOS (14,0)]
+	[iOS (14, 0)]
 	[Native]
 	public enum ARAltitudeSource : long {
 		Unknown,
@@ -243,7 +243,7 @@ namespace ARKit {
 		UserDefined,
 	}
 
-	[iOS (14,0)]
+	[iOS (14, 0)]
 	[Native]
 	public enum ARConfidenceLevel : long {
 		Low,
@@ -251,7 +251,7 @@ namespace ARKit {
 		High,
 	}
 
-	[iOS (14,0)]
+	[iOS (14, 0)]
 	[Native]
 	public enum ARGeoTrackingAccuracy : long {
 		Undetermined,
@@ -260,7 +260,7 @@ namespace ARKit {
 		High,
 	}
 
-	[iOS (14,0)]
+	[iOS (14, 0)]
 	[Native]
 	public enum ARGeoTrackingState : long {
 		NotAvailable,
@@ -269,7 +269,7 @@ namespace ARKit {
 		Localized,
 	}
 
-	[iOS (14,0)]
+	[iOS (14, 0)]
 	[Native]
 	public enum ARGeoTrackingStateReason : long {
 		None,
@@ -863,7 +863,7 @@ namespace ARKit {
 		[Export ("updateWithCollaborationData:")]
 		void Update (ARCollaborationData collaborationData);
 
-		[iOS (14,0)]
+		[iOS (14, 0)]
 		[Async (ResultTypeName="GeoLocationForPoint")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		[Export ("getGeoLocationForPoint:completionHandler:")]
@@ -898,7 +898,7 @@ namespace ARKit {
 		[Export ("session:didOutputCollaborationData:")]
 		void DidOutputCollaborationData (ARSession session, ARCollaborationData data);
 
-		[iOS (14,0)]
+		[iOS (14, 0)]
 		[Export ("session:didChangeGeoTrackingStatus:")]
 		void DidChangeGeoTrackingStatus (ARSession session, ARGeoTrackingStatus geoTrackingStatus);
 	}
@@ -2203,8 +2203,8 @@ namespace ARKit {
 		ARGeometrySource Classification { get; }
 	}
 
-	[iOS (14,0)]
-	[BaseType (typeof(NSObject))]
+	[iOS (14, 0)]
+	[BaseType (typeof (NSObject))]
 	interface ARDepthData {
 		[Export ("depthMap", ArgumentSemantic.Assign)]
 		CVPixelBuffer DepthMap { get; }
@@ -2213,8 +2213,8 @@ namespace ARKit {
 		CVPixelBuffer ConfidenceMap { get; }
 	}
 
-	[iOS (14,0)]
-	[BaseType (typeof(ARAnchor))]
+	[iOS (14, 0)]
+	[BaseType (typeof (ARAnchor))]
 	interface ARGeoAnchor : ARTrackable {
 		// Inlined from 'ARAnchorCopying' protocol (we can't have constructors in interfaces)
 		[iOS (14,0)]
@@ -2244,7 +2244,7 @@ namespace ARKit {
 	}
 
 	[iOS (14,0)]
-	[BaseType (typeof(ARConfiguration))]
+	[BaseType (typeof (ARConfiguration))]
 	interface ARGeoTrackingConfiguration {
 		[Static]
 		[Export ("supportedVideoFormats")]
@@ -2287,8 +2287,8 @@ namespace ARKit {
 		ARGeoTrackingConfiguration Create ();
 	}
 
-	[iOS (14,0)]
-	[BaseType (typeof(NSObject))]
+	[iOS (14, 0)]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface ARGeoTrackingStatus : NSCopying, NSSecureCoding {
 		[Export ("state")]
