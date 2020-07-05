@@ -173,5 +173,6 @@ namespace ObjCRuntime {
 
 		// macOS 10.16
 		public const string UserNotificationsUILibrary = "/System/Library/Frameworks/UserNotificationsUI.framework/UserNotificationsUI";
+		public const string ClassKitLibrary = "/System/Library/Frameworks/ClassKit.framework/ClassKit";
 	}
 }
