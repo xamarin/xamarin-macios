@@ -1798,6 +1798,7 @@ MAC_FRAMEWORKS =            \
 	AutomaticAssessmentConfiguration \
 	AVKit                   \
 	BusinessChat            \
+	CallKit                 \
 	CFNetwork               \
 	CloudKit                \
 	Contacts                \
