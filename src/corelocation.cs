@@ -438,17 +438,17 @@ namespace CoreLocation {
 		bool AuthorizedForPreciseLocation { [Bind ("isAuthorizedForPreciseLocation")] get; }
 
 		[Async]
-		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Watch (7, 0), TV (14, 0), Mac (10, 16), iOS (14, 0)]
 		[Export ("requestTemporaryFullAccuracyAuthorizationWithPurposeKey:completion:")]
 		void RequestTemporaryFullAccuracyAuthorization (string purposeKey, [NullAllowed] Action<NSError> completion);
 
-		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Watch (7, 0), TV (14, 0), Mac (10, 16), iOS (14, 0)]
 		[Export ("requestTemporaryFullAccuracyAuthorizationWithPurposeKey:")]
 		void RequestTemporaryFullAccuracyAuthorization (string purposeKey);
 
 		// TODO: Apple??? 
 		[Async]
-		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Watch (7, 0), TV (14, 0), Mac (10, 16), iOS (14, 0)]
 		[Deprecated (PlatformName.WatchOS, 7, 0)]
 		[Deprecated (PlatformName.TvOS, 14, 0)]
 		[Deprecated (PlatformName.iOS, 14, 0)]
@@ -457,7 +457,7 @@ namespace CoreLocation {
 		void RequestTemporaryPreciseLocationAuthorization (string purposeKey, [NullAllowed] Action<NSError> completion);
 
 		// TODO: Apple??? 
-		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Watch (7, 0), TV (14, 0), Mac (10, 16), iOS (14, 0)]
 		[Deprecated (PlatformName.WatchOS, 7, 0)]
 		[Deprecated (PlatformName.TvOS, 14, 0)]
 		[Deprecated (PlatformName.iOS, 14, 0)]
@@ -570,9 +570,9 @@ namespace CoreLocation {
 		[Export ("locationManager:didFinishDeferredUpdatesWithError:"), EventArgs ("NSError", true)]
 		void DeferredUpdatesFinished (CLLocationManager manager, [NullAllowed] NSError error);
 
-		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Watch (7, 0), TV (14, 0), Mac (10, 16), iOS (14, 0)]
 		[Export ("locationManagerDidChangeAuthorization:")]
-		void LocationManagerDidChangeAuthorization (CLLocationManager manager);
+		void DidChangeAuthorization (CLLocationManager manager);
 
 	}
 
