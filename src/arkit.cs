@@ -2246,6 +2246,10 @@ namespace ARKit {
 	[iOS (14,0)]
 	[BaseType (typeof(ARConfiguration))]
 	interface ARGeoTrackingConfiguration {
+		[Static]
+		[Export ("supportedVideoFormats")]
+		ARVideoFormat[] GetSupportedVideoFormats ();
+
 		[Export ("environmentTexturing", ArgumentSemantic.Assign)]
 		AREnvironmentTexturing EnvironmentTexturing { get; set; }
 
