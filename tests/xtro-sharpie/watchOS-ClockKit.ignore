@@ -1,4 +1,4 @@
-# Default construtor is disabled, not need to add it.
+# Default constructor is disabled, not need to add it.
 !deprecated-attribute-missing! CLKFullColorImageProvider::init missing a [Deprecated] attribute
 !incorrect-protocol-member! CLKComplicationDataSource::getSupportedTimeTravelDirectionsForComplication:withHandler: is OPTIONAL and should NOT be abstract
 

@@ -62,7 +62,7 @@ namespace ClockKit {
 		[Export ("getSupportedTimeTravelDirectionsForComplication:withHandler:")]
 		void GetSupportedTimeTravelDirections (CLKComplication complication, Action<CLKComplicationTimeTravelDirections> handler);
 
-		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Backwards extension and time travel is not longer supported..")]
+		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Backwards extension and time travel is not longer supported.")]
 		[Export ("getTimelineStartDateForComplication:withHandler:")]
 		void GetTimelineStartDate (CLKComplication complication, Action<NSDate> handler);
 
@@ -83,7 +83,7 @@ namespace ClockKit {
 		[Export ("getCurrentTimelineEntryForComplication:withHandler:")]
 		void GetCurrentTimelineEntry (CLKComplication complication, Action<CLKComplicationTimelineEntry> handler);
 
-		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Backwards extension and time travel is not longer supported..")]
+		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Backwards extension and time travel is not longer supported.")]
 		[Export ("getTimelineEntriesForComplication:beforeDate:limit:withHandler:")]
 		void GetTimelineEntriesBeforeDate (CLKComplication complication, NSDate beforeDate, nuint limit, Action<CLKComplicationTimelineEntry []> handler);
 
@@ -1560,11 +1560,11 @@ namespace ClockKit {
 
 		[Watch (7, 0), NoiOS]
 		[Export ("initWithFullColorImage:")]
-		IntPtr Constructor (UIImage image);
+		IntPtr Constructor (UIImage fullColorImage);
 
 		[Watch (7, 0), NoiOS]
 		[Export ("initWithFullColorImage:tintedImageProvider:")]
-		IntPtr Constructor (UIImage image, [NullAllowed] CLKImageProvider tintedImageProvider);
+		IntPtr Constructor (UIImage fullColorImage, [NullAllowed] CLKImageProvider tintedImageProvider);
 	}
 
 	[Watch (5,0)]
@@ -1674,6 +1674,7 @@ namespace ClockKit {
 	[Watch (7, 0), iOS (14, 0)]
 	[BaseType (typeof (NSObject))]
 	interface CLKWatchFaceLibrary {
+		[Async]
 		[Export ("addWatchFaceAtURL:completionHandler:")]
 		void AddWatchFace (NSUrl fileUrl, Action<NSError> handler);
 	}
@@ -1875,4 +1876,3 @@ namespace ClockKit {
 
 
 }
-
