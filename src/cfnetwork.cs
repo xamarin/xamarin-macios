@@ -69,7 +69,7 @@ namespace CoreServices {
 
 		[Mac (10, 16), iOS (14,0), TV (14, 0)]
 		[Internal][Field ("kCFHTTPVersion3_0", "CFNetwork")]
-		NSString _HTTPVersion3_0 { get; }
+		IntPtr _HTTPVersion3_0 { get; }
 
 		[Internal][Field ("kCFHTTPAuthenticationSchemeBasic", "CFNetwork")]
 		IntPtr _AuthenticationSchemeBasic { get; }

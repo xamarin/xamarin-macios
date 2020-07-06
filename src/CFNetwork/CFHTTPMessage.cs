@@ -80,15 +80,19 @@ namespace CoreServices {
 				return _HTTPVersion1_1.Handle;
 			else if (version.Equals (HttpVersion.Version10))
 				return _HTTPVersion1_0.Handle;
-			else if (version.Major == 2 && version.Minor == 0) {
+			else if (version.Major == 3 && version.Minor == 0) {
+				if (_HTTPVersion3_0 != IntPtr.Zero)
+					// HTTP 3.0 requires OS X 10.16 or later.
+					return _HTTPVersion3_0;
+				else if (_HTTPVersion2_0 != null && _HTTPVersion2_0.Handle != IntPtr.Zero)
+					// HTTP 2.0 requires OS X 10.11 or later.
+					return _HTTPVersion2_0.Handle; 
+				else
+					return _HTTPVersion1_1.Handle;
+			} else if (version.Major == 2 && version.Minor == 0) {
 				if (_HTTPVersion2_0 != null && _HTTPVersion2_0.Handle != IntPtr.Zero)
 					return _HTTPVersion2_0.Handle;
 				// HTTP 2.0 requires OS X 10.11 or later.
-				return _HTTPVersion1_1.Handle;
-			} else if (version.Major == 3 && version.Minor == 0) {
-				if (_HTTPVersion3_0 != null && _HTTPVersion3_0.Handle != IntPtr.Zero)
-					return _HTTPVersion3_0.Handle;
-				// HTTP 3.0 requires OS X 10.16 or later.
 				return _HTTPVersion1_1.Handle;
 			} else
 				throw new ArgumentException ();
