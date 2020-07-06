@@ -527,8 +527,8 @@ namespace CallKit {
 		[Export ("supportedHandleTypes", ArgumentSemantic.Copy)]
 		NSSet<NSNumber> SupportedHandleTypes { get; set; }
 
-		[Deprecated (PlatformName.iOS, 14, 0, message: "Use the default construtor instead.")]
-		[Deprecated (PlatformName.MacOSX, 10, 16, message: "Use the default construtor instead.")]
+		[Deprecated (PlatformName.iOS, 14, 0, message: "Use the default constructor instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 16, message: "Use the default constructor instead.")]
 		[Export ("initWithLocalizedName:")]
 		IntPtr Constructor (string localizedName);
 
