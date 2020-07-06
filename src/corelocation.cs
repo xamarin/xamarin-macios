@@ -292,10 +292,10 @@ namespace CoreLocation {
 		[Export ("authorizationStatus")]
 		CLAuthorizationStatus _IStatus { get; }
 
-		[Deprecated (PlatformName.iOS, 14, 0, message: "Use the instance property instead.")]
-		[Deprecated (PlatformName.MacOSX, 10, 16, message: "Use the instance property instead.")]
-		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use the instance property instead.")]
-		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Use instance property instead.")]
+		[Deprecated (PlatformName.iOS, 14, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 16)]
+		[Deprecated (PlatformName.TvOS, 14, 0)]
+		[Deprecated (PlatformName.WatchOS, 7, 0)]
 		[Internal]
 		[Static]
 		[Export ("authorizationStatus")]
@@ -428,7 +428,7 @@ namespace CoreLocation {
 		[Export ("accuracyAuthorization")]
 		CLAccuracyAuthorization AccuracyAuthorization { get; }
 
-		// TODO: Apple??? 
+		// Apple issue reported: https://github.com/xamarin/maccore/issues/2259
 		[Watch (7, 0), TV (14, 0), Mac (10, 16), iOS (14, 0)]
 		[Deprecated (PlatformName.WatchOS, 7, 0)]
 		[Deprecated (PlatformName.TvOS, 14, 0)]
@@ -446,7 +446,7 @@ namespace CoreLocation {
 		[Export ("requestTemporaryFullAccuracyAuthorizationWithPurposeKey:")]
 		void RequestTemporaryFullAccuracyAuthorization (string purposeKey);
 
-		// TODO: Apple??? 
+		// Apple issue reported: https://github.com/xamarin/maccore/issues/2259
 		[Async]
 		[Watch (7, 0), TV (14, 0), Mac (10, 16), iOS (14, 0)]
 		[Deprecated (PlatformName.WatchOS, 7, 0)]
@@ -456,7 +456,7 @@ namespace CoreLocation {
 		[Export ("requestTemporaryPreciseLocationAuthorizationWithPurposeKey:completion:")]
 		void RequestTemporaryPreciseLocationAuthorization (string purposeKey, [NullAllowed] Action<NSError> completion);
 
-		// TODO: Apple??? 
+		// Apple issue reported: https://github.com/xamarin/maccore/issues/2259
 		[Watch (7, 0), TV (14, 0), Mac (10, 16), iOS (14, 0)]
 		[Deprecated (PlatformName.WatchOS, 7, 0)]
 		[Deprecated (PlatformName.TvOS, 14, 0)]
@@ -542,10 +542,10 @@ namespace CoreLocation {
 		void DidVisit (CLLocationManager manager, CLVisit visit);
 #endif
 
-		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'LocationManagerDidChangeAuthorization' instead.")]
-		[Deprecated (PlatformName.MacOSX, 10, 16, message: "Use 'LocationManagerDidChangeAuthorization' instead.")]
-		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use 'LocationManagerDidChangeAuthorization' instead.")]
-		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Use 'LocationManagerDidChangeAuthorization' instead.")]
+		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'DidChangeAuthorization' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 16, message: "Use 'DidChangeAuthorization' instead.")]
+		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use 'DidChangeAuthorization' instead.")]
+		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Use 'DidChangeAuthorization' instead.")]
 		[Export ("locationManager:didChangeAuthorizationStatus:"), EventArgs ("CLAuthorizationChanged")]
 		void AuthorizationChanged (CLLocationManager manager, CLAuthorizationStatus status);
 
