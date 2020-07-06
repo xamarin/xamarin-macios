@@ -797,6 +797,8 @@ namespace ARKit {
 		void DidRemoveNode (ARSKView view, SKNode node, ARAnchor anchor);
 	}
 
+	delegate void GetGeolocationCallback (CLLocationCoordinate2D coordinate, double altitude, NSError error);
+
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (NSObject))]
@@ -867,7 +869,7 @@ namespace ARKit {
 		[Async (ResultTypeName="GeoLocationForPoint")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		[Export ("getGeoLocationForPoint:completionHandler:")]
-		void GetGeoLocation (Vector3 position, Action<CLLocationCoordinate2D, double, NSError> completionHandler);
+		void GetGeoLocation (Vector3 position, GetGeolocationCallback completionHandler);
 	}
 
 	[iOS (11,0)]
@@ -2205,6 +2207,7 @@ namespace ARKit {
 
 	[iOS (14, 0)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
 	interface ARDepthData {
 		[Export ("depthMap", ArgumentSemantic.Assign)]
 		CVPixelBuffer DepthMap { get; }
