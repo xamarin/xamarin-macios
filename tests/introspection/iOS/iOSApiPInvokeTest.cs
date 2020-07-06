@@ -143,6 +143,9 @@ namespace Introspection {
 			Assert.AreEqual (0, Errors, "{0} errors found in {1} native delegate validated: {2}", Errors, n, string.Join (", ", failed_api));
 		}
 
+#if NET
+		[Ignore ("We don't ship NUnitLite in .NET 5")]
+#endif
 		[Test]
 		public void NUnitLite ()
 		{
@@ -153,6 +156,9 @@ namespace Introspection {
 
 #if !__WATCHOS__
 		[Test]
+#if NET
+		[Ignore ("We don't ship MonoTouch.Dialog in .NET 5")]
+#endif
 		public void MonoTouchDialog ()
 		{
 			// there's no direct reference to MTD - but it's there

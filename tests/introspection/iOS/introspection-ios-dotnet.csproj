@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.iOS.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <RuntimeIdentifier>ios-x64</RuntimeIdentifier>
+    <OutputType>Exe</OutputType>
+    <DefineConstants>NET</DefineConstants>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>Introspection</RootNamespace>
+    <AssemblyName>introspection</AssemblyName>
+    <MtouchLink>None</MtouchLink>
+    <AssetTargetFallback>xamarinios10;$(AssetTargetFallback)</AssetTargetFallback>
+    <!-- This is needed because the packages/ directory might be in the same folder as this project file, and some some packages might have C# files, which would then automatically be included -->
+    <DefaultItemExcludes>$(DefaultItemExcludes);packages/**;</DefaultItemExcludes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NUnitLite" Version="3.12.0" />
+    <PackageReference Include="MonoTouch.Dialog" Version="2.0.0-pre1" />
+    <ProjectReference Include="..\..\..\external\Touch.Unit\Touch.Client\Touch.Client-iOS.dotnet.csproj" />
+    <!-- MonoTouch.Dialog references System.Json, which isn't shipped with .NET5, so reference the NuGet instead -->
+    <PackageReference Include="System.Json" Version="4.7.1" />
+    <!-- The linker resolves some assembly references too eagerly, and fails when it can't find them, so work around this by referencing the missing assemblies-->
+    <!-- ref: https://github.com/mono/linker/issues/1139 -->
+    <PackageReference Include="System.Security.Permissions" Version="5.0.0-preview.2.20160.6" />
+    <PackageReference Include="System.Threading.AccessControl" Version="5.0.0-preview.2.20160.6" />
+    <PackageReference Include="System.CodeDom" Version="5.0.0-preview.2.20160.6" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0-preview.2.20160.6" />
+    <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="5.0.0-preview.2.20160.6" />
+    <PackageReference Include="System.Diagnostics.EventLog" Version="5.0.0-preview.2.20160.6" />
+    <PackageReference Include="System.IO.Ports" Version="5.0.0-preview.2.20160.6" />
+    <PackageReference Include="System.Data.SqlClient" Version="5.0.0-alpha1.19523.8" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\ApiBaseTest.cs">
+      <Link>ApiBaseTest.cs</Link>
+    </Compile>
+    <Compile Include="..\ApiClassPtrTest.cs">
+      <Link>ApiClassPtrTest.cs</Link>
+    </Compile>
+    <Compile Include="..\ApiCMAttachmentTest.cs">
+      <Link>ApiCMAttachmentTest.cs</Link>
+    </Compile>
+    <Compile Include="..\ApiCoreImageFiltersTest.cs">
+      <Link>ApiCoreImageFiltersTest.cs</Link>
+    </Compile>
+    <Compile Include="..\ApiCtorInitTest.cs">
+      <Link>ApiCtorInitTest.cs</Link>
+    </Compile>
+    <Compile Include="..\ApiFieldTest.cs">
+      <Link>ApiFieldTest.cs</Link>
+    </Compile>
+    <Compile Include="..\ApiPInvokeTest.cs">
+      <Link>ApiPInvokeTest.cs</Link>
+    </Compile>
+    <Compile Include="..\ApiProtocolTest.cs">
+      <Link>ApiProtocolTest.cs</Link>
+    </Compile>
+    <Compile Include="..\ApiSelectorTest.cs">
+      <Link>ApiSelectorTest.cs</Link>
+    </Compile>
+    <Compile Include="..\ApiSignatureTest.cs">
+      <Link>ApiSignatureTest.cs</Link>
+    </Compile>
+    <Compile Include="..\ApiStructTest.cs">
+      <Link>ApiStructTest.cs</Link>
+    </Compile>
+    <Compile Include="..\ApiTypoTest.cs">
+      <Link>ApiTypoTest.cs</Link>
+    </Compile>
+    <Compile Include="..\ApiWeakPropertyTest.cs">
+      <Link>ApiWeakPropertyTest.cs</Link>
+    </Compile>
+    <Compile Include="..\CoreSelectorTest.cs">
+      <Link>CoreSelectorTest.cs</Link>
+    </Compile>
+    <Compile Include="..\EnvironmentVariable.cs">
+      <Link>EnvironmentVariable.cs</Link>
+    </Compile>
+    <Compile Include="..\..\common\MonoNativeConfig.cs">
+      <Link>MonoNativeConfig.cs</Link>
+    </Compile>
+    <Compile Include="..\..\common\PlatformInfo.cs">
+      <Link>PlatformInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\common\TestRuntime.cs">
+      <Link>TestRuntime.cs</Link>
+    </Compile>
+    <Compile Include="..\ApiAvailabilityTest.cs">
+      <Link>ApiAvailabilityTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\tools\common\Frameworks.cs">
+      <Link>Frameworks.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\tools\common\ApplePlatform.cs">
+      <Link>ApplePlatform.cs</Link>
+    </Compile>
+    <Compile Include="..\ApiFrameworkTest.cs">
+      <Link>ApiFrameworkTest.cs</Link>
+    </Compile>
+    <Compile Include="..\ApiTypeTest.cs">
+      <Link>ApiTypeTest.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="..\xamarin1.png">
+      <Link>xamarin1.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\..\tools\mtouch\simlauncher64-sgen.frameworks">
+      <Link>simlauncher64-sgen.frameworks</Link>
+    </BundleResource>
+  </ItemGroup>
+</Project>

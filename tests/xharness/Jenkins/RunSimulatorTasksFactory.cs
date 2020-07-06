@@ -39,14 +39,18 @@ namespace Xharness.Jenkins {
 					configurations = new string [] { "Debug" };
 				foreach (var config in configurations) {
 					foreach (var pair in ps) {
-						var derived = new MSBuildTask (jenkins: jenkins, testProject: project, processManager: processManager) {
-							ProjectConfiguration = config,
-							ProjectPlatform = "iPhoneSimulator",
-							Platform = pair.Item2,
-							Ignored = pair.Item3,
-							TestName = project.Name,
-							Dependency = project.Dependency,
-						};
+						MSBuildTask derived;
+						if (project.IsDotNetProject) {
+							derived = new DotNetBuildTask (jenkins: jenkins, testProject: project, processManager: processManager);
+						} else {
+							derived = new MSBuildTask (jenkins: jenkins, testProject: project, processManager: processManager);
+						}
+						derived.ProjectConfiguration = config;
+						derived.ProjectPlatform = "iPhoneSimulator";
+						derived.Platform = pair.Item2;
+						derived.Ignored = pair.Item3;
+						derived.TestName = project.Name;
+						derived.Dependency = project.Dependency;
 						derived.CloneTestProject (jenkins.MainLog, processManager, pair.Item1);
 						var simTasks = CreateAsync (jenkins, processManager, derived);
 						runSimulatorTasks.AddRange (simTasks);
@@ -100,8 +104,21 @@ namespace Xharness.Jenkins {
 				ignored = new [] { false };
 				break;
 			case TestPlatform.iOS_Unified:
-				platforms = new TestPlatform [] { TestPlatform.iOS_Unified32, TestPlatform.iOS_Unified64 };
-				ignored = new [] { !jenkins.IncludeiOS32, false };
+				var iOSProject = (iOSTestProject) buildTask.TestProject;
+				if (iOSProject.SkipiOS32Variation && iOSProject.SkipiOS64Variation) {
+					return runtasks;
+				} else if (iOSProject.SkipiOS32Variation) {
+					targets = new TestTarget [] { TestTarget.Simulator_iOS64 };
+					platforms = new TestPlatform [] { TestPlatform.iOS_Unified64 };
+					ignored = new [] { false };
+				} else if (iOSProject.SkipiOS64Variation) {
+					targets = new TestTarget [] { TestTarget.Simulator_iOS32 };
+					platforms = new TestPlatform [] { TestPlatform.iOS_Unified32 };
+					ignored = new [] { !jenkins.IncludeiOS32 };
+				} else {
+					platforms = new TestPlatform [] { TestPlatform.iOS_Unified32, TestPlatform.iOS_Unified64 };
+					ignored = new [] { !jenkins.IncludeiOS32, false };
+				}
 				break;
 			case TestPlatform.iOS_TodayExtension64:
 				targets = new TestTarget [] { TestTarget.Simulator_iOS64 };

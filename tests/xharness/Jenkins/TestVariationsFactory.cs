@@ -106,6 +106,8 @@ namespace Xharness.Jenkins {
 					yield return new TestData { Variation = "Debug (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all,-remove-uithread-checks", Debug = true, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL", Undefines = "DYNAMIC_REGISTRAR", Ignored = !jenkins.IncludeAll };
 					break;
 				case "introspection":
+					if (test.TestProject.IsDotNetProject)
+						break; // Our .NET 5 code hasn't implemented building using static libraries yet, and the iOS 10.3 simulator requires dylibs to be signed, which we don't do yet, thus this doesn't quite work yet for the iOS 10.3 simulator.
 					foreach (var target in test.Platform.GetAppRunnerTargets ())
 						yield return new TestData {
 							Variation = $"Debug ({test.Platform.GetSimulatorMinVersion ()})",
@@ -141,6 +143,9 @@ namespace Xharness.Jenkins {
 			foreach (var task in tests) {
 				if (string.IsNullOrEmpty (task.Variation))
 					task.Variation = task.ProjectConfiguration.Contains ("Debug") ? "Debug" : "Release";
+
+				if (task.TestProject.IsDotNetProject)
+					task.Variation += " [dotnet]";
 			}
 
 			var rv = new List<T> (tests);
@@ -158,6 +163,9 @@ namespace Xharness.Jenkins {
 					var ignored = test_data.Ignored;
 					var known_failure = test_data.KnownFailure;
 					var candidates = test_data.Candidates;
+
+					if (task.TestProject.IsDotNetProject)
+						variation += " [dotnet]";
 
 					if (known_failure.HasValue)
 						ignored = true;
@@ -211,13 +219,18 @@ namespace Xharness.Jenkins {
 						clone.Xml.Save (clone.Path);
 					});
 
-					var build = new MSBuildTask (jenkins: jenkins, testProject: clone, processManager: processManager) {
-						ProjectConfiguration = configuration,
-						ProjectPlatform = task.ProjectPlatform,
-						Platform = task.Platform,
-						InitialTask = clone_task,
-						TestName = clone.Name,
-					};
+					MSBuildTask build;
+					if (clone.IsDotNetProject) {
+						build = new DotNetBuildTask (jenkins: jenkins, testProject: clone, processManager: processManager);
+					} else {
+						build = new MSBuildTask (jenkins: jenkins, testProject: clone, processManager: processManager);
+					}
+					build.ProjectConfiguration = configuration;
+					build.ProjectPlatform = task.ProjectPlatform;
+					build.Platform = task.Platform;
+					build.InitialTask = clone_task;
+					build.TestName = clone.Name;
+
 					T newVariation = creator (build, task, candidates);
 					newVariation.Variation = variation;
 					newVariation.Ignored = ignored ?? task.Ignored;

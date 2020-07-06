@@ -902,6 +902,10 @@
         </value>
     </data>
 
+	<data name="MX0177" xml:space="preserve">
+		<value>Unknown platform: {0}. This usually indicates a bug; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.</value>
+	</data>
+
 	<data name="MX1009" xml:space="preserve">
 		<value>Could not copy the assembly '{0}' to '{1}': {2}
 		</value>

@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 
-#if MTOUCH || MMP
+#if MTOUCH || MMP || BUNDLER
 using Mono.Cecil;
 
 using Xamarin.Bundler;
-using Registrar;
 #endif
 
 using Xamarin.Utils;
@@ -17,6 +16,19 @@ public class Framework
 	public Version Version;
 	public Version VersionAvailableInSimulator;
 	public bool AlwaysWeakLinked;
+
+#if MTOUCH || MMP || BUNDLER
+	public bool IsFrameworkAvailableInSimulator (Application app)
+	{
+		if (VersionAvailableInSimulator == null)
+			return false;
+
+		if (VersionAvailableInSimulator > app.SdkVersion)
+			return false;
+
+		return true;
+	}
+#endif
 }
 
 public class Frameworks : Dictionary <string, Framework>
@@ -497,8 +509,8 @@ public class Frameworks : Dictionary <string, Framework>
 		}
 	}
 
-#if MMP
-	public static void Gather (Application app, AssemblyDefinition product_assembly, HashSet<string> frameworks, HashSet<string> weak_frameworks)
+#if MTOUCH || MMP || BUNDLER
+	static void Gather (Application app, AssemblyDefinition product_assembly, HashSet<string> frameworks, HashSet<string> weak_frameworks, Func<Framework, bool> include_framework)
 	{
 		var namespaces = new HashSet<string> ();
 
@@ -508,25 +520,57 @@ public class Frameworks : Dictionary <string, Framework>
 				namespaces.Add (td.Namespace);
 
 		// Iterate over all the namespaces and check which frameworks we need to link with.
+		var all_frameworks = GetFrameworks (app.Platform, app.IsSimulatorBuild);
 		foreach (var nspace in namespaces) {
-			switch (nspace) {
-			case "QTKit":
-				if (Driver.LinkProhibitedFrameworks) {
-					ErrorHelper.Warning (5221, Errors.MM5221, nspace);
-				}  else {
-					ErrorHelper.Warning (5220, Errors.MM5220, nspace);
-					continue;
-				}
-				break;
+			if (!all_frameworks.TryGetValue (nspace, out var framework))
+				continue;
+
+			if (!include_framework (framework))
+				continue;
+
+			if (app.SdkVersion < framework.Version) {
+				// We're building with an old sdk, and the framework doesn't exist there.
+				continue;
 			}
-			if (Driver.GetFrameworks (app).TryGetValue (nspace, out var framework)) {
-				if (app.SdkVersion >= framework.Version) {
-					var add_to = app.DeploymentTarget >= framework.Version ? frameworks : weak_frameworks;
-					add_to.Add (framework.Name);
-					continue;
-				}
-			}
+
+			if (app.IsSimulatorBuild && !framework.IsFrameworkAvailableInSimulator (app))
+				continue;
+
+			var add_to = app.DeploymentTarget >= framework.Version ? frameworks : weak_frameworks;
+			add_to.Add (framework.Name);
 		}
 	}
+
+	static bool FilterFrameworks (Application app, Framework framework)
+	{
+		switch (app.Platform) {
+		case ApplePlatform.iOS:
+		case ApplePlatform.TVOS:
+		case ApplePlatform.WatchOS:
+			break; // Include all frameworks by default
+		case ApplePlatform.MacOSX:
+			switch (framework.Name) {
+			case "QTKit":
+#if MMP
+				if (Driver.LinkProhibitedFrameworks) {
+					ErrorHelper.Warning (5221, Errors.MM5221, framework.Name);
+				} else {
+					ErrorHelper.Warning (5220, Errors.MM5220, framework.Name);
+					return false;
+				}
 #endif
+				return true;
+			}
+			return true;
+		default:
+			throw ErrorHelper.CreateError (71, Errors.MX0071 /* "Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case." */, app.Platform, app.GetProductName ());
+		}
+		return true;
+	}
+
+	public static void Gather (Application app, AssemblyDefinition product_assembly, HashSet<string> frameworks, HashSet<string> weak_frameworks)
+	{
+		Gather (app, product_assembly, frameworks, weak_frameworks, (framework) => FilterFrameworks (app, framework));
+	}
+#endif // MTOUCH || MMP || BUNDLER
 }

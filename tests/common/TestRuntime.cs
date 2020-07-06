@@ -96,6 +96,9 @@ partial class TestRuntime
 		NUnit.Framework.Assert.Ignore (message);
 	}
 
+#if NET
+	// error CS1061: 'AppDomain' does not contain a definition for 'DefineDynamicAssembly' and no accessible extension method 'DefineDynamicAssembly' accepting a first argument of type 'AppDomain' could be found (are you missing a using directive or an assembly reference?)
+#else
 	static AssemblyName assemblyName = new AssemblyName ("DynamicAssemblyExample"); 
 	public static bool CheckExecutingWithInterpreter ()
 	{
@@ -110,6 +113,7 @@ partial class TestRuntime
 			return false;
 		}
 	}
+#endif
 
 	public static void AssertXcodeVersion (int major, int minor, int build = 0)
 	{

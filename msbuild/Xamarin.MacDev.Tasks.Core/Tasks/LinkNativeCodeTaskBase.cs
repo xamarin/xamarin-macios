@@ -29,7 +29,6 @@ namespace Xamarin.MacDev.Tasks {
 		public string MinimumOSVersion { get; set; }
 
 		public ITaskItem[] Frameworks { get; set; }
-		public ITaskItem [] WeakFrameworks { get; set; }
 #endregion
 
 		public override bool Execute ()
@@ -78,14 +77,8 @@ namespace Xamarin.MacDev.Tasks {
 
 			if (Frameworks != null) {
 				foreach (var fw in Frameworks) {
-					arguments.Add ("-framework");
-					arguments.Add (fw.ItemSpec);
-				}
-			}
-
-			if (WeakFrameworks != null) {
-				foreach (var fw in WeakFrameworks) {
-					arguments.Add ("-weak_framework");
+					var is_weak = fw.GetMetadata ("IsWeak") == "true";
+					arguments.Add (is_weak ? "-weak_framework" : "-framework");
 					arguments.Add (fw.ItemSpec);
 				}
 			}

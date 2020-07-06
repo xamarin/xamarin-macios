@@ -118,6 +118,11 @@ namespace Xamarin.Bundler {
 			}
 		}
 
+		public string GetProductName ()
+		{
+			return ProductName;
+		}
+
 		// If we're targetting a 64 bit arch.
 		bool? is64bits;
 		public bool Is64Build {

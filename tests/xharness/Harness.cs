@@ -207,7 +207,7 @@ namespace Xharness {
 			if (string.IsNullOrEmpty (SdkRoot))
 				SdkRoot = config ["XCODE_DEVELOPER_ROOT"] ?? configuration.SdkRoot;
 
-			processManager = new ProcessManager (XcodeRoot, MlaunchPath);
+			processManager = new ProcessManager (XcodeRoot, MlaunchPath, GetDotNetExecutable, XIBuildPath);
 			TunnelBore = new TunnelBore (processManager);
 		}
 
@@ -389,6 +389,7 @@ namespace Xharness {
 				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".fsproj")), false) { Name = p });
 
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "iOS", "introspection-ios.csproj"))) { Name = "introspection" });
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "iOS", "introspection-ios-dotnet.csproj"))) { Name = "introspection", IsDotNetProject = true, SkipiOSVariation = false, SkiptvOSVariation = true, SkipwatchOSVariation = true, SkipTodayExtensionVariation = true, SkipDeviceVariations = true, SkipiOS32Variation = true, });
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "dont link", "dont link.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link all", "link all.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link sdk", "link sdk.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
@@ -518,17 +519,21 @@ namespace Xharness {
 						TemplateProjectPath = file,
 						Harness = this,
 						TestProject = proj,
+						ShouldSkipProjectGeneration = proj.IsDotNetProject,
 					};
 					unified.Execute ();
 					unified_targets.Add (unified);
 
-					var today = new TodayExtensionTarget {
-						TemplateProjectPath = file,
-						Harness = this,
-						TestProject = proj,
-					};
-					today.Execute ();
-					today_targets.Add (today);
+					if (!proj.SkipTodayExtensionVariation) {
+						var today = new TodayExtensionTarget {
+							TemplateProjectPath = file,
+							Harness = this,
+							TestProject = proj,
+							ShouldSkipProjectGeneration = proj.IsDotNetProject,
+						};
+						today.Execute ();
+						today_targets.Add (today);
+					}
 				}
 			}
 
