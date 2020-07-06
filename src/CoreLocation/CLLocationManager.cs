@@ -55,8 +55,10 @@ namespace CoreLocation {
 				if (UIKit.UIDevice.CurrentDevice.CheckSystemVersion (14, 0)) {
 #elif WATCH
 				if (WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (7, 0)) {
-#else 
+#elif MONOMAC
 				if (PlatformHelper.CheckSystemVersion (10, 16)) {
+#else 
+				#error Unknown platform
 #endif
 					return new CLLocationManager ()._IStatus;
 				} else {
