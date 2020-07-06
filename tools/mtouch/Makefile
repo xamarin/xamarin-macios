@@ -162,6 +162,9 @@ SIMLAUNCHER_FRAMEWORKS =  \
 	-weak_framework AutomaticAssessmentConfiguration	\
 						\
 	-weak_framework AppClip	\
+	# waiting on apple to fix the framework on ios
+	# https://github.com/xamarin/maccore/issues/2258
+	# -weak_framework ClockKit \
 
 # keep the above list of weak_framework
 # 1. grouped by iOS versions;

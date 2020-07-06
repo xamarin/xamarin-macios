@@ -146,5 +146,7 @@ namespace ObjCRuntime {
 		public const string AutomaticAssessmentConfigurationLibrary = "/System/Library/Frameworks/AutomaticAssessmentConfiguration.framework/AutomaticAssessmentConfiguration";
 		// iOS 14.0
 		public const string AppClipLibrary = "/System/Library/Frameworks/AppClip.framework/AppClip";
+		// waiting on apple to fix the headers https://github.com/xamarin/maccore/issues/2258
+		// public const string ClockKitLibrary = "/System/Library/Frameworks/ClockKit.framework/ClockKit";
 	}
 }

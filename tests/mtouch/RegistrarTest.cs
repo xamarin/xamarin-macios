@@ -346,6 +346,8 @@ class MyObjectErr : NSObject, IFoo1, IFoo2
 					new { Framework = "BackgroundTasks", Version = "13.0" },
 					new { Framework = "QuickLookThumbnailing", Version = "13.0" },
 					new { Framework = "AutomaticAssessmentConfiguration", Version = "13.4" },
+					// waiting on apple to ifx the headers https://github.com/xamarin/maccore/issues/2258
+					// new { Framework = "ClockKit", Version = "14.0" },
 				};
 				foreach (var framework in invalidFrameworks)
 					mtouch.AssertError (4134, $"Your application is using the '{framework.Framework}' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS {framework.Version}, while you're building with the iOS {mtouch.Sdk} SDK.) Please select a newer SDK in your app's iOS Build options.");

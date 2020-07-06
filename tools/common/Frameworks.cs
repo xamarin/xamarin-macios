@@ -333,6 +333,9 @@ public class Frameworks : Dictionary <string, Framework>
 
 				{ "AppClip", "AppClip", 14,0 },
 
+				// waiting on apple to fix it: https://github.com/xamarin/maccore/issues/2258
+				// { "ClockKit", "ClockKit", 14,0 },
+
 				// the above MUST be kept in sync with simlauncher
 				// see tools/mtouch/Makefile
 				// please also keep it sorted to ease comparison
