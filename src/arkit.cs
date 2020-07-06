@@ -2243,7 +2243,7 @@ namespace ARKit {
 		IntPtr Constructor (string name, CLLocationCoordinate2D coordinate, double altitude);
 	}
 
-	[iOS (14,0)]
+	[iOS (14, 0)]
 	[BaseType (typeof (ARConfiguration))]
 	interface ARGeoTrackingConfiguration {
 		[Static]
@@ -2254,7 +2254,7 @@ namespace ARKit {
 		AREnvironmentTexturing EnvironmentTexturing { get; set; }
 
 		[Export ("wantsHDREnvironmentTextures")]
-		bool WantsHDREnvironmentTextures { get; set; }
+		bool WantsHdrEnvironmentTextures { get; set; }
 
 		[Export ("planeDetection", ArgumentSemantic.Assign)]
 		ARPlaneDetection PlaneDetection { get; set; }
