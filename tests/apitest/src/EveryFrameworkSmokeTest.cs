@@ -76,7 +76,7 @@ namespace Xamarin.Mac.Tests
 				case "NetworkLibrary":
 				case "UserNotificationsLibrary":
 				case "VideoSubscriberAccountLibrary":
-				// macOs 10.6
+				// macOS 10.6
 				case "CallKitLibrary":
 					return LoadStatus.Acceptable;
 				}

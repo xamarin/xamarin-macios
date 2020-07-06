@@ -34,7 +34,7 @@ namespace CallKit {
 		InvalidArgument = 2,
 	}
 
-	[iOS (10, 0), Mac (10 ,16)]
+	[iOS (10, 0), Mac (10, 16)]
 	[Introduced (PlatformName.UIKitForMac, 13,0)]
 	[ErrorDomain ("CXErrorDomainIncomingCall")]
 	[Native]
@@ -58,7 +58,7 @@ namespace CallKit {
 		UnknownCallUuid = 4,
 		CallUuidAlreadyExists = 5,
 		InvalidAction = 6,
-		MaximumCallGroupsReached = 7
+		MaximumCallGroupsReached = 7,
 	}
 
 	[iOS (10, 0), Mac (10, 16)]
@@ -84,7 +84,7 @@ namespace CallKit {
 	public enum CXPlayDtmfCallActionType : long {
 		SingleTone = 1,
 		SoftPause = 2,
-		HardPause = 3
+		HardPause = 3,
 	}
 
 	[iOS (10, 0), Mac (10, 16)]
@@ -95,7 +95,7 @@ namespace CallKit {
 		RemoteEnded = 2,
 		Unanswered = 3,
 		AnsweredElsewhere = 4,
-		DeclinedElsewhere = 5
+		DeclinedElsewhere = 5,
 	}
 
 	[iOS (10, 0), Mac (10, 16)]
@@ -104,7 +104,7 @@ namespace CallKit {
 	public enum CXHandleType : long {
 		Generic = 1,
 		PhoneNumber = 2,
-		EmailAddress = 3
+		EmailAddress = 3,
 	}
 
 	[iOS (10, 0), Mac (10, 16)]
@@ -499,8 +499,8 @@ namespace CallKit {
 	[DisableDefaultCtor]
 	interface CXProviderConfiguration : NSCopying {
 
+		[NoMac] // deprecated and was never added to Mac OS X before
 		[Deprecated (PlatformName.iOS, 14, 0)]
-		[Deprecated (PlatformName.MacOSX, 10, 16)]
 		[Export ("localizedName"), NullAllowed]
 		string LocalizedName { get; }
 
@@ -527,8 +527,8 @@ namespace CallKit {
 		[Export ("supportedHandleTypes", ArgumentSemantic.Copy)]
 		NSSet<NSNumber> SupportedHandleTypes { get; set; }
 
+		[NoMac] // deprecated and was never added to Mac OS X before 
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use the default constructor instead.")]
-		[Deprecated (PlatformName.MacOSX, 10, 16, message: "Use the default constructor instead.")]
 		[Export ("initWithLocalizedName:")]
 		IntPtr Constructor (string localizedName);
 

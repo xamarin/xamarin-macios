@@ -173,7 +173,6 @@ namespace ObjCRuntime {
 
 		// macOS 10.16
 		public const string UserNotificationsUILibrary = "/System/Library/Frameworks/UserNotificationsUI.framework/UserNotificationsUI";
-		// waiting for it to be fixed in a next beta release: https://github.com/xamarin/maccore/issues/2257
-		// public const string CallKitLibrary = "/System/Library/Frameworks/CallKit.framework/CallKit";
+		public const string CallKitLibrary = "/System/Library/Frameworks/CallKit.framework/CallKit";
 	}
 }
