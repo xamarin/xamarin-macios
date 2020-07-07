@@ -411,6 +411,7 @@ namespace Introspection {
 							case "ARBodyAnchor":
 							case "AREnvironmentProbeAnchor":
 							case "ARFaceAnchor":
+							case "ARGeoAnchor":
 							case "ARGeometryElement":
 							case "ARGeometrySource":
 							case "ARImageAnchor":
