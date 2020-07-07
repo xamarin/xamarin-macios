@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if __IOS__ || __TVOS__
+
+using System;
 using Foundation;
 using UIKit;
 using ObjCRuntime;
@@ -37,3 +39,5 @@ namespace MonoTouchFixtures.UIKit {
 		}
 	}
 }
+
+#endif
