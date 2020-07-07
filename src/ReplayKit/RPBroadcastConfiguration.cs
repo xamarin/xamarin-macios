@@ -25,6 +25,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#if !MONOMAC
+
 using System;
 using System.Drawing;
 using System.Diagnostics;
@@ -49,3 +51,5 @@ namespace ReplayKit {
 		}		
 	}
 }
+
+#endif

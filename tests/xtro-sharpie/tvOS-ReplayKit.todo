@@ -1,2 +1,0 @@
-!missing-null-allowed! 'System.String ReplayKit.RPBroadcastController::get_BroadcastExtensionBundleID()' is missing an [NullAllowed] on return type
-!missing-selector! RPScreenRecorder::stopRecordingWithOutputURL:completionHandler: not bound
