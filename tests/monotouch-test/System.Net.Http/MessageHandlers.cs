@@ -28,6 +28,12 @@ namespace MonoTests.System.Net.Http
 	[TestFixture]
 	public class MessageHandlerTest
 	{
+		public MessageHandlerTest ()
+		{
+			// Https seems broken on our macOS 10.9 bot, so skip this test.
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+		}
+
 		void PrintHandlerToTest ()
 		{
 #if !__WATCHOS__
