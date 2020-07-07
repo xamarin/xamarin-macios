@@ -234,3 +234,6 @@
 !missing-type! CLKComplicationTemplateGraphicExtraLargeCircularStackText not bound
 !missing-type! CLKComplicationTemplateGraphicRectangularFullImage not bound
 !missing-type! CLKWatchFaceLibrary not bound
+## appended from unclassified file
+!deprecated-attribute-missing! CLKComplicationServer::earliestTimeTravelDate missing a [Deprecated] attribute
+!deprecated-attribute-missing! CLKComplicationServer::latestTimeTravelDate missing a [Deprecated] attribute

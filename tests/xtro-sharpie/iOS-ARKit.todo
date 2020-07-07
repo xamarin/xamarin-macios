@@ -1,1 +1,13 @@
 !missing-pinvoke! ARSkeletonJointNameForRecognizedPointKey is not bound
+## appended from unclassified file
+!unknown-field! ARSkeletonJointNameLeftEar bound
+!unknown-field! ARSkeletonJointNameLeftEye bound
+!unknown-field! ARSkeletonJointNameLeftForearm bound
+!unknown-field! ARSkeletonJointNameLeftLeg bound
+!unknown-field! ARSkeletonJointNameLeftUpLeg bound
+!unknown-field! ARSkeletonJointNameNeck bound
+!unknown-field! ARSkeletonJointNameRightEar bound
+!unknown-field! ARSkeletonJointNameRightEye bound
+!unknown-field! ARSkeletonJointNameRightForearm bound
+!unknown-field! ARSkeletonJointNameRightLeg bound
+!unknown-field! ARSkeletonJointNameRightUpLeg bound

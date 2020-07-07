@@ -145,3 +145,24 @@
 !missing-type! INObjectSection not bound
 !missing-type! INOutgoingMessageTypeResolutionResult not bound
 !missing-type! INSendMessageAttachment not bound
+## appended from unclassified file
+!deprecated-attribute-missing! INStartCallIntent::initWithAudioRoute:destinationType:contacts:recordTypeForRedialing:callCapability: missing a [Deprecated] attribute
+!deprecated-attribute-missing! INStartCallIntent::recordTypeForRedialing missing a [Deprecated] attribute
+!extra-designated-initializer! INStartCallIntent::initWithAudioRoute:destinationType:contacts:recordTypeForRedialing:callCapability: is incorrectly decorated with an [DesignatedInitializer] attribute
+!missing-enum! INStartCallCallRecordToCallBackUnsupportedReason not bound
+!missing-protocol-member! INStartCallIntentHandling::resolveCallRecordToCallBackForStartCall:withCompletion: not found
+!missing-selector! +INCallRecordResolutionResult::confirmationRequiredWithCallRecordToConfirm: not bound
+!missing-selector! +INCallRecordResolutionResult::disambiguationWithCallRecordsToDisambiguate: not bound
+!missing-selector! +INCallRecordResolutionResult::successWithResolvedCallRecord: not bound
+!missing-selector! +INStartCallCallRecordToCallBackResolutionResult::unsupportedForReason: not bound
+!missing-selector! INCallRecordFilter::callCapability not bound
+!missing-selector! INCallRecordFilter::callTypes not bound
+!missing-selector! INCallRecordFilter::initWithParticipants:callTypes:callCapability: not bound
+!missing-selector! INCallRecordFilter::participants not bound
+!missing-selector! INStartCallCallRecordToCallBackResolutionResult::initWithCallRecordResolutionResult: not bound
+!missing-selector! INStartCallIntent::callRecordFilter not bound
+!missing-selector! INStartCallIntent::callRecordToCallBack not bound
+!missing-selector! INStartCallIntent::initWithCallRecordFilter:callRecordToCallBack:audioRoute:destinationType:contacts:callCapability: not bound
+!missing-type! INCallRecordFilter not bound
+!missing-type! INCallRecordResolutionResult not bound
+!missing-type! INStartCallCallRecordToCallBackResolutionResult not bound
