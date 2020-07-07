@@ -50,6 +50,8 @@ stages:
     pool:
       name: ${{ parameters.iOSDevicePool }}
       demands: ${{ parameters.iOSDeviceDemand }}
+      workspace:
+        clean: all
     steps:
     - template: device-tests.yml
       parameters:
@@ -65,6 +67,8 @@ stages:
     condition: succeededOrFailed()
     pool:
       vmImage: ${{ parameters.WindowsDevicePool }}
+      workspace:
+        clean: all
     steps:
     - template: upload-vsdrops.yml
       parameters:
@@ -77,6 +81,8 @@ stages:
     condition: succeededOrFailed()
     pool:
       vmImage: ${{ parameters.WindowsDevicePool }}
+      workspace:
+        clean: all
     steps:
     - template: upload-vsts-tests.yml
 
@@ -97,6 +103,8 @@ stages:
       VSDROPS_INDEX: $[ dependencies.upload_vsdrops.outputs['vsdrops.VSDROPS_INDEX'] ]
     pool:
       vmImage: ${{ parameters.WindowsDevicePool }}
+      workspace:
+        clean: all
     steps:
     - template: publish-html.yml
       parameters:
