@@ -19,11 +19,11 @@ namespace UIKit {
 
 	public partial class UICellAccessory {
 
-		[Watch (7,0), TV (14,0), iOS (14,0)]
+		[TV (14,0), iOS (14,0)]
 		[DllImport (Constants.UIKitLibrary)]
 		static extern IntPtr UICellAccessoryPositionBeforeAccessoryOfClass (IntPtr accessoryCls);
 
-		[Watch (7,0), TV (14,0), iOS (14,0)]
+		[TV (14,0), iOS (14,0)]
 		[return: DelegateProxy (typeof (SDUICellAccessoryPosition))]
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static UICellAccessoryPosition GetPositionBeforeAccessory (Class accessoryClass)
@@ -34,16 +34,16 @@ namespace UIKit {
 			return NIDUICellAccessoryPosition.Create (ret)!;
 		}
 		
-		[Watch (7,0), TV (14,0), iOS (14,0)]
+		[TV (14,0), iOS (14,0)]
 		[return: DelegateProxy (typeof (SDUICellAccessoryPosition))]
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static UICellAccessoryPosition GetPositionBeforeAccessory (Type accessoryType) => GetPositionBeforeAccessory (new Class (accessoryType));
 
-		[Watch (7,0), TV (14,0), iOS (14,0)]
+		[TV (14,0), iOS (14,0)]
 		[DllImport (Constants.UIKitLibrary)]
 		static extern IntPtr UICellAccessoryPositionAfterAccessoryOfClass (IntPtr accessoryCls);
 
-		[Watch (7,0), TV (14,0), iOS (14,0)]
+		[TV (14,0), iOS (14,0)]
 		[return: DelegateProxy (typeof (SDUICellAccessoryPosition))]
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static UICellAccessoryPosition GetPositionAfterAccessory (Class accessoryClass)
@@ -54,7 +54,7 @@ namespace UIKit {
 			return NIDUICellAccessoryPosition.Create (ret)!;
 		}
 
-		[Watch (7,0), TV (14,0), iOS (14,0)]
+		[TV (14,0), iOS (14,0)]
 		[return: DelegateProxy (typeof (SDUICellAccessoryPosition))]
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static UICellAccessoryPosition GetPositionAfterAccessory (Type accessoryType) => GetPositionAfterAccessory (new Class (accessoryType));
@@ -100,7 +100,7 @@ namespace UIKit {
 		}
 		
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		unsafe nuint Invoke (UICellAccessory [] accessories)
+		nuint Invoke (UICellAccessory [] accessories)
 		{
 			using var nsa_accessories = accessories == null ? null : NSArray.FromNSObjects (accessories);
 			
