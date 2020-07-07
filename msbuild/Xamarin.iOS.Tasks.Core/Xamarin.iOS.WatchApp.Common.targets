@@ -15,8 +15,6 @@ Copyright (C) 2015-2016 Xamarin. All rights reserved.
 -->
 
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<UsingTask TaskName="Xamarin.iOS.Tasks.ResolveNativeWatchApp" AssemblyFile="Xamarin.iOS.Tasks.dll" />
-
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets" 
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets')"/>
 	

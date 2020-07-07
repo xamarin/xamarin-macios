@@ -18,48 +18,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
      so be careful not to add fixes here that should go into Xamarin.Mac.Common.props which is shared -->
 
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<UsingTask TaskName="Xamarin.MacDev.Tasks.ArTool" AssemblyFile="Xamarin.Mac.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.MacDev.Tasks.Codesign" AssemblyFile="Xamarin.Mac.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.MacDev.Tasks.CollectBundleResources" AssemblyFile="Xamarin.Mac.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.MacDev.Tasks.CreateInstallerPackage" AssemblyFile="Xamarin.Mac.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.MacDev.Tasks.CreatePkgInfo" AssemblyFile="Xamarin.Mac.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.MacDev.Tasks.Ditto" AssemblyFile="Xamarin.Mac.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.MacDev.Tasks.FindItemWithLogicalName" AssemblyFile="Xamarin.Mac.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.MacDev.Tasks.PackLibraryResources" AssemblyFile="Xamarin.Mac.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.MacDev.Tasks.PropertyListEditor" AssemblyFile="Xamarin.Mac.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.MacDev.Tasks.ReadItemsFromFile" AssemblyFile="Xamarin.Mac.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.MacDev.Tasks.SmartCopy" AssemblyFile="Xamarin.Mac.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.MacDev.Tasks.UnpackLibraryResources" AssemblyFile="Xamarin.Mac.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.MacDev.Tasks.WriteItemsToFile" AssemblyFile="Xamarin.Mac.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.Mac.Tasks.Archive" AssemblyFile="Xamarin.Mac.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.Mac.Tasks.ACTool" AssemblyFile="Xamarin.Mac.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.Mac.Tasks.CodesignVerify" AssemblyFile="Xamarin.Mac.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.Mac.Tasks.CompileAppManifest" AssemblyFile="Xamarin.Mac.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.Mac.Tasks.CompileEntitlements" AssemblyFile="Xamarin.Mac.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.Mac.Tasks.CompileSceneKitAssets" AssemblyFile="Xamarin.Mac.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.Mac.Tasks.DetectSdkLocations" AssemblyFile="Xamarin.Mac.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.Mac.Tasks.DetectSigningIdentity" AssemblyFile="Xamarin.Mac.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.Mac.Tasks.EmbedProvisionProfile" AssemblyFile="Xamarin.Mac.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.Mac.Tasks.IBTool" AssemblyFile="Xamarin.Mac.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.Mac.Tasks.MetalLib" AssemblyFile="Xamarin.Mac.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.Mac.Tasks.Metal" AssemblyFile="Xamarin.Mac.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.Mac.Tasks.Mmp" AssemblyFile="Xamarin.Mac.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.Mac.Tasks.ScnTool" AssemblyFile="Xamarin.Mac.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.Mac.Tasks.TextureAtlas" AssemblyFile="Xamarin.Mac.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.MacDev.Tasks.GenerateBundleName" AssemblyFile="Xamarin.Mac.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.MacDev.Tasks.GetNativeExecutableName" AssemblyFile="Xamarin.Mac.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.MacDev.Tasks.GetPropertyListValue" AssemblyFile="Xamarin.Mac.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.MacDev.Tasks.SymbolStrip" AssemblyFile="Xamarin.Mac.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.MacDev.Tasks.Zip" AssemblyFile="Xamarin.Mac.Tasks.dll" />
-
-	<UsingTask TaskName="Microsoft.Build.Tasks.Copy" AssemblyFile="Xamarin.Mac.Tasks.dll"/>
-	<UsingTask TaskName="Microsoft.Build.Tasks.Delete" AssemblyFile="Xamarin.Mac.Tasks.dll"/>
-	<UsingTask TaskName="Microsoft.Build.Tasks.Exec" AssemblyFile="Xamarin.Mac.Tasks.dll"/>
-	<UsingTask TaskName="Microsoft.Build.Tasks.MakeDir" AssemblyFile="Xamarin.Mac.Tasks.dll"/>
-	<UsingTask TaskName="Microsoft.Build.Tasks.Move" AssemblyFile="Xamarin.Mac.Tasks.dll" />
-	<UsingTask TaskName="Microsoft.Build.Tasks.RemoveDir" AssemblyFile="Xamarin.Mac.Tasks.dll"/>
-	<UsingTask TaskName="Microsoft.Build.Tasks.Touch" AssemblyFile="Xamarin.Mac.Tasks.dll"/>
-
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.Common.props"
 			Condition="'$(_XamarinCommonPropsHasBeenImported)' != 'true'" />
 	
