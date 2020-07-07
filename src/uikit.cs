@@ -11558,7 +11558,7 @@ namespace UIKit {
 
 		[TV (14,0), NoWatch, NoiOS]
 		[Export ("updateSearchResultsForSearchController:selectingSearchSuggestion:")]
-		void SelectingSearchSuggestion (UISearchController searchController, IUISearchSuggestion searchSuggestion);
+		void UpdateSearchResults (UISearchController searchController, IUISearchSuggestion searchSuggestion);
 	}
 	
 	[BaseType (typeof(UIControl))]
@@ -13338,16 +13338,16 @@ namespace UIKit {
 		[Export ("automaticallyUpdatesContentConfiguration")]
 		bool AutomaticallyUpdatesContentConfiguration { get; set; }
 
-		[Export ("contentView", ArgumentSemantic.Retain)]
-		UIView ContentView { get; }
-
 		[Deprecated (PlatformName.iOS, 14, 0)]
 		[Export ("textLabel", ArgumentSemantic.Retain)]
-		UILabel TextLabel { get; }
+		UILabel TextLabel { get;  }
 
 		[Deprecated (PlatformName.iOS, 14, 0)]
 		[Export ("detailTextLabel", ArgumentSemantic.Retain)]
-		UILabel DetailTextLabel { get; }
+		UILabel DetailTextLabel { get;  }
+
+		[Export ("contentView", ArgumentSemantic.Retain)]
+		UIView ContentView { get;  }
 
 		[Watch (7,0), TV (14,0), iOS (14,0)]
 		[NullAllowed, Export ("backgroundConfiguration", ArgumentSemantic.Copy)]
@@ -22376,7 +22376,7 @@ namespace UIKit {
 
 		[Abstract]
 		[Export ("indirectScribbleInteraction:isElementFocused:")]
-		bool GetIsElementFocused (UIIndirectScribbleInteraction interaction, NSObject elementIdentifier);
+		bool IsElementFocused (UIIndirectScribbleInteraction interaction, NSObject elementIdentifier);
 
 		[Abstract]
 		[Export ("indirectScribbleInteraction:frameForElement:")]
@@ -22641,11 +22641,11 @@ namespace UIKit {
 
 		[Abstract]
 		[NullAllowed, Export ("localizedSuggestion")]
-		string LocalizedSuggestion { get; }
+		NSString LocalizedSuggestion { get; }
 
 		[return: NullAllowed]
 		[Export ("localizedDescription")]
-		string GetLocalizedDescription ();
+		NSString GetLocalizedDescription ();
 
 		[return: NullAllowed]
 		[Export ("iconImage")]
@@ -22669,24 +22669,24 @@ namespace UIKit {
 
 		[Static]
 		[Export ("suggestionWithLocalizedSuggestion:")]
-		UISearchSuggestionItem Create (string suggestion);
+		UISearchSuggestionItem Create (NSString localizedSuggestion);
 
 		[Static]
 		[Export ("suggestionWithLocalizedSuggestion:descriptionString:")]
-		UISearchSuggestionItem Create (string suggestion, [NullAllowed] string description);
+		UISearchSuggestionItem Create (NSString localizedSuggestion, [NullAllowed] string description);
 
 		[Static]
 		[Export ("suggestionWithLocalizedSuggestion:descriptionString:iconImage:")]
-		UISearchSuggestionItem Create (string suggestion, [NullAllowed] string description, [NullAllowed] UIImage iconImage);
+		UISearchSuggestionItem Create (NSString localizedSuggestion, [NullAllowed] string description, [NullAllowed] UIImage iconImage);
 
 		[Export ("initWithLocalizedSuggestion:")]
-		IntPtr Constructor (string suggestion);
+		IntPtr Constructor (NSString localizedSuggestion);
 
 		[Export ("initWithLocalizedSuggestion:localizedDescription:")]
-		IntPtr Constructor (string suggestion, [NullAllowed] string description);
+		IntPtr Constructor (NSString localizedSuggestion, [NullAllowed] string description);
 
 		[Export ("initWithLocalizedSuggestion:localizedDescription:iconImage:")]
-		IntPtr Constructor (string suggestion, [NullAllowed] string description, [NullAllowed] UIImage iconImage);
+		IntPtr Constructor (NSString localizedSuggestion, [NullAllowed] string description, [NullAllowed] UIImage iconImage);
 
 		// Inlined by the adopted protocol
 		// [NullAllowed, Export ("localizedSuggestion")]
