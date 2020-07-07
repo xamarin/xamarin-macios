@@ -47,24 +47,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</AllowedReferenceRelatedFileExtensions>
 	</PropertyGroup>
 
-	<PropertyGroup>
-		<GeneratedSourcesDir Condition="'$(GeneratedSourcesDir)' == '' And '$(TargetFrameworkIdentifier)' == 'Xamarin.TVOS'">$(IntermediateOutputPath)tvos</GeneratedSourcesDir>
-		<GeneratedSourcesDir Condition="'$(GeneratedSourcesDir)' == '' And '$(TargetFrameworkIdentifier)' == 'Xamarin.WatchOS'">$(IntermediateOutputPath)watchos</GeneratedSourcesDir>
-		<GeneratedSourcesDir Condition="'$(GeneratedSourcesDir)' == ''">$(IntermediateOutputPath)ios</GeneratedSourcesDir>
-		<GeneratedSourcesDir Condition="'$(GeneratedSourcesDir)' != '' and !HasTrailingSlash ('$(GeneratedSourcesDir)')">$(GeneratedSourcesDir)\</GeneratedSourcesDir>
-
-		<ProcessEnums Condition="'$(ProcessEnums)' == ''">False</ProcessEnums>
-	</PropertyGroup>
-
-	<!-- Make our Build Actions show up in MonoDevelop -->
-	<ItemGroup>
-		<AvailableItemName Include="BundleResource" />
-		<AvailableItemName Include="ObjcBindingApiDefinition" />
-		<AvailableItemName Include="ObjcBindingCoreSource" />
-		<AvailableItemName Include="ObjcBindingNativeLibrary" />
-		<AvailableItemName Include="ObjcBindingNativeFramework" />
-	</ItemGroup>
-
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.props"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.props')"/>
 

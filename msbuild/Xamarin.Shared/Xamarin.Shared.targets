@@ -255,6 +255,61 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<Error Condition="'$(_AppManifest)' == '' And '$(_CanOutputAppBundle)' == 'true'" Text="Info.plist not found."/>
 	</Target>
 
+	<PropertyGroup Condition="'$(IsBindingProject)' == 'true'">
+		<!-- Add our own pre and post build steps -->
+		<!-- Override the CoreCompile Target to use bgen -->
+		<CompileDependsOn>
+			_GenerateBindings;
+			_PrepareNativeReferences;
+			_CollectGeneratedSources;
+			$(CompileDependsOn)
+			_CreateBindingResourcePackage;
+		</CompileDependsOn>
+	</PropertyGroup>
+
+	<Target Name="_GenerateBindings"
+		Inputs="$(MSBuildAllProjects);@(ObjcBindingApiDefinition);@(ObjcBindingCoreSource);@(ReferencePath);@(ObjcBindingNativeLibrary)"
+		Outputs="$(_GeneratedSourcesFileList)"
+		DependsOnTargets="_ComputeTargetFrameworkMoniker"
+		Condition="'$(IsBindingProject)' == 'true' And '$(DesignTimeBuild)' != 'true'">
+
+		<ItemGroup>
+			<BTouchReferencePath Include="@(ReferenceCopyLocalPaths)" Condition="'%(Extension)' == '.dll'" />
+		</ItemGroup>
+
+		<PropertyGroup>
+			<BTouchEmitDebugInformation>false</BTouchEmitDebugInformation>
+			<BTouchEmitDebugInformation Condition="'$(Debug)' != ''">true</BTouchEmitDebugInformation>
+		</PropertyGroup>
+
+		<BTouch
+			Condition="'$(IsMacEnabled)' == 'true'"
+			SessionId="$(BuildSessionId)"
+			OutputPath="$(OutputPath)"
+			ObjectiveCLibraries="@(ObjcBindingNativeLibrary)"
+			AdditionalLibPaths="$(AdditionalLibPaths)"
+			AllowUnsafeBlocks="$(AllowUnsafeBlocks)"
+			ApiDefinitions="@(ObjcBindingApiDefinition)"
+			BaseLibDll="$(BaseLibDllPath)"
+			CoreSources="@(ObjcBindingCoreSource)"
+			DefineConstants="$(DefineConstants)"
+			EmitDebugInformation="$(BTouchEmitDebugInformation)"
+			ExtraArgs="$(BTouchExtraArgs)"
+			GeneratedSourcesDir="$(GeneratedSourcesDir)"
+			GeneratedSourcesFileList="$(_GeneratedSourcesFileList)"
+			Namespace="$(Namespace)"
+			OutputAssembly="$(OutputAssembly)"
+			ProcessEnums="$(ProcessEnums)"
+			ProjectDir="$(MSBuildProjectDirectory)"
+			References="@(ReferencePath);@(BTouchReferencePath)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+			BTouchToolPath="$(BTouchToolPath)"
+			BTouchToolExe="$(BTouchToolExe)"
+			StandardOutputImportance="High"
+			>
+		</BTouch>
+	</Target>
+
 	<Target Name="_GetMinimumOSVersion" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_ComputeTargetFrameworkMoniker">
 		<GetMinimumOSVersion
 			SessionId="$(BuildSessionId)"

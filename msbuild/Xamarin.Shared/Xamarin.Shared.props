@@ -193,6 +193,24 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 
 		<BTouchToolExe  Condition="'$(OS)' == 'Unix' And '$(BTouchToolExe)' == ''">bgen</BTouchToolExe>
 		<BTouchToolExe  Condition="'$(OS)' != 'Unix' And '$(BTouchToolExe)' == ''">bgen.exe</BTouchToolExe>
+
+		<GeneratedSourcesDir Condition="'$(GeneratedSourcesDir)' == ''">$(IntermediateOutputPath)$(_PlatformName)</GeneratedSourcesDir>
+		<GeneratedSourcesDir Condition="'$(GeneratedSourcesDir)' != '' and !HasTrailingSlash ('$(GeneratedSourcesDir)')">$(GeneratedSourcesDir)\</GeneratedSourcesDir>
+		<_GeneratedSourcesFileList>$(GeneratedSourcesDir)sources.list</_GeneratedSourcesFileList>
+
+		<ProcessEnums Condition="'$(ProcessEnums)' == ''">false</ProcessEnums>
+
+		<!-- The generated binding code is unsafe, so make sure to allow unsafe code when compiling the C# code -->
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+
+		<!-- Build bindings with the latest (stable) version of C#
+
+		     We require C# 8 for nullability support. However we allow custom
+		     code to be included inside binding projects and we should not
+		     support anything (stable) that the C# compiler (installed
+		     separately) allow, so `latest` it is.
+		-->
+		<LangVersion>latest</LangVersion>
 	</PropertyGroup>
 
 	<Target Name="_ComputeTargetFrameworkMoniker" Condition="'$(_ComputedTargetFrameworkMoniker)' == ''">
