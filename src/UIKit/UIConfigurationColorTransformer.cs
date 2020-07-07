@@ -65,9 +65,9 @@ namespace UIKit {
 		}
 		
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		unsafe UIColor Invoke (UIColor color)
+		UIColor Invoke (UIColor color)
 		{
-			return Runtime.GetNSObject<UIColor> (invoker (BlockPointer, color == null ? IntPtr.Zero : color.Handle));
+			return Runtime.GetNSObject<UIColor> (invoker (BlockPointer, color.GetHandle ()));
 		}
 	} /* class NIDUIConfigurationColorTransformerHandler */
 }
