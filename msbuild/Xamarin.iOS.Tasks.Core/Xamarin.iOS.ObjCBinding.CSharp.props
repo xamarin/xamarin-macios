@@ -18,12 +18,6 @@ Copyright (C) 2013-2016 Xamarin Inc. All rights reserved.
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.props"
 		Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.props')"/>
-	
-	<PropertyGroup Condition="'$(OS)' == 'Unix'">
-		<MonoTouchSdkRoot Condition="'$(MonoTouchSdkRoot)' == '' And '$(MD_MTOUCH_SDK_ROOT)' != '' And Exists('$(MD_MTOUCH_SDK_ROOT)/bin')">$(MD_MTOUCH_SDK_ROOT)</MonoTouchSdkRoot>
-		<MonoTouchSdkRoot Condition="'$(MonoTouchSdkRoot)' == '' And '$(MD_MTOUCH_SDK_ROOT)' != '' And Exists('$(MD_MTOUCH_SDK_ROOT)/usr/bin')">$(MD_MTOUCH_SDK_ROOT)/usr</MonoTouchSdkRoot>
-		<MonoTouchSdkRoot Condition="'$(MonoTouchSdkRoot)' == '' And Exists('/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin')">/Library/Frameworks/Xamarin.iOS.framework/Versions/Current</MonoTouchSdkRoot>
-	</PropertyGroup>
 
 	<PropertyGroup>
 		<!-- Version/fx properties -->

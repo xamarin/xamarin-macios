@@ -25,12 +25,6 @@ Copyright (C) 2013-2016 Xamarin Inc. All rights reserved.
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets" 
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets')"/>
 
-	<PropertyGroup Condition="'$(OS)' == 'Unix'">
-		<MonoTouchSdkRoot Condition="'$(MonoTouchSdkRoot)' == '' And '$(MD_MTOUCH_SDK_ROOT)' != '' And Exists('$(MD_MTOUCH_SDK_ROOT)/bin')">$(MD_MTOUCH_SDK_ROOT)</MonoTouchSdkRoot>
-		<MonoTouchSdkRoot Condition="'$(MonoTouchSdkRoot)' == '' And '$(MD_MTOUCH_SDK_ROOT)' != '' And Exists('$(MD_MTOUCH_SDK_ROOT)/usr/bin')">$(MD_MTOUCH_SDK_ROOT)/usr</MonoTouchSdkRoot>
-		<MonoTouchSdkRoot Condition="'$(MonoTouchSdkRoot)' == '' And Exists('/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin')">/Library/Frameworks/Xamarin.iOS.framework/Versions/Current</MonoTouchSdkRoot>
-	</PropertyGroup>
-
 	<!-- Add our own pre-build steps -->
 	<PropertyGroup Condition="'$(_UsingXamarinSdk)' != 'true'">
 		<BuildDependsOn>

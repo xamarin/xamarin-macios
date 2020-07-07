@@ -84,12 +84,8 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
 		<IsMacEnabled>true</IsMacEnabled>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(XamarinMacFrameworkRoot)' == ''">
-		<XamarinMacFrameworkRoot>/Library/Frameworks/Xamarin.Mac.framework/Versions/Current</XamarinMacFrameworkRoot>
-	</PropertyGroup>
-
 	<PropertyGroup Condition="'$(TargetFrameworkName)' == 'Full'">
-		<AssemblySearchPaths>$(XamarinMacFrameworkRoot)/lib/reference/full;$(XamarinMacFrameworkRoot)/lib/mono;$(AssemblySearchPaths)</AssemblySearchPaths>
+		<AssemblySearchPaths>$(_XamarinSdkRoot)/lib/reference/full;$(_XamarinSdkRoot)/lib/mono;$(AssemblySearchPaths)</AssemblySearchPaths>
 		<ImplicitlyExpandNETStandardFacades>False</ImplicitlyExpandNETStandardFacades>
 	</PropertyGroup>
 
