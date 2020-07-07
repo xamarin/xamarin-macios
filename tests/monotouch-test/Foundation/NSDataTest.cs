@@ -142,6 +142,9 @@ namespace MonoTouchFixtures.Foundation {
 				Assert.Ignore ("NSData.FromUrl doesn't seem to work in watchOS");
 			}
 #endif
+			// Https seems broken on our macOS 10.9 bot, so skip this test.
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+
 			// we have network issues, try several urls, if one works, be happy, else fail
 			for (var i = 0; i < NetworkResources.RobotsUrls.Length; i++) {
 				NSError error;
