@@ -47,24 +47,5 @@ namespace CoreLocation {
 			return false;
 		}
 #endif
-
-		public static CLAuthorizationStatus Status {
-			get {
-				// because an instance property in iOS 14, tvOS 14, Watch 7 and macOS 10,16
-#if IOS || TVOS
-				if (UIKit.UIDevice.CurrentDevice.CheckSystemVersion (14, 0)) {
-#elif WATCH
-				if (WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (7, 0)) {
-#elif MONOMAC
-				if (PlatformHelper.CheckSystemVersion (10, 16)) {
-#else 
-				#error Unknown platform
-#endif
-					return new CLLocationManager ()._IStatus;
-				} else {
-					return _SStatus;
-				}
-			}
-		}
 	}
 }

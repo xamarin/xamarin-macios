@@ -287,19 +287,16 @@ namespace CoreLocation {
 		[Export ("stopMonitoringForRegion:")]
 		void StopMonitoring (CLRegion region);
 
-		[Internal]
 		[Watch (7, 0), TV (14, 0), Mac (10, 16), iOS (14, 0)]
 		[Export ("authorizationStatus")]
-		CLAuthorizationStatus _IStatus { get; }
+		CLAuthorizationStatus AuthorizationStatus { get; }
 
-		[Deprecated (PlatformName.iOS, 14, 0)]
-		[Deprecated (PlatformName.MacOSX, 10, 16)]
-		[Deprecated (PlatformName.TvOS, 14, 0)]
-		[Deprecated (PlatformName.WatchOS, 7, 0)]
-		[Internal]
-		[Static]
-		[Export ("authorizationStatus")]
-		CLAuthorizationStatus _SStatus { get; }
+		[Deprecated (PlatformName.iOS, 14, 0, message: "Use the instance property 'AuthorizationStatus' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 16, message: "Use the instance 'AuthorizationStatus' property instead.")]
+		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use the instance property AuthorizationStatus' instead.")]
+		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Use instance property 'AuthorizationStatus' instead.")]
+		[Export ("authorizationStatus")][Static]
+		CLAuthorizationStatus Status { get; }
 
 		[NoWatch][NoTV]
 		[Export ("startMonitoringForRegion:")]
