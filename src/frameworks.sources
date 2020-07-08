@@ -310,6 +310,7 @@ CLASSKIT_SOURCES = \
 
 CLOCKKIT_CORE_SOURCES = \
 	ClockKit/CLKEnums.cs \
+	ClockKit/CLKComplication.cs \
 
 # CloudKit
 

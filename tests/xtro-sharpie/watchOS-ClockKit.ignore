@@ -1,6 +1,3 @@
 # Default constructor is disabled, not need to add it.
 !deprecated-attribute-missing! CLKFullColorImageProvider::init missing a [Deprecated] attribute
 !incorrect-protocol-member! CLKComplicationDataSource::getSupportedTimeTravelDirectionsForComplication:withHandler: is OPTIONAL and should NOT be abstract
-
-# no needed, families is a smart enum and the same can be achived with .net
-!missing-pinvoke! CLKAllComplicationFamilies is not bound
