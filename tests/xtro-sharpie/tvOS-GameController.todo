@@ -387,3 +387,9 @@
 !wrong-base-type! GCExtendedGamepad expected GCPhysicalInputProfile actual NSObject
 !wrong-base-type! GCGamepad expected GCPhysicalInputProfile actual NSObject
 !wrong-base-type! GCMicroGamepad expected GCPhysicalInputProfile actual NSObject
+## appended from unclassified file
+!extra-null-allowed! 'GameController.GCController GameController.GCGamepad::get_Controller()' has a extraneous [NullAllowed] on return type
+!missing-field! GCHapticDurationInfinite not bound
+!missing-selector! GCMotion::acceleration not bound
+!missing-selector! GCMotion::hasGravityAndUserAcceleration not bound
+!missing-selector! GCMotion::setAcceleration: not bound

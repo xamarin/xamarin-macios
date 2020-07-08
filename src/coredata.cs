@@ -1623,6 +1623,7 @@ namespace CoreData
 #if !WATCH
 	[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor] // NSInternalInconsistencyException Reason: NSCoreDataCoreSpotlightDelegate requires the use of the initializer initForStoreWithDescription:model: 
 	interface NSCoreDataCoreSpotlightDelegate
 	{
 		[Export ("domainIdentifier")]

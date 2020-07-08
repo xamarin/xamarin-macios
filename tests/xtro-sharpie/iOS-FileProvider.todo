@@ -1,0 +1,2 @@
+!incorrect-protocol-member! NSFileProviderItem::typeIdentifier is OPTIONAL and should NOT be abstract
+!missing-protocol-member! NSFileProviderItem::contentType not found
