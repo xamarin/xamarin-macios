@@ -5,7 +5,7 @@
 //	TJ Lambert  <t-anlamb@microsoft.com>
 //	Whitney Schmidt  <whschm@microsoft.com>
 //
-// Copyright 2020 Microsoft Corporation All rights reserved.
+// Copyright 2019, 2020 Microsoft Corporation All rights reserved.
 //
 
 #if MONOMAC
@@ -65,7 +65,6 @@ namespace PencilKit {
 		PencilOnly,
 	}
 
-	[Unavailable (PlatformName.UIKitForMac), Advice ("This API is not available when using UIKit on macOS.")]
 	[iOS (13, 0), NoMac]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[BaseType (typeof (NSObject))]
@@ -96,33 +95,32 @@ namespace PencilKit {
 		// [Export ("delegate", ArgumentSemantic.Weak), NullAllowed]
 		// NSObject WeakDelegate { get; set; }
 
-		[Unavailable (PlatformName.UIKitForMac), Advice ("This API is not available when using UIKit on macOS.")]
+		[Unavailable (PlatformName.MacCatalyst), Advice ("This API is not available when using Catalyst on macOS.")]
 		[Wrap ("WeakDelegate"), NullAllowed, New]
 		IPKCanvasViewDelegate Delegate { get; set; }
 
 		[Export ("drawing", ArgumentSemantic.Copy)]
 		PKDrawing Drawing { get; set; }
 
-		[Unavailable (PlatformName.UIKitForMac), Advice ("This API is not available when using UIKit on macOS.")]
+		[Unavailable (PlatformName.MacCatalyst), Advice ("This API is not available when using Catalyst on macOS.")]
 		[Export ("tool", ArgumentSemantic.Copy)]
 		PKTool Tool { get; set; }
 
-		[Unavailable (PlatformName.UIKitForMac), Advice ("This API is not available when using UIKit on macOS.")]
+		[Unavailable (PlatformName.MacCatalyst), Advice ("This API is not available when using Catalyst on macOS.")]
 		[Export ("rulerActive")]
 		bool RulerActive { [Bind ("isRulerActive")] get; set; }
 
-		[Unavailable (PlatformName.UIKitForMac), Advice ("This API is not available when using UIKit on macOS.")]
+		[Unavailable (PlatformName.MacCatalyst), Advice ("This API is not available when using Catalyst on macOS.")]
 		[Export ("drawingGestureRecognizer")]
 		UIGestureRecognizer DrawingGestureRecognizer { get; }
 
-		[Introduced (PlatformName.iOS, 13, 0, message: "Use 'drawingPolicy' property instead.")]
-		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'drawingPolicy' property instead.")]
-		[Unavailable (PlatformName.UIKitForMac), Advice ("This API is not available when using UIKit on macOS.")]
+		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'DrawingPolicy' property instead.")]
+		[Unavailable (PlatformName.MacCatalyst), Advice ("This API is not available when using Catalyst on macOS.")]
 		[Export ("allowsFingerDrawing")]
 		bool AllowsFingerDrawing { get; set; }
 
 		[iOS (14, 0)]
-		[Unavailable (PlatformName.UIKitForMac), Advice ("This API is not available when using UIKit on macOS.")]
+		[Unavailable (PlatformName.MacCatalyst), Advice ("This API is not available when using Catalyst on macOS.")]
 		[Export ("drawingPolicy", ArgumentSemantic.Assign)]
 		PKCanvasViewDrawingPolicy DrawingPolicy { get; set; }
 	}
@@ -244,7 +242,6 @@ namespace PencilKit {
 
 	interface IPKToolPickerObserver {}
 
-	[Unavailable (PlatformName.UIKitForMac), Advice ("This API is not available when using UIKit on macOS.")]
 	[iOS (13, 0), NoMac]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Protocol]
@@ -263,8 +260,6 @@ namespace PencilKit {
 		void FramesObscuredDidChange (PKToolPicker toolPicker);
 	}
 
-
-	[Unavailable (PlatformName.UIKitForMac), Advice ("This API is not available when using UIKit on macOS.")]
 	[iOS (13, 0), NoMac]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[DisableDefaultCtor]
@@ -302,7 +297,6 @@ namespace PencilKit {
 		[Export ("colorUserInterfaceStyle", ArgumentSemantic.Assign)]
 		UIUserInterfaceStyle ColorUserInterfaceStyle { get; set; }
 
-		[Introduced (PlatformName.iOS, 13, 0, message: "Create individual instances instead.")]
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Create individual instances instead.")]
 		[Static]
 		[return: NullAllowed]
@@ -323,15 +317,16 @@ namespace PencilKit {
 
 	[Mac (10, 16), iOS (14, 0)]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof(NSObject))]
 	interface PKInk : NSCopying
 	{
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("initWithInkType:color:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (/* enum PKInkType */ string type, UIColor color);
+		IntPtr Constructor (/* enum PKInkType */ NSString type, UIColor color);
 
-		[Wrap ("this (type.GetConstant (), color)")]
+		[Wrap ("this (type.GetConstant ()!, color)")]
 		IntPtr Constructor (PKInkType type, UIColor color);
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
@@ -393,6 +388,7 @@ namespace PencilKit {
 
 	[Mac (10, 16), iOS (14, 0)]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof(NSObject))]
 	interface PKStrokePath : NSCopying
 	{
