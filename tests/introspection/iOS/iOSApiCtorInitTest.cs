@@ -363,6 +363,7 @@ namespace Introspection {
 					return;
 				break;
 			case "AVMediaSelection":
+			case "AVMutableMediaSelection":
 				// crash with xcode 12 beta 2
 				if (TestRuntime.CheckXcodeVersion (12, 0))
 					return;
