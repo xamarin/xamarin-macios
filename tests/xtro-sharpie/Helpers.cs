@@ -251,7 +251,7 @@ namespace Extrospection {
 			// static types, e.g. categories, won't have a [Register] attribute
 			if (type.IsStatic ()) {
 				if (self.HasParameters)
-					tname = self.Parameters [0].ParameterType.Name; // extension method
+					tname = self.Parameters [0].ParameterType.Resolve ().GetName (); // extension method
 			}
 			if (tname == null)
 				return null;
