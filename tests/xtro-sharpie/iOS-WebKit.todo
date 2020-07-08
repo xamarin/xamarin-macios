@@ -37,3 +37,5 @@
 !missing-type! WKFindConfiguration not bound
 !missing-type! WKFindResult not bound
 !missing-type! WKPDFConfiguration not bound
+## appended from unclassified file
+!missing-protocol! WKScriptMessageHandlerWithReply not bound
