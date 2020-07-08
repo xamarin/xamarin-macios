@@ -43,10 +43,6 @@ namespace ClockKit {
 		NSUserActivity UserActivity { get; }
 
 		[Watch (7, 0)]
-		[Field ("CLKLaunchedComplicationIdentifierKey")]
-		NSString LaunchedComplicationIdentifierKey { get; }
-
-		[Watch (7, 0)]
 		[Field ("CLKDefaultComplicationIdentifier")]
 		NSString DefaultComplicationIdentifier { get; }
 	}
@@ -1146,6 +1142,10 @@ namespace ClockKit {
 
 		[Field ("CLKLaunchedTimelineEntryDateKey")]
 		NSString LaunchedTimelineEntryDate { get; }
+
+		[Watch (7, 0)]
+		[Field ("CLKLaunchedComplicationIdentifierKey")]
+		NSString LaunchedComplicationIdentifierKey { get; }
 	}
 
 	[Watch (5,0)]
