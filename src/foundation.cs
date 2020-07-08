@@ -6226,6 +6226,7 @@ namespace Foundation
 
 		[Mac (10,10), iOS (8,0)]
 		[Export ("promisedItemResourceValuesForKeys:error:")]
+		[return: NullAllowed]
 		NSDictionary GetPromisedItemResourceValues (NSString [] keys, out NSError error);
 		
 	}
