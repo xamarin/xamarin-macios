@@ -18,7 +18,7 @@ namespace ClockKit {
 	[ErrorDomain ("CLKWatchFaceLibraryErrorDomain")]
 	[Native]
 	public enum CLKWatchFaceLibraryErrorCode : long {
-		NotFileURL = 1,
+		NotFileUrl = 1,
 		InvalidFile = 2,
 		PermissionDenied = 3,
 		FaceNotAvailable = 4,
@@ -30,23 +30,23 @@ namespace ClockKit {
 		[Export ("family")]
 		CLKComplicationFamily Family { get; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("identifier")]
 		string Identifier { get; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("userInfo"), NullAllowed]
 		NSDictionary UserInfo { get; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("userActivity"), NullAllowed]
 		NSUserActivity UserActivity { get; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Field ("CLKLaunchedComplicationIdentifierKey")]
 		NSString LaunchedComplicationIdentifierKey { get; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Field ("CLKDefaultComplicationIdentifier")]
 		NSString DefaultComplicationIdentifier { get; }
 	}
@@ -111,11 +111,11 @@ namespace ClockKit {
 		[Export ("getLocalizableSampleTemplateForComplication:withHandler:")]
 		void GetLocalizableSampleTemplate (CLKComplication complication, Action<CLKComplicationTemplate> handler);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("getComplicationDescriptorsWithHandler:")]
-		void GetComplicationDescriptors (Action<NSArray<CLKComplicationDescriptor>> handler);
+		void GetComplicationDescriptors (Action<CLKComplicationDescriptor[]> handler);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("handleSharedComplicationDescriptors:")]
 		void HandleSharedComplicationDescriptors (CLKComplicationDescriptor[] complicationDescriptors);
 	}
@@ -135,9 +135,11 @@ namespace ClockKit {
 		[Export ("activeComplications"), NullAllowed]
 		CLKComplication [] ActiveComplications { get; }
 
+		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Backwards extension and time travel is not longer supported.")]
 		[Export ("earliestTimeTravelDate")]
 		NSDate EarliestTimeTravelDate { get; }
 
+		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Backwards extension and time travel is not longer supported.")]
 		[Export ("latestTimeTravelDate")]
 		NSDate LatestTimeTravelDate { get; }
 
@@ -147,7 +149,7 @@ namespace ClockKit {
 		[Export ("extendTimelineForComplication:")]
 		void ExtendTimeline (CLKComplication complication);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("reloadComplicationDescriptors")]
 		void ReloadComplicationDescriptors ();
 	}
@@ -159,7 +161,7 @@ namespace ClockKit {
 		[NullAllowed, Export ("tintColor", ArgumentSemantic.Copy)]
 		UIColor TintColor { get; set; }
 
-		[Deprecated (PlatformName.iOS, 14, 0, message: "The default constructor is deprecated. Use the provided factories instead.")]
+		[Deprecated (PlatformName.iOS, 14, 0, message: "Use the provided factories instead.")]
 		[Export ("init")]
 		IntPtr Constructor ();
 	}
@@ -170,11 +172,11 @@ namespace ClockKit {
 		[Export ("textProvider", ArgumentSemantic.Copy)]
 		CLKTextProvider TextProvider { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithTextProvider:")]
 		IntPtr Constructor (CLKTextProvider textProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithTextProvider:")]
 		CLKComplicationTemplateModularSmallSimpleText Create (CLKTextProvider textProvider);
@@ -186,11 +188,11 @@ namespace ClockKit {
 		[Export ("imageProvider", ArgumentSemantic.Copy)]
 		CLKImageProvider ImageProvider { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithImageProvider:")]
 		IntPtr Constructor (CLKImageProvider imageProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithImageProvider:")]
 		CLKComplicationTemplateModularSmallSimpleImage Create (CLKImageProvider imageProvider);
@@ -208,11 +210,11 @@ namespace ClockKit {
 		[Export ("ringStyle")]
 		CLKComplicationRingStyle RingStyle { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithTextProvider:fillFraction:ringStyle:")]
 		IntPtr Constructor (CLKTextProvider textProvider, float fillFraction, CLKComplicationRingStyle ringStyle);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithTextProvider:fillFraction:ringStyle:")]
 		CLKComplicationTemplateModularSmallRingText Create (CLKTextProvider textProvider, float fillFraction, CLKComplicationRingStyle ringStyle);
@@ -230,11 +232,11 @@ namespace ClockKit {
 		[Export ("ringStyle")]
 		CLKComplicationRingStyle RingStyle { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithImageProvider:fillFraction:ringStyle:")]
 		IntPtr Constructor (CLKImageProvider imageProvider, float fillFraction, CLKComplicationRingStyle ringStyle);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithImageProvider:fillFraction:ringStyle:")]
 		CLKComplicationTemplateModularSmallRingImage Create (CLKImageProvider imageProvider, float fillFraction, CLKComplicationRingStyle ringStyle);
@@ -252,11 +254,11 @@ namespace ClockKit {
 		[Export ("highlightLine2")]
 		bool HighlightLine2 { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithLine1TextProvider:line2TextProvider:")]
 		IntPtr Constructor (CLKTextProvider line1TextProvider, CLKTextProvider line2TextProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithLine1TextProvider:line2TextProvider:")]
 		CLKComplicationTemplateModularSmallStackText Create (CLKTextProvider line1TextProvider, CLKTextProvider line2TextProvider);
@@ -274,11 +276,11 @@ namespace ClockKit {
 		[Export ("highlightLine2")]
 		bool HighlightLine2 { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithLine1ImageProvider:line2TextProvider:")]
 		IntPtr Constructor (CLKImageProvider line1ImageProvider, CLKTextProvider line2TextProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithLine1ImageProvider:line2TextProvider:")]
 		CLKComplicationTemplateModularSmallStackImage Create (CLKImageProvider line1ImageProvider, CLKTextProvider line2TextProvider);
@@ -305,11 +307,11 @@ namespace ClockKit {
 		[Export ("highlightColumn2")]
 		bool HighlightColumn2 { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithRow1Column1TextProvider:row1Column2TextProvider:row2Column1TextProvider:row2Column2TextProvider:")]
 		IntPtr Constructor (CLKTextProvider row1Column1TextProvider, CLKTextProvider row1Column2TextProvider, CLKTextProvider row2Column1TextProvider, CLKTextProvider row2Column2TextProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithRow1Column1TextProvider:row1Column2TextProvider:row2Column1TextProvider:row2Column2TextProvider:")]
 		CLKComplicationTemplateModularSmallColumnsText Create (CLKTextProvider row1Column1TextProvider, CLKTextProvider row1Column2TextProvider, CLKTextProvider row2Column1TextProvider, CLKTextProvider row2Column2TextProvider);
@@ -332,38 +334,38 @@ namespace ClockKit {
 		[Export ("headerImageProvider", ArgumentSemantic.Copy)]
 		CLKImageProvider HeaderImageProvider { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithHeaderTextProvider:body1TextProvider:")]
 		IntPtr Constructor (CLKTextProvider headerTextProvider, CLKTextProvider body1TextProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithHeaderTextProvider:body1TextProvider:body2TextProvider:")]
 		IntPtr Constructor (CLKTextProvider headerTextProvider, CLKTextProvider body1TextProvider, [NullAllowed] CLKTextProvider body2TextProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithHeaderImageProvider:headerTextProvider:body1TextProvider:")]
 		IntPtr Constructor ([NullAllowed] CLKImageProvider headerImageProvider, CLKTextProvider headerTextProvider, CLKTextProvider body1TextProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithHeaderImageProvider:headerTextProvider:body1TextProvider:body2TextProvider:")]
 		IntPtr Constructor ([NullAllowed] CLKImageProvider headerImageProvider, CLKTextProvider headerTextProvider, CLKTextProvider body1TextProvider, [NullAllowed] CLKTextProvider body2TextProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithHeaderTextProvider:body1TextProvider:")]
 		CLKComplicationTemplateModularLargeStandardBody Create (CLKTextProvider headerTextProvider, CLKTextProvider body1TextProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithHeaderTextProvider:body1TextProvider:body2TextProvider:")]
 		CLKComplicationTemplateModularLargeStandardBody Create (CLKTextProvider headerTextProvider, CLKTextProvider body1TextProvider, [NullAllowed] CLKTextProvider body2TextProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithHeaderImageProvider:headerTextProvider:body1TextProvider:")]
 		CLKComplicationTemplateModularLargeStandardBody Create ([NullAllowed] CLKImageProvider headerImageProvider, CLKTextProvider headerTextProvider, CLKTextProvider body1TextProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithHeaderImageProvider:headerTextProvider:body1TextProvider:body2TextProvider:")]
 		CLKComplicationTemplateModularLargeStandardBody Create ([NullAllowed] CLKImageProvider headerImageProvider, CLKTextProvider headerTextProvider, CLKTextProvider body1TextProvider, [NullAllowed] CLKTextProvider body2TextProvider);
@@ -378,11 +380,11 @@ namespace ClockKit {
 		[Export ("bodyTextProvider", ArgumentSemantic.Copy)]
 		CLKTextProvider BodyTextProvider { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithHeaderTextProvider:bodyTextProvider:")]
 		IntPtr Constructor (CLKTextProvider headerTextProvider, CLKTextProvider bodyTextProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithHeaderTextProvider:bodyTextProvider:")]
 		CLKComplicationTemplateModularLargeTallBody Create (CLKTextProvider headerTextProvider, CLKTextProvider bodyTextProvider);
@@ -413,20 +415,20 @@ namespace ClockKit {
 		[Export ("column2Alignment")]
 		CLKComplicationColumnAlignment Column2Alignment { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithHeaderTextProvider:row1Column1TextProvider:row1Column2TextProvider:row2Column1TextProvider:row2Column2TextProvider:")]
 		IntPtr Constructor (CLKTextProvider headerTextProvider, CLKTextProvider row1Column1TextProvider, CLKTextProvider row1Column2TextProvider, CLKTextProvider row2Column1TextProvider, CLKTextProvider row2Column2TextProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithHeaderImageProvider:headerTextProvider:row1Column1TextProvider:row1Column2TextProvider:row2Column1TextProvider:row2Column2TextProvider:")]
 		IntPtr Constructor ([NullAllowed] CLKImageProvider headerImageProvider, CLKTextProvider headerTextProvider, CLKTextProvider row1Column1TextProvider, CLKTextProvider row1Column2TextProvider, CLKTextProvider row2Column1TextProvider, CLKTextProvider row2Column2TextProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithHeaderTextProvider:row1Column1TextProvider:row1Column2TextProvider:row2Column1TextProvider:row2Column2TextProvider:")]
 		CLKComplicationTemplateModularLargeTable Create (CLKTextProvider headerTextProvider, CLKTextProvider row1Column1TextProvider, CLKTextProvider row1Column2TextProvider, CLKTextProvider row2Column1TextProvider, CLKTextProvider row2Column2TextProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithHeaderImageProvider:headerTextProvider:row1Column1TextProvider:row1Column2TextProvider:row2Column1TextProvider:row2Column2TextProvider:")]
 		CLKComplicationTemplateModularLargeTable Create ([NullAllowed] CLKImageProvider headerImageProvider, CLKTextProvider headerTextProvider, CLKTextProvider row1Column1TextProvider, CLKTextProvider row1Column2TextProvider, CLKTextProvider row2Column1TextProvider, CLKTextProvider row2Column2TextProvider);
@@ -468,20 +470,20 @@ namespace ClockKit {
 		[Export ("column2Alignment")]
 		CLKComplicationColumnAlignment Column2Alignment { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithRow1Column1TextProvider:row1Column2TextProvider:row2Column1TextProvider:row2Column2TextProvider:row3Column1TextProvider:row3Column2TextProvider:")]
 		IntPtr Constructor (CLKTextProvider row1Column1TextProvider, CLKTextProvider row1Column2TextProvider, CLKTextProvider row2Column1TextProvider, CLKTextProvider row2Column2TextProvider, CLKTextProvider row3Column1TextProvider, CLKTextProvider row3Column2TextProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithRow1ImageProvider:row1Column1TextProvider:row1Column2TextProvider:row2ImageProvider:row2Column1TextProvider:row2Column2TextProvider:row3ImageProvider:row3Column1TextProvider:row3Column2TextProvider:")]
 		IntPtr Constructor ([NullAllowed] CLKImageProvider row1ImageProvider, CLKTextProvider row1Column1TextProvider, CLKTextProvider row1Column2TextProvider, [NullAllowed] CLKImageProvider row2ImageProvider, CLKTextProvider row2Column1TextProvider, CLKTextProvider row2Column2TextProvider, [NullAllowed] CLKImageProvider row3ImageProvider, CLKTextProvider row3Column1TextProvider, CLKTextProvider row3Column2TextProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithRow1Column1TextProvider:row1Column2TextProvider:row2Column1TextProvider:row2Column2TextProvider:row3Column1TextProvider:row3Column2TextProvider:")]
 		CLKComplicationTemplateModularLargeColumns Create (CLKTextProvider row1Column1TextProvider, CLKTextProvider row1Column2TextProvider, CLKTextProvider row2Column1TextProvider, CLKTextProvider row2Column2TextProvider, CLKTextProvider row3Column1TextProvider, CLKTextProvider row3Column2TextProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithRow1ImageProvider:row1Column1TextProvider:row1Column2TextProvider:row2ImageProvider:row2Column1TextProvider:row2Column2TextProvider:row3ImageProvider:row3Column1TextProvider:row3Column2TextProvider:")]
 		CLKComplicationTemplateModularLargeColumns Create ([NullAllowed] CLKImageProvider row1ImageProvider, CLKTextProvider row1Column1TextProvider, CLKTextProvider row1Column2TextProvider, [NullAllowed] CLKImageProvider row2ImageProvider, CLKTextProvider row2Column1TextProvider, CLKTextProvider row2Column2TextProvider, [NullAllowed] CLKImageProvider row3ImageProvider, CLKTextProvider row3Column1TextProvider, CLKTextProvider row3Column2TextProvider);
@@ -497,20 +499,20 @@ namespace ClockKit {
 		[Export ("imageProvider", ArgumentSemantic.Copy)]
 		CLKImageProvider ImageProvider { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithTextProvider:")]
 		IntPtr Constructor (CLKTextProvider textProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithTextProvider:imageProvider:")]
 		IntPtr Constructor (CLKTextProvider textProvider, [NullAllowed] CLKImageProvider imageProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithTextProvider:")]
 		CLKComplicationTemplateUtilitarianSmallFlat Create (CLKTextProvider textProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithTextProvider:imageProvider:")]
 		CLKComplicationTemplateUtilitarianSmallFlat Create (CLKTextProvider textProvider, [NullAllowed] CLKImageProvider imageProvider);
@@ -522,11 +524,11 @@ namespace ClockKit {
 		[Export ("imageProvider", ArgumentSemantic.Copy)]
 		CLKImageProvider ImageProvider { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithImageProvider:")]
 		IntPtr Constructor (CLKImageProvider imageProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithImageProvider:")]
 		CLKComplicationTemplateUtilitarianSmallSquare Create (CLKImageProvider imageProvider);
@@ -544,11 +546,11 @@ namespace ClockKit {
 		[Export ("ringStyle")]
 		CLKComplicationRingStyle RingStyle { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithTextProvider:fillFraction:ringStyle:")]
 		IntPtr Constructor (CLKTextProvider textProvider, float fillFraction, CLKComplicationRingStyle ringStyle);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithTextProvider:fillFraction:ringStyle:")]
 		CLKComplicationTemplateUtilitarianSmallRingText Create (CLKTextProvider textProvider, float fillFraction, CLKComplicationRingStyle ringStyle);
@@ -566,11 +568,11 @@ namespace ClockKit {
 		[Export ("ringStyle")]
 		CLKComplicationRingStyle RingStyle { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithImageProvider:fillFraction:ringStyle:")]
 		IntPtr Constructor (CLKImageProvider imageProvider, float fillFraction, CLKComplicationRingStyle ringStyle);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithImageProvider:fillFraction:ringStyle:")]
 		CLKComplicationTemplateUtilitarianSmallRingImage Create (CLKImageProvider imageProvider, float fillFraction, CLKComplicationRingStyle ringStyle);
@@ -586,20 +588,20 @@ namespace ClockKit {
 		[Export ("imageProvider", ArgumentSemantic.Copy)]
 		CLKImageProvider ImageProvider { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithTextProvider:")]
 		IntPtr Constructor (CLKTextProvider textProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithTextProvider:imageProvider:")]
 		IntPtr Constructor (CLKTextProvider textProvider, [NullAllowed] CLKImageProvider imageProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithTextProvider:")]
 		CLKComplicationTemplateUtilitarianLargeFlat Create (CLKTextProvider textProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithTextProvider:imageProvider:")]
 		CLKComplicationTemplateUtilitarianLargeFlat Create (CLKTextProvider textProvider, [NullAllowed] CLKImageProvider imageProvider);
@@ -611,11 +613,11 @@ namespace ClockKit {
 		[Export ("textProvider", ArgumentSemantic.Copy)]
 		CLKTextProvider TextProvider { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithTextProvider:")]
 		IntPtr Constructor (CLKTextProvider textProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithTextProvider:")]
 		CLKComplicationTemplateCircularSmallSimpleText Create (CLKTextProvider textProvider);
@@ -627,11 +629,11 @@ namespace ClockKit {
 		[Export ("imageProvider", ArgumentSemantic.Copy)]
 		CLKImageProvider ImageProvider { get; set; }
 
-		[Watch (7,0), NoiOS]
+		[Watch (7,0)]
 		[Export ("initWithImageProvider:")]
 		IntPtr Constructor (CLKImageProvider imageProvider);
 
-		[Watch (7,0), NoiOS]
+		[Watch (7,0)]
 		[Static]
 		[Export ("templateWithImageProvider:")]
 		CLKComplicationTemplateCircularSmallSimpleImage Create (CLKImageProvider imageProvider);
@@ -649,11 +651,11 @@ namespace ClockKit {
 		[Export ("ringStyle")]
 		CLKComplicationRingStyle RingStyle { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithTextProvider:fillFraction:ringStyle:")]
 		IntPtr Constructor (CLKTextProvider textProvider, float fillFraction, CLKComplicationRingStyle ringStyle);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithTextProvider:fillFraction:ringStyle:")]
 		CLKComplicationTemplateCircularSmallRingText Create (CLKTextProvider textProvider, float fillFraction, CLKComplicationRingStyle ringStyle);
@@ -671,11 +673,11 @@ namespace ClockKit {
 		[Export ("ringStyle")]
 		CLKComplicationRingStyle RingStyle { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithImageProvider:fillFraction:ringStyle:")]
 		IntPtr Constructor (CLKImageProvider imageProvider, float fillFraction, CLKComplicationRingStyle ringStyle);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithImageProvider:fillFraction:ringStyle:")]
 		CLKComplicationTemplateCircularSmallRingImage Create (CLKImageProvider imageProvider, float fillFraction, CLKComplicationRingStyle ringStyle);
@@ -690,11 +692,11 @@ namespace ClockKit {
 		[Export ("line2TextProvider", ArgumentSemantic.Copy)]
 		CLKTextProvider Line2TextProvider { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithLine1TextProvider:line2TextProvider:")]
 		IntPtr Constructor (CLKTextProvider line1TextProvider, CLKTextProvider line2TextProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithLine1TextProvider:line2TextProvider:")]
 		CLKComplicationTemplateCircularSmallStackText Create (CLKTextProvider line1TextProvider, CLKTextProvider line2TextProvider);
@@ -709,11 +711,11 @@ namespace ClockKit {
 		[Export ("line2TextProvider", ArgumentSemantic.Copy)]
 		CLKTextProvider Line2TextProvider { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithLine1ImageProvider:line2TextProvider:")]
 		IntPtr Constructor (CLKImageProvider line1ImageProvider, CLKTextProvider line2TextProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithLine1ImageProvider:line2TextProvider:")]
 		CLKComplicationTemplateCircularSmallStackImage Create (CLKImageProvider line1ImageProvider, CLKTextProvider line2TextProvider);
@@ -726,11 +728,11 @@ namespace ClockKit {
 		[Export ("textProvider", ArgumentSemantic.Copy)]
 		CLKTextProvider TextProvider { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithTextProvider:")]
 		IntPtr Constructor (CLKTextProvider textProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithTextProvider:")]
 		CLKComplicationTemplateExtraLargeSimpleText Create (CLKTextProvider textProvider);
@@ -743,11 +745,11 @@ namespace ClockKit {
 		[Export ("imageProvider", ArgumentSemantic.Copy)]
 		CLKImageProvider ImageProvider { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithImageProvider:")]
 		IntPtr Constructor (CLKImageProvider imageProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithImageProvider:")]
 		CLKComplicationTemplateExtraLargeSimpleImage Create (CLKImageProvider imageProvider);
@@ -766,11 +768,11 @@ namespace ClockKit {
 		[Export ("ringStyle", ArgumentSemantic.Assign)]
 		CLKComplicationRingStyle RingStyle { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithTextProvider:fillFraction:ringStyle:")]
 		IntPtr Constructor (CLKTextProvider textProvider, float fillFraction, CLKComplicationRingStyle ringStyle);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithTextProvider:fillFraction:ringStyle:")]
 		CLKComplicationTemplateExtraLargeRingText Create (CLKTextProvider textProvider, float fillFraction, CLKComplicationRingStyle ringStyle);
@@ -789,11 +791,11 @@ namespace ClockKit {
 		[Export ("ringStyle", ArgumentSemantic.Assign)]
 		CLKComplicationRingStyle RingStyle { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithImageProvider:fillFraction:ringStyle:")]
 		IntPtr Constructor (CLKImageProvider imageProvider, float fillFraction, CLKComplicationRingStyle ringStyle);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithImageProvider:fillFraction:ringStyle:")]
 		CLKComplicationTemplateExtraLargeRingImage Create (CLKImageProvider imageProvider, float fillFraction, CLKComplicationRingStyle ringStyle);
@@ -812,11 +814,11 @@ namespace ClockKit {
 		[Export ("highlightLine2")]
 		bool HighlightLine2 { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithLine1TextProvider:line2TextProvider:")]
 		IntPtr Constructor (CLKTextProvider line1TextProvider, CLKTextProvider line2TextProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithLine1TextProvider:line2TextProvider:")]
 		CLKComplicationTemplateExtraLargeStackText Create (CLKTextProvider line1TextProvider, CLKTextProvider line2TextProvider);
@@ -835,11 +837,11 @@ namespace ClockKit {
 		[Export ("highlightLine2")]
 		bool HighlightLine2 { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithLine1ImageProvider:line2TextProvider:")]
 		IntPtr Constructor (CLKImageProvider line1ImageProvider, CLKTextProvider line2TextProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithLine1ImageProvider:line2TextProvider:")]
 		CLKComplicationTemplateExtraLargeStackImage Create (CLKImageProvider line1ImageProvider, CLKTextProvider line2TextProvider);
@@ -867,11 +869,11 @@ namespace ClockKit {
 		[Export ("highlightColumn2")]
 		bool HighlightColumn2 { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithRow1Column1TextProvider:row1Column2TextProvider:row2Column1TextProvider:row2Column2TextProvider:")]
 		IntPtr Constructor (CLKTextProvider row1Column1TextProvider, CLKTextProvider row1Column2TextProvider, CLKTextProvider row2Column1TextProvider, CLKTextProvider row2Column2TextProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithRow1Column1TextProvider:row1Column2TextProvider:row2Column1TextProvider:row2Column2TextProvider:")]
 		CLKComplicationTemplateExtraLargeColumnsText Create (CLKTextProvider row1Column1TextProvider, CLKTextProvider row1Column2TextProvider, CLKTextProvider row2Column1TextProvider, CLKTextProvider row2Column2TextProvider);
@@ -902,7 +904,7 @@ namespace ClockKit {
 	[DisableDefaultCtor]
 	interface CLKImageProvider : NSCopying {
 
-		[Deprecated (PlatformName.iOS, 14, 0, message: "The default constructor is deprecated.")]
+		[Deprecated (PlatformName.iOS, 14, 0)] 
 		[Export ("init")]
 		IntPtr Constructor ();
 
@@ -930,11 +932,11 @@ namespace ClockKit {
 		[NullAllowed, Export ("twoPieceImageForeground", ArgumentSemantic.Retain)]
 		UIImage TwoPieceImageForeground { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithOnePieceImage:")]
 		IntPtr Constructor (UIImage onePieceImage);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithOnePieceImage:twoPieceImageBackground:twoPieceImageForeground:")]
 		IntPtr Constructor (UIImage onePieceImage, [NullAllowed] UIImage twoPieceImageBackground, [NullAllowed] UIImage twoPieceImageForeground);
 	}
@@ -943,7 +945,7 @@ namespace ClockKit {
 	[DisableDefaultCtor]
 	interface CLKTextProvider : NSCopying {
  
-		[Deprecated (PlatformName.iOS, 14, 0, message: "The default constructor is deprecated. Use the provided factories instead.")]
+		[Deprecated (PlatformName.iOS, 14, 0, message: "Use the provided factories instead.")]
 		[Export ("init")]
 		IntPtr Constructor ();
 
@@ -1001,15 +1003,15 @@ namespace ClockKit {
 		[Export ("shortText")]
 		string ShortText { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithText:")]
 		IntPtr Constructor (string text);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithText:shortText:")]
 		IntPtr Constructor (string text, [NullAllowed] string shortText);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithText:shortText:accessibilityLabel:")]
 		IntPtr Constructor (string text, [NullAllowed] string shortText, [NullAllowed] string accessibilityLabel);
 	}
@@ -1039,11 +1041,11 @@ namespace ClockKit {
 		[Export ("uppercase")]
 		bool Uppercase { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithDate:units:")]
 		IntPtr Constructor (NSDate date, NSCalendarUnit calendarUnits);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithDate:units:timeZone:")]
 		IntPtr Constructor (NSDate date, NSCalendarUnit calendarUnits, [NullAllowed] NSTimeZone timeZone);
 	}
@@ -1066,11 +1068,11 @@ namespace ClockKit {
 		[Export ("timeZone", ArgumentSemantic.Retain)]
 		NSTimeZone TimeZone { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithDate:")]
 		IntPtr Constructor (NSDate date);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithDate:timeZone:")]
 		IntPtr Constructor (NSDate date, [NullAllowed] NSTimeZone timeZone);
 	}
@@ -1096,11 +1098,11 @@ namespace ClockKit {
 		[Export ("timeZone", ArgumentSemantic.Retain)]
 		NSTimeZone TimeZone { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithStartDate:endDate:")]
 		IntPtr Constructor (NSDate startDate, NSDate endDate);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithStartDate:endDate:timeZone:")]
 		IntPtr Constructor (NSDate startDate, NSDate endDate, [NullAllowed] NSTimeZone timeZone);
 	}
@@ -1121,20 +1123,20 @@ namespace ClockKit {
 		[Export ("calendarUnits")]
 		NSCalendarUnit CalendarUnits { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithDate:style:units:")]
 		IntPtr Constructor (NSDate date, CLKRelativeDateStyle style, NSCalendarUnit calendarUnits);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithDate:relativeToDate:style:units:")]
 		IntPtr Constructor (NSDate date, [NullAllowed] NSDate relativeDate, CLKRelativeDateStyle style, NSCalendarUnit calendarUnits);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("textProviderWithDate:relativeToDate:style:units:")]
 		CLKRelativeDateTextProvider Create (NSDate date, [NullAllowed] NSDate relativeToDate, CLKRelativeDateStyle style, NSCalendarUnit calendarUnits);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("relativeToDate", ArgumentSemantic.Retain), NullAllowed]
 		NSDate RelativeToDate { get; set; }
 	}
@@ -1155,20 +1157,20 @@ namespace ClockKit {
 		[NullAllowed, Export ("textProvider", ArgumentSemantic.Copy)]
 		CLKTextProvider TextProvider { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithCircularTemplate:")]
 		IntPtr Constructor (CLKComplicationTemplateGraphicCircular circularTemplate);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithCircularTemplate:textProvider:")]
 		IntPtr Constructor (CLKComplicationTemplateGraphicCircular circularTemplate, [NullAllowed] CLKTextProvider textProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithCircularTemplate:")]
 		CLKComplicationTemplateGraphicBezelCircularText Create (CLKComplicationTemplateGraphicCircular circularTemplate);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithCircularTemplate:textProvider:")]
 		CLKComplicationTemplateGraphicBezelCircularText Create (CLKComplicationTemplateGraphicCircular circularTemplate, [NullAllowed] CLKTextProvider textProvider);
@@ -1190,11 +1192,11 @@ namespace ClockKit {
 		[Export ("imageProvider", ArgumentSemantic.Copy)]
 		CLKFullColorImageProvider ImageProvider { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithGaugeProvider:imageProvider:")]
 		IntPtr Constructor (CLKGaugeProvider gaugeProvider, CLKFullColorImageProvider imageProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithGaugeProvider:imageProvider:")]
 		CLKComplicationTemplateGraphicCircularClosedGaugeImage Create (CLKGaugeProvider gaugeProvider, CLKFullColorImageProvider imageProvider);
@@ -1209,11 +1211,11 @@ namespace ClockKit {
 		[Export ("centerTextProvider", ArgumentSemantic.Copy)]
 		CLKTextProvider CenterTextProvider { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithGaugeProvider:centerTextProvider:")]
 		IntPtr Constructor (CLKGaugeProvider gaugeProvider, CLKTextProvider centerTextProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithGaugeProvider:centerTextProvider:")]
 		CLKComplicationTemplateGraphicCircularClosedGaugeText Create (CLKGaugeProvider gaugeProvider, CLKTextProvider centerTextProvider);
@@ -1225,11 +1227,11 @@ namespace ClockKit {
 		[Export ("imageProvider", ArgumentSemantic.Copy)]
 		CLKFullColorImageProvider ImageProvider { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithImageProvider:")]
 		IntPtr Constructor (CLKFullColorImageProvider imageProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithImageProvider:")]
 		CLKComplicationTemplateGraphicCircularImage Create (CLKFullColorImageProvider imageProvider);
@@ -1247,11 +1249,11 @@ namespace ClockKit {
 		[Export ("centerTextProvider", ArgumentSemantic.Copy)]
 		CLKTextProvider CenterTextProvider { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithGaugeProvider:bottomImageProvider:centerTextProvider:")]
 		IntPtr Constructor (CLKGaugeProvider gaugeProvider, CLKFullColorImageProvider bottomImageProvider, CLKTextProvider centerTextProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithGaugeProvider:bottomImageProvider:centerTextProvider:")]
 		CLKComplicationTemplateGraphicCircularOpenGaugeImage Create (CLKGaugeProvider gaugeProvider, CLKFullColorImageProvider bottomImageProvider, CLKTextProvider centerTextProvider);
@@ -1272,11 +1274,11 @@ namespace ClockKit {
 		[Export ("centerTextProvider", ArgumentSemantic.Copy)]
 		CLKTextProvider CenterTextProvider { get; set; }
 	
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithGaugeProvider:leadingTextProvider:trailingTextProvider:centerTextProvider:")]
 		IntPtr Constructor (CLKGaugeProvider gaugeProvider, CLKTextProvider leadingTextProvider, CLKTextProvider trailingTextProvider, CLKTextProvider centerTextProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithGaugeProvider:leadingTextProvider:trailingTextProvider:centerTextProvider:")]
 		CLKComplicationTemplateGraphicCircularOpenGaugeRangeText Create (CLKGaugeProvider gaugeProvider, CLKTextProvider leadingTextProvider, CLKTextProvider trailingTextProvider, CLKTextProvider centerTextProvider);
@@ -1294,11 +1296,11 @@ namespace ClockKit {
 		[Export ("centerTextProvider", ArgumentSemantic.Copy)]
 		CLKTextProvider CenterTextProvider { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithGaugeProvider:bottomTextProvider:centerTextProvider:")]
 		IntPtr Constructor (CLKGaugeProvider gaugeProvider, CLKTextProvider bottomTextProvider, CLKTextProvider centerTextProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithGaugeProvider:bottomTextProvider:centerTextProvider:")]
 		CLKComplicationTemplateGraphicCircularOpenGaugeSimpleText Create (CLKGaugeProvider gaugeProvider, CLKTextProvider bottomTextProvider, CLKTextProvider centerTextProvider);
@@ -1310,11 +1312,11 @@ namespace ClockKit {
 		[Export ("imageProvider", ArgumentSemantic.Copy)]
 		CLKFullColorImageProvider ImageProvider { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithImageProvider:")]
 		IntPtr Constructor (CLKFullColorImageProvider imageProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithImageProvider:")]
 		CLKComplicationTemplateGraphicCornerCircularImage Create (CLKFullColorImageProvider imageProvider);
@@ -1335,20 +1337,20 @@ namespace ClockKit {
 		[Export ("imageProvider", ArgumentSemantic.Copy)]
 		CLKFullColorImageProvider ImageProvider { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithGaugeProvider:imageProvider:")]
 		IntPtr Constructor (CLKGaugeProvider gaugeProvider, CLKFullColorImageProvider imageProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithGaugeProvider:leadingTextProvider:trailingTextProvider:imageProvider:")]
 		IntPtr Constructor (CLKGaugeProvider gaugeProvider, [NullAllowed] CLKTextProvider leadingTextProvider, [NullAllowed] CLKTextProvider trailingTextProvider, CLKFullColorImageProvider imageProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithGaugeProvider:imageProvider:")]
 		CLKComplicationTemplateGraphicCornerGaugeImage Create (CLKGaugeProvider gaugeProvider, CLKFullColorImageProvider imageProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithGaugeProvider:leadingTextProvider:trailingTextProvider:imageProvider:")]
 		CLKComplicationTemplateGraphicCornerGaugeImage Create (CLKGaugeProvider gaugeProvider, [NullAllowed] CLKTextProvider leadingTextProvider, [NullAllowed] CLKTextProvider trailingTextProvider, CLKFullColorImageProvider imageProvider);
@@ -1369,20 +1371,20 @@ namespace ClockKit {
 		[Export ("outerTextProvider", ArgumentSemantic.Copy)]
 		CLKTextProvider OuterTextProvider { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithGaugeProvider:outerTextProvider:")]
 		IntPtr Constructor (CLKGaugeProvider gaugeProvider, CLKTextProvider outerTextProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithGaugeProvider:leadingTextProvider:trailingTextProvider:outerTextProvider:")]
 		IntPtr Constructor (CLKGaugeProvider gaugeProvider, [NullAllowed] CLKTextProvider leadingTextProvider, [NullAllowed] CLKTextProvider trailingTextProvider, CLKTextProvider outerTextProvider);
 
-		[Watch (7,0), NoiOS]
+		[Watch (7,0)]
 		[Static]
 		[Export ("templateWithGaugeProvider:outerTextProvider:")]
 		CLKComplicationTemplateGraphicCornerGaugeText Create (CLKGaugeProvider gaugeProvider, CLKTextProvider outerTextProvider);
 
-		[Watch (7,0), NoiOS]
+		[Watch (7,0)]
 		[Static]
 		[Export ("templateWithGaugeProvider:leadingTextProvider:trailingTextProvider:outerTextProvider:")]
 		CLKComplicationTemplateGraphicCornerGaugeText Create (CLKGaugeProvider gaugeProvider, [NullAllowed] CLKTextProvider leadingTextProvider, [NullAllowed] CLKTextProvider trailingTextProvider, CLKTextProvider outerTextProvider);
@@ -1397,11 +1399,11 @@ namespace ClockKit {
 		[Export ("outerTextProvider", ArgumentSemantic.Copy)]
 		CLKTextProvider OuterTextProvider { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithInnerTextProvider:outerTextProvider:")]
 		IntPtr Constructor (CLKTextProvider innerTextProvider, CLKTextProvider outerTextProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithInnerTextProvider:outerTextProvider:")]
 		CLKComplicationTemplateGraphicCornerStackText Create (CLKTextProvider innerTextProvider, CLKTextProvider outerTextProvider);
@@ -1416,11 +1418,11 @@ namespace ClockKit {
 		[Export ("imageProvider", ArgumentSemantic.Copy)]
 		CLKFullColorImageProvider ImageProvider { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithTextProvider:imageProvider:")]
 		IntPtr Constructor (CLKTextProvider textProvider, CLKFullColorImageProvider imageProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithTextProvider:imageProvider:")]
 		CLKComplicationTemplateGraphicCornerTextImage Create (CLKTextProvider textProvider, CLKFullColorImageProvider imageProvider);
@@ -1435,11 +1437,11 @@ namespace ClockKit {
 		[Export ("textProvider", ArgumentSemantic.Copy)]
 		CLKTextProvider TextProvider { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithTextProvider:imageProvider:")]
 		IntPtr Constructor (CLKTextProvider textProvider, CLKFullColorImageProvider imageProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithTextProvider:imageProvider:")]
 		CLKComplicationTemplateGraphicRectangularLargeImage Create (CLKTextProvider textProvider, CLKFullColorImageProvider imageProvider);
@@ -1460,38 +1462,38 @@ namespace ClockKit {
 		[NullAllowed, Export ("body2TextProvider", ArgumentSemantic.Copy)]
 		CLKTextProvider Body2TextProvider { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithHeaderTextProvider:body1TextProvider:")]
 		IntPtr Constructor (CLKTextProvider headerTextProvider, CLKTextProvider body1TextProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithHeaderTextProvider:body1TextProvider:body2TextProvider:")]
 		IntPtr Constructor (CLKTextProvider headerTextProvider, CLKTextProvider body1TextProvider, [NullAllowed] CLKTextProvider body2TextProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithHeaderImageProvider:headerTextProvider:body1TextProvider:")]
 		IntPtr Constructor ([NullAllowed] CLKFullColorImageProvider headerImageProvider, CLKTextProvider headerTextProvider, CLKTextProvider body1TextProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithHeaderImageProvider:headerTextProvider:body1TextProvider:body2TextProvider:")]
 		IntPtr Constructor ([NullAllowed] CLKFullColorImageProvider headerImageProvider, CLKTextProvider headerTextProvider, CLKTextProvider body1TextProvider, [NullAllowed] CLKTextProvider body2TextProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithHeaderTextProvider:body1TextProvider:")]
 		CLKComplicationTemplateGraphicRectangularStandardBody Create (CLKTextProvider headerTextProvider, CLKTextProvider body1TextProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithHeaderTextProvider:body1TextProvider:body2TextProvider:")]
 		CLKComplicationTemplateGraphicRectangularStandardBody Create (CLKTextProvider headerTextProvider, CLKTextProvider body1TextProvider, [NullAllowed] CLKTextProvider body2TextProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithHeaderImageProvider:headerTextProvider:body1TextProvider:")]
 		CLKComplicationTemplateGraphicRectangularStandardBody Create ([NullAllowed] CLKFullColorImageProvider headerImageProvider, CLKTextProvider headerTextProvider, CLKTextProvider body1TextProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithHeaderImageProvider:headerTextProvider:body1TextProvider:body2TextProvider:")]
 		CLKComplicationTemplateGraphicRectangularStandardBody Create ([NullAllowed] CLKFullColorImageProvider headerImageProvider, CLKTextProvider headerTextProvider, CLKTextProvider body1TextProvider, [NullAllowed] CLKTextProvider body2TextProvider);
@@ -1512,20 +1514,20 @@ namespace ClockKit {
 		[Export ("gaugeProvider", ArgumentSemantic.Copy)]
 		CLKGaugeProvider GaugeProvider { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithHeaderTextProvider:body1TextProvider:gaugeProvider:")]
 		IntPtr Constructor (CLKTextProvider headerTextProvider, CLKTextProvider body1TextProvider, CLKGaugeProvider gaugeProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithHeaderImageProvider:headerTextProvider:body1TextProvider:gaugeProvider:")]
 		IntPtr Constructor ([NullAllowed] CLKFullColorImageProvider headerImageProvider, CLKTextProvider headerTextProvider, CLKTextProvider body1TextProvider, CLKGaugeProvider gaugeProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithHeaderTextProvider:body1TextProvider:gaugeProvider:")]
 		CLKComplicationTemplateGraphicRectangularTextGauge Create (CLKTextProvider headerTextProvider, CLKTextProvider body1TextProvider, CLKGaugeProvider gaugeProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithHeaderImageProvider:headerTextProvider:body1TextProvider:gaugeProvider:")]
 		CLKComplicationTemplateGraphicRectangularTextGauge Create ([NullAllowed] CLKFullColorImageProvider headerImageProvider, CLKTextProvider headerTextProvider, CLKTextProvider body1TextProvider, CLKGaugeProvider gaugeProvider);
@@ -1554,15 +1556,15 @@ namespace ClockKit {
 		[NullAllowed, Export ("accessibilityLabel", ArgumentSemantic.Retain)]
 		string AccessibilityLabel { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("init")]
 		IntPtr Constructor ();
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithFullColorImage:")]
 		IntPtr Constructor (UIImage fullColorImage);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithFullColorImage:tintedImageProvider:")]
 		IntPtr Constructor (UIImage fullColorImage, [NullAllowed] CLKImageProvider tintedImageProvider);
 	}
@@ -1641,11 +1643,11 @@ namespace ClockKit {
 		[Export ("line2TextProvider", ArgumentSemantic.Copy)]
 		CLKTextProvider Line2TextProvider { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithLine1TextProvider:line2TextProvider:")]
 		IntPtr Constructor (CLKTextProvider line1TextProvider, CLKTextProvider line2TextProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithLine1TextProvider:line2TextProvider:")]
 		CLKComplicationTemplateGraphicCircularStackText Create (CLKTextProvider line1TextProvider, CLKTextProvider line2TextProvider);
@@ -1661,11 +1663,11 @@ namespace ClockKit {
 		[Export ("line2TextProvider", ArgumentSemantic.Copy)]
 		CLKTextProvider Line2TextProvider { get; set; }
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Export ("initWithLine1ImageProvider:line2TextProvider:")]
 		IntPtr Constructor (CLKFullColorImageProvider line1ImageProvider, CLKTextProvider line2TextProvider);
 
-		[Watch (7, 0), NoiOS]
+		[Watch (7, 0)]
 		[Static]
 		[Export ("templateWithLine1ImageProvider:line2TextProvider:")]
 		CLKComplicationTemplateGraphicCircularStackImage Create (CLKFullColorImageProvider line1ImageProvider, CLKTextProvider line2TextProvider);
@@ -1679,7 +1681,7 @@ namespace ClockKit {
 		void AddWatchFace (NSUrl fileUrl, Action<NSError> handler);
 	}
 
-	[Watch (7, 0), NoiOS]
+	[Watch (7, 0)]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateGraphicRectangularFullImage : NSSecureCoding {
 		[Export ("imageProvider", ArgumentSemantic.Copy)]
@@ -1693,13 +1695,13 @@ namespace ClockKit {
 		CLKComplicationTemplateGraphicRectangularFullImage Create (CLKFullColorImageProvider imageProvider);
 	}
 
-	[Abstract] // from docs 'An abstract superclass for all the extra large circular graphic templates.'
-	[Watch (7, 0), NoiOS]
+	[Advice ("This class is an abstract super class in the runtime. Do use one of its children.")]
+	[Watch (7, 0)]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateGraphicExtraLargeCircular : NSSecureCoding {
 	}
 
-	[Watch (7, 0), NoiOS]
+	[Watch (7, 0)]
 	[BaseType (typeof (CLKComplicationTemplateGraphicExtraLargeCircular))]
 	interface CLKComplicationTemplateGraphicExtraLargeCircularStackText {
 		[Export ("line1TextProvider", ArgumentSemantic.Copy)]
@@ -1716,7 +1718,7 @@ namespace ClockKit {
 		CLKComplicationTemplateGraphicExtraLargeCircularStackText Create (CLKTextProvider line1TextProvider, CLKTextProvider line2TextProvider);
 	}
 
-	[Watch (7, 0), NoiOS]
+	[Watch (7, 0)]
 	[BaseType (typeof (CLKComplicationTemplateGraphicExtraLargeCircular))]
 	interface CLKComplicationTemplateGraphicExtraLargeCircularStackImage {
 		[Export ("line1ImageProvider", ArgumentSemantic.Copy)]
@@ -1733,7 +1735,7 @@ namespace ClockKit {
 		CLKComplicationTemplateGraphicExtraLargeCircularStackImage Create (CLKFullColorImageProvider line1ImageProvider, CLKTextProvider line2TextProvider);
 	}
 
-	[Watch (7, 0), NoiOS]
+	[Watch (7, 0)]
 	[BaseType (typeof (CLKComplicationTemplateGraphicExtraLargeCircular))]
 	interface CLKComplicationTemplateGraphicExtraLargeCircularOpenGaugeSimpleText {
 		[Export ("gaugeProvider", ArgumentSemantic.Copy)]
@@ -1753,7 +1755,7 @@ namespace ClockKit {
 		CLKComplicationTemplateGraphicExtraLargeCircularOpenGaugeSimpleText Create (CLKGaugeProvider gaugeProvider, CLKTextProvider bottomTextProvider, CLKTextProvider centerTextProvider);
 	}
 
-	[Watch (7, 0), NoiOS]
+	[Watch (7, 0)]
 	[BaseType (typeof (CLKComplicationTemplateGraphicExtraLargeCircular))]
 	interface CLKComplicationTemplateGraphicExtraLargeCircularOpenGaugeRangeText {
 		[Export ("gaugeProvider", ArgumentSemantic.Copy)]
@@ -1776,7 +1778,7 @@ namespace ClockKit {
 		CLKComplicationTemplateGraphicExtraLargeCircularOpenGaugeRangeText Create (CLKGaugeProvider gaugeProvider, CLKTextProvider leadingTextProvider, CLKTextProvider trailingTextProvider, CLKTextProvider centerTextProvider);
 	}
 
-	[Watch (7, 0), NoiOS]
+	[Watch (7, 0)]
 	[BaseType (typeof (CLKComplicationTemplateGraphicExtraLargeCircular))]
 	interface CLKComplicationTemplateGraphicExtraLargeCircularOpenGaugeImage {
 		[Export ("gaugeProvider", ArgumentSemantic.Copy)]
@@ -1796,7 +1798,7 @@ namespace ClockKit {
 		CLKComplicationTemplateGraphicExtraLargeCircularOpenGaugeImage Create (CLKGaugeProvider gaugeProvider, CLKFullColorImageProvider bottomImageProvider, CLKTextProvider centerTextProvider);
 	}
 
-	[Watch (7, 0), NoiOS]
+	[Watch (7, 0)]
 	[BaseType (typeof(CLKComplicationTemplateGraphicExtraLargeCircular))]
 	interface CLKComplicationTemplateGraphicExtraLargeCircularImage {
 		[Export ("imageProvider", ArgumentSemantic.Copy)]
@@ -1810,7 +1812,7 @@ namespace ClockKit {
 		CLKComplicationTemplateGraphicExtraLargeCircularImage Create (CLKFullColorImageProvider imageProvider);
 	}
 
-	[Watch (7, 0), NoiOS]
+	[Watch (7, 0)]
 	[BaseType (typeof(CLKComplicationTemplateGraphicExtraLargeCircular))]
 	interface CLKComplicationTemplateGraphicExtraLargeCircularClosedGaugeText {
 		[Export ("gaugeProvider", ArgumentSemantic.Copy)]
@@ -1827,7 +1829,7 @@ namespace ClockKit {
 		CLKComplicationTemplateGraphicExtraLargeCircularClosedGaugeText Create (CLKGaugeProvider gaugeProvider, CLKTextProvider centerTextProvider);
 	}
 
-	[Watch (7, 0), NoiOS]
+	[Watch (7, 0)]
 	[BaseType (typeof(CLKComplicationTemplateGraphicExtraLargeCircular))]
 	interface CLKComplicationTemplateGraphicExtraLargeCircularClosedGaugeImage {
 		[Export ("gaugeProvider", ArgumentSemantic.Copy)]
@@ -1844,7 +1846,7 @@ namespace ClockKit {
 		CLKComplicationTemplateGraphicExtraLargeCircularClosedGaugeImage Create (CLKGaugeProvider gaugeProvider, CLKFullColorImageProvider imageProvider);
 	}
 
-	[Watch (7, 0), NoiOS]
+	[Watch (7, 0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface CLKComplicationDescriptor : NSCopying, NSSecureCoding {

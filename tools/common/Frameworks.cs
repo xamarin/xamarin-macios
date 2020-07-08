@@ -195,6 +195,8 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "AutomaticAssessmentConfiguration", "AutomaticAssessmentConfiguration", 10,15,4 },
 
 					{ "UserNotificationsUI", "UserNotificationsUI", 10,16 },
+					{ "ClassKit", "ClassKit", 10,16 },
+					{ "ReplayKit", "ReplayKit", 10,16 },
 				};
 			}
 			return mac_frameworks;
@@ -332,9 +334,6 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "AutomaticAssessmentConfiguration", "AutomaticAssessmentConfiguration", 13, 4 },
 
 				{ "AppClip", "AppClip", 14,0 },
-
-				// waiting on apple to fix it: https://github.com/xamarin/maccore/issues/2258
-				// { "ClockKit", "ClockKit", 14,0 },
 
 				// the above MUST be kept in sync with simlauncher
 				// see tools/mtouch/Makefile
@@ -525,15 +524,13 @@ public class Frameworks : Dictionary <string, Framework>
 	// This checks if a framework is unavailable due to bugs in Xcode (such as Apple forgetting to ship a library or headers for a framework, which seems to happen at least once a year).
 	public static bool IsFrameworkBroken (Application app, string framework)
 	{
-		if (app.Platform == ApplePlatform.WatchOS && app.IsSimulatorBuild && Driver.XcodeProductVersion == "12A6159" /* Xcode 12 beta 1 */) {
+		if (app.Platform == ApplePlatform.WatchOS && app.IsSimulatorBuild && Driver.XcodeProductVersion == "12A6163b" /* Xcode 12 beta 12 */) {
 			switch (framework) {
-			case "CoreAudioTypes":
 			case "CoreML":
 			case "CoreVideo":
-			case "MediaPlayer":
-				// Apple seems to have forgotten to ship the MediaPlayer library for the simulator in Xcode 12 beta 1 (it's still available for device builds).
+				// Apple seems to have forgotten to ship the several libraries for the simulator in Xcode 12 betas (it's still available for device builds).
 				// https://github.com/xamarin/maccore/issues/2244
-				Driver.Log (1, $"Can't use '{framework}' in the simulator because Apple didn't ship it with Xcode 12 beta 1");
+				Driver.Log (1, $"Can't use '{framework}' in the simulator because Apple didn't ship it with Xcode 12 beta {Driver.XcodeProductVersion}");
 				return true;
 			}
 		}
