@@ -2028,50 +2028,6 @@ namespace ARKit {
 
 		[Field ("ARSkeletonJointNameRightShoulder")]
 		RightShoulder,
-
-		[iOS (14, 0)]
-		[Field ("ARSkeletonJointNameNeck")]
-		Neck,
-
-		[iOS (14, 0)]
-		[Field ("ARSkeletonJointNameLeftForearm")]
-		LeftForearm,
-
-		[iOS (14, 0)]
-		[Field ("ARSkeletonJointNameRightForearm")]
-		RightForearm,
-
-		[iOS (14, 0)]
-		[Field ("ARSkeletonJointNameLeftUpLeg")]
-		LeftUpLeg,
-
-		[iOS (14, 0)]
-		[Field ("ARSkeletonJointNameRightUpLeg")]
-		RightUpLeg,
-
-		[iOS (14, 0)]
-		[Field ("ARSkeletonJointNameLeftLeg")]
-		LeftLeg,
-
-		[iOS (14, 0)]
-		[Field ("ARSkeletonJointNameRightLeg")]
-		RightLeg,
-
-		[iOS (14, 0)]
-		[Field ("ARSkeletonJointNameLeftEye")]
-		LeftEye,
-
-		[iOS (14, 0)]
-		[Field ("ARSkeletonJointNameRightEye")]
-		RightEye,
-
-		[iOS (14, 0)]
-		[Field ("ARSkeletonJointNameLeftEar")]
-		LeftEar,
-
-		[iOS (14, 0)]
-		[Field ("ARSkeletonJointNameRightEar")]
-		RightEar,
 	}
 
 	[iOS (13,0)]
