@@ -1703,6 +1703,7 @@ SHARED_CORE_SOURCES = \
 	ObjCRuntime/BindAsAttribute.cs \
 	ObjCRuntime/Blocks.cs \
 	ObjCRuntime/Class.cs \
+	ObjCRuntime/Constants.cs \
 	ObjCRuntime/INativeObject.cs \
 	ObjCRuntime/LinkWithAttribute.cs \
 	ObjCRuntime/NativeAttribute.cs \

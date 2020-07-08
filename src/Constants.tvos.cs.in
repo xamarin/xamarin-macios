@@ -4,13 +4,6 @@ namespace ObjCRuntime {
 		internal const string Revision = "@REVISION@";
 		public const string SdkVersion = "@TVOS_SDK_VERSION@";
 
-		public const string libSystemLibrary = "/usr/lib/libSystem.dylib";
-		public const string libcLibrary = "/usr/lib/libc.dylib";
-		public const string ObjectiveCLibrary = "/usr/lib/libobjc.dylib";
-#if !XAMCORE_4_0
-		public const string libdispatchLibrary = "/usr/lib/system/libdispatch.dylib";
-#endif
-		
 		// TVOS 9.0
 		internal const string CoreServicesLibrary = "/System/Library/Frameworks/MobileCoreServices.framework/MobileCoreServices";
 		public const string AccelerateImageLibrary = "/System/Library/Frameworks/Accelerate.framework/Frameworks/vImage.framework/vImage";
@@ -62,9 +55,6 @@ namespace ObjCRuntime {
 		public const string TVServicesLibrary = "/System/Library/Frameworks/TVServices.framework/TVServices";
 		public const string UIKitLibrary = "/System/Library/Frameworks/UIKit.framework/UIKit";
 		public const string libcompressionLibrary = "/usr/lib/libcompression.dylib";
-#if !XAMCORE_4_0
-		public const string libcompression = "/usr/lib/libcompression.dylib";
-#endif
 
 		// TVOS 9.2
 		public const string MapKitLibrary = "/System/Library/Frameworks/MapKit.framework/MapKit";
