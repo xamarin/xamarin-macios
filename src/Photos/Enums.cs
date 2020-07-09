@@ -379,4 +379,12 @@ namespace Photos
 		RelinquishingLibraryBundleToWriter = 3142,
 		SwitchingSystemPhotoLibrary = 3143,
 	}
+
+	[TV (14,0), Mac (10,16), iOS (14,0)]
+	[Native]
+	public enum PHAccessLevel : long
+	{
+		AddOnly = 1,
+		ReadWrite = 2,
+	}
 }

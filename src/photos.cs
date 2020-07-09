@@ -1072,12 +1072,28 @@ namespace Photos
 		[Export ("sharedPhotoLibrary")]
 		PHPhotoLibrary SharedPhotoLibrary { get; }
 
+		[Deprecated (PlatformName.iOS, 14, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 16)]
+		[Deprecated (PlatformName.TvOS, 14, 0)]
 		[Static, Export ("authorizationStatus")]
 		PHAuthorizationStatus AuthorizationStatus { get; }
 
+		[TV (14,0), Mac (10,16), iOS (14,0)]
+		[Static]
+		[Export ("authorizationStatusForAccessLevel:")]
+		PHAuthorizationStatus authorizationStatus (PHAccessLevel accessLevel);
+
+		[Deprecated (PlatformName.iOS, 14, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 16)]
+		[Deprecated (PlatformName.TvOS, 14, 0)]
 		[Static, Export ("requestAuthorization:")]
 		[Async]
 		void RequestAuthorization (Action<PHAuthorizationStatus> handler);
+
+		[TV (14,0), Mac (10,16), iOS (14,0)]
+		[Static]
+		[Export ("requestAuthorizationForAccessLevel:handler:")]
+		void RequestAuthorization (PHAccessLevel accessLevel, Action<PHAuthorizationStatus> handler);
 
 		// no [Async] since we're binding performChangesAndWait:error: too
 		[Export ("performChanges:completionHandler:")]
@@ -1130,7 +1146,7 @@ namespace Photos
 #endif
 	[Mac (10,12)]
 	[BaseType (typeof(NSObject))]
-	interface PHLivePhoto : NSSecureCoding, NSCopying
+	interface PHLivePhoto : NSSecureCoding, NSCopying, NSItemProviderReading
 	{
 		[Export ("size")]
 		CGSize Size { get; }
