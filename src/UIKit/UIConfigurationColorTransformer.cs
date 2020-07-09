@@ -24,6 +24,18 @@ namespace UIKit {
 			[return: DelegateProxy (typeof (SDUIConfigurationColorTransformerHandler))]
 			get => NIDUIConfigurationColorTransformerHandler.Create (_Grayscale)!;
 		}
+
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public static UIConfigurationColorTransformerHandler PreferredTint {
+			[return: DelegateProxy (typeof (SDUIConfigurationColorTransformerHandler))]
+			get => NIDUIConfigurationColorTransformerHandler.Create (_PreferredTint)!;
+		}
+
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public static UIConfigurationColorTransformerHandler MonochromeTint {
+			[return: DelegateProxy (typeof (SDUIConfigurationColorTransformerHandler))]
+			get => NIDUIConfigurationColorTransformerHandler.Create (_MonochromeTint)!;
+		}
 	} /* class UIConfigurationColorTransformer */
 
 	[UnmanagedFunctionPointerAttribute (CallingConvention.Cdecl)]

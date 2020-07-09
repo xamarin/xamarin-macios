@@ -26,6 +26,7 @@ using CoreAnimation;
 #endif
 using CoreData;
 using UserNotifications;
+using UniformTypeIdentifiers;
 
 #if IOS
 using FileProvider;
@@ -1464,6 +1465,22 @@ namespace UIKit {
 		[Export ("initWithAttributedName:actionHandler:")]
 		IntPtr Constructor (NSAttributedString attributedName, [NullAllowed] UIAccessibilityCustomActionHandler actionHandler);
 
+		[TV (14,0), iOS (14,0)]
+		[Export ("initWithName:image:target:selector:")]
+		IntPtr Constructor (string name, [NullAllowed] UIImage image, [NullAllowed] NSObject target, Selector selector);
+
+		[TV (14,0), iOS (14,0)]
+		[Export ("initWithAttributedName:image:target:selector:")]
+		IntPtr Constructor (NSAttributedString attributedName, [NullAllowed] UIImage image, [NullAllowed] NSObject target, Selector selector);
+
+		[TV (14,0), iOS (14,0)]
+		[Export ("initWithName:image:actionHandler:")]
+		IntPtr Constructor (string name, [NullAllowed] UIImage image, UIAccessibilityCustomActionHandler actionHandler);
+
+		[TV (14,0), iOS (14,0)]
+		[Export ("initWithAttributedName:image:actionHandler:")]
+		IntPtr Constructor (NSAttributedString attributedName, [NullAllowed] UIImage image, UIAccessibilityCustomActionHandler actionHandler);
+
 		[NullAllowed] // by default this property is null
 	    [Export ("name")]
 	    string Name { get; set; }
@@ -1483,6 +1500,10 @@ namespace UIKit {
 		[TV (13,0), iOS (13,0)]
 		[NullAllowed, Export ("actionHandler", ArgumentSemantic.Copy)]
 		UIAccessibilityCustomActionHandler ActionHandler { get; set; }
+
+		[TV (14,0), iOS (14,0)]
+		[NullAllowed, Export ("image", ArgumentSemantic.Strong)]
+		UIImage Image { get; set; }
 	}
 
 	delegate UIAccessibilityCustomRotorItemResult UIAccessibilityCustomRotorSearch (UIAccessibilityCustomRotorSearchPredicate predicate);
@@ -16077,6 +16098,10 @@ namespace UIKit {
 		[iOS (8,0)]
 		[Export ("preferredPrimaryColumnWidthFraction", ArgumentSemantic.UnsafeUnretained)]
 		nfloat PreferredPrimaryColumnWidthFraction { get; set; }
+
+		[TV (14,0), iOS (14,0)]
+		[Export ("preferredPrimaryColumnWidth")]
+		nfloat PreferredPrimaryColumnWidth { get; set; }
 		
 		[iOS (8,0)]
 		[Export ("minimumPrimaryColumnWidth", ArgumentSemantic.UnsafeUnretained)]
@@ -16093,6 +16118,10 @@ namespace UIKit {
 		[TV (14,0), iOS (14,0)]
 		[Export ("preferredSupplementaryColumnWidthFraction")]
 		nfloat PreferredSupplementaryColumnWidthFraction { get; set; }
+
+		[TV (14,0), iOS (14,0)]
+		[Export ("preferredSupplementaryColumnWidth")]
+		nfloat PreferredSupplementaryColumnWidth { get; set; }
 
 		[TV (14,0), iOS (14,0)]
 		[Export ("minimumSupplementaryColumnWidth")]
@@ -16224,6 +16253,14 @@ namespace UIKit {
 		[TV (14,0), iOS (14,0)]
 		[Export ("splitViewController:willHideColumn:"), EventArgs ("UISplitViewControllerWillShowHideColumn")]
 		void WillHideColumn (UISplitViewController splitViewController, UISplitViewControllerColumn column);
+	
+		[TV (14,0), iOS (14,0)]
+		[Export ("splitViewControllerInteractivePresentationGestureWillBegin:")]
+		void InteractivePresentationGestureWillBegin (UISplitViewController svc);
+
+		[TV (14,0), iOS (14,0)]
+		[Export ("splitViewControllerInteractivePresentationGestureDidEnd:")]
+		void InteractivePresentationGestureDidEnd (UISplitViewController svc);
 	}
 
 	[Category]
@@ -17690,16 +17727,14 @@ namespace UIKit {
 		[Export ("initWithDocumentTypes:inMode:")]
 		IntPtr Constructor (string [] allowedUTIs, UIDocumentPickerMode mode);
 
-		// TODO: Enable when UniformTypeIdentifiers is bound
-		// [NoTV, iOS (14,0)]
-		// [Export ("initForOpeningContentTypes:asCopy:")]
-		// [DesignatedInitializer]
-		// IntPtr Constructor (UTType[] contentTypes, bool asCopy);
+		[NoTV, iOS (14,0)]
+		[Export ("initForOpeningContentTypes:asCopy:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (UTType[] contentTypes, bool asCopy);
 
-		// TODO: Enable when UniformTypeIdentifiers is bound
-		// [NoTV, iOS (14,0)]
-		// [Export ("initForOpeningContentTypes:")]
-		// IntPtr Constructor (UTType[] contentTypes);
+		[NoTV, iOS (14,0)]
+		[Export ("initForOpeningContentTypes:")]
+		IntPtr Constructor (UTType[] contentTypes);
 
 		[Deprecated (PlatformName.iOS, 14, 0)]
 		[Advice ("Use 'UTType' constructor overloads.")]
@@ -19485,11 +19520,10 @@ namespace UIKit {
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] string[] allowedContentTypes);
 
-		// TODO: Enable when UniformTypeIdentifiers is bound
-		// [iOS (14,0)]
-		// [Export ("initForOpeningContentTypes:")]
-		// [DesignatedInitializer]
-		// IntPtr Constructor ([NullAllowed] UTType [] contentTypes);
+		[iOS (14,0)]
+		[Export ("initForOpeningContentTypes:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] UTType [] contentTypes);
 
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		IUIDocumentBrowserViewControllerDelegate Delegate { get; set; }
@@ -19509,10 +19543,9 @@ namespace UIKit {
 		[Export ("recentDocumentsContentTypes", ArgumentSemantic.Copy)]
 		string [] RecentDocumentsContentTypes { get; }
 
-		// TODO: Enable when UniformTypeIdentifiers is bound
-		// [iOS (14,0)]
-		// [Export ("contentTypesForRecentDocuments", ArgumentSemantic.Copy)]
-		// UTType [] ContentTypesForRecentDocuments { get; }
+		[iOS (14,0)]
+		[Export ("contentTypesForRecentDocuments", ArgumentSemantic.Copy)]
+		UTType [] ContentTypesForRecentDocuments { get; }
 
 		[iOS (13,0)]
 		[Export ("shouldShowFileExtensions")]
@@ -22042,6 +22075,9 @@ namespace UIKit {
 		UICellConfigurationDropState CellDropState { get; set; }
 	}
 
+	[NoTV]
+	delegate UISwipeActionsConfiguration UICollectionLayoutListSwipeActionsConfigurationProvider (NSIndexPath indexPath);
+
 	[NoWatch, TV (14,0), iOS (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -22066,6 +22102,16 @@ namespace UIKit {
 
 		[Export ("footerMode", ArgumentSemantic.Assign)]
 		UICollectionLayoutListFooterMode FooterMode { get; set; }
+
+		[NoTV]
+		[NullAllowed]
+		[Export ("leadingSwipeActionsConfigurationProvider", ArgumentSemantic.Copy)]
+		UICollectionLayoutListSwipeActionsConfigurationProvider LeadingSwipeActionsConfigurationProvider { get; set; }
+
+		[NoTV]
+		[NullAllowed]
+		[Export ("trailingSwipeActionsConfigurationProvider", ArgumentSemantic.Copy)]
+		UICollectionLayoutListSwipeActionsConfigurationProvider TrailingSwipeActionsConfigurationProvider { get; set; }
 	}
 
 	[NoWatch, TV (14,0), iOS (14,0)]
@@ -22162,16 +22208,6 @@ namespace UIKit {
 		[NoTV]
 		[Export ("separatorLayoutGuide")]
 		UILayoutGuide SeparatorLayoutGuide { get; }
-
-		[NoTV]
-		[NullAllowed]
-		[Export ("leadingSwipeActionsConfiguration", ArgumentSemantic.Strong)]
-		UISwipeActionsConfiguration LeadingSwipeActionsConfiguration { get; set; }
-
-		[NoTV]
-		[NullAllowed]
-		[Export ("trailingSwipeActionsConfiguration", ArgumentSemantic.Strong)]
-		UISwipeActionsConfiguration TrailingSwipeActionsConfiguration { get; set; }
 	}
 
 	interface IUIColorPickerViewControllerDelegate { }
@@ -22496,6 +22532,15 @@ namespace UIKit {
 		// UIContentView interface wants IUIContentConfiguration, covariant types can't come soon enough
 		[Sealed, Export ("configuration", ArgumentSemantic.Copy)]
 		UIListContentConfiguration ListContentConfiguration { get; set; }
+
+		[NullAllowed, Export ("textLayoutGuide", ArgumentSemantic.Strong)]
+		UILayoutGuide TextLayoutGuide { get; }
+
+		[NullAllowed, Export ("secondaryTextLayoutGuide", ArgumentSemantic.Strong)]
+		UILayoutGuide SecondaryTextLayoutGuide { get; }
+
+		[NullAllowed, Export ("imageLayoutGuide", ArgumentSemantic.Strong)]
+		UILayoutGuide ImageLayoutGuide { get; }
 	}
 
 	delegate UIColor UIConfigurationColorTransformerHandler (UIColor color);
@@ -22567,6 +22612,9 @@ namespace UIKit {
 
 		[Export ("adjustsFontForContentSizeCategory")]
 		bool AdjustsFontForContentSizeCategory { get; set; }
+
+		[Export ("transform", ArgumentSemantic.Assign)]
+		UIListContentTextTransform Transform { get; set; }
 	}
 
 	interface UIPointerLockStateDidChangeEventArgs {
@@ -22660,6 +22708,12 @@ namespace UIKit {
 		[Internal]
 		[Field ("UIConfigurationColorTransformerGrayscale")]
 		IntPtr _Grayscale { get; }
+
+		[Field ("UIConfigurationColorTransformerPreferredTint")]
+		IntPtr _PreferredTint { get; }
+
+		[Field ("UIConfigurationColorTransformerMonochromeTint")]
+		IntPtr _MonochromeTint { get; }
 	}
 
 	[TV (14,0), NoWatch, NoiOS]
@@ -22761,5 +22815,15 @@ namespace UIKit {
 
 		// [NullAllowed, Export ("didReorderHandler", ArgumentSemantic.Copy)]
 		// Action<NSDiffableDataSourceTransaction<SectionType, ItemType>> DidReorderHandler { get; set; }
+	}
+
+	[TV (14,0), iOS (14,0)]
+	[NoWatch]
+	[Native]
+	public enum UIListContentTextTransform : long {
+		None,
+		Uppercase,
+		Lowercase,
+		Capitalized,
 	}
 }

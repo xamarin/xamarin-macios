@@ -3070,6 +3070,8 @@ namespace UIKit {
 		ProbableWebUrl,
 		[Field ("UIPasteboardDetectionPatternProbableWebSearch")]
 		ProbableWebSearch,
+		[Field ("UIPasteboardDetectionPatternNumber")]
+		Number,
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 10, 14)]
