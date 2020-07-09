@@ -1789,6 +1789,7 @@ COMMON_FRAMEWORKS =         \
 	SoundAnalysis 			\
 	SpriteKit               \
 	StoreKit				\
+	UniformTypeIdentifiers  \
 
 MAC_FRAMEWORKS =            \
 	$(COMMON_FRAMEWORKS)    \
@@ -1801,6 +1802,7 @@ MAC_FRAMEWORKS =            \
 	AVKit                   \
 	BusinessChat            \
 	CFNetwork               \
+	ClassKit                \
 	CloudKit                \
 	Contacts                \
 	ContactsUI              \
@@ -1860,6 +1862,7 @@ MAC_FRAMEWORKS =            \
 	QuickLook               \
 	QuickLookThumbnailing	\
 	QuickLookUI             \
+	ReplayKit               \
 	SafariServices          \
 	ScriptingBridge         \
 	SearchKit               \

@@ -65,14 +65,16 @@ namespace CoreBluetooth {
 #endif
 	}
 
-	[iOS (13,0), TV (13,0), Watch (6,0), NoMac]
+	[iOS (13,0), TV (13,0), Watch (6,0)]
+	[Mac (10,16)]
 	[StrongDictionary ("CBConnectionEventMatchingOptionsKeys")]
 	interface CBConnectionEventMatchingOptions {
 		NSUuid [] PeripheralUuids { get; set; }
 		CBUUID [] ServiceUuids { get; set;}
 	}
 
-	[iOS (13,0), TV (13,0), Watch (6,0), NoMac]
+	[iOS (13,0), TV (13,0), Watch (6,0)]
+	[Mac (10,16)]
 	[Static]
 	[Internal]
 	interface CBConnectionEventMatchingOptionsKeys {
@@ -231,17 +233,20 @@ namespace CoreBluetooth {
 		[Export ("isScanning")]
 		bool IsScanning { get; }
 
-		[iOS (13,0), TV (13,0), Watch (6,0), NoMac]
+		[iOS (13,0), TV (13,0), Watch (6,0)]
+		[Mac (10,16)]
 		[Static]
 		[Export ("supportsFeatures:")]
 		bool SupportsFeatures (CBCentralManagerFeature features);
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
-		[iOS (13,0), TV (13,0), Watch (6,0), NoMac]
+		[iOS (13,0), TV (13,0), Watch (6,0)]
+		[Mac (10,16)]
 		[Export ("registerForConnectionEventsWithOptions:")]
 		void RegisterForConnectionEvents ([NullAllowed] NSDictionary options);
 
-		[iOS (13,0), TV (13,0), Watch (6,0), NoMac]
+		[iOS (13,0), TV (13,0), Watch (6,0)]
+		[Mac (10,16)]
 		[Wrap ("RegisterForConnectionEvents (options.GetDictionary ())")]
 		void RegisterForConnectionEvents ([NullAllowed] CBConnectionEventMatchingOptions options);
 	}
@@ -357,7 +362,8 @@ namespace CoreBluetooth {
 		[Export ("centralManager:willRestoreState:"), EventArgs ("CBWillRestore")]
 		void WillRestoreState (CBCentralManager central, NSDictionary dict);
 
-		[iOS (13,0), TV (13,0), Watch (6,0), NoMac]
+		[iOS (13,0), TV (13,0), Watch (6,0)]
+		[Mac (10,16)]
 		[Export ("centralManager:connectionEventDidOccur:forPeripheral:"), EventArgs ("CBPeripheralConnectionEvent")]
 		void ConnectionEventDidOccur (CBCentralManager central, CBConnectionEvent connectionEvent, CBPeripheral peripheral);
 

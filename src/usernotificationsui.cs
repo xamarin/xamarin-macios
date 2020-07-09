@@ -23,6 +23,7 @@ namespace UserNotificationsUI {
 
 	[iOS (10, 0)]
 	[Mac (10,16)]
+	[Introduced (PlatformName.MacCatalyst, 14,0)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Unavailable (PlatformName.TvOS)]
 	[Native]
@@ -34,6 +35,7 @@ namespace UserNotificationsUI {
 
 	[iOS (10, 0)]
 	[Mac (10,16)]
+	[Introduced (PlatformName.MacCatalyst, 14,0)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Unavailable (PlatformName.TvOS)]
 	[Native]
@@ -47,6 +49,7 @@ namespace UserNotificationsUI {
 
 	[iOS (10, 0)]
 	[Mac (10,16)]
+	[Introduced (PlatformName.MacCatalyst, 14,0)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Unavailable (PlatformName.TvOS)]
 	[Protocol]
@@ -77,6 +80,7 @@ namespace UserNotificationsUI {
 
 	[iOS (10, 0)]
 	[Mac (10,16)]
+	[Introduced (PlatformName.MacCatalyst, 14,0)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Unavailable (PlatformName.TvOS)]
 	[Category]

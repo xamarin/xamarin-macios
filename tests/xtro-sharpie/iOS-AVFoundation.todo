@@ -66,3 +66,7 @@
 !missing-type! AVAssetSegmentReport not bound
 !missing-type! AVAssetSegmentReportSampleInformation not bound
 !missing-type! AVAssetSegmentTrackReport not bound
+## appended from unclassified file
+!missing-field! AVAssetDownloadTaskMinimumRequiredPresentationSizeKey not bound
+!missing-field! AVAssetDownloadTaskPrefersHDRKey not bound
+!missing-selector! AVCaptureDevice::manufacturer not bound
