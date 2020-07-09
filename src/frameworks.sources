@@ -1787,6 +1787,7 @@ COMMON_FRAMEWORKS =         \
 	SoundAnalysis 			\
 	SpriteKit               \
 	StoreKit				\
+	UniformTypeIdentifiers  \
 
 MAC_FRAMEWORKS =            \
 	$(COMMON_FRAMEWORKS)    \

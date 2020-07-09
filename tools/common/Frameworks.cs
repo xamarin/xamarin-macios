@@ -194,6 +194,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 					{ "AutomaticAssessmentConfiguration", "AutomaticAssessmentConfiguration", 10,15,4 },
 
+					{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 10,16 },
 					{ "UserNotificationsUI", "UserNotificationsUI", 10,16 },
 					{ "CallKit", "CallKit", 10,16 },
 					{ "ClassKit", "ClassKit", 10,16 },
@@ -335,6 +336,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "AutomaticAssessmentConfiguration", "AutomaticAssessmentConfiguration", 13, 4 },
 
 				{ "AppClip", "AppClip", 14,0 },
+				{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 14,0 },
 
 				// the above MUST be kept in sync with simlauncher
 				// see tools/mtouch/Makefile
@@ -399,8 +401,9 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "PushKit", "PushKit", 6 },
 				{ "SoundAnalysis", "SoundAnalysis", 6 },
 				{ "CoreMedia", "CoreMedia", 6 },
-				{ "StoreKit", "StoreKit", 6,2 }
+				{ "StoreKit", "StoreKit", 6,2 },
 
+				{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 7,0 },
 			};
 		}
 		return watch_frameworks;
@@ -481,6 +484,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "BackgroundTasks", "BackgroundTasks", 13, 0 },
 
 					{ "LinkPresentation", "LinkPresentation", 14,0 },
+					{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 14,0 },
 				};
 			}
 			return tvos_frameworks;
