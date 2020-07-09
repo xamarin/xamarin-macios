@@ -1,2 +1,0 @@
-!missing-selector! SKView::disableDepthStencilBuffer not bound
-!missing-selector! SKView::setDisableDepthStencilBuffer: not bound
