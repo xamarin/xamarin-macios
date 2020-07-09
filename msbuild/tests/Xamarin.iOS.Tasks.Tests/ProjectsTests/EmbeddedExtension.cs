@@ -24,9 +24,9 @@ namespace Xamarin.iOS.Tasks {
 			var xcodeProjectFolder = Path.Combine (mtouchPaths.ProjectPath , "..", "..", "native");
 			string [] xcodeBuildArgs;
 			if (this.Platform  == "iPhone")
-				xcodeBuildArgs = new [] { "-configuration", "Debug", "-target", "NativeTodayExtension", "-arch", "arm64", "-sdk", "iphoneos13.5" };
+				xcodeBuildArgs = new [] { "-configuration", "Debug", "-target", "NativeTodayExtension", "-arch", "arm64" };
 			else
-				xcodeBuildArgs = new [] { "-configuration", "Debug", "-target", "NativeTodayExtension", "-arch", "x86_64", "-sdk", "iphonesimulator13.5" };
+				xcodeBuildArgs = new [] { "-configuration", "Debug", "-target", "NativeTodayExtension", "-arch", "x86_64" };
 			Assert.AreEqual (0, ExecutionHelper.Execute ("/usr/bin/xcodebuild", xcodeBuildArgs.Concat (new [] { "clean" }).ToArray (), out System.Text.StringBuilder cleanOutput, xcodeProjectFolder));
 			Assert.AreEqual (0, ExecutionHelper.Execute ("/usr/bin/xcodebuild", xcodeBuildArgs.Concat (new [] { "build" }).ToArray (), out System.Text.StringBuilder _, xcodeProjectFolder));
 

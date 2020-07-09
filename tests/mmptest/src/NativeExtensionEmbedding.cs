@@ -17,7 +17,7 @@ namespace Xamarin.MMP.Tests
 				TI.CopyDirectory (Path.Combine (TI.FindSourceDirectory (), @"NativeExtension"), tmpDir);
 
 				var xcodeProjectFolder = Path.Combine (tmpDir, "NativeExtension");
-				string [] xcodeBuildArgs = new [] { "-configuration", "Debug", "-target", "NativeTodayExtension", "-arch", "x86_64", "-sdk", "macosx10.15" };
+				string [] xcodeBuildArgs = new [] { "-configuration", "Debug", "-target", "NativeTodayExtension", "-arch", "x86_64" };
 				Assert.AreEqual (0, ExecutionHelper.Execute ("/usr/bin/xcodebuild", xcodeBuildArgs.Concat (new [] { "clean" }).ToArray (), out System.Text.StringBuilder cleanOutput, xcodeProjectFolder));
 				Assert.AreEqual (0, ExecutionHelper.Execute ("/usr/bin/xcodebuild", xcodeBuildArgs.Concat (new [] { "build" }).ToArray (), out System.Text.StringBuilder _, xcodeProjectFolder));
 
