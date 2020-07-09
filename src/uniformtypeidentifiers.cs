@@ -121,6 +121,8 @@ namespace UniformTypeIdentifiers {
 		NSSet<UTType> Supertypes { get; }
 	}
 
+	[Introduced (PlatformName.MacCatalyst, 14,0)]
+	[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
 	enum UTTagClass {
 		[Field ("UTTagClassFilenameExtension")]
 		FilenameExtension,
@@ -373,10 +375,10 @@ namespace UniformTypeIdentifiers {
 		UTType QuickTimeMovie { get; }
 
 		[Field ("UTTypeMPEG")]
-		UTType MPeg { get; }
+		UTType Mpeg { get; }
 
 		[Field ("UTTypeMPEG2Video")]
-		UTType MPeg2Video { get; }
+		UTType Mpeg2Video { get; }
 
 		[Field ("UTTypeMPEG2TransportStream")]
 		UTType Mpeg2TransportStream { get; }
