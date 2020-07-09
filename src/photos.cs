@@ -1147,7 +1147,10 @@ namespace Photos
 #endif
 	[Mac (10,12)]
 	[BaseType (typeof(NSObject))]
-	interface PHLivePhoto : NSSecureCoding, NSCopying, NSItemProviderReading
+	interface PHLivePhoto : NSSecureCoding, NSCopying
+#if IOS
+	, NSItemProviderReading
+#endif
 	{
 		[Export ("size")]
 		CGSize Size { get; }
