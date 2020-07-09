@@ -23,8 +23,9 @@ steps:
     usePat: true 
 
 - pwsh: |
-    echo "##vso[task.setvariable variable=VSDROPS_INDEX];isOutput=true]$Env:VSDROPS_INDEX"
+    Get-ChildItem env:
+    Write-Host '##vso[task.setvariable variable=VSDROPS_INDEX];isOutput=true]$Env:VS_INDEX'
   displayName: Publis vsdrops path
   name: vsdrops # not to be confused with the displayName, this is used to later use the name of the step to access the output variables from an other job
   env:
-    VSDROPS_INDEX: '${{ parameters.vsdropsPrefix }}/$(Build.BuildNumber)/$(Build.BuildId);/tests/vsdrops_index.html' # url to the vsdrops generated index file
+    VS_INDEX: '${{ parameters.vsdropsPrefix }}/$(Build.BuildNumber)/$(Build.BuildId);/tests/vsdrops_index.html' # url to the vsdrops generated index file
