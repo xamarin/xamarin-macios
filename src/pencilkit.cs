@@ -298,18 +298,17 @@ namespace PencilKit {
 		UIUserInterfaceStyle ColorUserInterfaceStyle { get; set; }
 
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Create individual instances instead.")]
+		[Unavailable (PlatformName.MacCatalyst), Advice ("This API is not available when using Catalyst on macOS.")]
 		[Static]
 		[return: NullAllowed]
 		[Export ("sharedToolPickerForWindow:")]
 		PKToolPicker GetSharedToolPicker (UIWindow window);
 
 		[iOS (14, 0)]
-		[Introduced (PlatformName.MacCatalyst, 14, 0)]
 		[Export ("showsDrawingPolicyControls")]
 		bool ShowsDrawingPolicyControls { get; set; }
 
 		[iOS (14, 0)]
-		[Introduced (PlatformName.MacCatalyst, 14, 0)]
 		[NullAllowed]
 		[Export ("stateAutosaveName")]
 		string StateAutosaveName { get; set; }
@@ -415,13 +414,13 @@ namespace PencilKit {
 		PKStrokePoint GetInterpolatedPoint (nfloat parametricValue);
 
 		[Export ("enumerateInterpolatedPointsInRange:strideByDistance:usingBlock:")]
-		void EnumerateInterpolatedPointsByDistance (PKFloatRange range, nfloat distanceStep, PKInterpolatedPointsEnumeratorHandler enumeratorHandler);
+		void EnumerateInterpolatedPointsByDistanceStep (PKFloatRange range, nfloat distanceStep, PKInterpolatedPointsEnumeratorHandler enumeratorHandler);
 
 		[Export ("enumerateInterpolatedPointsInRange:strideByTime:usingBlock:")]
-		void EnumerateInterpolatedPointsByTime (PKFloatRange range, double timeStep, PKInterpolatedPointsEnumeratorHandler enumeratorHandler);
+		void EnumerateInterpolatedPointsByTimeStep (PKFloatRange range, double timeStep, PKInterpolatedPointsEnumeratorHandler enumeratorHandler);
 
 		[Export ("enumerateInterpolatedPointsInRange:strideByParametricStep:usingBlock:")]
-		void EnumerateInterpolatedPointsByParametric (PKFloatRange range, nfloat parametricStep, PKInterpolatedPointsEnumeratorHandler enumeratorHandler);
+		void EnumerateInterpolatedPointsByParametricStep (PKFloatRange range, nfloat parametricStep, PKInterpolatedPointsEnumeratorHandler enumeratorHandler);
 
 		[Export ("parametricValue:offsetByDistance:")]
 		nfloat GetParametricValue (nfloat parametricValue, nfloat distanceStep);
