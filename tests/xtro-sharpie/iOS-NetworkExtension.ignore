@@ -1,6 +1,3 @@
-## bound as a category - needs debugging (URL capitalizarion?)
-!missing-selector! NSMutableURLRequest::bindToHotspotHelperCommand: not bound
-
 ## Native code has NWPathStatus in NetworkExtension and nw_path_status_t in Network (with the same elements).
 ## NetworkExtension.NWPathStatus is the oldest, but NetworkExtension isn't present on all the platforms Network
 ## is, which means we can't use the same managed enum for both cases (the native enums aren't entirely identical

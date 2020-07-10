@@ -427,6 +427,13 @@ namespace Introspection {
 								break;
 							}
 							break;
+						case "CIGlassDistortion":
+							switch (key) {
+							case "textureImage":
+								key = "texture";
+								break;
+							}
+							break;
 						}
 						// 'input' is implied (generally) and explicit (in a few cases)
 						if (!key.StartsWith ("input", StringComparison.Ordinal))

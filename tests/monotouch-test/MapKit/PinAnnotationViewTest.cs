@@ -65,9 +65,7 @@ namespace MonoTouchFixtures.MapKit {
 
 			var frame = new CGRect (10, 10, 100, 100);
 			using (var av = new MKPinAnnotationView (frame)) {
-				// broke in xcode 12 beta 1
-				if (!TestRuntime.CheckXcodeVersion (12, 0))
-					Assert.That (av.Frame.ToString (), Is.EqualTo (frame.ToString ()), "Frame"); // fp comparison fails
+				Assert.That (av.Frame.ToString (), Is.EqualTo (frame.ToString ()), "Frame"); // fp comparison fails
 				Assert.Null (av.Annotation, "Annotation");
 				Assert.False (av.AnimatesDrop, "AnimatesDrop");
 
