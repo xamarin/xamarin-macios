@@ -625,6 +625,7 @@ namespace CoreMotion {
 		NotAvailable,
 		NotEntitled,
 		NotAuthorized,
+		NilData,
 		Size,
 	}
 
