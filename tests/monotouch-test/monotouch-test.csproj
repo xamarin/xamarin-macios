@@ -206,7 +206,6 @@
     <Compile Include="..\common\Extensions.cs">
       <Link>Extensions.cs</Link>
     </Compile>
-    <Compile Include="ClockKit\CLKComplicationTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
@@ -269,6 +268,7 @@
     <Folder Include="CoreMidi\" />
     <Folder Include="CoreAudioKit\" />
     <Folder Include="Messages\" />
+    <Folder Include="ClockKit\" />
     <Folder Include="CloudKit\" />
     <Folder Include="Intents\" />
     <Folder Include="System.Net.Http\" />
