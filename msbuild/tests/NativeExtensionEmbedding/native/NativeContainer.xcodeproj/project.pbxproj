@@ -402,6 +402,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"NativeContainer/Preview Content\"";
 				DEVELOPMENT_TEAM = VAA25J7DNH;
@@ -423,6 +424,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"NativeContainer/Preview Content\"";
 				DEVELOPMENT_TEAM = VAA25J7DNH;
@@ -442,6 +444,7 @@
 		42D8EA2224B50B0F003D1CF3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VAA25J7DNH;
 				INFOPLIST_FILE = NativeTodayExtension/Info.plist;
@@ -461,6 +464,7 @@
 		42D8EA2324B50B0F003D1CF3 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VAA25J7DNH;
 				INFOPLIST_FILE = NativeTodayExtension/Info.plist;
