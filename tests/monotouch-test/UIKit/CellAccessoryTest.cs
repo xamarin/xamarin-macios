@@ -20,7 +20,7 @@ namespace MonoTouchFixtures.UIKit {
 			Assert.NotNull (cap, "Class/cap");
 			Assert.That (cap (new UICellAccessory [0]), Is.EqualTo (0), "Class/Invoke");
 
-			cap = UICellAccessory.GetPositionBeforeAccessory (new Class (typeof (UICellAccessory)));
+			cap = UICellAccessory.GetPositionBeforeAccessory (typeof (UICellAccessory));
 			Assert.NotNull (cap, "Type/cap");
 			Assert.That (cap (new UICellAccessory [0]), Is.EqualTo (0), "Type/Invoke");
 		}
