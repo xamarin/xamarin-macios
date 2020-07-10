@@ -10,13 +10,13 @@ namespace ClockKit {
 			[DllImport (Constants.ClockKitLibrary)]
 			static extern IntPtr CLKAllComplicationFamilies ();
 
-			public static NSNumber[] GetAllComplicationFamilies ()
+			public static CLKComplicationFamily[] GetAllComplicationFamilies ()
 			{
 				using (var nsArray = new NSArray (CLKAllComplicationFamilies ())) {
-					var families = new NSNumber [(int)nsArray.Count];
+					var families = new CLKComplicationFamily [(int)nsArray.Count];
 					for (nuint i = 0; i < nsArray.Count; i++)
 					{
-						families[i] = nsArray.GetItem <NSNumber> (i);
+						families[i] = (CLKComplicationFamily)nsArray.GetItem <NSNumber> (i).Int32Value;
 					}
 					return families;
 				}
