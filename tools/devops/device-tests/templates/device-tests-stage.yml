@@ -66,7 +66,7 @@ stages:
     dependsOn: tests # can start as soon as the tests are done
     condition: succeededOrFailed()
     pool:
-      vmImage: ${{ parameters.WindowsDevicePool }}
+      name: ${{ parameters.WindowsDevicePool }}
       workspace:
         clean: all
     steps:
@@ -80,7 +80,7 @@ stages:
     dependsOn: tests # can start as soon as the tests are done
     condition: succeededOrFailed()
     pool:
-      vmImage: ${{ parameters.WindowsDevicePool }}
+      name: ${{ parameters.WindowsDevicePool }}
       workspace:
         clean: all
     steps:
@@ -102,7 +102,7 @@ stages:
       TESTS_JOBSTATUS: $[ dependencies.tests.outputs['runTests.TESTS_JOBSTATUS'] ]
       VSDROPS_INDEX: $[ dependencies.upload_vsdrops.outputs['vsdrops.VSDROPS_INDEX'] ]
     pool:
-      vmImage: ${{ parameters.WindowsDevicePool }}
+      name: ${{ parameters.WindowsDevicePool }}
       workspace:
         clean: all
     steps:
