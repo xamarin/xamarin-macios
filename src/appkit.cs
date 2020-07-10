@@ -10535,6 +10535,18 @@ namespace AppKit {
 		[Mac (10,12)]
 		[Export ("anchorWithOffsetToAnchor:")]
 		NSLayoutDimension GetAnchorWithOffset (NSLayoutXAxisAnchor otherAnchor);
+
+		[Mac (10,16)]
+		[Export ("constraintEqualToSystemSpacingAfterAnchor:multiplier:")]
+		NSLayoutConstraint ConstraintEqualToSystemSpacingAfterAnchor (NSLayoutXAxisAnchor anchor, nfloat multiplier);
+
+		[Mac (10,16)]
+		[Export ("constraintGreaterThanOrEqualToSystemSpacingAfterAnchor:multiplier:")]
+		NSLayoutConstraint ConstraintGreaterThanOrEqualToSystemSpacingAfterAnchor (NSLayoutXAxisAnchor anchor, nfloat multiplier);
+
+		[Mac (10,16)]
+		[Export ("constraintLessThanOrEqualToSystemSpacingAfterAnchor:multiplier:")]
+		NSLayoutConstraint ConstraintLessThanOrEqualToSystemSpacingAfterAnchor (NSLayoutXAxisAnchor anchor, nfloat multiplier);
 	}
 
 	[Mac (10,11)]
@@ -10545,6 +10557,18 @@ namespace AppKit {
 		[Mac (10,12)]
 		[Export ("anchorWithOffsetToAnchor:")]
 		NSLayoutDimension GetAnchorWithOffset (NSLayoutYAxisAnchor otherAnchor);
+
+		[Mac (10,16)]
+		[Export ("constraintEqualToSystemSpacingBelowAnchor:multiplier:")]
+		NSLayoutConstraint ConstraintEqualToSystemSpacingBelowAnchor (NSLayoutYAxisAnchor anchor, nfloat multiplier);
+
+		[Mac (10,16)]
+		[Export ("constraintGreaterThanOrEqualToSystemSpacingBelowAnchor:multiplier:")]
+		NSLayoutConstraint ConstraintGreaterThanOrEqualToSystemSpacingBelowAnchor (NSLayoutYAxisAnchor anchor, nfloat multiplier);
+
+		[Mac (10,16)]
+		[Export ("constraintLessThanOrEqualToSystemSpacingBelowAnchor:multiplier:")]
+		NSLayoutConstraint ConstraintLessThanOrEqualToSystemSpacingBelowAnchor (NSLayoutYAxisAnchor anchor, nfloat multiplier);
 	}
 
 	[Mac (10,11)]

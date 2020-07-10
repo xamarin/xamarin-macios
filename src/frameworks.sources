@@ -1522,11 +1522,13 @@ UIKIT_SOURCES = \
 	UIKit/UIBarItem.cs \
 	UIKit/UIBezierPath.cs \
 	UIKit/UIButton.cs \
+	UIKit/UICellAccessory.cs \
 	UIKit/UICollectionView.cs \
 	UIKit/UICollectionViewLayout.cs \
 	UIKit/UICollectionViewLayoutAttributes.cs \
 	UIKit/UICollectionViewTransitionLayout.cs \
 	UIKit/UIColor.cs \
+	UIKit/UIConfigurationColorTransformer.cs \
 	UIKit/UIContentSizeCategory.cs \
 	UIKit/UIControl.cs \
 	UIKit/UIDevice.cs \
