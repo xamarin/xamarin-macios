@@ -1,10 +1,5 @@
 
 # job that downloads the html report from the artifacts and uploads them into vsdrops.
-parameters:
-
-- name: vsdropsPrefix
-  type: string
-
 steps:
 
 - checkout: self
@@ -21,10 +16,3 @@ steps:
     sourcePath: $(HTML_REPORT_PATH)
     detailedLog: true
     usePat: true 
-
-- pwsh: |
-    echo "##vso[task.setvariable variable=VSDROPS_INDEX];isOutput=true]$Env:VSDROPS_INDEX"
-  displayName: Publis vsdrops path
-  name: vsdrops # not to be confused with the displayName, this is used to later use the name of the step to access the output variables from an other job
-  env:
-    VSDROPS_INDEX: '${{ parameters.vsdropsPrefix }}/$(Build.BuildNumber)/$(Build.BuildId);/tests/vsdrops_index.html' # url to the vsdrops generated index file

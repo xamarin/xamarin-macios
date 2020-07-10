@@ -195,7 +195,9 @@ function New-GitHubComment {
         Authorization = ("token {0}" -f $Env:GITHUB_TOKEN)
     }
 
-    return Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body ($payload | ConvertTo-Json) -ContentType 'application/json' -PreserveAuthorizationOnRedirect
+    $request = Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body ($payload | ConvertTo-Json) -ContentType 'application/json' -PreserveAuthorizationOnRedirect
+    Write-Host $request
+    return $request
 }
 
 <#
@@ -351,6 +353,7 @@ function New-GitHubSummaryComment {
     $request = $null
 
     if (-not (Test-Path $TestSummaryPath -PathType Leaf)) {
+        Write-Host "No test summary found"
         Set-GitHubStatus -Status "failure" -Description "Tests failed catastrophically on $Context (no summary found)." -Context "$Context"
         $request = New-GitHubComment -Header "Tests failed catastrophically on $Context (no summary found)." -Emoji ":fire:" -Description "Result file $TestSummaryPath not found. $headerLinks"
     } else {

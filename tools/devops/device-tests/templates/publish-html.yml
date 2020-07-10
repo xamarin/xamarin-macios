@@ -17,6 +17,9 @@ parameters:
   type: string 
   default: 'iOS Device Tests' # default context, since we started dealing with iOS devices. 
 
+- name: vsdropsPrefix
+  type: string
+
 steps:
 
 - checkout: self
@@ -24,11 +27,13 @@ steps:
 
 - template: download-artifacts.yml 
 
-# Use the cmdlet to post a new summary comment. The cmdlet checks if we have the TestSummary.md file or not. It will also add the appropriate links to the commnet. 
+# Use the cmdlet to post a new summary comment. The cmdlet checks if we have the TestSummary.md file or not. It will also add the appropriate links to the comment. 
 # this step uses variables that have been set by the tests job dependency via output variables, those variables contain if the xamarin-storage could be used and its path
 - pwsh: |
+    $env:VSDROPS_INDEX="$Env:VSDROPSPREFIX/$Env:BUILD_BUILDNUMBER/$Env:BUILD_BUILDID;/tests/vsdrops_index.html"
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\device-tests\scripts\GitHub.psm1 
-    New-GitHubSummaryComment -Context "$Env:CONTEXT" -XamarinStoragePath "$Env:XAMARIN_STORAGE_PATH" -TestSummaryPath "$Env:TESTS_SUMMARY"
+    $response = New-GitHubSummaryComment -Context "$Env:CONTEXT" -XamarinStoragePath "$Env:XAMARIN_STORAGE_PATH" -TestSummaryPath "$Env:TESTS_SUMMARY"
+    Write-Host $response
   env:
     BUILD_REVISION: $(BUILD_REVISION)
     CONTEXT: ${{ parameters.statusContext }}
@@ -36,7 +41,6 @@ steps:
     XAMARIN_STORAGE_PATH: $(XAMARIN_STORAGE_PATH) # could be null if the step was not executed if we use vsdrops, the cmdlet will know how to handle that case
     XAMARIN_STORAGE_FAILED: $(XAMARIN_STORAGE_FAILED) # could not reach xamarin-storage, either the bot is not in the vpn or it finally failed
     TESTS_JOBSTATUS: $(TESTS_JOBSTATUS) # set by the runTests step
-    VSDROPS_INDEX: $(VSDROPS_INDEX)
     TESTS_SUMMARY: $(TEST_SUMMARY_PATH)
   displayName: 'Add summaries'
   condition: always()
