@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 using Xamarin.Linker;
 
@@ -15,28 +16,29 @@ namespace Xamarin {
 			foreach (var abi in Configuration.Abis) {
 
 				var file = Path.Combine (Configuration.CacheDirectory, $"main.{abi.AsArchString ()}.m");
-				var contents = $@"
-#include ""xamarin/xamarin.h""
+				var contents = new StringWriter ();
 
-void xamarin_setup_impl ()
-{{
-	setenv (""DOTNET_SYSTEM_GLOBALIZATION_INVARIANT"", ""1"", 1); // https://github.com/xamarin/xamarin-macios/issues/8906
-	xamarin_executable_name = ""{Configuration.AssemblyName}"";
-}}
+				contents.WriteLine ("#include \"xamarin/xamarin.h\"");
+				contents.WriteLine ();
+				contents.WriteLine ("void xamarin_setup_impl ()");
+				contents.WriteLine ("{");
+				contents.WriteLine ("\tsetenv (\"DOTNET_SYSTEM_GLOBALIZATION_INVARIANT\", \"1\", 1); // https://github.com/xamarin/xamarin-macios/issues/8906");
+				contents.WriteLine ("\txamarin_executable_name = \"{0}\";", Configuration.AssemblyName);
+				contents.WriteLine ("}");
+				contents.WriteLine ();
+				contents.WriteLine ("void xamarin_initialize_callbacks () __attribute__ ((constructor));");
+				contents.WriteLine ("void xamarin_initialize_callbacks ()");
+				contents.WriteLine ("{");
+				contents.WriteLine ("\txamarin_setup = xamarin_setup_impl;");
+				contents.WriteLine ("}");
+				contents.WriteLine ();
+				contents.WriteLine ("int");
+				contents.WriteLine ("main (int argc, char** argv)");
+				contents.WriteLine ("{");
+				contents.WriteLine ("\t@autoreleasepool { return xamarin_main (argc, argv, XamarinLaunchModeApp); }");
+				contents.WriteLine ("}");
 
-void xamarin_initialize_callbacks () __attribute__ ((constructor));
-void xamarin_initialize_callbacks ()
-{{
-	xamarin_setup = xamarin_setup_impl;
-}}
-
-int
-main (int argc, char** argv)
-{{
-	@autoreleasepool {{ return xamarin_main (argc, argv, XamarinLaunchModeApp); }}
-}}
-";
-				File.WriteAllText (file, contents);
+				File.WriteAllText (file, contents.ToString ());
 
 				items.Add (new MSBuildItem {
 					Include = file,
