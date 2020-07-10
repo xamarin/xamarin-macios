@@ -141,6 +141,22 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<!-- The default is false for all platforms -->
 		<_BundlerDebug Condition="'$(_BundlerDebug)' == ''">false</_BundlerDebug>
 
+		<!-- Extra arguments -->
+		<_BundlerArguments Condition="'$(_PlatformName)' == 'macOS'">$(MonoBundlingExtraArgs)</_BundlerArguments>
+		<_BundlerArguments Condition="'$(_PlatformName)' != 'macOS'">$(MtouchExtraArgs)</_BundlerArguments>
+
+		<!-- NoSymbolStrip -->
+		<!-- Xamarin.Mac never had an equivalent for MtouchNoSymbolStrip -->
+		<!-- in either case default to 'false' -->
+		<_NoSymbolStrip Condition="'$(_PlatformName)' != 'macOS'">$(MtouchNoSymbolStrip)</_NoSymbolStrip>
+		<_NoSymbolStrip Condition="'$(_NoSymbolStrip)' == ''">false</_NoSymbolStrip>
+
+		<!-- NoDSymUtil -->
+		<!-- Xamarin.Mac never had an equivalent for MtouchNoDSymUtil -->
+		<!-- in either case default to 'false' -->
+		<_NoDSymUtil Condition="'$(_PlatformName)' != 'macOS'">$(MtouchNoDSymUtil)</_NoDSymUtil>
+		<_NoDSymUtil Condition="'$(_NoDSymUtil)' == ''">false</_NoDSymUtil>
+
 		<!-- DeviceSpecificIntermediateOutputPath -->
 		<!--
 			We don't need this value for Xamarin.Mac, but many of the targets
