@@ -277,6 +277,7 @@ namespace ARKit {
 		NeedLocationPermissions,
 		WorldTrackingUnstable,
 		WaitingForLocation,
+		WaitingForAvailabilityCheck,
 		GeoDataNotLoaded,
 		DevicePointedTooLow,
 		VisualLocalizationFailed,
