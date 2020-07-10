@@ -1,4 +1,4 @@
-﻿//
+//
 // ClockKit bindings
 //
 // Authors:
@@ -14,7 +14,7 @@ using UIKit;
 
 namespace ClockKit {
 
-	[Watch (7,0), iOS (14, 0)]
+	[Watch (7,0)]
 	[ErrorDomain ("CLKWatchFaceLibraryErrorDomain")]
 	[Native]
 	public enum CLKWatchFaceLibraryErrorCode : long {
@@ -58,7 +58,7 @@ namespace ClockKit {
 		[Export ("getSupportedTimeTravelDirectionsForComplication:withHandler:")]
 		void GetSupportedTimeTravelDirections (CLKComplication complication, Action<CLKComplicationTimeTravelDirections> handler);
 
-		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Backwards extension and time travel is not longer supported.")]
+		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Backwards extension and time travel are not longer supported.")]
 		[Export ("getTimelineStartDateForComplication:withHandler:")]
 		void GetTimelineStartDate (CLKComplication complication, Action<NSDate> handler);
 
@@ -79,7 +79,7 @@ namespace ClockKit {
 		[Export ("getCurrentTimelineEntryForComplication:withHandler:")]
 		void GetCurrentTimelineEntry (CLKComplication complication, Action<CLKComplicationTimelineEntry> handler);
 
-		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Backwards extension and time travel is not longer supported.")]
+		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Backwards extension and time travel are not longer supported.")]
 		[Export ("getTimelineEntriesForComplication:beforeDate:limit:withHandler:")]
 		void GetTimelineEntriesBeforeDate (CLKComplication complication, NSDate beforeDate, nuint limit, Action<CLKComplicationTimelineEntry []> handler);
 
@@ -157,7 +157,7 @@ namespace ClockKit {
 		[NullAllowed, Export ("tintColor", ArgumentSemantic.Copy)]
 		UIColor TintColor { get; set; }
 
-		[Deprecated (PlatformName.iOS, 14, 0, message: "Use the provided factories instead.")]
+		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Use the provided factories instead.")]
 		[Export ("init")]
 		IntPtr Constructor ();
 	}
@@ -900,7 +900,7 @@ namespace ClockKit {
 	[DisableDefaultCtor]
 	interface CLKImageProvider : NSCopying {
 
-		[Deprecated (PlatformName.iOS, 14, 0)] 
+		[Deprecated (PlatformName.WatchOS, 7, 0)] 
 		[Export ("init")]
 		IntPtr Constructor ();
 
