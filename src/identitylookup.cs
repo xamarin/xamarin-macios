@@ -21,7 +21,17 @@ namespace IdentityLookup {
 	public enum ILMessageFilterAction : long {
 		None = 0,
 		Allow = 1,
-		Filter = 2,
+		Junk = 2,
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'Junk' instead.")]
+		Filter = Junk,
+#endif
+		[iOS (14,0)]
+		[Introduced (PlatformName.MacCatalyst, 14,0)]
+		Promotion = 3,
+		[iOS (14,0)]
+		[Introduced (PlatformName.MacCatalyst, 14,0)]
+		Transaction = 4,
 	}
 
 	[iOS (11,0)]
