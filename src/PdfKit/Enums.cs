@@ -75,7 +75,8 @@ namespace PdfKit {
 	public enum PdfMarkupType : long {
 		Highlight = 0,
 		StrikeOut = 1,
-		Underline = 2
+		Underline = 2,
+		Redact    = 3,
 	}
 
 	[iOS (11,0)]

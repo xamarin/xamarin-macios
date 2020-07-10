@@ -139,6 +139,10 @@ namespace SafariServices {
 		[iOS (11,0)]
 		[Export ("safariViewController:initialLoadDidRedirectToURL:")]
 		void InitialLoadDidRedirectToUrl (SFSafariViewController controller, NSUrl url);
+
+		[iOS (14,0)]
+		[Export ("safariViewControllerWillOpenInBrowser:")]
+		void WillOpenInBrowser (SFSafariViewController controller);
 	}
 
 	[iOS (11,0)]
