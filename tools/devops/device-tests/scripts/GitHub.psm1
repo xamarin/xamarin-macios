@@ -353,7 +353,7 @@ function New-GitHubSummaryComment {
     $request = $null
 
     if (-not (Test-Path $TestSummaryPath -PathType Leaf)) {
-        Write-Host "Not test summary found"
+        Write-Host "No test summary found"
         Set-GitHubStatus -Status "failure" -Description "Tests failed catastrophically on $Context (no summary found)." -Context "$Context"
         $request = New-GitHubComment -Header "Tests failed catastrophically on $Context (no summary found)." -Emoji ":fire:" -Description "Result file $TestSummaryPath not found. $headerLinks"
     } else {
