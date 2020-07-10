@@ -496,6 +496,7 @@ namespace PhotosUI {
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
 	[BaseType (typeof (UIViewController))]
+	[Advice ("This type should not be subclassed.")]
 	[DisableDefaultCtor]
 	interface PHPickerViewController
 	{
@@ -515,6 +516,7 @@ namespace PhotosUI {
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
 	[BaseType (typeof (NSObject))]
+	[Advice ("This type should not be subclassed.")]
 	interface PHPickerConfiguration : NSCopying
 	{
 		[Export ("selectionLimit")]
@@ -529,7 +531,7 @@ namespace PhotosUI {
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
 	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor]
+	[Advice ("This type should not be subclassed.")]	[DisableDefaultCtor]
 	interface PHPickerFilter : NSCopying
 	{
 		[Static]
@@ -546,11 +548,12 @@ namespace PhotosUI {
 
 		[Static]
 		[Export ("anyFilterMatchingSubfilters:")]
-		PHPickerFilter AnyFilterMatchingSubfilters (PHPickerFilter[] subfilters);
+		PHPickerFilter GetAnyFilterMatchingSubfilters (PHPickerFilter[] subfilters);
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
 	[BaseType (typeof (NSObject))]
+	[Advice ("This type should not be subclassed.")]
 	[DisableDefaultCtor]
 	interface PHPickerResult
 	{
