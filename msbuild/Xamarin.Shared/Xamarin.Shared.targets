@@ -509,7 +509,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 				<SigningKey>$(CodesignKey)</SigningKey>
 				<Keychain>$(CodesignKeychain)</Keychain>
 				<DisableTimestamp>False</DisableTimestamp>
-				<DisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(MtouchDebug)' == 'true'">True</DisableTimestamp>
+				<DisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(_BundlerDebug)' == 'true'">True</DisableTimestamp>
 				<CodesignAllocate>$(_CodesignAllocate)</CodesignAllocate>
 				<ResourceRules>$(CodesignResourceRules)</ResourceRules>
 				<NativeExecutable>%(AdditionalAppExtensions.Filename)</NativeExecutable>
@@ -520,4 +520,3 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets')"/>
 </Project>
-
