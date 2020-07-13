@@ -941,7 +941,7 @@ namespace ClockKit {
 	[DisableDefaultCtor]
 	interface CLKTextProvider : NSCopying {
  
-		[Deprecated (PlatformName.iOS, 14, 0, message: "Use overloaded constructors..")]
+		[Deprecated (PlatformName.iOS, 14, 0, message: "Use overloaded constructors.")]
 		[Export ("init")]
 		IntPtr Constructor ();
 
