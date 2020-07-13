@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using NUnit.Framework;
 
@@ -7,19 +7,19 @@ using Xamarin.MacDev.Tasks;
 namespace Xamarin.iOS.Tasks
 {
 	[TestFixture]
-	public class ParseMtouchExtraArgsTests : TestBase
+	public class ParseBundlerArgumentsTests : TestBase
 	{
-		class CustomMtouchExtraArgs : ParseExtraMtouchArgsTaskBase {}
+		class CustomParseBundlerArguments : ParseBundlerArgumentsTaskBase {}
 
 		[Test]
 		public void NoExtraArgs ()
 		{
-			var task = CreateTask<CustomMtouchExtraArgs> ();
+			var task = CreateTask<CustomParseBundlerArguments> ();
 			Assert.IsTrue (task.Execute (), "execute");
 			Assert.AreEqual ("false", task.NoSymbolStrip, "nosymbolstrip");
 			Assert.AreEqual ("false", task.NoDSymUtil, "nodsymutil");
 
-			task = CreateTask<CustomMtouchExtraArgs> ();
+			task = CreateTask<CustomParseBundlerArguments> ();
 			task.ExtraArgs = string.Empty;
 			Assert.IsTrue (task.Execute (), "execute");
 			Assert.AreEqual ("false", task.NoSymbolStrip, "nosymbolstrip");
@@ -40,7 +40,7 @@ namespace Xamarin.iOS.Tasks
 			};
 
 			foreach (var variation in false_variations) {
-				var task = CreateTask<CustomMtouchExtraArgs> ();
+				var task = CreateTask<CustomParseBundlerArguments> ();
 				task.ExtraArgs = variation;
 				Assert.IsTrue (task.Execute (), "execute: " + variation);
 				Assert.AreEqual ("false", task.NoSymbolStrip, "nosymbolstrip: " + variation);
@@ -48,7 +48,7 @@ namespace Xamarin.iOS.Tasks
 			}
 
 			foreach (var variation in true_variations) {
-				var task = CreateTask<CustomMtouchExtraArgs> ();
+				var task = CreateTask<CustomParseBundlerArguments> ();
 				task.ExtraArgs = variation;
 				Assert.IsTrue (task.Execute (), "execute: " + variation);
 				Assert.AreEqual ("true", task.NoSymbolStrip, "nosymbolstrip: " + variation);
@@ -71,7 +71,7 @@ namespace Xamarin.iOS.Tasks
 			};
 
 			foreach (var variation in false_variations) {
-				var task = CreateTask<CustomMtouchExtraArgs> ();
+				var task = CreateTask<CustomParseBundlerArguments> ();
 				task.ExtraArgs = variation;
 				Assert.IsTrue (task.Execute (), "execute: " + variation);
 				Assert.AreEqual ("false", task.NoSymbolStrip, "nosymbolstrip: " + variation);
@@ -79,7 +79,7 @@ namespace Xamarin.iOS.Tasks
 			}
 
 			foreach (var variation in true_variations) {
-				var task = CreateTask<CustomMtouchExtraArgs> ();
+				var task = CreateTask<CustomParseBundlerArguments> ();
 				task.ExtraArgs = variation;
 				Assert.IsTrue (task.Execute (), "execute: " + variation);
 				Assert.AreEqual ("false", task.NoSymbolStrip, "nosymbolstrip: " + variation);

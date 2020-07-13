@@ -87,6 +87,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			_TemperMetal;
 			_CompileEntitlements;
 			_CompileAppManifest;
+			_ParseBundlerArguments;
 			_CompileToNative;
 			_CreatePkgInfo;
 			_CopyAppExtensionsToBundle;
@@ -371,7 +372,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			HttpClientHandler="$(HttpClientHandler)"
 			I18n="$(I18n)"
 			Profiling="$(Profiling)"
-			ExtraArgs="$(MonoBundlingExtraArgs)"
+			ExtraArgs="$(_BundlerArguments)"
 			NativeReferences="@(NativeReference)"
 			References="@(ReferencePath);@(ReferenceCopyLocalAssemblyPaths)"
 			ResponseFilePath="$(IntermediateOutputPath)response-file.rsp"
