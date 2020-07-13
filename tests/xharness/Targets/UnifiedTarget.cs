@@ -128,6 +128,11 @@ namespace Xharness.Targets {
 			}
 		}
 
+		public override string DotNetSdk => "Microsoft.iOS.Sdk";
+		public override string RuntimeIdentifier => "ios-x64";
+		public override DevicePlatform ApplePlatform => DevicePlatform.iOS;
+		public override string TargetFrameworkForNuGet => "xamarinios10";
+
 		protected override void ExecuteInternal ()
 		{
 			if (MonoNativeInfo == null)

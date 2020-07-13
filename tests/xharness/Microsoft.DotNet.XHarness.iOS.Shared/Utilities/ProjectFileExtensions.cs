@@ -151,11 +151,14 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 			return GetElementValue (csproj, platform, configuration, "OutputPath");
 		}
 
-		static string GetElementValue (this XmlDocument csproj, string platform, string configuration, string elementName)
+		static string GetElementValue (this XmlDocument csproj, string platform, string configuration, string elementName, bool throwIfNotFound = true)
 		{
 			var nodes = csproj.SelectNodes ($"/*/*/*[local-name() = '{elementName}']");
-			if (nodes.Count == 0)
-				throw new Exception ($"Could not find node {elementName}");
+			if (nodes.Count == 0) {
+				if (throwIfNotFound)
+					throw new Exception ($"Could not find node {elementName}");
+				return null;
+			}
 			foreach (XmlNode n in nodes) {
 				if (IsNodeApplicable (n, platform, configuration))
 					return n.InnerText.Replace ("$(Platform)", platform).Replace ("$(Configuration)", configuration);
@@ -180,6 +183,11 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 				throw new NotImplementedException (outputType);
 			}
 			return outputPath + "\\" + assemblyName + "." + extension; // MSBuild-style paths.
+		}
+
+		public static string GetIsBindingProject (this XmlDocument csproj)
+		{
+			return GetElementValue (csproj, string.Empty, string.Empty, "IsBindingProject", throwIfNotFound: false);
 		}
 
 		public static void SetIntermediateOutputPath (this XmlDocument csproj, string value)
@@ -433,19 +441,21 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 		}
 
 		public delegate bool FixReferenceDelegate (string reference, out string fixed_reference);
-		public static void FixProjectReferences (this XmlDocument csproj, string suffix, FixReferenceDelegate fixCallback = null)
+		public static void FixProjectReferences (this XmlDocument csproj, string suffix, FixReferenceDelegate fixCallback = null, FixReferenceDelegate fixIncludeCallback = null)
 		{
 			var nodes = csproj.SelectNodes ("/*/*/*[local-name() = 'ProjectReference']");
 			if (nodes.Count == 0)
 				return;
 			foreach (XmlNode n in nodes) {
-				var name = n ["Name"].InnerText;
+				var name = n ["Name"]?.InnerText;
 				string fixed_name = null;
-				if (fixCallback != null && !fixCallback (name, out fixed_name))
+				if (name != null && fixCallback != null && !fixCallback (name, out fixed_name))
 					continue;
 				var include = n.Attributes ["Include"];
 				string fixed_include;
-				if (fixed_name == null) {
+				if (fixIncludeCallback != null && fixIncludeCallback (include.Value, out fixed_include)) {
+					// we're done here
+				} else if (fixed_name == null) {
 					fixed_include = include.Value;
 					fixed_include = fixed_include.Replace (".csproj", suffix + ".csproj");
 					fixed_include = fixed_include.Replace (".fsproj", suffix + ".fsproj");
@@ -456,9 +466,11 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 					fixed_include = fixed_include.Replace ('/', '\\');
 				}
 				n.Attributes ["Include"].Value = fixed_include;
-				var nameElement = n ["Name"];
-				name = System.IO.Path.GetFileNameWithoutExtension (fixed_include.Replace ('\\', '/'));
-				nameElement.InnerText = name;
+				if (name != null) {
+					var nameElement = n ["Name"];
+					name = System.IO.Path.GetFileNameWithoutExtension (fixed_include.Replace ('\\', '/'));
+					nameElement.InnerText = name;
+				}
 			}
 		}
 
@@ -632,10 +644,41 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 			}
 		}
 
+		public static void SetSdk (this XmlDocument csproj, string sdk)
+		{
+			var node = csproj.SelectSingleNode ("//*[local-name() = 'Project']");
+			if (node == null)
+				throw new Exception ($"Could not find a 'Project' node");
+			var attrib = node.Attributes ["Sdk"];
+			if (attrib == null)
+				throw new Exception ($"The 'Project' node doesn't have an 'Sdk' attribute");
+			attrib.Value = sdk;
+		}
+
+		public static void SetRuntimeIdentifier (this XmlDocument csproj, string runtimeIdentifier)
+		{
+			var node = csproj.SelectSingleNode ("//*[local-name() = 'RuntimeIdentifier']");
+			if (node == null)
+				throw new Exception ($"Could not find a 'RuntimeIdentifier' node");
+			node.InnerText = runtimeIdentifier;
+		}
+
 		public static void SetProjectReferenceValue (this XmlDocument csproj, string projectInclude, string node, string value)
 		{
 			var nameNode = csproj.SelectSingleNode ("//*[local-name() = 'ProjectReference' and @Include = '" + projectInclude + "']/*[local-name() = '" + node + "']");
 			nameNode.InnerText = value;
+		}
+
+		public static string GetAssetTargetFallback (this XmlDocument csproj)
+		{
+			return csproj.SelectSingleNode ("//*[local-name() = 'AssetTargetFallback']")?.InnerText;
+		}
+
+		public static void SetAssetTargetFallback (this XmlDocument csproj, string value)
+		{
+			var node = csproj.SelectSingleNode ("//*[local-name() = 'AssetTargetFallback']");
+			if (node != null)
+				node.InnerText = value;
 		}
 
 		public static void SetProjectReferenceInclude (this XmlDocument csproj, string projectInclude, string value)
