@@ -548,6 +548,17 @@ namespace CoreGraphics {
 				return CGColorSpaceIsHDR (handle);
 			}
 		}
+
+		[iOS (14,0)][TV (14,0)][Watch (7,0)][Mac (10,16)]
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern bool CGColorSpaceUsesExtendedRange (/* CGColorSpaceRef */ IntPtr space);
+
+		[iOS (14,0)][TV (14,0)][Watch (7,0)][Mac (10,16)]
+		public bool UsesExtendedRange {
+			get {
+				return CGColorSpaceUsesExtendedRange (handle);
+			}
+		}
 #endif // !COREBUILD
 	}
 }

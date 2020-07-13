@@ -94,7 +94,6 @@ namespace CoreGraphics {
 			handle = CGColorCreate (colorspace.handle, components);
 		}
 
-#if !XAMCORE_3_0 || MONOMAC
 		[DllImport(Constants.CoreGraphicsLibrary)]
 		extern static /* CGColorRef */ IntPtr CGColorCreateGenericGray (/* CGFloat */ nfloat gray, /* CGFloat */ nfloat alpha);
 
@@ -131,7 +130,18 @@ namespace CoreGraphics {
 				CGColorRetain (handle);
 			}
 		}
-#endif
+
+		[iOS (14,0)][TV (14,0)][Watch (7,0)]
+		public CGColor (CGConstantColor color)
+		{
+			var constant = color.GetConstant ();
+			if (constant == null)
+				throw new ArgumentNullException (nameof (color));
+			handle = CGColorGetConstantColor (constant.Handle);
+			if (handle == IntPtr.Zero)
+				throw new ArgumentException (nameof (color));
+			CGColorRetain (handle);
+		}
 
 		[DllImport(Constants.CoreGraphicsLibrary)]
 		extern static /* CGColorRef */ IntPtr CGColorCreateWithPattern (/* CGColorSpaceRef */ IntPtr space, /* CGPatternRef */ IntPtr pattern, /* const CGFloat[] */ nfloat [] components);
@@ -307,6 +317,17 @@ namespace CoreGraphics {
 		static public CGColor CreateGenericGrayGamma2_2 (nfloat gray, nfloat alpha)
 		{
 			var h = CGColorCreateGenericGrayGamma2_2 (gray, alpha);
+			return h == IntPtr.Zero ? null : new CGColor (h);
+		}
+
+		[iOS (14,0)][TV (14,0)][Watch (7,0)][Mac (10,16)]
+		[DllImport(Constants.CoreGraphicsLibrary)]
+		static extern /* CGColorRef */ IntPtr CGColorCreateGenericCMYK (nfloat cyan, nfloat magenta, nfloat yellow, nfloat black, nfloat alpha);
+
+		[iOS (14,0)][TV (14,0)][Watch (7,0)][Mac (10,16)]
+		static public CGColor CreateCmyk (nfloat cyan, nfloat magenta, nfloat yellow, nfloat black, nfloat alpha)
+		{
+			var h = CGColorCreateGenericCMYK (cyan, magenta, yellow, black, alpha);
 			return h == IntPtr.Zero ? null : new CGColor (h);
 		}
 #endif // !COREBUILD
