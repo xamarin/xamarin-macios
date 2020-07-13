@@ -28,6 +28,11 @@ namespace Xharness.Targets {
 			get { return "ARMv7k, ARM64_32"; }
 		}
 
+		public override string DotNetSdk => "Microsoft.watchOS.Sdk";
+		public override string RuntimeIdentifier => throw new NotImplementedException ();
+		public override DevicePlatform ApplePlatform => DevicePlatform.watchOS;
+		public override string TargetFrameworkForNuGet => "xamarinwatch10";
+
 		void CreateWatchOSAppProject ()
 		{
 			var csproj = new XmlDocument ();
