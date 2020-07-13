@@ -101,6 +101,8 @@
 !missing-field! kCTUnderlineStyleAttributeName not bound
 !missing-field! kCTVerticalFormsAttributeName not bound
 !missing-field! kCTWritingDirectionAttributeName not bound
+!missing-field! kCTFontOpticalSizeAttribute not bound
+!missing-field! kCTFontVariationAxesAttribute not bound
 !missing-pinvoke! CTFontCollectionGetTypeID is not bound
 !missing-pinvoke! CTFontDescriptorCreateCopyWithFamily is not bound
 !missing-pinvoke! CTFontDescriptorCreateCopyWithSymbolicTraits is not bound
