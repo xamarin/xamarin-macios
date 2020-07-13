@@ -37,6 +37,6 @@
 		<string>NativeTodayExtension</string>
 	</dict>
 	<key>NSHumanReadableCopyright</key>
-	<string>Copyright © 2020 Chris Hamons. All rights reserved.</string>
+	<string>Copyright 2020 Microsoft Inc</string>
 </dict>
 </plist>
