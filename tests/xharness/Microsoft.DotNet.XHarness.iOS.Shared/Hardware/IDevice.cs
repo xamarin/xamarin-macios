@@ -19,6 +19,24 @@
 		macOS,
 	}
 
+	public static class DevicePlatform_Extensions {
+		public static string AsString (this DevicePlatform value)
+		{
+			switch (value) {
+			case DevicePlatform.iOS:
+				return "iOS";
+			case DevicePlatform.tvOS:
+				return "tvOS";
+			case DevicePlatform.watchOS:
+				return "watchOS";
+			case DevicePlatform.macOS:
+				return "macOS";
+			default:
+				throw new System.Exception ($"Unknown platform: {value}");
+			}
+		}
+	}
+
 	public interface IDevice {
 		string Name { get; }
 		string UDID { get; }

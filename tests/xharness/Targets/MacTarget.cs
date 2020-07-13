@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.DotNet.XHarness.iOS.Shared;
+using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
 namespace Xharness.Targets
@@ -112,7 +113,12 @@ namespace Xharness.Targets
 				return "mac";
 			}
 		}
-		
+
+		public override string DotNetSdk => "Microsoft.macOS.Sdk";
+		public override string RuntimeIdentifier => "osx-x64";
+		public override DevicePlatform ApplePlatform => DevicePlatform.macOS;
+		public override string TargetFrameworkForNuGet => "xamarinmac10";
+
 		public MonoNativeInfo MonoNativeInfo { get; set; }
 
 		protected override bool FixProjectReference (string name, out string fixed_name)
