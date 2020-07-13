@@ -647,12 +647,19 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 		public static void SetSdk (this XmlDocument csproj, string sdk)
 		{
 			var node = csproj.SelectSingleNode ("//*[local-name() = 'Project']");
-			node.Attributes ["Sdk"].Value = sdk;
+			if (node == null)
+				throw new Exception ($"Could not find a 'Project' node");
+			var attrib = node.Attributes ["Sdk"];
+			if (attrib == null)
+				throw new Exception ($"The 'Project' node doesn't have an 'Sdk' attribute");
+			attrib.Value = sdk;
 		}
 
 		public static void SetRuntimeIdentifier (this XmlDocument csproj, string runtimeIdentifier)
 		{
 			var node = csproj.SelectSingleNode ("//*[local-name() = 'RuntimeIdentifier']");
+			if (node == null)
+				throw new Exception ($"Could not find a 'RuntimeIdentifier' node");
 			node.InnerText = runtimeIdentifier;
 		}
 

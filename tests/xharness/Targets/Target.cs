@@ -77,18 +77,7 @@ namespace Xharness.Targets
 
 		public string PlatformString {
 			get {
-				switch (ApplePlatform) {
-				case DevicePlatform.iOS:
-					return "iOS";
-				case DevicePlatform.tvOS:
-					return "tvOS";
-				case DevicePlatform.watchOS:
-					return "watchOS";
-				case DevicePlatform.macOS:
-					return "macOS";
-				default:
-					throw new Exception ($"Unknown platform: {ApplePlatform}");
-				}
+				return ApplePlatform.AsString ();
 			}
 		}
 
