@@ -12,3 +12,9 @@
 
 ## NSInvalidArgumentException Reason: You must call -[CKMarkNotificationsReadOperation initWithNotificationIDsToMarkRead:]
 !missing-selector! CKMarkNotificationsReadOperation::init not bound
+
+# all of them deprecated and marked with the [Obsoleted] attr.
+!unknown-native-enum! CKSubscriptionOptions bound
+!unknown-type! CKDiscoverAllContactsOperation bound
+!unknown-type! CKDiscoveredUserInfo bound
+!unknown-type! CKDiscoverUserInfosOperation bound

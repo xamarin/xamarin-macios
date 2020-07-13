@@ -155,8 +155,10 @@ namespace CloudKit
 
 	[NoWatch]
 	[iOS (8, 0)]
+	[Obsoleted (PlatformName.iOS, 14, 0, message : "Use 'CKQuerySubscriptionOptions' instead.")]
 	[Deprecated (PlatformName.iOS, 10, 0, message : "Use 'CKQuerySubscriptionOptions' instead.")]
 	[Mac (10, 10)]
+	[Obsoleted (PlatformName.MacOSX, 10, 16, message : "Use 'CKQuerySubscriptionOptions' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 12, message : "Use 'CKQuerySubscriptionOptions' instead.")]
 	[Flags]
 	[Native]
