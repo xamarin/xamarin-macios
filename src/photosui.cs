@@ -531,7 +531,8 @@ namespace PhotosUI {
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
 	[BaseType (typeof (NSObject))]
-	[Advice ("This type should not be subclassed.")]	[DisableDefaultCtor]
+	[Advice ("This type should not be subclassed.")]
+	[DisableDefaultCtor]
 	interface PHPickerFilter : NSCopying
 	{
 		[Static]
