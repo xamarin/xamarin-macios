@@ -58,7 +58,7 @@ namespace Xamarin.MacDev.Tasks {
 						NoSymbolStrip = string.IsNullOrEmpty (value) ? "true" : "false";
 						break;
 					case "dsym":
-						NoDSymUtil = ParseBool (arg.Substring (5)) ? "false" : "true";
+						NoDSymUtil = ParseBool (value) ? "false" : "true";
 						break;
 					default:
 						break;
