@@ -283,7 +283,7 @@ namespace CoreGraphics {
 		{
 			var h = CGColorCreateCopyByMatchingToColorSpace (space == null ? IntPtr.Zero : space.Handle, intent,
 				color == null ? IntPtr.Zero : color.Handle, options == null ? IntPtr.Zero : options.Handle);
-			return h == IntPtr.Zero ? null : new CGColor (h);
+			return h == IntPtr.Zero ? null : new CGColor (h, owns: true);
 		}
 
 		[Mac (10,15)]
@@ -300,7 +300,7 @@ namespace CoreGraphics {
 		static public CGColor CreateSrgb (nfloat red, nfloat green, nfloat blue, nfloat alpha)
 		{
 			var h = CGColorCreateSRGB (red, green, blue, alpha);
-			return h == IntPtr.Zero ? null : new CGColor (h);
+			return h == IntPtr.Zero ? null : new CGColor (h, owns: true);
 		}
 
 		[Mac (10,15)]
@@ -317,7 +317,7 @@ namespace CoreGraphics {
 		static public CGColor CreateGenericGrayGamma2_2 (nfloat gray, nfloat alpha)
 		{
 			var h = CGColorCreateGenericGrayGamma2_2 (gray, alpha);
-			return h == IntPtr.Zero ? null : new CGColor (h);
+			return h == IntPtr.Zero ? null : new CGColor (h, owns: true);
 		}
 
 		[iOS (14,0)][TV (14,0)][Watch (7,0)][Mac (10,16)]
@@ -328,7 +328,7 @@ namespace CoreGraphics {
 		static public CGColor CreateCmyk (nfloat cyan, nfloat magenta, nfloat yellow, nfloat black, nfloat alpha)
 		{
 			var h = CGColorCreateGenericCMYK (cyan, magenta, yellow, black, alpha);
-			return h == IntPtr.Zero ? null : new CGColor (h);
+			return h == IntPtr.Zero ? null : new CGColor (h, owns: true);
 		}
 #endif // !COREBUILD
 	}

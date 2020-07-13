@@ -78,11 +78,11 @@ namespace CoreGraphics {
 		IntPtr kCGPDFContextAccessPermissions { get; }
 
 		[Mac (10,16)][iOS (14,0)][TV (14,0)][Watch (7,0)]
-		[Field ("kCGPDFContextCreateLinearizedPDF")]
+		[Internal][Field ("kCGPDFContextCreateLinearizedPDF")]
 		IntPtr kCGPDFContextCreateLinearizedPDF { get; }
 
 		[Mac (10,16)][iOS (14,0)][TV (14,0)][Watch (7,0)]
-		[Field ("kCGPDFContextCreatePDFA")]
+		[Internal][Field ("kCGPDFContextCreatePDFA")]
 		IntPtr kCGPDFContextCreatePDFA { get; }
 	}
 
@@ -215,14 +215,18 @@ namespace CoreGraphics {
 
 		[Mac (10,14)][iOS (12,0)]
 		[TV (12,0)][Watch (5,0)]
-		[Deprecated (PlatformName.MacOSX, 10,15,4)]
-		[Deprecated (PlatformName.iOS, 13,4)]
-		[Deprecated (PlatformName.TvOS, 13,4)]
-		[Deprecated (PlatformName.WatchOS, 6,2)]
+		[Deprecated (PlatformName.MacOSX, 10,15,4, message: "Use 'Itur_2100_PQ' instead.")]
+		[Deprecated (PlatformName.iOS, 13,4, message: "Use 'Itur_2100_PQ' instead.")]
+		[Deprecated (PlatformName.TvOS, 13,4, message: "Use 'Itur_2100_PQ' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6,2, message: "Use 'Itur_2100_PQ' instead.")]
 		[Field ("kCGColorSpaceITUR_2020_PQ_EOTF")]
 		NSString Itur_2020_PQ_Eotf { get; }
 
 		[Mac (10,15,4), iOS (13,4), TV (13,4), Watch (6,2)]
+		[Deprecated (PlatformName.MacOSX, 10,16, message: "Use 'Itur_2100_PQ' instead.")]
+		[Deprecated (PlatformName.iOS, 14,0, message: "Use 'Itur_2100_PQ' instead.")]
+		[Deprecated (PlatformName.TvOS, 14,0, message: "Use 'Itur_2100_PQ' instead.")]
+		[Deprecated (PlatformName.WatchOS, 7,0, message: "Use 'Itur_2100_PQ' instead.")]
 		[Field ("kCGColorSpaceITUR_2020_PQ")]
 		NSString Itur_2020_PQ { get; }
 
@@ -246,10 +250,10 @@ namespace CoreGraphics {
 
 		[Mac (10,15)][iOS (13,0)]
 		[TV (13,0)][Watch (6,0)]
-		[Deprecated (PlatformName.MacOSX, 10,16)]
-		[Deprecated (PlatformName.iOS, 14,0)]
-		[Deprecated (PlatformName.TvOS, 14,0)]
-		[Deprecated (PlatformName.WatchOS, 7,0)]
+		[Deprecated (PlatformName.MacOSX, 10,16, message: "Use 'Itur_2100_PQ' instead.")]
+		[Deprecated (PlatformName.iOS, 14,0, message: "Use 'Itur_2100_PQ' instead.")]
+		[Deprecated (PlatformName.TvOS, 14,0, message: "Use 'Itur_2100_PQ' instead.")]
+		[Deprecated (PlatformName.WatchOS, 7,0, message: "Use 'Itur_2100_PQ' instead.")]
 		[Field ("kCGColorSpaceITUR_2020_HLG")]
 		NSString Itur_2020_Hlg { get; }
 
