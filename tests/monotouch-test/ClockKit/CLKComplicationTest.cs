@@ -21,7 +21,7 @@ namespace MonoTouchFixtures.ClockKit {
 		public void GetAllComplicationFamiliesTest ()
 		{
 			var families = CLKComplication.GetAllComplicationFamilies ();
-			Assert.IsNotNull (families, "Falimies should not be null.");
+			Assert.IsNotNull (families, "Families should not be null.");
 		}
 	}
 }
