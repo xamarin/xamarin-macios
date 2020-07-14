@@ -104,6 +104,9 @@ namespace Xharness.Targets
 			case "Touch.Client-iOS.dotnet.csproj":
 			case "Touch.Client-iOS.csproj":
 				var dir = Path.GetDirectoryName (include);
+				var parentDir = Path.GetFileName (dir);
+				if (parentDir == "iOS")
+					dir = Path.Combine (Path.GetDirectoryName (dir), PlatformString);
 				fixed_include = Path.Combine (dir, fn.Replace ("-iOS", "-" + PlatformString));
 				break;
 			default:

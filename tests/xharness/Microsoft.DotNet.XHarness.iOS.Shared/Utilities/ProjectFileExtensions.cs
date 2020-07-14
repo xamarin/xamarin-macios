@@ -269,6 +269,13 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 				reference.ParentNode.RemoveChild (reference);
 		}
 
+		public static void RemovePackageReference (this XmlDocument csproj, string projectName)
+		{
+			var reference = csproj.SelectSingleNode ("/*/*/*[local-name() = 'PackageReference' and @Include = '" + projectName + "']");
+			if (reference != null)
+				reference.ParentNode.RemoveChild (reference);
+		}
+
 		public static void AddCompileInclude (this XmlDocument csproj, string link, string include, bool prepend = false)
 		{
 			AddInclude (csproj, "Compile", link, include, prepend);
