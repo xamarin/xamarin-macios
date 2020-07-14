@@ -380,7 +380,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			Profiling="$(Profiling)"
 			ExtraArgs="$(_BundlerArguments)"
 			NativeReferences="@(NativeReference)"
-			References="@(ReferencePath);@(ReferenceCopyLocalAssemblyPaths)"
+			References="@(ReferencePath);@(MmpReferencePath)"
 			ResponseFilePath="$(IntermediateOutputPath)response-file.rsp"
 			SdkRoot="$(_SdkDevPath)"
 			IntermediateOutputPath="$(IntermediateOutputPath)mmp-cache"
