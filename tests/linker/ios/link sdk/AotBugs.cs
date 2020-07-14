@@ -35,6 +35,9 @@ namespace LinkSdk.Aot {
 	
 	interface IAotTest {
 	}
+
+	interface IExpectException {
+	}
 	
 	[TestFixture]
 	// already done in Bug2096Test.cs -> [Preserve (AllMembers = true)]
