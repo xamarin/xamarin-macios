@@ -179,7 +179,7 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			// null values are fine
 			using (var l = main.GetLocalizedString (null, null, null))
-				Assert.That (l.Length, Is.EqualTo (0), "null,null,null");
+				Assert.That (l.Length, Is.EqualTo ((nint) 0), "null,null,null");
 
 			// NoKey does not exists so the same string is returned
 			using (var l = main.GetLocalizedString ("NoKey", null, null))

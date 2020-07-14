@@ -320,16 +320,16 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			Assert.Throws<ArgumentNullException> (() => NSData.FromString (null), "1-null");
 			var d = NSData.FromString (String.Empty);
-			Assert.That (d.Length, Is.EqualTo (0), "1-empty");
+			Assert.That (d.Length, Is.EqualTo ((nuint) 0), "1-empty");
 
 			Assert.Throws<ArgumentNullException> (() => NSData.FromString (null, NSStringEncoding.Unicode), "2-null");
 			d = NSData.FromString (String.Empty, NSStringEncoding.Unicode);
-			Assert.That (d.Length, Is.EqualTo (2), "2-empty"); // 0xfffe unicode header
+			Assert.That (d.Length, Is.EqualTo ((nuint) 2), "2-empty"); // 0xfffe unicode header
 
 			// not sure it was a good choice to throw here (but breaking it would be worse)
 			Assert.Throws<ArgumentNullException> (() => d = ((NSData) (string) null), "as-null");
 			d = (NSData) String.Empty;
-			Assert.That (d.Length, Is.EqualTo (0), "as-empty");
+			Assert.That (d.Length, Is.EqualTo ((nuint) 0), "as-empty");
 		}
 
 		[Test]

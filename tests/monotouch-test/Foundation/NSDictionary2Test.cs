@@ -17,7 +17,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void Ctor ()
 		{
 			var dict = new NSDictionary<NSDate, NSSet> ();
-			Assert.AreEqual (0, dict.Count, "Count");
+			Assert.AreEqual ((nuint) 0, dict.Count, "Count");
 		}
 
 		//
@@ -30,7 +30,7 @@ namespace MonoTouchFixtures.Foundation {
 			var value = new NSString ("value");
 
 			var j = new NSDictionary<NSString, NSString> (key, value);
-			Assert.AreEqual (j.Count, 1, "count");
+			Assert.AreEqual (j.Count, (nuint) 1, "count");
 			Assert.AreEqual (j [key], value, "key lookup");
 		}
 
@@ -41,7 +41,7 @@ namespace MonoTouchFixtures.Foundation {
 				new NSString[] { new NSString ("first-k"), new NSString ("second-k") },
 				new NSString[] { new NSString ("first"), new NSString ("second") }
 			);
-			Assert.AreEqual (j.Count, 2, "count");
+			Assert.AreEqual (j.Count, (nuint) 2, "count");
 			Assert.AreEqual ((string)(j [(NSString) "first-k"]), "first", "lookup1");
 			Assert.AreEqual ((string)(j [(NSString) "second-k"]), "second", "lookup2");
 		}
@@ -52,7 +52,7 @@ namespace MonoTouchFixtures.Foundation {
 			var other = new NSDictionary<NSString, NSString> ((NSString) "key", (NSString) "value");
 			var j = new NSDictionary<NSString, NSString> (other);
 
-			Assert.AreEqual (j.Count, 1, "count");
+			Assert.AreEqual (j.Count, (nuint) 1, "count");
 			Assert.AreEqual ((string)(NSString)(j ["key"]), "value", "key lookup");
 		}
 
@@ -85,7 +85,7 @@ namespace MonoTouchFixtures.Foundation {
 			};
 
 			var dict = NSDictionary<NSString, NSNumber>.FromObjectsAndKeys (values, keys, values.Length);
-			Assert.AreEqual (dict.Count, 5, "count");
+			Assert.AreEqual (dict.Count, (nuint) 5, "count");
 			for (int i = 0; i < values.Length; i++)
 				Assert.AreEqual (dict [keys [i]], values [i], $"key lookup, Iteration: {i}");
 		}
@@ -99,10 +99,10 @@ namespace MonoTouchFixtures.Foundation {
 					if (k1 >= int.MaxValue)
 						Assert.Ignore ("RetainCount unusable for testing");
 					var k2 = k1;
-					Assert.That (k.RetainCount, Is.EqualTo ((nint) 1), "Key.RetainCount-a");
+					Assert.That (k.RetainCount, Is.EqualTo ((nuint) 1), "Key.RetainCount-a");
 					var v1 = v.RetainCount;
 					var v2 = v1;
-					Assert.That (v.RetainCount, Is.EqualTo ((nint) 1), "Value.RetainCount-a");
+					Assert.That (v.RetainCount, Is.EqualTo ((nuint) 1), "Value.RetainCount-a");
 					using (var d = new NSDictionary<NSString, NSString> (k, v)) {
 						k2 = k.RetainCount;
 						Assert.That (k2, Is.GreaterThan (k1), "Key.RetainCount-b");
@@ -132,10 +132,10 @@ namespace MonoTouchFixtures.Foundation {
 					if (k1 >= int.MaxValue)
 						Assert.Ignore ("RetainCount unusable for testing");
 					var k2 = k1;
-					Assert.That (k.RetainCount, Is.EqualTo ((nint) 1), "Key.RetainCount-a");
+					Assert.That (k.RetainCount, Is.EqualTo ((nuint) 1), "Key.RetainCount-a");
 					var v1 = v.RetainCount;
 					var v2 = v1;
-					Assert.That (v.RetainCount, Is.EqualTo ((nint) 1), "Value.RetainCount-a");
+					Assert.That (v.RetainCount, Is.EqualTo ((nuint) 1), "Value.RetainCount-a");
 					using (var d = new NSDictionary<NSString, NSString> (k, v)) {
 						k2 = k.RetainCount;
 						Assert.That (k2, Is.GreaterThan (k1), "Key.RetainCount-b");

@@ -25,7 +25,7 @@ namespace MonoTouchFixtures.Foundation {
 			Assert.Throws <ArgumentNullException> (() => NSArray.FromStrings (null), "null");
 
 			using (var a = NSArray.FromStrings (new string [1])) {
-				Assert.That (a.Count, Is.EqualTo (1), "null item");
+				Assert.That (a.Count, Is.EqualTo ((nuint) 1), "null item");
 				Assert.IsNull (a.GetItem <NSString> (0), "0");
 			}
 		}
@@ -34,7 +34,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void Null ()
 		{
 			using (var a = NSArray.FromNSObjects (NSNull.Null)) {
-				Assert.That (a.Count, Is.EqualTo (1), "Count");
+				Assert.That (a.Count, Is.EqualTo ((nuint) 1), "Count");
 				Assert.IsNull (a.GetItem<NSNull> (0), "0");
 			}
 		}

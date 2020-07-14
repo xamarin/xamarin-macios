@@ -15,7 +15,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void Ctor ()
 		{
 			using (var arr = new NSMutableSet<NSDate> ()) {
-				Assert.AreEqual (0, arr.Count, "Count");
+				Assert.AreEqual ((nuint) 0, arr.Count, "Count");
 			}
 		}
 
@@ -23,10 +23,10 @@ namespace MonoTouchFixtures.Foundation {
 		public void Ctor_Params ()
 		{
 			using (var arr = new NSMutableSet<NSString> ((NSString) "foo")) {
-				Assert.AreEqual (1, arr.Count, "Count");
+				Assert.AreEqual ((nuint) 1, arr.Count, "Count");
 			}
 			using (var arr = new NSMutableSet<NSString> ((NSString) "foo", (NSString) "bar")) {
-				Assert.AreEqual (2, arr.Count, "Count");
+				Assert.AreEqual ((nuint) 2, arr.Count, "Count");
 			}
 		}
 
@@ -37,8 +37,8 @@ namespace MonoTouchFixtures.Foundation {
 
 			using (var first = new NSSet<NSString> (v1)) {
 				using (var second = new NSMutableSet<NSString> (first)) {
-					Assert.AreEqual (1, first.Count, "1 count");
-					Assert.AreEqual (1, second.Count, "2 count");
+					Assert.AreEqual ((nuint) 1, first.Count, "1 count");
+					Assert.AreEqual ((nuint) 1, second.Count, "2 count");
 				}
 			}
 		}
@@ -50,8 +50,8 @@ namespace MonoTouchFixtures.Foundation {
 
 			using (var first = new NSMutableSet<NSString> (v1)) {
 				using (var second = new NSMutableSet<NSString> (first)) {
-					Assert.AreEqual (1, first.Count, "1 count");
-					Assert.AreEqual (1, second.Count, "2 count");
+					Assert.AreEqual ((nuint) 1, first.Count, "1 count");
+					Assert.AreEqual ((nuint) 1, second.Count, "2 count");
 				}
 			}
 		}
@@ -118,7 +118,7 @@ namespace MonoTouchFixtures.Foundation {
 			using (var first = new NSMutableSet<NSString> (v1)) {
 				using (var second = new NSMutableSet<NSString> (v2)) {
 					using (var third = first + second) {
-						Assert.AreEqual (2, third.Count, "+ Count");
+						Assert.AreEqual ((nuint) 2, third.Count, "+ Count");
 						Assert.IsTrue (third.Contains (v1), "+ 1");
 						Assert.IsTrue (third.Contains (v2), "+ 2");
 					}
@@ -135,7 +135,7 @@ namespace MonoTouchFixtures.Foundation {
 			using (var first = new NSMutableSet<NSString> (v1, v2)) {
 				using (var second = new NSMutableSet<NSString> (v2)) {
 					using (var third = first - second) {
-						Assert.AreEqual (1, third.Count, "- Count");
+						Assert.AreEqual ((nuint) 1, third.Count, "- Count");
 						Assert.IsTrue (third.Contains (v1), "- 1");
 					}
 				}
@@ -166,12 +166,12 @@ namespace MonoTouchFixtures.Foundation {
 				Assert.Throws<ArgumentNullException> (() => st.Remove ((NSString) null), "Remove ANE 1");
 
 				st.Remove (v2);
-				Assert.AreEqual (1, st.Count, "Remove 1 Count");
+				Assert.AreEqual ((nuint) 1, st.Count, "Remove 1 Count");
 				Assert.IsTrue (st.Contains (v1), "Remove 1 Contains");
 				Assert.AreSame (v1, st.AnyObject, "Remove 1 AnyObject");
 
 				st.Remove (v1);
-				Assert.AreEqual (0, st.Count, "Remove 2 Count");
+				Assert.AreEqual ((nuint) 0, st.Count, "Remove 2 Count");
 			}
 		}
 
@@ -186,17 +186,17 @@ namespace MonoTouchFixtures.Foundation {
 				Assert.Throws<ArgumentNullException> (() => st.AddObjects ((NSString[]) null), "AddObjects ANE 2");
 
 				st.AddObjects (v1);
-				Assert.AreEqual (1, st.Count, "AddObjects 1 Count");
+				Assert.AreEqual ((nuint) 1, st.Count, "AddObjects 1 Count");
 				Assert.IsTrue (st.Contains (v1), "AddObjects 1 Contains");
 
 				st.RemoveAll ();
 				st.AddObjects (v1, v1);
-				Assert.AreEqual (1, st.Count, "AddObjects 2 Count");
+				Assert.AreEqual ((nuint) 1, st.Count, "AddObjects 2 Count");
 				Assert.IsTrue (st.Contains (v1), "AddObjects 2 Contains");
 
 				st.RemoveAll ();
 				st.AddObjects (v2, v1);
-				Assert.AreEqual (2, st.Count, "AddObjects 3 Count");
+				Assert.AreEqual ((nuint) 2, st.Count, "AddObjects 3 Count");
 				Assert.IsTrue (st.Contains (v1), "AddObjects 3 Contains a");
 				Assert.IsTrue (st.Contains (v2), "AddObjects 3 Contains b");
 			}
@@ -211,7 +211,7 @@ namespace MonoTouchFixtures.Foundation {
 				values [i] = (NSString) i.ToString ();
 
 			using (var st = new NSMutableSet<NSString> (values)) {
-				Assert.AreEqual (C, st.Count, "Count 1");
+				Assert.AreEqual ((nuint) C, st.Count, "Count 1");
 
 				var lst = new List<NSString> ();
 				foreach (var a in (IEnumerable<NSString>) st) {
@@ -233,7 +233,7 @@ namespace MonoTouchFixtures.Foundation {
 				values [i] = (NSString) i.ToString ();
 
 			using (var st = new NSMutableSet<NSString> (values)) {
-				Assert.AreEqual (C, st.Count, "Count 1");
+				Assert.AreEqual ((nuint) C, st.Count, "Count 1");
 
 				var lst = new List<NSString> ();
 				foreach (NSString a in (IEnumerable) st) {

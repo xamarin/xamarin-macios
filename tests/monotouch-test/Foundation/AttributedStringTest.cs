@@ -120,9 +120,9 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			using (var s1 = new NSAttributedString ("string")) {
 				using (var copy = s1.MutableCopy ())
-					Assert.That (copy.RetainCount, Is.EqualTo ((nint) 1), "Copy retaincount 1");
+					Assert.That (copy.RetainCount, Is.EqualTo ((nuint) 1), "Copy retaincount 1");
 				using (var copy = ((INSMutableCopying) s1).MutableCopy (NSZone.Default))
-					Assert.That (copy.RetainCount, Is.EqualTo ((nint) 1), "Copy retaincount 2");
+					Assert.That (copy.RetainCount, Is.EqualTo ((nuint) 1), "Copy retaincount 2");
 			}
 		}
 

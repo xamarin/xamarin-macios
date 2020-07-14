@@ -17,7 +17,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void Ctor ()
 		{
 			var dict = new NSMutableDictionary<NSDate, NSSet> ();
-			Assert.AreEqual (0, dict.Count, "Count");
+			Assert.AreEqual ((nuint) 0, dict.Count, "Count");
 		}
 
 		[Test]
@@ -26,7 +26,7 @@ namespace MonoTouchFixtures.Foundation {
 			var other = new NSDictionary<NSString, NSString> ((NSString) "key", (NSString) "value");
 			var j = new NSMutableDictionary<NSString, NSString> (other);
 
-			Assert.AreEqual (j.Count, 1, "count");
+			Assert.AreEqual (j.Count, (nuint) 1, "count");
 			Assert.AreEqual ((string)(NSString)(j [(NSString) "key"]), "value", "key lookup");
 		}
 
@@ -37,7 +37,7 @@ namespace MonoTouchFixtures.Foundation {
 			other.Add ((NSString) "key", (NSString) "value");
 			var j = new NSMutableDictionary<NSString, NSString> (other);
 
-			Assert.AreEqual (j.Count, 1, "count");
+			Assert.AreEqual (j.Count, (nuint) 1, "count");
 			Assert.AreEqual ((string)(NSString)(j [(NSString) "key"]), "value", "key lookup");
 		}
 
@@ -60,7 +60,7 @@ namespace MonoTouchFixtures.Foundation {
 			};
 
 			var dict = NSMutableDictionary<NSString, NSNumber>.FromObjectsAndKeys (values, keys, values.Length);
-			Assert.AreEqual (dict.Count, 5, "count");
+			Assert.AreEqual (dict.Count, (nuint) 5, "count");
 			for (int i = 0; i < values.Length; i++)
 				Assert.AreEqual (dict [keys [i]], values [i], $"key lookup, Iteration: {i}");
 		}
@@ -74,10 +74,10 @@ namespace MonoTouchFixtures.Foundation {
 					if (k1 >= int.MaxValue)
 						Assert.Ignore ("RetainCount unusable for testing");
 					var k2 = k1;
-					Assert.That (k.RetainCount, Is.EqualTo ((nint) 1), "Key.RetainCount-a");
+					Assert.That (k.RetainCount, Is.EqualTo ((nuint) 1), "Key.RetainCount-a");
 					var v1 = v.RetainCount;
 					var v2 = v1;
-					Assert.That (v.RetainCount, Is.EqualTo ((nint) 1), "Value.RetainCount-a");
+					Assert.That (v.RetainCount, Is.EqualTo ((nuint) 1), "Value.RetainCount-a");
 					using (var d = new NSMutableDictionary<NSString, NSString> (k, v)) {
 						k2 = k.RetainCount;
 						Assert.That (k2, Is.GreaterThan (k1), "Key.RetainCount-b");
@@ -107,10 +107,10 @@ namespace MonoTouchFixtures.Foundation {
 					if (k1 >= int.MaxValue)
 						Assert.Ignore ("RetainCount unusable for testing");
 					var k2 = k1;
-					Assert.That (k.RetainCount, Is.EqualTo ((nint) 1), "Key.RetainCount-a");
+					Assert.That (k.RetainCount, Is.EqualTo ((nuint) 1), "Key.RetainCount-a");
 					var v1 = v.RetainCount;
 					var v2 = v1;
-					Assert.That (v.RetainCount, Is.EqualTo ((nint) 1), "Value.RetainCount-a");
+					Assert.That (v.RetainCount, Is.EqualTo ((nuint) 1), "Value.RetainCount-a");
 					using (var d = new NSMutableDictionary<NSString, NSString> (k, v)) {
 						k2 = k.RetainCount;
 						Assert.That (k2, Is.GreaterThan (k1), "Key.RetainCount-b");
@@ -603,15 +603,15 @@ namespace MonoTouchFixtures.Foundation {
 			Assert.Throws<ArgumentNullException> (() => dict.Add (key1, null), "ANE 2");
 
 			dict.Add (key1, value1);
-			Assert.AreEqual (1, dict.Count, "a Count");
+			Assert.AreEqual ((nuint) 1, dict.Count, "a Count");
 			Assert.AreSame (value1, dict [key1], "a idx");
 
 			dict.Add (key1, value1);
-			Assert.AreEqual (1, dict.Count, "b Count");
+			Assert.AreEqual ((nuint) 1, dict.Count, "b Count");
 			Assert.AreSame (value1, dict [key1], "b idx");
 
 			dict.Add (key2, value1);
-			Assert.AreEqual (2, dict.Count, "c Count");
+			Assert.AreEqual ((nuint) 2, dict.Count, "c Count");
 			Assert.AreSame (value1, dict [key2], "c idx");
 		}
 
@@ -630,11 +630,11 @@ namespace MonoTouchFixtures.Foundation {
 			dict.Add (key1, value1);
 
 			dict.Remove (key2);
-			Assert.AreEqual (1, dict.Count, "a Count");
+			Assert.AreEqual ((nuint) 1, dict.Count, "a Count");
 			Assert.AreSame (value1, dict [key1], "a idx");
 
 			dict.Remove (key1);
-			Assert.AreEqual (0, dict.Count, "b Count");
+			Assert.AreEqual ((nuint) 0, dict.Count, "b Count");
 		}
 
 		[Test]
@@ -667,27 +667,27 @@ namespace MonoTouchFixtures.Foundation {
 			using (var dic1 = new NSMutableDictionary<NSString, NSDate> ()) {
 				var now = NSDate.Now;
 				using (var dic2 = NSDictionary.FromObjectAndKey ((NSDate) now, (NSString) "key")) {
-					Assert.AreEqual (0, dic1.Count, "Count 0");
+					Assert.AreEqual ((nuint) 0, dic1.Count, "Count 0");
 
 					dic1.AddEntries (dic2);
 
-					Assert.AreEqual (1, dic1.Count, "Count 1");
+					Assert.AreEqual ((nuint) 1, dic1.Count, "Count 1");
 					Assert.AreEqual (now, dic1 ["key"], "Value 1");
 
 					dic1.AddEntries (dic2);
 					
-					Assert.AreEqual (1, dic1.Count, "Count 2");
+					Assert.AreEqual ((nuint) 1, dic1.Count, "Count 2");
 					Assert.AreEqual (now, dic1 ["key"], "Value 2");
 				}
 
 				// Be nasty, and put something of the wrong type in the dictionary
 				dic1.Clear ();
 				using (var dic2 = NSDictionary.FromObjectAndKey ((NSString) "value", (NSString) "key")) {
-					Assert.AreEqual (0, dic1.Count, "X Count 0");
+					Assert.AreEqual ((nuint) 0, dic1.Count, "X Count 0");
 
 					dic1.AddEntries (dic2);
 
-					Assert.AreEqual (1, dic1.Count, "X Count 1");
+					Assert.AreEqual ((nuint) 1, dic1.Count, "X Count 1");
 					Assert.Throws<InvalidCastException> (() =>
 					{
 						var obj = dic1 [(NSString) "key"];
@@ -697,11 +697,11 @@ namespace MonoTouchFixtures.Foundation {
 				// Use a generic dict of the right types
 				dic1.Clear ();
 				using (var dic2 = new NSDictionary<NSString,NSDate> ((NSString) "key2", now.AddSeconds (3600))) {
-					Assert.AreEqual (0, dic1.Count, "Y Count 0");
+					Assert.AreEqual ((nuint) 0, dic1.Count, "Y Count 0");
 
 					dic1.AddEntries (dic2);
 
-					Assert.AreEqual (1, dic1.Count, "Y Count 1");
+					Assert.AreEqual ((nuint) 1, dic1.Count, "Y Count 1");
 					var obj = dic1 [(NSString) "key2"];
 					Assert.AreEqual (now.AddSeconds (3600).SecondsSinceReferenceDate, obj.SecondsSinceReferenceDate, "Y Value 1");
 				}

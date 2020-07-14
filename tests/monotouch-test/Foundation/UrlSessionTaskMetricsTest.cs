@@ -30,7 +30,7 @@ namespace MonoTouchFixtures.Foundation {
 
 			using (var stm = new NSUrlSessionTaskMetrics ()) {
 				// in iOS10 those selectors do not respond - but they do work (forwarded to __NSCFURLSessionTaskMetrics type ?)
-				Assert.That (stm.RedirectCount, Is.EqualTo (0), "RedirectCount");
+				Assert.That (stm.RedirectCount, Is.EqualTo ((nuint) 0), "RedirectCount");
 				Assert.That (stm.TaskInterval.Duration, Is.EqualTo (0), "TaskInterval");
 				Assert.Null (stm.TransactionMetrics, "TransactionMetrics");
 			}

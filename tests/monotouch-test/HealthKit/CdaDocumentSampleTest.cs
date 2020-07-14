@@ -32,7 +32,7 @@ namespace MonoTouchFixtures.HealthKit {
 					using (var s = HKCdaDocumentSample.Create (d, NSDate.DistantPast, NSDate.DistantFuture, (NSDictionary)null, out error)) {
 						Assert.NotNull (error, "error");
 						var details = new HKDetailedCdaErrors (error.UserInfo);
-						Assert.That (details.ValidationError.Length, Is.EqualTo (0), "Length");
+						Assert.That (details.ValidationError.Length, Is.EqualTo ((nint) 0), "Length");
 					}
 				};
 				if (TestRuntime.CheckXcodeVersion (11, 0)) {

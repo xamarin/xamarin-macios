@@ -49,7 +49,7 @@ namespace MonoTouchFixtures.GamePlayKit {
 					})
 				});
 				mesh.Triangulate ();
-				Assert.That (mesh.TriangleCount, Is.GreaterThan (0), "No Triangles");
+				Assert.That (mesh.TriangleCount, Is.GreaterThan ((nuint) 0), "No Triangles");
 				var triangle = mesh.GetTriangle (0);
 				Assert.AreNotEqual (def, triangle, "Default triangle");
 			}

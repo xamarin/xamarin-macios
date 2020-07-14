@@ -154,14 +154,14 @@ namespace MonoTouchFixtures.CoreGraphics {
 				Assert.That (cs.GetColorTable ().Length, Is.EqualTo (0), "GetColorTable");
 
 				using (var icc_profile = cs.GetICCProfile ())
-					Assert.That (icc_profile.Length, Is.EqualTo (3144), "GetICCProfile");
+					Assert.That (icc_profile.Length, Is.EqualTo ((nuint) 3144), "GetICCProfile");
 
 				Assert.That (cs.Name, Is.EqualTo (CGColorSpaceNames.ExtendedSrgb.ToString ()), "Name");
 				Assert.True (cs.IsWideGamutRgb, "IsWideGamutRgb");
 				Assert.True (cs.SupportsOutput, "SupportsOutput");
 
 				using (var icc_data = cs.GetIccData ())
-					Assert.That (icc_data.Length, Is.EqualTo (3144), "GetIccData");
+					Assert.That (icc_data.Length, Is.EqualTo ((nuint) 3144), "GetIccData");
 			}
 		}
 
@@ -213,7 +213,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 
 			if (TestRuntime.CheckXcodeVersion (5, 0)) {
 				using (var icc_profile = cs.GetICCProfile ())
-					Assert.That (icc_profile.Length, Is.EqualTo (3284), "GetICCProfile");
+					Assert.That (icc_profile.Length, Is.EqualTo ((nuint) 3284), "GetICCProfile");
 			}
 
 			if (TestRuntime.CheckXcodeVersion (8, 0)) {
@@ -221,7 +221,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 				Assert.False (cs.IsWideGamutRgb, "IsWideGamutRgb");
 				Assert.True (cs.SupportsOutput, "SupportsOutput");
 				using (var icc_data = cs.GetIccData ())
-					Assert.That (icc_data.Length, Is.EqualTo (3284), "GetIccData");
+					Assert.That (icc_data.Length, Is.EqualTo ((nuint) 3284), "GetIccData");
 			}
 		}
 

@@ -7,6 +7,7 @@
 // Copyright 2015 Xamarin Inc. All rights reserved.
 //
 
+using System;
 using Foundation;
 using ObjCRuntime;
 using NUnit.Framework;
@@ -49,11 +50,11 @@ namespace MonoTouchFixtures.Foundation {
 
 					// the original NSMutableDictionary is fine - but it's not what's being used, i.e. property is "copy"
 					md.Remove (s1);
-					Assert.That (md.Count, Is.EqualTo (0), "1");
-					Assert.That (mur.Headers.Count, Is.EqualTo (1), "2");
+					Assert.That (md.Count, Is.EqualTo ((nuint) 0), "1");
+					Assert.That (mur.Headers.Count, Is.EqualTo ((nuint) 1), "2");
 					md.SetValueForKey (s3, s1);
-					Assert.That (md.Count, Is.EqualTo (1), "3");
-					Assert.That (mur.Headers.Count, Is.EqualTo (1), "40");
+					Assert.That (md.Count, Is.EqualTo ((nuint) 1), "3");
+					Assert.That (mur.Headers.Count, Is.EqualTo ((nuint) 1), "40");
 
 					Assert.AreNotSame (md, mur.Headers, "!same");
 				}

@@ -89,7 +89,7 @@ namespace MonoTouchFixtures.CoreMedia {
 			Assert.That (CMTime.GetMinimum (v, y) == v, "GetMinimum #1");
 
 			using (var d = x.ToDictionary ()) {
-				Assert.That (d.RetainCount, Is.EqualTo ((nint) 1), "RetainCount");
+				Assert.That (d.RetainCount, Is.EqualTo ((nuint) 1), "RetainCount");
 				Assert.That (d.Count, Is.EqualTo ((nuint) 4), "Count");
 
 				var time = CMTime.FromDictionary (d);

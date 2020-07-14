@@ -117,7 +117,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 				var value = dummy.Value;
 				Assert.AreEqual (typeof (NSMutableArray), value.GetType (), "Array Value Type");
 				var arr = (NSArray)value;
-				Assert.AreEqual (1, arr.Count, "Array Count");
+				Assert.AreEqual ((nuint) 1, arr.Count, "Array Count");
 				Assert.AreEqual ("SomeStringArrayValue", arr.GetItem<NSString> (0).ToString (), "Array First Value");
 			}
 
@@ -131,7 +131,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 				var value = dummy.Value;
 				Assert.AreEqual (typeof (NSMutableDictionary), value.GetType (), "Dictionary Value Type");
 				var dict = (NSDictionary) value;
-				Assert.AreEqual (1, dict.Count, "Dictionary Count");
+				Assert.AreEqual ((nuint) 1, dict.Count, "Dictionary Count");
 				Assert.AreEqual ("SomeKey", dict.Keys [0].ToString (), "Dictionary Key Value");
 				Assert.AreEqual ("SomeStringValue", dict ["SomeKey"].ToString (), "Dictionary Entry Value");
 			}
