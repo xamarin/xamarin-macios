@@ -11,7 +11,7 @@ using Foundation;
 namespace MonoTouchFixtures.Foundation {
 
 	[TestFixture]
-	public class AA_NSStreamTest 
+	public class NSStreamTest 
 	{
 		[Test]
 		public void BoundPairTest ()
