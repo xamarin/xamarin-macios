@@ -336,12 +336,7 @@ namespace CoreGraphics {
 		static extern /* NSString */ IntPtr AXNameFromColor (/* CGColorRef */ IntPtr color);
 
 		[iOS (14,0)][TV (14,0)][Watch (7,0)][Mac (10,16)]
-		public NSString AXName {
-			get {
-				var h = AXNameFromColor (handle);
-				return Runtime.GetNSObject<NSString> (h);
-			}
-		}
+		public string AXName => NSString.FromHandle (AXNameFromColor (handle));
 
 
 #endif // !COREBUILD
