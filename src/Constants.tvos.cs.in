@@ -95,5 +95,6 @@ namespace ObjCRuntime {
 		// tvOS 14.0
 		public const string LinkPresentationLibrary = "/System/Library/Frameworks/LinkPresentation.framework/LinkPresentation";
 		public const string UniformTypeIdentifiersLibrary = "/System/Library/Frameworks/UniformTypeIdentifiers.framework/UniformTypeIdentifiers";
+		public const string AccessibilityLibrary = "/System/Library/Frameworks/Accessibility.framework/Accessibility";
 	}
 }

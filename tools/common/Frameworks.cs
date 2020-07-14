@@ -199,6 +199,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "CallKit", "CallKit", 10,16 },
 					{ "ClassKit", "ClassKit", 10,16 },
 					{ "ReplayKit", "ReplayKit", 10,16 },
+					{ "Accessibility", "Accessibility", 10,16 },
 				};
 			}
 			return mac_frameworks;
@@ -337,6 +338,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 				{ "AppClip", "AppClip", 14,0 },
 				{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 14,0 },
+				{ "Accessibility", "Accessibility", 14,0 },
 
 				// the above MUST be kept in sync with simlauncher
 				// see tools/mtouch/Makefile
@@ -404,6 +406,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "StoreKit", "StoreKit", 6,2 },
 
 				{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 7,0 },
+				{ "Accessibility", "Accessibility", 7,0 },
 			};
 		}
 		return watch_frameworks;
@@ -485,6 +488,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 					{ "LinkPresentation", "LinkPresentation", 14,0 },
 					{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 14,0 },
+					{ "Accessibility", "Accessibility", 14,0 },
 				};
 			}
 			return tvos_frameworks;

@@ -71,5 +71,6 @@ namespace ObjCRuntime {
 
 		// watchOS 7
 		public const string UniformTypeIdentifiersLibrary = "/System/Library/Frameworks/UniformTypeIdentifiers.framework/UniformTypeIdentifiers";
+		public const string AccessibilityLibrary = "/System/Library/Frameworks/Accessibility.framework/Accessibility";
 	}
 }

@@ -176,5 +176,6 @@ namespace ObjCRuntime {
 		public const string UserNotificationsUILibrary = "/System/Library/Frameworks/UserNotificationsUI.framework/UserNotificationsUI";
 		public const string ClassKitLibrary = "/System/Library/Frameworks/ClassKit.framework/ClassKit";
 		public const string ReplayKitLibrary = "/System/Library/Frameworks/ReplayKit.framework/ReplayKit";
+		public const string AccessibilityLibrary = "/System/Library/Frameworks/Accessibility.framework/Accessibility";
 	}
 }
