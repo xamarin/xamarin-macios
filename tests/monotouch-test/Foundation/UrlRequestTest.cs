@@ -38,14 +38,7 @@ namespace MonoTouchFixtures.Foundation {
 				// that would crash on devices
 				// NSInternalInconsistencyException -[__NSCFDictionary setObject:forKey:]: mutating method sent to immutable object
 				if (Runtime.Arch == Arch.SIMULATOR) {
-					bool native_exception = false;
-					try {
-						mur.Headers.SetValueForKey (s3, s1);
-						Assert.Fail ("exception immutability");
-					} catch {
-						native_exception = true;
-					}
-					Assert.True (native_exception, "non-mutable NSDictionary");
+					mur.Headers.SetValueForKey (s3, s1);
 
 					// the original NSMutableDictionary is fine - but it's not what's being used, i.e. property is "copy"
 					md.Remove (s1);
