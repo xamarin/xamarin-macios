@@ -43,7 +43,6 @@ namespace Accessibility {
 
 	[Watch (7, 0), TV (14, 0), Mac (10, 16), iOS (14, 0)]
 	[Protocol]
-	[BaseType (typeof(NSObject))]
 	interface AXCustomContentProvider
 	{
 		[Abstract]
