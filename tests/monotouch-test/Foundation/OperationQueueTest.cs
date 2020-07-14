@@ -20,12 +20,11 @@ namespace MonoTouchFixtures.Foundation {
 	public class OperationQueueTest {
 		
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void Add_NSAction_Null ()
 		{
 			using (var q = new NSOperationQueue ()) {
 				// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: *** -[NSBlockOperation addExecutionBlock:]: block is nil
-				q.AddOperation ((Action) null);
+				Assert.Throws<ArgumentNullException> (() => q.AddOperation ((Action) null));
 			}
 		}
 

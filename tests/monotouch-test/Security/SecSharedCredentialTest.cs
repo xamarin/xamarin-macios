@@ -29,31 +29,21 @@ namespace MonoTouchFixtures.Security {
 		}
 
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void AddSharedWebCredentialNullDomain ()
 		{
 			domainName = null;
 			Action<NSError> handler = (NSError e) =>  {
-				Assert.IsNull (e);
-				waitEvent.Set ();
 			};
-			SecSharedCredential.AddSharedWebCredential (domainName, account, password, handler); 
-			waitEvent.WaitOne ();
-			Assert.Pass ("Block was correctly executed.");
+			Assert.Throws<ArgumentNullException> (() => SecSharedCredential.AddSharedWebCredential (domainName, account, password, handler));
 		}
 
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void AddSharedWebCredentialNullAccount ()
 		{
 			account = null;
 			Action<NSError> handler = (NSError e) =>  {
-				Assert.IsNull (e);
-				waitEvent.Set ();
 			};
-			SecSharedCredential.AddSharedWebCredential (domainName, account, password, handler); 
-			waitEvent.WaitOne ();
-			Assert.Pass ("Block was correctly executed.");
+			Assert.Throws<ArgumentNullException> (() => SecSharedCredential.AddSharedWebCredential (domainName, account, password, handler));
 		}
 
 		[Test]
