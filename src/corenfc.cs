@@ -132,6 +132,11 @@ namespace CoreNFC {
 
 	interface INFCIso15693Tag { }
 
+	delegate void NFCIso15693TagReadMultipleBlocksCallback (NSData[] dataBlocks, NSError error); 
+	delegate void NFCIso15693TagResponseCallback (ResponseFlag responseFlag, NSData response, NSError error); 
+	delegate void NFCIso15693TagGetMultipleBlockSecurityStatusCallback (NSNumber [] securityStatus, NSError error);
+	delegate void NFCIso15693TagGetSystemInfoAndUidCallback (NSData uid, nint dsfid, nint afi, nint blockSize, nint blockCount, nint icReference, NSError error);
+
 	//[iOS (11,0), NoTV, NoWatch, NoMac]
 	[iOS (11,0)]
 	[Protocol (Name = "NFCISO15693Tag")]
@@ -289,6 +294,84 @@ namespace CoreNFC {
 #endif
 		[Export ("extendedReadMultipleBlocksWithRequestFlags:blockRange:completionHandler:")]
 		void ExtendedReadMultipleBlocks (RequestFlag flags, NSRange blockRange, Action<NSData [], NSError> completionHandler);
+
+		[iOS (14, 0)]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("extendedWriteMultipleBlocksWithRequestFlags:blockRange:dataBlocks:completionHandler:")]
+		void ExtendedWriteMultipleBlocks (RequestFlag flags, NSRange blockRange, NSData[] dataBlocks, Action<NSError> completionHandler);
+
+		[iOS (14, 0)]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("authenticateWithRequestFlags:cryptoSuiteIdentifier:message:completionHandler:")]
+		void Authenticate (RequestFlag flags, nint cryptoSuiteIdentifier, NSData message, NFCIso15693TagResponseCallback completionHandler);
+
+		[iOS (14, 0)]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("keyUpdateWithRequestFlags:keyIdentifier:message:completionHandler:")]
+		void KeyUpdate (RequestFlag flags, nint keyIdentifier, NSData message, NFCIso15693TagResponseCallback completionHandler);
+
+		[iOS (14, 0)]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("challengeWithRequestFlags:cryptoSuiteIdentifier:message:completionHandler:")]
+		void Challenge (RequestFlag flags, nint cryptoSuiteIdentifier, NSData message, Action<NSError> completionHandler);
+
+		[iOS (14, 0)]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("readBufferWithRequestFlags:completionHandler:")]
+		void ReadBuffer (RequestFlag flags, NFCIso15693TagResponseCallback completionHandler);
+
+		[iOS (14, 0)]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("extendedGetMultipleBlockSecurityStatusWithRequestFlag:blockRange:completionHandler:")]
+		void ExtendedGetMultipleBlockSecurityStatus (RequestFlag flags, NSRange blockRange, NFCIso15693TagGetMultipleBlockSecurityStatusCallback completionHandler);
+
+		[iOS (14, 0)]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("extendedFastReadMultipleBlocksWithRequestFlag:blockRange:completionHandler:")]
+		void ExtendedFastReadMultipleBlocks (RequestFlag flags, NSRange blockRange, NFCIso15693TagReadMultipleBlocksCallback completionHandler);
+
+		[iOS (14, 0)]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("sendRequestWithFlag:commandCode:data:completionHandler:")]
+		void SendRequest (nint flags, nint commandCode, [NullAllowed] NSData data, NFCIso15693TagResponseCallback completionHandler);
+
+		[iOS (14, 0)]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("getSystemInfoAndUIDWithRequestFlag:completionHandler:")]
+		void GetSystemInfoAndUid (RequestFlag flags, NFCIso15693TagGetSystemInfoAndUidCallback completionHandler);
+
+		[iOS (14, 0)]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("fastReadMultipleBlocksWithRequestFlag:blockRange:completionHandler:")]
+		void FastReadMultipleBlocks (RequestFlag flags, NSRange blockRange, NFCIso15693TagReadMultipleBlocksCallback completionHandler);
+
+		[iOS (14, 0)]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("lockDSFIDWithRequestFlag:completionHandler:")]
+		void LockDsfId (RequestFlag flags, Action<NSError> completionHandler);
+
 	}
 
 	[iOS (11,0)]
@@ -626,6 +709,19 @@ namespace CoreNFC {
 		Select = (1 << 4),
 		Address = (1 << 5),
 		Option = (1 << 6),
+		CommandSpecificBit8 = (1 << 7),
+	}
+
+	[Flags, iOS (14, 0)]
+	public enum ResponseFlag : byte
+	{
+		Error = (1 << 0),
+		ResponseBufferValid = (1 << 1),
+		FinalResponse = (1 << 2),
+		ProtocolExtension = (1 << 3),
+		BlockSecurityStatusBit5 = (1 << 4),
+		BlockSecurityStatusBit6 = (1 << 5),
+		WaitTimeExtension = (1 << 6),
 	}
 
 	[iOS (13,0)]
