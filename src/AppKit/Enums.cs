@@ -327,9 +327,11 @@ namespace AppKit {
 	
 	[Native]
 	public enum NSControlSize : ulong {
-		Regular, 
-		Small,
-		Mini
+		Regular = 0, 
+		Small = 1,
+		Mini = 2,
+		[Mac (10,16)]
+		Large = 3
 	}
 
 	[Native]
@@ -1514,6 +1516,7 @@ namespace AppKit {
 		TraitTightLeading = 1 << 15,
 		[Mac (10,13)]
 		TraitLooseLeading = 1 << 16,
+		TraitEmphasized = BoldTrait,
 		UnknownClass = 0 << 28,
 		OldStyleSerifsClass = 1 << 28,
 		TransitionalSerifsClass = 2 << 28,
@@ -1737,6 +1740,7 @@ namespace AppKit {
 
 	[Flags]
 	[Native]
+	[Deprecated (PlatformName.MacOSX, 10, 16)]
 	public enum NSWorkspaceLaunchOptions : ulong {
 		Print = 2,
 		InhibitingBackgroundOnly = 0x80,
@@ -3008,5 +3012,49 @@ namespace AppKit {
 		CreateSymbolicLink,
 		SetAttributes,
 		ReplaceFile,
+	}
+
+	[Mac (10,16)]
+	[Native]
+	public enum NSTableViewStyle : long
+	{
+		Automatic,
+		FullWidth,
+		Inset,
+		SourceList
+	}
+
+	[Mac (10,16)]
+	[Native]
+	public enum NSTitlebarSeparatorStyle : long
+	{
+		Automatic,
+		None,
+		Line,
+		Shadow
+	}
+
+	[Mac (10,16)]
+	[Native]
+	public enum NSWindowToolbarStyle : long
+	{
+		Automatic,
+		Expanded,
+		Preference,
+		Unified,
+		UnifiedCompact
+	}
+
+	[Flags, Mac (10,16)]
+	[Native]
+	public enum NSTableViewAnimationOptions : ulong
+	{
+		EffectNone = 0x0,
+		EffectFade = 0x1,
+		EffectGap = 0x2,
+		SlideUp = 0x10,
+		SlideDown = 0x20,
+		SlideLeft = 0x30,
+		SlideRight = 0x40
 	}
 }
