@@ -66,7 +66,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 			if (PlatformCFNetwork.GetProxiesForUri (uri, settings).Length <= 1)
 				Assert.Ignore ("Only run when proxy is configured.");
 
-			var req = new HttpWebRequest (uri);
+			var req = WebRequest.CreateHttp (uri);
 			using (var rsp = req.GetResponse ())
 				using (var str = new StreamReader (rsp.GetResponseStream ()))
 					Console.WriteLine (str.ReadToEnd ());
