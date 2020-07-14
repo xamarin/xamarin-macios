@@ -150,7 +150,7 @@ namespace MonoTouchFixtures.CoreData {
 						}
 
 						var sections = fetchedResultsController.Sections;
-						Assert.That (sections [0].GetType ().FullName, Is.StringEnding ("CoreData.NSFetchedResultsSectionInfoWrapper"), "Wrapper");
+						Assert.That (sections [0].GetType ().FullName, Does.EndWith ("CoreData.NSFetchedResultsSectionInfoWrapper"), "Wrapper");
 					}
 				}
 			}

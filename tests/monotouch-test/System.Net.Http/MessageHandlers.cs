@@ -124,8 +124,8 @@ namespace MonoTests.System.Net.Http
 			Assert.IsTrue (nativeCookieResult, $"Failed to get native cookies");
 			Assert.AreEqual (1, managedCookies.Count (), $"Managed Cookie Count");
 			Assert.AreEqual (1, nativeCookies.Count (), $"Native Cookie Count");
-			Assert.That (nativeCookies.First (), Is.StringStarting ("cookie=chocolate-chip;"), $"Native Cookie Value");
-			Assert.That (managedCookies.First (), Is.StringStarting ("cookie=chocolate-chip;"), $"Managed Cookie Value");
+			Assert.That (nativeCookies.First (), Does.StartWith ("cookie=chocolate-chip;"), $"Native Cookie Value");
+			Assert.That (managedCookies.First (), Does.StartWith ("cookie=chocolate-chip;"), $"Managed Cookie Value");
 		}
 
 		// ensure that we can use a cookie container to set the cookies for a url
