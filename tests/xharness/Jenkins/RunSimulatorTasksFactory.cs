@@ -72,6 +72,9 @@ namespace Xharness.Jenkins {
 					tunnelBore: jenkins.TunnelBore,
 					candidates: candidates?.Cast<SimulatorDevice> () ?? test.Candidates)).ToList ();
 
+			if (jenkins.IsServerMode)
+				return testVariations;
+
 			foreach (var tv in testVariations) {
 				if (!tv.Ignored)
 					await tv.FindSimulatorAsync ();
