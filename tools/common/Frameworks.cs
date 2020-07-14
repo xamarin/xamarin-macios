@@ -336,6 +336,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "AutomaticAssessmentConfiguration", "AutomaticAssessmentConfiguration", 13, 4 },
 
 				{ "AppClip", "AppClip", 14,0 },
+				{ "MediaSetup", "MediaSetup", new Version (14, 0), NotAvailableInSimulator /* no headers in beta 2 */ },
 				{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 14,0 },
 
 				// the above MUST be kept in sync with simlauncher

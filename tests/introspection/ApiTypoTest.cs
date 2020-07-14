@@ -982,6 +982,13 @@ namespace Introspection
 					Assert.True (CheckLibrary (s), fi.Name);
 					break;
 #endif
+#if __IOS__
+				case "MediaSetupLibrary":
+					// Xcode 12 beta 2 does not ship this framework/headers for the simulator
+					if (Runtime.Arch == Arch.DEVICE)
+						Assert.True (CheckLibrary (s), fi.Name);
+					break;
+#endif
 #if __TVOS__
 				case "MetalPerformanceShadersLibrary":
 					// not supported in tvOS (12.1) simulator so load fails
