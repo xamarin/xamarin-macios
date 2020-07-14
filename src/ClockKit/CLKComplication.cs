@@ -10,6 +10,7 @@ namespace ClockKit {
 			[DllImport (Constants.ClockKitLibrary)]
 			static extern IntPtr CLKAllComplicationFamilies ();
 
+			[Watch (7,0)]
 			public static CLKComplicationFamily[] GetAllComplicationFamilies ()
 			{
 				using (var nsArray = new NSArray (CLKAllComplicationFamilies ())) {
