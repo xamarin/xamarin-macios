@@ -7,27 +7,21 @@ using NUnit.Framework;
 using Xamarin.Tests;
 
 namespace Xamarin.iOS.Tasks {
-	[TestFixture ("iPhone")]
-	[TestFixture ("iPhoneSimulator")]
 	public class EmbeddedExtension : ProjectTest {
-		
-		public EmbeddedExtension (string platform) : base (platform)      
+		// Simulator only as extensions require signing otherwise, which is hard on bots
+		public EmbeddedExtension () : base ("iPhoneSimulator")
 		{
 		}
 
 		[Test]
 		public void BasicTest ()
 		{
-			var mtouchPaths = SetupProjectPaths ("ManagedContainer", "../NativeExtensionEmbedding/managed", true, Platform);
+			var mtouchPaths = SetupProjectPaths ("ManagedContainer", "../NativeExtensionEmbedding/managed", true, "iPhoneSimulator");
 
 			Engine.ProjectCollection.SetGlobalProperty ("Platform", Platform);
 
 			var xcodeProjectFolder = Path.Combine (mtouchPaths.ProjectPath , "..", "..", "native");
-			string [] xcodeBuildArgs;
-			if (this.Platform  == "iPhone")
-				xcodeBuildArgs = new [] { "-configuration", "Debug", "-target", "NativeTodayExtension", "-arch", "arm64" };
-			else
-				xcodeBuildArgs = new [] { "-configuration", "Debug", "-target", "NativeTodayExtension", "-arch", "x86_64" };
+			string [] xcodeBuildArgs = new [] { "-configuration", "Debug", "-target", "NativeTodayExtension", "-sdk", "iphonesimulator" };
 			var env = new System.Collections.Generic.Dictionary<string, string> { { "DEVELOPER_DIR", Configuration.XcodeLocation } };
 			Assert.AreEqual (0, ExecutionHelper.Execute ("/usr/bin/xcodebuild", xcodeBuildArgs.Concat (new [] { "clean" }).ToArray (), out var _, workingDirectory: xcodeProjectFolder, environment_variables: env, stdout_callback: Console.WriteLine, stderr_callback: Console.Error.WriteLine));
 
