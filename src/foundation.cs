@@ -1317,7 +1317,7 @@ namespace Foundation
 		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
 		[Export ("decodeArrayOfObjectsOfClass:forKey:")]
 		[return: NullAllowed]
-		NSObject[] DecodeArrayOfObjects (Class cls, string key);
+		NSObject[] DecodeArrayOfObjects (Class @class, string key);
 
 		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
 		[Export ("decodeArrayOfObjectsOfClasses:forKey:")]
@@ -1327,7 +1327,7 @@ namespace Foundation
 		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
 		[Export ("decodeDictionaryWithKeysOfClass:objectsOfClass:forKey:")]
 		[return: NullAllowed]
-		NSDictionary DecodeDictionary (Class keyCls, Class objectCls, string key);
+		NSDictionary DecodeDictionary (Class keyClass, Class objectClass, string key);
 
 		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
 		[Export ("decodeDictionaryWithKeysOfClasses:objectsOfClasses:forKey:")]
@@ -2526,7 +2526,7 @@ namespace Foundation
 		[Static]
 		[Export ("unarchivedArrayOfObjectsOfClass:fromData:error:")]
 		[return: NullAllowed]
-		NSObject[] GetUnarchivedArray (Class cls, NSData data, [NullAllowed] out NSError error);
+		NSObject[] GetUnarchivedArray (Class @class, NSData data, [NullAllowed] out NSError error);
 
 		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
 		[Static]
@@ -2538,7 +2538,7 @@ namespace Foundation
 		[Static]
 		[Export ("unarchivedDictionaryWithKeysOfClass:objectsOfClass:fromData:error:")]
 		[return: NullAllowed]
-		NSDictionary GetUnarchivedDictionary (Class keyCls, Class valueCls, NSData data, [NullAllowed] out NSError error);
+		NSDictionary GetUnarchivedDictionary (Class keyClass, Class valueClass, NSData data, [NullAllowed] out NSError error);
 
 		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
 		[Static]
