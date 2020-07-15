@@ -133,7 +133,7 @@ namespace CoreNFC {
 	interface INFCIso15693Tag { }
 
 	delegate void NFCIso15693TagReadMultipleBlocksCallback (NSData[] dataBlocks, NSError error); 
-	delegate void NFCIso15693TagResponseCallback (ResponseFlag responseFlag, NSData response, NSError error); 
+	delegate void NFCIso15693TagResponseCallback (NFCISO15693ResponseFlag responseFlag, NSData response, NSError error); 
 	delegate void NFCIso15693TagGetMultipleBlockSecurityStatusCallback (NSNumber [] securityStatus, NSError error);
 	delegate void NFCIso15693TagGetSystemInfoAndUidCallback (NSData uid, nint dsfid, nint afi, nint blockSize, nint blockCount, nint icReference, NSError error);
 
@@ -651,7 +651,13 @@ namespace CoreNFC {
 
 	[iOS (13,0)]
 	[Native]
-	enum EncryptionId : long {
+#if XAMCORE_4_0
+	enum NFCFeliCaEncryptionId
+#else
+	[Advice ("The native name of this enum is 'NFCFeliCaEncryptionId'.")]
+	enum EncryptionId
+#endif
+		: long {
 		Aes = 79,
 		Des = 65,
 	}
@@ -684,7 +690,13 @@ namespace CoreNFC {
 
 	[iOS (13,0)]
 	[Native]
-	enum PollingRequestCode : long {
+#if XAMCORE_4_0
+	enum NFCFeliCaPollingRequestCode
+#else
+	[Advice ("The native name of this enum is 'NFCFeliCaPollingRequestCode'.")]
+	enum PollingRequestCode
+#endif
+		: long {
 		NoRequest = 0,
 		SystemCode = 1,
 		CommunicationPerformance = 2,
@@ -692,7 +704,13 @@ namespace CoreNFC {
 
 	[iOS (13,0)]
 	[Native]
-	enum PollingTimeSlot : long {
+#if XAMCORE_4_0
+	enum NFCFeliCaPollingTimeSlot
+#else
+	[Advice ("The native name of this enum is 'NFCFeliCaPollingTimeSlot'.")]
+	enum PollingTimeSlot
+#endif
+		: long {
 		Max1 = 0,
 		Max2 = 1,
 		Max4 = 3,
@@ -702,7 +720,13 @@ namespace CoreNFC {
 
 	[iOS (13,0)]
 	[Flags]
-	enum RequestFlag : byte {
+#if XAMCORE_4_0
+	enum NFCISO15693RequestFlag
+#else
+	[Advice ("The native name of this enum is 'NFCISO15693RequestFlag'.")]
+	enum RequestFlag
+#endif
+		: byte {
 		DualSubCarriers = (1 << 0),
 		HighDataRate = (1 << 1),
 		ProtocolExtension = (1 << 3),
@@ -713,7 +737,7 @@ namespace CoreNFC {
 	}
 
 	[Flags, iOS (14, 0)]
-	public enum ResponseFlag : byte
+	public enum NFCISO15693ResponseFlag : byte
 	{
 		Error = (1 << 0),
 		ResponseBufferValid = (1 << 1),
@@ -726,7 +750,13 @@ namespace CoreNFC {
 
 	[iOS (13,0)]
 	[Native]
-	enum VasErrorCode : long {
+#if XAMCORE_4_0
+	enum NFCVASErrorCode
+#else
+	[Advice ("The native name of this enum is 'NFCVASErrorCode'.")]
+	enum VasErrorCode
+#endif
+		: long {
 		Success = 36864,
 		DataNotFound = 27267,
 		DataNotActivated = 25223,
@@ -739,7 +769,13 @@ namespace CoreNFC {
 
 	[iOS (13,0)]
 	[Native]
-	enum VasMode : long {
+#if XAMCORE_4_0
+	enum NFCVASMode 
+#else
+	[Advice ("The native name of this enum is 'NFCVASMode'.")]
+	enum VasMode 
+#endif
+		: long {
 		UrlOnly = 0,
 		Normal = 1,
 	}

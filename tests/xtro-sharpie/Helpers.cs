@@ -59,7 +59,6 @@ namespace Extrospection {
 			{ "NFCVASErrorCode", "VasErrorCode" },
 			{ "NFCVASMode", "VasMode" },
 			{ "NFCISO15693RequestFlag", "RequestFlag" },
-			{ "NFCISO15693ResponseFlag", "ResponseFlag" },
 			// not enums
 		};
 
