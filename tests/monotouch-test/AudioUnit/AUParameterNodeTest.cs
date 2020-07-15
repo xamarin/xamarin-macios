@@ -150,7 +150,7 @@ namespace monotouchtest {
 		// Reason: ImplementorDisplayNameWithLengthCallback never invoked when user requests truncated version of node's name.
 		// Objc/Swift code demosntrates the same behavior.
 		// Waiting for comments/fix from Apple.
-		[Test, Ignore]
+		[Test, Ignore ("ImplementorDisplayNameWithLengthCallback never invoked when user requests truncated version of node's name.")]
 		public void ImplementorDisplayNameWithLengthCallback ()
 		{
 			TestRuntime.AssertXcodeVersion (7, 0);
