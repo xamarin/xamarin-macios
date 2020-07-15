@@ -1779,6 +1779,7 @@ SHARED_SOURCES = \
 #
 
 COMMON_FRAMEWORKS =         \
+	Accessibility           \
 	Accelerate              \
 	AuthenticationServices	\
 	AVFoundation            \

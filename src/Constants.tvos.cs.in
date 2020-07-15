@@ -93,6 +93,7 @@ namespace ObjCRuntime {
 		public const string BackgroundTasksLibrary = "/System/Library/Frameworks/BackgroundTasks.framework/BackgroundTasks";
 
 		// tvOS 14.0
+		public const string AccessibilityLibrary = "/System/Library/Frameworks/Accessibility.framework/Accessibility";
 		public const string LinkPresentationLibrary = "/System/Library/Frameworks/LinkPresentation.framework/LinkPresentation";
 		public const string UniformTypeIdentifiersLibrary = "/System/Library/Frameworks/UniformTypeIdentifiers.framework/UniformTypeIdentifiers";
 	}

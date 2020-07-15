@@ -98,6 +98,15 @@ namespace MonoTouchFixtures.CoreGraphics {
 			}
 		}
 
+		[Test]
+		public void GetAXName ()
+		{
+			TestRuntime.AssertXcodeVersion (12, 0);
+			using (var c = new CGColor (CGConstantColor.Black)) {
+				Assert.IsNotNull (c.AXName, "AXName");
+			}
+		}
+
 	}
 }
 
