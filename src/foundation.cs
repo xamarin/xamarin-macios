@@ -110,7 +110,11 @@ namespace Foundation
 
 	delegate bool NSEnumerateErrorHandler (NSUrl url, NSError error);
 	delegate void NSMetadataQueryEnumerationCallback (NSObject result, nuint idx, ref bool stop);
+#if XAMCORE_4_0
+	delegate void NSItemProviderCompletionHandler (INSSecureCoding item, NSError error);
+#else
 	delegate void NSItemProviderCompletionHandler (NSObject itemBeingLoaded, NSError error);
+#endif
 	delegate void NSItemProviderLoadHandler ([BlockCallback] NSItemProviderCompletionHandler completionHandler, Class expectedValueClass, NSDictionary options);
 	delegate void EnumerateDatesCallback (NSDate date, bool exactMatch, ref bool stop);
 	delegate void EnumerateIndexSetCallback (nuint idx, ref bool stop);
@@ -1309,6 +1313,26 @@ namespace Foundation
 		[iOS (9,0)][Mac (10,11)]
 		[NullAllowed, Export ("error", ArgumentSemantic.Copy)]
 		NSError Error { get; }
+
+		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Export ("decodeArrayOfObjectsOfClass:forKey:")]
+		[return: NullAllowed]
+		NSObject[] DecodeArrayOfObjects (Class @class, string key);
+
+		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Export ("decodeArrayOfObjectsOfClasses:forKey:")]
+		[return: NullAllowed]
+		NSObject[] DecodeArrayOfObjects (NSSet<Class> classes, string key);
+
+		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Export ("decodeDictionaryWithKeysOfClass:objectsOfClass:forKey:")]
+		[return: NullAllowed]
+		NSDictionary DecodeDictionary (Class keyClass, Class objectClass, string key);
+
+		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Export ("decodeDictionaryWithKeysOfClasses:objectsOfClasses:forKey:")]
+		[return: NullAllowed]
+		NSDictionary DecodeDictionary (NSSet<Class> keyClasses, NSSet<Class> objectClasses, string key);
 	}
 	
 	[BaseType (typeof (NSPredicate))]
@@ -2497,6 +2521,30 @@ namespace Foundation
 		[Export ("requiresSecureCoding")]
 		bool GetRequiresSecureCoding ();
 
+
+		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Static]
+		[Export ("unarchivedArrayOfObjectsOfClass:fromData:error:")]
+		[return: NullAllowed]
+		NSObject[] GetUnarchivedArray (Class @class, NSData data, [NullAllowed] out NSError error);
+
+		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Static]
+		[Export ("unarchivedArrayOfObjectsOfClasses:fromData:error:")]
+		[return: NullAllowed]
+		NSObject[] GetUnarchivedArray (NSSet<Class> classes, NSData data, [NullAllowed] out NSError error);
+
+		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Static]
+		[Export ("unarchivedDictionaryWithKeysOfClass:objectsOfClass:fromData:error:")]
+		[return: NullAllowed]
+		NSDictionary GetUnarchivedDictionary (Class keyClass, Class valueClass, NSData data, [NullAllowed] out NSError error);
+
+		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Static]
+		[Export ("unarchivedDictionaryWithKeysOfClasses:objectsOfClasses:fromData:error:")]
+		[return: NullAllowed]
+		NSDictionary GetUnarchivedDictionary (NSSet<Class> keyClasses, NSSet<Class> valueClasses, NSData data, [NullAllowed] out NSError error);
 	}
 
 	[BaseType (typeof (NSObject), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NSMetadataQueryDelegate)})]
@@ -3907,6 +3955,11 @@ namespace Foundation
 		[Field ("NSURLErrorDomain")]
 		NSString NSUrlErrorDomain { get; }
 
+#if XAMCORE_4_0
+		[NoWatch]
+#else
+		[Obsoleted (PlatformName.WatchOS, 7,0)]
+#endif
 		[Field ("NSNetServicesErrorDomain")]
 		NSString NSNetServicesErrorDomain { get; }
 
@@ -4303,6 +4356,10 @@ namespace Foundation
 
 	delegate void NSLingusticEnumerator (NSString tag, NSRange tokenRange, NSRange sentenceRange, ref bool stop);
 
+	[Deprecated (PlatformName.MacOSX, 10,16, message: "Use 'NaturalLanguage.*' API instead.")]
+	[Deprecated (PlatformName.iOS, 14,0, message: "Use 'NaturalLanguage.*' API instead.")]
+	[Deprecated (PlatformName.WatchOS, 7,0, message: "Use 'NaturalLanguage.*' API instead.")]
+	[Deprecated (PlatformName.TvOS, 14,0, message: "Use 'NaturalLanguage.*' API instead.")]
 	[BaseType (typeof (NSObject))]
 	interface NSLinguisticTagger {
 		[DesignatedInitializer]
@@ -5777,6 +5834,10 @@ namespace Foundation
 		[Field ("NSURLVolumeURLKey")]
 		NSString VolumeURLKey { get; }
 
+		[Deprecated (PlatformName.iOS, 14,0, message: "Use 'ContentTypeKey' instead.")]
+		[Deprecated (PlatformName.TvOS, 14,0, message: "Use 'ContentTypeKey' instead.")]
+		[Deprecated (PlatformName.WatchOS, 7,0, message: "Use 'ContentTypeKey' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10,16, message: "Use 'ContentTypeKey' instead.")]
 		[Field ("NSURLTypeIdentifierKey")]
 		NSString TypeIdentifierKey { get; }
 
@@ -6202,6 +6263,30 @@ namespace Foundation
 		[Field ("NSURLFileProtectionCompleteUntilFirstUserAuthentication")]
 		NSString FileProtectionCompleteUntilFirstUserAuthentication { get; }
 #endif
+
+		[Watch (7,0)][TV (14,0)][Mac (10,16)][iOS (14,0)]
+		[Field ("NSURLContentTypeKey")]
+		NSString ContentTypeKey { get; }
+
+		[Watch (7,0)][TV (14,0)][Mac (10,16)][iOS (14,0)]
+		[Field ("NSURLFileContentIdentifierKey")]
+		NSString FileContentIdentifierKey { get; }
+
+		[Watch (7,0)][TV (14,0)][Mac (10,16)][iOS (14,0)]
+		[Field ("NSURLIsPurgeableKey")]
+		NSString IsPurgeableKey { get; }
+
+		[Watch (7,0)][TV (14,0)][Mac (10,16)][iOS (14,0)]
+		[Field ("NSURLIsSparseKey")]
+		NSString IsSparseKey { get; }
+
+		[Watch (7,0)][TV (14,0)][Mac (10,16)][iOS (14,0)]
+		[Field ("NSURLMayHaveExtendedAttributesKey")]
+		NSString MayHaveExtendedAttributesKey { get; }
+
+		[Watch (7,0)][TV (14,0)][Mac (10,16)][iOS (14,0)]
+		[Field ("NSURLMayShareFileContentKey")]
+		NSString MayShareFileContentKey { get; }
 
 		// From the NSItemProviderReading protocol
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
@@ -14419,6 +14504,7 @@ namespace Foundation
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
+	[Deprecated (PlatformName.MacOSX, 10,16, message: "Use 'UserNotifications.*' API instead.")]
 	interface NSUserNotificationCenterDelegate 
 	{
 		[Export ("userNotificationCenter:didDeliverNotification:"), EventArgs ("UNCDidDeliverNotification")]
