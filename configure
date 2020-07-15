@@ -138,3 +138,4 @@ while test x$1 != x; do
 		;;
 	esac
 done
+exit 0
