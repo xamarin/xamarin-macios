@@ -42,13 +42,13 @@ namespace MonoTouchFixtures.Metal {
 			hd.CpuCacheMode = MTLCpuCacheMode.WriteCombined;
 			Assert.That (hd.StorageMode, Is.EqualTo (MTLStorageMode.Private), "StorageMode");
 			hd.StorageMode = MTLStorageMode.Memoryless;
-			Assert.That (hd.Size, Is.EqualTo (0), "Size");
+			Assert.That (hd.Size, Is.EqualTo ((nuint) 0), "Size");
 			hd.Size = 16;
 
 			using (var hd2 = (MTLHeapDescriptor) hd.Copy ()) {
 				Assert.That (hd2.CpuCacheMode, Is.EqualTo (MTLCpuCacheMode.WriteCombined), "CpuCacheMode");
 				Assert.That (hd2.StorageMode, Is.EqualTo (MTLStorageMode.Memoryless), "StorageMode");
-				Assert.That (hd2.Size, Is.EqualTo (16), "Size");
+				Assert.That (hd2.Size, Is.EqualTo ((nuint) 16), "Size");
 
 				// NSCopying
 				Assert.That (hd2.Handle, Is.Not.EqualTo (hd.Handle), "Handle");
@@ -70,7 +70,7 @@ namespace MonoTouchFixtures.Metal {
 			TestRuntime.AssertXcodeVersion (9, 0);
 
 			hd.Size = 2;
-			Assert.AreEqual (2, hd.Size);
+			Assert.AreEqual ((nuint) 2, hd.Size);
 		}
 
 		[Test]
