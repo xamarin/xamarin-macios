@@ -80,6 +80,7 @@ stages:
     condition: succeededOrFailed()
     pool:
       name: ${{ parameters.WindowsDevicePool }}
+      demands: agent.os -equals Windows_NT #  not needed, but lest not waste our mac with devices, we have less.
       workspace:
         clean: all
     steps:
