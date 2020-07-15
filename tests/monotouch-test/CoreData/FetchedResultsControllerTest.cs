@@ -20,7 +20,7 @@ namespace MonoTouchFixtures.CoreData {
 	[Preserve (AllMembers = true)]
 	public class FetchedResultsControllerTest {
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Cache ()
 		{
 			// null -> delete all cache

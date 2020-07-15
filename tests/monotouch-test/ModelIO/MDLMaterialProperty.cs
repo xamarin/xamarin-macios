@@ -36,7 +36,7 @@ namespace MonoTouchFixtures.ModelIO {
 	// we want the test to be available if we use the linker
 	[Preserve (AllMembers = true)]
 	public class MDLMaterialPropertyTest {
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Setup ()
 		{
 

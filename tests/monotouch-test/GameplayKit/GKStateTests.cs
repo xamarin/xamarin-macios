@@ -24,7 +24,7 @@ namespace MonoTouchFixtures.GameplayKit {
 	[Preserve (AllMembers = true)]
 	public class GKStateTests {
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Setup ()
 		{
 			TestRuntime.AssertXcodeVersion (7, 0);

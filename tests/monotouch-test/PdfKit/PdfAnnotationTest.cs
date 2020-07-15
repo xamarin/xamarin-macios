@@ -26,7 +26,7 @@ namespace MonoTouchFixtures.PdfKit
 	[Preserve (AllMembers = true)]
 	public class PdfAnnotationTest
 	{
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Setup ()
 		{
 			TestRuntime.AssertXcodeVersion (9, 0);

@@ -13,7 +13,7 @@ namespace MonoTouchFixtures.Network {
 	public class NWIPProtocolMetadataTest {
 		NWIPMetadata metadata;
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Init () => TestRuntime.AssertXcodeVersion (10, 0);
 
 		[SetUp]

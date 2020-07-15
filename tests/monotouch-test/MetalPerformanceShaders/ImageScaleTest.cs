@@ -16,7 +16,7 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 
 		IMTLDevice device;
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Metal ()
 		{
 			TestRuntime.AssertXcodeVersion (9,0);
