@@ -4,6 +4,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
+using Mono.Cecil;
+
 namespace Microsoft.DotNet.XHarness.iOS.Shared.TestImporter.Templates.Managed {
 	public static class RegisterTypeGenerator {
 
@@ -11,7 +13,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.TestImporter.Templates.Managed {
 		static readonly string KeysReplacement = "%KEY VALUES%";
 		static readonly string IsxUnitReplacement = "%IS XUNIT%";
 
-		public static async Task<string> GenerateCodeAsync ((string FailureMessage, Dictionary<string, Type> Types) typeRegistration, bool isXunit,
+		public static async Task<string> GenerateCodeAsync ((string FailureMessage, Dictionary<string, TypeDefinition> Types) typeRegistration, bool isXunit,
 			Stream template)
 		{
 			var importStringBuilder = new StringBuilder ();
