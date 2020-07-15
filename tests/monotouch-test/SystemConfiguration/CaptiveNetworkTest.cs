@@ -74,18 +74,25 @@ namespace MonoTouchFixtures.SystemConfiguration {
 				return;
 
 			Assert.AreEqual (StatusCode.OK, status, "Status");
-
-			if ((dict == null) && (Runtime.Arch == Arch.DEVICE) && TestRuntime.CheckSystemVersion (PlatformName.iOS, 9, 0))
-				Assert.Ignore ("null on iOS9 devices - CaptiveNetwork is being deprecated ?!?");
-
-			if (dict.Count == 3) {
-				Assert.NotNull (dict [CaptiveNetwork.NetworkInfoKeyBSSID], "NetworkInfoKeyBSSID");
-				Assert.NotNull (dict [CaptiveNetwork.NetworkInfoKeySSID], "NetworkInfoKeySSID");
-				Assert.NotNull (dict [CaptiveNetwork.NetworkInfoKeySSIDData], "NetworkInfoKeySSIDData");
-			} else {
-				Assert.Fail ("Unexpected dictionary result with {0} items", dict.Count);
-			}
+			// To get a non-null dictionary back, we must (https://developer.apple.com/documentation/systemconfiguration/1614126-cncopycurrentnetworkinfo)
+			// * Use core location, and request (and get) authorization to use location information
+			// * Add the 'com.apple.developer.networking.wifi-info' entitlement
+			// I tried this, and still got null back, so just assert that we get null.
+			Assert.IsNull (dict, "Dictionary");
 #endif
+		}
+
+		[Test]
+		public void TryGetSupportedInterfaces ()
+		{
+			StatusCode status;
+#if __TVOS__
+			Assert.Throws<NotSupportedException> (() => CaptiveNetwork.TryGetSupportedInterfaces (out var ifaces));
+#else
+			status = CaptiveNetwork.TryGetSupportedInterfaces (out var ifaces);
+			Assert.AreEqual (StatusCode.OK, status, "Status");
+			Assert.IsNull (ifaces, "Null Interfaces");
+#endif // __TVOS__
 		}
 #endif
 
