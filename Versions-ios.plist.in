@@ -133,6 +133,8 @@
 			<string>10.0</string>
 			<key>com.apple.usernotifications.service</key>
 			<string>10.0</string>
+			<key>com.apple.authentication-services-credential-provider-ui</key>
+			<string>12.0</string>
 		</dict>
 		<key>tvOS</key>
 		<dict>
