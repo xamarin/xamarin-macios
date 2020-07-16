@@ -133,7 +133,7 @@ namespace CoreNFC {
 	interface INFCIso15693Tag { }
 
 	delegate void NFCIso15693TagReadMultipleBlocksCallback (NSData[] dataBlocks, NSError error); 
-	delegate void NFCIso15693TagResponseCallback (NFCISO15693ResponseFlag responseFlag, NSData response, NSError error); 
+	delegate void NFCIso15693TagResponseCallback (NFCIso15693ResponseFlag responseFlag, NSData response, NSError error); 
 	delegate void NFCIso15693TagGetMultipleBlockSecurityStatusCallback (NSNumber [] securityStatus, NSError error);
 	delegate void NFCIso15693TagGetSystemInfoAndUidCallback (NSData uid, nint dsfid, nint afi, nint blockSize, nint blockCount, nint icReference, NSError error);
 
@@ -721,9 +721,9 @@ namespace CoreNFC {
 	[iOS (13,0)]
 	[Flags]
 #if XAMCORE_4_0
-	enum NFCISO15693RequestFlag
+	enum NFCIso15693RequestFlag
 #else
-	[Advice ("The native name of this enum is 'NFCISO15693RequestFlag'.")]
+	[Advice ("The native name of this enum is 'NFCIso15693RequestFlag'.")]
 	enum RequestFlag
 #endif
 		: byte {
@@ -737,7 +737,7 @@ namespace CoreNFC {
 	}
 
 	[Flags, iOS (14, 0)]
-	public enum NFCISO15693ResponseFlag : byte
+	public enum NFCIso15693ResponseFlag : byte
 	{
 		Error = (1 << 0),
 		ResponseBufferValid = (1 << 1),
@@ -751,9 +751,9 @@ namespace CoreNFC {
 	[iOS (13,0)]
 	[Native]
 #if XAMCORE_4_0
-	enum NFCVASErrorCode
+	enum NFCVasErrorCode
 #else
-	[Advice ("The native name of this enum is 'NFCVASErrorCode'.")]
+	[Advice ("The native name of this enum is 'NFCVasErrorCode'.")]
 	enum VasErrorCode
 #endif
 		: long {
@@ -770,9 +770,9 @@ namespace CoreNFC {
 	[iOS (13,0)]
 	[Native]
 #if XAMCORE_4_0
-	enum NFCVASMode 
+	enum NFCVasMode 
 #else
-	[Advice ("The native name of this enum is 'NFCVASMode'.")]
+	[Advice ("The native name of this enum is 'NFCVasMode'.")]
 	enum VasMode 
 #endif
 		: long {
