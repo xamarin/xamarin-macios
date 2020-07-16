@@ -89,13 +89,6 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 			doc = new XmlDocument ();
 			doc.LoadWithoutNetworkAccess (original_path);
 			var original_name = System.IO.Path.GetFileName (original_path);
-			if (original_name.Contains ("GuiUnit_NET") || original_name.Contains ("GuiUnit_xammac_mobile")) {
-				// The GuiUnit project files writes stuff outside their project directory using relative paths,
-				// but override that so that we don't end up with multiple cloned projects writing stuff to
-				// the same location.
-				doc.SetOutputPath ("bin\\$(Configuration)");
-				doc.SetNode ("DocumentationFile", "bin\\$(Configuration)\\nunitlite.xml");
-			}
 			doc.ResolveAllPaths (original_path);
 
 			if (doc.IsDotNetProject ()) {
