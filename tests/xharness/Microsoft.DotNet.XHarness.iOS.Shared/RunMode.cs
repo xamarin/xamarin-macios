@@ -6,5 +6,6 @@
 		iOS,
 		TvOS,
 		WatchOS,
+		macOS,
 	}
 }
