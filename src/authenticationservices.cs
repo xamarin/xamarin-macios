@@ -509,7 +509,7 @@ namespace AuthenticationServices {
 
 		[Mac (10, 16), iOS (14, 0)]
 		[Field ("ASAuthorizationProviderAuthorizationOperationConfigurationRemoved")]
-		Removed,
+		ConfigurationRemoved,
 	}
 
 	[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
@@ -844,6 +844,7 @@ namespace AuthenticationServices {
 	[DisableDefaultCtor]
 	interface ASAccountAuthenticationModificationExtensionContext {
 
+		[Async]
 		[Export ("getSignInWithAppleUpgradeAuthorizationWithState:nonce:completionHandler:")]
 		void GetSignInWithAppleUpgradeAuthorization ([NullAllowed] string state, [NullAllowed] string nonce, Action<ASAuthorizationAppleIdCredential, NSError> completionHandler);
 
