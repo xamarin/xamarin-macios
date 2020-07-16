@@ -1,0 +1,6 @@
+native/build
+native/DerivedData
+xcshareddata
+xcuserdata
+bin
+obj
