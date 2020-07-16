@@ -56,89 +56,79 @@ namespace MonoTouchFixtures.Foundation {
 		}
 
 		[Test]
-		[ExpectedException (typeof (ArgumentException))]
 		public void TestCreateWithDictWrongArgDescription ()
 		{
 			var description = new NSScriptCommandDescriptionDictionary ();
-			NSScriptCommandDescription.Create (suiteName, commandName, description);
+			Assert.Throws<ArgumentException> (() => NSScriptCommandDescription.Create (suiteName, commandName, description));
 		}
 		
 		[TestCase ("")]
 		[TestCase (null)]
-		[ExpectedException (typeof (ArgumentException))]
 		public void TestCreateWithDictNullOrEmptySuitName (string code)
 		{
 			var description = new NSScriptCommandDescriptionDictionary ();
-			NSScriptCommandDescription.Create (code, commandName, description);
+			Assert.Throws<ArgumentException> (() => NSScriptCommandDescription.Create (code, commandName, description));
 		}
 	
 		[TestCase ("")]
 		[TestCase (null)]
-		[ExpectedException (typeof (ArgumentException))]
 		public void TestCreateWithDictNullOrEmptyCommandName (string code)
 		{
 			var description = new NSScriptCommandDescriptionDictionary ();
-			NSScriptCommandDescription.Create (suiteName, code, description);
+			Assert.Throws<ArgumentException> (() => NSScriptCommandDescription.Create (suiteName, code, description));
 		}
 		
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void TestCreateWithDictNullDict ()
 		{
 			NSScriptCommandDescriptionDictionary dict = null;
-			NSScriptCommandDescription.Create (suiteName, commandName, dict);
+			Assert.Throws<ArgumentNullException> (() => NSScriptCommandDescription.Create (suiteName, commandName, dict));
 		}
 		
 		[TestCase ("")]
 		[TestCase (null)]
-		[ExpectedException (typeof (ArgumentException))]
 		public void TestCreateSuiteNameNullOrEmpty (string code)
 		{
-			NSScriptCommandDescription.Create (code, commandName, dict);
+			Assert.Throws<ArgumentException> (() => NSScriptCommandDescription.Create (code, commandName, dict));
 		}
 		
 		[TestCase ("")]
 		[TestCase (null)]
-		[ExpectedException (typeof (ArgumentException))]
 		public void TestCreateCommandNameNullOrEmpty (string code)
 		{
-			NSScriptCommandDescription.Create (suiteName, code, dict);
+			Assert.Throws<ArgumentException> (() => NSScriptCommandDescription.Create (suiteName, code, dict));
 		}
 		
 		[TestCase ("")]
 		[TestCase (null)]
-		[ExpectedException (typeof (ArgumentException))]
 		public void TestCreateCmdClassNullOrEmpty (string code)
 		{
 			dict.CommandClass = code;
-			NSScriptCommandDescription.Create (suiteName, commandName, dict);
+			Assert.Throws<ArgumentException> (() => NSScriptCommandDescription.Create (suiteName, commandName, dict));
 		}
 		
 		[TestCase ("")]
 		[TestCase (null)]
-		[ExpectedException (typeof (ArgumentException))]
 		public void TestCreateEventCodeNullOrEmpty (string code)
 		{
 			dict.AppleEventCode = code; 
-			NSScriptCommandDescription.Create (suiteName, commandName, dict);
+			Assert.Throws<ArgumentException> (() => NSScriptCommandDescription.Create (suiteName, commandName, dict));
 		}
 		
 		[TestCase ("TooLong")]
 		[TestCase ("srt")]
-		[ExpectedException (typeof (ArgumentException))]
 		public void TestCreateEventCodeWrongLength (string code)
 		{
 			dict.AppleEventCode = code; 
-			NSScriptCommandDescription.Create (suiteName, commandName, dict);
+			Assert.Throws<ArgumentException> (() => NSScriptCommandDescription.Create (suiteName, commandName, dict));
 		}
 		
 		[TestCase ("TooLong")]
 		[TestCase ("srt")]
-		[ExpectedException (typeof (ArgumentException))]
 		public void TestCreateResultAppleEventWrongLength (string code)
 		{
 			dict.ResultAppleEventCode = code;
-			NSScriptCommandDescription.Create (suiteName, commandName, dict);
+			Assert.Throws<ArgumentException> (() => NSScriptCommandDescription.Create (suiteName, commandName, dict));
 		}
 		
 		[Test]

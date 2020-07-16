@@ -186,12 +186,13 @@ namespace MonoTouchFixtures.Intents {
 		}
 
 		[Test]
-#if __WATCHOS__
-		[ExpectedException (typeof (PlatformNotSupportedException))]
-#endif
 		public void INCarAirCirculationModeResolutionResultPropertyTest ()
 		{
-		
+#if __WATCHOS__
+			Assert.Throws<PlatformNotSupportedException> (() => { var v = INCarAirCirculationModeResolutionResult.NeedsValue; });
+			Assert.Throws<PlatformNotSupportedException> (() => { var v = INCarAirCirculationModeResolutionResult.NotRequired; });
+			Assert.Throws<PlatformNotSupportedException> (() => { var v = INCarAirCirculationModeResolutionResult.Unsupported; });
+#else
 			using (var needsValue = INCarAirCirculationModeResolutionResult.NeedsValue)
 			using (var notRequired = INCarAirCirculationModeResolutionResult.NotRequired)
 			using (var unsupported = INCarAirCirculationModeResolutionResult.Unsupported) {
@@ -203,14 +204,17 @@ namespace MonoTouchFixtures.Intents {
 				Assert.IsInstanceOfType (typeof (INCarAirCirculationModeResolutionResult), notRequired, "NotRequired");
 				Assert.IsInstanceOfType (typeof (INCarAirCirculationModeResolutionResult), unsupported, "Unsupported");
 			}
+#endif
 		}
 
 		[Test]
-#if __WATCHOS__
-		[ExpectedException (typeof (PlatformNotSupportedException))]
-#endif
 		public void INCarAudioSourceResolutionResultPropertyTest ()
 		{
+#if __WATCHOS__
+			Assert.Throws<PlatformNotSupportedException> (() => { var v = INCarAudioSourceResolutionResult.NeedsValue; });
+			Assert.Throws<PlatformNotSupportedException> (() => { var v = INCarAudioSourceResolutionResult.NotRequired; });
+			Assert.Throws<PlatformNotSupportedException> (() => { var v = INCarAudioSourceResolutionResult.Unsupported; });
+#else
 			using (var needsValue = INCarAudioSourceResolutionResult.NeedsValue)
 			using (var notRequired = INCarAudioSourceResolutionResult.NotRequired)
 			using (var unsupported = INCarAudioSourceResolutionResult.Unsupported) {
@@ -222,14 +226,17 @@ namespace MonoTouchFixtures.Intents {
 				Assert.IsInstanceOfType (typeof (INCarAudioSourceResolutionResult), notRequired, "NotRequired");
 				Assert.IsInstanceOfType (typeof (INCarAudioSourceResolutionResult), unsupported, "Unsupported");
 			}
+#endif
 		}
 
 		[Test]
-#if __WATCHOS__
-		[ExpectedException (typeof (PlatformNotSupportedException))]
-#endif
 		public void INCarDefrosterResolutionResultPropertyTest ()
 		{
+#if __WATCHOS__
+			Assert.Throws<PlatformNotSupportedException> (() => { var v = INCarDefrosterResolutionResult.NeedsValue; });
+			Assert.Throws<PlatformNotSupportedException> (() => { var v = INCarDefrosterResolutionResult.NotRequired; });
+			Assert.Throws<PlatformNotSupportedException> (() => { var v = INCarDefrosterResolutionResult.Unsupported; });
+#else
 			using (var needsValue = INCarDefrosterResolutionResult.NeedsValue)
 			using (var notRequired = INCarDefrosterResolutionResult.NotRequired)
 			using (var unsupported = INCarDefrosterResolutionResult.Unsupported) {
@@ -241,14 +248,17 @@ namespace MonoTouchFixtures.Intents {
 				Assert.IsInstanceOfType (typeof (INCarDefrosterResolutionResult), notRequired, "NotRequired");
 				Assert.IsInstanceOfType (typeof (INCarDefrosterResolutionResult), unsupported, "Unsupported");
 			}
+#endif
 		}
 
 		[Test]
-#if __WATCHOS__
-		[ExpectedException (typeof (PlatformNotSupportedException))]
-#endif
 		public void INCarSeatResolutionResultPropertyTest ()
 		{
+#if __WATCHOS__
+			Assert.Throws<PlatformNotSupportedException> (() => { var v = INCarSeatResolutionResult.NeedsValue; });
+			Assert.Throws<PlatformNotSupportedException> (() => { var v = INCarSeatResolutionResult.NotRequired; });
+			Assert.Throws<PlatformNotSupportedException> (() => { var v = INCarSeatResolutionResult.Unsupported; });
+#else
 			using (var needsValue = INCarSeatResolutionResult.NeedsValue)
 			using (var notRequired = INCarSeatResolutionResult.NotRequired)
 			using (var unsupported = INCarSeatResolutionResult.Unsupported) {
@@ -260,6 +270,7 @@ namespace MonoTouchFixtures.Intents {
 				Assert.IsInstanceOfType (typeof (INCarSeatResolutionResult), notRequired, "NotRequired");
 				Assert.IsInstanceOfType (typeof (INCarSeatResolutionResult), unsupported, "Unsupported");
 			}
+#endif
 		}
 
 		[Test]
@@ -327,11 +338,13 @@ namespace MonoTouchFixtures.Intents {
 		}
 
 		[Test]
-#if __WATCHOS__
-		[ExpectedException (typeof (PlatformNotSupportedException))]
-#endif
 		public void INRadioTypeResolutionResultPropertyTest ()
 		{
+#if __WATCHOS__
+			Assert.Throws<PlatformNotSupportedException> (() => { var v = INRadioTypeResolutionResult.NeedsValue; });
+			Assert.Throws<PlatformNotSupportedException> (() => { var v = INRadioTypeResolutionResult.NotRequired; });
+			Assert.Throws<PlatformNotSupportedException> (() => { var v = INRadioTypeResolutionResult.Unsupported; });
+#else
 			using (var needsValue = INRadioTypeResolutionResult.NeedsValue)
 			using (var notRequired = INRadioTypeResolutionResult.NotRequired)
 			using (var unsupported = INRadioTypeResolutionResult.Unsupported) {
@@ -343,14 +356,17 @@ namespace MonoTouchFixtures.Intents {
 				Assert.IsInstanceOfType (typeof (INRadioTypeResolutionResult), notRequired, "NotRequired");
 				Assert.IsInstanceOfType (typeof (INRadioTypeResolutionResult), unsupported, "Unsupported");
 			}
+#endif
 		}
 
 		[Test]
-#if __WATCHOS__
-		[ExpectedException (typeof (PlatformNotSupportedException))]
-#endif
 		public void INRelativeReferenceResolutionResultPropertyTest ()
 		{
+#if __WATCHOS__
+			Assert.Throws<PlatformNotSupportedException> (() => { var v = INRelativeReferenceResolutionResult.NeedsValue; });
+			Assert.Throws<PlatformNotSupportedException> (() => { var v = INRelativeReferenceResolutionResult.NotRequired; });
+			Assert.Throws<PlatformNotSupportedException> (() => { var v = INRelativeReferenceResolutionResult.Unsupported; });
+#else
 			using (var needsValue = INRelativeReferenceResolutionResult.NeedsValue)
 			using (var notRequired = INRelativeReferenceResolutionResult.NotRequired)
 			using (var unsupported = INRelativeReferenceResolutionResult.Unsupported) {
@@ -362,14 +378,17 @@ namespace MonoTouchFixtures.Intents {
 				Assert.IsInstanceOfType (typeof (INRelativeReferenceResolutionResult), notRequired, "NotRequired");
 				Assert.IsInstanceOfType (typeof (INRelativeReferenceResolutionResult), unsupported, "Unsupported");
 			}
+#endif
 		}
 
 		[Test]
-#if __WATCHOS__
-		[ExpectedException (typeof (PlatformNotSupportedException))]
-#endif
 		public void INRelativeSettingResolutionResultPropertyTest ()
 		{
+#if __WATCHOS__
+			Assert.Throws<PlatformNotSupportedException> (() => { var v = INRelativeSettingResolutionResult.NeedsValue; });
+			Assert.Throws<PlatformNotSupportedException> (() => { var v = INRelativeSettingResolutionResult.NotRequired; });
+			Assert.Throws<PlatformNotSupportedException> (() => { var v = INRelativeSettingResolutionResult.Unsupported; });
+#else
 			using (var needsValue = INRelativeSettingResolutionResult.NeedsValue)
 			using (var notRequired = INRelativeSettingResolutionResult.NotRequired)
 			using (var unsupported = INRelativeSettingResolutionResult.Unsupported) {
@@ -381,6 +400,7 @@ namespace MonoTouchFixtures.Intents {
 				Assert.IsInstanceOfType (typeof (INRelativeSettingResolutionResult), notRequired, "NotRequired");
 				Assert.IsInstanceOfType (typeof (INRelativeSettingResolutionResult), unsupported, "Unsupported");
 			}
+#endif
 		}
 
 #if !__WATCHOS__
@@ -415,7 +435,7 @@ namespace MonoTouchFixtures.Intents {
 				Assert.IsInstanceOfType (typeof (INRestaurantResolutionResult), unsupported, "Unsupported");
 			}
 		}
-#endif
+#endif // !__WATCHOS__
 
 		[Test]
 		public void INTemperatureResolutionResultPropertyTest ()

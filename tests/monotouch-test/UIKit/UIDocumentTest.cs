@@ -108,14 +108,13 @@ namespace MonoTouchFixtures.UIKit {
 		}
 		
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void PerformAsynchronousFileAccess_Null ()
 		{
 			using (NSUrl url = NSUrl.FromFilename (GetFileName ()))
 			using (var doc = new MyDocument (url)) {
 				// NULL value is not documented by Apple but adding a
 				// [NullAllowed] would throw an Objective-C exception (bad)
-				doc.PerformAsynchronousFileAccess (null);
+				Assert.Throws<ArgumentNullException> (() => doc.PerformAsynchronousFileAccess (null));
 			}
 		}
 
