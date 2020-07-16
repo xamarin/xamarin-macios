@@ -76,10 +76,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void RegisterAssembly_null ()
 		{
-			Runtime.RegisterAssembly (null);
+			Assert.Throws<ArgumentNullException> (() => Runtime.RegisterAssembly (null));
 		}
 
 #if !__WATCHOS__ && !__TVOS__ && !MONOMAC

@@ -415,12 +415,11 @@ namespace LinkSdk.Aot {
 		}
 
 		[Test]
-		[ExpectedException (typeof (NullReferenceException))]
 		public void AsEnumerable_4114 ()
 		{
 			Enumbers<string> e = new Enumbers<string> ();
 			//  Attempting to JIT compile method 'System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<string, string>>:ToArray ()' while running with --aot-only.
-			e.Enumerate (null);
+			Assert.Throws<NullReferenceException> (() => e.Enumerate (null));
 		}
 
 		static object mInstance = null;

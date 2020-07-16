@@ -98,24 +98,21 @@ namespace MonoTouchFixtures.Foundation {
 		// I guess no one ever used them since they don't work...
 		// commented (selectors removed from MT bindings) - can be re-enabled to test newer iOS releases
 		[Test]
-		[ExpectedException (typeof (MonoTouchException))]
 		public void PathForImageResource ()
 		{
-			main.PathForImageResource ("basn3p08.png");
+			Assert.Throws<MonoTouchException> (() => main.PathForImageResource ("basn3p08.png"));
 		}
 
 		[Test]
-		[ExpectedException (typeof (MonoTouchException))]
 		public void PathForSoundResource ()
 		{
-			main.PathForSoundResource ("basn3p08.png");
+			Assert.Throws<MonoTouchException> (() => main.PathForSoundResource ("basn3p08.png"));
 		}
 
 		[Test]
-		[ExpectedException (typeof (MonoTouchException))]
 		public void LoadNib ()
 		{
-			NSBundle.LoadNib (String.Empty, main);
+			Assert.Throws<MonoTouchException> (() => NSBundle.LoadNib (String.Empty, main));
 		}
 #endif
 		[Test]

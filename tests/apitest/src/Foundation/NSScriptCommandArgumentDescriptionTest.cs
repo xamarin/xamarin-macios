@@ -36,34 +36,30 @@ namespace MonoTouchFixtures.Foundation {
 		
 		[TestCase ("")]
 		[TestCase (null)]
-		[ExpectedException (typeof (ArgumentException))]
 		public void TestConstructorNameNullOrEmpty (string name)
 		{
-			new NSScriptCommandArgumentDescription (name, "eeee", "NSString", false);
+			Assert.Throws<ArgumentException> (() => new NSScriptCommandArgumentDescription (name, "eeee", "NSString", false));
 		}
 		
 		[TestCase ("")]
 		[TestCase (null)]
-		[ExpectedException (typeof (ArgumentException))]
 		public void TestConstructorEventCodeNullOrEmpty (string eventCode)
 		{
-			new NSScriptCommandArgumentDescription ("name", eventCode, "NSString", false);
+			Assert.Throws<ArgumentException> (() => new NSScriptCommandArgumentDescription ("name", eventCode, "NSString", false));
 		}
 		
 		[TestCase ("srf")]
 		[TestCase ("TooLong")]
-		[ExpectedException (typeof (ArgumentException))]
 		public void TestConstructorEventCodeWrongLength (string eventCode)
 		{
-			new NSScriptCommandArgumentDescription ("name", eventCode, "NSString", false);
+			Assert.Throws<ArgumentException> (() => new NSScriptCommandArgumentDescription ("name", eventCode, "NSString", false));
 		}
 		
 		[TestCase ("")]
 		[TestCase (null)]
-		[ExpectedException (typeof (ArgumentException))]
 		public void TestConstructorTypeNullOrEmpty (string type)
 		{
-			new NSScriptCommandArgumentDescription ("name", "****", type, false);
+			Assert.Throws<ArgumentException> (() => new NSScriptCommandArgumentDescription ("name", "****", type, false));
 		}
 		
 		[TestCase ("name", "cdfd", "NSString", true)]

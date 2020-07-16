@@ -48,116 +48,110 @@ namespace MonoTouchFixtures.SystemConfiguration {
 
 #if !MONOMAC // TryCopyCurrentNetworkInfo and fields checked are not on Mac
 		[Test]
-#if __TVOS__
-		[ExpectedException (typeof (NotSupportedException))]
-#else
-		[ExpectedException (typeof (ArgumentNullException))]
-#endif
 		public void TryCopyCurrentNetworkInfo_Null ()
 		{
 			NSDictionary dict;
-			CaptiveNetwork.TryCopyCurrentNetworkInfo (null, out dict);
+#if __TVOS__
+			Assert.Throws<NotSupportedException> (() => CaptiveNetwork.TryCopyCurrentNetworkInfo (null, out dict));
+#else
+			Assert.Throws<ArgumentNullException> (() => CaptiveNetwork.TryCopyCurrentNetworkInfo (null, out dict));
+#endif
 		}
 		
 		[Test]
-#if __TVOS__
-		[ExpectedException (typeof (NotSupportedException))]
-#endif
 		public void TryCopyCurrentNetworkInfo ()
 		{
-			if (Runtime.Arch == Arch.SIMULATOR) {
-#if __IOS__
-				if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 6, 0))
-					Assert.Inconclusive ("This test throws EntryPointNotFoundException on the iOS 6 simulator with Lion");
-#endif
-			}
-
 			NSDictionary dict;
-			var status = CaptiveNetwork.TryCopyCurrentNetworkInfo ("en0", out dict);
+			StatusCode status;
+
+#if __TVOS__
+			Assert.Throws<NotSupportedException> (() => { status = CaptiveNetwork.TryCopyCurrentNetworkInfo ("en0", out dict); });
+#else
+			status = CaptiveNetwork.TryCopyCurrentNetworkInfo ("en0", out dict);
 
 			// No network, ignore test
 			if (status == StatusCode.NoKey)
 				return;
 
 			Assert.AreEqual (StatusCode.OK, status, "Status");
-
-#if __TVOS__
-			Assert.IsNull (dict, "Dictionary"); // null?
-			return;
+			// To get a non-null dictionary back, we must (https://developer.apple.com/documentation/systemconfiguration/1614126-cncopycurrentnetworkinfo)
+			// * Use core location, and request (and get) authorization to use location information
+			// * Add the 'com.apple.developer.networking.wifi-info' entitlement
+			// I tried this, and still got null back, so just assert that we get null.
+			Assert.IsNull (dict, "Dictionary");
 #endif
+		}
 
-			if ((dict == null) && (Runtime.Arch == Arch.DEVICE) && TestRuntime.CheckSystemVersion (PlatformName.iOS, 9, 0))
-				Assert.Ignore ("null on iOS9 devices - CaptiveNetwork is being deprecated ?!?");
-
-			if (dict.Count == 3) {
-				Assert.NotNull (dict [CaptiveNetwork.NetworkInfoKeyBSSID], "NetworkInfoKeyBSSID");
-				Assert.NotNull (dict [CaptiveNetwork.NetworkInfoKeySSID], "NetworkInfoKeySSID");
-				Assert.NotNull (dict [CaptiveNetwork.NetworkInfoKeySSIDData], "NetworkInfoKeySSIDData");
-			} else {
-				Assert.Fail ("Unexpected dictionary result with {0} items", dict.Count);
-			}
+		[Test]
+		public void TryGetSupportedInterfaces ()
+		{
+			StatusCode status;
+#if __TVOS__
+			Assert.Throws<NotSupportedException> (() => CaptiveNetwork.TryGetSupportedInterfaces (out var ifaces));
+#else
+			status = CaptiveNetwork.TryGetSupportedInterfaces (out var ifaces);
+			Assert.AreEqual (StatusCode.OK, status, "Status");
+			Assert.IsNull (ifaces, "Null Interfaces");
+#endif // __TVOS__
 		}
 #endif
 
 		[Test]
-#if __TVOS__
-		[ExpectedException (typeof (NotSupportedException))]
-#else
-		[ExpectedException (typeof (ArgumentNullException))]
-#endif
 		public void MarkPortalOnline_Null ()
 		{
-			CaptiveNetwork.MarkPortalOnline (null);
+#if __TVOS__
+			Assert.Throws<NotSupportedException> (() => CaptiveNetwork.MarkPortalOnline (null));
+#else
+			Assert.Throws<ArgumentNullException> (() => CaptiveNetwork.MarkPortalOnline (null));
+#endif
 		}
 
 		[Test]
-#if __TVOS__
-		[ExpectedException (typeof (NotSupportedException))]
-#endif
 		public void MarkPortalOnline ()
 		{
 			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
+
+#if __TVOS__
+			Assert.Throws<NotSupportedException> (() => CaptiveNetwork.MarkPortalOnline ("xamxam"));
+#else
 			Assert.False (CaptiveNetwork.MarkPortalOnline ("xamxam"));
+#endif
 		}
 		
 		[Test]
-#if __TVOS__
-		[ExpectedException (typeof (NotSupportedException))]
-#else
-		[ExpectedException (typeof (ArgumentNullException))]
-#endif
 		public void MarkPortalOffline_Null ()
 		{
-			CaptiveNetwork.MarkPortalOffline (null);
+#if __TVOS__
+			Assert.Throws<NotSupportedException> (() => CaptiveNetwork.MarkPortalOffline (null));
+#else
+			Assert.Throws<ArgumentNullException> (() => CaptiveNetwork.MarkPortalOffline (null));
+#endif
 		}
 
 		[Test]
-#if __TVOS__
-		[ExpectedException (typeof (NotSupportedException))]
-#endif
 		public void MarkPortalOffline ()
 		{
 			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
+#if __TVOS__
+			Assert.Throws<NotSupportedException> (() => CaptiveNetwork.MarkPortalOffline ("xamxam"));
+#else
 			Assert.False (CaptiveNetwork.MarkPortalOffline ("xamxam"));
+#endif
 		}
 		
 		[Test]
-#if __TVOS__
-		[ExpectedException (typeof (NotSupportedException))]
-#else
-		[ExpectedException (typeof (ArgumentNullException))]
-#endif
 		public void SetSupportedSSIDs_Null ()
 		{
-			CaptiveNetwork.SetSupportedSSIDs (null);
+#if __TVOS__
+			Assert.Throws<NotSupportedException> (() => CaptiveNetwork.SetSupportedSSIDs (null));
+#else
+			Assert.Throws<ArgumentNullException> (() => CaptiveNetwork.SetSupportedSSIDs (null));
+#endif
 		}
 
 		[Test]
-#if __TVOS__
-		[ExpectedException (typeof (NotSupportedException))]
-#endif
 		public void SetSupportedSSIDs ()
 		{
 			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
@@ -168,7 +162,11 @@ namespace MonoTouchFixtures.SystemConfiguration {
 			// that API is deprecated in iOS9 - and it might be why it returns false (or not)
 			bool supported = !TestRuntime.CheckXcodeVersion (7, 0);
 #endif
-			Assert.That (CaptiveNetwork.SetSupportedSSIDs (new string [2] { "one", "two" } ), Is.EqualTo (supported), "set");
+#if __TVOS__
+			Assert.Throws<NotSupportedException> (() => CaptiveNetwork.SetSupportedSSIDs (new string [2] { "one", "two" } ), "set");
+#else
+			Assert.That (CaptiveNetwork.SetSupportedSSIDs (new string [2] { "one", "two" }), Is.EqualTo (supported), "set");
+#endif
 		}
 	}
 }

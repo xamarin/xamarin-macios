@@ -2616,7 +2616,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				obj.SetStringArrayMethod (array);
 				Assert.That (obj.StringArrayProperty, Is.EqualTo (array), "3");
 				var rv = obj.GetStringArrayMethod ();
-				Assert.That (rv, Is.EquivalentTo (array), "4");
+				Assert.That (rv, Is.EqualTo (array), "4");
 			}
 
 			using (var arrayObj = NSArray.FromStrings (array)) {
@@ -2658,7 +2658,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				obj.SetNSObjectArrayMethod (array);
 				Assert.That (obj.NSObjectArrayProperty, Is.EqualTo (array), "3");
 				var rv = obj.GetNSObjectArrayMethod ();
-				Assert.That (rv, Is.EquivalentTo (array), "4");
+				Assert.That (rv, Is.EqualTo (array), "4");
 			}
 
 			using (var arrayObj = NSArray.FromNSObjects (array)) {
@@ -2700,7 +2700,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				obj.SetINSCodingArrayMethod (array);
 				Assert.That (obj.INSCodingArrayProperty, Is.EqualTo (array), "3");
 				var rv = obj.GetINSCodingArrayMethod ();
-				Assert.That (rv, Is.EquivalentTo (array), "4");
+				Assert.That (rv, Is.EqualTo (array), "4");
 			}
 
 			using (var arrayObj = NSArray.FromNSObjects<INSCoding> (array)) {

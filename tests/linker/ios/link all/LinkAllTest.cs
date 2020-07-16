@@ -297,17 +297,18 @@ namespace LinkAll {
 		}
 
 		[Test]
-#if __WATCHOS__
-		[ExpectedException (typeof (PlatformNotSupportedException))]
-#endif
 		public void SystemDataSqlClient ()
 		{
+#if __WATCHOS__
+			Assert.Throws<PlatformNotSupportedException> (() => new System.Data.SqlClient.SqlConnection ());
+#else
 			// notes:
 			// * this test is mean to fail when building the application using a Community or Indie licenses
 			// * linksdk.app references System.Data (assembly) but not types in SqlClient namespace
 			using (var sc = new System.Data.SqlClient.SqlConnection ()) {
 				Assert.NotNull (sc);
 			}
+#endif
 		}
 		
 #if !__TVOS__ && !__WATCHOS__

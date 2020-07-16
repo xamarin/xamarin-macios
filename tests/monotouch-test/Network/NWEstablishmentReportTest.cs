@@ -89,7 +89,7 @@ namespace MonoTouchFixtures.Network {
 		}
 
 		[Test]
-		public void TestPreviousAttemptCount () => Assert.AreNotEqual (-1, report.PreviousAttemptCount);
+		public void TestPreviousAttemptCount () => Assert.AreNotEqual (uint.MaxValue, report.PreviousAttemptCount);
 
 		[Test]
 		public void TestDuration () => Assert.IsTrue (report.Duration > TimeSpan.MinValue);

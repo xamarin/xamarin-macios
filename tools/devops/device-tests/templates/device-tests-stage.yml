@@ -67,6 +67,7 @@ stages:
     condition: succeededOrFailed()
     pool:
       name: ${{ parameters.WindowsDevicePool }}
+      demands: agent.os -equals Windows_NT # we need to use a windows machine since vsdrops just works on them and the pool might have diff OS in the agents
       workspace:
         clean: all
     steps:
@@ -79,6 +80,7 @@ stages:
     condition: succeededOrFailed()
     pool:
       name: ${{ parameters.WindowsDevicePool }}
+      demands: agent.os -equals Windows_NT #  not needed, but lest not waste our mac with devices, we have less.
       workspace:
         clean: all
     steps:

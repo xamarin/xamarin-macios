@@ -45,24 +45,22 @@ namespace MonoTouchFixtures.GamePlayKit {
 			Assert.IsNull (entity.GetComponent (typeof (NameComponent)), "Component typeof NameComponent must be null");
 		}
 
-		[ExpectedException (typeof (ArgumentNullException))]
 		[Test]
 		public void BadGetComponent ()
 		{
 			TestRuntime.AssertXcodeVersion (7, 0);
 
 			var entity = GKEntity.GetEntity ();
-			entity.GetComponent (null);
+			Assert.Throws<ArgumentNullException> (() => entity.GetComponent (null));
 		}
 
-		[ExpectedException (typeof (ArgumentNullException))]
 		[Test]
 		public void BadRemoval ()
 		{
 			TestRuntime.AssertXcodeVersion (7, 0);
 
 			var entity = GKEntity.GetEntity ();
-			entity.RemoveComponent (null);
+			Assert.Throws<ArgumentNullException> (() => entity.RemoveComponent (null));
 		}
 	}
 
