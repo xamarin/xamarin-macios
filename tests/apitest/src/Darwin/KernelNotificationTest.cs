@@ -26,7 +26,7 @@ namespace apitest
 		public void KEvent ()
 		{
 			// (KernelEvent[], KernelEvent[])
-			using (var sleep = Process.Start ("/bin/sleep", "0.5")) {
+			using (var sleep = Process.Start ("/bin/sleep", "0.05")) {
 				using (var kqueue = new KernelQueue ()) {
 					var events = CreateEvents (sleep);
 					Assert.IsTrue (kqueue.KEvent (events, events), "kevent");
@@ -34,7 +34,7 @@ namespace apitest
 			}
 
 			// (KernelEvent[], KernelEvent[], TimeSpan?)
-			using (var sleep = Process.Start ("/bin/sleep", "0.5")) {
+			using (var sleep = Process.Start ("/bin/sleep", "0.05")) {
 				using (var kqueue = new KernelQueue ()) {
 					var events = CreateEvents (sleep);
 					Assert.AreEqual (1, kqueue.KEvent (events, events, TimeSpan.FromSeconds (5)), "kevent");
@@ -42,7 +42,7 @@ namespace apitest
 			}
 
 			// (KernelEvent[], KernelEvent[], TimeSpan?)
-			using (var sleep = Process.Start ("/bin/sleep", "0.5")) {
+			using (var sleep = Process.Start ("/bin/sleep", "0.05")) {
 				using (var kqueue = new KernelQueue ()) {
 					var events = CreateEvents (sleep);
 					Assert.AreEqual (1, kqueue.KEvent (events, events, null), "kevent");
@@ -50,7 +50,7 @@ namespace apitest
 			}
 
 			// (KernelEvent[], int, KernelEvent[], int, TimeSpec?)
-			using (var sleep = Process.Start ("/bin/sleep", "0.5")) {
+			using (var sleep = Process.Start ("/bin/sleep", "0.05")) {
 				using (var kqueue = new KernelQueue ()) {
 					var events = CreateEvents (sleep);
 					TimeSpec ts = new TimeSpec
@@ -62,7 +62,7 @@ namespace apitest
 			}
 
 			// (KernelEvent[], int, KernelEvent[], int, TimeSpec?)
-			using (var sleep = Process.Start ("/bin/sleep", "0.5")) {
+			using (var sleep = Process.Start ("/bin/sleep", "0.05")) {
 				using (var kqueue = new KernelQueue ()) {
 					var events = CreateEvents (sleep);
 					Assert.AreEqual (1, kqueue.KEvent (events, events.Length, events, events.Length, null), "kevent");
@@ -70,7 +70,7 @@ namespace apitest
 			}
 
 			// (KernelEvent[], int, KernelEvent[], int, ref TimeSpec)
-			using (var sleep = Process.Start ("/bin/sleep", "0.5")) {
+			using (var sleep = Process.Start ("/bin/sleep", "0.05")) {
 				using (var kqueue = new KernelQueue ()) {
 					var events = CreateEvents (sleep);
 					TimeSpec ts = new TimeSpec
@@ -82,7 +82,7 @@ namespace apitest
 			}
 
 			// (KernelEvent[], KernelEvent[], ref TimeSpec)
-			using (var sleep = Process.Start ("/bin/sleep", "0.5")) {
+			using (var sleep = Process.Start ("/bin/sleep", "0.05")) {
 				using (var kqueue = new KernelQueue ()) {
 					var events = CreateEvents (sleep);
 					TimeSpec ts = new TimeSpec
@@ -94,7 +94,7 @@ namespace apitest
 			}
 
 			// (KernelEvent[], int, KernelEvent[], int)
-			using (var sleep = Process.Start ("/bin/sleep", "0.5")) {
+			using (var sleep = Process.Start ("/bin/sleep", "0.05")) {
 				using (var kqueue = new KernelQueue ()) {
 					var events = CreateEvents (sleep);
 					Assert.IsTrue (kqueue.KEvent (events, events.Length, events, events.Length), "kevent");
