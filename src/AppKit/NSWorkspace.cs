@@ -22,7 +22,7 @@ namespace AppKit {
 			return _OpenUrls (urls, bundleIdentifier, options, descriptor, null);
 		}
 
-		[Advice ("Use 'NSWorkSpace.IconForContentType'.")]
+		[Advice ("Use 'NSWorkSpace.IconForContentType' instead.")]
 		public virtual NSImage IconForFileType (string fileType)
 		{
 			var nsFileType = NSString.CreateNative (fileType);
@@ -34,7 +34,7 @@ namespace AppKit {
 			}
 		}
 
-		[Advice ("Use 'NSWorkSpace.IconForContentType'.")]
+		[Advice ("Use 'NSWorkSpace.IconForContentType' instead.")]
 		public virtual NSImage IconForFileType (HfsTypeCode typeCode)
 		{
 			var nsFileType = GetNSFileType ((uint) typeCode);

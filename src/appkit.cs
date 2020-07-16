@@ -2271,7 +2271,7 @@ namespace AppKit {
 		[NullAllowed, Export ("contentTintColor", ArgumentSemantic.Copy)]
 		NSColor ContentTintColor { get; set; }
 
-		[NoiOS, Mac (10, 16)]
+		[Mac (10, 16)]
 		[Export ("hasDestructiveAction")]
 		bool HasDestructiveAction { get; set; }
 	}
@@ -3675,12 +3675,12 @@ namespace AppKit {
 
 		[Static]
 		[Export ("controlShadowColor")]
-		[Deprecated (PlatformName.MacOSX, 10, 16, message: "Use a context specific color such as 'SeparatorColor.`")]
+		[Deprecated (PlatformName.MacOSX, 10, 16, message: "Use a context specific color such as 'SeparatorColor'.`")]
 		NSColor ControlShadow { get; }
 
 		[Static]
 		[Export ("controlDarkShadowColor")]
-		[Deprecated (PlatformName.MacOSX, 10, 16, message: "Use a context specific color such as 'SeparatorColor.`")]
+		[Deprecated (PlatformName.MacOSX, 10, 16, message: "Use a context specific color such as 'SeparatorColor'.`")]
 		NSColor ControlDarkShadow { get; }
 
 		[Static]
@@ -3689,12 +3689,12 @@ namespace AppKit {
 
 		[Static]
 		[Export ("controlHighlightColor")]
-		[Deprecated (PlatformName.MacOSX, 10, 16, message: "Use a context specific color such as 'SeparatorColor.`")]
+		[Deprecated (PlatformName.MacOSX, 10, 16, message: "Use a context specific color such as 'SeparatorColor'.`")]
 		NSColor ControlHighlight { get; }
 
 		[Static]
 		[Export ("controlLightHighlightColor")]
-		[Deprecated (PlatformName.MacOSX, 10, 16, message: "Use a context specific color such as 'SeparatorColor.`")]
+		[Deprecated (PlatformName.MacOSX, 10, 16, message: "Use a context specific color such as 'SeparatorColor'.`")]
 		NSColor ControlLightHighlight { get; }
 
 		[Static]
@@ -3762,7 +3762,7 @@ namespace AppKit {
 
 		[Static]
 		[Export ("selectedKnobColor")]
-		[Deprecated (PlatformName.MacOSX, 10, 16, message: "Use 'NSScroller' instead")]
+		[Deprecated (PlatformName.MacOSX, 10, 16, message: "Use 'NSScroller' instead.")]
 		NSColor SelectedKnob { get; }
 
 		[Static]
@@ -6510,7 +6510,7 @@ namespace AppKit {
 		[Mac (10,16)]
 		[Static]
 		[Export ("preferredFontForTextStyle:options:")]
-		NSFont PreferredFontForTextStyle (string style, NSDictionary options);
+		NSFont GetPreferredFont (string textStyle, NSDictionary options);
 	}
 
 	interface NSFontCollectionChangedEventArgs {
@@ -6742,7 +6742,7 @@ namespace AppKit {
 		[Mac (10,16)]
 		[Static]
 		[Export ("preferredFontDescriptorForTextStyle:options:")]
-		NSFontDescriptor PreferredFontDescriptorForTextStyle (string style, NSDictionary options);
+		NSFontDescriptor GetPreferredFont (string textStyle, NSDictionary options);
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -9027,7 +9027,7 @@ namespace AppKit {
 		[Mac (10,16)]
 		[Export ("outlineView:tintConfigurationForItem:")]
 		[return: NullAllowed]
-		NSTintConfiguration OutlineView (NSOutlineView outlineView, NSObject item);
+		NSTintConfiguration GetTintConfiguration (NSOutlineView outlineView, NSObject item);
 	}
 	
 	[BaseType (typeof (NSObject))]
@@ -9334,7 +9334,7 @@ namespace AppKit {
 		[Static]
 		[Export ("imageWithSystemSymbolName:accessibilityDescription:")]
 		[return: NullAllowed]
-		NSImage GetSystemSymbol (string symbolName, [NullAllowed] string description);
+		NSImage GetSystemSymbol (string symbolName, [NullAllowed] string accessibilityDescription);
 	}
 
 	public enum NSImageName 
@@ -13467,17 +13467,17 @@ namespace AppKit {
 		bool SendsSearchStringImmediately { get; set; }
 
 		[Mac (10,11)]
-		[Advice ("Use 'SearchTextBounds' instead.`")]
+		[Advice ("Use 'SearchTextBounds' instead.'")]
 		[Export ("rectForSearchTextWhenCentered:")]
 		CGRect GetRectForSearchText (bool isCentered);
 
 		[Mac (10,11)]
-		[Advice ("Use 'SearchButtonBounds' instead.`")]
+		[Advice ("Use 'SearchButtonBounds' instead.'")]
 		[Export ("rectForSearchButtonWhenCentered:")]
 		CGRect GetRectForSearchButton (bool isCentered);
 
 		[Mac (10,11)]
-		[Advice ("Use 'CancelButtonBounds' instead.`")]
+		[Advice ("Use 'CancelButtonBounds' instead.'")]
 		[Export ("rectForCancelButtonWhenCentered:")]
 		CGRect GetRectForCancelButton (bool isCentered);
 
@@ -13490,7 +13490,7 @@ namespace AppKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Mac (10,11)]
-		[Advice ("No longer availabile, now a no-op")]
+		[Advice ("No longer availabile, now a no-op.")]
 		[Export ("centersPlaceholder")]
 		bool CentersPlaceholder { get; set; }
 
@@ -27884,9 +27884,9 @@ namespace AppKit {
 		nfloat PreferredWidthForSearchFieldRepresentation { get; set; }
 	}
 
-	delegate NSView NSTableViewDiffableDataSourceCellProvider (NSTableView arg0, NSTableColumn arg1, nint arg2, NSObject arg3);
-	delegate NSTableRowView NSTableViewDiffableDataSourceRowProvider (NSTableView arg0, nint arg1, NSObject arg2);
-	delegate NSView NSTableViewDiffableDataSourceSectionHeaderViewProvider (NSTableView arg0, nint arg1, NSObject arg2);
+	delegate NSView NSTableViewDiffableDataSourceCellProvider (NSTableView tableView, NSTableColumn column, nint row, NSObject itemId);
+	delegate NSTableRowView NSTableViewDiffableDataSourceRowProvider (NSTableView tableView, nint row, NSObject identifier);
+	delegate NSView NSTableViewDiffableDataSourceSectionHeaderViewProvider (NSTableView tableView, nint row, NSObject sectionId);
 
 	[Mac (10,16)]
 	[BaseType (typeof(NSObject))]
@@ -27903,6 +27903,7 @@ namespace AppKit {
 		void ApplySnapshot (NSDiffableDataSourceSnapshot<NSObject, NSObject> snapshot, bool animatingDifferences);
 
 		[Export ("applySnapshot:animatingDifferences:completion:")]
+		[Async]
 		void ApplySnapshot (NSDiffableDataSourceSnapshot<NSObject, NSObject> snapshot, bool animatingDifferences, [NullAllowed] Action completion);
 
 		[Export ("itemIdentifierForRow:")]
@@ -27929,20 +27930,18 @@ namespace AppKit {
 		NSTableViewAnimationOptions DefaultRowAnimation { get; set; }
 	}
 
+	[Mac (10, 16)]
 	[Protocol]
 	interface NSTextContent
 	{
-		[Mac (10, 16)]
 		[Abstract]
 		[Export ("contentType")]
 		NSString GetContentType ();
 
-		[Mac (10, 16)]
 		[Abstract]
 		[Export ("setContentType:")]
 		void SetContentType (NSString contentType);
 	}
-
 
 	[Mac (10, 16)]
 	enum NSTextContentType {
@@ -27958,6 +27957,7 @@ namespace AppKit {
 
 	[Mac (10,16)]
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
 	interface NSTintConfiguration : NSCopying, NSSecureCoding
 	{
 		[Static]
@@ -27988,6 +27988,7 @@ namespace AppKit {
 
 	[Mac (10,16)]
 	[BaseType (typeof(NSToolbarItem))]
+	[DisableDefaultCtor]
 	interface NSTrackingSeparatorToolbarItem
 	{
 		[DesignatedInitializer]

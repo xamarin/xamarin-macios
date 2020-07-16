@@ -3021,7 +3021,7 @@ namespace AppKit {
 		Automatic,
 		FullWidth,
 		Inset,
-		SourceList
+		SourceList,
 	}
 
 	[Mac (10,16)]
@@ -3031,7 +3031,7 @@ namespace AppKit {
 		Automatic,
 		None,
 		Line,
-		Shadow
+		Shadow,
 	}
 
 	[Mac (10,16)]
@@ -3042,10 +3042,10 @@ namespace AppKit {
 		Expanded,
 		Preference,
 		Unified,
-		UnifiedCompact
+		UnifiedCompact,
 	}
 
-	[Flags, Mac (10,16)]
+	[Flags, Mac (10,7)]
 	[Native]
 	public enum NSTableViewAnimationOptions : ulong
 	{
@@ -3055,6 +3055,6 @@ namespace AppKit {
 		SlideUp = 0x10,
 		SlideDown = 0x20,
 		SlideLeft = 0x30,
-		SlideRight = 0x40
+		SlideRight = 0x40,
 	}
 }
