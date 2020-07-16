@@ -27865,6 +27865,7 @@ namespace AppKit {
 	[Unavailable (PlatformName.MacCatalyst)]
 	[Mac (10,16)]
 	[BaseType (typeof(NSToolbarItem))]
+	[DisableDefaultCtor]
 	interface NSSearchToolbarItem
 	{
 		[DesignatedInitializer]
@@ -27891,34 +27892,35 @@ namespace AppKit {
 	[Mac (10,16)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface NSTableViewDiffableDataSource : NSTableViewDataSource
-	{
+	interface NSTableViewDiffableDataSource<SectionIdentifierType,ItemIdentifierType> : NSTableViewDataSource
+		where SectionIdentifierType : NSObject
+		where ItemIdentifierType : NSObject {
 		[Export ("initWithTableView:cellProvider:")]
 		IntPtr Constructor (NSTableView tableView, NSTableViewDiffableDataSourceCellProvider cellProvider);
 
 		[Export ("snapshot")]
-		NSDiffableDataSourceSnapshot<NSObject, NSObject> Snapshot ();
+		NSDiffableDataSourceSnapshot<SectionIdentifierType,ItemIdentifierType> Snapshot ();
 
 		[Export ("applySnapshot:animatingDifferences:")]
-		void ApplySnapshot (NSDiffableDataSourceSnapshot<NSObject, NSObject> snapshot, bool animatingDifferences);
+		void ApplySnapshot (NSDiffableDataSourceSnapshot<SectionIdentifierType,ItemIdentifierType> snapshot, bool animatingDifferences);
 
 		[Export ("applySnapshot:animatingDifferences:completion:")]
 		[Async]
-		void ApplySnapshot (NSDiffableDataSourceSnapshot<NSObject, NSObject> snapshot, bool animatingDifferences, [NullAllowed] Action completion);
+		void ApplySnapshot (NSDiffableDataSourceSnapshot<SectionIdentifierType,ItemIdentifierType> snapshot, bool animatingDifferences, [NullAllowed] Action completion);
 
 		[Export ("itemIdentifierForRow:")]
 		[return: NullAllowed]
-		NSObject GetItemIdentifier (nint row);
+		ItemIdentifierType GetItemIdentifier (nint row);
 
 		[Export ("rowForItemIdentifier:")]
-		nint GetRowForItemIdentifier (NSObject itemIdentifier);
+		nint GetRowForItemIdentifier (ItemIdentifierType itemIdentifier);
 
 		[Export ("sectionIdentifierForRow:")]
 		[return: NullAllowed]
-		NSObject GetSectionIdentifier (nint row);
+		SectionIdentifierType GetSectionIdentifier (nint row);
 
 		[Export ("rowForSectionIdentifier:")]
-		nint GetRowForSectionIdentifier (NSObject sectionIdentifier);
+		nint GetRowForSectionIdentifier (SectionIdentifierType sectionIdentifier);
 
 		[NullAllowed, Export ("rowViewProvider", ArgumentSemantic.Copy)]
 		NSTableViewDiffableDataSourceRowProvider RowViewProvider { get; set; }
