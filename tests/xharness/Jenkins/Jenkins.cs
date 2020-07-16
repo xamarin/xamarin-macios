@@ -361,6 +361,12 @@ namespace Xharness.Jenkins {
 							continue;
 						}
 
+						var simulator = task as RunSimulatorTask;
+						if (simulator != null) {
+							allSimulatorTasks.Add (simulator);
+							continue;
+						}
+
 						if (task is DotNetTestTask dotnet) {
 							allDotNetTestTasks.Add (dotnet);
 							continue;
