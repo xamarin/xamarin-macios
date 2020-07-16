@@ -19792,11 +19792,11 @@ namespace AppKit {
 		NSView View { get; set; }
 
 		[Export ("minSize")]
-		[Advice("Use system constraints instead.")]
+		[Advice ("Use system constraints instead.")]
 		CGSize MinSize { get; set; }
 
 		[Export ("maxSize")]
-		[Advice("Use system constraints instead.")]
+		[Advice ("Use system constraints instead.")]
 		CGSize MaxSize { get; set; }
 
 		[Export ("visibilityPriority")]
@@ -21483,7 +21483,7 @@ namespace AppKit {
 		void NoteFileSystemChanged (string path);
 		
 		[Export ("getInfoForFile:application:type:"), ThreadSafe]
-		[Advice ("Use 'NSWorkspace.UrlForApplication' or 'NSUrl.GetResourceValue' instead")]
+		[Advice ("Use 'NSWorkspace.UrlForApplication' or 'NSUrl.GetResourceValue' instead.")]
 		bool GetInfo (string fullPath, out string appName, out string fileType);
 		
 		[Export ("isFilePackageAtPath:"), ThreadSafe]
@@ -21762,7 +21762,7 @@ namespace AppKit {
 
 		[Mac (10,16)]
 		[Export ("iconForContentType:")]
-		NSImage IconForContentType (UTType contentType);
+		NSImage GetIcon (UTType contentType);
 	}
 	
 	[Mac (10,14)]
@@ -27805,37 +27805,37 @@ namespace AppKit {
 	public enum NSFontTextStyle
 	{
 		[Field ("NSFontTextStyleLargeTitle")]
-		NSFontTextStyleLargeTitle,
+		LargeTitle,
 
 		[Field ("NSFontTextStyleTitle1")]
-		NSFontTextStyleTitle1,
+		Title1,
 
 		[Field ("NSFontTextStyleTitle2")]
-		NSFontTextStyleTitle2,
+		Title2,
 
 		[Field ("NSFontTextStyleTitle3")]
-		NSFontTextStyleTitle3,
+		Title3,
 
 		[Field ("NSFontTextStyleHeadline")]
-		NSFontTextStyleHeadline,
+		Headline,
 
 		[Field ("NSFontTextStyleSubheadline")]
-		NSFontTextStyleSubheadline,
+		Subheadline,
 
 		[Field ("NSFontTextStyleBody")]
-		NSFontTextStyleBody,
+		Body,
 
 		[Field ("NSFontTextStyleCallout")]
-		NSFontTextStyleCallout,
+		Callout,
 
 		[Field ("NSFontTextStyleFootnote")]
-		NSFontTextStyleFootnote,
+		Footnote,
 
 		[Field ("NSFontTextStyleCaption1")]
-		NSFontTextStyleCaption1,
+		Caption1,
 
 		[Field ("NSFontTextStyleCaption2")]
-		NSFontTextStyleCaption2,
+		Caption2,
 	}
 
 	[Mac (10,15), iOS (10,13)]
@@ -27907,17 +27907,17 @@ namespace AppKit {
 
 		[Export ("itemIdentifierForRow:")]
 		[return: NullAllowed]
-		NSObject ItemIdentifierForRow (nint row);
+		NSObject GetItemIdentifier (nint row);
 
 		[Export ("rowForItemIdentifier:")]
-		nint RowForItemIdentifier (NSObject identifier);
+		nint GetRowForItemIdentifier (NSObject itemIdentifier);
 
 		[Export ("sectionIdentifierForRow:")]
 		[return: NullAllowed]
-		NSObject SectionIdentifierForRow (nint row);
+		NSObject GetSectionIdentifier (nint row);
 
 		[Export ("rowForSectionIdentifier:")]
-		nint RowForSectionIdentifier (NSObject identifier);
+		nint GetRowForSectionIdentifier (NSObject sectionIdentifier);
 
 		[NullAllowed, Export ("rowViewProvider", ArgumentSemantic.Copy)]
 		NSTableViewDiffableDataSourceRowProvider RowViewProvider { get; set; }
@@ -27947,13 +27947,13 @@ namespace AppKit {
 	[Mac (10, 16)]
 	enum NSTextContentType {
 		[Field ("NSTextContentTypeUsername")]
-		NSTextContentTypeUsername,
+		Username,
 
 		[Field ("NSTextContentTypePassword")]
-		NSTextContentTypePassword,
+		Password,
 
 		[Field ("NSTextContentTypeOneTimeCode")]
-		NSTextContentTypeOneTimeCode,
+		OneTimeCode,
 	}
 
 	[Mac (10,16)]
@@ -27970,11 +27970,11 @@ namespace AppKit {
 
 		[Static]
 		[Export ("tintConfigurationWithPreferredColor:")]
-		NSTintConfiguration TintConfigurationWithPreferredColor (NSColor color);
+		NSTintConfiguration CreateWithPreferredColor (NSColor color);
 
 		[Static]
 		[Export ("tintConfigurationWithFixedColor:")]
-		NSTintConfiguration TintConfigurationWithFixedColor (NSColor color);
+		NSTintConfiguration CreateWithFixedColor (NSColor color);
 
 		[NullAllowed, Export ("baseTintColor", ArgumentSemantic.Strong)]
 		NSColor BaseTintColor { get; }
