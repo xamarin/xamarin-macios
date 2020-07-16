@@ -96,9 +96,7 @@ namespace Xharness
 					allTargetNames.Add (MakeMacUnifiedTargetName (target, MacTargetNameType.Build));
 					allTargetCleanNames.Add (MakeMacUnifiedTargetName (target, MacTargetNameType.Clean));
 
-					string guiUnitDependency = target.Modern ? "$(GUI_UNIT_PATH)/bin/xammac_mobile/GuiUnit.exe" : "$(GUI_UNIT_PATH)/bin/net_4_5/GuiUnit.exe";
-
-					writer.WriteTarget (MakeMacUnifiedTargetName (target, MacTargetNameType.Build), "{0}", target.ProjectPath.Replace (" ", "\\ ") + " "  + guiUnitDependency + " " + nuget_restore_dependency);
+					writer.WriteTarget (MakeMacUnifiedTargetName (target, MacTargetNameType.Build), "{0}", target.ProjectPath.Replace (" ", "\\ ") + " "  + nuget_restore_dependency);
 					writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XIBUILD) -- \"/property:Configuration=$(CONFIG)\" /t:Build $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
 					writer.WriteLine ();
 
