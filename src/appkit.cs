@@ -7943,7 +7943,7 @@ namespace AppKit {
 	partial interface NSMenu : NSCoding, NSCopying, NSAccessibility, NSAccessibilityElement, NSAppearanceCustomization, NSUserInterfaceItemIdentification  {
 		[DesignatedInitializer]
 		[Export ("initWithTitle:")]
-		IntPtr Constructor (string aTitle);
+		IntPtr Constructor (string title);
 
 		[Static]
 		[Export ("popUpContextMenu:withEvent:forView:")]
