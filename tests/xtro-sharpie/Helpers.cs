@@ -53,6 +53,12 @@ namespace Extrospection {
 			{ "UITableViewCellAccessoryType", "UITableViewCellAccessory" },
 			{ "UITableViewCellStateMask", "UITableViewCellState" },
 			{ "WatchKitErrorCode", "WKErrorCode" }, // WebKit already had that name
+			{ "NFCFeliCaEncryptionId", "EncryptionId" },
+			{ "NFCFeliCaPollingRequestCode", "PollingRequestCode" },
+			{ "NFCFeliCaPollingTimeSlot", "PollingTimeSlot" },
+			{ "NFCVASErrorCode", "VasErrorCode" },
+			{ "NFCVASMode", "VasMode" },
+			{ "NFCISO15693RequestFlag", "RequestFlag" },
 			// not enums
 		};
 
