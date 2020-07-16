@@ -1,0 +1,6 @@
+!missing-enum! MUError not bound
+!missing-field! MorphunAssetsUpdaterVersionNumber not bound
+!missing-field! MorphunAssetsUpdaterVersionString not bound
+!missing-selector! +MorphunAssetsUpdater::forceUpdate:updateLanguages:removeLanguages: not bound
+!missing-selector! +MorphunAssetsUpdater::getPaths: not bound
+!missing-type! MorphunAssetsUpdater not bound
