@@ -81,19 +81,32 @@ namespace Xharness.Jenkins.TestTasks {
 			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
 				using (var proc = new Process ()) {
 					proc.StartInfo.FileName = Path;
+					var arguments = new List<string> ();
+					ILog xmlLog = null;
+					var useXmlOutput = Harness.InCI || true;
 					if (IsUnitTest) {
-						var xml = Logs.CreateFile ($"test-{Platform}-{Timestamp}.xml", LogType.NUnitResult.ToString ());
-						proc.StartInfo.Arguments = StringUtils.FormatArguments ($"-result=" + xml);
+						var extension = useXmlOutput ? "xml" : "log";
+						var type = useXmlOutput ? LogType.XmlLog : LogType.NUnitResult;
+						xmlLog = Logs.Create ($"test-{Platform}-{Timestamp}.{extension}", type.ToString ());
+						arguments.Add ($"-transport:FILE");
+						arguments.Add ($"--logfile:{xmlLog.FullPath}");
+						if (useXmlOutput) {
+							arguments.Add ("--enablexml");
+							arguments.Add ("--xmlmode=wrapped");
+							arguments.Add ("--xmlversion=nunitv3");
+						}
 					}
 					if (!Harness.GetIncludeSystemPermissionTests (Platform, false))
 						proc.StartInfo.EnvironmentVariables ["DISABLE_SYSTEM_PERMISSION_TESTS"] = "1";
 					proc.StartInfo.EnvironmentVariables ["MONO_DEBUG"] = "no-gdb-backtrace";
+					proc.StartInfo.Arguments = StringUtils.FormatArguments (arguments);
 					Jenkins.MainLog.WriteLine ("Executing {0} ({1})", TestName, Mode);
 					var log = Logs.Create ($"execute-{Platform}-{Timestamp}.txt", LogType.ExecutionLog.ToString ());
+					ICrashSnapshotReporter snapshot = null;
 					if (!Jenkins.Harness.DryRun) {
 						ExecutionResult = TestExecutingResult.Running;
 
-						var snapshot = CrashReportSnapshotFactory.Create (log, Logs, isDevice: false, deviceName: null);
+						snapshot = CrashReportSnapshotFactory.Create (log, Logs, isDevice: false, deviceName: null);
 						await snapshot.StartCaptureAsync ();
 
 						ProcessExecutionResult result = null;
@@ -117,6 +130,15 @@ namespace Xharness.Jenkins.TestTasks {
 						}
 					}
 					Jenkins.MainLog.WriteLine ("Executed {0} ({1})", TestName, Mode);
+
+					if (IsUnitTest) {
+						var reporterFactory = new TestReporterFactory (ProcessManager);
+						var listener = new Microsoft.DotNet.XHarness.iOS.Shared.Listeners.SimpleFileListener (xmlLog.FullPath, log, xmlLog, useXmlOutput);
+						var reporter = reporterFactory.Create (Harness.HarnessLog, log, Logs, snapshot, listener, Harness.ResultParser, new AppBundleInformation ("N/A", "N/A", "N/A", "N/A", null), RunMode.macOS, Harness.XmlJargon, "no device here", TimeSpan.Zero);
+						var rv = await reporter.ParseResult ();
+						ExecutionResult = rv.ExecutingResult;
+						FailureMessage = rv.FailureMessage;
+					}
 				}
 			}
 		}
