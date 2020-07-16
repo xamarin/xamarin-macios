@@ -1,6 +1,5 @@
 !missing-enum! NEDNSProtocol not bound
 !missing-enum! NEDNSSettingsManagerError not bound
-!missing-enum! NEFilterDataAttribute not bound
 !missing-field! NEDNSSettingsConfigurationDidChangeNotification not bound
 !missing-field! NEDNSSettingsErrorDomain not bound
 !missing-selector! +NEDNSSettingsManager::sharedManager not bound
