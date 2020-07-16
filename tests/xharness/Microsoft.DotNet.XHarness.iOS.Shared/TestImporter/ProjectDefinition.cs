@@ -127,7 +127,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.TestImporter {
 					if (t.HasGenericParameters)
 						return false;
 
-					if (t.Namespace == null)
+					if (string.IsNullOrEmpty (t.Namespace))
 						return false;
 
 					if (!t.FullName.EndsWith ("Test", StringComparison.OrdinalIgnoreCase) && !t.FullName.EndsWith ("Tests", StringComparison.OrdinalIgnoreCase))
