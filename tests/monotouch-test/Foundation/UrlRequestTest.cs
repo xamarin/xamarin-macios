@@ -34,30 +34,17 @@ namespace MonoTouchFixtures.Foundation {
 				// that a bit like lying, we still consider it an NSMutableDictionary but it't not mutable
 				Assert.That (mur.Headers, Is.TypeOf (typeof (NSMutableDictionary)), "NSMutableDictionary");
 
-#if !MONOMAC // No Simulator for mac
-				// that would crash on devices
-				// NSInternalInconsistencyException -[__NSCFDictionary setObject:forKey:]: mutating method sent to immutable object
-				if (Runtime.Arch == Arch.SIMULATOR) {
-					bool native_exception = false;
-					try {
-						mur.Headers.SetValueForKey (s3, s1);
-						Assert.Fail ("exception immutability");
-					} catch {
-						native_exception = true;
-					}
-					Assert.True (native_exception, "non-mutable NSDictionary");
+				mur.Headers.SetValueForKey (s3, s1);
 
-					// the original NSMutableDictionary is fine - but it's not what's being used, i.e. property is "copy"
-					md.Remove (s1);
-					Assert.That (md.Count, Is.EqualTo (0), "1");
-					Assert.That (mur.Headers.Count, Is.EqualTo (1), "2");
-					md.SetValueForKey (s3, s1);
-					Assert.That (md.Count, Is.EqualTo (1), "3");
-					Assert.That (mur.Headers.Count, Is.EqualTo (1), "40");
+				// the original NSMutableDictionary is fine - but it's not what's being used, i.e. property is "copy"
+				md.Remove (s1);
+				Assert.That (md.Count, Is.EqualTo (0), "1");
+				Assert.That (mur.Headers.Count, Is.EqualTo (1), "2");
+				md.SetValueForKey (s3, s1);
+				Assert.That (md.Count, Is.EqualTo (1), "3");
+				Assert.That (mur.Headers.Count, Is.EqualTo (1), "40");
 
-					Assert.AreNotSame (md, mur.Headers, "!same");
-				}
-#endif
+				Assert.AreNotSame (md, mur.Headers, "!same");
 
 				// https://www.bignerdranch.com/blog/about-mutability/
 				Assert.That (mur.Headers.Class.Name, Is.EqualTo ("__NSCFDictionary"), "__NSCFDictionary");
