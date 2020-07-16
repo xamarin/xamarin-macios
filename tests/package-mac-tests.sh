@@ -34,7 +34,6 @@ for app in */bin/x86/*/*.app linker/mac/*/bin/x86/*/*.app introspection/Mac/bin/
 done
 
 $CP -p Makefile-mac.inc $DIR/tests
-$CP -p common.mk $DIR/tests
 $CP -p Makefile $DIR/tests
 $CP -p ../Make.config $DIR
 $CP -p ../Make.versions $DIR
