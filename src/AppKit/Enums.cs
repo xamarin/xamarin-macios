@@ -331,7 +331,7 @@ namespace AppKit {
 		Small = 1,
 		Mini = 2,
 		[Mac (10,16)]
-		Large = 3
+		Large = 3,
 	}
 
 	[Native]
