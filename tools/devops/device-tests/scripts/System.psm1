@@ -194,7 +194,7 @@ function Clear-HD {
                 Write-Debug "Path not found '$dir'"
             }
         } catch {
-            Write-Error "Could not remove dir $dir - $_"
+            Write-Debug "Could not remove dir $dir - $_"
         }
     }
     Get-PSDrive "/" | Format-Table -Wrap
