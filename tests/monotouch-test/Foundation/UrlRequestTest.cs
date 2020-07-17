@@ -35,7 +35,19 @@ namespace MonoTouchFixtures.Foundation {
 				// that a bit like lying, we still consider it an NSMutableDictionary but it't not mutable
 				Assert.That (mur.Headers, Is.TypeOf (typeof (NSMutableDictionary)), "NSMutableDictionary");
 
-				mur.Headers.SetValueForKey (s3, s1);
+				var isActuallyMutable = TestRuntime.CheckXcodeVersion (8, 0);
+				if (isActuallyMutable) {
+					mur.Headers.SetValueForKey (s3, s1);
+				} else {
+					// In older OSes, the Headers is an instance of a class that's somehow immutable,
+					// even though it's an NSMutableDictionary subclass (specifically __NSCFDictionary).
+					// This feels like a bug that Apple fixed at some point.
+#if __MACOS__
+					Assert.Throws<ObjCException> (() => mur.Headers.SetValueForKey (s3, s1));
+#else
+					Assert.Throws<MonoTouchException> (() => mur.Headers.SetValueForKey (s3, s1));
+#endif
+				}
 
 				// the original NSMutableDictionary is fine - but it's not what's being used, i.e. property is "copy"
 				md.Remove (s1);
