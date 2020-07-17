@@ -22,7 +22,9 @@ namespace Xamarin.Linker {
 				case AssemblyAction.CopyUsed:
 				case AssemblyAction.Link:
 				case AssemblyAction.Save:
-					Configuration.Target.AddAssembly (assembly);
+					var ad = Configuration.Target.AddAssembly (assembly);
+					var assemblyFileName = Configuration.GetAssemblyFileName (assembly);
+					ad.FullPath = assemblyFileName;
 					break;
 				case AssemblyAction.AddBypassNGen: // This should be turned into Save or Delete
 				case AssemblyAction.AddBypassNGenUsed: // This should be turned into Save or Delete
