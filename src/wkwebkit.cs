@@ -18,6 +18,8 @@ using Security;
 using AppKit;
 #else
 using UIKit;
+using NSPrintInfo = Foundation.NSObject;
+using NSPrintOperation = Foundation.NSObject;
 #endif
 
 namespace WebKit
@@ -226,6 +228,10 @@ namespace WebKit
 		[iOS (9,0)][Mac (10,11)]
 		[Export ("webViewWebContentProcessDidTerminate:")]
 		void ContentProcessDidTerminate (WKWebView webView);
+
+		[Mac (10,16)][iOS (14,0)]
+		[Export ("webView:authenticationChallenge:shouldAllowDeprecatedTLS:")]
+		void ShouldAllowDeprecatedTls (WKWebView webView, NSUrlAuthenticationChallenge challenge, Action<bool> decisionHandler);
 	}
 
 	[iOS (8,0), Mac (10,10)] // Not defined in 32-bit
@@ -248,6 +254,8 @@ namespace WebKit
 		[Export ("minimumFontSize")]
 		nfloat MinimumFontSize { get; set; }
 
+		[Deprecated (PlatformName.MacOSX, 10,16, message: "Use 'WKWebPagePreferences.AllowsContentJavaScript' instead.")]
+		[Deprecated (PlatformName.iOS, 14,0, message: "Use 'WKWebPagePreferences.AllowsContentJavaScript' instead.")]
 		[Export ("javaScriptEnabled")]
 		bool JavaScriptEnabled { get; set; }
 
@@ -291,7 +299,13 @@ namespace WebKit
 
 		[Export ("frameInfo", ArgumentSemantic.Copy)]
 		WKFrameInfo FrameInfo { get; }
+
+		[Mac (10,16)][iOS (14,0)]
+		[Export ("world")]
+		WKContentWorld World { get; }
 	}
+
+	interface IWKScriptMessageHandler {}
 
 	[Mac (10,10), iOS (8,0)]
 	[Protocol, Model]
@@ -546,8 +560,20 @@ namespace WebKit
 		[Export ("addScriptMessageHandler:name:")]
 		void AddScriptMessageHandler ([Protocolize] WKScriptMessageHandler scriptMessageHandler, string name);
 
+		[Mac (10,16), iOS (14,0)]
+		[Export ("addScriptMessageHandler:contentWorld:name:")]
+		void AddScriptMessageHandler (IWKScriptMessageHandler scriptMessageHandler, WKContentWorld world, string name);
+
+		[Mac (10,16), iOS (14,0)]
+		[Export ("addScriptMessageHandlerWithReply:contentWorld:name:")]
+		void AddScriptMessageHandler (IWKScriptMessageHandlerWithReply scriptMessageHandlerWithReply, WKContentWorld contentWorld, string name);
+
 		[Export ("removeScriptMessageHandlerForName:")]
 		void RemoveScriptMessageHandler (string name);
+
+		[Mac (10,16), iOS (14,0)]
+		[Export ("removeScriptMessageHandlerForName:contentWorld:")]
+		void RemoveScriptMessageHandler (string name, WKContentWorld contentWorld);
 
 		[Mac (10,13), iOS (11,0)]
 		[Export ("addContentRuleList:")]
@@ -560,6 +586,14 @@ namespace WebKit
 		[Mac (10,13), iOS (11,0)]
 		[Export ("removeAllContentRuleLists")]
 		void RemoveAllContentRuleLists ();
+
+		[Mac (10,16), iOS (14,0)]
+		[Export ("removeAllScriptMessageHandlersFromContentWorld:")]
+		void RemoveAllScriptMessageHandlers (WKContentWorld contentWorld);
+
+		[Mac (10,16), iOS (14,0)]
+		[Export ("removeAllScriptMessageHandlers")]
+		void RemoveAllScriptMessageHandlers ();
 	}
 
 	[iOS (8,0), Mac (10,10)] // Not defined in 32-bit
@@ -747,6 +781,43 @@ namespace WebKit
 		[Export ("handlesURLScheme:")]
 		bool HandlesUrlScheme (string urlScheme);
 
+		[Mac (10,16), iOS (14,0)]
+		[Async]
+		[Export ("evaluateJavaScript:inContentWorld:completionHandler:")]
+		void EvaluateJavaScript (string javaScriptString, WKContentWorld contentWorld, [NullAllowed] Action<NSObject, NSError> completionHandler);
+
+		[Mac (10,16), iOS (14,0)]
+		[Async]
+		[Export ("callAsyncJavaScript:arguments:inContentWorld:completionHandler:")]
+		void CallAsyncJavaScript (string functionBody, [NullAllowed] NSDictionary<NSString, NSObject> arguments, WKContentWorld contentWorld, [NullAllowed] Action<NSObject, NSError> completionHandler);
+
+		[Mac (10,16), iOS (14,0)]
+		[Async]
+		[Export ("createPDFWithConfiguration:completionHandler:")]
+		void CreatePdf ([NullAllowed] WKPdfConfiguration pdfConfiguration, Action<NSData, NSError> completionHandler);
+
+		[Mac (10,16), iOS (14,0)]
+		[Async]
+		[Export ("createWebArchiveDataWithCompletionHandler:")]
+		void CreateWebArchive (Action<NSData, NSError> completionHandler);
+
+		[Mac (10,16), iOS (14,0)]
+		[Async]
+		[Export ("findString:withConfiguration:completionHandler:")]
+		void Find (string @string, [NullAllowed] WKFindConfiguration configuration, Action<WKFindResult> completionHandler);
+
+		[Mac (10, 16), iOS (14, 0)]
+		[NullAllowed, Export ("mediaType")]
+		string MediaType { get; set; }
+
+		[Mac (10, 16), iOS (14, 0)]
+		[Export ("pageZoom")]
+		nfloat PageZoom { get; set; }
+
+		[NoiOS]
+		[Mac (10,16)]
+		[Export ("printOperationWithPrintInfo:")]
+		NSPrintOperation GetPrintOperation (NSPrintInfo printInfo);
 	}
 
 	delegate void WKJavascriptEvaluationResult (NSObject result, NSError error);
@@ -828,6 +899,11 @@ namespace WebKit
 		[iOS (13,0)]
 		[Export ("defaultWebpagePreferences", ArgumentSemantic.Copy)]
 		WKWebpagePreferences DefaultWebpagePreferences { get; set; }
+
+		[Mac (10,16)]
+		[iOS (14,0)]
+		[Export ("limitsNavigationsToAppBoundDomains")]
+		bool LimitsNavigationsToAppBoundDomains { get; set; }
 	}
 
 	[iOS (8,0), Mac (10,10)] // Not defined in 32-bit
@@ -921,6 +997,11 @@ namespace WebKit
 
 		[Export ("preferredContentMode", ArgumentSemantic.Assign)]
 		WKContentMode PreferredContentMode { get; set; }
+
+		[Mac (10,16)]
+		[iOS (14,0)]
+		[Export ("allowsContentJavaScript")]
+		bool AllowsContentJavaScript { get; set; }
 	}
 
 	[NoMac]
@@ -932,4 +1013,66 @@ namespace WebKit
 		NSUrl LinkUrl { get; }
 	}
 
+	[Mac (10,16)][iOS (14,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface WKContentWorld {
+
+		[Static]
+		[Export ("pageWorld")]
+		WKContentWorld Page { get; }
+
+		[Static]
+		[Export ("defaultClientWorld")]
+		WKContentWorld DefaultClient { get; }
+
+		[Static]
+		[Export ("worldWithName:")]
+		WKContentWorld Create (string name);
+
+		[NullAllowed, Export ("name")]
+		string Name { get; }
+	}
+
+	[Mac (10,16)][iOS (14,0)]
+	[BaseType (typeof (NSObject))]
+	interface WKFindConfiguration : NSCopying {
+
+		[Export ("backwards")]
+		bool Backwards { get; set; }
+
+		[Export ("caseSensitive")]
+		bool CaseSensitive { get; set; }
+
+		[Export ("wraps")]
+		bool Wraps { get; set; }
+	}
+
+	[Mac (10,16)][iOS (14,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface WKFindResult : NSCopying {
+
+		[Export ("matchFound")]
+		bool MatchFound { get; }
+	}
+
+	[Mac (10,16)][iOS (14,0)]
+	[BaseType (typeof (NSObject), Name = "WKPDFConfiguration")]
+	interface WKPdfConfiguration : NSCopying {
+
+		[Export ("rect", ArgumentSemantic.Assign)]
+		CGRect Rect { get; set; }
+	}
+
+	interface IWKScriptMessageHandlerWithReply {}
+
+	[Mac (10,16)][iOS (14,0)]
+	[Protocol]
+	interface WKScriptMessageHandlerWithReply {
+
+		[Abstract]
+		[Export ("userContentController:didReceiveScriptMessage:replyHandler:")]
+		void DidReceiveScriptMessage (WKUserContentController userContentController, WKScriptMessage message, Action<NSObject, NSString> replyHandler);
+	}
 }
