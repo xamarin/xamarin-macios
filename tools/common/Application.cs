@@ -880,5 +880,13 @@ namespace Xamarin.Bundler {
 			foreach (var t in Targets)
 				t.LoadSymbols ();
 		}
+
+		public bool IsFrameworkAvailableInSimulator (string framework)
+		{
+			if (!Driver.GetFrameworks (this).TryGetValue (framework, out var fw))
+				return true; // Unknown framework, assume it's valid for the simulator
+
+			return fw.IsFrameworkAvailableInSimulator (this);
+		}
 	}
 }
