@@ -184,6 +184,15 @@ namespace Xamarin.Linker {
 			}
 		}
 
+		public string GetAssemblyFileName (AssemblyDefinition assembly)
+		{
+			// See: https://github.com/mono/linker/issues/1313
+			// Call LinkContext.Resolver.GetAssemblyFileName (https://github.com/mono/linker/blob/da2cc0fcd6c3a8e8e5d1b5d4a655f3653baa8980/src/linker/Linker/AssemblyResolver.cs#L88) using reflection.
+			var resolver = typeof (LinkContext).GetProperty ("Resolver").GetValue (Context);
+			var filename = (string) resolver.GetType ().GetMethod ("GetAssemblyFileName", new Type [] { typeof (AssemblyDefinition) }).Invoke (resolver, new object [] { assembly });
+			return filename;
+		}
+
 		public void WriteOutputForMSBuild (string itemName, List<MSBuildItem> items)
 		{
 			var xmlNs = XNamespace.Get ("http://schemas.microsoft.com/developer/msbuild/2003");
