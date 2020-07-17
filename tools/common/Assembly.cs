@@ -73,11 +73,13 @@ namespace Xamarin.Bundler {
 			}
 		}
 		public string FileName { get { return Path.GetFileName (FullPath); } }
-		public string Identity { get { return GetIdentity (FullPath); } }
+		public string Identity { get { return GetIdentity (AssemblyDefinition); } }
 
 		public static string GetIdentity (AssemblyDefinition ad)
 		{
-			return Path.GetFileNameWithoutExtension (ad.MainModule.FileName);
+			if (!string.IsNullOrEmpty (ad.MainModule.FileName))
+				return Path.GetFileNameWithoutExtension (ad.MainModule.FileName);
+			return ad.Name.Name;
 		}
 
 		public static string GetIdentity (string path)
