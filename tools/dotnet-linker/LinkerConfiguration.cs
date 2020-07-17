@@ -108,6 +108,20 @@ namespace Xamarin.Linker {
 						throw new InvalidOperationException ($"Unable to parse the {key} value: {value} in {linker_file}");
 					Application.LinkMode = lm;
 					break;
+				case "MarshalManagedExceptionMode":
+					if (!string.IsNullOrEmpty (value)) {
+						if (!Application.TryParseManagedExceptionMode (value, out var mode))
+							throw new InvalidOperationException ($"Unable to parse the {key} value: {value} in {linker_file}");
+						Application.MarshalManagedExceptions = mode;
+					}
+					break;
+				case "MarshalObjectiveCExceptionMode":
+					if (!string.IsNullOrEmpty (value)) {
+						if (!Application.TryParseObjectiveCExceptionMode (value, out var mode))
+							throw new InvalidOperationException ($"Unable to parse the {key} value: {value} in {linker_file}");
+						Application.MarshalObjectiveCExceptions = mode;
+					}
+					break;
 				case "PartialStaticRegistrarLibrary":
 					PartialStaticRegistrarLibrary = value;
 					break;
@@ -183,6 +197,9 @@ namespace Xamarin.Linker {
 
 			if (Driver.TargetFramework.Platform != Platform)
 				throw ErrorHelper.CreateError (99, "Inconsistent platforms. TargetFramework={0}, Platform={1}", Driver.TargetFramework.Platform, Platform);
+
+			Application.SetManagedExceptionMode ();
+			Application.SetObjectiveCExceptionMode ();
 		}
 
 		public void Write ()
@@ -197,6 +214,8 @@ namespace Xamarin.Linker {
 				Console.WriteLine ($"    ItemsDirectory: {ItemsDirectory}");
 				Console.WriteLine ($"    IsSimulatorBuild: {IsSimulatorBuild}");
 				Console.WriteLine ($"    LinkMode: {LinkMode}");
+				Console.WriteLine ($"    MarshalManagedExceptions: {Application.MarshalManagedExceptions} (IsDefault: {Application.IsDefaultMarshalManagedExceptionMode})");
+				Console.WriteLine ($"    MarshalObjectiveCExceptions: {Application.MarshalObjectiveCExceptions}");
 				Console.WriteLine ($"    PartialStaticRegistrarLibrary: {PartialStaticRegistrarLibrary}");
 				Console.WriteLine ($"    Platform: {Platform}");
 				Console.WriteLine ($"    PlatformAssembly: {PlatformAssembly}.dll");
