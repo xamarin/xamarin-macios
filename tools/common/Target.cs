@@ -31,6 +31,8 @@ using MonoMac.Tuner;
 using PlatformResolver = Xamarin.Bundler.MonoMacResolver;
 using PlatformLinkContext = MonoMac.Tuner.MonoMacLinkContext;
 #elif NET
+using LinkerOptions = Xamarin.Linker.LinkerConfiguration;
+using PlatformLinkContext = Xamarin.Tuner.DerivedLinkContext;
 using PlatformResolver = Xamarin.Linker.DotNetResolver;
 #else
 #error Invalid defines
