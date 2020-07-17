@@ -16,7 +16,7 @@ namespace Xamarin.Mac.Tests
 			NSGradient g = new NSGradient (new[] { NSColor.Black, NSColor.White, NSColor.Black }, new[] { 0f, .5f, 1.0f }, colorSpace);
 			Assert.IsNotNull (g);
 			Assert.AreEqual (colorSpace, g.ColorSpace);
-			Assert.AreEqual (3, g.ColorStopsCount);
+			Assert.AreEqual ((nint) 3, g.ColorStopsCount);
 
 			// Since we are asking for colors on a gradient, there will be some color blending, even with just black and white.
 			const float closeEnough = .05f;

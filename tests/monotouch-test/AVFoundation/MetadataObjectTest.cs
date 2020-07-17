@@ -32,7 +32,7 @@ namespace MonoTouchFixtures.AVFoundation {
 			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
 			using (var obj = new AVMetadataFaceObject ()) {
-				Assert.AreEqual (0, obj.FaceID, "FaceID");
+				Assert.AreEqual ((nint) 0, obj.FaceID, "FaceID");
 				Assert.AreEqual (false, obj.HasRollAngle, "HasRollAngle");
 				Assert.AreEqual (false, obj.HasYawAngle, "HasYawAngle");
 #if !MONOMAC // No Type property for Mac

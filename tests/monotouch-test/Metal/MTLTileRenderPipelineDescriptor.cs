@@ -45,7 +45,7 @@ namespace MonoTouchFixtures.Metal {
 		public void GetSetRasterSampleCount ()
 		{
 			descriptor.RasterSampleCount = 2;
-			Assert.AreEqual (2, descriptor.RasterSampleCount);
+			Assert.AreEqual ((nuint) 2, descriptor.RasterSampleCount);
 		}
 
 		[Test]
@@ -70,7 +70,7 @@ namespace MonoTouchFixtures.Metal {
 		{
 			TestRuntime.AssertXcodeVersion (10, 0);
 			descriptor.MaxTotalThreadsPerThreadgroup = 10;
-			Assert.AreEqual (10, descriptor.MaxTotalThreadsPerThreadgroup);
+			Assert.AreEqual ((nuint) 10, descriptor.MaxTotalThreadsPerThreadgroup);
 		}
 	}
 }

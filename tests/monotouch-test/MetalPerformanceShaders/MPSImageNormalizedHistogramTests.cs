@@ -59,12 +59,12 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 			Asserts.AreEqual (info, rv, "HistogramInfo");
 
 			Assert.IsTrue (obj.ZeroHistogram, "ZeroHistogram");
-			Assert.AreEqual (3072, obj.GetHistogramSize (MTLPixelFormat.RGBA16Sint), "HistogramSizeForSourceFormat");
+			Assert.AreEqual ((nuint) 3072, obj.GetHistogramSize (MTLPixelFormat.RGBA16Sint), "HistogramSizeForSourceFormat");
 
 			var crs = obj.ClipRectSource;
-			Assert.AreEqual (0, crs.Origin.X, "ClipRectSource.Origin.X");
-			Assert.AreEqual (0, crs.Origin.Y, "ClipRectSource.Origin.Y");
-			Assert.AreEqual (0, crs.Origin.Z, "ClipRectSource.Origin.Z");
+			Assert.AreEqual ((nint) 0, crs.Origin.X, "ClipRectSource.Origin.X");
+			Assert.AreEqual ((nint) 0, crs.Origin.Y, "ClipRectSource.Origin.Y");
+			Assert.AreEqual ((nint) 0, crs.Origin.Z, "ClipRectSource.Origin.Z");
 			Assert.AreEqual (nuint.MaxValue, (nuint) crs.Size.Depth, "ClipRectSource.Size.Depth");
 			Assert.AreEqual (nuint.MaxValue, (nuint) crs.Size.Height, "ClipRectSource.Size.Height");
 			Assert.AreEqual (nuint.MaxValue, (nuint) crs.Size.Width, "ClipRectSource.Size.Width");

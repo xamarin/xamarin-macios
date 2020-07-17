@@ -31,9 +31,9 @@ namespace Xamarin.Mac.Tests
 			NSString input = new NSString("Hey\nHow\nYou\nDoing");
 			nuint start, lineEnd, contentsEnd;
 			input.GetLineStart (out start, out lineEnd, out contentsEnd, new NSRange (5, 11));
-			Assert.AreEqual (4, start);
-			Assert.AreEqual (17, lineEnd);
-			Assert.AreEqual (17, contentsEnd);
+			Assert.AreEqual ((nuint) 4, start);
+			Assert.AreEqual ((nuint) 17, lineEnd);
+			Assert.AreEqual ((nuint) 17, contentsEnd);
 		}
 
 		[Test]

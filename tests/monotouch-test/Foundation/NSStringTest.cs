@@ -76,7 +76,7 @@ namespace monotouchtest
 				Assert.AreEqual (testString, NSString.FromHandle (str.Handle, owns), $"true #{i}");
 			}
 			// If there was a leak, RetainCount would be 100+ because we looped 100 times above.
-			Assert.That (str.RetainCount, Is.LessThan (10), "RetainCount");
+			Assert.That (str.RetainCount, Is.LessThan ((nuint) 10), "RetainCount");
 		}
 	}
 }

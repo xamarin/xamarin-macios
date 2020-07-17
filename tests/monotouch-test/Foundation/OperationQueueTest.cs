@@ -33,7 +33,7 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			using (var q = new NSOperationQueue ()) {
 				q.AddOperation ((NSOperation) null);
-				Assert.That (q.OperationCount, Is.EqualTo (0), "OperationCount");
+				Assert.That (q.OperationCount, Is.EqualTo ((nint) 0), "OperationCount");
 				Assert.That (q.Operations.Length, Is.EqualTo (0), "Operations");
 			}
 		}
@@ -43,7 +43,7 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			using (var q = new NSOperationQueue ()) {
 				q.AddOperations (null, true);
-				Assert.That (q.OperationCount, Is.EqualTo (0), "OperationCount");
+				Assert.That (q.OperationCount, Is.EqualTo ((nint) 0), "OperationCount");
 				Assert.That (q.Operations.Length, Is.EqualTo (0), "Operations");
 			}
 		}

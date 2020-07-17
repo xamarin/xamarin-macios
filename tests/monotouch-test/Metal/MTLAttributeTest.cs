@@ -36,7 +36,7 @@ namespace MonoTouchFixtures.Metal {
 		[Test]
 		public void GetAttributeIndexTest ()
 		{
-			Assert.AreEqual (0, attr.AttributeIndex, $"AttributeIndex default value is {attr.AttributeIndex}");
+			Assert.AreEqual ((nuint) 0, attr.AttributeIndex, $"AttributeIndex default value is {attr.AttributeIndex}");
 		}
 
 		[Test]

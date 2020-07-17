@@ -47,7 +47,7 @@ namespace MonoTouchFixtures.Foundation {
 				Assert.Null (task.TaskDescription, "taskDescription");
 				task.TaskDescription = "descriptive label";
 				Assert.That ((string)task.TaskDescription, Is.EqualTo ("descriptive label"), "setTaskDescription:");
-				Assert.That (task.TaskIdentifier, Is.GreaterThanOrEqualTo (0), "taskIdentifier");
+				Assert.That (task.TaskIdentifier, Is.GreaterThanOrEqualTo ((nuint) 0), "taskIdentifier");
 
 				if (TestRuntime.CheckXcodeVersion (9, 0)) {
 					Assert.Null (task.EarliestBeginDate, "earliestBeginDate");

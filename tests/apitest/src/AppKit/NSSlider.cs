@@ -23,7 +23,7 @@ namespace Xamarin.Mac.Tests
 #else
 			slider.IsVertical = 1;
 #endif
-			Assert.AreEqual (1, slider.IsVertical);
+			Assert.AreEqual ((nint) 1, slider.IsVertical);
 		}
 	}
 }
