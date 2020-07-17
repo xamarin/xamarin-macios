@@ -44,10 +44,14 @@ namespace EmbeddedResources {
 			Assert.AreEqual ("Welcome", manager.GetString ("String1", new CultureInfo ("en")), "en");
 			Assert.AreEqual ("G'day", manager.GetString ("String1", new CultureInfo ("en-AU")), "en-AU");
 			Assert.AreEqual ("Willkommen", manager.GetString ("String1", new CultureInfo ("de")), "de");
+#if !NET // https://github.com/xamarin/xamarin-macios/issues/8906
 			Assert.AreEqual ("Willkommen", manager.GetString ("String1", new CultureInfo ("de-DE")), "de-DE");
+#endif
 			Assert.AreEqual ("Bienvenido", manager.GetString ("String1", new CultureInfo ("es")), "es");
+#if !NET // https://github.com/xamarin/xamarin-macios/issues/8906
 			Assert.AreEqual ("Bienvenido", manager.GetString ("String1", new CultureInfo ("es-AR")), "es-AR");
 			Assert.AreEqual ("Bienvenido", manager.GetString ("String1", new CultureInfo ("es-ES")), "es-ES");
+#endif
 		}
 	}
 }
