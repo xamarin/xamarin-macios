@@ -386,6 +386,9 @@ namespace Introspection {
 				case "TVTopShelfSectionedItem":
 					return true;
 #endif
+				// Xcode 12 beta 2
+				case "MSServiceAccount":
+					return true;
 				}
 				break;
 			case "NSSecureCoding":
@@ -614,6 +617,9 @@ namespace Introspection {
 				case "TVTopShelfSectionedItem":
 					return true;
 #endif
+				// Xcode 12 beta 2
+				case "MSServiceAccount":
+					return true;
 				}
 				break;
 			case "NSCopying":

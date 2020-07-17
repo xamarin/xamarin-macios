@@ -1944,6 +1944,7 @@ IOS_FRAMEWORKS =         \
 	MapKit \
 	MediaAccessibility \
 	MediaPlayer \
+	MediaSetup \
 	MediaToolbox \
 	Messages \
 	MessageUI \
