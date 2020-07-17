@@ -53,6 +53,7 @@ namespace Extrospection {
 			{ "UITableViewCellAccessoryType", "UITableViewCellAccessory" },
 			{ "UITableViewCellStateMask", "UITableViewCellState" },
 			{ "WatchKitErrorCode", "WKErrorCode" }, // WebKit already had that name
+			{ "MIDIProtocolID", "MidiProtocolID"},
 			// not enums
 		};
 
