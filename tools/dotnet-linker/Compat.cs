@@ -19,11 +19,6 @@ namespace Xamarin.Bundler {
 			this.Configuration = configuration;
 		}
 
-		// This method is needed for ErrorHelper.tools.cs to compile.
-		public void LoadSymbols ()
-		{
-		}
-
 		public string GetProductName ()
 		{
 			switch (Platform) {
