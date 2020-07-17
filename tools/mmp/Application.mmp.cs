@@ -16,8 +16,6 @@ namespace Xamarin.Bundler {
 		public bool? DisableLldbAttach = null;
 		public bool? DisableOmitFramePointer = null;
 
-		bool RequiresXcodeHeaders => Registrar == RegistrarMode.Static && LinkMode == LinkMode.None;
-
 		// Use this to get the single Abi we currently support for Xamarin.Mac.
 		// This makes it easy to find everywhere we need to update when Apple adds support for new Abis.
 		public Abi Abi { get { return Abis.First (); } }
