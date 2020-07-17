@@ -1358,7 +1358,14 @@ namespace ObjCRuntime {
 				}
 			}
 
-			if (implementation.IsInterface)
+			var interface_check_type = implementation;
+#if NET
+			// https://github.com/dotnet/runtime/issues/39068
+			if (interface_check_type.IsByRef)
+				interface_check_type = interface_check_type.GetElementType ();
+#endif
+
+			if (interface_check_type.IsInterface) 
 				implementation = FindProtocolWrapperType (implementation);
 
 			return implementation;
@@ -1382,8 +1389,14 @@ namespace ObjCRuntime {
 			}
 
 			if (o != null) {
+				var interface_check_type = target_type;
+#if NET
+				// https://github.com/dotnet/runtime/issues/39068
+				if (interface_check_type.IsByRef)
+					interface_check_type = interface_check_type.GetElementType ();
+#endif
 				// found an existing object, but with an incompatible type.
-				if (!target_type.IsInterface) {
+				if (!interface_check_type.IsInterface) {
 					// if the target type is another class, there's nothing we can do.
 					throw new InvalidCastException (string.Format ("Unable to cast object of type '{0}' to type '{1}'.", o.GetType ().FullName, target_type.FullName));
 				}
@@ -1456,6 +1469,11 @@ namespace ObjCRuntime {
 
 		private static Type FindProtocolWrapperType (Type type)
 		{
+#if NET
+			// https://github.com/dotnet/runtime/issues/39068
+			if (type.IsByRef)
+				type = type.GetElementType ();
+#endif
 			if (type == null || !type.IsInterface)
 				return null;
 
