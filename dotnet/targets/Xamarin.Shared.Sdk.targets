@@ -136,6 +136,7 @@
 			<_CustomLinkerOptions>
 				AssemblyName=$(AssemblyName).dll
 				CacheDirectory=$(_LinkerCacheDirectory)
+				Debug=$(_BundlerDebug)
 				DeploymentTarget=$(_MinimumOSVersion)
 				ItemsDirectory=$(_LinkerItemsDirectory)
 				IsSimulatorBuild=$(_SdkIsSimulator)
