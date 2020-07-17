@@ -140,10 +140,10 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 
 		<!-- Debug -->
 		<!-- Xamarin.Mac: use MmpDebug, but if that isn't set, use DebugSymbols -->
-		<_BundlerDebug Condition="'$(_PlatformName)' == 'macOS'">$(MmpDebug)</_BundlerDebug>
-		<_BundlerDebug Condition="'$(_PlatformName)' == 'macOS' And '$(_BundlerDebug)' == ''">$(DebugSymbols)</_BundlerDebug>
+		<_BundlerDebug Condition="'$(_BundlerDebug)' == '' And '$(_PlatformName)' == 'macOS'">$(MmpDebug)</_BundlerDebug>
+		<_BundlerDebug Condition="'$(_BundlerDebug)' == '' And '$(_PlatformName)' == 'macOS'">$(DebugSymbols)</_BundlerDebug>
 		<!-- Xamarin.iOS: Use MtouchDebug -->
-		<_BundlerDebug Condition="'$(_PlatformName)' != 'macOS'">$(MtouchDebug)</_BundlerDebug>
+		<_BundlerDebug Condition="'$(_BundlerDebug)' == '' And '$(_PlatformName)' != 'macOS'">$(MtouchDebug)</_BundlerDebug>
 		<!-- Otherwise the default is true if we're building a Debug configuration -->
 		<_BundlerDebug Condition="'$(_BundlerDebug)' == '' And '$(Configuration)' == 'Debug'">true</_BundlerDebug>
 		<!-- As a last resort, the default is false for all platforms -->
