@@ -43,6 +43,22 @@ namespace Xamarin.Bundler {
 		}
 	}
 
+	public partial class Driver {
+		public static string NAME {
+			get { return "xamarin-bundler"; }
+		}
+
+		public static string GetArch32Directory (Application app)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public static string GetArch64Directory (Application app)
+		{
+			throw new NotImplementedException ();
+		}
+	}
+
 	public class DotNetLinkContext {
 		public DotNetLinkContext ()
 		{
