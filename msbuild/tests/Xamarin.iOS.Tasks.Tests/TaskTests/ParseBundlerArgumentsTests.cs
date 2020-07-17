@@ -86,6 +86,34 @@ namespace Xamarin.iOS.Tasks
 				Assert.AreEqual ("true", task.NoDSymUtil, "nodsymutil: " + variation);
 			}
 		}
+
+		[Test]
+		[TestCase ("--marshal-managed-exceptions", "")]
+		[TestCase ("--marshal-managed-exceptions:", "")]
+		[TestCase ("--marshal-managed-exceptions:default", "default")]
+		[TestCase ("--marshal-managed-exceptions:dummy", "dummy")]
+		[TestCase ("-marshal-managed-exceptions:dummy", "dummy")]
+		[TestCase ("/marshal-managed-exceptions:dummy", "dummy")]
+		public void MarshalManagedExceptionMode (string input, string output)
+		{
+			var task = CreateTask<CustomParseBundlerArguments> ();
+			task.ExtraArgs = input;
+			Assert.AreEqual (output, task.MarshalManagedExceptionMode, output);
+		}
+
+		[Test]
+		[TestCase ("--marshal-objectivec-exceptions", "")]
+		[TestCase ("--marshal-objectivec-exceptions:", "")]
+		[TestCase ("--marshal-objectivec-exceptions:default", "default")]
+		[TestCase ("--marshal-objectivec-exceptions:dummy", "dummy")]
+		[TestCase ("-marshal-objectivec-exceptions:dummy", "dummy")]
+		[TestCase ("/marshal-objectivec-exceptions:dummy", "dummy")]
+		public void MarshalObjetiveCExceptionMode (string input, string output)
+		{
+			var task = CreateTask<CustomParseBundlerArguments> ();
+			task.ExtraArgs = input;
+			Assert.AreEqual (output, task.MarshalObjectiveCExceptionMode, output);
+		}
 	}
 }
 

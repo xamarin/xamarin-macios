@@ -8,6 +8,12 @@ namespace Xamarin.MacDev.Tasks {
 		public string ExtraArgs { get; set; }
 
 		[Output]
+		public string MarshalManagedExceptionMode { get; set; }
+
+		[Output]
+		public string MarshalObjectiveCExceptionMode { get; set; }
+
+		[Output]
 		public string NoSymbolStrip { get; set; }
 
 		[Output]
@@ -70,6 +76,12 @@ namespace Xamarin.MacDev.Tasks {
 					case "quiet":
 					case "q":
 						Verbosity--;
+						break;
+					case "marshal-managed-exceptions":
+						MarshalManagedExceptionMode = value;
+						break;
+					case "marshal-objectivec-exceptions":
+						MarshalObjectiveCExceptionMode = value;
 						break;
 					default:
 						break;
