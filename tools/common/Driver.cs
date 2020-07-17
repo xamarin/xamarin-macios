@@ -26,6 +26,7 @@ namespace Xamarin.Bundler {
 
 		public static bool Force { get; set; }
 
+		static Version min_xcode_version = new Version (6, 0);
 		public static int Main (string [] args)
 		{
 			try {

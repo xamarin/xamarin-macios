@@ -120,8 +120,6 @@ namespace Xamarin.Bundler
 			Embeddinator,
 		}
 
-		static Version min_xcode_version = new Version (6, 0);
-
 		//
 		// Output generation
 		static string dotfile;
