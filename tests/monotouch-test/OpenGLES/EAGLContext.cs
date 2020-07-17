@@ -7,6 +7,7 @@
 // Copyright 2017 Microsoft
 //
 
+#if !NET // OpenTK-1.0.dll not yet supported for .NET
 #if !__WATCHOS__ && !MONOMAC
 
 using System;
@@ -40,3 +41,4 @@ namespace MonoTouchFixtures.OpenGLES
 }
 
 #endif // !__WATCHOS__
+#endif // !NET
