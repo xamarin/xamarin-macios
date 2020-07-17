@@ -41,13 +41,6 @@ using UIKit;
 namespace GameKit {
 	public partial class GKLeaderboardSet {
 
-		// Before iOS14, Watch7, and OSX 10.16 `LoadLeaderboards:` must be used (it's the only way to create GKScore)
-		//
-		// After iOS14 `LoadLeaderBoardsWithHandler:` replace this (new terminology) but we can't use
-		// it because it won't be available while executing on earlier release
-		//
-		// We could continue to use the older one... but we're not 100% sure that their implementation won't
-		// start to differ in future releases
 		public void LoadLeaderboardsWithHandler (GKLeaderboardsHandler completionHandler)
 		{
 #if IOS || TVOS
