@@ -3045,7 +3045,7 @@ namespace AppKit {
 		UnifiedCompact,
 	}
 
-	[Flags, Mac (10,7)]
+	[Flags]
 	[Native]
 	public enum NSTableViewAnimationOptions : ulong
 	{
