@@ -3,6 +3,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>dotnet_linker</RootNamespace>
     <DefineConstants>$(DefineConstants);BUNDLER</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="XliffTasks" Version="1.0.0-beta.20154.1" />
