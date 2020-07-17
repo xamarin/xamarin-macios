@@ -21,6 +21,12 @@ using PlatformResolver = Xamarin.Bundler.MonoMacResolver;
 
 namespace Xamarin.Bundler {
 
+	public enum BuildTarget {
+		None,
+		Simulator,
+		Device,
+	}
+
 	public enum MonoNativeMode {
 		None,
 		Compat,
@@ -88,6 +94,8 @@ namespace Xamarin.Bundler {
 		public List<Application> SharedCodeApps = new List<Application> (); // List of appexes we're sharing code with.
 		public string RegistrarOutputLibrary;
 
+		public BuildTarget BuildTarget;
+
 		bool RequiresXcodeHeaders {
 			get {
 				switch (Platform) {
@@ -132,6 +140,37 @@ namespace Xamarin.Bundler {
 				}
 			}
 		}
+
+		public bool IsDeviceBuild {
+			get {
+				switch (Platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
+					return BuildTarget == BuildTarget.Device;
+				case ApplePlatform.MacOSX:
+					return false;
+				default:
+					throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
+				}
+			}
+		}
+
+		public bool IsSimulatorBuild {
+			get {
+				switch (Platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
+					return BuildTarget == BuildTarget.Simulator;
+				case ApplePlatform.MacOSX:
+					return false;
+				default:
+					throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
+				}
+			}
+		}
+
 		public static int Concurrency => Driver.Concurrency;
 		public Version DeploymentTarget;
 		public Version SdkVersion;
