@@ -131,48 +131,16 @@ namespace Xamarin.Bundler {
 			options.Add ("coop:", "If the GC should run in cooperative mode.", v => { app.EnableCoopGC = ParseBool (v, "coop"); }, hidden: true);
 			options.Add ("sgen-conc", "Enable the *experimental* concurrent garbage collector.", v => { app.EnableSGenConc = true; });
 			options.Add ("marshal-objectivec-exceptions:", "Specify how Objective-C exceptions should be marshalled. Valid values: default, unwindmanagedcode, throwmanagedexception, abort and disable. The default depends on the target platform (on watchOS the default is 'throwmanagedexception', while on all other platforms it's 'disable').", v => {
-				switch (v) {
-				case "default":
-					app.MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.Default;
-					break;
-				case "unwindmanaged":
-				case "unwindmanagedcode":
-					app.MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.UnwindManagedCode;
-					break;
-				case "throwmanaged":
-				case "throwmanagedexception":
-					app.MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.ThrowManagedException;
-					break;
-				case "abort":
-					app.MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.Abort;
-					break;
-				case "disable":
-					app.MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.Disable;
-					break;
-				default:
+				if (Application.TryParseObjectiveCExceptionMode (v, out var value)) {
+					app.MarshalObjectiveCExceptions = value;
+				} else {
 					throw ErrorHelper.CreateError (26, Errors.MX0026, "--marshal-objective-exceptions", $"Invalid value: {v}. Valid values are: default, unwindmanagedcode, throwmanagedexception, abort and disable.");
 				}
 			});
 			options.Add ("marshal-managed-exceptions:", "Specify how managed exceptions should be marshalled. Valid values: default, unwindnativecode, throwobjectivecexception, abort and disable. The default depends on the target platform (on watchOS the default is 'throwobjectivecexception', while on all other platform it's 'disable').", v => {
-				switch (v) {
-				case "default":
-					app.MarshalManagedExceptions = MarshalManagedExceptionMode.Default;
-					break;
-				case "unwindnative":
-				case "unwindnativecode":
-					app.MarshalManagedExceptions = MarshalManagedExceptionMode.UnwindNativeCode;
-					break;
-				case "throwobjectivec":
-				case "throwobjectivecexception":
-					app.MarshalManagedExceptions = MarshalManagedExceptionMode.ThrowObjectiveCException;
-					break;
-				case "abort":
-					app.MarshalManagedExceptions = MarshalManagedExceptionMode.Abort;
-					break;
-				case "disable":
-					app.MarshalManagedExceptions = MarshalManagedExceptionMode.Disable;
-					break;
-				default:
+				if (Application.TryParseManagedExceptionMode (v, out var value)) {
+					app.MarshalManagedExceptions = value;
+				} else {
 					throw ErrorHelper.CreateError (26, Errors.MX0026, "--marshal-managed-exceptions", $"Invalid value: {v}. Valid values are: default, unwindnativecode, throwobjectivecexception, abort and disable.");
 				}
 			});
