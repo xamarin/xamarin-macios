@@ -182,6 +182,18 @@
 		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_LinkerFrameworks.items" Condition="Exists('$(_LinkerItemsDirectory)/_LinkerFrameworks.items')">
 			<Output TaskParameter="Items" ItemName="_LinkerFrameworks" />
 		</ReadItemsFromFile>
+		<!-- Load _BindingLibraryLinkWith -->
+		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_BindingLibraryLinkWith.items" Condition="Exists('$(_LinkerItemsDirectory)/_BindingLibraryLinkWith.items')">
+			<Output TaskParameter="Items" ItemName="_BindingLibraryLinkWith" />
+		</ReadItemsFromFile>
+		<!-- Load _BindingLibraryLinkerFlags -->
+		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_BindingLibraryLinkerFlags.items" Condition="Exists('$(_LinkerItemsDirectory)/_BindingLibraryLinkerFlags.items')">
+			<Output TaskParameter="Items" ItemName="_BindingLibraryLinkerFlags" />
+		</ReadItemsFromFile>
+		<!-- Load _BindingLibraryFrameworks -->
+		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_BindingLibraryFrameworks.items" Condition="Exists('$(_LinkerItemsDirectory)/_BindingLibraryFrameworks.items')">
+			<Output TaskParameter="Items" ItemName="_BindingLibraryFrameworks" />
+		</ReadItemsFromFile>
 	</Target>
 
 	<!-- Native code -->
@@ -316,8 +328,9 @@
 
 		<LinkNativeCode
 			SessionId="$(BuildSessionId)"
-			Frameworks="@(_NativeExecutableFrameworks)"
-			LinkWithLibraries="@(_XamarinMainLibraries)"
+			Frameworks="@(_NativeExecutableFrameworks);@(_BindingLibraryFrameworks)"
+			LinkerFlags="@(_BindingLibraryLinkerFlags)"
+			LinkWithLibraries="@(_XamarinMainLibraries);@(_BindingLibraryLinkWith)"
 			MinimumOSVersion="$(_MinimumOSVersion)"
 			ObjectFiles="@(_NativeExecutableObjectFiles)"
 			OutputFile="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)"
