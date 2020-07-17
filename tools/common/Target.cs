@@ -86,6 +86,13 @@ namespace Xamarin.Bundler {
 			this.StaticRegistrar = new StaticRegistrar (this);
 		}
 
+		public Assembly AddAssembly (AssemblyDefinition assembly)
+		{
+			var asm = new Assembly (this, assembly);
+			Assemblies.Add (asm);
+			return asm;
+		}
+
 		// This will find the link context, possibly looking in container targets.
 		public PlatformLinkContext GetLinkContext ()
 		{
