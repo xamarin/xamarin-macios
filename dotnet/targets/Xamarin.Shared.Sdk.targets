@@ -311,7 +311,7 @@
 			<ResolvedFileToPublish
 				Update="@(ResolvedFileToPublish)"
 				RelativePath="$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(_AssemblyPublishDir)))%(Filename)%(Extension)"
-				Condition="'%(Extension)' == '.dll' Or '%(Extension)' == '.pdb' Or '$(Extension)' == '.exe'" />
+				Condition="'%(Extension)' == '.dll' Or '%(Extension)' == '.pdb' Or '%(Extension)' == '.exe'" />
 			<ResolvedFileToPublish
 				Update="@(ResolvedFileToPublish)"
 				RelativePath="$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(_DylibPublishDir)))%(Filename)%(Extension)"
