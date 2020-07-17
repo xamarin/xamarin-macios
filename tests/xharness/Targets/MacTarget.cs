@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
@@ -121,23 +122,25 @@ namespace Xharness.Targets
 
 		public MonoNativeInfo MonoNativeInfo { get; set; }
 
-		protected override bool FixProjectReference (string name, out string fixed_name)
+		protected override bool FixProjectReference (string include, string subdir, string suffix, out string fixed_include)
 		{
-			fixed_name = null;
-			switch (name) {
-			case "GuiUnit_NET_4_5":
+			var fn = Path.GetFileName (include);
+
+			fixed_include = include;
+			switch (fn) {
+			case "GuiUnit_NET_4_5.csproj":
 				if (Flavor == MacFlavors.Full || Flavor == MacFlavors.System)
 					return false;
-				fixed_name = "GuiUnit_xammac_mobile";
+				fixed_include = include.Replace (fn, "GuiUnit_xammac_mobile.csproj");
 				return true;
-			case "GuiUnit_xammac_mobile":
+			case "GuiUnit_xammac_mobile.csproj":
 				if (Flavor == MacFlavors.Modern)
 					return false;
-				fixed_name = "GuiUnit_NET_4_5";
+				fixed_include = include.Replace (fn, "GuiUnit_NET_4_5.csproj");
 				return true;
-			default:
-				return base.FixProjectReference (name, out fixed_name);
 			}
+
+			return base.FixProjectReference (include, subdir, suffix, out fixed_include);
 		}
 
 		public string SimplifiedName {
@@ -191,6 +194,7 @@ namespace Xharness.Targets
 
 			ProjectGuid = "{" + Helpers.GenerateStableGuid ().ToString ().ToUpper () + "}";
 			inputProject.SetProjectGuid (ProjectGuid);
+			inputProject.ResolveAllPaths (TemplateProjectPath);
 		}
 	}
 }

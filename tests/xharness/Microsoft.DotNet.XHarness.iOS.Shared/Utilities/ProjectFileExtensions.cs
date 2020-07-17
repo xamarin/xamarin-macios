@@ -436,37 +436,30 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 			return imports [0].Attributes ["Project"].Value;
 		}
 
-		public delegate bool FixReferenceDelegate (string reference, out string fixed_reference);
-		public static void FixProjectReferences (this XmlDocument csproj, string suffix, FixReferenceDelegate fixCallback = null, FixReferenceDelegate fixIncludeCallback = null)
+		public delegate bool FixReferenceDelegate (string include, string subdir, string suffix, out string fixed_include);
+
+		public static void FixProjectReferences (this XmlDocument csproj, string suffix, FixReferenceDelegate fixCallback)
+		{
+			FixProjectReferences (csproj, null, suffix, fixCallback);
+		}
+
+		public static void FixProjectReferences (this XmlDocument csproj, string subdir, string suffix, FixReferenceDelegate fixCallback)
 		{
 			var nodes = csproj.SelectNodes ("/*/*/*[local-name() = 'ProjectReference']");
-			if (nodes.Count == 0)
-				return;
 			foreach (XmlNode n in nodes) {
-				var name = n ["Name"]?.InnerText;
-				string fixed_name = null;
-				if (name != null && fixCallback != null && !fixCallback (name, out fixed_name))
+				var nameNode = n ["Name"];
+				var includeAttribute = n.Attributes ["Include"];
+				var include = includeAttribute.Value;
+
+				include = include.Replace ('\\', '/');
+				if (!fixCallback (include, subdir, suffix, out var fixed_include))
 					continue;
-				var include = n.Attributes ["Include"];
-				string fixed_include;
-				if (fixIncludeCallback != null && fixIncludeCallback (include.Value, out fixed_include)) {
-					// we're done here
-				} else if (fixed_name == null) {
-					fixed_include = include.Value;
-					fixed_include = fixed_include.Replace (".csproj", suffix + ".csproj");
-					fixed_include = fixed_include.Replace (".fsproj", suffix + ".fsproj");
-				} else {
-					var unix_path = include.Value.Replace ('\\', '/');
-					var unix_dir = System.IO.Path.GetDirectoryName (unix_path);
-					fixed_include = System.IO.Path.Combine (unix_dir, fixed_name + System.IO.Path.GetExtension (unix_path));
-					fixed_include = fixed_include.Replace ('/', '\\');
-				}
-				n.Attributes ["Include"].Value = fixed_include;
-				if (name != null) {
-					var nameElement = n ["Name"];
-					name = System.IO.Path.GetFileNameWithoutExtension (fixed_include.Replace ('\\', '/'));
-					nameElement.InnerText = name;
-				}
+				var name = Path.GetFileNameWithoutExtension (fixed_include);
+				fixed_include = fixed_include.Replace ('/', '\\');
+
+				includeAttribute.Value = fixed_include;
+				if (nameNode != null)
+					nameNode.InnerText = name;
 			}
 		}
 
@@ -583,8 +576,8 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 
 		public static bool IsDotNetProject (this XmlDocument csproj)
 		{
-			var project = csproj.SelectSingleNode ("./*[local-name() = 'Project']");
-			var attrib = project.Attributes ["Sdk"];
+			var project = csproj?.SelectSingleNode ("./*[local-name() = 'Project']");
+			var attrib = project?.Attributes ["Sdk"];
 			return attrib != null;
 		}
 
@@ -619,7 +612,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 
 		public static string GetInfoPListInclude (this XmlDocument csproj)
 		{
-			return GetInfoPListNode (csproj).Attributes ["Include"].Value;
+			return GetInfoPListNode (csproj)?.Attributes ["Include"]?.Value;
 		}
 
 		public static IEnumerable<string> GetProjectReferences (this XmlDocument csproj)

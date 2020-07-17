@@ -96,7 +96,7 @@ namespace Xharness.Targets {
 			csproj.AddCompileInclude ("TodayExtensionMain." + ext, Path.Combine (IsGeneratedBclTest? GeneratedTemplatePath : Harness.TodayExtensionTemplate, "TodayExtensionMain." + ext), true);
 			csproj.AddInterfaceDefinition (Path.Combine (Harness.TodayExtensionTemplate, "TodayView.storyboard").Replace ('/', '\\'));
 			csproj.SetExtraLinkerDefs ("extra-linker-defs" + ExtraLinkerDefsSuffix + ".xml");
-			csproj.FixProjectReferences ("-today");
+			csproj.FixProjectReferences (Path.Combine (ProjectsDir, GetTargetSpecificDir ()), "-today", FixProjectReference);
 			if (MonoNativeInfo != null) {
 				MonoNativeInfo.AddProjectDefines (csproj);
 				csproj.AddAdditionalDefines ("MONO_NATIVE_TODAY");
@@ -108,7 +108,7 @@ namespace Xharness.Targets {
 
 			XmlDocument info_plist = new XmlDocument ();
 			var target_info_plist = Path.Combine (IsGeneratedBclTest ? GeneratedPath : TargetDirectory, $"Info{suffix}.plist");
-			info_plist.LoadWithoutNetworkAccess (Path.Combine (IsGeneratedBclTest ? GeneratedPath : TargetDirectory, "Info.plist"));
+			info_plist.LoadWithoutNetworkAccess (Path.Combine (IsGeneratedBclTest ? GeneratedPath : TargetDirectory, OriginalInfoPListInclude));
 			BundleIdentifier = (IsGeneratedBclTest)? 
 				$"com.xamarin.bcltests.{AppName.Replace (" Today", "")}":
 				info_plist.GetCFBundleIdentifier () + "-today";
@@ -138,8 +138,8 @@ namespace Xharness.Targets {
 
 			switch (OutputType) {
 			case "Exe":
-				TodayExtensionProjectPath = Path.Combine (TargetDirectory, templateName + Suffix + "-extension." + ProjectFileExtension);
-				TodayContainerProjectPath = Path.Combine (TargetDirectory, templateName + Suffix + "." + ProjectFileExtension);
+				TodayExtensionProjectPath = Path.Combine (TargetDirectory, ProjectsDir, GetTargetSpecificDir ("extension"), templateName + Suffix + "-extension." + ProjectFileExtension);
+				TodayContainerProjectPath = Path.Combine (TargetDirectory, ProjectsDir, GetTargetSpecificDir (), templateName + Suffix + "." + ProjectFileExtension);
 				CreateTodayExtensionProject ();
 				CreateTodayContainerProject ();
 				break;
