@@ -30,6 +30,7 @@ namespace Xamarin {
 			// is loaded into the current process once per --custom-step,
 			// which makes it very difficult to share state between steps.
 			Steps.Add (new LoadNonSkippedAssembliesStep ());
+			Steps.Add (new ExtractBindingLibrariesStep ());
 			Steps.Add (new GenerateMainStep ());
 			Steps.Add (new GatherFrameworksStep ());
 
