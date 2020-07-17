@@ -8,6 +8,7 @@
 // Copyright 2018 Xamarin Inc. All rights reserved.
 //
 
+#if !NET // WeakAttribute is not supported in .NET
 using System;
 
 using Foundation;
@@ -137,3 +138,4 @@ namespace MonoTouchFixtures {
 		public void RemoveStrongRef () => strong = null;
 	}
 }
+#endif // !NET
