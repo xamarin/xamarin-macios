@@ -53,7 +53,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 
@@ -523,24 +522,6 @@ namespace Xamarin.Bundler
 			}
 
 			return main_source;
-		}
-
-		[DllImport (Constants.libSystemLibrary)]
-		static extern int symlink (string path1, string path2);
-
-		public static bool Symlink (string path1, string path2)
-		{
-			return symlink (path1, path2) == 0;
-		}
-
-		[DllImport (Constants.libSystemLibrary)]
-		static extern int unlink (string pathname);
-
-		public static void FileDelete (string file)
-		{
-			// File.Delete can't always delete symlinks (in particular if the symlink points to a file that doesn't exist).
-			unlink (file);
-			// ignore any errors.
 		}
 
 		public static void CopyAssembly (string source, string target, string target_dir = null)
@@ -1182,46 +1163,6 @@ namespace Xamarin.Bundler
 						return true;
 
 			return false;
-		}
-
-		struct timespec {
-			public IntPtr tv_sec;
-			public IntPtr tv_nsec;
-		}
-
-		struct stat { /* when _DARWIN_FEATURE_64_BIT_INODE is defined */
-			public uint st_dev;
-			public ushort st_mode;
-			public ushort st_nlink;
-			public ulong st_ino;
-			public uint st_uid;
-			public uint st_gid;
-			public uint st_rdev;
-			public timespec st_atimespec;
-			public timespec st_mtimespec;
-			public timespec st_ctimespec;
-			public timespec st_birthtimespec;
-			public ulong st_size;
-			public ulong st_blocks;
-			public uint st_blksize;
-			public uint st_flags;
-			public uint st_gen;
-			public uint st_lspare;
-			public ulong st_qspare_1;
-			public ulong st_qspare_2;
-		}
-
-		[DllImport (Constants.libSystemLibrary, EntryPoint = "lstat$INODE64", SetLastError = true)]
-		static extern int lstat (string path, out stat buf);
-
-		public static bool IsSymlink (string file)
-		{
-			stat buf;
-			var rv = lstat (file, out buf);
-			if (rv != 0)
-				throw new Exception (string.Format ("Could not lstat '{0}': {1}", file, Marshal.GetLastWin32Error ()));
-			const int S_IFLNK = 40960;
-			return (buf.st_mode & S_IFLNK) == S_IFLNK;
 		}
 
 		public static bool IsFrameworkAvailableInSimulator (Application app, string framework)
