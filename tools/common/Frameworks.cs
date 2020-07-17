@@ -337,6 +337,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "AutomaticAssessmentConfiguration", "AutomaticAssessmentConfiguration", 13, 4 },
 
 				{ "AppClip", "AppClip", 14,0 },
+				{ "MediaSetup", "MediaSetup", new Version (14, 0), NotAvailableInSimulator /* no headers in beta 2 */ },
 				{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 14,0 },
 				{ "Accessibility", "Accessibility", 14,0 },
 
@@ -533,17 +534,26 @@ public class Frameworks : Dictionary <string, Framework>
 	// This checks if a framework is unavailable due to bugs in Xcode (such as Apple forgetting to ship a library or headers for a framework, which seems to happen at least once a year).
 	public static bool IsFrameworkBroken (Application app, string framework)
 	{
-		if (app.Platform == ApplePlatform.WatchOS && app.IsSimulatorBuild && Driver.XcodeProductVersion == "12A6163b" /* Xcode 12 beta 12 */) {
+		if (app.IsSimulatorBuild && Driver.XcodeProductVersion == "12A6163b" /* Xcode 12 beta 12 */) {
 			switch (framework) {
+			// Apple seems to have forgotten to ship the several libraries for the simulator in Xcode 12 betas (it's still available for device builds).
+			// https://github.com/xamarin/maccore/issues/2244
 			case "CoreML":
 			case "CoreVideo":
-				// Apple seems to have forgotten to ship the several libraries for the simulator in Xcode 12 betas (it's still available for device builds).
-				// https://github.com/xamarin/maccore/issues/2244
-				Driver.Log (1, $"Can't use '{framework}' in the simulator because Apple didn't ship it with Xcode 12 beta {Driver.XcodeProductVersion}");
-				return true;
+				if (app.Platform != ApplePlatform.WatchOS)
+					return false;
+				break;
+			// https://github.com/xamarin/maccore/issues/2266
+			case "MediaSetup":
+				if (app.Platform != ApplePlatform.iOS)
+					return false;
+				break;
+			default:
+				return false;
 			}
+			Driver.Log (1, $"Can't use '{framework}' in the simulator because Apple didn't ship it with Xcode 12 beta {Driver.XcodeProductVersion}");
+			return true;
 		}
-
 		return false;
 	}
 #endif
