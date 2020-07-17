@@ -38,14 +38,6 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		public Version SdkVersion {
-			get { return Configuration.SdkVersion; }
-		}
-
-		public Version DeploymentTarget {
-			get { return Configuration.DeploymentTarget; }
-		}
-
 		public ApplePlatform Platform {
 			get { return Configuration.Platform; }
 		}

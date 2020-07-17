@@ -136,6 +136,8 @@ namespace Xamarin.Linker {
 			Target = new Target (Application);
 
 			Application.Cache.Location = CacheDirectory;
+			Application.DeploymentTarget = DeploymentTarget;
+			Application.SdkVersion = SdkVersion;
 
 			switch (Platform) {
 			case ApplePlatform.iOS:
