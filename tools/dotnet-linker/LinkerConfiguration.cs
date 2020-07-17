@@ -5,10 +5,13 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 
+using Mono.Cecil;
 using Mono.Linker;
 
 using Xamarin.Bundler;
 using Xamarin.Utils;
+
+using ObjCRuntime;
 
 namespace Xamarin.Linker {
 	public class LinkerConfiguration {
@@ -29,12 +32,17 @@ namespace Xamarin.Linker {
 		public Application Application { get; private set; }
 		public Target Target { get; private set; }
 
+		public LinkContext Context { get; private set; }
+
 		public static LinkerConfiguration GetInstance (LinkContext context)
 		{
 			if (!configurations.TryGetValue (context, out var instance)) {
 				if (!context.TryGetCustomData ("LinkerOptionsFile", out var linker_options_file))
 					throw new Exception ($"No custom linker options file was passed to the linker (using --custom-data LinkerOptionsFile=...");
-				instance = new LinkerConfiguration (linker_options_file);
+				instance = new LinkerConfiguration (linker_options_file) {
+					Context = context,
+				};
+
 				configurations.Add (context, instance);
 			}
 
