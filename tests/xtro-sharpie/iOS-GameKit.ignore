@@ -32,3 +32,6 @@
 !missing-null-allowed! 'UIKit.UIViewController GameKit.GKAchievement::ChallengeComposeController(GameKit.GKPlayer[],System.String,GameKit.GKChallengeComposeHandler)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'UIKit.UIViewController GameKit.GKAchievement::ChallengeComposeController(GameKit.GKPlayer[],System.String,GameKit.GKChallengeComposeHandler)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIViewController GameKit.GKScore::ChallengeComposeController(System.String[],System.String,GameKit.GKChallengeComposeHandler)' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'System.String GameKit.GKAchievement::get_PlayerID()' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'System.String[] GameKit.GKMatch::get_PlayersIDs()' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'System.String[] GameKit.GKVoiceChat::get_PlayerIDs()' is missing an [NullAllowed] on return type

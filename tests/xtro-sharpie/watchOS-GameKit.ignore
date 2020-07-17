@@ -79,3 +79,4 @@
 
 # Initial result from new rule missing-null-allowed
 !missing-null-allowed! 'System.String GameKit.GKTurnBasedParticipant::get_PlayerID()' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'System.String GameKit.GKAchievement::get_PlayerID()' is missing an [NullAllowed] on return type

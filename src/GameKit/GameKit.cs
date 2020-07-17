@@ -291,11 +291,43 @@ namespace GameKit {
 		NoAnswer = 5,
 	}
 
-	[Mac (10,13,4), TV (11,3), iOS (11,3)]
+	[iOS (11,3)][Obsoleted (PlatformName.iOS, 14,0, message: "Do not use; this API was removed.")]
+	[Mac (10,13,4)][Obsoleted (PlatformName.MacOSX, 10,16, message: "Do not use; this API was removed.")]
+	[TV (11,3)][Obsoleted (PlatformName.TvOS, 14,0, message: "Do not use; this API was removed.")]
+	[Obsolete]
 	[Native]
 	public enum GKAuthenticationType : ulong {
 		WithoutUI = 0,
 		GreenBuddyUI = 1,
 		AuthKitInvocation = 2,
+	}
+
+	[TV (14,0), Mac (10,16), iOS (14,0)]
+	[NoWatch]
+	[Native]
+	public enum GKAccessPointLocation : long
+	{
+		TopLeading,
+		TopTrailing,
+		BottomLeading,
+		BottomTrailing
+	}
+
+	[TV (14,0), Mac (10,16), iOS (14,0), Watch(7,0)]
+	[Native]
+	public enum GKLeaderboardType : long
+	{
+		Classic,
+		Recurring,
+	}
+
+	[TV (14,0), Mac (10,16), iOS (14,0)]
+	[NoWatch]
+	[Native]
+	public enum GKMatchmakingMode : long
+	{
+		Default = 0,
+		NearbyOnly = 1,
+		AutomatchOnly = 2,
 	}
 }
