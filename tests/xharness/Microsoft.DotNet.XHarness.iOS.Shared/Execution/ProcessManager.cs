@@ -250,6 +250,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Execution {
 
 				foreach (var diagnose_pid in pids) {
 					var template = Path.GetTempFileName ();
+					var templateQuit = Path.GetTempFileName ();
 					try {
 						var commands = new StringBuilder ();
 						using (var dbg = new Process ()) {
@@ -259,8 +260,9 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Execution {
 							commands.AppendLine ("detach");
 							commands.AppendLine ("quit");
 							dbg.StartInfo.FileName = "/usr/bin/lldb";
-							dbg.StartInfo.Arguments = StringUtils.FormatArguments ("--source", template);
+							dbg.StartInfo.Arguments = StringUtils.FormatArguments ("--source", template, "--source", templateQuit);
 							File.WriteAllText (template, commands.ToString ());
+							File.WriteAllText (templateQuit, "quit\n");
 
 							log.WriteLine ($"Printing backtrace for pid={pid}");
 							await RunAsyncInternal (dbg, log, log, log, TimeSpan.FromSeconds (30), diagnostics: false);
@@ -268,6 +270,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Execution {
 					} finally {
 						try {
 							File.Delete (template);
+							File.Delete (templateQuit);
 						} catch {
 							// Don't care
 						}
