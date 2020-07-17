@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Text;
 
-#if MTOUCH || MMP
+#if MTOUCH || MMP || BUNDLER
 using Mono.Cecil;
 using Xamarin.Linker;
 #else
@@ -11,7 +11,7 @@ using Foundation;
 using ObjCRuntime;
 #endif
 
-#if MMP || MMP_TEST || MTOUCH
+#if MMP || MMP_TEST || MTOUCH || BUNDLER
 namespace Xamarin.Bundler {
 #else
 namespace ObjCRuntime {
@@ -24,7 +24,7 @@ namespace ObjCRuntime {
 
 		string http_message_handler;
 
-#if MTOUCH || MMP
+#if MTOUCH || MMP || BUNDLER
 		/*
 		 * This section is only used by the tools
 		 */
