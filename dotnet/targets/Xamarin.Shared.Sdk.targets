@@ -92,6 +92,7 @@
 		<BuildDependsOn>
 			$(BuildDependsOn);
 			_CreateAppBundle;
+			Codesign;
 		</BuildDependsOn>
 
 		<!-- We re-use ComputeFilesToPublish & CopyFilesToPublishDirectory to copy files to the .app -->
