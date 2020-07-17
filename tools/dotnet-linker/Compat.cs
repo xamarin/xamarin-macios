@@ -33,6 +33,11 @@ namespace Xamarin.Bundler {
 			}
 		}
 
+		public void SelectRegistrar ()
+		{
+			throw new NotImplementedException ();
+		}
+
 		public ApplePlatform Platform {
 			get { return Configuration.Platform; }
 		}
