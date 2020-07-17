@@ -52,15 +52,15 @@ namespace MonoTouchFixtures.MetalPerformanceShaders
 					// > /BuildRoot/Library/Caches/com.apple.xbs/Sources/MetalImage/MetalImage-39.3/MetalImage/Filters/MIHistogram.mm:103: failed assertion `[MPSImageHistogram histogramSizeForSourceFormat:] unsupported texture format: 114'
 					// I made sure the MTLPixelFormat values I tested with were also added in iOS 9, so that's not the problem.
 					// Conclusion: just avoid executing HistogramSizeForSourceFormat on anything below iOS 10.rm 
-					Assert.AreEqual (3072, obj.GetHistogramSize (MTLPixelFormat.RGBA16Sint), "HistogramSizeForSourceFormat");
+					Assert.AreEqual ((nuint) 3072, obj.GetHistogramSize (MTLPixelFormat.RGBA16Sint), "HistogramSizeForSourceFormat");
 				}
 				var crs = obj.ClipRectSource;
-				Assert.AreEqual (0, crs.Origin.X, "ClipRectSource.Origin.X");
-				Assert.AreEqual (0, crs.Origin.Y, "ClipRectSource.Origin.Y");
-				Assert.AreEqual (0, crs.Origin.Z, "ClipRectSource.Origin.Z");
-				Assert.AreEqual (-1, crs.Size.Depth, "ClipRectSource.Size.Depth");
-				Assert.AreEqual (-1, crs.Size.Height, "ClipRectSource.Size.Height");
-				Assert.AreEqual (-1, crs.Size.Width, "ClipRectSource.Size.Width");
+				Assert.AreEqual ((nint) 0, crs.Origin.X, "ClipRectSource.Origin.X");
+				Assert.AreEqual ((nint) 0, crs.Origin.Y, "ClipRectSource.Origin.Y");
+				Assert.AreEqual ((nint) 0, crs.Origin.Z, "ClipRectSource.Origin.Z");
+				Assert.AreEqual ((nint) (-1), crs.Size.Depth, "ClipRectSource.Size.Depth");
+				Assert.AreEqual ((nint) (-1), crs.Size.Height, "ClipRectSource.Size.Height");
+				Assert.AreEqual ((nint) (-1), crs.Size.Width, "ClipRectSource.Size.Width");
 			}
 		}
 	}

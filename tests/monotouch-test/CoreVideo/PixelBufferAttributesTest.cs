@@ -25,7 +25,7 @@ namespace MonoTouchFixtures.CoreVideo {
 		public void Defaults ()
 		{
 			var options = new CVPixelBufferAttributes ();
-			Assert.That (options.Dictionary.Count, Is.EqualTo (0), "Count");
+			Assert.That (options.Dictionary.Count, Is.EqualTo ((nuint) 0), "Count");
 			Assert.Null (options.MemoryAllocator, "MemoryAllocator");
 		}
 
@@ -35,7 +35,7 @@ namespace MonoTouchFixtures.CoreVideo {
 			var options = new CVPixelBufferAttributes () {
 				MemoryAllocator = CFAllocator.MallocZone
 			};
-			Assert.That (options.Dictionary.Count, Is.EqualTo (1), "Count");
+			Assert.That (options.Dictionary.Count, Is.EqualTo ((nuint) 1), "Count");
 			Assert.That (options.MemoryAllocator.Handle, Is.EqualTo (CFAllocator.MallocZone.Handle), "MemoryAllocator");
 		}
 	}

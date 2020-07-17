@@ -121,6 +121,7 @@
     <Compile Include="..\..\tools\mtouch\Errors.Designer.cs">
       <Link>Errors.Designer.cs</Link>
     </Compile>
+    <Compile Include="src\NativeExtensionEmbedding.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />

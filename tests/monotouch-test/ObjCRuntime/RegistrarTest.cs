@@ -359,7 +359,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				using (var pool = new NSAutoreleasePool ())
 					ptr = Messaging.IntPtr_objc_msgSend (obj.Handle, Selector.GetHandle ("testRetainArray"));
 				using (var rv = Runtime.GetNSObject (ptr)) {
-					Assert.AreEqual (2, rv.RetainCount, "array");
+					Assert.AreEqual ((nuint) 2, rv.RetainCount, "array");
 					Assert.AreSame (typeof(NSArray), rv.GetType (), "array type");
 					rv.DangerousRelease ();
 				}
@@ -367,7 +367,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				using (var pool = new NSAutoreleasePool ())
 					ptr = Messaging.IntPtr_objc_msgSend (obj.Handle, Selector.GetHandle ("testReturnINativeObject"));
 				using (var rv = Runtime.GetNSObject (ptr)) {
-					Assert.AreEqual (2, rv.RetainCount, "inativeobject");
+					Assert.AreEqual ((nuint) 2, rv.RetainCount, "inativeobject");
 					Assert.AreSame (typeof(NSObject), rv.GetType (), "inativeobject type");
 					rv.DangerousRelease ();
 				}
@@ -375,7 +375,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				using (var pool = new NSAutoreleasePool ())
 					ptr = Messaging.IntPtr_objc_msgSend (obj.Handle, Selector.GetHandle ("testRetainNSObject"));
 				using (var rv = Runtime.GetNSObject (ptr)) {
-					Assert.AreEqual (2, rv.RetainCount, "nsobject");
+					Assert.AreEqual ((nuint) 2, rv.RetainCount, "nsobject");
 					Assert.AreSame (typeof(NSObject), rv.GetType (), "nsobject type");
 					rv.DangerousRelease ();
 				}
@@ -383,7 +383,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				using (var pool = new NSAutoreleasePool ())
 					ptr = Messaging.IntPtr_objc_msgSend (obj.Handle, Selector.GetHandle ("testRetainString"));
 				using (var rv = Runtime.GetNSObject (ptr)) {
-					Assert.AreEqual (2, rv.RetainCount, "string");
+					Assert.AreEqual ((nuint) 2, rv.RetainCount, "string");
 					Assert.IsTrue (rv is NSString, "string type");
 					rv.DangerousRelease ();
 				}
@@ -393,7 +393,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				using (var pool = new NSAutoreleasePool ())
 					ptr = Messaging.IntPtr_objc_msgSend (obj.Handle, Selector.GetHandle ("testOverriddenRetainNSObject"));
 				using (var rv = Runtime.GetNSObject (ptr)) {
-					Assert.AreEqual (2, rv.RetainCount, "overridden nsobject");
+					Assert.AreEqual ((nuint) 2, rv.RetainCount, "overridden nsobject");
 					Assert.AreSame (typeof(NSObject), rv.GetType (), "overridden nsobject type");
 					rv.DangerousRelease ();
 				}
@@ -652,8 +652,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				var pnt1 = new CGPoint (123, 456);
 				PointF pnt2 = new CGPoint ();
 				void_objc_msgSend_CGPoint_ref_CGPoint (obj.Handle, Selector.GetHandle ("testCGPoint:out:"), pnt1, ref pnt2);
-				Assert.AreEqual (123, pnt2.X, "X");
-				Assert.AreEqual (456, pnt2.Y, "Y");
+				Assert.AreEqual ((nfloat) 123, pnt2.X, "X");
+				Assert.AreEqual ((nfloat) 456, pnt2.Y, "Y");
 			}
 		}
 
@@ -1366,7 +1366,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 #endif
 			var exp = new string [] { "@", ":", "^v", "C", "c", "s", "s", "S", "i", "I", "q", "Q", "f", "d", boolEncoding, "@", ":", "#" };
 
-			Assert.AreEqual (exp.Length, sig.NumberOfArguments, "NumberOfArguments");
+			Assert.AreEqual ((nuint) exp.Length, sig.NumberOfArguments, "NumberOfArguments");
 //			for (uint i = 0; i < exp.Length; i++) {
 //				var p = Marshal.PtrToStringAuto (sig.GetArgumentType (i));
 //				Console.WriteLine ("{0}: {1}", i, p);
@@ -2164,7 +2164,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		public void TestInheritedProtocols ()
 		{
 			using (var obj = new Bug28757B ()) {
-				Assert.AreEqual (2, Messaging.nint_objc_msgSend_IntPtr_nint (obj.Handle, Selector.GetHandle ("tableView:numberOfRowsInSection:"), IntPtr.Zero, 0), "#test");
+				Assert.AreEqual ((nint) 2, Messaging.nint_objc_msgSend_IntPtr_nint (obj.Handle, Selector.GetHandle ("tableView:numberOfRowsInSection:"), IntPtr.Zero, 0), "#test");
 			}
 		}
 #endif // !__WATCHOS
@@ -2232,7 +2232,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				var array = Messaging.IntPtr_objc_msgSend_IntPtr (Class.GetHandle (typeof(NSArray)), Selector.GetHandle ("arrayWithObject:"), handle);
 				Messaging.void_objc_msgSend_IntPtr (contact.Handle, Selector.GetHandle ("setDates:"), array);
 
-				Assert.AreEqual (1923, contact.Dates [0].Value.Year, "Dates");
+				Assert.AreEqual ((nint) 1923, contact.Dates [0].Value.Year, "Dates");
 			}
 
 			using (var contact = new SubclassedContact ()) {
@@ -2240,7 +2240,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				var obj = Runtime.GetNSObject (dates);
 				Assert.AreEqual (typeof (NSArray), obj.GetType (), "2 date type");
 				var arr = (NSArray) obj;
-				Assert.AreEqual (1, arr.Count, "2 count");
+				Assert.AreEqual ((nuint) 1, arr.Count, "2 count");
 			}
 
 			using (var contact = new SubclassedContact ()) {
@@ -2616,7 +2616,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				obj.SetStringArrayMethod (array);
 				Assert.That (obj.StringArrayProperty, Is.EqualTo (array), "3");
 				var rv = obj.GetStringArrayMethod ();
-				Assert.That (rv, Is.EquivalentTo (array), "4");
+				Assert.That (rv, Is.EqualTo (array), "4");
 			}
 
 			using (var arrayObj = NSArray.FromStrings (array)) {
@@ -2658,7 +2658,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				obj.SetNSObjectArrayMethod (array);
 				Assert.That (obj.NSObjectArrayProperty, Is.EqualTo (array), "3");
 				var rv = obj.GetNSObjectArrayMethod ();
-				Assert.That (rv, Is.EquivalentTo (array), "4");
+				Assert.That (rv, Is.EqualTo (array), "4");
 			}
 
 			using (var arrayObj = NSArray.FromNSObjects (array)) {
@@ -2700,7 +2700,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				obj.SetINSCodingArrayMethod (array);
 				Assert.That (obj.INSCodingArrayProperty, Is.EqualTo (array), "3");
 				var rv = obj.GetINSCodingArrayMethod ();
-				Assert.That (rv, Is.EquivalentTo (array), "4");
+				Assert.That (rv, Is.EqualTo (array), "4");
 			}
 
 			using (var arrayObj = NSArray.FromNSObjects<INSCoding> (array)) {

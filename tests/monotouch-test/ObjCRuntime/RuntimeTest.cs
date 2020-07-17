@@ -76,10 +76,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void RegisterAssembly_null ()
 		{
-			Runtime.RegisterAssembly (null);
+			Assert.Throws<ArgumentNullException> (() => Runtime.RegisterAssembly (null));
 		}
 
 #if !__WATCHOS__ && !__TVOS__ && !MONOMAC
@@ -482,7 +481,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			while ((long) obj.RetainCount > (long) count / 2 && iterations++ < max_iterations) {
 				Thread.Sleep (100);
 			}
-			Assert.That (obj.RetainCount, Is.Not.GreaterThan (count / 2), "RC. Iterations: " + iterations);
+			Assert.That (obj.RetainCount, Is.Not.GreaterThan ((nuint) (count / 2)), "RC. Iterations: " + iterations);
 
 			obj.Dispose ();
 		}

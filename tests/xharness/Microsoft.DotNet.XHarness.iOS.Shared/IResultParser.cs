@@ -31,6 +31,6 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 		(string resultLine, bool failed) GenerateHumanReadableResults (string source, string destination, XmlResultJargon xmlType);
 
 		// generated a human readable test report.
-		void GenerateTestReport (StreamWriter writer, string resultsPath, XmlResultJargon xmlType);
+		void GenerateTestReport (TextWriter writer, string resultsPath, XmlResultJargon xmlType);
 	}
 }

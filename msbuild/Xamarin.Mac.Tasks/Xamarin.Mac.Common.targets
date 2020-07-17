@@ -331,6 +331,19 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<_AppBundleManifestRelativePath>Contents/</_AppBundleManifestRelativePath>
 	</PropertyGroup>
 
+	<Target Name="_GetCompileToNativeInputs"
+		DependsOnTargets="ResolveReferences">
+		<ItemGroup>
+			<!-- Skip the reference assemblies. 'mmp' will fail to AOT them if passed 'aot:all'. Similar to: https://github.com/xamarin/xamarin-macios/issues/3199 -->
+			<!-- Remove exact references, such as if a package had a framework reference to 'System' that we already have -->
+			<!-- This is exactly what "Microsoft.NuGet.Build.Tasks"'s 'ResolveNuGetPackageAssets' target is doing -->
+			<!-- Effectively 'ResolveNuGetPackageAssets' computes the NuGet packages using their json asset file, adds the full assemblies to 'ReferenceCopyLocalPaths' and outputs the resolved references via '_ReferencesFromNuGetPackages' -->
+			<ReferencePath Remove="@(_ReferencesFromNuGetPackages)" />
+			<MmpReferencePath Include="@(ReferenceCopyLocalPaths)" Condition="'%(Extension)' == '.dll'" />
+			<_CompileToNativeInput Include="$(TargetDir)$(TargetFileName);@(MmpReferencePath)" />
+		</ItemGroup>
+	</Target>
+
 	<PropertyGroup>
 		<CompileToNativeDependsOn>
 			_ComputeTargetFrameworkMoniker;
@@ -340,22 +353,15 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			ResolveReferences;
 			_CompileEntitlements;
 			_CompileAppManifest;
+			_GetCompileToNativeInputs;
 			_ExpandNativeReferences;
 			_ComputeTargetArchitectures;
 		</CompileToNativeDependsOn>
 	</PropertyGroup>
 
 	<Target Name="_CompileToNative" DependsOnTargets="$(CompileToNativeDependsOn)"
-		Inputs="$(TargetDir)$(TargetFileName);@(_FrameworkNativeReference);@(_FileNativeReference);@(BundleDependentFiles)"
+		Inputs="@(_CompileToNativeInput);@(_FrameworkNativeReference);@(_FileNativeReference);@(BundleDependentFiles)"
 		Outputs="$(_AppBundlePath)Contents\MacOS\$(_AppBundleName)">
-		<ItemGroup>
-			<!-- Skip the reference assemblies. 'mmp' will fail to AOT them if passed 'aot:all'. Similar to: https://github.com/xamarin/xamarin-macios/issues/3199 -->
-			<!-- Remove exact references, such as if a package had a framework reference to 'System' that we already have -->
-			<!-- This is exactly what "Microsoft.NuGet.Build.Tasks"'s 'ResolveNuGetPackageAssets' target is doing -->
-			<!-- Effectively 'ResolveNuGetPackageAssets' computes the NuGet packages using their json asset file, adds the full assemblies to 'ReferenceCopyLocalPaths' and outputs the resolved references via '_ReferencesFromNuGetPackages' -->
-			<ReferencePath Remove="@(_ReferencesFromNuGetPackages)" />
-			<ReferenceCopyLocalAssemblyPaths Include="@(ReferenceCopyLocalPaths)" Condition="'%(Extension)' == '.dll'" />
-		</ItemGroup>
 		<Mmp
 			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
@@ -374,7 +380,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			Profiling="$(Profiling)"
 			ExtraArgs="$(_BundlerArguments)"
 			NativeReferences="@(NativeReference)"
-			References="@(ReferencePath);@(ReferenceCopyLocalAssemblyPaths)"
+			References="@(ReferencePath);@(MmpReferencePath)"
 			ResponseFilePath="$(IntermediateOutputPath)response-file.rsp"
 			SdkRoot="$(_SdkDevPath)"
 			IntermediateOutputPath="$(IntermediateOutputPath)mmp-cache"
@@ -558,7 +564,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		/>
 	</Target>
 
-	<Target Name="_CopyAppExtensionsToBundle"  Condition="'$(IsAppExtension)' != 'true'" DependsOnTargets="_ResolveAppExtensionReferences">
+	<Target Name="_CopyAppExtensionsToBundle"  Condition="'$(IsAppExtension)' != 'true'" DependsOnTargets="_ExtendAppExtensionReferences">
 		<MakeDir Directories="$(_AppBundlePath)Contents\PlugIns" Condition="'%(_ResolvedAppExtensionReferences.Extension)' == '.appex'" />
 		<MakeDir Directories="$(_AppBundlePath)Contents\XPCServices" Condition="'%(_ResolvedAppExtensionReferences.Extension)' == '.xpc'" />
 

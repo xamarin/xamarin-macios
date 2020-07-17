@@ -143,13 +143,12 @@ namespace MonoTouchFixtures.EventKit {
 		}
 
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void FromEventStore_Null ()
 		{
 #if MONOMAC
-			EKCalendar.Create (EKEntityType.Event, null);
+			Assert.Throws<ArgumentNullException> (() => EKCalendar.Create (EKEntityType.Event, null));
 #else
-			EKCalendar.FromEventStore (null);
+			Assert.Throws<ArgumentNullException> (() => EKCalendar.FromEventStore (null));
 #endif
 		}
 	}

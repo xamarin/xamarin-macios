@@ -35,7 +35,7 @@ namespace MonoTouchFixtures.Metal {
 		public void GetIndexTest ()
 		{
 			var constant = new MTLFunctionConstant ();
-			Assert.AreEqual (0, constant.Index, $"Index is {constant.Index}"); // default value is 0
+			Assert.AreEqual ((nuint) 0, constant.Index, $"Index is {constant.Index}"); // default value is 0
 		}
 		
 		[Test]

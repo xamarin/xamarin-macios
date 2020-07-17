@@ -721,10 +721,9 @@ namespace LinkSdk {
 		}
 
 		[Test]
-		[ExpectedException (typeof (NotSupportedException))]
 		public void LinkedAway ()
 		{
-			new System.Runtime.Remoting.RemotingException ();
+			Assert.Throws<NotSupportedException> (() => new System.Runtime.Remoting.RemotingException ());
 		}
 
 		[Test]

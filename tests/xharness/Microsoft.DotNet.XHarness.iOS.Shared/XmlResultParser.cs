@@ -459,7 +459,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 			return parseData;
 		}
 
-		static void GenerateNUnitV2TestReport (StreamWriter writer, XmlReader reader)
+		static void GenerateTouchUnitTestReport (TextWriter writer, XmlReader reader)
 		{
 			while (reader.Read ()) {
 
@@ -502,7 +502,65 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 			}
 		}
 
-		static void GenerateNUnitV3TestReport (StreamWriter writer, XmlReader reader)
+		static void GenerateNUnitV2TestReport (TextWriter writer, XmlReader reader)
+		{
+			if (!reader.ReadToFollowing ("test-results"))
+				return;
+
+			long.TryParse (reader ["errors"], out var errors);
+			long.TryParse (reader ["failures"], out var failures);
+			if (errors == 0 && failures == 0)
+				return;
+
+			writer.WriteLine ("<div style='padding-left: 15px;'>");
+			writer.WriteLine ("<ul>");
+
+			void write_failure ()
+			{
+				var name = reader ["name"];
+				var message = reader.ReadToDescendant ("message") ? reader.ReadElementContentAsString () : null;
+				var message_block = message?.IndexOf ('\n') >= 0;
+				writer.WriteLine ("<li>");
+				writer.Write (name.AsHtml ());
+				if (!string.IsNullOrEmpty (message)) {
+					writer.Write (": ");
+					if (message_block)
+						writer.WriteLine ("<div style='padding-left: 15px;'>");
+					writer.Write (message.AsHtml ());
+					if (message_block)
+						writer.WriteLine ("</div>");
+				}
+				writer.WriteLine ("</li>");
+			}
+
+			while (reader.ReadToFollowing ("test-suite")) {
+				if (reader ["type"] == "Assembly")
+					continue;
+
+				var result = reader ["result"];
+				if (result != "Error" && result != "Failure")
+					continue;
+
+				if (result == "Error")
+					write_failure ();
+
+				if (!reader.ReadToDescendant ("test-case"))
+					continue;
+
+				do {
+					result = reader ["result"];
+					if (result != "Error" && result != "Failure")
+						continue;
+
+					write_failure ();
+				} while (reader.ReadToNextSibling ("test-case"));
+			}
+
+			writer.WriteLine ("</ul>");
+			writer.WriteLine ("</div>");
+		}
+
+		static void GenerateNUnitV3TestReport (TextWriter writer, XmlReader reader)
 		{
 			List<(string name, string message)> failedTests = new List<(string name, string message)> ();
 			while (reader.Read ()) {
@@ -551,7 +609,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 			}
 		}
 
-		static void GeneratexUnitTestReport (StreamWriter writer, XmlReader reader)
+		static void GeneratexUnitTestReport (TextWriter writer, XmlReader reader)
 		{
 			var failedTests = new List<(string name, string message)> ();
 			// xUnit is not as nice and does not provide the final result in a top node,
@@ -593,7 +651,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 			}
 		}
 
-		static void GenerateTrxTestReport (StreamWriter writer, XmlReader reader)
+		static void GenerateTrxTestReport (TextWriter writer, XmlReader reader)
 		{
 			var tests = ParseTrxXml (reader);
 			var failedTests = tests.Where (v => v.Outcome != "Passed");
@@ -616,14 +674,21 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 			}
 		}
 
-		public void GenerateTestReport (StreamWriter writer, string resultsPath, XmlResultJargon xmlType)
+		public void GenerateTestReport (TextWriter writer, string resultsPath, XmlResultJargon xmlType)
 		{
 			using (var stream = new StreamReader (resultsPath))
+				GenerateTestReport (writer, stream, xmlType);
+		}
+
+		public void GenerateTestReport (TextWriter writer, TextReader stream, XmlResultJargon xmlType)
+		{
 			using (var reader = XmlReader.Create (stream)) {
 				switch (xmlType) {
 				case XmlResultJargon.NUnitV2:
-				case XmlResultJargon.TouchUnit:
 					GenerateNUnitV2TestReport (writer, reader);
+					break;
+				case XmlResultJargon.TouchUnit:
+					GenerateTouchUnitTestReport (writer, reader);
 					break;
 				case XmlResultJargon.xUnit:
 					GeneratexUnitTestReport (writer, reader);
@@ -635,7 +700,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 					GenerateTrxTestReport (writer, reader);
 					break;
 				default:
-					writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {resultsPath}: Not supported format.</span><br />");
+					writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {xmlType}: Not supported format.</span><br />");
 					break;
 				}
 			}

@@ -27,7 +27,7 @@ namespace MonoTouchFixtures.PassKit {
 				pr.RequiredBillingContactFields |= PKContactFields.PhoneNumber;
 				pr.RequiredBillingContactFields |= PKContactFields.Name;
 				pr.RequiredBillingContactFields |= PKContactFields.PhoneticName;
-				Assert.That (pr.WeakRequiredBillingContactFields.Count, Is.EqualTo (5), "Count-5");
+				Assert.That (pr.WeakRequiredBillingContactFields.Count, Is.EqualTo ((nuint) 5), "Count-5");
 
 				pr.RequiredBillingContactFields = PKContactFields.PhoneticName;
 				Assert.That (pr.RequiredBillingContactFields, Is.EqualTo (PKContactFields.PhoneticName), "PhoneticName");
@@ -40,27 +40,27 @@ namespace MonoTouchFixtures.PassKit {
 			TestRuntime.AssertXcodeVersion (9,0);
 
 			using (var pr = new PKPaymentRequest ()) {
-				Assert.That (pr.WeakRequiredBillingContactFields.Count, Is.EqualTo (0), "Count");
+				Assert.That (pr.WeakRequiredBillingContactFields.Count, Is.EqualTo ((nuint) 0), "Count");
 
 				using (var set = new NSMutableSet ()) {
 					pr.WeakRequiredBillingContactFields = set;
-					Assert.That (pr.WeakRequiredBillingContactFields.Count, Is.EqualTo (0), "Count-0");
+					Assert.That (pr.WeakRequiredBillingContactFields.Count, Is.EqualTo ((nuint) 0), "Count-0");
 					set.Add (PKContactFields.PostalAddress.GetConstant ()); 
-					Assert.That (pr.WeakRequiredBillingContactFields.Count, Is.EqualTo (1), "Count-1");
+					Assert.That (pr.WeakRequiredBillingContactFields.Count, Is.EqualTo ((nuint) 1), "Count-1");
 					set.Add (PKContactFields.EmailAddress.GetConstant ()); 
-					Assert.That (pr.WeakRequiredBillingContactFields.Count, Is.EqualTo (2), "Count-2");
+					Assert.That (pr.WeakRequiredBillingContactFields.Count, Is.EqualTo ((nuint) 2), "Count-2");
 					set.Add (PKContactFields.PhoneNumber.GetConstant ()); 
-					Assert.That (pr.WeakRequiredBillingContactFields.Count, Is.EqualTo (3), "Count-3");
+					Assert.That (pr.WeakRequiredBillingContactFields.Count, Is.EqualTo ((nuint) 3), "Count-3");
 					set.Add (PKContactFields.Name.GetConstant ()); 
-					Assert.That (pr.WeakRequiredBillingContactFields.Count, Is.EqualTo (4), "Count-5");
+					Assert.That (pr.WeakRequiredBillingContactFields.Count, Is.EqualTo ((nuint) 4), "Count-5");
 					set.Add (PKContactFields.PhoneticName.GetConstant ()); 
-					Assert.That (pr.WeakRequiredBillingContactFields.Count, Is.EqualTo (5), "Count-5");
+					Assert.That (pr.WeakRequiredBillingContactFields.Count, Is.EqualTo ((nuint) 5), "Count-5");
 					set.Add (PKContactFields.PhoneticName.GetConstant ()); 
-					Assert.That (pr.WeakRequiredBillingContactFields.Count, Is.EqualTo (5), "Count-5b");
+					Assert.That (pr.WeakRequiredBillingContactFields.Count, Is.EqualTo ((nuint) 5), "Count-5b");
 					set.Remove (PKContactFields.PhoneticName.GetConstant ()); 
-					Assert.That (pr.WeakRequiredBillingContactFields.Count, Is.EqualTo (4), "Count-4b");
+					Assert.That (pr.WeakRequiredBillingContactFields.Count, Is.EqualTo ((nuint) 4), "Count-4b");
 					set.RemoveAll ();
-					Assert.That (pr.WeakRequiredBillingContactFields.Count, Is.EqualTo (0), "Count-0b");
+					Assert.That (pr.WeakRequiredBillingContactFields.Count, Is.EqualTo ((nuint) 0), "Count-0b");
 				}
 			}
 		}

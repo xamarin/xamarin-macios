@@ -60,7 +60,7 @@ namespace MonoTouchFixtures.CoreImage {
 		{
 			Assert.Throws<ArgumentNullException> (() => CIVector.FromValues (null), "null");
 			using (var v = CIVector.FromValues (new nfloat [0])) {
-				Assert.That (v.Count, Is.EqualTo (0), "Count/empty");
+				Assert.That (v.Count, Is.EqualTo ((nint) 0), "Count/empty");
 			}
 		}
 	}

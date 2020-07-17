@@ -59,8 +59,8 @@ namespace MonoTouchFixtures.ModelIO {
 			using (var obj = new MDLVertexAttribute ("name", MDLVertexFormat.Float3, 1, 2)) {
 				Assert.AreEqual ("name", obj.Name, "Name");
 				Assert.AreEqual (MDLVertexFormat.Float3, obj.Format, "Format");
-				Assert.AreEqual (1, obj.Offset, "Offset");
-				Assert.AreEqual (2, obj.BufferIndex, "BufferIndex");
+				Assert.AreEqual ((nuint) 1, obj.Offset, "Offset");
+				Assert.AreEqual ((nuint) 2, obj.BufferIndex, "BufferIndex");
 				Asserts.AreEqual (new Vector4 (0, 0, 0, 1), obj.InitializationValue, "InitializationValue");
 			}
 		}
@@ -78,10 +78,10 @@ namespace MonoTouchFixtures.ModelIO {
 				Assert.AreEqual (MDLVertexFormat.Float2, obj.Format, "Format");
 
 				obj.Offset = 4;
-				Assert.AreEqual (4, obj.Offset, "Offset");
+				Assert.AreEqual ((nuint) 4, obj.Offset, "Offset");
 
 				obj.BufferIndex = 9;
-				Assert.AreEqual (9, obj.BufferIndex, "BufferIndex");
+				Assert.AreEqual ((nuint) 9, obj.BufferIndex, "BufferIndex");
 			}
 
 			using (var obj = new MDLVertexAttribute ("name", MDLVertexFormat.Float3, 1, 2)) {

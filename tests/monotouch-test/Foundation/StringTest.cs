@@ -30,11 +30,10 @@ namespace MonoTouchFixtures.Foundation {
 	public class StringTest {
 		
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void Compare_Null ()
 		{
 			using (NSString s = new NSString ("s")) {
-				s.Compare (null);
+				Assert.Throws<ArgumentNullException> (() => s.Compare (null));
 			}
 		}
 		

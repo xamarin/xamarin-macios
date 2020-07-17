@@ -125,22 +125,22 @@ namespace apitest {
 
 			nint n;
 			n = sum.GetSentenceSummaryInfo (10, rankOrder, sentenceIndex, paragraphIndex);
-			Assert.AreEqual (4, n);
-			Assert.AreEqual (2, paragraphIndex[3]); // 4th sentence (index 3) is on the 3rd (index 2) paragraph
+			Assert.AreEqual ((nint) 4, n);
+			Assert.AreEqual ((nint) 2, paragraphIndex[3]); // 4th sentence (index 3) is on the 3rd (index 2) paragraph
 			n = sum.GetSentenceSummaryInfo (10, null, sentenceIndex, paragraphIndex);
-			Assert.AreEqual (4, n);
+			Assert.AreEqual ((nint) 4, n);
 			n = sum.GetSentenceSummaryInfo (10, rankOrder, null, paragraphIndex);
-			Assert.AreEqual (4, n);
+			Assert.AreEqual ((nint) 4, n);
 			n = sum.GetSentenceSummaryInfo (10, rankOrder, sentenceIndex, null);
-			Assert.AreEqual (4, n);
+			Assert.AreEqual ((nint) 4, n);
 			n = sum.GetSentenceSummaryInfo (10, null, null, paragraphIndex);
-			Assert.AreEqual (4, n);
+			Assert.AreEqual ((nint) 4, n);
 			n = sum.GetSentenceSummaryInfo (10, null, sentenceIndex, null);
-			Assert.AreEqual (4, n);
+			Assert.AreEqual ((nint) 4, n);
 			n = sum.GetSentenceSummaryInfo (10, rankOrder, null, null);
-			Assert.AreEqual (4, n);
+			Assert.AreEqual ((nint) 4, n);
 			n = sum.GetSentenceSummaryInfo (10, null, null, null);
-			Assert.AreEqual (4, n);
+			Assert.AreEqual ((nint) 4, n);
 
 			n = sum.GetParagraphSummaryInfo (10, rankOrder, paragraphIndex);
 			n = sum.GetParagraphSummaryInfo (10, null, paragraphIndex);

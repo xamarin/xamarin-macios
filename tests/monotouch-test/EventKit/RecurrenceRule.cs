@@ -34,7 +34,7 @@ namespace MonoTouchFixtures.EventKit {
 				Assert.AreEqual ("gregorian", rule.CalendarIdentifier, "CalendarIdentifier");
 				Assert.IsNull (rule.RecurrenceEnd, "RecurrenceEnd");
 				Assert.AreEqual (EKRecurrenceFrequency.Weekly, rule.Frequency, "Frequency");
-				Assert.AreEqual (1, rule.Interval, "Interval");
+				Assert.AreEqual ((nint) 1, rule.Interval, "Interval");
 				Assert.AreEqual (EKDay.Monday, rule.FirstDayOfTheWeek, "FirstDayOfTheWeek");
 				Assert.IsNull (rule.DaysOfTheWeek, "DaysOfTheWeek");
 				Assert.IsNull (rule.DaysOfTheMonth, "DaysOfTheMonth");

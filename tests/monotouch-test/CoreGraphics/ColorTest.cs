@@ -74,8 +74,8 @@ namespace MonoTouchFixtures.CoreGraphics {
 		{
 			TestRuntime.AssertXcodeVersion (11, 0);
 			using (var c = CGColor.CreateSrgb (0.1f, 0.2f, 0.3f, 0.4f)) {
-				Assert.That (c.NumberOfComponents, Is.EqualTo (4), "NumberOfComponents");
-				Assert.That (c.Alpha, Is.InRange (0.4f, 0.40001f), "Alpha");
+				Assert.That (c.NumberOfComponents, Is.EqualTo ((nint) 4), "NumberOfComponents");
+				Assert.That (c.Alpha, Is.InRange ((nfloat) 0.4f, (nfloat) 0.40001f), "Alpha");
 				Assert.That (c.ColorSpace.Model, Is.EqualTo (CGColorSpaceModel.RGB), "CGColorSpaceModel");
 			}
 		}
@@ -85,8 +85,8 @@ namespace MonoTouchFixtures.CoreGraphics {
 		{
 			TestRuntime.AssertXcodeVersion (11, 0);
 			using (var c = CGColor.CreateGenericGrayGamma2_2 (0.1f, 0.2f)) {
-				Assert.That (c.NumberOfComponents, Is.EqualTo (2), "NumberOfComponents");
-				Assert.That (c.Alpha, Is.InRange (0.2f, 0.20001f), "Alpha");
+				Assert.That (c.NumberOfComponents, Is.EqualTo ((nint) 2), "NumberOfComponents");
+				Assert.That (c.Alpha, Is.InRange ((nfloat) 0.2f, (nfloat) 0.20001f), "Alpha");
 				Assert.That (c.ColorSpace.Model, Is.EqualTo (CGColorSpaceModel.Monochrome), "CGColorSpaceModel");
 			}
 		}

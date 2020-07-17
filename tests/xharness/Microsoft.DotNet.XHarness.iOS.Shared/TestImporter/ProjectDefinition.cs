@@ -4,6 +4,8 @@ using System.Linq;
 using System.Reflection;
 using System.Collections.Generic;
 
+using Mono.Cecil;
+
 namespace Microsoft.DotNet.XHarness.iOS.Shared.TestImporter {
 	/// <summary>
 	/// Class that defines a bcl test project. A bcl test project by definition is the combination of the name
@@ -21,6 +23,16 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.TestImporter {
 				if (TestAssemblies.Count > 0)
 					return TestAssemblies [0].IsXUnit;
 				return false;
+			}
+		}
+
+		Dictionary<string, AssemblyDefinition> assemblies = new Dictionary<string, AssemblyDefinition> ();
+		AssemblyDefinition LoadAssembly (string path)
+		{
+			lock (assemblies) {
+				if (!assemblies.TryGetValue (path, out var ad))
+					assemblies [path] = ad = AssemblyDefinition.ReadAssembly (path, new ReaderParameters (ReadingMode.Deferred));
+				return ad;
 			}
 		}
 
@@ -51,12 +63,12 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.TestImporter {
 			ExtraArgs = extraArgs;
 		}
 
-		static (string FailureMessage, IEnumerable<string> References) GetAssemblyReferences (string assemblyPath)
+		(string FailureMessage, IEnumerable<string> References) GetAssemblyReferences (string assemblyPath)
 		{
 			if (!File.Exists (assemblyPath))
 				return ($"The file {assemblyPath} does not exist.", null);
-			var a = Assembly.LoadFile (assemblyPath);
-			return (null, a.GetReferencedAssemblies ().Select ((arg) => arg.Name));
+			var ad = LoadAssembly (assemblyPath);
+			return (null, ad.MainModule.AssemblyReferences.Select ((arg) => arg.Name));
 		}
 
 		/// <summary>
@@ -97,32 +109,35 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.TestImporter {
 			return (failureMessage, set);
 		}
 
-		public (string FailureMessage, Dictionary<string, Type> Types) GetTypeForAssemblies (string monoRootPath, Platform platform)
+		public (string FailureMessage, Dictionary<string, TypeDefinition> Types) GetTypeForAssemblies (string monoRootPath, Platform platform)
 		{
 			if (monoRootPath == null)
 				throw new ArgumentNullException (nameof (monoRootPath));
-			var dict = new Dictionary<string, Type> ();
+			var dict = new Dictionary<string, TypeDefinition> ();
 			// loop over the paths, grab the assembly, find a type and then add it
 			foreach (var definition in TestAssemblies) {
 				var path = definition.GetPath (platform);
 				if (!File.Exists (path))
 					return ($"The assembly {path} does not exist. Please make sure it exists, then re-generate the project files by executing 'git clean -xfd && make' in the tests/ directory.", null);
-				var a = Assembly.LoadFile (path);
-				try {
-					var types = a.ExportedTypes;
-					if (!types.Any ()) {
-						continue;
-					}
-					dict [Path.GetFileName (path)] = types.First (t => !t.IsGenericType && (t.FullName.EndsWith ("Test") || t.FullName.EndsWith ("Tests")) && t.Namespace != null);
-				} catch (ReflectionTypeLoadException e) { // ReflectionTypeLoadException
-					// we did get an exception, possible reason, the type comes from an assebly not loaded, but 
-					// nevertheless we can do something about it, get all the not null types in the exception
-					// and use one of them
-					var types = e.Types.Where (t => t != null).Where (t => !t.IsGenericType && (t.FullName.EndsWith ("Test") || t.FullName.EndsWith ("Tests")) && t.Namespace != null);
-					if (types.Any ()) {
-						dict [Path.GetFileName (path)] = types.First ();
-					}
-				}
+				var ad = LoadAssembly (path);
+				var accessibleType = ad.MainModule.Types.FirstOrDefault ((t) => {
+					if (!t.IsPublic)
+						return false;
+
+					if (t.HasGenericParameters)
+						return false;
+
+					if (string.IsNullOrEmpty (t.Namespace))
+						return false;
+
+					if (!t.FullName.EndsWith ("Test", StringComparison.OrdinalIgnoreCase) && !t.FullName.EndsWith ("Tests", StringComparison.OrdinalIgnoreCase))
+						return false;
+
+					return true;
+				});
+				if (accessibleType == null)
+					continue;
+				dict [Path.GetFileName (path)] = accessibleType;
 			}
 			return (null, dict);
 		}

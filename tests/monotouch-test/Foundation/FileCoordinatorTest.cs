@@ -45,7 +45,6 @@ namespace MonoTouchFixtures.Foundation {
 		}
 
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void CoordinateRead_Null ()
 		{
 			using (var url = GetUrl ())
@@ -53,7 +52,7 @@ namespace MonoTouchFixtures.Foundation {
 				NSError err;
 				// NULL is not documented by Apple but it crash the app with:
 				// NSFileCoordinator: A surprising server error was signaled. Details: Connection invalid
-				fc.CoordinateRead (url, NSFileCoordinatorReadingOptions.WithoutChanges, out err, null);
+				Assert.Throws<ArgumentNullException> (() => fc.CoordinateRead (url, NSFileCoordinatorReadingOptions.WithoutChanges, out err, null));
 			}
 		}
 
@@ -71,7 +70,6 @@ namespace MonoTouchFixtures.Foundation {
 		}
 
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void CoordinateWrite_Null ()
 		{
 			using (var url = GetUrl ())
@@ -79,7 +77,7 @@ namespace MonoTouchFixtures.Foundation {
 				NSError err;
 				// NULL is not documented by Apple but it crash the app with:
 				// NSFileCoordinator: A surprising server error was signaled. Details: Connection invalid
-				fc.CoordinateWrite (url, NSFileCoordinatorWritingOptions.ForDeleting, out err, null);
+				Assert.Throws<ArgumentNullException> (() => fc.CoordinateWrite (url, NSFileCoordinatorWritingOptions.ForDeleting, out err, null));
 			}
 		}
 		
@@ -102,7 +100,6 @@ namespace MonoTouchFixtures.Foundation {
 		}
 
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void CoordinateReadWrite_Null ()
 		{
 			using (var url = GetUrl ())
@@ -110,7 +107,7 @@ namespace MonoTouchFixtures.Foundation {
 				NSError err;
 				// NULL is not documented by Apple but it crash the app with:
 				// NSFileCoordinator: A surprising server error was signaled. Details: Connection invalid
-				fc.CoordinateReadWrite (url, NSFileCoordinatorReadingOptions.WithoutChanges, url, NSFileCoordinatorWritingOptions.ForDeleting, out err, null);
+				Assert.Throws<ArgumentNullException> (() => fc.CoordinateReadWrite (url, NSFileCoordinatorReadingOptions.WithoutChanges, url, NSFileCoordinatorWritingOptions.ForDeleting, out err, null));
 			}
 		}
 
@@ -128,7 +125,6 @@ namespace MonoTouchFixtures.Foundation {
 		}
 
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void CoordinateWriteWrite_Null ()
 		{
 			using (var url = GetUrl ())
@@ -136,7 +132,7 @@ namespace MonoTouchFixtures.Foundation {
 				NSError err;
 				// NULL is not documented by Apple but it crash the app with:
 				// NSFileCoordinator: A surprising server error was signaled. Details: Connection invalid
-				fc.CoordinateWriteWrite (url, NSFileCoordinatorWritingOptions.ForMoving, url, NSFileCoordinatorWritingOptions.ForDeleting, out err, null);
+				Assert.Throws<ArgumentNullException> (() => fc.CoordinateWriteWrite (url, NSFileCoordinatorWritingOptions.ForMoving, url, NSFileCoordinatorWritingOptions.ForDeleting, out err, null));
 			}
 		}
 		
@@ -159,7 +155,6 @@ namespace MonoTouchFixtures.Foundation {
 		}
 		
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void CoordinateBatch_Action_Null ()
 		{
 			using (var url = GetUrl ())
@@ -167,7 +162,7 @@ namespace MonoTouchFixtures.Foundation {
 				NSError err;
 				// NULL is not documented by Apple but it crash the app with:
 				// NSFileCoordinator: A surprising server error was signaled. Details: Connection invalid
-				fc.CoordinateBatc (new NSUrl[] { url }, NSFileCoordinatorReadingOptions.WithoutChanges, new NSUrl[] { url }, NSFileCoordinatorWritingOptions.ForDeleting, out err, null);
+				Assert.Throws<ArgumentNullException> (() => fc.CoordinateBatc (new NSUrl[] { url }, NSFileCoordinatorReadingOptions.WithoutChanges, new NSUrl[] { url }, NSFileCoordinatorWritingOptions.ForDeleting, out err, null));
 			}
 		}
 	}

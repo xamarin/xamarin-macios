@@ -4,6 +4,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
+using Mono.Cecil;
+
 namespace Microsoft.DotNet.XHarness.iOS.Shared.TestImporter.Templates.Managed {
 	public static class RegisterTypeGenerator {
 
@@ -11,8 +13,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.TestImporter.Templates.Managed {
 		static readonly string KeysReplacement = "%KEY VALUES%";
 		static readonly string IsxUnitReplacement = "%IS XUNIT%";
 
-		public static async Task<string> GenerateCodeAsync ((string FailureMessage, Dictionary<string, Type> Types) typeRegistration, bool isXunit,
-			Stream template)
+		public static string GenerateCode ((string FailureMessage, Dictionary<string, TypeDefinition> Types) typeRegistration, bool isXunit, string template)
 		{
 			var importStringBuilder = new StringBuilder ();
 			var keyValuesStringBuilder = new StringBuilder ();
@@ -33,13 +34,11 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.TestImporter.Templates.Managed {
 			}
 
 			// got the lines we want to add, read the template and substitute
-			using (var reader = new StreamReader (template)) {
-				var result = await reader.ReadToEndAsync ();
-				result = result.Replace (UsingReplacement, importStringBuilder.ToString ());
-				result = result.Replace (KeysReplacement, keyValuesStringBuilder.ToString ());
-				result = result.Replace (IsxUnitReplacement, isXunit ? "true" : "false");
-				return result;
-			}
+			var result = template;
+			result = result.Replace (UsingReplacement, importStringBuilder.ToString ());
+			result = result.Replace (KeysReplacement, keyValuesStringBuilder.ToString ());
+			result = result.Replace (IsxUnitReplacement, isXunit ? "true" : "false");
+			return result;
 		}
 	}
 }
