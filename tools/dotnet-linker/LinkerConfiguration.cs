@@ -27,6 +27,7 @@ namespace Xamarin.Linker {
 		static ConditionalWeakTable<LinkContext, LinkerConfiguration> configurations = new ConditionalWeakTable<LinkContext, LinkerConfiguration> ();
 
 		public Application Application { get; private set; }
+		public Target Target { get; private set; }
 
 		public static LinkerConfiguration GetInstance (LinkContext context)
 		{
@@ -132,6 +133,8 @@ namespace Xamarin.Linker {
 			ErrorHelper.Platform = Platform;
 
 			Application = new Application (this, significantLines.ToArray ());
+			Target = new Target (Application);
+
 			Application.Cache.Location = CacheDirectory;
 
 			switch (Platform) {
