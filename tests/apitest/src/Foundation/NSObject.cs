@@ -1,5 +1,5 @@
 using System;
-using System.Threading.Tasks;
+using System.Threading;
 using NUnit.Framework;
 
 using AppKit;
@@ -13,17 +13,12 @@ namespace Xamarin.Mac.Tests
 	public class NSObjectTests
 	{
 		[Test]
-		async public Task NSObjectTests_InvokeTest ()
+		public void NSObjectTests_InvokeTest ()
 		{
 			bool hit = false;
 			NSApplication.SharedApplication.Invoke (() => hit = true, 1);
-			// Wait for 10 second, then give up
-			for (int i = 0; i < 1000; ++i) {
-				if (hit)
-					return;
-				await Task.Delay (10);
-			}
-			Assert.Fail ("Did not see events after 10 second");
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (10), () => { }, () => hit);
+			Assert.IsTrue (hit, "Did not see events after 10 seconds");
 		}
 	}
 }
