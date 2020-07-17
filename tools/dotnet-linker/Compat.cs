@@ -41,10 +41,6 @@ namespace Xamarin.Bundler {
 			get { return Configuration.DeploymentTarget; }
 		}
 
-		public bool IsSimulatorBuild {
-			get { return Configuration.IsSimulatorBuild; }
-		}
-
 		public ApplePlatform Platform {
 			get { return Configuration.Platform; }
 		}
