@@ -26,10 +26,14 @@ using MonoTouch;
 using MonoTouch.Tuner;
 using PlatformResolver = MonoTouch.Tuner.MonoTouchResolver;
 using PlatformLinkContext = MonoTouch.Tuner.MonoTouchLinkContext;
-#else
+#elif MMP
 using MonoMac.Tuner;
 using PlatformResolver = Xamarin.Bundler.MonoMacResolver;
 using PlatformLinkContext = MonoMac.Tuner.MonoMacLinkContext;
+#elif NET
+using PlatformResolver = Xamarin.Linker.DotNetResolver;
+#else
+#error Invalid defines
 #endif
 
 namespace Xamarin.Bundler {
