@@ -33,6 +33,8 @@ namespace Xamarin.MacDev.Tasks {
 		[Required]
 		public ITaskItem[] ApiDefinitions { get; set; }
 
+		public string AttributeAssembly { get; set; }
+
 		public ITaskItem[] CoreSources { get; set; }
 
 		public string DefineConstants { get; set; }
@@ -92,6 +94,8 @@ namespace Xamarin.MacDev.Tasks {
 			cmd.AppendSwitch ("/nostdlib");
 			cmd.AppendSwitchIfNotNull ("/baselib:", BaseLibDll);
 			cmd.AppendSwitchIfNotNull ("/out:", OutputAssembly);
+
+			cmd.AppendSwitchIfNotNull ("/attributelib:", AttributeAssembly);
 
 			string dir;
 			if (!string.IsNullOrEmpty (BaseLibDll)) {
