@@ -36,10 +36,9 @@ using MidiObjectRef = System.Int32;
 namespace CoreMidi {
 
 	[Mac (10, 16), iOS (14, 0)]
-	public enum MidiProtocolID
-	{
+	public enum MidiProtocolID {
 		Protocol_1_0 = 1,
-		Protocol_2_0 = 2
+		Protocol_2_0 = 2,
 	}
 
 	
