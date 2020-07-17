@@ -5,10 +5,11 @@ using Xamarin.Linker;
 using Xamarin.Utils;
 
 namespace Xamarin.Bundler {
-	public class Application {
+	public partial class Application {
 		public LinkerConfiguration Configuration { get; private set; }
 
-		public Application (LinkerConfiguration configuration)
+		public Application (LinkerConfiguration configuration, string[] arguments)
+			: this (arguments)
 		{
 			this.Configuration = configuration;
 		}
