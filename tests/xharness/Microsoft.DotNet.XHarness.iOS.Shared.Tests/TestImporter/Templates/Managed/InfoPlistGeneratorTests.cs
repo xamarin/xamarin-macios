@@ -12,20 +12,14 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.TestImporter.Templates.Mana
 		[Test]
 		public void GenerateCodeNullTemplateFile ()
 		{
-			Assert.ThrowsAsync<ArgumentNullException> (() =>
-				InfoPlistGenerator.GenerateCodeAsync (null, "Project Name"));
+			Assert.Throws<ArgumentNullException> (() =>
+				InfoPlistGenerator.GenerateCode (null, "Project Name"));
 		}
 
 		[Test]
 		public void GenerateCodeNullProjectName ()
 		{
-			var tmp = Path.GetTempFileName ();
-			File.WriteAllText (tmp, "Hello");
-			using (var stream = new FileStream (tmp, FileMode.Open)) {
-				Assert.ThrowsAsync<ArgumentNullException> (() => InfoPlistGenerator.GenerateCodeAsync (stream, null));
-			}
-
-			File.Delete (tmp);
+			Assert.Throws<ArgumentNullException> (() => InfoPlistGenerator.GenerateCode ("Hello", null));
 		}
 
 		[Test]
@@ -39,7 +33,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.TestImporter.Templates.Mana
 				await file.WriteAsync (fakeTemplate);
 			}
 
-			var result = await InfoPlistGenerator.GenerateCodeAsync (File.OpenRead (templatePath), projectName);
+			var result = InfoPlistGenerator.GenerateCode (File.ReadAllText (templatePath), projectName);
 			try {
 				StringAssert.DoesNotContain (InfoPlistGenerator.ApplicationNameReplacement, result);
 				StringAssert.DoesNotContain (InfoPlistGenerator.IndentifierReplacement, result);
