@@ -131,6 +131,7 @@ namespace Xharness.Targets {
 
 			inputProject.AddExtraMtouchArgs ("--bitcode:asmonly", "iPhone", "Release");
 			inputProject.SetMtouchUseLlvm (true, "iPhone", "Release");
+			inputProject.ResolveAllPaths (TemplateProjectPath);
 
 			// Remove bitcode from executables, since we don't need it for testing, and it makes test apps bigger (and the Apple TV might refuse to install them).
 			var configurations = new string [] { "Debug", "Debug64", "Release", "Release64" };

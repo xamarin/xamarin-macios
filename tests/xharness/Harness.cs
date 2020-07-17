@@ -687,6 +687,7 @@ namespace Xharness {
 		public void Save (StringWriter doc, string path)
 		{
 			if (!File.Exists (path)) {
+				Directory.CreateDirectory (Path.GetDirectoryName (path));
 				File.WriteAllText (path, doc.ToString ());
 				Log (1, "Created {0}", path);
 			} else {

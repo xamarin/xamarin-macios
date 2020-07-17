@@ -157,7 +157,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 
 		public string FlavorSuffix => Flavor == MonoNativeFlavor.Compat ? "-compat" : "-unified";
 		public string ProjectName => "mono-native" + FlavorSuffix;
-		public string ProjectPath => Path.Combine (rootDirectory, "mono-native", TemplateName + FlavorSuffix + ".csproj");
+		public string ProjectPath => Path.Combine (rootDirectory, "mono-native", FlavorSuffix.TrimStart ('-'), DevicePlatform.ToString (), TemplateName + FlavorSuffix + ".csproj");
 		string TemplateName => "mono-native" + TemplateSuffix;
 		public string TemplatePath => Path.Combine (rootDirectory, "mono-native", TemplateName + ".csproj.template");
 		protected virtual string TemplateSuffix => string.Empty;
@@ -171,11 +171,12 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 			inputProject.SetOutputPath ("bin\\$(Platform)\\$(Configuration)" + FlavorSuffix);
 			inputProject.SetIntermediateOutputPath ("obj\\$(Platform)\\$(Configuration)" + FlavorSuffix);
 			inputProject.SetAssemblyName (inputProject.GetAssemblyName () + FlavorSuffix);
+			inputProject.ResolveAllPaths (TemplatePath);
 
-			var template_info_plist = Path.Combine (Path.GetDirectoryName (TemplatePath), inputProject.GetInfoPListInclude ());
-			var target_info_plist = Path.Combine (Path.GetDirectoryName (template_info_plist), "Info" + TemplateSuffix + FlavorSuffix + ".plist");
+			var template_info_plist = inputProject.GetInfoPListInclude ().Replace ('\\', '/');
+			var target_info_plist = Path.Combine (Path.GetDirectoryName (ProjectPath), "Info" + TemplateSuffix + FlavorSuffix + ".plist");
 			SetInfoPListMinimumOSVersion (template_info_plist, target_info_plist);
-			inputProject.FixInfoPListInclude (FlavorSuffix, newName: Path.GetFileName (target_info_plist));
+			inputProject.FixInfoPListInclude (FlavorSuffix, newName: target_info_plist);
 
 			AddProjectDefines (inputProject);
 
