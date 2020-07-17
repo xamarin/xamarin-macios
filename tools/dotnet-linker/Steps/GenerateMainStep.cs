@@ -13,6 +13,7 @@ namespace Xamarin {
 			var registration_methods = Configuration.RegistrationMethods;
 			var items = new List<MSBuildItem> ();
 
+			var app = Configuration.Application;
 			foreach (var abi in Configuration.Abis) {
 
 				var file = Path.Combine (Configuration.CacheDirectory, $"main.{abi.AsArchString ()}.mm");
@@ -38,6 +39,9 @@ namespace Xamarin {
 						contents.WriteLine ("();");
 					}
 				}
+				if (!app.IsDefaultMarshalManagedExceptionMode)
+					contents.WriteLine ("\txamarin_marshal_managed_exception_mode = MarshalManagedExceptionMode{0};", app.MarshalManagedExceptions);
+				contents.WriteLine ("\txamarin_marshal_objectivec_exception_mode = MarshalObjectiveCExceptionMode{0};", app.MarshalObjectiveCExceptions);
 				contents.WriteLine ("}");
 				contents.WriteLine ();
 				contents.WriteLine ("void xamarin_initialize_callbacks () __attribute__ ((constructor));");
