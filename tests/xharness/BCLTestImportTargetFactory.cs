@@ -355,7 +355,7 @@ namespace Xharness {
 			foreach (var tp in GenerateAlliOSTestProjects ()) {
 				var prefix = tp.XUnit ? "xUnit" : "NUnit";
 				var finalName = tp.Name.StartsWith ("mscorlib", StringComparison.Ordinal) ? tp.Name : $"[{prefix}] Mono {tp.Name}"; // mscorlib is our special test
-				result.Add (new iOSTestProject (tp.Path) {
+				var proj = new iOSTestProject (tp.Path) {
 					Name = finalName,
 					SkipiOSVariation = !tp.Platforms.Contains (Platform.iOS),
 					SkiptvOSVariation = !tp.Platforms.Contains (Platform.TvOS),
@@ -365,8 +365,12 @@ namespace Xharness {
 					RestoreNugetsInProject = true,
 					MTouchExtraArgs = tp.ExtraArgs,
 					TimeoutMultiplier = tp.TimeoutMultiplier,
-					Dependency = () => tp.GenerationCompleted,
-				});
+				};
+				proj.Dependency = async () => {
+					await tp.GenerationCompleted;
+					proj.FailureMessage = tp.Failure;
+				};
+				result.Add (proj);
 			}
 			return result;
 		}
