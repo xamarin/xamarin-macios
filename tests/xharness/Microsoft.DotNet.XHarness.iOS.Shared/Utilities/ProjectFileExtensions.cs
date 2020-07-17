@@ -236,11 +236,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 
 		public static void RemoveTargetFrameworkIdentifier (this XmlDocument csproj)
 		{
-			try {
-				RemoveNode (csproj, "TargetFrameworkIdentifier");
-			} catch {
-				// ignore exceptions, if not present, we are not worried
-			}
+			RemoveNode (csproj, "TargetFrameworkIdentifier", throwOnInexistentNode: false);
 		}
 
 		public static void SetAssemblyName (this XmlDocument csproj, string value)
