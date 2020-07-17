@@ -55,16 +55,20 @@ namespace Xamarin.Bundler {
 
 		public AssemblyDefinition AssemblyDefinition;
 		public Target Target;
-		public bool IsFrameworkAssembly { get { return is_framework_assembly.Value; } }
+		public bool? IsFrameworkAssembly { get { return is_framework_assembly; } }
 		public string FullPath {
 			get {
 				return full_path;
 			}
 			set {
 				full_path = value;
-				if (!is_framework_assembly.HasValue) {
+				if (!is_framework_assembly.HasValue && !string.IsNullOrEmpty (full_path)) {
 					var real_full_path = Target.GetRealPath (full_path);
+#if NET
+					// TODO: Figure out how to determine whether an assembly is a framework assembly or not (but it's not urgent to implement, it's just a performance improvement)
+#else
 					is_framework_assembly = real_full_path.StartsWith (Path.GetDirectoryName (Path.GetDirectoryName (Target.Resolver.FrameworkDirectory)), StringComparison.Ordinal);
+#endif
 				}
 			}
 		}
@@ -143,7 +147,7 @@ namespace Xamarin.Bundler {
 		public void ExtractNativeLinkInfo ()
 		{
 			// ignore framework assemblies, they won't have any LinkWith attributes
-			if (IsFrameworkAssembly)
+			if (IsFrameworkAssembly == true)
 				return;
 
 			var assembly = AssemblyDefinition;
