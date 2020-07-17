@@ -545,9 +545,9 @@ namespace Xharness {
 				}
 			}
 
-			SolutionGenerator.CreateSolution (this, watchos_targets, "watchos");
-			SolutionGenerator.CreateSolution (this, tvos_targets, "tvos");
-			SolutionGenerator.CreateSolution (this, today_targets, "today");
+			SolutionGenerator.CreateSolution (this, watchos_targets, "watchos", DevicePlatform.watchOS);
+			SolutionGenerator.CreateSolution (this, tvos_targets, "tvos", DevicePlatform.tvOS);
+			SolutionGenerator.CreateSolution (this, today_targets, "today", DevicePlatform.iOS);
 			MakefileGenerator.CreateMakefile (this, unified_targets, tvos_targets, watchos_targets, today_targets);
 
 			return rv;
