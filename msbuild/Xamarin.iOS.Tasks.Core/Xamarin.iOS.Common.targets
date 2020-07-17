@@ -1227,14 +1227,11 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			>
 
-			<!-- We output the same task parameter to 2 different properties because they will be used differently -->
-
-			<!-- $(_CompiledEntitlements) will be passed to the MTouch task (only really needed for iOS Simulator builds,
-				 but does not cause harm when set for device builds). -->
-			<Output TaskParameter="CompiledEntitlements" PropertyName="_CompiledEntitlements" />
+			<!-- $(_CompiledEntitlements) will be passed to the MTouch task, it's used to embed the entitlements in the executable -->
+			<Output TaskParameter="EntitlementsInExecutable" PropertyName="_CompiledEntitlements" />
 
 			<!-- $(_CompiledCodesignEntitlements) will be used only with Codesign tasks when building for device. MUST NOT BE SET for iOS Simulator builds. -->
-			<Output TaskParameter="CompiledEntitlements" PropertyName="_CompiledCodesignEntitlements" Condition="'$(_SdkIsSimulator)' == 'false'" />
+			<Output TaskParameter="EntitlementsInSignature" PropertyName="_CompiledCodesignEntitlements" />
 		</CompileEntitlements>
 	</Target>
 

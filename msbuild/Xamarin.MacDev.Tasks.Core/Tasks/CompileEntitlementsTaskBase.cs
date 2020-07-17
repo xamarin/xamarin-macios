@@ -28,7 +28,6 @@ namespace Xamarin.MacDev.Tasks
 		[Required]
 		public string BundleIdentifier { get; set; }
 
-		[Output]
 		[Required]
 		public ITaskItem CompiledEntitlements { get; set; }
 
@@ -44,6 +43,12 @@ namespace Xamarin.MacDev.Tasks
 
 		[Required]
 		public string SdkVersion { get; set; }
+
+		[Output]
+		public ITaskItem EntitlementsInExecutable { get; set; }
+
+		[Output]
+		public ITaskItem EntitlementsInSignature { get; set; }
 
 		#endregion
 
@@ -380,6 +385,14 @@ namespace Xamarin.MacDev.Tasks
 					Log.LogError (MSBStrings.E0115, ex.Message);
 					return false;
 				}
+			}
+
+			if (SdkIsSimulator) {
+				if (compiled.Count > 0) {
+					EntitlementsInExecutable = CompiledEntitlements;
+				}
+			} else {
+				EntitlementsInSignature = CompiledEntitlements;
 			}
 
 			return !Log.HasLoggedErrors;
