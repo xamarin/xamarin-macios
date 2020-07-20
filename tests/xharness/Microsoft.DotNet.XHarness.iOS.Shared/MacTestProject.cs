@@ -16,10 +16,13 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 		public bool GenerateFull => GenerateVariations && (TargetFrameworkFlavors & MacFlavors.Full) == MacFlavors.Full;
 		public bool GenerateSystem => GenerateVariations && (TargetFrameworkFlavors & MacFlavors.System) == MacFlavors.System;
 
-		public bool GenerateVariations {
+		public override bool GenerateVariations {
 			get {
 				// If a bitwise combination of flavors, then we're generating variations
 				return TargetFrameworkFlavors != MacFlavors.Modern && TargetFrameworkFlavors != MacFlavors.Full && TargetFrameworkFlavors != MacFlavors.System && TargetFrameworkFlavors != MacFlavors.Console;
+			}
+			set {
+				throw new Exception ("This value is read-only");
 			}
 		}
 
