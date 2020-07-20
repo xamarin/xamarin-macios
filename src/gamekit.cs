@@ -437,12 +437,10 @@ namespace GameKit {
 
 		[Watch (7, 0), TV (14, 0), Mac (10, 16), iOS (14, 0)]
 		[Export ("loadEntriesForPlayerScope:timeScope:range:completionHandler:")]
-		[Async]
 		void LoadEntries (GKLeaderboardPlayerScope playerScope, GKLeaderboardTimeScope timeScope, NSRange range, [NullAllowed] GKEntriesForPlayerScopeHandler completionHandler);
 
 		[Watch (7, 0), TV (14, 0), Mac (10, 16), iOS (14, 0)]
 		[Export ("loadEntriesForPlayers:timeScope:completionHandler:")]
-		[Async]
 		void LoadEntries (GKPlayer[] players, GKLeaderboardTimeScope timeScope, [NullAllowed] GKEntriesForPlayersHandler completionHandler);
 
 		[Watch (7, 0), TV (14, 0), Mac (10, 16), iOS (14, 0)]
