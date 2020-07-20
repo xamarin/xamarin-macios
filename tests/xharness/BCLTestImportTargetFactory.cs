@@ -365,6 +365,7 @@ namespace Xharness {
 					RestoreNugetsInProject = true,
 					MTouchExtraArgs = tp.ExtraArgs,
 					TimeoutMultiplier = tp.TimeoutMultiplier,
+					GenerateVariations = false,
 				};
 				proj.Dependency = async () => {
 					await tp.GenerationCompleted;
