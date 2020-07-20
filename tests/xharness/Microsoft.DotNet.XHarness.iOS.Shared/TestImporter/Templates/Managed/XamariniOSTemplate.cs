@@ -25,6 +25,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.TestImporter.Templates.Managed {
 		internal static readonly string DefineConstantsKey = "%DEFINE CONSTANTS%";
 		internal static readonly string DownloadPathKey = "%DOWNLOAD PATH%";
 		internal static readonly string TestingFrameworksKey = "%TESTING FRAMEWORKS%";
+		internal static readonly string TemplatesPathKey = "%TEMPLATESPATH%";
 
 		// resource related static vars used to copy the embedded src to the hd
 		static string srcResourcePrefix = "Microsoft.DotNet.XHarness.iOS.Shared.TestImporter.Templates.Managed.Resources.src.";
@@ -83,6 +84,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.TestImporter.Templates.Managed {
 		};
 
 		public string OutputDirectoryPath { get; set; }
+		public string TemplatesPath => Path.Combine (OutputDirectoryPath, "templates");
 		string GeneratedCodePathRoot => Path.Combine (OutputDirectoryPath, "generated");
 		public string IgnoreFilesRootDirectory { get; set; }
 		public IAssemblyLocator AssemblyLocator { get; set; }
@@ -92,9 +94,9 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.TestImporter.Templates.Managed {
 		public Func<string, Guid> GuidGenerator { get; set; }
 
 		// helpers that will return the destination of the different templates once writtne locally
-		string WatchContainerTemplatePath => Path.Combine (OutputDirectoryPath, "templates", "watchOS", "Container").Replace ("/", "\\");
-		string WatchAppTemplatePath => Path.Combine (OutputDirectoryPath, "templates", "watchOS", "App").Replace ("/", "\\");
-		string WatchExtensionTemplatePath => Path.Combine (OutputDirectoryPath, "templates", "watchOS", "Extension").Replace ("/", "\\");
+		string WatchContainerTemplatePath => Path.Combine (TemplatesPath, "watchOS", "Container").Replace ("/", "\\");
+		string WatchAppTemplatePath => Path.Combine (TemplatesPath, "watchOS", "App").Replace ("/", "\\");
+		string WatchExtensionTemplatePath => Path.Combine (TemplatesPath, "watchOS", "Extension").Replace ("/", "\\");
 
 		bool srcGenerated = false;
 		object srcGeneratedLock = new object ();
@@ -382,7 +384,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.TestImporter.Templates.Managed {
 		public GeneratedProjects GenerateTestProjects (IEnumerable<(string Name, string [] Assemblies, string ExtraArgs, double TimeoutMultiplier)> projects, Platform platform)
 		{
 			// generate the template c# code before we create the diff projects
-			GenerateSource (Path.Combine (OutputDirectoryPath, "templates"));
+			GenerateSource (TemplatesPath);
 			var result = new GeneratedProjects ();
 			switch (platform) {
 			case Platform.WatchOS:
@@ -443,6 +445,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.TestImporter.Templates.Managed {
 			result = result.Replace (RegisterTypeKey, GetRegisterTypeNode (registerPath));
 			result = result.Replace (ReferencesKey, sb.ToString ());
 			result = result.Replace (ContentKey, GenerateIncludeFilesNode (projectName, info, Platform.WatchOS));
+			result = result.Replace (TemplatesPathKey, TemplatesPath.Replace ('/', '\\'));
 			return result;
 		}
 
@@ -574,6 +577,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.TestImporter.Templates.Managed {
 			result = result.Replace (RegisterTypeKey, GetRegisterTypeNode (registerPath));
 			result = result.Replace (PlistKey, infoPlistPath);
 			result = result.Replace (ContentKey, GenerateIncludeFilesNode (projectName, info, platform));
+			result = result.Replace (TemplatesPathKey, TemplatesPath.Replace ('/', '\\'));
 			return result;
 		}
 
@@ -666,6 +670,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.TestImporter.Templates.Managed {
 			result = result.Replace (RegisterTypeKey, GetRegisterTypeNode (registerPath));
 			result = result.Replace (PlistKey, infoPlistPath);
 			result = result.Replace (ContentKey, GenerateIncludeFilesNode (projectName, info, platform));
+			result = result.Replace (TemplatesPathKey, TemplatesPath.Replace ('/', '\\'));
 			switch (platform) {
 			case Platform.MacOSFull:
 				result = result.Replace (TargetFrameworkVersionKey, "v4.5.2");
