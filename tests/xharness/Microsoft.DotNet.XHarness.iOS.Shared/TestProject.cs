@@ -15,6 +15,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 		XmlDocument xml;
 		bool generate_variations = true;
 
+		public TestPlatform TestPlatform;
 		public string Path;
 		public string SolutionPath;
 		public string Name;
