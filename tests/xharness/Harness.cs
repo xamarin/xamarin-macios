@@ -323,7 +323,6 @@ namespace Xharness {
 
 			foreach (var proj in MacTestProjects) {
 				var target = new MacTarget (MacFlavors.Modern);
-				target.MonoNativeInfo = proj.MonoNativeInfo;
 				configureTarget (target, proj.Path, proj.IsNUnitProject, true);
 				unified_targets.Add (target);
 			}
@@ -339,7 +338,6 @@ namespace Xharness {
 				// Generate variations if requested
 				if (proj.GenerateFull) {
 					var target = new MacTarget (MacFlavors.Full);
-					target.MonoNativeInfo = proj.MonoNativeInfo;
 					configureTarget (target, file, proj.IsNUnitProject, false);
 					unified_targets.Add (target);
 
@@ -351,7 +349,6 @@ namespace Xharness {
 
 				if (proj.GenerateSystem) {
 					var target = new MacTarget (MacFlavors.System);
-					target.MonoNativeInfo = proj.MonoNativeInfo;
 					configureTarget (target, file, proj.IsNUnitProject, false);
 					unified_targets.Add (target);
 
@@ -496,9 +493,6 @@ namespace Xharness {
 
 			foreach (var proj in IOSTestProjects) {
 				var file = proj.Path;
-
-				if (proj.MonoNativeInfo != null)
-					file = proj.MonoNativeInfo.TemplatePath;
 
 				if (!File.Exists (file)) {
 					Console.WriteLine ($"Can't find the project file {file}.");

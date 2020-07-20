@@ -46,11 +46,6 @@ namespace Xharness.Targets {
 			csproj.SetProjectGuid (WatchOSAppGuid);
 			csproj.FixInfoPListInclude (suffix, Path.GetDirectoryName (TemplateProjectPath));
 			csproj.ResolveAllPaths (TemplateProjectPath);
-			if (MonoNativeInfo != null) {
-				csproj.AddAdditionalDefines ("MONO_NATIVE_WATCH");
-				MonoNativeHelper.AddProjectDefines (csproj, MonoNativeInfo.Flavor);
-				MonoNativeHelper.RemoveSymlinkMode (csproj);
-			}
 			csproj.Save (WatchOSAppProjectPath, (l,m) => Harness.Log (l,m));
 
 			XmlDocument info_plist = new XmlDocument ();
@@ -75,11 +70,6 @@ namespace Xharness.Targets {
 			csproj.SetProjectGuid (WatchOSGuid);
 			csproj.FixInfoPListInclude (Suffix, Path.GetDirectoryName (TemplateProjectPath));
 			csproj.ResolveAllPaths (TemplateProjectPath);
-			if (MonoNativeInfo != null) {
-				csproj.AddAdditionalDefines ("MONO_NATIVE_WATCH");
-				MonoNativeHelper.AddProjectDefines (csproj, MonoNativeInfo.Flavor);
-				MonoNativeHelper.RemoveSymlinkMode (csproj);
-			}
 			csproj.Save (WatchOSProjectPath, (l, m) => Harness.Log (l, m));
 
 			XmlDocument info_plist = new XmlDocument ();
@@ -135,12 +125,6 @@ namespace Xharness.Targets {
 			csproj.SetExtraLinkerDefs ("extra-linker-defs" + ExtraLinkerDefsSuffix + ".xml");
 			csproj.SetMtouchUseBitcode (true, "iPhone", "Release");
 			csproj.SetMtouchUseLlvm (true, "iPhone", "Release");
-
-			if (MonoNativeInfo != null) {
-				csproj.AddAdditionalDefines ("MONO_NATIVE_WATCH");
-				MonoNativeHelper.AddProjectDefines (csproj, MonoNativeInfo.Flavor);
-				MonoNativeHelper.RemoveSymlinkMode (csproj);
-			}
 			csproj.ResolveAllPaths (TemplateProjectPath);
 
 			// Not linking a watch extensions requires passing -Os to the native compiler.
@@ -251,8 +235,6 @@ namespace Xharness.Targets {
 				Name = TestProject.Name;
 			else
 				base.CalculateName ();
-			if (MonoNativeInfo != null)
-				Name = Name + MonoNativeInfo.FlavorSuffix;
 		}
 
 		protected override string GetMinimumOSVersion (string templateMinimumOSVersion)
@@ -264,7 +246,7 @@ namespace Xharness.Targets {
 
 		public override string Suffix {
 			get {
-				return MonoNativeInfo != null ? MonoNativeInfo.FlavorSuffix + "-watchos" : "-watchos";
+				return "-watchos";
 			}
 		}
 
