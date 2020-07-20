@@ -504,10 +504,8 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.TestImporter.Templates.Managed {
 					using (var file = new StreamWriter (infoPlistPath, false)) { // false is do not append
 						await file.WriteAsync (rootPlist);
 					}
-
-					using (var file = new StreamWriter (rootProjectPath, false)) // false is do not append
-					using (var reader = new StreamReader (GetProjectTemplate (Platform.WatchOS))) {
-						var template = await reader.ReadToEndAsync ();
+					using (var file = new StreamWriter (rootProjectPath, false)) { // false is do not append
+						var template = GetProjectTemplate (Platform.WatchOS);
 						var generatedRootProject = GenerateWatchProject (def.Name, template, infoPlistPath);
 						await file.WriteAsync (generatedRootProject);
 					}
