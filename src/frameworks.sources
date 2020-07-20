@@ -1143,7 +1143,10 @@ NATURALLANGUAGE_CORE_SOURCES = \
 
 NATURALLANGUAGE_SOURCES = \
 	NaturalLanguage/NLEmbedding.cs \
+	NaturalLanguage/NLLanguage.cs \
 	NaturalLanguage/NLLanguageRecognizer.cs \
+	NaturalLanguage/NLModel.cs \
+	NaturalLanguage/NLTagger.cs \
 
 # Network
 
@@ -1792,6 +1795,7 @@ COMMON_FRAMEWORKS =         \
 	Compression             \
 	Foundation              \
 	GameKit                 \
+	NaturalLanguage         \
 	Network                 \
 	SceneKit                \
 	SoundAnalysis 			\
@@ -1855,7 +1859,6 @@ MAC_FRAMEWORKS =            \
 	MobileCoreServices      \
 	ModelIO                 \
 	MultipeerConnectivity	\
-	NaturalLanguage         \
 	NetworkExtension        \
 	NotificationCenter 	\
 	OpenGL                  \
@@ -1955,7 +1958,6 @@ IOS_FRAMEWORKS =         \
 	MobileCoreServices \
 	ModelIO \
 	MultipeerConnectivity \
-	NaturalLanguage \
 	NetworkExtension \
 	NewsstandKit \
 	NotificationCenter \
@@ -2004,7 +2006,6 @@ WATCHOS_FRAMEWORKS =        \
 	MapKit                  \
 	MediaPlayer             \
 	MobileCoreServices      \
-	NaturalLanguage         \
 	PassKit                 \
 	PushKit			\
 	Security                \
@@ -2048,7 +2049,6 @@ TVOS_FRAMEWORKS =           \
 	MobileCoreServices      \
 	ModelIO                 \
 	MultipeerConnectivity   \
-	NaturalLanguage         \
 	OpenGLES                \
 	Photos                  \
 	PhotosUI                \
