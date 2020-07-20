@@ -13,6 +13,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 	public class TestProject
 	{
 		XmlDocument xml;
+		bool generate_variations = true;
 
 		public string Path;
 		public string SolutionPath;
@@ -41,6 +42,8 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 			Path = path;
 			IsExecutableProject = isExecutableProject;
 		}
+
+		public virtual bool GenerateVariations { get => generate_variations; set => generate_variations = value; }
 
 		public XmlDocument Xml {
 			get {
