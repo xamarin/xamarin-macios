@@ -549,7 +549,8 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 		{
 			var import = GetInfoPListNode (csproj, false);
 			if (import != null) {
-				var value = import.Attributes ["Include"].Value;
+				var attrib = import.Attributes ["Include"];
+				var value = attrib.Value;
 				var unixValue = value.Replace ('\\', '/');
 				var fname = Path.GetFileName (unixValue);
 				if (newName == null) {
@@ -558,8 +559,8 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 					else
 						newName = value.Replace (fname, $"{fullPath}\\Info{suffix}.plist");
 				}
-				import.Attributes ["Include"].Value = (!Path.IsPathRooted (unixValue)) ? value.Replace (fname, newName) : newName;
 
+				attrib.Value = (!Path.IsPathRooted (unixValue)) ? value.Replace (fname, newName) : newName;
 				var logicalName = import.SelectSingleNode ("./*[local-name() = 'LogicalName']");
 				if (logicalName == null) {
 					logicalName = csproj.CreateElement ("LogicalName", csproj.GetNamespace ());
