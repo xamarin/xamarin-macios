@@ -20,7 +20,7 @@ namespace Xharness.Targets {
 
 		public override string Suffix {
 			get {
-				return MonoNativeInfo != null ? MonoNativeInfo.FlavorSuffix + "-today" : "-today";
+				return "-today";
 			}
 		}
 
@@ -32,18 +32,10 @@ namespace Xharness.Targets {
 
 		public override string ProjectFileSuffix {
 			get {
-				if (MonoNativeInfo != null)
-					return MonoNativeInfo.FlavorSuffix + "-today";
 				return "-today";
 			}
 		}
 
-		protected override void CalculateName ()
-		{
-			base.CalculateName ();
-			if (MonoNativeInfo != null)
-				Name = Name + MonoNativeInfo.FlavorSuffix;
-		}
 		
 		bool IsGeneratedBclTest { get => IsBCLProject; }
 		
@@ -65,10 +57,6 @@ namespace Xharness.Targets {
 			TodayContainerGuid = "{" + Helpers.GenerateStableGuid ().ToString ().ToUpper () + "}";
 			ProjectGuid = TodayContainerGuid;
 			csproj.SetProjectGuid (TodayContainerGuid);
-			if (MonoNativeInfo != null) {
-				MonoNativeInfo.AddProjectDefines (csproj);
-				csproj.AddAdditionalDefines ("MONO_NATIVE_TODAY");
-			}
 			csproj.Save(TodayContainerProjectPath, (l, m) => Harness.Log (l,m));
 
 			XmlDocument info_plist = new XmlDocument ();
@@ -97,10 +85,6 @@ namespace Xharness.Targets {
 			csproj.AddInterfaceDefinition (Path.Combine (Harness.TodayExtensionTemplate, "TodayView.storyboard").Replace ('/', '\\'));
 			csproj.SetExtraLinkerDefs ("extra-linker-defs" + ExtraLinkerDefsSuffix + ".xml");
 			csproj.FixProjectReferences (Path.Combine (ProjectsDir, GetTargetSpecificDir ()), "-today", FixProjectReference);
-			if (MonoNativeInfo != null) {
-				MonoNativeInfo.AddProjectDefines (csproj);
-				csproj.AddAdditionalDefines ("MONO_NATIVE_TODAY");
-			}
 
 			csproj.Save (TodayExtensionProjectPath, (l,m) => Harness.Log (l,m));
 

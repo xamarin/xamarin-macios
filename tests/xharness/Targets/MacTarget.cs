@@ -19,14 +19,6 @@ namespace Xharness.Targets
 			Flavor = flavor;
 		}
 
-		protected override void CalculateName ()
-		{
-			base.CalculateName ();
-
-			if (MonoNativeInfo != null)
-				Name = Name + MonoNativeInfo.FlavorSuffix;
-		}
-
 		public override string Suffix {
 			get {
 				switch (Flavor) {
@@ -119,8 +111,6 @@ namespace Xharness.Targets
 		public override string RuntimeIdentifier => "osx-x64";
 		public override DevicePlatform ApplePlatform => DevicePlatform.macOS;
 		public override string TargetFrameworkForNuGet => "xamarinmac10";
-
-		public MonoNativeInfo MonoNativeInfo { get; set; }
 
 		protected override bool FixProjectReference (string include, string subdir, string suffix, out string fixed_include)
 		{
