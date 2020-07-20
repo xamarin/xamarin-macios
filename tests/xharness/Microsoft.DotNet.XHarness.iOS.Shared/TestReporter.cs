@@ -292,6 +292,8 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 			// from the TCP connection, we are going to fail when trying to read it and not parse it. Therefore, we are not only
 			// going to check if we are in CI, but also if the listener_log is valid.
 			var path = Path.ChangeExtension (test_log_path, "xml");
+			if (path == test_log_path)
+				path = Path.Combine (Path.GetDirectoryName (path), Path.GetFileNameWithoutExtension (path) + "-clean.xml");
 			resultParser.CleanXml (test_log_path, path);
 
 			if (ResultsUseXml && resultParser.IsValidXml (path, out var xmlType)) {
