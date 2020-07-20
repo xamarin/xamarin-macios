@@ -293,10 +293,10 @@ namespace GameKit {
 		[Export ("playerScope", ArgumentSemantic.Assign)]
 		GKLeaderboardPlayerScope PlayerScope { get; set;  }
 
-		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'LoadEntries' to obtain the size of the leaderboard.")]
-		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use 'LoadEntries' to obtain the size of the leaderboard.")]
-		[Deprecated (PlatformName.MacOSX, 10, 16, message: "Use 'LoadEntries' to obtain the size of the leaderboard.")]
-		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Use 'LoadEntries' to obtain the size of the leaderboard.")]
+		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'LoadEntries' instead.")]
+		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use 'LoadEntries' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 16, message: "Use 'LoadEntries' instead.")]
+		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Use 'LoadEntries' instead.")]
 		[Export ("maxRange", ArgumentSemantic.Assign)]
 		nint MaxRange { get; }
 
@@ -318,17 +318,17 @@ namespace GameKit {
 		[Export ("range", ArgumentSemantic.Assign)]
 		NSRange Range { get; set;  }
 
-		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'LoadEntries' to obtain scores instead.")]
-		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use 'LoadEntries' to obtain scores instead.")]
-		[Deprecated (PlatformName.MacOSX, 10, 16, message: "Use 'LoadEntries' to obtain scores instead.")]
-		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Use 'LoadEntries' to obtain scores instead.")]
+		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'LoadEntries' instead.")]
+		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use 'LoadEntries' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 16, message: "Use 'LoadEntries' instead.")]
+		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Use 'LoadEntries' instead.")]
 		[Export ("scores", ArgumentSemantic.Retain)]
 		GKScore [] Scores { get;  }
 
-		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'LoadEntries' to obtain scores instead.")]
-		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use 'LoadEntries' to obtain scores instead.")]
-		[Deprecated (PlatformName.MacOSX, 10, 16, message: "Use 'LoadEntries' to obtain scores instead.")]
-		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Use 'LoadEntries' to obtain scores instead.")]
+		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'LoadEntries' instead.")]
+		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use 'LoadEntries' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 16, message: "Use 'LoadEntries' instead.")]
+		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Use 'LoadEntries' instead.")]
 		[Export ("localPlayerScore", ArgumentSemantic.Retain)]
 		GKScore LocalPlayerScore { get;  }
 
@@ -2155,9 +2155,9 @@ namespace GameKit {
 		[Protocolize]
 		GKGameCenterControllerDelegate Delegate { get; set;  }
 
-		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'initWithState' instead")]
-		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use 'initWithState' instead")]
-		[Deprecated (PlatformName.MacOSX, 10, 16, message: "Use 'initWithState' instead")]
+		[Deprecated (PlatformName.iOS, 14, 0, message: "Use '.ctor (GKGameCenterViewControllerState)' instead.")]
+		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use '.ctor (GKGameCenterViewControllerState)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 16, message: "Use '.ctor (GKGameCenterViewControllerState)' instead.")]
 		[TV (9,0)]
 		[Export ("viewState", ArgumentSemantic.Assign)]
 		GKGameCenterViewControllerState ViewState { get; set; }
@@ -2175,9 +2175,9 @@ namespace GameKit {
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'LeaderboardIdentifier' instead.")]
 		string LeaderboardCategory { get; set; }
 
-		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'initWithLeaderboard' instead.")]
-		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use 'initWithLeaderboard' instead.")]
-		[Deprecated (PlatformName.MacOSX, 10, 16, message: "Use 'initWithLeaderboard' instead.")]
+		[Deprecated (PlatformName.iOS, 14, 0, message: "Use '.ctor (GKLeaderboard, GKLeaderboardPlayerScope)' instead.")]
+		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use '.ctor (GKLeaderboard, GKLeaderboardPlayerScope)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 16, message: "Use '.ctor (GKLeaderboard, GKLeaderboardPlayerScope)' instead.")]
 		[TV (9,0)][iOS (7,0)][Mac (10,10)] // Marked 10.9 in header, apple 17612948
 		[NullAllowed] // by default this property is null
 		[Export ("leaderboardIdentifier", ArgumentSemantic.Strong)]
