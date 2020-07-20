@@ -12,6 +12,7 @@
     <AssetTargetFallback>xamarinios10;$(AssetTargetFallback)</AssetTargetFallback>
     <!-- This is needed because the packages/ directory might be in the same folder as this project file, and some some packages might have C# files, which would then automatically be included -->
     <DefaultItemExcludes>$(DefaultItemExcludes);packages/**;</DefaultItemExcludes>
+    <EnableDefaultItems>false</EnableDefaultItems>
   </PropertyGroup>
 
   <ItemGroup>
@@ -33,6 +34,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="Main.cs" />
+    <Compile Include="AppDelegate.cs" />
+    <Compile Include="iOSApiCtorInitTest.cs" />
+    <Compile Include="iOSApiFieldTest.cs" />
+    <Compile Include="iOSApiSelectorTest.cs" />
+    <Compile Include="iOSApiSignatureTest.cs" />
+    <Compile Include="iOSApiProtocolTest.cs" />
+    <Compile Include="iOSApiWeakPropertyTest.cs" />
+    <Compile Include="iOSApiPInvokeTest.cs" />
+    <Compile Include="iOSApiClassPtrTest.cs" />
+    <Compile Include="iOSApiTypoTest.cs" />
+    <Compile Include="iOSCoreImageFiltersTest.cs" />
     <Compile Include="..\ApiBaseTest.cs">
       <Link>ApiBaseTest.cs</Link>
     </Compile>
@@ -102,6 +115,26 @@
     <Compile Include="..\ApiTypeTest.cs">
       <Link>ApiTypeTest.cs</Link>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Info.plist">
+      <LogicalName>Info.plist</LogicalName>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <InterfaceDefinition Include="LaunchScreen.storyboard" Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" />
+  </ItemGroup>
+  <ItemGroup>
+    <ImageAsset Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" Include="Assets.xcassets\AppIcons.appiconset\Contents.json" />
+    <ImageAsset Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" Include="Assets.xcassets\AppIcons.appiconset\Icon-app-60%403x.png" />
+    <ImageAsset Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" Include="Assets.xcassets\AppIcons.appiconset\icon-app-57.png" />
+    <ImageAsset Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" Include="Assets.xcassets\AppIcons.appiconset\icon-app-57%402x.png" />
+    <ImageAsset Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" Include="Assets.xcassets\AppIcons.appiconset\icon-app-60%402x.png" />
+    <ImageAsset Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" Include="Assets.xcassets\AppIcons.appiconset\icon-app-72.png" />
+    <ImageAsset Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" Include="Assets.xcassets\AppIcons.appiconset\icon-app-72%402x.png" />
+    <ImageAsset Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" Include="Assets.xcassets\AppIcons.appiconset\icon-app-76.png" />
+    <ImageAsset Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" Include="Assets.xcassets\AppIcons.appiconset\icon-app-76%402x.png" />
+    <ImageAsset Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" Include="Assets.xcassets\AppIcons.appiconset\icon-app-83.5%402x.png" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="..\xamarin1.png">

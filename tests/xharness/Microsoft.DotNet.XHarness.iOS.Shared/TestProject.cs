@@ -95,50 +95,52 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 			doc.ResolveAllPaths (original_path);
 
 			if (doc.IsDotNetProject ()) {
-				// Many types of files below the csproj directory are included by default,
-				// which means that we have to include them manually in the cloned csproj,
-				// because the cloned project is stored in a very different directory.
-				var test_dir = System.IO.Path.GetDirectoryName (original_path);
+				if (doc.GetEnableDefaultItems () != false) {
+					// Many types of files below the csproj directory are included by default,
+					// which means that we have to include them manually in the cloned csproj,
+					// because the cloned project is stored in a very different directory.
+					var test_dir = System.IO.Path.GetDirectoryName (original_path);
 
-				// Get all the files in the project directory from git
-				using var process = new Process ();
-				process.StartInfo.FileName = "git";
-				process.StartInfo.Arguments = "ls-files";
-				process.StartInfo.WorkingDirectory = test_dir;
-				var stdout = new MemoryLog () { Timestamp = false };
-				var result = await processManager.RunAsync (process, log, stdout, stdout, timeout: TimeSpan.FromSeconds (15));
-				if (!result.Succeeded)
-					throw new Exception ($"Failed to list the files in the directory {test_dir} (TimedOut: {result.TimedOut} ExitCode: {result.ExitCode}):\n{stdout}");
+					// Get all the files in the project directory from git
+					using var process = new Process ();
+					process.StartInfo.FileName = "git";
+					process.StartInfo.Arguments = "ls-files";
+					process.StartInfo.WorkingDirectory = test_dir;
+					var stdout = new MemoryLog () { Timestamp = false };
+					var result = await processManager.RunAsync (process, log, stdout, stdout, timeout: TimeSpan.FromSeconds (15));
+					if (!result.Succeeded)
+						throw new Exception ($"Failed to list the files in the directory {test_dir} (TimedOut: {result.TimedOut} ExitCode: {result.ExitCode}):\n{stdout}");
 
-				var files = stdout.ToString ().Split ('\n');
-				foreach (var file in files) {
-					var ext = System.IO.Path.GetExtension (file);
-					var full_path = System.IO.Path.Combine (test_dir, file);
-					var windows_file = full_path.Replace ('/', '\\');
+					var files = stdout.ToString ().Split ('\n');
+					foreach (var file in files) {
+						var ext = System.IO.Path.GetExtension (file);
+						var full_path = System.IO.Path.Combine (test_dir, file);
+						var windows_file = full_path.Replace ('/', '\\');
 
-					if (file.Contains (".xcasset")) {
-						doc.AddInclude ("ImageAsset", file, windows_file, true);
-						continue;
-					}
+						if (file.Contains (".xcasset")) {
+							doc.AddInclude ("ImageAsset", file, windows_file, true);
+							continue;
+						}
 
-					switch (ext.ToLowerInvariant ()) {
-					case ".cs":
-						doc.AddInclude ("Compile", file, windows_file, true);
-						break;
-					case ".plist":
-						doc.AddInclude ("None", file, windows_file, true);
-						break;
-					case ".storyboard":
-						doc.AddInclude ("InterfaceDefinition", file, windows_file, true);
-						break;
-					case ".gitignore":
-					case ".csproj":
-					case ".props": // Directory.Build.props
-					case "": // Makefile
-						break; // ignore these files
-					default:
-						Console.WriteLine ($"Unknown file: {file} (extension: {ext}). There might be a default inclusion behavior for this file.");
-						break;
+						switch (ext.ToLowerInvariant ()) {
+						case ".cs":
+							doc.AddInclude ("Compile", file, windows_file, true);
+							break;
+						case ".plist":
+							doc.AddInclude ("None", file, windows_file, true);
+							break;
+						case ".storyboard":
+							doc.AddInclude ("InterfaceDefinition", file, windows_file, true);
+							break;
+						case ".gitignore":
+						case ".csproj":
+						case ".props": // Directory.Build.props
+						case "": // Makefile
+							break; // ignore these files
+						default:
+							Console.WriteLine ($"Unknown file: {file} (extension: {ext}). There might be a default inclusion behavior for this file.");
+							break;
+						}
 					}
 				}
 
