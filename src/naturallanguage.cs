@@ -564,12 +564,12 @@ namespace NaturalLanguage {
 		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
 		[Static]
 		[Export ("supportedSentenceEmbeddingRevisionsForLanguage:")]
-		NSIndexSet SupportedSentenceEmbeddingRevisions (NSString language);
+		NSIndexSet GetSupportedSentenceEmbeddingRevisions (NSString language);
 
 		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
 		[Static]
 		[Wrap ("SupportedSentenceEmbeddingRevisions (language.GetConstant ()!)")]
-		NSIndexSet SupportedSentenceEmbeddingRevisions (NLLanguage language);
+		NSIndexSet GetSupportedSentenceEmbeddingRevisions (NLLanguage language);
 	}
 
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
