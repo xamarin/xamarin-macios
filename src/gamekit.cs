@@ -488,12 +488,10 @@ namespace GameKit {
 		[Async]
 		void LoadLeaderboardSets ([NullAllowed] GKLeaderboardSetsHandler completionHandler);
 
-		[Internal]
 		[Export ("loadLeaderboardsWithCompletionHandler:")]
 		[Async]
 		void LoadLeaderboards ([NullAllowed] GKLeaderboardsHandler completionHandler);
 
-		[Internal]
 		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
 		[Export ("loadLeaderboardsWithHandler:")]
 		[Async]
