@@ -291,10 +291,9 @@ namespace GameKit {
 		NoAnswer = 5,
 	}
 
-	[iOS (11,3)][Obsoleted (PlatformName.iOS, 14,0, message: "Do not use; this API was removed.")]
-	[Mac (10,13,4)][Obsoleted (PlatformName.MacOSX, 10,16, message: "Do not use; this API was removed.")]
-	[TV (11,3)][Obsoleted (PlatformName.TvOS, 14,0, message: "Do not use; this API was removed.")]
-	[Obsolete]
+	[iOS (11,3)][Deprecated (PlatformName.iOS, 14,0, message: "Do not use; this API was removed.")]
+	[Mac (10,13,4)][Deprecated (PlatformName.MacOSX, 10,16, message: "Do not use; this API was removed.")]
+	[TV (11,3)][Deprecated (PlatformName.TvOS, 14,0, message: "Do not use; this API was removed.")]
 	[Native]
 	public enum GKAuthenticationType : ulong {
 		WithoutUI = 0,
@@ -310,7 +309,7 @@ namespace GameKit {
 		TopLeading,
 		TopTrailing,
 		BottomLeading,
-		BottomTrailing
+		BottomTrailing,
 	}
 
 	[TV (14,0), Mac (10,16), iOS (14,0), Watch(7,0)]

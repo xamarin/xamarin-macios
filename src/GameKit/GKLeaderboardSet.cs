@@ -31,12 +31,12 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#if !MONOMAC
-
 using System;
 using Foundation;
 using ObjCRuntime;
+#if !MONOMAC
 using UIKit;
+#endif
 
 namespace GameKit {
 	public partial class GKLeaderboardSet {
@@ -56,5 +56,3 @@ namespace GameKit {
 		}
 	}
 }
-
-#endif // !MONOMAC

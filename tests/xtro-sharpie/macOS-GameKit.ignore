@@ -45,5 +45,6 @@
 !missing-null-allowed! 'System.Void GameKit.GKDialogController::set_ParentWindow(AppKit.NSWindow)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void GameKit.GKGameSession::SendMessage(System.String,System.String[],Foundation.NSData,GameKit.GKCloudPlayer[],System.Boolean,System.Action`1<Foundation.NSError>)' is missing an [NullAllowed] on parameter #2
 !missing-null-allowed! 'System.Void GameKit.GKMatchmakerViewController::set_DefaultInvitationMessage(System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.String[] GameKit.GKMatch::get_PlayersIDs()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String[] GameKit.GKVoiceChat::get_PlayerIDs()' is missing an [NullAllowed] on return type
+
+# API removed by Apple, marked as deprecated
+!unknown-native-enum! GKAuthenticationType bound
