@@ -18,7 +18,7 @@ namespace Xamarin.MacDev.Tasks {
 		{
 			PDictionary plist = null;
 
-			if (!string.IsNullOrEmpty (AppManifest.ItemSpec)) {
+			if (!string.IsNullOrEmpty (AppManifest?.ItemSpec)) {
 				try {
 					plist = PDictionary.FromFile (AppManifest.ItemSpec);
 				} catch (Exception ex) {
