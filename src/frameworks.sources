@@ -827,7 +827,6 @@ GAMEKIT_SOURCES = \
 	GameKit/GameKit2.cs \
 	GameKit/GKCompat.cs \
 	GameKit/GKScore.cs \
-	GameKit/GKLeaderboardSet.cs \
 
 # GameplayKit
 
