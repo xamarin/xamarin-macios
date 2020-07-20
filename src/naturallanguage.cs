@@ -568,7 +568,7 @@ namespace NaturalLanguage {
 
 		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
 		[Static]
-		[Wrap ("SupportedSentenceEmbeddingRevisions (language.GetConstant ()!)")]
+		[Wrap ("GetSupportedSentenceEmbeddingRevisions (language.GetConstant ()!)")]
 		NSIndexSet GetSupportedSentenceEmbeddingRevisions (NLLanguage language);
 	}
 
