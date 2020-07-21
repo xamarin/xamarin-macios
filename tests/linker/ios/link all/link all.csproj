@@ -226,7 +226,7 @@
       <Project>{FE6EDEE9-ADF6-4F42-BCF2-B68C0A44EC3D}</Project>
       <Name>BundledResources</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\bindings-test\bindings-test.csproj">
+    <ProjectReference Include="..\..\..\bindings-test\iOS\bindings-test.csproj">
       <Project>{D6667423-EDD8-4B50-9D98-1AC5D8A8A4EA}</Project>
       <Name>bindings-test</Name>
     </ProjectReference>
