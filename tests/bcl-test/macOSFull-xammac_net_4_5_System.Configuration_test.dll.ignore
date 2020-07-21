@@ -6,3 +6,21 @@ MonoTests.System.Configuration.AppSettingsSectionTest.TestFile
 # Expected: not null
 # But was:  null
 MonoTests.System.Configuration.ConfigurationManagerTest.TestConnectionStringRetrieval
+
+# The UnixSignalTest breaks NullReferenceException handling in the runtime.
+# Any NRE will deadlock the process after this test, so just skip it.
+MonoTests.Mono.Unix.UnixSignalTest
+
+# Needs RabbitMQ:
+#     System.TypeInitializationException : The type initializer for '...' threw an exception.
+#     ----> System.IO.FileNotFoundException : Could not load the file 'Mono.Messaging.RabbitMQ, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756'.
+MonoTests.System.Messaging.TransactionMessageTest
+MonoTests.System.Messaging.AdminTest
+MonoTests.System.Messaging.AsyncPeekTest
+MonoTests.System.Messaging.AsyncReceiveTest
+MonoTests.System.Messaging.BasicMessagingTest
+MonoTests.System.Messaging.PeekTest
+MonoTests.System.Messaging.SelectorTest
+
+# System.ArgumentException : The value's length for key 'data source' exceeds it's limit of '128'.
+DbLinqTest.DataContextTest.Ctor_FileOrServerOrConnectionIsFilename
