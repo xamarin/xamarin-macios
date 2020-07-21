@@ -157,10 +157,9 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 
 		public string FlavorSuffix => Flavor == MonoNativeFlavor.Compat ? "-compat" : "-unified";
 		public string ProjectName => "mono-native" + FlavorSuffix;
-		public string ProjectPath => Path.Combine (rootDirectory, "mono-native", FlavorSuffix.TrimStart ('-'), DevicePlatform.ToString (), TemplateName + FlavorSuffix + ".csproj");
-		string TemplateName => "mono-native" + TemplateSuffix;
-		public string TemplatePath => Path.Combine (rootDirectory, "mono-native", TemplateName + ".csproj.template");
-		protected virtual string TemplateSuffix => string.Empty;
+		public string ProjectPath => Path.Combine (rootDirectory, "mono-native", DevicePlatform.ToString (), FlavorSuffix.TrimStart ('-'), TemplateName + FlavorSuffix + ".csproj");
+		string TemplateName => "mono-native";
+		public string TemplatePath => Path.Combine (rootDirectory, "mono-native", DevicePlatform.ToString (), TemplateName + ".csproj.template");
 
 		public void Convert ()
 		{
@@ -174,7 +173,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 			inputProject.ResolveAllPaths (TemplatePath);
 
 			var template_info_plist = inputProject.GetInfoPListInclude ().Replace ('\\', '/');
-			var target_info_plist = Path.Combine (Path.GetDirectoryName (ProjectPath), "Info" + TemplateSuffix + FlavorSuffix + ".plist");
+			var target_info_plist = Path.Combine (Path.GetDirectoryName (ProjectPath), "Info" + FlavorSuffix + ".plist");
 			SetInfoPListMinimumOSVersion (template_info_plist, target_info_plist);
 			inputProject.FixInfoPListInclude (FlavorSuffix, newName: target_info_plist);
 
@@ -206,7 +205,6 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 
 	public class MacMonoNativeInfo : MonoNativeInfo
 	{
-		protected override string TemplateSuffix => "-mac";
 		protected override DevicePlatform DevicePlatform { get { return DevicePlatform.macOS; } }
 
 		public MacMonoNativeInfo (MonoNativeFlavor flavor, string rootDirectory, Action<int, string> logAction)
