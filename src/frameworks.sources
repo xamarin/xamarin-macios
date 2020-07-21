@@ -1102,6 +1102,11 @@ METALPERFORMANCESHADERS_SOURCES = \
 
 # MetricKit
 
+METRICKIT_SOURCES = \
+	MetricKit/MXMetaData.cs \
+	MetricKit/MXMetric.cs \
+	MetricKit/MXMetricPayload.cs \
+
 
 # MobileCoreServices
 
