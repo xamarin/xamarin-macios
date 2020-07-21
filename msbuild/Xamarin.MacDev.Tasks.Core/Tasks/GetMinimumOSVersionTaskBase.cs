@@ -6,7 +6,7 @@ using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.MacDev.Tasks {
 	public abstract class GetMinimumOSVersionTaskBase : XamarinTask {
-		public string AppManifest { get; set; }
+		public ITaskItem AppManifest { get; set; }
 
 		[Required]
 		public string SdkVersion { get; set; }
@@ -18,9 +18,9 @@ namespace Xamarin.MacDev.Tasks {
 		{
 			PDictionary plist = null;
 
-			if (!string.IsNullOrEmpty (AppManifest)) {
+			if (!string.IsNullOrEmpty (AppManifest?.ItemSpec)) {
 				try {
-					plist = PDictionary.FromFile (AppManifest);
+					plist = PDictionary.FromFile (AppManifest.ItemSpec);
 				} catch (Exception ex) {
 					Log.LogError (null, null, null, AppManifest, 0, 0, 0, 0, MSBStrings.E0010, AppManifest, ex.Message);
 					return false;
