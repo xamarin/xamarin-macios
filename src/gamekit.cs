@@ -436,10 +436,12 @@ namespace GameKit {
 		double Duration { get; }
 
 		[Watch (7, 0), TV (14, 0), Mac (10, 16), iOS (14, 0)]
+		[Async (ResultTypeName = "GKEntriesForPlayerScopeResult")]
 		[Export ("loadEntriesForPlayerScope:timeScope:range:completionHandler:")]
 		void LoadEntries (GKLeaderboardPlayerScope playerScope, GKLeaderboardTimeScope timeScope, NSRange range, [NullAllowed] GKEntriesForPlayerScopeHandler completionHandler);
 
 		[Watch (7, 0), TV (14, 0), Mac (10, 16), iOS (14, 0)]
+		[Async (ResultTypeName = "GKEntriesForPlayersResult")]
 		[Export ("loadEntriesForPlayers:timeScope:completionHandler:")]
 		void LoadEntries (GKPlayer[] players, GKLeaderboardTimeScope timeScope, [NullAllowed] GKEntriesForPlayersHandler completionHandler);
 
@@ -2677,6 +2679,7 @@ namespace GameKit {
 		[Export ("player", ArgumentSemantic.Strong)]
 		GKPlayer Player { get; }
 
+#if MONOMAC // Some APIs missing on iOS, tvOS, watchOS as of Xcode 12 beta 2 - https://github.com/xamarin/maccore/issues/2269
 		[Export ("rank")]
 		nint Rank { get; }
 
@@ -2691,7 +2694,7 @@ namespace GameKit {
 
 		[Export ("date", ArgumentSemantic.Strong)]
 		NSDate Date { get; }
-
+#endif
 		[NoWatch] // header lists watch as supported, but UIViewController is not available on Watch!
 		[Async (ResultTypeName = "GKChallengeComposeResult")]
 		[Export ("challengeComposeControllerWithMessage:players:completionHandler:")]
