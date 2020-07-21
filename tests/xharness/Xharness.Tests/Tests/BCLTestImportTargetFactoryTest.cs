@@ -82,22 +82,22 @@ namespace Xharness.Tests.TestImporter.Tests {
 		}
 
 		[Test]
-		public async Task GenerateTestProjectsAsyncTest ()
+		public void GenerateTestProjectsAsyncTest ()
 		{
 			var projects = new GeneratedProjects () {
-				( Name: "First project", Path: "", XUnit: false, ExtraArgs: "", Failure: "", TimeoutMultiplier: 1),
-				( Name: "Second project", Path: "", XUnit: true, ExtraArgs: "", Failure: "", TimeoutMultiplier: 1),
+				new GeneratedProject { Name = "First project", Path = "", XUnit = false, ExtraArgs = "", Failure = "", TimeoutMultiplier = 1, GenerationCompleted = Task.CompletedTask, },
+				new GeneratedProject { Name = "Second project", Path = "", XUnit = true, ExtraArgs = "", Failure = "", TimeoutMultiplier = 1, GenerationCompleted = Task.CompletedTask, },
 			};
 			var infos = new List<(string Name, string [] Assemblies, string ExtraArgs, double TimeoutMultiplier)> {
 				( Name: "First project", Assemblies: new string [] { }, ExtraArgs: "", TimeoutMultiplier: 1),
 				( Name: "Second project", Assemblies: new string [] { }, ExtraArgs: "", TimeoutMultiplier: 1),
 			};
-			template.Setup (t => t.GenerateTestProjectsAsync (It.IsAny<IEnumerable<(string Name, string [] Assemblies, string ExtraArgs, double TimeoutMultiplier)>> (), It.IsAny<Platform> ())).Returns (() => {
-				return Task.FromResult (projects);
+			template.Setup (t => t.GenerateTestProjects (It.IsAny<IEnumerable<(string Name, string [] Assemblies, string ExtraArgs, double TimeoutMultiplier)>> (), It.IsAny<Platform> ())).Returns (() => {
+				return projects;
 			});
-			var result = await generator.GenerateTestProjectsAsync (infos, Platform.iOS);
+			var result = generator.GenerateTestProjects (infos, Platform.iOS);
 			Assert.AreEqual (projects.Count, result.Count);
-			template.Verify (t => t.GenerateTestProjectsAsync (It.IsAny<IEnumerable<(string Name, string [] Assemblies, string ExtraArgs, double TimeoutMultiplier)>> (), It.IsAny<Platform> ()));
+			template.Verify (t => t.GenerateTestProjects (It.IsAny<IEnumerable<(string Name, string [] Assemblies, string ExtraArgs, double TimeoutMultiplier)>> (), It.IsAny<Platform> ()));
 		}
 	}
 }
