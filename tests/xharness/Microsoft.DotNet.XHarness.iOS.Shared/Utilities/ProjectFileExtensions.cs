@@ -552,15 +552,22 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 				var attrib = import.Attributes ["Include"];
 				var value = attrib.Value;
 				var unixValue = value.Replace ('\\', '/');
-				var fname = Path.GetFileName (unixValue);
-				if (newName == null) {
-					if (string.IsNullOrEmpty (fullPath))
-						newName = value.Replace (fname, $"Info{suffix}.plist");
-					else
-						newName = value.Replace (fname, $"{fullPath}\\Info{suffix}.plist");
-				}
 
-				attrib.Value = (!Path.IsPathRooted (unixValue)) ? value.Replace (fname, newName) : newName;
+				// If newName is specified, use that as-is
+				// If not:
+				//     If the existing value has a directory, use that as the directory
+				//     Otherwise, if fullPath is passed, use that as the directory
+				//     Finally, combine the expected Info.plist name with the directory (if there is a directory; there might not be one)
+				if (newName == null) {
+					var directory = Path.GetDirectoryName (unixValue);
+					if (string.IsNullOrEmpty (directory))
+						directory = fullPath;
+
+					newName = $"Info{suffix}.plist";
+					if (!string.IsNullOrEmpty (directory))
+						newName = Path.Combine (directory, newName);
+				}
+				attrib.Value = newName.Replace ('/', '\\');
 				var logicalName = import.SelectSingleNode ("./*[local-name() = 'LogicalName']");
 				if (logicalName == null) {
 					logicalName = csproj.CreateElement ("LogicalName", csproj.GetNamespace ());
