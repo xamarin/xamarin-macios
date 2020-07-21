@@ -63,7 +63,7 @@ namespace DeviceCheck {
 
 		[Async]
 		[Export ("generateKeyWithCompletionHandler:")]
-		void GenerateKey (Action<NSString, NSError> completionHandler);
+		void GenerateKey (Action<string, NSError> completionHandler);
 
 		[Async]
 		[Export ("attestKey:clientDataHash:completionHandler:")]
