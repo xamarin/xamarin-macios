@@ -411,6 +411,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 	<Target Name="_GetMinimumOSVersion" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_ComputeTargetFrameworkMoniker">
 		<GetMinimumOSVersion
+			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
 			AppManifest="$(_AppManifest)"
 			SdkVersion="$(_SdkVersion)"
