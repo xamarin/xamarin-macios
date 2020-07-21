@@ -680,7 +680,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.TestImporter.Templates.Managed {
 				if (!projectDefinition.Validate ())
 					throw new InvalidOperationException ("xUnit and NUnit assemblies cannot be mixed in a test project.");
 				// generate the required type registration info
-				var generatedCodeDir = Path.Combine (GeneratedCodePathRoot, projectDefinition.Name, "mac");
+				var generatedCodeDir = Path.Combine (GeneratedCodePathRoot, projectDefinition.Name, platform.ToString ());
 				Directory.CreateDirectory (generatedCodeDir);
 				var registerTypePath = Path.Combine (generatedCodeDir, "RegisterType-mac.cs");
 
