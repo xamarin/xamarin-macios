@@ -588,6 +588,14 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 			return attrib != null;
 		}
 
+		public static bool? GetEnableDefaultItems (this XmlDocument csproj)
+		{
+			var node = csproj.SelectSingleNode ($"/*/*/*[local-name() = 'EnableDefaultItems']");
+			if (node == null)
+				return null;
+			return string.Equals (node.InnerText, "true", StringComparison.OrdinalIgnoreCase);
+		}
+
 		static XmlNode GetInfoPListNode (this XmlDocument csproj, bool throw_if_not_found = false)
 		{
 			var logicalNames = csproj.SelectNodes ("//*[local-name() = 'LogicalName']");
