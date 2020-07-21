@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -169,22 +169,23 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Main.cs" />
-    <Compile Include="AppDelegate.cs" />
-    <Compile Include="NativePlatformConfig.cs" />
-    <Compile Include="Introspection.cs" />
-    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\corlib\Test\Mono\MonoNativePlatform.cs">
+    <Compile Include="..\Main.cs" />
+    <Compile Include="..\AppDelegate.cs" />
+    <Compile Include="..\NativePlatformConfig.cs" />
+    <Compile Include="..\Introspection.cs" />
+    <Compile Include="..\..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\corlib\Test\Mono\MonoNativePlatform.cs">
       <Link>MonoNativePlatform.cs</Link>
     </Compile>
-    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\corlib\Test\Mono\MonoNativePlatformType.cs">
+    <Compile Include="..\..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\corlib\Test\Mono\MonoNativePlatformType.cs">
       <Link>MonoNativePlatformType.cs</Link>
     </Compile>
-    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\corlib\Test\Mono\NativePlatformTest.cs">
+    <Compile Include="..\..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\corlib\Test\Mono\NativePlatformTest.cs">
       <Link>NativePlatformTest.cs</Link>
     </Compile>
-    <Compile Include="..\common\MonoNativeConfig.cs">
+    <Compile Include="..\..\common\MonoNativeConfig.cs">
       <Link>MonoNativeConfig.cs</Link>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>
+
