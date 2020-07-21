@@ -468,6 +468,18 @@ namespace Xharness {
 			return mac ? AutoConfigureMac (true) : ConfigureIOS ();
 		}
 
+		// At startup we:
+		// * Load a list of well-known test projects IOSTestProjects/MacTestProjects. This happens in AutoConfigureIOS/AutoConfigureMac.
+		//   Example projects:
+		//     * introspection
+		//     * dont link, link all, link sdk
+		// * Each of these test projects can used to generate other platform variations (tvOS, watchOS, macOS full, etc),
+		//   if the the TestProject.GenerateVariations property is true.
+		// * For the mono-native template project, we generate a compat+unified version of the mono-native template project (in MonoNativeInfo.Convert).
+		//   GenerateVariations is true for mono-native projects, which means we'll generate platform variations.
+		// * For the BCL tests, we use a BCL test project generator. The BCL test generator generates projects for
+		//   all platforms we're interested in, so we set GenerateVariations to false to avoid generate the platform variations again.
+
 		int ConfigureIOS ()
 		{
 			var rv = 0;
