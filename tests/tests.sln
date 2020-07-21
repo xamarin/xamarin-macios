@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BundledResources", "Bundled
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmbeddedResources", "EmbeddedResources\EmbeddedResources.csproj", "{676F527D-3352-42EA-9DE2-181C45003568}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bindings-test", "bindings-test\bindings-test.csproj", "{D6667423-EDD8-4B50-9D98-1AC5D8A8A4EA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bindings-test", "bindings-test\iOS\bindings-test.csproj", "{D6667423-EDD8-4B50-9D98-1AC5D8A8A4EA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bindings-framework-test", "bindings-framework-test\bindings-framework-test.csproj", "{E40B0B77-3467-4891-9117-7AF8F248E306}"
 EndProject

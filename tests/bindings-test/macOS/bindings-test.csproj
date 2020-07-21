@@ -7,7 +7,7 @@
     <ProjectTypeGuids>{810C163F-4746-4721-8B8E-88A3673A62EA};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <RootNamespace>bindingstestmac</RootNamespace>
-    <AssemblyName>bindings-test-mac</AssemblyName>
+    <AssemblyName>bindings-test</AssemblyName>
     <MacResourcePrefix>Resources</MacResourcePrefix>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
@@ -35,71 +35,71 @@
     <Reference Include="Xamarin.Mac" />
   </ItemGroup>
   <ItemGroup>
-    <ObjcBindingApiDefinition Include="ApiDefinition.cs" />
-    <ObjcBindingApiDefinition Include="..\generator\tests\ref-out-parameters.cs" />
-    <ObjcBindingApiDefinition Include="ApiDefinition.generated.cs" />
-    <ObjcBindingApiDefinition Include="ApiProtocol.cs" />
+    <ObjcBindingApiDefinition Include="..\ApiDefinition.cs" />
+    <ObjcBindingApiDefinition Include="..\..\generator\tests\ref-out-parameters.cs" />
+    <ObjcBindingApiDefinition Include="..\ApiDefinition.generated.cs" />
+    <ObjcBindingApiDefinition Include="..\ApiProtocol.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ObjcBindingCoreSource Include="StructsAndEnums.cs" />
-    <ObjcBindingCoreSource Include="StructsAndEnums.generated.cs" />
+    <ObjcBindingCoreSource Include="..\StructsAndEnums.cs" />
+    <ObjcBindingCoreSource Include="..\StructsAndEnums.generated.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.ObjcBinding.CSharp.targets" />
   <PropertyGroup>
-    <TestLibrariesDirectory>..\..\tests\test-libraries</TestLibrariesDirectory>
+    <TestLibrariesDirectory>..\..\..\tests\test-libraries</TestLibrariesDirectory>
   </PropertyGroup>
   <ItemGroup>
-    <ObjcBindingNativeLibrary Include="..\..\tests\test-libraries\.libs\macos\libtest.a">
+    <ObjcBindingNativeLibrary Include="..\..\..\tests\test-libraries\.libs\macos\libtest.a">
       <Link>libtest.a</Link>
     </ObjcBindingNativeLibrary>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\common\ConditionalCompilation.cs">
+    <Compile Include="..\..\common\ConditionalCompilation.cs">
       <Link>ConditionalCompilation.cs</Link>
     </Compile>
-    <Compile Include="libtest.linkwith.cs">
+    <Compile Include="..\libtest.linkwith.cs">
       <DependentUpon>libtest.a</DependentUpon>
     </Compile>
-    <Compile Include="ProtocolTest.cs" />
-    <Compile Include="..\api-shared\ObjCRuntime\Registrar.cs">
+    <Compile Include="..\ProtocolTest.cs" />
+    <Compile Include="..\..\api-shared\ObjCRuntime\Registrar.cs">
       <Link>Registrar.cs</Link>
     </Compile>
-    <Compile Include="RegistrarBindingTest.cs" />
-    <Compile Include="..\common\TestRuntime.cs">
+    <Compile Include="..\RegistrarBindingTest.cs" />
+    <Compile Include="..\..\common\TestRuntime.cs">
       <Link>TestRuntime.cs</Link>
     </Compile>
-    <Compile Include="RuntimeTest.cs" />
-    <Compile Include="CodeBehind.cs" />
-    <Compile Include="Messaging.cs" />
+    <Compile Include="..\RuntimeTest.cs" />
+    <Compile Include="..\CodeBehind.cs" />
+    <Compile Include="..\Messaging.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\tests\test-libraries\libtest.m">
+    <None Include="..\..\..\tests\test-libraries\libtest.m">
       <Link>libtest.m</Link>
     </None>
-    <None Include="..\..\tests\test-libraries\libtest.h">
+    <None Include="..\..\..\tests\test-libraries\libtest.h">
       <Link>libtest.h</Link>
     </None>
-    <None Include="..\..\tests\test-libraries\libtest.structs.h">
+    <None Include="..\..\..\tests\test-libraries\libtest.structs.h">
       <Link>libtest.structs.h</Link>
     </None>
-    <None Include="..\..\tests\test-libraries\libtest.properties.h">
+    <None Include="..\..\..\tests\test-libraries\libtest.properties.h">
       <Link>libtest.properties.h</Link>
     </None>
-    <None Include="..\..\tests\test-libraries\testgenerator.cs">
+    <None Include="..\..\..\tests\test-libraries\testgenerator.cs">
       <Link>testgenerator.cs</Link>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <GeneratedTestInput Include="..\..\tests\test-libraries\*.m" />
-    <GeneratedTestInput Include="..\..\tests\test-libraries\*.h" />
-    <GeneratedTestInput Include="..\..\tests\test-libraries\*.cs" />
-    <GeneratedTestInput Include="..\..\tests\test-libraries\Makefile" />
-    <GeneratedTestOutput Include="..\..\tests\test-libraries\.libs\macos\libtest.a" />
-    <GeneratedTestOutput Include="ApiDefinition.generated.cs" />
-    <GeneratedTestOutput Include="StructsAndEnums.generated.cs" />
+    <GeneratedTestInput Include="..\..\..\tests\test-libraries\*.m" />
+    <GeneratedTestInput Include="..\..\..\tests\test-libraries\*.h" />
+    <GeneratedTestInput Include="..\..\..\tests\test-libraries\*.cs" />
+    <GeneratedTestInput Include="..\..\..\tests\test-libraries\Makefile" />
+    <GeneratedTestOutput Include="..\..\..\tests\test-libraries\.libs\macos\libtest.a" />
+    <GeneratedTestOutput Include="..\ApiDefinition.generated.cs" />
+    <GeneratedTestOutput Include="..\StructsAndEnums.generated.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\external\guiunit\src\framework\GuiUnit_xammac_mobile.csproj">
+    <ProjectReference Include="..\..\..\external\guiunit\src\framework\GuiUnit_xammac_mobile.csproj">
       <Project>{EACFD119-769E-4E6C-89B7-A6CE3757C431}</Project>
       <Name>GuiUnit_xammac_mobile</Name>
     </ProjectReference>
@@ -108,3 +108,4 @@
     <Exec Command="make -j8 -C $(TestLibrariesDirectory)" />
   </Target>
 </Project>
+
