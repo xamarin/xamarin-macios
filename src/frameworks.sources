@@ -1430,6 +1430,15 @@ SECURITY_SOURCES = \
 	Security/SslConnection.cs \
 	Security/SslContext.cs \
 
+# SensorKit
+
+SENSORKIT_CORE_SOURCES = \
+	SensorKit/SRAmbientLightChromaticity.cs \
+
+SENSORKIT_SOURCES = \
+	SensorKit/SRAbsoluteTime.cs \
+	SensorKit/SRSensor.cs \
+
 # Social
 
 SOCIAL_CORE_SOURCES = \
@@ -1973,6 +1982,7 @@ IOS_FRAMEWORKS =         \
 	ReplayKit \
 	SafariServices \
 	Security \
+	SensorKit \
 	Social \
 	Speech \
 	SystemConfiguration \
