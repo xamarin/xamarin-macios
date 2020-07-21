@@ -379,28 +379,28 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.TestImporter.Templates.Managed {
 			return contentFiles.ToString ();
 		}
 
-		public async Task<GeneratedProjects> GenerateTestProjectsAsync (IEnumerable<(string Name, string [] Assemblies, string ExtraArgs, double TimeoutMultiplier)> projects, Platform platform)
+		public GeneratedProjects GenerateTestProjects (IEnumerable<(string Name, string [] Assemblies, string ExtraArgs, double TimeoutMultiplier)> projects, Platform platform)
 		{
 			// generate the template c# code before we create the diff projects
 			GenerateSource (Path.Combine (OutputDirectoryPath, "templates"));
 			var result = new GeneratedProjects ();
 			switch (platform) {
 			case Platform.WatchOS:
-				result = await GenerateWatchOSTestProjectsAsync (projects);
+				result = GenerateWatchOSTestProjects (projects);
 				break;
 			case Platform.iOS:
 			case Platform.TvOS:
-				result = await GenerateiOSTestProjectsAsync (projects, platform);
+				result = GenerateiOSTestProjects (projects, platform);
 				break;
 			case Platform.MacOSFull:
 			case Platform.MacOSModern:
-				result = await GenerateMacTestProjectsAsync (projects, platform);
+				result = GenerateMacTestProjects (projects, platform);
 				break;
 			}
 			return result;
 		}
 
-		#region Watch Porjects generation
+		#region Watch Projects generation
 
 		string GenerateWatchProject (string projectName, string template, string infoPlistPath)
 		{
@@ -447,7 +447,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.TestImporter.Templates.Managed {
 		}
 
 		// internal implementations that generate each of the diff projects
-		async Task<GeneratedProjects> GenerateWatchOSTestProjectsAsync (IEnumerable<(string Name, string [] Assemblies, string ExtraArgs, double TimeoutMultiplier)> projects)
+		GeneratedProjects GenerateWatchOSTestProjects (IEnumerable<(string Name, string [] Assemblies, string ExtraArgs, double TimeoutMultiplier)> projects)
 		{
 			var projectPaths = new GeneratedProjects ();
 			foreach (var def in projects) {
@@ -462,65 +462,74 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.TestImporter.Templates.Managed {
 
 				if (!projectDefinition.Validate ())
 					throw new InvalidOperationException ("xUnit and NUnit assemblies cannot be mixed in a test project.");
+				var gp = new GeneratedProject ();
 				var generatedCodeDir = Path.Combine (GeneratedCodePathRoot, projectDefinition.Name, "watch");
 				if (!Directory.Exists (generatedCodeDir)) {
 					Directory.CreateDirectory (generatedCodeDir);
 				}
 				var registerTypePath = Path.Combine (generatedCodeDir, "RegisterType.cs");
-				string failure = null;
-				string rootProjectPath = GetProjectPath (projectDefinition.Name, Platform.WatchOS); ;
-				try {
-					// create the plist for each of the apps
-					var projectData = new Dictionary<WatchAppType, (string plist, string project)> ();
-					foreach (var appType in new [] { WatchAppType.Extension, WatchAppType.App }) {
-						(string plist, string project) data;
-						var plist = InfoPlistGenerator.GenerateCode (GetPlistTemplate (appType), projectDefinition.Name);
-						data.plist = GetPListPath (generatedCodeDir, appType);
-						using (var file = new StreamWriter (data.plist, false)) { // false is do not append
-							await file.WriteAsync (plist);
+				gp.Name = projectDefinition.Name;
+				gp.Path = GetProjectPath (projectDefinition.Name, Platform.WatchOS);
+				gp.XUnit = projectDefinition.IsXUnit;
+				gp.ExtraArgs = projectDefinition.ExtraArgs;
+				gp.TimeoutMultiplier = def.TimeoutMultiplier;
+				var task = Task.Run (async () => {
+					try {
+						// create the plist for each of the apps
+						var projectData = new Dictionary<WatchAppType, (string plist, string project)> ();
+						foreach (var appType in new [] { WatchAppType.Extension, WatchAppType.App }) {
+							(string plist, string project) data;
+							var plist = InfoPlistGenerator.GenerateCode (GetPlistTemplate (appType), projectDefinition.Name);
+							data.plist = GetPListPath (generatedCodeDir, appType);
+							using (var file = new StreamWriter (data.plist, false)) { // false is do not append
+								await file.WriteAsync (plist);
+							}
+
+							string generatedProject;
+							switch (appType) {
+							case WatchAppType.App:
+								generatedProject = GenerateWatchApp (projectDefinition.Name, GetProjectTemplate (appType), data.plist);
+								break;
+							default:
+								var info = projectDefinition.GetAssemblyInclusionInformation (Platform.WatchOS);
+								generatedProject = GenerateWatchExtension (projectDefinition.Name, GetProjectTemplate (appType), data.plist, registerTypePath, info);
+								gp.Failure ??= info.FailureMessage;
+								break;
+							}
+							data.project = GetProjectPath (projectDefinition.Name, appType);
+							using (var file = new StreamWriter (data.project, false)) { // false is do not append
+								await file.WriteAsync (generatedProject);
+							}
+
+							projectData [appType] = data;
+						} // foreach app type
+
+						var rootPlist = InfoPlistGenerator.GenerateCode (GetPlistTemplate (Platform.WatchOS), projectDefinition.Name);
+						var infoPlistPath = GetPListPath (generatedCodeDir, Platform.WatchOS);
+						using (var file = new StreamWriter (infoPlistPath, false)) { // false is do not append
+							await file.WriteAsync (rootPlist);
 						}
 
-						string generatedProject;
-						switch (appType) {
-						case WatchAppType.App:
-							generatedProject = GenerateWatchApp (projectDefinition.Name, GetProjectTemplate (appType), data.plist);
-							break;
-						default:
-							var info = projectDefinition.GetAssemblyInclusionInformation (Platform.WatchOS);
-							generatedProject = GenerateWatchExtension (projectDefinition.Name, GetProjectTemplate (appType), data.plist, registerTypePath, info);
-							failure ??= info.FailureMessage;
-							break;
+						using (var file = new StreamWriter (gp.Path, false)) { // false is do not append
+							var template = GetProjectTemplate (Platform.WatchOS);
+							var generatedRootProject = GenerateWatchProject (def.Name, template, infoPlistPath);
+							await file.WriteAsync (generatedRootProject);
 						}
-						data.project = GetProjectPath (projectDefinition.Name, appType);
-						using (var file = new StreamWriter (data.project, false)) { // false is do not append
-							await file.WriteAsync (generatedProject);
+						var typesPerAssembly = projectDefinition.GetTypeForAssemblies (AssemblyLocator.GetAssembliesRootLocation (Platform.iOS), Platform.WatchOS);
+						var registerCode = RegisterTypeGenerator.GenerateCode (typesPerAssembly, projectDefinition.IsXUnit, GetRegisterTypeTemplate ());
+						using (var file = new StreamWriter (registerTypePath, false)) { // false is do not append
+							await file.WriteAsync (registerCode);
 						}
 
-						projectData [appType] = data;
-					} // foreach app type
+						gp.Failure ??= typesPerAssembly.FailureMessage;
+					} catch (Exception e) {
+						gp.Failure = e.Message;
+					}
+				});
+				gp.GenerationCompleted = task;
 
-					var rootPlist = InfoPlistGenerator.GenerateCode (GetPlistTemplate (Platform.WatchOS), projectDefinition.Name);
-					var infoPlistPath = GetPListPath (generatedCodeDir, Platform.WatchOS);
-					using (var file = new StreamWriter (infoPlistPath, false)) { // false is do not append
-						await file.WriteAsync (rootPlist);
-					}
-					using (var file = new StreamWriter (rootProjectPath, false)) { // false is do not append
-						var template = GetProjectTemplate (Platform.WatchOS);
-						var generatedRootProject = GenerateWatchProject (def.Name, template, infoPlistPath);
-						await file.WriteAsync (generatedRootProject);
-					}
-					var typesPerAssembly = projectDefinition.GetTypeForAssemblies (AssemblyLocator.GetAssembliesRootLocation (Platform.iOS), Platform.WatchOS);
-					var registerCode = RegisterTypeGenerator.GenerateCode (typesPerAssembly, projectDefinition.IsXUnit, GetRegisterTypeTemplate ());
-					using (var file = new StreamWriter (registerTypePath, false)) { // false is do not append
-						await file.WriteAsync (registerCode);
-					}
-
-					failure ??= typesPerAssembly.FailureMessage;
-				} catch (Exception e) {
-					failure = e.Message;
-				}
 				// we have the 3 projects we depend on, we need the root one, the one that will be used by harness
-				projectPaths.Add ((projectDefinition.Name, rootProjectPath, projectDefinition.IsXUnit, projectDefinition.ExtraArgs, failure, def.TimeoutMultiplier));
+				projectPaths.Add (gp);
 			} // foreach project
 
 			return projectPaths;
@@ -568,7 +577,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.TestImporter.Templates.Managed {
 			return result;
 		}
 
-		async Task<GeneratedProjects> GenerateiOSTestProjectsAsync (IEnumerable<(string Name, string [] Assemblies, string ExtraArgs, double TimeoutMultiplier)> projects, Platform platform)
+		GeneratedProjects GenerateiOSTestProjects (IEnumerable<(string Name, string [] Assemblies, string ExtraArgs, double TimeoutMultiplier)> projects, Platform platform)
 		{
 			if (platform == Platform.WatchOS)
 				throw new ArgumentException (nameof (platform));
@@ -592,32 +601,39 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.TestImporter.Templates.Managed {
 				var registerTypePath = Path.Combine (generatedCodeDir, "RegisterType.cs");
 
 				string projectPath = GetProjectPath (projectDefinition.Name, platform);
-				string failure = null;
-				try {
-					var plist = InfoPlistGenerator.GenerateCode (GetPlistTemplate (platform), projectDefinition.Name);
-					var infoPlistPath = GetPListPath (generatedCodeDir, platform);
-					using (var file = new StreamWriter (infoPlistPath, false)) { // false is do not append
-						await file.WriteAsync (plist);
-					}
+				var gp = new GeneratedProject ();
+				gp.Name = projectDefinition.Name;
+				gp.Path = projectPath;
+				gp.XUnit = projectDefinition.IsXUnit;
+				gp.ExtraArgs = projectDefinition.ExtraArgs;
+				gp.TimeoutMultiplier = def.TimeoutMultiplier;
+				gp.GenerationCompleted = Task.Run (async () => {
+					try {
+						var plist = InfoPlistGenerator.GenerateCode (GetPlistTemplate (platform), projectDefinition.Name);
+						var infoPlistPath = GetPListPath (generatedCodeDir, platform);
+						using (var file = new StreamWriter (infoPlistPath, false)) { // false is do not append
+							await file.WriteAsync (plist);
+						}
 
-					var info = projectDefinition.GetAssemblyInclusionInformation (platform);
-					var generatedProject = Generate (projectDefinition.Name, registerTypePath, info, GetProjectTemplate (platform), infoPlistPath, platform);
-					using (var file = new StreamWriter (projectPath, false)) { // false is do not append
-						await file.WriteAsync (generatedProject);
-					}
-					var typesPerAssembly = projectDefinition.GetTypeForAssemblies (AssemblyLocator.GetAssembliesRootLocation (platform), platform);
-					var registerCode = RegisterTypeGenerator.GenerateCode (typesPerAssembly, projectDefinition.IsXUnit, GetRegisterTypeTemplate ());
+						var info = projectDefinition.GetAssemblyInclusionInformation (platform);
+						var generatedProject = Generate (projectDefinition.Name, registerTypePath, info, GetProjectTemplate (platform), infoPlistPath, platform);
+						using (var file = new StreamWriter (projectPath, false)) { // false is do not append
+							await file.WriteAsync (generatedProject);
+						}
+						var typesPerAssembly = projectDefinition.GetTypeForAssemblies (AssemblyLocator.GetAssembliesRootLocation (platform), platform);
+						var registerCode = RegisterTypeGenerator.GenerateCode (typesPerAssembly, projectDefinition.IsXUnit, GetRegisterTypeTemplate ());
 
-					using (var file = new StreamWriter (registerTypePath, false)) { // false is do not append
-						await file.WriteAsync (registerCode);
-					}
+						using (var file = new StreamWriter (registerTypePath, false)) { // false is do not append
+							await file.WriteAsync (registerCode);
+						}
 
-					failure = failure ?? info.FailureMessage;
-					failure = failure ?? typesPerAssembly.FailureMessage;
-				} catch (Exception e) {
-					failure = e.Message;
-				}
-				projectPaths.Add ((projectDefinition.Name, projectPath, projectDefinition.IsXUnit, projectDefinition.ExtraArgs, failure, def.TimeoutMultiplier));
+						gp.Failure ??= info.FailureMessage;
+						gp.Failure ??= typesPerAssembly.FailureMessage;
+					} catch (Exception e) {
+						gp.Failure = e.Message;
+					}
+				});
+				projectPaths.Add (gp);
 			} // foreach project
 
 			return projectPaths;
@@ -667,7 +683,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.TestImporter.Templates.Managed {
 			return result;
 		}
 
-		async Task<GeneratedProjects> GenerateMacTestProjectsAsync (IEnumerable<(string Name, string [] Assemblies, string ExtraArgs, double TimeoutMultiplier)> projects, Platform platform)
+		GeneratedProjects GenerateMacTestProjects (IEnumerable<(string Name, string [] Assemblies, string ExtraArgs, double TimeoutMultiplier)> projects, Platform platform)
 		{
 			var projectPaths = new GeneratedProjects ();
 			foreach (var def in projects) {
@@ -684,32 +700,40 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.TestImporter.Templates.Managed {
 				Directory.CreateDirectory (generatedCodeDir);
 				var registerTypePath = Path.Combine (generatedCodeDir, "RegisterType-mac.cs");
 
-				var typesPerAssembly = projectDefinition.GetTypeForAssemblies (AssemblyLocator.GetAssembliesRootLocation (platform), platform);
-				var registerCode = RegisterTypeGenerator.GenerateCode (typesPerAssembly, projectDefinition.IsXUnit, GetRegisterTypeTemplate ());
-
-				using (var file = new StreamWriter (registerTypePath, false)) { // false is do not append
-					await file.WriteAsync (registerCode);
-				}
 				var projectPath = GetProjectPath (projectDefinition.Name, platform);
-				string failure = null;
-				try {
-					var plist = InfoPlistGenerator.GenerateCode (GetPlistTemplate (platform), projectDefinition.Name);
-					var infoPlistPath = GetPListPath (generatedCodeDir, platform);
-					using (var file = new StreamWriter (infoPlistPath, false)) { // false is do not append
-						await file.WriteAsync (plist);
-					}
+				var gp = new GeneratedProject ();
+				gp.Name = projectDefinition.Name;
+				gp.Path = projectPath;
+				gp.XUnit = projectDefinition.IsXUnit;
+				gp.ExtraArgs = projectDefinition.ExtraArgs;
+				gp.TimeoutMultiplier = def.TimeoutMultiplier;
+				gp.GenerationCompleted = Task.Run (async () => {
+					try {
+						var typesPerAssembly = projectDefinition.GetTypeForAssemblies (AssemblyLocator.GetAssembliesRootLocation (platform), platform);
+						var registerCode = RegisterTypeGenerator.GenerateCode (typesPerAssembly, projectDefinition.IsXUnit, GetRegisterTypeTemplate ());
 
-					var info = projectDefinition.GetAssemblyInclusionInformation (platform);
-					var generatedProject = GenerateMac (projectDefinition.Name, registerTypePath, info, GetProjectTemplate (platform), infoPlistPath, platform);
-					using (var file = new StreamWriter (projectPath, false)) { // false is do not append
-						await file.WriteAsync (generatedProject);
+						using (var file = new StreamWriter (registerTypePath, false)) { // false is do not append
+							await file.WriteAsync (registerCode);
+						}
+
+						var plist = InfoPlistGenerator.GenerateCode (GetPlistTemplate (platform), projectDefinition.Name);
+						var infoPlistPath = GetPListPath (generatedCodeDir, platform);
+						using (var file = new StreamWriter (infoPlistPath, false)) { // false is do not append
+							await file.WriteAsync (plist);
+						}
+
+						var info = projectDefinition.GetAssemblyInclusionInformation (platform);
+						var generatedProject = GenerateMac (projectDefinition.Name, registerTypePath, info, GetProjectTemplate (platform), infoPlistPath, platform);
+						using (var file = new StreamWriter (projectPath, false)) { // false is do not append
+							await file.WriteAsync (generatedProject);
+						}
+						gp.Failure ??= info.FailureMessage;
+						gp.Failure ??= typesPerAssembly.FailureMessage;
+					} catch (Exception e) {
+						gp.Failure = e.Message;
 					}
-					failure = failure ?? info.FailureMessage;
-					failure = failure ?? typesPerAssembly.FailureMessage;
-				} catch (Exception e) {
-					failure = e.Message;
-				}
-				projectPaths.Add ((projectDefinition.Name, projectPath, projectDefinition.IsXUnit, projectDefinition.ExtraArgs, failure, def.TimeoutMultiplier));
+				});
+				projectPaths.Add (gp);
 
 			}
 			return projectPaths;
