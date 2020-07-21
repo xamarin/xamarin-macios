@@ -145,11 +145,12 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 	{
 		Action<int, string> log;
 		public MonoNativeFlavor Flavor { get; }
-		protected virtual DevicePlatform DevicePlatform {  get { return DevicePlatform.iOS; } }
+		public DevicePlatform DevicePlatform { get; set; }
 		string rootDirectory;
 
-		public MonoNativeInfo (MonoNativeFlavor flavor, string rootDirectory, Action<int, string> logAction = null)
+		public MonoNativeInfo (DevicePlatform platform, MonoNativeFlavor flavor, string rootDirectory, Action<int, string> logAction = null)
 		{
+			DevicePlatform = platform;
 			this.log = logAction;
 			this.rootDirectory = rootDirectory ?? throw new ArgumentNullException (nameof (rootDirectory));
 			this.Flavor = flavor;
@@ -199,22 +200,11 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 
 		public virtual void SetInfoPListMinimumOSVersion (XmlDocument info_plist, string version)
 		{
-			info_plist.SetMinimumOSVersion (version);
-		}
-	}
-
-	public class MacMonoNativeInfo : MonoNativeInfo
-	{
-		protected override DevicePlatform DevicePlatform { get { return DevicePlatform.macOS; } }
-
-		public MacMonoNativeInfo (MonoNativeFlavor flavor, string rootDirectory, Action<int, string> logAction)
-			: base (flavor, rootDirectory, logAction)
-		{
-		}
-
-		public override void SetInfoPListMinimumOSVersion (XmlDocument info_plist, string version)
-		{
-			info_plist.SetMinimummacOSVersion (version);
+			if (DevicePlatform == DevicePlatform.macOS) {
+				info_plist.SetMinimummacOSVersion (version);
+			} else {
+				info_plist.SetMinimumOSVersion (version);
+			}
 		}
 	}
 }
