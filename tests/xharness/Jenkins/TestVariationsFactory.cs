@@ -29,19 +29,6 @@ namespace Xharness.Jenkins {
 		{
 			// This function returns additional test configurations (in addition to the default one) for the specific test
 
-			MonoNativeFlavor flavor;
-			switch (test.TestName) {
-			case "mono-native-compat":
-				flavor = MonoNativeFlavor.Compat;
-				break;
-			case "mono-native-unified":
-				flavor = MonoNativeFlavor.Unified;
-				break;
-			default:
-				flavor = MonoNativeFlavor.None;
-				break;
-			}
-
 			// 32-bit interpreter doesn't work yet: https://github.com/mono/mono/issues/9871
 			var supports_interpreter = test.Platform != TestPlatform.iOS_Unified32;
 			var supports_dynamic_registrar_on_device = test.Platform == TestPlatform.iOS_Unified64 || test.Platform == TestPlatform.tvOS;
@@ -54,17 +41,17 @@ namespace Xharness.Jenkins {
 
 				/* we don't add --assembly-build-target=@all=staticobject because that's the default in all our test projects */
 				if (supports_debug) {
-					yield return new TestData { Variation = "AssemblyBuildTarget: dylib (debug)", MTouchExtraArgs = $"--assembly-build-target=@all=dynamiclibrary {test.TestProject.MTouchExtraArgs}", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Dynamic, MonoNativeFlavor = flavor };
-					yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (debug)", MTouchExtraArgs = $"--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject {test.TestProject.MTouchExtraArgs}", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, MonoNativeFlavor = flavor };
-					yield return new TestData { Variation = "AssemblyBuildTarget: dylib (debug, profiling)", MTouchExtraArgs = $"--assembly-build-target=@all=dynamiclibrary {test.TestProject.MTouchExtraArgs}", Debug = true, Profiling = true, MonoNativeLinkMode = MonoNativeLinkMode.Dynamic, MonoNativeFlavor = flavor };
-					yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (debug, profiling)", MTouchExtraArgs = $"--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject {test.TestProject.MTouchExtraArgs}", Debug = true, Profiling = true, MonoNativeLinkMode = MonoNativeLinkMode.Static, MonoNativeFlavor = flavor };
+					yield return new TestData { Variation = "AssemblyBuildTarget: dylib (debug)", MTouchExtraArgs = $"--assembly-build-target=@all=dynamiclibrary {test.TestProject.MTouchExtraArgs}", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Dynamic };
+					yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (debug)", MTouchExtraArgs = $"--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject {test.TestProject.MTouchExtraArgs}", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static };
+					yield return new TestData { Variation = "AssemblyBuildTarget: dylib (debug, profiling)", MTouchExtraArgs = $"--assembly-build-target=@all=dynamiclibrary {test.TestProject.MTouchExtraArgs}", Debug = true, Profiling = true, MonoNativeLinkMode = MonoNativeLinkMode.Dynamic };
+					yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (debug, profiling)", MTouchExtraArgs = $"--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject {test.TestProject.MTouchExtraArgs}", Debug = true, Profiling = true, MonoNativeLinkMode = MonoNativeLinkMode.Static };
 				}
 
 				if (test.ProjectConfiguration.Contains ("Debug"))
 					yield return new TestData { Variation = "Release", MTouchExtraArgs = test.TestProject.MTouchExtraArgs, Debug = false, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static };
 				if (test.Platform == TestPlatform.iOS_Unified32)
 					yield return new TestData { Variation = "Release: UseThumb", MTouchExtraArgs = test.TestProject.MTouchExtraArgs, Debug = false, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, UseThumb = true };
-				yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (release)", MTouchExtraArgs = $"--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject {test.TestProject.MTouchExtraArgs}", Debug = false, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, MonoNativeFlavor = flavor };
+				yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (release)", MTouchExtraArgs = $"--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject {test.TestProject.MTouchExtraArgs}", Debug = false, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static };
 
 				switch (test.TestName) {
 				case "monotouch-test":
@@ -203,11 +190,11 @@ namespace Xharness.Jenkins {
 							}
 						}
 						clone.Xml.SetNode (isMac ? "Profiling" : "MTouchProfiling", profiling ? "True" : "False", task.ProjectPlatform, configuration);
-						if (test_data.MonoNativeFlavor != MonoNativeFlavor.None) {
+						if (test_data.MonoNativeLinkMode != MonoNativeLinkMode.None) {
 							var mono_native_link = test_data.MonoNativeLinkMode;
 							if (!canSymlink && mono_native_link == MonoNativeLinkMode.Symlink)
 								mono_native_link = MonoNativeLinkMode.Static;
-							MonoNativeHelper.AddProjectDefines (clone.Xml, test_data.MonoNativeFlavor, mono_native_link, task.ProjectPlatform, configuration);
+							MonoNativeHelper.AddProjectDefines (clone.Xml, mono_native_link);
 						}
 						if (test_data.EnableSGenConc)
 							clone.Xml.SetNode ("MtouchEnableSGenConc", "true", task.ProjectPlatform, configuration);
