@@ -25,7 +25,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 		public string [] Configurations;
 		public Func<Task> Dependency;
 		public string FailureMessage;
-		public bool RestoreNugetsInProject;
+		public bool RestoreNugetsInProject = true;
 		public string MTouchExtraArgs;
 		public double TimeoutMultiplier = 1;
 
