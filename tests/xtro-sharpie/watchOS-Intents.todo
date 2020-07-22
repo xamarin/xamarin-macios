@@ -1,17 +1,12 @@
-!unknown-native-enum! INCarAirCirculationMode bound
-!unknown-native-enum! INCarAudioSource bound
-!unknown-native-enum! INCarDefroster bound
-!unknown-native-enum! INCarSeat bound
-!unknown-native-enum! INRadioType bound
-!unknown-native-enum! INRelativeReference bound
-!unknown-native-enum! INRelativeSetting bound
-!unknown-type! INParameter bound
 !deprecated-attribute-missing! INSendMessageIntent::initWithRecipients:content:speakableGroupName:conversationIdentifier:serviceName:sender: missing a [Deprecated] attribute
+!deprecated-attribute-missing! INStartCallIntent::initWithAudioRoute:destinationType:contacts:recordTypeForRedialing:callCapability: missing a [Deprecated] attribute
+!deprecated-attribute-missing! INStartCallIntent::recordTypeForRedialing missing a [Deprecated] attribute
 !extra-designated-initializer! INFlightReservation::initWithItemReference:reservationNumber:bookingTime:reservationStatus:reservationHolderName:actions:reservedSeat:flight: is incorrectly decorated with an [DesignatedInitializer] attribute
 !extra-designated-initializer! INLodgingReservation::initWithItemReference:reservationNumber:bookingTime:reservationStatus:reservationHolderName:actions:lodgingBusinessLocation:reservationDuration:numberOfAdults:numberOfChildren: is incorrectly decorated with an [DesignatedInitializer] attribute
 !extra-designated-initializer! INRentalCarReservation::initWithItemReference:reservationNumber:bookingTime:reservationStatus:reservationHolderName:actions:rentalCar:rentalDuration:pickupLocation:dropOffLocation: is incorrectly decorated with an [DesignatedInitializer] attribute
 !extra-designated-initializer! INRestaurantReservation::initWithItemReference:reservationNumber:bookingTime:reservationStatus:reservationHolderName:actions:reservationDuration:partySize:restaurantLocation: is incorrectly decorated with an [DesignatedInitializer] attribute
 !extra-designated-initializer! INSendMessageIntent::initWithRecipients:content:speakableGroupName:conversationIdentifier:serviceName:sender: is incorrectly decorated with an [DesignatedInitializer] attribute
+!extra-designated-initializer! INStartCallIntent::initWithAudioRoute:destinationType:contacts:recordTypeForRedialing:callCapability: is incorrectly decorated with an [DesignatedInitializer] attribute
 !extra-designated-initializer! INTicketedEventReservation::initWithItemReference:reservationNumber:bookingTime:reservationStatus:reservationHolderName:actions:reservedSeat:event: is incorrectly decorated with an [DesignatedInitializer] attribute
 !extra-designated-initializer! INTrainReservation::initWithItemReference:reservationNumber:bookingTime:reservationStatus:reservationHolderName:actions:reservedSeat:trainTrip: is incorrectly decorated with an [DesignatedInitializer] attribute
 !missing-enum! INChargingConnectorTypeOptions not bound
@@ -19,13 +14,21 @@
 !missing-enum! INListCarsIntentResponseCode not bound
 !missing-enum! INOutgoingMessageType not bound
 !missing-enum! INShortcutAvailabilityOptions not bound
+!missing-enum! INStartCallCallRecordToCallBackUnsupportedReason not bound
 !missing-field! INPersonHandleLabelSchool not bound
+!missing-field! INStartCallIntentIdentifier not bound
+!missing-field! INStartVideoCallIntentIdentifier not bound
 !missing-protocol! INListCarsIntentHandling not bound
 !missing-protocol-member! INSendMessageIntentHandling::resolveOutgoingMessageTypeForSendMessage:withCompletion: not found
+!missing-protocol-member! INStartCallIntentHandling::resolveCallRecordToCallBackForStartCall:withCompletion: not found
+!missing-selector! +INCallRecordResolutionResult::confirmationRequiredWithCallRecordToConfirm: not bound
+!missing-selector! +INCallRecordResolutionResult::disambiguationWithCallRecordsToDisambiguate: not bound
+!missing-selector! +INCallRecordResolutionResult::successWithResolvedCallRecord: not bound
 !missing-selector! +INImage::systemImageNamed: not bound
 !missing-selector! +INOutgoingMessageTypeResolutionResult::confirmationRequiredWithOutgoingMessageTypeToConfirm: not bound
 !missing-selector! +INOutgoingMessageTypeResolutionResult::successWithResolvedOutgoingMessageType: not bound
 !missing-selector! +INSendMessageAttachment::attachmentWithAudioMessageFile: not bound
+!missing-selector! +INStartCallCallRecordToCallBackResolutionResult::unsupportedForReason: not bound
 !missing-selector! INBoatReservation::boatTrip not bound
 !missing-selector! INBoatReservation::initWithItemReference:reservationNumber:bookingTime:reservationStatus:reservationHolderName:actions:URL:reservedSeat:boatTrip: not bound
 !missing-selector! INBoatReservation::reservedSeat not bound
@@ -48,6 +51,10 @@
 !missing-selector! INBusTrip::initWithProvider:busName:busNumber:tripDuration:departureBusStopLocation:departurePlatform:arrivalBusStopLocation:arrivalPlatform: not bound
 !missing-selector! INBusTrip::provider not bound
 !missing-selector! INBusTrip::tripDuration not bound
+!missing-selector! INCallRecordFilter::callCapability not bound
+!missing-selector! INCallRecordFilter::callTypes not bound
+!missing-selector! INCallRecordFilter::initWithParticipants:callTypes:callCapability: not bound
+!missing-selector! INCallRecordFilter::participants not bound
 !missing-selector! INCar::carIdentifier not bound
 !missing-selector! INCar::color not bound
 !missing-selector! INCar::displayName not bound
@@ -128,6 +135,10 @@
 !missing-selector! INSendMessageIntent::initWithRecipients:outgoingMessageType:content:speakableGroupName:conversationIdentifier:serviceName:sender: not bound
 !missing-selector! INSendMessageIntent::initWithRecipients:outgoingMessageType:content:speakableGroupName:conversationIdentifier:serviceName:sender:attachments: not bound
 !missing-selector! INSendMessageIntent::outgoingMessageType not bound
+!missing-selector! INStartCallCallRecordToCallBackResolutionResult::initWithCallRecordResolutionResult: not bound
+!missing-selector! INStartCallIntent::callRecordFilter not bound
+!missing-selector! INStartCallIntent::callRecordToCallBack not bound
+!missing-selector! INStartCallIntent::initWithCallRecordFilter:callRecordToCallBack:audioRoute:destinationType:contacts:callCapability: not bound
 !missing-selector! INTicketedEventReservation::initWithItemReference:reservationNumber:bookingTime:reservationStatus:reservationHolderName:actions:URL:reservedSeat:event: not bound
 !missing-selector! INTrainReservation::initWithItemReference:reservationNumber:bookingTime:reservationStatus:reservationHolderName:actions:URL:reservedSeat:trainTrip: not bound
 !missing-selector! NSUserActivity::setShortcutAvailability: not bound
@@ -136,6 +147,8 @@
 !missing-type! INBoatTrip not bound
 !missing-type! INBusReservation not bound
 !missing-type! INBusTrip not bound
+!missing-type! INCallRecordFilter not bound
+!missing-type! INCallRecordResolutionResult not bound
 !missing-type! INCar not bound
 !missing-type! INColor not bound
 !missing-type! INHeadUnit not bound
@@ -145,24 +158,12 @@
 !missing-type! INObjectSection not bound
 !missing-type! INOutgoingMessageTypeResolutionResult not bound
 !missing-type! INSendMessageAttachment not bound
-## appended from unclassified file
-!deprecated-attribute-missing! INStartCallIntent::initWithAudioRoute:destinationType:contacts:recordTypeForRedialing:callCapability: missing a [Deprecated] attribute
-!deprecated-attribute-missing! INStartCallIntent::recordTypeForRedialing missing a [Deprecated] attribute
-!extra-designated-initializer! INStartCallIntent::initWithAudioRoute:destinationType:contacts:recordTypeForRedialing:callCapability: is incorrectly decorated with an [DesignatedInitializer] attribute
-!missing-enum! INStartCallCallRecordToCallBackUnsupportedReason not bound
-!missing-protocol-member! INStartCallIntentHandling::resolveCallRecordToCallBackForStartCall:withCompletion: not found
-!missing-selector! +INCallRecordResolutionResult::confirmationRequiredWithCallRecordToConfirm: not bound
-!missing-selector! +INCallRecordResolutionResult::disambiguationWithCallRecordsToDisambiguate: not bound
-!missing-selector! +INCallRecordResolutionResult::successWithResolvedCallRecord: not bound
-!missing-selector! +INStartCallCallRecordToCallBackResolutionResult::unsupportedForReason: not bound
-!missing-selector! INCallRecordFilter::callCapability not bound
-!missing-selector! INCallRecordFilter::callTypes not bound
-!missing-selector! INCallRecordFilter::initWithParticipants:callTypes:callCapability: not bound
-!missing-selector! INCallRecordFilter::participants not bound
-!missing-selector! INStartCallCallRecordToCallBackResolutionResult::initWithCallRecordResolutionResult: not bound
-!missing-selector! INStartCallIntent::callRecordFilter not bound
-!missing-selector! INStartCallIntent::callRecordToCallBack not bound
-!missing-selector! INStartCallIntent::initWithCallRecordFilter:callRecordToCallBack:audioRoute:destinationType:contacts:callCapability: not bound
-!missing-type! INCallRecordFilter not bound
-!missing-type! INCallRecordResolutionResult not bound
 !missing-type! INStartCallCallRecordToCallBackResolutionResult not bound
+!unknown-native-enum! INCarAirCirculationMode bound
+!unknown-native-enum! INCarAudioSource bound
+!unknown-native-enum! INCarDefroster bound
+!unknown-native-enum! INCarSeat bound
+!unknown-native-enum! INRadioType bound
+!unknown-native-enum! INRelativeReference bound
+!unknown-native-enum! INRelativeSetting bound
+!unknown-type! INParameter bound

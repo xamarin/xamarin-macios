@@ -1,27 +1,3 @@
-!deprecated-attribute-missing! GKGameCenterViewController::leaderboardIdentifier missing a [Deprecated] attribute
-!deprecated-attribute-missing! GKGameCenterViewController::setLeaderboardIdentifier: missing a [Deprecated] attribute
-!deprecated-attribute-missing! GKGameCenterViewController::setViewState: missing a [Deprecated] attribute
-!deprecated-attribute-missing! GKGameCenterViewController::viewState missing a [Deprecated] attribute
-!deprecated-attribute-missing! GKLeaderboard::identifier missing a [Deprecated] attribute
-!deprecated-attribute-missing! GKLeaderboard::init missing a [Deprecated] attribute
-!deprecated-attribute-missing! GKLeaderboard::initWithPlayers: missing a [Deprecated] attribute
-!deprecated-attribute-missing! GKLeaderboard::isLoading missing a [Deprecated] attribute
-!deprecated-attribute-missing! GKLeaderboard::loadLeaderboardsWithCompletionHandler: missing a [Deprecated] attribute
-!deprecated-attribute-missing! GKLeaderboard::loadScoresWithCompletionHandler: missing a [Deprecated] attribute
-!deprecated-attribute-missing! GKLeaderboard::localPlayerScore missing a [Deprecated] attribute
-!deprecated-attribute-missing! GKLeaderboard::maxRange missing a [Deprecated] attribute
-!deprecated-attribute-missing! GKLeaderboard::playerScope missing a [Deprecated] attribute
-!deprecated-attribute-missing! GKLeaderboard::range missing a [Deprecated] attribute
-!deprecated-attribute-missing! GKLeaderboard::scores missing a [Deprecated] attribute
-!deprecated-attribute-missing! GKLeaderboard::setIdentifier: missing a [Deprecated] attribute
-!deprecated-attribute-missing! GKLeaderboard::setPlayerScope: missing a [Deprecated] attribute
-!deprecated-attribute-missing! GKLeaderboard::setRange: missing a [Deprecated] attribute
-!deprecated-attribute-missing! GKLeaderboard::setTimeScope: missing a [Deprecated] attribute
-!deprecated-attribute-missing! GKLeaderboard::timeScope missing a [Deprecated] attribute
-!deprecated-attribute-missing! GKLeaderboardSet::loadLeaderboardsWithCompletionHandler: missing a [Deprecated] attribute
-!deprecated-attribute-missing! GKScore missing a [Deprecated] attribute
-!deprecated-attribute-missing! GKScore::reportScores:withEligibleChallenges:withCompletionHandler: missing a [Deprecated] attribute
-!deprecated-attribute-missing! GKTurnBasedMatch::endMatchInTurnWithMatchData:scores:achievements:completionHandler: missing a [Deprecated] attribute
 !missing-enum! GKAccessPointLocation not bound
 !missing-enum! GKLeaderboardType not bound
 !missing-enum! GKMatchmakingMode not bound

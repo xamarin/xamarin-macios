@@ -3,9 +3,6 @@
 !missing-selector! MPNowPlayingInfoCenter::playbackState not bound
 !missing-selector! MPNowPlayingInfoCenter::setPlaybackState: not bound
 
-## MPMediaItem only exposed for fields, it's not really available
-!unknown-type! MPMediaItem bound
-
 ## marked as available in tvOS 11 but the member is not and using a type, MPMusicPlayerQueueDescriptor, that's not available
 !missing-protocol! MPSystemMusicPlayerController not bound
 
@@ -13,9 +10,6 @@
 ## In reality it's only available in the simulator, not on AppleTV devices (all fields are null)
 !missing-field! MPMediaPlaylistPropertyAuthorDisplayName not bound
 !missing-field! MPMediaPlaylistPropertyDescriptionText not bound
-
-## stuff removed in Xcode 12 -> XAMCORE_4_0
-!unknown-protocol! MPMediaPlayback bound
 
 ## _added_ in xcode12 but already deprecated in iOS9 (likely error in headers)
 !missing-field! MPMediaPlaybackIsPreparedToPlayDidChangeNotification not bound

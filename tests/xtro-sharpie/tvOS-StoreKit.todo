@@ -1,4 +1,3 @@
-!missing-enum! SKOverlayPosition not bound
 !missing-field! SKStoreProductParameterAdNetworkSourceAppStoreIdentifier not bound
 !missing-field! SKStoreProductParameterAdNetworkVersion not bound
 !missing-protocol-member! SKPaymentTransactionObserver::paymentQueue:didRevokeEntitlementsForProductIdentifiers: not found
