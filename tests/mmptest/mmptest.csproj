@@ -123,9 +123,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
-    <None Include="..\common\mac\MacTestMain.cs">
-      <Link>MacTestMain.cs</Link>
-    </None>
     <None Include="packages.config" />
     <None Include="..\..\tools\mtouch\Errors.resx">
       <Link>Errors.resx</Link>
