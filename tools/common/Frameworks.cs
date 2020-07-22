@@ -338,6 +338,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 				{ "AppClip", "AppClip", 14,0 },
 				{ "MediaSetup", "MediaSetup", new Version (14, 0), NotAvailableInSimulator /* no headers in beta 2 */ },
+				{ "SensorKit", "SensorKit", 14,0 },
 				{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 14,0 },
 				{ "Accessibility", "Accessibility", 14,0 },
 

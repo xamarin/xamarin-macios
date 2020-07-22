@@ -1143,7 +1143,10 @@ NATURALLANGUAGE_CORE_SOURCES = \
 
 NATURALLANGUAGE_SOURCES = \
 	NaturalLanguage/NLEmbedding.cs \
+	NaturalLanguage/NLLanguage.cs \
 	NaturalLanguage/NLLanguageRecognizer.cs \
+	NaturalLanguage/NLModel.cs \
+	NaturalLanguage/NLTagger.cs \
 
 # Network
 
@@ -1426,6 +1429,15 @@ SECURITY_SOURCES = \
 	Security/SecTrust.cs \
 	Security/SslConnection.cs \
 	Security/SslContext.cs \
+
+# SensorKit
+
+SENSORKIT_CORE_SOURCES = \
+	SensorKit/SRAmbientLightChromaticity.cs \
+
+SENSORKIT_SOURCES = \
+	SensorKit/SRAbsoluteTime.cs \
+	SensorKit/SRSensor.cs \
 
 # Social
 
@@ -1792,6 +1804,7 @@ COMMON_FRAMEWORKS =         \
 	Compression             \
 	Foundation              \
 	GameKit                 \
+	NaturalLanguage         \
 	Network                 \
 	SceneKit                \
 	SoundAnalysis 			\
@@ -1855,7 +1868,6 @@ MAC_FRAMEWORKS =            \
 	MobileCoreServices      \
 	ModelIO                 \
 	MultipeerConnectivity	\
-	NaturalLanguage         \
 	NetworkExtension        \
 	NotificationCenter 	\
 	OpenGL                  \
@@ -1955,7 +1967,6 @@ IOS_FRAMEWORKS =         \
 	MobileCoreServices \
 	ModelIO \
 	MultipeerConnectivity \
-	NaturalLanguage \
 	NetworkExtension \
 	NewsstandKit \
 	NotificationCenter \
@@ -1971,6 +1982,7 @@ IOS_FRAMEWORKS =         \
 	ReplayKit \
 	SafariServices \
 	Security \
+	SensorKit \
 	Social \
 	Speech \
 	SystemConfiguration \
@@ -2004,7 +2016,6 @@ WATCHOS_FRAMEWORKS =        \
 	MapKit                  \
 	MediaPlayer             \
 	MobileCoreServices      \
-	NaturalLanguage         \
 	PassKit                 \
 	PushKit			\
 	Security                \
@@ -2048,7 +2059,6 @@ TVOS_FRAMEWORKS =           \
 	MobileCoreServices      \
 	ModelIO                 \
 	MultipeerConnectivity   \
-	NaturalLanguage         \
 	OpenGLES                \
 	Photos                  \
 	PhotosUI                \

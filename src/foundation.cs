@@ -3746,6 +3746,24 @@ namespace Foundation
 
 		[Export ("isEqualToDate:")]
 		bool IsEqualToDate (NSDate other);
+
+		// NSDate_SensorKit
+
+		[NoWatch, NoTV, NoMac]
+		[iOS (14,0)]
+		[Static]
+		[Export ("dateWithSRAbsoluteTime:")]
+		NSDate CreateFromSRAbsoluteTime (double time);
+
+		[NoWatch, NoTV, NoMac]
+		[iOS (14,0)]
+		[Export ("initWithSRAbsoluteTime:")]
+		IntPtr Constructor (double srAbsoluteTime);
+
+		[NoWatch, NoTV, NoMac]
+		[iOS (14,0)]
+		[Export ("srAbsoluteTime")]
+		double SrAbsoluteTime { get; }
 	}
 	
 	[BaseType (typeof (NSObject))]
