@@ -435,7 +435,7 @@ namespace Introspection {
 					return true;
 				break;
 			case "MPSTemporaryNDArray": // NS_UNAVAILABLE
-				if (ctor.ToString () == $"Void .ctor(Metal.IMTLDevice, MetalPerformanceShaders.MPSNDArrayDescriptor)")
+				if (cstr == $"Void .ctor(Metal.IMTLDevice, MetalPerformanceShaders.MPSNDArrayDescriptor)")
 					return true;
 				break;
 			case "MFMailComposeViewController": // You are meant to use the system provided one
