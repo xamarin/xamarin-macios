@@ -36,7 +36,7 @@ using MidiObjectRef = System.Int32;
 namespace CoreMidi {
 
 	[Mac (10, 16), iOS (14, 0)]
-	public enum MidiProtocolID {
+	public enum MidiProtocolId {
 		Protocol_1_0 = 1,
 		Protocol_2_0 = 2,
 	}
@@ -149,14 +149,25 @@ namespace CoreMidi {
 		[Export ("sourceEndpoint")] [Internal]
 		int /* MIDIObjectRef = UInt32 */ _SourceEndpoint { get; }
 
+#if XAMCORE_4_0
+		[Wrap ("new MidiEndpoint (_SourceEndpoint)")]
+		MidiEndpoint GetSourceEndpoint ();
+#else
 		[Wrap ("new MidiEndpoint (_SourceEndpoint)")]
 		MidiEndpoint SourceEndpoint { get; }
+#endif
 
 		[Export ("destinationEndpoint")] [Internal]
 		int /* MIDIObjectRef = UInt32 */ _DestinationEndpoint { get; }
 
+#if XAMCORE_4_0
+		[Wrap ("new MidiEndpoint (_DestinationEndpoint)")]
+		MidiEndpoint GetDestinationEndPoint ();
+#else
 		[Wrap ("new MidiEndpoint (_DestinationEndpoint)")]
 		MidiEndpoint DestinationEndPoint { get; }
+#endif
+
 	}
 #endif
 
@@ -190,14 +201,14 @@ namespace CoreMidi {
 		[Export ("disabledProfiles")]
 		MidiCIProfile[] DisabledProfiles { get; }
 
-		[Deprecated (PlatformName.iOS, 14, 0, message : "Use 'ctr (byte midiChannel, MidiCIProfile[] enabled, MidiCIProfile[] disabled)' instead.")]
-		[Deprecated (PlatformName.MacOSX, 10, 16, message : "Use 'ctr (byte midiChannel, MidiCIProfile[] enabled, MidiCIProfile[] disabled)' instead.")]
+		[Deprecated (PlatformName.iOS, 14, 0, message : "Use the '(byte midiChannel, MidiCIProfile[] enabled, MidiCIProfile[] disabled)' constructor instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 16, message : "Use the '(byte midiChannel, MidiCIProfile[] enabled, MidiCIProfile[] disabled)' constructor instead.")]
 		[Export ("initWithEnabledProfiles:disabledProfiles:")]
 		IntPtr Constructor (MidiCIProfile[] enabled, MidiCIProfile[] disabled);
 
 		[Mac (10, 16), iOS (14, 0)]
 		[Export ("initWithChannel:enabledProfiles:disabledProfiles:")]
-		IntPtr Constructor (byte midiChannelNum, MidiCIProfile[] enabled, MidiCIProfile[] disabled);
+		IntPtr Constructor (byte midiChannelNumber, MidiCIProfile[] enabled, MidiCIProfile[] disabled);
 
 		[Mac (10, 16), iOS (14, 0)]
 		[Export ("midiChannel")]
@@ -256,7 +267,7 @@ namespace CoreMidi {
 
 		[Mac (10, 16), iOS (14, 0)]
 		[Export ("initWithDiscoveredNode:dataReadyHandler:disconnectHandler:")]
-		IntPtr Constructor (MidiCIDiscoveredNode discoveredNode, Action handler, MidiCISessionDisconnectHandler disconnectHandler);
+		IntPtr Constructor (MidiCIDiscoveredNode discoveredNode, Action dataReadyHandler, MidiCISessionDisconnectHandler disconnectHandler);
 
 		[Mac (10, 16), iOS (14, 0)]
 		[Export ("sendProfile:onChannel:profileData:")]
@@ -267,10 +278,12 @@ namespace CoreMidi {
 		MidiCIDeviceInfo DeviceInfo { get; }
 
 		[Mac (10, 16), iOS (14, 0)]
+		[BindAs (typeof (ulong))]
 		[Export ("maxSysExSize")]
 		NSNumber MaxSysExSize { get; }
 
 		[Mac (10, 16), iOS (14, 0)]
+		[BindAs (typeof (int))]
 		[Export ("maxPropertyRequests")]
 		NSNumber MaxPropertyRequests { get; }
 
@@ -278,12 +291,6 @@ namespace CoreMidi {
 		[Mac (10, 16), iOS (14, 0)]
 		[Export ("midiDestination")]
 		MidiObjectRef _MidiDestination { get; }
-
-		[Mac (10, 16), iOS (14, 0)]
-		MidiEndpoint MidiDestination {
-			[Wrap ("new MidiEndpoint (_MidiDestination)")]
-			get;
-		}
 
 		[Mac (10, 16), iOS (14, 0)]
 		[NullAllowed, Export ("profileSpecificDataHandler", ArgumentSemantic.Copy)]
@@ -296,7 +303,7 @@ namespace CoreMidi {
 	interface MidiCIDeviceInfo : NSSecureCoding
 	{
 		[Export ("manufacturerID")]
-		NSData ManufacturerID { get; }
+		NSData ManufacturerId { get; }
 
 		[Export ("family")]
 		NSData Family { get; }
@@ -311,16 +318,14 @@ namespace CoreMidi {
 		[Export ("midiDestination")]
 		MidiObjectRef _MidiDestination { get; }
 
-		MidiEndpoint MidiDestination {
-			[Wrap ("new MidiEndpoint (_MidiDestination)")]
-			get;
-		}
+		[Wrap ("new MidiEndpoint (_MidiDestination)")]
+		MidiEndpoint GetMidiDestination ();
 
 		[Internal]
 		[Export ("initWithDestination:manufacturer:family:model:revision:")]
 		IntPtr Constructor (MidiObjectRef midiDestination, NSData manufacturer, NSData family, NSData modelNumber, NSData revisionLevel);
 
-		[Wrap ("this (midiDestination.Handle, manufacturer, family, modelNumber, revisionLevel)")]
+		[Wrap ("this (midiDestination?.Handle ?? throw new ArgumentNullException (nameof (midiDestination)), manufacturer, family, modelNumber, revisionLevel)")]
 		IntPtr Constructor (MidiEndpoint midiDestination, NSData manufacturer, NSData family, NSData modelNumber, NSData revisionLevel);
 	}
 
@@ -333,10 +338,8 @@ namespace CoreMidi {
 		[Export ("destination")]
 		MidiObjectRef _Destination { get; }
 
-		MidiEndpoint Destination { 
-			[Wrap ("new MidiEndpoint (_Destination)")]
-			get;
-		}
+		[Wrap ("new MidiEndpoint (_Destination)")]
+		MidiEndpoint GetDestination (); 
 
 		[Export ("deviceInfo")]
 		MidiCIDeviceInfo DeviceInfo { get; }
@@ -351,9 +354,10 @@ namespace CoreMidi {
 		NSNumber MaximumSysExSize { get; }
 	}
 
-	delegate void MidiCIDiscoveryResponseDelegate (MidiCIDiscoveredNode[] arg0);
+	delegate void MidiCIDiscoveryResponseDelegate (MidiCIDiscoveredNode[] discoveredNodes);
 
 	[Mac (10, 16), iOS (14, 0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject), Name="MIDICIDiscoveryManager")]
 	interface MidiCIDiscoveryManager
 	{
@@ -392,7 +396,7 @@ namespace CoreMidi {
 	[DisableDefaultCtor]
 	interface MidiCIResponder
 	{
-		// MIDICIInitiatiorMUID is a type alias to NSNumber, we do not have much more info
+		[BindAs (typeof (int[]))]
 		[Export ("initiators")]
 		NSNumber[] Initiators { get; }
 

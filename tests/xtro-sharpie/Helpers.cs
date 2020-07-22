@@ -53,7 +53,7 @@ namespace Extrospection {
 			{ "UITableViewCellAccessoryType", "UITableViewCellAccessory" },
 			{ "UITableViewCellStateMask", "UITableViewCellState" },
 			{ "WatchKitErrorCode", "WKErrorCode" }, // WebKit already had that name
-			{ "MIDIProtocolID", "MidiProtocolID"},
+			{ "MIDIProtocolID", "MidiProtocolId"},
 			{ "NFCFeliCaEncryptionId", "EncryptionId" },
 			{ "NFCFeliCaPollingRequestCode", "PollingRequestCode" },
 			{ "NFCFeliCaPollingTimeSlot", "PollingTimeSlot" },
