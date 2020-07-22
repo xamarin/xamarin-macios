@@ -1,4 +1,4 @@
-
+#if IOS
 using System;
 
 using Foundation;
@@ -19,3 +19,4 @@ namespace MetricKit {
 		}
 	}
 }
+#endif
