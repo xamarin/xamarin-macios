@@ -148,14 +148,15 @@ namespace Xamarin.iOS.Tasks
 			get; set;
 		}
 
-		public ProjectPaths SetupProjectPaths (string projectName, string csprojName, string baseDir = "../", bool includePlatform = true, string platform = "iPhoneSimulator", string config = "Debug")
+		public ProjectPaths SetupProjectPaths (string projectName, string csprojName, string baseDir = "../", bool includePlatform = true, string platform = "iPhoneSimulator", string config = "Debug", string projectPath = null)
 		{
 			var testsBase = GetTestDirectory ();
-			string projectPath;
-			if (Path.IsPathRooted (baseDir)) {
-				projectPath = Path.Combine (baseDir, projectName);
-			} else {
-				projectPath = Path.Combine (testsBase, "Xamarin.iOS.Tasks.Tests", baseDir, projectName);
+			if (projectPath == null) {
+				if (Path.IsPathRooted (baseDir)) {
+					projectPath = Path.Combine (baseDir, projectName);
+				} else {
+					projectPath = Path.Combine (testsBase, "Xamarin.iOS.Tasks.Tests", baseDir, projectName);
+				}
 			}
 
 			var binPath = includePlatform ? Path.Combine (projectPath, "bin", platform, config) : Path.Combine (projectPath, "bin", config);
@@ -170,9 +171,9 @@ namespace Xamarin.iOS.Tasks
 			};
 		}
 
-		public ProjectPaths SetupProjectPaths (string projectName, string baseDir = "../", bool includePlatform = true, string platform = "iPhoneSimulator", string config = "Debug")
+		public ProjectPaths SetupProjectPaths (string projectName, string baseDir = "../", bool includePlatform = true, string platform = "iPhoneSimulator", string config = "Debug", string projectPath = null)
 		{
-			return SetupProjectPaths (projectName, projectName, baseDir, includePlatform, platform, config);
+			return SetupProjectPaths (projectName, projectName, baseDir, includePlatform, platform, config, projectPath);
 		}
 
 		[SetUp]
