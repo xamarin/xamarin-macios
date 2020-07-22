@@ -348,7 +348,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 		{
 			var rv = new TrxTests ();
 			var tests = new Dictionary<string, TrxTest> ();
-			TrxTest lastTest = null;
+			TrxTest? lastTest = null;
 			while (reader.Read ()) {
 				if (reader.NodeType != XmlNodeType.Element)
 					continue;
