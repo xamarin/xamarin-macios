@@ -48,62 +48,21 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 
 	public static class MonoNativeHelper
 	{
-		public static void AddProjectDefines (
-			XmlDocument project, MonoNativeFlavor flavor, MonoNativeLinkMode link,
-			string platform, string config)
-		{
-			AddProjectDefines (project, flavor, platform, config);
-			AddProjectDefines (project, link, platform, config);
-		}
-
-		public static void AddProjectDefines (
-			XmlDocument project, MonoNativeFlavor flavor,
-			string platform = null, string config = null)
-		{
-			switch (flavor) {
-			case MonoNativeFlavor.Compat:
-				if (platform != null)
-					project.AddAdditionalDefines ("MONO_NATIVE_COMPAT", platform, config);
-				else
-					project.AddAdditionalDefines ("MONO_NATIVE_COMPAT");
-				break;
-			case MonoNativeFlavor.Unified:
-				if (platform != null)
-					project.AddAdditionalDefines ("MONO_NATIVE_UNIFIED", platform, config);
-				else
-					project.AddAdditionalDefines ("MONO_NATIVE_UNIFIED");
-				break;
-			default:
-				throw new Exception ($"Unknown MonoNativeFlavor: {flavor}");
-			}
-		}
-
-		public static void AddProjectDefines (
-			XmlDocument project, MonoNativeLinkMode link,
-			string platform, string config)
+		public static void AddProjectDefines (XmlDocument project, MonoNativeLinkMode link)
 		{
 			switch (link) {
 			case MonoNativeLinkMode.Static:
-				project.AddAdditionalDefines ("MONO_NATIVE_STATIC", platform, config);
-				project.RemoveDefines ("MONO_NATIVE_DYNAMIC; MONO_NATIVE_SYMLINK", platform, config);
+				project.AddTopLevelProperty ("MonoNativeMode", "MONO_NATIVE_STATIC");;
 				break;
 			case MonoNativeLinkMode.Dynamic:
-				project.AddAdditionalDefines ("MONO_NATIVE_DYNAMIC", platform, config);
-				project.RemoveDefines ("MONO_NATIVE_STATIC; MONO_NATIVE_SYMLINK", platform, config);
+				project.AddTopLevelProperty ("MonoNativeMode", "MONO_NATIVE_DYNAMIC");
 				break;
 			case MonoNativeLinkMode.Symlink:
-				project.AddAdditionalDefines ("MONO_NATIVE_SYMLINK", platform, config);
-				project.RemoveDefines ("MONO_NATIVE_MONO_NATIVE_STATIC; MONO_NATIVE_DYNAMIC", platform, config);
+				project.AddTopLevelProperty ("MonoNativeMode", "MONO_NATIVE_SYMLINK");
 				break;
 			default:
 				throw new Exception ($"Unknown MonoNativeLinkMode: {link}");
 			}
-		}
-
-		public static void RemoveSymlinkMode (XmlDocument project)
-		{
-			AddProjectDefines (project, MonoNativeLinkMode.Static, "iPhone", "Debug");
-			AddProjectDefines (project, MonoNativeLinkMode.Static, "iPhoneSimulator", "Debug");
 		}
 
 		public static string GetMinimumOSVersion (DevicePlatform platform, MonoNativeFlavor flavor)
@@ -168,9 +127,8 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 
 			var xml = File.ReadAllText (TemplatePath);
 			inputProject.LoadXmlWithoutNetworkAccess (xml);
-			inputProject.SetOutputPath ("bin\\$(Platform)\\$(Configuration)" + FlavorSuffix);
-			inputProject.SetIntermediateOutputPath ("obj\\$(Platform)\\$(Configuration)" + FlavorSuffix);
 			inputProject.SetAssemblyName (inputProject.GetAssemblyName () + FlavorSuffix);
+			inputProject.AddAdditionalDefines (Flavor == MonoNativeFlavor.Compat ? "MONO_NATIVE_COMPAT" : "MONO_NATIVE_UNIFIED");
 			inputProject.ResolveAllPaths (TemplatePath);
 
 			var template_info_plist = inputProject.GetInfoPListInclude ().Replace ('\\', '/');
@@ -178,14 +136,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 			SetInfoPListMinimumOSVersion (template_info_plist, target_info_plist);
 			inputProject.FixInfoPListInclude (FlavorSuffix, newName: target_info_plist);
 
-			AddProjectDefines (inputProject);
-
 			inputProject.Save (ProjectPath, log);
-		}
-
-		public void AddProjectDefines (XmlDocument project)
-		{
-			MonoNativeHelper.AddProjectDefines (project, Flavor);
 		}
 
 		public XmlDocument SetInfoPListMinimumOSVersion (string template_plist, string target_plist)
