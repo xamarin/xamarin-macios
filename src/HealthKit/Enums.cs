@@ -482,7 +482,7 @@ namespace HealthKit
 		[iOS (14, 0)]
 		[Field ("HKFHIRResourceTypeMedicationRequest")]
 		MedicationRequest,
-		[NoWatch, iOS (14, 0)]
+		[iOS (14, 0)]
 		[Field ("HKFHIRResourceTypeCoverage")]
 		Coverage,
 	}
@@ -506,13 +506,12 @@ namespace HealthKit
 		VitalSignRecord,
 		[Watch (7, 0), iOS (14, 0)]
 		[Field ("HKClinicalTypeIdentifierCoverageRecord")]
-		HKClinicalTypeIdentifierCoverageRecord,
+		CoverageRecord,
 	}
 
 	[Watch (5,0), iOS (12,0)]
 	[Native]
-	public enum HKAuthorizationRequestStatus : long 
-	{
+	public enum HKAuthorizationRequestStatus : long {
 		Unknown = 0,
 		ShouldRequest,
 		Unnecessary,
@@ -529,7 +528,7 @@ namespace HealthKit
 
 	[Watch (7,0), iOS (14,0)]
 	[Native]
-	public enum HKAppleECGAlgorithmVersion : long {
+	public enum HKAppleEcgAlgorithmVersion : long {
 		Version1 = 1,
 	}
 
@@ -593,9 +592,9 @@ namespace HealthKit
 	}
 
 	[NoWatch, iOS (14, 0)]
-	public enum HKFHIRRelease {
+	public enum HKFhirRelease {
 		[Field ("HKFHIRReleaseDSTU2")]
-		DSTU2,
+		Dstu2,
 		[Field ("HKFHIRReleaseR4")]
 		R4,
 		[Field ("HKFHIRReleaseUnknown")]

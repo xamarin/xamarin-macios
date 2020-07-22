@@ -1053,7 +1053,7 @@ namespace HealthKit {
 	}
 
 	[Watch (7, 0), iOS (14, 0)]
-	[BaseType (typeof (HKObjectType))]
+	[BaseType (typeof (HKSampleType))]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: The -init method is not available on HKElectrocardiogram
 	interface HKElectrocardiogramType {
 
@@ -3195,7 +3195,7 @@ namespace HealthKit {
 
 		[iOS (14, 0)]
 		[Export ("FHIRVersion", ArgumentSemantic.Copy)]
-		HKFHIRVersion FhirVersion { get; }
+		HKFhirVersion FhirVersion { get; }
 	}
 
 	[Watch (5,0), iOS (12,0)]
@@ -3397,6 +3397,7 @@ namespace HealthKit {
 
 	[Watch (7,0), iOS (14,0)]
 	[BaseType (typeof (HKQuery))]
+	[DisableDefaultCtor]
 	interface HKElectrocardiogramQuery
 	{
 
@@ -3407,6 +3408,7 @@ namespace HealthKit {
 
 	[Watch (7,0), iOS (14,0)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
 	interface HKElectrocardiogramVoltageMeasurement
 	{
 		[Export ("timeSinceSampleStart")]
@@ -3414,13 +3416,13 @@ namespace HealthKit {
 
 		[Export ("quantityForLead:")]
 		[return: NullAllowed]
-		HKQuantity QuantityForLead (HKElectrocardiogramLead lead);
+		HKQuantity GetQuantity (HKElectrocardiogramLead lead);
 	}
 
 	[NoWatch, iOS (14,0)]
-	[BaseType (typeof (NSObject))]
+	[BaseType (typeof (NSObject), Name = "HKFHIRVersion")]
 	[DisableDefaultCtor]
-	interface HKFHIRVersion : NSCopying, NSSecureCoding
+	interface HKFhirVersion : NSCopying, NSSecureCoding
 	{
 		[Export ("majorVersion")]
 		nint MajorVersion { get; }
@@ -3432,7 +3434,7 @@ namespace HealthKit {
 		nint PatchVersion { get; }
 
 		[Export ("FHIRRelease", ArgumentSemantic.Strong)]
-		string FHIRRelease { get; }
+		string FhirRelease { get; }
 
 		[Export ("stringRepresentation")]
 		string StringRepresentation { get; }
@@ -3440,15 +3442,15 @@ namespace HealthKit {
 		[Static]
 		[Export ("versionFromVersionString:error:")]
 		[return: NullAllowed]
-		HKFHIRVersion VersionFromVersionString (string versionString, [NullAllowed] out NSError errorOut);
+		HKFhirVersion GetVersion (string versionString, [NullAllowed] out NSError errorOut);
 
 		[Static]
 		[Export ("primaryDSTU2Version")]
-		HKFHIRVersion PrimaryDSTU2Version ();
+		HKFhirVersion PrimaryDstu2Version { get; }
 
 		[Static]
 		[Export ("primaryR4Version")]
-		HKFHIRVersion PrimaryR4Version ();
+		HKFhirVersion PrimaryR4Version { get; }
 	}
 
 }
