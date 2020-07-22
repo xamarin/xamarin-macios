@@ -183,7 +183,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Execution.Mlaunch {
 			this.variableName = variableName ?? throw new ArgumentNullException (nameof (variableName));
 
 			if (variableValue is bool b)
-				this.variableValue = b.ToString ().ToLower ();
+				this.variableValue = b.ToString ().ToLowerInvariant ();
 			else
 				this.variableValue = variableValue?.ToString ();
 		}
