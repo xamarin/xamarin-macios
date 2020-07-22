@@ -817,6 +817,15 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 			throw new Exception ("Could not find where to add a new DefineConstants node");
 		}
 
+		public static void AddTopLevelProperty (this XmlDocument csproj, string property, string value)
+		{
+			var propertyGroup = csproj.SelectNodes ("//*[local-name() = 'PropertyGroup' and not(@Condition)]") [0];
+
+			var propertyNode = csproj.CreateElement (property, csproj.GetNamespace ());
+			propertyNode.InnerText = value;
+			propertyGroup.AppendChild (propertyNode);
+		}
+
 		public static void SetNode (this XmlDocument csproj, string node, string value)
 		{
 			var nodes = csproj.SelectNodes ("/*/*/*[local-name() = '" + node + "']");
