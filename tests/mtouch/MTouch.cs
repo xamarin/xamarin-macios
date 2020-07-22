@@ -1971,20 +1971,27 @@ public class TestApp {
 			}
 		}
 
-		static string BindingsLibrary {
-			get {
-				return Path.Combine (Configuration.SourceRoot, "tests/bindings-test/bin/Debug/bindings-test.dll");
-			}
-		}
-
 		static string GetBindingsLibrary (Profile profile)
 		{
-			var fn = Path.Combine (Configuration.SourceRoot, "tests", "bindings-test", "bin", "Any CPU", GetConfiguration (profile), "bindings-test.dll");
-
-			if (!File.Exists (fn)) {
-				var csproj = Path.Combine (Configuration.SourceRoot, "tests", "bindings-test", "bindings-test" + GetProjectSuffix (profile) + ".csproj");
-				XBuild.BuildXI (csproj, platform: "AnyCPU");
+			var project_dir = Path.Combine (Configuration.SourceRoot, "tests", "bindings-test", "iOS");
+			switch (profile) {
+			case Profile.iOS:
+				break;
+			case Profile.tvOS:
+			case Profile.watchOS:
+				project_dir = Path.Combine (project_dir, "generated-projects", profile.ToString ());
+				break;
+			default:
+				throw new NotImplementedException (profile.ToString ());
 			}
+			var csproj = Path.Combine (project_dir, $"bindings-test{GetProjectSuffix (profile)}.csproj");
+			var fn = Path.Combine (project_dir, "bin", "Any CPU", GetConfiguration (profile), "bindings-test.dll");
+
+			if (!File.Exists (fn))
+				XBuild.BuildXI (csproj, platform: "AnyCPU");
+
+			if (!File.Exists (fn))
+				throw new Exception ($"Could not find the bindings-test library for {profile}");
 
 			return fn;
 		}
