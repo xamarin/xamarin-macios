@@ -493,7 +493,7 @@ namespace Xharness {
 			foreach (var monoNativeInfo in IOSTestProjects.Where (x => x.MonoNativeInfo != null).Select (x => x.MonoNativeInfo))
 				monoNativeInfo.Convert ();
 
-			foreach (var proj in IOSTestProjects.Where ((v) => v.GenerateVariations).ToArray ()) {
+			foreach (var proj in IOSTestProjects.Where ((v) => v.GenerateVariations)) {
 				var file = proj.Path;
 
 				if (!File.Exists (file)) {
