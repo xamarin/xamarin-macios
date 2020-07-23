@@ -1989,7 +1989,7 @@ namespace GameKit {
 		[Async]
 		void SendReminder (GKTurnBasedParticipant [] participants, string localizableMessage, NSObject [] arguments, [NullAllowed] Action<NSError> completionHandler);
 
-		[iOS (14,0)][Mac (10,16)]
+		[iOS (14,0)][Mac (10,16)][Watch (7,0)][TV (14,0)]
 		[Export ("endMatchInTurnWithMatchData:leaderboardScores:achievements:completionHandler:")]
 		[Async]
 		void EndMatchInTurn (NSData matchData, GKLeaderboardScore[] scores, NSObject[] achievements, Action<NSError> completionHandler);
