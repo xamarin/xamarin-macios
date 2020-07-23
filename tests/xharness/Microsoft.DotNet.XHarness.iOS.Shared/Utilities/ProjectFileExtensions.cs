@@ -601,17 +601,9 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 		{
 			var logicalNames = csproj.SelectNodes ("//*[local-name() = 'LogicalName']");
 			foreach (XmlNode ln in logicalNames) {
-				if (!ln.InnerText.Contains("Info.plist"))
+				if (ln.InnerText != "Info.plist")
 					continue;
 				return ln.ParentNode;
-			}
-			var nodes = csproj.SelectNodes ("//*[local-name() = 'None' and contains(@Include ,'Info.plist')]");
-			if (nodes.Count > 0) {
-				return nodes [0]; // return the value, which could be Info.plist or a full path (linked).
-			}
-			nodes = csproj.SelectNodes ("//*[local-name() = 'None' and contains(@Include ,'Info-tv.plist')]");
-			if (nodes.Count > 0) {
-				return nodes [0]; // return the value, which could be Info.plist or a full path (linked).
 			}
 			if (throw_if_not_found)
 				throw new Exception ($"Could not find Info.plist include.");
