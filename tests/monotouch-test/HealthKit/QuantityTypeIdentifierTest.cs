@@ -67,6 +67,17 @@ namespace MonoTouchFixtures.HealthKit {
 					if (!TestRuntime.CheckXcodeVersion(11, 0))
 						continue;
 					break;
+				case HKQuantityTypeIdentifier.SixMinuteWalkTestDistance:
+				case HKQuantityTypeIdentifier.StairAscentSpeed:
+				case HKQuantityTypeIdentifier.StairDescentSpeed:
+				case HKQuantityTypeIdentifier.WalkingAsymmetryPercentage:
+				case HKQuantityTypeIdentifier.WalkingDoubleSupportPercentage:
+				case HKQuantityTypeIdentifier.WalkingSpeed:
+				case HKQuantityTypeIdentifier.WalkingStepLength:
+					if (!TestRuntime.CheckXcodeVersion (12, 0))
+						continue;
+					break;
+
 				}
 
 				try {
