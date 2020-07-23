@@ -13,6 +13,9 @@ namespace Xamarin.MacDev.Tasks {
 		[Output]
 		public string NoDSymUtil { get; set; }
 
+		[Output]
+		public int Verbosity { get; set; }
+
 		public override bool Execute ()
 		{
 			if (string.IsNullOrEmpty (NoSymbolStrip))
@@ -59,6 +62,14 @@ namespace Xamarin.MacDev.Tasks {
 						break;
 					case "dsym":
 						NoDSymUtil = ParseBool (value) ? "false" : "true";
+						break;
+					case "verbose":
+					case "v":
+						Verbosity++;
+						break;
+					case "quiet":
+					case "q":
+						Verbosity--;
 						break;
 					default:
 						break;
