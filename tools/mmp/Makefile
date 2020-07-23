@@ -76,9 +76,6 @@ clean-local::
 include $(TOP)/mk/rules.mk
 include ../common/Make.common
 
-run::
-	$(Q) make -C $(TOP)/tests/mmp-aot-tests
-
 # make will automatically consider files created in chained implicit rules as temporary files, and delete them afterwards
 # marking those files as .SECONDARY will prevent that deletion.
 .SECONDARY: $(foreach ext,h m a,Xamarin.Mac.registrar.mobile.x86_64.$(ext) Xamarin.Mac.registrar.full.x86_64.$(ext))
