@@ -33,8 +33,7 @@ run-tests: bin/Debug/mtouch.dll test.config
 -include mtouch.csproj.inc
 
 bin/Debug/mtouch.dll: $(mtouch_dependencies)
-	$(Q_XBUILD) $(SYSTEM_XIBUILD) -t -- /Library/Frameworks//Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe restore packages.config
-	$(SYSTEM_XIBUILD) -- mtouch.csproj $(XBUILD_VERBOSITY)
+	$(SYSTEM_XIBUILD) -- mtouch.csproj /r $(XBUILD_VERBOSITY)
 	$(Q) rm -f .failed-stamp
 
 build: bin/Debug/mtouch.dll
