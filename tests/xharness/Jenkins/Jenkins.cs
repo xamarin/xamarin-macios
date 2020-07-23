@@ -28,7 +28,7 @@ namespace Xharness.Jenkins {
 		public bool IncludeMac = true;
 		public bool IncludeiOS = true;
 		public bool IncludeiOS64 = true;
-		public bool IncludeiOS32 = true;
+		public bool IncludeiOS32 = false; // broken in xcode 12 beta 3, not possible with DTK
 		public bool IncludeiOSExtensions;
 		public bool ForceExtensionBuildOnly;
 		public bool IncludetvOS = true;
@@ -909,7 +909,8 @@ namespace Xharness.Jenkins {
 			} else if (labels.Contains ("run-" + testname + "-tests")) {
 				MainLog.WriteLine ("Enabled '{0}' tests because the label 'run-{0}-tests' is set.", testname);
 				if (testname == "ios")
-					IncludeiOS32 = IncludeiOS64 = true;
+					IncludeiOS64 = true;
+				// removed 'IncludeiOS32' as it's broken in xcode 12 beta 3, not possible with DTK
 				value = true;
 				return true;
 			} else if (labels.Contains ("skip-all-tests")) {
