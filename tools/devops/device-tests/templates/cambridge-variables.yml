@@ -3,7 +3,7 @@ variables:
   value: 'VSEng-Xamarin-QA'
 
 - name: WindowsDevicePool
-  value: 'VSEng-Xamarin-Win-XMA'
+  value: 'VSEngDeploymentPool'
 
 - name: useXamarinStorage
   value: ${{ true }}  # the cambridge lab DOES have access to xamarin-storage
