@@ -5,14 +5,6 @@ steps:
 - checkout: self
   persistCredentials: true
 
-- powershell: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\device-tests\scripts\System.psm1
-    Get-SystemInfo | Format-Table -Wrap -HideTableHeaders
-    Write-Host "Env variables are:"
-    Get-ChildItem env:
-  displayName: 'Dump Environment'
-  timeoutInMinutes: 1
-
 # Download the Html Report that was added by the tests job.
 - task: DownloadPipelineArtifact@2
   displayName: Download html report 
