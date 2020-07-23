@@ -151,6 +151,8 @@ namespace LinkAll {
 			CertTRUSTEFAIL = 0x800B010B,
 		}
 
+#if !NET
+		// ICertificatePolicy has been removed from .NET 5+
 		class TestPolicy : ICertificatePolicy {
 
 			const int RecoverableTrustFailure = 5; // SecTrustResult
@@ -202,6 +204,7 @@ namespace LinkAll {
 				ServicePointManager.CertificatePolicy = old;
 			}
 		}
+#endif
 		
 		[Test]
 		public void DetectPlatform ()
