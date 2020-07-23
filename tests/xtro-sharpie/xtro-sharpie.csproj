@@ -56,21 +56,8 @@
     <Reference Include="Clang">
       <HintPath>\Library\Frameworks\ObjectiveSharpie.framework\Versions\Current\Clang.dll</HintPath>
     </Reference>
-    <Reference Include="Mono.Cecil">
-      <HintPath>..\..\packages\Mono.Cecil.0.9.6.4\lib\net45\Mono.Cecil.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Cecil.Mdb">
-      <HintPath>..\..\packages\Mono.Cecil.0.9.6.4\lib\net45\Mono.Cecil.Mdb.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Cecil.Pdb">
-      <HintPath>..\..\packages\Mono.Cecil.0.9.6.4\lib\net45\Mono.Cecil.Pdb.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Cecil.Rocks">
-      <HintPath>..\..\packages\Mono.Cecil.0.9.6.4\lib\net45\Mono.Cecil.Rocks.dll</HintPath>
-    </Reference>
-    <Reference Include="System.ValueTuple">
-      <HintPath>..\..\packages\System.ValueTuple.4.4.0\lib\net47\System.ValueTuple.dll</HintPath>
-    </Reference>
+    <PackageReference Include="Mono.Cecil" Version="0.11.1" />
+    <PackageReference Include="System.ValueTuple" Version="4.4.0" />
     <Reference Include="mscorlib" />
   </ItemGroup>
   <ItemGroup>
@@ -93,9 +80,6 @@
     <Compile Include="VersionHelpers.cs" />
     <Compile Include="ReleaseAttributeCheck.cs" />
     <Compile Include="NullabilityCheck.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">

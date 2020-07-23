@@ -158,11 +158,7 @@ namespace Extrospection {
 			if (td.HasInterfaces) {
 				foreach (var intf in td.Interfaces) {
 					TypeReference ifaceType;
-#if CECIL_0_10
 					ifaceType = intf?.InterfaceType;
-#else
-					ifaceType = intf;
-#endif
 					if (protocol == GetProtocolName (ifaceType?.Resolve ()))
 						return true;
 				}
