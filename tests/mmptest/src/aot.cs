@@ -44,7 +44,7 @@ namespace Xamarin.MMP.Tests.Unit
 			{
 				RunCommand = onRunDelegate != null ? onRunDelegate : OnRunCommand,
 				ParallelOptions = new ParallelOptions () { MaxDegreeOfParallelism = 1 },
-				XamarinMacPrefix = Driver.WalkUpDirHierarchyLookingForLocalBuild (), // HACK - AOT test shouldn't need this from driver.cs 
+				XamarinMacPrefix = Xamarin.Tests.Configuration.SdkRootXM,
 			};
 			try {
 				Profile.Current = new XamarinMacProfile ();

@@ -92,7 +92,7 @@ ROOT_DIR=$(git rev-parse --show-toplevel)
 # We'll checkout another hash, which may not have this script, and executing a script that is deleted
 # sounds like a bad idea. So copy the scripts to /tmp and execute it from there
 if test -z "$WORKING_DIR"; then
-	$CP "$ROOT_DIR/tools/compare-commits.sh" "$ROOT_DIR/tools/diff-to-html" "$TMPDIR/"
+	$CP -v "$ROOT_DIR/tools/compare-commits.sh" "$ROOT_DIR/tools/diff-to-html" "$TMPDIR/"
 	exec "$TMPDIR/$(basename "$0")" "${ORIGINAL_ARGS[@]}" "--impl-working-dir=$(pwd)"
 	exit $?
 fi
@@ -248,6 +248,15 @@ find build build-new '(' \
 mkdir -p "$OUTPUT_DIR/generator-diff"
 GENERATOR_DIFF_FILE="$OUTPUT_DIR/generator-diff/index.html"
 git diff --no-index build build-new > "$OUTPUT_DIR/generator-diff/generator.diff" || true
+if ! test -f "$TMPDIR/diff-to-html"; then
+	# Some diagnostics to try to figure out https://github.com/xamarin/maccore/issues/1467.
+	echo "The file $TMPDIR/diff-to-html does not exist!"
+	echo "This script: $0"
+	echo "The arguments: $*"
+	echo "Listing the contents of $TMPDIR:"
+	ls -la "$TMPDIR"
+	exit 1
+fi
 "$TMPDIR/diff-to-html" "$OUTPUT_DIR/generator-diff/generator.diff" "$GENERATOR_DIFF_FILE"
 
 # Check if any files in the normal output paths were modified (there should be none)
