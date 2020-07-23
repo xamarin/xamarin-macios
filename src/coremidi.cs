@@ -351,6 +351,7 @@ namespace CoreMidi {
 		bool SupportsProperties { get; }
 
 		[Export ("maximumSysExSize")]
+		[BindAs (typeof (ulong))]
 		NSNumber MaximumSysExSize { get; }
 	}
 
