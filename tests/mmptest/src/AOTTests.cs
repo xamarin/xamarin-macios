@@ -52,7 +52,6 @@ namespace Xamarin.MMP.Tests
 		bool IsFileManagedCode (FileInfo file) => file.Extension.ToLowerInvariant () == ".exe" || file.Extension.ToLowerInvariant () == ".dll";
 		bool ShouldBaseFilesBeAOT (FileInfo file) => file.Name == "Xamarin.Mac.dll" || file.Name == "System.dll" || file.Name == "mscorlib.dll";
 
-		// AOT unit tests can be found in tests/mmp-aot-tests
 		[TestCase (false)]
 		[TestCase (true)]
 		public void AOT_SmokeTest (bool useProjectTags) {

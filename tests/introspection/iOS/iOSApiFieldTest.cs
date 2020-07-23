@@ -134,6 +134,7 @@ namespace Introspection {
 			case "kCVMetalTextureCacheMaximumTextureAgeKey":
 			case "kCVMetalTextureUsage":
 			case "MPSRectNoClip":
+			case "MTLCommandBufferErrorDomain":
 			case "MTKTextureLoaderErrorDomain":
 			case "MTKTextureLoaderErrorKey":
 			case "MTKTextureLoaderOptionAllocateMipmaps":

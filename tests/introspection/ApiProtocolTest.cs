@@ -213,6 +213,8 @@ namespace Introspection {
 				case "ICNotification":
 				case "ICNotificationManagerConfiguration":
 				case "MPSNNNeuronDescriptor":
+				case "MPSNDArrayAllocator": // Conformance in header, but fails at runtime.
+				case "MPSNNLossCallback": // Conformance in header, but fails at runtime.
 					return true;
 				// Xcode 11
 				case "NSFileProviderItemVersion":
