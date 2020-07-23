@@ -272,13 +272,16 @@ namespace Xamarin.Bundler {
 			// only one of IsUnifiedMobile or IsUnifiedFull should ever be true. IsUnified
 			// is true if one of IsUnifiedMobile or IsUnifiedFull is true; IsClassic is
 			// implied if IsUnified is not true;
-			int IsUnifiedCount = IsUnifiedMobile ? 1 : 0;
-			if (IsUnifiedFullSystemFramework)
-				IsUnifiedCount++;
-			if (IsUnifiedFullXamMacFramework)
-				IsUnifiedCount++;
-			if (IsUnifiedCount != 1)
-				throw ErrorHelper.CreateError (99, Errors.MX0099 ,"IsClassic/IsUnified/IsUnifiedMobile/IsUnifiedFullSystemFramework/IsUnifiedFullXamMacFramework logic regression");
+			// Skip this check if we're in .NET 5 mode (which happens when generating the partial static registrar code).
+			if (!TargetFramework.IsDotNet) {
+				int IsUnifiedCount = IsUnifiedMobile ? 1 : 0;
+				if (IsUnifiedFullSystemFramework)
+					IsUnifiedCount++;
+				if (IsUnifiedFullXamMacFramework)
+					IsUnifiedCount++;
+				if (IsUnifiedCount != 1)
+					throw ErrorHelper.CreateError (99, Errors.MX0099, "IsClassic/IsUnified/IsUnifiedMobile/IsUnifiedFullSystemFramework/IsUnifiedFullXamMacFramework logic regression");
+			}
 
 			ValidateXamarinMacReference ();
 			if (!bypass_linking_checks && (IsUnifiedFullSystemFramework || IsUnifiedFullXamMacFramework)) {

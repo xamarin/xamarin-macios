@@ -661,7 +661,7 @@ namespace Xamarin.Bundler {
 #endif
 			};
 
-			if (Platform == ApplePlatform.iOS) {
+			if (Platform == ApplePlatform.iOS && !Driver.IsDotNet) {
 				if (Is32Build) {
 					resolver.ArchDirectory = Driver.GetArch32Directory (this);
 				} else {
