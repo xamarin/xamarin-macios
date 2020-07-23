@@ -35,6 +35,9 @@ steps:
 - checkout: maccore
   persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
 
+- bash: make -C $(System.DefaultWorkingDirectory)/xamarin-macios/ git-clean-all
+  displayName: 'Clean workspace'
+
 # Run the pipeline script tests to ensure that we will have not have an unexpected behaviour.
 - bash: make -C $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/device-tests/scripts run-tests
   displayName: 'Run pipeline script tests'
