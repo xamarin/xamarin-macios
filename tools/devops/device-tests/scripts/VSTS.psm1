@@ -81,7 +81,7 @@ function Set-PipelineResult {
         [Parameter(Mandatory)]
         [String]
         [ValidateScript({
-            $("canceled", "failed", "none", "partiallySucceeded", "succeeded").Contains($_) #validate that the status is in the range of valid values
+            $("canceled", "failed", "none", "partiallySucceeded", "succeeded").Contains($_) # validate that the status is in the range of valid values
         })]
         $Status
     )
