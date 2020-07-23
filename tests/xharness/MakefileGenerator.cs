@@ -80,9 +80,6 @@ namespace Xharness
 				// special case for those targets that are auto generated from the mono assemblies
 				allTargets.RemoveAll (v => v.IsBCLProject);
 
-				// we can only execute executable projects
-				allTargets.RemoveAll (v => !v.IsExe);
-
 				// build/[install/]run targets for specific test projects.
 				foreach (var target in allTargets) {
 					var make_escaped_simplified_name = target.SimplifiedName.Replace (" ", "\\ ");
