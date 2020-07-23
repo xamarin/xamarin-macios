@@ -10,18 +10,12 @@ namespace Xamarin.MMP.Tests
 	{
 		public string RoslynTestProjectRoot => Path.Combine (TI.FindSourceDirectory (), "TestProjects/RoslynTestApp/");
 
-		void RestoreRoslynNuget (string projectPath)
-		{
-			TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Versions/Current/Commands/nuget", new [] { "restore", projectPath }, "Restore Nuget");
-		}
-
 		[Test]
 		public void XMModernRosylnProjet_ShouldBuildAndRunWithMSBuild ()
 		{
 			string projectPath = Path.Combine (RoslynTestProjectRoot, "Modern/RoslynTestApp.sln");
 
 			TI.CleanUnifiedProject (projectPath);
-			RestoreRoslynNuget (projectPath);
 			TI.BuildProject (projectPath);
 			TI.RunAndAssert (Path.Combine (RoslynTestProjectRoot, "Modern/bin/Debug/RoslynTestApp.app/Contents/MacOS/RoslynTestApp"), Array.Empty<string> (), "Run");
 		}
@@ -32,7 +26,6 @@ namespace Xamarin.MMP.Tests
 			string projectPath = Path.Combine (RoslynTestProjectRoot, "Full/RoslynTestApp.sln");
 
 			TI.CleanUnifiedProject (projectPath);
-			RestoreRoslynNuget (projectPath);
 			TI.BuildProject (projectPath);
 			TI.RunAndAssert (Path.Combine (RoslynTestProjectRoot, "Full/bin/Debug/RoslynTestApp.app/Contents/MacOS/RoslynTestApp"), Array.Empty<string> (), "Run");
 		}
