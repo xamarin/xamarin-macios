@@ -2599,38 +2599,21 @@ public class TestApp {
 		}
 
 		[Test]
-		[TestCase (Target.Dev, Profile.iOS, "dont link", "Release64")]
-		[TestCase (Target.Dev, Profile.iOS, "link all", "Release64")]
-		[TestCase (Target.Dev, Profile.iOS, "link sdk", "Release64")]
-		[TestCase (Target.Dev, Profile.iOS, "monotouch-test", "Release64")]
-		[TestCase (Target.Dev, Profile.iOS, "mscorlib Part 1", "Release64")]
-		[TestCase (Target.Dev, Profile.iOS, "mscorlib Part 2", "Release64")]
-		[TestCase (Target.Dev, Profile.iOS, "BCL tests group 1", "Release64")]
-		public void BuildTestProject (Target target, Profile profile, string testname, string configuration)
+		[TestCase (Target.Dev, Profile.iOS, "linker/ios", "dont link", "Release64")]
+		[TestCase (Target.Dev, Profile.iOS, "linker/ios", "link all", "Release64")]
+		[TestCase (Target.Dev, Profile.iOS, "linker/ios", "link sdk", "Release64")]
+		[TestCase (Target.Dev, Profile.iOS, "", "monotouch-test", "Release64")]
+		[TestCase (Target.Dev, Profile.iOS, "bcl-test/generated/iOS", "mscorlib Part 1", "Release64")]
+		[TestCase (Target.Dev, Profile.iOS, "bcl-test/generated/iOS", "mscorlib Part 2", "Release64")]
+		[TestCase (Target.Dev, Profile.iOS, "bcl-test/generated/iOS", "BCL tests group 1", "Release64")]
+		public void BuildTestProject (Target target, Profile profile, string subdir, string testname, string configuration)
 		{
 			if (target == Target.Dev)
 				AssertDeviceAvailable ();
 			
-			var subdir = string.Empty;
-			switch (testname) {
-			case "dont link":
-			case "link sdk":
-			case "link all":
-				subdir = "/linker/ios";
-				break;
-			case "monotouch-test":
-				break;
-			default:
-				subdir = "/bcl-test";
-				break;
-			}
+			var testDir = Path.Combine (Configuration.SourceRoot, "tests", subdir, testname);
 			var platform = target == Target.Dev ? "iPhone" : "iPhoneSimulator";
-			string csproj = null;
-			if (subdir == "/bcl-test") { // bcl tests are generated and are not in their own dir
-				csproj = Path.Combine (Configuration.SourceRoot, "tests" + subdir, testname + GetProjectSuffix (profile) + ".csproj");
-			} else {
-				csproj = Path.Combine (Configuration.SourceRoot, "tests" + subdir, testname, testname + GetProjectSuffix (profile) + ".csproj");
-			}
+			var csproj = Path.Combine (testDir, testname + GetProjectSuffix (profile) + ".csproj");
 			XBuild.BuildXI (csproj, configuration, platform, timeout: TimeSpan.FromMinutes (15));
 		}
 
