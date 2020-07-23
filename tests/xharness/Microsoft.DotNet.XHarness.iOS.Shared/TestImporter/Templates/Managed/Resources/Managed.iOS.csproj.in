@@ -165,7 +165,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="%PLIST PATH%">
-      <Link>Info.plist</Link>
+      <LogicalName>Info.plist</LogicalName>
     </None>
     <None Include="%TEMPLATESPATH%\iOSApp\Entitlements.plist">
       <Link>Entitlements.plist</Link>

@@ -72,7 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include=".\Info.plist">
-      <Link>Info.plist</Link>
+      <LogicalName>Info.plist</LogicalName>
     </None>
     <None Include=".\Entitlements.plist">
       <Link>Entitlements.plist</Link>
