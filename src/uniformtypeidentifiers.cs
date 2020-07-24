@@ -473,6 +473,9 @@ namespace UniformTypeIdentifiers {
 		[Field ("UTTypeZIP")]
 		UTType Zip { get; }
 
+		[Field ("UTTypeAppleArchive")]
+		UTType AppleArchive { get; }
+
 		[Field ("UTTypeSpreadsheet")]
 		UTType Spreadsheet { get; }
 
