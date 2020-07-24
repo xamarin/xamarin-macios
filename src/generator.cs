@@ -3557,7 +3557,10 @@ public partial class Generator : IMemberGatherer {
 			var bindAsAtt = GetBindAsAttribute (pi);
 			if (bindAsAtt != null) {
 				PrintBindAsAttribute (pi, sb);
-				sb.Append (FormatType (bindAsAtt.Type.DeclaringType, bindAsAtt.Type, protocolized));
+				var bt = bindAsAtt.Type;
+				sb.Append (FormatType (bt.DeclaringType, bt, protocolized));
+				if (!bt.IsValueType && AttributeManager.HasAttribute<NullAllowedAttribute> (pi))
+					sb.Append ('?');
 			} else {
 				sb.Append (FormatType (declaringType, parType, protocolized));
 				// some `IntPtr` are decorated with `[NullAttribute]`
