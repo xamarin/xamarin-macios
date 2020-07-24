@@ -83,7 +83,7 @@
 # API removed by Apple, marked as deprecated
 !unknown-native-enum! GKAuthenticationType bound
 
-# Xcode 12 beta 2 - these API are missing
+# Xcode 12 beta 3 - these API are missing
 # https://github.com/xamarin/maccore/issues/2269
 !missing-selector! GKLeaderboardEntry::context not bound
 !missing-selector! GKLeaderboardEntry::date not bound
