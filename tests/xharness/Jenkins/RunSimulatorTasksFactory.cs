@@ -40,6 +40,7 @@ namespace Xharness.Jenkins {
 				foreach (var config in configurations) {
 					foreach (var pair in ps) {
 						MSBuildTask derived;
+						var configIgnored = pair.Item3;
 						if (project.IsDotNetProject) {
 							derived = new DotNetBuildTask (jenkins: jenkins, testProject: project, processManager: processManager);
 							configIgnored |= !jenkins.IncludeDotNet;
@@ -49,7 +50,7 @@ namespace Xharness.Jenkins {
 						derived.ProjectConfiguration = config;
 						derived.ProjectPlatform = "iPhoneSimulator";
 						derived.Platform = pair.Item2;
-						derived.Ignored = pair.Item3;
+						derived.Ignored = configIgnored;
 						derived.TestName = project.Name;
 						derived.Dependency = project.Dependency;
 						derived.CloneTestProject (jenkins.MainLog, processManager, pair.Item1);
