@@ -209,6 +209,7 @@ namespace Xharness.Jenkins {
 					MSBuildTask build;
 					if (clone.IsDotNetProject) {
 						build = new DotNetBuildTask (jenkins: jenkins, testProject: clone, processManager: processManager);
+						ignored |= !jenkins.IncludeDotNet;
 					} else {
 						build = new MSBuildTask (jenkins: jenkins, testProject: clone, processManager: processManager);
 					}
