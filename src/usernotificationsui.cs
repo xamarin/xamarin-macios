@@ -22,7 +22,7 @@ using UserNotifications;
 namespace UserNotificationsUI {
 
 	[iOS (10, 0)]
-	[Mac (10,16)]
+	[Mac (11,0)]
 	[Introduced (PlatformName.MacCatalyst, 14,0)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Unavailable (PlatformName.TvOS)]
@@ -34,7 +34,7 @@ namespace UserNotificationsUI {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10,16)]
+	[Mac (11,0)]
 	[Introduced (PlatformName.MacCatalyst, 14,0)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Unavailable (PlatformName.TvOS)]
@@ -48,7 +48,7 @@ namespace UserNotificationsUI {
 	interface IUNNotificationContentExtension { }
 
 	[iOS (10, 0)]
-	[Mac (10,16)]
+	[Mac (11,0)]
 	[Introduced (PlatformName.MacCatalyst, 14,0)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Unavailable (PlatformName.TvOS)]
@@ -79,7 +79,7 @@ namespace UserNotificationsUI {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10,16)]
+	[Mac (11,0)]
 	[Introduced (PlatformName.MacCatalyst, 14,0)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Unavailable (PlatformName.TvOS)]
