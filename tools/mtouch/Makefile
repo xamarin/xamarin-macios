@@ -161,9 +161,10 @@ SIMLAUNCHER_FRAMEWORKS =  \
 						\
 	-weak_framework AutomaticAssessmentConfiguration	\
 						\
-	-weak_framework AppClip	\
 	-weak_framework Accessibility	\
+	-weak_framework AppClip	\
 	-weak_framework SensorKit \
+	-weak_framework UniformTypeIdentifiers \
 
 # keep the above list of weak_framework
 # 1. grouped by iOS versions;
