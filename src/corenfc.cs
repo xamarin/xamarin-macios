@@ -140,7 +140,7 @@ namespace CoreNFC {
 	//[iOS (11,0), NoTV, NoWatch, NoMac]
 	[iOS (11,0)]
 	[Protocol (Name = "NFCISO15693Tag")]
-	interface NFCIso15693Tag : NFCTag {
+	interface NFCIso15693Tag : NFCTag, NFCNdefTag {
 
 		[Abstract]
 		[Export ("identifier", ArgumentSemantic.Copy)]
