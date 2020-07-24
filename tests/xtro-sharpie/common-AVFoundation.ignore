@@ -72,5 +72,3 @@
 
 # Initial result from new rule missing-null-allowed
 !missing-null-allowed! 'System.Boolean AVFoundation.AVPlayerItem::Seek(Foundation.NSDate,AVFoundation.AVCompletion)' is missing an [NullAllowed] on parameter #1
-!missing-null-allowed! 'System.Void AVFoundation.AVPlayerMediaSelectionCriteria::.ctor(AVFoundation.AVMediaCharacteristics[],AVFoundation.AVMediaCharacteristics[],System.String[])' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void AVFoundation.AVPlayerMediaSelectionCriteria::.ctor(AVFoundation.AVMediaCharacteristics[],AVFoundation.AVMediaCharacteristics[],System.String[])' is missing an [NullAllowed] on parameter #1
