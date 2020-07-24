@@ -3,9 +3,6 @@
 !missing-selector! MPNowPlayingInfoCenter::playbackState not bound
 !missing-selector! MPNowPlayingInfoCenter::setPlaybackState: not bound
 
-## MPMediaItem only exposed for fields, it's not really available
-!unknown-type! MPMediaItem bound
-
 ## marked as available in tvOS 11 but the member is not and using a type, MPMusicPlayerQueueDescriptor, that's not available
 !missing-protocol! MPSystemMusicPlayerController not bound
 
@@ -14,8 +11,34 @@
 !missing-field! MPMediaPlaylistPropertyAuthorDisplayName not bound
 !missing-field! MPMediaPlaylistPropertyDescriptionText not bound
 
-# Initial result from new rule missing-null-allowed
-!missing-null-allowed! 'Foundation.NSString MediaPlayer.NSUserActivity_MediaPlayerAdditions::GetExternalMediaContentIdentifier(Foundation.NSUserActivity)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.Void MediaPlayer.MPContentItem::set_Artwork(MediaPlayer.MPMediaItemArtwork)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void MediaPlayer.MPContentItem::set_Subtitle(System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void MediaPlayer.MPContentItem::set_Title(System.String)' is missing an [NullAllowed] on parameter #0
+## _added_ in xcode12 but already deprecated in iOS9 (likely error in headers)
+!missing-field! MPMediaPlaybackIsPreparedToPlayDidChangeNotification not bound
+!missing-field! MPMovieDurationAvailableNotification not bound
+!missing-field! MPMovieMediaTypesAvailableNotification not bound
+!missing-field! MPMovieNaturalSizeAvailableNotification not bound
+!missing-field! MPMoviePlayerDidEnterFullscreenNotification not bound
+!missing-field! MPMoviePlayerDidExitFullscreenNotification not bound
+!missing-field! MPMoviePlayerFullscreenAnimationCurveUserInfoKey not bound
+!missing-field! MPMoviePlayerFullscreenAnimationDurationUserInfoKey not bound
+!missing-field! MPMoviePlayerIsAirPlayVideoActiveDidChangeNotification not bound
+!missing-field! MPMoviePlayerLoadStateDidChangeNotification not bound
+!missing-field! MPMoviePlayerNowPlayingMovieDidChangeNotification not bound
+!missing-field! MPMoviePlayerPlaybackDidFinishNotification not bound
+!missing-field! MPMoviePlayerPlaybackDidFinishReasonUserInfoKey not bound
+!missing-field! MPMoviePlayerPlaybackStateDidChangeNotification not bound
+!missing-field! MPMoviePlayerReadyForDisplayDidChangeNotification not bound
+!missing-field! MPMoviePlayerScalingModeDidChangeNotification not bound
+!missing-field! MPMoviePlayerThumbnailErrorKey not bound
+!missing-field! MPMoviePlayerThumbnailImageKey not bound
+!missing-field! MPMoviePlayerThumbnailImageRequestDidFinishNotification not bound
+!missing-field! MPMoviePlayerThumbnailTimeKey not bound
+!missing-field! MPMoviePlayerTimedMetadataKeyDataType not bound
+!missing-field! MPMoviePlayerTimedMetadataKeyInfo not bound
+!missing-field! MPMoviePlayerTimedMetadataKeyLanguageCode not bound
+!missing-field! MPMoviePlayerTimedMetadataKeyMIMEType not bound
+!missing-field! MPMoviePlayerTimedMetadataKeyName not bound
+!missing-field! MPMoviePlayerTimedMetadataUpdatedNotification not bound
+!missing-field! MPMoviePlayerTimedMetadataUserInfoKey not bound
+!missing-field! MPMoviePlayerWillEnterFullscreenNotification not bound
+!missing-field! MPMoviePlayerWillExitFullscreenNotification not bound
+!missing-field! MPMovieSourceTypeAvailableNotification not bound

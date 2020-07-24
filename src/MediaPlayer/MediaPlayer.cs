@@ -107,7 +107,7 @@ namespace MediaPlayer {
 
 	// NSUInteger -> MPMediaItem.h
 	[Native]
-	[NoWatch]
+	[Watch (7,0)]
 	[Flags]
 	public enum MPMediaType : ulong {
 		Music        = 1 << 0,
@@ -301,7 +301,7 @@ namespace MediaPlayer {
 	}
 
 	[Mac (10,14,2)]
-	[NoWatch]
+	[Watch (7,0)]
 	[iOS (9,3)]
 	[Native]
 	[ErrorDomain ("MPErrorDomain")]

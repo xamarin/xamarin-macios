@@ -398,6 +398,12 @@ namespace CoreML {
 		[return: NullAllowed]
 		NSObject GetParameterValue (MLParameterKey key, [NullAllowed] out NSError error);
 
+		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Static]
+		[Async]
+		[Export ("loadContentsOfURL:configuration:completionHandler:")]
+		void LoadContents (NSUrl url, MLModelConfiguration configuration, Action<MLModel, NSError> handler);
+
 		// Category MLModel (MLModelCompilation)
 
 		[Static]
@@ -428,6 +434,10 @@ namespace CoreML {
 
 		[Wrap ("_Metadata")]
 		MLModelMetadata Metadata { get; }
+
+		[Watch (7, 0), TV (14, 0), Mac (10, 16), iOS (14, 0)]
+		[NullAllowed, Export ("classLabels", ArgumentSemantic.Copy)]
+		NSObject[] ClassLabels { get; }
 
 		// From MLModelDescription (MLUpdateAdditions)
 
@@ -532,6 +542,13 @@ namespace CoreML {
 		[Internal]
 		// Bind 'key' as IntPtr to avoid multiple conversions (nint[] -> NSNumber[] -> NSArray)
 		void SetObject (NSNumber obj, IntPtr key);
+
+		// @interface Concatenating (MLMultiArray)
+
+		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Static]
+		[Export ("multiArrayByConcatenatingMultiArrays:alongAxis:dataType:")]
+		MLMultiArray Concat (MLMultiArray[] multiArrays, nint axis, MLMultiArrayDataType dataType);
 	}
 
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
@@ -968,6 +985,18 @@ namespace CoreML {
 		[return: NullAllowed]
 		MLUpdateTask Create (NSUrl modelUrl, IMLBatchProvider trainingData, [NullAllowed] MLModelConfiguration configuration, MLUpdateProgressHandlers progressHandlers, [NullAllowed] out NSError error);
 
+		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Static]
+		[Export ("updateTaskForModelAtURL:trainingData:completionHandler:error:")]
+		[return: NullAllowed]
+		MLUpdateTask Create (NSUrl modelUrl, IMLBatchProvider trainingData, Action<MLUpdateContext> completionHandler, [NullAllowed] out NSError error);
+
+		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Static]
+		[Export ("updateTaskForModelAtURL:trainingData:progressHandlers:error:")]
+		[return: NullAllowed]
+		MLUpdateTask Create (NSUrl modelUrl, IMLBatchProvider trainingData, MLUpdateProgressHandlers progressHandlers, [NullAllowed] out NSError error);
+
 		[Export ("resumeWithParameters:")]
 		void Resume (NSDictionary<MLParameterKey, NSObject> updateParameters);
 	}
@@ -981,5 +1010,46 @@ namespace CoreML {
 		[Abstract]
 		[Export ("writeToURL:error:")]
 		bool Write (NSUrl url, [NullAllowed] out NSError error);
+	}
+
+	[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MLModelCollection {
+
+		[Export ("identifier")]
+		string Identifier { get; }
+
+		[Export ("entries", ArgumentSemantic.Copy)]
+		NSDictionary<NSString, MLModelCollectionEntry> Entries { get; }
+
+		[Static]
+		[Async]
+		[Export ("beginAccessingModelCollectionWithIdentifier:completionHandler:")]
+		NSProgress BeginAccessingModelCollection (string identifier, Action<MLModelCollection, NSError> completionHandler);
+
+		[Static]
+		[Async]
+		[Export ("endAccessingModelCollectionWithIdentifier:completionHandler:")]
+		void EndAccessingModelCollection (string identifier, Action<bool, NSError> completionHandler);
+
+		[Notification]
+		[Field ("MLModelCollectionDidChangeNotification")]
+		NSString DidChangeNotification { get; }
+	}
+
+	[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MLModelCollectionEntry {
+
+		[Export ("modelIdentifier")]
+		string ModelIdentifier { get; }
+
+		[Export ("modelURL")]
+		NSUrl ModelUrl { get; }
+
+		[Export ("isEqualToModelCollectionEntry:")]
+		bool IsEqual (MLModelCollectionEntry entry);
 	}
 }

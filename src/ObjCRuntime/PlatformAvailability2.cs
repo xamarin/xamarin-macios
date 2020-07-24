@@ -100,7 +100,7 @@ namespace ObjCRuntime
 			}
 
 			if (Architecture != PlatformArchitecture.None)
-				builder.AppendFormat (", {0}.{1}", nameof (PlatformArchitecture), Architecture);
+				builder.Append (", ObjCRuntime.PlatformArchitecture.").Append (Architecture);
 
 			if (Message != null)
 				builder.AppendFormat (", message: \"{0}\"", Message.Replace ("\"", "\"\""));

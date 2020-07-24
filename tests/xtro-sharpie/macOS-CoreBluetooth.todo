@@ -1,0 +1,4 @@
+!extra-protocol-member! unexpected selector CBCentralManagerDelegate::centralManager:connectionEventDidOccur:forPeripheral: found
+!unknown-field! CBConnectionEventMatchingOptionPeripheralUUIDs bound
+!unknown-field! CBConnectionEventMatchingOptionServiceUUIDs bound
+!unknown-native-enum! CBCentralManagerFeature bound

@@ -1102,6 +1102,11 @@ METALPERFORMANCESHADERS_SOURCES = \
 
 # MetricKit
 
+METRICKIT_SOURCES = \
+	MetricKit/MXMetaData.cs \
+	MetricKit/MXMetric.cs \
+	MetricKit/MXMetricPayload.cs \
+
 
 # MobileCoreServices
 
@@ -1143,7 +1148,10 @@ NATURALLANGUAGE_CORE_SOURCES = \
 
 NATURALLANGUAGE_SOURCES = \
 	NaturalLanguage/NLEmbedding.cs \
+	NaturalLanguage/NLLanguage.cs \
 	NaturalLanguage/NLLanguageRecognizer.cs \
+	NaturalLanguage/NLModel.cs \
+	NaturalLanguage/NLTagger.cs \
 
 # Network
 
@@ -1427,6 +1435,15 @@ SECURITY_SOURCES = \
 	Security/SslConnection.cs \
 	Security/SslContext.cs \
 
+# SensorKit
+
+SENSORKIT_CORE_SOURCES = \
+	SensorKit/SRAmbientLightChromaticity.cs \
+
+SENSORKIT_SOURCES = \
+	SensorKit/SRAbsoluteTime.cs \
+	SensorKit/SRSensor.cs \
+
 # Social
 
 SOCIAL_CORE_SOURCES = \
@@ -1695,6 +1712,7 @@ WKWEBKIT_API_SOURCES = \
 	WKWebKit/Defs.cs \
 
 WKWEBKIT_SOURCES = \
+	WKWebKit/WKCompat.cs \
 	WKWebKit/WKWindowFeatures.cs \
 
 #
@@ -1792,6 +1810,7 @@ COMMON_FRAMEWORKS =         \
 	Compression             \
 	Foundation              \
 	GameKit                 \
+	NaturalLanguage         \
 	Network                 \
 	SceneKit                \
 	SoundAnalysis 			\
@@ -1855,7 +1874,6 @@ MAC_FRAMEWORKS =            \
 	MobileCoreServices      \
 	ModelIO                 \
 	MultipeerConnectivity	\
-	NaturalLanguage         \
 	NetworkExtension        \
 	NotificationCenter 	\
 	OpenGL                  \
@@ -1944,6 +1962,7 @@ IOS_FRAMEWORKS =         \
 	MapKit \
 	MediaAccessibility \
 	MediaPlayer \
+	MediaSetup \
 	MediaToolbox \
 	Messages \
 	MessageUI \
@@ -1954,7 +1973,6 @@ IOS_FRAMEWORKS =         \
 	MobileCoreServices \
 	ModelIO \
 	MultipeerConnectivity \
-	NaturalLanguage \
 	NetworkExtension \
 	NewsstandKit \
 	NotificationCenter \
@@ -1970,6 +1988,7 @@ IOS_FRAMEWORKS =         \
 	ReplayKit \
 	SafariServices \
 	Security \
+	SensorKit \
 	Social \
 	Speech \
 	SystemConfiguration \
@@ -2003,7 +2022,6 @@ WATCHOS_FRAMEWORKS =        \
 	MapKit                  \
 	MediaPlayer             \
 	MobileCoreServices      \
-	NaturalLanguage         \
 	PassKit                 \
 	PushKit			\
 	Security                \
@@ -2047,7 +2065,6 @@ TVOS_FRAMEWORKS =           \
 	MobileCoreServices      \
 	ModelIO                 \
 	MultipeerConnectivity   \
-	NaturalLanguage         \
 	OpenGLES                \
 	Photos                  \
 	PhotosUI                \

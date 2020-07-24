@@ -386,6 +386,19 @@ namespace Introspection {
 				case "TVTopShelfSectionedItem":
 					return true;
 #endif
+				// Xcode 12 beta 2
+				case "MSServiceAccount":
+				case "SRAmbientLightSample":
+				case "SRApplicationUsage":
+				case "SRDeviceUsageReport":
+				case "SRKeyboardMetrics":
+				case "SRKeyboardProbabilityMetric`1":
+				case "SRMessagesUsageReport":
+				case "SRNotificationUsage":
+				case "SRPhoneUsageReport":
+				case "SRVisit":
+				case "SRWebUsage":
+					return true;
 				}
 				break;
 			case "NSSecureCoding":
@@ -614,6 +627,19 @@ namespace Introspection {
 				case "TVTopShelfSectionedItem":
 					return true;
 #endif
+				// Xcode 12 beta 2
+				case "MSServiceAccount":
+				case "SRAmbientLightSample":
+				case "SRApplicationUsage":
+				case "SRDeviceUsageReport":
+				case "SRKeyboardMetrics":
+				case "SRKeyboardProbabilityMetric`1":
+				case "SRMessagesUsageReport":
+				case "SRNotificationUsage":
+				case "SRPhoneUsageReport":
+				case "SRVisit":
+				case "SRWebUsage":
+					return true;
 				}
 				break;
 			case "NSCopying":

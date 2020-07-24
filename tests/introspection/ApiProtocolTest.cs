@@ -98,6 +98,7 @@ namespace Introspection {
 					return true;
 				// Xcode 12 beta 1
 				case "ACAccountType":
+				case "ASAccountAuthenticationModificationExtensionContext":
 				case "AVAssetDownloadUrlSession":
 				case "NSUrlSession":
 				case "SNClassification":
@@ -171,6 +172,7 @@ namespace Introspection {
 				case "NSHttpCookie":
 					return true;
 				// Xcode 12 beta 1
+				case "ASAccountAuthenticationModificationExtensionContext":
 				case "GCController":
 				case "GCExtendedGamepad":
 				case "GCMicroGamepad":
@@ -241,6 +243,7 @@ namespace Introspection {
 				case "NSHttpCookie":
 					return true;
 				// Xcode 12 beta 1
+				case "ASAccountAuthenticationModificationExtensionContext":
 				case "GCController":
 				case "GCExtendedGamepad":
 				case "GCMicroGamepad":
