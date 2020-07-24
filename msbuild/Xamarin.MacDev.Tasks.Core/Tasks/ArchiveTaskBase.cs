@@ -6,6 +6,7 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev;
+using System.Globalization;
 
 namespace Xamarin.MacDev.Tasks
 {
@@ -62,7 +63,7 @@ namespace Xamarin.MacDev.Tasks
 
 		protected string CreateArchiveDirectory ()
 		{
-			var timestamp = Now.ToString ("M-dd-yy h.mm tt");
+			var timestamp = Now.ToString ("M-dd-yy h.mm tt", CultureInfo.InvariantCulture);
 			var folder = Now.ToString ("yyyy-MM-dd");
 			var baseArchiveDir = XcodeArchivesDir;
 			string archiveDir, name;
