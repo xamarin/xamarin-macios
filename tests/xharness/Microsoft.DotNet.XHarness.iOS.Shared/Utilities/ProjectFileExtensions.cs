@@ -597,14 +597,16 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 			return string.Equals (node.InnerText, "true", StringComparison.OrdinalIgnoreCase);
 		}
 
-		static XmlNode GetInfoPListNode (this XmlDocument csproj, bool throw_if_not_found = false)
+		public static XmlNode GetInfoPListNode (this XmlDocument csproj, bool throw_if_not_found = false)
 		{
-			var logicalNames = csproj.SelectNodes ("//*[local-name() = 'LogicalName']");
-			foreach (XmlNode ln in logicalNames) {
-				if (ln.InnerText != "Info.plist")
-					continue;
-				return ln.ParentNode;
-			}
+			var noLogicalName = csproj.SelectSingleNode ("//*[(local-name() = 'None' or local-name() = 'BundleResource' or local-name() = 'Content') and @Include = 'Info.plist']");
+			if (noLogicalName != null)
+				return noLogicalName;
+
+			var logicalName = csproj.SelectSingleNode ("//*[(local-name() = 'None' or local-name() = 'Content' or local-name() = 'BundleResource')]/*[local-name()='LogicalName' and text() = 'Info.plist']");
+			if (logicalName != null)
+				return logicalName.ParentNode;
+
 			if (throw_if_not_found)
 				throw new Exception ($"Could not find Info.plist include.");
 			return null;
