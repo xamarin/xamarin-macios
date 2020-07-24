@@ -437,6 +437,7 @@ namespace WebKit
 	
 	[iOS (9,0), Mac(10,11)]
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor] // NSGenericException Reason: Calling [WKWebsiteDataStore init] is not supported.
 	interface WKWebsiteDataStore : NSSecureCoding {
 
 		[Static]
@@ -781,15 +782,15 @@ namespace WebKit
 		[Export ("handlesURLScheme:")]
 		bool HandlesUrlScheme (string urlScheme);
 
-		[Mac (10,16), iOS (14,0)]
+		[Mac (11,0), iOS (14,0)]
 		[Async]
-		[Export ("evaluateJavaScript:inContentWorld:completionHandler:")]
-		void EvaluateJavaScript (string javaScriptString, WKContentWorld contentWorld, [NullAllowed] Action<NSObject, NSError> completionHandler);
+		[Export ("evaluateJavaScript:inFrame:inContentWorld:completionHandler:")]
+		void EvaluateJavaScript (string javaScriptString, [NullAllowed] WKFrameInfo frame, WKContentWorld contentWorld, [NullAllowed] Action<NSObject, NSError> completionHandler);
 
-		[Mac (10,16), iOS (14,0)]
+		[Mac (11,0), iOS (14,0)]
 		[Async]
-		[Export ("callAsyncJavaScript:arguments:inContentWorld:completionHandler:")]
-		void CallAsyncJavaScript (string functionBody, [NullAllowed] NSDictionary<NSString, NSObject> arguments, WKContentWorld contentWorld, [NullAllowed] Action<NSObject, NSError> completionHandler);
+		[Export ("callAsyncJavaScript:arguments:inFrame:inContentWorld:completionHandler:")]
+		void CallAsyncJavaScript (string functionBody, [NullAllowed] NSDictionary<NSString, NSObject> arguments, [NullAllowed] WKFrameInfo frame, WKContentWorld contentWorld, [NullAllowed] Action<NSObject, NSError> completionHandler);
 
 		[Mac (10,16), iOS (14,0)]
 		[Async]

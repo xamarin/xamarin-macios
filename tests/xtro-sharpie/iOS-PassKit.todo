@@ -2,6 +2,7 @@
 !missing-enum! PKBarcodeEventConfigurationDataType not bound
 !missing-enum! PKIssuerProvisioningExtensionAuthorizationResult not bound
 !missing-field! PKPaymentNetworkAlipay not bound
+!missing-field! PKPaymentNetworkGirocard not bound
 !missing-protocol! PKAddSecureElementPassViewControllerDelegate not bound
 !missing-protocol! PKIssuerProvisioningExtensionAuthorizationProviding not bound
 !missing-protocol! PKPaymentInformationRequestHandling not bound

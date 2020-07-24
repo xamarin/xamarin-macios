@@ -17,6 +17,7 @@
 !missing-pinvoke! nw_group_descriptor_add_endpoint is not bound
 !missing-pinvoke! nw_group_descriptor_create_multicast is not bound
 !missing-pinvoke! nw_group_descriptor_enumerate_endpoints is not bound
+!missing-pinvoke! nw_ip_options_set_disable_multicast_loopback is not bound
 !missing-pinvoke! nw_multicast_group_descriptor_get_disable_unicast_traffic is not bound
 !missing-pinvoke! nw_multicast_group_descriptor_set_disable_unicast_traffic is not bound
 !missing-pinvoke! nw_multicast_group_descriptor_set_specific_source is not bound

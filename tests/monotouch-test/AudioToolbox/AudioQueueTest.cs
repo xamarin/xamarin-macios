@@ -36,6 +36,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 		}
 
 		[Test]
+		[Ignore ("Broken in Xcode 12 beta 3 - https://github.com/xamarin/xamarin-macios/issues/8943")]
 		public void ChannelAssignments ()
 		{
 			var aq = new OutputAudioQueue (AudioStreamBasicDescription.CreateLinearPCM ());
