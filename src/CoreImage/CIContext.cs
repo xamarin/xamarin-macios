@@ -130,7 +130,7 @@ namespace CoreImage {
 			}
 		}
 
-		[iOS (14,0)][TV (14,0)][Mac (10,16)]
+		[iOS (14,0)][TV (14,0)][Mac (11,0)]
 		public string Name {
 			get {
 				return GetStringValue (CIContext.Name);
