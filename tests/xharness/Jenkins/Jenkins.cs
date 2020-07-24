@@ -360,6 +360,9 @@ namespace Xharness.Jenkins {
 					yield return new TestData { Variation = "Debug (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all,-remove-uithread-checks", Debug = true, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL", Undefines = "DYNAMIC_REGISTRAR", Ignored = !IncludeAll };
 					break;
 				case "introspection":
+					// Xcode 12 beta 3 broke iOS 32 bits simulators
+					if (test.Platform == TestPlatform.iOS_Unified32)
+						break;
 					foreach (var target in GetAppRunnerTargets (test.Platform))
 						yield return new TestData {
 							Variation = $"Debug ({GetSimulatorMinVersion (test.Platform)})",
