@@ -259,11 +259,11 @@ namespace CoreSpotlight {
 	interface CSSearchableItemAttributeSet : NSCopying, NSSecureCoding {
 
 		[Deprecated (PlatformName.iOS, 14,0, message: "Use '.ctor(UTType)' instead.")]
-		[Deprecated (PlatformName.MacOSX, 10,16, message: "Use '.ctor(UTType)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 11,0, message: "Use '.ctor(UTType)' instead.")]
 		[Export ("initWithItemContentType:")]
 		IntPtr Constructor (string itemContentType);
 
-		[iOS (14,0)][TV (14,0)][Mac (10,16)]
+		[iOS (14,0)][TV (14,0)][Mac (11,0)]
 		[Export ("initWithContentType:")]
 		IntPtr Constructor (UTType contentType);
 
