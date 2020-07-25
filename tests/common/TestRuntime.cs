@@ -214,7 +214,7 @@ partial class TestRuntime
 #elif __IOS__
 				return CheckiOSSystemVersion (14, 0);
 #elif MONOMAC
-				return CheckMacSystemVersion (10, 16, 0);
+				return CheckMacSystemVersion (11, 0, 0);
 #else
 				throw new NotImplementedException ();
 #endif
