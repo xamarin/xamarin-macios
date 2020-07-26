@@ -19,7 +19,7 @@ namespace AppKit
 	public partial class NSPredicateEditorRowTemplate
 	{
 		public NSPredicateEditorRowTemplate (params NSCompoundPredicateType [] compoundTypes)
-			: this (compoundTypes.Select (t => NSNumber.FromUInt32 ((uint)t)).ToArray ())
+			: this (Array.ConvertAll (compoundTypes, t => NSNumber.FromUInt32 ((uint)t)))
 		{
 		}
 
