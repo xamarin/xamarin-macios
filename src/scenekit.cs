@@ -1066,7 +1066,7 @@ namespace SceneKit {
 		SCNGeometryElement FromSubmesh (MDLSubmesh submesh);
 
 		[NoWatch] // marked as 7,0 but there's no Metal support on the platform
-		[TV (14,0), Mac (10,16), iOS (14,0)]
+		[TV (14,0), Mac (11,0), iOS (14,0)]
 		[Static]
 		[Export ("geometryElementWithBuffer:primitiveType:primitiveCount:bytesPerIndex:")]
 		SCNGeometryElement FromBuffer (IMTLBuffer buffer, SCNGeometryPrimitiveType primitiveType, nint primitiveCount, nint bytesPerIndex);
