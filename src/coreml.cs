@@ -59,9 +59,13 @@ namespace CoreML {
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 	[Native]
 	public enum MLMultiArrayDataType : long {
-		Double = 65536 | 64,
-		Float32 = 65536 | 32,
-		Int32 = 131072 | 32,
+		Double = 0x10000 | 64,
+		// added in xcode12 but it's the same a `Double` and can be used in earlier versions
+		Float64 = 0x10000 | 64,
+		Float32 = 0x10000 | 32,
+		// added in xcode12 but it's the same a `Float32` and can be used in earlier versions
+		Float = 0x10000 | 32,
+		Int32 = 0x20000 | 32,
 	}
 
 	[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
@@ -398,7 +402,7 @@ namespace CoreML {
 		[return: NullAllowed]
 		NSObject GetParameterValue (MLParameterKey key, [NullAllowed] out NSError error);
 
-		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 		[Static]
 		[Async]
 		[Export ("loadContentsOfURL:configuration:completionHandler:")]
@@ -435,7 +439,7 @@ namespace CoreML {
 		[Wrap ("_Metadata")]
 		MLModelMetadata Metadata { get; }
 
-		[Watch (7, 0), TV (14, 0), Mac (10, 16), iOS (14, 0)]
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 		[NullAllowed, Export ("classLabels", ArgumentSemantic.Copy)]
 		NSObject[] ClassLabels { get; }
 
@@ -545,7 +549,7 @@ namespace CoreML {
 
 		// @interface Concatenating (MLMultiArray)
 
-		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 		[Static]
 		[Export ("multiArrayByConcatenatingMultiArrays:alongAxis:dataType:")]
 		MLMultiArray Concat (MLMultiArray[] multiArrays, nint axis, MLMultiArrayDataType dataType);
@@ -985,13 +989,13 @@ namespace CoreML {
 		[return: NullAllowed]
 		MLUpdateTask Create (NSUrl modelUrl, IMLBatchProvider trainingData, [NullAllowed] MLModelConfiguration configuration, MLUpdateProgressHandlers progressHandlers, [NullAllowed] out NSError error);
 
-		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 		[Static]
 		[Export ("updateTaskForModelAtURL:trainingData:completionHandler:error:")]
 		[return: NullAllowed]
 		MLUpdateTask Create (NSUrl modelUrl, IMLBatchProvider trainingData, Action<MLUpdateContext> completionHandler, [NullAllowed] out NSError error);
 
-		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 		[Static]
 		[Export ("updateTaskForModelAtURL:trainingData:progressHandlers:error:")]
 		[return: NullAllowed]
@@ -1012,7 +1016,7 @@ namespace CoreML {
 		bool Write (NSUrl url, [NullAllowed] out NSError error);
 	}
 
-	[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+	[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MLModelCollection {
@@ -1038,7 +1042,7 @@ namespace CoreML {
 		NSString DidChangeNotification { get; }
 	}
 
-	[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+	[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MLModelCollectionEntry {
