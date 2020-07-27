@@ -531,7 +531,7 @@ namespace CoreVideo {
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (14, 0)]
-	public enum kCVVersatileBayerPattern : uint
+	public enum CVVersatileBayerPattern : uint
 	{
 		Rggb = 0,
 		Grbg = 1,
