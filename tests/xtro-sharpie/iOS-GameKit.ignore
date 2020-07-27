@@ -32,3 +32,14 @@
 !missing-null-allowed! 'UIKit.UIViewController GameKit.GKAchievement::ChallengeComposeController(GameKit.GKPlayer[],System.String,GameKit.GKChallengeComposeHandler)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'UIKit.UIViewController GameKit.GKAchievement::ChallengeComposeController(GameKit.GKPlayer[],System.String,GameKit.GKChallengeComposeHandler)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIViewController GameKit.GKScore::ChallengeComposeController(System.String[],System.String,GameKit.GKChallengeComposeHandler)' is missing an [NullAllowed] on return type
+
+# API removed by Apple, marked as deprecated
+!unknown-native-enum! GKAuthenticationType bound
+
+# Xcode 12 beta 3 - these API are missing
+# https://github.com/xamarin/maccore/issues/2269
+!missing-selector! GKLeaderboardEntry::context not bound
+!missing-selector! GKLeaderboardEntry::date not bound
+!missing-selector! GKLeaderboardEntry::formattedScore not bound
+!missing-selector! GKLeaderboardEntry::rank not bound
+!missing-selector! GKLeaderboardEntry::score not bound
