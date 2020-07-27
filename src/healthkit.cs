@@ -1952,10 +1952,6 @@ namespace HealthKit {
 		[Field ("HKCategoryTypeIdentifierAppetiteChanges")]
 		AppetiteChanges,
 
-		[Watch (7, 0), iOS (14, 0)]
-		[Field ("HKCategoryTypeIdentifierBladderIncontinence")]
-		BladderIncontinence,
-
 		[Watch (7, 0), iOS (13, 6)]
 		[Field ("HKCategoryTypeIdentifierBloating")]
 		Bloating,
@@ -1988,10 +1984,6 @@ namespace HealthKit {
 		[Field ("HKCategoryTypeIdentifierDizziness")]
 		Dizziness,
 
-		[Watch (7, 0), iOS (14, 0)]
-		[Field ("HKCategoryTypeIdentifierDrySkin")]
-		DrySkin,
-
 		[Watch (7, 0), iOS (13, 6)]
 		[Field ("HKCategoryTypeIdentifierFainting")]
 		Fainting,
@@ -2007,10 +1999,6 @@ namespace HealthKit {
 		[Watch (7, 0), iOS (13, 6)]
 		[Field ("HKCategoryTypeIdentifierGeneralizedBodyAche")]
 		GeneralizedBodyAche,
-
-		[Watch (7, 0), iOS (14, 0)]
-		[Field ("HKCategoryTypeIdentifierHairLoss")]
-		HairLoss,
 
 		[Watch (7, 0), iOS (13, 6)]
 		[Field ("HKCategoryTypeIdentifierHeadache")]
@@ -2036,10 +2024,6 @@ namespace HealthKit {
 		[Field ("HKCategoryTypeIdentifierLowerBackPain")]
 		LowerBackPain,
 
-		[Watch (7, 0), iOS (14, 0)]
-		[Field ("HKCategoryTypeIdentifierMemoryLapse")]
-		MemoryLapse,
-
 		[Watch (7, 0), iOS (13, 6)]
 		[Field ("HKCategoryTypeIdentifierMoodChanges")]
 		MoodChanges,
@@ -2047,10 +2031,6 @@ namespace HealthKit {
 		[Watch (7, 0), iOS (13, 6)]
 		[Field ("HKCategoryTypeIdentifierNausea")]
 		Nausea,
-
-		[Watch (7, 0), iOS (14, 0)]
-		[Field ("HKCategoryTypeIdentifierNightSweats")]
-		NightSweats,
 
 		[Watch (7, 0), iOS (13, 6)]
 		[Field ("HKCategoryTypeIdentifierPelvicPain")]
@@ -2084,10 +2064,6 @@ namespace HealthKit {
 		[Field ("HKCategoryTypeIdentifierSoreThroat")]
 		SoreThroat,
 
-		[Watch (7, 0), iOS (14, 0)]
-		[Field ("HKCategoryTypeIdentifierVaginalDryness")]
-		VaginalDryness,
-
 		[Watch (7, 0), iOS (13, 6)]
 		[Field ("HKCategoryTypeIdentifierVomiting")]
 		Vomiting,
@@ -2095,6 +2071,30 @@ namespace HealthKit {
 		[Watch (7, 0), iOS (13, 6)]
 		[Field ("HKCategoryTypeIdentifierWheezing")]
 		Wheezing,
+
+		[Watch (7, 0), iOS (14, 0)]
+		[Field ("HKCategoryTypeIdentifierBladderIncontinence")]
+		BladderIncontinence,
+
+		[Watch (7, 0), iOS (14, 0)]
+		[Field ("HKCategoryTypeIdentifierDrySkin")]
+		DrySkin,
+
+		[Watch (7, 0), iOS (14, 0)]
+		[Field ("HKCategoryTypeIdentifierHairLoss")]
+		HairLoss,
+
+		[Watch (7, 0), iOS (14, 0)]
+		[Field ("HKCategoryTypeIdentifierVaginalDryness")]
+		VaginalDryness,
+
+		[Watch (7, 0), iOS (14, 0)]
+		[Field ("HKCategoryTypeIdentifierMemoryLapse")]
+		MemoryLapse,
+
+		[Watch (7, 0), iOS (14, 0)]
+		[Field ("HKCategoryTypeIdentifierNightSweats")]
+		NightSweats,
 
 		[Watch (7, 0), iOS (14, 0)]
 		[Field ("HKCategoryTypeIdentifierEnvironmentalAudioExposureEvent")]
