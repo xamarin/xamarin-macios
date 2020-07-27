@@ -72,32 +72,6 @@ namespace HealthKit {
 		Active,
 	}
 
-	[iOS (13,6), NoWatch]
-	[Native]
-	public enum HKCategoryValueSeverity : long {
-		Unspecified = 0,
-		NotPresent,
-		Mild,
-		Moderate,
-		Severe,
-	}
-
-	[iOS (13,6), NoWatch]
-	[Native]
-	public enum HKCategoryValueAppetiteChanges : long {
-		Unspecified = 0,
-		NoChange,
-		Decreased,
-		Increased,
-	}
-
-	[iOS (13,6), NoWatch]
-	[Native]
-	public enum HKCategoryValuePresence : long {
-		Present = 0,
-		NotPresent,
-	}
-
 	delegate void HKAnchoredObjectResultHandler2 (HKAnchoredObjectQuery query, HKSample[] results, nuint newAnchor, NSError error);
 
 	[Obsolete ("Use HKAnchoredObjectResultHandler2 instead")]
