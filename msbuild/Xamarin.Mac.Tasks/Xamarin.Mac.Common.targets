@@ -730,7 +730,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		/>
 	</Target>
 
-	<Target Name="_CopyAppExtensionsToBundle"  Condition="'$(IsAppExtension)' != 'true'" DependsOnTargets="_ResolveAppExtensionReferences">
+	<Target Name="_CopyAppExtensionsToBundle"  Condition="'$(IsAppExtension)' != 'true'" DependsOnTargets="_ExtendAppExtensionReferences">
 		<MakeDir Directories="$(_AppBundlePath)Contents\PlugIns" Condition="'%(_ResolvedAppExtensionReferences.Extension)' == '.appex'" />
 		<MakeDir Directories="$(_AppBundlePath)Contents\XPCServices" Condition="'%(_ResolvedAppExtensionReferences.Extension)' == '.xpc'" />
 
