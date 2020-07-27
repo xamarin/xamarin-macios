@@ -984,9 +984,10 @@ namespace Introspection
 					Assert.True (CheckLibrary (s), fi.Name);
 					break;
 #endif
-#if __IOS__
+#if !__MACOS__
 				case "MediaSetupLibrary":
-					// Xcode 12 beta 2 does not ship this framework/headers for the simulator
+				case "MLComputeLibrary":
+					// Xcode 12 beta 2 does not ship this framework/headers for the simulators
 					if (Runtime.Arch == Arch.DEVICE)
 						Assert.True (CheckLibrary (s), fi.Name);
 					break;

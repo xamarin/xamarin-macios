@@ -148,6 +148,7 @@ namespace ObjCRuntime {
 		public const string AccessibilityLibrary = "/System/Library/Frameworks/Accessibility.framework/Accessibility";
 		public const string AppClipLibrary = "/System/Library/Frameworks/AppClip.framework/AppClip";
 		public const string MediaSetupLibrary = "/System/Library/Frameworks/MediaSetup.framework/MediaSetup";
+		public const string MLComputeLibrary = "/System/Library/Frameworks/MLCompute.framework/MLCompute";
 		public const string SensorKitLibrary = "/System/Library/Frameworks/SensorKit.framework/SensorKit";
 		public const string UniformTypeIdentifiersLibrary = "/System/Library/Frameworks/UniformTypeIdentifiers.framework/UniformTypeIdentifiers";
 	}
