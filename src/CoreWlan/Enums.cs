@@ -86,7 +86,7 @@ namespace CoreWlan {
 		Unknown = int.MaxValue,
 	}
 
-	[Deprecated (PlatformName.MacOSX, 10,16)]
+	[Deprecated (PlatformName.MacOSX, 11,0)]
 	[Native]
 	public enum CWIbssModeSecurity : ulong {
 		None = 0,
@@ -138,10 +138,10 @@ namespace CoreWlan {
 		ModeDidChange = 7,
 		ScanCacheUpdated = 8,
 
-		[Deprecated (PlatformName.MacOSX, 10,16)]
+		[Deprecated (PlatformName.MacOSX, 11,0)]
 		VirtualInterfaceStateChanged = 9,
 
-		[Deprecated (PlatformName.MacOSX, 10,16)]
+		[Deprecated (PlatformName.MacOSX, 11,0)]
 		RangingReportEvent = 10,
 		Unknown = long.MaxValue
 	}
