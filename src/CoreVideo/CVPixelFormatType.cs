@@ -5,6 +5,7 @@
 //     
 // Copyright 2011 Novell, Inc
 // Copyright 2011-2014, 2016 Xamarin Inc
+// Copyright 2020 Microsoft Corporation. All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -106,5 +107,16 @@ namespace CoreVideo {
 		CV420YpCbCr10BiPlanarFullRange = 0x78663230, // xf20
 		CV422YpCbCr10BiPlanarFullRange = 0x78663232, // xf22
 		CV444YpCbCr10BiPlanarFullRange = 0x78663434, // xf44
+		// iOS 14.0
+		CV422YpCbCr8BiPlanarVideoRange = 0x34323276, // '422v'
+		CV422YpCbCr8BiPlanarFullRange  = 0x34323266, // '422f'
+		CV444YpCbCr8BiPlanarVideoRange = 0x34343476, // '444v'
+		CV444YpCbCr8BiPlanarFullRange  = 0x34343466, // '444f'
+		OneComponent10 = 0x4c303130, // 'L010'
+		OneComponent12 = 0x4c303132, // 'L012'
+		OneComponent16 = 0x4c303136, // 'L016'
+		TwoComponent16 = 0x32433136, // '2C16'
+		CV16VersatileBayer = 0x62703136, // 'bp16'
+		CV64RGBA_DownscaledProResRAW = 0x62703634, // 'bp64'
 	}
 }

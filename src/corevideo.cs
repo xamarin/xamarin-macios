@@ -2,6 +2,7 @@
 // corevideo.cs: Definitions for CoreVideo
 //
 // Copyright 2014 Xamarin Inc. All rights reserved.
+// Copyright 2020 Microsoft Corporation. All rights reserved.
 //
 
 using System;
@@ -348,10 +349,14 @@ namespace CoreVideo {
 		[Field ("kCVImageBufferYCbCrMatrix_SMPTE_240M_1995")]
 		Smpte240M1995,
 
+		[Deprecated (PlatformName.iOS, 14, 0, message: "This API is no longer supported.")]
+		[Deprecated (PlatformName.MacOSX, 11, 0, message: "This API is no longer supported.")]
 		[Field ("kCVImageBufferYCbCrMatrix_DCI_P3")]
 		[iOS (9,0), Mac (10,12)]
 		DciP3,
 
+		[Deprecated (PlatformName.iOS, 14, 0, message: "This API is no longer supported.")]
+		[Deprecated (PlatformName.MacOSX, 11, 0, message: "This API is no longer supported.")]
 		[Field ("kCVImageBufferYCbCrMatrix_P3_D65")]
 		[iOS (9,0), Mac (10,12)]
 		P3D65,
@@ -426,6 +431,55 @@ namespace CoreVideo {
 		[Field ("kCVPixelBufferOpenGLTextureCacheCompatibilityKey")]
 		NSString OpenGLTextureCacheCompatibilityKey { get; }
 #endif
+		[Unavailable (PlatformName.MacCatalyst)]
+		[NoWatch, NoTV, NoMac, iOS (14, 0)]
+		[Field ("kCVPixelBufferProResRAWKey_BlackLevel"), Advice ("This API is not available when using MacCatalyst.")]
+		NSString ProResRawKey_BlackLevel { get; }
+
+		[Unavailable (PlatformName.MacCatalyst)]
+		[NoWatch, NoTV, NoMac, iOS (14, 0)]
+		[Field ("kCVPixelBufferProResRAWKey_ColorMatrix"), Advice ("This API is not available when using MacCatalyst.")]
+		NSString ProResRawKey_ColorMatrix { get; }
+
+		[Unavailable (PlatformName.MacCatalyst)]
+		[NoWatch, NoTV, NoMac, iOS (14, 0)]
+		[Field ("kCVPixelBufferProResRAWKey_GainFactor"), Advice ("This API is not available when using MacCatalyst.")]
+		NSString ProResRawKey_GainFactor { get; }
+
+		[Unavailable (PlatformName.MacCatalyst)]
+		[NoWatch, NoTV, NoMac, iOS (14, 0)]
+		[Field ("kCVPixelBufferProResRAWKey_RecommendedCrop"), Advice ("This API is not available when using MacCatalyst.")]
+		NSString ProResRawKey_RecommendedCrop { get; }
+
+		[Unavailable (PlatformName.MacCatalyst)]
+		[NoWatch, NoTV, NoMac, iOS (14, 0)]
+		[Field ("kCVPixelBufferProResRAWKey_SenselSitingOffsets"), Advice ("This API is not available when using MacCatalyst.")]
+		NSString ProResRawKey_SenselSitingOffsets { get; }
+
+		[Unavailable (PlatformName.MacCatalyst)]
+		[NoWatch, NoTV, NoMac, iOS (14, 0)]
+		[Field ("kCVPixelBufferProResRAWKey_WhiteBalanceBlueFactor"), Advice ("This API is not available when using MacCatalyst.")]
+		NSString ProResRawKey_WhiteBalanceBlueFactor { get; }
+
+		[Unavailable (PlatformName.MacCatalyst)]
+		[NoWatch, NoTV, NoMac, iOS (14, 0)]
+		[Field ("kCVPixelBufferProResRAWKey_WhiteBalanceCCT"), Advice ("This API is not available when using MacCatalyst.")]
+		NSString ProResRawKey_WhiteBalanceCct { get; }
+
+		[Unavailable (PlatformName.MacCatalyst)]
+		[NoWatch, NoTV, NoMac, iOS (14, 0)]
+		[Field ("kCVPixelBufferProResRAWKey_WhiteBalanceRedFactor"), Advice ("This API is not available when using MacCatalyst.")]
+		NSString ProResRawKey_WhiteBalanceRedFactor { get; }
+
+		[Unavailable (PlatformName.MacCatalyst)]
+		[NoWatch, NoTV, NoMac, iOS (14, 0)]
+		[Field ("kCVPixelBufferProResRAWKey_WhiteLevel"), Advice ("This API is not available when using MacCatalyst.")]
+		NSString ProResRawKey_WhiteLevel { get; }
+
+		[Unavailable (PlatformName.MacCatalyst)]
+		[NoWatch, NoTV, NoMac, iOS (14, 0)]
+		[Field ("kCVPixelBufferVersatileBayerKey_BayerPattern"), Advice ("This API is not available when using MacCatalyst.")]
+		NSString VersatileBayerKey_BayerPattern { get; }
 	}
 
 	[Partial]
@@ -474,5 +528,14 @@ namespace CoreVideo {
 	[StrongDictionary ("CVMetalTextureAttributesKeys")]
 	interface CVMetalTextureAttributes {
 		// Create stub DictionaryContainer class
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (14, 0)]
+	public enum kCVVersatileBayerPattern : uint
+	{
+		Rggb = 0,
+		Grbg = 1,
+		Gbrg = 2,
+		Bggr = 3,
 	}
 }
