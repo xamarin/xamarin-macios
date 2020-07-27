@@ -250,12 +250,9 @@ namespace Xharness.Targets
 				inputProject = new XmlDocument ();
 				inputProject.LoadWithoutNetworkAccess (TemplateProjectPath);
 				OriginalInfoPListInclude = inputProject.GetInfoPListInclude ()?.Replace ('\\', '/');
-			}
 
-			ProjectPath = Path.Combine (targetDirectory, ProjectsDir, GetTargetSpecificDir (), templateName + ProjectFileSuffix + "." + ProjectFileExtension);
+				ProjectPath = Path.Combine (targetDirectory, ProjectsDir, GetTargetSpecificDir (), templateName + ProjectFileSuffix + "." + ProjectFileExtension);
 
-			if (!ShouldSkipProjectGeneration)
-			{
 				outputType = inputProject.GetOutputType ();
 
 				if (inputProject.IsDotNetProject ()) {
@@ -280,6 +277,8 @@ namespace Xharness.Targets
 				}
 
 				ExecuteInternal ();
+			} else {
+				ProjectPath = TemplateProjectPath;
 			}
 		}
 
