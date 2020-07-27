@@ -137,6 +137,7 @@
 				PlatformAssembly=$(_PlatformAssemblyName).dll
 				SdkVersion=$(_SdkVersion)
 				TargetArchitectures=$(TargetArchitectures)
+				Verbosity=$(_BundlerVerbosity)
 			</_CustomLinkerOptions>
 			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) --custom-data "LinkerOptionsFile=$(_CustomLinkerOptionsFile)"</_ExtraTrimmerArgs>
 
@@ -148,18 +149,10 @@
 			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) --verbose</_ExtraTrimmerArgs>
 		</PropertyGroup>
 		<ItemGroup>
-			<!-- add our custom steps -->
+			<!-- add a custom step which inserts any other steps we need -->
 			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)">
 				<BeforeStep>LoadReferencesStep</BeforeStep>
 				<Type>Xamarin.SetupStep</Type>
-			</_TrimmerCustomSteps>
-			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)">
-				<!-- At the end of the pipeline -->
-				<Type>Xamarin.GenerateMainStep</Type>
-			</_TrimmerCustomSteps>
-			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)">
-				<!-- At the end of the pipeline -->
-				<Type>Xamarin.GatherFrameworksStep</Type>
 			</_TrimmerCustomSteps>
 		</ItemGroup>
 
