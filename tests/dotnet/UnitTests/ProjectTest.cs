@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 using NUnit.Framework;
@@ -9,6 +10,8 @@ using Xamarin.Tests;
 namespace Xamarin.Tests {
 	[TestFixture]
 	public class DotNetProjectTest {
+		Dictionary<string, string> verbosity = new Dictionary<string, string> { { "_BundlerVerbosity", "1" } };
+
 		string GetProjectPath (string project, string subdir = null)
 		{
 			var project_dir = Path.Combine (Configuration.SourceRoot, "tests", "dotnet", project);
@@ -42,7 +45,7 @@ namespace Xamarin.Tests {
 			var platform = ApplePlatform.iOS;
 			var project_path = GetProjectPath ("MySingleView");
 			Clean (project_path);
-			var result = DotNet.AssertBuild (project_path);
+			var result = DotNet.AssertBuild (project_path, verbosity);
 			AssertThatLinkerExecuted (result);
 			AssertAppContents (platform, Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", "net5.0", "ios-x64", "MySingleView.app"));
 		}
@@ -55,7 +58,7 @@ namespace Xamarin.Tests {
 			var platform = ApplePlatform.MacOSX;
 			var project_path = GetProjectPath ("MyCocoaApp");
 			Clean (project_path);
-			var result = DotNet.AssertBuild (project_path);
+			var result = DotNet.AssertBuild (project_path, verbosity);
 			AssertThatLinkerExecuted (result);
 			AssertAppContents (platform, Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", "net5.0", "osx-x64", "MyCocoaApp.app"));
 		}
@@ -66,7 +69,7 @@ namespace Xamarin.Tests {
 			var platform = ApplePlatform.TVOS;
 			var project_path = GetProjectPath ("MyTVApp");
 			Clean (project_path);
-			var result = DotNet.AssertBuild (project_path);
+			var result = DotNet.AssertBuild (project_path, verbosity);
 			AssertThatLinkerExecuted (result);
 			AssertAppContents (platform, Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", "net5.0", "tvos-x64", "MyTVApp.app"));
 		}
@@ -76,7 +79,7 @@ namespace Xamarin.Tests {
 		{
 			var project_path = GetProjectPath ("MyWatchApp");
 			Clean (project_path);
-			var result = DotNet.AssertBuildFailure (project_path);
+			var result = DotNet.AssertBuildFailure (project_path, verbosity);
 			Assert.That (result.StandardOutput.ToString (), Does.Contain ("The specified RuntimeIdentifier 'watchos-x86' is not recognized."), "Missing runtime pack for watchOS");
 		}
 
@@ -90,7 +93,7 @@ namespace Xamarin.Tests {
 				Assert.Ignore ("Ignore until Xamarin.Mac is re-enabled. Issue: https://github.com/xamarin/xamarin-macios/issues/9680");
 			var project_path = GetProjectPath ("MyClassLibrary", platform);
 			Clean (project_path);
-			var result = DotNet.AssertBuild (project_path);
+			var result = DotNet.AssertBuild (project_path, verbosity);
 			Assert.That (result.StandardOutput.ToString (), Does.Not.Contain ("Task \"ILLink\""), "Linker executed unexpectedly.");
 		}
 
@@ -98,7 +101,7 @@ namespace Xamarin.Tests {
 		{
 			var output = result.StandardOutput.ToString ();
 			Assert.That (output, Does.Contain ("Building target \"_RunILLink\" completely."), "Linker did not executed as expected.");
-			Assert.That (output, Does.Contain ("Hello SetupStep"), "Custom steps did not run as expected.");
+			Assert.That (output, Does.Contain ("Pipeline Steps:"), "Custom steps did not run as expected.");
 		}
 
 		void AssertAppContents (ApplePlatform platform, string app_directory)

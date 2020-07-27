@@ -286,6 +286,18 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</DetectSdkLocations>
 	</Target>
 
+	<Target Name="_ParseBundlerArguments">
+		<ParseBundlerArguments
+			ExtraArgs="$(_BundlerArguments)"
+			NoSymbolStrip="$(_NoSymbolStrip)"
+			NoDSymUtil="$(_NoDSymUtil)"
+			>
+			<Output TaskParameter="NoSymbolStrip" PropertyName="_NoSymbolStrip"/>
+			<Output TaskParameter="NoDSymUtil" PropertyName="_NoDSymUtil"/>
+			<Output TaskParameter="Verbosity" PropertyName="_BundlerVerbosity" />
+		</ParseBundlerArguments>
+	</Target>
+
 	<!-- Code signing -->
 
 	<PropertyGroup>

@@ -483,7 +483,6 @@
     <None Include="..\..\docs\website\mmp-errors.md">
       <Link>docs\website\mmp-errors.md</Link>
     </None>
-    <None Include="..\.editorconfig" />
   </ItemGroup>
   <Import Project="..\..\packages\XliffTasks.1.0.0-beta.20060.1\build\XliffTasks.targets" Condition="Exists('..\..\packages\XliffTasks.1.0.0-beta.20060.1\build\XliffTasks.targets')" />
   <Target Name="BuildSdkVersions" Inputs="../common/SdkVersions.cs.in" Outputs="../common/SdkVersions.cs">

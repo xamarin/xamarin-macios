@@ -18,7 +18,8 @@ namespace Xamarin.Linker {
 		public string ItemsDirectory { get; private set; }
 		public ApplePlatform Platform { get; private set; }
 		public string PlatformAssembly { get; private set; }
-		public string CacheDirectory { get; private set; }
+		public Version SdkVersion { get; private set; }
+		public int Verbosity { get; private set; }
 
 		static ConditionalWeakTable<LinkContext, LinkerConfiguration> configurations = new ConditionalWeakTable<LinkContext, LinkerConfiguration> ();
 
@@ -51,6 +52,10 @@ namespace Xamarin.Linker {
 
 				var key = line [..eq];
 				var value = line [(eq + 1)..];
+
+				if (string.IsNullOrEmpty (value))
+					continue;
+
 				switch (key) {
 				case "AssemblyName":
 					AssemblyName = value;
@@ -93,6 +98,11 @@ namespace Xamarin.Linker {
 							Abis.Add (a);
 					}
 					break;
+				case "Verbosity":
+					if (!int.TryParse (value, out var verbosity))
+						throw new InvalidOperationException ($"Invalid Verbosity '{value}' in {linker_file}");
+					Verbosity = verbosity;
+					break;
 				default:
 					throw new InvalidOperationException ($"Unknown key '{key}' in {linker_file}");
 				}
@@ -103,13 +113,19 @@ namespace Xamarin.Linker {
 
 		public void Write ()
 		{
-			Console.WriteLine ($"LinkerConfiguration:");
-			Console.WriteLine ($"    ABIs: {string.Join (", ", Abis.Select (v => v.AsArchString ()))}");
-			Console.WriteLine ($"    AssemblyName: {AssemblyName}");
-			Console.WriteLine ($"    CacheDirectory: {CacheDirectory}");
-			Console.WriteLine ($"    ItemsDirectory: {ItemsDirectory}");
-			Console.WriteLine ($"    Platform: {Platform}");
-			Console.WriteLine ($"    PlatformAssembly: {PlatformAssembly}.dll");
+			if (Verbosity > 0) {
+				Console.WriteLine ($"LinkerConfiguration:");
+				Console.WriteLine ($"    ABIs: {string.Join (", ", Abis.Select (v => v.AsArchString ()))}");
+				Console.WriteLine ($"    AssemblyName: {AssemblyName}");
+				Console.WriteLine ($"    CacheDirectory: {CacheDirectory}");
+				Console.WriteLine ($"    DeploymentTarget: {DeploymentTarget}");
+				Console.WriteLine ($"    ItemsDirectory: {ItemsDirectory}");
+				Console.WriteLine ($"    IsSimulatorBuild: {IsSimulatorBuild}");
+				Console.WriteLine ($"    Platform: {Platform}");
+				Console.WriteLine ($"    PlatformAssembly: {PlatformAssembly}.dll");
+				Console.WriteLine ($"    SdkVersion: {SdkVersion}");
+				Console.WriteLine ($"    Verbosity: {Verbosity}");
+			}
 		}
 
 		public void WriteOutputForMSBuild (string itemName, List<MSBuildItem> items)
