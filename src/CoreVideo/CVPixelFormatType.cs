@@ -5,7 +5,7 @@
 //     
 // Copyright 2011 Novell, Inc
 // Copyright 2011-2014, 2016 Xamarin Inc
-// Copyright 2020 Microsoft Corporation. All rights reserved.
+// Copyright 2020 Microsoft Corporation
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -117,6 +117,6 @@ namespace CoreVideo {
 		OneComponent16 = 0x4c303136, // 'L016'
 		TwoComponent16 = 0x32433136, // '2C16'
 		CV16VersatileBayer = 0x62703136, // 'bp16'
-		CV64RGBA_DownscaledProResRAW = 0x62703634, // 'bp64'
+		CV64Rgba_DownscaledProResRaw = 0x62703634, // 'bp64'
 	}
 }

@@ -2,7 +2,7 @@
 // corevideo.cs: Definitions for CoreVideo
 //
 // Copyright 2014 Xamarin Inc. All rights reserved.
-// Copyright 2020 Microsoft Corporation. All rights reserved.
+// Copyright 2020 Microsoft Corporation
 //
 
 using System;
@@ -431,54 +431,54 @@ namespace CoreVideo {
 		[Field ("kCVPixelBufferOpenGLTextureCacheCompatibilityKey")]
 		NSString OpenGLTextureCacheCompatibilityKey { get; }
 #endif
-		[Unavailable (PlatformName.MacCatalyst)]
+		[Unavailable (PlatformName.MacCatalyst), Advice ("This API is not available when using MacCatalyst.")]
 		[NoWatch, NoTV, NoMac, iOS (14, 0)]
-		[Field ("kCVPixelBufferProResRAWKey_BlackLevel"), Advice ("This API is not available when using MacCatalyst.")]
+		[Field ("kCVPixelBufferProResRAWKey_BlackLevel")]
 		NSString ProResRawKey_BlackLevel { get; }
 
-		[Unavailable (PlatformName.MacCatalyst)]
+		[Unavailable (PlatformName.MacCatalyst), Advice ("This API is not available when using MacCatalyst.")]
 		[NoWatch, NoTV, NoMac, iOS (14, 0)]
-		[Field ("kCVPixelBufferProResRAWKey_ColorMatrix"), Advice ("This API is not available when using MacCatalyst.")]
+		[Field ("kCVPixelBufferProResRAWKey_ColorMatrix")]
 		NSString ProResRawKey_ColorMatrix { get; }
 
-		[Unavailable (PlatformName.MacCatalyst)]
+		[Unavailable (PlatformName.MacCatalyst), Advice ("This API is not available when using MacCatalyst.")]
 		[NoWatch, NoTV, NoMac, iOS (14, 0)]
-		[Field ("kCVPixelBufferProResRAWKey_GainFactor"), Advice ("This API is not available when using MacCatalyst.")]
+		[Field ("kCVPixelBufferProResRAWKey_GainFactor")]
 		NSString ProResRawKey_GainFactor { get; }
 
-		[Unavailable (PlatformName.MacCatalyst)]
+		[Unavailable (PlatformName.MacCatalyst), Advice ("This API is not available when using MacCatalyst.")]
 		[NoWatch, NoTV, NoMac, iOS (14, 0)]
-		[Field ("kCVPixelBufferProResRAWKey_RecommendedCrop"), Advice ("This API is not available when using MacCatalyst.")]
+		[Field ("kCVPixelBufferProResRAWKey_RecommendedCrop")]
 		NSString ProResRawKey_RecommendedCrop { get; }
 
-		[Unavailable (PlatformName.MacCatalyst)]
+		[Unavailable (PlatformName.MacCatalyst), Advice ("This API is not available when using MacCatalyst.")]
 		[NoWatch, NoTV, NoMac, iOS (14, 0)]
-		[Field ("kCVPixelBufferProResRAWKey_SenselSitingOffsets"), Advice ("This API is not available when using MacCatalyst.")]
+		[Field ("kCVPixelBufferProResRAWKey_SenselSitingOffsets")]
 		NSString ProResRawKey_SenselSitingOffsets { get; }
 
-		[Unavailable (PlatformName.MacCatalyst)]
+		[Unavailable (PlatformName.MacCatalyst), Advice ("This API is not available when using MacCatalyst.")]
 		[NoWatch, NoTV, NoMac, iOS (14, 0)]
-		[Field ("kCVPixelBufferProResRAWKey_WhiteBalanceBlueFactor"), Advice ("This API is not available when using MacCatalyst.")]
+		[Field ("kCVPixelBufferProResRAWKey_WhiteBalanceBlueFactor")]
 		NSString ProResRawKey_WhiteBalanceBlueFactor { get; }
 
-		[Unavailable (PlatformName.MacCatalyst)]
+		[Unavailable (PlatformName.MacCatalyst), Advice ("This API is not available when using MacCatalyst.")]
 		[NoWatch, NoTV, NoMac, iOS (14, 0)]
-		[Field ("kCVPixelBufferProResRAWKey_WhiteBalanceCCT"), Advice ("This API is not available when using MacCatalyst.")]
+		[Field ("kCVPixelBufferProResRAWKey_WhiteBalanceCCT")]
 		NSString ProResRawKey_WhiteBalanceCct { get; }
 
-		[Unavailable (PlatformName.MacCatalyst)]
+		[Unavailable (PlatformName.MacCatalyst), Advice ("This API is not available when using MacCatalyst.")]
 		[NoWatch, NoTV, NoMac, iOS (14, 0)]
-		[Field ("kCVPixelBufferProResRAWKey_WhiteBalanceRedFactor"), Advice ("This API is not available when using MacCatalyst.")]
+		[Field ("kCVPixelBufferProResRAWKey_WhiteBalanceRedFactor")]
 		NSString ProResRawKey_WhiteBalanceRedFactor { get; }
 
-		[Unavailable (PlatformName.MacCatalyst)]
+		[Unavailable (PlatformName.MacCatalyst), Advice ("This API is not available when using MacCatalyst.")]
 		[NoWatch, NoTV, NoMac, iOS (14, 0)]
-		[Field ("kCVPixelBufferProResRAWKey_WhiteLevel"), Advice ("This API is not available when using MacCatalyst.")]
+		[Field ("kCVPixelBufferProResRAWKey_WhiteLevel")]
 		NSString ProResRawKey_WhiteLevel { get; }
 
-		[Unavailable (PlatformName.MacCatalyst)]
+		[Unavailable (PlatformName.MacCatalyst), Advice ("This API is not available when using MacCatalyst.")]
 		[NoWatch, NoTV, NoMac, iOS (14, 0)]
-		[Field ("kCVPixelBufferVersatileBayerKey_BayerPattern"), Advice ("This API is not available when using MacCatalyst.")]
+		[Field ("kCVPixelBufferVersatileBayerKey_BayerPattern")]
 		NSString VersatileBayerKey_BayerPattern { get; }
 	}
 
