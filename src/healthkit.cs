@@ -72,6 +72,32 @@ namespace HealthKit {
 		Active,
 	}
 
+	[iOS (13,6), NoWatch]
+	[Native]
+	public enum HKCategoryValueSeverity : long {
+		Unspecified = 0,
+		NotPresent,
+		Mild,
+		Moderate,
+		Severe,
+	}
+
+	[iOS (13,6), NoWatch]
+	[Native]
+	public enum HKCategoryValueAppetiteChanges : long {
+		Unspecified = 0,
+		NoChange,
+		Decreased,
+		Increased,
+	}
+
+	[iOS (13,6), NoWatch]
+	[Native]
+	public enum HKCategoryValuePresence : long {
+		Present = 0,
+		NotPresent,
+	}
+
 	delegate void HKAnchoredObjectResultHandler2 (HKAnchoredObjectQuery query, HKSample[] results, nuint newAnchor, NSError error);
 
 	[Obsolete ("Use HKAnchoredObjectResultHandler2 instead")]
@@ -120,7 +146,7 @@ namespace HealthKit {
 
 		[Field ("HKPredicateKeyPathMetadata")]
 		NSString Metadata { get; }
-		
+
 		[Field ("HKPredicateKeyPathQuantity")]
 		NSString Quantity { get; }
 
@@ -141,13 +167,13 @@ namespace HealthKit {
 
 		[Field ("HKPredicateKeyPathWorkoutDuration")]
 		NSString WorkoutDuration { get; }
-		
+
 		[Field ("HKPredicateKeyPathWorkoutTotalDistance")]
 		NSString WorkoutTotalDistance { get; }
-		
+
 		[Field ("HKPredicateKeyPathWorkoutTotalEnergyBurned")]
 		NSString WorkoutTotalEnergyBurned { get; }
-		
+
 		[Field ("HKPredicateKeyPathWorkoutType")]
 		NSString WorkoutType { get; }
 
@@ -353,7 +379,7 @@ namespace HealthKit {
 
 		[Export ("objectsForType:")]
 		NSSet GetObjects (HKObjectType objectType);
-		
+
 		[Export ("correlationType")]
 		HKCorrelationType CorrelationType { get; }
 
@@ -572,7 +598,7 @@ namespace HealthKit {
 	}
 
 	delegate void HKStoreSampleAddedCallback (bool success, NSError error);
-	
+
 	[Watch (2,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
@@ -629,28 +655,28 @@ namespace HealthKit {
 
 		[Export ("DeviceManufacturerName")]
 		string DeviceManufacturerName { get; set; }
-		
+
 		[Export ("WasTakenInLab")]
 		bool WasTakenInLab { get; set; }
 
 		[Export ("ReferenceRangeLowerLimit")]
 		NSNumber ReferenceRangeLowerLimit { get; set; }
-		
+
 		[Export ("ReferenceRangeUpperLimit")]
 		NSNumber ReferenceRangeUpperLimit { get; set; }
-		
+
 		[Export ("WasUserEntered")]
 		bool WasUserEntered { get; set; }
-		
+
 		[Export ("WorkoutBrandName")]
 		string WorkoutBrandName { get; set; }
-		
+
 		[Export ("GroupFitness")]
 		bool GroupFitness { get; set; }
-		
+
 		[Export ("IndoorWorkout")]
 		bool IndoorWorkout { get; set; }
-		
+
 		[Export ("CoachedWorkout")]
 		bool CoachedWorkout { get; set; }
 
@@ -705,7 +731,7 @@ namespace HealthKit {
 		[Watch (4, 0), iOS (11, 0)]
 		[Export ("VO2MaxTestType")]
 		HKVO2MaxTestType VO2MaxTestType { get; }
-        
+
 		[Watch (4,0), iOS (11,0)]
 		[Export ("HeartRateMotionContext")]
 		HKHeartRateMotionContext HeartRateMotionContext { get; }
@@ -746,7 +772,7 @@ namespace HealthKit {
 		[Export ("HeartRateEventThreshold")]
 		HKQuantity HeartRateEventThreshold { get; set; }
 	}
-		
+
 	[Watch (2,0)]
 	[iOS (8,0)]
 	[Static]
@@ -783,7 +809,7 @@ namespace HealthKit {
 
 		[Field ("HKMetadataKeyDeviceManufacturerName")]
 		NSString DeviceManufacturerName { get; }
-		
+
 		[Field ("HKMetadataKeyWasTakenInLab")]
 		NSString WasTakenInLab { get; }
 
@@ -792,19 +818,19 @@ namespace HealthKit {
 
 		[Field ("HKMetadataKeyReferenceRangeUpperLimit")]
 		NSString ReferenceRangeUpperLimit { get; }
-		
+
 		[Field ("HKMetadataKeyWasUserEntered")]
 		NSString WasUserEntered { get; }
-		
+
 		[Field ("HKMetadataKeyWorkoutBrandName")]
 		NSString WorkoutBrandName { get; }
-		
+
 		[Field ("HKMetadataKeyGroupFitness")]
 		NSString GroupFitness { get; }
-		
+
 		[Field ("HKMetadataKeyIndoorWorkout")]
 		NSString IndoorWorkout { get; }
-		
+
 		[Field ("HKMetadataKeyCoachedWorkout")]
 		NSString CoachedWorkout { get; }
 
@@ -859,7 +885,7 @@ namespace HealthKit {
 		[Watch (4, 0), iOS (11, 0)]
 		[Field ("HKMetadataKeyVO2MaxTestType")]
 		NSString VO2MaxTestType { get; }
-        
+
 		[Watch (4,0), iOS (11,0)]
 		[Field ("HKMetadataKeyHeartRateMotionContext")]
 		NSString HeartRateMotionContext { get; }
@@ -1093,7 +1119,7 @@ namespace HealthKit {
 	[Watch (5,0)]
 	[iOS (12,0)]
 	[BaseType (typeof (HKSampleType))]
-	[DisableDefaultCtor] // NSInvalidArgumentException Reason: The -init method is not available on HKClinicalType 
+	[DisableDefaultCtor] // NSInvalidArgumentException Reason: The -init method is not available on HKClinicalType
 	interface HKClinicalType {
 
 	}
@@ -1871,7 +1897,7 @@ namespace HealthKit {
 	enum HKCorrelationTypeIdentifier {
 		[Field ("HKCorrelationTypeIdentifierBloodPressure")]
 		BloodPressure,
-		
+
 		[Field ("HKCorrelationTypeIdentifierFood")]
 		Food,
 	}
@@ -2239,10 +2265,10 @@ namespace HealthKit {
 		[Static]
 		[Export ("fluidOunceUSUnit")]
 		HKUnit FluidOunceUSUnit { get; }
-		
+
 		[Static]
 		[Export ("fluidOunceImperialUnit")]
-		HKUnit FluidOunceImperialUnit { get; }	
+		HKUnit FluidOunceImperialUnit { get; }
 
 		[Static]
 		[Export ("pintUSUnit")]
@@ -2465,7 +2491,7 @@ namespace HealthKit {
 
 		[Static, Wrap ("Create (workoutActivityType, startDate, endDate, workoutEvents, totalEnergyBurned, totalDistance, metadata.GetDictionary ())")]
 		HKWorkout Create (HKWorkoutActivityType workoutActivityType, NSDate startDate, NSDate endDate, HKWorkoutEvent [] workoutEvents, HKQuantity totalEnergyBurned, HKQuantity totalDistance, HKMetadata metadata);
-		
+
 		[Static, Export ("workoutWithActivityType:startDate:endDate:duration:totalEnergyBurned:totalDistance:metadata:")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)] // this is not the one we want to be seen (compat only)
 		HKWorkout Create (HKWorkoutActivityType workoutActivityType, NSDate startDate, NSDate endDate, double duration, [NullAllowed] HKQuantity totalEnergyBurned, [NullAllowed] HKQuantity totalDistance, [NullAllowed] NSDictionary metadata);
@@ -3326,13 +3352,13 @@ namespace HealthKit {
 		[Export ("mostRecentQuantityDateInterval", ArgumentSemantic.Copy)]
 		NSDateInterval MostRecentDateInterval { get; }
 	}
-	
+
 	[iOS (13,0)]
 	[Watch (6,0)]
 	[BaseType (typeof (HKSeriesSample))]
 	[DisableDefaultCtor]
 	interface HKHeartbeatSeriesSample : NSSecureCoding {}
-	
+
 	delegate void HKHeartbeatSeriesBuilderCompletionHandler (bool success, NSError error);
 
 	[Watch (6,0), iOS (13,0)]

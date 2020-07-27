@@ -194,12 +194,13 @@ public class Frameworks : Dictionary <string, Framework>
 
 					{ "AutomaticAssessmentConfiguration", "AutomaticAssessmentConfiguration", 10,15,4 },
 
-					{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 10,16 },
-					{ "UserNotificationsUI", "UserNotificationsUI", 10,16 },
-					{ "CallKit", "CallKit", 10,16 },
-					{ "ClassKit", "ClassKit", 10,16 },
-					{ "ReplayKit", "ReplayKit", 10,16 },
-					{ "Accessibility", "Accessibility", 10,16 },
+					{ "Accessibility", "Accessibility", 11,0 },
+					{ "CallKit", "CallKit", 11,0 },
+					{ "ClassKit", "ClassKit", 11,0 },
+					{ "MLCompute", "MLCompute", 11,0 },
+					{ "ReplayKit", "ReplayKit", 11,0 },
+					{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 11,0 },
+					{ "UserNotificationsUI", "UserNotificationsUI", 11,0 },
 				};
 			}
 			return mac_frameworks;
@@ -336,11 +337,12 @@ public class Frameworks : Dictionary <string, Framework>
 
 				{ "AutomaticAssessmentConfiguration", "AutomaticAssessmentConfiguration", 13, 4 },
 
+				{ "Accessibility", "Accessibility", 14,0 },
 				{ "AppClip", "AppClip", 14,0 },
-				{ "MediaSetup", "MediaSetup", new Version (14, 0), NotAvailableInSimulator /* no headers in beta 2 */ },
+				{ "MediaSetup", "MediaSetup", new Version (14, 0), NotAvailableInSimulator /* no headers in beta 3 */ },
+				{ "MLCompute", "MLCompute", new Version (14,0), NotAvailableInSimulator },
 				{ "SensorKit", "SensorKit", 14,0 },
 				{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 14,0 },
-				{ "Accessibility", "Accessibility", 14,0 },
 
 				// the above MUST be kept in sync with simlauncher
 				// see tools/mtouch/Makefile
@@ -407,8 +409,8 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "CoreMedia", "CoreMedia", 6 },
 				{ "StoreKit", "StoreKit", 6,2 },
 
-				{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 7,0 },
 				{ "Accessibility", "Accessibility", 7,0 },
+				{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 7,0 },
 			};
 		}
 		return watch_frameworks;
@@ -488,9 +490,10 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "SoundAnalysis", "SoundAnalysis", 13,0 },
 					{ "BackgroundTasks", "BackgroundTasks", 13, 0 },
 
-					{ "LinkPresentation", "LinkPresentation", 14,0 },
-					{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 14,0 },
 					{ "Accessibility", "Accessibility", 14,0 },
+					{ "LinkPresentation", "LinkPresentation", 14,0 },
+					{ "MLCompute", "MLCompute", new Version (14,0), NotAvailableInSimulator },
+					{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 14,0 },
 				};
 			}
 			return tvos_frameworks;
@@ -541,6 +544,11 @@ public class Frameworks : Dictionary <string, Framework>
 			// https://github.com/xamarin/maccore/issues/2266
 			case "MediaSetup":
 				if (app.Platform != ApplePlatform.iOS)
+					return false;
+				break;
+			// framework missing on both iOS and tvOS simulators (but present for macOS)
+			case "MLCompute":
+				if (app.Platform == ApplePlatform.MacOSX)
 					return false;
 				break;
 			default:

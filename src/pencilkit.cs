@@ -34,7 +34,7 @@ using CoreGraphics;
 
 namespace PencilKit {
 
-	[iOS (13, 0), Mac (10, 16)]
+	[iOS (13, 0), Mac (11, 0)]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Native]
 	enum PKEraserType : long {
@@ -42,7 +42,7 @@ namespace PencilKit {
 		Bitmap,
 	}
 
-	[iOS (13, 0), Mac (10, 16)]
+	[iOS (13, 0), Mac (11, 0)]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	enum PKInkType {
 		[Field ("PKInkTypePen")]
@@ -138,7 +138,7 @@ namespace PencilKit {
 		[Export ("initWithData:error:")]
 		IntPtr Constructor (NSData data, [NullAllowed] out NSError error);
 
-		[Mac (10, 16), iOS (14, 0)]
+		[Mac (11, 0), iOS (14, 0)]
 		[Export ("initWithStrokes:")]
 		IntPtr Constructor (PKStroke[] strokes);
 
@@ -148,7 +148,7 @@ namespace PencilKit {
 		[Export ("bounds")]
 		CGRect Bounds { get; }
 
-		[Mac (10, 16), iOS (14, 0)]
+		[Mac (11, 0), iOS (14, 0)]
 		[Export ("strokes")]
 		PKStroke[] Strokes { get; }
 
@@ -161,12 +161,12 @@ namespace PencilKit {
 		[Export ("drawingByAppendingDrawing:")]
 		PKDrawing GetDrawing (PKDrawing drawing);
 
-		[Mac (10, 16), iOS (14, 0)]
+		[Mac (11, 0), iOS (14, 0)]
 		[Export ("drawingByAppendingStrokes:")]
 		PKDrawing GetDrawing (PKStroke[] strokes);
 	}
 
-	[iOS (13, 0), Mac (10, 16)]
+	[iOS (13, 0), Mac (11, 0)]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[BaseType (typeof (PKTool))]
 	[DisableDefaultCtor]
@@ -180,7 +180,7 @@ namespace PencilKit {
 		IntPtr Constructor (PKEraserType eraserType);
 	}
 
-	[iOS (13, 0), Mac (10, 16)]
+	[iOS (13, 0), Mac (11, 0)]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[BaseType (typeof (PKTool))]
 	[DisableDefaultCtor]
@@ -228,13 +228,13 @@ namespace PencilKit {
 		PKInk Ink { get; }
 	}
 
-	[iOS (13, 0), Mac (10, 16)]
+	[iOS (13, 0), Mac (11, 0)]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[BaseType (typeof (PKTool))]
 	[DesignatedDefaultCtor]
 	interface PKLassoTool {}
 
-	[iOS (13, 0), Mac (10, 16)]
+	[iOS (13, 0), Mac (11, 0)]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -314,7 +314,7 @@ namespace PencilKit {
 		string StateAutosaveName { get; set; }
 	}
 
-	[Mac (10, 16), iOS (14, 0)]
+	[Mac (11, 0), iOS (14, 0)]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof(NSObject))]
@@ -339,7 +339,7 @@ namespace PencilKit {
 		UIColor Color { get; }
 	}
 
-	[Mac (10, 16), iOS (14, 0)]
+	[Mac (11, 0), iOS (14, 0)]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof(NSObject))]
@@ -355,7 +355,7 @@ namespace PencilKit {
 		nfloat UpperBound { get; }
 	}
 
-	[Mac (10, 16), iOS (14, 0)]
+	[Mac (11, 0), iOS (14, 0)]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof(NSObject))]
@@ -385,7 +385,7 @@ namespace PencilKit {
 
 	delegate void PKInterpolatedPointsEnumeratorHandler (PKStrokePoint strokePoint, out bool stop);
 
-	[Mac (10, 16), iOS (14, 0)]
+	[Mac (11, 0), iOS (14, 0)]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof(NSObject))]
@@ -429,7 +429,7 @@ namespace PencilKit {
 		nfloat GetParametricValue (nfloat parametricValue, double timeStep);
 	}
 
-	[Mac (10, 16), iOS (14, 0)]
+	[Mac (11, 0), iOS (14, 0)]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
