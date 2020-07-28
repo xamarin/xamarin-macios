@@ -53,7 +53,7 @@ namespace MLCompute {
 		[DllImport (Constants.MLComputeLibrary)]
 		static extern /* NSString */ IntPtr MLCLossTypeDebugDescription (MLCLossType lossType);
 
-		public static string DebugDescription (this MLCLossType self)
+		public static string GetDebugDescription (this MLCLossType self)
 		{
 			return CFString.FetchString (MLCLossTypeDebugDescription (self));
 		}
@@ -66,7 +66,7 @@ namespace MLCompute {
 		[DllImport (Constants.MLComputeLibrary)]
 		static extern /* NSString */ IntPtr MLCReductionTypeDebugDescription (MLCReductionType reductionType);
 
-		public static string DebugDescription (this MLCReductionType self)
+		public static string GetDebugDescription (this MLCReductionType self)
 		{
 			return CFString.FetchString (MLCReductionTypeDebugDescription (self));
 		}
@@ -79,7 +79,7 @@ namespace MLCompute {
 		[DllImport (Constants.MLComputeLibrary)]
 		static extern /* NSString */ IntPtr MLCPaddingTypeDebugDescription (MLCPaddingType paddingType);
 
-		public static string DebugDescription (this MLCPaddingType self)
+		public static string GetDebugDescription (this MLCPaddingType self)
 		{
 			return CFString.FetchString (MLCPaddingTypeDebugDescription (self));
 		}
@@ -92,7 +92,7 @@ namespace MLCompute {
 		[DllImport (Constants.MLComputeLibrary)]
 		static extern /* NSString */ IntPtr MLCConvolutionTypeDebugDescription (MLCConvolutionType convolutionType);
 
-		public static string DebugDescription (this MLCConvolutionType self)
+		public static string GetDebugDescription (this MLCConvolutionType self)
 		{
 			return CFString.FetchString (MLCConvolutionTypeDebugDescription (self));
 		}
@@ -105,7 +105,7 @@ namespace MLCompute {
 		[DllImport (Constants.MLComputeLibrary)]
 		static extern /* NSString */ IntPtr MLCPoolingTypeDebugDescription (MLCPoolingType poolingType);
 
-		public static string DebugDescription (this MLCPoolingType self)
+		public static string GetDebugDescription (this MLCPoolingType self)
 		{
 			return CFString.FetchString (MLCPoolingTypeDebugDescription (self));
 		}
@@ -118,7 +118,7 @@ namespace MLCompute {
 		[DllImport (Constants.MLComputeLibrary)]
 		static extern /* NSString */ IntPtr MLCSoftmaxOperationDebugDescription (MLCSoftmaxOperation operation);
 
-		public static string DebugDescription (this MLCSoftmaxOperation self)
+		public static string GetDebugDescription (this MLCSoftmaxOperation self)
 		{
 			return CFString.FetchString (MLCSoftmaxOperationDebugDescription (self));
 		}
@@ -131,7 +131,7 @@ namespace MLCompute {
 		[DllImport (Constants.MLComputeLibrary)]
 		static extern /* NSString */ IntPtr MLCSampleModeDebugDescription (MLCSampleMode mode);
 
-		public static string DebugDescription (this MLCSampleMode self)
+		public static string GetDebugDescription (this MLCSampleMode self)
 		{
 			return CFString.FetchString (MLCSampleModeDebugDescription (self));
 		}
@@ -144,7 +144,7 @@ namespace MLCompute {
 		[DllImport (Constants.MLComputeLibrary)]
 		static extern /* NSString */ IntPtr MLCLSTMResultModeDebugDescription (MLCLstmResultMode mode);
 
-		public static string DebugDescription (this MLCLstmResultMode self)
+		public static string GetDebugDescription (this MLCLstmResultMode self)
 		{
 			return CFString.FetchString (MLCLSTMResultModeDebugDescription (self));
 		}
