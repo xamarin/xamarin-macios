@@ -127,13 +127,13 @@ namespace NaturalLanguage {
 		string[] GetPredictedLabels (string[] tokens);
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
-		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 		[Export ("predictedLabelHypothesesForString:maximumCount:")]
 		// `Native` added (like existing API) because we provide a better API with manual bindings (to avoid NSNumber)
 		NSDictionary<NSString, NSNumber> GetNativePredictedLabelHypotheses (string @string, nuint maximumCount);
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
-		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 		[Export ("predictedLabelHypothesesForTokens:maximumCount:")]
 		// `Native` added (like existing API) because we provide a better API with manual bindings (to avoid NSNumber)
 		NSDictionary<NSString, NSNumber>[] GetNativePredictedLabelHypotheses (string[] tokens, nuint maximumCount);
@@ -172,7 +172,7 @@ namespace NaturalLanguage {
 		[Export ("enumerateTokensInRange:usingBlock:")]
 		void EnumerateTokens (NSRange range, NLTokenizerEnumerateContinuationHandler handler);
 
-		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 		[Export ("tokenRangeForRange:")]
 		NSRange GetTokenRange (NSRange range);
 	}
@@ -300,23 +300,23 @@ namespace NaturalLanguage {
 		void RequestAssets (NLLanguage language, NLTagScheme tagScheme, Action<NLTaggerAssetsResult, NSError> completionHandler);
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
-		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 		[Export ("tagHypothesesAtIndex:unit:scheme:maximumCount:tokenRange:")]
 		// `Native` added (like existing API) because we provide a better API with manual bindings (to avoid NSNumber)
 		NSDictionary<NSString, NSNumber> GetNativeTagHypotheses (nuint characterIndex, NLTokenUnit unit, NSString scheme, nuint maximumCount, out NSRange tokenRange);
 
-		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 		[Internal][Sealed]
 		[Export ("tagHypothesesAtIndex:unit:scheme:maximumCount:tokenRange:")]
 		NSDictionary<NSString, NSNumber> GetTagHypotheses (nuint characterIndex, NLTokenUnit unit, NSString scheme, nuint maximumCount, IntPtr tokenRange);
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
-		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 		[Wrap ("GetTagHypotheses (characterIndex, unit, scheme, maximumCount, IntPtr.Zero)")]
 		// `Native` added (like existing API) because we provide a better API with manual bindings (to avoid NSNumber)
 		NSDictionary<NSString, NSNumber> GetNativeTagHypotheses (nuint characterIndex, NLTokenUnit unit, NSString scheme, nuint maximumCount);
 
-		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 		[Export ("tokenRangeForRange:unit:")]
 		NSRange GetTokenRange (NSRange range, NLTokenUnit unit);
 	}
@@ -524,49 +524,49 @@ namespace NaturalLanguage {
 		bool Write (NLVectorDictionary dictionary, NLLanguage? language, nuint revision, NSUrl url, [NullAllowed] out NSError error);
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
-		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 		[Static]
 		[Export ("currentSentenceEmbeddingRevisionForLanguage:")]
 		nuint GetCurrentSentenceEmbeddingRevision (NSString language);
 
-		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 		[Static]
 		[Wrap ("GetCurrentSentenceEmbeddingRevision (language.GetConstant ()!)")]
 		nuint GetCurrentSentenceEmbeddingRevision (NLLanguage language);
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
-		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 		[Static]
 		[Export ("sentenceEmbeddingForLanguage:")]
 		[return: NullAllowed]
 		NLEmbedding GetSentenceEmbedding (NSString language);
 
-		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 		[Static]
 		[Wrap ("GetSentenceEmbedding (language.GetConstant ()!)")]
 		[return: NullAllowed]
 		NLEmbedding GetSentenceEmbedding (NLLanguage language);
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
-		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 		[Static]
 		[Export ("sentenceEmbeddingForLanguage:revision:")]
 		[return: NullAllowed]
 		NLEmbedding GetSentenceEmbedding (NSString language, nuint revision);
 
-		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 		[Static]
 		[Wrap ("GetSentenceEmbedding (language.GetConstant ()!, revision)")]
 		[return: NullAllowed]
 		NLEmbedding GetSentenceEmbedding (NLLanguage language, nuint revision);
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
-		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 		[Static]
 		[Export ("supportedSentenceEmbeddingRevisionsForLanguage:")]
 		NSIndexSet GetSupportedSentenceEmbeddingRevisions (NSString language);
 
-		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 		[Static]
 		[Wrap ("GetSupportedSentenceEmbeddingRevisions (language.GetConstant ()!)")]
 		NSIndexSet GetSupportedSentenceEmbeddingRevisions (NLLanguage language);
