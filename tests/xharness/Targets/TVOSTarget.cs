@@ -10,7 +10,7 @@ namespace Xharness.Targets {
 	{
 		public override string Suffix {
 			get {
-				return MonoNativeInfo != null ? MonoNativeInfo.FlavorSuffix + "-tvos" : "-tvos";
+				return "-tvos";
 			}
 		}
 
@@ -62,13 +62,6 @@ namespace Xharness.Targets {
 			}
 		}
 
-		protected override void CalculateName ()
-		{
-			base.CalculateName ();
-			if (MonoNativeInfo != null)
-				Name = Name + MonoNativeInfo.FlavorSuffix;
-		}
-
 		protected override string GetMinimumOSVersion (string templateMinimumOSVersion)
 		{
 			if (MonoNativeInfo == null)
@@ -111,12 +104,6 @@ namespace Xharness.Targets {
 		{
 			base.ProcessProject ();
 
-			if (MonoNativeInfo != null) {
-				inputProject.AddAdditionalDefines ("MONO_NATIVE_TV");
-				MonoNativeHelper.AddProjectDefines (inputProject, MonoNativeInfo.Flavor);
-				MonoNativeHelper.RemoveSymlinkMode (inputProject);
-			}
-
 			var srcDirectory = Path.Combine (HarnessConfiguration.RootDirectory, "..", "src");
 
 			string project_guid;
@@ -131,6 +118,7 @@ namespace Xharness.Targets {
 
 			inputProject.AddExtraMtouchArgs ("--bitcode:asmonly", "iPhone", "Release");
 			inputProject.SetMtouchUseLlvm (true, "iPhone", "Release");
+			inputProject.ResolveAllPaths (TemplateProjectPath);
 
 			// Remove bitcode from executables, since we don't need it for testing, and it makes test apps bigger (and the Apple TV might refuse to install them).
 			var configurations = new string [] { "Debug", "Debug64", "Release", "Release64" };

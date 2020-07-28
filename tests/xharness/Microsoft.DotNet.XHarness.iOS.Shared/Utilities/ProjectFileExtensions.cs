@@ -436,37 +436,30 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 			return imports [0].Attributes ["Project"].Value;
 		}
 
-		public delegate bool FixReferenceDelegate (string reference, out string fixed_reference);
-		public static void FixProjectReferences (this XmlDocument csproj, string suffix, FixReferenceDelegate fixCallback = null, FixReferenceDelegate fixIncludeCallback = null)
+		public delegate bool FixReferenceDelegate (string include, string subdir, string suffix, out string fixed_include);
+
+		public static void FixProjectReferences (this XmlDocument csproj, string suffix, FixReferenceDelegate fixCallback)
+		{
+			FixProjectReferences (csproj, null, suffix, fixCallback);
+		}
+
+		public static void FixProjectReferences (this XmlDocument csproj, string subdir, string suffix, FixReferenceDelegate fixCallback)
 		{
 			var nodes = csproj.SelectNodes ("/*/*/*[local-name() = 'ProjectReference']");
-			if (nodes.Count == 0)
-				return;
 			foreach (XmlNode n in nodes) {
-				var name = n ["Name"]?.InnerText;
-				string fixed_name = null;
-				if (name != null && fixCallback != null && !fixCallback (name, out fixed_name))
+				var nameNode = n ["Name"];
+				var includeAttribute = n.Attributes ["Include"];
+				var include = includeAttribute.Value;
+
+				include = include.Replace ('\\', '/');
+				if (!fixCallback (include, subdir, suffix, out var fixed_include))
 					continue;
-				var include = n.Attributes ["Include"];
-				string fixed_include;
-				if (fixIncludeCallback != null && fixIncludeCallback (include.Value, out fixed_include)) {
-					// we're done here
-				} else if (fixed_name == null) {
-					fixed_include = include.Value;
-					fixed_include = fixed_include.Replace (".csproj", suffix + ".csproj");
-					fixed_include = fixed_include.Replace (".fsproj", suffix + ".fsproj");
-				} else {
-					var unix_path = include.Value.Replace ('\\', '/');
-					var unix_dir = System.IO.Path.GetDirectoryName (unix_path);
-					fixed_include = System.IO.Path.Combine (unix_dir, fixed_name + System.IO.Path.GetExtension (unix_path));
-					fixed_include = fixed_include.Replace ('/', '\\');
-				}
-				n.Attributes ["Include"].Value = fixed_include;
-				if (name != null) {
-					var nameElement = n ["Name"];
-					name = System.IO.Path.GetFileNameWithoutExtension (fixed_include.Replace ('\\', '/'));
-					nameElement.InnerText = name;
-				}
+				var name = Path.GetFileNameWithoutExtension (fixed_include);
+				fixed_include = fixed_include.Replace ('/', '\\');
+
+				includeAttribute.Value = fixed_include;
+				if (nameNode != null)
+					nameNode.InnerText = name;
 			}
 		}
 
@@ -556,17 +549,25 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 		{
 			var import = GetInfoPListNode (csproj, false);
 			if (import != null) {
-				var value = import.Attributes ["Include"].Value;
+				var attrib = import.Attributes ["Include"];
+				var value = attrib.Value;
 				var unixValue = value.Replace ('\\', '/');
-				var fname = Path.GetFileName (unixValue);
-				if (newName == null) {
-					if (string.IsNullOrEmpty (fullPath))
-						newName = value.Replace (fname, $"Info{suffix}.plist");
-					else
-						newName = value.Replace (fname, $"{fullPath}\\Info{suffix}.plist");
-				}
-				import.Attributes ["Include"].Value = (!Path.IsPathRooted (unixValue)) ? value.Replace (fname, newName) : newName;
 
+				// If newName is specified, use that as-is
+				// If not:
+				//     If the existing value has a directory, use that as the directory
+				//     Otherwise, if fullPath is passed, use that as the directory
+				//     Finally, combine the expected Info.plist name with the directory (if there is a directory; there might not be one)
+				if (newName == null) {
+					var directory = Path.GetDirectoryName (unixValue);
+					if (string.IsNullOrEmpty (directory))
+						directory = fullPath;
+
+					newName = $"Info{suffix}.plist";
+					if (!string.IsNullOrEmpty (directory))
+						newName = Path.Combine (directory, newName);
+				}
+				attrib.Value = newName.Replace ('/', '\\');
 				var logicalName = import.SelectSingleNode ("./*[local-name() = 'LogicalName']");
 				if (logicalName == null) {
 					logicalName = csproj.CreateElement ("LogicalName", csproj.GetNamespace ());
@@ -583,8 +584,8 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 
 		public static bool IsDotNetProject (this XmlDocument csproj)
 		{
-			var project = csproj.SelectSingleNode ("./*[local-name() = 'Project']");
-			var attrib = project.Attributes ["Sdk"];
+			var project = csproj?.SelectSingleNode ("./*[local-name() = 'Project']");
+			var attrib = project?.Attributes ["Sdk"];
 			return attrib != null;
 		}
 
@@ -596,22 +597,16 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 			return string.Equals (node.InnerText, "true", StringComparison.OrdinalIgnoreCase);
 		}
 
-		static XmlNode GetInfoPListNode (this XmlDocument csproj, bool throw_if_not_found = false)
+		public static XmlNode GetInfoPListNode (this XmlDocument csproj, bool throw_if_not_found = false)
 		{
-			var logicalNames = csproj.SelectNodes ("//*[local-name() = 'LogicalName']");
-			foreach (XmlNode ln in logicalNames) {
-				if (!ln.InnerText.Contains("Info.plist"))
-					continue;
-				return ln.ParentNode;
-			}
-			var nodes = csproj.SelectNodes ("//*[local-name() = 'None' and contains(@Include ,'Info.plist')]");
-			if (nodes.Count > 0) {
-				return nodes [0]; // return the value, which could be Info.plist or a full path (linked).
-			}
-			nodes = csproj.SelectNodes ("//*[local-name() = 'None' and contains(@Include ,'Info-tv.plist')]");
-			if (nodes.Count > 0) {
-				return nodes [0]; // return the value, which could be Info.plist or a full path (linked).
-			}
+			var noLogicalName = csproj.SelectSingleNode ("//*[(local-name() = 'None' or local-name() = 'BundleResource' or local-name() = 'Content') and @Include = 'Info.plist']");
+			if (noLogicalName != null)
+				return noLogicalName;
+
+			var logicalName = csproj.SelectSingleNode ("//*[(local-name() = 'None' or local-name() = 'Content' or local-name() = 'BundleResource')]/*[local-name()='LogicalName' and text() = 'Info.plist']");
+			if (logicalName != null)
+				return logicalName.ParentNode;
+
 			if (throw_if_not_found)
 				throw new Exception ($"Could not find Info.plist include.");
 			return null;
@@ -619,7 +614,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 
 		public static string GetInfoPListInclude (this XmlDocument csproj)
 		{
-			return GetInfoPListNode (csproj).Attributes ["Include"].Value;
+			return GetInfoPListNode (csproj)?.Attributes ["Include"]?.Value;
 		}
 
 		public static IEnumerable<string> GetProjectReferences (this XmlDocument csproj)
@@ -814,6 +809,15 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 			}
 
 			throw new Exception ("Could not find where to add a new DefineConstants node");
+		}
+
+		public static void AddTopLevelProperty (this XmlDocument csproj, string property, string value)
+		{
+			var propertyGroup = csproj.SelectNodes ("//*[local-name() = 'PropertyGroup' and not(@Condition)]") [0];
+
+			var propertyNode = csproj.CreateElement (property, csproj.GetNamespace ());
+			propertyNode.InnerText = value;
+			propertyGroup.AppendChild (propertyNode);
 		}
 
 		public static void SetNode (this XmlDocument csproj, string node, string value)

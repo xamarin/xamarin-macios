@@ -288,7 +288,7 @@ namespace Xharness {
 			}
 
 			foreach (var flavor in new MonoNativeFlavor [] { MonoNativeFlavor.Compat, MonoNativeFlavor.Unified }) {
-				var monoNativeInfo = new MacMonoNativeInfo (flavor, RootDirectory, Log);
+				var monoNativeInfo = new MonoNativeInfo (DevicePlatform.macOS, flavor, RootDirectory, Log);
 				var macTestProject = new MacTestProject (monoNativeInfo.ProjectPath, targetFrameworkFlavor: MacFlavors.Modern | MacFlavors.Full) {
 					MonoNativeInfo = monoNativeInfo,
 					Name = monoNativeInfo.ProjectName,
@@ -323,7 +323,6 @@ namespace Xharness {
 
 			foreach (var proj in MacTestProjects) {
 				var target = new MacTarget (MacFlavors.Modern);
-				target.MonoNativeInfo = proj.MonoNativeInfo;
 				configureTarget (target, proj.Path, proj.IsNUnitProject, true);
 				unified_targets.Add (target);
 			}
@@ -339,7 +338,6 @@ namespace Xharness {
 				// Generate variations if requested
 				if (proj.GenerateFull) {
 					var target = new MacTarget (MacFlavors.Full);
-					target.MonoNativeInfo = proj.MonoNativeInfo;
 					configureTarget (target, file, proj.IsNUnitProject, false);
 					unified_targets.Add (target);
 
@@ -351,7 +349,6 @@ namespace Xharness {
 
 				if (proj.GenerateSystem) {
 					var target = new MacTarget (MacFlavors.System);
-					target.MonoNativeInfo = proj.MonoNativeInfo;
 					configureTarget (target, file, proj.IsNUnitProject, false);
 					unified_targets.Add (target);
 
@@ -375,7 +372,7 @@ namespace Xharness {
 		void AutoConfigureIOS ()
 		{
 			var test_suites = new string [] { "monotouch-test", "framework-test", "interdependent-binding-projects" };
-			var library_projects = new string [] { "BundledResources", "EmbeddedResources", "bindings-test", "bindings-test2", "bindings-framework-test" };
+			var library_projects = new string [] { "BundledResources", "EmbeddedResources", "bindings-test2", "bindings-framework-test" };
 			var fsharp_test_suites = new string [] { "fsharp" };
 			var fsharp_library_projects = new string [] { "fsharplibrary" };
 
@@ -388,6 +385,8 @@ namespace Xharness {
 			foreach (var p in fsharp_library_projects)
 				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".fsproj")), false) { Name = p });
 
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bindings-test", "iOS", "bindings-test.csproj")), false) { Name = "bindings-test" });
+
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "iOS", "introspection-ios.csproj"))) { Name = "introspection" });
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "iOS", "introspection-ios-dotnet.csproj"))) { Name = "introspection", IsDotNetProject = true, SkipiOSVariation = false, SkiptvOSVariation = false, SkipwatchOSVariation = true, SkipTodayExtensionVariation = true, SkipDeviceVariations = true, SkipiOS32Variation = true, });
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "dont link", "dont link.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
@@ -395,7 +394,7 @@ namespace Xharness {
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link sdk", "link sdk.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
 
 			foreach (var flavor in new MonoNativeFlavor [] { MonoNativeFlavor.Compat, MonoNativeFlavor.Unified }) {
-				var monoNativeInfo = new MonoNativeInfo (flavor, RootDirectory, Log);
+				var monoNativeInfo = new MonoNativeInfo (DevicePlatform.iOS, flavor, RootDirectory, Log);
 				var iosTestProject = new iOSTestProject (monoNativeInfo.ProjectPath) {
 					MonoNativeInfo = monoNativeInfo,
 					Name = monoNativeInfo.ProjectName,
@@ -468,6 +467,18 @@ namespace Xharness {
 			return mac ? AutoConfigureMac (true) : ConfigureIOS ();
 		}
 
+		// At startup we:
+		// * Load a list of well-known test projects IOSTestProjects/MacTestProjects. This happens in AutoConfigureIOS/AutoConfigureMac.
+		//   Example projects:
+		//     * introspection
+		//     * dont link, link all, link sdk
+		// * Each of these test projects can used to generate other platform variations (tvOS, watchOS, macOS full, etc),
+		//   if the the TestProject.GenerateVariations property is true.
+		// * For the mono-native template project, we generate a compat+unified version of the mono-native template project (in MonoNativeInfo.Convert).
+		//   GenerateVariations is true for mono-native projects, which means we'll generate platform variations.
+		// * For the BCL tests, we use a BCL test project generator. The BCL test generator generates projects for
+		//   all platforms we're interested in, so we set GenerateVariations to false to avoid generate the platform variations again.
+
 		int ConfigureIOS ()
 		{
 			var rv = 0;
@@ -482,11 +493,8 @@ namespace Xharness {
 			foreach (var monoNativeInfo in IOSTestProjects.Where (x => x.MonoNativeInfo != null).Select (x => x.MonoNativeInfo))
 				monoNativeInfo.Convert ();
 
-			foreach (var proj in IOSTestProjects) {
+			foreach (var proj in IOSTestProjects.Where ((v) => v.GenerateVariations)) {
 				var file = proj.Path;
-
-				if (proj.MonoNativeInfo != null)
-					file = proj.MonoNativeInfo.TemplatePath;
 
 				if (!File.Exists (file)) {
 					Console.WriteLine ($"Can't find the project file {file}.");
@@ -675,6 +683,7 @@ namespace Xharness {
 		public void Save (StringWriter doc, string path)
 		{
 			if (!File.Exists (path)) {
+				Directory.CreateDirectory (Path.GetDirectoryName (path));
 				File.WriteAllText (path, doc.ToString ());
 				Log (1, "Created {0}", path);
 			} else {

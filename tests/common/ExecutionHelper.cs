@@ -508,7 +508,7 @@ namespace Xamarin.Tests
 				Console.WriteLine ("Exit code: {0}", rv.ExitCode);
 			}
 			if (throwOnError && rv.ExitCode != 0)
-				throw new Exception ();
+				throw new Exception ($"Execution failed with exit code {rv.ExitCode}:\n{fileName} {StringUtils.FormatArguments (arguments)}\nReview standard output/standard error for more details.");
 			return output;
 		}
 	}
