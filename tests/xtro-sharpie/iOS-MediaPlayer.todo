@@ -1,8 +1,0 @@
-!deprecated-attribute-missing! MPPlayableContentDataSource::contentItemForIdentifier:completionHandler: missing a [Deprecated] attribute
-!deprecated-attribute-missing! MPPlayableContentDelegate::playableContentManager:didUpdateContext: missing a [Deprecated] attribute
-!deprecated-attribute-missing! MPPlayableContentDelegate::playableContentManager:initiatePlaybackOfContentItemAtIndexPath:completionHandler: missing a [Deprecated] attribute
-!deprecated-attribute-missing! MPPlayableContentManager missing a [Deprecated] attribute
-!deprecated-attribute-missing! MPPlayableContentManager::context missing a [Deprecated] attribute
-!deprecated-attribute-missing! MPPlayableContentManager::nowPlayingIdentifiers missing a [Deprecated] attribute
-!deprecated-attribute-missing! MPPlayableContentManager::setNowPlayingIdentifiers: missing a [Deprecated] attribute
-!deprecated-attribute-missing! MPPlayableContentManagerContext missing a [Deprecated] attribute
