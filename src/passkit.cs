@@ -10,14 +10,26 @@
 using System;
 using System.ComponentModel;
 using Contacts;
+using CoreGraphics;
 using ObjCRuntime;
 using Foundation;
+#if MONOMAC
+using AppKit;
+using ABRecord = Foundation.NSObject;
+using UIButton = AppKit.NSButton;
+using UIImage = AppKit.NSImage;
+using UIViewController = AppKit.NSViewController;
+using UIWindow = AppKit.NSWindow;
+#else
 using UIKit;
-#if !WATCH
+#if IOS
 using AddressBook;
 #else
-interface ABRecord {}
-#endif
+using ABRecord = Foundation.NSObject;
+using UIViewController = Foundation.NSObject;
+using UIWindow = Foundation.NSObject;
+#endif // IOS
+#endif // MONOMAC
 
 namespace PassKit {
 
@@ -273,6 +285,7 @@ namespace PassKit {
 
 		[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
 		[Deprecated (PlatformName.iOS, 9, 0)]
+		[NoMac]
 		[Export ("paymentAuthorizationViewController:didSelectShippingAddress:completion:")]
 		[EventArgs ("PKPaymentShippingAddressSelected")]
 		void DidSelectShippingAddress (PKPaymentAuthorizationViewController controller, ABRecord address, PKPaymentShippingAddressSelected completion);
@@ -305,6 +318,11 @@ namespace PassKit {
 		[Export ("paymentAuthorizationViewController:didSelectPaymentMethod:handler:")]
 		[EventArgs ("PKPaymentRequestPaymentMethodUpdate")]
 		void DidSelectPaymentMethod2 (PKPaymentAuthorizationViewController controller, PKPaymentMethod paymentMethod, Action<PKPaymentRequestPaymentMethodUpdate> completion);
+
+		[Watch (7,0)][iOS (14,0)]
+		[Export ("paymentAuthorizationViewController:didRequestMerchantSessionUpdate:")]
+		[EventArgs ("PKPaymentRequestMerchantSessionUpdate")]
+		void DidRequestMerchantSessionUpdate (PKPaymentAuthorizationViewController controller, Action<PKPaymentRequestMerchantSessionUpdate> updateHandler);
 	}
 
 	[iOS (8,0)]
@@ -548,7 +566,8 @@ namespace PassKit {
 		PKPaymentMethod PaymentMethod { get; }		
 	}
 
-#if !WATCH
+	[NoMac]
+	[NoWatch]
 	[BaseType (typeof (UIViewController), Delegates = new string [] {"WeakDelegate"}, Events = new Type [] { typeof (PKAddPassesViewControllerDelegate) })]
 	// invalid null handle for default 'init'
 	[DisableDefaultCtor]
@@ -578,6 +597,8 @@ namespace PassKit {
 		PKAddPassesViewControllerDelegate Delegate { get; set;  }
 	}
 
+	[NoMac]
+	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -586,6 +607,7 @@ namespace PassKit {
 		void Finished (PKAddPassesViewController controller);
 	}
 
+	[NoWatch]
 	[iOS (9,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor] // designated
@@ -608,6 +630,7 @@ namespace PassKit {
 		NSData WrappedKey { get; set; }
 	}
 
+	[NoWatch]
 	[iOS (9,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
@@ -655,6 +678,8 @@ namespace PassKit {
 		NSSet<NSString> ProductIdentifiers { get; set; }
 	}
 
+	[NoMac]
+	[NoWatch]
 	[iOS (9,0)]
 	[BaseType (typeof(UIViewController))]
 	[DisableDefaultCtor]
@@ -684,6 +709,8 @@ namespace PassKit {
 
 	interface IPKAddPaymentPassViewControllerDelegate {}
 	
+	[NoWatch]
+	[NoMac]
 	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
 	interface PKAddPaymentPassViewControllerDelegate
@@ -696,7 +723,6 @@ namespace PassKit {
 		[Export ("addPaymentPassViewController:didFinishAddingPaymentPass:error:")]
 		void DidFinishAddingPaymentPass (PKAddPaymentPassViewController controller, [NullAllowed] PKPaymentPass pass, [NullAllowed] NSError error);
 	}
-#endif // !WATCH
 		
 	[BaseType (typeof (PKObject))]
 	interface PKPass : NSSecureCoding, NSCopying {
@@ -753,6 +779,7 @@ namespace PassKit {
 
 		[Deprecated (PlatformName.iOS, 13, 4, message: "Use 'SecureElementPass' instead.")]
 		[Deprecated (PlatformName.WatchOS, 6, 2, message: "Use 'SecureElementPass' instead.")]
+		[NoMac]
 		[iOS (8,0)]
 		[Export ("paymentPass")]
 		PKPaymentPass PaymentPass { get; }
@@ -786,6 +813,7 @@ namespace PassKit {
 
 		[Deprecated (PlatformName.iOS, 13, 4, message: "Use 'SecureElementPass' instead.")]
 		[Deprecated (PlatformName.WatchOS, 6, 2, message: "Use 'SecureElementPass' instead.")]
+		[NoMac]
 		[NullAllowed, Export ("paymentPass", ArgumentSemantic.Copy)]
 		PKPaymentPass PaymentPass { get; }
 
@@ -804,6 +832,7 @@ namespace PassKit {
 
 		[Deprecated (PlatformName.iOS, 13, 4, message: "Use 'PKSecureElementPass.PassActivationState' instead.")]
 		[Deprecated (PlatformName.WatchOS, 6, 2, message: "Use 'PKSecureElementPass.PassActivationState' instead.")]
+		[NoMac]
 		[Export ("activationState")]
 		PKPaymentPassActivationState ActivationState { get; }
 	}
@@ -817,6 +846,7 @@ namespace PassKit {
 	[Static]
 	[iOS (8,0)]
 	[Watch (3,0)]
+	[Mac (11,0)]
 	interface PKPaymentNetwork {
 		[Field ("PKPaymentNetworkAmex")]
 		NSString Amex { get; }
@@ -900,6 +930,15 @@ namespace PassKit {
 		[Watch (5,1,2)][iOS (12,1,1)]
 		[Field ("PKPaymentNetworkMada")]
 		NSString Mada { get; }
+
+		[Watch (7,0)][iOS (14,0)]
+		[Field ("PKPaymentNetworkAlipay")]
+		NSString Alipay { get; }
+
+		[Watch (7,0)][iOS (14,0)]
+		[NoMac]
+		[Field ("PKPaymentNetworkGirocard")]
+		NSString Girocard { get; }
 	}
 
 #if !WATCH
@@ -923,6 +962,7 @@ namespace PassKit {
 		nfloat CornerRadius { get; set; }
 	}
 
+	[NoMac]
 	[iOS (9,0)]
 	[BaseType (typeof (UIButton))]
 	[DisableDefaultCtor]
@@ -995,7 +1035,9 @@ namespace PassKit {
 
 		[Deprecated (PlatformName.WatchOS, 4,0, message: "Use 'DidAuthorizePayment' overload with the 'Action<PKPaymentAuthorizationResult>' parameter instead.")]
 		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'DidAuthorizePayment' overload with the 'Action<PKPaymentAuthorizationResult>' parameter instead.")]
+#if !XAMCORE_4_0
 		[Abstract]
+#endif
 		[Export ("paymentAuthorizationController:didAuthorizePayment:completion:")]
 		void DidAuthorizePayment (PKPaymentAuthorizationController controller, PKPayment payment, Action<PKPaymentAuthorizationStatus> completion);
 
@@ -1036,6 +1078,18 @@ namespace PassKit {
 		[Watch (4,0)][iOS (11,0)]
 		[Export ("paymentAuthorizationController:didSelectPaymentMethod:handler:")]
 		void DidSelectPaymentMethod (PKPaymentAuthorizationController controller, PKPaymentMethod paymentMethod, Action<PKPaymentRequestPaymentMethodUpdate> completion);
+
+		[Watch (7,0)][iOS (14,0)]
+		[Export ("paymentAuthorizationController:didRequestMerchantSessionUpdate:")]
+		void DidRequestMerchantSessionUpdate (PKPaymentAuthorizationController controller, Action<PKPaymentRequestMerchantSessionUpdate> handler);
+	
+		[Watch (7,0)][iOS (14,0)]
+		[Export ("presentationWindowForPaymentAuthorizationController:")]
+		[return: NullAllowed]
+#if MONOMAC
+		[Abstract]
+#endif
+		UIWindow GetPresentationWindow (PKPaymentAuthorizationController controller);
 	}
 
 	[iOS (10,1)]
@@ -1213,6 +1267,7 @@ namespace PassKit {
 	interface IPKDisbursementAuthorizationControllerDelegate { }
 
 	[NoWatch]
+	[NoMac] // both members are not available but, like many times, the protocol is not decorated
 	[iOS (12,2)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
@@ -1227,6 +1282,7 @@ namespace PassKit {
 	}
 
 	[NoWatch]
+	[NoMac] // all members are not available but, like many times, the type is not decorated
 	[iOS (12,2)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -1315,5 +1371,380 @@ namespace PassKit {
 
 		[NullAllowed, Export ("pairedTerminalIdentifier")]
 		string PairedTerminalIdentifier { get; }
+	}
+
+	[NoWatch, NoTV]
+	[iOS (14,0)]
+	[Native]
+	public enum PKAddShareablePassConfigurationPrimaryAction : ulong {
+		Add,
+		Share,
+	}
+
+	[Watch (7,0), iOS (14,0)]
+	[NoTV]
+	[Native]
+	public enum PKBarcodeEventConfigurationDataType : long {
+		Unknown,
+		SigningKeyMaterial,
+		SigningCertificate,
+	}
+
+	[NoWatch, NoTV, NoMac]
+	[iOS (14,0)]
+	[Native]
+	public enum PKIssuerProvisioningExtensionAuthorizationResult : long {
+		Canceled,
+		Authorized,
+	}
+
+	[NoWatch, NoTV]
+	[iOS (13,4)]
+	[Mac (11,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface PKAddSecureElementPassConfiguration {
+
+		[NullAllowed, Export ("issuerIdentifier")]
+		string IssuerIdentifier { get; set; }
+
+		[NullAllowed, Export ("localizedDescription")]
+		string LocalizedDescription { get; set; }
+	}
+
+	[NoWatch, NoTV]
+	[Mac (11,0)]
+	[iOS (13,4)]
+	[BaseType (typeof (PKAddSecureElementPassConfiguration))]
+	// note: `init` is present in headers
+	interface PKAddCarKeyPassConfiguration {
+
+		[Export ("password")]
+		string Password { get; set; }
+	}
+
+	interface IPKAddSecureElementPassViewControllerDelegate {}
+
+	[NoWatch, NoTV, NoMac]
+	[iOS (13,4)]
+	[Protocol, Model (AutoGeneratedName = true)]
+	[BaseType (typeof (NSObject))]
+	interface PKAddSecureElementPassViewControllerDelegate {
+
+		[Deprecated (PlatformName.iOS, 14,0, message: "Use 'DidFinishAddingSecureElementPasses' instead.")]
+		[Abstract]
+		[Export ("addSecureElementPassViewController:didFinishAddingSecureElementPass:error:")]
+		void DidFinishAddingSecureElementPass (PKAddSecureElementPassViewController controller, [NullAllowed] PKSecureElementPass pass, [NullAllowed] NSError error);
+	
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("addSecureElementPassViewController:didFinishAddingSecureElementPasses:error:")]
+		void DidFinishAddingSecureElementPasses (PKAddSecureElementPassViewController controller, [NullAllowed] PKSecureElementPass[] passes, [NullAllowed] NSError error);
+}
+
+	[NoWatch, NoTV, NoMac]
+	[iOS (13,4)]
+	[BaseType (typeof(UIViewController))]
+	[DisableDefaultCtor]
+	interface PKAddSecureElementPassViewController {
+
+		[Static]
+		[Export ("canAddSecureElementPassWithConfiguration:")]
+		bool CanAddSecureElementPass (PKAddSecureElementPassConfiguration configuration);
+
+		[Export ("initWithConfiguration:delegate:")]
+		IntPtr Constructor (PKAddSecureElementPassConfiguration configuration, [NullAllowed] IPKAddSecureElementPassViewControllerDelegate @delegate);
+
+		[Wrap ("WeakDelegate")]
+		[NullAllowed]
+		IPKAddSecureElementPassViewControllerDelegate Delegate { get; set; }
+
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		NSObject WeakDelegate { get; set; }
+	}
+
+	[NoWatch, NoTV]
+	[iOS (14,0)]
+	[Mac (11,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface PKShareablePassMetadata {
+
+		[Export ("initWithProvisioningCredentialIdentifier:cardConfigurationIdentifier:sharingInstanceIdentifier:passThumbnailImage:ownerDisplayName:localizedDescription:")]
+		IntPtr Constructor (string credentialIdentifier, string cardConfigurationIdentifier, string sharingInstanceIdentifier, CGImage passThumbnailImage, string ownerDisplayName, string localizedDescription);
+
+		[Export ("credentialIdentifier", ArgumentSemantic.Strong)]
+		string CredentialIdentifier { get; }
+
+		[Export ("cardConfigurationIdentifier", ArgumentSemantic.Strong)]
+		string CardConfigurationIdentifier { get; }
+
+		[Export ("sharingInstanceIdentifier", ArgumentSemantic.Strong)]
+		string SharingInstanceIdentifier { get; }
+
+		[Export ("passThumbnailImage")]
+		CGImage PassThumbnailImage { get; }
+
+		[Export ("localizedDescription", ArgumentSemantic.Strong)]
+		string LocalizedDescription { get; }
+
+		[Export ("ownerDisplayName", ArgumentSemantic.Strong)]
+		string OwnerDisplayName { get; }
+	}
+
+	[NoWatch, NoTV]
+	[iOS (14,0)]
+	[Mac (11,0)]
+	[BaseType (typeof (PKAddSecureElementPassConfiguration))]
+	[DisableDefaultCtor]
+	interface PKAddShareablePassConfiguration {
+
+		[Async]
+		[Static]
+		[Export ("configurationForPassMetadata:provisioningPolicyIdentifier:primaryAction:completion:")]
+		void GetConfiguration (PKShareablePassMetadata[] credentialsMetadata, string provisioningPolicyIdentifier, PKAddShareablePassConfigurationPrimaryAction action, Action<PKAddShareablePassConfiguration, NSError> completion);
+
+		[Export ("primaryAction")]
+		PKAddShareablePassConfigurationPrimaryAction PrimaryAction { get; }
+
+		[Export ("credentialsMetadata", ArgumentSemantic.Strong)]
+		PKShareablePassMetadata[] CredentialsMetadata { get; }
+
+		[Export ("provisioningPolicyIdentifier", ArgumentSemantic.Strong)]
+		string ProvisioningPolicyIdentifier { get; }
+	}
+
+	[Watch (7,0)][iOS (14,0)]
+	[NoTV]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface PKBarcodeEventConfigurationRequest {
+
+		[Export ("deviceAccountIdentifier")]
+		string DeviceAccountIdentifier { get; }
+
+		[Export ("configurationData")]
+		NSData ConfigurationData { get; }
+
+		[Export ("configurationDataType")]
+		PKBarcodeEventConfigurationDataType ConfigurationDataType { get; }
+	}
+
+	[Watch (7,0)][iOS (14,0)]
+	[NoTV]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface PKBarcodeEventMetadataRequest {
+
+		[Export ("deviceAccountIdentifier")]
+		string DeviceAccountIdentifier { get; }
+
+		[Export ("lastUsedBarcodeIdentifier")]
+		string LastUsedBarcodeIdentifier { get; }
+	}
+
+	[Watch (7,0)][iOS (14,0)]
+	[NoTV]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface PKBarcodeEventMetadataResponse {
+
+		[Export ("initWithPaymentInformation:")]
+		IntPtr Constructor (NSData paymentInformation);
+
+		[Export ("paymentInformation", ArgumentSemantic.Copy)]
+		NSData PaymentInformation { get; set; }
+	}
+
+	[Watch (7,0)][iOS (14,0)]
+	[NoTV]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface PKBarcodeEventSignatureRequest {
+
+		[Export ("deviceAccountIdentifier")]
+		string DeviceAccountIdentifier { get; }
+
+		[Export ("transactionIdentifier")]
+		string TransactionIdentifier { get; }
+
+		[Export ("barcodeIdentifier")]
+		string BarcodeIdentifier { get; }
+
+		[Export ("rawMerchantName")]
+		string RawMerchantName { get; }
+
+		[Export ("merchantName")]
+		string MerchantName { get; }
+
+		[Export ("transactionDate", ArgumentSemantic.Strong)]
+		NSDate TransactionDate { get; }
+
+		[Export ("currencyCode")]
+		string CurrencyCode { get; }
+
+		// FIXME ?
+		[Export ("amount", ArgumentSemantic.Strong)]
+		NSNumber Amount { get; }
+
+		[Export ("transactionStatus")]
+		string TransactionStatus { get; }
+
+		[Export ("partialSignature", ArgumentSemantic.Copy)]
+		NSData PartialSignature { get; }
+	}
+
+	[Watch (7,0)][iOS (14,0)]
+	[NoTV]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface PKBarcodeEventSignatureResponse {
+
+		[Export ("initWithSignedData:")]
+		IntPtr Constructor (NSData signedData);
+
+		[Export ("signedData", ArgumentSemantic.Copy)]
+		NSData SignedData { get; set; }
+	}
+
+	[NoWatch, NoTV]
+	[iOS (14,0)]
+	[Mac (11,0)]
+	[BaseType (typeof (NSObject))]
+	[DesignatedDefaultCtor]
+	interface PKIssuerProvisioningExtensionStatus {
+
+		[Export ("requiresAuthentication")]
+		bool RequiresAuthentication { get; set; }
+
+		[Export ("passEntriesAvailable")]
+		bool PassEntriesAvailable { get; set; }
+
+		[Export ("remotePassEntriesAvailable")]
+		bool RemotePassEntriesAvailable { get; set; }
+	}
+
+	[NoWatch, NoTV]
+	[iOS (14,0)]
+	[Mac (11,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface PKIssuerProvisioningExtensionPassEntry {
+
+		[Export ("identifier")]
+		string Identifier { get; }
+
+		[Export ("title")]
+		string Title { get; }
+
+		[Export ("art")]
+		CGImage Art { get; }
+	}
+
+	[NoWatch, NoTV, NoMac]
+	[iOS (14,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface PKIssuerProvisioningExtensionHandler {
+
+		[Async]
+		[Export ("statusWithCompletion:")]
+		void GetStatus (Action<PKIssuerProvisioningExtensionStatus> completion);
+
+		[Async]
+		[Export ("passEntriesWithCompletion:")]
+		void PassEntries (Action<PKIssuerProvisioningExtensionPassEntry[]> completion);
+
+		[Async]
+		[Export ("remotePassEntriesWithCompletion:")]
+		void RemotePassEntries (Action<PKIssuerProvisioningExtensionPassEntry[]> completion);
+
+		[Async]
+		[Export ("generateAddPaymentPassRequestForPassEntryWithIdentifier:configuration:certificateChain:nonce:nonceSignature:completionHandler:")]
+		void GenerateAddPaymentPassRequest (string identifier, PKAddPaymentPassRequestConfiguration configuration, NSData[] certificates, NSData nonce, NSData nonceSignature, Action<PKAddPaymentPassRequest> completion);
+	}
+
+	[NoWatch, NoTV, NoMac]
+	[iOS (14,0)]
+	[Protocol]
+	interface PKIssuerProvisioningExtensionAuthorizationProviding {
+
+		[Abstract]
+		[NullAllowed, Export ("completionHandler", ArgumentSemantic.Copy)]
+		Action<PKIssuerProvisioningExtensionAuthorizationResult> CompletionHandler { get; set; }
+	}
+
+	[NoWatch, NoTV, NoMac]
+	[iOS (14,0)]
+	delegate void PKInformationRequestCompletionBlock (PKBarcodeEventMetadataResponse response);
+
+	[NoWatch, NoTV, NoMac]
+	[iOS (14,0)]
+	delegate void PKSignatureRequestCompletionBlock (PKBarcodeEventSignatureResponse response);
+
+	[NoTV]
+	[Mac (11,0)]
+	[Watch (7,0)][iOS (14,0)]
+	[Protocol]
+	interface PKPaymentInformationRequestHandling {
+
+		[Abstract]
+		[Export ("handleInformationRequest:completion:")]
+		void HandleInformationRequest (PKBarcodeEventMetadataRequest infoRequest, PKInformationRequestCompletionBlock completion);
+
+		[Abstract]
+		[Export ("handleSignatureRequest:completion:")]
+		void HandleSignatureRequest (PKBarcodeEventSignatureRequest signatureRequest, PKSignatureRequestCompletionBlock completion);
+
+		[Abstract]
+		[Export ("handleConfigurationRequest:completion:")]
+		void HandleConfigurationRequest (PKBarcodeEventConfigurationRequest configurationRequest, Action completion);
+	}
+
+	[NoWatch, NoTV]
+	[iOS (14,0)]
+	[Mac (11,0)]
+	[BaseType (typeof (PKIssuerProvisioningExtensionPassEntry))]
+	[DisableDefaultCtor]
+	interface PKIssuerProvisioningExtensionPaymentPassEntry {
+
+		[Export ("initWithIdentifier:title:art:addRequestConfiguration:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string identifier, string title, CGImage art, PKAddPaymentPassRequestConfiguration configuration);
+
+		[Export ("addRequestConfiguration")]
+		PKAddPaymentPassRequestConfiguration AddRequestConfiguration { get; }
+	}
+
+	[NoTV]
+	[Watch (7,0)][Mac (11,0)][iOS (14,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface PKPaymentMerchantSession {
+
+		[Export ("initWithDictionary:")]
+		IntPtr Constructor (NSDictionary dictionary);
+	}
+
+	[NoTV]
+	[Watch (7,0)][Mac (11,0)][iOS (14,0)]
+	[BaseType (typeof (NSObject))]
+	interface PKPaymentRequestMerchantSessionUpdate {
+
+		[Export ("initWithStatus:merchantSession:")]
+		IntPtr Constructor (PKPaymentAuthorizationStatus status, [NullAllowed] PKPaymentMerchantSession session);
+
+		[Export ("status", ArgumentSemantic.Assign)]
+		PKPaymentAuthorizationStatus Status { get; set; }
+
+		[NullAllowed, Export ("session", ArgumentSemantic.Strong)]
+		PKPaymentMerchantSession Session { get; set; }
+	}
+
+	[Watch (7,0)][Mac (11,0)][iOS (14,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface PKPaymentInformationEventExtension {
 	}
 }

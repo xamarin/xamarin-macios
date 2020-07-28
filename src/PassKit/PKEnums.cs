@@ -150,6 +150,7 @@ namespace PassKit {
 
 	[Watch (6,0)]
 	[iOS (9,0)]
+	[Mac (11,0)]
 	[Native]
 	public enum PKAddPaymentPassError : long
 	{
@@ -192,6 +193,7 @@ namespace PassKit {
 	}
 
 	[NoWatch]
+	[NoMac]
 	[iOS (9,0)]
 	[Native]
 	public enum PKAddPassButtonStyle : long {
@@ -210,6 +212,7 @@ namespace PassKit {
 	}
 
 	[iOS (12,0)]
+	[Mac (11,0)]
 	[NoWatch] // https://feedbackassistant.apple.com/feedback/6301809 https://github.com/xamarin/maccore/issues/1819
 	[Native]
 	public enum PKAddPaymentPassStyle : ulong {
@@ -218,6 +221,7 @@ namespace PassKit {
 	}
 
 	[Watch (6,2), iOS (13,4)]
+	[Mac (11,0)]
 	[ErrorDomain ("PKAddSecureElementPassErrorDomain")]
 	[Native]
 	public enum PKAddSecureElementPassErrorCode : long {

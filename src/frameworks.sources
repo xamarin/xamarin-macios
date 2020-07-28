@@ -1879,6 +1879,7 @@ MAC_FRAMEWORKS =            \
 	NetworkExtension        \
 	NotificationCenter 	\
 	OpenGL                  \
+	PassKit                 \
 	PdfKit                  \
 	PencilKit               \
 	Photos                  \

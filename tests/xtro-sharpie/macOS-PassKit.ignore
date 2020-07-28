@@ -1,0 +1,8 @@
+## no point in adding API that are already deprecated to a new platform
+!missing-selector! PKPass::paymentPass not bound
+!missing-selector! PKPaymentMethod::paymentPass not bound
+!missing-selector! PKPaymentPass::activationState not bound
+
+## all members are decorated but not the type themselves
+!missing-protocol! PKDisbursementAuthorizationControllerDelegate not bound
+!missing-type! PKDisbursementAuthorizationController not bound
