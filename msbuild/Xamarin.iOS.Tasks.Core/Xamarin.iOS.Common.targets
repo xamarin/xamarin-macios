@@ -647,7 +647,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<!-- strip embedded frameworks -->
 		<SymbolStrip
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '$(MtouchNoSymbolStrip)' == 'false'"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(_NoSymbolStrip)' == 'false'"
 			Executable="%(_Frameworks.Identity)"
 			IsFramework="true"
 			SymbolFile=""
@@ -676,7 +676,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			<_AppExtensionDebugSymbolProperties Include="$(_AppBundleFileName)">
 				<CompiledArchitectures>$(_CompiledArchitectures)</CompiledArchitectures>
 				<NativeExecutable>$(_NativeExecutableFileName)</NativeExecutable>
-				<NoSymbolStrip>$(MtouchNoSymbolStrip)</NoSymbolStrip>
+				<NoSymbolStrip>$(_NoSymbolStrip)</NoSymbolStrip>
 				<SymbolsList>$(_SymbolsListFullPath)</SymbolsList>
 				<NoDSymUtil>$(_NoDSymUtil)</NoDSymUtil>
 			</_AppExtensionDebugSymbolProperties>
@@ -714,7 +714,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<!-- strip the debug symbols from the $(_NativeExecutable) -->
 		<SymbolStrip
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '$(MtouchNoSymbolStrip)' == 'false' And '$(IsAppExtension)' == 'false'"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(_NoSymbolStrip)' == 'false' And '$(IsAppExtension)' == 'false'"
 			Executable="$(_NativeExecutable)"
 			IsFramework="false"
 			SymbolFile="$(_MtouchSymbolsList)"
@@ -724,7 +724,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<!-- touch the dSYM Info.plist so that its mtime is newer than the stripped $(_NativeExecutable) -->
 		<Touch
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '$(MtouchNoSymbolStrip)' == 'false' And '$(IsAppExtension)' == 'false' And Exists('$(AppBundleDir).dSYM')"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(_NoSymbolStrip)' == 'false' And '$(IsAppExtension)' == 'false' And Exists('$(AppBundleDir).dSYM')"
 			Files="$(AppBundleDir).dSYM\Contents\Info.plist"
 		>
 		</Touch>
