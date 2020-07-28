@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if !__WATCHOS__
+
+using System;
 
 using Foundation;
 using MLCompute;
@@ -15,8 +17,10 @@ namespace MonoTouchFixtures.MLCompute {
 		public void SetUp ()
 		{
 			TestRuntime.AssertXcodeVersion (12, 0);
+#if !MONOMAC
 			if (Runtime.Arch == Arch.SIMULATOR)
 				Assert.Ignore ("https://github.com/xamarin/maccore/issues/2271");
+#endif
 		}
 
 		[Test]
@@ -36,3 +40,5 @@ namespace MonoTouchFixtures.MLCompute {
 		}
 	}
 }
+
+#endif // !__WATCHOS__
