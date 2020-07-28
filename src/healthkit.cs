@@ -1953,6 +1953,10 @@ namespace HealthKit {
 		AppetiteChanges,
 
 		[Watch (7, 0), iOS (13, 6)]
+		[Field ("HKCategoryTypeIdentifierGeneralizedBodyAche")]
+		GeneralizedBodyAche,
+
+		[Watch (7, 0), iOS (13, 6)]
 		[Field ("HKCategoryTypeIdentifierBloating")]
 		Bloating,
 
@@ -1995,10 +1999,6 @@ namespace HealthKit {
 		[Watch (7, 0), iOS (13, 6)]
 		[Field ("HKCategoryTypeIdentifierFever")]
 		Fever,
-
-		[Watch (7, 0), iOS (13, 6)]
-		[Field ("HKCategoryTypeIdentifierGeneralizedBodyAche")]
-		GeneralizedBodyAche,
 
 		[Watch (7, 0), iOS (13, 6)]
 		[Field ("HKCategoryTypeIdentifierHeadache")]
