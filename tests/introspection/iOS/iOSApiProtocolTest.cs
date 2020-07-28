@@ -711,9 +711,6 @@ namespace Introspection {
 				case "HKAudiogramSample": // Conformance not in headers
 				case "UIImage": // only complains on tvOS beta 6
 					return true;
-				// Xcode 12 beta 2
-				case "HKElectrocardiogram": // Conformance not in headers
-					return true;
 				}
 				break;
 			case "NSMutableCopying":
