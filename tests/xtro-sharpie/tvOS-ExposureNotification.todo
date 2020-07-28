@@ -1,9 +1,3 @@
 !missing-enum! ENAuthorizationStatus not bound
 !missing-enum! ENErrorCode not bound
 !missing-enum! ENStatus not bound
-## appended from unclassified file
-!missing-enum! ENActivityFlags not bound
-!missing-enum! ENCalibrationConfidence not bound
-!missing-enum! ENDiagnosisReportType not bound
-!missing-enum! ENExposureFlags not bound
-!missing-enum! ENInfectiousness not bound

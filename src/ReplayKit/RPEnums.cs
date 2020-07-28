@@ -12,7 +12,7 @@ namespace ReplayKit {
 
 	[iOS (9,0)]
 	[TV (10,0)]
-	[Mac (10,16)]
+	[Mac (11,0)]
 	[Native]
 	[ErrorDomain ("RPRecordingErrorDomain")]
 	public enum RPRecordingError : long {
@@ -65,7 +65,7 @@ namespace ReplayKit {
 	[Native]
 	[iOS (10,0)]
 	[TV (10,0)]
-	[Mac (10,16)]
+	[Mac (11,0)]
 	public enum RPSampleBufferType : long {
 		Video = 1,
 		AudioApp,
@@ -75,7 +75,7 @@ namespace ReplayKit {
 	[Native]
 	[iOS (11,0)]
 	[NoTV]
-	[Mac (10,16)]
+	[Mac (11,0)]
 	public enum RPCameraPosition : long {
 		Front = 1,
 		Back,

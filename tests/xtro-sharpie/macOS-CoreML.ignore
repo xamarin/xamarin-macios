@@ -1,8 +1,0 @@
-## xcode12 beta 2 headers not updated for macOS
-!missing-enum! MLModelCollectionStatus not bound
-!missing-null-allowed! 'Foundation.NSDictionary`2<Foundation.NSString,CoreML.MLModelCollectionEntry> CoreML.MLModelCollection::get_Entries()' is missing an [NullAllowed] on return type
-!missing-selector! +MLModelCollection::modelCollectionWithIdentifier: not bound
-!missing-selector! +MLParameterKey::alpha not bound
-!missing-selector! MLModelCollection::isSynchronizationEnabled not bound
-!missing-selector! MLModelCollection::setIsSynchronizationEnabled: not bound
-!missing-selector! MLModelCollection::status not bound

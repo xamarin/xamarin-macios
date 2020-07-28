@@ -1,5 +1,6 @@
 !missing-enum! PKBarcodeEventConfigurationDataType not bound
 !missing-field! PKPaymentNetworkAlipay not bound
+!missing-field! PKPaymentNetworkGirocard not bound
 !missing-protocol! PKPaymentInformationRequestHandling not bound
 !missing-protocol-member! PKPaymentAuthorizationControllerDelegate::paymentAuthorizationController:didRequestMerchantSessionUpdate: not found
 !missing-protocol-member! PKPaymentAuthorizationControllerDelegate::presentationWindowForPaymentAuthorizationController: not found

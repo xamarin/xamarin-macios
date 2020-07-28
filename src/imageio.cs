@@ -67,7 +67,7 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyHEICSDictionary")]
 		NSString HeicsDictionary { get; }
 
-		[Mac (10,16), iOS (14,0), TV (14,0), Watch (7,0)]
+		[Mac (11,0), iOS (14,0), TV (14,0), Watch (7,0)]
 		[Field ("kCGImagePropertyWebPDictionary")]
 		NSString WebPDictionary { get; }
 
@@ -2007,27 +2007,27 @@ namespace ImageIO {
 
 		// WebP Dictionary Keys
 
-		[Mac (10,16)][iOS (14,0)][TV (14,0)][Watch (7,0)]
+		[Mac (11,0)][iOS (14,0)][TV (14,0)][Watch (7,0)]
 		[Field ("kCGImagePropertyWebPLoopCount")]
 		NSString WebPLoopCount { get; }
 
-		[Mac (10,16)][iOS (14,0)][TV (14,0)][Watch (7,0)]
+		[Mac (11,0)][iOS (14,0)][TV (14,0)][Watch (7,0)]
 		[Field ("kCGImagePropertyWebPDelayTime")]
 		NSString WebPDelayTime { get; }
 
-		[Mac (10,16)][iOS (14,0)][TV (14,0)][Watch (7,0)]
+		[Mac (11,0)][iOS (14,0)][TV (14,0)][Watch (7,0)]
 		[Field ("kCGImagePropertyWebPUnclampedDelayTime")]
 		NSString WebPUnclampedDelayTime { get; }
 
-		[Mac (10,16)][iOS (14,0)][TV (14,0)][Watch (7,0)]
+		[Mac (11,0)][iOS (14,0)][TV (14,0)][Watch (7,0)]
 		[Field ("kCGImagePropertyWebPFrameInfoArray")]
 		NSString WebPFrameInfoArray { get; }
 
-		[Mac (10,16)][iOS (14,0)][TV (14,0)][Watch (7,0)]
+		[Mac (11,0)][iOS (14,0)][TV (14,0)][Watch (7,0)]
 		[Field ("kCGImagePropertyWebPCanvasPixelWidth")]
 		NSString WebPCanvasPixelWidth { get; }
 
-		[Mac (10,16)][iOS (14,0)][TV (14,0)][Watch (7,0)]
+		[Mac (11,0)][iOS (14,0)][TV (14,0)][Watch (7,0)]
 		[Field ("kCGImagePropertyWebPCanvasPixelHeight")]
 		NSString WebPCanvasPixelHeight { get; }
 	}
@@ -2201,7 +2201,7 @@ namespace ImageIO {
 		[Export ("ExifAuxDictionary")]
 		NSDictionary ExifAuxDictionary { get; set; }
 
-		[Mac (10,16), iOS (14,0), TV (14,0), Watch (7,0)]
+		[Mac (11,0), iOS (14,0), TV (14,0), Watch (7,0)]
 		[Export ("WebPDictionary")]
 		NSDictionary WebPDictionary { get; set; }
 	}
@@ -2277,7 +2277,7 @@ namespace ImageIO {
 		[Static][Wrap ("CGImageProperties.ExifAuxDictionary")]
 		NSString ExifAuxDictionary { get; }
 
-		[Mac (10,16), iOS (14,0), TV (14,0), Watch (7,0)]
+		[Mac (11,0), iOS (14,0), TV (14,0), Watch (7,0)]
 		[Static][Wrap ("CGImageProperties.WebPDictionary")]
 		NSString WebPDictionary { get; }
 	}

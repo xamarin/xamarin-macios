@@ -247,7 +247,7 @@ namespace Introspection {
 						return true;
 					break;
 				case "NSMenu":
-					if (!Mac.CheckSystemVersion (10, 16))
+					if (!Mac.CheckSystemVersion (11, 0))
 						return true;
 					break;
 				}
@@ -286,7 +286,7 @@ namespace Introspection {
 				case "NSComboBox":
 				case "NSSearchField":
 				case "NSSecureTextField":
-					if (!Mac.CheckSystemVersion (10, 16))
+					if (!Mac.CheckSystemVersion (11, 0))
 						return true;
 					break;
 

@@ -1,0 +1,2 @@
+!missing-selector! QLThumbnailGenerationRequest::contentType not bound
+!missing-selector! QLThumbnailGenerationRequest::setContentType: not bound

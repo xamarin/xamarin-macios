@@ -1,59 +1,3 @@
-!unknown-native-enum! INCallCapability bound
-!unknown-native-enum! INCallCapabilityOptions bound
-!unknown-native-enum! INCallDestinationType bound
-!unknown-native-enum! INCallRecordType bound
-!unknown-native-enum! INCallRecordTypeOptions bound
-!unknown-native-enum! INConditionalOperator bound
-!unknown-native-enum! INMessageAttributeOptions bound
-!unknown-native-enum! INMessageType bound
-!unknown-native-enum! INSearchCallHistoryIntentResponseCode bound
-!unknown-native-enum! INSearchForMessagesIntentResponseCode bound
-!unknown-native-enum! INSendMessageIntentResponseCode bound
-!unknown-native-enum! INSendMessageRecipientUnsupportedReason bound
-!unknown-native-enum! INStartAudioCallIntentResponseCode bound
-!unknown-native-enum! INStartVideoCallIntentResponseCode bound
-!unknown-protocol! INSearchCallHistoryIntentHandling bound
-!unknown-protocol! INSearchForMessagesIntentHandling bound
-!unknown-protocol! INSendMessageIntentHandling bound
-!unknown-protocol! INStartAudioCallIntentHandling bound
-!unknown-protocol! INStartVideoCallIntentHandling bound
-!unknown-type! INCallDestinationTypeResolutionResult bound
-!unknown-type! INCallRecord bound
-!unknown-type! INCallRecordTypeOptionsResolutionResult bound
-!unknown-type! INCallRecordTypeResolutionResult bound
-!unknown-type! INDateComponentsRangeResolutionResult bound
-!unknown-type! INMessage bound
-!unknown-type! INMessageAttributeOptionsResolutionResult bound
-!unknown-type! INParameter bound
-!unknown-type! INRecurrenceRule bound
-!unknown-type! INSearchCallHistoryIntent bound
-!unknown-type! INSearchCallHistoryIntentResponse bound
-!unknown-type! INSearchForMessagesIntent bound
-!unknown-type! INSearchForMessagesIntentResponse bound
-!unknown-type! INSendMessageIntent bound
-!unknown-type! INSendMessageIntentResponse bound
-!unknown-type! INSendMessageRecipientResolutionResult bound
-!unknown-type! INSpeakableStringResolutionResult bound
-!unknown-type! INStartAudioCallIntent bound
-!unknown-type! INStartAudioCallIntentResponse bound
-!unknown-type! INStartVideoCallIntent bound
-!unknown-type! INStartVideoCallIntentResponse bound
-
-## Xcode 11.4 b1
-!unknown-field! INPersonRelationshipAssistant bound
-!unknown-field! INPersonRelationshipBrother bound
-!unknown-field! INPersonRelationshipChild bound
-!unknown-field! INPersonRelationshipFather bound
-!unknown-field! INPersonRelationshipFriend bound
-!unknown-field! INPersonRelationshipManager bound
-!unknown-field! INPersonRelationshipMother bound
-!unknown-field! INPersonRelationshipParent bound
-!unknown-field! INPersonRelationshipPartner bound
-!unknown-field! INPersonRelationshipSister bound
-!unknown-field! INPersonRelationshipSpouse bound
-
-## appended from unclassified file
-!deprecated-attribute-missing! INSendMessageIntent::initWithRecipients:content:speakableGroupName:conversationIdentifier:serviceName:sender: missing a [Deprecated] attribute
 !missing-enum! INGetReservationDetailsIntentResponseCode not bound
 !missing-enum! INPaymentMethodType not bound
 !missing-enum! INReservationActionType not bound
@@ -309,3 +253,54 @@
 !missing-type! INTrainTrip not bound
 !missing-type! INURLResolutionResult not bound
 !missing-type! INVolumeResolutionResult not bound
+!unknown-field! INPersonRelationshipAssistant bound
+!unknown-field! INPersonRelationshipBrother bound
+!unknown-field! INPersonRelationshipChild bound
+!unknown-field! INPersonRelationshipFather bound
+!unknown-field! INPersonRelationshipFriend bound
+!unknown-field! INPersonRelationshipManager bound
+!unknown-field! INPersonRelationshipMother bound
+!unknown-field! INPersonRelationshipParent bound
+!unknown-field! INPersonRelationshipPartner bound
+!unknown-field! INPersonRelationshipSister bound
+!unknown-field! INPersonRelationshipSpouse bound
+!unknown-native-enum! INCallCapability bound
+!unknown-native-enum! INCallCapabilityOptions bound
+!unknown-native-enum! INCallDestinationType bound
+!unknown-native-enum! INCallRecordType bound
+!unknown-native-enum! INCallRecordTypeOptions bound
+!unknown-native-enum! INConditionalOperator bound
+!unknown-native-enum! INMessageAttributeOptions bound
+!unknown-native-enum! INMessageType bound
+!unknown-native-enum! INSearchCallHistoryIntentResponseCode bound
+!unknown-native-enum! INSearchForMessagesIntentResponseCode bound
+!unknown-native-enum! INSendMessageIntentResponseCode bound
+!unknown-native-enum! INSendMessageRecipientUnsupportedReason bound
+!unknown-native-enum! INStartAudioCallIntentResponseCode bound
+!unknown-native-enum! INStartVideoCallIntentResponseCode bound
+!unknown-protocol! INSearchCallHistoryIntentHandling bound
+!unknown-protocol! INSearchForMessagesIntentHandling bound
+!unknown-protocol! INSendMessageIntentHandling bound
+!unknown-protocol! INStartAudioCallIntentHandling bound
+!unknown-protocol! INStartVideoCallIntentHandling bound
+!unknown-type! INCallDestinationTypeResolutionResult bound
+!unknown-type! INCallRecord bound
+!unknown-type! INCallRecordTypeOptionsResolutionResult bound
+!unknown-type! INCallRecordTypeResolutionResult bound
+!unknown-type! INDateComponentsRangeResolutionResult bound
+!unknown-type! INMessage bound
+!unknown-type! INMessageAttributeOptionsResolutionResult bound
+!unknown-type! INParameter bound
+!unknown-type! INRecurrenceRule bound
+!unknown-type! INSearchCallHistoryIntent bound
+!unknown-type! INSearchCallHistoryIntentResponse bound
+!unknown-type! INSearchForMessagesIntent bound
+!unknown-type! INSearchForMessagesIntentResponse bound
+!unknown-type! INSendMessageIntent bound
+!unknown-type! INSendMessageIntentResponse bound
+!unknown-type! INSendMessageRecipientResolutionResult bound
+!unknown-type! INSpeakableStringResolutionResult bound
+!unknown-type! INStartAudioCallIntent bound
+!unknown-type! INStartAudioCallIntentResponse bound
+!unknown-type! INStartVideoCallIntent bound
+!unknown-type! INStartVideoCallIntentResponse bound

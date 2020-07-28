@@ -4,5 +4,3 @@
 ## This member is not available on mac
 ## https://developer.apple.com/documentation/fileprovider/nsfileprovideritem/2879552-trashed?language=objc
 !extra-protocol-member! unexpected selector NSFileProviderItem::isTrashed found
-
-!missing-protocol! NSFileProviderItemFlags not bound

@@ -14,6 +14,7 @@ using Foundation;
 using Metal;
 
 namespace MetalPerformanceShaders {
+	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	[iOS (11,3), TV (11,3), Mac (10,13,4)]
 	public static partial class MPSStateBatch {
 

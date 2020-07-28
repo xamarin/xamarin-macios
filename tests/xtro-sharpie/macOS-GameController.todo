@@ -1,8 +1,9 @@
-!deprecated-attribute-missing! GCMotion::hasAttitudeAndRotationRate missing a [Deprecated] attribute
+!extra-null-allowed! 'GameController.GCController GameController.GCGamepad::get_Controller()' has a extraneous [NullAllowed] on return type
 !missing-enum! GCDeviceBatteryState not bound
 !missing-enum! GCTouchState not bound
 !missing-field! GCControllerDidBecomeCurrentNotification not bound
 !missing-field! GCControllerDidStopBeingCurrentNotification not bound
+!missing-field! GCHapticDurationInfinite not bound
 !missing-field! GCHapticsLocalityAll not bound
 !missing-field! GCHapticsLocalityDefault not bound
 !missing-field! GCHapticsLocalityHandles not bound
@@ -342,10 +343,13 @@
 !missing-selector! GCKeyboardInput::isAnyKeyPressed not bound
 !missing-selector! GCKeyboardInput::keyChangedHandler not bound
 !missing-selector! GCKeyboardInput::setKeyChangedHandler: not bound
+!missing-selector! GCMotion::acceleration not bound
 !missing-selector! GCMotion::hasAttitude not bound
+!missing-selector! GCMotion::hasGravityAndUserAcceleration not bound
 !missing-selector! GCMotion::hasRotationRate not bound
 !missing-selector! GCMotion::sensorsActive not bound
 !missing-selector! GCMotion::sensorsRequireManualActivation not bound
+!missing-selector! GCMotion::setAcceleration: not bound
 !missing-selector! GCMotion::setSensorsActive: not bound
 !missing-selector! GCMouse::mouseInput not bound
 !missing-selector! GCMouseInput::auxiliaryButtons not bound

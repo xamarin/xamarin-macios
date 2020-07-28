@@ -214,7 +214,7 @@ partial class TestRuntime
 #elif __IOS__
 				return CheckiOSSystemVersion (14, 0);
 #elif MONOMAC
-				return CheckMacSystemVersion (10, 16, 0);
+				return CheckMacSystemVersion (11, 0, 0);
 #else
 				throw new NotImplementedException ();
 #endif
@@ -281,6 +281,30 @@ partial class TestRuntime
 				return CheckiOSSystemVersion (13, 4);
 #elif MONOMAC
 				return CheckMacSystemVersion (10, 15, 4);
+#else
+				throw new NotImplementedException ();
+#endif
+			case 5:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (6, 2);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (13, 4);
+#elif __IOS__
+				return CheckiOSSystemVersion(13, 5);
+#elif MONOMAC
+				return CheckMacSystemVersion (10, 15, 5);
+#else
+				throw new NotImplementedException ();
+#endif
+			case 6:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (6, 2);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (13, 4);
+#elif __IOS__
+				return CheckiOSSystemVersion(13, 6);
+#elif MONOMAC
+				return CheckMacSystemVersion (10, 15, 6);
 #else
 				throw new NotImplementedException ();
 #endif

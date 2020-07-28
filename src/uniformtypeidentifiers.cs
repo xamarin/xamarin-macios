@@ -6,7 +6,7 @@ using ObjCRuntime;
 namespace UniformTypeIdentifiers {
 
 	[Introduced (PlatformName.MacCatalyst, 14,0)]
-	[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+	[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface UTType : NSCopying, NSSecureCoding {
@@ -122,7 +122,7 @@ namespace UniformTypeIdentifiers {
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14,0)]
-	[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+	[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 	enum UTTagClass {
 		[Field ("UTTagClassFilenameExtension")]
 		FilenameExtension,
@@ -132,8 +132,8 @@ namespace UniformTypeIdentifiers {
 	}
 
 	// split from UTType for clarity between members (selectors) and constants (fields)
-	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[Watch (7, 0), TV (14, 0), Mac (10, 16), iOS (14, 0)]
+	[Introduced (PlatformName.MacCatalyst, 14,0)]
+	[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 	[Static]
 	interface UTTypes {
 
@@ -473,6 +473,9 @@ namespace UniformTypeIdentifiers {
 		[Field ("UTTypeZIP")]
 		UTType Zip { get; }
 
+		[Field ("UTTypeAppleArchive")]
+		UTType AppleArchive { get; }
+
 		[Field ("UTTypeSpreadsheet")]
 		UTType Spreadsheet { get; }
 
@@ -526,7 +529,7 @@ namespace UniformTypeIdentifiers {
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+	[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 	[Category]
 	[BaseType (typeof (NSString))]
 	interface NSString_UTAdditions {
@@ -539,7 +542,7 @@ namespace UniformTypeIdentifiers {
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+	[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 	[Category]
 	[BaseType (typeof (NSUrl))]
 	interface NSUrl_UTAdditions {

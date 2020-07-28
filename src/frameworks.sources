@@ -1096,11 +1096,18 @@ METALPERFORMANCESHADERS_SOURCES = \
 	MetalPerformanceShaders/MPSCnnNeuron.cs \
 	MetalPerformanceShaders/MPSCnnKernel.cs \
 	MetalPerformanceShaders/MPSMatrixDescriptor.cs \
+	MetalPerformanceShaders/MPSNDArray.cs \
+	MetalPerformanceShaders/MPSNNGraph.cs \
 	MetalPerformanceShaders/MPSImageHistogram.cs \
 	MetalPerformanceShaders/MPSStateBatch.cs \
 	MetalPerformanceShaders/MPSStateResourceList.cs \
 
 # MetricKit
+
+METRICKIT_SOURCES = \
+	MetricKit/MXMetaData.cs \
+	MetricKit/MXMetric.cs \
+	MetricKit/MXMetricPayload.cs \
 
 
 # MobileCoreServices
@@ -1707,6 +1714,7 @@ WKWEBKIT_API_SOURCES = \
 	WKWebKit/Defs.cs \
 
 WKWEBKIT_SOURCES = \
+	WKWebKit/WKCompat.cs \
 	WKWebKit/WKWindowFeatures.cs \
 
 #

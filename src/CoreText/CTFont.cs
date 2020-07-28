@@ -1860,11 +1860,11 @@ namespace CoreText {
 			return GetGlyphsForCharacters (characters, glyphs, Math.Min (characters.Length, glyphs.Length));
 		}
 
-		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern unsafe /* CFStringRef _Nullable */ IntPtr CTFontCopyNameForGlyph (/* CTFontRef */ IntPtr font, CGGlyph glyph);
 
-		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 		public string GetGlyphName (CGGlyph glyph)
 		{
 			return CFString.FetchString (CTFontCopyNameForGlyph (handle, glyph), releaseHandle: true);
