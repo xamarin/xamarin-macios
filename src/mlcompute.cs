@@ -556,7 +556,7 @@ namespace MLCompute {
 
 		[Static]
 		[Export ("tensorWithShape:dataType:")]
-		MLCTensor Create ([BindAs (typeof (nint[]))]NSNumber[] shape, MLCDataType dataType);
+		MLCTensor Create ([BindAs (typeof (nint[]))] NSNumber[] shape, MLCDataType dataType);
 
 		[Static]
 		[Export ("tensorWithShape:data:dataType:")]
@@ -1835,7 +1835,7 @@ namespace MLCompute {
 	[NoWatch]
 	[BaseType (typeof (NSObject), Name ="MLCYOLOLossDescriptor")]
 	[DisableDefaultCtor]
-	interface MLCYoloLossDescriptor : NSCopying	{
+	interface MLCYoloLossDescriptor : NSCopying {
 
 		[Export ("anchorBoxCount")]
 		nuint AnchorBoxCount { get; }
