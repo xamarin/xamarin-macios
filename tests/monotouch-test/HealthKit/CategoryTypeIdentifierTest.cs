@@ -47,11 +47,9 @@ namespace MonoTouchFixtures.HealthKit {
 					if (!TestRuntime.CheckXcodeVersion (11, 0))
 						continue;
 					break;
-#if !__WATCHOS__
 				case HKCategoryTypeIdentifier.AbdominalCramps:
 				case HKCategoryTypeIdentifier.Acne:
 				case HKCategoryTypeIdentifier.AppetiteChanges:
-				case HKCategoryTypeIdentifier.GeneralizedBodyAche:
 				case HKCategoryTypeIdentifier.Bloating:
 				case HKCategoryTypeIdentifier.BreastPain:
 				case HKCategoryTypeIdentifier.ChestTightnessOrPain:
@@ -63,12 +61,13 @@ namespace MonoTouchFixtures.HealthKit {
 				case HKCategoryTypeIdentifier.Fainting:
 				case HKCategoryTypeIdentifier.Fatigue:
 				case HKCategoryTypeIdentifier.Fever:
+				case HKCategoryTypeIdentifier.GeneralizedBodyAche:
 				case HKCategoryTypeIdentifier.Headache:
 				case HKCategoryTypeIdentifier.Heartburn:
 				case HKCategoryTypeIdentifier.HotFlashes:
-				case HKCategoryTypeIdentifier.LowerBackPain:
 				case HKCategoryTypeIdentifier.LossOfSmell:
 				case HKCategoryTypeIdentifier.LossOfTaste:
+				case HKCategoryTypeIdentifier.LowerBackPain:
 				case HKCategoryTypeIdentifier.MoodChanges:
 				case HKCategoryTypeIdentifier.Nausea:
 				case HKCategoryTypeIdentifier.PelvicPain:
@@ -84,7 +83,17 @@ namespace MonoTouchFixtures.HealthKit {
 					if (!TestRuntime.CheckXcodeVersion (11, 6))
 						continue;
 					break;
-#endif
+				case HKCategoryTypeIdentifier.BladderIncontinence:
+				case HKCategoryTypeIdentifier.DrySkin:
+				case HKCategoryTypeIdentifier.HairLoss:
+				case HKCategoryTypeIdentifier.MemoryLapse:
+				case HKCategoryTypeIdentifier.NightSweats:
+				case HKCategoryTypeIdentifier.VaginalDryness:
+				case HKCategoryTypeIdentifier.EnvironmentalAudioExposureEvent:
+				case HKCategoryTypeIdentifier.HandwashingEvent:
+					if (!TestRuntime.CheckXcodeVersion (12, 0))
+						continue;
+					break;
 				default:
 					if (!TestRuntime.CheckXcodeVersion (7, 0))
 						continue;
