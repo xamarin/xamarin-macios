@@ -15,6 +15,7 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
+	[TV (14,0)]
 	[Register ("INIntentResolutionResult", SkipRegistration = true)]
 	public sealed partial class INIntentResolutionResult<ObjectType> : INIntentResolutionResult
 		where ObjectType : class, INativeObject 
@@ -44,12 +45,11 @@ namespace Intents {
 			}
 		}
 
-#if !MONOMAC
-		[Watch (6,0), iOS (13,0)]
+		[Watch (6,0), iOS (13,0), Mac (10,16)]
 		public static INIntentResolutionResult GetUnsupported (nint reason) => throw new NotImplementedException ("All subclasses of INIntentResolutionResult must re-implement this method");
 
-		[Watch (6,0), iOS (13,0)]
+		[Watch (6,0), iOS (13,0), Mac (10,16)]
 		public static INIntentResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason) => throw new NotImplementedException ("All subclasses of INIntentResolutionResult must re-implement this method");
-#endif
+
 	}
 }

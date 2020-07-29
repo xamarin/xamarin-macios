@@ -494,6 +494,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "LinkPresentation", "LinkPresentation", 14,0 },
 					{ "MLCompute", "MLCompute", new Version (14,0), NotAvailableInSimulator },
 					{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 14,0 },
+					{ "Intents", "Intents", 14,0 },
 				};
 			}
 			return tvos_frameworks;
