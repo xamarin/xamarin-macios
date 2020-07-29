@@ -30,9 +30,9 @@ namespace MediaPlayer {
 #else
 	[Watch (5,0)]
 	[Obsoleted (PlatformName.WatchOS, 7,0, message: "Removed in Xcode 12")]
+#endif // XAMCORE_4_0
 	[TV (14,0)]
 	interface MPMediaEntity : NSSecureCoding {
-#endif // XAMCORE_4_0
 #else
 	interface MPMediaItem : NSSecureCoding {
 #endif
