@@ -35,7 +35,7 @@ using MidiObjectRef = System.Int32;
 
 namespace CoreMidi {
 
-	[Mac (10, 16), iOS (14, 0)]
+	[Mac (11, 0), iOS (14, 0)]
 	public enum MidiProtocolId {
 		Protocol_1_0 = 1,
 		Protocol_2_0 = 2,
@@ -202,15 +202,15 @@ namespace CoreMidi {
 		MidiCIProfile[] DisabledProfiles { get; }
 
 		[Deprecated (PlatformName.iOS, 14, 0, message : "Use the '(byte midiChannel, MidiCIProfile[] enabled, MidiCIProfile[] disabled)' constructor instead.")]
-		[Deprecated (PlatformName.MacOSX, 10, 16, message : "Use the '(byte midiChannel, MidiCIProfile[] enabled, MidiCIProfile[] disabled)' constructor instead.")]
+		[Deprecated (PlatformName.MacOSX, 11, 0, message : "Use the '(byte midiChannel, MidiCIProfile[] enabled, MidiCIProfile[] disabled)' constructor instead.")]
 		[Export ("initWithEnabledProfiles:disabledProfiles:")]
 		IntPtr Constructor (MidiCIProfile[] enabled, MidiCIProfile[] disabled);
 
-		[Mac (10, 16), iOS (14, 0)]
+		[Mac (11, 0), iOS (14, 0)]
 		[Export ("initWithChannel:enabledProfiles:disabledProfiles:")]
 		IntPtr Constructor (byte midiChannelNumber, MidiCIProfile[] enabled, MidiCIProfile[] disabled);
 
-		[Mac (10, 16), iOS (14, 0)]
+		[Mac (11, 0), iOS (14, 0)]
 		[Export ("midiChannel")]
 		byte MidiChannel { get; }
 	}
@@ -265,39 +265,39 @@ namespace CoreMidi {
 		[NullAllowed, Export ("propertyChangedCallback", ArgumentSemantic.Assign)]
 		MidiCIPropertyChangedHandler PropertyChangedCallback { get; set; }
 
-		[Mac (10, 16), iOS (14, 0)]
+		[Mac (11, 0), iOS (14, 0)]
 		[Export ("initWithDiscoveredNode:dataReadyHandler:disconnectHandler:")]
 		IntPtr Constructor (MidiCIDiscoveredNode discoveredNode, Action dataReadyHandler, MidiCISessionDisconnectHandler disconnectHandler);
 
-		[Mac (10, 16), iOS (14, 0)]
+		[Mac (11, 0), iOS (14, 0)]
 		[Export ("sendProfile:onChannel:profileData:")]
 		bool SendProfile (MidiCIProfile profile, byte channel, NSData profileSpecificData);
 
-		[Mac (10, 16), iOS (14, 0)]
+		[Mac (11, 0), iOS (14, 0)]
 		[Export ("deviceInfo")]
 		MidiCIDeviceInfo DeviceInfo { get; }
 
-		[Mac (10, 16), iOS (14, 0)]
+		[Mac (11, 0), iOS (14, 0)]
 		[BindAs (typeof (ulong))]
 		[Export ("maxSysExSize")]
 		NSNumber MaxSysExSize { get; }
 
-		[Mac (10, 16), iOS (14, 0)]
+		[Mac (11, 0), iOS (14, 0)]
 		[BindAs (typeof (int))]
 		[Export ("maxPropertyRequests")]
 		NSNumber MaxPropertyRequests { get; }
 
 		[Internal]
-		[Mac (10, 16), iOS (14, 0)]
+		[Mac (11, 0), iOS (14, 0)]
 		[Export ("midiDestination")]
 		MidiObjectRef _MidiDestination { get; }
 
-		[Mac (10, 16), iOS (14, 0)]
+		[Mac (11, 0), iOS (14, 0)]
 		[NullAllowed, Export ("profileSpecificDataHandler", ArgumentSemantic.Copy)]
 		MidiCIProfileSpecificDataHandler ProfileSpecificDataHandler { get; set; }
 	}
 
-	[Mac (10, 16), iOS (14, 0)]
+	[Mac (11, 0), iOS (14, 0)]
 	[BaseType (typeof (NSObject), Name="MIDICIDeviceInfo")]
 	[DisableDefaultCtor]
 	interface MidiCIDeviceInfo : NSSecureCoding
@@ -329,7 +329,7 @@ namespace CoreMidi {
 		IntPtr Constructor (MidiEndpoint midiDestination, NSData manufacturer, NSData family, NSData modelNumber, NSData revisionLevel);
 	}
 
-	[Mac (10, 16), iOS (14, 0)]
+	[Mac (11, 0), iOS (14, 0)]
 	[BaseType (typeof (NSObject), Name="MIDICIDiscoveredNode")]
 	[DisableDefaultCtor]
 	interface MidiCIDiscoveredNode
@@ -357,7 +357,7 @@ namespace CoreMidi {
 
 	delegate void MidiCIDiscoveryResponseDelegate (MidiCIDiscoveredNode[] discoveredNodes);
 
-	[Mac (10, 16), iOS (14, 0)]
+	[Mac (11, 0), iOS (14, 0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject), Name="MIDICIDiscoveryManager")]
 	interface MidiCIDiscoveryManager
@@ -392,7 +392,7 @@ namespace CoreMidi {
 		void HandleData (MidiCIProfile profile, byte channel, NSData inData);
 	}
 
-	[Mac (10, 16), iOS (14, 0)]
+	[Mac (11, 0), iOS (14, 0)]
 	[BaseType (typeof (NSObject), Name="MIDICIResponder")]
 	[DisableDefaultCtor]
 	interface MidiCIResponder
