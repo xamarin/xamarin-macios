@@ -1,8 +1,5 @@
 !missing-enum! UINavigationItemBackButtonDisplayMode not bound
-!missing-field! NSTrackingAttributeName not bound
 !missing-protocol-member! UIApplicationDelegate::application:handlerForIntent: not found
-!missing-selector! +UIAction::actionWithHandler: not bound
-!missing-selector! +UIMenu::menuWithChildren: not bound
 !missing-selector! NSDiffableDataSourceSectionTransaction::difference not bound
 !missing-selector! NSDiffableDataSourceTransaction::difference not bound
 !missing-selector! UICollectionViewDiffableDataSourceReorderingHandlers::canReorderItemHandler not bound
@@ -21,5 +18,3 @@
 !missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::snapshotForExpandingParentItemHandler not bound
 !missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::willCollapseItemHandler not bound
 !missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::willExpandItemHandler not bound
-!unknown-native-enum! UICellAccessoryOutlineDisclosureStyle bound
-!unknown-type! UICellAccessoryOutlineDisclosure bound
