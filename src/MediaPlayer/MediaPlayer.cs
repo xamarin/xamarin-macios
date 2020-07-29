@@ -196,9 +196,8 @@ namespace MediaPlayer {
 
 	// NSInteger -> /MPMusicPlayerController.h
 	[NoMac]
-	[NoTV]
 	[NoWatch]
-	[Deprecated (PlatformName.iOS, 9, 0)]
+	[TV (14,0)]
 	[Native]
 	public enum MPMusicPlaybackState : long {
 		Stopped,
@@ -213,7 +212,7 @@ namespace MediaPlayer {
 	[Native]
 	[NoMac]
 	[NoWatch]
-	[NoTV]
+	[TV (14,0)]
 	public enum MPMusicRepeatMode : long {
 		Default,
 		None,
@@ -224,8 +223,8 @@ namespace MediaPlayer {
 	// NSInteger -> /MPMusicPlayerController.h
 	[Native]
 	[NoMac]
-	[NoTV]
 	[NoWatch]
+	[TV (14,0)]
 	public enum MPMusicShuffleMode : long {
 		Default,
 		Off,
