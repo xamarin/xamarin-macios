@@ -49,7 +49,7 @@ function Stop-Pipeline {
         status = "Cancelling"
     }
 
-    return Invoke-RestMethod -Uri $url -Headers $headers -Method "PATCH" -Body ($payload | ConvertTo-json) -ContentType 'application/json' -PreserveAuthorizationOnRedirect
+    return Invoke-RestMethod -Uri $url -Headers $headers -Method "PATCH" -Body ($payload | ConvertTo-json) -ContentType 'application/json'
 }
 
 # export public functions, other functions are private and should not be used ouside the module.

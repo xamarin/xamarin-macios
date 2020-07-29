@@ -107,7 +107,7 @@ function Set-GitHubStatus {
         Authorization = ("token {0}" -f $Env:GITHUB_TOKEN)
     }
 
-    return Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body ($payload | ConvertTo-json) -ContentType 'application/json' -PreserveAuthorizationOnRedirect
+    return Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body ($payload | ConvertTo-json) -ContentType 'application/json'
 }
 
 <#
@@ -195,7 +195,7 @@ function New-GitHubComment {
         Authorization = ("token {0}" -f $Env:GITHUB_TOKEN)
     }
 
-    $request = Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body ($payload | ConvertTo-Json) -ContentType 'application/json' -PreserveAuthorizationOnRedirect
+    $request = Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body ($payload | ConvertTo-Json) -ContentType 'application/json'
     Write-Host $request
     return $request
 }
