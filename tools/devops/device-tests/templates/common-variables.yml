@@ -5,3 +5,6 @@ variables:
   - group: Xamarin-Secrets
   - name: VSDropsPrefix
     value: 'https://vsdrop.corp.microsoft.com/file/v1/xamarin-macios/device-tests'
+  - name: WindowsDevicePool
+    value: 'VSEngDeploymentPool'
+
