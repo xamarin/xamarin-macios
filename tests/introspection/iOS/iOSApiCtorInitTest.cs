@@ -70,6 +70,7 @@ namespace Introspection {
 					return true;
 				break;
 			case "DeviceCheck": // Only available on device
+			case "MLCompute": // Only available on device
 				if (Runtime.Arch == Arch.SIMULATOR)
 					return true;
 				break;

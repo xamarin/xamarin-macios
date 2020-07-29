@@ -37,6 +37,7 @@ namespace Introspection {
 			// they don't answer on the simulator (Apple implementation does not work) but fine on devices
 			case "GameController":
 			case "MonoTouch.GameController":
+			case "MLCompute": // xcode 12 beta 3
 				return Runtime.Arch == Arch.SIMULATOR;
 
 			case "CoreAudioKit":

@@ -1109,6 +1109,10 @@ METRICKIT_SOURCES = \
 	MetricKit/MXMetric.cs \
 	MetricKit/MXMetricPayload.cs \
 
+# MLCompute
+
+MLCOMPUTE_SOURCES = \
+	MLCompute/MLHelpers.cs \
 
 # MobileCoreServices
 
@@ -1873,6 +1877,7 @@ MAC_FRAMEWORKS =            \
 	Metal                   \
 	MetalKit                \
 	MetalPerformanceShaders \
+	MLCompute               \
 	MobileCoreServices      \
 	ModelIO                 \
 	MultipeerConnectivity	\
@@ -1972,6 +1977,7 @@ IOS_FRAMEWORKS =         \
 	MetalKit \
 	MetalPerformanceShaders \
 	MetricKit \
+	MLCompute \
 	MobileCoreServices \
 	ModelIO \
 	MultipeerConnectivity \
@@ -2064,6 +2070,7 @@ TVOS_FRAMEWORKS =           \
 	Metal                   \
 	MetalKit                \
 	MetalPerformanceShaders \
+	MLCompute               \
 	MobileCoreServices      \
 	ModelIO                 \
 	MultipeerConnectivity   \
