@@ -12192,7 +12192,7 @@ namespace Intents {
 		[Watch (7,0), iOS (14,0)]
 		[Static]
 		[Export ("successesWithResolvedMediaItems:")]
-		INPlayMediaMediaItemResolutionResult [] GetSuccess (INMediaItem[] resolvedMediaItems);
+		INPlayMediaMediaItemResolutionResult [] GetSuccesses (INMediaItem[] resolvedMediaItems);
 
 		[Static]
 		[Export ("unsupportedForReason:")]

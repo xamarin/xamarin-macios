@@ -45,10 +45,10 @@ namespace Intents {
 			}
 		}
 
-		[Watch (6,0), iOS (13,0), Mac (10,16)]
+		[Watch (6,0), iOS (13,0), Mac (11,0)]
 		public static INIntentResolutionResult GetUnsupported (nint reason) => throw new NotImplementedException ("All subclasses of INIntentResolutionResult must re-implement this method");
 
-		[Watch (6,0), iOS (13,0), Mac (10,16)]
+		[Watch (6,0), iOS (13,0), Mac (11,0)]
 		public static INIntentResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason) => throw new NotImplementedException ("All subclasses of INIntentResolutionResult must re-implement this method");
 
 	}
