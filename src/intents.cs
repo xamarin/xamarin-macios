@@ -895,7 +895,6 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 #endif
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'INStartCallIntentResponseCode' instead.")]
 	[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'INStartCallIntentResponseCode' instead.")]
@@ -2484,7 +2483,6 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 #endif
 	[iOS (10, 0)]
 	[Watch (3, 2)]
@@ -2968,7 +2966,6 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 #endif
 	[iOS (10, 0)]
 	[Watch (3, 2)]
@@ -4001,7 +3998,6 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 #endif
 	[iOS (10, 0)]
 	[Watch (3, 2)]
@@ -4063,7 +4059,6 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 #endif
 	[iOS (10, 0)]
 	[Watch (3, 2)]
@@ -5618,7 +5613,6 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 #endif
 	[iOS (10, 0)]
 	[Watch (3, 2)]
@@ -5670,7 +5664,6 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 #endif
 	[iOS (10, 0)]
 	[Watch (3, 2)]
@@ -5716,7 +5709,6 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 #endif
 	[iOS (10, 0)]
 	[Watch (3, 2)]
@@ -5741,7 +5733,6 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 #endif
 	[iOS (10, 0)]
 	[Watch (3, 2)]
@@ -5836,7 +5827,6 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 #endif
 	[iOS (10, 0)]
 	[Watch (3, 2)]
@@ -5884,7 +5874,6 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 #endif
 	[iOS (10, 0)]
 	[Watch (3, 2)]
@@ -6003,7 +5992,6 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 #endif
 	[iOS (10, 0)]
 	[Watch (3, 2)]
@@ -6068,7 +6056,6 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 #endif
 	[iOS (10, 0)]
 	[Watch (3, 2)]
@@ -6121,7 +6108,6 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 #endif
 	[iOS (10, 0)]
 	[Watch (3, 2)]
@@ -6907,7 +6893,6 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 #endif
 	[iOS (10, 0)]
 	[Watch (3, 2)]
@@ -6963,8 +6948,6 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
-	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'INStartCallIntent' instead.")]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 #endif
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'INStartCallIntent' instead.")]
 	[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'INStartCallIntent' instead.")]
@@ -7033,8 +7016,6 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
-	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'INStartCallIntentResponse' instead.")]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 #endif
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'INStartCallIntentResponse' instead.")]
 	[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'INStartCallIntentResponse' instead.")]
@@ -7148,8 +7129,6 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
-	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'INStartCallIntent' instead.")]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 #endif
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'INStartCallIntent' instead.")]
 	[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'INStartCallIntent' instead.")]
@@ -7198,8 +7177,6 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
-	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'INStartCallIntentResponse' instead.")]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 #endif
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'INStartCallIntentResponse' instead.")]
 	[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'INStartCallIntentResponse' instead.")]
@@ -8860,7 +8837,6 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
-	[Mac (10,13)]
 #endif
 	[Watch (4,0), NoTV, iOS (11,0)]
 	[BaseType (typeof (INIntentResolutionResult))]
@@ -8910,7 +8886,6 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
-	[Mac (10,13)]
 #endif
 	[Watch (4,0), iOS (11,0), NoTV]
 	[BaseType (typeof (NSObject))]
@@ -8958,7 +8933,6 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
-	[Mac (10,13)]
 #endif
 	[Watch (4,0), NoTV, iOS (11,0)]
 	[BaseType (typeof (INIntentResolutionResult))]
@@ -9526,7 +9500,6 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
-	[Mac (10,14)]
 #endif
 	[Watch (4,0), iOS (11,0), NoTV]
 	[BaseType (typeof (NSObject))]
@@ -9564,7 +9537,6 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
-	[Mac (10,13)]
 #endif
 	[Watch (4,0), NoTV, iOS (11,0)]
 	[BaseType (typeof (NSObject))]
@@ -9883,7 +9855,6 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
-	[Mac (10,13)]
 #endif
 	[Watch (4,0), NoTV, iOS (11,0)]
 	[BaseType (typeof (INPersonResolutionResult))]
