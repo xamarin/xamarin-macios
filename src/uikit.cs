@@ -5233,7 +5233,7 @@ namespace UIKit {
 
 		// UIColor (UIAccessibility) Category
 
-		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[Watch (7,0), TV (14,0), iOS (14,0)]
 		[Export ("accessibilityName")]
 		string AccessibilityName { get; }
 	}
