@@ -25,7 +25,6 @@
 !missing-selector! +INCurrencyAmountResolutionResult::successWithResolvedCurrencyAmount: not bound
 !missing-selector! +INDoubleResolutionResult::confirmationRequiredWithValueToConfirm: not bound
 !missing-selector! +INDoubleResolutionResult::successWithResolvedValue: not bound
-!missing-selector! INObject::setAlternativeSpeakableMatches: not bound
 !missing-selector! INTicketedEvent::category not bound
 !missing-selector! INTicketedEvent::eventDuration not bound
 !missing-selector! INTicketedEvent::initWithCategory:name:eventDuration:location: not bound

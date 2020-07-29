@@ -56,7 +56,7 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, it will be removed in the future.")]
+	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 #endif
 	[iOS (10, 0)]
 	[Watch (3, 2)]
@@ -171,7 +171,7 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, it will be removed in the future.")]
+	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 #endif
 	[NoTV]
 	[iOS (10, 0)]
@@ -371,7 +371,7 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, it will be removed in the future.")]
+	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 #endif
 	[iOS (10, 0)]
 	[Watch (3, 2)]
@@ -632,7 +632,7 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, it will be removed in the future.")]
+	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 #endif
 	[iOS (10, 0)]
 	[Watch (3, 2)]
@@ -656,7 +656,7 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, it will be removed in the future.")]
+	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 #endif
 	[iOS (10, 0)]
 	[Watch (3, 2)]
@@ -693,7 +693,7 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, it will be removed in the future.")]
+	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 #endif
 	[iOS (10, 0)]
 	[Watch (3, 2)]
@@ -826,7 +826,6 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
-	[TV (14,0)]
 	[Native]
 	public enum INSetSeatSettingsInCarIntentResponseCode : long {
 		Unspecified = 0,
@@ -851,7 +850,7 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, it will be removed in the future.")]
+	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 #endif
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'INStartCallIntentResponseCode' instead.")]
 	[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'INStartCallIntentResponseCode' instead.")]
@@ -895,12 +894,12 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, it will be removed in the future.")]
+	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 #endif
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'INStartCallIntentResponseCode' instead.")]
 	[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'INStartCallIntentResponseCode' instead.")]
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
 	[Native]
@@ -1010,7 +1009,6 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
-	[Mac (11,0)]
 	[NoTV]
 	[Native]
 	public enum INPersonHandleType : long {
@@ -1218,7 +1216,7 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, it will be removed in the future.")]
+	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 #endif
 	[Watch (3,2), NoTV, iOS (10,0)]
 	[Native]
@@ -1231,7 +1229,7 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, it will be removed in the future.")]
+	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 #endif
 	[Watch (4,0), NoTV, iOS (11,0)]
 	[Native]
@@ -1248,7 +1246,7 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, it will be removed in the future.")]
+	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 #endif
 	[Watch (3,2), NoTV, iOS (10,0)]
 	[Native]
@@ -1330,7 +1328,7 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, it will be removed in the future.")]
+	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 #endif
 	[Watch (4,0), NoTV, iOS (11,0)]
 	[Native]
@@ -1452,7 +1450,7 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, it will be removed in the future.")]
+	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 #endif
 	[Watch (4,0), NoTV, iOS (11,0)]
 	[Native]
@@ -2207,7 +2205,7 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, it will be removed in the future.")]
+	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 #endif
 	[iOS (10, 2)]
 	[Watch (3, 2)]
@@ -2485,10 +2483,10 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, it will be removed in the future.")]
+	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 #endif
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[NoTV]
 	[BaseType (typeof (INIntentResolutionResult))]
@@ -2969,10 +2967,10 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, it will be removed in the future.")]
+	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 #endif
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[NoTV]
 	[BaseType (typeof (INIntentResolutionResult))]
@@ -3080,7 +3078,6 @@ namespace Intents {
 	}
 
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Implement 'INSendMessageIntentHandling, INSearchForMessagesIntentHandling and INSetMessageAttributeIntentHandling' instead.")]
-
 	[Deprecated (PlatformName.WatchOS, 13, 0, message: "Implement 'INSendMessageIntentHandling and INSearchForMessagesIntentHandling' instead.")]
 	[iOS (10, 0)]
 	[Watch (3, 2)]
@@ -3673,7 +3670,7 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
-	[Mac (11,0), TV (14,0)]
+	[TV (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INImage : NSCopying, NSSecureCoding {
@@ -4003,10 +4000,10 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, it will be removed in the future.")]
+	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 #endif
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[NoTV]
 	[BaseType (typeof (NSObject))]
@@ -4065,10 +4062,10 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, it will be removed in the future.")]
+	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 #endif
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[NoTV]
 	[BaseType (typeof (INIntentResolutionResult))]
@@ -5620,10 +5617,10 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, it will be removed in the future.")]
+	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 #endif
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[NoTV]
 	[BaseType (typeof (INIntent))]
@@ -5672,10 +5669,10 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, it will be removed in the future.")]
+	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 #endif
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[NoTV]
 	[Protocol]
@@ -5718,10 +5715,10 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, it will be removed in the future.")]
+	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 #endif
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[NoTV]
 	[BaseType (typeof (INIntentResponse))]
@@ -5743,10 +5740,10 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, it will be removed in the future.")]
+	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 #endif
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[NoTV]
 	[BaseType (typeof (INIntent))]
@@ -5838,10 +5835,10 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, it will be removed in the future.")]
+	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 #endif
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[NoTV]
 	[Protocol]
@@ -5886,10 +5883,10 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, it will be removed in the future.")]
+	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 #endif
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[NoTV]
 	[BaseType (typeof (INIntentResponse))]
@@ -6005,10 +6002,10 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, it will be removed in the future.")]
+	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 #endif
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[NoTV]
 	[BaseType (typeof (INIntent))]
@@ -6070,10 +6067,10 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, it will be removed in the future.")]
+	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 #endif
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[NoTV]
 	[Protocol]
@@ -6123,10 +6120,10 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, it will be removed in the future.")]
+	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 #endif
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[NoTV]
 	[BaseType (typeof (INIntentResponse))]
@@ -6909,10 +6906,10 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, it will be removed in the future.")]
+	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 #endif
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[NoTV]
 	[BaseType (typeof (INIntentResolutionResult))]
@@ -6965,13 +6962,13 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, it will be removed in the future.")]
+	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'INStartCallIntent' instead.")]
+	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 #endif
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'INStartCallIntent' instead.")]
-	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'INStartCallIntent' instead.")]
 	[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'INStartCallIntent' instead.")]
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[NoTV]
 	[BaseType (typeof (INIntent))]
@@ -6999,13 +6996,13 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, it will be removed in the future.")]
+	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'INStartCallIntentHandling' instead.")]
+	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 #endif
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'INStartCallIntentHandling' instead.")]
-	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'INStartCallIntentHandling' instead.")]
 	[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'INStartCallIntentHandling' instead.")]
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[NoTV]
 	[Protocol]
@@ -7035,13 +7032,13 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, it will be removed in the future.")]
+	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'INStartCallIntentResponse' instead.")]
+	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 #endif
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'INStartCallIntentResponse' instead.")]
-	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'INStartCallIntentResponse' instead.")]
 	[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'INStartCallIntentResponse' instead.")]
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[NoTV]
 	[BaseType (typeof (INIntentResponse))]
@@ -7150,13 +7147,13 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, it will be removed in the future.")]
+	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'INStartCallIntent' instead.")]
+	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 #endif
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'INStartCallIntent' instead.")]
-	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'INStartCallIntent' instead.")]
 	[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'INStartCallIntent' instead.")]
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
 	[BaseType (typeof (INIntent))]
@@ -7200,13 +7197,13 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, it will be removed in the future.")]
+	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'INStartCallIntentResponse' instead.")]
+	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 #endif
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'INStartCallIntentResponse' instead.")]
-	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'INStartCallIntentResponse' instead.")]
 	[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'INStartCallIntentResponse' instead.")]
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
 	[BaseType (typeof (INIntentResponse))]
@@ -8862,9 +8859,10 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, it will be removed in the future.")]
+	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Mac (10,13)]
 #endif
-	[Watch (4,0), NoTV, Mac (10,13), iOS (11,0)]
+	[Watch (4,0), NoTV, iOS (11,0)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INCallDestinationTypeResolutionResult {
@@ -8911,9 +8909,10 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, it will be removed in the future.")]
+	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Mac (10,13)]
 #endif
-	[Watch (4,0), Mac (10,13), iOS (11,0), NoTV]
+	[Watch (4,0), iOS (11,0), NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INCallRecord : NSCopying, NSSecureCoding {
@@ -8958,9 +8957,10 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, it will be removed in the future.")]
+	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Mac (10,13)]
 #endif
-	[Watch (4,0), NoTV, Mac (10,13), iOS (11,0)]
+	[Watch (4,0), NoTV, iOS (11,0)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INCallRecordTypeOptionsResolutionResult {
@@ -9525,9 +9525,10 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, it will be removed in the future.")]
+	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Mac (10,14)]
 #endif
-	[Watch (4,0), Mac (10,14), iOS (11,0), NoTV]
+	[Watch (4,0), iOS (11,0), NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INParameter : NSCopying, NSSecureCoding {
@@ -9562,9 +9563,10 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, it will be removed in the future.")]
+	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Mac (10,13)]
 #endif
-	[Watch (4,0), Mac (10,13), NoTV, iOS (11,0)]
+	[Watch (4,0), NoTV, iOS (11,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INRecurrenceRule : NSCopying, NSSecureCoding {
@@ -9880,9 +9882,10 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, it will be removed in the future.")]
+	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Mac (10,13)]
 #endif
-	[Watch (4,0), NoTV, Mac (10,13), iOS (11,0)]
+	[Watch (4,0), NoTV, iOS (11,0)]
 	[BaseType (typeof (INPersonResolutionResult))]
 	[DisableDefaultCtor]
 	interface INSendMessageRecipientResolutionResult {
@@ -10731,7 +10734,7 @@ namespace Intents {
 		//string PronunciationHint { get; }
 
 		[Sealed]
-		[Watch (6,0), NoMac, iOS (13,0)]
+		[Watch (6,0), iOS (13,0)]
 		[Export ("alternativeSpeakableMatches")]
 		[return: NullAllowed]
 		INSpeakableString [] GetAlternativeSpeakableMatches ();
@@ -10745,7 +10748,7 @@ namespace Intents {
 		INImage DisplayImage { get; set; }
 
 		// Not [Sealed] since the 'AlternativeSpeakableMatches' inlined property is read-only
-		[Watch (6,0), NoMac, iOS (13,0)]
+		[Watch (6,0), iOS (13,0)]
 		[Export ("setAlternativeSpeakableMatches:")]
 		void SetAlternativeSpeakableMatches ([NullAllowed] INSpeakableString [] alternativeSpeakableMatches);
 	}
@@ -12189,11 +12192,6 @@ namespace Intents {
 	[DisableDefaultCtor]
 	interface INPlayMediaMediaItemResolutionResult {
 
-		[Watch (7,0), iOS (14,0)]
-		[Static]
-		[Export ("successesWithResolvedMediaItems:")]
-		INPlayMediaMediaItemResolutionResult [] GetSuccesses (INMediaItem[] resolvedMediaItems);
-
 		[Static]
 		[Export ("unsupportedForReason:")]
 		INPlayMediaMediaItemResolutionResult GetUnsupported (INPlayMediaMediaItemUnsupportedReason reason);
@@ -12912,8 +12910,8 @@ namespace Intents {
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] INCallRecordFilter callRecordFilter, [NullAllowed] INCallRecord callRecordToCallBack, INCallAudioRoute audioRoute, INCallDestinationType destinationType, [NullAllowed] INPerson[] contacts, INCallCapability callCapability);
 
-		[Deprecated (PlatformName.iOS, 14, 0)]
-		[Deprecated (PlatformName.WatchOS, 7, 0)]
+		[Deprecated (PlatformName.iOS, 14, 0, message: "Use '.ctor (INCallRecordFilter, INCallRecord, INCallAudioRoute, INCallDestinationType, INPerson[], INCallCapability)' overload instead.")]
+		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Use '.ctor (INCallRecordFilter, INCallRecord, INCallAudioRoute, INCallDestinationType, INPerson[], INCallCapability)' overload instead.")]
 		[Export ("initWithAudioRoute:destinationType:contacts:recordTypeForRedialing:callCapability:")]
 		IntPtr Constructor (INCallAudioRoute audioRoute, INCallDestinationType destinationType, [NullAllowed] INPerson[] contacts, INCallRecordType recordTypeForRedialing, INCallCapability callCapability);
 
