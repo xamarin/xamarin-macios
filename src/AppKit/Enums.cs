@@ -330,7 +330,7 @@ namespace AppKit {
 		Regular = 0, 
 		Small = 1,
 		Mini = 2,
-		[Mac (10,16)]
+		[Mac (11,0)]
 		Large = 3,
 	}
 
@@ -1740,7 +1740,7 @@ namespace AppKit {
 
 	[Flags]
 	[Native]
-	[Deprecated (PlatformName.MacOSX, 10, 16)]
+	[Deprecated (PlatformName.MacOSX, 11, 0)]
 	public enum NSWorkspaceLaunchOptions : ulong {
 		Print = 2,
 		InhibitingBackgroundOnly = 0x80,
@@ -3014,7 +3014,7 @@ namespace AppKit {
 		ReplaceFile,
 	}
 
-	[Mac (10,16)]
+	[Mac (11,0)]
 	[Native]
 	public enum NSTableViewStyle : long
 	{
@@ -3024,7 +3024,7 @@ namespace AppKit {
 		SourceList,
 	}
 
-	[Mac (10,16)]
+	[Mac (11,0)]
 	[Native]
 	public enum NSTitlebarSeparatorStyle : long
 	{
@@ -3034,7 +3034,7 @@ namespace AppKit {
 		Shadow,
 	}
 
-	[Mac (10,16)]
+	[Mac (11,0)]
 	[Native]
 	public enum NSWindowToolbarStyle : long
 	{
@@ -3056,5 +3056,14 @@ namespace AppKit {
 		SlideDown = 0x20,
 		SlideLeft = 0x30,
 		SlideRight = 0x40,
+	}
+
+	[Mac (11,0)]
+	[Native]
+	public enum NSImageSymbolScale : long
+	{
+		Small = 1,
+		Medium = 2,
+		Large = 3,
 	}
 }
