@@ -98,7 +98,7 @@ namespace AVKit {
 		[Export ("pictureInPictureButtonStopImageCompatibleWithTraitCollection:")]
 		UIImage CreateStopButton ([NullAllowed] UITraitCollection traitCollection);
 
-		[TV (14, 0), NoWatch, Mac (10, 16), iOS (14, 0)]
+		[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
 		[Export ("requiresLinearPlayback")]
 		bool RequiresLinearPlayback { get; set; }
 
