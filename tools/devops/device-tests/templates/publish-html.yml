@@ -32,8 +32,13 @@ steps:
 - powershell: |
     $env:VSDROPS_INDEX="$Env:VSDROPSPREFIX/$Env:BUILD_BUILDNUMBER/$Env:BUILD_BUILDID;/tests/vsdrops_index.html"
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\device-tests\scripts\GitHub.psm1 
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\device-tests\scripts\VSTS.psm1 
     $response = New-GitHubSummaryComment -Context "$Env:CONTEXT" -XamarinStoragePath "$Env:XAMARIN_STORAGE_PATH" -TestSummaryPath "$Env:TESTS_SUMMARY"
     Write-Host $response
+    if($Env:TESTS_JOBSTATUS -ne "Succeeded")
+    {
+      Set-PipelineResult -Status partiallySucceeded
+    }
   env:
     BUILD_REVISION: $(BUILD_REVISION)
     CONTEXT: ${{ parameters.statusContext }}
