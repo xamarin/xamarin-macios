@@ -2013,16 +2013,16 @@ namespace HealthKit {
 		HotFlashes,
 
 		[Watch (7, 0), iOS (13, 6)]
+		[Field ("HKCategoryTypeIdentifierLowerBackPain")]
+		LowerBackPain,
+
+		[Watch (7, 0), iOS (13, 6)]
 		[Field ("HKCategoryTypeIdentifierLossOfSmell")]
 		LossOfSmell,
 
 		[Watch (7, 0), iOS (13, 6)]
 		[Field ("HKCategoryTypeIdentifierLossOfTaste")]
 		LossOfTaste,
-
-		[Watch (7, 0), iOS (13, 6)]
-		[Field ("HKCategoryTypeIdentifierLowerBackPain")]
-		LowerBackPain,
 
 		[Watch (7, 0), iOS (13, 6)]
 		[Field ("HKCategoryTypeIdentifierMoodChanges")]
