@@ -479,6 +479,12 @@ namespace HealthKit
 		Observation,
 		[Field ("HKFHIRResourceTypeProcedure")]
 		Procedure,
+		[iOS (14, 0)]
+		[Field ("HKFHIRResourceTypeMedicationRequest")]
+		MedicationRequest,
+		[iOS (14, 0)]
+		[Field ("HKFHIRResourceTypeCoverage")]
+		Coverage,
 	}
 
 	[Watch (5, 0), iOS (12, 0)]
@@ -498,14 +504,100 @@ namespace HealthKit
 		ProcedureRecord,
 		[Field ("HKClinicalTypeIdentifierVitalSignRecord")]
 		VitalSignRecord,
+		[Watch (7, 0), iOS (14, 0)]
+		[Field ("HKClinicalTypeIdentifierCoverageRecord")]
+		CoverageRecord,
 	}
 
 	[Watch (5,0), iOS (12,0)]
 	[Native]
-	public enum HKAuthorizationRequestStatus : long 
-	{
+	public enum HKAuthorizationRequestStatus : long {
 		Unknown = 0,
 		ShouldRequest,
 		Unnecessary,
+	}
+
+	[Watch (7,0), iOS (13,6)]
+	[Native]
+	public enum HKCategoryValueAppetiteChanges : long {
+		Unspecified = 0,
+		NoChange,
+		Decreased,
+		Increased,
+	}
+
+	[Watch (7,0), iOS (14,0)]
+	[Native]
+	public enum HKAppleEcgAlgorithmVersion : long {
+		Version1 = 1,
+	}
+
+	[Watch (7,0), iOS (14,0)]
+	[Native]
+	public enum HKCategoryValueEnvironmentalAudioExposureEvent : long {
+		MomentaryLimit = 1,
+	}
+
+	[Watch (7,0), iOS (13,6)]
+	[Native]
+	public enum HKCategoryValuePresence : long {
+		Present = 0,
+		NotPresent,
+	}
+
+	[Watch (7,0), iOS (13,6)]
+	[Native]
+	public enum HKCategoryValueSeverity : long {
+		Unspecified = 0,
+		NotPresent,
+		Mild,
+		Moderate,
+		Severe,
+	}
+
+	[Watch (7,0), iOS (14,0)]
+	[Native]
+	public enum HKDevicePlacementSide : long {
+		Unknown = 0,
+		Left,
+		Right,
+		Central,
+	}
+
+	[Watch (7,0), iOS (14,0)]
+	[Native]
+	public enum HKElectrocardiogramClassification : long {
+		NotSet = 0,
+		SinusRhythm,
+		AtrialFibrillation,
+		InconclusiveLowHeartRate,
+		InconclusiveHighHeartRate,
+		InconclusivePoorReading,
+		InconclusiveOther,
+		Unrecognized = 100,
+	}
+
+	[Watch (7,0), iOS (14,0)]
+	[Native]
+	public enum HKElectrocardiogramLead : long {
+		AppleWatchSimilarToLeadI = 1,
+	}
+
+	[Watch (7,0), iOS (14,0)]
+	[Native]
+	public enum HKElectrocardiogramSymptomsStatus : long {
+		NotSet = 0,
+		None = 1,
+		Present = 2,
+	}
+
+	[NoWatch, iOS (14, 0)]
+	public enum HKFhirRelease {
+		[Field ("HKFHIRReleaseDSTU2")]
+		Dstu2,
+		[Field ("HKFHIRReleaseR4")]
+		R4,
+		[Field ("HKFHIRReleaseUnknown")]
+		Unknown,
 	}
 }
