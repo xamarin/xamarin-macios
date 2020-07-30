@@ -280,6 +280,9 @@ namespace Xamarin.MMP.Tests
 			buildArgs.Add ("/verbosity:diagnostic");
 			buildArgs.Add ("/property:XamarinMacFrameworkRoot=" + rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current");
 
+			// Restore any package references
+			buildArgs.Add ("/r");
+
 			if (release)
 				buildArgs.Add ("/property:Configuration=Release");
 			else

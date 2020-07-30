@@ -17,12 +17,6 @@ namespace MonoTouchFixtures.Net45 {
 			if (File.Exists (testResults))
 				File.Delete (testResults);
 
-			StringBuilder restoreOutput = new StringBuilder ();
-			int code = Driver.RunCommand ("mono", new [] { "/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe", "restore", $"{testFolder}/packages.config", "-PackagesDirectory", Configuration.NuGetPackagesDirectory }, output: restoreOutput);
-
-			if (code != 0)
-				Assert.Fail ("ProtobufShouldSerializeAndDeserialize failed to restore nuget packages");
-
 			TI.BuildProject (testFolder + "/Protobuf_Test.csproj");
 
 			TI.RunAndAssert (testFolder + "/bin/Debug/Protobuf_Test.app/Contents/MacOS/Protobuf_Test", Array.Empty<string> (), "Run");
@@ -42,13 +36,6 @@ namespace MonoTouchFixtures.Net45 {
 		{
 			var testFolder = Path.Combine (TI.FindRootDirectory (), "../tests/common/mac/TestProjects/ImmutableCollection_Test/ImmutableCollection_Test");
 
-			StringBuilder restoreOutput = new StringBuilder ();
-
-			int code = Driver.RunCommand ("mono", new [] { "/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe", "restore", $"{testFolder}/packages.config", "-PackagesDirectory", Configuration.NuGetPackagesDirectory }, output: restoreOutput);
-
-			if (code != 0)
-				Assert.Fail ("Net45ShouldUseImmutableCollection failed to restore nuget packages");
-
 			TI.BuildProject (testFolder + "/ImmutableCollection_Test.csproj");
 
 			TI.RunAndAssert (testFolder + "/bin/Debug/ImmutableCollection_Test.app/Contents/MacOS/ImmutableCollection_Test", Array.Empty<string> (), "Run");
@@ -61,13 +48,6 @@ namespace MonoTouchFixtures.Net45 {
 			var testResults = testFolder + "/TestResult.txt";
 			if (File.Exists (testResults))
 				File.Delete (testResults);
-
-			StringBuilder restoreOutput = new StringBuilder ();
-
-			int code = Driver.RunCommand ("mono", new [] { "/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe", "restore", $"{testFolder}/../MyLibrary/packages.config", "-PackagesDirectory", Configuration.NuGetPackagesDirectory }, output: restoreOutput);
-
-			if (code != 0)
-				Assert.Fail ("Net45ShouldUseImmutableCollection failed to restore nuget packages");
 
 			TI.BuildProject (testFolder + "/BasicPCLTest.csproj");
 
