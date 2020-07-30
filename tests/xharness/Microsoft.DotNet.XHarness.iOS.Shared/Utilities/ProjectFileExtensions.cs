@@ -891,6 +891,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 				"CodesignEntitlements",
 				"TestLibrariesDirectory",
 				"HintPath",
+				"RootTestsDirectory",
 			};
 			var attributes_with_paths = new string [] []
 			{
