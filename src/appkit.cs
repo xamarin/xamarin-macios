@@ -13241,7 +13241,11 @@ namespace AppKit {
 
 		//Detected properties
 		[Export ("documentView", ArgumentSemantic.Retain), NullAllowed]
+#if XAMCORE_4_0
+		NSView DocumentView { get; set; }
+#else
 		NSObject DocumentView { get; set; }
+#endif
 
 		[Export ("contentView", ArgumentSemantic.Retain)]
 		new NSClipView ContentView { get; set; }
