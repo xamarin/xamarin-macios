@@ -1792,6 +1792,11 @@ namespace UIKit {
 		[Export ("sender")]
 		NSObject Sender { get; }
 
+		[TV (14,0), iOS (14,0)]
+		[Static]
+		[Export ("actionWithHandler:")]
+		UIAction Create (UIActionHandler handler);
+
 		[Static]
 		[Export ("actionWithTitle:image:identifier:handler:")]
 		UIAction Create (string title, [NullAllowed] UIImage image, [NullAllowed] string identifier, UIActionHandler handler);
@@ -5228,7 +5233,7 @@ namespace UIKit {
 
 		// UIColor (UIAccessibility) Category
 
-		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Watch (7,0), TV (14,0), iOS (14,0)]
 		[Export ("accessibilityName")]
 		string AccessibilityName { get; }
 	}
@@ -7908,6 +7913,11 @@ namespace UIKit {
 		[Export ("children")]
 		UIMenuElement [] Children { get; }
 
+		[TV (14,0), iOS (14,0)]
+		[Static]
+		[Export ("menuWithChildren:")]
+		UIMenu Create (UIMenuElement[] children);
+
 		[Static]
 		[Export ("menuWithTitle:children:")]
 		UIMenu Create (string title, UIMenuElement [] children);
@@ -8291,6 +8301,10 @@ namespace UIKit {
 		[NoWatch, NoTV, iOS (14,0)]
 		[Export ("showsMenuAsPrimaryAction")]
 		bool ShowsMenuAsPrimaryAction { get; set; }
+
+		[NoWatch, NoTV, iOS (14,0)]
+		[Export ("menuAttachmentPointForConfiguration:")]
+		CGPoint GetMenuAttachmentPoint (UIContextMenuConfiguration configuration);
 	}
 
 	[iOS (7,0)]
@@ -9510,6 +9524,10 @@ namespace UIKit {
 		[NoTV]
 		[Export ("setHidesBackButton:animated:")]
 		void SetHidesBackButton (bool hides, bool animated);
+
+		[NoTV, iOS (14,0)]
+		[Export ("backButtonDisplayMode", ArgumentSemantic.Assign)]
+		UINavigationItemBackButtonDisplayMode BackButtonDisplayMode { get; set; }
 
 		[Export ("leftBarButtonItem", ArgumentSemantic.Retain)][NullAllowed]
 		UIBarButtonItem LeftBarButtonItem {
@@ -11882,7 +11900,11 @@ namespace UIKit {
 		[iOS (7,0)]
 		[Field ("NSWritingDirectionAttributeName")]
 		NSString WritingDirection { get; }
-		
+
+		[TV (14,0), Watch (7,0), iOS (14,0)]
+		[Field ("NSTrackingAttributeName")]
+		NSString Tracking { get; }
+
 //
 // These are internal, if we choose to expose these, we should
 // put them on a better named class
@@ -21877,10 +21899,12 @@ namespace UIKit {
 		[Export ("listGroupedHeaderFooterConfiguration")]
 		UIBackgroundConfiguration ListGroupedHeaderFooterConfiguration { get; }
 
+		[NoTV]
 		[Static]
 		[Export ("listSidebarHeaderConfiguration")]
 		UIBackgroundConfiguration ListSidebarHeaderConfiguration { get; }
 
+		[NoTV]
 		[Static]
 		[Export ("listSidebarCellConfiguration")]
 		UIBackgroundConfiguration ListSidebarCellConfiguration { get; }
@@ -21990,7 +22014,7 @@ namespace UIKit {
 		UIColor SelectedTintColor { get; set; }
 	}
 
-	[NoWatch, TV (14,0), iOS (14,0)]
+	[NoWatch, NoTV, iOS (14,0)]
 	[BaseType (typeof (UICellAccessory))]
 	interface UICellAccessoryOutlineDisclosure {
 
@@ -22465,14 +22489,17 @@ namespace UIKit {
 		[Export ("groupedFooterConfiguration")]
 		UIListContentConfiguration GroupedFooterConfiguration { get; }
 
+		[NoTV]
 		[Static]
 		[Export ("sidebarCellConfiguration")]
 		UIListContentConfiguration SidebarCellConfiguration { get; }
 
+		[NoTV]
 		[Static]
 		[Export ("sidebarSubtitleCellConfiguration")]
 		UIListContentConfiguration SidebarSubtitleCellConfiguration { get; }
 
+		[NoTV]
 		[Static]
 		[Export ("sidebarHeaderConfiguration")]
 		UIListContentConfiguration SidebarHeaderConfiguration { get; }
