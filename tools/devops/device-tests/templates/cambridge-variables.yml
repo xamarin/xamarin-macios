@@ -2,8 +2,5 @@ variables:
 - name: iOSDevicePool
   value: 'VSEng-Xamarin-QA'
 
-- name: WindowsDevicePool
-  value: 'VSEngDeploymentPool'
-
 - name: useXamarinStorage
   value: ${{ true }}  # the cambridge lab DOES have access to xamarin-storage
