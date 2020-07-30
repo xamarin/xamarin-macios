@@ -184,7 +184,7 @@ function New-GitHubComment {
         $msg.AppendLine($Message)
     }
     $msg.AppendLine()
-    $msg.AppendLine("[Pipeline]($targetUrl) on Agent $Env:AGENT_NAME") # Env:AGENT_NAME is added by the pipeline
+    $msg.AppendLine("[Pipeline]($targetUrl) on Agent $Env:TESTS_BOT") # Env:TESTS_BOT is added by the pipeline as a variable comming from the execute tests job
 
     $url = "https://api.github.com/repos/xamarin/xamarin-macios/commits/$Env:BUILD_REVISION/comments"
     $payload = @{
