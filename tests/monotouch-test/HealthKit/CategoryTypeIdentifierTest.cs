@@ -47,6 +47,7 @@ namespace MonoTouchFixtures.HealthKit {
 					if (!TestRuntime.CheckXcodeVersion (11, 0))
 						continue;
 					break;
+				case HKCategoryTypeIdentifier.GeneralizedBodyAche:
 				case HKCategoryTypeIdentifier.AbdominalCramps:
 				case HKCategoryTypeIdentifier.Acne:
 				case HKCategoryTypeIdentifier.AppetiteChanges:
@@ -61,13 +62,12 @@ namespace MonoTouchFixtures.HealthKit {
 				case HKCategoryTypeIdentifier.Fainting:
 				case HKCategoryTypeIdentifier.Fatigue:
 				case HKCategoryTypeIdentifier.Fever:
-				case HKCategoryTypeIdentifier.GeneralizedBodyAche:
 				case HKCategoryTypeIdentifier.Headache:
 				case HKCategoryTypeIdentifier.Heartburn:
 				case HKCategoryTypeIdentifier.HotFlashes:
+				case HKCategoryTypeIdentifier.LowerBackPain:
 				case HKCategoryTypeIdentifier.LossOfSmell:
 				case HKCategoryTypeIdentifier.LossOfTaste:
-				case HKCategoryTypeIdentifier.LowerBackPain:
 				case HKCategoryTypeIdentifier.MoodChanges:
 				case HKCategoryTypeIdentifier.Nausea:
 				case HKCategoryTypeIdentifier.PelvicPain:
