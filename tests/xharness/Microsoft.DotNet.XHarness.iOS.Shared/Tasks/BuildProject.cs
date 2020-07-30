@@ -27,6 +27,8 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 
 		public bool RestoreNugets {
 			get {
+				if (TestProject.IsDotNetProject)
+					return false;
 				return TestProject.RestoreNugetsInProject || !string.IsNullOrEmpty (SolutionPath);
 			}
 		}
