@@ -99,6 +99,7 @@ stages:
       # Note the use of single quotes!
       XAMARIN_STORAGE_PATH: $[ dependencies.tests.outputs['runTests.XAMARIN_STORAGE_PATH'] ]
       XAMARIN_STORAGE_FAILED: $[ dependencies.tests.outputs['runTests.XAMARIN_STORAGE_FAILED'] ]
+      TESTS_BOT: $[ dependencies.tests.outputs['runTests.TESTS_BOT'] ]
       TESTS_JOBSTATUS: $[ dependencies.tests.outputs['runTests.TESTS_JOBSTATUS'] ]
     pool:
       name: ${{ parameters.WindowsDevicePool }}
