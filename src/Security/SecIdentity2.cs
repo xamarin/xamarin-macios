@@ -61,12 +61,12 @@ namespace Security {
 		public SecCertificate [] Certificates {
 			get {
 				var certArray = sec_identity_copy_certificates_ref (GetCheckedHandle ());
-				var n = (int) NSArray.GetCount (certArray);
-				var ret = new SecCertificate [n];
-				for (int i = 0; i < n; i++)
-					ret [i] = new SecCertificate (NSArray.GetAtIndex (certArray, (nuint) i), owns: false);
-				CFObject.CFRelease (certArray);
-				return ret;
+				try {
+					return NSArray.ArrayFromHandle<SecCertificate> (certArray);
+				}
+				finally {
+					CFObject.CFRelease (certArray);
+				}
 			}
 		}
 
