@@ -195,6 +195,8 @@ namespace ARKit {
 		PersonSegmentation = 1 << 0,
 		PersonSegmentationWithDepth = (1 << 1) | (1 << 0),
 		BodyDetection = 1 << 2,
+		[iOS (14,0)]
+		SceneDepth = (1 << 3),
 	}
 
 	[iOS (13,0)]
