@@ -1971,7 +1971,29 @@ public class TestApp {
 			}
 		}
 
-		static string GetBindingsLibrary (Profile profile)
+		static void LoadWithoutNetworkAccess (XmlDocument doc, string filename)
+		{
+			using (var fs = new FileStream (filename, FileMode.Open, FileAccess.Read)) {
+				var settings = new XmlReaderSettings () {
+					XmlResolver = null,
+					DtdProcessing = DtdProcessing.Parse,
+				};
+				using (var reader = XmlReader.Create (fs, settings)) {
+					doc.Load (reader);
+				}
+			}
+		}
+
+		static string [] GetBindingsLibraryWithReferences (Profile profile)
+		{
+			var lib = GetBindingsLibrary (profile, out var version);
+			var nunit_framework = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.UserProfile), ".nuget", "packages", "nunit", version, "lib", "netstandard2.0", "nunit.framework.dll");
+			if (!File.Exists (nunit_framework))
+				throw new FileNotFoundException ($"Could not find nunit.framework.dll in {nunit_framework}. Has the version changed?");
+			return new string [] { lib, nunit_framework };
+		}
+
+		static string GetBindingsLibrary (Profile profile, out string version)
 		{
 			var project_dir = Path.Combine (Configuration.SourceRoot, "tests", "bindings-test", "iOS");
 			switch (profile) {
@@ -1985,6 +2007,13 @@ public class TestApp {
 				throw new NotImplementedException (profile.ToString ());
 			}
 			var csproj = Path.Combine (project_dir, $"bindings-test{GetProjectSuffix (profile)}.csproj");
+
+			// Find the PackageReference node in the csproj and get the Version attribute
+			var doc = new XmlDocument ();
+			LoadWithoutNetworkAccess (doc, csproj);
+			var node = doc.SelectSingleNode ("//*[local-name() = 'PackageReference' and @Include = 'NUnitLite']");
+			version = node.Attributes ["Version"].Value;
+
 			var fn = Path.Combine (project_dir, "bin", "Any CPU", GetConfiguration (profile), "bindings-test.dll");
 
 			if (!File.Exists (fn))
@@ -2159,7 +2188,7 @@ public class TestApp {
 				Profile = profile,
 				Debug = true,
 				FastDev = true,
-				References = new string [] { GetBindingsLibrary (profile) },
+				References = GetBindingsLibraryWithReferences (profile),
 				NoFastSim = true,
 				Registrar = MTouchRegistrar.Static,
 			}) {
@@ -2186,7 +2215,7 @@ public class TestApp {
 				Profile = profile,
 				Debug = true,
 				FastDev = true,
-				References = new string [] { GetBindingsLibrary (profile) },
+				References = GetBindingsLibraryWithReferences (profile),
 				NoFastSim = true,
 				Linker = MTouchLinker.DontLink,
 			}) {
@@ -2207,7 +2236,7 @@ public class TestApp {
 				Profile = profile,
 				Debug = true,
 				FastDev = true,
-				References = new string [] { GetBindingsLibrary (profile) },
+				References = GetBindingsLibraryWithReferences (profile),
 				NoFastSim = true,
 			}) {
 				mtouch.CreateTemporaryApp_LinkWith ();
@@ -2227,7 +2256,7 @@ public class TestApp {
 				Profile = profile,
 				Debug = true,
 				FastDev = true,
-				References = new string [] { GetBindingsLibrary (profile) },
+				References = GetBindingsLibraryWithReferences (profile),
 				Linker = MTouchLinker.LinkSdk,
 				NoFastSim = true,
 			}) {
@@ -2248,7 +2277,7 @@ public class TestApp {
 				Profile = profile,
 				Debug = true,
 				FastDev = true,
-				References = new string [] { GetBindingsLibrary (profile) },
+				References = GetBindingsLibraryWithReferences (profile),
 			}) {
 				mtouch.CreateTemporaryApp_LinkWith ();
 				Assert.AreEqual (0, mtouch.Execute (MTouchAction.BuildSim), "build");
@@ -2266,7 +2295,7 @@ public class TestApp {
 				Profile = profile,
 				Debug = true,
 				FastDev = true,
-				References = new string [] { GetBindingsLibrary (profile) },
+				References = GetBindingsLibraryWithReferences (profile),
 			}) {
 				mtouch.CreateTemporaryApp_LinkWith ();
 				Assert.AreEqual (0, mtouch.Execute (MTouchAction.BuildDev), "build");
@@ -2286,7 +2315,7 @@ public class TestApp {
 				Profile = profile,
 				Debug = true,
 				FastDev = true,
-				References = new string [] { GetBindingsLibrary (profile) },
+				References = GetBindingsLibraryWithReferences (profile),
 				Linker = MTouchLinker.DontLink,
 			}) {
 				mtouch.CreateTemporaryApp_LinkWith ();
@@ -2305,7 +2334,7 @@ public class TestApp {
 				Profile = profile,
 				Debug = true,
 				FastDev = true,
-				References = new string [] { GetBindingsLibrary (profile) },
+				References = GetBindingsLibraryWithReferences (profile),
 			}) {
 				mtouch.CreateTemporaryApp_LinkWith ();
 
@@ -2329,7 +2358,7 @@ public class TestApp {
 				Profile = profile,
 				Debug = true,
 				FastDev = true,
-				References = new string [] { GetBindingsLibrary (profile) },
+				References = GetBindingsLibraryWithReferences (profile),
 				Linker = MTouchLinker.LinkSdk,
 			}) {
 				mtouch.CreateTemporaryApp_LinkWith ();
@@ -4094,8 +4123,9 @@ public partial class KeyboardViewController : UIKit.UIInputViewController
 		public void RebuildWhenReferenceSymbolsInCode ()
 		{
 			using (var mtouch = new MTouchTool ()) {
-				var bindingsLibrary = GetBindingsLibrary (Profile.iOS);
-				mtouch.References = new string [] { bindingsLibrary };
+				var bindingsLibraryWithReferences = GetBindingsLibraryWithReferences (Profile.iOS);
+				var bindingsLibrary = bindingsLibraryWithReferences [0];
+				mtouch.References = bindingsLibraryWithReferences;
 				mtouch.CreateTemporaryApp_LinkWith ();
 				mtouch.CreateTemporaryCacheDirectory ();
 				mtouch.SymbolMode = MTouchSymbolMode.Code;
@@ -4441,7 +4471,8 @@ public class TestApp {
 			args.Add ("/nologo");
 			args.Add ($"/out:{exe}");
 			args.Add ($"/r:{GetBaseLibrary (profile)}");
-			args.Add ($"/r:{GetBindingsLibrary (profile)}");
+			foreach (var r in GetBindingsLibraryWithReferences (profile))
+				args.Add ($"/r:{r}");
 			var compiler = GetCompiler (profile, args);
 			if (ExecutionHelper.Execute (compiler, args, out output) != 0)
 				throw new Exception (output);
