@@ -126,7 +126,8 @@ namespace Xamarin.Bundler {
 				}
 
 				// Update the debug symbols file even if the assembly didn't change.
-				if (copy_debug_symbols) {
+				if (copy_debug_symbols && HasValidSymbols) {
+					// Unfortunately Cecil won't tell us the path of the symbol file, so we have to try all we support (.pdb+.mdb)
 					if (File.Exists (source + ".mdb"))
 						Application.UpdateFile (source + ".mdb", target + ".mdb", true);
 

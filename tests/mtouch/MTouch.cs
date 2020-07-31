@@ -4122,6 +4122,77 @@ public partial class KeyboardViewController : UIKit.UIInputViewController
 			}
 		}
 
+		[Test]
+		public void RebuildWithInvalidSymbolFile ()
+		{
+			var csproj = @"<?xml version=""1.0"" encoding=""utf-8""?>
+<Project DefaultTargets=""Build"" ToolsVersion=""4.0"" xmlns=""http://schemas.microsoft.com/developer/msbuild/2003"">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFrameworkIdentifier>Xamarin.iOS</TargetFrameworkIdentifier>
+    <OutputPath>bin</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include=""Xamarin.iOS"" />
+    <PackageReference Include=""NUnitLite"" Version=""3.12.0"" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=""Info.plist"" />
+    <Compile Include=""code.cs"" />
+  </ItemGroup>
+  <Import Project=""$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets"" />
+</Project>
+";
+			var infoPlist = @"<?xml version=""1.0"" encoding=""UTF-8""?>
+<!DOCTYPE plist PUBLIC ""-//Apple//DTD PLIST 1.0//EN"" ""http://www.apple.com/DTDs/PropertyList-1.0.dtd"">
+<plist version=""1.0"">
+<dict>
+	<key>CFBundleIdentifier</key>
+	<string>com.xamarin.monotouch-test</string>
+	<key>MinimumOSVersion</key>
+	<string>12.0</string>
+</dict>
+</plist>
+";
+
+			var code = @"using System;
+class C {
+	static void Main ()
+	{
+		Console.WriteLine (typeof (Foundation.NSObject)); // Make sure there's a reference to Xamarin.iOS.dll
+		Console.WriteLine (typeof (NUnit.Framework.Assert)); // Make sure there's a reference to nunit.framework.dll
+	}
+}";
+			var dir = Cache.CreateTemporaryDirectory ();
+			var csprojPath = Path.Combine (dir, "test.csproj");
+			var infoPlistPath = Path.Combine (dir, "Info.plist");
+			var codePath = Path.Combine (dir, "code.cs");
+			File.WriteAllText (csprojPath, csproj);
+			File.WriteAllText (infoPlistPath, infoPlist);
+			File.WriteAllText (codePath, code);
+
+			var arguments = new string [] {
+				"/p:MtouchArch=x86_64",
+				"-consoleLoggerParameters:NoSummary", // this avoids duplicating the errors and warnings at the end of the build
+			};
+			var targets = "Build";
+			XBuild.BuildXI (csprojPath, arguments: arguments, targets: targets);
+
+			// Touch code.cs
+			new FileInfo (codePath).LastWriteTimeUtc = DateTime.UtcNow;
+
+			var output = XBuild.BuildXI (csprojPath, arguments: arguments, targets: targets);
+
+			Assert.That (output, Does.Not.Contain ("must be rebuilt"), "nothing rebuilt in rebuild");
+			Assert.That (output, Does.Not.Contain ("clang"), "no clang in rebuild");
+			Assert.That (output, Does.Contain ("Reloading cached assemblies."), "reloaded cached assemblies");
+
+			var messages = Tool.ParseMessages (output.Split ('\n'), "mtouch");
+			Tool.AssertWarningPattern (messages, "MT", 178, "Debugging symbol file for '.*/nunitlite.dll' is not valid and was ignored.*");
+			Tool.AssertWarningPattern (messages, "MT", 178, "Debugging symbol file for '.*/nunit.framework.dll' is not valid and was ignored.*");
+			Tool.AssertWarningCount (messages, 2);
+		}
+
 		public void XamarinSdkAdjustLibs ()
 		{
 			using (var exttool = new MTouchTool ()) {

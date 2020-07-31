@@ -108,6 +108,12 @@ namespace Xamarin.Bundler {
 			this.FullPath = definition.MainModule.FileName;
 		}
 
+		public bool HasValidSymbols {
+			get {
+				return AssemblyDefinition.MainModule.HasSymbols;
+			}
+		}
+
 		public void LoadSymbols ()
 		{	
 			if (symbols_loaded.HasValue)
