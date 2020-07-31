@@ -518,7 +518,14 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 			void write_failure ()
 			{
 				var name = reader ["name"];
-				var message = reader.ReadToDescendant ("message") ? reader.ReadElementContentAsString () : null;
+				string? message = null;
+				var depth = reader.Depth;
+				if (reader.ReadToDescendant ("message")) {
+					message = reader.ReadElementContentAsString ();
+					// ReadToParent
+					while (depth > reader.Depth && reader.Read ()) {
+					}
+				}
 				var message_block = message?.IndexOf ('\n') >= 0;
 				writer.WriteLine ("<li>");
 				writer.Write (name.AsHtml ());
@@ -544,16 +551,18 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 				if (result == "Error")
 					write_failure ();
 
-				if (!reader.ReadToDescendant ("test-case"))
-					continue;
+				var depth = reader.Depth;
 
-				do {
+				while (reader.Read ()) {
+					if (reader.NodeType != XmlNodeType.Element || reader.Name != "test-case")
+							continue;
+
 					result = reader ["result"];
-					if (result != "Error" && result != "Failure")
-						continue;
-
-					write_failure ();
-				} while (reader.ReadToNextSibling ("test-case"));
+					if (result == "Error" || result == "Failure")
+						write_failure ();
+					if (reader.Depth < depth)
+						break;
+				}
 			}
 
 			writer.WriteLine ("</ul>");

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<test-results name="mtouch.dll" total="440" errors="4" failures="19" not-run="6" inconclusive="0" ignored="6" skipped="0" invalid="0" date="2020-07-31" time="03:17:46">
+  <environment nunit-version="3.6.0.0" clr-version="4.0.30319.42000" os-version="Unix 19.5.0.0" platform="Unix" cwd="..." machine-name="..." user="..." user-domain="..." />
+  <culture-info current-culture="en-US" current-uiculture="en-US" />
+  <test-suite type="Assembly" name="mtouch.dll" executed="True" result="Failure" success="False" time="3393.268" asserts="7560">
+    <properties>
+      <property name="_PID" value="72474" />
+      <property name="_APPDOMAIN" value="domain-" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+      <stack-trace />
+    </failure>
+    <results>
+      <test-suite type="SetUpFixture" name="[default namespace]" executed="True" result="Failure" success="False" time="3393.255" asserts="7560">
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+          <stack-trace />
+        </failure>
+        <results>
+          <test-suite type="TestSuite" name="Xamarin" executed="True" result="Failure" success="False" time="3393.250" asserts="7560">
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+              <stack-trace />
+            </failure>
+            <results>
+              <test-suite type="TestFixture" name="MTouch" executed="True" result="Failure" success="False" time="2720.409" asserts="576">
+                <failure>
+                  <message><![CDATA[One or more child tests had errors]]></message>
+                  <stack-trace />
+                </failure>
+                <results>
+                  <test-suite type="ParameterizedTest" name="FastDev_LinkAll" executed="True" result="Failure" success="False" time="16.633" asserts="2">
+                    <failure>
+                      <message><![CDATA[One or more child tests had errors]]></message>
+                      <stack-trace />
+                    </failure>
+                    <results>
+                      <test-case name="Xamarin.MTouch.FastDev_LinkAll(iOS)" executed="True" result="Failure" success="False" time="8.162" asserts="1">
+                        <failure>
+                          <message>message</message>
+                          <stack-trace>stacktrace</stack-trace>
+                        </failure>
+                      </test-case>
+                    </results>
+                  </test-suite>
+                  <test-case name="Xamarin.MTouch.RebuildWhenReferenceSymbolsInCode" executed="True" result="Failure" success="False" time="0.443" asserts="0">
+                    <failure>
+                      <message>message</message>
+                      <stack-trace>stacktrace</stack-trace>
+                    </failure>
+                  </test-case>
+                </results>
+              </test-suite>
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+    </results>
+  </test-suite>
+</test-results>
+
