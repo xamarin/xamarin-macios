@@ -107,7 +107,7 @@ function Set-GitHubStatus {
         Authorization = ("token {0}" -f $Env:GITHUB_TOKEN)
     }
 
-    return Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body ($payload | ConvertTo-json) -ContentType 'application/json' -PreserveAuthorizationOnRedirect
+    return Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body ($payload | ConvertTo-json) -ContentType 'application/json'
 }
 
 <#
@@ -184,7 +184,7 @@ function New-GitHubComment {
         $msg.AppendLine($Message)
     }
     $msg.AppendLine()
-    $msg.AppendLine("[Pipeline]($targetUrl) on Agent $Env:AGENT_NAME") # Env:AGENT_NAME is added by the pipeline
+    $msg.AppendLine("[Pipeline]($targetUrl) on Agent $Env:TESTS_BOT") # Env:TESTS_BOT is added by the pipeline as a variable coming from the execute tests job
 
     $url = "https://api.github.com/repos/xamarin/xamarin-macios/commits/$Env:BUILD_REVISION/comments"
     $payload = @{
@@ -195,7 +195,7 @@ function New-GitHubComment {
         Authorization = ("token {0}" -f $Env:GITHUB_TOKEN)
     }
 
-    $request = Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body ($payload | ConvertTo-Json) -ContentType 'application/json' -PreserveAuthorizationOnRedirect
+    $request = Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body ($payload | ConvertTo-Json) -ContentType 'application/json'
     Write-Host $request
     return $request
 }
