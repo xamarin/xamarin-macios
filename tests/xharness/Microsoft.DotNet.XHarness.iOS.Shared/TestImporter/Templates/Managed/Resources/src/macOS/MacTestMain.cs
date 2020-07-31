@@ -55,11 +55,11 @@ namespace Xamarin.Mac.Tests
 			}
 			await runner.Run (testAssemblies).ConfigureAwait (false);
 
-			if (options.ResultFile != null) {
-				using (var writer = new StreamWriter (options.ResultFile)) {
+			if (options.LogFile != null) {
+				using (var writer = new StreamWriter (options.LogFile)) {
 					runner.WriteResultsToFile (writer, TestRunner.Jargon.NUnitV3);
 				}
-				logger.Info ($"Xml result can be found {options.ResultFile}");
+				logger.Info ($"Xml result can be found {options.LogFile}");
 			}
 			
 			logger.Info ($"Tests run: {runner.TotalTests} Passed: {runner.PassedTests} Inconclusive: {runner.InconclusiveTests} Failed: {runner.FailedTests} Ignored: {runner.FilteredTests}");
