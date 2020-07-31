@@ -2193,6 +2193,7 @@ public class TestApp {
 				Registrar = MTouchRegistrar.Static,
 			}) {
 				mtouch.CreateTemporaryApp_LinkWith ();
+				mtouch.DlsymString = "+nunit.framework.dll"; // nunit.framework.dll has a P/Invoke to GetVersionEx, so we need to use dlsym to avoid a native linker error.
 				Assert.AreEqual (0, mtouch.Execute (MTouchAction.BuildDev), "build");
 
 				var symbols = GetNativeSymbols (mtouch.NativeExecutablePath);
@@ -2319,6 +2320,7 @@ public class TestApp {
 				Linker = MTouchLinker.DontLink,
 			}) {
 				mtouch.CreateTemporaryApp_LinkWith ();
+				mtouch.DlsymString = "+nunit.framework.dll"; // nunit.framework.dll has a P/Invoke to GetVersionEx, so we need to use dlsym to avoid a native linker error.
 				Assert.AreEqual (0, mtouch.Execute (MTouchAction.BuildDev), "build 1");
 			}
 		}
@@ -2337,6 +2339,7 @@ public class TestApp {
 				References = GetBindingsLibraryWithReferences (profile),
 			}) {
 				mtouch.CreateTemporaryApp_LinkWith ();
+				mtouch.DlsymString = "+nunit.framework.dll"; // nunit.framework.dll has a P/Invoke to GetVersionEx, so we need to use dlsym to avoid a native linker error.
 
 				// --fastdev w/all link
 				Assert.AreEqual (0, mtouch.Execute (MTouchAction.BuildDev), "build 1");
@@ -2362,6 +2365,7 @@ public class TestApp {
 				Linker = MTouchLinker.LinkSdk,
 			}) {
 				mtouch.CreateTemporaryApp_LinkWith ();
+				mtouch.DlsymString = "+nunit.framework.dll"; // nunit.framework.dll has a P/Invoke to GetVersionEx, so we need to use dlsym to avoid a native linker error.
 
 				// --fastdev w/sdk link
 				Assert.AreEqual (0, mtouch.Execute (MTouchAction.BuildDev), "build");
