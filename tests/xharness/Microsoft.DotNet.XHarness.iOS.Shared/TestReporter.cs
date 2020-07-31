@@ -172,7 +172,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 		// return if the tcp connection with the device failed
 		async Task<bool> TcpConnectionFailed ()
 		{
-			using var reader = new StreamReader (mainLog.FullPath);
+			using var reader = mainLog.GetReader ();
 			string line;
 			while ((line = await reader.ReadLineAsync ()) != null) {
 				if (line.Contains ("Couldn't establish a TCP connection with any of the hostnames")) {
