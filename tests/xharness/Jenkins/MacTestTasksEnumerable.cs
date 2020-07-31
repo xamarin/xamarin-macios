@@ -82,7 +82,6 @@ namespace Xharness.Jenkins {
 					MSBuildTask build = new MSBuildTask (jenkins: jenkins, testProject: project, processManager: processManager);
 					build.Platform = platform;
 					build.CloneTestProject (jenkins.MainLog, processManager, project);
-					build.SolutionPath = project.SolutionPath;
 					build.ProjectConfiguration = config;
 					build.ProjectPlatform = project.Platform;
 					build.SpecifyPlatform = false;
