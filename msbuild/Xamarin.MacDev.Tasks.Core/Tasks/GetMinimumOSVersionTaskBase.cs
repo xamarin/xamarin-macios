@@ -22,7 +22,7 @@ namespace Xamarin.MacDev.Tasks {
 				try {
 					plist = PDictionary.FromFile (AppManifest.ItemSpec);
 				} catch (Exception ex) {
-					Log.LogError (null, null, null, AppManifest, 0, 0, 0, 0, MSBStrings.E0010, AppManifest, ex.Message);
+					Log.LogError (null, null, null, AppManifest.ItemSpec, 0, 0, 0, 0, MSBStrings.E0010, AppManifest.ItemSpec, ex.Message);
 					return false;
 				}
 			}
@@ -31,7 +31,7 @@ namespace Xamarin.MacDev.Tasks {
 			if (string.IsNullOrEmpty (minimumOSVersionInManifest)) {
 				MinimumOSVersion = SdkVersion;
 			} else if (!IAppleSdkVersion_Extensions.TryParse (minimumOSVersionInManifest, out var _)) {
-				Log.LogError (null, null, null, AppManifest, 0, 0, 0, 0, MSBStrings.E0011, minimumOSVersionInManifest);
+				Log.LogError (null, null, null, AppManifest.ItemSpec, 0, 0, 0, 0, MSBStrings.E0011, minimumOSVersionInManifest);
 				return false;
 			} else {
 				MinimumOSVersion = minimumOSVersionInManifest;
