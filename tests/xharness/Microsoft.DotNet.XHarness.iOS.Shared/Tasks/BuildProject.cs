@@ -87,6 +87,8 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 				var fixPath = referenceProject.Replace ("\\", "/"); // do the replace in case we use win paths
 				result.Add (fixPath);
 				// get all possible references
+				if (!Path.IsPathRooted (fixPath))
+					fixPath = Path.Combine (Path.GetDirectoryName (csproj), fixPath);
 				result.AddRange (GetNestedReferenceProjects (fixPath));
 			}
 			return result;
