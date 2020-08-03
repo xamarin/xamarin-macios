@@ -361,9 +361,31 @@ error<br/>
 message</div>
 </li>
 <li>
-ErrorTest2: SingleLineErrorMessage</li>
-<li>
 NUnit.Tests.Assemblies.MockTestFixture.FailingTest: Intentional failure</li>
+<li>
+NUnit.Tests.Assemblies.MockTestFixture.TestWithException: System.ApplicationException : Intentional Exception</li>
+</ul>
+</div>
+";
+			Assert.AreEqual (expectedOutput, writer.ToString (), "Output");
+		}
+
+
+		[Test]
+		public void NUnitV2GenerateTestReportWithTestCaseFailures ()
+		{
+			using var writer = new StringWriter ();
+			using var stream = GetType ().Assembly.GetManifestResourceStream ("Microsoft.DotNet.XHarness.iOS.Shared.Tests.Samples.TestCaseFailures.xml");
+			using var reader = new StreamReader (stream);
+			resultParser.GenerateTestReport (writer, reader, XmlResultJargon.NUnitV2);
+			Console.WriteLine (writer.ToString ());
+			var expectedOutput =
+@"<div style='padding-left: 15px;'>
+<ul>
+<li>
+Xamarin.MTouch.FastDev_LinkAll(iOS): message</li>
+<li>
+Xamarin.MTouch.RebuildWhenReferenceSymbolsInCode: message</li>
 </ul>
 </div>
 ";
