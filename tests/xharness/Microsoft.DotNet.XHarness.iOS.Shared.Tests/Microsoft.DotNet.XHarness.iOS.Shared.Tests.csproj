@@ -18,6 +18,7 @@
     <None Remove="Samples\TouchUnitSample.xml" />
     <None Remove="Samples\xUnitSample.xml" />
     <None Remove="Samples\NUnitV2SampleFailure.xml" />
+    <None Remove="Samples\TestCaseFailures.xml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -52,6 +53,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Samples\NUnitV2SampleFailure.xml" />
+    <EmbeddedResource Include="Samples\TestCaseFailures.xml" />
   </ItemGroup>
 
   <ItemGroup>
