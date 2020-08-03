@@ -112,6 +112,16 @@ namespace CoreAnimation {
 		{
 			throw new NotSupportedException ();
 		}
+
+		[Obsolete ("Empty stub (not a public API).")]
+		public static NSString[] BehaviorTypes { get; }
+	}
+
+	public partial class CAMetalLayer {
+
+		[Obsolete ("Always throw a 'NotSupportedException' (not a public API).")]
+		public virtual ICAMetalDrawable CreateDrawable ()
+			=> throw new NotSupportedException ();
 	}
 }
 
