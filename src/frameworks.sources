@@ -1,6 +1,6 @@
 #
 # The source files used to build the platform assemblies:
-# 
+#
 # Xamarin.iOS: monotouch.dll and Xamarin.iOS.dll
 # Xamarin.Mac: XamMac.dll and Xamarin.Mac.dll
 # Xamarin.WatchOS: Xamarin.WatchOS.dll
@@ -190,7 +190,7 @@ AUDIOTOOLBOX_SOURCES = \
 	AudioToolbox/MusicPlayer.cs \
 	AudioToolbox/MusicTrack.cs \
 
-# AudioUnit 
+# AudioUnit
 
 AUDIOUNIT_CORE_SOURCES = \
 	AudioUnit/AudioComponent.cs \
@@ -575,7 +575,7 @@ CORESERVICES_SOURCES = \
 
 CORESPOTLIGHT_API_SOURCES = \
 	CoreSpotlight/CSEnums.cs \
-	
+
 CORESPOTLIGHT_SOURCES = \
 	CoreSpotlight/CSCompat.cs \
 	CoreSpotlight/CSSearchableIndex.cs \
@@ -1197,7 +1197,7 @@ NETWORK_SOURCES = \
 	Network/NWWebSocketOptions.cs	\
 	Network/NWWebSocketRequest.cs	\
 	Network/NWWebSocketResponse.cs	\
-	
+
 # NetworkExtension
 
 NETWORKEXTENSION_API_SOURCES = \
@@ -1286,7 +1286,7 @@ OPENGLES_SOURCES = \
 
 PASSKIT_API_SOURCES = \
 	PassKit/PKEnums.cs \
-	
+
 PASSKIT_SOURCES = \
 	PassKit/PKPaymentRequest.cs	\
 
@@ -1327,7 +1327,7 @@ PHOTOSUI_API_SOURCES = \
 PRINTCORE_SOURCES = \
 	PrintCore/Defs.cs	\
 	PrintCore/PrintCore.cs
-	
+
 # QTKit
 
 QTKIT_CORE_SOURCES = \
