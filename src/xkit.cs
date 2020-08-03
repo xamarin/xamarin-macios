@@ -1328,7 +1328,7 @@ namespace UIKit {
 
 		[Static]
 		[Export ("defaultWritingDirectionForLanguage:")]
-		NSWritingDirection GetDefaultWritingDirection (string languageName);
+		NSWritingDirection GetDefaultWritingDirection ([NullAllowed] string languageName);
 
 		[Static]
 		[Export ("defaultParagraphStyle", ArgumentSemantic.Copy)]
@@ -1340,6 +1340,7 @@ namespace UIKit {
 
 		[iOS (7,0)]
 		[Export ("tabStops", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		NSTextTab[] TabStops { get; [NotImplemented] set; }
 
 		[iOS (9,0)]
@@ -1427,6 +1428,7 @@ namespace UIKit {
 		[iOS (7,0)]
 		[Export ("tabStops", ArgumentSemantic.Copy)]
 		[Override]
+		[NullAllowed]
 		NSTextTab[] TabStops { get; set; }
 
 		[iOS (9,0)]
