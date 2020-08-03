@@ -2,10 +2,15 @@
 
 #if !COREBUILD
 
-using CloudKit;
-using ObjCRuntime;
-using Foundation;
 using System;
+using System.Threading.Tasks;
+
+#if MONOMAC || IOS
+using Contacts;
+#endif
+using CloudKit;
+using Foundation;
+using ObjCRuntime;
 
 namespace CloudKit {
 
@@ -30,6 +35,94 @@ namespace CloudKit {
 		{
 		}
 	}
+
+	public partial class CKContainer {
+
+		[iOS (8, 0), Mac (10, 10)]
+		[Obsolete ("Use 'DiscoverAllIdentities' instead. NotSupportedException'")]
+		public virtual void DiscoverAllContactUserInfos (Action<CKDiscoveredUserInfo[], NSError> completionHandler) 
+			=> throw new NotSupportedException ();
+
+		[iOS (8, 0), Mac (10, 10)]
+		[Obsolete ("Use 'DiscoverAllIdentities' instead. Always throw a 'NotSupportedException'")]
+		public virtual Task<CKDiscoveredUserInfo[]> DiscoverAllContactUserInfosAsync ()
+			=> Task.FromException<CKDiscoveredUserInfo[]> (new NotSupportedException ());
+
+		[iOS (8, 0), Mac (10, 10)]
+		[Obsolete ("Use 'DiscoverUserIdentityWithEmailAddress' instead. Always throw a 'NotSupportedException'")]
+		public virtual void DiscoverUserInfo (string email, Action<CKDiscoveredUserInfo, NSError> completionHandler)
+			=> throw new NotSupportedException ();
+
+		[iOS (8, 0), Mac (10, 10)]
+		[Obsolete ("Use 'DiscoverUserIdentityWithEmailAddress' instead. Always throw a 'NotSupportedException'")]
+		public virtual Task<CKDiscoveredUserInfo> DiscoverUserInfoAsync (string email)
+			=> Task.FromException<CKDiscoveredUserInfo> (new NotSupportedException ());
+
+		[iOS (8, 0), Mac (10, 10)]
+		[Obsolete ("Use 'DiscoverUserIdentity' instead. Always throw a 'NotSupportedException'")]
+		public virtual void DiscoverUserInfo (CKRecordID userRecordId, Action<CKDiscoveredUserInfo, NSError> completionHandler)
+			=> throw new NotSupportedException ();
+
+		[iOS (8, 0), Mac (10, 10)]
+		[Obsolete ("Use 'DiscoverUserIdentity' instead. Always throw a 'NotSupportedException'")]
+		public virtual Task<CKDiscoveredUserInfo> DiscoverUserInfoAsync (CKRecordID userRecordId)
+			=> Task.FromException<CKDiscoveredUserInfo> (new NotSupportedException ());
+	}
+
+	public partial class CKDiscoverAllContactsOperation {
+
+		[Obsolete ("Empty stub (not a public API).")]
+		public virtual Action<CKDiscoveredUserInfo[], NSError> DiscoverAllContactsHandler { get; set; }
+
+	}
+
+	[iOS (8,0), Mac (10,10)]
+	public delegate void CKDiscoverUserInfosCompletionHandler (NSDictionary emailsToUserInfos, NSDictionary userRecordIdsToUserInfos, NSError operationError);
+	
+	public partial class CKDiscoverUserInfosOperation { 
+
+		[iOS (8,0), Mac (10,10)]
+		[Obsolete ("Empty stub (not a public API).")]
+		public virtual CKDiscoverUserInfosCompletionHandler Completed { get; set; }
+	}
+
+	public partial class CKDiscoverUserInfosOperation {
+		[Obsolete ("Always throws NotSupportedException (). (not a public API).")]
+		public CKDiscoverUserInfosOperation (string [] emailAddresses, CKRecordID [] userRecordIDs)
+			=> throw new NotSupportedException ();
+
+		[Obsolete ("Empty stub (not a public API).")]
+		public virtual CKRecordID [] UserRecordIds { get; set; }
+	}
+
+	public partial class CKSubscription {
+		[Obsolete ("Always throws NotSupportedException (). Use 'CKRecordZoneSubscription'.")]
+		public CKSubscription (CKRecordZoneID zoneId, CKSubscriptionOptions subscriptionOptions)
+			=> throw new NotSupportedException ();
+
+		[Obsolete ("Always throws NotSupportedException (). Use 'CKRecordZoneSubscription'.")]
+		public CKSubscription (CKRecordZoneID zoneId, string subscriptionId, CKSubscriptionOptions subscriptionOptions)
+			=> throw new NotSupportedException ();
+#if !WATCH
+		[Obsolete ("Empty stub (not a public API). Use 'CKRecordZoneSubscription'.")]
+		public virtual CKSubscriptionOptions SubscriptionOptions { get; }
+#endif
+	}
+
+	public partial class CKQueryNotification {
+		[iOS (8, 0), Mac (10, 10)]
+		[Obsolete ("Empty stub (not public API). Use 'DatabaseScope' instead.")]
+		public virtual bool IsPublicDatabase { get; }
+	}
+
+#if MONOMAC || IOS
+	public partial class CKDiscoveredUserInfo {
+		[iOS (9,0)][Mac (10,11)]
+		[Obsolete ("Empty stub (not public API).")]
+		public virtual CNContact DisplayContact { get; }
+	}
+#endif
+
 #endif
 
 #if WATCH

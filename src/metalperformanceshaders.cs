@@ -1142,10 +1142,6 @@ namespace MetalPerformanceShaders {
 		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
 
 		[TV (11, 0), iOS (11, 0)]
-		[Export ("encodeToCommandBuffer:sourceImage:destinationImage:state:")]
-		void EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSImage sourceImage, MPSImage destinationImage, out MPSCnnConvolutionState state);
-
-		[TV (11, 0), iOS (11, 0)]
 		[Export ("dilationRateX")]
 		nuint DilationRateX { get; }
 
@@ -3178,9 +3174,6 @@ namespace MetalPerformanceShaders {
 
 		[Export ("kernelHeight")]
 		nuint KernelHeight { get; }
-
-		[Export ("sourceOffset")]
-		MPSOffset SourceOffset { get; }
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
@@ -3213,9 +3206,6 @@ namespace MetalPerformanceShaders {
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
-
-		[Export ("encodeToCommandBuffer:sourceImage:convolutionState:")]
-		MPSImage EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSImage sourceImage, [NullAllowed]MPSCnnConvolutionState convolutionState);
 
 		[TV (11,3), Mac (10,13,4), iOS (11,3)]
 		[Export ("encodeToCommandBuffer:sourceImage:convolutionGradientState:")]
@@ -3837,9 +3827,6 @@ namespace MetalPerformanceShaders {
 
 		[Export ("initWithSource:weights:")]
 		IntPtr Constructor (MPSNNImageNode sourceNode, IMPSCnnConvolutionDataSource weights);
-
-		[NullAllowed, Export ("convolutionState")]
-		MPSCnnConvolutionStateNode ConvolutionState { get; }
 
 		[TV (11,3), Mac (10,13,4), iOS (11,3)]
 		[NullAllowed, Export ("convolutionGradientState")]
