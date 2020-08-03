@@ -399,7 +399,7 @@ namespace Introspection {
 				case "SRVisit":
 				case "SRWebUsage":
 					return true;
-				// iOS 14 beat 3 (to be reviewed)
+				// iOS 14 beta 3 (to be reviewed)
 				case "GCDeviceBattery":
 				case "GCDeviceLight":
 				case "GCDualShockGamepad":
@@ -556,7 +556,7 @@ namespace Introspection {
 				case "HMAddAccessoryRequest":  // Conformance not in headers
 					return true;
 
-				// iOS 14 beat 3 (to be reviewed)
+				// iOS 14 beta 3 (to be reviewed)
 				case "GCDeviceBattery":
 				case "GCDeviceLight":
 				case "GCDualShockGamepad":

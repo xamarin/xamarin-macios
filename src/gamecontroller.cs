@@ -4,7 +4,7 @@
 // Authors:
 //   Aaron Bockover (abock@xamarin.com)
 //   TJ Lambert (t-anlamb@microsoft.com)
-//	 Whitney Schmidt (whschm@microsoft.com)
+//   Whitney Schmidt (whschm@microsoft.com)
 //
 // Copyright 2013, 2015 Xamarin Inc.
 // Copyright 2019, 2020 Microsoft Corporation
