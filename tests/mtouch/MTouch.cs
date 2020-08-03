@@ -4173,6 +4173,7 @@ class C {
 
 			var arguments = new string [] {
 				"/p:MtouchArch=x86_64",
+				"/p:MtouchExtraArgs=-vvvvvvvvvv", // make sure mtouch prints out the verbose text we're looking for in our asserts
 				"-consoleLoggerParameters:NoSummary", // this avoids duplicating the errors and warnings at the end of the build
 			};
 			var targets = "Build";
