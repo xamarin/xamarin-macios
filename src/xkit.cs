@@ -1330,9 +1330,23 @@ namespace UIKit {
 		[Export ("defaultWritingDirectionForLanguage:")]
 		NSWritingDirection GetDefaultWritingDirection ([NullAllowed] string languageName);
 
+#if MONOMAC && !XAMCORE_4_0
+		[Obsolete ("Use the 'GetDefaultWritingDirection' method instead.")]
+		[Static]
+		[Export ("defaultWritingDirectionForLanguage:")]
+		NSWritingDirection DefaultWritingDirection ([NullAllowed] string languageName);
+#endif
+
 		[Static]
 		[Export ("defaultParagraphStyle", ArgumentSemantic.Copy)]
 		NSParagraphStyle Default { get; }
+
+#if MONOMAC && !XAMCORE_4_0
+		[Obsolete ("Use the 'Default' property instead.")]
+		[Static]
+		[Export ("defaultParagraphStyle", ArgumentSemantic.Copy)]
+		NSParagraphStyle DefaultParagraphStyle { get; }
+#endif
 
 		[iOS (7,0)]
 		[Export ("defaultTabInterval")]
@@ -1350,7 +1364,11 @@ namespace UIKit {
 
 		[NoiOS, NoTV, NoWatch]
 		[Export ("textBlocks")]
+#if XAMCORE_4_0
+		NSTextBlock [] TextBlocks { get; [NotImplemented] set; }
+#else
 		NSTextTableBlock [] TextBlocks { get; [NotImplemented] set; }
+#endif
 
 		[NoiOS, NoTV, NoWatch]
 		[Export ("textLists")]
@@ -1450,12 +1468,18 @@ namespace UIKit {
 		void SetParagraphStyle (NSParagraphStyle paragraphStyle);
 
 		[NoiOS, NoTV, NoWatch]
-		[Export ("setTextBlocks:")]
-		void SetTextBlocks (NSTextBlock [] array);
+		[Override]
+		[Export ("textBlocks")]
+#if XAMCORE_4_0
+		NSTextBlock [] TextBlocks { get; set; }
+#else
+		NSTextTableBlock [] TextBlocks { get; set; }
+#endif
 
 		[NoiOS, NoTV, NoWatch]
-		[Export ("setTextLists:")]
-		void SetTextLists (NSTextList [] array);
+		[Override]
+		[Export ("textLists")]
+		NSTextList [] TextLists { get; set; }
 
 		[NoiOS, NoTV, NoWatch]
 		[Export ("tighteningFactorForTruncation")]
