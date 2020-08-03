@@ -220,7 +220,7 @@ namespace Xamarin.Tests
 			}
 		}
 
-		public static int GetWarningCount (List<ToolMessage> messages)
+		public static int GetWarningCount (IEnumerable<ToolMessage> messages)
 		{
 			return messages.Count ((v) => v.IsWarning);
 		}
@@ -239,7 +239,7 @@ namespace Xamarin.Tests
 			AssertWarningCount (messages, count, message);
 		}
 
-		public static void AssertWarningCount (List<ToolMessage> messages, int count, string message = "warnings")
+		public static void AssertWarningCount (IEnumerable<ToolMessage> messages, int count, string message = "warnings")
 		{
 			if (count != GetWarningCount (messages))
 				Assert.Fail ($"{message}\nExpected: {count}\nBut was: { GetWarningCount (messages)}\nWarnings:\n\t{string.Join ("\n\t", messages.Where ((v) => v.IsWarning).Select ((v) => v.ToString ()))}");
@@ -297,7 +297,7 @@ namespace Xamarin.Tests
 			AssertFilename (messages, prefix, number, message, matches, filename, linenumber);
 		}
 
-		static void AssertFilename (List<ToolMessage> messages, string prefix, int number, string message, IEnumerable<ToolMessage> matches, string filename, int? linenumber)
+		static void AssertFilename (IList<ToolMessage> messages, string prefix, int number, string message, IEnumerable<ToolMessage> matches, string filename, int? linenumber)
 		{
 			if (filename != null) {
 				var hasDirectory = filename.IndexOf (Path.DirectorySeparatorChar) > -1;
@@ -333,7 +333,7 @@ namespace Xamarin.Tests
 			AssertWarningPattern (messages, prefix, number, messagePattern);
 		}
 
-		public static void AssertWarningPattern (List<ToolMessage> messages, string prefix, int number, string messagePattern)
+		public static void AssertWarningPattern (IEnumerable<ToolMessage> messages, string prefix, int number, string messagePattern)
 		{
 			if (!messages.Any ((msg) => msg.Prefix == prefix && msg.Number == number))
 				Assert.Fail (string.Format ("The warning '{0}{1:0000}' was not found in the output.", prefix, number));
@@ -355,7 +355,7 @@ namespace Xamarin.Tests
 			AssertWarning (messages, prefix, number, message, filename, linenumber);
 		}
 
-		public static void AssertWarning (List<ToolMessage> messages, string prefix, int number, string message, string filename = null, int? linenumber = null)
+		public static void AssertWarning (IList<ToolMessage> messages, string prefix, int number, string message, string filename = null, int? linenumber = null)
 		{
 			if (!messages.Any ((msg) => msg.Prefix == prefix && msg.Number == number))
 				Assert.Fail (string.Format ("The warning '{0}{1:0000}' was not found in the output.", prefix, number));
