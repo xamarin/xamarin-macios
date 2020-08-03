@@ -100,6 +100,10 @@ namespace SceneKit {
 		{
 			return SCNSceneRenderer_Extensions.PresentSceneAsync (this, scene, transition, pointOfView);
 		}
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Obsolete ("Empty stub (not a public API).")]
+		public virtual bool TemporalAntialiasingEnabled { get; set; }
 	}
 #endif
 
@@ -144,6 +148,13 @@ namespace SceneKit {
 				return SearchMode;
 			}
 		}
+	}
+
+	public partial class SCNView {
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Obsolete ("Empty stub. (not a public API).")]
+		public virtual bool DrawableResizesAsynchronously { get; set; } 
 	}
 #endif
 }

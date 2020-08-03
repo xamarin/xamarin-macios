@@ -621,9 +621,6 @@ namespace CoreAnimation {
 		[Export ("drawableSize")]
 		CGSize DrawableSize { get; set; }
 
-		[Export ("newDrawable")]
-		ICAMetalDrawable CreateDrawable ();
-
 		[Export ("nextDrawable")]
 		ICAMetalDrawable NextDrawable ();
 		
@@ -1764,9 +1761,6 @@ namespace CoreAnimation {
 
 		[Export ("type")]
 		string Type { get; }
-
-		[Static][Export ("behaviorTypes")]
-		NSString[] BehaviorTypes { get; }
 
 		// [Static][Export ("behaviorWithType:")]
 		// CAEmitterBehavior Create (NSString type);
