@@ -3,8 +3,9 @@
 //
 // Authors:
 //   Chris Hamons (chris.hamons@xamarin.com)
+//   Whitney Schmidt (whschm@microsoft.com)
 //
-// Copyright 2019 Microsoft Corporation
+// Copyright 2019, 2020 Microsoft Corporation
 
 using System;
 
@@ -21,8 +22,6 @@ namespace GameController {
 		Version1 = 0x0100,
 		Version2 = 0x0101,
 	}
-
-
 	[Native]
 	public enum GCMicroGamepadSnapshotDataVersion : long
 	{
