@@ -216,8 +216,13 @@ namespace Xamarin.Tests
 
 		public int WarningCount {
 			get {
-				return messages.Count ((v) => v.IsWarning);
+				return GetWarningCount (messages);
 			}
+		}
+
+		public static int GetWarningCount (IEnumerable<ToolMessage> messages)
+		{
+			return messages.Count ((v) => v.IsWarning);
 		}
 
 		public bool HasError (string prefix, int number, string message)
@@ -231,8 +236,13 @@ namespace Xamarin.Tests
 
 		public void AssertWarningCount (int count, string message = "warnings")
 		{
-			if (count != WarningCount)
-				Assert.Fail ($"{message}\nExpected: {count}\nBut was: {WarningCount}\nWarnings:\n\t{string.Join ("\n\t", this.Messages.Where ((v) => v.IsWarning).Select ((v) => v.ToString ()))}");
+			AssertWarningCount (messages, count, message);
+		}
+
+		public static void AssertWarningCount (IEnumerable<ToolMessage> messages, int count, string message = "warnings")
+		{
+			if (count != GetWarningCount (messages))
+				Assert.Fail ($"{message}\nExpected: {count}\nBut was: { GetWarningCount (messages)}\nWarnings:\n\t{string.Join ("\n\t", messages.Where ((v) => v.IsWarning).Select ((v) => v.ToString ()))}");
 		}
 
 		public void AssertErrorCount (int count, string message = "errors")
@@ -284,6 +294,11 @@ namespace Xamarin.Tests
 
 		void AssertFilename (string prefix, int number, string message, IEnumerable<ToolMessage> matches, string filename, int? linenumber)
 		{
+			AssertFilename (messages, prefix, number, message, matches, filename, linenumber);
+		}
+
+		static void AssertFilename (IList<ToolMessage> messages, string prefix, int number, string message, IEnumerable<ToolMessage> matches, string filename, int? linenumber)
+		{
 			if (filename != null) {
 				var hasDirectory = filename.IndexOf (Path.DirectorySeparatorChar) > -1;
 				if (!matches.Any ((v) => {
@@ -315,6 +330,11 @@ namespace Xamarin.Tests
 
 		public void AssertWarningPattern (string prefix, int number, string messagePattern)
 		{
+			AssertWarningPattern (messages, prefix, number, messagePattern);
+		}
+
+		public static void AssertWarningPattern (IEnumerable<ToolMessage> messages, string prefix, int number, string messagePattern)
+		{
 			if (!messages.Any ((msg) => msg.Prefix == prefix && msg.Number == number))
 				Assert.Fail (string.Format ("The warning '{0}{1:0000}' was not found in the output.", prefix, number));
 
@@ -332,6 +352,11 @@ namespace Xamarin.Tests
 
 		public void AssertWarning (string prefix, int number, string message, string filename = null, int? linenumber = null)
 		{
+			AssertWarning (messages, prefix, number, message, filename, linenumber);
+		}
+
+		public static void AssertWarning (IList<ToolMessage> messages, string prefix, int number, string message, string filename = null, int? linenumber = null)
+		{
 			if (!messages.Any ((msg) => msg.Prefix == prefix && msg.Number == number))
 				Assert.Fail (string.Format ("The warning '{0}{1:0000}' was not found in the output.", prefix, number));
 
@@ -341,7 +366,7 @@ namespace Xamarin.Tests
 				Assert.Fail (string.Format ("The warning '{0}{1:0000}: {2}' was not found in the output:\n{3}", prefix, number, message, string.Join ("\n", details.ToArray ())));
 			}
 
-			AssertFilename (prefix, number, message, matches, filename, linenumber);
+			AssertFilename (messages, prefix, number, message, matches, filename, linenumber);
 		}
 
 		public void AssertNoWarnings ()
@@ -394,39 +419,39 @@ namespace Xamarin.Tests
 			}
 		}
 
-		public static void BuildXM (string project, string configuration = "Debug", string platform = "iPhoneSimulator", string verbosity = null, TimeSpan? timeout = null, string [] arguments = null)
+		public static string BuildXM (string project, string configuration = "Debug", string platform = "iPhoneSimulator", string verbosity = null, TimeSpan? timeout = null, string [] arguments = null, string targets = "Clean,Build")
 		{
-			Build (project,
+			return Build (project,
 				new Dictionary<string, string> {
 					{ "MD_APPLE_SDK_ROOT", Path.GetDirectoryName (Path.GetDirectoryName (Configuration.xcode_root)) },
 					{ "TargetFrameworkFallbackSearchPaths", Path.Combine (Configuration.TargetDirectoryXM, "Library", "Frameworks", "Mono.framework", "External", "xbuild-frameworks") },
 					{ "MSBuildExtensionsPathFallbackPathsOverride", Path.Combine (Configuration.TargetDirectoryXM, "Library", "Frameworks", "Mono.framework", "External", "xbuild") },
 					{ "XamarinMacFrameworkRoot", Path.Combine (Configuration.TargetDirectoryXM, "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current") },
 					{ "XAMMAC_FRAMEWORK_PATH", Path.Combine (Configuration.TargetDirectoryXM, "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current") },
-				}, configuration, platform, verbosity, timeout, arguments);
+				}, configuration, platform, verbosity, timeout, arguments, targets);
 		}
 
-		public static void BuildXI (string project, string configuration = "Debug", string platform = "iPhoneSimulator", string verbosity = null, TimeSpan? timeout = null, string [] arguments = null)
+		public static string BuildXI (string project, string configuration = "Debug", string platform = "iPhoneSimulator", string verbosity = null, TimeSpan? timeout = null, string [] arguments = null, string targets = "Clean,Build")
 		{
-			Build (project,
+			return Build (project,
 				new Dictionary<string, string> {
 					{ "MD_APPLE_SDK_ROOT", Path.GetDirectoryName (Path.GetDirectoryName (Configuration.xcode_root)) },
 					{ "TargetFrameworkFallbackSearchPaths", Path.Combine (Configuration.TargetDirectoryXI, "Library", "Frameworks", "Mono.framework", "External", "xbuild-frameworks") },
 					{ "MSBuildExtensionsPathFallbackPathsOverride", Path.Combine (Configuration.TargetDirectoryXI, "Library", "Frameworks", "Mono.framework", "External", "xbuild") },
 					{ "MD_MTOUCH_SDK_ROOT", Path.Combine (Configuration.TargetDirectoryXI, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current") },
-				}, configuration, platform, verbosity, timeout, arguments);
+				}, configuration, platform, verbosity, timeout, arguments, targets);
 		}
 
-		static void Build (string project, Dictionary<string, string> environmentVariables, string configuration = "Debug", string platform = "iPhoneSimulator", string verbosity = null, TimeSpan? timeout = null, string [] arguments = null)
+		static string Build (string project, Dictionary<string, string> environmentVariables, string configuration = "Debug", string platform = "iPhoneSimulator", string verbosity = null, TimeSpan? timeout = null, string [] arguments = null, string targets = "Clean,Build")
 		{
-			ExecutionHelper.Execute (ToolPath,
+			return ExecutionHelper.Execute (ToolPath,
 				new string [] {
 					"--",
 					$"/p:Configuration={configuration}",
 					$"/p:Platform={platform}",
 					$"/verbosity:{(string.IsNullOrEmpty (verbosity) ? "normal" : verbosity)}",
 					"/r:True", // restore nuget packages which are used in some test cases
-					"/t:Clean,Build", // clean and then build, in case we left something behind in a shared dir
+					$"/t:{targets}", // clean and then build, in case we left something behind in a shared dir
 					project
 				}.Union (arguments ?? new string [] { }).ToArray (),
 				environmentVariables: environmentVariables,

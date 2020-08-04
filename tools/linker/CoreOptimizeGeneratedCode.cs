@@ -236,6 +236,10 @@ namespace Xamarin.Linker {
 			case Code.Conv_I1:
 			case Code.Conv_I2:
 			case Code.Conv_I4:
+			case Code.Conv_U:
+			case Code.Sizeof:
+			case Code.Ldfld:
+			case Code.Ldflda:
 				return null; // just to not hit the CWL below
 #endif
 			default:
