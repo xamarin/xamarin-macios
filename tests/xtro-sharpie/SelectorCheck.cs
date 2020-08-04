@@ -17,7 +17,7 @@ namespace Extrospection {
 	public class SelectorCheck : BaseVisitor {
 
 		HashSet<string> qualified_selectors = new HashSet<string> ();
-		Dictionary<string, Helpers.ArgumentSemantic> qualified_properties = new Dictionary<string, Helpers.ArgumentSemantic> ();
+		Dictionary<string, List<Tuple<MethodDefinition, Helpers.ArgumentSemantic>>> qualified_properties = new Dictionary<string, List<Tuple<MethodDefinition, Helpers.ArgumentSemantic>>> ();
 
 		// most selectors will be found in [Export] attribtues
 		public override void VisitManagedMethod (MethodDefinition method)
@@ -38,7 +38,9 @@ namespace Extrospection {
 						var argumentSemantic = Helpers.ArgumentSemantic.Assign; // Default
 						if (ca.ConstructorArguments.Count > 1) {
 							argumentSemantic = (Helpers.ArgumentSemantic)ca.ConstructorArguments [1].Value;
-							qualified_properties.Add (methodDefinition, argumentSemantic);
+							if (!qualified_properties.TryGetValue (methodDefinition, out var list))
+								qualified_properties [methodDefinition] = list = new List<Tuple<MethodDefinition, Helpers.ArgumentSemantic>> ();
+							list.Add (new Tuple<MethodDefinition, Helpers.ArgumentSemantic> (method, argumentSemantic));
 						}
 
 						qualified_selectors.Add (methodDefinition);
@@ -66,12 +68,18 @@ namespace Extrospection {
 			var nativeArgumentSemantic = decl.Attributes.ToArgumentSemantic ();
 			var nativeMethodDefinition = decl.QualifiedName;
 
-			bool found = qualified_properties.TryGetValue (nativeMethodDefinition, out var managedArgumentSemantic);
-			if (found && managedArgumentSemantic != nativeArgumentSemantic) {
-				// FIXME: only Copy mistakes are reported now
-				if (managedArgumentSemantic == Helpers.ArgumentSemantic.Copy || nativeArgumentSemantic == Helpers.ArgumentSemantic.Copy) {
-					// FIXME: rule disactivated for now
-					//Log.On (framework).Add ($"!incorrect-argument-semantic! Native '{nativeMethodDefinition}' is declared as ({nativeArgumentSemantic.ToUsableString ().ToLowerInvariant ()}) but mapped to 'ArgumentSemantic.{managedArgumentSemantic.ToUsableString ()}'");
+			if (qualified_properties.TryGetValue (nativeMethodDefinition, out var managedArgumentSemanticList)) {
+				foreach (var entry in managedArgumentSemanticList) {
+					var method = entry.Item1;
+					var managedArgumentSemantic = entry.Item2;
+
+					if (managedArgumentSemantic != nativeArgumentSemantic) {
+						// FIXME: only Copy mistakes are reported now
+						if (managedArgumentSemantic == Helpers.ArgumentSemantic.Copy || nativeArgumentSemantic == Helpers.ArgumentSemantic.Copy) {
+							// FIXME: rule disactivated for now
+							// Log.On (framework).Add ($"!incorrect-argument-semantic! Native '{nativeMethodDefinition}' is declared as ({nativeArgumentSemantic.ToUsableString ().ToLowerInvariant ()}) but mapped to 'ArgumentSemantic.{managedArgumentSemantic.ToUsableString ()}' in '{method}'");
+						}
+					}
 				}
 			}
 		}

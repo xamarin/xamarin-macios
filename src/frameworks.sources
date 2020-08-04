@@ -77,6 +77,7 @@ APPKIT_SOURCES = \
 	AppKit/AppKitSynchronizationContext.cs \
 	AppKit/AppKitThreadAccessException.cs \
 	AppKit/BeginSheet.cs \
+	AppKit/Compat.cs \
 	AppKit/DoubleWrapper.cs \
 	AppKit/EventArgs.cs \
 	AppKit/Functions.cs \
