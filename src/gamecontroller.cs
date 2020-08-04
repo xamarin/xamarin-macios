@@ -170,7 +170,6 @@ namespace GameController {
 	[DisableDefaultCtor] // return nil handle -> only exposed as getter
 	partial interface GCGamepad {
 
-		//[NullAllowed] This seems like it's a breaking change...
 		[Export ("controller", ArgumentSemantic.Assign)]
 		GCController Controller { get; }
 
@@ -476,7 +475,6 @@ namespace GameController {
 		[Export ("rotationRate", ArgumentSemantic.Assign)]
 		Vector3d RotationRate { get; }
 
-
 		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Deprecated, use 'HasAttitude' and 'HasRotationRate' instead.")]
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Deprecated, use 'HasAttitude' and 'HasRotationRate' instead.")]
 		[Deprecated (PlatformName.TvOS, 14, 0, message: "Deprecated, use 'HasAttitude' and 'HasRotationRate' instead.")]
@@ -528,11 +526,7 @@ namespace GameController {
 
 		[TV (14, 0), Mac (11, 0), iOS (14, 0)]
 		[Export ("acceleration")]
-		GCAcceleration Acceleration { get; }
-
-		[TV (14,0), Mac (11,0), iOS (14,0)]
-		[Export ("setAcceleration:")]
-		void SetAcceleration (GCAcceleration acceleration);
+		GCAcceleration Acceleration { get; set; }
 	}
 
 	[Mac (10,11)]
@@ -697,32 +691,36 @@ namespace GameController {
 		//[return: NullAllowed]
 		//CHHapticEngine CreateEngine (string locality);
 
+		[Field ("GCHapticDurationInfinite")]
+		float HapticDurationInfinite { get; }
+	}
+
+	[Static]
+	interface GCHapticsLocality {
+
 		[Field ("GCHapticsLocalityDefault")]
-		NSString LocalityDefault { get; }
+		NSString Default { get; }
 
 		[Field ("GCHapticsLocalityAll")]
-		NSString LocalityAll { get; }
+		NSString All { get; }
 
 		[Field ("GCHapticsLocalityHandles")]
-		NSString LocalityHandles { get; }
+		NSString Handles { get; }
 
 		[Field ("GCHapticsLocalityLeftHandle")]
-		NSString LocalityLeftHandle { get; }
+		NSString LeftHandle { get; }
 
 		[Field ("GCHapticsLocalityRightHandle")]
-		NSString LocalityRightHandle { get; }
+		NSString RightHandle { get; }
 
 		[Field ("GCHapticsLocalityTriggers")]
-		NSString LocalityTriggers { get; }
+		NSString Triggers { get; }
 
 		[Field ("GCHapticsLocalityLeftTrigger")]
-		NSString LocalityLeftTrigger { get; }
+		NSString LeftTrigger { get; }
 
 		[Field ("GCHapticsLocalityRightTrigger")]
-		NSString LocalityRightTrigger { get; }
-
-		[Field ("GCHapticDurationInfinite")]
-		float DurationInfinite { get; }
+		NSString RightTrigger { get; }
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
@@ -763,7 +761,7 @@ namespace GameController {
 		NSString DidConnectNotification { get; }
 
 		[Notification, Field ("GCKeyboardDidDisconnectNotification")]
-		NSString DisconnectNotification { get; }
+		NSString DidDisconnectNotification { get; }
 	}
 
 	delegate void GCKeyboardValueChangedHandler (GCKeyboardInput keyboard, GCControllerButtonInput key, nint keyCode, bool pressed);
@@ -776,11 +774,11 @@ namespace GameController {
 		GCKeyboardValueChangedHandler KeyChangedHandler { get; set; }
 
 		[Export ("anyKeyPressed")]
-		bool AnyKeyPressed { [Bind ("isAnyKeyPressed")] get; }
+		bool IsAnyKeyPressed { [Bind ("isAnyKeyPressed")] get; }
 
 		[Export ("buttonForKeyCode:")]
 		[return: NullAllowed]
-		GCControllerButtonInput Button (nint code);
+		GCControllerButtonInput GetButton (nint code);
 	}
 
 	[Mac (11, 0), iOS (14, 0), TV (14, 0)]
@@ -843,27 +841,21 @@ namespace GameController {
 	interface IGCDevice {}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
-	[BaseType (typeof (NSObject))]
 	[Protocol]
-	[Model]
 	interface GCDevice
 	{
-		[TV (9, 0), Mac (10, 9), iOS (7, 0)]
 		[Abstract]
 		[Export ("handlerQueue", ArgumentSemantic.Strong)]
 		DispatchQueue HandlerQueue { get; set; }
 
-		[TV (9, 0), Mac (10, 9), iOS (7, 0)]
 		[Abstract]
 		[NullAllowed, Export ("vendorName")]
 		string VendorName { get; }
 
-		[TV (13, 0), Mac (10, 15), iOS (13, 0)]
 		[Abstract]
 		[Export ("productCategory")]
 		string ProductCategory { get; }
 
-		[TV (14, 0), Mac (11, 0), iOS (14, 0)]
 		[Abstract]
 		[Export ("physicalInputProfile", ArgumentSemantic.Strong)]
 		GCPhysicalInputProfile PhysicalInputProfile { get; }
@@ -906,7 +898,7 @@ namespace GameController {
 
 		[Export ("objectForKeyedSubscript:")]
 		[return: NullAllowed]
-		GCControllerElement ObjectForKeyedSubscript (string key);
+		GCControllerElement GetObjectForKeyedSubscript (string key);
 
 		[Export ("capture")]
 		GCPhysicalInputProfile Capture ();
@@ -915,7 +907,6 @@ namespace GameController {
 		void SetState (GCPhysicalInputProfile physicalInput);
 	}
 
-	// These constants could go inside of GCPhysicalInputProfile or GCController, thoughts?
 	[TV (14, 0), Mac (11, 0), iOS (14, 0)]
 	[Static]
 	interface GCInputXbox {
@@ -1012,771 +1003,769 @@ namespace GameController {
 		GCControllerButtonInput PaddleButton4 { get; }
 	}
 
-	[Static] // I tried moving GCKey and GCKeyCode to separate files, but ran into
-	// error CS0246: The type or namespace name 'StaticAttribute' could not be found (are you missing a using directive or an assembly reference?)
-	// error CS0246: The type or namespace name 'Static' could not be found (are you missing a using directive or an assembly reference?)
-    [TV (14, 0), Mac (11, 0), iOS (14, 0)]
-    partial interface GCKey
+	[Static]
+	[TV (14, 0), Mac (11, 0), iOS (14, 0)]
+	partial interface GCKey
     {
-        [Field ("GCKeyA")]
-        NSString A { get; }
+		[Field ("GCKeyA")]
+		NSString A { get; }
 
-        [Field ("GCKeyB")]
-        NSString B { get; }
+		[Field ("GCKeyB")]
+		NSString B { get; }
 
-        [Field ("GCKeyC")]
-        NSString C { get; }
+		[Field ("GCKeyC")]
+		NSString C { get; }
 
-        [Field ("GCKeyD")]
-        NSString D { get; }
+		[Field ("GCKeyD")]
+		NSString D { get; }
 
-        [Field ("GCKeyE")]
-        NSString E { get; }
+		[Field ("GCKeyE")]
+		NSString E { get; }
 
-        [Field ("GCKeyF")]
-        NSString F { get; }
+		[Field ("GCKeyF")]
+		NSString F { get; }
 
-        [Field ("GCKeyG")]
-        NSString G { get; }
+		[Field ("GCKeyG")]
+		NSString G { get; }
 
-        [Field ("GCKeyH")]
-        NSString H { get; }
+		[Field ("GCKeyH")]
+		NSString H { get; }
 
-        [Field ("GCKeyI")]
-        NSString I { get; }
+		[Field ("GCKeyI")]
+		NSString I { get; }
 
-        [Field ("GCKeyJ")]
-        NSString J { get; }
+		[Field ("GCKeyJ")]
+		NSString J { get; }
 
-        [Field ("GCKeyK")]
-        NSString K { get; }
+		[Field ("GCKeyK")]
+		NSString K { get; }
 
-        [Field ("GCKeyL")]
-        NSString L { get; }
+		[Field ("GCKeyL")]
+		NSString L { get; }
 
-        [Field ("GCKeyM")]
-        NSString M { get; }
+		[Field ("GCKeyM")]
+		NSString M { get; }
 
-        [Field ("GCKeyN")]
-        NSString N { get; }
+		[Field ("GCKeyN")]
+		NSString N { get; }
 
-        [Field ("GCKeyO")]
-        NSString O { get; }
+		[Field ("GCKeyO")]
+		NSString O { get; }
 
-        [Field ("GCKeyP")]
-        NSString P { get; }
+		[Field ("GCKeyP")]
+		NSString P { get; }
 
-        [Field ("GCKeyQ")]
-        NSString Q { get; }
+		[Field ("GCKeyQ")]
+		NSString Q { get; }
 
-        [Field ("GCKeyR")]
-        NSString R { get; }
+		[Field ("GCKeyR")]
+		NSString R { get; }
 
-        [Field ("GCKeyS")]
-        NSString S { get; }
+		[Field ("GCKeyS")]
+		NSString S { get; }
 
-        [Field ("GCKeyT")]
-        NSString T { get; }
+		[Field ("GCKeyT")]
+		NSString T { get; }
 
-        [Field ("GCKeyU")]
-        NSString U { get; }
+		[Field ("GCKeyU")]
+		NSString U { get; }
 
-        [Field ("GCKeyV")]
-        NSString V { get; }
+		[Field ("GCKeyV")]
+		NSString V { get; }
 
-        [Field ("GCKeyW")]
-        NSString W { get; }
+		[Field ("GCKeyW")]
+		NSString W { get; }
 
-        [Field ("GCKeyX")]
-        NSString X { get; }
+		[Field ("GCKeyX")]
+		NSString X { get; }
 
-        [Field ("GCKeyY")]
-        NSString Y { get; }
+		[Field ("GCKeyY")]
+		NSString Y { get; }
 
-        [Field ("GCKeyZ")]
-        NSString Z { get; }
+		[Field ("GCKeyZ")]
+		NSString Z { get; }
 
-        [Field ("GCKeyOne")]
-        NSString One { get; }
+		[Field ("GCKeyOne")]
+		NSString One { get; }
 
-        [Field ("GCKeyTwo")]
-        NSString Two { get; }
+		[Field ("GCKeyTwo")]
+		NSString Two { get; }
 
-        [Field ("GCKeyThree")]
-        NSString Three { get; }
+		[Field ("GCKeyThree")]
+		NSString Three { get; }
 
-        [Field ("GCKeyFour")]
-        NSString Four { get; }
+		[Field ("GCKeyFour")]
+		NSString Four { get; }
 
-        [Field ("GCKeyFive")]
-        NSString Five { get; }
+		[Field ("GCKeyFive")]
+		NSString Five { get; }
 
-        [Field ("GCKeySix")]
-        NSString Six { get; }
+		[Field ("GCKeySix")]
+		NSString Six { get; }
 
-        [Field ("GCKeySeven")]
-        NSString Seven { get; }
+		[Field ("GCKeySeven")]
+		NSString Seven { get; }
 
-        [Field ("GCKeyEight")]
-        NSString Eight { get; }
+		[Field ("GCKeyEight")]
+		NSString Eight { get; }
 
-        [Field ("GCKeyNine")]
-        NSString Nine { get; }
+		[Field ("GCKeyNine")]
+		NSString Nine { get; }
 
-        [Field ("GCKeyZero")]
-        NSString Zero { get; }
+		[Field ("GCKeyZero")]
+		NSString Zero { get; }
 
-        [Field ("GCKeyReturnOrEnter")]
-        NSString ReturnOrEnter { get; }
+		[Field ("GCKeyReturnOrEnter")]
+		NSString ReturnOrEnter { get; }
 
-        [Field ("GCKeyEscape")]
-        NSString Escape { get; }
+		[Field ("GCKeyEscape")]
+		NSString Escape { get; }
 
-        [Field ("GCKeyDeleteOrBackspace")]
-        NSString DeleteOrBackspace { get; }
+		[Field ("GCKeyDeleteOrBackspace")]
+		NSString DeleteOrBackspace { get; }
 
-        [Field ("GCKeyTab")]
-        NSString Tab { get; }
+		[Field ("GCKeyTab")]
+		NSString Tab { get; }
 
-        [Field ("GCKeySpacebar")]
-        NSString Spacebar { get; }
+		[Field ("GCKeySpacebar")]
+		NSString Spacebar { get; }
 
-        [Field ("GCKeyHyphen")]
-        NSString Hyphen { get; }
+		[Field ("GCKeyHyphen")]
+		NSString Hyphen { get; }
 
-        [Field ("GCKeyEqualSign")]
-        NSString EqualSign { get; }
+		[Field ("GCKeyEqualSign")]
+		NSString EqualSign { get; }
 
-        [Field ("GCKeyOpenBracket")]
-        NSString OpenBracket { get; }
+		[Field ("GCKeyOpenBracket")]
+		NSString OpenBracket { get; }
 
-        [Field ("GCKeyCloseBracket")]
-        NSString CloseBracket { get; }
+		[Field ("GCKeyCloseBracket")]
+		NSString CloseBracket { get; }
 
-        [Field ("GCKeyBackslash")]
-        NSString Backslash { get; }
+		[Field ("GCKeyBackslash")]
+		NSString Backslash { get; }
 
-        [Field ("GCKeyNonUSPound")]
-        NSString NonUSPound { get; }
+		[Field ("GCKeyNonUSPound")]
+		NSString NonUSPound { get; }
 
-        [Field ("GCKeySemicolon")]
-        NSString Semicolon { get; }
+		[Field ("GCKeySemicolon")]
+		NSString Semicolon { get; }
 
-        [Field ("GCKeyQuote")]
-        NSString Quote { get; }
+		[Field ("GCKeyQuote")]
+		NSString Quote { get; }
 
-        [Field ("GCKeyGraveAccentAndTilde")]
-        NSString GraveAccentAndTilde { get; }
+		[Field ("GCKeyGraveAccentAndTilde")]
+		NSString GraveAccentAndTilde { get; }
 
-        [Field ("GCKeyComma")]
-        NSString Comma { get; }
+		[Field ("GCKeyComma")]
+		NSString Comma { get; }
 
-        [Field ("GCKeyPeriod")]
-        NSString Period { get; }
+		[Field ("GCKeyPeriod")]
+		NSString Period { get; }
 
-        [Field ("GCKeySlash")]
-        NSString Slash { get; }
+		[Field ("GCKeySlash")]
+		NSString Slash { get; }
 
-        [Field ("GCKeyCapsLock")]
-        NSString CapsLock { get; }
+		[Field ("GCKeyCapsLock")]
+		NSString CapsLock { get; }
 
-        [Field ("GCKeyF1")]
-        NSString F1 { get; }
+		[Field ("GCKeyF1")]
+		NSString F1 { get; }
 
-        [Field ("GCKeyF2")]
-        NSString F2 { get; }
+		[Field ("GCKeyF2")]
+		NSString F2 { get; }
 
-        [Field ("GCKeyF3")]
-        NSString F3 { get; }
+		[Field ("GCKeyF3")]
+		NSString F3 { get; }
 
-        [Field ("GCKeyF4")]
-        NSString F4 { get; }
+		[Field ("GCKeyF4")]
+		NSString F4 { get; }
 
-        [Field ("GCKeyF5")]
-        NSString F5 { get; }
+		[Field ("GCKeyF5")]
+		NSString F5 { get; }
 
-        [Field ("GCKeyF6")]
-        NSString F6 { get; }
+		[Field ("GCKeyF6")]
+		NSString F6 { get; }
 
-        [Field ("GCKeyF7")]
-        NSString F7 { get; }
+		[Field ("GCKeyF7")]
+		NSString F7 { get; }
 
-        [Field ("GCKeyF8")]
-        NSString F8 { get; }
+		[Field ("GCKeyF8")]
+		NSString F8 { get; }
 
-        [Field ("GCKeyF9")]
-        NSString F9 { get; }
+		[Field ("GCKeyF9")]
+		NSString F9 { get; }
 
-        [Field ("GCKeyF10")]
-        NSString F10 { get; }
+		[Field ("GCKeyF10")]
+		NSString F10 { get; }
 
-        [Field ("GCKeyF11")]
-        NSString F11 { get; }
+		[Field ("GCKeyF11")]
+		NSString F11 { get; }
 
-        [Field ("GCKeyF12")]
-        NSString F12 { get; }
+		[Field ("GCKeyF12")]
+		NSString F12 { get; }
 
-        [Field ("GCKeyPrintScreen")]
-        NSString PrintScreen { get; }
+		[Field ("GCKeyPrintScreen")]
+		NSString PrintScreen { get; }
 
-        [Field ("GCKeyScrollLock")]
-        NSString ScrollLock { get; }
+		[Field ("GCKeyScrollLock")]
+		NSString ScrollLock { get; }
 
-        [Field ("GCKeyPause")]
-        NSString Pause { get; }
+		[Field ("GCKeyPause")]
+		NSString Pause { get; }
 
-        [Field ("GCKeyInsert")]
-        NSString Insert { get; }
+		[Field ("GCKeyInsert")]
+		NSString Insert { get; }
 
-        [Field ("GCKeyHome")]
-        NSString Home { get; }
+		[Field ("GCKeyHome")]
+		NSString Home { get; }
 
-        [Field ("GCKeyPageUp")]
-        NSString PageUp { get; }
+		[Field ("GCKeyPageUp")]
+		NSString PageUp { get; }
 
-        [Field ("GCKeyDeleteForward")]
-        NSString DeleteForward { get; }
+		[Field ("GCKeyDeleteForward")]
+		NSString DeleteForward { get; }
 
-        [Field ("GCKeyEnd")]
-        NSString End { get; }
+		[Field ("GCKeyEnd")]
+		NSString End { get; }
 
-        [Field ("GCKeyPageDown")]
-        NSString PageDown { get; }
+		[Field ("GCKeyPageDown")]
+		NSString PageDown { get; }
 
-        [Field ("GCKeyRightArrow")]
-        NSString RightArrow { get; }
+		[Field ("GCKeyRightArrow")]
+		NSString RightArrow { get; }
 
-        [Field ("GCKeyLeftArrow")]
-        NSString LeftArrow { get; }
+		[Field ("GCKeyLeftArrow")]
+		NSString LeftArrow { get; }
 
-        [Field ("GCKeyDownArrow")]
-        NSString DownArrow { get; }
+		[Field ("GCKeyDownArrow")]
+		NSString DownArrow { get; }
 
-        [Field ("GCKeyUpArrow")]
-        NSString UpArrow { get; }
+		[Field ("GCKeyUpArrow")]
+		NSString UpArrow { get; }
 
-        [Field ("GCKeyKeypadNumLock")]
-        NSString KeypadNumLock { get; }
+		[Field ("GCKeyKeypadNumLock")]
+		NSString KeypadNumLock { get; }
 
-        [Field ("GCKeyKeypadSlash")]
-        NSString KeypadSlash { get; }
+		[Field ("GCKeyKeypadSlash")]
+		NSString KeypadSlash { get; }
 
-        [Field ("GCKeyKeypadAsterisk")]
-        NSString KeypadAsterisk { get; }
+		[Field ("GCKeyKeypadAsterisk")]
+		NSString KeypadAsterisk { get; }
 
-        [Field ("GCKeyKeypadHyphen")]
-        NSString KeypadHyphen { get; }
+		[Field ("GCKeyKeypadHyphen")]
+		NSString KeypadHyphen { get; }
 
-        [Field ("GCKeyKeypadPlus")]
-        NSString KeypadPlus { get; }
+		[Field ("GCKeyKeypadPlus")]
+		NSString KeypadPlus { get; }
 
-        [Field ("GCKeyKeypadEnter")]
-        NSString KeypadEnter { get; }
+		[Field ("GCKeyKeypadEnter")]
+		NSString KeypadEnter { get; }
 
-        [Field ("GCKeyKeypad1")]
-        NSString Keypad1 { get; }
+		[Field ("GCKeyKeypad1")]
+		NSString Keypad1 { get; }
 
-        [Field ("GCKeyKeypad2")]
-        NSString Keypad2 { get; }
+		[Field ("GCKeyKeypad2")]
+		NSString Keypad2 { get; }
 
-        [Field ("GCKeyKeypad3")]
-        NSString Keypad3 { get; }
+		[Field ("GCKeyKeypad3")]
+		NSString Keypad3 { get; }
 
-        [Field ("GCKeyKeypad4")]
-        NSString Keypad4 { get; }
+		[Field ("GCKeyKeypad4")]
+		NSString Keypad4 { get; }
 
-        [Field ("GCKeyKeypad5")]
-        NSString Keypad5 { get; }
+		[Field ("GCKeyKeypad5")]
+		NSString Keypad5 { get; }
 
-        [Field ("GCKeyKeypad6")]
-        NSString Keypad6 { get; }
+		[Field ("GCKeyKeypad6")]
+		NSString Keypad6 { get; }
 
-        [Field ("GCKeyKeypad7")]
-        NSString Keypad7 { get; }
+		[Field ("GCKeyKeypad7")]
+		NSString Keypad7 { get; }
 
-        [Field ("GCKeyKeypad8")]
-        NSString Keypad8 { get; }
+		[Field ("GCKeyKeypad8")]
+		NSString Keypad8 { get; }
 
-        [Field ("GCKeyKeypad9")]
-        NSString Keypad9 { get; }
+		[Field ("GCKeyKeypad9")]
+		NSString Keypad9 { get; }
 
-        [Field ("GCKeyKeypad0")]
-        NSString Keypad0 { get; }
+		[Field ("GCKeyKeypad0")]
+		NSString Keypad0 { get; }
 
-        [Field ("GCKeyKeypadPeriod")]
-        NSString KeypadPeriod { get; }
+		[Field ("GCKeyKeypadPeriod")]
+		NSString KeypadPeriod { get; }
 
-        [Field ("GCKeyKeypadEqualSign")]
-        NSString KeypadEqualSign { get; }
+		[Field ("GCKeyKeypadEqualSign")]
+		NSString KeypadEqualSign { get; }
 
-        [Field ("GCKeyNonUSBackslash")]
-        NSString NonUSBackslash { get; }
+		[Field ("GCKeyNonUSBackslash")]
+		NSString NonUSBackslash { get; }
 
-        [Field ("GCKeyApplication")]
-        NSString Application { get; }
+		[Field ("GCKeyApplication")]
+		NSString Application { get; }
 
-        [Field ("GCKeyPower")]
-        NSString Power { get; }
+		[Field ("GCKeyPower")]
+		NSString Power { get; }
 
-        [Field ("GCKeyInternational1")]
-        NSString International1 { get; }
+		[Field ("GCKeyInternational1")]
+		NSString International1 { get; }
 
-        [Field ("GCKeyInternational2")]
-        NSString International2 { get; }
+		[Field ("GCKeyInternational2")]
+		NSString International2 { get; }
 
-        [Field ("GCKeyInternational3")]
-        NSString International3 { get; }
+		[Field ("GCKeyInternational3")]
+		NSString International3 { get; }
 
-        [Field ("GCKeyInternational4")]
-        NSString International4 { get; }
+		[Field ("GCKeyInternational4")]
+		NSString International4 { get; }
 
-        [Field ("GCKeyInternational5")]
-        NSString International5 { get; }
+		[Field ("GCKeyInternational5")]
+		NSString International5 { get; }
 
-        [Field ("GCKeyInternational6")]
-        NSString International6 { get; }
+		[Field ("GCKeyInternational6")]
+		NSString International6 { get; }
 
-        [Field ("GCKeyInternational7")]
-        NSString International7 { get; }
+		[Field ("GCKeyInternational7")]
+		NSString International7 { get; }
 
-        [Field ("GCKeyInternational8")]
-        NSString International8 { get; }
+		[Field ("GCKeyInternational8")]
+		NSString International8 { get; }
 
-        [Field ("GCKeyInternational9")]
-        NSString International9 { get; }
+		[Field ("GCKeyInternational9")]
+		NSString International9 { get; }
 
-        [Field ("GCKeyLANG1")]
-        NSString LANG1 { get; }
+		[Field ("GCKeyLANG1")]
+		NSString Lang1 { get; }
 
-        [Field ("GCKeyLANG2")]
-        NSString LANG2 { get; }
+		[Field ("GCKeyLANG2")]
+		NSString Lang2 { get; }
 
-        [Field ("GCKeyLANG3")]
-        NSString LANG3 { get; }
+		[Field ("GCKeyLANG3")]
+		NSString Lang3 { get; }
 
-        [Field ("GCKeyLANG4")]
-        NSString LANG4 { get; }
+		[Field ("GCKeyLANG4")]
+		NSString Lang4 { get; }
 
-        [Field ("GCKeyLANG5")]
-        NSString LANG5 { get; }
+		[Field ("GCKeyLANG5")]
+		NSString Lang5 { get; }
 
-        [Field ("GCKeyLANG6")]
-        NSString LANG6 { get; }
+		[Field ("GCKeyLANG6")]
+		NSString Lang6 { get; }
 
-        [Field ("GCKeyLANG7")]
-        NSString LANG7 { get; }
+		[Field ("GCKeyLANG7")]
+		NSString Lang7 { get; }
 
-        [Field ("GCKeyLANG8")]
-        NSString LANG8 { get; }
+		[Field ("GCKeyLANG8")]
+		NSString Lang8 { get; }
 
-        [Field ("GCKeyLANG9")]
-        NSString LANG9 { get; }
+		[Field ("GCKeyLANG9")]
+		NSString Lang9 { get; }
 
-        [Field ("GCKeyLeftControl")]
-        NSString LeftControl { get; }
+		[Field ("GCKeyLeftControl")]
+		NSString LeftControl { get; }
 
-        [Field ("GCKeyLeftShift")]
-        NSString LeftShift { get; }
+		[Field ("GCKeyLeftShift")]
+		NSString LeftShift { get; }
 
-        [Field ("GCKeyLeftAlt")]
-        NSString LeftAlt { get; }
+		[Field ("GCKeyLeftAlt")]
+		NSString LeftAlt { get; }
 
-        [Field ("GCKeyLeftGUI")]
-        NSString LeftGui { get; }
+		[Field ("GCKeyLeftGUI")]
+		NSString LeftGui { get; }
 
-        [Field ("GCKeyRightControl")]
-        NSString RightControl { get; }
+		[Field ("GCKeyRightControl")]
+		NSString RightControl { get; }
 
-        [Field ("GCKeyRightShift")]
-        NSString RightShift { get; }
+		[Field ("GCKeyRightShift")]
+		NSString RightShift { get; }
 
-        [Field ("GCKeyRightAlt")]
-        NSString RightAlt { get; }
+		[Field ("GCKeyRightAlt")]
+		NSString RightAlt { get; }
 
-        [Field ("GCKeyRightGUI")]
-        NSString RightGui { get; }
-    }
+		[Field ("GCKeyRightGUI")]
+		NSString RightGui { get; }
+	}
 
 	[TV (14, 0), Mac (11, 0), iOS (14, 0)]
-    [Static]
-    interface GCKeyCode
-    {
-        [Field ("GCKeyCodeKeyA")]
-        nint KeyA { get; }
+	[Static]
+	interface GCKeyCode
+	{
+		[Field ("GCKeyCodeKeyA")]
+		nint KeyA { get; }
 
-        [Field ("GCKeyCodeKeyB")]
-        nint KeyB { get; }
+		[Field ("GCKeyCodeKeyB")]
+		nint KeyB { get; }
 
-        [Field ("GCKeyCodeKeyC")]
-        nint KeyC { get; }
+		[Field ("GCKeyCodeKeyC")]
+		nint KeyC { get; }
 
-        [Field ("GCKeyCodeKeyD")]
-        nint KeyD { get; }
+		[Field ("GCKeyCodeKeyD")]
+		nint KeyD { get; }
 
-        [Field ("GCKeyCodeKeyE")]
-        nint KeyE { get; }
+		[Field ("GCKeyCodeKeyE")]
+		nint KeyE { get; }
 
-        [Field ("GCKeyCodeKeyF")]
-        nint KeyF { get; }
+		[Field ("GCKeyCodeKeyF")]
+		nint KeyF { get; }
 
-        [Field ("GCKeyCodeKeyG")]
-        nint KeyG { get; }
+		[Field ("GCKeyCodeKeyG")]
+		nint KeyG { get; }
 
-        [Field ("GCKeyCodeKeyH")]
-        nint KeyH { get; }
+		[Field ("GCKeyCodeKeyH")]
+		nint KeyH { get; }
 
-        [Field ("GCKeyCodeKeyI")]
-        nint KeyI { get; }
+		[Field ("GCKeyCodeKeyI")]
+		nint KeyI { get; }
 
-        [Field ("GCKeyCodeKeyJ")]
-        nint KeyJ { get; }
+		[Field ("GCKeyCodeKeyJ")]
+		nint KeyJ { get; }
 
-        [Field ("GCKeyCodeKeyK")]
-        nint KeyK { get; }
+		[Field ("GCKeyCodeKeyK")]
+		nint KeyK { get; }
 
-        [Field ("GCKeyCodeKeyL")]
-        nint KeyL { get; }
+		[Field ("GCKeyCodeKeyL")]
+		nint KeyL { get; }
 
-        [Field ("GCKeyCodeKeyM")]
-        nint KeyM { get; }
+		[Field ("GCKeyCodeKeyM")]
+		nint KeyM { get; }
 
-        [Field ("GCKeyCodeKeyN")]
-        nint KeyN { get; }
+		[Field ("GCKeyCodeKeyN")]
+		nint KeyN { get; }
 
-        [Field ("GCKeyCodeKeyO")]
-        nint KeyO { get; }
+		[Field ("GCKeyCodeKeyO")]
+		nint KeyO { get; }
 
-        [Field ("GCKeyCodeKeyP")]
-        nint KeyP { get; }
+		[Field ("GCKeyCodeKeyP")]
+		nint KeyP { get; }
 
-        [Field ("GCKeyCodeKeyQ")]
-        nint KeyQ { get; }
+		[Field ("GCKeyCodeKeyQ")]
+		nint KeyQ { get; }
 
-        [Field ("GCKeyCodeKeyR")]
-        nint KeyR { get; }
+		[Field ("GCKeyCodeKeyR")]
+		nint KeyR { get; }
 
-        [Field ("GCKeyCodeKeyS")]
-        nint KeyS { get; }
+		[Field ("GCKeyCodeKeyS")]
+		nint KeyS { get; }
 
-        [Field ("GCKeyCodeKeyT")]
-        nint KeyT { get; }
+		[Field ("GCKeyCodeKeyT")]
+		nint KeyT { get; }
 
-        [Field ("GCKeyCodeKeyU")]
-        nint KeyU { get; }
+		[Field ("GCKeyCodeKeyU")]
+		nint KeyU { get; }
 
-        [Field ("GCKeyCodeKeyV")]
-        nint KeyV { get; }
+		[Field ("GCKeyCodeKeyV")]
+		nint KeyV { get; }
 
-        [Field ("GCKeyCodeKeyW")]
-        nint KeyW { get; }
+		[Field ("GCKeyCodeKeyW")]
+		nint KeyW { get; }
 
-        [Field ("GCKeyCodeKeyX")]
-        nint KeyX { get; }
+		[Field ("GCKeyCodeKeyX")]
+		nint KeyX { get; }
 
-        [Field ("GCKeyCodeKeyY")]
-        nint KeyY { get; }
+		[Field ("GCKeyCodeKeyY")]
+		nint KeyY { get; }
 
-        [Field ("GCKeyCodeKeyZ")]
-        nint KeyZ { get; }
+		[Field ("GCKeyCodeKeyZ")]
+		nint KeyZ { get; }
 
-        [Field ("GCKeyCodeOne")]
-        nint One { get; }
+		[Field ("GCKeyCodeOne")]
+		nint One { get; }
 
-        [Field ("GCKeyCodeTwo")]
-        nint Two { get; }
+		[Field ("GCKeyCodeTwo")]
+		nint Two { get; }
 
-        [Field ("GCKeyCodeThree")]
-        nint Three { get; }
+		[Field ("GCKeyCodeThree")]
+		nint Three { get; }
 
-        [Field ("GCKeyCodeFour")]
-        nint Four { get; }
+		[Field ("GCKeyCodeFour")]
+		nint Four { get; }
 
-        [Field ("GCKeyCodeFive")]
-        nint Five { get; }
+		[Field ("GCKeyCodeFive")]
+		nint Five { get; }
 
-        [Field ("GCKeyCodeSix")]
-        nint Six { get; }
+		[Field ("GCKeyCodeSix")]
+		nint Six { get; }
 
-        [Field ("GCKeyCodeSeven")]
-        nint Seven { get; }
+		[Field ("GCKeyCodeSeven")]
+		nint Seven { get; }
 
-        [Field ("GCKeyCodeEight")]
-        nint Eight { get; }
+		[Field ("GCKeyCodeEight")]
+		nint Eight { get; }
 
-        [Field ("GCKeyCodeNine")]
-        nint Nine { get; }
+		[Field ("GCKeyCodeNine")]
+		nint Nine { get; }
 
-        [Field ("GCKeyCodeZero")]
-        nint Zero { get; }
+		[Field ("GCKeyCodeZero")]
+		nint Zero { get; }
 
-        [Field ("GCKeyCodeReturnOrEnter")]
-        nint ReturnOrEnter { get; }
+		[Field ("GCKeyCodeReturnOrEnter")]
+		nint ReturnOrEnter { get; }
 
-        [Field ("GCKeyCodeEscape")]
-        nint Escape { get; }
+		[Field ("GCKeyCodeEscape")]
+		nint Escape { get; }
 
-        [Field ("GCKeyCodeDeleteOrBackspace")]
-        nint DeleteOrBackspace { get; }
+		[Field ("GCKeyCodeDeleteOrBackspace")]
+		nint DeleteOrBackspace { get; }
 
-        [Field ("GCKeyCodeTab")]
-        nint Tab { get; }
+		[Field ("GCKeyCodeTab")]
+		nint Tab { get; }
 
-        [Field ("GCKeyCodeSpacebar")]
-        nint Spacebar { get; }
+		[Field ("GCKeyCodeSpacebar")]
+		nint Spacebar { get; }
 
-        [Field ("GCKeyCodeHyphen")]
-        nint Hyphen { get; }
+		[Field ("GCKeyCodeHyphen")]
+		nint Hyphen { get; }
 
-        [Field ("GCKeyCodeEqualSign")]
-        nint EqualSign { get; }
+		[Field ("GCKeyCodeEqualSign")]
+		nint EqualSign { get; }
 
-        [Field ("GCKeyCodeOpenBracket")]
-        nint OpenBracket { get; }
+		[Field ("GCKeyCodeOpenBracket")]
+		nint OpenBracket { get; }
 
-        [Field ("GCKeyCodeCloseBracket")]
-        nint CloseBracket { get; }
+		[Field ("GCKeyCodeCloseBracket")]
+		nint CloseBracket { get; }
 
-        [Field ("GCKeyCodeBackslash")]
-        nint Backslash { get; }
+		[Field ("GCKeyCodeBackslash")]
+		nint Backslash { get; }
 
-        [Field ("GCKeyCodeNonUSPound")]
-        nint NonUSPound { get; }
+		[Field ("GCKeyCodeNonUSPound")]
+		nint NonUSPound { get; }
 
-        [Field ("GCKeyCodeSemicolon")]
-        nint Semicolon { get; }
+		[Field ("GCKeyCodeSemicolon")]
+		nint Semicolon { get; }
 
-        [Field ("GCKeyCodeQuote")]
-        nint Quote { get; }
+		[Field ("GCKeyCodeQuote")]
+		nint Quote { get; }
 
-        [Field ("GCKeyCodeGraveAccentAndTilde")]
-        nint GraveAccentAndTilde { get; }
+		[Field ("GCKeyCodeGraveAccentAndTilde")]
+		nint GraveAccentAndTilde { get; }
 
-        [Field ("GCKeyCodeComma")]
-        nint Comma { get; }
+		[Field ("GCKeyCodeComma")]
+		nint Comma { get; }
 
-        [Field ("GCKeyCodePeriod")]
-        nint Period { get; }
+		[Field ("GCKeyCodePeriod")]
+		nint Period { get; }
 
-        [Field ("GCKeyCodeSlash")]
-        nint Slash { get; }
+		[Field ("GCKeyCodeSlash")]
+		nint Slash { get; }
 
-        [Field ("GCKeyCodeCapsLock")]
-        nint CapsLock { get; }
+		[Field ("GCKeyCodeCapsLock")]
+		nint CapsLock { get; }
 
-        [Field ("GCKeyCodeF1")]
-        nint F1 { get; }
+		[Field ("GCKeyCodeF1")]
+		nint F1 { get; }
 
-        [Field ("GCKeyCodeF2")]
-        nint F2 { get; }
+		[Field ("GCKeyCodeF2")]
+		nint F2 { get; }
 
-        [Field ("GCKeyCodeF3")]
-        nint F3 { get; }
+		[Field ("GCKeyCodeF3")]
+		nint F3 { get; }
 
-        [Field ("GCKeyCodeF4")]
-        nint F4 { get; }
+		[Field ("GCKeyCodeF4")]
+		nint F4 { get; }
 
-        [Field ("GCKeyCodeF5")]
-        nint F5 { get; }
+		[Field ("GCKeyCodeF5")]
+		nint F5 { get; }
 
-        [Field ("GCKeyCodeF6")]
-        nint F6 { get; }
+		[Field ("GCKeyCodeF6")]
+		nint F6 { get; }
 
-        [Field ("GCKeyCodeF7")]
-        nint F7 { get; }
+		[Field ("GCKeyCodeF7")]
+		nint F7 { get; }
 
-        [Field ("GCKeyCodeF8")]
-        nint F8 { get; }
+		[Field ("GCKeyCodeF8")]
+		nint F8 { get; }
 
-        [Field ("GCKeyCodeF9")]
-        nint F9 { get; }
+		[Field ("GCKeyCodeF9")]
+		nint F9 { get; }
 
-        [Field ("GCKeyCodeF10")]
-        nint F10 { get; }
+		[Field ("GCKeyCodeF10")]
+		nint F10 { get; }
 
-        [Field ("GCKeyCodeF11")]
-        nint F11 { get; }
+		[Field ("GCKeyCodeF11")]
+		nint F11 { get; }
 
-        [Field ("GCKeyCodeF12")]
-        nint F12 { get; }
+		[Field ("GCKeyCodeF12")]
+		nint F12 { get; }
 
-        [Field ("GCKeyCodePrintScreen")]
-        nint PrintScreen { get; }
+		[Field ("GCKeyCodePrintScreen")]
+		nint PrintScreen { get; }
 
-        [Field ("GCKeyCodeScrollLock")]
-        nint ScrollLock { get; }
+		[Field ("GCKeyCodeScrollLock")]
+		nint ScrollLock { get; }
 
-        [Field ("GCKeyCodePause")]
-        nint Pause { get; }
+		[Field ("GCKeyCodePause")]
+		nint Pause { get; }
 
-        [Field ("GCKeyCodeInsert")]
-        nint Insert { get; }
+		[Field ("GCKeyCodeInsert")]
+		nint Insert { get; }
 
-        [Field ("GCKeyCodeHome")]
-        nint Home { get; }
+		[Field ("GCKeyCodeHome")]
+		nint Home { get; }
 
-        [Field ("GCKeyCodePageUp")]
-        nint PageUp { get; }
+		[Field ("GCKeyCodePageUp")]
+		nint PageUp { get; }
 
-        [Field ("GCKeyCodeDeleteForward")]
-        nint DeleteForward { get; }
+		[Field ("GCKeyCodeDeleteForward")]
+		nint DeleteForward { get; }
 
-        [Field ("GCKeyCodeEnd")]
-        nint End { get; }
+		[Field ("GCKeyCodeEnd")]
+		nint End { get; }
 
-        [Field ("GCKeyCodePageDown")]
-        nint PageDown { get; }
+		[Field ("GCKeyCodePageDown")]
+		nint PageDown { get; }
 
-        [Field ("GCKeyCodeRightArrow")]
-        nint RightArrow { get; }
+		[Field ("GCKeyCodeRightArrow")]
+		nint RightArrow { get; }
 
-        [Field ("GCKeyCodeLeftArrow")]
-        nint LeftArrow { get; }
+		[Field ("GCKeyCodeLeftArrow")]
+		nint LeftArrow { get; }
 
-        [Field ("GCKeyCodeDownArrow")]
-        nint DownArrow { get; }
+		[Field ("GCKeyCodeDownArrow")]
+		nint DownArrow { get; }
 
-        [Field ("GCKeyCodeUpArrow")]
-        nint UpArrow { get; }
+		[Field ("GCKeyCodeUpArrow")]
+		nint UpArrow { get; }
 
-        [Field ("GCKeyCodeKeypadNumLock")]
-        nint KeypadNumLock { get; }
+		[Field ("GCKeyCodeKeypadNumLock")]
+		nint KeypadNumLock { get; }
 
-        [Field ("GCKeyCodeKeypadSlash")]
-        nint KeypadSlash { get; }
+		[Field ("GCKeyCodeKeypadSlash")]
+		nint KeypadSlash { get; }
 
-        [Field ("GCKeyCodeKeypadAsterisk")]
-        nint KeypadAsterisk { get; }
+		[Field ("GCKeyCodeKeypadAsterisk")]
+		nint KeypadAsterisk { get; }
 
-        [Field ("GCKeyCodeKeypadHyphen")]
-        nint KeypadHyphen { get; }
+		[Field ("GCKeyCodeKeypadHyphen")]
+		nint KeypadHyphen { get; }
 
-        [Field ("GCKeyCodeKeypadPlus")]
-        nint KeypadPlus { get; }
+		[Field ("GCKeyCodeKeypadPlus")]
+		nint KeypadPlus { get; }
 
-        [Field ("GCKeyCodeKeypadEnter")]
-        nint KeypadEnter { get; }
+		[Field ("GCKeyCodeKeypadEnter")]
+		nint KeypadEnter { get; }
 
-        [Field ("GCKeyCodeKeypad1")]
-        nint Keypad1 { get; }
+		[Field ("GCKeyCodeKeypad1")]
+		nint Keypad1 { get; }
 
-        [Field ("GCKeyCodeKeypad2")]
-        nint Keypad2 { get; }
+		[Field ("GCKeyCodeKeypad2")]
+		nint Keypad2 { get; }
 
-        [Field ("GCKeyCodeKeypad3")]
-        nint Keypad3 { get; }
+		[Field ("GCKeyCodeKeypad3")]
+		nint Keypad3 { get; }
 
-        [Field ("GCKeyCodeKeypad4")]
-        nint Keypad4 { get; }
+		[Field ("GCKeyCodeKeypad4")]
+		nint Keypad4 { get; }
 
-        [Field ("GCKeyCodeKeypad5")]
-        nint Keypad5 { get; }
+		[Field ("GCKeyCodeKeypad5")]
+		nint Keypad5 { get; }
 
-        [Field ("GCKeyCodeKeypad6")]
-        nint Keypad6 { get; }
+		[Field ("GCKeyCodeKeypad6")]
+		nint Keypad6 { get; }
 
-        [Field ("GCKeyCodeKeypad7")]
-        nint Keypad7 { get; }
+		[Field ("GCKeyCodeKeypad7")]
+		nint Keypad7 { get; }
 
-        [Field ("GCKeyCodeKeypad8")]
-        nint Keypad8 { get; }
+		[Field ("GCKeyCodeKeypad8")]
+		nint Keypad8 { get; }
 
-        [Field ("GCKeyCodeKeypad9")]
-        nint Keypad9 { get; }
+		[Field ("GCKeyCodeKeypad9")]
+		nint Keypad9 { get; }
 
-        [Field ("GCKeyCodeKeypad0")]
-        nint Keypad0 { get; }
+		[Field ("GCKeyCodeKeypad0")]
+		nint Keypad0 { get; }
 
-        [Field ("GCKeyCodeKeypadPeriod")]
-        nint KeypadPeriod { get; }
+		[Field ("GCKeyCodeKeypadPeriod")]
+		nint KeypadPeriod { get; }
 
-        [Field ("GCKeyCodeKeypadEqualSign")]
-        nint KeypadEqualSign { get; }
+		[Field ("GCKeyCodeKeypadEqualSign")]
+		nint KeypadEqualSign { get; }
 
-        [Field ("GCKeyCodeNonUSBackslash")]
-        nint NonUSBackslash { get; }
+		[Field ("GCKeyCodeNonUSBackslash")]
+		nint NonUSBackslash { get; }
 
-        [Field ("GCKeyCodeApplication")]
-        nint Application { get; }
+		[Field ("GCKeyCodeApplication")]
+		nint Application { get; }
 
-        [Field ("GCKeyCodePower")]
-        nint Power { get; }
+		[Field ("GCKeyCodePower")]
+		nint Power { get; }
 
-        [Field ("GCKeyCodeInternational1")]
-        nint International1 { get; }
+		[Field ("GCKeyCodeInternational1")]
+		nint International1 { get; }
 
-        [Field ("GCKeyCodeInternational2")]
-        nint International2 { get; }
+		[Field ("GCKeyCodeInternational2")]
+		nint International2 { get; }
 
-        [Field ("GCKeyCodeInternational3")]
-        nint International3 { get; }
+		[Field ("GCKeyCodeInternational3")]
+		nint International3 { get; }
 
-        [Field ("GCKeyCodeInternational4")]
-        nint International4 { get; }
+		[Field ("GCKeyCodeInternational4")]
+		nint International4 { get; }
 
-        [Field ("GCKeyCodeInternational5")]
-        nint International5 { get; }
+		[Field ("GCKeyCodeInternational5")]
+		nint International5 { get; }
 
-        [Field ("GCKeyCodeInternational6")]
-        nint International6 { get; }
+		[Field ("GCKeyCodeInternational6")]
+		nint International6 { get; }
 
-        [Field ("GCKeyCodeInternational7")]
-        nint International7 { get; }
+		[Field ("GCKeyCodeInternational7")]
+		nint International7 { get; }
 
-        [Field ("GCKeyCodeInternational8")]
-        nint International8 { get; }
+		[Field ("GCKeyCodeInternational8")]
+		nint International8 { get; }
 
-        [Field ("GCKeyCodeInternational9")]
-        nint International9 { get; }
+		[Field ("GCKeyCodeInternational9")]
+		nint International9 { get; }
 
-        [Field ("GCKeyCodeLANG1")]
-        nint LANG1 { get; }
+		[Field ("GCKeyCodeLANG1")]
+		nint Lang1 { get; }
 
-        [Field ("GCKeyCodeLANG2")]
-        nint LANG2 { get; }
+		[Field ("GCKeyCodeLANG2")]
+		nint Lang2 { get; }
 
-        [Field ("GCKeyCodeLANG3")]
-        nint LANG3 { get; }
+		[Field ("GCKeyCodeLANG3")]
+		nint Lang3 { get; }
 
-        [Field ("GCKeyCodeLANG4")]
-        nint LANG4 { get; }
+		[Field ("GCKeyCodeLANG4")]
+		nint Lang4 { get; }
 
-        [Field ("GCKeyCodeLANG5")]
-        nint LANG5 { get; }
+		[Field ("GCKeyCodeLANG5")]
+		nint Lang5 { get; }
 
-        [Field ("GCKeyCodeLANG6")]
-        nint LANG6 { get; }
+		[Field ("GCKeyCodeLANG6")]
+		nint Lang6 { get; }
 
-        [Field ("GCKeyCodeLANG7")]
-        nint LANG7 { get; }
+		[Field ("GCKeyCodeLANG7")]
+		nint Lang7 { get; }
 
-        [Field ("GCKeyCodeLANG8")]
-        nint LANG8 { get; }
+		[Field ("GCKeyCodeLANG8")]
+		nint Lang8 { get; }
 
-        [Field ("GCKeyCodeLANG9")]
-        nint LANG9 { get; }
+		[Field ("GCKeyCodeLANG9")]
+		nint Lang9 { get; }
 
-        [Field ("GCKeyCodeLeftControl")]
-        nint LeftControl { get; }
+		[Field ("GCKeyCodeLeftControl")]
+		nint LeftControl { get; }
 
-        [Field ("GCKeyCodeLeftShift")]
-        nint LeftShift { get; }
+		[Field ("GCKeyCodeLeftShift")]
+		nint LeftShift { get; }
 
-        [Field ("GCKeyCodeLeftAlt")]
-        nint LeftAlt { get; }
+		[Field ("GCKeyCodeLeftAlt")]
+		nint LeftAlt { get; }
 
-        [Field ("GCKeyCodeLeftGUI")]
-        nint LeftGui { get; }
+		[Field ("GCKeyCodeLeftGUI")]
+		nint LeftGui { get; }
 
-        [Field ("GCKeyCodeRightControl")]
-        nint RightControl { get; }
+		[Field ("GCKeyCodeRightControl")]
+		nint RightControl { get; }
 
-        [Field ("GCKeyCodeRightShift")]
-        nint RightShift { get; }
+		[Field ("GCKeyCodeRightShift")]
+		nint RightShift { get; }
 
-        [Field ("GCKeyCodeRightAlt")]
-        nint RightAlt { get; }
+		[Field ("GCKeyCodeRightAlt")]
+		nint RightAlt { get; }
 
-        [Field ("GCKeyCodeRightGUI")]
-        nint RightGui { get; }
-    }
+		[Field ("GCKeyCodeRightGUI")]
+		nint RightGui { get; }
+	}
 }
