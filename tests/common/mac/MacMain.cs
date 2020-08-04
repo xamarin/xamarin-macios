@@ -11,7 +11,7 @@ namespace Xamarin.Mac.Tests {
 			var arguments = new List<string> (args);
 			arguments.RemoveAll ((arg) => arg.StartsWith ("-psn_", StringComparison.Ordinal));
 
-			var exit_code = await MonoTouch.NUnit.UI.MacRunner.MainAsync (arguments, typeof (MainClass).Assembly);
+			var exit_code = await MonoTouch.NUnit.UI.MacRunner.MainAsync (arguments, true, _exit, typeof (MainClass).Assembly);
 			_exit (exit_code);
 			return exit_code;
 		}
