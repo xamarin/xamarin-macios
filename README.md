@@ -54,9 +54,9 @@ However, we provide links to older Xamarin.iOS and Mac packages for macOS downgr
 - [Request a new feature](https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions#writing-good-bug-reports-and-feature-requests) on GitHub
 - [Vote on existing feature requests](https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions#before-submitting-an-issue)
 - [Submit bugs to GitHub Issues](https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions)
-- Discuss development and design on [Gitter](https://gitter.im/xamarin/xamarin-macios)
+- Discuss development and design on [Discord](https://discord.gg/Gw6cvsq)
 
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/xamarin/xamarin-macios?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Discord](https://img.shields.io/discord/732297728826277939.svg?label=Join%20chat&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/Gw6cvsq)
 
 ## License
 
