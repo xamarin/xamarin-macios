@@ -1345,7 +1345,7 @@ namespace UIKit {
 		[Obsolete ("Use the 'Default' property instead.")]
 		[Static]
 		[Export ("defaultParagraphStyle", ArgumentSemantic.Copy)]
-		NSParagraphStyle DefaultParagraphStyle { get; set; }
+		NSParagraphStyle DefaultParagraphStyle { get; [NotImplemented] set; }
 #endif
 
 		[iOS (7,0)]
