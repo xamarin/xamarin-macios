@@ -2049,6 +2049,7 @@ TVOS_FRAMEWORKS =           \
 	CloudKit                \
 	CoreAnimation           \
 	CoreGraphics            \
+	CoreHaptics             \
 	CoreImage               \
 	CoreLocation            \
 	CoreSpotlight			\

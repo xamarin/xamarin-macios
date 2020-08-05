@@ -491,6 +491,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "BackgroundTasks", "BackgroundTasks", 13, 0 },
 
 					{ "Accessibility", "Accessibility", 14,0 },
+					{ "CoreHaptics", "CoreHaptics", 14, 0 },
 					{ "LinkPresentation", "LinkPresentation", 14,0 },
 					{ "MLCompute", "MLCompute", new Version (14,0), NotAvailableInSimulator },
 					{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 14,0 },
