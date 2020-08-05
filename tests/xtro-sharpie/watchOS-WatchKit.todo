@@ -1,0 +1,5 @@
+!missing-field! WKApplicationDidBecomeActiveNotification not bound
+!missing-field! WKApplicationDidEnterBackgroundNotification not bound
+!missing-field! WKApplicationDidFinishLaunchingNotification not bound
+!missing-field! WKApplicationWillEnterForegroundNotification not bound
+!missing-field! WKApplicationWillResignActiveNotification not bound

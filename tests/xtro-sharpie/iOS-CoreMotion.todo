@@ -1,0 +1,4 @@
+!missing-selector! CMRecordedRotationRateData::startDate not bound
+!missing-selector! CMRotationRateData::rotationRate not bound
+!missing-type! CMRecordedRotationRateData not bound
+!missing-type! CMRotationRateData not bound
