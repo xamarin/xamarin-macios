@@ -118,7 +118,6 @@ namespace HomeKit {
 		FailedToJoinNetwork = 102,
 	}
 
-
 	// conveniance enum (ObjC uses NSString)
 	[iOS (8,0)]
 	[TV (10,0)]
