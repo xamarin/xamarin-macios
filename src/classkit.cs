@@ -441,6 +441,7 @@ namespace ClassKit {
 		[Export ("kind", ArgumentSemantic.Assign)]
 		CLSProgressReportingCapabilityKind Kind { get; }
 
+		[NullAllowed]
 		[Export ("details")]
 		string Details { get; }
 
