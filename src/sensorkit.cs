@@ -719,9 +719,10 @@ namespace SensorKit {
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		NSObject WeakDelegate { get; set; }
 
+		[Async]
 		[Static]
-		[Export ("requestAuthorizationForSensors:")]
-		void RequestAuthorization (NSSet<NSString> sensors);
+		[Export ("requestAuthorizationForSensors:completion:")]
+		void RequestAuthorization (NSSet<NSString> sensors, Action<NSError> completion);
 	}
 
 	[NoWatch, NoTV, NoMac]

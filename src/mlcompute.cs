@@ -331,12 +331,12 @@ namespace MLCompute {
 		MLCActivationLayer EluLayer { get; }
 
 		[Static]
-		[Export ("eluLayerWithAlpha:")]
-		MLCActivationLayer CreateEluLayer (float alpha);
+		[Export ("eluLayerWithA:")]
+		MLCActivationLayer CreateEluLayer (float a);
 
 		[Static]
-		[Export ("relunLayerWithAlpha:beta:")]
-		MLCActivationLayer CreateRelunLayer (float alpha, float beta);
+		[Export ("relunLayerWithA:b:")]
+		MLCActivationLayer CreateRelunLayer (float a, float b);
 
 		[Static]
 		[Export ("logSigmoidLayer")]
@@ -351,24 +351,24 @@ namespace MLCompute {
 		MLCActivationLayer CeluLayer { get; }
 
 		[Static]
-		[Export ("celuLayerWithAlpha:")]
-		MLCActivationLayer CreateCeluLayer (float alpha);
+		[Export ("celuLayerWithA:")]
+		MLCActivationLayer CreateCeluLayer (float a);
 
 		[Static]
 		[Export ("hardShrinkLayer")]
 		MLCActivationLayer HardShrinkLayer { get; }
 
 		[Static]
-		[Export ("hardShrinkLayerWithLambda:")]
-		MLCActivationLayer CreateHardShrinkLayer (float lambda);
+		[Export ("hardShrinkLayerWithA:")]
+		MLCActivationLayer CreateHardShrinkLayer (float a);
 
 		[Static]
 		[Export ("softShrinkLayer")]
 		MLCActivationLayer SoftShrinkLayer { get; }
 
 		[Static]
-		[Export ("softShrinkLayerWithLambda:")]
-		MLCActivationLayer CreateSoftShrinkLayer (float lambda);
+		[Export ("softShrinkLayerWithA:")]
+		MLCActivationLayer CreateSoftShrinkLayer (float a);
 
 		[Static]
 		[Export ("tanhShrinkLayer")]

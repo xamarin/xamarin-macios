@@ -54,3 +54,4 @@
 !missing-type! NEDNSOverHTTPSSettings not bound
 !missing-type! NEDNSOverTLSSettings not bound
 !missing-type! NEDNSSettingsManager not bound
+!missing-selector! +NEHotspotNetwork::fetchCurrentWithCompletionHandler: not bound

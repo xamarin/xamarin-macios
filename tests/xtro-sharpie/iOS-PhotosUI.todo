@@ -1,0 +1,3 @@
+!missing-enum! PHPickerConfigurationAssetRepresentationMode not bound
+!missing-selector! PHPickerConfiguration::preferredAssetRepresentationMode not bound
+!missing-selector! PHPickerConfiguration::setPreferredAssetRepresentationMode: not bound

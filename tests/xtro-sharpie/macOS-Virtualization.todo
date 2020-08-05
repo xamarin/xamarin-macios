@@ -131,3 +131,5 @@
 !missing-type! VZVirtioTraditionalMemoryBalloonDeviceConfiguration not bound
 !missing-type! VZVirtualMachine not bound
 !missing-type! VZVirtualMachineConfiguration not bound
+!missing-selector! VZDiskImageStorageDeviceAttachment::isReadOnly not bound
+!missing-selector! VZDiskImageStorageDeviceAttachment::URL not bound

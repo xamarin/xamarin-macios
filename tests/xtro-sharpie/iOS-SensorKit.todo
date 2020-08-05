@@ -1,0 +1,4 @@
+!missing-enum! SRAuthorizationStatus not bound
+!missing-field! SRSensorRotationRate not bound
+!missing-selector! SRSensorReader::authorizationStatus not bound
+!unknown-field! SRSensorGyroscope bound
