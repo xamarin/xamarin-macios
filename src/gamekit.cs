@@ -1992,7 +1992,7 @@ namespace GameKit {
 		[iOS (14,0)][Mac (11,0)][Watch (7,0)][TV (14,0)]
 		[Export ("endMatchInTurnWithMatchData:leaderboardScores:achievements:completionHandler:")]
 		[Async]
-		void EndMatchInTurn (NSData matchData, GKLeaderboardScore[] scores, NSObject[] achievements, Action<NSError> completionHandler);
+		void EndMatchInTurn (NSData matchData, GKLeaderboardScore[] scores, NSObject[] achievements, [NullAllowed] Action<NSError> completionHandler);
 	}
 
 	[NoWatch]
