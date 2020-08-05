@@ -358,12 +358,12 @@ namespace Contacts {
 		NSString ContactPropertyAttribute { get; }
 
 		[Static]
-		[iOS (14, 0), Mac (10, 16), Watch (7, 0)]
+		[iOS (14, 0), Mac (11, 0), Watch (7, 0)]
 		[Export ("descriptorForRequiredKeysForDelimiter")]
 		ICNKeyDescriptor RequiredKeysForDelimiter { get; }
 
 		[Static]
-		[iOS (14, 0), Mac (10, 16), Watch (7, 0)]
+		[iOS (14, 0), Mac (11, 0), Watch (7, 0)]
 		[Export ("descriptorForRequiredKeysForNameOrder")]
 		ICNKeyDescriptor RequiredKeysForNameOrder { get; }
 	}
@@ -1258,11 +1258,11 @@ namespace Contacts {
 		[Field ("CNLabelContactRelationSonInLawOrBrotherInLaw")]
 		NSString SonInLawOrBrotherInLaw { get; }
 
-		[iOS (14, 0), Mac (10, 16), Watch (7, 0)]
+		[iOS (14, 0), Mac (11, 0), Watch (7, 0)]
 		[Field ("CNLabelContactRelationGranddaughterOrNiece")]
 		NSString GranddaughterOrNiece { get; }
 
-		[iOS (14, 0), Mac (10, 16), Watch (7, 0)]
+		[iOS (14, 0), Mac (11, 0), Watch (7, 0)]
 		[Field ("CNLabelContactRelationGrandsonOrNephew")]
 		NSString GrandsonOrNephew { get; }
 
