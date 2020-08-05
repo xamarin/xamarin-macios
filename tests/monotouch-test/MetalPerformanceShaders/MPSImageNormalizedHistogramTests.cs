@@ -23,7 +23,7 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 	public class MPSImageNormalizedHistogramTests {
 		IMTLDevice device;
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Metal ()
 		{
 			TestRuntime.AssertDevice ();

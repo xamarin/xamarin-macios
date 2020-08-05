@@ -15,7 +15,7 @@ namespace MonoTouchFixtures.Network {
 	public class NWProtocolTcpOptionsTest {
 		NWProtocolTcpOptions options;
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Init () => TestRuntime.AssertXcodeVersion (11, 0);
 
 		[SetUp]

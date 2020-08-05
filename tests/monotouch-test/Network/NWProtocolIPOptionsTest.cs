@@ -35,7 +35,7 @@ namespace MonoTouchFixtures.Network {
 			}
 		}
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Init ()
 		{
 			TestRuntime.AssertXcodeVersion (11, 0);
@@ -59,7 +59,7 @@ namespace MonoTouchFixtures.Network {
 			}
 		}
 
-		[TestFixtureTearDown]
+		[OneTimeTearDown]
 		public void Dispose()
 		{
 			connection?.Dispose ();

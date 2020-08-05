@@ -25,7 +25,7 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 		IMTLDevice device;
 		NSArray<MPSImage> cache;
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Metal ()
 		{
 			TestRuntime.AssertDevice ();

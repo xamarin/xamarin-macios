@@ -586,10 +586,10 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				} catch (RuntimeException mex) {
 					Assert.AreEqual (8029, mex.Code, "Exception code (A)");
 					var failure = mex.ToString ();
-					Assert.That (failure, Is.StringContaining ("Failed to marshal the Objective-C object"), "Failed to marshal (A)");
-					Assert.That (failure, Is.StringContaining ("Additional information:"), "Additional information: (A)");
-					Assert.That (failure, Is.StringContaining ("Selector: doSomethingElse:"), "Selector (A)");
-					Assert.That (failure, Is.StringContaining ("DoSomethingElse"), "DoSomethingElse (A)");
+					Assert.That (failure, Does.Contain ("Failed to marshal the Objective-C object"), "Failed to marshal (A)");
+					Assert.That (failure, Does.Contain ("Additional information:"), "Additional information: (A)");
+					Assert.That (failure, Does.Contain ("Selector: doSomethingElse:"), "Selector (A)");
+					Assert.That (failure, Does.Contain ("DoSomethingElse"), "DoSomethingElse (A)");
 				}
 
 				try {
@@ -598,10 +598,10 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				} catch (RuntimeException mex) {
 					Assert.That (mex.Code, Is.EqualTo (8034).Or.EqualTo (8027), "Exception code (B)");
 					var failure = mex.ToString ();
-					Assert.That (failure, Is.StringContaining ("Failed to marshal the Objective-C object"), "Failed to marshal (B)");
-					Assert.That (failure, Is.StringContaining ("Additional information:"), "Additional information: (B)");
-					Assert.That (failure, Is.StringContaining ("Selector: doSomething:"), "Selector (B)");
-					Assert.That (failure, Is.StringContaining ("DoSomething"), "DoSomething (B)");
+					Assert.That (failure, Does.Contain ("Failed to marshal the Objective-C object"), "Failed to marshal (B)");
+					Assert.That (failure, Does.Contain ("Additional information:"), "Additional information: (B)");
+					Assert.That (failure, Does.Contain ("Selector: doSomething:"), "Selector (B)");
+					Assert.That (failure, Does.Contain ("DoSomething"), "DoSomething (B)");
 				}
 			} finally {
 				Messaging.void_objc_msgSend (handle, Selector.GetHandle ("release"));

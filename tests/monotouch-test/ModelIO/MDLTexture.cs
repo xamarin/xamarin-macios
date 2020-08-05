@@ -25,7 +25,7 @@ namespace MonoTouchFixtures.ModelIO {
 	// we want the test to be available if we use the linker
 	[Preserve (AllMembers = true)]
 	public class MDLTextureTest {
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Setup ()
 		{
 			TestRuntime.AssertXcodeVersion (7, 0);
@@ -78,11 +78,11 @@ namespace MonoTouchFixtures.ModelIO {
 						Assert.IsNull (txt, "Is Null"); // this is probably because the arguments to CreateIrradianceTextureCube are invalid, but I haven't been able to figure out valid values.
 					} else {
 						Assert.IsNotNull (txt, "Ain't Null");
-						Assert.AreEqual (4, txt.ChannelCount, "ChannelCount");
+						Assert.AreEqual ((nuint) 4, txt.ChannelCount, "ChannelCount");
 						Assert.AreEqual (MDLTextureChannelEncoding.UInt8, txt.ChannelEncoding, "ChannelEncoding");
 						Assert.AreEqual (new Vector2i (3, 18), txt.Dimensions, "Dimensions");
-						Assert.AreEqual (2, txt.MipLevelCount, "MipLevelCount");
-						Assert.AreEqual (12, txt.RowStride, "RowStride");
+						Assert.AreEqual ((nuint) 2, txt.MipLevelCount, "MipLevelCount");
+						Assert.AreEqual ((nint) 12, txt.RowStride, "RowStride");
 					}
 				}
 			}
@@ -99,11 +99,11 @@ namespace MonoTouchFixtures.ModelIO {
 						Assert.IsNull (txt, "Is Null"); // this is probably because the arguments to CreateIrradianceTextureCube are invalid, but I haven't been able to figure out valid values.
 					} else {
 						Assert.IsNotNull (txt, "Ain't Null");
-						Assert.AreEqual (4, txt.ChannelCount, "ChannelCount");
+						Assert.AreEqual ((nuint) 4, txt.ChannelCount, "ChannelCount");
 						Assert.AreEqual (MDLTextureChannelEncoding.UInt8, txt.ChannelEncoding, "ChannelEncoding");
 						Assert.AreEqual (new Vector2i (3, 18), txt.Dimensions, "Dimensions");
-						Assert.AreEqual (1, txt.MipLevelCount, "MipLevelCount");
-						Assert.AreEqual (12, txt.RowStride, "RowStride");
+						Assert.AreEqual ((nuint) 1, txt.MipLevelCount, "MipLevelCount");
+						Assert.AreEqual ((nint) 12, txt.RowStride, "RowStride");
 					}
 				}
 			}

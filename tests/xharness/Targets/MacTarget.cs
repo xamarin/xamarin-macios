@@ -116,18 +116,21 @@ namespace Xharness.Targets
 		{
 			var fn = Path.GetFileName (include);
 
-			fixed_include = include;
 			switch (fn) {
-			case "GuiUnit_NET_4_5.csproj":
-				if (Flavor == MacFlavors.Full || Flavor == MacFlavors.System)
-					return false;
-				fixed_include = include.Replace (fn, "GuiUnit_xammac_mobile.csproj");
-				return true;
-			case "GuiUnit_xammac_mobile.csproj":
-				if (Flavor == MacFlavors.Modern)
-					return false;
-				fixed_include = include.Replace (fn, "GuiUnit_NET_4_5.csproj");
-				return true;
+			case "Touch.Client-macOS-mobile.csproj":
+				switch (Flavor) {
+				case MacFlavors.Full:
+				case MacFlavors.System:
+					var dir = Path.GetDirectoryName (include);
+					var parentDir = Path.GetDirectoryName (dir);
+					dir = Path.Combine (parentDir, "full");
+					fixed_include = Path.Combine (dir, fn.Replace ("-mobile", "-full"));
+					return true;
+				case MacFlavors.Modern:
+				default:
+					break;
+				}
+				break;
 			}
 
 			return base.FixProjectReference (include, subdir, suffix, out fixed_include);

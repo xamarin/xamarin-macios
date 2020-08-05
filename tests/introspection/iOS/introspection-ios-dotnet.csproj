@@ -18,7 +18,7 @@
   <ItemGroup>
     <PackageReference Include="NUnitLite" Version="3.12.0" />
     <PackageReference Include="MonoTouch.Dialog" Version="2.0.0-pre1" />
-    <ProjectReference Include="..\..\..\external\Touch.Unit\Touch.Client\Touch.Client-iOS.dotnet.csproj" />
+    <ProjectReference Include="..\..\..\external\Touch.Unit\Touch.Client\dotnet\iOS\Touch.Client-iOS.dotnet.csproj" />
     <!-- MonoTouch.Dialog references System.Json, which isn't shipped with .NET5, so reference the NuGet instead -->
     <PackageReference Include="System.Json" Version="4.7.1" />
     <!-- The linker resolves some assembly references too eagerly, and fails when it can't find them, so work around this by referencing the missing assemblies-->

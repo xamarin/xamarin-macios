@@ -14,6 +14,7 @@
     <NoWarn>168,169,219,414,612,618,649,672</NoWarn>
     <TargetFrameworkIdentifier>Xamarin.iOS</TargetFrameworkIdentifier>
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)-unified</IntermediateOutputPath>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <PropertyGroup>
     <MonoNativeMode Condition="'$(TargetFrameworkIdentifier)|$(Configuration)|$(Platform)' == 'Xamarin.iOS|Debug|iPhoneSimulator'">MONO_NATIVE_SYMLINK</MonoNativeMode>
@@ -162,7 +163,10 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.iOS" />
-    <Reference Include="MonoTouch.NUnitLite" />
+    <ProjectReference Include="..\..\..\external\Touch.Unit\Touch.Client\iOS\Touch.Client-iOS.csproj">
+      <Project>{F611ED96-54B5-4975-99BB-12F50AF95936}</Project>
+      <Name>Touch.Client-iOS</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />

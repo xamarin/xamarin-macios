@@ -22,7 +22,7 @@ namespace MonoTouchFixtures.Network {
 		NWProtocolStack stack;
 		List<NWProtocolOptions> options;
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Init ()
 		{
 			TestRuntime.AssertXcodeVersion (10, 0);
@@ -46,7 +46,7 @@ namespace MonoTouchFixtures.Network {
 			}
 		}
 
-		[TestFixtureTearDown]
+		[OneTimeTearDown]
 		public void Dispose()
 		{
 			connection?.Dispose ();

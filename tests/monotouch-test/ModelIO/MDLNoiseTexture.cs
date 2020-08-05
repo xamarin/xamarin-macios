@@ -24,7 +24,7 @@ namespace MonoTouchFixtures.ModelIO
 	[Preserve (AllMembers = true)]
 	public class MDLNoiseTextureTest
 	{
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Setup ()
 		{
 			TestRuntime.AssertXcodeVersion (8, 2);

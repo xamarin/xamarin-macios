@@ -95,7 +95,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 				var data = dummy.AsData (CFPropertyListFormat.XmlFormat1);
 				Assert.IsNull (data.Error, "Error");
 				Assert.IsNotNull (data.Data, "Data");
-				Assert.That (new StreamReader (data.Data.AsStream ()).ReadToEnd (), Is.StringStarting ("<?xml"), "String Value");
+				Assert.That (new StreamReader (data.Data.AsStream ()).ReadToEnd (), Does.StartWith ("<?xml"), "String Value");
 			}
 		}
 

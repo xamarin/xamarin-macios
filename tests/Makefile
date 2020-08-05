@@ -190,12 +190,6 @@ Makefile.inc: xharness/xharness.exe
 
 -include Makefile.inc
 
-$(GUI_UNIT_PATH)/bin/net_4_5/GuiUnit.exe:
-	TargetFrameworkFallbackSearchPaths=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks MSBuildExtensionsPathFallbackPathsOverride=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current $(SYSTEM_XIBUILD) -- $(XBUILD_VERBOSITY) $(GUI_UNIT_PATH)/src/framework/GuiUnit_NET_4_5.csproj
-
-$(GUI_UNIT_PATH)/bin/xammac_mobile/GuiUnit.exe:
-	TargetFrameworkFallbackSearchPaths=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks MSBuildExtensionsPathFallbackPathsOverride=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current $(SYSTEM_XIBUILD) -- $(XBUILD_VERBOSITY) $(GUI_UNIT_PATH)/src/framework/GuiUnit_xammac_mobile.csproj
-
 Makefile-mac.inc: xharness/xharness.exe
 	$(Q_GEN) $(SYSTEM_MONO) --debug $(CURDIR)/$< $(XHARNESS_VERBOSITY) --configure  --autoconf --mac --rootdir $(CURDIR)
 

@@ -46,7 +46,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		HttpListener listener;
 		int port;
 		Thread listener_thread;
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Setup ()
 		{
 			var listening = new ManualResetEvent (false);
@@ -101,7 +101,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 			listening.WaitOne ();
 		}
 
-		[TestFixtureTearDown]
+		[OneTimeTearDown]
 		public void TearDown ()
 		{
 			listener.Stop ();

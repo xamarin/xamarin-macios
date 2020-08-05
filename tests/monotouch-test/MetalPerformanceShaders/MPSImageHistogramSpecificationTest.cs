@@ -18,7 +18,7 @@ namespace MonoTouchFixtures.MetalPerformanceShaders
 	{
 		IMTLDevice device;
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Metal ()
 		{
 #if !MONOMAC
