@@ -15,11 +15,12 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 using OpenTK;
-//#using CoreHaptics; // need CoreHaptics update for TV 14.0 inclusion
 #if MONOMAC
 using AppKit;
 using UIViewController = AppKit.NSViewController;
+using CHHapticEngine = Foundation.NSObject;
 #else
+using CoreHaptics;
 using UIKit;
 #endif
 
@@ -685,16 +686,16 @@ namespace GameController {
 		[Export ("supportedLocalities", ArgumentSemantic.Strong)]
 		NSSet<NSString> SupportedLocalities { get; }
 
-		// Dependency on Xcode 12 CoreHaptics bindings
-		// -(CHHapticEngine * _Nullable)createEngineWithLocality:(GCHapticsLocality _Nonnull)locality;
-		//[Export ("createEngineWithLocality:")]
-		//[return: NullAllowed]
-		//CHHapticEngine CreateEngine (string locality);
+		[NoMac] // TODO: Remove [NoMac] when CoreHaptics can compile on Mac OSX: https://github.com/xamarin/maccore/issues/2261
+		[Export ("createEngineWithLocality:")]
+		[return: NullAllowed]
+		CHHapticEngine CreateEngine (string locality);
 
 		[Field ("GCHapticDurationInfinite")]
 		float HapticDurationInfinite { get; }
 	}
 
+	[TV (14,0), Mac (11,0), iOS (14,0)]
 	[Static]
 	interface GCHapticsLocality {
 
@@ -1006,7 +1007,7 @@ namespace GameController {
 	[Static]
 	[TV (14, 0), Mac (11, 0), iOS (14, 0)]
 	partial interface GCKey
-    {
+	{
 		[Field ("GCKeyA")]
 		NSString A { get; }
 
