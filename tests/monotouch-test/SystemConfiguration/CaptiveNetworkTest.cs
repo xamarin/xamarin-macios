@@ -14,7 +14,6 @@ using System.IO;
 using Foundation;
 using ObjCRuntime;
 using SystemConfiguration;
-using System.Runtime.InteropServices;
 #if !MONOMAC
 using UIKit;
 #endif
@@ -83,9 +82,6 @@ namespace MonoTouchFixtures.SystemConfiguration {
 #endif
 		}
 
-		[DllImport (Constants.SystemConfigurationLibrary)]
-		extern static IntPtr /* CFArrayRef __nullable */ CNCopySupportedInterfaces ();
-
 		[Test]
 		public void TryGetSupportedInterfaces ()
 		{
@@ -93,17 +89,8 @@ namespace MonoTouchFixtures.SystemConfiguration {
 #if __TVOS__
 			Assert.Throws<NotSupportedException> (() => CaptiveNetwork.TryGetSupportedInterfaces (out var ifaces));
 #else
-
 			status = CaptiveNetwork.TryGetSupportedInterfaces (out var ifaces);
 			Assert.AreEqual (StatusCode.OK, status, "Status");
-
-			IntPtr array = CNCopySupportedInterfaces ();
-			if (array == IntPtr.Zero) {
-				Assert.IsNull (ifaces, "Null Interfaces");
-			} else {
-				var supportedInterfaces = NSArray.StringArrayFromHandle (array);
-				Assert.AreEqual (supportedInterfaces.Length, ifaces.Length, "Not null interfaces");
-			}
 #endif // __TVOS__
 		}
 #endif
