@@ -1,1 +1,0 @@
-!missing-null-allowed! 'System.String ClassKit.CLSProgressReportingCapability::get_Details()' is missing an [NullAllowed] on return type
