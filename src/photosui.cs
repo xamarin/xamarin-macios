@@ -519,6 +519,9 @@ namespace PhotosUI {
 	[Advice ("This type should not be subclassed.")]
 	interface PHPickerConfiguration : NSCopying
 	{
+		[Export ("preferredAssetRepresentationMode", ArgumentSemantic.Assign)]
+		PHPickerConfigurationAssetRepresentationMode PreferredAssetRepresentationMode { get; set; }
+
 		[Export ("selectionLimit")]
 		nint SelectionLimit { get; set; }
 
