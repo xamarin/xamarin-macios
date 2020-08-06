@@ -177,6 +177,7 @@ namespace Xamarin.Tests {
 		}
 
 		[TestCase ("iOS")]
+		[TestCase ("macOS")]
 		public void BuildBindingsTest (string platform)
 		{
 			var assemblyName = "bindings-test";
