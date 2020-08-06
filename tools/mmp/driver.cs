@@ -709,12 +709,6 @@ namespace Xamarin.Bundler {
 		}
 
 		[DllImport (Constants.libSystemLibrary)]
-		static extern int unlink (string pathname);
-
-		[DllImport (Constants.libSystemLibrary)]
-		static extern int symlink (string path1, string path2);
-
-		[DllImport (Constants.libSystemLibrary)]
 		static extern IntPtr realpath (string path, IntPtr buffer);
 
 		static string GetRealPath (string path)
