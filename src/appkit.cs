@@ -2260,6 +2260,11 @@ namespace AppKit {
 		[Export ("imageHugsTitle")]
 		bool ImageHugsTitle { get; set; }
 
+		[NullAllowed]
+		[Mac (11,0)]
+		[Export ("symbolConfiguration", ArgumentSemantic.Copy)]
+		NSImageSymbolConfiguration SymbolConfiguration { get; set; }
+
 		[Export ("imageScaling")]
 		NSImageScale ImageScaling { get; set; }
 
@@ -6511,6 +6516,10 @@ namespace AppKit {
 		[Static]
 		[Export ("preferredFontForTextStyle:options:")]
 		NSFont GetPreferredFont (string textStyle, NSDictionary options);
+
+		[Mac (11,0)]
+		[Export ("fontWithSize:")]
+		NSFont GetFont (nfloat fontSize);
 	}
 
 	interface NSFontCollectionChangedEventArgs {
@@ -10149,6 +10158,11 @@ namespace AppKit {
 		[Mac (10, 14)]
 		[NullAllowed, Export ("contentTintColor", ArgumentSemantic.Copy)]
 		NSColor ContentTintColor { get; set; }
+
+		[NullAllowed]
+		[Mac (11,0)]
+		[Export ("symbolConfiguration", ArgumentSemantic.Copy)]
+		NSImageSymbolConfiguration SymbolConfiguration { get; set; }
 	}
 
 	[BaseType (typeof (NSControl), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (NSMatrixDelegate)})]
@@ -10909,6 +10923,10 @@ namespace AppKit {
 		[Export ("headerLevel")]
 		nint HeaderLevel { get; [NotImplemented] set; }
 
+		[Mac (11,0)]
+		[Export ("lineBreakStrategy")]
+		NSLineBreakStrategy LineBreakStrategy { get; [NotImplemented] set; }
+
 		// @property (readonly) BOOL allowsDefaultTighteningForTruncation __attribute__((availability(macosx, introduced=10.11)));
 		[Mac (10,11)]
 		[Export ("allowsDefaultTighteningForTruncation")]
@@ -10950,6 +10968,11 @@ namespace AppKit {
 		[Export ("headerLevel")]
 		[Override]
 		nint HeaderLevel { get; set; }
+
+		[Mac (11,0)]
+		[Override]
+		[Export ("lineBreakStrategy", ArgumentSemantic.Assign)]
+		NSLineBreakStrategy LineBreakStrategy { get; set; }
 
 		[Export ("lineSpacing")]
 		[Override]
@@ -14997,6 +15020,10 @@ namespace AppKit {
 		[Field ("NSKernAttributeName")]
 		NSString KerningAdjustment { get; }
 
+		[Mac (11,0)]
+		[Field ("NSTrackingAttributeName")]
+		NSString Tracking { get; }
+
 		[Field ("NSLinkAttributeName")]
 		NSString Link { get; }
 
@@ -18168,6 +18195,10 @@ namespace AppKit {
 		[Mac (10,11)]
 		[Export ("allowsDefaultTighteningForTruncation")]
 		bool AllowsDefaultTighteningForTruncation { get; set; }
+
+		[Mac (10,15)]
+		[Export ("lineBreakStrategy", ArgumentSemantic.Assign)]
+		NSLineBreakStrategy LineBreakStrategy { get; set; }
 
 		[Mac (10,12)]
 		[Static]
@@ -28020,7 +28051,7 @@ namespace AppKit {
 	[Mac (11,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface NSImageSymbolConfiguration
+	interface NSImageSymbolConfiguration : NSCopying
 	{
 		[Static]
 		[Export ("configurationWithPointSize:weight:scale:")]
@@ -28034,9 +28065,12 @@ namespace AppKit {
 		[Export ("configurationWithTextStyle:scale:")]
 		NSImageSymbolConfiguration Create (string style, NSImageSymbolScale scale);
 
-		[NoiOS]
 		[Static]
 		[Export ("configurationWithTextStyle:")]
 		NSImageSymbolConfiguration Create (string style);
+
+		[Static]
+		[Export ("configurationWithScale:")]
+		NSImageSymbolConfiguration Create (NSImageSymbolScale scale);
 	}
 }
