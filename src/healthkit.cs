@@ -41,6 +41,7 @@ namespace HealthKit {
 		UserCanceled,
 		AnotherWorkoutSessionStarted,
 		UserExitedWorkoutSession,
+		NoData,
 	}
 
 	[iOS (10,0)]
