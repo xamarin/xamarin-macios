@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,8 +17,8 @@ namespace Xharness.Jenkins.TestTasks
 		public bool ProduceHtmlReport = true;
 		public bool InProcess;
 
-		public NUnitExecuteTask (BuildToolTask build_task, IProcessManager processManager)
-			: base (build_task, processManager)
+		public NUnitExecuteTask (Jenkins jenkins, BuildToolTask build_task, IProcessManager processManager)
+			: base (jenkins, build_task, processManager)
 		{
 		}
 
@@ -73,15 +71,15 @@ namespace Xharness.Jenkins.TestTasks
 			}
 
 			if (is_packageref) {
-				TestExecutable = Path.Combine (Harness.RootDirectory, "..", "tools", $"nunit3-console-{nunit_version}");
+				TestExecutable = Path.Combine (RootDirectory, "..", "tools", $"nunit3-console-{nunit_version}");
 				if (!File.Exists (TestExecutable))
 					throw new FileNotFoundException ($"The helper script to execute the unit tests does not exist: {TestExecutable}");
 				WorkingDirectory = Path.GetDirectoryName (TestProject.Path);
 			} else if (nunit_version [0] == '2') {
-				TestExecutable = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.Runners." + nunit_version, "tools", "nunit-console.exe");
+				TestExecutable = Path.Combine (RootDirectory, "..", "packages", "NUnit.Runners." + nunit_version, "tools", "nunit-console.exe");
 				WorkingDirectory = Path.Combine (Path.GetDirectoryName (TestExecutable), "lib");
 			} else {
-				TestExecutable = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.ConsoleRunner." + nunit_version, "tools", "nunit3-console.exe");
+				TestExecutable = Path.Combine (RootDirectory, "..", "packages", "NUnit.ConsoleRunner." + nunit_version, "tools", "nunit3-console.exe");
 				WorkingDirectory = Path.GetDirectoryName (TestLibrary);
 			}
 			TestExecutable = Path.GetFullPath (TestExecutable);
@@ -110,7 +108,7 @@ namespace Xharness.Jenkins.TestTasks
 			}
 		}
 
-		protected override async Task RunTestAsync ()
+		public override async Task RunTestAsync ()
 		{
 			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
 				var xmlLog = Logs.CreateFile ($"log-{Timestamp}.xml", LogType.XmlLog.ToString ());
@@ -132,12 +130,12 @@ namespace Xharness.Jenkins.TestTasks
 					args.Add ("-labels");
 				}
 
-				await ExecuteProcessAsync (log, Harness.XIBuildPath, args);
+				await ExecuteProcessAsync (log, Jenkins.Harness.XIBuildPath, args);
 
 				if (ProduceHtmlReport) {
 					try {
 						var output = Logs.Create ($"Log-{Timestamp}.html", "HTML log");
-						using (var srt = new StringReader (File.ReadAllText (Path.Combine (Harness.RootDirectory, "HtmlTransform.xslt")))) {
+						using (var srt = new StringReader (File.ReadAllText (Path.Combine (RootDirectory, "HtmlTransform.xslt")))) {
 							using (var sri = File.OpenRead (xmlLog)) {
 								using (var xrt = XmlReader.Create (srt)) {
 									using (var xri = XmlReader.Create (sri)) {

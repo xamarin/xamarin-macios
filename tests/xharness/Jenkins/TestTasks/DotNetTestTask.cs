@@ -6,13 +6,13 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 
 namespace Xharness.Jenkins.TestTasks {
 	class DotNetTestTask : RunTestTask {
-		public DotNetTestTask (DotNetBuildTask build_task, IProcessManager processManager)
-			: base (build_task, processManager)
+		public DotNetTestTask (Jenkins jenkins, DotNetBuildTask build_task, IProcessManager processManager)
+			: base (jenkins, build_task, processManager)
 		{
 			DotNetBuildTask.SetDotNetEnvironmentVariables (Environment);
 		}
 
-		protected override async Task RunTestAsync ()
+		public override async Task RunTestAsync ()
 		{
 			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
 				var trx = Logs.Create ($"results-{Timestamp}.trx", LogType.TrxLog.ToString ());
@@ -27,7 +27,7 @@ namespace Xharness.Jenkins.TestTasks {
 					"--logger:html;LogFileName=" + Path.GetFileName (html.FullPath)
 				};
 
-				await ExecuteProcessAsync (Harness.DOTNET, args);
+				await ExecuteProcessAsync (Jenkins.Harness.DOTNET, args);
 			}
 		}
 	}

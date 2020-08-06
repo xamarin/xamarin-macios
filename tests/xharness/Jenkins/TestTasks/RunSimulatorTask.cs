@@ -1,104 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
-using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
-using Microsoft.DotNet.XHarness.iOS.Shared;
-using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
-using Microsoft.DotNet.XHarness.iOS.Shared.Collections;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
+using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
+using Xharness.TestTasks;
+using Microsoft.DotNet.XHarness.iOS.Shared.Tasks;
 
 namespace Xharness.Jenkins.TestTasks {
-	class RunSimulatorTask : RunXITask<ISimulatorDevice>
+	class RunSimulatorTask : RunXITask<ISimulatorDevice>, IRunSimulatorTask
 	{
-		readonly ISimulatorLoader simulators;
+		readonly RunSimulator runSimulator;
 		public IAcquiredResource AcquiredResource;
 
-		public ISimulatorDevice [] Simulators {
-			get {
-				if (Device == null) {
-					return new ISimulatorDevice [] { };
-				} else if (CompanionDevice == null) {
-					return new ISimulatorDevice [] { Device };
-				} else {
-					return new ISimulatorDevice [] { Device, CompanionDevice };
-				}
-			}
-		}
 
-		public RunSimulatorTask (ISimulatorLoader simulators, MSBuildTask build_task, IProcessManager ProcessManager, IEnumerable<ISimulatorDevice> candidates = null)
-			: base (build_task, ProcessManager, candidates)
-		{
-			var project = Path.GetFileNameWithoutExtension (ProjectFile);
-			if (project.EndsWith ("-tvos", StringComparison.Ordinal)) {
-				AppRunnerTarget = TestTarget.Simulator_tvOS;
-			} else if (project.EndsWith ("-watchos", StringComparison.Ordinal)) {
-				AppRunnerTarget = TestTarget.Simulator_watchOS;
-			} else {
-				AppRunnerTarget = TestTarget.Simulator_iOS;
-			}
+		public ISimulatorDevice [] Simulators => runSimulator.Simulators;
 
-			this.simulators = simulators ?? throw new ArgumentNullException (nameof (simulators));
-		}
+		public RunSimulatorTask (Jenkins jenkins, ISimulatorLoader simulators, MSBuildTask buildTask, IProcessManager processManager, ITunnelBore tunnelBore, IEnumerable<ISimulatorDevice> candidates = null)
+			: base (jenkins, buildTask, processManager, candidates) =>  runSimulator = new RunSimulator (
+				testTask: this,
+				simulators: simulators,
+				errorKnowledgeBase: Jenkins,
+				mainLog: Jenkins.MainLog,
+				simulatorLoadLog: Jenkins.SimulatorLoadLog);
 
-		public async Task FindSimulatorAsync ()
-		{
-			if (Device != null)
-				return;
+		public Task FindSimulatorAsync () => runSimulator.FindSimulatorAsync ();
 
-			var asyncEnumerable = Candidates as IAsyncEnumerable;
-			if (asyncEnumerable != null)
-				await asyncEnumerable.ReadyTask;
+		public Task SelectSimulatorAsync () => runSimulator.SelectSimulatorAsync ();
 
-			if (!Candidates.Any ()) {
-				ExecutionResult = TestExecutingResult.DeviceNotFound;
-				FailureMessage = "No applicable devices found.";
-			} else {
-				Device = Candidates.First ();
-				if (Platform == TestPlatform.watchOS)
-					CompanionDevice = simulators.FindCompanionDevice (Jenkins.SimulatorLoadLog, Device);
-			}
-
-		}
-
-		public async Task SelectSimulatorAsync ()
-		{
-			if (Finished)
-				return;
-
-			if (!BuildTask.Succeeded) {
-				ExecutionResult = TestExecutingResult.BuildFailure;
-				return;
-			}
-
-			await FindSimulatorAsync ();
-
-			var clean_state = false;//Platform == TestPlatform.watchOS;
-			runner = new AppRunner (ProcessManager,
-				new AppBundleInformationParser (),
-				new SimulatorLoaderFactory (ProcessManager),
-				new SimpleListenerFactory (),
-				new DeviceLoaderFactory (ProcessManager),
-				new CrashSnapshotReporterFactory (ProcessManager),
-				new CaptureLogFactory (),
-				new DeviceLogCapturerFactory (ProcessManager),
-				new TestReporterFactory (ProcessManager),
-				AppRunnerTarget,
-				Harness,
-				mainLog: Logs.Create ($"run-{Device.UDID}-{Timestamp}.log", "Run log"),
-				logs: Logs,
-				projectFilePath: ProjectFile,				
-				ensureCleanSimulatorState: clean_state,
-				buildConfiguration: ProjectConfiguration,
-				timeoutMultiplier: TimeoutMultiplier,
-				variation: Variation,
-				buildTask: BuildTask,
-				simulators: Simulators);
-		}
-
-		Task<IAcquiredResource> AcquireResourceAsync ()
+		public Task<IAcquiredResource> AcquireResourceAsync ()
 		{
 			if (AcquiredResource != null) {
 				// We don't own the acquired resource, so wrap it in a class that won't dispose it.
@@ -108,27 +37,7 @@ namespace Xharness.Jenkins.TestTasks {
 			}
 		}
 
-		protected override async Task RunTestAsync ()
-		{
-			Jenkins.MainLog.WriteLine ("Running XI on '{0}' ({2}) for {1}", Device?.Name, ProjectFile, Device?.UDID);
-
-			ExecutionResult = ExecutionResult & ~TestExecutingResult.InProgressMask | TestExecutingResult.Running;
-			await BuildTask.RunAsync ();
-			if (!BuildTask.Succeeded) {
-				ExecutionResult = TestExecutingResult.BuildFailure;
-				return;
-			}
-			using (var resource = await NotifyBlockingWaitAsync (AcquireResourceAsync ())) {
-				if (runner == null)
-					await SelectSimulatorAsync ();
-				await runner.RunAsync ();
-			}
-			ExecutionResult = runner.Result;
-
-			KnownFailure = null;
-			if (Jenkins.IsHE0038Error (runner.MainLog))
-				KnownFailure = $"<a href='https://github.com/xamarin/maccore/issues/581'>HE0038</a>";
-		}
+		public override Task RunTestAsync () => runSimulator.RunTestAsync ();
 
 		protected override string XIMode {
 			get {
