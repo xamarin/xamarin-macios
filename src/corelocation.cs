@@ -425,15 +425,6 @@ namespace CoreLocation {
 		[Export ("accuracyAuthorization")]
 		CLAccuracyAuthorization AccuracyAuthorization { get; }
 
-		// Apple issue reported: https://github.com/xamarin/maccore/issues/2259
-		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
-		[Deprecated (PlatformName.WatchOS, 7, 0)]
-		[Deprecated (PlatformName.TvOS, 14, 0)]
-		[Deprecated (PlatformName.iOS, 14, 0)]
-		[Deprecated (PlatformName.MacOSX, 11, 0)]
-		[Export ("authorizedForPreciseLocation")]
-		bool AuthorizedForPreciseLocation { [Bind ("isAuthorizedForPreciseLocation")] get; }
-
 		[Async]
 		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
 		[Export ("requestTemporaryFullAccuracyAuthorizationWithPurposeKey:completion:")]
@@ -442,6 +433,7 @@ namespace CoreLocation {
 		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
 		[Export ("requestTemporaryFullAccuracyAuthorizationWithPurposeKey:")]
 		void RequestTemporaryFullAccuracyAuthorization (string purposeKey);
+
 	}
 	
 	[BaseType (typeof (NSObject))]
