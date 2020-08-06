@@ -669,7 +669,7 @@ namespace GameController {
 	[TV (14,0), Mac (11,0), iOS (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface GCDeviceBattery
+	interface GCDeviceBattery : NSSecureCoding, NSCoding
 	{
 		[Export ("batteryLevel")]
 		float BatteryLevel { get; }
@@ -727,7 +727,7 @@ namespace GameController {
 	[TV (14,0), Mac (11,0), iOS (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface GCDeviceLight
+	interface GCDeviceLight: NSSecureCoding, NSCoding
 	{
 		[Export ("color", ArgumentSemantic.Copy)]
 		GCColor Color { get; set; }
@@ -735,7 +735,7 @@ namespace GameController {
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
 	[BaseType (typeof (GCExtendedGamepad))]
-	interface GCDualShockGamepad
+	interface GCDualShockGamepad: NSSecureCoding, NSCoding
 	{
 		[Export ("touchpadButton")]
 		GCControllerButtonInput TouchpadButton { get; }
@@ -749,7 +749,7 @@ namespace GameController {
 
 	[TV (14, 0), Mac (11, 0), iOS (14, 0)]
 	[BaseType (typeof (NSObject))]
-	interface GCKeyboard : GCDevice
+	interface GCKeyboard : GCDevice, NSSecureCoding, NSCoding
 	{
 		[NullAllowed, Export ("keyboardInput", ArgumentSemantic.Strong)]
 		GCKeyboardInput KeyboardInput { get; }
@@ -784,7 +784,7 @@ namespace GameController {
 
 	[Mac (11, 0), iOS (14, 0), TV (14, 0)]
 	[BaseType (typeof (NSObject))]
-	interface GCMouse : GCDevice
+	interface GCMouse : GCDevice, NSSecureCoding, NSCoding
 	{
 		[NullAllowed, Export ("mouseInput", ArgumentSemantic.Strong)]
 		GCMouseInput MouseInput { get; }
@@ -989,7 +989,7 @@ namespace GameController {
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
 	[BaseType (typeof (GCExtendedGamepad))]
-	interface GCXboxGamepad
+	interface GCXboxGamepad: NSSecureCoding, NSCoding
 	{
 		[NullAllowed, Export ("paddleButton1")]
 		GCControllerButtonInput PaddleButton1 { get; }

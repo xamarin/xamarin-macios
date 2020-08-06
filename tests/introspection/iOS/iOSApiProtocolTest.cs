@@ -399,14 +399,6 @@ namespace Introspection {
 				case "SRVisit":
 				case "SRWebUsage":
 					return true;
-				// iOS 14 beta 3 (to be reviewed)
-				case "GCDeviceBattery":
-				case "GCDeviceLight":
-				case "GCDualShockGamepad":
-				case "GCKeyboard":
-				case "GCMouse":
-				case "GCXboxGamepad":
-					return true;
 				}
 				break;
 			case "NSSecureCoding":
@@ -554,15 +546,6 @@ namespace Introspection {
 				case "HKAudiogramSensitivityPoint":  // Conformance not in headers
 				case "HMAccessoryOwnershipToken":  // Conformance not in headers
 				case "HMAddAccessoryRequest":  // Conformance not in headers
-					return true;
-
-				// iOS 14 beta 3 (to be reviewed)
-				case "GCDeviceBattery":
-				case "GCDeviceLight":
-				case "GCDualShockGamepad":
-				case "GCKeyboard":
-				case "GCMouse":
-				case "GCXboxGamepad":
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
