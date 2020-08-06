@@ -618,7 +618,7 @@ namespace GameController {
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
-	[BaseType (typeof( NSObject))]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface GCColor : NSCopying, NSSecureCoding
 	{
