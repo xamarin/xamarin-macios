@@ -389,7 +389,17 @@ namespace Xamarin.Bundler {
 			RuntimeOptions = RuntimeOptions.Create (this, HttpMessageHandler, TlsProvider);
 
 			if (RequiresXcodeHeaders && SdkVersion < SdkVersions.GetVersion (this)) {
-				throw ErrorHelper.CreateError (91, Errors.MX0091, ProductName, PlatformName, SdkVersions.GetVersion (this), SdkVersions.Xcode, Error91LinkerSuggestion);
+				switch (Platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
+					throw ErrorHelper.CreateError (180, Errors.MX0179, ProductName, PlatformName, SdkVersions.GetVersion (this), SdkVersions.Xcode);
+				case ApplePlatform.MacOSX:
+					throw ErrorHelper.CreateError (179, Errors.MX0180, ProductName, PlatformName, SdkVersions.GetVersion (this), SdkVersions.Xcode);
+				default:
+					// Default to the iOS error message, it's better than showing MX0071 (unknown platform), which would be completely unrelated
+					goto case ApplePlatform.iOS;
+				}
 			}
 
 			if (DeploymentTarget != null) {
