@@ -1,11 +1,8 @@
-﻿using System;
 using System.IO;
 using System.Collections.Generic;
 
 using Xamarin.MacDev;
 using Xamarin.MacDev.Tasks;
-using Microsoft.Build.Utilities;
-using Microsoft.Build.Framework;
 
 namespace Xamarin.Mac.Tasks {
 	public abstract class CompileEntitlementsCore : CompileEntitlementsTaskBase {

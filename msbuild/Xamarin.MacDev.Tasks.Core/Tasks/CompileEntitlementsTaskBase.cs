@@ -3,17 +3,13 @@ using System.IO;
 using System.Collections.Generic;
 
 using Microsoft.Build.Framework;
-using Microsoft.Build.Utilities;
 
-using Xamarin.MacDev;
 using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.MacDev.Tasks
 {
 	public abstract class CompileEntitlementsTaskBase : XamarinTask
 	{
-		static readonly byte[] XcentMagic = { 0xfa, 0xde, 0x71, 0x71 };
-
 		bool warnedTeamIdentifierPrefix;
 		bool warnedAppIdentifierPrefix;
 

@@ -1,15 +1,11 @@
-﻿using System;
 using System.IO;
 using System.Collections.Generic;
 
-using Microsoft.Build.Framework;
-using Microsoft.Build.Utilities;
-
-using Xamarin.Utils;
+using Xamarin.MacDev.Tasks;
 
 namespace Xamarin.iOS.Tasks
 {
-	public abstract class CompileEntitlementsTaskCore : Xamarin.MacDev.Tasks.CompileEntitlementsTaskBase
+	public abstract class CompileEntitlementsTaskCore : CompileEntitlementsTaskBase
 	{
 		static readonly HashSet<string> allowedProvisioningKeys = new HashSet<string> {
 			"application-identifier",
@@ -42,3 +38,4 @@ namespace Xamarin.iOS.Tasks
 		protected override string EntitlementBundlePath { get { return AppBundleDir; } }
 	}
 }
+

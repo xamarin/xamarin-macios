@@ -1,6 +1,5 @@
-﻿namespace Xamarin.iOS.Tasks
-{
-	public class CompileEntitlements : CompileEntitlementsTaskCore
-	{
+namespace Xamarin.iOS.Tasks {
+	public class CompileEntitlements : CompileEntitlementsTaskCore {
 	}
 }
+
