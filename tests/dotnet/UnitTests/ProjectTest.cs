@@ -177,6 +177,8 @@ namespace Xamarin.Tests {
 		}
 
 		[TestCase ("iOS")]
+		[TestCase ("tvOS")]
+		[TestCase ("watchOS")]
 		[TestCase ("macOS")]
 		public void BuildBindingsTest (string platform)
 		{
