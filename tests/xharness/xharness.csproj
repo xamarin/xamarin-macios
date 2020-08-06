@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -81,8 +81,6 @@
     <Compile Include="Harness.cs" />
     <Compile Include="TestReporterFactory.cs" />
     <Compile Include="Jenkins\Jenkins.cs" />
-    <Compile Include="Jenkins\Resource.cs" />
-    <Compile Include="Jenkins\Resources.cs" />
     <Compile Include="Jenkins\TestTasks\AggregatedRunSimulatorTask.cs" />
     <Compile Include="Jenkins\TestTasks\BuildProjectTask.cs" />
     <Compile Include="Jenkins\TestTasks\BuildToolTask.cs" />
@@ -98,9 +96,8 @@
     <Compile Include="Jenkins\TestTasks\RunTestTask.cs" />
     <Compile Include="Jenkins\TestTasks\RunXITask.cs" />
     <Compile Include="Jenkins\TestTasks\RunXtroTask.cs" />
-    <Compile Include="Jenkins\TestTasks\TestTask.cs" />
+    <Compile Include="Jenkins\TestTasks\AppleTestTask.cs" />
     <Compile Include="MakefileGenerator.cs" />
-    <Compile Include="MonoNativeInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SolutionGenerator.cs" />
@@ -111,12 +108,20 @@
     <Compile Include="Targets\TVOSTarget.cs" />
     <Compile Include="Targets\UnifiedTarget.cs" />
     <Compile Include="Targets\WatchOSTarget.cs" />
-    <Compile Include="TestPlatform.cs" />
-    <Compile Include="TestProject.cs" />
     <Compile Include="TestImporter\Xamarin\AssemblyLocator.cs" />
     <Compile Include="TestImporter\Xamarin\ProjectFilter.cs" />
     <Compile Include="TestImporter\Xamarin\AssemblyDefinitionFactory.cs" />
     <Compile Include="TestImporter\Xamarin\TestAssemblyDefinition.cs" />
+    <Compile Include="TestTasks\DotNetBuild.cs" />
+    <Compile Include="TestTasks\IBuildToolTask.cs" />
+    <Compile Include="TestTasks\IRunDeviceTask.cs" />
+    <Compile Include="TestTasks\RunTest.cs" />
+    <Compile Include="TestTasks\IRunTestTask.cs" />
+    <Compile Include="TestTasks\RunSimulator.cs" />
+    <Compile Include="TestTasks\IRunXITask.cs" />
+    <Compile Include="TestTasks\IRunSimulatorTask.cs" />
+    <Compile Include="TestTasks\RunDevice.cs" />
+    <Compile Include="TestProjectExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\tools\mtouch\SdkVersions.cs">

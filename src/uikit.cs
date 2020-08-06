@@ -22010,8 +22010,6 @@ namespace UIKit {
 	[BaseType (typeof (UICellAccessory))]
 	interface UICellAccessoryMultiselect {
 
-		[NullAllowed, Export ("selectedTintColor", ArgumentSemantic.Strong)]
-		UIColor SelectedTintColor { get; set; }
 	}
 
 	[NoWatch, NoTV, iOS (14,0)]
@@ -22020,9 +22018,6 @@ namespace UIKit {
 
 		[Export ("style", ArgumentSemantic.Assign)]
 		UICellAccessoryOutlineDisclosureStyle Style { get; set; }
-
-		[NullAllowed, Export ("selectedTintColor", ArgumentSemantic.Strong)]
-		UIColor SelectedTintColor { get; set; }
 
 		[NullAllowed, Export ("actionHandler", ArgumentSemantic.Copy)]
 		Action ActionHandler { get; set; }

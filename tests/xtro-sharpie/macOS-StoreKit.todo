@@ -1,4 +1,3 @@
-!missing-enum! SKOverlayPosition not bound
 !missing-enum! SKProductStorePromotionVisibility not bound
 !missing-field! SKCloudServiceCapabilitiesDidChangeNotification not bound
 !missing-field! SKStorefrontCountryCodeDidChangeNotification not bound

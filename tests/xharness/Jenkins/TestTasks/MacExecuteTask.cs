@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -18,8 +18,8 @@ namespace Xharness.Jenkins.TestTasks {
 		public bool BCLTest;
 		public bool IsUnitTest;
 
-		public MacExecuteTask (BuildToolTask build_task, IProcessManager processManager, ICrashSnapshotReporterFactory crashReportSnapshotFactory)
-			: base (build_task, processManager)
+		public MacExecuteTask (Jenkins jenkins, BuildToolTask build_task, IProcessManager processManager, ICrashSnapshotReporterFactory crashReportSnapshotFactory)
+			: base (jenkins, build_task, processManager)
 		{
 			this.CrashReportSnapshotFactory = crashReportSnapshotFactory ?? throw new ArgumentNullException (nameof (crashReportSnapshotFactory));
 		}
@@ -50,7 +50,7 @@ namespace Xharness.Jenkins.TestTasks {
 			}
 		}
 
-		protected override async Task RunTestAsync ()
+		public override async Task RunTestAsync ()
 		{
 			var projectDir = System.IO.Path.GetDirectoryName (ProjectFile);
 			var name = System.IO.Path.GetFileName (projectDir);
@@ -90,7 +90,7 @@ namespace Xharness.Jenkins.TestTasks {
 					proc.StartInfo.EnvironmentVariables ["MONO_DEBUG"] = "no-gdb-backtrace";
 					Jenkins.MainLog.WriteLine ("Executing {0} ({1})", TestName, Mode);
 					var log = Logs.Create ($"execute-{Platform}-{Timestamp}.txt", LogType.ExecutionLog.ToString ());
-					if (!Harness.DryRun) {
+					if (!Jenkins.Harness.DryRun) {
 						ExecutionResult = TestExecutingResult.Running;
 
 						var snapshot = CrashReportSnapshotFactory.Create (log, Logs, isDevice: false, deviceName: null);

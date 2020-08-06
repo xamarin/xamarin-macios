@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 
 namespace Microsoft.DotNet.XHarness.iOS.Shared.Listeners {
@@ -9,7 +10,11 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Listeners {
 	}
 
 	public interface ISimpleListenerFactory {
-		(ListenerTransport transport, ISimpleListener listener, string listenerTempFile) Create (RunMode mode,
+		ITunnelBore TunnelBore { get; }
+		
+		bool UseTcpTunnel { get; }
+		(ListenerTransport transport, ISimpleListener listener, string listenerTempFile) Create (string device,
+			RunMode mode,
 			ILog log,
 			ILog listenerLog,
 			bool isSimulator,
@@ -19,7 +24,14 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Listeners {
 
 	public class SimpleListenerFactory : ISimpleListenerFactory {
 
-		public (ListenerTransport transport, ISimpleListener listener, string listenerTempFile) Create (RunMode mode,
+		public ITunnelBore TunnelBore { get; private set; }
+
+		public bool UseTcpTunnel => TunnelBore != null;
+
+		public SimpleListenerFactory (ITunnelBore tunnelBore = null) => TunnelBore = tunnelBore;
+
+		public (ListenerTransport transport, ISimpleListener listener, string listenerTempFile) Create (string device,
+			RunMode mode,
 			ILog log,
 			ILog listenerLog,
 			bool isSimulator,
@@ -45,7 +57,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Listeners {
 				listener = new SimpleHttpListener (log, listenerLog, autoExit, xmlOutput);
 				break;
 			case ListenerTransport.Tcp:
-				listener = new SimpleTcpListener (log, listenerLog, autoExit, xmlOutput);
+				listener = new SimpleTcpListener (log, listenerLog, autoExit, xmlOutput, UseTcpTunnel);
 				break;
 			default:
 				throw new NotImplementedException ("Unknown type of listener");

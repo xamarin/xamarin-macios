@@ -40,3 +40,4 @@
 !missing-protocol! OS_nw_privacy_context not bound
 !missing-protocol! OS_nw_resolution_report not bound
 !missing-protocol! OS_nw_resolver_config not bound
+!missing-pinvoke! nw_ip_options_set_disable_multicast_loopback is not bound
