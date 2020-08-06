@@ -61,8 +61,6 @@ namespace Xamarin.Bundler {
 
 	public static partial class Driver {
 		internal const string NAME = "mmp";
-		const string LOCAL_BUILD_DIR = "_mac-build";
-		const string FRAMEWORK_LOCATION_VARIABLE = "XAMMAC_FRAMEWORK_PATH";
 		internal static Application App = new Application (Environment.GetCommandLineArgs ());
 		static Target BuildTarget;
 		static List<string> resources = new List<string> ();
