@@ -706,4 +706,22 @@ namespace CoreMotion {
 		[Export ("headphoneMotionManagerDidDisconnect:")]
 		void DidDisconnect (CMHeadphoneMotionManager manager);
 	}
+
+	[Watch (7,0), NoMac, iOS (14,0)]
+	[BaseType (typeof (CMLogItem))]
+	[DisableDefaultCtor]
+	interface CMRotationRateData {
+
+		[Export ("rotationRate")]
+		CMRotationRate RotationRate { get; }
+	}
+
+	[Watch (7,0), NoMac, iOS (14,0)]
+	[BaseType (typeof (CMRotationRateData))]
+	[DisableDefaultCtor]
+	interface CMRecordedRotationRateData {
+
+		[Export ("startDate")]
+		NSDate StartDate { get; }
+	}
 }
