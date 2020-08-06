@@ -442,25 +442,6 @@ namespace CoreLocation {
 		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
 		[Export ("requestTemporaryFullAccuracyAuthorizationWithPurposeKey:")]
 		void RequestTemporaryFullAccuracyAuthorization (string purposeKey);
-
-		// Apple issue reported: https://github.com/xamarin/maccore/issues/2259
-		[Async]
-		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
-		[Deprecated (PlatformName.WatchOS, 7, 0)]
-		[Deprecated (PlatformName.TvOS, 14, 0)]
-		[Deprecated (PlatformName.iOS, 14, 0)]
-		[Deprecated (PlatformName.MacOSX, 11, 0)]
-		[Export ("requestTemporaryPreciseLocationAuthorizationWithPurposeKey:completion:")]
-		void RequestTemporaryPreciseLocationAuthorization (string purposeKey, [NullAllowed] Action<NSError> completion);
-
-		// Apple issue reported: https://github.com/xamarin/maccore/issues/2259
-		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
-		[Deprecated (PlatformName.WatchOS, 7, 0)]
-		[Deprecated (PlatformName.TvOS, 14, 0)]
-		[Deprecated (PlatformName.iOS, 14, 0)]
-		[Deprecated (PlatformName.MacOSX, 11, 0)]
-		[Export ("requestTemporaryPreciseLocationAuthorizationWithPurposeKey:")]
-		void RequestTemporaryPreciseLocationAuthorization (string purposeKey);
 	}
 	
 	[BaseType (typeof (NSObject))]
