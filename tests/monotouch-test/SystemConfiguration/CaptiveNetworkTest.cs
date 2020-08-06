@@ -91,7 +91,6 @@ namespace MonoTouchFixtures.SystemConfiguration {
 #else
 			status = CaptiveNetwork.TryGetSupportedInterfaces (out var ifaces);
 			Assert.AreEqual (StatusCode.OK, status, "Status");
-			Assert.IsNull (ifaces, "Null Interfaces");
 #endif // __TVOS__
 		}
 #endif
