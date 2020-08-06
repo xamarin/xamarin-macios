@@ -11,7 +11,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 	public class BuildProject : BuildTool {
 		public IResourceManager ResourceManager { get; set; }
-		public IEnvManager EnviromentManager { get; set; }
+		public IEnvManager EnvironmentManager { get; set; }
 		public IEventLogger EventLogger { get; set; }
 		Func<string> msbuildPath;
 
@@ -22,7 +22,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 			this.msbuildPath = msbuildPath ?? throw new ArgumentNullException (nameof (msbuildPath));
 			ResourceManager = resourceManager ?? throw new ArgumentNullException (nameof (resourceManager));
 			EventLogger = eventLogger ?? throw new ArgumentNullException (nameof (eventLogger));
-			EnviromentManager = envManager ?? throw new ArgumentNullException (nameof (envManager));
+			EnvironmentManager = envManager ?? throw new ArgumentNullException (nameof (envManager));
 		}
 
 		public bool RestoreNugets {
@@ -58,7 +58,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 					args.Add ("-Verbosity");
 					args.Add ("detailed");
 					nuget.StartInfo.Arguments = StringUtils.FormatArguments (args);
-					EnviromentManager.SetEnvironmentVariables (nuget);
+					EnvironmentManager.SetEnvironmentVariables (nuget);
 					EventLogger.LogEvent (log, "Restoring nugets for {0} ({1}) on path {2}", TestName, Mode, projectPath);
 
 					var timeout = TimeSpan.FromMinutes (15);
