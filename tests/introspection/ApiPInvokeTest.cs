@@ -209,13 +209,13 @@ namespace Introspection
 					case "__Internal":
 						// load from executable
 						path = null;
+						break;
 #if NET
+					case "QCall":
 						// Globalization hasn't been implemented yet: https://github.com/xamarin/xamarin-macios/issues/8906
 						if (name.StartsWith ("GlobalizationNative_", StringComparison.Ordinal))
 							continue;
-#endif
 						break;
-#if NET
 					case "libhostpolicy":
 						// There's no libhostpolicy library.
 						// https://github.com/dotnet/runtime/issues/38543
