@@ -147,6 +147,18 @@
 
 			<!-- Verbose output, so that we get something to stdout when something goes wrong -->
 			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) --verbose</_ExtraTrimmerArgs>
+
+			<!--
+				Always process symbols files, even in release mode, because
+				the AOT compiler uses the symbol files to create DWARF debug
+				information.
+
+				FIXME: At some point we should set the DebuggerSupport
+				property so that the linker can remove debugging support when
+				in release mode, but the linker doesn't seem quite ready for
+				this yet (ref: https://github.com/dotnet/sdk/pull/12144).
+			-->
+			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) -b</_ExtraTrimmerArgs>
 		</PropertyGroup>
 		<ItemGroup>
 			<!-- add a custom step which inserts any other steps we need -->
