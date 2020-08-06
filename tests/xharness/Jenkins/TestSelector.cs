@@ -216,6 +216,7 @@ namespace Xharness.Jenkins {
 			SetEnabled (labels, "xtro", ref jenkins.IncludeXtro);
 			SetEnabled (labels, "cecil", ref jenkins.IncludeCecil);
 			SetEnabled (labels, "old-simulator", ref jenkins.IncludeOldSimulatorTests);
+			SetEnabled (labels, "dotnet", ref jenkins.IncludeDotNet);
 			SetEnabled (labels, "all", ref jenkins.IncludeAll);
 
 			// enabled by default
