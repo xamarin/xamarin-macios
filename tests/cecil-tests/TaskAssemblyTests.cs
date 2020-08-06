@@ -153,7 +153,6 @@ namespace Cecil.Tests {
 			case "Xamarin.Mac.Tasks":
 				switch (typename) {
 				case "Xamarin.Mac.Tasks.CodesignVerify":
-				case "Xamarin.Mac.Tasks.CompileEntitlements":
 				case "Xamarin.Mac.Tasks.IBTool":
 				case "Xamarin.Mac.Tasks.Metal":
 				case "Xamarin.Mac.Tasks.MetalLib":

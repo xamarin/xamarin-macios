@@ -9,7 +9,7 @@ using Xamarin.Utils;
 
 namespace Xamarin.iOS.Tasks
 {
-	public abstract class CompileEntitlementsTaskBase : Xamarin.MacDev.Tasks.CompileEntitlementsTaskBase
+	public abstract class CompileEntitlementsTaskCore : Xamarin.MacDev.Tasks.CompileEntitlementsTaskBase
 	{
 		static readonly HashSet<string> allowedProvisioningKeys = new HashSet<string> {
 			"application-identifier",
