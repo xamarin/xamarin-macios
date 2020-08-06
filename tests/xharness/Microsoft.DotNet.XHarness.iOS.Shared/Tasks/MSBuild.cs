@@ -61,7 +61,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 				xbuild.StartInfo.FileName = msbuildPath ();
 				xbuild.StartInfo.Arguments = StringUtils.FormatArguments (GetToolArguments (projectPlatform, projectConfiguration, projectFile, buildLog));
 				xbuild.StartInfo.WorkingDirectory = Path.GetDirectoryName (projectFile);
-				EnviromentManager.SetEnvironmentVariables (xbuild);
+				EnvironmentManager.SetEnvironmentVariables (xbuild);
 				xbuild.StartInfo.EnvironmentVariables ["MSBuildExtensionsPath"] = null;
 				EventLogger.LogEvent (buildLog, "Building {0} ({1})", TestName, Mode);
 				if (!dryRun) {
@@ -99,7 +99,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 				args.Add ("/t:Clean");
 				xbuild.StartInfo.Arguments = StringUtils.FormatArguments (args);
 				xbuild.StartInfo.WorkingDirectory = Path.GetDirectoryName (project_file);
-				EnviromentManager.SetEnvironmentVariables (xbuild);
+				EnvironmentManager.SetEnvironmentVariables (xbuild);
 				EventLogger.LogEvent (log, "Cleaning {0} ({1}) - {2}", TestName, Mode, project_file);
 				var timeout = TimeSpan.FromMinutes (1);
 				await ProcessManager.RunAsync (xbuild, log, timeout);
