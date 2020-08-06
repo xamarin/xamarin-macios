@@ -54,6 +54,10 @@ namespace CoreML {
 		CustomModel = 5,
 		Update = 6,
 		Parameters = 7,
+		ModelEncryption = 8,
+		ModelDecryptionKeyFetch = 9,
+		ModelDecryption = 10,
+		ModelCollection = 11,
 	}
 
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
