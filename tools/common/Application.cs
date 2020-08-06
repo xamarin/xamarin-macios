@@ -388,15 +388,15 @@ namespace Xamarin.Bundler {
 
 			RuntimeOptions = RuntimeOptions.Create (this, HttpMessageHandler, TlsProvider);
 
-			if (RequiresXcodeHeaders && SdkVersion < SdkVersions.GetVersion (Platform)) {
-				throw ErrorHelper.CreateError (91, Errors.MX0091, ProductName, PlatformName, SdkVersions.GetVersion (Platform), SdkVersions.Xcode, Error91LinkerSuggestion);
+			if (RequiresXcodeHeaders && SdkVersion < SdkVersions.GetVersion (this)) {
+				throw ErrorHelper.CreateError (91, Errors.MX0091, ProductName, PlatformName, SdkVersions.GetVersion (this), SdkVersions.Xcode, Error91LinkerSuggestion);
 			}
 
 			if (DeploymentTarget != null) {
-				if (DeploymentTarget < Xamarin.SdkVersions.GetMinVersion (Platform))
-					throw new ProductException (73, true, Errors.MT0073, Constants.Version, DeploymentTarget, Xamarin.SdkVersions.GetMinVersion (Platform), PlatformName, ProductName);
-				if (DeploymentTarget > Xamarin.SdkVersions.GetVersion (Platform))
-					throw new ProductException (74, true, Errors.MX0074, Constants.Version, DeploymentTarget, Xamarin.SdkVersions.GetVersion (Platform), PlatformName, ProductName);
+				if (DeploymentTarget < Xamarin.SdkVersions.GetMinVersion (this))
+					throw new ProductException (73, true, Errors.MT0073, Constants.Version, DeploymentTarget, Xamarin.SdkVersions.GetMinVersion (this), PlatformName, ProductName);
+				if (DeploymentTarget > Xamarin.SdkVersions.GetVersion (this))
+					throw new ProductException (74, true, Errors.MX0074, Constants.Version, DeploymentTarget, Xamarin.SdkVersions.GetVersion (this), PlatformName, ProductName);
 			}
 
 			if (Platform == ApplePlatform.WatchOS && EnableCoopGC.HasValue && !EnableCoopGC.Value)

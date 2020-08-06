@@ -40,7 +40,7 @@ namespace Xamarin.Bundler {
 
 	public partial class Application
 	{
-		public const string ProductName = "Xamarin.iOS";
+		public string ProductName = "Xamarin.iOS";
 		public const string Error91LinkerSuggestion = "set the managed linker behaviour to Link Framework SDKs Only in your project's iOS Build Options > Linker Behavior";
 
 		public string ExecutableName;
@@ -1067,7 +1067,7 @@ namespace Xamarin.Bundler {
 #endif
 
 			if (DeploymentTarget == null)
-				DeploymentTarget = Xamarin.SdkVersions.GetVersion (Platform);
+				DeploymentTarget = Xamarin.SdkVersions.GetVersion (this);
 
 			if (Platform == ApplePlatform.iOS && (HasDynamicLibraries || HasFrameworks) && DeploymentTarget.Major < 8) {
 				ErrorHelper.Warning (78, Errors.MT0078, DeploymentTarget);
@@ -1263,6 +1263,7 @@ namespace Xamarin.Bundler {
 				if (link_tasks.Count > 1) {
 					// If we have more than one executable, we must lipo them together.
 					var lipo_task = new LipoTask {
+						App = this,
 						InputFiles = link_tasks.Select ((v) => v.OutputFile),
 						OutputFile = Executable,
 					};
@@ -1464,10 +1465,10 @@ namespace Xamarin.Bundler {
 						if (files.Count == 1) {
 							CopyFile (files.First (), targetPath);
 						} else {
-							Driver.RunLipo (targetPath, files);
+							Driver.RunLipo (this, targetPath, files);
 						}
 						if (LibMonoLinkMode == AssemblyBuildTarget.Framework)
-							Driver.RunInstallNameTool (new [] { "-change", "@rpath/libmonosgen-2.0.dylib", "@rpath/Mono.framework/Mono", targetPath });
+							Driver.RunInstallNameTool (this, new [] { "-change", "@rpath/libmonosgen-2.0.dylib", "@rpath/Mono.framework/Mono", targetPath });
 
 						// Remove architectures we don't care about.
 						if (IsDeviceBuild)
@@ -1492,7 +1493,7 @@ namespace Xamarin.Bundler {
 					Directory.CreateDirectory (frameworkDirectory);
 					var allExecutables = Targets.SelectMany ((t) => t.Executables.Values).ToArray ();
 					if (allExecutables.Length > 1) {
-						Lipo (frameworkExecutable, allExecutables);
+						Lipo (this, frameworkExecutable, allExecutables);
 					} else {
 						UpdateFile (allExecutables [0], frameworkExecutable);
 					}
@@ -1519,17 +1520,17 @@ namespace Xamarin.Bundler {
 			}
 			sb.Add ("-o");
 			sb.Add (macho_file);
-			Driver.RunBitcodeStrip (sb);
+			Driver.RunBitcodeStrip (this, sb);
 		}
 
 		// Returns true if is up-to-date
-		public static bool Lipo (string output, params string [] inputs)
+		public static bool Lipo (Application app, string output, params string [] inputs)
 		{
 			if (IsUptodate (inputs, new string [] { output })) {
 				Driver.Log (3, "Target '{0}' is up-to-date.", output);
 				return true;
 			} else {
-				Driver.RunLipo (output, inputs);
+				Driver.RunLipo (app, output, inputs);
 				return false;
 			}
 		}
@@ -1849,7 +1850,7 @@ namespace Xamarin.Bundler {
 				if (Directory.Exists (dsym_dir))
 					Directory.Delete (dsym_dir, true);
 				
-				Driver.CreateDsym (AppDirectory, ExecutableName, dsym_dir);
+				Driver.CreateDsym (this, AppDirectory, ExecutableName, dsym_dir);
 			} else {
 				Driver.Log (3, "Target '{0}' is up-to-date.", dsym_dir);
 			}
@@ -1890,7 +1891,7 @@ namespace Xamarin.Bundler {
 				if (Embeddinator)
 					args.Add ("-ux");
 				args.Add (Executable);
-				Driver.RunStrip (args);
+				Driver.RunStrip (this, args);
 				Driver.Watch ("Native Strip", 1);
 			}
 
@@ -2036,7 +2037,7 @@ namespace Xamarin.Bundler {
 			sb.AppendLine ("        <key>DTPlatformName</key>");
 			sb.AppendLine ($"        <string>{Driver.GetPlatform (this).ToLowerInvariant ()}</string>");
 			sb.AppendLine ("        <key>DTPlatformVersion</key>");
-			sb.AppendLine ($"        <string>{SdkVersions.GetVersion (Platform)}</string>");
+			sb.AppendLine ($"        <string>{SdkVersions.GetVersion (this)}</string>");
 			sb.AppendLine ("        <key>DTSDKBuild</key>");
 			sb.AppendLine ("        <string>12D508</string>");
 			sb.AppendLine ("        <key>DTSDKName</key>");

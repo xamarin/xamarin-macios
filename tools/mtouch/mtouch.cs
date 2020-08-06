@@ -79,7 +79,6 @@ namespace Xamarin.Bundler
 {
 	public partial class Driver {
 		internal const string NAME = "mtouch";
-		internal const string PRODUCT = "Xamarin.iOS";
 		const string LOCAL_BUILD_DIR = "_ios-build";
 		const string FRAMEWORK_LOCATION_VARIABLE = "MD_MTOUCH_SDK_ROOT";
 
@@ -287,7 +286,7 @@ namespace Xamarin.Bundler
 			}
 
 			if (enable_llvm)
-				aot.Append ("llvm-path=").Append (FrameworkDirectory).Append ("/LLVM/bin/,");
+				aot.Append ("llvm-path=").Append (GetFrameworkCurrentDirectory (app)).Append ("/LLVM/bin/,");
 
 			aot.Append ("outfile=").Append (outputFile);
 			if (enable_llvm)
@@ -923,7 +922,7 @@ namespace Xamarin.Bundler
 			
 			// Allow a few actions, since these seem to always work no matter the Xcode version.
 			var accept_any_xcode_version = action == Action.ListDevices || action == Action.ListCrashReports || action == Action.ListApps || action == Action.LogDev;
-			ValidateXcode (accept_any_xcode_version, false);
+			ValidateXcode (app, accept_any_xcode_version, false);
 
 			switch (action) {
 			/* Device actions */
@@ -945,7 +944,7 @@ namespace Xamarin.Bundler
 			case Action.LaunchWatchApp:
 			case Action.KillWatchApp:
 			case Action.ListSimulators:
-				return CallMlaunch ();
+				return CallMlaunch (app);
 			}
 
 			if (app.SdkVersion == null)
@@ -986,7 +985,7 @@ namespace Xamarin.Bundler
 				throw new ProductException (82, true, Errors.MT0082);
 
 			if (cross_prefix == null)
-				cross_prefix = FrameworkDirectory;
+				cross_prefix = GetFrameworkCurrentDirectory (app);
 
 			Watch ("Setup", 1);
 
@@ -1033,23 +1032,22 @@ namespace Xamarin.Bundler
 			{ IsBackground = true }.Start ();
 		}
 
-		static string MlaunchPath {
-			get {
-				// check next to mtouch first
-				var path = Path.Combine (FrameworkBinDirectory, "mlaunch");
-				if (File.Exists (path))
-					return path;
+		static string GetMlaunchPath (Application app)
+		{
+			// check next to mtouch first
+			var path = Path.Combine (GetFrameworkBinDirectory (app), "mlaunch");
+			if (File.Exists (path))
+				return path;
 
-				// check an environment variable
-				path = Environment.GetEnvironmentVariable ("MLAUNCH_PATH");
-				if (File.Exists (path))
-					return path;
+			// check an environment variable
+			path = Environment.GetEnvironmentVariable ("MLAUNCH_PATH");
+			if (File.Exists (path))
+				return path;
 
-				throw ErrorHelper.CreateError (93, Errors.MT0093);
-			}
+			throw ErrorHelper.CreateError (93, Errors.MT0093);
 		}
 
-		static int CallMlaunch ()
+		static int CallMlaunch (Application app)
 		{
 			Log (1, "Forwarding to mlaunch");
 			using (var p = new Process ()) {
@@ -1057,7 +1055,7 @@ namespace Xamarin.Bundler
 				p.StartInfo.RedirectStandardError = true;
 				p.StartInfo.RedirectStandardInput = true;
 				p.StartInfo.RedirectStandardOutput = true;
-				p.StartInfo.FileName = MlaunchPath;
+				p.StartInfo.FileName = GetMlaunchPath (app);
 
 				var sb = Environment.GetCommandLineArgs ().Skip (1).ToList ();
 				p.StartInfo.Arguments = StringUtils.FormatArguments (sb);
