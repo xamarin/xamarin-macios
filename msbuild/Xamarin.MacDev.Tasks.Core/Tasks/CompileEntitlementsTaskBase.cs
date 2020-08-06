@@ -31,12 +31,19 @@ namespace Xamarin.MacDev.Tasks
 		[Required]
 		public ITaskItem CompiledEntitlements { get; set; }
 
+		public bool Debug { get; set; }
+
 		public string Entitlements { get; set; }
 
 		[Required]
 		public bool IsAppExtension { get; set; }
 
 		public string ProvisioningProfile { get; set; }
+
+		[Required]
+		public string SdkDevPath { get; set; }
+
+		public bool SdkIsSimulator { get; set; }
 
 		[Required]
 		public string SdkPlatform { get; set; }

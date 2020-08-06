@@ -11,11 +11,6 @@ namespace Xamarin.Mac.Tasks
 {
 	public class CompileEntitlements : CompileEntitlementsTaskBase
 	{
-		public bool Debug { get; set; }
-
-		[Required]
-		public string SdkDevPath { get; set; }
-
 		static readonly HashSet<string> allowedProvisioningKeys = new HashSet<string> {
 			"com.apple.application-identifier",
 			"com.apple.developer.aps-environment",
