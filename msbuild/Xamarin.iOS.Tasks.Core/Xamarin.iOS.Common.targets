@@ -1238,18 +1238,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</CompileEntitlements>
 	</Target>
 
-	<Target Name="_PrepareResourceRules" DependsOnTargets="_DetectSdkLocations;_GenerateBundleName">
-		<PrepareResourceRules
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '$(CodesignResourceRules)' != '' And '$(ComputedPlatform)' == 'iPhone'"
-			AppBundleDir="$(AppBundleDir)"
-			ResourceRules="$(CodesignResourceRules)"
-			SdkVersion="$(_SdkVersion)"
-			>
-			<Output TaskParameter="PreparedResourceRules" PropertyName="_PreparedResourceRules"/>
-		</PrepareResourceRules>
-	</Target>
-
 	<Target Name="_SeparateAppExtensionReferences" BeforeTargets="AssignProjectConfiguration">
 		<CreateItem Include="@(ProjectReference)" PreserveExistingMetadata="true" Condition="'%(Identity)' != '' And '%(ProjectReference.IsAppExtension)' == 'true'">
 			<Output ItemName="_AppExtensionReference" TaskParameter="Include" />
