@@ -333,6 +333,19 @@ clean-local::
 	rm -f $(SIMLAUNCHERS)
 	$(SYSTEM_MSBUILD) "/t:Clean" /p:Configuration=$(MTOUCH_CONF) *.csproj
 
+all-local:: verify-sorted-resx
+verify-sorted-resx:
+	$(Q) grep '"[A-Z][A-Z][0-9][0-9][0-9][0-9]' Errors.resx | sed -e 's/.*name="[A-Z][A-Z]//' -e 's/" xml:.*//' > .$@.tmp
+	$(Q) sort .$@.tmp > .$@-sorted.tmp
+	$(Q) if diff -U0 .$@.tmp .$@-sorted.tmp > ".$@-unsorted.tmp" 2>&1; then \
+		rm -rf .$@*tmp; \
+	else \
+		echo "❌ The following errors in Errors.resx are not sorted:"; \
+		cat ".$@-unsorted.tmp" | grep "^[+][^+]" | sed 's/^[+]/    /'; \
+		rm -rf .$@*tmp; \
+		exit 1; \
+	fi
+
 include $(TOP)/mk/rules.mk
 include ../common/Make.common
 

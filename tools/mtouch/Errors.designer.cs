@@ -647,60 +647,6 @@ namespace Xamarin.Bundler {
             }
         }
         
-        internal static string MX0129 {
-            get {
-                return ResourceManager.GetString("MX0129", resourceCulture);
-            }
-        }
-        
-        internal static string MX0130 {
-            get {
-                return ResourceManager.GetString("MX0130", resourceCulture);
-            }
-        }
-        
-        internal static string MX0131 {
-            get {
-                return ResourceManager.GetString("MX0131", resourceCulture);
-            }
-        }
-        
-        internal static string MX0132 {
-            get {
-                return ResourceManager.GetString("MX0132", resourceCulture);
-            }
-        }
-        
-        internal static string MX0133 {
-            get {
-                return ResourceManager.GetString("MX0133", resourceCulture);
-            }
-        }
-        
-        internal static string MX0135 {
-            get {
-                return ResourceManager.GetString("MX0135", resourceCulture);
-            }
-        }
-        
-        internal static string MX0148 {
-            get {
-                return ResourceManager.GetString("MX0148", resourceCulture);
-            }
-        }
-        
-        internal static string MX0178 {
-            get {
-                return ResourceManager.GetString("MX0178", resourceCulture);
-            }
-        }
-        
-        internal static string MT0150 {
-            get {
-                return ResourceManager.GetString("MT0150", resourceCulture);
-            }
-        }
-        
         internal static string MT0100 {
             get {
                 return ResourceManager.GetString("MT0100", resourceCulture);
@@ -953,6 +899,42 @@ namespace Xamarin.Bundler {
             }
         }
         
+        internal static string MX0129 {
+            get {
+                return ResourceManager.GetString("MX0129", resourceCulture);
+            }
+        }
+        
+        internal static string MX0130 {
+            get {
+                return ResourceManager.GetString("MX0130", resourceCulture);
+            }
+        }
+        
+        internal static string MX0131 {
+            get {
+                return ResourceManager.GetString("MX0131", resourceCulture);
+            }
+        }
+        
+        internal static string MX0132 {
+            get {
+                return ResourceManager.GetString("MX0132", resourceCulture);
+            }
+        }
+        
+        internal static string MX0133 {
+            get {
+                return ResourceManager.GetString("MX0133", resourceCulture);
+            }
+        }
+        
+        internal static string MX0135 {
+            get {
+                return ResourceManager.GetString("MX0135", resourceCulture);
+            }
+        }
+        
         internal static string MT0136 {
             get {
                 return ResourceManager.GetString("MT0136", resourceCulture);
@@ -1010,6 +992,18 @@ namespace Xamarin.Bundler {
         internal static string MM0147 {
             get {
                 return ResourceManager.GetString("MM0147", resourceCulture);
+            }
+        }
+        
+        internal static string MX0148 {
+            get {
+                return ResourceManager.GetString("MX0148", resourceCulture);
+            }
+        }
+        
+        internal static string MT0150 {
+            get {
+                return ResourceManager.GetString("MT0150", resourceCulture);
             }
         }
         
@@ -1088,6 +1082,12 @@ namespace Xamarin.Bundler {
         internal static string MX0177 {
             get {
                 return ResourceManager.GetString("MX0177", resourceCulture);
+            }
+        }
+        
+        internal static string MX0178 {
+            get {
+                return ResourceManager.GetString("MX0178", resourceCulture);
             }
         }
         
@@ -1247,6 +1247,12 @@ namespace Xamarin.Bundler {
             }
         }
         
+        internal static string MT1601 {
+            get {
+                return ResourceManager.GetString("MT1601", resourceCulture);
+            }
+        }
+        
         internal static string MX1602 {
             get {
                 return ResourceManager.GetString("MX1602", resourceCulture);
@@ -1262,12 +1268,6 @@ namespace Xamarin.Bundler {
         internal static string MX1604 {
             get {
                 return ResourceManager.GetString("MX1604", resourceCulture);
-            }
-        }
-        
-        internal static string MT1601 {
-            get {
-                return ResourceManager.GetString("MT1601", resourceCulture);
             }
         }
         
@@ -1931,6 +1931,12 @@ namespace Xamarin.Bundler {
             }
         }
         
+        internal static string MT4162_A {
+            get {
+                return ResourceManager.GetString("MT4162_A", resourceCulture);
+            }
+        }
+        
         internal static string MT4162_BaseType {
             get {
                 return ResourceManager.GetString("MT4162_BaseType", resourceCulture);
@@ -1943,21 +1949,15 @@ namespace Xamarin.Bundler {
             }
         }
         
-        internal static string MT4162_ReturnType {
-            get {
-                return ResourceManager.GetString("MT4162_ReturnType", resourceCulture);
-            }
-        }
-        
         internal static string MT4162_PropertyType {
             get {
                 return ResourceManager.GetString("MT4162_PropertyType", resourceCulture);
             }
         }
         
-        internal static string MT4162_A {
+        internal static string MT4162_ReturnType {
             get {
-                return ResourceManager.GetString("MT4162_A", resourceCulture);
+                return ResourceManager.GetString("MT4162_ReturnType", resourceCulture);
             }
         }
         
