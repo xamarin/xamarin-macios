@@ -1,0 +1,2 @@
+## TODO: We do not have generator support to trampoline Vector3 -> vector_float3 for Fields
+!missing-field! NINearbyObjectDirectionNotAvailable not bound

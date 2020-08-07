@@ -1,5 +1,5 @@
 //
-// NearbyInteraction bindings
+// NearbyInteraction enums
 //
 // Authors:
 //	Whitney Schmidt  <whschm@microsoft.com>

@@ -16,7 +16,6 @@ using System.Runtime.CompilerServices;
 
 using Foundation;
 using ObjCRuntime;
-using System.Runtime.InteropServices;
 
 namespace Introspection {
 
@@ -67,9 +66,6 @@ namespace Introspection {
 			return IntPtr.Zero;
 		}
 
-		[DllImport (Constants.FoundationLibrary)]
-		extern static IntPtr NSStringFromClass (IntPtr ptr);
-
 		[Test]
 		public void VerifyClassPtr ()
 		{
@@ -89,16 +85,7 @@ namespace Introspection {
 				IntPtr class_ptr = (IntPtr) fi.GetValue (null);
 				IntPtr register_class_ptr = GetClassPtrFromRegister (t);
 
-				///////
-				var ret1 = (string) Runtime.GetNSObject<NSString> (NSStringFromClass (class_ptr));
-				var ret2 = (string) Runtime.GetNSObject<NSString> (NSStringFromClass (register_class_ptr));
-				var ret3 = Runtime.GetNSObject<NSString> (NSStringFromClass (class_ptr));
-				///////
-				///
-
-				//Console.WriteLine ($"This is ret2: {ret2}");
-
-				Assert.AreEqual (class_ptr, register_class_ptr, $"class_ptr and RegisterAttribute are different: t.Name: {t.Name} ret1: {ret1} ret2: {ret2} ret3: {ret3}");
+				Assert.AreEqual (class_ptr, register_class_ptr, "class_ptr and RegisterAttribute are different: " + t.Name);
 			}
 		}
 

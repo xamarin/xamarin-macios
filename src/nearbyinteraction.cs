@@ -57,13 +57,16 @@ namespace NearbyInteraction {
         float Distance { get; }
 
         [Export ("direction")]
-        Vector3 Direction { get; }
+        Vector3 Direction {
+            [MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+            get;
+        }
 
         [Field ("NINearbyObjectDistanceNotAvailable")]
         float DistanceNotAvailable { get; }
 
-        // TODO: Currently we do not have generator support to trampoline Vector3 -> vector_float3 for Fields
-        // There is support for Properties
+        // TODO: We do not have generator support to trampoline Vector3 -> vector_float3 for Fields
+        // There is support for Vector3 -> vector_float3 for properties
         // error BI1014: bgen: Unsupported type for Fields: global::OpenTK.Vector3 for 'NearbyInteraction.NINearbyObjectDistance DirectionNotAvailable'.
         // extern simd_float3 NINearbyObjectDirectionNotAvailable __attribute__((availability(ios, introduced=14.0))) __attribute__((availability(macos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(tvos, unavailable))) __attribute__((visibility("default"))) __attribute__((availability(swift, unavailable)));
         // [Unavailable (PlatformName.Swift)]
@@ -115,10 +118,10 @@ namespace NearbyInteraction {
     interface NISessionDelegate
     {
         [Export ("session:didUpdateNearbyObjects:")]
-        void Session (NISession session, NINearbyObject[] nearbyObjects);
+        void DidSessionUpdateNearbyObjects (NISession session, NINearbyObject[] nearbyObjects);
 
         [Export ("session:didRemoveNearbyObjects:withReason:")]
-        void Session (NISession session, NINearbyObject[] nearbyObjects, NINearbyObjectRemovalReason reason);
+        void DidSessionRemoveNearbyObjects (NISession session, NINearbyObject[] nearbyObjects, NINearbyObjectRemovalReason reason);
 
         [Export ("sessionWasSuspended:")]
         void SessionWasSuspended (NISession session);
@@ -127,6 +130,6 @@ namespace NearbyInteraction {
         void SessionSuspensionEnded (NISession session);
 
         [Export ("session:didInvalidateWithError:")]
-        void Session (NISession session, NSError error);
+        void DidSessionInvalidate (NISession session, NSError error);
     }
 }
