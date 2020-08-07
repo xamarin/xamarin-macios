@@ -452,6 +452,9 @@
     <Compile Include="..\common\Driver.execution.cs">
       <Link>tools\common\Driver.execution.cs</Link>
     </Compile>
+    <Compile Include="..\mtouch\Stripper.cs">
+      <Link>external\tools\mtouch\Stripper.cs</Link>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
