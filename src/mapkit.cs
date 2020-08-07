@@ -1139,7 +1139,7 @@ namespace MapKit {
 
 		[TV (14,0), NoWatch, Mac (11,0), iOS (14,0)]
 		[Export ("locationAtPointIndex:")]
-		nfloat GetLocation (nuint index);
+		nfloat GetLocation (nuint pointIndex);
 
 		[TV (14,0), NoWatch, Mac (11,0), iOS (14,0)]
 		[return: BindAs (typeof (nfloat []))]
@@ -2177,7 +2177,7 @@ namespace MapKit {
 
 		[Export ("initWithCenterCoordinate:radius:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (CLLocationCoordinate2D coordinate, double radius);
+		IntPtr Constructor (CLLocationCoordinate2D centerCoordinate, double radius);
 
 		[Export ("initWithCoordinateRegion:")]
 		[DesignatedInitializer]
