@@ -366,10 +366,17 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</CompileDependsOn>
 	</PropertyGroup>
 
+	<PropertyGroup>
+		<_GenerateBindingsDependsOn>
+			_ComputeTargetFrameworkMoniker;
+			$(_GenerateBindingsDependsOn);
+		</_GenerateBindingsDependsOn>
+	</PropertyGroup>
+
 	<Target Name="_GenerateBindings"
 		Inputs="$(MSBuildAllProjects);@(ObjcBindingApiDefinition);@(ObjcBindingCoreSource);@(ReferencePath);@(ObjcBindingNativeLibrary)"
 		Outputs="$(_GeneratedSourcesFileList)"
-		DependsOnTargets="_ComputeTargetFrameworkMoniker"
+		DependsOnTargets="$(_GenerateBindingsDependsOn)"
 		Condition="'$(IsBindingProject)' == 'true' And '$(DesignTimeBuild)' != 'true'">
 
 		<ItemGroup>
