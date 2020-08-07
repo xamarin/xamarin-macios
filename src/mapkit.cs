@@ -1744,13 +1744,14 @@ namespace MapKit {
 	partial interface MKGradientPolylineRenderer
 	{
 		[Export ("locations", ArgumentSemantic.Copy)]
+		[BindAs (typeof (nfloat[]))]
 		NSNumber[] Locations { get; }
 
 		[Export ("colors", ArgumentSemantic.Copy)]
 		UIColor[] Colors { get; }
 
 		[Export ("setColors:atLocations:")]
-		void SetColors (UIColor[] colors, NSNumber[] locations);
+		void SetColors (UIColor[] colors, [BindAs (typeof (nfloat[]))]NSNumber[] locations);
 	}
 
 	[ThreadSafe]
@@ -2159,7 +2160,6 @@ namespace MapKit {
 	interface MKUserLocationView { 
 		[DesignatedInitializer]
 		[Export ("initWithAnnotation:reuseIdentifier:")]
-		[PostGet ("Annotation")]
 		IntPtr Constructor ([NullAllowed] IMKAnnotation annotation, [NullAllowed] string reuseIdentifier);
 	
 		[Export ("initWithFrame:")]
