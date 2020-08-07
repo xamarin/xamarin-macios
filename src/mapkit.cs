@@ -2202,6 +2202,10 @@ namespace MapKit {
 	[BaseType (typeof (UIView))]
 	interface MKPitchControl
 	{
+		[DesignatedInitializer]
+		[Export ("initWithFrame:")]
+		IntPtr Constructor (CGRect frameRect);
+
 		[Static]
 		[Export ("pitchControlWithMapView:")]
 		MKPitchControl Create ([NullAllowed] MKMapView mapView);
@@ -2216,6 +2220,11 @@ namespace MapKit {
 	[BaseType (typeof (UIView))]
 	interface MKZoomControl
 	{
+
+		[DesignatedInitializer]
+		[Export ("initWithFrame:")]
+		IntPtr Constructor (CGRect frameRect);
+
 		[Static]
 		[Export ("zoomControlWithMapView:")]
 		MKZoomControl Create ([NullAllowed] MKMapView mapView);
