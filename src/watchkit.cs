@@ -1036,6 +1036,26 @@ namespace WatchKit {
 		[Watch (7,0)]
 		[Export ("globalTintColor")]
 		UIColor GlobalTintColor { get; }
+
+		[Watch (7, 0), NoiOS]
+		[Notification, Field ("WKApplicationDidFinishLaunchingNotification")]
+		NSString DidFinishLaunchingNotification { get; }
+
+		[Watch (7, 0), NoiOS]
+		[Notification, Field ("WKApplicationDidBecomeActiveNotification")]
+		NSString DidBecomeActiveNotification { get; }
+
+		[Watch (7, 0), NoiOS]
+		[Notification, Field ("WKApplicationWillResignActiveNotification")]
+		NSString WillResignActiveNotification { get; }
+
+		[Watch (7, 0), NoiOS]
+		[Notification, Field ("WKApplicationWillEnterForegroundNotification")]
+		NSString WillEnterForegroundNotification { get; }
+
+		[Watch (7, 0), NoiOS]
+		[Notification, Field ("WKApplicationDidEnterBackgroundNotification")]
+		NSString DidEnterBackgroundNotification { get; }
 	}
 
 	[NoiOS]
