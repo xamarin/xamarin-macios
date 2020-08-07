@@ -586,6 +586,10 @@ namespace UIKit {
 		[iOS (9,0)]
 		[Export ("allowsDefaultTighteningForTruncation")]
 		bool AllowsDefaultTighteningForTruncation { get; [NotImplemented] set; }
+
+		[Watch (7,0), TV (14,0), iOS (14,0)]
+		[Export ("lineBreakStrategy")]
+		NSLineBreakStrategy LineBreakStrategy { get; [NotImplemented] set; }
 	}
 
 	[ThreadSafe]
@@ -657,6 +661,10 @@ namespace UIKit {
 		[Override]
 		[Export ("allowsDefaultTighteningForTruncation")]
 		bool AllowsDefaultTighteningForTruncation { get; set; }
+
+		[Watch (7,0), TV (14,0), iOS (14,0)]
+		[Export ("lineBreakStrategy")]
+		NSLineBreakStrategy LineBreakStrategy { get; set; }
 
 		[iOS (9,0)]
 		[Export ("addTabStop:")]
@@ -3882,6 +3890,7 @@ namespace UIKit {
 		[Export ("reuseIdentifier", ArgumentSemantic.Copy)]
 		NSString ReuseIdentifier { get;  }
 
+		[RequiresSuper]
 		[Export ("prepareForReuse")]
 		void PrepareForReuse ();
 
@@ -8727,6 +8736,10 @@ namespace UIKit {
 		[iOS (9,0)]
 		[Export ("allowsDefaultTighteningForTruncation")]
 		bool AllowsDefaultTighteningForTruncation { get; set; }
+
+		[Watch (7,0), TV (14,0), iOS (14,0)]
+		[Export ("lineBreakStrategy", ArgumentSemantic.Assign)]
+		NSLineBreakStrategy LineBreakStrategy { get; set; }
 
 		[TV (12, 0), NoWatch, NoiOS]
 		[Export ("enablesMarqueeWhenAncestorFocused")]
@@ -21909,6 +21922,11 @@ namespace UIKit {
 		[Export ("listSidebarCellConfiguration")]
 		UIBackgroundConfiguration ListSidebarCellConfiguration { get; }
 
+		[NoWatch, NoTV]
+		[Static]
+		[Export ("listAccompaniedSidebarCellConfiguration")]
+		UIBackgroundConfiguration ListAccompaniedSidebarCellConfiguration { get; }
+
 		[Export ("updatedConfigurationForState:")]
 		UIBackgroundConfiguration GetUpdatedConfiguration (IUIConfigurationState state);
 
@@ -21963,6 +21981,9 @@ namespace UIKit {
 		[Export ("displayedState", ArgumentSemantic.Assign)]
 		UICellAccessoryDisplayedState DisplayedState { get; set; }
 
+		[Export ("hidden")]
+		bool IsHidden { [Bind ("isHidden")] get; set; }
+
 		[Export ("reservedLayoutWidth")]
 		nfloat ReservedLayoutWidth { get; set; }
 
@@ -21986,6 +22007,9 @@ namespace UIKit {
 	[BaseType (typeof (UICellAccessory))]
 	interface UICellAccessoryDelete {
 
+		[NullAllowed, Export ("backgroundColor", ArgumentSemantic.Strong)]
+		UIColor BackgroundColor { get; set; }
+
 		[NullAllowed, Export ("actionHandler", ArgumentSemantic.Copy)]
 		Action ActionHandler { get; set; }
 	}
@@ -21993,6 +22017,9 @@ namespace UIKit {
 	[NoWatch, TV (14,0), iOS (14,0)]
 	[BaseType (typeof (UICellAccessory))]
 	interface UICellAccessoryInsert {
+
+		[NullAllowed, Export ("backgroundColor", ArgumentSemantic.Strong)]
+		UIColor BackgroundColor { get; set; }
 
 		[NullAllowed, Export ("actionHandler", ArgumentSemantic.Copy)]
 		Action ActionHandler { get; set; }
@@ -22010,6 +22037,8 @@ namespace UIKit {
 	[BaseType (typeof (UICellAccessory))]
 	interface UICellAccessoryMultiselect {
 
+		[NullAllowed, Export ("backgroundColor", ArgumentSemantic.Strong)]
+		UIColor BackgroundColor { get; set; }
 	}
 
 	[NoWatch, NoTV, iOS (14,0)]
@@ -22496,6 +22525,16 @@ namespace UIKit {
 
 		[NoTV]
 		[Static]
+		[Export ("accompaniedSidebarCellConfiguration")]
+		UIListContentConfiguration AccompaniedSidebarCellConfiguration { get; }
+
+		[NoTV]
+		[Static]
+		[Export ("accompaniedSidebarSubtitleCellConfiguration")]
+		UIListContentConfiguration AccompaniedSidebarSubtitleCellConfiguration { get; }
+
+		[NoTV]
+		[Static]
 		[Export ("sidebarHeaderConfiguration")]
 		UIListContentConfiguration SidebarHeaderConfiguration { get; }
 
@@ -22595,6 +22634,9 @@ namespace UIKit {
 
 		[Export ("reservedLayoutSize", ArgumentSemantic.Assign)]
 		CGSize ReservedLayoutSize { get; set; }
+
+		[Export ("accessibilityIgnoresInvertColors")]
+		bool AccessibilityIgnoresInvertColors { get; set; }
 	}
 
 	[NoWatch, TV (14,0), iOS (14,0)]
