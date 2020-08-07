@@ -733,6 +733,7 @@ namespace CoreNFC {
 		Select = (1 << 4),
 		Address = (1 << 5),
 		Option = (1 << 6),
+		[iOS (14,0)]
 		CommandSpecificBit8 = (1 << 7),
 	}
 
