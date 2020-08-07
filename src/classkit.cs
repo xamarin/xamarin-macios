@@ -16,7 +16,7 @@ using System.Reflection;
 namespace ClassKit {
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch, NoTV, Mac (10, 16), iOS (11,4)]
+	[NoWatch, NoTV, Mac (11,0), iOS (11,4)]
 	[Native]
 	enum CLSBinaryValueType : long {
 		TrueFalse = 0,
@@ -27,7 +27,7 @@ namespace ClassKit {
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch, NoTV, Mac (10, 16), iOS (11,4)]
+	[NoWatch, NoTV, Mac (11,0), iOS (11,4)]
 	[Native]
 	enum CLSContextType : long {
 		None = 0,
@@ -53,7 +53,7 @@ namespace ClassKit {
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch, NoTV, Mac (10, 16), iOS (11,4)]
+	[NoWatch, NoTV, Mac (11,0), iOS (11,4)]
 	[Native]
 	[ErrorDomain ("CLSErrorCodeDomain")]
 	public enum CLSErrorCode : long {
@@ -71,7 +71,7 @@ namespace ClassKit {
 
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch, NoTV, Mac (10, 16), iOS (11,4)]
+	[NoWatch, NoTV, Mac (11,0), iOS (11,4)]
 	enum CLSContextTopic {
 		[Field ("CLSContextTopicMath")]
 		Math,
@@ -93,7 +93,7 @@ namespace ClassKit {
 
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch, NoTV, Mac (10, 16), iOS (14, 0)]
+	[NoWatch, NoTV, Mac (11,0), iOS (14, 0)]
 	[Native]
 	public enum CLSProgressReportingCapabilityKind : long {
 		Duration = 0,
@@ -104,7 +104,7 @@ namespace ClassKit {
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch, NoTV, Mac (10, 16), iOS (11,4)]
+	[NoWatch, NoTV, Mac (11,0), iOS (11,4)]
 	[Static]
 	interface CLSErrorUserInfoKeys {
 
@@ -116,7 +116,7 @@ namespace ClassKit {
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch, NoTV, Mac (10, 16), iOS (11,4)]
+	[NoWatch, NoTV, Mac (11,0), iOS (11,4)]
 	[Static]
 	interface CLSPredicateKeyPath {
 		[Field ("CLSPredicateKeyPathDateCreated")]
@@ -139,7 +139,7 @@ namespace ClassKit {
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch, NoTV, Mac (10, 16), iOS (11,4)]
+	[NoWatch, NoTV, Mac (11,0), iOS (11,4)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CLSObject : NSSecureCoding {
@@ -152,7 +152,7 @@ namespace ClassKit {
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch, NoTV, Mac (10, 16), iOS (11,4)]
+	[NoWatch, NoTV, Mac (11,0), iOS (11,4)]
 	[BaseType (typeof (CLSObject))]
 	[DisableDefaultCtor]
 	interface CLSActivity {
@@ -189,7 +189,7 @@ namespace ClassKit {
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch, NoTV, Mac (10, 16), iOS (11,4)]
+	[NoWatch, NoTV, Mac (11,0), iOS (11,4)]
 	[BaseType (typeof (CLSObject))]
 	[DisableDefaultCtor]
 	interface CLSActivityItem {
@@ -202,7 +202,7 @@ namespace ClassKit {
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch, NoTV, Mac (10, 16), iOS (11,4)]
+	[NoWatch, NoTV, Mac (11,0), iOS (11,4)]
 	[BaseType (typeof (CLSActivityItem))]
 	[DisableDefaultCtor]
 	interface CLSBinaryItem {
@@ -219,7 +219,7 @@ namespace ClassKit {
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch, NoTV, Mac (10, 16), iOS (11,4)]
+	[NoWatch, NoTV, Mac (11,0), iOS (11,4)]
 	[BaseType (typeof (CLSObject))]
 	[DisableDefaultCtor]
 	interface CLSContext {
@@ -273,37 +273,37 @@ namespace ClassKit {
 		void ResignActive ();
 
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
-		[NoWatch, NoTV, Mac (10, 16), iOS (14, 0)]
+		[NoWatch, NoTV, Mac (11,0), iOS (14, 0)]
 		[Export ("assignable")]
 		bool Assignable { [Bind ("isAssignable")] get; set; }
 
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
-		[NoWatch, NoTV, Mac (10, 16), iOS (14, 0)]
+		[NoWatch, NoTV, Mac (11,0), iOS (14, 0)]
 		[Export ("suggestedAge", ArgumentSemantic.Assign)]
 		NSRange SuggestedAge { get; set; }
 
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
-		[NoWatch, NoTV, Mac (10, 16), iOS (14, 0)]
+		[NoWatch, NoTV, Mac (11,0), iOS (14, 0)]
 		[Export ("suggestedCompletionTime", ArgumentSemantic.Assign)]
 		NSRange SuggestedCompletionTime { get; set; }
 
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
-		[NoWatch, NoTV, Mac (10, 16), iOS (14, 0)]
+		[NoWatch, NoTV, Mac (11,0), iOS (14, 0)]
 		[Export ("progressReportingCapabilities", ArgumentSemantic.Copy)]
 		NSSet<CLSProgressReportingCapability> ProgressReportingCapabilities { get; }
 
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
-		[NoWatch, NoTV, Mac (10, 16), iOS (14, 0)]
+		[NoWatch, NoTV, Mac (11,0), iOS (14, 0)]
 		[Export ("setType:")]
 		void SetType (CLSContextType type);
 
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
-		[NoWatch, NoTV, Mac (10, 16), iOS (14, 0)]
+		[NoWatch, NoTV, Mac (11,0), iOS (14, 0)]
 		[Export ("addProgressReportingCapabilities:")]
 		void AddProgressReportingCapabilities (NSSet<CLSProgressReportingCapability> capabilities);
 
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
-		[NoWatch, NoTV, Mac (10, 16), iOS (14, 0)]
+		[NoWatch, NoTV, Mac (11,0), iOS (14, 0)]
 		[Export ("resetProgressReportingCapabilities")]
 		void ResetProgressReportingCapabilities ();
 
@@ -334,7 +334,7 @@ namespace ClassKit {
 	interface ICLSDataStoreDelegate { }
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch, NoTV, Mac (10, 16), iOS (11,4)]
+	[NoWatch, NoTV, Mac (11,0), iOS (11,4)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface CLSDataStoreDelegate {
@@ -346,7 +346,7 @@ namespace ClassKit {
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch, NoTV, Mac (10, 16), iOS (11,4)]
+	[NoWatch, NoTV, Mac (11,0), iOS (11,4)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CLSDataStore {
@@ -394,7 +394,7 @@ namespace ClassKit {
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch, NoTV, Mac (10, 16), iOS (11,4)]
+	[NoWatch, NoTV, Mac (11,0), iOS (11,4)]
 	[BaseType (typeof (CLSActivityItem))]
 	[DisableDefaultCtor]
 	interface CLSQuantityItem {
@@ -408,7 +408,7 @@ namespace ClassKit {
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch, NoTV, Mac (10, 16), iOS (11,4)]
+	[NoWatch, NoTV, Mac (11,0), iOS (11,4)]
 	[BaseType (typeof (CLSActivityItem))]
 	[DisableDefaultCtor]
 	interface CLSScoreItem {
@@ -425,7 +425,7 @@ namespace ClassKit {
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch, NoTV, Mac (10, 16), iOS (12,2)]
+	[NoWatch, NoTV, Mac (11,0), iOS (12,2)]
 	[Protocol]
 	interface CLSContextProvider {
 		[Abstract]
@@ -434,7 +434,7 @@ namespace ClassKit {
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch, NoTV, Mac (10,16), iOS (14,0)]
+	[NoWatch, NoTV, Mac (11,0), iOS (14,0)]
 	[BaseType (typeof (CLSObject))]
 	[DisableDefaultCtor]
 	interface CLSProgressReportingCapability {
