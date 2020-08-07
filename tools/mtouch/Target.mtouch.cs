@@ -52,26 +52,6 @@ namespace Xamarin.Bundler
 		// If the assemblies were symlinked.
 		public bool Symlinked;
 
-		// If we're targetting a 32 bit arch for this target.
-		bool? is32bits;
-		public bool Is32Build {
-			get {
-				if (!is32bits.HasValue)
-					is32bits = Application.IsArchEnabled (Abis, Abi.Arch32Mask);
-				return is32bits.Value;
-			}
-		}
-
-		// If we're targetting a 64 bit arch for this target.
-		bool? is64bits;
-		public bool Is64Build {
-			get {
-				if (!is64bits.HasValue)
-					is64bits = Application.IsArchEnabled (Abis, Abi.Arch64Mask);
-				return is64bits.Value;
-			}
-		}
-
 		// If this is an app extension, this returns the equivalent (32/64bit) target for the container app.
 		// This may be null (it's possible to build an extension for 32+64bit, and the main app only for 64-bit, for instance.
 		public Target ContainerTarget {
