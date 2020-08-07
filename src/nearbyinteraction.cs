@@ -65,7 +65,8 @@ namespace NearbyInteraction {
         [Field ("NINearbyObjectDistanceNotAvailable")]
         float DistanceNotAvailable { get; }
 
-        // TODO: We do not have generator support to trampoline Vector3 -> vector_float3 for Fields
+        // TODO: https://github.com/xamarin/maccore/issues/2274
+        // We do not have generator support to trampoline Vector3 -> vector_float3 for Fields
         // There is support for Vector3 -> vector_float3 for properties
         // error BI1014: bgen: Unsupported type for Fields: global::OpenTK.Vector3 for 'NearbyInteraction.NINearbyObjectDistance DirectionNotAvailable'.
         // extern simd_float3 NINearbyObjectDirectionNotAvailable __attribute__((availability(ios, introduced=14.0))) __attribute__((availability(macos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(tvos, unavailable))) __attribute__((visibility("default"))) __attribute__((availability(swift, unavailable)));
