@@ -146,7 +146,8 @@ namespace Foundation  {
 		BadArgumentError = -72004,
 		CancelledError = -72005,
 		InvalidError = -72006,
-		TimeoutError = -72007
+		TimeoutError = -72007,
+		MissingRequiredConfigurationError = -72008,
 	}
 
 	[Flags]
