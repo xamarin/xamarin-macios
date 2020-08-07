@@ -41,7 +41,62 @@ namespace CoreMidi {
 		Protocol_2_0 = 2,
 	}
 
-	
+	[Mac (11, 0), iOS (14, 0)]
+	public enum MidiCVStatus : uint {
+		RegisteredPnc = 0,
+		AssignablePnc = 1,
+		RegisteredControl = 2,
+		AssignableControl = 3,
+		RelRegisteredControl = 4,
+		RelAssignableControl = 5,
+		PerNotePitchBend = 6,
+		// 7 is not present in the headers..
+		NoteOff = 8,
+		NoteOn = 9,
+		PolyPressure = 10,
+		ControlChange = 11,
+		ProgramChange = 12,
+		ChannelPressure = 13,
+		PitchBend = 14,
+		PerNoteMgmt = 15,
+	}
+
+	[Mac (11, 0), iOS (14, 0)]
+	public enum MidiMessageType : uint {
+		Utility = 0,
+		System = 1,
+		ChannelVoice1 = 2,
+		SysEx = 3,
+		ChannelVoice2 = 4,
+		Data128 = 5,
+	}
+
+	[Mac (11, 0), iOS (14, 0)]
+	public enum MidiSysExStatus : uint {
+		Complete = 0,
+		Start = 1,
+		Continue = 2,
+		End = 3,
+	}
+
+	[Mac (11, 0), iOS (14, 0)]
+	public enum MidiSystemStatus : uint {
+		StartOfExclusive = 240,
+		EndOfExclusive = 247,
+		Mtc = 241,
+		SongPosPointer = 242,
+		SongSelect = 243,
+		TuneRequest = 246,
+		TimingClock = 248,
+		Start = 250,
+		Continue = 251,
+		Stop = 252,
+		ActiveSending = 254,
+		SystemReset = 255,
+	}
+
+
+		
 #if !MONOMAC
 	[NoMac][NoTV][NoWatch]
 	[BaseType (typeof (NSObject), Name="MIDINetworkHost")]
