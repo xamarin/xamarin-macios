@@ -55,7 +55,9 @@ namespace Foundation  {
 		I386   = 0x00000007,
 		PPC    = 0x00000012,
 		X86_64 = 0x01000007,
-		PPC64  = 0x01000012
+		PPC64  = 0x01000012,
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		ARM64  = 0x0100000c,
 	}
 #endif
 

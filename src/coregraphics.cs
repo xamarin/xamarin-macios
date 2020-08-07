@@ -77,11 +77,11 @@ namespace CoreGraphics {
 		[Internal][Field ("kCGPDFContextAccessPermissions")]
 		IntPtr kCGPDFContextAccessPermissions { get; }
 
-		[Mac (10,16)][iOS (14,0)][TV (14,0)][Watch (7,0)]
+		[Mac (11,0)][iOS (14,0)][TV (14,0)][Watch (7,0)]
 		[Internal][Field ("kCGPDFContextCreateLinearizedPDF")]
 		IntPtr kCGPDFContextCreateLinearizedPDF { get; }
 
-		[Mac (10,16)][iOS (14,0)][TV (14,0)][Watch (7,0)]
+		[Mac (11,0)][iOS (14,0)][TV (14,0)][Watch (7,0)]
 		[Internal][Field ("kCGPDFContextCreatePDFA")]
 		IntPtr kCGPDFContextCreatePDFA { get; }
 	}
@@ -223,7 +223,7 @@ namespace CoreGraphics {
 		NSString Itur_2020_PQ_Eotf { get; }
 
 		[Mac (10,15,4), iOS (13,4), TV (13,4), Watch (6,2)]
-		[Deprecated (PlatformName.MacOSX, 10,16, message: "Use 'Itur_2100_PQ' instead.")]
+		[Deprecated (PlatformName.MacOSX, 11,0, message: "Use 'Itur_2100_PQ' instead.")]
 		[Deprecated (PlatformName.iOS, 14,0, message: "Use 'Itur_2100_PQ' instead.")]
 		[Deprecated (PlatformName.TvOS, 14,0, message: "Use 'Itur_2100_PQ' instead.")]
 		[Deprecated (PlatformName.WatchOS, 7,0, message: "Use 'Itur_2100_PQ' instead.")]
@@ -250,18 +250,18 @@ namespace CoreGraphics {
 
 		[Mac (10,15)][iOS (13,0)]
 		[TV (13,0)][Watch (6,0)]
-		[Deprecated (PlatformName.MacOSX, 10,16, message: "Use 'Itur_2100_PQ' instead.")]
+		[Deprecated (PlatformName.MacOSX, 11,0, message: "Use 'Itur_2100_PQ' instead.")]
 		[Deprecated (PlatformName.iOS, 14,0, message: "Use 'Itur_2100_PQ' instead.")]
 		[Deprecated (PlatformName.TvOS, 14,0, message: "Use 'Itur_2100_PQ' instead.")]
 		[Deprecated (PlatformName.WatchOS, 7,0, message: "Use 'Itur_2100_PQ' instead.")]
 		[Field ("kCGColorSpaceITUR_2020_HLG")]
 		NSString Itur_2020_Hlg { get; }
 
-		[iOS (14,0)][TV (14,0)][Watch (7,0)][Mac (10,16)]
+		[iOS (14,0)][TV (14,0)][Watch (7,0)][Mac (11,0)]
 		[Field ("kCGColorSpaceITUR_2100_HLG")]
 		NSString Itur_2100_Hlg { get; }
 
-		[iOS (14,0)][TV (14,0)][Watch (7,0)][Mac (10,16)]
+		[iOS (14,0)][TV (14,0)][Watch (7,0)][Mac (11,0)]
 		[Field ("kCGColorSpaceITUR_2100_PQ")]
 		NSString Itur_2100_PQ { get; }
 	}
