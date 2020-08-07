@@ -1078,6 +1078,8 @@ namespace AudioUnit
 		TranslateBundleIDToTransportManager = 1953325673, // 'tmbi'
 		BoxList = 1651472419, // 'box#'
 		TranslateUIDToBox = 1969841250, // 'uidb'
+		ClockDeviceList = 1668049699, //'clk#'
+		TranslateUidToClockDevice = 1969841251, // 'uidc',
 		ProcessIsMaster = 1835103092, // 'mast'
 		IsInitingOrExiting = 1768845172, // 'inot'
 		UserIDChanged = 1702193508, // 'euid'
@@ -1087,7 +1089,10 @@ namespace AudioUnit
 		HogModeIsAllowed = 1752131442, // 'hogr'
 		UserSessionIsActiveOrHeadless = 1970496882, // 'user'
 		ServiceRestarted = 1936880500, // 'srst'
-		PowerHint = 1886353256 // 'powh'
+		PowerHint = 1886353256, // 'powh'
+		ActualSampleRate = 1634955892,// 'asrt',
+		ClockDevice = 1634755428, // 'apcd',
+		IOThreadOSWorkgroup = 1869838183, // 'oswg'
 	}
 
 	public enum AudioObjectPropertyScope : uint
