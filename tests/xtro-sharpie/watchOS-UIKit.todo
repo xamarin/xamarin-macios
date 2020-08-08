@@ -1,4 +1,0 @@
-!missing-enum! NSLineBreakStrategy not bound
-!missing-selector! NSMutableParagraphStyle::lineBreakStrategy not bound
-!missing-selector! NSMutableParagraphStyle::setLineBreakStrategy: not bound
-!missing-selector! NSParagraphStyle::lineBreakStrategy not bound

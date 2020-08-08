@@ -3143,4 +3143,14 @@ namespace UIKit {
 		Minimal = 2,
 	}
 
+	[Watch (7,0), TV (14,0), iOS (14,0)]
+	[Flags]
+	[Native]
+	public enum NSLineBreakStrategy : ulong {
+		None = 0x0,
+		PushOut = 1uL << 0,
+		HangulWordPriority = 1uL << 1,
+		Standard = 0xffff,
+	}
+
 }
