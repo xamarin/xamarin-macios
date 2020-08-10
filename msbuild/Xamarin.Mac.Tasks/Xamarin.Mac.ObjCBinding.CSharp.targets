@@ -57,19 +57,6 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Shared.targets" />
 
-	<Target Name="_PrepareNativeReferences" Condition="'$(DesignTimeBuild)' != 'true'">
-		<PrepareNativeReferences
-			Condition="'$(IsMacEnabled)' == 'true'"
-			SessionId="$(BuildSessionId)"
-			IntermediateOutputPath="$(IntermediateOutputPath)"
-			NativeReferences="@(NativeReference)"
-		>
-			<Output ItemName="ManifestResourceWithNoCulture" TaskParameter="EmbeddedResources" Condition="'$(NoBindingEmbedding)' != 'true'"/>
-			<Output ItemName="_NativeFramework" TaskParameter="NativeFrameworks" Condition="'$(NoBindingEmbedding)' != 'true'"/>
-			<Output ItemName="Compile" TaskParameter="LinkWithAttributes" />
-		</PrepareNativeReferences>
-	</Target>
-
 	<Target Name="_CollectNativeFrameworkResources" Returns="@(_NativeFrameworkResource)" DependsOnTargets="_PrepareNativeReferences">
 		<CreateItem Include="@(_NativeFramework -> '%(Identity)\**\*.*')">
 			<Output ItemName="_NativeFrameworkResource" TaskParameter="Include" />

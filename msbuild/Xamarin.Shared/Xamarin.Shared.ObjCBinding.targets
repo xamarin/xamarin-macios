@@ -56,4 +56,16 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		</CreateEmbeddedResources>
 	</Target>
 
+	<Target Name="_PrepareNativeReferences" Condition="'$(DesignTimeBuild)' != 'true'">
+		<PrepareNativeReferences
+			Condition="'$(IsMacEnabled)' == 'true'"
+			SessionId="$(BuildSessionId)"
+			IntermediateOutputPath="$(IntermediateOutputPath)"
+			NativeReferences="@(NativeReference)"
+		>
+			<Output ItemName="ManifestResourceWithNoCulture" TaskParameter="EmbeddedResources" Condition="'$(NoBindingEmbedding)' != 'true'"/>
+			<Output ItemName="_NativeFramework" TaskParameter="NativeFrameworks" Condition="'$(NoBindingEmbedding)' != 'true'"/>
+			<Output ItemName="Compile" TaskParameter="LinkWithAttributes" />
+		</PrepareNativeReferences>
+	</Target>
 </Project>
