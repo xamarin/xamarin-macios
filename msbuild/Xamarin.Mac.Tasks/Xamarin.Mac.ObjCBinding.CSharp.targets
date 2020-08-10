@@ -57,12 +57,6 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Shared.targets" />
 
-	<Target Name="_CollectNativeFrameworkResources" Returns="@(_NativeFrameworkResource)" DependsOnTargets="_PrepareNativeReferences">
-		<CreateItem Include="@(_NativeFramework -> '%(Identity)\**\*.*')">
-			<Output ItemName="_NativeFrameworkResource" TaskParameter="Include" />
-		</CreateItem>
-	</Target>
-
 	<Target Name="_CompressFrameworks" Inputs="@(_NativeFrameworkResource)" Outputs="$(IntermediateOutputPath)%(_NativeFramework.Filename)%(_NativeFramework.Extension)" DependsOnTargets="_CollectNativeFrameworkResources">
 		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(IntermediateOutputPath)%(_NativeFramework.Filename)%(_NativeFramework.Extension)" />
 

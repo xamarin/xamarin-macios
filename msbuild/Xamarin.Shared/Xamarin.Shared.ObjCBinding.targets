@@ -46,6 +46,12 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<RemoveDir Directories="$(GeneratedSourcesDir)" Condition="Exists ('$(GeneratedSourcesDir)')" />
 	</Target>
 
+	<Target Name="_CollectNativeFrameworkResources" Returns="@(_NativeFrameworkResource)" DependsOnTargets="_PrepareNativeReferences">
+		<CreateItem Include="@(_NativeFramework -> '%(Identity)\**\*.*')">
+			<Output ItemName="_NativeFrameworkResource" TaskParameter="Include" />
+		</CreateItem>
+	</Target>
+
 	<Target Name="_CreateEmbeddedResources" DependsOnTargets="_CollectBundleResources">
 		<PropertyGroup>
 			<_EmbeddedResourcePrefix Condition="'$(_PlatformName)' == 'macOS'">xammac</_EmbeddedResourcePrefix>
