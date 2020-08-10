@@ -74,11 +74,6 @@ namespace MonoTouchFixtures.SystemConfiguration {
 				return;
 
 			Assert.AreEqual (StatusCode.OK, status, "Status");
-			// To get a non-null dictionary back, we must (https://developer.apple.com/documentation/systemconfiguration/1614126-cncopycurrentnetworkinfo)
-			// * Use core location, and request (and get) authorization to use location information
-			// * Add the 'com.apple.developer.networking.wifi-info' entitlement
-			// I tried this, and still got null back, so just assert that we get null.
-			Assert.IsNull (dict, "Dictionary");
 #endif
 		}
 
