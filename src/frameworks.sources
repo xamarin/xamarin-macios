@@ -1202,8 +1202,8 @@ NETWORK_SOURCES = \
 NEARBYINTERACTION_API_SOURCES = \
 	NearbyInteraction/Enums.cs \
 
-NEARBYINTERACTION_SOURCE = \
-	NearbyInteaction/NINearbyObject.cs \
+NEARBYINTERACTION_SOURCES = \
+	NearbyInteraction/NINearbyObject.cs \
 
 # NetworkExtension
 
