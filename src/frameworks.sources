@@ -1197,7 +1197,11 @@ NETWORK_SOURCES = \
 	Network/NWWebSocketOptions.cs	\
 	Network/NWWebSocketRequest.cs	\
 	Network/NWWebSocketResponse.cs	\
-	
+
+# NearbyInteraction
+NEARBYINTERACTION_API_SOURCES = \
+	NearbyInteraction/Enums.cs \
+
 # NetworkExtension
 
 NETWORKEXTENSION_API_SOURCES = \
@@ -1881,6 +1885,7 @@ MAC_FRAMEWORKS =            \
 	MobileCoreServices      \
 	ModelIO                 \
 	MultipeerConnectivity	\
+	NearbyInteraction		\
 	NetworkExtension        \
 	NotificationCenter 	\
 	OpenGL                  \
@@ -1981,6 +1986,7 @@ IOS_FRAMEWORKS =         \
 	MobileCoreServices \
 	ModelIO \
 	MultipeerConnectivity \
+	NearbyInteraction \
 	NetworkExtension \
 	NewsstandKit \
 	NotificationCenter \
