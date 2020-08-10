@@ -422,9 +422,9 @@ namespace Xamarin.Bundler {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
 				case ApplePlatform.WatchOS:
-					throw ErrorHelper.CreateError (180, Errors.MX0179, ProductName, PlatformName, SdkVersions.GetVersion (this), SdkVersions.Xcode);
+					throw ErrorHelper.CreateError (180, Errors.MX0180, ProductName, PlatformName, SdkVersions.GetVersion (this), SdkVersions.Xcode);
 				case ApplePlatform.MacOSX:
-					throw ErrorHelper.CreateError (179, Errors.MX0180, ProductName, PlatformName, SdkVersions.GetVersion (this), SdkVersions.Xcode);
+					throw ErrorHelper.CreateError (179, Errors.MX0179, ProductName, PlatformName, SdkVersions.GetVersion (this), SdkVersions.Xcode);
 				default:
 					// Default to the iOS error message, it's better than showing MX0071 (unknown platform), which would be completely unrelated
 					goto case ApplePlatform.iOS;
