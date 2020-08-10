@@ -25,8 +25,7 @@ Copyright (C) 2015-2016 Xamarin. All rights reserved.
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.iOS.Common.targets" />
 
-	<Import Project="$(MSBuildThisFileDirectory)Xamarin.iOS.WatchApp.Common.props" 
-			Condition="'$(_XamarinWatchAppCommonPropsHasBeenImported)' != 'true'" />
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.iOS.WatchApp.Common.props" />
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets" 
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets')"/>

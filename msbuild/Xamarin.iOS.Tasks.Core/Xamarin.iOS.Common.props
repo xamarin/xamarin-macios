@@ -17,13 +17,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.props"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.props')"/>
 
-	<!-- This is used to determine whether Xamarin.iOS.Common.targets needs to import 
-         Xamarin.iOS.Common.props itself, or whether it has been imported previously,
-         e.g. by the project itself. -->
-	<PropertyGroup>
-		<_XamarinCommonPropsHasBeenImported>true</_XamarinCommonPropsHasBeenImported>
-	</PropertyGroup>
-
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Shared.props" />
 
 	<!-- When looking for related files to copy, look for Mono debugging files as well -->
