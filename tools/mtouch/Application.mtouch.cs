@@ -135,8 +135,6 @@ namespace Xamarin.Bundler {
 			return !IsInterpreted (assembly);
 		}
 
-		bool RequiresXcodeHeaders => LinkMode == LinkMode.None;
-
 		public List<string> UserGccFlags;
 
 		// If we didn't link the final executable because the existing binary is up-to-date.

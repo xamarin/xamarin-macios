@@ -88,6 +88,21 @@ namespace Xamarin.Bundler {
 		public List<Application> SharedCodeApps = new List<Application> (); // List of appexes we're sharing code with.
 		public string RegistrarOutputLibrary;
 
+		bool RequiresXcodeHeaders {
+			get {
+				switch (Platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
+					return LinkMode == LinkMode.None;
+				case ApplePlatform.MacOSX:
+					return Registrar == RegistrarMode.Static && LinkMode == LinkMode.None;
+				default:
+					throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
+				}
+			}
+		}
+
 		public string LocalBuildDir {
 			get {
 				switch (Platform) {
