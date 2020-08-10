@@ -88,7 +88,7 @@ namespace Xamarin.MacDev.Tasks {
 					arguments.Add (Path.GetFullPath (obj.ItemSpec));
 
 			arguments.Add ("-o");
-			arguments.Add (OutputFile);
+			arguments.Add (Path.GetFullPath (OutputFile));
 
 			ExecuteAsync ("xcrun", arguments, sdkDevPath: SdkDevPath).Wait ();
 
