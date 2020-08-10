@@ -204,7 +204,7 @@ namespace CoreMotion {
 		[Export ("heading")]
 		double Heading { get; }
 
-		[iOS (14,0)][Watch (7,0)][Mac (10,16)]
+		[iOS (14,0)][Watch (7,0)][Mac (11,0)]
 		[Export ("sensorLocation")]
 		CMDeviceMotionSensorLocation SensorLocation { get; }
 	}
@@ -650,7 +650,7 @@ namespace CoreMotion {
 		High,
 	}
 
-	[iOS (14,0)][Watch (7,0)][Mac (10,16)]
+	[iOS (14,0)][Watch (7,0)][Mac (11,0)]
 	[Native]
 	public enum CMDeviceMotionSensorLocation : long {
 		Default,
@@ -705,5 +705,23 @@ namespace CoreMotion {
 
 		[Export ("headphoneMotionManagerDidDisconnect:")]
 		void DidDisconnect (CMHeadphoneMotionManager manager);
+	}
+
+	[Watch (7,0), NoMac, iOS (14,0)]
+	[BaseType (typeof (CMLogItem))]
+	[DisableDefaultCtor]
+	interface CMRotationRateData {
+
+		[Export ("rotationRate")]
+		CMRotationRate RotationRate { get; }
+	}
+
+	[Watch (7,0), NoMac, iOS (14,0)]
+	[BaseType (typeof (CMRotationRateData))]
+	[DisableDefaultCtor]
+	interface CMRecordedRotationRateData {
+
+		[Export ("startDate")]
+		NSDate StartDate { get; }
 	}
 }

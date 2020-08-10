@@ -4,6 +4,8 @@
 !missing-field! kCFURLFileProtectionCompleteUntilFirstUserAuthentication not bound
 !missing-field! kCFURLFileProtectionKey not bound
 !missing-field! kCFURLFileProtectionNone not bound
+!missing-field! kCFURLVolumeSupportsFileProtectionKey not bound
+
 
 
 ## unsorted

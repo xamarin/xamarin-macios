@@ -266,6 +266,9 @@ namespace Intents {
 	[Native]
 	[ErrorDomain ("INIntentErrorDomain")]
 	public enum INIntentErrorCode : long {
+		HandlingApplicationExitedUnexpectedly = 1312,
+		HandlingApplicationRequestTimeout = 1314,
+		HandlingNotSupportedOnPlatform = 1316,
 		InteractionOperationNotSupported = 1900,
 		DonatingInteraction = 1901,
 		DeletingAllInteractions = 1902,
@@ -2026,8 +2029,8 @@ namespace Intents {
 		Music = (1uL << 2),
 		Podcasts = (1uL << 3),
 		Reading = (1uL << 4),
-		PrepareForTomorrow = (1uL << 5),
 		YogaAndStretching = (1uL << 6),
+		WrapUpYourDay = (1uL << 7),
 	}
 
 	[Watch (7,0), NoTV, NoMac, iOS (14,0)]

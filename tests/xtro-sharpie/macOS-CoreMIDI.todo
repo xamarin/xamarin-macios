@@ -1,4 +1,0 @@
-!missing-enum! MIDICVStatus not bound
-!missing-enum! MIDIMessageType not bound
-!missing-enum! MIDISysExStatus not bound
-!missing-enum! MIDISystemStatus not bound

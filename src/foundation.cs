@@ -1314,22 +1314,22 @@ namespace Foundation
 		[NullAllowed, Export ("error", ArgumentSemantic.Copy)]
 		NSError Error { get; }
 
-		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 		[Export ("decodeArrayOfObjectsOfClass:forKey:")]
 		[return: NullAllowed]
 		NSObject[] DecodeArrayOfObjects (Class @class, string key);
 
-		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 		[Export ("decodeArrayOfObjectsOfClasses:forKey:")]
 		[return: NullAllowed]
 		NSObject[] DecodeArrayOfObjects (NSSet<Class> classes, string key);
 
-		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 		[Export ("decodeDictionaryWithKeysOfClass:objectsOfClass:forKey:")]
 		[return: NullAllowed]
 		NSDictionary DecodeDictionary (Class keyClass, Class objectClass, string key);
 
-		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 		[Export ("decodeDictionaryWithKeysOfClasses:objectsOfClasses:forKey:")]
 		[return: NullAllowed]
 		NSDictionary DecodeDictionary (NSSet<Class> keyClasses, NSSet<Class> objectClasses, string key);
@@ -2522,25 +2522,25 @@ namespace Foundation
 		bool GetRequiresSecureCoding ();
 
 
-		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 		[Static]
 		[Export ("unarchivedArrayOfObjectsOfClass:fromData:error:")]
 		[return: NullAllowed]
 		NSObject[] GetUnarchivedArray (Class @class, NSData data, [NullAllowed] out NSError error);
 
-		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 		[Static]
 		[Export ("unarchivedArrayOfObjectsOfClasses:fromData:error:")]
 		[return: NullAllowed]
 		NSObject[] GetUnarchivedArray (NSSet<Class> classes, NSData data, [NullAllowed] out NSError error);
 
-		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 		[Static]
 		[Export ("unarchivedDictionaryWithKeysOfClass:objectsOfClass:fromData:error:")]
 		[return: NullAllowed]
 		NSDictionary GetUnarchivedDictionary (Class keyClass, Class valueClass, NSData data, [NullAllowed] out NSError error);
 
-		[Watch (7,0), TV (14,0), Mac (10,16), iOS (14,0)]
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 		[Static]
 		[Export ("unarchivedDictionaryWithKeysOfClasses:objectsOfClasses:fromData:error:")]
 		[return: NullAllowed]
@@ -4374,7 +4374,7 @@ namespace Foundation
 
 	delegate void NSLingusticEnumerator (NSString tag, NSRange tokenRange, NSRange sentenceRange, ref bool stop);
 
-	[Deprecated (PlatformName.MacOSX, 10,16, message: "Use 'NaturalLanguage.*' API instead.")]
+	[Deprecated (PlatformName.MacOSX, 11,0, message: "Use 'NaturalLanguage.*' API instead.")]
 	[Deprecated (PlatformName.iOS, 14,0, message: "Use 'NaturalLanguage.*' API instead.")]
 	[Deprecated (PlatformName.WatchOS, 7,0, message: "Use 'NaturalLanguage.*' API instead.")]
 	[Deprecated (PlatformName.TvOS, 14,0, message: "Use 'NaturalLanguage.*' API instead.")]
@@ -5370,12 +5370,12 @@ namespace Foundation
 		// From NSUserActivity (CLSDeepLinks)
 
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
-		[NoWatch, NoTV, Mac (10, 16), iOS (11,4)]
+		[NoWatch, NoTV, Mac (11, 0), iOS (11,4)]
 		[Export ("isClassKitDeepLink")]
 		bool IsClassKitDeepLink { get; }
 
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
-		[NoWatch, NoTV, Mac (10, 16), iOS (11,4)]
+		[NoWatch, NoTV, Mac (11, 0), iOS (11,4)]
 		[NullAllowed, Export ("contextIdentifierPath", ArgumentSemantic.Strong)]
 		string[] ContextIdentifierPath { get; }
 
@@ -5855,7 +5855,7 @@ namespace Foundation
 		[Deprecated (PlatformName.iOS, 14,0, message: "Use 'ContentTypeKey' instead.")]
 		[Deprecated (PlatformName.TvOS, 14,0, message: "Use 'ContentTypeKey' instead.")]
 		[Deprecated (PlatformName.WatchOS, 7,0, message: "Use 'ContentTypeKey' instead.")]
-		[Deprecated (PlatformName.MacOSX, 10,16, message: "Use 'ContentTypeKey' instead.")]
+		[Deprecated (PlatformName.MacOSX, 11,0, message: "Use 'ContentTypeKey' instead.")]
 		[Field ("NSURLTypeIdentifierKey")]
 		NSString TypeIdentifierKey { get; }
 
@@ -6072,6 +6072,10 @@ namespace Foundation
 		[Field ("NSURLVolumeSupportsAccessPermissionsKey")]
 		NSString VolumeSupportsAccessPermissionsKey { get; }
 
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[Field ("NSURLVolumeSupportsFileProtectionKey")]
+		NSString VolumeSupportsFileProtectionKey { get; }
+
 		[NoWatch, NoTV, Mac (10, 13), iOS (11, 0)]
 		[Field ("NSURLVolumeAvailableCapacityForImportantUsageKey")]
 		NSString VolumeAvailableCapacityForImportantUsageKey { get; }
@@ -6282,27 +6286,27 @@ namespace Foundation
 		NSString FileProtectionCompleteUntilFirstUserAuthentication { get; }
 #endif
 
-		[Watch (7,0)][TV (14,0)][Mac (10,16)][iOS (14,0)]
+		[Watch (7,0)][TV (14,0)][Mac (11,0)][iOS (14,0)]
 		[Field ("NSURLContentTypeKey")]
 		NSString ContentTypeKey { get; }
 
-		[Watch (7,0)][TV (14,0)][Mac (10,16)][iOS (14,0)]
+		[Watch (7,0)][TV (14,0)][Mac (11,0)][iOS (14,0)]
 		[Field ("NSURLFileContentIdentifierKey")]
 		NSString FileContentIdentifierKey { get; }
 
-		[Watch (7,0)][TV (14,0)][Mac (10,16)][iOS (14,0)]
+		[Watch (7,0)][TV (14,0)][Mac (11,0)][iOS (14,0)]
 		[Field ("NSURLIsPurgeableKey")]
 		NSString IsPurgeableKey { get; }
 
-		[Watch (7,0)][TV (14,0)][Mac (10,16)][iOS (14,0)]
+		[Watch (7,0)][TV (14,0)][Mac (11,0)][iOS (14,0)]
 		[Field ("NSURLIsSparseKey")]
 		NSString IsSparseKey { get; }
 
-		[Watch (7,0)][TV (14,0)][Mac (10,16)][iOS (14,0)]
+		[Watch (7,0)][TV (14,0)][Mac (11,0)][iOS (14,0)]
 		[Field ("NSURLMayHaveExtendedAttributesKey")]
 		NSString MayHaveExtendedAttributesKey { get; }
 
-		[Watch (7,0)][TV (14,0)][Mac (10,16)][iOS (14,0)]
+		[Watch (7,0)][TV (14,0)][Mac (11,0)][iOS (14,0)]
 		[Field ("NSURLMayShareFileContentKey")]
 		NSString MayShareFileContentKey { get; }
 
@@ -6391,7 +6395,6 @@ namespace Foundation
 		[Deprecated (PlatformName.iOS, 13,0, message : "Use the overload that accepts an 'NSUrl' parameter instead.")]
 		[Deprecated (PlatformName.WatchOS, 6,0, message : "Use the overload that accepts an 'NSUrl' parameter instead.")]
 		[Deprecated (PlatformName.TvOS, 13,0, message : "Use the overload that accepts an 'NSUrl' parameter instead.")]
-		[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
 		[Export ("initWithMemoryCapacity:diskCapacity:diskPath:")]
 		IntPtr Constructor (nuint memoryCapacity, nuint diskCapacity, string diskPath);
 
@@ -11835,6 +11838,10 @@ namespace Foundation
 		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
 		[Export ("macCatalystApp")]
 		bool IsMacCatalystApplication { [Bind ("isMacCatalystApp")] get; }
+
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[Export ("iOSAppOnMac")]
+		bool IsiOSApplicationOnMac { [Bind ("isiOSAppOnMac")] get; }
 #endregion
 	}
 
@@ -14522,7 +14529,7 @@ namespace Foundation
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
-	[Deprecated (PlatformName.MacOSX, 10,16, message: "Use 'UserNotifications.*' API instead.")]
+	[Deprecated (PlatformName.MacOSX, 11,0, message: "Use 'UserNotifications.*' API instead.")]
 	interface NSUserNotificationCenterDelegate 
 	{
 		[Export ("userNotificationCenter:didDeliverNotification:"), EventArgs ("UNCDidDeliverNotification")]
