@@ -14,6 +14,7 @@ using System;
 namespace NearbyInteraction {
 
     [NoWatch, NoTV, NoMac, iOS (14,0)]
+    [ErrorDomain ("NIErrorDomain")]
     [Native]
     public enum NIErrorCode : long
     {
