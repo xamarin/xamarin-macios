@@ -52,27 +52,7 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Shared.targets" />
 
-	<Target Name="_CompressFrameworks" Inputs="@(_NativeFrameworkResource)" Outputs="$(IntermediateOutputPath)%(_NativeFramework.Filename)%(_NativeFramework.Extension)" DependsOnTargets="_CollectNativeFrameworkResources">
-		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(IntermediateOutputPath)%(_NativeFramework.Filename)%(_NativeFramework.Extension)" />
-
-		<Zip
-			Condition="'$(IsMacEnabled)' == 'true'"
-			SessionId="$(BuildSessionId)"
-			ToolExe="$(ZipExe)"
-			ToolPath="$(ZipPath)"
-			Recursive="true"
-			Symlinks="true"
-			Sources="%(_NativeFramework.Identity)"
-			OutputFile="$(IntermediateOutputPath)%(_NativeFramework.Filename)%(_NativeFramework.Extension)"
-			WorkingDirectory="%(_NativeFramework.FullPath)" >
-		</Zip>
-
-		<CreateItem Include="$(IntermediateOutputPath)%(_NativeFramework.Filename)%(_NativeFramework.Extension)">
-			<Output TaskParameter="Include" ItemName="ManifestResourceWithNoCulture" />
-		</CreateItem>
-	</Target>
-
-	<Target Name="_CollectGeneratedSources" DependsOnTargets="_CompressFrameworks;_GenerateBindings"
+	<Target Name="_CollectGeneratedSources" DependsOnTargets="_CompressNativeFrameworkResources;_GenerateBindings"
 		Condition="'$(DesignTimeBuild)' != 'true'">
 		
 		<ReadLinesFromFile File="$(_GeneratedSourcesFileList)" >

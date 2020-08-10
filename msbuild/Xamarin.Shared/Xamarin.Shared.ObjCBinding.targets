@@ -62,6 +62,26 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		</CreateEmbeddedResources>
 	</Target>
 
+	<Target Name="_CompressNativeFrameworkResources" Inputs="@(_NativeFrameworkResource)" Outputs="$(IntermediateOutputPath)%(_NativeFramework.Filename)%(_NativeFramework.Extension)" DependsOnTargets="_CollectNativeFrameworkResources">
+		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(IntermediateOutputPath)%(_NativeFramework.Filename)%(_NativeFramework.Extension)" />
+
+		<Zip
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			ToolExe="$(ZipExe)"
+			ToolPath="$(ZipPath)"
+			Recursive="true"
+			Symlinks="true"
+			Sources="%(_NativeFramework.Identity)"
+			OutputFile="$(IntermediateOutputPath)%(_NativeFramework.Filename)%(_NativeFramework.Extension)"
+			WorkingDirectory="%(_NativeFramework.Identity)" >
+		</Zip>
+
+		<CreateItem Include="$(IntermediateOutputPath)%(_NativeFramework.Filename)%(_NativeFramework.Extension)">
+			<Output TaskParameter="Include" ItemName="ManifestResourceWithNoCulture" />
+		</CreateItem>
+	</Target>
+
 	<Target Name="_PrepareNativeReferences" Condition="'$(DesignTimeBuild)' != 'true'">
 		<PrepareNativeReferences
 			Condition="'$(IsMacEnabled)' == 'true'"
