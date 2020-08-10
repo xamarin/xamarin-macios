@@ -258,11 +258,77 @@ namespace Xamarin.Tests {
 			Assert.That (ad.MainModule.Resources [0].Name, Is.EqualTo ("libtest2.a"), "libtest2.a");
 		}
 
-		void CopyDotNetSupportingFiles (string targetDirectory)
+		[TestCase ("iOS")]
+		[TestCase ("tvOS")]
+		// [TestCase ("watchOS")] // No watchOS Touch.Client project for .NET yet
+		// [TestCase ("macOS")] // No macOS Touch.Client project for .NET yet
+		public void BuildInterdependentBindingProjects (string platform)
+		{
+			var assemblyName = "interdependent-binding-projects";
+			var dotnet_bindings_dir = Path.Combine (Configuration.SourceRoot, "tests", assemblyName, "dotnet");
+			var project_dir = Path.Combine (dotnet_bindings_dir, platform);
+			var project_path = Path.Combine (project_dir, $"{assemblyName}.csproj");
+
+			Clean (project_path);
+			CopyDotNetSupportingFiles (dotnet_bindings_dir);
+			CopyDotNetSupportingFiles (dotnet_bindings_dir.Replace (assemblyName, "bindings-test"));
+			CopyDotNetSupportingFiles (dotnet_bindings_dir.Replace (assemblyName, "bindings-test2"));
+			var cleanupSupportFiles = CopyDotNetSupportingFiles (Path.Combine (Configuration.SourceRoot, "external", "Touch.Unit", "Touch.Client/dotnet"));
+			try {
+				var result = DotNet.AssertBuild (project_path, verbosity);
+				var lines = result.StandardOutput.ToString ().Split ('\n');
+				// Find the resulting binding assembly from the build log
+				var assemblies = lines.
+					Select (v => v.Trim ()).
+					Where (v => {
+						if (v.Length < 10)
+							return false;
+						if (v [0] != '/')
+							return false;
+						if (!v.EndsWith ($"{assemblyName}.dll", StringComparison.Ordinal))
+							return false;
+						if (!v.Contains ("/bin/", StringComparison.Ordinal))
+							return false;
+						if (!v.Contains ($"{assemblyName}.app", StringComparison.Ordinal))
+							return false;
+						return true;
+					});
+				Assert.That (assemblies, Is.Not.Empty, "Assemblies");
+				// Make sure there's no other assembly confusing our logic
+				assemblies = assemblies.Distinct ();
+				Assert.That (assemblies.Count (), Is.EqualTo (1), $"Unique assemblies: {string.Join (", ", assemblies)}");
+				var asm = assemblies.First ();
+				Assert.That (asm, Does.Exist, "Assembly existence");
+
+				// Verify that the resources
+				var asmDir = Path.GetDirectoryName (asm);
+				var ad = AssemblyDefinition.ReadAssembly (asm, new ReaderParameters { ReadingMode = ReadingMode.Deferred });
+				Assert.That (ad.MainModule.Resources.Count, Is.EqualTo (0), "0 resources for interdependent-binding-projects.dll");
+
+				var ad1 = AssemblyDefinition.ReadAssembly (Path.Combine (asmDir, "bindings-test.dll"), new ReaderParameters { ReadingMode = ReadingMode.Deferred });
+				Assert.That (ad1.MainModule.Resources.Count, Is.EqualTo (1), "1 resource for bindings-test.dll");
+				Assert.That (ad1.MainModule.Resources [0].Name, Is.EqualTo ("libtest.a"), "libtest.a - bindings-test.dll");
+
+				var ad2 = AssemblyDefinition.ReadAssembly (Path.Combine (asmDir, "bindings-test2.dll"), new ReaderParameters { ReadingMode = ReadingMode.Deferred });
+				Assert.That (ad2.MainModule.Resources.Count, Is.EqualTo (1), "1 resource for bindings-test2.dll");
+				Assert.That (ad2.MainModule.Resources [0].Name, Is.EqualTo ("libtest2.a"), "libtest2.a - bindings-test2.dll");
+			} finally {
+				foreach (var file in cleanupSupportFiles)
+					File.Delete (file);
+			}
+		}
+
+		string[] CopyDotNetSupportingFiles (string targetDirectory)
 		{
 			var srcDirectory = Path.Combine (Configuration.SourceRoot, "tests", "dotnet");
-			foreach (var fn in new string [] { "global.json", "NuGet.config" })
-				File.Copy (Path.Combine (srcDirectory, fn), Path.Combine (targetDirectory, fn), true);
+			var files = new string [] { "global.json", "NuGet.config" };
+			var targets = new string [files.Length];
+			for (var i = 0; i < files.Length; i++) {
+				var fn = files [i];
+				targets [i] = Path.Combine (targetDirectory, fn);
+				File.Copy (Path.Combine (srcDirectory, fn), targets [i], true);
+			}
+			return targets;
 		}
 
 		void AssertThatLinkerExecuted (ExecutionResult result)
