@@ -1077,7 +1077,7 @@ public class B : A {}
 		[Test]
 		[TestCase (Profile.tvOS, "tvOS")]
 		[TestCase (Profile.iOS, "iOS")]
-		public void MT0091 (Profile profile, string name)
+		public void MT0180 (Profile profile, string name)
 		{
 			// Any old Xcode will do.
 			var old_xcode = Configuration.GetOldXcodeRoot ();
@@ -1110,7 +1110,7 @@ public class B : A {}
 				mtouch.Sdk = sdk_version;
 				Assert.AreEqual (1, mtouch.Execute (MTouchAction.BuildSim));
 				var xcodeVersionString = Configuration.XcodeVersionString;
-				mtouch.AssertError (91, String.Format ("This version of Xamarin.iOS requires the {0} {1} SDK (shipped with Xcode {2}). Either upgrade Xcode to get the required header files or set the managed linker behaviour to Link Framework SDKs Only in your project's iOS Build Options > Linker Behavior (to try to avoid the new APIs).", name, GetSdkVersion (profile), xcodeVersionString));
+				mtouch.AssertError (180, String.Format ("This version of Xamarin.iOS requires the {0} {1} SDK (shipped with Xcode {2}). Either upgrade Xcode to get the required header files or set the managed linker behaviour to Link Framework SDKs Only in your project's iOS Build Options > Linker Behavior (to try to avoid the new APIs).", name, GetSdkVersion (profile), xcodeVersionString));
 			}
 		}
 
