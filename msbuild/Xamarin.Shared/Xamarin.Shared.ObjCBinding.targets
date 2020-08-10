@@ -75,6 +75,10 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 				<FrameworkPath>%(_NativeFramework.Identity)</FrameworkPath>
 				<ZipFile>$(IntermediateOutputPath)%(_NativeFramework.Filename)%(_NativeFramework.Extension)</ZipFile>
 			</_NativeFrameworkResource>
+			<_NativeFrameworkResource Include="%(ObjCBindingNativeFramework.Identity)\**\*.*" Condition="'%(ObjCBindingNativeFramework.Identity)' != ''">
+				<FrameworkPath>%(ObjCBindingNativeFramework.Identity)</FrameworkPath>
+				<ZipFile>$(IntermediateOutputPath)%(ObjCBindingNativeFramework.Filename)%(ObjCBindingNativeFramework.Extension)</ZipFile>
+			</_NativeFrameworkResource>
 		</ItemGroup>
 	</Target>
 
