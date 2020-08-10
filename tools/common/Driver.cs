@@ -738,7 +738,7 @@ namespace Xamarin.Bundler {
 				var localPath = Path.GetDirectoryName (GetFullPath ());
 				while (localPath.Length > 1) {
 					if (File.Exists (Path.Combine (localPath, "Make.config"))) {
-						local_build = Path.Combine (localPath, LOCAL_BUILD_DIR, "Library", "Frameworks", app.ProductName + ".framework", "Versions", "Current");
+						local_build = Path.Combine (localPath, app.LocalBuildDir, "Library", "Frameworks", app.ProductName + ".framework", "Versions", "Current");
 						return local_build;
 					}
 
@@ -754,7 +754,7 @@ namespace Xamarin.Bundler {
 		public static string GetFrameworkCurrentDirectory (Application app)
 		{
 			if (framework_dir == null) {
-				var env_framework_dir = Environment.GetEnvironmentVariable (FRAMEWORK_LOCATION_VARIABLE);
+				var env_framework_dir = Environment.GetEnvironmentVariable (app.FrameworkLocationVariable);
 				if (!string.IsNullOrEmpty (env_framework_dir)) {
 					framework_dir = env_framework_dir;
 				} else {

@@ -79,8 +79,6 @@ namespace Xamarin.Bundler
 {
 	public partial class Driver {
 		internal const string NAME = "mtouch";
-		const string LOCAL_BUILD_DIR = "_ios-build";
-		const string FRAMEWORK_LOCATION_VARIABLE = "MD_MTOUCH_SDK_ROOT";
 
 		public static void ShowHelp (OptionSet os)
 		{
