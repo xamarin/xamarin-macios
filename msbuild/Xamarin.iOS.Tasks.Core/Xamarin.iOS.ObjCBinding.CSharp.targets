@@ -29,26 +29,6 @@ Copyright (C) 2013-2016 Xamarin Inc. All rights reserved.
 		<DefineConstants>$(XamarinDefineConstants);$(DefineConstants)</DefineConstants>
 	</PropertyGroup>
 
-	<Target Name="_CollectGeneratedSources" DependsOnTargets="_GenerateBindings;_CompressNativeFrameworkResources"
-		Condition="'$(DesignTimeBuild)' != 'true'">
-		
-		<ReadLinesFromFile File="$(_GeneratedSourcesFileList)" >
-			<Output TaskParameter="Lines" ItemName="GeneratedSources" />
-		</ReadLinesFromFile>
-
-		<CreateItem Include="@(ObjcBindingCoreSource)">
-			<Output TaskParameter="Include" ItemName="Compile" />
-		</CreateItem>
-
-		<CreateItem Include="@(GeneratedSources)">
-			<Output TaskParameter="Include" ItemName="Compile" />
-		</CreateItem>
-
-		<CreateItem Include="@(ObjcBindingNativeLibrary)">
-			<Output TaskParameter="Include" ItemName="ManifestResourceWithNoCulture" />
-		</CreateItem>
-	</Target>
-
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets')"/>
 </Project>
