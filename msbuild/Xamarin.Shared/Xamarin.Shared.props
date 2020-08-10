@@ -258,6 +258,12 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		</AllowedReferenceRelatedFileExtensions>
 	</PropertyGroup>
 
+	<!-- This is used to determine if VS is connected to mac. -->
+	<PropertyGroup>
+		<IsMacEnabled>true</IsMacEnabled>
+		<MtouchTargetsEnabled Condition="'$(_PlatformName)' != 'macOS'">$(IsMacEnabled)</MtouchTargetsEnabled>
+	</PropertyGroup>
+
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets')"/>
 </Project>
