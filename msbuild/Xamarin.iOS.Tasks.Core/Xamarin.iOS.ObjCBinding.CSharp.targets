@@ -24,11 +24,6 @@ Copyright (C) 2013-2016 Xamarin Inc. All rights reserved.
 	<Import Project="Xamarin.iOS.ObjCBinding.Common.targets" />
 	<Import Project="Xamarin.Shared.targets"/>
 
-	<PropertyGroup>
-		<XamarinDefineConstants Condition="'$(XamarinDefineConstants)' == ''">__UNIFIED__;__MOBILE__;__IOS__</XamarinDefineConstants>
-		<DefineConstants>$(XamarinDefineConstants);$(DefineConstants)</DefineConstants>
-	</PropertyGroup>
-
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets')"/>
 </Project>

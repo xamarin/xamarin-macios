@@ -22,8 +22,6 @@ Copyright (C) 2015-2016 Xamarin Inc. All rights reserved.
 		<!-- Version/fx properties -->
 		<TargetFrameworkIdentifier Condition="'$(TargetFrameworkIdentifier)' == ''">Xamarin.TVOS</TargetFrameworkIdentifier>
 		<TargetFrameworkVersion Condition="'$(TargetFrameworkVersion)' == ''">v1.0</TargetFrameworkVersion>
-
-		<XamarinDefineConstants>__UNIFIED__;__MOBILE__;__TVOS__</XamarinDefineConstants>
 	</PropertyGroup>
 
 	<Import Project="..\iOS\Xamarin.iOS.ObjCBinding.CSharp.targets"/>

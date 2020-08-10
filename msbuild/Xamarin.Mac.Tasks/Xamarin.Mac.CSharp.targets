@@ -21,8 +21,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	<PropertyGroup>
 		<!-- Version/fx properties -->
 		<TargetFrameworkVersion Condition="'$(TargetFrameworkIdentifier)' == '' And '$(TargetFrameworkVersion)' == ''">v4.5</TargetFrameworkVersion>
-
-		<DefineConstants>__UNIFIED__;__MACOS__;$(DefineConstants)</DefineConstants>
 	</PropertyGroup>
 
 	<Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" Condition="'$(_UsingXamarinSdk)' != 'true'" />

@@ -17,10 +17,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.props"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.props')"/>
 
-	<PropertyGroup>
-		<DefineConstants>__UNIFIED__;__MACOS__;$(DefineConstants)</DefineConstants>
-	</PropertyGroup>
-
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.props"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.props')"/>
 
