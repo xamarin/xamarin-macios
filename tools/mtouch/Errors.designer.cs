@@ -599,12 +599,6 @@ namespace Xamarin.Bundler {
             }
         }
         
-        internal static string MX0091 {
-            get {
-                return ResourceManager.GetString("MX0091", resourceCulture);
-            }
-        }
-        
         internal static string MT0093 {
             get {
                 return ResourceManager.GetString("MT0093", resourceCulture);
@@ -1088,6 +1082,18 @@ namespace Xamarin.Bundler {
         internal static string MX0178 {
             get {
                 return ResourceManager.GetString("MX0178", resourceCulture);
+            }
+        }
+        
+        internal static string MX0179 {
+            get {
+                return ResourceManager.GetString("MX0179", resourceCulture);
+            }
+        }
+        
+        internal static string MX0180 {
+            get {
+                return ResourceManager.GetString("MX0180", resourceCulture);
             }
         }
         

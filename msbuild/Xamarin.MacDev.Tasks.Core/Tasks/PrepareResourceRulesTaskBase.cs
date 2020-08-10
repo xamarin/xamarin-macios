@@ -1,13 +1,10 @@
-﻿using System;
 using System.IO;
 
 using Microsoft.Build.Framework;
-using Microsoft.Build.Utilities;
 
-using Xamarin.MacDev.Tasks;
 using Xamarin.Localization.MSBuild;
 
-namespace Xamarin.iOS.Tasks
+namespace Xamarin.MacDev.Tasks
 {
 	public abstract class PrepareResourceRulesTaskBase : XamarinTask
 	{
@@ -51,3 +48,4 @@ namespace Xamarin.iOS.Tasks
 		}
 	}
 }
+

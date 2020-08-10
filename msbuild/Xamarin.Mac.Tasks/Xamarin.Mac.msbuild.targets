@@ -19,7 +19,7 @@ Copyright (c) 2017 Microsoft Corp. (www.microsoft.com)
 
 	<!-- Location of mscorlib -->
 	<PropertyGroup Condition="'$(OS)' != 'Windows_NT'">
-		<FrameworkPathOverride Condition="'$(TargetFrameworkName)' != 'System'">$(MacBclPath)</FrameworkPathOverride>
+		<FrameworkPathOverride Condition="'$(TargetFrameworkName)' != 'System'">$(_XamarinBclPath)</FrameworkPathOverride>
 	</PropertyGroup>
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.TargetFrameworkFix.targets"/>

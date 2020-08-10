@@ -5,8 +5,6 @@ namespace Xamarin.Bundler {
 	public partial class Application
 	{
 		public string ProductName = "Xamarin.Mac";
-		public const string Error91LinkerSuggestion = "use the dynamic registrar or set the managed linker behaviour to Link Platform or Link Framework SDKs Only in your project's Mac Build Options > Linker Behavior";
-
 		public bool IsSimulatorBuild => false;
 		public bool IsDeviceBuild => false;
 		public bool IsTodayExtension => false;

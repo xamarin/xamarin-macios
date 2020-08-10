@@ -103,6 +103,35 @@ namespace Xamarin.Bundler {
 			}
 		}
 
+		public string LocalBuildDir {
+			get {
+				switch (Platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
+					return "_ios-build";
+				case ApplePlatform.MacOSX:
+					return "_mac-build";
+				default:
+					throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
+				}
+			}
+		}
+
+		public string FrameworkLocationVariable {
+			get {
+				switch (Platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
+					return "MD_MTOUCH_SDK_ROOT";
+				case ApplePlatform.MacOSX:
+					return "XAMMAC_FRAMEWORK_PATH";
+				default:
+					throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
+				}
+			}
+		}
 		public static int Concurrency => Driver.Concurrency;
 		public Version DeploymentTarget;
 		public Version SdkVersion;
@@ -404,7 +433,17 @@ namespace Xamarin.Bundler {
 			RuntimeOptions = RuntimeOptions.Create (this, HttpMessageHandler, TlsProvider);
 
 			if (RequiresXcodeHeaders && SdkVersion < SdkVersions.GetVersion (this)) {
-				throw ErrorHelper.CreateError (91, Errors.MX0091, ProductName, PlatformName, SdkVersions.GetVersion (this), SdkVersions.Xcode, Error91LinkerSuggestion);
+				switch (Platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
+					throw ErrorHelper.CreateError (180, Errors.MX0179, ProductName, PlatformName, SdkVersions.GetVersion (this), SdkVersions.Xcode);
+				case ApplePlatform.MacOSX:
+					throw ErrorHelper.CreateError (179, Errors.MX0180, ProductName, PlatformName, SdkVersions.GetVersion (this), SdkVersions.Xcode);
+				default:
+					// Default to the iOS error message, it's better than showing MX0071 (unknown platform), which would be completely unrelated
+					goto case ApplePlatform.iOS;
+				}
 			}
 
 			if (DeploymentTarget != null) {
