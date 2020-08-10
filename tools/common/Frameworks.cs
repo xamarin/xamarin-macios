@@ -100,6 +100,8 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "PdfKit", "Quartz", 10, 0 },
 					{ "Security", 10, 0 },
 
+					{ "GSS", "GSS", 10, 1 },
+
 					{ "AudioUnit", 10, 2 },
 					{ "CoreMidi", "CoreMIDI", 10, 2 },
 					{ "WebKit", 10, 2},
@@ -191,7 +193,6 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "VideoSubscriberAccount", "VideoSubscriberAccount", 10,14 },
 					{ "UserNotifications", "UserNotifications", 10,14 },
 					{ "iTunesLibrary", "iTunesLibrary", 10,14 },
-					{ "GSS", "GSS", 10, 14 },
 
 					{ "AuthenticationServices", "AuthenticationServices", 10,15 },
 					{ "CoreMotion", "CoreMotion", 10,15 },
