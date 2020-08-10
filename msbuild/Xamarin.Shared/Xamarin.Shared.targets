@@ -609,6 +609,8 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</PrepareResourceRules>
 	</Target>
 
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Shared.ObjCBinding.targets" Condition="'$(IsBindingProject)' == 'true'" />
+
 	<!-- Xamarin.ImplicitFacade.targets will detect if we need to add an implicit reference to netstandard.dll -->
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.ImplicitFacade.targets" Condition="!('$(_PlatformName)' == 'macOS' And '$(TargetFrameworkName)' == 'System')"/>
 
