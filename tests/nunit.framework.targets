@@ -4,6 +4,6 @@
 	<PropertyGroup>
 		<XmlLinkerFile>$(MSBuildThisFileDirectory)nunit.framework.xml</XmlLinkerFile>
 	    <MonoBundlingExtraArgs>--xml=$(XmlLinkerFile) $(MonoBundlingExtraArgs)</MonoBundlingExtraArgs>
-	    <MtouchExtraArgs>--xml=$(XmlLinkerFile) $(MtouchExtraArgs)</MtouchExtraArgs>
+	    <MtouchExtraArgs>--xml=$(XmlLinkerFile) --dlsym:+nunit.framework.dll $(MtouchExtraArgs)</MtouchExtraArgs>
 	</PropertyGroup>
 </Project>

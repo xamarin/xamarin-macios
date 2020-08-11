@@ -15,6 +15,7 @@
     <TargetFrameworkIdentifier>Xamarin.iOS</TargetFrameworkIdentifier>
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)-unified</IntermediateOutputPath>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <RootTestsDirectory>..\..</RootTestsDirectory>
   </PropertyGroup>
   <PropertyGroup>
     <MonoNativeMode Condition="'$(TargetFrameworkIdentifier)|$(Configuration)|$(Platform)' == 'Xamarin.iOS|Debug|iPhoneSimulator'">MONO_NATIVE_SYMLINK</MonoNativeMode>
@@ -194,6 +195,7 @@
       <Link>MonoNativeConfig.cs</Link>
     </Compile>
   </ItemGroup>
+  <Import Project="$(RootTestsDirectory)\nunit.framework.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>
 
