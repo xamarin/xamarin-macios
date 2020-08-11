@@ -1,4 +1,4 @@
-﻿// Copyright 2020 Microsoft Inc.
+﻿// Copyright 2020 Microsoft Corp.
 
 #if !MONOMAC
 
@@ -28,7 +28,7 @@ namespace MonoTouchFixtures.NearbyInteraction {
 				byte* ptr = (byte*) v;
 				byte zero = 0;
 				for (var i = 0; i < sizeof (Vector3); i++)
-					Assert.True (ptr[i] == zero, "Expected {0} but was {1}", zero.ToString(), ptr[i].ToString());
+					Assert.That (ptr [i], Is.EqualTo (zero), $"Position {i}");
 			}
 		}
 	}
