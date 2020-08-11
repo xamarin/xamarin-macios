@@ -92,12 +92,15 @@ public class Frameworks : Dictionary <string, Framework>
 				mac_frameworks = new Frameworks () {
 					{ "Accelerate", 10, 0 },
 					{ "AppKit", 10, 0 },
+					{ "CoreFoundation", "CoreFoundation", 10, 0 },
 					{ "CoreGraphics", "QuartzCore", 10, 0 },
 					{ "CoreImage", "QuartzCore", 10, 0 },
 					{ "Foundation", 10, 0 },
 					{ "ImageKit", "Quartz", 10, 0 },
 					{ "PdfKit", "Quartz", 10, 0 },
 					{ "Security", 10, 0 },
+
+					{ "GSS", "GSS", 10, 1 },
 
 					{ "AudioUnit", 10, 2 },
 					{ "CoreMidi", "CoreMIDI", 10, 2 },
@@ -227,6 +230,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "CFNetwork", "CFNetwork", 3 },
 				{ "CoreAnimation", "QuartzCore", 3 },
 				{ "CoreData", "CoreData", 3 },
+				{ "CoreFoundation", "CoreFoundation", 3 },
 				{ "CoreGraphics", "CoreGraphics", 3 },
 				{ "CoreLocation", "CoreLocation", 3 },
 				{ "ExternalAccessory", "ExternalAccessory", 3 },
@@ -261,6 +265,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "CoreImage", "CoreImage", 5 },
 				{ "CoreBluetooth", "CoreBluetooth", 5 },
 				{ "Twitter", "Twitter", 5 },
+				{ "GSS", "GSS", 5 },
 
 				{ "MediaToolbox", "MediaToolbox", 6 },
 				{ "PassKit", "PassKit", 6 },
@@ -430,6 +435,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "CoreAudio", "CoreAudio", 9 },
 					{ "CoreBluetooth", "CoreBluetooth", 9 },
 					{ "CoreData", "CoreData", 9 },
+					{ "CoreFoundation", "CoreFoundation", 9 },
 					{ "CoreGraphics", "CoreGraphics", 9 },
 					{ "CoreImage", "CoreImage", 9 },
 					{ "CoreLocation", "CoreLocation", 9 },
