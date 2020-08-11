@@ -1841,7 +1841,6 @@ namespace ARKit {
 		[Export ("maximumNumberOfTrackedImages")]
 		nint MaximumNumberOfTrackedImages { get; set; }
 
-		[iOS (13,0)]
 		[Static]
 		[Export ("supportsFrameSemantics:")]
 		bool SupportsFrameSemantics (ARFrameSemantics frameSemantics);
@@ -1862,7 +1861,6 @@ namespace ARKit {
 		[NullAllowed, Export ("initialWorldMap", ArgumentSemantic.Strong)]
 		ARWorldMap InitialWorldMap { get; set; }
 
-		[iOS (13,0)]
 		[Static]
 		[Export ("supportsFrameSemantics:")]
 		bool SupportsFrameSemantics (ARFrameSemantics frameSemantics);
@@ -2283,7 +2281,6 @@ namespace ARKit {
 		[return: Release]
 		ARGeoTrackingConfiguration Create ();
 
-		[iOS (13,0)]
 		[Static]
 		[Export ("supportsFrameSemantics:")]
 		bool SupportsFrameSemantics (ARFrameSemantics frameSemantics);
