@@ -19,20 +19,20 @@ using Vector3 = global::OpenTK.Vector3;
 namespace NearbyInteraction {
     partial class NINearbyObject
     {
-        static Vector3? _NINearbyObjectDirectionNotAvailable;
+        static Vector3? _DirectionNotAvailable;
 
         // TODO: https://github.com/xamarin/maccore/issues/2274
         // We do not have generator support to trampoline Vector3 -> vector_float3 for Fields
         [Field ("NINearbyObjectDirectionNotAvailable",  "NearbyInteraction")]
-        public static Vector3 NINearbyObjectDirectionNotAvailable {
+        public static Vector3 DirectionNotAvailable {
             get {
-                if (_NINearbyObjectDirectionNotAvailable == null) {
+                if (_DirectionNotAvailable == null) {
                     unsafe {
                         Vector3 *pointer = (Vector3 *) Dlfcn.GetIndirect (Libraries.NearbyInteraction.Handle, "NINearbyObjectDirectionNotAvailable");
-                        _NINearbyObjectDirectionNotAvailable = *pointer;
+                        _DirectionNotAvailable = *pointer;
                     }
                 }
-                return (OpenTK.Vector3)_NINearbyObjectDirectionNotAvailable;
+                return (Vector3)_DirectionNotAvailable;
             }
         }
     }
