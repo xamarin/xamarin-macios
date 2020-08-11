@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.iOS.Sdk">
+  <PropertyGroup>
+    <NativeLibName>ios-fat</NativeLibName>
+    <PlatformName>iOS</PlatformName>
+  </PropertyGroup>
+  <Import Project="..\shared.targets" />
+</Project>

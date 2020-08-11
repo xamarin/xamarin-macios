@@ -176,6 +176,88 @@ namespace Xamarin.Tests {
 			Assert.That (ad.MainModule.Resources.Count (), Is.EqualTo (2), "2 resources"); // There are 2 embedded resources by default by the F# compiler.
 		}
 
+		[TestCase ("iOS")]
+		[TestCase ("tvOS")]
+		[TestCase ("watchOS")]
+		[TestCase ("macOS")]
+		public void BuildBindingsTest (string platform)
+		{
+			var assemblyName = "bindings-test";
+			var dotnet_bindings_dir = Path.Combine (Configuration.SourceRoot, "tests", assemblyName, "dotnet");
+			var project_dir = Path.Combine (dotnet_bindings_dir, platform);
+			var project_path = Path.Combine (project_dir, $"{assemblyName}.csproj");
+
+			Clean (project_path);
+			CopyDotNetSupportingFiles (dotnet_bindings_dir);
+			var result = DotNet.AssertBuild (project_path, verbosity);
+			var lines = result.StandardOutput.ToString ().Split ('\n');
+			// Find the resulting binding assembly from the build log
+			var assemblies = lines.
+				Select (v => v.Trim ()).
+				Where (v => {
+					if (v.Length < 10)
+						return false;
+					if (v [0] != '/')
+						return false;
+					if (!v.EndsWith ($"{assemblyName}.dll", StringComparison.Ordinal))
+						return false;
+					if (!v.Contains ("/bin/", StringComparison.Ordinal))
+						return false;
+					return true;
+				});
+			Assert.That (assemblies, Is.Not.Empty, "Assemblies");
+			// Make sure there's no other assembly confusing our logic
+			Assert.That (assemblies.Distinct ().Count (), Is.EqualTo (1), "Unique assemblies");
+			var asm = assemblies.First ();
+			Assert.That (asm, Does.Exist, "Assembly existence");
+
+			// Verify that there's one resource in the binding assembly, and its name
+			var ad = AssemblyDefinition.ReadAssembly (asm, new ReaderParameters { ReadingMode = ReadingMode.Deferred });
+			Assert.That (ad.MainModule.Resources.Count, Is.EqualTo (1), "1 resource");
+			Assert.That (ad.MainModule.Resources [0].Name, Is.EqualTo ("libtest.a"), "libtest.a");
+		}
+
+		[TestCase ("iOS")]
+		[TestCase ("tvOS")]
+		[TestCase ("watchOS")]
+		[TestCase ("macOS")]
+		public void BuildBindingsTest2 (string platform)
+		{
+			var assemblyName = "bindings-test2";
+			var dotnet_bindings_dir = Path.Combine (Configuration.SourceRoot, "tests", assemblyName, "dotnet");
+			var project_dir = Path.Combine (dotnet_bindings_dir, platform);
+			var project_path = Path.Combine (project_dir, $"{assemblyName}.csproj");
+
+			Clean (project_path);
+			CopyDotNetSupportingFiles (dotnet_bindings_dir);
+			var result = DotNet.AssertBuild (project_path, verbosity);
+			var lines = result.StandardOutput.ToString ().Split ('\n');
+			// Find the resulting binding assembly from the build log
+			var assemblies = lines.
+				Select (v => v.Trim ()).
+				Where (v => {
+					if (v.Length < 10)
+						return false;
+					if (v [0] != '/')
+						return false;
+					if (!v.EndsWith ($"{assemblyName}.dll", StringComparison.Ordinal))
+						return false;
+					if (!v.Contains ("/bin/", StringComparison.Ordinal))
+						return false;
+					return true;
+				});
+			Assert.That (assemblies, Is.Not.Empty, "Assemblies");
+			// Make sure there's no other assembly confusing our logic
+			Assert.That (assemblies.Distinct ().Count (), Is.EqualTo (1), "Unique assemblies");
+			var asm = assemblies.First ();
+			Assert.That (asm, Does.Exist, "Assembly existence");
+
+			// Verify that there's one resource in the binding assembly, and its name
+			var ad = AssemblyDefinition.ReadAssembly (asm, new ReaderParameters { ReadingMode = ReadingMode.Deferred });
+			Assert.That (ad.MainModule.Resources.Count, Is.EqualTo (1), "1 resource");
+			Assert.That (ad.MainModule.Resources [0].Name, Is.EqualTo ("libtest2.a"), "libtest2.a");
+		}
+
 		void CopyDotNetSupportingFiles (string targetDirectory)
 		{
 			var srcDirectory = Path.Combine (Configuration.SourceRoot, "tests", "dotnet");

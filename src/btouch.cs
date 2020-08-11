@@ -51,6 +51,7 @@ public class BindingTouch {
 	string attributedll;
 
 	List<string> libs = new List<string> ();
+	List<string> references = new List<string> ();
 
 	public Universe universe;
 	public TypeManager TypeManager = new TypeManager ();
@@ -169,6 +170,13 @@ public class BindingTouch {
 				return path;
 		}
 
+		// Look in our references to see if we were explicity passed a path to the library we're looking for
+		foreach (var reference in references) {
+			var refname = Path.GetFileName (reference);
+			if (refname == name || refname == name + ".dll")
+				return reference;
+		}
+
 		throw new FileNotFoundException ($"Could not find the assembly '{name}' in any of the directories: {string.Join (", ", GetLibraryDirectories ())}");
 	}
 
@@ -225,7 +233,6 @@ public class BindingTouch {
 		List<string> sources;
 		var resources = new List<string> ();
 		var linkwith = new List<string> ();
-		var references = new List<string> ();
 		var api_sources = new List<string> ();
 		var core_sources = new List<string> ();
 		var extra_sources = new List<string> ();
