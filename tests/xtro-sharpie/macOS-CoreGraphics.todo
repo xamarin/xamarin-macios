@@ -1,6 +1,0 @@
-!missing-pinvoke! CGPreflightListenEventAccess is not bound
-!missing-pinvoke! CGPreflightPostEventAccess is not bound
-!missing-pinvoke! CGPreflightScreenCaptureAccess is not bound
-!missing-pinvoke! CGRequestListenEventAccess is not bound
-!missing-pinvoke! CGRequestPostEventAccess is not bound
-!missing-pinvoke! CGRequestScreenCaptureAccess is not bound

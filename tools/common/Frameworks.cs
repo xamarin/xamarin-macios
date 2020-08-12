@@ -341,6 +341,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "AppClip", "AppClip", 14,0 },
 				{ "MediaSetup", "MediaSetup", new Version (14, 0), NotAvailableInSimulator /* no headers in beta 3 */ },
 				{ "MLCompute", "MLCompute", new Version (14,0), NotAvailableInSimulator },
+				{ "NearbyInteraction", "NearbyInteraction", 14,0 },
 				{ "SensorKit", "SensorKit", 14,0 },
 				{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 14,0 },
 
@@ -491,9 +492,11 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "BackgroundTasks", "BackgroundTasks", 13, 0 },
 
 					{ "Accessibility", "Accessibility", 14,0 },
+					{ "CoreHaptics", "CoreHaptics", 14, 0 },
 					{ "LinkPresentation", "LinkPresentation", 14,0 },
 					{ "MLCompute", "MLCompute", new Version (14,0), NotAvailableInSimulator },
 					{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 14,0 },
+					{ "Intents", "Intents", 14,0 },
 				};
 			}
 			return tvos_frameworks;
@@ -538,7 +541,7 @@ public class Frameworks : Dictionary <string, Framework>
 	// This checks if a framework is unavailable due to bugs in Xcode (such as Apple forgetting to ship a library or headers for a framework, which seems to happen at least once a year).
 	public static bool IsFrameworkBroken (Application app, string framework)
 	{
-		if (app.IsSimulatorBuild && Driver.XcodeProductVersion == "12A8169g" /* Xcode 12 beta 3 */) {
+		if (app.IsSimulatorBuild && Driver.XcodeProductVersion == "12A8179i" /* Xcode 12 beta 4 */) {
 			switch (framework) {
 			// Apple seems to have forgotten to ship the several libraries for the simulator in Xcode 12 betas (it's still available for device builds).
 			// https://github.com/xamarin/maccore/issues/2266

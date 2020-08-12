@@ -9,14 +9,14 @@ namespace AppKit {
 
 	public partial class NSWorkspace {
 
-		[Deprecated (PlatformName.MacOSX, 10, 16, message: "Use 'NSWorkspace.OpenUrls' with completion handler.")]
+		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use 'NSWorkspace.OpenUrls' with completion handler.")]
 		public virtual bool OpenUrls (NSUrl[] urls, string bundleIdentifier, NSWorkspaceLaunchOptions options, NSAppleEventDescriptor descriptor, string[] identifiers)
 		{
 			// Ignore the passed in argument, because if you pass it in we will crash on cleanup.
 			return _OpenUrls (urls, bundleIdentifier, options, descriptor, null);
 		}
 
-		[Deprecated (PlatformName.MacOSX, 10, 16, message: "Use 'NSWorkspace.OpenUrls' with completion handler.")]
+		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use 'NSWorkspace.OpenUrls' with completion handler.")]
 		public virtual bool OpenUrls (NSUrl[] urls, string bundleIdentifier, NSWorkspaceLaunchOptions options, NSAppleEventDescriptor descriptor)
 		{
 			return _OpenUrls (urls, bundleIdentifier, options, descriptor, null);

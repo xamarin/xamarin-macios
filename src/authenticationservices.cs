@@ -23,10 +23,10 @@ using UIWindow = Foundation.NSObject;
 
 namespace AuthenticationServices {
 
-	[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoTV][NoWatch]
 	[iOS (12,0)]
-	[Mac (10,16)]
+	[Mac (11,0)]
 	[Native]
 	[ErrorDomain ("ASCredentialIdentityStoreErrorDomain")]
 	public enum ASCredentialIdentityStoreErrorCode : long {
@@ -35,10 +35,10 @@ namespace AuthenticationServices {
 		StoreBusy = 2,
 	}
 
-	[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoTV][NoWatch]
 	[iOS (12,0)]
-	[Mac (10,16)]
+	[Mac (11,0)]
 	[Native]
 	[ErrorDomain ("ASExtensionErrorDomain")]
 	public enum ASExtensionErrorCode : long {
@@ -50,15 +50,16 @@ namespace AuthenticationServices {
 
 	[Partial]
 	interface ASExtensionErrorCodeExtensions {
-		[NoWatch, NoTV, Mac (10, 16), iOS (14, 0)]
+
+		[NoWatch, NoTV, NoMac, iOS (14,0)]
 		[Field ("ASExtensionLocalizedFailureReasonErrorKey")]
 		NSString LocalizedFailureReasonErrorKey { get; }
 	}
 
-	[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoTV][NoWatch]
 	[iOS (12,0)]
-	[Mac (10,16)]
+	[Mac (11,0)]
 	[Native]
 	public enum ASCredentialServiceIdentifierType : long {
 		Domain,
@@ -69,6 +70,7 @@ namespace AuthenticationServices {
 	[Watch (6,2)]
 	[Mac (10,15)]
 	[iOS (12,0)]
+	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	[Native]
 	[ErrorDomain ("ASWebAuthenticationSessionErrorDomain")]
 	public enum ASWebAuthenticationSessionErrorCode : long {
@@ -79,10 +81,10 @@ namespace AuthenticationServices {
 
 	delegate void ASCredentialIdentityStoreCompletionHandler (bool success, NSError error);
 
-	[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoTV][NoWatch]
 	[iOS (12,0)]
-	[Mac (10,16)]
+	[Mac (11,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface ASCredentialIdentityStore {
@@ -111,10 +113,10 @@ namespace AuthenticationServices {
 		void ReplaceCredentialIdentities (ASPasswordCredentialIdentity[] newCredentialIdentities, [NullAllowed] ASCredentialIdentityStoreCompletionHandler completion);
 	}
 
-	[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoTV][NoWatch]
 	[iOS (12,0)]
-	[Mac (10,16)]
+	[Mac (11,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface ASCredentialIdentityStoreState {
@@ -127,10 +129,10 @@ namespace AuthenticationServices {
 
 	delegate void ASCredentialProviderExtensionRequestCompletionHandler (bool expired);
 
-	[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoTV][NoWatch]
 	[iOS (12,0)]
-	[Mac (10,16)]
+	[Mac (11,0)]
 	[BaseType (typeof (NSExtensionContext))]
 	[DisableDefaultCtor]
 	interface ASCredentialProviderExtensionContext {
@@ -144,10 +146,10 @@ namespace AuthenticationServices {
 		void CancelRequest (NSError error);
 	}
 
-	[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoTV][NoWatch]
 	[iOS (12,0)]
-	[Mac (10,16)]
+	[Mac (11,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface ASCredentialServiceIdentifier : NSCopying, NSSecureCoding {
@@ -161,10 +163,10 @@ namespace AuthenticationServices {
 		ASCredentialServiceIdentifierType Type { get; }
 	}
 
-	[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoTV][NoWatch]
 	[iOS (12,0)]
-	[Mac (10,16)]
+	[Mac (11,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface ASPasswordCredentialIdentity : NSCopying, NSSecureCoding {
@@ -189,10 +191,10 @@ namespace AuthenticationServices {
 		nint Rank { get; set; }
 	}
 
-	[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoTV][NoWatch]
 	[iOS (12,0)]
-	[Mac (10,16)]
+	[Mac (11,0)]
 	[BaseType (typeof (UIViewController))]
 	interface ASCredentialProviderViewController {
 		[Export ("extensionContext", ArgumentSemantic.Strong)]
@@ -486,7 +488,7 @@ namespace AuthenticationServices {
 	[Protocol]
 	interface ASAuthorizationProvider { }
 
-	[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch, NoTV, Mac (10,15), iOS (13,0)]
 	[Protocol]
 	interface ASAuthorizationProviderExtensionAuthorizationRequestHandler {
@@ -499,7 +501,7 @@ namespace AuthenticationServices {
 		void CancelAuthorization (ASAuthorizationProviderExtensionAuthorizationRequest request);
 	}
 
-	[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch, NoTV, Mac (10,15), iOS (13,0)]
 	enum ASAuthorizationProviderAuthorizationOperation {
 		// no value yet - but we must handle `nil` as a default value
@@ -507,12 +509,12 @@ namespace AuthenticationServices {
 		[Field (null)]
 		None,
 
-		[Mac (10, 16), iOS (14, 0)]
+		[Mac (11, 0), iOS (14, 0)]
 		[Field ("ASAuthorizationProviderAuthorizationOperationConfigurationRemoved")]
 		ConfigurationRemoved,
 	}
 
-	[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch, NoTV, Mac (10,15), iOS (13,0)]
 	[BaseType (typeof (NSObject))]
 	interface ASAuthorizationProviderExtensionAuthorizationRequest {
@@ -567,17 +569,17 @@ namespace AuthenticationServices {
 		NSDictionary AuthorizationOptions { get; }
 
 		[iOS (14,0)]
-		[Mac (10,16)]
+		[Mac (11,0)]
 		[Export ("callerManaged")]
 		bool CallerManaged { [Bind ("isCallerManaged")] get; }
 
 		[iOS (14,0)]
-		[Mac (10,16)]
+		[Mac (11,0)]
 		[Export ("callerTeamIdentifier")]
 		string CallerTeamIdentifier { get; }
 
 		[iOS (14,0)]
-		[Mac (10,16)]
+		[Mac (11,0)]
 		[Export ("localizedCallerDisplayName")]
 		string LocalizedCallerDisplayName { get; }
 	}
@@ -780,9 +782,9 @@ namespace AuthenticationServices {
 	}
 
 
+	[Introduced (PlatformName.UIKitForMac, 14, 0)]
 	[iOS (14,0)]
 	[NoWatch, NoTV, NoMac]
-	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using Catalyst on macOS.")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface ASAccountAuthenticationModificationRequest {
@@ -790,9 +792,9 @@ namespace AuthenticationServices {
 
 	interface IASAccountAuthenticationModificationControllerDelegate {}
 
+	[Introduced (PlatformName.UIKitForMac, 14, 0)]
 	[iOS (14,0)]
 	[NoWatch, NoTV, NoMac]
-	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using Catalyst on macOS.")]
 	[Protocol][Model (AutoGeneratedName = true)]
 	[BaseType (typeof (NSObject))]
 	interface ASAccountAuthenticationModificationControllerDelegate {
@@ -806,9 +808,9 @@ namespace AuthenticationServices {
 
 	interface IASAccountAuthenticationModificationControllerPresentationContextProviding {}
 
+	[Introduced (PlatformName.UIKitForMac, 14, 0)]
 	[iOS (14,0)]
 	[NoWatch, NoTV, NoMac]
-	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using Catalyst on macOS.")]
 	[Protocol]
 	interface ASAccountAuthenticationModificationControllerPresentationContextProviding {
 
@@ -817,9 +819,9 @@ namespace AuthenticationServices {
 		UIWindow GetPresentationAnchor (ASAccountAuthenticationModificationController controller);
 	}
 
+	[Introduced (PlatformName.UIKitForMac, 14, 0)]
 	[iOS (14,0)]
 	[NoWatch, NoTV, NoMac]
-	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using Catalyst on macOS.")]
 	[BaseType (typeof (NSObject))]
 	interface ASAccountAuthenticationModificationController {
 
@@ -837,9 +839,9 @@ namespace AuthenticationServices {
 		void PerformRequest (ASAccountAuthenticationModificationRequest request);
 	}
 
+	[Introduced (PlatformName.UIKitForMac, 14, 0)]
 	[iOS (14,0)]
 	[NoWatch, NoTV, NoMac]
-	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using Catalyst on macOS.")]
 	[BaseType (typeof (NSExtensionContext))]
 	[DisableDefaultCtor]
 	interface ASAccountAuthenticationModificationExtensionContext {
@@ -858,9 +860,9 @@ namespace AuthenticationServices {
 		void CancelRequest (NSError error);
 	}
 
+	[Introduced (PlatformName.UIKitForMac, 14, 0)]
 	[iOS (14,0)]
 	[NoWatch, NoTV, NoMac]
-	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using Catalyst on macOS.")]
 	[BaseType (typeof (ASAccountAuthenticationModificationRequest))]
 	[DisableDefaultCtor]
 	interface ASAccountAuthenticationModificationReplacePasswordWithSignInWithAppleRequest {
@@ -878,9 +880,9 @@ namespace AuthenticationServices {
 		NSDictionary UserInfo { get; }
 	}
 
+	[Introduced (PlatformName.UIKitForMac, 14, 0)]
 	[iOS (14,0)]
 	[NoWatch, NoTV, NoMac]
-	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using Catalyst on macOS.")]
 	[BaseType (typeof (ASAccountAuthenticationModificationRequest))]
 	[DisableDefaultCtor]
 	interface ASAccountAuthenticationModificationUpgradePasswordToStrongPasswordRequest {
@@ -898,9 +900,9 @@ namespace AuthenticationServices {
 		NSDictionary UserInfo { get; }
 	}
 
+	[Introduced (PlatformName.UIKitForMac, 14, 0)]
 	[iOS (14,0)]
 	[NoWatch, NoTV, NoMac]
-	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using Catalyst on macOS.")]
 	[BaseType (typeof (UIViewController))]
 	interface ASAccountAuthenticationModificationViewController {
 

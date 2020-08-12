@@ -165,6 +165,7 @@ SIMLAUNCHER_FRAMEWORKS =  \
 	-weak_framework AppClip	\
 	-weak_framework SensorKit \
 	-weak_framework UniformTypeIdentifiers \
+	-weak_framework NearbyInteraction \
 
 # keep the above list of weak_framework
 # 1. grouped by iOS versions;

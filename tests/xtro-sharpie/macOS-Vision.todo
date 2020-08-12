@@ -174,3 +174,5 @@
 !missing-type! VNVector not bound
 !missing-type! VNVideoProcessor not bound
 !unknown-simd-type-mapping! The Simd type NS_RETURNS_INNER_POINTER const simd_float2 * does not have a mapping to a managed type. Please add one in SimdCheck.cs
+!missing-selector! VNRecognizedPointsObservation::availableKeys not bound
+!missing-selector! VNRecognizedPointsObservation::recognizedPointForKey:error: not bound

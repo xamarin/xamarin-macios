@@ -2960,7 +2960,7 @@ namespace UIKit {
 		WhenNotEditing,
 	}
 
-	[NoWatch, TV (14,0), iOS (14,0)]
+	[NoWatch, NoTV, iOS (14,0)]
 	[Native]
 	public enum UICellAccessoryOutlineDisclosureStyle : long {
 		Automatic,
@@ -3123,6 +3123,34 @@ namespace UIKit {
 	public enum UICollectionLayoutListFooterMode : long {
 		None,
 		Supplementary,
+	}
+
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[NoWatch, NoTV, NoiOS]
+	[Native]
+	public enum UITitlebarSeparatorStyle : long {
+		Automatic,
+		None,
+		Line,
+		Shadow,
+	}
+
+	[NoWatch, NoTV, iOS (14,0)]
+	[Native]
+	public enum UINavigationItemBackButtonDisplayMode : long {
+		Default = 0,
+		Generic = 1,
+		Minimal = 2,
+	}
+
+	[Watch (7,0), TV (14,0), iOS (14,0)]
+	[Flags]
+	[Native]
+	public enum NSLineBreakStrategy : ulong {
+		None = 0x0,
+		PushOut = 1uL << 0,
+		HangulWordPriority = 1uL << 1,
+		Standard = 0xffff,
 	}
 
 }

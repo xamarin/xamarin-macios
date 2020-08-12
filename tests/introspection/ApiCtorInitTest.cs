@@ -68,6 +68,13 @@ namespace Introspection {
 				return true;
 			case "NEPacketTunnelProvider":
 				return true;
+			// On iOS 14 (beta 4) we get: [NISimulator] To simulate Nearby Interaction distance and direction, launch two or more simulators and
+			// move the simulator windows around the screen.
+			// The same error occurs when trying to default init NISession in Xcode.
+			// It seems that it is only possible to create a NISession when there are two devices or sims running, which makes sense given the description of
+			// NISession from Apple API docs: "An object that identifies a unique connection between two peer devices"
+			case "NISession":
+				return true;
 			case "NSUnitDispersion": // -init should never be called on NSUnit!
 			case "NSUnitVolume": // -init should never be called on NSUnit!
 			case "NSUnitDuration": // -init should never be called on NSUnit!

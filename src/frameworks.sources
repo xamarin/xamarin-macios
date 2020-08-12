@@ -1109,6 +1109,10 @@ METRICKIT_SOURCES = \
 	MetricKit/MXMetric.cs \
 	MetricKit/MXMetricPayload.cs \
 
+# MLCompute
+
+MLCOMPUTE_SOURCES = \
+	MLCompute/MLHelpers.cs \
 
 # MobileCoreServices
 
@@ -1193,7 +1197,11 @@ NETWORK_SOURCES = \
 	Network/NWWebSocketOptions.cs	\
 	Network/NWWebSocketRequest.cs	\
 	Network/NWWebSocketResponse.cs	\
-	
+
+# NearbyInteraction
+NEARBYINTERACTION_API_SOURCES = \
+	NearbyInteraction/Enums.cs \
+
 # NetworkExtension
 
 NETWORKEXTENSION_API_SOURCES = \
@@ -1873,9 +1881,11 @@ MAC_FRAMEWORKS =            \
 	Metal                   \
 	MetalKit                \
 	MetalPerformanceShaders \
+	MLCompute               \
 	MobileCoreServices      \
 	ModelIO                 \
 	MultipeerConnectivity	\
+	NearbyInteraction		\
 	NetworkExtension        \
 	NotificationCenter 	\
 	OpenGL                  \
@@ -1973,9 +1983,11 @@ IOS_FRAMEWORKS =         \
 	MetalKit \
 	MetalPerformanceShaders \
 	MetricKit \
+	MLCompute \
 	MobileCoreServices \
 	ModelIO \
 	MultipeerConnectivity \
+	NearbyInteraction \
 	NetworkExtension \
 	NewsstandKit \
 	NotificationCenter \
@@ -2044,6 +2056,7 @@ TVOS_FRAMEWORKS =           \
 	CloudKit                \
 	CoreAnimation           \
 	CoreGraphics            \
+	CoreHaptics             \
 	CoreImage               \
 	CoreLocation            \
 	CoreSpotlight			\
@@ -2055,6 +2068,7 @@ TVOS_FRAMEWORKS =           \
 	GameplayKit             \
 	HomeKit                 \
 	ImageIO                 \
+	Intents                 \
 	IOSurface				\
 	JavaScriptCore          \
 	LinkPresentation        \
@@ -2065,6 +2079,7 @@ TVOS_FRAMEWORKS =           \
 	Metal                   \
 	MetalKit                \
 	MetalPerformanceShaders \
+	MLCompute               \
 	MobileCoreServices      \
 	ModelIO                 \
 	MultipeerConnectivity   \

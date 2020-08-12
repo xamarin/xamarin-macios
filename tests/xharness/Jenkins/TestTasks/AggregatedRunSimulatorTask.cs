@@ -11,7 +11,7 @@ namespace Xharness.Jenkins.TestTasks {
 	// This class groups simulator run tasks according to the
 	// simulator they'll run from, so that we minimize switching
 	// between different simulators (which is slow).
-	class AggregatedRunSimulatorTask : TestTask
+	class AggregatedRunSimulatorTask : AppleTestTask
 	{
 		public IEnumerable<RunSimulatorTask> Tasks;
 
@@ -22,7 +22,7 @@ namespace Xharness.Jenkins.TestTasks {
 		Stopwatch run_timer = new Stopwatch ();
 		public TimeSpan RunDuration { get { return run_timer.Elapsed; } }
 
-		public AggregatedRunSimulatorTask (IEnumerable<RunSimulatorTask> tasks)
+		public AggregatedRunSimulatorTask (Jenkins jenkins, IEnumerable<RunSimulatorTask> tasks) : base (jenkins)
 		{
 			this.Tasks = tasks;
 		}

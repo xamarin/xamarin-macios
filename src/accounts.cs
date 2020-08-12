@@ -88,7 +88,7 @@ namespace Accounts {
 		void RequestAccess (ACAccountType accountType, ACRequestCompletionHandler completionHandler);
 
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Public notification is deprecated.")]
-		[Deprecated (PlatformName.MacOSX, 10, 16, message: "Public notification is deprecated.")]
+		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Public notification is deprecated.")]
 		[Field ("ACAccountStoreDidChangeNotification")]
 		[Notification]
 		NSString ChangeNotification { get; }
