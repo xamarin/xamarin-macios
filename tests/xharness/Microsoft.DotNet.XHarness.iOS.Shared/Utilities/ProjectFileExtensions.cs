@@ -942,7 +942,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 				new string [] { "ObjcBindingCoreSource", "Include" },
 				new string [] { "ObjcBindingNativeLibrary", "Include" },
 				new string [] { "ObjcBindingNativeFramework", "Include" },
-				new string [] { "Import", "Project", "CustomBuildActions.targets" },
+				new string [] { "Import", "Project", "CustomBuildActions.targets", "..\\shared.targets" },
 				new string [] { "FilesToCopy", "Include" },
 				new string [] { "FilesToCopyFoo", "Include" },
 				new string [] { "FilesToCopyFooBar", "Include" },
