@@ -1101,9 +1101,9 @@ namespace AVFoundation {
 	[Native]
 	[NoTV, NoWatch, Mac (11, 0), NoiOS]
 	public enum AVAudioRoutingArbitrationCategory : long {
-		back = 0,
-		AndRecord = 1,
-		AndRecordVoice = 2,
+		Playback = 0,
+		PlayAndRecord = 1,
+		PlayAndRecordVoice = 2,
 	}
 
 

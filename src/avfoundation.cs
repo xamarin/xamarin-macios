@@ -2294,6 +2294,10 @@ namespace AVFoundation {
 		[UnifiedInternal, Field ("AVAudioSessionPolarPatternSubcardioid")]
 		NSString PolarPatternSubcardioid { get; }
 
+		[NoWatch, NoTV, NoMac, iOS (14, 0)]
+		[Field ("AVAudioSessionPolarPatternStereo")]
+		NSString PolarPatternStereo { get; }
+
 		// 8.0
 		[NoTV, NoMac]
 		[iOS (8,0), Watch (5,0)]
@@ -2350,9 +2354,6 @@ namespace AVFoundation {
 		[Export ("inputOrientation")]
 		AVAudioStereoOrientation InputOrientation { get; }
 
-		[NoWatch, NoTV, NoMac, iOS (14, 0)]
-		[Field ("AVAudioSessionPolarPatternStereo")]
-		NSString PolarPatternStereo { get; }
 	}
 	
 	[NoMac]
@@ -4081,7 +4082,8 @@ namespace AVFoundation {
 		[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
 		[Export ("outputFileTypeProfile")]
 		[NullAllowed]
-		string OutputFileTypeProfile { get; set; }
+		[BindAs (typeof (AVFileTypeProfile))]
+		NSString OutputFileTypeProfile { get; set; }
 
 		[Wrap ("WriterWeakDelegate")]
 		IAVAssetWriterDelegate WriterDelegate { get; set; }
@@ -8106,7 +8108,7 @@ namespace AVFoundation {
 
 		[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
 		[Export ("supportsHDRSourceFrames")]
-		bool SupportsHDRSourceFrames { get; }
+		bool SupportsHdrSourceFrames { get; }
 	}
 	
 	[NoWatch]
@@ -13375,7 +13377,7 @@ namespace AVFoundation {
 	}
 
 	[Static][Internal]
-	[Watch (2,0), NoTV, Mac (10,15), iOS (12,2)]
+	[Watch (7,0), NoTV, Mac (10,15), iOS (12,2)]
 	interface AVContentKeySessionServerPlaybackContextOptionKeys {
 		[Field ("AVContentKeySessionServerPlaybackContextOptionProtocolVersions")]
 		NSString ProtocolVersionsKey { get; }
