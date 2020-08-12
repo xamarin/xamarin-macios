@@ -10,34 +10,31 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\common\ApplePlatform.cs">
-      <Link>external\ApplePlatform.cs</Link>
+      <Link>tools\common\ApplePlatform.cs</Link>
     </Compile>
     <Compile Include="..\common\MachO.cs">
-      <Link>external\MachO.cs</Link>
+      <Link>tools\common\MachO.cs</Link>
     </Compile>
     <Compile Include="..\..\src\ObjCRuntime\ErrorHelper.cs">
-      <Link>external\ErrorHelper.cs</Link>
+      <Link>src\ObjCRuntime\ErrorHelper.cs</Link>
     </Compile>
     <Compile Include="..\common\error.cs">
-      <Link>external\error.cs</Link>
+      <Link>tools\common\error.cs</Link>
     </Compile>
     <Compile Include="..\common\ErrorHelper.tools.cs">
-      <Link>external\ErrorHelper.tools.cs</Link>
+      <Link>tools\common\ErrorHelper.tools.cs</Link>
     </Compile>
     <Compile Include="..\mtouch\Errors.designer.cs">
-      <Link>external\Errors.designer.cs</Link>
+      <Link>tools\mtouch\Errors.designer.cs</Link>
       <DependentUpon>Errors.resx</DependentUpon>
     </Compile>
     <Compile Include="..\common\Frameworks.cs">
-      <Link>external\Frameworks.cs</Link>
+      <Link>tools\common\Frameworks.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="external\" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="..\mtouch\Errors.resx">
-      <Link>external\Errors.resx</Link>
+      <Link>tools\mtouch\Errors.resx</Link>
       <XlfSourceFormat>Resx</XlfSourceFormat>
       <XlfOutputItem>EmbeddedResource</XlfOutputItem>
       <Generator>ResXFileCodeGenerator</Generator>

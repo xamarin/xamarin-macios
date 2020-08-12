@@ -99,10 +99,7 @@
     <GeneratedTestOutput Include="..\StructsAndEnums.generated.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\external\guiunit\src\framework\GuiUnit_xammac_mobile.csproj">
-      <Project>{EACFD119-769E-4E6C-89B7-A6CE3757C431}</Project>
-      <Name>GuiUnit_xammac_mobile</Name>
-    </ProjectReference>
+    <PackageReference Include="NUnitLite" Version="3.12.0" />
   </ItemGroup>
   <Target Name="BeforeBuild" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)">
     <Exec Command="make -j8 -C $(TestLibrariesDirectory)" />

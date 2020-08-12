@@ -26,6 +26,8 @@ namespace Xamarin.iOS.Tasks
 
 			Engine.ProjectCollection.SetGlobalProperty ("Platform", Platform);
 
+			RunTarget (proj, "Restore", 0);
+
 			RunTarget (proj, "Build", 0);
 			Assert.IsTrue (File.Exists (dllPath), "{1} binding dll does not exist: {0} ", dllPath, Platform);
 

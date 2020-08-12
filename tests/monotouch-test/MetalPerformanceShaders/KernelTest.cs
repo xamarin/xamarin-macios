@@ -18,14 +18,14 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 
 		IMTLDevice device;
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Metal ()
 		{
 #if !MONOMAC
 			TestRuntime.AssertXcodeVersion (7, 0);
 
-			if (Runtime.Arch == Arch.SIMULATOR && Environment.OSVersion.Version.Major >= 15)
-				Assert.Inconclusive ("Metal is not supported in the simulator on macOS 10.15");
+			if (Runtime.Arch == Arch.SIMULATOR)
+				Assert.Inconclusive ("Metal Performance Shaders is not supported in the simulator");
 #else
 			TestRuntime.AssertXcodeVersion (9, 0);
 #endif

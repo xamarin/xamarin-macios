@@ -888,13 +888,13 @@ namespace LinkSdk {
 			var isExtension = bundlePath.EndsWith (".appex", StringComparison.Ordinal);
 			if (Runtime.Arch == Arch.DEVICE) {
 				if (isExtension)
-					Assert.That (path, Is.StringStarting ("/private/var/mobile/Containers/Data/PluginKitPlugin/"), "Containers-ios8");
+					Assert.That (path, Does.StartWith ("/private/var/mobile/Containers/Data/PluginKitPlugin/"), "Containers-ios8");
 #if !__WATCHOS__
 				else if (UIDevice.CurrentDevice.CheckSystemVersion (8, 0))
-					Assert.That (path, Is.StringStarting ("/private/var/mobile/Containers/Data/Application/"), "Containers-ios8");
+					Assert.That (path, Does.StartWith ("/private/var/mobile/Containers/Data/Application/"), "Containers-ios8");
 #endif
 				else
-					Assert.That (path, Is.StringStarting ("/private/var/mobile/Applications/"), "pre-Containers");
+					Assert.That (path, Does.StartWith ("/private/var/mobile/Applications/"), "pre-Containers");
 			}
 
 #if !__WATCHOS__

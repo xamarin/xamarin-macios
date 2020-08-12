@@ -61,9 +61,6 @@ namespace Xamarin.Bundler {
 
 	public static partial class Driver {
 		internal const string NAME = "mmp";
-		const string PRODUCT = "Xamarin.Mac";
-		const string LOCAL_BUILD_DIR = "_mac-build";
-		const string FRAMEWORK_LOCATION_VARIABLE = "XAMMAC_FRAMEWORK_PATH";
 		internal static Application App = new Application (Environment.GetCommandLineArgs ());
 		static Target BuildTarget;
 		static List<string> resources = new List<string> ();
@@ -96,8 +93,6 @@ namespace Xamarin.Bundler {
 		static bool is_extension, is_xpc_service;
 		static bool frameworks_copied_to_bundle_dir;    // Have we copied any frameworks to Foo.app/Contents/Frameworks?
 		static bool dylibs_copied_to_bundle_dir => native_libraries_copied_in.Count > 0;
-
-		static Version min_xcode_version = new Version (6, 0);
 
 		static void ShowHelp (OptionSet os) {
 			Console.WriteLine ("mmp - Xamarin.Mac Packer");
@@ -142,9 +137,9 @@ namespace Xamarin.Bundler {
 		public static string GetArch64Directory (Application app)
 		{
 			if (IsUnifiedMobile)
-				return Path.Combine (FrameworkLibDirectory, "x86_64", "mobile");
+				return Path.Combine (GetFrameworkLibDirectory (app), "x86_64", "mobile");
 			else if (IsUnifiedFullXamMacFramework)
-				return Path.Combine (FrameworkLibDirectory, "x86_64", "full");
+				return Path.Combine (GetFrameworkLibDirectory (app), "x86_64", "full");
 			throw new InvalidOperationException ("Arch64Directory when not Mobile or Full?");
 		}
 					
@@ -296,7 +291,7 @@ namespace Xamarin.Bundler {
 				}
 			}
 
-			ValidateXcode (false, true);
+			ValidateXcode (App, false, true);
 
 			App.Initialize ();
 
@@ -680,7 +675,7 @@ namespace Xamarin.Bundler {
 		static string MonoDirectory {
 			get {
 				if (IsUnifiedFullXamMacFramework || IsUnifiedMobile)
-					return FrameworkDirectory;
+					return GetFrameworkCurrentDirectory (App);
 				return SystemMonoDirectory;
 			}
 		}
@@ -707,12 +702,6 @@ namespace Xamarin.Bundler {
 		static void CodeSign () {
 			RunCommand ("codesign", String.Format ("-v -s \"{0}\" \"{1}\"", certificate_name, App.AppDirectory));
 		}
-
-		[DllImport (Constants.libSystemLibrary)]
-		static extern int unlink (string pathname);
-
-		[DllImport (Constants.libSystemLibrary)]
-		static extern int symlink (string path1, string path2);
 
 		[DllImport (Constants.libSystemLibrary)]
 		static extern IntPtr realpath (string path, IntPtr buffer);
@@ -744,7 +733,7 @@ namespace Xamarin.Bundler {
 
 		static string PartialStaticLibrary {
 			get {
-				return Path.Combine (FrameworkLibDirectory, string.Format ("mmp/Xamarin.Mac.registrar.{0}.a", IsUnifiedMobile ? "mobile" : "full"));
+				return Path.Combine (GetFrameworkLibDirectory (App), string.Format ("mmp/Xamarin.Mac.registrar.{0}.a", IsUnifiedMobile ? "mobile" : "full"));
 			}
 		}
 
@@ -1075,7 +1064,7 @@ namespace Xamarin.Bundler {
 				sourceFiles.Add (main);
 				args.AddRange (sourceFiles);
 
-				RunClang (args);
+				RunClang (App, args);
 			} catch (Win32Exception e) {
 				throw new ProductException (5103, true, e, Errors.MM5103, "driver");
 			}
@@ -1230,7 +1219,7 @@ namespace Xamarin.Bundler {
 					string libName = Path.GetFileName (linkWith);
 					string finalLibPath = Path.Combine (mmp_dir, libName);
 					Application.UpdateFile (linkWith, finalLibPath);
-					RunInstallNameTool (new [] { "-id", "@executable_path/../" + App.CustomBundleName + "/" + libName, finalLibPath });
+					RunInstallNameTool (App, new [] { "-id", "@executable_path/../" + App.CustomBundleName + "/" + libName, finalLibPath });
 					native_libraries_copied_in.Add (libName);
 				}
 			}
@@ -1259,7 +1248,7 @@ namespace Xamarin.Bundler {
 				// if required update the paths inside the .dylib that was copied
 				if (sb.Count > 0) {
 					sb.Add (library);
-					RunInstallNameTool (sb);
+					RunInstallNameTool (App, sb);
 					sb.Clear ();
 				}
 			}
@@ -1397,7 +1386,7 @@ namespace Xamarin.Bundler {
 
 			if (native_references.Contains (real_src)) {
 				if (!isStaticLib)
-					RunInstallNameTool (new [] { "-id", "@executable_path/../" + App.CustomBundleName + "/" + name, dest });
+					RunInstallNameTool (App, new [] { "-id", "@executable_path/../" + App.CustomBundleName + "/" + name, dest });
 				native_libraries_copied_in.Add (name);
 			}
 
@@ -1430,7 +1419,7 @@ namespace Xamarin.Bundler {
 				return;
 
 			var arch = App.Abi.AsString ();
-			RunLipo (new [] { dest, "-thin", arch, "-output", dest });
+			RunLipo (App, new [] { dest, "-thin", arch, "-output", dest });
 			if (name != "MonoPosixHelper" && name != "libmono-native-unified" && name != "libmono-native-compat")
 				ErrorHelper.Warning (2108, Errors.MM2108, name, arch);
 		}
@@ -1680,7 +1669,7 @@ namespace Xamarin.Bundler {
 			var arch = abi.AsArchString ();
 			switch (abi) {
 				case Abi.x86_64:
-					return Path.Combine (Driver.FrameworkLibDirectory, arch, flavor, name + ".dll");
+					return Path.Combine (Driver.GetFrameworkLibDirectory (Driver.App), arch, flavor, name + ".dll");
 				default:
 					throw new ProductException (5205, true, Errors.MM5205, arch);
 			}

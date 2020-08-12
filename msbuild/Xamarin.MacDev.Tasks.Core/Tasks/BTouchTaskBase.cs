@@ -33,6 +33,8 @@ namespace Xamarin.MacDev.Tasks {
 		[Required]
 		public ITaskItem[] ApiDefinitions { get; set; }
 
+		public string AttributeAssembly { get; set; }
+
 		public ITaskItem[] CoreSources { get; set; }
 
 		public string DefineConstants { get; set; }
@@ -93,11 +95,12 @@ namespace Xamarin.MacDev.Tasks {
 			cmd.AppendSwitchIfNotNull ("/baselib:", BaseLibDll);
 			cmd.AppendSwitchIfNotNull ("/out:", OutputAssembly);
 
+			cmd.AppendSwitchIfNotNull ("/attributelib:", AttributeAssembly);
+
 			string dir;
 			if (!string.IsNullOrEmpty (BaseLibDll)) {
 				dir = Path.GetDirectoryName (BaseLibDll);
 				cmd.AppendSwitchIfNotNull ("/lib:", dir);
-				cmd.AppendSwitchIfNotNull ("/r:", Path.Combine (dir, "mscorlib.dll"));
 			}
 
 			if (ProcessEnums)

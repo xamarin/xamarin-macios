@@ -17,12 +17,28 @@ $(DOTNET_BUILD_DIR)/bgen/bgen:  $(generator_dependencies) Makefile.generator $(B
 	$(Q_DOTNET_BUILD) $(DOTNET) build $(XBUILD_VERBOSITY) /p:Configuration=Debug bgen/bgen.csproj /p:IntermediateOutputPath=$(abspath $(DOTNET_BUILD_DIR)/IDE/obj/common)/ /p:OutputPath=$(abspath $(DOTNET_BUILD_DIR)/IDE/bin/common)/
 	$(Q) $(CP) $(DOTNET_BUILD_DIR)/IDE/bin/common/bgen* $(dir $@)
 
+$(DOTNET_DESTDIR)/%.Sdk/tools/lib/bgen/bgen: $(DOTNET_BUILD_DIR)/bgen/bgen | $(DOTNET_DESTDIR)/%.Sdk/tools/lib/bgen
+	$(Q) rm -f $(dir $@)/bgen*
+	$(Q) $(CP) $<* $(dir $@)
+
+$(DOTNET_DESTDIR)/%.Sdk/tools/bin/bgen: bgen/bgen.dotnet | $(DOTNET_DESTDIR)/%.Sdk/tools/bin
+	$(Q) $(CP) $< $@
+
+$(DOTNET_DESTDIR)/%.Sdk/tools/lib/Xamarin.Apple.BindingAttributes.dll: $(DOTNET_BUILD_DIR)/Xamarin.Apple.BindingAttributes.dll | $(DOTNET_DESTDIR)/%.Sdk/tools/lib
+	$(Q) $(CP) $< $@
+
 DOTNET_TARGETS += \
 	$(DOTNET_BUILD_DIR)/bgen/bgen \
+	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/tools/bin/bgen) \
+	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/tools/lib/bgen/bgen) \
+	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/tools/lib/Xamarin.Apple.BindingAttributes.dll) \
 
 DOTNET_TARGETS_DIRS += \
 	$(DOTNET_BUILD_DIR) \
 	$(DOTNET_BUILD_DIR)/bgen \
+	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/tools/bin) \
+	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/tools/lib) \
+	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/tools/lib/bgen) \
 
 #
 # Common

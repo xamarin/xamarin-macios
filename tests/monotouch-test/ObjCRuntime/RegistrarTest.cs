@@ -455,7 +455,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				handle = Messaging.IntPtr_objc_msgSend (handle, Selector.GetHandle ("init"));
 				Assert.Fail ("Expected [[Open_1 alloc] init] to fail.");
 			} catch (PlatformException mex) {
-				Assert.That (mex.ToString (), Is.StringContaining ("Cannot construct an instance of the type 'MonoTouchFixtures.ObjCRuntime.RegistrarTest+Open`1' from Objective-C because the type is generic."), "Exception message");
+				Assert.That (mex.ToString (), Does.Contain ("Cannot construct an instance of the type 'MonoTouchFixtures.ObjCRuntime.RegistrarTest+Open`1' from Objective-C because the type is generic."), "Exception message");
 			} finally {
 				Messaging.void_objc_msgSend (handle, Selector.GetHandle ("release")); // or should this be dealloc directly?
 			}
@@ -2963,8 +2963,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				Assert.AreNotSame (dummyObj, outObj, "NSCoding-3A-ref-out");
 				Assert.AreEqual (refObj.Handle, outObj.Handle, "NSCoding-3A-out-ref-eq");
 				Assert.AreNotSame (refObj, outObj, "NSCoding-3A-ref-out-not-safe");
-				Assert.That (refObj.GetType ().FullName, Is.StringContaining ("CodingWrapper"), "NSCoding-3A-ref-wrapper-type");
-				Assert.That (outObj.GetType ().FullName, Is.StringContaining ("CodingWrapper"), "NSCoding-3A-ref-wrapper-type");
+				Assert.That (refObj.GetType ().FullName, Does.Contain ("CodingWrapper"), "NSCoding-3A-ref-wrapper-type");
+				Assert.That (outObj.GetType ().FullName, Does.Contain ("CodingWrapper"), "NSCoding-3A-ref-wrapper-type");
 
 				// managed
 				refObj = dummyObj; // set to non-null
@@ -3010,8 +3010,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				Assert.AreNotEqual (IntPtr.Zero, refObj.Handle, "NSCoding-4A-ref");
 				Assert.AreNotEqual (IntPtr.Zero, outObj.Handle, "NSCoding-4A-out");
 				Assert.AreNotEqual (refObj.Handle, outObj.Handle, "NSCoding-4A-ref-distinct");
-				Assert.That (refObj.GetType ().FullName, Is.StringContaining ("CodingWrapper"), "NSCoding-4A-ref-wrapper-type");
-				Assert.That (outObj.GetType ().FullName, Is.StringContaining ("CodingWrapper"), "NSCoding-4A-ref-wrapper-type");
+				Assert.That (refObj.GetType ().FullName, Does.Contain ("CodingWrapper"), "NSCoding-4A-ref-wrapper-type");
+				Assert.That (outObj.GetType ().FullName, Does.Contain ("CodingWrapper"), "NSCoding-4A-ref-wrapper-type");
 
 				// managed
 				refObj = null; // set to null
@@ -4055,8 +4055,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				Assert.AreNotSame (dummyObj, outObj, "NSCodingArray-3A-ref-out");
 				AssertAreEqual (refObj, outObj, "NSCodingArray-3A-out-ref-eq");
 				Assert.AreNotSame (refObj, outObj, "NSCodingArray-3A-ref-out-not-safe");
-				Assert.That (refObj [0].GetType ().FullName, Is.StringContaining ("CodingWrapper"), "NSCodingArray-3A-ref-wrapper-type");
-				Assert.That (outObj [0].GetType ().FullName, Is.StringContaining ("CodingWrapper"), "NSCodingArray-3A-ref-wrapper-type");
+				Assert.That (refObj [0].GetType ().FullName, Does.Contain ("CodingWrapper"), "NSCodingArray-3A-ref-wrapper-type");
+				Assert.That (outObj [0].GetType ().FullName, Does.Contain ("CodingWrapper"), "NSCodingArray-3A-ref-wrapper-type");
 
 				// managed
 				refObj = dummyObj; // set to non-null
@@ -4097,8 +4097,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				Assert.IsNotNull (refObj, "NSCodingArray-4A-ref");
 				Assert.IsNotNull (outObj, "NSCodingArray-4A-out");
 				AssertAreNotEqual (refObj, outObj, "NSCodingArray-4A-ref-distinct");
-				Assert.That (refObj [0].GetType ().FullName, Is.StringContaining ("NSNumber").Or.StringContaining ("CodingWrapper"), "NSCodingArray-4A-ref-wrapper-type");
-				Assert.That (outObj [0].GetType ().FullName, Is.StringContaining ("NSNumber").Or.StringContaining ("CodingWrapper"), "NSCodingArray-4A-ref-wrapper-type");
+				Assert.That (refObj [0].GetType ().FullName, Does.Contain ("NSNumber").Or.Contain ("CodingWrapper"), "NSCodingArray-4A-ref-wrapper-type");
+				Assert.That (outObj [0].GetType ().FullName, Does.Contain ("NSNumber").Or.Contain ("CodingWrapper"), "NSCodingArray-4A-ref-wrapper-type");
 
 				// managed
 				refObj = null; // set to null

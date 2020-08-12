@@ -21,7 +21,7 @@ namespace MonoTouchFixtures.Network {
 
 		string identifier = "TestFramer";
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Init () => TestRuntime.AssertXcodeVersion (11, 0);
 
 		NWFramerStartResult StartCallback (NWFramer nWFramer)

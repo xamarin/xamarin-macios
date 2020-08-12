@@ -62,7 +62,6 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
 	<PropertyGroup>
 		<CodesignProvision Condition="'$(CodesignProvision)' == ''"></CodesignProvision>
 		<CodesignEntitlements Condition="'$(CodesignEntitlements)' == ''"></CodesignEntitlements>
-		<CodesignResourceRules Condition="'$(CodesignResourceRules)' == ''"></CodesignResourceRules>
 		<CodesignExtraArgs Condition="'$(CodesignExtraArgs)' == ''"></CodesignExtraArgs>
 		<CreatePackage Condition="'$(CreatePackage)' == ''">false</CreatePackage>
 		<HttpClientHandler Condition="'$(HttpClientHandler)' == ''">HttpClientHandler</HttpClientHandler>

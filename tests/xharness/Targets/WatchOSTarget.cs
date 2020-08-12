@@ -120,6 +120,7 @@ namespace Xharness.Targets {
 			csproj.AddAdditionalDefines ("BITCODE", "iPhone", "Release");
 			csproj.AddAdditionalDefines ("XAMCORE_3_0;FEATURE_NO_BSD_SOCKETS;MONOTOUCH_WATCH;");
 			csproj.RemoveReferences ("OpenTK-1.0");
+			csproj.RemovePackageReference ("MonoTouch.Dialog");
 			var ext = IsFSharp ? "fs" : "cs";
 			csproj.AddCompileInclude ("InterfaceController." + ext, Path.Combine (Harness.WatchOSExtensionTemplate, "InterfaceController." + ext));
 			csproj.SetExtraLinkerDefs ("extra-linker-defs" + ExtraLinkerDefsSuffix + ".xml");
@@ -195,6 +196,7 @@ namespace Xharness.Targets {
 			csproj.SetImport (IsBindingProject ? BindingsImports : Imports);
 			csproj.AddAdditionalDefines ("XAMCORE_3_0;MONOTOUCH_WATCH;");
 			csproj.FixProjectReferences (Path.Combine (ProjectsDir, GetTargetSpecificDir ()), Suffix, FixProjectReference);
+			csproj.RemovePackageReference ("MonoTouch.Dialog");
 			csproj.SetExtraLinkerDefs ("extra-linker-defs" + ExtraLinkerDefsSuffix + ".xml");
 			csproj.FixTestLibrariesReferences (Platform);
 			csproj.ResolveAllPaths (TemplateProjectPath);

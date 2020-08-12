@@ -35,7 +35,7 @@ namespace MonoTouchFixtures.Security {
 			rec.SetValueRef (new SecCertificate (data));
 
 			var rc = SecKeyChain.Add (rec);
-			Assert.IsTrue (rc == SecStatusCode.Success || rc == SecStatusCode.DuplicateItem, "Add_Certificate");
+			Assert.That (rc, Is.EqualTo (SecStatusCode.Success).Or.EqualTo (SecStatusCode.DuplicateItem), "Add_Certificate");
 		}
 
 #if !MONOMAC // No QueryAsConcreteType on Mac
@@ -46,7 +46,7 @@ namespace MonoTouchFixtures.Security {
 			using (var id = IdentityTest.GetIdentity ()) {
 				rec.SetValueRef (id);
 				SecStatusCode code = SecKeyChain.Add (rec);
-				Assert.True (code == SecStatusCode.DuplicateItem || code == SecStatusCode.Success);
+				Assert.That (code, Is.EqualTo (SecStatusCode.DuplicateItem).Or.EqualTo (SecStatusCode.Success), "code");
 			}
 
 			if (!TestRuntime.CheckXcodeVersion (5, 0))

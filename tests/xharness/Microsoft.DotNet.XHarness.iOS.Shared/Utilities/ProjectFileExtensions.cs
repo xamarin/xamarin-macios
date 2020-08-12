@@ -269,6 +269,13 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 				reference.ParentNode.RemoveChild (reference);
 		}
 
+		public static void RemovePackageReference (this XmlDocument csproj, string projectName)
+		{
+			var reference = csproj.SelectSingleNode ("/*/*/*[local-name() = 'PackageReference' and @Include = '" + projectName + "']");
+			if (reference != null)
+				reference.ParentNode.RemoveChild (reference);
+		}
+
 		public static void AddCompileInclude (this XmlDocument csproj, string link, string include, bool prepend = false)
 		{
 			AddInclude (csproj, "Compile", link, include, prepend);
@@ -309,9 +316,12 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 
 		public static void SetImport (this XmlDocument csproj, string value)
 		{
-			var imports = csproj.SelectNodes ("/*/*[local-name() = 'Import'][not(@Condition)]");			
+			var import = GetImport (csproj);
+			if (string.IsNullOrEmpty (import))
+				throw new Exception ($"Could not find the xamarin import");
+			var imports = csproj.SelectNodes ($"/*/*[local-name() = 'Import'][@Project = '{import}']");			
 			if (imports.Count != 1)
-				throw new Exception ("More than one import");
+				throw new Exception ($"Found {imports.Count} xamarin imports?");
 			imports [0].Attributes ["Project"].Value = value;
 		}
 
@@ -428,12 +438,18 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 			return null;
 		}
 
-		public static string GetImport (this XmlDocument csproj)
+		public static List<string> GetImports (this XmlDocument csproj)
 		{
 			var imports = csproj.SelectNodes ("/*/*[local-name() = 'Import'][not(@Condition)]");
-			if (imports.Count != 1)
-				throw new Exception ("More than one import");
-			return imports [0].Attributes ["Project"].Value;
+			var rv = new List<string> ();
+			foreach (XmlNode import in imports)
+				rv.Add (import.Attributes ["Project"].Value);
+			return rv;
+		}
+
+		public static string GetImport (this XmlDocument csproj)
+		{
+			return GetImports (csproj).FirstOrDefault ((v) => v.Replace ('/', '\\').Contains ("$(MSBuildExtensionsPath)\\Xamarin"));
 		}
 
 		public delegate bool FixReferenceDelegate (string include, string subdir, string suffix, out string fixed_include);
@@ -808,7 +824,25 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 				return;
 			}
 
-			throw new Exception ("Could not find where to add a new DefineConstants node");
+			// Create a new PropertyGroup with the desired condition, and add it just after the last PropertyGroup in the csproj.
+			var projectNode = csproj.SelectSingleNode ("//*[local-name() = 'Project']");
+			var lastPropertyGroup = csproj.SelectNodes ("//*[local-name() = 'PropertyGroup']").Cast<XmlNode> ().Last ();
+			var newPropertyGroup = csproj.CreateElement ("PropertyGroup", csproj.GetNamespace ());
+			var conditionAttribute = csproj.CreateAttribute ("Condition");
+			var condition = "";
+			if (!string.IsNullOrEmpty (platform))
+				condition = $"'$(Platform)' == '{platform}'";
+			if (!string.IsNullOrEmpty (configuration)) {
+				if (!string.IsNullOrEmpty (condition))
+					condition += " And ";
+				condition += $"'$(Configuration)' == '{configuration}'";
+			}
+			conditionAttribute.Value = condition;
+			newPropertyGroup.Attributes.Append (conditionAttribute);
+			var defineConstantsElement = csproj.CreateElement ("DefineConstants", csproj.GetNamespace ());
+			defineConstantsElement.InnerText = "$(DefineConstants);" + value;
+			newPropertyGroup.AppendChild (defineConstantsElement);
+			projectNode.InsertAfter (newPropertyGroup, lastPropertyGroup);
 		}
 
 		public static void AddTopLevelProperty (this XmlDocument csproj, string property, string value)
@@ -884,6 +918,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 				"CodesignEntitlements",
 				"TestLibrariesDirectory",
 				"HintPath",
+				"RootTestsDirectory",
 			};
 			var attributes_with_paths = new string [] []
 			{

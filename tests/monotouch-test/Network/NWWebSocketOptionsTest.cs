@@ -18,7 +18,7 @@ namespace MonoTouchFixtures.Network {
 
 		NWWebSocketOptions options;
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Init () => TestRuntime.AssertXcodeVersion (11, 0);
 
 		[SetUp]

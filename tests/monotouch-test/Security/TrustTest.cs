@@ -383,18 +383,18 @@ namespace MonoTouchFixtures.Security {
 			if (TestRuntime.CheckXcodeVersion (11, 0)) {
 				Assert.False (trust.Evaluate (out var error), "Evaluate");
 				Assert.NotNull (error, "error");
-				Assert.That (error.LocalizedDescription, Is.StringContaining ("\"mail.google.com\",\"Thawte SGC CA\",\"Class 3 Public Primary Certification Authority\" certificates do not meet pinning requirements"));
+				Assert.That (error.LocalizedDescription, Does.Contain ("\"mail.google.com\",\"Thawte SGC CA\",\"Class 3 Public Primary Certification Authority\" certificates do not meet pinning requirements"));
 				var underlyingError = (NSError) error.UserInfo [NSError.UnderlyingErrorKey];
 				// Error is:
 				// Certificate 0 “mail.google.com” has errors: Key size is not permitted for this use, SSL hostname does not match name(s) in certificate, Signature hash algorithm is not permitted for this use;Certificate 1 “Thawte SGC CA” has errors: Key size is not permitted for this use, Signature hash algorithm is not permitted for this use;Certificate 2 “Class 3 Public Primary Certification Authority” has errors: Key size is not permitted for this use;
 				// But the exact format can vary
 				// watchOS reports this:
 				// Certificate 0 “mail.google.com” has errors: Key size is not permitted for this use, Signature hash algorithm is not permitted for this use, SSL hostname does not match name(s) in certificate;Certificate 1 “Thawte SGC CA” has errors: Key size is not permitted for this use, Signature hash algorithm is not permitted for this use;Certificate 2 “Class 3 Public Primary Certification Authority” has errors: Key size is not permitted for this use;
-				Assert.That (underlyingError.LocalizedDescription, Is.StringContaining ("Certificate 0 “mail.google.com” has errors: "));
-				Assert.That (underlyingError.LocalizedDescription, Is.StringContaining ("Key size is not permitted for this use"));
-				Assert.That (underlyingError.LocalizedDescription, Is.StringContaining ("SSL hostname does not match name(s) in certificate").Or.StringContaining ("Signature hash algorithm is not permitted for this use"));
-				Assert.That (underlyingError.LocalizedDescription, Is.StringContaining ("Certificate 1 “Thawte SGC CA” has errors: Key size is not permitted for this use"));
-				Assert.That (underlyingError.LocalizedDescription, Is.StringContaining ("Certificate 2 “Class 3 Public Primary Certification Authority” has errors:"));
+				Assert.That (underlyingError.LocalizedDescription, Does.Contain ("Certificate 0 “mail.google.com” has errors: "));
+				Assert.That (underlyingError.LocalizedDescription, Does.Contain ("Key size is not permitted for this use"));
+				Assert.That (underlyingError.LocalizedDescription, Does.Contain ("SSL hostname does not match name(s) in certificate").Or.Contain ("Signature hash algorithm is not permitted for this use"));
+				Assert.That (underlyingError.LocalizedDescription, Does.Contain ("Certificate 1 “Thawte SGC CA” has errors: Key size is not permitted for this use"));
+				Assert.That (underlyingError.LocalizedDescription, Does.Contain ("Certificate 2 “Class 3 Public Primary Certification Authority” has errors:"));
 			} else if (TestRuntime.CheckXcodeVersion (10, 0)) {
 				Assert.True (trust.Evaluate (out var error), "Evaluate");
 				Assert.Null (error, "error");

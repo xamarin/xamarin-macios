@@ -22,7 +22,7 @@ namespace MonoTouchFixtures.Network {
 		string type = "_tictactoe._tcp";
 		string domain = "local.";
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Init () => TestRuntime.AssertXcodeVersion (11, 0);
 
 		[SetUp]

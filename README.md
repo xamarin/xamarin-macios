@@ -33,6 +33,8 @@ However, we provide links to older Xamarin.iOS and Mac packages for macOS downgr
 
 | Platform        | Link |
 |-----------------|--------|
+| Xamarin.iOS d16.7 | [13.20.2.2](https://download.visualstudio.microsoft.com/download/pr/b089be2f-932a-40ab-904b-b626f9e6427b/186357848bab70642927eaf17410a051/xamarin.ios-13.20.2.2.pkg) |
+| Xamarin.Mac d16.7 | [6.20.2.2](https://download.visualstudio.microsoft.com/download/pr/b089be2f-932a-40ab-904b-b626f9e6427b/6aad9f3ea4fbfb92ce267e0f60b34797/xamarin.mac-6.20.2.2.pkg) |
 | Xamarin.iOS d16.6 | [13.18.2.1](https://download.visualstudio.microsoft.com/download/pr/68ffa29a-6a5b-41f7-af7b-506ddcf4bbfc/35159cac3be1910e87309c0094a8ec8a/xamarin.ios-13.18.2.1.pkg) |
 | Xamarin.Mac d16.6 | [6.18.2.1](https://download.visualstudio.microsoft.com/download/pr/68ffa29a-6a5b-41f7-af7b-506ddcf4bbfc/9e1be52d9bff3599b796cfbab3f3d463/xamarin.mac-6.18.2.1.pkg) |
 | Xamarin.iOS d16.5 | [13.16.0.13](https://download.visualstudio.microsoft.com/download/pr/fb168f8a-b44e-4582-8147-eefdf1562110/0a25988a5b9f502f4facd875c1b2072b/xamarin.ios-13.16.0.13.pkg) |
@@ -54,9 +56,9 @@ However, we provide links to older Xamarin.iOS and Mac packages for macOS downgr
 - [Request a new feature](https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions#writing-good-bug-reports-and-feature-requests) on GitHub
 - [Vote on existing feature requests](https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions#before-submitting-an-issue)
 - [Submit bugs to GitHub Issues](https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions)
-- Discuss development and design on [Gitter](https://gitter.im/xamarin/xamarin-macios)
+- Discuss development and design on [Discord](https://discord.gg/Gw6cvsq)
 
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/xamarin/xamarin-macios?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Discord](https://img.shields.io/discord/732297728826277939.svg?label=Join%20chat&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/Gw6cvsq)
 
 ## License
 

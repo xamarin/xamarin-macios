@@ -16,7 +16,7 @@ namespace MonoTouchFixtures.Network {
 	[Preserve (AllMembers = true)]
 	public class NWProtocolDefinitionTest {
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Init () => TestRuntime.AssertXcodeVersion (10, 0);
 
 

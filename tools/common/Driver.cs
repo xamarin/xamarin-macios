@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -26,6 +27,7 @@ namespace Xamarin.Bundler {
 
 		public static bool Force { get; set; }
 
+		static Version min_xcode_version = new Version (6, 0);
 		public static int Main (string [] args)
 		{
 			try {
@@ -730,13 +732,13 @@ namespace Xamarin.Bundler {
 		}
 
 		static string local_build;
-		public static string WalkUpDirHierarchyLookingForLocalBuild ()
+		public static string WalkUpDirHierarchyLookingForLocalBuild (Application app)
 		{
 			if (local_build == null) {
 				var localPath = Path.GetDirectoryName (GetFullPath ());
 				while (localPath.Length > 1) {
 					if (File.Exists (Path.Combine (localPath, "Make.config"))) {
-						local_build = Path.Combine (localPath, LOCAL_BUILD_DIR, "Library", "Frameworks", PRODUCT + ".framework", "Versions", "Current");
+						local_build = Path.Combine (localPath, app.LocalBuildDir, "Library", "Frameworks", app.ProductName + ".framework", "Versions", "Current");
 						return local_build;
 					}
 
@@ -749,45 +751,42 @@ namespace Xamarin.Bundler {
 		// This is the 'Current' directory of the installed framework
 		// For XI/XM installed from package it's /Library/Frameworks/Xamarin.iOS.framework/Versions/Current or /Library/Frameworks/Xamarin.Mac.framework/Versions/Current
 		static string framework_dir;
-		public static string FrameworkDirectory {
-			get {
-				if (framework_dir == null) {
-					var env_framework_dir = Environment.GetEnvironmentVariable (FRAMEWORK_LOCATION_VARIABLE);
-					if (!string.IsNullOrEmpty (env_framework_dir)) {
-						framework_dir = env_framework_dir;
-					} else {
+		public static string GetFrameworkCurrentDirectory (Application app)
+		{
+			if (framework_dir == null) {
+				var env_framework_dir = Environment.GetEnvironmentVariable (app.FrameworkLocationVariable);
+				if (!string.IsNullOrEmpty (env_framework_dir)) {
+					framework_dir = env_framework_dir;
+				} else {
 #if DEBUG
-						// when launched from Visual Studio, the executable is not in the final install location,
-						// so walk the directory hierarchy to find the root source directory.
-						framework_dir = WalkUpDirHierarchyLookingForLocalBuild ();
+					// when launched from Visual Studio, the executable is not in the final install location,
+					// so walk the directory hierarchy to find the root source directory.
+					framework_dir = WalkUpDirHierarchyLookingForLocalBuild (app);
 #else
-						framework_dir = Path.GetDirectoryName (Path.GetDirectoryName (Path.GetDirectoryName (GetFullPath ())));
+					framework_dir = Path.GetDirectoryName (Path.GetDirectoryName (Path.GetDirectoryName (GetFullPath ())));
 #endif
-					}
-					framework_dir = Target.GetRealPath (framework_dir);
 				}
-				return framework_dir;
+				framework_dir = Target.GetRealPath (framework_dir);
 			}
+			return framework_dir;
 		}
 
 		// This is the 'Current/bin' directory of the installed framework
 		// For XI/XM installed from package it's one of these two:
 		//    /Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin
 		//    /Library/Frameworks/Xamarin.Mac.framework/Versions/Current/bin
-		public static string FrameworkBinDirectory {
-			get {
-				return Path.Combine (FrameworkDirectory, "bin");
-			}
+		public static string GetFrameworkBinDirectory (Application app)
+		{
+			return Path.Combine (GetFrameworkCurrentDirectory (app), "bin");
 		}
 
 		// This is the 'Current/lib' directory of the installed framework
 		// For XI/XM installed from package it's one of these two:
 		//    /Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib
 		//    /Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib
-		public static string FrameworkLibDirectory {
-			get {
-				return Path.Combine (FrameworkDirectory, "lib");
-			}
+		public static string GetFrameworkLibDirectory (Application app)
+		{
+			return Path.Combine (GetFrameworkCurrentDirectory (app), "lib");
 		}
 
 		// This is the directory where the libxamarin*.[a|dylib] and libxammac*.[a|dylib] libraries are
@@ -812,19 +811,19 @@ namespace Xamarin.Bundler {
 		{
 			switch (app.Platform) {
 			case ApplePlatform.iOS:
-				return Path.Combine (FrameworkLibDirectory, "mono", "Xamarin.iOS");
+				return Path.Combine (GetFrameworkLibDirectory (app), "mono", "Xamarin.iOS");
 			case ApplePlatform.WatchOS:
-				return Path.Combine (FrameworkLibDirectory, "mono", "Xamarin.WatchOS");
+				return Path.Combine (GetFrameworkLibDirectory (app), "mono", "Xamarin.WatchOS");
 			case ApplePlatform.TVOS:
-				return Path.Combine (FrameworkLibDirectory, "mono", "Xamarin.TVOS");
+				return Path.Combine (GetFrameworkLibDirectory (app), "mono", "Xamarin.TVOS");
 			case ApplePlatform.MacOSX:
 #if MMP
 				if (IsUnifiedMobile)
-					return Path.Combine (FrameworkLibDirectory, "mono", "Xamarin.Mac");
-				return Path.Combine (FrameworkLibDirectory, "mono", "4.5");
+					return Path.Combine (GetFrameworkLibDirectory (app), "mono", "Xamarin.Mac");
+				return Path.Combine (GetFrameworkLibDirectory (app), "mono", "4.5");
 #endif
 			default:
-				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, PRODUCT);
+				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, app.ProductName);
 			}
 		}
 
@@ -882,7 +881,7 @@ namespace Xamarin.Bundler {
 		// /Library/Frameworks/Xamarin.*.framework/Versions/Current/SDKs/*.sdk
 		public static string GetProductSdkDirectory (Application app)
 		{
-			var sdksDir = Path.Combine (FrameworkDirectory, "SDKs");
+			var sdksDir = Path.Combine (GetFrameworkCurrentDirectory (app), "SDKs");
 			string sdkName;
 			switch (app.Platform) {
 			case ApplePlatform.iOS:
@@ -898,7 +897,7 @@ namespace Xamarin.Bundler {
 				sdkName = "Xamarin.macOS.sdk";
 				break;
 			default:
-				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, PRODUCT);
+				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, app.ProductName);
 			}
 			return Path.Combine (sdksDir, sdkName);
 		}
@@ -916,7 +915,7 @@ namespace Xamarin.Bundler {
 			case ApplePlatform.MacOSX:
 				return "MacOSX";
 			default:
-				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, PRODUCT);
+				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, app.ProductName);
 			}
 		}
 
@@ -939,11 +938,11 @@ namespace Xamarin.Bundler {
 			case ApplePlatform.MacOSX:
 				return "Xamarin.Mac";
 			default:
-				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, PRODUCT);
+				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, app.ProductName);
 			}
 		}
 
-		static void ValidateXcode (bool accept_any_xcode_version, bool warn_if_not_found)
+		static void ValidateXcode (Application app, bool accept_any_xcode_version, bool warn_if_not_found)
 		{
 			if (sdk_root == null) {
 				sdk_root = FindSystemXcode ();
@@ -1000,10 +999,10 @@ namespace Xamarin.Bundler {
 
 			if (!accept_any_xcode_version) {
 				if (min_xcode_version != null && XcodeVersion < min_xcode_version)
-					throw ErrorHelper.CreateError (51, Errors.MT0051, Constants.Version, XcodeVersion.ToString (), sdk_root, PRODUCT, min_xcode_version);
+					throw ErrorHelper.CreateError (51, Errors.MT0051, Constants.Version, XcodeVersion.ToString (), sdk_root, app.ProductName, min_xcode_version);
 
 				if (XcodeVersion < SdkVersions.XcodeVersion)
-					ErrorHelper.Warning (79, Errors.MT0079, Constants.Version, XcodeVersion.ToString (), sdk_root, SdkVersions.Xcode, PRODUCT);
+					ErrorHelper.Warning (79, Errors.MT0079, Constants.Version, XcodeVersion.ToString (), sdk_root, SdkVersions.Xcode, app.ProductName);
 			}
 
 			Driver.Log (1, "Using Xcode {0} ({2}) found in {1}", XcodeVersion, sdk_root, XcodeProductVersion);
@@ -1043,7 +1042,7 @@ namespace Xamarin.Bundler {
 		}
 
 		static readonly Dictionary<string, string> tools = new Dictionary<string, string> ();
-		static string FindTool (string tool)
+		static string FindTool (Application app, string tool)
 		{
 			string path;
 
@@ -1052,10 +1051,10 @@ namespace Xamarin.Bundler {
 					return path;
 			}
 
-			path = LocateTool (tool);
-			static string LocateTool (string tool)
+			path = LocateTool (app, tool);
+			static string LocateTool (Application app, string tool)
 			{
-				if (XcrunFind (tool, out var path))
+				if (XcrunFind (app, tool, out var path))
 					return path;
 
 				// either /Developer (Xcode 4.2 and earlier), /Applications/Xcode.app/Contents/Developer (Xcode 4.3) or user override
@@ -1087,12 +1086,12 @@ namespace Xamarin.Bundler {
 			return path;
 		}
 
-		static bool XcrunFind (string tool, out string path)
+		static bool XcrunFind (Application app, string tool, out string path)
 		{
-			return XcrunFind (ApplePlatform.None, false, tool, out path);
+			return XcrunFind (app, ApplePlatform.None, false, tool, out path);
 		}
 
-		static bool XcrunFind (ApplePlatform platform, bool is_simulator, string tool, out string path)
+		static bool XcrunFind (Application app, ApplePlatform platform, bool is_simulator, string tool, out string path)
 		{
 			var env = new Dictionary<string, string> ();
 			// Unset XCODE_DEVELOPER_DIR_PATH. See https://github.com/xamarin/xamarin-macios/issues/3931.
@@ -1120,7 +1119,7 @@ namespace Xamarin.Bundler {
 					args.Add (is_simulator ? "watchsimulator" : "watchos");
 					break;
 				default:
-					throw ErrorHelper.CreateError (71, Errors.MX0071 /* Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case. */, platform.ToString (), PRODUCT);
+					throw ErrorHelper.CreateError (71, Errors.MX0071 /* Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case. */, platform.ToString (), app.ProductName);
 				}
 			}
 			args.Add ("-f");
@@ -1160,63 +1159,63 @@ namespace Xamarin.Bundler {
 			return ret == 0;
 		}
 
-		public static void RunXcodeTool (string tool, params string[] arguments)
+		public static void RunXcodeTool (Application app, string tool, params string[] arguments)
 		{
-			RunXcodeTool (tool, (IList<string>) arguments);
+			RunXcodeTool (app, tool, (IList<string>) arguments);
 		}
 
-		public static void RunXcodeTool (string tool, IList<string> arguments)
+		public static void RunXcodeTool (Application app, string tool, IList<string> arguments)
 		{
-			var executable = FindTool (tool);
+			var executable = FindTool (app, tool);
 			var rv = RunCommand (executable, arguments);
 			if (rv != 0)
 				throw ErrorHelper.CreateError (5309, Errors.MX5309 /* Failed to execute the tool '{0}', it failed with an error code '{1}'. Please check the build log for details. */, tool, rv);
 		}
 
-		public static void RunClang (IList<string> arguments)
+		public static void RunClang (Application app, IList<string> arguments)
 		{
-			RunXcodeTool ("clang", arguments);
+			RunXcodeTool (app, "clang", arguments);
 		}
 
-		public static void RunInstallNameTool (IList<string> arguments)
+		public static void RunInstallNameTool (Application app, IList<string> arguments)
 		{
-			RunXcodeTool ("install_name_tool", arguments);
+			RunXcodeTool (app, "install_name_tool", arguments);
 		}
 
-		public static void RunBitcodeStrip (IList<string> arguments)
+		public static void RunBitcodeStrip (Application app, IList<string> arguments)
 		{
-			RunXcodeTool ("bitcode_strip", arguments);
+			RunXcodeTool (app, "bitcode_strip", arguments);
 		}
 
-		public static void RunLipo (string output, IEnumerable<string> inputs)
+		public static void RunLipo (Application app, string output, IEnumerable<string> inputs)
 		{
 			var sb = new List<string> ();
 			sb.AddRange (inputs);
 			sb.Add ("-create");
 			sb.Add ("-output");
 			sb.Add (output);
-			RunLipo (sb);
+			RunLipo (app, sb);
 		}
 
-		public static void RunLipo (IList<string> options)
+		public static void RunLipo (Application app, IList<string> options)
 		{
-			RunXcodeTool ("lipo", options);
+			RunXcodeTool (app, "lipo", options);
 		}
 
-		public static void CreateDsym (string output_dir, string appname, string dsym_dir)
+		public static void CreateDsym (Application app, string output_dir, string appname, string dsym_dir)
 		{
-			RunDsymUtil (Path.Combine (output_dir, appname), "-num-threads", "4", "-z", "-o", dsym_dir);
+			RunDsymUtil (app, Path.Combine (output_dir, appname), "-num-threads", "4", "-z", "-o", dsym_dir);
 			RunCommand ("/usr/bin/mdimport", dsym_dir);
 		}
 
-		public static void RunDsymUtil (params string [] options)
+		public static void RunDsymUtil (Application app, params string [] options)
 		{
-			RunXcodeTool ("dsymutil", options);
+			RunXcodeTool (app, "dsymutil", options);
 		}
 
-		public static void RunStrip (IList<string> options)
+		public static void RunStrip (Application app, IList<string> options)
 		{
-			RunXcodeTool ("strip", options);
+			RunXcodeTool (app, "strip", options);
 		}
 
 		public static string CorlibName {
@@ -1231,8 +1230,66 @@ namespace Xamarin.Bundler {
 		{
 			var rv = Frameworks.GetFrameworks (app.Platform, app.IsSimulatorBuild);
 			if (rv == null)
-				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, PRODUCT);
+				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, app.ProductName);
 			return rv;
+		}
+
+		[DllImport (Constants.libSystemLibrary)]
+		static extern int symlink (string path1, string path2);
+
+		public static bool Symlink (string path1, string path2)
+		{
+			return symlink (path1, path2) == 0;
+		}
+
+		[DllImport (Constants.libSystemLibrary)]
+		static extern int unlink (string pathname);
+
+		public static void FileDelete (string file)
+		{
+			// File.Delete can't always delete symlinks (in particular if the symlink points to a file that doesn't exist).
+			unlink (file);
+			// ignore any errors.
+		}
+
+		struct timespec {
+			public IntPtr tv_sec;
+			public IntPtr tv_nsec;
+		}
+
+		struct stat { /* when _DARWIN_FEATURE_64_BIT_INODE is defined */
+			public uint st_dev;
+			public ushort st_mode;
+			public ushort st_nlink;
+			public ulong st_ino;
+			public uint st_uid;
+			public uint st_gid;
+			public uint st_rdev;
+			public timespec st_atimespec;
+			public timespec st_mtimespec;
+			public timespec st_ctimespec;
+			public timespec st_birthtimespec;
+			public ulong st_size;
+			public ulong st_blocks;
+			public uint st_blksize;
+			public uint st_flags;
+			public uint st_gen;
+			public uint st_lspare;
+			public ulong st_qspare_1;
+			public ulong st_qspare_2;
+		}
+
+		[DllImport (Constants.libSystemLibrary, EntryPoint = "lstat$INODE64", SetLastError = true)]
+		static extern int lstat (string path, out stat buf);
+
+		public static bool IsSymlink (string file)
+		{
+			stat buf;
+			var rv = lstat (file, out buf);
+			if (rv != 0)
+				throw new Exception (string.Format ("Could not lstat '{0}': {1}", file, Marshal.GetLastWin32Error ()));
+			const int S_IFLNK = 40960;
+			return (buf.st_mode & S_IFLNK) == S_IFLNK;
 		}
 	}
 }

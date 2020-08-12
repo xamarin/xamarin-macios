@@ -90,8 +90,8 @@ namespace MonoTouchFixtures.Foundation {
 				if (c == null)
 					Assert.Pass ("not iCloud enabled"); // simulator or provisioning profile without iCloud enabled (old ones)
 				else {
-					Assert.That (c.ToString (), Is.StringStarting ("file://localhost/private/var/mobile/Library/Mobile%20Documents").
-												Or.StringStarting ("file:///private/var/mobile/Library/Mobile%20Documents"));
+					Assert.That (c.ToString (), Does.StartWith ("file://localhost/private/var/mobile/Library/Mobile%20Documents").
+												Or.StartWith ("file:///private/var/mobile/Library/Mobile%20Documents"));
 				}
 			} else {
 				Assert.Pass ("iCloud is probably not enabled");

@@ -15,7 +15,7 @@ namespace MonoTouchFixtures.UIKit {
 	[Preserve (AllMembers = true)]
 	public class WebViewTest {
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Setup ()
 		{
 			if (Type.GetType ("UIKit.DeprecatedWebView, Xamarin.iOS") != null)

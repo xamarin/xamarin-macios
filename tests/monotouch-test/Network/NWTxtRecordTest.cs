@@ -19,7 +19,7 @@ namespace MonoTouchFixtures.Network
 		NWTxtRecord record;
 		string randomKey = "MyData";
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Init () => TestRuntime.AssertXcodeVersion (11, 0);
 
 

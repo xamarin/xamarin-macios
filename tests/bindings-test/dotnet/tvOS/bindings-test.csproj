@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.tvOS.Sdk">
+  <PropertyGroup>
+    <NativeLibName>tvos-fat</NativeLibName>
+  </PropertyGroup>
+  <Import Project="..\shared.targets" />
+</Project>

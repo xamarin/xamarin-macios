@@ -15,7 +15,7 @@ namespace MonoTouchFixtures.Network {
 	public class NWProtocolTlsOptionsTest {
 		NWProtocolTlsOptions options;
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Init () => TestRuntime.AssertXcodeVersion (11, 0);
 
 		[SetUp]

@@ -45,6 +45,7 @@ namespace Xamarin
 		public bool? NoSign;
 		public bool? FastDev;
 		public bool? Dlsym;
+		public string DlsymString;
 		public string Executable;
 		public string AppPath;
 		public string Device; // --device
@@ -315,9 +316,11 @@ namespace Xamarin
 
 			if (!string.IsNullOrEmpty (Mono))
 				sb.Add ($"--mono:{Mono}");
-			
+
 			if (Dlsym.HasValue)
 				sb.Add ($"--dlsym:{(Dlsym.Value ? "true" : "false")}");
+			else if (!string.IsNullOrEmpty (DlsymString))
+				sb.Add ($"--dlsym:{DlsymString}");
 
 			if (!string.IsNullOrEmpty (Executable)) {
 				sb.Add ("--executable");

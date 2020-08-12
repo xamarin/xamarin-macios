@@ -50,7 +50,7 @@ namespace MonoTouchFixtures.CoreImage {
 		{
 			CIDetectorOptions options = new CIDetectorOptions ();
 			using (var dtor = CIDetector.CreateFaceDetector (null, options)) {
-				Assert.That (dtor.Description, Is.StringContaining ("CIFaceCoreDetector").Or.StringContaining ("FaceDetector"), "Description");
+				Assert.That (dtor.Description, Does.Contain ("CIFaceCoreDetector").Or.Contain ("FaceDetector"), "Description");
 			}
 		}
 	}

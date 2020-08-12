@@ -5,7 +5,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 
 	/// <summary>
 	/// Managed the resorces that can be used by the different tests tasks so that when ran async they do not step
-	/// on eachother.
+	/// on each other.
 	/// </summary>
 	public interface IResourceManager
 	{
