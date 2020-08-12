@@ -447,24 +447,6 @@ namespace CloudKit {
 
 	}
 
-	[Deprecated (PlatformName.iOS, 10, 0, message : "Use 'CKDiscoverUserIdentitiesOperation' instead.")]
-	[Deprecated (PlatformName.MacOSX, 10, 12, message : "Use 'CKDiscoverUserIdentitiesOperation' instead.")]
-	[iOS (8,0), Mac (10,10)]
-	[NoWatch]
-	[BaseType (typeof (CKOperation))]
-	[DisableDefaultCtor] // designated
-	interface CKDiscoverUserInfosOperation {
-
-		[DesignatedInitializer]
-		[Export ("init")]
-		IntPtr Constructor ();
-
-		[NullAllowed] // by default this property is null
-		[Export ("emailAddresses", ArgumentSemantic.Copy)]
-		string [] EmailAddresses { get; set; }
-
-	}
-
 	// CKError.h Fields
 	[Watch (3,0)]
 	[iOS (8,0), Mac (10,10)]

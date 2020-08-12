@@ -1849,6 +1849,11 @@ namespace PdfKit {
 
 		[NoiOS]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
+		[Export ("takePasswordFrom:")]
+		void TakePasswordFrom (NSObject sender);
+
+		[NoiOS]
+		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("drawPage:")]
 		void DrawPage (PdfPage page);
 

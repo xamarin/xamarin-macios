@@ -1742,7 +1742,7 @@ namespace CoreAnimation {
 
 // Corresponding headers were removed in Xcode 9 without any explanation
 // rdar #33590997 was filled - no news
-// 'initWithType:' and 'behaviorWithType:' API now cause rejection
+// 'initWithType:', 'behaviorWithType:' and 'behaviorTypes' API now cause rejection
 // https://trello.com/c/J8BDDUV9/86-33590997-coreanimation-quartzcore-api-removals
 #if !XAMCORE_4_0
 	[iOS (7,0), Mac (10, 9)]
