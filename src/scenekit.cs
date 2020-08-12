@@ -3168,6 +3168,13 @@ namespace SceneKit {
 		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
 #endif
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("temporalAntialiasingEnabled")]
+		bool TemporalAntialiasingEnabled { [Bind ("isTemporalAntialiasingEnabled")] get; set; }
+
+#if XAMCORE_4_0
+		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
+#endif
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Export ("currentViewport")]
 		CGRect CurrentViewport { get; }
 
@@ -3474,6 +3481,10 @@ namespace SceneKit {
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Export ("rendersContinuously")]
 		bool RendersContinuously { get; set; }
+
+		[NoWatch, NoTV, Mac (10,15), NoiOS]
+		[Export ("drawableResizesAsynchronously")]
+		bool DrawableResizesAsynchronously { get; set; }
 	}
 
 #if XAMCORE_4_0
