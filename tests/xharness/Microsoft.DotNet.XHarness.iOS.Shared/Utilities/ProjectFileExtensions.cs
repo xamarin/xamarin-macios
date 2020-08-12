@@ -824,7 +824,25 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 				return;
 			}
 
-			throw new Exception ("Could not find where to add a new DefineConstants node");
+			// Create a new PropertyGroup with the desired condition, and add it just after the last PropertyGroup in the csproj.
+			var projectNode = csproj.SelectSingleNode ("//*[local-name() = 'Project']");
+			var lastPropertyGroup = csproj.SelectNodes ("//*[local-name() = 'PropertyGroup']").Cast<XmlNode> ().Last ();
+			var newPropertyGroup = csproj.CreateElement ("PropertyGroup", csproj.GetNamespace ());
+			var conditionAttribute = csproj.CreateAttribute ("Condition");
+			var condition = "";
+			if (!string.IsNullOrEmpty (platform))
+				condition = $"'$(Platform)' == '{platform}'";
+			if (!string.IsNullOrEmpty (configuration)) {
+				if (!string.IsNullOrEmpty (condition))
+					condition += " And ";
+				condition += $"'$(Configuration)' == '{configuration}'";
+			}
+			conditionAttribute.Value = condition;
+			newPropertyGroup.Attributes.Append (conditionAttribute);
+			var defineConstantsElement = csproj.CreateElement ("DefineConstants", csproj.GetNamespace ());
+			defineConstantsElement.InnerText = "$(DefineConstants);" + value;
+			newPropertyGroup.AppendChild (defineConstantsElement);
+			projectNode.InsertAfter (newPropertyGroup, lastPropertyGroup);
 		}
 
 		public static void AddTopLevelProperty (this XmlDocument csproj, string property, string value)
