@@ -39,32 +39,32 @@ namespace CloudKit {
 	public partial class CKContainer {
 
 		[iOS (8, 0), Mac (10, 10)]
-		[Obsolete ("Use 'DiscoverAllIdentities' instead. NotSupportedException'")]
+		[Obsolete ("Always throw a 'NotSupportedException' (not a public API). Use 'DiscoverAllIdentities' instead.")]
 		public virtual void DiscoverAllContactUserInfos (Action<CKDiscoveredUserInfo[], NSError> completionHandler) 
 			=> throw new NotSupportedException ();
 
 		[iOS (8, 0), Mac (10, 10)]
-		[Obsolete ("Use 'DiscoverAllIdentities' instead. Always throw a 'NotSupportedException'")]
+		[Obsolete ("Always throw a 'NotSupportedException' (not a public API). Use 'DiscoverAllIdentities' instead.")]
 		public virtual Task<CKDiscoveredUserInfo[]> DiscoverAllContactUserInfosAsync ()
 			=> Task.FromException<CKDiscoveredUserInfo[]> (new NotSupportedException ());
 
 		[iOS (8, 0), Mac (10, 10)]
-		[Obsolete ("Use 'DiscoverUserIdentityWithEmailAddress' instead. Always throw a 'NotSupportedException'")]
+		[Obsolete ("Always throw a 'NotSupportedException' (not a public API). Use 'DiscoverUserIdentityWithEmailAddress' instead.")]
 		public virtual void DiscoverUserInfo (string email, Action<CKDiscoveredUserInfo, NSError> completionHandler)
 			=> throw new NotSupportedException ();
 
 		[iOS (8, 0), Mac (10, 10)]
-		[Obsolete ("Use 'DiscoverUserIdentityWithEmailAddress' instead. Always throw a 'NotSupportedException'")]
+		[Obsolete ("Always throw a 'NotSupportedException' (not a public API). Use 'DiscoverUserIdentityWithEmailAddress' instead.")]
 		public virtual Task<CKDiscoveredUserInfo> DiscoverUserInfoAsync (string email)
 			=> Task.FromException<CKDiscoveredUserInfo> (new NotSupportedException ());
 
 		[iOS (8, 0), Mac (10, 10)]
-		[Obsolete ("Use 'DiscoverUserIdentity' instead. Always throw a 'NotSupportedException'")]
+		[Obsolete ("Always throw a 'NotSupportedException' (not a public API). Use 'DiscoverUserIdentity' instead.")]
 		public virtual void DiscoverUserInfo (CKRecordID userRecordId, Action<CKDiscoveredUserInfo, NSError> completionHandler)
 			=> throw new NotSupportedException ();
 
 		[iOS (8, 0), Mac (10, 10)]
-		[Obsolete ("Use 'DiscoverUserIdentity' instead. Always throw a 'NotSupportedException'")]
+		[Obsolete ("Always throw a 'NotSupportedException' (not a public API). Use 'DiscoverUserIdentity' instead.")]
 		public virtual Task<CKDiscoveredUserInfo> DiscoverUserInfoAsync (CKRecordID userRecordId)
 			=> Task.FromException<CKDiscoveredUserInfo> (new NotSupportedException ());
 	}
@@ -78,33 +78,39 @@ namespace CloudKit {
 
 	[iOS (8,0), Mac (10,10)]
 	public delegate void CKDiscoverUserInfosCompletionHandler (NSDictionary emailsToUserInfos, NSDictionary userRecordIdsToUserInfos, NSError operationError);
-	
-	public partial class CKDiscoverUserInfosOperation { 
+
+#if !WATCH	
+	[Obsolete ("Use 'CKDiscoverUserIdentitiesOperation' instead.")]
+	public partial class CKDiscoverUserInfosOperation : CKOperation { 
+
+		public CKDiscoverUserInfosOperation () : base () { }
 
 		[iOS (8,0), Mac (10,10)]
 		[Obsolete ("Empty stub (not a public API).")]
 		public virtual CKDiscoverUserInfosCompletionHandler Completed { get; set; }
-	}
 
-	public partial class CKDiscoverUserInfosOperation {
-		[Obsolete ("Always throws NotSupportedException (). (not a public API).")]
+		[Obsolete ("Always throws 'NotSupportedException' (not a public API).")]
 		public CKDiscoverUserInfosOperation (string [] emailAddresses, CKRecordID [] userRecordIDs)
 			=> throw new NotSupportedException ();
 
 		[Obsolete ("Empty stub (not a public API).")]
+		public virtual string[] EmailAddresses { get; set; }
+
+		[Obsolete ("Empty stub (not a public API).")]
 		public virtual CKRecordID [] UserRecordIds { get; set; }
 	}
+#endif
 
 	public partial class CKSubscription {
-		[Obsolete ("Always throws NotSupportedException (). Use 'CKRecordZoneSubscription'.")]
+		[Obsolete ("Always throws 'NotSupportedException' (not a public API). Use 'CKRecordZoneSubscription' instead.")]
 		public CKSubscription (CKRecordZoneID zoneId, CKSubscriptionOptions subscriptionOptions)
 			=> throw new NotSupportedException ();
 
-		[Obsolete ("Always throws NotSupportedException (). Use 'CKRecordZoneSubscription'.")]
+		[Obsolete ("Always throws 'NotSupportedException' (not a public API). Use 'CKRecordZoneSubscription' instead.")]
 		public CKSubscription (CKRecordZoneID zoneId, string subscriptionId, CKSubscriptionOptions subscriptionOptions)
 			=> throw new NotSupportedException ();
 #if !WATCH
-		[Obsolete ("Empty stub (not a public API). Use 'CKRecordZoneSubscription'.")]
+		[Obsolete ("Empty stub (not a public API). Use 'CKRecordZoneSubscription' intead.")]
 		public virtual CKSubscriptionOptions SubscriptionOptions { get; }
 #endif
 	}
