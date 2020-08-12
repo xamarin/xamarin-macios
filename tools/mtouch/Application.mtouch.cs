@@ -409,7 +409,8 @@ namespace Xamarin.Bundler {
 			if (Driver.TryParseBool (options, out dlsym)) {
 				DlsymOptions = dlsym ? DlsymOptions.All : DlsymOptions.None;
 			} else {
-				DlsymAssemblies = new List<Tuple<string, bool>> ();
+				if (DlsymAssemblies == null)
+					DlsymAssemblies = new List<Tuple<string, bool>> ();
 
 				var assemblies = options.Split (',');
 				foreach (var assembly in assemblies) {

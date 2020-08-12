@@ -15,6 +15,7 @@
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)-unified</IntermediateOutputPath>
     <DefineConstants></DefineConstants>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <RootTestsDirectory>..</RootTestsDirectory>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>True</DebugSymbols>
@@ -142,6 +143,7 @@
   <ItemGroup>
     <Compile Include="Main.cs" />
   </ItemGroup>
+  <Import Project="$(RootTestsDirectory)\nunit.framework.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
     <ProjectReference Include="..\bindings-test2\bindings-test2.csproj">
