@@ -1832,7 +1832,7 @@ namespace AVFoundation {
 
 	delegate void AVPermissionGranted (bool granted);
 
-	[Mac (11, 0)]
+	[Mac (11,0)]
 	[Watch (3,0)]
 #if MONOMAC
 	[Static]
@@ -2404,7 +2404,7 @@ namespace AVFoundation {
 		[Export ("AVAudioSessionInterruptionOptionKey")]
 		AVAudioSessionInterruptionOptions Option { get; }
 
-		[iOS (10, 3), TV (10, 2), Watch (3,2)]
+		[iOS (10, 3), TV (10, 2), Watch (3, 2)]
 		[NullAllowed]
 		[Export ("AVAudioSessionInterruptionWasSuspendedKey")]
 		bool WasSuspended { get; }
@@ -10403,7 +10403,7 @@ namespace AVFoundation {
 		[Export ("linkedDevices")]
 		AVCaptureDevice [] LinkedDevices { get; }
 
-		[Mac (10,9), iOS (14, 0), NoWatch]
+		[Mac (10,9), iOS (14,0), NoWatch]
 		[Export ("manufacturer")]
 		string Manufacturer { get; }
 
@@ -13277,7 +13277,7 @@ namespace AVFoundation {
 
 	partial interface IAVContentKeyRecipient {}
 
-	[TV (10,2), Mac (10,12,4), iOS (10,3), Watch (7, 0)]
+	[TV (10,2), Mac (10,12,4), iOS (10,3), Watch (7,0)]
 	[Protocol]
 	interface AVContentKeyRecipient {
 		[Abstract]
@@ -13285,7 +13285,7 @@ namespace AVFoundation {
 		bool MayRequireContentKeysForMediaDataProcessing { get; }
 	}
 
-	[TV (10,2), Mac (10,12,4), iOS (10,3), Watch (7, 0)]
+	[TV (10,2), Mac (10,12,4), iOS (10,3), Watch (7,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface AVContentKeySession {
@@ -13385,14 +13385,14 @@ namespace AVFoundation {
 	}
 
 	[StrongDictionary ("AVContentKeySessionServerPlaybackContextOptionKeys")]
-	[Watch (7, 0), NoTV, NoMac, iOS (12,2)]
+	[Watch (7,0), NoTV, NoMac, iOS (12,2)]
 	interface AVContentKeySessionServerPlaybackContextOptions {
 		NSNumber[] ProtocolVersions { get; }
 
 		NSData ServerChallenge { get; }
 	}
 
-	[TV (10,2), Mac (10,12,4), iOS (10,3), Watch (7, 0)]
+	[TV (10,2), Mac (10,12,4), iOS (10,3), Watch (7,0)]
 	[Category]
 	[BaseType (typeof(AVContentKeySession))]
 	interface AVContentKeySession_AVContentKeyRecipients
@@ -13467,7 +13467,7 @@ namespace AVFoundation {
 	}
 
 	[Category]
-	[Mac (10, 12, 4), iOS (10,3), TV (10, 2), Watch (7,0)]
+	[Mac (10, 12, 4), iOS (10,3), TV (10, 2), Watch (7, 0)]
 	[BaseType (typeof(AVContentKeyRequest))]
 	interface AVContentKeyRequest_AVContentKeyRequestRenewal
 	{
@@ -13475,7 +13475,7 @@ namespace AVFoundation {
 		bool GetRenewsExpiringResponseData ();
 	}
 
-	[TV (10,2), Mac (10,12,4), iOS (10,3), Watch (7, 0)]
+	[TV (10,2), Mac (10,12,4), iOS (10,3), Watch (7,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (AVContentKeyRequest))]
 	interface AVPersistableContentKeyRequest {
@@ -13485,7 +13485,7 @@ namespace AVFoundation {
 
 	}
 
-	[TV (10,2), Mac (10,12,4), iOS (10,3), Watch (7, 0)]
+	[TV (10,2), Mac (10,12,4), iOS (10,3), Watch (7,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface AVContentKeyResponse {
@@ -13882,7 +13882,7 @@ namespace AVFoundation {
 	}
 
 	[NoWatch, NoTV, NoiOS, Mac (11,0)]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface AVAudioRoutingArbiter
 	{
