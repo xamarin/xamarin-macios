@@ -27,13 +27,8 @@ namespace UIKit {
 
 
 		[Obsolete ("Always throws NotSupportedException (). (not a public API).")]
-#if !MONOMAC
-		public virtual void SetTemporaryAttributes (NSDictionary<NSString, NSObject> attributes, NSRange characterReange)
-			=> throw new NotSupportedException ();
-#else
 		public virtual void SetTemporaryAttributes (NSDictionary attrs, NSRange charRange)
 			=> throw new NotSupportedException ();
-#endif
 
 	}
 #endif // COREBUILD

@@ -3166,17 +3166,6 @@ namespace MetalPerformanceShaders {
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
-	[BaseType (typeof(MPSState), Name = "MPSCNNConvolutionState")]
-	[DisableDefaultCtor]
-	interface MPSCnnConvolutionState : MPSImageSizeEncodingState {
-		[Export ("kernelWidth")]
-		nuint KernelWidth { get; }
-
-		[Export ("kernelHeight")]
-		nuint KernelHeight { get; }
-	}
-
-	[TV (11,0), Mac (10, 13), iOS (11,0)]
 	[BaseType (typeof(MPSCnnKernel), Name = "MPSCNNConvolutionTranspose")]
 	[DisableDefaultCtor] // There is a DesignatedInitializer, file a bug if needed.
 	interface MPSCnnConvolutionTranspose {

@@ -12,18 +12,18 @@ namespace CoreMidi {
 
 	public partial class MidiCISession {
 
-		[Obsolete ("Always throws NotSupportedException (). (not a public API).")]
+		[Obsolete ("Always throws 'NotSupportedException' (not a public API).")]
 		public virtual void GetProperty (NSData inquiry, byte channel, MidiCIPropertyResponseHandler handler)
 			=> throw new NotSupportedException ();
 
-		[Obsolete ("Always throws NotSupportedException (). (not a public API).")]
+		[Obsolete ("Always throws 'NotSupportedException' (not a public API).")]
 		public virtual void HasProperty (NSData inquiry, byte channel, MidiCIPropertyResponseHandler handler)
 			=> throw new NotSupportedException ();
 
-		[Obsolete ("Empty stub. (not a public API).")]
+		[Obsolete ("Empty stub (not a public API).")]
 		public virtual MidiCIPropertyChangedHandler PropertyChangedCallback { get; set; }
 
-		[Obsolete ("Always throws NotSupportedException (). (not a public API).")]
+		[Obsolete ("Always throws 'NotSupportedException' (not a public API).")]
 		public virtual void SetProperty (NSData inquiry, byte channel, MidiCIPropertyResponseHandler handler)
 			=> throw new NotSupportedException ();
 	} 
