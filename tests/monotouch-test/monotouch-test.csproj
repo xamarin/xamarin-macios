@@ -285,6 +285,7 @@
     <Folder Include="Compression\" />
     <Folder Include="BackgroundTasks\" />
     <Folder Include="WebKit\" />
+    <Folder Include="NearbyInteraction\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AudioToolbox\1.caf" />
