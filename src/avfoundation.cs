@@ -13867,8 +13867,9 @@ namespace AVFoundation {
 		[Export ("trackID")]
 		int TrackId { get; }
 
+		[BindAs (typeof (AVMediaTypes))]
 		[Export ("mediaType")]
-		string MediaType { get; }
+		NSString MediaType { get; }
 
 		[Export ("earliestPresentationTimeStamp")]
 		CMTime EarliestPresentationTimeStamp { get; }
