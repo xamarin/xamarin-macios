@@ -728,7 +728,7 @@ namespace AVFoundation {
 		SkipItem
 	}
 
-	[TV (10,2), Mac (10,12,4), iOS (10,3), Watch (7, 0)]
+	[TV (10,2), Mac (10,12,4), iOS (10,3), Watch (7,0)]
 	[Native]
 	public enum AVContentKeyRequestStatus : long {
 		Requesting,
@@ -739,7 +739,7 @@ namespace AVFoundation {
 		Failed
 	}
 
-	[TV (10, 2), Mac (10, 12, 4), iOS (10, 3), Watch (7,0)]
+	[TV (10, 2), Mac (10, 12, 4), iOS (10, 3), Watch (7, 0)]
 	public enum AVContentKeyRequestRetryReason {
 		[Field ("AVContentKeyRequestRetryReasonTimedOut")]
 		TimedOut,
