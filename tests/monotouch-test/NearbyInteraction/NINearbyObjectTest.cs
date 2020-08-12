@@ -1,6 +1,6 @@
 ﻿// Copyright 2020 Microsoft Corp.
 
-#if !MONOMAC
+#if __IOS__
 
 using System;
 using Foundation;
@@ -18,8 +18,7 @@ namespace MonoTouchFixtures.NearbyInteraction {
 		[Test]
 		public void DirectionNotAvailable ()
 		{
-			if (!TestRuntime.CheckXcodeVersion (12, 0))
-				Assert.Ignore ("Requires iOS 14.0");
+			TestRuntime.AssertXcodeVersion (12, 0);
 
 			Vector3 vect = NINearbyObject.DirectionNotAvailable;
 
@@ -34,4 +33,4 @@ namespace MonoTouchFixtures.NearbyInteraction {
 	}
 }
 
-#endif // !MONOMAC
+#endif // __IOS__
