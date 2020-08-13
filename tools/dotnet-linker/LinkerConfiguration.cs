@@ -120,6 +120,11 @@ namespace Xamarin.Linker {
 							Abis.Add (a);
 					}
 					break;
+				case "TargetFramework":
+					if (!TargetFramework.TryParse (value, out var tf))
+						throw new InvalidOperationException ($"Invalid TargetFramework '{value}' in {linker_file}");
+					Driver.TargetFramework = TargetFramework.Parse (value);
+					break;
 				case "Verbosity":
 					if (!int.TryParse (value, out var verbosity))
 						throw new InvalidOperationException ($"Invalid Verbosity '{value}' in {linker_file}");
@@ -149,6 +154,9 @@ namespace Xamarin.Linker {
 			default:
 				break;
 			}
+
+			if (Driver.TargetFramework.Platform != Platform)
+				throw ErrorHelper.CreateError (99, "Inconsistent platforms. TargetFramework={0}, Platform={1}", Driver.TargetFramework.Platform, Platform);
 		}
 
 		public void Write ()

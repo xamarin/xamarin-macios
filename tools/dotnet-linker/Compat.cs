@@ -37,10 +37,6 @@ namespace Xamarin.Bundler {
 		{
 			throw new NotImplementedException ();
 		}
-
-		public ApplePlatform Platform {
-			get { return Configuration.Platform; }
-		}
 	}
 
 	public partial class Driver {
