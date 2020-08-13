@@ -1760,6 +1760,11 @@ namespace PdfKit {
 		[Export ("greekingThreshold")]
 		nfloat GreekingThreshold { get; set; }
 
+		[NoiOS]
+		[Deprecated (PlatformName.MacOSX, 10, 12)]
+		[Export ("takeBackgroundColorFrom:")]
+		void TakeBackgroundColor (NSObject sender);
+
 		[Export ("backgroundColor")]
 		NSColor BackgroundColor { get; set; }
 
