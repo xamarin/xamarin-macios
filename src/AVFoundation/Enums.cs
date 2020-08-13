@@ -1092,6 +1092,8 @@ namespace AVFoundation {
 
 	[TV (14, 0), Watch (7, 0), Mac (11, 0), iOS (14, 0)]
 	public enum AVFileTypeProfile {
+		[Field (null)]
+		None = 0,
 		[Field ("AVFileTypeProfileMPEG4AppleHLS")]
 		Mpeg4AppleHls,
 		[Field ("AVFileTypeProfileMPEG4CMAFCompliant")]
