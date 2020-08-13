@@ -199,6 +199,7 @@ namespace Xharness.Targets
 		protected void CreateLibraryProject ()
 		{
 			ProcessProject ();
+			inputProject.ResolveAllPaths (TemplateProjectPath);
 			inputProject.Save (ProjectPath, (l, m) => Harness.Log (l,m));
 
 			ProjectGuid = inputProject.GetProjectGuid ();
