@@ -14,6 +14,14 @@ using ObjCRuntime;
 
 namespace CloudKit {
 
+#if !XAMCORE_4_0
+	public partial class CKQueryNotification {
+		[iOS (8, 0), Mac (10, 10)]
+		[Obsolete ("Empty stub (not public API). Use 'DatabaseScope' instead.")]
+		public virtual bool IsPublicDatabase { get; }
+	}
+#endif
+
 #if !XAMCORE_4_0 && !WATCH
 	public partial class CKOperation {
 
@@ -85,6 +93,14 @@ namespace CloudKit {
 
 		public CKDiscoverUserInfosOperation () : base () { }
 
+		[Obsolete ("Always throws 'NotSupportedException' (not a public API).")]
+		protected CKDiscoverUserInfosOperation (Foundation.NSObjectFlag t)
+			=> throw new NotSupportedException ();
+
+		[Obsolete ("Always throws 'NotSupportedException' (not a public API).")]
+		protected CKDiscoverUserInfosOperation (IntPtr handle)
+			=> throw new NotSupportedException ();
+
 		[iOS (8,0), Mac (10,10)]
 		[Obsolete ("Empty stub (not a public API).")]
 		public virtual CKDiscoverUserInfosCompletionHandler Completed { get; set; }
@@ -98,6 +114,11 @@ namespace CloudKit {
 
 		[Obsolete ("Empty stub (not a public API).")]
 		public virtual CKRecordID [] UserRecordIds { get; set; }
+
+#pragma warning disable CS0809
+		[Obsolete ("Empty stub (not a public API).")]
+		public override IntPtr ClassHandle { get; }
+#pragma warning restore CS0809
 	}
 #endif
 
@@ -113,12 +134,6 @@ namespace CloudKit {
 		[Obsolete ("Empty stub (not a public API). Use 'CKRecordZoneSubscription' intead.")]
 		public virtual CKSubscriptionOptions SubscriptionOptions { get; }
 #endif
-	}
-
-	public partial class CKQueryNotification {
-		[iOS (8, 0), Mac (10, 10)]
-		[Obsolete ("Empty stub (not public API). Use 'DatabaseScope' instead.")]
-		public virtual bool IsPublicDatabase { get; }
 	}
 
 #if MONOMAC || IOS
