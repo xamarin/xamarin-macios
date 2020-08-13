@@ -81,7 +81,7 @@ namespace Xharness.Jenkins {
 				foreach (var config in configurations) {
 					MSBuildTask build = new MSBuildTask (jenkins: jenkins, testProject: project, processManager: processManager);
 					build.Platform = platform;
-					build.CloneTestProject (jenkins.MainLog, processManager, project);
+					build.CloneTestProject (jenkins.MainLog, processManager, project, HarnessConfiguration.RootDirectory);
 					build.ProjectConfiguration = config;
 					build.ProjectPlatform = project.Platform;
 					build.SpecifyPlatform = false;

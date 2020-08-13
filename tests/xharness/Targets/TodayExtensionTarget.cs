@@ -51,6 +51,7 @@ namespace Xharness.Targets {
 			TodayContainerGuid = "{" + Helpers.GenerateStableGuid ().ToString ().ToUpper () + "}";
 			ProjectGuid = TodayContainerGuid;
 			csproj.SetProjectGuid (TodayContainerGuid);
+			csproj.ResolveAllPaths (Harness.TodayContainerTemplate);
 			csproj.Save(TodayContainerProjectPath, (l, m) => Harness.Log (l,m));
 
 			XmlDocument info_plist = new XmlDocument ();
@@ -79,7 +80,7 @@ namespace Xharness.Targets {
 			csproj.AddInterfaceDefinition (Path.Combine (Harness.TodayExtensionTemplate, "TodayView.storyboard").Replace ('/', '\\'));
 			csproj.SetExtraLinkerDefs ("extra-linker-defs" + ExtraLinkerDefsSuffix + ".xml");
 			csproj.FixProjectReferences (Path.Combine (ProjectsDir, GetTargetSpecificDir ()), "-today", FixProjectReference);
-
+			csproj.ResolveAllPaths (TemplateProjectPath);
 			csproj.Save (TodayExtensionProjectPath, (l,m) => Harness.Log (l,m));
 
 			TodayExtensionGuid = csproj.GetProjectGuid ();

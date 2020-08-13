@@ -52,7 +52,7 @@ namespace Xharness.Jenkins {
 						Platform = TestPlatform.iOS_Unified64,
 						TestName = project.Name,
 					};
-					build64.CloneTestProject (jenkins.MainLog, processManager, project);
+					build64.CloneTestProject (jenkins.MainLog, processManager, project, HarnessConfiguration.RootDirectory);
 					projectTasks.Add (new RunDeviceTask (
 						jenkins: jenkins,
 						devices: jenkins.Devices,
@@ -69,7 +69,7 @@ namespace Xharness.Jenkins {
 						Platform = TestPlatform.iOS_Unified32,
 						TestName = project.Name,
 					};
-					build32.CloneTestProject (jenkins.MainLog, processManager, project);
+					build32.CloneTestProject (jenkins.MainLog, processManager, project, HarnessConfiguration.RootDirectory);
 					projectTasks.Add (new RunDeviceTask (
 						jenkins: jenkins,
 						devices: jenkins.Devices,
@@ -88,7 +88,7 @@ namespace Xharness.Jenkins {
 							Platform = TestPlatform.iOS_TodayExtension64,
 							TestName = project.Name,
 						};
-						buildToday.CloneTestProject (jenkins.MainLog, processManager, todayProject);
+						buildToday.CloneTestProject (jenkins.MainLog, processManager, todayProject, HarnessConfiguration.RootDirectory);
 						projectTasks.Add (new RunDeviceTask (
 							jenkins: jenkins,
 							devices: jenkins.Devices,
@@ -109,7 +109,7 @@ namespace Xharness.Jenkins {
 						Platform = TestPlatform.tvOS,
 						TestName = project.Name,
 					};
-					buildTV.CloneTestProject (jenkins.MainLog, processManager, tvOSProject);
+					buildTV.CloneTestProject (jenkins.MainLog, processManager, tvOSProject, HarnessConfiguration.RootDirectory);
 					projectTasks.Add (new RunDeviceTask (
 						jenkins: jenkins,
 						devices: jenkins.Devices,
@@ -130,7 +130,7 @@ namespace Xharness.Jenkins {
 							Platform = TestPlatform.watchOS_32,
 							TestName = project.Name,
 						};
-						buildWatch32.CloneTestProject (jenkins.MainLog, processManager, watchOSProject);
+						buildWatch32.CloneTestProject (jenkins.MainLog, processManager, watchOSProject, HarnessConfiguration.RootDirectory);
 						projectTasks.Add (new RunDeviceTask (
 							jenkins: jenkins,
 							devices: jenkins.Devices,
@@ -149,7 +149,7 @@ namespace Xharness.Jenkins {
 							Platform = TestPlatform.watchOS_64_32,
 							TestName = project.Name,
 						};
-						buildWatch64_32.CloneTestProject (jenkins.MainLog, processManager, watchOSProject);
+						buildWatch64_32.CloneTestProject (jenkins.MainLog, processManager, watchOSProject, HarnessConfiguration.RootDirectory);
 						projectTasks.Add (new RunDeviceTask (
 							jenkins: jenkins,
 							devices: jenkins.Devices,

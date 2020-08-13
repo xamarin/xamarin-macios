@@ -160,7 +160,7 @@ namespace Xharness.Jenkins {
 					var clone = task.TestProject.Clone ();
 					var clone_task = Task.Run (async () => {
 						await task.BuildTask.InitialTask; // this is the project cloning above
-						await clone.CreateCopyAsync (jenkins.MainLog, processManager, task);
+						await clone.CreateCopyAsync (jenkins.MainLog, processManager, task, HarnessConfiguration.RootDirectory);
 
 						var isMac = task.Platform.IsMac ();
 						var canSymlink = task.Platform.CanSymlink();
