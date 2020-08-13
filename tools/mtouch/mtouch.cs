@@ -1158,13 +1158,5 @@ namespace Xamarin.Bundler
 
 			return false;
 		}
-
-		public static bool IsFrameworkAvailableInSimulator (Application app, string framework)
-		{
-			if (!GetFrameworks (app).TryGetValue (framework, out var fw))
-				return true; // Unknown framework, assume it's valid for the simulator
-
-			return fw.IsFrameworkAvailableInSimulator (app);
-		}
 	}
 }
