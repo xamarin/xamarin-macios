@@ -912,7 +912,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 			}
 		}
 
-		public static void ResolveAllPaths (this XmlDocument csproj, string project_path)
+		public static void ResolveAllPaths (this XmlDocument csproj, string project_path, string rootDirectory = null)
 		{
 			var dir = System.IO.Path.GetDirectoryName (project_path);
 			var nodes_with_paths = new string []
@@ -967,6 +967,10 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 				if (input.StartsWith ("$(MSBuildBinPath)", StringComparison.Ordinal))
 					return input; // This is already a full path.
 				input = input.Replace ('\\', '/'); // make unix-style
+
+				if (rootDirectory != null)
+					input = input.Replace ("$(RootTestsDirectory)", rootDirectory);
+
 				input = System.IO.Path.GetFullPath (System.IO.Path.Combine (dir, input));
 				input = input.Replace ('/', '\\'); // make windows-style again
 				return input;

@@ -74,7 +74,7 @@ namespace Xharness.Jenkins {
 						derived.Ignored = configIgnored;
 						derived.TestName = project.Name;
 						derived.Dependency = project.Dependency;
-						derived.CloneTestProject (jenkins.MainLog, processManager, pair.Item1);
+						derived.CloneTestProject (jenkins.MainLog, processManager, pair.Item1, HarnessConfiguration.RootDirectory);
 						var simTasks = CreateAsync (jenkins, processManager, derived);
 						runSimulatorTasks.AddRange (simTasks);
 						foreach (var task in simTasks) {
