@@ -24,11 +24,6 @@ namespace Xamarin.Bundler {
 		MarkerOnly = 3,
 	}
 
-	public enum BuildTarget {
-		Simulator,
-		Device,
-	}
-
 	public enum DlsymOptions
 	{
 		Default,
@@ -42,7 +37,6 @@ namespace Xamarin.Bundler {
 		public string ProductName = "Xamarin.iOS";
 
 		public string ExecutableName;
-		public BuildTarget BuildTarget;
 
 		public bool EnableCxx;
 		bool? enable_msym;
@@ -468,14 +462,6 @@ namespace Xamarin.Bundler {
 			default:
 				throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, "Xamarin.iOS");
 			}
-		}
-
-		public bool IsDeviceBuild { 
-			get { return BuildTarget == BuildTarget.Device; } 
-		}
-
-		public bool IsSimulatorBuild { 
-			get { return BuildTarget == BuildTarget.Simulator; } 
 		}
 
 		public BitCodeMode BitCodeMode { get; set; }
