@@ -21,13 +21,16 @@ namespace UIKit {
 
 	[iOS (7,0)]
 	public partial class NSLayoutManager {
-		[Obsolete ("Always throws NotSupportedException (). (not a public API).")]
+		[Obsolete ("Always throws 'NotSupportedException' (not a public API).")]
 		public virtual void ReplaceTextStorage (NSTextStorage newTextStorage)
 			=> throw new NotSupportedException ();
 
-
-		[Obsolete ("Always throws NotSupportedException (). (not a public API).")]
+		[Obsolete ("Always throws 'NotSupportedException' (not a public API).")]
+#if MONOMAC
 		public virtual void SetTemporaryAttributes (NSDictionary attrs, NSRange charRange)
+#else
+		public virtual void SetTemporaryAttributes (Foundation.NSDictionary<Foundation.NSString,Foundation.NSObject> attributes, Foundation.NSRange characterReange)
+#endif
 			=> throw new NotSupportedException ();
 
 	}

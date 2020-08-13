@@ -43,7 +43,15 @@ namespace MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
 	[Obsolete ("Empty stub (not a public API).")]
-	public partial class MPSCnnConvolutionState : MPSState {
+	public partial class MPSCnnConvolutionState : MPSState, IMPSImageSizeEncodingState {
+
+		[Obsolete ("Always throws 'NotSupportedException' (not a public API).")]
+		protected MPSCnnConvolutionState (Foundation.NSObjectFlag t) : base (t)
+			=> throw new NotSupportedException ();
+
+		[Obsolete ("Always throws 'NotSupportedException' (not a public API).")]
+		protected MPSCnnConvolutionState (IntPtr handle) : base (handle)
+			=> throw new NotSupportedException ();
 
 		[Obsolete ("Always throws 'NotSupportedException' (not a public API).")]
 		[iOS (11,3), TV (11,3), Mac (10,13,4)]
@@ -79,6 +87,17 @@ namespace MetalPerformanceShaders {
 
 		[Obsolete ("Empty stub (not a public API).")]
 		public virtual MPSOffset SourceOffset { get; }
+
+		[Obsolete ("Empty stub (not a public API).")]
+		public virtual nuint SourceWidth { get; }
+
+		[Obsolete ("Empty stub (not a public API).")]
+		public virtual nuint SourceHeight { get; }
+
+#pragma warning disable CS0809
+		[Obsolete ("Empty stub (not a public API).")]
+		public override IntPtr ClassHandle { get; }
+#pragma warning restore CS0809
 	}
 }
 
