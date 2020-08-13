@@ -8,6 +8,8 @@ namespace Xamarin.MacDev.Tasks {
 	public abstract class LinkNativeCodeTaskBase : XamarinTask {
 
 #region Inputs
+		public ITaskItem[] LinkerFlags { get; set; }
+
 		public ITaskItem[] LinkWithLibraries { get; set; }
 
 		[Required]
@@ -89,6 +91,11 @@ namespace Xamarin.MacDev.Tasks {
 
 			arguments.Add ("-o");
 			arguments.Add (Path.GetFullPath (OutputFile));
+
+			if (LinkerFlags != null) {
+				foreach (var flag in LinkerFlags)
+					arguments.Add (flag.ItemSpec);
+			}
 
 			ExecuteAsync ("xcrun", arguments, sdkDevPath: SdkDevPath).Wait ();
 
