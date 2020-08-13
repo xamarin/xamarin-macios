@@ -26,7 +26,6 @@
 !missing-null-allowed! 'System.Void PdfKit.PdfAnnotation::set_Border(PdfKit.PdfBorder)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void PdfKit.PdfAnnotation::set_Contents(System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void PdfKit.PdfAnnotation::set_ModificationDate(Foundation.NSDate)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void PdfKit.PdfAnnotation::set_MouseUpAction(PdfKit.PdfAction)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void PdfKit.PdfAnnotation::set_Page(PdfKit.PdfPage)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void PdfKit.PdfAnnotation::set_Popup(PdfKit.PdfAnnotationPopup)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void PdfKit.PdfAnnotation::set_Type(System.String)' is missing an [NullAllowed] on parameter #0
@@ -47,3 +46,8 @@
 !missing-null-allowed! 'System.Void PdfKit.PdfView::SetCurrentSelection(PdfKit.PdfSelection,System.Boolean)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void PdfKit.PdfView::ZoomIn(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void PdfKit.PdfView::ZoomOut(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
+
+# deprecated API 
+!missing-selector! PDFAnnotation::mouseUpAction not bound
+!missing-selector! PDFAnnotation::removeAllAppearanceStreams not bound
+!missing-selector! PDFAnnotation::setMouseUpAction: not bound

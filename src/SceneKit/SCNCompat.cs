@@ -147,12 +147,12 @@ namespace SceneKit {
 		}
 	}
 
+#if !MONOMAC && !WATCH
 	public partial class SCNView {
-#if !MONOMAC
 		[Watch (6,0), TV (13,0), iOS (13,0)]
 		[Obsolete ("Empty stub. (not a public API).")]
 		public virtual bool DrawableResizesAsynchronously { get; set; } 
-#endif
 	}
+#endif
 #endif
 }
