@@ -52,8 +52,6 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 				connectedDevices.Reset ();
 			}
 
-			loaded = true;
-
 			var tmpfile = Path.GetTempFileName ();
 			try {
 				using (var process = new Process ()) {
@@ -92,6 +90,8 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 						}
 						connectedDevices.Add (d);
 					}
+
+					loaded = true;
 				}
 			} finally {
 				connectedDevices.SetCompleted ();
