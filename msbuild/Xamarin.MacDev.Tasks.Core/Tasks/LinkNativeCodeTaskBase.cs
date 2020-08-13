@@ -50,6 +50,9 @@ namespace Xamarin.MacDev.Tasks {
 					var libExtension = Path.GetExtension (lib).ToLowerInvariant ();
 					switch (libExtension) {
 					case ".a":
+						var forceLoad = string.Equals (libSpec.GetMetadata ("ForceLoad"), "true", StringComparison.OrdinalIgnoreCase);
+						if (forceLoad)
+							arguments.Add ("-force_load");
 						arguments.Add (lib);
 						break;
 					case ".dylib":
