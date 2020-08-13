@@ -2105,7 +2105,7 @@ namespace Registrar {
 			namespaces.Add (ns);
 
 #if !MMP
-			if (App.IsSimulatorBuild && !Driver.IsFrameworkAvailableInSimulator (App, ns)) {
+			if (App.IsSimulatorBuild && !App.IsFrameworkAvailableInSimulator (ns)) {
 				Driver.Log (5, "Not importing the framework {0} in the generated registrar code because it's not available in the simulator.", ns);
 				return;
 			}
@@ -2617,7 +2617,7 @@ namespace Registrar {
 		bool IsTypeAllowedInSimulator (ObjCType type)
 		{
 			var ns = type.Type.Namespace;
-			return Driver.IsFrameworkAvailableInSimulator (App, ns);
+			return App.IsFrameworkAvailableInSimulator (ns);
 		}
 #endif
 
