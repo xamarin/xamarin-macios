@@ -45,7 +45,7 @@ namespace CloudKit {
 	}
 
 	public partial class CKContainer {
-
+#if __IOS__ || MONOMAC
 		[iOS (8, 0), Mac (10, 10)]
 		[Obsolete ("Always throw a 'NotSupportedException' (not a public API). Use 'DiscoverAllIdentities' instead.")]
 		public virtual void DiscoverAllContactUserInfos (Action<CKDiscoveredUserInfo[], NSError> completionHandler) 
@@ -55,6 +55,7 @@ namespace CloudKit {
 		[Obsolete ("Always throw a 'NotSupportedException' (not a public API). Use 'DiscoverAllIdentities' instead.")]
 		public virtual Task<CKDiscoveredUserInfo[]> DiscoverAllContactUserInfosAsync ()
 			=> Task.FromException<CKDiscoveredUserInfo[]> (new NotSupportedException ());
+#endif
 
 		[iOS (8, 0), Mac (10, 10)]
 		[Obsolete ("Always throw a 'NotSupportedException' (not a public API). Use 'DiscoverUserIdentityWithEmailAddress' instead.")]
@@ -76,13 +77,14 @@ namespace CloudKit {
 		public virtual Task<CKDiscoveredUserInfo> DiscoverUserInfoAsync (CKRecordID userRecordId)
 			=> Task.FromException<CKDiscoveredUserInfo> (new NotSupportedException ());
 	}
-
+#if !TVOS
 	public partial class CKDiscoverAllContactsOperation {
 
 		[Obsolete ("Empty stub (not a public API).")]
 		public virtual Action<CKDiscoveredUserInfo[], NSError> DiscoverAllContactsHandler { get; set; }
 
 	}
+#endif
 
 	[iOS (8,0), Mac (10,10)]
 	public delegate void CKDiscoverUserInfosCompletionHandler (NSDictionary emailsToUserInfos, NSDictionary userRecordIdsToUserInfos, NSError operationError);
