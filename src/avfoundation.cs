@@ -4088,7 +4088,7 @@ namespace AVFoundation {
 		[BindAs (typeof (AVFileTypeProfile))]
 		NSString OutputFileTypeProfile { get; set; }
 
-		[Wrap ("WriterWeakDelegate")]
+		[Wrap ("WeakDelegate")]
 		IAVAssetWriterDelegate Delegate { get; set; }
 
 		[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
