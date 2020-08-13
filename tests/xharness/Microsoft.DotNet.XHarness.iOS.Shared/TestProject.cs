@@ -69,14 +69,14 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 			return rv;
 		}
 
-		internal async Task<TestProject> CreateCloneAsync (ILog log, IProcessManager processManager, ITestTask test)
+		internal async Task<TestProject> CreateCloneAsync (ILog log, IProcessManager processManager, ITestTask test, string rootDirectory)
 		{
 			var rv = Clone ();
-			await rv.CreateCopyAsync (log, processManager, test);
+			await rv.CreateCopyAsync (log, processManager, test, rootDirectory);
 			return rv;
 		}
 
-		public async Task CreateCopyAsync (ILog log, IProcessManager processManager, ITestTask test)
+		public async Task CreateCopyAsync (ILog log, IProcessManager processManager, ITestTask test, string rootDirectory)
 		{
 			var directory = DirectoryUtilities.CreateTemporaryDirectory (test?.TestName ?? System.IO.Path.GetFileNameWithoutExtension (Path));
 			Directory.CreateDirectory (directory);
@@ -89,7 +89,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 			doc = new XmlDocument ();
 			doc.LoadWithoutNetworkAccess (original_path);
 			var original_name = System.IO.Path.GetFileName (original_path);
-			doc.ResolveAllPaths (original_path);
+			doc.ResolveAllPaths (original_path, rootDirectory);
 
 			if (doc.IsDotNetProject ()) {
 				if (doc.GetEnableDefaultItems () != false) {
@@ -155,7 +155,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 			var projectReferences = new List<TestProject> ();
 			foreach (var pr in doc.GetProjectReferences ()) {
 				var tp = new TestProject (pr.Replace ('\\', '/'));
-				await tp.CreateCopyAsync (log, processManager, test);
+				await tp.CreateCopyAsync (log, processManager, test, rootDirectory);
 				doc.SetProjectReferenceInclude (pr, tp.Path.Replace ('/', '\\'));
 				projectReferences.Add (tp);
 			}
