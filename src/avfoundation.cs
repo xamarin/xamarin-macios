@@ -4089,11 +4089,11 @@ namespace AVFoundation {
 		NSString OutputFileTypeProfile { get; set; }
 
 		[Wrap ("WriterWeakDelegate")]
-		IAVAssetWriterDelegate WriterDelegate { get; set; }
+		IAVAssetWriterDelegate Delegate { get; set; }
 
 		[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
-		NSObject WriterWeakDelegate { get; set; }
+		NSObject WeakDelegate { get; set; }
 
 		[TV (14,0), NoWatch, Mac (11,0), iOS (14,0)]
 		[Export ("flushSegment")]
