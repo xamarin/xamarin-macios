@@ -137,6 +137,7 @@
 				PlatformAssembly=$(_PlatformAssemblyName).dll
 				SdkVersion=$(_SdkVersion)
 				TargetArchitectures=$(TargetArchitectures)
+				TargetFramework=$(_ComputedTargetFrameworkMoniker)
 				Verbosity=$(_BundlerVerbosity)
 			</_CustomLinkerOptions>
 			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) --custom-data "LinkerOptionsFile=$(_CustomLinkerOptionsFile)"</_ExtraTrimmerArgs>
