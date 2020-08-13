@@ -9,6 +9,7 @@ using Mono.Cecil.Cil;
 using Mono.Linker;
 
 using Xamarin.Linker;
+using Xamarin.MacDev;
 using Xamarin.Utils;
 
 using ObjCRuntime;
@@ -59,6 +60,7 @@ namespace Xamarin.Bundler {
 		public HashSet<string> Frameworks = new HashSet<string> ();
 		public HashSet<string> WeakFrameworks = new HashSet<string> ();
 
+		public bool IsExtension;
 		public ApplePlatform Platform { get { return Driver.TargetFramework.Platform; } }
 
 		// Linker config
@@ -207,6 +209,38 @@ namespace Xamarin.Bundler {
 			}
 
 			I18n = assemblies;
+		}
+
+		public bool IsTodayExtension {
+			get {
+				return ExtensionIdentifier == "com.apple.widget-extension";
+			}
+		}
+
+		public bool IsWatchExtension {
+			get {
+				return ExtensionIdentifier == "com.apple.watchkit";
+			}
+		}
+
+		public bool IsTVExtension {
+			get {
+				return ExtensionIdentifier == "com.apple.tv-services";
+			}
+		}
+
+		public string ExtensionIdentifier {
+			get {
+				if (!IsExtension)
+					return null;
+
+				var info_plist = Path.Combine (AppDirectory, "Info.plist");
+				var plist = Driver.FromPList (info_plist);
+				var dict = plist.Get<PDictionary> ("NSExtension");
+				if (dict == null)
+					return null;
+				return dict.GetString ("NSExtensionPointIdentifier");
+			}
 		}
 
 		// This is just a name for this app to show in log/error messages, etc.

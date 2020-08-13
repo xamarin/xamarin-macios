@@ -7,7 +7,6 @@ namespace Xamarin.Bundler {
 		public string ProductName = "Xamarin.Mac";
 		public bool IsSimulatorBuild => false;
 		public bool IsDeviceBuild => false;
-		public bool IsTodayExtension => false;
 
 		public string CustomBundleName = "MonoBundle";
 		public AOTOptions AOTOptions;
