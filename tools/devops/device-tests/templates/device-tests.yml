@@ -48,7 +48,7 @@ steps:
     Import-Module ./VSTS.psm1
     Import-Module ./GitHub.psm1
     Set-GitHubStatus -Status "error" -Description "Pipeline scripts tests failed." -Context "$Env:CONTEXT"
-    New-GitHubComment -Header "Pipeline scripts tests failed on $Env:CONTEXT" -Emoji ":fire:" -Description "The tests of the scripts used in the pepeline failed. The build was cancelled."
+    New-GitHubComment -Header "Pipeline scripts tests failed on $Env:CONTEXT" -Emoji ":fire:" -Description "The tests of the scripts used in the pipeline failed. The build was cancelled."
     Stop-Pipeline
   env:
     BUILD_REVISION: $(BUILD_REVISION)
