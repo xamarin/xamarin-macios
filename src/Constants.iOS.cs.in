@@ -150,6 +150,7 @@ namespace ObjCRuntime {
 		public const string MediaSetupLibrary = "/System/Library/Frameworks/MediaSetup.framework/MediaSetup";
 		public const string MLComputeLibrary = "/System/Library/Frameworks/MLCompute.framework/MLCompute";
 		public const string NearbyInteractionLibrary = "/System/Library/Frameworks/NearbyInteraction.framework/NearbyInteraction";
+		public const string ScreenTimeLibrary = "/System/Library/Frameworks/ScreenTime.framework/ScreenTime";
 		public const string SensorKitLibrary = "/System/Library/Frameworks/SensorKit.framework/SensorKit";
 		public const string UniformTypeIdentifiersLibrary = "/System/Library/Frameworks/UniformTypeIdentifiers.framework/UniformTypeIdentifiers";
 	}
