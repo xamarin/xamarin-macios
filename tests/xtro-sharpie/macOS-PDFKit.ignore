@@ -46,8 +46,3 @@
 !missing-null-allowed! 'System.Void PdfKit.PdfView::SetCurrentSelection(PdfKit.PdfSelection,System.Boolean)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void PdfKit.PdfView::ZoomIn(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void PdfKit.PdfView::ZoomOut(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
-
-# deprecated API 
-!missing-selector! PDFAnnotation::mouseUpAction not bound
-!missing-selector! PDFAnnotation::removeAllAppearanceStreams not bound
-!missing-selector! PDFAnnotation::setMouseUpAction: not bound
