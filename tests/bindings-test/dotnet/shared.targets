@@ -45,7 +45,7 @@
     <Compile Include="$(RootTestsDirectory)\api-shared\ObjCRuntime\Registrar.cs">
       <Link>Registrar.cs</Link>
     </Compile>
-    <Compile Include="..\..\RegistrarBindingTest.cs" />
+    <Compile Include="$(BindingsTestDirectory)\RegistrarBindingTest.cs" />
     <Compile Include="$(RootTestsDirectory)\common\TestRuntime.cs">
       <Link>TestRuntime.cs</Link>
     </Compile>
