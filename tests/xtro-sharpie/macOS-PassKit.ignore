@@ -29,6 +29,8 @@
 !missing-selector! PKPaymentToken::paymentNetwork not bound
 
 ## enum only used in API not available on macOS
+!missing-enum! PKAddressField not bound
+!missing-enum! PKPaymentPassActivationState not bound
 !missing-enum! PKDisbursementRequestSchedule not bound
 
 ## all members are decorated but not the type themselves
