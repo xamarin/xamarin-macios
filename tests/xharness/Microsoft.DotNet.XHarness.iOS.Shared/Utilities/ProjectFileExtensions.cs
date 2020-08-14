@@ -246,7 +246,10 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 
 		public static string GetAssemblyName (this XmlDocument csproj)
 		{
-			return csproj.SelectSingleNode ("/*/*/*[local-name() = 'AssemblyName']").InnerText;
+			var assemblyNameNode = csproj.SelectSingleNode ("/*/*/*[local-name() = 'AssemblyName']");
+			if (assemblyNameNode != null)
+				return assemblyNameNode.InnerText;
+			return Path.GetFileNameWithoutExtension (csproj.GetFilename ());
 		}
 
 		public static void SetPlatformAssembly (this XmlDocument csproj, string value)
