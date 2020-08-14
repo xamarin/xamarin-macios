@@ -19,17 +19,20 @@ namespace Xamarin.Bundler {
 			this.Configuration = configuration;
 		}
 
-		public string GetProductName ()
-		{
-			switch (Platform) {
-			case ApplePlatform.iOS:
-			case ApplePlatform.TVOS:
-			case ApplePlatform.WatchOS:
-				return "Xamarin.iOS";
-			case ApplePlatform.MacOSX:
-				return "Xamarin.Mac";
-			default:
-				throw ErrorHelper.CreateError (177, Errors.MX0177 /* "Unknown platform: {0}. This usually indicates a bug; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case." */, Platform);
+		public string ProductName {
+			get {
+				switch (Platform) {
+				case ApplePlatform.iOS:
+					return "Microsoft.iOS";
+				case ApplePlatform.TVOS:
+					return "Microsoft.tvOS";
+				case ApplePlatform.WatchOS:
+					return "Microsoft.watchOS";
+				case ApplePlatform.MacOSX:
+					return "Microsoft.macOS";
+				default:
+					throw ErrorHelper.CreateError (177, Errors.MX0177 /* "Unknown platform: {0}. This usually indicates a bug; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case." */, Platform);
+				}
 			}
 		}
 
