@@ -388,6 +388,19 @@ namespace Introspection {
 #endif
 				// Xcode 12 beta 2
 				case "MSServiceAccount":
+				case "PKAddCarKeyPassConfiguration":
+				case "PKAddSecureElementPassConfiguration":
+				case "PKAddShareablePassConfiguration":
+				case "PKBarcodeEventConfigurationRequest":
+				case "PKBarcodeEventMetadataRequest":
+				case "PKBarcodeEventMetadataResponse":
+				case "PKBarcodeEventSignatureRequest":
+				case "PKBarcodeEventSignatureResponse":
+				case "PKIssuerProvisioningExtensionPaymentPassEntry":
+				case "PKIssuerProvisioningExtensionStatus":
+				case "PKPaymentMerchantSession":
+				case "PKPaymentRequestMerchantSessionUpdate":
+				case "PKShareablePassMetadata":
 				case "SRAmbientLightSample":
 				case "SRApplicationUsage":
 				case "SRDeviceUsageReport":
@@ -629,6 +642,19 @@ namespace Introspection {
 #endif
 				// Xcode 12 beta 2
 				case "MSServiceAccount":
+				case "PKAddCarKeyPassConfiguration":
+				case "PKAddSecureElementPassConfiguration":
+				case "PKAddShareablePassConfiguration":
+				case "PKBarcodeEventConfigurationRequest":
+				case "PKBarcodeEventMetadataRequest":
+				case "PKBarcodeEventMetadataResponse":
+				case "PKBarcodeEventSignatureRequest":
+				case "PKBarcodeEventSignatureResponse":
+				case "PKIssuerProvisioningExtensionPaymentPassEntry":
+				case "PKIssuerProvisioningExtensionStatus":
+				case "PKPaymentMerchantSession":
+				case "PKPaymentRequestMerchantSessionUpdate":
+				case "PKShareablePassMetadata":
 				case "SRAmbientLightSample":
 				case "SRApplicationUsage":
 				case "SRDeviceUsageReport":
@@ -713,6 +739,8 @@ namespace Introspection {
 					return true;
 				// Xcode 12 beta 2
 				case "HKElectrocardiogram": // Conformance not in headers
+				case "PKPaymentMerchantSession":
+				case "PKShareablePassMetadata":
 					return true;
 				}
 				break;

@@ -5,6 +5,7 @@
 //	Sebastien Pouliot  <sebastien@xamarin.com>
 //
 // Copyright 2012, 2015-2016 Xamarin Inc. All rights reserved.
+// Copyright 2020 Microsoft Corp.
 //
 
 using System;
@@ -35,6 +36,7 @@ namespace PassKit {
 
 	[Watch (3,0)]
 	[iOS (9,0)]
+	[Mac (11,0)]
 	[BaseType (typeof(NSObject))]
 	interface PKContact : NSSecureCoding
 	{
@@ -50,6 +52,7 @@ namespace PassKit {
 		[NullAllowed, Export ("phoneNumber", ArgumentSemantic.Strong)]
 		CNPhoneNumber PhoneNumber { get; set; }
 
+		[NoMac]
 		[iOS (9,2)]
 		[Deprecated (PlatformName.iOS, 10,3, message:"Use 'SubLocality' and 'SubAdministrativeArea' on 'PostalAddress' instead.")]
 		[Deprecated (PlatformName.WatchOS, 3,2, message:"Use 'SubLocality' and 'SubAdministrativeArea' on 'PostalAddress' instead.")]
@@ -57,9 +60,11 @@ namespace PassKit {
 		string SupplementarySubLocality { get; set; }
 	}
 
+	[Mac (11,0)]
 	[Watch (6,2), iOS (13,4)]
 	delegate void PKPassLibrarySignDataCompletionHandler (NSData signedData, NSData signature, NSError error);
 	
+	[Mac (11,0)]
 	[BaseType (typeof (NSObject))]
 	interface PKPassLibrary {
 		[Static][Export ("isPassLibraryAvailable")]
@@ -98,11 +103,13 @@ namespace PassKit {
 		[Notification]
 		NSString RemotePaymentPassesDidChangeNotification { get; }
 
+		[NoMac]
 		[iOS (8,0)]
 		[Static,Export ("isPaymentPassActivationAvailable")]
 		[Deprecated (PlatformName.iOS, 9, 0, message: "Use the library's instance 'IsLibraryPaymentPassActivationAvailable' property instead.")]
 		bool IsPaymentPassActivationAvailable { get; }
 
+		[NoMac]
 		[Deprecated (PlatformName.iOS, 13, 4, message: "Use 'SecureElementPassActivationAvailable' instead.")]
 		[Deprecated (PlatformName.WatchOS, 6, 2, message: "Use 'SecureElementPassActivationAvailable' instead.")]
 		[iOS (9,0)]
@@ -113,6 +120,7 @@ namespace PassKit {
 		[Export ("secureElementPassActivationAvailable")]
 		bool SecureElementPassActivationAvailable { [Bind ("isSecureElementPassActivationAvailable")] get; }
 
+		[NoMac]
 		[Deprecated (PlatformName.iOS, 13, 4, message: "Use 'ActivateSecureElementPass' instead.")]
 		[NoWatch]
 		[iOS (8,0)]
@@ -125,6 +133,7 @@ namespace PassKit {
 		[Export ("activateSecureElementPass:withActivationData:completion:")]
 		void ActivateSecureElementPass (PKSecureElementPass secureElementPass, NSData activationData, [NullAllowed] Action<bool, NSError> completion);
 
+		[NoMac]
 		[NoWatch]
 		[iOS (8,0)]
 		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'ActivatePaymentPass (PKPaymentPass, NSData, Action<bool, NSError> completion)' instead.")]
@@ -137,6 +146,7 @@ namespace PassKit {
 		[Export ("openPaymentSetup")]
 		void OpenPaymentSetup ();
 
+		[NoMac]
 		[Deprecated (PlatformName.iOS, 13, 4, message: "Use 'CanAddSecureElementPass' instead.")]
 		[Deprecated (PlatformName.WatchOS, 6, 2, message: "Use 'CanAddSecureElementPass' instead.")]
 		[iOS (9,0)]
@@ -164,6 +174,7 @@ namespace PassKit {
 		[Export ("isSuppressingAutomaticPassPresentation")]
 		bool IsSuppressingAutomaticPassPresentation { get; }
 
+		[NoMac]
 		[Deprecated (PlatformName.iOS, 13, 4, message: "Use 'RemoteSecureElementPasses' instead.")]
 		[Deprecated (PlatformName.WatchOS, 6, 2, message: "Use 'RemoteSecureElementPasses' instead.")]
 		[iOS (9,0)]
@@ -182,6 +193,7 @@ namespace PassKit {
 		nuint RequestAutomaticPassPresentationSuppression (Action<PKAutomaticPassPresentationSuppressionResult> responseHandler);
 #endif
 
+		[NoMac]
 		[Deprecated (PlatformName.iOS, 13, 4, message: "Use 'PresentSecureElementPass' instead.")]
 		[NoWatch][iOS (10,0)]
 		[Export ("presentPaymentPass:")]
@@ -198,6 +210,7 @@ namespace PassKit {
 	}
 
 	[Static]
+	[Mac (11,0)]
 	interface PKPassLibraryUserInfoKey
 	{
 		[Field ("PKPassLibraryAddedPassesUserInfoKey")]
@@ -218,17 +231,20 @@ namespace PassKit {
 
 	[Watch (3,0)]
 	[iOS (8,0)]
+	[Mac (11,0)]
 	[BaseType (typeof (NSObject))]
 	interface PKPayment {
 		[Export ("token", ArgumentSemantic.Strong)]
 		PKPaymentToken Token { get; }
 
+		[NoMac]
 		[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
 		[NoWatch]
 		[Export ("billingAddress", ArgumentSemantic.Assign)]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'BillingContact' instead.")]
 		ABRecord BillingAddress { get; }
 
+		[NoMac]
 		[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
 		[NoWatch]
 		[Export ("shippingAddress", ArgumentSemantic.Assign)]
@@ -252,10 +268,12 @@ namespace PassKit {
 	delegate void PKPaymentShippingAddressSelected (PKPaymentAuthorizationStatus status, PKShippingMethod [] shippingMethods, PKPaymentSummaryItem [] summaryItems);
 	delegate void PKPaymentShippingMethodSelected (PKPaymentAuthorizationStatus status, PKPaymentSummaryItem[] summaryItems);
 
+	[Mac (11,0)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface PKPaymentAuthorizationViewControllerDelegate {
 		
+		[NoMac]
 		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'DidAuthorizePayment2' instead.")]
 		[Export ("paymentAuthorizationViewController:didAuthorizePayment:completion:")]
 		[EventArgs ("PKPaymentAuthorization")]
@@ -273,6 +291,7 @@ namespace PassKit {
 		[Abstract]
 		void PaymentAuthorizationViewControllerDidFinish (PKPaymentAuthorizationViewController controller);
 
+		[NoMac]
 		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'DidSelectShippingMethod2' instead.")]
 		[Export ("paymentAuthorizationViewController:didSelectShippingMethod:completion:")]
 		[EventArgs ("PKPaymentShippingMethodSelected")]
@@ -297,6 +316,7 @@ namespace PassKit {
 #endif
 		void WillAuthorizePayment (PKPaymentAuthorizationViewController controller);
 
+		[NoMac]
 		[iOS (9,0)]
 		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'DidSelectShippingContact' instead.")]
 		[Export ("paymentAuthorizationViewController:didSelectShippingContact:completion:")]
@@ -308,6 +328,7 @@ namespace PassKit {
 		[EventArgs ("PKPaymentRequestShippingContactUpdate")]
 		void DidSelectShippingContact2 (PKPaymentAuthorizationViewController controller, PKContact contact, Action<PKPaymentRequestShippingContactUpdate> completion);
 
+		[NoMac]
 		[iOS (9,0)]
 		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'DidSelectPaymentMethod2' instead.")]
 		[Export ("paymentAuthorizationViewController:didSelectPaymentMethod:completion:")]
@@ -325,6 +346,7 @@ namespace PassKit {
 		void DidRequestMerchantSessionUpdate (PKPaymentAuthorizationViewController controller, Action<PKPaymentRequestMerchantSessionUpdate> updateHandler);
 	}
 
+	[Mac (11,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (UIViewController), Delegates=new string []{"Delegate"}, Events=new Type [] {typeof(PKPaymentAuthorizationViewControllerDelegate)})]
 	interface PKPaymentAuthorizationViewController {
@@ -356,6 +378,7 @@ namespace PassKit {
 
 	[Watch (3,0)]
 	[iOS (8,0)]
+	[Mac (11,0)]
 	[BaseType (typeof (NSObject))]
 	interface PKPaymentSummaryItem {
 		[NullAllowed] // by default this property is null
@@ -381,6 +404,7 @@ namespace PassKit {
 
 	[Watch (3,0)]
 	[iOS (8,0)]
+	[Mac (11,0)]
 	[BaseType (typeof (PKPaymentSummaryItem))]
 	interface PKShippingMethod {
 		[NullAllowed] // by default this property is null
@@ -394,6 +418,7 @@ namespace PassKit {
 
 	[Watch (3,0)]
 	[iOS (8,0)]
+	[Mac (11,0)]
 	[BaseType (typeof (NSObject))]
 	interface PKPaymentRequest {
 		[NullAllowed] // by default this property is null
@@ -419,11 +444,13 @@ namespace PassKit {
 		[Export ("currencyCode")]
 		string CurrencyCode { get; set; }
 
+		[NoMac]
 		[Deprecated (PlatformName.WatchOS, 4,0, message: "Use 'RequiredBillingContactFields' instead.")]
 		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'RequiredBillingContactFields' instead.")]
 		[Export ("requiredBillingAddressFields", ArgumentSemantic.UnsafeUnretained)]
 		PKAddressField RequiredBillingAddressFields { get; set; }
 
+		[NoMac]
 		[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
 		[NoWatch]
 		[NullAllowed] // by default this property is null
@@ -431,11 +458,13 @@ namespace PassKit {
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'BillingContact' instead.")]
 		ABRecord BillingAddress { get; set; }
 
+		[NoMac]
 		[Deprecated (PlatformName.WatchOS, 4,0, message: "Use 'RequiredShippingContactFields' instead.")]
 		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'RequiredShippingContactFields' instead.")]
 		[Export ("requiredShippingAddressFields", ArgumentSemantic.UnsafeUnretained)]
 		PKAddressField RequiredShippingAddressFields { get; set; }
 
+		[NoMac]
 		[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
 		[NoWatch]
 		[NullAllowed] // by default this property is null
@@ -519,6 +548,7 @@ namespace PassKit {
 		NSError CreatePaymentShippingAddressUnserviceableError ([NullAllowed] string localizedDescription);
 	}
 
+	[Mac  (11,0)]
 	[Watch (4,0)][iOS (11,0)]
 	[Flags]
 	enum PKContactFields {
@@ -542,14 +572,17 @@ namespace PassKit {
 
 	[Watch (3,0)]
 	[iOS (8,0)]
+	[Mac (11,0)]
 	[BaseType (typeof (NSObject))]
 	interface PKPaymentToken {
 
+		[NoMac]
 		[NoWatch]
 		[Export ("paymentInstrumentName", ArgumentSemantic.Copy)]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'PaymentMethod' instead.")]
 		string PaymentInstrumentName { get; }
 
+		[NoMac]
 		[NoWatch]
 		[Export ("paymentNetwork")]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'PaymentMethod' instead.")]
@@ -609,6 +642,7 @@ namespace PassKit {
 
 	[NoWatch]
 	[iOS (9,0)]
+	[Mac (11,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor] // designated
 	interface PKAddPaymentPassRequest : NSSecureCoding
@@ -693,7 +727,7 @@ namespace PassKit {
 		[Export ("initWithRequestConfiguration:delegate:")]
 		IntPtr Constructor (PKAddPaymentPassRequestConfiguration configuration, [NullAllowed] IPKAddPaymentPassViewControllerDelegate viewControllerDelegate);
 
-#if !XAMCORE_4_0
+#if !XAMCORE_4_0 || !MONOMAC
 		[Obsolete ("Use the overload accepting a IPKAddPaymentPassViewControllerDelegate")]
 		[Wrap ("this (configuration, (IPKAddPaymentPassViewControllerDelegate) viewControllerDelegate)")]
 		IntPtr Constructor (PKAddPaymentPassRequestConfiguration configuration, PKAddPaymentPassViewControllerDelegate viewControllerDelegate);
@@ -724,6 +758,7 @@ namespace PassKit {
 		void DidFinishAddingPaymentPass (PKAddPaymentPassViewController controller, [NullAllowed] PKPaymentPass pass, [NullAllowed] NSError error);
 	}
 		
+	[Mac (11,0)]
 	[BaseType (typeof (PKObject))]
 	interface PKPass : NSSecureCoding, NSCopying {
 		[Export ("initWithData:error:")]
@@ -764,7 +799,7 @@ namespace PassKit {
 		[Export ("localizedValueForFieldKey:")]
 		NSObject GetLocalizedValue (NSString key); // TODO: Should be enum for PKPassLibraryUserInfoKey
 
-#if !XAMCORE_4_0
+#if !XAMCORE_4_0 || !MONOMAC
 		[Field ("PKPassKitErrorDomain")]
 		NSString ErrorDomain { get; }
 #endif
@@ -799,6 +834,7 @@ namespace PassKit {
 
 	[Watch (3,0)]
 	[iOS (9,0)]
+	[Mac (11,0)]
 	[BaseType (typeof(NSObject))]
 	interface PKPaymentMethod : NSSecureCoding
 	{
@@ -827,6 +863,7 @@ namespace PassKit {
 	}
 
 	[iOS (8,0)]
+	[Mac (11,0)]
 	[BaseType (typeof (PKSecureElementPass))]
 	interface PKPaymentPass {
 
@@ -838,6 +875,7 @@ namespace PassKit {
 	}
 	
 	[iOS (8,0)]
+	[Mac (11,0)]
 	[BaseType (typeof (NSObject))]
 	partial interface PKObject : NSCoding, NSSecureCoding, NSCopying {
 		//Empty class in header file
@@ -851,12 +889,14 @@ namespace PassKit {
 		[Field ("PKPaymentNetworkAmex")]
 		NSString Amex { get; }
 
+		[NoMac]
 		[iOS (10,3), Watch (3,2)]
 		[Deprecated (PlatformName.WatchOS, 4,0, message: "Use 'CartesBancaires' instead.")]
 		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'CartesBancaires' instead.")]
 		[Field ("PKPaymentNetworkCarteBancaire")]
 		NSString CarteBancaire { get; }
 
+		[NoMac]
 		[iOS (11,0)][Watch (4,0)]
 		[Deprecated (PlatformName.WatchOS, 4,2, message: "Use 'CartesBancaires' instead.")]
 		[Deprecated (PlatformName.iOS, 11,2, message: "Use 'CartesBancaires' instead.")]
@@ -932,16 +972,16 @@ namespace PassKit {
 		NSString Mada { get; }
 
 		[Watch (7,0)][iOS (14,0)]
-		[Field ("PKPaymentNetworkAlipay")]
-		NSString Alipay { get; }
+		[Field ("PKPaymentNetworkBarcode")]
+		NSString Barcode { get; }
 
 		[Watch (7,0)][iOS (14,0)]
-		[NoMac]
 		[Field ("PKPaymentNetworkGirocard")]
 		NSString Girocard { get; }
 	}
 
 #if !WATCH
+	[Mac (11,0)]
 	[iOS (8,3)]
 	[BaseType (typeof (UIButton))]
 	[DisableDefaultCtor]
@@ -981,6 +1021,7 @@ namespace PassKit {
 	}
 #endif // !WATCH
 
+	[Mac (11,0)]
 	[iOS(9,0)]
 	[Static]
 	interface PKEncryptionScheme {
@@ -993,6 +1034,7 @@ namespace PassKit {
 		NSString Rsa_V2 { get; }
 	}
 
+	[Mac (11,0)]
 	[Watch (3,0)][iOS (10,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // providing DesignatedInitializer
@@ -1028,11 +1070,13 @@ namespace PassKit {
 
 	interface IPKPaymentAuthorizationControllerDelegate {}
 
+	[Mac (11,0)]
 	[Watch (3,0)][iOS (10,0)]
 	[Protocol][Model]
 	[BaseType (typeof (NSObject))]
 	interface PKPaymentAuthorizationControllerDelegate {
 
+		[NoMac]
 		[Deprecated (PlatformName.WatchOS, 4,0, message: "Use 'DidAuthorizePayment' overload with the 'Action<PKPaymentAuthorizationResult>' parameter instead.")]
 		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'DidAuthorizePayment' overload with the 'Action<PKPaymentAuthorizationResult>' parameter instead.")]
 #if !XAMCORE_4_0
@@ -1052,6 +1096,7 @@ namespace PassKit {
 		[Export ("paymentAuthorizationControllerWillAuthorizePayment:")]
 		void WillAuthorizePayment (PKPaymentAuthorizationController controller);
 
+		[NoMac]
 		[Deprecated (PlatformName.WatchOS, 4,0, message: "Use 'DidSelectShippingMethod' overload with the 'Action<PKPaymentRequestPaymentMethodUpdate>' parameter instead.")]
 		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'DidSelectShippingMethod' overload with the 'Action<PKPaymentRequestPaymentMethodUpdate>' parameter instead.")]
 		[Export ("paymentAuthorizationController:didSelectShippingMethod:completion:")]
@@ -1061,6 +1106,7 @@ namespace PassKit {
 		[Export ("paymentAuthorizationController:didSelectShippingMethod:handler:")]
 		void DidSelectShippingMethod (PKPaymentAuthorizationController controller, PKPaymentMethod paymentMethod, Action<PKPaymentRequestPaymentMethodUpdate> completion);
 
+		[NoMac]
 		[Deprecated (PlatformName.WatchOS, 4,0, message: "Use 'DidSelectShippingContact' overload with the 'Action<PKPaymentRequestShippingContactUpdate>' parameter instead.")]
 		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'DidSelectShippingContact' overload with the 'Action<PKPaymentRequestShippingContactUpdate>' parameter instead.")]
 		[Export ("paymentAuthorizationController:didSelectShippingContact:completion:")]
@@ -1070,6 +1116,7 @@ namespace PassKit {
 		[Export ("paymentAuthorizationController:didSelectShippingContact:handler:")]
 		void DidSelectShippingContact (PKPaymentAuthorizationController controller, PKContact contact, Action<PKPaymentRequestShippingContactUpdate> completion);
 
+		[NoMac]
 		[Deprecated (PlatformName.WatchOS, 4,0, message: "Use 'DidSelectPaymentMethod' overload with the 'Action<PKPaymentRequestPaymentMethodUpdate>' parameter instead.")]
 		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'DidSelectPaymentMethod' overload with the 'Action<PKPaymentRequestPaymentMethodUpdate>' parameter instead.")]
 		[Export ("paymentAuthorizationController:didSelectPaymentMethod:completion:")]
@@ -1109,6 +1156,7 @@ namespace PassKit {
 		string Value { get; }
 	}
 
+	[Mac (11,0)]
 	[Watch (4,3), iOS (11,3)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -1135,8 +1183,9 @@ namespace PassKit {
 		NSDate ExpirationDate { get; }
 	}
 
+	[Mac (11,0)]
 	[Watch (3,1), iOS (10,1)]
-#if XAMCORE_4_0
+#if XAMCORE_4_0 || MONOMAC
 	[DisableDefaultCtor] // hint: getter only props and a factory method.
 #endif
 	[BaseType (typeof (PKTransitPassProperties))]
@@ -1174,6 +1223,7 @@ namespace PassKit {
 		bool Blacklisted { [Bind ("isBlacklisted")] get; }
 	}
 
+	[Mac (11,0)]
 	[Watch (4,0)][iOS (11,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -1189,6 +1239,7 @@ namespace PassKit {
 		NSError[] Errors { get; set; }
 	}
 
+	[Mac (11,0)]
 	[Watch (4,0)][iOS (11,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
@@ -1205,6 +1256,7 @@ namespace PassKit {
 		PKPaymentSummaryItem[] PaymentSummaryItems { get; set; }
 	}
 
+	[Mac (11,0)]
 	[Watch (4,0)][iOS (11,0)]
 	[BaseType (typeof (PKPaymentRequestUpdate))]
 	[DisableDefaultCtor]
@@ -1221,6 +1273,7 @@ namespace PassKit {
 		NSError[] Errors { get; set; }
 	}
 
+	[Mac (11,0)]
 	[Watch (4,0)][iOS (11,0)]
 	[BaseType (typeof (PKPaymentRequestUpdate))]
 	[DisableDefaultCtor]
@@ -1232,6 +1285,7 @@ namespace PassKit {
 		IntPtr Constructor (PKPaymentSummaryItem[] paymentSummaryItems);
 	}
 
+	[Mac (11,0)]
 	[Watch (4,0)][iOS (11,0)]
 	[BaseType (typeof (PKPaymentRequestUpdate))]
 	[DisableDefaultCtor]
@@ -1252,6 +1306,7 @@ namespace PassKit {
 		IntPtr Constructor (PKPaymentSummaryItem[] paymentSummaryItems);
 	}
 
+	[Mac (11,0)]
 	[Static] // not to enum'ify - exposed as NSString inside NSError
 	interface PKPaymentErrorKeys {
 
@@ -1306,6 +1361,7 @@ namespace PassKit {
 		bool SupportsDisbursements { get; }
 	}
 
+	[NoMac]
 	[NoWatch]
 	[iOS (12, 2)]
 	[Native]
@@ -1316,6 +1372,7 @@ namespace PassKit {
 
 	[NoWatch]
 	[iOS (12, 2)]
+	[NoMac] // all members are decorated as such, but not the type itself
 	[BaseType (typeof (NSObject))]
 	interface PKDisbursementRequest {
 		[Export ("amount", ArgumentSemantic.Copy)]
@@ -1327,6 +1384,7 @@ namespace PassKit {
 		[Export ("countryCode")]
 		string CountryCode { get; set; }
 
+		[NoMac]
 		[Export ("requestSchedule", ArgumentSemantic.Assign)]
 		PKDisbursementRequestSchedule RequestSchedule { get; set; }
 
@@ -1334,6 +1392,7 @@ namespace PassKit {
 		PKPaymentSummaryItem [] SummaryItems { get; set; }
 	}
 
+	[NoMac]
 	[NoWatch]
 	[iOS (12,2)]
 	[BaseType (typeof (NSObject))]
@@ -1346,6 +1405,7 @@ namespace PassKit {
 		NSUrl RedemptionUrl { get; }
 	}
 
+	[Mac (11,0)]
 	[Watch (6,2), iOS (13,4)]
 	[BaseType (typeof (PKPass))]
 	[DisableDefaultCtor]
@@ -1373,6 +1433,7 @@ namespace PassKit {
 		string PairedTerminalIdentifier { get; }
 	}
 
+	[Mac (11,0)]
 	[NoWatch, NoTV]
 	[iOS (14,0)]
 	[Native]
@@ -1381,6 +1442,7 @@ namespace PassKit {
 		Share,
 	}
 
+	[Mac (11,0)]
 	[Watch (7,0), iOS (14,0)]
 	[NoTV]
 	[Native]
@@ -1445,7 +1507,7 @@ namespace PassKit {
 
 	[NoWatch, NoTV, NoMac]
 	[iOS (13,4)]
-	[BaseType (typeof(UIViewController))]
+	[BaseType (typeof (UIViewController))]
 	[DisableDefaultCtor]
 	interface PKAddSecureElementPassViewController {
 
@@ -1503,7 +1565,7 @@ namespace PassKit {
 		[Async]
 		[Static]
 		[Export ("configurationForPassMetadata:provisioningPolicyIdentifier:primaryAction:completion:")]
-		void GetConfiguration (PKShareablePassMetadata[] credentialsMetadata, string provisioningPolicyIdentifier, PKAddShareablePassConfigurationPrimaryAction action, Action<PKAddShareablePassConfiguration, NSError> completion);
+		void GetConfiguration (PKShareablePassMetadata[] passMetadata, string provisioningPolicyIdentifier, PKAddShareablePassConfigurationPrimaryAction action, Action<PKAddShareablePassConfiguration, NSError> completion);
 
 		[Export ("primaryAction")]
 		PKAddShareablePassConfigurationPrimaryAction PrimaryAction { get; }
@@ -1515,6 +1577,7 @@ namespace PassKit {
 		string ProvisioningPolicyIdentifier { get; }
 	}
 
+	[Mac (11,0)]
 	[Watch (7,0)][iOS (14,0)]
 	[NoTV]
 	[BaseType (typeof (NSObject))]
@@ -1531,6 +1594,7 @@ namespace PassKit {
 		PKBarcodeEventConfigurationDataType ConfigurationDataType { get; }
 	}
 
+	[Mac (11,0)]
 	[Watch (7,0)][iOS (14,0)]
 	[NoTV]
 	[BaseType (typeof (NSObject))]
@@ -1544,6 +1608,7 @@ namespace PassKit {
 		string LastUsedBarcodeIdentifier { get; }
 	}
 
+	[Mac (11,0)]
 	[Watch (7,0)][iOS (14,0)]
 	[NoTV]
 	[BaseType (typeof (NSObject))]
@@ -1557,6 +1622,7 @@ namespace PassKit {
 		NSData PaymentInformation { get; set; }
 	}
 
+	[Mac (11,0)]
 	[Watch (7,0)][iOS (14,0)]
 	[NoTV]
 	[BaseType (typeof (NSObject))]
@@ -1595,6 +1661,7 @@ namespace PassKit {
 		NSData PartialSignature { get; }
 	}
 
+	[Mac (11,0)]
 	[Watch (7,0)][iOS (14,0)]
 	[NoTV]
 	[BaseType (typeof (NSObject))]
