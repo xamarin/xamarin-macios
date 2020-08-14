@@ -40,7 +40,6 @@
 
 # Looks like these two types were removed at some point and we just ignored this mess,
 # just moving from the ignored file to here for now
-!unknown-type! MPSCNNConvolutionState bound
 !unknown-type! MPSCNNConvolutionStateNode bound
 
 # Looks like the following selectors were released ahead of their time: Xcode 12 / iOS 13 / macOS 15
