@@ -318,7 +318,12 @@ namespace Xamarin.Bundler {
 
 			LogArguments (args);
 
-			ValidateTargetFramework ();
+			var validateFramework = true;
+#if MTOUCH
+			validateFramework = !IsMlaunchAction (action);
+#endif
+			if (validateFramework)
+				ValidateTargetFramework ();
 
 			return false;
 		}
