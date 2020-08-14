@@ -25,13 +25,11 @@ namespace UIKit {
 		public virtual void ReplaceTextStorage (NSTextStorage newTextStorage)
 			=> throw new NotSupportedException ();
 
+#if !MONOMAC
 		[Obsolete ("Always throws 'NotSupportedException' (not a public API).")]
-#if MONOMAC
-		public virtual void SetTemporaryAttributes (NSDictionary attrs, NSRange charRange)
-#else
 		public virtual void SetTemporaryAttributes (Foundation.NSDictionary<Foundation.NSString,Foundation.NSObject> attributes, Foundation.NSRange characterReange)
-#endif
 			=> throw new NotSupportedException ();
+#endif
 
 	}
 #endif // COREBUILD

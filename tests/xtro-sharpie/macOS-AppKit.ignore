@@ -2237,4 +2237,3 @@
 
 # deprecated API
 !missing-selector! NSLayoutManager::replaceTextStorage: not bound
-!missing-selector! NSLayoutManager::setTemporaryAttributes:forCharacterRange: not bound

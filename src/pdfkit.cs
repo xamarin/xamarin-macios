@@ -593,6 +593,12 @@ namespace PdfKit {
 		[Export ("color")]
 		NSColor Color { get; set; }
 
+		[NoiOS]
+		[NullAllowed]
+		[Deprecated (PlatformName.MacOSX, 10, 13)]
+		[Export ("mouseUpAction")]
+		PdfAction MouseUpAction { get; set; }
+
 		[Export ("contents")]
 		string Contents { get; set; }
 		
@@ -603,6 +609,11 @@ namespace PdfKit {
 
 		[Export ("hasAppearanceStream")]
 		bool HasAppearanceStream { get; }
+
+		[NoiOS]
+		[Deprecated (PlatformName.MacOSX, 10, 12)]
+		[Export ("removeAllAppearanceStreams")]
+		void RemoveAllAppearanceStreams ();
 
 		[NoiOS]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
