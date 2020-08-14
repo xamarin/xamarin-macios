@@ -40,6 +40,7 @@ namespace ScreenTime {
 
 	[Mac (11, 0), iOS (14, 0)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
 	interface STWebHistory {
 		[Export ("initWithBundleIdentifier:")]
 		[DesignatedInitializer]
@@ -57,6 +58,7 @@ namespace ScreenTime {
 
 	[Mac (11, 0), iOS (14, 0)]
 	[BaseType (typeof (UIViewController))]
+	[DisableDefaultCtor]
 	interface STWebpageController
 	{
 		[DesignatedInitializer]
