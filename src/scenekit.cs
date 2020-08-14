@@ -3482,7 +3482,7 @@ namespace SceneKit {
 		[Export ("rendersContinuously")]
 		bool RendersContinuously { get; set; }
 
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[NoWatch, NoTV, Mac (10,15), NoiOS]
 		[Export ("drawableResizesAsynchronously")]
 		bool DrawableResizesAsynchronously { get; set; }
 	}

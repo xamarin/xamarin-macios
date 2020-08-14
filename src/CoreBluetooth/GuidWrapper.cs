@@ -28,30 +28,14 @@ namespace CoreBluetooth {
 		{
 			ConnectPeripheral (peripheral, options == null ? null : options.Dictionary);
 		}
-
-#if !TVOS && !WATCH
-		[Deprecated (PlatformName.iOS, 7, 0)]
-		[Obsoleted (PlatformName.iOS, 9, 0, message : "Use 'RetrievePeripheralsWithIdentifiers' instead.")]
+#if !XAMCORE_4_0 && !TVOS && !WATCH
+		[Obsolete ("Always throws 'NotSupportedException' (not a public API).")]
 		public void RetrievePeripherals (CBUUID [] peripheralUuids)
-		{
-			if (peripheralUuids == null)
-				throw new ArgumentNullException ("peripheralUuids");
-			var ptrs = new IntPtr [peripheralUuids.Length];	
-			for (int i =0; i < peripheralUuids.Length; i++) {
-				using (var s = new NSString (peripheralUuids[i].ToString(true)))
-					ptrs [i] = CFUUID.CFUUIDCreateFromString (IntPtr.Zero, s.Handle);
-			}	
-			using (var arr = NSArray.FromIntPtrs (ptrs)) 
-				RetrievePeripherals (arr);
+			=> throw new NotSupportedException ();
 
-			foreach (var p in ptrs) 
-				CFObject.CFRelease (p);
-		}
-
+		[Obsolete ("Always throws 'NotSupportedException' (not a public API).")]
 		public void RetrievePeripherals (CBUUID peripheralUuid)
-		{
-			RetrievePeripherals (new [] { peripheralUuid });
-		}
+			=> throw new NotSupportedException ();
 #endif
 		public void ScanForPeripherals (CBUUID [] peripheralUuids, NSDictionary options)
 		{

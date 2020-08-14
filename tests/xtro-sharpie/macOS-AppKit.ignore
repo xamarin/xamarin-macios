@@ -2234,3 +2234,6 @@
 !missing-null-allowed! 'System.Void Foundation.NSObject::CommitEditing(Foundation.NSObject,ObjCRuntime.Selector,System.IntPtr)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Void Foundation.NSObject::SetDefaultPlaceholder(Foundation.NSObject,Foundation.NSObject,Foundation.NSString)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void Foundation.NSObject::SetDefaultPlaceholder(Foundation.NSObject,Foundation.NSObject,Foundation.NSString)' is missing an [NullAllowed] on parameter #1
+
+# deprecated API
+!missing-selector! NSLayoutManager::replaceTextStorage: not bound

@@ -684,7 +684,12 @@ namespace UIKit {
 		void RemoveLayoutManager (NSLayoutManager aLayoutManager);
 
 		[Export ("editedMask")]
-		NSTextStorageEditActions EditedMask { get; set; }
+		NSTextStorageEditActions EditedMask {
+			get;
+#if !XAMCORE_4_0
+			[NotImplemented] set;
+#endif
+		}
 
 		[Export ("editedRange")]
 		NSRange EditedRange { get;

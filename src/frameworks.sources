@@ -71,6 +71,7 @@ APPKIT_CORE_SOURCES = \
 	AppKit/XEnums.cs \
 	AppKit/NSAccessibility.cs \
 	XKit/Types.cs \
+	XKit/XKitCompat.cs \
 
 APPKIT_SOURCES = \
 	AppKit/ActionDispatcher.cs \
@@ -539,6 +540,7 @@ COREMEDIA_API_SOURCES = \
 # CoreMidi
 
 COREMIDI_CORE_SOURCES = \
+	CoreMidi/MidiCompat.cs \
 	CoreMidi/MidiCIDeviceIdentification.cs \
 	CoreMidi/MidiServices.cs \
 	CoreMidi/MidiThruConnection.cs \
@@ -1507,6 +1509,7 @@ UIKIT_CORE_SOURCES = \
     UIKit/UIStringAttributes.cs \
     UIKit/UITypes.cs \
     XKit/Types.cs \
+    XKit/XKitCompat.cs \
 
 UIKIT_SOURCES = \
 	UIKit/Compat.cs \
