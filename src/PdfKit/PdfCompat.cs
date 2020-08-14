@@ -37,11 +37,13 @@ namespace PdfKit {
 
 	public partial class PdfAnnotation {
 
+#if __IOS__
 		[Obsolete ("Empty stub (not a public API).")]
 		public virtual PdfAction MouseUpAction { get; set; }
 
 		[Obsolete ("Empty stub (not a public API).")]
 		public virtual void RemoveAllAppearanceStreams () {}
+#endif
 	} 
 }
 

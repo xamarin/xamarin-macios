@@ -721,6 +721,10 @@ namespace UIKit {
 		[Export ("temporaryAttributesAtCharacterIndex:effectiveRange:")]
 		NSDictionary<NSString, NSObject> GetTemporaryAttributes (nuint characterIndex, out NSRange effectiveCharacterRange);
 
+		[NoiOS, NoTV, NoWatch]
+		[Export ("setTemporaryAttributes:forCharacterRange:")]
+		void SetTemporaryAttributes (NSDictionary attrs, NSRange charRange);
+
 		[NoiOS][NoTV]
 		[Export ("addTemporaryAttributes:forCharacterRange:")]
 #if XAMCORE_4_0
