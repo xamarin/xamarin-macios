@@ -165,6 +165,9 @@ namespace Xamarin.Linker {
 
 			if (Driver.TargetFramework.Platform != Platform)
 				throw ErrorHelper.CreateError (99, "Inconsistent platforms. TargetFramework={0}, Platform={1}", Driver.TargetFramework.Platform, Platform);
+
+			Driver.Verbosity = Verbosity;
+			ErrorHelper.Verbosity = Verbosity;
 		}
 
 		public void Write ()
