@@ -83,6 +83,10 @@
 
 	<Import Sdk="Microsoft.NET.Sdk" Project="Sdk.targets" />
 
+	<PropertyGroup>
+		<TargetPlatformSupported Condition=" '$(TargetPlatformIdentifier)' == '$(_PlatformName)' ">true</TargetPlatformSupported>
+	</PropertyGroup>
+
 	<!-- Default item includes (globs and implicit references) -->
 	<Import Project="Xamarin.Shared.Sdk.DefaultItems.targets" />
 	<Import Project="Xamarin.Shared.Sdk.TargetFrameworkInference.targets" />
