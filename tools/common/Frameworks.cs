@@ -199,6 +199,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "ClassKit", "ClassKit", 11,0 },
 					{ "MLCompute", "MLCompute", 11,0 },
 					{ "ReplayKit", "ReplayKit", 11,0 },
+					{ "ScreenTime", "ScreenTime", 11,0 },
 					{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 11,0 },
 					{ "UserNotificationsUI", "UserNotificationsUI", 11,0 },
 				};
@@ -342,6 +343,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "MediaSetup", "MediaSetup", new Version (14, 0), NotAvailableInSimulator /* no headers in beta 3 */ },
 				{ "MLCompute", "MLCompute", new Version (14,0), NotAvailableInSimulator },
 				{ "NearbyInteraction", "NearbyInteraction", 14,0 },
+				{ "ScreenTime", "ScreenTime", 14,0 },
 				{ "SensorKit", "SensorKit", 14,0 },
 				{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 14,0 },
 
