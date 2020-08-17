@@ -728,7 +728,7 @@ namespace AVFoundation {
 		SkipItem
 	}
 
-	[TV (10,2), Mac (10,12,4), iOS (10,3), NoWatch]
+	[TV (10,2), Mac (10,12,4), iOS (10,3), Watch (7,0)]
 	[Native]
 	public enum AVContentKeyRequestStatus : long {
 		Requesting,
@@ -739,7 +739,7 @@ namespace AVFoundation {
 		Failed
 	}
 
-	[TV (10, 2), Mac (10, 12, 4), iOS (10, 3), NoWatch]
+	[TV (10, 2), Mac (10, 12, 4), iOS (10, 3), Watch (7, 0)]
 	public enum AVContentKeyRequestRetryReason {
 		[Field ("AVContentKeyRequestRetryReasonTimedOut")]
 		TimedOut,
@@ -749,19 +749,20 @@ namespace AVFoundation {
 		ReceivedObsoleteContentKey,
 	}
 
-	[TV (10, 2), Mac (10, 12, 4), iOS (10, 3), NoWatch]
+	[TV (10, 2), Mac (10, 12, 4), iOS (10, 3), Watch (7, 0)]
 	public enum AVContentKeySystem {
 		[Field ("AVContentKeySystemFairPlayStreaming")]
 		FairPlayStreaming = 0,
 
-		[TV (11, 0), NoWatch, Mac (10, 13), iOS (11, 0)]
+		[TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[Field ("AVContentKeySystemClearKey")]
 		ClearKey = 1,
 
+		[NoWatch]
 		[Obsolete ("Use 'AVContentKeySystem.SystemClearKey' instead.")]
 		AVContentKeySystemClearKey = ClearKey,
 
-		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+		[TV (13,0), Mac (10,15), iOS (13,0)]
 		[Field ("AVContentKeySystemAuthorizationToken")]
 		AuthorizationToken = 2,
 	}
@@ -1061,5 +1062,51 @@ namespace AVFoundation {
 		Mono = 0,
 		Bypass = 1,
 	}
+
+	[TV (14,0), NoWatch, Mac (11,0), iOS (14,0)]
+	[Native]
+	public enum AVAssetSegmentType : long {
+		Initialization = 1,
+		Separable = 2,
+	}
+
+	[Flags]
+	[Native]
+	[TV (14, 0), Watch (7, 0), Mac (11, 0), iOS (14, 0)]
+	public enum AVAudioSpatializationFormats : ulong {
+		None = 0,
+		MonoAndStereo = 3,
+		Multichannel = 4,
+		MonoStereoAndMultichannel = 7,
+	}
+
+	[Native]
+	[TV (14, 0), Watch (7, 0), Mac (11, 0), iOS (14, 0)]
+	public enum AVAudioStereoOrientation : long {
+		None = 0,
+		Portrait = 1,
+		PortraitUpsideDown = 2,
+		LandscapeRight = 3,
+		LandscapeLeft = 4,
+	}
+
+	[TV (14, 0), Watch (7, 0), Mac (11, 0), iOS (14, 0)]
+	public enum AVFileTypeProfile {
+		[Field (null)]
+		None = 0,
+		[Field ("AVFileTypeProfileMPEG4AppleHLS")]
+		Mpeg4AppleHls,
+		[Field ("AVFileTypeProfileMPEG4CMAFCompliant")]
+		Mpeg4CmafCompliant,
+	}
+
+	[Native]
+	[NoTV, NoWatch, Mac (11, 0), NoiOS]
+	public enum AVAudioRoutingArbitrationCategory : long {
+		Playback = 0,
+		PlayAndRecord = 1,
+		PlayAndRecordVoice = 2,
+	}
+
 
 }

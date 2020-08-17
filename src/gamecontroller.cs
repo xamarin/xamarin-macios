@@ -334,14 +334,13 @@ namespace GameController {
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use the Menu button found on the controller's profile, if it exists.")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use the Menu button found on the controller's profile, if it exists.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use the Menu button found on the controller's profile, if it exists.")]
-
 		[NullAllowed]
 		[Export ("controllerPausedHandler", ArgumentSemantic.Copy)]
 		Action<GCController> ControllerPausedHandler { get; set; }
 
 		[NullAllowed]
 		[Export ("vendorName", ArgumentSemantic.Copy)]
-		string VendorName { get; }
+		new string VendorName { get; }
 
 		[Export ("attachedToDevice")]
 		bool AttachedToDevice { [Bind ("isAttachedToDevice")] get; }
@@ -393,11 +392,11 @@ namespace GameController {
 
 		[iOS (9,0)][Mac (10,11)]
 		[Export ("handlerQueue", ArgumentSemantic.Retain)]
-		DispatchQueue HandlerQueue { get; set; }
+		new DispatchQueue HandlerQueue { get; set; }
 
 		[TV (13, 0), Mac (10, 15), iOS (13, 0)]
 		[Export ("productCategory")]
-		string ProductCategory { get; }
+		new string ProductCategory { get; }
 
 		[TV (13, 0), Mac (10, 15), iOS (13, 0)]
 		[Export ("snapshot")]

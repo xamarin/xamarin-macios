@@ -1042,6 +1042,11 @@ namespace ARKit {
 		[iOS (13,4)]
 		[Export ("sceneReconstruction", ArgumentSemantic.Assign)]
 		ARSceneReconstruction SceneReconstruction { get; set; }
+
+		[iOS (13,0)]
+		[Static]
+		[Export ("supportsFrameSemantics:")]
+		bool SupportsFrameSemantics (ARFrameSemantics frameSemantics);
 	}
 
 	[iOS (11,0)]
@@ -1057,6 +1062,11 @@ namespace ARKit {
 		[iOS (11,3)]
 		[Export ("autoFocusEnabled")]
 		bool AutoFocusEnabled { [Bind ("isAutoFocusEnabled")] get; set; }
+
+		[iOS (13,0)]
+		[Static]
+		[Export ("supportsFrameSemantics:")]
+		bool SupportsFrameSemantics (ARFrameSemantics frameSemantics);
 	}
 
 	[iOS (11,0)]
@@ -1106,6 +1116,11 @@ namespace ARKit {
 		[iOS (13,0)]
 		[Export ("worldTrackingEnabled")]
 		bool WorldTrackingEnabled { [Bind ("isWorldTrackingEnabled")] get; set; }
+
+		[iOS (13,0)]
+		[Static]
+		[Export ("supportsFrameSemantics:")]
+		bool SupportsFrameSemantics (ARFrameSemantics frameSemantics);
 	}
 
 	[iOS (11,0)]
@@ -1552,6 +1567,11 @@ namespace ARKit {
 
 		[Export ("maximumNumberOfTrackedImages")]
 		nint MaximumNumberOfTrackedImages { get; set; }
+
+		[iOS (13,0)]
+		[Static]
+		[Export ("supportsFrameSemantics:")]
+		bool SupportsFrameSemantics (ARFrameSemantics frameSemantics);
 	}
 
 	[iOS (12,0)]
@@ -1567,6 +1587,11 @@ namespace ARKit {
 
 		[Export ("planeDetection", ArgumentSemantic.Assign)]
 		ARPlaneDetection PlaneDetection { get; set; }
+
+		[iOS (13,0)]
+		[Static]
+		[Export ("supportsFrameSemantics:")]
+		bool SupportsFrameSemantics (ARFrameSemantics frameSemantics);
 	}
 
 	[iOS (12,0)]
@@ -1815,6 +1840,10 @@ namespace ARKit {
 
 		[Export ("maximumNumberOfTrackedImages")]
 		nint MaximumNumberOfTrackedImages { get; set; }
+
+		[Static]
+		[Export ("supportsFrameSemantics:")]
+		bool SupportsFrameSemantics (ARFrameSemantics frameSemantics);
 	}
 
 	[iOS (13,0)]
@@ -1831,6 +1860,10 @@ namespace ARKit {
 
 		[NullAllowed, Export ("initialWorldMap", ArgumentSemantic.Strong)]
 		ARWorldMap InitialWorldMap { get; set; }
+
+		[Static]
+		[Export ("supportsFrameSemantics:")]
+		bool SupportsFrameSemantics (ARFrameSemantics frameSemantics);
 	}
 
 	[iOS (13,0)]
@@ -2247,6 +2280,10 @@ namespace ARKit {
 		[Export ("new")]
 		[return: Release]
 		ARGeoTrackingConfiguration Create ();
+
+		[Static]
+		[Export ("supportsFrameSemantics:")]
+		bool SupportsFrameSemantics (ARFrameSemantics frameSemantics);
 	}
 
 	[iOS (14, 0)]

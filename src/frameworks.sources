@@ -1202,6 +1202,9 @@ NETWORK_SOURCES = \
 NEARBYINTERACTION_API_SOURCES = \
 	NearbyInteraction/Enums.cs \
 
+NEARBYINTERACTION_SOURCES = \
+	NearbyInteraction/NINearbyObject.cs \
+
 # NetworkExtension
 
 NETWORKEXTENSION_API_SOURCES = \
@@ -1410,6 +1413,8 @@ SCRIPTINGBRIDGE_CORE_SOURCES = \
 
 SCRIPTINGBRIDGE_SOURCES = \
 	ScriptingBridge/SBApplication.cs \
+
+# ScreenTime
 
 # SearchKit
 
@@ -1903,6 +1908,7 @@ MAC_FRAMEWORKS =            \
 	QuickLookUI             \
 	ReplayKit               \
 	SafariServices          \
+	ScreenTime              \
 	ScriptingBridge         \
 	SearchKit               \
 	Security                \
@@ -2002,6 +2008,7 @@ IOS_FRAMEWORKS =         \
 	QuickLookThumbnailing \
 	ReplayKit \
 	SafariServices \
+	ScreenTime \
 	Security \
 	SensorKit \
 	Social \
