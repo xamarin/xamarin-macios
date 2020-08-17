@@ -9,10 +9,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -173,6 +173,7 @@ namespace ObjCRuntime {
 
 		// macOS 10.16/11.0
 		public const string AccessibilityLibrary = "/System/Library/Frameworks/Accessibility.framework/Accessibility";
+		public const string AppTrackingTransparencyLibrary = "/System/Library/Frameworks/AppTrackingTransparency.framework/AppTrackingTransparency";
 		public const string ClassKitLibrary = "/System/Library/Frameworks/ClassKit.framework/ClassKit";
 		public const string MLComputeLibrary = "/System/Library/Frameworks/MLCompute.framework/MLCompute";
 		public const string NearbyInteractionLibrary = "/System/Library/Frameworks/NearbyInteraction.framework/NearbyInteraction";
@@ -180,9 +181,6 @@ namespace ObjCRuntime {
 		public const string ScreenTimeLibrary = "/System/Library/Frameworks/ScreenTime.framework/ScreenTime";
 		public const string UniformTypeIdentifiersLibrary = "/System/Library/Frameworks/UniformTypeIdentifiers.framework/UniformTypeIdentifiers";
 		public const string UserNotificationsUILibrary = "/System/Library/Frameworks/UserNotificationsUI.framework/UserNotificationsUI";
-
-		// macOS 11.0
-		public const string AppTrackingTransparencyLibrary = "/System/Library/Frameworks/AppTrackingTransparency.framework/AppTrackingTransparency";
 
 	}
 }
