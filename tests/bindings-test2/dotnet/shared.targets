@@ -8,16 +8,9 @@
     <LangVersion>latest</LangVersion>
     <IsBindingProject>true</IsBindingProject>
 
-    <RootTestsDirectory>$(MSBuildThisFileDirectory)\..\..</RootTestsDirectory>
     <BindingsTest2Directory>$(RootTestsDirectory)\bindings-test2</BindingsTest2Directory>
     <TestLibrariesDirectory>$(RootTestsDirectory)\test-libraries</TestLibrariesDirectory>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="NUnitLite" Version="3.12.0" />
-
-    <ProjectReference Include="$(RootTestsDirectory)\bindings-test\dotnet\$(PlatformName)\bindings-test.csproj" />
-  </ItemGroup>
 
   <ItemGroup>
     <ObjcBindingApiDefinition Include="$(BindingsTest2Directory)\ApiDefinition.cs" />
