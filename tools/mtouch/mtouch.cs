@@ -922,28 +922,8 @@ namespace Xamarin.Bundler
 			var accept_any_xcode_version = action == Action.ListDevices || action == Action.ListCrashReports || action == Action.ListApps || action == Action.LogDev;
 			ValidateXcode (app, accept_any_xcode_version, false);
 
-			switch (action) {
-			/* Device actions */
-			case Action.LogDev:
-			case Action.InstallDevice:
-			case Action.ListDevices:
-			case Action.IsAppInstalled:
-			case Action.ListCrashReports:
-			case Action.DownloadCrashReport:
-			case Action.KillApp:
-			case Action.KillAndLaunch:
-			case Action.LaunchDevice:
-			case Action.DebugDevice:
-			case Action.ListApps:
-			/* Simulator actions */
-			case Action.DebugSim:
-			case Action.LaunchSim:
-			case Action.InstallSim:
-			case Action.LaunchWatchApp:
-			case Action.KillWatchApp:
-			case Action.ListSimulators:
+			if (IsMlaunchAction (action))
 				return CallMlaunch (app);
-			}
 
 			if (app.SdkVersion == null)
 				throw new ProductException (25, true, Errors.MT0025, app.PlatformName);
@@ -1015,6 +995,34 @@ namespace Xamarin.Bundler
 			}
 
 			return 0;
+		}
+
+		static bool IsMlaunchAction (Action action)
+		{
+			switch (action) {
+			/* Device actions */
+			case Action.LogDev:
+			case Action.InstallDevice:
+			case Action.ListDevices:
+			case Action.IsAppInstalled:
+			case Action.ListCrashReports:
+			case Action.DownloadCrashReport:
+			case Action.KillApp:
+			case Action.KillAndLaunch:
+			case Action.LaunchDevice:
+			case Action.DebugDevice:
+			case Action.ListApps:
+			/* Simulator actions */
+			case Action.DebugSim:
+			case Action.LaunchSim:
+			case Action.InstallSim:
+			case Action.LaunchWatchApp:
+			case Action.KillWatchApp:
+			case Action.ListSimulators:
+				return true;
+			}
+
+			return false;
 		}
 
 		static void RedirectStream (StreamReader @in, StreamWriter @out)
