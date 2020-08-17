@@ -15,3 +15,10 @@
 !missing-field! kMIDIDriverPropertyUsesSerial not bound
 !missing-field! kMIDIPropertyFactoryPatchNameFile not bound
 !missing-field! kMIDIPropertyUserPatchNameFile not bound
+
+#Deprecated API
+!missing-selector! MIDICISession::getProperty:onChannel:responseHandler: not bound
+!missing-selector! MIDICISession::hasProperty:onChannel:responseHandler: not bound
+!missing-selector! MIDICISession::propertyChangedCallback not bound
+!missing-selector! MIDICISession::setProperty:onChannel:responseHandler: not bound
+!missing-selector! MIDICISession::setPropertyChangedCallback: not bound

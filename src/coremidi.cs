@@ -182,8 +182,6 @@ namespace CoreMidi {
 	}
 
 	delegate void MidiCIProfileChangedHandler (MidiCISession session, byte channel, MidiCIProfile profile, bool enabled);
-	delegate void MidiCIPropertyResponseHandler (MidiCISession session, byte channel, NSData response, NSError error);
-	delegate void MidiCIPropertyChangedHandler (MidiCISession session, byte channel, NSData data);
 
 	[NoWatch, NoTV, Mac (10,14), iOS (12,0)]
 	[BaseType (typeof(NSObject), Name="MIDICISession")]
@@ -216,17 +214,5 @@ namespace CoreMidi {
 
 		[NullAllowed, Export ("profileChangedCallback", ArgumentSemantic.Assign)]
 		MidiCIProfileChangedHandler ProfileChangedCallback { get; set; }
-
-		[Export ("hasProperty:onChannel:responseHandler:")]
-		void HasProperty (NSData inquiry, byte channel, MidiCIPropertyResponseHandler handler);
-
-		[Export ("getProperty:onChannel:responseHandler:")]
-		void GetProperty (NSData inquiry, byte channel, MidiCIPropertyResponseHandler handler);
-
-		[Export ("setProperty:onChannel:responseHandler:")]
-		void SetProperty (NSData inquiry, byte channel, MidiCIPropertyResponseHandler handler);
-
-		[NullAllowed, Export ("propertyChangedCallback", ArgumentSemantic.Assign)]
-		MidiCIPropertyChangedHandler PropertyChangedCallback { get; set; }
 	}
 }

@@ -49,3 +49,6 @@
 
 ## Types (and members) added and deprecated in the same version (watchOS 6,0)
 !missing-selector! CKSubscription::recordType not bound
+
+#deprecated
+!missing-selector! CKQueryNotification::isPublicDatabase not bound
