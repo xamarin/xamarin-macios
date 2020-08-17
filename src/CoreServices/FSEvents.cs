@@ -30,6 +30,8 @@ namespace CoreServices
 		MarkSelf = 0x00000020,
 		[Mac (10,13)]
 		UseExtendedData = 0x00000040,
+		[Mac (11,0)]
+		FullHistory = 0x00000080,
 	}
 
 	// FSEvents.h: typedef UInt32                          FSEventStreamEventFlags;
