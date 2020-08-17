@@ -800,7 +800,7 @@ namespace PassKit {
 		[Export ("localizedValueForFieldKey:")]
 		NSObject GetLocalizedValue (NSString key); // TODO: Should be enum for PKPassLibraryUserInfoKey
 
-#if !XAMCORE_4_0 || !MONOMAC
+#if !XAMCORE_4_0 && !MONOMAC
 		[Field ("PKPassKitErrorDomain")]
 		NSString ErrorDomain { get; }
 #endif
@@ -1500,9 +1500,7 @@ namespace PassKit {
 		[Export ("addSecureElementPassViewController:didFinishAddingSecureElementPass:error:")]
 		void DidFinishAddingSecureElementPass (PKAddSecureElementPassViewController controller, [NullAllowed] PKSecureElementPass pass, [NullAllowed] NSError error);
 	
-#if XAMCORE_4_0
 		[Abstract]
-#endif
 		[Export ("addSecureElementPassViewController:didFinishAddingSecureElementPasses:error:")]
 		void DidFinishAddingSecureElementPasses (PKAddSecureElementPassViewController controller, [NullAllowed] PKSecureElementPass[] passes, [NullAllowed] NSError error);
 }
@@ -1652,7 +1650,7 @@ namespace PassKit {
 		[Export ("currencyCode")]
 		string CurrencyCode { get; }
 
-		// FIXME ?
+		// NSDecimalNumber is used elsewhere (but it's a subclass for NSNumber and can't be used here)
 		[Export ("amount", ArgumentSemantic.Strong)]
 		NSNumber Amount { get; }
 
