@@ -3,6 +3,9 @@ using ObjCRuntime;
 
 namespace MobileCoreServices {
 
+	[Deprecated (PlatformName.iOS, 14, 0, message : "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
+	[Deprecated (PlatformName.TvOS, 14, 0, message : "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
+	[Deprecated (PlatformName.WatchOS, 7, 0, message : "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 	[Partial]
 	interface UTType {
 		[Field ("kUTTypeItem", "+CoreServices")]
