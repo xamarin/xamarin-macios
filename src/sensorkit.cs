@@ -29,6 +29,15 @@ namespace SensorKit {
 	[NoWatch, NoTV, NoMac]
 	[iOS (14,0)]
 	[Native]
+	public enum SRAuthorizationStatus : long {
+		NotDetermined = 0,
+		Authorized,
+		Denied,
+	}
+
+	[NoWatch, NoTV, NoMac]
+	[iOS (14,0)]
+	[Native]
 	enum SRCrownOrientation : long
 	{
 		Left,
@@ -57,6 +66,7 @@ namespace SensorKit {
 		NoAuthorization,
 		DataInaccessible,
 		FetchRequestInvalid,
+		PromptDeclined,
 	}
 
 	[NoWatch, NoTV, NoMac]
@@ -619,7 +629,7 @@ namespace SensorKit {
 		void FetchingRequestFailed (SRSensorReader reader, SRFetchRequest fetchRequest, NSError error);
 
 		[Export ("sensorReader:didChangeAuthorizationStatus:")]
-		void DidChangeAuthorizationStatus (SRSensorReader reader, bool authorized);
+		void DidChangeAuthorizationStatus (SRSensorReader reader, SRAuthorizationStatus authorizationStatus);
 
 		[Export ("sensorReaderWillStartRecording:")]
 		void WillStartRecording (SRSensorReader reader);
@@ -652,8 +662,8 @@ namespace SensorKit {
 		[Field ("SRSensorAccelerometer")]
 		Accelerometer,
 
-		[Field ("SRSensorGyroscope")]
-		Gyroscope,
+		[Field ("SRSensorRotationRate")]
+		RotationRate,
 
 		[Field ("SRSensorVisits")]
 		Visits,
@@ -701,8 +711,8 @@ namespace SensorKit {
 		[Export ("fetch:")]
 		void Fetch (SRFetchRequest request);
 
-		[Export ("authorized")]
-		bool Authorized { [Bind ("isAuthorized")] get; }
+		[Export ("authorizationStatus")]
+		SRAuthorizationStatus AuthorizationStatus { get; }
 
 		[Export ("sensor")]
 		NSString WeakSensor { get; }
