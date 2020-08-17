@@ -12,8 +12,13 @@
 using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
+using CoreGraphics;
 using StoreKit;
-#if !MONOMAC
+#if MONOMAC
+using AppKit;
+using UIViewController = AppKit.NSViewController;
+using UIWindowScene = Foundation.NSObject;
+#else
 using UIKit;
 #endif
 #if WATCH
@@ -245,6 +250,15 @@ namespace StoreKit {
 		[NoWatch, NoTV, NoMac, iOS (13,4)]
 		[Export ("showPriceConsentIfNeeded")]
 		void ShowPriceConsentIfNeeded ();
+
+		[NoWatch, NoTV, NoMac, iOS (14,0)]
+		[Export ("presentCodeRedemptionSheet")]
+		void PresentCodeRedemptionSheet ();
+
+		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[Export ("transactionObservers")]
+		[Protocolize]
+		SKPaymentTransactionObserver[] TransactionObservers { get; }
 	}
 	
 	[Watch (6, 2)]
@@ -327,6 +341,10 @@ namespace StoreKit {
 		[Mac (10,14,4)]
 		[Export ("discounts")]
 		SKProductDiscount [] Discounts { get; }
+
+		[Watch (7, 0), Mac (11, 0), iOS (14, 0)]
+		[Export ("isFamilyShareable")]
+		bool IsFamilyShareable { get; }
 	}
 
 	[Watch (6, 2)]
@@ -350,7 +368,7 @@ namespace StoreKit {
 		[Export ("paymentQueue:updatedDownloads:")]
 		void UpdatedDownloads (SKPaymentQueue queue, SKDownload [] downloads);
 
-		[iOS (11,0)][TV (11,0)][NoMac][NoWatch]
+		[iOS (11,0)][TV (11,0)][Mac (11,0)][NoWatch]
 		[Export ("paymentQueue:shouldAddStorePayment:forProduct:")]
 		bool ShouldAddStorePayment (SKPaymentQueue queue, SKPayment payment, SKProduct product);
 
@@ -359,6 +377,10 @@ namespace StoreKit {
 		[TV (13,0)]
 		[Export ("paymentQueueDidChangeStorefront:")]
 		void DidChangeStorefront (SKPaymentQueue queue);
+
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[Export ("paymentQueue:didRevokeEntitlementsForProductIdentifiers:")]
+		void DidRevokeEntitlements (SKPaymentQueue queue, string[] productIdentifiers);
 	}
 
 	[Watch (6, 2)]
@@ -495,9 +517,7 @@ namespace StoreKit {
 		void ReceivedResponse (SKProductsRequest request, SKProductsResponse response);
 	}
 
-#if !MONOMAC
-	[NoTV]
-	[NoWatch]
+	[Mac (11, 0), NoTV, NoWatch]
 	[BaseType (typeof (UIViewController),
 		   Delegates=new string [] { "WeakDelegate" },
 		   Events   =new Type   [] { typeof (SKStoreProductViewControllerDelegate) })]
@@ -525,34 +545,51 @@ namespace StoreKit {
 		void LoadProduct (StoreProductParameters parameters, [NullAllowed] Action<bool,NSError> callback);
 	}
 
-	[NoWatch]
-	[NoMac]
-	[StrongDictionary ("SKStoreProductParameterKey")]
-	interface StoreProductParameters {
-
-		[iOS (11,3), TV (11,3)]
-		[Export ("AdNetworkAttributionSignature")]
-		string AdNetworkAttributionSignature { get; set; }
-
-		[iOS (11,3), TV (11,3)]
-		[Export ("AdNetworkCampaignIdentifier")]
-		uint AdNetworkCampaignIdentifier { get; set; }
-
-		[iOS (11,3), TV (11,3)]
-		[Export ("AdNetworkIdentifier")]
-		string AdNetworkIdentifier { get; set; }
-
-		[iOS (11,3), TV (11,3)]
-		[Export ("AdNetworkNonce")]
-		NSUuid AdNetworkNonce { get; set; }
-
-		[iOS (11,3), TV (11,3)]
-		[Export ("AdNetworkTimestamp")]
-		uint AdNetworkTimestamp { get; set; }
+	[Mac (11,0), NoTV, NoWatch]
+	[BaseType (typeof (NSObject))]
+	[Model]
+	[Protocol]
+	interface SKStoreProductViewControllerDelegate {
+		[Export ("productViewControllerDidFinish:"), EventArgs ("SKStoreProductViewController")]
+		void Finished (SKStoreProductViewController controller);
 	}
 
 	[NoWatch]
-	[NoMac]
+	[Mac (11,0)]
+	[StrongDictionary ("SKStoreProductParameterKey")]
+	interface StoreProductParameters {
+
+		[iOS (11,3), TV (11,3), NoMac]
+		[Export ("AdNetworkAttributionSignature")]
+		string AdNetworkAttributionSignature { get; set; }
+
+		[iOS (11,3), TV (11,3), NoMac]
+		[Export ("AdNetworkCampaignIdentifier")]
+		uint AdNetworkCampaignIdentifier { get; set; }
+
+		[iOS (11,3), TV (11,3), NoMac]
+		[Export ("AdNetworkIdentifier")]
+		string AdNetworkIdentifier { get; set; }
+
+		[iOS (11,3), TV (11,3), NoMac]
+		[Export ("AdNetworkNonce")]
+		NSUuid AdNetworkNonce { get; set; }
+
+		[iOS (11,3), TV (11,3), NoMac]
+		[Export ("AdNetworkTimestamp")]
+		uint AdNetworkTimestamp { get; set; }
+
+		[NoWatch, NoMac, iOS (14, 0)]
+		[Export ("AdNetworkSourceAppStoreIdentifier")]
+		string AdNetworkSourceAppStoreIdentifier { get; }
+
+		[NoWatch, NoMac, iOS (14, 0)]
+		[Export ("AdNetworkVersion")]
+		string AdNetworkVersion { get; }
+	}
+
+	[NoWatch]
+	[Mac (11,0)]
 	[Static]
 	interface SKStoreProductParameterKey
 	{
@@ -599,73 +636,17 @@ namespace StoreKit {
 		[iOS (11,3), TV (11,3), NoMac]
 		[Field ("SKStoreProductParameterAdNetworkTimestamp")]
 		NSString AdNetworkTimestamp { get; }
+
+		[NoWatch, NoMac, iOS (14, 0)]
+		[Field ("SKStoreProductParameterAdNetworkSourceAppStoreIdentifier")]
+		NSString AdNetworkSourceAppStoreIdentifier { get; }
+
+		[NoWatch, NoMac, iOS (14, 0)]
+		[Field ("SKStoreProductParameterAdNetworkVersion")]
+		NSString AdNetworkVersion { get; }
 	}
 
-	[NoTV]
-	[NoWatch]
-	[BaseType (typeof (NSObject))]
-	[Model]
-	[Protocol]
-	interface SKStoreProductViewControllerDelegate {
-		[Export ("productViewControllerDidFinish:"), EventArgs ("SKStoreProductViewController")]
-		void Finished (SKStoreProductViewController controller);
-	}
-
-	[NoWatch]
-	[iOS (9,3)]
-	[TV (9,2)]
-	[BaseType (typeof (NSObject))]
-#if XAMCORE_3_0 // Avoid breaking change in iOS
-	[DisableDefaultCtor]
-#endif
-	interface SKCloudServiceController {
-		[Static]
-		[Export ("authorizationStatus")]
-		SKCloudServiceAuthorizationStatus AuthorizationStatus { get; }
-
-		[Static]
-		[Async]
-		[Export ("requestAuthorization:")]
-		void RequestAuthorization (Action<SKCloudServiceAuthorizationStatus> handler);
-
-		[Async]
-		[Export ("requestStorefrontIdentifierWithCompletionHandler:")]
-		void RequestStorefrontIdentifier (Action<NSString, NSError> completionHandler);
-
-		[iOS (11,0)][TV (11,0)]
-		[Async]
-		[Export ("requestStorefrontCountryCodeWithCompletionHandler:")]
-		void RequestStorefrontCountryCode (Action<NSString, NSError> completionHandler);
-
-		[Async]
-		[Export ("requestCapabilitiesWithCompletionHandler:")]
-		void RequestCapabilities (Action<SKCloudServiceCapability, NSError> completionHandler);
-
-		[iOS (10,3), TV (10,2)]
-		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'RequestUserToken' instead.")]
-		[Deprecated (PlatformName.TvOS, 11,0, message: "Use 'RequestUserToken' instead.")]
-		[Async]
-		[Export ("requestPersonalizationTokenForClientToken:withCompletionHandler:")]
-		void RequestPersonalizationToken (string clientToken, Action<NSString, NSError> completionHandler);
-
-		[iOS (11,0)][TV (11,0)]
-		[Async]
-		[Export ("requestUserTokenForDeveloperToken:completionHandler:")]
-		void RequestUserToken (string developerToken, Action<NSString, NSError> completionHandler);
-
-		[Notification]
-		[Field ("SKStorefrontIdentifierDidChangeNotification")]
-		NSString StorefrontIdentifierDidChangeNotification { get; }
-
-		[Notification]
-		[Field ("SKCloudServiceCapabilitiesDidChangeNotification")]
-		NSString CloudServiceCapabilitiesDidChangeNotification { get; }
-
-		[iOS (11,0)][TV (11,0)]
-		[Notification]
-		[Field ("SKStorefrontCountryCodeDidChangeNotification")]
-		NSString StorefrontCountryCodeDidChangeNotification { get; }
-	}
+#if !MONOMAC
 
 	[iOS (10,1)]
 	[NoWatch]
@@ -763,8 +744,65 @@ namespace StoreKit {
 		[Field ("SKCloudServiceSetupMessageIdentifierPlayMusic")]
 		PlayMusic,
 	}
+#endif
 
-	[NoWatch, iOS (11,0), TV (11,0)]
+	[Mac (11,0), Watch (7,0), iOS (9,3), TV (9,2)]
+	[BaseType (typeof (NSObject))]
+#if XAMCORE_3_0 // Avoid breaking change in iOS
+	[DisableDefaultCtor]
+#endif
+	interface SKCloudServiceController {
+		[Static]
+		[Export ("authorizationStatus")]
+		SKCloudServiceAuthorizationStatus AuthorizationStatus { get; }
+
+		[Static]
+		[Async]
+		[Export ("requestAuthorization:")]
+		void RequestAuthorization (Action<SKCloudServiceAuthorizationStatus> handler);
+
+		[Async]
+		[Export ("requestStorefrontIdentifierWithCompletionHandler:")]
+		void RequestStorefrontIdentifier (Action<NSString, NSError> completionHandler);
+
+		[iOS (11,0)][TV (11,0)]
+		[Async]
+		[Export ("requestStorefrontCountryCodeWithCompletionHandler:")]
+		void RequestStorefrontCountryCode (Action<NSString, NSError> completionHandler);
+
+		[Async]
+		[Export ("requestCapabilitiesWithCompletionHandler:")]
+		void RequestCapabilities (Action<SKCloudServiceCapability, NSError> completionHandler);
+
+		[iOS (10,3), TV (10,2)]
+		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'RequestUserToken' instead.")]
+		[Deprecated (PlatformName.TvOS, 11,0, message: "Use 'RequestUserToken' instead.")]
+		[Async]
+		[Export ("requestPersonalizationTokenForClientToken:withCompletionHandler:")]
+		void RequestPersonalizationToken (string clientToken, Action<NSString, NSError> completionHandler);
+
+		[iOS (11,0)][TV (11,0)]
+		[Async]
+		[Export ("requestUserTokenForDeveloperToken:completionHandler:")]
+		void RequestUserToken (string developerToken, Action<NSString, NSError> completionHandler);
+
+		[Notification]
+		[Field ("SKStorefrontIdentifierDidChangeNotification")]
+		NSString StorefrontIdentifierDidChangeNotification { get; }
+
+		[Notification]
+		[Field ("SKCloudServiceCapabilitiesDidChangeNotification")]
+		NSString CloudServiceCapabilitiesDidChangeNotification { get; }
+
+		[iOS (11,0)][TV (11,0)]
+		[Notification]
+		[Field ("SKStorefrontCountryCodeDidChangeNotification")]
+		NSString StorefrontCountryCodeDidChangeNotification { get; }
+	}
+
+
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[NoWatch, iOS (11,0), TV (11,0), Mac (11,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // static Default property is the only documented way to get the controller
 	interface SKProductStorePromotionController {
@@ -788,7 +826,6 @@ namespace StoreKit {
 		[Export ("updateStorePromotionOrder:completionHandler:")]
 		void Update (SKProduct[] storePromotionOrder, [NullAllowed] Action<NSError> completionHandler);
 	}
-#endif
 
 	[iOS (10,3), Mac (10,14)]
 	[NoTV]
@@ -797,9 +834,16 @@ namespace StoreKit {
 	[DisableDefaultCtor] // Not specified but very likely
 	interface SKStoreReviewController {
 
+		[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'RequestReview (UIWindowScene windowScene)' API instead.")]
 		[Static]
 		[Export ("requestReview")]
 		void RequestReview ();
+
+		[Introduced (PlatformName.MacCatalyst, 14, 0)]
+		[NoWatch, NoTV, iOS (14,0), Mac (11,0)]
+		[Static]
+		[Export ("requestReviewInScene:")]
+		void RequestReview (UIWindowScene windowScene);
 	}
 
 	[Watch (6, 2), iOS (11,2), TV (11,2), Mac (10,13,2)]
@@ -853,6 +897,11 @@ namespace StoreKit {
 		[Static]
 		[Export ("registerAppForAdNetworkAttribution")]
 		void RegisterAppForAdNetworkAttribution ();
+
+		[NoWatch, NoTV, NoMac, iOS (14,0)]
+		[Static]
+		[Export ("updateConversionValue:")]
+		void UpdateConversionValue (nint conversionValue);
 	}
 
 	[iOS (12,2)]
@@ -955,4 +1004,141 @@ namespace StoreKit {
 		[Export ("repairArcadeApp")]
 		void Repair ();
 	}
+
+
+	[Unavailable (PlatformName.MacCatalyst)]
+	[NoWatch, NoTV, NoMac, iOS (14,0)]
+	[Advice ("This API is not available when using UIKit on macOS.")]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface SKOverlayTransitionContext {
+		[Export ("addAnimationBlock:")]
+		void AddAnimationBlock (Action block);
+
+		[Export ("startFrame")]
+		CGRect StartFrame { get; }
+
+		[Export ("endFrame")]
+		CGRect EndFrame { get; }
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (14,0)]
+	[DisableDefaultCtor]
+	[BaseType (typeof (NSObject))]
+	interface SKOverlayConfiguration {}
+
+	[Unavailable (PlatformName.MacCatalyst)]
+	[NoWatch, NoTV, NoMac, iOS (14,0)]
+	[Advice ("This API is not available when using UIKit on macOS.")]
+	[BaseType (typeof (SKOverlayConfiguration))]
+	[DisableDefaultCtor]
+	interface SKOverlayAppConfiguration {
+		[Export ("initWithAppIdentifier:position:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string appIdentifier, SKOverlayPosition position);
+
+		[Export ("appIdentifier", ArgumentSemantic.Retain)]
+		string AppIdentifier { get; set; }
+
+		[NullAllowed, Export ("campaignToken", ArgumentSemantic.Retain)]
+		string CampaignToken { get; set; }
+
+		[NullAllowed, Export ("providerToken", ArgumentSemantic.Retain)]
+		string ProviderToken { get; set; }
+
+		[Export ("position", ArgumentSemantic.Assign)]
+		SKOverlayPosition Position { get; set; }
+
+		[Export ("userDismissible")]
+		bool UserDismissible { get; set; }
+
+		[Export ("setAdditionalValue:forKey:")]
+		void SetAdditionalValue ([NullAllowed] NSObject value, string key);
+
+		[Export ("additionalValueForKey:")]
+		[return: NullAllowed]
+		NSObject GetAdditionalValue (string key);
+	}
+
+	[Unavailable (PlatformName.MacCatalyst)]
+	[NoWatch, NoTV, NoMac, iOS (14,0)]
+	[Advice ("This API is not available when using UIKit on macOS.")]
+	[BaseType (typeof (SKOverlayConfiguration))]
+	[DisableDefaultCtor]
+	interface SKOverlayAppClipConfiguration {
+		[Export ("initWithPosition:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (SKOverlayPosition position);
+
+		[NullAllowed, Export ("campaignToken", ArgumentSemantic.Retain)]
+		string CampaignToken { get; set; }
+
+		[NullAllowed, Export ("providerToken", ArgumentSemantic.Retain)]
+		string ProviderToken { get; set; }
+
+		[Export ("position", ArgumentSemantic.Assign)]
+		SKOverlayPosition Position { get; set; }
+
+		[Export ("setAdditionalValue:forKey:")]
+		void SetAdditionalValue ([NullAllowed] NSObject value, string key);
+
+		[Export ("additionalValueForKey:")]
+		[return: NullAllowed]
+		NSObject GetAdditionalValue (string key);
+	}
+
+	interface ISKOverlayDelegate {}
+
+	[Unavailable (PlatformName.MacCatalyst)]
+	[NoWatch, NoTV, NoMac, iOS (14,0)]
+	[Protocol, Model (AutoGeneratedName = true), Advice ("This API is not available when using UIKit on macOS.")]
+	[BaseType (typeof (NSObject))]
+	interface SKOverlayDelegate {
+		[Export ("storeOverlay:didFailToLoadWithError:")]
+		void DidFailToLoad (SKOverlay overlay, NSError error);
+
+		[Export ("storeOverlay:willStartPresentation:")]
+		void WillStartPresentation (SKOverlay overlay, SKOverlayTransitionContext transitionContext);
+
+		[Export ("storeOverlay:didFinishPresentation:")]
+		void DidFinishPresentation (SKOverlay overlay, SKOverlayTransitionContext transitionContext);
+
+		[Export ("storeOverlay:willStartDismissal:")]
+		void WillStartDismissal (SKOverlay overlay, SKOverlayTransitionContext transitionContext);
+
+		[Export ("storeOverlay:didFinishDismissal:")]
+		void DidFinishDismissal (SKOverlay overlay, SKOverlayTransitionContext transitionContext);
+	}
+
+
+	[Unavailable (PlatformName.MacCatalyst)]
+	[NoWatch, NoTV, NoMac, iOS (14,0)]
+	[Advice ("This API is not available when using UIKit on macOS.")]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface SKOverlay {
+		[Export ("initWithConfiguration:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (SKOverlayConfiguration configuration);
+
+		[iOS (14,0)]
+		[Export ("presentInScene:")]
+		void PresentInScene (UIWindowScene scene);
+
+		[iOS (14,0)]
+		[Static]
+		[Export ("dismissOverlayInScene:")]
+		void DismissOverlayInScene (UIWindowScene scene);
+
+		[Wrap ("WeakDelegate")]
+		[NullAllowed]
+		ISKOverlayDelegate Delegate { get; set; }
+
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		NSObject WeakDelegate { get; set; }
+
+		[Export ("configuration", ArgumentSemantic.Copy)]
+		SKOverlayConfiguration Configuration { get; }
+	}
+
 }
