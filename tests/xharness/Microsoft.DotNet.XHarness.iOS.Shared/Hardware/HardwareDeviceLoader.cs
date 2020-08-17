@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using Microsoft.DotNet.XHarness.iOS.Shared.Collections;
@@ -27,6 +28,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 	}
 
 	public class HardwareDeviceLoader : IHardwareDeviceLoader {
+		readonly SemaphoreSlim semaphore = new SemaphoreSlim (1);
 		readonly IProcessManager processManager;
 		bool loaded;
 
@@ -46,13 +48,15 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 
 		public async Task LoadDevices (ILog log, bool includeLocked = false, bool forceRefresh = false, bool listExtraData = false)
 		{
+			await semaphore.WaitAsync ();
+
 			if (loaded) {
-				if (!forceRefresh)
+				if (!forceRefresh) {
+					semaphore.Release ();
 					return;
+				}
 				connectedDevices.Reset ();
 			}
-
-			loaded = true;
 
 			var tmpfile = Path.GetTempFileName ();
 			try {
@@ -92,11 +96,14 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 						}
 						connectedDevices.Add (d);
 					}
+
+					loaded = true;
 				}
 			} finally {
 				connectedDevices.SetCompleted ();
 				File.Delete (tmpfile);
 				log.Flush ();
+				semaphore.Release ();
 			}
 		}
 
