@@ -1068,9 +1068,12 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 					foreach (var prop in properties)
 						args.Add ($"/p:{prop.Key}={prop.Value}");
 					args.Add (inspector);
+					var env = new Dictionary<string, string> {
+						{ "MSBUILD_EXE_PATH", null },
+					};
 					proc.StartInfo.Arguments = StringUtils.FormatArguments (args);
 					proc.StartInfo.WorkingDirectory = dir;
-					var rv = await processManager.RunAsync (proc, log, timeout: TimeSpan.FromSeconds (15));
+					var rv = await processManager.RunAsync (proc, log, environment_variables: env, timeout: TimeSpan.FromSeconds (15));
 					if (!rv.Succeeded)
 						throw new Exception ($"Unable to evaluate the property {evaluateProperty}.");
 					return File.ReadAllText (output).Trim ();
