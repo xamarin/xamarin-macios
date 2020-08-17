@@ -1,4 +1,4 @@
-﻿//
+//
 // Intents bindings
 //
 // Authors:
@@ -3702,22 +3702,22 @@ namespace Intents {
 
 		// INImage_IntentsUI (IntentsUI)
 
-		[NoMac, NoWatch, TV (14,0)]
+		[NoMac, NoWatch, NoTV]
 		[Static]
 		[Export ("imageWithCGImage:")]
 		INImage FromImage (CGImage image);
 
-		[NoMac, NoWatch, TV (14,0)]
+		[NoMac, NoWatch, NoTV]
 		[Static]
 		[Export ("imageWithUIImage:")]
 		INImage FromImage (UIImage image);
 
-		[NoMac, NoWatch, TV (14,0)]
+		[NoMac, NoWatch, NoTV]
 		[Static]
 		[Export ("imageSizeForIntentResponse:")]
 		CGSize GetImageSize (INIntentResponse response);
 
-		[NoMac, NoWatch, iOS (11,0), TV (14,0)]
+		[NoMac, NoWatch, iOS (11,0), NoTV]
 		[Async]
 		[Export ("fetchUIImageWithCompletion:")]
 		void FetchImage (Action<UIImage> completion);
