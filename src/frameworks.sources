@@ -1491,6 +1491,8 @@ STOREKIT_API_SOURCES = \
 	StoreKit/Enums.cs \
 
 STOREKIT_CORE_SOURCES = \
+	StoreKit/SKOverlayAppClipConfiguration.cs \
+	StoreKit/SKOverlayAppConfiguration.cs \
 	StoreKit/SKReceiptProperty.cs \
 	StoreKit/StoreProductParameters.cs \
 

@@ -257,8 +257,7 @@ namespace StoreKit {
 
 		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
 		[Export ("transactionObservers")]
-		[Protocolize]
-		SKPaymentTransactionObserver[] TransactionObservers { get; }
+		ISKPaymentTransactionObserver[] TransactionObservers { get; }
 	}
 	
 	[Watch (6, 2)]
@@ -346,6 +345,8 @@ namespace StoreKit {
 		[Export ("isFamilyShareable")]
 		bool IsFamilyShareable { get; }
 	}
+
+	interface ISKPaymentTransactionObserver {}
 
 	[Watch (6, 2)]
 	[BaseType (typeof (NSObject))]
@@ -558,6 +559,14 @@ namespace StoreKit {
 	[Mac (11,0)]
 	[StrongDictionary ("SKStoreProductParameterKey")]
 	interface StoreProductParameters {
+
+		[iOS (11,0)][TV (11,0)]
+		[Export ("ProductIdentifier")]
+		string ProductIdentifier { get; }
+
+		[iOS (8,3)]
+		[Export ("ProviderToken")]
+		string ProviderToken { get; }
 
 		[iOS (11,3), TV (11,3), NoMac]
 		[Export ("AdNetworkAttributionSignature")]
@@ -834,13 +843,13 @@ namespace StoreKit {
 	[DisableDefaultCtor] // Not specified but very likely
 	interface SKStoreReviewController {
 
-		[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'RequestReview (UIWindowScene windowScene)' API instead.")]
+		[Deprecated (PlatformName.iOS, 14, 0, message : "Use the 'RequestReview (UIWindowScene windowScene)' API instead.")]
 		[Static]
 		[Export ("requestReview")]
 		void RequestReview ();
 
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
-		[NoWatch, NoTV, iOS (14,0), Mac (11,0)]
+		[NoWatch, NoTV, iOS (14,0), NoMac]
 		[Static]
 		[Export ("requestReviewInScene:")]
 		void RequestReview (UIWindowScene windowScene);
@@ -1121,11 +1130,9 @@ namespace StoreKit {
 		[DesignatedInitializer]
 		IntPtr Constructor (SKOverlayConfiguration configuration);
 
-		[iOS (14,0)]
 		[Export ("presentInScene:")]
 		void PresentInScene (UIWindowScene scene);
 
-		[iOS (14,0)]
 		[Static]
 		[Export ("dismissOverlayInScene:")]
 		void DismissOverlayInScene (UIWindowScene scene);
