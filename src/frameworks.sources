@@ -1414,6 +1414,8 @@ SCRIPTINGBRIDGE_CORE_SOURCES = \
 SCRIPTINGBRIDGE_SOURCES = \
 	ScriptingBridge/SBApplication.cs \
 
+# ScreenTime
+
 # SearchKit
 
 SEARCHKIT_SOURCES = \
@@ -1906,6 +1908,7 @@ MAC_FRAMEWORKS =            \
 	QuickLookUI             \
 	ReplayKit               \
 	SafariServices          \
+	ScreenTime              \
 	ScriptingBridge         \
 	SearchKit               \
 	Security                \
@@ -2006,6 +2009,7 @@ IOS_FRAMEWORKS =         \
 	QuickLookThumbnailing \
 	ReplayKit \
 	SafariServices \
+	ScreenTime \
 	Security \
 	SensorKit \
 	Social \
