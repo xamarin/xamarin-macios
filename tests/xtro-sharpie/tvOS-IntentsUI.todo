@@ -1,6 +1,0 @@
-!missing-field! IntentsUIVersionNumber not bound
-!missing-field! IntentsUIVersionString not bound
-!missing-selector! +INImage::imageSizeForIntentResponse: not bound
-!missing-selector! +INImage::imageWithCGImage: not bound
-!missing-selector! +INImage::imageWithUIImage: not bound
-!missing-selector! INImage::fetchUIImageWithCompletion: not bound
