@@ -588,11 +588,11 @@ namespace StoreKit {
 		[Export ("AdNetworkTimestamp")]
 		uint AdNetworkTimestamp { get; set; }
 
-		[NoWatch, NoMac, iOS (14, 0)]
+		[NoWatch, NoMac, NoTV, iOS (14, 0)]
 		[Export ("AdNetworkSourceAppStoreIdentifier")]
 		string AdNetworkSourceAppStoreIdentifier { get; }
 
-		[NoWatch, NoMac, iOS (14, 0)]
+		[NoWatch, NoMac, NoTV, iOS (14, 0)]
 		[Export ("AdNetworkVersion")]
 		string AdNetworkVersion { get; }
 	}
@@ -646,11 +646,11 @@ namespace StoreKit {
 		[Field ("SKStoreProductParameterAdNetworkTimestamp")]
 		NSString AdNetworkTimestamp { get; }
 
-		[NoWatch, NoMac, iOS (14, 0)]
+		[NoWatch, NoMac, NoTV, iOS (14, 0)]
 		[Field ("SKStoreProductParameterAdNetworkSourceAppStoreIdentifier")]
 		NSString AdNetworkSourceAppStoreIdentifier { get; }
 
-		[NoWatch, NoMac, iOS (14, 0)]
+		[NoWatch, NoMac, NoTV, iOS (14, 0)]
 		[Field ("SKStoreProductParameterAdNetworkVersion")]
 		NSString AdNetworkVersion { get; }
 	}
