@@ -341,7 +341,7 @@ namespace StoreKit {
 		[Export ("discounts")]
 		SKProductDiscount [] Discounts { get; }
 
-		[Watch (7, 0), Mac (11, 0), iOS (14, 0)]
+		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
 		[Export ("isFamilyShareable")]
 		bool IsFamilyShareable { get; }
 	}
@@ -588,11 +588,11 @@ namespace StoreKit {
 		[Export ("AdNetworkTimestamp")]
 		uint AdNetworkTimestamp { get; set; }
 
-		[NoWatch, NoMac, NoTV, iOS (14, 0)]
+		[NoWatch, NoMac, TV (14,0), iOS (14, 0)]
 		[Export ("AdNetworkSourceAppStoreIdentifier")]
 		string AdNetworkSourceAppStoreIdentifier { get; }
 
-		[NoWatch, NoMac, NoTV, iOS (14, 0)]
+		[NoWatch, NoMac, TV (14,0), iOS (14, 0)]
 		[Export ("AdNetworkVersion")]
 		string AdNetworkVersion { get; }
 	}
@@ -646,11 +646,11 @@ namespace StoreKit {
 		[Field ("SKStoreProductParameterAdNetworkTimestamp")]
 		NSString AdNetworkTimestamp { get; }
 
-		[NoWatch, NoMac, NoTV, iOS (14, 0)]
+		[NoWatch, NoMac, TV (14, 0), iOS (14, 0)]
 		[Field ("SKStoreProductParameterAdNetworkSourceAppStoreIdentifier")]
 		NSString AdNetworkSourceAppStoreIdentifier { get; }
 
-		[NoWatch, NoMac, NoTV, iOS (14, 0)]
+		[NoWatch, NoMac, TV (14, 0), iOS (14, 0)]
 		[Field ("SKStoreProductParameterAdNetworkVersion")]
 		NSString AdNetworkVersion { get; }
 	}
