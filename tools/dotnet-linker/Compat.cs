@@ -40,6 +40,28 @@ namespace Xamarin.Bundler {
 		{
 			throw new NotImplementedException ();
 		}
+
+		public AssemblyBuildTarget LibMonoLinkMode {
+			get { throw new NotImplementedException (); }
+		}
+
+		public AssemblyBuildTarget LibXamarinLinkMode {
+			get { throw new NotImplementedException (); }
+		}
+
+		public bool HasAnyDynamicLibraries {
+			get { throw new NotImplementedException (); }
+		}
+
+		public string GetLibMono (AssemblyBuildTarget build_target)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public string GetLibXamarin (AssemblyBuildTarget build_target)
+		{
+			throw new NotImplementedException ();
+		}
 	}
 
 	public partial class Driver {
