@@ -76,7 +76,13 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 			return rv;
 		}
 
-		public async Task CreateCopyAsync (ILog log, IProcessManager processManager, ITestTask test, string rootDirectory)
+		public Task CreateCopyAsync (ILog log, IProcessManager processManager, ITestTask test, string rootDirectory)
+		{
+			var pr = new Dictionary<string, TestProject> ();
+			return CreateCopyAsync (log, processManager, test, rootDirectory, pr);
+		}
+
+		async Task CreateCopyAsync (ILog log, IProcessManager processManager, ITestTask test, string rootDirectory, Dictionary<string, TestProject> allProjectReferences)
 		{
 			var directory = DirectoryUtilities.CreateTemporaryDirectory (test?.TestName ?? System.IO.Path.GetFileNameWithoutExtension (Path));
 			Directory.CreateDirectory (directory);
@@ -154,8 +160,12 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 
 			var projectReferences = new List<TestProject> ();
 			foreach (var pr in doc.GetProjectReferences ()) {
-				var tp = new TestProject (pr.Replace ('\\', '/'));
-				await tp.CreateCopyAsync (log, processManager, test, rootDirectory);
+				var prPath = pr.Replace ('\\', '/');
+				if (!allProjectReferences.TryGetValue (prPath, out var tp)) {
+					tp = new TestProject (pr.Replace ('\\', '/'));
+					await tp.CreateCopyAsync (log, processManager, test, rootDirectory, allProjectReferences);
+					allProjectReferences.Add (prPath, tp);
+				}
 				doc.SetProjectReferenceInclude (pr, tp.Path.Replace ('/', '\\'));
 				projectReferences.Add (tp);
 			}
