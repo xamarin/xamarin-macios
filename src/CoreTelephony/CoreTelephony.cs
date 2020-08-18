@@ -42,6 +42,7 @@ namespace CoreTelephony {
 		NoError = 0, Posix = 1, Mach = 2
 	}
 
+	[Obsolete ("Use the 'CallKit' API instead.")]
 	[iOS (9,0)]
 	[Native]
 	public enum CTCellularDataRestrictedState : ulong {
@@ -50,6 +51,7 @@ namespace CoreTelephony {
 		NotRestricted
 	}
 
+	[Obsolete ("Use the 'CallKit' API instead.")]
 	[iOS (12,0)]
 	[Native]
 	public enum CTCellularPlanProvisioningAddPlanResult : long {
