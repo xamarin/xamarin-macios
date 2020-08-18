@@ -476,6 +476,11 @@ namespace Introspection {
 				if (cstr == $"Void .ctor(CoreGraphics.CGRect)")
 					return true;
 				break;
+			case "PKAddSecureElementPassViewController":
+				// no overview available yet... unlikely that it can be customized
+				if (cstr == "Void .ctor(System.String, Foundation.NSBundle)")
+					return true;
+				break;
 			}
 
 			var ep = ctor.GetParameters ();
