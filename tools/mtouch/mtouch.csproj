@@ -60,6 +60,9 @@
     <Compile Include="..\..\src\ObjCRuntime\Constants.cs">
       <Link>src\ObjCRuntime\Constants.cs</Link>
     </Compile>
+    <Compile Include="..\common\AssemblyBuildTarget.cs">
+      <Link>tools\common\AssemblyBuildTarget.cs</Link>
+    </Compile>
     <Compile Include="..\common\PListExtensions.cs">
       <Link>tools\common\PListExtensions.cs</Link>
     </Compile>
