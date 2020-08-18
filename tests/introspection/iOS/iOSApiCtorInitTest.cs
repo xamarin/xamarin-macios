@@ -223,6 +223,12 @@ namespace Introspection {
 				return TestRuntime.CheckXcodeVersion (11, 2);
 			case "UIMenuController": // Stopped working with Xcode 11.3 beta 1
 				return TestRuntime.CheckXcodeVersion (11, 3);
+#if __TVOS__
+			case "MPSPredicate":
+				// the device .ctor ends up calling `initWithBuffer:offset:` and crash on older (non 4k AppleTV devices)
+				// MPSPredicate.mm:102: failed assertion `[MPSPredicate initWithBuffer:offset:] device: Apple A8 GPU does not support predication.'
+				return ((Runtime.Arch == Arch.DEVICE) && (UIScreen.MainScreen.NativeBounds.Width <= 1920));
+#endif
 			default:
 				return base.Skip (type);
 			}
