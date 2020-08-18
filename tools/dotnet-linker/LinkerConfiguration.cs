@@ -34,6 +34,9 @@ namespace Xamarin.Linker {
 		public Application Application { get; private set; }
 		public Target Target { get; private set; }
 
+		public IList<string> RegistrationMethods { get; set; } = new List<string> ();
+		public CompilerFlags CompilerFlags;
+
 		public LinkContext Context { get; private set; }
 
 		public static LinkerConfiguration GetInstance (LinkContext context)
@@ -58,6 +61,7 @@ namespace Xamarin.Linker {
 
 			Application = new Application (this);
 			Target = new Target (Application);
+			CompilerFlags = new CompilerFlags (Target);
 
 			var lines = File.ReadAllLines (linker_file);
 			var significantLines = new List<string> (); // This is the input the cache uses to verify if the cache is still valid

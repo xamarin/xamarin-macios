@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 using Xamarin.Linker;
 
@@ -11,6 +10,7 @@ namespace Xamarin {
 		{
 			base.EndProcess ();
 
+			var registration_methods = Configuration.RegistrationMethods;
 			var items = new List<MSBuildItem> ();
 
 			foreach (var abi in Configuration.Abis) {
@@ -20,10 +20,24 @@ namespace Xamarin {
 
 				contents.WriteLine ("#include \"xamarin/xamarin.h\"");
 				contents.WriteLine ();
+				if (registration_methods != null) {
+					foreach (var method in registration_methods) {
+						contents.Write ("extern \"C\" void ");
+						contents.Write (method);
+						contents.WriteLine (" ();");
+					}
+				}
 				contents.WriteLine ("void xamarin_setup_impl ()");
 				contents.WriteLine ("{");
 				contents.WriteLine ("\tsetenv (\"DOTNET_SYSTEM_GLOBALIZATION_INVARIANT\", \"1\", 1); // https://github.com/xamarin/xamarin-macios/issues/8906");
 				contents.WriteLine ("\txamarin_executable_name = \"{0}\";", Configuration.AssemblyName);
+				if (registration_methods != null) {
+					for (int i = 0; i < registration_methods.Count; i++) {
+						contents.Write ("\t");
+						contents.Write (registration_methods [i]);
+						contents.WriteLine ("();");
+					}
+				}
 				contents.WriteLine ("}");
 				contents.WriteLine ();
 				contents.WriteLine ("void xamarin_initialize_callbacks () __attribute__ ((constructor));");
@@ -49,6 +63,27 @@ namespace Xamarin {
 			}
 
 			Configuration.WriteOutputForMSBuild ("_MainFile", items);
+
+			var linkWith = new List<MSBuildItem> ();
+			if (Configuration.CompilerFlags.LinkWithLibraries != null) {
+				foreach (var lib in Configuration.CompilerFlags.LinkWithLibraries) {
+					linkWith.Add (new MSBuildItem {
+						Include = lib,
+					});
+				}
+			}
+			if (Configuration.CompilerFlags.ForceLoadLibraries != null) {
+				foreach (var lib in Configuration.CompilerFlags.ForceLoadLibraries) {
+					linkWith.Add (new MSBuildItem {
+						Include = lib,
+						Metadata = {
+							{ "ForceLoad", "true" },
+						},
+					});
+				}
+			}
+
+			Configuration.WriteOutputForMSBuild ("_MainLinkWith", linkWith);
 		}
 	}
 }

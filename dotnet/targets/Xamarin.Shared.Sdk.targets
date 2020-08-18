@@ -180,6 +180,10 @@
 		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_MainFile.items" Condition="Exists('$(_LinkerItemsDirectory)/_MainFile.items')">
 			<Output TaskParameter="Items" ItemName="_MainFile" />
 		</ReadItemsFromFile>
+		<!-- Load _MainLinkWith -->
+		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_MainLinkWith.items" Condition="Exists('$(_LinkerItemsDirectory)/_MainLinkWith.items')">
+			<Output TaskParameter="Items" ItemName="_MainLinkWith" />
+		</ReadItemsFromFile>
 		<!-- Load _LinkerFrameworks -->
 		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_LinkerFrameworks.items" Condition="Exists('$(_LinkerItemsDirectory)/_LinkerFrameworks.items')">
 			<Output TaskParameter="Items" ItemName="_LinkerFrameworks" />
@@ -337,7 +341,7 @@
 			SessionId="$(BuildSessionId)"
 			Frameworks="@(_NativeExecutableFrameworks);@(_BindingLibraryFrameworks)"
 			LinkerFlags="@(_BindingLibraryLinkerFlags)"
-			LinkWithLibraries="@(_XamarinMainLibraries);@(_BindingLibraryLinkWith)"
+			LinkWithLibraries="@(_XamarinMainLibraries);@(_BindingLibraryLinkWith);@(_MainLinkWith)"
 			MinimumOSVersion="$(_MinimumOSVersion)"
 			ObjectFiles="@(_NativeExecutableObjectFiles)"
 			OutputFile="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)"

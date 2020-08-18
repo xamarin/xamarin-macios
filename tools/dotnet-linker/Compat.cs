@@ -37,7 +37,14 @@ namespace Xamarin.Bundler {
 
 		public void SelectRegistrar ()
 		{
-			throw new NotImplementedException ();
+			if (Registrar == RegistrarMode.Default) {
+				if (LinkMode == LinkMode.None && IsDefaultMarshalManagedExceptionMode) {
+					Registrar = RegistrarMode.PartialStatic;
+				} else {
+					Registrar = RegistrarMode.Dynamic;
+				}
+			}
+			Driver.Log (1, $"Registrar mode: {Registrar}");
 		}
 
 		public AssemblyBuildTarget LibMonoLinkMode {
