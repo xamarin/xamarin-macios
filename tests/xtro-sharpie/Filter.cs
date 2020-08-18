@@ -47,8 +47,10 @@ namespace Extrospection {
 			case "IOBluetoothUI":
 			case "IOKit":
 			case "JavaFrameEmbedding":
+			case "JavaRuntimeSupport":
 			case "JavaVM":
 			case "Kerberos":
+			case "KernelManagement":
 			case "LatentSemanticMapping":
 			case "LaunchServices":
 			case "Metadata":
@@ -59,6 +61,8 @@ namespace Extrospection {
 			case "OpenScripting":
 			case "OSAKit":
 			case "OSServices":
+			case "ParavirtualizedGraphics":
+			case "PCSC":
 			case "PreferencePanes":
 			case "Python":
 			case "QD":
@@ -75,8 +79,10 @@ namespace Extrospection {
 			case "SpeechRecognition":
 			case "SpeechSynthesis":
 			case "SyncServices":
+			case "SystemExtensions":
 			case "Tcl":
 			case "TWAIN":
+			case "Virtualization":
 			case "vmnet":
 				// other non-supported frameworks
 			case "GSS": // iOS and macOS
