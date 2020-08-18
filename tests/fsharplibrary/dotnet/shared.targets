@@ -8,6 +8,9 @@
 		<FSharpLibraryDirectory>$(RootTestsDirectory)\fsharplibrary</FSharpLibraryDirectory>
 
 		<AssemblyOriginatorKeyFile>$(RootTestsDirectory)\..\product.snk</AssemblyOriginatorKeyFile>
+
+		<!-- Work around https://github.com/dotnet/sdk/issues/12954 -->
+		<ProduceReferenceAssembly>false</ProduceReferenceAssembly>
 	</PropertyGroup>
 
 	<ItemGroup>
