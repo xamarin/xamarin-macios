@@ -49,7 +49,7 @@ namespace Xamarin.Tests {
 			Clean (project_path);
 			var result = DotNet.AssertBuild (project_path, verbosity);
 			AssertThatLinkerExecuted (result);
-			AssertAppContents (platform, Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", "net5.0", "ios-x64", "MySingleView.app"));
+			AssertAppContents (platform, Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", "net5.0-ios", "ios-x64", "MySingleView.app"));
 		}
 
 		[Test]
@@ -60,7 +60,7 @@ namespace Xamarin.Tests {
 			Clean (project_path);
 			var result = DotNet.AssertBuild (project_path, verbosity);
 			AssertThatLinkerExecuted (result);
-			AssertAppContents (platform, Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", "net5.0", "osx-x64", "MyCocoaApp.app"));
+			AssertAppContents (platform, Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", "net5.0-macos", "osx-x64", "MyCocoaApp.app"));
 		}
 
 		[Test]
@@ -71,7 +71,7 @@ namespace Xamarin.Tests {
 			Clean (project_path);
 			var result = DotNet.AssertBuild (project_path, verbosity);
 			AssertThatLinkerExecuted (result);
-			AssertAppContents (platform, Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", "net5.0", "tvos-x64", "MyTVApp.app"));
+			AssertAppContents (platform, Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", "net5.0-tvos", "tvos-x64", "MyTVApp.app"));
 		}
 
 		[Test]
