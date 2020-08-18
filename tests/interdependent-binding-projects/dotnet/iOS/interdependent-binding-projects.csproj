@@ -16,6 +16,8 @@
   <ItemGroup>
     <PackageReference Include="NUnitLite" Version="3.12.0" />
     <PackageReference Include="MonoTouch.Dialog" Version="2.0.0-pre1" />
+    <!-- MonoTouch.Dialog references System.Json, which isn't shipped with .NET5, so reference the NuGet instead -->
+    <PackageReference Include="System.Json" Version="4.7.1" />
     <ProjectReference Include="$(RootTestsDirectory)\..\external\Touch.Unit\Touch.Client\dotnet\iOS\Touch.Client-iOS.dotnet.csproj" />
     <ProjectReference Include="$(RootTestsDirectory)\bindings-test\dotnet\iOS\bindings-test.csproj" />
     <ProjectReference Include="$(RootTestsDirectory)\bindings-test2\dotnet\iOS\bindings-test2.csproj" />
