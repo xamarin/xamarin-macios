@@ -297,8 +297,6 @@ namespace Xharness {
 
 			args.AddRange (harness.EnvironmentVariables.Select (kvp => new SetEnvVariableArgument (kvp.Key, kvp.Value)));
 
-			await processManager.ExecuteCommandAsync ("ls", new string [] { "-laR", AppInformation.LaunchAppPath }, log: MainLog, timeout: TimeSpan.FromSeconds (15));
-
 			if (IsExtension) {
 				switch (AppInformation.Extension) {
 				case Extension.TodayExtension:

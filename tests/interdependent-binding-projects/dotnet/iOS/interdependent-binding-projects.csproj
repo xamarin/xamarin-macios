@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <OutputType>Exe</OutputType>
+    <SignAssembly>true</SignAssembly>
     <LangVersion>latest</LangVersion>
     <RuntimeIdentifier>ios-x64</RuntimeIdentifier>
     <AssetTargetFallback>xamarinios10;$(AssetTargetFallback)</AssetTargetFallback>
@@ -18,8 +19,8 @@
     <!-- MonoTouch.Dialog references System.Json, which isn't shipped with .NET5, so reference the NuGet instead -->
     <PackageReference Include="System.Json" Version="4.7.1" />
     <ProjectReference Include="$(RootTestsDirectory)\..\external\Touch.Unit\Touch.Client\dotnet\iOS\Touch.Client-iOS.dotnet.csproj" />
-    <!-- <ProjectReference Include="$(RootTestsDirectory)\bindings-test\dotnet\iOS\bindings-test.csproj" /> -->
-    <!-- <ProjectReference Include="$(RootTestsDirectory)\bindings-test2\dotnet\iOS\bindings-test2.csproj" /> -->
+    <ProjectReference Include="$(RootTestsDirectory)\bindings-test\dotnet\iOS\bindings-test.csproj" />
+    <ProjectReference Include="$(RootTestsDirectory)\bindings-test2\dotnet\iOS\bindings-test2.csproj" />
   </ItemGroup>
 
   <ItemGroup>

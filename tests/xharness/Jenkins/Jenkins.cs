@@ -210,23 +210,23 @@ namespace Xharness.Jenkins {
 			};
 			Tasks.Add (runDotNetGenerator);
 
-			//var buildDotNetTestsProject = new TestProject (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "dotnet", "UnitTests", "DotNetUnitTests.csproj"))) {
-			//	IsDotNetProject = true,
-			//};
-			//var buildDotNetTests = new DotNetBuildTask (this, testProject: buildDotNetTestsProject, processManager: processManager) {
-			//	SpecifyPlatform = false,
-			//	Platform = TestPlatform.All,
-			//	ProjectConfiguration = "Debug",
-			//	Ignored = !IncludeDotNet,
-			//};
-			//var runDotNetTests = new DotNetTestTask (this, buildDotNetTests, processManager) {
-			//	TestProject = buildDotNetTestsProject,
-			//	Platform = TestPlatform.All,
-			//	TestName = "DotNet tests",
-			//	Timeout = TimeSpan.FromMinutes (15),
-			//	Ignored = !IncludeDotNet,
-			//};
-			//Tasks.Add (runDotNetTests);
+			var buildDotNetTestsProject = new TestProject (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "dotnet", "UnitTests", "DotNetUnitTests.csproj"))) {
+				IsDotNetProject = true,
+			};
+			var buildDotNetTests = new DotNetBuildTask (this, testProject: buildDotNetTestsProject, processManager: processManager) {
+				SpecifyPlatform = false,
+				Platform = TestPlatform.All,
+				ProjectConfiguration = "Debug",
+				Ignored = !IncludeDotNet,
+			};
+			var runDotNetTests = new DotNetTestTask (this, buildDotNetTests, processManager) {
+				TestProject = buildDotNetTestsProject,
+				Platform = TestPlatform.All,
+				TestName = "DotNet tests",
+				Timeout = TimeSpan.FromMinutes (15),
+				Ignored = !IncludeDotNet,
+			};
+			Tasks.Add (runDotNetTests);
 
 			var deviceTestFactory = new RunDeviceTasksFactory ();
 			var loaddev = deviceTestFactory.CreateAsync (this, processManager, testVariationsFactory).ContinueWith ((v) => {
