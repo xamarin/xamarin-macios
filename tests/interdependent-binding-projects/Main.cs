@@ -21,7 +21,7 @@ public partial class AppDelegate : UIApplicationDelegate
 		runner = new TouchRunner (window);
 		runner.Add (System.Reflection.Assembly.GetExecutingAssembly ());
 		// runner.Add (typeof (Xamarin.BindingTests2.BindingTest).Assembly);
-		runner.Add (typeof (Xamarin.BindingTests.ProtocolTest).Assembly);
+		// runner.Add (typeof (Xamarin.BindingTests.ProtocolTest).Assembly);
 
 		window.RootViewController = new UINavigationController (runner.GetViewController ());
 		window.MakeKeyAndVisible ();
