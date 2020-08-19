@@ -3,7 +3,7 @@
 //
 // Authors:
 //	Alex Soto <alexsoto@microsoft.com>
-//  TJ Lambert <TJ.Lambert@microsoft.com>
+//	TJ Lambert <TJ.Lambert@microsoft.com>
 //
 // Copyright (c) Microsoft Corporation.
 //
