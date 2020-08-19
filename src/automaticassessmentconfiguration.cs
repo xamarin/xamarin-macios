@@ -3,6 +3,7 @@
 //
 // Authors:
 //	Alex Soto <alexsoto@microsoft.com>
+//  TJ Lambert <TJ.Lambert@microsoft.com>
 //
 // Copyright (c) Microsoft Corporation.
 //
@@ -21,6 +22,16 @@ namespace AutomaticAssessmentConfiguration {
 	public enum AEAssessmentErrorCode : long {
 		Unknown = 1
 	}
+
+	[Unavailable (PlatformName.MacCatalyst)]
+	[iOS (14, 0)]
+	[Advice ("This API is not available when using UIKit on macOS.")]
+	[Native]
+	enum AEAutocorrectMode : long {
+		None = 0,
+		Spelling = 1 << 0,
+		Punctuation = 1 << 1,
+	}
 	
 	[Unavailable (PlatformName.MacCatalyst)]
 	[Mac (10,15,4), iOS (13,4)]
@@ -28,6 +39,59 @@ namespace AutomaticAssessmentConfiguration {
 	[BaseType (typeof (NSObject))]
 	interface AEAssessmentConfiguration : NSCopying {
 
+		[Unavailable (PlatformName.MacCatalyst)]
+		[NoMac, iOS (14, 0)]
+		[Advice ("This API is not available when using UIKit on macOS.")]
+		[Export ("autocorrectMode")]
+		AEAutocorrectMode AutocorrectMode { get; set; }
+
+		[Unavailable (PlatformName.MacCatalyst)]
+		[NoMac, iOS (14, 0)]
+		[Advice ("This API is not available when using UIKit on macOS.")]
+		[Export ("allowsSpellCheck")]
+		bool AllowsSpellCheck { get; set; }
+
+		[Unavailable (PlatformName.MacCatalyst)]
+		[NoMac, iOS (14, 0)]
+		[Advice ("This API is not available when using UIKit on macOS.")]
+		[Export ("allowsPredictiveKeyboard")]
+		bool AllowsPredictiveKeyboard { get; set; }
+
+		[Unavailable (PlatformName.MacCatalyst)]
+		[NoMac, iOS (14, 0)]
+		[Advice ("This API is not available when using UIKit on macOS.")]
+		[Export ("allowsKeyboardShortcuts")]
+		bool AllowsKeyboardShortcuts { get; set; }
+
+		[Unavailable (PlatformName.MacCatalyst)]
+		[NoMac, iOS (14, 0)]
+		[Advice ("This API is not available when using UIKit on macOS.")]
+		[Export ("allowsActivityContinuation")]
+		bool AllowsActivityContinuation { get; set; }
+
+		[Unavailable (PlatformName.MacCatalyst)]
+		[NoMac, iOS (14, 0)]
+		[Advice ("This API is not available when using UIKit on macOS.")]
+		[Export ("allowsDictation")]
+		bool AllowsDictation { get; set; }
+
+		[Unavailable (PlatformName.MacCatalyst)]
+		[NoMac, iOS (14, 0)]
+		[Advice ("This API is not available when using UIKit on macOS.")]
+		[Export ("allowsAccessibilitySpeech")]
+		bool AllowsAccessibilitySpeech { get; set; }
+
+		[Unavailable (PlatformName.MacCatalyst)]
+		[NoMac, iOS (14, 0)]
+		[Advice ("This API is not available when using UIKit on macOS.")]
+		[Export ("allowsPasswordAutoFill")]
+		bool AllowsPasswordAutoFill { get; set; }
+
+		[Unavailable (PlatformName.MacCatalyst)]
+		[NoMac, iOS (14, 0)]
+		[Advice ("This API is not available when using UIKit on macOS.")]
+		[Export ("allowsContinuousPathKeyboard")]
+		bool AllowsContinuousPathKeyboard { get; set; }
 	}
 
 	[Unavailable (PlatformName.MacCatalyst)]
