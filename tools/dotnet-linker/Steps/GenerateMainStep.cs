@@ -15,7 +15,7 @@ namespace Xamarin {
 
 			foreach (var abi in Configuration.Abis) {
 
-				var file = Path.Combine (Configuration.CacheDirectory, $"main.{abi.AsArchString ()}.m");
+				var file = Path.Combine (Configuration.CacheDirectory, $"main.{abi.AsArchString ()}.mm");
 				var contents = new StringWriter ();
 
 				contents.WriteLine ("#include \"xamarin/xamarin.h\"");
