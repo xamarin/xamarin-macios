@@ -332,11 +332,12 @@ namespace Xharness.Jenkins {
 
 				switch (test.TestName) {
 				case "monotouch-test":
+					// iOS 32 bits is broken on recent Xcode 12 betas (and this fails on internal jenkins)
+					if ((test.Platform == TestPlatform.iOS_Unified32) && !IncludeiOS32)
+						break;
 					if (supports_dynamic_registrar_on_device)
 						yield return new TestData { Variation = "Debug (dynamic registrar)", MTouchExtraArgs = "--registrar:dynamic", Debug = true, Profiling = false };
-					// iOS 32 bits is broken on recent Xcode 12 betas (and this fails on internal jenkins)
-					if ((test.Platform != TestPlatform.iOS_Unified32) || IncludeiOS32)
-						yield return new TestData { Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = false, Profiling = false, Defines = "OPTIMIZEALL" };
+					yield return new TestData { Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = false, Profiling = false, Defines = "OPTIMIZEALL" };
 					if (supports_debug) {
 						yield return new TestData { Variation = "Debug (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = true, Profiling = false, Defines = "OPTIMIZEALL" };
 						yield return new TestData { Variation = "Debug: SGenConc", MTouchExtraArgs = "", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, EnableSGenConc = true};
