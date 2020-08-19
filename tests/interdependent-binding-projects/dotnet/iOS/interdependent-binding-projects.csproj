@@ -10,6 +10,7 @@
     <!-- This is needed because the packages/ directory might be in the same folder as this project file, and some some packages might have C# files, which would then automatically be included -->
     <DefaultItemExcludes>$(DefaultItemExcludes);packages/**;</DefaultItemExcludes>
     <EnableDefaultItems>false</EnableDefaultItems>
+    <AssemblyOriginatorKeyFile>$(RootTestsDirectory)\..\product.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>
