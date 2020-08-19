@@ -13,8 +13,6 @@ namespace MonoTouchFixtures.AVFoundation {
 	[Preserve (AllMembers = true)]
 	public class AVAudioFormatTest {
 
-		AVAudioFormat nullFormat = null;
-
 		[Test]
 		public void TestEqualOperatorSameInstace ()
 		{
@@ -30,8 +28,11 @@ namespace MonoTouchFixtures.AVFoundation {
 				Assert.IsFalse (format == null, "format == null");
 				Assert.IsFalse (null == format, "null == format");
 			}
-			Assert.IsTrue (nullFormat == null, "nullFormat == null");
-			Assert.IsTrue (null == nullFormat, "null == nullFormat");
+			using (AVAudioFormat nullFormat = null)
+			{
+				Assert.IsTrue (nullFormat == null, "nullFormat == null");
+				Assert.IsTrue (null == nullFormat, "null == nullFormat");
+			}
 		}
 
 		[Test]
@@ -42,8 +43,12 @@ namespace MonoTouchFixtures.AVFoundation {
 				Assert.IsTrue (format != null, "format != null");
 				Assert.IsTrue (null != format, "null != format");
 			}
-			Assert.IsFalse (nullFormat != null, "nullFormat != null");
-			Assert.IsFalse (null != nullFormat, "null != nullFormat");
+			using (AVAudioFormat nullFormat = null)
+			{
+				Assert.IsFalse (nullFormat != null, "nullFormat != null");
+				Assert.IsFalse (null != nullFormat, "null != nullFormat");
+			}
+
 		}
 	}
 }
