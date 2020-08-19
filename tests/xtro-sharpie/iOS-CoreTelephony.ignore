@@ -1,3 +1,4 @@
+# the following have been removed from xcode 12:
 !unknown-field! CTRadioAccessTechnologyCDMA1x bound
 !unknown-field! CTRadioAccessTechnologyCDMAEVDORev0 bound
 !unknown-field! CTRadioAccessTechnologyCDMAEVDORevA bound
