@@ -19,7 +19,7 @@
     <PackageReference Include="System.Json" Version="4.7.1" />
     <ProjectReference Include="$(RootTestsDirectory)\..\external\Touch.Unit\Touch.Client\dotnet\iOS\Touch.Client-iOS.dotnet.csproj" />
     <ProjectReference Include="$(RootTestsDirectory)\bindings-test\dotnet\iOS\bindings-test.csproj" />
-    <ProjectReference Include="$(RootTestsDirectory)\bindings-test2\dotnet\iOS\bindings-test2.csproj" />
+    <!-- <ProjectReference Include="$(RootTestsDirectory)\bindings-test2\dotnet\iOS\bindings-test2.csproj" /> -->
   </ItemGroup>
 
   <ItemGroup>
