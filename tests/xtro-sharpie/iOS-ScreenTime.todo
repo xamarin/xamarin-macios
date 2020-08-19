@@ -1,0 +1,2 @@
+!missing-selector! STWebHistory::initWithBundleIdentifier:error: not bound
+!missing-selector! STWebpageController::setBundleIdentifier:error: not bound

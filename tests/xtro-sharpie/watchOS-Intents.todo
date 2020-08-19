@@ -1,0 +1,15 @@
+!missing-field! INCarChargingConnectorTypeCCS1 not bound
+!missing-field! INCarChargingConnectorTypeCCS2 not bound
+!missing-field! INCarChargingConnectorTypeCHAdeMO not bound
+!missing-field! INCarChargingConnectorTypeGBTAC not bound
+!missing-field! INCarChargingConnectorTypeGBTDC not bound
+!missing-field! INCarChargingConnectorTypeJ1772 not bound
+!missing-field! INCarChargingConnectorTypeMennekes not bound
+!missing-field! INCarChargingConnectorTypeNone not bound
+!missing-field! INCarChargingConnectorTypeTesla not bound
+!missing-selector! INCarHeadUnit::bluetoothIdentifier not bound
+!missing-selector! INCarHeadUnit::iAP2Identifier not bound
+!missing-selector! INCarHeadUnit::initWithBluetoothIdentifier:iAP2Identifier: not bound
+!missing-type! INCarHeadUnit not bound
+!unknown-native-enum! INChargingConnectorTypeOptions bound
+!unknown-type! INHeadUnit bound

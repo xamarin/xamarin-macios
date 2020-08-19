@@ -8033,24 +8033,24 @@ namespace Intents {
 		NSNumber MinutesToFull { get; set; }
 
 		[Watch (7, 0), iOS (14, 0)]
-		[NullAllowed, Export ("maxDistance", ArgumentSemantic.Copy)]
-		NSMeasurement<NSUnitLength> MaxDistance { get; set; }
+		[NullAllowed, Export ("maximumDistance", ArgumentSemantic.Copy)]
+		NSMeasurement<NSUnitLength> MaximumDistance { get; set; }
 
 		[Watch (7, 0), iOS (14, 0)]
 		[NullAllowed, Export ("distanceRemainingElectric", ArgumentSemantic.Copy)]
 		NSMeasurement<NSUnitLength> DistanceRemainingElectric { get; set; }
 
 		[Watch (7, 0), iOS (14, 0)]
-		[NullAllowed, Export ("maxDistanceElectric", ArgumentSemantic.Copy)]
-		NSMeasurement<NSUnitLength> MaxDistanceElectric { get; set; }
+		[NullAllowed, Export ("maximumDistanceElectric", ArgumentSemantic.Copy)]
+		NSMeasurement<NSUnitLength> MaximumDistanceElectric { get; set; }
 
 		[Watch (7, 0), iOS (14, 0)]
-		[NullAllowed, Export ("distanceRemainingGasoline", ArgumentSemantic.Copy)]
-		NSMeasurement<NSUnitLength> DistanceRemainingGasoline { get; set; }
+		[NullAllowed, Export ("distanceRemainingFuel", ArgumentSemantic.Copy)]
+		NSMeasurement<NSUnitLength> DistanceRemainingFuel { get; set; }
 
 		[Watch (7, 0), iOS (14, 0)]
-		[NullAllowed, Export ("maxDistanceGasoline", ArgumentSemantic.Copy)]
-		NSMeasurement<NSUnitLength> MaxDistanceGasoline { get; set; }
+		[NullAllowed, Export ("maximumDistanceFuel", ArgumentSemantic.Copy)]
+		NSMeasurement<NSUnitLength> MaximumDistanceFuel { get; set; }
 
 		[Watch (7, 0), iOS (14, 0)]
 		[NullAllowed, Export ("consumptionFormulaArguments", ArgumentSemantic.Copy)]
@@ -8065,20 +8065,20 @@ namespace Intents {
 		NSDateComponents DateOfLastStateUpdate { get; set; }
 
 		[Watch (7, 0), iOS (14, 0)]
-		[Export ("activeConnector", ArgumentSemantic.Assign)]
-		INChargingConnectorTypeOptions ActiveConnector { get; set; }
+		[NullAllowed, Export ("activeConnector")]
+		NSString ActiveConnector { get; set; } // TODO: turn into smart enum INCarChargingConnectorType when doing Beta 5
 
 		[Watch (7, 0), iOS (14, 0)]
-		[NullAllowed, Export ("maxBatteryCapacity", ArgumentSemantic.Copy)]
-		NSMeasurement<NSUnitEnergy> MaxBatteryCapacity { get; set; }
+		[NullAllowed, Export ("maximumBatteryCapacity", ArgumentSemantic.Copy)]
+		NSMeasurement<NSUnitEnergy> MaximumBatteryCapacity { get; set; }
 
 		[Watch (7, 0), iOS (14, 0)]
 		[NullAllowed, Export ("currentBatteryCapacity", ArgumentSemantic.Copy)]
 		NSMeasurement<NSUnitEnergy> CurrentBatteryCapacity { get; set; }
 
 		[Watch (7, 0), iOS (14, 0)]
-		[NullAllowed, Export ("minBatteryCapacity", ArgumentSemantic.Copy)]
-		NSMeasurement<NSUnitEnergy> MinBatteryCapacity { get; set; }
+		[NullAllowed, Export ("minimumBatteryCapacity", ArgumentSemantic.Copy)]
+		NSMeasurement<NSUnitEnergy> MinimumBatteryCapacity { get; set; }
 	}
 
 	[iOS (10, 3)]

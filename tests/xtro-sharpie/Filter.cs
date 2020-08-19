@@ -47,6 +47,7 @@ namespace Extrospection {
 			case "IOBluetoothUI":
 			case "IOKit":
 			case "JavaFrameEmbedding":
+			case "JavaNativeFoundation":
 			case "JavaRuntimeSupport":
 			case "JavaVM":
 			case "Kerberos":

@@ -7,12 +7,6 @@
 # There's an identical function that takes a C callback instead of a block, and which we've bound, which makes this function redundant since the managed API would be identical.
 !missing-pinvoke! CGPDFDictionaryApplyBlock is not bound
 
-## existed, then deprecated and removed in later SDK
-!unknown-field! kCGColorSpaceDisplayP3_PQ_EOTF bound
-!unknown-field! kCGColorSpaceITUR_2020_HLG bound
-!unknown-field! kCGColorSpaceITUR_2020_PQ bound
-!unknown-field! kCGColorSpaceITUR_2020_PQ_EOTF bound
-
 ## unsorted
 
 !missing-enum! CGBitmapInfo not bound

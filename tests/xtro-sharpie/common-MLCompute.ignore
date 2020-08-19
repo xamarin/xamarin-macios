@@ -1,7 +1,5 @@
 ## already deprecated (and replaced)
 !missing-selector! +MLCSGDOptimizer::optimizerWithDescriptor:momentumScale:usesNestrovMomentum: not bound
-!missing-selector! +MLCTrainingGraph::trainingGraphWithGraphObjects:lossLayer:optimizer: not bound
-!missing-selector! MLCSGDOptimizer::usesNestrovMomentum not bound
 !missing-selector! MLCTensor::optimizerData: not bound
 
 ## sharpie skip empty types - but they can be used

@@ -666,6 +666,11 @@ namespace CoreMotion {
 	[NoMac]
 	[BaseType (typeof(NSObject))]
 	interface CMHeadphoneMotionManager {
+
+		[Static]
+		[Export ("authorizationStatus")]
+		CMAuthorizationStatus AuthorizationStatus { get; }
+
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
 		ICMHeadphoneMotionManagerDelegate Delegate { get; set; }
