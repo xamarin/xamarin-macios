@@ -196,7 +196,7 @@ namespace ARKit {
 		PersonSegmentationWithDepth = (1 << 1) | (1 << 0),
 		BodyDetection = 1 << 2,
 		[iOS (14,0)]
-		SceneDepth = (1 << 3),
+		SceneDepth = (1 << 4),
 	}
 
 	[iOS (13,0)]
@@ -475,6 +475,11 @@ namespace ARKit {
 		[iOS (14, 0)]
 		[NullAllowed, Export ("sceneDepth", ArgumentSemantic.Strong)]
 		ARDepthData SceneDepth { get; }
+
+		[iOS (14, 0)]
+		[NullAllowed]
+		[Export ("smoothedSceneDepth", ArgumentSemantic.Strong)]
+		ARDepthData SmoothedSceneDepth { get; }
 	}
 
 	[iOS (11,0)]
@@ -1986,13 +1991,21 @@ namespace ARKit {
 		[Protected, Export ("jointLocalTransforms")]
 		IntPtr RawJointLocalTransforms { get; }
 
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("modelTransformForJointName:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		Matrix4 GetModelTransform ([BindAs (typeof (ARSkeletonJointName))] NSString jointName);
+		Matrix4 GetModelTransform (NSString jointName);
 
+		[Wrap ("GetModelTransform (jointName.GetConstant()!)")]
+		Matrix4 GetModelTransform (ARSkeletonJointName jointName);
+
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("localTransformForJointName:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		Matrix4 GetLocalTransform ([BindAs (typeof (ARSkeletonJointName))] NSString jointName);
+		Matrix4 GetLocalTransform (NSString jointName);
+
+		[Wrap ("GetLocalTransform (jointName.GetConstant()!)")]
+		Matrix4 GetLocalTransform (ARSkeletonJointName jointName);
 	}
 
 	[iOS (13,0)]
@@ -2004,9 +2017,13 @@ namespace ARKit {
 		[Protected, Export ("jointLandmarks")]
 		IntPtr RawJointLandmarks { get; }
 
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("landmarkForJointNamed:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		Vector2 GetLandmarkPoint ([BindAs (typeof (ARSkeletonJointName))] NSString jointName);
+		Vector2 GetLandmarkPoint (NSString jointName);
+
+		[Wrap ("GetLandmarkPoint (jointName.GetConstant()!)")]
+		Vector2 GetLandmarkPoint (ARSkeletonJointName jointName);
 	}
 
 	[iOS (13,0)]
@@ -2034,8 +2051,12 @@ namespace ARKit {
 		[NullAllowed, Export ("neutralBodySkeleton3D")]
 		ARSkeleton3D NeutralBodySkeleton3D { get; }
 
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("indexForJointName:")]
-		nuint GetJointIndex ([BindAs (typeof (ARSkeletonJointName))] NSString jointName);
+		nuint GetJointIndex (NSString? jointName);
+
+		[Wrap ("GetJointIndex (jointName.GetConstant()!)")]
+		nuint GetJointIndex (ARSkeletonJointName jointName);
 	}
 
 	[iOS (13,0)]
