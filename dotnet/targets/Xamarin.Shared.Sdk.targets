@@ -133,6 +133,7 @@
 				DeploymentTarget=$(_MinimumOSVersion)
 				ItemsDirectory=$(_LinkerItemsDirectory)
 				IsSimulatorBuild=$(_SdkIsSimulator)
+				LinkMode=$(_LinkMode)
 				Platform=$(_PlatformName)
 				PlatformAssembly=$(_PlatformAssemblyName).dll
 				SdkVersion=$(_SdkVersion)

@@ -22,6 +22,7 @@ namespace Xamarin.Linker {
 		public Version DeploymentTarget { get; private set; }
 		public string ItemsDirectory { get; private set; }
 		public bool IsSimulatorBuild { get; private set; }
+		public LinkMode LinkMode => Application.LinkMode;
 		public ApplePlatform Platform { get; private set; }
 		public string PlatformAssembly { get; private set; }
 		public Version SdkVersion { get; private set; }
@@ -93,6 +94,11 @@ namespace Xamarin.Linker {
 					break;
 				case "IsSimulatorBuild":
 					IsSimulatorBuild = string.Equals ("true", value, StringComparison.OrdinalIgnoreCase);
+					break;
+				case "LinkMode":
+					if (!Enum.TryParse<LinkMode> (value, true, out var lm))
+						throw new InvalidOperationException ($"Unable to parse the {key} value: {value} in {linker_file}");
+					Application.LinkMode = lm;
 					break;
 				case "Platform":
 					switch (value) {
@@ -178,6 +184,7 @@ namespace Xamarin.Linker {
 				Console.WriteLine ($"    DeploymentTarget: {DeploymentTarget}");
 				Console.WriteLine ($"    ItemsDirectory: {ItemsDirectory}");
 				Console.WriteLine ($"    IsSimulatorBuild: {IsSimulatorBuild}");
+				Console.WriteLine ($"    LinkMode: {LinkMode}");
 				Console.WriteLine ($"    Platform: {Platform}");
 				Console.WriteLine ($"    PlatformAssembly: {PlatformAssembly}.dll");
 				Console.WriteLine ($"    SdkVersion: {SdkVersion}");
