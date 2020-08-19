@@ -2590,12 +2590,12 @@ namespace CoreData
 		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 		[Static]
 		[Export ("batchInsertRequestWithEntityName:dictionaryHandler:")]
-		NSBatchInsertRequest BatchInsertRequest (string entityName, NSBatchInsertRequestDictionaryHandler handler);
+		NSBatchInsertRequest CreateBatchInsertRequest (string entityName, NSBatchInsertRequestDictionaryHandler handler);
 
 		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 		[Static]
 		[Export ("batchInsertRequestWithEntityName:managedObjectHandler:")]
-		NSBatchInsertRequest BatchInsertRequest (string entityName, NSBatchInsertRequestManagedObjectHandler handler);
+		NSBatchInsertRequest CreateBatchInsertRequest (string entityName, NSBatchInsertRequestManagedObjectHandler handler);
 	}
 
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
@@ -2713,11 +2713,11 @@ namespace CoreData
 
 		[Static]
 		[Export ("fetchEventsAfterDate:")]
-		NSPersistentCloudKitContainerEventRequest FetchEvents (NSDate date);
+		NSPersistentCloudKitContainerEventRequest FetchEventsAfter (NSDate date);
 
 		[Static]
 		[Export ("fetchEventsAfterEvent:")]
-		NSPersistentCloudKitContainerEventRequest FetchEvents ([NullAllowed] NSPersistentCloudKitContainerEvent @event);
+		NSPersistentCloudKitContainerEventRequest FetchEventsAfter ([NullAllowed] NSPersistentCloudKitContainerEvent @event);
 
 		[Static]
 		[Export ("fetchEventsMatchingFetchRequest:")]
