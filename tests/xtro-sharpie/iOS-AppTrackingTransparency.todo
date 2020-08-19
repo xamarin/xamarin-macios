@@ -1,6 +1,0 @@
-!missing-enum! ATTrackingManagerAuthorizationStatus not bound
-!missing-field! AppTrackingTransparencyVersionNumber not bound
-!missing-field! AppTrackingTransparencyVersionString not bound
-!missing-selector! +ATTrackingManager::requestTrackingAuthorizationWithCompletionHandler: not bound
-!missing-selector! +ATTrackingManager::trackingAuthorizationStatus not bound
-!missing-type! ATTrackingManager not bound

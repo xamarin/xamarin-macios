@@ -1840,6 +1840,7 @@ MAC_FRAMEWORKS =            \
 	Accounts                \
 	AdSupport               \
 	AppKit XKit             \
+	AppTrackingTransparency \
 	AudioToolbox            \
 	AudioUnit               \
 	AutomaticAssessmentConfiguration \
@@ -1933,6 +1934,7 @@ IOS_FRAMEWORKS =         \
 	AddressBook \
 	AddressBookUI \
 	AppClip \
+	AppTrackingTransparency \
 	ARKit \
 	AssetsLibrary \
 	AudioToolbox \
@@ -2058,6 +2060,7 @@ TVOS_FRAMEWORKS =           \
 	$(COMMON_FRAMEWORKS)    \
 	AVKit                   \
 	AdSupport               \
+	AppTrackingTransparency \
 	AudioToolbox            \
 	AudioUnit               \
 	BackgroundTasks         \

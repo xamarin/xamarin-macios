@@ -163,6 +163,7 @@ SIMLAUNCHER_FRAMEWORKS =  \
 						\
 	-weak_framework Accessibility	\
 	-weak_framework AppClip	\
+	-weak_framework AppTrackingTransparency	\
 	-weak_framework ScreenTime \
 	-weak_framework SensorKit \
 	-weak_framework UniformTypeIdentifiers \

@@ -147,6 +147,7 @@ namespace ObjCRuntime {
 		// iOS 14.0
 		public const string AccessibilityLibrary = "/System/Library/Frameworks/Accessibility.framework/Accessibility";
 		public const string AppClipLibrary = "/System/Library/Frameworks/AppClip.framework/AppClip";
+		public const string AppTrackingTransparencyLibrary = "/System/Library/Frameworks/AppTrackingTransparency.framework/AppTrackingTransparency";
 		public const string MediaSetupLibrary = "/System/Library/Frameworks/MediaSetup.framework/MediaSetup";
 		public const string MLComputeLibrary = "/System/Library/Frameworks/MLCompute.framework/MLCompute";
 		public const string NearbyInteractionLibrary = "/System/Library/Frameworks/NearbyInteraction.framework/NearbyInteraction";

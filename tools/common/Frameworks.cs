@@ -195,6 +195,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "AutomaticAssessmentConfiguration", "AutomaticAssessmentConfiguration", 10,15,4 },
 
 					{ "Accessibility", "Accessibility", 11,0 },
+					{ "AppTrackingTransparency", "AppTrackingTransparency", 11,0 },
 					{ "CallKit", "CallKit", 11,0 },
 					{ "ClassKit", "ClassKit", 11,0 },
 					{ "MLCompute", "MLCompute", 11,0 },
@@ -341,6 +342,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 				{ "Accessibility", "Accessibility", 14,0 },
 				{ "AppClip", "AppClip", 14,0 },
+				{ "AppTrackingTransparency", "AppTrackingTransparency", 14,0 },
 				{ "MediaSetup", "MediaSetup", new Version (14, 0), NotAvailableInSimulator /* no headers in beta 3 */ },
 				{ "MLCompute", "MLCompute", new Version (14,0), NotAvailableInSimulator },
 				{ "NearbyInteraction", "NearbyInteraction", 14,0 },
@@ -495,6 +497,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "BackgroundTasks", "BackgroundTasks", 13, 0 },
 
 					{ "Accessibility", "Accessibility", 14,0 },
+					{ "AppTrackingTransparency", "AppTrackingTransparency", 14,0 },
 					{ "CoreHaptics", "CoreHaptics", 14, 0 },
 					{ "LinkPresentation", "LinkPresentation", 14,0 },
 					{ "MLCompute", "MLCompute", new Version (14,0), NotAvailableInSimulator },
