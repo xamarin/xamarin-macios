@@ -291,7 +291,7 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			using (var url = NSUrl.FromString ("http://www.xamarin.com")) {
 				Assert.IsFalse (url == null, "url == null");
-				Assert.IsFalse (null == true, "null == url");
+				Assert.IsFalse (null == url, "null == url");
 			}
 		}
 
