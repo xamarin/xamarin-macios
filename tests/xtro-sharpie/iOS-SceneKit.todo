@@ -1,1 +1,0 @@
-!incorrect-protocol-member! SCNSceneRenderer::currentRenderPassDescriptor is REQUIRED and should be abstract
