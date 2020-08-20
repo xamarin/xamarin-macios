@@ -14,12 +14,16 @@ namespace AVFoundation {
 	public partial class AVAudioFormat {
 		public static bool operator == (AVAudioFormat a, AVAudioFormat b)
 		{
+			if ((object) a == (object) b)
+				return true;
+			if ((object) a == null ^ (object) b == null)
+				return false;
 			return a.Equals (b);
 		}
 		
 		public static bool operator != (AVAudioFormat a, AVAudioFormat b)
 		{
-			return !a.Equals (b);
+			return !(a == b);
 		}
 	}
 }
