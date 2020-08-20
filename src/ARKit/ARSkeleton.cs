@@ -14,7 +14,8 @@ namespace ARKit {
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[iOS (14,0)]
-		public static NSString CreateJointName (NSString recognizedPointKey) {
+		public static NSString CreateJointName (NSString recognizedPointKey)
+		{
 			if (recognizedPointKey == null)
 				throw new ArgumentNullException (nameof (recognizedPointKey));
 			var newNamePtr = ARSkeletonJointNameForRecognizedPointKey (recognizedPointKey.Handle);
