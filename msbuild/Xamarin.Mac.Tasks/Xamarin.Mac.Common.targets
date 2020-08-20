@@ -326,6 +326,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 
 	<PropertyGroup>
 		<CompileToNativeDependsOn>
+			_ComputeLinkMode;
 			_ComputeTargetFrameworkMoniker;
 			_DetectAppManifest;
 			_DetectSdkLocations;
