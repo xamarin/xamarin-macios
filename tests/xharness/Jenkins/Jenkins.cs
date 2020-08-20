@@ -363,6 +363,9 @@ namespace Xharness.Jenkins {
 			case "iPhoneSimulator":
 				switch (test.TestName) {
 				case "monotouch-test":
+					// Xcode 12 beta 3 broke iOS 32 bits simulators
+					if (test.Platform == TestPlatform.iOS_Unified32)
+						break;
 					// The default is to run monotouch-test with the dynamic registrar (in the simulator), so that's already covered
 					yield return new TestData { Variation = "Debug (LinkSdk)", Debug = true, Profiling = false, LinkMode = "LinkSdk" };
 					yield return new TestData { Variation = "Debug (static registrar)", MTouchExtraArgs = "--registrar:static", Debug = true, Profiling = false, Undefines = "DYNAMIC_REGISTRAR" };
