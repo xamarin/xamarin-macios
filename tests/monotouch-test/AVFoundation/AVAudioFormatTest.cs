@@ -13,6 +13,12 @@ namespace MonoTouchFixtures.AVFoundation {
 	[Preserve (AllMembers = true)]
 	public class AVAudioFormatTest {
 
+		[SetUp]
+		public void Setup ()
+		{
+			TestRuntime.AssertXcodeVersion (6, 0);
+		}
+
 		[Test]
 		public void TestEqualOperatorSameInstace ()
 		{
