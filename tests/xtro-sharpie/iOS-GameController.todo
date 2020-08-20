@@ -1,0 +1,4 @@
+!missing-enum! GCSystemGestureState not bound
+!missing-selector! GCControllerElement::isBoundToSystemGesture not bound
+!missing-selector! GCControllerElement::preferredSystemGestureState not bound
+!missing-selector! GCControllerElement::setPreferredSystemGestureState: not bound
