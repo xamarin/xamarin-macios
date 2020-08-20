@@ -54,6 +54,9 @@ namespace Xamarin.Linker {
 			if (!File.Exists (linker_file))
 				throw new FileNotFoundException ($"The custom linker file {linker_file} does not exist.");
 
+			Application = new Application (this);
+			Target = new Target (Application);
+
 			var lines = File.ReadAllLines (linker_file);
 			var significantLines = new List<string> (); // This is the input the cache uses to verify if the cache is still valid
 			for (var i = 0; i < lines.Length; i++) {
@@ -145,9 +148,7 @@ namespace Xamarin.Linker {
 
 			ErrorHelper.Platform = Platform;
 
-			Application = new Application (this, significantLines.ToArray ());
-			Target = new Target (Application);
-
+			Application.CreateCache (significantLines.ToArray ());
 			Application.Cache.Location = CacheDirectory;
 			Application.DeploymentTarget = DeploymentTarget;
 			Application.SdkVersion = SdkVersion;

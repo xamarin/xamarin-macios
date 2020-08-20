@@ -224,7 +224,16 @@ namespace Xamarin.Bundler {
 
 		public bool IsDualBuild { get { return Is32Build && Is64Build; } } // if we're building both a 32 and a 64 bit version.
 
-		public Application (string[] arguments)
+		public Application ()
+		{
+		}
+
+		public Application (string [] arguments)
+		{
+			CreateCache (arguments);
+		}
+
+		public void CreateCache (string [] arguments)
 		{
 			Cache = new Cache (arguments);
 		}

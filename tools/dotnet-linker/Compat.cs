@@ -13,8 +13,7 @@ namespace Xamarin.Bundler {
 	public partial class Application {
 		public LinkerConfiguration Configuration { get; private set; }
 
-		public Application (LinkerConfiguration configuration, string[] arguments)
-			: this (arguments)
+		public Application (LinkerConfiguration configuration)
 		{
 			this.Configuration = configuration;
 		}
