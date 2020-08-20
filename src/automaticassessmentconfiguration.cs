@@ -39,55 +39,46 @@ namespace AutomaticAssessmentConfiguration {
 	[BaseType (typeof (NSObject))]
 	interface AEAssessmentConfiguration : NSCopying {
 
-		[Unavailable (PlatformName.MacCatalyst)]
 		[NoMac, iOS (14, 0)]
 		[Advice ("This API is not available when using UIKit on macOS.")]
 		[Export ("autocorrectMode")]
 		AEAutocorrectMode AutocorrectMode { get; set; }
 
-		[Unavailable (PlatformName.MacCatalyst)]
 		[NoMac, iOS (14, 0)]
 		[Advice ("This API is not available when using UIKit on macOS.")]
 		[Export ("allowsSpellCheck")]
 		bool AllowsSpellCheck { get; set; }
 
-		[Unavailable (PlatformName.MacCatalyst)]
 		[NoMac, iOS (14, 0)]
 		[Advice ("This API is not available when using UIKit on macOS.")]
 		[Export ("allowsPredictiveKeyboard")]
 		bool AllowsPredictiveKeyboard { get; set; }
 
-		[Unavailable (PlatformName.MacCatalyst)]
 		[NoMac, iOS (14, 0)]
 		[Advice ("This API is not available when using UIKit on macOS.")]
 		[Export ("allowsKeyboardShortcuts")]
 		bool AllowsKeyboardShortcuts { get; set; }
 
-		[Unavailable (PlatformName.MacCatalyst)]
 		[NoMac, iOS (14, 0)]
 		[Advice ("This API is not available when using UIKit on macOS.")]
 		[Export ("allowsActivityContinuation")]
 		bool AllowsActivityContinuation { get; set; }
 
-		[Unavailable (PlatformName.MacCatalyst)]
 		[NoMac, iOS (14, 0)]
 		[Advice ("This API is not available when using UIKit on macOS.")]
 		[Export ("allowsDictation")]
 		bool AllowsDictation { get; set; }
 
-		[Unavailable (PlatformName.MacCatalyst)]
 		[NoMac, iOS (14, 0)]
 		[Advice ("This API is not available when using UIKit on macOS.")]
 		[Export ("allowsAccessibilitySpeech")]
 		bool AllowsAccessibilitySpeech { get; set; }
 
-		[Unavailable (PlatformName.MacCatalyst)]
 		[NoMac, iOS (14, 0)]
 		[Advice ("This API is not available when using UIKit on macOS.")]
 		[Export ("allowsPasswordAutoFill")]
 		bool AllowsPasswordAutoFill { get; set; }
 
-		[Unavailable (PlatformName.MacCatalyst)]
 		[NoMac, iOS (14, 0)]
 		[Advice ("This API is not available when using UIKit on macOS.")]
 		[Export ("allowsContinuousPathKeyboard")]
