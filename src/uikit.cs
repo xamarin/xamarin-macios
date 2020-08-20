@@ -16186,10 +16186,6 @@ namespace UIKit {
 		[Field ("UISplitViewControllerAutomaticDimension")]
 		nfloat AutomaticDimension { get; }
 
-		[NoWatch, TV (14,0), iOS (14,0)]
-		[Field ("UISplitViewControllerAutomaticSupplementaryFillDimension")]
-		nfloat AutomaticSupplementaryFillDimension { get; }
-
 		[iOS (11,0), TV (11,0)]
 		[Export ("primaryEdge", ArgumentSemantic.Assign)]
 		UISplitViewControllerPrimaryEdge PrimaryEdge { get; set; }
@@ -22113,6 +22109,9 @@ namespace UIKit {
 
 		[Export ("swiped")]
 		bool Swiped { [Bind ("isSwiped")] get; set; }
+
+		[Export ("reordering")]
+		bool Reordering { [Bind ("isReordering")] get; set; }
 
 		[NoWatch, NoTV]
 		[Export ("cellDragState", ArgumentSemantic.Assign)]
