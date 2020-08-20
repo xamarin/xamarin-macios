@@ -23,6 +23,7 @@ namespace Xamarin.Linker {
 		public string ItemsDirectory { get; private set; }
 		public bool IsSimulatorBuild { get; private set; }
 		public LinkMode LinkMode => Application.LinkMode;
+		public string PartialStaticRegistrarLibrary { get; set; }
 		public ApplePlatform Platform { get; private set; }
 		public string PlatformAssembly { get; private set; }
 		public Version SdkVersion { get; private set; }
@@ -99,6 +100,9 @@ namespace Xamarin.Linker {
 					if (!Enum.TryParse<LinkMode> (value, true, out var lm))
 						throw new InvalidOperationException ($"Unable to parse the {key} value: {value} in {linker_file}");
 					Application.LinkMode = lm;
+					break;
+				case "PartialStaticRegistrarLibrary":
+					PartialStaticRegistrarLibrary = value;
 					break;
 				case "Platform":
 					switch (value) {
@@ -185,6 +189,7 @@ namespace Xamarin.Linker {
 				Console.WriteLine ($"    ItemsDirectory: {ItemsDirectory}");
 				Console.WriteLine ($"    IsSimulatorBuild: {IsSimulatorBuild}");
 				Console.WriteLine ($"    LinkMode: {LinkMode}");
+				Console.WriteLine ($"    PartialStaticRegistrarLibrary: {PartialStaticRegistrarLibrary}");
 				Console.WriteLine ($"    Platform: {Platform}");
 				Console.WriteLine ($"    PlatformAssembly: {PlatformAssembly}.dll");
 				Console.WriteLine ($"    SdkVersion: {SdkVersion}");
