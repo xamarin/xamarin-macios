@@ -1620,9 +1620,8 @@ namespace Xamarin.Bundler {
 			
 			Target.PrintAssemblyReferences (assembly);
 
-			var asm = new Assembly (BuildTarget, assembly);
+			var asm = BuildTarget.AddAssembly (assembly);
 			asm.ComputeSatellites ();
-			BuildTarget.Assemblies.Add (asm);
 
 			resolved_assemblies.Add (fqname);
 

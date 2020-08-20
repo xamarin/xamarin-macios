@@ -8,6 +8,8 @@ namespace Xamarin.MacDev.Tasks {
 	public abstract class LinkNativeCodeTaskBase : XamarinTask {
 
 #region Inputs
+		public ITaskItem[] LinkerFlags { get; set; }
+
 		public ITaskItem[] LinkWithLibraries { get; set; }
 
 		[Required]
@@ -49,6 +51,9 @@ namespace Xamarin.MacDev.Tasks {
 					var libExtension = Path.GetExtension (lib).ToLowerInvariant ();
 					switch (libExtension) {
 					case ".a":
+						var forceLoad = string.Equals (libSpec.GetMetadata ("ForceLoad"), "true", StringComparison.OrdinalIgnoreCase);
+						if (forceLoad)
+							arguments.Add ("-force_load");
 						arguments.Add (lib);
 						break;
 					case ".dylib":
@@ -96,6 +101,11 @@ namespace Xamarin.MacDev.Tasks {
 
 			arguments.Add ("-o");
 			arguments.Add (OutputFile);
+
+			if (LinkerFlags != null) {
+				foreach (var flag in LinkerFlags)
+					arguments.Add (flag.ItemSpec);
+			}
 
 			ExecuteAsync ("xcrun", arguments, sdkDevPath: SdkDevPath).Wait ();
 
