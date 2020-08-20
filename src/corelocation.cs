@@ -194,7 +194,6 @@ namespace CoreLocation {
 		[Export ("stopUpdatingLocation")]
 		void StopUpdatingLocation ();
 
-		[NoMac]
 		[Export ("locationServicesEnabled"), Static]
 		bool LocationServicesEnabled { get; }
 
@@ -226,7 +225,7 @@ namespace CoreLocation {
 		[NullAllowed, Export ("purpose")]
 		string Purpose { get; set; }
 
-		[NoTV][NoMac]
+		[NoTV][Mac (11,0)]
 		[Watch (6,0)]
 		[Export ("headingAvailable"), Static]
 		bool HeadingAvailable { get; }
@@ -306,13 +305,13 @@ namespace CoreLocation {
 		[Export ("pausesLocationUpdatesAutomatically", ArgumentSemantic.Assign)]
 		bool PausesLocationUpdatesAutomatically { get; set; }
 
-		[NoWatch][NoTV][Mac (11,0)]
+		[NoWatch][NoTV][NoMac]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Not used anymore. Call will not have any effect.")]
 		[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
 		[Export ("allowDeferredLocationUpdatesUntilTraveled:timeout:")]
 		void AllowDeferredLocationUpdatesUntil (double distance, double timeout);
 
-		[NoWatch][NoTV][Mac (11,0)]
+		[NoWatch][NoTV][NoMac]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Not used anymore. Call will not have any effect.")]
 		[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
 		[Export ("disallowDeferredLocationUpdates")]
