@@ -5,7 +5,7 @@
 //	Alex Soto <alexsoto@microsoft.com>
 //	TJ Lambert <TJ.Lambert@microsoft.com>
 //
-// Copyright (c) Microsoft Corporation.
+// Copyright (2020) Microsoft Corporation.
 //
 
 using System;
