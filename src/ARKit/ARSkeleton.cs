@@ -18,8 +18,7 @@ namespace ARKit {
 		{
 			if (recognizedPointKey == null)
 				throw new ArgumentNullException (nameof (recognizedPointKey));
-			var newNamePtr = ARSkeletonJointNameForRecognizedPointKey (recognizedPointKey.Handle);
-			return (newNamePtr == IntPtr.Zero) ? null : new NSString (newNamePtr);
+			return (NSString) Runtime.GetNSObject (ARSkeletonJointNameForRecognizedPointKey (recognizedPointKey.Handle));
 		}
 	}
 }
