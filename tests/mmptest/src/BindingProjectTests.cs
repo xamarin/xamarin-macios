@@ -155,6 +155,8 @@ namespace Xamarin.MMP.Tests
 
 				Assert.False (logs.Item1.Contains ("CS1685"), "Binding should not contains CS1685 multiple definition warning:\n" + logs.Item1);
 
+				Assert.False (logs.Item1.Contains ("MSB9004"), "Binding should not contains MSB9004 warning:\n" + logs.Item1);
+
 				string bindingName = RemoveCSProj (projects.Item1.ProjectName);
 				string appName = RemoveCSProj (projects.Item2.ProjectName);
 				string libPath = Path.Combine (tmpDir, $"bin/Debug/{appName}.app/Contents/MonoBundle/{bindingName}.dll");
