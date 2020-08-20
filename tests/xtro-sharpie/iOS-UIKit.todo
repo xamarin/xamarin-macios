@@ -1,7 +1,5 @@
 !missing-selector! NSDiffableDataSourceSectionTransaction::difference not bound
 !missing-selector! NSDiffableDataSourceTransaction::difference not bound
-!missing-selector! UICellConfigurationState::isReordering not bound
-!missing-selector! UICellConfigurationState::setReordering: not bound
 !missing-selector! UICollectionViewDiffableDataSourceReorderingHandlers::canReorderItemHandler not bound
 !missing-selector! UICollectionViewDiffableDataSourceReorderingHandlers::didReorderHandler not bound
 !missing-selector! UICollectionViewDiffableDataSourceReorderingHandlers::setCanReorderItemHandler: not bound
@@ -18,4 +16,3 @@
 !missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::snapshotForExpandingParentItemHandler not bound
 !missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::willCollapseItemHandler not bound
 !missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::willExpandItemHandler not bound
-!unknown-field! UISplitViewControllerAutomaticSupplementaryFillDimension bound
