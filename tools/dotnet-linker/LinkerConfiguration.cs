@@ -25,7 +25,7 @@ namespace Xamarin.Linker {
 		public ApplePlatform Platform { get; private set; }
 		public string PlatformAssembly { get; private set; }
 		public Version SdkVersion { get; private set; }
-		public int Verbosity { get; private set; }
+		public int Verbosity => Driver.Verbosity;
 
 		static ConditionalWeakTable<LinkContext, LinkerConfiguration> configurations = new ConditionalWeakTable<LinkContext, LinkerConfiguration> ();
 
@@ -136,7 +136,7 @@ namespace Xamarin.Linker {
 				case "Verbosity":
 					if (!int.TryParse (value, out var verbosity))
 						throw new InvalidOperationException ($"Invalid Verbosity '{value}' in {linker_file}");
-					Verbosity = verbosity;
+					Driver.Verbosity += verbosity;
 					break;
 				default:
 					throw new InvalidOperationException ($"Unknown key '{key}' in {linker_file}");
@@ -165,9 +165,6 @@ namespace Xamarin.Linker {
 
 			if (Driver.TargetFramework.Platform != Platform)
 				throw ErrorHelper.CreateError (99, "Inconsistent platforms. TargetFramework={0}, Platform={1}", Driver.TargetFramework.Platform, Platform);
-
-			Driver.Verbosity = Verbosity;
-			ErrorHelper.Verbosity = Verbosity;
 		}
 
 		public void Write ()
