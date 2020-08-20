@@ -912,7 +912,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 			}
 		}
 
-		public static void ResolveAllPaths (this XmlDocument csproj, string project_path)
+		public static void ResolveAllPaths (this XmlDocument csproj, string project_path, string rootDirectory = null)
 		{
 			var dir = System.IO.Path.GetDirectoryName (project_path);
 			var nodes_with_paths = new string []
@@ -942,7 +942,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 				new string [] { "ObjcBindingCoreSource", "Include" },
 				new string [] { "ObjcBindingNativeLibrary", "Include" },
 				new string [] { "ObjcBindingNativeFramework", "Include" },
-				new string [] { "Import", "Project", "CustomBuildActions.targets" },
+				new string [] { "Import", "Project", "CustomBuildActions.targets", "..\\shared.targets" },
 				new string [] { "FilesToCopy", "Include" },
 				new string [] { "FilesToCopyFoo", "Include" },
 				new string [] { "FilesToCopyFooBar", "Include" },
@@ -967,6 +967,10 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 				if (input.StartsWith ("$(MSBuildBinPath)", StringComparison.Ordinal))
 					return input; // This is already a full path.
 				input = input.Replace ('\\', '/'); // make unix-style
+
+				if (rootDirectory != null)
+					input = input.Replace ("$(RootTestsDirectory)", rootDirectory);
+
 				input = System.IO.Path.GetFullPath (System.IO.Path.Combine (dir, input));
 				input = input.Replace ('/', '\\'); // make windows-style again
 				return input;
@@ -1064,9 +1068,12 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 					foreach (var prop in properties)
 						args.Add ($"/p:{prop.Key}={prop.Value}");
 					args.Add (inspector);
+					var env = new Dictionary<string, string> {
+						{ "MSBUILD_EXE_PATH", null },
+					};
 					proc.StartInfo.Arguments = StringUtils.FormatArguments (args);
 					proc.StartInfo.WorkingDirectory = dir;
-					var rv = await processManager.RunAsync (proc, log, timeout: TimeSpan.FromSeconds (15));
+					var rv = await processManager.RunAsync (proc, log, environment_variables: env, timeout: TimeSpan.FromSeconds (15));
 					if (!rv.Succeeded)
 						throw new Exception ($"Unable to evaluate the property {evaluateProperty}.");
 					return File.ReadAllText (output).Trim ();

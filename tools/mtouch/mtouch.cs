@@ -1154,7 +1154,7 @@ namespace Xamarin.Bundler
 
 		static bool IsBoundAssembly (Assembly s)
 		{
-			if (s.IsFrameworkAssembly)
+			if (s.IsFrameworkAssembly == true)
 				return false;
 
 			AssemblyDefinition ad = s.AssemblyDefinition;

@@ -26,10 +26,16 @@ using MonoTouch;
 using MonoTouch.Tuner;
 using PlatformResolver = MonoTouch.Tuner.MonoTouchResolver;
 using PlatformLinkContext = MonoTouch.Tuner.MonoTouchLinkContext;
-#else
+#elif MMP
 using MonoMac.Tuner;
 using PlatformResolver = Xamarin.Bundler.MonoMacResolver;
 using PlatformLinkContext = MonoMac.Tuner.MonoMacLinkContext;
+#elif NET
+using LinkerOptions = Xamarin.Linker.LinkerConfiguration;
+using PlatformLinkContext = Xamarin.Tuner.DerivedLinkContext;
+using PlatformResolver = Xamarin.Linker.DotNetResolver;
+#else
+#error Invalid defines
 #endif
 
 namespace Xamarin.Bundler {
@@ -78,6 +84,13 @@ namespace Xamarin.Bundler {
 		{
 			this.App = app;
 			this.StaticRegistrar = new StaticRegistrar (this);
+		}
+
+		public Assembly AddAssembly (AssemblyDefinition assembly)
+		{
+			var asm = new Assembly (this, assembly);
+			Assemblies.Add (asm);
+			return asm;
 		}
 
 		// This will find the link context, possibly looking in container targets.

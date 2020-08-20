@@ -5,10 +5,13 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 
+using Mono.Cecil;
 using Mono.Linker;
 
 using Xamarin.Bundler;
 using Xamarin.Utils;
+
+using ObjCRuntime;
 
 namespace Xamarin.Linker {
 	public class LinkerConfiguration {
@@ -27,13 +30,19 @@ namespace Xamarin.Linker {
 		static ConditionalWeakTable<LinkContext, LinkerConfiguration> configurations = new ConditionalWeakTable<LinkContext, LinkerConfiguration> ();
 
 		public Application Application { get; private set; }
+		public Target Target { get; private set; }
+
+		public LinkContext Context { get; private set; }
 
 		public static LinkerConfiguration GetInstance (LinkContext context)
 		{
 			if (!configurations.TryGetValue (context, out var instance)) {
 				if (!context.TryGetCustomData ("LinkerOptionsFile", out var linker_options_file))
 					throw new Exception ($"No custom linker options file was passed to the linker (using --custom-data LinkerOptionsFile=...");
-				instance = new LinkerConfiguration (linker_options_file);
+				instance = new LinkerConfiguration (linker_options_file) {
+					Context = context,
+				};
+
 				configurations.Add (context, instance);
 			}
 
@@ -46,6 +55,7 @@ namespace Xamarin.Linker {
 				throw new FileNotFoundException ($"The custom linker file {linker_file} does not exist.");
 
 			var lines = File.ReadAllLines (linker_file);
+			var significantLines = new List<string> (); // This is the input the cache uses to verify if the cache is still valid
 			for (var i = 0; i < lines.Length; i++) {
 				var line = lines [i].TrimStart ();
 				if (line.Length == 0 || line [0] == '#')
@@ -54,6 +64,8 @@ namespace Xamarin.Linker {
 				var eq = line.IndexOf ('=');
 				if (eq == -1)
 					throw new InvalidOperationException ($"Invalid syntax for line {i + 1} in {linker_file}: No equals sign.");
+
+				significantLines.Add (line);
 
 				var key = line [..eq];
 				var value = line [(eq + 1)..];
@@ -116,6 +128,11 @@ namespace Xamarin.Linker {
 							Abis.Add (a);
 					}
 					break;
+				case "TargetFramework":
+					if (!TargetFramework.TryParse (value, out var tf))
+						throw new InvalidOperationException ($"Invalid TargetFramework '{value}' in {linker_file}");
+					Driver.TargetFramework = TargetFramework.Parse (value);
+					break;
 				case "Verbosity":
 					if (!int.TryParse (value, out var verbosity))
 						throw new InvalidOperationException ($"Invalid Verbosity '{value}' in {linker_file}");
@@ -128,7 +145,29 @@ namespace Xamarin.Linker {
 
 			ErrorHelper.Platform = Platform;
 
-			Application = new Application (this);
+			Application = new Application (this, significantLines.ToArray ());
+			Target = new Target (Application);
+
+			Application.Cache.Location = CacheDirectory;
+			Application.DeploymentTarget = DeploymentTarget;
+			Application.SdkVersion = SdkVersion;
+
+			switch (Platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
+				Application.BuildTarget = IsSimulatorBuild ? BuildTarget.Simulator : BuildTarget.Device;
+				break;
+			case ApplePlatform.MacOSX:
+			default:
+				break;
+			}
+
+			if (Driver.TargetFramework.Platform != Platform)
+				throw ErrorHelper.CreateError (99, "Inconsistent platforms. TargetFramework={0}, Platform={1}", Driver.TargetFramework.Platform, Platform);
+
+			Driver.Verbosity = Verbosity;
+			ErrorHelper.Verbosity = Verbosity;
 		}
 
 		public void Write ()
@@ -146,6 +185,15 @@ namespace Xamarin.Linker {
 				Console.WriteLine ($"    SdkVersion: {SdkVersion}");
 				Console.WriteLine ($"    Verbosity: {Verbosity}");
 			}
+		}
+
+		public string GetAssemblyFileName (AssemblyDefinition assembly)
+		{
+			// See: https://github.com/mono/linker/issues/1313
+			// Call LinkContext.Resolver.GetAssemblyFileName (https://github.com/mono/linker/blob/da2cc0fcd6c3a8e8e5d1b5d4a655f3653baa8980/src/linker/Linker/AssemblyResolver.cs#L88) using reflection.
+			var resolver = typeof (LinkContext).GetProperty ("Resolver").GetValue (Context);
+			var filename = (string) resolver.GetType ().GetMethod ("GetAssemblyFileName", new Type [] { typeof (AssemblyDefinition) }).Invoke (resolver, new object [] { assembly });
+			return filename;
 		}
 
 		public void WriteOutputForMSBuild (string itemName, List<MSBuildItem> items)
