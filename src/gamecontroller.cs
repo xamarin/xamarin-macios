@@ -53,6 +53,14 @@ namespace GameController {
 		[TV (14, 0), Mac (11, 0), iOS (14, 0)]
 		[Export ("aliases")]
 		NSSet<NSString> Aliases { get; }
+
+		[TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[Export ("boundToSystemGesture")]
+		bool IsBoundToSystemGesture { [Bind ("isBoundToSystemGesture")] get; }
+
+		[TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[Export ("preferredSystemGestureState", ArgumentSemantic.Assign)]
+		GCSystemGestureState PreferredSystemGestureState { get; set; }
 	}
 
 	delegate void GCControllerAxisValueChangedHandler (GCControllerAxisInput axis, float /* float, not CGFloat */ value);

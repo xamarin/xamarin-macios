@@ -47,4 +47,13 @@ namespace GameController {
 		Charging,
 		Full,
 	}
+
+	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[Native]
+	public enum GCSystemGestureState : long
+	{
+		Enabled = 0,
+		AlwaysReceive,
+		Disabled,
+	}
 }
