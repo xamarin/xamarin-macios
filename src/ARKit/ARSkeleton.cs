@@ -11,6 +11,7 @@ namespace ARKit {
 		[iOS (14,0)]
 		[DllImport (Constants.ARKitLibrary)]
 		static extern IntPtr /* NSString */ ARSkeletonJointNameForRecognizedPointKey (/* NSString */ IntPtr recognizedPointKey);
+		
 		[iOS (14,0)]
 		public static NSString CreateJointName (NSString recognizedPointKey)
 		{
