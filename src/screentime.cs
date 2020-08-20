@@ -42,9 +42,9 @@ namespace ScreenTime {
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface STWebHistory {
-		[Export ("initWithBundleIdentifier:")]
-		[DesignatedInitializer]
-		IntPtr Constructor (string bundleIdentifier);
+
+		[Export ("initWithBundleIdentifier:error:")]
+		IntPtr Constructor (string bundleIdentifier, [NullAllowed] out NSError error);
 
 		[Export ("deleteHistoryForURL:")]
 		void DeleteHistory (NSUrl url);
@@ -80,8 +80,8 @@ namespace ScreenTime {
 		[Export ("URLIsBlocked")]
 		bool UrlIsBlocked { get; }
 
-		[Export ("bundleIdentifier")]
-		string BundleIdentifier { get; set; }
+		[Export ("setBundleIdentifier:error:")]
+		bool SetBundleIdentifier (string bundleIdentifier, [NullAllowed] out NSError error);
 	}
 
 }
