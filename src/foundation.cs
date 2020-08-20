@@ -6264,8 +6264,7 @@ namespace Foundation
 		[Field ("NSURLIsApplicationKey")]
 		NSString IsApplicationKey { get; }
 
-#if !MONOMAC
-		[iOS (9,0), Mac(10,11)]
+		[iOS (9,0)][NoMac]
 		[Field ("NSURLFileProtectionKey")]
 		NSString FileProtectionKey { get; }
 
@@ -6284,7 +6283,6 @@ namespace Foundation
 		[iOS (9,0), Mac(10,11)]
 		[Field ("NSURLFileProtectionCompleteUntilFirstUserAuthentication")]
 		NSString FileProtectionCompleteUntilFirstUserAuthentication { get; }
-#endif
 
 		[Watch (7,0)][TV (14,0)][Mac (11,0)][iOS (14,0)]
 		[Field ("NSURLContentTypeKey")]
@@ -12248,22 +12246,26 @@ namespace Foundation
 		[Field("NSFileBusy")]
 		NSString Busy { get; }
 
-#if !MONOMAC
+		[Mac (11,0)]
 		[Field ("NSFileProtectionKey")]
 		NSString FileProtectionKey { get; }
 
+		[Mac (11,0)]
 		[Field ("NSFileProtectionNone")]
 		NSString FileProtectionNone { get; }
 
+		[Mac (11,0)]
 		[Field ("NSFileProtectionComplete")]
 		NSString FileProtectionComplete { get; }
 
+		[Mac (11,0)]
 		[Field ("NSFileProtectionCompleteUnlessOpen")]
 		NSString FileProtectionCompleteUnlessOpen { get; }
 
+		[Mac (11,0)]
 		[Field ("NSFileProtectionCompleteUntilFirstUserAuthentication")]
 		NSString FileProtectionCompleteUntilFirstUserAuthentication  { get; }
-#endif
+
 		[Field("NSFileSystemSize")]
 		NSString SystemSize { get; }
 
@@ -14738,6 +14740,10 @@ namespace Foundation
 		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
 		[Export ("multipath")]
 		bool Multipath { [Bind ("isMultipath")] get; }
+
+		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[Export ("domainResolutionProtocol")]
+		NSUrlSessionTaskMetricsDomainResolutionProtocol DomainResolutionProtocol { get; }
 	}
 
 	[iOS (10,0)][TV (10,0)][Watch (3,0)][Mac (10,12)]
@@ -16324,5 +16330,15 @@ namespace Foundation
 
 		[Export ("shouldDefer")]
 		bool ShouldDefer { get; }
+	}
+
+	[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+	[Native]
+	public enum NSUrlSessionTaskMetricsDomainResolutionProtocol : long {
+		Unknown,
+		Udp,
+		Tcp,
+		Tls,
+		Https,
 	}
 }
