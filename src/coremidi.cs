@@ -308,18 +308,6 @@ namespace CoreMidi {
 		[NullAllowed, Export ("profileChangedCallback", ArgumentSemantic.Assign)]
 		MidiCIProfileChangedHandler ProfileChangedCallback { get; set; }
 
-		[Export ("hasProperty:onChannel:responseHandler:")]
-		void HasProperty (NSData inquiry, byte channel, MidiCIPropertyResponseHandler handler);
-
-		[Export ("getProperty:onChannel:responseHandler:")]
-		void GetProperty (NSData inquiry, byte channel, MidiCIPropertyResponseHandler handler);
-
-		[Export ("setProperty:onChannel:responseHandler:")]
-		void SetProperty (NSData inquiry, byte channel, MidiCIPropertyResponseHandler handler);
-
-		[NullAllowed, Export ("propertyChangedCallback", ArgumentSemantic.Assign)]
-		MidiCIPropertyChangedHandler PropertyChangedCallback { get; set; }
-
 		[Mac (11, 0), iOS (14, 0)]
 		[Export ("initWithDiscoveredNode:dataReadyHandler:disconnectHandler:")]
 		IntPtr Constructor (MidiCIDiscoveredNode discoveredNode, Action dataReadyHandler, MidiCISessionDisconnectHandler disconnectHandler);

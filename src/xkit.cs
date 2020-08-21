@@ -64,9 +64,6 @@ namespace UIKit {
 		NSAttributedString AttributedString { get; }
 #endif
 
-		[Export ("replaceTextStorage:")]
-		void ReplaceTextStorage (NSTextStorage newTextStorage);
-
 		[Export ("textContainers")]
 		NSTextContainer [] TextContainers { get; }
 
@@ -724,12 +721,9 @@ namespace UIKit {
 		[Export ("temporaryAttributesAtCharacterIndex:effectiveRange:")]
 		NSDictionary<NSString, NSObject> GetTemporaryAttributes (nuint characterIndex, out NSRange effectiveCharacterRange);
 
+		[NoiOS, NoTV, NoWatch]
 		[Export ("setTemporaryAttributes:forCharacterRange:")]
-#if XAMCORE_4_0 || !MONOMAC
-		void SetTemporaryAttributes (NSDictionary<NSString, NSObject> attributes, NSRange characterReange);
-#else
 		void SetTemporaryAttributes (NSDictionary attrs, NSRange charRange);
-#endif
 
 		[NoiOS][NoTV]
 		[Export ("addTemporaryAttributes:forCharacterRange:")]
