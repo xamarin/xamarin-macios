@@ -264,6 +264,11 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<MtouchTargetsEnabled Condition="'$(_PlatformName)' != 'macOS'">$(IsMacEnabled)</MtouchTargetsEnabled>
 	</PropertyGroup>
 
+	<PropertyGroup>
+		<!-- Enable nuget package conflict resolution -->
+		<ResolveAssemblyConflicts>true</ResolveAssemblyConflicts>
+	</PropertyGroup>
+
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets')"/>
 </Project>
