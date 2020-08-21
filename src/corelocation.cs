@@ -423,7 +423,7 @@ namespace CoreLocation {
 
 		[NoWatch, NoTV, Mac (11, 0), iOS (14, 0)]
 		[Export ("authorizedForWidgetUpdates")]
-		bool AuthorizedForWidgetUpdates { [Bind ("isAuthorizedForWidgetUpdates")] get; }
+		bool IsAuthorizedForWidgetUpdates { [Bind ("isAuthorizedForWidgetUpdates")] get; }
 
 	}
 	
