@@ -26,7 +26,6 @@ namespace MonoTouchFixtures.CoreMedia {
 
 #if !MONOMAC // The CMAudioClockCreate API is only available on iOS
 		[Test]
-		[Ignore ("Broken in Xcode 12 beta 3 - https://github.com/xamarin/xamarin-macios/issues/8943")]
 		public void CreateAudioClock ()
 		{
 			CMClockError ce;
