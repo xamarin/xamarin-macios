@@ -20,7 +20,7 @@ namespace Xharness.Jenkins {
 				if (!project.IsExecutableProject)
 					continue;
 
-				bool ignored = !jenkins.IncludeSimulator;
+				bool ignored = project.Ignore ?? !jenkins.IncludeSimulator;
 				if (!jenkins.IsIncluded (project))
 					ignored = true;
 

@@ -28,6 +28,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 		public bool RestoreNugetsInProject = true;
 		public string MTouchExtraArgs;
 		public double TimeoutMultiplier = 1;
+		public bool? Ignore;
 
 		public IEnumerable<TestProject> ProjectReferences;
 
@@ -66,6 +67,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 			rv.Name = Name;
 			rv.MTouchExtraArgs = MTouchExtraArgs;
 			rv.TimeoutMultiplier = TimeoutMultiplier;
+			rv.Ignore = Ignore;
 			return rv;
 		}
 
