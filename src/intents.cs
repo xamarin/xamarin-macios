@@ -1976,21 +1976,6 @@ namespace Intents {
 	[Flags]
 	[Watch (7,0), NoTV, NoMac, iOS (14,0)]
 	[Native]
-	public enum INChargingConnectorTypeOptions : ulong {
-		None = (1uL << 0),
-		J1772 = (1uL << 1),
-		Ccs1 = (1uL << 2),
-		Ccs2 = (1uL << 3),
-		ChaDeMo = (1uL << 4),
-		Gbtac = (1uL << 5),
-		Gbtdc = (1uL << 6),
-		Tesla = (1uL << 7),
-		Mennekes = (1uL << 8),
-	}
-
-	[Flags]
-	[Watch (7,0), NoTV, NoMac, iOS (14,0)]
-	[Native]
 	public enum INDayOfWeekOptions : ulong {
 		Monday = (1uL << 0),
 		Tuesday = (1uL << 1),
@@ -2029,8 +2014,8 @@ namespace Intents {
 		Music = (1uL << 2),
 		Podcasts = (1uL << 3),
 		Reading = (1uL << 4),
+		WrapUpYourDay = (1uL << 5),
 		YogaAndStretching = (1uL << 6),
-		WrapUpYourDay = (1uL << 7),
 	}
 
 	[Watch (7,0), NoTV, NoMac, iOS (14,0)]
@@ -2330,11 +2315,42 @@ namespace Intents {
 		Swim,
 	}
 
+	[iOS (14,0), NoMac, NoTV, Watch (7,0)]
+	enum INCarChargingConnectorType {
+		[DefaultEnumValue]
+		[Field ("INCarChargingConnectorTypeNone")]
+		None,
+
+		[Field ("INCarChargingConnectorTypeJ1772")]
+		J1772,
+
+		[Field ("INCarChargingConnectorTypeCCS1")]
+		Ccs1,
+
+		[Field ("INCarChargingConnectorTypeCCS2")]
+		Ccs2,
+
+		[Field ("INCarChargingConnectorTypeCHAdeMO")]
+		ChaDeMo,
+
+		[Field ("INCarChargingConnectorTypeGBTAC")]
+		Gbtac,
+
+		[Field ("INCarChargingConnectorTypeGBTDC")]
+		Gbtdc,
+
+		[Field ("INCarChargingConnectorTypeTesla")]
+		Tesla,
+
+		[Field ("INCarChargingConnectorTypeMennekes")]
+		Mennekes,
+	}
+
 	// End of enums
 
 	[iOS (10, 0)]
 	[Watch (3, 2)]
-	[Unavailable (PlatformName.MacOSX)]
+	[Mac (11,0)]
 	[NoTV]
 	[Internal]
 	[Category]
@@ -3757,13 +3773,13 @@ namespace Intents {
 		INIntegerResolutionResult Unsupported { get; }
 
 		[New]
-		[Watch (6,0), iOS (13,0), NoMac]
+		[Watch (6,0), iOS (13,0)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INIntegerResolutionResult GetUnsupported (nint reason);
 
 		[New]
-		[Watch (6,0), iOS (13,0), NoMac]
+		[Watch (6,0), iOS (13,0)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INIntegerResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
@@ -8065,8 +8081,9 @@ namespace Intents {
 		NSDateComponents DateOfLastStateUpdate { get; set; }
 
 		[Watch (7, 0), iOS (14, 0)]
+		[BindAs (typeof (INCarChargingConnectorType))]
 		[NullAllowed, Export ("activeConnector")]
-		NSString ActiveConnector { get; set; } // TODO: turn into smart enum INCarChargingConnectorType when doing Beta 5
+		NSString ActiveConnector { get; set; }
 
 		[Watch (7, 0), iOS (14, 0)]
 		[NullAllowed, Export ("maximumBatteryCapacity", ArgumentSemantic.Copy)]
@@ -8981,7 +8998,7 @@ namespace Intents {
 		INCallRecordTypeOptionsResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
-	[NoWatch, NoMac, iOS (11,0)]
+	[NoWatch, NoMac, iOS (11,0), NoTV]
 	[BaseType (typeof (INIntent))]
 	[DisableDefaultCtor]
 	interface INCancelRideIntent {
@@ -13688,7 +13705,7 @@ namespace Intents {
 
 		[Export ("initWithCarIdentifier:displayName:year:make:model:color:headUnit:supportedChargingConnectors:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string carIdentifier, [NullAllowed] string displayName, [NullAllowed] [BindAs (typeof (nint?))] NSNumber year, [NullAllowed] string make, [NullAllowed] string model, [NullAllowed] INColor color, [NullAllowed] INHeadUnit headUnit, INChargingConnectorTypeOptions supportedChargingConnectors);
+		IntPtr Constructor (string carIdentifier, [NullAllowed] string displayName, [NullAllowed] string year, [NullAllowed] string make, [NullAllowed] string model, [NullAllowed] CGColor color, [NullAllowed] INCarHeadUnit headUnit, [NullAllowed] [BindAs (typeof (INCarChargingConnectorType []))] NSString [] supportedChargingConnectors);
 
 		[Export ("carIdentifier")]
 		string CarIdentifier { get; }
@@ -13696,9 +13713,8 @@ namespace Intents {
 		[NullAllowed, Export ("displayName")]
 		string DisplayName { get; }
 
-		[BindAs (typeof (nint?))]
-		[Export ("year", ArgumentSemantic.Copy)]
-		NSNumber Year { get; }
+		[NullAllowed, Export ("year")]
+		string Year { get; }
 
 		[NullAllowed, Export ("make")]
 		string Make { get; }
@@ -13706,21 +13722,38 @@ namespace Intents {
 		[NullAllowed, Export ("model")]
 		string Model { get; }
 
-		[NullAllowed, Export ("color", ArgumentSemantic.Copy)]
-		INColor Color { get; }
+		[NullAllowed, Export ("color")]
+		CGColor Color { get; }
 
 		[NullAllowed, Export ("headUnit", ArgumentSemantic.Copy)]
-		INHeadUnit HeadUnit { get; }
+		INCarHeadUnit HeadUnit { get; }
 
-		[Export ("supportedChargingConnectors", ArgumentSemantic.Assign)]
-		INChargingConnectorTypeOptions SupportedChargingConnectors { get; }
+		[BindAs (typeof (INCarChargingConnectorType []))]
+		[NullAllowed, Export ("supportedChargingConnectors", ArgumentSemantic.Copy)]
+		NSString [] SupportedChargingConnectors { get; }
 
 		[Export ("setMaximumPower:forChargingConnectorType:")]
-		void SetMaximumPower (NSMeasurement<NSUnitPower> power, INChargingConnectorTypeOptions chargingConnectorType);
+		void SetMaximumPower (NSMeasurement<NSUnitPower> power, [BindAs (typeof (INCarChargingConnectorType))] NSString chargingConnectorType);
 
 		[Export ("maximumPowerForChargingConnectorType:")]
 		[return: NullAllowed]
-		NSMeasurement<NSUnitPower> GetMaximumPower (INChargingConnectorTypeOptions chargingConnectorType);
+		NSMeasurement<NSUnitPower> GetMaximumPower ([BindAs (typeof (INCarChargingConnectorType))] NSString chargingConnectorType);
+	}
+
+	[Watch (7,0), NoTV, NoMac, iOS (14,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface INCarHeadUnit : NSCopying, NSSecureCoding {
+
+		[Export ("initWithBluetoothIdentifier:iAP2Identifier:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] string bluetoothIdentifier, [NullAllowed] string iAP2Identifier);
+
+		[NullAllowed, Export ("bluetoothIdentifier")]
+		string BluetoothIdentifier { get; }
+
+		[NullAllowed, Export ("iAP2Identifier")]
+		string Iap2Identifier { get; }
 	}
 
 	[Watch (7,0), NoTV, NoMac, iOS (14,0)]
@@ -13740,22 +13773,6 @@ namespace Intents {
 
 		[Export ("blue")]
 		double Blue { get; }
-	}
-
-	[Watch (7,0), NoTV, NoMac, iOS (14,0)]
-	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor]
-	interface INHeadUnit : NSCopying, NSSecureCoding {
-
-		[Export ("initWithBluetoothIdentifier:iap2Identifier:")]
-		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] string bluetoothIdentifier, [NullAllowed] string iap2Identifier);
-
-		[NullAllowed, Export ("bluetoothIdentifier")]
-		string BluetoothIdentifier { get; }
-
-		[NullAllowed, Export ("iap2Identifier")]
-		string Iap2Identifier { get; }
 	}
 
 	[Watch (7,0), NoTV, NoMac, iOS (14,0)]

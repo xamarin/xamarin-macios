@@ -27,3 +27,6 @@
 !missing-type! INSendRideFeedbackIntent not bound
 !missing-type! INSendRideFeedbackIntentResponse not bound
 !unknown-native-enum! INCallRecordType bound
+!missing-selector! INCancelRideIntent::initWithRideIdentifier: not bound
+!missing-selector! INCancelRideIntent::rideIdentifier not bound
+!missing-type! INCancelRideIntent not bound
