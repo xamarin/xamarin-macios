@@ -91,6 +91,7 @@ steps:
       New-GitHubComment -Header "Tests failed catastrophically on $Env:CONTEXT" -Emoji ":fire:" -Description "Not enough free space in the host."
       Stop-Pipeline
     }
+    Set-GitHubStatus -Status "pending" -Description "Device tests on VSTS have been started." -Context "$Env:CONTEXT"
   env:
     BUILD_REVISION: $(BUILD_REVISION)
     CONTEXT: ${{ parameters.statusContext }}
