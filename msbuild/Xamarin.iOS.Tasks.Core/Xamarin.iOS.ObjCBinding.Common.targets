@@ -49,12 +49,6 @@ Copyright (C) 2013-2016 Xamarin Inc. All rights reserved.
 		<RemoveDir Directories="$(GeneratedSourcesDir)" Condition="Exists ('$(GeneratedSourcesDir)')" />
 	</Target>
 
-	<Target Name="_AssignBundleResourceNames">
-		<AssignBundleResourceNames BundleResources="@(BundleResource)" ResourceDirectoryPrefixes="$(_ResourcePrefix)">
-			<Output ItemName="_BundleResourceWithName" TaskParameter="BundleResourcesWithNames" />
-		</AssignBundleResourceNames>
-	</Target>
-
 	<Target Name="_CreateEmbeddedResources" DependsOnTargets="_CollectBundleResources">
 		<CreateEmbeddedResources BundleResources="@(_BundleResourceWithLogicalName)" Prefix="monotouch">
 			<Output ItemName="EmbeddedResource" TaskParameter="EmbeddedResources" />
