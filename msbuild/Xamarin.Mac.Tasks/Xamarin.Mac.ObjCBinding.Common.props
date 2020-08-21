@@ -28,16 +28,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<DefineConstants>__UNIFIED__;__MACOS__;$(DefineConstants)</DefineConstants>
 	</PropertyGroup>
 
-	<!-- When looking for related files to copy, look for Mono debugging files as well -->
-	<PropertyGroup>
-		<AllowedReferenceRelatedFileExtensions>
-			$(AllowedReferenceRelatedFileExtensions);
-			.dll.mdb;
-			.exe.mdb;
-			.pdb
-		</AllowedReferenceRelatedFileExtensions>
-	</PropertyGroup>
-
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.props"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.props')"/>
 

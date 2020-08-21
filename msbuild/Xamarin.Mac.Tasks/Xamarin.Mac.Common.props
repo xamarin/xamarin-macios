@@ -49,16 +49,6 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
 		<FilterDeniedAssemblies Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.Mac'">true</FilterDeniedAssemblies>
 	</PropertyGroup>
 
-	<!-- When looking for related files to copy, look for Mono debugging files as well -->
-	<PropertyGroup>
-		<AllowedReferenceRelatedFileExtensions>
-			$(AllowedReferenceRelatedFileExtensions);
-			.dll.mdb;
-			.exe.mdb;
-			.pdb
-		</AllowedReferenceRelatedFileExtensions>
-	</PropertyGroup>
-
 	<PropertyGroup>
 		<CodesignProvision Condition="'$(CodesignProvision)' == ''"></CodesignProvision>
 		<CodesignEntitlements Condition="'$(CodesignEntitlements)' == ''"></CodesignEntitlements>

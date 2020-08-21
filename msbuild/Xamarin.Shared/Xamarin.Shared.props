@@ -248,6 +248,16 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		</PropertyGroup>
 	</Target>
 
+	<!-- When looking for related files to copy, look for Mono debugging files as well -->
+	<PropertyGroup>
+		<AllowedReferenceRelatedFileExtensions>
+			$(AllowedReferenceRelatedFileExtensions);
+			.dll.mdb;
+			.exe.mdb;
+			.pdb
+		</AllowedReferenceRelatedFileExtensions>
+	</PropertyGroup>
+
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets')"/>
 </Project>
