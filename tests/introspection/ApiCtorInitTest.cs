@@ -51,6 +51,7 @@ namespace Introspection {
 		/// <param name="type">The Type to be tested</param>
 		protected virtual bool Skip (Type type)
 		{
+			Console.WriteLine ($"Type is {type.Name}");
 			if (type.ContainsGenericParameters)
 				return true;
 
@@ -113,6 +114,10 @@ namespace Introspection {
 			case "MPSCnnUpsamplingNearest":
 				return true;
 			case "MPSImageArithmetic": // Cannot directly initialize MPSImageArithmetic. Use one of the sub-classes of MPSImageArithmetic.
+				return true;
+			case "CKDiscoverUserInfosOperation": // deprecated, throws exception
+			case "CKSubscription":
+			case "MPSCnnConvolutionState":
 				return true;
 			case "QTMovie":
 				return TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 14, 4); // Broke in macOS 10.14.4.
