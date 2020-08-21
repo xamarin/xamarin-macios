@@ -51,7 +51,6 @@ namespace Introspection {
 		/// <param name="type">The Type to be tested</param>
 		protected virtual bool Skip (Type type)
 		{
-			Console.WriteLine ($"Type is {type.Name}");
 			if (type.ContainsGenericParameters)
 				return true;
 
