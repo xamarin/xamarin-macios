@@ -218,7 +218,7 @@
 			<_IntermediateNativeLibraryDir>$(IntermediateOutputPath)nativelibraries/</_IntermediateNativeLibraryDir>
 			<_NativeExecutableName>$(_AppBundleName)</_NativeExecutableName>
 
-			<_LibMonoLinkMode Condition="'$(_LibMonoLinkMode)' == '' And '$(ComputedPlatform)' != 'iPhone'">dylib</_LibMonoLinkMode>
+			<_LibMonoLinkMode Condition="'$(_LibMonoLinkMode)' == '' And ('$(ComputedPlatform)' != 'iPhone' Or '$(_PlatformName)' == 'macOS')">dylib</_LibMonoLinkMode>
 			<_LibMonoLinkMode Condition="'$(_LibMonoLinkMode)' == ''">static</_LibMonoLinkMode>
 			<_LibMonoExtension Condition="'$(_LibMonoLinkMode)' == 'dylib'">dylib</_LibMonoExtension>
 			<_LibMonoExtension Condition="'$(_LibMonoLinkMode)' == 'static'">a</_LibMonoExtension>
@@ -229,6 +229,9 @@
 			<_LibXamarinExtension Condition="'$(_LibXamarinLinkMode)' == 'static'">a</_LibXamarinExtension>
 			<_LibXamarinName Condition="'$(_LibXamarinName)' == '' And '$(_BundlerDebug)' == 'true'">libxamarin-debug.$(_LibXamarinExtension)</_LibXamarinName>
 			<_LibXamarinName Condition="'$(_LibXamarinName)' == '' And '$(_BundlerDebug)' != 'true'">libxamarin.$(_LibXamarinExtension)</_LibXamarinName>
+
+			<_MonoNugetPackageId Condition="'$(_PlatformName)' != 'macOS'">Microsoft.NETCore.App.Runtime.$(RuntimeIdentifier)</_MonoNugetPackageId>
+			<_MonoNugetPackageId Condition="'$(_PlatformName)' == 'macOS'">Microsoft.NETCore.App.Runtime.Mono.$(RuntimeIdentifier)</_MonoNugetPackageId>
 		</PropertyGroup>
 
 		<ItemGroup>
@@ -238,7 +241,7 @@
 				Condition=" '%(ResolvedFileToPublish.AssetType)' == 'native' And
 							'%(ResolvedFileToPublish.RuntimeIdentifier)' == '$(RuntimeIdentifier)' And
 							'%(ResolvedFileToPublish.Extension)' == '.$(_LibMonoExtension)' And
-							'%(ResolvedFileToPublish.NuGetPackageId)' == 'Microsoft.NETCore.App.Runtime.$(RuntimeIdentifier)'
+							'%(ResolvedFileToPublish.NuGetPackageId)' == '$(_MonoNugetPackageId)'
 							"
 			/>
 		</ItemGroup>
