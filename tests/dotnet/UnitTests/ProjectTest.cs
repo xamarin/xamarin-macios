@@ -211,6 +211,38 @@ namespace Xamarin.Tests {
 			Assert.That (ad.MainModule.Resources [0].Name, Is.EqualTo ("libtest2.a"), "libtest2.a");
 		}
 
+		[TestCase ("iOS", "monotouch")]
+		[TestCase ("tvOS", "monotouch")]
+		[TestCase ("watchOS", "monotouch")]
+		[TestCase ("macOS", "xammac")]
+		public void BuildBundledResources (string platform, string prefix)
+		{
+			var assemblyName = "BundledResources";
+			var dotnet_bindings_dir = Path.Combine (Configuration.SourceRoot, "tests", assemblyName, "dotnet");
+			var project_dir = Path.Combine (dotnet_bindings_dir, platform);
+			var project_path = Path.Combine (project_dir, $"{assemblyName}.csproj");
+
+			Clean (project_path);
+			CopyDotNetSupportingFiles (dotnet_bindings_dir);
+			var result = DotNet.AssertBuild (project_path, verbosity);
+			var lines = result.StandardOutput.ToString ().Split ('\n');
+			// Find the resulting binding assembly from the build log
+			var assemblies = FilterToAssembly (lines, assemblyName);
+			Assert.That (assemblies, Is.Not.Empty, "Assemblies");
+			// Make sure there's no other assembly confusing our logic
+			Assert.That (assemblies.Distinct ().Count (), Is.EqualTo (1), "Unique assemblies");
+			var asm = assemblies.First ();
+			Assert.That (asm, Does.Exist, "Assembly existence");
+
+			// Verify that there's one resource in the binding assembly, and its name
+			var ad = AssemblyDefinition.ReadAssembly (asm, new ReaderParameters { ReadingMode = ReadingMode.Deferred });
+			Assert.That (ad.MainModule.Resources.Count, Is.EqualTo (2), "2 resources");
+			// Sort the resources before we assert, since we don't care about the order, and sorted order makes the asserts simpler.
+			var resources = ad.MainModule.Resources.OrderBy (v => v.Name).ToArray ();
+			Assert.That (resources [0].Name, Is.EqualTo ($"__{prefix}_content_basn3p08.png"), $"__{prefix}_content_basn3p08.png");
+			Assert.That (resources [1].Name, Is.EqualTo ($"__{prefix}_content_xamvideotest.mp4"), $"__{prefix}_content_xamvideotest.mp4");
+		}
+
 		[TestCase ("iOS")]
 		[TestCase ("tvOS")]
 		// [TestCase ("watchOS")] // No watchOS Touch.Client project for .NET yet
