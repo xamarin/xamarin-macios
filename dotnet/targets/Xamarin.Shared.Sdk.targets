@@ -116,7 +116,10 @@
 		<_AdditionalTaskAssemblyDirectory>$(_XamarinSdkRootDirectory)tools/dotnet-linker/</_AdditionalTaskAssemblyDirectory>
 		<_AdditionalTaskAssembly>$(_AdditionalTaskAssemblyDirectory)dotnet-linker.dll</_AdditionalTaskAssembly>
 	</PropertyGroup>
-	<Target Name="_ComputeLinkerArguments" DependsOnTargets="_ComputeLinkMode">
+	<Target Name="_ComputeLinkerArguments" DependsOnTargets="_ComputeLinkMode;ComputeResolvedFilesToPublishList">
+		<!-- Validate the linker mode -->
+		<Error Text="Invalid link mode: '$(_LinkMode)'. Valid link modes are: 'None', 'SdkOnly' and 'Full'" Condition="'$(_LinkMode)' != 'None' And '$(_LinkMode)' != 'SdkOnly' And '$(_LinkMode)' != 'Full'" />
+
 		<PropertyGroup>
 			<!-- Pass the custom options to our custom steps -->
 			<_CustomLinkerOptionsFile>$([System.IO.Path]::GetFullPath('$(IntermediateOutputPath)custom-linker-options.txt'))</_CustomLinkerOptionsFile>
@@ -146,6 +149,11 @@
 			<!-- System.Runtime.dll isn't always copied to the .app -->
 			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) -p copy "System.Runtime"</_ExtraTrimmerArgs>
 
+			<!-- TrimMode specifies what the linker will do with framework assemblies -->
+			<TrimMode Condition="'$(_LinkMode)' == 'None'">copy</TrimMode> <!-- Don't use 'copyused', because that might still end up saving some assemblies, and if that's the platform assembly, it may break the partial static registrar -->
+			<TrimMode Condition="'$(_LinkMode)' == 'SdkOnly' Or '$(_LinkMode)' == 'Full'">link</TrimMode>
+			<!-- For Full link mode we also need to set TrimMode for all non-framework assemblies. This is done further below -->
+
 			<!-- Verbose output, so that we get something to stdout when something goes wrong -->
 			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) --verbose</_ExtraTrimmerArgs>
 
@@ -161,7 +169,19 @@
 			-->
 			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) -b</_ExtraTrimmerArgs>
 		</PropertyGroup>
+
 		<ItemGroup>
+			<!-- Mark all assemblies to be linked if we're linking all assemblies -->
+			<ResolvedFileToPublish
+				Update="@(ResolvedFileToPublish)"
+				Condition="'$(_LinkMode)' == 'Full' And '%(ResolvedFileToPublish.Extension)' == '.dll' And '%(ResolvedFileToPublish.AssetType)' != 'native'"
+			>
+				<TrimMode>link</TrimMode>
+			</ResolvedFileToPublish>
+
+			<!-- Mark our entry assembly as a root assembly. -->
+			<TrimmerRootAssembly Include="$(AssemblyName)" />
+
 			<!-- add a custom step which inserts any other steps we need -->
 			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)">
 				<BeforeStep>LoadReferencesStep</BeforeStep>
