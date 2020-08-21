@@ -376,7 +376,18 @@ namespace AppKit {
 		bool AllowsVibrancy { get; }
 
 		[Static, Export ("currentAppearance")]
+		[Deprecated (PlatformName.MacOSX, 10, 9, message: "Use PerformAsCurrentDrawingAppearance: to temporarily set the drawing appearance, or CurrentDrawingAppearance to access the currently drawing appearance.")]
 		NSAppearance CurrentAppearance { get; [Bind("setCurrentAppearance:")] set; }
+
+		[Mac (11, 0)]
+		[Static]
+		[Export ("currentDrawingAppearance", ArgumentSemantic.Strong)]
+		NSAppearance CurrentDrawingAppearance { get; }
+
+		[Mac (11,0)]
+		[Export ("performAsCurrentDrawingAppearance:")]
+		void PerformAsCurrentDrawingAppearance (Action receiver);
+
 
 		[Static, Export ("appearanceNamed:")]
 		NSAppearance GetAppearance (NSString name);
@@ -27918,11 +27929,14 @@ namespace AppKit {
 		[Export ("resignsFirstResponderWithCancel")]
 		bool ResignsFirstResponderWithCancel { get; set; }
 
-		[Export ("minimumWidthForSearchFieldRepresentation")]
-		nfloat MinimumWidthForSearchFieldRepresentation { get; set; }
+		[Export ("preferredWidthForSearchField")]
+		nfloat PreferredWidthForSearchField { get; set; }
 
-		[Export ("preferredWidthForSearchFieldRepresentation")]
-		nfloat PreferredWidthForSearchFieldRepresentation { get; set; }
+		[Export ("beginSearchInteraction")]
+		void BeginSearchInteraction ();
+
+		[Export ("endSearchInteraction")]
+		void EndSearchInteraction ();
 	}
 
 	delegate NSView NSTableViewDiffableDataSourceCellProvider (NSTableView tableView, NSTableColumn column, nint row, NSObject itemId);
