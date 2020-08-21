@@ -54,10 +54,9 @@ namespace CoreML {
 		CustomModel = 5,
 		Update = 6,
 		Parameters = 7,
-		ModelEncryption = 8,
-		ModelDecryptionKeyFetch = 9,
-		ModelDecryption = 10,
-		ModelCollection = 11,
+		ModelDecryptionKeyFetch = 8,
+		ModelDecryption = 9,
+		ModelCollection = 10,
 	}
 
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
@@ -1020,13 +1019,17 @@ namespace CoreML {
 		bool Write (NSUrl url, [NullAllowed] out NSError error);
 	}
 
-	[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+	[Mac (11,0), iOS (14,0)]
+	[NoTV][NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MLModelCollection {
 
 		[Export ("identifier")]
 		string Identifier { get; }
+
+		[Export ("deploymentID")]
+		string DeploymentId { get; }
 
 		[Export ("entries", ArgumentSemantic.Copy)]
 		NSDictionary<NSString, MLModelCollectionEntry> Entries { get; }
@@ -1046,7 +1049,8 @@ namespace CoreML {
 		NSString DidChangeNotification { get; }
 	}
 
-	[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+	[Mac (11,0), iOS (14,0)]
+	[NoTV][NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MLModelCollectionEntry {

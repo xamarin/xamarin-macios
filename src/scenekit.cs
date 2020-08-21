@@ -3190,6 +3190,14 @@ namespace SceneKit {
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Export ("usesReverseZ")]
 		bool UsesReverseZ { get; set; }
+
+		[NoWatch]
+		[TV (14,0)][Mac (10,11)][iOS (14,0)]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("currentRenderPassDescriptor")]
+		MTLRenderPassDescriptor CurrentRenderPassDescriptor { get; }
 	}
 
 	[Watch (3,0)]

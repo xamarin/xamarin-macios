@@ -154,6 +154,7 @@ ARKIT_SOURCES = \
 	ARKit/ARFaceGeometry.cs \
 	ARKit/ARPlaneGeometry.cs \
 	ARKit/ARPointCloud.cs \
+	ARKit/ARSkeleton.cs \
 	ARKit/ARSkeleton3D.cs \
 	ARKit/ARSkeleton2D.cs \
 

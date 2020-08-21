@@ -130,6 +130,7 @@ namespace Xharness.TestTasks {
 						// Install the app
 						InstallLog = new AppInstallMonitorLog (testTask.Logs.Create ($"install-{Helpers.Timestamp}.log", "Install log"));
 						try {
+							using var logReader = InstallLog.GetReader ();
 							testTask.Runner.MainLog = this.InstallLog;
 							var install_result = await testTask.Runner.InstallAsync (InstallLog.CancellationToken);
 							if (!install_result.Succeeded) {
@@ -143,7 +144,8 @@ namespace Xharness.TestTasks {
 										testTask.Variation,
 										$"AppInstallation on {testTask.Device.Name}",
 										$"Install failed on {testTask.Device.Name}, exit code: {install_result.ExitCode}",
-										InstallLog.FullPath, xmlResultJargon);
+										logReader,
+										xmlResultJargon);
 							}
 						} finally {
 							InstallLog.Dispose ();

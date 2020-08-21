@@ -218,11 +218,15 @@ namespace Foundation  {
 		Atomic = 1,
 
 		WithoutOverwriting  = 2,
-			
+		[Mac (11,0)]
 		FileProtectionNone = 0x10000000,
+		[Mac (11,0)]
 		FileProtectionComplete = 0x20000000,
+		[Mac (11,0)]
 		FileProtectionMask = 0xf0000000,
+		[Mac (11,0)]
 		FileProtectionCompleteUnlessOpen = 0x30000000,
+		[Mac (11,0)]
 		FileProtectionCompleteUntilFirstUserAuthentication = 0x40000000,
 	}
 	

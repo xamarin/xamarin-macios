@@ -679,11 +679,13 @@ namespace AudioUnit
 			return MusicDeviceMIDIEvent (handle, status, data1, data2, offsetSampleFrame);
 		}
 
+#if !XAMCORE_4_0
+		[Obsolete ("This API has been removed.")]
 		public AudioUnitStatus SetLatency (double latency)
 		{
-			// ElementCount: Float64, AudioUnitScopeType.Global is the only valid scope for Latency.
-			return AudioUnitSetProperty (handle, AudioUnitPropertyIDType.Latency, AudioUnitScopeType.Global, 0, ref latency, sizeof (double));
+			return AudioUnitStatus.OK;
 		}
+#endif
 
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern AudioUnitStatus AudioUnitGetProperty (IntPtr inUnit, AudioUnitPropertyIDType inID, AudioUnitScopeType inScope, uint inElement, ref double outData, ref uint ioDataSize);

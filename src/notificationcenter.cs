@@ -15,6 +15,7 @@ namespace NotificationCenter {
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // not meant to be user created
 	[Deprecated (PlatformName.iOS, 14,0)]
+	[Deprecated (PlatformName.MacOSX, 11,0)]
 	interface NCWidgetController {
 
 		[Static]
@@ -27,6 +28,7 @@ namespace NotificationCenter {
 
 	[iOS (8,0)][Mac (10,10)]
 	[Deprecated (PlatformName.iOS, 14,0)]
+	[Deprecated (PlatformName.MacOSX, 11,0)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface NCWidgetProviding {
@@ -122,6 +124,7 @@ namespace NotificationCenter {
 
 #if MONOMAC
 	[Mac (10,10)]
+	[Deprecated (PlatformName.MacOSX, 11,0)]
 	[BaseType (typeof(NSViewController), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NCWidgetListViewDelegate)})]
 	interface NCWidgetListViewController
 	{
@@ -156,6 +159,7 @@ namespace NotificationCenter {
 	interface INCWidgetListViewDelegate {}
 
 	[Mac (10, 10)]
+	[Deprecated (PlatformName.MacOSX, 11,0)]
 	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
 	interface NCWidgetListViewDelegate
@@ -181,6 +185,7 @@ namespace NotificationCenter {
 	}
 
 	[Mac (10,10)]
+	[Deprecated (PlatformName.MacOSX, 11,0)]
 	[BaseType (typeof(NSViewController), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NCWidgetSearchViewDelegate)})]
 	interface NCWidgetSearchViewController
 	{
@@ -210,6 +215,7 @@ namespace NotificationCenter {
 	interface INCWidgetSearchViewDelegate {}
 
 	[Mac (10,10)]
+	[Deprecated (PlatformName.MacOSX, 11,0)]
 	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
 	interface NCWidgetSearchViewDelegate

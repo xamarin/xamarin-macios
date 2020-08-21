@@ -264,8 +264,9 @@ namespace MLCompute {
 		[Export ("isDebuggingEnabled")]
 		bool IsDebuggingEnabled { get; set; }
 
-		[Export ("supportsDataType:forDeviceType:")]
-		bool SupportsDataType (MLCDataType dataType, MLCDeviceType deviceType);
+		[Static]
+		[Export ("supportsDataType:onDevice:")]
+		bool SupportsDataType (MLCDataType dataType, MLCDeviceType device);
 	}
 
 	[iOS (14,0)][TV (14,0)][Mac (11,0)]
@@ -334,19 +335,11 @@ namespace MLCompute {
 		MLCActivationLayer EluLayer { get; }
 
 		[Static]
-#if MONOMAC
-		[Export ("eluLayerWithAlpha:")]
-#else
 		[Export ("eluLayerWithA:")]
-#endif
 		MLCActivationLayer CreateEluLayer (float a);
 
 		[Static]
-#if MONOMAC
-		[Export ("relunLayerWithAlpha:beta:")]
-#else
 		[Export ("relunLayerWithA:b:")]
-#endif
 		MLCActivationLayer CreateRelunLayer (float a, float b);
 
 		[Static]
@@ -362,11 +355,7 @@ namespace MLCompute {
 		MLCActivationLayer CeluLayer { get; }
 
 		[Static]
-#if MONOMAC
-		[Export ("celuLayerWithAlpha:")]
-#else
 		[Export ("celuLayerWithA:")]
-#endif
 		MLCActivationLayer CreateCeluLayer (float a);
 
 		[Static]
@@ -374,11 +363,7 @@ namespace MLCompute {
 		MLCActivationLayer HardShrinkLayer { get; }
 
 		[Static]
-#if MONOMAC
-		[Export ("hardShrinkLayerWithLambda:")]
-#else
 		[Export ("hardShrinkLayerWithA:")]
-#endif
 		MLCActivationLayer CreateHardShrinkLayer (float a);
 
 		[Static]
@@ -386,11 +371,7 @@ namespace MLCompute {
 		MLCActivationLayer SoftShrinkLayer { get; }
 
 		[Static]
-#if MONOMAC
-		[Export ("softShrinkLayerWithLambda:")]
-#else
 		[Export ("softShrinkLayerWithA:")]
-#endif
 		MLCActivationLayer CreateSoftShrinkLayer (float a);
 
 		[Static]

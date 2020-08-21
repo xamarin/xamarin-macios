@@ -1136,6 +1136,34 @@ namespace CoreData
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[NullAllowed, Export ("transactionAuthor")]
 		string TransactionAuthor { get; set; }
+
+		[Notification (typeof (NSManagedObjectsIdsChangedEventArgs))]
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[Field ("NSManagedObjectContextDidMergeChangesObjectIDsNotification")]
+		NSString DidMergeChangesObjectIdsNotification { get; }
+
+		[Notification (typeof (NSManagedObjectsIdsChangedEventArgs))]
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[Field ("NSManagedObjectContextDidSaveObjectIDsNotification")]
+		NSString DidSaveObjectIdsNotification { get; }
+	}
+
+	[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+	interface NSManagedObjectsIdsChangedEventArgs {
+		[Export ("NSDeletedObjectIDsKey")]
+		NSSet DeletedObjectIds { get; }
+
+		[Export ("NSInsertedObjectIDsKey")]
+		NSSet InsertedObjectIdsKey { get; }
+
+		[Export ("NSInvalidatedObjectIDsKey")]
+		NSSet InvalidatedObjectIdsKey { get; }
+
+		[Export ("NSRefreshedObjectIDsKey")]
+		NSSet RefreshedObjectIdsKey { get; }
+
+		[Export ("NSUpdatedObjectIDsKey")]
+		NSSet UpdatedObjectIdsKey { get; }
 	}
 
 	interface NSManagedObjectChangeEventArgs {
@@ -2492,6 +2520,13 @@ namespace CoreData
 		NSDictionary[] ConflictingSnapshots { get; }
 	}
 
+#if XAMCORE_4_0
+	delegate bool NSBatchInsertRequestDictionaryHandler (NSMutableDictionary<NSString, NSObject> dictionary);
+#else
+	delegate bool NSBatchInsertRequestDictionaryHandler (NSMutableDictionary dictionary);
+#endif
+	delegate bool NSBatchInsertRequestManagedObjectHandler (NSManagedObject managedObject);
+
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 	[BaseType (typeof(NSPersistentStoreRequest))]
 	[DisableDefaultCtor] // NSInternalInconsistencyException Reason: -init results in undefined behavior for NSBatchInsertRequest
@@ -2503,6 +2538,22 @@ namespace CoreData
 		[Deprecated (PlatformName.MacOSX, 10,16, message: "Use 'no yet bound' instead.")]
 		[Export ("init")]
 		IntPtr Constructor ();
+
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[Export ("initWithEntity:dictionaryHandler:")]
+		IntPtr Constructor (NSEntityDescription entity, NSBatchInsertRequestDictionaryHandler handler);
+
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[Export ("initWithEntity:managedObjectHandler:")]
+		IntPtr Constructor (NSEntityDescription entity, NSBatchInsertRequestManagedObjectHandler handler);
+
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[Export ("initWithEntityName:dictionaryHandler:")]
+		IntPtr Constructor (string entityName, NSBatchInsertRequestDictionaryHandler handler);
+
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[Export ("initWithEntityName:managedObjectHandler:")]
+		IntPtr Constructor (string entityName, NSBatchInsertRequestManagedObjectHandler handler);
 
 		[Export ("entityName")]
 		string EntityName { get; }
@@ -2520,11 +2571,31 @@ namespace CoreData
 		[Export ("batchInsertRequestWithEntityName:objects:")]
 		NSBatchInsertRequest BatchInsertRequest (string entityName, NSDictionary<NSString, NSObject>[] dictionaries);
 
+		[DesignatedInitializer]
 		[Export ("initWithEntityName:objects:")]
 		IntPtr Constructor (string entityName, NSDictionary<NSString, NSObject>[] dictionaries);
 
+		[DesignatedInitializer]
 		[Export ("initWithEntity:objects:")]
 		IntPtr Constructor (NSEntityDescription entity, NSDictionary<NSString, NSObject>[] dictionaries);
+
+		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[NullAllowed, Export ("dictionaryHandler", ArgumentSemantic.Copy)]
+		NSBatchInsertRequestDictionaryHandler DictionaryHandler { get; set; }
+
+		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[NullAllowed, Export ("managedObjectHandler", ArgumentSemantic.Copy)]
+		NSBatchInsertRequestManagedObjectHandler ManagedObjectHandler { get; set; }
+
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[Static]
+		[Export ("batchInsertRequestWithEntityName:dictionaryHandler:")]
+		NSBatchInsertRequest CreateBatchInsertRequest (string entityName, NSBatchInsertRequestDictionaryHandler handler);
+
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[Static]
+		[Export ("batchInsertRequestWithEntityName:managedObjectHandler:")]
+		NSBatchInsertRequest CreateBatchInsertRequest (string entityName, NSBatchInsertRequestManagedObjectHandler handler);
 	}
 
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
@@ -2569,6 +2640,18 @@ namespace CoreData
 
 		[Export ("recordIDsForManagedObjectIDs:")]
 		NSDictionary<NSManagedObjectID, CKRecordID> GetRecordIds (NSManagedObjectID[] managedObjectIds);
+
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[Export ("canUpdateRecordForManagedObjectWithID:")]
+		bool CanUpdateRecord (NSManagedObjectID objectID);
+
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[Export ("canDeleteRecordForManagedObjectWithID:")]
+		bool CanDeleteRecord (NSManagedObjectID objectID);
+
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[Export ("canModifyManagedObjectsInStore:")]
+		bool CanModifyManagedObjects (NSPersistentStore store);
 	}
 
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
@@ -2581,5 +2664,79 @@ namespace CoreData
 		[Export ("initWithContainerIdentifier:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (string containerIdentifier);
+
+		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[Export ("databaseScope", ArgumentSemantic.Assign)]
+		CKDatabaseScope DatabaseScope { get; set; }
 	}
+
+	[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface NSPersistentCloudKitContainerEvent : NSCopying {
+		[Export ("identifier", ArgumentSemantic.Strong)]
+		NSUuid Identifier { get; }
+
+		[Export ("storeIdentifier", ArgumentSemantic.Strong)]
+		string StoreIdentifier { get; }
+
+		[Export ("type")]
+		NSPersistentCloudKitContainerEventType Type { get; }
+
+		[Export ("startDate", ArgumentSemantic.Strong)]
+		NSDate StartDate { get; }
+
+		[NullAllowed, Export ("endDate", ArgumentSemantic.Strong)]
+		NSDate EndDate { get; }
+
+		[Export ("succeeded")]
+		bool Succeeded { get; }
+
+		[NullAllowed, Export ("error", ArgumentSemantic.Strong)]
+		NSError Error { get; }
+
+		[Notification]
+		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[Field ("NSPersistentCloudKitContainerEventChangedNotification")]
+		NSString ChangedNotification { get; }
+
+		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[Field ("NSPersistentCloudKitContainerEventUserInfoKey")]
+		NSString UserInfoKey { get; }
+	}
+
+	[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+	[BaseType (typeof (NSPersistentStoreRequest))]
+	interface NSPersistentCloudKitContainerEventRequest {
+		[Export ("resultType", ArgumentSemantic.Assign)]
+		NSPersistentCloudKitContainerEventResultType ResultType { get; set; }
+
+		[Static]
+		[Export ("fetchEventsAfterDate:")]
+		NSPersistentCloudKitContainerEventRequest FetchEventsAfter (NSDate date);
+
+		[Static]
+		[Export ("fetchEventsAfterEvent:")]
+		NSPersistentCloudKitContainerEventRequest FetchEventsAfter ([NullAllowed] NSPersistentCloudKitContainerEvent @event);
+
+		[Static]
+		[Export ("fetchEventsMatchingFetchRequest:")]
+		NSPersistentCloudKitContainerEventRequest FetchEvents (NSFetchRequest fetchRequest);
+
+		[Static]
+		[Export ("fetchRequestForEvents")]
+		NSFetchRequest FetchRequest ();
+	}
+
+	[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+	[BaseType (typeof(NSPersistentStoreResult))]
+	[DisableDefaultCtor]
+	interface NSPersistentCloudKitContainerEventResult {
+		[NullAllowed, Export ("result", ArgumentSemantic.Strong)]
+		NSObject Result { get; }
+
+		[Export ("resultType")]
+		NSPersistentCloudKitContainerEventResultType ResultType { get; }
+	}
+
 }

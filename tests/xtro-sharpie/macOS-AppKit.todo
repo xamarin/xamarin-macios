@@ -1,0 +1,8 @@
+!deprecated-attribute-missing! NSAppearance::currentAppearance missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSAppearance::setCurrentAppearance: missing a [Deprecated] attribute
+!missing-selector! +NSAppearance::currentDrawingAppearance not bound
+!missing-selector! NSAppearance::performAsCurrentDrawingAppearance: not bound
+!missing-selector! NSSearchToolbarItem::beginSearchInteraction not bound
+!missing-selector! NSSearchToolbarItem::endSearchInteraction not bound
+!missing-selector! NSSearchToolbarItem::preferredWidthForSearchField not bound
+!missing-selector! NSSearchToolbarItem::setPreferredWidthForSearchField: not bound
