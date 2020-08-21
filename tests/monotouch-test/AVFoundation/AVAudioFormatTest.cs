@@ -7,6 +7,8 @@ using System;
 using Foundation;
 using AVFoundation;
 using NUnit.Framework;
+using ObjCRuntime;
+
 namespace MonoTouchFixtures.AVFoundation {
 
 	[TestFixture]
@@ -16,7 +18,8 @@ namespace MonoTouchFixtures.AVFoundation {
 		[SetUp]
 		public void Setup ()
 		{
-			TestRuntime.AssertXcodeVersion (6, 0);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
 		}
 
 		[Test]
