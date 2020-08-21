@@ -297,6 +297,8 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 			// from the TCP connection, we are going to fail when trying to read it and not parse it. Therefore, we are not only
 			// going to check if we are in CI, but also if the listener_log is valid.
 			var path = Path.ChangeExtension (test_log_path, "xml");
+			if (path == test_log_path)
+				path = Path.Combine (Path.GetDirectoryName (path), Path.GetFileNameWithoutExtension (path) + "-clean.xml");
 			resultParser.CleanXml (test_log_path, path);
 
 			if (ResultsUseXml && resultParser.IsValidXml (path, out var xmlType)) {
@@ -323,12 +325,9 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 					}
 					path = newFilename;
 
-					// write the human readable results in a tmp file, which we later use to step on the logs
-					var tmpFile = Path.Combine (Path.GetTempPath (), Guid.NewGuid ().ToString ());
-					(parseResult.resultLine, parseResult.failed) = resultParser.GenerateHumanReadableResults (path, tmpFile, xmlType);
-					File.Copy (tmpFile, test_log_path, true);
-					File.Delete (tmpFile);
-
+					var humanReadableLog = logs.CreateFile (Path.GetFileNameWithoutExtension (test_log_path) + ".log", LogType.NUnitResult.ToString ());
+					(parseResult.resultLine, parseResult.failed) = resultParser.GenerateHumanReadableResults (path, humanReadableLog, xmlType);
+					
 					// we do not longer need the tmp file
 					logs.AddFile (path, LogType.XmlLog.ToString ());
 					return parseResult;
@@ -396,6 +395,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 		// generate all the xml failures that will help the integration with the CI and return the failure reason
 		async Task GenerateXmlFailures (string failureMessage, bool crashed, string crashReason)
 		{
+			using var mainLogReader = mainLog.GetReader ();
 			if (!ResultsUseXml) // nothing to do
 				return;
 			if (!string.IsNullOrEmpty (crashReason)) {
@@ -406,7 +406,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 					appInfo.Variation,
 					$"App Crash {appInfo.AppName} {appInfo.Variation}",
 					$"App crashed: {failureMessage}",
-					mainLog.FullPath,
+					mainLogReader,
 					xmlJargon);
 			} else if (launchFailure) {
 				resultParser.GenerateFailure (
@@ -416,7 +416,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 					appInfo.Variation,
 					$"App Launch {appInfo.AppName} {appInfo.Variation} on {deviceName}",
 					$"{failureMessage} on {deviceName}",
-					mainLog.FullPath,
+					mainLogReader,
 					xmlJargon);
 			} else if (!isSimulatorTest && crashed && string.IsNullOrEmpty (crashReason)) {
 				// this happens more that what we would like on devices, the main reason most of the time is that we have had netwoking problems and the
@@ -430,7 +430,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 						appInfo.Variation,
 						$"TcpConnection on {deviceName}",
 						$"Device {deviceName} could not reach the host over tcp.",
-						mainLog.FullPath,
+						mainLogReader,
 						xmlJargon);
 				}
 			} else if (timedout) {
@@ -441,7 +441,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 					appInfo.Variation,
 					$"App Timeout {appInfo.AppName} {appInfo.Variation} on bot {deviceName}",
 					$"{appInfo.AppName} {appInfo.Variation} Test run timed out after {timeout.TotalMinutes} minute(s) on bot {deviceName}.",
-					mainLog.FullPath,
+					mainLogReader,
 					xmlJargon);
 			}
 		}
