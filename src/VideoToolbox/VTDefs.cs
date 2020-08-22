@@ -9,6 +9,7 @@
 //
 
 using System;
+using Foundation;
 using ObjCRuntime;
 
 namespace VideoToolbox {
@@ -48,6 +49,10 @@ namespace VideoToolbox {
 		ColorCorrectionImageRotationFailed        = -12219,
 		VideoDecoderRemoved                       = -17690,
 		SessionMalfunction                        = -17691,
+		[Mac (11, 0)]
+		DecoderNeedsRosetta                       = -17692,
+		[Mac (11, 0)]
+		EncoderNeedsRosetta	                      = -17693,
 	}
 
 	// uint32_t -> VTErrors.h
@@ -252,4 +257,14 @@ namespace VideoToolbox {
 		Decimate,
 		Average
 	}
+
+	[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+	public enum HdrMetadataInsertionMode {
+		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[Field ("kVTHDRMetadataInsertionMode_None")]
+		None,
+		[Field ("kVTHDRMetadataInsertionMode_Auto")]
+		Auto,
+	}
+
 }
