@@ -602,7 +602,7 @@ namespace Xamarin.Bundler {
 			if (generate_plist)
 				GeneratePList ();
 
-			if (App.LinkMode != LinkMode.All && App.RuntimeOptions != null)
+			if (App.LinkMode != LinkMode.Full && App.RuntimeOptions != null)
 				App.RuntimeOptions.Write (resources_dir);
 
 			if (App.AOTOptions != null && App.AOTOptions.IsAOT) {

@@ -24,12 +24,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Shared.props" />
 
-	<!-- This is used to determine if VS is connected to mac. -->
-	<PropertyGroup>
-		<IsMacEnabled>true</IsMacEnabled>
-		<MtouchTargetsEnabled>$(IsMacEnabled)</MtouchTargetsEnabled>
-	</PropertyGroup>
-
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.props"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.props')"/>
 

@@ -74,7 +74,7 @@ namespace Xamarin.Bundler {
 		public ApplePlatform Platform { get { return Driver.TargetFramework.Platform; } }
 
 		// Linker config
-		public LinkMode LinkMode = LinkMode.All;
+		public LinkMode LinkMode = LinkMode.Full;
 		public List<string> LinkSkipped = new List<string> ();
 		public List<string> Definitions = new List<string> ();
 		public I18nAssemblies I18n;

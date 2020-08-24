@@ -110,22 +110,11 @@ namespace Xamarin.Tests {
 			var result = DotNet.AssertBuild (project_path, verbosity);
 			var lines = result.StandardOutput.ToString ().Split ('\n');
 			// Find the resulting binding assembly from the build log
-			var assemblies = lines.
-				Select (v => v.Trim ()).
-				Where (v => {
-					if (v.Length < 10)
-						return false;
-					if (v [0] != '/')
-						return false;
-					if (!v.EndsWith ($"{assemblyName}.dll", StringComparison.Ordinal))
-						return false;
-					if (!v.Contains ("/bin/", StringComparison.Ordinal))
-						return false;
-					return true;
-				});
+			var assemblies = FilterToAssembly (lines, assemblyName);
 			Assert.That (assemblies, Is.Not.Empty, "Assemblies");
 			// Make sure there's no other assembly confusing our logic
-			Assert.That (assemblies.Distinct ().Count (), Is.EqualTo (1), "Unique assemblies");
+			assemblies = assemblies.Distinct ();
+			Assert.That (assemblies.Count (), Is.EqualTo (1), $"Unique assemblies\n\t{string.Join ("\n\t", assemblies)}");
 			var asm = assemblies.First ();
 			Assert.That (asm, Does.Exist, "Assembly existence");
 			// Verify that there's one resource in the assembly, and its name
@@ -153,19 +142,7 @@ namespace Xamarin.Tests {
 			var result = DotNet.AssertBuild (project_path, verbosity);
 			var lines = result.StandardOutput.ToString ().Split ('\n');
 			// Find the resulting binding assembly from the build log
-			var assemblies = lines.
-				Select (v => v.Trim ()).
-				Where (v => {
-					if (v.Length < 10)
-						return false;
-					if (v [0] != '/')
-						return false;
-					if (!v.EndsWith ($"{assemblyName}.dll", StringComparison.Ordinal))
-						return false;
-					if (!v.Contains ("/bin/", StringComparison.Ordinal))
-						return false;
-					return true;
-				});
+			var assemblies = FilterToAssembly (lines, assemblyName);
 			Assert.That (assemblies, Is.Not.Empty, "Assemblies");
 			// Make sure there's no other assembly confusing our logic
 			Assert.That (assemblies.Distinct ().Count (), Is.EqualTo (1), "Unique assemblies");
@@ -192,19 +169,7 @@ namespace Xamarin.Tests {
 			var result = DotNet.AssertBuild (project_path, verbosity);
 			var lines = result.StandardOutput.ToString ().Split ('\n');
 			// Find the resulting binding assembly from the build log
-			var assemblies = lines.
-				Select (v => v.Trim ()).
-				Where (v => {
-					if (v.Length < 10)
-						return false;
-					if (v [0] != '/')
-						return false;
-					if (!v.EndsWith ($"{assemblyName}.dll", StringComparison.Ordinal))
-						return false;
-					if (!v.Contains ("/bin/", StringComparison.Ordinal))
-						return false;
-					return true;
-				});
+			var assemblies = FilterToAssembly (lines, assemblyName);
 			Assert.That (assemblies, Is.Not.Empty, "Assemblies");
 			// Make sure there's no other assembly confusing our logic
 			Assert.That (assemblies.Distinct ().Count (), Is.EqualTo (1), "Unique assemblies");
@@ -233,19 +198,7 @@ namespace Xamarin.Tests {
 			var result = DotNet.AssertBuild (project_path, verbosity);
 			var lines = result.StandardOutput.ToString ().Split ('\n');
 			// Find the resulting binding assembly from the build log
-			var assemblies = lines.
-				Select (v => v.Trim ()).
-				Where (v => {
-					if (v.Length < 10)
-						return false;
-					if (v [0] != '/')
-						return false;
-					if (!v.EndsWith ($"{assemblyName}.dll", StringComparison.Ordinal))
-						return false;
-					if (!v.Contains ("/bin/", StringComparison.Ordinal))
-						return false;
-					return true;
-				});
+			var assemblies = FilterToAssembly (lines, assemblyName);
 			Assert.That (assemblies, Is.Not.Empty, "Assemblies");
 			// Make sure there's no other assembly confusing our logic
 			Assert.That (assemblies.Distinct ().Count (), Is.EqualTo (1), "Unique assemblies");
@@ -354,6 +307,25 @@ namespace Xamarin.Tests {
 				throw new NotImplementedException ($"Unknown platform: {platform}");
 			}
 			Assert.That (info_plist_path, Does.Exist, "Info.plist");
+		}
+
+		IEnumerable<string> FilterToAssembly (IEnumerable<string> lines, string assemblyName)
+		{
+			return lines.
+				Select (v => v.Trim ()).
+				Where (v => {
+					if (v.Length < 10)
+						return false;
+					if (v [0] != '/')
+						return false;
+					if (!v.EndsWith ($"{assemblyName}.dll", StringComparison.Ordinal))
+						return false;
+					if (!v.Contains ("/bin/", StringComparison.Ordinal))
+						return false;
+					if (v.Contains ("/ref/", StringComparison.Ordinal))
+						return false; // Skip reference assemblies
+					return true;
+				});
 		}
 	}
 }

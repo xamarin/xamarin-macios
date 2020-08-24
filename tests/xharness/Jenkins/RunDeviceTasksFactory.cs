@@ -22,7 +22,7 @@ namespace Xharness.Jenkins {
 				if (project.SkipDeviceVariations)
 					continue;
 
-				bool ignored = !jenkins.IncludeDevice;
+				bool ignored = project.Ignore ?? !jenkins.IncludeDevice;
 				if (!jenkins.IsIncluded (project))
 					ignored = true;
 
