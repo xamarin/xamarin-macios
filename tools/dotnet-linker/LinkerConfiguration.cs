@@ -182,6 +182,7 @@ namespace Xamarin.Linker {
 			Application.CreateCache (significantLines.ToArray ());
 			Application.Cache.Location = CacheDirectory;
 			Application.DeploymentTarget = DeploymentTarget;
+			Application.EnableCoopGC ??= Platform == ApplePlatform.WatchOS;
 			Application.SdkVersion = SdkVersion;
 
 			switch (Platform) {
