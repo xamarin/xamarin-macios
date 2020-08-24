@@ -244,13 +244,14 @@ namespace Introspection {
 				// Xcode 11.4, not documented
 				case "NSHttpCookie":
 					return true;
-				// Xcode 12 beta 1
+				// Xcode 12
 				case "ASAccountAuthenticationModificationExtensionContext":
 				case "GCController":
 				case "GCExtendedGamepad":
 				case "GCMicroGamepad":
 				case "GCMotion":
 				case "SNClassification":
+				case "CPMessageListItem": // Conformance not in headers
 					return true;
 				}
 				break;

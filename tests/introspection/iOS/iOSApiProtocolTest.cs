@@ -412,7 +412,18 @@ namespace Introspection {
 				case "SRVisit":
 				case "SRWebUsage":
 					return true;
+				// Xcode 12
+				case "CPButton": // conformance not in headers
+				case "CPContactCallButton": // conformance not in headers
+				case "CPContactDirectionsButton": // conformance not in headers
+				case "CPContactMessageButton": // conformance not in headers
+				case "CPMessageListItem": // Conformance not in headers
+				case "CPMessageListItemLeadingConfiguration": // conformance not in headers
+				case "CPMessageListItemTrailingConfiguration": // conformance not in headers
+				case "CPTextButton": // conformance not in headers
+					return true;
 				}
+
 				break;
 			case "NSSecureCoding":
 				switch (type.Name) {
@@ -666,7 +677,17 @@ namespace Introspection {
 				case "SRVisit":
 				case "SRWebUsage":
 					return true;
+				// Xcode 12 beta 4
+				case "CPButton": // conformance not in headers (NSSecureCoding)
+				case "CPContactCallButton": // conformance not in headers
+				case "CPContactDirectionsButton": // conformance not in headers
+				case "CPContactMessageButton": // conformance not in headers
+				case "CPMessageListItemLeadingConfiguration": // conformance not in headers
+				case "CPMessageListItemTrailingConfiguration": // conformance not in headers
+				case "CPTextButton": // conformance not in headers
+					return true;
 				}
+
 				break;
 			case "NSCopying":
 				switch (type.Name) {
