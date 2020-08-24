@@ -423,7 +423,6 @@ namespace Introspection {
 				case "CPTextButton": // conformance not in headers
 					return true;
 				}
-
 				break;
 			case "NSSecureCoding":
 				switch (type.Name) {
@@ -687,7 +686,6 @@ namespace Introspection {
 				case "CPTextButton": // conformance not in headers
 					return true;
 				}
-
 				break;
 			case "NSCopying":
 				switch (type.Name) {
