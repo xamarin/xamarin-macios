@@ -68,7 +68,6 @@ namespace MonoTouchFixtures.AudioToolbox {
 
 #if !MONOMAC // Currently no AppDelegate in xammac_test
 		[Test]
-		[Ignore ("Broken in Xcode 12 beta 3 - https://github.com/xamarin/xamarin-macios/issues/8943")]
 		public void TestCallbackPlaySystem ()
 		{
 			TestRuntime.AssertSystemVersion (PlatformName.iOS, 9, 0, throwIfOtherPlatform: false);
@@ -88,7 +87,6 @@ namespace MonoTouchFixtures.AudioToolbox {
 		}
 
 		[Test]
-		[Ignore ("Broken in Xcode 12 beta 3 - https://github.com/xamarin/xamarin-macios/issues/8943")]
 		public void TestCallbackPlayAlert ()
 		{
 			TestRuntime.AssertSystemVersion (PlatformName.iOS, 9, 0, throwIfOtherPlatform: false);
