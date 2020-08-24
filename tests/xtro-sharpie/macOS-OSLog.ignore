@@ -1,3 +1,5 @@
+## Will save these bindings for later - https://github.com/xamarin/xamarin-macios/issues/9480
+
 !missing-enum! OSLogEntryLogLevel not bound
 !missing-enum! OSLogEntrySignpostType not bound
 !missing-enum! OSLogEntryStoreCategory not bound
