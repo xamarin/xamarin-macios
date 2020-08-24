@@ -4,7 +4,8 @@
 // Authors:
 //	Whitney Schmidt <whschm@microsoft.com>
 //
-// Copyright 2020 Microsoft Corporation.
+// Copyright (c) Microsoft Corporation.
+// Licensed under MIT License.
 //
 
 using System;
@@ -45,5 +46,5 @@ namespace CarPlay {
                 throw new ArgumentException ("The 'CPMessageListItemType type' argument needs a value.");
             }
         }
-	}
+    }
 }
