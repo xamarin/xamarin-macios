@@ -187,7 +187,6 @@ namespace CarPlay {
 
 		[Deprecated (PlatformName.iOS, 14, 0)]
 		[Export ("initWithType:handler:")]
-		//[DesignatedInitializer] fwict, this is a safe change.
 		IntPtr Constructor (CPBarButtonType type, [NullAllowed] Action<CPBarButton> handler);
 
 		[Export ("enabled")]
@@ -203,17 +202,14 @@ namespace CarPlay {
 		[NullAllowed, Export ("title")]
 		string Title { get; set; }
 
-		// -(instancetype _Nonnull)initWithImage:(UIImage * _Nonnull)image handler:(CPBarButtonHandler _Nullable)handler __attribute__((availability(ios, introduced=14.0)));
 		[iOS (14,0)]
 		[Export ("initWithImage:handler:")]
 		IntPtr Constructor (UIImage image, [NullAllowed] CPBarButtonHandler handler);
 
-		// -(instancetype _Nonnull)initWithTitle:(NSString * _Nonnull)title handler:(CPBarButtonHandler _Nullable)handler __attribute__((availability(ios, introduced=14.0)));
 		[iOS (14,0)]
 		[Export ("initWithTitle:handler:")]
 		IntPtr Constructor (string title, [NullAllowed] CPBarButtonHandler handler);
 
-		// @property (assign, nonatomic) CPBarButtonStyle buttonStyle __attribute__((availability(ios, introduced=14.0)));
 		[iOS (14, 0)]
 		[Export ("buttonStyle", ArgumentSemantic.Assign)]
 		CPBarButtonStyle ButtonStyle { get; set; }
