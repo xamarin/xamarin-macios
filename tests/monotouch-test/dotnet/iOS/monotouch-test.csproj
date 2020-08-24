@@ -48,24 +48,6 @@
     </Compile>
     <Compile Include="..\..\..\..\tests\test-libraries\TrampolineTest.generated.cs" />
     <Compile Include="..\..\..\..\tests\test-libraries\RegistrarTest.generated.cs" />
-    <Compile Include="..\..\..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\System.Drawing\Test\System.Drawing\TestPoint.cs">
-      <Link>System.Drawing\TestPoint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\System.Drawing\Test\System.Drawing\TestPointF.cs">
-      <Link>System.Drawing\TestPointF.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\System.Drawing\Test\System.Drawing\TestRectangle.cs">
-      <Link>System.Drawing\TestRectangle.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\System.Drawing\Test\System.Drawing\TestRectangleF.cs">
-      <Link>System.Drawing\TestRectangleF.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\System.Drawing\Test\System.Drawing\TestSize.cs">
-      <Link>System.Drawing\TestSize.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\System.Drawing\Test\System.Drawing\TestSizeF.cs">
-      <Link>System.Drawing\TestSizeF.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\api-shared\ObjCRuntime\RegistrarTest.cs">
       <Link>shared\ObjCRuntime\RegistrarTest.cs</Link>
     </Compile>
