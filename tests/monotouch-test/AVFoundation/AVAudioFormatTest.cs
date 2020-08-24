@@ -7,11 +7,20 @@ using System;
 using Foundation;
 using AVFoundation;
 using NUnit.Framework;
+using ObjCRuntime;
+
 namespace MonoTouchFixtures.AVFoundation {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class AVAudioFormatTest {
+
+		[SetUp]
+		public void Setup ()
+		{
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+		}
 
 		[Test]
 		public void TestEqualOperatorSameInstace ()
