@@ -537,6 +537,9 @@ namespace MonoTouchFixtures.Security {
 		}
 
 		[Test]
+#if NET
+		[Ignore ("System.EntryPointNotFoundException: AppleCryptoNative_X509ImportCertificate")] // https://github.com/dotnet/runtime/issues/36897
+#endif
 		public void MailX1 ()
 		{
 			using (var cert = new X509Certificate (mail_google_com)) {

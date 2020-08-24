@@ -8,7 +8,7 @@ namespace Xamarin.Bundler {
 	public enum LinkMode {
 		None,
 		SDKOnly,
-		All,
+		Full,
 		Platform,
 	}
 }

@@ -456,6 +456,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 		[Test]
+#if NET
+		[Ignore ("https://github.com/dotnet/runtime/issues/32543")]
+#endif
 		public void NSAutoreleasePoolInThreadPool ()
 		{
 			var count = 100;
