@@ -971,14 +971,14 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 				if (input [0] == '/')
 					return input; // This is already a full path.
 
-				// Don't process anything that starts with a variable, it's either a full path already, or the variable will be updated according to the new location
-				if (input.StartsWith ("$(", StringComparison.Ordinal))
-					return input;
-
 				input = input.Replace ('\\', '/'); // make unix-style
 
 				if (rootDirectory != null)
 					input = input.Replace ("$(RootTestsDirectory)", rootDirectory);
+
+				// Don't process anything that starts with a variable, it's either a full path already, or the variable will be updated according to the new location
+				if (input.StartsWith ("$(", StringComparison.Ordinal))
+					return input;
 
 				input = System.IO.Path.GetFullPath (System.IO.Path.Combine (dir, input));
 				input = input.Replace ('/', '\\'); // make windows-style again
