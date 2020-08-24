@@ -337,30 +337,37 @@ namespace CarPlay {
 		NSString CarPlayErrorDomain { get; }
 
 		[iOS (14, 0)]
+		[Async]
 		[Export ("setRootTemplate:animated:completion:")]
 		void SetRootTemplate (CPTemplate rootTemplate, bool animated, [NullAllowed] Action<bool, NSError> completion);
 
 		[iOS (14, 0)]
+		[Async]
 		[Export ("pushTemplate:animated:completion:")]
 		void PushTemplate (CPTemplate templateToPush, bool animated, [NullAllowed] Action<bool, NSError> completion);
 
 		[iOS (14, 0)]
+		[Async]
 		[Export ("popTemplateAnimated:completion:")]
 		void PopTemplate (bool animated, [NullAllowed] Action<bool, NSError> completion);
 
 		[iOS (14, 0)]
+		[Async]
 		[Export ("popToRootTemplateAnimated:completion:")]
 		void PopToRootTemplate (bool animated, [NullAllowed] Action<bool, NSError> completion);
 
 		[iOS (14, 0)]
+		[Async]
 		[Export ("popToTemplate:animated:completion:")]
 		void PopToTemplate (CPTemplate targetTemplate, bool animated, [NullAllowed] Action<bool, NSError> completion);
 
 		[iOS (14, 0)]
+		[Async]
 		[Export ("presentTemplate:animated:completion:")]
 		void PresentTemplate (CPTemplate templateToPresent, bool animated, [NullAllowed] Action<bool, NSError> completion);
 
 		[iOS (14, 0)]
+		[Async]
 		[Export ("dismissTemplateAnimated:completion:")]
 		void DismissTemplate (bool animated, [NullAllowed] Action<bool, NSError> completion);
 
