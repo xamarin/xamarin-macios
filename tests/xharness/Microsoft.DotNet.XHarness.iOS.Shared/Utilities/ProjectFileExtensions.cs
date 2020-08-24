@@ -958,14 +958,23 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 			{
 				"MtouchExtraArgs",
 			};
-			Func<string, string> convert = (input) =>
+			Func<string, string> convert = null;
+			convert = (input) =>
 			{
+				if (input.IndexOf (';') >= 0) {
+					var split = input.Split (new char [] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+					for (var i = 0; i < split.Length; i++)
+						split [i] = convert (split [i]);
+					return string.Join (";", split);
+				}
+
 				if (input [0] == '/')
 					return input; // This is already a full path.
-				if (input.StartsWith ("$(MSBuildExtensionsPath)", StringComparison.Ordinal))
-					return input; // This is already a full path.
-				if (input.StartsWith ("$(MSBuildBinPath)", StringComparison.Ordinal))
-					return input; // This is already a full path.
+
+				// Don't process anything that starts with a variable, it's either a full path already, or the variable will be updated according to the new location
+				if (input.StartsWith ("$(", StringComparison.Ordinal))
+					return input;
+
 				input = input.Replace ('\\', '/'); // make unix-style
 
 				if (rootDirectory != null)
