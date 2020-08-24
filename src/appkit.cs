@@ -376,7 +376,7 @@ namespace AppKit {
 		bool AllowsVibrancy { get; }
 
 		[Static, Export ("currentAppearance")]
-		[Deprecated (PlatformName.MacOSX, 10, 9, message: "Use PerformAsCurrentDrawingAppearance: to temporarily set the drawing appearance, or CurrentDrawingAppearance to access the currently drawing appearance.")]
+		[Deprecated (PlatformName.MacOSX, 10, 9, message: "Use PerformAsCurrentDrawingAppearance or CurrentDrawingAppearance instead.")]
 		NSAppearance CurrentAppearance { get; [Bind("setCurrentAppearance:")] set; }
 
 		[Mac (11, 0)]
