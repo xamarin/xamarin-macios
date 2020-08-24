@@ -47,6 +47,9 @@ namespace MonoTouchFixtures.Security {
 		}
 
 		[Test]
+#if NET
+		[Ignore ("System.EntryPointNotFoundException: AppleCryptoNative_SecKeychainCreate")] // https://github.com/dotnet/runtime/issues/36897
+#endif
 		public void Encrypt_Old ()
 		{
 			// the old API was not working but the crash was fixed, still you need to provide an adequatly sized buffer
@@ -63,6 +66,9 @@ namespace MonoTouchFixtures.Security {
 		}
 
 		[Test]
+#if NET
+		[Ignore ("System.EntryPointNotFoundException: AppleCryptoNative_SecKeychainCreate")] // https://github.com/dotnet/runtime/issues/36897
+#endif
 		public void Encrypt_Empty ()
 		{
 			using (SecPolicy p = SecPolicy.CreateBasicX509Policy ())
@@ -79,6 +85,9 @@ namespace MonoTouchFixtures.Security {
 		}
 
 		[Test]
+#if NET
+		[Ignore ("System.EntryPointNotFoundException: AppleCryptoNative_SecKeychainCreate")] // https://github.com/dotnet/runtime/issues/36897
+#endif
 		public void Encrypt_New ()
 		{
 			using (SecPolicy p = SecPolicy.CreateBasicX509Policy ())
