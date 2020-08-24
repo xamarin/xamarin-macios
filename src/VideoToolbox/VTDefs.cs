@@ -260,7 +260,6 @@ namespace VideoToolbox {
 
 	[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
 	public enum HdrMetadataInsertionMode {
-		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
 		[Field ("kVTHDRMetadataInsertionMode_None")]
 		None,
 		[Field ("kVTHDRMetadataInsertionMode_Auto")]
