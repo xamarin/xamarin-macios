@@ -1092,6 +1092,9 @@ namespace LinkSdk {
 		}
 #endif
 
+#if NET
+		[Ignore ("https://github.com/mono/linker/issues/1453")]
+#endif
 		[Test]
 		// https://github.com/xamarin/xamarin-macios/issues/6346
 		public void AsQueryable_Enumerable ()
