@@ -13,8 +13,7 @@ namespace Xamarin.Bundler {
 	public partial class Application {
 		public LinkerConfiguration Configuration { get; private set; }
 
-		public Application (LinkerConfiguration configuration, string[] arguments)
-			: this (arguments)
+		public Application (LinkerConfiguration configuration)
 		{
 			this.Configuration = configuration;
 		}
@@ -37,6 +36,35 @@ namespace Xamarin.Bundler {
 		}
 
 		public void SelectRegistrar ()
+		{
+			if (Registrar == RegistrarMode.Default) {
+				if (LinkMode == LinkMode.None && IsDefaultMarshalManagedExceptionMode) {
+					Registrar = RegistrarMode.PartialStatic;
+				} else {
+					Registrar = RegistrarMode.Dynamic;
+				}
+			}
+			Driver.Log (1, $"Registrar mode: {Registrar}");
+		}
+
+		public AssemblyBuildTarget LibMonoLinkMode {
+			get { throw new NotImplementedException (); }
+		}
+
+		public AssemblyBuildTarget LibXamarinLinkMode {
+			get { throw new NotImplementedException (); }
+		}
+
+		public bool HasAnyDynamicLibraries {
+			get { throw new NotImplementedException (); }
+		}
+
+		public string GetLibMono (AssemblyBuildTarget build_target)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public string GetLibXamarin (AssemblyBuildTarget build_target)
 		{
 			throw new NotImplementedException ();
 		}

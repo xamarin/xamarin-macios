@@ -117,7 +117,7 @@
 		<_AdditionalTaskAssemblyDirectory>$(_XamarinSdkRootDirectory)tools/dotnet-linker/</_AdditionalTaskAssemblyDirectory>
 		<_AdditionalTaskAssembly>$(_AdditionalTaskAssemblyDirectory)dotnet-linker.dll</_AdditionalTaskAssembly>
 	</PropertyGroup>
-	<Target Name="_ComputeLinkerArguments" DependsOnTargets="_ComputeLinkMode;ComputeResolvedFilesToPublishList">
+	<Target Name="_ComputeLinkerArguments" DependsOnTargets="_ComputeLinkMode;_ComputeFrameworkVariables;ComputeResolvedFilesToPublishList">
 		<!-- Validate the linker mode -->
 		<Error Text="Invalid link mode: '$(_LinkMode)'. Valid link modes are: 'None', 'SdkOnly' and 'Full'" Condition="'$(_LinkMode)' != 'None' And '$(_LinkMode)' != 'SdkOnly' And '$(_LinkMode)' != 'Full'" />
 
@@ -137,6 +137,8 @@
 				DeploymentTarget=$(_MinimumOSVersion)
 				ItemsDirectory=$(_LinkerItemsDirectory)
 				IsSimulatorBuild=$(_SdkIsSimulator)
+				LinkMode=$(_LinkMode)
+				PartialStaticRegistrarLibrary=$(_LibPartialStaticRegistrar)
 				Platform=$(_PlatformName)
 				PlatformAssembly=$(_PlatformAssemblyName).dll
 				SdkVersion=$(_SdkVersion)
@@ -199,6 +201,10 @@
 		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_MainFile.items" Condition="Exists('$(_LinkerItemsDirectory)/_MainFile.items')">
 			<Output TaskParameter="Items" ItemName="_MainFile" />
 		</ReadItemsFromFile>
+		<!-- Load _MainLinkWith -->
+		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_MainLinkWith.items" Condition="Exists('$(_LinkerItemsDirectory)/_MainLinkWith.items')">
+			<Output TaskParameter="Items" ItemName="_MainLinkWith" />
+		</ReadItemsFromFile>
 		<!-- Load _LinkerFrameworks -->
 		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_LinkerFrameworks.items" Condition="Exists('$(_LinkerItemsDirectory)/_LinkerFrameworks.items')">
 			<Output TaskParameter="Items" ItemName="_LinkerFrameworks" />
@@ -231,6 +237,8 @@
 			<_XamarinIncludeDirectory>$(_XamarinSdkRuntimePackDirectory)/runtimes/$(RuntimeIdentifier)/native</_XamarinIncludeDirectory>
 			<_XamarinRefAssemblyDirectory>$(_XamarinRefPackageDirectory)/ref/net5.0/</_XamarinRefAssemblyDirectory>
 			<_XamarinRefAssemblyPath>$(_XamarinRefAssemblyDirectory)$(_PlatformAssemblyName).dll</_XamarinRefAssemblyPath>
+
+			<_LibPartialStaticRegistrar>$(_XamarinNativeLibraryDirectory)/Microsoft.$(_PlatformName).registrar.a</_LibPartialStaticRegistrar>
 		</PropertyGroup>
 	</Target>
 
@@ -354,7 +362,7 @@
 			SessionId="$(BuildSessionId)"
 			Frameworks="@(_NativeExecutableFrameworks);@(_BindingLibraryFrameworks)"
 			LinkerFlags="@(_BindingLibraryLinkerFlags)"
-			LinkWithLibraries="@(_XamarinMainLibraries);@(_BindingLibraryLinkWith)"
+			LinkWithLibraries="@(_XamarinMainLibraries);@(_BindingLibraryLinkWith);@(_MainLinkWith)"
 			MinimumOSVersion="$(_MinimumOSVersion)"
 			ObjectFiles="@(_NativeExecutableObjectFiles)"
 			OutputFile="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)"

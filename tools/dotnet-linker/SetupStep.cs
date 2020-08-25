@@ -31,6 +31,7 @@ namespace Xamarin {
 			// which makes it very difficult to share state between steps.
 			Steps.Add (new LoadNonSkippedAssembliesStep ());
 			Steps.Add (new ExtractBindingLibrariesStep ());
+			Steps.Add (new RegistrarStep ());
 			Steps.Add (new GenerateMainStep ());
 			Steps.Add (new GatherFrameworksStep ());
 

@@ -19,6 +19,12 @@
     <Compile Include="..\..\src\ObjCRuntime\ErrorHelper.cs">
       <Link>src\ObjCRuntime\ErrorHelper.cs</Link>
     </Compile>
+    <Compile Include="..\common\AssemblyBuildTarget.cs">
+      <Link>tools\common\AssemblyBuildTarget.cs</Link>
+    </Compile>
+    <Compile Include="..\common\CompilerFlags.cs">
+      <Link>external\tools\common\CompilerFlags.cs</Link>
+    </Compile>
     <Compile Include="..\common\CoreResolver.cs">
       <Link>external\tools\common\CoreResolver.cs</Link>
     </Compile>
