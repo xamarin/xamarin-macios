@@ -386,9 +386,12 @@ namespace MonoTouchFixtures.Security {
 				// since we modified the `trust` instance it's result was invalidated (marked as unspecified on iOS 11)
 				Assert.That (trust.GetTrustResult (), Is.EqualTo (trust_result), "GetTrustResult-2");
 			}
-			if (TestRuntime.CheckXcodeVersion (12, 0))
-				Assert.Inconclusive ("A different error than the one we expect is thrown");
-			else if (TestRuntime.CheckXcodeVersion (11, 0)) {
+			if (TestRuntime.CheckXcodeVersion (12, 0)) {
+				// old certificate (built in our tests) was not quite up to spec and it eventually became important
+				Assert.False (trust.Evaluate (out var error), "Evaluate");
+				Assert.NotNull (error, "error");
+				Assert.That (error.LocalizedDescription, Is.EqualTo ("“mail.google.com” certificate is not standards compliant"), "desc");
+			} else if (TestRuntime.CheckXcodeVersion (11, 0)) {
 				Assert.False (trust.Evaluate (out var error), "Evaluate");
 				Assert.NotNull (error, "error");
 				Assert.That (error.LocalizedDescription, Is.StringContaining ("\"mail.google.com\",\"Thawte SGC CA\",\"Class 3 Public Primary Certification Authority\" certificates do not meet pinning requirements"));
