@@ -90,6 +90,9 @@
 	<!-- Inject our custom logic into *DependsOn variables -->
 	<PropertyGroup>
 		<BuildDependsOn>
+			_CollectBundleResources;
+			_PackLibraryResources;
+			_UnpackLibraryResources;
 			$(BuildDependsOn);
 			_CreateAppBundle;
 			Codesign;
@@ -98,7 +101,6 @@
 		<!-- We re-use ComputeFilesToPublish & CopyFilesToPublishDirectory to copy files to the .app -->
 		<!-- ComputeFilesToPublish will run ILLink -->
 		<CreateAppBundleDependsOn>
-			_CollectBundleResources;
 			_DetectAppManifest;
 			_CopyResourcesToBundle;
 			_CompileAppManifest;
