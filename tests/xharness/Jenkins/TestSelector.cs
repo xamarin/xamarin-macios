@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 
@@ -80,7 +81,7 @@ namespace Xharness.Jenkins {
 		static readonly string [] dotnetPrefixes = {
 			"dotnet",
 			"msbuild",
-			"tests/dotnet",
+			".*dotnet.*",
 		};
 
 		#endregion
@@ -101,12 +102,29 @@ namespace Xharness.Jenkins {
 		void SetEnabled (IEnumerable<string> files, string [] prefixes, string testname, ref bool value)
 		{
 			MainLog.WriteLine ($"Checking if test {testname} should be enabled according to the modified files.");
+
+			// Compute any regexes we might need out of the loop.
+			var regexes = new Regex [prefixes.Length];
+			for (var i = 0; i < prefixes.Length; i++) {
+				// If the prefix contains a star, treat it is as a regex.
+				if (prefixes [i].IndexOf ('*') == -1)
+					continue;
+
+				var regex = new Regex (prefixes [i]);
+				regexes [i] = regex;
+			}
+
 			foreach (var file in files) {
 				MainLog.WriteLine ($"Checking for file {file}"); 
-				foreach (var prefix in prefixes) {
+				for (var i = 0; i < prefixes.Length; i++) {
+					var prefix = prefixes [i];
 					if (file.StartsWith (prefix, StringComparison.Ordinal)) {
 						value = true;
 						MainLog.WriteLine ("Enabled '{0}' tests because the modified file '{1}' matches prefix '{2}'", testname, file, prefix);
+						return;
+					} else if (regexes [i]?.IsMatch (file) == true) {
+						value = true;
+						MainLog.WriteLine ("Enabled '{0}' tests because the modified file '{1}' matches regex '{2}'", testname, file, prefix);
 						return;
 					}
 				}
