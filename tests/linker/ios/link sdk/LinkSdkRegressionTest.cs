@@ -802,7 +802,12 @@ namespace LinkSdk {
 			var mem = System.Diagnostics.Process.GetCurrentProcess ().PrivateMemorySize64;
 			// the above used a mach call that iOS samdbox did *not* allow (sandbox) on device
 			// but has been fixed (different call) for the same PID
+#if NET
+			// It's not entirely clear, but it appears this is not implemented, and won't be, for mobile platforms: https://github.com/dotnet/runtime/issues/28990
+			Assert.That (mem, Is.EqualTo (0), "PrivateMemorySize64");
+#else
 			Assert.That (mem, Is.Not.EqualTo (0), "PrivateMemorySize64");
+#endif
 		}
 
 		string TestFolder (Environment.SpecialFolder folder, bool supported = true, bool exists = true, bool readOnly = false)
