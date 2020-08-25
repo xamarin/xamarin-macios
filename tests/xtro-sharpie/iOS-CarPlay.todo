@@ -44,10 +44,6 @@
 !missing-selector! CPBarButton::initWithImage:handler: not bound
 !missing-selector! CPBarButton::initWithTitle:handler: not bound
 !missing-selector! CPBarButton::setButtonStyle: not bound
-!missing-selector! CPBaseListItem::listItemHandler not bound
-!missing-selector! CPBaseListItem::setListItemHandler: not bound
-!missing-selector! CPBaseListItem::setUserInfo: not bound
-!missing-selector! CPBaseListItem::userInfo not bound
 !missing-selector! CPButton::image not bound
 !missing-selector! CPButton::initWithImage:handler: not bound
 !missing-selector! CPButton::isEnabled not bound
@@ -242,7 +238,6 @@
 !missing-selector! CPTextButton::setTitle: not bound
 !missing-selector! CPTextButton::textStyle not bound
 !missing-selector! CPTextButton::title not bound
-!missing-type! CPBaseListItem not bound
 !missing-type! CPButton not bound
 !missing-type! CPContact not bound
 !missing-type! CPContactCallButton not bound
@@ -271,4 +266,5 @@
 !missing-type! CPTabBarTemplate not bound
 !missing-type! CPTextButton not bound
 !unknown-field! CPMaximumListItemImageSize bound
-!wrong-base-type! CPListItem expected CPBaseListItem actual NSObject
+!missing-selector! CPPointOfInterest::setUserInfo: not bound
+!missing-selector! CPPointOfInterest::userInfo not bound
