@@ -15,7 +15,7 @@ namespace DontLink {
 		public void TypeDescriptorCanary ()
 		{
 			// this will fail is ReflectTypeDescriptionProvider.cs is modified
-			var rtdp = Type.GetType ("System.ComponentModel.ReflectTypeDescriptionProvider, System");
+			var rtdp = typeof (System.ComponentModel.BooleanConverter).Assembly.GetType ("System.ComponentModel.ReflectTypeDescriptionProvider");
 			Assert.NotNull (rtdp, "type");
 			var p = rtdp.GetProperty ("IntrinsicTypeConverters", BindingFlags.Static | BindingFlags.NonPublic);
 			Assert.NotNull (p, "property");
