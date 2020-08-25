@@ -22,6 +22,8 @@ namespace Xamarin.Linker {
 		public Version DeploymentTarget { get; private set; }
 		public string ItemsDirectory { get; private set; }
 		public bool IsSimulatorBuild { get; private set; }
+		public LinkMode LinkMode => Application.LinkMode;
+		public string PartialStaticRegistrarLibrary { get; set; }
 		public ApplePlatform Platform { get; private set; }
 		public string PlatformAssembly { get; private set; }
 		public Version SdkVersion { get; private set; }
@@ -31,6 +33,9 @@ namespace Xamarin.Linker {
 
 		public Application Application { get; private set; }
 		public Target Target { get; private set; }
+
+		public IList<string> RegistrationMethods { get; set; } = new List<string> ();
+		public CompilerFlags CompilerFlags;
 
 		public LinkContext Context { get; private set; }
 
@@ -53,6 +58,10 @@ namespace Xamarin.Linker {
 		{
 			if (!File.Exists (linker_file))
 				throw new FileNotFoundException ($"The custom linker file {linker_file} does not exist.");
+
+			Application = new Application (this);
+			Target = new Target (Application);
+			CompilerFlags = new CompilerFlags (Target);
 
 			var lines = File.ReadAllLines (linker_file);
 			var significantLines = new List<string> (); // This is the input the cache uses to verify if the cache is still valid
@@ -90,6 +99,14 @@ namespace Xamarin.Linker {
 					break;
 				case "IsSimulatorBuild":
 					IsSimulatorBuild = string.Equals ("true", value, StringComparison.OrdinalIgnoreCase);
+					break;
+				case "LinkMode":
+					if (!Enum.TryParse<LinkMode> (value, true, out var lm))
+						throw new InvalidOperationException ($"Unable to parse the {key} value: {value} in {linker_file}");
+					Application.LinkMode = lm;
+					break;
+				case "PartialStaticRegistrarLibrary":
+					PartialStaticRegistrarLibrary = value;
 					break;
 				case "Platform":
 					switch (value) {
@@ -145,9 +162,7 @@ namespace Xamarin.Linker {
 
 			ErrorHelper.Platform = Platform;
 
-			Application = new Application (this, significantLines.ToArray ());
-			Target = new Target (Application);
-
+			Application.CreateCache (significantLines.ToArray ());
 			Application.Cache.Location = CacheDirectory;
 			Application.DeploymentTarget = DeploymentTarget;
 			Application.SdkVersion = SdkVersion;
@@ -177,6 +192,8 @@ namespace Xamarin.Linker {
 				Console.WriteLine ($"    DeploymentTarget: {DeploymentTarget}");
 				Console.WriteLine ($"    ItemsDirectory: {ItemsDirectory}");
 				Console.WriteLine ($"    IsSimulatorBuild: {IsSimulatorBuild}");
+				Console.WriteLine ($"    LinkMode: {LinkMode}");
+				Console.WriteLine ($"    PartialStaticRegistrarLibrary: {PartialStaticRegistrarLibrary}");
 				Console.WriteLine ($"    Platform: {Platform}");
 				Console.WriteLine ($"    PlatformAssembly: {PlatformAssembly}.dll");
 				Console.WriteLine ($"    SdkVersion: {SdkVersion}");

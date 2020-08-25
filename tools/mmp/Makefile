@@ -18,15 +18,23 @@ LOCAL_MMP_COMMAND=$(SYSTEM_MONO) --debug $(LOCAL_MMP)
 $(MMP_DIR)/mmp.exe: $(mmp_dependencies)
 	$(Q_GEN) $(SYSTEM_MSBUILD) $(TOP)/Xamarin.Mac.sln "/t:mmp" $(XBUILD_VERBOSITY) /p:Configuration=$(MMP_CONF)
 
+MMP_TARGETS_DOTNET = \
+	$(DOTNET_DESTDIR)/Microsoft.macOS.Runtime.osx-x64/runtimes/osx-x64/native/Microsoft.macOS.registrar.a \
+
 MMP_TARGETS = \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/mmp \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp/mmp.exe \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp/Xamarin.Mac.registrar.mobile.a \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp/Xamarin.Mac.registrar.full.a \
+	$(MMP_TARGETS_DOTNET) \
+
+MMP_DIRECTORIES_DOTNET = \
+	$(DOTNET_DESTDIR)/Microsoft.macOS.Runtime.osx-x64/runtimes/osx-x64/native \
 
 MMP_DIRECTORIES = \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp \
+	$(MMP_DIRECTORIES_DOTNET) \
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/mmp: mmp | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin
 	$(Q) $(CP) $< $@
@@ -38,6 +46,9 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp/mmp.exe: $(MMP_DIR)/mmp.exe |
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp/Xamarin.Mac.registrar.%.a: Xamarin.Mac.registrar.%.a | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp
 	$(Q) $(CP) $<* $(dir $@)
+
+$(DOTNET_DESTDIR)/Microsoft.macOS.Runtime.osx-x64/runtimes/osx-x64/native/Microsoft.macOS.registrar.a: Microsoft.macOS.registrar.x86_64.a | $(DOTNET_DESTDIR)/Microsoft.macOS.Runtime.osx-x64/runtimes/osx-x64/native
+	$(Q) $(CP) $< $@
 
 $(MMP_DIRECTORIES):
 	$(Q) mkdir -p $@
@@ -52,15 +63,24 @@ Xamarin.Mac.registrar.mobile.x86_64.m: $(TOP)/src/build/mac/mobile-64/Xamarin.Ma
 	$(GENERATE_PART_REGISTRAR) --target-framework Xamarin.Mac,Version=v2.0,Profile=Mobile -a:$(MOBILE_BCL_DIR)/mscorlib.dll
 	$(Q) touch Xamarin.Mac.registrar.mobile.x86_64.m Xamarin.Mac.registrar.mobile.x86_64.h
 
+Microsoft.macOS.registrar.x86_64.m: $(TOP)/src/build/dotnet/macos/64/Xamarin.Mac.dll $(LOCAL_MMP)
+	$(GENERATE_PART_REGISTRAR) --target-framework .NETCoreApp,Version=5.0,Profile=macos -a:$(DOTNET_BCL_DIR)/System.Runtime.dll
+	$(Q) touch $@ $(basename $@).h
+
 Xamarin.Mac.registrar.full.x86_64.m:   $(TOP)/src/build/mac/full-64/Xamarin.Mac.dll $(LOCAL_MMP)
 	$(GENERATE_PART_REGISTRAR) --target-framework Xamarin.Mac,Version=v4.5,Profile=Full -a:$(FULL_BCL_DIR)/mscorlib.dll
 	$(Q) touch Xamarin.Mac.registrar.full.x86_64.m Xamarin.Mac.registrar.full.x86_64.h
 
-Xamarin.Mac.registrar.%.x86_64.a: Xamarin.Mac.registrar.%.x86_64.m
+%.x86_64.a: %.x86_64.m
 	$(Q_CC) $(MAC_CC) -DDEBUG -g -gdwarf-2 -x objective-c++ -std=c++14 -o $@ -c -arch x86_64 $< -Wall -Wno-unguarded-availability-new -I$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/include -mmacosx-version-min=$(MIN_OSX_SDK_VERSION) -fobjc-runtime=macosx
 
 Xamarin.Mac.registrar.%.a: Xamarin.Mac.registrar.%.x86_64.a
 	$(Q) $(CP) $< $@
+
+dotnet: $(MMP_TARGETS_DOTNET)
+ifdef ENABLE_DOTNET
+MMP_TARGETS += $(MMP_TARGETS_DOTNET)
+endif
 
 ifdef INCLUDE_MAC
 install-local:: $(MMP_TARGETS)

@@ -11,13 +11,6 @@ using Mono.Cecil;
 using Xamarin.Utils;
 
 namespace Xamarin.Bundler {
-	public enum AssemblyBuildTarget
-	{
-		StaticObject,
-		DynamicLibrary,
-		Framework,
-	}
-
 	public class AotInfo
 	{
 		public AOTTask Task;

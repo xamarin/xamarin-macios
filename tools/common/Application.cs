@@ -224,7 +224,16 @@ namespace Xamarin.Bundler {
 
 		public bool IsDualBuild { get { return Is32Build && Is64Build; } } // if we're building both a 32 and a 64 bit version.
 
-		public Application (string[] arguments)
+		public Application ()
+		{
+		}
+
+		public Application (string [] arguments)
+		{
+			CreateCache (arguments);
+		}
+
+		public void CreateCache (string [] arguments)
 		{
 			Cache = new Cache (arguments);
 		}
@@ -661,7 +670,7 @@ namespace Xamarin.Bundler {
 #endif
 			};
 
-			if (Platform == ApplePlatform.iOS) {
+			if (Platform == ApplePlatform.iOS && !Driver.IsDotNet) {
 				if (Is32Build) {
 					resolver.ArchDirectory = Driver.GetArch32Directory (this);
 				} else {
@@ -720,7 +729,7 @@ namespace Xamarin.Bundler {
 #endif
 			var registrar = new Registrar.StaticRegistrar (this);
 			if (RootAssemblies.Count == 1)
-				registrar.GenerateSingleAssembly (resolvedAssemblies.Values, Path.ChangeExtension (registrar_m, "h"), registrar_m, Path.GetFileNameWithoutExtension (RootAssembly));
+				registrar.GenerateSingleAssembly (resolver, resolvedAssemblies.Values, Path.ChangeExtension (registrar_m, "h"), registrar_m, Path.GetFileNameWithoutExtension (RootAssembly));
 			else
 				registrar.Generate (resolvedAssemblies.Values, Path.ChangeExtension (registrar_m, "h"), registrar_m);
 		}

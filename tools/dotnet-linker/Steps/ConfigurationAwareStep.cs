@@ -10,6 +10,11 @@ namespace Xamarin.Linker {
 			get { return LinkerConfiguration.GetInstance (Context); }
 		}
 
+		protected void Report (Exception exception)
+		{
+			ErrorHelper.Show (exception);
+		}
+
 		protected void Report (List<Exception> exceptions)
 		{
 			// Maybe there's a better way to show errors that integrates with the linker?
