@@ -545,41 +545,8 @@ namespace Xamarin.Bundler {
 			if (!EnableCoopGC.HasValue)
 				EnableCoopGC = Platform == ApplePlatform.WatchOS;
 
-			if (EnableCoopGC.Value) {
-				switch (MarshalObjectiveCExceptions) {
-				case MarshalObjectiveCExceptionMode.UnwindManagedCode:
-				case MarshalObjectiveCExceptionMode.Disable:
-					throw ErrorHelper.CreateError (89, Errors.MT0089, "--marshal-objectivec-exceptions", MarshalObjectiveCExceptions.ToString ().ToLowerInvariant ());
-				}
-				switch (MarshalManagedExceptions) {
-				case MarshalManagedExceptionMode.UnwindNativeCode:
-				case MarshalManagedExceptionMode.Disable:
-					throw ErrorHelper.CreateError (89, Errors.MT0089, "--marshal-managed-exceptions", MarshalManagedExceptions.ToString ().ToLowerInvariant ());
-				}
-			}
-
-
-			bool isSimulatorOrDesktopDebug = EnableDebug;
-#if MTOUCH
-			isSimulatorOrDesktopDebug &= IsSimulatorBuild;
-#endif
-
-			if (MarshalObjectiveCExceptions == MarshalObjectiveCExceptionMode.Default) {
-				if (EnableCoopGC.Value || (Platform == ApplePlatform.MacOSX && EnableDebug)) {
-					MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.ThrowManagedException;
-				} else {
-					MarshalObjectiveCExceptions = isSimulatorOrDesktopDebug ? MarshalObjectiveCExceptionMode.UnwindManagedCode : MarshalObjectiveCExceptionMode.Disable;
-				}
-			}
-
-			if (MarshalManagedExceptions == MarshalManagedExceptionMode.Default) {
-				if (EnableCoopGC.Value) {
-					MarshalManagedExceptions = MarshalManagedExceptionMode.ThrowObjectiveCException;
-				} else {
-					MarshalManagedExceptions = isSimulatorOrDesktopDebug ? MarshalManagedExceptionMode.UnwindNativeCode : MarshalManagedExceptionMode.Disable;
-				}
-				IsDefaultMarshalManagedExceptionMode = true;
-			}
+			SetObjectiveCExceptionMode ();
+			SetManagedExceptionMode ();
 
 			if (SymbolMode == SymbolMode.Default) {
 #if MONOTOUCH
@@ -973,6 +940,121 @@ namespace Xamarin.Bundler {
 				return true; // Unknown framework, assume it's valid for the simulator
 
 			return fw.IsFrameworkAvailableInSimulator (this);
+		}
+
+		public static bool TryParseManagedExceptionMode (string value, out MarshalManagedExceptionMode mode)
+		{
+			mode = MarshalManagedExceptionMode.Default;
+
+			switch (value) {
+			case "default":
+				mode = MarshalManagedExceptionMode.Default;
+				break;
+			case "unwindnative":
+			case "unwindnativecode":
+				mode = MarshalManagedExceptionMode.UnwindNativeCode;
+				break;
+			case "throwobjectivec":
+			case "throwobjectivecexception":
+				mode = MarshalManagedExceptionMode.ThrowObjectiveCException;
+				break;
+			case "abort":
+				mode = MarshalManagedExceptionMode.Abort;
+				break;
+			case "disable":
+				mode = MarshalManagedExceptionMode.Disable;
+				break;
+			default:
+				return false;
+			}
+
+			return true;
+		}
+
+		public static bool TryParseObjectiveCExceptionMode (string value, out MarshalObjectiveCExceptionMode mode)
+		{
+			mode = MarshalObjectiveCExceptionMode.Default;
+			switch (value) {
+			case "default":
+				mode = MarshalObjectiveCExceptionMode.Default;
+				break;
+			case "unwindmanaged":
+			case "unwindmanagedcode":
+				mode = MarshalObjectiveCExceptionMode.UnwindManagedCode;
+				break;
+			case "throwmanaged":
+			case "throwmanagedexception":
+				mode = MarshalObjectiveCExceptionMode.ThrowManagedException;
+				break;
+			case "abort":
+				mode = MarshalObjectiveCExceptionMode.Abort;
+				break;
+			case "disable":
+				mode = MarshalObjectiveCExceptionMode.Disable;
+				break;
+			default:
+				return false;
+			}
+			return true;
+		}
+
+		public void SetManagedExceptionMode ()
+		{
+			switch (MarshalManagedExceptions) {
+			case MarshalManagedExceptionMode.Default:
+				if (EnableCoopGC.Value) {
+					MarshalManagedExceptions = MarshalManagedExceptionMode.ThrowObjectiveCException;
+				} else {
+					switch (Platform) {
+					case ApplePlatform.iOS:
+					case ApplePlatform.TVOS:
+					case ApplePlatform.WatchOS:
+						MarshalManagedExceptions = EnableDebug && IsSimulatorBuild ? MarshalManagedExceptionMode.UnwindNativeCode : MarshalManagedExceptionMode.Disable;
+						break;
+					case ApplePlatform.MacOSX:
+						MarshalManagedExceptions = EnableDebug ? MarshalManagedExceptionMode.UnwindNativeCode : MarshalManagedExceptionMode.Disable;
+						break;
+					default:
+						throw ErrorHelper.CreateError (71, Errors.MX0071 /* Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case. */, Platform, ProductName);
+					}
+				}
+				IsDefaultMarshalManagedExceptionMode = true;
+				break;
+			case MarshalManagedExceptionMode.UnwindNativeCode:
+			case MarshalManagedExceptionMode.Disable:
+				if (EnableCoopGC.Value)
+					throw ErrorHelper.CreateError (89, Errors.MT0089, "--marshal-managed-exceptions", MarshalManagedExceptions.ToString ().ToLowerInvariant ());
+				break;
+			}
+		}
+
+		public void SetObjectiveCExceptionMode ()
+		{
+			switch (MarshalObjectiveCExceptions) {
+			case MarshalObjectiveCExceptionMode.Default:
+				if (EnableCoopGC.Value) {
+					MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.ThrowManagedException;
+				} else {
+					switch (Platform) {
+					case ApplePlatform.iOS:
+					case ApplePlatform.TVOS:
+					case ApplePlatform.WatchOS:
+						MarshalObjectiveCExceptions = EnableDebug && IsSimulatorBuild ? MarshalObjectiveCExceptionMode.UnwindManagedCode : MarshalObjectiveCExceptionMode.Disable;
+						break;
+					case ApplePlatform.MacOSX:
+						MarshalObjectiveCExceptions = EnableDebug ? MarshalObjectiveCExceptionMode.ThrowManagedException : MarshalObjectiveCExceptionMode.Disable;
+						break;
+					default:
+						throw ErrorHelper.CreateError (71, Errors.MX0071 /* Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case. */, Platform, ProductName);
+					}
+				}
+				break;
+			case MarshalObjectiveCExceptionMode.UnwindManagedCode:
+			case MarshalObjectiveCExceptionMode.Disable:
+				if (EnableCoopGC.Value)
+					throw ErrorHelper.CreateError (89, Errors.MT0089, "--marshal-objectivec-exceptions", MarshalObjectiveCExceptions.ToString ().ToLowerInvariant ());
+				break;
+			}
 		}
 	}
 }
