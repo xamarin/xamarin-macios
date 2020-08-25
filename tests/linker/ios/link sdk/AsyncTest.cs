@@ -16,6 +16,9 @@ namespace LinkSdk {
 			return Task.Run (async () => await (new HttpClient ()).GetStringAsync (NetworkResources.MicrosoftUrl));
 		}
 
+#if NET
+		[Ignore ("System.EntryPointNotFoundException: AppleCryptoNative_SecKeychainItemCopyKeychain")] // https://github.com/dotnet/runtime/issues/36897
+#endif
 		[Test]
 		public void Bug12221 ()
 		{

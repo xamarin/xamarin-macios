@@ -35,6 +35,9 @@ namespace LinkSdk {
 
 		static int trust_validation_callback;
 
+#if NET
+		[Ignore ("System.EntryPointNotFoundException: AppleCryptoNative_SecKeychainItemCopyKeychain")] // https://github.com/dotnet/runtime/issues/36897
+#endif
 		[Test]
 		public void TrustUsingNewCallback ()
 		{
@@ -64,6 +67,9 @@ namespace LinkSdk {
 			}
 		}
 
+#if NET
+		[Ignore ("System.EntryPointNotFoundException: AppleCryptoNative_SecKeychainItemCopyKeychain")] // https://github.com/dotnet/runtime/issues/36897
+#endif
 		[Test]
 		public void SSL_IP_5706 ()
 		{
@@ -88,6 +94,9 @@ namespace LinkSdk {
 
 		static int sne_validation_callback;
 
+#if NET
+		[Ignore ("System.EntryPointNotFoundException: AppleCryptoNative_SecKeychainItemCopyKeychain")] // https://github.com/dotnet/runtime/issues/36897
+#endif
 		[Test]
 		public void TLS1_ServerNameExtension ()
 		{
