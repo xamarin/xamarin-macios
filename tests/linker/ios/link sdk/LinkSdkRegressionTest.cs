@@ -405,6 +405,7 @@ namespace LinkSdk {
 		}
 
 #if !__WATCHOS__
+#if !NET // OpenTK-1.0.dll is not supported yet
 		[Test]
 		public void OpenTk_3049 ()
 		{
@@ -430,6 +431,7 @@ namespace LinkSdk {
 			core = GetTypeHelper ("OpenTK.Graphics.ES20.GL/Core, " + OpenTKAssembly, false);
 			Assert.NotNull (core, "ES20/Core");
 		}
+#endif // !NET
 #endif // !__WATCHOS__
 		
 		[Test]
