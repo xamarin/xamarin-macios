@@ -46,10 +46,36 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<RemoveDir Directories="$(GeneratedSourcesDir)" Condition="Exists ('$(GeneratedSourcesDir)')" />
 	</Target>
 
+	<!--
+
+		We can't just use @(_NativeFramework) as the input to the
+		_CompressNativeFrameworkResources task, because _NativeFramework is a
+		list of directories, and MSBuild doesn't do dependency checks
+		correctly when inputs are directories. So instead get all the files
+		from every framework, and use that as the inputs.
+
+		Additionally we add two metadatas on each file:
+
+		* The path to the framework the file belongs to
+		* The path to the zip file where the compressed directory will be stored
+
+		Then when we compress the frameworks in
+		_CompressNativeFrameworkResources, we use the zip file metadata as the
+		output, which means MSBuild will batch the call to
+		_CompressNativeFrameworkResources, and call
+		_CompressNativeFrameworkResources once for each zip file, passing in
+		only the inputs that correspond to that zip file. This effectively
+		means that _CompressNativeFrameworkResources will be called once for
+		each framework we want to compress, which is exactly what we want.
+
+	-->
 	<Target Name="_CollectNativeFrameworkResources" Returns="@(_NativeFrameworkResource)" DependsOnTargets="_PrepareNativeReferences">
-		<CreateItem Include="@(_NativeFramework -> '%(Identity)\**\*.*')">
-			<Output ItemName="_NativeFrameworkResource" TaskParameter="Include" />
-		</CreateItem>
+		<ItemGroup>
+			<_NativeFrameworkResource Include="%(_NativeFramework.Identity)\**\*.*" Condition="'%(_NativeFramework.Identity)' != ''">
+				<FrameworkPath>%(_NativeFramework.Identity)</FrameworkPath>
+				<ZipFile>$(IntermediateOutputPath)%(_NativeFramework.Filename)%(_NativeFramework.Extension)</ZipFile>
+			</_NativeFrameworkResource>
+		</ItemGroup>
 	</Target>
 
 	<Target Name="_CreateEmbeddedResources" DependsOnTargets="_CollectBundleResources">
@@ -58,8 +84,8 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		</CreateEmbeddedResources>
 	</Target>
 
-	<Target Name="_CompressNativeFrameworkResources" Inputs="@(_NativeFrameworkResource)" Outputs="$(IntermediateOutputPath)%(_NativeFramework.Filename)%(_NativeFramework.Extension)" DependsOnTargets="_CollectNativeFrameworkResources">
-		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(IntermediateOutputPath)%(_NativeFramework.Filename)%(_NativeFramework.Extension)" />
+	<Target Name="_CompressNativeFrameworkResources" Inputs="@(_NativeFrameworkResource)" Outputs="%(_NativeFrameworkResource.ZipFile)" DependsOnTargets="_CollectNativeFrameworkResources">
+		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="%(_NativeFrameworkResource.ZipFile)" />
 
 		<Zip
 			SessionId="$(BuildSessionId)"
@@ -68,12 +94,12 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 			ToolPath="$(ZipPath)"
 			Recursive="true"
 			Symlinks="true"
-			Sources="%(_NativeFramework.Identity)"
-			OutputFile="$(IntermediateOutputPath)%(_NativeFramework.Filename)%(_NativeFramework.Extension)"
-			WorkingDirectory="%(_NativeFramework.Identity)" >
+			Sources="%(_NativeFrameworkResource.FrameworkPath)"
+			OutputFile="%(_NativeFrameworkResource.ZipFile)"
+			WorkingDirectory="%(_NativeFrameworkResource.FrameworkPath)" >
 		</Zip>
 
-		<CreateItem Include="$(IntermediateOutputPath)%(_NativeFramework.Filename)%(_NativeFramework.Extension)">
+		<CreateItem Include="%(_NativeFrameworkResource.ZipFile)">
 			<Output TaskParameter="Include" ItemName="ManifestResourceWithNoCulture" />
 		</CreateItem>
 	</Target>
