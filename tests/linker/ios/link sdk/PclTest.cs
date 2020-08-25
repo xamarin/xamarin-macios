@@ -33,7 +33,7 @@ namespace LinkSdk {
 			
 			Assert.False (this is ICommand, "ICommand");
 			
-			HttpWebRequest hwr = new HttpWebRequest (uri);
+			HttpWebRequest hwr = WebRequest.CreateHttp (uri);
 			try {
 				Assert.True (hwr.SupportsCookieContainer, "SupportsCookieContainer");
 			}
