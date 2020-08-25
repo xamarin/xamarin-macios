@@ -549,7 +549,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			NoDSymUtil="$(_NoDSymUtil)"
 			>
 			<Output TaskParameter="MarshalManagedExceptionMode" PropertyName="_MarshalManagedExceptionMode" />
-			<Output TaskParameter="MarshaObjectiveCExceptionMode" PropertyName="_MarshalObjectiveCExceptionMode" />
+			<Output TaskParameter="MarshalObjectiveCExceptionMode" PropertyName="_MarshalObjectiveCExceptionMode" />
 			<Output TaskParameter="NoSymbolStrip" PropertyName="_NoSymbolStrip"/>
 			<Output TaskParameter="NoDSymUtil" PropertyName="_NoDSymUtil"/>
 			<Output TaskParameter="Verbosity" PropertyName="_BundlerVerbosity" />
