@@ -18,7 +18,9 @@ using System.Security.Permissions;
 using System.Security.Principal;
 using System.Threading;
 using System.Xml;
+#if !NET
 using Mono.Data.Sqlite;
+#endif
 using MonoTouch;
 #if !__TVOS__ && !__WATCHOS__
 using AddressBook;
@@ -79,6 +81,7 @@ namespace LinkSdk {
 			// the above should not throw System.Runtime.Serialization.SerializationException
 		}
 		
+#if !NET // This test requires Mono.Data.SqliteConnection, which .NET 5+ doesn't have
 		[Test]
 		// http://bugzilla.xamarin.com/show_bug.cgi?id=233
 		public void Bug233_MonoPInvokeCallback ()
@@ -89,6 +92,7 @@ namespace LinkSdk {
 			// the above should not crash
 			c.Close ();
 		}
+#endif
 		
 		[Test]
 		// http://bugzilla.xamarin.com/show_bug.cgi?id=234
@@ -226,6 +230,7 @@ namespace LinkSdk {
 			}
 		}
 		
+#if !NET // This test requires System.ServiceModel.dll, which .NET 5+ doesn't have
 		[Test]
 		// http://bugzilla.xamarin.com/show_bug.cgi?id=1415
 		public void Bug1415_Linker_DataMember ()
@@ -268,7 +273,9 @@ namespace LinkSdk {
 			Assert.True (stack_trace, "StackTrace");
 			Assert.True (type, "Type");
 		}
+#endif // !NET
 		
+#if !NET // This test requires System.ServiceModel.dll, which .NET 5+ doesn't have
 		[Test]
 		// http://bugzilla.xamarin.com/show_bug.cgi?id=1415
 		// not really part of the bug - but part of the same fix
@@ -285,6 +292,7 @@ namespace LinkSdk {
 			// should be null if application is linked (won't be if "Don't link" is used)
 #endif // !__WATCHOS__
 		}
+#endif // !NET
 
 		[Test]
 		// http://bugzilla.xamarin.com/show_bug.cgi?id=1443
@@ -386,6 +394,7 @@ namespace LinkSdk {
 			}
 		}
 
+#if !NET // This test requires Mono.Data.SqliteConnection, which .NET 5+ doesn't have
 		[Test]
 		// http://stackoverflow.com/questions/8602726/cant-open-sqlite-database-in-read-only-mode
 		public void Sqlite_ReadOnly ()
@@ -395,6 +404,7 @@ namespace LinkSdk {
 			// the above should not throw a 'misuse' exception
 			c.Close ();
 		}
+#endif
 		
 		[Test]
 		public void AsQueryable_3028 ()
@@ -722,11 +732,13 @@ namespace LinkSdk {
 			Assert.IsFalse (Attribute.IsDefined (GetType (), typeof(SerializableAttribute)));
 		}
 
+#if !NET // This test requires System.Runtime.Remoting.dll, which .NET 5+ doesn't have
 		[Test]
 		public void LinkedAway ()
 		{
 			Assert.Throws<NotSupportedException> (() => new System.Runtime.Remoting.RemotingException ());
 		}
+#endif // !NET
 
 		[Test]
 		public void ArrayClear_11184 ()
@@ -1000,6 +1012,7 @@ namespace LinkSdk {
 		}
 
 #if !__WATCHOS__
+#if !NET // This test requires Mono.Security.dll, which .NET 5+ doesn't have
 		[Test]
 		public void TlsProvider_Apple ()
 		{
@@ -1007,6 +1020,7 @@ namespace LinkSdk {
 			Assert.NotNull (provider, "provider");
 			Assert.That (provider.ID, Is.EqualTo (new Guid ("981af8af-a3a3-419a-9f01-a518e3a17c1c")), "correct provider");
 		}
+#endif
 
 		[Test]
 		public void Github5024 ()
