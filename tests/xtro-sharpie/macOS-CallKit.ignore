@@ -1,3 +1,4 @@
+# was added to mac os but it does not compile due to a dependency in AVFoundation, issue: https://github.com/xamarin/maccore/issues/2301
 !missing-enum! CXCallEndedReason not bound
 !missing-enum! CXErrorCode not bound
 !missing-enum! CXErrorCodeCallDirectoryManagerError not bound
