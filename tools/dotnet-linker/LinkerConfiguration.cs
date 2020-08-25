@@ -89,6 +89,9 @@ namespace Xamarin.Linker {
 				case "CacheDirectory":
 					CacheDirectory = value;
 					break;
+				case "Debug":
+					Application.EnableDebug = string.Equals (value, "true", StringComparison.OrdinalIgnoreCase);
+					break;
 				case "DeploymentTarget":
 					if (!Version.TryParse (value, out var deployment_target))
 						throw new InvalidOperationException ($"Unable to parse the {key} value: {value} in {linker_file}");
@@ -189,6 +192,7 @@ namespace Xamarin.Linker {
 				Console.WriteLine ($"    ABIs: {string.Join (", ", Abis.Select (v => v.AsArchString ()))}");
 				Console.WriteLine ($"    AssemblyName: {AssemblyName}");
 				Console.WriteLine ($"    CacheDirectory: {CacheDirectory}");
+				Console.WriteLine ($"    Debug: {Application.EnableDebug}");
 				Console.WriteLine ($"    DeploymentTarget: {DeploymentTarget}");
 				Console.WriteLine ($"    ItemsDirectory: {ItemsDirectory}");
 				Console.WriteLine ($"    IsSimulatorBuild: {IsSimulatorBuild}");
