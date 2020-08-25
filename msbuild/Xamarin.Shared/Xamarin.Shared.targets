@@ -606,9 +606,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<_ResolvedAppExtensionReferences Include="%(AdditionalAppExtensions.Identity)/%(AdditionalAppExtensions.BuildOutput)/%(AdditionalAppExtensions.Name).appex" />
 
 			<_AppExtensionCodesignProperties Include="%(AdditionalAppExtensions.Name).appex">
-				<Entitlements Condition="Exists('$(_ExtensionEntitlementPath)')">
-					$(_ExtensionEntitlementPath)
-				</Entitlements>
+				<Entitlements Condition="Exists('$(_ExtensionEntitlementPath)')">$(_ExtensionEntitlementPath)</Entitlements>
 				<SigningKey>$(CodesignKey)</SigningKey>
 				<Keychain>$(CodesignKeychain)</Keychain>
 				<DisableTimestamp>False</DisableTimestamp>
