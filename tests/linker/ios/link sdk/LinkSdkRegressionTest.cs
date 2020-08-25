@@ -693,7 +693,7 @@ namespace LinkSdk {
 		public void Pointer_5200 ()
 		{
 			// ensure the linker did not remove the type, which is used by the runtime
-			Assert.NotNull (GetTypeHelper ("System.Reflection.Pointer, mscorlib"));
+			Assert.NotNull (GetTypeHelper ("System.Reflection.Pointer, " + typeof (int).Assembly.GetName ().Name));
 		}
 
 		[Test]
