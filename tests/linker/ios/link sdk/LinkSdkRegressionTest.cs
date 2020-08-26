@@ -1009,7 +1009,11 @@ namespace LinkSdk {
 		[Test]
 		public void MonoRuntime34671 ()
 		{
+#if NET
+			Assert.Null (GetTypeHelper ("Mono.Runtime"), "Mono.Runtime");
+#else
 			Assert.NotNull (GetTypeHelper ("Mono.Runtime"), "Mono.Runtime");
+#endif
 		}
 
 		[Test]
