@@ -39,6 +39,9 @@ namespace Xamarin.Linker {
 
 		public LinkContext Context { get; private set; }
 
+		// The list of assemblies is populated in CollectAssembliesStep.
+		public List<AssemblyDefinition> Assemblies = new List<AssemblyDefinition> ();
+
 		public static LinkerConfiguration GetInstance (LinkContext context)
 		{
 			if (!configurations.TryGetValue (context, out var instance)) {
