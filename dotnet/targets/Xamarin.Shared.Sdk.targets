@@ -90,6 +90,7 @@
 	<!-- Inject our custom logic into *DependsOn variables -->
 	<PropertyGroup>
 		<BuildDependsOn>
+			BuildOnlySettings;
 			_CollectBundleResources;
 			_PackLibraryResources;
 			_UnpackLibraryResources;
