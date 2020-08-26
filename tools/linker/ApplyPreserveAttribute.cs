@@ -89,7 +89,7 @@ namespace Xamarin.Linker.Steps {
 					srs = (type.Name == "DataContractAttribute");
 
 				if (srs) {
-					MarkDefautConstructor (provider, is_sdk ? LinkContext.DataContract : null);
+					MarkDefaultConstructor (provider, is_sdk ? LinkContext.DataContract : null);
 					return !is_sdk;
 				}
 				break;
@@ -100,7 +100,7 @@ namespace Xamarin.Linker.Steps {
 					// but we do not have to keep things that XML serialization will ignore anyway!
 					if (name != "XmlIgnoreAttribute") {
 						// the default constructor of the type *being used* is needed
-						MarkDefautConstructor (provider, is_sdk ? LinkContext.XmlSerialization : null);
+						MarkDefaultConstructor (provider, is_sdk ? LinkContext.XmlSerialization : null);
 						return !is_sdk;
 					}
 				}
@@ -119,7 +119,7 @@ namespace Xamarin.Linker.Steps {
 		}
 
 		// xml serialization requires the default .ctor to be present
-		void MarkDefautConstructor (ICustomAttributeProvider provider, IList<ICustomAttributeProvider> list)
+		void MarkDefaultConstructor (ICustomAttributeProvider provider, IList<ICustomAttributeProvider> list)
 		{
 			if (list != null) {
 				list.Add (provider);
@@ -130,13 +130,13 @@ namespace Xamarin.Linker.Steps {
 			if (td == null) {
 				PropertyDefinition pd = (provider as PropertyDefinition);
 				if (pd != null) {
-					MarkDefautConstructor (pd.DeclaringType);					
+					MarkDefaultConstructor (pd.DeclaringType);					
 					MarkGenericType (pd.PropertyType as GenericInstanceType);
 					td = pd.PropertyType.Resolve ();
 				} else {
 					FieldDefinition fd = (provider as FieldDefinition);
 					if (fd != null) {
-						MarkDefautConstructor (fd.DeclaringType);
+						MarkDefaultConstructor (fd.DeclaringType);
 						MarkGenericType (fd.FieldType as GenericInstanceType);
 						td = (fd.FieldType as TypeReference).Resolve ();
 					}
@@ -145,7 +145,7 @@ namespace Xamarin.Linker.Steps {
 
 			// e.g. <T> property (see bug #5543) or field (see linkall unit tests)
 			if (td != null)
-				MarkDefautConstructor (td);
+				MarkDefaultConstructor (td);
 		}
 
 		void MarkGenericType (GenericInstanceType git)
@@ -154,10 +154,10 @@ namespace Xamarin.Linker.Steps {
 				return;
 
 			foreach (TypeReference tr in git.GenericArguments)
-				MarkDefautConstructor (tr.Resolve ());
+				MarkDefaultConstructor (tr.Resolve ());
 		}
 
-		void MarkDefautConstructor (TypeDefinition type)
+		void MarkDefaultConstructor (TypeDefinition type)
 		{
 			if ((type == null) || !type.HasMethods)
 				return;
