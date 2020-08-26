@@ -29,6 +29,10 @@ namespace Vision {
 		[DllImport (Constants.VisionLibrary, EntryPoint = "VNImagePointForNormalizedPoint")]
 		public static extern CGPoint GetImagePoint (CGPoint normalizedPoint, nuint imageWidth, nuint imageHeight);
 
+		[TV (14,0), Mac (11,0), iOS (14,0)]
+		[DllImport (Constants.VisionLibrary, EntryPoint = "VNNormalizedPointForImagePoint")]
+		public static extern CGPoint GetNormalizedPoint (CGPoint imagePoint, nuint imageWidth, nuint imageHeight);
+
 		[DllImport (Constants.VisionLibrary, EntryPoint = "VNImageRectForNormalizedRect")]
 		public static extern CGRect GetImageRect (CGRect normalizedRect, nuint imageWidth, nuint imageHeight);
 
@@ -67,5 +71,21 @@ namespace Vision {
 
 		[TV (13,0), Mac (10,15), iOS (13,0)]
 		public static nuint GetElementTypeSize (VNElementType elementType) => VNElementTypeSize ((nuint) (ulong) elementType);
+	}
+
+	public partial class VNGeometryUtils {
+
+		public static VNCircle CreateBoundingCircle (Vector2 [] points, out NSError error)
+		{
+			if (points == null)
+				throw new ArgumentNullException (nameof (points));
+			if (points.Length == 0)
+				throw new InvalidOperationException ($"{points} array must have more than zero elements.");
+
+			unsafe {
+				fixed (Vector2* points_ptr = points)
+					return CreateBoundingCircle ((IntPtr) points_ptr, points.Length, out error);
+			}
+		}
 	}
 }

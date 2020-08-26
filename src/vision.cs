@@ -11,6 +11,7 @@ using System;
 using CoreFoundation;
 using CoreGraphics;
 using CoreImage;
+using CoreMedia;
 using CoreML;
 using CoreVideo;
 using Foundation;
@@ -19,6 +20,8 @@ using ObjCRuntime;
 using ImageIO;
 
 using Matrix3 = global::OpenTK.NMatrix3;
+using Vector2 = global::OpenTK.Vector2;
+using Vector3 = global::OpenTK.Vector3;
 
 namespace Vision {
 
@@ -44,6 +47,7 @@ namespace Vision {
 		InvalidModel,
 		UnsupportedRevision,
 		DataUnavailable,
+		TimeStampNotFound,
 	}
 
 	[TV (11,0), Mac (10,13), iOS (11,0)]
@@ -266,6 +270,8 @@ namespace Vision {
 	enum VNDetectFaceCaptureQualityRequestRevision : ulong {
 		Unspecified = 0,
 		One = 1,
+		[TV (14,0), Mac (11,0), iOS (14,0)]
+		Two = 2,
 	}
 
 	[TV (13,0), Mac (10,15), iOS (13,0)]
@@ -323,6 +329,8 @@ namespace Vision {
 	enum VNRecognizeTextRequestRevision : ulong {
 		Unspecified = 0,
 		One = 1,
+		[TV (14,0), Mac (11,0), iOS (14,0)]
+		Two = 2,
 	}
 
 	[TV (13,0), Mac (10,15), iOS (13,0)]
@@ -331,6 +339,243 @@ namespace Vision {
 		Unknown = 0,
 		Float = 1,
 		Double = 2,
+	}
+
+	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[Native]
+	enum VNDetectContourRequestRevision : ulong {
+		Unspecified = 0,
+		One = 1,
+	}
+
+	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[Native]
+	enum VNDetectHumanBodyPoseRequestRevision : ulong {
+		Unspecified = 0,
+		One = 1,
+	}
+
+	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[Native]
+	enum VNDetectHumanHandPoseRequestRevision : ulong {
+		Unspecified = 0,
+		One = 1,
+	}
+
+	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[Native]
+	enum VNDetectTrajectoriesRequestRevision : ulong {
+		Unspecified = 0,
+		One = 1,
+	}
+
+	[Native]
+	public enum VNGenerateOpticalFlowRequestComputationAccuracy : ulong {
+		Low = 0,
+		Medium,
+		High,
+		VeryHigh,
+	}
+
+	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[Native]
+	enum VNGenerateOpticalFlowRequestRevision : ulong {
+		Unspecified = 0,
+		One = 1,
+	}
+
+	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[Native]
+	enum VNStatefulRequestRevision : ulong {
+		Unspecified = 0,
+		One = 1,
+	}
+
+	[TV (14,0), Mac (11,0), iOS (14,0)]
+	enum VNHumanBodyPoseObservationJointName {
+		[DefaultEnumValue]
+		[Field (null)]
+		None,
+
+		[Field ("VNHumanBodyPoseObservationJointNameNose")]
+		Nose,
+
+		[Field ("VNHumanBodyPoseObservationJointNameLeftEye")]
+		LeftEye,
+
+		[Field ("VNHumanBodyPoseObservationJointNameRightEye")]
+		RightEye,
+
+		[Field ("VNHumanBodyPoseObservationJointNameLeftEar")]
+		LeftEar,
+
+		[Field ("VNHumanBodyPoseObservationJointNameRightEar")]
+		RightEar,
+
+		[Field ("VNHumanBodyPoseObservationJointNameLeftShoulder")]
+		LeftShoulder,
+
+		[Field ("VNHumanBodyPoseObservationJointNameRightShoulder")]
+		RightShoulder,
+
+		[Field ("VNHumanBodyPoseObservationJointNameNeck")]
+		Neck,
+
+		[Field ("VNHumanBodyPoseObservationJointNameLeftElbow")]
+		LeftElbow,
+
+		[Field ("VNHumanBodyPoseObservationJointNameRightElbow")]
+		RightElbow,
+
+		[Field ("VNHumanBodyPoseObservationJointNameLeftWrist")]
+		LeftWrist,
+
+		[Field ("VNHumanBodyPoseObservationJointNameRightWrist")]
+		RightWrist,
+
+		[Field ("VNHumanBodyPoseObservationJointNameLeftHip")]
+		LeftHip,
+
+		[Field ("VNHumanBodyPoseObservationJointNameRightHip")]
+		RightHip,
+
+		[Field ("VNHumanBodyPoseObservationJointNameRoot")]
+		Root,
+
+		[Field ("VNHumanBodyPoseObservationJointNameLeftKnee")]
+		LeftKnee,
+
+		[Field ("VNHumanBodyPoseObservationJointNameRightKnee")]
+		RightKnee,
+
+		[Field ("VNHumanBodyPoseObservationJointNameLeftAnkle")]
+		LeftAnkle,
+
+		[Field ("VNHumanBodyPoseObservationJointNameRightAnkle")]
+		RightAnkle,
+	}
+
+	[TV (14,0), Mac (11,0), iOS (14,0)]
+	enum VNHumanBodyPoseObservationJointsGroupName {
+		[DefaultEnumValue]
+		[Field (null)]
+		None,
+
+		[Field ("VNHumanBodyPoseObservationJointsGroupNameFace")]
+		Face,
+
+		[Field ("VNHumanBodyPoseObservationJointsGroupNameTorso")]
+		Torso,
+
+		[Field ("VNHumanBodyPoseObservationJointsGroupNameLeftArm")]
+		LeftArm,
+
+		[Field ("VNHumanBodyPoseObservationJointsGroupNameRightArm")]
+		RightArm,
+
+		[Field ("VNHumanBodyPoseObservationJointsGroupNameLeftLeg")]
+		LeftLeg,
+
+		[Field ("VNHumanBodyPoseObservationJointsGroupNameRightLeg")]
+		RightLeg,
+
+		[Field ("VNHumanBodyPoseObservationJointsGroupNameAll")]
+		All,
+	}
+
+	[TV (14,0), Mac (11,0), iOS (14,0)]
+	enum VNHumanHandPoseObservationJointName {
+		[DefaultEnumValue]
+		[Field (null)]
+		None,
+
+		[Field ("VNHumanHandPoseObservationJointNameWrist")]
+		Wrist,
+
+		[Field ("VNHumanHandPoseObservationJointNameThumbCMC")]
+		ThumbCmc,
+
+		[Field ("VNHumanHandPoseObservationJointNameThumbMP")]
+		ThumbMP,
+
+		[Field ("VNHumanHandPoseObservationJointNameThumbIP")]
+		ThumbIP,
+
+		[Field ("VNHumanHandPoseObservationJointNameThumbTip")]
+		ThumbTip,
+
+		[Field ("VNHumanHandPoseObservationJointNameIndexMCP")]
+		IndexMcp,
+
+		[Field ("VNHumanHandPoseObservationJointNameIndexPIP")]
+		IndexPip,
+
+		[Field ("VNHumanHandPoseObservationJointNameIndexDIP")]
+		IndexDip,
+
+		[Field ("VNHumanHandPoseObservationJointNameIndexTip")]
+		IndexTip,
+
+		[Field ("VNHumanHandPoseObservationJointNameMiddleMCP")]
+		MiddleMcp,
+
+		[Field ("VNHumanHandPoseObservationJointNameMiddlePIP")]
+		MiddlePip,
+
+		[Field ("VNHumanHandPoseObservationJointNameMiddleDIP")]
+		MiddleDip,
+
+		[Field ("VNHumanHandPoseObservationJointNameMiddleTip")]
+		MiddleTip,
+
+		[Field ("VNHumanHandPoseObservationJointNameRingMCP")]
+		RingMcp,
+
+		[Field ("VNHumanHandPoseObservationJointNameRingPIP")]
+		RingPip,
+
+		[Field ("VNHumanHandPoseObservationJointNameRingDIP")]
+		RingDip,
+
+		[Field ("VNHumanHandPoseObservationJointNameRingTip")]
+		RingTip,
+
+		[Field ("VNHumanHandPoseObservationJointNameLittleMCP")]
+		LittleMcp,
+
+		[Field ("VNHumanHandPoseObservationJointNameLittlePIP")]
+		LittlePip,
+
+		[Field ("VNHumanHandPoseObservationJointNameLittleDIP")]
+		LittleDip,
+
+		[Field ("VNHumanHandPoseObservationJointNameLittleTip")]
+		LittleTip,
+	}
+
+	[TV (14,0), Mac (11,0), iOS (14,0)]
+	enum VNHumanHandPoseObservationJointsGroupName {
+		[DefaultEnumValue]
+		[Field (null)]
+		None,
+
+		[Field ("VNHumanHandPoseObservationJointsGroupNameThumb")]
+		Thumb,
+
+		[Field ("VNHumanHandPoseObservationJointsGroupNameIndexFinger")]
+		IndexFinger,
+
+		[Field ("VNHumanHandPoseObservationJointsGroupNameMiddleFinger")]
+		MiddleFinger,
+
+		[Field ("VNHumanHandPoseObservationJointsGroupNameRingFinger")]
+		RingFinger,
+
+		[Field ("VNHumanHandPoseObservationJointsGroupNameLittleFinger")]
+		LittleFinger,
+
+		[Field ("VNHumanHandPoseObservationJointsGroupNameAll")]
+		All,
 	}
 
 	[TV (11,0), Mac (10,13), iOS (11,0)]
@@ -1214,6 +1459,10 @@ namespace Vision {
 
 		[Export ("confidence")]
 		float Confidence { get; }
+
+		[TV (14,0), Mac (11,0), iOS (14,0)]
+		[Export ("timeRange", ArgumentSemantic.Assign)]
+		CMTimeRange TimeRange { get; }
 	}
 
 	[TV (11,0), Mac (10,13), iOS (11,0)]
@@ -1627,6 +1876,22 @@ namespace Vision {
 		[Wrap ("this (imageData, orientation, imageOptions.GetDictionary ()!)")]
 		IntPtr Constructor (NSData imageData, CGImagePropertyOrientation orientation, VNImageOptions imageOptions);
 
+		[TV (14,0), Mac (11,0), iOS (14,0)]
+		[Export ("initWithCMSampleBuffer:options:")]
+		IntPtr Constructor (CMSampleBuffer sampleBuffer, NSDictionary options);
+
+		[TV (14,0), Mac (11,0), iOS (14,0)]
+		[Wrap ("this (sampleBuffer, imageOptions.GetDictionary ()!)")]
+		IntPtr Constructor (CMSampleBuffer sampleBuffer, VNImageOptions imageOptions);
+
+		[TV (14,0), Mac (11,0), iOS (14,0)]
+		[Export ("initWithCMSampleBuffer:orientation:options:")]
+		IntPtr Constructor (CMSampleBuffer sampleBuffer, CGImagePropertyOrientation orientation, NSDictionary options);
+
+		[TV (14,0), Mac (11,0), iOS (14,0)]
+		[Wrap ("this (sampleBuffer, orientation, imageOptions.GetDictionary ()!)")]
+		IntPtr Constructor (CMSampleBuffer sampleBuffer, CGImagePropertyOrientation orientation, VNImageOptions imageOptions);
+
 		[Export ("performRequests:error:")]
 		bool Perform (VNRequest [] requests, out NSError error);
 	}
@@ -1669,6 +1934,14 @@ namespace Vision {
 
 		[Export ("performRequests:onImageData:orientation:error:")]
 		bool Perform (VNRequest [] requests, NSData imageData, CGImagePropertyOrientation orientation, out NSError error);
+
+		[TV (14,0), Mac (11,0), iOS (14,0)]
+		[Export ("performRequests:onCMSampleBuffer:error:")]
+		bool Perform (VNRequest[] requests, CMSampleBuffer sampleBuffer, [NullAllowed] out NSError error);
+
+		[TV (14,0), Mac (11,0), iOS (14,0)]
+		[Export ("performRequests:onCMSampleBuffer:orientation:error:")]
+		bool Perform (VNRequest[] requests, CMSampleBuffer sampleBuffer, CGImagePropertyOrientation orientation, [NullAllowed] out NSError error);
 	}
 
 	[TV (11,0), Mac (10,13), iOS (11,0)]
@@ -1796,6 +2069,38 @@ namespace Vision {
 
 		[Wrap ("this (imageData, orientation, options.GetDictionary ()!, completionHandler)")]
 		IntPtr Constructor (NSData imageData, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+
+		[TV (14,0), Mac (11,0), iOS (14,0)]
+		[Export ("initWithTargetedCMSampleBuffer:options:")]
+		IntPtr Constructor (CMSampleBuffer sampleBuffer, NSDictionary optionsDict);
+
+		[TV (14,0), Mac (11,0), iOS (14,0)]
+		[Wrap ("this (sampleBuffer, options.GetDictionary ()!)")]
+		IntPtr Constructor (CMSampleBuffer sampleBuffer, VNImageOptions options);
+
+		[TV (14,0), Mac (11,0), iOS (14,0)]
+		[Export ("initWithTargetedCMSampleBuffer:options:completionHandler:")]
+		IntPtr Constructor (CMSampleBuffer sampleBuffer, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+
+		[TV (14,0), Mac (11,0), iOS (14,0)]
+		[Wrap ("this (sampleBuffer, options.GetDictionary ()!, completionHandler)")]
+		IntPtr Constructor (CMSampleBuffer sampleBuffer, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+
+		[TV (14,0), Mac (11,0), iOS (14,0)]
+		[Export ("initWithTargetedCMSampleBuffer:orientation:options:")]
+		IntPtr Constructor (CMSampleBuffer sampleBuffer, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
+
+		[TV (14,0), Mac (11,0), iOS (14,0)]
+		[Wrap ("this (sampleBuffer, orientation, options.GetDictionary ()!)")]
+		IntPtr Constructor (CMSampleBuffer sampleBuffer, CGImagePropertyOrientation orientation, VNImageOptions options);
+
+		[TV (14,0), Mac (11,0), iOS (14,0)]
+		[Export ("initWithTargetedCMSampleBuffer:orientation:options:completionHandler:")]
+		IntPtr Constructor (CMSampleBuffer sampleBuffer, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+
+		[TV (14,0), Mac (11,0), iOS (14,0)]
+		[Wrap ("this (sampleBuffer, orientation, options.GetDictionary ()!, completionHandler)")]
+		IntPtr Constructor (CMSampleBuffer sampleBuffer, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 	}
 
 	[TV (11,0), Mac (10,13), iOS (11,0)]
@@ -2302,5 +2607,815 @@ namespace Vision {
 		bool Indeterminate { get; }
 	}
 
+	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[BaseType (typeof (VNImageBasedRequest))]
+	[DisableDefaultCtor]
+	interface VNDetectContoursRequest {
 
+		[Export ("contrastAdjustment")]
+		float ContrastAdjustment { get; set; }
+
+		[Export ("detectsDarkOnLight")]
+		bool DetectsDarkOnLight { get; set; }
+
+		[Export ("maximumImageDimension")]
+		nuint MaximumImageDimension { get; set; }
+
+		[Export ("initWithCompletionHandler:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
+
+		// We must inline the following 5 properties
+		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
+		// into subclasses so the correct class_ptr is used for the static members and the right enum type is also used.
+
+		[Export ("revision")]
+		VNDetectContourRequestRevision Revision { get; set; }
+
+		[Static]
+		[Export ("supportedRevisions", ArgumentSemantic.Copy)]
+		NSIndexSet WeakSupportedRevisions { get; }
+
+		[Static]
+		[Wrap ("GetSupportedVersions<VNDetectContourRequestRevision> (WeakSupportedRevisions)")]
+		VNDetectContourRequestRevision [] SupportedRevisions { get; }
+
+		[Static]
+		[Export ("defaultRevision")]
+		VNDetectContourRequestRevision DefaultRevision { get; }
+
+		[Static]
+		[Export ("currentRevision")]
+		VNDetectContourRequestRevision CurrentRevision { get; }
+	}
+
+	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[BaseType (typeof (VNRecognizedPointsObservation))]
+	interface VNHumanBodyPoseObservation {
+
+		[BindAs (typeof (VNHumanBodyPoseObservationJointName []))]
+		[Export ("availableJointNames", ArgumentSemantic.Copy)]
+		NSString [] AvailableJointNames { get; }
+
+		[BindAs (typeof (VNHumanBodyPoseObservationJointsGroupName []))]
+		[Export ("availableJointsGroupNames", ArgumentSemantic.Copy)]
+		NSString [] AvailableJointsGroupNames { get; }
+
+		[Export ("recognizedPointForJointName:error:")]
+		[return: NullAllowed]
+		VNRecognizedPoint GetRecognizedPoint ([BindAs (typeof (VNHumanBodyPoseObservationJointName))] NSString jointName, [NullAllowed] out NSError error);
+
+		[Export ("recognizedPointsForJointsGroupName:error:")]
+		[return: NullAllowed]
+		NSDictionary<NSString, VNRecognizedPoint> GetRecognizedPoints ([BindAs (typeof (VNHumanBodyPoseObservationJointsGroupName))] NSString jointsGroupName, [NullAllowed] out NSError error);
+	}
+
+	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[BaseType (typeof (VNImageBasedRequest))]
+	[DisableDefaultCtor]
+	interface VNDetectHumanBodyPoseRequest {
+
+		[Static]
+		[Export ("supportedJointNamesForRevision:error:")]
+		[return: BindAs (typeof (VNHumanBodyPoseObservationJointName []))]
+		[return: NullAllowed]
+		NSString [] GetSupportedJointNames (VNDetectHumanBodyPoseRequestRevision revision, [NullAllowed] out NSError error);
+
+		[Static]
+		[Export ("supportedJointsGroupNamesForRevision:error:")]
+		[return: NullAllowed]
+		[return: BindAs (typeof (VNHumanBodyPoseObservationJointsGroupName []))]
+		NSString [] GetSupportedJointsGroupNames (VNDetectHumanBodyPoseRequestRevision revision, [NullAllowed] out NSError error);
+
+		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
+		VNHumanBodyPoseObservation [] Results { get; }
+
+		[Export ("initWithCompletionHandler:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
+
+		// We must inline the following 5 properties
+		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
+		// into subclasses so the correct class_ptr is used for the static members and the right enum type is also used.
+
+		[Export ("revision")]
+		VNDetectHumanBodyPoseRequestRevision Revision { get; set; }
+
+		[Static]
+		[Export ("supportedRevisions", ArgumentSemantic.Copy)]
+		NSIndexSet WeakSupportedRevisions { get; }
+
+		[Static]
+		[Wrap ("GetSupportedVersions<VNDetectHumanBodyPoseRequestRevision> (WeakSupportedRevisions)")]
+		VNDetectHumanBodyPoseRequestRevision [] SupportedRevisions { get; }
+
+		[Static]
+		[Export ("defaultRevision")]
+		VNDetectHumanBodyPoseRequestRevision DefaultRevision { get; }
+
+		[Static]
+		[Export ("currentRevision")]
+		VNDetectHumanBodyPoseRequestRevision CurrentRevision { get; }
+	}
+
+	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[BaseType (typeof (VNRecognizedPointsObservation))]
+	interface VNHumanHandPoseObservation {
+
+		[BindAs (typeof (VNHumanHandPoseObservationJointName []))]
+		[Export ("availableJointNames", ArgumentSemantic.Copy)]
+		NSString [] AvailableJointNames { get; }
+
+		[BindAs (typeof (VNHumanHandPoseObservationJointsGroupName []))]
+		[Export ("availableJointsGroupNames", ArgumentSemantic.Copy)]
+		NSString [] AvailableJointsGroupNames { get; }
+
+		[Export ("recognizedPointForJointName:error:")]
+		[return: NullAllowed]
+		VNRecognizedPoint GetRecognizedPoint ([BindAs (typeof (VNHumanHandPoseObservationJointName))] NSString jointName, [NullAllowed] out NSError error);
+
+		[Export ("recognizedPointsForJointsGroupName:error:")]
+		[return: NullAllowed]
+		NSDictionary<NSString, VNRecognizedPoint> GetRecognizedPoints ([BindAs (typeof (VNHumanHandPoseObservationJointsGroupName))] NSString jointsGroupName, [NullAllowed] out NSError error);
+	}
+
+	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[BaseType (typeof (VNImageBasedRequest))]
+	[DisableDefaultCtor]
+	interface VNDetectHumanHandPoseRequest {
+
+		[Static]
+		[Export ("supportedJointNamesForRevision:error:")]
+		[return: NullAllowed]
+		[return: BindAs (typeof (VNHumanHandPoseObservationJointName []))]
+		NSString [] SupportedJointNamesForRevision (VNDetectHumanHandPoseRequestRevision revision, [NullAllowed] out NSError error);
+
+		[Static]
+		[Export ("supportedJointsGroupNamesForRevision:error:")]
+		[return: NullAllowed]
+		[return: BindAs (typeof (VNHumanHandPoseObservationJointsGroupName []))]
+		NSString [] SupportedJointsGroupNamesForRevision (VNDetectHumanHandPoseRequestRevision revision, [NullAllowed] out NSError error);
+
+		[Export ("maximumHandCount")]
+		nuint MaximumHandCount { get; set; }
+
+		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
+		VNHumanHandPoseObservation [] Results { get; }
+
+		[Export ("initWithCompletionHandler:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
+
+		// We must inline the following 5 properties
+		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
+		// into subclasses so the correct class_ptr is used for the static members and the right enum type is also used.
+
+		[Export ("revision")]
+		VNDetectHumanHandPoseRequestRevision Revision { get; set; }
+
+		[Static]
+		[Export ("supportedRevisions", ArgumentSemantic.Copy)]
+		NSIndexSet WeakSupportedRevisions { get; }
+
+		[Static]
+		[Wrap ("GetSupportedVersions<VNDetectHumanHandPoseRequestRevision> (WeakSupportedRevisions)")]
+		VNDetectHumanHandPoseRequestRevision [] SupportedRevisions { get; }
+
+		[Static]
+		[Export ("defaultRevision")]
+		VNDetectHumanHandPoseRequestRevision DefaultRevision { get; }
+
+		[Static]
+		[Export ("currentRevision")]
+		VNDetectHumanHandPoseRequestRevision CurrentRevision { get; }
+	}
+
+	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[BaseType (typeof (VNStatefulRequest))]
+	[DisableDefaultCtor]
+	interface VNDetectTrajectoriesRequest {
+
+		[Export ("initWithFrameAnalysisSpacing:trajectoryLength:completionHandler:")]
+		IntPtr Constructor (CMTime frameAnalysisSpacing, nint trajectoryLength, [NullAllowed] VNRequestCompletionHandler completionHandler);
+
+		[Export ("trajectoryLength")]
+		nint TrajectoryLength { get; }
+
+		[Export ("objectMinimumNormalizedRadius")]
+		float ObjectMinimumNormalizedRadius { get; set; }
+
+		[Export ("objectMaximumNormalizedRadius")]
+		float ObjectMaximumNormalizedRadius { get; set; }
+
+		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
+		VNTrajectoryObservation [] Results { get; }
+
+		// We must inline the following 5 properties
+		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
+		// into subclasses so the correct class_ptr is used for the static members and the right enum type is also used.
+
+		[Export ("revision")]
+		VNDetectTrajectoriesRequestRevision Revision { get; set; }
+
+		[Static]
+		[Export ("supportedRevisions", ArgumentSemantic.Copy)]
+		NSIndexSet WeakSupportedRevisions { get; }
+
+		[Static]
+		[Wrap ("GetSupportedVersions<VNDetectTrajectoriesRequestRevision> (WeakSupportedRevisions)")]
+		VNDetectTrajectoriesRequestRevision [] SupportedRevisions { get; }
+
+		[Static]
+		[Export ("defaultRevision")]
+		VNDetectTrajectoriesRequestRevision DefaultRevision { get; }
+
+		[Static]
+		[Export ("currentRevision")]
+		VNDetectTrajectoriesRequestRevision CurrentRevision { get; }
+	}
+
+	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface VNPoint : NSCopying, NSSecureCoding {
+
+		[Static]
+		[Export ("zeroPoint", ArgumentSemantic.Strong)]
+		VNPoint ZeroPoint { get; }
+
+		[Static]
+		[Export ("pointByApplyingVector:toPoint:")]
+		VNPoint Create (VNVector vector, VNPoint point);
+
+		[Export ("distanceToPoint:")]
+		double GetDistanceToPoint (VNPoint point);
+
+		[Export ("initWithX:y:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (double x, double y);
+
+		[Export ("initWithLocation:")]
+		IntPtr Constructor (CGPoint location);
+
+		[Export ("location")]
+		CGPoint Location { get; }
+
+		[Export ("x")]
+		double X { get; }
+
+		[Export ("y")]
+		double Y { get; }
+	}
+
+	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface VNVector : NSCopying, NSSecureCoding {
+
+		[Static]
+		[Export ("zeroVector", ArgumentSemantic.Strong)]
+		VNVector ZeroVector { get; }
+
+		[Static]
+		[Export ("unitVectorForVector:")]
+		VNVector CreateUnitVector (VNVector vector);
+
+		[Static]
+		[Export ("vectorByMultiplyingVector:byScalar:")]
+		VNVector CreateByMultiplyingVector (VNVector vector, double scalar);
+
+		[Static]
+		[Export ("vectorByAddingVector:toVector:")]
+		VNVector CreateByAddingVector (VNVector v1, VNVector v2);
+
+		[Static]
+		[Export ("vectorBySubtractingVector:fromVector:")]
+		VNVector CreateBySubtractingVector (VNVector v1, VNVector v2);
+
+		[Static]
+		[Export ("dotProductOfVector:vector:")]
+		double GetDotProduct (VNVector v1, VNVector v2);
+
+		[Export ("initWithXComponent:yComponent:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (double x, double y);
+
+		[Internal]
+		[Export ("initWithR:theta:")]
+		IntPtr InitWithRTheta (double r, double theta);
+
+		[Export ("initWithVectorHead:tail:")]
+		IntPtr Constructor (VNPoint head, VNPoint tail);
+
+		[Export ("x")]
+		double X { get; }
+
+		[Export ("y")]
+		double Y { get; }
+
+		[Export ("r")]
+		double R { get; }
+
+		[Export ("theta")]
+		double Theta { get; }
+
+		[Export ("length")]
+		double Length { get; }
+
+		[Export ("squaredLength")]
+		double SquaredLength { get; }
+	}
+
+	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface VNCircle : NSCopying, NSSecureCoding {
+
+		[Static]
+		[Export ("zeroCircle", ArgumentSemantic.Strong)]
+		VNCircle ZeroCircle { get; }
+
+		[Internal]
+		[Export ("initWithCenter:radius:")]
+		IntPtr InitWithCenterRadius (VNPoint center, double radius);
+
+		[Internal]
+		[Export ("initWithCenter:diameter:")]
+		IntPtr InitWithCenterDiameter (VNPoint center, double diameter);
+
+		[Export ("containsPoint:")]
+		bool ContainsPoint (VNPoint point);
+
+		[Export ("containsPoint:inCircumferentialRingOfWidth:")]
+		bool ContainsPoint (VNPoint point, double ringWidth);
+
+		[Export ("center", ArgumentSemantic.Strong)]
+		VNPoint Center { get; }
+
+		[Export ("radius")]
+		double Radius { get; }
+
+		[Export ("diameter")]
+		double Diameter { get; }
+	}
+
+	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor] // Not meant to be created but obtained via VNContoursObservation
+	interface VNContour : NSCopying, VNRequestRevisionProviding {
+
+		[Export ("indexPath")]
+		NSIndexPath IndexPath { get; }
+
+		[Export ("childContourCount")]
+		nint ChildContourCount { get; }
+
+		[Export ("childContours")]
+		VNContour [] ChildContours { get; }
+
+		[Export ("childContourAtIndex:error:")]
+		[return: NullAllowed]
+		VNContour GetChildContour (nuint childContourIndex, [NullAllowed] out NSError error);
+
+		[Export ("pointCount")]
+		nint PointCount { get; }
+
+		[Export ("normalizedPoints")]
+		Vector2 NormalizedPoints {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
+		}
+
+		[Export ("normalizedPath")]
+		CGPath NormalizedPath { get; }
+
+		[Export ("aspectRatio")]
+		float AspectRatio { get; }
+
+		[Export ("polygonApproximationWithEpsilon:error:")]
+		[return: NullAllowed]
+		VNContour GetPolygonApproximation (float epsilon, [NullAllowed] out NSError error);
+	}
+
+	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[BaseType (typeof (VNPoint))]
+	[DisableDefaultCtor]
+	interface VNDetectedPoint {
+
+		[Export ("confidence")]
+		float Confidence { get; }
+	}
+
+	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[BaseType (typeof (VNDetectedPoint))]
+	[DisableDefaultCtor]
+	interface VNRecognizedPoint {
+
+		// This can be one of the several smart enums so can't really BindAs
+		[Export ("identifier")]
+		NSString Identifier { get; }
+	}
+
+	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface VNGeometryUtils {
+
+		[Static]
+		[Export ("boundingCircleForContour:error:")]
+		[return: NullAllowed]
+		VNCircle CreateBoundingCircle (VNContour contour, [NullAllowed] out NSError error);
+
+		[Static]
+		[Export ("boundingCircleForPoints:error:")]
+		[return: NullAllowed]
+		VNCircle CreateBoundingCircle (VNPoint[] points, [NullAllowed] out NSError error);
+
+		[Internal]
+		[Static]
+		[Export ("boundingCircleForSIMDPoints:pointCount:error:")]
+		[return: NullAllowed]
+		VNCircle CreateBoundingCircle (IntPtr pointsPtr, nint pointCount, out NSError error);
+
+		[Static]
+		[Export ("calculateArea:forContour:orientedArea:error:")]
+		bool CalculateArea (out double area, VNContour contour, bool orientedArea, [NullAllowed] out NSError error);
+
+		[Static]
+		[Export ("calculatePerimeter:forContour:error:")]
+		bool CalculatePerimeter (out double perimeter, VNContour contour, [NullAllowed] out NSError error);
+	}
+
+	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[BaseType (typeof (VNTargetedImageRequest))]
+	interface VNGenerateOpticalFlowRequest {
+
+		[Export ("computationAccuracy", ArgumentSemantic.Assign)]
+		VNGenerateOpticalFlowRequestComputationAccuracy ComputationAccuracy { get; set; }
+
+		[Advice ("The only allowed values here are 'TwoComponent16Half' or 'TwoComponent32Float' (Default).")]
+		[Export ("outputPixelFormat")]
+		CVPixelFormatType OutputPixelFormat { get; set; }
+
+		// Inlined from parent class
+		[Export ("initWithTargetedCVPixelBuffer:options:")]
+		IntPtr Constructor (CVPixelBuffer pixelBuffer, NSDictionary optionsDict);
+
+		[Wrap ("this (pixelBuffer, options.GetDictionary ()!)")]
+		IntPtr Constructor (CVPixelBuffer pixelBuffer, VNImageOptions options);
+
+		[Export ("initWithTargetedCVPixelBuffer:options:completionHandler:")]
+		IntPtr Constructor (CVPixelBuffer pixelBuffer, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+
+		[Wrap ("this (pixelBuffer, options.GetDictionary ()!, completionHandler)")]
+		IntPtr Constructor (CVPixelBuffer pixelBuffer, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+
+		[Export ("initWithTargetedCVPixelBuffer:orientation:options:")]
+		IntPtr Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
+
+		[Wrap ("this (pixelBuffer, orientation, options.GetDictionary ()!)")]
+		IntPtr Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, VNImageOptions options);
+
+		[Export ("initWithTargetedCVPixelBuffer:orientation:options:completionHandler:")]
+		IntPtr Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+
+		[Wrap ("this (pixelBuffer, orientation, options.GetDictionary ()!, completionHandler)")]
+		IntPtr Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+
+		[Export ("initWithTargetedCGImage:options:")]
+		IntPtr Constructor (CGImage cgImage, NSDictionary optionsDict);
+
+		[Wrap ("this (cgImage, options.GetDictionary ()!)")]
+		IntPtr Constructor (CGImage cgImage, VNImageOptions options);
+
+		[Export ("initWithTargetedCGImage:options:completionHandler:")]
+		IntPtr Constructor (CGImage cgImage, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+
+		[Wrap ("this (cgImage, options.GetDictionary ()!, completionHandler)")]
+		IntPtr Constructor (CGImage cgImage, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+
+		[Export ("initWithTargetedCGImage:orientation:options:")]
+		IntPtr Constructor (CGImage cgImage, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
+
+		[Wrap ("this (cgImage, orientation, options.GetDictionary ()!)")]
+		IntPtr Constructor (CGImage cgImage, CGImagePropertyOrientation orientation, VNImageOptions options);
+
+		[Export ("initWithTargetedCGImage:orientation:options:completionHandler:")]
+		IntPtr Constructor (CGImage cgImage, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+
+		[Wrap ("this (cgImage, orientation, options.GetDictionary ()!, completionHandler)")]
+		IntPtr Constructor (CGImage cgImage, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+
+		[Export ("initWithTargetedCIImage:options:")]
+		IntPtr Constructor (CIImage ciImage, NSDictionary optionsDict);
+
+		[Wrap ("this (ciImage, options.GetDictionary ()!)")]
+		IntPtr Constructor (CIImage ciImage, VNImageOptions options);
+
+		[Export ("initWithTargetedCIImage:options:completionHandler:")]
+		IntPtr Constructor (CIImage ciImage, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+
+		[Wrap ("this (ciImage, options.GetDictionary ()!, completionHandler)")]
+		IntPtr Constructor (CIImage ciImage, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+
+		[Export ("initWithTargetedCIImage:orientation:options:")]
+		IntPtr Constructor (CIImage ciImage, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
+
+		[Wrap ("this (ciImage, orientation, options.GetDictionary ()!)")]
+		IntPtr Constructor (CIImage ciImage, CGImagePropertyOrientation orientation, VNImageOptions options);
+
+		[Export ("initWithTargetedCIImage:orientation:options:completionHandler:")]
+		IntPtr Constructor (CIImage ciImage, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+
+		[Wrap ("this (ciImage, orientation, options.GetDictionary ()!, completionHandler)")]
+		IntPtr Constructor (CIImage ciImage, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+
+		[Export ("initWithTargetedImageURL:options:")]
+		IntPtr Constructor (NSUrl imageUrl, NSDictionary optionsDict);
+
+		[Wrap ("this (imageUrl, options.GetDictionary ()!)")]
+		IntPtr Constructor (NSUrl imageUrl, VNImageOptions options);
+
+		[Export ("initWithTargetedImageURL:options:completionHandler:")]
+		IntPtr Constructor (NSUrl imageUrl, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+
+		[Wrap ("this (imageUrl, options.GetDictionary ()!, completionHandler)")]
+		IntPtr Constructor (NSUrl imageUrl, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+
+		[Export ("initWithTargetedImageURL:orientation:options:")]
+		IntPtr Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
+
+		[Wrap ("this (imageUrl, orientation, options.GetDictionary ()!)")]
+		IntPtr Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, VNImageOptions options);
+
+		[Export ("initWithTargetedImageURL:orientation:options:completionHandler:")]
+		IntPtr Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+
+		[Wrap ("this (imageUrl, orientation, options.GetDictionary ()!, completionHandler)")]
+		IntPtr Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+
+		[Export ("initWithTargetedImageData:options:")]
+		IntPtr Constructor (NSData imageData, NSDictionary optionsDict);
+
+		[Wrap ("this (imageData, options.GetDictionary ()!)")]
+		IntPtr Constructor (NSData imageData, VNImageOptions options);
+
+		[Export ("initWithTargetedImageData:options:completionHandler:")]
+		IntPtr Constructor (NSData imageData, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+
+		[Wrap ("this (imageData, options.GetDictionary ()!, completionHandler)")]
+		IntPtr Constructor (NSData imageData, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+
+		[Export ("initWithTargetedImageData:orientation:options:")]
+		IntPtr Constructor (NSData imageData, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
+
+		[Wrap ("this (imageData, orientation, options.GetDictionary ()!)")]
+		IntPtr Constructor (NSData imageData, CGImagePropertyOrientation orientation, VNImageOptions options);
+
+		[Export ("initWithTargetedImageData:orientation:options:completionHandler:")]
+		IntPtr Constructor (NSData imageData, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+
+		[Wrap ("this (imageData, orientation, options.GetDictionary ()!, completionHandler)")]
+		IntPtr Constructor (NSData imageData, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+
+		// We must inline the following 5 properties
+		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
+		// into subclasses so the correct class_ptr is used for the static members and the right enum type is also used.
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[Export ("revision")]
+		VNGenerateOpticalFlowRequestRevision Revision { get; set; }
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[Static]
+		[Export ("supportedRevisions", ArgumentSemantic.Copy)]
+		NSIndexSet WeakSupportedRevisions { get; }
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[Static]
+		[Wrap ("GetSupportedVersions<VNGenerateOpticalFlowRequestRevision> (WeakSupportedRevisions)")]
+		VNGenerateOpticalFlowRequestRevision [] SupportedRevisions { get; }
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[Static]
+		[Export ("defaultRevision")]
+		VNGenerateOpticalFlowRequestRevision DefaultRevision { get; }
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[Static]
+		[Export ("currentRevision")]
+		VNGenerateOpticalFlowRequestRevision CurrentRevision { get; }
+	}
+
+	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[BaseType (typeof (VNObservation))]
+	[DisableDefaultCtor]
+	interface VNTrajectoryObservation {
+
+		[Export ("detectedPoints", ArgumentSemantic.Copy)]
+		VNPoint[] DetectedPoints { get; }
+
+		[Export ("projectedPoints", ArgumentSemantic.Copy)]
+		VNPoint[] ProjectedPoints { get; }
+
+		[Export ("equationCoefficients")]
+		Vector3 EquationCoefficients {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
+		}
+	}
+
+	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[BaseType (typeof (VNObservation))]
+	[DisableDefaultCtor]
+	interface VNContoursObservation {
+
+		[Field ("VNRecognizedPointGroupKeyAll")]
+		NSString RecognizedPointGroupKeyAll { get; }
+
+		[Export ("contourCount")]
+		nint ContourCount { get; }
+
+		[Export ("contourAtIndex:error:")]
+		[return: NullAllowed]
+		VNContour GetContour (nint contourIndex, [NullAllowed] out NSError error);
+
+		[Export ("topLevelContourCount")]
+		nint TopLevelContourCount { get; }
+
+		[Export ("topLevelContours")]
+		VNContour [] TopLevelContours { get; }
+
+		[Export ("contourAtIndexPath:error:")]
+		[return: NullAllowed]
+		VNContour GetContour (NSIndexPath indexPath, [NullAllowed] out NSError error);
+
+		[Export ("normalizedPath")]
+		CGPath NormalizedPath { get; }
+	}
+
+	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[BaseType (typeof (VNObservation))]
+	[DisableDefaultCtor]
+	interface VNRecognizedPointsObservation {
+
+		[Advice ("You can use 'GetAvailableKeys<T> ()' where 'T' can be 'VNHumanBodyPoseObservationJointName' or 'VNHumanHandPoseObservationJointName' enum.")]
+		[Export ("availableKeys", ArgumentSemantic.Copy)]
+		NSString [] AvailableKeys { get; }
+
+		[Advice ("You can use 'GetAvailableGroupKeys<T> ()' where 'T' can be 'VNHumanBodyPoseObservationJointsGroupName' or 'VNHumanHandPoseObservationJointsGroupName' enum.")]
+		[Export ("availableGroupKeys", ArgumentSemantic.Copy)]
+		NSString [] AvailableGroupKeys { get; }
+
+		[Export ("recognizedPointForKey:error:")]
+		[return: NullAllowed]
+		VNRecognizedPoint GetRecognizedPoint (NSString pointKey, out NSError error);
+
+		[Wrap ("GetRecognizedPoint (handLandmark.GetConstant ()!, out error)")]
+		[return: NullAllowed]
+		VNRecognizedPoint GetRecognizedPoint (VNHumanHandPoseObservationJointName handLandmark, out NSError error);
+
+		[Wrap ("GetRecognizedPoint (bodyLandmark.GetConstant ()!, out error)")]
+		[return: NullAllowed]
+		VNRecognizedPoint GetRecognizedPoint (VNHumanBodyPoseObservationJointName bodyLandmark, out NSError error);
+
+		[Export ("recognizedPointsForGroupKey:error:")]
+		[return: NullAllowed]
+		NSDictionary<NSString, VNRecognizedPoint> GetRecognizedPoints (NSString groupKey, out NSError error);
+
+		[Wrap ("GetRecognizedPoints (bodyLandmarkRegion.GetConstant ()!, out error)")]
+		[return: NullAllowed]
+		NSDictionary<NSString, VNRecognizedPoint> GetRecognizedPoints (VNHumanBodyPoseObservationJointsGroupName bodyLandmarkRegion, out NSError error);
+
+		[Wrap ("GetRecognizedPoints (handLandmarkRegion.GetConstant ()!, out error)")]
+		[return: NullAllowed]
+		NSDictionary<NSString, VNRecognizedPoint> GetRecognizedPoints (VNHumanHandPoseObservationJointsGroupName handLandmarkRegion, out NSError error);
+
+		[Export ("keypointsMultiArrayAndReturnError:")]
+		[return: NullAllowed]
+		MLMultiArray GetKeypoints (out NSError error);
+	}
+
+	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[BaseType (typeof (VNImageBasedRequest))]
+	[DisableDefaultCtor]
+	interface VNStatefulRequest {
+
+		[Export ("initWithFrameAnalysisSpacing:completionHandler:")]
+		IntPtr Constructor (CMTime frameAnalysisSpacing, [NullAllowed] VNRequestCompletionHandler completionHandler);
+
+		[Export ("minimumLatencyFrameCount")]
+		nint MinimumLatencyFrameCount { get; }
+
+		[Export ("frameAnalysisSpacing")]
+		CMTime FrameAnalysisSpacing { get; }
+
+		// We must inline the following 5 properties
+		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
+		// into subclasses so the correct class_ptr is used for the static members and the right enum type is also used.
+
+		[Export ("revision")]
+		VNStatefulRequestRevision Revision { get; set; }
+
+		[Static]
+		[Export ("supportedRevisions", ArgumentSemantic.Copy)]
+		NSIndexSet WeakSupportedRevisions { get; }
+
+		[Static]
+		[Wrap ("GetSupportedVersions<VNStatefulRequestRevision> (WeakSupportedRevisions)")]
+		VNStatefulRequestRevision [] SupportedRevisions { get; }
+
+		[Static]
+		[Export ("defaultRevision")]
+		VNStatefulRequestRevision DefaultRevision { get; }
+
+		[Static]
+		[Export ("currentRevision")]
+		VNStatefulRequestRevision CurrentRevision { get; }
+	}
+
+	[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use 'VNVideoProcessorRequestProcessingOptions' instead.")]
+	[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'VNVideoProcessorRequestProcessingOptions' instead.")]
+	[Deprecated (PlatformName.TvOS, 14, 0, message: "Use 'VNVideoProcessorRequestProcessingOptions' instead.")]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
+	[Internal]
+	[Static]
+	interface VNVideoProcessingOptionKeys {
+		[Field ("VNVideoProcessingOptionFrameCadence")]
+		NSString FrameCadenceKey { get; }
+
+		[Field ("VNVideoProcessingOptionTimeInterval")]
+		NSString TimeIntervalKey { get; }
+	}
+
+	[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use 'VNVideoProcessorRequestProcessingOptions' instead.")]
+	[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'VNVideoProcessorRequestProcessingOptions' instead.")]
+	[Deprecated (PlatformName.TvOS, 14, 0, message: "Use 'VNVideoProcessorRequestProcessingOptions' instead.")]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
+	[StrongDictionary ("VNVideoProcessingOptionKeys")]
+	interface VNVideoProcessingOptions {
+		nint FrameCadence { get; set; }
+		double TimeInterval { get; set; }
+	}
+
+	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface VNVideoProcessor {
+
+		[Export ("initWithURL:")]
+		IntPtr Constructor (NSUrl videoUrl);
+
+		[Export ("addRequest:processingOptions:error:")]
+		bool AddRequest (VNRequest request, VNVideoProcessorRequestProcessingOptions processingOptions, [NullAllowed] out NSError error);
+
+		[Export ("removeRequest:error:")]
+		bool RemoveRequest (VNRequest request, [NullAllowed] out NSError error);
+
+		[Export ("analyzeTimeRange:error:")]
+		bool Analyze (CMTimeRange timeRange, [NullAllowed] out NSError error);
+
+		[Export ("cancel")]
+		void Cancel ();
+	}
+
+	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[BaseType (typeof (NSObject))]
+	interface VNVideoProcessorCadence : NSCopying {
+
+	}
+
+	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[BaseType (typeof (VNVideoProcessorCadence))]
+	[DisableDefaultCtor]
+	interface VNVideoProcessorFrameRateCadence {
+
+		[Export ("initWithFrameRate:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (nint frameRate);
+
+		[Export ("frameRate")]
+		nint FrameRate { get; }
+	}
+
+	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[BaseType (typeof (VNVideoProcessorCadence))]
+	[DisableDefaultCtor]
+	interface VNVideoProcessorTimeIntervalCadence {
+
+		[Export ("initWithTimeInterval:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (double timeInterval);
+
+		[Export ("timeInterval")]
+		double TimeInterval { get; }
+	}
+
+	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[BaseType (typeof (NSObject))]
+	interface VNVideoProcessorRequestProcessingOptions : NSCopying {
+
+		[NullAllowed, Export ("cadence", ArgumentSemantic.Copy)]
+		VNVideoProcessorCadence Cadence { get; set; }
+	}
 }
