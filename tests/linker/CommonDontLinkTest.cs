@@ -15,13 +15,20 @@ namespace DontLink {
 		public void TypeDescriptorCanary ()
 		{
 			// this will fail is ReflectTypeDescriptionProvider.cs is modified
-			var rtdp = Type.GetType ("System.ComponentModel.ReflectTypeDescriptionProvider, System");
+			var rtdp = typeof (System.ComponentModel.BooleanConverter).Assembly.GetType ("System.ComponentModel.ReflectTypeDescriptionProvider");
 			Assert.NotNull (rtdp, "type");
 			var p = rtdp.GetProperty ("IntrinsicTypeConverters", BindingFlags.Static | BindingFlags.NonPublic);
 			Assert.NotNull (p, "property");
 			var ht = (Hashtable) p.GetGetMethod (true).Invoke (null, null);
 			Assert.NotNull (ht, "Hashtable");
-			Assert.That (ht.Count, Is.EqualTo (26), "Count");
+
+#if NET
+			var expectedCount = 28;
+#else
+			var expectedCount = 26;
+#endif
+			Assert.That (ht.Count, Is.EqualTo (expectedCount), "Count");
+
 			foreach (var item in ht.Values) {
 				var name = item.ToString ();
 				switch (name) {
@@ -50,6 +57,10 @@ namespace DontLink {
 				case "System.ComponentModel.UInt32Converter":
 				case "System.ComponentModel.ByteConverter":
 				case "System.ComponentModel.EnumConverter":
+#if NET
+				case "System.ComponentModel.VersionConverter":
+				case "System.UriTypeConverter":
+#endif
 					break;
 				default:
 					Assert.Fail ($"Unknown type descriptor {name}");
