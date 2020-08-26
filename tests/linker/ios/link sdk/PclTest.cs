@@ -33,7 +33,7 @@ namespace LinkSdk {
 			
 			Assert.False (this is ICommand, "ICommand");
 			
-			HttpWebRequest hwr = new HttpWebRequest (uri);
+			HttpWebRequest hwr = WebRequest.CreateHttp (uri);
 			try {
 				Assert.True (hwr.SupportsCookieContainer, "SupportsCookieContainer");
 			}
@@ -70,17 +70,27 @@ namespace LinkSdk {
 		{
 			AddressHeaderCollection ahc = new AddressHeaderCollection ();
 			try {
-				ahc.FindAll (null, null);
+				ahc.FindAll ("name", "namespace");
 			}
 			catch (NotImplementedException) {
 				// feature is not available, but the symbol itself is needed
 			}
 			
 			try {
-				FaultException.CreateFault (null, String.Empty, null);
+				FaultException.CreateFault (new TestFault (), String.Empty, Array.Empty<Type> ());
 			}
 			catch (NotImplementedException) {
 				// feature is not available, but the symbol itself is needed
+			}
+		}
+
+		class TestFault : MessageFault {
+			public override FaultCode Code => throw new NotImplementedException ();
+			public override bool HasDetail => throw new NotImplementedException ();
+			public override FaultReason Reason => throw new NotImplementedException ();
+			protected override void OnWriteDetailContents (XmlDictionaryWriter writer)
+			{
+				throw new NotImplementedException ();
 			}
 		}
 

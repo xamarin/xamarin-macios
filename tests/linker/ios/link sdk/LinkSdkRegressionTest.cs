@@ -18,7 +18,9 @@ using System.Security.Permissions;
 using System.Security.Principal;
 using System.Threading;
 using System.Xml;
+#if !NET
 using Mono.Data.Sqlite;
+#endif
 using MonoTouch;
 #if !__TVOS__ && !__WATCHOS__
 using AddressBook;
@@ -79,6 +81,7 @@ namespace LinkSdk {
 			// the above should not throw System.Runtime.Serialization.SerializationException
 		}
 		
+#if !NET // This test requires Mono.Data.SqliteConnection, which .NET 5+ doesn't have
 		[Test]
 		// http://bugzilla.xamarin.com/show_bug.cgi?id=233
 		public void Bug233_MonoPInvokeCallback ()
@@ -89,6 +92,7 @@ namespace LinkSdk {
 			// the above should not crash
 			c.Close ();
 		}
+#endif
 		
 		[Test]
 		// http://bugzilla.xamarin.com/show_bug.cgi?id=234
@@ -226,6 +230,7 @@ namespace LinkSdk {
 			}
 		}
 		
+#if !NET // This test requires System.ServiceModel.dll, which .NET 5+ doesn't have
 		[Test]
 		// http://bugzilla.xamarin.com/show_bug.cgi?id=1415
 		public void Bug1415_Linker_DataMember ()
@@ -268,7 +273,9 @@ namespace LinkSdk {
 			Assert.True (stack_trace, "StackTrace");
 			Assert.True (type, "Type");
 		}
+#endif // !NET
 		
+#if !NET // This test requires System.ServiceModel.dll, which .NET 5+ doesn't have
 		[Test]
 		// http://bugzilla.xamarin.com/show_bug.cgi?id=1415
 		// not really part of the bug - but part of the same fix
@@ -285,6 +292,7 @@ namespace LinkSdk {
 			// should be null if application is linked (won't be if "Don't link" is used)
 #endif // !__WATCHOS__
 		}
+#endif // !NET
 
 		[Test]
 		// http://bugzilla.xamarin.com/show_bug.cgi?id=1443
@@ -386,6 +394,7 @@ namespace LinkSdk {
 			}
 		}
 
+#if !NET // This test requires Mono.Data.SqliteConnection, which .NET 5+ doesn't have
 		[Test]
 		// http://stackoverflow.com/questions/8602726/cant-open-sqlite-database-in-read-only-mode
 		public void Sqlite_ReadOnly ()
@@ -395,6 +404,7 @@ namespace LinkSdk {
 			// the above should not throw a 'misuse' exception
 			c.Close ();
 		}
+#endif
 		
 		[Test]
 		public void AsQueryable_3028 ()
@@ -405,6 +415,7 @@ namespace LinkSdk {
 		}
 
 #if !__WATCHOS__
+#if !NET // OpenTK-1.0.dll is not supported yet
 		[Test]
 		public void OpenTk_3049 ()
 		{
@@ -430,6 +441,7 @@ namespace LinkSdk {
 			core = GetTypeHelper ("OpenTK.Graphics.ES20.GL/Core, " + OpenTKAssembly, false);
 			Assert.NotNull (core, "ES20/Core");
 		}
+#endif // !NET
 #endif // !__WATCHOS__
 		
 		[Test]
@@ -622,6 +634,9 @@ namespace LinkSdk {
 			Assert.NotNull (NetworkInterface.GetAllNetworkInterfaces ());
 		}
 		
+#if NET
+		[Ignore ("System.EntryPointNotFoundException: AppleCryptoNative_SecKeychainItemCopyKeychain")] // https://github.com/dotnet/runtime/issues/36897
+#endif
 		[Test]
 		public void WebClient_SSL_Leak ()
 		{
@@ -678,7 +693,7 @@ namespace LinkSdk {
 		public void Pointer_5200 ()
 		{
 			// ensure the linker did not remove the type, which is used by the runtime
-			Assert.NotNull (GetTypeHelper ("System.Reflection.Pointer, mscorlib"));
+			Assert.NotNull (GetTypeHelper ("System.Reflection.Pointer, " + typeof (int).Assembly.GetName ().Name));
 		}
 
 		[Test]
@@ -720,11 +735,13 @@ namespace LinkSdk {
 			Assert.IsFalse (Attribute.IsDefined (GetType (), typeof(SerializableAttribute)));
 		}
 
+#if !NET // This test requires System.Runtime.Remoting.dll, which .NET 5+ doesn't have
 		[Test]
 		public void LinkedAway ()
 		{
 			Assert.Throws<NotSupportedException> (() => new System.Runtime.Remoting.RemotingException ());
 		}
+#endif // !NET
 
 		[Test]
 		public void ArrayClear_11184 ()
@@ -785,7 +802,12 @@ namespace LinkSdk {
 			var mem = System.Diagnostics.Process.GetCurrentProcess ().PrivateMemorySize64;
 			// the above used a mach call that iOS samdbox did *not* allow (sandbox) on device
 			// but has been fixed (different call) for the same PID
+#if NET
+			// It's not entirely clear, but it appears this is not implemented, and won't be, for mobile platforms: https://github.com/dotnet/runtime/issues/28990
+			Assert.That (mem, Is.EqualTo (0), "PrivateMemorySize64");
+#else
 			Assert.That (mem, Is.Not.EqualTo (0), "PrivateMemorySize64");
+#endif
 		}
 
 		string TestFolder (Environment.SpecialFolder folder, bool supported = true, bool exists = true, bool readOnly = false)
@@ -880,8 +902,10 @@ namespace LinkSdk {
 			Assert.That (path, Is.EqualTo ("/usr/share"), "path - CommonApplicationData");
 
 			// and the simulator is more lax
+#if !NET // https://github.com/dotnet/runtime/issues/41383
 			path = TestFolder (Environment.SpecialFolder.ProgramFiles, readOnly: device);
 			Assert.That (path, Is.EqualTo ("/Applications"), "path - ProgramFiles");
+#endif
 
 			path = TestFolder (Environment.SpecialFolder.UserProfile, readOnly: device);
 			var bundlePath = NSBundle.MainBundle.BundlePath;
@@ -987,7 +1011,11 @@ namespace LinkSdk {
 		[Test]
 		public void MonoRuntime34671 ()
 		{
+#if NET
+			Assert.Null (GetTypeHelper ("Mono.Runtime"), "Mono.Runtime");
+#else
 			Assert.NotNull (GetTypeHelper ("Mono.Runtime"), "Mono.Runtime");
+#endif
 		}
 
 		[Test]
@@ -998,6 +1026,7 @@ namespace LinkSdk {
 		}
 
 #if !__WATCHOS__
+#if !NET // This test requires Mono.Security.dll, which .NET 5+ doesn't have
 		[Test]
 		public void TlsProvider_Apple ()
 		{
@@ -1005,6 +1034,7 @@ namespace LinkSdk {
 			Assert.NotNull (provider, "provider");
 			Assert.That (provider.ID, Is.EqualTo (new Guid ("981af8af-a3a3-419a-9f01-a518e3a17c1c")), "correct provider");
 		}
+#endif
 
 		[Test]
 		public void Github5024 ()
@@ -1073,6 +1103,9 @@ namespace LinkSdk {
 		}
 #endif
 
+#if NET
+		[Ignore ("https://github.com/mono/linker/issues/1453")]
+#endif
 		[Test]
 		// https://github.com/xamarin/xamarin-macios/issues/6346
 		public void AsQueryable_Enumerable ()

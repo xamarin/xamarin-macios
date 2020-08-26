@@ -23,6 +23,9 @@ namespace LinkSdk {
 	[Preserve (AllMembers = true)]
 	public class CryptoTest {
 		
+#if NET
+		[Ignore ("https://github.com/dotnet/runtime/issues/36897")]
+#endif
 		[Test]
 		public void AesCreate ()
 		{
@@ -35,6 +38,9 @@ namespace LinkSdk {
 
 		static int trust_validation_callback;
 
+#if NET
+		[Ignore ("System.EntryPointNotFoundException: AppleCryptoNative_SecKeychainItemCopyKeychain")] // https://github.com/dotnet/runtime/issues/36897
+#endif
 		[Test]
 		public void TrustUsingNewCallback ()
 		{
@@ -64,6 +70,9 @@ namespace LinkSdk {
 			}
 		}
 
+#if NET
+		[Ignore ("System.EntryPointNotFoundException: AppleCryptoNative_SecKeychainItemCopyKeychain")] // https://github.com/dotnet/runtime/issues/36897
+#endif
 		[Test]
 		public void SSL_IP_5706 ()
 		{
@@ -88,6 +97,9 @@ namespace LinkSdk {
 
 		static int sne_validation_callback;
 
+#if NET
+		[Ignore ("System.EntryPointNotFoundException: AppleCryptoNative_SecKeychainItemCopyKeychain")] // https://github.com/dotnet/runtime/issues/36897
+#endif
 		[Test]
 		public void TLS1_ServerNameExtension ()
 		{
@@ -133,6 +145,9 @@ namespace LinkSdk {
 			}
 		}
 
+#if NET
+		[Ignore ("System.EntryPointNotFoundException: AppleCryptoNative_SecKeychainCreate")] // https://github.com/dotnet/runtime/issues/36897
+#endif
 		[Test]
 		public void Chain ()
 		{
@@ -213,6 +228,10 @@ namespace LinkSdk {
 			0x58, 0x62, 0x42, 0x43, 0x35, 0x37, 0x77, 0x3D, 0x3D, 0x0D, 0x0A, 0x2D, 0x2D, 0x2D, 0x2D, 0x2D, 0x45, 0x4E, 0x44, 0x20, 
 			0x43, 0x45, 0x52, 0x54, 0x49, 0x46, 0x49, 0x43, 0x41, 0x54, 0x45, 0x2D, 0x2D, 0x2D, 0x2D, 0x2D, 0x0D, 0x0A, };
 
+
+#if NET
+		[Ignore ("System.EntryPointNotFoundException : AppleCryptoNative_SecCopyErrorMessageString")] // https://github.com/dotnet/runtime/issues/36897
+#endif
 		[Test]
 		public void Sha256 ()
 		{
