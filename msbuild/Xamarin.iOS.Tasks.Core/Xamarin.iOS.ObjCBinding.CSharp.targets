@@ -29,35 +29,7 @@ Copyright (C) 2013-2016 Xamarin Inc. All rights reserved.
 		<DefineConstants>$(XamarinDefineConstants);$(DefineConstants)</DefineConstants>
 	</PropertyGroup>
 
-	<!-- OBSOLETE -->
-	<Target Name="_CollectObjCBindingNativeFrameworkResources" Returns="@(_ObjCBindingNativeFrameworkResource)">
-		<CreateItem Include="@(ObjCBindingNativeFramework -> '%(Identity)\**\*.*')">
-			<Output ItemName="_ObjCBindingNativeFrameworkResource" TaskParameter="Include" />
-		</CreateItem>
-	</Target>
-	
-	<Target Name="_CompressObjCBindingNativeFrameworkResources" Inputs="@(_ObjCBindingNativeFrameworkResource)" Outputs="$(IntermediateOutputPath)%(ObjCBindingNativeFramework.Filename)%(ObjCBindingNativeFramework.Extension)" DependsOnTargets="_CollectObjCBindingNativeFrameworkResources">
-		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(IntermediateOutputPath)%(ObjCBindingNativeFramework.Filename)%(ObjCBindingNativeFramework.Extension)" />
-
-		<Zip
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			ToolExe="$(ZipExe)"
-			ToolPath="$(ZipPath)"
-			Recursive="true"
-			Symlinks="true"
-			Sources="%(ObjCBindingNativeFramework.Identity)"
-			OutputFile="$(IntermediateOutputPath)%(ObjCBindingNativeFramework.Filename)%(ObjCBindingNativeFramework.Extension)"
-			WorkingDirectory="%(ObjCBindingNativeFramework.Identity)" >
-		</Zip>
-
-		<CreateItem Include="$(IntermediateOutputPath)%(ObjCBindingNativeFramework.Filename)%(ObjCBindingNativeFramework.Extension)">
-			<Output TaskParameter="Include" ItemName="ManifestResourceWithNoCulture" />
-		</CreateItem>
-	</Target>
-	<!-- /OBSOLETE -->
-
-	<Target Name="_CollectGeneratedSources" DependsOnTargets="_GenerateBindings;_CompressNativeFrameworkResources;_CompressObjCBindingNativeFrameworkResources"
+	<Target Name="_CollectGeneratedSources" DependsOnTargets="_GenerateBindings;_CompressNativeFrameworkResources"
 		Condition="'$(DesignTimeBuild)' != 'true'">
 		
 		<ReadLinesFromFile File="$(_GeneratedSourcesFileList)" >
