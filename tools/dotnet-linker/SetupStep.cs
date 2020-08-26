@@ -8,6 +8,7 @@ using Mono.Linker.Steps;
 
 using Xamarin.Bundler;
 using Xamarin.Linker;
+using Xamarin.Linker.Steps;
 
 namespace Xamarin {
 
@@ -44,6 +45,17 @@ namespace Xamarin {
 			// Load the list of assemblies loaded by the linker.
 			// This would not be needed of LinkContext.GetAssemblies () was exposed to us.
 			InsertAfter (new CollectAssembliesStep (), "LoadReferencesStep");
+
+			var prelink_substeps = new DotNetSubStepDispatcher ();
+			InsertAfter (prelink_substeps, "RemoveSecurityStep");
+
+			if (Configuration.LinkMode != LinkMode.None) {
+				// We need to run the ApplyPreserveAttribute step even we're only linking sdk assemblies, because even
+				// though we know that sdk assemblies will never have Preserve attributes, user assemblies may have
+				// [assembly: LinkSafe] attributes, which means we treat them as sdk assemblies and those may have
+				// Preserve attributes.
+				prelink_substeps.Add (new ApplyPreserveAttribute ());
+			}
 
 			Steps.Add (new LoadNonSkippedAssembliesStep ());
 			Steps.Add (new ExtractBindingLibrariesStep ());
