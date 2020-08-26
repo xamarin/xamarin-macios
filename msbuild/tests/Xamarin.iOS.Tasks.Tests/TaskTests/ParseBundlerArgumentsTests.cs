@@ -98,6 +98,7 @@ namespace Xamarin.iOS.Tasks
 		{
 			var task = CreateTask<CustomParseBundlerArguments> ();
 			task.ExtraArgs = input;
+			Assert.IsTrue (task.Execute (), input);
 			Assert.AreEqual (output, task.MarshalManagedExceptionMode, output);
 		}
 
@@ -112,6 +113,7 @@ namespace Xamarin.iOS.Tasks
 		{
 			var task = CreateTask<CustomParseBundlerArguments> ();
 			task.ExtraArgs = input;
+			Assert.IsTrue (task.Execute (), input);
 			Assert.AreEqual (output, task.MarshalObjectiveCExceptionMode, output);
 		}
 	}
