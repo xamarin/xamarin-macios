@@ -902,8 +902,10 @@ namespace LinkSdk {
 			Assert.That (path, Is.EqualTo ("/usr/share"), "path - CommonApplicationData");
 
 			// and the simulator is more lax
+#if !NET // https://github.com/dotnet/runtime/issues/41383
 			path = TestFolder (Environment.SpecialFolder.ProgramFiles, readOnly: device);
 			Assert.That (path, Is.EqualTo ("/Applications"), "path - ProgramFiles");
+#endif
 
 			path = TestFolder (Environment.SpecialFolder.UserProfile, readOnly: device);
 			var bundlePath = NSBundle.MainBundle.BundlePath;
