@@ -42,6 +42,14 @@ namespace Xamarin {
 				Console.WriteLine ("Pipeline Steps:");
 				foreach (var step in Steps) {
 					Console.WriteLine ($"    {step}");
+					if (step is SubStepsDispatcher) {
+						var substeps = typeof (SubStepsDispatcher).GetField ("substeps", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue (step) as IEnumerable<ISubStep>;
+						if (substeps != null) {
+							foreach (var substep in substeps) {
+								Console.WriteLine ($"        {substep}");
+							}
+						}
+					}
 				}
 			}
 
