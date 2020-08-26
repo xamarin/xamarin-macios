@@ -26,7 +26,6 @@ MMP_TARGETS = \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp/mmp.exe \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp/Xamarin.Mac.registrar.mobile.a \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp/Xamarin.Mac.registrar.full.a \
-	$(MMP_TARGETS_DOTNET) \
 
 MMP_DIRECTORIES_DOTNET = \
 	$(DOTNET_DESTDIR)/Microsoft.macOS.Runtime.osx-x64/runtimes/osx-x64/native \
