@@ -16,7 +16,7 @@ using ObjCRuntime;
 
 namespace CarPlay {
 
-    public enum  CPMessageListItemType {
+    public enum CPMessageListItemType {
         Identifier,
         FullName,
     }
@@ -24,7 +24,6 @@ namespace CarPlay {
 	public partial class CPMessageListItem {
 
 		public CPMessageListItem (string identifier, string text, CPMessageListItemLeadingConfiguration leadingConfiguration,
-
             CPMessageListItemTrailingConfiguration? trailingConfiguration, string? detailText, string? trailingText) :
                 this (identifier, text, leadingConfiguration, trailingConfiguration, detailText, trailingText, CPMessageListItemType.Identifier)
             {
@@ -43,7 +42,7 @@ namespace CarPlay {
                     "initWithFullName:phoneOrEmailAddress:leadingConfiguration:trailingConfiguration:detailText:trailingText:");
                 break;
             default:
-                throw new ArgumentException ("The 'CPMessageListItemType type' argument needs a value.");
+                throw new ArgumentException (nameof (type));
             }
         }
     }

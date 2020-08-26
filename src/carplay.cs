@@ -121,6 +121,7 @@ namespace CarPlay {
 		TwoColumn,
 	}
 
+	[NoWatch, NoTV, NoMac, iOS (14,0)]
 	[Native]
 	public enum CPListItemAccessoryType : long
 	{
@@ -129,6 +130,7 @@ namespace CarPlay {
 		Cloud,
 	}
 
+	[NoWatch, NoTV, NoMac, iOS (14,0)]
 	[Native]
 	public enum CPListItemPlayingIndicatorLocation : long
 	{
@@ -136,6 +138,7 @@ namespace CarPlay {
 		Trailing,
 	}
 
+	[NoWatch, NoTV, NoMac, iOS (14,0)]
 	[Native]
 	public enum CPMessageLeadingItem : long
 	{
@@ -144,6 +147,7 @@ namespace CarPlay {
 		Star,
 	}
 
+	[NoWatch, NoTV, NoMac, iOS (14,0)]
 	[Native]
 	public enum CPMessageTrailingItem : long
 	{
@@ -328,10 +332,6 @@ namespace CarPlay {
 		[Export ("templates", ArgumentSemantic.Strong)]
 		CPTemplate [] Templates { get; }
 
-		// Not sure about this one. ObjC header says: extern NSString * const CarPlayErrorDomain;
-		[Field ("CarPlayErrorDomain")]
-		NSString CarPlayErrorDomain { get; }
-
 		[iOS (14, 0)]
 		[Async]
 		[Export ("setRootTemplate:animated:completion:")]
@@ -417,9 +417,9 @@ namespace CarPlay {
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (12,0)]
-	[BaseType (typeof (CPBaseListItem))]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface CPListItem : NSSecureCoding {
+	interface CPListItem : CPSelectableListItem {
 
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Do not use; this API was removed.")]
 		[Field ("CPMaximumListItemImageSize")]
@@ -499,6 +499,10 @@ namespace CarPlay {
 		[iOS (14,0)]
 		[Export ("setText:")]
 		void SetText (string text);
+
+		[NullAllowed, iOS (14, 0)]
+		[Export ("handler", ArgumentSemantic.Copy)]
+		CPSelectableListItemHandler Handler { get; set; }
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (12,0)]
@@ -523,11 +527,11 @@ namespace CarPlay {
 
 		[iOS (14,0)]
 		[Export ("indexOfItem:")]
-		nuint IndexOfItem (CPBaseListItem item);
+		nuint GetIndex (ICPListTemplateItem item);
 
 		[iOS (14,0)]
 		[Export ("itemAtIndex:")]
-		CPBaseListItem ItemAtIndex (nuint index);
+		ICPListTemplateItem GetItem (nuint index);
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (12,0)]
@@ -576,7 +580,7 @@ namespace CarPlay {
 		[iOS (14,0)]
 		[Export ("indexPathForItem:")]
 		[return: NullAllowed]
-		NSIndexPath IndexPathForItem (CPBaseListItem item);
+		NSIndexPath GetIndexPath (ICPListTemplateItem item);
 
 		[iOS (14, 0)]
 		[Export ("emptyViewTitleVariants", ArgumentSemantic.Copy)]
@@ -595,7 +599,6 @@ namespace CarPlay {
 	interface CPListTemplateDelegate {
 
 		[Abstract]
-		[Async]
 		[Export ("listTemplate:didSelectListItem:completionHandler:")]
 		void DidSelectListItem (CPListTemplate listTemplate, CPListItem item, Action completionHandler);
 	}
@@ -608,6 +611,7 @@ namespace CarPlay {
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'CPManeuver.SymbolImage' instead.")]
 		[NullAllowed, Export ("symbolSet", ArgumentSemantic.Strong)]
 		CPImageSet SymbolSet { get; set; }
+
 
  		[iOS (13,0)]
 		[NullAllowed, Export ("symbolImage", ArgumentSemantic.Strong)]
@@ -825,7 +829,6 @@ namespace CarPlay {
 	[DisableDefaultCtor]
 	interface CPNavigationAlert : NSSecureCoding {
 
-
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use constructor that takes in 'UIImage' instead of 'CPImageSet'.")]
 		[Export ("initWithTitleVariants:subtitleVariants:imageSet:primaryAction:secondaryAction:duration:")]
 		IntPtr Constructor (string[] titleVariants, [NullAllowed] string[] subtitleVariants, [NullAllowed] CPImageSet imageSet, CPAlertAction primaryAction, [NullAllowed] CPAlertAction secondaryAction, double duration);
@@ -905,12 +908,10 @@ namespace CarPlay {
 	interface CPSearchTemplateDelegate {
 
 		[Abstract]
-		[Async]
 		[Export ("searchTemplate:updatedSearchText:completionHandler:")]
 		void UpdatedSearchText (CPSearchTemplate searchTemplate, string searchText, CPSearchTemplateDelegateUpdateHandler completionHandler);
 
 		[Abstract]
-		[Async]
 		[Export ("searchTemplate:selectedResult:completionHandler:")]
 		void SelectedResult (CPSearchTemplate searchTemplate, CPListItem item, Action completionHandler);
 
@@ -1290,23 +1291,6 @@ namespace CarPlay {
 		UIWindow DashboardWindow { get; }
 	}
 
-	// warning BI1115: bgen: The parameter 'completionBlock' in the delegate 'CarPlay.CPListItemHandler' does not have a [CCallback] or [BlockCallback] attribute. Defaulting to [CCallback].
-	delegate void CPListItemHandler (CPBaseListItem item, Action completionBlock);
-
-	[Deprecated (PlatformName.iOS, 14, 0)]
-	[NoWatch, NoTV, NoMac, iOS (14,0)]
-	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor]
-	interface CPBaseListItem : NSSecureCoding
-	{
-		[Deprecated (PlatformName.iOS, 14, 0)]
-		[NullAllowed, Export ("listItemHandler", ArgumentSemantic.Copy)]
-		CPListItemHandler ListItemHandler { get; set; }
-
-		[NullAllowed, Export ("userInfo", ArgumentSemantic.Strong)]
-		NSObject UserInfo { get; set; }
-	}
-
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -1354,6 +1338,7 @@ namespace CarPlay {
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
 	[BaseType (typeof (CPButton))]
+	[DisableDefaultCtor]
 	interface CPContactCallButton
 	{
 		[Export ("initWithImage:handler:")]
@@ -1366,6 +1351,7 @@ namespace CarPlay {
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
 	[BaseType (typeof (CPButton))]
+	[DisableDefaultCtor]
 	interface CPContactDirectionsButton
 	{
 		[Export ("initWithImage:handler:")]
@@ -1427,12 +1413,12 @@ namespace CarPlay {
 		CPTextButton[] Actions { get; set; }
 	}
 
-	// warning BI1115: bgen: The parameter 'completionHandler' in the delegate 'CarPlay.ListImageRowItemHandler' does not have a [CCallback] or [BlockCallback] attribute. Defaulting to [CCallback].
-	delegate void ListImageRowItemHandler (CPListImageRowItem item, nint index, Action completionHandler);
+	delegate void CPListImageRowItemHandler (CPListImageRowItem item, nint index, [BlockCallback] Action completionBlock);
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
-	[BaseType (typeof (CPBaseListItem))]
-	interface CPListImageRowItem
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface CPListImageRowItem : CPSelectableListItem
 	{
 		[Export ("initWithText:images:")]
 		IntPtr Constructor (string text, UIImage[] images);
@@ -1444,7 +1430,11 @@ namespace CarPlay {
 		void UpdateImages (UIImage[] gridImages);
 
 		[NullAllowed, Export ("listImageRowHandler", ArgumentSemantic.Copy)]
-		ListImageRowItemHandler ListImageRowHandler { get; set; }
+		CPListImageRowItemHandler ListImageRowHandler { get; set; }
+
+		[Export ("handler", ArgumentSemantic.Copy)]
+		[NullAllowed]
+		CPSelectableListItemHandler Handler { get; set; }
 
 		[Static]
 		[Export ("maximumImageSize")]
@@ -1531,6 +1521,7 @@ namespace CarPlay {
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
 	interface CPMessageListItemLeadingConfiguration
 	{
 		[Export ("unread")]
@@ -1548,6 +1539,7 @@ namespace CarPlay {
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
 	interface CPMessageListItemTrailingConfiguration
 	{
 		[Export ("trailingItem")]
@@ -1578,7 +1570,9 @@ namespace CarPlay {
 		CGSize MaximumImageSize { get; }
 	}
 
+	[NoWatch, NoTV, NoMac, iOS (14,0)]
 	[BaseType (typeof (CPNowPlayingButton))]
+	[DisableDefaultCtor]
 	interface CPNowPlayingImageButton
 	{
 		[Export ("initWithImage:handler:")]
@@ -1715,8 +1709,6 @@ namespace CarPlay {
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
 	[Protocol]
-	[Model]
-	[BaseType (typeof (NSObject))]
 	interface CPNowPlayingTemplateObserver
 	{
 		[Export ("nowPlayingTemplateUpNextButtonTapped:")]
@@ -1733,7 +1725,7 @@ namespace CarPlay {
 	{
 		[Static]
 		[Export ("sharedTemplate", ArgumentSemantic.Strong)]
-		CPNowPlayingTemplate SharedTemplate { get; /*set;*/ }
+		CPNowPlayingTemplate SharedTemplate { get; }
 
 		[Export ("addObserver:")]
 		void AddObserver (ICPNowPlayingTemplateObserver observer);
@@ -1759,6 +1751,7 @@ namespace CarPlay {
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
 	[BaseType (typeof (CPButton))]
+	[DisableDefaultCtor]
 	interface CPContactMessageButton
 	{
 		[Export ("initWithImage:handler:")]
@@ -1796,6 +1789,8 @@ namespace CarPlay {
 	[BaseType (typeof (CPNowPlayingButton))]
 	interface CPNowPlayingRepeatButton {}
 
+	interface ICPListTemplateItem { }
+
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
 	[Protocol]
 	interface CPListTemplateItem
@@ -1809,22 +1804,18 @@ namespace CarPlay {
 		NSObject UserInfo { get; set; }
 	}
 
+	interface ICPSelectableListItem { }
 
-#if false
-	delegate void CPSelectableListItemHandler (CPSelectableListItem item, Action completionBlock);
+	delegate void CPSelectableListItemHandler (ICPSelectableListItem item, [BlockCallback] Action completionBlock);
 
-	// @protocol CPSelectableListItem <CPListTemplateItem> is not available in Xcode12 beta 5
-	// Radar: https://feedbackassistant.apple.com/feedback/8524515
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
 	[Protocol]
 	interface CPSelectableListItem : CPListTemplateItem
 	{
 		[Abstract]
-		[Async]
 		[NullAllowed, Export ("handler", ArgumentSemantic.Copy)]
 		CPSelectableListItemHandler Handler { get; set; }
 	}
-# endif
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
 	[BaseType (typeof (CPInformationItem))]
