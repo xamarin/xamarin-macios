@@ -1004,7 +1004,7 @@ namespace Metal {
 	}
 
 	[Unavailable (PlatformName.MacCatalyst)]
-	[Flags, NoMac, NoTV, iOS (13,0)]
+	[Flags, Mac (11,0), NoTV, iOS (13,0)]
 	[Native, Advice ("This API is not available when using UIKit on macOS.")]
 	public enum MTLSparseTextureRegionAlignmentMode : ulong {
 		Outward = 0x0,
@@ -1012,7 +1012,7 @@ namespace Metal {
 	}
 
 	[Unavailable (PlatformName.MacCatalyst)]
-	[Flags, NoMac, NoTV, iOS (13,0)]
+	[Flags, Mac (11,0), NoTV, iOS (13,0)]
 	[Native, Advice ("This API is not available when using UIKit on macOS.")]
 	public enum MTLSparseTextureMappingMode : ulong {
 		Map = 0x0,
@@ -1076,15 +1076,15 @@ namespace Metal {
 		Unspecified = ulong.MaxValue,
 	}
 
-	[NoiOS, NoTV, Mac (10,15)]
+	[iOS (14,0), TV (14,0), Mac (10,15)]
 	[Native]
 	[ErrorDomain ("MTLCounterErrorDomain")]
 	public enum MTLCounterSampleBufferError : long {
 		OutOfMemory,
 		Internal,
 	}
-#if MONOMAC
-	[NoiOS, NoTV, Mac (10,15)]
+
+	[iOS (14,0), TV (14,0), Mac (10,15)]
 	public enum MTLCommonCounter {
 		[Field ("MTLCommonCounterTimestamp")]
 		Timestamp,
@@ -1141,5 +1141,100 @@ namespace Metal {
 		SetStatistic,
 	}
 
-#endif
+	[Flags, Mac (11,0), iOS (14,0)]
+	public enum MTLAccelerationStructureInstanceOptions : uint {
+		None = 0x0,
+		DisableTriangleCulling = (1u << 0),
+		TriangleFrontFacingWindingCounterClockwise = (1u << 1),
+		Opaque = (1u << 2),
+		NonOpaque = (1u << 3),
+	}
+
+	[Mac (11,0), iOS (14,0), NoTV]
+	[Flags]
+	[Native]
+	public enum MTLAccelerationStructureUsage : ulong {
+		None = 0x0,
+		Refit = (1uL << 0),
+		PreferFastBuild = (1uL << 1),
+	}
+
+	[Mac (11,0), iOS (14,0), TV (14,0)]
+	[Native]
+	public enum MTLBinaryArchiveError : ulong {
+		None = 0,
+		InvalidFile = 1,
+		UnexpectedElement = 2,
+		CompilationFailure = 3,
+	}
+
+	[Mac (11,0), iOS (14,0), TV (14,0)]
+	[Flags]
+	[Native]
+	public enum MTLCommandBufferErrorOption : ulong {
+		None = 0x0,
+		EncoderExecutionStatus = 1uL << 0,
+	}
+
+	[Mac (11,0), iOS (14,0), TV (14,0)]
+	[Native]
+	public enum MTLCommandEncoderErrorState : long {
+		Unknown = 0,
+		Completed = 1,
+		Affected = 2,
+		Pending = 3,
+		Faulted = 4,
+	}
+
+	[Mac (11,0), iOS (14,0), TV (14,0)]
+	[Native]
+	public enum MTLCounterSamplingPoint : ulong {
+		StageBoundary,
+		DrawBoundary,
+		DispatchBoundary,
+		TileDispatchBoundary,
+		BlitBoundary,
+	}
+
+	[Mac (11,0), iOS (14,0), TV (14,0)]
+	[Native]
+	public enum MTLDynamicLibraryError : ulong {
+		None = 0,
+		InvalidFile = 1,
+		CompilationFailure = 2,
+		UnresolvedInstallName = 3,
+		DependencyLoadFailure = 4,
+		Unsupported = 5,
+	}
+
+	[Mac (11,0), iOS (14,0), TV (14,0)]
+	[Native]
+	public enum MTLFunctionLogType : ulong
+	{
+		Validation = 0,
+	}
+
+	[Flags, Mac (11,0), iOS (14,0), TV (14,0)]
+	[Native]
+	public enum MTLFunctionOptions : ulong {
+		None = 0x0,
+		CompileToBinary = 1uL << 0,
+	}
+
+	[Flags, Mac (11,0), iOS (14,0), NoTV]
+	[Native]
+	public enum MTLIntersectionFunctionSignature : ulong {
+		None = 0x0,
+		Instancing = (1uL << 0),
+		TriangleData = (1uL << 1),
+		WorldSpaceData = (1uL << 2),
+	}
+
+	[Mac (11,0), iOS (14,0), TV (14,0)]
+	[Native]
+	public enum MTLLibraryType : long {
+		Executable = 0,
+		Dynamic = 1,
+	}
+
 }
