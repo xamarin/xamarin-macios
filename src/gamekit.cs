@@ -607,7 +607,7 @@ namespace GameKit {
 		[Field ("GKPlayerIDNoLongerAvailable")]
 		NSString IdNoLongerAvailable { get; }
 
-		[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
+		[TV (14, 0), Watch(7, 0), Mac (11, 0), iOS (14, 0)]
 		[Export ("isInvitable")]
 		bool IsInvitable { get; }
 	}
@@ -1208,6 +1208,9 @@ namespace GameKit {
 		GKPlayer [] Recipients { get; set; }
 
 		[NoWatch]
+		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'GKMatchmakerViewController.MatchmakingMode' instead.")]
+		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use 'GKMatchmakerViewController.MatchmakingMode' instead.")]
+		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use 'GKMatchmakerViewController.MatchmakingMode' instead.")]
 		[TV (13,0)][Mac (10,15)][iOS (13,0)]
 		[Export ("restrictToAutomatch")]
 		bool RestrictToAutomatch { get; set; }

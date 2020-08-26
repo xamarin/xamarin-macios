@@ -1,3 +1,0 @@
-!missing-selector! GKPlayer::isInvitable not bound
-!missing-selector! GKMatchRequest::restrictToAutomatch not bound
-!missing-selector! GKMatchRequest::setRestrictToAutomatch: not bound

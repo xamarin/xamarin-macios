@@ -90,3 +90,7 @@
 !missing-selector! GKLeaderboardEntry::formattedScore not bound
 !missing-selector! GKLeaderboardEntry::rank not bound
 !missing-selector! GKLeaderboardEntry::score not bound
+
+# Xcode 12 beta 6 - these API have been deprecated and were never available on watch before
+!missing-selector! GKMatchRequest::restrictToAutomatch not bound
+!missing-selector! GKMatchRequest::setRestrictToAutomatch: not bound
