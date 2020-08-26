@@ -35,9 +35,7 @@ using LinkPresentation;
 #if TVOS || WATCH
 using LPLinkMetadata = Foundation.NSObject;
 #endif // TVOS || WATCH
-#if !TVOS
 using Intents;
-#endif // !TVOS
 
 // Unfortunately this file is a mix of #if's and [NoWatch] so we list
 // some classes until [NoWatch] is used instead of #if's directives
@@ -3611,7 +3609,6 @@ namespace UIKit {
 		[Export ("application:userDidAcceptCloudKitShareWithMetadata:")]
 		void UserDidAcceptCloudKitShare (UIApplication application, CKShareMetadata cloudKitShareMetadata);
 
-#if !TVOS
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'GetHandlerForIntent' instead.")]
 		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Use 'GetHandlerForIntent' instead.")]
 		[NoTV]
@@ -3619,12 +3616,10 @@ namespace UIKit {
 		[Export ("application:handleIntent:completionHandler:")]
 		void HandleIntent (UIApplication application, INIntent intent, Action<INIntentResponse> completionHandler);
 
-		// TODO: enable on tvOS once Intents framework is exposed on tvOS.
 		[iOS (14,0), TV (14,0), Watch (7,0)]
 		[Export ("application:handlerForIntent:")]
 		[return: NullAllowed]
 		NSObject GetHandlerForIntent (UIApplication application, INIntent intent);
-#endif // !TVOS
 
 		[iOS (13,0), TV (13,0), Watch (6,0)]
 		[Export ("application:configurationForConnectingSceneSession:options:")]
