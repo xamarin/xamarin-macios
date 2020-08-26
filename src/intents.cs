@@ -266,9 +266,6 @@ namespace Intents {
 	[Native]
 	[ErrorDomain ("INIntentErrorDomain")]
 	public enum INIntentErrorCode : long {
-		HandlingApplicationExitedUnexpectedly = 1312,
-		HandlingApplicationRequestTimeout = 1314,
-		HandlingNotSupportedOnPlatform = 1316,
 		InteractionOperationNotSupported = 1900,
 		DonatingInteraction = 1901,
 		DeletingAllInteractions = 1902,
