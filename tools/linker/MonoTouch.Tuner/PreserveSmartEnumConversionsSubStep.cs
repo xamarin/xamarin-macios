@@ -7,7 +7,11 @@ using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Linker;
 using Mono.Tuner;
+#if NET
+using Mono.Linker.Steps;
+#else
 using MonoTouch.Tuner;
+#endif
 
 using Xamarin.Bundler;
 
