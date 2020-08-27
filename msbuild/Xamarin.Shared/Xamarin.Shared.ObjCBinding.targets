@@ -63,9 +63,12 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 			<Output TaskParameter="Include" ItemName="Compile" />
 		</CreateItem>
 
-		<CreateItem Include="@(ObjcBindingNativeLibrary)">
-			<Output TaskParameter="Include" ItemName="ManifestResourceWithNoCulture" />
-		</CreateItem>
+		<ItemGroup>
+			<EmbeddedResource Include="@(ObjcBindingNativeLibrary)">
+				<Type>Non-Resx</Type>
+				<WithCulture>false</WithCulture>
+			</EmbeddedResource>
+		</ItemGroup>
 	</Target>
 
 	<!--
@@ -125,9 +128,12 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 			WorkingDirectory="%(_NativeFrameworkResource.FrameworkPath)" >
 		</Zip>
 
-		<CreateItem Include="%(_NativeFrameworkResource.ZipFile)">
-			<Output TaskParameter="Include" ItemName="ManifestResourceWithNoCulture" />
-		</CreateItem>
+		<ItemGroup>
+			<EmbeddedResource Include="%(_NativeFrameworkResource.ZipFile)">
+				<Type>Non-Resx</Type>
+				<WithCulture>false</WithCulture>
+			</EmbeddedResource>
+		</ItemGroup>
 	</Target>
 
 	<Target Name="_PrepareNativeReferences" Condition="'$(DesignTimeBuild)' != 'true'">
@@ -137,7 +143,7 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 			IntermediateOutputPath="$(IntermediateOutputPath)"
 			NativeReferences="@(NativeReference)"
 		>
-			<Output ItemName="ManifestResourceWithNoCulture" TaskParameter="EmbeddedResources" Condition="'$(NoBindingEmbedding)' != 'true'"/>
+			<Output ItemName="EmbeddedResource" TaskParameter="EmbeddedResources" Condition="'$(NoBindingEmbedding)' != 'true'"/>
 			<Output ItemName="_NativeFramework" TaskParameter="NativeFrameworks" Condition="'$(NoBindingEmbedding)' != 'true'"/>
 			<Output ItemName="Compile" TaskParameter="LinkWithAttributes" />
 		</PrepareNativeReferences>

@@ -115,6 +115,8 @@ namespace Xamarin.MacDev.Tasks
 					nativeFrameworks.Add (item);
 				} else {
 					item.SetMetadata ("LogicalName", logicalName);
+					item.SetMetadata ("WithCulture", "false");
+					item.SetMetadata ("Type", "Non-Resx");
 					embeddedResources.Add (item);
 				}
 
