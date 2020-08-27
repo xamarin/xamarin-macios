@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using Mono.Cecil;
+using Mono.Tuner;
 using MonoTouch.Tuner;
 using ObjCRuntime;
 using Xamarin;
@@ -243,7 +244,7 @@ namespace Xamarin.Bundler {
 					continue;
 
 				TypeReference type = attr.Constructor.DeclaringType;
-				if (!type.IsPlatformType ("ObjCRuntime", "LinkWithAttribute"))
+				if (!type.Is ("ObjCRuntime", "LinkWithAttribute"))
 					continue;
 
 				// Let the linker remove it the attribute from the assembly

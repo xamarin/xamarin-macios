@@ -21,10 +21,5 @@ namespace MonoTouch.Tuner {
 
 			return null;
 		}
-
-		public static bool IsPlatformType (this TypeReference type, string @namespace, string name)
-		{
-			return type.Is (@namespace, name);
-		}
 	}
 }

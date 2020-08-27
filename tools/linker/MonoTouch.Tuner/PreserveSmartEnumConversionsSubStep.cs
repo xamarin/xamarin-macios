@@ -32,7 +32,7 @@ namespace Xamarin.Linker.Steps
 
 			// We don't need to process assemblies that don't reference ObjCRuntime.BindAsAttribute.
 			foreach (var tr in assembly.MainModule.GetTypeReferences ()) {
-				if (tr.IsPlatformType ("ObjCRuntime", "BindAsAttribute"))
+				if (tr.Is ("ObjCRuntime", "BindAsAttribute"))
 					return true;
 			}
 
@@ -59,7 +59,7 @@ namespace Xamarin.Linker.Steps
 			foreach (var ca in provider.CustomAttributes) {
 				var tr = ca.Constructor.DeclaringType;
 
-				if (!tr.IsPlatformType ("ObjCRuntime", "BindAsAttribute"))
+				if (!tr.Is ("ObjCRuntime", "BindAsAttribute"))
 					continue;
 
 				if (ca.ConstructorArguments.Count != 1) {
@@ -110,13 +110,13 @@ namespace Xamarin.Linker.Steps
 					if (!method.HasParameters || method.Parameters.Count != 1)
 						continue;
 					if (method.Name == "GetConstant") {
-						if (!method.ReturnType.IsPlatformType ("Foundation", "NSString"))
+						if (!method.ReturnType.Is ("Foundation", "NSString"))
 							continue;
 						if (method.Parameters [0].ParameterType != managedEnumType)
 							continue;
 						getConstant = method;
 					} else if (method.Name == "GetValue") {
-						if (!method.Parameters [0].ParameterType.IsPlatformType ("Foundation", "NSString"))
+						if (!method.Parameters [0].ParameterType.Is ("Foundation", "NSString"))
 							continue;
 						if (method.ReturnType != managedEnumType)
 							continue;
