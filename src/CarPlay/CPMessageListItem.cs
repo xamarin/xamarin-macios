@@ -16,6 +16,7 @@ using ObjCRuntime;
 
 namespace CarPlay {
 
+    [NoWatch, NoTV, NoMac, iOS (14,0)]
     public enum CPMessageListItemType {
         Identifier,
         FullName,
