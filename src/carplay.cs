@@ -1620,6 +1620,9 @@ namespace CarPlay {
 
 		[NullAllowed, Export ("secondaryButton", ArgumentSemantic.Strong)]
 		CPTextButton SecondaryButton { get; set; }
+
+		[NullAllowed, Export ("userInfo", ArgumentSemantic.Strong)]
+		NSObject UserInfo { get; set; }
 	}
 
 	interface ICPPointOfInterestTemplateDelegate { }
@@ -1632,6 +1635,9 @@ namespace CarPlay {
 		[Abstract]
 		[Export ("pointOfInterestTemplate:didChangeMapRegion:")]
 		void DidChangeMapRegion (CPPointOfInterestTemplate pointOfInterestTemplate, MKCoordinateRegion region);
+
+		[Export ("pointOfInterestTemplate:didSelectPointOfInterest:")]
+		void DidSelectPointOfInterest (CPPointOfInterestTemplate pointOfInterestTemplate, CPPointOfInterest pointOfInterest);
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]

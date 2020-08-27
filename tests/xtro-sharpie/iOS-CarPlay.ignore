@@ -8,3 +8,9 @@
 
 # Removed in iOS 14
 !unknown-field! CPMaximumListItemImageSize bound
+
+# As of Xcode 12 beta 6 the CarPlay framework does not have an error enum
+!missing-field! CarPlayErrorDomain not bound
+
+# Exposed as read/write but not writeable, likely should be read-only. Xcode 12 Beta 6
+!missing-selector! +CPNowPlayingTemplate::setSharedTemplate: not bound
