@@ -137,6 +137,9 @@
     <Compile Include="..\linker\ApplyPreserveAttribute.cs">
       <Link>external\tools\linker\ApplyPreserveAttribute.cs</Link>
     </Compile>
+    <Compile Include="..\linker\ExceptionalSubStep.cs">
+      <Link>external\tools\linker\ExceptionalSubStep.cs</Link>
+    </Compile>
     <Compile Include="..\linker\MonoTouch.Tuner\Extensions.cs">
       <Link>external\tools\linker\MonoTouch.Tuner\Extensions.cs</Link>
     </Compile>

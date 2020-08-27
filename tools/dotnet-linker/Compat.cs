@@ -119,6 +119,22 @@ namespace Xamarin.Bundler {
 	}
 }
 
+namespace Xamarin.Linker {
+	public class Profile {
+		public LinkerConfiguration Configuration { get; private set; }
+
+		public Profile (LinkerConfiguration config)
+		{
+			Configuration = config;
+		}
+
+		public bool IsProductAssembly (AssemblyDefinition assembly)
+		{
+			return assembly.Name.Name == Configuration.PlatformAssembly;
+		}
+	}
+}
+
 namespace Mono.Linker {
 	public static class LinkContextExtensions {
 		public static void LogMessage (this LinkContext context, string messsage)
