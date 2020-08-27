@@ -79,7 +79,6 @@ namespace Xharness.Jenkins {
 			"Make.config",
 		};
 		static readonly string [] dotnetPrefixes = {
-			"dotnet",
 			"msbuild",
 			".*dotnet.*",
 		};
