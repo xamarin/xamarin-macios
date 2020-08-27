@@ -547,7 +547,7 @@ run_application_init (xamarin_initialize_data *data)
 
 	MonoMethod *initialize = mono_class_get_method_from_name (app_class, "Init", 0);
 	if (!initialize)
-		xamarin_assertion_message ("Fatal error: failed to load the NSApplication.Init method");
+		xamarin_assertion_message ("Fatal error: failed to load the %s.%s method", "NSApplication", "Init");
 
 	mono_runtime_invoke (initialize, NULL, NULL, NULL);
 }
