@@ -78,7 +78,7 @@ namespace Xharness.Jenkins {
 			"src",
 			"Make.config",
 		};
-		static readonly string [] dotnetPrefixes = {
+		static readonly string [] dotnetFilenames = {
 			"msbuild",
 			".*dotnet.*",
 		};
@@ -98,25 +98,26 @@ namespace Xharness.Jenkins {
 			jenkins.ForceExtensionBuildOnly = true;
 		}
 		
-		void SetEnabled (IEnumerable<string> files, string [] prefixes, string testname, ref bool value)
+		// 'filenames' is a list of filename prefixes, unless the name has a star character, in which case it's interpreted as a regex expression.
+		void SetEnabled (IEnumerable<string> files, string [] filenames, string testname, ref bool value)
 		{
 			MainLog.WriteLine ($"Checking if test {testname} should be enabled according to the modified files.");
 
 			// Compute any regexes we might need out of the loop.
-			var regexes = new Regex [prefixes.Length];
-			for (var i = 0; i < prefixes.Length; i++) {
+			var regexes = new Regex [filenames.Length];
+			for (var i = 0; i < filenames.Length; i++) {
 				// If the prefix contains a star, treat it is as a regex.
-				if (prefixes [i].IndexOf ('*') == -1)
+				if (filenames [i].IndexOf ('*') == -1)
 					continue;
 
-				var regex = new Regex (prefixes [i]);
+				var regex = new Regex (filenames [i]);
 				regexes [i] = regex;
 			}
 
 			foreach (var file in files) {
 				MainLog.WriteLine ($"Checking for file {file}"); 
-				for (var i = 0; i < prefixes.Length; i++) {
-					var prefix = prefixes [i];
+				for (var i = 0; i < filenames.Length; i++) {
+					var prefix = filenames [i];
 					if (file.StartsWith (prefix, StringComparison.Ordinal)) {
 						value = true;
 						MainLog.WriteLine ("Enabled '{0}' tests because the modified file '{1}' matches prefix '{2}'", testname, file, prefix);
@@ -174,7 +175,7 @@ namespace Xharness.Jenkins {
 			SetEnabled (files, macBindingProject, "mac-binding-project", ref jenkins.IncludeMacBindingProject);
 			SetEnabled (files, xtroPrefixes, "xtro", ref jenkins.IncludeXtro);
 			SetEnabled (files, cecilPrefixes, "cecil", ref jenkins.IncludeCecil);
-			SetEnabled (files, dotnetPrefixes, "dotnet", ref jenkins.IncludeDotNet);
+			SetEnabled (files, dotnetFilenames, "dotnet", ref jenkins.IncludeDotNet);
 		}
 
 		void SelectTestsByLabel (int pullRequest)
