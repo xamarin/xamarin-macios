@@ -143,6 +143,8 @@
 				ItemsDirectory=$(_LinkerItemsDirectory)
 				IsSimulatorBuild=$(_SdkIsSimulator)
 				LinkMode=$(_LinkMode)
+				MarshalManagedExceptionMode=$(_MarshalManagedExceptionMode)
+				MarshalObjectiveCExceptionMode=$(_MarshalObjectiveCExceptionMode)
 				PartialStaticRegistrarLibrary=$(_LibPartialStaticRegistrar)
 				Platform=$(_PlatformName)
 				PlatformAssembly=$(_PlatformAssemblyName).dll
