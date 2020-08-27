@@ -127,7 +127,7 @@ namespace Mono.Linker {
 		}
 		public static IEnumerable<AssemblyDefinition> GetAssemblies (this LinkContext context)
 		{
-			throw new NotImplementedException ();
+			return LinkerConfiguration.GetInstance (context).Assemblies;
 		}
 		public static Dictionary<IMetadataTokenProvider, object> GetCustomAnnotations (this AnnotationStore self, string name)
 		{

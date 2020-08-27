@@ -84,7 +84,7 @@ namespace MonoTouch.Tuner {
 		static SubStepDispatcher GetSubSteps ()
 		{
 			SubStepDispatcher sub = new SubStepDispatcher ();
-			sub.Add (new ApplyPreserveAttribute ());
+			sub.Add (new MobileApplyPreserveAttribute ());
 			sub.Add (new CoreRemoveSecurity ());
 			sub.Add (new OptimizeGeneratedCodeSubStep ());
 			sub.Add (new RemoveUserResourcesSubStep ());

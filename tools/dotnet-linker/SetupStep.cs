@@ -8,6 +8,7 @@ using Mono.Linker.Steps;
 
 using Xamarin.Bundler;
 using Xamarin.Linker;
+using Xamarin.Linker.Steps;
 
 namespace Xamarin {
 
@@ -24,11 +25,38 @@ namespace Xamarin {
 			}
 		}
 
+		void InsertAfter (IStep step, string stepName)
+		{
+			for (int i = 0; i < Steps.Count;) {
+				if (Steps [i++].GetType ().Name == stepName) {
+					Steps.Insert (i, step);
+					return;
+				}
+			}
+			throw new InvalidOperationException ($"Could not insert {step} after {stepName} because {stepName} wasn't found.");
+		}
+
 		protected override void Process ()
 		{
 			// Don't use --custom-step to load each step, because this assembly
 			// is loaded into the current process once per --custom-step,
 			// which makes it very difficult to share state between steps.
+
+			// Load the list of assemblies loaded by the linker.
+			// This would not be needed of LinkContext.GetAssemblies () was exposed to us.
+			InsertAfter (new CollectAssembliesStep (), "LoadReferencesStep");
+
+			var prelink_substeps = new DotNetSubStepDispatcher ();
+			InsertAfter (prelink_substeps, "RemoveSecurityStep");
+
+			if (Configuration.LinkMode != LinkMode.None) {
+				// We need to run the ApplyPreserveAttribute step even we're only linking sdk assemblies, because even
+				// though we know that sdk assemblies will never have Preserve attributes, user assemblies may have
+				// [assembly: LinkSafe] attributes, which means we treat them as sdk assemblies and those may have
+				// Preserve attributes.
+				prelink_substeps.Add (new ApplyPreserveAttribute ());
+			}
+
 			Steps.Add (new LoadNonSkippedAssembliesStep ());
 			Steps.Add (new ExtractBindingLibrariesStep ());
 			Steps.Add (new RegistrarStep ());

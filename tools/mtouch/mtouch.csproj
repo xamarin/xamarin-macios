@@ -288,6 +288,9 @@
     <Compile Include="..\linker\CoreRemoveAttributes.cs">
       <Link>tools\linker\CoreRemoveAttributes.cs</Link>
     </Compile>
+    <Compile Include="..\linker\MobileApplyPreserveAttribute.cs">
+      <Link>tools\linker\MobileApplyPreserveAttribute.cs</Link>
+    </Compile>
     <Compile Include="..\linker\MobileExtensions.cs">
       <Link>tools\linker\MobileExtensions.cs</Link>
     </Compile>

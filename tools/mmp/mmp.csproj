@@ -277,6 +277,9 @@
     <Compile Include="..\linker\CoreHttpMessageHandler.cs">
       <Link>tools\linker\CoreHttpMessageHandler.cs</Link>
     </Compile>
+    <Compile Include="..\linker\MobileApplyPreserveAttribute.cs">
+      <Link>tools\linker\MobileApplyPreserveAttribute.cs</Link>
+    </Compile>
     <Compile Include="..\linker\MobileRemoveAttributes.cs">
       <Link>tools\linker\MobileRemoveAttributes.cs</Link>
     </Compile>
