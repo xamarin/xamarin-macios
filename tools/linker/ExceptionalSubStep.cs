@@ -19,7 +19,7 @@ namespace Xamarin.Linker {
 		protected DerivedLinkContext LinkContext {
 			get {
 #if NET
-				throw new NotImplementedException ();
+				return Configuration.DerivedLinkContext;
 #else
 				return (DerivedLinkContext) base.context;
 #endif

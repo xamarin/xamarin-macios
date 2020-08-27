@@ -39,6 +39,7 @@ namespace Xamarin.Linker {
 		public CompilerFlags CompilerFlags;
 
 		public LinkContext Context { get; private set; }
+		public DerivedLinkContext DerivedLinkContext { get; private set; }
 		public Profile Profile { get; private set; }
 
 		// The list of assemblies is populated in CollectAssembliesStep.
@@ -64,7 +65,8 @@ namespace Xamarin.Linker {
 			if (!File.Exists (linker_file))
 				throw new FileNotFoundException ($"The custom linker file {linker_file} does not exist.");
 
-			Profile = new Profile (this);
+			Profile = new BaseProfile (this);
+			DerivedLinkContext = new DerivedLinkContext { LinkerConfiguration = this, };
 			Application = new Application (this);
 			Target = new Target (Application);
 			CompilerFlags = new CompilerFlags (Target);

@@ -149,6 +149,9 @@
     <Compile Include="..\linker\MobileExtensions.cs">
       <Link>external\tools\linker\MobileExtensions.cs</Link>
     </Compile>
+    <Compile Include="..\linker\MarkNSObjects.cs">
+      <Link>external\tools\linker\MarkNSObjects.cs</Link>
+    </Compile>
     <Compile Include="..\linker\ObjCExtensions.cs">
       <Link>external\tools\linker\ObjCExtensions.cs</Link>
     </Compile>
