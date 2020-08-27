@@ -46,6 +46,28 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<RemoveDir Directories="$(GeneratedSourcesDir)" Condition="Exists ('$(GeneratedSourcesDir)')" />
 	</Target>
 
+	<Target Name="_CollectGeneratedSources"
+		DependsOnTargets="_GenerateBindings;_CompressNativeFrameworkResources"
+		Condition="'$(DesignTimeBuild)' != 'true'"
+	>
+
+		<ReadLinesFromFile File="$(_GeneratedSourcesFileList)" >
+			<Output TaskParameter="Lines" ItemName="GeneratedSources" />
+		</ReadLinesFromFile>
+
+		<CreateItem Include="@(ObjcBindingCoreSource)">
+			<Output TaskParameter="Include" ItemName="Compile" />
+		</CreateItem>
+
+		<CreateItem Include="@(GeneratedSources)">
+			<Output TaskParameter="Include" ItemName="Compile" />
+		</CreateItem>
+
+		<CreateItem Include="@(ObjcBindingNativeLibrary)">
+			<Output TaskParameter="Include" ItemName="ManifestResourceWithNoCulture" />
+		</CreateItem>
+	</Target>
+
 	<!--
 
 		We can't just use @(_NativeFramework) as the input to the
