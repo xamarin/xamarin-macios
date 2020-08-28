@@ -76,7 +76,12 @@ namespace LinkAll {
 			Assert.NotNull (TypeDescriptor.GetConverter (new BuiltInConverter ()), "BuiltInConverter");
 
 			string name = (typeof (BuiltInConverter).GetCustomAttributes (false) [0] as TypeConverterAttribute).ConverterTypeName;
-			Assert.That (name, Is.EqualTo ("System.ComponentModel.BooleanConverter, System, Version=2.0.5.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e"), "ConverterTypeName");
+#if NET
+			var typename = "System.ComponentModel.BooleanConverter, System.ComponentModel.TypeConverter, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
+#else
+			var typename = "System.ComponentModel.BooleanConverter, System, Version=2.0.5.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e";
+#endif
+			Assert.That (name, Is.EqualTo (typename), "ConverterTypeName");
 		}
 
 		[Test]
