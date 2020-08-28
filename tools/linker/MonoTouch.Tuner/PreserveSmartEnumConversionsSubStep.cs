@@ -7,7 +7,11 @@ using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Linker;
 using Mono.Tuner;
+#if NET
+using Mono.Linker.Steps;
+#else
 using MonoTouch.Tuner;
+#endif
 
 using Xamarin.Bundler;
 
@@ -21,7 +25,10 @@ namespace Xamarin.Linker.Steps
 
 		public override SubStepTargets Targets {
 			get {
-				return SubStepTargets.Method | SubStepTargets.Property;
+				return
+					SubStepTargets.Method
+					| SubStepTargets.Type // SubStepTargets.Type is only needed to work around a linker bug: https://github.com/mono/linker/issues/1458
+					| SubStepTargets.Property;
 			}
 		}
 
@@ -41,6 +48,18 @@ namespace Xamarin.Linker.Steps
 
 		void Preserve (Tuple<MethodDefinition, MethodDefinition> pair, MethodDefinition conditionA, MethodDefinition conditionB = null)
 		{
+#if NET
+			// The AddPreservedMethod (MethodDefinition, MethodDefinition) has not been exposed yet, so preserve the entire containing type instead.
+			// https://github.com/mono/linker/issues/1456
+			if (conditionA != null) {
+				context.Annotations.AddPreservedMethod (conditionA.DeclaringType, pair.Item1);
+				context.Annotations.AddPreservedMethod (conditionA.DeclaringType, pair.Item2);
+			}
+			if (conditionB != null) {
+				context.Annotations.AddPreservedMethod (conditionB.DeclaringType, pair.Item1);
+				context.Annotations.AddPreservedMethod (conditionB.DeclaringType, pair.Item2);
+			}
+#else
 			if (conditionA != null) {
 				context.Annotations.AddPreservedMethod (conditionA, pair.Item1);
 				context.Annotations.AddPreservedMethod (conditionA, pair.Item2);
@@ -49,6 +68,7 @@ namespace Xamarin.Linker.Steps
 				context.Annotations.AddPreservedMethod (conditionB, pair.Item1);
 				context.Annotations.AddPreservedMethod (conditionB, pair.Item2);
 			}
+#endif
 		}
 
 		void ProcessAttributeProvider (ICustomAttributeProvider provider, MethodDefinition conditionA, MethodDefinition conditionB = null)

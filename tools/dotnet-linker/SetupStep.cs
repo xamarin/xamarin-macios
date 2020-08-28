@@ -55,6 +55,7 @@ namespace Xamarin {
 				// [assembly: LinkSafe] attributes, which means we treat them as sdk assemblies and those may have
 				// Preserve attributes.
 				prelink_substeps.Add (new ApplyPreserveAttribute ());
+				prelink_substeps.Add (new PreserveSmartEnumConversionsSubStep ());
 			}
 
 			Steps.Add (new LoadNonSkippedAssembliesStep ());

@@ -7,15 +7,40 @@ using Xamarin.Bundler;
 
 using Xamarin.Tuner;
 
+#if NET
+using Mono.Linker;
+using Mono.Linker.Steps;
+#endif
+
 namespace Xamarin.Linker {
 
 	public abstract class ExceptionalSubStep : BaseSubStep {
 
 		protected DerivedLinkContext LinkContext {
 			get {
+#if NET
+				throw new NotImplementedException ();
+#else
 				return (DerivedLinkContext) base.context;
+#endif
 			}
 		}
+
+#if NET
+		protected LinkContext context {
+			get { return Context; }
+		}
+
+		protected LinkerConfiguration Configuration {
+			get { return LinkerConfiguration.GetInstance (Context);  }
+		}
+
+		protected Profile Profile {
+			get {
+				return Configuration.Profile;
+			}
+		}
+#endif
 
 		public override sealed void ProcessAssembly (AssemblyDefinition assembly)
 		{

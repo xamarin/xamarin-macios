@@ -10,6 +10,7 @@ using Mono.Linker;
 
 using Xamarin.Bundler;
 using Xamarin.Utils;
+using Xamarin.Tuner;
 
 using ObjCRuntime;
 
@@ -38,6 +39,7 @@ namespace Xamarin.Linker {
 		public CompilerFlags CompilerFlags;
 
 		public LinkContext Context { get; private set; }
+		public Profile Profile { get; private set; }
 
 		// The list of assemblies is populated in CollectAssembliesStep.
 		public List<AssemblyDefinition> Assemblies = new List<AssemblyDefinition> ();
@@ -62,6 +64,7 @@ namespace Xamarin.Linker {
 			if (!File.Exists (linker_file))
 				throw new FileNotFoundException ($"The custom linker file {linker_file} does not exist.");
 
+			Profile = new Profile (this);
 			Application = new Application (this);
 			Target = new Target (Application);
 			CompilerFlags = new CompilerFlags (Target);
