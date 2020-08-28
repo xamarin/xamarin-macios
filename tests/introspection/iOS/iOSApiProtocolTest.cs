@@ -687,7 +687,6 @@ namespace Introspection {
 				case "CPMessageListItemTrailingConfiguration": // conformance not in headers
 				case "CPTextButton": // conformance not in headers
 				case "CPListImageRowItem": // conformance not in headers
-				case "CPListItem": // conformance not in headers
 					return true;
 				}
 				break;

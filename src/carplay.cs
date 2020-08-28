@@ -419,7 +419,7 @@ namespace CarPlay {
 	[NoWatch, NoTV, NoMac, iOS (12,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface CPListItem : CPSelectableListItem {
+	interface CPListItem : CPSelectableListItem, NSSecureCoding {
 
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Do not use; this API was removed.")]
 		[Field ("CPMaximumListItemImageSize")]
