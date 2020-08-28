@@ -255,6 +255,10 @@ namespace Extrospection
 			if (native_name.StartsWith (_nsrefinedforswift, StringComparison.Ordinal))
 				return Undecorate (native_name.Substring (_nsrefinedforswift.Length));
 
+			const string _nsreturnsinnerpointer = "NS_RETURNS_INNER_POINTER ";
+			if (native_name.StartsWith (_nsreturnsinnerpointer, StringComparison.Ordinal))
+				return Undecorate (native_name.Substring (_nsreturnsinnerpointer.Length));
+
 			const string _Nonnull = " _Nonnull";
 			if (native_name.EndsWith (_Nonnull, StringComparison.Ordinal))
 				return Undecorate (native_name.Substring (0, native_name.Length - _Nonnull.Length));

@@ -35,6 +35,12 @@
 !unknown-native-enum! VNGenerateObjectnessBasedSaliencyImageRequestRevision bound
 !unknown-native-enum! VNRecognizeAnimalsRequestRevision bound
 !unknown-native-enum! VNRecognizeTextRequestRevision bound
+!unknown-native-enum! VNDetectContourRequestRevision bound
+!unknown-native-enum! VNDetectHumanBodyPoseRequestRevision bound
+!unknown-native-enum! VNDetectHumanHandPoseRequestRevision bound
+!unknown-native-enum! VNDetectTrajectoriesRequestRevision bound
+!unknown-native-enum! VNGenerateOpticalFlowRequestRevision bound
+!unknown-native-enum! VNStatefulRequestRevision bound
 
 ## VNRequest is an abstract class so this will be bound in subclasses
 ## matching the return type to the above defined custom enums 
@@ -45,3 +51,78 @@
 !missing-selector! VNRequest::setRevision: not bound
 ## init is available but it's abstract (type) and not a designated initializer (so we don't bind it)
 !missing-selector! VNRequest::init not bound
+
+# Not really needed anymore, this old(?) unbound APIs got replaced
+!missing-field! VNVideoProcessingOptionFrameCadence not bound
+!missing-field! VNVideoProcessingOptionTimeInterval not bound
+
+# API introduced and deprecated at the same time in Xcode 12
+!missing-field! VNBodyLandmarkKeyLeftAnkle not bound
+!missing-field! VNBodyLandmarkKeyLeftEar not bound
+!missing-field! VNBodyLandmarkKeyLeftElbow not bound
+!missing-field! VNBodyLandmarkKeyLeftEye not bound
+!missing-field! VNBodyLandmarkKeyLeftHip not bound
+!missing-field! VNBodyLandmarkKeyLeftKnee not bound
+!missing-field! VNBodyLandmarkKeyLeftShoulder not bound
+!missing-field! VNBodyLandmarkKeyLeftWrist not bound
+!missing-field! VNBodyLandmarkKeyNeck not bound
+!missing-field! VNBodyLandmarkKeyNose not bound
+!missing-field! VNBodyLandmarkKeyRightAnkle not bound
+!missing-field! VNBodyLandmarkKeyRightEar not bound
+!missing-field! VNBodyLandmarkKeyRightElbow not bound
+!missing-field! VNBodyLandmarkKeyRightEye not bound
+!missing-field! VNBodyLandmarkKeyRightHip not bound
+!missing-field! VNBodyLandmarkKeyRightKnee not bound
+!missing-field! VNBodyLandmarkKeyRightShoulder not bound
+!missing-field! VNBodyLandmarkKeyRightWrist not bound
+!missing-field! VNBodyLandmarkKeyRoot not bound
+!missing-field! VNBodyLandmarkRegionKeyFace not bound
+!missing-field! VNBodyLandmarkRegionKeyLeftArm not bound
+!missing-field! VNBodyLandmarkRegionKeyLeftLeg not bound
+!missing-field! VNBodyLandmarkRegionKeyRightArm not bound
+!missing-field! VNBodyLandmarkRegionKeyRightLeg not bound
+!missing-field! VNBodyLandmarkRegionKeyTorso not bound
+!missing-field! VNHandLandmarkKeyIndexDIP not bound
+!missing-field! VNHandLandmarkKeyIndexMCP not bound
+!missing-field! VNHandLandmarkKeyIndexPIP not bound
+!missing-field! VNHandLandmarkKeyIndexTIP not bound
+!missing-field! VNHandLandmarkKeyLittleDIP not bound
+!missing-field! VNHandLandmarkKeyLittleMCP not bound
+!missing-field! VNHandLandmarkKeyLittlePIP not bound
+!missing-field! VNHandLandmarkKeyLittleTIP not bound
+!missing-field! VNHandLandmarkKeyMiddleDIP not bound
+!missing-field! VNHandLandmarkKeyMiddleMCP not bound
+!missing-field! VNHandLandmarkKeyMiddlePIP not bound
+!missing-field! VNHandLandmarkKeyMiddleTIP not bound
+!missing-field! VNHandLandmarkKeyRingDIP not bound
+!missing-field! VNHandLandmarkKeyRingMCP not bound
+!missing-field! VNHandLandmarkKeyRingPIP not bound
+!missing-field! VNHandLandmarkKeyRingTIP not bound
+!missing-field! VNHandLandmarkKeyThumbCMC not bound
+!missing-field! VNHandLandmarkKeyThumbIP not bound
+!missing-field! VNHandLandmarkKeyThumbMP not bound
+!missing-field! VNHandLandmarkKeyThumbTIP not bound
+!missing-field! VNHandLandmarkKeyWrist not bound
+!missing-field! VNHandLandmarkRegionKeyIndexFinger not bound
+!missing-field! VNHandLandmarkRegionKeyLittleFinger not bound
+!missing-field! VNHandLandmarkRegionKeyMiddleFinger not bound
+!missing-field! VNHandLandmarkRegionKeyRingFinger not bound
+!missing-field! VNHandLandmarkRegionKeyThumb not bound
+!missing-selector! +VNDetectHumanBodyPoseRequest::supportedIdentifiedPointGroupKeysForRevision:error: not bound
+!missing-selector! +VNDetectHumanBodyPoseRequest::supportedIdentifiedPointKeysForRevision:error: not bound
+!missing-selector! +VNDetectHumanBodyPoseRequest::supportedRecognizedPointGroupKeysForRevision:error: not bound
+!missing-selector! +VNDetectHumanBodyPoseRequest::supportedRecognizedPointKeysForRevision:error: not bound
+!missing-selector! +VNDetectHumanHandPoseRequest::supportedIdentifiedPointGroupKeysForRevision:error: not bound
+!missing-selector! +VNDetectHumanHandPoseRequest::supportedIdentifiedPointKeysForRevision:error: not bound
+!missing-selector! +VNDetectHumanHandPoseRequest::supportedRecognizedPointGroupKeysForRevision:error: not bound
+!missing-selector! +VNDetectHumanHandPoseRequest::supportedRecognizedPointKeysForRevision:error: not bound
+!missing-selector! +VNPoint::distanceBetweenPoint:point: not bound
+!missing-selector! VNDetectContoursRequest::detectDarkOnLight not bound
+!missing-selector! VNDetectContoursRequest::setDetectDarkOnLight: not bound
+!missing-selector! VNDetectTrajectoriesRequest::maximumObjectSize not bound
+!missing-selector! VNDetectTrajectoriesRequest::minimumObjectSize not bound
+!missing-selector! VNDetectTrajectoriesRequest::setMaximumObjectSize: not bound
+!missing-selector! VNDetectTrajectoriesRequest::setMinimumObjectSize: not bound
+!missing-selector! VNStatefulRequest::requestFrameAnalysisSpacing not bound
+!missing-selector! VNVideoProcessor::addRequest:withProcessingOptions:error: not bound
+!missing-selector! VNVideoProcessor::analyzeWithTimeRange:error: not bound
