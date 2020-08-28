@@ -31,11 +31,11 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ("\t<ItemGroup>");
 
 	foreach (XmlNode n in nodes)
-		writer.WriteLine ($"\t\t<_{platform}SupportedTargetPlatform Include=\"{n.InnerText}\" />");
+		writer.WriteLine ($"\t\t<{platform}SupportedTargetPlatform Include=\"{n.InnerText}\" />");
 
 	writer.WriteLine ("\t</ItemGroup>");
 	writer.WriteLine ("\t<ItemGroup>");
-	writer.WriteLine ($"\t\t<SupportedTargetPlatform Condition=\"'$(TargetPlatformIdentifier)' == '{platform}'\" Include=\"@(_{platform}SupportedTargetPlatform)\" />");
+	writer.WriteLine ($"\t\t<SupportedTargetPlatform Condition=\"'$(TargetPlatformIdentifier)' == '{platform}'\" Include=\"@({platform}SupportedTargetPlatform)\" />");
 	writer.WriteLine ("\t</ItemGroup>");
 	writer.WriteLine ("</Project>");
 }
