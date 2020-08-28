@@ -21,11 +21,6 @@ namespace MonoTouch.Tuner {
 			get { return product_assembly; }
 		}
 
-		public override string GetNamespace (string nspace)
-		{
-			return nspace;
-		}
-
 		public void SetProductAssembly (string assembly)
 		{
 			product_assembly = assembly;
