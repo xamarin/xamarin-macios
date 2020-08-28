@@ -16,16 +16,16 @@ namespace Vision {
 
 		public static VNCircle CreateUsingRadius (VNPoint center, double radius)
 		{
-			var circle = new VNCircle (NSObjectFlag.Empty);
-			circle.InitializeHandle (circle.InitWithCenterRadius (center, radius));
-			return circle;
+			var handle = Messaging.IntPtr_objc_msgSend (class_ptr, Selector.GetHandle ("alloc"));
+			handle = Messaging.IntPtr_objc_msgSend_IntPtr_Double (handle, Selector.GetHandle ("initWithCenter:radius:"), center.Handle, radius);
+			return Runtime.GetNSObject<VNCircle> (handle, true);
 		}
 
 		public static VNCircle CreateUsingDiameter (VNPoint center, double diameter)
 		{
-			var circle = new VNCircle (NSObjectFlag.Empty);
-			circle.InitializeHandle (circle.InitWithCenterDiameter (center, diameter));
-			return circle;
+			var handle = Messaging.IntPtr_objc_msgSend (class_ptr, Selector.GetHandle ("alloc"));
+			handle = Messaging.IntPtr_objc_msgSend_IntPtr_Double (handle, Selector.GetHandle ("initWithCenter:diameter:"), center.Handle, diameter);
+			return Runtime.GetNSObject<VNCircle> (handle, true);
 		}
 	}
 }

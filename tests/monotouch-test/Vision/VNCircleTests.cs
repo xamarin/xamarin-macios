@@ -35,6 +35,7 @@ namespace MonoTouchFixtures.Vision {
 			Assert.AreEqual (circle.Radius, 10, "Radius");
 			Assert.AreEqual (circle.Center.X, 10, "X");
 			Assert.AreEqual (circle.Center.Y, 10, "Y");
+			Assert.That (circle.RetainCount, Is.EqualTo ((nint) 1), "RetainCount");
 		}
 
 		[Test]
@@ -45,8 +46,8 @@ namespace MonoTouchFixtures.Vision {
 			Assert.AreEqual (circle.Diameter, 7, "Diameter");
 			Assert.AreEqual (circle.Center.Y, 6, "Y");
 			Assert.AreEqual (circle.Center.X, 5, "X");
+			Assert.That (circle.RetainCount, Is.EqualTo ((nint) 1), "RetainCount");
 		}
-
 	}
 }
 #endif

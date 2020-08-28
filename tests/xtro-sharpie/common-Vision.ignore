@@ -52,8 +52,9 @@
 ## init is available but it's abstract (type) and not a designated initializer (so we don't bind it)
 !missing-selector! VNRequest::init not bound
 
-# Sharpie needs a fix to only get simd_float2 intead of const simd_float2
-!unknown-simd-type-mapping! The Simd type NS_RETURNS_INNER_POINTER const simd_float2 * does not have a mapping to a managed type. Please add one in SimdCheck.cs
+# Not really needed anymore, this old(?) unbound APIs got replaced
+!missing-field! VNVideoProcessingOptionFrameCadence not bound
+!missing-field! VNVideoProcessingOptionTimeInterval not bound
 
 # API introduced and deprecated at the same time in Xcode 12
 !missing-field! VNBodyLandmarkKeyLeftAnkle not bound

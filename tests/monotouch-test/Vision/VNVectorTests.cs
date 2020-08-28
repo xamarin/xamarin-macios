@@ -34,6 +34,7 @@ namespace MonoTouchFixtures.Vision {
 			Assert.NotNull (vector, "vector not null");
 			Assert.AreEqual (vector.R, 10, "R");
 			Assert.AreEqual (vector.Theta, 0.5, "Theta");
+			Assert.That (vector.RetainCount, Is.EqualTo ((nint) 1), "RetainCount");
 		}
 	}
 }

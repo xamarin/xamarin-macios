@@ -45,6 +45,7 @@ namespace Extrospection
 			{ "vector_uint4", new NativeSimdInfo { Managed = "Vector4i", }},
 			// simd_floatX is typedefed to vector_floatX
 			{ "simd_float2", new NativeSimdInfo { Managed = "Vector2" }},
+			{ "NS_RETURNS_INNER_POINTER const simd_float2", new NativeSimdInfo { Managed = "Vector2" }},
 			{ "simd_float3", new NativeSimdInfo { Managed = "Vector3" }},
 			{ "simd_float4", new NativeSimdInfo { Managed = "Vector4" }},
 			{ "simd_float3x3", new NativeSimdInfo { Managed = "MatrixFloat3x3", InvalidManaged = "Matrix3" }},

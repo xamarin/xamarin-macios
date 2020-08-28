@@ -16,9 +16,9 @@ namespace Vision {
 
 		public static VNVector Create (double r, double theta)
 		{
-			var vector = new VNVector (NSObjectFlag.Empty);
-			vector.InitializeHandle (vector.InitWithRTheta (r, theta));
-			return vector;
+			var handle = Messaging.IntPtr_objc_msgSend (class_ptr, Selector.GetHandle ("alloc"));
+			handle = Messaging.IntPtr_objc_msgSend_Double_Double (handle, Selector.GetHandle ("initWithR:theta:"), r, theta);
+			return Runtime.GetNSObject<VNVector> (handle, true);
 		}
 	}
 }

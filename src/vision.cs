@@ -369,6 +369,7 @@ namespace Vision {
 		One = 1,
 	}
 
+	[TV (14,0), Mac (11,0), iOS (14,0)]
 	[Native]
 	public enum VNGenerateOpticalFlowRequestComputationAccuracy : ulong {
 		Low = 0,
@@ -2651,6 +2652,7 @@ namespace Vision {
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
 	[BaseType (typeof (VNRecognizedPointsObservation))]
+	[DisableDefaultCtor]
 	interface VNHumanBodyPoseObservation {
 
 		[BindAs (typeof (VNHumanBodyPoseObservationJointName []))]
@@ -2720,6 +2722,7 @@ namespace Vision {
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
 	[BaseType (typeof (VNRecognizedPointsObservation))]
+	[DisableDefaultCtor]
 	interface VNHumanHandPoseObservation {
 
 		[BindAs (typeof (VNHumanHandPoseObservationJointName []))]
@@ -2748,13 +2751,13 @@ namespace Vision {
 		[Export ("supportedJointNamesForRevision:error:")]
 		[return: NullAllowed]
 		[return: BindAs (typeof (VNHumanHandPoseObservationJointName []))]
-		NSString [] SupportedJointNamesForRevision (VNDetectHumanHandPoseRequestRevision revision, [NullAllowed] out NSError error);
+		NSString [] GetSupportedJointNames (VNDetectHumanHandPoseRequestRevision revision, [NullAllowed] out NSError error);
 
 		[Static]
 		[Export ("supportedJointsGroupNamesForRevision:error:")]
 		[return: NullAllowed]
 		[return: BindAs (typeof (VNHumanHandPoseObservationJointsGroupName []))]
-		NSString [] SupportedJointsGroupNamesForRevision (VNDetectHumanHandPoseRequestRevision revision, [NullAllowed] out NSError error);
+		NSString [] GetSupportedJointsGroupNames (VNDetectHumanHandPoseRequestRevision revision, [NullAllowed] out NSError error);
 
 		[Export ("maximumHandCount")]
 		nuint MaximumHandCount { get; set; }
@@ -2841,7 +2844,7 @@ namespace Vision {
 
 		[Static]
 		[Export ("zeroPoint", ArgumentSemantic.Strong)]
-		VNPoint ZeroPoint { get; }
+		VNPoint Zero { get; }
 
 		[Static]
 		[Export ("pointByApplyingVector:toPoint:")]
@@ -2874,7 +2877,7 @@ namespace Vision {
 
 		[Static]
 		[Export ("zeroVector", ArgumentSemantic.Strong)]
-		VNVector ZeroVector { get; }
+		VNVector Zero { get; }
 
 		[Static]
 		[Export ("unitVectorForVector:")]
@@ -2933,7 +2936,7 @@ namespace Vision {
 
 		[Static]
 		[Export ("zeroCircle", ArgumentSemantic.Strong)]
-		VNCircle ZeroCircle { get; }
+		VNCircle Zero { get; }
 
 		[Internal]
 		[Export ("initWithCenter:radius:")]
@@ -2944,10 +2947,10 @@ namespace Vision {
 		IntPtr InitWithCenterDiameter (VNPoint center, double diameter);
 
 		[Export ("containsPoint:")]
-		bool ContainsPoint (VNPoint point);
+		bool Contains (VNPoint point);
 
 		[Export ("containsPoint:inCircumferentialRingOfWidth:")]
-		bool ContainsPoint (VNPoint point, double ringWidth);
+		bool Contains (VNPoint point, double ringWidth);
 
 		[Export ("center", ArgumentSemantic.Strong)]
 		VNPoint Center { get; }
@@ -3334,30 +3337,6 @@ namespace Vision {
 		VNStatefulRequestRevision CurrentRevision { get; }
 	}
 
-	[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use 'VNVideoProcessorRequestProcessingOptions' instead.")]
-	[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'VNVideoProcessorRequestProcessingOptions' instead.")]
-	[Deprecated (PlatformName.TvOS, 14, 0, message: "Use 'VNVideoProcessorRequestProcessingOptions' instead.")]
-	[TV (11,0), Mac (10,13), iOS (11,0)]
-	[Internal]
-	[Static]
-	interface VNVideoProcessingOptionKeys {
-		[Field ("VNVideoProcessingOptionFrameCadence")]
-		NSString FrameCadenceKey { get; }
-
-		[Field ("VNVideoProcessingOptionTimeInterval")]
-		NSString TimeIntervalKey { get; }
-	}
-
-	[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use 'VNVideoProcessorRequestProcessingOptions' instead.")]
-	[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'VNVideoProcessorRequestProcessingOptions' instead.")]
-	[Deprecated (PlatformName.TvOS, 14, 0, message: "Use 'VNVideoProcessorRequestProcessingOptions' instead.")]
-	[TV (11,0), Mac (10,13), iOS (11,0)]
-	[StrongDictionary ("VNVideoProcessingOptionKeys")]
-	interface VNVideoProcessingOptions {
-		nint FrameCadence { get; set; }
-		double TimeInterval { get; set; }
-	}
-
 	[TV (14,0), Mac (11,0), iOS (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -3381,6 +3360,7 @@ namespace Vision {
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
 	interface VNVideoProcessorCadence : NSCopying {
 
 	}

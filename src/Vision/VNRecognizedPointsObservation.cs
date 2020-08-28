@@ -30,13 +30,10 @@ namespace Vision {
 			if (count == 0)
 				return availableKeys;
 
-			if (availableKeys is VNHumanBodyPoseObservationJointName) {
-				for (int i = 0; i < count; i++)
-					availableKeys[i] = (T) (object) VNHumanBodyPoseObservationJointNameExtensions.GetValue (keys[i]);
-			} else if (availableKeys is VNHumanHandPoseObservationJointName) {
-				for (int i = 0; i < count; i++)
-					availableKeys[i] = (T) (object) VNHumanHandPoseObservationJointNameExtensions.GetValue (keys[i]);
-			}
+			if (type == typeof (VNHumanBodyPoseObservationJointName))
+				availableKeys = Array.ConvertAll (keys, (v) => (T) (object) VNHumanBodyPoseObservationJointNameExtensions.GetValue (v));
+			else if (type == typeof (VNHumanHandPoseObservationJointName))
+				availableKeys = Array.ConvertAll (keys, (v) => (T) (object) VNHumanHandPoseObservationJointNameExtensions.GetValue (v));
 
 			return availableKeys;
 		}
@@ -57,13 +54,10 @@ namespace Vision {
 			if (count == 0)
 				return availableGroupKeys;
 
-			if (availableGroupKeys is VNHumanBodyPoseObservationJointsGroupName) {
-				for (int i = 0; i < count; i++)
-					availableGroupKeys[i] = (T) (object) VNHumanBodyPoseObservationJointsGroupNameExtensions.GetValue (keys[i]);
-			} else if (availableGroupKeys is VNHumanHandPoseObservationJointsGroupName) {
-				for (int i = 0; i < count; i++)
-					availableGroupKeys[i] = (T) (object) VNHumanHandPoseObservationJointsGroupNameExtensions.GetValue (keys[i]);
-			}
+			if (type == typeof (VNHumanBodyPoseObservationJointsGroupName))
+				availableGroupKeys = Array.ConvertAll (keys, (v) => (T) (object) VNHumanBodyPoseObservationJointsGroupNameExtensions.GetValue (v));
+			else if (type == typeof (VNHumanHandPoseObservationJointsGroupName))
+				availableGroupKeys = Array.ConvertAll (keys, (v) => (T) (object) VNHumanHandPoseObservationJointsGroupNameExtensions.GetValue (v));
 
 			return availableGroupKeys;
 		}
