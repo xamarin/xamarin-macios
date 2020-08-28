@@ -90,7 +90,12 @@ namespace LinkAll {
 			Assert.NotNull (TypeDescriptor.GetConverter (new TypeDescriptorTest ()), "TypeDescriptorTest");
 
 			string name = (typeof (TypeDescriptorTest).GetCustomAttributes (false) [0] as TypeConverterAttribute).ConverterTypeName;
-			Assert.That (name, Is.EqualTo ("LinkAll.CustomConverter, link all, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"), "ConverterTypeName");
+#if NET
+			var typename = "LinkAll.CustomConverter, link all, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null";
+#else
+			var typename = "LinkAll.CustomConverter, link all, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null";
+#endif
+			Assert.That (name, Is.EqualTo (typename), "ConverterTypeName");
 		}
 
 		[Test]
