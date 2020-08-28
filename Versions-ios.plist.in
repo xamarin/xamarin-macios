@@ -68,7 +68,6 @@
 		</array>
 		<key>watchOS</key>
 		<array>
-			<string>1.0</string>
 			<string>2.0</string>
 			<string>2.1</string>
 			<string>2.2</string>
