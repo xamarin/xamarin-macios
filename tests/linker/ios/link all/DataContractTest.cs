@@ -19,6 +19,9 @@ using NUnit.Framework;
 
 namespace LinkAll.Serialization.DataContract {
 
+#if NET
+	[Ignore ("https://github.com/mono/linker/issues/1460")]
+#endif
 	[TestFixture]
 	// we want the tests to be available because we use the linker
 	[Preserve (AllMembers = true)]
