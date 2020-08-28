@@ -25,7 +25,8 @@ doc.Load (plistPath);
 var nodes = doc.SelectNodes ($"/plist/dict/key[text()='KnownVersions']/following-sibling::dict[1]/key[text()='{platform}']/following-sibling::array[1]/string");
 
 using (TextWriter writer = new StreamWriter (outputPath)) {
-	writer.WriteLine ($"<!-- This file contains a list of the {platform} platform versions that are supported for this SDK -->");
+	writer.WriteLine ($"<!-- This file contains a generated list of the {platform} platform versions that are supported for this SDK -->");
+	writer.WriteLine ($"<!-- Generation script: https://github.com/xamarin/xamarin-macios/blob/main/dotnet/generate-target-platforms.csharp -->");
 	writer.WriteLine ("<Project>");
 	writer.WriteLine ("\t<ItemGroup>");
 
