@@ -142,7 +142,7 @@ namespace Xharness.Jenkins.TestTasks
 				args.Add (Path.GetFullPath (TestExecutable));
 				args.Add (Path.GetFullPath (TestLibrary));
 				if (IsNUnit3) {
-					args.Add ("-result=" + xmlLog + ";format=nunit2");
+					args.Add ("-result=" + xmlLog);
 					args.Add ("--labels=All");
 					if (InProcess)
 						args.Add ("--inprocess");
