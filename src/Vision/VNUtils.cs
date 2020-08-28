@@ -80,7 +80,7 @@ namespace Vision {
 			if (points == null)
 				throw new ArgumentNullException (nameof (points));
 			if (points.Length == 0)
-				throw new ArgumentException ($"{points} array must have more than zero elements.");
+				throw new ArgumentException ($"'{nameof (points)}' array must have more than zero elements.");
 
 			unsafe {
 				fixed (Vector2* points_ptr = points)
