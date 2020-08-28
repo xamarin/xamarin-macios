@@ -24,18 +24,14 @@ namespace Vision {
 			if (keys == null)
 				return null;
 
-			var count = keys.Length;
-			var availableKeys = new T [count];
-
-			if (count == 0)
-				return availableKeys;
+			if (keys.Length == 0)
+				return Array.Empty<T> ();
 
 			if (type == typeof (VNHumanBodyPoseObservationJointName))
-				availableKeys = Array.ConvertAll (keys, (v) => (T) (object) VNHumanBodyPoseObservationJointNameExtensions.GetValue (v));
+				return Array.ConvertAll (keys, (v) => (T) (object) VNHumanBodyPoseObservationJointNameExtensions.GetValue (v));
 			else if (type == typeof (VNHumanHandPoseObservationJointName))
-				availableKeys = Array.ConvertAll (keys, (v) => (T) (object) VNHumanHandPoseObservationJointNameExtensions.GetValue (v));
-
-			return availableKeys;
+				return Array.ConvertAll (keys, (v) => (T) (object) VNHumanHandPoseObservationJointNameExtensions.GetValue (v));
+			return null;
 		}
 
 		public T [] GetAvailableGroupKeys<T> () where T : Enum
@@ -48,18 +44,14 @@ namespace Vision {
 			if (keys == null)
 				return null;
 
-			var count = keys.Length;
-			var availableGroupKeys = new T [count];
-
-			if (count == 0)
-				return availableGroupKeys;
+			if (keys.Length == 0)
+				return Array.Empty<T> ();
 
 			if (type == typeof (VNHumanBodyPoseObservationJointsGroupName))
-				availableGroupKeys = Array.ConvertAll (keys, (v) => (T) (object) VNHumanBodyPoseObservationJointsGroupNameExtensions.GetValue (v));
+				return Array.ConvertAll (keys, (v) => (T) (object) VNHumanBodyPoseObservationJointsGroupNameExtensions.GetValue (v));
 			else if (type == typeof (VNHumanHandPoseObservationJointsGroupName))
-				availableGroupKeys = Array.ConvertAll (keys, (v) => (T) (object) VNHumanHandPoseObservationJointsGroupNameExtensions.GetValue (v));
-
-			return availableGroupKeys;
+				return Array.ConvertAll (keys, (v) => (T) (object) VNHumanHandPoseObservationJointsGroupNameExtensions.GetValue (v));
+			return null;
 		}
 	}
 }

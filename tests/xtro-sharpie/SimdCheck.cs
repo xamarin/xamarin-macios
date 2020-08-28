@@ -45,7 +45,6 @@ namespace Extrospection
 			{ "vector_uint4", new NativeSimdInfo { Managed = "Vector4i", }},
 			// simd_floatX is typedefed to vector_floatX
 			{ "simd_float2", new NativeSimdInfo { Managed = "Vector2" }},
-			{ "NS_RETURNS_INNER_POINTER const simd_float2", new NativeSimdInfo { Managed = "Vector2" }},
 			{ "simd_float3", new NativeSimdInfo { Managed = "Vector3" }},
 			{ "simd_float4", new NativeSimdInfo { Managed = "Vector4" }},
 			{ "simd_float3x3", new NativeSimdInfo { Managed = "MatrixFloat3x3", InvalidManaged = "Matrix3" }},
@@ -255,6 +254,10 @@ namespace Extrospection
 			const string _nsrefinedforswift = "NS_REFINED_FOR_SWIFT ";
 			if (native_name.StartsWith (_nsrefinedforswift, StringComparison.Ordinal))
 				return Undecorate (native_name.Substring (_nsrefinedforswift.Length));
+
+			const string _nsreturnsinnerpointer = "NS_RETURNS_INNER_POINTER ";
+			if (native_name.StartsWith (_nsreturnsinnerpointer, StringComparison.Ordinal))
+				return Undecorate (native_name.Substring (_nsreturnsinnerpointer.Length));
 
 			const string _Nonnull = " _Nonnull";
 			if (native_name.EndsWith (_Nonnull, StringComparison.Ordinal))
