@@ -603,6 +603,13 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "CPMessageListItem":
+				switch (selectorName) {
+				case "initWithConversationIdentifier:text:leadingConfiguration:trailingConfiguration:detailText:trailingText:":
+				case "initWithFullName:phoneOrEmailAddress:leadingConfiguration:trailingConfiguration:detailText:trailingText:":
+					return true;
+				}
+				break;
 			case "VNFaceLandmarkRegion":
 			case "VNFaceLandmarks":
 			case "PHLivePhoto":

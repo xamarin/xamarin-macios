@@ -302,6 +302,7 @@ CALLKIT_SOURCES = \
 
 CARPLAY_SOURCES = \
 	CarPlay/CPNavigationAlert.cs \
+	CarPlay/CPMessageListItem.cs \
 
 # ClassKit
 
