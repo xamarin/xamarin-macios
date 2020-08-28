@@ -52,12 +52,16 @@ namespace LinkAll {
 	// we want the test to be availble if we use the linker
 	[Preserve (AllMembers = true)]
 	public class CommonLinkAllTest {
+		string WorkAroundLinkerHeuristics { get { return ""; } }
 
+#if NET
+		[Ignore ("https://github.com/xamarin/xamarin-macios/issues/9562")]
+#endif
 		[Test]
 		public void BindingsAndBeforeInitField ()
 		{
 			ObjCRuntime.Trampolines.SDInnerBlock.Invoke (IntPtr.Zero, 0);
-			var fields = typeof (ObjCRuntime.Trampolines.SDInnerBlock).GetFields (BindingFlags.NonPublic | BindingFlags.Static);
+			var fields = Type.GetType ("ObjCRuntime.Trampolines+SDInnerBlock" + WorkAroundLinkerHeuristics).GetFields (BindingFlags.NonPublic | BindingFlags.Static);
 			Assert.That (fields.Length, Is.EqualTo (1), "one");
 			Assert.That (fields [0].Name, Is.EqualTo ("Handler"), "Name");
 		}
@@ -66,7 +70,7 @@ namespace LinkAll {
 		public void BindingsAndBeforeInitField_2 ()
 		{
 			ObjCRuntime.Trampolines.SDInnerBlock_Misnamed.Invoke (IntPtr.Zero, 0);
-			var fields = typeof (ObjCRuntime.Trampolines.SDInnerBlock_Misnamed).GetFields (BindingFlags.NonPublic | BindingFlags.Static);
+			var fields = Type.GetType ("ObjCRuntime.Trampolines+SDInnerBlock_Misnamed" + WorkAroundLinkerHeuristics).GetFields (BindingFlags.NonPublic | BindingFlags.Static);
 			Assert.That (fields.Length, Is.EqualTo (0), "zero");
 		}
 
