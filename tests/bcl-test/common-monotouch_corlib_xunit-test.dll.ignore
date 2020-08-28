@@ -435,3 +435,6 @@ Platform32:System.Tests.ConvertToBooleanTests.FromDouble
 Platform32:System.Tests.ConvertToBooleanTests.FromSingle
 Platform32:System.Tests.BitConverterArray.ConvertFromFloat(num: 0, expected: [1, 0, 0, 0])
 Platform32:System.Tests.BitConverterSpan.ConvertFromFloat(num: 0, expected: [1, 0, 0, 0])
+
+# https://github.com/xamarin/maccore/issues/2296
+KLASS:System.Tests.DateTimeTests
