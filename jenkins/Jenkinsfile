@@ -489,6 +489,12 @@ timestamps {
                     }
 
                     dir ("${workspace}") {
+                        stage ('Cleanup') {
+                            currentStage = "${STAGE_NAME}"
+                            echo ("Cleaning up on ${env.NODE_NAME}")
+                            sh ("${workspace}/xamarin-macios/jenkins/clean-jenkins-bots.sh")
+                        }
+
                         stage ('Provisioning') {
                             currentStage = "${STAGE_NAME}"
                             echo ("Building on ${env.NODE_NAME}")
