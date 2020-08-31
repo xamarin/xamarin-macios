@@ -1,0 +1,43 @@
+#!/usr/bin/env /Library/Frameworks/Mono.framework/Commands/csharp
+
+// arguments are: <platform> <outputPath>
+
+using System.IO;
+using System.Xml;
+
+var args = Environment.GetCommandLineArgs ();
+var expectedArgumentCount = 2;
+if (args.Length != expectedArgumentCount + 2 /* 2 default arguments (executable + script) + 'expectedArgumentCount' arguments we're interested in */) {
+	// first arg is "/Library/Frameworks/Mono.framework/Versions/4.8.0/lib/mono/4.5/csharp.exe"
+	// second arg the script itself
+	// then comes the ones we care about
+	Console.WriteLine ($"Need {expectedArgumentCount} arguments, got {args.Length - 2}");
+	Environment.Exit (1);
+	return;
+}
+
+var platform = args [2];
+var outputPath = args [3];
+var plistPath = platform == "macOS" ? "../Versions-mac.plist.in" : "../Versions-ios.plist.in";
+
+var doc = new XmlDocument ();
+doc.Load (plistPath);
+var nodes = doc.SelectNodes ($"/plist/dict/key[text()='KnownVersions']/following-sibling::dict[1]/key[text()='{platform}']/following-sibling::array[1]/string");
+
+using (TextWriter writer = new StreamWriter (outputPath)) {
+	writer.WriteLine ($"<!-- This file contains a generated list of the {platform} platform versions that are supported for this SDK -->");
+	writer.WriteLine ($"<!-- Generation script: https://github.com/xamarin/xamarin-macios/blob/main/dotnet/generate-target-platforms.csharp -->");
+	writer.WriteLine ("<Project>");
+	writer.WriteLine ("\t<ItemGroup>");
+
+	foreach (XmlNode n in nodes)
+		writer.WriteLine ($"\t\t<{platform}SupportedTargetPlatform Include=\"{n.InnerText}\" />");
+
+	writer.WriteLine ("\t</ItemGroup>");
+	writer.WriteLine ("\t<ItemGroup>");
+	writer.WriteLine ($"\t\t<SupportedTargetPlatform Condition=\"'$(TargetPlatformIdentifier)' == '{platform}'\" Include=\"@({platform}SupportedTargetPlatform)\" />");
+	writer.WriteLine ("\t</ItemGroup>");
+	writer.WriteLine ("</Project>");
+}
+
+Environment.Exit (0);

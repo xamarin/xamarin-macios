@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
 	<PropertyGroup>
-		<TargetFramework>net5.0</TargetFramework>
 		<SignAssembly>true</SignAssembly>
 		<LangVersion>latest</LangVersion>
 
