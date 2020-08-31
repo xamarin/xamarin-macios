@@ -86,16 +86,10 @@ namespace Xamarin.Bundler {
 		}
 	}
 
+	// We can't make the linker use a LinkerContext subclass (DerivedLinkerContext), so we make DerivedLinkerContext
+	// derive from this class, and then we redirect to the LinkerContext instance here.
 	public class DotNetLinkContext {
-		public DotNetLinkContext ()
-		{
-			throw new NotImplementedException ();
-		}
-
-		public DotNetLinkContext (Pipeline pipeline, AssemblyResolver resolver)
-		{
-			throw new NotImplementedException ();
-		}
+		public LinkerConfiguration LinkerConfiguration;
 
 		public AssemblyAction UserAction {
 			get { throw new NotImplementedException (); }
@@ -104,13 +98,13 @@ namespace Xamarin.Bundler {
 
 		public AnnotationStore Annotations {
 			get {
-				throw new NotImplementedException ();
+				return LinkerConfiguration.Context.Annotations;
 			}
 		}
 
 		public AssemblyDefinition GetAssembly (string name)
 		{
-			throw new NotImplementedException ();
+			return LinkerConfiguration.Context.GetLoadedAssembly (name);
 		}
 	}
 
@@ -120,12 +114,27 @@ namespace Xamarin.Bundler {
 }
 
 namespace Xamarin.Linker {
+	public class BaseProfile : Profile {
+		public BaseProfile (LinkerConfiguration config)
+			: base (config)
+		{
+		}
+	}
+
 	public class Profile {
 		public LinkerConfiguration Configuration { get; private set; }
 
 		public Profile (LinkerConfiguration config)
 		{
 			Configuration = config;
+		}
+
+		public Profile Current {
+			get { return this; }
+		}
+
+		public string ProductAssembly {
+			get { return Configuration.PlatformAssembly; }
 		}
 
 		public bool IsProductAssembly (AssemblyDefinition assembly)

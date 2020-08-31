@@ -33,6 +33,9 @@ using System;
 using Mono.Cecil;
 using Mono.Linker;
 using Mono.Tuner;
+#if NET
+using Mono.Linker.Steps;
+#endif
 
 namespace Xamarin.Linker.Steps {
 
@@ -95,7 +98,7 @@ namespace Xamarin.Linker.Steps {
 				return false;
 
 			var overrides = Annotations.GetOverrides (method);
-			if (overrides == null || overrides.Count == 0)
+			if (overrides == null)
 				return false;
 
 			foreach (var @override in overrides)
