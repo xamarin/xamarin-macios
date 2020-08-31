@@ -247,9 +247,6 @@
     <Compile Include="linker\MonoMac.Tuner\MonoMacNamespaces.cs">
       <Link>linker\MonoMac.Tuner\MonoMacNamespaces.cs</Link>
     </Compile>
-    <Compile Include="linker\MonoMac.Tuner\OptimizeGeneratedCodeSubStep.cs">
-      <Link>linker\MonoMac.Tuner\OptimizeGeneratedCodeSubStep.cs</Link>
-    </Compile>
     <Compile Include="linker\MonoMac.Tuner\MacRemoveResources.cs">
       <Link>linker\MonoMac.Tuner\MacRemoveResources.cs</Link>
     </Compile>

@@ -81,9 +81,6 @@
     <Compile Include="..\linker\MonoTouch.Tuner\MonoTouchProfile.cs">
       <Link>tools\linker\MonoTouch.Tuner\MonoTouchProfile.cs</Link>
     </Compile>
-    <Compile Include="..\linker\MonoTouch.Tuner\OptimizeGeneratedCodeSubStep.cs">
-      <Link>tools\linker\MonoTouch.Tuner\OptimizeGeneratedCodeSubStep.cs</Link>
-    </Compile>
     <Compile Include="..\linker\MonoTouch.Tuner\PreserveCode.cs">
       <Link>tools\linker\MonoTouch.Tuner\PreserveCode.cs</Link>
     </Compile>
