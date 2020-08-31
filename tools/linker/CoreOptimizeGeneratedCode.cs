@@ -12,10 +12,13 @@ using MonoTouch.Tuner;
 #if MONOMAC
 using MonoMac.Tuner;
 #endif
+#if NET
+using Mono.Linker.Steps;
+#endif
 
 namespace Xamarin.Linker {
 
-	public abstract class CoreOptimizeGeneratedCode : ExceptionalSubStep {
+	public class OptimizeGeneratedCodeSubStep : ExceptionalSubStep {
 		// If the type currently being processed is a direct binding or not.
 		// A null value means it's not a constant value, and can't be inlined.
 		bool? isdirectbinding_constant;
@@ -28,6 +31,10 @@ namespace Xamarin.Linker {
 
 		public bool IsDualBuild {
 			get { return LinkContext.App.IsDualBuild; }
+		}
+
+		public bool Device {
+			get { return LinkContext.App.IsDeviceBuild; }
 		}
 
 		public int Arch {
@@ -702,6 +709,10 @@ namespace Xamarin.Linker {
 			case "IsARM64CallingConvention":
 				ProcessIsARM64CallingConvention (caller, ins);
 				break;
+			case "Arch":
+				// https://app.asana.com/0/77259014252/77812690163
+				ProcessRuntimeArch (caller, ins);
+				break;
 			}
 		}
 
@@ -933,6 +944,28 @@ namespace Xamarin.Linker {
 			ins.Operand = null;
 
 			return 0;
+		}
+
+		void ProcessRuntimeArch (MethodDefinition caller, Instruction ins)
+		{
+			const string operation = "inline Runtime.Arch";
+
+			if (Optimizations.InlineRuntimeArch != true)
+				return;
+
+			// Verify we're checking the right Arch field
+			var fr = ins.Operand as FieldReference;
+			if (!fr.DeclaringType.Is (Namespaces.ObjCRuntime, "Runtime"))
+				return;
+
+			// Verify a few assumptions before doing anything
+			if (!ValidateInstruction (caller, ins, operation, Code.Ldsfld))
+				return;
+
+			// We're fine, inline the Runtime.Arch condition
+			// The enum values are Runtime.DEVICE = 0 and Runtime.SIMULATOR = 1,
+			ins.OpCode = Device ? OpCodes.Ldc_I4_0 : OpCodes.Ldc_I4_1;
+			ins.Operand = null;
 		}
 
 		// Returns the type of the value pushed on the stack by the given instruction.

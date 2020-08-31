@@ -91,12 +91,10 @@ namespace Xamarin.Bundler
 			get { return values [(int) Opt.InlineIntPtrSize]; }
 			set { values [(int) Opt.InlineIntPtrSize] = value; }
 		}
-#if MONOTOUCH
 		public bool? InlineRuntimeArch {
 			get { return values [(int) Opt.InlineRuntimeArch]; }
 			set { values [(int) Opt.InlineRuntimeArch] = value; }
 		}
-#endif
 		public bool? OptimizeBlockLiteralSetupBlock {
 			get { return values [(int) Opt.BlockLiteralSetupBlock]; }
 			set { values [(int) Opt.BlockLiteralSetupBlock] = value; }
