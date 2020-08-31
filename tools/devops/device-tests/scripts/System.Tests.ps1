@@ -12,6 +12,7 @@ Describe 'Clear-HD' {
             # call the method, and check that remove-item was correctly called with each of the files we want to remove
 
             Mock Remove-Item
+            Mock Remove-InstalledSimulators
             # mock test path to always return true, that is all dirs are present
             Mock Test-Path {
                 return $True
@@ -38,6 +39,7 @@ Describe 'Clear-HD' {
 
             Clear-HD
 
+            Assert-MockCalled -CommandName Remove-InstalledSimulators -Times 1
             Assert-MockCalled -CommandName Remove-Item -Times $directories.Count -Scope It 
 
         }
@@ -77,9 +79,11 @@ Describe 'Clear-HD' {
             Mock Test-Path {
                 return $Path -in $presentDirectories
             }
+            Mock Remove-InstalledSimulators
 
             Clear-HD
 
+            Assert-MockCalled -CommandName Remove-InstalledSimulators -Times 1 
             $debugCalls = $directories.Count - $presentDirectories.Count
             Assert-MockCalled -CommandName Remove-Item -Times $presentDirectories.Count -Scope It 
             Assert-MockCalled -CommandName Write-Debug -Times $debugCalls -Scope It 

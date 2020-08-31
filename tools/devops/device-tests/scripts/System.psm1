@@ -86,6 +86,25 @@ function Get-MonoVersion {
 
 <#
     .SYNOPSIS
+        Removes all the installed simulators in the system.
+#>
+function Remove-InstalledSimulators {
+    param()
+    # use the .Net libs to execute the process
+    $pinfo = New-Object System.Diagnostics.ProcessStartInfo
+    $pinfo.FileName = "/Applications/Xcode.app/Contents/Developer/usr/bin/simctl"
+    $pinfo.RedirectStandardOutput = $true
+    $pinfo.UseShellExecute = $false
+    $pinfo.Arguments = "delete all"
+
+    $p = New-Object System.Diagnostics.Process
+    $p.StartInfo = $pinfo
+    $p.Start() | Out-Null
+    $p.WaitForExit()
+}
+
+<#
+    .SYNOPSIS
         Returns the details of the system that is currently executing the
         pipeline.
     .DESCRIPTION
@@ -162,6 +181,10 @@ function Clear-XamarinProcesses {
         Remove known paths and directories that are not needed for the tests.
 #>
 function Clear-HD {
+
+    # Delete all the simulator devices. Rolf: These can take up a lot of space over time (I've seen 100+GB on the bots)
+    Remove-InstalledSimulators 
+
     # print the current state of the HD
     Get-PSDrive "/" | Format-Table -Wrap
 
@@ -197,6 +220,7 @@ function Clear-HD {
             Write-Debug "Could not remove dir $dir - $_"
         }
     }
+
     Get-PSDrive "/" | Format-Table -Wrap
 }
 
@@ -253,3 +277,4 @@ Export-ModuleMember -Function Clear-XamarinProcesses
 Export-ModuleMember -Function Clear-HD
 Export-ModuleMember -Function Test-HDFreeSpace
 Export-ModuleMember -Function Clear-AfterTests
+Export-ModuleMember -Function Remove-InstalledSimulators 
