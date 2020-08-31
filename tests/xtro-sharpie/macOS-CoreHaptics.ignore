@@ -1,3 +1,4 @@
+# This framework, although appers in the header, will not compile: https://github.com/xamarin/maccore/issues/2261
 !missing-enum! CHHapticEngineFinishedAction not bound
 !missing-enum! CHHapticEngineStoppedReason not bound
 !missing-enum! CHHapticErrorCode not bound

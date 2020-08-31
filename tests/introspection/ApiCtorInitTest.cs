@@ -485,6 +485,16 @@ namespace Introspection {
 				if (cstr == "Void .ctor(System.String, Foundation.NSBundle)")
 					return true;
 				break;
+			case "VNDetectedPoint":
+				// This class is not meant to be instantiated
+				if (cstr == "Void .ctor(Double, Double)")
+					return true;
+				break;
+			case "VNStatefulRequest":
+				// This class uses another overload to get instantiated
+				if (cstr == "Void .ctor(Vision.VNRequestCompletionHandler)")
+					return true;
+				break;
 			}
 
 			var ep = ctor.GetParameters ();

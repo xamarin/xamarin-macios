@@ -1,5 +1,3 @@
-!missing-enum! UINavigationItemBackButtonDisplayMode not bound
-!missing-protocol-member! UIApplicationDelegate::application:handlerForIntent: not found
 !missing-selector! NSDiffableDataSourceSectionTransaction::difference not bound
 !missing-selector! NSDiffableDataSourceTransaction::difference not bound
 !missing-selector! UICollectionViewDiffableDataSourceReorderingHandlers::canReorderItemHandler not bound
