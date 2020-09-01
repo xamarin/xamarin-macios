@@ -179,7 +179,7 @@
 !incorrect-protocol-member! MTLResourceStateCommandEncoder::waitForFence: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderCommandEncoder::sampleCountersInBuffer:atSampleIndex:withBarrier: is REQUIRED and should be abstract
 
-# introspection reports them as failing:
+# introspection reports them as failing https://github.com/xamarin/maccore/issues/2312
 !missing-selector! MTLBlitPassDescriptor::sampleBufferAttachments not bound
 !missing-selector! MTLBlitPassSampleBufferAttachmentDescriptor::endOfEncoderSampleIndex not bound
 !missing-selector! MTLBlitPassSampleBufferAttachmentDescriptor::sampleBuffer not bound

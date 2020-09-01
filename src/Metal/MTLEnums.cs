@@ -1160,6 +1160,7 @@ namespace Metal {
 	}
 
 	[Mac (11,0), iOS (14,0), TV (14,0)]
+	[ErrorDomain ("MTLBinaryArchiveDomain")]
 	[Native]
 	public enum MTLBinaryArchiveError : ulong {
 		None = 0,
@@ -1197,6 +1198,7 @@ namespace Metal {
 	}
 
 	[Mac (11,0), iOS (14,0), TV (14,0)]
+	[ErrorDomain ("MTLDynamicLibraryDomain")]
 	[Native]
 	public enum MTLDynamicLibraryError : ulong {
 		None = 0,

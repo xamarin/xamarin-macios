@@ -384,7 +384,6 @@ namespace Metal {
 
 		public float Y;
 	}
-
 #endif
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]

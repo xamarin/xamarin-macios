@@ -452,7 +452,7 @@ namespace Metal {
 #endif
 		[Export ("commandBufferWithDescriptor:")]
 		[return: NullAllowed]
-		IMTLCommandBuffer CreateCommandBuffer (MTLCommandBufferDescriptor descriptor);
+		IMTLCommandBuffer CommandBuffer (MTLCommandBufferDescriptor descriptor);
 	}
 
 	interface IMTLComputeCommandEncoder {}
@@ -1474,7 +1474,7 @@ namespace Metal {
 #if XAMCORE_4_0
 		[Abstract]
 #endif
-		[iOS (14,0), TV (11,0), Mac (10,15)]
+		[iOS (14,0), TV (14,0), Mac (10,15)]
 		[Export ("sampleTimestamps:gpuTimestamp:")]
 		void GetSampleTimestamps (nuint cpuTimestamp, nuint gpuTimestamp);
 
@@ -1527,28 +1527,28 @@ namespace Metal {
 		[Export ("supportsBCTextureCompression")]
 		bool SupportsBCTextureCompression { get; }
 
-		[Mac (11, 0), iOS (14, 0)]
+		[Mac (11, 0), iOS (14, 0), TV (14,0)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
 		[Export ("supportsPullModelInterpolation")]
 		bool SupportsPullModelInterpolation { get; }
 
-		[Mac (11,0), iOS (14,0)]
+		[Mac (11,0), iOS (14,0), TV (14,0)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
 		[Export ("supportsCounterSampling:")]
 		bool SupportsCounterSampling (MTLCounterSamplingPoint samplingPoint);
 
-		[Mac (11, 0), iOS (14, 0)]
+		[Mac (11, 0), iOS (14, 0), TV (14,0)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
 		[Export ("supportsDynamicLibraries")]
 		bool SupportsDynamicLibraries { get; }
 
-		[Mac (11,0), iOS (14,0)]
+		[Mac (11,0), iOS (14,0), TV (14,0)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
@@ -1556,7 +1556,7 @@ namespace Metal {
 		[return: NullAllowed]
 		IMTLDynamicLibrary CreateDynamicLibrary (IMTLLibrary library, [NullAllowed] out NSError error);
 
-		[Mac (11,0), iOS (14,0)]
+		[Mac (11,0), iOS (14,0), TV (14,0)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
@@ -1564,7 +1564,7 @@ namespace Metal {
 		[return: NullAllowed]
 		IMTLDynamicLibrary CreateDynamicLibrary (NSUrl url, [NullAllowed] out NSError error);
 
-		[Mac (11,0), iOS (14,0)]
+		[Mac (11,0), iOS (14,0), TV (14,0)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
@@ -4047,9 +4047,10 @@ namespace Metal {
 
 	interface IMTLBinaryArchive {}
 
-	[Mac (11,0), iOS (14,0)]
+	[Mac (11,0), iOS (14,0), TV (14,0)]
 	[Protocol]
 	interface MTLBinaryArchive {
+
 		[Abstract]
 		[NullAllowed, Export ("label")]
 		string Label { get; set; }
@@ -4672,9 +4673,9 @@ namespace Metal {
 		[Export ("blitPassDescriptor")]
 		MTLBlitPassDescriptor Create ();
 
-		// fails on introspection both on simulator and device
-		//[Export ("sampleBufferAttachments")]
-		//MTLBlitPassSampleBufferAttachmentDescriptorArray SampleBufferAttachments { get; }
+		[NoMac, NoTV, NoiOS] // fails on introspection both on simulator and device
+		[Export ("sampleBufferAttachments")]
+		MTLBlitPassSampleBufferAttachmentDescriptorArray SampleBufferAttachments { get; }
 	}
 
 	[Mac (11,0), iOS (14,0), TV (14,0)]
@@ -4701,13 +4702,15 @@ namespace Metal {
 
 		[Export ("setObject:atIndexedSubscript:")]
 		void SetObject ([NullAllowed] MTLBlitPassSampleBufferAttachmentDescriptor attachment, nuint attachmentIndex);
-
-		// TODO: ADD INDEXER
 	}
 
 	[Mac (11,0), iOS (14,0), TV (14,0)]
 	[BaseType (typeof (NSObject))]
 	interface MTLCommandBufferDescriptor : NSCopying {
+
+		[Field ("MTLCommandBufferEncoderInfoErrorKey")]
+		NSString BufferEncoderInfoErrorKey { get; }
+
 		[Export ("retainedReferences")]
 		bool RetainedReferences { get; set; }
 
@@ -4756,8 +4759,6 @@ namespace Metal {
 
 		[Export ("setObject:atIndexedSubscript:")]
 		void SetObject ([NullAllowed] MTLComputePassSampleBufferAttachmentDescriptor attachment, nuint attachmentIndex);
-
-		// TODO: Indexer
 	}
 
 	[Mac (11,0), iOS (14,0), TV (14,0)]
@@ -4863,22 +4864,18 @@ namespace Metal {
 		IMTLCounterSampleBuffer SampleBuffer { get; set; }
 
 		[NoiOS, NoTV] // fails on intro both on simulators and device
-		[Mac (11, 0)]
 		[Export ("startOfVertexSampleIndex")]
 		nuint StartOfVertexSampleIndex { get; set; }
 
 		[NoiOS, NoTV] // fails on intro both on simulators and device
-		[Mac (11, 0)]
 		[Export ("endOfVertexSampleIndex")]
 		nuint EndOfVertexSampleIndex { get; set; }
 
 		[NoiOS, NoTV] // fails on intro both on simulators and device
-		[Mac (11, 0)]
 		[Export ("startOfFragmentSampleIndex")]
 		nuint StartOfFragmentSampleIndex { get; set; }
 
 		[NoiOS, NoTV] // fails on intro both on simulators and device
-		[Mac (11, 0)]
 		[Export ("endOfFragmentSampleIndex")]
 		nuint EndOfFragmentSampleIndex { get; set; }
 	}
@@ -4892,7 +4889,6 @@ namespace Metal {
 		[Export ("setObject:atIndexedSubscript:")]
 		void SetObject ([NullAllowed] MTLRenderPassSampleBufferAttachmentDescriptor attachment, nuint attachmentIndex);
 
-		// TODO INDEXER
 	}
 
 	[Mac (11,0), iOS (14,0), NoTV]
@@ -4904,7 +4900,6 @@ namespace Metal {
 		MTLResourceStatePassDescriptor Create ();
 
 		[NoiOS, NoTV] // fails on intro both on simulators and device
-		[Mac (11, 0)]
 		[Export ("sampleBufferAttachments")]
 		MTLResourceStatePassSampleBufferAttachmentDescriptorArray SampleBufferAttachments { get; }
 	}
@@ -4934,7 +4929,6 @@ namespace Metal {
 		[Export ("setObject:atIndexedSubscript:")]
 		void SetObject ([NullAllowed] MTLResourceStatePassSampleBufferAttachmentDescriptor attachment, nuint attachmentIndex);
 
-		// TOD INDEXER
 	}
 
 	[Mac (11,0), iOS (14,0), NoTV]
@@ -5078,6 +5072,7 @@ namespace Metal {
 	[Mac (11,0), iOS (14,0), TV (14,0)]
 	[Protocol]
 	interface MTLCommandBufferEncoderInfo {
+
 		[Abstract]
 		[Export ("label")]
 		string Label { get; }
@@ -5096,6 +5091,7 @@ namespace Metal {
 	[Mac (11,0), iOS (14,0), TV (14,0)]
 	[Protocol]
 	interface MTLDynamicLibrary {
+	
 		[Abstract]
 		[NullAllowed, Export ("label")]
 		string Label { get; set; }
