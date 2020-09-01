@@ -13513,7 +13513,7 @@ namespace AVFoundation {
 		CMFormatDescription ReplacementFormatDescription { get; }
 	}
 
-	delegate /* OSStatus */ int AVAudioSourceNodeRenderHandler (bool isSilence, AudioTimeStamp timestamp, uint frameCunt, ref AudioBuffers outputData);
+	delegate /* OSStatus */ int AVAudioSourceNodeRenderHandler (bool isSilence, AudioTimeStamp timestamp, uint frameCount, ref AudioBuffers outputData);
 
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 	[BaseType (typeof(AVAudioNode))]
