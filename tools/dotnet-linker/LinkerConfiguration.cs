@@ -208,6 +208,7 @@ namespace Xamarin.Linker {
 			Application.DeploymentTarget = DeploymentTarget;
 			Application.SdkVersion = SdkVersion;
 
+			DerivedLinkContext.Target = Target;
 			Target.Abis = Abis;
 			Application.Abis = Abis;
 
