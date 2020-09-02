@@ -91,6 +91,14 @@ namespace LinkAll.Interfaces {
 			Assert.Null (type_b.GetMethod ("Bar", BindingFlags.Instance | BindingFlags.Public), "B::Bar");
 		}
 
+		[Test]
+		[Ignore ("https://github.com/xamarin/xamarin-macios/issues/9566")]
+		public void Issue9566 ()
+		{
+			var ifaces = (I[]) (object) new B[0];
+			Assert.IsNotNull (ifaces, "Array cast");
+		}
+
 		[DllImport ("/usr/lib/system/libsystem_dnssd.dylib")]
 		public static extern int DNSServiceGetProperty (
 			[MarshalAs (UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof (UTF8Marshaler))] string name,
