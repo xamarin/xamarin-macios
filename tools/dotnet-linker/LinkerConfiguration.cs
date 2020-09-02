@@ -21,6 +21,7 @@ namespace Xamarin.Linker {
 		public string AssemblyName { get; private set; }
 		public string CacheDirectory { get; private set; }
 		public Version DeploymentTarget { get; private set; }
+		public HashSet<string> FrameworkAssemblies { get; private set; } = new HashSet<string> ();
 		public string ItemsDirectory { get; private set; }
 		public bool IsSimulatorBuild { get; private set; }
 		public LinkMode LinkMode => Application.LinkMode;
@@ -104,6 +105,9 @@ namespace Xamarin.Linker {
 					if (!Version.TryParse (value, out var deployment_target))
 						throw new InvalidOperationException ($"Unable to parse the {key} value: {value} in {linker_file}");
 					DeploymentTarget = deployment_target;
+					break;
+				case "FrameworkAssembly":
+					FrameworkAssemblies.Add (value);
 					break;
 				case "ItemsDirectory":
 					ItemsDirectory = value;
@@ -221,6 +225,9 @@ namespace Xamarin.Linker {
 				Console.WriteLine ($"    Debug: {Application.EnableDebug}");
 				Console.WriteLine ($"    DeploymentTarget: {DeploymentTarget}");
 				Console.WriteLine ($"    ItemsDirectory: {ItemsDirectory}");
+				Console.WriteLine ($"    {FrameworkAssemblies.Count} framework assemblies:");
+				foreach (var fw in FrameworkAssemblies.OrderBy (v => v))
+					Console.WriteLine ($"        {fw}");
 				Console.WriteLine ($"    IsSimulatorBuild: {IsSimulatorBuild}");
 				Console.WriteLine ($"    LinkMode: {LinkMode}");
 				Console.WriteLine ($"    MarshalManagedExceptions: {Application.MarshalManagedExceptions} (IsDefault: {Application.IsDefaultMarshalManagedExceptionMode})");

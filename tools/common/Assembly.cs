@@ -64,10 +64,10 @@ namespace Xamarin.Bundler {
 			set {
 				full_path = value;
 				if (!is_framework_assembly.HasValue && !string.IsNullOrEmpty (full_path)) {
-					var real_full_path = Target.GetRealPath (full_path);
 #if NET
-					// TODO: Figure out how to determine whether an assembly is a framework assembly or not (but it's not urgent to implement, it's just a performance improvement)
+					is_framework_assembly = Target.App.Configuration.FrameworkAssemblies.Contains (GetIdentity (full_path));
 #else
+					var real_full_path = Target.GetRealPath (full_path);
 					is_framework_assembly = real_full_path.StartsWith (Path.GetDirectoryName (Path.GetDirectoryName (Target.Resolver.FrameworkDirectory)), StringComparison.Ordinal);
 #endif
 				}
