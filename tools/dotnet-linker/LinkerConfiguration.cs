@@ -208,6 +208,9 @@ namespace Xamarin.Linker {
 			Application.DeploymentTarget = DeploymentTarget;
 			Application.SdkVersion = SdkVersion;
 
+			Target.Abis = Abis;
+			Application.Abis = Abis;
+
 			switch (Platform) {
 			case ApplePlatform.iOS:
 			case ApplePlatform.TVOS:
