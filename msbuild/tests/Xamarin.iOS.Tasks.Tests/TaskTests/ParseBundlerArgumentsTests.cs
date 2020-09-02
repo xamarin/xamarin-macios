@@ -116,6 +116,23 @@ namespace Xamarin.iOS.Tasks
 			Assert.IsTrue (task.Execute (), input);
 			Assert.AreEqual (output, task.MarshalObjectiveCExceptionMode, output);
 		}
+
+		[Test]
+		[TestCase ("--optimize", "")]
+		[TestCase ("--optimize:", "")]
+		[TestCase ("--optimize:default", "default")]
+		[TestCase ("--optimize:dummy", "dummy")]
+		[TestCase ("-optimize:dummy", "dummy")]
+		[TestCase ("/optimize:dummy", "dummy")]
+		[TestCase ("/optimize:dummy1 -optimize:dummy2", "dummy1,dummy2")]
+		[TestCase ("/optimize:+all,-none -optimize:allornone", "+all,-none,allornone")]
+		public void Optimize (string input, string output)
+		{
+			var task = CreateTask<CustomParseBundlerArguments> ();
+			task.ExtraArgs = input;
+			Assert.IsTrue (task.Execute (), input);
+			Assert.AreEqual (output, task.Optimize, output);
+		}
 	}
 }
 
