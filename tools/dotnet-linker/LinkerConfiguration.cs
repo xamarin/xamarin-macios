@@ -45,6 +45,8 @@ namespace Xamarin.Linker {
 
 		// The list of assemblies is populated in CollectAssembliesStep.
 		public List<AssemblyDefinition> Assemblies = new List<AssemblyDefinition> ();
+		
+		string user_optimize_flags;
 
 		public static LinkerConfiguration GetInstance (LinkContext context)
 		{
@@ -134,6 +136,9 @@ namespace Xamarin.Linker {
 						Application.MarshalObjectiveCExceptions = mode;
 					}
 					break;
+				case "Optimize":
+					user_optimize_flags = value;
+					break;
 				case "PartialStaticRegistrarLibrary":
 					PartialStaticRegistrarLibrary = value;
 					break;
@@ -191,10 +196,16 @@ namespace Xamarin.Linker {
 
 			ErrorHelper.Platform = Platform;
 
+			// Optimizations.Parse can only be called after setting ErrorHelper.Platform
+			if (!string.IsNullOrEmpty (user_optimize_flags)) {
+				var messages = new List<ProductException> ();
+				Application.Optimizations.Parse (Application.Platform, user_optimize_flags, messages);
+				ErrorHelper.Show (messages);
+			}
+
 			Application.CreateCache (significantLines.ToArray ());
 			Application.Cache.Location = CacheDirectory;
 			Application.DeploymentTarget = DeploymentTarget;
-			Application.EnableCoopGC ??= Platform == ApplePlatform.WatchOS;
 			Application.SdkVersion = SdkVersion;
 
 			switch (Platform) {
@@ -211,8 +222,7 @@ namespace Xamarin.Linker {
 			if (Driver.TargetFramework.Platform != Platform)
 				throw ErrorHelper.CreateError (99, "Inconsistent platforms. TargetFramework={0}, Platform={1}", Driver.TargetFramework.Platform, Platform);
 
-			Application.SetManagedExceptionMode ();
-			Application.SetObjectiveCExceptionMode ();
+			Application.InitializeCommon ();
 		}
 
 		public void Write ()
@@ -232,6 +242,7 @@ namespace Xamarin.Linker {
 				Console.WriteLine ($"    LinkMode: {LinkMode}");
 				Console.WriteLine ($"    MarshalManagedExceptions: {Application.MarshalManagedExceptions} (IsDefault: {Application.IsDefaultMarshalManagedExceptionMode})");
 				Console.WriteLine ($"    MarshalObjectiveCExceptions: {Application.MarshalObjectiveCExceptions}");
+				Console.WriteLine ($"    Optimize: {user_optimize_flags} => {Application.Optimizations}");
 				Console.WriteLine ($"    PartialStaticRegistrarLibrary: {PartialStaticRegistrarLibrary}");
 				Console.WriteLine ($"    Platform: {Platform}");
 				Console.WriteLine ($"    PlatformAssembly: {PlatformAssembly}.dll");

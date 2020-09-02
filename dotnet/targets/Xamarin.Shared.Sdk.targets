@@ -139,7 +139,7 @@
 		<_AdditionalTaskAssemblyDirectory>$(_XamarinSdkRootDirectory)tools/dotnet-linker/</_AdditionalTaskAssemblyDirectory>
 		<_AdditionalTaskAssembly>$(_AdditionalTaskAssemblyDirectory)dotnet-linker.dll</_AdditionalTaskAssembly>
 	</PropertyGroup>
-	<Target Name="_ComputeLinkerArguments" DependsOnTargets="_ComputeLinkMode;_ComputeFrameworkVariables;_ComputeFrameworkAssemblies;ComputeResolvedFilesToPublishList">
+	<Target Name="_ComputeLinkerArguments" DependsOnTargets="_ComputeLinkMode;_ComputeFrameworkVariables;_ComputeFrameworkAssemblies;ComputeResolvedFilesToPublishList;_ParseBundlerArguments;">
 		<!-- Validate the linker mode -->
 		<Error Text="Invalid link mode: '$(_LinkMode)'. Valid link modes are: 'None', 'SdkOnly' and 'Full'" Condition="'$(_LinkMode)' != 'None' And '$(_LinkMode)' != 'SdkOnly' And '$(_LinkMode)' != 'Full'" />
 
@@ -164,6 +164,7 @@
 				LinkMode=$(_LinkMode)
 				MarshalManagedExceptionMode=$(_MarshalManagedExceptionMode)
 				MarshalObjectiveCExceptionMode=$(_MarshalObjectiveCExceptionMode)
+				Optimize=$(_BundlerOptimize)
 				PartialStaticRegistrarLibrary=$(_LibPartialStaticRegistrar)
 				Platform=$(_PlatformName)
 				PlatformAssembly=$(_PlatformAssemblyName).dll
