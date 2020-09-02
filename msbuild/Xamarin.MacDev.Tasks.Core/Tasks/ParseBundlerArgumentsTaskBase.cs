@@ -20,6 +20,9 @@ namespace Xamarin.MacDev.Tasks {
 		public string NoDSymUtil { get; set; }
 
 		[Output]
+		public string Optimize { get; set; }
+
+		[Output]
 		public int Verbosity { get; set; }
 
 		public override bool Execute ()
@@ -82,6 +85,11 @@ namespace Xamarin.MacDev.Tasks {
 						break;
 					case "marshal-objectivec-exceptions":
 						MarshalObjectiveCExceptionMode = value;
+						break;
+					case "optimize":
+						if (!string.IsNullOrEmpty (Optimize))
+							Optimize += ",";
+						Optimize += value;
 						break;
 					default:
 						break;
