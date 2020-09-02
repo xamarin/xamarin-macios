@@ -52,7 +52,7 @@ namespace LinkAll.Layout {
 			DefaultClass c = new DefaultClass ();
 			c.used = 1;
 			// can't ask SizeOf on Auto
-			var t = typeof (DefaultClass);
+			var t = c.GetType ();
 			var fields = t.GetFields ();
 			Assert.That (fields.Length, Is.EqualTo (1), "Length");
 			Assert.That (fields [0].Name, Is.EqualTo ("used"), "Name");
@@ -68,7 +68,7 @@ namespace LinkAll.Layout {
 			AutoClass c = new AutoClass ();
 			c.used = 1;
 			// can't ask SizeOf on Auto
-			var t = typeof (AutoClass);
+			var t = c.GetType ();
 			var fields = t.GetFields ();
 			Assert.That (fields.Length, Is.EqualTo (1), "Length");
 			Assert.That (fields [0].Name, Is.EqualTo ("used"), "Name");

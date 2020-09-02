@@ -37,6 +37,9 @@ namespace LinkAll.Serialization.Xml {
 		public T Result;
 	}
 
+#if NET
+	[Ignore ("https://github.com/dotnet/runtime/issues/41389")]
+#endif
 	[TestFixture]
 	// we want the tests to be available because we use the linker
 	[Preserve (AllMembers = true)]

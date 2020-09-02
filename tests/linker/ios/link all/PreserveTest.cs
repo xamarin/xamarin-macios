@@ -55,11 +55,12 @@ namespace LinkAll.Attributes {
 		const bool Debug = false;
 #endif
 		string AssemblyName = typeof (NSObject).Assembly.ToString ();
+		string WorkAroundLinkerHeuristics { get { return ""; }}
 
 		[Test]
 		public void PreserveTypeWithMembers ()
 		{
-			var t = Type.GetType ("LinkAll.Attributes.TypeWithMembers");
+			var t = Type.GetType ("LinkAll.Attributes.TypeWithMembers" + WorkAroundLinkerHeuristics);
 			// both type and members are preserved
 			Assert.NotNull (t, "type");
 			Assert.NotNull (t.GetProperty ("Present"), "members");
@@ -68,7 +69,7 @@ namespace LinkAll.Attributes {
 		[Test]
 		public void PreserveTypeWithoutMembers ()
 		{
-			var t = Type.GetType ("LinkAll.Attributes.TypeWithoutMembers");
+			var t = Type.GetType ("LinkAll.Attributes.TypeWithoutMembers" + WorkAroundLinkerHeuristics);
 			// type is preserved
 			Assert.NotNull (t, "type");
 			// but we did not ask the linker to preserve it's members
@@ -78,7 +79,7 @@ namespace LinkAll.Attributes {
 		[Test]
 		public void PreserveTypeWithCustomAttribute ()
 		{
-			var t = Type.GetType ("LinkAll.Attributes.MemberWithCustomAttribute");
+			var t = Type.GetType ("LinkAll.Attributes.MemberWithCustomAttribute" + WorkAroundLinkerHeuristics);
 			// both type and members are preserved - in this case the type is preserved because it's member was
 			Assert.NotNull (t, "type");
 			// and that member was preserved because it's decorated with a preserved attribute
@@ -151,13 +152,13 @@ namespace LinkAll.Attributes {
 		[Test]
 		public void SmartEnumTest ()
 		{
-			var consumer = GetType ().Assembly.GetType ("LinkAll.Attributes.SmartConsumer");
+			var consumer = GetType ().Assembly.GetType ("LinkAll.Attributes.SmartConsumer" + WorkAroundLinkerHeuristics);
 			Assert.NotNull (consumer, "SmartConsumer");
 			Assert.NotNull (consumer.GetMethod ("GetSmartEnumValue"), "GetSmartEnumValue");
 			Assert.NotNull (consumer.GetMethod ("SetSmartEnumValue"), "SetSmartEnumValue");
 			var smartEnum = GetType ().Assembly.GetType ("LinkAll.Attributes.SmartEnum");
 			Assert.NotNull (smartEnum, "SmartEnum");
-			var smartExtensions = GetType ().Assembly.GetType ("LinkAll.Attributes.SmartEnumExtensions");
+			var smartExtensions = GetType ().Assembly.GetType ("LinkAll.Attributes.SmartEnumExtensions" + WorkAroundLinkerHeuristics);
 			Assert.NotNull (smartExtensions, "SmartEnumExtensions");
 			Assert.NotNull (smartExtensions.GetMethod ("GetConstant"), "GetConstant");
 			Assert.NotNull (smartExtensions.GetMethod ("GetValue"), "GetValue");

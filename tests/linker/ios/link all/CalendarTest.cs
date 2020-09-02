@@ -10,6 +10,9 @@ namespace LinkAll.Calendars {
 	[TestFixture]
 	// we want the tests to be available because we use the linker
 	[Preserve (AllMembers = true)]
+#if NET
+	[Ignore ("No globalization data yet - https://github.com/xamarin/xamarin-macios/issues/8906")]
+#endif
 	public class CalendarTest {
 
 		// application *MUST* be build with I18N.MidEast and I18N.Other (Thai)
