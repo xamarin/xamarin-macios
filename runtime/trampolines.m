@@ -41,6 +41,23 @@
 #include "runtime-internal.h"
 #define DEBUG_REF_COUNTING
 
+#if defined(DEBUG_REF_COUNTING)
+#include <execinfo.h>
+void print_stacktrace()
+{
+	const int limit = 32;
+	void *array[limit];
+	char **names;
+	int i;
+	backtrace (array, limit);
+	names = backtrace_symbols (array, limit);
+	for (i =0; i < limit; ++i) {
+		PRINT ("%s", names [i]);
+	}
+	free (names);
+}
+#endif
+
 static pthread_mutex_t refcount_mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER;
 
 size_t
@@ -627,6 +644,8 @@ xamarin_release_trampoline (id self, SEL sel)
 	ref_count = [self retainCount];
 
 #if defined(DEBUG_REF_COUNTING)
+	if (strstr (getenv ("XM_DEBUG_REF_COUNTING_STACKTRACE_CLASSES"), class_getName (object_getClass (self))) != NULL)
+		print_stacktrace ();
 	PRINT ("xamarin_release_trampoline (%s Handle=%p) retainCount=%d; HasManagedRef=%i GCHandle=%i\n", 
 		class_getName ([self class]), self, ref_count, xamarin_has_managed_ref (self), xamarin_get_gchandle (self));
 #endif
@@ -704,6 +723,8 @@ xamarin_retain_trampoline (id self, SEL sel)
 	self = xamarin_invoke_objc_method_implementation (self, sel, (IMP) xamarin_retain_trampoline);
 	
 #if defined(DEBUG_REF_COUNTING)
+	if (strstr (getenv ("XM_DEBUG_REF_COUNTING_STACKTRACE_CLASSES"), class_getName (object_getClass (self))) != NULL)
+		print_stacktrace ();
 	PRINT ("xamarin_retain_trampoline  (%s Handle=%p) initial retainCount=%d; new retainCount=%d HadManagedRef=%i HasManagedRef=%i old GCHandle=%i new GCHandle=%i\n", 
 		class_getName ([self class]), self, ref_count, (int) [self retainCount], had_managed_ref, xamarin_has_managed_ref (self), pre_gchandle, xamarin_get_gchandle (self));
 #endif
