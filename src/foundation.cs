@@ -4095,7 +4095,7 @@ namespace Foundation
 		[Mac (11,0)]
 		[Static]
 		[Export ("fileProviderErrorForRejectedDeletionOfItem:")]
-		NSError FileProviderErrorForRejectedDeletion (INSFileProviderItem updatedVersion);
+		NSError GetFileProviderErrorForRejectedDeletion (INSFileProviderItem updatedVersion);
 #endif
 		
 #if false
