@@ -1141,7 +1141,7 @@ namespace Metal {
 		SetStatistic,
 	}
 
-	[Flags, Mac (11,0), iOS (14,0)]
+	[Flags, Mac (11,0), iOS (14,0), TV (14,0)]
 	public enum MTLAccelerationStructureInstanceOptions : uint {
 		None = 0x0,
 		DisableTriangleCulling = (1u << 0),

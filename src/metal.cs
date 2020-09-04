@@ -452,7 +452,7 @@ namespace Metal {
 #endif
 		[Export ("commandBufferWithDescriptor:")]
 		[return: NullAllowed]
-		IMTLCommandBuffer CommandBuffer (MTLCommandBufferDescriptor descriptor);
+		IMTLCommandBuffer CreateCommandBuffer (MTLCommandBufferDescriptor descriptor);
 	}
 
 	interface IMTLComputeCommandEncoder {}
@@ -1614,7 +1614,7 @@ namespace Metal {
 		[Abstract]
 #endif
 		[Export ("supportsQueryTextureLOD")]
-		bool SupportsQueryTextureLOD { get; }
+		bool SupportsQueryTextureLod { get; }
 
 	}
 
@@ -4074,7 +4074,7 @@ namespace Metal {
 
 		[Abstract]
 		[Export ("serializeToURL:error:")]
-		bool SerializeToUrl (NSUrl url, [NullAllowed] out NSError error);
+		bool Serialize (NSUrl url, [NullAllowed] out NSError error);
 	}
 
 
@@ -4108,7 +4108,7 @@ namespace Metal {
 		[Export ("reset")]
 		void Reset ();
 
-		[Mac (11, 0), NoiOS] // fails intro on simulator and device
+		[Mac (11, 0), iOS (14,0)]
 		[NullAllowed, Export ("binaryArchives", ArgumentSemantic.Copy)]
 		IMTLBinaryArchive[] BinaryArchives { get; set; }
 	}
@@ -4422,18 +4422,33 @@ namespace Metal {
 	[Mac (11,0), iOS (13,0), NoTV]
 	[Protocol]
 	interface MTLResourceStateCommandEncoder : MTLCommandEncoder {
+#if !MONOMAC
+		[Abstract]
+#endif
 		[Export ("updateTextureMappings:mode:regions:mipLevels:slices:numRegions:")]
 		void Update (IMTLTexture texture, MTLSparseTextureMappingMode mode, IntPtr regions, IntPtr mipLevels, IntPtr slices, nuint numRegions);
 
+#if !MONOMAC
+		[Abstract]
+#endif
 		[Export ("updateTextureMapping:mode:region:mipLevel:slice:")]
 		void Update (IMTLTexture texture, MTLSparseTextureMappingMode mode, MTLRegion region, nuint mipLevel, nuint slice);
 
+#if !MONOMAC
+		[Abstract]
+#endif
 		[Export ("updateTextureMapping:mode:indirectBuffer:indirectBufferOffset:")]
 		void Update (IMTLTexture texture, MTLSparseTextureMappingMode mode, IMTLBuffer indirectBuffer, nuint indirectBufferOffset);
 
+#if !MONOMAC
+		[Abstract]
+#endif
 		[Export ("updateFence:")]
 		void Update (IMTLFence fence);
 
+#if !MONOMAC
+		[Abstract]
+#endif
 		[Export ("waitForFence:")]
 		void Wait (IMTLFence fence);
 	}
@@ -4493,7 +4508,9 @@ namespace Metal {
 		void SetStageInRegion (MTLRegion region);
 
 		[Mac (11,0), iOS (14,0), TV (14,0)]
+#if XAMCORE_4_0
 		[Abstract]
+#endif
 		[Export ("setImageblockWidth:height:")]
 		void SetImageblock (nuint width, nuint height);
 	}
@@ -4558,20 +4575,20 @@ namespace Metal {
 	[BaseType (typeof (NSObject))]
 	interface MTLCounterSampleBufferDescriptor : NSCopying
 	{
-		[Mac (10, 15), NoiOS, NoTV] // fails on intro simulator and device
+		[Mac (10, 15)]
 		[NullAllowed]
 		[Export ("counterSet", ArgumentSemantic.Retain)]
 		IMTLCounterSet CounterSet { get; set; }
 
-		[Mac (10, 15), NoiOS, NoTV] // fails on intro simulator and device
+		[Mac (10, 15)]
 		[Export ("label")]
 		string Label { get; set; }
 
-		[Mac (10, 15), NoiOS, NoTV] // fails on intro simulator and device
+		[Mac (10, 15)]
 		[Export ("storageMode", ArgumentSemantic.Assign)]
 		MTLStorageMode StorageMode { get; set; }
 
-		[Mac (10, 15), NoiOS, NoTV] // fails on intro simulator and device
+		[Mac (10, 15)]
 		[Export ("sampleCount")]
 		nuint SampleCount { get; set; }
 	}
@@ -4673,7 +4690,6 @@ namespace Metal {
 		[Export ("blitPassDescriptor")]
 		MTLBlitPassDescriptor Create ();
 
-		[NoMac, NoTV, NoiOS] // fails on introspection both on simulator and device
 		[Export ("sampleBufferAttachments")]
 		MTLBlitPassSampleBufferAttachmentDescriptorArray SampleBufferAttachments { get; }
 	}
@@ -4681,15 +4697,12 @@ namespace Metal {
 	[Mac (11,0), iOS (14,0), TV (14,0)]
 	[BaseType (typeof (NSObject))]
 	interface MTLBlitPassSampleBufferAttachmentDescriptor : NSCopying {
-		[NoiOS, NoTV] // on iOS and tvOS fails on intro both on device and simulator
 		[NullAllowed, Export ("sampleBuffer", ArgumentSemantic.Retain)]
 		IMTLCounterSampleBuffer SampleBuffer { get; set; }
 
-		[NoiOS, NoTV] // on iOS and tvOS fails on intro both on device and simulator
 		[Export ("startOfEncoderSampleIndex")]
 		nuint StartOfEncoderSampleIndex { get; set; }
 
-		[NoiOS, NoTV] // on iOS and tvOS fails on intro both on device and simulator
 		[Export ("endOfEncoderSampleIndex")]
 		nuint EndOfEncoderSampleIndex { get; set; }
 	}
@@ -4725,11 +4738,9 @@ namespace Metal {
 		[Export ("computePassDescriptor")]
 		MTLComputePassDescriptor Create ();
 
-		[NoiOS, NoTV] // fails on intro both device and simulator
 		[Export ("dispatchType", ArgumentSemantic.Assign)]
 		MTLDispatchType DispatchType { get; set; }
 
-		[NoiOS, NoTV] // fails on intro both device and simulator
 		[Export ("sampleBufferAttachments")]
 		MTLComputePassSampleBufferAttachmentDescriptorArray SampleBufferAttachments { get; }
 	}
@@ -4738,15 +4749,12 @@ namespace Metal {
 	[BaseType (typeof (NSObject))]
 	interface MTLComputePassSampleBufferAttachmentDescriptor : NSCopying {
 
-		[NoiOS, NoTV] // fails on intro both device and simulator
 		[NullAllowed, Export ("sampleBuffer", ArgumentSemantic.Retain)]
 		IMTLCounterSampleBuffer SampleBuffer { get; set; }
 
-		[NoiOS, NoTV] // fails on intro both device and simulator
 		[Export ("startOfEncoderSampleIndex")]
 		nuint StartOfEncoderSampleIndex { get; set; }
 
-		[NoiOS, NoTV] // fails on intro both device and simulator
 		[Export ("endOfEncoderSampleIndex")]
 		nuint EndOfEncoderSampleIndex { get; set; }
 	}
@@ -4818,7 +4826,6 @@ namespace Metal {
 		[Export ("intersectionFunctionTableDescriptor")]
 		MTLIntersectionFunctionTableDescriptor Create ();
 
-		[NoiOS, NoTV] // fails on intro both on device and simulator
 		[Export ("functionCount")]
 		nuint FunctionCount { get; set; }
 	}
@@ -4831,15 +4838,12 @@ namespace Metal {
 		[Export ("linkedFunctions")]
 		MTLLinkedFunctions Create ();
 
-		[NoiOS, NoTV] // fails on intro both on simulators and device
 		[NullAllowed, Export ("functions", ArgumentSemantic.Copy)]
 		IMTLFunction[] Functions { get; set; }
 
-		[NoiOS, NoTV] // fails on intro both on simulators and device
 		[NullAllowed, Export ("binaryFunctions", ArgumentSemantic.Copy)]
 		IMTLFunction[] BinaryFunctions { get; set; }
 
-		[NoiOS, NoTV] // fails on intro both on simulators and device
 		[NullAllowed, Export ("groups", ArgumentSemantic.Copy)]
 		NSDictionary<NSString, NSArray<IMTLFunction>> Groups { get; set; }
 	}
@@ -4859,23 +4863,18 @@ namespace Metal {
 	[Mac (11,0), iOS (14,0), TV (14,0)]
 	[BaseType (typeof (NSObject))]
 	interface MTLRenderPassSampleBufferAttachmentDescriptor : NSCopying {
-		[NoiOS, NoTV] // fails on intro both on simulators and device
 		[NullAllowed, Export ("sampleBuffer", ArgumentSemantic.Retain)]
 		IMTLCounterSampleBuffer SampleBuffer { get; set; }
 
-		[NoiOS, NoTV] // fails on intro both on simulators and device
 		[Export ("startOfVertexSampleIndex")]
 		nuint StartOfVertexSampleIndex { get; set; }
 
-		[NoiOS, NoTV] // fails on intro both on simulators and device
 		[Export ("endOfVertexSampleIndex")]
 		nuint EndOfVertexSampleIndex { get; set; }
 
-		[NoiOS, NoTV] // fails on intro both on simulators and device
 		[Export ("startOfFragmentSampleIndex")]
 		nuint StartOfFragmentSampleIndex { get; set; }
 
-		[NoiOS, NoTV] // fails on intro both on simulators and device
 		[Export ("endOfFragmentSampleIndex")]
 		nuint EndOfFragmentSampleIndex { get; set; }
 	}
@@ -4899,23 +4898,19 @@ namespace Metal {
 		[Export ("resourceStatePassDescriptor")]
 		MTLResourceStatePassDescriptor Create ();
 
-		[NoiOS, NoTV] // fails on intro both on simulators and device
 		[Export ("sampleBufferAttachments")]
 		MTLResourceStatePassSampleBufferAttachmentDescriptorArray SampleBufferAttachments { get; }
 	}
 
-	[Mac (11,0),iOS (14,0), NoTV]
+	[Mac (11,0), iOS (14,0), NoTV]
 	[BaseType (typeof (NSObject))]
 	interface MTLResourceStatePassSampleBufferAttachmentDescriptor : NSCopying {
-		[NoiOS] // MTLResourceStatePassSampleBufferAttachmentDescriptor
 		[NullAllowed, Export ("sampleBuffer", ArgumentSemantic.Retain)]
 		IMTLCounterSampleBuffer SampleBuffer { get; set; }
 
-		[NoiOS] // MTLResourceStatePassSampleBufferAttachmentDescriptor
 		[Export ("startOfEncoderSampleIndex")]
 		nuint StartOfEncoderSampleIndex { get; set; }
 
-		[NoiOS] // MTLResourceStatePassSampleBufferAttachmentDescriptor
 		[Export ("endOfEncoderSampleIndex")]
 		nuint EndOfEncoderSampleIndex { get; set; }
 	}
@@ -4939,7 +4934,6 @@ namespace Metal {
 		[Export ("visibleFunctionTableDescriptor")]
 		MTLVisibleFunctionTableDescriptor Create ();
 
-		[NoiOS] // fails on intro on simulator and device
 		[Export ("functionCount")]
 		nuint FunctionCount { get; set; }
 	}
@@ -5011,7 +5005,6 @@ namespace Metal {
 		[Export ("useHeaps:count:")]
 		void UseHeaps (IMTLHeap[] heaps, nuint count);
 
-		[Mac (11,0), iOS (14,0)]
 		[Abstract]
 		[Export ("sampleCountersInBuffer:atSampleIndex:withBarrier:")]
 		void SampleCountersInBuffer (MTLCounterSampleBuffer sampleBuffer, nuint sampleIndex, bool barrier);
@@ -5106,7 +5099,7 @@ namespace Metal {
 
 		[Abstract]
 		[Export ("serializeToURL:error:")]
-		bool Error (NSUrl url, [NullAllowed] out NSError error);
+		bool Serialize (NSUrl url, [NullAllowed] out NSError error);
 	}
 
 	interface IMTLLogContainer {}
