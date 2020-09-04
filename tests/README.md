@@ -74,7 +74,7 @@ Con
 
 ### Xamarin.Mac
 
-Many tests when run for macOS use a integration [hack](https://github.com/xamarin/xamarin-macios/blob/master/tests/common/mac/MacTestMain.cs) which helps handle a number of issues:
+Many tests when run for macOS use a integration [hack](https://github.com/xamarin/xamarin-macios/blob/main/tests/common/mac/MacTestMain.cs) which helps handle a number of issues:
 
 - Allowing command line arguments to tests while excluding "psn" arguments passed in while debugging with Visual Studio for Mac
 - Optionally integrating with the macOS message loop for tests that require it (anything that uses most Cocoa primitives).
