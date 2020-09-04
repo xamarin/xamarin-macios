@@ -13,6 +13,7 @@ using System;
 using ObjCRuntime;
 using CoreGraphics;
 using Foundation;
+using UniformTypeIdentifiers;
 
 #if IOS && !XAMCORE_4_0
 using FileProvider;
@@ -30,54 +31,46 @@ namespace FileProvider {
 	[NoTV]
 	[iOS (8,0)]
 	[NoMac]
+	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using Catalyst on macOS.")]
 	[ThreadSafe]
 	[BaseType (typeof (NSObject))]
 	partial interface NSFileProviderExtension {
-		[NoMac]
+
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'NSFileProviderManager' instead.")]
 		[Static, Export ("writePlaceholderAtURL:withMetadata:error:")]
 		bool WritePlaceholder (NSUrl placeholderUrl, NSDictionary metadata, ref NSError error);
 
-		[NoMac]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'NSFileProviderManager.GetPlaceholderUrl (NSUrl)' instead.")]
 		[Static, Export ("placeholderURLForURL:")]
 		NSUrl GetPlaceholderUrl (NSUrl url);
 
-		[NoMac]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'NSFileProviderManager.ProviderIdentifier' instead.")]
 		[Export ("providerIdentifier")]
 		string ProviderIdentifier { get; }
 
-		[NoMac]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'NSFileProviderManager.DocumentStorageUrl' instead.")]
 		[Export ("documentStorageURL")]
 		NSUrl DocumentStorageUrl { get; }
 
-		[NoMac]
 		[return: NullAllowed]
 		[Export ("URLForItemWithPersistentIdentifier:")]
 		NSUrl GetUrlForItem (string persistentIdentifier);
 
-		[NoMac]
 		[return: NullAllowed]
 		[Export ("persistentIdentifierForItemAtURL:")]
 		string GetPersistentIdentifier (NSUrl itemUrl);
 
-		[NoMac]
 		[Export ("providePlaceholderAtURL:completionHandler:")]
 		[Async]
 		void ProvidePlaceholderAtUrl (NSUrl url, Action<NSError> completionHandler);
 
-		[NoMac]
 		[Export ("startProvidingItemAtURL:completionHandler:")]
 		[Async]
 		void StartProvidingItemAtUrl (NSUrl url, Action<NSError> completionHandler);
 
-		[NoMac]
 		[Export ("itemChangedAtURL:")]
 		void ItemChangedAtUrl (NSUrl url);
 
-		[NoMac]
 		[Export ("stopProvidingItemAtURL:")]
 		void StopProvidingItemAtUrl (NSUrl url);
 
@@ -88,106 +81,61 @@ namespace FileProvider {
 
 		// Inlining NSFileProviderExtension (NSFileProviderActions) so we get asyncs
 
-		[NoMac]
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'Import' instead.")]
 		[iOS (11,0)]
 		[Async]
 		[Export ("importDocumentAtURL:toParentItemIdentifier:completionHandler:")]
 		void ImportDocument (NSUrl fileUrl, string parentItemIdentifier, Action<INSFileProviderItem, NSError> completionHandler);
 
-		[NoMac]
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'CreateItem' instead.")]
 		[iOS (11,0)]
 		[Async]
 		[Export ("createDirectoryWithName:inParentItemIdentifier:completionHandler:")]
 		void CreateDirectory (string directoryName, string parentItemIdentifier, Action<INSFileProviderItem, NSError> completionHandler);
 
-		[NoMac]
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'ItemChanged' instead.")]
 		[iOS (11,0)]
 		[Async]
 		[Export ("renameItemWithIdentifier:toName:completionHandler:")]
 		void RenameItem (string itemIdentifier, string itemName, Action<INSFileProviderItem, NSError> completionHandler);
 
-		[NoMac]
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'ItemChanged' instead.")]
 		[iOS (11,0)]
 		[Async]
 		[Export ("reparentItemWithIdentifier:toParentItemWithIdentifier:newName:completionHandler:")]
 		void ReparentItem (string itemIdentifier, string parentItemIdentifier, [NullAllowed] string newName, Action<INSFileProviderItem, NSError> completionHandler);
 
-		[NoMac]
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'ItemChanged' instead.")]
 		[iOS (11,0)]
 		[Async]
 		[Export ("trashItemWithIdentifier:completionHandler:")]
 		void TrashItem (string itemIdentifier, Action<INSFileProviderItem, NSError> completionHandler);
 
-		[NoMac]
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'ItemChanged' instead.")]
 		[iOS (11,0)]
 		[Async]
 		[Export ("untrashItemWithIdentifier:toParentItemIdentifier:completionHandler:")]
 		void UntrashItem (string itemIdentifier, [NullAllowed] string parentItemIdentifier, Action<INSFileProviderItem, NSError> completionHandler);
 
-		[NoMac]
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'DeleteItem (NSString, NSFileProviderItemVersion, NSFileProviderDeleteItemOptions, Action<NSError>)' instead.")]
 		[iOS (11,0)]
 		[Async]
 		[Export ("deleteItemWithIdentifier:completionHandler:")]
 		void DeleteItem (string itemIdentifier, Action<NSError> completionHandler);
 
-		[NoMac]
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'ItemChanged' instead.")]
 		[iOS (11,0)]
 		[Async]
 		[Export ("setLastUsedDate:forItemIdentifier:completionHandler:")]
 		void SetLastUsedDate ([NullAllowed] NSDate lastUsedDate, string itemIdentifier, Action<INSFileProviderItem, NSError> completionHandler);
 
-		[NoMac]
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'ItemChanged' instead.")]
 		[iOS (11,0)]
 		[Async]
 		[Export ("setTagData:forItemIdentifier:completionHandler:")]
 		void SetTagData ([NullAllowed] NSData tagData, string itemIdentifier, Action<INSFileProviderItem, NSError> completionHandler);
 
-		[NoMac]
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'ItemChanged' instead.")]
 		[iOS (11,0)]
 		[Async]
 		[Export ("setFavoriteRank:forItemIdentifier:completionHandler:")]
 		void SetFavoriteRank ([NullAllowed] NSNumber favoriteRank, string itemIdentifier, Action<INSFileProviderItem, NSError> completionHandler);
-
-		[NoiOS]
-		[Async]
-		[Export ("performActionWithIdentifier:onItemsWithIdentifiers:completionHandler:")]
-		NSProgress PerformAction (NSString actionIdentifier, NSString[] itemIdentifiers, Action<NSError> completionHandler);
-
-		[NoiOS]
-		[Async (ResultTypeName = "NSFileProviderExtensionFetchResult")]
-		[Export ("fetchContentsForItemWithIdentifier:version:completionHandler:")]
-		NSProgress FetchContents (NSString itemIdentifier, [NullAllowed] NSFileProviderItemVersion requestedVersion, NSFileProviderExtensionFetchHandler completionHandler);
-
-		[NoiOS]
-		[Async (ResultTypeName = "NSFileProviderExtensionFetchResult")]
-		[Export ("fetchContentsForItemWithIdentifier:version:usingExistingContentsAtURL:existingVersion:completionHandler:")]
-		NSProgress FetchContents (NSString itemIdentifier, [NullAllowed] NSFileProviderItemVersion requestedVersion, NSUrl existingContents, NSFileProviderItemVersion existingVersion, NSFileProviderExtensionFetchHandler completionHandler);
-
-		[NoiOS]
-		[Async]
-		[Export ("itemChanged:baseVersion:changedFields:contents:completionHandler:")]
-		void ItemChanged (INSFileProviderItem item, NSFileProviderItemVersion version, NSFileProviderItemField changedFields, [NullAllowed] NSUrl newContents, Action<INSFileProviderItem, NSError> completionHandler);
 
 #region NSFileProviderEnumeration (NSFileProviderExtension)
 		[iOS (11,0)]
 		[Export ("enumeratorForContainerItemIdentifier:error:")]
 		[return: NullAllowed]
 		INSFileProviderEnumerator GetEnumerator (string containerItemIdentifier, out NSError error);
-
-		[NoiOS]
-		[Export ("enumeratorForSearchQuery:error:")]
-		[return: NullAllowed]
-		INSFileProviderEnumerator GetEnumerator (NSFileProviderSearchQuery searchQuery, [NullAllowed] out NSError error);
 #endregion
 
 		// From NSFileProviderExtension (NSFileProviderThumbnailing)
@@ -209,49 +157,14 @@ namespace FileProvider {
 		[iOS (11,0)]
 		[NullAllowed, Export ("domain")]
 		NSFileProviderDomain Domain { get; }
-
-#region CreateItem (NSFileProviderExtension)
-		[NoiOS]
-		[Export ("createItemBasedOnTemplate:fields:contents:options:completionHandler:")]
-		[Async]
-		void CreateItem (INSFileProviderItem itemTemplate, NSFileProviderItemField fields, [NullAllowed] NSUrl url, NSFileProviderCreateItemOptions options, Action<INSFileProviderItem, NSError> completionHandler);
-#endregion
-
-#region DeleteItem (NSFileProviderExtension)
-		[NoiOS]
-		[Export ("deleteItemWithIdentifier:baseVersion:options:completionHandler:")]
-		[Async]
-		void DeleteItem (NSString itemIdentifier, NSFileProviderItemVersion version, NSFileProviderDeleteItemOptions options, Action<NSError> completionHandler);
-#endregion
-
-#region Import (NSFileProviderExtension)
-		[NoiOS]
-		[Export ("importDidFinishWithCompletionHandler:")]
-		[Async]
-		void ImportDidFinish (Action completionHandler);
-#endregion
-
-#region MaterializedSet (NSFileProviderExtension)
-		[NoiOS]
-		[Export ("materializedItemsDidChangeWithCompletionHandler:")]
-		[Async]
-		void MaterializedItemsDidChange (Action completionHandler);
-#endregion
-
-#region Request (NSFileProviderExtension)
-		[NoiOS]
-		[NullAllowed, Export ("currentRequest")]
-		NSFileProviderRequest CurrentRequest { get; }
-#endregion
 	}
-
-	delegate void NSFileProviderExtensionFetchHandler (NSUrl fileContents, INSFileProviderItem item, NSError error);
 }
 
 namespace FileProvider {
 
 	[iOS (11,0)]
-	[NoMac]
+	[Mac (11,0)]
+	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using Catalyst on macOS.")]
 	[ErrorDomain ("NSFileProviderErrorDomain")]
 	[Native]
 	enum NSFileProviderError : long {
@@ -266,10 +179,21 @@ namespace FileProvider {
 		VersionOutOfDate = -1006,
 		[NoiOS]
 		DirectoryNotEmpty = -1007,
+		[NoiOS]
+		ProviderNotFound = -2001,
+		[NoiOS]
+		ProviderTranslocated = -2002,
+		[NoiOS]
+		OlderExtensionVersionRunning = -2003,
+		[NoiOS]
+		NewerExtensionVersionFound = -2004,
+		[NoiOS]
+		CannotSynchronize = -2005,
 	}
 
 	[iOS (11,0)]
-	[NoMac]
+	[Mac (11,0)]
+	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using Catalyst on macOS.")]
 	[Static]
 	interface NSFileProviderErrorKeys {
 
@@ -287,7 +211,8 @@ namespace FileProvider {
 	}
 
 	[iOS (11,0)]
-	[NoMac]
+	[Mac (11,0)]
+	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using Catalyst on macOS.")]
 	[Static]
 	interface NSFileProviderFavoriteRank {
 
@@ -296,7 +221,8 @@ namespace FileProvider {
 	}
 
 	[iOS (11,0)]
-	[NoMac]
+	[Mac (11,0)]
+	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using Catalyst on macOS.")]
 	[Static]
 	interface NSFileProviderItemIdentifier {
 
@@ -305,10 +231,15 @@ namespace FileProvider {
 
 		[Field ("NSFileProviderWorkingSetContainerItemIdentifier")]
 		NSString WorkingSetContainer { get; }
+
+		[NoiOS]
+		[Field ("NSFileProviderTrashContainerItemIdentifier")]
+		NSString TrashContainer { get; }
 	}
 
 	[iOS (11,0)]
 	[Mac (10,15)]
+	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using Catalyst on macOS.")]
 	[Native]
 	[Flags]
 	enum NSFileProviderItemCapabilities : ulong {
@@ -324,7 +255,8 @@ namespace FileProvider {
 	}
 
 	[iOS (11,0)]
-	[NoMac]
+	[Mac (11,0)]
+	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using Catalyst on macOS.")]
 	[Static]
 	interface NSFileProviderPage {
 
@@ -346,7 +278,8 @@ namespace FileProvider {
 	}
 
 	[iOS (11,0)]
-	[NoMac]
+	[Mac (11,0)]
+	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using Catalyst on macOS.")]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface NSFileProviderDomain {
@@ -365,13 +298,27 @@ namespace FileProvider {
 
 		[NoiOS]
 		[Export ("disconnected")]
-		bool Disconnected { [Bind ("isDisconnected")] get; set; }
+		bool Disconnected { [Bind ("isDisconnected")] get; }
+
+		[NoiOS]
+		[Export ("userEnabled")]
+		bool UserEnabled { get; }
+
+		[NoiOS]
+		[Export ("hidden")]
+		bool Hidden { [Bind ("isHidden")] get; set; }
+
+		[NoiOS]
+		[Notification]
+		[Field ("NSFileProviderDomainDidChange")]
+		NSString DidChange { get; }
 	}
 
 	interface INSFileProviderEnumerationObserver { }
 
 	[iOS (11,0)]
 	[Mac (10,15)]
+	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using Catalyst on macOS.")]
 	[Protocol]
 	interface NSFileProviderEnumerationObserver {
 
@@ -386,12 +333,18 @@ namespace FileProvider {
 		[Abstract]
 		[Export ("finishEnumeratingWithError:")]
 		void FinishEnumerating (NSError error);
+
+		[Mac (11,0)]
+		[NoiOS]
+		[Export ("suggestedPageSize")]
+		nint GetSuggestedPageSize ();
 	}
 
 	interface INSFileProviderChangeObserver { }
 
 	[iOS (11,0)]
 	[Mac (10,15)]
+	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using Catalyst on macOS.")]
 	[Protocol]
 	interface NSFileProviderChangeObserver {
 
@@ -410,12 +363,18 @@ namespace FileProvider {
 		[Abstract]
 		[Export ("finishEnumeratingWithError:")]
 		void FinishEnumerating (NSError error);
+
+		[Mac (11,0)]
+		[NoiOS]
+		[Export ("suggestedBatchSize")]
+		nint GetSuggestedBatchSize ();
 	}
 
 	interface INSFileProviderEnumerator { }
 
 	[iOS (11,0)]
 	[Mac (10,15)]
+	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using Catalyst on macOS.")]
 	[Protocol]
 	interface NSFileProviderEnumerator {
 
@@ -438,6 +397,7 @@ namespace FileProvider {
 
 	[iOS (11,0)]
 	[Mac (10,15)]
+	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using Catalyst on macOS.")]
 	[Protocol]
 	interface NSFileProviderItem {
 
@@ -453,9 +413,19 @@ namespace FileProvider {
 		[Export ("filename")]
 		string Filename { get; }
 
+#if !XAMCORE_4_0
+		// became optional when deprecated
 		[Abstract]
+#endif
+		[Deprecated (PlatformName.iOS, 14,0, message: "Use 'GetContentType' instead.")]
+		[Deprecated (PlatformName.MacOSX, 11,0, message: "Use 'GetContentType' instead.")]
 		[Export ("typeIdentifier")]
 		string TypeIdentifier { get; }
+
+		[iOS (14,0)]
+		[Mac (11,0)]
+		[Export ("contentType", ArgumentSemantic.Copy)]
+		UTType GetContentType ();
 
 		[Export ("capabilities")]
 		NSFileProviderItemCapabilities GetCapabilities ();
@@ -534,7 +504,6 @@ namespace FileProvider {
 		NSPersonNameComponents GetMostRecentEditorNameComponents ();
 
 		[NoMac]
-		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'ItemVersion' instead.")]
 		[return: NullAllowed]
 		[Export ("versionIdentifier")]
 		NSData GetVersionIdentifier ();
@@ -544,36 +513,33 @@ namespace FileProvider {
 		NSDictionary GetUserInfo ();
 
 		[NoiOS]
-		[NoMac]
 		[Export ("excludedFromSync")]
 		bool ExcludedFromSync { [Bind ("isExcludedFromSync")] get; }
 
-#if false
 		[NoiOS]
-		[NoMac]
-		[Export ("flags", ArgumentSemantic.Strong)]
-		[NullAllowed]
-		INSFileProviderItemFlags Flags { get; }
-#endif
+		[Export ("fileSystemFlags")]
+		NSFileProviderFileSystemFlags FileSystemFlags { get; }
 
 		[NoiOS]
-		[NoMac]
-		[NullAllowed, Export ("extendedAttributes", ArgumentSemantic.Strong)]
+		[Export ("extendedAttributes", ArgumentSemantic.Strong)]
 		NSDictionary<NSString, NSData> ExtendedAttributes { get; }
 
 		[NoiOS]
-		[NoMac]
 		[NullAllowed, Export ("itemVersion", ArgumentSemantic.Strong)]
 		NSFileProviderItemVersion ItemVersion { get; }
+
+		[NoiOS]
+		[NullAllowed, Export ("symlinkTargetPath")]
+		string SymlinkTargetPath { get; }
 	}
 
 	[iOS (11,0)]
-	[NoMac]
+	[Mac (11,0)]
+	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using Catalyst on macOS.")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSFileProviderManager {
 
-		[NoMac]
 		[Static]
 		[Export ("defaultManager", ArgumentSemantic.Strong)]
 		NSFileProviderManager DefaultManager { get; }
@@ -636,6 +602,16 @@ namespace FileProvider {
 		[Export ("getUserVisibleURLForItemIdentifier:completionHandler:")]
 		void GetUserVisibleUrl (NSString itemIdentifier, Action<NSUrl, NSError> completionHandler);
 
+		[NoiOS]
+		[Export ("temporaryDirectoryURLWithError:")]
+		[return: NullAllowed]
+		NSUrl GetTemporaryDirectoryUrl ([NullAllowed] out NSError error);
+
+		[NoiOS]
+		[Async]
+		[Export ("signalErrorResolved:completionHandler:")]
+		void SignalErrorResolved (NSError error, Action<NSError> completionHandler);
+
 #region Import (NSFileProviderManager)
 		[NoiOS]
 		[Static]
@@ -655,16 +631,44 @@ namespace FileProvider {
 		INSFileProviderEnumerator GetMaterializedItemsEnumerator ();
 #endregion
 
-#region DownloadAndEviction (NSFileProviderManager)
+#region Eviction (NSFileProviderManager)
 		[NoiOS]
 		[Export ("evictItemWithIdentifier:completionHandler:")]
 		[Async]
 		void EvictItem (NSString itemIdentifier, Action<NSError> completionHandler);
+#endregion
+
+#region Disconnection (NSFileProviderManager)
+		[NoiOS]
+		[Async]
+		[Export ("disconnectWithReason:options:completionHandler:")]
+		void Disconnect (string localizedReason, NSFileProviderManagerDisconnectionOptions options, Action<NSError> completionHandler);
 
 		[NoiOS]
-		[Export ("setDownloadPolicy:forItemWithIdentifier:completionHandler:")]
 		[Async]
-		void SetDownloadPolicy (NSFileProviderDownloadPolicy downloadPolicy, NSString itemIdentifier, Action<NSError> completionHandler);
+		[Export ("reconnectWithCompletionHandler:")]
+		void Reconnect (Action<NSError> completionHandler);
+#endregion
+
+#region Attribution (NSFileProviderManager)
+		[NoiOS]
+		[Async]
+		[Export ("lookupRequestingApplicationIdentifier:reason:completionHandler:")]
+		void LookupRequestingApplicationIdentifier (NSUuid app, string reason, Action<NSUrl, NSError> completionHandler);
+#endregion
+
+#region Barrier (NSFileProviderManager)
+		[NoiOS]
+		[Async]
+		[Export ("waitForChangesOnItemsBelowItemWithIdentifier:completionHandler:")]
+		void WaitForChangesOnItemsBelowItem (string itemIdentifier, Action<NSError> completionHandler);
+#endregion
+
+#region Stabilization (NSFileProviderManager)
+		[NoiOS]
+		[Async]
+		[Export ("waitForStabilizationWithCompletionHandler:")]
+		void WaitForStabilization (Action<NSError> completionHandler);
 #endregion
 	}
 
@@ -674,7 +678,8 @@ namespace FileProvider {
 	interface INSFileProviderServiceSource {}
 
 	[iOS (11,0)]
-	[NoMac]
+	[Mac (11,0)]
+	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using Catalyst on macOS.")]
 	[Protocol]
 	interface NSFileProviderServiceSource {
 
@@ -688,10 +693,10 @@ namespace FileProvider {
 		NSXpcListenerEndpoint MakeListenerEndpoint (out NSError error);
 	}
 
+	[Mac (11,0)]
+	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using Catalyst on macOS.")]
 	[NoiOS]
-	[NoMac]
-	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor] // the `init*` and properties don't allow null
+	[BaseType (typeof(NSObject))]
 	interface NSFileProviderItemVersion {
 
 		[Export ("initWithContentVersion:metadataVersion:")]
@@ -704,122 +709,206 @@ namespace FileProvider {
 		NSData MetadataVersion { get; }
 	}
 
+	[Mac (11,0)]
+	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using Catalyst on macOS.")]
 	[NoiOS]
-	[NoMac]
-	[BaseType (typeof (NSObject))]
-	interface NSFileProviderRequest {
-
-		[Export ("requestingApplicationIdentifier", ArgumentSemantic.Strong)]
-		NSUuid RequestingApplicationIdentifier { get; }
-	}
-
-	[NoiOS]
-	[NoMac]
-	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor]
-	interface NSFileProviderSearchQuery {
-
-		[NullAllowed, Export ("filename")]
-		string Filename { get; }
-
-		[NullAllowed, Export ("allowedContentTypes", ArgumentSemantic.Copy)]
-		NSSet<NSString> AllowedContentTypes { get; }
-
-		[NullAllowed, Export ("allowedPathExtensions", ArgumentSemantic.Copy)]
-		NSSet<NSString> AllowedPathExtensions { get; }
-
-		[Export ("scopedToItemIdentifier")]
-		NSString ScopedToItemIdentifier { get; }
-
-		[Export ("searchContainerItemIdentifier")]
-		NSString SearchContainerItemIdentifier { get; }
-	}
-
-	[NoiOS]
-	[NoMac]
-	[Flags]
-	[Native]
+	[Native][Flags]
 	enum NSFileProviderCreateItemOptions : ulong {
 		None = 0,
-		ItemMayAlreadyExist = 1,
+		MayAlreadyExist = 1,
 	}
 
+	[Mac (11,0)]
+	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using Catalyst on macOS.")]
 	[NoiOS]
-	[NoMac]
-	[Flags]
-	[Native]
+	[Native][Flags]
 	enum NSFileProviderDeleteItemOptions : ulong {
 		None = 0,
 		Recursive = 1,
 	}
 
+	[Mac (11,0)]
+	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using Catalyst on macOS.")]
 	[NoiOS]
-	[NoMac]
-	[Flags]
-	[Native]
-	enum NSFileProviderDownloadPolicy : ulong {
-		Default = 0,
-		Speculative = 1,
-		KeepDownloaded = 2,
+	[Native][Flags]
+	enum NSFileProviderModifyItemOptions : ulong {
+		None = 0,
+		MayAlreadyExist = 1,
 	}
 
+	[Mac (11,0)]
+	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using Catalyst on macOS.")]
 	[NoiOS]
-	[NoMac]
-	[Flags]
-	[Native]
-	enum NSFileProviderItemField : ulong {
-		Contents = 1 << 0,
-		Filename = 1 << 1,
-		ParentItemIdentifier = 1 << 2,
-		LastUsedDate = 1 << 3,
-		TagData = 1 << 4,
-		FavoriteRank = 1 << 5,
-		CreationDate = 1 << 6,
-		ContentModificationDate = 1 << 7,
-		Flags = 1 << 8,
-		Trashed = 1 << 9,
-		ExtendedAttributes = 1 << 10,
+	[Native][Flags]
+	enum NSFileProviderItemFields : ulong {
+		Contents = 1uL << 0,
+		Filename = 1uL << 1,
+		ParentItemIdentifier = 1uL << 2,
+		LastUsedDate = 1uL << 3,
+		TagData = 1uL << 4,
+		FavoriteRank = 1uL << 5,
+		CreationDate = 1uL << 6,
+		ContentModificationDate = 1uL << 7,
+		FileSystemFlags = 1uL << 8,
+		ExtendedAttributes = 1uL << 9,
 	}
 
-// broken in xcode 12 beta 1 - can't build device apps (registrar related)
-#if false
-	[iOS (13,0)]
-	[NoMac]
+	[Mac (11,0)]
+	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using Catalyst on macOS.")]
+	[NoiOS]
+	[Native][Flags]
+	enum NSFileProviderManagerDisconnectionOptions : ulong {
+		None = 0,
+		Temporary = 1,
+	}
+
+	[Mac (11,0)]
+	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using Catalyst on macOS.")]
+	[NoiOS]
+	[Native][Flags]
+	enum NSFileProviderFileSystemFlags : ulong
+	{
+		UserExecutable = 1uL << 0,
+		UserReadable = 1uL << 1,
+		UserWritable = 1uL << 2,
+		Hidden = 1uL << 3,
+		PathExtensionHidden = 1uL << 4,
+	}
+
+	[Mac (11,0)]
+	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using Catalyst on macOS.")]
+	[NoiOS]
+	[BaseType (typeof (NSObject))]
+	interface NSFileProviderRequest {
+
+		[Export ("requestingApplicationIdentifier", ArgumentSemantic.Strong)]
+		NSUuid RequestingApplicationIdentifier { get; }
+
+		[Export ("isSystemRequest")]
+		bool IsSystemRequest { get; }
+
+		[Export ("isFileViewerRequest")]
+		bool IsFileViewerRequest { get; }
+
+		[NullAllowed]
+		[Export ("requestingExecutable", ArgumentSemantic.Copy)]
+		NSUrl RequestingExecutable { get; }
+	}
+
+	[Mac (11,0)]
+	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using Catalyst on macOS.")]
+	[NoiOS]
 	[Protocol]
-	interface NSFileProviderItemDecorating : NSFileProviderItem {
+	interface NSFileProviderCustomAction {
 
-		[NoiOS]
 		[Abstract]
-		[NullAllowed, Export ("decorations", ArgumentSemantic.Strong)]
-		string[] Decorations { get; }
+		[Export ("performActionWithIdentifier:onItemsWithIdentifiers:completionHandler:")]
+		NSProgress PerformAction (string actionIdentifier, string[] itemIdentifiers, Action<NSError> completionHandler);
 	}
 
-	interface INSFileProviderItemFlags {}
+	interface INSFileProviderEnumerating {}
 
-	[iOS (13,0)]
-	[Mac (10,15)]
+	[Mac (11,0)]
+	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using Catalyst on macOS.")]
+	[NoiOS]
 	[Protocol]
-	interface NSFileProviderItemFlags {
+	interface NSFileProviderEnumerating {
 
 		[Abstract]
-		[Export ("userExecutable")]
-		bool UserExecutable { [Bind ("isUserExecutable")] get; }
-
-		[Abstract]
-		[Export ("userReadable")]
-		bool UserReadable { [Bind ("isUserReadable")] get; }
-
-		[Abstract]
-		[Export ("userWritable")]
-		bool UserWritable { [Bind ("isUserWritable")] get; }
-
-		[Abstract]
-		[Export ("hidden")]
-		bool Hidden { [Bind ("isHidden")] get; }
-
-		[Abstract]
-		[Export ("pathExtensionHidden")]
-		bool PathExtensionHidden { [Bind ("isPathExtensionHidden")] get; }
+		[Export ("enumeratorForContainerItemIdentifier:request:error:")]
+		[return: NullAllowed]
+		INSFileProviderEnumerator GetEnumerator (string containerItemIdentifier, NSFileProviderRequest request, [NullAllowed] out NSError error);
 	}
-#endif
+
+	[Mac (11,0)]
+	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using Catalyst on macOS.")]
+	[NoiOS]
+	[Protocol]
+	interface NSFileProviderIncrementalContentFetching {
+
+		[Abstract]
+		[Export ("fetchContentsForItemWithIdentifier:version:usingExistingContentsAtURL:existingVersion:request:completionHandler:")]
+		NSProgress FetchContents (string itemIdentifier, [NullAllowed] NSFileProviderItemVersion requestedVersion, NSUrl existingContents, NSFileProviderItemVersion existingVersion, NSFileProviderRequest request, NSFileProviderFetchContentsCompletionHandler completionHandler);
+	}
+
+	[Mac (11,0)]
+	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using Catalyst on macOS.")]
+	[NoiOS]
+	[Protocol]
+	interface NSFileProviderServicing {
+
+		[Abstract]
+		[Export ("supportedServiceSourcesForItemIdentifier:completionHandler:")]
+		NSProgress GetSupportedServiceSources (string itemIdentifier, Action<INSFileProviderServiceSource[], NSError> completionHandler);
+	}
+
+	[Mac (11,0)]
+	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using Catalyst on macOS.")]
+	[NoiOS]
+	[Protocol]
+	interface NSFileProviderThumbnailing {
+
+		[Abstract]
+		[Export ("fetchThumbnailsForItemIdentifiers:requestedSize:perThumbnailCompletionHandler:completionHandler:")]
+		NSProgress FetchThumbnails (string[] itemIdentifiers, CGSize size, NSFileProviderPerThumbnailCompletionHandler perThumbnailCompletionHandler, Action<NSError> completionHandler);
+	}
+
+	[Mac (11,0)]
+	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using Catalyst on macOS.")]
+	[NoiOS]
+	delegate void NSFileProviderPerThumbnailCompletionHandler (NSString identifier, [NullAllowed] NSData imageData, [NullAllowed] NSError error);
+
+	[Mac (11,0)]
+	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using Catalyst on macOS.")]
+	[NoiOS]
+	delegate void NSFileProviderFetchContentsCompletionHandler ([NullAllowed] NSUrl fileContents, [NullAllowed] INSFileProviderItem item, [NullAllowed] NSError error);
+
+	[Mac (11,0)]
+	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using Catalyst on macOS.")]
+	[NoiOS]
+	delegate void NSFileProviderCreateOrModifyItemCompletionHandler ([NullAllowed] INSFileProviderItem item, NSFileProviderItemFields stillPendingFields, bool shouldFetchContent, [NullAllowed] NSError error);
+
+	[Mac (11,0)]
+	[Unavailable (PlatformName.MacCatalyst)]
+	[NoiOS]
+	[Protocol]
+	[Advice ("Implementation must expose selector 'initWithDomain:' with '.ctor (NSFileProviderDomain)'.")]
+	interface NSFileProviderReplicatedExtension : NSFileProviderEnumerating {
+
+		/* see Advice above
+		[Abstract]
+		[Export ("initWithDomain:")]
+		IntPtr Constructor (NSFileProviderDomain domain);
+		*/
+
+		[Abstract]
+		[Export ("invalidate")]
+		void Invalidate ();
+
+		[Abstract]
+		[Export ("itemForIdentifier:request:completionHandler:")]
+		NSProgress GetItem (string identifier, NSFileProviderRequest request, Action<INSFileProviderItem, NSError> completionHandler);
+
+		[Abstract]
+		[Export ("createItemBasedOnTemplate:fields:contents:options:request:completionHandler:")]
+		NSProgress CreateItem (INSFileProviderItem itemTemplate, NSFileProviderItemFields fields, [NullAllowed] NSUrl url, NSFileProviderCreateItemOptions options, NSFileProviderRequest request, NSFileProviderCreateOrModifyItemCompletionHandler completionHandler);
+
+		[Abstract]
+		[Export ("fetchContentsForItemWithIdentifier:version:request:completionHandler:")]
+		NSProgress FetchContents (string itemIdentifier, [NullAllowed] NSFileProviderItemVersion requestedVersion, NSFileProviderRequest request, NSFileProviderFetchContentsCompletionHandler completionHandler);
+
+		[Abstract]
+		[Export ("modifyItem:baseVersion:changedFields:contents:options:request:completionHandler:")]
+		NSProgress ModifyItem (INSFileProviderItem item, NSFileProviderItemVersion version, NSFileProviderItemFields changedFields, [NullAllowed] NSUrl newContents, NSFileProviderModifyItemOptions options, NSFileProviderRequest request, NSFileProviderCreateOrModifyItemCompletionHandler completionHandler);
+
+		[Abstract]
+		[Export ("deleteItemWithIdentifier:baseVersion:options:request:completionHandler:")]
+		NSProgress DeleteItem (string identifier, NSFileProviderItemVersion version, NSFileProviderDeleteItemOptions options, NSFileProviderRequest request, Action<NSError> completionHandler);
+
+		[Export ("importDidFinishWithCompletionHandler:")]
+		void ImportDidFinish (Action completionHandler);
+
+		[Export ("materializedItemsDidChangeWithCompletionHandler:")]
+		void MaterializedItemsDidChange (Action completionHandler);
+	}
 }

@@ -671,6 +671,11 @@ EVENTKITUI_SOURCES = \
 EXTERNALACCESSORY_API_SOURCES = \
 	ExternalAccessory/EAEnums.cs \
 
+# FileProvider
+
+FILEPROVIDER_SOURCES = \
+	FileProvider/Compat.cs \
+
 # FinderSync
 
 FINDERSYNC_CORE_SOURCES = \

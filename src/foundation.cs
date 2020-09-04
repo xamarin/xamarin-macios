@@ -4090,6 +4090,12 @@ namespace Foundation
 		[Static]
 		[Export ("fileProviderErrorForOutOfDateItem:")]
 		NSError GetFileProviderErrorForOutOfDateItem (INSFileProviderItem updatedVersion);
+
+		[NoiOS]
+		[Mac (11,0)]
+		[Static]
+		[Export ("fileProviderErrorForRejectedDeletionOfItem:")]
+		NSError GetFileProviderErrorForRejectedDeletion (INSFileProviderItem updatedVersion);
 #endif
 		
 #if false
