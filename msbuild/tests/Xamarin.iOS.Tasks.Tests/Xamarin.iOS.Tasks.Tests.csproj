@@ -26,6 +26,7 @@
     <Reference Include="Xamarin.iOS.Tasks" HintPath="..\..\Xamarin.iOS.Tasks\bin\$(Configuration)\netstandard2.0\Xamarin.iOS.Tasks.dll" />
     <PackageReference Include="NUnit" Version="3.12.0" />
     <PackageReference Include="NUnit.ConsoleRunner" Version="3.11.1" />
+    <PackageReference Include="NUnit.Extension.NUnitV2ResultWriter" Version="3.6.0" />
   </ItemGroup>
 
   <Target Name="BuildTasksAssembly" AfterTargets="BeforeBuild">

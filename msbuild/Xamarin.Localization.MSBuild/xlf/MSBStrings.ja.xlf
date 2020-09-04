@@ -1,123 +1,123 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
-  <file datatype="xml" source-language="en" target-language="ja" original="../MSBStrings.resx">
+  <file datatype="xml" source-language="en" target-language="ja-JP" original="../MSBStrings.resx">
     <body>
       <trans-unit id="E0003">
         <source>Error executing tool '{0}': {1}
         </source>
-        <target state="new">Error executing tool '{0}': {1}
+        <target state="translated">ツール '{0}' の実行でエラーが発生しました: {1}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0004">
         <source>Failed to codesign '{0}': {1}
         </source>
-        <target state="new">Failed to codesign '{0}': {1}
+        <target state="translated">'{0}' の codesign に失敗しました: {1}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0005">
         <source>Failed to codesign '{0}'
         </source>
-        <target state="new">Failed to codesign '{0}'
+        <target state="translated">'{0}' の codesign に失敗しました
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0006">
         <source>  '{0}' not found.
         </source>
-        <target state="new">  '{0}' not found.
+        <target state="translated">  '{0}' が見つかりません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0007">
         <source>Error loading '{0}': Unknown image format.
         </source>
-        <target state="new">Error loading '{0}': Unknown image format.
+        <target state="translated">'{0}' の読み込みでエラーが発生しました: 画像の形式が不明です。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0008">
         <source>Invalid iTunesArtwork dimensions ({0}x{1}) for '{2}'.
         </source>
-        <target state="new">Invalid iTunesArtwork dimensions ({0}x{1}) for '{2}'.
+        <target state="translated">'{2}' に対して iTunesArtwork の大きさ ({0}x{1}) が無効です。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0009">
         <source>Multiple iTunesArtwork files with the same dimensions detected ({0}x{1}) for '{2}'.
         </source>
-        <target state="new">Multiple iTunesArtwork files with the same dimensions detected ({0}x{1}) for '{2}'.
+        <target state="translated">'{2}' に対して同じ大きさ ({0}x{1}) の iTunesArtwork ファイルが複数検出されました。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0010">
         <source>Error loading '{0}': {1}
         </source>
-        <target state="new">Error loading '{0}': {1}
+        <target state="translated">'{0}' の読み込みエラーです: {1}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0011">
         <source>Could not parse MinimumOSVersion value '{0}'
         </source>
-        <target state="new">Could not parse MinimumOSVersion value '{0}'
+        <target state="translated">MinimumOSVersion 値 '{0}' を解析できませんでした
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0012">
         <source>Could not parse TargetArchitectures '{0}'
         </source>
-        <target state="new">Could not parse TargetArchitectures '{0}'
+        <target state="translated">TargetArchitectures'{0}' を解析できませんでした
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0013">
         <source>The {0} SDK for '{1}' is not installed.
         </source>
-        <target state="new">The {0} SDK for '{1}' is not installed.
+        <target state="translated">'{1}' の {0} SDK がインストールされていません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0014">
         <source>The executable (CFBundleExecutable) name ({0}) cannot end with '.app', because iOS may fail to launch the app.
         </source>
-        <target state="new">The executable (CFBundleExecutable) name ({0}) cannot end with '.app', because iOS may fail to launch the app.
+        <target state="translated">iOS でアプリの起動に失敗する可能性があるため、実行可能ファイル (CFBundleExecutable) の名前 ({0}) の末尾に '.app' を使用することはできません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0023">
         <source>Cannot have more than 1 iTunesMetadata.plist.
         </source>
-        <target state="new">Cannot have more than 1 iTunesMetadata.plist.
+        <target state="translated">複数の iTunesMetadata.plist を持つことはできません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0024">
         <source>Error loading Settings plist file '{0}/Settings.bundle/Root.plist': {1}.
         </source>
-        <target state="new">Error loading Settings plist file '{0}/Settings.bundle/Root.plist': {1}.
+        <target state="translated">設定 plist ファイル '{0}/Settings.bundle/Root.plist' の読み込みでエラーが発生しました: {1}。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0025">
         <source>Could not parse the SDK version '{0}'
         </source>
-        <target state="new">Could not parse the SDK version '{0}'
+        <target state="translated">SDK バージョン '{0}' を解析できませんでした
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0032">
         <source>Could not locate SDK bin directory
         </source>
-        <target state="new">Could not locate SDK bin directory
+        <target state="translated">SDK bin ディレクトリが見つかりませんでした
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0044">
         <source>Could not find a valid Xcode app bundle at '{0}'. Please update your Apple SDK location in Visual Studio's preferences {1}.
         </source>
-        <target state="new">Could not find a valid Xcode app bundle at '{0}'. Please update your Apple SDK location in Visual Studio's preferences {1}.
+        <target state="translated">'{0}' に、有効な Xcode アプリ バンドルが見つかりませんでした。Visual Studio の設定 {1} で、Apple SDK の場所を更新してください。
         </target>
         <note>The following are literal names and should not be translated: Xcode, Apple SDK, Visual Studio
 {0} - The selected Xcode / Apple SDK directory.</note>
@@ -125,159 +125,159 @@
       <trans-unit id="E0045">
         <source>Could not find valid a usable Xcode developer path
         </source>
-        <target state="new">Could not find valid a usable Xcode developer path
+        <target state="translated">有効で使用可能な Xcode Developer パスが見つかりませんでした
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0046">
         <source>Could not find '{0}'
         </source>
-        <target state="new">Could not find '{0}'
+        <target state="translated">'{0}' が見つかりませんでした
         </target>
         <note />
       </trans-unit>
       <trans-unit id="E0048">
         <source>Unknown SDK platform: {0}
         </source>
-        <target state="new">Unknown SDK platform: {0}
+        <target state="translated">不明な SDK プラットフォームです: {0}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0049">
         <source>Could not locate the provisioning profile with a Name or UUID of {0}.
         </source>
-        <target state="new">Could not locate the provisioning profile with a Name or UUID of {0}.
+        <target state="translated">名前または UUID が {0} のプロビジョニング プロファイルが見つかりませんでした。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0050">
         <source>Unknown search option: {0}
         </source>
-        <target state="new">Unknown search option: {0}
+        <target state="translated">不明な検索オプションです: {0}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0053">
         <source>Target architecture ARMv6 is no longer supported in Xamarin.iOS. Please select a supported architecture.
         </source>
-        <target state="new">Target architecture ARMv6 is no longer supported in Xamarin.iOS. Please select a supported architecture.
+        <target state="translated">ターゲット アーキテクチャ ARMv6 は、Xamarin.iOS ではサポートされなくなりました。サポートされているアーキテクチャを選択してください。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0055">
         <source>Could not load Info.plist: {0}
         </source>
-        <target state="new">Could not load Info.plist: {0}
+        <target state="translated">Info.plist を読み込めませんでした: {0}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0057">
         <source>Invalid architectures: '{0}'.
         </source>
-        <target state="new">Invalid architectures: '{0}'.
+        <target state="translated">無効なアーキテクチャです: '{0}'。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0058">
         <source>Failed to parse the target device information.
         </source>
-        <target state="new">Failed to parse the target device information.
+        <target state="translated">ターゲット デバイス情報を解析できませんでした。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0059">
         <source>No target device found.
         </source>
-        <target state="new">No target device found.
+        <target state="translated">ターゲット デバイスが見つかりません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0060">
         <source>No device architecture information found.
         </source>
-        <target state="new">No device architecture information found.
+        <target state="translated">デバイス アーキテクチャ情報が見つかりません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0061">
         <source>Invalid target architecture: '{0}'
         </source>
-        <target state="new">Invalid target architecture: '{0}'
+        <target state="translated">無効なターゲット アーキテクチャです: '{0}'
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0062">
         <source>No device operating system information found.
         </source>
-        <target state="new">No device operating system information found.
+        <target state="translated">デバイスのオペレーティング システム情報が見つかりません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0063">
         <source>No device model information found.
         </source>
-        <target state="new">No device model information found.
+        <target state="translated">デバイスのモデル情報が見つかりません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0064">
         <source>No iOS version information found.
         </source>
-        <target state="new">No iOS version information found.
+        <target state="translated">iOS のバージョン情報が見つかりません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0065">
         <source>Resources rules file '{0}' not found.
         </source>
-        <target state="new">Resources rules file '{0}' not found.
+        <target state="translated">リソース ルール ファイル '{0}' が見つかりません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0066">
         <source>Failed to parse SdkVersion '{0}'.
         </source>
-        <target state="new">Failed to parse SdkVersion '{0}'.
+        <target state="translated">SdkVersion '{0}' を解析できませんでした。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0067">
         <source>Xcode 10 does not support watchOS 1 apps. Either upgrade to watchOS 2 apps, or use an older version of Xcode.</source>
-        <target state="new">Xcode 10 does not support watchOS 1 apps. Either upgrade to watchOS 2 apps, or use an older version of Xcode.</target>
+        <target state="translated">Xcode 10 では、watchOS 1 アプリはサポートされていません。watchOS 2 アプリにアップグレードするか、以前のバージョンの Xcode を使用してください。</target>
         <note />
       </trans-unit>
       <trans-unit id="E0068">
         <source>An installation of Xcode &gt;= 6.2 is required to build WatchKit applications.
         </source>
-        <target state="new">An installation of Xcode &gt;= 6.2 is required to build WatchKit applications.
+        <target state="translated">WatchKit アプリケーションをビルドするには、Xcode 6.2 以上をインストールする必要があります。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0069">
         <source>iOS {0} does not support WatchKit.
         </source>
-        <target state="new">iOS {0} does not support WatchKit.
+        <target state="translated">iOS {0} では、WatchKit はサポートされていません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0070">
         <source>Failed to locate the WatchKit launcher in the Xcode app bundle.
         </source>
-        <target state="new">Failed to locate the WatchKit launcher in the Xcode app bundle.
+        <target state="translated">Xcode アプリ バンドルに WatchKit ランチャーが見つかりませんでした。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0084">
         <source>Could not locate the {0} '{1}' SDK at path '{}'
         </source>
-        <target state="new">Could not locate the {0} '{1}' SDK at path '{}'
+        <target state="translated">パス '{}' に {0} '{1}' SDK が見つかりませんでした
         </target>
         <note />
       </trans-unit>
       <trans-unit id="E0085">
         <source>Could not locate the {0} '{1}' SDK usr path at '{2}'
         </source>
-        <target state="new">Could not locate the {0} '{1}' SDK usr path at '{2}'
+        <target state="translated">'{2}' に {0} '{1}' SDK usr パスが見つかりませんでした
         </target>
         <note>The provided SDK path is missing a 'usr' directory. The following are literal names and should not be translated: SDK, usr
 {0} - The platform name, such as 'iOS'.
@@ -287,49 +287,49 @@
       <trans-unit id="E0086">
         <source>Could not find a valid Xcode developer path
         </source>
-        <target state="new">Could not find a valid Xcode developer path
+        <target state="translated">有効な Xcode Developer パスが見つかりませんでした
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0088">
         <source>Could not get native libraries: {0}
         </source>
-        <target state="new">Could not get native libraries: {0}
+        <target state="translated">ネイティブ ライブラリを取得できませんでした: {0}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0089">
         <source>Unrecognized platform: {0}
         </source>
-        <target state="new">Unrecognized platform: {0}
+        <target state="translated">認識されないプラットフォームです: {0}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0091">
         <source>File not found: {0}
         </source>
-        <target state="new">File not found: {0}
+        <target state="translated">ファイルが見つかりません: {0}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0092">
         <source>Invalid json: {0}
         </source>
-        <target state="new">Invalid json: {0}
+        <target state="translated">無効な JSON です: {0}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0093">
         <source>Partial Info.plist file was not generated: {0}
         </source>
-        <target state="new">Partial Info.plist file was not generated: {0}
+        <target state="translated">部分的な Info.plist ファイルは生成されませんでした: {0}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0094">
         <source>Failed to load {0} log file `{1}`: {2}
         </source>
-        <target state="new">Failed to load {0} log file `{1}`: {2}
+        <target state="translated">{0} ログ ファイル '{1}' を読み込めませんでした: {2}
         </target>
         <note>A general failure message if a log file wasn't able to be loaded.
 {0} - The command-line tool that generated the log.
@@ -339,14 +339,14 @@
       <trans-unit id="E0097">
         <source>No API definition file specified.
         </source>
-        <target state="new">No API definition file specified.
+        <target state="translated">API 定義ファイルが指定されていません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0098">
         <source>{0} failed.
         </source>
-        <target state="new">{0} failed.
+        <target state="translated">{0} が失敗しました。
         </target>
         <note>A general error message that a command-line tool failed.
 {0} - The file path to the command-line tool.</note>
@@ -354,98 +354,98 @@
       <trans-unit id="E0099">
         <source>  Bundle Resource '{0}' not found on disk (should be at '{1}')
         </source>
-        <target state="new">  Bundle Resource '{0}' not found on disk (should be at '{1}')
+        <target state="translated">  バンドル リソース '{0}' がディスク上に見つかりません ('{1}' にあるはずです)
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0100">
         <source>The path '{0}' would result in a file outside of the app bundle and cannot be used.
         </source>
-        <target state="new">The path '{0}' would result in a file outside of the app bundle and cannot be used.
+        <target state="translated">パス '{0}' は、アプリ バンドル外のファイルを指しているため、使用できません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0101">
         <source>Info.plist files should have a Build Action of 'None'.
         </source>
-        <target state="new">Info.plist files should have a Build Action of 'None'.
+        <target state="translated">Info.plist ファイルのビルド アクションは 'None' である必要があります。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0102">
         <source>The name '{0}' is reserved and cannot be used.
         </source>
-        <target state="new">The name '{0}' is reserved and cannot be used.
+        <target state="translated">名前 '{0}' は予約されているため、使用できません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0107">
         <source>Error loading partial Info.plist template file '{0}': {1}
         </source>
-        <target state="new">Error loading partial Info.plist template file '{0}': {1}
+        <target state="translated">部分的な Info.plist テンプレート ファイル '{0}' の読み込みでエラーが発生しました: {1}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0112">
         <source>Entitlements.plist template '{0}' not found.
         </source>
-        <target state="new">Entitlements.plist template '{0}' not found.
+        <target state="translated">Entitlements.plist テンプレート '{0}' が見つかりません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0113">
         <source>Error loading Entitlements.plist template '{0}': {1}
         </source>
-        <target state="new">Error loading Entitlements.plist template '{0}': {1}
+        <target state="translated">Entitlements.plist テンプレート '{0}' の読み込みでエラーが発生しました: {1}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0114">
         <source>Error writing xcent file '{0}': {1}
         </source>
-        <target state="new">Error writing xcent file '{0}': {1}
+        <target state="translated">xcent ファイル '{0}' の作成でエラーが発生しました: {1}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0115">
         <source>Error writing archived-expanded-entitlements.xcent file: {0}
         </source>
-        <target state="new">Error writing archived-expanded-entitlements.xcent file: {0}
+        <target state="translated">archived-expanded-entitlements.xcent ファイルの書き込みでエラーが発生しました: {0}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0117">
         <source>{0} exited with code {1}
         </source>
-        <target state="new">{0} exited with code {1}
+        <target state="translated">{0} がコード {1} で終了しました
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0120">
         <source>Error saving `{0}': {1}
         </source>
-        <target state="new">Error saving `{0}': {1}
+        <target state="translated">'{0}' の保存でエラーが発生しました: {1}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0122">
         <source>Error loading '{0}'
         </source>
-        <target state="new">Error loading '{0}'
+        <target state="translated">'{0}' の読み込みでエラーが発生しました
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0123">
         <source>Package creation failed. Could not parse extra arguments.
         </source>
-        <target state="new">Package creation failed. Could not parse extra arguments.
+        <target state="translated">パッケージの作成に失敗しました。追加の引数を解析できませんでした。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0124">
         <source>The identity '{0}' doesn't match any valid certificate/private key pair in the default keychain.
         </source>
-        <target state="new">The identity '{0}' doesn't match any valid certificate/private key pair in the default keychain.
+        <target state="translated">ID '{0}' は、既定のキーチェーンにある証明書および秘密キーのどの有効なペアにも一致しません。
         </target>
         <note>A failure to sign the iOS application, due to a missing certificate/private key. Xcode has an identical error message, see: https://developer.apple.com/library/archive/technotes/tn2250/_index.html#//apple_ref/doc/uid/DTS40009933-CH1-TNTAG40-WHAT_DOES__VALID_SIGNING_IDENTITY_NOT_FOUND__MEAN_AND_HOW_DO_I_RESOLVE_IT_
 {0} - The name of the identity, such as 'iPhone Developer'.</note>
@@ -453,7 +453,7 @@
       <trans-unit id="E0128">
         <source>No valid {0} code signing keys found in keychain. You need to request a codesigning certificate from https://developer.apple.com.
         </source>
-        <target state="new">No valid {0} code signing keys found in keychain. You need to request a codesigning certificate from https://developer.apple.com.
+        <target state="translated">キーチェーンに有効な {0} コード署名キーが見つかりません。https://developer.apple.com からコード署名証明書を依頼する必要があります。
         </target>
         <note>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
 {0} - The platform name, such as 'iOS'.</note>
@@ -461,7 +461,7 @@
       <trans-unit id="E0130">
         <source>{0} code signing key '{1}' not found in keychain.
         </source>
-        <target state="new">{0} code signing key '{1}' not found in keychain.
+        <target state="translated">キーチェーンに {0} コード署名キー '{1}' が見つかりません。
         </target>
         <note>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
 {0} - The platform name, such as 'iOS'.
@@ -470,7 +470,7 @@
       <trans-unit id="E0131">
         <source>Could not find any available provisioning profiles for {0} on {1}.
         </source>
-        <target state="new">Could not find any available provisioning profiles for {0} on {1}.
+        <target state="translated">{1} で {0} に対して利用可能なプロビジョニング プロファイルが見つかりませんでした。
         </target>
         <note>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
 {0} - The app bundle name, such as 'YouriOSApp.app'
@@ -479,7 +479,7 @@
       <trans-unit id="E0133">
         <source>No installed provisioning profiles match the installed {0} {1} signing identities.
         </source>
-        <target state="new">No installed provisioning profiles match the installed {0} {1} signing identities.
+        <target state="translated">インストールされている {0} {1} 署名 ID と一致するプロビジョニング プロファイルがインストールされていません。
         </target>
         <note>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
 {0} - The platform name, such as 'iOS'.
@@ -488,14 +488,14 @@
       <trans-unit id="E0139">
         <source>{0} does not define CFBundleIdentifier
         </source>
-        <target state="new">{0} does not define CFBundleIdentifier
+        <target state="translated">{0} で CFBundleIdentifier が定義されていません
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0140">
         <source>The specified {0} provisioning profile '{1}' could not be found
         </source>
-        <target state="new">The specified {0} provisioning profile '{1}' could not be found
+        <target state="translated">指定された {0} プロビジョニング プロファイル '{1}' が見つかりませんでした
         </target>
         <note>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
 {0} - The platform name, such as 'iOS'.
@@ -504,84 +504,84 @@
       <trans-unit id="E0141">
         <source>Project bundle identifier '{0}' does not match specified provisioning profile '{1}'
         </source>
-        <target state="new">Project bundle identifier '{0}' does not match specified provisioning profile '{1}'
+        <target state="translated">プロジェクトのバンドル識別子 '{0}' は指定されたプロビジョニング プロファイル '{1}' と一致しません
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0144">
         <source>The specified {0} provisioning profile '{1}' could not be found
         </source>
-        <target state="new">The specified {0} provisioning profile '{1}' could not be found
+        <target state="translated">指定された {0} プロビジョニング プロファイル '{1}' が見つかりませんでした
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0145">
         <source>No {0} signing identities match the specified provisioning profile '{1}'.
         </source>
-        <target state="new">No {0} signing identities match the specified provisioning profile '{1}'.
+        <target state="translated">指定されたプロビジョニング プロファイル '{1}' と一致する {0} 署名 ID がありません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0146">
         <source>Bundle identifier '{0}' does not match any installed provisioning profile for selected signing identity '{0}'.
         </source>
-        <target state="new">Bundle identifier '{0}' does not match any installed provisioning profile for selected signing identity '{0}'.
+        <target state="translated">バンドル識別子 '{0}' は、選ばれている署名 ID '{0}' のどのインストール済みプロビジョニング プロファイルとも一致しません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0147">
         <source>Bundle identifier '{0}' does not match any installed provisioning profile for selected signing identity '{0}'.
         </source>
-        <target state="new">Bundle identifier '{0}' does not match any installed provisioning profile for selected signing identity '{0}'.
+        <target state="translated">バンドル識別子 '{0}' は、選ばれている署名 ID '{0}' のどのインストール済みプロビジョニング プロファイルとも一致しません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0148">
         <source>Bundle identifier '{0}' does not match any installed provisioning profile.
         </source>
-        <target state="new">Bundle identifier '{0}' does not match any installed provisioning profile.
+        <target state="translated">バンドル識別子 '{0}' は、どのインストール済みプロビジョニング プロファイルとも一致しません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0150">
         <source>  AssemblyPath cannot be null or empty
         </source>
-        <target state="new">  AssemblyPath cannot be null or empty
+        <target state="translated">  AssemblyPath を null または空にすることはできません
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0152">
         <source>No property specified.
         </source>
-        <target state="new">No property specified.
+        <target state="translated">プロパティが指定されていません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0153">
         <source>The dictionary at '{0}' did not contain the key: {1}
         </source>
-        <target state="new">The dictionary at '{0}' did not contain the key: {1}
+        <target state="translated">'{0}' にあるディクショナリにキーが含まれていませんでした: {1}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0154">
         <source>Could not parse array index: {0}
         </source>
-        <target state="new">Could not parse array index: {0}
+        <target state="translated">配列インデックスを解析できませんでした: {0}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0155">
         <source>Array index out of range for item '{0}'
         </source>
-        <target state="new">Array index out of range for item '{0}'
+        <target state="translated">項目 '{0}' の配列インデックスが範囲外です
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0156">
         <source>{0} values do not support child properties.
         </source>
-        <target state="new">{0} values do not support child properties.
+        <target state="translated">{0} 値は、子プロパティをサポートしていません。
         </target>
         <note>The type of value in a '.plist' file (see: https://en.wikipedia.org/wiki/Property_list), such as a number or string cannot contain child values.
 {0} - The value type, such as 'NSString'.</note>
@@ -589,266 +589,266 @@
       <trans-unit id="E0157">
         <source>Getting {0} values is not supported.
         </source>
-        <target state="new">Getting {0} values is not supported.
+        <target state="translated">{0} 値の取得はサポートされていません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0158">
         <source>The file '{0}' does not exist.
         </source>
-        <target state="new">The file '{0}' does not exist.
+        <target state="translated">ファイル '{0}' は存在しません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0159">
         <source>The file '{0}' conflicts with '{1}'.
         </source>
-        <target state="new">The file '{0}' conflicts with '{1}'.
+        <target state="translated">ファイル '{0}' が '{1}' と競合しています。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0160">
         <source>Watch apps/extensions require Xcode 6.2 or later. The current Xcode version is {0}
         </source>
-        <target state="new">Watch apps/extensions require Xcode 6.2 or later. The current Xcode version is {0}
+        <target state="translated">Watch App および Extension には Xcode 6.2 以降が必要です。現在の Xcode バージョンは {0} です
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0161">
         <source>Items must have logical names computed.
         </source>
-        <target state="new">Items must have logical names computed.
+        <target state="translated">項目には論理名を計算する必要があります。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0166">
         <source>You must specify a DestinationFolder or the DestinationFiles, but not both.
         </source>
-        <target state="new">You must specify a DestinationFolder or the DestinationFiles, but not both.
+        <target state="translated">DestinationFolder または DestinationFiles のいずれかを指定する必要があります。両方は指定できません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0167">
         <source>The number of DestinationFiles must match the number of SourceFiles.
         </source>
-        <target state="new">The number of DestinationFiles must match the number of SourceFiles.
+        <target state="translated">DestinationFiles の数は、SourceFiles の数と一致する必要があります。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0169">
         <source>Unknown target framework identifier: {0}.
         </source>
-        <target state="new">Unknown target framework identifier: {0}.
+        <target state="translated">不明なターゲット フレームワーク識別子です: {0}。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0170">
         <source>Could not find {0} in {1}.
         </source>
-        <target state="new">Could not find {0} in {1}.
+        <target state="translated">{1} に {0} が見つかりませんでした。
         </target>
         <note />
       </trans-unit>
       <trans-unit id="E0171">
         <source>The {0} SDK is not installed.
         </source>
-        <target state="new">The {0} SDK is not installed.
+        <target state="translated">{0} SDK がインストールされていません。
         </target>
         <note />
       </trans-unit>
       <trans-unit id="E0172">
         <source>The {0} SDK version '{1}' is not installed, and no newer version was found.
         </source>
-        <target state="new">The {0} SDK version '{1}' is not installed, and no newer version was found.
+        <target state="translated">{0} SDK バージョン '{1}' がインストールされていません。また、それより新しいバージョンも見つかりませんでした。
         </target>
         <note />
       </trans-unit>
       <trans-unit id="E0173">
         <source>The {0} SDK version '{1}' is not installed. Using newer version '{2}' instead'.
         </source>
-        <target state="new">The {0} SDK version '{1}' is not installed. Using newer version '{2}' instead'.
+        <target state="translated">{0} SDK バージョン '{1}' がインストールされていません。代わりに、それより新しいバージョン '{2}' を使用します。
         </target>
         <note />
       </trans-unit>
       <trans-unit id="E7001">
         <source>Could not resolve host IPs for WiFi debugger settings.
         </source>
-        <target state="new">Could not resolve host IPs for WiFi debugger settings.
+        <target state="translated">WiFi デバッガー設定のホスト IP を解決できませんでした。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7002">
         <source>This machine does not have any network adapters. This is required when debugging or profiling on device over WiFi.
         </source>
-        <target state="new">This machine does not have any network adapters. This is required when debugging or profiling on device over WiFi.
+        <target state="translated">このマシンにはネットワーク アダプターがありません。これは、WiFi を使用してデバイス上でデバッグまたはプロファイルを行うときに必要です。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7003">
         <source>The App Extension '{0}' does not contain an Info.plist.
         </source>
-        <target state="new">The App Extension '{0}' does not contain an Info.plist.
+        <target state="translated">アプリ拡張機能 '{0}' に Info.plist が含まれていません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7004">
         <source>The App Extension '{0}' does not specify a CFBundleIdentifier.
         </source>
-        <target state="new">The App Extension '{0}' does not specify a CFBundleIdentifier.
+        <target state="translated">アプリ拡張機能 '{0}' で CFBundleIdentifier が指定されていません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7005">
         <source>The App Extension '{0}' does not specify a CFBundleExecutable.
         </source>
-        <target state="new">The App Extension '{0}' does not specify a CFBundleExecutable.
+        <target state="translated">アプリ拡張機能 '{0}' で CFBundleExecutable が指定されていません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7006">
         <source>The App Extension '{0}' has an invalid CFBundleIdentifier ({1}), it does not begin with the main app bundle's CFBundleIdentifier ({2}).
         </source>
-        <target state="new">The App Extension '{0}' has an invalid CFBundleIdentifier ({1}), it does not begin with the main app bundle's CFBundleIdentifier ({2}).
+        <target state="translated">アプリ拡張機能 '{0}' に無効な CFBundleIdentifier ({1}) が含まれています。メイン アプリ バンドルの CFBundleIdentifier ({2}) で始まっていません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7007">
         <source>The App Extension '{0}' has a CFBundleIdentifier ({1}) that ends with the illegal suffix ".key".
         </source>
-        <target state="new">The App Extension '{0}' has a CFBundleIdentifier ({1}) that ends with the illegal suffix ".key".
+        <target state="translated">アプリ拡張機能 '{0}' に、無効なサフィックス ".key" で終わる CFBundleIdentifier ({1}) が含まれています。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7008">
         <source>The App Extension '{0}' does not specify a CFBundleShortVersionString.
         </source>
-        <target state="new">The App Extension '{0}' does not specify a CFBundleShortVersionString.
+        <target state="translated">アプリ拡張機能 '{0}' で CFBundleShortVersionString が指定されていません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7009">
         <source>The App Extension '{0}' has an invalid Info.plist: it does not contain an NSExtension dictionary.
         </source>
-        <target state="new">The App Extension '{0}' has an invalid Info.plist: it does not contain an NSExtension dictionary.
+        <target state="translated">アプリ拡張機能 '{0}' に無効な Info.plist があります。NSExtension ディクショナリが含まれていません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7010">
         <source>The App Extension '{0}' has an invalid Info.plist: the NSExtension dictionary does not contain an NSExtensionPointIdentifier value.
         </source>
-        <target state="new">The App Extension '{0}' has an invalid Info.plist: the NSExtension dictionary does not contain an NSExtensionPointIdentifier value.
+        <target state="translated">アプリ拡張機能 '{0}' に無効な Info.plist があります。NSExtension ディクショナリに NSExtensionPointIdentifier 値が含まれていません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7011">
         <source>The WatchKit Extension '{0}' has an invalid Info.plist: the NSExtension dictionary does not contain an NSExtensionAttributes dictionary.
         </source>
-        <target state="new">The WatchKit Extension '{0}' has an invalid Info.plist: the NSExtension dictionary does not contain an NSExtensionAttributes dictionary.
+        <target state="translated">WatchKit 拡張機能 '{0}' に無効な Info.plist があります。NSExtension ディクショナリに NSExtensionAttributes ディクショナリが含まれていません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7012">
         <source>The WatchKit Extension '{0}' does not contain any watch apps.
         </source>
-        <target state="new">The WatchKit Extension '{0}' does not contain any watch apps.
+        <target state="translated">WatchKit 拡張機能 '{0}' に Watch アプリが含まれていません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7012_A">
         <source>The WatchKit Extension '{0}' contain more than one watch apps.
         </source>
-        <target state="new">The WatchKit Extension '{0}' contain more than one watch apps.
+        <target state="translated">WatchKit 拡張機能 '{0}' に複数の Watch アプリが含まれています。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7013">
         <source>The WatchKit Extension '{0}' has an invalid Info.plist: the UIRequiredDeviceCapabilities dictionary must contain the 'watch-companion' capability with a value of 'true'.
         </source>
-        <target state="new">The WatchKit Extension '{0}' has an invalid Info.plist: the UIRequiredDeviceCapabilities dictionary must contain the 'watch-companion' capability with a value of 'true'.
+        <target state="translated">WatchKit 拡張機能 '{0}' に無効な Info.plist があります。UIRequiredDeviceCapabilities ディクショナリで 'watch-companion' 機能に 'true' の値を含める必要があります。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7013_A">
         <source>The WatchKit Extension '{0}' has an invalid Info.plist: the UIRequiredDeviceCapabilities array must contain the 'watch-companion' capability.
         </source>
-        <target state="new">The WatchKit Extension '{0}' has an invalid Info.plist: the UIRequiredDeviceCapabilities array must contain the 'watch-companion' capability.
+        <target state="translated">WatchKit 拡張機能 '{0}' に無効な Info.plist があります。UIRequiredDeviceCapabilities 配列に 'watch-companion' 機能を含める必要があります。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7013_B">
         <source>The WatchKit Extension '{0}' has an invalid Info.plist: the UIRequiredDeviceCapabilities key must be present and contain the 'watch-companion' capability.
         </source>
-        <target state="new">The WatchKit Extension '{0}' has an invalid Info.plist: the UIRequiredDeviceCapabilities key must be present and contain the 'watch-companion' capability.
+        <target state="translated">WatchKit 拡張機能 '{0}' に無効な Info.plist があります。UIRequiredDeviceCapabilities キーを指定し、'watch-companion' 機能を含める必要があります。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7014">
         <source>The Watch App '{0}' does not contain an Info.plist.
         </source>
-        <target state="new">The Watch App '{0}' does not contain an Info.plist.
+        <target state="translated">Watch App '{0}' に Info.plist が含まれていません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7015">
         <source>The Watch App '{0}' does not specify a CFBundleIdentifier.
         </source>
-        <target state="new">The Watch App '{0}' does not specify a CFBundleIdentifier.
+        <target state="translated">Watch App '{0}' で CFBundleIdentifier が指定されていません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7016">
         <source>The Watch App '{0}' has an invalid CFBundleIdentifier ({1}), it does not begin with the main app bundle's CFBundleIdentifier ({2}).
         </source>
-        <target state="new">The Watch App '{0}' has an invalid CFBundleIdentifier ({1}), it does not begin with the main app bundle's CFBundleIdentifier ({2}).
+        <target state="translated">Watch App '{0}' に無効な CFBundleIdentifier ({1}) が含まれています。メイン アプリ バンドルの CFBundleIdentifier ({2}) で始まっていません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7017">
         <source>The Watch App '{0}' does not have a valid UIDeviceFamily value. Expected 'Watch (4)' but found '{1} ({2})'.
         </source>
-        <target state="new">The Watch App '{0}' does not have a valid UIDeviceFamily value. Expected 'Watch (4)' but found '{1} ({2})'.
+        <target state="translated">Watch App '{0}' に、有効な UIDeviceFamily 値がありません。'Watch (4)' が必要ですが、'{1} ({2})' が見つかりました。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7018">
         <source>The Watch App '{name}' does not specify a CFBundleExecutable
         </source>
-        <target state="new">The Watch App '{name}' does not specify a CFBundleExecutable
+        <target state="translated">Watch App '{name}' で CFBundleExecutable が指定されていません
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7019">
         <source>The Watch App '{0}' has an invalid WKCompanionAppBundleIdentifier value ('{1}'), it does not match the main app bundle's CFBundleIdentifier ('{2}').
         </source>
-        <target state="new">The Watch App '{0}' has an invalid WKCompanionAppBundleIdentifier value ('{1}'), it does not match the main app bundle's CFBundleIdentifier ('{2}').
+        <target state="translated">Watch App '{0}' に無効な WKCompanionAppBundleIdentifier 値があります ('{1}')。メイン アプリ バンドルの CFBundleIdentifier ('{2}') と一致しません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7020">
         <source>The Watch App '{0}' has an invalid Info.plist: the WKWatchKitApp key must be present and have a value of 'true'.
         </source>
-        <target state="new">The Watch App '{0}' has an invalid Info.plist: the WKWatchKitApp key must be present and have a value of 'true'.
+        <target state="translated">Watch App '{0}' に無効な Info.plist があります。WKWatchKitApp キーを指定し、'true' の値を設定する必要があります。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7021">
         <source>The Watch App '{0}' has an invalid Info.plist: the LSRequiresIPhoneOS key must not be present.
         </source>
-        <target state="new">The Watch App '{0}' has an invalid Info.plist: the LSRequiresIPhoneOS key must not be present.
+        <target state="translated">Watch App '{0}' に無効な Info.plist があります。LSRequiresIPhoneOS キーを指定することはできません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7022">
         <source>The Watch App '{0}' does not contain any Watch Extensions.
         </source>
-        <target state="new">The Watch App '{0}' does not contain any Watch Extensions.
+        <target state="translated">Watch App '{0}' に Watch Extension が 1 つも含まれていません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7022_A">
         <source>The Watch App '{0}' does not contain a Watch Extension.
         </source>
-        <target state="new">The Watch App '{0}' does not contain a Watch Extension.
+        <target state="translated">Watch App '{0}' に Watch Extension が含まれていません。
         </target>
         <note>The watchOS Application does not contain a watchOS extension, see: https://developer.apple.com/documentation/watchkit
 {0} - The app bundle name, such as 'YourWatchOSApp.app'</note>
@@ -856,392 +856,392 @@
       <trans-unit id="E7023">
         <source>The Watch Extension '{0}' does not contain an Info.plist.
         </source>
-        <target state="new">The Watch Extension '{0}' does not contain an Info.plist.
+        <target state="translated">Watch Extension '{0}' に Info.plist が含まれていません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7024">
         <source>The Watch Extension '{0}' does not specify a CFBundleIdentifier.
         </source>
-        <target state="new">The Watch Extension '{0}' does not specify a CFBundleIdentifier.
+        <target state="translated">Watch Extension '{0}' で CFBundleIdentifier が指定されていません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7025">
         <source>The Watch Extension '{0}' does not specify a CFBundleExecutable.
         </source>
-        <target state="new">The Watch Extension '{0}' does not specify a CFBundleExecutable.
+        <target state="translated">Watch Extension '{0}' で CFBundleExecutable が指定されていません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7026">
         <source>The Watch Extension '{0}' has an invalid CFBundleIdentifier ({1}), it does not begin with the main app bundle's CFBundleIdentifier ({2}).
         </source>
-        <target state="new">The Watch Extension '{0}' has an invalid CFBundleIdentifier ({1}), it does not begin with the main app bundle's CFBundleIdentifier ({2}).
+        <target state="translated">Watch Extension '{0}' に無効な CFBundleIdentifier ({1}) が含まれています。メイン アプリ バンドルの CFBundleIdentifier ({2}) で始まっていません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7027">
         <source>The Watch Extension '{0}' has a CFBundleIdentifier ({1}) that ends with the illegal suffix ".key".
         </source>
-        <target state="new">The Watch Extension '{0}' has a CFBundleIdentifier ({1}) that ends with the illegal suffix ".key".
+        <target state="translated">Watch Extension '{0}' に、無効なサフィックス ".key" で終わる CFBundleIdentifier ({1}) が含まれています。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7028">
         <source>The Watch Extension '{0}' has an invalid Info.plist: it does not contain an NSExtension dictionary.
         </source>
-        <target state="new">The Watch Extension '{0}' has an invalid Info.plist: it does not contain an NSExtension dictionary.
+        <target state="translated">Watch Extension '{0}' に無効な Info.plist があります。NSExtension ディクショナリが含まれていません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7029">
         <source>The Watch Extension '{0}' has an invalid Info.plist: the NSExtensionPointIdentifier must be "com.apple.watchkit".
         </source>
-        <target state="new">The Watch Extension '{0}' has an invalid Info.plist: the NSExtensionPointIdentifier must be "com.apple.watchkit".
+        <target state="translated">Watch Extension '{0}' に無効な Info.plist があります。NSExtensionPointIdentifier は "com.apple.watchkit" でなければなりません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7029_A">
         <source>The Watch Extension '{0}' has an invalid Info.plist: the NSExtension dictionary must contain an NSExtensionPointIdentifier.
         </source>
-        <target state="new">The Watch Extension '{0}' has an invalid Info.plist: the NSExtension dictionary must contain an NSExtensionPointIdentifier.
+        <target state="translated">Watch Extension '{0}' に無効な Info.plist があります。NSExtension ディクショナリに NSExtensionPointIdentifier を含める必要があります。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7030">
         <source>The Watch Extension '{0}' has an invalid Info.plist: the NSExtension dictionary must contain NSExtensionAttributes.
         </source>
-        <target state="new">The Watch Extension '{0}' has an invalid Info.plist: the NSExtension dictionary must contain NSExtensionAttributes.
+        <target state="translated">Watch Extension '{0}' に無効な Info.plist があります。NSExtension ディクショナリに NSExtensionAttributes を含める必要があります。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7031">
         <source>The Watch Extension '{0}' has an invalid WKAppBundleIdentifier value ('{1}'), it does not match the parent Watch App bundle's CFBundleIdentifier ('{2}').
         </source>
-        <target state="new">The Watch Extension '{0}' has an invalid WKAppBundleIdentifier value ('{1}'), it does not match the parent Watch App bundle's CFBundleIdentifier ('{2}').
+        <target state="translated">Watch Extension '{0}' に無効な WKAppBundleIdentifier 値 ('{1}') が含まれています。これは、親 Watch アプリ バンドルの CFBundleIdentifier ('{2}') と一致しません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7031_A">
         <source>The Watch Extension '{0}' has an invalid Info.plist: the NSExtensionAttributes dictionary must contain a WKAppBundleIdentifier.
         </source>
-        <target state="new">The Watch Extension '{0}' has an invalid Info.plist: the NSExtensionAttributes dictionary must contain a WKAppBundleIdentifier.
+        <target state="translated">Watch Extension '{0}' に無効な Info.plist があります。NSExtensionAttributes ディクショナリに WKAppBundleIdentifier を含める必要があります。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7032">
         <source>The WatchKit Extension '{0}' has an invalid Info.plist: the UIRequiredDeviceCapabilities dictionary should not contain the 'watch-companion' capability.
         </source>
-        <target state="new">The WatchKit Extension '{0}' has an invalid Info.plist: the UIRequiredDeviceCapabilities dictionary should not contain the 'watch-companion' capability.
+        <target state="translated">WatchKit 拡張機能 '{0}' に無効な Info.plist があります。UIRequiredDeviceCapabilities ディクショナリに 'watch-companion' 機能を含めることはできません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7032_A">
         <source>The WatchKit Extension '{0}' has an invalid Info.plist: the UIRequiredDeviceCapabilities array should not contain the 'watch-companion' capability.
         </source>
-        <target state="new">The WatchKit Extension '{0}' has an invalid Info.plist: the UIRequiredDeviceCapabilities array should not contain the 'watch-companion' capability.
+        <target state="translated">WatchKit 拡張機能 '{0}' に無効な Info.plist があります。UIRequiredDeviceCapabilities 配列に 'watch-companion' 機能を含めることはできません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7033">
         <source>The Watch App '{0}' does not contain an Info.plist.
         </source>
-        <target state="new">The Watch App '{0}' does not contain an Info.plist.
+        <target state="translated">Watch App '{0}' に Info.plist が含まれていません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7034">
         <source>The Watch App '{0}' does not specify a CFBundleIdentifier.
         </source>
-        <target state="new">The Watch App '{0}' does not specify a CFBundleIdentifier.
+        <target state="translated">Watch App '{0}' で CFBundleIdentifier が指定されていません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7035">
         <source>The Watch App '{0}' does not have a valid UIDeviceFamily value. Expected '{1}' but found '{2} ({3})'.
         </source>
-        <target state="new">The Watch App '{0}' does not have a valid UIDeviceFamily value. Expected '{1}' but found '{2} ({3})'.
+        <target state="translated">Watch App '{0}' に、有効な UIDeviceFamily 値がありません。'{1}' が必要ですが、'{2} ({3})' が見つかりました。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7036">
         <source>The Watch App '{0}' does not specify a CFBundleExecutable.
         </source>
-        <target state="new">The Watch App '{0}' does not specify a CFBundleExecutable.
+        <target state="translated">Watch App '{0}' で CFBundleExecutable が指定されていません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7037">
         <source>The WatchKit Extension '{0}' has an invalid WKAppBundleIdentifier value ('{1}'), it does not match the Watch App's CFBundleIdentifier ('{2}').
         </source>
-        <target state="new">The WatchKit Extension '{0}' has an invalid WKAppBundleIdentifier value ('{1}'), it does not match the Watch App's CFBundleIdentifier ('{2}').
+        <target state="translated">WatchKit 拡張機能 '{0}' に無効な WKAppBundleIdentifier 値 ('{1}') が含まれています。これは、Watch App の CFBundleIdentifier ('{2}') と一致しません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7038">
         <source>The Watch App '{0}' has an invalid WKCompanionAppBundleIdentifier value ('{1}'), it does not match the main app bundle's CFBundleIdentifier ('{2}').
         </source>
-        <target state="new">The Watch App '{0}' has an invalid WKCompanionAppBundleIdentifier value ('{1}'), it does not match the main app bundle's CFBundleIdentifier ('{2}').
+        <target state="translated">Watch App '{0}' に無効な WKCompanionAppBundleIdentifier 値があります ('{1}')。メイン アプリ バンドルの CFBundleIdentifier ('{2}') と一致しません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7038_A">
         <source>The Watch App '{0}' has an invalid Info.plist: the WKCompanionAppBundleIdentifier must exist and must match the main app bundle's CFBundleIdentifier.
         </source>
-        <target state="new">The Watch App '{0}' has an invalid Info.plist: the WKCompanionAppBundleIdentifier must exist and must match the main app bundle's CFBundleIdentifier.
+        <target state="translated">Watch App '{0}' に無効な Info.plist があります。WKCompanionAppBundleIdentifier が存在し、メイン アプリ バンドルの CFBundleIdentifier と一致している必要があります。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7039">
         <source>The Watch App '{0}' has an invalid Info.plist: the LSRequiresIPhoneOS key must not be present.
         </source>
-        <target state="new">The Watch App '{0}' has an invalid Info.plist: the LSRequiresIPhoneOS key must not be present.
+        <target state="translated">Watch App '{0}' に無効な Info.plist があります。LSRequiresIPhoneOS キーを指定することはできません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7040">
         <source>The app bundle {0} does not contain an Info.plist.
         </source>
-        <target state="new">The app bundle {0} does not contain an Info.plist.
+        <target state="translated">アプリ バンドル {0} に Info.plist が含まれていません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7041">
         <source>{0} does not specify a CFBundleIdentifier.
         </source>
-        <target state="new">{0} does not specify a CFBundleIdentifier.
+        <target state="translated">{0} は CFBundleIdentifier を指定していません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7042">
         <source>{0} does not specify a CFBundleExecutable.
         </source>
-        <target state="new">{0} does not specify a CFBundleExecutable.
+        <target state="translated">{0} は CFBundleExecutable を指定していません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7043">
         <source>{0} does not specify a CFBundleSupportedPlatforms.
         </source>
-        <target state="new">{0} does not specify a CFBundleSupportedPlatforms.
+        <target state="translated">{0} は CFBundleSupportedPlatforms を指定していません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7044">
         <source>{0} does not specify a UIDeviceFamily.
         </source>
-        <target state="new">{0} does not specify a UIDeviceFamily.
+        <target state="translated">{0} は UIDeviceFamily を指定していません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7044_A">
         <source>{0} is invalid: the UIDeviceFamily key must contain a value for '{1}'.
         </source>
-        <target state="new">{0} is invalid: the UIDeviceFamily key must contain a value for '{1}'.
+        <target state="translated">{0} が無効です。UIDeviceFamily キーに '{1}' の値を含める必要があります。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7045">
         <source>Unrecognized Type: {Type}
         </source>
-        <target state="new">Unrecognized Type: {Type}
+        <target state="translated">認識されない型です: {Type}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7046">
         <source>Add: Entry, "{0}", Incorrectly Specified
         </source>
-        <target state="new">Add: Entry, "{0}", Incorrectly Specified
+        <target state="translated">追加: エントリ "{0}" は正しく指定されていません
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7047">
         <source>Add: Entry, "{0}", Contains Invalid Array Index
         </source>
-        <target state="new">Add: Entry, "{0}", Contains Invalid Array Index
+        <target state="translated">追加: エントリ "{0}" に無効な配列インデックスが含まれています
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7048">
         <source>Add: "{0}" Entry Already Exists
         </source>
-        <target state="new">Add: "{0}" Entry Already Exists
+        <target state="translated">追加: "{0}" エントリは既に存在します
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7049">
         <source>Add: Can't Add Entry, "{0}", to Parent
         </source>
-        <target state="new">Add: Can't Add Entry, "{0}", to Parent
+        <target state="translated">追加: エントリ "{0}" を親に追加できません
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7050">
         <source>Delete: Can't Delete Entry, "{0}", from Parent
         </source>
-        <target state="new">Delete: Can't Delete Entry, "{0}", from Parent
+        <target state="translated">削除: 親からエントリ "{0}" を削除できません
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7051">
         <source>Delete: Entry, "{0}", Contains Invalid Array Index
         </source>
-        <target state="new">Delete: Entry, "{0}", Contains Invalid Array Index
+        <target state="translated">削除: エントリ "{0}" に無効な配列インデックスが含まれています
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7052">
         <source>Delete: Entry, "{0}", Does Not Exist
         </source>
-        <target state="new">Delete: Entry, "{0}", Does Not Exist
+        <target state="translated">削除: エントリ "{0}" が存在しません
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7053">
         <source>Import: Entry, "{0}", Incorrectly Specified
         </source>
-        <target state="new">Import: Entry, "{0}", Incorrectly Specified
+        <target state="translated">インポート: エントリ "{0}" は正しく指定されていません
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7054">
         <source>Import: Entry, "{0}", Contains Invalid Array Index
         </source>
-        <target state="new">Import: Entry, "{0}", Contains Invalid Array Index
+        <target state="translated">インポート: エントリ "{0}" に無効な配列インデックスが含まれています
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7055">
         <source>Import: Error Reading File: {0}
         </source>
-        <target state="new">Import: Error Reading File: {0}
+        <target state="translated">インポート: ファイルの読み取りでエラーが発生しました: {0}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7056">
         <source>Import: Can't Add Entry, "{0}", to Parent
         </source>
-        <target state="new">Import: Can't Add Entry, "{0}", to Parent
+        <target state="translated">インポート: エントリ "{0}" を親に追加できません
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7057">
         <source>Merge: Can't Add array Entries to dict
         </source>
-        <target state="new">Merge: Can't Add array Entries to dict
+        <target state="translated">マージ: 配列エントリをディクショナリに追加できません
         </target>
         <note>Array entries in a '.plist' file (see: https://en.wikipedia.org/wiki/Property_list), cannot be added to a dictionary.</note>
       </trans-unit>
       <trans-unit id="E7058">
         <source>Merge: Specified Entry Must Be a Container
         </source>
-        <target state="new">Merge: Specified Entry Must Be a Container
+        <target state="translated">マージ: 指定されたエントリはコンテナーである必要があります
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7059">
         <source>Merge: Entry, "{0}", Contains Invalid Array Index
         </source>
-        <target state="new">Merge: Entry, "{0}", Contains Invalid Array Index
+        <target state="translated">マージ: エントリ "{0}" に無効な配列インデックスが含まれています
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7060">
         <source>Merge: Entry, "{0}", Does Not Exist
         </source>
-        <target state="new">Merge: Entry, "{0}", Does Not Exist
+        <target state="translated">マージ: エントリ "{0}" が存在しません
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7061">
         <source>Merge: Error Reading File: {0}
         </source>
-        <target state="new">Merge: Error Reading File: {0}
+        <target state="translated">マージ: ファイルの読み取りでエラーが発生しました: {0}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7062">
         <source>Set: Entry, "{0}", Incorrectly Specified
         </source>
-        <target state="new">Set: Entry, "{0}", Incorrectly Specified
+        <target state="translated">設定: エントリ "{0}" は正しく指定されていません
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7063">
         <source>Set: Entry, "{0}", Contains Invalid Array Index
         </source>
-        <target state="new">Set: Entry, "{0}", Contains Invalid Array Index
+        <target state="translated">設定: エントリ "{0}" に無効な配列インデックスが含まれています
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7064">
         <source>Set: Entry, "{0}", Does Not Exist
         </source>
-        <target state="new">Set: Entry, "{0}", Does Not Exist
+        <target state="translated">設定: エントリ "{0}" が存在しません
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7068">
         <source>Can't create a binding resource package unless there are native references in the binding project.
         </source>
-        <target state="new">Can't create a binding resource package unless there are native references in the binding project.
+        <target state="translated">バインド プロジェクトにネイティブ参照がある場合を除いて、バインド リソース パッケージは作成できません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0001">
         <source>Tool {0} execution started with arguments: {1}
         </source>
-        <target state="new">Tool {0} execution started with arguments: {1}
+        <target state="translated">ツール {0} の実行が開始されました。引数: {1}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0002">
         <source>Tool {0} execution finished (exit code = {1}).
         </source>
-        <target state="new">Tool {0} execution finished (exit code = {1}).
+        <target state="translated">ツール {0} の実行が完了しました (終了コード = {1})。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0017">
         <source>All http loads are already allowed.
         </source>
-        <target state="new">All http loads are already allowed.
+        <target state="translated">すべての http 読み込みは既に許可されています。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0018">
         <source>Allowed arbitrary HTTP loads to support debugging.
         </source>
-        <target state="new">Allowed arbitrary HTTP loads to support debugging.
+        <target state="translated">デバッグをサポートするための任意の HTTP 読み込みが許可されました。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0047">
         <source>Searching for '{0}' in '{1}'
         </source>
-        <target state="new">Searching for '{0}' in '{1}'
+        <target state="translated">'{1}' で '{0}' を検索しています
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0105">
         <source>No Frameworks directory found.
         </source>
-        <target state="new">No Frameworks directory found.
+        <target state="translated">フレームワーク ディレクトリが見つかりません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0116">
         <source>Tool {0} execution finished.
         </source>
-        <target state="new">Tool {0} execution finished.
+        <target state="translated">ツール {0} の実行が完了しました。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0119">
         <source>Skipping `{0}' as the output file, `{1}', is newer.
         </source>
-        <target state="new">Skipping `{0}' as the output file, `{1}', is newer.
+        <target state="translated">出力ファイル '{1}' のほうが新しいため、'{0}' をスキップしています。
         </target>
         <note>Skipping a build operation, since the destination file is newer than the source file.
 {0} - The destination file.
@@ -1250,91 +1250,91 @@
       <trans-unit id="M0121">
         <source>Creating binding resource package: {0}
         </source>
-        <target state="new">Creating binding resource package: {0}
+        <target state="translated">バインド リソース パッケージを作成しています: {0}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0125">
         <source>Detected signing identity:
         </source>
-        <target state="new">Detected signing identity:
+        <target state="translated">署名 ID が検出されました:
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0126">
         <source>The certificate '{0}' does not match any of the prefixes '{1}'.
         </source>
-        <target state="new">The certificate '{0}' does not match any of the prefixes '{1}'.
+        <target state="translated">証明書 '{0}' が、プレフィックス '{1}' のうちどれとも一致しません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0127">
         <source>The certificate '{0}' has expired ({1})
         </source>
-        <target state="new">The certificate '{0}' has expired ({1})
+        <target state="translated">証明書 '{0}' の有効期限が切れています ({1})
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0129">
         <source>The certificate '{0}' does not match '{1}'.
         </source>
-        <target state="new">The certificate '{0}' does not match '{1}'.
+        <target state="translated">証明書 '{0}' が '{1}' と一致しません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0132">
         <source>'{0}' doesn't match '{1}'.
         </source>
-        <target state="new">'{0}' doesn't match '{1}'.
+        <target state="translated">'{0}' が '{1}' と一致しません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0134">
         <source>Finding matching provisioning profiles with compatible AppID, keeping only those with the longest matching (wildcard) IDs.
         </source>
-        <target state="new">Finding matching provisioning profiles with compatible AppID, keeping only those with the longest matching (wildcard) IDs.
+        <target state="translated">互換性のある AppID を持つ、一致するプロビジョニング プロファイルを検索し、最長一致 (ワイルドカード) の ID を持つもののみを保持しています。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0135">
         <source>AppID: {0} was ruled out because we found a better match: {1}.
         </source>
-        <target state="new">AppID: {0} was ruled out because we found a better match: {1}.
+        <target state="translated">AppID: よりマッチ率の高いものが見つかったため、{0} を除外しました: {1}。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0136">
         <source>AppID: {0} was ruled out because we already found better matches: {1}.
         </source>
-        <target state="new">AppID: {0} was ruled out because we already found better matches: {1}.
+        <target state="translated">AppID: よりマッチ率の高いものが既に見つかっているため、{0} を除外しました: {1}。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0138">
         <source>Multiple provisioning profiles match the bundle identifier; using the first match.
         </source>
-        <target state="new">Multiple provisioning profiles match the bundle identifier; using the first match.
+        <target state="translated">複数のプロビジョニング プロファイルがバンドル識別子と一致しています。最初に一致したものを使用します。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0142">
         <source>Multiple signing identities match '{0}'; using the first match.
         </source>
-        <target state="new">Multiple signing identities match '{0}'; using the first match.
+        <target state="translated">複数の署名 ID が '{0}' と一致します。最初の一致を使用します。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0143">
         <source>Multiple signing identities found; using the first identity.
         </source>
-        <target state="new">Multiple signing identities found; using the first identity.
+        <target state="translated">複数の署名 ID が見つかりました。最初の ID を使用します。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0149">
         <source>  {0} found at: {1}
         </source>
-        <target state="new">  {0} found at: {1}
+        <target state="translated">  {0} が次の場所に見つかりました: {1}
         </target>
         <note>A file was found at a location.
 {0} - The '%(LogicalName)' of the file, or a relative path.
@@ -1343,189 +1343,189 @@
       <trans-unit id="M0151">
         <source>Generated bundle name: {0}
         </source>
-        <target state="new">Generated bundle name: {0}
+        <target state="translated">生成されたバンドル名: {0}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0162">
         <source>Duplicate Entry Was Skipped: {0}
         </source>
-        <target state="new">Duplicate Entry Was Skipped: {0}
+        <target state="translated">重複するエントリがスキップされました: {0}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0163">
         <source>File Doesn't Exist, Will Create: {0}
         </source>
-        <target state="new">File Doesn't Exist, Will Create: {0}
+        <target state="translated">ファイルが存在しないため、作成されます: {0}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0164">
         <source>Creating directory '{0}'
         </source>
-        <target state="new">Creating directory '{0}'
+        <target state="translated">ディレクトリ '{0}' を作成しています
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0165">
         <source>Copying file from '{0}' to '{1}'
         </source>
-        <target state="new">Copying file from '{0}' to '{1}'
+        <target state="translated">'{0}' から '{1}' へファイルをコピーしています
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0168">
         <source>  Skipping framework assembly: {0}
         </source>
-        <target state="new">  Skipping framework assembly: {0}
+        <target state="translated">  フレームワーク アセンブリをスキップしています: {0}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0016">
         <source>Can only fake the watchOS 4.3 SDK when building for watchOS.
         </source>
-        <target state="new">Can only fake the watchOS 4.3 SDK when building for watchOS.
+        <target state="translated">watchOS 向けのビルド時に、watchOS 4.3 SDK に対してのみフェイクを作成できます。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0019">
         <source>Supported iPhone orientations have not been set
         </source>
-        <target state="new">Supported iPhone orientations have not been set
+        <target state="translated">サポートされている iPhone の向きが設定されていません
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0020">
         <source>Supported iPhone orientations are not matched pairs
         </source>
-        <target state="new">Supported iPhone orientations are not matched pairs
+        <target state="translated">サポートされている iPhone の向きが一致するペアになっていません
         </target>
         <note>The iPhone orientation settings do not match iPad, see: https://xamarin.github.io/bugzilla-archives/85/850/bug.html</note>
       </trans-unit>
       <trans-unit id="W0021">
         <source>Supported iPad orientations have not been set
         </source>
-        <target state="new">Supported iPad orientations have not been set
+        <target state="translated">サポートされている iPad の向きが設定されていません
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0022">
         <source>Supported iPad orientations are not matched pairs
         </source>
-        <target state="new">Supported iPad orientations are not matched pairs
+        <target state="translated">サポートされている iPad の向きがペアになっていません
         </target>
         <note>The iPad orientation settings do not match iPhone, see: https://xamarin.github.io/bugzilla-archives/85/850/bug.html</note>
       </trans-unit>
       <trans-unit id="W0051">
         <source>Unknown native reference type for '{0}'.
         </source>
-        <target state="new">Unknown native reference type for '{0}'.
+        <target state="translated">'{0}' のネイティブ参照型が不明です。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0052">
         <source>Dynamic native references are not supported: '{0}'
         </source>
-        <target state="new">Dynamic native references are not supported: '{0}'
+        <target state="translated">動的なネイティブ参照はサポートされていません: '{0}'
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0054">
         <source>Failed to create response file '{0}': {1}
         </source>
-        <target state="new">Failed to create response file '{0}': {1}
+        <target state="translated">応答ファイル '{0}' を作成できませんでした: {1}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0071">
         <source>The App Extension '{0}' has a CFBundleShortVersionString ({1}) that does not match the main app bundle's CFBundleShortVersionString ({2})
         </source>
-        <target state="new">The App Extension '{0}' has a CFBundleShortVersionString ({1}) that does not match the main app bundle's CFBundleShortVersionString ({2})
+        <target state="translated">アプリ拡張機能 '{0}' に、メイン アプリ バンドルの CFBundleShortVersionString ({2}) と一致しない CFBundleShortVersionString ({1}) があります
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0072">
         <source>The App Extension '{0}' does not specify a CFBundleVersion
         </source>
-        <target state="new">The App Extension '{0}' does not specify a CFBundleVersion
+        <target state="translated">アプリ拡張機能 '{0}' で CFBundleVersion が指定されていません
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0073">
         <source>The App Extension '{0}' has a CFBundleVersion ({1}) that does not match the main app bundle's CFBundleVersion ({2})
         </source>
-        <target state="new">The App Extension '{0}' has a CFBundleVersion ({1}) that does not match the main app bundle's CFBundleVersion ({2})
+        <target state="translated">アプリ拡張機能 '{0}' に、メイン アプリ バンドルの CFBundleVersion ({2}) と一致しない CFBundleVersion ({1}) があります
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0074">
         <source>The App Extension '{0}' has an unrecognized NSExtensionPointIdentifier value ('{1}').
         </source>
-        <target state="new">The App Extension '{0}' has an unrecognized NSExtensionPointIdentifier value ('{1}').
+        <target state="translated">アプリ拡張機能 '{0}' に、認識されない NSExtensionPointIdentifier 値 ('{1}') があります。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0075">
         <source>The Watch App '{0}' does not specify a CFBundleShortVersionString
         </source>
-        <target state="new">The Watch App '{0}' does not specify a CFBundleShortVersionString
+        <target state="translated">Watch App '{0}' で CFBundleShortVersionString が指定されていません
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0076">
         <source>The Watch App '{0}' has a CFBundleShortVersionString ({1}) that does not match the main app bundle's CFBundleShortVersionString ({2})
         </source>
-        <target state="new">The Watch App '{0}' has a CFBundleShortVersionString ({1}) that does not match the main app bundle's CFBundleShortVersionString ({2})
+        <target state="translated">Watch App '{0}' に、メイン アプリ バンドルの CFBundleShortVersionString ({2}) と一致しない CFBundleShortVersionString ({1}) があります
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0077">
         <source>The Watch App '{0}' does not specify a CFBundleVersion
         </source>
-        <target state="new">The Watch App '{0}' does not specify a CFBundleVersion
+        <target state="translated">Watch App '{0}' で CFBundleVersion が指定されていません
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0078">
         <source>The Watch App '{0}' has a CFBundleVersion ({1}) that does not match the main app bundle's CFBundleVersion ({2})
         </source>
-        <target state="new">The Watch App '{0}' has a CFBundleVersion ({1}) that does not match the main app bundle's CFBundleVersion ({2})
+        <target state="translated">Watch App '{0}' に、メイン アプリ バンドルの CFBundleVersion ({2}) と一致しない CFBundleVersion ({1}) があります
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0079">
         <source>The Watch Extension '{0}' does not specify a CFBundleShortVersionString)
         </source>
-        <target state="new">The Watch Extension '{0}' does not specify a CFBundleShortVersionString)
+        <target state="translated">Watch Extension '{0}' で CFBundleShortVersionString が指定されていません
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0080">
         <source>The Watch Extension '{0}' has a CFBundleShortVersionString ({1}) that does not match the main app bundle's CFBundleShortVersionString ({2})
         </source>
-        <target state="new">The Watch Extension '{0}' has a CFBundleShortVersionString ({1}) that does not match the main app bundle's CFBundleShortVersionString ({2})
+        <target state="translated">Watch Extension '{0}' に、メイン アプリ バンドルの CFBundleShortVersionString ({2}) と一致しない CFBundleShortVersionString ({1}) があります
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0081">
         <source>The Watch Extension '{0}' does not specify a CFBundleVersion
         </source>
-        <target state="new">The Watch Extension '{0}' does not specify a CFBundleVersion
+        <target state="translated">Watch Extension '{0}' で CFBundleVersion が指定されていません
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0082">
         <source>The Watch Extension '{0}' has a CFBundleVersion ({1}) that does not match the main app bundle's CFBundleVersion ({2})
         </source>
-        <target state="new">The Watch Extension '{0}' has a CFBundleVersion ({1}) that does not match the main app bundle's CFBundleVersion ({2})
+        <target state="translated">Watch Extension '{0}' に、メイン アプリ バンドルの CFBundleVersion ({2}) と一致しない CFBundleVersion ({1}) があります
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0090">
         <source>Asset not part of an asset catalog: {0}
         </source>
-        <target state="new">Asset not part of an asset catalog: {0}
+        <target state="translated">資産は資産カタログの一部ではありません: {0}
         </target>
         <note></note>
       </trans-unit>
@@ -1533,64 +1533,64 @@
         <source>Failed to parse altool output: {0}.
             Output: {1}
         </source>
-        <target state="new">Failed to parse altool output: {0}.
-            Output: {1}
+        <target state="translated">altool の出力を解析できませんでした: {0}。
+            出力: {1}
         </target>
         <note />
       </trans-unit>
       <trans-unit id="W0103">
         <source>Found a directory within the Frameworks directory which is not a framework: {0}
         </source>
-        <target state="new">Found a directory within the Frameworks directory which is not a framework: {0}
+        <target state="translated">フレームワーク ディレクトリ内にフレームワークではないディレクトリが見つかりました: {0}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0104">
         <source>The framework {0} does not contain a binary named {1}
         </source>
-        <target state="new">The framework {0} does not contain a binary named {1}
+        <target state="translated">フレームワーク {0} には、{1} という名前のバイナリが含まれていません
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0106">
         <source>Could not determine value for manifest key '{0}'
         </source>
-        <target state="new">Could not determine value for manifest key '{0}'
+        <target state="translated">マニフェスト キー '{0}' の値を特定できませんでした
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0108">
         <source>Cannot expand $(TeamIdentifierPrefix) in Entitlements.plist without a provisioning profile.
         </source>
-        <target state="new">Cannot expand $(TeamIdentifierPrefix) in Entitlements.plist without a provisioning profile.
+        <target state="translated">プロビジョニング プロファイルなしで Entitlements.plist 内の $(TeamIdentifierPrefix) を展開することはできません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0109">
         <source>Cannot expand $(AppIdentifierPrefix) in Entitlements.plist without a provisioning profile.
         </source>
-        <target state="new">Cannot expand $(AppIdentifierPrefix) in Entitlements.plist without a provisioning profile.
+        <target state="translated">プロビジョニング プロファイルなしで Entitlements.plist 内の $(AppIdentifierPrefix) を展開することはできません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0110">
         <source>iCloud entitlements such as '{0}' require a Provisioning Profile.
         </source>
-        <target state="new">iCloud entitlements such as '{0}' require a Provisioning Profile.
+        <target state="translated">iCloud エンタイトルメント ('{0}' など) にはプロビジョニング プロファイルが必要です。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0111">
         <source>The iCloud entitlement '{item.Key}' is not supported by the Provisioning Profile.
         </source>
-        <target state="new">The iCloud entitlement '{item.Key}' is not supported by the Provisioning Profile.
+        <target state="translated">iCloud エンタイトルメント '{item.Key}' は、プロビジョニング プロファイルでサポートされていません。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0137">
         <source>No installed provisioning profiles match the bundle identifier.
         </source>
-        <target state="new">No installed provisioning profiles match the bundle identifier.
+        <target state="translated">バンドル識別子と一致するインストールされたプロビジョニング プロファイルがありません。
         </target>
         <note></note>
       </trans-unit>

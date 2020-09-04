@@ -1,123 +1,123 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
-  <file datatype="xml" source-language="en" target-language="it" original="../MSBStrings.resx">
+  <file datatype="xml" source-language="en" target-language="it-IT" original="../MSBStrings.resx">
     <body>
       <trans-unit id="E0003">
         <source>Error executing tool '{0}': {1}
         </source>
-        <target state="new">Error executing tool '{0}': {1}
+        <target state="translated">Si è verificato un errore durante l'esecuzione dello strumento '{0}': {1}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0004">
         <source>Failed to codesign '{0}': {1}
         </source>
-        <target state="new">Failed to codesign '{0}': {1}
+        <target state="translated">Non è stato possibile firmare il codice per '{0}': {1}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0005">
         <source>Failed to codesign '{0}'
         </source>
-        <target state="new">Failed to codesign '{0}'
+        <target state="translated">Non è stato possibile firmare il codice per '{0}'
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0006">
         <source>  '{0}' not found.
         </source>
-        <target state="new">  '{0}' not found.
+        <target state="translated">  '{0}' non trovato.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0007">
         <source>Error loading '{0}': Unknown image format.
         </source>
-        <target state="new">Error loading '{0}': Unknown image format.
+        <target state="translated">Si è verificato un errore durante il caricamento di '{0}': Formato immagine sconosciuto.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0008">
         <source>Invalid iTunesArtwork dimensions ({0}x{1}) for '{2}'.
         </source>
-        <target state="new">Invalid iTunesArtwork dimensions ({0}x{1}) for '{2}'.
+        <target state="translated">Le dimensioni di iTunesArtwork ({0}x{1}) per '{2}' non sono valide.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0009">
         <source>Multiple iTunesArtwork files with the same dimensions detected ({0}x{1}) for '{2}'.
         </source>
-        <target state="new">Multiple iTunesArtwork files with the same dimensions detected ({0}x{1}) for '{2}'.
+        <target state="translated">Sono stati rilevati più file iTunesArtwork con le stesse dimensioni ({0}x{1}) per '{2}'.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0010">
         <source>Error loading '{0}': {1}
         </source>
-        <target state="new">Error loading '{0}': {1}
+        <target state="translated">Si è verificato un errore durante il caricamento di '{0}': {1}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0011">
         <source>Could not parse MinimumOSVersion value '{0}'
         </source>
-        <target state="new">Could not parse MinimumOSVersion value '{0}'
+        <target state="translated">Non è stato possibile analizzare il valore '{0}' di MinimumOSVersion
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0012">
         <source>Could not parse TargetArchitectures '{0}'
         </source>
-        <target state="new">Could not parse TargetArchitectures '{0}'
+        <target state="translated">Non è stato possibile analizzare il valore '{0}' di TargetArchitectures
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0013">
         <source>The {0} SDK for '{1}' is not installed.
         </source>
-        <target state="new">The {0} SDK for '{1}' is not installed.
+        <target state="translated">{0} SDK per '{1}' non è installato.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0014">
         <source>The executable (CFBundleExecutable) name ({0}) cannot end with '.app', because iOS may fail to launch the app.
         </source>
-        <target state="new">The executable (CFBundleExecutable) name ({0}) cannot end with '.app', because iOS may fail to launch the app.
+        <target state="translated">Il nome ({0}) dell'eseguibile (CFBundleExecutable) non può terminare con '.app', perché iOS potrebbe non riuscire ad avviare l'app.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0023">
         <source>Cannot have more than 1 iTunesMetadata.plist.
         </source>
-        <target state="new">Cannot have more than 1 iTunesMetadata.plist.
+        <target state="translated">Non può esistere più di un file iTunesMetadata.plist.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0024">
         <source>Error loading Settings plist file '{0}/Settings.bundle/Root.plist': {1}.
         </source>
-        <target state="new">Error loading Settings plist file '{0}/Settings.bundle/Root.plist': {1}.
+        <target state="translated">Si è verificato un errore durante il caricamento del file plist di impostazioni '{0}/Settings.bundle/Root.plist': {1}.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0025">
         <source>Could not parse the SDK version '{0}'
         </source>
-        <target state="new">Could not parse the SDK version '{0}'
+        <target state="translated">Non è stato possibile analizzare l'SDK versione '{0}'
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0032">
         <source>Could not locate SDK bin directory
         </source>
-        <target state="new">Could not locate SDK bin directory
+        <target state="translated">Non è stato possibile individuare la directory bin dell'SDK
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0044">
         <source>Could not find a valid Xcode app bundle at '{0}'. Please update your Apple SDK location in Visual Studio's preferences {1}.
         </source>
-        <target state="new">Could not find a valid Xcode app bundle at '{0}'. Please update your Apple SDK location in Visual Studio's preferences {1}.
+        <target state="translated">Non è stato possibile trovare un bundle dell'app di Xcode valido nella directory '{0}'. Aggiornare il percorso di Apple SDK nelle preferenze {1} di Visual Studio.
         </target>
         <note>The following are literal names and should not be translated: Xcode, Apple SDK, Visual Studio
 {0} - The selected Xcode / Apple SDK directory.</note>
@@ -125,159 +125,159 @@
       <trans-unit id="E0045">
         <source>Could not find valid a usable Xcode developer path
         </source>
-        <target state="new">Could not find valid a usable Xcode developer path
+        <target state="translated">Non è stato possibile trovare un percorso sviluppatori Xcode utilizzabile valido
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0046">
         <source>Could not find '{0}'
         </source>
-        <target state="new">Could not find '{0}'
+        <target state="translated">Non è stato possibile trovare '{0}'
         </target>
         <note />
       </trans-unit>
       <trans-unit id="E0048">
         <source>Unknown SDK platform: {0}
         </source>
-        <target state="new">Unknown SDK platform: {0}
+        <target state="translated">Piattaforma SDK sconosciuta: {0}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0049">
         <source>Could not locate the provisioning profile with a Name or UUID of {0}.
         </source>
-        <target state="new">Could not locate the provisioning profile with a Name or UUID of {0}.
+        <target state="translated">Non è stato possibile individuare il profilo di provisioning con nome o UUID {0}.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0050">
         <source>Unknown search option: {0}
         </source>
-        <target state="new">Unknown search option: {0}
+        <target state="translated">Opzione di ricerca sconosciuta: {0}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0053">
         <source>Target architecture ARMv6 is no longer supported in Xamarin.iOS. Please select a supported architecture.
         </source>
-        <target state="new">Target architecture ARMv6 is no longer supported in Xamarin.iOS. Please select a supported architecture.
+        <target state="translated">L'architettura di destinazione ARMv6 non è più supportata in Xamarin.iOS. Selezionare un'architettura supportata.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0055">
         <source>Could not load Info.plist: {0}
         </source>
-        <target state="new">Could not load Info.plist: {0}
+        <target state="translated">Non è stato possibile caricare il file Info.plist: {0}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0057">
         <source>Invalid architectures: '{0}'.
         </source>
-        <target state="new">Invalid architectures: '{0}'.
+        <target state="translated">Architetture non valide: '{0}'.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0058">
         <source>Failed to parse the target device information.
         </source>
-        <target state="new">Failed to parse the target device information.
+        <target state="translated">Non è stato possibile analizzare le informazioni sul dispositivo di destinazione.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0059">
         <source>No target device found.
         </source>
-        <target state="new">No target device found.
+        <target state="translated">Non è stato trovato alcun dispositivo di destinazione.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0060">
         <source>No device architecture information found.
         </source>
-        <target state="new">No device architecture information found.
+        <target state="translated">Non sono state trovate informazioni sull'architettura del dispositivo.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0061">
         <source>Invalid target architecture: '{0}'
         </source>
-        <target state="new">Invalid target architecture: '{0}'
+        <target state="translated">Architettura di destinazione non valida: '{0}'
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0062">
         <source>No device operating system information found.
         </source>
-        <target state="new">No device operating system information found.
+        <target state="translated">Non sono state trovate informazioni sul sistema operativo del dispositivo.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0063">
         <source>No device model information found.
         </source>
-        <target state="new">No device model information found.
+        <target state="translated">Non sono state trovate informazioni sul modello del dispositivo.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0064">
         <source>No iOS version information found.
         </source>
-        <target state="new">No iOS version information found.
+        <target state="translated">Non sono state trovate informazioni sulla versione di iOS.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0065">
         <source>Resources rules file '{0}' not found.
         </source>
-        <target state="new">Resources rules file '{0}' not found.
+        <target state="translated">Il file di regole per le risorse '{0}' non è stato trovato.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0066">
         <source>Failed to parse SdkVersion '{0}'.
         </source>
-        <target state="new">Failed to parse SdkVersion '{0}'.
+        <target state="translated">Non è stato possibile analizzare il valore '{0}' di SdkVersion.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0067">
         <source>Xcode 10 does not support watchOS 1 apps. Either upgrade to watchOS 2 apps, or use an older version of Xcode.</source>
-        <target state="new">Xcode 10 does not support watchOS 1 apps. Either upgrade to watchOS 2 apps, or use an older version of Xcode.</target>
+        <target state="translated">Xcode 10 non supporta le app watchOS 1. Eseguire l'aggiornamento alle app watchOS 2 oppure usare una versione precedente di Xcode.</target>
         <note />
       </trans-unit>
       <trans-unit id="E0068">
         <source>An installation of Xcode &gt;= 6.2 is required to build WatchKit applications.
         </source>
-        <target state="new">An installation of Xcode &gt;= 6.2 is required to build WatchKit applications.
+        <target state="translated">Per compilare applicazioni WatchKit, è richiesta un'installazione di Xcode uguale o successiva alla 6.2.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0069">
         <source>iOS {0} does not support WatchKit.
         </source>
-        <target state="new">iOS {0} does not support WatchKit.
+        <target state="translated">iOS {0} non supporta WatchKit.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0070">
         <source>Failed to locate the WatchKit launcher in the Xcode app bundle.
         </source>
-        <target state="new">Failed to locate the WatchKit launcher in the Xcode app bundle.
+        <target state="translated">Non è stato possibile individuare il programma di avvio di WatchKit nel bundle dell'app di Xcode.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0084">
         <source>Could not locate the {0} '{1}' SDK at path '{}'
         </source>
-        <target state="new">Could not locate the {0} '{1}' SDK at path '{}'
+        <target state="translated">Non è stato possibile individuare {0} '{1}' SDK nel percorso '{}'
         </target>
         <note />
       </trans-unit>
       <trans-unit id="E0085">
         <source>Could not locate the {0} '{1}' SDK usr path at '{2}'
         </source>
-        <target state="new">Could not locate the {0} '{1}' SDK usr path at '{2}'
+        <target state="translated">Non è stato possibile individuare il percorso usr di {0} '{1}' SDK alla posizione '{2}'
         </target>
         <note>The provided SDK path is missing a 'usr' directory. The following are literal names and should not be translated: SDK, usr
 {0} - The platform name, such as 'iOS'.
@@ -287,49 +287,49 @@
       <trans-unit id="E0086">
         <source>Could not find a valid Xcode developer path
         </source>
-        <target state="new">Could not find a valid Xcode developer path
+        <target state="translated">Non è stato possibile trovare un percorso sviluppatori Xcode valido
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0088">
         <source>Could not get native libraries: {0}
         </source>
-        <target state="new">Could not get native libraries: {0}
+        <target state="translated">Non è stato possibile recuperare le librerie native: {0}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0089">
         <source>Unrecognized platform: {0}
         </source>
-        <target state="new">Unrecognized platform: {0}
+        <target state="translated">Piattaforma non riconosciuta: {0}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0091">
         <source>File not found: {0}
         </source>
-        <target state="new">File not found: {0}
+        <target state="translated">File non trovato: {0}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0092">
         <source>Invalid json: {0}
         </source>
-        <target state="new">Invalid json: {0}
+        <target state="translated">JSON non valido: {0}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0093">
         <source>Partial Info.plist file was not generated: {0}
         </source>
-        <target state="new">Partial Info.plist file was not generated: {0}
+        <target state="translated">Il file Info.plist parziale non è stato generato: {0}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0094">
         <source>Failed to load {0} log file `{1}`: {2}
         </source>
-        <target state="new">Failed to load {0} log file `{1}`: {2}
+        <target state="translated">Non è stato possibile caricare il file di log `{1}` di {0}: {2}
         </target>
         <note>A general failure message if a log file wasn't able to be loaded.
 {0} - The command-line tool that generated the log.
@@ -339,14 +339,14 @@
       <trans-unit id="E0097">
         <source>No API definition file specified.
         </source>
-        <target state="new">No API definition file specified.
+        <target state="translated">Non è stato specificato alcun file di definizione API.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0098">
         <source>{0} failed.
         </source>
-        <target state="new">{0} failed.
+        <target state="translated">{0} non riuscito.
         </target>
         <note>A general error message that a command-line tool failed.
 {0} - The file path to the command-line tool.</note>
@@ -354,98 +354,98 @@
       <trans-unit id="E0099">
         <source>  Bundle Resource '{0}' not found on disk (should be at '{1}')
         </source>
-        <target state="new">  Bundle Resource '{0}' not found on disk (should be at '{1}')
+        <target state="translated">  La risorsa '{0}' del bundle non è stata trovata nel disco (deve trovarsi in '{1}')
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0100">
         <source>The path '{0}' would result in a file outside of the app bundle and cannot be used.
         </source>
-        <target state="new">The path '{0}' would result in a file outside of the app bundle and cannot be used.
+        <target state="translated">Se si specifica il percorso '{0}', un file non verrà salvato nel bundle dell'app e non potrà essere usato.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0101">
         <source>Info.plist files should have a Build Action of 'None'.
         </source>
-        <target state="new">Info.plist files should have a Build Action of 'None'.
+        <target state="translated">L'azione di compilazione dei file Info.plist deve essere 'None'.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0102">
         <source>The name '{0}' is reserved and cannot be used.
         </source>
-        <target state="new">The name '{0}' is reserved and cannot be used.
+        <target state="translated">Il nome '{0}' è riservato e non può essere usato.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0107">
         <source>Error loading partial Info.plist template file '{0}': {1}
         </source>
-        <target state="new">Error loading partial Info.plist template file '{0}': {1}
+        <target state="translated">Si è verificato un errore durante il caricamento del file di modello parziale '{0}' di Info.plist: {1}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0112">
         <source>Entitlements.plist template '{0}' not found.
         </source>
-        <target state="new">Entitlements.plist template '{0}' not found.
+        <target state="translated">Il modello '{0}' di Entitlements.plist non è stato trovato.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0113">
         <source>Error loading Entitlements.plist template '{0}': {1}
         </source>
-        <target state="new">Error loading Entitlements.plist template '{0}': {1}
+        <target state="translated">Si è verificato un errore durante il caricamento del modello '{0}' di Entitlements.plist: {1}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0114">
         <source>Error writing xcent file '{0}': {1}
         </source>
-        <target state="new">Error writing xcent file '{0}': {1}
+        <target state="translated">Si è verificato un errore durante la scrittura del file xcent '{0}': {1}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0115">
         <source>Error writing archived-expanded-entitlements.xcent file: {0}
         </source>
-        <target state="new">Error writing archived-expanded-entitlements.xcent file: {0}
+        <target state="translated">Si è verificato un errore durante la scrittura del file archived-expanded-entitlements.xcent: {0}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0117">
         <source>{0} exited with code {1}
         </source>
-        <target state="new">{0} exited with code {1}
+        <target state="translated">{0} è terminato con il codice {1}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0120">
         <source>Error saving `{0}': {1}
         </source>
-        <target state="new">Error saving `{0}': {1}
+        <target state="translated">Si è verificato un errore durante il salvataggio di `{0}': {1}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0122">
         <source>Error loading '{0}'
         </source>
-        <target state="new">Error loading '{0}'
+        <target state="translated">Si è verificato un errore durante il caricamento di '{0}'
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0123">
         <source>Package creation failed. Could not parse extra arguments.
         </source>
-        <target state="new">Package creation failed. Could not parse extra arguments.
+        <target state="translated">La creazione del pacchetto non è riuscita. Non è stato possibile analizzare gli argomenti aggiuntivi.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0124">
         <source>The identity '{0}' doesn't match any valid certificate/private key pair in the default keychain.
         </source>
-        <target state="new">The identity '{0}' doesn't match any valid certificate/private key pair in the default keychain.
+        <target state="translated">L'identità '{0}' non corrisponde ad alcuna coppia certificato-chiave privata nel keychain predefinito.
         </target>
         <note>A failure to sign the iOS application, due to a missing certificate/private key. Xcode has an identical error message, see: https://developer.apple.com/library/archive/technotes/tn2250/_index.html#//apple_ref/doc/uid/DTS40009933-CH1-TNTAG40-WHAT_DOES__VALID_SIGNING_IDENTITY_NOT_FOUND__MEAN_AND_HOW_DO_I_RESOLVE_IT_
 {0} - The name of the identity, such as 'iPhone Developer'.</note>
@@ -453,7 +453,7 @@
       <trans-unit id="E0128">
         <source>No valid {0} code signing keys found in keychain. You need to request a codesigning certificate from https://developer.apple.com.
         </source>
-        <target state="new">No valid {0} code signing keys found in keychain. You need to request a codesigning certificate from https://developer.apple.com.
+        <target state="translated">Nel keychain non sono state trovate chiavi di firma del codice valide per {0}. È necessario richiedere un certificato di firma del codice a https://developer.apple.com.
         </target>
         <note>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
 {0} - The platform name, such as 'iOS'.</note>
@@ -461,7 +461,7 @@
       <trans-unit id="E0130">
         <source>{0} code signing key '{1}' not found in keychain.
         </source>
-        <target state="new">{0} code signing key '{1}' not found in keychain.
+        <target state="translated">La chiave di firma del codice '{1}' di {0} non è stata trovata nel keychain.
         </target>
         <note>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
 {0} - The platform name, such as 'iOS'.
@@ -470,7 +470,7 @@
       <trans-unit id="E0131">
         <source>Could not find any available provisioning profiles for {0} on {1}.
         </source>
-        <target state="new">Could not find any available provisioning profiles for {0} on {1}.
+        <target state="translated">Non è stato possibile trovare profili di provisioning disponibili per {0} in {1}.
         </target>
         <note>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
 {0} - The app bundle name, such as 'YouriOSApp.app'
@@ -479,7 +479,7 @@
       <trans-unit id="E0133">
         <source>No installed provisioning profiles match the installed {0} {1} signing identities.
         </source>
-        <target state="new">No installed provisioning profiles match the installed {0} {1} signing identities.
+        <target state="translated">Nessuno dei profili di provisioning installati corrisponde alle identità di firma {1} di {0} installate.
         </target>
         <note>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
 {0} - The platform name, such as 'iOS'.
@@ -488,14 +488,14 @@
       <trans-unit id="E0139">
         <source>{0} does not define CFBundleIdentifier
         </source>
-        <target state="new">{0} does not define CFBundleIdentifier
+        <target state="translated">{0} non definisce CFBundleIdentifier
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0140">
         <source>The specified {0} provisioning profile '{1}' could not be found
         </source>
-        <target state="new">The specified {0} provisioning profile '{1}' could not be found
+        <target state="translated">Il profilo di provisioning '{1}' di {0} specificato non è stato trovato
         </target>
         <note>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
 {0} - The platform name, such as 'iOS'.
@@ -504,84 +504,84 @@
       <trans-unit id="E0141">
         <source>Project bundle identifier '{0}' does not match specified provisioning profile '{1}'
         </source>
-        <target state="new">Project bundle identifier '{0}' does not match specified provisioning profile '{1}'
+        <target state="translated">L'identificatore '{0}' del bundle del progetto non corrisponde al profilo di provisioning specificato '{1}'
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0144">
         <source>The specified {0} provisioning profile '{1}' could not be found
         </source>
-        <target state="new">The specified {0} provisioning profile '{1}' could not be found
+        <target state="translated">Il profilo di provisioning '{1}' di {0} specificato non è stato trovato
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0145">
         <source>No {0} signing identities match the specified provisioning profile '{1}'.
         </source>
-        <target state="new">No {0} signing identities match the specified provisioning profile '{1}'.
+        <target state="translated">Nessuna delle identità di firma di {0} corrisponde al profilo di provisioning specificato '{1}'.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0146">
         <source>Bundle identifier '{0}' does not match any installed provisioning profile for selected signing identity '{0}'.
         </source>
-        <target state="new">Bundle identifier '{0}' does not match any installed provisioning profile for selected signing identity '{0}'.
+        <target state="translated">L'identificatore '{0}' del bundle non corrisponde ad alcun profilo di provisioning installato per l'identità di firma selezionata '{0}'.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0147">
         <source>Bundle identifier '{0}' does not match any installed provisioning profile for selected signing identity '{0}'.
         </source>
-        <target state="new">Bundle identifier '{0}' does not match any installed provisioning profile for selected signing identity '{0}'.
+        <target state="translated">L'identificatore '{0}' del bundle non corrisponde ad alcun profilo di provisioning installato per l'identità di firma selezionata '{0}'.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0148">
         <source>Bundle identifier '{0}' does not match any installed provisioning profile.
         </source>
-        <target state="new">Bundle identifier '{0}' does not match any installed provisioning profile.
+        <target state="translated">L'identificatore '{0}' del bundle non corrisponde ad alcun profilo di provisioning installato.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0150">
         <source>  AssemblyPath cannot be null or empty
         </source>
-        <target state="new">  AssemblyPath cannot be null or empty
+        <target state="translated">  AssemblyPath non può essere Null o vuoto
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0152">
         <source>No property specified.
         </source>
-        <target state="new">No property specified.
+        <target state="translated">Non è stata specificata alcuna proprietà.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0153">
         <source>The dictionary at '{0}' did not contain the key: {1}
         </source>
-        <target state="new">The dictionary at '{0}' did not contain the key: {1}
+        <target state="translated">Il dizionario alla posizione '{0}' non contiene la chiave: {1}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0154">
         <source>Could not parse array index: {0}
         </source>
-        <target state="new">Could not parse array index: {0}
+        <target state="translated">Non è stato possibile analizzare l'indice della matrice: {0}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0155">
         <source>Array index out of range for item '{0}'
         </source>
-        <target state="new">Array index out of range for item '{0}'
+        <target state="translated">L'indice della matrice non è compreso nell'intervallo per l'elemento '{0}'
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0156">
         <source>{0} values do not support child properties.
         </source>
-        <target state="new">{0} values do not support child properties.
+        <target state="translated">I valori di {0} non supportano proprietà figlio.
         </target>
         <note>The type of value in a '.plist' file (see: https://en.wikipedia.org/wiki/Property_list), such as a number or string cannot contain child values.
 {0} - The value type, such as 'NSString'.</note>
@@ -589,266 +589,266 @@
       <trans-unit id="E0157">
         <source>Getting {0} values is not supported.
         </source>
-        <target state="new">Getting {0} values is not supported.
+        <target state="translated">Il recupero dei valori di {0} non è supportato.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0158">
         <source>The file '{0}' does not exist.
         </source>
-        <target state="new">The file '{0}' does not exist.
+        <target state="translated">Il file '{0}' non esiste.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0159">
         <source>The file '{0}' conflicts with '{1}'.
         </source>
-        <target state="new">The file '{0}' conflicts with '{1}'.
+        <target state="translated">Il file '{0}' è in conflitto con '{1}'.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0160">
         <source>Watch apps/extensions require Xcode 6.2 or later. The current Xcode version is {0}
         </source>
-        <target state="new">Watch apps/extensions require Xcode 6.2 or later. The current Xcode version is {0}
+        <target state="translated">Con le app/estensioni Watch è richiesto Xcode 6.2 o versioni successive. La versione corrente di Xcode è {0}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0161">
         <source>Items must have logical names computed.
         </source>
-        <target state="new">Items must have logical names computed.
+        <target state="translated">Agli elementi devono essere assegnati nomi logici calcolati.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0166">
         <source>You must specify a DestinationFolder or the DestinationFiles, but not both.
         </source>
-        <target state="new">You must specify a DestinationFolder or the DestinationFiles, but not both.
+        <target state="translated">È necessario specificare una cartella di destinazione o i file di destinazione, ma non entrambi.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0167">
         <source>The number of DestinationFiles must match the number of SourceFiles.
         </source>
-        <target state="new">The number of DestinationFiles must match the number of SourceFiles.
+        <target state="translated">Il numero di file di destinazione deve corrisponde a quello dei file di origine.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0169">
         <source>Unknown target framework identifier: {0}.
         </source>
-        <target state="new">Unknown target framework identifier: {0}.
+        <target state="translated">Identificatore del framework di destinazione sconosciuto: {0}.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0170">
         <source>Could not find {0} in {1}.
         </source>
-        <target state="new">Could not find {0} in {1}.
+        <target state="translated">Non è stato possibile trovare {0} in {1}.
         </target>
         <note />
       </trans-unit>
       <trans-unit id="E0171">
         <source>The {0} SDK is not installed.
         </source>
-        <target state="new">The {0} SDK is not installed.
+        <target state="translated">{0} SDK non è installato.
         </target>
         <note />
       </trans-unit>
       <trans-unit id="E0172">
         <source>The {0} SDK version '{1}' is not installed, and no newer version was found.
         </source>
-        <target state="new">The {0} SDK version '{1}' is not installed, and no newer version was found.
+        <target state="translated">{0} SDK versione '{1}' non è installato e non è stata trovata alcuna versione più recente.
         </target>
         <note />
       </trans-unit>
       <trans-unit id="E0173">
         <source>The {0} SDK version '{1}' is not installed. Using newer version '{2}' instead'.
         </source>
-        <target state="new">The {0} SDK version '{1}' is not installed. Using newer version '{2}' instead'.
+        <target state="translated">{0} SDK versione '{1}' non è installato. In alternativa, verrà usata la versione più recente '{2}'.
         </target>
         <note />
       </trans-unit>
       <trans-unit id="E7001">
         <source>Could not resolve host IPs for WiFi debugger settings.
         </source>
-        <target state="new">Could not resolve host IPs for WiFi debugger settings.
+        <target state="translated">Non è stato possibile risolvere gli indirizzi IP host per le impostazioni del debugger Wi-Fi.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7002">
         <source>This machine does not have any network adapters. This is required when debugging or profiling on device over WiFi.
         </source>
-        <target state="new">This machine does not have any network adapters. This is required when debugging or profiling on device over WiFi.
+        <target state="translated">Per questo computer non sono disponibili schede di rete, che sono necessarie quando si esegue il debug o la profilatura nel dispositivo tramite Wi-Fi.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7003">
         <source>The App Extension '{0}' does not contain an Info.plist.
         </source>
-        <target state="new">The App Extension '{0}' does not contain an Info.plist.
+        <target state="translated">L'estensione app '{0}' non contiene alcun file Info.plist.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7004">
         <source>The App Extension '{0}' does not specify a CFBundleIdentifier.
         </source>
-        <target state="new">The App Extension '{0}' does not specify a CFBundleIdentifier.
+        <target state="translated">L'estensione app '{0}' non specifica alcun valore CFBundleIdentifier.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7005">
         <source>The App Extension '{0}' does not specify a CFBundleExecutable.
         </source>
-        <target state="new">The App Extension '{0}' does not specify a CFBundleExecutable.
+        <target state="translated">L'estensione app '{0}' non specifica alcun valore CFBundleExecutable.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7006">
         <source>The App Extension '{0}' has an invalid CFBundleIdentifier ({1}), it does not begin with the main app bundle's CFBundleIdentifier ({2}).
         </source>
-        <target state="new">The App Extension '{0}' has an invalid CFBundleIdentifier ({1}), it does not begin with the main app bundle's CFBundleIdentifier ({2}).
+        <target state="translated">L'estensione app '{0}' contiene un valore CFBundleIdentifier ({1}) non valido. Non inizia con il valore CFBundleIdentifier ({2}) del bundle dell'app principale.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7007">
         <source>The App Extension '{0}' has a CFBundleIdentifier ({1}) that ends with the illegal suffix ".key".
         </source>
-        <target state="new">The App Extension '{0}' has a CFBundleIdentifier ({1}) that ends with the illegal suffix ".key".
+        <target state="translated">L'estensione app '{0}' contiene un valore CFBundleIdentifier ({1}) che termina con il suffisso non valido ".key".
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7008">
         <source>The App Extension '{0}' does not specify a CFBundleShortVersionString.
         </source>
-        <target state="new">The App Extension '{0}' does not specify a CFBundleShortVersionString.
+        <target state="translated">L'estensione app '{0}' non specifica alcun valore CFBundleShortVersionString.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7009">
         <source>The App Extension '{0}' has an invalid Info.plist: it does not contain an NSExtension dictionary.
         </source>
-        <target state="new">The App Extension '{0}' has an invalid Info.plist: it does not contain an NSExtension dictionary.
+        <target state="translated">L'estensione app '{0}' contiene un file Info.plist non valido: non include alcun dizionario NSExtension.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7010">
         <source>The App Extension '{0}' has an invalid Info.plist: the NSExtension dictionary does not contain an NSExtensionPointIdentifier value.
         </source>
-        <target state="new">The App Extension '{0}' has an invalid Info.plist: the NSExtension dictionary does not contain an NSExtensionPointIdentifier value.
+        <target state="translated">L'estensione app '{0}' contiene un file Info.plist non valido: il dizionario NSExtension non include alcun valore NSExtensionPointIdentifier.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7011">
         <source>The WatchKit Extension '{0}' has an invalid Info.plist: the NSExtension dictionary does not contain an NSExtensionAttributes dictionary.
         </source>
-        <target state="new">The WatchKit Extension '{0}' has an invalid Info.plist: the NSExtension dictionary does not contain an NSExtensionAttributes dictionary.
+        <target state="translated">L'estensione WatchKit '{0}' contiene un file Info.plist non valido: il dizionario NSExtension non include alcun dizionario NSExtensionAttributes.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7012">
         <source>The WatchKit Extension '{0}' does not contain any watch apps.
         </source>
-        <target state="new">The WatchKit Extension '{0}' does not contain any watch apps.
+        <target state="translated">L'estensione WatchKit '{0}' non contiene alcuna app Watch.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7012_A">
         <source>The WatchKit Extension '{0}' contain more than one watch apps.
         </source>
-        <target state="new">The WatchKit Extension '{0}' contain more than one watch apps.
+        <target state="translated">L'estensione WatchKit '{0}' contiene più di un'app Watch.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7013">
         <source>The WatchKit Extension '{0}' has an invalid Info.plist: the UIRequiredDeviceCapabilities dictionary must contain the 'watch-companion' capability with a value of 'true'.
         </source>
-        <target state="new">The WatchKit Extension '{0}' has an invalid Info.plist: the UIRequiredDeviceCapabilities dictionary must contain the 'watch-companion' capability with a value of 'true'.
+        <target state="translated">L'estensione WatchKit '{0}' contiene un file Info.plist non valido: il dizionario UIRequiredDeviceCapabilities deve includere la funzionalità 'watch-companion' con valore 'true'.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7013_A">
         <source>The WatchKit Extension '{0}' has an invalid Info.plist: the UIRequiredDeviceCapabilities array must contain the 'watch-companion' capability.
         </source>
-        <target state="new">The WatchKit Extension '{0}' has an invalid Info.plist: the UIRequiredDeviceCapabilities array must contain the 'watch-companion' capability.
+        <target state="translated">L'estensione WatchKit '{0}' contiene un file Info.plist non valido: la matrice UIRequiredDeviceCapabilities deve includere la funzionalità 'watch-companion'.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7013_B">
         <source>The WatchKit Extension '{0}' has an invalid Info.plist: the UIRequiredDeviceCapabilities key must be present and contain the 'watch-companion' capability.
         </source>
-        <target state="new">The WatchKit Extension '{0}' has an invalid Info.plist: the UIRequiredDeviceCapabilities key must be present and contain the 'watch-companion' capability.
+        <target state="translated">L'estensione WatchKit '{0}' contiene un file Info.plist non valido: la chiave UIRequiredDeviceCapabilities deve essere presente e deve includere la funzionalità 'watch-companion'.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7014">
         <source>The Watch App '{0}' does not contain an Info.plist.
         </source>
-        <target state="new">The Watch App '{0}' does not contain an Info.plist.
+        <target state="translated">L'app Watch '{0}' non contiene alcun file Info.plist.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7015">
         <source>The Watch App '{0}' does not specify a CFBundleIdentifier.
         </source>
-        <target state="new">The Watch App '{0}' does not specify a CFBundleIdentifier.
+        <target state="translated">L'app Watch '{0}' non specifica alcun valore CFBundleIdentifier.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7016">
         <source>The Watch App '{0}' has an invalid CFBundleIdentifier ({1}), it does not begin with the main app bundle's CFBundleIdentifier ({2}).
         </source>
-        <target state="new">The Watch App '{0}' has an invalid CFBundleIdentifier ({1}), it does not begin with the main app bundle's CFBundleIdentifier ({2}).
+        <target state="translated">L'app Watch '{0}' contiene un valore CFBundleIdentifier ({1}) non valido. Non inizia con il valore CFBundleIdentifier ({2}) del bundle dell'app principale.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7017">
         <source>The Watch App '{0}' does not have a valid UIDeviceFamily value. Expected 'Watch (4)' but found '{1} ({2})'.
         </source>
-        <target state="new">The Watch App '{0}' does not have a valid UIDeviceFamily value. Expected 'Watch (4)' but found '{1} ({2})'.
+        <target state="translated">L'app Watch '{0}' non contiene alcun valore UIDeviceFamily valido. È previsto 'Watch (4)' ma è stato trovato '{1} ({2})'.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7018">
         <source>The Watch App '{name}' does not specify a CFBundleExecutable
         </source>
-        <target state="new">The Watch App '{name}' does not specify a CFBundleExecutable
+        <target state="translated">L'app Watch '{name}' non specifica alcun valore CFBundleExecutable
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7019">
         <source>The Watch App '{0}' has an invalid WKCompanionAppBundleIdentifier value ('{1}'), it does not match the main app bundle's CFBundleIdentifier ('{2}').
         </source>
-        <target state="new">The Watch App '{0}' has an invalid WKCompanionAppBundleIdentifier value ('{1}'), it does not match the main app bundle's CFBundleIdentifier ('{2}').
+        <target state="translated">L'app Watch '{0}' contiene un valore WKCompanionAppBundleIdentifier ('{1}') non valido. Non corrisponde al valore CFBundleIdentifier ('{2}') del bundle dell'app principale.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7020">
         <source>The Watch App '{0}' has an invalid Info.plist: the WKWatchKitApp key must be present and have a value of 'true'.
         </source>
-        <target state="new">The Watch App '{0}' has an invalid Info.plist: the WKWatchKitApp key must be present and have a value of 'true'.
+        <target state="translated">L'app Watch '{0}' contiene un file Info.plist non valido: la chiave WKWatchKitApp deve essere presente e deve avere valore 'true'.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7021">
         <source>The Watch App '{0}' has an invalid Info.plist: the LSRequiresIPhoneOS key must not be present.
         </source>
-        <target state="new">The Watch App '{0}' has an invalid Info.plist: the LSRequiresIPhoneOS key must not be present.
+        <target state="translated">L'app Watch '{0}' contiene un file Info.plist non valido: la chiave LSRequiresIPhoneOS non deve essere presente.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7022">
         <source>The Watch App '{0}' does not contain any Watch Extensions.
         </source>
-        <target state="new">The Watch App '{0}' does not contain any Watch Extensions.
+        <target state="translated">L'app Watch '{0}' non contiene estensioni Watch.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7022_A">
         <source>The Watch App '{0}' does not contain a Watch Extension.
         </source>
-        <target state="new">The Watch App '{0}' does not contain a Watch Extension.
+        <target state="translated">L'app Watch '{0}' non contiene alcuna estensione Watch.
         </target>
         <note>The watchOS Application does not contain a watchOS extension, see: https://developer.apple.com/documentation/watchkit
 {0} - The app bundle name, such as 'YourWatchOSApp.app'</note>
@@ -856,392 +856,392 @@
       <trans-unit id="E7023">
         <source>The Watch Extension '{0}' does not contain an Info.plist.
         </source>
-        <target state="new">The Watch Extension '{0}' does not contain an Info.plist.
+        <target state="translated">L'estensione Watch '{0}' non contiene alcun file Info.plist.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7024">
         <source>The Watch Extension '{0}' does not specify a CFBundleIdentifier.
         </source>
-        <target state="new">The Watch Extension '{0}' does not specify a CFBundleIdentifier.
+        <target state="translated">L'estensione Watch '{0}' non specifica alcun valore CFBundleIdentifier.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7025">
         <source>The Watch Extension '{0}' does not specify a CFBundleExecutable.
         </source>
-        <target state="new">The Watch Extension '{0}' does not specify a CFBundleExecutable.
+        <target state="translated">L'estensione Watch '{0}' non specifica alcun valore CFBundleExecutable.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7026">
         <source>The Watch Extension '{0}' has an invalid CFBundleIdentifier ({1}), it does not begin with the main app bundle's CFBundleIdentifier ({2}).
         </source>
-        <target state="new">The Watch Extension '{0}' has an invalid CFBundleIdentifier ({1}), it does not begin with the main app bundle's CFBundleIdentifier ({2}).
+        <target state="translated">L'estensione Watch '{0}' contiene un valore CFBundleIdentifier ({1}) non valido. Non inizia con il valore CFBundleIdentifier ({2}) del bundle dell'app principale.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7027">
         <source>The Watch Extension '{0}' has a CFBundleIdentifier ({1}) that ends with the illegal suffix ".key".
         </source>
-        <target state="new">The Watch Extension '{0}' has a CFBundleIdentifier ({1}) that ends with the illegal suffix ".key".
+        <target state="translated">L'estensione Watch '{0}' contiene un valore CFBundleIdentifier ({1}) che termina con il suffisso non valido ".key".
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7028">
         <source>The Watch Extension '{0}' has an invalid Info.plist: it does not contain an NSExtension dictionary.
         </source>
-        <target state="new">The Watch Extension '{0}' has an invalid Info.plist: it does not contain an NSExtension dictionary.
+        <target state="translated">L'estensione Watch '{0}' contiene un file Info.plist non valido: non include alcun dizionario NSExtension.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7029">
         <source>The Watch Extension '{0}' has an invalid Info.plist: the NSExtensionPointIdentifier must be "com.apple.watchkit".
         </source>
-        <target state="new">The Watch Extension '{0}' has an invalid Info.plist: the NSExtensionPointIdentifier must be "com.apple.watchkit".
+        <target state="translated">L'estensione Watch '{0}' contiene un file Info.plist non valido: il valore di NSExtensionPointIdentifier deve essere "com.apple.watchkit".
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7029_A">
         <source>The Watch Extension '{0}' has an invalid Info.plist: the NSExtension dictionary must contain an NSExtensionPointIdentifier.
         </source>
-        <target state="new">The Watch Extension '{0}' has an invalid Info.plist: the NSExtension dictionary must contain an NSExtensionPointIdentifier.
+        <target state="translated">L'estensione Watch '{0}' contiene un file Info.plist non valido: il dizionario NSExtension deve includere un valore NSExtensionPointIdentifier.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7030">
         <source>The Watch Extension '{0}' has an invalid Info.plist: the NSExtension dictionary must contain NSExtensionAttributes.
         </source>
-        <target state="new">The Watch Extension '{0}' has an invalid Info.plist: the NSExtension dictionary must contain NSExtensionAttributes.
+        <target state="translated">L'estensione Watch '{0}' contiene un file Info.plist non valido: il dizionario NSExtension deve includere un valore NSExtensionAttributes.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7031">
         <source>The Watch Extension '{0}' has an invalid WKAppBundleIdentifier value ('{1}'), it does not match the parent Watch App bundle's CFBundleIdentifier ('{2}').
         </source>
-        <target state="new">The Watch Extension '{0}' has an invalid WKAppBundleIdentifier value ('{1}'), it does not match the parent Watch App bundle's CFBundleIdentifier ('{2}').
+        <target state="translated">L'estensione Watch '{0}' contiene un valore WKAppBundleIdentifier ('{1}') non valido. Non corrisponde al valore CFBundleIdentifier ('{2}') del bundle dell'app Watch padre.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7031_A">
         <source>The Watch Extension '{0}' has an invalid Info.plist: the NSExtensionAttributes dictionary must contain a WKAppBundleIdentifier.
         </source>
-        <target state="new">The Watch Extension '{0}' has an invalid Info.plist: the NSExtensionAttributes dictionary must contain a WKAppBundleIdentifier.
+        <target state="translated">L'estensione Watch '{0}' contiene un file Info.plist non valido: il dizionario NSExtensionAttributes deve includere un valore WKAppBundleIdentifier.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7032">
         <source>The WatchKit Extension '{0}' has an invalid Info.plist: the UIRequiredDeviceCapabilities dictionary should not contain the 'watch-companion' capability.
         </source>
-        <target state="new">The WatchKit Extension '{0}' has an invalid Info.plist: the UIRequiredDeviceCapabilities dictionary should not contain the 'watch-companion' capability.
+        <target state="translated">L'estensione WatchKit '{0}' contiene un file Info.plist non valido: il dizionario UIRequiredDeviceCapabilities non deve includere la funzionalità 'watch-companion'.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7032_A">
         <source>The WatchKit Extension '{0}' has an invalid Info.plist: the UIRequiredDeviceCapabilities array should not contain the 'watch-companion' capability.
         </source>
-        <target state="new">The WatchKit Extension '{0}' has an invalid Info.plist: the UIRequiredDeviceCapabilities array should not contain the 'watch-companion' capability.
+        <target state="translated">L'estensione WatchKit '{0}' contiene un file Info.plist non valido: la matrice UIRequiredDeviceCapabilities non deve includere la funzionalità 'watch-companion'.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7033">
         <source>The Watch App '{0}' does not contain an Info.plist.
         </source>
-        <target state="new">The Watch App '{0}' does not contain an Info.plist.
+        <target state="translated">L'app Watch '{0}' non contiene alcun file Info.plist.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7034">
         <source>The Watch App '{0}' does not specify a CFBundleIdentifier.
         </source>
-        <target state="new">The Watch App '{0}' does not specify a CFBundleIdentifier.
+        <target state="translated">L'app Watch '{0}' non specifica alcun valore CFBundleIdentifier.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7035">
         <source>The Watch App '{0}' does not have a valid UIDeviceFamily value. Expected '{1}' but found '{2} ({3})'.
         </source>
-        <target state="new">The Watch App '{0}' does not have a valid UIDeviceFamily value. Expected '{1}' but found '{2} ({3})'.
+        <target state="translated">L'app Watch '{0}' non contiene alcun valore UIDeviceFamily valido. È previsto '{1}' ma è stato trovato '{2} ({3})'.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7036">
         <source>The Watch App '{0}' does not specify a CFBundleExecutable.
         </source>
-        <target state="new">The Watch App '{0}' does not specify a CFBundleExecutable.
+        <target state="translated">L'app Watch '{0}' non specifica alcun valore CFBundleExecutable.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7037">
         <source>The WatchKit Extension '{0}' has an invalid WKAppBundleIdentifier value ('{1}'), it does not match the Watch App's CFBundleIdentifier ('{2}').
         </source>
-        <target state="new">The WatchKit Extension '{0}' has an invalid WKAppBundleIdentifier value ('{1}'), it does not match the Watch App's CFBundleIdentifier ('{2}').
+        <target state="translated">L'estensione WatchKit '{0}' contiene un valore WKAppBundleIdentifier ('{1}') non valido. Non corrisponde al valore CFBundleIdentifier ('{2}') dell'app Watch.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7038">
         <source>The Watch App '{0}' has an invalid WKCompanionAppBundleIdentifier value ('{1}'), it does not match the main app bundle's CFBundleIdentifier ('{2}').
         </source>
-        <target state="new">The Watch App '{0}' has an invalid WKCompanionAppBundleIdentifier value ('{1}'), it does not match the main app bundle's CFBundleIdentifier ('{2}').
+        <target state="translated">L'app Watch '{0}' contiene un valore WKCompanionAppBundleIdentifier ('{1}') non valido. Non corrisponde al valore CFBundleIdentifier ('{2}') del bundle dell'app principale.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7038_A">
         <source>The Watch App '{0}' has an invalid Info.plist: the WKCompanionAppBundleIdentifier must exist and must match the main app bundle's CFBundleIdentifier.
         </source>
-        <target state="new">The Watch App '{0}' has an invalid Info.plist: the WKCompanionAppBundleIdentifier must exist and must match the main app bundle's CFBundleIdentifier.
+        <target state="translated">L'app Watch '{0}' contiene un file Info.plist non valido: il valore WKCompanionAppBundleIdentifier deve esistere e deve corrispondere al valore CFBundleIdentifier del bundle dell'app principale.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7039">
         <source>The Watch App '{0}' has an invalid Info.plist: the LSRequiresIPhoneOS key must not be present.
         </source>
-        <target state="new">The Watch App '{0}' has an invalid Info.plist: the LSRequiresIPhoneOS key must not be present.
+        <target state="translated">L'app Watch '{0}' contiene un file Info.plist non valido: la chiave LSRequiresIPhoneOS non deve essere presente.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7040">
         <source>The app bundle {0} does not contain an Info.plist.
         </source>
-        <target state="new">The app bundle {0} does not contain an Info.plist.
+        <target state="translated">Il bundle dell'app {0} non contiene alcun file Info.plist.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7041">
         <source>{0} does not specify a CFBundleIdentifier.
         </source>
-        <target state="new">{0} does not specify a CFBundleIdentifier.
+        <target state="translated">{0} non specifica alcun valore CFBundleIdentifier.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7042">
         <source>{0} does not specify a CFBundleExecutable.
         </source>
-        <target state="new">{0} does not specify a CFBundleExecutable.
+        <target state="translated">{0} non specifica alcun valore CFBundleExecutable.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7043">
         <source>{0} does not specify a CFBundleSupportedPlatforms.
         </source>
-        <target state="new">{0} does not specify a CFBundleSupportedPlatforms.
+        <target state="translated">{0} non specifica alcun valore CFBundleSupportedPlatforms.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7044">
         <source>{0} does not specify a UIDeviceFamily.
         </source>
-        <target state="new">{0} does not specify a UIDeviceFamily.
+        <target state="translated">{0} non specifica alcun valore UIDeviceFamily.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7044_A">
         <source>{0} is invalid: the UIDeviceFamily key must contain a value for '{1}'.
         </source>
-        <target state="new">{0} is invalid: the UIDeviceFamily key must contain a value for '{1}'.
+        <target state="translated">{0} non è valido: la chiave UIDeviceFamily deve contenere un valore per '{1}'.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7045">
         <source>Unrecognized Type: {Type}
         </source>
-        <target state="new">Unrecognized Type: {Type}
+        <target state="translated">Tipo non riconosciuto: {Type}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7046">
         <source>Add: Entry, "{0}", Incorrectly Specified
         </source>
-        <target state="new">Add: Entry, "{0}", Incorrectly Specified
+        <target state="translated">Aggiunta: la voce "{0}" non è specificata correttamente
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7047">
         <source>Add: Entry, "{0}", Contains Invalid Array Index
         </source>
-        <target state="new">Add: Entry, "{0}", Contains Invalid Array Index
+        <target state="translated">Aggiunta: la voce "{0}" contiene un indice di matrice non valido
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7048">
         <source>Add: "{0}" Entry Already Exists
         </source>
-        <target state="new">Add: "{0}" Entry Already Exists
+        <target state="translated">Aggiunta: la voce "{0}" esiste già
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7049">
         <source>Add: Can't Add Entry, "{0}", to Parent
         </source>
-        <target state="new">Add: Can't Add Entry, "{0}", to Parent
+        <target state="translated">Aggiunta: non è possibile aggiungere la voce "{0}" all'elemento padre
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7050">
         <source>Delete: Can't Delete Entry, "{0}", from Parent
         </source>
-        <target state="new">Delete: Can't Delete Entry, "{0}", from Parent
+        <target state="translated">Eliminazione: non è possibile eliminare la voce "{0}" dall'elemento padre
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7051">
         <source>Delete: Entry, "{0}", Contains Invalid Array Index
         </source>
-        <target state="new">Delete: Entry, "{0}", Contains Invalid Array Index
+        <target state="translated">Eliminazione: la voce "{0}" contiene un indice di matrice non valido
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7052">
         <source>Delete: Entry, "{0}", Does Not Exist
         </source>
-        <target state="new">Delete: Entry, "{0}", Does Not Exist
+        <target state="translated">Eliminazione: la voce "{0}" non esiste
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7053">
         <source>Import: Entry, "{0}", Incorrectly Specified
         </source>
-        <target state="new">Import: Entry, "{0}", Incorrectly Specified
+        <target state="translated">Importazione: la voce "{0}" non è specificata correttamente
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7054">
         <source>Import: Entry, "{0}", Contains Invalid Array Index
         </source>
-        <target state="new">Import: Entry, "{0}", Contains Invalid Array Index
+        <target state="translated">Importazione: la voce "{0}" contiene un indice di matrice non valido
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7055">
         <source>Import: Error Reading File: {0}
         </source>
-        <target state="new">Import: Error Reading File: {0}
+        <target state="translated">Importazione: errore durante la lettura del file: {0}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7056">
         <source>Import: Can't Add Entry, "{0}", to Parent
         </source>
-        <target state="new">Import: Can't Add Entry, "{0}", to Parent
+        <target state="translated">Importazione: non è possibile aggiungere la voce "{0}" all'elemento padre
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7057">
         <source>Merge: Can't Add array Entries to dict
         </source>
-        <target state="new">Merge: Can't Add array Entries to dict
+        <target state="translated">Unione: non è possibile aggiungere voci di matrice al dizionario
         </target>
         <note>Array entries in a '.plist' file (see: https://en.wikipedia.org/wiki/Property_list), cannot be added to a dictionary.</note>
       </trans-unit>
       <trans-unit id="E7058">
         <source>Merge: Specified Entry Must Be a Container
         </source>
-        <target state="new">Merge: Specified Entry Must Be a Container
+        <target state="translated">Unione: la voce specificata deve essere un contenitore
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7059">
         <source>Merge: Entry, "{0}", Contains Invalid Array Index
         </source>
-        <target state="new">Merge: Entry, "{0}", Contains Invalid Array Index
+        <target state="translated">Unione: la voce "{0}" contiene un indice di matrice non valido
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7060">
         <source>Merge: Entry, "{0}", Does Not Exist
         </source>
-        <target state="new">Merge: Entry, "{0}", Does Not Exist
+        <target state="translated">Unione: la voce "{0}" non esiste
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7061">
         <source>Merge: Error Reading File: {0}
         </source>
-        <target state="new">Merge: Error Reading File: {0}
+        <target state="translated">Unione: errore durante la lettura del file: {0}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7062">
         <source>Set: Entry, "{0}", Incorrectly Specified
         </source>
-        <target state="new">Set: Entry, "{0}", Incorrectly Specified
+        <target state="translated">Impostazione: la voce "{0}" non è specificata correttamente
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7063">
         <source>Set: Entry, "{0}", Contains Invalid Array Index
         </source>
-        <target state="new">Set: Entry, "{0}", Contains Invalid Array Index
+        <target state="translated">Impostazione: la voce "{0}" contiene un indice di matrice non valido
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7064">
         <source>Set: Entry, "{0}", Does Not Exist
         </source>
-        <target state="new">Set: Entry, "{0}", Does Not Exist
+        <target state="translated">Impostazione: la voce "{0}" non esiste
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7068">
         <source>Can't create a binding resource package unless there are native references in the binding project.
         </source>
-        <target state="new">Can't create a binding resource package unless there are native references in the binding project.
+        <target state="translated">Non è possibile creare un pacchetto di risorse di binding a meno che nel progetto di binding non siano presenti riferimenti nativi.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0001">
         <source>Tool {0} execution started with arguments: {1}
         </source>
-        <target state="new">Tool {0} execution started with arguments: {1}
+        <target state="translated">L'esecuzione dello strumento {0} è stata avviata con gli argomenti: {1}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0002">
         <source>Tool {0} execution finished (exit code = {1}).
         </source>
-        <target state="new">Tool {0} execution finished (exit code = {1}).
+        <target state="translated">L'esecuzione dello strumento {0} è terminata (codice di uscita = {1}).
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0017">
         <source>All http loads are already allowed.
         </source>
-        <target state="new">All http loads are already allowed.
+        <target state="translated">Tutti i carichi HTTP sono già consentiti.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0018">
         <source>Allowed arbitrary HTTP loads to support debugging.
         </source>
-        <target state="new">Allowed arbitrary HTTP loads to support debugging.
+        <target state="translated">Sono consentiti carichi HTTP arbitrari per supportare il debug.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0047">
         <source>Searching for '{0}' in '{1}'
         </source>
-        <target state="new">Searching for '{0}' in '{1}'
+        <target state="translated">Ricerca di '{0}' in '{1}'
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0105">
         <source>No Frameworks directory found.
         </source>
-        <target state="new">No Frameworks directory found.
+        <target state="translated">Non è stata trovata alcuna directory Frameworks.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0116">
         <source>Tool {0} execution finished.
         </source>
-        <target state="new">Tool {0} execution finished.
+        <target state="translated">L'esecuzione dello strumento {0} è terminata.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0119">
         <source>Skipping `{0}' as the output file, `{1}', is newer.
         </source>
-        <target state="new">Skipping `{0}' as the output file, `{1}', is newer.
+        <target state="translated">`{0}' verrà ignorato come file di output. Il più recente è `{1}'.
         </target>
         <note>Skipping a build operation, since the destination file is newer than the source file.
 {0} - The destination file.
@@ -1250,91 +1250,91 @@
       <trans-unit id="M0121">
         <source>Creating binding resource package: {0}
         </source>
-        <target state="new">Creating binding resource package: {0}
+        <target state="translated">Creazione del pacchetto di risorse di binding: {0}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0125">
         <source>Detected signing identity:
         </source>
-        <target state="new">Detected signing identity:
+        <target state="translated">Identità di firma rilevata:
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0126">
         <source>The certificate '{0}' does not match any of the prefixes '{1}'.
         </source>
-        <target state="new">The certificate '{0}' does not match any of the prefixes '{1}'.
+        <target state="translated">Il certificato '{0}' non corrisponde a nessuno dei prefissi '{1}'.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0127">
         <source>The certificate '{0}' has expired ({1})
         </source>
-        <target state="new">The certificate '{0}' has expired ({1})
+        <target state="translated">Il certificato '{0}' è scaduto ({1})
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0129">
         <source>The certificate '{0}' does not match '{1}'.
         </source>
-        <target state="new">The certificate '{0}' does not match '{1}'.
+        <target state="translated">Il certificato '{0}' non corrisponde a '{1}'.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0132">
         <source>'{0}' doesn't match '{1}'.
         </source>
-        <target state="new">'{0}' doesn't match '{1}'.
+        <target state="translated">'{0}' non corrisponde a '{1}'.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0134">
         <source>Finding matching provisioning profiles with compatible AppID, keeping only those with the longest matching (wildcard) IDs.
         </source>
-        <target state="new">Finding matching provisioning profiles with compatible AppID, keeping only those with the longest matching (wildcard) IDs.
+        <target state="translated">Ricerca dei profili di provisioning corrispondenti con ID app compatibile. Verranno mantenuti solo quelli con gli ID corrispondenti più lunghi (caratteri jolly).
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0135">
         <source>AppID: {0} was ruled out because we found a better match: {1}.
         </source>
-        <target state="new">AppID: {0} was ruled out because we found a better match: {1}.
+        <target state="translated">L'ID app {0} è stato escluso perché è stata trovata una corrispondenza migliore: {1}.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0136">
         <source>AppID: {0} was ruled out because we already found better matches: {1}.
         </source>
-        <target state="new">AppID: {0} was ruled out because we already found better matches: {1}.
+        <target state="translated">L'ID app {0} è stato escluso perché sono già state trovate corrispondenze migliori: {1}.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0138">
         <source>Multiple provisioning profiles match the bundle identifier; using the first match.
         </source>
-        <target state="new">Multiple provisioning profiles match the bundle identifier; using the first match.
+        <target state="translated">Più profili di provisioning corrispondono all'identificatore del bundle. Verrà usata la prima corrispondenza.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0142">
         <source>Multiple signing identities match '{0}'; using the first match.
         </source>
-        <target state="new">Multiple signing identities match '{0}'; using the first match.
+        <target state="translated">Più identità di firma corrispondono a '{0}'. Verrà usata la prima corrispondenza.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0143">
         <source>Multiple signing identities found; using the first identity.
         </source>
-        <target state="new">Multiple signing identities found; using the first identity.
+        <target state="translated">Sono state trovate più identità di firma. Verrà usata la prima identità.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0149">
         <source>  {0} found at: {1}
         </source>
-        <target state="new">  {0} found at: {1}
+        <target state="translated">  {0} trovato in: {1}
         </target>
         <note>A file was found at a location.
 {0} - The '%(LogicalName)' of the file, or a relative path.
@@ -1343,189 +1343,189 @@
       <trans-unit id="M0151">
         <source>Generated bundle name: {0}
         </source>
-        <target state="new">Generated bundle name: {0}
+        <target state="translated">Nome del bundle generato: {0}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0162">
         <source>Duplicate Entry Was Skipped: {0}
         </source>
-        <target state="new">Duplicate Entry Was Skipped: {0}
+        <target state="translated">La voce duplicata è stata ignorata: {0}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0163">
         <source>File Doesn't Exist, Will Create: {0}
         </source>
-        <target state="new">File Doesn't Exist, Will Create: {0}
+        <target state="translated">Il file non esiste. Verrà creato: {0}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0164">
         <source>Creating directory '{0}'
         </source>
-        <target state="new">Creating directory '{0}'
+        <target state="translated">Creazione della directory '{0}'
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0165">
         <source>Copying file from '{0}' to '{1}'
         </source>
-        <target state="new">Copying file from '{0}' to '{1}'
+        <target state="translated">Copia del file da '{0}' a '{1}'
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0168">
         <source>  Skipping framework assembly: {0}
         </source>
-        <target state="new">  Skipping framework assembly: {0}
+        <target state="translated">  L'assembly del framework verrà ignorato: {0}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0016">
         <source>Can only fake the watchOS 4.3 SDK when building for watchOS.
         </source>
-        <target state="new">Can only fake the watchOS 4.3 SDK when building for watchOS.
+        <target state="translated">È possibile solo simulare watchOS 4.3 SDK quando si compila per watchOS.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0019">
         <source>Supported iPhone orientations have not been set
         </source>
-        <target state="new">Supported iPhone orientations have not been set
+        <target state="translated">Gli orientamenti per iPhone supportati non sono stati impostati
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0020">
         <source>Supported iPhone orientations are not matched pairs
         </source>
-        <target state="new">Supported iPhone orientations are not matched pairs
+        <target state="translated">Le impostazioni di orientamento dell'iPhone non corrispondono a quelle dell'iPad
         </target>
         <note>The iPhone orientation settings do not match iPad, see: https://xamarin.github.io/bugzilla-archives/85/850/bug.html</note>
       </trans-unit>
       <trans-unit id="W0021">
         <source>Supported iPad orientations have not been set
         </source>
-        <target state="new">Supported iPad orientations have not been set
+        <target state="translated">Gli orientamenti per iPad supportati non sono stati impostati
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0022">
         <source>Supported iPad orientations are not matched pairs
         </source>
-        <target state="new">Supported iPad orientations are not matched pairs
+        <target state="translated">Gli orientamenti per iPad supportati non sono coppie abbinate
         </target>
         <note>The iPad orientation settings do not match iPhone, see: https://xamarin.github.io/bugzilla-archives/85/850/bug.html</note>
       </trans-unit>
       <trans-unit id="W0051">
         <source>Unknown native reference type for '{0}'.
         </source>
-        <target state="new">Unknown native reference type for '{0}'.
+        <target state="translated">Tipo riferimento nativo sconosciuto per '{0}'.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0052">
         <source>Dynamic native references are not supported: '{0}'
         </source>
-        <target state="new">Dynamic native references are not supported: '{0}'
+        <target state="translated">I riferimenti nativi dinamici non sono supportati: '{0}'
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0054">
         <source>Failed to create response file '{0}': {1}
         </source>
-        <target state="new">Failed to create response file '{0}': {1}
+        <target state="translated">Non è stato possibile creare il file di risposta '{0}': {1}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0071">
         <source>The App Extension '{0}' has a CFBundleShortVersionString ({1}) that does not match the main app bundle's CFBundleShortVersionString ({2})
         </source>
-        <target state="new">The App Extension '{0}' has a CFBundleShortVersionString ({1}) that does not match the main app bundle's CFBundleShortVersionString ({2})
+        <target state="translated">L'estensione app '{0}' contiene un valore CFBundleShortVersionString ({1}) che non corrisponde al valore CFBundleShortVersionString ({2}) del bundle dell'app principale
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0072">
         <source>The App Extension '{0}' does not specify a CFBundleVersion
         </source>
-        <target state="new">The App Extension '{0}' does not specify a CFBundleVersion
+        <target state="translated">L'estensione app '{0}' non specifica alcun valore CFBundleVersion
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0073">
         <source>The App Extension '{0}' has a CFBundleVersion ({1}) that does not match the main app bundle's CFBundleVersion ({2})
         </source>
-        <target state="new">The App Extension '{0}' has a CFBundleVersion ({1}) that does not match the main app bundle's CFBundleVersion ({2})
+        <target state="translated">L'estensione app '{0}' contiene un valore CFBundleVersion ({1}) che non corrisponde al valore CFBundleVersion ({2}) del bundle dell'app principale
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0074">
         <source>The App Extension '{0}' has an unrecognized NSExtensionPointIdentifier value ('{1}').
         </source>
-        <target state="new">The App Extension '{0}' has an unrecognized NSExtensionPointIdentifier value ('{1}').
+        <target state="translated">L'estensione app '{0}' contiene un valore NSExtensionPointIdentifier ('{1}') non riconosciuto.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0075">
         <source>The Watch App '{0}' does not specify a CFBundleShortVersionString
         </source>
-        <target state="new">The Watch App '{0}' does not specify a CFBundleShortVersionString
+        <target state="translated">L'app Watch '{0}' non specifica alcun valore CFBundleShortVersionString
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0076">
         <source>The Watch App '{0}' has a CFBundleShortVersionString ({1}) that does not match the main app bundle's CFBundleShortVersionString ({2})
         </source>
-        <target state="new">The Watch App '{0}' has a CFBundleShortVersionString ({1}) that does not match the main app bundle's CFBundleShortVersionString ({2})
+        <target state="translated">L'app Watch '{0}' contiene un valore CFBundleShortVersionString ({1}) che non corrisponde al valore CFBundleShortVersionString ({2}) del bundle dell'app principale
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0077">
         <source>The Watch App '{0}' does not specify a CFBundleVersion
         </source>
-        <target state="new">The Watch App '{0}' does not specify a CFBundleVersion
+        <target state="translated">L'app Watch '{0}' non specifica alcun valore CFBundleVersion
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0078">
         <source>The Watch App '{0}' has a CFBundleVersion ({1}) that does not match the main app bundle's CFBundleVersion ({2})
         </source>
-        <target state="new">The Watch App '{0}' has a CFBundleVersion ({1}) that does not match the main app bundle's CFBundleVersion ({2})
+        <target state="translated">L'app Watch '{0}' contiene un valore CFBundleVersion ({1}) che non corrisponde al valore CFBundleVersion ({2}) del bundle dell'app principale
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0079">
         <source>The Watch Extension '{0}' does not specify a CFBundleShortVersionString)
         </source>
-        <target state="new">The Watch Extension '{0}' does not specify a CFBundleShortVersionString)
+        <target state="translated">L'estensione Watch '{0}' non specifica alcun valore CFBundleShortVersionString
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0080">
         <source>The Watch Extension '{0}' has a CFBundleShortVersionString ({1}) that does not match the main app bundle's CFBundleShortVersionString ({2})
         </source>
-        <target state="new">The Watch Extension '{0}' has a CFBundleShortVersionString ({1}) that does not match the main app bundle's CFBundleShortVersionString ({2})
+        <target state="translated">L'estensione Watch '{0}' contiene un valore CFBundleShortVersionString ({1}) che non corrisponde al valore CFBundleShortVersionString ({2}) del bundle dell'app principale
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0081">
         <source>The Watch Extension '{0}' does not specify a CFBundleVersion
         </source>
-        <target state="new">The Watch Extension '{0}' does not specify a CFBundleVersion
+        <target state="translated">L'estensione Watch '{0}' non specifica alcun valore CFBundleVersion
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0082">
         <source>The Watch Extension '{0}' has a CFBundleVersion ({1}) that does not match the main app bundle's CFBundleVersion ({2})
         </source>
-        <target state="new">The Watch Extension '{0}' has a CFBundleVersion ({1}) that does not match the main app bundle's CFBundleVersion ({2})
+        <target state="translated">L'estensione Watch '{0}' contiene un valore CFBundleVersion ({1}) che non corrisponde al valore CFBundleVersion ({2}) del bundle dell'app principale
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0090">
         <source>Asset not part of an asset catalog: {0}
         </source>
-        <target state="new">Asset not part of an asset catalog: {0}
+        <target state="translated">L'asset non fa parte di un catalogo asset: {0}
         </target>
         <note></note>
       </trans-unit>
@@ -1533,7 +1533,7 @@
         <source>Failed to parse altool output: {0}.
             Output: {1}
         </source>
-        <target state="new">Failed to parse altool output: {0}.
+        <target state="translated">Non è stato possibile analizzare l'output di altool: {0}.
             Output: {1}
         </target>
         <note />
@@ -1541,56 +1541,56 @@
       <trans-unit id="W0103">
         <source>Found a directory within the Frameworks directory which is not a framework: {0}
         </source>
-        <target state="new">Found a directory within the Frameworks directory which is not a framework: {0}
+        <target state="translated">Nella directory Frameworks è stata trovata una directory che non è un framework: {0}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0104">
         <source>The framework {0} does not contain a binary named {1}
         </source>
-        <target state="new">The framework {0} does not contain a binary named {1}
+        <target state="translated">Il framework {0} non contiene un file binario denominato {1}
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0106">
         <source>Could not determine value for manifest key '{0}'
         </source>
-        <target state="new">Could not determine value for manifest key '{0}'
+        <target state="translated">Non è stato possibile determinare il valore per la chiave di manifesto '{0}'
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0108">
         <source>Cannot expand $(TeamIdentifierPrefix) in Entitlements.plist without a provisioning profile.
         </source>
-        <target state="new">Cannot expand $(TeamIdentifierPrefix) in Entitlements.plist without a provisioning profile.
+        <target state="translated">Non è possibile espandere $(TeamIdentifierPrefix) in Entitlements.plist senza un profilo di provisioning.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0109">
         <source>Cannot expand $(AppIdentifierPrefix) in Entitlements.plist without a provisioning profile.
         </source>
-        <target state="new">Cannot expand $(AppIdentifierPrefix) in Entitlements.plist without a provisioning profile.
+        <target state="translated">Non è possibile espandere $(AppIdentifierPrefix) in Entitlements.plist senza un profilo di provisioning.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0110">
         <source>iCloud entitlements such as '{0}' require a Provisioning Profile.
         </source>
-        <target state="new">iCloud entitlements such as '{0}' require a Provisioning Profile.
+        <target state="translated">Con gli entitlement iCloud, come '{0}', è richiesto un profilo di provisioning.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0111">
         <source>The iCloud entitlement '{item.Key}' is not supported by the Provisioning Profile.
         </source>
-        <target state="new">The iCloud entitlement '{item.Key}' is not supported by the Provisioning Profile.
+        <target state="translated">L'entitlement iCloud '{item.Key}' non è supportato dal profilo di provisioning.
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0137">
         <source>No installed provisioning profiles match the bundle identifier.
         </source>
-        <target state="new">No installed provisioning profiles match the bundle identifier.
+        <target state="translated">Nessuno dei profili di provisioning installati corrisponde all'identificatore del bundle.
         </target>
         <note></note>
       </trans-unit>
