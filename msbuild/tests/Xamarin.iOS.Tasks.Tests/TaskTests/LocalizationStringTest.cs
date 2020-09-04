@@ -13,7 +13,6 @@ namespace Xamarin.iOS.Tasks {
 		[Test]
 		public void OperatingSystemTranslations ()
 		{
-
 			CultureInfo culture1 = CultureInfo.CurrentCulture;
 			string locale = culture1.Name;
 
@@ -51,7 +50,7 @@ namespace Xamarin.iOS.Tasks {
 			foreach (string culture in cultures) {
 				CultureInfo newCulture;
 				try {
-					newCulture = new CultureInfo (culture);		
+					newCulture = new CultureInfo (culture);
 				}
 				catch (System.Globalization.CultureNotFoundException) {
 					reportString += culture + ": is not a valid culture. ";
@@ -65,9 +64,8 @@ namespace Xamarin.iOS.Tasks {
 
 				Assert.IsFalse (task.Execute (), "Execute failure");
 				Assert.AreEqual (count+1, Engine.Logger.ErrorEvents.Count, "ErrorCount");
-				bool isTranslated = TranslationAvailable (culture, Engine.Logger.ErrorEvents[count].Message);
 				count++; 
-
+				bool isTranslated = TranslationAvailable (culture, Engine.Logger.ErrorEvents[count].Message);
 				if (!isTranslated)
 					reportString += culture + ": is not supported correctly. ";
 			}
