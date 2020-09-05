@@ -2053,7 +2053,7 @@ namespace ARKit {
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("indexForJointName:")]
-		nuint GetJointIndex (NSString? jointName);
+		nuint GetJointIndex (NSString jointName);
 
 		[Wrap ("GetJointIndex (jointName.GetConstant()!)")]
 		nuint GetJointIndex (ARSkeletonJointName jointName);
