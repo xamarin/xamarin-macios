@@ -4775,7 +4775,7 @@ namespace Metal {
 	interface MTLFunctionDescriptor : NSCopying {
 		[Static]
 		[Export ("functionDescriptor")]
-		MTLFunctionDescriptor Create { get; }
+		MTLFunctionDescriptor Create ();
 
 		[NullAllowed, Export ("name")]
 		string Name { get; set; }
