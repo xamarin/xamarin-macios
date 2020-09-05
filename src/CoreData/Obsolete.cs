@@ -28,4 +28,13 @@ namespace CoreData {
 		}
 	}
 #endif
+#if !XAMCORE_4_0
+	public partial class NSCoreDataCoreSpotlightDelegate {
+
+		[Obsolete ("Default constructor is not available")]
+		public NSCoreDataCoreSpotlightDelegate ()
+		{
+		}
+	}
+#endif
 }
