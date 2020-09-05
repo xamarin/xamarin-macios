@@ -22826,7 +22826,7 @@ namespace UIKit {
 		IntPtr Constructor (UITraitCollection traitCollection);
 
 		[Export ("traitCollection", ArgumentSemantic.Strong)]
-		UITraitCollection TraitCollection { get; set; }
+		new UITraitCollection TraitCollection { get; set; }
 
 		[Export ("disabled")]
 		bool Disabled { [Bind ("isDisabled")] get; set; }
