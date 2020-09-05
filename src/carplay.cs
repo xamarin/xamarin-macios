@@ -440,7 +440,7 @@ namespace CarPlay {
 		IntPtr Constructor ([NullAllowed] string text, [NullAllowed] string detailText, [NullAllowed] UIImage image, [NullAllowed] UIImage accessoryImage, CPListItemAccessoryType accessoryType);
 
 		[NullAllowed, Export ("text")]
-		string Text { get; }
+		new string Text { get; }
 
 		[NullAllowed, Export ("detailText")]
 		string DetailText { get; }
@@ -453,7 +453,7 @@ namespace CarPlay {
 		bool ShowsDisclosureIndicator { get; }
 
 		[NullAllowed, Export ("userInfo", ArgumentSemantic.Strong)]
-		NSObject UserInfo { get; set; }
+		new NSObject UserInfo { get; set; }
 
 		[iOS (14, 0)]
 		[Export ("explicitContent")]
@@ -502,7 +502,7 @@ namespace CarPlay {
 
 		[NullAllowed, iOS (14, 0)]
 		[Export ("handler", ArgumentSemantic.Copy)]
-		CPSelectableListItemHandler Handler { get; set; }
+		new CPSelectableListItemHandler Handler { get; set; }
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (12,0)]
@@ -1434,7 +1434,7 @@ namespace CarPlay {
 
 		[Export ("handler", ArgumentSemantic.Copy)]
 		[NullAllowed]
-		CPSelectableListItemHandler Handler { get; set; }
+		new CPSelectableListItemHandler Handler { get; set; }
 
 		[Static]
 		[Export ("maximumImageSize")]
@@ -1444,10 +1444,10 @@ namespace CarPlay {
 		nuint MaximumNumberOfGridImages { get; }
 
 		[NullAllowed, Export ("text")]
-		string Text { get; set; }
+		new string Text { get; set; }
 
 		[NullAllowed, Export ("userInfo", ArgumentSemantic.Strong)]
-		NSObject UserInfo { get; set; }
+		new NSObject UserInfo { get; set; }
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
@@ -1513,10 +1513,10 @@ namespace CarPlay {
 		CGSize MaximumMessageItemImageSize { get; }
 
 		[NullAllowed, Export ("text")]
-		string Text { get; set; }
+		new string Text { get; set; }
 
 		[NullAllowed, Export ("userInfo", ArgumentSemantic.Strong)]
-		NSObject UserInfo { get; set; }
+		new NSObject UserInfo { get; set; }
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
