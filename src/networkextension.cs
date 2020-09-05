@@ -2158,7 +2158,7 @@ namespace NetworkExtension {
 		[Async]
 		[Static]
 		[Export ("loadAllFromPreferencesWithCompletionHandler:")]
-		void LoadAllFromPreferences (Action<NSArray<NEAppPushManager>, NSError> completionHandler);
+		void LoadAllFromPreferences (Action<NEAppPushManager [], NSError> completionHandler);
 
 		[Async]
 		[Export ("loadFromPreferencesWithCompletionHandler:")]
