@@ -2139,7 +2139,7 @@ namespace NetworkExtension {
 	[BaseType (typeof (NSObject))]
 	interface NEAppPushManager {
 		[Export ("matchSSIDs", ArgumentSemantic.Copy)]
-		string[] MatchSsIds { get; set; }
+		string[] MatchSsids { get; set; }
 
 		[Export ("providerConfiguration", ArgumentSemantic.Copy)]
 		NSDictionary<NSString, NSObject> ProviderConfiguration { get; set; }
