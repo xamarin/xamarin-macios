@@ -6,6 +6,7 @@ using Mono.Cecil;
 using Mono.Linker;
 using Mono.Linker.Steps;
 
+using Xamarin.Bundler;
 using Xamarin.Linker;
 using Xamarin.Utils;
 
@@ -140,6 +141,11 @@ namespace Xamarin.Linker {
 		public bool IsProductAssembly (AssemblyDefinition assembly)
 		{
 			return assembly.Name.Name == Configuration.PlatformAssembly;
+		}
+
+		public bool IsSdkAssembly (AssemblyDefinition assembly)
+		{
+			return Configuration.FrameworkAssemblies.Contains (Assembly.GetIdentity (assembly));
 		}
 	}
 }
