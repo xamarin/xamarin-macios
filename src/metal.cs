@@ -4841,6 +4841,7 @@ namespace Metal {
 		[NullAllowed, Export ("functions", ArgumentSemantic.Copy)]
 		IMTLFunction[] Functions { get; set; }
 
+		[NoTV] 
 		[NullAllowed, Export ("binaryFunctions", ArgumentSemantic.Copy)]
 		IMTLFunction[] BinaryFunctions { get; set; }
 

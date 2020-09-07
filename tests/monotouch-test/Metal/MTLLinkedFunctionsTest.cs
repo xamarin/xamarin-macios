@@ -38,6 +38,7 @@ namespace MonoTouchFixtures.Metal {
 			}, "Getter");
 		}
 
+#if !__TVOS__  // Not present on tvos
 		[Test]
 		public void BinaryFunctions ()
 		{
@@ -48,6 +49,7 @@ namespace MonoTouchFixtures.Metal {
 				var f = functions.BinaryFunctions;
 			}, "Getter");
 		}
+#endif
 
 		[Test]
 		public void Groupstest ()
