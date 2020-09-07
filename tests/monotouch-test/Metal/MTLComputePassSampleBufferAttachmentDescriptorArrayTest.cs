@@ -23,12 +23,12 @@ namespace MonoTouchFixtures.Metal {
 		[TearDown]
 		public void TearDown ()
 		{
-			array.Dispose ();
+			array?.Dispose ();
 			array = null; 
 		}
 
 		[Test]
-		public void IndexrTest ()
+		public void IndexerTest ()
 		{
 
 			var obj = new MTLComputePassSampleBufferAttachmentDescriptor ();

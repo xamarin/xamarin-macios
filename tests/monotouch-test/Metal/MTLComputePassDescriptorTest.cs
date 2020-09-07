@@ -23,7 +23,7 @@ namespace MonoTouchFixtures.Metal {
 		[TearDown]
 		public void TearDown ()
 		{
-			descriptor.Dispose ();
+			descriptor?.Dispose ();
 			descriptor = null;
 		}
 
