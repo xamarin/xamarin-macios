@@ -33,6 +33,12 @@ namespace CoreBluetooth {
 		}
 	}
 
+	public partial class CBCentralManager {
+
+		[Obsolete ("Empty stub (not a public API).")]
+		public virtual void RetrieveConnectedPeripherals () {}
+	}
+
 #pragma warning restore CS0809
 
 #endif

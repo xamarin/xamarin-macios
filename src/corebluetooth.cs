@@ -140,18 +140,6 @@ namespace CoreBluetooth {
 		[Wrap ("this (centralDelegate, queue, options.GetDictionary ())")]
 		IntPtr Constructor ([NullAllowed, Protocolize] CBCentralManagerDelegate centralDelegate, [NullAllowed] DispatchQueue queue, CBCentralInitOptions options);
 
-		[NoTV]
-		[NoWatch]
-		[Availability (Obsoleted = Platform.iOS_9_0)]
-		[Export ("retrievePeripherals:"), Internal]
-		void RetrievePeripherals (NSArray peripheralUUIDs);
-
-		[NoTV]
-		[NoWatch]
-		[Export ("retrieveConnectedPeripherals")]
-		[Availability (Deprecated = Platform.iOS_7_0, Obsoleted = Platform.iOS_9_0, Message = "Use 'RetrievePeripheralsWithIdentifiers' instead.")]
-		void RetrieveConnectedPeripherals ();
-
 		[Export ("scanForPeripheralsWithServices:options:"), Internal]
 		void ScanForPeripherals ([NullAllowed] NSArray serviceUUIDs, [NullAllowed] NSDictionary options);
 

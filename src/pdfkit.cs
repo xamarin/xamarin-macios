@@ -593,6 +593,8 @@ namespace PdfKit {
 		[Export ("color")]
 		NSColor Color { get; set; }
 
+		[NoiOS]
+		[NullAllowed]
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		[Export ("mouseUpAction")]
 		PdfAction MouseUpAction { get; set; }
@@ -608,6 +610,7 @@ namespace PdfKit {
 		[Export ("hasAppearanceStream")]
 		bool HasAppearanceStream { get; }
 
+		[NoiOS]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("removeAllAppearanceStreams")]
 		void RemoveAllAppearanceStreams ();
@@ -1768,6 +1771,7 @@ namespace PdfKit {
 		[Export ("greekingThreshold")]
 		nfloat GreekingThreshold { get; set; }
 
+		[NoiOS]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("takeBackgroundColorFrom:")]
 		void TakeBackgroundColor (NSObject sender);
@@ -1859,6 +1863,7 @@ namespace PdfKit {
 		[Export ("highlightedSelections")]
 		PdfSelection [] HighlightedSelections { get; set; }
 
+		[NoiOS]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("takePasswordFrom:")]
 		void TakePasswordFrom (NSObject sender);
