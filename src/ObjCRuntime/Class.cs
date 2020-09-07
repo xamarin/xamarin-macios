@@ -226,7 +226,7 @@ namespace ObjCRuntime {
 				return Runtime.Registrar.Lookup (klass, throw_on_error);
 
 			if (throw_on_error)
-				throw ErrorHelper.CreateError (8026, $"Can't lookup the Objective-C class 0x{klass.ToString ("x")} ({class_getName (klass)}) when the dynamic registrar has been linked away.");
+				throw ErrorHelper.CreateError (8026, $"Can't lookup the Objective-C class 0x{klass.ToString ("x")} ({Marshal.PtrToStringAuto (class_getName (klass))}) when the dynamic registrar has been linked away.");
 
 			return null;
 		}
@@ -264,7 +264,7 @@ namespace ObjCRuntime {
 				var rv = class_map.handle;
 				is_custom_type = (class_map.flags & Runtime.MTTypeFlags.CustomType) == Runtime.MTTypeFlags.CustomType;
 #if LOG_TYPELOAD
-				Console.WriteLine ($"FindClass ({type.FullName}, {is_custom_type}): 0x{rv.ToString ("x")} = {class_getName (rv)}.");
+				Console.WriteLine ($"FindClass ({type.FullName}, {is_custom_type}): 0x{rv.ToString ("x")} = {Marshal.PtrToStringAuto (class_getName (rv))}.");
 #endif
 				return rv;
 			}
