@@ -1357,19 +1357,20 @@
 		</target>
         <note></note>
       </trans-unit>
-      <trans-unit id="MT2003_A">
-        <source>Option '--optimize={0}' will be ignored since it's only applicable to watchOS.
-		</source>
-        <target state="new">Option '--optimize={0}' will be ignored since it's only applicable to watchOS.
-		</target>
-        <note></note>
-      </trans-unit>
       <trans-unit id="MT2003_B">
         <source>Option '--optimize={0}{1}' will be ignored since linking is disabled
 		</source>
         <target state="new">Option '--optimize={0}{1}' will be ignored since linking is disabled
 		</target>
         <note></note>
+      </trans-unit>
+      <trans-unit id="MT2003_C">
+        <source>Option '--optimize={0}' will be ignored since it's only applicable to {1}.</source>
+        <target state="new">Option '--optimize={0}' will be ignored since it's only applicable to {1}.</target>
+        <note>This is a warning that is shown when the command-line option --optimize=... is not valid for a particular platform
+{0} - The optimization option that is not valid for the current platform
+{1} - The platforms in question, such as 'iOS'.
+		</note>
       </trans-unit>
       <trans-unit id="MT2006">
         <source>Can not load mscorlib.dll from: '{0}'. Please reinstall Xamarin.iOS.

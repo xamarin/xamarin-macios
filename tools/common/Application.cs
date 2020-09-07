@@ -59,6 +59,7 @@ namespace Xamarin.Bundler {
 		public bool EnableDebug;
 		// The list of assemblies that we do generate debugging info for.
 		public bool DebugAll;
+		public bool UseInterpreter;
 		public List<string> DebugAssemblies = new List<string> ();
 		internal RuntimeOptions RuntimeOptions;
 		public Optimizations Optimizations = new Optimizations ();
@@ -578,7 +579,10 @@ namespace Xamarin.Bundler {
 				ErrorHelper.Warning (3007, Errors.MX3007);
 			}
 
-			Optimizations.Initialize (this);
+			Optimizations.Initialize (this, out var messages);
+			ErrorHelper.Show (messages);
+			if (Driver.Verbosity > 3)
+				Driver.Log (4, $"Enabled optimizations: {Optimizations}");
 		}
 
 		void SelectMonoNative ()

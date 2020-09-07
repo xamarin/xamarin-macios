@@ -1084,15 +1084,20 @@
 		<value>Option '--optimize={0}{1}' will be ignored since the static registrar is not enabled
 		</value>
 	</data>
-	
-	<data name="MT2003_A" xml:space="preserve">
-		<value>Option '--optimize={0}' will be ignored since it's only applicable to watchOS.
-		</value>
-	</data>
+
+	<!-- MT2003_A is not in use anymore -->
 
 	<data name="MT2003_B" xml:space="preserve">
 		<value>Option '--optimize={0}{1}' will be ignored since linking is disabled
 		</value>
+	</data>
+
+	<data name="MT2003_C" xml:space="preserve">
+		<value>Option '--optimize={0}' will be ignored since it's only applicable to {1}.</value>
+		<comment>This is a warning that is shown when the command-line option --optimize=... is not valid for a particular platform
+{0} - The optimization option that is not valid for the current platform
+{1} - The platforms in question, such as 'iOS'.
+		</comment>
 	</data>
 
 	<data name="MX2004" xml:space="preserve">

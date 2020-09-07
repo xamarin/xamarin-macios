@@ -72,7 +72,6 @@ namespace Xamarin.Bundler {
 		public List<string> AotOtherArguments = null;
 		public bool? LLVMAsmWriter;
 		public Dictionary<string, string> LLVMOptimizations = new Dictionary<string, string> ();
-		public bool UseInterpreter;
 		public List<string> InterpretedAssemblies = new List<string> ();
 
 		// Xamarin.Mac options available here to minimize ifdefs
