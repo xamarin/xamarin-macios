@@ -899,6 +899,42 @@ namespace Xamarin.Bundler {
 			abis = res;
 		}
 
+		public void ParseRegistrar (string v)
+		{
+			var split = v.Split ('=');
+			var name = split [0];
+			var value = split.Length > 1 ? split [1] : string.Empty;
+			switch (name) {
+			case "static":
+				Registrar = RegistrarMode.Static;
+				break;
+			case "dynamic":
+				Registrar = RegistrarMode.Dynamic;
+				break;
+			case "default":
+				Registrar = RegistrarMode.Default;
+				break;
+			case "partial":
+			case "partial-static":
+				Registrar = RegistrarMode.PartialStatic;
+				break;
+			default:
+				throw ErrorHelper.CreateError (20, Errors.MX0020, "--registrar", "static, dynamic or default");
+			}
+
+			switch (value) {
+			case "trace":
+				RegistrarOptions = RegistrarOptions.Trace;
+				break;
+			case "default":
+			case "":
+				RegistrarOptions = RegistrarOptions.Default;
+				break;
+			default:
+				throw ErrorHelper.CreateError (20, Errors.MX0020, "--registrar", "static, dynamic or default");
+			}
+		}
+
 		public static string GetArchitectures (IEnumerable<Abi> abis)
 		{
 			var res = new List<string> ();
