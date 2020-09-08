@@ -327,6 +327,11 @@ namespace NetworkExtension {
 		[NoWatch, NoTV, Mac (11, 0), iOS (14, 0)]
 		[Export ("dnsProtocol")]
 		NEDnsProtocol DnsProtocol { get; }
+
+		[Mac (11,0), iOS (14,0), NoTV]
+		[Notification]
+		[Field ("NEDNSSettingsConfigurationDidChangeNotification")]
+		NSString ConfigurationDidChangeNotification { get; }
 	}
 
 	[iOS (9,0)]
@@ -2212,10 +2217,6 @@ namespace NetworkExtension {
 		[NullAllowed]
 		[Export ("serverURL", ArgumentSemantic.Copy)]
 		NSUrl ServerUrl { get; set; }
-
-		[Notification]
-		[Field ("NEDNSSettingsConfigurationDidChangeNotification")]
-		NSString ConfigurationDidChangeNotification { get; }
 	}
 
 	[NoWatch, NoTV, Mac (11,0), iOS (14,0)]
