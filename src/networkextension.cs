@@ -328,7 +328,7 @@ namespace NetworkExtension {
 		[Export ("dnsProtocol")]
 		NEDnsProtocol DnsProtocol { get; }
 
-		[Mac (11,0), iOS (14,0), NoTV]
+		[Mac (11,0), iOS (14,0), NoTV, NoWatch]
 		[Notification]
 		[Field ("NEDNSSettingsConfigurationDidChangeNotification")]
 		NSString ConfigurationDidChangeNotification { get; }
