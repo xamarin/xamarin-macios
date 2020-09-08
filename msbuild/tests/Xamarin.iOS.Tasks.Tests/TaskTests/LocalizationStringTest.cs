@@ -13,8 +13,8 @@ namespace Xamarin.iOS.Tasks {
 		[Test]
 		public void OperatingSystemTranslations ()
 		{
-			CultureInfo culture1 = CultureInfo.CurrentCulture;
-			string locale = culture1.Name;
+			CultureInfo currentCulture = Thread.CurrentThread.CurrentUICulture;
+			string locale = currentCulture.Name;
 
 			var task = CreateTask<CollectITunesArtwork> ();
 			task.ITunesArtwork = new TaskItem [] { new TaskItem (Assembly.GetExecutingAssembly ().Location) };
@@ -25,51 +25,41 @@ namespace Xamarin.iOS.Tasks {
 			Assert.IsTrue (isTranslated, "Your current locale is not supported: " + locale + ".");
 		}
 
-		[Test]
-		public void AllSupportedTranslations ()
+		[TestCase ("cs-CZ")]
+		[TestCase ("de-DE")]
+		[TestCase ("en-US")]
+		[TestCase ("es-ES")]
+		[TestCase ("fr-FR")]
+		[TestCase ("it-IT")]
+		[TestCase ("ja-JP")]
+		[TestCase ("ko-KR")]
+		[TestCase ("pl-PL")]
+		[TestCase ("pt-BR")]
+		[TestCase ("ru-RU")]
+		[TestCase ("tr-TR")]
+		[TestCase ("zh-CN")]
+		[TestCase ("zh-TW")]
+		public void AllSupportedTranslations (string culture)
 		{
-			string reportString = string.Empty;
-			int count = 0;
-			var cultures = new List<string> () {
-				"cs-CZ",
-				"de-DE",
-				"en-US",
-				"es-ES",
-				"fr-FR",
-				"it-IT",
-				"ja-JP",
-				"ko-KR",
-				"pl-PL",
-				"pt-BR",
-				"ru-RU",
-				"tr-TR",
-				"zh-CN",
-				"zh-TW",
-			};
-
-			foreach (string culture in cultures) {
-				CultureInfo newCulture;
-				try {
-					newCulture = new CultureInfo (culture);
-				}
-				catch (System.Globalization.CultureNotFoundException) {
-					reportString += culture + ": is not a valid culture. ";
-					continue;
-				}
-
+			CultureInfo originalCulture = Thread.CurrentThread.CurrentUICulture;
+			CultureInfo newCulture;
+			try {
+				newCulture = new CultureInfo (culture);
 				Thread.CurrentThread.CurrentUICulture = newCulture;
-
-				var task = CreateTask<CollectITunesArtwork> ();
-				task.ITunesArtwork = new TaskItem [] { new TaskItem (Assembly.GetExecutingAssembly ().Location) };
-
-				Assert.IsFalse (task.Execute (), "Execute failure");
-				Assert.AreEqual (count+1, Engine.Logger.ErrorEvents.Count, "ErrorCount");
-				bool isTranslated = TranslationAvailable (culture, Engine.Logger.ErrorEvents[count].Message);
-				count++;
-				if (!isTranslated)
-					reportString += culture + ": is not supported correctly. ";
 			}
-			Assert.AreEqual (string.Empty, reportString, "Some locales were not translated properly: " + reportString);
+			catch (System.Globalization.CultureNotFoundException) {
+				Assert.IsTrue (false, culture + ": is not a valid culture. ");
+			}
+
+			var task = CreateTask<CollectITunesArtwork> ();
+			task.ITunesArtwork = new TaskItem [] { new TaskItem (Assembly.GetExecutingAssembly ().Location) };
+
+			Assert.IsFalse (task.Execute (), "Execute failure");
+			Assert.AreEqual (1, Engine.Logger.ErrorEvents.Count, "ErrorCount");
+			bool isTranslated = TranslationAvailable (culture, Engine.Logger.ErrorEvents[0].Message);
+			Assert.IsTrue (isTranslated, culture + ": is not supported correctly. ");
+
+			Thread.CurrentThread.CurrentUICulture = originalCulture;
 		}
 
 		public bool TranslationAvailable (string locale, string respectiveErrorMessage) {
