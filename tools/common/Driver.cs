@@ -53,6 +53,8 @@ namespace Xamarin.Bundler {
 		{
 			Action a = Action.None; // Need a temporary local variable, since anonymous functions can't write directly to ref/out arguments.
 
+			List<string> optimize = null;
+
 			options.Add ("h|?|help", "Displays the help", v => a = Action.Help);
 			options.Add ("f|force", "Forces the recompilation of code, regardless of timestamps", v => Force = true);
 			options.Add ("cache=", "Specify the directory where temporary build files will be cached", v => app.Cache.Location = v);
@@ -200,7 +202,9 @@ namespace Xamarin.Bundler {
 #endif
 					"",
 					(v) => {
-						app.Optimizations.Parse (v);
+						if (optimize == null)
+							optimize = new List<string> ();
+						optimize.Add (v);
 					});
 			options.Add ("package-debug-symbols:", "Specify whether debug info files (*.mdb / *.pdb) should be packaged in the app. Default is 'true' for debug builds and 'false' for release builds.", v => app.PackageManagedDebugSymbols = ParseBool (v, "package-debug-symbols"));
 			options.Add ("profiling:", "Enable profiling", v => app.EnableProfiling = ParseBool (v, "profiling"));
@@ -293,6 +297,14 @@ namespace Xamarin.Bundler {
 #endif
 			if (validateFramework)
 				ValidateTargetFramework ();
+
+			if (optimize != null) {
+				// This must happen after the call to ValidateTargetFramework, so that app.Platform is correct.
+				var messages = new List<ProductException> ();
+				foreach (var opt in optimize)
+					app.Optimizations.Parse (app.Platform, opt, messages);
+				ErrorHelper.Show (messages);
+			}
 
 			return false;
 		}

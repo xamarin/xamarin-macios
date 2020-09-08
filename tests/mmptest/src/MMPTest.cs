@@ -612,7 +612,6 @@ namespace Xamarin.MMP.Tests
 		}
 
 		[Test]
-		[TestCase ("inline-runtime-arch")] // This is valid for Xamarin.iOS
 		[TestCase ("foo")]
 		public void MM0132 (string opt)
 		{
@@ -686,6 +685,20 @@ namespace Xamarin.MMP.Tests
 			});
 		}
 
+		[Test]
+		[TestCase ("inline-runtime-arch")] // This is valid for iOS, tvOS and watchOS.
+		public void MM2003 (string opt)
+		{
+			RunMMPTest (tmpDir => {
+				var test = new TI.UnifiedTestConfig (tmpDir) {
+					CSProjConfig = $"<MonoBundlingExtraArgs>--optimize={opt}</MonoBundlingExtraArgs>" +
+						"<LinkMode>Full</LinkMode>",
+				};
+				var rv = TI.TestUnifiedExecutable (test, shouldFail: false);
+				rv.Messages.AssertWarning (2003, $"Option '--optimize={opt}' will be ignored since it's only applicable to iOS, watchOS, tvOS.");
+				rv.Messages.AssertErrorCount (0);
+			});
+		}
 		[Test]
 		public void BuildingSameSolutionTwice_ShouldNotRunACToolTwice ()
 		{
