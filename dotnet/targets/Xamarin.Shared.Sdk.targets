@@ -79,6 +79,20 @@
 		<_PlatformAssemblyName Condition=" '$(_PlatformName)' == 'tvOS' ">Xamarin.TVOS</_PlatformAssemblyName>
 		<_PlatformAssemblyName Condition=" '$(_PlatformName)' == 'watchOS' ">Xamarin.WatchOS</_PlatformAssemblyName>
 		<_PlatformAssemblyName Condition=" '$(_PlatformName)' == 'macOS' ">Xamarin.Mac</_PlatformAssemblyName>
+
+		<!-- We have to set DebuggerSupport before importing Microsoft.NET.Sdk -->
+		<!-- That means we have to set _BundlerDebug before that, because DebuggerSupport depends on it -->
+		<!-- Xamarin.Mac: use MmpDebug (this differs from the old-style logic, which checks $(DebugSymbols) as well) -->
+		<_BundlerDebug Condition="'$(_BundlerDebug)' == '' And '$(_PlatformName)' == 'macOS'">$(MmpDebug)</_BundlerDebug>
+		<!-- Xamarin.iOS: Use MtouchDebug -->
+		<_BundlerDebug Condition="'$(_BundlerDebug)' == '' And '$(_PlatformName)' != 'macOS'">$(MtouchDebug)</_BundlerDebug>
+		<!-- Otherwise the default is true if we're building a Debug configuration -->
+		<_BundlerDebug Condition="'$(_BundlerDebug)' == '' And '$(Configuration)' == 'Debug'">true</_BundlerDebug>
+		<!-- As a last resort, the default is false for all platforms -->
+		<_BundlerDebug Condition="'$(_BundlerDebug)' == ''">false</_BundlerDebug>
+
+		<!-- On the other hand, we want the linker to link away debug support in the actual code unless we're building for Debug -->
+		<DebuggerSupport Condition="'$(DebuggerSupport)' == ''">$(_BundlerDebug)</DebuggerSupport>
 	</PropertyGroup>
 
 	<Import Sdk="Microsoft.NET.Sdk" Project="Sdk.targets" />
@@ -183,6 +197,9 @@
 				this yet (ref: https://github.com/dotnet/sdk/pull/12144).
 			-->
 			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) -b</_ExtraTrimmerArgs>
+
+			<!-- We always want the linker to process debug symbols, even when building in Release mode, because the AOT compiler uses the managed debug symbols to output DWARF debugging symbols -->
+			<TrimmerRemoveSymbols Condition="'$(TrimmerRemoveSymbols)' == ''">false</TrimmerRemoveSymbols>
 		</PropertyGroup>
 
 		<ItemGroup>
