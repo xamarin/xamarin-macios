@@ -1,3 +1,4 @@
+# ignored due to https://github.com/xamarin/maccore/issues/2313
 !missing-enum! NEAppProxyFlowError not bound
 !missing-enum! NEHotspotConfigurationError not bound
 !missing-field! NEHotspotConfigurationErrorDomain not bound
