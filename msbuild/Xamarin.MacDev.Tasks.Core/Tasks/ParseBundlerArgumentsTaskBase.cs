@@ -23,6 +23,9 @@ namespace Xamarin.MacDev.Tasks {
 		public string Optimize { get; set; }
 
 		[Output]
+		public string Registrar { get; set; }
+
+		[Output]
 		public int Verbosity { get; set; }
 
 		public override bool Execute ()
@@ -90,6 +93,9 @@ namespace Xamarin.MacDev.Tasks {
 						if (!string.IsNullOrEmpty (Optimize))
 							Optimize += ",";
 						Optimize += value;
+						break;
+					case "registrar":
+						Registrar = value;
 						break;
 					default:
 						break;
