@@ -35,7 +35,7 @@ namespace AudioToolbox {
 		SpatializeIfMono = 0,
 		Bypass = 1,
 		PointSource = 2,
-		AmbienceBed = 3
+		AmbienceBed = 3,
 	}
 
 }
