@@ -2144,7 +2144,7 @@ namespace NetworkExtension {
 	[BaseType (typeof (NSObject))]
 	interface NEAppPushManager {
 		[Export ("matchSSIDs", ArgumentSemantic.Copy)]
-		string[] MatchSsIds { get; set; }
+		string[] MatchSsids { get; set; }
 
 		[Export ("providerConfiguration", ArgumentSemantic.Copy)]
 		NSDictionary<NSString, NSObject> ProviderConfiguration { get; set; }
@@ -2163,7 +2163,7 @@ namespace NetworkExtension {
 		[Async]
 		[Static]
 		[Export ("loadAllFromPreferencesWithCompletionHandler:")]
-		void LoadAllFromPreferences (Action<NSArray<NEAppPushManager>, NSError> completionHandler);
+		void LoadAllFromPreferences (Action<NEAppPushManager [], NSError> completionHandler);
 
 		[Async]
 		[Export ("loadFromPreferencesWithCompletionHandler:")]
