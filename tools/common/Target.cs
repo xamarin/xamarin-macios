@@ -86,6 +86,14 @@ namespace Xamarin.Bundler {
 			this.StaticRegistrar = new StaticRegistrar (this);
 		}
 
+		// If this is an app extension, this returns the equivalent (32/64bit) target for the container app.
+		// This may be null (it's possible to build an extension for 32+64bit, and the main app only for 64-bit, for instance.
+		public Target ContainerTarget {
+			get {
+				return App.ContainerApp.Targets.FirstOrDefault ((v) => v.Is32Build == Is32Build);
+			}
+		}
+
 		public Assembly AddAssembly (AssemblyDefinition assembly)
 		{
 			var asm = new Assembly (this, assembly);

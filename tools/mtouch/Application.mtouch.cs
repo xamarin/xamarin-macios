@@ -48,7 +48,6 @@ namespace Xamarin.Bundler {
 
 		public List<string> Extensions = new List<string> (); // A list of the extensions this app contains.
 		public List<Application> AppExtensions = new List<Application> ();
-		public Application ContainerApp; // For extensions, this is the containing app
 
 		public bool? EnablePie;
 		public bool NativeStrip = true;
@@ -63,10 +62,8 @@ namespace Xamarin.Bundler {
 
 		public bool NoFastSim;
 		public bool NoDevCodeShare;
-		public bool IsCodeShared { get; private set; }
 
 		public string Compiler = string.Empty;
-		public string CompilerPath;
 
 		public string AotArguments = "static,asmonly,direct-icalls,";
 		public List<string> AotOtherArguments = null;
