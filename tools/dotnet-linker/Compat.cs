@@ -40,9 +40,17 @@ namespace Xamarin.Bundler {
 		public void SelectRegistrar ()
 		{
 			if (Registrar == RegistrarMode.Default) {
-				if (LinkMode == LinkMode.None && IsDefaultMarshalManagedExceptionMode) {
+				if (IsDeviceBuild) {
+					// mobile device builds use the static registrar by default
+					Registrar = RegistrarMode.Static;
+				} else if (Platform == ApplePlatform.MacOSX && !EnableDebug) {
+					// release macOS builds use the static registrar by default
+					Registrar = RegistrarMode.Static;
+				} else if (LinkMode == LinkMode.None && IsDefaultMarshalManagedExceptionMode) {
+					// Otherwise use the partial static registrar if we can
 					Registrar = RegistrarMode.PartialStatic;
 				} else {
+					// Last option is the dynamic registrar
 					Registrar = RegistrarMode.Dynamic;
 				}
 			}
