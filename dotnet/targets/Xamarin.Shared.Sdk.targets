@@ -252,6 +252,10 @@
 		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_BindingLibraryFrameworks.items" Condition="Exists('$(_LinkerItemsDirectory)/_BindingLibraryFrameworks.items')">
 			<Output TaskParameter="Items" ItemName="_BindingLibraryFrameworks" />
 		</ReadItemsFromFile>
+		<!-- Load _RegistrarFile -->
+		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_RegistrarFile.items" Condition="Exists('$(_LinkerItemsDirectory)/_RegistrarFile.items')">
+			<Output TaskParameter="Items" ItemName="_RegistrarFile" />
+		</ReadItemsFromFile>
 	</Target>
 
 	<!-- Native code -->
@@ -329,24 +333,29 @@
 		</PropertyGroup>
 	</Target>
 
-	<Target Name="_CompileNativeExecutable"
-		DependsOnTargets="_DetectSdkLocations;_ComputeTargetArchitectures;_GenerateBundleName;_ComputeVariables;_GetMinimumOSVersion"
-		Inputs="@(_MainFile)"
-		Outputs="@(_MainFile -> '%(_IntermediateNativeLibraryDir)%(Filename).o')"
-		>
-
+	<Target Name="_ComputeNativeExecutableInputs" DependsOnTargets="_ComputeVariables">
 		<ItemGroup>
-			<_MainFile Update="@(_MainFile)">
+			<_CompileNativeExecutableFile Include="@(_MainFile)">
 				<OutputFile>$(_IntermediateNativeLibraryDir)%(Filename).o</OutputFile>
-			</_MainFile>
+			</_CompileNativeExecutableFile>
+			<_CompileNativeExecutableFile Include="@(_RegistrarFile)">
+				<OutputFile>$(_IntermediateNativeLibraryDir)%(Filename).o</OutputFile>
+			</_CompileNativeExecutableFile>
 			<_XamarinMainIncludeDirectory Include="$(_XamarinIncludeDirectory)" />
 		</ItemGroup>
+	</Target>
+
+	<Target Name="_CompileNativeExecutable"
+		DependsOnTargets="_DetectSdkLocations;_ComputeTargetArchitectures;_GenerateBundleName;_ComputeVariables;_GetMinimumOSVersion;_ComputeNativeExecutableInputs"
+		Inputs="@(_CompileNativeExecutableFile)"
+		Outputs="@(_CompileNativeExecutableFile -> '%(OutputFile)')"
+		>
 
 		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(_IntermediateNativeLibraryDir)" />
 
 		<CompileNativeCode
 			SessionId="$(BuildSessionId)"
-			CompileInfo="@(_MainFile)"
+			CompileInfo="@(_CompileNativeExecutableFile)"
 			MinimumOSVersion="$(_MinimumOSVersion)"
 			IncludeDirectories="@(_XamarinMainIncludeDirectory)"
 			SdkDevPath="$(_SdkDevPath)"
