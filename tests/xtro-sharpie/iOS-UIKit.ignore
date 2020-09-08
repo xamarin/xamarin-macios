@@ -136,7 +136,6 @@
 # Initial result from new rule missing-null-allowed
 !missing-null-allowed! 'CoreAnimation.CADisplayLink UIKit.UIScreen::CreateDisplayLink(Foundation.NSObject,ObjCRuntime.Selector)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'CoreGraphics.CGRect UIKit.NSTextAttachmentContainer::GetAttachmentBounds(UIKit.NSTextContainer,CoreGraphics.CGRect,CoreGraphics.CGPoint,System.nuint)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'CoreImage.CIImage UIKit.UIImage::get_CIImage()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSArray Foundation.NSBundle::LoadNib(System.String,Foundation.NSObject,Foundation.NSDictionary)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSArray[] UIKit.UIPasteboard::PasteBoardTypesForSet(Foundation.NSIndexSet)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'Foundation.NSArray[] UIKit.UIPasteboard::PasteBoardTypesForSet(Foundation.NSIndexSet)' is missing an [NullAllowed] on return type
@@ -388,15 +387,6 @@
 !missing-null-allowed! 'UIKit.UIImage UIKit.UIButton::get_CurrentBackgroundImage()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIImage UIKit.UIButton::get_CurrentImage()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIImage UIKit.UIButton::ImageForState(UIKit.UIControlState)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'UIKit.UIImage UIKit.UIImage::CreateAnimatedImage(System.String,System.Double)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'UIKit.UIImage UIKit.UIImage::CreateAnimatedImage(System.String,UIKit.UIEdgeInsets,System.Double)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'UIKit.UIImage UIKit.UIImage::CreateAnimatedImage(System.String,UIKit.UIEdgeInsets,UIKit.UIImageResizingMode,System.Double)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'UIKit.UIImage UIKit.UIImage::CreateAnimatedImage(UIKit.UIImage[],System.Double)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'UIKit.UIImage UIKit.UIImage::FromBundle(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'UIKit.UIImage UIKit.UIImage::FromBundle(System.String,Foundation.NSBundle,UIKit.UITraitCollection)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'UIKit.UIImage UIKit.UIImage::FromFile(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'UIKit.UIImage UIKit.UIImage::LoadFromData(Foundation.NSData)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'UIKit.UIImage UIKit.UIImage::LoadFromData(Foundation.NSData,System.nfloat)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIImage UIKit.UINavigationBar::GetBackgroundImage(UIKit.UIBarMetrics)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIImage UIKit.UINavigationBar::GetBackgroundImage(UIKit.UIBarPosition,UIKit.UIBarMetrics)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIImage UIKit.UISearchBar::BackgroundImageForBarPosition(UIKit.UIBarPosition,UIKit.UIBarMetrics)' is missing an [NullAllowed] on return type
@@ -421,9 +411,6 @@
 !missing-null-allowed! 'UIKit.UIImage UIKit.UITabBarItem::get_FinishedUnselectedImage()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIImage UIKit.UIToolbar::GetBackgroundImage(UIKit.UIToolbarPosition,UIKit.UIBarMetrics)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIImage UIKit.UIToolbar::GetShadowImage(UIKit.UIToolbarPosition)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'UIKit.UIImage[] UIKit.UIImage::get_Images()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'UIKit.UIImageAsset UIKit.UIImage::get_ImageAsset()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'UIKit.UIImageConfiguration UIKit.UIImage::get_Configuration()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIImageView UIKit.UIButton::get_ImageView()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIImageView UIKit.UITableViewCell::get_ImageView()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIInputViewController UIKit.UIResponder::get_InputAccessoryViewController()' is missing an [NullAllowed] on return type
