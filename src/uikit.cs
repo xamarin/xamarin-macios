@@ -7293,12 +7293,14 @@ namespace UIKit {
 #if !WATCH
 		[Export ("CIImage")]
 		[ThreadSafe]
-		CIImage CIImage { [NullAllowed] get; }
+		[NullAllowed]
+		CIImage CIImage { get; }
 #endif // !WATCH
 		
 		[Export ("images")]
 		[ThreadSafe]
-		UIImage [] Images { [NullAllowed] get; }
+		[NullAllowed]
+		UIImage [] Images { get; }
 
 		[Export ("duration")]
 		[ThreadSafe]
@@ -7369,7 +7371,8 @@ namespace UIKit {
 		[iOS (8,0)]
 		[Export ("imageAsset")]
 		[ThreadSafe]
-		UIImageAsset ImageAsset { [NullAllowed] get; }
+		[NullAllowed]
+		UIImageAsset ImageAsset { get; }
 #endif // !WATCH
 
 		[iOS (9,0)]
@@ -7449,7 +7452,8 @@ namespace UIKit {
 
 		[Watch (6,0), TV (13,0), iOS (13,0)]
 		[Export ("configuration", ArgumentSemantic.Copy)]
-		UIImageConfiguration Configuration { [NullAllowed] get; }
+		[NullAllowed]
+		UIImageConfiguration Configuration { get; }
 
 		[Watch (6,0), TV (13,0), iOS (13,0)]
 		[Export ("imageWithConfiguration:")]
