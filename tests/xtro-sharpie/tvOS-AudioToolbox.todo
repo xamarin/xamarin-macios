@@ -1,7 +1,0 @@
-!missing-enum! AUSpatialMixerOutputType not bound
-!missing-enum! AUSpatialMixerPointSourceInHeadMode not bound
-!missing-enum! AUSpatialMixerSourceMode not bound
-!missing-pinvoke! AudioComponentCopyIcon is not bound
-!missing-pinvoke! AudioWorkIntervalCreate is not bound
-!missing-selector! AUAudioUnit::osWorkgroup not bound
-!missing-selector! AUAudioUnit::renderContextObserver not bound
