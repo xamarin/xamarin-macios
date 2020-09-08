@@ -4815,6 +4815,7 @@ namespace Metal {
 	}
 
 	[Mac (11,0), iOS (14,0), NoTV]
+	[DisableDefaultCtor]
 	[BaseType (typeof (MTLFunctionDescriptor))]
 	interface MTLIntersectionFunctionDescriptor  : NSCopying {}
 
