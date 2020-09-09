@@ -169,6 +169,22 @@ namespace AVFoundation {
 		}
 	}
 
+	public delegate int AVAudioSourceNodeRenderHandler (bool isSilence, AudioToolbox.AudioTimeStamp timestamp, uint frameCount, ref AudioToolbox.AudioBuffers outputData);
+
+	partial class AVAudioSourceNode {
+		[Obsolete("Use 'AVAudioSourceNode (AVAudioSourceNodeRenderHandler2)' instead.")]
+		public IntPtr Constructor (AVAudioSourceNodeRenderHandler renderHandler)
+		{
+			throw new NotImplementedException ();
+		}
+
+		[Obsolete("Use 'AVAudioSourceNode (AVAudioFormat, AVAudioSourceNodeRenderHandler2)' instead.")]
+		public IntPtr Constructor (AVAudioFormat format, AVAudioSourceNodeRenderHandler renderHandler)
+		{
+			throw new NotImplementedException ();
+		}
+	}
+
 #if !MONOMAC
 	partial class AVSampleBufferAudioRenderer
 	{
