@@ -7144,6 +7144,7 @@ namespace UIKit {
 #endif
 		[ThreadSafe]
 		[Static] [Export ("imageNamed:")][Autorelease]
+		[return: NullAllowed]
 		UIImage FromBundle (string name);
 
 #if !WATCH
@@ -7155,15 +7156,18 @@ namespace UIKit {
 		[ThreadSafe]
 		[iOS (8,0)]
 		[Static, Export ("imageNamed:inBundle:compatibleWithTraitCollection:")]
+		[return: NullAllowed]
 		UIImage FromBundle (string name, [NullAllowed] NSBundle bundle, [NullAllowed] UITraitCollection traitCollection);
 #endif // !WATCH
 
 		[Static] [Export ("imageWithContentsOfFile:")][Autorelease]
 		[ThreadSafe]
+		[return: NullAllowed]
 		UIImage FromFile (string filename);
 		
 		[Static] [Export ("imageWithData:")][Autorelease]
 		[ThreadSafe]
+		[return: NullAllowed]
 		UIImage LoadFromData (NSData data);
 
 		[Static] [Export ("imageWithCGImage:")][Autorelease]
@@ -7259,14 +7263,17 @@ namespace UIKit {
 
 		[Static, Export ("animatedImageNamed:duration:")][Autorelease]
 		[ThreadSafe]
+		[return: NullAllowed]
 		UIImage CreateAnimatedImage (string name, double duration);
 
 		[Static, Export ("animatedImageWithImages:duration:")][Autorelease]
 		[ThreadSafe]
+		[return: NullAllowed]
 		UIImage CreateAnimatedImage (UIImage [] images, double duration);
 
 		[Static, Export ("animatedResizableImageNamed:capInsets:duration:")][Autorelease]
 		[ThreadSafe]
+		[return: NullAllowed]
 		UIImage CreateAnimatedImage (string name, UIEdgeInsets capInsets, double duration);
 
 		[Export ("initWithCGImage:")]
@@ -7286,11 +7293,13 @@ namespace UIKit {
 #if !WATCH
 		[Export ("CIImage")]
 		[ThreadSafe]
+		[NullAllowed]
 		CIImage CIImage { get; }
 #endif // !WATCH
 		
 		[Export ("images")]
 		[ThreadSafe]
+		[NullAllowed]
 		UIImage [] Images { get; }
 
 		[Export ("duration")]
@@ -7315,6 +7324,7 @@ namespace UIKit {
 		[Static]
 		[Export ("imageWithData:scale:")]
 		[ThreadSafe, Autorelease]
+		[return: NullAllowed]
 		UIImage LoadFromData (NSData data, nfloat scale);
 
 #if !WATCH
@@ -7341,6 +7351,7 @@ namespace UIKit {
 		[Static]
 		[Export ("animatedResizableImageNamed:capInsets:resizingMode:duration:")]
 		[ThreadSafe]
+		[return: NullAllowed]
 		UIImage CreateAnimatedImage (string name, UIEdgeInsets capInsets, UIImageResizingMode resizingMode, double duration);
 		
 		[Export ("imageWithAlignmentRectInsets:")]
@@ -7360,6 +7371,7 @@ namespace UIKit {
 		[iOS (8,0)]
 		[Export ("imageAsset")]
 		[ThreadSafe]
+		[NullAllowed]
 		UIImageAsset ImageAsset { get; }
 #endif // !WATCH
 
@@ -7440,6 +7452,7 @@ namespace UIKit {
 
 		[Watch (6,0), TV (13,0), iOS (13,0)]
 		[Export ("configuration", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		UIImageConfiguration Configuration { get; }
 
 		[Watch (6,0), TV (13,0), iOS (13,0)]
