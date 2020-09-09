@@ -30,20 +30,18 @@ namespace Xamarin.iOS.Tasks {
 			try {
 				newCulture = new CultureInfo (culture);
 				Thread.CurrentThread.CurrentUICulture = newCulture;
-			}
-			catch (System.Globalization.CultureNotFoundException) {
+				var task = CreateTask<CollectITunesArtwork> ();
+				task.ITunesArtwork = new TaskItem [] { new TaskItem (Assembly.GetExecutingAssembly ().Location) };
+
+				Assert.IsFalse (task.Execute (), "Execute failure");
+				Assert.AreEqual (1, Engine.Logger.ErrorEvents.Count, "ErrorCount");
+				bool isTranslated = Engine.Logger.ErrorEvents[0].Message.Contains (errorMessage);
+				Assert.IsTrue (isTranslated, culture + ": is not supported correctly. ");
+				Thread.CurrentThread.CurrentUICulture = originalCulture;
+			} catch (CultureNotFoundException) {
+				Thread.CurrentThread.CurrentUICulture = originalCulture;
 				Assert.IsTrue (false, culture + ": is not a valid culture. ");
 			}
-
-			var task = CreateTask<CollectITunesArtwork> ();
-			task.ITunesArtwork = new TaskItem [] { new TaskItem (Assembly.GetExecutingAssembly ().Location) };
-
-			Assert.IsFalse (task.Execute (), "Execute failure");
-			Assert.AreEqual (1, Engine.Logger.ErrorEvents.Count, "ErrorCount");
-			bool isTranslated = Engine.Logger.ErrorEvents[0].Message.Contains (errorMessage);
-			Assert.IsTrue (isTranslated, culture + ": is not supported correctly. ");
-
-			Thread.CurrentThread.CurrentUICulture = originalCulture;
 		}
 	}
 }
