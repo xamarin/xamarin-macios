@@ -1079,6 +1079,7 @@ METAL_SOURCES = \
 	Metal/MTLCompat.cs \
 	Metal/MTLComputePassSampleBufferAttachmentDescriptorArray.cs \
 	Metal/MTLDevice.cs \
+	Metal/MTLIntersectionFunctionTable.cs \
 	Metal/MTLArrays.cs \
 	Metal/MTLRasterizationRateLayerDescriptor.cs \
 	Metal/MTLRenderCommandEncoder.cs \

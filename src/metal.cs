@@ -3662,11 +3662,11 @@ namespace Metal {
 		[NullAllowed, Export ("linkedFunctions", ArgumentSemantic.Copy)]
 		MTLLinkedFunctions LinkedFunctions { get; set; }
 
-		[Mac (11, 0), iOS (14, 0), NoTV] // fails introspection on tv on simulator and device
+		[Mac (11, 0), iOS (14, 0), NoTV]
 		[Export ("supportAddingBinaryFunctions")]
 		bool SupportAddingBinaryFunctions { get; set; }
 
-		[Mac (11, 0), iOS (14, 0), NoTV] // fails introspection on tv on simulator and device
+		[Mac (11, 0), iOS (14, 0), NoTV]
 		[Export ("maxCallStackDepth")]
 		nuint MaxCallStackDepth { get; set; }
 	}
