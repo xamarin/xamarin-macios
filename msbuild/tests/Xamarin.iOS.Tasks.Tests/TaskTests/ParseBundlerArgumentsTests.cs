@@ -133,6 +133,21 @@ namespace Xamarin.iOS.Tasks
 			Assert.IsTrue (task.Execute (), input);
 			Assert.AreEqual (output, task.Optimize, output);
 		}
+
+		[TestCase ("--registrar", "")]
+		[TestCase ("--registrar:static", "static")]
+		[TestCase ("--registrar:default", "default")]
+		[TestCase ("--registrar=dynamic,trace", "dynamic,trace")]
+		[TestCase ("-registrar:dummy", "dummy")]
+		[TestCase ("/registrar:dummy", "dummy")]
+		[TestCase ("/registrar:dummy1 /registrar:dummy2", "dummy2")]
+		public void Registrar (string input, string output)
+		{
+			var task = CreateTask<CustomParseBundlerArguments> ();
+			task.ExtraArgs = input;
+			Assert.IsTrue (task.Execute (), input);
+			Assert.AreEqual (output, task.Registrar, output);
+		}
 	}
 }
 
