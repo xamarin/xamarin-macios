@@ -10,7 +10,10 @@ using Xamarin.Tests;
 namespace Xamarin.Tests {
 	[TestFixture]
 	public class DotNetProjectTest {
-		Dictionary<string, string> verbosity = new Dictionary<string, string> { { "_BundlerVerbosity", "1" } };
+		Dictionary<string, string> verbosity = new Dictionary<string, string> {
+			{ "MtouchExtraArgs", "-v" },
+			{ "MonoBundlingExtraArgs", "-v" },
+		};
 
 		string GetProjectPath (string project, string subdir = null)
 		{

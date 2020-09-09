@@ -30,6 +30,13 @@ namespace Xamarin.Linker {
 		public Target Target { get; private set; }
 
 		public LinkContext Context { get; private set; }
+		public DerivedLinkContext DerivedLinkContext { get; private set; }
+		public Profile Profile { get; private set; }
+
+		// The list of assemblies is populated in CollectAssembliesStep.
+		public List<AssemblyDefinition> Assemblies = new List<AssemblyDefinition> ();
+		
+		string user_optimize_flags;
 
 		public static LinkerConfiguration GetInstance (LinkContext context)
 		{
@@ -80,6 +87,34 @@ namespace Xamarin.Linker {
 				case "ItemsDirectory":
 					ItemsDirectory = value;
 					break;
+				case "IsSimulatorBuild":
+					IsSimulatorBuild = string.Equals ("true", value, StringComparison.OrdinalIgnoreCase);
+					break;
+				case "LinkMode":
+					if (!Enum.TryParse<LinkMode> (value, true, out var lm))
+						throw new InvalidOperationException ($"Unable to parse the {key} value: {value} in {linker_file}");
+					Application.LinkMode = lm;
+					break;
+				case "MarshalManagedExceptionMode":
+					if (!string.IsNullOrEmpty (value)) {
+						if (!Application.TryParseManagedExceptionMode (value, out var mode))
+							throw new InvalidOperationException ($"Unable to parse the {key} value: {value} in {linker_file}");
+						Application.MarshalManagedExceptions = mode;
+					}
+					break;
+				case "MarshalObjectiveCExceptionMode":
+					if (!string.IsNullOrEmpty (value)) {
+						if (!Application.TryParseObjectiveCExceptionMode (value, out var mode))
+							throw new InvalidOperationException ($"Unable to parse the {key} value: {value} in {linker_file}");
+						Application.MarshalObjectiveCExceptions = mode;
+					}
+					break;
+				case "Optimize":
+					user_optimize_flags = value;
+					break;
+				case "PartialStaticRegistrarLibrary":
+					PartialStaticRegistrarLibrary = value;
+					break;
 				case "Platform":
 					switch (value) {
 					case "iOS":
@@ -129,9 +164,14 @@ namespace Xamarin.Linker {
 
 			ErrorHelper.Platform = Platform;
 
-			Application = new Application (this, significantLines.ToArray ());
-			Target = new Target (Application);
+			// Optimizations.Parse can only be called after setting ErrorHelper.Platform
+			if (!string.IsNullOrEmpty (user_optimize_flags)) {
+				var messages = new List<ProductException> ();
+				Application.Optimizations.Parse (Application.Platform, user_optimize_flags, messages);
+				ErrorHelper.Show (messages);
+			}
 
+			Application.CreateCache (significantLines.ToArray ());
 			Application.Cache.Location = CacheDirectory;
 			Application.DeploymentTarget = DeploymentTarget;
 			Application.SdkVersion = SdkVersion;
@@ -150,8 +190,7 @@ namespace Xamarin.Linker {
 			if (Driver.TargetFramework.Platform != Platform)
 				throw ErrorHelper.CreateError (99, "Inconsistent platforms. TargetFramework={0}, Platform={1}", Driver.TargetFramework.Platform, Platform);
 
-			Driver.Verbosity = Verbosity;
-			ErrorHelper.Verbosity = Verbosity;
+			Application.InitializeCommon ();
 		}
 
 		public void Write ()
@@ -164,6 +203,11 @@ namespace Xamarin.Linker {
 				Console.WriteLine ($"    DeploymentTarget: {DeploymentTarget}");
 				Console.WriteLine ($"    ItemsDirectory: {ItemsDirectory}");
 				Console.WriteLine ($"    IsSimulatorBuild: {IsSimulatorBuild}");
+				Console.WriteLine ($"    LinkMode: {LinkMode}");
+				Console.WriteLine ($"    MarshalManagedExceptions: {Application.MarshalManagedExceptions} (IsDefault: {Application.IsDefaultMarshalManagedExceptionMode})");
+				Console.WriteLine ($"    MarshalObjectiveCExceptions: {Application.MarshalObjectiveCExceptions}");
+				Console.WriteLine ($"    Optimize: {user_optimize_flags} => {Application.Optimizations}");
+				Console.WriteLine ($"    PartialStaticRegistrarLibrary: {PartialStaticRegistrarLibrary}");
 				Console.WriteLine ($"    Platform: {Platform}");
 				Console.WriteLine ($"    PlatformAssembly: {PlatformAssembly}.dll");
 				Console.WriteLine ($"    SdkVersion: {SdkVersion}");
