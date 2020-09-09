@@ -13526,7 +13526,7 @@ namespace AVFoundation {
 		[Export ("initWithFormat:renderBlock:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (AVAudioFormat format, AVAudioSourceNodeRenderHandler2 renderHandler);
-	}	
+	}
 
 	delegate int AVAudioSinkNodeReceiverHandler (AudioTimeStamp timestamp, uint frameCount, ref AudioBuffers inputData);
 
