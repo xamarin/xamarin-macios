@@ -173,13 +173,15 @@ namespace AVFoundation {
 
 	partial class AVAudioSourceNode {
 		[Obsolete("Use 'AVAudioSourceNode (AVAudioSourceNodeRenderHandler2)' instead.")]
-		public IntPtr Constructor (AVAudioSourceNodeRenderHandler renderHandler)
+		public AVAudioSourceNode (AVAudioSourceNodeRenderHandler renderHandler)
+			: base (NSObjectFlag.Empty)
 		{
 			throw new NotImplementedException ();
 		}
 
 		[Obsolete("Use 'AVAudioSourceNode (AVAudioFormat, AVAudioSourceNodeRenderHandler2)' instead.")]
-		public IntPtr Constructor (AVAudioFormat format, AVAudioSourceNodeRenderHandler renderHandler)
+		public AVAudioSourceNode (AVAudioFormat format, AVAudioSourceNodeRenderHandler renderHandler)
+			: base (NSObjectFlag.Empty)
 		{
 			throw new NotImplementedException ();
 		}
