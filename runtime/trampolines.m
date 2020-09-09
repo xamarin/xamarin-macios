@@ -45,14 +45,18 @@
 #include <execinfo.h>
 void print_stacktrace()
 {
-	const int limit = 32;
+	const int limit = 50;
 	void *array[limit];
 	char **names;
 	int i;
 	backtrace (array, limit);
 	names = backtrace_symbols (array, limit);
-	for (i =0; i < limit; ++i) {
-		PRINT ("%s", names [i]);
+	for (i = 0; i < limit; ++i) {
+		if (strstr (names [i], "???") != NULL) {
+			PRINT ("%s", mono_pmip (array[i]));
+		} else {
+			PRINT ("%s", names [i]);
+		}
 	}
 	free (names);
 }

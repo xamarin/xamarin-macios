@@ -586,6 +586,10 @@
 			"char **", "argv"
 		),
 
+		new Export ("char*", "mono_pmip",
+			"void*",     "ip"
+		),
+
 		new Export (true, "void", "mono_install_load_aot_data_hook",
 			"MonoLoadAotDataFunc", "load_func",
 			"MonoFreeAotDataFunc", "free_func",
