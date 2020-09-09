@@ -91,5 +91,16 @@ namespace Xamarin.Tests
 				completionHandler (42);
 			}
 		}
+
+		[Test]
+		public void ForcedTypeForProxiedObject ()
+		{
+			using (var obj = new ObjCRegistrarTest ()) {
+				var proxiedObject = obj.GetProxiedObject ();
+				Assert.AreEqual (314, proxiedObject.GetNumber (), "Number");
+				Assert.AreEqual ("IsProxied", proxiedObject.Class.Name, "Proxied Class Name");
+				Assert.AreEqual ("ToBeProxied", proxiedObject.GetType ().Name, "Bound Class Name");
+			}
+		}
 	}
 }

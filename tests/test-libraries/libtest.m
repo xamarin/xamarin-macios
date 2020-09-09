@@ -294,6 +294,45 @@ static UltimateMachine *shared;
 @end
 
 /*
+ * ObjC test classes used for NSProxy testing
+ */
+@implementation ToBeProxied
+	-(int) getNumber
+	{
+		return 271;
+	}
+@end
+
+@implementation IsProxied
+	-(int) getNumber
+	{
+		return 314;
+	}
+
+	-(instancetype) init
+	{
+		return self;
+	}
+
+	-(void) forwardInvocation: (NSInvocation *) invocation
+	{
+		ToBeProxied *obj = [[ToBeProxied alloc] init];
+		[invocation setTarget:obj];
+		[invocation invoke];
+	}
+
+	-(NSMethodSignature *) methodSignatureForSelector: (SEL) sel
+	{
+		ToBeProxied *obj = [[ToBeProxied alloc] init];
+		NSMethodSignature *signature = [obj methodSignatureForSelector: sel];
+		if (!signature)
+			signature = [super methodSignatureForSelector:sel];
+
+		return signature;
+	}
+@end
+
+/*
  * ObjC test class used for registrar tests.
 */
 @implementation ObjCRegistrarTest
@@ -494,6 +533,11 @@ static UltimateMachine *shared;
 		obj5P = NULL;
 		obj6P = NULL;
 		obj7P = NULL;
+	}
+
+	-(ToBeProxied *) getProxiedObject
+	{
+		return (ToBeProxied *) [[[IsProxied alloc] init] autorelease];
 	}
 @end
 

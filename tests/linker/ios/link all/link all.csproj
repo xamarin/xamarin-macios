@@ -28,7 +28,7 @@
     <MtouchDebug>True</MtouchDebug>
     <MtouchLink>Full</MtouchLink>
     <MtouchI18n>mideast,other</MtouchI18n>
-    <MtouchExtraArgs>--registrar=static --optimize=all,-remove-dynamic-registrar,-force-rejected-types-removal</MtouchExtraArgs>
+    <MtouchExtraArgs>--registrar=static --optimize=all,-remove-dynamic-registrar,-force-rejected-types-removal,-register-protocols</MtouchExtraArgs>
     <MtouchArch>i386, x86_64</MtouchArch>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
@@ -42,7 +42,7 @@
     <MtouchI18n>mideast,other</MtouchI18n>
     <MtouchArch>i386, x86_64</MtouchArch>
     <DefineConstants>$(DefineConstants)</DefineConstants>
-    <MtouchExtraArgs>--registrar:static --optimize=all,-remove-dynamic-registrar,-force-rejected-types-removal</MtouchExtraArgs>
+    <MtouchExtraArgs>--registrar:static --optimize=all,-remove-dynamic-registrar,-force-rejected-types-removal,-register-protocols</MtouchExtraArgs>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
@@ -58,7 +58,7 @@
     <MtouchLink>Full</MtouchLink>
     <MtouchI18n>mideast,other</MtouchI18n>
     <MtouchArch>ARMv7, ARM64</MtouchArch>
-    <MtouchExtraArgs>-gcc_flags="-UhoItsB0rken" --optimize=all,-remove-dynamic-registrar,-force-rejected-types-removal</MtouchExtraArgs>
+    <MtouchExtraArgs>-gcc_flags="-UhoItsB0rken" --optimize=all,-remove-dynamic-registrar,-force-rejected-types-removal,-register-protocols</MtouchExtraArgs>
     <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
@@ -75,7 +75,7 @@
     <MtouchLink>Full</MtouchLink>
     <MtouchI18n>mideast,other</MtouchI18n>
     <MtouchArch>ARMv7</MtouchArch>
-    <MtouchExtraArgs>-gcc_flags="-UhoItsB0rken" --optimize=all,-remove-dynamic-registrar,-force-rejected-types-removal</MtouchExtraArgs>
+    <MtouchExtraArgs>-gcc_flags="-UhoItsB0rken" --optimize=all,-remove-dynamic-registrar,-force-rejected-types-removal,-register-protocols</MtouchExtraArgs>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug64|iPhone' ">
@@ -91,7 +91,7 @@
     <MtouchLink>Full</MtouchLink>
     <MtouchI18n>mideast,other</MtouchI18n>
     <MtouchArch>ARM64</MtouchArch>
-    <MtouchExtraArgs>-gcc_flags="-UhoItsB0rken" --optimize=all,-remove-dynamic-registrar,-force-rejected-types-removal</MtouchExtraArgs>
+    <MtouchExtraArgs>-gcc_flags="-UhoItsB0rken" --optimize=all,-remove-dynamic-registrar,-force-rejected-types-removal,-register-protocols</MtouchExtraArgs>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
@@ -105,7 +105,7 @@
     <MtouchI18n>mideast,other</MtouchI18n>
     <MtouchUseLlvm>True</MtouchUseLlvm>
     <MtouchArch>ARMv7, ARM64</MtouchArch>
-    <MtouchExtraArgs>--optimize=all,-remove-dynamic-registrar,-force-rejected-types-removal</MtouchExtraArgs>
+    <MtouchExtraArgs>--optimize=all,-remove-dynamic-registrar,-force-rejected-types-removal,-register-protocols</MtouchExtraArgs>
     <DefineConstants>$(DefineConstants)</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
@@ -120,7 +120,7 @@
     <MtouchI18n>mideast,other</MtouchI18n>
     <MtouchUseLlvm>True</MtouchUseLlvm>
     <MtouchArch>ARMv7</MtouchArch>
-    <MtouchExtraArgs>--optimize=all,-remove-dynamic-registrar,-force-rejected-types-removal</MtouchExtraArgs>
+    <MtouchExtraArgs>--optimize=all,-remove-dynamic-registrar,-force-rejected-types-removal,-register-protocols</MtouchExtraArgs>
     <DefineConstants>$(DefineConstants)</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
@@ -135,7 +135,7 @@
     <MtouchI18n>mideast,other</MtouchI18n>
     <MtouchUseLlvm>True</MtouchUseLlvm>
     <MtouchArch>ARM64</MtouchArch>
-    <MtouchExtraArgs>--optimize=all,-remove-dynamic-registrar,-force-rejected-types-removal</MtouchExtraArgs>
+    <MtouchExtraArgs>--optimize=all,-remove-dynamic-registrar,-force-rejected-types-removal,-register-protocols</MtouchExtraArgs>
     <DefineConstants>$(DefineConstants)</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
@@ -150,7 +150,7 @@
     <MtouchI18n>mideast,other</MtouchI18n>
     <MtouchUseLlvm>true</MtouchUseLlvm>
     <MtouchArch>ARMv7, ARM64</MtouchArch>
-    <MtouchExtraArgs>--bitcode:full --optimize=all,-remove-dynamic-registrar,-force-rejected-types-removal</MtouchExtraArgs>
+    <MtouchExtraArgs>--bitcode:full --optimize=all,-remove-dynamic-registrar,-force-rejected-types-removal,-register-protocols</MtouchExtraArgs>
     <DefineConstants>$(DefineConstants)</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>

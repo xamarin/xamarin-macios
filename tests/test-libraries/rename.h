@@ -11,6 +11,8 @@
 	#define UltimateMachine   object_UltimateMachine
 	#define FrameworkTest     object_FrameworkTest
 	#define RefOutParameters  object_RefOutParameters
+	#define ToBeProxied       object_ToBeProxied
+	#define IsProxied         object_IsProxied
 	#define Sc                object_Sc
 	#define Scc               object_Scc
 	#define Sccc              object_Sccc
@@ -80,6 +82,8 @@
 	#define UltimateMachine   ar_UltimateMachine
 	#define FrameworkTest     ar_FrameworkTest
 	#define RefOutParameters  ar_RefOutParameters
+	#define ToBeProxied       ar_ToBeProxied
+	#define IsProxied         ar_IsProxied
 	#define Sc                ar_Sc
 	#define Scc               ar_Scc
 	#define Sccc              ar_Sccc

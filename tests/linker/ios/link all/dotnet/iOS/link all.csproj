@@ -11,7 +11,7 @@
     <MtouchLink>Full</MtouchLink>
     <AssetTargetFallback>xamarinios10;$(AssetTargetFallback)</AssetTargetFallback>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <MtouchExtraArgs>--optimize=all,-remove-dynamic-registrar,-force-rejected-types-removal</MtouchExtraArgs>
+    <MtouchExtraArgs>--optimize=all,-remove-dynamic-registrar,-force-rejected-types-removal,-register-protocols</MtouchExtraArgs>
   </PropertyGroup>
 
   <ItemGroup>
