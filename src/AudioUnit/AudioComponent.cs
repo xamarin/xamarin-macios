@@ -39,6 +39,9 @@ using Foundation;
 using UIKit;
 #else
 using AppKit;
+#if !COREBUILD
+using UIImage=AppKit.NSImage;
+#endif
 #endif
 
 namespace AudioUnit
@@ -326,9 +329,16 @@ namespace AudioUnit
 			}
 		}
 
-		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[NoWatch, TV (14,0), Mac (11,0), iOS (14,0)]
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern unsafe IntPtr AudioComponentCopyIcon (IntPtr comp);
+
+		[NoWatch, TV (14,0), iOS (14,0), Mac (11,0)]
+		public UIImage CopyIcon ()
+		{
+			var ptr = AudioComponentCopyIcon (handle);
+			return Runtime.GetNSObject<UIImage> (ptr, owns: true);
+		}
 
 #if !MONOMAC
 		[iOS (7,0)]
@@ -352,12 +362,6 @@ namespace AudioUnit
 			}
 		}
 
-		[Watch (7,0), TV (14,0), iOS (14,0)]
-		public UIImage CopyIcon () {
-			var ptr = AudioComponentCopyIcon (handle);
-			return ptr == IntPtr.Zero ? null : new UIImage (ptr);
-		}
-
 #else
 		// extern NSImage * __nullable AudioComponentGetIcon (AudioComponent __nonnull comp) __attribute__((availability(macosx, introduced=10.11)));
 		[Mac (10,11)]
@@ -370,11 +374,6 @@ namespace AudioUnit
 			return new AppKit.NSImage (AudioComponentGetIcon (handle));
 		}
 
-		[Mac (11,0)]
-		public AppKit.NSImage CopyIcon () { 
-			var ptr = AudioComponentCopyIcon (handle);
-			return ptr == IntPtr.Zero ? null : new AppKit.NSImage (ptr);
-		}
 #endif
 
 #if IOS || MONOMAC
