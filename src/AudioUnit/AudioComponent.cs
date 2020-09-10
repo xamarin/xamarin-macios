@@ -361,7 +361,6 @@ namespace AudioUnit
 				return AudioComponentGetLastActiveTime (handle);
 			}
 		}
-
 #else
 		// extern NSImage * __nullable AudioComponentGetIcon (AudioComponent __nonnull comp) __attribute__((availability(macosx, introduced=10.11)));
 		[Mac (10,11)]
@@ -373,7 +372,6 @@ namespace AudioUnit
 		{
 			return new AppKit.NSImage (AudioComponentGetIcon (handle));
 		}
-
 #endif
 
 #if IOS || MONOMAC
