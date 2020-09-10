@@ -351,7 +351,6 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 		public static void AddToNode (this XmlDocument csproj, string node, string value, string platform, string configuration)
 		{
 			var nodes = csproj.SelectNodes ($"//*[local-name() = '{node}']");
-			var found = false;
 			foreach (XmlNode mea in nodes) {
 				if (!IsNodeApplicable (mea, platform, configuration))
 					continue;
@@ -359,22 +358,18 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 				if (mea.InnerText.Length > 0 && mea.InnerText [mea.InnerText.Length - 1] != ' ')
 					mea.InnerText += " ";
 				mea.InnerText += value;
-				found = true;
-			}
-
-			if (found)
 				return;
+			}
 
 			// The project might not have this node, so create one of none was found.
-			var propertyGroups = csproj.SelectNodes ("//*[local-name() = 'PropertyGroup' and @Condition]");
-			foreach (XmlNode pg in propertyGroups) {
-				if (!EvaluateCondition (pg, platform, configuration))
-					continue;
+			var propertyGroups = csproj.SelectNodes ("//*[local-name() = 'PropertyGroup' and @Condition]").Cast<XmlNode> ();
+			var propertyGroup = propertyGroups.FirstOrDefault (v => EvaluateCondition (v, platform, configuration));
+			if (propertyGroup == null)
+				propertyGroup = csproj.AddPropertyGroup (platform, configuration);
 
-				var mea = csproj.CreateElement (node, csproj.GetNamespace ());
-				mea.InnerText = value;
-				pg.AppendChild (mea);
-			}
+			var newNode = csproj.CreateElement (node, csproj.GetNamespace ());
+			newNode.InnerText = value;
+			propertyGroup.AppendChild (newNode);
 		}
 
 		public static string GetMtouchLink (this XmlDocument csproj, string platform, string configuration)
@@ -827,25 +822,40 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 				return;
 			}
 
-			// Create a new PropertyGroup with the desired condition, and add it just after the last PropertyGroup in the csproj.
-			var projectNode = csproj.SelectSingleNode ("//*[local-name() = 'Project']");
-			var lastPropertyGroup = csproj.SelectNodes ("//*[local-name() = 'PropertyGroup']").Cast<XmlNode> ().Last ();
-			var newPropertyGroup = csproj.CreateElement ("PropertyGroup", csproj.GetNamespace ());
-			var conditionAttribute = csproj.CreateAttribute ("Condition");
-			var condition = "";
-			if (!string.IsNullOrEmpty (platform))
-				condition = $"'$(Platform)' == '{platform}'";
-			if (!string.IsNullOrEmpty (configuration)) {
-				if (!string.IsNullOrEmpty (condition))
-					condition += " And ";
-				condition += $"'$(Configuration)' == '{configuration}'";
-			}
-			conditionAttribute.Value = condition;
-			newPropertyGroup.Attributes.Append (conditionAttribute);
+			var newPropertyGroup = csproj.AddPropertyGroup (platform, configuration);
 			var defineConstantsElement = csproj.CreateElement ("DefineConstants", csproj.GetNamespace ());
 			defineConstantsElement.InnerText = "$(DefineConstants);" + value;
 			newPropertyGroup.AppendChild (defineConstantsElement);
+		}
+
+		static XmlNode AddPropertyGroup (this XmlDocument csproj, string platform, string configuration)
+		{
+			// Create a new PropertyGroup with the desired condition, and add it just after the last PropertyGroup in the csproj.
+			var projectNode = csproj.SelectSingleNode ("//*[local-name() = 'Project']");
+			var lastPropertyGroup = csproj.SelectNodes ("/*[local-name() = 'Project']/*[local-name() = 'PropertyGroup']").Cast<XmlNode> ().Last ();
+			var newPropertyGroup = csproj.CreateElement ("PropertyGroup", csproj.GetNamespace ());
+			if (!string.IsNullOrEmpty (platform) || !string.IsNullOrEmpty (configuration)) {
+				// Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' "
+				var conditionAttribute = csproj.CreateAttribute ("Condition");
+				var left = string.Empty;
+				var right = string.Empty;
+				if (!string.IsNullOrEmpty (configuration)) {
+					left = "$(Configuration)";
+					right = configuration;
+				}
+				if (!string.IsNullOrEmpty (platform)) {
+					if (!string.IsNullOrEmpty (left)) {
+						left += "|";
+						right += "|";
+					}
+					left += "$(Platform)";
+					right += platform;
+				}
+				conditionAttribute.Value = $"'{left}' == '{right}'";
+				newPropertyGroup.Attributes.Append (conditionAttribute);
+			}
 			projectNode.InsertAfter (newPropertyGroup, lastPropertyGroup);
+			return newPropertyGroup;
 		}
 
 		public static void AddTopLevelProperty (this XmlDocument csproj, string property, string value)
