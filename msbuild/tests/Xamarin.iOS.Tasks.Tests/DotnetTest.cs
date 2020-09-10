@@ -37,7 +37,7 @@ namespace Xamarin.iOS.Tasks {
 		[TestCase ("MyAppWithPackageReference")]
 		[TestCase ("MyCoreMLApp")]
 		[TestCase ("MyIBToolLinkTest")]
-		// [TestCase ("MyiOSAppWithBinding")] // TODO: .NET version fails to compile due to a bug wrt to how we pass frameworks to the linker.
+		[TestCase ("MyiOSAppWithBinding")]
 		// [TestCase ("MyLinkedAssets")] // TODO: Requires fat apps, which has not been implemented yet
 		[TestCase ("MyMasterDetailApp")]
 		[TestCase ("MyMetalGame")]
