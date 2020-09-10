@@ -38,20 +38,6 @@ void x_mdltransform_get_rotation_matrix (MDLTransform *self, NSTimeInterval time
 typedef unsigned int (^RegistrarTestBlock) (unsigned int magic);
 
 /*
- * ObjC test classes used for NSProxy testing
- */
-@interface ToBeProxied : NSObject {
-}
-	-(int) getNumber;
-@end
-@interface IsProxied : NSProxy {
-	// Do not bind this class, it's a private class.
-}
-	-(instancetype) init;
-	-(int) getNumber;
-@end
-
-/*
  * ObjC test class used for registrar tests.
  */
 @interface ObjCRegistrarTest : NSObject {
@@ -137,7 +123,6 @@ typedef unsigned int (^RegistrarTestBlock) (unsigned int magic);
 	-(void) setINSCodingArrayMethod: (NSArray *) array;
 	-(NSArray *) getINSCodingArrayMethod;
 
-	-(ToBeProxied *) getProxiedObject;
 @end
 
 @protocol ProtocolAssignerProtocol

@@ -32,16 +32,6 @@ namespace Bindings.Test {
 	delegate uint RegistrarTestBlock (uint magic);
 
 	/*
-	 * ObjC test class used for NSProxy testing.
-	 * Do not bind the IsProxied class (it's supposed to be private)
-	 */
-	[BaseType (typeof (NSObject))]
-	interface ToBeProxied {
-		[Export ("getNumber")]
-		int GetNumber ();
-	}
-
-	/*
 	 * ObjC test class used for registrar
 	 */
 	[BaseType (typeof (NSObject))]
@@ -246,10 +236,6 @@ namespace Bindings.Test {
 		[return: NullAllowed]
 		[Export ("getINSCodingArrayMethod")]
 		INSCoding[] GetINSCodingArrayMethod ();
-
-		[return: ForcedType]
-		[Export ("getProxiedObject")]
-		ToBeProxied GetProxiedObject ();
 	}
 
 	[Protocol]

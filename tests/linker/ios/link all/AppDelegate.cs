@@ -35,7 +35,6 @@ namespace LinkAll
 			// register every tests included in the main application/assembly
 			runner.Add (System.Reflection.Assembly.GetExecutingAssembly ());
 			runner.Add (typeof (BundledResources.ResourcesTest).Assembly);
-			runner.Add (typeof (Bindings.Test.CFunctions).Assembly);
 
 			window.RootViewController = new UINavigationController (runner.GetViewController ());
 			
