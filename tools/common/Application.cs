@@ -707,6 +707,7 @@ namespace Xamarin.Bundler {
 
 		public IEnumerable<Abi> Abis {
 			get { return abis; }
+			set { abis = new List<Abi> (value); }
 		}
 
 		public bool IsArchEnabled (Abi arch)
