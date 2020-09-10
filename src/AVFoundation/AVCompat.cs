@@ -1,7 +1,5 @@
 // Copyright 2014-2016 Xamarin Inc. All rights reserved.
 
-#if !WATCH
-
 using System;
 using System.ComponentModel;
 using OpenTK;
@@ -10,6 +8,26 @@ using Foundation;
 using ObjCRuntime;
 
 namespace AVFoundation {
+#if !XAMCORE_4_0
+	public delegate int AVAudioSourceNodeRenderHandler (bool isSilence, AudioToolbox.AudioTimeStamp timestamp, uint frameCount, ref AudioToolbox.AudioBuffers outputData);
+
+	partial class AVAudioSourceNode {
+		[Obsolete("Use 'AVAudioSourceNode (AVAudioSourceNodeRenderHandler2)' instead.")]
+		public AVAudioSourceNode (AVAudioSourceNodeRenderHandler renderHandler)
+			: base (NSObjectFlag.Empty)
+		{
+			throw new InvalidOperationException ("Do not use this constructor. Use the 'AVAudioSourceNode (AVAudioSourceNodeRenderHandler2)' constructor instead.");
+		}
+
+		[Obsolete("Use 'AVAudioSourceNode (AVAudioFormat, AVAudioSourceNodeRenderHandler2)' instead.")]
+		public AVAudioSourceNode (AVAudioFormat format, AVAudioSourceNodeRenderHandler renderHandler)
+			: base (NSObjectFlag.Empty)
+		{
+			throw new InvalidOperationException ("Do not use this constructor. Use the 'AVAudioSourceNode (AVAudioFormat, AVAudioSourceNodeRenderHandler2)' constructor instead.");
+		}
+	}
+#endif // !XAMCORE_4_0
+#if !WATCH
 #if MONOMAC && !XAMCORE_4_0
 	[Obsolete ("This API is not available on this platform.")]
 	public partial class AVCaptureDataOutputSynchronizer : NSObject
@@ -166,24 +184,6 @@ namespace AVFoundation {
 		[Obsolete ("Please use the static 'SharedInstance' property as this type is not meant to be created.")]
 		public AVAudioUnitComponentManager ()
 		{
-		}
-	}
-
-	public delegate int AVAudioSourceNodeRenderHandler (bool isSilence, AudioToolbox.AudioTimeStamp timestamp, uint frameCount, ref AudioToolbox.AudioBuffers outputData);
-
-	partial class AVAudioSourceNode {
-		[Obsolete("Use 'AVAudioSourceNode (AVAudioSourceNodeRenderHandler2)' instead.")]
-		public AVAudioSourceNode (AVAudioSourceNodeRenderHandler renderHandler)
-			: base (NSObjectFlag.Empty)
-		{
-			throw new NotImplementedException ();
-		}
-
-		[Obsolete("Use 'AVAudioSourceNode (AVAudioFormat, AVAudioSourceNodeRenderHandler2)' instead.")]
-		public AVAudioSourceNode (AVAudioFormat format, AVAudioSourceNodeRenderHandler renderHandler)
-			: base (NSObjectFlag.Empty)
-		{
-			throw new NotImplementedException ();
 		}
 	}
 
@@ -514,6 +514,5 @@ namespace AVFoundation {
 
 #endif // TVOS
 #endif // !XAMCORE_4_0
+#endif // !WATCH
 }
-
-#endif
