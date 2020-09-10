@@ -11,19 +11,19 @@ namespace ScriptingBridge {
 		public static T FromBundleIdentifier<T> (string ident) where T : SBApplication, new()
 		{
 			using (var u = FromBundleIdentifier (ident))
-				return (T)System.Activator.CreateInstance (typeof(T), BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, null, new object [] { u.Handle }, null);
+				return u == null ? (T)u : (T)System.Activator.CreateInstance (typeof(T), BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, null, new object [] { u.Handle }, null);
 		}
 
 		public static T FromURL<T> (NSUrl url) where T : SBApplication
 		{
 			using (var u = FromURL (url))
-				return (T)System.Activator.CreateInstance (typeof(T), BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, null, new object [] { u.Handle }, null);
+				return u == null ? (T)u : (T)System.Activator.CreateInstance (typeof(T), BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, null, new object [] { u.Handle }, null);
 		}
 
 		public static T FromProcessIdentifier<T> (int /* pid_t = int */ pid) where T : SBApplication
 		{
 			using (var u = FromProcessIdentifier (pid))
-				return (T)System.Activator.CreateInstance (typeof(T), BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, null, new object [] { u.Handle }, null);
+				return u == null ? (T)u : (T)System.Activator.CreateInstance (typeof(T), BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, null, new object [] { u.Handle }, null);
 		}
 	}
 }
