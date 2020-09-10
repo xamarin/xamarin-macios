@@ -934,7 +934,9 @@ namespace Registrar {
 					UnlockRegistrar ();
 			}
 
-			throw ErrorHelper.CreateError (4143, "The ObjectiveC class '{0}' could not be registered, it does not seem to derive from any known ObjectiveC class (including NSObject).", Marshal.PtrToStringAuto (Class.class_getName (original_class)));
+			if (throw_on_error)
+				throw ErrorHelper.CreateError (4143, "The ObjectiveC class '{0}' could not be registered, it does not seem to derive from any known ObjectiveC class (including NSObject).", Marshal.PtrToStringAuto (Class.class_getName (original_class)));
+			return null;
 		}
 
 		bool RegisterMethod (ObjCMethod method)
