@@ -378,6 +378,7 @@ all-local:: $(MSBUILD_PRODUCTS) .stamp-test-xml
 	$(Q) touch $@
 
 # make all the target assemblies build when any of the sources have changed
+$(foreach dll,$(MSBUILD_TASK_ASSEMBLIES),$(dll)/bin/$(CONFIG)/$(TARGETFRAMEWORK)/$(dll).dll $(dll)/bin/$(CONFIG)/$(TARGETFRAMEWORK)/$(dll).pdb): .build-stamp
 	echo $^
 	ls -la $^
 

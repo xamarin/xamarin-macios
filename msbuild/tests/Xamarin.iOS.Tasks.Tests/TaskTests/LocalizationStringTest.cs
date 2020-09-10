@@ -37,10 +37,8 @@ namespace Xamarin.iOS.Tasks {
 				Assert.AreEqual (1, Engine.Logger.ErrorEvents.Count, "ErrorCount");
 				bool isTranslated = Engine.Logger.ErrorEvents[0].Message.Contains (errorMessage);
 				Assert.IsTrue (isTranslated, culture + ": is not supported correctly. ");
+			} finally {
 				Thread.CurrentThread.CurrentUICulture = originalCulture;
-			} catch (CultureNotFoundException) {
-				Thread.CurrentThread.CurrentUICulture = originalCulture;
-				Assert.IsTrue (false, culture + ": is not a valid culture. ");
 			}
 		}
 	}
