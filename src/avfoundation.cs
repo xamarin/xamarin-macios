@@ -13512,20 +13512,31 @@ namespace AVFoundation {
 		[Export ("replacementFormatDescription")]
 		CMFormatDescription ReplacementFormatDescription { get; }
 	}
-
+#if XAMCORE_4_0
+	delegate /* OSStatus */ int AVAudioSourceNodeRenderHandler (ref bool isSilence, ref AudioTimeStamp timestamp, uint frameCount, ref AudioBuffers outputData);
+#else
+	delegate /* OSStatus */ int AVAudioSourceNodeRenderHandler (bool isSilence, AudioToolbox.AudioTimeStamp timestamp, uint frameCount, ref AudioBuffers outputData);
 	delegate /* OSStatus */ int AVAudioSourceNodeRenderHandler2 (ref bool isSilence, ref AudioTimeStamp timestamp, uint frameCount, ref AudioBuffers outputData);
-
+#endif
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 	[BaseType (typeof(AVAudioNode))]
 	[DisableDefaultCtor]
 	interface AVAudioSourceNode : AVAudioMixing {
 		[Export ("initWithRenderBlock:")]
 		[DesignatedInitializer]
+#if XAMCORE_4_0
+		IntPtr Constructor (AVAudioSourceNodeRenderHandler renderHandler);
+#else
 		IntPtr Constructor (AVAudioSourceNodeRenderHandler2 renderHandler);
+#endif
 
 		[Export ("initWithFormat:renderBlock:")]
 		[DesignatedInitializer]
+#if XAMCORE_4_0
+                IntPtr Constructor (AVAudioFormat format, AVAudioSourceNodeRenderHandler renderHandler);
+#else
 		IntPtr Constructor (AVAudioFormat format, AVAudioSourceNodeRenderHandler2 renderHandler);
+#endif
 	}
 
 	delegate int AVAudioSinkNodeReceiverHandler (AudioTimeStamp timestamp, uint frameCount, ref AudioBuffers inputData);
