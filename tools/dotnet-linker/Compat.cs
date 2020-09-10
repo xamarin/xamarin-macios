@@ -1,6 +1,7 @@
 // Compat.cs: might not be ideal but it eases code sharing with existing code during the initial implementation.
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 using Mono.Cecil;
 using Mono.Linker;
@@ -101,9 +102,14 @@ namespace Mono.Linker {
 		{
 			throw new NotImplementedException ();
 		}
+
+		static ConditionalWeakTable<AnnotationStore, Dictionary<string, Dictionary<IMetadataTokenProvider, object>>> custom_annotations = new ConditionalWeakTable<AnnotationStore, Dictionary<string, Dictionary<IMetadataTokenProvider, object>>> ();
 		public static Dictionary<IMetadataTokenProvider, object> GetCustomAnnotations (this AnnotationStore self, string name)
 		{
-			throw new NotImplementedException ();
+			var store = custom_annotations.GetOrCreateValue (self);
+			if (!store.TryGetValue (name, out var dict))
+				store [name] = dict = new Dictionary<IMetadataTokenProvider, object> ();
+			return dict;
 		}
 	}
 }

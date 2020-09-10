@@ -566,7 +566,7 @@ namespace Xamarin.Linker {
 					}
 				}
 			}
-#if TRACE
+#if false
 			Console.WriteLine ($"{caller.FullName}:");
 			for (int i = 0; i < reachable.Length; i++) {
 				Console.WriteLine ($"{(reachable [i] ? "   " : "-  ")} {instructions [i]}");
