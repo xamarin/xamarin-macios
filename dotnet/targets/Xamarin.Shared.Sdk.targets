@@ -221,6 +221,8 @@
 				<BeforeStep>LoadReferencesStep</BeforeStep>
 				<Type>Xamarin.SetupStep</Type>
 			</_TrimmerCustomSteps>
+
+			<TrimmerRootDescriptor Include="@(_BundlerXmlDefinitions)" />
 		</ItemGroup>
 
 		<!-- Create the file with our custom linker options -->
