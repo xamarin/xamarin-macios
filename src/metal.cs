@@ -5037,7 +5037,7 @@ namespace Metal {
 
 		[Abstract]
 		[Export ("setBuffers:offsets:withRange:")]
-		void SetBuffers (IMTLBuffer[] buffers, /* nuint[]*/ IntPtr offsets, NSRange range);
+		void SetBuffers (IntPtr /* IMTLBuffer[] */ buffers, /* nuint[]*/ IntPtr offsets, NSRange range);
 
 		[Abstract]
 		[Export ("setFunction:atIndex:")]

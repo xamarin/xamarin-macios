@@ -36,7 +36,7 @@ namespace MonoTouchFixtures.Metal {
 				Assert.Inconclusive ("Could not get functions for the pipeline.");
 
 			function = library.CreateFunction (library.FunctionNames [0]);
-			pipelineState = device.CreateComputePipelineState (function, MTLPipelineOption.BufferTypeInfo, out MTLComputePipelineReflection reflection, out NSError error);
+			pipelineState = device.CreateComputePipelineState (function, MTLPipelineOption.ArgumentInfo, out MTLComputePipelineReflection reflection, out NSError error);
 
 			if (error != null) { 
 				Assert.Inconclusive ($"Could not create pipeline {error}");
@@ -58,10 +58,18 @@ namespace MonoTouchFixtures.Metal {
 		[Test]
 		public void SetBuffersTest ()
 		{
+			Assert.Throws<ArgumentNullException> (() => {
+				functionTable.SetBuffers (null, new nuint [0], new NSRange ());
+			}, "Null buffers should throw.");
+
+			Assert.Throws<ArgumentNullException> (() => {
+				functionTable.SetBuffers (new IMTLBuffer [0] , null, new NSRange ());
+			}, "Null offsets should throw.");
+
 			// assert we do not crash or throw, we are testing the extension method
 			Assert.DoesNotThrow (() => {
 				functionTable.SetBuffers (new IMTLBuffer [0], new nuint [0], new NSRange ());
-			});
+			}, "Should not throw");
 		}
 
 	}
