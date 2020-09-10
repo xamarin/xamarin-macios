@@ -68,6 +68,11 @@ namespace Xamarin.Bundler {
 		public SymbolMode SymbolMode;
 		public HashSet<string> IgnoredSymbols = new HashSet<string> ();
 
+		public string CompilerPath;
+
+		public Application ContainerApp; // For extensions, this is the containing app
+		public bool IsCodeShared { get; private set; }
+
 		public HashSet<string> Frameworks = new HashSet<string> ();
 		public HashSet<string> WeakFrameworks = new HashSet<string> ();
 
