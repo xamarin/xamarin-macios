@@ -346,7 +346,7 @@
 	</Target>
 
 	<Target Name="_CompileNativeExecutable"
-		DependsOnTargets="_DetectSdkLocations;_ComputeTargetArchitectures;_GenerateBundleName;_ComputeVariables;_GetMinimumOSVersion;_ComputeNativeExecutableInputs"
+		DependsOnTargets="_DetectSdkLocations;_ComputeTargetArchitectures;_GenerateBundleName;_GetMinimumOSVersion;_ComputeNativeExecutableInputs"
 		Inputs="@(_CompileNativeExecutableFile)"
 		Outputs="@(_CompileNativeExecutableFile -> '%(OutputFile)')"
 		>
