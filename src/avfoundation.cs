@@ -13533,7 +13533,7 @@ namespace AVFoundation {
 		[Export ("initWithFormat:renderBlock:")]
 		[DesignatedInitializer]
 #if XAMCORE_4_0
-                IntPtr Constructor (AVAudioFormat format, AVAudioSourceNodeRenderHandler renderHandler);
+		IntPtr Constructor (AVAudioFormat format, AVAudioSourceNodeRenderHandler renderHandler);
 #else
 		IntPtr Constructor (AVAudioFormat format, AVAudioSourceNodeRenderHandler2 renderHandler);
 #endif
