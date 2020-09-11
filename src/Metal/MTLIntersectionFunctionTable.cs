@@ -17,17 +17,16 @@ namespace Metal {
 			if (offsets == null)
 				throw new ArgumentNullException (nameof (offsets));
 
+			var bufferPtrArray = new IntPtr [buffers.Length];
+			// get all intptr from the array to pass to the lower level call
+			for (var i = 0; i < buffers.Length; i++) {
+				bufferPtrArray [i] = buffers [i].Handle;
+			}
+
 			unsafe {
-				// cannot used fixed or we get:
-				// Cannot take the address of, get the size of, or declare a pointer to a managed type ('IMTLBuffer')
-				var buffersHandle = GCHandle.Alloc (buffers, GCHandleType.Pinned);
-				IntPtr buffersPtr = buffersHandle.AddrOfPinnedObject ();
+				fixed (void* buffersPtr = bufferPtrArray)
 				fixed (void* offsetsPtr = offsets) { // can use fixed
-					try {
-						table.SetBuffers (buffersPtr, (IntPtr) offsetsPtr, range);
-					} finally {
-						buffersHandle.Free ();
-					}
+					table.SetBuffers ((IntPtr) buffersPtr, (IntPtr) offsetsPtr, range);
 				}
 			}
 		}
