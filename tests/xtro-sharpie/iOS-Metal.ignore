@@ -86,10 +86,6 @@
 !missing-selector! MTLHeapDescriptor::setType: not bound
 !missing-selector! MTLHeapDescriptor::type not bound
 
-# Fails instrospection issue: https://github.com/xamarin/maccore/issues/1979
-!missing-selector! MTLIndirectCommandBufferDescriptor::maxKernelBufferBindCount not bound
-!missing-selector! MTLIndirectCommandBufferDescriptor::setMaxKernelBufferBindCount: not bound
-
 # Selectors reported as not working by instrospection: https://github.com/xamarin/maccore/issues/1976
 !missing-selector! MTLRasterizationRateLayerDescriptor::horizontal not bound
 !missing-selector! MTLRasterizationRateLayerDescriptor::horizontalSampleStorage not bound
@@ -128,5 +124,53 @@
 !missing-null-allowed! 'System.Void Metal.MTLRenderPipelineDescriptor::set_Label(System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void Metal.MTLRenderPipelineDescriptor::set_VertexDescriptor(Metal.MTLVertexDescriptor)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void Metal.MTLSamplerDescriptor::set_Label(System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void Metal.MTLTileRenderPipelineDescriptor::set_Label(System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void Metal.MTLVertexBufferLayoutDescriptorArray::SetObject(Metal.MTLVertexBufferLayoutDescriptor,System.nuint)' is missing an [NullAllowed] on parameter #0
+
+# new methods added to a protocol, they will be abstract in XAMCORE_4
+!incorrect-protocol-member! MTLArgumentEncoder::setAccelerationStructure:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLArgumentEncoder::setIntersectionFunctionTable:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLArgumentEncoder::setIntersectionFunctionTables:withRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLArgumentEncoder::setVisibleFunctionTable:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLArgumentEncoder::setVisibleFunctionTables:withRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::sampleCountersInBuffer:atSampleIndex:withBarrier: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::setAccelerationStructure:atBufferIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::setIntersectionFunctionTable:atBufferIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::setIntersectionFunctionTables:withBufferRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::setVisibleFunctionTable:atBufferIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::setVisibleFunctionTables:withBufferRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::accelerationStructureSizesWithDescriptor: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::counterSets is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newAccelerationStructureWithDescriptor: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newAccelerationStructureWithSize: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newBinaryArchiveWithDescriptor:error: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newCounterSampleBufferWithDescriptor:error: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newDynamicLibrary:error: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newDynamicLibraryWithURL:error: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::sampleTimestamps:gpuTimestamp: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::supportsCounterSampling: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::supportsDynamicLibraries is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::supportsFunctionPointers is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::supportsPullModelInterpolation is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::supportsRaytracing is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLLibrary::installName is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLLibrary::newFunctionWithDescriptor:completionHandler: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLLibrary::newFunctionWithDescriptor:error: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLLibrary::newIntersectionFunctionWithDescriptor:completionHandler: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLLibrary::newIntersectionFunctionWithDescriptor:error: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLLibrary::type is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLBlitCommandEncoder::resolveCounters:inRange:destinationBuffer:destinationOffset: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLBlitCommandEncoder::sampleCountersInBuffer:atSampleIndex:withBarrier: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLCommandBuffer::accelerationStructureCommandEncoder is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLCommandBuffer::blitCommandEncoderWithDescriptor: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLCommandBuffer::computeCommandEncoderWithDescriptor: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLCommandBuffer::errorOptions is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLCommandBuffer::logs is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLCommandBuffer::resourceStateCommandEncoderWithDescriptor: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLCommandQueue::commandBufferWithDescriptor: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputePipelineState::functionHandleWithFunction: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputePipelineState::newComputePipelineStateWithAdditionalBinaryFunctions:error: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputePipelineState::newIntersectionFunctionTableWithDescriptor: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputePipelineState::newVisibleFunctionTableWithDescriptor: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLFunction::options is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::sampleCountersInBuffer:atSampleIndex:withBarrier: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLIndirectComputeCommand::setImageblockWidth:height: is REQUIRED and should be abstract
