@@ -68,6 +68,11 @@ namespace Xamarin.Bundler {
 		public SymbolMode SymbolMode;
 		public HashSet<string> IgnoredSymbols = new HashSet<string> ();
 
+		public string CompilerPath;
+
+		public Application ContainerApp; // For extensions, this is the containing app
+		public bool IsCodeShared { get; private set; }
+
 		public HashSet<string> Frameworks = new HashSet<string> ();
 		public HashSet<string> WeakFrameworks = new HashSet<string> ();
 
@@ -707,6 +712,7 @@ namespace Xamarin.Bundler {
 
 		public IEnumerable<Abi> Abis {
 			get { return abis; }
+			set { abis = new List<Abi> (value); }
 		}
 
 		public bool IsArchEnabled (Abi arch)
@@ -891,6 +897,44 @@ namespace Xamarin.Bundler {
 			// We replace any existing abis, to keep the old behavior where '--armv6 --armv7' would 
 			// enable only the last abi specified and disable the rest.
 			abis = res;
+		}
+
+		public void ParseRegistrar (string v)
+		{
+			var split = v.Split ('=');
+			var name = split [0];
+			var value = split.Length > 1 ? split [1] : string.Empty;
+			switch (name) {
+			case "static":
+				Registrar = RegistrarMode.Static;
+				break;
+			case "dynamic":
+				Registrar = RegistrarMode.Dynamic;
+				break;
+			case "default":
+				Registrar = RegistrarMode.Default;
+				break;
+#if !MTOUCH
+			case "partial":
+			case "partial-static":
+				Registrar = RegistrarMode.PartialStatic;
+				break;
+#endif
+			default:
+				throw ErrorHelper.CreateError (20, Errors.MX0020, "--registrar", "static, dynamic or default");
+			}
+
+			switch (value) {
+			case "trace":
+				RegistrarOptions = RegistrarOptions.Trace;
+				break;
+			case "default":
+			case "":
+				RegistrarOptions = RegistrarOptions.Default;
+				break;
+			default:
+				throw ErrorHelper.CreateError (20, Errors.MX0020, "--registrar", "static, dynamic or default");
+			}
 		}
 
 		public static string GetArchitectures (IEnumerable<Abi> abis)

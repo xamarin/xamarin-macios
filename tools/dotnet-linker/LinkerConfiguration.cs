@@ -163,6 +163,9 @@ namespace Xamarin.Linker {
 				case "PlatformAssembly":
 					PlatformAssembly = Path.GetFileNameWithoutExtension (value);
 					break;
+				case "Registrar":
+					Application.ParseRegistrar (value);
+					break;
 				case "SdkVersion":
 					if (!Version.TryParse (value, out var sdk_version))
 						throw new InvalidOperationException ($"Unable to parse the {key} value: {value} in {linker_file}");
@@ -208,6 +211,10 @@ namespace Xamarin.Linker {
 			Application.DeploymentTarget = DeploymentTarget;
 			Application.SdkVersion = SdkVersion;
 
+			DerivedLinkContext.Target = Target;
+			Target.Abis = Abis;
+			Application.Abis = Abis;
+
 			switch (Platform) {
 			case ApplePlatform.iOS:
 			case ApplePlatform.TVOS:
@@ -246,6 +253,7 @@ namespace Xamarin.Linker {
 				Console.WriteLine ($"    PartialStaticRegistrarLibrary: {PartialStaticRegistrarLibrary}");
 				Console.WriteLine ($"    Platform: {Platform}");
 				Console.WriteLine ($"    PlatformAssembly: {PlatformAssembly}.dll");
+				Console.WriteLine ($"    Registrar: {Application.Registrar} (Options: {Application.RegistrarOptions})");
 				Console.WriteLine ($"    SdkVersion: {SdkVersion}");
 				Console.WriteLine ($"    Verbosity: {Verbosity}");
 			}

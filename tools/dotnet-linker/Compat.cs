@@ -1,6 +1,7 @@
 // Compat.cs: might not be ideal but it eases code sharing with existing code during the initial implementation.
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 using Mono.Cecil;
 using Mono.Linker;
@@ -39,9 +40,17 @@ namespace Xamarin.Bundler {
 		public void SelectRegistrar ()
 		{
 			if (Registrar == RegistrarMode.Default) {
-				if (LinkMode == LinkMode.None && IsDefaultMarshalManagedExceptionMode) {
+				if (IsDeviceBuild) {
+					// mobile device builds use the static registrar by default
+					Registrar = RegistrarMode.Static;
+				} else if (Platform == ApplePlatform.MacOSX && !EnableDebug) {
+					// release macOS builds use the static registrar by default
+					Registrar = RegistrarMode.Static;
+				} else if (LinkMode == LinkMode.None && IsDefaultMarshalManagedExceptionMode) {
+					// Otherwise use the partial static registrar if we can
 					Registrar = RegistrarMode.PartialStatic;
 				} else {
+					// Last option is the dynamic registrar
 					Registrar = RegistrarMode.Dynamic;
 				}
 			}
@@ -160,9 +169,14 @@ namespace Mono.Linker {
 		{
 			return LinkerConfiguration.GetInstance (context).Assemblies;
 		}
+
+		static ConditionalWeakTable<AnnotationStore, Dictionary<string, Dictionary<IMetadataTokenProvider, object>>> custom_annotations = new ConditionalWeakTable<AnnotationStore, Dictionary<string, Dictionary<IMetadataTokenProvider, object>>> ();
 		public static Dictionary<IMetadataTokenProvider, object> GetCustomAnnotations (this AnnotationStore self, string name)
 		{
-			throw new NotImplementedException ();
+			var store = custom_annotations.GetOrCreateValue (self);
+			if (!store.TryGetValue (name, out var dict))
+				store [name] = dict = new Dictionary<IMetadataTokenProvider, object> ();
+			return dict;
 		}
 	}
 }
