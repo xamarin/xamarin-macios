@@ -1,18 +1,4 @@
 !missing-field! _nw_privacy_context_default_context not bound
-!missing-pinvoke! nw_connection_group_cancel is not bound
-!missing-pinvoke! nw_connection_group_copy_descriptor is not bound
-!missing-pinvoke! nw_connection_group_copy_local_endpoint_for_message is not bound
-!missing-pinvoke! nw_connection_group_copy_parameters is not bound
-!missing-pinvoke! nw_connection_group_copy_path_for_message is not bound
-!missing-pinvoke! nw_connection_group_copy_remote_endpoint_for_message is not bound
-!missing-pinvoke! nw_connection_group_create is not bound
-!missing-pinvoke! nw_connection_group_extract_connection_for_message is not bound
-!missing-pinvoke! nw_connection_group_reply is not bound
-!missing-pinvoke! nw_connection_group_send_message is not bound
-!missing-pinvoke! nw_connection_group_set_queue is not bound
-!missing-pinvoke! nw_connection_group_set_receive_handler is not bound
-!missing-pinvoke! nw_connection_group_set_state_changed_handler is not bound
-!missing-pinvoke! nw_connection_group_start is not bound
 !missing-pinvoke! nw_establishment_report_enumerate_resolution_reports is not bound
 !missing-pinvoke! nw_group_descriptor_add_endpoint is not bound
 !missing-pinvoke! nw_group_descriptor_create_multicast is not bound
@@ -36,7 +22,6 @@
 !missing-pinvoke! nw_resolver_config_add_server_address is not bound
 !missing-pinvoke! nw_resolver_config_create_https is not bound
 !missing-pinvoke! nw_resolver_config_create_tls is not bound
-!missing-protocol! OS_nw_connection_group not bound
 !missing-protocol! OS_nw_group_descriptor not bound
 !missing-protocol! OS_nw_privacy_context not bound
 !missing-protocol! OS_nw_resolution_report not bound

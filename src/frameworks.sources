@@ -1176,6 +1176,7 @@ NETWORK_SOURCES = \
 	Network/NWBrowseResult.cs	\
 	Network/NWBrowser.cs	\
 	Network/NWConnection.cs			\
+	Network/NWConnectionGroup.cs		\
 	Network/NWContentContext.cs		\
 	Network/NWDataTransferReport.cs 	\
 	Network/NWEthernetChannel.cs 	\
@@ -1184,6 +1185,7 @@ NETWORK_SOURCES = \
 	Network/NWError.cs			\
 	Network/NWFramer.cs			\
 	Network/NWFramerMessage.cs			\
+	Network/NWGroupDescriptor.cs		\
 	Network/NWInterface.cs			\
 	Network/NWIPMetadata.cs			\
 	Network/NWListener.cs			\
