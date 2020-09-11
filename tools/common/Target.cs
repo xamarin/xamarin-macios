@@ -106,10 +106,8 @@ namespace Xamarin.Bundler {
 		{
 			if (LinkContext != null)
 				return LinkContext;
-#if MTOUCH
 			if (App.IsExtension && App.IsCodeShared)
 				return ContainerTarget.GetLinkContext ();
-#endif
 			return null;
 		}
 
@@ -312,11 +310,12 @@ namespace Xamarin.Bundler {
 					dynamic_symbols.AddFunction ("mono_pmip");
 
 				bool has_dyn_msgSend;
-#if MONOTOUCH
-				has_dyn_msgSend = App.IsSimulatorBuild;
-#else
-				has_dyn_msgSend = App.MarshalObjectiveCExceptions != MarshalObjectiveCExceptionMode.Disable && !App.RequiresPInvokeWrappers && Is64Build;
-#endif
+
+				if (App.Platform == ApplePlatform.MacOSX) {
+					has_dyn_msgSend = App.MarshalObjectiveCExceptions != MarshalObjectiveCExceptionMode.Disable && !App.RequiresPInvokeWrappers && Is64Build;
+				} else {
+					has_dyn_msgSend = App.IsSimulatorBuild;
+				}
 
 				if (has_dyn_msgSend) {
 					dynamic_symbols.AddFunction ("xamarin_dyn_objc_msgSend");
@@ -352,19 +351,17 @@ namespace Xamarin.Bundler {
 			if (single_assembly != null && !symbol.Members.Any ((v) => v.Module.Assembly == single_assembly.AssemblyDefinition))
 				return false; // nope, this symbol is not used in the assembly we're using as filter.
 
-#if MTOUCH
 			// If we're code-sharing, the managed linker might have found symbols
 			// that are not in any of the assemblies in the current app.
 			// This occurs because the managed linker processes all the
 			// assemblies for all the apps together, but when linking natively
 			// we're only linking with the assemblies that actually go into the app.
-			if (App.IsCodeShared && symbol.Assemblies.Count > 0) {
+			if (App.Platform != ApplePlatform.MacOSX && App.IsCodeShared && symbol.Assemblies.Count > 0) {
 				// So if this is a symbol related to any assembly, make sure
 				// at least one of those assemblies are in the current app.
 				if (!symbol.Assemblies.Any ((v) => Assemblies.Contains (v)))
 					return false;
 			}
-#endif
 
 			switch (symbol.Type) {
 			case SymbolType.Field:
