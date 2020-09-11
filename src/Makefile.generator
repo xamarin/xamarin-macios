@@ -13,9 +13,12 @@ $(BUILD_DIR)/generator.csproj: generator.csproj | $(BUILD_DIR)
 $(BUILD_DIR)/common/bgen.exe: $(generator_dependencies) Makefile.generator $(BUILD_DIR)/generator-frameworks.g.cs
 	$(Q_GEN) $(SYSTEM_MSBUILD) $(XBUILD_VERBOSITY) /p:Configuration=Debug generator.csproj /p:IntermediateOutputPath=$(BUILD_DIR)/IDE/obj/common/ /p:OutputPath=$(BUILD_DIR)/common
 
-$(DOTNET_BUILD_DIR)/bgen/bgen:  $(generator_dependencies) Makefile.generator $(BUILD_DIR)/generator-frameworks.g.cs | $(DOTNET_BUILD_DIR)/bgen
-	$(Q_DOTNET_BUILD) $(DOTNET) build $(XBUILD_VERBOSITY) /p:Configuration=Debug bgen/bgen.csproj /p:IntermediateOutputPath=$(abspath $(DOTNET_BUILD_DIR)/IDE/obj/common)/ /p:OutputPath=$(abspath $(DOTNET_BUILD_DIR)/IDE/bin/common)/
+$(DOTNET_BUILD_DIR)/bgen/bgen:  $(generator_dependencies) Makefile.generator $(BUILD_DIR)/generator-frameworks.g.cs global.json | $(DOTNET_BUILD_DIR)/bgen
+	$(Q_DOTNET_BUILD) $(DOTNET5) publish $(XBUILD_VERBOSITY) /p:Configuration=Debug bgen/bgen.csproj /p:IntermediateOutputPath=$(abspath $(DOTNET_BUILD_DIR)/IDE/obj/common)/ /p:OutputPath=$(abspath $(DOTNET_BUILD_DIR)/IDE/bin/common)/
 	$(Q) $(CP) $(DOTNET_BUILD_DIR)/IDE/bin/common/bgen* $(dir $@)
+	$(Q) printf 'exec dotnet "$$(dirname "$$0")"/bgen.dll $$@\n' > $@
+	$(Q) chmod +x $@
+
 
 $(DOTNET_DESTDIR)/%.Sdk/tools/lib/bgen/bgen: $(DOTNET_BUILD_DIR)/bgen/bgen | $(DOTNET_DESTDIR)/%.Sdk/tools/lib/bgen
 	$(Q) rm -f $(dir $@)/bgen*
