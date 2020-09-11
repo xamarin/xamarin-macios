@@ -914,10 +914,12 @@ namespace Xamarin.Bundler {
 			case "default":
 				Registrar = RegistrarMode.Default;
 				break;
+#if !MTOUCH
 			case "partial":
 			case "partial-static":
 				Registrar = RegistrarMode.PartialStatic;
 				break;
+#endif
 			default:
 				throw ErrorHelper.CreateError (20, Errors.MX0020, "--registrar", "static, dynamic or default");
 			}
