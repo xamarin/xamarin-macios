@@ -11,17 +11,19 @@ namespace AVFoundation {
 #if !XAMCORE_4_0
 	public delegate int AVAudioSourceNodeRenderHandler (bool isSilence, AudioToolbox.AudioTimeStamp timestamp, uint frameCount, ref AudioToolbox.AudioBuffers outputData);
 
+	partial class AVAudioNode {
+		internal AVAudioNode() {}
+	}
+
 	partial class AVAudioSourceNode {
 		[Obsolete("Use 'AVAudioSourceNode (AVAudioSourceNodeRenderHandler2)' instead.")]
 		public AVAudioSourceNode (AVAudioSourceNodeRenderHandler renderHandler)
-			: base (NSObjectFlag.Empty)
 		{
 			throw new InvalidOperationException ("Do not use this constructor. Use the 'AVAudioSourceNode (AVAudioSourceNodeRenderHandler2)' constructor instead.");
 		}
 
 		[Obsolete("Use 'AVAudioSourceNode (AVAudioFormat, AVAudioSourceNodeRenderHandler2)' instead.")]
 		public AVAudioSourceNode (AVAudioFormat format, AVAudioSourceNodeRenderHandler renderHandler)
-			: base (NSObjectFlag.Empty)
 		{
 			throw new InvalidOperationException ("Do not use this constructor. Use the 'AVAudioSourceNode (AVAudioFormat, AVAudioSourceNodeRenderHandler2)' constructor instead.");
 		}
