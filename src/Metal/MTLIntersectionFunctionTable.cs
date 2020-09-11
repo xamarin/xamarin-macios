@@ -17,7 +17,7 @@ namespace Metal {
 			if (offsets == null)
 				throw new ArgumentNullException (nameof (offsets));
 
-			var bufferPtrArray = new IntPtr [buffers.Length];
+			var bufferPtrArray = buffers.Length <= 1024 ? stackalloc IntPtr[buffers.Length] : new IntPtr [buffers.Length];
 			// get all intptr from the array to pass to the lower level call
 			for (var i = 0; i < buffers.Length; i++) {
 				bufferPtrArray [i] = buffers [i].Handle;
