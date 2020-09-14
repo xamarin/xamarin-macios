@@ -221,41 +221,7 @@ namespace Xamarin.Bundler {
 				}
 			);
 			options.Add ("registrar:", "Specify the registrar to use (dynamic, static or default (dynamic in the simulator, static on device)).", v => {
-				var split = v.Split ('=');
-				var name = split [0];
-				var value = split.Length > 1 ? split [1] : string.Empty;
-
-				switch (name) {
-				case "static":
-					app.Registrar = RegistrarMode.Static;
-					break;
-				case "dynamic":
-					app.Registrar = RegistrarMode.Dynamic;
-					break;
-				case "default":
-					app.Registrar = RegistrarMode.Default;
-					break;
-#if MMP
-				case "partial":
-				case "partial-static":
-					app.Registrar = RegistrarMode.PartialStatic;
-					break;
-#endif
-				default:
-					throw ErrorHelper.CreateError (20, Errors.MX0020, "--registrar", "static, dynamic or default");
-				}
-
-				switch (value) {
-				case "trace":
-					app.RegistrarOptions = RegistrarOptions.Trace;
-					break;
-				case "default":
-				case "":
-					app.RegistrarOptions = RegistrarOptions.Default;
-					break;
-				default:
-					throw ErrorHelper.CreateError (20, Errors.MX0020, "--registrar", "static, dynamic or default");
-				}
+				app.ParseRegistrar (v);
 			});
 			options.Add ("runregistrar:", "Runs the registrar on the input assembly and outputs a corresponding native library.",
 				v => {
@@ -972,7 +938,7 @@ namespace Xamarin.Bundler {
 			} else {
 				throw ErrorHelper.CreateError (57, Errors.MT0057, sdk_root);
 			}
-			
+
 			var plist_path = Path.Combine (Path.GetDirectoryName (DeveloperDirectory), "version.plist");
 
 			if (File.Exists (plist_path)) {
