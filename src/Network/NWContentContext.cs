@@ -62,7 +62,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_content_context_get_identifier (IntPtr handle);
 
-		public string Identifier => Marshal.PtrToStringAnsi (nw_content_context_get_identifier (GetCheckedHandle ()));
+		public string? Identifier => Marshal.PtrToStringAnsi (nw_content_context_get_identifier (GetCheckedHandle ()));
 
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]

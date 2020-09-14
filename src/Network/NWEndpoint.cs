@@ -57,7 +57,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern IntPtr nw_endpoint_get_hostname (OS_nw_endpoint endpoint);
 
-		public string Hostname => Marshal.PtrToStringAnsi (nw_endpoint_get_hostname (GetCheckedHandle ()));
+		public string? Hostname => Marshal.PtrToStringAnsi (nw_endpoint_get_hostname (GetCheckedHandle ()));
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern string nw_endpoint_copy_port_string (OS_nw_endpoint endpoint);
@@ -104,17 +104,17 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern unsafe IntPtr nw_endpoint_get_bonjour_service_name (OS_nw_endpoint endpoint);
 
-		public string BonjourServiceName => Marshal.PtrToStringAnsi (nw_endpoint_get_bonjour_service_name (GetCheckedHandle ()));
+		public string? BonjourServiceName => Marshal.PtrToStringAnsi (nw_endpoint_get_bonjour_service_name (GetCheckedHandle ()));
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern IntPtr nw_endpoint_get_bonjour_service_type (OS_nw_endpoint endpoint);
 
-		public string BonjourServiceType => Marshal.PtrToStringAnsi (nw_endpoint_get_bonjour_service_type (GetCheckedHandle ()));
+		public string? BonjourServiceType => Marshal.PtrToStringAnsi (nw_endpoint_get_bonjour_service_type (GetCheckedHandle ()));
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern IntPtr nw_endpoint_get_bonjour_service_domain (OS_nw_endpoint endpoint);
 
-		public string BonjourServiceDomain => Marshal.PtrToStringAnsi (nw_endpoint_get_bonjour_service_domain (GetCheckedHandle ()));
+		public string? BonjourServiceDomain => Marshal.PtrToStringAnsi (nw_endpoint_get_bonjour_service_domain (GetCheckedHandle ()));
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[DllImport (Constants.NetworkLibrary, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
@@ -136,6 +136,6 @@ namespace Network {
 		static extern IntPtr nw_endpoint_get_url (OS_nw_endpoint endpoint);
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
-		public string Url => Marshal.PtrToStringAnsi (nw_endpoint_get_url (GetCheckedHandle ()));
+		public string? Url => Marshal.PtrToStringAnsi (nw_endpoint_get_url (GetCheckedHandle ()));
 	}
 }
