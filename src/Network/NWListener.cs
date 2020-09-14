@@ -6,6 +6,9 @@
 //
 // Copyrigh 2018 Microsoft Inc
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
@@ -35,7 +38,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_listener_create_with_port (string port, IntPtr nwparameters);
 
-		public static NWListener Create (string port, NWParameters parameters)
+		public static NWListener? Create (string port, NWParameters parameters)
 		{
 			IntPtr handle;
 
@@ -53,7 +56,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_listener_create (IntPtr nwparameters);
 
-		public static NWListener Create (NWParameters parameters)
+		public static NWListener? Create (NWParameters parameters)
 		{
 			IntPtr handle;
 
@@ -69,7 +72,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_listener_create_with_connection (IntPtr nwconnection, IntPtr nwparameters);
 
-		public static NWListener Create (NWConnection connection, NWParameters parameters)
+		public static NWListener? Create (NWConnection connection, NWParameters parameters)
 		{
 			if (parameters == null)
 				throw new ArgumentNullException (nameof (parameters));
@@ -121,9 +124,9 @@ namespace Network {
 		[MonoPInvokeCallback (typeof (nw_listener_state_changed_handler_t))]
 		static void TrampolineListenerStateChanged (IntPtr block, NWListenerState state,  IntPtr nwerror)
 		{
-			var del = BlockLiteral.GetTarget<Action<NWListenerState,NWError>> (block);
+			var del = BlockLiteral.GetTarget<Action<NWListenerState,NWError?>> (block);
 			if (del != null){
-				NWError err = nwerror == IntPtr.Zero ? null : new NWError (nwerror, owns: false);
+				NWError? err = nwerror == IntPtr.Zero ? null : new NWError (nwerror, owns: false);
 				del (state, err);
 				err?.Dispose ();
 			}
@@ -133,7 +136,7 @@ namespace Network {
 		static extern unsafe void nw_listener_set_state_changed_handler (IntPtr handle, void *callback);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public void SetStateChangedHandler (Action<NWListenerState,NWError> callback)
+		public void SetStateChangedHandler (Action<NWListenerState,NWError?> callback)
 		{
 			unsafe {
 				if (callback == null){
@@ -162,7 +165,7 @@ namespace Network {
 			var del = BlockLiteral.GetTarget<Action<NWConnection>> (block);
 			if (del != null){
 				var nwconnection = new NWConnection (connection, owns: false);
-			        del (nwconnection);
+				del (nwconnection);
 			}
 		}
 
@@ -203,9 +206,8 @@ namespace Network {
 		{
 			var del = BlockLiteral.GetTarget<AdvertisedEndpointChanged> (block);
 			if (del != null) {
-				var nwendpoint = new NWEndpoint (endpoint, owns: false);
+				using var nwendpoint = new NWEndpoint (endpoint, owns: false);
 				del (nwendpoint, added != 0 ? true : false);
-				nwendpoint.Dispose ();
 			}
 		}
 

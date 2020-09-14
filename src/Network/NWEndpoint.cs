@@ -6,6 +6,9 @@
 //
 // Copyrigh 2018 Microsoft Inc
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
@@ -39,7 +42,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		extern static OS_nw_endpoint nw_endpoint_create_host (string hostname, string port);
 
-		public static NWEndpoint Create (string hostname, string port)
+		public static NWEndpoint? Create (string hostname, string port)
 		{
 			if (hostname == null)
 				throw new ArgumentNullException (nameof (hostname));
@@ -88,7 +91,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern unsafe OS_nw_endpoint nw_endpoint_create_bonjour_service (string name, string type, string domain);
 
-		public static NWEndpoint CreateBonjourService (string name, string serviceType, string domain)
+		public static NWEndpoint? CreateBonjourService (string name, string serviceType, string domain)
 		{
 			if (serviceType == null)
 				throw new ArgumentNullException (nameof (serviceType));
@@ -118,7 +121,7 @@ namespace Network {
 		static extern OS_nw_endpoint nw_endpoint_create_url (string url);
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
-		public static NWEndpoint Create (string url)
+		public static NWEndpoint? Create (string url)
 		{
 			if (url == null)
 				throw new ArgumentNullException (nameof (url));

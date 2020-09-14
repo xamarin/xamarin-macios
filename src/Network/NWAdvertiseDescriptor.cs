@@ -6,6 +6,8 @@
 //
 // Copyrigh 2018 Microsoft Inc
 //
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
@@ -26,7 +28,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern IntPtr nw_advertise_descriptor_create_bonjour_service (string name, string type, string domain);
 
-		public static NWAdvertiseDescriptor CreateBonjourService (string name, string type, string domain = null)
+		public static NWAdvertiseDescriptor? CreateBonjourService (string name, string type, string? domain = null)
 		{
 			if (name == null)
 				throw new ArgumentNullException (nameof (name));
@@ -34,7 +36,7 @@ namespace Network {
 			if (type == null)
 				throw new ArgumentNullException (nameof (type));
 
-			var x = nw_advertise_descriptor_create_bonjour_service (name, type, domain);
+			var x = nw_advertise_descriptor_create_bonjour_service (name, type, domain!);
 			if (x == IntPtr.Zero)
 				return null;
 			return new NWAdvertiseDescriptor (x, owns: true);
