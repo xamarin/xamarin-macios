@@ -256,7 +256,7 @@ namespace ClassKit {
 		CGImage Thumbnail { get; set; }
 
 		[Protected]
-		[NullAllowed, Export ("topic")]
+		[NullAllowed, Export ("topic", ArgumentSemantic.Copy)]
 		NSString WeakTopic { get; set; }
 
 		[Export ("initWithType:identifier:title:")]

@@ -213,6 +213,7 @@ namespace PencilKit {
 		[BindAs (typeof (PKInkType))]
 		NSString InkType { get; }
 
+		[NoMac]
 		[Static]
 		[Export ("convertColor:fromUserInterfaceStyle:to:")]
 		UIColor ConvertColor (UIColor color, UIUserInterfaceStyle fromUserInterfaceStyle, UIUserInterfaceStyle toUserInterfaceStyle);

@@ -4086,12 +4086,6 @@ namespace Foundation
 		NSError GetFileProviderError (string nonExistentItemIdentifier);
 
 		[NoiOS]
-		[Mac (10,15)]
-		[Static]
-		[Export ("fileProviderErrorForOutOfDateItem:")]
-		NSError GetFileProviderErrorForOutOfDateItem (INSFileProviderItem updatedVersion);
-
-		[NoiOS]
 		[Mac (11,0)]
 		[Static]
 		[Export ("fileProviderErrorForRejectedDeletionOfItem:")]

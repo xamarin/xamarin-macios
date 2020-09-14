@@ -769,6 +769,7 @@ namespace PassKit {
 		string AuthenticationToken { get; }
 
 		[NoWatch]
+		[NoMac]
 		[Export ("icon", ArgumentSemantic.Copy)]
 		UIImage Icon { get; }
 
