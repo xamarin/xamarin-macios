@@ -6,6 +6,8 @@
 //
 // Copyrigh 2019 Microsoft Inc
 //
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
@@ -25,13 +27,13 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_browse_descriptor nw_browse_descriptor_create_bonjour_service (string type, string domain);
 
-		public static NWBrowserDescriptor CreateBonjourService (string type, string domain)
+		public static NWBrowserDescriptor CreateBonjourService (string type, string? domain)
 		{
 			// domain can be null, type CANNOT	
 			if (type == null)
 				throw new ArgumentNullException (nameof (type));
 
-			return new NWBrowserDescriptor (nw_browse_descriptor_create_bonjour_service (type, domain), owns: true);
+			return new NWBrowserDescriptor (nw_browse_descriptor_create_bonjour_service (type, domain!), owns: true);
 		}
 
 		public static NWBrowserDescriptor CreateBonjourService (string type) => CreateBonjourService (type, null);

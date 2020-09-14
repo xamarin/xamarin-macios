@@ -6,6 +6,9 @@
 //
 // Copyrigh 2018 Microsoft Inc
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
@@ -101,7 +104,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_content_context_set_antecedent (IntPtr handle, IntPtr value);
 
-		public NWContentContext Antecedent {
+		public NWContentContext? Antecedent {
 			get {
 				var h = nw_content_context_copy_antecedent (GetCheckedHandle ());
 				if (h == IntPtr.Zero)
@@ -116,7 +119,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_content_context_copy_protocol_metadata (IntPtr handle, IntPtr protocol);
 
-		public NWProtocolMetadata GetProtocolMetadata (NWProtocolDefinition protocolDefinition)
+		public NWProtocolMetadata? GetProtocolMetadata (NWProtocolDefinition protocolDefinition)
 		{
 			if (protocolDefinition == null)
 				throw new ArgumentNullException (nameof (protocolDefinition));
@@ -150,15 +153,12 @@ namespace Network {
 		[MonoPInvokeCallback (typeof (ProtocolIterator))]
 		static void TrampolineProtocolIterator (IntPtr block, IntPtr definition, IntPtr metadata)
 		{
-			var del = BlockLiteral.GetTarget<Action<NWProtocolDefinition,NWProtocolMetadata>> (block);
+			var del = BlockLiteral.GetTarget<Action<NWProtocolDefinition?,NWProtocolMetadata?>> (block);
 			if (del != null) {
-				var pdef = definition == IntPtr.Zero ? null : new NWProtocolDefinition (definition, owns: true);
-				var meta = metadata == IntPtr.Zero ? null : new NWProtocolMetadata (metadata, owns: true);
+				using NWProtocolDefinition? pdef = definition == IntPtr.Zero ? null : new NWProtocolDefinition (definition, owns: true);
+				using NWProtocolMetadata? meta = metadata == IntPtr.Zero ? null : new NWProtocolMetadata (metadata, owns: true);
 
 				del (pdef, meta);
-
-				pdef?.Dispose ();
-				meta?.Dispose ();
 			}
 		}
 
@@ -166,7 +166,7 @@ namespace Network {
 		static extern void nw_content_context_foreach_protocol_metadata (IntPtr handle, ref BlockLiteral callback);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public void IterateProtocolMetadata (Action<NWProtocolDefinition,NWProtocolMetadata> callback)
+		public void IterateProtocolMetadata (Action<NWProtocolDefinition?,NWProtocolMetadata?> callback)
 		{
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_ProtocolIterator, callback);
@@ -181,7 +181,7 @@ namespace Network {
 		//
 		// Use this as a parameter to NWConnection.Send's with all the default properties
 		// ie: NW_CONNECTION_DEFAULT_MESSAGE_CONTEXT, use this for datagrams
-		static NWContentContext defaultMessage;
+		static NWContentContext? defaultMessage;
 		public static NWContentContext DefaultMessage {
 			get {
 				if (defaultMessage == null)
@@ -193,7 +193,7 @@ namespace Network {
 
 		// Use this as a parameter to NWConnection.Send's to indicate that no more sends are expected
 		// (ie: NW_CONNECTION_FINAL_MESSAGE_CONTEXT)
-		static NWContentContext finalMessage;
+		static NWContentContext? finalMessage;
 		public static NWContentContext FinalMessage {
 			get {
 				if (finalMessage == null)
@@ -204,7 +204,7 @@ namespace Network {
 
 		// This sending context represents the entire connection
 		// ie: NW_CONNECTION_DEFAULT_STREAM_CONTEXT
-		static NWContentContext defaultStream;
+		static NWContentContext? defaultStream;
 		public static NWContentContext DefaultStream {
 			get {
 				if (defaultStream == null)
