@@ -45,7 +45,7 @@ namespace Network {
 			if (parameters == null)
 				throw new ArgumentNullException (nameof (parameters));
 
-			InitializeHandle (nw_connection_group_create (groupDescriptor.Handle, parameters.Handle));
+			InitializeHandle (nw_connection_group_create (groupDescriptor.GetCheckedHandle (), parameters.GetCheckedHandle ()));
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
@@ -90,7 +90,7 @@ namespace Network {
  			if (queue == null)
 				throw new ArgumentNullException (nameof (queue));
 
-			nw_connection_group_set_queue (GetCheckedHandle (), queue.Handle);
+			nw_connection_group_set_queue (GetCheckedHandle (), queue.GetCheckedHandle ());
 		}
 
 		// can return null
@@ -101,7 +101,7 @@ namespace Network {
 		{
 			if (context == null)
 				throw new ArgumentNullException (nameof (context));
-			var ptr = nw_connection_group_copy_local_endpoint_for_message (GetCheckedHandle (), context.Handle);
+			var ptr = nw_connection_group_copy_local_endpoint_for_message (GetCheckedHandle (), context.GetCheckedHandle ());
 			return ptr == IntPtr.Zero ? null : new NWEndpoint (ptr, owns: true);
 		}
 
@@ -113,7 +113,7 @@ namespace Network {
 		{
 			if (context == null)
 				throw new ArgumentNullException (nameof (context));
-			var ptr = nw_connection_group_copy_path_for_message (GetCheckedHandle (), context.Handle);
+			var ptr = nw_connection_group_copy_path_for_message (GetCheckedHandle (), context.GetCheckedHandle ());
 			return ptr == IntPtr.Zero ? null : new NWPath (ptr, owns: true);
 		}
 
@@ -125,7 +125,7 @@ namespace Network {
 		{
 			if (context == null)
 				throw new ArgumentNullException (nameof (context));
-			var ptr = nw_connection_group_copy_remote_endpoint_for_message (GetCheckedHandle (), context.Handle);
+			var ptr = nw_connection_group_copy_remote_endpoint_for_message (GetCheckedHandle (), context.GetCheckedHandle ());
 			return ptr == IntPtr.Zero ? null : new NWEndpoint (ptr, owns: true);
 		}
 
@@ -137,7 +137,7 @@ namespace Network {
 		{
 			if (context == null)
 				throw new ArgumentNullException (nameof (context));
-			var ptr = nw_connection_group_extract_connection_for_message (GetCheckedHandle (), context.Handle);
+			var ptr = nw_connection_group_extract_connection_for_message (GetCheckedHandle (), context.GetCheckedHandle ());
 			return ptr == IntPtr.Zero ? null : new NWConnection (ptr, owns: true);
 		}
 
@@ -151,8 +151,7 @@ namespace Network {
 			if (outboundMessage == null)
 				throw new ArgumentNullException (nameof (outboundMessage));
 
-			var contentPtr = (content == null) ? IntPtr.Zero : content.Handle;
-			nw_connection_group_reply (GetCheckedHandle (), inboundMessage.Handle, outboundMessage.Handle, contentPtr);
+			nw_connection_group_reply (GetCheckedHandle (), inboundMessage.Handle, outboundMessage.Handle, content.GetHandle ());
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
@@ -166,9 +165,8 @@ namespace Network {
 		{
 			var del = BlockLiteral.GetTarget<Action<NWError?>> (block);
 			if (del != null) {
-				var err = error == IntPtr.Zero ? null : new NWError (error, owns: false);
+				using var err = error == IntPtr.Zero ? null : new NWError (error, owns: false);
 				del (err);
-				err?.Dispose ();
 			}
 		}
 
@@ -178,9 +176,9 @@ namespace Network {
 			unsafe {
 				if (handler == null) {
 					nw_connection_group_send_message (GetCheckedHandle (),
-						content == null ? IntPtr.Zero : content.Handle,
-						endpoint == null ? IntPtr.Zero : endpoint.Handle,
-						context.Handle,
+						content.GetHandle (),
+						endpoint.GetHandle (),
+						context.GetCheckedHandle (),
 						null);
 					return;
 				}
@@ -189,9 +187,9 @@ namespace Network {
 				block_handler.SetupBlockUnsafe (static_SendCompletion, handler);
 				try {
 					nw_connection_group_send_message (GetCheckedHandle (),
-						content == null ? IntPtr.Zero : content.Handle,
-						endpoint == null ? IntPtr.Zero : endpoint.Handle,
-						context.Handle,
+						content.GetHandle (),
+						endpoint.GetHandle (),
+						context.GetCheckedHandle (),
 						&block_handler);
 				} finally {
 					block_handler.CleanupBlock ();
@@ -210,11 +208,9 @@ namespace Network {
 		{
 			var del = BlockLiteral.GetTarget<NWConnectionGroupReceiveDelegate> (block);
 			if (del != null) {
-				var nsContent = new DispatchData (content, owns: false);
-				var nsContext = new NWContentContext (context, owns: false);
+				using var nsContent = new DispatchData (content, owns: false);
+				using var nsContext = new NWContentContext (context, owns: false);
 				del (nsContent, nsContext, isCompleted);
-				nsContext.Dispose ();
-				nsContext.Dispose ();
 			}
 		}
 
@@ -248,9 +244,8 @@ namespace Network {
 		{
 			var del = BlockLiteral.GetTarget<NWConnectionGroupStateChangedDelegate> (block);
 			if (del != null) {
-				var nwError = (error == IntPtr.Zero) ? null : new NWError (error, owns: false);
+				using var nwError = (error == IntPtr.Zero) ? null : new NWError (error, owns: false);
 				del (state, nwError);
-				nwError?.Dispose ();
 			}
 		}
 
