@@ -6,6 +6,9 @@
 //
 // Copyrigh 2018 Microsoft Inc
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
@@ -39,7 +42,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		extern static OS_nw_endpoint nw_endpoint_create_host (string hostname, string port);
 
-		public static NWEndpoint Create (string hostname, string port)
+		public static NWEndpoint? Create (string hostname, string port)
 		{
 			if (hostname == null)
 				throw new ArgumentNullException (nameof (hostname));
@@ -54,7 +57,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern IntPtr nw_endpoint_get_hostname (OS_nw_endpoint endpoint);
 
-		public string Hostname => Marshal.PtrToStringAnsi (nw_endpoint_get_hostname (GetCheckedHandle ()));
+		public string? Hostname => Marshal.PtrToStringAnsi (nw_endpoint_get_hostname (GetCheckedHandle ()));
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern string nw_endpoint_copy_port_string (OS_nw_endpoint endpoint);
@@ -88,7 +91,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern unsafe OS_nw_endpoint nw_endpoint_create_bonjour_service (string name, string type, string domain);
 
-		public static NWEndpoint CreateBonjourService (string name, string serviceType, string domain)
+		public static NWEndpoint? CreateBonjourService (string name, string serviceType, string domain)
 		{
 			if (serviceType == null)
 				throw new ArgumentNullException (nameof (serviceType));
@@ -101,24 +104,24 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern unsafe IntPtr nw_endpoint_get_bonjour_service_name (OS_nw_endpoint endpoint);
 
-		public string BonjourServiceName => Marshal.PtrToStringAnsi (nw_endpoint_get_bonjour_service_name (GetCheckedHandle ()));
+		public string? BonjourServiceName => Marshal.PtrToStringAnsi (nw_endpoint_get_bonjour_service_name (GetCheckedHandle ()));
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern IntPtr nw_endpoint_get_bonjour_service_type (OS_nw_endpoint endpoint);
 
-		public string BonjourServiceType => Marshal.PtrToStringAnsi (nw_endpoint_get_bonjour_service_type (GetCheckedHandle ()));
+		public string? BonjourServiceType => Marshal.PtrToStringAnsi (nw_endpoint_get_bonjour_service_type (GetCheckedHandle ()));
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern IntPtr nw_endpoint_get_bonjour_service_domain (OS_nw_endpoint endpoint);
 
-		public string BonjourServiceDomain => Marshal.PtrToStringAnsi (nw_endpoint_get_bonjour_service_domain (GetCheckedHandle ()));
+		public string? BonjourServiceDomain => Marshal.PtrToStringAnsi (nw_endpoint_get_bonjour_service_domain (GetCheckedHandle ()));
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[DllImport (Constants.NetworkLibrary, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
 		static extern OS_nw_endpoint nw_endpoint_create_url (string url);
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
-		public static NWEndpoint Create (string url)
+		public static NWEndpoint? Create (string url)
 		{
 			if (url == null)
 				throw new ArgumentNullException (nameof (url));
@@ -133,6 +136,6 @@ namespace Network {
 		static extern IntPtr nw_endpoint_get_url (OS_nw_endpoint endpoint);
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
-		public string Url => Marshal.PtrToStringAnsi (nw_endpoint_get_url (GetCheckedHandle ()));
+		public string? Url => Marshal.PtrToStringAnsi (nw_endpoint_get_url (GetCheckedHandle ()));
 	}
 }

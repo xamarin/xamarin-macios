@@ -6,6 +6,9 @@
 //
 // Copyright 2019 Microsoft Inc
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
