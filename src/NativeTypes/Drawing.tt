@@ -16,6 +16,7 @@
 //   Aaron Bockover <abock@xamarin.com>
 //   Miguel de Icaza <miguel@xamarin.com>
 //
+// Copyright 2020 Microsoft Corp. All Rights Reserved.
 // Copyright 2013 Xamarin, Inc. All rights reserved.
 //
 
@@ -212,6 +213,12 @@ namespace CoreGraphics
 			hash = hash * 31 + <#= type.X_Width #>.GetHashCode ();
 			hash = hash * 31 + <#= type.Y_Height #>.GetHashCode ();
 			return hash;
+		}
+
+		public void Deconstruct (out nfloat <#= type.X_Width #>, out nfloat <#= type.Y_Height #>)
+		{
+			<#= type.X_Width #> = <#= ucfirst (type.X_Width) #>;
+			<#= type.Y_Height #> = <#= ucfirst (type.Y_Height) #>;
 		}
 
 <# if (type.Name == "CGSize") { #>
@@ -571,6 +578,20 @@ namespace CoreGraphics
 		{
 			return String.Format ("{{X={0},Y={1},Width={2},Height={3}}}",
 				x, y, width, height);
+		}
+
+		public void Deconstruct (out nfloat x, out nfloat y, out nfloat width, out nfloat height)
+		{
+			x = X;
+			y = Y;
+			width = Width;
+			height = Height;
+		}
+
+		public void Deconstruct (out CGPoint location, out CGSize size)
+		{
+			location = Location;
+			size = Size;
 		}
 
 #if !COREBUILD
