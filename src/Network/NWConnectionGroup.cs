@@ -33,12 +33,12 @@ namespace Network {
 
 	[TV (14,0), Mac (11,0), iOS (14,0), Watch (7,0)]
 	public class NWConnectionGroup : NativeObject {
-		public NWConnectionGroup (IntPtr handle, bool owns) : base (handle, owns) {}
+		protected NWConnectionGroup (IntPtr handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_connection_group nw_connection_group_create (OS_nw_group_descriptor group_descriptor, OS_nw_parameters parameters);
 
-		public NWConnectionGroup (NWGroupDescriptor groupDescriptor, NWParameters parameters)
+		public NWConnectionGroup (NWMulticastGroup groupDescriptor, NWParameters parameters)
 		{
 			if (groupDescriptor == null)
 				throw new ArgumentNullException (nameof (groupDescriptor));
@@ -51,12 +51,12 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_group_descriptor nw_connection_group_copy_descriptor (OS_nw_connection_group group);
 
-		public NWGroupDescriptor? GroupDescriptor {
+		public NWMulticastGroup? GroupDescriptor {
 			get {
 				var x = nw_connection_group_copy_descriptor (GetCheckedHandle ());
 				if (x == IntPtr.Zero)
 					return null;
-				return new NWGroupDescriptor (x, owns: true);
+				return new NWMulticastGroup (x, owns: true);
 			}
 		}
 

@@ -1185,7 +1185,7 @@ NETWORK_SOURCES = \
 	Network/NWError.cs			\
 	Network/NWFramer.cs			\
 	Network/NWFramerMessage.cs			\
-	Network/NWGroupDescriptor.cs		\
+	Network/NWMulticastGroup.cs		\
 	Network/NWInterface.cs			\
 	Network/NWIPMetadata.cs			\
 	Network/NWListener.cs			\

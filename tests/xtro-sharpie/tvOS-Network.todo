@@ -1,12 +1,6 @@
 !missing-field! _nw_privacy_context_default_context not bound
 !missing-pinvoke! nw_establishment_report_enumerate_resolution_reports is not bound
-!missing-pinvoke! nw_group_descriptor_add_endpoint is not bound
-!missing-pinvoke! nw_group_descriptor_create_multicast is not bound
-!missing-pinvoke! nw_group_descriptor_enumerate_endpoints is not bound
 !missing-pinvoke! nw_ip_options_set_disable_multicast_loopback is not bound
-!missing-pinvoke! nw_multicast_group_descriptor_get_disable_unicast_traffic is not bound
-!missing-pinvoke! nw_multicast_group_descriptor_set_disable_unicast_traffic is not bound
-!missing-pinvoke! nw_multicast_group_descriptor_set_specific_source is not bound
 !missing-pinvoke! nw_parameters_set_privacy_context is not bound
 !missing-pinvoke! nw_path_monitor_prohibit_interface_type is not bound
 !missing-pinvoke! nw_privacy_context_create is not bound
@@ -22,7 +16,6 @@
 !missing-pinvoke! nw_resolver_config_add_server_address is not bound
 !missing-pinvoke! nw_resolver_config_create_https is not bound
 !missing-pinvoke! nw_resolver_config_create_tls is not bound
-!missing-protocol! OS_nw_group_descriptor not bound
 !missing-protocol! OS_nw_privacy_context not bound
 !missing-protocol! OS_nw_resolution_report not bound
 !missing-protocol! OS_nw_resolver_config not bound
