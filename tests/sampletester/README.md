@@ -5,12 +5,12 @@ projects, and build all the relevant projects in those repositories.
 
 It is executed automatically in [Azure DevOps][1] every [Saturday][2] for the listed branches. This includes:
 
-* `master`
+* `main`
 * `d16-x` - i.e. one or many active release branches
 * `xcodeY` - i.e. the current xcode *beta* feature branch
 * `mono-202z-zz` - i.e. the mono integration branches (new one every two months)
 
-where `x`, `Y` and `z` needs to be periodically updated as new branches are created (e.g. `d16-x`) and old ones are merged into `master` (e.g. `xcodeY` and `mono-202z-zz`).
+where `x`, `Y` and `z` needs to be periodically updated as new branches are created (e.g. `d16-x`) and old ones are merged into `main` (e.g. `xcodeY` and `mono-202z-zz`).
 
 It can also be triggered manually, but have in mind that the commit in
 question must already have packages (as GitHub statuses).

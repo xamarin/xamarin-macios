@@ -1,7 +1,7 @@
 ﻿// this is an adaptation of NUnitLite's TcpWriter.cs with an additional 
 // overrides and with network-activity UI enhancement
 // This code is a small modification of 
-// https://github.com/spouliot/Touch.Unit/blob/master/NUnitLite/TouchRunner/TcpTextWriter.cs
+// https://github.com/spouliot/Touch.Unit/blob/main/NUnitLite/TouchRunner/TcpTextWriter.cs
 using System;
 using System.IO;
 using System.Net;

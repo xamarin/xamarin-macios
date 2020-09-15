@@ -1,7 +1,7 @@
 #!/bin/bash -ex
 
 cd xamarin-macios-data
-git checkout master
+git checkout main
 cp -cr ../logs/ ./
 
 mv ./*/*.zip .
