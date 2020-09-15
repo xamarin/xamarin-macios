@@ -1,5 +1,7 @@
 using System;
-using System.IO;
+using System.Linq;
+using Microsoft.Build.Utilities;
+
 using NUnit.Framework;
 
 using Xamarin.MacDev.Tasks;
@@ -147,6 +149,25 @@ namespace Xamarin.iOS.Tasks
 			task.ExtraArgs = input;
 			Assert.IsTrue (task.Execute (), input);
 			Assert.AreEqual (output, task.Registrar, output);
+		}
+
+		[TestCase ("--xml", null, "")]
+		[TestCase ("--xml", "", "")]
+		[TestCase ("--xml:abc", null, "abc")]
+		[TestCase ("--xml:abc --xml:def", null, "abc;def")]
+		[TestCase ("--xml:abc --xml:def", "123", "123;abc;def")]
+		[TestCase ("--xml:abc --xml:def", "123;456", "123;456;abc;def")]
+		[TestCase ("-xml:dummy", null, "dummy")]
+		[TestCase ("/xml:dummy", null, "dummy")]
+		[TestCase ("/xml:dummy1 /xml:dummy2", null, "dummy1;dummy2")]
+		public void XmlDefinitions (string input, string existing, string output)
+		{
+			var task = CreateTask<CustomParseBundlerArguments> ();
+			if (existing != null)
+				task.XmlDefinitions = existing.Split (new char [] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select (v => new TaskItem (v)).ToArray ();
+			task.ExtraArgs = input;
+			Assert.IsTrue (task.Execute (), input);
+			Assert.AreEqual (output, string.Join (";", task.XmlDefinitions.Select (v => v.ItemSpec).ToArray ()), output);
 		}
 	}
 }
