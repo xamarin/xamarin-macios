@@ -55,9 +55,9 @@ namespace Xamarin.Bundler {
 
 			List<string> optimize = null;
 
-			options.Add ("h|?|help", "Displays the help", v => a = Action.Help);
-			options.Add ("f|force", "Forces the recompilation of code, regardless of timestamps", v => Force = true);
-			options.Add ("cache=", "Specify the directory where temporary build files will be cached", v => app.Cache.Location = v);
+			options.Add ("h|?|help", "Displays the help.", v => a = Action.Help);
+			options.Add ("f|force", "Forces the recompilation of code, regardless of timestamps.", v => Force = true);
+			options.Add ("cache=", "Specify the directory where temporary build files will be cached.", v => app.Cache.Location = v);
 			options.Add ("version", "Output version information and exit.", v => a = Action.Version);
 			options.Add ("v|verbose", "Specify how verbose the output should be. This can be passed multiple times to increase the verbosity.", v => Verbosity++);
 			options.Add ("q|quiet", "Specify how quiet the output should be. This can be passed multiple times to increase the silence.", v => Verbosity--);
@@ -91,19 +91,19 @@ namespace Xamarin.Bundler {
 			});
 			options.Add ("target-framework=", "Specify target framework to use. Currently supported: '" + string.Join ("', '", TargetFramework.ValidFrameworks.Select ((v) => v.ToString ())) + "'.", v => SetTargetFramework (v));
 #if MMP
-			options.Add ("abi=", "Comma-separated list of ABIs to target. x86_64", v => app.ParseAbi (v));
+			options.Add ("abi=", "Comma-separated list of ABIs to target. x86_64.", v => app.ParseAbi (v));
 #else
-			options.Add ("abi=", "Comma-separated list of ABIs to target. Currently supported: armv7, armv7+llvm, armv7+llvm+thumb2, armv7s, armv7s+llvm, armv7s+llvm+thumb2, arm64, arm64+llvm, arm64_32, arm64_32+llvm, i386, x86_64", v => app.ParseAbi (v));
+			options.Add ("abi=", "Comma-separated list of ABIs to target. Currently supported: armv7, armv7+llvm, armv7+llvm+thumb2, armv7s, armv7s+llvm, armv7s+llvm+thumb2, arm64, arm64+llvm, arm64_32, arm64_32+llvm, i386, x86_64.", v => app.ParseAbi (v));
 #endif
 			options.Add ("no-xcode-version-check", "Ignores the Xcode version check.", v => { min_xcode_version = null; }, true /* This is a non-documented option. Please discuss any customers running into the xcode version check on the maciosdev@ list before giving this option out to customers. */);
 			options.Add ("nolink", "Do not link the assemblies.", v => app.LinkMode = LinkMode.None);
 #if MMP
-			options.Add ("linkplatform", "Link only the Xamarin.Mac.dll platform assembly", v => app.LinkMode = LinkMode.Platform);
+			options.Add ("linkplatform", "Link only the Xamarin.Mac.dll platform assembly.", v => app.LinkMode = LinkMode.Platform);
 #endif
-			options.Add ("linksdkonly", "Link only the SDK assemblies", v => app.LinkMode = LinkMode.SDKOnly);
-			options.Add ("linkskip=", "Skip linking of the specified assembly", v => app.LinkSkipped.Add (v));
-			options.Add ("i18n=", "List of i18n assemblies to copy to the output directory, separated by commas (none, all, cjk, mideast, other, rare and/or west)", v => app.ParseI18nAssemblies (v));
-			options.Add ("xml=", "Provide an extra XML definition file to the linker", v => app.Definitions.Add (v));
+			options.Add ("linksdkonly", "Link only the SDK assemblies.", v => app.LinkMode = LinkMode.SDKOnly);
+			options.Add ("linkskip=", "Skip linking of the specified assembly.", v => app.LinkSkipped.Add (v));
+			options.Add ("i18n=", "List of i18n assemblies to copy to the output directory, separated by commas (none, all, cjk, mideast, other, rare and/or west).", v => app.ParseI18nAssemblies (v));
+			options.Add ("xml=", "Provide an extra XML definition file to the linker.", v => app.Definitions.Add (v));
 			options.Add ("warnaserror:", "An optional comma-separated list of warning codes that should be reported as errors (if no warnings are specified all warnings are reported as errors).", v =>
 			{
 				try {
@@ -207,11 +207,11 @@ namespace Xamarin.Bundler {
 						optimize.Add (v);
 					});
 			options.Add ("package-debug-symbols:", "Specify whether debug info files (*.mdb / *.pdb) should be packaged in the app. Default is 'true' for debug builds and 'false' for release builds.", v => app.PackageManagedDebugSymbols = ParseBool (v, "package-debug-symbols"));
-			options.Add ("profiling:", "Enable profiling", v => app.EnableProfiling = ParseBool (v, "profiling"));
-			options.Add ("debugtrack:", "Enable debug tracking of object resurrection bugs", v => { app.DebugTrack = ParseBool (v, "--debugtrack"); });
-			options.Add ("http-message-handler=", "Specify the default HTTP message handler for HttpClient", v => { app.HttpMessageHandler = v; });
-			options.Add ("tls-provider=", "Specify the default TLS provider", v => { app.TlsProvider = v; });
-			options.Add ("setenv=", "Set the environment variable in the application on startup", v => {
+			options.Add ("profiling:", "Enable profiling.", v => app.EnableProfiling = ParseBool (v, "profiling"));
+			options.Add ("debugtrack:", "Enable debug tracking of object resurrection bugs.", v => { app.DebugTrack = ParseBool (v, "--debugtrack"); });
+			options.Add ("http-message-handler=", "Specify the default HTTP message handler for HttpClient.", v => { app.HttpMessageHandler = v; });
+			options.Add ("tls-provider=", "Specify the default TLS provider.", v => { app.TlsProvider = v; });
+			options.Add ("setenv=", "Set the environment variable in the application on startup.", v => {
 					int eq = v.IndexOf ('=');
 					if (eq <= 0)
 						throw ErrorHelper.CreateError (2, Errors.MT0002, v);
@@ -220,7 +220,7 @@ namespace Xamarin.Bundler {
 					app.EnvironmentVariables.Add (name, value);
 				}
 			);
-			options.Add ("registrar:", "Specify the registrar to use (dynamic, static or default (dynamic in the simulator, static on device))", v => {
+			options.Add ("registrar:", "Specify the registrar to use (dynamic, static or default (dynamic in the simulator, static on device)).", v => {
 				app.ParseRegistrar (v);
 			});
 			options.Add ("runregistrar:", "Runs the registrar on the input assembly and outputs a corresponding native library.",
@@ -230,7 +230,7 @@ namespace Xamarin.Bundler {
 				},
 				true /* this is an internal option */
 			);
-			options.Add ("warn-on-type-ref=", "Warn if any of the comma-separated types is referenced by assemblies - both before and after linking", v => {
+			options.Add ("warn-on-type-ref=", "Warn if any of the comma-separated types is referenced by assemblies - both before and after linking.", v => {
 				app.WarnOnTypeRef.AddRange (v.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries));
 			});
 			// Keep the ResponseFileSource option at the end.
@@ -938,7 +938,7 @@ namespace Xamarin.Bundler {
 			} else {
 				throw ErrorHelper.CreateError (57, Errors.MT0057, sdk_root);
 			}
-			
+
 			var plist_path = Path.Combine (Path.GetDirectoryName (DeveloperDirectory), "version.plist");
 
 			if (File.Exists (plist_path)) {
