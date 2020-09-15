@@ -1196,7 +1196,7 @@ $(DOTNET_COMPILER): Makefile $(TOP)/Make.config | $(DOTNET_BUILD_DIR)
 
 # This tells NuGet to use the exact same dotnet version we've configured in Make.config
 global.json: $(TOP)/global5.json
-	$(CP) $< $@
+	$(Q) $(CP) $< $@
 
 install-local:: $(INSTALL_TARGETS)
 all-local:: $(ALL_TARGETS)
