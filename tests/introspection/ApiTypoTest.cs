@@ -940,7 +940,11 @@ namespace Introspection
 			case Constants.CoreImageLibrary:
 				break;
 			default:
-				if (!File.Exists (lib))
+				if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 11, 0)) {
+					// on macOS 11.0 the frameworks binary files are not present (cache) but can be loaded
+					if (!Directory.Exists (Path.GetDirectoryName (lib)))
+						return false;
+				} else if (!File.Exists (lib))
 					return false;
 				break;
 			}

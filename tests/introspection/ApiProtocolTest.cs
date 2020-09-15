@@ -96,12 +96,24 @@ namespace Introspection {
 				// Xcode 11
 				case "NSFileProviderSearchQuery":
 					return true;
-				// Xcode 12 beta 1
+				// Xcode 12
 				case "ACAccountType":
 				case "ASAccountAuthenticationModificationExtensionContext":
+				case "ASCredentialProviderExtensionContext":
 				case "AVAssetDownloadUrlSession":
+				case "NSFileProviderDomain": // Conformance not in headers
 				case "NSUrlSession":
 				case "SNClassification":
+				case "SNClassificationResult":
+					return true;
+				// PassKit now available on macOS 11+
+				case "PKPaymentMethod":
+				case "PKPaymentMerchantSession":
+				case "PKPaymentSummaryItem":
+				case "PKShareablePassMetadata":
+				case "PKShippingMethod":
+				case "PKSuicaPassProperties": // Conformance not in headers
+				case "PKTransitPassProperties": // Conformance not in headers
 					return true;
 				}
 				break;
@@ -173,12 +185,44 @@ namespace Introspection {
 					return true;
 				// Xcode 12 beta 1
 				case "ASAccountAuthenticationModificationExtensionContext":
+				case "ASCredentialProviderExtensionContext":
 				case "GCController":
 				case "GCExtendedGamepad":
 				case "GCMicroGamepad":
 				case "GCMotion":
 				case "INFile":
 				case "SNClassification":
+				case "SNClassificationResult":
+					return true;
+				// PassKit now available on macOS 11+
+				case "PKPayment":
+				case "PKPaymentSummaryItem":
+				case "PKShippingMethod":
+				case "PKPaymentRequest":
+				case "PKPaymentToken":
+				case "PKLabeledValue":
+				case "PKPaymentAuthorizationResult":
+				case "PKPaymentRequestShippingMethodUpdate":
+				case "PKPaymentRequestUpdate":
+				case "PKPaymentRequestPaymentMethodUpdate":
+				case "PKPaymentRequestShippingContactUpdate":
+				case "PKSuicaPassProperties": // Conformance not in headers
+				case "PKTransitPassProperties": // Conformance not in headers
+				case "PKDisbursementRequest":
+				case "PKDisbursementVoucher":
+				case "PKAddCarKeyPassConfiguration":
+				case "PKAddSecureElementPassConfiguration":
+				case "PKAddShareablePassConfiguration":
+				case "PKBarcodeEventConfigurationRequest":
+				case "PKBarcodeEventMetadataRequest":
+				case "PKBarcodeEventMetadataResponse":
+				case "PKBarcodeEventSignatureRequest":
+				case "PKBarcodeEventSignatureResponse":
+				case "PKIssuerProvisioningExtensionPaymentPassEntry":
+				case "PKIssuerProvisioningExtensionStatus":
+				case "PKPaymentMerchantSession":
+				case "PKPaymentRequestMerchantSessionUpdate":
+				case "PKShareablePassMetadata":
 					return true;
 				}
 				break;
@@ -246,12 +290,44 @@ namespace Introspection {
 					return true;
 				// Xcode 12
 				case "ASAccountAuthenticationModificationExtensionContext":
+				case "ASCredentialProviderExtensionContext":
 				case "GCController":
 				case "GCExtendedGamepad":
 				case "GCMicroGamepad":
 				case "GCMotion":
 				case "SNClassification":
+				case "SNClassificationResult":
 				case "CPMessageListItem": // Conformance not in headers
+					return true;
+				// PassKit now available on macOS 11+
+				case "PKPayment":
+				case "PKPaymentSummaryItem":
+				case "PKShippingMethod":
+				case "PKPaymentRequest":
+				case "PKPaymentToken":
+				case "PKLabeledValue":
+				case "PKPaymentAuthorizationResult":
+				case "PKPaymentRequestShippingMethodUpdate":
+				case "PKPaymentRequestUpdate":
+				case "PKPaymentRequestPaymentMethodUpdate":
+				case "PKPaymentRequestShippingContactUpdate":
+				case "PKSuicaPassProperties": // Conformance not in headers
+				case "PKTransitPassProperties": // Conformance not in headers
+				case "PKDisbursementRequest":
+				case "PKDisbursementVoucher":
+				case "PKAddCarKeyPassConfiguration":
+				case "PKAddSecureElementPassConfiguration":
+				case "PKAddShareablePassConfiguration":
+				case "PKBarcodeEventConfigurationRequest":
+				case "PKBarcodeEventMetadataRequest":
+				case "PKBarcodeEventMetadataResponse":
+				case "PKBarcodeEventSignatureRequest":
+				case "PKBarcodeEventSignatureResponse":
+				case "PKIssuerProvisioningExtensionPaymentPassEntry":
+				case "PKIssuerProvisioningExtensionStatus":
+				case "PKPaymentMerchantSession":
+				case "PKPaymentRequestMerchantSessionUpdate":
+				case "PKShareablePassMetadata":
 					return true;
 				}
 				break;

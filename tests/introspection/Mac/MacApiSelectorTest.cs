@@ -679,6 +679,16 @@ namespace Introspection {
 				break;
 			case "AVFoundation":
 				switch (type.Name) {
+				case "AVCaptureDevice":
+					switch (selectorName) {
+					// macOS 11.0 / AVCaptureDeviceTransportControls category selectors don't respond anymore
+					case "setTransportControlsPlaybackMode:speed:":
+					case "transportControlsPlaybackMode":
+					case "transportControlsSpeed":
+					case "transportControlsSupported":
+						return true;
+					}
+					break;
 				case "AVCapturePhoto":
 					switch (selectorName) {
 					case "fileDataRepresentationWithReplacementMetadata:replacementEmbeddedThumbnailPhotoFormat:replacementEmbeddedThumbnailPixelBuffer:replacementDepthData:":
