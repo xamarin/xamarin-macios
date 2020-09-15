@@ -1544,8 +1544,7 @@ namespace AppKit {
 		IntPtr Constructor (CGRect frameRect);
 
 		[Export ("borderType")]
-		[Advice ("Only used with deprecated NSBoxOldStyle. Use 'Transparent' property for NSNoBorder.")]
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Only used with deprecated NSBoxOldStyle. Use 'Transparent' property for NSNoBorder.")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'Transparent' property for NSNoBorder instead.")]
 		NSBorderType BorderType { get; set; }
 	
 		[Export ("titlePosition")]
@@ -3691,12 +3690,12 @@ namespace AppKit {
 
 		[Static]
 		[Export ("controlShadowColor")]
-		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use a context specific color such as 'SeparatorColor'.`")]
+		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use a context specific color such as 'SeparatorColor'.")]
 		NSColor ControlShadow { get; }
 
 		[Static]
 		[Export ("controlDarkShadowColor")]
-		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use a context specific color such as 'SeparatorColor'.`")]
+		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use a context specific color such as 'SeparatorColor'.")]
 		NSColor ControlDarkShadow { get; }
 
 		[Static]
@@ -3705,12 +3704,12 @@ namespace AppKit {
 
 		[Static]
 		[Export ("controlHighlightColor")]
-		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use a context specific color such as 'SeparatorColor'.`")]
+		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use a context specific color such as 'SeparatorColor'.")]
 		NSColor ControlHighlight { get; }
 
 		[Static]
 		[Export ("controlLightHighlightColor")]
-		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use a context specific color such as 'SeparatorColor'.`")]
+		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use a context specific color such as 'SeparatorColor'.")]
 		NSColor ControlLightHighlight { get; }
 
 		[Static]
@@ -13506,17 +13505,17 @@ namespace AppKit {
 		bool SendsSearchStringImmediately { get; set; }
 
 		[Mac (10,11)]
-		[Advice ("Use 'SearchTextBounds' instead.'")]
+		[Advice ("Use 'SearchTextBounds' instead.")]
 		[Export ("rectForSearchTextWhenCentered:")]
 		CGRect GetRectForSearchText (bool isCentered);
 
 		[Mac (10,11)]
-		[Advice ("Use 'SearchButtonBounds' instead.'")]
+		[Advice ("Use 'SearchButtonBounds' instead.")]
 		[Export ("rectForSearchButtonWhenCentered:")]
 		CGRect GetRectForSearchButton (bool isCentered);
 
 		[Mac (10,11)]
-		[Advice ("Use 'CancelButtonBounds' instead.'")]
+		[Advice ("Use 'CancelButtonBounds' instead.")]
 		[Export ("rectForCancelButtonWhenCentered:")]
 		CGRect GetRectForCancelButton (bool isCentered);
 
