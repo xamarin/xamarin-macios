@@ -33,7 +33,7 @@ namespace Network {
 
 	public delegate void NWBrowserChangesDelegate (NWBrowseResult? oldResult, NWBrowseResult? newResult, bool completed);
 
-	public delegate void NWBrowserCompleteChangesDelegate (List<(NWBrowseResult? result, NWBrowseResultChange? change)>? changes);
+	public delegate void NWBrowserCompleteChangesDelegate (List<(NWBrowseResult? result, NWBrowseResultChange change)>? changes);
 
 	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 	public class NWBrowser : NativeObject {
@@ -144,7 +144,7 @@ namespace Network {
 		// syntactic sugar for the user, nicer to get all the changes at once
 		public NWBrowserCompleteChangesDelegate? CompleteChangesDelegate { get; set; }
 		object changesLock = new object ();
-		List<(NWBrowseResult? result, NWBrowseResultChange? change)> changes = new List<(NWBrowseResult? result, NWBrowseResultChange? change)> ();
+		List<(NWBrowseResult? result, NWBrowseResultChange change)> changes = new List<(NWBrowseResult? result, NWBrowseResultChange change)> ();
 
 		void InternalChangesHandler (NWBrowseResult? oldResult, NWBrowseResult? newResult, bool completed)
 		{
@@ -166,13 +166,13 @@ namespace Network {
 			// at this point, we do not longer need the old result
 			// results can be null
 			oldResult?.Dispose ();
-			List<(NWBrowseResult? result, NWBrowseResultChange? change)>? tmp_changes = null;
+			List<(NWBrowseResult? result, NWBrowseResultChange change)>? tmp_changes = null;
 			lock (changesLock) {
 				changes.Add (result);
 				// only call when we know we are done
 				if (completed)  {
 					tmp_changes = changes;
-					changes = new List<(NWBrowseResult? result, NWBrowseResultChange? change)> ();
+					changes = new List<(NWBrowseResult? result, NWBrowseResultChange change)> ();
 				}
 			}
 			if (completed) {

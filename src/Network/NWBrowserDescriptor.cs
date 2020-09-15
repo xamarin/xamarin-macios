@@ -25,7 +25,7 @@ namespace Network {
 		internal NWBrowserDescriptor (IntPtr handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern OS_nw_browse_descriptor nw_browse_descriptor_create_bonjour_service (string type, string domain);
+		static extern OS_nw_browse_descriptor nw_browse_descriptor_create_bonjour_service (string type, string? domain);
 
 		public static NWBrowserDescriptor CreateBonjourService (string type, string? domain)
 		{
@@ -33,7 +33,7 @@ namespace Network {
 			if (type == null)
 				throw new ArgumentNullException (nameof (type));
 
-			return new NWBrowserDescriptor (nw_browse_descriptor_create_bonjour_service (type, domain!), owns: true);
+			return new NWBrowserDescriptor (nw_browse_descriptor_create_bonjour_service (type, domain), owns: true);
 		}
 
 		public static NWBrowserDescriptor CreateBonjourService (string type) => CreateBonjourService (type, null);
