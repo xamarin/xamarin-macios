@@ -6,6 +6,9 @@
 //
 // Copyright 2019 Microsoft Inc
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
@@ -37,7 +40,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		unsafe static extern IntPtr nw_txt_record_create_with_bytes (byte *txtBytes, nuint len);
 
-		public static NWTxtRecord FromBytes (ReadOnlySpan<byte> bytes)
+		public static NWTxtRecord? FromBytes (ReadOnlySpan<byte> bytes)
 		{
 			unsafe {
 				fixed (byte* mh = bytes) {
@@ -52,7 +55,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern IntPtr nw_txt_record_create_dictionary ();
 
-		public static NWTxtRecord CreateDictionary ()
+		public static NWTxtRecord? CreateDictionary ()
 		{
 			var x = nw_txt_record_create_dictionary ();
 			if (x == IntPtr.Zero)
