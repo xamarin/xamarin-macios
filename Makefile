@@ -18,6 +18,8 @@ world: check-system
 
 .PHONY: check-system
 check-system:
+ifdef INCLUDE_MAC
+ifdef INCLUDE_IOS
 	@if [[ "x$(IOS_COMMIT_DISTANCE)" != "x$(MAC_COMMIT_DISTANCE)" ]]; then \
 		echo "$(COLOR_RED)*** The commit distance for Xamarin.iOS ($(IOS_COMMIT_DISTANCE)) and Xamarin.Mac ($(MAC_COMMIT_DISTANCE)) are different.$(COLOR_CLEAR)"; \
 		echo "$(COLOR_RED)*** To fix this problem, bump the revision (the third number) for both $(COLOR_GRAY)IOS_PACKAGE_NUMBER$(COLOR_RED) and $(COLOR_GRAY)MAC_PACKAGE_NUMBER$(COLOR_RED) in Make.versions.$(COLOR_CLEAR)"; \
@@ -29,8 +31,18 @@ check-system:
 		echo "$(COLOR_RED)*** Once fixed, you need to commit the changes for them to pass this check.$(COLOR_CLEAR)"; \
 		exit 1; \
 	fi
+endif
+endif
 	@./system-dependencies.sh
+ifdef INCLUDE_MAC
+ifdef INCLUDE_IOS
 	@echo "Building Xamarin.iOS $(IOS_PACKAGE_VERSION) and Xamarin.Mac $(MAC_PACKAGE_VERSION)"
+else
+	@echo "Building Xamarin.Mac $(MAC_PACKAGE_VERSION)"	
+endif
+else
+	@echo "Building Xamarin.iOS $(IOS_PACKAGE_VERSION)"
+endif
 
 check-permissions:
 ifdef INCLUDE_MAC
