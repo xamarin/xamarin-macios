@@ -174,3 +174,5 @@
 !incorrect-protocol-member! MTLFunction::options is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderCommandEncoder::sampleCountersInBuffer:atSampleIndex:withBarrier: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLIndirectComputeCommand::setImageblockWidth:height: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::areBarycentricCoordsSupported is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::supportsShaderBarycentricCoordinates is REQUIRED and should be abstract
