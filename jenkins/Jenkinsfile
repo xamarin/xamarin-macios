@@ -951,6 +951,10 @@ timestamps {
                                                 } else {
                                                     echo ("${currentStage} succeeded")
                                                 }
+                                                // create a zip that contains the test run results and upload them to azure to be later served in vsdrops
+                                                echo ("Compressing and uploading test results")
+                                                sh ("7z a ${reportPrefix}.7z ${reportPrefix}")
+                                                uploadFiles ("${reportPrefix}.7z", "wrench", virtualPath)
                                             }
                                         }
                                     }
