@@ -54,23 +54,39 @@ $(XMAC_PCH): .stamp-check-sharpie
 
 ios-$(IOS_SDK_VERSION).g.cs: $(XIOS_PCH)
 
+ifdef INCLUDE_IOS
 gen-ios: ios-$(IOS_SDK_VERSION).g.cs .stamp-check-sharpie
 	sharpie query -bind $(XIOS_PCH) > ios-$(IOS_SDK_VERSION).g.cs
+else
+gen-ios: ; @true
+endif
 
 tvos-$(TVOS_SDK_VERSION).g.cs: $(XTVOS_PCH)
 
+ifdef INCLUDE_TVOS
 gen-tvos: tvos-$(TVOS_SDK_VERSION).g.cs .stamp-check-sharpie
 	sharpie query -bind $(XTVOS_PCH) > tvos-$(TVOS_SDK_VERSION).g.cs
+else
+gen-tvos: ; @true
+endif
 
 watchos-$(WATCH_SDK_VERSION).g.cs: $(XWATCHOS_PCH)
 
+ifdef INCLUDE_WATCH
 gen-watchos: watchos-$(WATCH_SDK_VERSION).g.cs .stamp-check-sharpie
 	sharpie query -bind $(XWATCHOS_PCH) > watchos-$(WATCH_SDK_VERSION).g.cs
+else
+gen-watchos: ; @true
+endif
 
 macos-$(OSX_SDK_VERSION).g.cs: $(XMAC_PCH)
 
+ifdef INCLUDE_MAC
 gen-macos: macos-$(OSX_SDK_VERSION).g.cs .stamp-check-sharpie
 	sharpie query -bind $(XMAC_PCH) > macos-$(OSX_SDK_VERSION).g.cs
+else
+gen-macos: ; @true
+endif
 
 gen-all: gen-ios gen-tvos gen-watchos gen-macos
 	
@@ -84,17 +100,33 @@ report: build
 report-short:
 	JENKINS_SERVER_COOKIE=1 make report
 
+ifdef INCLUDE_IOS
 classify-ios:
 	$(MONO) bin/Debug/xtro-sharpie.exe $(XIOS_PCH) $(XIOS) $(XIOS_GL)
+else
+classify-ios: ; @true
+endif
 
+ifdef INCLUDE_TVOS
 classify-tvos:
 	$(MONO) bin/Debug/xtro-sharpie.exe $(XTVOS_PCH) $(XTVOS) $(XTVOS_GL)
+else
+classify-tvos: ; @true
+endif
 
+ifdef INCLUDE_WATCH
 classify-watchos:
 	$(MONO) bin/Debug/xtro-sharpie.exe $(XWATCHOS_PCH) $(XWATCHOS)
+else
+classify-watchos: ; @true
+endif
 
+ifdef INCLUDE_MAC
 classify-macos:
 	$(MONO) bin/Debug/xtro-sharpie.exe $(XMAC_PCH) $(XMAC)
+else
+classify-macos: ; @true
+endif
 
 classify: build $(XIOS_PCH) $(XWATCHOS_PCH) $(XTVOS_PCH) $(XMAC_PCH)
 	rm -f *.unclassified
