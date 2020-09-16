@@ -151,7 +151,7 @@ namespace Network {
 			if (outboundMessage == null)
 				throw new ArgumentNullException (nameof (outboundMessage));
 
-			nw_connection_group_reply (GetCheckedHandle (), inboundMessage.Handle, outboundMessage.Handle, content.GetHandle ());
+			nw_connection_group_reply (GetCheckedHandle (), inboundMessage.GetCheckedHandle  (), outboundMessage.GetCheckedHandle (), content.GetHandle ());
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
