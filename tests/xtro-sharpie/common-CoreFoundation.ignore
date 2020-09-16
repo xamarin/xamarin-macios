@@ -423,7 +423,6 @@
 !missing-pinvoke! CFBitVectorSetBitAtIndex is not bound
 !missing-pinvoke! CFBitVectorSetBits is not bound
 !missing-pinvoke! CFBitVectorSetCount is not bound
-!missing-pinvoke! CFBundleCloseBundleResourceMap is not bound
 !missing-pinvoke! CFBundleCopyBundleLocalizations is not bound
 !missing-pinvoke! CFBundleCopyExecutableArchitecturesForURL is not bound
 !missing-pinvoke! CFBundleCopyInfoDictionaryInDirectory is not bound
@@ -437,8 +436,6 @@
 !missing-pinvoke! CFBundleGetValueForInfoDictionaryKey is not bound
 !missing-pinvoke! CFBundleGetVersionNumber is not bound
 !missing-pinvoke! CFBundleLoadExecutable is not bound
-!missing-pinvoke! CFBundleOpenBundleResourceFiles is not bound
-!missing-pinvoke! CFBundleOpenBundleResourceMap is not bound
 !missing-pinvoke! CFCalendarAddComponents is not bound
 !missing-pinvoke! CFCalendarComposeAbsoluteTime is not bound
 !missing-pinvoke! CFCalendarCopyCurrent is not bound

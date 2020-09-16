@@ -547,7 +547,7 @@ public class Frameworks : Dictionary <string, Framework>
 	// This checks if a framework is unavailable due to bugs in Xcode (such as Apple forgetting to ship a library or headers for a framework, which seems to happen at least once a year).
 	public static bool IsFrameworkBroken (Application app, string framework)
 	{
-		if (app.IsSimulatorBuild && Driver.XcodeProductVersion == "12A8189n" /* Xcode 12 beta 6 */) {
+		if (app.IsSimulatorBuild) {
 			switch (framework) {
 			// Apple seems to have forgotten to ship the several libraries for the simulator in Xcode 12 betas (it's still available for device builds).
 			// https://github.com/xamarin/maccore/issues/2266
@@ -563,7 +563,7 @@ public class Frameworks : Dictionary <string, Framework>
 			default:
 				return false;
 			}
-			Driver.Log (1, $"Can't use '{framework}' in the simulator because Apple didn't ship it with Xcode 12 beta {Driver.XcodeProductVersion}");
+			Driver.Log (1, $"Can't use '{framework}' in the simulator because Apple didn't ship it with Xcode 12 {Driver.XcodeProductVersion}");
 			return true;
 		}
 		return false;

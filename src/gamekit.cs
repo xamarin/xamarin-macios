@@ -607,7 +607,7 @@ namespace GameKit {
 		[Field ("GKPlayerIDNoLongerAvailable")]
 		NSString IdNoLongerAvailable { get; }
 
-		[TV (14, 0), Watch(7, 0), Mac (11, 0), iOS (14, 0)]
+		[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
 		[Export ("isInvitable")]
 		bool IsInvitable { get; }
 	}

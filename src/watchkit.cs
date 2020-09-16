@@ -1625,6 +1625,7 @@ namespace WatchKit {
 		SessionInProgress,
 		Expired,
 		ResignedFrontmost,
+		SuppressedBySystem,
 		Error = -1,
 	}
 

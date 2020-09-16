@@ -374,6 +374,8 @@ namespace Introspection {
 			case "AVMutableMediaSelection":
 			// crash with xcode 12 beta 3
 			case "GKTurnBasedMatch":
+			// crash with xcode 12 GM
+			case "CSLocalizedString":
 				if (TestRuntime.CheckXcodeVersion (12, 0))
 					return;
 				break;

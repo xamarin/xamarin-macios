@@ -5,7 +5,39 @@ using System.IO;
 namespace Extrospection {
 	class Sanitizer {
 
-		static readonly string [] Platforms = new [] { "iOS", "tvOS", "watchOS", "macOS" };
+		static List<string> platforms;
+
+		static List<string> Platforms {
+			get {
+				if (platforms != null)
+					return platforms;
+
+				platforms = new List<string> (4);
+				foreach (var line in File.ReadAllLines ("../../Make.config")) {
+					var eq = line.IndexOf ('=');
+					if (eq == -1)
+						continue;
+					if (!line.StartsWith ("INCLUDE_", StringComparison.Ordinal))
+						continue;
+
+					switch (line.Substring (0, eq)) {
+					case "INCLUDE_IOS":
+						platforms.Add ("iOS");
+						break;
+					case "INCLUDE_TVOS":
+						platforms.Add ("tvOS");
+						break;
+					case "INCLUDE_WATCH":
+						platforms.Add ("watchOS");
+						break;
+					case "INCLUDE_MAC":
+						platforms.Add ("macOS");
+						break;
+					}
+				}
+				return platforms;
+			}
+		}
 
 		static bool IsEntry (string line)
 		{
@@ -71,6 +103,8 @@ namespace Extrospection {
 		static void NoIgnoredTodo ()
 		{
 			foreach (var file in Directory.GetFiles (directory, "*.todo")) {
+				if (!IsIncluded (file))
+					continue;
 				var last = file.LastIndexOf ('-');
 				var fx = file.Substring (last + 1, file.Length - last - 6);
 				// check if it's in common or in the same platform
@@ -95,9 +129,21 @@ namespace Extrospection {
 			}
 		}
 
+		static bool IsIncluded (string file)
+		{
+			var name = Path.GetFileName (file);
+			foreach (var p in Platforms) {
+				if (name.StartsWith (p, StringComparison.Ordinal))
+					return true;
+			}
+			return false;
+		}
+
 		static void NoFixedTodo ()
 		{
 			foreach (var file in Directory.GetFiles (directory, "*.todo")) {
+				if (!IsIncluded (file))
+					continue;
 				var last = file.LastIndexOf ('-');
 				var fx = file.Substring (last + 1, file.Length - last - 6);
 				var raw = Path.ChangeExtension (file, ".raw");
@@ -133,6 +179,7 @@ namespace Extrospection {
 		public static int Main (string [] args)
 		{
 			directory = args.Length == 0 ? "." : args [0];
+			Environment.CurrentDirectory = directory;
 
 			// cache stuff
 			foreach (var file in Directory.GetFiles (directory, "common-*.ignore")) {
@@ -151,6 +198,8 @@ namespace Extrospection {
 				CorrectEntries (common, $"common-{fx}.ignore");
 			}
 			foreach (var file in Directory.GetFiles (directory, "*.ignore")) {
+				if (!IsIncluded (file))
+					continue;
 				var filename = Path.GetFileName (file);
 				// already processed from cache - don't reload them
 				if (filename.StartsWith ("common-", StringComparison.Ordinal))
@@ -181,7 +230,7 @@ namespace Extrospection {
 				var fx = kvp.Key;
 				var common = kvp.Value;
 				//ExistingCommonEntries (common, $"common-{fx}.ignore");
-				List<string> [] raws = new List<string> [Platforms.Length];
+				List<string> [] raws = new List<string> [Platforms.Count];
 				for (int i=0; i < raws.Length; i++) {
 					var fname = Path.Combine (directory, $"{Platforms[i]}-{fx}.raw");
 					if (File.Exists (fname))
@@ -213,6 +262,8 @@ namespace Extrospection {
 			}
 			// * a platform ignore must existing in it's corresponding raw file
 			foreach (var file in Directory.GetFiles (directory, "*.ignore")) {
+				if (!IsIncluded (file))
+					continue;
 				var shortname = Path.GetFileName (file);
 				if (shortname.StartsWith ("common-", StringComparison.Ordinal))
 					continue;

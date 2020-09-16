@@ -131,14 +131,13 @@ namespace Metal {
 	[Native]
 	public enum MTLSamplerAddressMode : ulong {
 		ClampToEdge = 0,
-#if MONOMAC
+		[iOS (14,0)]
 		MirrorClampToEdge = 1,
-#endif
 		Repeat = 2,
 		MirrorRepeat = 3,
 		ClampToZero = 4,
 		
-		[Mac (10,12)]
+		[Mac (10,12), iOS (14,0)]
 		ClampToBorderColor = 5,
 	}
 
@@ -773,9 +772,9 @@ namespace Metal {
 	}
 
 #if XAMCORE_4_0
-	[NoiOS][NoTV]
+	[NoTV]
 #endif
-	[Mac (10,12)]
+	[Mac (10,12), iOS (14,0)]
 	[Native]
 	public enum MTLSamplerBorderColor : ulong {
 		TransparentBlack = 0,
@@ -1044,6 +1043,10 @@ namespace Metal {
 		Apple3 = 1003,
 		Apple4 = 1004,
 		Apple5 = 1005,
+		[NoTV, NoMac, iOS (14,0)] // Yep just available in iOS
+		Apple6 = 1006,
+		[NoTV, NoMac, iOS (14,0)] // Yep just available in iOS
+		Apple7 = 1007,
 		Mac1 = 2001,
 		Mac2 = 2002,
 		Common1 = 3001,

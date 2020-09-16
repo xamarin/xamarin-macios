@@ -34,6 +34,8 @@ namespace Xamarin.iOS.Tasks
 			if (Configuration.XcodeVersion.Major >= 12) {
 				Assert.IsTrue (files.Contains (Path.Combine (mlmodelc, "metadata.json")), " metadata.json not found");
 				expected_length++;
+				Assert.IsTrue (files.Contains (Path.Combine (mlmodelc, "analytics", "coremldata.bin")), "analytics/coremldata.bin not found");
+				expected_length++;
 			}
 			Assert.AreEqual (expected_length, files.Count, "File count");
 		}
