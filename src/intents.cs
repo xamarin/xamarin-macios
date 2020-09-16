@@ -2329,7 +2329,7 @@ namespace Intents {
 	[iOS (14,0), NoMac, NoTV, Watch (7,0)]
 	enum INCarChargingConnectorType {
 		[DefaultEnumValue]
-		[Field ("INCarChargingConnectorTypeNone")]
+		[Field (null)]
 		None,
 
 		[Field ("INCarChargingConnectorTypeJ1772")]
@@ -13739,7 +13739,7 @@ namespace Intents {
 
 		[Export ("initWithCarIdentifier:displayName:year:make:model:color:headUnit:supportedChargingConnectors:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string carIdentifier, [NullAllowed] string displayName, [NullAllowed] string year, [NullAllowed] string make, [NullAllowed] string model, [NullAllowed] CGColor color, [NullAllowed] INCarHeadUnit headUnit, [NullAllowed] [BindAs (typeof (INCarChargingConnectorType []))] NSString [] supportedChargingConnectors);
+		IntPtr Constructor (string carIdentifier, [NullAllowed] string displayName, [NullAllowed] string year, [NullAllowed] string make, [NullAllowed] string model, [NullAllowed] CGColor color, [NullAllowed] INCarHeadUnit headUnit, [BindAs (typeof (INCarChargingConnectorType []))] NSString [] supportedChargingConnectors);
 
 		[Export ("carIdentifier")]
 		string CarIdentifier { get; }
@@ -13763,7 +13763,7 @@ namespace Intents {
 		INCarHeadUnit HeadUnit { get; }
 
 		[BindAs (typeof (INCarChargingConnectorType []))]
-		[NullAllowed, Export ("supportedChargingConnectors", ArgumentSemantic.Copy)]
+		[Export ("supportedChargingConnectors", ArgumentSemantic.Copy)]
 		NSString [] SupportedChargingConnectors { get; }
 
 		[Export ("setMaximumPower:forChargingConnectorType:")]
@@ -13788,25 +13788,6 @@ namespace Intents {
 
 		[NullAllowed, Export ("iAP2Identifier")]
 		string Iap2Identifier { get; }
-	}
-
-	[Watch (7,0), NoTV, NoMac, iOS (14,0)]
-	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor]
-	interface INColor : NSCopying, NSSecureCoding {
-
-		[Export ("initWithRed:green:blue:")]
-		[DesignatedInitializer]
-		IntPtr Constructor (double red, double green, double blue);
-
-		[Export ("red")]
-		double Red { get; }
-
-		[Export ("green")]
-		double Green { get; }
-
-		[Export ("blue")]
-		double Blue { get; }
 	}
 
 	[Watch (7,0), NoTV, NoMac, iOS (14,0)]

@@ -1421,14 +1421,14 @@ namespace Metal {
 #if XAMCORE_4_0
 		[Abstract]
 #endif
-		[NoiOS, NoTV, Mac (10, 15)]
+		[iOS (14,0), NoTV, Mac (10, 15)]
 		[Export ("barycentricCoordsSupported")]
 		bool BarycentricCoordsSupported { [Bind ("areBarycentricCoordsSupported")] get; }
 
 #if XAMCORE_4_0
 		[Abstract]
 #endif
-		[NoiOS, NoTV, Mac (10, 15)]
+		[iOS (14,0), NoTV, Mac (10, 15)]
 		[Export ("supportsShaderBarycentricCoordinates")]
 		bool SupportsShaderBarycentricCoordinates { get; }
 
@@ -1979,7 +1979,7 @@ namespace Metal {
 		[Export ("lodAverage")]
 		bool LodAverage { get; set; }
 
-		[NoiOS, NoTV, NoWatch, Mac (10,12)]
+		[iOS (14,0), NoTV, NoWatch, Mac (10,12)]
 		[Export ("borderColor", ArgumentSemantic.Assign)]
 		MTLSamplerBorderColor BorderColor { get; set; }
 
@@ -4822,7 +4822,7 @@ namespace Metal {
 	[Mac (11,0), iOS (14,0), NoTV]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
-	interface MTLIntersectionFunctionTableDescriptor {
+	interface MTLIntersectionFunctionTableDescriptor : NSCopying {
 		[Static]
 		[Export ("intersectionFunctionTableDescriptor")]
 		MTLIntersectionFunctionTableDescriptor Create ();
@@ -4931,7 +4931,7 @@ namespace Metal {
 	[Mac (11,0), iOS (14,0), NoTV]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
-	interface MTLVisibleFunctionTableDescriptor {
+	interface MTLVisibleFunctionTableDescriptor : NSCopying {
 		[Static]
 		[Export ("visibleFunctionTableDescriptor")]
 		MTLVisibleFunctionTableDescriptor Create ();

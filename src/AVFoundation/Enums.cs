@@ -332,6 +332,12 @@ namespace AVFoundation {
 	public enum AVAudioSessionPortOverride : ulong {
 		None = 0,
 		[NoTV]
+#if XAMCORE_4_0 // Removed in Xcode 12 GM
+		[NoMac, NoWatch]
+#else
+		[Obsoleted (PlatformName.WatchOS, 2,0, message : "Unavailable and will be removed in the future.")]
+		[Obsoleted (PlatformName.MacOSX, 10,7, message : "Unavailable and will be removed in the future.")]
+#endif
 		Speaker = 0x73706b72 // 'spkr'
 	}
 
@@ -354,15 +360,42 @@ namespace AVFoundation {
 	public enum AVAudioSessionCategoryOptions : ulong {
 		MixWithOthers = 1,
 		DuckOthers = 2,
+#if XAMCORE_4_0 // Removed in Xcode 12 GM
+		[NoMac, NoWatch]
+#else
+		[Obsoleted (PlatformName.WatchOS, 2,0, message : "Unavailable and will be removed in the future.")]
+		[Obsoleted (PlatformName.MacOSX, 10,7, message : "Unavailable and will be removed in the future.")]
+#endif
 		[NoTV]
 		AllowBluetooth = 4,
+#if XAMCORE_4_0 // Removed in Xcode 12 GM
+		[NoMac, NoWatch]
+#else
+		[Obsoleted (PlatformName.WatchOS, 2,0, message : "Unavailable and will be removed in the future.")]
+		[Obsoleted (PlatformName.MacOSX, 10,7, message : "Unavailable and will be removed in the future.")]
+#endif
 		[NoTV]
 		DefaultToSpeaker = 8,
 
+#if XAMCORE_4_0 // Removed in Xcode 12 GM
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,7, message : "Unavailable and will be removed in the future.")]
+#endif
 		[iOS (9,0)]
 		InterruptSpokenAudioAndMixWithOthers = 17,
+#if XAMCORE_4_0 // Removed in Xcode 12 GM
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,7, message : "Unavailable and will be removed in the future.")]
+#endif
 		[NoWatch, iOS (10,0), TV (10,0)]
 		AllowBluetoothA2DP = 32,
+#if XAMCORE_4_0 // Removed in Xcode 12 GM
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,7, message : "Unavailable and will be removed in the future.")]
+#endif
 		[NoWatch, iOS (10,0), TV (10,0)]
 		AllowAirPlay = 64,
 	}
@@ -874,7 +907,9 @@ namespace AVFoundation {
 	public enum AVAudioSessionRouteSharingPolicy : ulong {
 		Default = 0,
 		LongForm = 1,
-		Independent = 2
+		Independent = 2,
+		[iOS (14,0), NoWatch, NoTV, NoMac]
+		LongFormVideo = 3,
 	}
 
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
