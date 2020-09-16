@@ -738,14 +738,43 @@ namespace Introspection
 		}
 
 		[Test]
+		public virtual void AttributeTypoTest ()
+		{
+			var types = Assembly.GetTypes ();
+			int totalErrors = 0;
+			foreach (Type t in types)
+				AttributeTypo (t, ref totalErrors);
+
+			Assert.IsTrue ((totalErrors == 0), "Attributes have {0} typos!", totalErrors);
+		}
+
+		void AttributeTypo (Type t, ref int totalErrors)
+		{
+			AttributesMessageTypoRules (t, t.Name, ref totalErrors);
+
+			foreach (var f in t.GetFields ())
+				AttributesMessageTypoRules (f, t.Name, ref totalErrors);
+
+			foreach (var p in t.GetProperties ())
+				AttributesMessageTypoRules (p, t.Name, ref totalErrors);
+
+			foreach (var m in t.GetMethods ())
+				AttributesMessageTypoRules (m, t.Name, ref totalErrors);
+
+			foreach (var e in t.GetEvents ())
+				AttributesMessageTypoRules (e, t.Name, ref totalErrors);
+
+			foreach (var nt in t.GetNestedTypes ())
+				AttributeTypo (nt, ref totalErrors);
+		}
+
+		[Test]
 		public virtual void TypoTest ()
 		{
 			var types = Assembly.GetTypes ();
 			int totalErrors = 0;
 			foreach (Type t in types) {
 				if (t.IsPublic) {
-					AttributesMessageTypoRules (t, t.Name, ref totalErrors);
-
 					if (IsObsolete (t))
 						continue;
 
@@ -762,8 +791,6 @@ namespace Introspection
 					foreach (FieldInfo f in fields) {
 						if (!f.IsPublic && !f.IsFamily)
 							continue;
-
-						AttributesMessageTypoRules (f, t.Name, ref totalErrors);
 
 						if (IsObsolete (f))
 							continue;
@@ -782,8 +809,6 @@ namespace Introspection
 					foreach (MethodInfo m in methods) {
 						if (!m.IsPublic && !m.IsFamily)
 							continue;
-
-						AttributesMessageTypoRules (m, t.Name, ref totalErrors);
 
 						if (IsObsolete (m))
 							continue;
