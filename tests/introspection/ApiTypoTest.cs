@@ -1041,9 +1041,14 @@ namespace Introspection
 				default:
 					if (fi.Name.EndsWith ("Library", StringComparison.Ordinal)) {
 #if __IOS__
-						// NFC is currently not available on iPad
-						if (fi.Name == "CoreNFCLibrary" && UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Pad)
-							continue;
+						if (fi.Name == "CoreNFCLibrary") {
+							// NFC is currently not available on iPad
+							if (UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Pad)
+								continue;
+							// Phone works unless Xcode 12 on simulator
+							if ((Runtime.Arch == Arch.SIMULATOR) && TestRuntime.CheckXcodeVersion (12, 0))
+								continue;
+						}
 #endif
 #if __MACOS__
 						// Only available in macOS 10.15.4+
