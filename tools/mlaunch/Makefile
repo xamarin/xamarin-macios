@@ -6,6 +6,12 @@ COLOR_GREEN:=$(shell tput setaf 120 2>/dev/null)
 COLOR_CLEAR:=$(shell tput sgr0 2>/dev/null)
 
 ifdef ENABLE_XAMARIN
+ifdef INCLUDE_MAC
+ENABLE_MLAUNCH=1
+endif
+endif
+
+ifdef ENABLE_MLAUNCH
 all-local install-local clean-local::
 	$(MAKE) -C $(MACCORE_PATH)/tools/mlaunch $@
 else
@@ -14,7 +20,7 @@ all-local install-local::
 	$(Q) $(CP) -R $(MACIOS_BINARIES_PATH)/mlaunch/lib/mlaunch $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib
 endif
 
-ifdef ENABLE_XAMARIN
+ifdef ENABLE_MLAUNCH
 publish:
 	$(Q) mkdir -p $(MACIOS_BINARIES_PATH)/mlaunch/bin
 	$(Q) mkdir -p $(MACIOS_BINARIES_PATH)/mlaunch/lib
