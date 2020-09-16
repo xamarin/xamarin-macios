@@ -1067,6 +1067,7 @@ METAL_CORE_SOURCES = \
 METAL_SOURCES = \
 	Metal/MTLArgumentEncoder.cs \
 	Metal/MTLCompat.cs \
+	Metal/MTLComputeCommandEncoder.cs \
 	Metal/MTLDevice.cs \
 	Metal/MTLArrays.cs \
 	Metal/MTLRasterizationRateLayerDescriptor.cs \

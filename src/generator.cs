@@ -5562,7 +5562,7 @@ public partial class Generator : IMemberGatherer {
 		return false;
 	}
 
-	void GenerateProtocolTypes (Type type, string class_visibility, string TypeName, string protocol_name, ProtocolAttribute protocolAttribute)
+	void GenerateProtocolTypes (Type type, string class_visibility, string TypeName, string protocol_name, ProtocolAttribute protocolAttribute, bool isPartial=false)
 	{
 		var allProtocolMethods = new List<MethodInfo> ();
 		var allProtocolProperties = new List<PropertyInfo> ();
@@ -5693,7 +5693,8 @@ public partial class Generator : IMemberGatherer {
 		}
 
 		PrintXpcInterfaceAttribute (type);
-		print ("{0} interface I{1} : INativeObject, IDisposable{2}", class_visibility, TypeName, ifaces.Count () > 0 ? ", " : string.Empty);
+		var classVisibility = class_visibility + (isPartial ? " partial " : String.Empty);
+		print ("{0} interface I{1} : INativeObject, IDisposable{2}", classVisibility, TypeName, ifaces.Count () > 0 ? ", " : string.Empty);
 		indent++;
 		sb.Clear ();
 		foreach (var iface in ifaces) {
@@ -5827,7 +5828,7 @@ public partial class Generator : IMemberGatherer {
 		}
 
 		PrintPreserveAttribute (type);
-		print ("internal sealed class {0}Wrapper : BaseWrapper, I{0} {{", TypeName);
+		print ("internal sealed {0}class {1}Wrapper : BaseWrapper, I{1} {{", isPartial ? "partial " : String.Empty, TypeName);
 		indent++;
 		// ctor (IntPtr, bool)
 		print ("[Preserve (Conditional = true)]");
@@ -6240,7 +6241,7 @@ public partial class Generator : IMemberGatherer {
 				if (is_model && base_type == TypeManager.System_Object)
 					ErrorHelper.Warning (1060, type.FullName);
 
-				GenerateProtocolTypes (type, class_visibility, TypeName, protocol.Name ?? objc_type_name, protocol);
+				GenerateProtocolTypes (type, class_visibility, TypeName, protocol.Name ?? objc_type_name, protocol, is_partial);
 			}
 
 			if (!is_static_class && bta == null && is_protocol)

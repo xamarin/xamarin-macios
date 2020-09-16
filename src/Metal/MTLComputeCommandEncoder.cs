@@ -5,31 +5,28 @@ using ObjCRuntime;
 
 namespace Metal {
 
+
 #if !XAMCORE_4_0
-	public partial interface IMTLArgumentEncoder {
+	public partial interface IMTLComputeCommandEncoder {
 		[Obsolete ("Use 'SetManagedBuffers' instead.")]
 		void SetBuffers (IMTLBuffer [] buffers, IntPtr offsets, NSRange range);
 	}
 
-	internal partial class MTLArgumentEncoderWrapper {
+	internal partial class MTLComputeCommandEncoderWrapper {
 
 		[Obsolete ("Use 'SetManagedBuffers' instead.")]
-		public void SetBuffers (IMTLBuffer [] buffers, IntPtr offsets, NSRange range) 
+		public void SetBuffers (IMTLBuffer [] buffers, IntPtr offsets, NSRange range)
 			=> throw new NotSupportedException ();
 	}
 #endif
 
-	public static partial class MTLArgumentEncoder_Extensions {
-#if !XAMCORE_4_0
-		[Obsolete ("Use 'SetManagedBuffers' instead.")]
-		public unsafe static void SetBuffers (this IMTLArgumentEncoder This, IMTLBuffer [] buffers, nint [] offsets, Foundation.NSRange range)
-			=> throw new NotSupportedException ();
-#endif
+	// add some extension methods to make the API of the protocol nicer
+	public static class IMTLComputeCommandEncoderExtensions {
 
 #if XAMCORE_4_0
-		public static void SetBuffers (this IMTLArgumentEncoder table, IMTLBuffer[] buffers, nuint[] offsets, NSRange range)
+		public static void SetBuffers (this IMTLComputeCommandEncoder table, IMTLBuffer[] buffers, nuint[] offsets, NSRange range)
 #else
-		public static void SetManagedBuffers (this IMTLArgumentEncoder table, IMTLBuffer[] buffers, nuint[] offsets, NSRange range)
+		public static void SetManagedBuffers (this IMTLComputeCommandEncoder table, IMTLBuffer[] buffers, nuint[] offsets, NSRange range)
 #endif
 		{
 			if (buffers == null)
