@@ -29,7 +29,7 @@ namespace MediaPlayer {
 	[NoWatch] // marked as unavailable in xcode 12 beta 1
 #else
 	[Watch (5,0)]
-	[Obsoleted (PlatformName.WatchOS, 7,0, message: "Removed in Xcode 12")]
+	[Obsoleted (PlatformName.WatchOS, 7,0, message: "Removed in Xcode 12.")]
 #endif // XAMCORE_4_0
 	[TV (14,0)]
 	interface MPMediaEntity : NSSecureCoding {
@@ -55,7 +55,7 @@ namespace MediaPlayer {
 #if XAMCORE_4_0
 		[NoWatch] // marked as unavailable in xcode 12 beta 1
 #else
-		[Obsoleted (PlatformName.WatchOS, 7,0, message: "Removed in Xcode 12")]
+		[Obsoleted (PlatformName.WatchOS, 7,0, message: "Removed in Xcode 12.")]
 #endif
 		[Field ("MPMediaEntityPropertyPersistentID")]
 		NSString PropertyPersistentID { get; }
@@ -748,8 +748,8 @@ namespace MediaPlayer {
 	[NoTV]
 #else
 	[Watch (5,0)]
-	[Obsoleted (PlatformName.TvOS, 14,0, message: "Removed in Xcode 12")]
-	[Obsoleted (PlatformName.WatchOS, 5,0, message: "Removed in Xcode 12")]
+	[Obsoleted (PlatformName.TvOS, 14,0, message: "Removed in Xcode 12.")]
+	[Obsoleted (PlatformName.WatchOS, 5,0, message: "Removed in Xcode 12.")]
 #endif
 	[Protocol]
 	interface MPMediaPlayback {

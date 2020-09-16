@@ -607,7 +607,7 @@ namespace GameKit {
 		[Field ("GKPlayerIDNoLongerAvailable")]
 		NSString IdNoLongerAvailable { get; }
 
-		[TV (14, 0), Watch(7, 0), Mac (11, 0), iOS (14, 0)]
+		[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
 		[Export ("isInvitable")]
 		bool IsInvitable { get; }
 	}
@@ -2686,7 +2686,9 @@ namespace GameKit {
 		[Export ("player", ArgumentSemantic.Strong)]
 		GKPlayer Player { get; }
 
-#if MONOMAC // Some APIs missing on iOS, tvOS, watchOS as of Xcode 12 beta 3 - https://github.com/xamarin/maccore/issues/2269
+#if false
+		// Some APIs missing on iOS, tvOS, watchOS as of Xcode 12 beta 3 - https://github.com/xamarin/maccore/issues/2269
+		// disabled since the selectors don't respond on macOS 11.0
 		[Export ("rank")]
 		nint Rank { get; }
 

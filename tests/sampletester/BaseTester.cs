@@ -42,6 +42,19 @@ namespace Xamarin.Tests {
 			}
 		}
 
+		string default_branch;
+		public virtual string DefaultBranch {
+			get {
+				if (default_branch == null)
+					default_branch = (string) GetType ().GetField ("DEFAULT_BRANCH", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)?.GetValue (null);
+				return default_branch;
+
+			}
+			set {
+				default_branch = value;
+			}
+		}
+
 		protected BaseTester ()
 		{
 		}

@@ -73,6 +73,13 @@ namespace HealthKit {
 		Active,
 	}
 
+	[Watch (7,0), iOS (14,0)]
+	[Native]
+	public enum HKActivityMoveMode : long {
+		ActiveEnergy = 1,
+		AppleMoveTime = 2,
+	}
+
 	delegate void HKAnchoredObjectResultHandler2 (HKAnchoredObjectQuery query, HKSample[] results, nuint newAnchor, NSError error);
 
 	[Obsolete ("Use HKAnchoredObjectResultHandler2 instead")]
@@ -465,6 +472,11 @@ namespace HealthKit {
 		[Export ("wheelchairUseWithError:")]
 		[return: NullAllowed]
 		HKWheelchairUseObject GetWheelchairUse (out NSError error);
+
+		[Watch (7,0), iOS (14,0)]
+		[Export ("activityMoveModeWithError:")]
+		[return: NullAllowed]
+		HKActivityMoveModeObject GetActivityMoveMode ([NullAllowed] out NSError error);
 
 		// FIXME NS_EXTENSION_UNAVAILABLE("Not available to extensions") ;
 		[Export ("stopQuery:")]
@@ -912,6 +924,10 @@ namespace HealthKit {
 		[Watch (7, 0), iOS (14, 0)]
 		[Field ("HKMetadataKeyDevicePlacementSide")]
 		NSString DevicePlacementSide { get; }
+
+		[Watch (7, 0), iOS (14, 0)]
+		[Field ("HKMetadataKeyBarometricPressure")]
+		NSString BarometricPressure { get; }
 
 		[Watch (7, 0), iOS (14, 0)]
 		[Field ("HKMetadataKeyAppleECGAlgorithmVersion")]
@@ -2129,10 +2145,9 @@ namespace HealthKit {
 		[Field ("HKCharacteristicTypeIdentifierWheelchairUse")]
 		WheelchairUse,
 
-		// API unavailable https://github.com/xamarin/maccore/issues/1899
-		// [Watch (6, 0), iOS (13, 0)]
-		// [Field ("HKCharacteristicTypeIdentifierActivityMoveMode")]
-		// ActivityMoveMode,
+		[Watch (7,0), iOS (14,0)]
+		[Field ("HKCharacteristicTypeIdentifierActivityMoveMode")]
+		ActivityMoveMode,
 	}
 
 	[Watch (2,0)]
@@ -2879,8 +2894,16 @@ namespace HealthKit {
 		[Export ("dateComponentsForCalendar:")]
 		NSDateComponents DateComponentsForCalendar (NSCalendar calendar);
 
+		[Watch (7, 0), iOS (14, 0)]
+		[Export ("activityMoveMode", ArgumentSemantic.Assign)]
+		HKActivityMoveMode ActivityMoveMode { get; set; }
+
 		[Export ("activeEnergyBurned", ArgumentSemantic.Strong)]
 		HKQuantity ActiveEnergyBurned { get; set; }
+
+		[Watch (7, 0), iOS (14, 0)]
+		[Export ("appleMoveTime", ArgumentSemantic.Strong)]
+		HKQuantity AppleMoveTime { get; set; }
 
 		[Export ("appleExerciseTime", ArgumentSemantic.Strong)]
 		HKQuantity AppleExerciseTime { get; set; }
@@ -2890,6 +2913,10 @@ namespace HealthKit {
 
 		[Export ("activeEnergyBurnedGoal", ArgumentSemantic.Strong)]
 		HKQuantity ActiveEnergyBurnedGoal { get; set; }
+
+		[Watch (7, 0), iOS (14, 0)]
+		[Export ("appleMoveTimeGoal", ArgumentSemantic.Strong)]
+		HKQuantity AppleMoveTimeGoal { get; set; }
 
 		[Export ("appleExerciseTimeGoal", ArgumentSemantic.Strong)]
 		HKQuantity AppleExerciseTimeGoal { get; set; }
@@ -3452,6 +3479,15 @@ namespace HealthKit {
 		[Static]
 		[Export ("primaryR4Version")]
 		HKFhirVersion PrimaryR4Version { get; }
+	}
+
+	[Watch (7,0), iOS (14,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface HKActivityMoveModeObject : NSCopying, NSSecureCoding {
+
+		[Export ("activityMoveMode")]
+		HKActivityMoveMode ActivityMoveMode { get; }
 	}
 
 }

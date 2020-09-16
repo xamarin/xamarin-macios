@@ -11,6 +11,7 @@
 !missing-pinvoke! MIDISetSerialPortOwner is not bound
 !missing-pinvoke! MIDIGetSerialPortOwner is not bound
 !missing-pinvoke! MIDIGetSerialPortDrivers is not bound
+!missing-pinvoke! MIDIDriverEnableMonitoring is not bound
 
 !missing-field! kMIDIDriverPropertyUsesSerial not bound
 !missing-field! kMIDIPropertyFactoryPatchNameFile not bound

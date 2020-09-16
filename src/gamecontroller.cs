@@ -50,6 +50,14 @@ namespace GameController {
 		[NullAllowed, Export ("localizedName", ArgumentSemantic.Strong)]
 		string LocalizedName { get; set; }
 
+		[NoTV, NoMac, iOS (14, 0)]
+		[NullAllowed, Export ("unmappedSfSymbolsName", ArgumentSemantic.Strong)]
+		string UnmappedSfSymbolsName { get; set; }
+
+		[NoTV, NoMac, iOS (14, 0)]
+		[NullAllowed, Export ("unmappedLocalizedName", ArgumentSemantic.Strong)]
+		string UnmappedLocalizedName { get; set; }
+
 		[TV (14, 0), Mac (11, 0), iOS (14, 0)]
 		[Export ("aliases")]
 		NSSet<NSString> Aliases { get; }
@@ -483,9 +491,9 @@ namespace GameController {
 		[Export ("rotationRate", ArgumentSemantic.Assign)]
 		Vector3d RotationRate { get; }
 
-		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Deprecated, use 'HasAttitude' and 'HasRotationRate' instead.")]
-		[Deprecated (PlatformName.iOS, 14, 0, message: "Deprecated, use 'HasAttitude' and 'HasRotationRate' instead.")]
-		[Deprecated (PlatformName.TvOS, 14, 0, message: "Deprecated, use 'HasAttitude' and 'HasRotationRate' instead.")]
+		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use 'HasAttitude' and 'HasRotationRate' instead.")]
+		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'HasAttitude' and 'HasRotationRate' instead.")]
+		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use 'HasAttitude' and 'HasRotationRate' instead.")]
 		[TV (11,0)]
 		[iOS (11,0)]
 		[Mac (10,13)]

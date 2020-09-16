@@ -57,6 +57,7 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[iOS (10, 0)]
 	[Watch (3, 2)]
@@ -172,6 +173,7 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[NoTV]
 	[iOS (10, 0)]
@@ -372,6 +374,7 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[iOS (10, 0)]
 	[Watch (3, 2)]
@@ -633,6 +636,7 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[iOS (10, 0)]
 	[Watch (3, 2)]
@@ -657,6 +661,7 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[iOS (10, 0)]
 	[Watch (3, 2)]
@@ -694,6 +699,7 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[iOS (10, 0)]
 	[Watch (3, 2)]
@@ -851,6 +857,7 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'INStartCallIntentResponseCode' instead.")]
 	[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'INStartCallIntentResponseCode' instead.")]
@@ -895,6 +902,7 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'INStartCallIntentResponseCode' instead.")]
 	[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'INStartCallIntentResponseCode' instead.")]
@@ -1216,6 +1224,7 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[Watch (3,2), NoTV, iOS (10,0)]
 	[Native]
@@ -1229,6 +1238,7 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[Watch (4,0), NoTV, iOS (11,0)]
 	[Native]
@@ -1246,6 +1256,7 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[Watch (3,2), NoTV, iOS (10,0)]
 	[Native]
@@ -1328,6 +1339,7 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[Watch (4,0), NoTV, iOS (11,0)]
 	[Native]
@@ -1450,6 +1462,7 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[Watch (4,0), NoTV, iOS (11,0)]
 	[Native]
@@ -2190,6 +2203,7 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[iOS (10, 2)]
 	[Watch (3, 2)]
@@ -2315,7 +2329,7 @@ namespace Intents {
 	[iOS (14,0), NoMac, NoTV, Watch (7,0)]
 	enum INCarChargingConnectorType {
 		[DefaultEnumValue]
-		[Field ("INCarChargingConnectorTypeNone")]
+		[Field (null)]
 		None,
 
 		[Field ("INCarChargingConnectorTypeJ1772")]
@@ -2499,6 +2513,7 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[iOS (10, 0)]
 	[Watch (3, 2)]
@@ -2982,6 +2997,7 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[iOS (10, 0)]
 	[Watch (3, 2)]
@@ -4014,6 +4030,7 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[iOS (10, 0)]
 	[Watch (3, 2)]
@@ -4075,6 +4092,7 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[iOS (10, 0)]
 	[Watch (3, 2)]
@@ -5629,6 +5647,7 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[iOS (10, 0)]
 	[Watch (3, 2)]
@@ -5680,6 +5699,7 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[iOS (10, 0)]
 	[Watch (3, 2)]
@@ -5725,6 +5745,7 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[iOS (10, 0)]
 	[Watch (3, 2)]
@@ -5749,6 +5770,7 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[iOS (10, 0)]
 	[Watch (3, 2)]
@@ -5843,6 +5865,7 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[iOS (10, 0)]
 	[Watch (3, 2)]
@@ -5890,6 +5913,7 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[iOS (10, 0)]
 	[Watch (3, 2)]
@@ -6008,6 +6032,7 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[iOS (10, 0)]
 	[Watch (3, 2)]
@@ -6072,6 +6097,7 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[iOS (10, 0)]
 	[Watch (3, 2)]
@@ -6124,6 +6150,7 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[iOS (10, 0)]
 	[Watch (3, 2)]
@@ -6909,6 +6936,7 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[iOS (10, 0)]
 	[Watch (3, 2)]
@@ -6964,6 +6992,7 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'INStartCallIntent' instead.")]
 	[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'INStartCallIntent' instead.")]
@@ -6996,8 +7025,7 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
-	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'INStartCallIntentHandling' instead.")]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'INStartCallIntentHandling' instead.")]
 	[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'INStartCallIntentHandling' instead.")]
@@ -7032,6 +7060,7 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'INStartCallIntentResponse' instead.")]
 	[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'INStartCallIntentResponse' instead.")]
@@ -7145,6 +7174,7 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'INStartCallIntent' instead.")]
 	[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'INStartCallIntent' instead.")]
@@ -7193,6 +7223,7 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'INStartCallIntentResponse' instead.")]
 	[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'INStartCallIntentResponse' instead.")]
@@ -8854,6 +8885,7 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[Watch (4,0), NoTV, iOS (11,0)]
 	[BaseType (typeof (INIntentResolutionResult))]
@@ -8903,6 +8935,7 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[Watch (4,0), iOS (11,0), NoTV]
 	[BaseType (typeof (NSObject))]
@@ -8950,6 +8983,7 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[Watch (4,0), NoTV, iOS (11,0)]
 	[BaseType (typeof (INIntentResolutionResult))]
@@ -9517,6 +9551,7 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[Watch (4,0), iOS (11,0), NoTV]
 	[BaseType (typeof (NSObject))]
@@ -9554,6 +9589,7 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[Watch (4,0), NoTV, iOS (11,0)]
 	[BaseType (typeof (NSObject))]
@@ -9872,6 +9908,7 @@ namespace Intents {
 	[NoMac]
 #elif MONOMAC
 	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
+	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[Watch (4,0), NoTV, iOS (11,0)]
 	[BaseType (typeof (INPersonResolutionResult))]
@@ -13702,7 +13739,7 @@ namespace Intents {
 
 		[Export ("initWithCarIdentifier:displayName:year:make:model:color:headUnit:supportedChargingConnectors:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string carIdentifier, [NullAllowed] string displayName, [NullAllowed] string year, [NullAllowed] string make, [NullAllowed] string model, [NullAllowed] CGColor color, [NullAllowed] INCarHeadUnit headUnit, [NullAllowed] [BindAs (typeof (INCarChargingConnectorType []))] NSString [] supportedChargingConnectors);
+		IntPtr Constructor (string carIdentifier, [NullAllowed] string displayName, [NullAllowed] string year, [NullAllowed] string make, [NullAllowed] string model, [NullAllowed] CGColor color, [NullAllowed] INCarHeadUnit headUnit, [BindAs (typeof (INCarChargingConnectorType []))] NSString [] supportedChargingConnectors);
 
 		[Export ("carIdentifier")]
 		string CarIdentifier { get; }
@@ -13726,7 +13763,7 @@ namespace Intents {
 		INCarHeadUnit HeadUnit { get; }
 
 		[BindAs (typeof (INCarChargingConnectorType []))]
-		[NullAllowed, Export ("supportedChargingConnectors", ArgumentSemantic.Copy)]
+		[Export ("supportedChargingConnectors", ArgumentSemantic.Copy)]
 		NSString [] SupportedChargingConnectors { get; }
 
 		[Export ("setMaximumPower:forChargingConnectorType:")]
@@ -13751,25 +13788,6 @@ namespace Intents {
 
 		[NullAllowed, Export ("iAP2Identifier")]
 		string Iap2Identifier { get; }
-	}
-
-	[Watch (7,0), NoTV, NoMac, iOS (14,0)]
-	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor]
-	interface INColor : NSCopying, NSSecureCoding {
-
-		[Export ("initWithRed:green:blue:")]
-		[DesignatedInitializer]
-		IntPtr Constructor (double red, double green, double blue);
-
-		[Export ("red")]
-		double Red { get; }
-
-		[Export ("green")]
-		double Green { get; }
-
-		[Export ("blue")]
-		double Blue { get; }
 	}
 
 	[Watch (7,0), NoTV, NoMac, iOS (14,0)]

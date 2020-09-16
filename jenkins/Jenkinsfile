@@ -402,8 +402,8 @@ def abortExecutingBuilds ()
 }
 
 timestamps {
-    def mainMacOSVersion = 15
-    node ("xamarin-macios && macos-10.${mainMacOSVersion}") {
+    def mainMacOSVersion = "10.15"
+    node ("xamarin-macios && macos-${mainMacOSVersion}") {
         try {
             timeout (time: 15, unit: 'HOURS') {
                 // Hard-code a workspace, since branch-based and PR-based
@@ -740,8 +740,11 @@ timestamps {
                                     hasXamarinMacTests = false
                                     echoError ("Failed to package Xamarin.Mac tests (exit code: ${exitCode})")
                                     failedStages.add (currentStage)
+                                } else {
+                                    def packaged_xm_tests = findFiles (glob: "tests/*.7z")
+                                    if (packaged_xm_tests.size () > 0)
+                                        uploadFiles ("tests/*.7z", "wrench", virtualPath)
                                 }
-                                uploadFiles ("tests/*.7z", "wrench", virtualPath)
                             }
 
                             timeout (time: 13, unit: 'HOURS') {
@@ -759,31 +762,25 @@ timestamps {
                                     if (hasXamarinMacTests) {
                                         def url = "https://bosstoragemirror.blob.core.windows.net/wrench/${virtualPath}/tests/mac-test-package.7z"
                                         def maccore_hash = sh (script: "grep NEEDED_MACCORE_VERSION ${workspace}/xamarin-macios/mk/xamarin.mk | sed 's/NEEDED_MACCORE_VERSION := //'", returnStdout: true).trim ()
-                                        // Get the min and current macOS version from Make.config,
-                                        // and calculate all the macOS versions in between (including both end points).
-                                        // The trims/splits/toIntegers at the end are to select the minor part of the macOS version number,
-                                        // then we just loop from the minor part of the min version to the minor part of the current version.
-                                        def firstOS = sh (returnStdout: true, script: "grep ^MIN_OSX_SDK_VERSION= '${workspace}/xamarin-macios/Make.config' | sed 's/.*=//'").trim ().split ("\\.")[1].toInteger ()
-                                        def lastOS = sh (returnStdout: true, script: "grep ^OSX_SDK_VERSION= '${workspace}/xamarin-macios/Make.config' | sed 's/.*=//'").trim ().split ("\\.")[1].toInteger ()
-                                        def macOSes = []
+                                        // Get all the supported macOS versions from Versions-mac.plist.in
+                                        def macOSes = sh (returnStdout: true, script: "${workspace}/xamarin-macios/jenkins/list-macos-platforms.csharp ${workspace}/xamarin-macios/Versions-mac.plist.in").trim ().split (" ");
                                         def excludedOSes = []
-                                        for (os = firstOS; os <= lastOS; os++)
-                                            macOSes.add (os)
                                         // If any macOS version needs to be excluded manually, it can be done like this (in this case to remove macOS 10.14):
                                         // Any macOS versions excluded like this still get a entry in the Jenkins UI, making it explicit that the OS version was skipped.
-                                        //     excludedOSes.add (14)
+                                        //     excludedOSes.add ("10.14")
+                                        excludedOSes.add ("11.0") // We have a bot labelled as 10.16 (and we're running there)
                                         // Have in mind that the value in the list is only the minor part of the macOS version number.
                                         for (i = 0; i < macOSes.size (); i++) {
                                             def os = macOSes [i];
                                             def macOS = "${os}" // Need to bind the label variable before the closure
                                             def excluded = false
-                                            def nodeText = "XM tests on 10.${macOS}"
+                                            def nodeText = "XM tests on ${macOS}"
                                             if (indexOfElement (excludedOSes, os) >= 0) {
                                                 excluded = true
-                                                nodeText = "ℹ️ XM tests not executed on 10.${macOS} ℹ️"
+                                                nodeText = "ℹ️ XM tests not executed on ${macOS} ℹ️"
                                             } else if (os == mainMacOSVersion) {
                                                 excluded = true
-                                                nodeText = "ℹ️ XM tests not executed on a separate 10.${macOS} bot because they're already executed as a part of the main test run ℹ️"
+                                                nodeText = "ℹ️ XM tests not executed on a separate ${macOS} bot because they're already executed as a part of the main test run ℹ️"
                                             }
                                             builders [nodeText] = {
                                                 try {
@@ -791,16 +788,16 @@ timestamps {
                                                         if (excluded) {
                                                             echo (nodeText)
                                                         } else {
-                                                            node ("xamarin-macios && macos-10.${macOS}") {
-                                                                stage ("Running XM tests on '10.${macOS}'") {
-                                                                    runXamarinMacTests (url, "macOS 10.${macOS}", maccore_hash, gitHash)
+                                                            node ("xamarin-macios && macos-${macOS}") {
+                                                                stage ("Running XM tests on '${macOS}'") {
+                                                                    runXamarinMacTests (url, "macOS ${macOS}", maccore_hash, gitHash)
                                                                 }
                                                             }
                                                         }
                                                     }
                                                 } catch (err) {
-                                                    currentStage = "Running XM tests on '10.${macOS}'"
-                                                    def msg = "Xamarin.Mac tests on 10.${macOS} failed: " + err.getMessage ();
+                                                    currentStage = "Running XM tests on '${macOS}'"
+                                                    def msg = "Xamarin.Mac tests on ${macOS} failed: " + err.getMessage ();
                                                     appendFileComment ("🔥 [${msg}](${env.RUN_DISPLAY_URL}) 🔥\n")
                                                     failedStages.add (currentStage)
                                                     throw err

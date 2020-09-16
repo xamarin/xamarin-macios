@@ -1075,13 +1075,18 @@ METAL_CORE_SOURCES = \
 
 METAL_SOURCES = \
 	Metal/MTLArgumentEncoder.cs \
+	Metal/MTLBlitPassSampleBufferAttachmentDescriptorArray.cs \
 	Metal/MTLCompat.cs \
+	Metal/MTLComputePassSampleBufferAttachmentDescriptorArray.cs \
 	Metal/MTLDevice.cs \
+	Metal/MTLIntersectionFunctionTable.cs \
 	Metal/MTLArrays.cs \
 	Metal/MTLRasterizationRateLayerDescriptor.cs \
 	Metal/MTLRenderCommandEncoder.cs \
 	Metal/MTLRenderPassDescriptor.cs \
+	Metal/MTLRenderPassSampleBufferAttachmentDescriptorArray.cs \
 	Metal/MTLResourceStateCommandEncoder.cs \
+	Metal/MTLResourceStatePassSampleBufferAttachmentDescriptorArray.cs \
 	Metal/MTLVertexDescriptor.cs \
 
 # MetalKit
