@@ -327,7 +327,8 @@
 
 	<Target Name="_ComputeBindingVariables" DependsOnTargets="_ComputeFrameworkVariables" Condition="'$(IsBindingProject)' == 'true'">
 		<PropertyGroup>
-			<BTouchToolPath>$(_XamarinSdkRootDirectory)/tools/bin</BTouchToolPath>
+			<BTouchToolExe>bgen.dll</BTouchToolExe>
+			<BTouchToolPath>$(_XamarinSdkRootDirectory)\tools\lib\bgen</BTouchToolPath>
 			<BaseLibDllPath>$(_XamarinRefAssemblyPath)</BaseLibDllPath>
 			<_GeneratorAttributeAssembly>$(_XamarinSdkRootDirectory)/tools/lib/Xamarin.Apple.BindingAttributes.dll</_GeneratorAttributeAssembly>
 		</PropertyGroup>
