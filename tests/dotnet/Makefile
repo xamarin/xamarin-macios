@@ -23,8 +23,16 @@ global.json: $(TOP)/Make.config.inc Makefile $(TOP)/.git/HEAD $(TOP)/.git/index
 		printf "\t\t\"Microsoft.macOS.Sdk\": \"$(MACOS_NUGET_VERSION_NO_METADATA)\"\n" >> $@; \
 		printf "\t}\n}\n" >> $@
 
+../bgen/global.json: global.json
+	$(Q) $(CP) $< $@
+
+../bgen/NuGet.config: NuGet.config
+	$(Q) $(CP) $< $@
+
 TARGETS += \
 	NuGet.config \
 	global.json \
+	../bgen/NuGet.config \
+	../bgen/global.json \
 
 all-local:: $(TARGETS)
