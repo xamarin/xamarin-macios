@@ -59,21 +59,22 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_group_descriptor_enumerate_endpoints (OS_nw_group_descriptor descriptor, ref BlockLiteral enumerate_block);
 
-		delegate void nw_group_descriptor_enumerate_endpoints_block_t (IntPtr block, OS_nw_endpoint endpoint);
+		delegate bool nw_group_descriptor_enumerate_endpoints_block_t (IntPtr block, OS_nw_endpoint endpoint);
 		static nw_group_descriptor_enumerate_endpoints_block_t static_EnumerateEndpointsHandler = TrampolineEnumerateEndpointsHandler;
 
 		[MonoPInvokeCallback (typeof (nw_group_descriptor_enumerate_endpoints_block_t))]
-		static void TrampolineEnumerateEndpointsHandler (IntPtr block, OS_nw_endpoint endpoint)
+		static bool TrampolineEnumerateEndpointsHandler (IntPtr block, OS_nw_endpoint endpoint)
 		{
-			var del = BlockLiteral.GetTarget<Action<NWEndpoint>> (block);
+			var del = BlockLiteral.GetTarget<Func<NWEndpoint, bool>> (block);
 			if (del != null) {
-				var nsEndpoint = new NWEndpoint (endpoint, owns: true); 
-				del (nsEndpoint);
+				using var nsEndpoint = new NWEndpoint (endpoint, owns: false); 
+				return del (nsEndpoint);
 			}
+			return false;
 		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public void EnumerateEndpoints (Action<NWEndpoint> handler)
+		public void EnumerateEndpoints (Func<NWEndpoint, bool> handler)
 		{
 			if (handler == null)
 				throw new ArgumentNullException (nameof (handler));

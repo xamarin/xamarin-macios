@@ -34,7 +34,7 @@ namespace MonoTouchFixtures.Network {
 			descriptor?.Dispose ();
 			descriptor = null;
 		}
-
+		
 		[Test]
 		public void DisabledUnicastTrafficTest ()
 		{
@@ -45,7 +45,7 @@ namespace MonoTouchFixtures.Network {
 				Assert.IsTrue (descriptor.DisabledUnicastTraffic, "Value");
 			}, "Getter");
 		}
-
+		
 		[Test]
 		public void AddEndpointTest ()
 		{
@@ -54,24 +54,25 @@ namespace MonoTouchFixtures.Network {
 			}, "Null argument.");
 
 			// create new endpoint and later ensure that it is present in the enumeration
-			using var newEndpoint = NWEndpoint.Create ("224.0.0.252", "5454");
+			var newEndpoint = NWEndpoint.Create ("224.0.0.252", "5454");
 			descriptor.AddEndpoint (newEndpoint);
 
 			var e = new AutoResetEvent (false);
 			descriptor.EnumerateEndpoints ((endPoint) => {
 				Assert.IsNotNull (endPoint);
 				e.Set ();
+				return true;
 			});
 			e.WaitOne (10000);
 		}
-
+		
 		[Test]
 		public void SetSpecificSourceTest ()
 		{
 
 			Assert.DoesNotThrow (() => {
 				// create new endpoint and later ensure that it is present in the enumeration
-				using var newEndpoint = NWEndpoint.Create ("224.0.0.252", "5454");
+				var newEndpoint = NWEndpoint.Create ("224.0.0.252", "5454");
 				descriptor.SetSpecificSource (newEndpoint);
 			});
 		}

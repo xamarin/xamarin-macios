@@ -45,7 +45,7 @@ namespace MonoTouchFixtures.Network {
 			connectionGroup?.Dispose ();
 			connectionGroup = null;
 		}
-
+		
 		[Test]
 		public void GroupDescriptorTest ()
 			=> Assert.NotNull (connectionGroup.GroupDescriptor);
