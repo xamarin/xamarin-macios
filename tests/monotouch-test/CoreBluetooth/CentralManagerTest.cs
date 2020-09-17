@@ -81,7 +81,7 @@ namespace MonoTouchFixtures.CoreBluetooth {
 			mgrDelegate = new ManagerDelegate ();
 			mgr = new CBCentralManager (mgrDelegate, new DispatchQueue ("com.xamarin.tests." + TestContext.CurrentContext.Test.Name));
 			if (!mgrDelegate.PoweredOnEvent.WaitOne (TimeSpan.FromSeconds (5)))
-				Assert.Inconclusive ("Bluetooth never turned on. Authorization state: {0}", CBCentralManager.Authorization);
+				Assert.Inconclusive ("Bluetooth never turned on.");
 		}
 
 		[TearDown]
