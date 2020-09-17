@@ -35,13 +35,13 @@ namespace Xamarin.Mac.Tests {
 #if !XAMCORE_4_0
 			using (var app1 = SBApplication.FromBundleIdentifier (knownBundle))
 			using (var app2 = SBApplication.FromBundleIdentifier<MySBApp> (knownBundle))
-			using (var app4 = SBApplication.FromBundleIdentifier<MySBApp> (unknownBundle))
 			using (var app3 = SBApplication.FromBundleIdentifier (unknownBundle))
+			using (var app4 = SBApplication.FromBundleIdentifier<MySBApp> (unknownBundle))
 #else
-			var (app1 = SBApplication.GetApplicationFromBundleIdentifier (knownBundle))
-			var (app2 = SBApplication.GetApplicationFromBundleIdentifier<MySbApp> (knownBundle))
-			var (app3 = SBApplication.GetApplicationFromBundleIdentifier (unknownBundle))
-			var (app4 = SBApplication.GetApplicationFromBundleIdentifier<MySbApp> (unknownBundle))
+			var (app1 = SBApplication.GetApplication (knownBundle))
+			var (app2 = SBApplication.GetApplication<MySbApp> (knownBundle))
+			var (app3 = SBApplication.GetApplication (unknownBundle))
+			var (app4 = SBApplication.GetApplication<MySbApp> (unknownBundle))
 #endif
 			{
 				Assert.IsNotNull (app1, "SBApplication from known bundle is null");
@@ -59,8 +59,8 @@ namespace Xamarin.Mac.Tests {
 			using (var app1 = SBApplication.FromURL (knownUrl))
 			using (var app2 = SBApplication.FromURL<MySBApp> (knownUrl))
 #else
-			using (var app1 = SBApplication.GetApplicationFromUrl (knownUrl))
-			using (var app2 = SBApplication.GetApplicationFromUrl<MySbApp> (knownUrl))
+			using (var app1 = SBApplication.GetApplication (knownUrl))
+			using (var app2 = SBApplication.GetApplication<MySbApp> (knownUrl))
 #endif
 			{
 				Assert.IsNotNull (app1, "SBApplication from known URL is null");
@@ -79,10 +79,10 @@ namespace Xamarin.Mac.Tests {
 			using (var app3 = SBApplication.FromProcessIdentifier (unknownPid))
 			using (var app4 = SBApplication.FromProcessIdentifier<MySBApp> (unknownPid))
 #else
-			using (var app1 = SBApplication.GetApplicationFromProcessIdentifier (knownPid))
-			using (var app2 = SBApplication.GetApplicationFromProcessIdentifier<MySbApp> (knownPid))
-			using (var app3 = SBApplication.GetApplicationFromProcessIdentifier (unknownPid))
-			using (var app4 = SBApplication.GetApplicationFromProcessIdentifier<MySbApp> (unknownPid)
+			using (var app1 = SBApplication.GetApplication (knownPid))
+			using (var app2 = SBApplication.GetApplication<MySbApp> (knownPid))
+			using (var app3 = SBApplication.GetApplication (unknownPid))
+			using (var app4 = SBApplication.GetApplication<MySbApp> (unknownPid)
 #endif
 			{
 				Assert.IsNotNull (app1, "SBApplication from known pid is null");
