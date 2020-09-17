@@ -547,5 +547,18 @@ namespace Xamarin.Tests
 				return;
 			Assert.Ignore ("This build does not include device support.");
 		}
+
+		public static string [] CopyDotNetSupportingFiles (string targetDirectory)
+		{
+			var srcDirectory = Path.Combine (SourceRoot, "tests", "dotnet");
+			var files = new string [] { "global.json", "NuGet.config" };
+			var targets = new string [files.Length];
+			for (var i = 0; i < files.Length; i++) {
+				var fn = files [i];
+				targets [i] = Path.Combine (targetDirectory, fn);
+				File.Copy (Path.Combine (srcDirectory, fn), targets [i], true);
+			}
+			return targets;
+		}
 	}
 }

@@ -109,7 +109,7 @@ namespace Xamarin.Tests {
 			var project_dir = Path.Combine (dotnet_bindings_dir, platform);
 			var project_path = Path.Combine (project_dir, $"{assemblyName}.csproj");
 			Clean (project_path);
-			CopyDotNetSupportingFiles (dotnet_bindings_dir);
+			Configuration.CopyDotNetSupportingFiles (dotnet_bindings_dir);
 			var result = DotNet.AssertBuild (project_path, verbosity);
 			var lines = result.StandardOutput.ToString ().Split ('\n');
 			// Find the resulting binding assembly from the build log
@@ -141,7 +141,7 @@ namespace Xamarin.Tests {
 			var project_dir = Path.Combine (dotnet_bindings_dir, platform);
 			var project_path = Path.Combine (project_dir, $"{assemblyName}.fsproj");
 			Clean (project_path);
-			CopyDotNetSupportingFiles (dotnet_bindings_dir);
+			Configuration.CopyDotNetSupportingFiles (dotnet_bindings_dir);
 			var result = DotNet.AssertBuild (project_path, verbosity);
 			var lines = result.StandardOutput.ToString ().Split ('\n');
 			// Find the resulting binding assembly from the build log
@@ -168,7 +168,7 @@ namespace Xamarin.Tests {
 			var project_path = Path.Combine (project_dir, $"{assemblyName}.csproj");
 
 			Clean (project_path);
-			CopyDotNetSupportingFiles (dotnet_bindings_dir);
+			Configuration.CopyDotNetSupportingFiles (dotnet_bindings_dir);
 			var result = DotNet.AssertBuild (project_path, verbosity);
 			var lines = result.StandardOutput.ToString ().Split ('\n');
 			// Find the resulting binding assembly from the build log
@@ -197,7 +197,7 @@ namespace Xamarin.Tests {
 			var project_path = Path.Combine (project_dir, $"{assemblyName}.csproj");
 
 			Clean (project_path);
-			CopyDotNetSupportingFiles (dotnet_bindings_dir);
+			Configuration.CopyDotNetSupportingFiles (dotnet_bindings_dir);
 			var result = DotNet.AssertBuild (project_path, verbosity);
 			var lines = result.StandardOutput.ToString ().Split ('\n');
 			// Find the resulting binding assembly from the build log
@@ -226,7 +226,7 @@ namespace Xamarin.Tests {
 			var project_path = Path.Combine (project_dir, $"{assemblyName}.csproj");
 
 			Clean (project_path);
-			CopyDotNetSupportingFiles (dotnet_bindings_dir);
+			Configuration.CopyDotNetSupportingFiles (dotnet_bindings_dir);
 			var result = DotNet.AssertBuild (project_path, verbosity);
 			var lines = result.StandardOutput.ToString ().Split ('\n');
 			// Find the resulting binding assembly from the build log
@@ -258,10 +258,10 @@ namespace Xamarin.Tests {
 			var project_path = Path.Combine (project_dir, $"{assemblyName}.csproj");
 
 			Clean (project_path);
-			CopyDotNetSupportingFiles (dotnet_bindings_dir);
-			CopyDotNetSupportingFiles (dotnet_bindings_dir.Replace (assemblyName, "bindings-test"));
-			CopyDotNetSupportingFiles (dotnet_bindings_dir.Replace (assemblyName, "bindings-test2"));
-			var cleanupSupportFiles = CopyDotNetSupportingFiles (Path.Combine (Configuration.SourceRoot, "external", "Touch.Unit", "Touch.Client/dotnet"));
+			Configuration.CopyDotNetSupportingFiles (dotnet_bindings_dir);
+			Configuration.CopyDotNetSupportingFiles (dotnet_bindings_dir.Replace (assemblyName, "bindings-test"));
+			Configuration.CopyDotNetSupportingFiles (dotnet_bindings_dir.Replace (assemblyName, "bindings-test2"));
+			var cleanupSupportFiles = Configuration.CopyDotNetSupportingFiles (Path.Combine (Configuration.SourceRoot, "external", "Touch.Unit", "Touch.Client/dotnet"));
 			try {
 				var result = DotNet.AssertBuild (project_path, verbosity);
 				var lines = result.StandardOutput.ToString ().Split ('\n');
@@ -304,19 +304,6 @@ namespace Xamarin.Tests {
 				foreach (var file in cleanupSupportFiles)
 					File.Delete (file);
 			}
-		}
-
-		string[] CopyDotNetSupportingFiles (string targetDirectory)
-		{
-			var srcDirectory = Path.Combine (Configuration.SourceRoot, "tests", "dotnet");
-			var files = new string [] { "global.json", "NuGet.config" };
-			var targets = new string [files.Length];
-			for (var i = 0; i < files.Length; i++) {
-				var fn = files [i];
-				targets [i] = Path.Combine (targetDirectory, fn);
-				File.Copy (Path.Combine (srcDirectory, fn), targets [i], true);
-			}
-			return targets;
 		}
 
 		void AssertThatLinkerExecuted (ExecutionResult result)
