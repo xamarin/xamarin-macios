@@ -2986,6 +2986,14 @@
         <note>
 		</note>
       </trans-unit>
+      <trans-unit id="MX5223">
+        <source>Did not link with the framework '{0}', because the current {1} SDK does not contain support for this framework in the simulator.</source>
+        <target state="new">Did not link with the framework '{0}', because the current {1} SDK does not contain support for this framework in the simulator.</target>
+        <note>This is a warning explaining why a native framework won't be referenced from the app when building for the simulator. The following are literal names and should not be translated: SDK
+			{0}: The name of the native framework
+			{1}: The current platform (will be either iOS, tvOS, watchOS or macOS).
+		</note>
+      </trans-unit>
       <trans-unit id="MX5305">
         <source>Missing 'lipo' tool. Please install Xcode 'Command-Line Tools' component
 		</source>
