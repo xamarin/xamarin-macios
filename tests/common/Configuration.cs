@@ -548,6 +548,62 @@ namespace Xamarin.Tests
 			Assert.Ignore ("This build does not include device support.");
 		}
 
+		static Dictionary<string, string> cloned_directories = new Dictionary<string, string> ();
+		public static string CloneTestDirectory (string directory, string mode)
+		{
+			// Copy the test projects to a temporary directory so that we can run the tests from there without affecting the working directory.
+			// Some tests may modify the test code / projects, and this way the working copy doesn't end up dirty.
+			lock (cloned_directories) {
+				if (cloned_directories.TryGetValue (mode, out var value))
+					return value;
+
+				var testsTemporaryDirectory = Xamarin.Cache.CreateTemporaryDirectory ($"{Path.GetFileName (directory)}-{mode}");
+				// We want to start off clean every time the tests are launched
+				if (Directory.Exists (testsTemporaryDirectory))
+					Directory.Delete (testsTemporaryDirectory, true);
+
+				// Only copy files in git, we want a clean copy
+				var rv = ExecutionHelper.Execute ("git", new string [] { "ls-files" }, out var ls_files_output, working_directory: directory, timeout: TimeSpan.FromSeconds (15));
+				if (rv != 0)
+					throw new Exception ($"Failed to list test files. 'git ls-files' in {directory} failed with exit code {rv}.");
+				
+				var files = ls_files_output.ToString ().Split (new char [] { '\n' }, StringSplitOptions.RemoveEmptyEntries).ToArray ();
+				foreach (var file in files) {
+					var src = Path.Combine (directory, file);
+					var tgt = Path.Combine (testsTemporaryDirectory, file);
+					var tgtDir = Path.GetDirectoryName (tgt);
+					Directory.CreateDirectory (tgtDir);
+					File.Copy (src, tgt);
+				}
+
+				cloned_directories [mode] = testsTemporaryDirectory;
+				return testsTemporaryDirectory;
+			}
+		}
+
+		// Replace one file with another
+		// Example files:
+		//    foo.csproj
+		//    foo.mode.csproj
+		// when called with mode="mode", will delete foo.csproj and move foo.mode.csproj to foo.csproj
+		// Will also replace the string ".mode." in any replaced file with "."
+		public static void FixupTestFiles (string directory, string mode)
+		{
+			var files = Directory.GetFiles (directory, "*", SearchOption.AllDirectories);
+			var replace = "." + mode + ".";
+			foreach (var file in files) {
+				if (!file.Contains (replace))
+					continue;
+				var tgt = file.Replace (replace, ".");
+
+				File.Delete (tgt);
+				var contents = File.ReadAllText (file);
+				contents = contents.Replace (replace, ".");
+				File.WriteAllText (tgt, contents);
+				File.Delete (file);
+			}
+		}
+
 		public static string [] CopyDotNetSupportingFiles (string targetDirectory)
 		{
 			var srcDirectory = Path.Combine (SourceRoot, "tests", "dotnet");
@@ -556,7 +612,10 @@ namespace Xamarin.Tests
 			for (var i = 0; i < files.Length; i++) {
 				var fn = files [i];
 				targets [i] = Path.Combine (targetDirectory, fn);
-				File.Copy (Path.Combine (srcDirectory, fn), targets [i], true);
+				var src = Path.Combine (srcDirectory, fn);
+				if (!File.Exists (src))
+					ExecutionHelper.Execute ("make", new [] { "-C", srcDirectory, fn });
+				File.Copy (src, targets [i], true);
 			}
 			return targets;
 		}
