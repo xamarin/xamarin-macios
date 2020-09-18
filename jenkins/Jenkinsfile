@@ -86,6 +86,35 @@ def githubGetPullRequestLabels ()
     return github_pull_request_labels
 }
 
+custom_labels = null
+def getCustomLabels ()
+{
+    if (custom_labels == null) {
+        custom_labels = []
+        def custom_labels_file = "${workspace}/xamarin-macios/jenkins/custom-labels.txt"
+        if (fileExists (custom_labels_file)) {
+            def contents = sh (script: "grep -v '^[[:space:]]*#' ${custom_labels_file} | grep -v '^[[:space:]]*\$' | tr \$'\n' ' ' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*\$//'", returnStdout: true)
+            custom_labels += contents.tokenize (' ')
+            echo ("Found labels ${custom_labels} in ${custom_labels_file}")
+        } else {
+            echo ("The custom labels file ${custom_labels_file} does not exist")
+        }
+    }
+    return custom_labels
+}
+
+labels = null
+def getLabels ()
+{
+    if (labels == null) {
+        labels = []
+        labels += githubGetPullRequestLabels ()
+        labels += getCustomLabels ()
+        echo ("Found labels: ${labels}")
+    }
+    return labels
+}
+
 def githubAddComment (url, markdown)
 {
     if (markdown.length () > 32768) {
