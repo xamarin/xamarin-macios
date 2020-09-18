@@ -77,6 +77,7 @@ namespace Xamarin {
 				prelink_substeps.Add (new OptimizeGeneratedCodeSubStep ());
 				prelink_substeps.Add (new MarkNSObjects ());
 				prelink_substeps.Add (new PreserveSmartEnumConversionsSubStep ());
+				prelink_substeps.Add (new CollectUnmarkedMembersSubStep ());
 
 				post_sweep_substeps.Add (new RemoveAttributesStep ());
 			}
