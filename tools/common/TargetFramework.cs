@@ -14,10 +14,10 @@ namespace Xamarin.Utils
 {
 	public struct TargetFramework : IEquatable<TargetFramework>
 	{
-		public const string DotNet_5_0_iOS_String = ".NETCoreApp,Version=5.0,Profile=ios"; // Short form: net5.0-ios
-		public const string DotNet_5_0_tvOS_String = ".NETCoreApp,Version=5.0,Profile=tvos"; // Short form: net5.0-tvos
-		public const string DotNet_5_0_watchOS_String = ".NETCoreApp,Version=5.0,Profile=watchos"; // Short form: net5.0-watchos
-		public const string DotNet_5_0_macOS_String = ".NETCoreApp,Version=5.0,Profile=macos"; // Short form: net5.0-macos
+		public const string DotNet_6_0_iOS_String = ".NETCoreApp,Version=6.0,Profile=ios"; // Short form: net6.0-ios
+		public const string DotNet_6_0_tvOS_String = ".NETCoreApp,Version=6.0,Profile=tvos"; // Short form: net6.0-tvos
+		public const string DotNet_6_0_watchOS_String = ".NETCoreApp,Version=6.0,Profile=watchos"; // Short form: net6.0-watchos
+		public const string DotNet_6_0_macOS_String = ".NETCoreApp,Version=6.0,Profile=macos"; // Short form: net6.0-macos
 
 		public static readonly TargetFramework Empty = new TargetFramework ();
 		public static readonly TargetFramework Net_2_0 = Parse ("2.0");
@@ -35,10 +35,10 @@ namespace Xamarin.Utils
 		public static readonly TargetFramework Xamarin_Mac_4_5_Full = Parse ("Xamarin.Mac,Version=v4.5,Profile=Full");
 		public static readonly TargetFramework Xamarin_Mac_4_5_System = Parse ("Xamarin.Mac,Version=v4.5,Profile=System");
 
-		public static readonly TargetFramework DotNet_5_0_iOS = Parse (DotNet_5_0_iOS_String);
-		public static readonly TargetFramework DotNet_5_0_tvOS = Parse (DotNet_5_0_tvOS_String);
-		public static readonly TargetFramework DotNet_5_0_watchOS = Parse (DotNet_5_0_watchOS_String);
-		public static readonly TargetFramework DotNet_5_0_macOS = Parse (DotNet_5_0_macOS_String);
+		public static readonly TargetFramework DotNet_5_0_iOS = Parse (DotNet_6_0_iOS_String);
+		public static readonly TargetFramework DotNet_5_0_tvOS = Parse (DotNet_6_0_tvOS_String);
+		public static readonly TargetFramework DotNet_5_0_watchOS = Parse (DotNet_6_0_watchOS_String);
+		public static readonly TargetFramework DotNet_5_0_macOS = Parse (DotNet_6_0_macOS_String);
 
 		public static readonly TargetFramework [] ValidFrameworksMac = new [] {
 			Xamarin_Mac_2_0_Mobile, Xamarin_Mac_4_5_Full, Xamarin_Mac_4_5_System,

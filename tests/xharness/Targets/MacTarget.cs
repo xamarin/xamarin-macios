@@ -110,7 +110,7 @@ namespace Xharness.Targets
 		public override string DotNetSdk => "Microsoft.macOS.Sdk";
 		public override string RuntimeIdentifier => "osx-x64";
 		public override DevicePlatform ApplePlatform => DevicePlatform.macOS;
-		public override string TargetFramework => "net5.0-macos";
+		public override string TargetFramework => "net6.0-macos";
 		public override string TargetFrameworkForNuGet => "xamarinmac10";
 
 		protected override bool FixProjectReference (string include, string subdir, string suffix, out string fixed_include)

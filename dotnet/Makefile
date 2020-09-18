@@ -3,8 +3,8 @@ TOP = ..
 include $(TOP)/Make.config
 include $(TOP)/mk/rules.mk
 
-DOTNET_MANIFESTS_PATH=$(DOTNET5_DIR)/sdk-manifests/$(DOTNET5_VERSION_BAND)
-DOTNET_PACKS_PATH=$(DOTNET5_DIR)/packs
+DOTNET_MANIFESTS_PATH=$(DOTNET6_DIR)/sdk-manifests/$(DOTNET6_VERSION_BAND)
+DOTNET_PACKS_PATH=$(DOTNET6_DIR)/packs
 TMP_PKG_DIR=_pkg
 
 # Create variables prefixed with the correctly cased platform name from the upper-cased platform name. This makes some of the next sections somewhat simpler.
@@ -124,7 +124,7 @@ define CreateNuGetTemplate
 nupkgs/$(1).$(2)+$(NUGET_BUILD_METADATA).nupkg: $(TEMPLATED_FILES) $(3) package/$(1)/package.csproj $(wildcard package/*.csproj) $(wildcard $(DOTNET_DESTDIR)/$(1)/* $(DOTNET_DESTDIR)/$(1)/*/* $(DOTNET_DESTDIR)/$(1)/*/*/* $(DOTNET_DESTDIR)/$(1)/*/*/*/*) global.json
 	@# Delete any versions of the nuget we're building
 	$$(Q) rm -f nupkgs/$(1).*.nupkg
-	$$(Q_PACK) $(DOTNET5) pack package/$(1)/package.csproj --output "$$(dir $$@)" $(DOTNET_PACK_VERBOSITY)
+	$$(Q_PACK) $(DOTNET6) pack package/$(1)/package.csproj --output "$$(dir $$@)" $(DOTNET_PACK_VERBOSITY)
 	@# Nuget pack doesn't add the metadata to the filename, but we want that, so rename nuget to contain the full name
 	$$(Q) mv "nupkgs/$(1).$(2).nupkg" "$$@"
 	@# Clean the local feed
@@ -191,7 +191,7 @@ define CreatePackage
 # The workload package
 $(TMP_PKG_DIR)/Microsoft.$1.Workload.$2.pkg: $($(1)_NUGET_TARGETS) $(WORKLOAD_TARGETS) Makefile | $(TMP_PKG_DIR)
 	$$(Q) rm -f $$@
-	$$(Q_GEN) pkgbuild --quiet --version '$2' --root Microsoft.NET.Workload.$1 --component-plist PackageInfo.plist  --install-location /usr/local/share/dotnet/sdk-manifests/$(DOTNET5_VERSION_BAND)/Microsoft.NET.Workload.$1 --identifier com.microsoft.net.$3.workload.pkg $$@.tmp
+	$$(Q_GEN) pkgbuild --quiet --version '$2' --root Microsoft.NET.Workload.$1 --component-plist PackageInfo.plist  --install-location /usr/local/share/dotnet/sdk-manifests/$(DOTNET6_VERSION_BAND)/Microsoft.NET.Workload.$1 --identifier com.microsoft.net.$3.workload.pkg $$@.tmp
 	$$(Q) mv $$@.tmp $$@
 
 # The sdk package
@@ -227,10 +227,10 @@ PACKAGE_TARGETS += $(DOTNET_PKG_DIR)/Microsoft.$1.Bundle.$2.pkg
 
 $(TMP_PKG_DIR)/Microsoft.$1.Bundle.$2.zip: $($(1)_NUGET_TARGETS) $(WORKLOAD_TARGETS) Makefile $(REF_PACK_$(4)) $(SDK_PACK_$(4)) | $(TMP_PKG_DIR)
 	$$(Q) rm -rf $$@ $$@.tmpdir $$@.tmp
-	$$(Q) mkdir -p $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET5_VERSION_BAND)/
+	$$(Q) mkdir -p $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET6_VERSION_BAND)/
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/Microsoft.$1.Sdk
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/Microsoft.$1.Ref
-	$$(Q) $(CP) -r Microsoft.NET.Workload.$1 $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET5_VERSION_BAND)/
+	$$(Q) $(CP) -r Microsoft.NET.Workload.$1 $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET6_VERSION_BAND)/
 	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/Microsoft.$1.Sdk $$@.tmpdir/dotnet/packs/Microsoft.$1.Sdk/$2
 	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/Microsoft.$1.Ref $$@.tmpdir/dotnet/packs/Microsoft.$1.Ref/$2
 	$$(Q_GEN) cd $$@.tmpdir && zip -9rq $$(abspath $$@.tmp) .
@@ -275,7 +275,7 @@ all-local:: $(TARGETS) targets/Xamarin.Shared.Sdk.Versions.targets
 endif
 
 # This tells NuGet to use the exact same dotnet version we've configured in Make.config
-global.json: $(TOP)/global5.json
+global.json: $(TOP)/global6.json
 	$(CP) $< $@
 
 clean-local::

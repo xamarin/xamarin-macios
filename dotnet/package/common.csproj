@@ -2,7 +2,7 @@
   <Import Project="../targets/Xamarin.Shared.Sdk.Versions.targets" />
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <PackageVersion>$(_PackageVersion)</PackageVersion>
     <RepositoryUrl>https://github.com/xamarin/xamarin-macios</RepositoryUrl>
@@ -45,12 +45,12 @@
     <!-- https://github.com/dotnet/runtime/blob/0647ec314948904319da5eb15e9931f7c85ed1e2/src/installer/pkg/projects/Directory.Build.targets#L281 -->
     <PropertyGroup Condition="'$(_CreateFrameworkList)' == 'true'">
       <_FrameworkListFile>$(_packagePath)data/FrameworkList.xml</_FrameworkListFile>
-      <_PackTargetPath>ref/net5.0</_PackTargetPath>
+      <_PackTargetPath>ref/net6.0</_PackTargetPath>
       <_PackNativePath>runtimes/$(_RuntimeIdentifier)/native</_PackNativePath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(_CreateRuntimeList)' == 'true'">
       <_FrameworkListFile>$(_packagePath)data/RuntimeList.xml</_FrameworkListFile>
-      <_PackTargetPath>runtimes/$(_RuntimeIdentifier)/lib/net5.0</_PackTargetPath>
+      <_PackTargetPath>runtimes/$(_RuntimeIdentifier)/lib/net6.0</_PackTargetPath>
       <_PackNativePath>runtimes/$(_RuntimeIdentifier)/native</_PackNativePath>
     </PropertyGroup>
     <ItemGroup>
@@ -62,9 +62,9 @@
 
     <ItemGroup>
       <!-- Hardcode framework attributes -->
-      <_FrameworkListRootAttributes Include="Name" Value="Microsoft $(_PlatformName) - NET 5.0" />
+      <_FrameworkListRootAttributes Include="Name" Value="Microsoft $(_PlatformName) - NET 6.0" />
       <_FrameworkListRootAttributes Include="TargetFrameworkIdentifier" Value=".NETCoreApp" />
-      <_FrameworkListRootAttributes Include="TargetFrameworkVersion" Value="5.0" />
+      <_FrameworkListRootAttributes Include="TargetFrameworkVersion" Value="6.0" />
       <_FrameworkListRootAttributes Include="FrameworkName" Value="Microsoft.$(_PlatformName)" />
       <_PackageFiles Include="$(_FrameworkListFile)" PackagePath="data" />
 

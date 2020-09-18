@@ -14,7 +14,7 @@ namespace Xamarin.Tests {
 		public static string Executable {
 			get {
 				if (dotnet_executable == null) {
-					dotnet_executable = Configuration.EvaluateVariable ("DOTNET5");
+					dotnet_executable = Configuration.EvaluateVariable ("DOTNET6");
 					if (string.IsNullOrEmpty (dotnet_executable))
 						throw new Exception ($"Could not find the dotnet executable.");
 					if (!File.Exists (dotnet_executable))

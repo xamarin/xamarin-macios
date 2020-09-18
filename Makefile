@@ -53,15 +53,15 @@ ifdef INCLUDE_IOS
 	@echo Validated file permissions for Xamarin.iOS.
 endif
 
-all-local:: global.json global5.json
+all-local:: global.json global6.json
 global.json: Make.config Makefile
 	$(Q) printf "{\n\t\"sdk\": {\n\t\t\"version\": \"$(DOTNET_VERSION)\"\n\t}\n}\n" > $@
 
 # This tells NuGet to use the exact same dotnet version we've configured in Make.config
-global5.json: $(TOP)/Make.config.inc Makefile $(TOP)/.git/HEAD $(TOP)/.git/index
+global6.json: $(TOP)/Make.config.inc Makefile $(TOP)/.git/HEAD $(TOP)/.git/index
 	$(Q_GEN) \
 		printf "{\n" > $@; \
-		printf "\t\"sdk\": { \"version\": \"$(DOTNET5_VERSION)\" },\n" >> $@; \
+		printf "\t\"sdk\": { \"version\": \"$(DOTNET6_VERSION)\" },\n" >> $@; \
 		printf "\t\"msbuild-sdks\": {\n" >> $@; \
 		printf "\t\t\"Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk\": \"5.0.0-beta.20120.1\"\n" >> $@; \
 		printf "\t}\n}\n" >> $@

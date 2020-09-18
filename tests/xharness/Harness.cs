@@ -129,7 +129,7 @@ namespace Xharness {
 		public string MONO_MAC_SDK_DESTDIR { get; }
 		public bool ENABLE_XAMARIN { get; }
 		public string DOTNET { get; }
-		public string DOTNET5 { get; }
+		public string DOTNET6 { get; }
 
 		// Run
 
@@ -202,7 +202,7 @@ namespace Xharness {
 			MONO_MAC_SDK_DESTDIR = config ["MONO_MAC_SDK_DESTDIR"];
 			ENABLE_XAMARIN = config.ContainsKey ("ENABLE_XAMARIN") && !string.IsNullOrEmpty (config ["ENABLE_XAMARIN"]);
 			DOTNET = config ["DOTNET"];
-			DOTNET5 = config ["DOTNET5"];
+			DOTNET6 = config ["DOTNET6"];
 
 			if (string.IsNullOrEmpty (SdkRoot))
 				SdkRoot = config ["XCODE_DEVELOPER_ROOT"] ?? configuration.SdkRoot;
@@ -736,7 +736,7 @@ namespace Xharness {
 			return rv;
 		}
 
-		// Gets either the DOTNET or DOTNET5 variable, depending on any global.json
+		// Gets either the DOTNET or DOTNET6 variable, depending on any global.json
 		// config file found in the specified directory or any containing directories.
 		Dictionary<string, string> dotnet_executables = new Dictionary<string, string> ();
 		public string GetDotNetExecutable (string directory)
@@ -773,7 +773,7 @@ namespace Xharness {
 					executable = DOTNET;
 					break;
 				default:
-					executable = DOTNET5;
+					executable = DOTNET6;
 					break;
 				}
 				Log ($"Mapped .NET SDK version {version} to {executable} for {directory}");
