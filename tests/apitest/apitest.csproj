@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
+    <Folder Include="src\ScriptingBridge\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="src\AppKit\NSAppearance.cs" />
@@ -157,6 +158,7 @@
       <Link>shared\TestRuntime.cs</Link>
     </Compile>
     <Compile Include="src\AppKit\NSScreen.cs" />
+    <Compile Include="src\ScriptingBridge\SBApplicationTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\guiunit\src\framework\GuiUnit_NET_4_5.csproj">
