@@ -68,6 +68,10 @@ namespace WebKit
 		// Xcode 11
 		AttributedStringContentFailedToLoad,
 		AttributedStringContentLoadTimedOut,
+		// Xcode 12
+		JavaScriptInvalidFrameTarget,
+		NavigationAppBoundDomain,
+		JavaScriptAppBoundDomain,
 	}
 
 #if !MONOMAC || !XAMCORE_4_0

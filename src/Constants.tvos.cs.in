@@ -92,5 +92,13 @@ namespace ObjCRuntime {
 		public const string SoundAnalysisLibrary = "/System/Library/Frameworks/SoundAnalysis.framework/SoundAnalysis";
 		public const string BackgroundTasksLibrary = "/System/Library/Frameworks/BackgroundTasks.framework/BackgroundTasks";
 
+		// tvOS 14.0
+		public const string AccessibilityLibrary = "/System/Library/Frameworks/Accessibility.framework/Accessibility";
+		public const string AppTrackingTransparencyLibrary = "/System/Library/Frameworks/AppTrackingTransparency.framework/AppTrackingTransparency";
+		public const string CoreHapticsLibrary = "/System/Library/Frameworks/CoreHaptics.framework/CoreHaptics";
+		public const string LinkPresentationLibrary = "/System/Library/Frameworks/LinkPresentation.framework/LinkPresentation";
+		public const string MLComputeLibrary = "/System/Library/Frameworks/MLCompute.framework/MLCompute";
+		public const string UniformTypeIdentifiersLibrary = "/System/Library/Frameworks/UniformTypeIdentifiers.framework/UniformTypeIdentifiers";
+		public const string IntentsLibrary = "/System/Library/Frameworks/Intents.framework/Intents";
 	}
 }

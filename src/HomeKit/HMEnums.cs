@@ -111,6 +111,11 @@ namespace HomeKit {
 		OwnershipFailure = 96,
 		MaximumAccessoriesOfTypeInHome = 97,
 		WiFiCredentialGenerationFailed = 98,
+		// iOS 14
+		EnterpriseNetworkNotSupported = 99,
+		TimedOutWaitingForAccessory = 100,
+		AccessoryCommunicationFailure = 101,
+		FailedToJoinNetwork = 102,
 	}
 
 	
@@ -1384,5 +1389,33 @@ namespace HomeKit {
 	public enum HMCharacteristicValueConfigurationState : long {
 		NotConfigured = 0,
 		Configured,
+	}
+
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[Watch (2,0), TV (10,0), NoMac, iOS (8,0)]
+	[Native]
+	public enum HMCharacteristicValueTargetDoorState : long
+	{
+		Open = 0,
+		Closed = 1,
+	}
+
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[Watch (2,0), TV (10,0), NoMac, iOS (8,0)]
+	[Native]
+	public enum HMCharacteristicValueCurrentHeatingCooling : long
+	{
+		Off = 0,
+		Heat = 1,
+		Cool = 2,
+	}
+
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[Watch (2,0), TV (10,0), NoMac, iOS (8,0)]
+	[Native]
+	public enum HMCharacteristicValueTargetLockMechanismState : long
+	{
+		Unsecured = 0,
+		Secured = 1,
 	}
 }

@@ -47,10 +47,10 @@ namespace Foundation {
 		// Converts from an NSURL to a System.Uri
 		public static implicit operator Uri (NSUrl url)
 		{
-			if (url.RelativePath == url.Path)
-				return new Uri (url.AbsoluteString, UriKind.Absolute);
+			if (Uri.TryCreate (url.AbsoluteString, UriKind.Absolute, out var uri))
+				return uri;
 			else
-				return new Uri (url.RelativePath, UriKind.Relative);
+				return new Uri (url.AbsoluteString, UriKind.Relative);
 		}
 
 		public static implicit operator NSUrl (Uri uri)
@@ -58,7 +58,7 @@ namespace Foundation {
 			if (uri.IsAbsoluteUri)
 				return new NSUrl (uri.AbsoluteUri);
 			else
-				return new NSUrl (uri.PathAndQuery);
+				return new NSUrl (uri.OriginalString);
 		}
 
 		public static NSUrl FromFilename (string url)

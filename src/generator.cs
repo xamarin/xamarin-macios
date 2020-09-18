@@ -3557,7 +3557,10 @@ public partial class Generator : IMemberGatherer {
 			var bindAsAtt = GetBindAsAttribute (pi);
 			if (bindAsAtt != null) {
 				PrintBindAsAttribute (pi, sb);
-				sb.Append (FormatType (bindAsAtt.Type.DeclaringType, bindAsAtt.Type, protocolized));
+				var bt = bindAsAtt.Type;
+				sb.Append (FormatType (bt.DeclaringType, bt, protocolized));
+				if (!bt.IsValueType && AttributeManager.HasAttribute<NullAllowedAttribute> (pi))
+					sb.Append ('?');
 			} else {
 				sb.Append (FormatType (declaringType, parType, protocolized));
 				// some `IntPtr` are decorated with `[NullAttribute]`
@@ -6730,6 +6733,12 @@ public partial class Generator : IMemberGatherer {
 						print ("if (_{0} == null)", field_pi.Name);
 						indent++;
 						print ("_{0} = Runtime.GetNSObject<NSArray> (Dlfcn.GetIndirect (Libraries.{2}.Handle, \"{1}\"));", field_pi.Name, fieldAttr.SymbolName, library_name);
+						indent--;
+						print ("return _{0};", field_pi.Name);
+					} else if (field_pi.PropertyType.Name == "UTType") {
+						print ("if (_{0} == null)", field_pi.Name);
+						indent++;
+						print ("_{0} = Runtime.GetNSObject<UTType> (Dlfcn.GetIntPtr (Libraries.{2}.Handle, \"{1}\"));", field_pi.Name, fieldAttr.SymbolName, library_name);
 						indent--;
 						print ("return _{0};", field_pi.Name);
 					} else if (field_pi.PropertyType == TypeManager.System_Int32){

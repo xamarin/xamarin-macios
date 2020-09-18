@@ -154,6 +154,7 @@ ARKIT_SOURCES = \
 	ARKit/ARFaceGeometry.cs \
 	ARKit/ARPlaneGeometry.cs \
 	ARKit/ARPointCloud.cs \
+	ARKit/ARSkeleton.cs \
 	ARKit/ARSkeleton3D.cs \
 	ARKit/ARSkeleton2D.cs \
 
@@ -301,6 +302,7 @@ CALLKIT_SOURCES = \
 
 CARPLAY_SOURCES = \
 	CarPlay/CPNavigationAlert.cs \
+	CarPlay/CPMessageListItem.cs \
 
 # ClassKit
 
@@ -311,6 +313,9 @@ CLASSKIT_SOURCES = \
 
 CLOCKKIT_CORE_SOURCES = \
 	ClockKit/CLKEnums.cs \
+
+CLOCKKIT_SOURCES = \
+	ClockKit/CLKComplication.cs \
 
 # CloudKit
 
@@ -665,6 +670,11 @@ EVENTKITUI_SOURCES = \
 
 EXTERNALACCESSORY_API_SOURCES = \
 	ExternalAccessory/EAEnums.cs \
+
+# FileProvider
+
+FILEPROVIDER_SOURCES = \
+	FileProvider/Compat.cs \
 
 # FinderSync
 
@@ -1065,13 +1075,18 @@ METAL_CORE_SOURCES = \
 
 METAL_SOURCES = \
 	Metal/MTLArgumentEncoder.cs \
+	Metal/MTLBlitPassSampleBufferAttachmentDescriptorArray.cs \
 	Metal/MTLCompat.cs \
+	Metal/MTLComputePassSampleBufferAttachmentDescriptorArray.cs \
 	Metal/MTLDevice.cs \
+	Metal/MTLIntersectionFunctionTable.cs \
 	Metal/MTLArrays.cs \
 	Metal/MTLRasterizationRateLayerDescriptor.cs \
 	Metal/MTLRenderCommandEncoder.cs \
 	Metal/MTLRenderPassDescriptor.cs \
+	Metal/MTLRenderPassSampleBufferAttachmentDescriptorArray.cs \
 	Metal/MTLResourceStateCommandEncoder.cs \
+	Metal/MTLResourceStatePassSampleBufferAttachmentDescriptorArray.cs \
 	Metal/MTLVertexDescriptor.cs \
 
 # MetalKit
@@ -1103,6 +1118,15 @@ METALPERFORMANCESHADERS_SOURCES = \
 
 # MetricKit
 
+METRICKIT_SOURCES = \
+	MetricKit/MXMetaData.cs \
+	MetricKit/MXMetric.cs \
+	MetricKit/MXMetricPayload.cs \
+
+# MLCompute
+
+MLCOMPUTE_SOURCES = \
+	MLCompute/MLHelpers.cs \
 
 # MobileCoreServices
 
@@ -1144,7 +1168,10 @@ NATURALLANGUAGE_CORE_SOURCES = \
 
 NATURALLANGUAGE_SOURCES = \
 	NaturalLanguage/NLEmbedding.cs \
+	NaturalLanguage/NLLanguage.cs \
 	NaturalLanguage/NLLanguageRecognizer.cs \
+	NaturalLanguage/NLModel.cs \
+	NaturalLanguage/NLTagger.cs \
 
 # Network
 
@@ -1184,7 +1211,14 @@ NETWORK_SOURCES = \
 	Network/NWWebSocketOptions.cs	\
 	Network/NWWebSocketRequest.cs	\
 	Network/NWWebSocketResponse.cs	\
-	
+
+# NearbyInteraction
+NEARBYINTERACTION_API_SOURCES = \
+	NearbyInteraction/Enums.cs \
+
+NEARBYINTERACTION_SOURCES = \
+	NearbyInteraction/NINearbyObject.cs \
+
 # NetworkExtension
 
 NETWORKEXTENSION_API_SOURCES = \
@@ -1276,6 +1310,10 @@ PASSKIT_API_SOURCES = \
 	
 PASSKIT_SOURCES = \
 	PassKit/PKPaymentRequest.cs	\
+
+# PencilKit
+PENCILKIT_API_SOURCEs = \
+	PencilKit/Indexers.cs
 
 # PdfKit
 
@@ -1390,6 +1428,8 @@ SCRIPTINGBRIDGE_CORE_SOURCES = \
 SCRIPTINGBRIDGE_SOURCES = \
 	ScriptingBridge/SBApplication.cs \
 
+# ScreenTime
+
 # SearchKit
 
 SEARCHKIT_SOURCES = \
@@ -1424,6 +1464,15 @@ SECURITY_SOURCES = \
 	Security/SslConnection.cs \
 	Security/SslContext.cs \
 
+# SensorKit
+
+SENSORKIT_CORE_SOURCES = \
+	SensorKit/SRAmbientLightChromaticity.cs \
+
+SENSORKIT_SOURCES = \
+	SensorKit/SRAbsoluteTime.cs \
+	SensorKit/SRSensor.cs \
+
 # Social
 
 SOCIAL_CORE_SOURCES = \
@@ -1456,6 +1505,8 @@ STOREKIT_API_SOURCES = \
 	StoreKit/Enums.cs \
 
 STOREKIT_CORE_SOURCES = \
+	StoreKit/SKOverlayAppClipConfiguration.cs \
+	StoreKit/SKOverlayAppConfiguration.cs \
 	StoreKit/SKReceiptProperty.cs \
 	StoreKit/StoreProductParameters.cs \
 
@@ -1527,11 +1578,13 @@ UIKIT_SOURCES = \
 	UIKit/UIBarItem.cs \
 	UIKit/UIBezierPath.cs \
 	UIKit/UIButton.cs \
+	UIKit/UICellAccessory.cs \
 	UIKit/UICollectionView.cs \
 	UIKit/UICollectionViewLayout.cs \
 	UIKit/UICollectionViewLayoutAttributes.cs \
 	UIKit/UICollectionViewTransitionLayout.cs \
 	UIKit/UIColor.cs \
+	UIKit/UIConfigurationColorTransformer.cs \
 	UIKit/UIContentSizeCategory.cs \
 	UIKit/UIControl.cs \
 	UIKit/UIDevice.cs \
@@ -1618,13 +1671,16 @@ VIDEOTOOLBOX_SOURCES = \
 
 VISION_SOURCES = \
 	Vision/VNBarcodeSymbologyExtensions.cs \
+	Vision/VNCircle.cs \
 	Vision/VNCompat.cs \
 	Vision/VNDetectBarcodesRequest.cs \
 	Vision/VNFaceLandmarkRegion2D.cs \
 	Vision/VNFeaturePrintObservation.cs \
+	Vision/VNRecognizedPointsObservation.cs \
 	Vision/VNRequest.cs \
 	Vision/VNRequestRevision.cs \
 	Vision/VNUtils.cs \
+	Vision/VNVector.cs \
 
 # WatchConnectivity
 
@@ -1691,6 +1747,7 @@ WKWEBKIT_API_SOURCES = \
 	WKWebKit/Defs.cs \
 
 WKWEBKIT_SOURCES = \
+	WKWebKit/WKCompat.cs \
 	WKWebKit/WKWindowFeatures.cs \
 
 #
@@ -1776,6 +1833,7 @@ SHARED_SOURCES = \
 #
 
 COMMON_FRAMEWORKS =         \
+	Accessibility           \
 	Accelerate              \
 	AuthenticationServices	\
 	AVFoundation            \
@@ -1788,23 +1846,27 @@ COMMON_FRAMEWORKS =         \
 	Compression             \
 	Foundation              \
 	GameKit                 \
+	NaturalLanguage         \
 	Network                 \
 	SceneKit                \
 	SoundAnalysis 			\
 	SpriteKit               \
 	StoreKit				\
+	UniformTypeIdentifiers  \
 
 MAC_FRAMEWORKS =            \
 	$(COMMON_FRAMEWORKS)    \
 	Accounts                \
 	AdSupport               \
 	AppKit XKit             \
+	AppTrackingTransparency \
 	AudioToolbox            \
 	AudioUnit               \
 	AutomaticAssessmentConfiguration \
 	AVKit                   \
 	BusinessChat            \
 	CFNetwork               \
+	ClassKit                \
 	CloudKit                \
 	Contacts                \
 	ContactsUI              \
@@ -1846,13 +1908,15 @@ MAC_FRAMEWORKS =            \
 	Metal                   \
 	MetalKit                \
 	MetalPerformanceShaders \
+	MLCompute               \
 	MobileCoreServices      \
 	ModelIO                 \
 	MultipeerConnectivity	\
-	NaturalLanguage         \
+	NearbyInteraction		\
 	NetworkExtension        \
 	NotificationCenter 	\
 	OpenGL                  \
+	PassKit                 \
 	PdfKit                  \
 	PencilKit               \
 	Photos                  \
@@ -1864,7 +1928,9 @@ MAC_FRAMEWORKS =            \
 	QuickLook               \
 	QuickLookThumbnailing	\
 	QuickLookUI             \
+	ReplayKit               \
 	SafariServices          \
+	ScreenTime              \
 	ScriptingBridge         \
 	SearchKit               \
 	Security                \
@@ -1872,6 +1938,7 @@ MAC_FRAMEWORKS =            \
 	Speech                  \
 	SystemConfiguration     \
 	UserNotifications       \
+	UserNotificationsUI		\
 	VideoSubscriberAccount  \
 	VideoToolbox            \
 	Vision                  \
@@ -1885,6 +1952,8 @@ IOS_FRAMEWORKS =         \
 	AdSupport \
 	AddressBook \
 	AddressBookUI \
+	AppClip \
+	AppTrackingTransparency \
 	ARKit \
 	AssetsLibrary \
 	AudioToolbox \
@@ -1935,6 +2004,7 @@ IOS_FRAMEWORKS =         \
 	MapKit \
 	MediaAccessibility \
 	MediaPlayer \
+	MediaSetup \
 	MediaToolbox \
 	Messages \
 	MessageUI \
@@ -1942,10 +2012,11 @@ IOS_FRAMEWORKS =         \
 	MetalKit \
 	MetalPerformanceShaders \
 	MetricKit \
+	MLCompute \
 	MobileCoreServices \
 	ModelIO \
 	MultipeerConnectivity \
-	NaturalLanguage \
+	NearbyInteraction \
 	NetworkExtension \
 	NewsstandKit \
 	NotificationCenter \
@@ -1960,7 +2031,9 @@ IOS_FRAMEWORKS =         \
 	QuickLookThumbnailing \
 	ReplayKit \
 	SafariServices \
+	ScreenTime \
 	Security \
+	SensorKit \
 	Social \
 	Speech \
 	SystemConfiguration \
@@ -1994,7 +2067,6 @@ WATCHOS_FRAMEWORKS =        \
 	MapKit                  \
 	MediaPlayer             \
 	MobileCoreServices      \
-	NaturalLanguage         \
 	PassKit                 \
 	PushKit			\
 	Security                \
@@ -2007,6 +2079,7 @@ TVOS_FRAMEWORKS =           \
 	$(COMMON_FRAMEWORKS)    \
 	AVKit                   \
 	AdSupport               \
+	AppTrackingTransparency \
 	AudioToolbox            \
 	AudioUnit               \
 	BackgroundTasks         \
@@ -2014,6 +2087,7 @@ TVOS_FRAMEWORKS =           \
 	CloudKit                \
 	CoreAnimation           \
 	CoreGraphics            \
+	CoreHaptics             \
 	CoreImage               \
 	CoreLocation            \
 	CoreSpotlight			\
@@ -2025,8 +2099,10 @@ TVOS_FRAMEWORKS =           \
 	GameplayKit             \
 	HomeKit                 \
 	ImageIO                 \
+	Intents                 \
 	IOSurface				\
 	JavaScriptCore          \
+	LinkPresentation        \
 	MapKit                  \
 	MediaAccessibility      \
 	MediaPlayer             \
@@ -2034,10 +2110,10 @@ TVOS_FRAMEWORKS =           \
 	Metal                   \
 	MetalKit                \
 	MetalPerformanceShaders \
+	MLCompute               \
 	MobileCoreServices      \
 	ModelIO                 \
 	MultipeerConnectivity   \
-	NaturalLanguage         \
 	OpenGLES                \
 	Photos                  \
 	PhotosUI                \

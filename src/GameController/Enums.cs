@@ -3,8 +3,9 @@
 //
 // Authors:
 //   Chris Hamons (chris.hamons@xamarin.com)
+//   Whitney Schmidt (whschm@microsoft.com)
 //
-// Copyright 2019 Microsoft Corporation 
+// Copyright 2019, 2020 Microsoft Corporation
 
 using System;
 
@@ -21,10 +22,38 @@ namespace GameController {
 		Version1 = 0x0100,
 		Version2 = 0x0101,
 	}
-	
+
 	[Native]
 	public enum GCMicroGamepadSnapshotDataVersion : long
 	{
 		Version1 = 0x0100,
+	}
+
+	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[Native]
+	public enum GCTouchState : long
+	{
+		Up,
+		Down,
+		Moving,
+	}
+
+	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[Native]
+	public enum GCDeviceBatteryState : long
+	{
+		Unknown = -1,
+		Discharging,
+		Charging,
+		Full,
+	}
+
+	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[Native]
+	public enum GCSystemGestureState : long
+	{
+		Enabled = 0,
+		AlwaysReceive,
+		Disabled,
 	}
 }

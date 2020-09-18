@@ -84,6 +84,8 @@ namespace UserNotifications {
 		Authorized,
 		[iOS (12, 0), TV (12, 0), Watch (5, 0)]
 		Provisional,
+		[iOS (14,0)][NoMac, NoWatch, NoTV]
+		Ephemeral,
 	}
 
 	[iOS (10, 0)]
@@ -139,7 +141,15 @@ namespace UserNotifications {
 		None = 0,
 		Badge = (1 << 0),
 		Sound = (1 << 1),
-		Alert = (1 << 2)
+		[Deprecated (PlatformName.iOS, 14,0, message: "Use 'List | Banner' instead.")]
+		[Deprecated (PlatformName.TvOS, 14,0, message: "Use 'List | Banner' instead.")]
+		[Deprecated (PlatformName.WatchOS, 7,0, message: "Use 'List | Banner' instead.")]
+		[Deprecated (PlatformName.MacOSX, 11,0, message: "Use 'List | Banner' instead.")]
+		Alert = (1 << 2),
+		[iOS (14,0)][TV (14,0)][Watch (7,0)][Mac (11,0)]
+		List = (1 << 3),
+		[iOS (14,0)][TV (14,0)][Watch (7,0)][Mac (11,0)]
+		Banner = (1 << 4),
 	}
 
 	[NoWatch, NoTV, iOS (11,0)]

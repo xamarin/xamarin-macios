@@ -6,6 +6,9 @@
 //
 // Copyrigh 2018 Microsoft Inc
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
@@ -44,7 +47,7 @@ namespace Network {
 			if (del != null) {
 				using (var tempOptions = new NWProtocolOptions (iface, owns: false)) 
 				using (var definition = tempOptions.ProtocolDefinition) {
-					NWProtocolOptions castedOptions = null;
+					NWProtocolOptions? castedOptions = null;
 
 					if (definition.Equals (NWProtocolDefinition.TcpDefinition)) {
 						castedOptions = new NWProtocolTcpOptions (iface, owns: false);
@@ -58,8 +61,11 @@ namespace Network {
 						castedOptions = new NWWebSocketOptions (iface, owns: false);
 					} 
 
-					del (castedOptions ?? tempOptions);
-					castedOptions?.Dispose ();
+					try {
+						del (castedOptions ?? tempOptions);
+					} finally {
+						castedOptions?.Dispose ();
+					}
 				}
 			}
 		}
@@ -71,7 +77,7 @@ namespace Network {
 		// If you pass null, to either configureTls, or configureTcp they will use the default options
 		//
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public unsafe static NWParameters CreateSecureTcp (Action<NWProtocolOptions> configureTls = null, Action<NWProtocolOptions> configureTcp = null)
+		public unsafe static NWParameters CreateSecureTcp (Action<NWProtocolOptions>? configureTls = null, Action<NWProtocolOptions>? configureTcp = null)
 		{
 			var tlsHandler = new BlockLiteral ();
 			var tcpHandler = new BlockLiteral ();
@@ -101,7 +107,7 @@ namespace Network {
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		// If you pass null to configureTcp, it will use the default options
-		public unsafe static NWParameters CreateTcp (Action<NWProtocolOptions> configureTcp = null)
+		public unsafe static NWParameters CreateTcp (Action<NWProtocolOptions>? configureTcp = null)
 		{
 			var tcpHandler = new BlockLiteral ();
 
@@ -128,7 +134,7 @@ namespace Network {
 		// If you pass null, to either configureTls, or configureTcp they will use the default options
 		//
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public unsafe static NWParameters CreateSecureUdp (Action<NWProtocolOptions> configureTls = null, Action<NWProtocolOptions> configureUdp = null)
+		public unsafe static NWParameters CreateSecureUdp (Action<NWProtocolOptions>? configureTls = null, Action<NWProtocolOptions>? configureUdp = null)
 		{
 			var tlsHandler = new BlockLiteral ();
 			var udpHandler = new BlockLiteral ();
@@ -159,7 +165,7 @@ namespace Network {
 
 		// If you pass null to configureTcp, it will use the default options
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public unsafe static NWParameters CreateUdp (Action<NWProtocolOptions> configureUdp = null)
+		public unsafe static NWParameters CreateUdp (Action<NWProtocolOptions>? configureUdp = null)
 		{
 			var udpHandler = new BlockLiteral ();
 
@@ -184,7 +190,7 @@ namespace Network {
 
 		[NoWatch, NoTV, NoiOS, Mac (10,15)]
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public unsafe static NWParameters CreateCustomIP (byte protocolNumber, Action<NWProtocolOptions> configureCustomIP = null)
+		public unsafe static NWParameters CreateCustomIP (byte protocolNumber, Action<NWProtocolOptions>? configureCustomIP = null)
 		{
 			var ipHandler = new BlockLiteral ();
 
@@ -276,7 +282,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern IntPtr nw_parameters_copy_required_interface (nw_parameters_t parameters);
 
-		public NWInterface RequiredInterface {
+		public NWInterface? RequiredInterface {
 			get {
 				var iface = nw_parameters_copy_required_interface (GetCheckedHandle ());
 
@@ -451,7 +457,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_parameters_set_local_endpoint (IntPtr handle, IntPtr endpoint);
 
-		public NWEndpoint LocalEndpoint {
+		public NWEndpoint? LocalEndpoint {
 			get {
 				var x = nw_parameters_copy_local_endpoint (GetCheckedHandle ());
 				if (x == IntPtr.Zero)

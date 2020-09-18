@@ -7,53 +7,8 @@
 # so current code works better (before 7.0) but can't be overridden (likely a good thing)
 !missing-selector! MPMediaEntity::persistentID not bound
 
-
-## unsorted
-
-!missing-selector! MPMediaItem::albumArtist not bound
-!missing-selector! MPMediaItem::albumArtistPersistentID not bound
-!missing-selector! MPMediaItem::albumPersistentID not bound
-!missing-selector! MPMediaItem::albumTitle not bound
-!missing-selector! MPMediaItem::albumTrackCount not bound
-!missing-selector! MPMediaItem::albumTrackNumber not bound
-!missing-selector! MPMediaItem::artist not bound
-!missing-selector! MPMediaItem::artistPersistentID not bound
-!missing-selector! MPMediaItem::artwork not bound
-!missing-selector! MPMediaItem::assetURL not bound
-!missing-selector! MPMediaItem::beatsPerMinute not bound
-!missing-selector! MPMediaItem::bookmarkTime not bound
-!missing-selector! MPMediaItem::comments not bound
-!missing-selector! MPMediaItem::composer not bound
-!missing-selector! MPMediaItem::composerPersistentID not bound
-!missing-selector! MPMediaItem::dateAdded not bound
-!missing-selector! MPMediaItem::discCount not bound
-!missing-selector! MPMediaItem::discNumber not bound
-!missing-selector! MPMediaItem::genre not bound
-!missing-selector! MPMediaItem::genrePersistentID not bound
-!missing-selector! MPMediaItem::hasProtectedAsset not bound
-!missing-selector! MPMediaItem::isCloudItem not bound
-!missing-selector! MPMediaItem::isCompilation not bound
-!missing-selector! MPMediaItem::isExplicitItem not bound
-!missing-selector! MPMediaItem::lastPlayedDate not bound
-!missing-selector! MPMediaItem::lyrics not bound
-!missing-selector! MPMediaItem::mediaType not bound
-!missing-selector! MPMediaItem::persistentID not bound
-!missing-selector! MPMediaItem::playbackDuration not bound
-!missing-selector! MPMediaItem::playbackStoreID not bound
-!missing-selector! MPMediaItem::playCount not bound
-!missing-selector! MPMediaItem::podcastPersistentID not bound
-!missing-selector! MPMediaItem::podcastTitle not bound
-!missing-selector! MPMediaItem::rating not bound
-!missing-selector! MPMediaItem::releaseDate not bound
-!missing-selector! MPMediaItem::skipCount not bound
-!missing-selector! MPMediaItem::title not bound
-!missing-selector! MPMediaItem::userGrouping not bound
-
 # Initial result from new rule missing-null-allowed
-!missing-null-allowed! 'Foundation.NSObject MediaPlayer.MPMediaEntity::GetObject(Foundation.NSObject)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSObject MediaPlayer.MPMediaEntity::ValueForProperty(Foundation.NSString)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject MediaPlayer.MPMediaPropertyPredicate::get_Value()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSString MediaPlayer.NSUserActivity_MediaPlayerAdditions::GetExternalMediaContentIdentifier(Foundation.NSUserActivity)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'MediaPlayer.MPContentItem MediaPlayer.MPPlayableContentDataSource::ContentItem(Foundation.NSIndexPath)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'MediaPlayer.MPMediaItem MediaPlayer.MPMediaItemCollection::get_RepresentativeItem()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'MediaPlayer.MPMediaItem[] MediaPlayer.MPMediaPlaylist::get_SeedItems()' is missing an [NullAllowed] on return type
@@ -62,10 +17,3 @@
 !missing-null-allowed! 'MediaPlayer.MPMediaQuerySection[] MediaPlayer.MPMediaQuery::get_CollectionSections()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'MediaPlayer.MPMediaQuerySection[] MediaPlayer.MPMediaQuery::get_ItemSections()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String MediaPlayer.MPMediaPlaylist::get_Name()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.Void MediaPlayer.MPContentItem::set_Artwork(MediaPlayer.MPMediaItemArtwork)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void MediaPlayer.MPContentItem::set_Subtitle(System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void MediaPlayer.MPContentItem::set_Title(System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'UIKit.UIImage MediaPlayer.MPVolumeView::GetMaximumVolumeSliderImage(UIKit.UIControlState)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'UIKit.UIImage MediaPlayer.MPVolumeView::GetMinimumVolumeSliderImage(UIKit.UIControlState)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'UIKit.UIImage MediaPlayer.MPVolumeView::GetRouteButtonImage(UIKit.UIControlState)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'UIKit.UIImage MediaPlayer.MPVolumeView::GetVolumeThumbImage(UIKit.UIControlState)' is missing an [NullAllowed] on return type

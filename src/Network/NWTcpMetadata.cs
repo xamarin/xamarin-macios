@@ -6,6 +6,9 @@
 //
 // Copyrigh 2019 Microsoft
 //
+
+#nullable enable
+
 using System;
 using ObjCRuntime;
 using Foundation;
