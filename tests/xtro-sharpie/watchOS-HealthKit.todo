@@ -1,0 +1,3 @@
+!missing-enum! HKCategoryValueHeadphoneAudioExposureEvent not bound
+!missing-field! HKCategoryTypeIdentifierHeadphoneAudioExposureEvent not bound
+!missing-field! HKMetadataKeyAudioExposureDuration not bound
