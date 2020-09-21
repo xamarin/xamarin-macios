@@ -1517,8 +1517,10 @@ namespace Xamarin.Bundler
 				} else {
 					mainlib = "libapp.a";
 				}
-				var libmain = Path.Combine (Driver.GetProductSdkLibDirectory (App), mainlib);
-				linker_flags.AddLinkWith (libmain, true);
+				if (mainlib != null) {
+					var libmain = Path.Combine (Driver.GetProductSdkLibDirectory (App), mainlib);
+					linker_flags.AddLinkWith (libmain, true);
+				}
 			}
 
 			var libmonodir = Driver.GetMonoLibraryDirectory (App);
