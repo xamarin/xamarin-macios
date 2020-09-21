@@ -140,13 +140,8 @@ all-local:: $(TARGETS) targets/Xamarin.Shared.Sdk.Versions.props
 endif
 
 # This tells NuGet to use the exact same dotnet version we've configured in Make.config
-global.json: $(TOP)/Make.config.inc Makefile $(TOP)/.git/HEAD $(TOP)/.git/index
-	$(Q_GEN) \
-		printf "{\n" > $@; \
-		printf "\t\"sdk\": { \"version\": \"$(DOTNET5_VERSION)\" },\n" >> $@; \
-		printf "\t\"msbuild-sdks\": {\n" >> $@; \
-		printf "\t\t\"Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk\": \"5.0.0-beta.20120.1\"\n" >> $@; \
-		printf "\t}\n}\n" >> $@
+global.json: $(TOP)/global5.json
+	$(CP) $< $@
 
 clean-local::
 	$(Q) rm -Rf $(DOTNET_NUPKG_DIR) $(DOTNET_FEED_DIR)
