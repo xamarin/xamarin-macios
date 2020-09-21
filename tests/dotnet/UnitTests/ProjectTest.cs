@@ -49,6 +49,7 @@ namespace Xamarin.Tests {
 		[Test]
 		public void BuildMyCocoaApp ()
 		{
+			Assert.Ignore ("Ignore until Xamarin.Mac is re-enabled. Issue: https://github.com/xamarin/xamarin-macios/issues/9680");
 			var platform = ApplePlatform.MacOSX;
 			var project_path = GetProjectPath ("MyCocoaApp");
 			Clean (project_path);
@@ -83,6 +84,8 @@ namespace Xamarin.Tests {
 		[TestCase ("macOS")]
 		public void BuildMyClassLibrary (string platform)
 		{
+			if (platform == "macOS")
+				Assert.Ignore ("Ignore until Xamarin.Mac is re-enabled. Issue: https://github.com/xamarin/xamarin-macios/issues/9680");
 			var project_path = GetProjectPath ("MyClassLibrary", platform);
 			Clean (project_path);
 			var result = DotNet.AssertBuild (project_path);

@@ -40,6 +40,8 @@ namespace Cecil.Tests {
 		[Test]
 		public void EnsureOnlyCodeInBaseTasks ()
 		{
+			if (assembly == "Xamarin.Mac.Tasks.dll")
+				Assert.Ignore ("Ignore until Xamarin.Mac is re-enabled. Issue: https://github.com/xamarin/xamarin-macios/issues/9680");
 			var parameters = new ReaderParameters (ReadingMode.Deferred);
 			var resolver = new DefaultAssemblyResolver ();
 			resolver.AddSearchDirectory ("/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/msbuild/Current/bin");
