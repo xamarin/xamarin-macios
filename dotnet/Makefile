@@ -139,6 +139,10 @@ ifdef ENABLE_DOTNET
 all-local:: $(TARGETS) targets/Xamarin.Shared.Sdk.Versions.props
 endif
 
+# This tells NuGet to use the exact same dotnet version we've configured in Make.config
+global.json: $(TOP)/global5.json
+	$(CP) $< $@
+
 clean-local::
 	$(Q) rm -Rf $(DOTNET_NUPKG_DIR) $(DOTNET_FEED_DIR)
 	$(Q) git clean -xfdq
