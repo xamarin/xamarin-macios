@@ -6,6 +6,8 @@
 //
 // Copyrigh 2019 Microsoft Inc
 //
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -29,9 +31,9 @@ namespace Network {
 		Cancelled = 3,
 	}
 
-	public delegate void NWBrowserChangesDelegate (NWBrowseResult oldResult, NWBrowseResult newResult, bool completed);
+	public delegate void NWBrowserChangesDelegate (NWBrowseResult? oldResult, NWBrowseResult? newResult, bool completed);
 
-	public delegate void NWBrowserCompleteChangesDelegate (List<(NWBrowseResult result, NWBrowseResultChange change)> changes);
+	public delegate void NWBrowserCompleteChangesDelegate (List<(NWBrowseResult? result, NWBrowseResultChange change)>? changes);
 
 	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 	public class NWBrowser : NativeObject {
@@ -48,7 +50,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_browser nw_browser_create (OS_nw_browse_descriptor descriptor, OS_nw_parameters parameters);
 
-		public NWBrowser (NWBrowserDescriptor descriptor, NWParameters parameters)
+		public NWBrowser (NWBrowserDescriptor descriptor, NWParameters? parameters)
 		{
 			if (descriptor == null)
 				throw new ArgumentNullException (nameof (descriptor));
@@ -131,20 +133,20 @@ namespace Network {
 			var del = BlockLiteral.GetTarget<NWBrowserChangesDelegate> (block);
 			if (del != null) {
 				// we do the cleanup of the objs in the internal handlers
-				NWBrowseResult nwOldResult = (oldResult == IntPtr.Zero) ? null : new NWBrowseResult (oldResult, owns: false);
-				NWBrowseResult nwNewResult = (newResult == IntPtr.Zero) ? null : new NWBrowseResult (newResult, owns: false);
+				NWBrowseResult? nwOldResult = (oldResult == IntPtr.Zero) ? null : new NWBrowseResult (oldResult, owns: false);
+				NWBrowseResult? nwNewResult = (newResult == IntPtr.Zero) ? null : new NWBrowseResult (newResult, owns: false);
 				del (nwOldResult, nwNewResult, completed);
 			}
 		}
 
-		public Action<NWBrowseResult, NWBrowseResult> IndividualChangesDelegate { get; set; }
+		public Action<NWBrowseResult?, NWBrowseResult?>? IndividualChangesDelegate { get; set; }
 
 		// syntactic sugar for the user, nicer to get all the changes at once
-		public NWBrowserCompleteChangesDelegate CompleteChangesDelegate { get; set; }
+		public NWBrowserCompleteChangesDelegate? CompleteChangesDelegate { get; set; }
 		object changesLock = new object ();
-		List<(NWBrowseResult result, NWBrowseResultChange change)> changes = new List<(NWBrowseResult result, NWBrowseResultChange change)> ();
+		List<(NWBrowseResult? result, NWBrowseResultChange change)> changes = new List<(NWBrowseResult? result, NWBrowseResultChange change)> ();
 
-		void InternalChangesHandler (NWBrowseResult oldResult, NWBrowseResult newResult, bool completed)
+		void InternalChangesHandler (NWBrowseResult? oldResult, NWBrowseResult? newResult, bool completed)
 		{
 			// we allow the user to listen to both, individual changes AND complete ones, individual is simple, just
 			// call the cb, completed, we need to get a collection and call the cb when completed
@@ -164,24 +166,25 @@ namespace Network {
 			// at this point, we do not longer need the old result
 			// results can be null
 			oldResult?.Dispose ();
-			List<(NWBrowseResult result, NWBrowseResultChange change)> tmp_changes = null;
+			List<(NWBrowseResult? result, NWBrowseResultChange change)>? tmp_changes = null;
 			lock (changesLock) {
 				changes.Add (result);
 				// only call when we know we are done
 				if (completed)  {
 					tmp_changes = changes;
-					changes = new List<(NWBrowseResult result, NWBrowseResultChange change)> ();
+					changes = new List<(NWBrowseResult? result, NWBrowseResultChange change)> ();
 				}
 			}
 			if (completed) {
-				completeCb.Invoke (tmp_changes);
-				foreach (var c in tmp_changes)
-					c.result?.Dispose ();
+				completeCb?.Invoke (tmp_changes);
+				if (tmp_changes != null)
+					foreach (var c in tmp_changes)
+						c.result?.Dispose ();
 			}
 		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		void SetChangesHandler (NWBrowserChangesDelegate handler)
+		void SetChangesHandler (NWBrowserChangesDelegate? handler)
 		{
 			unsafe {
 				if (handler == null) {
@@ -202,7 +205,7 @@ namespace Network {
 		// let to not change the API, but would be nice to remove it in the following releases.
 #if !XAMCORE_4_0
 		[Obsolete ("Uset the 'IndividualChangesDelegate' instead.")]
-		public void SetChangesHandler (Action<NWBrowseResult, NWBrowseResult> handler) => IndividualChangesDelegate = handler;
+		public void SetChangesHandler (Action<NWBrowseResult?, NWBrowseResult?> handler) => IndividualChangesDelegate = handler;
 #endif
 
 		[DllImport (Constants.NetworkLibrary)]
@@ -214,7 +217,7 @@ namespace Network {
 		[MonoPInvokeCallback (typeof (nw_browser_set_state_changed_handler_t))]
 		static void TrampolineStateChangesHandler (IntPtr block, NWBrowserState state, IntPtr error)
 		{
-			var del = BlockLiteral.GetTarget<Action<NWBrowserState, NWError>> (block);
+			var del = BlockLiteral.GetTarget<Action<NWBrowserState, NWError?>> (block);
 			if (del != null) {
 				var nwError = (error == IntPtr.Zero)? null : new NWError (error, owns: false);
 				del (state, nwError);
@@ -222,7 +225,7 @@ namespace Network {
 		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public void SetStateChangesHandler (Action<NWBrowserState, NWError> handler)
+		public void SetStateChangesHandler (Action<NWBrowserState, NWError?> handler)
 		{
 			unsafe {
 				if (handler == null) {

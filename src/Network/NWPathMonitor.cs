@@ -6,6 +6,9 @@
 //
 // Copyrigh 2018 Microsoft Inc
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
@@ -23,8 +26,8 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_path_monitor_create ();
 
-		NWPath currentPath;
-		public NWPath CurrentPath => currentPath;
+		NWPath? currentPath;
+		public NWPath? CurrentPath => currentPath;
 		public NWPathMonitor ()
 		{
 			InitializeHandle (nw_path_monitor_create ());
@@ -97,8 +100,8 @@ namespace Network {
 			}
 		}
 
-		Action<NWPath> userSnapshotHandler;
-		public Action<NWPath> SnapshotHandler {
+		Action<NWPath>? userSnapshotHandler;
+		public Action<NWPath>? SnapshotHandler {
 			get => userSnapshotHandler;
 			set => userSnapshotHandler = value;
 		}

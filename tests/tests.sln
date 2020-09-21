@@ -33,23 +33,23 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sampletester", "sampleteste
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cecil-tests", "cecil-tests\cecil-tests.csproj", "{0C979851-15E9-4BB6-AD79-5F0C7DF69456}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mscorlib Part 1", "bcl-test\mscorlib Part 1.csproj", "{831EF5B4-562E-4D83-28A1-072A1EA62614}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mscorlib Part 1", "bcl-test\generated\iOS\mscorlib Part 1\mscorlib Part 1.csproj", "{831EF5B4-562E-4D83-28A1-072A1EA62614}"
 EndProject
-Project("{9344BDBB-3E7F-41FC-A0DD-8665D75EE146}") = "mscorlib Part 2", "bcl-test\mscorlib Part 2.csproj", "{DA109EA4-9480-4781-A08A-2E3EB90EB9D9}"
+Project("{9344BDBB-3E7F-41FC-A0DD-8665D75EE146}") = "mscorlib Part 2", "bcl-test\generated\iOS\mscorlib Part 2\mscorlib Part 2.csproj", "{DA109EA4-9480-4781-A08A-2E3EB90EB9D9}"
 EndProject
-Project("{9344BDBB-3E7F-41FC-A0DD-8665D75EE146}") = "BCL tests group 1", "bcl-test\BCL tests group 1.csproj", "{1F505595-04F0-4B02-8852-3E9225DE9C89}"
+Project("{9344BDBB-3E7F-41FC-A0DD-8665D75EE146}") = "BCL tests group 1", "bcl-test\generated\iOS\BCL tests group 1\BCL tests group 1.csproj", "{1F505595-04F0-4B02-8852-3E9225DE9C89}"
 EndProject
-Project("{9344BDBB-3E7F-41FC-A0DD-8665D75EE146}") = "BCL tests group 2", "bcl-test\BCL tests group 2.csproj", "{6027FD99-39A1-4325-875A-AC02C0D4D177}"
+Project("{9344BDBB-3E7F-41FC-A0DD-8665D75EE146}") = "BCL tests group 2", "bcl-test\generated\iOS\BCL tests group 2\BCL tests group 2.csproj", "{6027FD99-39A1-4325-875A-AC02C0D4D177}"
 EndProject
-Project("{9344BDBB-3E7F-41FC-A0DD-8665D75EE146}") = "BCL tests group 3", "bcl-test\BCL tests group 3.csproj", "{913249DE-D559-430E-873F-9C20ED4EF9B8}"
+Project("{9344BDBB-3E7F-41FC-A0DD-8665D75EE146}") = "BCL tests group 3", "bcl-test\generated\iOS\BCL tests group 3\BCL tests group 3.csproj", "{913249DE-D559-430E-873F-9C20ED4EF9B8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BCL tests group 4", "bcl-test\BCL tests group 4.csproj", "{1AD2FA2A-26A2-317F-96B9-0E9B994F5C8D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BCL tests group 4", "bcl-test\generated\iOS\BCL tests group 4\BCL tests group 4.csproj", "{1AD2FA2A-26A2-317F-96B9-0E9B994F5C8D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BCL tests group 5", "bcl-test\BCL tests group 5.csproj", "{9F163330-6AC4-85B4-4C4C-9B8E772BBA1F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BCL tests group 5", "bcl-test\generated\iOS\BCL tests group 5\BCL tests group 5.csproj", "{9F163330-6AC4-85B4-4C4C-9B8E772BBA1F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemCoreXunit Part 1", "bcl-test\SystemCoreXunit Part 1.csproj", "{95B73E69-2E60-E9E3-9FE3-9079B1E509AA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemCoreXunit Part 1", "bcl-test\generated\iOS\SystemCoreXunit Part 1\SystemCoreXunit Part 1.csproj", "{95B73E69-2E60-E9E3-9FE3-9079B1E509AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemCoreXunit Part 2", "bcl-test\SystemCoreXunit Part 2.csproj", "{5841F8C4-9B59-1AC9-C303-C6BFF94B3D7F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemCoreXunit Part 2", "bcl-test\generated\iOS\SystemCoreXunit Part 2\SystemCoreXunit Part 2.csproj", "{5841F8C4-9B59-1AC9-C303-C6BFF94B3D7F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Touch.Client-iOS", "..\external\Touch.Unit\Touch.Client\iOS\Touch.Client-iOS.csproj", "{F611ED96-54B5-4975-99BB-12F50AF95936}"
 EndProject

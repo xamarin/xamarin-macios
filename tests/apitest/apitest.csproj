@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
+    <Folder Include="src\ScriptingBridge\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="src\AppKit\NSAppearance.cs" />
@@ -160,6 +161,7 @@
     <Compile Include="..\common\mac\TestRuntime.macos.cs">
       <Link>TestRuntime.macos.cs</Link>
     </Compile>
+    <Compile Include="src\ScriptingBridge\SBApplicationTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\Touch.Unit\Touch.Client\macOS\mobile\Touch.Client-macOS-mobile.csproj">

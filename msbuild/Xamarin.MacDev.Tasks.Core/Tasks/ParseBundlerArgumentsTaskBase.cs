@@ -1,4 +1,4 @@
-using System;
+using System.Collections.Generic;
 
 using Microsoft.Build.Utilities;
 using Microsoft.Build.Framework;
@@ -28,6 +28,9 @@ namespace Xamarin.MacDev.Tasks {
 		[Output]
 		public int Verbosity { get; set; }
 
+		[Output]
+		public ITaskItem[] XmlDefinitions { get; set; }
+
 		public override bool Execute ()
 		{
 			if (string.IsNullOrEmpty (NoSymbolStrip))
@@ -38,6 +41,7 @@ namespace Xamarin.MacDev.Tasks {
 
 			if (!string.IsNullOrEmpty (ExtraArgs)) {
 				var args = CommandLineArgumentBuilder.Parse (ExtraArgs);
+				List<string> xml = null;
 
 				for (int i = 0; i < args.Length; i++) {
 					var arg = args [i];
@@ -97,9 +101,23 @@ namespace Xamarin.MacDev.Tasks {
 					case "registrar":
 						Registrar = value;
 						break;
+					case "xml":
+						if (xml == null)
+							xml = new List<string> ();
+						xml.Add (value);
+						break;
 					default:
 						break;
 					}
+				}
+
+				if (xml != null) {
+					var defs = new List<ITaskItem> ();
+					if (XmlDefinitions != null)
+						defs.AddRange (XmlDefinitions);
+					foreach (var x in xml)
+						defs.Add (new TaskItem (x));
+					XmlDefinitions = defs.ToArray ();
 				}
 			}
 

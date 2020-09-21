@@ -6,6 +6,9 @@
 //
 // Copyrigh 2018 Microsoft Inc
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
@@ -30,7 +33,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern IntPtr nw_interface_get_name (OS_nw_interface iface);
 
-		public string Name => Marshal.PtrToStringAnsi (nw_interface_get_name (GetCheckedHandle ()));
+		public string? Name => Marshal.PtrToStringAnsi (nw_interface_get_name (GetCheckedHandle ()));
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern /* uint32_t */ uint nw_interface_get_index (OS_nw_interface iface);

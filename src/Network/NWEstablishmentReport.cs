@@ -7,6 +7,9 @@
 //
 // Copyright 2019 Microsoft Inc
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
@@ -124,7 +127,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern nw_endpoint_t nw_establishment_report_copy_proxy_endpoint (OS_nw_establishment_report report);
 
-		public NWEndpoint ProxyEndpoint {
+		public NWEndpoint? ProxyEndpoint {
 			get {
 				var ptr = nw_establishment_report_copy_proxy_endpoint (GetCheckedHandle ());
 				return (ptr == IntPtr.Zero) ? null : new NWEndpoint (ptr, owns:true);
