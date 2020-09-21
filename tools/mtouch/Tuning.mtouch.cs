@@ -70,7 +70,6 @@ namespace MonoTouch.Tuner {
 			context.LinkSymbols = options.LinkSymbols;
 			context.OutputDirectory = options.OutputDirectory;
 			context.SetParameter ("debug-build", options.DebugBuild.ToString ());
-			context.StaticRegistrar = options.Target.StaticRegistrar;
 			context.Target = options.Target;
 			context.ExcludedFeatures = new [] { "remoting", "com", "sre" };
 			context.SymbolWriterProvider = new CustomSymbolWriterProvider ();
