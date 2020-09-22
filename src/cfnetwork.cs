@@ -58,14 +58,18 @@ namespace CoreServices {
 	interface CFHTTPMessage {
 
 		[Internal][Field ("kCFHTTPVersion1_0", "CFNetwork")]
-		NSString _HTTPVersion1_0 { get; }
+		IntPtr _HTTPVersion1_0 { get; }
 
 		[Internal][Field ("kCFHTTPVersion1_1", "CFNetwork")]
-		NSString _HTTPVersion1_1 { get; }
+		IntPtr _HTTPVersion1_1 { get; }
 
 		[Mac (10,11)][iOS (9,0)]
 		[Internal][Field ("kCFHTTPVersion2_0", "CFNetwork")]
-		NSString _HTTPVersion2_0 { get; }
+		IntPtr _HTTPVersion2_0 { get; }
+
+		[Mac (11, 0), iOS (14,0), TV (14, 0)]
+		[Internal][Field ("kCFHTTPVersion3_0", "CFNetwork")]
+		IntPtr _HTTPVersion3_0 { get; }
 
 		[Internal][Field ("kCFHTTPAuthenticationSchemeBasic", "CFNetwork")]
 		IntPtr _AuthenticationSchemeBasic { get; }

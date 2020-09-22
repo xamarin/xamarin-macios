@@ -45,7 +45,7 @@ namespace Introspection {
 
 		static Type CIFilterType = typeof (CIFilter);
 
-#if true
+#if false
 		static TextWriter BindingOutput;
 #else
 		static TextWriter BindingOutput = Console.Out;
@@ -427,6 +427,13 @@ namespace Introspection {
 								break;
 							}
 							break;
+						case "CIGlassDistortion":
+							switch (key) {
+							case "textureImage":
+								key = "texture";
+								break;
+							}
+							break;
 						}
 						// 'input' is implied (generally) and explicit (in a few cases)
 						if (!key.StartsWith ("input", StringComparison.Ordinal))
@@ -503,6 +510,17 @@ namespace Introspection {
 						switch (key) {
 						case "outputImageV1":
 							// existed briefly in macOS 10.11, but neither before nor after.
+							continue;
+						}
+						break;
+					case "CIAreaAverage":
+					case "CIAreaHistogram":
+					case "CIAreaMinMax":
+						switch (key) {
+						case "outputImageMPS":
+						case "outputImageMPS:":
+						case "outputImageNonMPS:":
+							// no doc for argument
 							continue;
 						}
 						break;

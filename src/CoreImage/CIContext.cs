@@ -129,6 +129,16 @@ namespace CoreImage {
 				SetBooleanValue (CIContext.AllowLowPower, value);
 			}
 		}
+
+		[iOS (14,0)][TV (14,0)][Mac (11,0)]
+		public string Name {
+			get {
+				return GetStringValue (CIContext.Name);
+			}
+			set {
+				SetStringValue (CIContext.Name, value);
+			}
+		}
 	}
 	
 	public partial class CIContext {

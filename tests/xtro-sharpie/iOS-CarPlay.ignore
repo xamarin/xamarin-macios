@@ -1,3 +1,16 @@
 !incorrect-protocol-member! CPBarButtonProviding::backButton is REQUIRED and should be abstract
 !incorrect-protocol-member! CPBarButtonProviding::setBackButton: is REQUIRED and should be abstract
 !incorrect-protocol-member! CPSessionConfigurationDelegate::sessionConfiguration:limitedUserInterfacesChanged: is OPTIONAL and should NOT be abstract
+
+# introduced iOS 14, deprecated iOS 14
+!missing-selector! CPListItem::showsExplicitLabel not bound
+!missing-selector! CPListItem::setShowsExplicitLabel: not bound
+
+# Removed in iOS 14
+!unknown-field! CPMaximumListItemImageSize bound
+
+# As of Xcode 12 beta 6 the CarPlay framework does not have an error enum
+!missing-field! CarPlayErrorDomain not bound
+
+# Exposed as read/write but not writeable, likely should be read-only. Xcode 12 Beta 6
+!missing-selector! +CPNowPlayingTemplate::setSharedTemplate: not bound
