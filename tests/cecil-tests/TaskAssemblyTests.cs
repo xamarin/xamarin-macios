@@ -8,6 +8,7 @@ using NUnit.Framework;
 
 using Mono.Cecil;
 using Mono.Cecil.Cil;
+using Xamarin.Tests;
 
 #nullable enable
 
@@ -40,7 +41,7 @@ namespace Cecil.Tests {
 		[Test]
 		public void EnsureOnlyCodeInBaseTasks ()
 		{
-			if (assembly.Contains ("Xamarin.Mac.Tasks.dll"))
+			if (assembly.Contains ("Xamarin.Mac.Tasks.dll") && !Configuration.include_mac)
 				Assert.Ignore ("Ignore until Xamarin.Mac is re-enabled. Issue: https://github.com/xamarin/xamarin-macios/issues/9680");
 			var parameters = new ReaderParameters (ReadingMode.Deferred);
 			var resolver = new DefaultAssemblyResolver ();

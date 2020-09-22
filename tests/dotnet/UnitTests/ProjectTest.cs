@@ -4,6 +4,7 @@ using System.IO;
 using NUnit.Framework;
 
 using Xamarin.Utils;
+using Xamarin.Tests;
 
 namespace Xamarin.Tests {
 	[TestFixture]
@@ -49,6 +50,7 @@ namespace Xamarin.Tests {
 		[Test]
 		public void BuildMyCocoaApp ()
 		{
+			if (!Configuration.include_mac)
 			Assert.Ignore ("Ignore until Xamarin.Mac is re-enabled. Issue: https://github.com/xamarin/xamarin-macios/issues/9680");
 			var platform = ApplePlatform.MacOSX;
 			var project_path = GetProjectPath ("MyCocoaApp");
@@ -84,7 +86,7 @@ namespace Xamarin.Tests {
 		[TestCase ("macOS")]
 		public void BuildMyClassLibrary (string platform)
 		{
-			if (platform == "macOS")
+			if (platform == "macOS" && !Configuration.include_mac)
 				Assert.Ignore ("Ignore until Xamarin.Mac is re-enabled. Issue: https://github.com/xamarin/xamarin-macios/issues/9680");
 			var project_path = GetProjectPath ("MyClassLibrary", platform);
 			Clean (project_path);
