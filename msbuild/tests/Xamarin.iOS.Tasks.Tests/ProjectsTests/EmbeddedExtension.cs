@@ -36,7 +36,9 @@ namespace Xamarin.iOS.Tasks {
 			RunTarget (proj, "Clean", 0);
 			RunTarget (proj, "Build", 0);
 
-			Assert.That (File.Exists (Path.Combine (AppBundlePath, "PlugIns", "NativeTodayExtension.appex", "NativeTodayExtension")), "NativeTodayExtension");
+			var expectedFilepath = Path.Combine (AppBundlePath, "PlugIns", "NativeTodayExtension.appex", "NativeTodayExtension");
+
+			Assert.That (File.Exists (expectedFilepath), $"NativeTodayExtension, file path '{expectedFilepath}' missing.");
 		}
 	}
 }
