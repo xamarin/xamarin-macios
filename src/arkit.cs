@@ -1996,7 +1996,7 @@ namespace ARKit {
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		Matrix4 GetModelTransform (NSString jointName);
 
-		[Wrap ("GetModelTransform (jointName.GetConstant()!)")]
+		[Wrap ("GetModelTransform (jointName.GetConstant()!)", IsVirtual = true)]
 		Matrix4 GetModelTransform (ARSkeletonJointName jointName);
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
@@ -2004,7 +2004,7 @@ namespace ARKit {
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		Matrix4 GetLocalTransform (NSString jointName);
 
-		[Wrap ("GetLocalTransform (jointName.GetConstant()!)")]
+		[Wrap ("GetLocalTransform (jointName.GetConstant()!)", IsVirtual = true)]
 		Matrix4 GetLocalTransform (ARSkeletonJointName jointName);
 	}
 
@@ -2022,7 +2022,7 @@ namespace ARKit {
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		Vector2 GetLandmarkPoint (NSString jointName);
 
-		[Wrap ("GetLandmarkPoint (jointName.GetConstant()!)")]
+		[Wrap ("GetLandmarkPoint (jointName.GetConstant()!)", IsVirtual = true)]
 		Vector2 GetLandmarkPoint (ARSkeletonJointName jointName);
 	}
 
