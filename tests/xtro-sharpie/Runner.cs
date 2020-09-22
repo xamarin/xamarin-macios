@@ -44,6 +44,7 @@ namespace Extrospection {
 					Helpers.Platform = Platforms.tvOS;
 				managed_reader.Load (assemblyName);
 			}
+			managed_reader.Process ();
 
 			var reader = new AstReader ();
 			foreach (var v in managed_reader) {
@@ -62,17 +63,30 @@ namespace Extrospection {
 
 	class AssemblyReader : IEnumerable<BaseVisitor> {
 
+		HashSet<AssemblyDefinition> assemblies = new HashSet<AssemblyDefinition> ();
+		DefaultAssemblyResolver resolver = new DefaultAssemblyResolver ();
+
 		public void Load (string filename)
 		{
-			var ad = AssemblyDefinition.ReadAssembly (filename);
-			foreach (var v in Visitors) {
-				v.VisitManagedAssembly (ad);
-				foreach (var module in ad.Modules) {
-					v.VisitManagedModule (module);
-					if (!module.HasTypes)
-						continue;
-					foreach (var td in module.Types)
-						ProcessType (v, td);
+			resolver.AddSearchDirectory (Path.GetDirectoryName (filename));
+			ReaderParameters rp = new ReaderParameters () {
+				AssemblyResolver = resolver
+			};
+			assemblies.Add (AssemblyDefinition.ReadAssembly (filename, rp));
+		}
+
+		public void Process ()
+		{
+			foreach (var ad in assemblies) {
+				foreach (var v in Visitors) {
+					v.VisitManagedAssembly (ad);
+					foreach (var module in ad.Modules) {
+						v.VisitManagedModule (module);
+						if (!module.HasTypes)
+							continue;
+						foreach (var td in module.Types)
+							ProcessType (v, td);
+					}
 				}
 			}
 		}

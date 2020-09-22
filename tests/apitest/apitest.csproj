@@ -157,6 +157,7 @@
     <Compile Include="..\common\TestRuntime.cs">
       <Link>shared\TestRuntime.cs</Link>
     </Compile>
+    <Compile Include="src\AppKit\NSScreen.cs" />
     <Compile Include="src\ScriptingBridge\SBApplicationTest.cs" />
   </ItemGroup>
   <ItemGroup>

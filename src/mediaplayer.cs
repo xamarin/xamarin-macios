@@ -24,9 +24,14 @@ using System;
 namespace MediaPlayer {
 	[Mac (10,12,2)] // type exists only to expose fields
 	[BaseType (typeof (NSObject))]
-#if IOS || WATCH
-	// introduced in 4.2
+#if !MONOMAC
+#if XAMCORE_4_0
+	[NoWatch] // marked as unavailable in xcode 12 beta 1
+#else
 	[Watch (5,0)]
+	[Obsoleted (PlatformName.WatchOS, 7,0, message: "Removed in Xcode 12.")]
+#endif // XAMCORE_4_0
+	[TV (14,0)]
 	interface MPMediaEntity : NSSecureCoding {
 #else
 	interface MPMediaItem : NSSecureCoding {
@@ -36,25 +41,32 @@ namespace MediaPlayer {
 		bool CanFilterByProperty (NSString property);
 
 		[Export ("valueForProperty:")]
+		[return: NullAllowed]
 		NSObject ValueForProperty (NSString property);
 
 		[Export ("enumerateValuesForProperties:usingBlock:")]
 		void EnumerateValues (NSSet propertiesToEnumerate, MPMediaItemEnumerator enumerator);
 
 		[iOS (8,0)]
+		[return: NullAllowed]
 		[Export ("objectForKeyedSubscript:")]
 		NSObject GetObject (NSObject key);
 
+#if XAMCORE_4_0
+		[NoWatch] // marked as unavailable in xcode 12 beta 1
+#else
+		[Obsoleted (PlatformName.WatchOS, 7,0, message: "Removed in Xcode 12.")]
+#endif
 		[Field ("MPMediaEntityPropertyPersistentID")]
 		NSString PropertyPersistentID { get; }
 
-		[NoiOS, NoMac, NoTV, Watch (5,0)]
+		[NoiOS, NoMac, Watch (5,0)]
 		[Export ("persistentID")]
 		ulong PersistentID { get; }
 
-#if IOS || WATCH
+#if IOS || WATCH || TVOS
 	}
-#if MONOMAC || TVOS || WATCH
+#if MONOMAC || WATCH
 	[Mac (10,12,2)]
 	[Watch (5,0)]
 	[Static]
@@ -453,9 +465,14 @@ namespace MediaPlayer {
 		[Async]
 		[Export ("addMediaItems:completionHandler:")]
 		void AddMediaItems (MPMediaItem[] mediaItems, [NullAllowed] Action<NSError> completionHandler);
+
+		[iOS (14,0)]
+		[NullAllowed, Export ("cloudGlobalID")]
+		string CloudGlobalId { get; }
 	}
 
-	[NoMac, Watch (5,0)]
+	[Mac (10,16)]
+	[Watch (5,0)]
 	[Static]
 	interface MPMediaPlaylistProperty {
 		[Field ("MPMediaPlaylistPropertyPersistentID")]
@@ -479,6 +496,10 @@ namespace MediaPlayer {
 		[NoTV] // do not work on AppleTV devices (only in simulator)
 		[Field ("MPMediaPlaylistPropertyAuthorDisplayName")]
 		NSString AuthorDisplayName { get; }
+
+		[iOS (14,0)][TV (14,0)][Watch (7,0)]
+		[Field ("MPMediaPlaylistPropertyCloudGlobalID")]
+		NSString CloudGlobalId { get; }
 	}
 
 	[NoMac]
@@ -721,9 +742,15 @@ namespace MediaPlayer {
 		MPTimedMetadata [] TimedMetadata { get; }
 	}
 
-	// no [Model] yet... it can be easily created in user code (all abstract) if needed
 	[NoMac]
+#if XAMCORE_4_0
+	[NoWatch] // marked as unavailable in xcode 12 beta 1
+	[NoTV]
+#else
 	[Watch (5,0)]
+	[Obsoleted (PlatformName.TvOS, 14,0, message: "Removed in Xcode 12.")]
+	[Obsoleted (PlatformName.WatchOS, 5,0, message: "Removed in Xcode 12.")]
+#endif
 	[Protocol]
 	interface MPMediaPlayback {
 		[Abstract]
@@ -1135,7 +1162,7 @@ namespace MediaPlayer {
 #endif
 
 	[NoMac]
-	[NoTV]
+	[TV (14,0)]
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -1143,6 +1170,7 @@ namespace MediaPlayer {
 
 		[Export ("init")]
 		[Deprecated (PlatformName.iOS, 11,3)]
+		[NoTV]
 		IntPtr Constructor ();
 
 		[Static, Export ("applicationMusicPlayer")]
@@ -1155,6 +1183,7 @@ namespace MediaPlayer {
 
 		[Static, Export ("iPodMusicPlayer")]
 		[Availability (Deprecated = Platform.iOS_8_0, Message="Use 'SystemMusicPlayer' instead.")]
+		[NoTV]
 		MPMusicPlayerController iPodMusicPlayer { get; }
 
 		[iOS (8,0)]
@@ -1177,12 +1206,15 @@ namespace MediaPlayer {
 		[Export ("indexOfNowPlayingItem")]
 		nuint IndexOfNowPlayingItem { get; }
 
+		[ForcedType]
 		[Export ("nowPlayingItem", ArgumentSemantic.Copy), NullAllowed]
 		MPMediaItem NowPlayingItem { get; set; }
 
+		[NoTV]
 		[Export ("setQueueWithQuery:")]
 		void SetQueue (MPMediaQuery query);
 
+		[NoTV]
 		[Export ("setQueueWithItemCollection:")]
 		void SetQueue (MPMediaItemCollection collection);
 
@@ -1230,13 +1262,14 @@ namespace MediaPlayer {
 		[Notification]
 		NSString NowPlayingItemDidChangeNotification { get; }
 
+		[NoTV]
 		[Field ("MPMusicPlayerControllerVolumeDidChangeNotification")]
 		[Notification]
 		NSString VolumeDidChangeNotification { get; }
 	}
 
 #if !MONOMAC && !WATCH
-	[NoTV]
+	[TV (14,0)]
 	[BaseType (typeof (UIView))]
 	interface MPVolumeView {
 		[Export ("initWithFrame:")]
@@ -1260,12 +1293,15 @@ namespace MediaPlayer {
 		[Export ("setVolumeThumbImage:forState:")]
 		void SetVolumeThumbImage ([NullAllowed] UIImage image, UIControlState state);
 
+		[return: NullAllowed]
 		[Export ("minimumVolumeSliderImageForState:")]
 		UIImage GetMinimumVolumeSliderImage (UIControlState state);
 
+		[return: NullAllowed]
 		[Export ("maximumVolumeSliderImageForState:")]
 		UIImage GetMaximumVolumeSliderImage (UIControlState state);
 
+		[return: NullAllowed]
 		[Export ("volumeThumbImageForState:")]
 		UIImage GetVolumeThumbImage (UIControlState state);
 
@@ -1280,6 +1316,7 @@ namespace MediaPlayer {
 		void SetRouteButtonImage ([NullAllowed] UIImage image, UIControlState state);
 
 		[Deprecated (PlatformName.iOS, 13, 0, message: "See 'AVRoutePickerView' for possible replacements.")]
+		[return: NullAllowed]
 		[Export ("routeButtonImageForState:")]
 		UIImage GetRouteButtonImage (UIControlState state);
 
@@ -1448,6 +1485,7 @@ namespace MediaPlayer {
 		[Export ("initWithIdentifier:")]
 		IntPtr Constructor (string identifier);
 
+		[NullAllowed]
 		[Export ("artwork")]
 		MPMediaItemArtwork Artwork { get; set; }
 
@@ -1457,9 +1495,11 @@ namespace MediaPlayer {
 		[Export ("playbackProgress")]
 		float PlaybackProgress { get; set; } // float, not CGFloat
 
+		[NullAllowed]
 		[Export ("subtitle")]
 		string Subtitle { get; set; }
 
+		[NullAllowed]
 		[Export ("title")]
 		string Title { get; set; }
 
@@ -1509,6 +1549,7 @@ namespace MediaPlayer {
 
 		[NoMac]
 		[iOS (10,0)]
+		[Deprecated (PlatformName.iOS, 14,0, message: "Use 'CarPlay' API instead.")]
 		[Async]
 		[Export ("contentItemForIdentifier:completionHandler:")]
 		void GetContentItem (string identifier, Action<MPContentItem, NSError> completionHandler);
@@ -1525,10 +1566,13 @@ namespace MediaPlayer {
 	[Model]
 	[Protocol]
 	interface MPPlayableContentDelegate {
+
+		[Deprecated (PlatformName.iOS, 14,0, message: "Use 'CarPlay' API instead.")]
 		[Export ("playableContentManager:initiatePlaybackOfContentItemAtIndexPath:completionHandler:")]
 		void InitiatePlaybackOfContentItem (MPPlayableContentManager contentManager, NSIndexPath indexPath, Action<NSError> completionHandler);
 
 		[iOS (8,4)]
+		[Deprecated (PlatformName.iOS, 14,0, message: "Use 'CarPlay' API instead.")]
 		[Export ("playableContentManager:didUpdateContext:")]
 		void ContextUpdated (MPPlayableContentManager contentManager, MPPlayableContentManagerContext context);
 
@@ -1547,6 +1591,7 @@ namespace MediaPlayer {
 	[NoTV]
 	[NoWatch]
 	[iOS (7,1)]
+	[Deprecated (PlatformName.iOS, 14,0, message: "Use 'CarPlay' API instead.")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: -init is invalid. Use +sharedManager. <- [sic]
 	interface MPPlayableContentManager {
@@ -1591,6 +1636,7 @@ namespace MediaPlayer {
 	[NoTV]
 	[NoWatch]
 	[iOS (8,4)]
+	[Deprecated (PlatformName.iOS, 14,0, message: "Use 'CarPlay' API instead.")]
 	[BaseType (typeof(NSObject))]
 	interface MPPlayableContentManagerContext {
 		[Export ("enforcedContentItemsCount")]
@@ -2014,9 +2060,9 @@ namespace MediaPlayer {
 	}
 
 	[NoMac]
-	[NoTV]
 	[NoWatch]
 	[iOS (10,1)]
+	[TV (14,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface MPMusicPlayerQueueDescriptor : NSSecureCoding {
@@ -2056,9 +2102,9 @@ namespace MediaPlayer {
 	}
 
 	[NoMac]
-	[NoTV]
 	[NoWatch]
 	[iOS (10,1)]
+	[TV (14,0)]
 	[BaseType (typeof(MPMusicPlayerQueueDescriptor))]
 	interface MPMusicPlayerStoreQueueDescriptor
 	{
@@ -2078,10 +2124,10 @@ namespace MediaPlayer {
 		void SetEndTime (double endTime, string storeID);
 	}
 
-	[NoTV]
 	[NoMac]
 	[NoWatch]
 	[iOS (10,3)]
+	[TV (14,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface MPMusicPlayerControllerQueue
@@ -2094,10 +2140,10 @@ namespace MediaPlayer {
 		NSString DidChangeNotification { get; }
 	}
 
-	[NoTV]
 	[NoMac]
 	[NoWatch]
 	[iOS (10,3)]
+	[TV (14,0)]
 	[BaseType (typeof(MPMusicPlayerControllerQueue))]
 	interface MPMusicPlayerControllerMutableQueue
 	{
@@ -2108,10 +2154,10 @@ namespace MediaPlayer {
 		void RemoveItem (MPMediaItem item);
 	}
 
-	[NoTV]
 	[NoMac]
 	[NoWatch]
 	[iOS (10,3)]
+	[TV (14,0)]
 	[BaseType (typeof(MPMusicPlayerController))]
 	interface MPMusicPlayerApplicationController
 	{
@@ -2120,8 +2166,9 @@ namespace MediaPlayer {
 		void Perform (Action<MPMusicPlayerControllerMutableQueue> queueTransaction, Action<MPMusicPlayerControllerQueue, NSError> completionHandler);
 	}
 
-	[NoTV][NoMac]
+	[NoMac]
 	[iOS (11,0)]
+	[TV (14,0)]
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -2133,9 +2180,10 @@ namespace MediaPlayer {
 		NSDictionary Dictionary { get; }
 	}
 
-	[NoTV][NoMac]
+	[NoMac]
 	[NoWatch]
 	[iOS (11,0)]
+	[TV (14,0)]
 	[BaseType (typeof (MPMusicPlayerQueueDescriptor))]
 	[DisableDefaultCtor]
 	interface MPMusicPlayerPlayParametersQueueDescriptor {
@@ -2157,7 +2205,8 @@ namespace MediaPlayer {
 
 	interface IMPSystemMusicPlayerController {}
 
-	[NoTV][NoMac]
+	[NoTV]
+	[NoMac] // headers have no availability macros on the protocol itself but the only member is not available on macOS
 	[iOS (11,0), Watch (5,0)]
 	[Protocol]
 	interface MPSystemMusicPlayerController {
@@ -2172,6 +2221,7 @@ namespace MediaPlayer {
 	[TV (10,0,1)][iOS (10,1)]
 	[NoWatch][NoMac]
 	interface NSUserActivity_MediaPlayerAdditions {
+		[return: NullAllowed]
 		[Export ("externalMediaContentIdentifier")]
 		NSString GetExternalMediaContentIdentifier ();
 
@@ -2197,5 +2247,62 @@ namespace MediaPlayer {
 	interface AVMediaSelectionGroup_MPNowPlayingInfoLanguageOptionAdditions {
 		[Export ("makeNowPlayingInfoLanguageOptionGroup")]
 		MPNowPlayingInfoLanguageOptionGroup CreateNowPlayingInfoLanguageOptionGroup ();
+	}
+
+	interface IMPNowPlayingSessionDelegate {}
+
+	[TV (14,0)]
+	[NoWatch, NoMac, NoiOS]
+	[Protocol, Model (AutoGeneratedName = true)]
+	[BaseType (typeof (NSObject))]
+	interface MPNowPlayingSessionDelegate {
+
+		[Export ("nowPlayingSessionDidChangeActive:")]
+		void DidChangeActive (MPNowPlayingSession nowPlayingSession);
+
+		[Export ("nowPlayingSessionDidChangeCanBecomeActive:")]
+		void DidChangeCanBecomeActive (MPNowPlayingSession nowPlayingSession);
+	}
+
+	[TV (14,0)]
+	[NoWatch, NoMac, NoiOS]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MPNowPlayingSession {
+
+		[Export ("initWithPlayers:")]
+		IntPtr Constructor (AVPlayer[] players);
+
+		[Export ("players", ArgumentSemantic.Strong)]
+		AVPlayer[] Players { get; }
+
+		[Wrap ("WeakDelegate")]
+		[NullAllowed]
+		IMPNowPlayingSessionDelegate Delegate { get; set; }
+
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		NSObject WeakDelegate { get; set; }
+
+		[Export ("nowPlayingInfoCenter", ArgumentSemantic.Strong)]
+		MPNowPlayingInfoCenter NowPlayingInfoCenter { get; }
+
+		[Export ("remoteCommandCenter", ArgumentSemantic.Strong)]
+		MPRemoteCommandCenter RemoteCommandCenter { get; }
+
+		[Export ("canBecomeActive")]
+		bool CanBecomeActive { get; }
+
+		[Export ("active")]
+		bool Active { [Bind ("isActive")] get; }
+
+		[Async]
+		[Export ("becomeActiveIfPossibleWithCompletion:")]
+		void BecomeActiveIfPossible ([NullAllowed] Action<bool> completion);
+
+		[Export ("addPlayer:")]
+		void AddPlayer (AVPlayer player);
+
+		[Export ("removePlayer:")]
+		void RemovePlayer (AVPlayer player);
 	}
 }

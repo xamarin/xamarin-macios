@@ -4,6 +4,8 @@ using System.Threading;
 using System.Diagnostics;
 using System.Collections.Generic;
 
+using Xamarin.Tests;
+
 using NUnit.Framework;
 
 namespace Xamarin.iOS.Tasks
@@ -25,10 +27,17 @@ namespace Xamarin.iOS.Tasks
 
 			var files = new HashSet<string> (Directory.EnumerateFiles (mlmodelc, "*.*", SearchOption.AllDirectories));
 
-			Assert.AreEqual (expected.Length, files.Count);
-
 			foreach (var name in expected)
 				Assert.IsTrue (files.Contains (Path.Combine (mlmodelc, name)), "{0} not found", name);
+
+			var expected_length = expected.Length;
+			if (Configuration.XcodeVersion.Major >= 12) {
+				Assert.IsTrue (files.Contains (Path.Combine (mlmodelc, "metadata.json")), " metadata.json not found");
+				expected_length++;
+				Assert.IsTrue (files.Contains (Path.Combine (mlmodelc, "analytics", "coremldata.bin")), "analytics/coremldata.bin not found");
+				expected_length++;
+			}
+			Assert.AreEqual (expected_length, files.Count, "File count");
 		}
 
 		[Test]

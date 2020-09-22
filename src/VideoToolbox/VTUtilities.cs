@@ -12,6 +12,7 @@ using System.Runtime.InteropServices;
 
 using ObjCRuntime;
 using CoreGraphics;
+using CoreMedia;
 using CoreVideo;
 
 namespace VideoToolbox {
@@ -45,5 +46,15 @@ namespace VideoToolbox {
 
 			return ret;
 		}
+
+#if MONOMAC
+		[NoWatch, NoTV, NoiOS, Mac (11,0)]
+		[DllImport (Constants.VideoToolboxLibrary)]
+		static extern void VTRegisterSupplementalVideoDecoderIfAvailable (uint codecType);
+
+		[NoWatch, NoTV, NoiOS, Mac (11,0)]
+		public static void RegisterSupplementalVideoDecoder (CMVideoCodecType codecType)
+			=> VTRegisterSupplementalVideoDecoderIfAvailable ((uint) codecType);
+#endif
 	}
 }

@@ -32,6 +32,15 @@ namespace Introspection {
 				if (TestRuntime.CheckXcodeVersion (8, 0))
 					return true;
 				break;
+			// broken with Xcode 12 beta 1
+			case "MidiCISession":
+				switch (name) {
+				case "deviceIdentification":
+					if (TestRuntime.CheckXcodeVersion (12, 0))
+						return true;
+					break;
+				}
+				break;
 			}
 
 			switch (name) {

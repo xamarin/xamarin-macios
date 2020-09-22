@@ -6,6 +6,8 @@
 //
 // Copyright 2019 Microsoft Inc
 //
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
@@ -53,7 +55,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern NWBrowseResultChange nw_browse_result_get_changes (OS_nw_browse_result old_result, OS_nw_browse_result new_result);
 
-		public static NWBrowseResultChange GetChanges (NWBrowseResult oldResult, NWBrowseResult newResult)
+		public static NWBrowseResultChange GetChanges (NWBrowseResult? oldResult, NWBrowseResult? newResult)
 			=> nw_browse_result_get_changes (oldResult.GetHandle (), newResult.GetHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]

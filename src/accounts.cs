@@ -87,6 +87,8 @@ namespace Accounts {
 		[Async]
 		void RequestAccess (ACAccountType accountType, ACRequestCompletionHandler completionHandler);
 
+		[Deprecated (PlatformName.iOS, 14, 0)]
+		[Deprecated (PlatformName.MacOSX, 11, 0)]
 		[Field ("ACAccountStoreDidChangeNotification")]
 		[Notification]
 		NSString ChangeNotification { get; }

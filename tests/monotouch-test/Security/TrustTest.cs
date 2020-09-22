@@ -295,6 +295,12 @@ namespace MonoTouchFixtures.Security {
 			using (SecKey pkey = trust.GetPublicKey ()) {
 				Assert.That (CFGetRetainCount (pkey.Handle), Is.GreaterThanOrEqualTo ((nint) 1), "RetainCount(pkey)");
 			}
+			if (TestRuntime.CheckXcodeVersion (12,0)) {
+				using (SecKey key = trust.GetKey ()) {
+					Assert.That (key.BlockSize, Is.EqualTo (128), "BlockSize");
+					Assert.That (CFGetRetainCount (key.Handle), Is.GreaterThanOrEqualTo ((nint) 1), "RetainCount(key)");
+				}
+			}
 			if (TestRuntime.CheckXcodeVersion (10,0)) {
 				Assert.False (trust.Evaluate (out var error), "Evaluate");
 				Assert.NotNull (error, "error");
@@ -380,7 +386,12 @@ namespace MonoTouchFixtures.Security {
 				// since we modified the `trust` instance it's result was invalidated (marked as unspecified on iOS 11)
 				Assert.That (trust.GetTrustResult (), Is.EqualTo (trust_result), "GetTrustResult-2");
 			}
-			if (TestRuntime.CheckXcodeVersion (11, 0)) {
+			if (TestRuntime.CheckXcodeVersion (12, 0)) {
+				// old certificate (built in our tests) was not quite up to spec and it eventually became important
+				Assert.False (trust.Evaluate (out var error), "Evaluate");
+				Assert.NotNull (error, "error");
+				Assert.That (error.LocalizedDescription, Is.EqualTo ("“mail.google.com” certificate is not standards compliant"), "desc");
+			} else if (TestRuntime.CheckXcodeVersion (11, 0)) {
 				Assert.False (trust.Evaluate (out var error), "Evaluate");
 				Assert.NotNull (error, "error");
 				Assert.That (error.LocalizedDescription, Is.StringContaining ("\"mail.google.com\",\"Thawte SGC CA\",\"Class 3 Public Primary Certification Authority\" certificates do not meet pinning requirements"));

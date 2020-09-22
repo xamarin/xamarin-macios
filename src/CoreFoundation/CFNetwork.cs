@@ -106,6 +106,7 @@ namespace CoreFoundation {
 		NetServiceCancel = -72005,
 		NetServiceInvalid = -72006,
 		NetServiceTimeout = -72007,
+		NetServiceMissingRequiredConfiguration = -72008,
 		NetServiceDnsServiceFailure = -73000
 	}
 }

@@ -38,7 +38,7 @@ namespace Xharness.Jenkins {
 		public bool IncludeMac = true;
 		public bool IncludeiOS = true;
 		public bool IncludeiOS64 = true;
-		public bool IncludeiOS32 = true;
+		public bool IncludeiOS32 = false; // broken in xcode 12 beta 3, not possible with DTK
 		public bool IncludeiOSExtensions;
 		public bool ForceExtensionBuildOnly;
 		public bool IncludetvOS = true;
