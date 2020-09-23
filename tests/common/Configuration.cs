@@ -20,6 +20,7 @@ namespace Xamarin.Tests
 		static string mt_root;
 		static string ios_destdir;
 		static string mac_destdir;
+		public static string DotNet5BclDir;
 		public static string mt_src_root;
 		public static string sdk_version;
 		public static string watchos_sdk_version;
@@ -265,6 +266,7 @@ namespace Xamarin.Tests
 			include_tvos = !string.IsNullOrEmpty (GetVariable ("INCLUDE_TVOS", ""));
 			include_watchos = !string.IsNullOrEmpty (GetVariable ("INCLUDE_WATCH", ""));
 			include_device = !string.IsNullOrEmpty (GetVariable ("INCLUDE_DEVICE", ""));
+			DotNet5BclDir = GetVariable ("DOTNET5_BCL_DIR", null);
 
 			XcodeVersionString = GetXcodeVersion (xcode_root);
 #if MONOMAC
@@ -380,6 +382,68 @@ namespace Xamarin.Tests
 			}
 		}
 
+		static string GetRefNuGetName (TargetFramework targetFramework)
+		{
+			switch (targetFramework.Platform) {
+			case ApplePlatform.iOS:
+				return "Microsoft.iOS.Ref";
+			case ApplePlatform.TVOS:
+				return "Microsoft.tvOS.Ref";
+			case ApplePlatform.WatchOS:
+				return "Microsoft.watchOS.Ref";
+			case ApplePlatform.MacOSX:
+				return "Microsoft.macOS.Ref";
+			default:
+				throw new InvalidOperationException (targetFramework.ToString ());
+			}
+		}
+
+		static string GetSdkNuGetName (TargetFramework targetFramework)
+		{
+			switch (targetFramework.Platform) {
+			case ApplePlatform.iOS:
+				return "Microsoft.iOS.Sdk";
+			case ApplePlatform.TVOS:
+				return "Microsoft.tvOS.Sdk";
+			case ApplePlatform.WatchOS:
+				return "Microsoft.watchOS.Sdk";
+			case ApplePlatform.MacOSX:
+				return "Microsoft.macOS.Sdk";
+			default:
+				throw new InvalidOperationException (targetFramework.ToString ());
+			}
+		}
+
+		public static string GetDotNetRoot ()
+		{
+			return Path.Combine (SourceRoot, "_build");
+		}
+
+		public static string GetRefDirectory (TargetFramework targetFramework)
+		{
+			if (targetFramework.IsDotNet)
+				return Path.Combine (GetDotNetRoot (), GetRefNuGetName (targetFramework), "ref", "net5.0");
+
+			// This is only applicable for .NET
+			throw new InvalidOperationException (targetFramework.ToString ());
+		}
+
+		public static string GetSdkRoot (TargetFramework targetFramework)
+		{
+			if (targetFramework.IsDotNet)
+				return Path.Combine (GetDotNetRoot (), GetSdkNuGetName (targetFramework), "tools");
+			switch (targetFramework.Platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
+				return SdkRootXI;
+			case ApplePlatform.MacOSX:
+				return SdkRootXM;
+			default:
+				throw new InvalidOperationException ();
+			}
+		}
+
 		public static string SdkRootXI {
 			get {
 				return Path.Combine (TargetDirectoryXI, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current");
@@ -428,6 +492,30 @@ namespace Xamarin.Tests
 			}
 		}
 
+		public static string GetBindingAttributePath (TargetFramework targetFramework)
+		{
+			if (targetFramework.IsDotNet)
+				return Path.Combine (GetSdkRoot (targetFramework), "lib", "Xamarin.Apple.BindingAttributes.dll");
+
+			switch (targetFramework.Platform) {
+			case ApplePlatform.iOS:
+				return Path.Combine (GetSdkRoot (targetFramework), "lib", "bgen", "Xamarin.iOS.BindingAttributes.dll");
+			case ApplePlatform.TVOS:
+				return Path.Combine (GetSdkRoot (targetFramework), "lib", "bgen", "Xamarin.TVOS.BindingAttributes.dll");
+			case ApplePlatform.WatchOS:
+				return Path.Combine (GetSdkRoot (targetFramework), "lib", "bgen", "Xamarin.WatchOS.BindingAttributes.dll");
+			case ApplePlatform.MacOSX:
+				if (targetFramework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
+					return Path.Combine (GetSdkRoot (targetFramework), "lib", "bgen", "Xamarin.Mac-mobile.BindingAttributes.dll");
+				} else if (targetFramework == TargetFramework.Xamarin_Mac_4_5_Full) {
+					return Path.Combine (GetSdkRoot (targetFramework), "lib", "bgen", "Xamarin.Mac-full.BindingAttributes.dll");
+				}
+				goto default;
+			default:
+				throw new InvalidOperationException ();
+			}
+		}
+
 		public static string MmpPath {
 			get {
 				return Path.Combine (BinDirXM, "mmp");
@@ -466,6 +554,45 @@ namespace Xamarin.Tests
 			default:
 				throw new NotImplementedException ();
 			}
+		}
+
+		static string GetBaseLibraryName (TargetFramework targetFramework)
+		{
+			switch (targetFramework.Platform) {
+			case ApplePlatform.iOS:
+				return "Xamarin.iOS.dll";
+			case ApplePlatform.TVOS:
+				return "Xamarin.TVOS.dll";
+			case ApplePlatform.WatchOS:
+				return "Xamarin.WatchOS.dll";
+			case ApplePlatform.MacOSX:
+				return "Xamarin.Mac.dll";
+			default:
+				throw new InvalidOperationException (targetFramework.ToString ());
+			}
+		}
+
+		public static string GetBaseLibrary (TargetFramework targetFramework)
+		{
+			if (targetFramework.IsDotNet)
+				return Path.Combine (GetRefDirectory (targetFramework), GetBaseLibraryName (targetFramework));
+
+			switch (targetFramework.Platform) {
+			case ApplePlatform.iOS:
+				return XamarinIOSDll;
+			case ApplePlatform.TVOS:
+				return XamarinTVOSDll;
+			case ApplePlatform.WatchOS:
+				return XamarinWatchOSDll;
+			}
+
+			if (targetFramework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
+				return XamarinMacMobileDll;
+			} else if (targetFramework == TargetFramework.Xamarin_Mac_4_5_Full) {
+				return XamarinMacFullDll;
+			}
+
+			throw new InvalidOperationException (targetFramework.ToString ());
 		}
 
 		public static string GetTargetFramework (Profile profile)
