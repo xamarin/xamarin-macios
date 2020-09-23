@@ -10,6 +10,10 @@ namespace Extrospection {
 	class EnumCheck : BaseVisitor {
 
 		Dictionary<string,TypeDefinition> enums = new Dictionary<string, TypeDefinition> (StringComparer.InvariantCultureIgnoreCase);
+		Dictionary<long, string> managed_signed_values = new Dictionary<long, string> ();
+		Dictionary<ulong, string> managed_unsigned_values = new Dictionary<ulong, string> ();
+		Dictionary<long, string> native_signed_values = new Dictionary<long, string> ();
+		Dictionary<ulong, string> native_unsigned_values = new Dictionary<ulong,string> ();
 
 		public override void VisitManagedType (TypeDefinition type)
 		{
@@ -122,25 +126,107 @@ namespace Extrospection {
 			}
 
 			int managed_size = 4;
+			bool signed = true;
 			switch (GetEnumUnderlyingType (type).Name) {
 			case "Byte":
+				signed = false;
+				managed_size = 1;
+				break;
 			case "SByte":
 				managed_size = 1;
 				break;
 			case "Int16":
+				managed_size = 2;
+				break;
 			case "UInt16":
+				signed = false;
 				managed_size = 2;
 				break;
 			case "Int32":
+				break;
 			case "UInt32":
+				signed = false;
 				break;
 			case "Int64":
+				managed_size = 8;
+				break;
 			case "UInt64":
+				signed = false;
 				managed_size = 8;
 				break;
 			default:
 				throw new NotImplementedException ();
 			}
+
+			var fields = type.Fields;
+			if (signed) {
+				managed_signed_values.Clear ();
+				native_signed_values.Clear ();
+				// skip `0` since it's `__value` (special)
+				for (int i = 1; i < fields.Count; i++) {
+					var f = fields [i];
+					if (!f.IsObsolete ())
+						managed_signed_values [Convert.ToInt64 (f.Constant)] = f.Name;
+				}
+
+				long n = 0;
+				foreach (var value in decl.Values) {
+					if ((value.InitExpr != null) && value.InitExpr.EvaluateAsInt (decl.AstContext, out var integer))
+						n = integer.SExtValue;
+
+					native_signed_values [n] = value.ToString ();
+					// assume, sequentially assigned (in case next `value.InitExpr` is null)
+					n++;
+				}
+
+				foreach (var value in native_signed_values.Keys) {
+					if (!managed_signed_values.ContainsKey (value))
+						Log.On (framework).Add ($"!missing-enum-value! {type.Name} native value {native_signed_values [value]} = {value} not bound");
+					else
+						managed_signed_values.Remove (value);
+				}
+
+				foreach (var value in managed_signed_values.Keys) {
+					// we often add `None = 0` to flags and error codes
+					if ((value == 0) && (managed_signed_values [0] == "None"))
+						continue;
+					Log.On (framework).Add ($"!extra-enum-value! Managed value {value} for {type.Name}.{managed_signed_values [value]} not found in native headers");
+				}
+			} else {
+				managed_unsigned_values.Clear ();
+				native_unsigned_values.Clear ();
+				// skip `0` since it's `__value` (special)
+				for (int i = 1; i < fields.Count; i++) {
+					var f = fields [i];
+					if (!f.IsObsolete ())
+						managed_unsigned_values [Convert.ToUInt64 (f.Constant)] = f.Name;
+				}
+
+				ulong n = 0;
+				foreach (var value in decl.Values) {
+					if ((value.InitExpr != null) && value.InitExpr.EvaluateAsInt (decl.AstContext, out var integer))
+						n = integer.ZExtValue;
+
+					native_unsigned_values [n] = value.ToString ();
+					// assume, sequentially assigned (in case next `value.InitExpr` is null)
+					n++;
+				}
+
+				foreach (var value in native_unsigned_values.Keys) {
+					if (!managed_unsigned_values.ContainsKey (value))
+						Log.On (framework).Add ($"!missing-enum-value! {type.Name} native value {native_unsigned_values [value]} = {value} not bound");
+					else
+						managed_unsigned_values.Remove (value);
+				}
+
+				foreach (var value in managed_unsigned_values.Keys) {
+					// we often add `None = 0` to flags and error codes
+					if ((value == 0) && (managed_unsigned_values [0] == "None"))
+						continue;
+					Log.On (framework).Add ($"!extra-enum-value! Managed value {value} for {type.Name}.{managed_unsigned_values [value]} not found in native headers");
+				}
+			}
+
 			if (native_size != managed_size)
 				Log.On (framework).Add ($"!wrong-enum-size! {name} managed {managed_size} vs native {native_size}");
 		}
