@@ -390,7 +390,10 @@ namespace MonoTouchFixtures.Security {
 				// old certificate (built in our tests) was not quite up to spec and it eventually became important
 				Assert.False (trust.Evaluate (out var error), "Evaluate");
 				Assert.NotNull (error, "error");
-				Assert.That (error.LocalizedDescription, Is.EqualTo ("“mail.google.com” certificate is not standards compliant"), "desc");
+				if (TestRuntime.CheckXcodeVersion (12, 2))
+					Assert.That (error.LocalizedDescription, Is.EqualTo ("“mail.google.com” certificate is using a broken signature algorithm"), "desc");
+				else
+					Assert.That (error.LocalizedDescription, Is.EqualTo ("“mail.google.com” certificate is not standards compliant"), "desc");
 			} else if (TestRuntime.CheckXcodeVersion (11, 0)) {
 				Assert.False (trust.Evaluate (out var error), "Evaluate");
 				Assert.NotNull (error, "error");
