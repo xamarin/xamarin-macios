@@ -27,8 +27,6 @@ namespace Xamarin.iOS.Tasks
 
 			var files = new HashSet<string> (Directory.EnumerateFiles (mlmodelc, "*.*", SearchOption.AllDirectories));
 
-			Assert.AreEqual (expected.Length, files.Count);
-
 			foreach (var name in expected)
 				Assert.IsTrue (files.Contains (Path.Combine (mlmodelc, name)), "{0} not found", name);
 
