@@ -60,7 +60,7 @@ namespace Xamarin.Tests {
 		public void BuildMyCocoaApp ()
 		{
 			if (!Configuration.include_mac)
-			Assert.Ignore ("Ignore until Xamarin.Mac is re-enabled. Issue: https://github.com/xamarin/xamarin-macios/issues/9680");
+				Assert.Ignore ("Ignore until Xamarin.Mac is re-enabled. Issue: https://github.com/xamarin/xamarin-macios/issues/9680");
 			var platform = ApplePlatform.MacOSX;
 			var project_path = GetProjectPath ("MyCocoaApp");
 			Clean (project_path);
@@ -109,6 +109,8 @@ namespace Xamarin.Tests {
 		[TestCase ("macOS")]
 		public void BuildEmbeddedResourcesTest (string platform)
 		{
+			if (!Configuration.include_mac)
+				Assert.Ignore ("Ignore until Xamarin.Mac is re-enabled. Issue: https://github.com/xamarin/xamarin-macios/issues/9680");
 			var assemblyName = "EmbeddedResources";
 			var dotnet_bindings_dir = Path.Combine (Configuration.SourceRoot, "tests", assemblyName, "dotnet");
 			var project_dir = Path.Combine (dotnet_bindings_dir, platform);
@@ -141,6 +143,8 @@ namespace Xamarin.Tests {
 		[TestCase ("macOS")]
 		public void BuildFSharpLibraryTest (string platform)
 		{
+			if (!Configuration.include_mac)
+				Assert.Ignore ("Ignore until Xamarin.Mac is re-enabled. Issue: https://github.com/xamarin/xamarin-macios/issues/9680");
 			var assemblyName = "fsharplibrary";
 			var dotnet_bindings_dir = Path.Combine (Configuration.SourceRoot, "tests", assemblyName, "dotnet");
 			var project_dir = Path.Combine (dotnet_bindings_dir, platform);
@@ -167,6 +171,8 @@ namespace Xamarin.Tests {
 		[TestCase ("macOS")]
 		public void BuildBindingsTest (string platform)
 		{
+			if (!Configuration.include_mac)
+				Assert.Ignore ("Ignore until Xamarin.Mac is re-enabled. Issue: https://github.com/xamarin/xamarin-macios/issues/9680");
 			var assemblyName = "bindings-test";
 			var dotnet_bindings_dir = Path.Combine (Configuration.SourceRoot, "tests", assemblyName, "dotnet");
 			var project_dir = Path.Combine (dotnet_bindings_dir, platform);
@@ -196,6 +202,8 @@ namespace Xamarin.Tests {
 		[TestCase ("macOS")]
 		public void BuildBindingsTest2 (string platform)
 		{
+			if (!Configuration.include_mac)
+				Assert.Ignore ("Ignore until Xamarin.Mac is re-enabled. Issue: https://github.com/xamarin/xamarin-macios/issues/9680");
 			var assemblyName = "bindings-test2";
 			var dotnet_bindings_dir = Path.Combine (Configuration.SourceRoot, "tests", assemblyName, "dotnet");
 			var project_dir = Path.Combine (dotnet_bindings_dir, platform);
@@ -225,6 +233,8 @@ namespace Xamarin.Tests {
 		[TestCase ("macOS", "xammac")]
 		public void BuildBundledResources (string platform, string prefix)
 		{
+			if (!Configuration.include_mac)
+				Assert.Ignore ("Ignore until Xamarin.Mac is re-enabled. Issue: https://github.com/xamarin/xamarin-macios/issues/9680");
 			var assemblyName = "BundledResources";
 			var dotnet_bindings_dir = Path.Combine (Configuration.SourceRoot, "tests", assemblyName, "dotnet");
 			var project_dir = Path.Combine (dotnet_bindings_dir, platform);
