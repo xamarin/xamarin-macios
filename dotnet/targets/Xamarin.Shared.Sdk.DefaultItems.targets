@@ -77,6 +77,7 @@
                             RuntimePackNamePatterns="Microsoft.$(_PlatformName).Runtime.**RID**"
                             RuntimePackRuntimeIdentifiers="$(_RuntimePackRuntimeIdentifiers)"
                             Profile="$(_PlatformName)"
+                            IsTrimmable="true"
                             />
   </ItemGroup>
 
