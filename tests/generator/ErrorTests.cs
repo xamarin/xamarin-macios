@@ -29,6 +29,7 @@ namespace GeneratorTests
 			bgen.AssertError (86, "A target framework (--target-framework) must be specified.");
 		}
 
+#if !NET
 		[Test]
 		public void BI0087 ()
 		{
@@ -38,6 +39,7 @@ namespace GeneratorTests
 			bgen.AssertExecuteError ("build");
 			bgen.AssertError (87, "Xamarin.Mac Classic binding projects are not supported anymore. Please upgrade the binding project to a Xamarin.Mac Unified binding project.");
 		}
+#endif
 
 		[Test]
 		[TestCase (Profile.iOS)]
@@ -53,7 +55,9 @@ namespace GeneratorTests
 		}
 
 		[Test]
+#if !NET
 		[TestCase (Profile.macOSFull)]
+#endif
 		[TestCase (Profile.macOSMobile)]
 		public void BI1037 (Profile profile)
 		{
@@ -66,7 +70,9 @@ namespace GeneratorTests
 		}
 
 		[Test]
+#if !NET
 		[TestCase (Profile.macOSFull)]
+#endif
 		[TestCase (Profile.macOSMobile)]
 		public void BI1038 (Profile profile)
 		{
@@ -79,7 +85,9 @@ namespace GeneratorTests
 		}
 
 		[Test]
+#if !NET
 		[TestCase (Profile.macOSFull)]
+#endif
 		[TestCase (Profile.macOSMobile)]
 		public void BI1039 (Profile profile)
 		{
@@ -92,7 +100,9 @@ namespace GeneratorTests
 		}
 
 		[Test]
+#if !NET
 		[TestCase (Profile.macOSFull)]
+#endif
 		[TestCase (Profile.macOSMobile)]
 		public void BI1040 (Profile profile)
 		{
@@ -105,7 +115,9 @@ namespace GeneratorTests
 		}
 
 		[Test]
+#if !NET
 		[TestCase (Profile.macOSFull)]
+#endif
 		[TestCase (Profile.macOSMobile)]
 		public void BI1041 (Profile profile)
 		{
@@ -744,7 +756,9 @@ namespace BI1066Errors
 
 		[Test]
 		[TestCase (Profile.iOS)]
+#if !NET
 		[TestCase (Profile.macOSFull)]
+#endif
 		[TestCase (Profile.macOSMobile)]
 		public void WarnAsError (Profile profile)
 		{
@@ -795,7 +809,9 @@ namespace BI1066Errors
 
 		[Test]
 		[TestCase (Profile.iOS)]
+#if !NET
 		[TestCase (Profile.macOSFull)]
+#endif
 		[TestCase (Profile.macOSMobile)]
 		public void NoWarn (Profile profile)
 		{
@@ -846,7 +862,9 @@ namespace BI1066Errors
 
 		[Test]
 		[TestCase (Profile.iOS)]
+#if !NET
 		[TestCase (Profile.macOSFull)]
+#endif
 		[TestCase (Profile.macOSMobile)]
 		public void MissingExportOnProperty (Profile profile)
 		{
