@@ -2699,10 +2699,10 @@
       </trans-unit>
       <trans-unit id="MX5222">
         <source>The native linker failed to execute: {0}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
-        </source>
+ 		</source>
         <target state="new">The native linker failed to execute: {0}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
-        </target>
-        <note></note>
+ 		</target>
+        <note />
       </trans-unit>
       <trans-unit id="MX5223">
         <source>Did not link with the framework '{0}', because the current {1} SDK does not contain support for this framework in the simulator.</source>
