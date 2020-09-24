@@ -383,7 +383,7 @@
 	<Target Name="_UpdateDynamicLibraryId" DependsOnTargets="_ComputeVariables" Inputs="@(_MonoLibrary)" Outputs="@(_MonoLibrary -> '$(_IntermediateNativeLibraryDir)%(Filename)%(Extension)')">
 		<!-- install_name_tool modifies the file in-place, so copy it first to a temporary directory before we fix it -->
 		<Copy SourceFiles="%(_MonoLibrary.FullPath)" DestinationFolder="$(_IntermediateNativeLibraryDir)" />
-		<Exec Command="install_name_tool -id @executable_path/%(_MonoLibrary.Filename)%(_MonoLibrary.Extension) $(_IntermediateNativeLibraryDir)%(_MonoLibrary.Filename)%(_MonoLibrary.Extension)" />
+		<Exec Command="xcrun install_name_tool -id @executable_path/%(_MonoLibrary.Filename)%(_MonoLibrary.Extension) $(_IntermediateNativeLibraryDir)%(_MonoLibrary.Filename)%(_MonoLibrary.Extension)" EnvironmentVariables="DEVELOPER_DIR=$(_SdkDevPath)" />
 		<!-- Update our item groups -->
 		<ItemGroup>
 			<_MonoLibraryFixed Include="@(_MonoLibrary -> '$(_IntermediateNativeLibraryDir)%(Filename)%(Extension)')" />
