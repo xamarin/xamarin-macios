@@ -162,9 +162,10 @@ namespace Extrospection {
 			if (signed) {
 				managed_signed_values.Clear ();
 				native_signed_values.Clear ();
-				// skip `0` since it's `__value` (special)
-				for (int i = 1; i < fields.Count; i++) {
-					var f = fields [i];
+				foreach (var f in fields) {
+					// skip special `value__`
+					if (f.IsRuntimeSpecialName && !f.IsStatic)
+						continue;
 					if (!f.IsObsolete ())
 						managed_signed_values [Convert.ToInt64 (f.Constant)] = f.Name;
 				}
@@ -195,9 +196,10 @@ namespace Extrospection {
 			} else {
 				managed_unsigned_values.Clear ();
 				native_unsigned_values.Clear ();
-				// skip `0` since it's `__value` (special)
-				for (int i = 1; i < fields.Count; i++) {
-					var f = fields [i];
+				foreach (var f in fields) {
+					// skip special `value__`
+					if (f.IsRuntimeSpecialName && !f.IsStatic)
+						continue;
 					if (!f.IsObsolete ())
 						managed_unsigned_values [Convert.ToUInt64 (f.Constant)] = f.Name;
 				}
