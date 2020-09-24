@@ -139,7 +139,7 @@ namespace Xamarin.Linker.Steps {
 				Annotations.AddPreservedMethod (method.DeclaringType, method);
 
 			// Does the method already have a DynamicDependency attribute? If so, no need to add another one
-			if (!method.CustomAttributes.Any (v => v.AttributeType.Is ("System.Diagnostics.CodeAnalysis", "DynamicDependencyAttribute")))
+			if (method.CustomAttributes.Any (v => v.AttributeType.Is ("System.Diagnostics.CodeAnalysis", "DynamicDependencyAttribute")))
 				return;
 
 			// Create and add the DynamicDependency attribute to the method
