@@ -188,8 +188,7 @@ namespace Extrospection {
 				}
 
 				foreach (var value in managed_signed_values.Keys) {
-					// we often add `None = 0` to flags and error codes
-					if ((value == 0) && (managed_signed_values [0] == "None"))
+					if ((value == 0) && IsExtraZeroValid (type.Name, managed_signed_values [0]))
 						continue;
 					Log.On (framework).Add ($"!extra-enum-value! Managed value {value} for {type.Name}.{managed_signed_values [value]} not found in native headers");
 				}
@@ -222,8 +221,7 @@ namespace Extrospection {
 				}
 
 				foreach (var value in managed_unsigned_values.Keys) {
-					// we often add `None = 0` to flags and error codes
-					if ((value == 0) && (managed_unsigned_values [0] == "None"))
+					if ((value == 0) && IsExtraZeroValid (type.Name, managed_unsigned_values [0]))
 						continue;
 					Log.On (framework).Add ($"!extra-enum-value! Managed value {value} for {type.Name}.{managed_unsigned_values [value]} not found in native headers");
 				}
@@ -231,6 +229,27 @@ namespace Extrospection {
 
 			if (native_size != managed_size)
 				Log.On (framework).Add ($"!wrong-enum-size! {name} managed {managed_size} vs native {native_size}");
+		}
+
+		static bool IsExtraZeroValid (string typeName, string valueName)
+		{
+			switch (valueName) {
+			// we often add `None = 0` to flags, when none exists
+			case "None":
+				return true;
+			// `Ok = 0` and `Success = 0` are often added to errors enums
+			case "Ok":
+			case "Success":
+				if (typeName.EndsWith ("ErrorCode", StringComparison.Ordinal))
+					return true;
+				if (typeName.EndsWith ("Status", StringComparison.Ordinal))
+					return true;
+				break;
+			// used in HealthKit for a default value
+			case "NotApplicable":
+				return typeName.StartsWith ("HK", StringComparison.Ordinal);
+			}
+			return false;
 		}
 
 		static bool IsNative (TypeDefinition type)
