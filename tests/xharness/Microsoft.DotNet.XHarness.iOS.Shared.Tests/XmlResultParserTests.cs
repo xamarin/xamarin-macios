@@ -332,8 +332,6 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests {
 			var (resultLine, failed) = resultParser.GenerateHumanReadableResults (source, destination, type);
 			var output = destination.ToString ();
 
-			Console.WriteLine (output);
-
 			Assert.AreEqual (expectedFailure, failed, "failed");
 			Assert.AreEqual (expectedResultLine, resultLine, "result line");
 
