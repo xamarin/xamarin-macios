@@ -86,7 +86,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests {
 
 
 		[TestCase ("nunit-", XmlResultJargon.NUnitV2)]
-		[TestCase ("nunit-", XmlResultJargon.NUnitV2)]
+		[TestCase ("nunit-", XmlResultJargon.NUnitV3)]
 		[TestCase ("nunit-", XmlResultJargon.TouchUnit)]
 		[TestCase ("xunit-", XmlResultJargon.xUnit)]
 		public void GetXmlFilePathTest (string prefix, XmlResultJargon jargon)
