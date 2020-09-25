@@ -66,6 +66,95 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 			return false;
 		}
 
+		static void ParseNUnitV3XmlTestCase (TextWriter writer, XmlReader reader)
+		{
+			if (reader.NodeType != XmlNodeType.Element)
+				throw new InvalidOperationException ();
+			if (reader.Name != "test-case")
+				throw new InvalidOperationException ();
+
+			// read the test cases in the current node
+			var status = reader ["result"];
+			switch (status) {
+			case "Passed":
+				writer.Write ("\t[PASS] ");
+				break;
+			case "Skipped":
+				writer.Write ("\t[IGNORED] ");
+				break;
+			case "Error":
+			case "Failed":
+				writer.Write ("\t[FAIL] ");
+				break;
+			case "Inconclusive":
+				writer.Write ("\t[INCONCLUSIVE] ");
+				break;
+			default:
+				writer.Write ("\t[INFO] ");
+				break;
+			}
+			var name = reader ["name"];
+			writer.Write (name);
+			if (status == "Failed") { //  we need to print the message
+				reader.ReadToDescendant ("failure");
+				reader.ReadToDescendant ("message");
+				writer.Write ($" : {reader.ReadElementContentAsString ()}");
+				if (reader.Name != "stack-trace")
+					reader.ReadToNextSibling ("stack-trace");
+				writer.Write ($" : {reader.ReadElementContentAsString ()}");
+			}
+			if (status == "Skipped") { // nice to have the skip reason
+				reader.ReadToDescendant ("reason");
+				reader.ReadToDescendant ("message");
+				writer.Write ($" : {reader.ReadElementContentAsString ()}");
+			}
+			// add a new line
+			writer.WriteLine ();
+		}
+
+		static void ParseNUnitV3XmlTestSuite (TextWriter writer, XmlReader reader, bool nested, int nesting = 0)
+		{
+			if (reader.NodeType != XmlNodeType.Element)
+				throw new InvalidOperationException ();
+			if (reader.Name != "test-suite")
+				throw new InvalidOperationException ();
+
+			var type = reader ["type"];
+			var isFixture = type == "TestFixture" || type == "ParameterizedFixture";
+			var testCaseName = reader ["fullname"];
+			var time = reader.GetAttribute ("time") ?? "0"; // some nodes might not have the time :/
+
+			if (isFixture)
+				writer.WriteLine (testCaseName);
+
+			if (reader.IsEmptyElement) {
+				if (isFixture)
+					writer.WriteLine ($"{testCaseName} {time} ms");
+				return;
+			}
+
+			while (reader.Read ()) {
+				switch (reader.NodeType ) {
+				case XmlNodeType.Element:
+					if (reader.Name == "test-case") {
+						ParseNUnitV3XmlTestCase (writer, reader);
+					} else if (reader.Name == "test-suite") {
+						ParseNUnitV3XmlTestSuite (writer, reader, nested || isFixture);
+					}
+					break;
+				case XmlNodeType.EndElement:
+					if (reader.Name == "test-suite") {
+						if (isFixture)
+							writer.WriteLine ($"{testCaseName} {time} ms");
+						return;
+					}
+					break;
+				}
+			}
+
+			throw new InvalidOperationException ("Invalid XML: no test-suite end element");
+		}
+
 		static (string resultLine, bool failed) ParseNUnitV3Xml (TextReader stream, TextWriter writer)
 		{
 			long testcasecount, passed, failed, inconclusive, skipped;
@@ -82,52 +171,8 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 						long.TryParse (reader ["skipped"], out skipped);
 						failedTestRun = failed != 0;
 					}
-					if (reader.NodeType == XmlNodeType.Element && reader.Name == "test-suite" && (reader ["type"] == "TestFixture" || reader ["type"] == "ParameterizedFixture")) {
-						var testCaseName = reader ["fullname"];
-						writer.WriteLine (testCaseName);
-						var time = reader.GetAttribute ("time") ?? "0"; // some nodes might not have the time :/
-																		// get the first node and then move in the siblings of the same type
-						reader.ReadToDescendant ("test-case");
-						do {
-							if (reader.Name != "test-case")
-								break;
-							// read the test cases in the current node
-							var status = reader ["result"];
-							switch (status) {
-							case "Passed":
-								writer.Write ("\t[PASS] ");
-								break;
-							case "Skipped":
-								writer.Write ("\t[IGNORED] ");
-								break;
-							case "Error":
-							case "Failed":
-								writer.Write ("\t[FAIL] ");
-								break;
-							case "Inconclusive":
-								writer.Write ("\t[INCONCLUSIVE] ");
-								break;
-							default:
-								writer.Write ("\t[INFO] ");
-								break;
-							}
-							writer.Write (reader ["name"]);
-							if (status == "Failed") { //  we need to print the message
-								reader.ReadToDescendant ("failure");
-								reader.ReadToDescendant ("message");
-								writer.Write ($" : {reader.ReadElementContentAsString ()}");
-								reader.ReadToNextSibling ("stack-trace");
-								writer.Write ($" : {reader.ReadElementContentAsString ()}");
-							}
-							if (status == "Skipped") { // nice to have the skip reason
-								reader.ReadToDescendant ("reason");
-								reader.ReadToDescendant ("message");
-								writer.Write ($" : {reader.ReadElementContentAsString ()}");
-							}
-							// add a new line
-							writer.WriteLine ();
-						} while (reader.ReadToNextSibling ("test-case"));
-						writer.WriteLine ($"{testCaseName} {time} ms");
+					if (reader.NodeType == XmlNodeType.Element && reader.Name == "test-suite") {
+						ParseNUnitV3XmlTestSuite (writer, reader, false);
 					}
 				}
 			}
