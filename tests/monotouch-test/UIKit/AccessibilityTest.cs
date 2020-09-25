@@ -32,6 +32,20 @@ namespace MonoTouchFixtures.UIKit {
 			});
 			UIAccessibility.RequestGuidedAccessSession (false, null);
 		}
+
+		[Test]
+		public void ButtonShapesEnabled ()
+		{
+			TestRuntime.AssertXcodeVersion (12, 0);
+			Assert.False (UIAccessibility.ButtonShapesEnabled);
+		}
+
+		[Test]
+		public void PrefersCrossFadeTransitions ()
+		{
+			TestRuntime.AssertXcodeVersion (12, 0);
+			Assert.False (UIAccessibility.PrefersCrossFadeTransitions);
+		}
 	}
 }
 

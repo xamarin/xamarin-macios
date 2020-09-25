@@ -77,6 +77,8 @@ namespace MetalPerformanceShaders {
 
 	[Flags]
 	[Native]
+	[iOS (13,0), TV (13,0), Mac (10,15)]
+	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	public enum MPSAliasingStrategy : ulong
 	{
 		Default = 0x0,
@@ -128,6 +130,8 @@ namespace MetalPerformanceShaders {
 	}
 
 	// uses NSUInteger
+	[iOS (13,0), TV (13,0), Mac (10,15)]
+	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	public struct MPSDimensionSlice {
 		public nuint Start;
 		public nuint Length;
@@ -188,6 +192,7 @@ namespace MetalPerformanceShaders {
 		NonPositiveDefinite = -3,
 	}
 
+	[iOS (13,0), TV (13,0), Mac (10,15)]
 	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	[Flags]
 	[Native]
@@ -563,6 +568,8 @@ namespace MetalPerformanceShaders {
 		// MaxTextures = 128 or 32,
 	}
 
+	[iOS (11,3), TV (11,3), Mac (10,13,4)]
+	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	public enum MPSCustomKernelIndex : uint
 	{
 		DestIndex = 0,
@@ -574,6 +581,8 @@ namespace MetalPerformanceShaders {
 		UserDataIndex = 30,
 	}
 
+	[iOS (11,2), TV (11,2), Mac (10,13,2)]
+	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MPSMatrixOffset
 	{

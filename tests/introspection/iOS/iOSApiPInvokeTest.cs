@@ -65,6 +65,9 @@ namespace Introspection {
 				return !simulator;
 
 			default:
+				// MLCompute not available in simulator as of Xcode 12 beta 3
+				if (simulator && symbolName.StartsWith ("MLC", StringComparison.Ordinal))
+					return true;
 				return base.Skip (symbolName);
 			}
 		}

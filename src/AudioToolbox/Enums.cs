@@ -13,4 +13,29 @@ namespace AudioToolbox {
 		MetaParameter = (1u << 2),
 		UserInterfaceParameter = (1u << 3),
 	}
+
+	[NoWatch, TV (14, 0), Mac (11, 0), iOS (14, 0)]
+	public enum AUSpatialMixerOutputType : uint
+	{
+		Headphones = 1,
+		BuiltInSpeakers = 2,
+		ExternalSpeakers = 3,
+	}
+
+	[NoWatch, TV (14, 0), Mac (11, 0), iOS (14, 0)]
+	public enum AUSpatialMixerPointSourceInHeadMode : uint
+	{
+		Mono = 0,
+		Bypass = 1,
+	}
+
+	[NoWatch, TV (14, 0), Mac (11, 0), iOS (14, 0)]
+	public enum AUSpatialMixerSourceMode : uint
+	{
+		SpatializeIfMono = 0,
+		Bypass = 1,
+		PointSource = 2,
+		AmbienceBed = 3,
+	}
+
 }

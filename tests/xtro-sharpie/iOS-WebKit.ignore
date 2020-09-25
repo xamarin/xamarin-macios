@@ -1,9 +1,3 @@
-# Moved into a *deprecated* category that is now visible from iOS (but were only on macOS before)
-!missing-selector! WKPreferences::javaEnabled not bound
-!missing-selector! WKPreferences::plugInsEnabled not bound
-!missing-selector! WKPreferences::setJavaEnabled: not bound
-!missing-selector! WKPreferences::setPlugInsEnabled: not bound
-
 # Initial result from new rule missing-null-allowed
 !missing-null-allowed! 'Foundation.NSNumber WebKit.WKWindowFeatures::get_allowsResizing()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSNumber WebKit.WKWindowFeatures::get_height()' is missing an [NullAllowed] on return type

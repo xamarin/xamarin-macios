@@ -31,8 +31,72 @@ using Foundation;
 using CoreGraphics;
 using ObjCRuntime;
 
+using MidiObjectRef = System.Int32;
+
 namespace CoreMidi {
-	
+
+	[Mac (11, 0), iOS (14, 0)]
+	public enum MidiProtocolId {
+		Protocol_1_0 = 1,
+		Protocol_2_0 = 2,
+	}
+
+	[Mac (11, 0), iOS (14, 0)]
+	public enum MidiCVStatus : uint {
+		RegisteredPnc = 0,
+		AssignablePnc = 1,
+		RegisteredControl = 2,
+		AssignableControl = 3,
+		RelRegisteredControl = 4,
+		RelAssignableControl = 5,
+		PerNotePitchBend = 6,
+		// 7 is not present in the headers..
+		NoteOff = 8,
+		NoteOn = 9,
+		PolyPressure = 10,
+		ControlChange = 11,
+		ProgramChange = 12,
+		ChannelPressure = 13,
+		PitchBend = 14,
+		PerNoteMgmt = 15,
+	}
+
+	[Mac (11, 0), iOS (14, 0)]
+	public enum MidiMessageType : uint {
+		Utility = 0,
+		System = 1,
+		ChannelVoice1 = 2,
+		SysEx = 3,
+		ChannelVoice2 = 4,
+		Data128 = 5,
+	}
+
+	[Mac (11, 0), iOS (14, 0)]
+	public enum MidiSysExStatus : uint {
+		Complete = 0,
+		Start = 1,
+		Continue = 2,
+		End = 3,
+	}
+
+	[Mac (11, 0), iOS (14, 0)]
+	public enum MidiSystemStatus : uint {
+		StartOfExclusive = 240,
+		EndOfExclusive = 247,
+		Mtc = 241,
+		SongPosPointer = 242,
+		SongSelect = 243,
+		TuneRequest = 246,
+		TimingClock = 248,
+		Start = 250,
+		Continue = 251,
+		Stop = 252,
+		ActiveSending = 254,
+		SystemReset = 255,
+	}
+
+
+		
 #if !MONOMAC
 	[NoMac][NoTV][NoWatch]
 	[BaseType (typeof (NSObject), Name="MIDINetworkHost")]
@@ -140,14 +204,25 @@ namespace CoreMidi {
 		[Export ("sourceEndpoint")] [Internal]
 		int /* MIDIObjectRef = UInt32 */ _SourceEndpoint { get; }
 
+#if XAMCORE_4_0
+		[Wrap ("new MidiEndpoint (_SourceEndpoint)")]
+		MidiEndpoint GetSourceEndpoint ();
+#else
 		[Wrap ("new MidiEndpoint (_SourceEndpoint)")]
 		MidiEndpoint SourceEndpoint { get; }
+#endif
 
 		[Export ("destinationEndpoint")] [Internal]
 		int /* MIDIObjectRef = UInt32 */ _DestinationEndpoint { get; }
 
+#if XAMCORE_4_0
+		[Wrap ("new MidiEndpoint (_DestinationEndpoint)")]
+		MidiEndpoint GetDestinationEndPoint ();
+#else
 		[Wrap ("new MidiEndpoint (_DestinationEndpoint)")]
 		MidiEndpoint DestinationEndPoint { get; }
+#endif
+
 	}
 #endif
 
@@ -164,6 +239,10 @@ namespace CoreMidi {
 
 		[Export ("initWithData:name:")]
 		IntPtr Constructor (NSData data, string inName);
+
+		[Mac (11, 0), iOS (14,0)]
+		[Export ("initWithData:")]
+		IntPtr Constructor (NSData data);
 	}
 
 	[NoWatch, NoTV, Mac (10,14), iOS (12,0)]
@@ -177,11 +256,25 @@ namespace CoreMidi {
 		[Export ("disabledProfiles")]
 		MidiCIProfile[] DisabledProfiles { get; }
 
+		[Deprecated (PlatformName.iOS, 14, 0, message : "Use the '(byte midiChannel, MidiCIProfile[] enabled, MidiCIProfile[] disabled)' constructor instead.")]
+		[Deprecated (PlatformName.MacOSX, 11, 0, message : "Use the '(byte midiChannel, MidiCIProfile[] enabled, MidiCIProfile[] disabled)' constructor instead.")]
 		[Export ("initWithEnabledProfiles:disabledProfiles:")]
 		IntPtr Constructor (MidiCIProfile[] enabled, MidiCIProfile[] disabled);
+
+		[Mac (11, 0), iOS (14, 0)]
+		[Export ("initWithChannel:enabledProfiles:disabledProfiles:")]
+		IntPtr Constructor (byte midiChannelNumber, MidiCIProfile[] enabled, MidiCIProfile[] disabled);
+
+		[Mac (11, 0), iOS (14, 0)]
+		[Export ("midiChannel")]
+		byte MidiChannel { get; }
 	}
 
 	delegate void MidiCIProfileChangedHandler (MidiCISession session, byte channel, MidiCIProfile profile, bool enabled);
+	delegate void MidiCIPropertyResponseHandler (MidiCISession session, byte channel, NSData response, NSError error);
+	delegate void MidiCIPropertyChangedHandler (MidiCISession session, byte channel, NSData data);
+	delegate void MidiCIProfileSpecificDataHandler (MidiCISession session, byte channel, MidiCIProfile profile, NSData data);
+	delegate void MidiCISessionDisconnectHandler (MidiCISession session, NSError error);
 
 	[NoWatch, NoTV, Mac (10,14), iOS (12,0)]
 	[BaseType (typeof(NSObject), Name="MIDICISession")]
@@ -214,5 +307,166 @@ namespace CoreMidi {
 
 		[NullAllowed, Export ("profileChangedCallback", ArgumentSemantic.Assign)]
 		MidiCIProfileChangedHandler ProfileChangedCallback { get; set; }
+
+		[Mac (11, 0), iOS (14, 0)]
+		[Export ("initWithDiscoveredNode:dataReadyHandler:disconnectHandler:")]
+		IntPtr Constructor (MidiCIDiscoveredNode discoveredNode, Action dataReadyHandler, MidiCISessionDisconnectHandler disconnectHandler);
+
+		[Mac (11, 0), iOS (14, 0)]
+		[Export ("sendProfile:onChannel:profileData:")]
+		bool SendProfile (MidiCIProfile profile, byte channel, NSData profileSpecificData);
+
+		[Mac (11, 0), iOS (14, 0)]
+		[Export ("deviceInfo")]
+		MidiCIDeviceInfo DeviceInfo { get; }
+
+		[Mac (11, 0), iOS (14, 0)]
+		[BindAs (typeof (ulong))]
+		[Export ("maxSysExSize")]
+		NSNumber MaxSysExSize { get; }
+
+		[Mac (11, 0), iOS (14, 0)]
+		[BindAs (typeof (int))]
+		[Export ("maxPropertyRequests")]
+		NSNumber MaxPropertyRequests { get; }
+
+		[Internal]
+		[Mac (11, 0), iOS (14, 0)]
+		[Export ("midiDestination")]
+		MidiObjectRef _MidiDestination { get; }
+
+		[Mac (11, 0), iOS (14, 0)]
+		[NullAllowed, Export ("profileSpecificDataHandler", ArgumentSemantic.Copy)]
+		MidiCIProfileSpecificDataHandler ProfileSpecificDataHandler { get; set; }
 	}
+
+	[Mac (11, 0), iOS (14, 0)]
+	[BaseType (typeof (NSObject), Name="MIDICIDeviceInfo")]
+	[DisableDefaultCtor]
+	interface MidiCIDeviceInfo : NSSecureCoding
+	{
+		[Export ("manufacturerID")]
+		NSData ManufacturerId { get; }
+
+		[Export ("family")]
+		NSData Family { get; }
+
+		[Export ("modelNumber")]
+		NSData ModelNumber { get; }
+
+		[Export ("revisionLevel")]
+		NSData RevisionLevel { get; }
+
+		[Internal]
+		[Export ("midiDestination")]
+		MidiObjectRef _MidiDestination { get; }
+
+		[Wrap ("new MidiEndpoint (_MidiDestination)")]
+		MidiEndpoint GetMidiDestination ();
+
+		[Internal]
+		[Export ("initWithDestination:manufacturer:family:model:revision:")]
+		IntPtr Constructor (MidiObjectRef midiDestination, NSData manufacturer, NSData family, NSData modelNumber, NSData revisionLevel);
+
+		[Wrap ("this (midiDestination?.Handle ?? throw new ArgumentNullException (nameof (midiDestination)), manufacturer, family, modelNumber, revisionLevel)")]
+		IntPtr Constructor (MidiEndpoint midiDestination, NSData manufacturer, NSData family, NSData modelNumber, NSData revisionLevel);
+	}
+
+	[Mac (11, 0), iOS (14, 0)]
+	[BaseType (typeof (NSObject), Name="MIDICIDiscoveredNode")]
+	[DisableDefaultCtor]
+	interface MidiCIDiscoveredNode
+	{
+		[Internal]
+		[Export ("destination")]
+		MidiObjectRef _Destination { get; }
+
+		[Wrap ("new MidiEndpoint (_Destination)")]
+		MidiEndpoint GetDestination (); 
+
+		[Export ("deviceInfo")]
+		MidiCIDeviceInfo DeviceInfo { get; }
+
+		[Export ("supportsProfiles")]
+		bool SupportsProfiles { get; }
+
+		[Export ("supportsProperties")]
+		bool SupportsProperties { get; }
+
+		[Export ("maximumSysExSize")]
+		[BindAs (typeof (ulong))]
+		NSNumber MaximumSysExSize { get; }
+	}
+
+	delegate void MidiCIDiscoveryResponseDelegate (MidiCIDiscoveredNode[] discoveredNodes);
+
+	[Mac (11, 0), iOS (14, 0)]
+	[DisableDefaultCtor]
+	[BaseType (typeof (NSObject), Name="MIDICIDiscoveryManager")]
+	interface MidiCIDiscoveryManager
+	{
+		[Static]
+		[Export ("sharedInstance")]
+		MidiCIDiscoveryManager SharedInstance { get; }
+
+		[Export ("discoverWithHandler:")]
+		void Discover (MidiCIDiscoveryResponseDelegate completedHandler);
+	}
+
+	interface IMidiCIProfileResponderDelegate {} 
+
+	[Mac (11, 0), iOS (14,0)]
+	[Protocol, Model (AutoGeneratedName = true)]
+	[BaseType (typeof (NSObject), Name="MIDICIProfileResponderDelegate")]
+	interface MidiCIProfileResponderDelegate
+	{
+		[Abstract]
+		[Export ("connectInitiator:withDeviceInfo:")]
+		bool ConnectInitiator (NSNumber initiatorMuid, MidiCIDeviceInfo deviceInfo);
+
+		[Abstract]
+		[Export ("initiatorDisconnected:")]
+		void InitiatorDisconnected (NSNumber initiatorMuid);
+
+		[Export ("willSetProfile:onChannel:enabled:")]
+		bool WillSetProfile (MidiCIProfile profile, byte channel, bool shouldEnable);
+
+		[Export ("handleDataForProfile:onChannel:data:")]
+		void HandleData (MidiCIProfile profile, byte channel, NSData inData);
+	}
+
+	[Mac (11, 0), iOS (14, 0)]
+	[BaseType (typeof (NSObject), Name="MIDICIResponder")]
+	[DisableDefaultCtor]
+	interface MidiCIResponder
+	{
+		[BindAs (typeof (int[]))]
+		[Export ("initiators")]
+		NSNumber[] Initiators { get; }
+
+		[Wrap ("WeakProfileDelegate")]
+		IMidiCIProfileResponderDelegate ProfileDelegate { get; }
+
+		[Export ("profileDelegate", ArgumentSemantic.Retain)]
+		NSObject WeakProfileDelegate { get; }
+
+		[Export ("deviceInfo")]
+		MidiCIDeviceInfo DeviceInfo { get; }
+
+		[Export ("initWithDeviceInfo:profileDelegate:profileStates:supportProperties:")]
+		IntPtr Constructor (MidiCIDeviceInfo deviceInfo, IMidiCIProfileResponderDelegate @delegate, MidiCIProfileState[] profileList, bool propertiesSupported);
+
+		[Export ("notifyProfile:onChannel:isEnabled:")]
+		bool NotifyProfile (MidiCIProfile profile, byte channel, bool enabledState);
+
+		[Export ("sendProfile:onChannel:profileData:")]
+		bool SendProfile (MidiCIProfile profile, byte channel, NSData profileSpecificData);
+
+		[Export ("start")]
+		bool Start ();
+
+		[Export ("stop")]
+		void Stop ();
+	}
+
 }

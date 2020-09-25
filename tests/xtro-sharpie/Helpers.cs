@@ -36,6 +36,8 @@ namespace Extrospection {
 			{ "NEVPNIKEv2DiffieHellmanGroup", "NEVpnIke2DiffieHellman" },
 			{ "NEVPNIKEv2EncryptionAlgorithm", "NEVpnIke2EncryptionAlgorithm" },
 			{ "NEVPNIKEv2IntegrityAlgorithm", "NEVpnIke2IntegrityAlgorithm" },
+			{ "NEDNSProtocol", "NEDnsProtocol"},
+			{ "NEDNSSettingsManagerError", "NEDnsSettingsManagerError"},
 			{ "NSAttributedStringEnumerationOptions", "NSAttributedStringEnumeration" },
 			{ "NSFileProviderErrorCode", "NSFileProviderError" },
 			{ "NSUbiquitousKeyValueStoreChangeReason", "NSUbiquitousKeyValueStore" },
@@ -53,6 +55,17 @@ namespace Extrospection {
 			{ "UITableViewCellAccessoryType", "UITableViewCellAccessory" },
 			{ "UITableViewCellStateMask", "UITableViewCellState" },
 			{ "WatchKitErrorCode", "WKErrorCode" }, // WebKit already had that name
+			{ "MIDIProtocolID", "MidiProtocolId" },
+			{ "MIDICVStatus", "MidiCVStatus" },
+			{ "MIDIMessageType", "MidiMessageType" },
+			{ "MIDISysExStatus", "MidiSysExStatus" },
+			{ "MIDISystemStatus", "MidiSystemStatus" },
+			{ "NFCFeliCaEncryptionId", "EncryptionId" },
+			{ "NFCFeliCaPollingRequestCode", "PollingRequestCode" },
+			{ "NFCFeliCaPollingTimeSlot", "PollingTimeSlot" },
+			{ "NFCVASErrorCode", "VasErrorCode" },
+			{ "NFCVASMode", "VasMode" },
+			{ "NFCISO15693RequestFlag", "RequestFlag" },
 			// not enums
 		};
 

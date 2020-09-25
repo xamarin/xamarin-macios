@@ -216,6 +216,10 @@ namespace TVMLKit {
 
 		[Export ("launchOptions", ArgumentSemantic.Copy)]
 		NSDictionary<NSString,NSObject> LaunchOptions { get; set; }
+
+		[TV (14,0)]
+		[Export ("supportsPictureInPicturePlayback")]
+		bool SupportsPictureInPicturePlayback { get; set; }
 	}
 
 	[TV (9,0)]

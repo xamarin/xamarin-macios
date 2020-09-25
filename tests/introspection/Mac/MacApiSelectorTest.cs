@@ -138,6 +138,13 @@ namespace Introspection {
 					if (!Mac.CheckSystemVersion (10, 12)) // NSCoding was added in 10.12
 						return true;
 					break;
+				case "MLDictionaryFeatureProvider":
+				case "MLMultiArray":
+				case "MLFeatureValue":
+				case "MLSequence":
+					if (!Mac.CheckSystemVersion (11, 0)) // NSCoding was added in 10.16 / 11
+						return true;
+					break;
 				}
 				break;
 			case "accessibilityNotifiesWhenDestroyed":
@@ -672,6 +679,16 @@ namespace Introspection {
 				break;
 			case "AVFoundation":
 				switch (type.Name) {
+				case "AVCaptureDevice":
+					switch (selectorName) {
+					// macOS 11.0 / AVCaptureDeviceTransportControls category selectors don't respond anymore
+					case "setTransportControlsPlaybackMode:speed:":
+					case "transportControlsPlaybackMode":
+					case "transportControlsSpeed":
+					case "transportControlsSupported":
+						return true;
+					}
+					break;
 				case "AVCapturePhoto":
 					switch (selectorName) {
 					case "fileDataRepresentationWithReplacementMetadata:replacementEmbeddedThumbnailPhotoFormat:replacementEmbeddedThumbnailPixelBuffer:replacementDepthData:":

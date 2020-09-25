@@ -7,7 +7,7 @@
 // Copyright 2017 Xamarin Inc. All rights reserved.
 //
 
-#if !MONOMAC
+#if !MONOMAC && !TVOS
 using System;
 using Foundation;
 using ObjCRuntime;

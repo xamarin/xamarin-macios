@@ -117,6 +117,8 @@ namespace UIKit {
 		
 		ValueChanged        = 1 << 12,
 		PrimaryActionTriggered = 1 << 13,
+		[iOS (14,0), TV (14,0)]
+		MenuActionTriggered = 1 << 14,
 		
 		EditingDidBegin     = 1 << 16,
 		EditingChanged      = 1 << 17,
@@ -392,9 +394,11 @@ namespace UIKit {
 	[Native]
 	[NoWatch][NoTV]
 	public enum UIImagePickerControllerSourceType : long {
+		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'PHPicker' instead.")]
 		PhotoLibrary,
 		Camera,
-		SavedPhotosAlbum
+		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'PHPicker' instead.")]
+		SavedPhotosAlbum,
 	}
 
 	// NSInteger -> UIImagePickerController.h
@@ -951,6 +955,8 @@ namespace UIKit {
 		Pad,
 		TV,
 		CarPlay,
+		[Watch (7,0), TV (14,0), iOS (14,0)]
+		Mac,
 	}
 
 	// NSInteger -> UIApplication.h
@@ -1717,6 +1723,7 @@ namespace UIKit {
 		Last
 	}
 
+	[Deprecated (PlatformName.iOS, 14, 0, message: "Use the designated constructors instead.")]
 	[NoTV][NoWatch]
 	[iOS (8, 0)]
 	[Native]
@@ -1740,9 +1747,30 @@ namespace UIKit {
 	[NoWatch]
 	public enum UISplitViewControllerDisplayMode : long {
 		Automatic,
-		PrimaryHidden,
-		AllVisible,
-		PrimaryOverlay
+		[TV (14,0), iOS (14,0)]
+		SecondaryOnly,
+		[TV (14,0), iOS (14,0)]
+		OneBesideSecondary,
+		[TV (14,0), iOS (14,0)]
+		OneOverSecondary,
+		[TV (14,0), iOS (14,0)]
+		TwoBesideSecondary,
+		[TV (14,0), iOS (14,0)]
+		TwoOverSecondary,
+		[TV (14,0), iOS (14,0)]
+		TwoDisplaceSecondary,
+
+		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'SecondaryOnly' instead.")]
+		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use 'SecondaryOnly' instead.")]
+		PrimaryHidden = SecondaryOnly,
+
+		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'OneBesideSecondary' instead.")]
+		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use 'OneBesideSecondary' instead.")]
+		AllVisible = OneBesideSecondary,
+
+		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'OneOverSecondary' instead.")]
+		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use 'OneOverSecondary' instead.")]
+		PrimaryOverlay = OneOverSecondary,
 	}
 
 	[Native]
@@ -2171,6 +2199,7 @@ namespace UIKit {
 		Dragging
 	}
 	
+	[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'PHPicker' instead.")]
 	[NoWatch]
 	[NoTV, iOS (11,0)]
 	[Native]
@@ -2524,6 +2553,10 @@ namespace UIKit {
 		BringAllToFront,
 		[Field ("UIMenuRoot")]
 		Root,
+
+		[iOS (14,0), TV (14,0)]
+		[Field ("UIMenuOpenRecent")]
+		OpenRecent,
 	}
 
 	[iOS (13,0), TV (13,0), Watch (6,0)]
@@ -2681,6 +2714,8 @@ namespace UIKit {
 		Automatic,
 		Wheels,
 		Compact,
+		[iOS (14,0)]
+		Inline,
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 13, 4)]
@@ -2906,6 +2941,216 @@ namespace UIKit {
 		None = 0,
 		Overlay,
 		Underlay,
+	}
+
+	[NoWatch, TV (14,0), iOS (14,0)]
+	[Native]
+	public enum UIButtonRole : long {
+		Normal,
+		Primary,
+		Cancel,
+		Destructive,
+	}
+
+	[NoWatch, TV (14,0), iOS (14,0)]
+	[Native]
+	public enum UICellAccessoryDisplayedState : long {
+		Always,
+		WhenEditing,
+		WhenNotEditing,
+	}
+
+	[NoWatch, NoTV, iOS (14,0)]
+	[Native]
+	public enum UICellAccessoryOutlineDisclosureStyle : long {
+		Automatic,
+		Header,
+		Cell,
+	}
+
+	[NoWatch, TV (14,0), iOS (14,0)]
+	[Native]
+	public enum UICellAccessoryPlacement : long {
+		Leading,
+		Trailing,
+	}
+
+	[NoWatch, NoTV, iOS (14,0)]
+	[Native]
+	public enum UICellConfigurationDragState : long {
+		None,
+		Lifting,
+		Dragging,
+	}
+
+	[NoWatch, NoTV, iOS (14,0)]
+	[Native]
+	public enum UICellConfigurationDropState : long {
+		None,
+		NotTargeted,
+		Targeted,
+	}
+
+	[NoWatch, TV (14,0), iOS (14,0)]
+	[Native]
+	public enum UICollectionLayoutListAppearance : long {
+		Plain,
+		Grouped,
+#if !TVOS
+		[NoTV]
+		InsetGrouped,
+		[NoTV]
+		Sidebar,
+		[NoTV]
+		SidebarPlain,
+#endif
+	}
+
+	[NoWatch, TV (14,0), iOS (14,0)]
+	[Native]
+	public enum UICollectionLayoutListHeaderMode : long {
+		None,
+		Supplementary,
+		FirstItemInSection,
+	}
+
+	[NoWatch, TV (14,0), iOS (14,0)]
+	[Native]
+	public enum UIContentInsetsReference : long {
+		Automatic,
+		None,
+		SafeArea,
+		LayoutMargins,
+		ReadableContent,
+	}
+
+	[NoWatch, NoTV, iOS (14,0)]
+	[Native]
+	public enum UIContextMenuInteractionAppearance : long {
+		Unknown = 0,
+		Rich,
+		Compact,
+	}
+
+	[NoWatch, TV (14,0), iOS (14,0)]
+	[Native]
+	public enum UIUserInterfaceActiveAppearance : long {
+		Unspecified = -1,
+		Inactive,
+		Active,
+	}
+
+	[NoWatch, TV (14,0), iOS (14,0)]
+	[Native]
+	public enum UIListContentTextAlignment : long {
+		Natural,
+		Center,
+		Justified,
+	}
+
+	[NoWatch, TV (14,0), iOS (14,0)]
+	[Native]
+	public enum UIPageControlInteractionState : long {
+		None = 0,
+		Discrete = 1,
+		Continuous = 2,
+	}
+
+	[NoWatch, TV (14,0), iOS (14,0)]
+	[Native]
+	public enum UIPageControlBackgroundStyle : long {
+		Automatic = 0,
+		Prominent = 1,
+		Minimal = 2,
+	}
+
+	[iOS (14,0), TV (14,0), NoWatch]
+	public enum UIPasteboardDetectionPattern {
+		[Field ("UIPasteboardDetectionPatternProbableWebURL")]
+		ProbableWebUrl,
+		[Field ("UIPasteboardDetectionPatternProbableWebSearch")]
+		ProbableWebSearch,
+		[Field ("UIPasteboardDetectionPatternNumber")]
+		Number,
+	}
+
+	[Introduced (PlatformName.MacCatalyst, 10, 14)]
+	[NoWatch, NoTV, NoiOS]
+	[Native]
+	public enum UISceneCollectionJoinBehavior : long {
+		Automatic,
+		Preferred,
+		Disallowed,
+		PreferredWithoutActivating,
+	}
+
+	[NoWatch, TV (14,0), iOS (14,0)]
+	[Native]
+	public enum UISplitViewControllerStyle : long {
+		Unspecified,
+		DoubleColumn,
+		TripleColumn,
+	}
+
+	[NoWatch, TV (14,0), iOS (14,0)]
+	[Native]
+	public enum UISplitViewControllerColumn : long {
+		Primary,
+		Supplementary,
+		Secondary,
+		Compact,
+	}
+
+	[NoWatch, TV (14,0), iOS (14,0)]
+	[Native]
+	public enum UISplitViewControllerSplitBehavior : long {
+		Automatic,
+		Tile,
+		Overlay,
+		Displace,
+	}
+
+	[NoWatch, NoTV, iOS (14,0)]
+	[Native]
+	public enum UISwitchStyle : long {
+		Automatic = 0,
+		Checkbox,
+		Sliding,
+	}
+
+	[NoWatch, TV (14,0), iOS (14,0)]
+	[Native]
+	public enum UICollectionLayoutListFooterMode : long {
+		None,
+		Supplementary,
+	}
+
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[NoWatch, NoTV, NoiOS]
+	[Native]
+	public enum UITitlebarSeparatorStyle : long {
+		Automatic,
+		None,
+		Line,
+		Shadow,
+	}
+
+	[NoWatch, NoTV, iOS (14,0)]
+	[Native]
+	public enum UINavigationItemBackButtonDisplayMode : long {
+		Default = 0,
+		Generic = 1,
+		Minimal = 2,
+	}
+
+	[Watch (7,0), TV (14,0), iOS (14,0)]
+	[Flags]
+	[Native]
+	public enum NSLineBreakStrategy : ulong {
+		None = 0x0,
+		PushOut = 1uL << 0,
+		HangulWordPriority = 1uL << 1,
+		Standard = 0xffff,
 	}
 
 }

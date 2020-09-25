@@ -223,7 +223,6 @@ namespace Xamarin.Bundler {
 						case "Metal":
 						case "MetalKit":
 						case "MetalPerformanceShaders":
-						case "CoreNFC":
 							// some frameworks do not exists on simulators and will result in linker errors if we include them
 							if (App.IsSimulatorBuild)
 								continue;
@@ -245,6 +244,16 @@ namespace Xamarin.Bundler {
 							// Xcode 11 doesn't ship WatchKit for iOS
 							if (Driver.XcodeVersion.Major == 11 && App.Platform == ApplePlatform.iOS) {
 								ErrorHelper.Warning (5219, Errors.MT5219);
+								continue;
+							}
+							break;
+						default:
+							if (App.IsSimulatorBuild && !App.IsFrameworkAvailableInSimulator (framework.Name)) {
+								if (App.LinkMode != LinkMode.None) {
+									ErrorHelper.Warning (5223, Errors.MX5223, framework.Name, App.PlatformName);
+								} else {
+									Driver.Log (3, Errors.MX5223, framework.Name, App.PlatformName);
+								}
 								continue;
 							}
 							break;

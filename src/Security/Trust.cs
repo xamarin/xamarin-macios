@@ -172,12 +172,35 @@ namespace Security {
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr /* SecKeyRef */ SecTrustCopyPublicKey (IntPtr /* SecTrustRef */ trust);
 
+		[Deprecated (PlatformName.iOS, 14,0, message: "Use 'GetKey' instead.")]
+		[Deprecated (PlatformName.MacOSX, 11,0, message: "Use 'GetKey' instead.")]
+		[Deprecated (PlatformName.TvOS, 14,0, message: "Use 'GetKey' instead.")]
+		[Deprecated (PlatformName.WatchOS, 7,0, message: "Use 'GetKey' instead.")]
 		public SecKey GetPublicKey ()
 		{
 			if (handle == IntPtr.Zero)
 				throw new ObjectDisposedException ("SecTrust");
 
 			return new SecKey (SecTrustCopyPublicKey (handle), true);
+		}
+
+		[iOS (14,0)]
+		[TV (14,0)]
+		[Watch (7,0)]
+		[Mac (11,0)]
+		[DllImport (Constants.SecurityLibrary)]
+		extern static IntPtr /* SecKeyRef */ SecTrustCopyKey (IntPtr /* SecTrustRef */ trust);
+
+		[iOS (14,0)]
+		[TV (14,0)]
+		[Watch (7,0)]
+		[Mac (11,0)]
+		public SecKey GetKey ()
+		{
+			if (handle == IntPtr.Zero)
+				throw new ObjectDisposedException ("SecTrust");
+
+			return new SecKey (SecTrustCopyKey (handle), true);
 		}
 
 		[Mac (10,9)]
