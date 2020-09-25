@@ -64,7 +64,12 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 			bool failedTestRun = false; // result = "Failed"
 			testcasecount = passed = failed = inconclusive = skipped = 0L;
 
-			using (var reader = XmlReader.Create (stream)) {
+			var settings = new XmlReaderSettings ();
+			settings.IgnoreWhitespace = true;
+			settings.IgnoreComments = true;
+			settings.IgnoreProcessingInstructions = true;
+
+			using (var reader = XmlReader.Create (stream, settings)) {
 				while (reader.Read ()) {
 					if (reader.NodeType == XmlNodeType.Element && reader.Name == "test-run") {
 						long.TryParse (reader ["testcasecount"], out testcasecount);
