@@ -829,15 +829,26 @@ timestamps {
                             stage ("Package XM tests") {
                                 currentStage = "${STAGE_NAME}"
                                 echo ("Building on ${env.NODE_NAME}")
-                                def exitCode = sh (script: "make -C ${workspace}/xamarin-macios/tests package-tests", returnStatus: true)
-                                if (exitCode != 0) {
+                                def skipPackagedXamarinMacTests = getLabels ().contains ("skip-packaged-xamarin-mac-tests")
+                                if (skipPackagedXamarinMacTests) {
+                                    echo ("Skipping packaged Xamarin.Mac tests because the label 'skip-packaged-xamarin-mac-tests' was found")
                                     hasXamarinMacTests = false
-                                    echoError ("Failed to package Xamarin.Mac tests (exit code: ${exitCode})")
-                                    failedStages.add (currentStage)
                                 } else {
-                                    def packaged_xm_tests = findFiles (glob: "tests/*.7z")
-                                    if (packaged_xm_tests.size () > 0)
-                                        uploadFiles ("tests/*.7z", "wrench", virtualPath)
+                                    def exitCode = sh (script: "make -C ${workspace}/xamarin-macios/tests package-tests", returnStatus: true)
+                                    if (exitCode != 0) {
+                                        hasXamarinMacTests = false
+                                        echoError ("Failed to package Xamarin.Mac tests (exit code: ${exitCode})")
+                                        failedStages.add (currentStage)
+                                    } else {
+                                        def packaged_xm_tests = findFiles (glob: "tests/*.7z")
+                                        if (packaged_xm_tests.size () > 0) {
+                                            uploadFiles ("tests/*.7z", "wrench", virtualPath)
+                                        } else {
+                                            // This may happen if the Xamarin.Mac build has been disabled
+                                            manager.addWarningBadge("Could not find any packaged Xamarin.Mac tests to upload")
+                                            hasXamarinMacTests = false
+                                        }
+                                    }
                                 }
                             }
 
