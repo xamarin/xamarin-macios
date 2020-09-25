@@ -308,40 +308,44 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests {
 			Directory.Delete (logsDir, true);
 		}
 
-		/// <summary>
-		/// https://github.com/xamarin/xamarin-macios/issues/8214
-		/// </summary>
-		[Test]
-		public void Issue8214Test ()
+		[TestCase ("Issue8214.xml", true, "Tests run: 2376 Passed: 2301 Inconclusive: 13 Failed: 1 Ignored: 74")] // https://github.com/xamarin/xamarin-macios/issues/8214
+		[TestCase ("NUnitV2Sample.xml", true, "Tests run: 21 Passed: 4 Inconclusive: 1 Failed: 2 Ignored: 7")]
+		[TestCase ("NUnitV2SampleFailure.xml", true, "Tests run: 21 Passed: 4 Inconclusive: 1 Failed: 2 Ignored: 7")]
+		[TestCase ("NUnitV3Sample.xml", true, "Tests run: 25 Passed: 12 Inconclusive: 1 Failed: 2 Ignored: 4")]
+		[TestCase ("NUnitV3SampleFailure.xml", true, "Tests run: 5 Passed: 3 Inconclusive: 1 Failed: 2 Ignored: 4")]
+		[TestCase ("TestCaseFailures.xml", true, "Tests run: 440 Passed: 405 Inconclusive: 0 Failed: 23 Ignored: 6")]
+		[TestCase ("TouchUnitSample.xml", false, "Tests run: 2354 Passed: 2223 Inconclusive: 13 Failed: 0 Ignored: 59", new string [] { "Tests run: 2286 Passed: 2282 Inconclusive: 4 Failed: 0 Ignored: 47" })] // The counting is a bit off here, seems like that's in Touch.Unit
+		[TestCase ("xUnitSample.xml", false, "Tests run: 53821 Passed: 53801 Inconclusive: 0 Failed: 0 Ignored: 20")]
+		[TestCase ("NUnitV3SampleParameterizedFailure.xml", true, "Tests run: 2086 Passed: 2041 Inconclusive: 7 Failed: 2 Ignored: 43", new string [] { "	[FAIL] GHIssue8342(OK,\"mandel\",\"12345678\",\"mandel\",\"12345678\") :   Status not ok" })]
+		public void HumanReadableResultsTest (string xmlFile, bool expectedFailure, string expectedResultLine, string [] additionalLines = null)
 		{
-			string expectedResultLine = "Tests run: 2376 Passed: 2301 Inconclusive: 13 Failed: 1 Ignored: 74";
-			// get the sample that was added to the issue to validate that we do parse the resuls correctly and copy it to a local
-			// path to be parsed
-			var name = GetType ().Assembly.GetManifestResourceNames ().Where (a => a.EndsWith ("Issue8214.xml", StringComparison.Ordinal)).FirstOrDefault ();
-			var tempPath = Path.GetTempFileName ();
-			var destinationFile = Path.GetTempFileName ();
-			using (var outputStream = new StreamWriter (tempPath))
-			using (var sampleStream = new StreamReader (GetType ().Assembly.GetManifestResourceStream (name))) {
-				string line;
-				while ((line = sampleStream.ReadLine ()) != null)
-					outputStream.WriteLine (line);
+			// get the sample xml to parse
+			var name = GetType ().Assembly.GetManifestResourceNames ().Where (a => a.EndsWith (xmlFile, StringComparison.Ordinal)).FirstOrDefault ();
+			using var validXmlSource = new StreamReader (GetType ().Assembly.GetManifestResourceStream (name));
+			using var source = new StreamReader (GetType ().Assembly.GetManifestResourceStream (name));
+			using var destination = new StringWriter ();
+
+			// Get the xml type
+			Assert.IsTrue (resultParser.IsValidXml (validXmlSource, out var type), "Valid Xml");
+
+			// generate the results
+			var (resultLine, failed) = resultParser.GenerateHumanReadableResults (source, destination, type);
+			var output = destination.ToString ();
+
+			Assert.AreEqual (expectedFailure, failed, "failed");
+			Assert.AreEqual (expectedResultLine, resultLine, "result line");
+
+			if (additionalLines != null) {
+				var lines = output.Split ('\n');
+				foreach (var line in additionalLines)
+					Assert.That (lines, Does.Contain (line), "Expected line");
 			}
-			var (resultLine, failed) = resultParser.GenerateHumanReadableResults (tempPath, destinationFile, XmlResultJargon.NUnitV3);
-			Assert.IsTrue (failed, "failed");
-			Assert.AreEqual (expectedResultLine, resultLine, "resultLine");
-			// verify that the destination does contain the result line
-			string resultLineInDestinationFile = null;
-			using (var resultReader = new StreamReader (destinationFile)) {
-				string line;
-				while ((line = resultReader.ReadLine ()) != null) {
-					if (line.Contains ("Tests run:")) {
-						resultLineInDestinationFile = line;
-						break;
-					}
-				}
+
+			if (expectedFailure) {
+				Assert.That (output, Does.Contain ("[FAIL]"), "FAIL");
+			} else {
+				Assert.That (output, Does.Not.Contain ("[FAIL]"), "Not FAIL");
 			}
-			Assert.IsNotNull (resultLineInDestinationFile, "result file result line");
-			Assert.AreEqual (expectedResultLine, resultLineInDestinationFile, "content result file result line");
 		}
 
 		[Test]
