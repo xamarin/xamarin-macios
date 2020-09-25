@@ -481,33 +481,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		</CompileSceneKitAssets>
 	</Target>
 
-	<Target Name="_CompileInterfaceDefinitions" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_GetMinimumOSVersion;_CoreCompileInterfaceDefinitions" />
-
-	<Target Name="_CoreCompileInterfaceDefinitions">
-		<IBTool
-			Condition="'$(IsMacEnabled)' == 'true'"
-			SessionId="$(BuildSessionId)"
-			ToolExe="$(IBToolExe)"
-			ToolPath="$(IBToolPath)"
-			AppManifest="$(_AppManifest)"
-			EnableOnDemandResources="false"
-			InterfaceDefinitions="@(InterfaceDefinition)"
-			IntermediateOutputPath="$(IntermediateOutputPath)"
-			MinimumOSVersion="$(_MinimumOSVersion)"
-			SdkPlatform="MacOSX"
-			ProjectDir="$(MSBuildProjectDirectory)"
-			ResourcePrefix="$(_ResourcePrefix)"
-			SdkDevPath="$(_SdkDevPath)"
-			SdkBinPath="$(_SdkBinPath)"
-			SdkUsrPath="$(_SdkUsrPath)"
-			SdkRoot="$(_SdkRoot)"
-			SdkVersion="$(_SdkVersion)">
-			<Output TaskParameter="OutputManifests" ItemName="FileWrites" />
-			<Output TaskParameter="BundleResources" ItemName="FileWrites" />
-			<Output TaskParameter="BundleResources" ItemName="_BundleResourceWithLogicalName" />
-		</IBTool>
-	</Target>
-
 	<Target Name="_CreatePkgInfo" DependsOnTargets="_GenerateBundleName" Outputs="$(_AppBundlePath)Contents\PkgInfo">
 		<CreatePkgInfo SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" OutputPath="$(_AppBundlePath)Contents\PkgInfo" />
 
