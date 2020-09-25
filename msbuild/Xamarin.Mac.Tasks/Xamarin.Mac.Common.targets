@@ -122,29 +122,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<RemoveDir Directories="$(IntermediateOutputPath)" />
 	</Target>
 
-	<Target Name="_CodesignNativeLibraries" Condition="'$(_RequireCodeSigning)'" DependsOnTargets="_DetectSigningIdentity">
-
-		<ItemGroup>
-			<_CodesignNativeLibrary Include="$(_AppContentsPath)\**\*.dylib" />
-			<_CodesignNativeLibrary Include="$(_AppResourcesPath)\**\*.metallib" />
-		</ItemGroup>
-
-		<Codesign
-			SessionId="$(BuildSessionId)"
-			ToolExe="$(CodesignExe)"
-			ToolPath="$(CodesignPath)"
-			Condition="'@(_NativeLibrary)' != '' And '$(IsMacEnabled)' == 'true'"
-			CodesignAllocate="$(_CodesignAllocate)"
-			Keychain="$(CodesignKeychain)"
-			Resources="@(_CodesignNativeLibrary)"
-			SigningKey="$(_CodeSigningKey)"
-			ExtraArgs="$(CodesignExtraArgs)"
-			IsAppExtension="$(IsAppExtension)"
-			UseSecureTimestamp="$(UseHardenedRuntime)"
-			>
-		</Codesign>
-	</Target>
-
 	<Target Name="_EmbedProvisionProfile" Condition="'$(_ProvisioningProfile)' != ''" DependsOnTargets="_GenerateBundleName"
 		Outputs="$(_AppBundlePath)Contents\embedded.provisionprofile">
 		<EmbedProvisionProfile
