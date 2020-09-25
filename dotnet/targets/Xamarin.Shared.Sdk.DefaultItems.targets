@@ -32,6 +32,15 @@
     </SceneKitAsset>
   </ItemGroup>
 
+  <!-- Default Asset Catalog file inclusion -->
+  <ItemGroup Condition="'$(_EnableDefaultXamarinItems)' == 'true' ">
+    <ImageAsset Include="**\*.xcassets\**\*.png;**\*.xcassets\*\*.jpg;**\*.xcassets\**\*.json">
+      <Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
+      <Visible>false</Visible>
+      <IsDefaultItem>true</IsDefaultItem>
+    </ImageAsset>
+  </ItemGroup>
+
   <!-- Default Storyboard file inclusion -->
   <ItemGroup Condition=" '$(_EnableDefaultXamarinItems)' == 'true' ">
     <InterfaceDefinition Include="**\*.storyboard;**\*.xib">

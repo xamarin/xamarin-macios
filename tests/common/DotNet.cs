@@ -106,7 +106,6 @@ namespace Xamarin.Tests {
 					switch (filename) {
 					case "MonoTouchDebugConfiguration.txt": // TODO
 					case "PkgInfo": // TODO
-					case "Assets.car": // TODO
 					case "runtime-options.plist": // TODO
 					case "Root.plist": // TODO
 						return false;
