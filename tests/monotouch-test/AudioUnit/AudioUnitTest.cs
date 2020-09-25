@@ -49,6 +49,14 @@ namespace MonoTouchFixtures.AudioUnit
 			var mixer = graph.GetNodeInfo (mixerNode);
 			Assert.AreEqual (1, mixer.GetElementCount (AudioUnitScopeType.Global));
 		}
+
+		[Test]
+		public unsafe void TestSizeOf()
+		{
+			Assert.AreEqual (sizeof (AudioFormat), Marshal.SizeOf (typeof (AudioFormat)));
+			Assert.AreEqual (sizeof (AudioValueRange), Marshal.SizeOf (typeof (AudioValueRange)));
+			Assert.AreEqual (sizeof (AudioClassDescription), Marshal.SizeOf (typeof (AudioClassDescription)));
+		}
 	}
 }
 
