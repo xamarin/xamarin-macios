@@ -22,6 +22,11 @@ items).
 All \*.scnassets directories anywhere in the project directory or any
 subdirectory are included by default (as `SceneKitAsset` items).
 
+## Storyboards
+
+All \*.storyboard and \*.xib files in the project directory or any
+subdirectory are included by default (as `InterfaceDefinition` items).
+
 ## Binding projects
 
 Default compilation includes is turned off for binding projects, because
