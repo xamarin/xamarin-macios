@@ -13,7 +13,6 @@
 ## unsorted
 
 !extra-designated-initializer! NSScriptCommand::initWithCoder: is incorrectly decorated with an [DesignatedInitializer] attribute
-!extra-protocol-member! unexpected selector NSURLSessionDelegate::URLSessionDidFinishEventsForBackgroundURLSession: found
 !missing-enum! NSDistributedNotificationOptions not bound
 !missing-enum! NSInsertionPosition not bound
 !missing-enum! NSRelativePosition not bound

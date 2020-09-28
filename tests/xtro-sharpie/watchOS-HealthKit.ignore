@@ -41,3 +41,6 @@
 !missing-null-allowed! 'HealthKit.HKSource[] HealthKit.HKStatistics::get_Sources()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'HealthKit.HKStatistics HealthKit.HKStatisticsCollection::GetStatistics(Foundation.NSDate)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'HealthKit.HKWorkoutEvent[] HealthKit.HKWorkout::get_WorkoutEvents()' is missing an [NullAllowed] on return type
+
+# Added in Xcode 12 stable but still not added in Xcode 12.2 Beta 1
+!unknown-field! HKMetadataKeyBarometricPressure bound

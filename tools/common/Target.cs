@@ -214,6 +214,16 @@ namespace Xamarin.Bundler {
 								continue;
 							}
 							break;
+						default:
+							if (App.IsSimulatorBuild && !Driver.IsFrameworkAvailableInSimulator (App, framework.Name)) {
+								if (App.LinkMode != LinkMode.None) {
+									ErrorHelper.Warning (5223, Errors.MX5223, framework.Name, App.PlatformName);
+								} else {
+									Driver.Log (3, Errors.MX5223, framework.Name, App.PlatformName);
+								}
+								continue;
+							}
+							break;
 #endif
 						}
 
