@@ -289,13 +289,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="@(_IpaPackageFile)" />
 	</Target>
 
-	<PropertyGroup>
-		<_CollectBundleResourcesDependsOn>
-			$(_CollectBundleResourcesDependsOn);
-			_CompileCoreMLModels;
-		</_CollectBundleResourcesDependsOn>
-	</PropertyGroup>
-
 	<Target Name="_CreateAssetPackManifest" DependsOnTargets="_CopyResourcesToBundle">
 		<CreateAssetPackManifest
 			SessionId="$(BuildSessionId)"
@@ -947,61 +940,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<WriteItemsToFile Items="@(_TextureAtlas_BundleResources)" ItemName="_BundleResourceWithLogicalName" File="$(_TextureAtlasCache)" Overwrite="true" IncludeMetadata="true" />
 		<ItemGroup>
 			<FileWrites Include="$(_TextureAtlasCache)" />
-		</ItemGroup>
-	</Target>
-
-	<Target Name="_CompileCoreMLModels" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_ComputeTargetArchitectures;_BeforeCompileCoreMLModels;_ReadCompileCoreMLModels;_CoreCompileCoreMLModels" />
-
-	<Target Name="_BeforeCompileCoreMLModels"
-		Inputs="@(CoreMLModel);$(_AppManifest)"
-		Outputs="$(_CoreMLModel_PartialAppManifestCache);$(_CoreMLModel_BundleResourceCache)">
-		<!-- If any CoreMLModel or AppManifest is newer than the generated items list, we delete them so that the _CoreCompileCoreMLModels
-		     target runs again and updates those lists for the next run
-		-->
-		<Delete Files="$(_CoreMLModel_PartialAppManifestCache);$(_CoreMLModel_BundleResourceCache)" />
-		<RemoveDir Directories="$(DeviceSpecificIntermediateOutputPath)coremlc" />
-	</Target>
-
-	<Target Name="_ReadCompileCoreMLModels"	DependsOnTargets="_BeforeCompileCoreMLModels">
-		<!-- If _BeforeCompileCoreMLModels did not delete the generated items lists from _CoreCompileCoreMLModels, then we read them
-		     since that target won't run and we need the output items that are cached in those files, which includes full metadata -->
-		<ReadItemsFromFile File="$(_CoreMLModel_PartialAppManifestCache)" Condition="Exists('$(_CoreMLModel_PartialAppManifestCache)')">
-			<Output TaskParameter="Items" ItemName="_PartialAppManifest" />
-		</ReadItemsFromFile>
-		<ReadItemsFromFile File="$(_CoreMLModel_BundleResourceCache)" Condition="Exists('$(_CoreMLModel_BundleResourceCache)')">
-			<Output TaskParameter="Items" ItemName="_BundleResourceWithLogicalName" />
-		</ReadItemsFromFile>
-	</Target>
-
-	<Target Name="_CoreCompileCoreMLModels" 
-		Inputs="@(CoreMLModel);$(_AppManifest)"
-		Outputs="$(_CoreMLModel_PartialAppManifestCache);$(_CoreMLModel_BundleResourceCache)"
-		DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_BeforeCompileCoreMLModels">
-
-		<CoreMLCompiler
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			ToolExe="$(CoreMLCompilerExe)"
-			ToolPath="$(CoreMLCompilerPath)"
-			Models="@(CoreMLModel)"
-			EnableOnDemandResources="$(EnableOnDemandResources)"
-			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
-			ProjectDir="$(MSBuildProjectDirectory)"
-			ResourcePrefix="$(_ResourcePrefix)"
-			SdkDevPath="$(_SdkDevPath)">
-			<Output TaskParameter="BundleResources" ItemName="_BundleResourceWithLogicalName" />
-			<Output TaskParameter="PartialAppManifests" ItemName="_PartialAppManifest" />
-
-			<!-- Local items to be persisted to items files -->
-			<Output TaskParameter="PartialAppManifests" ItemName="_CoreMLModel_PartialAppManifest" />
-			<Output TaskParameter="BundleResources" ItemName="_CoreMLModel_BundleResources" />
-		</CoreMLCompiler>
-
-		<!-- Cache the generated outputs items for incremental build support -->
-		<WriteItemsToFile Items="@(_CoreMLModel_PartialAppManifest)" ItemName="_PartialAppManifest" File="$(_CoreMLModel_PartialAppManifestCache)" Overwrite="true" IncludeMetadata="true" />
-		<WriteItemsToFile Items="@(_CoreMLModel_BundleResources)" ItemName="_BundleResourceWithLogicalName" File="$(_CoreMLModel_BundleResourceCache)" Overwrite="true" IncludeMetadata="true" />
-		<ItemGroup>
-			<FileWrites Include="$(_CoreMLModel_PartialAppManifestCache);$(_CoreMLModel_BundleResourceCache)" />
 		</ItemGroup>
 	</Target>
 
