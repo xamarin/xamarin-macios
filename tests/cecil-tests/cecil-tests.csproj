@@ -40,5 +40,8 @@
     <Compile Include="..\..\tools\common\TargetFramework.cs">
       <Link>TargetFramework.cs</Link>
     </Compile>
+    <Compile Include="..\mtouch\Cache.cs">
+      <Link>Cache.cs</Link>
+    </Compile>
   </ItemGroup>
 </Project>
