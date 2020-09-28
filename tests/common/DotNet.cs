@@ -100,7 +100,6 @@ namespace Xamarin.Tests {
 						return false;
 
 					// There's a lot of TODOs here, those correspond with missing features in .NET and will be removed as those features are implemented
-					case ".png": // TODO
 					case ".metallib": // TODO
 						return false;
 					}
@@ -111,13 +110,6 @@ namespace Xamarin.Tests {
 					case "PkgInfo": // TODO
 					case "runtime-options.plist": // TODO
 					case "Root.plist": // TODO
-						return false;
-					}
-
-					var dir = Path.GetDirectoryName (v);
-					var dirext = Path.GetExtension (dir);
-					switch (dirext) {
-					case ".atlasc": // TODO
 						return false;
 					}
 
