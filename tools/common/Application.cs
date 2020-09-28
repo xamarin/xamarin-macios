@@ -308,13 +308,13 @@ namespace Xamarin.Bundler {
 
 		public bool RequiresPInvokeWrappers {
 			get {
-#if MTOUCH
+				if (Platform == ApplePlatform.MacOSX)
+					return false;
+
 				if (IsSimulatorBuild)
 					return false;
+
 				return MarshalObjectiveCExceptions == MarshalObjectiveCExceptionMode.ThrowManagedException || MarshalObjectiveCExceptions == MarshalObjectiveCExceptionMode.Abort;
-#else
-				return false;
-#endif
 			}
 		}
 

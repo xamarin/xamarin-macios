@@ -277,12 +277,10 @@ namespace Xamarin.Bundler {
 
 		void AssertiOSVersionSupportsUserFrameworks (string path)
 		{
-#if MONOTOUCH
-			if (App.Platform == Xamarin.Utils.ApplePlatform.iOS && App.DeploymentTarget.Major < 8) {
+			if (App.Platform == ApplePlatform.iOS && App.DeploymentTarget.Major < 8) {
 				throw ErrorHelper.CreateError (1305, Errors.MT1305,
 					FileName, Path.GetFileName (path), App.DeploymentTarget);
 			}
-#endif
 		}
 
 		void ProcessNativeReferenceOptions (NativeReferenceMetadata metadata)
@@ -452,11 +450,7 @@ namespace Xamarin.Bundler {
 			if (Driver.GetFrameworks (App).TryGetValue (file, out var framework) && framework.Version > App.SdkVersion)
 				ErrorHelper.Warning (135, Errors.MX0135, file, FileName, App.PlatformName, framework.Version, App.SdkVersion);
 			else {
-#if MTOUCH
 				var strong = (framework == null) || (App.DeploymentTarget >= (App.IsSimulatorBuild ? framework.VersionAvailableInSimulator ?? framework.Version : framework.Version));
-#else
-				var strong = (framework == null) || (App.DeploymentTarget >= framework.Version);
-#endif
 				if (strong) {
 					if (Frameworks.Add (file))
 						Driver.Log (3, "Linking with the framework {0} because it's referenced by a module reference in {1}", file, FileName);
@@ -499,12 +493,10 @@ namespace Xamarin.Bundler {
 					
 					string file = Path.GetFileNameWithoutExtension (name);
 
-#if !MONOMAC
 					if (App.IsSimulatorBuild && !App.IsFrameworkAvailableInSimulator (file)) {
 						Driver.Log (3, "Not linking with {0} (referenced by a module reference in {1}) because it's not available in the simulator.", file, FileName);
 						continue;
 					}
-#endif
 
 					switch (file) {
 					// special case
@@ -548,24 +540,24 @@ namespace Xamarin.Bundler {
 							Driver.Log (3, "Linking with the framework OpenAL because {0} is referenced by a module reference in {1}", file, FileName);
 						break;
 					default:
-#if MONOMAC
-						string path = Path.GetDirectoryName (name);
-						if (!path.StartsWith ("/System/Library/Frameworks", StringComparison.Ordinal))
-							continue;
+						if (App.Platform == ApplePlatform.MacOSX) {
+							string path = Path.GetDirectoryName (name);
+							if (!path.StartsWith ("/System/Library/Frameworks", StringComparison.Ordinal))
+								continue;
 
-						// CoreServices has multiple sub-frameworks that can be used by customer code
-						if (path.StartsWith ("/System/Library/Frameworks/CoreServices.framework/", StringComparison.Ordinal)) {
-							if (Frameworks.Add ("CoreServices"))
-								Driver.Log (3, "Linking with the framework CoreServices because {0} is referenced by a module reference in {1}", file, FileName);
-							break;
+							// CoreServices has multiple sub-frameworks that can be used by customer code
+							if (path.StartsWith ("/System/Library/Frameworks/CoreServices.framework/", StringComparison.Ordinal)) {
+								if (Frameworks.Add ("CoreServices"))
+									Driver.Log (3, "Linking with the framework CoreServices because {0} is referenced by a module reference in {1}", file, FileName);
+								break;
+							}
+							// ApplicationServices has multiple sub-frameworks that can be used by customer code
+							if (path.StartsWith ("/System/Library/Frameworks/ApplicationServices.framework/", StringComparison.Ordinal)) {
+								if (Frameworks.Add ("ApplicationServices"))
+									Driver.Log (3, "Linking with the framework ApplicationServices because {0} is referenced by a module reference in {1}", file, FileName);
+								break;
+							}
 						}
-						// ApplicationServices has multiple sub-frameworks that can be used by customer code
-						if (path.StartsWith ("/System/Library/Frameworks/ApplicationServices.framework/", StringComparison.Ordinal)) {
-							if (Frameworks.Add ("ApplicationServices"))
-								Driver.Log (3, "Linking with the framework ApplicationServices because {0} is referenced by a module reference in {1}", file, FileName);
-							break;
-						}
-#endif
 
 						// detect frameworks
 						int f = name.IndexOf (".framework/", StringComparison.Ordinal);
