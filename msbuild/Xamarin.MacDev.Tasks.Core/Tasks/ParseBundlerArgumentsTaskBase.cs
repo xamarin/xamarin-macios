@@ -14,6 +14,9 @@ namespace Xamarin.MacDev.Tasks {
 		public string MarshalObjectiveCExceptionMode { get; set; }
 
 		[Output]
+		public string CustomBundleName { get; set; }
+
+		[Output]
 		public string NoSymbolStrip { get; set; }
 
 		[Output]
@@ -92,6 +95,9 @@ namespace Xamarin.MacDev.Tasks {
 						break;
 					case "marshal-objectivec-exceptions":
 						MarshalObjectiveCExceptionMode = value;
+						break;
+					case "custom_bundle_name":
+						CustomBundleName = value;
 						break;
 					case "optimize":
 						if (!string.IsNullOrEmpty (Optimize))
