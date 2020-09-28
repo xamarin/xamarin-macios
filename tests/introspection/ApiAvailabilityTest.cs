@@ -48,7 +48,7 @@ namespace Introspection {
 #elif __WATCHOS__
 			Minimum = new Version (2,0);
 			// Need to special case watchOS 'Maximum' version for OS minor subversions (can't change Constants.SdkVersion)
-			Maximum = new Version (6,2,5);
+			//Maximum = new Version (6,2,5);
 			Filter = (AvailabilityBaseAttribute arg) => {
 				return (arg.AvailabilityKind != AvailabilityKind.Introduced) || (arg.Platform != PlatformName.WatchOS);
 			};

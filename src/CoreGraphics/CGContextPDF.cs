@@ -82,6 +82,10 @@ namespace CoreGraphics {
 		public bool? AllowsCopying { get; set; }
 		public CGPDFAccessPermissions? AccessPermissions { get; set; }
 		//public NSDictionary OutputIntent { get; set; }
+		[Mac (11,0)][iOS (14,0)][TV (14,0)][Watch (7,0)]
+		public bool? CreateLinearizedPdf { get; set; }
+		[Mac (11,0)][iOS (14,0)][TV (14,0)][Watch (7,0)]
+		public bool? CreatePdfA2u { get; set; }
 
 		internal override NSMutableDictionary ToDictionary ()
 		{
@@ -113,6 +117,12 @@ namespace CoreGraphics {
 				ret.LowlevelSetObject (CFBoolean.FalseHandle, kCGPDFContextAllowsCopying);
 			if (AccessPermissions.HasValue)
 				ret.LowlevelSetObject (NSNumber.FromInt32 ((int) AccessPermissions.Value), kCGPDFContextAccessPermissions);
+			// only set the keys if they exists in the current OS version
+			if ((kCGPDFContextCreateLinearizedPDF != IntPtr.Zero) && CreateLinearizedPdf.HasValue)
+				ret.LowlevelSetObject (CFBoolean.ToHandle (CreateLinearizedPdf.Value), kCGPDFContextCreateLinearizedPDF);
+			// default to kCFBooleanFalse
+			if ((kCGPDFContextCreatePDFA != IntPtr.Zero) && CreatePdfA2u.HasValue && CreatePdfA2u == true)
+				ret.LowlevelSetObject (CFBoolean.TrueHandle, kCGPDFContextCreatePDFA);
 			return ret;
 		}
 	}

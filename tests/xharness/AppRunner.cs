@@ -349,8 +349,11 @@ namespace Xharness {
 				MainLog.WriteLine ("*** Executing {0}/{1} in the simulator ***", AppInformation.AppName, runMode);
 
 				if (EnsureCleanSimulatorState) {
-					foreach (var sim in simulators)
-						await sim.PrepareSimulator (MainLog, AppInformation.BundleIdentifier);
+					foreach (var sim in simulators) {
+						using var tcclog = Logs.Create ($"prepare-simulator-{Helpers.Timestamp}.log", "Simulator preparation");
+						var rv = await sim.PrepareSimulator (tcclog, AppInformation.BundleIdentifier);
+						tcclog.Description += rv ? " ✅ " : " (failed) ⚠️";
+					}
 				}
 
 				args.Add (new SimulatorUDIDArgument (simulator.UDID));

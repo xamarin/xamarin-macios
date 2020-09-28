@@ -246,6 +246,10 @@ namespace Introspection {
 					if (!Mac.CheckSystemVersion (10, 14)) // Was added in 10.14
 						return true;
 					break;
+				case "NSMenu":
+					if (!Mac.CheckSystemVersion (11, 0))
+						return true;
+					break;
 				}
 				break;
 			case "NSUserInterfaceValidations":
@@ -272,6 +276,20 @@ namespace Introspection {
 					if (!Mac.CheckSystemVersion (10, 11)) // NSNull started implementing the CAAction protocol in 10.11
 						return true;
 					break;
+				}
+				break;
+			case "NSTextContent":
+				switch (type.Name) {
+				case "NSTextField":
+				case "NSTextView":
+				case "NSTokenField":
+				case "NSComboBox":
+				case "NSSearchField":
+				case "NSSecureTextField":
+					if (!Mac.CheckSystemVersion (11, 0))
+						return true;
+					break;
+
 				}
 				break;
 			}

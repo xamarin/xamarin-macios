@@ -1072,12 +1072,29 @@ namespace Photos
 		[Export ("sharedPhotoLibrary")]
 		PHPhotoLibrary SharedPhotoLibrary { get; }
 
+		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'GetAuthorizationStatus' instead.")]
+		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use 'GetAuthorizationStatus' instead.")]
+		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use 'GetAuthorizationStatus' instead.")]
 		[Static, Export ("authorizationStatus")]
 		PHAuthorizationStatus AuthorizationStatus { get; }
 
+		[TV (14,0), Mac (11,0), iOS (14,0)]
+		[Static]
+		[Export ("authorizationStatusForAccessLevel:")]
+		PHAuthorizationStatus GetAuthorizationStatus (PHAccessLevel accessLevel);
+
+		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'RequestAuthorization(PHAccessLevel, Action<PHAuthorizationStatus>)' overload instead.")]
+		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use 'RequestAuthorization(PHAccessLevel, Action<PHAuthorizationStatus>)' overload instead.")]
+		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use 'RequestAuthorization(PHAccessLevel, Action<PHAuthorizationStatus>)' overload instead.")]
 		[Static, Export ("requestAuthorization:")]
 		[Async]
 		void RequestAuthorization (Action<PHAuthorizationStatus> handler);
+
+		[TV (14,0), Mac (11,0), iOS (14,0)]
+		[Static]
+		[Export ("requestAuthorizationForAccessLevel:handler:")]
+		[Async]
+		void RequestAuthorization (PHAccessLevel accessLevel, Action<PHAuthorizationStatus> handler);
 
 		// no [Async] since we're binding performChangesAndWait:error: too
 		[Export ("performChanges:completionHandler:")]
@@ -1131,6 +1148,9 @@ namespace Photos
 	[Mac (10,12)]
 	[BaseType (typeof(NSObject))]
 	interface PHLivePhoto : NSSecureCoding, NSCopying
+#if IOS
+	, NSItemProviderReading
+#endif
 	{
 		[Export ("size")]
 		CGSize Size { get; }

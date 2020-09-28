@@ -11,6 +11,7 @@ using System;
 using System.ComponentModel;
 using ObjCRuntime;
 using Foundation;
+using UniformTypeIdentifiers;
 
 namespace CoreSpotlight {
 
@@ -257,8 +258,14 @@ namespace CoreSpotlight {
 	[BaseType (typeof (NSObject))]
 	interface CSSearchableItemAttributeSet : NSCopying, NSSecureCoding {
 
+		[Deprecated (PlatformName.iOS, 14,0, message: "Use '.ctor(UTType)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 11,0, message: "Use '.ctor(UTType)' instead.")]
 		[Export ("initWithItemContentType:")]
 		IntPtr Constructor (string itemContentType);
+
+		[iOS (14,0)][TV (14,0)][Mac (11,0)]
+		[Export ("initWithContentType:")]
+		IntPtr Constructor (UTType contentType);
 
 		// FIXME: Should we keep all the following Categories inline? or should we make them actual [Category] interfaces
 		// There are no methods on any of the following categories, just properties

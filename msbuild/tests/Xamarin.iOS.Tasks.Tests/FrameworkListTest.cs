@@ -22,6 +22,24 @@ namespace Xamarin.iOS.Tasks
 		{
 			var fameworkListFileParts = frameworkListFile.Split ('-');
 			string frameworkName = fameworkListFileParts[0];
+			switch (frameworkName) {
+			case "Xamarin.iOS":
+				if (!Configuration.include_ios)
+					Assert.Inconclusive ("include_ios is disabled");
+				break;
+			case "Xamarin.TVOS":
+				if (!Configuration.include_tvos)
+					Assert.Inconclusive ("include_tvos is disabled");
+				break;
+			case "Xamarin.WatchOS":
+				if (!Configuration.include_watchos)
+					Assert.Inconclusive ("include_watchos is disabled");
+				break;
+			case "Xamarin.Mac":
+				if (!Configuration.include_mac)
+					Assert.Inconclusive ("include_mac is disabled");
+				break;
+			}
 			var isMac = frameworkName == "Xamarin.Mac";
 			var isFull = fameworkListFileParts[1] == "Full";
 			var frameworkListAssemblies = ScanFrameworkListXml (frameworkListFile, isMac);

@@ -38,7 +38,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 		bool IsWatchSimulator { get; }
 		Task Erase (ILog log);
 		Task Shutdown (ILog log);
-		Task PrepareSimulator (ILog log, params string [] bundle_identifiers);
+		Task<bool> PrepareSimulator (ILog log, params string [] bundle_identifiers);
 		Task KillEverything (ILog log);
 	}
 

@@ -1,0 +1,6 @@
+## already deprecated (and replaced)
+!missing-selector! +MLCSGDOptimizer::optimizerWithDescriptor:momentumScale:usesNestrovMomentum: not bound
+!missing-selector! MLCTensor::optimizerData: not bound
+
+## sharpie skip empty types - but they can be used
+!unknown-type! MLCTensorOptimizerDeviceData bound

@@ -4,6 +4,13 @@
 !unknown-pinvoke! SecKeyRawSign bound
 !unknown-pinvoke! SecKeyRawVerify bound
 
+## deprecated API (in 10.6, not sure why they appeared recently)
+!missing-pinvoke! SecHostCreateGuest is not bound
+!missing-pinvoke! SecHostRemoveGuest is not bound
+!missing-pinvoke! SecHostSelectedGuest is not bound
+!missing-pinvoke! SecHostSelectGuest is not bound
+!missing-pinvoke! SecHostSetGuestStatus is not bound
+!missing-pinvoke! SecHostSetHostingPort is not bound
 
 ## unsorted
 
