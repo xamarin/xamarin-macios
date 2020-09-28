@@ -145,6 +145,7 @@
 		<CreateAppBundleDependsOn>
 			_DetectAppManifest;
 			_CopyResourcesToBundle;
+			_CompileCoreMLModels;
 			_CompileEntitlements;
 			_CompileAppManifest;
 			_ComputeLinkerArguments;

@@ -55,4 +55,12 @@
 			<IsDefaultItem>true</IsDefaultItem>
 		</AtlasTexture>
 	</ItemGroup>
+
+	<!-- Default CoreMLModel inclusion -->
+	<ItemGroup Condition="'$(TargetPlatformIdentifier)' == '@PLATFORM@' And '$(_EnableDefaultXamarinItems)' == 'true' ">
+		<CoreMLModel Include="**\*.mlmodel">
+			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
+			<IsDefaultItem>true</IsDefaultItem>
+		</CoreMLModel>
+	</ItemGroup>
 </Project>
