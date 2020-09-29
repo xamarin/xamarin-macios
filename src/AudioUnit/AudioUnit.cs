@@ -772,10 +772,12 @@ namespace AudioUnit
 
 #if !MONOMAC
 		[iOS (7,0)]
+		[Deprecated (PlatformName.iOS, 13,0)]
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern AudioComponentStatus AudioOutputUnitPublish (AudioComponentDescription inDesc, IntPtr /* CFStringRef */ inName, uint /* UInt32 */ inVersion, IntPtr /* AudioUnit */ inOutputUnit);
 
 		[iOS (7,0)]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AudioUnit' instead.")]
 		public AudioComponentStatus AudioOutputUnitPublish (AudioComponentDescription description, string name, uint version = 1)
 		{
 
@@ -788,10 +790,12 @@ namespace AudioUnit
 		}
 
 		[iOS (7,0)]
+		[Deprecated (PlatformName.iOS, 13,0)]
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern IntPtr AudioOutputUnitGetHostIcon (IntPtr /* AudioUnit */ au, float /* float */ desiredPointSize);
 
 		[iOS (7,0)]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AudioUnit' instead.")]
 		public UIKit.UIImage GetHostIcon (float desiredPointSize)
 		{
 			return new UIKit.UIImage (AudioOutputUnitGetHostIcon (handle, desiredPointSize));
