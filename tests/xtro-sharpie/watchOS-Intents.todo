@@ -1,8 +1,0 @@
-!unknown-native-enum! INCarAirCirculationMode bound
-!unknown-native-enum! INCarAudioSource bound
-!unknown-native-enum! INCarDefroster bound
-!unknown-native-enum! INCarSeat bound
-!unknown-native-enum! INRadioType bound
-!unknown-native-enum! INRelativeReference bound
-!unknown-native-enum! INRelativeSetting bound
-!unknown-type! INParameter bound

@@ -1,5 +1,5 @@
 ﻿//
-// Unit tests for NSTimer
+// Unit tests for NSUbiquitousKeyValueStore
 //
 // Authors:
 //	Rolf Bjarne Kvinge <rolf@xamarin.com>
@@ -31,9 +31,21 @@ namespace MonoTouchFixtures.Foundation {
 				using (var key = new NSString ("key")) {
 					using (var value = new NSString ("value")) {
 						store [key] = value;
+#if __TVOS__
+						// broken on appletv devices running tvOS 14, test will fail when fixed
+						if ((Runtime.Arch == Arch.DEVICE) && TestRuntime.CheckXcodeVersion (12,0))
+							Assert.Null (store [key], "key 1");
+						else
+#endif
 						Assert.AreEqual (value, store [key], "key 1");
 
 						store [(string) key] = value;
+#if __TVOS__
+						// broken on appletv devices running tvOS 14, test will fail when fixed
+						if ((Runtime.Arch == Arch.DEVICE) && TestRuntime.CheckXcodeVersion (12,0))
+							Assert.Null (store [(string) key], "key 2");
+						else
+#endif
 						Assert.AreEqual (value, store [(string) key], "key 2");
 					}
 

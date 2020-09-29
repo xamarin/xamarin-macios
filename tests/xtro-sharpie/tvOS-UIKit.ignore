@@ -1,6 +1,4 @@
 ## lack of availabilty macros on NSItemProvder.PreferredPresentationStyle - intro says they are not available
-!missing-selector! NSItemProvider::preferredPresentationStyle not bound
-!missing-selector! NSItemProvider::setPreferredPresentationStyle: not bound
 ## and that also means the (enum/returned) type is unused
 !missing-enum! UIPreferredPresentationStyle not bound
 
@@ -71,6 +69,9 @@
 
 ## Does not make much sense to have it bound in tvOS
 !missing-field! UIGuidedAccessErrorDomain not bound
+
+## enum only used in iOS API (lack correct decorations on tvOS headers)
+!missing-enum! UINavigationItemBackButtonDisplayMode not bound
 
 # Xcode 11
 

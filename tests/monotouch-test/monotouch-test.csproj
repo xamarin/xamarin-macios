@@ -275,6 +275,7 @@
     <Folder Include="CoreMidi\" />
     <Folder Include="CoreAudioKit\" />
     <Folder Include="Messages\" />
+    <Folder Include="ClockKit\" />
     <Folder Include="CloudKit\" />
     <Folder Include="Intents\" />
     <Folder Include="System.Net.Http\" />
@@ -291,6 +292,7 @@
     <Folder Include="Compression\" />
     <Folder Include="BackgroundTasks\" />
     <Folder Include="WebKit\" />
+    <Folder Include="NearbyInteraction\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AudioToolbox\1.caf" />

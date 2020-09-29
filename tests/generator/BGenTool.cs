@@ -1,3 +1,5 @@
+#pragma warning disable 0649 // Field 'X' is never assigned to, and will always have its default value null
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,6 +17,7 @@ namespace Xamarin.Tests
 {
 	class BGenTool : Tool
 	{
+		public const string None = "None";
 		AssemblyDefinition assembly;
 
 		public Profile Profile;
@@ -25,12 +28,23 @@ namespace Xamarin.Tests
 		public List<string> Sources = new List<string> ();
 		public List<string> References = new List<string> ();
 
+		// If BaseLibrary and AttributeLibrary are null, we calculate a default value
+#if NET
+		public string BaseLibrary;
+		public string AttributeLibrary;
+		public bool ReferenceBclByDefault = true;
+#else
+		public string BaseLibrary = None;
+		public string AttributeLibrary = None;
+		public bool ReferenceBclByDefault = false;
+#endif
 		public string [] Defines;
 		public string TmpDirectory;
 		public string ResponseFile;
 		public string WarnAsError; // Set to empty string to pass /warnaserror, set to non-empty string to pass /warnaserror:<nonemptystring>
 		public string NoWarn; // Set to empty string to pass /nowarn, set to non-empty string to pass /nowarn:<nonemptystring>
 		public string Out;
+		public int Verbosity = 1;
 
 		protected override string ToolPath { get { return Profile == Profile.macOSClassic ? Configuration.BGenClassicPath : Configuration.BGenPath; } }
 		protected override string MessagePrefix { get { return "BI"; } }
@@ -61,6 +75,29 @@ namespace Xamarin.Tests
 			var sb = new List<string> ();
 			var targetFramework = (string) null;
 
+#if NET
+			switch (Profile) {
+			case Profile.None:
+				break;
+			case Profile.iOS:
+				targetFramework = TargetFramework.DotNet_5_0_iOS_String;
+				break;
+			case Profile.tvOS:
+				targetFramework = TargetFramework.DotNet_5_0_tvOS_String;
+				break;
+			case Profile.watchOS:
+				targetFramework = TargetFramework.DotNet_5_0_watchOS_String;
+				break;
+			case Profile.macOSMobile:
+				targetFramework = TargetFramework.DotNet_5_0_macOS_String;
+				break;
+			case Profile.macOSFull:
+			case Profile.macOSSystem:
+				throw new InvalidOperationException ($"Only the Mobile profile can be specified for .NET");
+			default:
+				throw new NotImplementedException ($"Profile: {Profile}");
+			}
+#else
 			switch (Profile) {
 			case Profile.None:
 				break;
@@ -88,6 +125,25 @@ namespace Xamarin.Tests
 			default:
 				throw new NotImplementedException ($"Profile: {Profile}");
 			}
+#endif
+
+			TargetFramework? tf = null;
+			if (targetFramework != null)
+				tf = TargetFramework.Parse (targetFramework);
+
+			if (BaseLibrary == null) {
+				if (tf.HasValue)
+					sb.Add ($"--baselib={Configuration.GetBaseLibrary (tf.Value)}");
+			} else if (BaseLibrary != None) {
+				sb.Add ($"--baselib={BaseLibrary}");
+			}
+
+			if (AttributeLibrary == null) {
+				if (tf.HasValue)
+					sb.Add ($"--attributelib={Configuration.GetBindingAttributePath (tf.Value)}");
+			} else if (AttributeLibrary != None) {
+				sb.Add ($"--attributelib={AttributeLibrary}");
+			}
 
 			if (!string.IsNullOrEmpty (targetFramework))
 				sb.Add ($"--target-framework={targetFramework}");
@@ -97,6 +153,16 @@ namespace Xamarin.Tests
 
 			foreach (var s in Sources)
 				sb.Add ($"-s={s}");
+
+			if (ReferenceBclByDefault) {
+				if (tf == null) {
+					// do nothing
+				} else if (tf.Value.IsDotNet == true) {
+					References.AddRange (Directory.GetFiles (Configuration.DotNet5BclDir, "*.dll"));
+				} else {
+					throw new NotImplementedException ("ReferenceBclByDefault");
+				}
+			}
 
 			foreach (var r in References)
 				sb.Add ($"-r={r}");
@@ -131,7 +197,8 @@ namespace Xamarin.Tests
 					arg += ":" + NoWarn;
 				sb.Add (arg);
 			}
-			sb.Add ("-v");
+			if (Verbosity != 0)
+				sb.Add ("-" + new string (Verbosity > 0 ? 'v' : 'q', Math.Abs (Verbosity)));
 			return sb.ToArray ();
 		}
 

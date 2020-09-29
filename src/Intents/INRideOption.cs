@@ -1,4 +1,4 @@
-#if IOS || TVOS
+#if IOS
 
 using Foundation;
 using Intents;

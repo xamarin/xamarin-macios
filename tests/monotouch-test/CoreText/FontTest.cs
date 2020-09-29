@@ -11,6 +11,7 @@ using System;
 using CoreGraphics;
 using CoreText;
 using Foundation;
+using ObjCRuntime;
 #if MONOMAC
 using AppKit;
 #else
@@ -114,6 +115,19 @@ namespace MonoTouchFixtures.CoreText {
 				using (var f3 = f1.ForString ("xamarin", new NSRange (0, 3), "FR"))
 					Assert.That (f3.Handle, Is.Not.EqualTo (IntPtr.Zero), "f3");
 			}
+		}
+
+		[Test]
+		public void CTFontCopyNameForGlyph ()
+		{
+			TestRuntime.AssertXcodeVersion (12, 0);
+
+			using (var ctfont = new CTFont ("HoeflerText-Regular", 10, CTFontOptions.Default))
+				Assert.That (ctfont.GetGlyphName ((ushort) 65), Is.EqualTo ("asciicircum"), "1");
+
+			using (var font = CGFont.CreateWithFontName ("AppleColorEmoji"))
+			using (var ctfont = font.ToCTFont ((nfloat) 10.0))
+				Assert.Null (ctfont.GetGlyphName ('\ud83d'), "2");
 		}
 	}
 }

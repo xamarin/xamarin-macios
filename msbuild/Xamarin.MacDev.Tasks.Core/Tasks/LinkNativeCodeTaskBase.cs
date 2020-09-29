@@ -86,8 +86,15 @@ namespace Xamarin.MacDev.Tasks {
 			if (Frameworks != null) {
 				foreach (var fw in Frameworks) {
 					var is_weak = fw.GetMetadata ("IsWeak") == "true";
+					var framework = fw.ItemSpec;
+					if (framework.EndsWith (".framework", StringComparison.Ordinal)) {
+						// user framework, we need to pass -F to the linker so that the linker finds the user framework.
+						arguments.Add ("-F");
+						arguments.Add (Path.GetDirectoryName (Path.GetFullPath (framework)));
+						framework = Path.GetFileNameWithoutExtension (framework);
+					}
 					arguments.Add (is_weak ? "-weak_framework" : "-framework");
-					arguments.Add (fw.ItemSpec);
+					arguments.Add (framework);
 				}
 			}
 

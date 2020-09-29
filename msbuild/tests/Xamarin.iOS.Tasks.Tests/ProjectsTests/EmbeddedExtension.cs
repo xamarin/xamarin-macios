@@ -23,10 +23,10 @@ namespace Xamarin.iOS.Tasks {
 			var xcodeProjectFolder = Path.Combine (mtouchPaths.ProjectPath , "..", "..", "native");
 			string [] xcodeBuildArgs = new [] { "-configuration", "Debug", "-target", "NativeTodayExtension", "-sdk", "iphonesimulator" };
 			var env = new System.Collections.Generic.Dictionary<string, string> { { "DEVELOPER_DIR", Configuration.XcodeLocation } };
-			Assert.AreEqual (0, ExecutionHelper.Execute ("/usr/bin/xcodebuild", xcodeBuildArgs.Concat (new [] { "clean" }).ToArray (), out var _, workingDirectory: xcodeProjectFolder, environment_variables: env, stdout_callback: Console.WriteLine, stderr_callback: Console.Error.WriteLine));
+			Assert.AreEqual (0, ExecutionHelper.Execute ("/usr/bin/xcodebuild", xcodeBuildArgs.Concat (new [] { "clean" }).ToList (), xcodeProjectFolder, Console.WriteLine, Console.Error.WriteLine));
 
 			var buildOutput = new StringBuilder ();
-			var buildCode = ExecutionHelper.Execute ("/usr/bin/xcodebuild", xcodeBuildArgs.Concat (new [] { "build" }).ToArray (), out var _, workingDirectory: xcodeProjectFolder, environment_variables: env, stdout_callback: t => buildOutput.Append (t), stderr_callback: t => buildOutput.Append (t));
+			var buildCode = ExecutionHelper.Execute ("/usr/bin/xcodebuild", xcodeBuildArgs.Concat (new [] { "build" }).ToList (), xcodeProjectFolder, t => buildOutput.Append (t), t => buildOutput.Append (t));
 			Assert.AreEqual (0, buildCode, $"Build Failed:{buildOutput}");
 
 			AppBundlePath = mtouchPaths.AppBundlePath;
@@ -36,7 +36,9 @@ namespace Xamarin.iOS.Tasks {
 			RunTarget (proj, "Clean", 0);
 			RunTarget (proj, "Build", 0);
 
-			Assert.That (File.Exists (Path.Combine (AppBundlePath, "PlugIns", "NativeTodayExtension.appex", "NativeTodayExtension")), "NativeTodayExtension");
+			var expectedFilepath = Path.Combine (AppBundlePath, "PlugIns", "NativeTodayExtension.appex", "NativeTodayExtension");
+
+			Assert.That (File.Exists (expectedFilepath), $"NativeTodayExtension, file path '{expectedFilepath}' missing.");
 		}
 	}
 }

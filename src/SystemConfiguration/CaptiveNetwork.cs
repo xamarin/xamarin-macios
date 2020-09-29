@@ -84,7 +84,8 @@ namespace SystemConfiguration {
 #endif
 		[DllImport (Constants.SystemConfigurationLibrary)]
 		extern static IntPtr /* CFArrayRef __nullable */ CNCopySupportedInterfaces ();
-		
+
+		[Deprecated (PlatformName.iOS, 14,0, message: "Use 'NEHotspotNetwork.FetchCurrent' instead.")]
 		static public StatusCode TryGetSupportedInterfaces (out string[] supportedInterfaces)
 		{
 			IntPtr array = CNCopySupportedInterfaces ();

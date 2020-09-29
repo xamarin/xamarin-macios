@@ -1946,11 +1946,20 @@
 		<value>Linking against framework '{0}'. It is prohibited (rejected) by the Mac App Store
 		</value>
 	</data>
+
 	
-    <data name="MX5222" xml:space="preserve">
-        <value>The native linker failed to execute: {0}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
-        </value>
-    </data>
+	<data name="MX5222" xml:space="preserve">
+		<value>The native linker failed to execute: {0}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+ 		</value>
+	</data>
+
+	<data name="MX5223" xml:space="preserve">
+		<value>Did not link with the framework '{0}', because the current {1} SDK does not contain support for this framework in the simulator.</value>
+		<comment>This is a warning explaining why a native framework won't be referenced from the app when building for the simulator. The following are literal names and should not be translated: SDK
+			{0}: The name of the native framework
+			{1}: The current platform (will be either iOS, tvOS, watchOS or macOS).
+		</comment>
+	</data>
 
 	<data name="MT5301" xml:space="preserve">
 		<value>Missing 'strip' tool. Please install Xcode 'Command-Line Tools' component

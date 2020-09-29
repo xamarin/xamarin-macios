@@ -509,3 +509,8 @@
 !missing-pinvoke! vImageVerticalShearD_ARGBFFFF is not bound
 !missing-pinvoke! vImageVerticalShearD_Planar8 is not bound
 !missing-pinvoke! vImageVerticalShearD_PlanarF is not bound
+!missing-pinvoke! vImageConverter_CreateWithCGColorConversionInfo is not bound
+!missing-pinvoke! vImageSepConvolve_Planar16U is not bound
+!missing-pinvoke! vImageSepConvolve_Planar8 is not bound
+!missing-pinvoke! vImageSepConvolve_Planar8to16U is not bound
+!missing-pinvoke! vImageSepConvolve_PlanarF is not bound

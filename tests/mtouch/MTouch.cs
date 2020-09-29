@@ -3107,6 +3107,30 @@ class Test {
 		}
 
 		[Test]
+		public void MT5223 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				var code = @"
+using System;
+
+class Test {
+	static void Main ()
+	{
+		Console.WriteLine (typeof (IOSurface.IOSurface));
+	}
+}
+";
+				mtouch.NoFastSim = true;
+				mtouch.CreateTemporaryApp (code: code);
+				mtouch.CreateTemporaryCacheDirectory ();
+
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+				mtouch.AssertWarning ("MT", 5223, "Did not link with the framework 'IOSurface', because the current iOS SDK does not contain support for this framework in the simulator.");
+				mtouch.AssertWarningCount (1);
+			}
+		}
+
+		[Test]
 		public void TestCaseMismatchedAssemblyName ()
 		{
 			// desk #90367 (and others in the past as well)

@@ -429,6 +429,22 @@ namespace CoreGraphics {
 			return result;
 		}
 
+		[Mac (11,0)]
+		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint="CGPreflightListenEventAccess")]
+		public static extern bool PreflightListenEventAccess ();
+
+		[Mac (11,0)]
+		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint="CGRequestListenEventAccess")]
+		public static extern bool RequestListenEventAccess ();
+
+		[Mac (11,0)]
+		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint="CGPreflightPostEventAccess")]
+		public static extern bool PreflightPostEventAccess ();
+
+		[Mac (11,0)]
+		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint="CGRequestPostEventAccess")]
+		public static extern bool RequestPostEventAccess ();
+
 	}
 
 	public struct CGEventTapInformation {

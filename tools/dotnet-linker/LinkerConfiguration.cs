@@ -213,6 +213,7 @@ namespace Xamarin.Linker {
 
 			DerivedLinkContext.Target = Target;
 			Target.Abis = Abis;
+			Target.LinkContext = DerivedLinkContext;
 			Application.Abis = Abis;
 
 			switch (Platform) {

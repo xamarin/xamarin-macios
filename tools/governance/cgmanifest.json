@@ -5,7 +5,7 @@
                "Type": "git",
                "Git": {
                    "RepositoryUrl": "https://github.com/spouliot/Touch.Unit.git",
-                   "CommitHash": "6c5bb930b35cf326d1f650eac0a5ac9e679a4e09"
+                   "CommitHash": "89afaf7e05a942c87231cf5601b3a5b59640e218"
                }
            },
            "DevelopmentDependency": true
@@ -15,7 +15,7 @@
                "Type": "git",
                "Git": {
                    "RepositoryUrl": "https://github.com/xamarin/Xamarin.MacDev",
-                   "CommitHash": "45c5a680e20a209ac846a32e0f2f0f83e843ab76"
+                   "CommitHash": "7ea83265099f904eaeb487a7b6a579e9e77d9433"
                }
            },
            "DevelopmentDependency": false
@@ -35,7 +35,7 @@
                "Type": "git",
                "Git": {
                    "RepositoryUrl": "https://github.com/xamarin/macios-binaries",
-                   "CommitHash": "3fbdcdb97459ca2c699d47e33028a106b95a7f1f"
+                   "CommitHash": "d33e206ce7978d2ec0019989a1add727c87ea1cf"
                }
            },
            "DevelopmentDependency": false
