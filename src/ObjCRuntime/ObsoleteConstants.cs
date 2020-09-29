@@ -10,5 +10,7 @@ namespace ObjCRuntime {
 		internal const string UseCallKitInstead = "Use the 'CallKit' API instead.";
 
 		internal const string WatchKitRemoved = "The WatchKit framework has been removed from iOS.";
+
+		internal const string UnavailableOnWatchOS = "This type is not available on watchOS.";
 	}
 }

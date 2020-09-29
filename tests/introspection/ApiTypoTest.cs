@@ -1080,7 +1080,11 @@ namespace Introspection
 						if (fi.Name == "AutomaticAssessmentConfigurationLibrary" && !TestRuntime.CheckXcodeVersion (11, 4))
 							continue;
 #endif
-
+#if __WATCHOS__
+						// added with watchOS 4 (mistake)
+						if (fi.Name == "VisionLibrary")
+							continue;
+#endif
 						Assert.True (CheckLibrary (s), fi.Name);
 					} else {
 						Assert.Fail ($"Unknown '{fi.Name}' field cannot be verified - please fix me!");
