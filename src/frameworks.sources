@@ -1757,6 +1757,7 @@ WKWEBKIT_SOURCES = \
 #
 
 SHARED_API_SOURCES = \
+	ObjCRuntime/ObsoleteConstants.cs \
 
 SHARED_CORE_SOURCES = \
 	MonoPInvokeCallbackAttribute.cs \
@@ -1770,6 +1771,7 @@ SHARED_CORE_SOURCES = \
 	ObjCRuntime/INativeObject.cs \
 	ObjCRuntime/LinkWithAttribute.cs \
 	ObjCRuntime/NativeAttribute.cs \
+	ObjCRuntime/ObsoleteConstants.cs \
 	ObjCRuntime/PlatformAvailability.cs \
 	ObjCRuntime/PlatformAvailability2.cs \
 	ObjCRuntime/PlatformAvailabilityShadow.cs \

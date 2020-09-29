@@ -1,0 +1,12 @@
+using System;
+
+namespace ObjCRuntime {
+
+	// we use this to avoid multiple similar strings for the same purpose
+	// which reduce the size of the metadata inside our platform assemblies
+	// once adopted everywhere then updating  strings will be much easier
+	partial class Constants {
+
+		internal const string UseCallKitInstead = "Use the 'CallKit' API instead.";
+	}
+}
