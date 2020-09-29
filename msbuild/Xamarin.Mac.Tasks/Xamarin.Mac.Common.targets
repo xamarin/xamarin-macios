@@ -330,6 +330,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			Architecture="$(TargetArchitectures)"
 			ArchiveSymbols="$(MonoSymbolArchive)"
+			CustomBundleName="$(_CustomBundleName)"
 			LinkMode="$(_LinkMode)"
 			Debug="$(_BundlerDebug)"
 			HttpClientHandler="$(HttpClientHandler)"

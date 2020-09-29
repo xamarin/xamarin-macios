@@ -169,6 +169,18 @@ namespace Xamarin.iOS.Tasks
 			Assert.IsTrue (task.Execute (), input);
 			Assert.AreEqual (output, string.Join (";", task.XmlDefinitions.Select (v => v.ItemSpec).ToArray ()), output);
 		}
+
+		[TestCase ("--custom_bundle_name", "")]
+		[TestCase ("--custom_bundle_name:", "")]
+		[TestCase ("--custom_bundle_name=", "")]
+		[TestCase ("--custom_bundle_name=abc", "abc")]
+		public void CustomBundleName (string input, string output)
+		{
+			var task = CreateTask<CustomParseBundlerArguments> ();
+			task.ExtraArgs = input;
+			Assert.IsTrue (task.Execute (), input);
+			Assert.AreEqual (output, task.CustomBundleName, output);
+		}
 	}
 }
 

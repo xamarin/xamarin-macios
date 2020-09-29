@@ -606,6 +606,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			NoSymbolStrip="$(_NoSymbolStrip)"
 			NoDSymUtil="$(_NoDSymUtil)"
 			>
+			<Output TaskParameter="CustomBundleName" ItemName="_CustomBundleName" />
 			<Output TaskParameter="MarshalManagedExceptionMode" PropertyName="_MarshalManagedExceptionMode" />
 			<Output TaskParameter="MarshalObjectiveCExceptionMode" PropertyName="_MarshalObjectiveCExceptionMode" />
 			<Output TaskParameter="NoSymbolStrip" PropertyName="_NoSymbolStrip"/>
@@ -615,6 +616,10 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<Output TaskParameter="Verbosity" PropertyName="_BundlerVerbosity" />
 			<Output TaskParameter="XmlDefinitions" ItemName="_BundlerXmlDefinitions" />
 		</ParseBundlerArguments>
+
+		<PropertyGroup>
+			<_CustomBundleName Condition="'$(_CustomBundleName)' == ''">MonoBundle</_CustomBundleName>
+		</PropertyGroup>
 	</Target>
 
 	<!-- Code signing -->

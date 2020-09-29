@@ -35,6 +35,9 @@ namespace Xamarin.Mac.Tasks
 		public bool HybridAOT { get; set; }
 		public string ExplicitAotAssemblies { get; set; }
 
+		[Required]
+		public string CustomBundleName { get; set; }
+
 		[Output]
 		public ITaskItem[] NativeLibraries { get; set; }
 
@@ -111,46 +114,12 @@ namespace Xamarin.Mac.Tasks
 			return CreateResponseFile (args, ExtraArgs == null ? null : CommandLineArgumentBuilder.Parse (ExtraArgs));
 		}
 
-		string GetMonoBundleDirName ()
-		{
-			if (!string.IsNullOrEmpty (ExtraArgs)) {
-				var args = CommandLineArgumentBuilder.Parse (ExtraArgs);
-
-				for (int i = 0; i < args.Length; i++) {
-					string arg;
-
-					if (string.IsNullOrEmpty (args[i]))
-						continue;
-
-					if (args[i][0] == '/') {
-						arg = args[i].Substring (1);
-					} else if (args[i][0] == '-') {
-						if (args[i].Length >= 2 && args[i][1] == '-')
-							arg = args[i].Substring (2);
-						else
-							arg = args[i].Substring (1);
-					} else {
-						continue;
-					}
-
-					if (arg.StartsWith ("custom_bundle_name:", StringComparison.Ordinal) ||
-					    arg.StartsWith ("custom_bundle_name=", StringComparison.Ordinal))
-						return arg.Substring ("custom_bundle_name=".Length);
-
-					if (arg == "custom_bundle_name" && i + 1 < args.Length)
-						return args[i + 1];
-				}
-			}
-
-			return "MonoBundle";
-		}
-
 		public override bool Execute ()
 		{
 			if (!base.Execute ())
 				return false;
 
-			var monoBundleDir = Path.Combine (AppBundleDir, "Contents", GetMonoBundleDirName ());
+			var monoBundleDir = Path.Combine (AppBundleDir, "Contents", CustomBundleName);
 
 			try {
 				var nativeLibrariesPath = Directory.EnumerateFiles (monoBundleDir, "*.dylib", SearchOption.AllDirectories);
