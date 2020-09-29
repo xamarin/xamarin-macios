@@ -471,6 +471,17 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 	<Target Name="_CreateAppBundle" Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsAppDistribution)' != 'true'" DependsOnTargets="$(CreateAppBundleDependsOn)" />
 
+	<Target Name="_ComputePkgInfoPath" DependsOnTargets="_GenerateBundleName">
+		<PropertyGroup>
+			<_PkgInfoPath Condition="'$(_PlatformName)' == 'macOS'">$(_AppBundlePath)Contents\PkgInfo</_PkgInfoPath>
+			<_PkgInfoPath Condition="'$(_PlatformName)' != 'macOS'">$(_AppBundlePath)PkgInfo</_PkgInfoPath>
+		</PropertyGroup>
+	</Target>
+
+	<Target Name="_CreatePkgInfo" Condition="'$(IsAppExtension)' == 'false'" DependsOnTargets="_ComputePkgInfoPath" Outputs="$(_PkgInfoPath)">
+		<CreatePkgInfo SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" OutputPath="$(_PkgInfoPath)" />
+	</Target>
+
 	<Target Name="_DetectAppManifest">
 		<!--
 			This targets runs for Library projects as well, so that Library
