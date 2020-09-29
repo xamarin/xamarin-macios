@@ -780,7 +780,7 @@ namespace Introspection
 			foreach (Type t in types)
 				AttributeTypo (t, ref totalErrors);
 
-			Assert.IsTrue ((totalErrors == 0), "Attributes have {0} typos!", totalErrors);
+			Assert.AreEqual (0, totalErrors, "Attributes have typos!");
 		}
 
 		void AttributeTypo (Type t, ref int totalErrors)
@@ -876,7 +876,7 @@ namespace Introspection
 			foreach (var typo in unused)
 				Console.WriteLine ("Unused entry \"{0}\"", typo);
 #endif
-			Assert.IsTrue ((totalErrors == 0), "We have {0} typos!", totalErrors);
+			Assert.AreEqual (0, totalErrors, "Typos!");
 		}
 
 		string GetMessage (object attribute)
