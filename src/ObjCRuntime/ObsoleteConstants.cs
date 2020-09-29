@@ -8,5 +8,7 @@ namespace ObjCRuntime {
 	partial class Constants {
 
 		internal const string UseCallKitInstead = "Use the 'CallKit' API instead.";
+
+		internal const string WatchKitRemoved = "The WatchKit framework has been removed from iOS.";
 	}
 }
