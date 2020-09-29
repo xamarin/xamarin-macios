@@ -63,6 +63,9 @@ namespace Xamarin {
 			var prelink_substeps = new DotNetSubStepDispatcher ();
 			InsertAfter (prelink_substeps, "RemoveSecurityStep");
 
+			var post_sweep_substeps = new DotNetSubStepDispatcher ();
+			InsertAfter (post_sweep_substeps, "SweepStep");
+
 			if (Configuration.LinkMode != LinkMode.None) {
 				pre_dynamic_dependency_lookup_substeps.Add (new PreserveBlockCodeSubStep ());
 
@@ -74,6 +77,8 @@ namespace Xamarin {
 				prelink_substeps.Add (new OptimizeGeneratedCodeSubStep ());
 				prelink_substeps.Add (new MarkNSObjects ());
 				prelink_substeps.Add (new PreserveSmartEnumConversionsSubStep ());
+
+				post_sweep_substeps.Add (new RemoveAttributesStep ());
 			}
 
 			Steps.Add (new LoadNonSkippedAssembliesStep ());
