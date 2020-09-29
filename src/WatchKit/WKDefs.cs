@@ -23,6 +23,7 @@ namespace WatchKit {
 
 	[iOS (8,2)]
 	[Unavailable (PlatformName.iOS)]
+	[Deprecated (PlatformName.WatchOS, 7,0)]
 	[Native]
 	public enum WKMenuItemIcon : long {
 		Accept,
@@ -85,7 +86,13 @@ namespace WatchKit {
 		Retry,
 		Start,
 		Stop,
-		Click
+		Click,
+		[Watch (7,0)]
+		NavigationLeftTurn,
+		[Watch (7,0)]
+		NavigationRightTurn,
+		[Watch (7,0)]
+		NavigationGenericManeuver,
 	}
 
 	[NoiOS]

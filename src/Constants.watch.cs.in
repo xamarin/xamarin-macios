@@ -59,5 +59,8 @@ namespace ObjCRuntime {
 		public const string CoreMediaLibrary = "/System/Library/Frameworks/CoreMedia.framework/CoreMedia";
 		public const string StoreKitLibrary = "/System/Library/Frameworks/StoreKit.framework/StoreKit";
 
+		// watchOS 7
+		public const string AccessibilityLibrary = "/System/Library/Frameworks/Accessibility.framework/Accessibility";
+		public const string UniformTypeIdentifiersLibrary = "/System/Library/Frameworks/UniformTypeIdentifiers.framework/UniformTypeIdentifiers";
 	}
 }

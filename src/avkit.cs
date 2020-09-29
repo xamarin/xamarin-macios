@@ -35,7 +35,7 @@ using UIWindow = Foundation.NSObject;
 #endif // !MONOMAC
 
 namespace AVKit {
-	[NoTV]
+	[TV (14, 0)]
 	[iOS (9,0)]
 	[Mac (10,15)]
 	[BaseType (typeof(NSObject))]
@@ -97,12 +97,19 @@ namespace AVKit {
 		[Static]
 		[Export ("pictureInPictureButtonStopImageCompatibleWithTraitCollection:")]
 		UIImage CreateStopButton ([NullAllowed] UITraitCollection traitCollection);
+
+		[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
+		[Export ("requiresLinearPlayback")]
+		bool RequiresLinearPlayback { get; set; }
+
+		[TV (14, 0), NoWatch, NoMac, NoiOS]
+		[Export ("canStopPictureInPicture")]
+		bool CanStopPictureInPicture { get; }
 	}
 	
 	interface IAVPictureInPictureControllerDelegate {}
 
-	[NoTV]
-	[iOS (9,0), Mac (10,15)]
+	[iOS (9,0), Mac (10,15), TV (14,0)]
 	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
 	interface AVPictureInPictureControllerDelegate
@@ -160,7 +167,7 @@ namespace AVKit {
 		[Export ("unobscuredContentGuide")]
 		UILayoutGuide UnobscuredContentGuide { get; }
 
-		[NoTV]
+		[TV (14, 0)]
 		[iOS (9,0)]
 		[Export ("allowsPictureInPicturePlayback")]
 		bool AllowsPictureInPicturePlayback { get; set; }
@@ -189,8 +196,8 @@ namespace AVKit {
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		NSObject WeakDelegate { get; set; }
 
-		[NoiOS][NoMac]
-		[TV (9,0)]
+		[NoMac]
+		[TV (9,0), iOS (14, 0)]
 		[Export ("requiresLinearPlayback")]
 		bool RequiresLinearPlayback { get; set; }
 
@@ -249,6 +256,10 @@ namespace AVKit {
 		[NoiOS, TV (13,0), NoWatch]
 		[NullAllowed, Export ("customOverlayViewController", ArgumentSemantic.Strong)]
 		UIViewController CustomOverlayViewController { get; set; }
+
+		[iOS (14, 0), NoTV]
+		[Export ("showsTimecodes")]
+		bool ShowsTimecodes { get; set; }
 	}
 
 	[NoMac]
@@ -256,31 +267,31 @@ namespace AVKit {
 	[BaseType (typeof(NSObject))]
 	interface AVPlayerViewControllerDelegate
 	{
-		[NoTV]
+		[TV (14, 0)]
 		[Export ("playerViewControllerWillStartPictureInPicture:")]
 		void WillStartPictureInPicture (AVPlayerViewController playerViewController);
 	
-		[NoTV]
+		[TV (14, 0)]
 		[Export ("playerViewControllerDidStartPictureInPicture:")]
 		void DidStartPictureInPicture (AVPlayerViewController playerViewController);
 	
-		[NoTV]
+		[TV (14, 0)]
 		[Export ("playerViewController:failedToStartPictureInPictureWithError:")]
 		void FailedToStartPictureInPicture (AVPlayerViewController playerViewController, NSError error);
 	
-		[NoTV]
+		[TV (14, 0)]
 		[Export ("playerViewControllerWillStopPictureInPicture:")]
 		void WillStopPictureInPicture (AVPlayerViewController playerViewController);
 	
-		[NoTV]
+		[TV (14, 0)]
 		[Export ("playerViewControllerDidStopPictureInPicture:")]
 		void DidStopPictureInPicture (AVPlayerViewController playerViewController);
 	
-		[NoTV]
+		[TV (14, 0)]
 		[Export ("playerViewControllerShouldAutomaticallyDismissAtPictureInPictureStart:")]
 		bool ShouldAutomaticallyDismissAtPictureInPictureStart (AVPlayerViewController playerViewController);
 	
-		[NoTV]
+		[TV (14, 0)]
 		[Export ("playerViewController:restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:")]
 		void RestoreUserInterfaceForPictureInPicture (AVPlayerViewController playerViewController, Action<bool> completionHandler);
 
