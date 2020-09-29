@@ -109,6 +109,9 @@
     <Compile Include="..\..\tools\common\Execution.cs">
       <Link>Execution.cs</Link>
     </Compile>
+    <Compile Include="..\..\tools\common\TargetFramework.cs">
+      <Link>TargetFramework.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\tools\mtouch\Errors.resx">

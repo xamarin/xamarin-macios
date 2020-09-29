@@ -90,7 +90,7 @@ namespace CloudKit {
 	public delegate void CKDiscoverUserInfosCompletionHandler (NSDictionary emailsToUserInfos, NSDictionary userRecordIdsToUserInfos, NSError operationError);
 
 #if !WATCH	
-	[Obsolete ("Use 'CKDiscoverUserIdentitiesOperation' instead.")]
+	[Obsoleted (PlatformName.iOS, 14, 0, message : "Use 'CKDiscoverUserIdentitiesOperation' instead.")]
 	public partial class CKDiscoverUserInfosOperation : CKOperation { 
 
 		public CKDiscoverUserInfosOperation () : base () { }

@@ -284,6 +284,64 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</CompileEntitlements>
 	</Target>
 
+	<Target Name="_CompileInterfaceDefinitions" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_ComputeTargetArchitectures;_BeforeCoreCompileInterfaceDefinitions;_ReadCoreCompileInterfaceDefinitions;_CoreCompileInterfaceDefinitions" />
+
+	<Target Name="_BeforeCoreCompileInterfaceDefinitions"
+		Inputs="@(InterfaceDefinition)"
+		Outputs="$(_IBToolCache)">
+
+		<!-- If any InterfaceDefinition is newer than the generated items list, we delete them so that the _CoreCompileInterfaceDefinitions 
+		     target runs again and updates those lists for the next run
+		-->
+		<Delete Files="$(_IBToolCache)" />
+	</Target>
+
+	<Target Name="_ReadCoreCompileInterfaceDefinitions"	DependsOnTargets="_BeforeCoreCompileInterfaceDefinitions">
+		<!-- If _BeforeCoreCompileInterfaceDefinitions did not delete the generated items lists from _CoreCompileInterfaceDefinitions, then we read them
+		     since that target won't run and we need to the output items that are cached in those files which includes full metadata -->
+		<ReadItemsFromFile File="$(_IBToolCache)" Condition="Exists('$(_IBToolCache)')">
+			<Output TaskParameter="Items" ItemName="_BundleResourceWithLogicalName" />
+		</ReadItemsFromFile>
+	</Target>
+
+	<Target Name="_CoreCompileInterfaceDefinitions"
+		Inputs="@(InterfaceDefinition)"
+		Outputs="$(_IBToolCache)"
+		DependsOnTargets="_BeforeCoreCompileInterfaceDefinitions;_GetMinimumOSVersion">
+
+		<IBTool
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			ToolExe="$(IBToolExe)"
+			ToolPath="$(IBToolPath)"
+			AppManifest="$(_AppManifest)"
+			EnableOnDemandResources="$(EnableOnDemandResources)"
+			InterfaceDefinitions="@(InterfaceDefinition)"
+			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
+			MinimumOSVersion="$(_MinimumOSVersion)"
+			IsWatchApp="$(IsWatchApp)"
+			IsWatch2App="$(IsWatch2App)"
+			ProjectDir="$(MSBuildProjectDirectory)"
+			ResourcePrefix="$(_ResourcePrefix)"
+			SdkDevPath="$(_SdkDevPath)"
+			SdkBinPath="$(_SdkBinPath)"
+			SdkUsrPath="$(_SdkUsrPath)"
+			SdkRoot="$(_SdkRoot)"
+			SdkPlatform="$(_SdkPlatform)"
+			SdkVersion="$(_SdkVersion)">
+			<Output TaskParameter="BundleResources" ItemName="_BundleResourceWithLogicalName" />
+
+			<!-- Local items to be persisted to items files -->
+			<Output TaskParameter="BundleResources" ItemName="_IBTool_BundleResources" />
+		</IBTool>
+
+		<!-- Cached the generated outputs items for incremental build support -->
+		<WriteItemsToFile Items="@(_IBTool_BundleResources)" ItemName="_BundleResourceWithLogicalName" File="$(_IBToolCache)" Overwrite="true" IncludeMetadata="true" />
+		<ItemGroup>
+			<FileWrites Include="$(_IBToolCache)" />
+		</ItemGroup>
+	</Target>
+
 	<Target Name="_ComputeTargetArchitectures" DependsOnTargets="_ComputeTargetFrameworkMoniker">
 		<!--
 			For now, this target is mostly for Xamarin.iOS, but in order to
@@ -548,6 +606,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			NoSymbolStrip="$(_NoSymbolStrip)"
 			NoDSymUtil="$(_NoDSymUtil)"
 			>
+			<Output TaskParameter="CustomBundleName" ItemName="_CustomBundleName" />
 			<Output TaskParameter="MarshalManagedExceptionMode" PropertyName="_MarshalManagedExceptionMode" />
 			<Output TaskParameter="MarshalObjectiveCExceptionMode" PropertyName="_MarshalObjectiveCExceptionMode" />
 			<Output TaskParameter="NoSymbolStrip" PropertyName="_NoSymbolStrip"/>
@@ -557,6 +616,10 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<Output TaskParameter="Verbosity" PropertyName="_BundlerVerbosity" />
 			<Output TaskParameter="XmlDefinitions" ItemName="_BundlerXmlDefinitions" />
 		</ParseBundlerArguments>
+
+		<PropertyGroup>
+			<_CustomBundleName Condition="'$(_CustomBundleName)' == ''">MonoBundle</_CustomBundleName>
+		</PropertyGroup>
 	</Target>
 
 	<!-- Code signing -->

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.watchOS.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net5.0-watchos</TargetFramework>
+    <IsAppExtension>true</IsAppExtension>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MyWatchKit2IntentsExtension\MyWatchKit2IntentsExtension.dotnet.csproj">
+      <IsAppExtension>true</IsAppExtension>
+      <Name>MyWatchKit2IntentsExtension</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

@@ -36,7 +36,6 @@
 !incorrect-protocol-member! MTLDevice::getDefaultSamplePositions:count: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::heapBufferSizeAndAlignWithLength:options: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::heapTextureSizeAndAlignWithDescriptor: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLDevice::isRemovable is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::maxThreadgroupMemoryLength is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::minimumLinearTextureAlignmentForPixelFormat: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::newArgumentEncoderWithArguments: is REQUIRED and should be abstract

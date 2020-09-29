@@ -356,6 +356,16 @@ namespace Contacts {
 
 		[Field ("CNContactPropertyAttribute")]
 		NSString ContactPropertyAttribute { get; }
+
+		[Static]
+		[iOS (14, 0), Mac (11, 0), Watch (7, 0)]
+		[Export ("descriptorForRequiredKeysForDelimiter")]
+		ICNKeyDescriptor RequiredKeysForDelimiter { get; }
+
+		[Static]
+		[iOS (14, 0), Mac (11, 0), Watch (7, 0)]
+		[Export ("descriptorForRequiredKeysForNameOrder")]
+		ICNKeyDescriptor RequiredKeysForNameOrder { get; }
 	}
 
 	[iOS (9,0), Mac (10,11)]
@@ -1247,6 +1257,14 @@ namespace Contacts {
 		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationSonInLawOrBrotherInLaw")]
 		NSString SonInLawOrBrotherInLaw { get; }
+
+		[iOS (14, 0), Mac (11, 0), Watch (7, 0)]
+		[Field ("CNLabelContactRelationGranddaughterOrNiece")]
+		NSString GranddaughterOrNiece { get; }
+
+		[iOS (14, 0), Mac (11, 0), Watch (7, 0)]
+		[Field ("CNLabelContactRelationGrandsonOrNephew")]
+		NSString GrandsonOrNephew { get; }
 
 	}
 

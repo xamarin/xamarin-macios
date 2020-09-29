@@ -79,7 +79,6 @@ namespace MonoMac.Tuner {
 				context.SymbolWriterProvider = new DefaultSymbolWriterProvider ();
 			}
 			context.OutputDirectory = options.OutputDirectory;
-			context.StaticRegistrar = options.Target.StaticRegistrar;
 			context.Target = options.Target;
 			options.LinkContext = context;
 			return context;

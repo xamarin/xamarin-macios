@@ -54,4 +54,14 @@ namespace PhotosUI {
 		[Field ("PHProjectCategoryUndefined")]
 		Undefined,
 	}
+
+	[NoWatch, NoTV, NoMac]
+	[iOS (14,0)]
+	[Native]
+	public enum PHPickerConfigurationAssetRepresentationMode : long
+	{
+		Automatic = 0,
+		Current = 1,
+		Compatible = 2,
+	}
 }

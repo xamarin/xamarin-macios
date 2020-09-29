@@ -31,6 +31,7 @@ tests/bcl-test/mscorlib*.csproj
 tests/bcl-test/SystemCoreXunit*.csproj
 tests/bcl-test/SystemXunit.csproj
 global.json
+global5.json
 .idea
 device-tests-provisioning.csx
 mono_crash.*.json

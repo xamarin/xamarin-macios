@@ -12,6 +12,7 @@
 using System;
 using ARKit;
 using Foundation;
+using ObjCRuntime;
 using NUnit.Framework;
 
 using MatrixFloat4x4 = global::OpenTK.NMatrix4;

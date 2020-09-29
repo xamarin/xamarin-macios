@@ -70,7 +70,7 @@ namespace CoreLocation {
 
 #if IOS && !COREBUILD // This code comes from Intents.CLPlacemark_INIntentsAdditions Category
 	public partial class CLPlacemark {
-		[iOS (10, 0)]
+		[iOS (10, 0), Mac (11,0)]
 		static public CLPlacemark GetPlacemark (CLLocation location, string name, CNPostalAddress postalAddress)
 		{
 			return (null as CLPlacemark)._GetPlacemark (location, name, postalAddress);

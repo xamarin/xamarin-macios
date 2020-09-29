@@ -1064,6 +1064,12 @@ namespace SceneKit {
 		[Static]
 		[Export ("geometryElementWithMDLSubmesh:")]
 		SCNGeometryElement FromSubmesh (MDLSubmesh submesh);
+
+		[NoWatch] // marked as 7,0 but there's no Metal support on the platform
+		[TV (14,0), Mac (11,0), iOS (14,0)]
+		[Static]
+		[Export ("geometryElementWithBuffer:primitiveType:primitiveCount:bytesPerIndex:")]
+		SCNGeometryElement FromBuffer (IMTLBuffer buffer, SCNGeometryPrimitiveType primitiveType, nint primitiveCount, nint bytesPerIndex);
 	}
 
 #if !WATCH
@@ -3184,6 +3190,14 @@ namespace SceneKit {
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Export ("usesReverseZ")]
 		bool UsesReverseZ { get; set; }
+
+		[NoWatch]
+		[TV (14,0)][Mac (10,11)][iOS (14,0)]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("currentRenderPassDescriptor")]
+		MTLRenderPassDescriptor CurrentRenderPassDescriptor { get; }
 	}
 
 	[Watch (3,0)]

@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
+using Microsoft.Build.Evaluation;
 
 namespace Xamarin.iOS.Tasks
 {
@@ -34,19 +35,24 @@ namespace Xamarin.iOS.Tasks
 			SetupEngine ();
 		}
 
-		public string BuildProject (string appName, string platform, string config, int expectedErrorCount = 0, bool clean = true)
+		public string BuildProject (string appName, string platform, string config, int expectedErrorCount = 0, bool clean = true, string projectBaseDir = "../", ExecutionMode executionMode = ExecutionMode.InProcess, bool nuget_restore = false)
 		{
-			var mtouchPaths = SetupProjectPaths (appName, "../", true, platform, config);
+			var mtouchPaths = SetupProjectPaths (appName, appName, projectBaseDir, includePlatform: true, platform: platform, config: config, is_dotnet: executionMode == ExecutionMode.DotNet);
 			var csproj = mtouchPaths["project_csprojpath"];
 
-			var proj = SetupProject (Engine, csproj);
+			Project proj = null;
+			if (executionMode != ExecutionMode.DotNet)
+				proj = SetupProject (Engine, csproj);
 
 			AppBundlePath = mtouchPaths ["app_bundlepath"];
 			Engine.ProjectCollection.SetGlobalProperty("Platform", platform);
 			Engine.ProjectCollection.SetGlobalProperty("Configuration", config);
 
+			if (nuget_restore)
+				NugetRestore (csproj);
+
 			if (clean) {
-				RunTarget (proj, "Clean");
+				RunTarget (proj, csproj, "Clean", executionMode);
 				Assert.IsFalse (Directory.Exists (AppBundlePath), "App bundle exists after cleanup: {0} ", AppBundlePath);
 				Assert.IsFalse (Directory.Exists (AppBundlePath + ".dSYM"), "App bundle .dSYM exists after cleanup: {0} ", AppBundlePath + ".dSYM");
 				Assert.IsFalse (Directory.Exists (AppBundlePath + ".mSYM"), "App bundle .mSYM exists after cleanup: {0} ", AppBundlePath + ".mSYM");
@@ -56,19 +62,22 @@ namespace Xamarin.iOS.Tasks
 				var binDir = Path.Combine (baseDir, "bin", platform, config);
 
 				if (Directory.Exists (objDir)) {
-					var path = Directory.EnumerateFiles (objDir, "*.*", SearchOption.AllDirectories).FirstOrDefault ();
-					Assert.IsNull (path, "File not cleaned: {0}", path);
+					var paths = Directory.EnumerateFiles (objDir, "*.*", SearchOption.AllDirectories)
+							.Where (v => !v.EndsWith (".FileListAbsolute.txt", StringComparison.Ordinal))
+							.Where (v => !v.EndsWith (".assets.cache", StringComparison.Ordinal));
+					Assert.IsEmpty (paths, "Files not cleaned:\n\t{0}", string.Join ("\n\t", paths));
 				}
 
 				if (Directory.Exists (binDir)) {
-					// Note: the .dSYM/Contents string match is a work-around for xbuild which is broken (wrongly interprets %(Directory))
-					var path = Directory.EnumerateFiles (binDir, "*.*", SearchOption.AllDirectories).FirstOrDefault (x => x.IndexOf (".dSYM/Contents/", StringComparison.Ordinal) == -1);
-					Assert.IsNull (path, "File not cleaned: {0}", path);
+					var paths = Directory.EnumerateFiles (binDir, "*.*", SearchOption.AllDirectories);
+					Assert.IsEmpty (paths, "Files not cleaned:\n\t{0}", string.Join ("\n\t", paths));
 				}
 			}
 
-			proj = SetupProject (Engine, mtouchPaths.ProjectCSProjPath);
-			RunTarget (proj, "Build", expectedErrorCount);
+			if (executionMode != ExecutionMode.DotNet)
+				proj = SetupProject (Engine, mtouchPaths.ProjectCSProjPath);
+
+			RunTarget (proj, csproj, "Build", executionMode, expectedErrorCount);
 
 			if (expectedErrorCount > 0)
 				return csproj;
@@ -78,8 +87,9 @@ namespace Xamarin.iOS.Tasks
 			TestFilesExists (AppBundlePath, ExpectedAppFiles);
 			TestFilesDoNotExist (AppBundlePath, UnexpectedAppFiles);
 
-			var coreFiles = GetCoreAppFiles (platform, config, appName.Replace (" ", "") + ".exe", appName.Replace (" ", ""));
-			var baseDirs = new string [] {
+			if (executionMode != ExecutionMode.DotNet) {
+				var coreFiles = GetCoreAppFiles (platform, config, appName.Replace (" ", "") + ".exe", appName.Replace (" ", ""));
+				var baseDirs = new string [] {
 				Path.Combine (AppBundlePath, ".monotouch-32"),
 				Path.Combine (AppBundlePath, ".monotouch-64"),
 				AppBundlePath,
@@ -87,7 +97,8 @@ namespace Xamarin.iOS.Tasks
 				Path.Combine (AppBundlePath, "Frameworks", "Xamarin.Sdk.framework", "MonoBundle", ".monotouch-64"),
 				Path.Combine (AppBundlePath, "Frameworks", "Xamarin.Sdk.framework", "MonoBundle"),
 			};
-			TestFilesExists (baseDirs, coreFiles);
+				TestFilesExists (baseDirs, coreFiles);
+			}
 
 			if (platform == "iPhone") {
 				var dSYMInfoPlist = Path.Combine (AppBundlePath + ".dSYM", "Contents", "Info.plist");

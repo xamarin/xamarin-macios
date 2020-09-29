@@ -4,6 +4,9 @@
 ## type was not marked as unavailable before Xcode9
 !unknown-type! NSUbiquitousKeyValueStore bound
 
+## removed in Xcode 12
+!unknown-field! NSNetServicesErrorDomain bound
+
 ## unsorted
 !missing-protocol-conformance! NSXPCConnection should conform to NSXPCProxyCreating
 !missing-selector! NSXPCInterface::interfaceForSelector:argumentIndex:ofReply: not bound

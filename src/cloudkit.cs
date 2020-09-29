@@ -400,7 +400,9 @@ namespace CloudKit {
 
 	[NoWatch]
 	[NoTV]
+	[Obsoleted (PlatformName.iOS, 14, 0, message : "Use 'CKDiscoverAllUserIdentitiesOperation' instead.")]
 	[Deprecated (PlatformName.iOS, 10, 0, message : "Use 'CKDiscoverAllUserIdentitiesOperation' instead.")]
+	[Obsoleted (PlatformName.MacOSX, 10, 16, message : "Use 'CKDiscoverAllUserIdentitiesOperation' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 12, message : "Use 'CKDiscoverAllUserIdentitiesOperation' instead.")]
 	[iOS (8,0), Mac (10,10)]
 	[BaseType (typeof (CKOperation))]
@@ -413,7 +415,9 @@ namespace CloudKit {
 
 	}
 
+	[Obsoleted (PlatformName.iOS, 14, 0, message : "Use 'CKUserIdentity' instead.")]
 	[Deprecated (PlatformName.iOS, 10, 0, message : "Use 'CKUserIdentity' instead.")]
+	[Obsoleted (PlatformName.MacOSX, 10, 16, message : "Use 'CKUserIdentity' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 12, message : "Use 'CKUserIdentity' instead.")]
 	[iOS (8,0), Mac (10,10)]
 	[NoWatch]
@@ -1072,6 +1076,10 @@ namespace CloudKit {
 		[Watch (4, 0), NoTV, Mac (10, 13), iOS (11, 0)]
 		[NullAllowed, Export ("subtitleLocalizationArgs", ArgumentSemantic.Copy)]
 		string[] SubtitleLocalizationArgs { get; }
+
+		[Watch (7, 0), TV (14, 0), Mac (10, 16), iOS (14, 0)]
+		[NullAllowed, Export ("subscriptionOwnerUserRecordID", ArgumentSemantic.Copy)]
+		CKRecordID SubscriptionOwnerUserRecordId { get; }
 	}
 
 	[Watch (3,0)]

@@ -107,7 +107,7 @@ namespace MediaPlayer {
 
 	// NSUInteger -> MPMediaItem.h
 	[Native]
-	[NoWatch]
+	[Watch (7,0)]
 	[Flags]
 	public enum MPMediaType : ulong {
 		Music        = 1 << 0,
@@ -196,9 +196,8 @@ namespace MediaPlayer {
 
 	// NSInteger -> /MPMusicPlayerController.h
 	[NoMac]
-	[NoTV]
 	[NoWatch]
-	[Deprecated (PlatformName.iOS, 9, 0)]
+	[TV (14,0)]
 	[Native]
 	public enum MPMusicPlaybackState : long {
 		Stopped,
@@ -213,7 +212,7 @@ namespace MediaPlayer {
 	[Native]
 	[NoMac]
 	[NoWatch]
-	[NoTV]
+	[TV (14,0)]
 	public enum MPMusicRepeatMode : long {
 		Default,
 		None,
@@ -224,8 +223,8 @@ namespace MediaPlayer {
 	// NSInteger -> /MPMusicPlayerController.h
 	[Native]
 	[NoMac]
-	[NoTV]
 	[NoWatch]
+	[TV (14,0)]
 	public enum MPMusicShuffleMode : long {
 		Default,
 		Off,
@@ -301,7 +300,7 @@ namespace MediaPlayer {
 	}
 
 	[Mac (10,14,2)]
-	[NoWatch]
+	[Watch (7,0)]
 	[iOS (9,3)]
 	[Native]
 	[ErrorDomain ("MPErrorDomain")]

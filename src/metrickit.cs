@@ -24,8 +24,20 @@ namespace MetricKit {
 		[Export ("JSONRepresentation")]
 		NSData JsonRepresentation { get; }
 
+#if IOS
+		[Internal]
+		[Deprecated (PlatformName.iOS, 14,0)]
 		[Export ("DictionaryRepresentation")]
+		NSDictionary _DictionaryRepresentation13 { get; }
+
+		[Internal]
+		[iOS (14,0)]
+		[Export ("dictionaryRepresentation")]
+		NSDictionary _DictionaryRepresentation14 { get; }
+#else
+		[Export ("dictionaryRepresentation")]
 		NSDictionary DictionaryRepresentation { get; }
+#endif
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (13,0)]
@@ -33,6 +45,10 @@ namespace MetricKit {
 	interface MXCpuMetric {
 		[Export ("cumulativeCPUTime", ArgumentSemantic.Strong)]
 		NSMeasurement<NSUnitDuration> CumulativeCpuTime { get; }
+
+		[iOS (14,0)]
+		[Export ("cumulativeCPUInstructions", ArgumentSemantic.Strong)]
+		NSMeasurement<NSUnit> CumulativeCpuInstructions { get; }
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (13,0)]
@@ -124,8 +140,24 @@ namespace MetricKit {
 		[Export ("JSONRepresentation")]
 		NSData JsonRepresentation { get; }
 
+#if IOS
+		[Internal]
+		[Deprecated (PlatformName.iOS, 14,0)]
 		[Export ("DictionaryRepresentation")]
+		NSDictionary _DictionaryRepresentation13 { get; }
+
+		[Internal]
+		[iOS (14,0)]
+		[Export ("dictionaryRepresentation")]
+		NSDictionary _DictionaryRepresentation14 { get; }
+#else
+		[Export ("dictionaryRepresentation")]
 		NSDictionary DictionaryRepresentation { get; }
+#endif
+
+		[iOS (14,0)]
+		[Export ("platformArchitecture", ArgumentSemantic.Strong)]
+		string PlatformArchitecture { get; }
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (13,0)]
@@ -327,8 +359,30 @@ namespace MetricKit {
 		[Export ("JSONRepresentation")]
 		NSData JsonRepresentation { get; }
 
+#if IOS
+		[Internal]
+		[Deprecated (PlatformName.iOS, 14,0)]
 		[Export ("DictionaryRepresentation")]
+		NSDictionary _DictionaryRepresentation13 { get; }
+
+		[Internal]
+		[iOS (14,0)]
+		[Export ("dictionaryRepresentation")]
+		NSDictionary _DictionaryRepresentation14 { get; }
+#else
+		[Export ("dictionaryRepresentation")]
 		NSDictionary DictionaryRepresentation { get; }
+#endif
+
+		[iOS (14,0)]
+		[NullAllowed]
+		[Export ("animationMetrics", ArgumentSemantic.Strong)]
+		MXAnimationMetric AnimationMetrics { get; }
+
+		[iOS (14,0)]
+		[NullAllowed]
+		[Export ("applicationExitMetrics", ArgumentSemantic.Strong)]
+		MXAppExitMetric ApplicationExitMetrics { get; }
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (13,0)]
@@ -347,6 +401,10 @@ namespace MetricKit {
 
 		[Export ("removeSubscriber:")]
 		void Remove (IMXMetricManagerSubscriber subscriber);
+
+		[iOS (14,0)]
+		[Export ("pastDiagnosticPayloads", ArgumentSemantic.Strong)]
+		MXDiagnosticPayload[] PastDiagnosticPayloads { get; }
 	}
 
 	interface IMXMetricManagerSubscriber { }
@@ -357,5 +415,227 @@ namespace MetricKit {
 		[Abstract]
 		[Export ("didReceiveMetricPayloads:")]
 		void DidReceiveMetricPayloads (MXMetricPayload[] payloads);
+
+		[iOS (14,0)]
+		[Export ("didReceiveDiagnosticPayloads:")]
+		void DidReceiveDiagnosticPayloads (MXDiagnosticPayload[] payloads);
+	}
+
+	[NoWatch, NoTV, NoMac]
+	[iOS (14,0)]
+	[BaseType (typeof (MXMetric))]
+	[DisableDefaultCtor]
+	interface MXAnimationMetric {
+
+		[Export ("scrollHitchTimeRatio", ArgumentSemantic.Strong)]
+		NSMeasurement<NSUnit> ScrollHitchTimeRatio { get; }
+	}
+
+	[NoWatch, NoTV, NoMac]
+	[iOS (14,0)]
+	[BaseType (typeof (MXMetric))]
+	[DisableDefaultCtor]
+	interface MXAppExitMetric {
+
+		[Export ("foregroundExitData", ArgumentSemantic.Strong)]
+		MXForegroundExitData ForegroundExitData { get; }
+
+		[Export ("backgroundExitData", ArgumentSemantic.Strong)]
+		MXBackgroundExitData BackgroundExitData { get; }
+	}
+
+	[NoWatch, NoTV, NoMac]
+	[iOS (14,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MXBackgroundExitData : NSSecureCoding {
+
+		[Export ("cumulativeNormalAppExitCount")]
+		nuint CumulativeNormalAppExitCount { get; }
+
+		[Export ("cumulativeMemoryResourceLimitExitCount")]
+		nuint CumulativeMemoryResourceLimitExitCount { get; }
+
+		[Export ("cumulativeCPUResourceLimitExitCount")]
+		nuint CumulativeCpuResourceLimitExitCount { get; }
+
+		[Export ("cumulativeMemoryPressureExitCount")]
+		nuint CumulativeMemoryPressureExitCount { get; }
+
+		[Export ("cumulativeBadAccessExitCount")]
+		nuint CumulativeBadAccessExitCount { get; }
+
+		[Export ("cumulativeAbnormalExitCount")]
+		nuint CumulativeAbnormalExitCount { get; }
+
+		[Export ("cumulativeIllegalInstructionExitCount")]
+		nuint CumulativeIllegalInstructionExitCount { get; }
+
+		[Export ("cumulativeAppWatchdogExitCount")]
+		nuint CumulativeAppWatchdogExitCount { get; }
+
+		[Export ("cumulativeSuspendedWithLockedFileExitCount")]
+		nuint CumulativeSuspendedWithLockedFileExitCount { get; }
+
+		[Export ("cumulativeBackgroundTaskAssertionTimeoutExitCount")]
+		nuint CumulativeBackgroundTaskAssertionTimeoutExitCount { get; }
+	}
+
+	[NoWatch, NoTV, NoMac]
+	[iOS (14,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MXForegroundExitData : NSSecureCoding {
+
+		[Export ("cumulativeNormalAppExitCount")]
+		nuint CumulativeNormalAppExitCount { get; }
+
+		[Export ("cumulativeMemoryResourceLimitExitCount")]
+		nuint CumulativeMemoryResourceLimitExitCount { get; }
+
+		[Export ("cumulativeBadAccessExitCount")]
+		nuint CumulativeBadAccessExitCount { get; }
+
+		[Export ("cumulativeAbnormalExitCount")]
+		nuint CumulativeAbnormalExitCount { get; }
+
+		[Export ("cumulativeIllegalInstructionExitCount")]
+		nuint CumulativeIllegalInstructionExitCount { get; }
+
+		[Export ("cumulativeAppWatchdogExitCount")]
+		nuint CumulativeAppWatchdogExitCount { get; }
+	}
+
+	[NoWatch, NoTV, NoMac]
+	[iOS (14,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MXCallStackTree : NSSecureCoding {
+
+		[Export ("JSONRepresentation")]
+		NSData JsonRepresentation { get; }
+	}
+
+	[NoWatch, NoTV, NoMac]
+	[iOS (14,0)]
+	[BaseType (typeof (MXDiagnostic), Name = "MXCPUExceptionDiagnostic")]
+	[DisableDefaultCtor]
+	interface MXCpuExceptionDiagnostic {
+
+		[Export ("callStackTree", ArgumentSemantic.Strong)]
+		MXCallStackTree CallStackTree { get; }
+
+		[Export ("totalCPUTime", ArgumentSemantic.Strong)]
+		NSMeasurement<NSUnitDuration> TotalCpuTime { get; }
+
+		[Export ("totalSampledTime", ArgumentSemantic.Strong)]
+		NSMeasurement<NSUnitDuration> TotalSampledTime { get; }
+	}
+
+	[NoWatch, NoTV, NoMac]
+	[iOS (14,0)]
+	[BaseType (typeof (MXDiagnostic))]
+	[DisableDefaultCtor]
+	interface MXCrashDiagnostic {
+
+		[Export ("callStackTree", ArgumentSemantic.Strong)]
+		MXCallStackTree CallStackTree { get; }
+
+		[NullAllowed, Export ("terminationReason", ArgumentSemantic.Strong)]
+		string TerminationReason { get; }
+
+		[NullAllowed, Export ("virtualMemoryRegionInfo", ArgumentSemantic.Strong)]
+		string VirtualMemoryRegionInfo { get; }
+
+		// exception_type_t -> int (exception_types.h)
+		[BindAs (typeof (int?))]
+		[NullAllowed, Export ("exceptionType", ArgumentSemantic.Strong)]
+		NSNumber ExceptionType { get; }
+
+		// mach_exception_code_t -> mach_exception_data_type_t -> int64_t (exception_types.h)
+		[BindAs (typeof (long?))]
+		[NullAllowed, Export ("exceptionCode", ArgumentSemantic.Strong)]
+		NSNumber ExceptionCode { get; }
+
+		// signal number (various structs) always an `int` (signal.h)
+		[BindAs (typeof (int?))]
+		[NullAllowed, Export ("signal", ArgumentSemantic.Strong)]
+		NSNumber Signal { get; }
+	}
+
+	[NoWatch, NoTV, NoMac]
+	[iOS (14,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MXDiagnostic : NSSecureCoding {
+
+		[Export ("metaData", ArgumentSemantic.Strong)]
+		MXMetaData MetaData { get; }
+
+		[Export ("applicationVersion", ArgumentSemantic.Strong)]
+		string ApplicationVersion { get; }
+
+		[Export ("JSONRepresentation")]
+		NSData JsonRepresentation { get; }
+
+		[Export ("dictionaryRepresentation")]
+		NSDictionary DictionaryRepresentation { get; }
+	}
+
+	[NoWatch, NoTV, NoMac]
+	[iOS (14,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MXDiagnosticPayload : NSSecureCoding {
+
+		[NullAllowed, Export ("cpuExceptionDiagnostics", ArgumentSemantic.Strong)]
+		MXCpuExceptionDiagnostic[] CpuExceptionDiagnostics { get; }
+
+		[NullAllowed, Export ("diskWriteExceptionDiagnostics", ArgumentSemantic.Strong)]
+		MXDiskWriteExceptionDiagnostic[] DiskWriteExceptionDiagnostics { get; }
+
+		[NullAllowed, Export ("hangDiagnostics", ArgumentSemantic.Strong)]
+		MXHangDiagnostic[] HangDiagnostics { get; }
+
+		[NullAllowed, Export ("crashDiagnostics", ArgumentSemantic.Strong)]
+		MXCrashDiagnostic[] CrashDiagnostics { get; }
+
+		[Export ("timeStampBegin", ArgumentSemantic.Strong)]
+		NSDate TimeStampBegin { get; }
+
+		[Export ("timeStampEnd", ArgumentSemantic.Strong)]
+		NSDate TimeStampEnd { get; }
+
+		[Export ("JSONRepresentation")]
+		NSData JsonRepresentation { get; }
+
+		[Export ("dictionaryRepresentation")]
+		NSDictionary DictionaryRepresentation { get; }
+	}
+
+	[NoWatch, NoTV, NoMac]
+	[iOS (14,0)]
+	[BaseType (typeof (MXDiagnostic))]
+	[DisableDefaultCtor]
+	interface MXDiskWriteExceptionDiagnostic {
+
+		[Export ("callStackTree", ArgumentSemantic.Strong)]
+		MXCallStackTree CallStackTree { get; }
+
+		[Export ("totalWritesCaused", ArgumentSemantic.Strong)]
+		NSMeasurement<NSUnitInformationStorage> TotalWritesCaused { get; }
+	}
+
+	[NoWatch, NoTV, NoMac]
+	[iOS (14,0)]
+	[BaseType (typeof (MXDiagnostic))]
+	[DisableDefaultCtor]
+	interface MXHangDiagnostic {
+
+		[Export ("callStackTree", ArgumentSemantic.Strong)]
+		MXCallStackTree CallStackTree { get; }
+
+		[Export ("hangDuration", ArgumentSemantic.Strong)]
+		NSMeasurement<NSUnitDuration> HangDuration { get; }
 	}
 }
