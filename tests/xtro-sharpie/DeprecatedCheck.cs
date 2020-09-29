@@ -82,9 +82,16 @@ namespace Extrospection
 		void ProcessCFunction (string fullname, VersionTuple objcVersion)
 		{
 			if (dllimports.TryGetValue (fullname, out var method)) {
-				var framework = Helpers.GetFramework (method.DeclaringType);
-				if (framework != null)
-					ProcessItem (method, fullname, objcVersion, framework);
+				var dt = method.DeclaringType;
+				var framework = Helpers.GetFramework (dt);
+				if (framework == null)
+					return;
+
+				// If the entire type is deprecated, call it good enough
+				if (AttributeHelpers.HasAnyDeprecationForCurrentPlatform (dt))
+					return;
+
+				ProcessItem (method, fullname, objcVersion, framework);
 			}
 		}
 
