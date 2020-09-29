@@ -60,6 +60,8 @@ namespace Xharness.Jenkins {
 
 				switch (test.TestName) {
 				case "monotouch-test":
+					if (test.TestProject.IsDotNetProject)
+						ignore = true;
 					if (supports_dynamic_registrar_on_device)
 						yield return new TestData { Variation = "Debug (dynamic registrar)", MTouchExtraArgs = "--registrar:dynamic", Debug = true, Profiling = false, Ignored = ignore };
 					yield return new TestData { Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = false, Profiling = false, Defines = "OPTIMIZEALL", Ignored = ignore };
@@ -91,8 +93,6 @@ namespace Xharness.Jenkins {
 			case "iPhoneSimulator":
 				switch (test.TestName) {
 				case "monotouch-test":
-					if (test.TestProject.IsDotNetProject)
-						ignore = true;
 					// The default is to run monotouch-test with the dynamic registrar (in the simulator), so that's already covered
 					yield return new TestData { Variation = "Debug (LinkSdk)", Debug = true, Profiling = false, LinkMode = "LinkSdk", Ignored = ignore };
 					yield return new TestData { Variation = "Debug (static registrar)", MTouchExtraArgs = "--registrar:static", Debug = true, Profiling = false, Undefines = "DYNAMIC_REGISTRAR", Ignored = ignore };
