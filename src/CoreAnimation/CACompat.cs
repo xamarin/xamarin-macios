@@ -10,22 +10,22 @@ namespace CoreAnimation {
 
 	partial class CAScrollLayer {
 
-		[Obsolete ("Use CAScroll enum")]
+		[Obsolete ("Use 'CAScroll' enum instead.")]
 		public static NSString ScrollBoth {
 			get { return CAScroll.Both.GetConstant (); }
 		}
 
-		[Obsolete ("Use CAScroll enum")]
+		[Obsolete ("Use 'CAScroll' enum instead.")]
 		public static NSString ScrollHorizontally {
 			get { return CAScroll.Horizontally.GetConstant (); }
 		}
 
-		[Obsolete ("Use CAScroll enum")]
+		[Obsolete ("Use 'CAScroll' enum instead.")]
 		public static NSString ScrollNone {
 			get { return CAScroll.None.GetConstant (); }
 		}
 
-		[Obsolete ("Use CAScroll enum")]
+		[Obsolete ("Use 'CAScroll' enum instead.")]
 		public static NSString ScrollVertically {
 			get { return CAScroll.Vertically.GetConstant (); }
 		}
