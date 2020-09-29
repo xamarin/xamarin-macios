@@ -608,5 +608,29 @@ namespace CoreFoundation {
 				}
 			}
 		}
+
+#if MONOMAC
+		[Introduced (PlatformName.MacOSX, 11, 0)]
+		[DllImport (Constants.CoreFoundationLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
+		extern static bool CFBundleIsExecutableLoadable (IntPtr bundle);
+
+		public static bool IsExecutableLoadable (CFBundle bundle) => CFBundleIsExecutableLoadable (bundle.Handle);
+
+		[Introduced (PlatformName.MacOSX, 11, 0)]
+		[DllImport (Constants.CoreFoundationLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
+		extern static bool CFBundleIsExecutableLoadableForURL (IntPtr bundle);
+
+		public static bool IsExecutableLoadable (NSUrl url) => CFBundleIsExecutableLoadableForURL (url.Handle);
+
+		[Introduced (PlatformName.MacOSX, 11, 0)]
+		[DllImport (Constants.CoreFoundationLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
+		extern static bool CFBundleIsArchitectureLoadable (/*cpu_type_t => integer_t => int*/ Architecture architecture);
+
+		public static bool IsArchitectureLoadable (Architecture architecture) => CFBundleIsArchitectureLoadable (architecture);
+
+#endif
 	}
 }
