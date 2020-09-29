@@ -35,6 +35,14 @@ using ObjCRuntime;
 using AudioToolbox;
 using CoreFoundation;
 using Foundation;
+#if !MONOMAC
+using UIKit;
+#else
+using AppKit;
+#if !COREBUILD
+using UIImage=AppKit.NSImage;
+#endif
+#endif
 
 namespace AudioUnit
 {
@@ -329,6 +337,17 @@ namespace AudioUnit
 
 				return null;
 			}
+		}
+
+		[NoWatch, TV (14,0), Mac (11,0), iOS (14,0)]
+		[DllImport (Constants.AudioUnitLibrary)]
+		static extern unsafe IntPtr AudioComponentCopyIcon (IntPtr comp);
+
+		[NoWatch, TV (14,0), iOS (14,0), Mac (11,0)]
+		public UIImage CopyIcon ()
+		{
+			var ptr = AudioComponentCopyIcon (handle);
+			return Runtime.GetNSObject<UIImage> (ptr, owns: true);
 		}
 
 #if !MONOMAC

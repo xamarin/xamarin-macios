@@ -158,6 +158,8 @@ namespace Security {
 		SslAtsLeafCertificateHashAlgorithmViolation = -9884,
 		SslAtsCertificateHashAlgorithmViolation     = -9885,
 		SslAtsCertificateTrustViolation             = -9886,
+		// xcode 12
+		SslEarlyDataRejected                        = -9890,
 	}
 
 	// Security.framework/Headers/SecureTransport.h

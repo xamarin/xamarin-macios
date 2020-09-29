@@ -47,14 +47,14 @@
     <Compile Include="..\..\..\tests\common\Configuration.cs">
       <Link>Configuration.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\tests\common\DotNet.cs">
+      <Link>DotNet.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\tests\common\Profile.cs">
       <Link>Profile.cs</Link>
     </Compile>
     <Compile Include="..\..\..\tests\common\ExecutionHelper.cs">
       <Link>ExecutionHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\tools\common\Execution.cs">
-      <Link>Execution.cs</Link>
     </Compile>
     <Compile Include="..\..\..\tests\mtouch\Cache.cs">
       <Link>Cache.cs</Link>

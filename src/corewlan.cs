@@ -145,6 +145,7 @@ namespace CoreWlan {
 		[Export ("requireAdministratorForPower", ArgumentSemantic.Assign)]
 		bool RequireAdministratorForPower { get; set; }
 
+		[Deprecated (PlatformName.MacOSX, 11,0)]
 		[Export ("requireAdministratorForIBSSMode", ArgumentSemantic.Assign)]
 		bool RequireAdministratorForIbssMode { get; set; }
 
@@ -406,6 +407,7 @@ namespace CoreWlan {
 		[Export ("associateToEnterpriseNetwork:identity:username:password:error:")]
 		bool AssociateToEnterpriseNetwork (CWNetwork network, SecIdentity identity, string username, string password, out NSError error);
 		 
+		[Deprecated (PlatformName.MacOSX, 11,0)]
 		[Export ("startIBSSModeWithSSID:security:channel:password:error:")]
 		bool StartIbssModeWithSsid (NSData ssidData, CWIbssModeSecurity security, nuint channel, string password, out NSError error);
 		 

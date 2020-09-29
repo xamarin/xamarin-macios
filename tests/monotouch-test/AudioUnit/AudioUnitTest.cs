@@ -49,6 +49,25 @@ namespace MonoTouchFixtures.AudioUnit
 			var mixer = graph.GetNodeInfo (mixerNode);
 			Assert.AreEqual (1, mixer.GetElementCount (AudioUnitScopeType.Global));
 		}
+
+		[Test]
+		public void CopyIconTest ()
+		{ 
+			TestRuntime.AssertXcodeVersion (12, 0);
+			AudioComponentDescription cd = new AudioComponentDescription () {
+				ComponentType = AudioComponentType.Output,
+#if MONOMAC
+				ComponentSubType = (int)AudioUnitSubType.VoiceProcessingIO,
+#else
+				ComponentSubType = 0x72696f63, // Remote_IO
+#endif
+				ComponentManufacturer = AudioComponentManufacturerType.Apple
+			};
+			AudioComponent component = AudioComponent.FindComponent (ref cd);
+			Assert.DoesNotThrow ( () => {
+				var icon = component.CopyIcon (); // ensuring that the manual binding does not throw, we do not care about the result
+			});
+		}
 	}
 }
 

@@ -137,6 +137,9 @@ namespace MonoTouchFixtures.CoreGraphics {
 					Assert.False (cs.SupportsOutput, "SupportsOutput");
 					Assert.Null (cs.GetIccData (), "GetIccData");
 				}
+
+				if (TestRuntime.CheckXcodeVersion (12, 0))
+					Assert.False (cs.UsesExtendedRange, "UsesExtendedRange");
 			}
 		}
 
@@ -161,7 +164,10 @@ namespace MonoTouchFixtures.CoreGraphics {
 				Assert.True (cs.SupportsOutput, "SupportsOutput");
 
 				using (var icc_data = cs.GetIccData ())
-					Assert.That (icc_data.Length, Is.EqualTo ((nuint) 3144), "GetIccData");
+					Assert.That (icc_data.Length, Is.EqualTo ((nuint)3144), "GetIccData");
+
+				if (TestRuntime.CheckXcodeVersion (12, 0))
+					Assert.True (cs.UsesExtendedRange, "UsesExtendedRange");
 			}
 		}
 

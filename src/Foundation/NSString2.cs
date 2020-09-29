@@ -63,15 +63,6 @@ namespace Foundation {
 			return (int)Compare (other);
 		}
 
-		// [Export ("initWithContentsOfURL:encoding:error")]
-		// IntPtr Constructor (NSUrl url, NSStringEncoding encoding, out NSError error);
-		// 
-		// [Export ("initWithContentsOfURL:usedEncoding:error:")]
-		// IntPtr Constructor (NSUrl url, out NSStringEncoding encoding, out NSError error);
-		// 
-		// [Export ("initWithBytes:length:encoding")]
-		// IntPtr Constructor (IntPtr bytes, int length, NSStringEncoding encoding);
-		
 		public char this [nint idx] {
 			get {
 				return _characterAtIndex (idx);

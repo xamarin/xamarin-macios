@@ -7,6 +7,7 @@
 // Copyright 2017 Xamarin Inc. All rights reserved.
 //
 
+#if !TVOS
 using System;
 using Foundation;
 using ObjCRuntime;
@@ -43,3 +44,4 @@ namespace Intents {
 		}
 	}
 }
+#endif

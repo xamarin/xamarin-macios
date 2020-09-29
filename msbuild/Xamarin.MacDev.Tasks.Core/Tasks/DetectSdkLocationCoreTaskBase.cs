@@ -130,6 +130,9 @@ namespace Xamarin.MacDev.Tasks {
 			if (EnsureAppleSdkRoot ())
 				EnsureSdkPath ();
 			EnsureXamarinSdkRoot ();
+
+			IsXcode8 = AppleSdkSettings.XcodeVersion.Major >= 8;
+
 			return !Log.HasLoggedErrors;
 		}
 

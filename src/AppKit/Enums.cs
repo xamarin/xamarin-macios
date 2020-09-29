@@ -327,9 +327,11 @@ namespace AppKit {
 	
 	[Native]
 	public enum NSControlSize : ulong {
-		Regular, 
-		Small,
-		Mini
+		Regular = 0, 
+		Small = 1,
+		Mini = 2,
+		[Mac (11,0)]
+		Large = 3,
 	}
 
 	[Native]
@@ -1514,6 +1516,7 @@ namespace AppKit {
 		TraitTightLeading = 1 << 15,
 		[Mac (10,13)]
 		TraitLooseLeading = 1 << 16,
+		TraitEmphasized = BoldTrait,
 		UnknownClass = 0 << 28,
 		OldStyleSerifsClass = 1 << 28,
 		TransitionalSerifsClass = 2 << 28,
@@ -1741,6 +1744,7 @@ namespace AppKit {
 
 	[Flags]
 	[Native]
+	[Deprecated (PlatformName.MacOSX, 11, 0)]
 	public enum NSWorkspaceLaunchOptions : ulong {
 		Print = 2,
 		InhibitingBackgroundOnly = 0x80,
@@ -3012,5 +3016,69 @@ namespace AppKit {
 		CreateSymbolicLink,
 		SetAttributes,
 		ReplaceFile,
+	}
+
+	[Mac (11,0)]
+	[Native]
+	public enum NSTableViewStyle : long
+	{
+		Automatic,
+		FullWidth,
+		Inset,
+		SourceList,
+	}
+
+	[Mac (11,0)]
+	[Native]
+	public enum NSTitlebarSeparatorStyle : long
+	{
+		Automatic,
+		None,
+		Line,
+		Shadow,
+	}
+
+	[Mac (11,0)]
+	[Native]
+	public enum NSWindowToolbarStyle : long
+	{
+		Automatic,
+		Expanded,
+		Preference,
+		Unified,
+		UnifiedCompact,
+	}
+
+	[Flags]
+	[Native]
+	public enum NSTableViewAnimationOptions : ulong
+	{
+		EffectNone = 0x0,
+		EffectFade = 0x1,
+		EffectGap = 0x2,
+		SlideUp = 0x10,
+		SlideDown = 0x20,
+		SlideLeft = 0x30,
+		SlideRight = 0x40,
+	}
+
+	[Mac (11,0)]
+	[Native]
+	public enum NSImageSymbolScale : long
+	{
+		Small = 1,
+		Medium = 2,
+		Large = 3,
+	}
+
+	[Mac (11,0)]
+	[Flags]
+	[Native]
+	public enum NSLineBreakStrategy : ulong
+	{
+		None = 0x0,
+		PushOut = 1uL << 0,
+		HangulWordPriority = 1uL << 1,
+		Standard = 0xffff,
 	}
 }

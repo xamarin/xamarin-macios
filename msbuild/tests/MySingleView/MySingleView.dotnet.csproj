@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.iOS.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net5.0-ios</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <RuntimeIdentifier>ios-x64</RuntimeIdentifier>
+    <DefaultItemExcludes>$(DefaultItemExcludes);MyLibrary\**</DefaultItemExcludes>
+    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <BundleResource Include="LinkedBundleResource.txt">
+      <Link>Folder\LinkedBundleResource.txt</Link>
+    </BundleResource>
+    <BundleResource Include="Folder\BundleResource.txt" />
+    <BundleResource Include="Resources\image.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="LinkedEmbeddedResource.txt">
+      <Link>Folder\LinkedEmbeddedResource.txt</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Folder\EmbeddedResource.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Folder\Content.txt" />
+    <Content Include="LinkedContent.txt">
+      <Link>Folder\LinkedContent.txt</Link>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="MyLibrary\MyLibrary.dotnet.csproj" />
+  </ItemGroup>
+</Project>

@@ -1375,6 +1375,10 @@ namespace UIKit {
 		[NoiOS, NoTV, NoWatch]
 		[Export ("headerLevel")]
 		nint HeaderLevel { get; [NotImplemented] set; }
+
+		[Mac (11,0), Watch (7,0), TV (14,0), iOS (14,0)]
+		[Export ("lineBreakStrategy")]
+		NSLineBreakStrategy LineBreakStrategy { get; [NotImplemented] set; }
 	}
 
 	[ThreadSafe]
@@ -1484,5 +1488,10 @@ namespace UIKit {
 		[Export ("headerLevel")]
 		[Override]
 		nint HeaderLevel { get; set; }
+
+		[Mac (11,0), Watch (7,0), TV (14,0), iOS (14,0)]
+		[Override]
+		[Export ("lineBreakStrategy", ArgumentSemantic.Assign)]
+		NSLineBreakStrategy LineBreakStrategy { get; set; }
 	}
 }

@@ -12,7 +12,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 		// failure perse but the situation in which the app could not be built, timeout or crashed.
 		void GenerateFailure (ILogs logs, string source, string appName, string variation, string title, string message, string stderrPath, XmlResultJargon jargon);
 		
-		void GenerateFailure (ILogs logs, string source, string appName, string variation, string title, string message, StreamReader stderrReader, XmlResultJargon jargon);
+		void GenerateFailure (ILogs logs, string source, string appName, string variation, string title, string message, TextReader stderrReader, XmlResultJargon jargon);
 
 		// updates a given xml result to contain a list of attachments. This is useful for CI to be able to add logs as part of the attachments of a failing test.
 		void UpdateMissingData (string source, string destination, string applicationName, IEnumerable<string> attachments);
