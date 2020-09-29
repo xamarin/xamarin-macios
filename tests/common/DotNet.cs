@@ -104,10 +104,7 @@ namespace Xamarin.Tests {
 
 					var filename = Path.GetFileName (v);
 					switch (filename) {
-					case "MonoTouchDebugConfiguration.txt": // TODO
-					case "PkgInfo": // TODO
 					case "runtime-options.plist": // TODO
-					case "Root.plist": // TODO
 						return false;
 					}
 
