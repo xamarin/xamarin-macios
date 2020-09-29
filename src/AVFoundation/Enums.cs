@@ -232,7 +232,6 @@ namespace AVFoundation {
 		NoCompatibleAlternatesForExternalDisplay = -11868,
 		[NoWatch, iOS (11,2), TV (11,2), Mac (10,13,2)]
 		NoSourceTrack = -11869,
-		[NoWatch, NoiOS, NoTV, Mac (11,0)]
 		RosettaNotInstalled = -11877,
 	}
 
