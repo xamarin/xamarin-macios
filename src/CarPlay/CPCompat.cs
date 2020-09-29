@@ -16,7 +16,7 @@ using System.ComponentModel;
 namespace CarPlay {
 	[Register (SkipRegistration = true)]
 	[Introduced (PlatformName.iOS, 14, 0)]
-	[Unavailable (PlatformName.iOS, 14, 2)]
+	[Unavailable (PlatformName.iOS, PlatformArchitecture.All)]
 	[Obsolete ("'CPEntity' has been removed from iOS.")]
 	[EditorBrowsable (EditorBrowsableState.Never)]
 	public class CPEntity : NSObject, INSSecureCoding {
