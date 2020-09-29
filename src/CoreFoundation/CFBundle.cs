@@ -615,20 +615,35 @@ namespace CoreFoundation {
 		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CFBundleIsExecutableLoadable (IntPtr bundle);
 
-		public static bool IsExecutableLoadable (CFBundle bundle) => CFBundleIsExecutableLoadable (bundle.Handle);
+		[Introduced (PlatformName.MacOSX, 11, 0)]
+		public static bool IsExecutableLoadable (CFBundle bundle) {
+			if (bundle == null)
+				throw new ArgumentNullException (nameof (bundle));
+			if (bundle.Handle == IntPtr.Zero)
+				throw new ObjectDisposedException (nameof (bundle));
+
+			return CFBundleIsExecutableLoadable (bundle.Handle);
+		}
 
 		[Introduced (PlatformName.MacOSX, 11, 0)]
 		[DllImport (Constants.CoreFoundationLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CFBundleIsExecutableLoadableForURL (IntPtr bundle);
 
-		public static bool IsExecutableLoadable (NSUrl url) => CFBundleIsExecutableLoadableForURL (url.Handle);
+		[Introduced (PlatformName.MacOSX, 11, 0)]
+		public static bool IsExecutableLoadable (NSUrl url) {
+			if (url == null)
+				throw new ArgumentNullException (nameof (url));
+
+			return CFBundleIsExecutableLoadableForURL (url.Handle);
+		}
 
 		[Introduced (PlatformName.MacOSX, 11, 0)]
 		[DllImport (Constants.CoreFoundationLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CFBundleIsArchitectureLoadable (/*cpu_type_t => integer_t => int*/ Architecture architecture);
 
+		[Introduced (PlatformName.MacOSX, 11, 0)]
 		public static bool IsArchitectureLoadable (Architecture architecture) => CFBundleIsArchitectureLoadable (architecture);
 
 #endif
