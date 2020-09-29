@@ -386,8 +386,12 @@ namespace Metal {
 	}
 #endif
 
+#if !TVOS || !XAMCORE_4_0
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Mac (11,0), iOS (14,0), NoTV]
+#if TVOS && !XAMCORE_4_0
+	[Obsolete ("This API is not available on this platform.")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLAccelerationStructureSizes
 	{
@@ -397,5 +401,5 @@ namespace Metal {
 
 		public nuint RefitScratchBufferSize;
 	}
-
+#endif
 }
