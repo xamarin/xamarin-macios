@@ -21,7 +21,7 @@ namespace Extrospection
 			if (!method.IsPInvokeImpl || !method.HasPInvokeInfo)
 				return;
 
-			// we don't decorated OpenTK types with availability
+			// we don't decorate OpenTK types with availability
 			var dt = method.DeclaringType;
 			var ns = dt.IsNested ? dt.DeclaringType.Namespace : dt.Namespace;
 			if (ns.StartsWith ("OpenTK.", StringComparison.Ordinal))
@@ -31,7 +31,7 @@ namespace Extrospection
 			if (info.Module.Name == "__Internal")
 				return;
 
-			// there are duplicates declarations, only the last will be reported
+			// there are duplicated declarations, only the last will be reported
 			dllimports [info.EntryPoint] = method;
 		}
 
