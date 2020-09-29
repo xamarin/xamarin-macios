@@ -98,14 +98,12 @@ namespace Xamarin.Tests {
 						return false;
 					case ".dylib": // ignore dylibs, they're not the same
 						return false;
-
-					// There's a lot of TODOs here, those correspond with missing features in .NET and will be removed as those features are implemented
 					}
 
 					var filename = Path.GetFileName (v);
 					switch (filename) {
-					case "runtime-options.plist": // TODO
-						return false;
+					case "runtime-options.plist":
+						return false; // the .NET runtime will deal with selecting the http handler, no need for us to do anything
 					}
 
 					var components = v.Split ('/');
