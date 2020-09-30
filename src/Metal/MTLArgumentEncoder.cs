@@ -5,32 +5,10 @@ using ObjCRuntime;
 
 namespace Metal {
 
-#if !XAMCORE_4_0
-	public partial interface IMTLArgumentEncoder {
-		[Obsolete ("Use 'SetManagedBuffers' instead.")]
-		void SetBuffers (IMTLBuffer [] buffers, IntPtr offsets, NSRange range);
-	}
-
-	internal partial class MTLArgumentEncoderWrapper {
-
-		[Obsolete ("Use 'SetManagedBuffers' instead.")]
-		public void SetBuffers (IMTLBuffer [] buffers, IntPtr offsets, NSRange range) 
-			=> throw new NotSupportedException ();
-	}
-#endif
 
 	public static partial class MTLArgumentEncoder_Extensions {
-#if !XAMCORE_4_0
-		[Obsolete ("Use 'SetManagedBuffers' instead.")]
-		public unsafe static void SetBuffers (this IMTLArgumentEncoder This, IMTLBuffer [] buffers, nint [] offsets, Foundation.NSRange range)
-			=> throw new NotSupportedException ();
-#endif
-
 #if XAMCORE_4_0
 		public static void SetBuffers (this IMTLArgumentEncoder table, IMTLBuffer[] buffers, nuint[] offsets, NSRange range)
-#else
-		public static void SetManagedBuffers (this IMTLArgumentEncoder table, IMTLBuffer[] buffers, nuint[] offsets, NSRange range)
-#endif
 		{
 			if (buffers == null)
 				throw new ArgumentNullException (nameof (buffers));
@@ -50,5 +28,12 @@ namespace Metal {
 				}
 			}
 		}
+#else 
+		public unsafe static void SetBuffers (this IMTLArgumentEncoder This, IMTLBuffer [] buffers, nint [] offsets, Foundation.NSRange range)
+		{
+			fixed (void* handle = offsets)
+				This.SetBuffers (buffers, (IntPtr)handle, range);
+		}
+#endif
 	}
 }

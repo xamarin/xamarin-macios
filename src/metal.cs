@@ -457,9 +457,6 @@ namespace Metal {
 
 	interface IMTLComputeCommandEncoder {}
 	
-#if !XAMCORE_4_0
-	[Partial]
-#endif
 	[iOS (8,0)][Mac (10,11)]
 	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
 	partial interface MTLComputeCommandEncoder : MTLCommandEncoder {
@@ -500,9 +497,12 @@ namespace Metal {
 
 #if XAMCORE_4_0
 		[Abstract]
-#else
 		[Export ("setBuffers:offsets:withRange:")]
 		void SetBuffers (IntPtr buffers, IntPtr offsets, NSRange range);
+#else
+		[Abstract]
+		[Export ("setBuffers:offsets:withRange:")]
+		void SetBuffers (IMTLBuffer [] buffers, IntPtr offsets, NSRange range);
 #endif
 
 
@@ -3886,9 +3886,6 @@ namespace Metal {
 
 	interface IMTLArgumentEncoder { }
 
-#if !XAMCORE_4_0
-	[Partial]
-#endif
 	[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
 	[Protocol]
 	interface MTLArgumentEncoder
@@ -3923,9 +3920,13 @@ namespace Metal {
 
 #if XAMCORE_4_0
 		[Abstract]
-#endif
 		[Export ("setBuffers:offsets:withRange:")]
 		void SetBuffers (IntPtr buffers, IntPtr offsets, NSRange range);
+#else
+		[Abstract]
+		[Export ("setBuffers:offsets:withRange:")]
+		void SetBuffers (IMTLBuffer[] buffers, IntPtr offsets, NSRange range);
+#endif
 
 		[Abstract]
 		[Export ("setTexture:atIndex:")]

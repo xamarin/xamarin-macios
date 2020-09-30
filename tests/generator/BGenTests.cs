@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -627,12 +627,6 @@ namespace GeneratorTests
 		public void DiamondProtocol ()
 		{
 			BuildFile (Profile.iOS, "tests/diamond-protocol.cs");
-		}
-
-		[Test]
-		public void GHIssue9648 ()
-		{
-			BuildFile (Profile.iOS, "ghissue9648.cs");
 		}
 
 		BGenTool BuildFile (Profile profile, params string [] filenames)

@@ -5,29 +5,12 @@ using ObjCRuntime;
 
 namespace Metal {
 
-
-#if !XAMCORE_4_0
-	public partial interface IMTLComputeCommandEncoder {
-		[Obsolete ("Use 'SetManagedBuffers' instead.")]
-		void SetBuffers (IMTLBuffer [] buffers, IntPtr offsets, NSRange range);
-	}
-
-	internal partial class MTLComputeCommandEncoderWrapper {
-
-		[Obsolete ("Use 'SetManagedBuffers' instead.")]
-		public void SetBuffers (IMTLBuffer [] buffers, IntPtr offsets, NSRange range)
-			=> throw new NotSupportedException ();
-	}
-#endif
+#if XAMCORE_4_0
 
 	// add some extension methods to make the API of the protocol nicer
 	public static class IMTLComputeCommandEncoderExtensions {
 
-#if XAMCORE_4_0
 		public static void SetBuffers (this IMTLComputeCommandEncoder table, IMTLBuffer[] buffers, nuint[] offsets, NSRange range)
-#else
-		public static void SetManagedBuffers (this IMTLComputeCommandEncoder table, IMTLBuffer[] buffers, nuint[] offsets, NSRange range)
-#endif
 		{
 			if (buffers == null)
 				throw new ArgumentNullException (nameof (buffers));
@@ -48,4 +31,5 @@ namespace Metal {
 			}
 		}
 	}
+#endif
 }
