@@ -352,20 +352,24 @@ namespace AudioUnit
 
 #if !MONOMAC
 		[iOS (7,0)]
+		[Deprecated (PlatformName.iOS, 14,0)]
 		[DllImport(Constants.AudioUnitLibrary)]
 		static extern IntPtr AudioComponentGetIcon (IntPtr comp, float /* float */ desiredPointSize);
 
 		[iOS (7,0)]
+		[Deprecated (PlatformName.iOS, 14,0, message: "Use 'CopyIcon' instead.")]
 		public UIKit.UIImage GetIcon (float desiredPointSize)
 		{
 			return new UIKit.UIImage (AudioComponentGetIcon (handle, desiredPointSize));
 		}
 
 		[iOS (7,0)]
+		[Deprecated (PlatformName.iOS, 13,0)]
 		[DllImport(Constants.AudioUnitLibrary)]
 		static extern double AudioComponentGetLastActiveTime (IntPtr comp);
 
 		[iOS (7,0)]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AudioUnit' instead.")]
 		public double LastActiveTime {
 			get {
 				return AudioComponentGetLastActiveTime (handle);
