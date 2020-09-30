@@ -553,12 +553,7 @@ namespace TestCase
 
 		public static string FindRootDirectory ()
 		{
-			var current = Assembly.GetExecutingAssembly ().Location;
-			while (!Directory.Exists (Path.Combine (current, "_mac-build")) && current.Length > 1)
-				current = Path.GetDirectoryName (current);
-			if (current.Length <= 1)
-				throw new DirectoryNotFoundException (string.Format ("Could not find the root directory starting from {0}", Environment.CurrentDirectory));
-			return Path.GetFullPath (Path.Combine (current, "_mac-build"));
+			return Configuration.TargetDirectoryXM;
 		}
 
 		static string GenerateOutputCommand (string tmpDir, Guid guid)
