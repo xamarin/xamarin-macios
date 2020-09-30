@@ -2528,18 +2528,18 @@ namespace UIKit {
 		[Protocolize]
 		UIApplicationDelegate Delegate { get; set; }
 
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use UIView's 'UserInteractionEnabled' property instead")]
-		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use UIView's 'UserInteractionEnabled' property instead")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use UIView's 'UserInteractionEnabled' property instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use UIView's 'UserInteractionEnabled' property instead.")]
 		[Export ("beginIgnoringInteractionEvents")]
 		void BeginIgnoringInteractionEvents ();
 		
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use UIView's 'UserInteractionEnabled' property instead")]
-		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use UIView's 'UserInteractionEnabled' property instead")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use UIView's 'UserInteractionEnabled' property instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use UIView's 'UserInteractionEnabled' property instead.")]
 		[Export ("endIgnoringInteractionEvents")]
 		void EndIgnoringInteractionEvents ();
 
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use UIView's 'UserInteractionEnabled' property instead")]
-		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use UIView's 'UserInteractionEnabled' property instead")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use UIView's 'UserInteractionEnabled' property instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use UIView's 'UserInteractionEnabled' property instead.")]
 		[Export ("isIgnoringInteractionEvents")]
 		bool IsIgnoringInteractionEvents { get; }
 
@@ -10210,7 +10210,8 @@ namespace UIKit {
 		[Protocolize]
 		UIPickerViewDelegate Delegate { get; set; }
 
-		[Deprecated (PlatformName.iOS, 13, 0, message: "This property is a no-op on iOS 7 and later.")]
+		[Deprecated (PlatformName.iOS, 13,0)]
+		[Advice ("This property is a no-op since 7.0.")]
 		[Export ("showsSelectionIndicator")]
 		bool ShowSelectionIndicator { get; set; }
 

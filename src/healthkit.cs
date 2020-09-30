@@ -2799,11 +2799,11 @@ namespace HealthKit {
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface HKWorkoutSession : NSSecureCoding {
-		[Deprecated (PlatformName.WatchOS, 3, 0, message: "Use WorkoutConfiguration")]
+		[Deprecated (PlatformName.WatchOS, 3, 0, message: "Use 'WorkoutConfiguration' instead.")]
 		[Export ("activityType")]
 		HKWorkoutActivityType ActivityType { get; }
 
-		[Deprecated (PlatformName.WatchOS, 3, 0, message: "Use WorkoutConfiguration")]
+		[Deprecated (PlatformName.WatchOS, 3, 0, message: "Use 'WorkoutConfiguration' instead.")]
 		[Export ("locationType")]
 		HKWorkoutSessionLocationType LocationType { get; }
 

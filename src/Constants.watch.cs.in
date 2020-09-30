@@ -55,7 +55,9 @@ namespace ObjCRuntime {
 		public const string CoreBluetoothLibrary = "/System/Library/Frameworks/CoreBluetooth.framework/CoreBluetooth";
 		public const string CoreMLLibrary = "/System/Library/Frameworks/CoreML.framework/CoreML";	
 		public const string CoreVideoLibrary = "/System/Library/Frameworks/CoreVideo.framework/CoreVideo";
+#if !XAMCORE_4_0
 		public const string VisionLibrary = "/System/Library/Frameworks/Vision.framework/Vision";
+#endif
 
 		// WatchOS 5
 		public const string NaturalLanguageLibrary = "/System/Library/Frameworks/NaturalLanguage.framework/NaturalLanguage";
