@@ -244,41 +244,21 @@ namespace Xamarin.MMP.Tests
 
 		public static string BuildClassicProject (string csprojTarget)
 		{
-			string rootDirectory = FindRootDirectory ();
-
-			// TODO - This is not enough for MSBuild to really work. We need stuff to have it not use system targets!
-			// These are required to have xbuild use are local build instead of system install
-			var env = new Dictionary<string, string> {
-				{ "TargetFrameworkFallbackSearchPaths", rootDirectory + "/Library/Frameworks/Mono.framework/External/xbuild-frameworks" },
-				{ "MSBuildExtensionsPathFallbackPathsOverride", rootDirectory + "/Library/Frameworks/Mono.framework/External/xbuild" },
-				{ "XAMMAC_FRAMEWORK_PATH", rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current" },
-				{ "XamarinMacFrameworkRoot", rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current" },
-			};
-
 			// This is to force build to use our mmp and not system mmp
 			var buildArgs = new List<string> ();
 			buildArgs.Add ("build");
 			buildArgs.Add (csprojTarget);
 
-			return RunAndAssert ("/Applications/Visual Studio.app/Contents/MacOS/vstool", buildArgs, "Compile", shouldFail: true, environment: env);
+			return RunAndAssert ("/Applications/Visual Studio.app/Contents/MacOS/vstool", buildArgs, "Compile", shouldFail: true, environment: Configuration.GetBuildEnvironment (ApplePlatform.MacOSX));
 		}
 
 		public static string BuildProject (string csprojTarget, bool shouldFail = false, bool release = false, Dictionary<string, string> environment = null, IList<string> extraArgs = null)
 		{
-			string rootDirectory = FindRootDirectory ();
-
-			// TODO - This is not enough for MSBuild to really work. We need stuff to have it not use system targets!
-			// These are required to have xbuild use are local build instead of system install
-			environment ??= new Dictionary<string, string> ();
-			environment ["TargetFrameworkFallbackSearchPaths"] = rootDirectory + "/Library/Frameworks/Mono.framework/External/xbuild-frameworks";
-			environment ["MSBuildExtensionsPathFallbackPathsOverride"] = rootDirectory + "/Library/Frameworks/Mono.framework/External/xbuild";
-			environment ["XAMMAC_FRAMEWORK_PATH"] = rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current";
-			environment ["XamarinMacFrameworkRoot"] = rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current";
+			Configuration.SetBuildVariables (ApplePlatform.MacOSX, ref environment);
 
 			// This is to force build to use our mmp and not system mmp
 			var buildArgs = new List<string> ();
 			buildArgs.Add ("/verbosity:diagnostic");
-			buildArgs.Add ("/property:XamarinMacFrameworkRoot=" + rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current");
 
 			// Restore any package references
 			buildArgs.Add ("/r");
@@ -588,17 +568,8 @@ namespace TestCase
 
 		public static void NugetRestore (string project)
 		{
-			string rootDirectory = FindRootDirectory ();
-
-			var env = new Dictionary<string, string> {
-				{ "TargetFrameworkFallbackSearchPaths", rootDirectory + "/Library/Frameworks/Mono.framework/External/xbuild-frameworks" },
-				{ "MSBuildExtensionsPathFallbackPathsOverride", rootDirectory + "/Library/Frameworks/Mono.framework/External/xbuild" },
-				{ "XAMMAC_FRAMEWORK_PATH", rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current" },
-				{ "XamarinMacFrameworkRoot", rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current" },
-			};
-
 			var output = new StringBuilder ();
-			var rv = ExecutionHelper.Execute (Configuration.XIBuildPath, new [] { $"--", "/t:Restore", project}, stdout: output, stderr: output, environmentVariables: env);
+			var rv = ExecutionHelper.Execute (Configuration.XIBuildPath, new [] { $"--", "/t:Restore", project}, stdout: output, stderr: output, environmentVariables: Configuration.GetBuildEnvironment (ApplePlatform.MacOSX));
 			if (rv != 0) {
 				Console.WriteLine ("nuget restore failed:");
 				Console.WriteLine (output);
