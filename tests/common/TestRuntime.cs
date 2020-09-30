@@ -202,6 +202,14 @@ partial class TestRuntime
 			var actual = GetiOSBuildVersion ();
 			Console.WriteLine (actual);
 			return actual.StartsWith (v.iOS.Build, StringComparison.Ordinal);
+#elif __TVOS__
+			if (!CheckExacttvOSSystemVersion (v.tvOS.Major, v.tvOS.Minor))
+				return false;
+			if (v.tvOS.Build == "?")
+				throw new NotImplementedException ($"Build number for tvOS {v.tvOS.Major}.{v.tvOS.Minor} beta {beta} (candidate: {GetiOSBuildVersion ()})");
+			var actual = GetiOSBuildVersion ();
+			Console.WriteLine (actual);
+			return actual.StartsWith (v.tvOS.Build, StringComparison.Ordinal);
 #else
 			throw new NotImplementedException ();
 #endif
@@ -673,6 +681,16 @@ partial class TestRuntime
 		return version.Major == major && version.Minor == minor;
 #else
 		throw new Exception ("Can't get iOS System version on other platforms.");
+#endif
+	}
+
+	static bool CheckExacttvOSSystemVersion (int major, int minor)
+	{
+#if __TVOS__
+		var version = Version.Parse (UIDevice.CurrentDevice.SystemVersion);
+		return version.Major == major && version.Minor == minor;
+#else
+		throw new Exception ("Can't get tvOS System version on other platforms.");
 #endif
 	}
 
