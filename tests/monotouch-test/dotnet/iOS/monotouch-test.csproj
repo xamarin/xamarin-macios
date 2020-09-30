@@ -14,6 +14,7 @@
     <CodesignEntitlements>..\..\Entitlements.plist</CodesignEntitlements>
     <AssetTargetFallback>xamarinios10;$(AssetTargetFallback)</AssetTargetFallback>
     <DefineConstants Condition="'$(Platform)' == 'iPhoneSimulator'">$(DefineConstants);DYNAMIC_REGISTRAR</DefineConstants>
+    <RootTestsDirectory>..\..\..</RootTestsDirectory>
   </PropertyGroup>
 
   <ItemGroup>
@@ -198,4 +199,5 @@
   <Target Name="BeforeBuild" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)" DependsOnTargets="CustomMetalSmelting" >
     <Exec Command="make -j8 -C $(TestLibrariesDirectory)" />
   </Target>
+  <Import Project="$(RootTestsDirectory)\nunit.framework.targets" />
 </Project>

@@ -294,6 +294,12 @@ namespace Introspection {
 			case "MonoMac.AVFoundation.AVCaptureDeviceInputSource": // Crashes on 10.9.5
 			case "AVFoundation.AVCaptureDeviceInputSource":
 				break;
+			// 11.0
+			case "AVFoundation.AVMediaSelection":
+			case "AVFoundation.AVMutableMediaSelection":
+			case "CoreLocation.CLBeacon":
+			case "GameKit.GKTurnBasedMatch":
+				break;
 			default:
 				base.CheckToString (obj);
 				break;
@@ -349,6 +355,9 @@ namespace Introspection {
 				// crashes on El Capitan (b2) but not before
 				if (!Mac.CheckSystemVersion (10, 11))
 					goto default;
+				do_not_dispose.Add (obj);
+				break;
+			case "CoreLocation.CLBeacon":
 				do_not_dispose.Add (obj);
 				break;
 			default:

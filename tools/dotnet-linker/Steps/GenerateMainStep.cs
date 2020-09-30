@@ -42,6 +42,7 @@ namespace Xamarin {
 				if (!app.IsDefaultMarshalManagedExceptionMode)
 					contents.WriteLine ("\txamarin_marshal_managed_exception_mode = MarshalManagedExceptionMode{0};", app.MarshalManagedExceptions);
 				contents.WriteLine ("\txamarin_marshal_objectivec_exception_mode = MarshalObjectiveCExceptionMode{0};", app.MarshalObjectiveCExceptions);
+				contents.WriteLine ("\txamarin_supports_dynamic_registration = {0};", app.DynamicRegistrationSupported ? "TRUE" : "FALSE");
 				contents.WriteLine ("}");
 				contents.WriteLine ();
 				contents.WriteLine ("void xamarin_initialize_callbacks () __attribute__ ((constructor));");

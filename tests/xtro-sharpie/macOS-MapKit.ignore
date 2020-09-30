@@ -1,8 +1,6 @@
 !missing-field! MKAnnotationCalloutInfoDidChangeNotification not bound
 !missing-protocol-conformance! MKUserLocation should conform to MKAnnotation
 !missing-protocol-member! MKOverlay::coordinate not found
-!unknown-native-enum! MKFeatureVisibility bound
-!unknown-native-enum! MKUserTrackingMode bound
 
 # Initial result from new rule extra-null-allowed
 !extra-null-allowed! 'System.Boolean MapKit.MKMapItem::_OpenMaps(MapKit.MKMapItem[],Foundation.NSDictionary)' has a extraneous [NullAllowed] on parameter #0

@@ -26,41 +26,41 @@ TVOS_DOTNET_BUILD_DIR=$(DOTNET_BUILD_DIR)/tvos
 GENERATOR_FLAGS=-process-enums -core -nologo -nostdlib -noconfig -native-exception-marshalling --ns:ObjCRuntime
 
 DOTNET_REFERENCES = \
-	/r:$(DOTNET_BCL_DIR)/System.Buffers.dll \
-	/r:$(DOTNET_BCL_DIR)/System.Collections.Concurrent.dll \
-	/r:$(DOTNET_BCL_DIR)/System.Collections.dll \
-	/r:$(DOTNET_BCL_DIR)/System.Collections.NonGeneric.dll \
-	/r:$(DOTNET_BCL_DIR)/System.Console.dll \
-	/r:$(DOTNET_BCL_DIR)/System.Diagnostics.Debug.dll \
-	/r:$(DOTNET_BCL_DIR)/System.Diagnostics.Tools.dll \
-	/r:$(DOTNET_BCL_DIR)/System.Drawing.Primitives.dll \
-	/r:$(DOTNET_BCL_DIR)/System.IO.Compression.dll \
-	/r:$(DOTNET_BCL_DIR)/System.IO.FileSystem.dll \
-	/r:$(DOTNET_BCL_DIR)/System.Linq.dll \
-	/r:$(DOTNET_BCL_DIR)/System.Memory.dll \
-	/r:$(DOTNET_BCL_DIR)/System.Net.Http.dll \
-	/r:$(DOTNET_BCL_DIR)/System.Net.NameResolution.dll \
-	/r:$(DOTNET_BCL_DIR)/System.Net.Primitives.dll \
-	/r:$(DOTNET_BCL_DIR)/System.Net.Requests.dll \
-	/r:$(DOTNET_BCL_DIR)/System.Net.Security.dll \
-	/r:$(DOTNET_BCL_DIR)/System.Net.ServicePoint.dll \
-	/r:$(DOTNET_BCL_DIR)/System.Net.Sockets.dll \
-	/r:$(DOTNET_BCL_DIR)/System.Resources.ResourceManager.dll \
-	/r:$(DOTNET_BCL_DIR)/System.Runtime.dll \
-	/r:$(DOTNET_BCL_DIR)/System.Runtime.Extensions.dll \
-	/r:$(DOTNET_BCL_DIR)/System.Runtime.InteropServices.dll \
-	/r:$(DOTNET_BCL_DIR)/System.Security.Cryptography.X509Certificates.dll \
-	/r:$(DOTNET_BCL_DIR)/System.Text.RegularExpressions.dll \
-	/r:$(DOTNET_BCL_DIR)/System.Threading.dll \
-	/r:$(DOTNET_BCL_DIR)/System.Threading.Tasks.dll \
-	/r:$(DOTNET_BCL_DIR)/System.Threading.Thread.dll \
-	/r:$(DOTNET_BCL_DIR)/System.Xml.dll \
-	/r:$(DOTNET_BCL_DIR)/System.Xml.ReaderWriter.dll \
+	/r:$(DOTNET5_BCL_DIR)/System.Buffers.dll \
+	/r:$(DOTNET5_BCL_DIR)/System.Collections.Concurrent.dll \
+	/r:$(DOTNET5_BCL_DIR)/System.Collections.dll \
+	/r:$(DOTNET5_BCL_DIR)/System.Collections.NonGeneric.dll \
+	/r:$(DOTNET5_BCL_DIR)/System.Console.dll \
+	/r:$(DOTNET5_BCL_DIR)/System.Diagnostics.Debug.dll \
+	/r:$(DOTNET5_BCL_DIR)/System.Diagnostics.Tools.dll \
+	/r:$(DOTNET5_BCL_DIR)/System.Drawing.Primitives.dll \
+	/r:$(DOTNET5_BCL_DIR)/System.IO.Compression.dll \
+	/r:$(DOTNET5_BCL_DIR)/System.IO.FileSystem.dll \
+	/r:$(DOTNET5_BCL_DIR)/System.Linq.dll \
+	/r:$(DOTNET5_BCL_DIR)/System.Memory.dll \
+	/r:$(DOTNET5_BCL_DIR)/System.Net.Http.dll \
+	/r:$(DOTNET5_BCL_DIR)/System.Net.NameResolution.dll \
+	/r:$(DOTNET5_BCL_DIR)/System.Net.Primitives.dll \
+	/r:$(DOTNET5_BCL_DIR)/System.Net.Requests.dll \
+	/r:$(DOTNET5_BCL_DIR)/System.Net.Security.dll \
+	/r:$(DOTNET5_BCL_DIR)/System.Net.ServicePoint.dll \
+	/r:$(DOTNET5_BCL_DIR)/System.Net.Sockets.dll \
+	/r:$(DOTNET5_BCL_DIR)/System.Resources.ResourceManager.dll \
+	/r:$(DOTNET5_BCL_DIR)/System.Runtime.dll \
+	/r:$(DOTNET5_BCL_DIR)/System.Runtime.Extensions.dll \
+	/r:$(DOTNET5_BCL_DIR)/System.Runtime.InteropServices.dll \
+	/r:$(DOTNET5_BCL_DIR)/System.Security.Cryptography.X509Certificates.dll \
+	/r:$(DOTNET5_BCL_DIR)/System.Text.RegularExpressions.dll \
+	/r:$(DOTNET5_BCL_DIR)/System.Threading.dll \
+	/r:$(DOTNET5_BCL_DIR)/System.Threading.Tasks.dll \
+	/r:$(DOTNET5_BCL_DIR)/System.Threading.Thread.dll \
+	/r:$(DOTNET5_BCL_DIR)/System.Xml.dll \
+	/r:$(DOTNET5_BCL_DIR)/System.Xml.ReaderWriter.dll \
 
 DOTNET_FLAGS=/noconfig /nostdlib+ /deterministic /features:strict /nologo /target:library /debug /unsafe /define:NET /define:NET_TODO $(DOTNET_REFERENCES)
 
 DOTNET_COMPILER=$(DOTNET_BUILD_DIR)/compiler
-DOTNET_GENERATOR_FLAGS=$(GENERATOR_FLAGS) -compiler=$(abspath $(DOTNET_COMPILER)) --lib=$(DOTNET_BCL_DIR) -attributelib:$(DOTNET_BINDING_ATTRIBUTES) $(DOTNET_REFERENCES)
+DOTNET_GENERATOR_FLAGS=$(GENERATOR_FLAGS) -compiler=$(abspath $(DOTNET_COMPILER)) --lib=$(DOTNET5_BCL_DIR) -attributelib:$(DOTNET_BINDING_ATTRIBUTES) $(DOTNET_REFERENCES)
 DOTNET_GENERATOR=$(DOTNET_BUILD_DIR)/bgen/bgen
 DOTNET_BINDING_ATTRIBUTES=$(DOTNET_BUILD_DIR)/Xamarin.Apple.BindingAttributes.dll
 
@@ -1193,6 +1193,10 @@ $(DOTNET_COMPILER): Makefile $(TOP)/Make.config | $(DOTNET_BUILD_DIR)
 	$(Q) echo "#!/bin/zsh -e" > $@
 	$(Q) echo "exec $(SYSTEM_CSC) $(DOTNET_FLAGS) \"\$$@\"" >> $@
 	$(Q) chmod +x $@
+
+# This tells NuGet to use the exact same dotnet version we've configured in Make.config
+global.json: $(TOP)/global5.json
+	$(Q) $(CP) $< $@
 
 install-local:: $(INSTALL_TARGETS)
 all-local:: $(ALL_TARGETS)

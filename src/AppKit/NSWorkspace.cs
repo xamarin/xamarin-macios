@@ -9,17 +9,20 @@ namespace AppKit {
 
 	public partial class NSWorkspace {
 
+		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use 'NSWorkspace.OpenUrls' with completion handler.")]
 		public virtual bool OpenUrls (NSUrl[] urls, string bundleIdentifier, NSWorkspaceLaunchOptions options, NSAppleEventDescriptor descriptor, string[] identifiers)
 		{
 			// Ignore the passed in argument, because if you pass it in we will crash on cleanup.
 			return _OpenUrls (urls, bundleIdentifier, options, descriptor, null);
 		}
 
+		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use 'NSWorkspace.OpenUrls' with completion handler.")]
 		public virtual bool OpenUrls (NSUrl[] urls, string bundleIdentifier, NSWorkspaceLaunchOptions options, NSAppleEventDescriptor descriptor)
 		{
 			return _OpenUrls (urls, bundleIdentifier, options, descriptor, null);
 		}
 
+		[Advice ("Use 'NSWorkSpace.IconForContentType' instead.")]
 		public virtual NSImage IconForFileType (string fileType)
 		{
 			var nsFileType = NSString.CreateNative (fileType);
@@ -31,6 +34,7 @@ namespace AppKit {
 			}
 		}
 
+		[Advice ("Use 'NSWorkSpace.IconForContentType' instead.")]
 		public virtual NSImage IconForFileType (HfsTypeCode typeCode)
 		{
 			var nsFileType = GetNSFileType ((uint) typeCode);

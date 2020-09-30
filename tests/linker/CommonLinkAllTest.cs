@@ -54,9 +54,6 @@ namespace LinkAll {
 	public class CommonLinkAllTest {
 		string WorkAroundLinkerHeuristics { get { return ""; } }
 
-#if NET
-		[Ignore ("https://github.com/xamarin/xamarin-macios/issues/9562")]
-#endif
 		[Test]
 		public void BindingsAndBeforeInitField ()
 		{

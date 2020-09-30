@@ -7,6 +7,7 @@
 // Copyright 2011-2014, 2016 Xamarin Inc
 //
 
+using System;
 using ObjCRuntime;
 
 namespace iAd {
@@ -50,10 +51,16 @@ namespace iAd {
 	[ErrorDomain ("ADClientErrorDomain")]
 	public enum ADClientError : long {
 		Unknown = 0,
-		LimitAdTracking = 1,
-		[iOS (11,3)]
+		TrackingRestrictedOrDenied = 1,
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'TrackingRestrictedOrDenied' instead.")]
+		LimitAdTracking = TrackingRestrictedOrDenied,
+#endif
 		MissingData = 2,
-		[iOS (11,3)]
 		CorruptResponse = 3,
+		RequestClientError = 4,
+		RequestServerError = 5,
+		RequestNetworkError = 6,
+		UnsupportedPlatform = 7,
 	}
 }
