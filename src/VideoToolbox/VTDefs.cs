@@ -49,9 +49,9 @@ namespace VideoToolbox {
 		ColorCorrectionImageRotationFailed        = -12219,
 		VideoDecoderRemoved                       = -17690,
 		SessionMalfunction                        = -17691,
-		[Mac (11, 0)]
+		[Mac (11, 0), iOS (14, 2), TV (14, 2)]
 		DecoderNeedsRosetta                       = -17692,
-		[Mac (11, 0)]
+		[Mac (11, 0), iOS (14, 2), TV (14, 2)]
 		EncoderNeedsRosetta	                      = -17693,
 	}
 
