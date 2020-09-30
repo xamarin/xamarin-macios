@@ -9,24 +9,24 @@ namespace WatchKit {
 	[Register ("WKInterfaceSeparator", SkipRegistration = true)]
 	[Introduced (PlatformName.iOS, 8,2, PlatformArchitecture.All)]
 	[Unavailable (PlatformName.iOS, PlatformArchitecture.All)]
-	[Obsolete ("The WatchKit framework has been removed from iOS")]
+	[Obsolete (Constants.WatchKitRemoved)]
 	[EditorBrowsable (EditorBrowsableState.Never)]
 	public class WKInterfaceSeparator : WKInterfaceObject {
-		public override IntPtr ClassHandle { get { throw new PlatformNotSupportedException ("The WatchKit framework has been removed from iOS"); } }
+		public override IntPtr ClassHandle { get { throw new PlatformNotSupportedException (Constants.WatchKitRemoved); } }
 
 		protected WKInterfaceSeparator (NSObjectFlag t) : base (t)
 		{
-			throw new PlatformNotSupportedException ("The WatchKit framework has been removed from iOS");
+			throw new PlatformNotSupportedException (Constants.WatchKitRemoved);
 		}
 
 		protected internal WKInterfaceSeparator (IntPtr handle) : base (handle)
 		{
-			throw new PlatformNotSupportedException ("The WatchKit framework has been removed from iOS");
+			throw new PlatformNotSupportedException (Constants.WatchKitRemoved);
 		}
 
 		public virtual void SetColor (global::UIKit.UIColor color)
 		{
-			throw new PlatformNotSupportedException ("The WatchKit framework has been removed from iOS");
+			throw new PlatformNotSupportedException (Constants.WatchKitRemoved);
 		}
 	} /* class WKInterfaceSeparator */
 }
