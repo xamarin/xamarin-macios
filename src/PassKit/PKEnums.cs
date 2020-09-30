@@ -27,7 +27,6 @@ namespace PassKit {
 		InvalidData = 1,
 		UnsupportedVersion,
 		InvalidSignature,
-		[iOS (8,0)]
 		NotEntitled
 	}
 
