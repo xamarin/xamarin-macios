@@ -100,8 +100,6 @@ namespace Xharness.Jenkins {
 					yield return new TestData { Variation = "Debug (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all,-remove-uithread-checks", Debug = true, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL", Undefines = "DYNAMIC_REGISTRAR", Ignored = ignore ?? !jenkins.IncludeAll };
 					break;
 				case "introspection":
-					if (test.TestProject.IsDotNetProject)
-						break; // Our .NET 5 code hasn't implemented building using static libraries yet, and the iOS 10.3 simulator requires dylibs to be signed, which we don't do yet, thus this doesn't quite work yet for the iOS 10.3 simulator.
 					foreach (var target in test.Platform.GetAppRunnerTargets ())
 						yield return new TestData {
 							Variation = $"Debug ({test.Platform.GetSimulatorMinVersion ()})",
@@ -121,7 +119,7 @@ namespace Xharness.Jenkins {
 						yield return new TestData { Variation = "Release (all optimizations)", MonoBundlingExtraArgs = "--registrar:static --optimize:all", Debug = false, LinkMode = "Full", Defines = "OPTIMIZEALL"};
 						break;
 					case "Debug":
-						yield return new TestData { Variation = "Debug (all optimizations)", MonoBundlingExtraArgs = "--registrar:static --optimize:all,-remove-uithread-checks", Debug = true, LinkMode = "Full", Defines = "OPTIMIZEALL", Ignored = !jenkins.IncludeAll };
+						yield return new TestData { Variation = "Debug (all optimizations)", MonoBundlingExtraArgs = "--registrar:static --optimize:all,-remove-uithread-checks", Debug = true, LinkMode = "Full", Defines = "OPTIMIZEALL", Ignored = !(jenkins.IncludeAll && jenkins.IncludeMac) };
 						break;
 					}
 					break;
