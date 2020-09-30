@@ -29,6 +29,7 @@ namespace Metal {
 					table.SetBuffers ((IntPtr) buffersPtr, (IntPtr) offsetsPtr, range);
 				}
 			}
+			GC.KeepAlive (buffers)
 		}
 	}
 #endif

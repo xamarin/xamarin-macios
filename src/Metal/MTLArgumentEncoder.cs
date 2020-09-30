@@ -8,7 +8,7 @@ namespace Metal {
 
 	public static partial class MTLArgumentEncoder_Extensions {
 #if XAMCORE_4_0
-		public static void SetBuffers (this IMTLArgumentEncoder table, IMTLBuffer[] buffers, nuint[] offsets, NSRange range)
+		public static void SetBuffers (this IMTLArgumentEncoder encoder, IMTLBuffer[] buffers, nuint[] offsets, NSRange range)
 		{
 			if (buffers == null)
 				throw new ArgumentNullException (nameof (buffers));
@@ -24,9 +24,10 @@ namespace Metal {
 			unsafe {
 				fixed (void* buffersPtr = bufferPtrArray)
 				fixed (void* offsetsPtr = offsets) { // can use fixed
-					table.SetBuffers ((IntPtr) buffersPtr, (IntPtr) offsetsPtr, range);
+					encoder.SetBuffers ((IntPtr) buffersPtr, (IntPtr) offsetsPtr, range);
 				}
 			}
+			GC.KeepAlive (buffers)
 		}
 #else 
 		public unsafe static void SetBuffers (this IMTLArgumentEncoder This, IMTLBuffer [] buffers, nint [] offsets, Foundation.NSRange range)
