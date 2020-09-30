@@ -91,6 +91,9 @@ namespace Xharness.Jenkins {
 				}
 				break;
 			case "iPhoneSimulator":
+				if (test.Platform == TestPlatform.iOS_Unified32)
+					ignore = true;
+
 				switch (test.TestName) {
 				case "monotouch-test":
 					// The default is to run monotouch-test with the dynamic registrar (in the simulator), so that's already covered
@@ -105,7 +108,7 @@ namespace Xharness.Jenkins {
 							Variation = $"Debug ({test.Platform.GetSimulatorMinVersion ()})",
 							Debug = true,
 							Candidates = jenkins.Simulators.SelectDevices (target, jenkins.SimulatorLoadLog, true),
-							Ignored = !jenkins.IncludeOldSimulatorTests, 
+							Ignored = ignore ?? !jenkins.IncludeOldSimulatorTests, 
 						};
 					break;
 				}
