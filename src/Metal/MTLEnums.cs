@@ -76,9 +76,7 @@ namespace Metal {
 		NotPermitted = 7,
 		OutOfMemory = 8,
 		InvalidResource = 9,
-		[iOS (10,0), TV (10,0), NoWatch, NoMac]
 		Memoryless = 10,
-		[Mac (10,13), NoiOS, NoTV, NoWatch]
 		DeviceRemoved = 11,
 	}
 
@@ -387,9 +385,7 @@ namespace Metal {
 		Internal,
 		CompileFailure,
 		CompileWarning,
-		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
 		FunctionNotFound,
-		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
 		FileNotFound,
 	}
 

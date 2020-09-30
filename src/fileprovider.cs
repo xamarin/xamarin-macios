@@ -175,19 +175,12 @@ namespace FileProvider {
 		InsufficientQuota = -1003,
 		ServerUnreachable = -1004,
 		NoSuchItem = -1005,
-		[NoiOS]
 		VersionOutOfDate = -1006,
-		[NoiOS]
 		DirectoryNotEmpty = -1007,
-		[NoiOS]
 		ProviderNotFound = -2001,
-		[NoiOS]
 		ProviderTranslocated = -2002,
-		[NoiOS]
 		OlderExtensionVersionRunning = -2003,
-		[NoiOS]
 		NewerExtensionVersionFound = -2004,
-		[NoiOS]
 		CannotSynchronize = -2005,
 	}
 
