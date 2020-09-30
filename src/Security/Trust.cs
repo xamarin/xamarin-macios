@@ -125,6 +125,10 @@ namespace Security {
 				throw new ArgumentException (result.ToString ());
 		}
 
+		[Deprecated (PlatformName.iOS, 12,1)]
+		[Deprecated (PlatformName.TvOS, 12,1)]
+		[Deprecated (PlatformName.WatchOS, 5,1)]
+		[Deprecated (PlatformName.MacOSX, 10,14,1)]
 		[DllImport (Constants.SecurityLibrary)]
 		extern static SecStatusCode /* OSStatus */ SecTrustEvaluate (IntPtr /* SecTrustRef */ trust, out /* SecTrustResultType */ SecTrustResult result);
 
@@ -169,6 +173,10 @@ namespace Security {
 			}
 		}
 
+		[Deprecated (PlatformName.iOS, 14,0)]
+		[Deprecated (PlatformName.MacOSX, 11,0)]
+		[Deprecated (PlatformName.TvOS, 14,0)]
+		[Deprecated (PlatformName.WatchOS, 7,0)]
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr /* SecKeyRef */ SecTrustCopyPublicKey (IntPtr /* SecTrustRef */ trust);
 
