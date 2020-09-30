@@ -256,7 +256,12 @@ namespace AVFoundation {
 	}
 #endif
 
+#if MONOMAC || !XAMCORE_4_0
+
 	[Mac (10, 10), NoiOS, NoWatch, NoTV]
+#if !MONOMAC
+	[Obsolete ("This API is not available on this platform.")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVSampleCursorSyncInfo {
 		[MarshalAs (UnmanagedType.I1)]
@@ -270,6 +275,9 @@ namespace AVFoundation {
 	}
 
 	[Mac (10, 10), NoiOS, NoWatch, NoTV]
+#if !MONOMAC
+	[Obsolete ("This API is not available on this platform.")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVSampleCursorDependencyInfo {
 		[MarshalAs (UnmanagedType.I1)]
@@ -292,6 +300,9 @@ namespace AVFoundation {
 	}
 
 	[Mac (10, 10), NoiOS, NoWatch, NoTV]
+#if !MONOMAC
+	[Obsolete ("This API is not available on this platform.")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVSampleCursorStorageRange {
 		public long Offset;
@@ -299,6 +310,9 @@ namespace AVFoundation {
 	}
 
 	[Mac (10, 10), NoiOS, NoWatch, NoTV]
+#if !MONOMAC
+	[Obsolete ("This API is not available on this platform.")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVSampleCursorChunkInfo {
 		public long SampleCount;
@@ -312,6 +326,7 @@ namespace AVFoundation {
 		[MarshalAs (UnmanagedType.I1)]
 		public bool HasUniformFormatDescriptions;
 	}
+#endif
 
 #if MONOMAC
 
