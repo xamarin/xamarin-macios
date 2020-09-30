@@ -7,7 +7,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 namespace Microsoft.DotNet.XHarness.iOS.Shared.Listeners {
 	public interface ISimpleListener {
 		Task CompletionTask { get; }
-		Task ConnectedTask { get; }
+		Task<bool> ConnectedTask { get; }
 		int Port { get; }
 		ILog TestLog { get; }
 
@@ -32,7 +32,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Listeners {
 		protected abstract void Start ();
 		protected abstract void Stop ();
 
-		public Task ConnectedTask => connected.Task;
+		public Task<bool> ConnectedTask => connected.Task;
 		public int Port { get; protected set; }
 		public abstract void Initialize ();
 

@@ -319,7 +319,7 @@ namespace Xharness.Tests {
 			// Mock finding simulators
 			simulators
 				.Setup (x => x.LoadDevices (It.IsAny<ILog> (), false, false, false))
-				.Returns (Task.CompletedTask);
+				.Returns (Task<bool>.CompletedTask);
 
 			string simulatorLogPath = Path.Combine (Path.GetTempPath (), "simulator-logs");
 
@@ -333,7 +333,7 @@ namespace Xharness.Tests {
 				.Setup (x => x.Create (It.IsAny<string> (), "TestLog", It.IsAny<bool> ()))
 				.Returns (listenerLogFile.Object);
 
-			simpleListener.SetupGet (x => x.ConnectedTask).Returns (Task.CompletedTask);
+			simpleListener.SetupGet (x => x.ConnectedTask).Returns (Task.FromResult (true));
 
 			var captureLog = new Mock<ICaptureLog> ();
 			captureLog.SetupGet (x => x.FullPath).Returns (simulatorLogPath);
@@ -424,7 +424,7 @@ namespace Xharness.Tests {
 				.Setup (x => x.Create (It.Is<string> (s => s.StartsWith ("test-sim64-")), "TestLog", It.IsAny<bool?> ()))
 				.Returns (listenerLogFile);
 
-			simpleListener.SetupGet (x => x.ConnectedTask).Returns (Task.CompletedTask);
+			simpleListener.SetupGet (x => x.ConnectedTask).Returns (Task.FromResult (true));
 
 			var captureLog = new Mock<ICaptureLog> ();
 			captureLog.SetupGet (x => x.FullPath).Returns (simulatorLogPath);
@@ -531,7 +531,7 @@ namespace Xharness.Tests {
 				.Setup (x => x.Create (It.IsAny<string> (), "TestLog", It.IsAny<bool> ()))
 				.Returns (listenerLogFile.Object);
 
-			simpleListener.SetupGet (x => x.ConnectedTask).Returns (Task.CompletedTask);
+			simpleListener.SetupGet (x => x.ConnectedTask).Returns (Task.FromResult (true));
 
 			// Act
 			var appRunner = new AppRunner (processManager.Object,
@@ -585,7 +585,7 @@ namespace Xharness.Tests {
 				.Setup (x => x.Create (It.Is<string> (s => s.StartsWith ("device-Test iPad-")), "Device log", It.IsAny<bool?> ()))
 				.Returns (deviceSystemLog.Object);
 
-			simpleListener.SetupGet (x => x.ConnectedTask).Returns (Task.CompletedTask);
+			simpleListener.SetupGet (x => x.ConnectedTask).Returns (Task.FromResult (true));
 
 			var deviceLogCapturer = new Mock<IDeviceLogCapturer> ();
 
@@ -693,7 +693,7 @@ namespace Xharness.Tests {
 				.Setup (x => x.Create (It.Is<string> (s => s.StartsWith ("device-Test iPad-")), "Device log", It.IsAny<bool?> ()))
 				.Returns (deviceSystemLog.Object);
 
-			simpleListener.SetupGet (x => x.ConnectedTask).Returns (Task.CompletedTask);
+			simpleListener.SetupGet (x => x.ConnectedTask).Returns (Task.FromResult (true));
 
 			var deviceLogCapturer = new Mock<IDeviceLogCapturer> ();
 
