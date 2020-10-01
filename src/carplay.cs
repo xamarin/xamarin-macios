@@ -1772,10 +1772,6 @@ namespace CarPlay {
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
-	[BaseType (typeof (NSObject))]
-	interface CPEntity : NSSecureCoding {}
-
-	[NoWatch, NoTV, NoMac, iOS (14,0)]
 	[BaseType (typeof (CPNowPlayingButton))]
 	interface CPNowPlayingShuffleButton {}
 

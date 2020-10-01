@@ -301,6 +301,7 @@ CALLKIT_SOURCES = \
 # CarPlay
 
 CARPLAY_SOURCES = \
+	CarPlay/CPCompat.cs \
 	CarPlay/CPNavigationAlert.cs \
 	CarPlay/CPMessageListItem.cs \
 
