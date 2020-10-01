@@ -565,7 +565,7 @@
     </data>
     
     <data name="W0111" xml:space="preserve">
-        <value>The iCloud entitlement '{item.Key}' is not supported by the Provisioning Profile.
+        <value>The iCloud entitlement '{0}' is not supported by the Provisioning Profile.
         </value>
     </data>
     
