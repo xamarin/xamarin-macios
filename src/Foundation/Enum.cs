@@ -208,7 +208,10 @@ namespace Foundation  {
 	public enum NSDataReadingOptions : ulong {
 		Mapped =   1 << 0,
 		Uncached = 1 << 1,
+#if !XAMCORE_4_0
+		[Obsolete ("This option is unavailable.")]
 		Coordinated = 1 << 2,
+#endif
 		MappedAlways = 1 << 3
 	}
 
@@ -542,7 +545,11 @@ namespace Foundation  {
 	[Flags]
 	[Native]
 	public enum NSDirectoryEnumerationOptions : ulong {
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'None' instead.")]
 		SkipsNone                    = 0,
+#endif
+		None                         = 0,
 		SkipsSubdirectoryDescendants = 1 << 0,
 		SkipsPackageDescendants      = 1 << 1,
 		SkipsHiddenFiles             = 1 << 2,
@@ -618,8 +625,12 @@ namespace Foundation  {
 	public enum NSStringDrawingOptions : ulong {
 		UsesLineFragmentOrigin = (1 << 0),
 		UsesFontLeading = (1 << 1),
+		[NoiOS][NoTV][NoWatch]
+		[Deprecated (PlatformName.MacOSX, 10,11)]
 		DisableScreenFontSubstitution = (1 << 2),
 		UsesDeviceMetrics = (1 << 3),
+		[NoiOS][NoTV][NoWatch]
+		[Deprecated (PlatformName.MacOSX, 10,11)]
 		OneShot = (1 << 4),
 		TruncatesLastVisibleLine = (1 << 5)
 	}		
@@ -631,12 +642,21 @@ namespace Foundation  {
 		Currency = 2,
 		Percent = 3,
 		Scientific = 4,
-		SpellOut = 5
+		SpellOut = 5,
+		[Mac (10,11)]
+		OrdinalStyle = 6,
+		[Mac (10,11)]
+		CurrencyIsoCodeStyle = 8,
+		[Mac (10,11)]
+		CurrencyPluralStyle = 9,
+		[Mac (10,11)]
+		CurrencyAccountingStyle = 10,
 	}
 
 	[Native]
 	public enum NSNumberFormatterBehavior : ulong {
 		Default = 0,
+		[NoiOS][NoTV][NoWatch]
 		Version_10_0 = 1000,
 		Version_10_4 = 1040
 	}
@@ -682,7 +702,9 @@ namespace Foundation  {
 		ForDeleting = 1,
 		ForMoving = 2,
 		ForMerging = 4,
-		ForReplacing = 8
+		ForReplacing = 8,
+		[iOS (8,0)][Mac (10,10)]
+		ContentIndependentMetadataOnly = 16,
 	}
 
 	[Flags]
@@ -993,6 +1015,7 @@ namespace Foundation  {
 		UserInitiated = 0x00FFFFFFUL | IdleSystemSleepDisabled,
 		Background = 0x000000ffUL,
 		LatencyCritical = 0xFF00000000UL,
+		InitiatedAllowingIdleSystemSleep = UserInitiated & ~IdleSystemSleepDisabled,
 	}
 
 	[Native]

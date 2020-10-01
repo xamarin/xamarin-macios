@@ -50,3 +50,7 @@
 !missing-null-allowed! 'UIKit.UIFontDescriptor UIKit.UIFontDescriptor::CreateWithTraits(UIKit.UIFontDescriptorSymbolicTraits)' is missing an [NullAllowed] on return type
 
 !unknown-field! UIUserNotificationActionResponseTypedTextKey bound
+
+# watchOS is 32bits but our [Native] enums are all 64 bits
+!extra-enum-value! Managed value 18446744073709551615 for UIRectCorner.AllCorners not found in native headers
+!missing-enum-value! UIRectCorner native value UIRectCornerAllCorners = 4294967295 not bound

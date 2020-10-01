@@ -405,3 +405,8 @@
 !missing-null-allowed! 'UIKit.UIWindow UIKit.UIApplication::get_KeyWindow()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIWindow UIKit.UITouch::get_Window()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIWindow UIKit.UIView::get_Window()' is missing an [NullAllowed] on return type
+
+## not available on tvOS (iOS 14+ only)
+!missing-enum-value! UICollectionLayoutListAppearance native value UICollectionLayoutListAppearanceInsetGrouped = 2 not bound
+!missing-enum-value! UICollectionLayoutListAppearance native value UICollectionLayoutListAppearanceSidebar = 3 not bound
+!missing-enum-value! UICollectionLayoutListAppearance native value UICollectionLayoutListAppearanceSidebarPlain = 4 not bound

@@ -41,6 +41,7 @@ namespace HealthKit {
 		UserCanceled,
 		AnotherWorkoutSessionStarted,
 		UserExitedWorkoutSession,
+		RequiredAuthorizationDenied,
 		NoData,
 	}
 
@@ -62,6 +63,10 @@ namespace HealthKit {
 		Ended,
 		[Watch (3,0)]
 		Paused,
+		[Watch (5,0)]
+		Prepared,
+		[Watch (5,0)]
+		Stopped,
 	}
 
 	[iOS (11,0)]

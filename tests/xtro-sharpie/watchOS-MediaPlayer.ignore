@@ -3,3 +3,7 @@
 !unknown-field! MPMediaEntityPropertyPersistentID bound
 !unknown-protocol! MPMediaPlayback bound
 !unknown-type! MPMediaEntity bound
+
+# watchOS is 32bits but our [Native] enums are all 64 bits
+!extra-enum-value! Managed value 18446744073709551615 for MPMediaType.Any not found in native headers
+!missing-enum-value! MPMediaType native value MPMediaTypeAny = 4294967295 not bound
