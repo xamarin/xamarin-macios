@@ -8,6 +8,7 @@ using System.Text;
 using NUnit.Framework;
 
 using Xamarin;
+using Xamarin.Tests;
 
 namespace Xamarin.MMP.Tests
 {
@@ -183,6 +184,22 @@ namespace Xamarin.MMP.Tests
 					Assert.IsFalse (secondBuildOutput.Contains (@"Building target ""_CompileToNative"""));
 				}
 			});
+		}
+
+		[Test]
+		public void MyCocoaSceneKitApp ()
+		{
+			var projectPath = Path.Combine (TI.FindSourceDirectory (), "TestProjects", "MyCocoaSceneKitApp", "MyCocoaSceneKitApp.csproj");
+			// Clone the project directory to a temporary directory
+			var testDirectory = Configuration.CloneTestDirectory (Path.GetDirectoryName (projectPath), "macOS");
+			// Update the project path to the clone project path in the temporary directory
+			projectPath = Path.Combine (testDirectory, Path.GetFileName (projectPath));
+			// build the project
+			TI.BuildProject (projectPath);
+			// verify that the scene kit assets are present in the app
+			var resourceDir = Path.Combine (testDirectory, "bin", "Debug", "MyCocoaSceneKitApp.app", "Contents", "Resources");
+			Assert.That (Path.Combine (resourceDir, "art.scnassets", "scene.scn"), Does.Exist, "scene.scn");
+			Assert.That (Path.Combine (resourceDir, "art.scnassets", "texture.png"), Does.Exist, "texture.png");
 		}
 	}
 }

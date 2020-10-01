@@ -329,13 +329,6 @@ namespace Introspection {
 		{
 			var cstr = ctor.ToString ();
 
-#if NET
-			// .NET 5 has an unusual take on how a ConstructorInfo should be converted to a string
-			// See also: https://github.com/dotnet/runtime/issues/36688
-			if (cstr.StartsWith (".ctorVoid ", StringComparison.Ordinal))
-				cstr = "Void .ctor" + cstr.Substring (".ctorVoid ".Length);
-#endif
-
 			switch (type.Name) {
 			case "MKTileOverlayRenderer":
 				// NSInvalidArgumentEception Expected a MKTileOverlay

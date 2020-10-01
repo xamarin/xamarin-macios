@@ -950,61 +950,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</ItemGroup>
 	</Target>
 
-	<Target Name="_CompileSceneKitAssets" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_ComputeTargetArchitectures;_BeforeCoreCompileSceneKitAssets;_ReadCoreCompileSceneKitAssets;_CoreCompileSceneKitAssets" />
-
-	<Target Name="_BeforeCoreCompileSceneKitAssets"
-		Inputs="@(SceneKitAsset)"
-		Outputs="$(_SceneKitCache)">
-
-		<!-- If any SceneKitAsset is newer than the generated items list, we delete them so that the _CoreCompileSceneKitAssets 
-		     target runs again and updates those lists for the next run
-		-->
-		<Delete Files="$(_SceneKitCache)" />
-	</Target>
-
-	<Target Name="_ReadCoreCompileSceneKitAssets"
-		DependsOnTargets="_BeforeCoreCompileSceneKitAssets">
-
-		<!-- If _BeforeCoreCompileSceneKitAssets did not delete the generated items lists from _CoreCompileSceneKitAssets, then we read them
-		     since that target won't run and we need to the output items that are cached in those files which includes full metadata -->
-		<ReadItemsFromFile File="$(_SceneKitCache)" Condition="Exists('$(_SceneKitCache)')">
-			<Output TaskParameter="Items" ItemName="_BundleResourceWithLogicalName" />
-		</ReadItemsFromFile>
-	</Target>
-
-	<Target Name="_CoreCompileSceneKitAssets"
-		Inputs="@(SceneKitAsset)"
-		Outputs="$(_SceneKitCache)"
-		DependsOnTargets="_BeforeCoreCompileSceneKitAssets;_GenerateBundleName;_ComputeTargetFrameworkMoniker">
-
-		<CompileSceneKitAssets
-			SessionId="$(BuildSessionId)"
-			AppBundleName="$(_AppBundleName)$(AppBundleExtension)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			ToolExe="$(CopySceneKitAssetsExe)"
-			ToolPath="$(CopySceneKitAssetsPath)"
-			SceneKitAssets="@(SceneKitAsset)"
-			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
-			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
-			ProjectDir="$(MSBuildProjectDirectory)"
-			ResourcePrefix="$(_ResourcePrefix)"
-			IsWatchApp="$(IsWatchApp)"
-			SdkPlatform="$(_SdkPlatform)"
-			SdkDevPath="$(_SdkDevPath)"
-			SdkRoot="$(_SdkRoot)"
-			SdkVersion="$(_SdkVersion)">
-			<Output TaskParameter="BundleResources" ItemName="_BundleResourceWithLogicalName" />
-
-			<!-- Local items to be persisted to items files -->
-			<Output TaskParameter="BundleResources" ItemName="_SceneKitAssets_BundleResources" />
-		</CompileSceneKitAssets>
-
-		<WriteItemsToFile Items="@(_SceneKitAssets_BundleResources)" ItemName="_BundleResourceWithLogicalName" File="$(_SceneKitCache)" Overwrite="true" IncludeMetadata="true" />
-		<ItemGroup>
-			<FileWrites Include="$(_SceneKitCache)" />
-		</ItemGroup>
-	</Target>
-
 	<Target Name="_CompileTextureAtlases" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_BeforeCompileTextureAtlases;_ReadCoreCompileTextureAtlases;_CoreCompileTextureAtlases" />
 
 	<Target Name="_BeforeCompileTextureAtlases"
@@ -1383,20 +1328,27 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			<_LibraryCodeSigningKey Condition="'$(_LibraryCodeSigningKey)' == ''">-</_LibraryCodeSigningKey>
 		</PropertyGroup>
 
-		<CodesignNativeLibraries
+		<ItemGroup>
+			<_CodesignNativeLibrary
+				Include="$(_AppBundlePath)\**\*.dylib;$(_AppBundlePath)\**\*.metallib"
+				Exclude="$(_AppBundlePath)\Watch\**;$(_AppBundlePath)\PlugIns\**"
+				/>
+		</ItemGroup>
+
+		<Codesign
 			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
 			ToolExe="$(CodesignExe)"
 			ToolPath="$(CodesignPath)"
-			AppBundleDir="$(AppBundleDir)"
-			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)codesign"
 			CodesignAllocate="$(_CodesignAllocate)"
 			DisableTimestamp="$(_CodesignDisableTimestamp)"
 			Keychain="$(CodesignKeychain)"
+			Resources="@(_CodesignNativeLibrary)"
 			SigningKey="$(_LibraryCodeSigningKey)"
+			StampPath="$(DeviceSpecificIntermediateOutputPath)codesign"
 			ExtraArgs="$(CodesignExtraArgs)"
 			>
-		</CodesignNativeLibraries>
+		</Codesign>
 	</Target>
 
 	<Target Name="_CodesignFrameworks" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(_Frameworks)' != ''" DependsOnTargets="_DetectSigningIdentity;_CollectFrameworks"
@@ -1446,20 +1398,32 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		Inputs="$(_AppBundlePath)PlugIns\%(_AppExtensionCodesignProperties.Identity)\%(_AppExtensionCodesignProperties.NativeExecutable);%(_AppExtensionCodesignProperties.CodesignAppExtensionInputs)"
 		Outputs="$(_AppBundlePath)PlugIns\%(_AppExtensionCodesignProperties.Identity)\_CodeSignature\CodeResources">
 
-		<CodesignNativeLibraries
+		<PropertyGroup>
+			<_CodesignAppExtensionsLibraryPath>$(_AppBundlePath)PlugIns\%(_AppExtensionCodesignProperties.Identity)\</_CodesignAppExtensionsLibraryPath>
+		</PropertyGroup>
+
+		<ItemGroup>
+			<_CodesignAppExtensionsLibrary
+				Include="$(_CodesignAppExtensionsLibraryPath)**\*.dylib;$(_CodesignAppExtensionsLibraryPath)**\*.metallib"
+				Exclude="$(_CodesignAppExtensionsLibraryPath)Watch\**;$(_CodesignAppExtensionsLibraryPath)PlugIns\**"
+				>
+			</_CodesignAppExtensionsLibrary>
+		</ItemGroup>
+
+		<Codesign
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true' And '%(_AppExtensionCodesignProperties.LibrarySigningKey)' != ''"
 			ToolExe="$(CodesignExe)"
 			ToolPath="$(CodesignPath)"
-			AppBundleDir="$(_AppBundlePath)PlugIns\%(_AppExtensionCodesignProperties.Identity)"
-			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)codesign\PlugIns\%(_AppExtensionCodesignProperties.Identity)"
+			Resources="@(_CodesignAppExtensionsLibrary)"
 			CodesignAllocate="%(_AppExtensionCodesignProperties.CodesignAllocate)"
 			DisableTimestamp="%(_AppExtensionCodesignProperties.DisableTimestamp)"
 			Keychain="%(_AppExtensionCodesignProperties.Keychain)"
 			SigningKey="%(_AppExtensionCodesignProperties.LibrarySigningKey)"
+			StampPath="$(DeviceSpecificIntermediateOutputPath)codesign\PlugIns\%(_AppExtensionCodesignProperties.Identity)"
 			ExtraArgs="%(_AppExtensionCodesignProperties.ExtraArgs)"
 			>
-		</CodesignNativeLibraries>
+		</Codesign>
 
 		<Codesign
 			SessionId="$(BuildSessionId)"

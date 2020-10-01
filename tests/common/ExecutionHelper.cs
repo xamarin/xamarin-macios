@@ -421,28 +421,15 @@ namespace Xamarin.Tests
 
 		public static string BuildXM (string project, string configuration = "Debug", string platform = "iPhoneSimulator", string verbosity = null, TimeSpan? timeout = null, string [] arguments = null, string targets = "Clean,Build")
 		{
-			return Build (project,
-				new Dictionary<string, string> {
-					{ "MD_APPLE_SDK_ROOT", Path.GetDirectoryName (Path.GetDirectoryName (Configuration.xcode_root)) },
-					{ "TargetFrameworkFallbackSearchPaths", Path.Combine (Configuration.TargetDirectoryXM, "Library", "Frameworks", "Mono.framework", "External", "xbuild-frameworks") },
-					{ "MSBuildExtensionsPathFallbackPathsOverride", Path.Combine (Configuration.TargetDirectoryXM, "Library", "Frameworks", "Mono.framework", "External", "xbuild") },
-					{ "XamarinMacFrameworkRoot", Path.Combine (Configuration.TargetDirectoryXM, "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current") },
-					{ "XAMMAC_FRAMEWORK_PATH", Path.Combine (Configuration.TargetDirectoryXM, "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current") },
-				}, configuration, platform, verbosity, timeout, arguments, targets);
+			return Build (project, ApplePlatform.MacOSX, configuration, platform, verbosity, timeout, arguments, targets);
 		}
 
 		public static string BuildXI (string project, string configuration = "Debug", string platform = "iPhoneSimulator", string verbosity = null, TimeSpan? timeout = null, string [] arguments = null, string targets = "Clean,Build")
 		{
-			return Build (project,
-				new Dictionary<string, string> {
-					{ "MD_APPLE_SDK_ROOT", Path.GetDirectoryName (Path.GetDirectoryName (Configuration.xcode_root)) },
-					{ "TargetFrameworkFallbackSearchPaths", Path.Combine (Configuration.TargetDirectoryXI, "Library", "Frameworks", "Mono.framework", "External", "xbuild-frameworks") },
-					{ "MSBuildExtensionsPathFallbackPathsOverride", Path.Combine (Configuration.TargetDirectoryXI, "Library", "Frameworks", "Mono.framework", "External", "xbuild") },
-					{ "MD_MTOUCH_SDK_ROOT", Path.Combine (Configuration.TargetDirectoryXI, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current") },
-				}, configuration, platform, verbosity, timeout, arguments, targets);
+			return Build (project, ApplePlatform.iOS, configuration, platform, verbosity, timeout, arguments, targets);
 		}
 
-		static string Build (string project, Dictionary<string, string> environmentVariables, string configuration = "Debug", string platform = "iPhoneSimulator", string verbosity = null, TimeSpan? timeout = null, string [] arguments = null, string targets = "Clean,Build")
+		static string Build (string project, ApplePlatform applePlatform, string configuration = "Debug", string platform = "iPhoneSimulator", string verbosity = null, TimeSpan? timeout = null, string [] arguments = null, string targets = "Clean,Build")
 		{
 			return ExecutionHelper.Execute (ToolPath,
 				new string [] {
@@ -454,7 +441,7 @@ namespace Xamarin.Tests
 					$"/t:{targets}", // clean and then build, in case we left something behind in a shared dir
 					project
 				}.Union (arguments ?? new string [] { }).ToArray (),
-				environmentVariables: environmentVariables,
+				environmentVariables: Configuration.GetBuildEnvironment (applePlatform),
 				timeout: timeout);
 		}
 	}

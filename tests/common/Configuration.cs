@@ -428,6 +428,20 @@ namespace Xamarin.Tests
 			throw new InvalidOperationException (targetFramework.ToString ());
 		}
 
+		public static string GetTargetDirectory (ApplePlatform platform)
+		{
+			switch (platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
+				return TargetDirectoryXI;
+			case ApplePlatform.MacOSX:
+				return TargetDirectoryXM;
+			default:
+				throw new InvalidOperationException (platform.ToString ());
+			}
+		}
+
 		public static string GetSdkRoot (TargetFramework targetFramework)
 		{
 			if (targetFramework.IsDotNet)
@@ -746,5 +760,39 @@ namespace Xamarin.Tests
 			}
 			return targets;
 		}
+
+		public static Dictionary<string, string> GetBuildEnvironment (ApplePlatform platform)
+		{
+			Dictionary<string, string> environment = new Dictionary<string, string> ();
+			SetBuildVariables (platform, ref environment);
+			return environment;
+		}
+
+		public static void SetBuildVariables (ApplePlatform platform, ref Dictionary<string, string> environment)
+		{
+			var rootDirectory = GetTargetDirectory (platform);
+
+			if (environment == null)
+				environment = new Dictionary<string, string> ();
+
+			environment ["MD_APPLE_SDK_ROOT"] = Path.GetDirectoryName (Path.GetDirectoryName (xcode_root));
+			environment ["TargetFrameworkFallbackSearchPaths"] = Path.Combine (rootDirectory, "Library", "Frameworks", "Mono.framework", "External", "xbuild-frameworks");
+			environment ["MSBuildExtensionsPathFallbackPathsOverride"] = Path.Combine (rootDirectory, "Library", "Frameworks", "Mono.framework", "External", "xbuild");
+			
+			switch (platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
+				environment ["MD_MTOUCH_SDK_ROOT"] = Path.Combine (rootDirectory, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current");
+				break;
+			case ApplePlatform.MacOSX:
+				environment ["XAMMAC_FRAMEWORK_PATH"] = Path.Combine (rootDirectory, "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current");
+				environment ["XamarinMacFrameworkRoot"] = Path.Combine (rootDirectory, "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current");
+				break;
+			default:
+				throw new NotImplementedException (platform.ToString ());
+			}
+		}
 	}
 }
+

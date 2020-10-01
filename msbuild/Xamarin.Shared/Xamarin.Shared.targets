@@ -38,7 +38,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.ALToolValidate" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.Archive" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.BTouch" AssemblyFile="$(_TaskAssemblyName)" />
-	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.CodesignNativeLibraries" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.CodesignVerify" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.CollectAssetPacks" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.CollectFrameworks" AssemblyFile="$(_TaskAssemblyName)" />
@@ -342,6 +341,61 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</ItemGroup>
 	</Target>
 
+	<Target Name="_CompileSceneKitAssets" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_ComputeTargetArchitectures;_BeforeCoreCompileSceneKitAssets;_ReadCoreCompileSceneKitAssets;_CoreCompileSceneKitAssets" />
+
+	<Target Name="_BeforeCoreCompileSceneKitAssets"
+		Inputs="@(SceneKitAsset)"
+		Outputs="$(_SceneKitCache)">
+
+		<!-- If any SceneKitAsset is newer than the generated items list, we delete them so that the _CoreCompileSceneKitAssets 
+		     target runs again and updates those lists for the next run
+		-->
+		<Delete Files="$(_SceneKitCache)" />
+	</Target>
+
+	<Target Name="_ReadCoreCompileSceneKitAssets"
+		DependsOnTargets="_BeforeCoreCompileSceneKitAssets">
+
+		<!-- If _BeforeCoreCompileSceneKitAssets did not delete the generated items lists from _CoreCompileSceneKitAssets, then we read them
+		     since that target won't run and we need to the output items that are cached in those files which includes full metadata -->
+		<ReadItemsFromFile File="$(_SceneKitCache)" Condition="Exists('$(_SceneKitCache)')">
+			<Output TaskParameter="Items" ItemName="_BundleResourceWithLogicalName" />
+		</ReadItemsFromFile>
+	</Target>
+
+	<Target Name="_CoreCompileSceneKitAssets"
+		Inputs="@(SceneKitAsset)"
+		Outputs="$(_SceneKitCache)"
+		DependsOnTargets="_BeforeCoreCompileSceneKitAssets;_GenerateBundleName;_ComputeTargetFrameworkMoniker">
+
+		<CompileSceneKitAssets
+			SessionId="$(BuildSessionId)"
+			AppBundleName="$(_AppBundleName)$(AppBundleExtension)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			ToolExe="$(CopySceneKitAssetsExe)"
+			ToolPath="$(CopySceneKitAssetsPath)"
+			SceneKitAssets="@(SceneKitAsset)"
+			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+			ProjectDir="$(MSBuildProjectDirectory)"
+			ResourcePrefix="$(_ResourcePrefix)"
+			IsWatchApp="$(IsWatchApp)"
+			SdkPlatform="$(_SdkPlatform)"
+			SdkDevPath="$(_SdkDevPath)"
+			SdkRoot="$(_SdkRoot)"
+			SdkVersion="$(_SdkVersion)">
+			<Output TaskParameter="BundleResources" ItemName="_BundleResourceWithLogicalName" />
+
+			<!-- Local items to be persisted to items files -->
+			<Output TaskParameter="BundleResources" ItemName="_SceneKitAssets_BundleResources" />
+		</CompileSceneKitAssets>
+
+		<WriteItemsToFile Items="@(_SceneKitAssets_BundleResources)" ItemName="_BundleResourceWithLogicalName" File="$(_SceneKitCache)" Overwrite="true" IncludeMetadata="true" />
+		<ItemGroup>
+			<FileWrites Include="$(_SceneKitCache)" />
+		</ItemGroup>
+	</Target>
+
 	<Target Name="_ComputeTargetArchitectures" DependsOnTargets="_ComputeTargetFrameworkMoniker">
 		<!--
 			For now, this target is mostly for Xamarin.iOS, but in order to
@@ -366,7 +420,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<Output TaskParameter="TargetDeviceOSVersion" PropertyName="TargetDeviceOSVersion" />
 		</ParseDeviceSpecificBuildInformation>
 
-		<PropertyGroup Condition="'$(_PlatformName)' != 'macOS'">
+		<PropertyGroup>
 			<_MtouchSymbolsList>$(DeviceSpecificIntermediateOutputPath)mtouch-symbols.list</_MtouchSymbolsList>
 
 			<!-- actool output caches -->
