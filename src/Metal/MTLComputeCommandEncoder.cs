@@ -5,10 +5,12 @@ using ObjCRuntime;
 
 namespace Metal {
 
-
-	public static partial class MTLArgumentEncoder_Extensions {
 #if XAMCORE_4_0
-		public static void SetBuffers (this IMTLArgumentEncoder encoder, IMTLBuffer[] buffers, nuint[] offsets, NSRange range)
+
+	// add some extension methods to make the API of the protocol nicer
+	public static class IMTLComputeCommandEncoderExtensions {
+
+		public static void SetBuffers (this IMTLComputeCommandEncoder table, IMTLBuffer[] buffers, nuint[] offsets, NSRange range)
 		{
 			if (buffers == null)
 				throw new ArgumentNullException (nameof (buffers));
@@ -24,17 +26,11 @@ namespace Metal {
 			unsafe {
 				fixed (void* buffersPtr = bufferPtrArray)
 				fixed (void* offsetsPtr = offsets) { // can use fixed
-					encoder.SetBuffers ((IntPtr) buffersPtr, (IntPtr) offsetsPtr, range);
+					table.SetBuffers ((IntPtr) buffersPtr, (IntPtr) offsetsPtr, range);
 				}
 			}
 			GC.KeepAlive (buffers)
 		}
-#else 
-		public unsafe static void SetBuffers (this IMTLArgumentEncoder This, IMTLBuffer [] buffers, nint [] offsets, Foundation.NSRange range)
-		{
-			fixed (void* handle = offsets)
-				This.SetBuffers (buffers, (IntPtr)handle, range);
-		}
-#endif
 	}
+#endif
 }
