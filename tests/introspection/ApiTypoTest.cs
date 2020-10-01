@@ -1035,6 +1035,8 @@ namespace Introspection
 			var sdk = new Version (Constants.SdkVersion);
 #if MONOMAC
 			if (!PlatformHelper.CheckSystemVersion (sdk.Major, sdk.Minor))
+#elif __WATCHOS__
+			if (!WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (sdk.Major, sdk.Minor))
 #else
 			if (!UIDevice.CurrentDevice.CheckSystemVersion (sdk.Major, sdk.Minor))
 #endif
