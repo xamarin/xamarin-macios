@@ -10,8 +10,8 @@ namespace Extrospection {
 	class EnumCheck : BaseVisitor {
 
 		Dictionary<string,TypeDefinition> enums = new Dictionary<string, TypeDefinition> (StringComparer.InvariantCultureIgnoreCase);
-		Dictionary<long, string> managed_signed_values = new Dictionary<long, string> ();
-		Dictionary<ulong, string> managed_unsigned_values = new Dictionary<ulong, string> ();
+		Dictionary<long, FieldDefinition> managed_signed_values = new Dictionary<long, FieldDefinition> ();
+		Dictionary<ulong, FieldDefinition> managed_unsigned_values = new Dictionary<ulong, FieldDefinition> ();
 		Dictionary<long, string> native_signed_values = new Dictionary<long, string> ();
 		Dictionary<ulong, string> native_unsigned_values = new Dictionary<ulong,string> ();
 
@@ -167,7 +167,7 @@ namespace Extrospection {
 					if (f.IsRuntimeSpecialName && !f.IsStatic)
 						continue;
 					if (!f.IsObsolete ())
-						managed_signed_values [Convert.ToInt64 (f.Constant)] = f.Name;
+						managed_signed_values [Convert.ToInt64 (f.Constant)] = f;
 				}
 
 				long n = 0;
@@ -188,9 +188,11 @@ namespace Extrospection {
 				}
 
 				foreach (var value in managed_signed_values.Keys) {
-					if ((value == 0) && IsExtraZeroValid (type.Name, managed_signed_values [0]))
+					if ((value == 0) && IsExtraZeroValid (type.Name, managed_signed_values [0].Name))
 						continue;
-					Log.On (framework).Add ($"!extra-enum-value! Managed value {value} for {type.Name}.{managed_signed_values [value]} not found in native headers");
+					// value could be decorated with `[No*]` and those should not be reported
+					if (managed_signed_values [value].IsAvailable ())
+						Log.On (framework).Add ($"!extra-enum-value! Managed value {value} for {type.Name}.{managed_signed_values [value].Name} not found in native headers");
 				}
 			} else {
 				managed_unsigned_values.Clear ();
@@ -200,7 +202,7 @@ namespace Extrospection {
 					if (f.IsRuntimeSpecialName && !f.IsStatic)
 						continue;
 					if (!f.IsObsolete ())
-						managed_unsigned_values [Convert.ToUInt64 (f.Constant)] = f.Name;
+						managed_unsigned_values [Convert.ToUInt64 (f.Constant)] = f;
 				}
 
 				ulong n = 0;
@@ -221,9 +223,11 @@ namespace Extrospection {
 				}
 
 				foreach (var value in managed_unsigned_values.Keys) {
-					if ((value == 0) && IsExtraZeroValid (type.Name, managed_unsigned_values [0]))
+					if ((value == 0) && IsExtraZeroValid (type.Name, managed_unsigned_values [0].Name))
 						continue;
-					Log.On (framework).Add ($"!extra-enum-value! Managed value {value} for {type.Name}.{managed_unsigned_values [value]} not found in native headers");
+					// value could be decorated with `[No*]` and those should not be reported
+					if (managed_unsigned_values [value].IsAvailable ())
+						Log.On (framework).Add ($"!extra-enum-value! Managed value {value} for {type.Name}.{managed_unsigned_values [value].Name} not found in native headers");
 				}
 			}
 
