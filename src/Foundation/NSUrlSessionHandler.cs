@@ -650,6 +650,7 @@ namespace Foundation {
 			public override void DidCompleteWithError (NSUrlSession session, NSUrlSessionTask task, NSError error)
 			{
 				var inflight = GetInflightData (task);
+				var serverError = task.Error;
 
 				// this can happen if the HTTP request times out and it is removed as part of the cancellation process
 				if (inflight != null) {
@@ -657,12 +658,12 @@ namespace Foundation {
 					inflight.Stream.TrySetReceivedAllData ();
 
 					// send the error or send the response back
-					if (error != null) {
+					if (error != null || serverError != null) {
 						// got an error, cancel the stream operatios before we do anything
 						inflight.CancellationTokenSource.Cancel (); 
 						inflight.Errored = true;
 
-						var exc = inflight.Exception ?? createExceptionForNSError (error);
+						var exc = inflight.Exception ?? createExceptionForNSError (error ?? serverError);  // client errors wont happen if we get server errors
 						inflight.CompletionSource.TrySetException (exc);
 						inflight.Stream.TrySetException (exc);
 					} else {
