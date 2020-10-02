@@ -532,7 +532,22 @@
 !missing-requires-super! UIControl::contextMenuInteraction:willDisplayMenuForConfiguration:animator: is missing an [RequiresSuper] attribute
 !missing-requires-super! UIControl::contextMenuInteraction:willEndForConfiguration:animator: is missing an [RequiresSuper] attribute
 
-## there's no UI_APPEARANCE_SELECTOR in headers - but they can (unofficially) work, YYMV
-!extra-ui-appearance-support! UIKit.UIColor UIKit.UIBarButtonItem::get_TintColor() should NOT be decorated with [Appearance]
-!extra-ui-appearance-support! System.Void UIKit.UIBarButtonItem::set_TintColor(UIKit.UIColor) should NOT be decorated with [Appearance]
+## manually bound (better, stronger signature) on `[setT|t]itleTextAttributes:forState:` which is decorated with `UI_APPEARANCE_SELECTOR`
+!extra-ui-appearance-support! UIKit.UITextAttributes UIKit.UIBarItem::GetTitleTextAttributes(UIKit.UIControlState) should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! System.Void UIKit.UIBarItem::SetTitleTextAttributes(UIKit.UITextAttributes,UIKit.UIControlState) should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! UIKit.UITextAttributes UIKit.UINavigationBar::GetTitleTextAttributes() should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! System.Void UIKit.UINavigationBar::SetTitleTextAttributes(UIKit.UITextAttributes) should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! UIKit.UITextAttributes UIKit.UISegmentedControl::GetTitleTextAttributes(UIKit.UIControlState) should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! System.Void UIKit.UISegmentedControl::SetTitleTextAttributes(UIKit.UITextAttributes,UIKit.UIControlState) should NOT be decorated with [Appearance]
 
+## there's no UI_APPEARANCE_SELECTOR in headers - but they can (unofficially) work, YYMV
+!extra-ui-appearance-support! System.Void UIKit.UISlider::set_MaxValueImage(UIKit.UIImage) should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! System.Void UIKit.UISlider::set_MinValueImage(UIKit.UIImage) should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! UIKit.UIImage UIKit.UISlider::get_MaxValueImage() should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! UIKit.UIImage UIKit.UISlider::get_MinValueImage() should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! System.Void UIKit.UISlider::SetMaxTrackImage(UIKit.UIImage,UIKit.UIControlState) should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! System.Void UIKit.UISlider::SetMinTrackImage(UIKit.UIImage,UIKit.UIControlState) should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! System.Void UIKit.UISlider::SetThumbImage(UIKit.UIImage,UIKit.UIControlState) should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! UIKit.UIImage UIKit.UISlider::MaxTrackImage(UIKit.UIControlState) should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! UIKit.UIImage UIKit.UISlider::MinTrackImage(UIKit.UIControlState) should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! UIKit.UIImage UIKit.UISlider::ThumbImage(UIKit.UIControlState) should NOT be decorated with [Appearance]
