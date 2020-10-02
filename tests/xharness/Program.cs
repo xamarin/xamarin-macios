@@ -42,7 +42,7 @@ namespace Xharness {
 				{ "mac", "Configure for Xamarin.Mac instead of iOS.", (v) => configuration.Mac = true },
 				{ "configure", "Creates project files and makefiles.", (v) => action = HarnessAction.Configure },
 				{ "autoconf", "Automatically decide what to configure.", (v) => configuration.AutoConf = true },
-				{ "rootdir=", "The root directory for the tests.", (v) => Harness.RootDirectory = v },
+				{ "rootdir=", "The root directory for the tests.", (v) => HarnessConfiguration.RootDirectory = v },
 				{ "project=", "Add a project file to process. This can be specified multiple times.", (v) => configuration.IOSTestProjects.Add (new iOSTestProject (v)) },
 				{ "watchos-container-template=", "The directory to use as a template for a watchos container app.", (v) => configuration.WatchOSContainerTemplate = v },
 				{ "watchos-app-template=", "The directory to use as a template for a watchos app.", (v) => configuration.WatchOSAppTemplate = v },

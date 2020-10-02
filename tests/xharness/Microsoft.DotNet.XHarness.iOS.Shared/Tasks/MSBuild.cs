@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
 using System.Xml;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
@@ -11,7 +12,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 
 	public class MSBuild : BuildProject {
 		readonly IErrorKnowledgeBase errorKnowledgeBase;
-		readonly string msbuildPath;
+		readonly Func<string> msbuildPath;
 
 		public virtual List<string> GetToolArguments (string projectPlatform, string projectConfiguration, string projectFile, ILog buildLog) {
 			var binlogPath = buildLog.FullPath.Replace (".txt", ".binlog");
@@ -28,7 +29,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 			return args;
 		}
 
-		public MSBuild (string msbuildPath,
+		public MSBuild (Func<string> msbuildPath,
 							IProcessManager processManager,
 							IResourceManager resourceManager,
 							IEventLogger eventLogger,
@@ -39,7 +40,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 			this.errorKnowledgeBase = errorKnowledgeBase ?? throw new ArgumentNullException (nameof (errorKnowledgeBase));
 		}
 
-		public async Task<(TestExecutingResult ExecutionResult, string KnownFailure)> ExecuteAsync (string projectPlatform, 
+		public async Task<(TestExecutingResult ExecutionResult, (string HumanMessage, string IssueLink)? KnownFailure)> ExecuteAsync (string projectPlatform, 
 																									string projectConfiguration,
 																									string projectFile,
 																									IAcquiredResource resource,
@@ -48,13 +49,19 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 																									ILog mainLog)
 		{
 			BuildLog = buildLog;
-			(TestExecutingResult ExecutionResult, string KnownFailure) result = (TestExecutingResult.NotStarted, (string) null);
-			await RestoreNugetsAsync (buildLog, resource, useXIBuild: true);
+			(TestExecutingResult ExecutionResult, (string HumanMessage, string IssueLink)? KnownFailure) result = (TestExecutingResult.NotStarted, ((string HumanMessage, string IssueLink)?) null);
+			var restoreResult = await RestoreNugetsAsync (buildLog, resource);
+			if ((restoreResult & TestExecutingResult.Failed) == TestExecutingResult.Failed) {
+				BuildLog.WriteLine ($"Failed to restore nugets: {restoreResult}");
+				result.ExecutionResult = restoreResult;
+				return result;
+			}
 
 			using (var xbuild = new Process ()) {
-				xbuild.StartInfo.FileName = msbuildPath;
+				xbuild.StartInfo.FileName = msbuildPath ();
 				xbuild.StartInfo.Arguments = StringUtils.FormatArguments (GetToolArguments (projectPlatform, projectConfiguration, projectFile, buildLog));
-				EnviromentManager.SetEnvironmentVariables (xbuild);
+				xbuild.StartInfo.WorkingDirectory = Path.GetDirectoryName (projectFile);
+				EnvironmentManager.SetEnvironmentVariables (xbuild);
 				xbuild.StartInfo.EnvironmentVariables ["MSBuildExtensionsPath"] = null;
 				EventLogger.LogEvent (buildLog, "Building {0} ({1})", TestName, Mode);
 				if (!dryRun) {
@@ -80,7 +87,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 		{
 			// Don't require the desktop resource here, this shouldn't be that resource sensitive
 			using (var xbuild = new Process ()) {
-				xbuild.StartInfo.FileName = msbuildPath;
+				xbuild.StartInfo.FileName = msbuildPath ();
 				var args = new List<string> ();
 				args.Add ("--");
 				args.Add ("/verbosity:diagnostic");
@@ -91,7 +98,8 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 				args.Add (project_file);
 				args.Add ("/t:Clean");
 				xbuild.StartInfo.Arguments = StringUtils.FormatArguments (args);
-				EnviromentManager.SetEnvironmentVariables (xbuild);
+				xbuild.StartInfo.WorkingDirectory = Path.GetDirectoryName (project_file);
+				EnvironmentManager.SetEnvironmentVariables (xbuild);
 				EventLogger.LogEvent (log, "Cleaning {0} ({1}) - {2}", TestName, Mode, project_file);
 				var timeout = TimeSpan.FromMinutes (1);
 				await ProcessManager.RunAsync (xbuild, log, timeout);

@@ -20,12 +20,12 @@ namespace Xharness.Jenkins.TestTasks {
 
 		protected override void InitializeTool () => 
 			buildToolTask = new MSBuild (
-				msbuildPath: ToolName,
+				msbuildPath: () => ToolName,
 				processManager: ProcessManager,
-				resourceManager: Jenkins,
+				resourceManager: ResourceManager,
 				eventLogger: this,
 				envManager: this,
-				errorKnowledgeBase: Jenkins);
+				errorKnowledgeBase: Jenkins.ErrorKnowledgeBase);
 
 		protected override async Task ExecuteAsync ()
 		{

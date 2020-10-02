@@ -7,17 +7,17 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Tasks;
 
 namespace Xharness.Jenkins.TestTasks {
-	public abstract class AppleTestTask : Microsoft.DotNet.XHarness.iOS.Shared.Tasks.TestTasks, ITestTask
+	abstract class AppleTestTask : Microsoft.DotNet.XHarness.iOS.Shared.Tasks.TestTasks, ITestTask
 	{
 		public Jenkins Jenkins { get; private set; }
 		public IHarness Harness { get { return Jenkins.Harness; } }
-		public override string RootDirectory => Xharness.Harness.RootDirectory;
+		public override string RootDirectory => HarnessConfiguration.RootDirectory;
 
-		public override IResourceManager ResourceManager => Jenkins;
+		public override IResourceManager ResourceManager => Jenkins.ResourceManager;
 
 		public override string LogDirectory {
 			get {
-				var rv = Path.Combine (Jenkins.LogDirectory, TestName, ID.ToString ());
+				var rv = Path.Combine (Jenkins.LogDirectory, TestName.Replace (" ", "-"), ID.ToString ());
 				Directory.CreateDirectory (rv);
 				return rv;
 			}
@@ -76,8 +76,13 @@ namespace Xharness.Jenkins.TestTasks {
 				throw new NotImplementedException ();
 			}
 
-			foreach (var kvp in Environment)
-				process.StartInfo.EnvironmentVariables [kvp.Key] = kvp.Value;
+			foreach (var kvp in Environment) {
+				if (kvp.Value == null) {
+					process.StartInfo.EnvironmentVariables.Remove (kvp.Key);
+				} else {
+					process.StartInfo.EnvironmentVariables [kvp.Key] = kvp.Value;
+				}
+			}
 		}
 
 		public override void LogEvent (ILog log, string text, params object [] args)
@@ -88,7 +93,7 @@ namespace Xharness.Jenkins.TestTasks {
 
 		protected override Task<IAcquiredResource> NotifyAndAcquireDesktopResourceAsync ()
 		{
-			return NotifyBlockingWaitAsync (SupportsParallelExecution ? Jenkins.DesktopResource.AcquireConcurrentAsync () : Jenkins.DesktopResource.AcquireExclusiveAsync ());
+			return NotifyBlockingWaitAsync (SupportsParallelExecution ? ResourceManager.DesktopResource.AcquireConcurrentAsync () : ResourceManager.DesktopResource.AcquireExclusiveAsync ());
 		}
 
 	}

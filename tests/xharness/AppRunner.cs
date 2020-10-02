@@ -26,6 +26,7 @@ namespace Xharness {
 		readonly ICaptureLogFactory captureLogFactory;
 		readonly IDeviceLogCapturerFactory deviceLogCapturerFactory;
 		readonly ITestReporterFactory testReporterFactory;
+		readonly IAppBundleInformationParser appBundleInformationParser;
 		
 		readonly RunMode runMode;
 		readonly bool isSimulator;
@@ -33,6 +34,9 @@ namespace Xharness {
 		readonly IHarness harness;
 		readonly double timeoutMultiplier;
 		readonly IBuildToolTask buildTask;
+		readonly string variation;
+		readonly string projectFilePath;
+		readonly string buildConfiguration;
 
 		string deviceName;
 		string companionDeviceName;
@@ -45,7 +49,7 @@ namespace Xharness {
 			set => ensureCleanSimulatorState = value;
 		}
 
-		public AppBundleInformation AppInformation { get; }
+		public AppBundleInformation AppInformation { get; private set;  }
 
 		bool IsExtension => AppInformation.Extension.HasValue;
 
@@ -80,9 +84,6 @@ namespace Xharness {
 						  string variation = null,
 						  IBuildToolTask buildTask = null)
 		{
-			if (appBundleInformationParser is null)
-				throw new ArgumentNullException (nameof (appBundleInformationParser));
-
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 			this.simulatorsLoaderFactory = simulatorsFactory ?? throw new ArgumentNullException (nameof (simulatorsFactory));
 			this.listenerFactory = simpleListenerFactory ?? throw new ArgumentNullException (nameof (simpleListenerFactory));
@@ -91,6 +92,7 @@ namespace Xharness {
 			this.captureLogFactory = captureLogFactory ?? throw new ArgumentNullException (nameof (captureLogFactory));
 			this.deviceLogCapturerFactory = deviceLogCapturerFactory ?? throw new ArgumentNullException (nameof (deviceLogCapturerFactory));
 			this.testReporterFactory = reporterFactory ?? throw new ArgumentNullException (nameof (testReporterFactory));
+			this.appBundleInformationParser = appBundleInformationParser ?? throw new ArgumentNullException (nameof (appBundleInformationParser));
 			this.harness = harness ?? throw new ArgumentNullException (nameof (harness));
 			this.MainLog = mainLog ?? throw new ArgumentNullException (nameof (mainLog));
 			this.Logs = logs ?? throw new ArgumentNullException (nameof (logs));
@@ -101,10 +103,17 @@ namespace Xharness {
 			this.simulators = simulators;
 			this.buildTask = buildTask;
 			this.target = target;
+			this.variation = variation;
+			this.projectFilePath = projectFilePath;
+			this.buildConfiguration = buildConfiguration;
 
 			runMode = target.ToRunMode ();
 			isSimulator = target.IsSimulator ();
-			AppInformation = appBundleInformationParser.ParseFromProject (projectFilePath, target, buildConfiguration);
+		}
+
+		public async Task InitializeAsync ()
+		{
+			AppInformation = await appBundleInformationParser.ParseFromProjectAsync (MainLog, processManager, projectFilePath, target, buildConfiguration);
 			AppInformation.Variation = variation;
 		}
 
@@ -134,7 +143,7 @@ namespace Xharness {
 
 			var device = await devs.FindDevice (runMode, MainLog, false, false);
 
-			deviceName = device.Name;
+			deviceName = device?.Name;
 
 			if (runMode == RunMode.WatchOS)
 				companionDeviceName = (await devs.FindCompanionDevice (MainLog, device)).Name;
@@ -148,6 +157,9 @@ namespace Xharness {
 			}
 
 			await FindDevice ();
+
+			if (string.IsNullOrEmpty (deviceName))
+				throw new NoDeviceFoundException ();
 
 			var args = new MlaunchArguments ();
 
@@ -187,8 +199,12 @@ namespace Xharness {
 
 		public async Task<int> RunAsync ()
 		{
-			if (!isSimulator)
+			if (!isSimulator) {
 				await FindDevice ();
+
+				if (deviceName == null)
+					throw new NoDeviceFoundException ();
+			}
 
 			var args = new MlaunchArguments ();
 
@@ -271,7 +287,6 @@ namespace Xharness {
 				harness.XmlJargon,
 				deviceName,
 				testReporterTimeout,
-				harness.LaunchTimeout,
 				buildTask?.Logs?.Directory,
 				(level, message) => harness.Log (level, message));
 
@@ -306,16 +321,10 @@ namespace Xharness {
 					return 1;
 
 				if (runMode != RunMode.WatchOS) {
-					var stderr_tty = harness.GetStandardErrorTty ();
-					if (!string.IsNullOrEmpty (stderr_tty)) {
-						args.Add (new SetStdoutArgument (stderr_tty));
-						args.Add (new SetStderrArgument (stderr_tty));
-					} else {
-						var stdout_log = Logs.CreateFile ($"stdout-{Helpers.Timestamp}.log", "Standard output");
-						var stderr_log = Logs.CreateFile ($"stderr-{Helpers.Timestamp}.log", "Standard error");
-						args.Add (new SetStdoutArgument (stdout_log));
-						args.Add (new SetStderrArgument (stderr_log));
-					}
+					var stdout_log = Logs.CreateFile ($"stdout-{Helpers.Timestamp}.log", "Standard output");
+					var stderr_log = Logs.CreateFile ($"stderr-{Helpers.Timestamp}.log", "Standard error");
+					args.Add (new SetStdoutArgument (stdout_log));
+					args.Add (new SetStderrArgument (stderr_log));
 				}
 
 				var systemLogs = new List<ICaptureLog> ();

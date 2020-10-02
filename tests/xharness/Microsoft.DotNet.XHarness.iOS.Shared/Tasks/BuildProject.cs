@@ -11,22 +11,24 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 	public class BuildProject : BuildTool {
 		public IResourceManager ResourceManager { get; set; }
-		public IEnvManager EnviromentManager { get; set; }
+		public IEnvManager EnvironmentManager { get; set; }
 		public IEventLogger EventLogger { get; set; }
-		string msbuildPath;
+		Func<string> msbuildPath;
 
 		public string SolutionPath { get; set; }
 
-		public BuildProject (string msbuildPath, IProcessManager processManager, IResourceManager resourceManager, IEventLogger eventLogger, IEnvManager envManager) : base (processManager)
+		public BuildProject (Func<string> msbuildPath, IProcessManager processManager, IResourceManager resourceManager, IEventLogger eventLogger, IEnvManager envManager) : base (processManager)
 		{
 			this.msbuildPath = msbuildPath ?? throw new ArgumentNullException (nameof (msbuildPath));
 			ResourceManager = resourceManager ?? throw new ArgumentNullException (nameof (resourceManager));
 			EventLogger = eventLogger ?? throw new ArgumentNullException (nameof (eventLogger));
-			EnviromentManager = envManager ?? throw new ArgumentNullException (nameof (envManager));
+			EnvironmentManager = envManager ?? throw new ArgumentNullException (nameof (envManager));
 		}
 
 		public bool RestoreNugets {
 			get {
+				if (TestProject.IsDotNetProject)
+					return false;
 				return TestProject.RestoreNugetsInProject || !string.IsNullOrEmpty (SolutionPath);
 			}
 		}
@@ -37,7 +39,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 			}
 		}
 
-		async Task<TestExecutingResult> RestoreNugetsAsync (string projectPath, ILog log, bool useXIBuild = false)
+		async Task<TestExecutingResult> RestoreNugetsAsync (string projectPath, ILog log)
 		{
 			using (var resource = await ResourceManager.NugetResource.AcquireExclusiveAsync ()) {
 				// we do not want to use xibuild on solutions, we will have some failures with Mac Full
@@ -46,19 +48,17 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 					throw new FileNotFoundException ("Could not find the solution whose nugets to restore.", projectPath);
 
 				using (var nuget = new Process ()) {
-					nuget.StartInfo.FileName = useXIBuild && !isSolution ? msbuildPath:
-						"/Library/Frameworks/Mono.framework/Versions/Current/Commands/nuget";
+					nuget.StartInfo.FileName = msbuildPath ();
 					var args = new List<string> ();
-					args.Add ((useXIBuild && !isSolution ? "/" : "") + "restore"); // diff param depending on the tool
+					args.Add ("-t");
+					args.Add ("--");
+					args.Add ("/Library/Frameworks/Mono.framework/Versions/Current/Commands/nuget");
+					args.Add ("restore");
 					args.Add (projectPath);
-					if (useXIBuild && !isSolution)
-						args.Add ("/verbosity:detailed");
-					else {
-						args.Add ("-verbosity");
-						args.Add ("detailed");
-					}
+					args.Add ("-Verbosity");
+					args.Add ("detailed");
 					nuget.StartInfo.Arguments = StringUtils.FormatArguments (args);
-					EnviromentManager.SetEnvironmentVariables (nuget);
+					EnvironmentManager.SetEnvironmentVariables (nuget);
 					EventLogger.LogEvent (log, "Restoring nugets for {0} ({1}) on path {2}", TestName, Mode, projectPath);
 
 					var timeout = TimeSpan.FromMinutes (15);
@@ -87,6 +87,8 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 				var fixPath = referenceProject.Replace ("\\", "/"); // do the replace in case we use win paths
 				result.Add (fixPath);
 				// get all possible references
+				if (!Path.IsPathRooted (fixPath))
+					fixPath = Path.Combine (Path.GetDirectoryName (csproj), fixPath);
 				result.AddRange (GetNestedReferenceProjects (fixPath));
 			}
 			return result;
@@ -94,7 +96,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 
 		// This method must be called with the desktop resource acquired
 		// (which is why it takes an IAcquiredResources as a parameter without using it in the function itself).
-		public async Task<TestExecutingResult> RestoreNugetsAsync (ILog log, IAcquiredResource resource, bool useXIBuild = false)
+		public async Task<TestExecutingResult> RestoreNugetsAsync (ILog log, IAcquiredResource resource)
 		{
 			if (!RestoreNugets)
 				return TestExecutingResult.Ignored;
@@ -107,7 +109,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 			if (SolutionPath == null) {
 				var references = GetNestedReferenceProjects (TestProject.Path);
 				foreach (var referenceProject in references) {
-					var execResult = await RestoreNugetsAsync (referenceProject, log, useXIBuild); // do the replace in case we use win paths
+					var execResult = await RestoreNugetsAsync (referenceProject, log); // do the replace in case we use win paths
 					if (execResult == TestExecutingResult.TimedOut) {
 						return execResult;
 					}
@@ -115,7 +117,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 			}
 
 			// restore for the main project/solution]
-			return await RestoreNugetsAsync (SolutionPath ?? TestProject.Path, log, useXIBuild);
+			return await RestoreNugetsAsync (SolutionPath ?? TestProject.Path, log);
 		}
 	}
 }

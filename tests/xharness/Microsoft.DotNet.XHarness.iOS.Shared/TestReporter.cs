@@ -38,7 +38,6 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 		readonly string deviceName;
 
 		readonly TimeSpan timeout;
-		readonly double launchTimeout;
 		readonly Stopwatch timeoutWatch;
 
 		/// <summary>
@@ -78,7 +77,6 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 			XmlResultJargon xmlJargon,
 			string device,
 			TimeSpan timeout,
-			double launchTimeout,
 			string additionalLogsDirectory = null,
 			ExceptionLogger exceptionLogger = null)
 		{
@@ -95,7 +93,6 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 			this.runMode = runMode;
 			this.xmlJargon = xmlJargon;
 			this.timeout = timeout;
-			this.launchTimeout = launchTimeout;
 			this.additionalLogsDirectory = additionalLogsDirectory;
 			this.exceptionLogger = exceptionLogger;
 			this.timeoutWatch  = Stopwatch.StartNew ();
@@ -175,7 +172,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 		// return if the tcp connection with the device failed
 		async Task<bool> TcpConnectionFailed ()
 		{
-			using var reader = new StreamReader (mainLog.FullPath);
+			using var reader = mainLog.GetReader ();
 			string line;
 			while ((line = await reader.ReadLineAsync ()) != null) {
 				if (line.Contains ("Couldn't establish a TCP connection with any of the hostnames")) {
@@ -187,12 +184,10 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 
 		// kill any process 
 		Task KillAppProcess (int pid, CancellationTokenSource cancellationSource) { 
-				var launchTimedout = cancellationSource.IsCancellationRequested;
-				var timeoutType = launchTimedout ? "Launch" : "Completion";
-				var timeoutValue = launchTimedout ? launchTimeout : timeout.TotalSeconds;
-
-				mainLog.WriteLine ($"{timeoutType} timed out after {timeoutValue} seconds");
-				return processManager.KillTreeAsync (pid, mainLog, true);
+			var launchTimedout = cancellationSource.IsCancellationRequested;
+			var timeoutType = launchTimedout ? "Launch" : "Completion";
+			mainLog.WriteLine ($"{timeoutType} timed out after {timeoutWatch.Elapsed.TotalSeconds} seconds");
+			return processManager.KillTreeAsync (pid, mainLog, true);
 		}
 
 		async Task CollectResult (Task<ProcessExecutionResult> processExecution)
@@ -231,7 +226,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 				mainLog.WriteLine ("Test run started");
 			} else {
 				cancellationTokenSource.Cancel ();
-				mainLog.WriteLine ("Test launch timed out after {0} minute(s).", launchTimeout);
+				mainLog.WriteLine ("Test launch timed out after {0} minute(s).", timeoutWatch.Elapsed.TotalMinutes);
 				timedout = true;
 			}
 		}

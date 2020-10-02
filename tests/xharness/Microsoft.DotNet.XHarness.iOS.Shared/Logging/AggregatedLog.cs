@@ -36,7 +36,9 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Logging {
 
 			public override StreamReader GetReader ()
 			{
-				throw new NotSupportedException ();
+				if (logs.Length > 0)
+					return logs [0].GetReader ();
+				return null;
 			}
 
 			public override void Flush ()

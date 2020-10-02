@@ -149,10 +149,41 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Hardware {
 			Assert.AreEqual (expected, sims.Count (), $"{target} simulators count");
 		}
 
-		private void AssertArgumentValue (MlaunchArgument arg, string expected, string message = null)
+		[Test]
+		public async Task FindAndCacheSimulatorsWithFailingMlaunchTest ()
 		{
-			var value = arg.AsCommandLineArgument ().Split (new char [] { '=' }, 2).LastOrDefault ();
-			Assert.AreEqual (expected, value, message);
+			// Moq.SetupSequence doesn't allow custom callbacks so we need to count ourselves
+			var calls = 0;
+
+			processManager
+				.Setup (p => p.RunAsync (It.IsAny<Process>(), It.Is<MlaunchArguments> (args => args.Any (a => a is ListSimulatorsArgument)), It.IsAny<ILog> (), It.IsAny<TimeSpan> (), It.IsAny<Dictionary<string, string>> (), It.IsAny<CancellationToken?> (), It.IsAny<bool?> ()))
+				.Returns<Process, MlaunchArguments, ILog, TimeSpan, Dictionary<string, string>, CancellationToken?, bool?> ((process, args, log, t, env, token, diagnostics) => {
+					calls++;
+
+					if (calls == 1) {
+						// Mlaunch can sometimes time out and we are testing that a subsequent Load will trigger it again
+						return Task.FromResult (new ProcessExecutionResult { ExitCode = 137, TimedOut = true });
+					}
+
+					// We get the temp file that was passed as the args, and write our sample xml, which will be parsed to get the devices
+					var tempPath = args.Where (a => a is ListSimulatorsArgument).First ().AsCommandLineArgument ();
+					tempPath = tempPath.Substring (tempPath.IndexOf ('=') + 1).Replace ("\"", string.Empty);
+
+					CopySampleData (tempPath);
+					return Task.FromResult (new ProcessExecutionResult { ExitCode = 0, TimedOut = false });
+				});
+
+			Assert.ThrowsAsync<Exception> (async () => await simulators.LoadDevices (executionLog.Object));
+
+			Assert.IsEmpty (simulators.AvailableDevices);
+			Assert.AreEqual (1, calls);
+			await simulators.LoadDevices (executionLog.Object);
+			Assert.AreEqual (2, calls);
+			Assert.IsNotEmpty (simulators.AvailableDevices);
+			await simulators.LoadDevices (executionLog.Object);
+			Assert.AreEqual (2, calls);
+			await simulators.LoadDevices (executionLog.Object);
+			Assert.AreEqual (2, calls);
 		}
 	}
 }
