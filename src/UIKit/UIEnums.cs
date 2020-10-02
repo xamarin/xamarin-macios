@@ -783,7 +783,7 @@ namespace UIKit {
 	// NSInteger -> UIActionSheet.h
 	[Native]
 	[NoTV][NoWatch]
-	[Deprecated (PlatformName.iOS, 13, 0, message: "'UIActionSheet' is deprecated.")]
+	[Deprecated (PlatformName.iOS, 13,0)]
 	public enum UIActionSheetStyle : long {
 		Automatic        = -1,
 		Default          = UIBarStyle.Default,

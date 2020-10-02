@@ -8,7 +8,7 @@ using ObjCRuntime;
 namespace WatchKit {
 	[Introduced (PlatformName.iOS, 8,2, PlatformArchitecture.All)]
 	[Unavailable (PlatformName.iOS, PlatformArchitecture.All)]
-	[Obsolete ("The WatchKit framework has been removed from iOS")]
+	[Obsolete (Constants.WatchKitRemoved)]
 	[EditorBrowsable (EditorBrowsableState.Never)]
 	public enum WKErrorCode : long {
 		None = 0,
@@ -20,12 +20,12 @@ namespace WatchKit {
 		RecordingFailedError = 6,
 	}
 
-	[Obsolete ("The WatchKit framework has been removed from iOS")]
+	[Obsolete (Constants.WatchKitRemoved)]
 	[EditorBrowsable (EditorBrowsableState.Never)]
 	static public class WKErrorCodeExtensions {
 		public static NSString GetDomain (this WKErrorCode self)
 		{
-			throw new PlatformNotSupportedException ("The WatchKit framework has been removed from iOS");
+			throw new PlatformNotSupportedException (Constants.WatchKitRemoved);
 		}
 	}
 }

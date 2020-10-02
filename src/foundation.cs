@@ -5176,7 +5176,7 @@ namespace Foundation
 
 	[BaseType (typeof (NSObject))]
 #if WATCH
-	[Advice ("Not available on watchOS")]
+	[Advice (Constants.UnavailableOnWatchOS)]
 	[DisableDefaultCtor] // "NSUbiquitousKeyValueStore is unavailable" is printed to the log.
 #endif
 	interface NSUbiquitousKeyValueStore {
