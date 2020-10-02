@@ -18,7 +18,3 @@
 
 ## This is already deprecated
 !missing-selector! PKPassLibrary::activatePaymentPass:withActivationData:completion: not bound
-
-# watchOS is 32bits but our [Native] enums are all 64 bits
-!extra-enum-value! Managed value 18446744073709551615 for PKPassType.Any not found in native headers
-!missing-enum-value! PKPassType native value PKPassTypeAny = 4294967295 not bound

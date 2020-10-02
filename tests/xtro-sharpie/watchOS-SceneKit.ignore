@@ -17,7 +17,3 @@
 !missing-null-allowed! 'SceneKit.SCNShape SceneKit.SCNShape::Create(UIKit.UIBezierPath,System.nfloat)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void SceneKit.SCNText::set_ChamferProfile(UIKit.UIBezierPath)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void SceneKit.SCNText::set_Font(UIKit.UIFont)' is missing an [NullAllowed] on parameter #0
-
-# watchOS is 32bits but our [Native] enums are all 64 bits
-!extra-enum-value! Managed value 18446744073709551615 for SCNPhysicsCollisionCategory.All not found in native headers
-!missing-enum-value! SCNPhysicsCollisionCategory native value SCNPhysicsCollisionCategoryAll = 4294967295 not bound
