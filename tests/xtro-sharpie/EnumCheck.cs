@@ -216,9 +216,18 @@ namespace Extrospection {
 				}
 
 				foreach (var value in native_unsigned_values.Keys) {
-					if (!managed_unsigned_values.ContainsKey (value))
-						Log.On (framework).Add ($"!missing-enum-value! {type.Name} native value {native_unsigned_values [value]} = {value} not bound");
-					else
+					if (!managed_unsigned_values.ContainsKey (value)) {
+						// only for unsigned (flags) native enums we allow all bits set on 32 bits (UInt32.MaxValue)
+						// to be equal to all bit set on 64 bits (UInt64.MaxValue) since the MaxValue differs between
+						// 32bits (e.g. watchOS) and 64bits (all others) platforms
+						var log = true;
+						if (native && (value == UInt32.MaxValue)) {
+							log = !managed_unsigned_values.ContainsKey (UInt64.MaxValue);
+							managed_unsigned_values.Remove (UInt64.MaxValue);
+						}
+						if (log)
+							Log.On (framework).Add ($"!missing-enum-value! {type.Name} native value {native_unsigned_values [value]} = {value} not bound");
+					} else
 						managed_unsigned_values.Remove (value);
 				}
 
