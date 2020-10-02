@@ -1029,6 +1029,19 @@ namespace Introspection
 		[Test]
 		public void ConstantsCheck ()
 		{
+			// The constants are file paths for frameworks / dylibs
+			// unless the latest OS is used there's likely to be missing ones
+			// so we run this test only on the latest supported (matching SDK) OS
+			var sdk = new Version (Constants.SdkVersion);
+#if MONOMAC
+			if (!PlatformHelper.CheckSystemVersion (sdk.Major, sdk.Minor))
+#elif __WATCHOS__
+			if (!WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (sdk.Major, sdk.Minor))
+#else
+			if (!UIDevice.CurrentDevice.CheckSystemVersion (sdk.Major, sdk.Minor))
+#endif
+				Assert.Ignore ($"Constants only verified using the latest OS version ({sdk.Major}.{sdk.Minor})");
+
 			var c = typeof (Constants);
 			foreach (var fi in c.GetFields ()) {
 				if (!fi.IsPublic)
