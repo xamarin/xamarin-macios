@@ -67,6 +67,14 @@ namespace MonoTouchFixtures.MediaAccessibility {
 		[Test]
 		public void SetCaption ()
 		{
+#if !__MACOS__
+			// looks like Apple broke something inside Xcode 12.2 Beta 2 in both sim and device
+			// NSInvalidArgumentException Reason: -[__NSCFType _getValue:forType:]: unrecognized selector sent to instance
+			// when calling MAImageCaptioning.SetCaption
+			if (TestRuntime.CheckExactXcodeVersion (12, 2, 2))
+				Assert.Ignore ("Broken in Xcode 12.2 Beta 2");
+#endif
+
 			TestRuntime.AssertXcodeVersion (11, 0);
 			Assert.Throws<ArgumentNullException> (() => MAImageCaptioning.SetCaption (null, "xamarin", out _));
 			// note: calling on a remote URL crash the process - not that it should work but...
