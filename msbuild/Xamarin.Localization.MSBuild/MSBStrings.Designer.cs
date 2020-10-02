@@ -443,12 +443,6 @@ namespace Xamarin.Localization.MSBuild {
             }
         }
         
-        public static string E0088 {
-            get {
-                return ResourceManager.GetString("E0088", resourceCulture);
-            }
-        }
-        
         public static string E0089 {
             get {
                 return ResourceManager.GetString("E0089", resourceCulture);

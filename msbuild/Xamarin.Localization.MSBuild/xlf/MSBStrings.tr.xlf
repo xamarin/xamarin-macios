@@ -291,13 +291,6 @@
         </target>
         <note></note>
       </trans-unit>
-      <trans-unit id="E0088">
-        <source>Could not get native libraries: {0}
-        </source>
-        <target state="new">Could not get native libraries: {0}
-        </target>
-        <note></note>
-      </trans-unit>
       <trans-unit id="E0089">
         <source>Unrecognized platform: {0}
         </source>

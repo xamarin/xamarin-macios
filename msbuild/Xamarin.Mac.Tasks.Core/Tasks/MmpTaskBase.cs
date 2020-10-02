@@ -38,9 +38,6 @@ namespace Xamarin.Mac.Tasks
 		[Required]
 		public string CustomBundleName { get; set; }
 
-		[Output]
-		public ITaskItem[] NativeLibraries { get; set; }
-
 		protected override bool ValidateParameters ()
 		{
 			XamMacArch arch;
@@ -118,22 +115,6 @@ namespace Xamarin.Mac.Tasks
 		{
 			if (!base.Execute ())
 				return false;
-
-			var monoBundleDir = Path.Combine (AppBundleDir, "Contents", CustomBundleName);
-
-			try {
-				var nativeLibrariesPath = Directory.EnumerateFiles (monoBundleDir, "*.dylib", SearchOption.AllDirectories);
-				var nativeLibraryItems = new List<ITaskItem> ();
-
-				foreach (var nativeLibrary in nativeLibrariesPath) {
-					nativeLibraryItems.Add (new TaskItem (nativeLibrary));
-				}
-
-				NativeLibraries = nativeLibraryItems.ToArray ();
-			} catch (Exception ex) {
-				Log.LogError (null, null, null, AppBundleDir, 0, 0, 0, 0, MSBStrings.E0088, ex.Message);
-				return false;
-			}
 
 			return !Log.HasLoggedErrors;
 		}
