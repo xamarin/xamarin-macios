@@ -62,7 +62,6 @@ namespace Xharness.Jenkins {
 						}
 
 						MSBuildTask derived;
-						var configIgnored = pair.Item3;
 						if (project.IsDotNetProject) {
 							derived = new DotNetBuildTask (jenkins: jenkins, testProject: project, processManager: processManager);
 							configIgnored |= !jenkins.IncludeDotNet;

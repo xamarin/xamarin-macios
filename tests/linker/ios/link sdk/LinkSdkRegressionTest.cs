@@ -967,9 +967,6 @@ namespace LinkSdk {
 		static Type type_uibutton = typeof (UIButton);
 
 		[Test]
-#if NET
-		[Ignore ("Not implemented yet: https://github.com/xamarin/xamarin-macios/issues/9612")]
-#endif
 		public void UIButtonSubclass ()
 		{
 			// ensure the linker keeps the .ctor(UIButtonType) around

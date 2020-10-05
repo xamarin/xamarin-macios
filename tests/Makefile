@@ -180,6 +180,12 @@ Makefile.inc: xharness/xharness.exe
 
 -include Makefile.inc
 
+$(GUI_UNIT_PATH)/bin/net_4_5/GuiUnit.exe:
+	TargetFrameworkFallbackSearchPaths=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks MSBuildExtensionsPathFallbackPathsOverride=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current $(SYSTEM_XIBUILD) -- $(XBUILD_VERBOSITY) $(GUI_UNIT_PATH)/src/framework/GuiUnit_NET_4_5.csproj
+
+$(GUI_UNIT_PATH)/bin/xammac_mobile/GuiUnit.exe:
+	TargetFrameworkFallbackSearchPaths=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks MSBuildExtensionsPathFallbackPathsOverride=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current $(SYSTEM_XIBUILD) -- $(XBUILD_VERBOSITY) $(GUI_UNIT_PATH)/src/framework/GuiUnit_xammac_mobile.csproj
+
 Makefile-mac.inc: xharness/xharness.exe
 	$(Q_GEN) $(SYSTEM_MONO) --debug $(CURDIR)/$< $(XHARNESS_VERBOSITY) --configure  --autoconf --mac --rootdir $(CURDIR)
 
@@ -192,10 +198,8 @@ $(TOP)/tools/common/SdkVersions.cs: $(TOP)/tools/common/SdkVersions.cs.in
 	@$(MAKE) -C $(TOP)/src project-files
 	@touch $@
 
-xharness/xharness.exe: $(xharness_dependencies) test.config test-system.config .stamp-src-project-files
+xharness/xharness.exe: $(xharness_dependencies) test.config test-system.config .stamp-src-project-files $(TOP)/tools/common/SdkVersions.cs
 	$(Q_GEN) $(SYSTEM_MSBUILD) /restore $(MSBUILD_VERBOSITY_QUIET) xharness/xharness.csproj
-xharness/xharness.csproj.inc: export ABSOLUTE_PATHS=1
--include xharness/xharness.csproj.inc
 
 killall:
 	@killall "iPhone Simulator" >/dev/null 2>&1 || true
@@ -205,7 +209,7 @@ killall:
 NUNIT_MSBUILD_DIR=$(TOP)/packages/NUnit.Runners.2.6.4/tools/lib
 test-ios-tasks: verify-system-vsmac-xcode-match
 	$(SYSTEM_MSBUILD) $(TOP)/msbuild/tests/Xamarin.iOS.Tasks.Tests/Xamarin.iOS.Tasks.Tests.csproj /p:Configuration=Debug
-	cd $(TOP)/msbuild/tests/Xamarin.iOS.Tasks.Tests && $(SYSTEM_XIBUILD) -t -- $(abspath $(TOP)/tools/nunit3-console-3.10.0) $(abspath $(TOP)/msbuild/tests/Xamarin.iOS.Tasks.Tests/bin/Debug/net461/Xamarin.iOS.Tasks.Tests.dll) "--result=$(abspath $(CURDIR)/TestResults_Xamarin.iOS.Tasks.Tests.xml);format=nunit2" -labels=All $(TEST_FIXTURE) || touch .failed-stamp
+	cd $(TOP)/msbuild/tests/Xamarin.iOS.Tasks.Tests && $(SYSTEM_XIBUILD) -t -- $(abspath $(TOP)/tools/nunit3-console-3.11.1) $(abspath $(TOP)/msbuild/tests/Xamarin.iOS.Tasks.Tests/bin/Debug/net461/Xamarin.iOS.Tasks.Tests.dll) "--result=$(abspath $(CURDIR)/TestResults_Xamarin.iOS.Tasks.Tests.xml);format=nunit2" -labels=Before $(TEST_FIXTURE) || touch $(CURDIR)/.$@-failed-stamp
 	@[[ -z "$$BUILD_REPOSITORY" ]] || ( xsltproc $(TOP)/tests/HtmlTransform.xslt $(CURDIR)/TestResults_Xamarin.iOS.Tasks.Tests.xml > $(TOP)/tests/index.html && echo "@MonkeyWrench: AddFile: $$PWD/index.html" )
 	@if test -e $(CURDIR)/.$@-failed-stamp; then rm $(CURDIR)/.$@-failed-stamp; exit 1; fi
 
@@ -386,6 +390,10 @@ wrench-launch-external wrench-report-external:
 # This will schedule a manual device test run for the current commit. The current commit must already have packages.
 launch-manual-device-tests:
 	./launch-manual-device-tests.sh
+
+# This will schedule a manual sample test run for the current commit. The current commit must already have packages.
+launch-manual-sample-tests:
+	./launch-manual-sample-tests.sh
 
 else
 wrench-launch-external wrench-report-external:

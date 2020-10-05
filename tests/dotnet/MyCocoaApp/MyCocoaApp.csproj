@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="Microsoft.macOS.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-    <RuntimeIdentifier>osx-x64</RuntimeIdentifier>
-    <OutputType>Exe</OutputType>
-  </PropertyGroup>
-</Project>

@@ -192,42 +192,6 @@ namespace Xharness.Jenkins {
 			};
 			Tasks.Add (runXtroReporter);
 
-			var buildDotNetGeneratorProject = new TestProject (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "bgen", "bgen-tests.csproj"))) {
-				IsDotNetProject = true,
-			};
-			var buildDotNetGenerator = new DotNetBuildTask (jenkins: this, testProject: buildDotNetGeneratorProject, processManager: processManager) {
-				TestProject = buildDotNetGeneratorProject,
-				SpecifyPlatform = false,
-				SpecifyConfiguration = false,
-				Platform = TestPlatform.iOS,
-			};
-			var runDotNetGenerator = new DotNetTestTask (this, buildDotNetGenerator, processManager) {
-				TestProject = buildDotNetGeneratorProject,
-				Platform = TestPlatform.iOS,
-				TestName = "Generator tests",
-				Mode = ".NET",
-				Ignored = !IncludeBtouch,
-			};
-			Tasks.Add (runDotNetGenerator);
-
-			var buildDotNetTestsProject = new TestProject (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "dotnet", "UnitTests", "DotNetUnitTests.csproj"))) {
-				IsDotNetProject = true,
-			};
-			var buildDotNetTests = new DotNetBuildTask (this, testProject: buildDotNetTestsProject, processManager: processManager) {
-				SpecifyPlatform = false,
-				Platform = TestPlatform.All,
-				ProjectConfiguration = "Debug",
-				Ignored = !IncludeDotNet,
-			};
-			var runDotNetTests = new DotNetTestTask (this, buildDotNetTests, processManager) {
-				TestProject = buildDotNetTestsProject,
-				Platform = TestPlatform.All,
-				TestName = "DotNet tests",
-				Timeout = TimeSpan.FromMinutes (15),
-				Ignored = !IncludeDotNet,
-			};
-			Tasks.Add (runDotNetTests);
-
 			var deviceTestFactory = new RunDeviceTasksFactory ();
 			var loaddev = deviceTestFactory.CreateAsync (this, processManager, testVariationsFactory).ContinueWith ((v) => {
 				Console.WriteLine ("Got device tasks completed");
