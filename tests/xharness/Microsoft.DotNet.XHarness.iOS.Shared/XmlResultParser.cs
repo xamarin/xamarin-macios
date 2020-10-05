@@ -1,4 +1,3 @@
-#nullable enable
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -612,7 +611,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 			("skipped", "0"),
 			("asserts", "0"));
 
-		static void WriteFailure (XmlWriter writer, string message, StreamReader? stderr = null)
+		static void WriteFailure (XmlWriter writer, string message, StreamReader stderr = null)
 		{
 			writer.WriteStartElement ("failure");
 			writer.WriteStartElement ("message");
@@ -715,10 +714,11 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 			writer.WriteEndElement (); // assemblies
 		}
 
-		static void GenerateFailureXml (string destination, string title, string message, StreamReader stderrReader, XmlResultJargon jargon)
+		static void GenerateFailureXml (string destination, string title, string message, string stderrPath, XmlResultJargon jargon)
 		{
 			XmlWriterSettings settings = new XmlWriterSettings { Indent = true };
 			using (var stream = File.CreateText (destination))
+			using (var stderrReader = new StreamReader (stderrPath))
 			using (var xmlWriter = XmlWriter.Create (stream, settings)) {
 				xmlWriter.WriteStartDocument ();
 				switch (jargon) {
@@ -736,26 +736,20 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 			}
 		}
 
-		public void GenerateFailure (ILogs logs, string source, string appName, string variation, string title,
-			string message, StreamReader stderr, XmlResultJargon jargon)
+		public void GenerateFailure (ILogs logs, string source, string appName, string variation, string title, string message, string stderrPath, XmlResultJargon jargon)
 		{
 			// VSTS does not provide a nice way to report build errors, create a fake
 			// test result with a failure in the case the build did not work
 			var failureLogXml = logs.Create ($"vsts-nunit-{source}-{Helpers.Timestamp}.xml", LogType.XmlLog.ToString ());
 			if (jargon == XmlResultJargon.NUnitV3) {
 				var failureXmlTmp = logs.Create ($"nunit-{source}-{Helpers.Timestamp}.tmp", "Failure Log tmp");
-				GenerateFailureXml (failureXmlTmp.FullPath, title, message, stderr, jargon);
+				GenerateFailureXml (failureXmlTmp.FullPath, title, message, stderrPath, jargon);
 				// add the required attachments and the info of the application that failed to install
 				var failure_logs = Directory.GetFiles (logs.Directory).Where (p => !p.Contains ("nunit")); // all logs but ourself
 				UpdateMissingData (failureXmlTmp.FullPath, failureLogXml.FullPath, $"{appName} {variation}", failure_logs);
 			} else {
-				GenerateFailureXml (failureLogXml.FullPath, title, message, stderr, jargon);
+				GenerateFailureXml (failureLogXml.FullPath, title, message, stderrPath, jargon);
 			}
-		}
-		public void GenerateFailure (ILogs logs, string source, string appName, string variation, string title, string message, string stderrPath, XmlResultJargon jargon)
-		{
-			using var stderrReader = new StreamReader (stderrPath);
-			GenerateFailure (logs, source, appName, variation, title, message, stderrReader, jargon);
 		}
 
 		public static string GetVSTSFilename (string filename)
