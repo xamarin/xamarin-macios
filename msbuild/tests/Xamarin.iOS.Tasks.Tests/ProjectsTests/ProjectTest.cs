@@ -38,13 +38,13 @@ namespace Xamarin.iOS.Tasks
 		public string BuildProject (string appName, string platform, string config, int expectedErrorCount = 0, bool clean = true, string projectBaseDir = "../", ExecutionMode executionMode = ExecutionMode.InProcess, bool nuget_restore = false)
 		{
 			var mtouchPaths = SetupProjectPaths (appName, appName, projectBaseDir, includePlatform: true, platform: platform, config: config, is_dotnet: executionMode == ExecutionMode.DotNet);
-			var csproj = mtouchPaths["project_csprojpath"];
+			var csproj = mtouchPaths.ProjectCSProjPath;
 
 			Project proj = null;
 			if (executionMode != ExecutionMode.DotNet)
 				proj = SetupProject (Engine, csproj);
 
-			AppBundlePath = mtouchPaths ["app_bundlepath"];
+			AppBundlePath = mtouchPaths.AppBundlePath;
 			Engine.ProjectCollection.SetGlobalProperty("Platform", platform);
 			Engine.ProjectCollection.SetGlobalProperty("Configuration", config);
 

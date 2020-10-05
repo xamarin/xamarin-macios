@@ -194,19 +194,19 @@ namespace Xamarin.iOS.Tasks
 		{
 			var mtouchPaths = SetupProjectPaths ("MySingleView");
 
-			MonoTouchProjectBinPath = mtouchPaths ["project_binpath"];
-			MonoTouchProjectObjPath = mtouchPaths ["project_objpath"];
-			MonoTouchProjectCSProjPath = mtouchPaths ["project_csprojpath"];
-			MonoTouchProjectPath = mtouchPaths ["project_path"];
+			MonoTouchProjectBinPath = mtouchPaths.ProjectBinPath;
+			MonoTouchProjectObjPath = mtouchPaths.ProjectObjPath;
+			MonoTouchProjectCSProjPath = mtouchPaths.ProjectCSProjPath;
+			MonoTouchProjectPath = mtouchPaths.ProjectPath;
 
-			AppBundlePath = mtouchPaths ["app_bundlepath"];
+			AppBundlePath = mtouchPaths.AppBundlePath;
 
 			var libraryPaths = SetupProjectPaths ("MyLibrary", "../MySingleView/", false);
 
-			LibraryProjectBinPath = libraryPaths ["project_binpath"];
-			LibraryProjectObjPath = libraryPaths ["project_objpath"];
-			LibraryProjectPath = libraryPaths ["project_path"];
-			LibraryProjectCSProjPath = libraryPaths ["project_csprojpath"];
+			LibraryProjectBinPath = libraryPaths.ProjectBinPath;
+			LibraryProjectObjPath = libraryPaths.ProjectObjPath;
+			LibraryProjectPath = libraryPaths.ProjectPath;
+			LibraryProjectCSProjPath = libraryPaths.ProjectCSProjPath;
 
 			SetupEngine ();
 
@@ -245,7 +245,7 @@ namespace Xamarin.iOS.Tasks
 		public void CleanUp () {
 
 			var paths = SetupProjectPaths ("MySingleView");
-			MonoTouchProjectPath = paths ["project_path"];
+			MonoTouchProjectPath = paths.ProjectPath;
 
 			TempDir = Path.Combine (Path.GetDirectoryName (Assembly.GetExecutingAssembly ().Location), "ScratchDir");
 			SafeDelete (TempDir);
@@ -379,7 +379,7 @@ namespace Xamarin.iOS.Tasks
 
 			var paths = SetupProjectPaths ("MySingleView");
 
-			var plist = PDictionary.FromFile (Path.Combine (paths ["project_path"], "Info.plist"));
+			var plist = PDictionary.FromFile (Path.Combine (paths.ProjectPath, "Info.plist"));
 			if (value == null)
 				plist.Remove (key);
 			else
@@ -550,11 +550,11 @@ namespace Xamarin.iOS.Tasks
 		}
 	}
 
-	public class ProjectPaths : Dictionary<string, string> {
-		public string ProjectPath { get { return this ["project_path"]; } set { this ["project_path"] = value; } }
-		public string ProjectBinPath { get { return this ["project_binpath"]; } set { this ["project_binpath"] = value; } }
-		public string ProjectObjPath { get { return this ["project_objpath"]; } set { this ["project_objpath"] = value; } }
-		public string ProjectCSProjPath { get { return this ["project_csprojpath"]; } set { this ["project_csprojpath"] = value; } }
-		public string AppBundlePath { get { return this ["app_bundlepath"]; } set { this ["app_bundlepath"] = value; } }
+	public class ProjectPaths {
+		public string ProjectPath { get; set; }
+		public string ProjectBinPath { get; set; }
+		public string ProjectObjPath { get; set; }
+		public string ProjectCSProjPath { get; set; }
+		public string AppBundlePath { get; set; }
 	}
 }

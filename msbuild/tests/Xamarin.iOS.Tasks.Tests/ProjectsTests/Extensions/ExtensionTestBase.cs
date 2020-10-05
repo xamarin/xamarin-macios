@@ -20,9 +20,9 @@ namespace Xamarin.iOS.Tasks
 			var bundlePath = platform;
 			var mtouchPaths = SetupProjectPaths (hostAppName, "../", true, bundlePath, config);
 
-			var proj = SetupProject (Engine, mtouchPaths ["project_csprojpath"]);
+			var proj = SetupProject (Engine, mtouchPaths.ProjectCSProjPath);
 
-			AppBundlePath = mtouchPaths ["app_bundlepath"];
+			AppBundlePath = mtouchPaths.AppBundlePath;
 			string extensionPath = Path.Combine(AppBundlePath, "PlugIns", extensionName + ".appex");
 			Engine.ProjectCollection.SetGlobalProperty ("Platform", platform);
 			Engine.ProjectCollection.SetGlobalProperty ("Configuration", config);
@@ -70,8 +70,8 @@ namespace Xamarin.iOS.Tasks
 		public void SetupPaths (string appName, string platform) 
 		{
 			var paths = this.SetupProjectPaths (appName, "../", true, platform);
-			MonoTouchProjectPath = paths ["project_path"];
-			AppBundlePath = paths ["app_bundlepath"];
+			MonoTouchProjectPath = paths.ProjectPath;
+			AppBundlePath = paths.AppBundlePath;
 		}
 			
 		[SetUp]

@@ -19,7 +19,7 @@ namespace Xamarin.iOS.Tasks
 		{
 			var mtouchPaths = SetupProjectPaths ("bindings-test", projectPath: Path.Combine (Configuration.RootPath, "tests", "bindings-test", "iOS"), includePlatform: false, config: "Any CPU/Debug-unified");
 
-			var proj = SetupProject (Engine, mtouchPaths ["project_csprojpath"]);
+			var proj = SetupProject (Engine, mtouchPaths.ProjectCSProjPath);
 
 			AppBundlePath = mtouchPaths.AppBundlePath;
 			var dllPath = Path.Combine(mtouchPaths.ProjectBinPath, "bindings-test.dll");
