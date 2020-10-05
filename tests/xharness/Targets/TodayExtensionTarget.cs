@@ -4,7 +4,6 @@ using System.IO;
 using System.Xml;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
-using Microsoft.DotNet.XHarness.iOS.Shared;
 
 namespace Xharness.Targets {
 	public class TodayExtensionTarget : UnifiedTarget
@@ -69,7 +68,7 @@ namespace Xharness.Targets {
 				MonoNativeInfo.AddProjectDefines (csproj);
 				csproj.AddAdditionalDefines ("MONO_NATIVE_TODAY");
 			}
-			csproj.Save(TodayContainerProjectPath, (l, m) => Harness.Log (l,m));
+			Harness.Save (csproj, TodayContainerProjectPath);
 
 			XmlDocument info_plist = new XmlDocument ();
 			var target_info_plist = Path.Combine ((IsGeneratedBclTest) ? GeneratedPath : TargetDirectory, $"Info{suffix}.plist");
@@ -77,7 +76,7 @@ namespace Xharness.Targets {
 			info_plist.SetCFBundleIdentifier (BundleIdentifier);
 			info_plist.SetCFBundleName (Name);
 			info_plist.SetMinimumOSVersion (GetMinimumOSVersion ("8.0"));
-			info_plist.Save (target_info_plist, (l,m) => Harness.Log (l,m));
+			Harness.Save (info_plist, target_info_plist);
 		}
 
 		void CreateTodayExtensionProject ()
@@ -102,7 +101,7 @@ namespace Xharness.Targets {
 				csproj.AddAdditionalDefines ("MONO_NATIVE_TODAY");
 			}
 
-			csproj.Save (TodayExtensionProjectPath, (l,m) => Harness.Log (l,m));
+			Harness.Save (csproj, TodayExtensionProjectPath);
 
 			TodayExtensionGuid = csproj.GetProjectGuid ();
 
@@ -123,7 +122,7 @@ namespace Xharness.Targets {
         <key>NSExtensionPointIdentifier</key>
         <string>com.apple.widget-extension</string>
     ");
-			info_plist.Save (target_info_plist, (l,m) => Harness.Log (l,m));
+			Harness.Save (info_plist, target_info_plist);
 		}
 
 		protected override void ExecuteInternal ()

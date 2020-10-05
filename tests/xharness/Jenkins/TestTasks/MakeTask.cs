@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.DotNet.XHarness.iOS.Shared;
@@ -12,7 +12,7 @@ namespace Xharness.Jenkins.TestTasks {
 		public string WorkingDirectory;
 		public TimeSpan Timeout = TimeSpan.FromMinutes (5);
 
-		public MakeTask (Jenkins jenkins, IProcessManager processManager) : base (jenkins, processManager)
+		public MakeTask (IProcessManager processManager) : base (processManager)
 		{
 		}
 
@@ -26,7 +26,7 @@ namespace Xharness.Jenkins.TestTasks {
 					SetEnvironmentVariables (make);
 					var log = Logs.Create ($"make-{Platform}-{Timestamp}.txt", LogType.BuildLog.ToString ());
 					LogEvent (log, "Making {0} in {1}", Target, WorkingDirectory);
-					if (!Jenkins.Harness.DryRun) {
+					if (!Harness.DryRun) {
 						var timeout = Timeout;
 						var result = await ProcessManager.RunAsync (make, log, timeout);
 						if (result.TimedOut) {
@@ -39,7 +39,7 @@ namespace Xharness.Jenkins.TestTasks {
 						}
 					}
 					using (var reader = log.GetReader ())
-						AddCILogFiles (reader);
+						AddWrenchLogFiles (reader);
 					Jenkins.MainLog.WriteLine ("Made {0} ({1})", TestName, Mode);
 				}
 			}

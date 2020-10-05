@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
-using Microsoft.DotNet.XHarness.iOS.Shared;
 
 namespace Xharness.Targets
 {
@@ -122,7 +121,7 @@ namespace Xharness.Targets
 		{
 			ProcessProject ();
 			PostProcessExecutableProject ();
-			inputProject.Save (ProjectPath, (l,m) => Harness.Log (l,m));
+			Harness.Save (inputProject, ProjectPath);
 
 			UpdateInfoPList ();
 		}
@@ -138,7 +137,7 @@ namespace Xharness.Targets
 		protected void CreateLibraryProject ()
 		{
 			ProcessProject ();
-			inputProject.Save (ProjectPath, (l, m) => Harness.Log (l,m));
+			Harness.Save (inputProject, ProjectPath);
 
 			ProjectGuid = inputProject.GetProjectGuid ();
 		}

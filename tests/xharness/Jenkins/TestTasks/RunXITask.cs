@@ -7,26 +7,25 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Collections;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
-using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
 
 namespace Xharness.Jenkins.TestTasks {
 	abstract class RunXITask<TDevice> : RunTestTask where TDevice : class, IDevice
 	{
-		public TestTarget AppRunnerTarget { get; set; }
+		public TestTarget AppRunnerTarget;
 
-		public AppRunner Runner { get; set; }
-		public AppRunner AdditionalRunner { get; set; }
+		protected AppRunner runner;
+		protected AppRunner additional_runner;
 
 		public IEnumerable<TDevice> Candidates { get; }
 
-		public TDevice Device { get; set; }
+		public TDevice Device { get; protected set; }
 
-		public TDevice CompanionDevice { get; set; }
+		public TDevice CompanionDevice { get; protected set; }
 
-		public string BundleIdentifier => Runner.AppInformation.BundleIdentifier;
+		public string BundleIdentifier => runner.AppInformation.BundleIdentifier;
 
-		public RunXITask (Jenkins jenkins, BuildToolTask build_task, IProcessManager processManager, IEnumerable<TDevice> candidates)
-			: base (jenkins, build_task, processManager)
+		public RunXITask (BuildToolTask build_task, IProcessManager processManager, IEnumerable<TDevice> candidates)
+			: base (build_task, processManager)
 		{
 			this.Candidates = candidates;
 		}
@@ -34,10 +33,10 @@ namespace Xharness.Jenkins.TestTasks {
 		public override IEnumerable<ILog> AggregatedLogs {
 			get {
 				var rv = base.AggregatedLogs;
-				if (Runner != null)
-					rv = rv.Union (Runner.Logs);
-				if (AdditionalRunner != null)
-					rv = rv.Union (AdditionalRunner.Logs);
+				if (runner != null)
+					rv = rv.Union (runner.Logs);
+				if (additional_runner != null)
+					rv = rv.Union (additional_runner.Logs);
 				return rv;
 			}
 		}
@@ -89,8 +88,8 @@ namespace Xharness.Jenkins.TestTasks {
 		public override void Reset ()
 		{
 			base.Reset ();
-			Runner = null;
-			AdditionalRunner = null;
+			runner = null;
+			additional_runner = null;
 		}
 	}
 }

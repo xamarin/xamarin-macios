@@ -3,7 +3,6 @@ using System.IO;
 using System.Xml;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
-using Microsoft.DotNet.XHarness.iOS.Shared;
 
 namespace Xharness.Targets {
 	public class TVOSTarget : iOSTarget

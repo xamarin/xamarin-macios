@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
-using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
@@ -45,7 +44,7 @@ namespace Xharness.Targets {
 				MonoNativeHelper.AddProjectDefines (csproj, MonoNativeInfo.Flavor);
 				MonoNativeHelper.RemoveSymlinkMode (csproj);
 			}
-			csproj.Save (WatchOSAppProjectPath, (l,m) => Harness.Log (l,m));
+			Harness.Save (csproj, WatchOSAppProjectPath);
 
 			XmlDocument info_plist = new XmlDocument ();
 			var target_info_plist = Path.Combine (TargetDirectory, $"Info{Suffix}-app.plist");
@@ -54,7 +53,7 @@ namespace Xharness.Targets {
 			info_plist.SetPListStringValue ("WKCompanionAppBundleIdentifier", BundleIdentifier);
 			info_plist.SetPListStringValue ("CFBundleName", Name);
 			info_plist.SetMinimumOSVersion (GetMinimumOSVersion (info_plist.GetMinimumOSVersion ()));
-			info_plist.Save(target_info_plist, (l, m) => Harness.Log (l, m));
+			Harness.Save (info_plist, target_info_plist);
 		}
 
 		void CreateWatchOSContainerProject ()
@@ -73,7 +72,7 @@ namespace Xharness.Targets {
 				MonoNativeHelper.AddProjectDefines (csproj, MonoNativeInfo.Flavor);
 				MonoNativeHelper.RemoveSymlinkMode (csproj);
 			}
-			csproj.Save (WatchOSProjectPath, (l, m) => Harness.Log (l, m));
+			Harness.Save (csproj, WatchOSProjectPath);
 
 			XmlDocument info_plist = new XmlDocument ();
 			var target_info_plist = Path.Combine (TargetDirectory, $"Info{Suffix}.plist");
@@ -81,7 +80,7 @@ namespace Xharness.Targets {
 			info_plist.SetCFBundleIdentifier (BundleIdentifier);
 			info_plist.SetCFBundleName (Name);
 			info_plist.SetMinimumOSVersion ("9.0");
-			info_plist.Save (target_info_plist, (l, m) => Harness.Log (l,m));
+			Harness.Save (info_plist, target_info_plist);
 		}
 
 		void CreateWatchOSExtensionProject ()
@@ -146,7 +145,7 @@ namespace Xharness.Targets {
 				csproj.AddExtraMtouchArgs ($"--gcc_flags='{flags}'", "iPhone", c);
 			}
 
-			csproj.Save (WatchOSExtensionProjectPath, (l,m) => Harness.Log (l, m));
+			Harness.Save (csproj, WatchOSExtensionProjectPath);
 
 			WatchOSExtensionGuid = csproj.GetProjectGuid ();
 
@@ -177,7 +176,7 @@ namespace Xharness.Targets {
 		  <true/>
 		");
 			}
-			info_plist.Save (target_info_plist, (l, m) => Harness.Log (l,m));
+			Harness.Save (info_plist, target_info_plist);
 		}
 
 		protected override string Imports {
@@ -205,7 +204,7 @@ namespace Xharness.Targets {
 			csproj.FixProjectReferences (Suffix);
 			csproj.SetExtraLinkerDefs ("extra-linker-defs" + ExtraLinkerDefsSuffix + ".xml");
 			csproj.FixTestLibrariesReferences (Platform);
-			csproj.Save (WatchOSProjectPath, (l,m) => Harness.Log (l,m));
+			Harness.Save (csproj, WatchOSProjectPath);
 
 			WatchOSGuid = csproj.GetProjectGuid ();
 		}

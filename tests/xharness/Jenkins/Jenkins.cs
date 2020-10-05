@@ -12,17 +12,14 @@ using Xharness.Jenkins.TestTasks;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
-using Microsoft.DotNet.XHarness.iOS.Shared.Tasks;
-using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
 
 namespace Xharness.Jenkins {
-	public class Jenkins : IResourceManager, IErrorKnowledgeBase
+	public class Jenkins
 	{
 		readonly ISimulatorLoader simulators;
 		readonly IHardwareDeviceLoader devices;
 		readonly IProcessManager processManager;
 		readonly IResultParser resultParser;
-		readonly ITunnelBore tunnelBore;
 		bool populating = true;
 
 		public Harness Harness { get; }
@@ -79,14 +76,14 @@ namespace Xharness.Jenkins {
 			}
 		}
 
-		List<AppleTestTask> Tasks = new List<AppleTestTask> ();
+		List<TestTask> Tasks = new List<TestTask> ();
 		Dictionary<string, MakeTask> DependencyTasks = new Dictionary<string, MakeTask> ();
 
-		public Resource DesktopResource { get; } = new Resource ("Desktop", Environment.ProcessorCount);
-		public Resource NugetResource { get;  } = new Resource ("Nuget", 1); // nuget is not parallel-safe :(
+		internal static Resource DesktopResource = new Resource ("Desktop", Environment.ProcessorCount);
+		internal static Resource NugetResource = new Resource ("Nuget", 1); // nuget is not parallel-safe :(
 
-		Dictionary<string, Resource> device_resources = new Dictionary<string, Resource> ();
-		public Resources GetDeviceResources (IEnumerable<IHardwareDevice> devices)
+		static Dictionary<string, Resource> device_resources = new Dictionary<string, Resource> ();
+		internal static Resources GetDeviceResources (IEnumerable<IHardwareDevice> devices)
 		{
 			List<Resource> resources = new List<Resource> ();
 			lock (device_resources) {
@@ -100,11 +97,10 @@ namespace Xharness.Jenkins {
 			return new Resources (resources);
 		}
 
-		public Jenkins (Harness harness, IProcessManager processManager, IResultParser resultParser, ITunnelBore tunnelBore)
+		public Jenkins (Harness harness, IProcessManager processManager, IResultParser resultParser)
 		{
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 			this.resultParser = resultParser ?? throw new ArgumentNullException (nameof (resultParser));
-			this.tunnelBore = tunnelBore ?? throw new ArgumentNullException (nameof (tunnelBore));
 			Harness = harness ?? throw new ArgumentNullException (nameof (harness));
 			simulators = new SimulatorLoader (processManager);
 			devices = new HardwareDeviceLoader (processManager);
@@ -230,13 +226,7 @@ namespace Xharness.Jenkins {
 
 			for (int i = 0; i < targets.Length; i++) {
 				var sims = simulators.SelectDevices (targets [i], SimulatorLoadLog, false);
-				runtasks.Add (new RunSimulatorTask (
-					jenkins: this,
-					simulators: simulators,
-					buildTask: buildTask,
-					processManager: processManager,
-					tunnelBore: tunnelBore,
-					candidates: sims) {
+				runtasks.Add (new RunSimulatorTask (simulators, buildTask, processManager, sims) {
 					Platform = platforms [i],
 					Ignored = ignored[i] || buildTask.Ignored
 				});
@@ -250,18 +240,18 @@ namespace Xharness.Jenkins {
 			if (!project.IsExecutableProject)
 				return false;
 			
-			if (project.IsBclTest ()) {
-				if (!project.IsBclxUnit ())
+			if (project.IsBclTest) {
+				if (!project.IsBclxUnit)
 					return IncludeBcl || IncludeBCLNUnit;
-				if (project.IsMscorlib ()) 
+				if (project.IsMscorlib) 
 					return IncludeMscorlib;
 				return IncludeBcl || IncludeBCLxUnit;
 			}
 
-			if (!IncludeMonotouch && project.IsMonotouch ())
+			if (!IncludeMonotouch && project.IsMonotouch)
 				return false;
 
-			if (!IncludeNonMonotouch && !project.IsMonotouch ())
+			if (!IncludeNonMonotouch && !project.IsMonotouch)
 				return false;
 
 			if (Harness.IncludeSystemPermissionTests == false && project.Name == "introspection")
@@ -496,7 +486,9 @@ namespace Xharness.Jenkins {
 						clone.Xml.Save (clone.Path);
 					});
 
-					var build = new MSBuildTask (jenkins: this, testProject: clone, processManager: processManager) {
+					var build = new MSBuildTask (processManager) {
+						Jenkins = this,
+						TestProject = clone,
 						ProjectConfiguration = configuration,
 						ProjectPlatform = task.ProjectPlatform,
 						Platform = task.Platform,
@@ -516,7 +508,7 @@ namespace Xharness.Jenkins {
 			return rv;
 		}
 
-		async Task<IEnumerable<AppleTestTask>> CreateRunSimulatorTasksAsync ()
+		async Task<IEnumerable<TestTask>> CreateRunSimulatorTasksAsync ()
 		{
 			var runSimulatorTasks = new List<RunSimulatorTask> ();
 
@@ -543,7 +535,8 @@ namespace Xharness.Jenkins {
 					configurations = new string [] { "Debug" };
 				foreach (var config in configurations) {
 					foreach (var pair in ps) {
-						var derived = new MSBuildTask (jenkins: this, testProject: project, processManager: processManager) {
+						var derived = new MSBuildTask (processManager) {
+							Jenkins = this,
 							ProjectConfiguration = config,
 							ProjectPlatform = "iPhoneSimulator",
 							Platform = pair.Item2,
@@ -564,13 +557,7 @@ namespace Xharness.Jenkins {
 			}
 
 			var testVariations = CreateTestVariations (runSimulatorTasks, (buildTask, test, candidates) =>
-				new RunSimulatorTask (
-					jenkins: this,
-					simulators: simulators,
-					buildTask: buildTask,
-					processManager: processManager,
-					tunnelBore: tunnelBore,
-					candidates: candidates?.Cast<SimulatorDevice> () ?? test.Candidates)).ToList ();
+				new RunSimulatorTask (simulators, buildTask, processManager, candidates?.Cast<SimulatorDevice> () ?? test.Candidates)).ToList ();
 
 			foreach (var tv in testVariations) {
 				if (!tv.Ignored)
@@ -579,14 +566,15 @@ namespace Xharness.Jenkins {
 
 			var rv = new List<AggregatedRunSimulatorTask> ();
 			foreach (var taskGroup in testVariations.GroupBy ((RunSimulatorTask task) => task.Device?.UDID ?? task.Candidates.ToString ())) {
-				rv.Add (new AggregatedRunSimulatorTask (jenkins: this, tasks: taskGroup) {
+				rv.Add (new AggregatedRunSimulatorTask (taskGroup) {
+					Jenkins = this,
 					TestName = $"Tests for {taskGroup.Key}",
 				});
 			}
 			return rv;
 		}
 
-		Task<IEnumerable<AppleTestTask>> CreateRunDeviceTasksAsync ()
+		Task<IEnumerable<TestTask>> CreateRunDeviceTasksAsync ()
 		{
 			var rv = new List<RunDeviceTask> ();
 			var projectTasks = new List<RunDeviceTask> ();
@@ -601,111 +589,75 @@ namespace Xharness.Jenkins {
 
 				projectTasks.Clear ();
 				if (!project.SkipiOSVariation) {
-					var build64 = new MSBuildTask (jenkins: this, testProject: project, processManager: processManager) {
+					var build64 = new MSBuildTask (processManager) {
+						Jenkins = this,
 						ProjectConfiguration = "Debug64",
 						ProjectPlatform = "iPhone",
 						Platform = TestPlatform.iOS_Unified64,
 						TestName = project.Name,
 					};
 					build64.CloneTestProject (project);
-					projectTasks.Add (new RunDeviceTask (
-						jenkins: this,
-						devices: devices,
-						buildTask: build64,
-						processManager: processManager,
-						tunnelBore: tunnelBore,
-						useTcpTunnel: Harness.UseTcpTunnel,
-						candidates: devices.Connected64BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !IncludeiOS64 });
+					projectTasks.Add (new RunDeviceTask (devices, build64, processManager, devices.Connected64BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !IncludeiOS64 });
 
-					var build32 = new MSBuildTask (jenkins: this, testProject: project, processManager: processManager) {
+					var build32 = new MSBuildTask (processManager) {
+						Jenkins = this,
 						ProjectConfiguration = project.Name != "dont link" ? "Debug32" : "Release32",
 						ProjectPlatform = "iPhone",
 						Platform = TestPlatform.iOS_Unified32,
 						TestName = project.Name,
 					};
 					build32.CloneTestProject (project);
-					projectTasks.Add (new RunDeviceTask (
-						jenkins: this,
-						devices: devices,
-						buildTask: build32,
-						processManager: processManager,
-						tunnelBore: tunnelBore,
-						useTcpTunnel: Harness.UseTcpTunnel,
-						candidates: devices.Connected32BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !IncludeiOS32 });
+					projectTasks.Add (new RunDeviceTask (devices, build32, processManager, devices.Connected32BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !IncludeiOS32 });
 
 					var todayProject = project.AsTodayExtensionProject ();
-					var buildToday = new MSBuildTask (jenkins: this, testProject: todayProject, processManager: processManager) {
+					var buildToday = new MSBuildTask (processManager) {
+						Jenkins = this,
 						ProjectConfiguration = "Debug64",
 						ProjectPlatform = "iPhone",
 						Platform = TestPlatform.iOS_TodayExtension64,
 						TestName = project.Name,
 					};
 					buildToday.CloneTestProject (todayProject);
-					projectTasks.Add (new RunDeviceTask (
-						jenkins: this,
-						devices: devices,
-						buildTask: buildToday,
-						processManager: processManager,
-						tunnelBore: tunnelBore,
-						useTcpTunnel: Harness.UseTcpTunnel,
-						candidates: devices.Connected64BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !IncludeiOSExtensions, BuildOnly = ForceExtensionBuildOnly });
+					projectTasks.Add (new RunDeviceTask (devices, buildToday, processManager, devices.Connected64BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !IncludeiOSExtensions, BuildOnly = ForceExtensionBuildOnly });
 				}
 
 				if (!project.SkiptvOSVariation) {
 					var tvOSProject = project.AsTvOSProject ();
-					var buildTV = new MSBuildTask (jenkins: this, testProject: tvOSProject, processManager: processManager) {
+					var buildTV = new MSBuildTask (processManager) {
+						Jenkins = this,
 						ProjectConfiguration = "Debug",
 						ProjectPlatform = "iPhone",
 						Platform = TestPlatform.tvOS,
 						TestName = project.Name,
 					};
 					buildTV.CloneTestProject (tvOSProject);
-					projectTasks.Add (new RunDeviceTask (
-						jenkins: this,
-						devices: devices,
-						buildTask: buildTV,
-						processManager: processManager,
-						tunnelBore: tunnelBore,
-						useTcpTunnel: Harness.UseTcpTunnel,
-						candidates: devices.ConnectedTV.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !IncludetvOS });
+					projectTasks.Add (new RunDeviceTask (devices, buildTV, processManager, devices.ConnectedTV.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !IncludetvOS });
 				}
 
 				if (!project.SkipwatchOSVariation) {
 					var watchOSProject = project.AsWatchOSProject ();
 					if (!project.SkipwatchOS32Variation) {
-						var buildWatch32 = new MSBuildTask (jenkins: this, testProject: watchOSProject, processManager: processManager) {
+						var buildWatch32 = new MSBuildTask (processManager) {
+							Jenkins = this,
 							ProjectConfiguration = "Debug32",
 							ProjectPlatform = "iPhone",
 							Platform = TestPlatform.watchOS_32,
 							TestName = project.Name,
 						};
 						buildWatch32.CloneTestProject (watchOSProject);
-						projectTasks.Add (new RunDeviceTask (
-							jenkins: this,
-							devices: devices,
-							buildTask: buildWatch32,
-							processManager: processManager,
-							tunnelBore: tunnelBore,
-							useTcpTunnel: Harness.UseTcpTunnel,
-							candidates: devices.ConnectedWatch) { Ignored = !IncludewatchOS });
+						projectTasks.Add (new RunDeviceTask (devices, buildWatch32, processManager, devices.ConnectedWatch) { Ignored = !IncludewatchOS });
 					}
 
 					if (!project.SkipwatchOSARM64_32Variation) {
-						var buildWatch64_32 = new MSBuildTask (jenkins: this, testProject: watchOSProject, processManager: processManager) {
+						var buildWatch64_32 = new MSBuildTask (processManager) {
+							Jenkins = this,
 							ProjectConfiguration = "Release64_32", // We don't support Debug for ARM64_32 yet.
 							ProjectPlatform = "iPhone",
 							Platform = TestPlatform.watchOS_64_32,
 							TestName = project.Name,
 						};
 						buildWatch64_32.CloneTestProject (watchOSProject);
-						projectTasks.Add (new RunDeviceTask (
-							jenkins: this,
-							devices: devices,
-							buildTask: buildWatch64_32,
-							processManager: processManager,
-							tunnelBore: tunnelBore,
-							useTcpTunnel: Harness.UseTcpTunnel,
-							candidates: devices.ConnectedWatch32_64.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !IncludewatchOS });
+						projectTasks.Add (new RunDeviceTask (devices, buildWatch64_32, processManager, devices.ConnectedWatch32_64.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !IncludewatchOS });
 					}
 				}
 				foreach (var task in projectTasks) {
@@ -716,15 +668,7 @@ namespace Xharness.Jenkins {
 				rv.AddRange (projectTasks);
 			}
 
-			return Task.FromResult<IEnumerable<AppleTestTask>> (CreateTestVariations (rv, (buildTask, test, candidates)
-				=> new RunDeviceTask (
-					jenkins: this, 
-					devices: devices,
-					buildTask: buildTask,
-					processManager: processManager,
-					tunnelBore: tunnelBore,
-					useTcpTunnel: Harness.UseTcpTunnel,
-					candidates: candidates?.Cast<IHardwareDevice> () ?? test.Candidates)));
+			return Task.FromResult<IEnumerable<TestTask>> (CreateTestVariations (rv, (buildTask, test, candidates) => new RunDeviceTask (devices, buildTask, processManager, candidates?.Cast<IHardwareDevice> () ?? test.Candidates)));
 		}
 
 		static string AddSuffixToPath (string path, string suffix)
@@ -1004,9 +948,10 @@ namespace Xharness.Jenkins {
 
 			var crashReportSnapshotFactory = new CrashSnapshotReporterFactory (processManager);
 
-			var net461Project = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "msbuild", "tests", "Xamarin.iOS.Tasks.Tests", "Xamarin.iOS.Tasks.Tests.csproj")));
-			var buildiOSMSBuild_net461 = new MSBuildTask (jenkins: this, testProject: net461Project, processManager: processManager)
+			var buildiOSMSBuild_net461 = new MSBuildTask (processManager)
 			{
+				Jenkins = this,
+				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "msbuild", "tests", "Xamarin.iOS.Tasks.Tests", "Xamarin.iOS.Tasks.Tests.csproj"))),
 				SpecifyPlatform = false,
 				SpecifyConfiguration = true,
 				ProjectConfiguration = "Debug-net461",
@@ -1014,10 +959,10 @@ namespace Xharness.Jenkins {
 				SolutionPath = Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "msbuild", "Xamarin.MacDev.Tasks.sln")),
 				SupportsParallelExecution = false,
 			};
-			var nunitExecutioniOSMSBuild_net461 = new NUnitExecuteTask (this, buildiOSMSBuild_net461, processManager)
+			var nunitExecutioniOSMSBuild_net461 = new NUnitExecuteTask (buildiOSMSBuild_net461, processManager)
 			{
 				TestLibrary = Path.Combine (Harness.RootDirectory, "..", "msbuild", "tests", "Xamarin.iOS.Tasks.Tests", "bin", "Debug-net461", "net461", "Xamarin.iOS.Tasks.Tests.dll"),
-				TestProject = net461Project,
+				TestProject = buildiOSMSBuild_net461.TestProject,
 				ProjectConfiguration = "Debug-net461",
 				Platform = TestPlatform.iOS,
 				TestName = "MSBuild tests",
@@ -1028,8 +973,9 @@ namespace Xharness.Jenkins {
 			};
 			Tasks.Add (nunitExecutioniOSMSBuild_net461);
 
-			var netstandard2Project = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "msbuild", "tests", "Xamarin.iOS.Tasks.Tests", "Xamarin.iOS.Tasks.Tests.csproj")));
-			var buildiOSMSBuild_netstandard2 = new MSBuildTask (jenkins: this, testProject: netstandard2Project, processManager: processManager) {
+			var buildiOSMSBuild_netstandard2 = new MSBuildTask (processManager) {
+				Jenkins = this,
+				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "msbuild", "tests", "Xamarin.iOS.Tasks.Tests", "Xamarin.iOS.Tasks.Tests.csproj"))),
 				SpecifyPlatform = false,
 				SpecifyConfiguration = true,
 				ProjectConfiguration = "Debug-netstandard2.0",
@@ -1037,9 +983,9 @@ namespace Xharness.Jenkins {
 				SolutionPath = Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "msbuild", "Xamarin.MacDev.Tasks.sln")),
 				SupportsParallelExecution = false,
 			};
-			var nunitExecutioniOSMSBuild_netstandard2 = new NUnitExecuteTask (this, buildiOSMSBuild_netstandard2, processManager) {
+			var nunitExecutioniOSMSBuild_netstandard2 = new NUnitExecuteTask (buildiOSMSBuild_netstandard2, processManager) {
 				TestLibrary = Path.Combine (Harness.RootDirectory, "..", "msbuild", "tests", "Xamarin.iOS.Tasks.Tests", "bin", "Debug-netstandard2.0", "net461", "Xamarin.iOS.Tasks.Tests.dll"),
-				TestProject = netstandard2Project,
+				TestProject = buildiOSMSBuild_netstandard2.TestProject,
 				ProjectConfiguration = "Debug-netstandard2.0",
 				Platform = TestPlatform.iOS,
 				TestName = "MSBuild tests",
@@ -1050,18 +996,19 @@ namespace Xharness.Jenkins {
 			};
 			Tasks.Add (nunitExecutioniOSMSBuild_netstandard2);
 
-			var installSourcesProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "tools", "install-source", "InstallSourcesTests", "InstallSourcesTests.csproj")));
-			var buildInstallSources = new MSBuildTask (jenkins: this, testProject: installSourcesProject, processManager: processManager)
+			var buildInstallSources = new MSBuildTask (processManager)
 			{
+				Jenkins = this,
+				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "tools", "install-source", "InstallSourcesTests", "InstallSourcesTests.csproj"))),
 				SpecifyPlatform = false,
 				SpecifyConfiguration = false,
 				Platform = TestPlatform.iOS,
 			};
 			buildInstallSources.SolutionPath = Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "tools", "install-source", "install-source.sln")); // this is required for nuget restore to be executed
-			var nunitExecutionInstallSource = new NUnitExecuteTask (this, buildInstallSources, processManager)
+			var nunitExecutionInstallSource = new NUnitExecuteTask (buildInstallSources, processManager)
 			{
 				TestLibrary = Path.Combine (Harness.RootDirectory, "..", "tools", "install-source", "InstallSourcesTests", "bin", "Release", "InstallSourcesTests.dll"),
-				TestProject = installSourcesProject,
+				TestProject = buildInstallSources.TestProject,
 				Platform = TestPlatform.iOS,
 				TestName = "Install Sources tests",
 				Mode = "iOS",
@@ -1100,9 +1047,10 @@ namespace Xharness.Jenkins {
 					throw new NotImplementedException (project.TargetFrameworkFlavors.ToString ());
 				}
 				foreach (var config in configurations) {
-					MSBuildTask build = new MSBuildTask (jenkins: this, testProject: project, processManager: processManager);
+					MSBuildTask build = new MSBuildTask (processManager);
 					build.Platform = platform;
 					build.CloneTestProject (project);
+					build.Jenkins = this;
 					build.SolutionPath = project.SolutionPath;
 					build.ProjectConfiguration = config;
 					build.ProjectPlatform = project.Platform;
@@ -1114,7 +1062,7 @@ namespace Xharness.Jenkins {
 					var ignored_main = ignored;
 					if (project.IsNUnitProject) {
 						var dll = Path.Combine (Path.GetDirectoryName (build.TestProject.Path), project.Xml.GetOutputAssemblyPath (build.ProjectPlatform, build.ProjectConfiguration).Replace ('\\', '/'));
-						exec = new NUnitExecuteTask (this, build, processManager) {
+						exec = new NUnitExecuteTask (build, processManager) {
 							Ignored = ignored_main,
 							TestLibrary = dll,
 							TestProject = project,
@@ -1125,14 +1073,14 @@ namespace Xharness.Jenkins {
 						};
 						execs = new [] { exec };
 					} else {
-						exec = new MacExecuteTask (this, build, processManager, crashReportSnapshotFactory) {
+						exec = new MacExecuteTask (build, processManager, crashReportSnapshotFactory) {
 							Ignored = ignored_main,
-							BCLTest = project.IsBclTest (),
+							BCLTest = project.IsBclTest,
 							TestName = project.Name,
 							IsUnitTest = true,
 						};
 						execs = CreateTestVariations (new [] { exec }, (buildTask, test, candidates) =>
-							new MacExecuteTask (this, buildTask, processManager, crashReportSnapshotFactory) { IsUnitTest = true } );
+							new MacExecuteTask (buildTask, processManager, crashReportSnapshotFactory) { IsUnitTest = true } );
 					}
 
 					foreach (var e in execs)
@@ -1142,8 +1090,9 @@ namespace Xharness.Jenkins {
 				}
 			}
 
-			var buildMTouch = new MakeTask (jenkins: this, processManager: processManager)
+			var buildMTouch = new MakeTask (processManager)
 			{
+				Jenkins = this,
 				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "mtouch", "mtouch.sln"))),
 				SpecifyPlatform = false,
 				SpecifyConfiguration = false,
@@ -1151,7 +1100,7 @@ namespace Xharness.Jenkins {
 				Target = "dependencies",
 				WorkingDirectory = Path.GetFullPath (Path.Combine (Harness.RootDirectory, "mtouch")),
 			};
-			var nunitExecutionMTouch = new NUnitExecuteTask (this, buildMTouch, processManager)
+			var nunitExecutionMTouch = new NUnitExecuteTask (buildMTouch, processManager)
 			{
 				TestLibrary = Path.Combine (Harness.RootDirectory, "mtouch", "bin", "Debug", "mtouch.dll"),
 				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "mtouch", "mtouch.csproj"))),
@@ -1163,7 +1112,8 @@ namespace Xharness.Jenkins {
 			};
 			Tasks.Add (nunitExecutionMTouch);
 
-			var buildGenerator = new MakeTask (jenkins: this, processManager: processManager) {
+			var buildGenerator = new MakeTask (processManager) {
+				Jenkins = this,
 				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "src", "generator.sln"))),
 				SpecifyPlatform = false,
 				SpecifyConfiguration = false,
@@ -1171,7 +1121,7 @@ namespace Xharness.Jenkins {
 				Target = "build-unit-tests",
 				WorkingDirectory = Path.GetFullPath (Path.Combine (Harness.RootDirectory, "generator")),
 			};
-			var runGenerator = new NUnitExecuteTask (this, buildGenerator, processManager) {
+			var runGenerator = new NUnitExecuteTask (buildGenerator, processManager) {
 				TestLibrary = Path.Combine (Harness.RootDirectory, "generator", "bin", "Debug", "generator-tests.dll"),
 				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "generator", "generator-tests.csproj"))),
 				Platform = TestPlatform.iOS,
@@ -1182,15 +1132,15 @@ namespace Xharness.Jenkins {
 			};
 			Tasks.Add (runGenerator);
 
-			var buildDotNetGeneratorProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "bgen", "bgen-tests.csproj")));
-			var buildDotNetGenerator = new DotNetBuildTask (jenkins: this, testProject: buildDotNetGeneratorProject, processManager: processManager) {
+			var buildDotNetGenerator = new DotNetBuildTask (processManager) {
+				Jenkins = this,
 				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "bgen", "bgen-tests.csproj"))),
 				SpecifyPlatform = false,
 				SpecifyConfiguration = false,
 				Platform = TestPlatform.iOS,
 			};
-			var runDotNetGenerator = new DotNetTestTask (this, buildDotNetGenerator, processManager) {
-				TestProject = buildDotNetGeneratorProject,
+			var runDotNetGenerator = new DotNetTestTask (buildDotNetGenerator, processManager) {
+				TestProject = buildDotNetGenerator.TestProject,
 				Platform = TestPlatform.iOS,
 				TestName = "Generator tests",
 				Mode = ".NET",
@@ -1198,8 +1148,9 @@ namespace Xharness.Jenkins {
 			};
 			Tasks.Add (runDotNetGenerator);
 
-			var run_mmp = new MakeTask (jenkins: this, processManager: processManager)
+			var run_mmp = new MakeTask (processManager)
 			{
+				Jenkins = this,
 				Platform = TestPlatform.Mac,
 				TestName = "MMP Regression Tests",
 				Target = "all", // -j" + Environment.ProcessorCount,
@@ -1216,8 +1167,9 @@ namespace Xharness.Jenkins {
 			run_mmp.Environment.Add ("BUILD_REVISION", "jenkins"); // This will print "@MonkeyWrench: AddFile: <log path>" lines, which we can use to get the log filenames.
 			Tasks.Add (run_mmp);
 
-			var runMacBindingProject = new MakeTask (jenkins: this, processManager: processManager)
+			var runMacBindingProject = new MakeTask (processManager)
 			{
+				Jenkins = this,
 				Platform = TestPlatform.Mac,
 				TestName = "Mac Binding Projects",
 				Target = "all",
@@ -1227,7 +1179,8 @@ namespace Xharness.Jenkins {
 			};
 			Tasks.Add (runMacBindingProject);
 
-			var buildXtroTests = new MakeTask (jenkins: this, processManager: processManager) {
+			var buildXtroTests = new MakeTask (processManager) {
+				Jenkins = this,
 				Platform = TestPlatform.All,
 				TestName = "Xtro",
 				Target = "wrench",
@@ -1235,7 +1188,8 @@ namespace Xharness.Jenkins {
 				Ignored = !IncludeXtro,
 				Timeout = TimeSpan.FromMinutes (15),
 			};
-			var runXtroReporter = new RunXtroTask (this, buildXtroTests, processManager, crashReportSnapshotFactory) {
+			var runXtroReporter = new RunXtroTask (buildXtroTests, processManager, crashReportSnapshotFactory) {
+				Jenkins = this,
 				Platform = TestPlatform.Mac,
 				TestName = buildXtroTests.TestName,
 				Ignored = buildXtroTests.Ignored,
@@ -1243,7 +1197,8 @@ namespace Xharness.Jenkins {
 			};
 			Tasks.Add (runXtroReporter);
 
-			var buildCecilTests = new MakeTask (jenkins: this, processManager: processManager) {
+			var buildCecilTests = new MakeTask (processManager) {
+				Jenkins = this,
 				Platform = TestPlatform.All,
 				TestName = "Cecil",
 				Target = "build",
@@ -1251,7 +1206,7 @@ namespace Xharness.Jenkins {
 				Ignored = !IncludeCecil,
 				Timeout = TimeSpan.FromMinutes (5),
 			};
-			var runCecilTests = new NUnitExecuteTask (this, buildCecilTests, processManager) {
+			var runCecilTests = new NUnitExecuteTask (buildCecilTests, processManager) {
 				TestLibrary = Path.Combine (buildCecilTests.WorkingDirectory, "bin", "Debug", "cecil-tests.dll"),
 				TestProject = new TestProject (Path.Combine (buildCecilTests.WorkingDirectory, "cecil-tests.csproj")),
 				Platform = TestPlatform.iOS,
@@ -1262,7 +1217,8 @@ namespace Xharness.Jenkins {
 			};
 			Tasks.Add (runCecilTests);
 
-			var runDocsTests = new MakeTask (jenkins: this, processManager: processManager) {
+			var runDocsTests = new MakeTask (processManager) {
+				Jenkins = this,
 				Platform = TestPlatform.All,
 				TestName = "Documentation",
 				Target = "wrench-docs",
@@ -1272,13 +1228,14 @@ namespace Xharness.Jenkins {
 			};
 			Tasks.Add (runDocsTests);
 
-			var buildSampleTestsProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "sampletester", "sampletester.sln")));
-			var buildSampleTests = new MSBuildTask (jenkins: this, testProject: buildSampleTestsProject, processManager: processManager) {
+			var buildSampleTests = new MSBuildTask (processManager) {
+				Jenkins = this,
+				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "sampletester", "sampletester.sln"))),
 				SpecifyPlatform = false,
 				Platform = TestPlatform.All,
 				ProjectConfiguration = "Debug",
 			};
-			var runSampleTests = new NUnitExecuteTask (this, buildSampleTests, processManager) {
+			var runSampleTests = new NUnitExecuteTask (buildSampleTests, processManager) {
 				TestLibrary = Path.Combine (Harness.RootDirectory, "sampletester", "bin", "Debug", "sampletester.dll"),
 				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "sampletester", "sampletester.csproj"))),
 				Platform = TestPlatform.All,
@@ -1423,7 +1380,7 @@ namespace Xharness.Jenkins {
 					try {
 						var allTasks = Tasks.SelectMany ((v) =>
 						{
-							var rv = new List<AppleTestTask> ();
+							var rv = new List<TestTask> ();
 							var runsim = v as AggregatedRunSimulatorTask;
 							if (runsim != null)
 								rv.AddRange (runsim.Tasks);
@@ -1431,9 +1388,9 @@ namespace Xharness.Jenkins {
 							return rv;
 						});
 
-						IEnumerable<AppleTestTask> find_tasks (StreamWriter writer, string ids)
+						IEnumerable<TestTask> find_tasks (StreamWriter writer, string ids)
 						{
-							IEnumerable<AppleTestTask> tasks;
+							IEnumerable<TestTask> tasks;
 							switch (request.Url.Query) {
 							case "?all":
 								tasks = Tasks;
@@ -1446,10 +1403,10 @@ namespace Xharness.Jenkins {
 								break;
 							case "?":
 								writer.WriteLine ("No tasks specified");
-								return Array.Empty<AppleTestTask> ();
+								return Array.Empty<TestTask> ();
 							default:
 								var id_inputs = ids.Substring (1).Split (',');
-								var rv = new List<AppleTestTask> (id_inputs.Length);
+								var rv = new List<TestTask> (id_inputs.Length);
 								foreach (var id_input in id_inputs) {
 									if (int.TryParse (id_input, out var id)) {
 										var task = Tasks.FirstOrDefault ((t) => t.ID == id);
@@ -1729,7 +1686,7 @@ namespace Xharness.Jenkins {
 			return tcs.Task;
 		}
 
-		string GetTestColor (IEnumerable<AppleTestTask> tests)
+		string GetTestColor (IEnumerable<TestTask> tests)
 		{
 			if (!tests.Any ())
 				return "black";
@@ -1759,7 +1716,7 @@ namespace Xharness.Jenkins {
 				return "black";
 		}
 
-		string GetTestColor (AppleTestTask test)
+		string GetTestColor (TestTask test)
 		{
 			if (test.NotStarted) {
 				return "black";
@@ -1830,7 +1787,7 @@ namespace Xharness.Jenkins {
 			}
 		}
 
-		bool IsHE0038Error (ILog log) {
+		public bool IsHE0038Error (ILog log) {
 			if (log == null)
 				return false;
 			if (File.Exists (log.FullPath) && new FileInfo (log.FullPath).Length > 0) {
@@ -1847,7 +1804,7 @@ namespace Xharness.Jenkins {
 			return false;
 		}
 
-		bool IsMonoMulti3Issue (ILog log) {
+		public bool IsMonoMulti3Issue (ILog log) {
 			if (log == null)
 				return false;
 			if (File.Exists (log.FullPath) && new FileInfo (log.FullPath).Length > 0) {
@@ -1859,27 +1816,6 @@ namespace Xharness.Jenkins {
 					if (line.Contains ("error MT5210: Native linking failed, undefined symbol: ___multi3"))
 						return true;
 				}
-			}
-			return false;
-		}
-
-
-		public bool IsKnownBuildIssue (ILog buildLog, out string knownFailureMessage)
-		{
-			knownFailureMessage = null;
-			if (IsMonoMulti3Issue (buildLog)) {
-				knownFailureMessage = $"<a href='https://github.com/mono/mono/issues/18560'>Undefined symbol ___multi3 on Release Mode</a>";
-				return true;
-			}
-			return false;
-		}
-
-		public bool IsKnownTestIssue (ILog runLog, out string knownFailureMessage)
-		{
-			knownFailureMessage = null;
-			if (IsHE0038Error (runLog)) {
-				knownFailureMessage = $"<a href='https://github.com/xamarin/maccore/issues/581'>HE0038</a>";
-				return true;
 			}
 			return false;
 		}
@@ -1934,7 +1870,7 @@ namespace Xharness.Jenkins {
 				throw new NotImplementedException ();
 			}
 
-			var allTasks = new List<AppleTestTask> ();
+			var allTasks = new List<TestTask> ();
 			if (!populating) {
 				allTasks.AddRange (allExecuteTasks);
 				allTasks.AddRange (allSimulatorTasks);
@@ -2189,7 +2125,7 @@ namespace Xharness.Jenkins {
 
 				writer.WriteLine ("<div id='test-table' style='width: 100%; display: flex;'>");
 				writer.WriteLine ("<div id='test-list'>");
-				var orderedTasks = allTasks.GroupBy ((AppleTestTask v) => v.TestName);
+				var orderedTasks = allTasks.GroupBy ((TestTask v) => v.TestName);
 
 				if (IsServerMode) {
 					// In server mode don't take into account anything that can change during a test run
@@ -2478,7 +2414,7 @@ namespace Xharness.Jenkins {
 					writer.WriteLine ("<div id='test-status' style='margin-left: 100px;' class='autorefreshable'>");
 					if (failedTests.Count () == 0) {
 						foreach (var group in failedTests.GroupBy ((v) => v.TestName)) {
-							var enumerableGroup = group as IEnumerable<AppleTestTask>;
+							var enumerableGroup = group as IEnumerable<TestTask>;
 							if (enumerableGroup != null) {
 								writer.WriteLine ("<a href='#test_{2}'>{0}</a> ({1})<br />", group.Key, string.Join (", ", enumerableGroup.Select ((v) => string.Format ("<span style='color: {0}'>{1}</span>", GetTestColor (v), string.IsNullOrEmpty (v.Mode) ? v.ExecutionResult.ToString () : v.Mode)).ToArray ()), group.Key.Replace (' ', '-'));
 								continue;
@@ -2541,11 +2477,11 @@ namespace Xharness.Jenkins {
 			return System.Web.HttpUtility.UrlEncode (path).Replace ("%2f", "/").Replace ("+", "%20");
 		}
 
-		string RenderTextStates (IEnumerable<AppleTestTask> tests)
+		string RenderTextStates (IEnumerable<TestTask> tests)
 		{
 			// Create a collection of all non-ignored tests in the group (unless all tests were ignored).
 			var allIgnored = tests.All ((v) => v.ExecutionResult == TestExecutingResult.Ignored);
-			IEnumerable<AppleTestTask> relevantGroup;
+			IEnumerable<TestTask> relevantGroup;
 			if (allIgnored) {
 				relevantGroup = tests;
 			} else {

@@ -51,7 +51,6 @@ namespace Xharness {
 		Dictionary<string, string> EnvironmentVariables { get; }
 		ILog HarnessLog { get; set; }
 		bool InCI { get; }
-		bool UseTcpTunnel { get; }
 		double LaunchTimeout { get; }
 		double Timeout { get; }
 		int Verbosity { get; }
@@ -74,7 +73,6 @@ namespace Xharness {
 		public HashSet<string> Labels { get; }
 		public XmlResultJargon XmlJargon { get; }
 		public IResultParser ResultParser { get; }
-		public ITunnelBore TunnelBore { get; }
 
 		// This is the maccore/tests directory.
 		static string root_directory;
@@ -104,7 +102,7 @@ namespace Xharness {
 			}
 		}
 
-		public string XIBuildPath => Path.GetFullPath (Path.Combine (RootDirectory, "..", "tools", "xibuild", "xibuild"));
+		public static string XIBuildPath => Path.GetFullPath (Path.Combine (RootDirectory, "..", "tools", "xibuild", "xibuild"));
 
 		string sdkRoot;
 		string SdkRoot {
@@ -221,7 +219,6 @@ namespace Xharness {
 				SdkRoot = config ["XCODE_DEVELOPER_ROOT"] ?? configuration.SdkRoot;
 
 			processManager = new ProcessManager (XcodeRoot, MlaunchPath);
-			TunnelBore = new TunnelBore (processManager);
 		}
 
 		public bool GetIncludeSystemPermissionTests (TestPlatform platform, bool device)
@@ -301,7 +298,7 @@ namespace Xharness {
 			}
 
 			foreach (var flavor in new MonoNativeFlavor [] { MonoNativeFlavor.Compat, MonoNativeFlavor.Unified }) {
-				var monoNativeInfo = new MacMonoNativeInfo (flavor, RootDirectory, Log);
+				var monoNativeInfo = new MacMonoNativeInfo (this, flavor);
 				var macTestProject = new MacTestProject (monoNativeInfo.ProjectPath, targetFrameworkFlavor: MacFlavors.Modern | MacFlavors.Full) {
 					MonoNativeInfo = monoNativeInfo,
 					Name = monoNativeInfo.ProjectName,
@@ -407,7 +404,7 @@ namespace Xharness {
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link sdk", "link sdk.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
 
 			foreach (var flavor in new MonoNativeFlavor [] { MonoNativeFlavor.Compat, MonoNativeFlavor.Unified }) {
-				var monoNativeInfo = new MonoNativeInfo (flavor, RootDirectory, Log);
+				var monoNativeInfo = new MonoNativeInfo (this, flavor);
 				var iosTestProject = new iOSTestProject (monoNativeInfo.ProjectPath) {
 					MonoNativeInfo = monoNativeInfo,
 					Name = monoNativeInfo.ProjectName,
@@ -630,13 +627,6 @@ namespace Xharness {
 			}
 		}
 
-		public bool UseTcpTunnel {
-			get {
-				// We use the 'USE_TCP_TUNNEL' variable to detect whether we're running CI or not.
-				return !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("USE_TCP_TUNNEL"));
-			}
-		}
-
 		public bool UseGroupedApps {
 			get {
 				var groupApps = Environment.GetEnvironmentVariable ("BCL_GROUPED_APPS");
@@ -669,8 +659,30 @@ namespace Xharness {
 				AutoConfigureMac (false);
 			}
 
-			var jenkins = new Jenkins.Jenkins (this, processManager, ResultParser, TunnelBore);
+			var jenkins = new Jenkins.Jenkins (this, processManager, ResultParser);
 			return jenkins.Run ();
+		}
+
+		public void Save (XmlDocument doc, string path)
+		{
+			if (!File.Exists (path)) {
+				doc.Save (path);
+				Log (1, "Created {0}", path);
+			} else {
+				var tmpPath = path + ".tmp";
+				doc.Save (tmpPath);
+				var existing = File.ReadAllText (path);
+				var updated = File.ReadAllText (tmpPath);
+
+				if (existing == updated) {
+					File.Delete (tmpPath);
+					Log (1, "Not saved {0}, no change", path);
+				} else {
+					File.Delete (path);
+					File.Move (tmpPath, path);
+					Log (1, "Updated {0}", path);
+				}
+			}
 		}
 
 		public void Save (StringWriter doc, string path)
@@ -706,7 +718,7 @@ namespace Xharness {
 			return new AppRunner (processManager,
 				new AppBundleInformationParser (),
 				new SimulatorLoaderFactory (processManager),
-				new SimpleListenerFactory (TunnelBore),
+				new SimpleListenerFactory (),
 				new DeviceLoaderFactory (processManager),
 				new CrashSnapshotReporterFactory (processManager),
 				new CaptureLogFactory (),
