@@ -200,3 +200,14 @@
 !missing-field! NSCharacterEncodingDocumentOption not bound
 !missing-field! NSDefaultAttributesDocumentOption not bound
 !missing-field! NSDocumentTypeDocumentOption not bound
+
+
+## helpers
+!extra-enum-value! Managed value -1 for UITextFieldDidEndEditingReason.Unknown not found in native headers
+!extra-enum-value! Managed value 18 for UIViewAutoresizing.FlexibleDimensions not found in native headers
+!extra-enum-value! Managed value 45 for UIViewAutoresizing.FlexibleMargins not found in native headers
+!extra-enum-value! Managed value 63 for UIViewAutoresizing.All not found in native headers
+
+## UITextAlignment is deprecated in iOS6 in favor of NSTextAlignment - values added to avoid breaking changes
+!extra-enum-value! Managed value 3 for UITextAlignment.Justified not found in native headers
+!extra-enum-value! Managed value 4 for UITextAlignment.Natural not found in native headers

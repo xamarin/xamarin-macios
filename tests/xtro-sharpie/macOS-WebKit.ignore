@@ -1,3 +1,9 @@
+# UINT_MAX was used even if the enum was NSUInteger / enums deprecated
+!extra-enum-value! Managed value 18446744073709551615 for WebDragDestinationAction.Any not found in native headers
+!extra-enum-value! Managed value 18446744073709551615 for WebDragSourceAction.Any not found in native headers
+!missing-enum-value! WebDragDestinationAction native value WebDragDestinationActionAny = 4294967295 not bound
+!missing-enum-value! WebDragSourceAction native value WebDragSourceActionAny = 4294967295 not bound
+
 ## only a subset of the old, pre WKWebKit, is bound for macOS
 
 !incorrect-protocol-member! WebOpenPanelResultListener::cancel is REQUIRED and should be abstract

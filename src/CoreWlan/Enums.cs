@@ -83,7 +83,7 @@ namespace CoreWlan {
 		Wpa3Enterprise = 12,
 		[Mac (10,15)]
 		Wpa3Transition = 13,
-		Unknown = int.MaxValue,
+		Unknown = long.MaxValue,
 	}
 
 	[Deprecated (PlatformName.MacOSX, 11,0)]

@@ -79,7 +79,8 @@ namespace GameKit {
 		Unavailable,
 		Connected,   
 		Disconnected,
-		Connecting,  
+		Connecting,
+		ConnectedRelay = 5,
 	}
 
 	// NSInteger -> GKLeaderboard.h
@@ -134,6 +135,9 @@ namespace GameKit {
 		GameSessionRequestInvalid = 29,
 		RestrictedToAutomatch = 30,
 		ApiNotAvailable = 31,
+		NotAuthorized = 32,
+		ConnectionTimeout = 33,
+		ApiObsolete = 34,
 	}
 
 	[Native]
@@ -247,6 +251,10 @@ namespace GameKit {
 		Leaderboards ,
 		Achievements,
 		Challenges,
+		[iOS (14,0)][TV (14,0)]
+		LocalPlayerProfile = 3,
+		[iOS (14,0)][TV (14,0)]
+		Dashboard = 4,
 	}
 
 	// NSInteger -> GKMatchmaker.h

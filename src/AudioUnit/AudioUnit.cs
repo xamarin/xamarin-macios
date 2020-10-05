@@ -1903,6 +1903,8 @@ namespace AudioUnit
 		VectorBasedPanning = 4,
 		StereoPassThrough = 5,
 		HrtfHQ = 6,
+		[iOS (14,0)][TV (14,0)][Mac (11,0)]
+		UseOutputType = 7,
 	}
 
 	public enum AU3DMixerAttenuationCurve : uint
