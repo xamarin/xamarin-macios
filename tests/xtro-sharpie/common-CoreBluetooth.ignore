@@ -12,7 +12,6 @@
 !missing-selector! CBCentralManager::init not bound
 
 ## short lived instance property being replaced with a static one
-!deprecated-attribute-missing! CBManager::authorization missing a [Deprecated] attribute
 !missing-selector! CBManager::authorization not bound
 
 # Initial result from new rule missing-null-allowed

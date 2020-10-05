@@ -59,8 +59,9 @@ namespace Extrospection
 
 		void ProcessObjcSelector (string fullname, VersionTuple objcVersion)
 		{
+			var class_method = fullname [0] == '+';
 			var n = fullname.IndexOf ("::");
-			string objcClassName = fullname.Substring (0, n);
+			string objcClassName = fullname.Substring (class_method ? 1: 0, n);
 			string selector = fullname.Substring (n + 2);
 
 			TypeDefinition managedType = ManagedTypes.FirstOrDefault (x => Helpers.GetName (x) == objcClassName);
@@ -73,7 +74,7 @@ namespace Extrospection
 				if (AttributeHelpers.HasAnyDeprecationForCurrentPlatform (managedType))
 					return;
 
-				var matchingMethod = managedType.Methods.FirstOrDefault (x => x.GetSelector () == selector && x.IsPublic);
+				var matchingMethod = managedType.Methods.FirstOrDefault (x => x.GetSelector () == selector && x.IsPublic && x.IsStatic == class_method);
 				if (matchingMethod != null)
 					ProcessItem (matchingMethod, fullname, objcVersion, framework);
 			}
@@ -152,8 +153,12 @@ namespace Extrospection
 
 		public override void VisitObjCMethodDecl (ObjCMethodDecl decl, VisitKind visitKind)
 		{
-			if (visitKind == VisitKind.Enter && AttributeHelpers.FindObjcDeprecated(decl.Attrs, out VersionTuple version))
-				ObjCDeprecatedSelectors[decl.QualifiedName] = version;
+			if (visitKind == VisitKind.Enter && AttributeHelpers.FindObjcDeprecated (decl.Attrs, out VersionTuple version)) {
+				var qn = decl.QualifiedName;
+				if (decl.IsClassMethod)
+					qn = "+" + qn;
+				ObjCDeprecatedSelectors [qn] = version;
+			}
 		}
 
 		public override void VisitFunctionDecl (FunctionDecl decl, VisitKind visitKind)
