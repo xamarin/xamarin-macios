@@ -123,6 +123,12 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	</Target>
 
 	<Target Name="_CodesignNativeLibraries" Condition="'$(_RequireCodeSigning)'" DependsOnTargets="_DetectSigningIdentity">
+
+		<ItemGroup>
+			<_CodesignNativeLibrary Include="$(_AppContentsPath)\**\*.dylib" />
+			<_CodesignNativeLibrary Include="$(_AppResourcesPath)\**\*.metallib" />
+		</ItemGroup>
+
 		<Codesign
 			SessionId="$(BuildSessionId)"
 			ToolExe="$(CodesignExe)"
@@ -130,7 +136,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			Condition="'@(_NativeLibrary)' != '' And '$(IsMacEnabled)' == 'true'"
 			CodesignAllocate="$(_CodesignAllocate)"
 			Keychain="$(CodesignKeychain)"
-			Resources="@(_NativeLibrary)"
+			Resources="@(_CodesignNativeLibrary)"
 			SigningKey="$(_CodeSigningKey)"
 			ExtraArgs="$(CodesignExtraArgs)"
 			IsAppExtension="$(IsAppExtension)"
@@ -231,10 +237,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			SdkRoot="$(_SdkRoot)"
 			OutputLibrary="$(_AppBundlePath)Contents\Resources\default.metallib">
 		</MetalLib>
-
-		<CreateItem Include="$(_AppBundlePath)Contents\Resources\default.metallib">
-			<Output TaskParameter="Include" ItemName="_NativeLibrary" />
-		</CreateItem>
 	</Target>
 
 	<Target Name="_CompileTextureAtlases" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_CoreCompileTextureAtlases" />
@@ -274,10 +276,11 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		</CreateInstallerPackage>
 	</Target>
 
-	<Target Name="_GenerateBundleName">
+	<Target Name="_GenerateBundleName" DependsOnTargets="_ParseBundlerArguments">
 		<PropertyGroup>
 			<AppBundleDir>$(OutputPath)$(_AppBundleName)$(AppBundleExtension)</AppBundleDir>
 			<_AppBundlePath>$(AppBundleDir)\</_AppBundlePath>
+			<_AppContentsPath>$(_AppBundlePath)Contents\$(_CustomBundleName)\</_AppContentsPath>
 			<_AppResourcesPath>$(_AppBundlePath)Contents\Resources\</_AppResourcesPath>
 		</PropertyGroup>
 	</Target>
@@ -352,7 +355,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			StandardOutputImportance="High"
 			XamarinSdkRoot="$(_XamarinSdkRoot)"
 			>
-			<Output TaskParameter="NativeLibraries" ItemName="_NativeLibrary" />
 		</Mmp>
 	</Target>
 
@@ -457,19 +459,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<ItemGroup>
 			<FileWrites Include="$(_ACTool_PartialAppManifestCache);$(_ACTool_BundleResourceCache)" />
 		</ItemGroup>
-	</Target>
-
-	<Target Name="_CreatePkgInfo" DependsOnTargets="_GenerateBundleName" Outputs="$(_AppBundlePath)Contents\PkgInfo">
-		<CreatePkgInfo SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" OutputPath="$(_AppBundlePath)Contents\PkgInfo" />
-
-		<Ditto
-			SessionId="$(BuildSessionId)"
-			Condition="'@(_ResolvedAppExtensionReferences)' != '' And '%(_ResolvedAppExtensionReferences.Identity)' != '' And '$(IsMacEnabled)' == 'true'"
-			ToolExe="$(DittoExe)"
-			ToolPath="$(DittoPath)"
-			Source="@(_ResolvedAppExtensionReferences)"
-			Destination="$(_AppBundlePath)PlugIns\%(_ResolvedAppExtensionReferences.FileName)%(_ResolvedAppExtensionReferences.Extension)"
-		/>
 	</Target>
 
 	<Target Name="_CopyAppExtensionsToBundle"  Condition="'$(IsAppExtension)' != 'true'" DependsOnTargets="_ExtendAppExtensionReferences">

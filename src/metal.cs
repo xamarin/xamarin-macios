@@ -495,9 +495,16 @@ namespace Metal {
 		[Export ("dispatchThreadgroupsWithIndirectBuffer:indirectBufferOffset:threadsPerThreadgroup:")]
 		void DispatchThreadgroups (IMTLBuffer indirectBuffer, nuint indirectBufferOffset, MTLSize threadsPerThreadgroup);
 
+#if XAMCORE_4_0
+		[Abstract]
+		[Export ("setBuffers:offsets:withRange:")]
+		void SetBuffers (IntPtr buffers, IntPtr offsets, NSRange range);
+#else
 		[Abstract]
 		[Export ("setBuffers:offsets:withRange:")]
 		void SetBuffers (IMTLBuffer [] buffers, IntPtr offsets, NSRange range);
+#endif
+
 
 		[Abstract]
 		[Export ("setSamplerStates:lodMinClamps:lodMaxClamps:withRange:")]
@@ -3911,9 +3918,15 @@ namespace Metal {
 		[Export ("setBuffer:offset:atIndex:")]
 		void SetBuffer ([NullAllowed] IMTLBuffer buffer, nuint offset, nuint index);
 
+#if XAMCORE_4_0
+		[Abstract]
+		[Export ("setBuffers:offsets:withRange:")]
+		void SetBuffers (IntPtr buffers, IntPtr offsets, NSRange range);
+#else
 		[Abstract]
 		[Export ("setBuffers:offsets:withRange:")]
 		void SetBuffers (IMTLBuffer[] buffers, IntPtr offsets, NSRange range);
+#endif
 
 		[Abstract]
 		[Export ("setTexture:atIndex:")]
