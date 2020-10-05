@@ -752,7 +752,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			Keychain="$(CodesignKeychain)"
 			Resources="@(_CodesignNativeLibrary)"
 			SigningKey="$(_LibraryCodeSigningKey)"
-			StampPath=">$(DeviceSpecificIntermediateOutputPath)codesign\"
+			StampPath="$(DeviceSpecificIntermediateOutputPath)codesign\"
 			ToolExe="$(CodesignExe)"
 			ToolPath="$(CodesignPath)"
 			UseSecureTimestamp="$(UseHardenedRuntime)"
