@@ -207,30 +207,19 @@ namespace AVFoundation {
 		AirPlayControllerRequiresInternet = -11856,
 		AirPlayReceiverRequiresInternet = -11857,
 
-		[iOS (9,0), Mac (10,11)]
 		VideoCompositorFailed = -11858,
 
 #if !MONOMAC
-		[iOS (9,0)]
 		RecordingAlreadyInProgress = -11859,
 #endif
-		[NoWatch, iOS (10,0), TV (10,0), Mac (10,12)]
 		UnsupportedOutputSettings = -11861,
-		[NoWatch, iOS (10,0), TV (10,0), Mac (10,12)]
 		OperationNotAllowed = -11862,
-		[NoWatch, iOS (11,0), TV (11,0), Mac (10,13)]
 		ContentIsUnavailable = -11863,
-		[NoWatch, iOS (11,0), TV (11,0), Mac (10,13)]
 		FormatUnsupported = -11864,
-		[NoWatch, iOS (11,0), TV (11,0), Mac (10,13)]
 		MalformedDepth = -11865,
-		[NoWatch, iOS (11,0), TV (11,0), Mac (10,13)]
 		ContentNotUpdated = -11866,
-		[NoWatch, iOS (11,0), TV (11,0), Mac (10,13)]
 		NoLongerPlayable = -11867,
-		[NoWatch, iOS (11,0), TV (11,0), Mac (10,13)]
 		NoCompatibleAlternatesForExternalDisplay = -11868,
-		[NoWatch, iOS (11,2), TV (11,2), Mac (10,13,2)]
 		NoSourceTrack = -11869,
 		RosettaNotInstalled = -11877,
 	}

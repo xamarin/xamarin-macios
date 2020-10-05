@@ -311,7 +311,6 @@ namespace MediaPlayer {
 		NetworkConnectionFailed,
 		NotFound,
 		NotSupported,
-		[iOS (10,1)]
 		Cancelled,
 		RequestTimedOut,
 	}

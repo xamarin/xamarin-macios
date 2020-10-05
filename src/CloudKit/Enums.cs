@@ -75,13 +75,13 @@ namespace CloudKit
 		ZoneNotFound = 26,
 		LimitExceeded  = 27,
 		UserDeletedZone = 28,
-		[iOS (10,0), TV (10,0), Mac (10,12)] TooManyParticipants = 29,
-		[iOS (10,0), TV (10,0), Mac (10,12)] AlreadyShared = 30,
-		[iOS (10,0), TV (10,0), Mac (10,12)] ReferenceViolation = 31,
-		[iOS (10,0), TV (10,0), Mac (10,12)] ManagedAccountRestricted = 32,
-		[iOS (10,0), TV (10,0), Mac (10,12)] ParticipantMayNeedVerification = 33,
-		[iOS (11,0), TV (11,0), Mac (10,13), Watch (4,0)] ResponseLost = 34,
-		[iOS (11,3), TV (11,3), Mac (10,13), Watch (4,3)] AssetNotAvailable = 35,
+		TooManyParticipants = 29,
+		AlreadyShared = 30,
+		ReferenceViolation = 31,
+		ManagedAccountRestricted = 32,
+		ParticipantMayNeedVerification = 33,
+		ResponseLost = 34,
+		AssetNotAvailable = 35,
 	}
 
 	// NSInteger -> CKModifyRecordsOperation.h

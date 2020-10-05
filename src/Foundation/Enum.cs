@@ -350,7 +350,6 @@ namespace Foundation  {
 
 		CoderReadCorruptError = 4864,
 		CoderValueNotFoundError = 4865,
-		[Mac (10,13), iOS (11,0), Watch (4,0), TV (11,0)]
 		CoderInvalidValueError = 4866,
 		CoderErrorMinimum = 4864,
 		CoderErrorMaximum = 4991,
@@ -362,30 +361,18 @@ namespace Foundation  {
 		BundleOnDemandResourceExceededMaximumSizeError = 4993,
 		BundleOnDemandResourceInvalidTagError = 4994,
 
-		[Mac (10,12)][iOS (10,0)][NoTV][NoWatch]
 		CloudSharingNetworkFailureError = 5120,
-		[Mac (10,12)][iOS (10,0)][NoTV][NoWatch]
 		CloudSharingQuotaExceededError = 5121,
-		[Mac (10,12)][iOS (10,0)][NoTV][NoWatch]
 		CloudSharingTooManyParticipantsError = 5122,
-		[Mac (10,12)][iOS (10,0)][NoTV][NoWatch]
 		CloudSharingConflictError = 5123,
-		[Mac (10,12)][iOS (10,0)][NoTV][NoWatch]
 		CloudSharingNoPermissionError = 5124,
-		[Mac (10,12)][iOS (10,0)][NoTV][NoWatch]
 		CloudSharingOtherError = 5375,
-		[Mac (10,12)][iOS (10,0)][NoTV][NoWatch]
 		CloudSharingErrorMinimum = 5120,
-		[Mac (10,12)][iOS (10,0)][NoTV][NoWatch]
 		CloudSharingErrorMaximum = 5375,
 
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		CompressionFailedError = 5376,
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		DecompressionFailedError = 5377,
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		CompressionErrorMinimum = 5376,
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		CompressionErrorMaximum = 5503,
 	}
 	
