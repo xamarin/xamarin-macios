@@ -65,6 +65,7 @@ namespace CoreText {
 		LeftToRight = 0,
 		RightToLeft = 1,
 
+		// part of an unnamed enum inside CTStringAttributes.h
 		Embedding = (0 << 1),
 		Override = (1 << 1)
 	}

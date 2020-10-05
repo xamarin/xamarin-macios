@@ -134,3 +134,7 @@
 
 ## Manually bound field
 !missing-field! kCTCharacterShapeAttributeName not bound
+
+## part of an unnamed enum inside CTStringAttributes.h
+!extra-enum-value! Managed value 2 for CTWritingDirection.Override not found in native headers
+
