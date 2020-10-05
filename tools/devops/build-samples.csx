@@ -53,8 +53,10 @@ if (string.IsNullOrEmpty (provision_from_commit)) {
 Console.WriteLine ($"Provisioning from {provision_from_commit}...");
 
 InstallPackage ("Mono", FindVariable ("MIN_MONO_URL"));
-InstallPackage ("Xamarin.iOS", FindVariable ("XI_PACKAGE"));
-InstallPackage ("Xamarin.Mac", FindVariable ("XM_PACKAGE"));
+if (FindVariable ("INCLUDE_IOS") == "1")
+	InstallPackage ("Xamarin.iOS", FindVariable ("XI_PACKAGE"));
+if (FindVariable ("INCLUDE_MAC") == "1")
+	InstallPackage ("Xamarin.Mac", FindVariable ("XM_PACKAGE"));
 InstallPackage ("Objective-Sharpie", FindVariable ("MIN_SHARPIE_URL"));
 
 // Provisioning profiles
