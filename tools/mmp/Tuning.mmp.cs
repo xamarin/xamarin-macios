@@ -79,7 +79,6 @@ namespace MonoMac.Tuner {
 				context.SymbolWriterProvider = new DefaultSymbolWriterProvider ();
 			}
 			context.OutputDirectory = options.OutputDirectory;
-			context.StaticRegistrar = options.Target.StaticRegistrar;
 			context.Target = options.Target;
 			options.LinkContext = context;
 			return context;
@@ -148,7 +147,7 @@ namespace MonoMac.Tuner {
 		static SubStepDispatcher GetSubSteps ()
 		{
 			SubStepDispatcher sub = new SubStepDispatcher ();
-			sub.Add (new ApplyPreserveAttribute ());
+			sub.Add (new MobileApplyPreserveAttribute ());
 			sub.Add (new OptimizeGeneratedCodeSubStep ());
 			sub.Add (new RemoveUserResourcesSubStep ());
 			// OptimizeGeneratedCodeSubStep and RemoveUserResourcesSubStep needs [GeneratedCode] so it must occurs before RemoveAttributes

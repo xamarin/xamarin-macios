@@ -35,6 +35,9 @@ namespace LinkSdk.Aot {
 	
 	interface IAotTest {
 	}
+
+	interface IExpectException {
+	}
 	
 	[TestFixture]
 	// already done in Bug2096Test.cs -> [Preserve (AllMembers = true)]
@@ -415,12 +418,11 @@ namespace LinkSdk.Aot {
 		}
 
 		[Test]
-		[ExpectedException (typeof (NullReferenceException))]
 		public void AsEnumerable_4114 ()
 		{
 			Enumbers<string> e = new Enumbers<string> ();
 			//  Attempting to JIT compile method 'System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<string, string>>:ToArray ()' while running with --aot-only.
-			e.Enumerate (null);
+			Assert.Throws<NullReferenceException> (() => e.Enumerate (null));
 		}
 
 		static object mInstance = null;
@@ -467,6 +469,9 @@ namespace LinkSdk.Aot {
 		}
 
 		[Test]
+#if NET
+		[Ignore ("MulticastDelegate.BeginInvoke isn't supported in .NET (https://github.com/dotnet/runtime/issues/16312)")]
+#endif
 		public void Bug5354 ()
 		{
 			Action<string> testAction = (string s) => { s.ToString (); };

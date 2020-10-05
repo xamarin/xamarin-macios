@@ -1331,7 +1331,7 @@ namespace ObjCRuntime {
 			return ConstructNSObject<NSObject> (ptr, target_type, MissingCtorResolution.ThrowConstructor1NotFound);
 		}
 
-		static Type LookupINativeObjectImplementation (IntPtr ptr, Type target_type, Type implementation = null)
+		static Type LookupINativeObjectImplementation (IntPtr ptr, Type target_type, Type implementation = null, bool forced_type = false)
 		{
 			if (!typeof (NSObject).IsAssignableFrom (target_type)) {
 				// If we're not expecting an NSObject, we can't do a dynamic lookup of the type of ptr,
@@ -1348,7 +1348,8 @@ namespace ObjCRuntime {
 					if (implementation == null)
 						implementation = target_type;
 				} else {
-					var runtime_type = Class.Lookup (p);
+					// only throw if we're not forcing the type we want to expose
+					var runtime_type = Class.Lookup (p, throw_on_error: !forced_type);
 					// Check if the runtime type can actually be used.
 					if (target_type.IsAssignableFrom (runtime_type)) {
 						implementation = runtime_type;
@@ -1358,7 +1359,14 @@ namespace ObjCRuntime {
 				}
 			}
 
-			if (implementation.IsInterface)
+			var interface_check_type = implementation;
+#if NET
+			// https://github.com/dotnet/runtime/issues/39068
+			if (interface_check_type.IsByRef)
+				interface_check_type = interface_check_type.GetElementType ();
+#endif
+
+			if (interface_check_type.IsInterface) 
 				implementation = FindProtocolWrapperType (implementation);
 
 			return implementation;
@@ -1382,8 +1390,14 @@ namespace ObjCRuntime {
 			}
 
 			if (o != null) {
+				var interface_check_type = target_type;
+#if NET
+				// https://github.com/dotnet/runtime/issues/39068
+				if (interface_check_type.IsByRef)
+					interface_check_type = interface_check_type.GetElementType ();
+#endif
 				// found an existing object, but with an incompatible type.
-				if (!target_type.IsInterface) {
+				if (!interface_check_type.IsInterface) {
 					// if the target type is another class, there's nothing we can do.
 					throw new InvalidCastException (string.Format ("Unable to cast object of type '{0}' to type '{1}'.", o.GetType ().FullName, target_type.FullName));
 				}
@@ -1437,7 +1451,7 @@ namespace ObjCRuntime {
 			}
 
 			// Lookup the ObjC type of the ptr and see if we can use it.
-			var implementation = LookupINativeObjectImplementation (ptr, typeof (T));
+			var implementation = LookupINativeObjectImplementation (ptr, typeof (T), forced_type: forced_type);
 
 			if (implementation.IsSubclassOf (typeof (NSObject))) {
 				if (o != null && !forced_type) {
@@ -1456,6 +1470,11 @@ namespace ObjCRuntime {
 
 		private static Type FindProtocolWrapperType (Type type)
 		{
+#if NET
+			// https://github.com/dotnet/runtime/issues/39068
+			if (type.IsByRef)
+				type = type.GetElementType ();
+#endif
 			if (type == null || !type.IsInterface)
 				return null;
 

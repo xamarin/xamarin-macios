@@ -22,7 +22,7 @@ namespace Xamarin.Mac.Tests {
 				Assert.That (mi.FileSystemName.ToString (), Is.EqualTo ("apitest.app"), "FileSystemName");
 				Assert.That (mi.FileSystemSize.UInt64Value, Is.GreaterThan (0), "FileSystemSize");
 				Assert.False (mi.IsUbiquitous, "IsUbiquitous");
-				Assert.That (mi.Path.ToString (), Is.StringEnding ("/apitest.app"), "Path");
+				Assert.That (mi.Path.ToString (), Does.EndWith ("/apitest.app"), "Path");
 				Assert.False (mi.UbiquitousItemHasUnresolvedConflicts, "UbiquitousItemHasUnresolvedConflicts");
 				Assert.False (mi.UbiquitousItemIsDownloading, "UbiquitousItemIsDownloading");
 				Assert.False (mi.UbiquitousItemIsUploaded, "UbiquitousItemIsUploaded");

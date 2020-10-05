@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.watchOS.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net5.0-watchos</TargetFramework>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NUnitLite" Version="3.12.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <BundleResource Include="..\..\..\monotouch-test\basn3p08.png">
+      <Link>basn3p08.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\..\monotouch-test\xamvideotest.mp4">
+      <Link>xamvideotest.mp4</Link>
+    </BundleResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\ResourcesTest.cs" />
+  </ItemGroup>
+</Project>

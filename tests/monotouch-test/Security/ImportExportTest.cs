@@ -58,7 +58,7 @@ namespace MonoTouchFixtures.Security {
 					break;
 				case "keyid":
 					Assert.That (x.Value, Is.TypeOf (typeof (NSMutableData)), "Keyid");
-					Assert.That ((x.Value as NSData).Length, Is.EqualTo (20), "keyid");
+					Assert.That ((x.Value as NSData).Length, Is.EqualTo ((nuint) 20), "keyid");
 					break;
 #endif
 				default:

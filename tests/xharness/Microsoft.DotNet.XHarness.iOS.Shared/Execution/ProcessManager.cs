@@ -19,6 +19,8 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Execution {
 		readonly string xcodeRoot;
 		public string XcodeRoot => xcodeRoot ?? autoDetectedXcodeRoot.Value;
 		public string MlaunchPath { get; }
+		public GetDotNetExecutableDelegate GetDotNetExecutable { get; private set; }
+		public string MSBuildPath { get; private set; }
 
 		Version xcode_version;
 		public Version XcodeVersion {
@@ -32,10 +34,12 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Execution {
 			}
 		}
 
-		public ProcessManager (string xcodeRoot = null, string mlaunchPath = "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/mlaunch")
+		public ProcessManager (string xcodeRoot = null, string mlaunchPath = "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/mlaunch", GetDotNetExecutableDelegate dotNetPath = null, string msBuildPath = null)
 		{
 			this.xcodeRoot = xcodeRoot;
 			MlaunchPath = mlaunchPath;
+			GetDotNetExecutable = dotNetPath;
+			MSBuildPath = msBuildPath;
 		}
 
 		public async Task<ProcessExecutionResult> ExecuteCommandAsync (string filename,
@@ -61,10 +65,12 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Execution {
 			return await RunAsync (p, args, log, timeout, environmentVariables, cancellationToken);
 		}
 
-		public Task<ProcessExecutionResult> ExecuteXcodeCommandAsync (string executable, IList<string> args, ILog log, TimeSpan timeout)
+		public async Task<ProcessExecutionResult> ExecuteXcodeCommandAsync (string executable, IList<string> args, ILog log, TimeSpan timeout)
 		{
-			string filename = Path.Combine (XcodeRoot, "Contents", "Developer", "usr", "bin", executable);
-			return ExecuteCommandAsync (filename, args, log, timeout: timeout);
+			using var p = new Process ();
+			p.StartInfo.FileName = Path.Combine (XcodeRoot, "Contents", "Developer", "usr", "bin", executable);
+			p.StartInfo.Arguments = StringUtils.FormatArguments (args);
+			return await RunAsync (p, log, timeout, diagnostics: false);
 		}
 
 		[DllImport ("/usr/lib/libc.dylib")]
@@ -244,6 +250,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Execution {
 
 				foreach (var diagnose_pid in pids) {
 					var template = Path.GetTempFileName ();
+					var templateQuit = Path.GetTempFileName ();
 					try {
 						var commands = new StringBuilder ();
 						using (var dbg = new Process ()) {
@@ -253,8 +260,9 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Execution {
 							commands.AppendLine ("detach");
 							commands.AppendLine ("quit");
 							dbg.StartInfo.FileName = "/usr/bin/lldb";
-							dbg.StartInfo.Arguments = StringUtils.FormatArguments ("--source", template);
+							dbg.StartInfo.Arguments = StringUtils.FormatArguments ("--source", template, "--source", templateQuit);
 							File.WriteAllText (template, commands.ToString ());
+							File.WriteAllText (templateQuit, "quit\n");
 
 							log.WriteLine ($"Printing backtrace for pid={pid}");
 							await RunAsyncInternal (dbg, log, log, log, TimeSpan.FromSeconds (30), diagnostics: false);
@@ -262,6 +270,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Execution {
 					} finally {
 						try {
 							File.Delete (template);
+							File.Delete (templateQuit);
 						} catch {
 							// Don't care
 						}
@@ -271,12 +280,19 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Execution {
 
 			// Send SIGABRT since that produces a crash report
 			// lldb may fail to attach to system processes, but crash reports will still be produced with potentially helpful stack traces.
-			for (int i = 0; i < pids.Count; i++)
+			for (int i = 0; i < pids.Count; i++) {
+				log.WriteLine ($"kill -6 {pids [i]}");
 				kill (pids [i], 6);
+			}
+
+			// Wait a little bit for the OS to process the SIGABRTs
+			await Task.Delay (TimeSpan.FromSeconds (5));
 
 			// send kill -9 anyway as a last resort
-			for (int i = 0; i < pids.Count; i++)
+			for (int i = 0; i < pids.Count; i++) {
+				log.WriteLine ($"kill -9 {pids [i]}");
 				kill (pids [i], 9);
+			}
 		}
 
 		static async Task<bool> WaitForExitAsync (Process process, TimeSpan? timeout = null)

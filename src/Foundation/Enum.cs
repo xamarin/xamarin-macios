@@ -55,7 +55,9 @@ namespace Foundation  {
 		I386   = 0x00000007,
 		PPC    = 0x00000012,
 		X86_64 = 0x01000007,
-		PPC64  = 0x01000012
+		PPC64  = 0x01000012,
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		ARM64  = 0x0100000c,
 	}
 #endif
 
@@ -144,7 +146,8 @@ namespace Foundation  {
 		BadArgumentError = -72004,
 		CancelledError = -72005,
 		InvalidError = -72006,
-		TimeoutError = -72007
+		TimeoutError = -72007,
+		MissingRequiredConfigurationError = -72008,
 	}
 
 	[Flags]
@@ -215,11 +218,15 @@ namespace Foundation  {
 		Atomic = 1,
 
 		WithoutOverwriting  = 2,
-			
+		[Mac (11,0)]
 		FileProtectionNone = 0x10000000,
+		[Mac (11,0)]
 		FileProtectionComplete = 0x20000000,
+		[Mac (11,0)]
 		FileProtectionMask = 0xf0000000,
+		[Mac (11,0)]
 		FileProtectionCompleteUnlessOpen = 0x30000000,
+		[Mac (11,0)]
 		FileProtectionCompleteUntilFirstUserAuthentication = 0x40000000,
 	}
 	
@@ -343,7 +350,6 @@ namespace Foundation  {
 
 		CoderReadCorruptError = 4864,
 		CoderValueNotFoundError = 4865,
-		[Mac (10,13), iOS (11,0), Watch (4,0), TV (11,0)]
 		CoderInvalidValueError = 4866,
 		CoderErrorMinimum = 4864,
 		CoderErrorMaximum = 4991,
@@ -355,30 +361,18 @@ namespace Foundation  {
 		BundleOnDemandResourceExceededMaximumSizeError = 4993,
 		BundleOnDemandResourceInvalidTagError = 4994,
 
-		[Mac (10,12)][iOS (10,0)][NoTV][NoWatch]
 		CloudSharingNetworkFailureError = 5120,
-		[Mac (10,12)][iOS (10,0)][NoTV][NoWatch]
 		CloudSharingQuotaExceededError = 5121,
-		[Mac (10,12)][iOS (10,0)][NoTV][NoWatch]
 		CloudSharingTooManyParticipantsError = 5122,
-		[Mac (10,12)][iOS (10,0)][NoTV][NoWatch]
 		CloudSharingConflictError = 5123,
-		[Mac (10,12)][iOS (10,0)][NoTV][NoWatch]
 		CloudSharingNoPermissionError = 5124,
-		[Mac (10,12)][iOS (10,0)][NoTV][NoWatch]
 		CloudSharingOtherError = 5375,
-		[Mac (10,12)][iOS (10,0)][NoTV][NoWatch]
 		CloudSharingErrorMinimum = 5120,
-		[Mac (10,12)][iOS (10,0)][NoTV][NoWatch]
 		CloudSharingErrorMaximum = 5375,
 
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		CompressionFailedError = 5376,
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		DecompressionFailedError = 5377,
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		CompressionErrorMinimum = 5376,
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		CompressionErrorMaximum = 5503,
 	}
 	

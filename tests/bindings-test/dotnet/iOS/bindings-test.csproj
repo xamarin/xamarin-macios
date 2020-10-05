@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.iOS.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net5.0-ios</TargetFramework>
+    <NativeLibName>ios-fat</NativeLibName>
+  </PropertyGroup>
+  <Import Project="..\shared.targets" />
+</Project>

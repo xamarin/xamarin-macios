@@ -1,0 +1,23 @@
+<Project>
+	<PropertyGroup>
+		<SignAssembly>true</SignAssembly>
+		<GenerateTailCalls>true</GenerateTailCalls>
+
+		<RootTestsDirectory>$(MSBuildThisFileDirectory)\..\..</RootTestsDirectory>
+		<FSharpLibraryDirectory>$(RootTestsDirectory)\fsharplibrary</FSharpLibraryDirectory>
+
+		<AssemblyOriginatorKeyFile>$(RootTestsDirectory)\..\product.snk</AssemblyOriginatorKeyFile>
+
+		<!-- Work around https://github.com/dotnet/sdk/issues/12954 -->
+		<ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="NUnitLite" Version="3.12.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Include="$(FSharpLibraryDirectory)\AssemblyInfo.fs" />
+		<Compile Include="$(FSharpLibraryDirectory)\ObjCRuntime\RegistrarTest.fs" />
+	</ItemGroup>
+</Project>

@@ -57,7 +57,7 @@ namespace MonoTouchFixtures.Foundation {
 					byte[] arr = new byte[10];
 					s.Open ();
 					Assert.IsTrue (s.HasBytesAvailable ());
-					Assert.AreEqual (2, s.Read (arr, 2), "#a 1");
+					Assert.AreEqual ((nint) 2, s.Read (arr, 2), "#a 1");
 					Assert.AreEqual (0, arr [0], "#a[0]");
 					Assert.AreEqual (1, arr [1], "#a[1]");
 				}
@@ -66,7 +66,7 @@ namespace MonoTouchFixtures.Foundation {
 					byte[] arr = new byte[10];
 					s.Open ();
 					Assert.IsTrue (s.HasBytesAvailable ());
-					Assert.AreEqual (2, s.Read (arr, 1, 2), "#b 1");
+					Assert.AreEqual ((nint) 2, s.Read (arr, 1, 2), "#b 1");
 					Assert.AreEqual (0, arr [0], "#b[0]");
 					Assert.AreEqual (0, arr [1], "#b[1]");
 					Assert.AreEqual (1, arr [2], "#b[2]");
@@ -77,7 +77,7 @@ namespace MonoTouchFixtures.Foundation {
 					s.Open ();
 					Assert.IsTrue (s.HasBytesAvailable ());
 					fixed (byte* ptr = &arr[2])
-						Assert.AreEqual (2, s.Read ((IntPtr) ptr, 2), "#c 1");
+						Assert.AreEqual ((nint) 2, s.Read ((IntPtr) ptr, 2), "#c 1");
 					Assert.AreEqual (0, arr [0], "#c[0]");
 					Assert.AreEqual (0, arr [1], "#c[1]");
 					Assert.AreEqual (0, arr [2], "#c[2]");

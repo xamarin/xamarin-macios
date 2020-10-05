@@ -79,38 +79,33 @@ namespace MonoTouchFixtures.UIKit {
 		}
 		
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void Animate_Null_a1 ()
 		{
-			UIView.Animate (1.0, null);
+			Assert.Throws<ArgumentNullException> (() => UIView.Animate (1.0, null));
 		}
 		
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void Animate_Null_a2 ()
 		{
-			UIView.Animate (1.0, null, Completion);
+			Assert.Throws<ArgumentNullException> (() => UIView.Animate (1.0, null, Completion));
 		}
 
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void Animate_Null_a3 ()
 		{
-			UIView.Animate (1.0, 2.0, UIViewAnimationOptions.Autoreverse, null, Completion);
+			Assert.Throws<ArgumentNullException> (() => UIView.Animate (1.0, 2.0, UIViewAnimationOptions.Autoreverse, null, Completion));
 		}
 
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void AnimateNotify_Null_a1 ()
 		{
-			UIView.AnimateNotify (1.0, null, CompletionHandler);
+			Assert.Throws<ArgumentNullException> (() => UIView.AnimateNotify (1.0, null, CompletionHandler));
 		}
 		
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void AnimateNotify_Null_a2 ()
 		{
-			UIView.AnimateNotify (1.0, 2.0, UIViewAnimationOptions.Autoreverse, null, CompletionHandler);
+			Assert.Throws<ArgumentNullException> (() => UIView.AnimateNotify (1.0, 2.0, UIViewAnimationOptions.Autoreverse, null, CompletionHandler));
 		}
 		
 		[Test]

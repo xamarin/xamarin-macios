@@ -34,6 +34,7 @@ namespace Introspection {
 #endif
 			// still most Metal helpers are not available on the simulator (even when the framework is present, it's missing symbols)
 			case "MPSSupportsMTLDevice":
+			case "MPSGetPreferredDevice":
 			// neither are the CoreVideo extensions for Metal
 			case "CVMetalTextureGetTexture":
 			case "CVMetalTextureIsFlipped":
@@ -53,6 +54,7 @@ namespace Introspection {
 			case "MPSStateBatchResourceSize":
 			case "MPSHintTemporaryMemoryHighWaterMark":
 			case "MPSSetHeapCacheDuration":
+			case "MPSGetImageType":
 				return simulator;
 			case "CVPixelBufferGetIOSurface":
 			case "CVPixelBufferCreateWithIOSurface":
@@ -63,6 +65,9 @@ namespace Introspection {
 				return !simulator;
 
 			default:
+				// MLCompute not available in simulator as of Xcode 12 beta 3
+				if (simulator && symbolName.StartsWith ("MLC", StringComparison.Ordinal))
+					return true;
 				return base.Skip (symbolName);
 			}
 		}
@@ -142,24 +147,5 @@ namespace Introspection {
 			}
 			Assert.AreEqual (0, Errors, "{0} errors found in {1} native delegate validated: {2}", Errors, n, string.Join (", ", failed_api));
 		}
-
-		[Test]
-		public void NUnitLite ()
-		{
-			var a = typeof (TestAttribute).Assembly;
-			if (!SkipAssembly (a))
-				Check (a);
-		}
-
-#if !__WATCHOS__
-		[Test]
-		public void MonoTouchDialog ()
-		{
-			// there's no direct reference to MTD - but it's there
-			var a = AppDelegate.Runner.NavigationController.TopViewController.GetType ().Assembly;
-			if (!SkipAssembly (a))
-				Check (a);
-		}
-#endif
 	}
 }

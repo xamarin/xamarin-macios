@@ -23,7 +23,7 @@ namespace MonoTouchFixtures.SpriteKit
 	[Preserve (AllMembers = true)]
 	public class UniformTest
 	{
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Setup ()
 		{
 			TestRuntime.AssertXcodeVersion (8, 0);

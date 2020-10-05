@@ -21,17 +21,6 @@ Copyright (C) 2015-2016 Xamarin. All rights reserved.
 		<!-- Version/fx properties -->
 		<TargetFrameworkIdentifier Condition="'$(TargetFrameworkIdentifier)' == ''">Xamarin.iOS</TargetFrameworkIdentifier>
 		<TargetFrameworkVersion Condition="'$(TargetFrameworkVersion)' == ''">v1.0</TargetFrameworkVersion>
-
-		<_IsUnifiedDefined>$([System.Text.RegularExpressions.Regex]::IsMatch('$(DefineConstants.Trim())', '(^|;)__UNIFIED__($|;)'))</_IsUnifiedDefined>
-		<_IsMobileDefined>$([System.Text.RegularExpressions.Regex]::IsMatch('$(DefineConstants.Trim())', '(^|;)__MOBILE__($|;)'))</_IsMobileDefined>
-		<_IsIOSDefined>$([System.Text.RegularExpressions.Regex]::IsMatch('$(DefineConstants.Trim())', '(^|;)__IOS__($|;)'))</_IsIOSDefined>
-
-		<DefineConstants Condition="!$(_IsUnifiedDefined)">__UNIFIED__;$(DefineConstants)</DefineConstants>
-		<DefineConstants Condition="!$(_IsMobileDefined)">__MOBILE__;$(DefineConstants)</DefineConstants>
-		<DefineConstants Condition="!$(_IsIOSDefined)">__IOS__;$(DefineConstants)</DefineConstants>
-
-		<!-- Enable nuget package conflict resolution -->
-		<ResolveAssemblyConflicts>true</ResolveAssemblyConflicts>
 	</PropertyGroup>
 	<Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" Condition="'$(_UsingXamarinSdk)' != 'true'" />
 	<Import Project="Xamarin.iOS.WatchApp.Common.targets" />

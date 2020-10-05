@@ -14,4 +14,18 @@
 		<_PackageVersion Condition=" '$(_PlatformName)' == 'watchOS' ">@WATCHOS_NUGET_VERSION_FULL@</_PackageVersion>
 		<_PackageVersion Condition=" '$(_PlatformName)' == 'macOS' ">@MACOS_NUGET_VERSION_FULL@</_PackageVersion>
 	</PropertyGroup>
+
+	<!-- Defines the default platform version if it's not specified in the TFM. The default should not change for a given .NET version:
+	     * We release support for iOS 14.5 with .NET 6
+	     * Apple releases iOS 15.0, we're still using .NET 6. This default continues to be iOS 14.5
+	     * .NET 7 is shipped, and at this point we bump the default to iOS 15.0
+	     Ref: https://github.com/dotnet/designs/blob/8e6394406d44f75f30ea2259a425cb9e38d75b69/accepted/2020/net5/net5.md#os-versions
+	-->
+	<PropertyGroup>
+		<!-- This section specifies the default platform version for .NET 5.0 -->
+		<_DefaultTargetPlatformVersion Condition=" '$(_PlatformName)' == 'iOS' ">13.6</_DefaultTargetPlatformVersion>
+		<_DefaultTargetPlatformVersion Condition=" '$(_PlatformName)' == 'tvOS' ">13.4</_DefaultTargetPlatformVersion>
+		<_DefaultTargetPlatformVersion Condition=" '$(_PlatformName)' == 'watchOS' ">6.2</_DefaultTargetPlatformVersion>
+		<_DefaultTargetPlatformVersion Condition=" '$(_PlatformName)' == 'macOS' ">10.15</_DefaultTargetPlatformVersion>
+	</PropertyGroup>
 </Project>

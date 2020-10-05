@@ -37,7 +37,7 @@ namespace MonoTouchFixtures.Network {
 			}
 		}
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Init ()
 		{
 			TestRuntime.AssertXcodeVersion (11, 0);
@@ -67,7 +67,7 @@ namespace MonoTouchFixtures.Network {
 			}
 		}
 
-		[TestFixtureTearDown]
+		[OneTimeTearDown]
 		public void Dispose()
 		{
 			report?.Dispose ();
@@ -89,7 +89,7 @@ namespace MonoTouchFixtures.Network {
 		}
 
 		[Test]
-		public void TestPreviousAttemptCount () => Assert.AreNotEqual (-1, report.PreviousAttemptCount);
+		public void TestPreviousAttemptCount () => Assert.AreNotEqual (uint.MaxValue, report.PreviousAttemptCount);
 
 		[Test]
 		public void TestDuration () => Assert.IsTrue (report.Duration > TimeSpan.MinValue);

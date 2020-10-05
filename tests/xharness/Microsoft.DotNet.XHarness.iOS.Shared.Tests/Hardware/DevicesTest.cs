@@ -113,10 +113,53 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Hardware {
 			Assert.AreEqual (0, devices.ConnectedTV.Count ());
 		}
 
-		private void AssertArgumentValue (MlaunchArgument arg, string expected, string message = null)
+		[Test]
+		public async Task FindAndCacheDevicesWithFailingMlaunchTest ()
 		{
-			var value = arg.AsCommandLineArgument ().Split (new char [] { '=' }, 2).LastOrDefault ();
-			Assert.AreEqual (expected, value, message);
+			string processPath = null;
+			MlaunchArguments passedArguments = null;
+
+			// Moq.SetupSequence doesn't allow custom callbacks so we need to count ourselves
+			var calls = 0;
+
+			// moq It.Is is not working as nicelly as we would like it, we capture data and use asserts
+			processManager.Setup (p => p.RunAsync (It.IsAny<Process> (), It.IsAny<MlaunchArguments> (), It.IsAny<ILog> (), It.IsAny<TimeSpan?> (), It.IsAny<Dictionary<string, string>> (), It.IsAny<CancellationToken?> (), It.IsAny<bool?> ()))
+				.Returns<Process, MlaunchArguments, ILog, TimeSpan?, Dictionary<string, string>, CancellationToken?, bool?> ((p, args, log, t, env, token, d) => {
+					calls++;
+
+					if (calls == 1) {
+						// Mlaunch can sometimes time out and we are testing that a subsequent Load will trigger it again
+						return Task.FromResult (new ProcessExecutionResult { ExitCode = 137, TimedOut = true });
+					}
+
+					processPath = p.StartInfo.FileName;
+					passedArguments = args;
+
+					// we get the temp file that was passed as the args, and write our sample xml, which will be parsed to get the devices :)
+					var tempPath = args.Where (a => a is ListDevicesArgument).First ().AsCommandLineArgument ();
+					tempPath = tempPath.Substring (tempPath.IndexOf ('=') + 1).Replace ("\"", string.Empty);
+
+					var name = GetType ().Assembly.GetManifestResourceNames ().Where (a => a.EndsWith ("devices.xml", StringComparison.Ordinal)).FirstOrDefault ();
+					using (var outputStream = new StreamWriter (tempPath))
+					using (var sampleStream = new StreamReader (GetType ().Assembly.GetManifestResourceStream (name))) {
+						string line;
+						while ((line = sampleStream.ReadLine ()) != null)
+							outputStream.WriteLine (line);
+					}
+					return Task.FromResult (new ProcessExecutionResult { ExitCode = 0, TimedOut = false });
+				});
+
+			Assert.ThrowsAsync<Exception> (async () => await devices.LoadDevices (executionLog.Object));
+
+			Assert.IsEmpty (devices.ConnectedDevices);
+			Assert.AreEqual (1, calls);
+			await devices.LoadDevices (executionLog.Object);
+			Assert.AreEqual (2, calls);
+			Assert.IsNotEmpty (devices.ConnectedDevices);
+			await devices.LoadDevices (executionLog.Object);
+			Assert.AreEqual (2, calls);
+			await devices.LoadDevices (executionLog.Object);
+			Assert.AreEqual (2, calls);
 		}
 	}
 }

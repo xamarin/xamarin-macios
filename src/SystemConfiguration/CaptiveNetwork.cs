@@ -60,10 +60,12 @@ namespace SystemConfiguration {
 		
 #if !MONOMAC
 
+		[Deprecated (PlatformName.iOS, 14,0)]
 		[DllImport (Constants.SystemConfigurationLibrary)]
 		extern static IntPtr /* CFDictionaryRef __nullable */  CNCopyCurrentNetworkInfo (
 			/* CFStringRef __nonnull */ IntPtr interfaceName);
 
+		[Deprecated (PlatformName.iOS, 14,0)]
 		static public StatusCode TryCopyCurrentNetworkInfo (string interfaceName, out NSDictionary currentNetworkInfo)
 		{
 			using (var nss = new NSString (interfaceName)) {
@@ -84,7 +86,8 @@ namespace SystemConfiguration {
 #endif
 		[DllImport (Constants.SystemConfigurationLibrary)]
 		extern static IntPtr /* CFArrayRef __nullable */ CNCopySupportedInterfaces ();
-		
+
+		[Deprecated (PlatformName.iOS, 14,0, message: "Use 'NEHotspotNetwork.FetchCurrent' instead.")]
 		static public StatusCode TryGetSupportedInterfaces (out string[] supportedInterfaces)
 		{
 			IntPtr array = CNCopySupportedInterfaces ();
@@ -98,12 +101,15 @@ namespace SystemConfiguration {
 			return StatusCode.OK;
 		}
 
+		[Deprecated (PlatformName.iOS, 9,0)]
 		[DllImport (Constants.SystemConfigurationLibrary)]
 		extern static bool CNMarkPortalOffline (IntPtr /* CFStringRef __nonnull */ interfaceName);
 
+		[Deprecated (PlatformName.iOS, 9,0)]
 		[DllImport (Constants.SystemConfigurationLibrary)]
 		extern static bool CNMarkPortalOnline (IntPtr /* CFStringRef __nonnull */ interfaceName);
 
+		[Deprecated (PlatformName.iOS, 9,0)]
 		static public bool MarkPortalOnline (string iface)
 		{
 			using (var nss = new NSString (iface)) {
@@ -111,6 +117,7 @@ namespace SystemConfiguration {
 			}
 		}
 
+		[Deprecated (PlatformName.iOS, 9,0)]
 		static public bool MarkPortalOffline (string iface)
 		{
 			using (var nss = new NSString (iface)) {
@@ -118,9 +125,11 @@ namespace SystemConfiguration {
 			}
 		}
 
+		[Deprecated (PlatformName.iOS, 9,0)]
 		[DllImport (Constants.SystemConfigurationLibrary)]
 		extern static bool CNSetSupportedSSIDs (IntPtr /* CFArrayRef __nonnull */ ssidArray);
 
+		[Deprecated (PlatformName.iOS, 9,0)]
 		static public bool SetSupportedSSIDs (string [] ssids)
 		{
 			using (var arr = NSArray.FromStrings (ssids)) {

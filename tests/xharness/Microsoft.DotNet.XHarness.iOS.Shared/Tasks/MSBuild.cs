@@ -12,7 +12,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 
 	public class MSBuild : BuildProject {
 		readonly IErrorKnowledgeBase errorKnowledgeBase;
-		readonly string msbuildPath;
+		readonly Func<string> msbuildPath;
 
 		public virtual List<string> GetToolArguments (string projectPlatform, string projectConfiguration, string projectFile, ILog buildLog) {
 			var binlogPath = buildLog.FullPath.Replace (".txt", ".binlog");
@@ -29,7 +29,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 			return args;
 		}
 
-		public MSBuild (string msbuildPath,
+		public MSBuild (Func<string> msbuildPath,
 							IProcessManager processManager,
 							IResourceManager resourceManager,
 							IEventLogger eventLogger,
@@ -58,10 +58,10 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 			}
 
 			using (var xbuild = new Process ()) {
-				xbuild.StartInfo.FileName = msbuildPath;
+				xbuild.StartInfo.FileName = msbuildPath ();
 				xbuild.StartInfo.Arguments = StringUtils.FormatArguments (GetToolArguments (projectPlatform, projectConfiguration, projectFile, buildLog));
 				xbuild.StartInfo.WorkingDirectory = Path.GetDirectoryName (projectFile);
-				EnviromentManager.SetEnvironmentVariables (xbuild);
+				EnvironmentManager.SetEnvironmentVariables (xbuild);
 				xbuild.StartInfo.EnvironmentVariables ["MSBuildExtensionsPath"] = null;
 				EventLogger.LogEvent (buildLog, "Building {0} ({1})", TestName, Mode);
 				if (!dryRun) {
@@ -87,7 +87,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 		{
 			// Don't require the desktop resource here, this shouldn't be that resource sensitive
 			using (var xbuild = new Process ()) {
-				xbuild.StartInfo.FileName = msbuildPath;
+				xbuild.StartInfo.FileName = msbuildPath ();
 				var args = new List<string> ();
 				args.Add ("--");
 				args.Add ("/verbosity:diagnostic");
@@ -99,7 +99,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 				args.Add ("/t:Clean");
 				xbuild.StartInfo.Arguments = StringUtils.FormatArguments (args);
 				xbuild.StartInfo.WorkingDirectory = Path.GetDirectoryName (project_file);
-				EnviromentManager.SetEnvironmentVariables (xbuild);
+				EnvironmentManager.SetEnvironmentVariables (xbuild);
 				EventLogger.LogEvent (log, "Cleaning {0} ({1}) - {2}", TestName, Mode, project_file);
 				var timeout = TimeSpan.FromMinutes (1);
 				await ProcessManager.RunAsync (xbuild, log, timeout);

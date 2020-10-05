@@ -22,10 +22,9 @@ namespace MonoTouchFixtures.MapKit {
 		}
 		
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void FromPoints_Null ()
 		{
-			MKPolygon.FromPoints (null);
+			Assert.Throws<ArgumentNullException> (() => MKPolygon.FromPoints (null));
 		}
 
 		[Test]
@@ -69,10 +68,9 @@ namespace MonoTouchFixtures.MapKit {
 		}
 		
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void FromCoordinates_Null ()
 		{
-			MKPolygon.FromCoordinates (null);
+			Assert.Throws<ArgumentNullException> (() => MKPolygon.FromCoordinates (null));
 		}
 
 		[Test]

@@ -147,6 +147,12 @@ namespace NetworkExtension {
 		High,
 	}
 
+	[NoWatch, NoTV, NoiOS, Mac (10,15,5)]
+	[Native]
+	public enum NEFilterDataAttribute : long {
+		HasIpHeader = 1,
+	}
+
 	[iOS (9,0)][Mac (10,11)]
 	[BaseType (typeof (NSObject))]
 	[Abstract] // documented as such and ...
@@ -317,6 +323,15 @@ namespace NetworkExtension {
 	
 		[Export ("matchDomainsNoSearch")]
 		bool MatchDomainsNoSearch { get; set; }
+
+		[NoWatch, NoTV, Mac (11, 0), iOS (14, 0)]
+		[Export ("dnsProtocol")]
+		NEDnsProtocol DnsProtocol { get; }
+
+		[Mac (11,0), iOS (14,0), NoTV, NoWatch]
+		[Notification]
+		[Field ("NEDNSSettingsConfigurationDidChangeNotification")]
+		NSString ConfigurationDidChangeNotification { get; }
 	}
 
 	[iOS (9,0)]
@@ -785,6 +800,12 @@ namespace NetworkExtension {
 
 		[Export ("setPassword:")]
 		void SetPassword (string password);
+
+		[Async]
+		[Watch (7,0), NoTV, NoMac, iOS (14,0)]
+		[Static]
+		[Export ("fetchCurrentWithCompletionHandler:")]
+		void FetchCurrent (Action<NEHotspotNetwork> completionHandler);
 	}
 #endif
 
@@ -1063,6 +1084,14 @@ namespace NetworkExtension {
 		[Field ("NETunnelProviderErrorDomain")]
 		NSString ErrorDomain { get; }
 #endif
+
+		[NoWatch, NoTV, NoiOS, Mac (11, 0)]
+		[Export ("excludedDomains", ArgumentSemantic.Copy)]
+		string[] ExcludedDomains { get; set; }
+
+		[NoWatch, NoTV, NoiOS, Mac (11, 0)]
+		[Export ("associatedDomains", ArgumentSemantic.Copy)]
+		string[] AssociatedDomains { get; set; }
 	}
 
 	
@@ -1212,8 +1241,7 @@ namespace NetworkExtension {
 		[NullAllowed, Export ("proxySettings", ArgumentSemantic.Copy)]
 		NEProxySettings ProxySettings { get; set; }
 
-		[NoiOS]
-		[Mac (10,15)]
+		[Mac (10,15), iOS (14,0)]
 		[Export ("includeAllNetworks")]
 		bool IncludeAllNetworks { get; set; }
 
@@ -1324,6 +1352,10 @@ namespace NetworkExtension {
 		[iOS (13,0)]
 		[Export ("enableFallback")]
 		bool EnableFallback { get; set; }
+
+		[NoWatch, NoTV, Mac (11, 0), iOS (14, 0)]
+		[Export ("mtu")]
+		nuint Mtu { get; set; }
 	}
 
 	[iOS (8,0)][Mac (10,10)]
@@ -1454,6 +1486,10 @@ namespace NetworkExtension {
 	
 		[Export ("isEqualToPath:")]
 		bool IsEqualToPath (NWPath path);
+
+		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[Export ("constrained")]
+		bool Constrained { [Bind ("isConstrained")] get; }
 	}
 	
 	[iOS (9,0)][Mac (10,11)]
@@ -1642,6 +1678,11 @@ namespace NetworkExtension {
 			[NotImplemented] set;
 #endif
 		}
+
+		[NullAllowed]
+		[NoWatch, NoTV, Mac (11, 0), iOS (14, 0)]
+		[Export ("remoteHostname")]
+		string RemoteHostname { get; }
 	}
 
 	[iOS (11,0)]
@@ -2098,4 +2139,140 @@ namespace NetworkExtension {
 		[NullAllowed, Export ("excludedNetworkRules", ArgumentSemantic.Copy)]
 		NENetworkRule[] ExcludedNetworkRules { get; set; }
 	}
+
+	[NoWatch, NoTV, NoMac, iOS (14,0)]
+	[BaseType (typeof (NSObject))]
+	interface NEAppPushManager {
+		[Export ("matchSSIDs", ArgumentSemantic.Copy)]
+		string[] MatchSsids { get; set; }
+
+		[Export ("providerConfiguration", ArgumentSemantic.Copy)]
+		NSDictionary<NSString, NSObject> ProviderConfiguration { get; set; }
+
+		[NullAllowed]
+		[Export ("providerBundleIdentifier")]
+		string ProviderBundleIdentifier { get; set; }
+
+		[Wrap ("WeakDelegate")]
+		[NullAllowed]
+		INEAppPushDelegate Delegate { get; set; }
+
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		NSObject WeakDelegate { get; set; }
+
+		[Async]
+		[Static]
+		[Export ("loadAllFromPreferencesWithCompletionHandler:")]
+		void LoadAllFromPreferences (Action<NEAppPushManager [], NSError> completionHandler);
+
+		[Async]
+		[Export ("loadFromPreferencesWithCompletionHandler:")]
+		void LoadFromPreferences (Action<NSError> completionHandler);
+
+		[Async]
+		[Export ("removeFromPreferencesWithCompletionHandler:")]
+		void RemoveFromPreferences (Action<NSError> completionHandler);
+
+		[Async]
+		[Export ("saveToPreferencesWithCompletionHandler:")]
+		void SaveToPreferences (Action<NSError> completionHandler);
+
+		[NullAllowed]
+		[Export ("localizedDescription")]
+		string LocalizedDescription { get; set; }
+
+		[Export ("enabled")]
+		bool Enabled { [Bind ("isEnabled")] get; set; }
+
+		[Export ("active")]
+		bool Active { [Bind ("isActive")] get; }
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (14,0)]
+	[BaseType (typeof (NEProvider))]
+	[DisableDefaultCtor] // init returns nil
+	interface NEAppPushProvider {
+		[NullAllowed]
+		[Export ("providerConfiguration")]
+		NSDictionary<NSString, NSObject> ProviderConfiguration { get; }
+
+		[Async]
+		[Export ("startWithCompletionHandler:")]
+		void Start (Action<NSError> completionHandler);
+
+		[Async]
+		[Export ("stopWithReason:completionHandler:")]
+		void Stop (NEProviderStopReason reason, Action completionHandler);
+
+		[Export ("reportIncomingCallWithUserInfo:")]
+		void ReportIncomingCall (NSDictionary userInfo);
+
+		[Export ("handleTimerEvent")]
+		void HandleTimerEvent ();
+	}
+
+	[NoWatch, NoTV, Mac (11,0), iOS (14,0)]
+	[BaseType (typeof (NEDnsSettings), Name = "NEDNSOverHTTPSSettings")]
+	interface NEDnsOverHttpsSettings {
+		[NullAllowed]
+		[Export ("serverURL", ArgumentSemantic.Copy)]
+		NSUrl ServerUrl { get; set; }
+	}
+
+	[NoWatch, NoTV, Mac (11,0), iOS (14,0)]
+	[BaseType (typeof (NEDnsSettings), Name = "NEDNSOverTLSSettings")]
+	interface NEDnsOverTlsSettings {
+		[NullAllowed]
+		[Export ("serverName")]
+		string ServerName { get; set; }
+	}
+
+	[NoWatch, NoTV, Mac (11,0), iOS (14,0)]
+	[DisableDefaultCtor]
+	[BaseType (typeof (NSObject), Name = "NEDNSSettingsManager")]
+	interface NEDnsSettingsManager {
+		[Static]
+		[Export ("sharedManager")]
+		NEDnsSettingsManager SharedManager { get; }
+
+		[Async]
+		[Export ("loadFromPreferencesWithCompletionHandler:")]
+		void LoadFromPreferences (Action<NSError> completionHandler);
+
+		[Async]
+		[Export ("removeFromPreferencesWithCompletionHandler:")]
+		void RemoveFromPreferences (Action<NSError> completionHandler);
+
+		[Async]
+		[Export ("saveToPreferencesWithCompletionHandler:")]
+		void SaveToPreferences (Action<NSError> completionHandler);
+
+		[NullAllowed]
+		[Export ("localizedDescription")]
+		string LocalizedDescription { get; set; }
+
+		[NullAllowed]
+		[Export ("dnsSettings", ArgumentSemantic.Strong)]
+		NEDnsSettings DnsSettings { get; set; }
+
+		[NullAllowed]
+		[Export ("onDemandRules", ArgumentSemantic.Copy)]
+		NEOnDemandRule[] OnDemandRules { get; set; }
+
+		[Export ("enabled")]
+		bool Enabled { [Bind ("isEnabled")] get; }
+	}
+
+	interface INEAppPushDelegate {}
+
+	[NoWatch, NoTV, NoMac, iOS (14,0)]
+	[Protocol, Model (AutoGeneratedName = true)]
+	[BaseType (typeof (NSObject))]
+	interface NEAppPushDelegate
+	{
+		[Abstract]
+		[Export ("appPushManager:didReceiveIncomingCallWithUserInfo:")]
+		void DidReceiveIncomingCall (NEAppPushManager manager, NSDictionary userInfo);
+	}
+
 }

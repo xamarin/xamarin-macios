@@ -88,7 +88,17 @@ namespace LinkAll.Interfaces {
 
 			// Foo and Bar are never used on B - so they can be removed
 			Assert.Null (type_b.GetMethod ("Foo", BindingFlags.Instance | BindingFlags.Public), "B::Foo");
+#if !NET // This is actually a bug in the linker that's been fixed in .NET
 			Assert.Null (type_b.GetMethod ("Bar", BindingFlags.Instance | BindingFlags.Public), "B::Bar");
+#endif
+		}
+
+		[Test]
+		[Ignore ("https://github.com/xamarin/xamarin-macios/issues/9566")]
+		public void Issue9566 ()
+		{
+			var ifaces = (I[]) (object) new B[0];
+			Assert.IsNotNull (ifaces, "Array cast");
 		}
 
 		[DllImport ("/usr/lib/system/libsystem_dnssd.dylib")]

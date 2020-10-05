@@ -243,8 +243,8 @@ namespace CoreFoundation {
 		internal extern static /* CFReadStreamRef __nonnull */ IntPtr CFReadStreamCreateForHTTPRequest (
 			/* CFAllocatorRef __nullable */ IntPtr alloc, /* CFHTTPMessageRef __nonnull */ IntPtr request);
 
-		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'NSUrlSession'.")]
-		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'NSUrlSession'.")]
+		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'NSUrlSession' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'NSUrlSession' instead.")]
 		public static CFHTTPStream CreateForHTTPRequest (CFHTTPMessage request)
 		{
 			if (request == null)
@@ -255,11 +255,15 @@ namespace CoreFoundation {
 		}
 
 		// CFHTTPStream.h in CFNetwork.framework (not CoreFoundation)
+		[Deprecated (PlatformName.iOS, 9,0)]
+		[Deprecated (PlatformName.MacOSX, 10,11)]
 		[DllImport (Constants.CFNetworkLibrary)]
 		internal extern static /* CFReadStreamRef __nonnull */ IntPtr CFReadStreamCreateForStreamedHTTPRequest (
 			/* CFAllocatorRef __nullable */ IntPtr alloc, /* CFHTTPMessageRef __nonnull */ IntPtr requestHeaders,
 			/* CFReadStreamRef __nonnull */ IntPtr requestBody);
 
+		[Deprecated (PlatformName.iOS, 9,0, message : "Use 'NSUrlSession' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10,11, message : "Use 'NSUrlSession' instead.")]
 		public static CFHTTPStream CreateForStreamedHTTPRequest (CFHTTPMessage request, CFReadStream body)
 		{
 			if (request == null)

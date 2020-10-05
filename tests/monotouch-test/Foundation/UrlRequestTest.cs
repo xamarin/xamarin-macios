@@ -7,6 +7,7 @@
 // Copyright 2015 Xamarin Inc. All rights reserved.
 //
 
+using System;
 using Foundation;
 using ObjCRuntime;
 using NUnit.Framework;
@@ -34,30 +35,29 @@ namespace MonoTouchFixtures.Foundation {
 				// that a bit like lying, we still consider it an NSMutableDictionary but it't not mutable
 				Assert.That (mur.Headers, Is.TypeOf (typeof (NSMutableDictionary)), "NSMutableDictionary");
 
-#if !MONOMAC // No Simulator for mac
-				// that would crash on devices
-				// NSInternalInconsistencyException -[__NSCFDictionary setObject:forKey:]: mutating method sent to immutable object
-				if (Runtime.Arch == Arch.SIMULATOR) {
-					bool native_exception = false;
-					try {
-						mur.Headers.SetValueForKey (s3, s1);
-						Assert.Fail ("exception immutability");
-					} catch {
-						native_exception = true;
-					}
-					Assert.True (native_exception, "non-mutable NSDictionary");
-
-					// the original NSMutableDictionary is fine - but it's not what's being used, i.e. property is "copy"
-					md.Remove (s1);
-					Assert.That (md.Count, Is.EqualTo (0), "1");
-					Assert.That (mur.Headers.Count, Is.EqualTo (1), "2");
-					md.SetValueForKey (s3, s1);
-					Assert.That (md.Count, Is.EqualTo (1), "3");
-					Assert.That (mur.Headers.Count, Is.EqualTo (1), "40");
-
-					Assert.AreNotSame (md, mur.Headers, "!same");
-				}
+				var isActuallyMutable = TestRuntime.CheckXcodeVersion (8, 0);
+				if (isActuallyMutable) {
+					mur.Headers.SetValueForKey (s3, s1);
+				} else {
+					// In older OSes, the Headers is an instance of a class that's somehow immutable,
+					// even though it's an NSMutableDictionary subclass (specifically __NSCFDictionary).
+					// This feels like a bug that Apple fixed at some point.
+#if __MACOS__
+					Assert.Throws<ObjCException> (() => mur.Headers.SetValueForKey (s3, s1));
+#else
+					Assert.Throws<MonoTouchException> (() => mur.Headers.SetValueForKey (s3, s1));
 #endif
+				}
+
+				// the original NSMutableDictionary is fine - but it's not what's being used, i.e. property is "copy"
+				md.Remove (s1);
+				Assert.That (md.Count, Is.EqualTo ((nuint) 0), "1");
+				Assert.That (mur.Headers.Count, Is.EqualTo ((nuint) 1), "2");
+				md.SetValueForKey (s3, s1);
+				Assert.That (md.Count, Is.EqualTo ((nuint) 1), "3");
+				Assert.That (mur.Headers.Count, Is.EqualTo ((nuint) 1), "40");
+
+				Assert.AreNotSame (md, mur.Headers, "!same");
 
 				// https://www.bignerdranch.com/blog/about-mutability/
 				Assert.That (mur.Headers.Class.Name, Is.EqualTo ("__NSCFDictionary"), "__NSCFDictionary");

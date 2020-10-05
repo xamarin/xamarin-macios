@@ -29,7 +29,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -425,21 +424,38 @@ namespace Foundation {
 			return value;
 		}
 
+		void AddManagedHeaders (NSMutableDictionary nativeHeaders, IEnumerable<KeyValuePair<string, IEnumerable<string>>> managedHeaders)
+		{
+			foreach (var keyValuePair in managedHeaders) {
+				var keyPtr = NSString.CreateNative (keyValuePair.Key);
+				var valuePtr = NSString.CreateNative (string.Join (GetHeaderSeparator (keyValuePair.Key), keyValuePair.Value));
+				nativeHeaders.LowlevelSetObject (valuePtr, keyPtr);
+				NSString.ReleaseNative (keyPtr);
+				NSString.ReleaseNative (valuePtr);
+			}
+		}
+
 		async Task<NSUrlRequest> CreateRequest (HttpRequestMessage request)
 		{
 			var stream = Stream.Null;
+			var nativeHeaders = new NSMutableDictionary ();
 			// set header cookies if needed from the managed cookie container if we do use Cookies
 			if (session.Configuration.HttpCookieStorage != null) {
 				var cookies = cookieContainer?.GetCookieHeader (request.RequestUri); // as per docs: An HTTP cookie header, with strings representing Cookie instances delimited by semicolons.
-				if (!string.IsNullOrEmpty (cookies))
-					request.Headers.TryAddWithoutValidation (Cookie, cookies); 
+				if (!string.IsNullOrEmpty (cookies)) {
+					var cookiePtr = NSString.CreateNative (Cookie);
+					var cookiesPtr = NSString.CreateNative (cookies);
+					nativeHeaders.LowlevelSetObject (cookiesPtr, cookiePtr);
+					NSString.ReleaseNative (cookiePtr);
+					NSString.ReleaseNative (cookiesPtr);
+				}
 			}
 
-			var headers = request.Headers as IEnumerable<KeyValuePair<string, IEnumerable<string>>>;
+			AddManagedHeaders (nativeHeaders, request.Headers);
 
 			if (request.Content != null) {
 				stream = await request.Content.ReadAsStreamAsync ().ConfigureAwait (false);
-				headers = System.Linq.Enumerable.ToArray(headers.Union (request.Content.Headers));
+				AddManagedHeaders (nativeHeaders, request.Content.Headers);
 			}
 
 			var nsrequest = new NSMutableUrlRequest {
@@ -447,10 +463,7 @@ namespace Foundation {
 				CachePolicy = DisableCaching ? NSUrlRequestCachePolicy.ReloadIgnoringCacheData : NSUrlRequestCachePolicy.UseProtocolCachePolicy,
 				HttpMethod = request.Method.ToString ().ToUpperInvariant (),
 				Url = NSUrl.FromString (request.RequestUri.AbsoluteUri),
-				Headers = headers.Aggregate (new NSMutableDictionary (), (acc, x) => {
-					acc.Add (new NSString (x.Key), new NSString (string.Join (GetHeaderSeparator (x.Key), x.Value)));
-					return acc;
-				})
+				Headers = nativeHeaders,
 			};
 
 			if (stream != Stream.Null) {
@@ -637,6 +650,7 @@ namespace Foundation {
 			public override void DidCompleteWithError (NSUrlSession session, NSUrlSessionTask task, NSError error)
 			{
 				var inflight = GetInflightData (task);
+				var serverError = task.Error;
 
 				// this can happen if the HTTP request times out and it is removed as part of the cancellation process
 				if (inflight != null) {
@@ -644,12 +658,12 @@ namespace Foundation {
 					inflight.Stream.TrySetReceivedAllData ();
 
 					// send the error or send the response back
-					if (error != null) {
+					if (error != null || serverError != null) {
 						// got an error, cancel the stream operatios before we do anything
 						inflight.CancellationTokenSource.Cancel (); 
 						inflight.Errored = true;
 
-						var exc = inflight.Exception ?? createExceptionForNSError (error);
+						var exc = inflight.Exception ?? createExceptionForNSError (error ?? serverError);  // client errors wont happen if we get server errors
 						inflight.CompletionSource.TrySetException (exc);
 						inflight.Stream.TrySetException (exc);
 					} else {

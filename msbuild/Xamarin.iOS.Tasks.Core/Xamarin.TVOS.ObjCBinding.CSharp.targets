@@ -15,9 +15,6 @@ Copyright (C) 2015-2016 Xamarin Inc. All rights reserved.
 -->
 
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<UsingTask TaskName="Xamarin.iOS.Tasks.BTouch" AssemblyFile="..\iOS\Xamarin.iOS.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.MacDev.Tasks.Zip" AssemblyFile="..\iOS\Xamarin.iOS.Tasks.dll" />
-
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets')"/>
 
@@ -25,8 +22,6 @@ Copyright (C) 2015-2016 Xamarin Inc. All rights reserved.
 		<!-- Version/fx properties -->
 		<TargetFrameworkIdentifier Condition="'$(TargetFrameworkIdentifier)' == ''">Xamarin.TVOS</TargetFrameworkIdentifier>
 		<TargetFrameworkVersion Condition="'$(TargetFrameworkVersion)' == ''">v1.0</TargetFrameworkVersion>
-
-		<XamarinDefineConstants>__UNIFIED__;__MOBILE__;__TVOS__</XamarinDefineConstants>
 	</PropertyGroup>
 
 	<Import Project="..\iOS\Xamarin.iOS.ObjCBinding.CSharp.targets"/>

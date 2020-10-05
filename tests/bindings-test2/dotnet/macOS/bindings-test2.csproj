@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.macOS.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net5.0-macos</TargetFramework>
+    <NativeLibName>macos</NativeLibName>
+    <PlatformName>macOS</PlatformName>
+    <RootTestsDirectory>..\..\..</RootTestsDirectory>
+  </PropertyGroup>
+  <Import Project="..\shared.targets" />
+  <ItemGroup>
+    <PackageReference Include="NUnitLite" Version="3.12.0" />
+    <ProjectReference Include="$(RootTestsDirectory)\bindings-test\dotnet\macOS\bindings-test.csproj" />
+  </ItemGroup>
+</Project>

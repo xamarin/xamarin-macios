@@ -10,6 +10,7 @@
 //
 using ObjCRuntime;
 using Foundation;
+using CloudKit;
 using CoreGraphics;
 using CoreLocation;
 using HealthKit;
@@ -131,18 +132,22 @@ namespace WatchKit {
 		[Export ("contextsForSegueWithIdentifier:inTable:rowIndex:")]
 		NSObject [] GetContextsForSegue (string segueIdentifier, WKInterfaceTable table, nint rowIndex);
 
+		[Deprecated (PlatformName.WatchOS, 7,0)]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("addMenuItemWithImage:title:action:")]
 		void AddMenuItem (UIImage image, string title, Selector action);
 
+		[Deprecated (PlatformName.WatchOS, 7,0)]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("addMenuItemWithImageNamed:title:action:")]
 		void AddMenuItem (string imageName, string title, Selector action);
 
+		[Deprecated (PlatformName.WatchOS, 7,0)]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("addMenuItemWithItemIcon:title:action:")]
 		void AddMenuItem (WKMenuItemIcon itemIcon, string title, Selector action);
 
+		[Deprecated (PlatformName.WatchOS, 7,0)]
 		[Export ("clearAllMenuItems")]
 		void ClearAllMenuItems ();
 
@@ -700,6 +705,7 @@ namespace WatchKit {
 	interface WKInterfaceMap {
 
 		[Watch (6,0)][Advice ("This API exists for SwiftUI and is not generally needed.")]
+		[Deprecated (PlatformName.WatchOS, 7,0, message: "Use 'MKMapView' instead.")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("init")]
 		IntPtr Constructor ();
@@ -1006,12 +1012,13 @@ namespace WatchKit {
 		bool Autorotated { [Bind ("isAutorotated")] get; }
 
 		[Watch (4,0)]
+		[Deprecated (PlatformName.WatchOS, 7,0)]
 		[Export ("frontmostTimeoutExtended")]
 		bool FrontmostTimeoutExtended { [Bind ("isFrontmostTimeoutExtended")] get; set; }
 
 		[Watch (4,0)]
 		[Export ("enableWaterLock")]
-		[Deprecated (PlatformName.WatchOS, 6,1, message: "Use WKInterfaceDevice.EnableWaterLock ()")]
+		[Deprecated (PlatformName.WatchOS, 6,1, message: "Use 'WKInterfaceDevice.EnableWaterLock' instead.")]
 		void EnableWaterLock ();
 
 		[Watch (6,0)]
@@ -1025,6 +1032,30 @@ namespace WatchKit {
 		[Watch (6,0)]
 		[Export ("registeredForRemoteNotifications")]
 		bool RegisteredForRemoteNotifications { [Bind ("isRegisteredForRemoteNotifications")] get; }
+
+		[Watch (7,0)]
+		[Export ("globalTintColor")]
+		UIColor GlobalTintColor { get; }
+
+		[Watch (7, 0), NoiOS]
+		[Notification, Field ("WKApplicationDidFinishLaunchingNotification")]
+		NSString DidFinishLaunchingNotification { get; }
+
+		[Watch (7, 0), NoiOS]
+		[Notification, Field ("WKApplicationDidBecomeActiveNotification")]
+		NSString DidBecomeActiveNotification { get; }
+
+		[Watch (7, 0), NoiOS]
+		[Notification, Field ("WKApplicationWillResignActiveNotification")]
+		NSString WillResignActiveNotification { get; }
+
+		[Watch (7, 0), NoiOS]
+		[Notification, Field ("WKApplicationWillEnterForegroundNotification")]
+		NSString WillEnterForegroundNotification { get; }
+
+		[Watch (7, 0), NoiOS]
+		[Notification, Field ("WKApplicationDidEnterBackgroundNotification")]
+		NSString DidEnterBackgroundNotification { get; }
 	}
 
 	[NoiOS]
@@ -1049,19 +1080,19 @@ namespace WatchKit {
 		[Export ("applicationDidEnterBackground")]
 		void ApplicationDidEnterBackground ();
 
-		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use UNUserNotificationCenterDelegate")]
+		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use 'UNUserNotificationCenterDelegate' instead.")]
 		[Export ("handleActionWithIdentifier:forRemoteNotification:")]
 		void HandleAction ([NullAllowed] string identifier, NSDictionary remoteNotification);
 
-		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use UNUserNotificationCenterDelegate")]
+		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use 'UNUserNotificationCenterDelegate' instead.")]
 		[Export ("handleActionWithIdentifier:forLocalNotification:")]
 		void HandleAction ([NullAllowed] string identifier, UILocalNotification localNotification);
 
-		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use UNUserNotificationCenterDelegate")]
+		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use 'UNUserNotificationCenterDelegate' instead.")]
 		[Export ("handleActionWithIdentifier:forRemoteNotification:withResponseInfo:")]
 		void HandleAction ([NullAllowed] string identifier, NSDictionary remoteNotification, NSDictionary responseInfo);
 
-		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use UNUserNotificationCenterDelegate")]
+		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use 'UNUserNotificationCenterDelegate' instead.")]
 		[Export ("handleActionWithIdentifier:forLocalNotification:withResponseInfo:")]
 		void HandleAction ([NullAllowed] string identifier, UILocalNotification localNotification, NSDictionary responseInfo);
 
@@ -1072,11 +1103,11 @@ namespace WatchKit {
 		[Export ("handleActivity:")]
 		void HandleUserActivity (NSUserActivity userActivity);
 
-		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use UNUserNotificationCenterDelegate")]
+		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use 'UNUserNotificationCenterDelegate' instead.")]
 		[Export ("didReceiveRemoteNotification:")]
 		void DidReceiveRemoteNotification (NSDictionary userInfo);
 
-		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use UNUserNotificationCenterDelegate")]
+		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use 'UNUserNotificationCenterDelegate' instead.")]
 		[Export ("didReceiveLocalNotification:")]
 		void DidReceiveLocalNotification (UILocalNotification notification);
 
@@ -1119,6 +1150,10 @@ namespace WatchKit {
 		[Watch (6,0)]
 		[Export ("didReceiveRemoteNotification:fetchCompletionHandler:")]
 		void DidReceiveRemoteNotification (NSDictionary userInfo, Action<WKBackgroundFetchResult> completionHandler);
+
+		[Watch (7,0)]
+		[Export ("userDidAcceptCloudKitShareWithMetadata:")]
+		void UserDidAcceptCloudKitShare (CKShareMetadata cloudKitShareMetadata);
 	}
 
 	[Watch (2,2), NoiOS]
@@ -1141,6 +1176,7 @@ namespace WatchKit {
 	interface WKInterfaceMovie {
 
 		[Watch (6,0)][Advice ("This API exists for SwiftUI and is not generally needed.")]
+		[Deprecated (PlatformName.WatchOS, 7,0, message: "Use 'AVVideoPlayer' instead.")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("init")]
 		IntPtr Constructor ();
@@ -1430,6 +1466,7 @@ namespace WatchKit {
 	interface WKInterfaceHMCamera {
 
 		[Watch (6,0)][Advice ("This API exists for SwiftUI and is not generally needed.")]
+		[Deprecated (PlatformName.WatchOS, 7,0, message: "Use 'HMCameraView' instead.")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("init")]
 		IntPtr Constructor ();
@@ -1489,6 +1526,7 @@ namespace WatchKit {
 	interface WKInterfaceSCNScene : SCNSceneRenderer {
 
 		[Watch (6,0)][Advice ("This API exists for SwiftUI and is not generally needed.")]
+		[Deprecated (PlatformName.WatchOS, 7,0, message: "Use 'SCNSceneView' instead.")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("init")]
 		IntPtr Constructor ();
@@ -1509,6 +1547,7 @@ namespace WatchKit {
 	interface WKInterfaceSKScene {
 
 		[Watch (6,0)][Advice ("This API exists for SwiftUI and is not generally needed.")]
+		[Deprecated (PlatformName.WatchOS, 7,0, message: "Use 'SKSpriteView' instead.")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("init")]
 		IntPtr Constructor ();
@@ -1586,6 +1625,7 @@ namespace WatchKit {
 		SessionInProgress,
 		Expired,
 		ResignedFrontmost,
+		SuppressedBySystem,
 		Error = -1,
 	}
 

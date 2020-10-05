@@ -54,13 +54,13 @@ namespace LinkAll.Attributes {
 #else
 		const bool Debug = false;
 #endif
-		const string NamespacePrefix = "";
 		string AssemblyName = typeof (NSObject).Assembly.ToString ();
+		string WorkAroundLinkerHeuristics { get { return ""; }}
 
 		[Test]
 		public void PreserveTypeWithMembers ()
 		{
-			var t = Type.GetType ("LinkAll.Attributes.TypeWithMembers");
+			var t = Type.GetType ("LinkAll.Attributes.TypeWithMembers" + WorkAroundLinkerHeuristics);
 			// both type and members are preserved
 			Assert.NotNull (t, "type");
 			Assert.NotNull (t.GetProperty ("Present"), "members");
@@ -69,7 +69,7 @@ namespace LinkAll.Attributes {
 		[Test]
 		public void PreserveTypeWithoutMembers ()
 		{
-			var t = Type.GetType ("LinkAll.Attributes.TypeWithoutMembers");
+			var t = Type.GetType ("LinkAll.Attributes.TypeWithoutMembers" + WorkAroundLinkerHeuristics);
 			// type is preserved
 			Assert.NotNull (t, "type");
 			// but we did not ask the linker to preserve it's members
@@ -79,7 +79,7 @@ namespace LinkAll.Attributes {
 		[Test]
 		public void PreserveTypeWithCustomAttribute ()
 		{
-			var t = Type.GetType ("LinkAll.Attributes.MemberWithCustomAttribute");
+			var t = Type.GetType ("LinkAll.Attributes.MemberWithCustomAttribute" + WorkAroundLinkerHeuristics);
 			// both type and members are preserved - in this case the type is preserved because it's member was
 			Assert.NotNull (t, "type");
 			// and that member was preserved because it's decorated with a preserved attribute
@@ -89,7 +89,7 @@ namespace LinkAll.Attributes {
 		[Test]
 		public void Class_LookupFullName ()
 		{
-			var klass = Type.GetType (NamespacePrefix + "ObjCRuntime.Class, " + AssemblyName);
+			var klass = Type.GetType ("ObjCRuntime.Class, " + AssemblyName);
 			Assert.NotNull (klass, "Class");
 			// only required (and preserved) for debug builds
 			var method = klass.GetMethod ("LookupFullName", BindingFlags.NonPublic | BindingFlags.Static);
@@ -101,7 +101,7 @@ namespace LinkAll.Attributes {
 		[Test]
 		public void Runtime_RegisterEntryAssembly ()
 		{
-			var klass = Type.GetType (NamespacePrefix + "ObjCRuntime.Runtime, " + AssemblyName);
+			var klass = Type.GetType ("ObjCRuntime.Runtime, " + AssemblyName);
 			Assert.NotNull (klass, "Runtime");
 			// RegisterEntryAssembly is only needed for the simulator (not on devices) so it's only preserved for sim builds
 			var method = klass.GetMethod ("RegisterEntryAssembly", BindingFlags.NonPublic | BindingFlags.Static, null, new [] { typeof (Assembly) }, null);
@@ -111,14 +111,14 @@ namespace LinkAll.Attributes {
 		[Test]
 		public void MonoTouchException_Unconditional ()
 		{
-			var klass = Type.GetType (NamespacePrefix + "Foundation.MonoTouchException, " + AssemblyName);
+			var klass = Type.GetType ("Foundation.MonoTouchException, " + AssemblyName);
 			Assert.NotNull (klass, "MonoTouchException");
 		}
 
 		[Test]
 		public void Class_Unconditional ()
 		{
-			var klass = Type.GetType (NamespacePrefix + "ObjCRuntime.Class, " + AssemblyName);
+			var klass = Type.GetType ("ObjCRuntime.Class, " + AssemblyName);
 			Assert.NotNull (klass, "Class");
 			// handle is unconditionally preserved
 			var field = klass.GetField ("handle", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -128,7 +128,7 @@ namespace LinkAll.Attributes {
 		[Test]
 		public void Runtime_Unconditional ()
 		{
-			var klass = Type.GetType (NamespacePrefix + "ObjCRuntime.Runtime, " + AssemblyName);
+			var klass = Type.GetType ("ObjCRuntime.Runtime, " + AssemblyName);
 			Assert.NotNull (klass, "Runtime");
 			// Initialize and a few other methods are unconditionally preserved
 			var method = klass.GetMethod ("Initialize", BindingFlags.NonPublic | BindingFlags.Static);
@@ -140,7 +140,7 @@ namespace LinkAll.Attributes {
 		[Test]
 		public void Selector_Unconditional ()
 		{
-			var klass = Type.GetType (NamespacePrefix + "ObjCRuntime.Selector, " + AssemblyName);
+			var klass = Type.GetType ("ObjCRuntime.Selector, " + AssemblyName);
 			Assert.NotNull (klass, "Selector");
 			// handle and is unconditionally preserved
 			var field = klass.GetField ("handle", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -152,13 +152,13 @@ namespace LinkAll.Attributes {
 		[Test]
 		public void SmartEnumTest ()
 		{
-			var consumer = GetType ().Assembly.GetType ("LinkAll.Attributes.SmartConsumer");
+			var consumer = GetType ().Assembly.GetType ("LinkAll.Attributes.SmartConsumer" + WorkAroundLinkerHeuristics);
 			Assert.NotNull (consumer, "SmartConsumer");
 			Assert.NotNull (consumer.GetMethod ("GetSmartEnumValue"), "GetSmartEnumValue");
 			Assert.NotNull (consumer.GetMethod ("SetSmartEnumValue"), "SetSmartEnumValue");
 			var smartEnum = GetType ().Assembly.GetType ("LinkAll.Attributes.SmartEnum");
 			Assert.NotNull (smartEnum, "SmartEnum");
-			var smartExtensions = GetType ().Assembly.GetType ("LinkAll.Attributes.SmartEnumExtensions");
+			var smartExtensions = GetType ().Assembly.GetType ("LinkAll.Attributes.SmartEnumExtensions" + WorkAroundLinkerHeuristics);
 			Assert.NotNull (smartExtensions, "SmartEnumExtensions");
 			Assert.NotNull (smartExtensions.GetMethod ("GetConstant"), "GetConstant");
 			Assert.NotNull (smartExtensions.GetMethod ("GetValue"), "GetValue");

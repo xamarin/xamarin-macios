@@ -20,10 +20,9 @@ namespace MonoTouchFixtures.CoreFoundation {
 	public class CFUrlTest {
 		
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void FromFile_Null ()
 		{
-			CFUrl.FromFile (null);
+			Assert.Throws<ArgumentNullException> (() => CFUrl.FromFile (null));
 		}
 
 		[Test]
@@ -37,10 +36,9 @@ namespace MonoTouchFixtures.CoreFoundation {
 		}
 
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void FromUrlString_Null ()
 		{
-			CFUrl.FromUrlString (null, CFUrl.FromFile ("/"));
+			Assert.Throws<ArgumentNullException> (() => CFUrl.FromUrlString (null, CFUrl.FromFile ("/")));
 		}
 
 		[Test]

@@ -17,24 +17,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.props"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.props')"/>
 
-	<!-- This is used to determine whether Xamarin.iOS.Common.targets needs to import 
-         Xamarin.iOS.Common.props itself, or whether it has been imported previously,
-         e.g. by the project itself. -->
-	<PropertyGroup>
-		<_XamarinCommonPropsHasBeenImported>true</_XamarinCommonPropsHasBeenImported>
-	</PropertyGroup>
-
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Shared.props" />
-
-	<!-- When looking for related files to copy, look for Mono debugging files as well -->
-	<PropertyGroup>
-		<AllowedReferenceRelatedFileExtensions>
-			$(AllowedReferenceRelatedFileExtensions);
-			.dll.mdb;
-			.exe.mdb;
-			.pdb
-		</AllowedReferenceRelatedFileExtensions>
-	</PropertyGroup>
 
 	<PropertyGroup>
 		<MtouchFastDev Condition="'$(MtouchFastDev)' == ''">False</MtouchFastDev>
@@ -42,7 +25,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<MtouchProfiling Condition="'$(MtouchProfiling)' == ''">False</MtouchProfiling>
 		<MtouchLinkerDumpDependencies Condition="'$(MtouchLinkerDumpDependencies)' == ''">False</MtouchLinkerDumpDependencies>
 		<MtouchUseLlvm Condition="'$(MtouchUseLlvm)' == ''">False</MtouchUseLlvm>
-		<MtouchNoSymbolStrip Condition="'$(MtouchNoSymbolStrip)' == ''">False</MtouchNoSymbolStrip>
 		<MtouchFloat32 Condition="'$(MtouchFloat32)' == ''">False</MtouchFloat32>
 		<MtouchEnableBitcode Condition="'$(MtouchEnableBitcode)' == ''">False</MtouchEnableBitcode>
 		<MtouchUseThumb Condition="'$(MtouchUseThumb)' == ''">False</MtouchUseThumb>
@@ -50,14 +32,9 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<MtouchEnableSGenConc Condition="'$(MtouchEnableSGenConc)' == ''">False</MtouchEnableSGenConc>
 		<MtouchVerbosity Condition="$(MtouchVerbosity) == ''">2</MtouchVerbosity>
 
-		<IsMacEnabled>true</IsMacEnabled>
-		<MtouchTargetsEnabled>$(IsMacEnabled)</MtouchTargetsEnabled>
-
 		<IsAppExtension Condition="'$(IsAppExtension)' == ''">False</IsAppExtension>
 		<IsWatchExtension Condition="'$(IsWatchExtension)' == ''">False</IsWatchExtension>
 		<IsWatchApp Condition="'$(IsWatchApp)' == ''">False</IsWatchApp>
-		<OptimizePNGs Condition="'$(OptimizePNGs)' == ''">True</OptimizePNGs>
-		<OptimizePropertyLists Condition="'$(OptimizePropertyLists)' == ''">True</OptimizePropertyLists>
 		<IpaIncludeArtwork Condition="'$(IpaIncludeArtwork)' == ''">False</IpaIncludeArtwork>
 		<ArchiveOnBuild Condition="'$(ArchiveOnBuild)' == ''">False</ArchiveOnBuild>
 		<BuildIpa Condition="'$(BuildIpa)' == ''">False</BuildIpa>
@@ -72,7 +49,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<IOSDebuggerPort Condition="'$(IOSDebuggerPort)' == ''">10000</IOSDebuggerPort>
 
 		<!-- On-Demand Resources -->
-		<EnableOnDemandResources Condition="'$(EnableOnDemandResources)' == ''">true</EnableOnDemandResources>
 		<OnDemandResourcesInitialInstallTags Condition="'$(OnDemandResourcesInitialInstallTags)' == '' Or '$(EnableOnDemandResources)' != 'true'"></OnDemandResourcesInitialInstallTags>
 		<OnDemandResourcesPrefetchOrder Condition="'$(OnDemandResourcesPrefetchOrder)' == '' Or '$(EnableOnDemandResources)' != 'true'"></OnDemandResourcesPrefetchOrder>
 		<EmbedOnDemandResources Condition="'$(EmbedOnDemandResources)' == ''">true</EmbedOnDemandResources>

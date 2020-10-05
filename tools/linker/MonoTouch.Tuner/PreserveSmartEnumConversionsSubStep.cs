@@ -7,7 +7,11 @@ using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Linker;
 using Mono.Tuner;
+#if NET
+using Mono.Linker.Steps;
+#else
 using MonoTouch.Tuner;
+#endif
 
 using Xamarin.Bundler;
 
@@ -21,7 +25,10 @@ namespace Xamarin.Linker.Steps
 
 		public override SubStepTargets Targets {
 			get {
-				return SubStepTargets.Method | SubStepTargets.Property;
+				return
+					SubStepTargets.Method
+					| SubStepTargets.Type // SubStepTargets.Type is only needed to work around a linker bug: https://github.com/mono/linker/issues/1458
+					| SubStepTargets.Property;
 			}
 		}
 
@@ -32,7 +39,7 @@ namespace Xamarin.Linker.Steps
 
 			// We don't need to process assemblies that don't reference ObjCRuntime.BindAsAttribute.
 			foreach (var tr in assembly.MainModule.GetTypeReferences ()) {
-				if (tr.IsPlatformType ("ObjCRuntime", "BindAsAttribute"))
+				if (tr.Is ("ObjCRuntime", "BindAsAttribute"))
 					return true;
 			}
 
@@ -41,6 +48,18 @@ namespace Xamarin.Linker.Steps
 
 		void Preserve (Tuple<MethodDefinition, MethodDefinition> pair, MethodDefinition conditionA, MethodDefinition conditionB = null)
 		{
+#if NET
+			// The AddPreservedMethod (MethodDefinition, MethodDefinition) has not been exposed yet, so preserve the entire containing type instead.
+			// https://github.com/mono/linker/issues/1456
+			if (conditionA != null) {
+				context.Annotations.AddPreservedMethod (conditionA.DeclaringType, pair.Item1);
+				context.Annotations.AddPreservedMethod (conditionA.DeclaringType, pair.Item2);
+			}
+			if (conditionB != null) {
+				context.Annotations.AddPreservedMethod (conditionB.DeclaringType, pair.Item1);
+				context.Annotations.AddPreservedMethod (conditionB.DeclaringType, pair.Item2);
+			}
+#else
 			if (conditionA != null) {
 				context.Annotations.AddPreservedMethod (conditionA, pair.Item1);
 				context.Annotations.AddPreservedMethod (conditionA, pair.Item2);
@@ -49,6 +68,7 @@ namespace Xamarin.Linker.Steps
 				context.Annotations.AddPreservedMethod (conditionB, pair.Item1);
 				context.Annotations.AddPreservedMethod (conditionB, pair.Item2);
 			}
+#endif
 		}
 
 		void ProcessAttributeProvider (ICustomAttributeProvider provider, MethodDefinition conditionA, MethodDefinition conditionB = null)
@@ -59,7 +79,7 @@ namespace Xamarin.Linker.Steps
 			foreach (var ca in provider.CustomAttributes) {
 				var tr = ca.Constructor.DeclaringType;
 
-				if (!tr.IsPlatformType ("ObjCRuntime", "BindAsAttribute"))
+				if (!tr.Is ("ObjCRuntime", "BindAsAttribute"))
 					continue;
 
 				if (ca.ConstructorArguments.Count != 1) {
@@ -110,13 +130,13 @@ namespace Xamarin.Linker.Steps
 					if (!method.HasParameters || method.Parameters.Count != 1)
 						continue;
 					if (method.Name == "GetConstant") {
-						if (!method.ReturnType.IsPlatformType ("Foundation", "NSString"))
+						if (!method.ReturnType.Is ("Foundation", "NSString"))
 							continue;
 						if (method.Parameters [0].ParameterType != managedEnumType)
 							continue;
 						getConstant = method;
 					} else if (method.Name == "GetValue") {
-						if (!method.Parameters [0].ParameterType.IsPlatformType ("Foundation", "NSString"))
+						if (!method.Parameters [0].ParameterType.Is ("Foundation", "NSString"))
 							continue;
 						if (method.ReturnType != managedEnumType)
 							continue;

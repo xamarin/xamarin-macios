@@ -3,17 +3,13 @@ using System.IO;
 using System.Collections.Generic;
 
 using Microsoft.Build.Framework;
-using Microsoft.Build.Utilities;
 
-using Xamarin.MacDev;
 using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.MacDev.Tasks
 {
 	public abstract class CompileEntitlementsTaskBase : XamarinTask
 	{
-		static readonly byte[] XcentMagic = { 0xfa, 0xde, 0x71, 0x71 };
-
 		bool warnedTeamIdentifierPrefix;
 		bool warnedAppIdentifierPrefix;
 
@@ -28,9 +24,10 @@ namespace Xamarin.MacDev.Tasks
 		[Required]
 		public string BundleIdentifier { get; set; }
 
-		[Output]
 		[Required]
 		public ITaskItem CompiledEntitlements { get; set; }
+
+		public bool Debug { get; set; }
 
 		public string Entitlements { get; set; }
 
@@ -40,10 +37,21 @@ namespace Xamarin.MacDev.Tasks
 		public string ProvisioningProfile { get; set; }
 
 		[Required]
+		public string SdkDevPath { get; set; }
+
+		public bool SdkIsSimulator { get; set; }
+
+		[Required]
 		public string SdkPlatform { get; set; }
 
 		[Required]
 		public string SdkVersion { get; set; }
+
+		[Output]
+		public ITaskItem EntitlementsInExecutable { get; set; }
+
+		[Output]
+		public ITaskItem EntitlementsInSignature { get; set; }
 
 		#endregion
 
@@ -380,6 +388,14 @@ namespace Xamarin.MacDev.Tasks
 					Log.LogError (MSBStrings.E0115, ex.Message);
 					return false;
 				}
+			}
+
+			if (SdkIsSimulator) {
+				if (compiled.Count > 0) {
+					EntitlementsInExecutable = CompiledEntitlements;
+				}
+			} else {
+				EntitlementsInSignature = CompiledEntitlements;
 			}
 
 			return !Log.HasLoggedErrors;

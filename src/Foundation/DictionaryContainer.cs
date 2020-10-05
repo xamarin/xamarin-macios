@@ -27,7 +27,6 @@
 //
 
 using System;
-using System.Linq;
 using System.Runtime.InteropServices;
 
 #if !COREBUILD
@@ -326,8 +325,12 @@ namespace Foundation {
 
 		protected void SetArrayValue<T> (NSString key, T[]? values)
 		{
-			if (NullCheckAndRemoveKey (key, values == null))
-				Dictionary [key] = NSArray.FromNSObjects (values.Select (x => NSObject.FromObject (x)).ToArray ());
+			if (NullCheckAndRemoveKey (key, values == null)) {
+				var nsValues = new NSObject [values!.Length];
+				for (var i = 0; i < values.Length; i++)
+					nsValues [i] = NSObject.FromObject (values [i]);
+				Dictionary [key] = NSArray.FromNSObjects (nsValues);
+			}
 		}
 
 		protected void SetArrayValue (NSString key, string[]? values)

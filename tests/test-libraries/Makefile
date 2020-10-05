@@ -62,7 +62,7 @@ EXTRA_DEPENDENCIES = libtest.h $(GENERATED_FILES) rename.h
 
 .libs/$(1)/libtest%.a: .libs/$(1)/libtest%.o libtest-object.m libtest-ar.m
 	$(Q) rm -f $$@
-	$$(call Q_2,AR     [$(1)]) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar cru $$@ $$^
+	$$(call Q_2,AR     [$(1)]) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar cru $$@ $$<
 
 .libs/$(1)/libtest.a: $$(foreach arch,$(3),.libs/$(1)/libtest.$$(arch).a)
 	$(Q) rm -f $$@

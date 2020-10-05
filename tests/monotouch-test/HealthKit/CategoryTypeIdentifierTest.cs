@@ -47,6 +47,53 @@ namespace MonoTouchFixtures.HealthKit {
 					if (!TestRuntime.CheckXcodeVersion (11, 0))
 						continue;
 					break;
+				case HKCategoryTypeIdentifier.GeneralizedBodyAche:
+				case HKCategoryTypeIdentifier.AbdominalCramps:
+				case HKCategoryTypeIdentifier.Acne:
+				case HKCategoryTypeIdentifier.AppetiteChanges:
+				case HKCategoryTypeIdentifier.Bloating:
+				case HKCategoryTypeIdentifier.BreastPain:
+				case HKCategoryTypeIdentifier.ChestTightnessOrPain:
+				case HKCategoryTypeIdentifier.Chills:
+				case HKCategoryTypeIdentifier.Constipation:
+				case HKCategoryTypeIdentifier.Coughing:
+				case HKCategoryTypeIdentifier.Diarrhea:
+				case HKCategoryTypeIdentifier.Dizziness:
+				case HKCategoryTypeIdentifier.Fainting:
+				case HKCategoryTypeIdentifier.Fatigue:
+				case HKCategoryTypeIdentifier.Fever:
+				case HKCategoryTypeIdentifier.Headache:
+				case HKCategoryTypeIdentifier.Heartburn:
+				case HKCategoryTypeIdentifier.HotFlashes:
+				case HKCategoryTypeIdentifier.LowerBackPain:
+				case HKCategoryTypeIdentifier.LossOfSmell:
+				case HKCategoryTypeIdentifier.LossOfTaste:
+				case HKCategoryTypeIdentifier.MoodChanges:
+				case HKCategoryTypeIdentifier.Nausea:
+				case HKCategoryTypeIdentifier.PelvicPain:
+				case HKCategoryTypeIdentifier.RapidPoundingOrFlutteringHeartbeat:
+				case HKCategoryTypeIdentifier.RunnyNose:
+				case HKCategoryTypeIdentifier.ShortnessOfBreath:
+				case HKCategoryTypeIdentifier.SinusCongestion:
+				case HKCategoryTypeIdentifier.SkippedHeartbeat:
+				case HKCategoryTypeIdentifier.SleepChanges:
+				case HKCategoryTypeIdentifier.SoreThroat:
+				case HKCategoryTypeIdentifier.Vomiting:
+				case HKCategoryTypeIdentifier.Wheezing:
+					if (!TestRuntime.CheckXcodeVersion (11, 6))
+						continue;
+					break;
+				case HKCategoryTypeIdentifier.BladderIncontinence:
+				case HKCategoryTypeIdentifier.DrySkin:
+				case HKCategoryTypeIdentifier.HairLoss:
+				case HKCategoryTypeIdentifier.MemoryLapse:
+				case HKCategoryTypeIdentifier.NightSweats:
+				case HKCategoryTypeIdentifier.VaginalDryness:
+				case HKCategoryTypeIdentifier.EnvironmentalAudioExposureEvent:
+				case HKCategoryTypeIdentifier.HandwashingEvent:
+					if (!TestRuntime.CheckXcodeVersion (12, 0))
+						continue;
+					break;
 				default:
 					if (!TestRuntime.CheckXcodeVersion (7, 0))
 						continue;

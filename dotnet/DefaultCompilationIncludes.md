@@ -17,4 +17,11 @@ the platform-specific variables `EnableDefaultiOSItems=false`,
 All \*.plist files in the root directory are included by default (as `None`
 items).
 
+## Binding projects
+
+Default compilation includes is turned off for binding projects, because
+typically there are C# source files (ApiDefinition.cs, StructsAndEnums.cs,
+etc.) in the binding project directory which should be compiled as binding
+source code, and not as normal C# source code.
+
 [1]: https://docs.microsoft.com/en-us/dotnet/core/tools/csproj#default-compilation-includes-in-net-core-projects

@@ -38,14 +38,14 @@ namespace MonoTouchFixtures.Metal {
 		public void GetSetArrayLengthTest ()
 		{
 			descriptor.ArrayLength = 1;
-			Assert.AreEqual (1, descriptor.ArrayLength);
+			Assert.AreEqual ((nuint) 1, descriptor.ArrayLength);
 		}
 
 		[Test]
 		public void GetSetConstantBlockAlignmentTest ()
 		{
 			descriptor.ConstantBlockAlignment = 1;
-			Assert.AreEqual (1, descriptor.ConstantBlockAlignment);
+			Assert.AreEqual ((nuint) 1, descriptor.ConstantBlockAlignment);
 		}
 
 		[Test]
@@ -59,7 +59,7 @@ namespace MonoTouchFixtures.Metal {
 		public void GetSetIndexTest ()
 		{
 			descriptor.Index = 1;
-			Assert.AreEqual (1, descriptor.Index);
+			Assert.AreEqual ((nuint) 1, descriptor.Index);
 		}
 
 		[Test]

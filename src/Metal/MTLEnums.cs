@@ -76,9 +76,7 @@ namespace Metal {
 		NotPermitted = 7,
 		OutOfMemory = 8,
 		InvalidResource = 9,
-		[iOS (10,0), TV (10,0), NoWatch, NoMac]
 		Memoryless = 10,
-		[Mac (10,13), NoiOS, NoTV, NoWatch]
 		DeviceRemoved = 11,
 	}
 
@@ -131,14 +129,13 @@ namespace Metal {
 	[Native]
 	public enum MTLSamplerAddressMode : ulong {
 		ClampToEdge = 0,
-#if MONOMAC
+		[iOS (14,0)]
 		MirrorClampToEdge = 1,
-#endif
 		Repeat = 2,
 		MirrorRepeat = 3,
 		ClampToZero = 4,
 		
-		[Mac (10,12)]
+		[Mac (10,12), iOS (14,0)]
 		ClampToBorderColor = 5,
 	}
 
@@ -388,9 +385,7 @@ namespace Metal {
 		Internal,
 		CompileFailure,
 		CompileWarning,
-		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
 		FunctionNotFound,
-		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
 		FileNotFound,
 	}
 
@@ -773,9 +768,9 @@ namespace Metal {
 	}
 
 #if XAMCORE_4_0
-	[NoiOS][NoTV]
+	[NoTV]
 #endif
-	[Mac (10,12)]
+	[Mac (10,12), iOS (14,0)]
 	[Native]
 	public enum MTLSamplerBorderColor : ulong {
 		TransparentBlack = 0,
@@ -1004,7 +999,7 @@ namespace Metal {
 	}
 
 	[Unavailable (PlatformName.MacCatalyst)]
-	[Flags, NoMac, NoTV, iOS (13,0)]
+	[Flags, Mac (11,0), NoTV, iOS (13,0)]
 	[Native, Advice ("This API is not available when using UIKit on macOS.")]
 	public enum MTLSparseTextureRegionAlignmentMode : ulong {
 		Outward = 0x0,
@@ -1012,7 +1007,7 @@ namespace Metal {
 	}
 
 	[Unavailable (PlatformName.MacCatalyst)]
-	[Flags, NoMac, NoTV, iOS (13,0)]
+	[Flags, Mac (11,0), NoTV, iOS (13,0)]
 	[Native, Advice ("This API is not available when using UIKit on macOS.")]
 	public enum MTLSparseTextureMappingMode : ulong {
 		Map = 0x0,
@@ -1044,6 +1039,10 @@ namespace Metal {
 		Apple3 = 1003,
 		Apple4 = 1004,
 		Apple5 = 1005,
+		[NoTV, NoMac, iOS (14,0)] // Yep just available in iOS
+		Apple6 = 1006,
+		[NoTV, NoMac, iOS (14,0)] // Yep just available in iOS
+		Apple7 = 1007,
 		Mac1 = 2001,
 		Mac2 = 2002,
 		Common1 = 3001,
@@ -1076,15 +1075,15 @@ namespace Metal {
 		Unspecified = ulong.MaxValue,
 	}
 
-	[NoiOS, NoTV, Mac (10,15)]
+	[iOS (14,0), TV (14,0), Mac (10,15)]
 	[Native]
 	[ErrorDomain ("MTLCounterErrorDomain")]
 	public enum MTLCounterSampleBufferError : long {
 		OutOfMemory,
 		Internal,
 	}
-#if MONOMAC
-	[NoiOS, NoTV, Mac (10,15)]
+
+	[iOS (14,0), TV (14,0), Mac (10,15)]
 	public enum MTLCommonCounter {
 		[Field ("MTLCommonCounterTimestamp")]
 		Timestamp,
@@ -1141,5 +1140,102 @@ namespace Metal {
 		SetStatistic,
 	}
 
-#endif
+	[Flags, Mac (11,0), iOS (14,0), TV (14,0)]
+	public enum MTLAccelerationStructureInstanceOptions : uint {
+		None = 0x0,
+		DisableTriangleCulling = (1u << 0),
+		TriangleFrontFacingWindingCounterClockwise = (1u << 1),
+		Opaque = (1u << 2),
+		NonOpaque = (1u << 3),
+	}
+
+	[Mac (11,0), iOS (14,0), NoTV]
+	[Flags]
+	[Native]
+	public enum MTLAccelerationStructureUsage : ulong {
+		None = 0x0,
+		Refit = (1uL << 0),
+		PreferFastBuild = (1uL << 1),
+	}
+
+	[Mac (11,0), iOS (14,0), TV (14,0)]
+	[ErrorDomain ("MTLBinaryArchiveDomain")]
+	[Native]
+	public enum MTLBinaryArchiveError : ulong {
+		None = 0,
+		InvalidFile = 1,
+		UnexpectedElement = 2,
+		CompilationFailure = 3,
+	}
+
+	[Mac (11,0), iOS (14,0), TV (14,0)]
+	[Flags]
+	[Native]
+	public enum MTLCommandBufferErrorOption : ulong {
+		None = 0x0,
+		EncoderExecutionStatus = 1uL << 0,
+	}
+
+	[Mac (11,0), iOS (14,0), TV (14,0)]
+	[Native]
+	public enum MTLCommandEncoderErrorState : long {
+		Unknown = 0,
+		Completed = 1,
+		Affected = 2,
+		Pending = 3,
+		Faulted = 4,
+	}
+
+	[Mac (11,0), iOS (14,0), TV (14,0)]
+	[Native]
+	public enum MTLCounterSamplingPoint : ulong {
+		StageBoundary,
+		DrawBoundary,
+		DispatchBoundary,
+		TileDispatchBoundary,
+		BlitBoundary,
+	}
+
+	[Mac (11,0), iOS (14,0), TV (14,0)]
+	[ErrorDomain ("MTLDynamicLibraryDomain")]
+	[Native]
+	public enum MTLDynamicLibraryError : ulong {
+		None = 0,
+		InvalidFile = 1,
+		CompilationFailure = 2,
+		UnresolvedInstallName = 3,
+		DependencyLoadFailure = 4,
+		Unsupported = 5,
+	}
+
+	[Mac (11,0), iOS (14,0), TV (14,0)]
+	[Native]
+	public enum MTLFunctionLogType : ulong
+	{
+		Validation = 0,
+	}
+
+	[Flags, Mac (11,0), iOS (14,0), TV (14,0)]
+	[Native]
+	public enum MTLFunctionOptions : ulong {
+		None = 0x0,
+		CompileToBinary = 1uL << 0,
+	}
+
+	[Flags, Mac (11,0), iOS (14,0), NoTV]
+	[Native]
+	public enum MTLIntersectionFunctionSignature : ulong {
+		None = 0x0,
+		Instancing = (1uL << 0),
+		TriangleData = (1uL << 1),
+		WorldSpaceData = (1uL << 2),
+	}
+
+	[Mac (11,0), iOS (14,0), TV (14,0)]
+	[Native]
+	public enum MTLLibraryType : long {
+		Executable = 0,
+		Dynamic = 1,
+	}
+
 }

@@ -88,7 +88,7 @@ namespace MonoTouchFixtures.VideoToolbox {
 			using (var session = CreateSession (asset)) {
 				var supportedProps = session.GetSupportedProperties ();
 				Assert.NotNull (supportedProps, "GetSupportedProperties");
-				Assert.That (supportedProps.Count, Is.GreaterThan (0), "GetSupportedProperties should be more than zero");
+				Assert.That (supportedProps.Count, Is.GreaterThan ((nuint) 0), "GetSupportedProperties should be more than zero");
 			}
 		}
 

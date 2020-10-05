@@ -22,10 +22,9 @@ namespace MonoTouchFixtures.MapKit {
 		}
 		
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void FromPoints_Null ()
 		{
-			MKPolyline.FromPoints (null);
+			Assert.Throws<ArgumentNullException> (() => MKPolyline.FromPoints (null));
 		}
 		
 		void CheckEmpty (MKPolyline pl)
@@ -63,10 +62,9 @@ namespace MonoTouchFixtures.MapKit {
 		}
 
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void FromCoordinates_Null ()
 		{
-			MKPolyline.FromCoordinates (null);
+			Assert.Throws<ArgumentNullException> (() => MKPolyline.FromCoordinates (null));
 		}
 		
 		[Test]

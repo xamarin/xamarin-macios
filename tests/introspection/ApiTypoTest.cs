@@ -69,6 +69,7 @@ namespace Introspection
 			"Accurracy",
 			"Achivements",
 			"Acos",
+			"Acosh",
 			"Acn",
 			"Actionname",
 			"Activitiy",
@@ -91,7 +92,9 @@ namespace Introspection
 			"Arraycollation",
 			"Argb",
 			"Asin",
+			"Asinh",
 			"Atan",
+			"Atanh",
 			"Atmos", // Dolby Atmos
 			"Ats",	// App Transport Security
 			"Attrib",
@@ -134,6 +137,7 @@ namespace Introspection
 			"Cavlc",
 			"Cda", // acronym: Clinical Document Architecture
 			"Cdrom",
+			"Celu", // Continuously Differentiable Exponential Linear Unit (ML)
 			"Cfa", // acronym: Color Filter Array
 			"Celp", // MPEG4ObjectID
 			"Characterteristic",
@@ -157,6 +161,7 @@ namespace Introspection
 			"Craete",
 			"Crosstraining",
 			"Cubemap",
+			"Cmaf", // Common Media Application Format (mpeg4)
 			"Cmy", // acronym: Cyan, magenta, yellow
 			"Cmyk", // acronym: Cyan, magenta, yellow and key
 			"Daap",
@@ -165,6 +170,7 @@ namespace Introspection
 			"Deca",
 			"Decomposables",
 			"Deinterlace",
+			"Depthwise",
 			"Descendents",
 			"Descrete",
 			"Dhe", // Diffie–Hellman key exchange
@@ -189,6 +195,7 @@ namespace Introspection
 			"Downmix", // Sound terminology that means making a stereo mix from a 5.1 surround mix.
 			"Dpa",
 			"Dpad", // Directional pad (D-pad)
+			"Dpads", // plural of above
 			"Droste",
 			"Dtls",
 			"Dtmf", // DTMF
@@ -212,6 +219,7 @@ namespace Introspection
 			"Emsg",	// 4cc
 			"Enc",
 			"Eppc",
+			"Epub",
 			"Eftpos", // Electronic funds transfer at point of sale
 			"Eotf", // DisplayP3_PQ_Eotf
 			"Exabits",
@@ -235,10 +243,13 @@ namespace Introspection
 			"Func",
 			"Gadu",
 			"Gbrg",	// acronym for Green-Blue-Reg-Green
+			"Gelu", // Gaussian Error Linear Unit (ML)
 			"Geocoder",
 			"Gigapascals",
 			"Gibibits",
 			"Gibibytes",
+			"Girocard",
+			"Glorot", // NN
 			"Gop", // acronym for Group Of Pictures
 			"Gpp",
 			"Gps",
@@ -247,6 +258,7 @@ namespace Introspection
 			"Gru",
 			"Greeking",
 			"Gtin",
+			"Gui",
 			"Hardlink",
 			"Heics", // High Efficiency Image File Format (Sequence)
 			"Hdmi",
@@ -263,6 +275,8 @@ namespace Introspection
 			"Hoa",
 			"Hrtf", // acronym used in AUSpatializationAlgorithm
 			"Hvxc", // MPEG4ObjectID
+			"Icns",
+			"Ico",
 			"Ies",
 			"Icq",
 			"Ident",
@@ -288,6 +302,7 @@ namespace Introspection
 			"Intermenstrual",
 			"Intersector",
 			"Intoi",
+			"Invitable",
 			"Ios",
 			"Iou",
 			"Ipa",
@@ -336,6 +351,7 @@ namespace Introspection
 			"Mada", // payment system
 			"Mapbuffer",
 			"Matchingcoalesce",
+			"Mcp", // metacarpophalangeal (hand)
 			"Mebibits",
 			"Mebibytes",
 			"Megaampere",
@@ -356,15 +372,19 @@ namespace Introspection
 			"Mimap",
 			"Minification",
 			"Mncs",
+			"Mgmt",
 			"Mobike", // acronym
 			"Morpher",
 			"mtouch",
 			"Mpe", // acronym
 			"Mps",
+			"Msaa", // multisample anti-aliasing 
 			"Mtu", // acronym
 			"Mtc", // acronym
+			"Mtgp",
 			"Mul",
 			"Mult",
+			"Multihead",
 			"Multipath",
 			"Multipeer",
 			"Muxed",
@@ -372,6 +392,7 @@ namespace Introspection
 			"Nanograms",
 			"Nanowatts",
 			"Nestrov",
+			"Nesterov",
 			"nfloat",
 			"Nfnt",
 			"nint",
@@ -397,6 +418,8 @@ namespace Introspection
 			"Organisation", // kCGImagePropertyIPTCExtRegistryOrganisationID in Xcode9.3-b1
 			"Orthographyrange",
 			"Orth",
+			"Osa", // Open Scripting Architecture
+			"Otsu", // threshold for image binarization
 			"ove",
 			"Paeth", // PNG filter
 			"Palettize",
@@ -414,11 +437,13 @@ namespace Introspection
 			"Persistance",
 			"Pesented",
 			"Pfs", // acronym
+			"Philox",
 			"Picometers",
 			"Picowatts",
 			"Pkcs",
 			"Placemark",
 			"Playthrough",
+			"Pnc", // MIDI
 			"Pnorm",
 			"Pointillize",
 			"Polyline",
@@ -445,6 +470,8 @@ namespace Introspection
 			"Reinvite",
 			"Rel",
 			"Relocalization",
+			"Relu", // Rectified Linear Unit (ML)
+			"Relun", // ReLUn - degree n Hermite coefficients
 			"Reprandial",
 			"Replayable",
 			"Requestwith",
@@ -458,6 +485,7 @@ namespace Introspection
 			"Rpa",
 			"Rpn", // acronym
 			"Rsa", // Rivest, Shamir and Adleman
+			"Rsqrt", // reciprocal square root
 			"Rssi",
 			"Rtp",
 			"Rtl",
@@ -469,6 +497,8 @@ namespace Introspection
 			"Sdtv", // acronym: Standard Definition Tele Vision
 			"Sdnn",
 			"Seekable",
+			"Selu", // Scaled Exponential Linear unit (ML)
+			"Sgd", // Stochastic Gradient Descent (ML)
 			"Shadable",
 			"Sharegroup",
 			"Sha", //  Secure Hash Algorithm
@@ -507,6 +537,9 @@ namespace Introspection
 			"Subsec",
 			"Suica", // Japanese contactless smart card type
 			"Superentity",
+			"Supertype",
+			"Supertypes",
+			"Svg", // Scalable Vector Graphics
 			"Sym",
 			"Synchronizable",
 			"Symbologies",
@@ -547,6 +580,8 @@ namespace Introspection
 			"Underrun",
 			"Unflagged",
 			"Unfocusing",
+			"Uid",
+			"Unmap",
 			"Unorm",
 			"Unpremultiplied",
 			"Unpremultiplying",
@@ -560,6 +595,8 @@ namespace Introspection
 			"Upce",
 			"Uri",
 			"Usac", // Unified Speech and Audio Coding
+			"Usd", // Universal Scene Description
+			"Usdz", // USD zip
 			"Uti",
 			"Varispeed",
 			"Vergence",
@@ -736,14 +773,43 @@ namespace Introspection
 		}
 
 		[Test]
+		public virtual void AttributeTypoTest ()
+		{
+			var types = Assembly.GetTypes ();
+			int totalErrors = 0;
+			foreach (Type t in types)
+				AttributeTypo (t, ref totalErrors);
+
+			Assert.AreEqual (0, totalErrors, "Attributes have typos!");
+		}
+
+		void AttributeTypo (Type t, ref int totalErrors)
+		{
+			AttributesMessageTypoRules (t, t.Name, ref totalErrors);
+
+			foreach (var f in t.GetFields ())
+				AttributesMessageTypoRules (f, t.Name, ref totalErrors);
+
+			foreach (var p in t.GetProperties ())
+				AttributesMessageTypoRules (p, t.Name, ref totalErrors);
+
+			foreach (var m in t.GetMethods ())
+				AttributesMessageTypoRules (m, t.Name, ref totalErrors);
+
+			foreach (var e in t.GetEvents ())
+				AttributesMessageTypoRules (e, t.Name, ref totalErrors);
+
+			foreach (var nt in t.GetNestedTypes ())
+				AttributeTypo (nt, ref totalErrors);
+		}
+
+		[Test]
 		public virtual void TypoTest ()
 		{
 			var types = Assembly.GetTypes ();
 			int totalErrors = 0;
 			foreach (Type t in types) {
 				if (t.IsPublic) {
-					AttributesMessageTypoRules (t, t.Name, ref totalErrors);
-
 					if (IsObsolete (t))
 						continue;
 
@@ -760,8 +826,6 @@ namespace Introspection
 					foreach (FieldInfo f in fields) {
 						if (!f.IsPublic && !f.IsFamily)
 							continue;
-
-						AttributesMessageTypoRules (f, t.Name, ref totalErrors);
 
 						if (IsObsolete (f))
 							continue;
@@ -780,8 +844,6 @@ namespace Introspection
 					foreach (MethodInfo m in methods) {
 						if (!m.IsPublic && !m.IsFamily)
 							continue;
-
-						AttributesMessageTypoRules (m, t.Name, ref totalErrors);
 
 						if (IsObsolete (m))
 							continue;
@@ -814,7 +876,7 @@ namespace Introspection
 			foreach (var typo in unused)
 				Console.WriteLine ("Unused entry \"{0}\"", typo);
 #endif
-			Assert.IsTrue ((totalErrors == 0), "We have {0} typos!", totalErrors);
+			Assert.AreEqual (0, totalErrors, "Typos!");
 		}
 
 		string GetMessage (object attribute)
@@ -938,7 +1000,11 @@ namespace Introspection
 			case Constants.CoreImageLibrary:
 				break;
 			default:
-				if (!File.Exists (lib))
+				if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 11, 0)) {
+					// on macOS 11.0 the frameworks binary files are not present (cache) but can be loaded
+					if (!Directory.Exists (Path.GetDirectoryName (lib)))
+						return false;
+				} else if (!File.Exists (lib))
 					return false;
 				break;
 			}
@@ -963,6 +1029,19 @@ namespace Introspection
 		[Test]
 		public void ConstantsCheck ()
 		{
+			// The constants are file paths for frameworks / dylibs
+			// unless the latest OS is used there's likely to be missing ones
+			// so we run this test only on the latest supported (matching SDK) OS
+			var sdk = new Version (Constants.SdkVersion);
+#if MONOMAC
+			if (!PlatformHelper.CheckSystemVersion (sdk.Major, sdk.Minor))
+#elif __WATCHOS__
+			if (!WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (sdk.Major, sdk.Minor))
+#else
+			if (!UIDevice.CurrentDevice.CheckSystemVersion (sdk.Major, sdk.Minor))
+#endif
+				Assert.Ignore ($"Constants only verified using the latest OS version ({sdk.Major}.{sdk.Minor})");
+
 			var c = typeof (Constants);
 			foreach (var fi in c.GetFields ()) {
 				if (!fi.IsPublic)
@@ -982,6 +1061,14 @@ namespace Introspection
 					Assert.True (CheckLibrary (s), fi.Name);
 					break;
 #endif
+#if !__MACOS__
+				case "MediaSetupLibrary":
+				case "MLComputeLibrary":
+					// Xcode 12 beta 2 does not ship this framework/headers for the simulators
+					if (Runtime.Arch == Arch.DEVICE)
+						Assert.True (CheckLibrary (s), fi.Name);
+					break;
+#endif
 #if __TVOS__
 				case "MetalPerformanceShadersLibrary":
 					// not supported in tvOS (12.1) simulator so load fails
@@ -992,16 +1079,25 @@ namespace Introspection
 				default:
 					if (fi.Name.EndsWith ("Library", StringComparison.Ordinal)) {
 #if __IOS__
-						// NFC is currently not available on iPad
-						if (fi.Name == "CoreNFCLibrary" && UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Pad)
-							continue;
+						if (fi.Name == "CoreNFCLibrary") {
+							// NFC is currently not available on iPad
+							if (UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Pad)
+								continue;
+							// Phone works unless Xcode 12 on simulator
+							if ((Runtime.Arch == Arch.SIMULATOR) && TestRuntime.CheckXcodeVersion (12, 0))
+								continue;
+						}
 #endif
 #if __MACOS__
 						// Only available in macOS 10.15.4+
 						if (fi.Name == "AutomaticAssessmentConfigurationLibrary" && !TestRuntime.CheckXcodeVersion (11, 4))
 							continue;
 #endif
-
+#if __WATCHOS__
+						// added with watchOS 4 (mistake)
+						if (fi.Name == "VisionLibrary")
+							continue;
+#endif
 						Assert.True (CheckLibrary (s), fi.Name);
 					} else {
 						Assert.Fail ($"Unknown '{fi.Name}' field cannot be verified - please fix me!");

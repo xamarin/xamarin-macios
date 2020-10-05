@@ -122,7 +122,11 @@ namespace LinkAll.Attributes {
 	public class AttributeTest {
 		
 		// Good enough to fool linker to abort the tracking
+#if NET
+		static string mscorlib = "System.Private.CoreLib";
+#else
 		static string mscorlib = "mscorlib";
+#endif
 
 		[Test]
 		public void DebugAssemblyAttributes ()

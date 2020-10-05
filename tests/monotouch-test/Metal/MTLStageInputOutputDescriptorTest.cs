@@ -51,7 +51,7 @@ namespace MonoTouchFixtures.Metal {
 		{
 			uint index = 5;
 			descriptor.IndexBufferIndex = 5;
-			Assert.AreEqual (descriptor.IndexBufferIndex, index);
+			Assert.AreEqual (descriptor.IndexBufferIndex, (nuint) index);
 		}
 	}
 }

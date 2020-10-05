@@ -32,7 +32,7 @@ namespace MonoTouchFixtures.CoreImage {
 		public void Defaults ()
 		{
 			var options = new CIImageInitializationOptions ();
-			Assert.That (options.Dictionary.Count, Is.EqualTo (0), "Count");
+			Assert.That (options.Dictionary.Count, Is.EqualTo ((nuint) 0), "Count");
 			Assert.Null (options.ColorSpace, "ColorSpace");
 		}
 
@@ -42,7 +42,7 @@ namespace MonoTouchFixtures.CoreImage {
 			var options = new CIImageInitializationOptions () {
 				ColorSpace = CGColorSpace.CreateDeviceRGB ()
 			};
-			Assert.That (options.Dictionary.Count, Is.EqualTo (1), "Count");
+			Assert.That (options.Dictionary.Count, Is.EqualTo ((nuint) 1), "Count");
 			Assert.NotNull (options.ColorSpace, "ColorSpace");
 		}
 
@@ -52,7 +52,7 @@ namespace MonoTouchFixtures.CoreImage {
 			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
 			var options = new CIImageInitializationOptionsWithMetadata ();
-			Assert.That (options.Dictionary.Count, Is.EqualTo (0), "Count");
+			Assert.That (options.Dictionary.Count, Is.EqualTo ((nuint) 0), "Count");
 			Assert.Null (options.Properties, "Properties");
 		}
 
@@ -67,7 +67,7 @@ namespace MonoTouchFixtures.CoreImage {
 			var options = new CIImageInitializationOptionsWithMetadata () {
 				Properties = suboptions
 			};
-			Assert.That (options.Dictionary.Count, Is.EqualTo (1), "Count");
+			Assert.That (options.Dictionary.Count, Is.EqualTo ((nuint) 1), "Count");
 			Assert.That (options.Properties.ProfileName, Is.EqualTo ("Xamarin"), "Properties");
 		}
 	}

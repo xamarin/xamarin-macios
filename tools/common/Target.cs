@@ -26,10 +26,16 @@ using MonoTouch;
 using MonoTouch.Tuner;
 using PlatformResolver = MonoTouch.Tuner.MonoTouchResolver;
 using PlatformLinkContext = MonoTouch.Tuner.MonoTouchLinkContext;
-#else
+#elif MMP
 using MonoMac.Tuner;
 using PlatformResolver = Xamarin.Bundler.MonoMacResolver;
 using PlatformLinkContext = MonoMac.Tuner.MonoMacLinkContext;
+#elif NET
+using LinkerOptions = Xamarin.Linker.LinkerConfiguration;
+using PlatformLinkContext = Xamarin.Tuner.DerivedLinkContext;
+using PlatformResolver = Xamarin.Linker.DotNetResolver;
+#else
+#error Invalid defines
 #endif
 
 namespace Xamarin.Bundler {
@@ -54,10 +60,25 @@ namespace Xamarin.Bundler {
 		// Note that each 'Target' can have multiple abis: armv7+armv7s for instance.
 		public List<Abi> Abis;
 
-#if MONOMAC
-		public bool Is32Build { get { return false; } }
-		public bool Is64Build { get { return true; } }
-#endif
+		// If we're targetting a 32 bit arch for this target.
+		bool? is32bits;
+		public bool Is32Build {
+			get {
+				if (!is32bits.HasValue)
+					is32bits = Application.IsArchEnabled (Abis, Abi.Arch32Mask);
+				return is32bits.Value;
+			}
+		}
+
+		// If we're targetting a 64 bit arch for this target.
+		bool? is64bits;
+		public bool Is64Build {
+			get {
+				if (!is64bits.HasValue)
+					is64bits = Application.IsArchEnabled (Abis, Abi.Arch64Mask);
+				return is64bits.Value;
+			}
+		}
 
 		public Target (Application app)
 		{
@@ -65,15 +86,28 @@ namespace Xamarin.Bundler {
 			this.StaticRegistrar = new StaticRegistrar (this);
 		}
 
+		// If this is an app extension, this returns the equivalent (32/64bit) target for the container app.
+		// This may be null (it's possible to build an extension for 32+64bit, and the main app only for 64-bit, for instance.
+		public Target ContainerTarget {
+			get {
+				return App.ContainerApp.Targets.FirstOrDefault ((v) => v.Is32Build == Is32Build);
+			}
+		}
+
+		public Assembly AddAssembly (AssemblyDefinition assembly)
+		{
+			var asm = new Assembly (this, assembly);
+			Assemblies.Add (asm);
+			return asm;
+		}
+
 		// This will find the link context, possibly looking in container targets.
 		public PlatformLinkContext GetLinkContext ()
 		{
 			if (LinkContext != null)
 				return LinkContext;
-#if MTOUCH
 			if (App.IsExtension && App.IsCodeShared)
 				return ContainerTarget.GetLinkContext ();
-#endif
 			return null;
 		}
 
@@ -187,7 +221,6 @@ namespace Xamarin.Bundler {
 						case "Metal":
 						case "MetalKit":
 						case "MetalPerformanceShaders":
-						case "CoreNFC":
 							// some frameworks do not exists on simulators and will result in linker errors if we include them
 							if (App.IsSimulatorBuild)
 								continue;
@@ -209,6 +242,16 @@ namespace Xamarin.Bundler {
 							// Xcode 11 doesn't ship WatchKit for iOS
 							if (Driver.XcodeVersion.Major == 11 && App.Platform == ApplePlatform.iOS) {
 								ErrorHelper.Warning (5219, Errors.MT5219);
+								continue;
+							}
+							break;
+						default:
+							if (App.IsSimulatorBuild && !App.IsFrameworkAvailableInSimulator (framework.Name)) {
+								if (App.LinkMode != LinkMode.None) {
+									ErrorHelper.Warning (5223, Errors.MX5223, framework.Name, App.PlatformName);
+								} else {
+									Driver.Log (3, Errors.MX5223, framework.Name, App.PlatformName);
+								}
 								continue;
 							}
 							break;
@@ -276,11 +319,12 @@ namespace Xamarin.Bundler {
 					dynamic_symbols.AddFunction ("mono_pmip");
 
 				bool has_dyn_msgSend;
-#if MONOTOUCH
-				has_dyn_msgSend = App.IsSimulatorBuild;
-#else
-				has_dyn_msgSend = App.MarshalObjectiveCExceptions != MarshalObjectiveCExceptionMode.Disable && !App.RequiresPInvokeWrappers && Is64Build;
-#endif
+
+				if (App.Platform == ApplePlatform.MacOSX) {
+					has_dyn_msgSend = App.MarshalObjectiveCExceptions != MarshalObjectiveCExceptionMode.Disable && !App.RequiresPInvokeWrappers && Is64Build;
+				} else {
+					has_dyn_msgSend = App.IsSimulatorBuild;
+				}
 
 				if (has_dyn_msgSend) {
 					dynamic_symbols.AddFunction ("xamarin_dyn_objc_msgSend");
@@ -316,19 +360,17 @@ namespace Xamarin.Bundler {
 			if (single_assembly != null && !symbol.Members.Any ((v) => v.Module.Assembly == single_assembly.AssemblyDefinition))
 				return false; // nope, this symbol is not used in the assembly we're using as filter.
 
-#if MTOUCH
 			// If we're code-sharing, the managed linker might have found symbols
 			// that are not in any of the assemblies in the current app.
 			// This occurs because the managed linker processes all the
 			// assemblies for all the apps together, but when linking natively
 			// we're only linking with the assemblies that actually go into the app.
-			if (App.IsCodeShared && symbol.Assemblies.Count > 0) {
+			if (App.Platform != ApplePlatform.MacOSX && App.IsCodeShared && symbol.Assemblies.Count > 0) {
 				// So if this is a symbol related to any assembly, make sure
 				// at least one of those assemblies are in the current app.
 				if (!symbol.Assemblies.Any ((v) => Assemblies.Contains (v)))
 					return false;
 			}
-#endif
 
 			switch (symbol.Type) {
 			case SymbolType.Field:

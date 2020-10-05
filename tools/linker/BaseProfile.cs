@@ -10,10 +10,5 @@ namespace Xamarin.Linker {
 
 		// return assembly name without extension (.dll)
 		public abstract string ProductAssembly { get ; }
-
-		public virtual string GetNamespace (string nspace)
-		{
-			return nspace;
-		}
 	}
 }

@@ -33,6 +33,8 @@ namespace Xamarin.MacDev.Tasks {
 		[Required]
 		public ITaskItem[] ApiDefinitions { get; set; }
 
+		public string AttributeAssembly { get; set; }
+
 		public ITaskItem[] CoreSources { get; set; }
 
 		public string DefineConstants { get; set; }
@@ -64,12 +66,39 @@ namespace Xamarin.MacDev.Tasks {
 
 		public ITaskItem[] Sources { get; set; }
 
+		bool IsDotNet {
+			get { return TargetFramework.IsDotNet; }
+		}
+
+		string DotNetPath {
+			get {
+				// Return the dotnet executable we're executing with.
+				var dotnet_path = Environment.GetEnvironmentVariable ("DOTNET_HOST_PATH");
+				if (string.IsNullOrEmpty (dotnet_path))
+					throw new InvalidOperationException ($"DOTNET_HOST_PATH is not set");
+				return dotnet_path;
+			}
+		}
+
 		protected override string ToolName {
-			get { return Path.GetFileNameWithoutExtension (ToolExe); }
+			get {
+				if (IsDotNet)
+					return Path.GetFileName (DotNetPath);
+
+				return Path.GetFileNameWithoutExtension (ToolExe);
+			}
 		}
 
 		protected override string GenerateFullPathToTool ()
 		{
+			// If we're building a .NET app, executing bgen using the same
+			// dotnet binary as we're executed with, instead of using the
+			// wrapper bgen script, because that script will try to use the
+			// system dotnet, which might not exist or not have the version we
+			// need.
+			if (IsDotNet)
+				return DotNetPath;
+
 			return Path.Combine (ToolPath, ToolExe);
 		}
 
@@ -85,6 +114,9 @@ namespace Xamarin.MacDev.Tasks {
 		{
 			var cmd = new CommandLineBuilder ();
 
+			if (IsDotNet)
+				cmd.AppendFileNameIfNotNull (Path.Combine (BTouchToolPath, BTouchToolExe));
+
 			#if DEBUG
 			cmd.AppendSwitch ("/v");
 			#endif
@@ -93,11 +125,12 @@ namespace Xamarin.MacDev.Tasks {
 			cmd.AppendSwitchIfNotNull ("/baselib:", BaseLibDll);
 			cmd.AppendSwitchIfNotNull ("/out:", OutputAssembly);
 
+			cmd.AppendSwitchIfNotNull ("/attributelib:", AttributeAssembly);
+
 			string dir;
 			if (!string.IsNullOrEmpty (BaseLibDll)) {
 				dir = Path.GetDirectoryName (BaseLibDll);
 				cmd.AppendSwitchIfNotNull ("/lib:", dir);
-				cmd.AppendSwitchIfNotNull ("/r:", Path.Combine (dir, "mscorlib.dll"));
 			}
 
 			if (ProcessEnums)
@@ -233,8 +266,10 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
-			ToolExe = BTouchToolExe;
-			ToolPath = BTouchToolPath;
+			if (!IsDotNet) {
+				ToolExe = BTouchToolExe;
+				ToolPath = BTouchToolPath;
+			}
 
 			if (!string.IsNullOrEmpty (SessionId) &&
 			    !string.IsNullOrEmpty (GeneratedSourcesDir) &&

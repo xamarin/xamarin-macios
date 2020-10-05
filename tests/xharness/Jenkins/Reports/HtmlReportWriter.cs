@@ -36,8 +36,8 @@ namespace Xharness.Jenkins.Reports {
 			this.embededResources = embeddedResources;
 		}
 
-		string GetLinkPath (string path)
-			=> linksPrefix != null ? Path.Combine (linksPrefix, path) : path;
+		string GetLinkFullPath (string path)
+			=> linksPrefix != null ? linksPrefix + LinkEncode (path) : LinkEncode (path); // vsdrops index paths are horrible, the use a ; and we cannot use combine, ex: https://vsdrop.corp.microsoft.com/file/v1/devdiv/20200612.13/3806978;/tests/index.html
 
 		string GetResourcePath (string resource)
 		{
@@ -116,7 +116,7 @@ namespace Xharness.Jenkins.Reports {
 
 			writer.WriteLine ($"<span id='x{id_counter++}' class='autorefreshable'>");
 			foreach (var log in jenkins.Logs)
-				writer.WriteLine ("<a href='{0}' type='text/plain;charset=UTF-8'>{1}</a><br />", GetLinkPath (log.FullPath.Substring (jenkins.LogDirectory.Length + 1)), log.Description);
+				writer.WriteLine ("<a href='{0}' type='text/plain;charset=UTF-8'>{1}</a><br />", log.FullPath.Substring (jenkins.LogDirectory.Length + 1), log.Description);
 			writer.WriteLine ("</span>");
 
 			var headerColor = "black";
@@ -442,18 +442,18 @@ namespace Xharness.Jenkins.Reports {
 									break;
 								}
 								if (!exists) {
-									writer.WriteLine ("<a href='{0}' type='{2}' target='{3}'>{1}</a> (does not exist)<br />", LinkEncode (GetLinkPath (log.FullPath.Substring (jenkins.LogDirectory.Length + 1))), log.Description, log_type, log_target);
+									writer.WriteLine ("<a href='{0}' type='{2}' target='{3}'>{1}</a> (does not exist)<br />", GetLinkFullPath (log.FullPath.Substring (jenkins.LogDirectory.Length + 1)), log.Description, log_type, log_target);
 								} else if (log.Description == LogType.BuildLog.ToString ()) {
 									var binlog = log.FullPath.Replace (".txt", ".binlog");
 									if (File.Exists (binlog)) {
-										var textLink = string.Format ("<a href='{0}' type='{2}' target='{3}'>{1}</a>", LinkEncode (GetLinkPath (log.FullPath.Substring (jenkins.LogDirectory.Length + 1))), log.Description, log_type, log_target);
-										var binLink = string.Format ("<a href='{0}' type='{2}' target='{3}' style='display:{4}'>{1}</a><br />", LinkEncode (GetLinkPath (binlog.Substring (jenkins.LogDirectory.Length + 1))), "Binlog download", log_type, log_target, test.Building ? "none" : "inline");
+										var textLink = string.Format ("<a href='{0}' type='{2}' target='{3}'>{1}</a>", GetLinkFullPath (log.FullPath.Substring (jenkins.LogDirectory.Length + 1)), log.Description, log_type, log_target);
+										var binLink = string.Format ("<a href='{0}' type='{2}' target='{3}' style='display:{4}'>{1}</a><br />", GetLinkFullPath (binlog.Substring (jenkins.LogDirectory.Length + 1)), "Binlog download", log_type, log_target, test.Building ? "none" : "inline");
 										writer.Write ("{0} {1}", textLink, binLink);
 									} else {
-										writer.WriteLine ("<a href='{0}' type='{2}' target='{3}'>{1}</a><br />", LinkEncode (GetLinkPath (log.FullPath.Substring (jenkins.LogDirectory.Length + 1))), log.Description, log_type, log_target);
+										writer.WriteLine ("<a href='{0}' type='{2}' target='{3}'>{1}</a><br />", GetLinkFullPath (log.FullPath.Substring (jenkins.LogDirectory.Length + 1)), log.Description, log_type, log_target);
 									}
 								} else {
-									writer.WriteLine ("<a href='{0}' type='{2}' target='{3}'>{1}</a><br />", LinkEncode (GetLinkPath (log.FullPath.Substring (jenkins.LogDirectory.Length + 1))), log.Description, log_type, log_target);
+									writer.WriteLine ("<a href='{0}' type='{2}' target='{3}'>{1}</a><br />", GetLinkFullPath (log.FullPath.Substring (jenkins.LogDirectory.Length + 1)), log.Description, log_type, log_target);
 								}
 								if (!exists) {
 									// Don't try to parse files that don't exist
@@ -539,6 +539,14 @@ namespace Xharness.Jenkins.Reports {
 											if (resultParser.IsValidXml (log.FullPath, out var jargon)) {
 												resultParser.GenerateTestReport (writer, log.FullPath, jargon);
 											}
+										}
+									} catch (Exception ex) {
+										writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {log.Description}: {ex.Message.AsHtml ()}</span><br />");
+									}
+								} else if (log.Description == LogType.TrxLog.ToString ()) {
+									try {
+										if (resultParser.IsValidXml (log.FullPath, out var jargon)) {
+											resultParser.GenerateTestReport (writer, log.FullPath, jargon);
 										}
 									} catch (Exception ex) {
 										writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {log.Description}: {ex.Message.AsHtml ()}</span><br />");

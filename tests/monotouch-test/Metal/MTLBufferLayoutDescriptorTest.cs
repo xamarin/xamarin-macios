@@ -23,7 +23,7 @@ namespace MonoTouchFixtures.Metal {
 			uint stride = 8;
 			var descriptor = new MTLBufferLayoutDescriptor ();
 			descriptor.Stride = stride;
-			Assert.AreEqual (stride, descriptor.Stride);
+			Assert.AreEqual ((nuint) stride, descriptor.Stride);
 		}
 		
 		[Test]
@@ -41,7 +41,7 @@ namespace MonoTouchFixtures.Metal {
 			uint step = 8;
 			var descriptor = new MTLBufferLayoutDescriptor ();
 			descriptor.StepRate = step;
-			Assert.AreEqual (step, descriptor.StepRate);
+			Assert.AreEqual ((nuint) step, descriptor.StepRate);
 		}
 	}
 }

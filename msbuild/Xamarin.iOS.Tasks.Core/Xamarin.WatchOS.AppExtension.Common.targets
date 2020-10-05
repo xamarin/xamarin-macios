@@ -25,15 +25,11 @@ Copyright (C) 2015-2016 Xamarin. All rights reserved.
 		<!-- This must be set before importing Microsoft.CSharp.targets -->
 		<!-- See Xamarin.iOS.AppExtension.CSharp.targets for a detailed explanation of this variable -->
 		<CopyNuGetImplementations Condition="'$(CopyNuGetImplementations)' == ''">true</CopyNuGetImplementations>
-
-		<!-- Enable nuget package conflict resolution -->
-		<ResolveAssemblyConflicts>true</ResolveAssemblyConflicts>
 	</PropertyGroup>
 
 	<Import Project="$(MSBuildThisFileDirectory)..\iOS\Xamarin.iOS.Common.targets" />
 
-	<Import Project="$(MSBuildThisFileDirectory)Xamarin.WatchOS.AppExtension.Common.props" 
-			Condition="'$(_XamarinWatchOSAppExtensionCommonPropsHasBeenImported)' != 'true'" />
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.WatchOS.AppExtension.Common.props" />
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets" 
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets')"/>

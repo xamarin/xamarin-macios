@@ -77,9 +77,9 @@ namespace MonoTouchFixtures.UIKit {
 		}
 
 		[Test]
+		[DefaultFloatingPointTolerance (0.00001)]
 		public void HSBA ()
 		{
-			GlobalSettings.DefaultFloatingPointTolerance = 0.00001;
 			RoundtripHSBA (UIColor.Black);
 			RoundtripHSBA (UIColor.Blue);
 			RoundtripHSBA (UIColor.Brown);
@@ -292,6 +292,18 @@ namespace MonoTouchFixtures.UIKit {
 			var r = new UIColor (nw, na);
 			Assert.That (r.ToString (), Is.EqualTo (c.ToString ()), c.ToString ());
 		}
+
+#if !__WATCHOS__
+		[Test]
+		public void UIConfigurationColorTransformerTest ()
+		{
+			TestRuntime.AssertXcodeVersion (12, 0);
+			var redColor = UIColor.Red;
+			var transformer = UIConfigurationColorTransformer.Grayscale;
+			var grayColor = transformer (redColor);
+			Assert.NotNull (grayColor, "Not null");
+		}
+#endif
 	}
 }
 #endif

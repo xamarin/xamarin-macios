@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
+	<!-- Automatically supply project capabilities for IDE use -->
+	<ItemGroup>
+		<ProjectCapability Include="Apple" />
+		<ProjectCapability Include="Mobile" />
+
+		<!-- See https://work.azdo.io/1112733 -->
+		<!-- Conflicts with our targets generator in VS+CPS -->
+		<ProjectCapability Remove="LaunchProfiles" />
+	</ItemGroup>
+
 	<PropertyGroup>
 		<_XamarinTaskAssembly Condition="'$(_PlatformName)' != 'macOS'">$(_XamarinSdkRootDirectory)\tools\msbuild\iOS\Xamarin.iOS.Tasks.dll</_XamarinTaskAssembly>
 		<_XamarinTaskAssembly Condition="'$(_PlatformName)' == 'macOS'">$(_XamarinSdkRootDirectory)\tools\msbuild\macOS\Xamarin.Mac.Tasks.dll</_XamarinTaskAssembly>
@@ -69,9 +79,27 @@
 		<_PlatformAssemblyName Condition=" '$(_PlatformName)' == 'tvOS' ">Xamarin.TVOS</_PlatformAssemblyName>
 		<_PlatformAssemblyName Condition=" '$(_PlatformName)' == 'watchOS' ">Xamarin.WatchOS</_PlatformAssemblyName>
 		<_PlatformAssemblyName Condition=" '$(_PlatformName)' == 'macOS' ">Xamarin.Mac</_PlatformAssemblyName>
+
+		<!-- We have to set DebuggerSupport before importing Microsoft.NET.Sdk -->
+		<!-- That means we have to set _BundlerDebug before that, because DebuggerSupport depends on it -->
+		<!-- Xamarin.Mac: use MmpDebug (this differs from the old-style logic, which checks $(DebugSymbols) as well) -->
+		<_BundlerDebug Condition="'$(_BundlerDebug)' == '' And '$(_PlatformName)' == 'macOS'">$(MmpDebug)</_BundlerDebug>
+		<!-- Xamarin.iOS: Use MtouchDebug -->
+		<_BundlerDebug Condition="'$(_BundlerDebug)' == '' And '$(_PlatformName)' != 'macOS'">$(MtouchDebug)</_BundlerDebug>
+		<!-- Otherwise the default is true if we're building a Debug configuration -->
+		<_BundlerDebug Condition="'$(_BundlerDebug)' == '' And '$(Configuration)' == 'Debug'">true</_BundlerDebug>
+		<!-- As a last resort, the default is false for all platforms -->
+		<_BundlerDebug Condition="'$(_BundlerDebug)' == ''">false</_BundlerDebug>
+
+		<!-- On the other hand, we want the linker to link away debug support in the actual code unless we're building for Debug -->
+		<DebuggerSupport Condition="'$(DebuggerSupport)' == ''">$(_BundlerDebug)</DebuggerSupport>
 	</PropertyGroup>
 
 	<Import Sdk="Microsoft.NET.Sdk" Project="Sdk.targets" />
+
+	<PropertyGroup>
+		<TargetPlatformSupported Condition=" '$(TargetPlatformIdentifier)' == '$(_PlatformName)' ">true</TargetPlatformSupported>
+	</PropertyGroup>
 
 	<!-- Default item includes (globs and implicit references) -->
 	<Import Project="Xamarin.Shared.Sdk.DefaultItems.targets" />
@@ -80,14 +108,21 @@
 	<!-- Inject our custom logic into *DependsOn variables -->
 	<PropertyGroup>
 		<BuildDependsOn>
+			BuildOnlySettings;
+			_CollectBundleResources;
+			_PackLibraryResources;
+			_UnpackLibraryResources;
 			$(BuildDependsOn);
 			_CreateAppBundle;
+			Codesign;
 		</BuildDependsOn>
 
 		<!-- We re-use ComputeFilesToPublish & CopyFilesToPublishDirectory to copy files to the .app -->
 		<!-- ComputeFilesToPublish will run ILLink -->
 		<CreateAppBundleDependsOn>
 			_DetectAppManifest;
+			_CopyResourcesToBundle;
+			_CompileEntitlements;
 			_CompileAppManifest;
 			_ComputeLinkerArguments;
 			ComputeFilesToPublish;
@@ -104,7 +139,10 @@
 		<_AdditionalTaskAssemblyDirectory>$(_XamarinSdkRootDirectory)tools/dotnet-linker/</_AdditionalTaskAssemblyDirectory>
 		<_AdditionalTaskAssembly>$(_AdditionalTaskAssemblyDirectory)dotnet-linker.dll</_AdditionalTaskAssembly>
 	</PropertyGroup>
-	<Target Name="_ComputeLinkerArguments">
+	<Target Name="_ComputeLinkerArguments" DependsOnTargets="_ComputeLinkMode;_ComputeFrameworkVariables;_ComputeFrameworkAssemblies;ComputeResolvedFilesToPublishList;_ParseBundlerArguments;">
+		<!-- Validate the linker mode -->
+		<Error Text="Invalid link mode: '$(_LinkMode)'. Valid link modes are: 'None', 'SdkOnly' and 'Full'" Condition="'$(_LinkMode)' != 'None' And '$(_LinkMode)' != 'SdkOnly' And '$(_LinkMode)' != 'Full'" />
+
 		<PropertyGroup>
 			<!-- Pass the custom options to our custom steps -->
 			<_CustomLinkerOptionsFile>$([System.IO.Path]::GetFullPath('$(IntermediateOutputPath)custom-linker-options.txt'))</_CustomLinkerOptionsFile>
@@ -116,27 +154,75 @@
 			<_LinkerCacheDirectory>$([System.IO.Path]::GetFullPath('$(IntermediateOutputPath)linker-cache'))</_LinkerCacheDirectory>
 
 			<_CustomLinkerOptions>
+				AssemblyName=$(AssemblyName).dll
 				CacheDirectory=$(_LinkerCacheDirectory)
+				Debug=$(_BundlerDebug)
+				DeploymentTarget=$(_MinimumOSVersion)
+				@(_XamarinFrameworkAssemblies -> 'FrameworkAssembly=%(Filename)')
 				ItemsDirectory=$(_LinkerItemsDirectory)
+				IsSimulatorBuild=$(_SdkIsSimulator)
+				LinkMode=$(_LinkMode)
+				MarshalManagedExceptionMode=$(_MarshalManagedExceptionMode)
+				MarshalObjectiveCExceptionMode=$(_MarshalObjectiveCExceptionMode)
+				Optimize=$(_BundlerOptimize)
+				PartialStaticRegistrarLibrary=$(_LibPartialStaticRegistrar)
 				Platform=$(_PlatformName)
 				PlatformAssembly=$(_PlatformAssemblyName).dll
+				Registrar=$(_BundlerRegistrar)
+				SdkVersion=$(_SdkVersion)
 				TargetArchitectures=$(TargetArchitectures)
+				TargetFramework=$(_ComputedTargetFrameworkMoniker)
+				Verbosity=$(_BundlerVerbosity)
 			</_CustomLinkerOptions>
 			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) --custom-data "LinkerOptionsFile=$(_CustomLinkerOptionsFile)"</_ExtraTrimmerArgs>
 
+			<!-- Work around a linker issue: https://github.com/mono/linker/issues/1304 -->
+			<!-- System.Runtime.dll isn't always copied to the .app -->
+			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) -p copy "System.Runtime"</_ExtraTrimmerArgs>
+
+			<!-- TrimMode specifies what the linker will do with framework assemblies -->
+			<TrimMode Condition="'$(_LinkMode)' == 'None'">copy</TrimMode> <!-- Don't use 'copyused', because that might still end up saving some assemblies, and if that's the platform assembly, it may break the partial static registrar -->
+			<TrimMode Condition="'$(_LinkMode)' == 'SdkOnly' Or '$(_LinkMode)' == 'Full'">link</TrimMode>
+			<!-- For Full link mode we also need to set TrimMode for all non-framework assemblies. This is done further below -->
+
 			<!-- Verbose output, so that we get something to stdout when something goes wrong -->
 			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) --verbose</_ExtraTrimmerArgs>
+
+			<!--
+				Always process symbols files, even in release mode, because
+				the AOT compiler uses the symbol files to create DWARF debug
+				information.
+
+				FIXME: At some point we should set the DebuggerSupport
+				property so that the linker can remove debugging support when
+				in release mode, but the linker doesn't seem quite ready for
+				this yet (ref: https://github.com/dotnet/sdk/pull/12144).
+			-->
+			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) -b</_ExtraTrimmerArgs>
+
+			<!-- We always want the linker to process debug symbols, even when building in Release mode, because the AOT compiler uses the managed debug symbols to output DWARF debugging symbols -->
+			<TrimmerRemoveSymbols Condition="'$(TrimmerRemoveSymbols)' == ''">false</TrimmerRemoveSymbols>
 		</PropertyGroup>
+
 		<ItemGroup>
-			<!-- add our custom steps -->
+			<!-- Mark all assemblies to be linked if we're linking all assemblies -->
+			<ResolvedFileToPublish
+				Update="@(ResolvedFileToPublish)"
+				Condition="'$(_LinkMode)' == 'Full' And '%(ResolvedFileToPublish.Extension)' == '.dll' And '%(ResolvedFileToPublish.AssetType)' != 'native'"
+			>
+				<TrimMode>link</TrimMode>
+			</ResolvedFileToPublish>
+
+			<!-- Mark our entry assembly as a root assembly. -->
+			<TrimmerRootAssembly Include="$(AssemblyName)" />
+
+			<!-- add a custom step which inserts any other steps we need -->
 			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)">
 				<BeforeStep>LoadReferencesStep</BeforeStep>
 				<Type>Xamarin.SetupStep</Type>
 			</_TrimmerCustomSteps>
-			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)">
-				<!-- At the end of the pipeline -->
-				<Type>Xamarin.GenerateMainStep</Type>
-			</_TrimmerCustomSteps>
+
+			<TrimmerRootDescriptor Include="@(_BundlerXmlDefinitions)" />
 		</ItemGroup>
 
 		<!-- Create the file with our custom linker options -->
@@ -148,35 +234,133 @@
 		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_MainFile.items" Condition="Exists('$(_LinkerItemsDirectory)/_MainFile.items')">
 			<Output TaskParameter="Items" ItemName="_MainFile" />
 		</ReadItemsFromFile>
+		<!-- Load _MainLinkWith -->
+		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_MainLinkWith.items" Condition="Exists('$(_LinkerItemsDirectory)/_MainLinkWith.items')">
+			<Output TaskParameter="Items" ItemName="_MainLinkWith" />
+		</ReadItemsFromFile>
+		<!-- Load _LinkerFrameworks -->
+		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_LinkerFrameworks.items" Condition="Exists('$(_LinkerItemsDirectory)/_LinkerFrameworks.items')">
+			<Output TaskParameter="Items" ItemName="_LinkerFrameworks" />
+		</ReadItemsFromFile>
+		<!-- Load _BindingLibraryLinkWith -->
+		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_BindingLibraryLinkWith.items" Condition="Exists('$(_LinkerItemsDirectory)/_BindingLibraryLinkWith.items')">
+			<Output TaskParameter="Items" ItemName="_BindingLibraryLinkWith" />
+		</ReadItemsFromFile>
+		<!-- Load _BindingLibraryLinkerFlags -->
+		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_BindingLibraryLinkerFlags.items" Condition="Exists('$(_LinkerItemsDirectory)/_BindingLibraryLinkerFlags.items')">
+			<Output TaskParameter="Items" ItemName="_BindingLibraryLinkerFlags" />
+		</ReadItemsFromFile>
+		<!-- Load _BindingLibraryFrameworks -->
+		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_BindingLibraryFrameworks.items" Condition="Exists('$(_LinkerItemsDirectory)/_BindingLibraryFrameworks.items')">
+			<Output TaskParameter="Items" ItemName="_BindingLibraryFrameworks" />
+		</ReadItemsFromFile>
+		<!-- Load _RegistrarFile -->
+		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_RegistrarFile.items" Condition="Exists('$(_LinkerItemsDirectory)/_RegistrarFile.items')">
+			<Output TaskParameter="Items" ItemName="_RegistrarFile" />
+		</ReadItemsFromFile>
 	</Target>
 
 	<!-- Native code -->
 
-	<Target Name="_ComputeVariables" DependsOnTargets="_GenerateBundleName">
+	<Target Name="_ComputeFrameworkVariables" DependsOnTargets="ResolveRuntimePackAssets">
+		<ItemGroup>
+			<!-- Look in the ResolvedFrameworkReference for our Microsoft.* package. This should only find a single package. -->
+			<_XamarinFrameworkReference Include="@(ResolvedFrameworkReference)" Condition="'%(ResolvedFrameworkReference.Identity)' == 'Microsoft.$(_PlatformName)'" />
+		</ItemGroup>
 		<PropertyGroup>
-			<_IntermediateNativeLibraryDir>$(IntermediateOutputPath)nativelibraries/</_IntermediateNativeLibraryDir>
-			<_NativeExecutableName>$(_AppBundleName)</_NativeExecutableName>
+			<_XamarinSdkRuntimePackDirectory>%(_XamarinFrameworkReference.RuntimePackPath)</_XamarinSdkRuntimePackDirectory>
+			<_XamarinRefPackageDirectory>%(_XamarinFrameworkReference.TargetingPackPath)</_XamarinRefPackageDirectory>
+			<_XamarinNativeLibraryDirectory>$(_XamarinSdkRuntimePackDirectory)/runtimes/$(RuntimeIdentifier)/native</_XamarinNativeLibraryDirectory>
+			<_XamarinIncludeDirectory>$(_XamarinSdkRuntimePackDirectory)/runtimes/$(RuntimeIdentifier)/native</_XamarinIncludeDirectory>
+			<_XamarinRefAssemblyDirectory>$(_XamarinRefPackageDirectory)/ref/net5.0/</_XamarinRefAssemblyDirectory>
+			<_XamarinRefAssemblyPath>$(_XamarinRefAssemblyDirectory)$(_PlatformAssemblyName).dll</_XamarinRefAssemblyPath>
+
+			<_LibPartialStaticRegistrar>$(_XamarinNativeLibraryDirectory)/Microsoft.$(_PlatformName).registrar.a</_LibPartialStaticRegistrar>
 		</PropertyGroup>
 	</Target>
 
-	<Target Name="_CompileNativeExecutable"
-		DependsOnTargets="_DetectSdkLocations;_ComputeTargetArchitectures;_GenerateBundleName;_ComputeVariables;_GetMinimumOSVersion"
-		Inputs="@(_MainFile)"
-		Outputs="@(_MainFile -> '%(_IntermediateNativeLibraryDir)%(Filename).o')"
-		>
+	<Target Name="_ComputeFrameworkAssemblies" DependsOnTargets="_ComputeVariables;ComputeResolvedFilesToPublishList">
+		<ItemGroup>
+			<!-- Define 'framework assembly' or 'sdk assembly' as assemblies that comes from the .NET BCL NuGet -->
+			<_XamarinFrameworkAssemblies Include="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.Extension)' == '.dll' And '%(ResolvedFileToPublish.NuGetPackageId)' == '$(_MonoNugetPackageId)'" />
+		</ItemGroup>
+	</Target>
+
+	<Target Name="_ComputeVariables" DependsOnTargets="_GenerateBundleName;_ComputeFrameworkVariables;ComputeResolvedFilesToPublishList">
+		<PropertyGroup>
+			<_IntermediateNativeLibraryDir>$(IntermediateOutputPath)nativelibraries/</_IntermediateNativeLibraryDir>
+			<_NativeExecutableName>$(_AppBundleName)</_NativeExecutableName>
+
+			<_LibMonoLinkMode Condition="'$(_LibMonoLinkMode)' == '' And ('$(ComputedPlatform)' != 'iPhone' Or '$(_PlatformName)' == 'macOS')">dylib</_LibMonoLinkMode>
+			<_LibMonoLinkMode Condition="'$(_LibMonoLinkMode)' == ''">static</_LibMonoLinkMode>
+			<_LibMonoExtension Condition="'$(_LibMonoLinkMode)' == 'dylib'">dylib</_LibMonoExtension>
+			<_LibMonoExtension Condition="'$(_LibMonoLinkMode)' == 'static'">a</_LibMonoExtension>
+
+			<_LibXamarinLinkMode Condition="'$(_LibXamarinLinkMode)' == '' And '$(ComputedPlatform)' != 'iPhone'">dylib</_LibXamarinLinkMode>
+			<_LibXamarinLinkMode Condition="'$(_LibXamarinLinkMode)' == ''">static</_LibXamarinLinkMode>
+			<_LibXamarinExtension Condition="'$(_LibXamarinLinkMode)' == 'dylib'">dylib</_LibXamarinExtension>
+			<_LibXamarinExtension Condition="'$(_LibXamarinLinkMode)' == 'static'">a</_LibXamarinExtension>
+			<_LibXamarinName Condition="'$(_LibXamarinName)' == '' And '$(_BundlerDebug)' == 'true'">libxamarin-debug.$(_LibXamarinExtension)</_LibXamarinName>
+			<_LibXamarinName Condition="'$(_LibXamarinName)' == '' And '$(_BundlerDebug)' != 'true'">libxamarin.$(_LibXamarinExtension)</_LibXamarinName>
+
+			<_MonoNugetPackageId Condition="'$(_PlatformName)' != 'macOS'">Microsoft.NETCore.App.Runtime.$(RuntimeIdentifier)</_MonoNugetPackageId>
+			<_MonoNugetPackageId Condition="'$(_PlatformName)' == 'macOS'">Microsoft.NETCore.App.Runtime.Mono.$(RuntimeIdentifier)</_MonoNugetPackageId>
+		</PropertyGroup>
 
 		<ItemGroup>
-			<_MainFile Update="@(_MainFile)">
-				<OutputFile>$(_IntermediateNativeLibraryDir)%(Filename).o</OutputFile>
-			</_MainFile>
+			<!-- Select the native libraries from mono we need to link with and potentially copy into the app -->
+			<_MonoLibrary
+				Include="@(ResolvedFileToPublish)"
+				Condition=" '%(ResolvedFileToPublish.AssetType)' == 'native' And
+							'%(ResolvedFileToPublish.RuntimeIdentifier)' == '$(RuntimeIdentifier)' And
+							'%(ResolvedFileToPublish.Extension)' == '.$(_LibMonoExtension)' And
+							'%(ResolvedFileToPublish.NuGetPackageId)' == '$(_MonoNugetPackageId)'
+							"
+			/>
 		</ItemGroup>
+	</Target>
+
+	<PropertyGroup>
+		<_GenerateBindingsDependsOn>
+			_ComputeBindingVariables;
+			$(_GenerateBindingsDependsOn);
+		</_GenerateBindingsDependsOn>
+	</PropertyGroup>
+
+	<Target Name="_ComputeBindingVariables" DependsOnTargets="_ComputeFrameworkVariables" Condition="'$(IsBindingProject)' == 'true'">
+		<PropertyGroup>
+			<BTouchToolExe>bgen.dll</BTouchToolExe>
+			<BTouchToolPath>$(_XamarinSdkRootDirectory)\tools\lib\bgen</BTouchToolPath>
+			<BaseLibDllPath>$(_XamarinRefAssemblyPath)</BaseLibDllPath>
+			<_GeneratorAttributeAssembly>$(_XamarinSdkRootDirectory)/tools/lib/Xamarin.Apple.BindingAttributes.dll</_GeneratorAttributeAssembly>
+		</PropertyGroup>
+	</Target>
+
+	<Target Name="_ComputeNativeExecutableInputs" DependsOnTargets="_ComputeVariables">
+		<ItemGroup>
+			<_CompileNativeExecutableFile Include="@(_MainFile)">
+				<OutputFile>$(_IntermediateNativeLibraryDir)%(Filename).o</OutputFile>
+			</_CompileNativeExecutableFile>
+			<_CompileNativeExecutableFile Include="@(_RegistrarFile)">
+				<OutputFile>$(_IntermediateNativeLibraryDir)%(Filename).o</OutputFile>
+			</_CompileNativeExecutableFile>
+			<_XamarinMainIncludeDirectory Include="$(_XamarinIncludeDirectory)" />
+		</ItemGroup>
+	</Target>
+
+	<Target Name="_CompileNativeExecutable"
+		DependsOnTargets="_DetectSdkLocations;_ComputeTargetArchitectures;_GenerateBundleName;_GetMinimumOSVersion;_ComputeNativeExecutableInputs"
+		Inputs="@(_CompileNativeExecutableFile)"
+		Outputs="@(_CompileNativeExecutableFile -> '%(OutputFile)')"
+		>
 
 		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(_IntermediateNativeLibraryDir)" />
 
 		<CompileNativeCode
 			SessionId="$(BuildSessionId)"
-			CompileInfo="@(_MainFile)"
+			CompileInfo="@(_CompileNativeExecutableFile)"
 			MinimumOSVersion="$(_MinimumOSVersion)"
+			IncludeDirectories="@(_XamarinMainIncludeDirectory)"
 			SdkDevPath="$(_SdkDevPath)"
 			SdkIsSimulator="$(_SdkIsSimulator)"
 			SdkRoot="$(_SdkRoot)"
@@ -186,15 +370,50 @@
 		</CompileNativeCode>
 	</Target>
 
+
+	<!-- The .dylibs shipped with mono comes with the original identity:
+
+	$ otool -l ~/.nuget/packages/microsoft.netcore.app.runtime.ios-x64/5.0.0-*/runtimes/ios-x64/native/libSystem.IO.Compression.Native.dylib | grep LC_ID_DYLIB -A 2
+          cmd LC_ID_DYLIB
+      cmdsize 184
+         name /Users/runner/runners/2.165.2/work/1/s/artifacts/obj/native/netcoreapp5.0-iOS-Release-x64/System.IO.Compression.Native/libSystem.IO.Compression.Native.dylib (offset 24)
+
+	This doesn't work after linking with these libraries, so this must be fixed to be @executable_path/. Eventually mono will ship dylibs we don't have to fix (https://github.com/dotnet/runtime/issues/34637).
+	-->
+	<Target Name="_UpdateDynamicLibraryId" DependsOnTargets="_ComputeVariables" Inputs="@(_MonoLibrary)" Outputs="@(_MonoLibrary -> '$(_IntermediateNativeLibraryDir)%(Filename)%(Extension)')">
+		<!-- install_name_tool modifies the file in-place, so copy it first to a temporary directory before we fix it -->
+		<Copy SourceFiles="%(_MonoLibrary.FullPath)" DestinationFolder="$(_IntermediateNativeLibraryDir)" />
+		<Exec Command="xcrun install_name_tool -id @executable_path/%(_MonoLibrary.Filename)%(_MonoLibrary.Extension) $(_IntermediateNativeLibraryDir)%(_MonoLibrary.Filename)%(_MonoLibrary.Extension)" EnvironmentVariables="DEVELOPER_DIR=$(_SdkDevPath)" />
+		<!-- Update our item groups -->
+		<ItemGroup>
+			<_MonoLibraryFixed Include="@(_MonoLibrary -> '$(_IntermediateNativeLibraryDir)%(Filename)%(Extension)')" />
+			<ResolvedFileToPublish Remove="@(_MonoLibrary)" />
+			<ResolvedFileToPublish Include="@(_MonoLibraryFixed)" />
+			<_MonoLibrary Remove="@(_MonoLibrary)" />
+			<_MonoLibrary Include="@(_MonoLibraryFixed)" />
+		</ItemGroup>
+	</Target>
+
 	<Target Name="_LinkNativeExecutable"
-			DependsOnTargets="_DetectSdkLocations;_ComputeTargetArchitectures;_GenerateBundleName;_CompileNativeExecutable;_CompileAppManifest"
+			DependsOnTargets="_DetectSdkLocations;_ComputeTargetArchitectures;_GenerateBundleName;_CompileNativeExecutable;_CompileAppManifest;_UpdateDynamicLibraryId"
 			Inputs="@(_NativeExecutableObjectFiles)"
 			Outputs="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)"
 		>
 
+		<ItemGroup>
+			<_XamarinMainLibraries Include="$(_XamarinNativeLibraryDirectory)/$(_LibXamarinName)" />
+			<!-- Link with the libraries shipped with the mono runtime pack -->
+			<_XamarinMainLibraries Include="@(_MonoLibrary)" />
+			<!-- The frameworks we need to link with (both weakly and normally) -->
+			<_NativeExecutableFrameworks Include="@(_LinkerFrameworks)" />
+		</ItemGroup>
+
 		<LinkNativeCode
 			SessionId="$(BuildSessionId)"
-			Frameworks="@(_NativeExecutableFrameworks)"
+			EntitlementsInExecutable="$(_CompiledEntitlements)"
+			Frameworks="@(_NativeExecutableFrameworks);@(_BindingLibraryFrameworks)"
+			LinkerFlags="@(_BindingLibraryLinkerFlags)"
+			LinkWithLibraries="@(_XamarinMainLibraries);@(_BindingLibraryLinkWith);@(_MainLinkWith)"
 			MinimumOSVersion="$(_MinimumOSVersion)"
 			ObjectFiles="@(_NativeExecutableObjectFiles)"
 			OutputFile="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)"
@@ -202,7 +421,6 @@
 			SdkIsSimulator="$(_SdkIsSimulator)"
 			SdkRoot="$(_SdkRoot)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
-			WeakFrameworks="@(_NativeExecutableWeakFrameworks)"
 		/>
 
 		<ItemGroup>
@@ -212,6 +430,20 @@
 				RelativePath="$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(MSBuildProjectDirectory)$(_AppBundlePath)))\$(_NativeExecutableName)"/>
 		</ItemGroup>
 	</Target>
+
+	<Target Name="_ComputeDefaultLinkMode" DependsOnTargets="_DetectSdkLocations">
+		<PropertyGroup>
+			<_DefaultLinkMode Condition="'$(_PlatformName)' == 'macOS'">None</_DefaultLinkMode> <!-- Linking is off by default for macOS apps -->
+			<_DefaultLinkMode Condition="'$(_PlatformName)' != 'macOS' And '$(_SdkIsSimulator)' == 'true'">None</_DefaultLinkMode> <!-- Linking is off by default in the simulator -->
+			<_DefaultLinkMode Condition="'$(_PlatformName)' != 'macOS' And '$(_SdkIsSimulator)' != 'true'">SdkOnly</_DefaultLinkMode> <!-- Linking is SdkOnly for iOS/tvOS/watchOS apps on device -->
+		</PropertyGroup>
+	</Target>
+	<PropertyGroup>
+		<_ComputeLinkModeDependsOn>
+			$(_ComputeLinkModeDependsOn);
+			_ComputeDefaultLinkMode;
+		</_ComputeLinkModeDependsOn>
+	</PropertyGroup>
 
 	<Target Name="_ComputePublishLocation" DependsOnTargets="_GenerateBundleName">
 		<!-- Put .dll, .pdb, .exe and .dylib in the .app -->
@@ -224,8 +456,13 @@
 		<ItemGroup>
 			<ResolvedFileToPublish
 				Update="@(ResolvedFileToPublish)"
-				RelativePath="$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(_AssemblyPublishDir)))%(Filename)%(Extension)"
-				Condition="'%(Extension)' == '.dll' Or '%(Extension)' == '.pdb' Or '$(Extension)' == '.exe'" />
+				RelativePath="$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(_AssemblyPublishDir)))%(ResolvedFileToPublish.DestinationSubDirectory)%(Filename)%(Extension)"
+				Condition="'%(Extension)' == '.dll' Or '%(Extension)' == '.pdb' Or '%(Extension)' == '.exe'" />
+			<!-- Copy the app.config file to the app bundle -->
+			<ResolvedFileToPublish
+				Update="@(ResolvedFileToPublish)"
+				RelativePath="$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(_AssemblyPublishDir)))%(ResolvedFileToPublish.DestinationSubDirectory)%(ResolvedFileToPublish.TargetPath)"
+				Condition="'$(AppConfig)' != '' And '%(ResolvedFileToPublish.OriginalItemSpec)' == '$(AppConfig)' And '%(ResolvedFileToPublish.Link)' == 'app.config' And '%(ResolvedFileToPublish.TargetPath)' != ''" />
 			<ResolvedFileToPublish
 				Update="@(ResolvedFileToPublish)"
 				RelativePath="$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(_DylibPublishDir)))%(Filename)%(Extension)"

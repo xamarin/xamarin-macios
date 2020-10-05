@@ -291,7 +291,7 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			using (var url = NSUrl.FromString ("http://www.xamarin.com")) {
 				Assert.IsFalse (url == null, "url == null");
-				Assert.IsFalse (null == true, "null == url");
+				Assert.IsFalse (null == url, "null == url");
 			}
 		}
 
@@ -318,6 +318,22 @@ namespace MonoTouchFixtures.Foundation {
 			using (var url1 = NSUrl.FromString ("http://www.xamarin.com"))
 			using (var url2 = NSUrl.FromString ("http://www.xamarin.com/foo"))
 				Assert.AreEqual (url1 != url2, !url1.IsEqual (url2));
+		}
+
+		[TestCase ("http://microsoft.com/", UriKind.Absolute)]
+		[TestCase ("https://microsoft.com/", UriKind.Absolute)]
+		[TestCase ("https://microsoft.com/some/path", UriKind.Absolute)]
+		[TestCase ("https://microsoft.com/page?value=foo", UriKind.Absolute)]
+		[TestCase ("relative", UriKind.Relative)]
+		[TestCase ("relative/to/some/page", UriKind.Relative)]
+		[TestCase ("relative?value=foo", UriKind.Relative)]
+		public void ImplicitOperatorRoundTrip (string value, UriKind kind)
+		{
+			var nsurl = new NSUrl (value);
+			Assert.AreEqual (nsurl.ToString (), ((NSUrl) (Uri) nsurl).ToString (), "RoundTrip NSUrl");
+
+			var url = new Uri (value, kind);
+			Assert.AreEqual (url.ToString (), ((Uri) (NSUrl) url).ToString (), "RoundTrip Uri");
 		}
 	}
 }

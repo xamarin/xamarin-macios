@@ -148,6 +148,9 @@ namespace LinkSdk.Serialization {
 			}
 		}
 		
+#if NET
+		[Ignore ("https://github.com/mono/linker/issues/1454")]
+#endif
 		[Test]
 		// http://bugzilla.xamarin.com/show_bug.cgi?id=1820
 		// note: this also test the linker (5.1+) ability not to remove 'unused' XML setters and .ctors used for serialization

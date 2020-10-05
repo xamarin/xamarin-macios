@@ -1,0 +1,7 @@
+#!/bin/bash -e
+
+pushd "$(dirname "$0")/.." > /dev/null
+MONOTOUCH_PREFIX=$(pwd -P)
+popd > /dev/null
+
+exec dotnet "$MONOTOUCH_PREFIX/lib/bgen/bgen.dll" "$@"

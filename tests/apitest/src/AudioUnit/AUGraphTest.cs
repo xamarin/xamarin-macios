@@ -1,5 +1,5 @@
 using System;
-using System.Threading.Tasks;
+using System.Threading;
 using NUnit.Framework;
 
 using AppKit;
@@ -49,7 +49,7 @@ namespace Xamarin.Mac.Tests
 		}
 
 		[Test]
-		public async Task DoTest ()
+		public void DoTest ()
 		{
 			SetupAUGraph ();
 
@@ -60,7 +60,7 @@ namespace Xamarin.Mac.Tests
 			AudioUnitStatus status = mMixer.SetRenderCallback (MixerRenderCallback);
 			Assert.AreEqual (AudioUnitStatus.OK, status );
 
-			await WaitOnGraphAndMixerCallbacks ();
+			WaitOnGraphAndMixerCallbacks ();
 		}
 
 		AudioUnitStatus GraphRenderCallback (AudioUnitRenderActionFlags actionFlags, AudioTimeStamp timeStamp, uint busNumber, uint numberFrames, AudioBuffers data)
@@ -75,7 +75,7 @@ namespace Xamarin.Mac.Tests
 			return AudioUnitStatus.NoError;
 		}
 
-		async Task WaitOnGraphAndMixerCallbacks ()
+		void WaitOnGraphAndMixerCallbacks ()
 		{
 			graph.Initialize ();
 			graph.Start ();
@@ -85,7 +85,7 @@ namespace Xamarin.Mac.Tests
 				for (int i = 0; i < 100; ++i) {
 					if (graphRenderCallbackCount > 0 && mixerRenderCallbackCount > 0)
 						return;
-					await Task.Delay (10);
+					Thread.Sleep (10);
 				}
 				Assert.Fail ("Did not see events after 1 second");
 			}

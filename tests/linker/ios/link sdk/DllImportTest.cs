@@ -75,6 +75,9 @@ namespace LinkSdk {
 			}
 		}
 
+#if NET
+		[Ignore ("https://github.com/dotnet/runtime/issues/41355")]
+#endif
 		[Test]
 		public void LackOfCapget ()
 		{

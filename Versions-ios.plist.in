@@ -39,6 +39,8 @@
 			<string>13.3</string>
 			<string>13.4</string>
 			<string>13.5</string>
+			<string>13.6</string>
+			<string>14.0</string>
 		</array>
 		<key>tvOS</key>
 		<array>
@@ -62,10 +64,10 @@
 			<string>13.2</string>
 			<string>13.3</string>
 			<string>13.4</string>
+			<string>14.0</string>
 		</array>
 		<key>watchOS</key>
 		<array>
-			<string>1.0</string>
 			<string>2.0</string>
 			<string>2.1</string>
 			<string>2.2</string>
@@ -83,6 +85,7 @@
 			<string>6.0</string>
 			<string>6.1</string>
 			<string>6.2</string>
+			<string>7.0</string>
 		</array>
 	</dict>
 	<key>RecommendedXcodeVersion</key>
@@ -133,6 +136,8 @@
 			<string>10.0</string>
 			<key>com.apple.usernotifications.service</key>
 			<string>10.0</string>
+			<key>com.apple.authentication-services-credential-provider-ui</key>
+			<string>12.0</string>
 		</dict>
 		<key>tvOS</key>
 		<dict>

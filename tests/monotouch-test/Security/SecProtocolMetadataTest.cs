@@ -71,10 +71,10 @@ namespace MonoTouchFixtures.Security {
 
 					if (TestRuntime.CheckXcodeVersion (11, 0)) {
 						using (var d = s.CreateSecret ("Xamarin", 128)) {
-							Assert.That (d.Size, Is.EqualTo (128), "CreateSecret-1");
+							Assert.That (d.Size, Is.EqualTo ((nuint) 128), "CreateSecret-1");
 						}
 						using (var d = s.CreateSecret ("Microsoft", new byte [1], 256)) {
-							Assert.That (d.Size, Is.EqualTo (256), "CreateSecret-2");
+							Assert.That (d.Size, Is.EqualTo ((nuint) 256), "CreateSecret-2");
 						}
 
 						Assert.That (s.NegotiatedTlsProtocolVersion, Is.EqualTo (TlsProtocolVersion.Tls12).Or.EqualTo (TlsProtocolVersion.Tls13), "NegotiatedTlsProtocolVersion");

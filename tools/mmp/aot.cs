@@ -177,8 +177,19 @@ namespace Xamarin.Bundler {
 		// Allows tests to stub out actual compilation and parallelism
 		public RunCommandDelegate RunCommand { get; set; } = Driver.RunCommand; 
 		public ParallelOptions ParallelOptions { get; set; } = new ParallelOptions () { MaxDegreeOfParallelism = Driver.Concurrency };
-		public string XamarinMacPrefix { get; set; } = Driver.FrameworkDirectory; // FrameworkDirectory assumes GetExecutingAssembly in ways that are not valid for tests, so we must stub out
 
+		string xamarin_mac_prefix;
+		public string XamarinMacPrefix {
+			get {
+				if (xamarin_mac_prefix == null)
+					xamarin_mac_prefix = Driver.GetFrameworkCurrentDirectory (Driver.App);
+				return xamarin_mac_prefix;
+			}
+			set {
+				xamarin_mac_prefix = value;
+			}
+		}
+		
 		AOTOptions options;
 		AOTCompilerType compilerType;
 		bool IsRelease;

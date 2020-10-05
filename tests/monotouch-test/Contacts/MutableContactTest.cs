@@ -64,7 +64,7 @@ namespace MonoTouchFixtures.Contacts {
 				contact.Birthday = new NSDateComponents () {
 					Year = 1980
 				};
-				Assert.AreEqual (1980, contact.Birthday.Year, "Birthday");
+				Assert.AreEqual ((nint) 1980, contact.Birthday.Year, "Birthday");
 
 				contact.ContactRelations = new CNLabeledValue<CNContactRelation> [] {
 					new CNLabeledValue<CNContactRelation> ("label", new CNContactRelation ("relation"))
@@ -126,7 +126,7 @@ namespace MonoTouchFixtures.Contacts {
 				contact.NonGregorianBirthday = new NSDateComponents () {
 					Year = 2099,
 				};
-				Assert.AreEqual (2099, contact.NonGregorianBirthday.Year, "NonGregorianBirthday");
+				Assert.AreEqual ((nint) 2099, contact.NonGregorianBirthday.Year, "NonGregorianBirthday");
 
 				contact.Note = "note";
 				Assert.AreEqual ("note", contact.Note, "Note");

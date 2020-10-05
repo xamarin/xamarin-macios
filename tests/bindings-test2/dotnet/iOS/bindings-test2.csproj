@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.iOS.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net5.0-ios</TargetFramework>
+    <NativeLibName>ios-fat</NativeLibName>
+    <PlatformName>iOS</PlatformName>
+    <RootTestsDirectory>..\..\..</RootTestsDirectory>
+  </PropertyGroup>
+  <Import Project="..\shared.targets" />
+  <ItemGroup>
+    <PackageReference Include="NUnitLite" Version="3.12.0" />
+    <ProjectReference Include="$(RootTestsDirectory)\bindings-test\dotnet\iOS\bindings-test.csproj" />
+  </ItemGroup>
+</Project>

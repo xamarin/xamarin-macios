@@ -1,3 +1,41 @@
+# Deprecated
+!missing-selector! PDFAnnotation::initWithDictionary:forPage: not bound
+!missing-field! kPDFAnnotationKey_Action not bound
+!missing-field! kPDFAnnotationKey_AdditionalActions not bound
+!missing-field! kPDFAnnotationKey_AppearanceDictionary not bound
+!missing-field! kPDFAnnotationKey_AppearanceState not bound
+!missing-field! kPDFAnnotationKey_Border not bound
+!missing-field! kPDFAnnotationKey_BorderStyle not bound
+!missing-field! kPDFAnnotationKey_Color not bound
+!missing-field! kPDFAnnotationKey_Contents not bound
+!missing-field! kPDFAnnotationKey_Date not bound
+!missing-field! kPDFAnnotationKey_DefaultAppearance not bound
+!missing-field! kPDFAnnotationKey_Destination not bound
+!missing-field! kPDFAnnotationKey_Flags not bound
+!missing-field! kPDFAnnotationKey_HighlightingMode not bound
+!missing-field! kPDFAnnotationKey_IconName not bound
+!missing-field! kPDFAnnotationKey_Inklist not bound
+!missing-field! kPDFAnnotationKey_InteriorColor not bound
+!missing-field! kPDFAnnotationKey_LineEndingStyles not bound
+!missing-field! kPDFAnnotationKey_LinePoints not bound
+!missing-field! kPDFAnnotationKey_Name not bound
+!missing-field! kPDFAnnotationKey_Open not bound
+!missing-field! kPDFAnnotationKey_Page not bound
+!missing-field! kPDFAnnotationKey_Parent not bound
+!missing-field! kPDFAnnotationKey_Popup not bound
+!missing-field! kPDFAnnotationKey_Quadding not bound
+!missing-field! kPDFAnnotationKey_QuadPoints not bound
+!missing-field! kPDFAnnotationKey_Rect not bound
+!missing-field! kPDFAnnotationKey_Subtype not bound
+!missing-field! kPDFAnnotationKey_TextLabel not bound
+!missing-field! kPDFAnnotationKey_WidgetAppearanceDictionary not bound
+!missing-field! kPDFAnnotationKey_WidgetDefaultValue not bound
+!missing-field! kPDFAnnotationKey_WidgetFieldFlags not bound
+!missing-field! kPDFAnnotationKey_WidgetFieldType not bound
+!missing-field! kPDFAnnotationKey_WidgetMaxLen not bound
+!missing-field! kPDFAnnotationKey_WidgetOptions not bound
+!missing-field! kPDFAnnotationKey_WidgetTextLabelUI not bound
+!missing-field! kPDFAnnotationKey_WidgetValue not bound
 
 # Initial result from new rule missing-null-allowed
 !missing-null-allowed! 'AppKit.NSView PdfKit.PdfView::get_DocumentView()' is missing an [NullAllowed] on return type
@@ -26,7 +64,6 @@
 !missing-null-allowed! 'System.Void PdfKit.PdfAnnotation::set_Border(PdfKit.PdfBorder)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void PdfKit.PdfAnnotation::set_Contents(System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void PdfKit.PdfAnnotation::set_ModificationDate(Foundation.NSDate)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void PdfKit.PdfAnnotation::set_MouseUpAction(PdfKit.PdfAction)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void PdfKit.PdfAnnotation::set_Page(PdfKit.PdfPage)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void PdfKit.PdfAnnotation::set_Popup(PdfKit.PdfAnnotationPopup)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void PdfKit.PdfAnnotation::set_Type(System.String)' is missing an [NullAllowed] on parameter #0

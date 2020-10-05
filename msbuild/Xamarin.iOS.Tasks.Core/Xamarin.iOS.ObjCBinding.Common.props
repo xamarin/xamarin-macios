@@ -17,48 +17,12 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.props"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.props')"/>
 
-	<!-- This is used to determine whether Xamarin.iOS.Common.targets needs to import 
-         Xamarin.iOS.ObjCBinding.Common.props itself, or whether it has been imported previously,
-         e.g. by the project itself. -->
+	<!-- This is used to set that we're a binding project. It must be set before including Xamarin.Shared.props -->
 	<PropertyGroup>
-		<_XamarinCommonPropsHasBeenImported>true</_XamarinCommonPropsHasBeenImported>
+		<IsBindingProject>true</IsBindingProject>
 	</PropertyGroup>
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Shared.props" />
-
-	<!-- This is used to determine if VS is connected to mac. -->
-	<PropertyGroup>
-		<IsMacEnabled>true</IsMacEnabled>
-		<MtouchTargetsEnabled>$(IsMacEnabled)</MtouchTargetsEnabled>
-	</PropertyGroup>
-
-	<!-- When looking for related files to copy, look for Mono debugging files as well -->
-	<PropertyGroup>
-		<AllowedReferenceRelatedFileExtensions>
-			$(AllowedReferenceRelatedFileExtensions);
-			.dll.mdb;
-			.exe.mdb;
-			.pdb
-		</AllowedReferenceRelatedFileExtensions>
-	</PropertyGroup>
-
-	<PropertyGroup>
-		<GeneratedSourcesDir Condition="'$(GeneratedSourcesDir)' == '' And '$(TargetFrameworkIdentifier)' == 'Xamarin.TVOS'">$(IntermediateOutputPath)tvos</GeneratedSourcesDir>
-		<GeneratedSourcesDir Condition="'$(GeneratedSourcesDir)' == '' And '$(TargetFrameworkIdentifier)' == 'Xamarin.WatchOS'">$(IntermediateOutputPath)watchos</GeneratedSourcesDir>
-		<GeneratedSourcesDir Condition="'$(GeneratedSourcesDir)' == ''">$(IntermediateOutputPath)ios</GeneratedSourcesDir>
-		<GeneratedSourcesDir Condition="'$(GeneratedSourcesDir)' != '' and !HasTrailingSlash ('$(GeneratedSourcesDir)')">$(GeneratedSourcesDir)\</GeneratedSourcesDir>
-
-		<ProcessEnums Condition="'$(ProcessEnums)' == ''">False</ProcessEnums>
-	</PropertyGroup>
-
-	<!-- Make our Build Actions show up in MonoDevelop -->
-	<ItemGroup>
-		<AvailableItemName Include="BundleResource" />
-		<AvailableItemName Include="ObjcBindingApiDefinition" />
-		<AvailableItemName Include="ObjcBindingCoreSource" />
-		<AvailableItemName Include="ObjcBindingNativeLibrary" />
-		<AvailableItemName Include="ObjcBindingNativeFramework" />
-	</ItemGroup>
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.props"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.props')"/>

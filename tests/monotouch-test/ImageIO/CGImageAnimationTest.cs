@@ -45,7 +45,7 @@ namespace MonoTouchFixtures.ImageIO {
 			tcs.TrySetResult (true);
 		}
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Init ()
 		{
 			TestRuntime.AssertXcodeVersion (11, 4);
@@ -54,7 +54,7 @@ namespace MonoTouchFixtures.ImageIO {
 			imageData = NSData.FromUrl (imageUrl);
 		}
 
-		[TestFixtureTearDown]
+		[OneTimeTearDown]
 		public void Cleanup ()
 		{
 			imageUrl?.Dispose ();

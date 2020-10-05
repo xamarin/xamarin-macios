@@ -32,7 +32,12 @@ namespace BundledResources {
 			// resources are removed by the linker or an extra step (e.g. "link sdk" or "don't link") but that
 			// extra step is done only on device (to keep the simulator builds as fast as possible)
 			var resources = typeof(ResourcesTest).Assembly.GetManifestResourceNames ();
-			if (Runtime.Arch == Arch.DEVICE) {
+#if __MACOS__
+			var hasResources = false;
+#else
+			var hasResources = Runtime.Arch != Arch.DEVICE;
+#endif
+			if (!hasResources) {
 				Assert.That (resources.Length, Is.EqualTo (0), "No resources");
 			} else {
 				Assert.That (resources.Length, Is.GreaterThanOrEqualTo (2), "Resources");

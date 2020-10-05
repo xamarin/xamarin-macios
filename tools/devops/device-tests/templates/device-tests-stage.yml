@@ -34,9 +34,12 @@ parameters:
   type: string
   default: 'VSEng-Xamarin-Win-XMA'
 
-- name: htmlReportStorage
+- name: useXamarinStorage
+  type: boolean
+  default: false
+
+- name: vsdropsPrefix 
   type: string
-  default: xamarin-storage # takes two different values, 'xamarin-storage' or 'vsdrop'
 
 stages:
 - stage: device_tests
@@ -47,19 +50,63 @@ stages:
     pool:
       name: ${{ parameters.iOSDevicePool }}
       demands: ${{ parameters.iOSDeviceDemand }}
+      workspace:
+        clean: all
     steps:
     - template: device-tests.yml
       parameters:
         testsLabels: ${{ parameters.testsLabels }}
         statusContext: ${{ parameters.statusContext }}
-        htmlReportStorage: ${{ parameters.htmlReportStorage }}
+        useXamarinStorage: ${{ parameters.useXamarinStorage }}
+        vsdropsPrefix: ${{ parameters.vsdropsPrefix }} 
 
-  - job: publish_html
-    displayName: 'Publish Html report in VSDrops'
-    dependsOn: tests
-    condition: and(succeededOrFailed(), eq('${{ parameters.htmlReportStorage }}', 'vsdrops')) # wait for tests to execute, but execute always except if it has been canceled or we are not using vsdrops 
+  - job: upload_vsdrops
+    displayName: 'Upload report to vsdrops'
+    timeoutInMinutes: 1000
+    dependsOn: tests # can start as soon as the tests are done
+    condition: succeededOrFailed()
     pool:
       name: ${{ parameters.WindowsDevicePool }}
       demands: agent.os -equals Windows_NT # we need to use a windows machine since vsdrops just works on them and the pool might have diff OS in the agents
+      workspace:
+        clean: all
+    steps:
+    - template: upload-vsdrops.yml
+
+  - job: upload_vsts_tests
+    displayName: 'Upload xml to vsts'
+    timeoutInMinutes: 1000
+    dependsOn: tests # can start as soon as the tests are done
+    condition: succeededOrFailed()
+    pool:
+      name: ${{ parameters.WindowsDevicePool }}
+      demands: agent.os -equals Windows_NT #  not needed, but lest not waste our mac with devices, we have less.
+      workspace:
+        clean: all
+    steps:
+    - template: upload-vsts-tests.yml
+
+  - job: publish_html
+    displayName: 'Publish Html report in VSDrops'
+    timeoutInMinutes: 1000
+    dependsOn: # has to wait for the tests to be done AND the data to be uploaded
+    - tests
+    - upload_vsdrops
+    - upload_vsts_tests 
+    condition: succeededOrFailed()
+    variables:
+      # Define the variable FOO from the previous job
+      # Note the use of single quotes!
+      XAMARIN_STORAGE_PATH: $[ dependencies.tests.outputs['runTests.XAMARIN_STORAGE_PATH'] ]
+      XAMARIN_STORAGE_FAILED: $[ dependencies.tests.outputs['runTests.XAMARIN_STORAGE_FAILED'] ]
+      TESTS_BOT: $[ dependencies.tests.outputs['runTests.TESTS_BOT'] ]
+      TESTS_JOBSTATUS: $[ dependencies.tests.outputs['runTests.TESTS_JOBSTATUS'] ]
+    pool:
+      name: ${{ parameters.WindowsDevicePool }}
+      workspace:
+        clean: all
     steps:
     - template: publish-html.yml
+      parameters:
+        statusContext: ${{ parameters.statusContext }}
+        vsdropsPrefix: ${{ parameters.vsdropsPrefix }} 

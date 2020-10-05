@@ -13,6 +13,9 @@
     <_EnableDefaultXamarinItems Condition=" '$(_PlatformName)' == 'tvOS' ">$(EnableDefaulttvOSItems)</_EnableDefaultXamarinItems>
     <_EnableDefaultXamarinItems Condition=" '$(_PlatformName)' == 'watchOS' ">$(EnableDefaultwatchOSItems)</_EnableDefaultXamarinItems>
     <_EnableDefaultXamarinItems Condition=" '$(_PlatformName)' == 'macOS' ">$(EnableDefaultmacOSItems)</_EnableDefaultXamarinItems>
+
+    <!-- Don't include default Compile items for binding projects, because that would pick up ApiDefinition.cs and StructsAndEnums.cs -->
+    <EnableDefaultCompileItems Condition=" '$(IsBindingProject)' == 'true' ">false</EnableDefaultCompileItems>
   </PropertyGroup>
 
   <!-- Default plist file inclusion -->
@@ -74,11 +77,32 @@
                             RuntimePackNamePatterns="Microsoft.$(_PlatformName).Runtime.**RID**"
                             RuntimePackRuntimeIdentifiers="$(_RuntimePackRuntimeIdentifiers)"
                             Profile="$(_PlatformName)"
+                            IsTrimmable="true"
                             />
   </ItemGroup>
 
   <ItemGroup Condition="'$(DisableImplicitFrameworkReferences)' != 'true'">
     <FrameworkReference Include="Microsoft.$(_PlatformName)" IsImplicitlyDefined="true" Pack="false" PrivateAssets="All" />
+  </ItemGroup>
+
+  <!-- This a workaround until https://github.com/dotnet/runtime/issues/34193 is fixed and a proper solution can be implemented.
+       The problem is that by default we get the 'Microsoft.NETCore.App.Runtime.osx-x64' runtime pack (the core clr version), when we want the 'Microsoft.NETCore.App.Mono.Runtime.osx-x64' runtime pack.
+       This works around that by declaring a new known framework for mono's runtime pack, removing the default 'Microsoft.NETCore.App' framework reference, and adding the mono one.
+   -->
+  <ItemGroup Condition="'$(_PlatformName)' == 'macOS'">
+    <KnownFrameworkReference Include="Microsoft.NETCore.App.Mono"
+                              TargetFramework="netcoreapp5.0"
+                              RuntimeFrameworkName="Microsoft.NETCore.App.Mono"
+                              DefaultRuntimeFrameworkVersion="$(BundledNETCorePlatformsPackageVersion)"
+                              LatestRuntimeFrameworkVersion="$(BundledNETCorePlatformsPackageVersion)"
+                              TargetingPackName="Microsoft.NETCore.App.Ref"
+                              TargetingPackVersion="$(BundledNETCorePlatformsPackageVersion)"
+                              RuntimePackNamePatterns="Microsoft.NETCore.App.Runtime.Mono.**RID**"
+                              RuntimePackRuntimeIdentifiers="osx-x64"
+                              IsTrimmable="true"
+                              />
+    <FrameworkReference Remove="Microsoft.NETCore.App" />
+    <FrameworkReference Include="Microsoft.NETCore.App.Mono" IsImplicitlyDefined="true" Pack="false" PrivateAssets="All" />
   </ItemGroup>
 
 </Project>

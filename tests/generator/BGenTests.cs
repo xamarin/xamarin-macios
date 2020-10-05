@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -17,59 +17,73 @@ namespace GeneratorTests
 	public class BGenTests
 	{
 		[Test]
+#if !NET
 		[TestCase (Profile.macOSFull)]
-		[TestCase (Profile.macOSMobile)]
 		[TestCase (Profile.macOSSystem)]
+#endif
+		[TestCase (Profile.macOSMobile)]
 		public void BMac_Smoke (Profile profile)
 		{
 			BuildFile (profile, "bmac_smoke.cs");
 		}
 
+#if !NET // There's no System.Drawing in the .NET BCL
 		[Test]
 		[TestCase (Profile.macOSSystem)]
 		public void BMac_NonAbsoluteReference_StillBuilds (Profile profile)
 		{
 			BuildFile (profile, true, false, new List<string> () { "System.Drawing" }, "bmac_smoke.cs");
 		}
+#endif
 
+#if !NET
 		[Test]
 		[TestCase (Profile.macOSSystem)]
 		public void BMac_AbsoluteSystemReference_StillBuilds (Profile profile)
 		{
 			BuildFile (profile, true, false, new List<string> () { "/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5/System.Drawing.dll" }, "bmac_smoke.cs");
 		}
+#endif
 
 		[Test]
+#if !NET
 		[TestCase (Profile.macOSFull)]
-		[TestCase (Profile.macOSMobile)]
 		[TestCase (Profile.macOSSystem)]
+#endif
+		[TestCase (Profile.macOSMobile)]
 		public void BMac_With_Hyphen_In_Name (Profile profile)
 		{
 			BuildFile (profile, "bmac-with-hyphen-in-name.cs");
 		}
 
 		[Test]
+#if !NET
 		[TestCase (Profile.macOSFull)]
-		[TestCase (Profile.macOSMobile)]
 		[TestCase (Profile.macOSSystem)]
+#endif
+		[TestCase (Profile.macOSMobile)]
 		public void PropertyRedefinitionMac (Profile profile)
 		{
 			BuildFile (profile, "property-redefination-mac.cs");
 		}
 
 		[Test]
+#if !NET
 		[TestCase (Profile.macOSFull)]
-		[TestCase (Profile.macOSMobile)]
 		[TestCase (Profile.macOSSystem)]
+#endif
+		[TestCase (Profile.macOSMobile)]
 		public void NSApplicationPublicEnsureMethods (Profile profile)
 		{
 			BuildFile (profile, "NSApplicationPublicEnsureMethods.cs");
 		}
 
 		[Test]
+#if !NET
 		[TestCase (Profile.macOSFull)]
-		[TestCase (Profile.macOSMobile)]
 		[TestCase (Profile.macOSSystem)]
+#endif
+		[TestCase (Profile.macOSMobile)]
 		public void ProtocolDuplicateAbstract (Profile profile)
 		{
 			BuildFile (profile, "protocol-duplicate-abstract.cs");
@@ -170,9 +184,11 @@ namespace GeneratorTests
 		}
 
 		[Test]
+#if !NET
 		[TestCase (Profile.macOSFull)]
-		[TestCase (Profile.macOSMobile)]
 		[TestCase (Profile.macOSSystem)]
+#endif
+		[TestCase (Profile.macOSMobile)]
 		public void Bug31788 (Profile profile)
 		{
 			var bgen = new BGenTool ();
@@ -581,7 +597,7 @@ namespace GeneratorTests
 		public void GHIssue5692 () => BuildFile (Profile.iOS, "ghissue5692.cs");
 
 		[Test]
-		public void GHIssue7304 () => BuildFile (Profile.macOSFull, "ghissue7304.cs");
+		public void GHIssue7304 () => BuildFile (Profile.macOSMobile, "ghissue7304.cs");
 
 		[Test]
 		public void RefOutParameters ()

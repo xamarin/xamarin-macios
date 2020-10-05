@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 
-#if MTOUCH || MMP
+#if MTOUCH || MMP || BUNDLER
 using Mono.Cecil;
 
 using Xamarin.Bundler;
+using Xamarin.Utils;
 using Registrar;
 #endif
 
@@ -17,6 +18,19 @@ public class Framework
 	public Version Version;
 	public Version VersionAvailableInSimulator;
 	public bool AlwaysWeakLinked;
+
+#if MTOUCH || MMP || BUNDLER
+	public bool IsFrameworkAvailableInSimulator (Application app)
+	{
+		if (VersionAvailableInSimulator == null)
+			return false;
+
+		if (VersionAvailableInSimulator > app.SdkVersion)
+			return false;
+
+		return true;
+	}
+#endif
 }
 
 public class Frameworks : Dictionary <string, Framework>
@@ -80,12 +94,15 @@ public class Frameworks : Dictionary <string, Framework>
 				mac_frameworks = new Frameworks () {
 					{ "Accelerate", 10, 0 },
 					{ "AppKit", 10, 0 },
+					{ "CoreFoundation", "CoreFoundation", 10, 0 },
 					{ "CoreGraphics", "QuartzCore", 10, 0 },
 					{ "CoreImage", "QuartzCore", 10, 0 },
 					{ "Foundation", 10, 0 },
 					{ "ImageKit", "Quartz", 10, 0 },
 					{ "PdfKit", "Quartz", 10, 0 },
 					{ "Security", 10, 0 },
+
+					{ "GSS", "GSS", 10, 1 },
 
 					{ "AudioUnit", 10, 2 },
 					{ "CoreMidi", "CoreMIDI", 10, 2 },
@@ -195,6 +212,17 @@ public class Frameworks : Dictionary <string, Framework>
 					//{ "CoreHaptics", "CoreHaptics", 10,15 },
 
 					{ "AutomaticAssessmentConfiguration", "AutomaticAssessmentConfiguration", 10,15,4 },
+
+					{ "Accessibility", "Accessibility", 11,0 },
+					{ "AppTrackingTransparency", "AppTrackingTransparency", 11,0 },
+					{ "CallKit", "CallKit", 11,0 },
+					{ "ClassKit", "ClassKit", 11,0 },
+					{ "MLCompute", "MLCompute", 11,0 },
+					{ "PassKit", "PassKit", 11,0 },
+					{ "ReplayKit", "ReplayKit", 11,0 },
+					{ "ScreenTime", "ScreenTime", 11,0 },
+					{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 11,0 },
+					{ "UserNotificationsUI", "UserNotificationsUI", 11,0 },
 				};
 			}
 			return mac_frameworks;
@@ -215,6 +243,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "CFNetwork", "CFNetwork", 3 },
 				{ "CoreAnimation", "QuartzCore", 3 },
 				{ "CoreData", "CoreData", 3 },
+				{ "CoreFoundation", "CoreFoundation", 3 },
 				{ "CoreGraphics", "CoreGraphics", 3 },
 				{ "CoreLocation", "CoreLocation", 3 },
 				{ "ExternalAccessory", "ExternalAccessory", 3 },
@@ -249,6 +278,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "CoreImage", "CoreImage", 5 },
 				{ "CoreBluetooth", "CoreBluetooth", 5 },
 				{ "Twitter", "Twitter", 5 },
+				{ "GSS", "GSS", 5 },
 
 				{ "MediaToolbox", "MediaToolbox", 6 },
 				{ "PassKit", "PassKit", 6 },
@@ -300,7 +330,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "IntentsUI", "IntentsUI", 10 },
 
 				{ "ARKit", "ARKit", 11 },
-				{ "CoreNFC", "CoreNFC", 11, true }, /* not always present, e.g. iPad w/iOS 12, so must be weak linked */
+				{ "CoreNFC", "CoreNFC", new Version (11, 0), NotAvailableInSimulator, true }, /* not always present, e.g. iPad w/iOS 12, so must be weak linked; doesn't work in the simulator in Xcode 12 (https://stackoverflow.com/q/63915728/183422) */
 				{ "DeviceCheck", "DeviceCheck", new Version (11, 0), new Version (13, 0) },
 				{ "IdentityLookup", "IdentityLookup", 11 },
 				{ "IOSurface", "IOSurface", new Version (11, 0), NotAvailableInSimulator /* Not available in the simulator (the header is there, but broken) */  },
@@ -330,6 +360,16 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "VisionKit", "VisionKit", 13, 0 },
 
 				{ "AutomaticAssessmentConfiguration", "AutomaticAssessmentConfiguration", 13, 4 },
+
+				{ "Accessibility", "Accessibility", 14,0 },
+				{ "AppClip", "AppClip", 14,0 },
+				{ "AppTrackingTransparency", "AppTrackingTransparency", 14,0 },
+				{ "MediaSetup", "MediaSetup", new Version (14, 0), NotAvailableInSimulator /* no headers in beta 3 */ },
+				{ "MLCompute", "MLCompute", new Version (14,0), NotAvailableInSimulator },
+				{ "NearbyInteraction", "NearbyInteraction", 14,0 },
+				{ "ScreenTime", "ScreenTime", 14,0 },
+				{ "SensorKit", "SensorKit", 14,0 },
+				{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 14,0 },
 
 				// the above MUST be kept in sync with simlauncher
 				// see tools/mtouch/Makefile
@@ -394,8 +434,10 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "PushKit", "PushKit", 6 },
 				{ "SoundAnalysis", "SoundAnalysis", 6 },
 				{ "CoreMedia", "CoreMedia", 6 },
-				{ "StoreKit", "StoreKit", 6,2 }
+				{ "StoreKit", "StoreKit", 6,2 },
 
+				{ "Accessibility", "Accessibility", 7,0 },
+				{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 7,0 },
 			};
 		}
 		return watch_frameworks;
@@ -418,6 +460,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "CoreAudio", "CoreAudio", 9 },
 					{ "CoreBluetooth", "CoreBluetooth", 9 },
 					{ "CoreData", "CoreData", 9 },
+					{ "CoreFoundation", "CoreFoundation", 9 },
 					{ "CoreGraphics", "CoreGraphics", 9 },
 					{ "CoreImage", "CoreImage", 9 },
 					{ "CoreLocation", "CoreLocation", 9 },
@@ -474,6 +517,14 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "AuthenticationServices", "AuthenticationServices", 13,0 },
 					{ "SoundAnalysis", "SoundAnalysis", 13,0 },
 					{ "BackgroundTasks", "BackgroundTasks", 13, 0 },
+
+					{ "Accessibility", "Accessibility", 14,0 },
+					{ "AppTrackingTransparency", "AppTrackingTransparency", 14,0 },
+					{ "CoreHaptics", "CoreHaptics", 14, 0 },
+					{ "LinkPresentation", "LinkPresentation", 14,0 },
+					{ "MLCompute", "MLCompute", new Version (14,0), NotAvailableInSimulator },
+					{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 14,0 },
+					{ "Intents", "Intents", 14,0 },
 				};
 			}
 			return tvos_frameworks;
@@ -497,8 +548,8 @@ public class Frameworks : Dictionary <string, Framework>
 		}
 	}
 
-#if MMP
-	public static void Gather (Application app, AssemblyDefinition product_assembly, HashSet<string> frameworks, HashSet<string> weak_frameworks)
+#if MTOUCH || MMP || BUNDLER
+	static void Gather (Application app, AssemblyDefinition product_assembly, HashSet<string> frameworks, HashSet<string> weak_frameworks, Func<Framework, bool> include_framework)
 	{
 		var namespaces = new HashSet<string> ();
 
@@ -508,25 +559,62 @@ public class Frameworks : Dictionary <string, Framework>
 				namespaces.Add (td.Namespace);
 
 		// Iterate over all the namespaces and check which frameworks we need to link with.
+		var all_frameworks = GetFrameworks (app.Platform, app.IsSimulatorBuild);
 		foreach (var nspace in namespaces) {
-			switch (nspace) {
-			case "QTKit":
-				if (Driver.LinkProhibitedFrameworks) {
-					ErrorHelper.Warning (5221, Errors.MM5221, nspace);
-				}  else {
-					ErrorHelper.Warning (5220, Errors.MM5220, nspace);
-					continue;
-				}
-				break;
+			if (!all_frameworks.TryGetValue (nspace, out var framework))
+				continue;
+
+			if (!include_framework (framework))
+				continue;
+
+			if (app.SdkVersion < framework.Version) {
+				// We're building with an old sdk, and the framework doesn't exist there.
+				continue;
 			}
-			if (Driver.GetFrameworks (app).TryGetValue (nspace, out var framework)) {
-				if (app.SdkVersion >= framework.Version) {
-					var add_to = app.DeploymentTarget >= framework.Version ? frameworks : weak_frameworks;
-					add_to.Add (framework.Name);
-					continue;
-				}
-			}
+
+			if (app.IsSimulatorBuild && !framework.IsFrameworkAvailableInSimulator (app))
+				continue;
+
+			var weak_link = framework.AlwaysWeakLinked || app.DeploymentTarget < framework.Version;
+			var add_to = weak_link ? weak_frameworks : frameworks;
+			add_to.Add (framework.Name);
 		}
+
+		// Make sure there are no duplicates between frameworks and weak frameworks.
+		// Keep the weak ones.
+		frameworks.ExceptWith (weak_frameworks);
 	}
+
+	static bool FilterFrameworks (Application app, Framework framework)
+	{
+		switch (app.Platform) {
+		case ApplePlatform.iOS:
+		case ApplePlatform.TVOS:
+		case ApplePlatform.WatchOS:
+			break; // Include all frameworks by default
+		case ApplePlatform.MacOSX:
+			switch (framework.Name) {
+			case "QTKit":
+#if MMP
+				if (Driver.LinkProhibitedFrameworks) {
+					ErrorHelper.Warning (5221, Errors.MM5221, framework.Name);
+				} else {
+					ErrorHelper.Warning (5220, Errors.MM5220, framework.Name);
+					return false;
+				}
 #endif
+				return true;
+			}
+			return true;
+		default:
+			throw ErrorHelper.CreateError (71, Errors.MX0071 /* "Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case." */, app.Platform, app.GetProductName ());
+		}
+		return true;
+	}
+
+	public static void Gather (Application app, AssemblyDefinition product_assembly, HashSet<string> frameworks, HashSet<string> weak_frameworks)
+	{
+		Gather (app, product_assembly, frameworks, weak_frameworks, (framework) => FilterFrameworks (app, framework));
+	}
+#endif // MTOUCH || MMP || BUNDLER
 }

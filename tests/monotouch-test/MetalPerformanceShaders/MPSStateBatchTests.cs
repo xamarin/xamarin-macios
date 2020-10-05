@@ -25,7 +25,7 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 		IMTLDevice device;
 		NSArray<MPSState> cache;
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Metal ()
 		{
 			TestRuntime.AssertDevice ();
@@ -53,7 +53,7 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 		public void MPSImageBatchResourceSizeTest ()
 		{
 			var size = MPSStateBatch.GetResourceSize (cache);
-			Assert.That (size, Is.GreaterThan (0), "idx");
+			Assert.That (size, Is.GreaterThan ((nuint) 0), "idx");
 		}
 	}
 }

@@ -68,6 +68,13 @@ namespace Introspection {
 				return true;
 			case "NEPacketTunnelProvider":
 				return true;
+			// On iOS 14 (beta 4) we get: [NISimulator] To simulate Nearby Interaction distance and direction, launch two or more simulators and
+			// move the simulator windows around the screen.
+			// The same error occurs when trying to default init NISession in Xcode.
+			// It seems that it is only possible to create a NISession when there are two devices or sims running, which makes sense given the description of
+			// NISession from Apple API docs: "An object that identifies a unique connection between two peer devices"
+			case "NISession":
+				return true;
 			case "NSUnitDispersion": // -init should never be called on NSUnit!
 			case "NSUnitVolume": // -init should never be called on NSUnit!
 			case "NSUnitDuration": // -init should never be called on NSUnit!
@@ -106,6 +113,10 @@ namespace Introspection {
 			case "MPSCnnUpsamplingNearest":
 				return true;
 			case "MPSImageArithmetic": // Cannot directly initialize MPSImageArithmetic. Use one of the sub-classes of MPSImageArithmetic.
+				return true;
+			case "CKDiscoverUserInfosOperation": // deprecated, throws exception
+			case "CKSubscription":
+			case "MPSCnnConvolutionState":
 				return true;
 			case "QTMovie":
 				return TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 14, 4); // Broke in macOS 10.14.4.
@@ -411,6 +422,7 @@ namespace Introspection {
 				// they don't make sense without extra arguments
 				return true;
 			case "ASCredentialProviderViewController": // goal is to "provides a standard interface for creating a credential provider extension", not a custom one
+			case "ASAccountAuthenticationModificationViewController":
 			case "INUIAddVoiceShortcutViewController": // Doesn't make sense without INVoiceShortcut and there is no other way to set this unless you use the other only .ctor
 			case "INUIEditVoiceShortcutViewController": // Doesn't make sense without INVoiceShortcut and there is no other way to set this unless you use the other only .ctor
 			case "ILClassificationUIExtensionViewController": // Meant to be an extension
@@ -423,7 +435,12 @@ namespace Introspection {
 			case "MPSNNOptimizer": // Not meant to be used, only subclasses
 			case "MPSNNReduceBinary": // Not meant to be used, only subclasses
 			case "MPSNNReduceUnary": // Not meant to be used, only subclasses
+			case "MPSMatrixRandom": // Not meant to be used, only subclasses
 				if (cstr == "Void .ctor(Metal.IMTLDevice)" || cstr == $"Void .ctor(Foundation.NSCoder, Metal.IMTLDevice)")
+					return true;
+				break;
+			case "MPSTemporaryNDArray": // NS_UNAVAILABLE
+				if (ctor.ToString () == $"Void .ctor(Metal.IMTLDevice, MetalPerformanceShaders.MPSNDArrayDescriptor)")
 					return true;
 				break;
 			case "MFMailComposeViewController": // You are meant to use the system provided one
@@ -457,6 +474,25 @@ namespace Introspection {
 				break;
 			case "NSSharingServicePickerToolbarItem": // This type doesn't have .ctors
 				if (cstr == $"Void .ctor(System.String)")
+					return true;
+				break;
+			case "UIRefreshControl": // init should be used instead.
+				if (cstr == $"Void .ctor(CoreGraphics.CGRect)")
+					return true;
+				break;
+			case "PKAddSecureElementPassViewController":
+				// no overview available yet... unlikely that it can be customized
+				if (cstr == "Void .ctor(System.String, Foundation.NSBundle)")
+					return true;
+				break;
+			case "VNDetectedPoint":
+				// This class is not meant to be instantiated
+				if (cstr == "Void .ctor(Double, Double)")
+					return true;
+				break;
+			case "VNStatefulRequest":
+				// This class uses another overload to get instantiated
+				if (cstr == "Void .ctor(Vision.VNRequestCompletionHandler)")
 					return true;
 				break;
 			}

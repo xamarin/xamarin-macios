@@ -38,7 +38,7 @@ namespace Xharness.Jenkins {
 		public bool IncludeMac = true;
 		public bool IncludeiOS = true;
 		public bool IncludeiOS64 = true;
-		public bool IncludeiOS32 = true;
+		public bool IncludeiOS32 = false; // broken in xcode 12 beta 3, not possible with DTK
 		public bool IncludeiOSExtensions;
 		public bool ForceExtensionBuildOnly;
 		public bool IncludetvOS = true;
@@ -149,7 +149,14 @@ namespace Xharness.Jenkins {
 
 			var simTasksFactory = new RunSimulatorTasksFactory ();
 			var loadsim = simTasksFactory.CreateAsync (this, processManager, testVariationsFactory)
-				.ContinueWith ((v) => { Console.WriteLine ("Simulator tasks created"); Tasks.AddRange (v.Result); });
+				.ContinueWith ((v) => {
+					if (v.Status == TaskStatus.RanToCompletion) {
+						Console.WriteLine ("Simulator tasks created");
+						Tasks.AddRange (v.Result);
+					} else {
+						Console.WriteLine ($"Failed to create simulator tasks: {v.Exception}");
+					}
+				});
 			
 			//Tasks.AddRange (await CreateRunSimulatorTasksAsync ());
 
@@ -185,9 +192,11 @@ namespace Xharness.Jenkins {
 			};
 			Tasks.Add (runXtroReporter);
 
-			var buildDotNetGeneratorProject = new TestProject (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "bgen", "bgen-tests.csproj")));
+			var buildDotNetGeneratorProject = new TestProject (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "bgen", "bgen-tests.csproj"))) {
+				IsDotNetProject = true,
+			};
 			var buildDotNetGenerator = new DotNetBuildTask (jenkins: this, testProject: buildDotNetGeneratorProject, processManager: processManager) {
-				TestProject = new TestProject (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "bgen", "bgen-tests.csproj"))),
+				TestProject = buildDotNetGeneratorProject,
 				SpecifyPlatform = false,
 				SpecifyConfiguration = false,
 				Platform = TestPlatform.iOS,
@@ -201,7 +210,9 @@ namespace Xharness.Jenkins {
 			};
 			Tasks.Add (runDotNetGenerator);
 
-			var buildDotNetTestsProject = new TestProject (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "dotnet", "UnitTests", "DotNetUnitTests.csproj")));
+			var buildDotNetTestsProject = new TestProject (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "dotnet", "UnitTests", "DotNetUnitTests.csproj"))) {
+				IsDotNetProject = true,
+			};
 			var buildDotNetTests = new DotNetBuildTask (this, testProject: buildDotNetTestsProject, processManager: processManager) {
 				SpecifyPlatform = false,
 				Platform = TestPlatform.All,
@@ -212,7 +223,7 @@ namespace Xharness.Jenkins {
 				TestProject = buildDotNetTestsProject,
 				Platform = TestPlatform.All,
 				TestName = "DotNet tests",
-				Timeout = TimeSpan.FromMinutes (5),
+				Timeout = TimeSpan.FromMinutes (15),
 				Ignored = !IncludeDotNet,
 			};
 			Tasks.Add (runDotNetTests);
@@ -351,6 +362,12 @@ namespace Xharness.Jenkins {
 						var run_device = task as RunDeviceTask;
 						if (run_device != null) {
 							allDeviceTasks.Add (run_device);
+							continue;
+						}
+
+						var simulator = task as RunSimulatorTask;
+						if (simulator != null) {
+							allSimulatorTasks.Add (simulator);
 							continue;
 						}
 

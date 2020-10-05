@@ -77,7 +77,6 @@ MONOTOUCH_HEADERS =     \
 
 MONOTOUCH_LIBS =               \
 	libextension.a             \
-	libwatchextension.a        \
 	libtvextension.a           \
 	libapp.a                   \
 	libxamarin.a               \
@@ -197,11 +196,11 @@ $(eval $(call PlatformTemplate,tvsimulator,TVSIMULATOR,x86_64))
 endif
 
 #
-# LibTemplate we build three different libraries from the same source code,
-# libapp.a, libextension.a and libwatchextension.a.
+# LibTemplate we build two different libraries from the same source code,
+# libapp.a and libextension.a
 #
 # They're all built from the same soure file (extension-main.m), but with different defines:
-# libextension.a has EXTENSION defined, while libwatchextension.a has WATCH_EXTENSION defined.
+# libextension.a has EXTENSION defined.
 #
 
 define LibTemplate
@@ -222,14 +221,6 @@ $$(foreach arch,$$($(2)_ARCHITECTURES),.libs/$(1)/tvextension-main.$$(arch).o): 
 	$$(call Q_2,LIPO,  [$1]) $(DEVICE_BIN_PATH)/lipo $$^ -create -output $$@
 
 .libs/$(1)/libapp.a:       $$(foreach arch,$$($(2)_ARCHITECTURES),.libs/$(1)/libapp.$$(arch).a)
-	$(Q) rm -f $$@
-	$$(call Q_2,LIPO,  [$1]) $(DEVICE_BIN_PATH)/lipo $$^ -create -output $$@
-
-.libs/$(1)/libwatchextension.%.a: .libs/$(1)/watchextension-main.%.o
-	$(Q) rm -f $$@
-	$$(call Q_2,AR,    [$1]) $(DEVICE_BIN_PATH)/ar cru $$@ $$^
-
-.libs/$(1)/libwatchextension.a: $$(foreach arch,$$($(2)_ARCHITECTURES),.libs/$(1)/libwatchextension.$$(arch).a)
 	$(Q) rm -f $$@
 	$$(call Q_2,LIPO,  [$1]) $(DEVICE_BIN_PATH)/lipo $$^ -create -output $$@
 

@@ -96,6 +96,9 @@ partial class TestRuntime
 		NUnit.Framework.Assert.Ignore (message);
 	}
 
+#if NET
+	// error CS1061: 'AppDomain' does not contain a definition for 'DefineDynamicAssembly' and no accessible extension method 'DefineDynamicAssembly' accepting a first argument of type 'AppDomain' could be found (are you missing a using directive or an assembly reference?)
+#else
 	static AssemblyName assemblyName = new AssemblyName ("DynamicAssemblyExample"); 
 	public static bool CheckExecutingWithInterpreter ()
 	{
@@ -110,6 +113,7 @@ partial class TestRuntime
 			return false;
 		}
 	}
+#endif
 
 	public static void AssertXcodeVersion (int major, int minor, int build = 0)
 	{
@@ -204,6 +208,24 @@ partial class TestRuntime
 	public static bool CheckXcodeVersion (int major, int minor, int build = 0)
 	{
 		switch (major) {
+		case 12:
+			switch (minor) {
+			case 0:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (7, 0);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (14, 0);
+#elif __IOS__
+				return CheckiOSSystemVersion (14, 0);
+#elif MONOMAC
+				return CheckMacSystemVersion (11, 0, 0);
+#else
+				throw new NotImplementedException ();
+#endif
+			default:
+				throw new NotImplementedException ();
+			}
+			break;
 		case 11:
 			switch (minor) {
 			case 0:
@@ -263,6 +285,30 @@ partial class TestRuntime
 				return CheckiOSSystemVersion (13, 4);
 #elif MONOMAC
 				return CheckMacSystemVersion (10, 15, 4);
+#else
+				throw new NotImplementedException ();
+#endif
+			case 5:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (6, 2);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (13, 4);
+#elif __IOS__
+				return CheckiOSSystemVersion(13, 5);
+#elif MONOMAC
+				return CheckMacSystemVersion (10, 15, 5);
+#else
+				throw new NotImplementedException ();
+#endif
+			case 6:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (6, 2);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (13, 4);
+#elif __IOS__
+				return CheckiOSSystemVersion(13, 6);
+#elif MONOMAC
+				return CheckMacSystemVersion (10, 15, 6);
 #else
 				throw new NotImplementedException ();
 #endif

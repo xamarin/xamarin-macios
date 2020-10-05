@@ -49,19 +49,25 @@ namespace CoreML {
 		Generic = 0,
 		FeatureType = 1,
 		IO = 3,
-		[Watch (4,2), TV (11,2), Mac (10,13,2), iOS (11,2)]
 		CustomLayer = 4,
 		CustomModel = 5,
 		Update = 6,
 		Parameters = 7,
+		ModelDecryptionKeyFetch = 8,
+		ModelDecryption = 9,
+		ModelCollection = 10,
 	}
 
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 	[Native]
 	public enum MLMultiArrayDataType : long {
-		Double = 65536 | 64,
-		Float32 = 65536 | 32,
-		Int32 = 131072 | 32,
+		Double = 0x10000 | 64,
+		// added in xcode12 but it's the same a `Double` and can be used in earlier versions
+		Float64 = 0x10000 | 64,
+		Float32 = 0x10000 | 32,
+		// added in xcode12 but it's the same a `Float32` and can be used in earlier versions
+		Float = 0x10000 | 32,
+		Int32 = 0x20000 | 32,
 	}
 
 	[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
@@ -109,7 +115,7 @@ namespace CoreML {
 
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 	[BaseType (typeof (NSObject))]
-	interface MLDictionaryFeatureProvider : MLFeatureProvider {
+	interface MLDictionaryFeatureProvider : MLFeatureProvider, NSSecureCoding {
 
 		[Export ("dictionary")]
 		NSDictionary<NSString, MLFeatureValue> Dictionary { get; }
@@ -168,7 +174,7 @@ namespace CoreML {
 
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 	[BaseType (typeof (NSObject))]
-	interface MLFeatureValue : NSCopying {
+	interface MLFeatureValue : NSCopying, NSSecureCoding {
 
 		[Export ("type")]
 		MLFeatureType Type { get; }
@@ -398,6 +404,12 @@ namespace CoreML {
 		[return: NullAllowed]
 		NSObject GetParameterValue (MLParameterKey key, [NullAllowed] out NSError error);
 
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[Static]
+		[Async]
+		[Export ("loadContentsOfURL:configuration:completionHandler:")]
+		void LoadContents (NSUrl url, MLModelConfiguration configuration, Action<MLModel, NSError> handler);
+
 		// Category MLModel (MLModelCompilation)
 
 		[Static]
@@ -428,6 +440,10 @@ namespace CoreML {
 
 		[Wrap ("_Metadata")]
 		MLModelMetadata Metadata { get; }
+
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[NullAllowed, Export ("classLabels", ArgumentSemantic.Copy)]
+		NSObject[] ClassLabels { get; }
 
 		// From MLModelDescription (MLUpdateAdditions)
 
@@ -480,7 +496,7 @@ namespace CoreML {
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
-	interface MLMultiArray {
+	interface MLMultiArray : NSSecureCoding {
 
 		[Export ("dataPointer")]
 		IntPtr DataPointer { get; }
@@ -532,6 +548,13 @@ namespace CoreML {
 		[Internal]
 		// Bind 'key' as IntPtr to avoid multiple conversions (nint[] -> NSNumber[] -> NSArray)
 		void SetObject (NSNumber obj, IntPtr key);
+
+		// @interface Concatenating (MLMultiArray)
+
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[Static]
+		[Export ("multiArrayByConcatenatingMultiArrays:alongAxis:dataType:")]
+		MLMultiArray Concat (MLMultiArray[] multiArrays, nint axis, MLMultiArrayDataType dataType);
 	}
 
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
@@ -710,7 +733,7 @@ namespace CoreML {
 	[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface MLSequence {
+	interface MLSequence : NSSecureCoding {
 
 		[Export ("type")]
 		MLFeatureType Type { get; }
@@ -968,6 +991,18 @@ namespace CoreML {
 		[return: NullAllowed]
 		MLUpdateTask Create (NSUrl modelUrl, IMLBatchProvider trainingData, [NullAllowed] MLModelConfiguration configuration, MLUpdateProgressHandlers progressHandlers, [NullAllowed] out NSError error);
 
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[Static]
+		[Export ("updateTaskForModelAtURL:trainingData:completionHandler:error:")]
+		[return: NullAllowed]
+		MLUpdateTask Create (NSUrl modelUrl, IMLBatchProvider trainingData, Action<MLUpdateContext> completionHandler, [NullAllowed] out NSError error);
+
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[Static]
+		[Export ("updateTaskForModelAtURL:trainingData:progressHandlers:error:")]
+		[return: NullAllowed]
+		MLUpdateTask Create (NSUrl modelUrl, IMLBatchProvider trainingData, MLUpdateProgressHandlers progressHandlers, [NullAllowed] out NSError error);
+
 		[Export ("resumeWithParameters:")]
 		void Resume (NSDictionary<MLParameterKey, NSObject> updateParameters);
 	}
@@ -981,5 +1016,51 @@ namespace CoreML {
 		[Abstract]
 		[Export ("writeToURL:error:")]
 		bool Write (NSUrl url, [NullAllowed] out NSError error);
+	}
+
+	[Mac (11,0), iOS (14,0)]
+	[NoTV][NoWatch]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MLModelCollection {
+
+		[Export ("identifier")]
+		string Identifier { get; }
+
+		[Export ("deploymentID")]
+		string DeploymentId { get; }
+
+		[Export ("entries", ArgumentSemantic.Copy)]
+		NSDictionary<NSString, MLModelCollectionEntry> Entries { get; }
+
+		[Static]
+		[Async]
+		[Export ("beginAccessingModelCollectionWithIdentifier:completionHandler:")]
+		NSProgress BeginAccessingModelCollection (string identifier, Action<MLModelCollection, NSError> completionHandler);
+
+		[Static]
+		[Async]
+		[Export ("endAccessingModelCollectionWithIdentifier:completionHandler:")]
+		void EndAccessingModelCollection (string identifier, Action<bool, NSError> completionHandler);
+
+		[Notification]
+		[Field ("MLModelCollectionDidChangeNotification")]
+		NSString DidChangeNotification { get; }
+	}
+
+	[Mac (11,0), iOS (14,0)]
+	[NoTV][NoWatch]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MLModelCollectionEntry {
+
+		[Export ("modelIdentifier")]
+		string ModelIdentifier { get; }
+
+		[Export ("modelURL")]
+		NSUrl ModelUrl { get; }
+
+		[Export ("isEqualToModelCollectionEntry:")]
+		bool IsEqual (MLModelCollectionEntry entry);
 	}
 }

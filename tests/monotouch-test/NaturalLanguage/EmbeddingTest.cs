@@ -49,7 +49,7 @@ namespace MonoTouchFixtures.NaturalLanguage {
 			var vd = new NLVectorDictionary ();
 			vd ["a"] = new [] { 0.7f, 1.0f };
 			var wd = vd.Dictionary;
-			Assert.That (wd.Count, Is.EqualTo (1), "Count");
+			Assert.That (wd.Count, Is.EqualTo ((nuint) 1), "Count");
 
 			using (var url = NSUrl.FromFilename (temp)) {
 				var strong = NLEmbedding.Write (vd, NLLanguage.French, 1, url, out var error);

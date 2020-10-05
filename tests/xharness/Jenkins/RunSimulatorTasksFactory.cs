@@ -20,34 +20,61 @@ namespace Xharness.Jenkins {
 				if (!project.IsExecutableProject)
 					continue;
 
-				bool ignored = !jenkins.IncludeSimulator;
+				bool ignored = project.Ignore ?? !jenkins.IncludeSimulator;
 				if (!jenkins.IsIncluded (project))
 					ignored = true;
 
 				var ps = new List<Tuple<TestProject, TestPlatform, bool>> ();
-				if (!project.SkipiOSVariation)
-					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project, TestPlatform.iOS_Unified, ignored || !jenkins.IncludeiOS64));
-				if (project.MonoNativeInfo != null)
-					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project, TestPlatform.iOS_TodayExtension64, ignored || !jenkins.IncludeiOS64));
-				if (!project.SkiptvOSVariation)
-					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project.AsTvOSProject (), TestPlatform.tvOS, ignored || !jenkins.IncludetvOS));
-				if (!project.SkipwatchOSVariation)
-					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project.AsWatchOSProject (), TestPlatform.watchOS, ignored || !jenkins.IncludewatchOS));
+				if (!project.GenerateVariations) {
+					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project, project.TestPlatform, ignored));
+				} else {
+					if (!project.SkipiOSVariation)
+						ps.Add (new Tuple<TestProject, TestPlatform, bool> (project, TestPlatform.iOS_Unified, ignored));
+					if (project.MonoNativeInfo != null)
+						ps.Add (new Tuple<TestProject, TestPlatform, bool> (project, TestPlatform.iOS_TodayExtension64, ignored));
+					if (!project.SkiptvOSVariation)
+						ps.Add (new Tuple<TestProject, TestPlatform, bool> (project.AsTvOSProject (), TestPlatform.tvOS, ignored));
+					if (!project.SkipwatchOSVariation)
+						ps.Add (new Tuple<TestProject, TestPlatform, bool> (project.AsWatchOSProject (), TestPlatform.watchOS, ignored));
+				}
 
 				var configurations = project.Configurations;
 				if (configurations == null)
 					configurations = new string [] { "Debug" };
 				foreach (var config in configurations) {
 					foreach (var pair in ps) {
-						var derived = new MSBuildTask (jenkins: jenkins, testProject: project, processManager: processManager) {
-							ProjectConfiguration = config,
-							ProjectPlatform = "iPhoneSimulator",
-							Platform = pair.Item2,
-							Ignored = pair.Item3,
-							TestName = project.Name,
-							Dependency = project.Dependency,
-						};
-						derived.CloneTestProject (jenkins.MainLog, processManager, pair.Item1);
+						var configIgnored = pair.Item3;
+						var testPlatform = pair.Item2;
+						switch (testPlatform) {
+						case TestPlatform.iOS_Unified:
+						case TestPlatform.iOS_TodayExtension64:
+							configIgnored |= !jenkins.IncludeiOS64;
+							break;
+						case TestPlatform.tvOS:
+							configIgnored |= !jenkins.IncludetvOS;
+							break;
+						case TestPlatform.watchOS:
+							configIgnored |= !jenkins.IncludewatchOS;
+							break;
+						default:
+							Console.WriteLine ("Unknown test platform for ignore check: {0}", testPlatform);
+							break;
+						}
+
+						MSBuildTask derived;
+						if (project.IsDotNetProject) {
+							derived = new DotNetBuildTask (jenkins: jenkins, testProject: project, processManager: processManager);
+							configIgnored |= !jenkins.IncludeDotNet;
+						} else {
+							derived = new MSBuildTask (jenkins: jenkins, testProject: project, processManager: processManager);
+						}
+						derived.ProjectConfiguration = config;
+						derived.ProjectPlatform = "iPhoneSimulator";
+						derived.Platform = testPlatform;
+						derived.Ignored = configIgnored;
+						derived.TestName = project.Name;
+						derived.Dependency = project.Dependency;
+						derived.CloneTestProject (jenkins.MainLog, processManager, pair.Item1, HarnessConfiguration.RootDirectory);
 						var simTasks = CreateAsync (jenkins, processManager, derived);
 						runSimulatorTasks.AddRange (simTasks);
 						foreach (var task in simTasks) {
@@ -67,6 +94,9 @@ namespace Xharness.Jenkins {
 					processManager: processManager,
 					tunnelBore: jenkins.TunnelBore,
 					candidates: candidates?.Cast<SimulatorDevice> () ?? test.Candidates)).ToList ();
+
+			if (jenkins.IsServerMode)
+				return testVariations;
 
 			foreach (var tv in testVariations) {
 				if (!tv.Ignored)
@@ -100,8 +130,21 @@ namespace Xharness.Jenkins {
 				ignored = new [] { false };
 				break;
 			case TestPlatform.iOS_Unified:
-				platforms = new TestPlatform [] { TestPlatform.iOS_Unified32, TestPlatform.iOS_Unified64 };
-				ignored = new [] { !jenkins.IncludeiOS32, false };
+				var iOSProject = (iOSTestProject) buildTask.TestProject;
+				if (iOSProject.SkipiOS32Variation && iOSProject.SkipiOS64Variation) {
+					return runtasks;
+				} else if (iOSProject.SkipiOS32Variation) {
+					targets = new TestTarget [] { TestTarget.Simulator_iOS64 };
+					platforms = new TestPlatform [] { TestPlatform.iOS_Unified64 };
+					ignored = new [] { false };
+				} else if (iOSProject.SkipiOS64Variation) {
+					targets = new TestTarget [] { TestTarget.Simulator_iOS32 };
+					platforms = new TestPlatform [] { TestPlatform.iOS_Unified32 };
+					ignored = new [] { !jenkins.IncludeiOS32 };
+				} else {
+					platforms = new TestPlatform [] { TestPlatform.iOS_Unified32, TestPlatform.iOS_Unified64 };
+					ignored = new [] { !jenkins.IncludeiOS32, false };
+				}
 				break;
 			case TestPlatform.iOS_TodayExtension64:
 				targets = new TestTarget [] { TestTarget.Simulator_iOS64 };

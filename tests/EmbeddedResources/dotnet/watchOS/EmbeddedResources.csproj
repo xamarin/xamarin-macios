@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.watchOS.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net5.0-watchos</TargetFramework>
+  </PropertyGroup>
+  <Import Project="..\shared.targets" />
+</Project>

@@ -98,24 +98,21 @@ namespace MonoTouchFixtures.Foundation {
 		// I guess no one ever used them since they don't work...
 		// commented (selectors removed from MT bindings) - can be re-enabled to test newer iOS releases
 		[Test]
-		[ExpectedException (typeof (MonoTouchException))]
 		public void PathForImageResource ()
 		{
-			main.PathForImageResource ("basn3p08.png");
+			Assert.Throws<MonoTouchException> (() => main.PathForImageResource ("basn3p08.png"));
 		}
 
 		[Test]
-		[ExpectedException (typeof (MonoTouchException))]
 		public void PathForSoundResource ()
 		{
-			main.PathForSoundResource ("basn3p08.png");
+			Assert.Throws<MonoTouchException> (() => main.PathForSoundResource ("basn3p08.png"));
 		}
 
 		[Test]
-		[ExpectedException (typeof (MonoTouchException))]
 		public void LoadNib ()
 		{
-			NSBundle.LoadNib (String.Empty, main);
+			Assert.Throws<MonoTouchException> (() => NSBundle.LoadNib (String.Empty, main));
 		}
 #endif
 		[Test]
@@ -141,7 +138,7 @@ namespace MonoTouchFixtures.Foundation {
 
 			// on iOS8 device this now ends with "/StoreKit/sandboxReceipt" 
 			// instead of "/StokeKit/receipt"
-			Assert.That (main.AppStoreReceiptUrl.AbsoluteString, Is.StringEnding ("eceipt"), "AppStoreReceiptUrl");
+			Assert.That (main.AppStoreReceiptUrl.AbsoluteString, Does.EndWith ("eceipt"), "AppStoreReceiptUrl");
 		}
 
 #if !XAMCORE_4_0
@@ -179,7 +176,7 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			// null values are fine
 			using (var l = main.GetLocalizedString (null, null, null))
-				Assert.That (l.Length, Is.EqualTo (0), "null,null,null");
+				Assert.That (l.Length, Is.EqualTo ((nint) 0), "null,null,null");
 
 			// NoKey does not exists so the same string is returned
 			using (var l = main.GetLocalizedString ("NoKey", null, null))

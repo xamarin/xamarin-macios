@@ -113,8 +113,10 @@ namespace MonoTouchFixtures.AVFoundation {
 					mre.WaitOne ();
 				}
 			};
-			var asyncResult = main.BeginInvoke (null, null);
-			main.EndInvoke (asyncResult);
+			var thread = new Thread (main) {
+				IsBackground = true,
+			};
+			thread.Start ();
 			Assert.True (mre.WaitOne (2000), "wait");
 			Assert.True (handled, "handled");
 		}

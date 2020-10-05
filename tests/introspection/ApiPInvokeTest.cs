@@ -210,6 +210,20 @@ namespace Introspection
 						// load from executable
 						path = null;
 						break;
+#if NET
+					case "QCall":
+						// Globalization hasn't been implemented yet: https://github.com/xamarin/xamarin-macios/issues/8906
+						if (name.StartsWith ("GlobalizationNative_", StringComparison.Ordinal))
+							continue;
+						break;
+					case "libhostpolicy":
+						// There's no libhostpolicy library.
+						// https://github.com/dotnet/runtime/issues/38543
+						continue;
+					case "libSystem.Native":
+						path += ".dylib";
+						break;
+#endif
 					case "libc":
 						// we still have some rogue/not-fully-qualified DllImport
 						path = "/usr/lib/libSystem.dylib";

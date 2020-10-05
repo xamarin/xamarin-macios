@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+using System;
+using System.Drawing;
 using Foundation;
 using ObjCRuntime;
 #if MONOMAC
@@ -67,7 +68,7 @@ namespace MonoTouchFixtures.Foundation
 			Assert.IsTrue (dateComponentsFormatter.AllowsFractionalUnits, "AllowsFractionalUnits");
 
 			dateComponentsFormatter.MaximumUnitCount = 50;
-			Assert.AreEqual (50, dateComponentsFormatter.MaximumUnitCount, "MaximumUnitCount");
+			Assert.AreEqual ((nint) 50, dateComponentsFormatter.MaximumUnitCount, "MaximumUnitCount");
 
 			dateComponentsFormatter.CollapsesLargestUnit = true;
 			Assert.IsTrue (dateComponentsFormatter.CollapsesLargestUnit, "CollapsesLargestUnit");

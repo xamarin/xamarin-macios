@@ -65,7 +65,7 @@ namespace MonoTouchFixtures.Foundation {
 			config.HttpCookieStorage = config.HttpCookieStorage; // setHTTPCookieStorage:
 
 			// iOS 7.x returned 6 (instead of 4)
-			Assert.That (config.HttpMaximumConnectionsPerHost, Is.GreaterThanOrEqualTo (4), "HTTPMaximumConnectionsPerHost");
+			Assert.That (config.HttpMaximumConnectionsPerHost, Is.GreaterThanOrEqualTo ((nint) 4), "HTTPMaximumConnectionsPerHost");
 			config.HttpMaximumConnectionsPerHost = config.HttpMaximumConnectionsPerHost; // setHTTPMaximumConnectionsPerHost:
 
 			Assert.True (config.HttpShouldSetCookies, "HTTPShouldSetCookies");

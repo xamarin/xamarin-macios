@@ -27,13 +27,13 @@ namespace MonoTouchFixtures.Foundation {
 			NSDateComponents comps;
 
 			comps = cal.Components (NSCalendarUnit.Year | NSCalendarUnit.Month | NSCalendarUnit.Day, (NSDate) now);
-			Assert.AreEqual (now.Year, comps.Year, "a year");
-			Assert.AreEqual (now.Month, comps.Month, "a month");
-			Assert.AreEqual (now.Day, comps.Day, "a day");
+			Assert.AreEqual ((nint) now.Year, comps.Year, "a year");
+			Assert.AreEqual ((nint) now.Month, comps.Month, "a month");
+			Assert.AreEqual ((nint) now.Day, comps.Day, "a day");
 
 			var dayCompare = now.ToUniversalTime ();
 			comps = cal.Components (NSCalendarUnit.Hour, (NSDate) dayCompare.AddHours (-1), (NSDate) dayCompare, NSDateComponentsWrappingBehavior.None);
-			Assert.AreEqual (1, comps.Hour, "b hour");
+			Assert.AreEqual ((nint) 1, comps.Hour, "b hour");
 		}
 
 		[Test]
@@ -183,7 +183,7 @@ namespace MonoTouchFixtures.Foundation {
 			NSDateComponents tomorrowComponents = NSCalendar.CurrentCalendar.Components (NSCalendarUnit.Day | NSCalendarUnit.Month | NSCalendarUnit.Year, Tomorrow);
 
 			NSDateComponents components = NSCalendar.CurrentCalendar.ComponentsFromDateToDate (NSCalendarUnit.Day | NSCalendarUnit.Month, todayComponents, tomorrowComponents, NSCalendarOptions.None);
-			Assert.AreEqual (1, components.Day, "One day passed between today and tomorrow");
+			Assert.AreEqual ((nint) 1, components.Day, "One day passed between today and tomorrow");
 		}
 
 		[Test]
@@ -360,7 +360,7 @@ namespace MonoTouchFixtures.Foundation {
 			Assert.IsTrue (todayComponents.IsValidDateInCalendar (NSCalendar.CurrentCalendar), "IsValidDateInCalendar");
 
 			todayComponents.SetValueForComponent (12, NSCalendarUnit.Day);
-			Assert.AreEqual (12, todayComponents.GetValueForComponent (NSCalendarUnit.Day), "GetValueForComponent\\SetValueForComponent");
+			Assert.AreEqual ((nint) 12, todayComponents.GetValueForComponent (NSCalendarUnit.Day), "GetValueForComponent\\SetValueForComponent");
 		}
 
 		[Test]
@@ -386,8 +386,8 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			var cal = new NSCalendar (NSCalendarType.Gregorian);
 			var range = cal.MinimumRange (unit);
-			Assert.AreEqual (location, range.Location);
-			Assert.AreEqual (length, range.Length);
+			Assert.AreEqual ((nint) location, range.Location);
+			Assert.AreEqual ((nint) length, range.Length);
 		}
 
 		[TestCase (1, 12, NSCalendarUnit.Month)]
@@ -397,8 +397,8 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			var cal = new NSCalendar (NSCalendarType.Gregorian);
 			var range = cal.MaximumRange (unit);
-			Assert.AreEqual (length, range.Length);
-			Assert.AreEqual (location, range.Location);
+			Assert.AreEqual ((nint) length, range.Length);
+			Assert.AreEqual ((nint) location, range.Location);
 		}
 
 		[TestCase (2010, 1, 11, 1, 31, NSCalendarUnit.Day, NSCalendarUnit.Month)]
@@ -411,8 +411,8 @@ namespace MonoTouchFixtures.Foundation {
 			var date = new DateTime (year, month, day);
 			date = DateTime.SpecifyKind (date, DateTimeKind.Utc);
 			var range = cal.Range (smaller, larger, (NSDate) date);
-			Assert.AreEqual (location, range.Location);
-			Assert.AreEqual (length, range.Length);
+			Assert.AreEqual ((nint) location, range.Location);
+			Assert.AreEqual ((nint) length, range.Length);
 		}
 
 		[TestCase (2010, 1, 11, NSCalendarUnit.Day, NSCalendarUnit.Month, 11)]
@@ -422,7 +422,7 @@ namespace MonoTouchFixtures.Foundation {
 			var cal = new NSCalendar (NSCalendarType.Gregorian);
 			var date = new DateTime (year, month, day, 0, 0, 0, DateTimeKind.Local);
 			var ordinality = cal.Ordinality (smaller, larger, (NSDate) date);
-			Assert.AreEqual (ordinality, expected);
+			Assert.AreEqual (ordinality, (nuint) expected);
 		}
 
 		[TestCase (2010, 1, 11, NSCalendarUnit.Day, 86400.0)]

@@ -50,7 +50,7 @@ namespace MonoTouchFixtures.AddressBookUI {
 				Assert.That (s, Is.EqualTo (expected), "false");
 				// country names can be translated, e.g. chinese, so we can't compare it
 				s = ABAddressFormatting.ToString (dict, true);
-				Assert.That (s, Is.StringStarting (expected), "prefix");
+				Assert.That (s, Does.StartWith (expected), "prefix");
 
 				// Apple broke this again (8.0.x are hard to predict) - test will fail once it's corrected
 				// iOS 8.1.2 device: working

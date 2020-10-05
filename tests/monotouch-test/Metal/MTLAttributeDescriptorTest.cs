@@ -39,7 +39,7 @@ namespace MonoTouchFixtures.Metal {
 		{
 			uint offset = 0; // must be 0, other value will crash the test.
 			descriptor.Offset = offset;
-			Assert.AreEqual (offset, descriptor.Offset);
+			Assert.AreEqual ((nuint) offset, descriptor.Offset);
 		}
 
 		[Test]
@@ -47,7 +47,7 @@ namespace MonoTouchFixtures.Metal {
 		{
 			uint index = 0; // must be 0, other value will crash the test.
 			descriptor.BufferIndex = index;
-			Assert.AreEqual (index, descriptor.BufferIndex);
+			Assert.AreEqual ((nuint) index, descriptor.BufferIndex);
 		}
 	}
 }

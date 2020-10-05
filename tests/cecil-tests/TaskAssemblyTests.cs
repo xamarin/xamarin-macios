@@ -8,6 +8,7 @@ using NUnit.Framework;
 
 using Mono.Cecil;
 using Mono.Cecil.Cil;
+using Xamarin.Tests;
 
 #nullable enable
 
@@ -40,6 +41,8 @@ namespace Cecil.Tests {
 		[Test]
 		public void EnsureOnlyCodeInBaseTasks ()
 		{
+			if (assembly.Contains ("Xamarin.Mac.Tasks.dll") && !Configuration.include_mac)
+				Assert.Ignore ("Ignore until Xamarin.Mac is re-enabled. Issue: https://github.com/xamarin/xamarin-macios/issues/9680");
 			var parameters = new ReaderParameters (ReadingMode.Deferred);
 			var resolver = new DefaultAssemblyResolver ();
 			resolver.AddSearchDirectory ("/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/msbuild/Current/bin");
@@ -153,7 +156,6 @@ namespace Cecil.Tests {
 			case "Xamarin.Mac.Tasks":
 				switch (typename) {
 				case "Xamarin.Mac.Tasks.CodesignVerify":
-				case "Xamarin.Mac.Tasks.CompileEntitlements":
 				case "Xamarin.Mac.Tasks.IBTool":
 				case "Xamarin.Mac.Tasks.Metal":
 				case "Xamarin.Mac.Tasks.MetalLib":

@@ -54,14 +54,14 @@ namespace MonoTouchFixtures.Metal {
 		public void GetSetMaxVertexBufferBindCountTest ()
 		{
 			descriptor.MaxVertexBufferBindCount = 1;
-			Assert.AreEqual (1, descriptor.MaxVertexBufferBindCount);
+			Assert.AreEqual ((nuint) 1, descriptor.MaxVertexBufferBindCount);
 		}
 
 		[Test]
 		public void GetSetMaxFragmentBufferBindCountTest ()
 		{
 			descriptor.MaxFragmentBufferBindCount = 1;
-			Assert.AreEqual (1, descriptor.MaxFragmentBufferBindCount);
+			Assert.AreEqual ((nuint) 1, descriptor.MaxFragmentBufferBindCount);
 		}
 	}
 }

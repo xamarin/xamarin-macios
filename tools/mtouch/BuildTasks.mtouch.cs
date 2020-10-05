@@ -601,6 +601,7 @@ namespace Xamarin.Bundler
 
 	public class LipoTask : BuildTask
 	{
+		public Application App;
 		public IEnumerable<string> InputFiles { get; set; }
 		public string OutputFile { get; set; }
 
@@ -618,7 +619,7 @@ namespace Xamarin.Bundler
 
 		protected override void Execute ()
 		{
-			Application.Lipo (OutputFile, InputFiles.ToArray ());
+			Application.Lipo (App, OutputFile, InputFiles.ToArray ());
 		}
 
 		public override string ToString ()

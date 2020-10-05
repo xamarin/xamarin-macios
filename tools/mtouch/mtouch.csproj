@@ -57,6 +57,12 @@
     <Compile Include="..\..\src\build\ios\Constants.cs">
       <Link>src\build\ios\Constants.cs</Link>
     </Compile>
+    <Compile Include="..\..\src\ObjCRuntime\Constants.cs">
+      <Link>src\ObjCRuntime\Constants.cs</Link>
+    </Compile>
+    <Compile Include="..\common\AssemblyBuildTarget.cs">
+      <Link>tools\common\AssemblyBuildTarget.cs</Link>
+    </Compile>
     <Compile Include="..\common\PListExtensions.cs">
       <Link>tools\common\PListExtensions.cs</Link>
     </Compile>
@@ -74,9 +80,6 @@
     </Compile>
     <Compile Include="..\linker\MonoTouch.Tuner\MonoTouchProfile.cs">
       <Link>tools\linker\MonoTouch.Tuner\MonoTouchProfile.cs</Link>
-    </Compile>
-    <Compile Include="..\linker\MonoTouch.Tuner\OptimizeGeneratedCodeSubStep.cs">
-      <Link>tools\linker\MonoTouch.Tuner\OptimizeGeneratedCodeSubStep.cs</Link>
     </Compile>
     <Compile Include="..\linker\MonoTouch.Tuner\PreserveCode.cs">
       <Link>tools\linker\MonoTouch.Tuner\PreserveCode.cs</Link>
@@ -281,6 +284,9 @@
     </Compile>
     <Compile Include="..\linker\CoreRemoveAttributes.cs">
       <Link>tools\linker\CoreRemoveAttributes.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\MobileApplyPreserveAttribute.cs">
+      <Link>tools\linker\MobileApplyPreserveAttribute.cs</Link>
     </Compile>
     <Compile Include="..\linker\MobileExtensions.cs">
       <Link>tools\linker\MobileExtensions.cs</Link>

@@ -36,13 +36,13 @@ namespace MonoTouchFixtures.Metal {
 		[Test]
 		public void GetAlignmentTest ()
 		{
-			Assert.AreEqual (0, ptrType.Alignment);
+			Assert.AreEqual ((nuint) 0, ptrType.Alignment);
 		}
 
 		[Test]
 		public void GetDataSizeTest ()
 		{
-			Assert.AreEqual (0, ptrType.DataSize);
+			Assert.AreEqual ((nuint) 0, ptrType.DataSize);
 		}
 
 		[Test]

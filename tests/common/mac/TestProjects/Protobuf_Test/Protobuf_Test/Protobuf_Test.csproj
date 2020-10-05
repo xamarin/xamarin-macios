@@ -49,10 +49,7 @@
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.Mac" />
     <Reference Include="System.Xml" />
-    <Reference Include="protobuf-net">
-      <HintPath>..\..\..\..\..\..\packages\protobuf-net.2.1.0\lib\net45\protobuf-net.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
+    <PackageReference Include="protobuf-net" Version="2.1.0" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
@@ -66,7 +63,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
 </Project>

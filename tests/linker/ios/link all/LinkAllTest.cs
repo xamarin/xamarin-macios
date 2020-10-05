@@ -151,6 +151,8 @@ namespace LinkAll {
 			CertTRUSTEFAIL = 0x800B010B,
 		}
 
+#if !NET
+		// ICertificatePolicy has been removed from .NET 5+
 		class TestPolicy : ICertificatePolicy {
 
 			const int RecoverableTrustFailure = 5; // SecTrustResult
@@ -202,6 +204,7 @@ namespace LinkAll {
 				ServicePointManager.CertificatePolicy = old;
 			}
 		}
+#endif
 		
 		[Test]
 		public void DetectPlatform ()
@@ -297,17 +300,18 @@ namespace LinkAll {
 		}
 
 		[Test]
-#if __WATCHOS__
-		[ExpectedException (typeof (PlatformNotSupportedException))]
-#endif
 		public void SystemDataSqlClient ()
 		{
+#if __WATCHOS__
+			Assert.Throws<PlatformNotSupportedException> (() => new System.Data.SqlClient.SqlConnection ());
+#else
 			// notes:
 			// * this test is mean to fail when building the application using a Community or Indie licenses
 			// * linksdk.app references System.Data (assembly) but not types in SqlClient namespace
 			using (var sc = new System.Data.SqlClient.SqlConnection ()) {
 				Assert.NotNull (sc);
 			}
+#endif
 		}
 		
 #if !__TVOS__ && !__WATCHOS__
@@ -423,6 +427,7 @@ namespace LinkAll {
 		}
 
 #if !__WATCHOS__
+#if !NET // OpenTK-1.0.dll isn't supported in .NET yet
 		[Test]
 		public void OpenTk10_Preserved ()
 		{
@@ -441,6 +446,7 @@ namespace LinkAll {
 			core = Helper.GetType ("OpenTK.Graphics.ES20.GL/Core, OpenTK-1.0", false);
 			Assert.NotNull (core, "ES20/Core");
 		}
+#endif // !NET
 #endif // !__WATCHOS__
 
 		[Test]
@@ -609,7 +615,7 @@ namespace LinkAll {
 			var bundlePath = NSBundle.MainBundle.BundlePath;
 			var isExtension = bundlePath.EndsWith (".appex", StringComparison.Ordinal);
 			var suffix = isExtension ? "link all.appex/mscorlib.dll" : "link all.app/mscorlib.dll";
-			Assert.That (corlib, Is.StringEnding (suffix), corlib);
+			Assert.That (corlib, Does.EndWith (suffix), corlib);
 		}
 	}
 

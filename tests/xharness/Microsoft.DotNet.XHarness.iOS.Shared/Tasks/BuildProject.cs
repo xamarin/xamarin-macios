@@ -11,22 +11,24 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 	public class BuildProject : BuildTool {
 		public IResourceManager ResourceManager { get; set; }
-		public IEnvManager EnviromentManager { get; set; }
+		public IEnvManager EnvironmentManager { get; set; }
 		public IEventLogger EventLogger { get; set; }
-		string msbuildPath;
+		Func<string> msbuildPath;
 
 		public string SolutionPath { get; set; }
 
-		public BuildProject (string msbuildPath, IProcessManager processManager, IResourceManager resourceManager, IEventLogger eventLogger, IEnvManager envManager) : base (processManager)
+		public BuildProject (Func<string> msbuildPath, IProcessManager processManager, IResourceManager resourceManager, IEventLogger eventLogger, IEnvManager envManager) : base (processManager)
 		{
 			this.msbuildPath = msbuildPath ?? throw new ArgumentNullException (nameof (msbuildPath));
 			ResourceManager = resourceManager ?? throw new ArgumentNullException (nameof (resourceManager));
 			EventLogger = eventLogger ?? throw new ArgumentNullException (nameof (eventLogger));
-			EnviromentManager = envManager ?? throw new ArgumentNullException (nameof (envManager));
+			EnvironmentManager = envManager ?? throw new ArgumentNullException (nameof (envManager));
 		}
 
 		public bool RestoreNugets {
 			get {
+				if (TestProject.IsDotNetProject)
+					return false;
 				return TestProject.RestoreNugetsInProject || !string.IsNullOrEmpty (SolutionPath);
 			}
 		}
@@ -46,7 +48,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 					throw new FileNotFoundException ("Could not find the solution whose nugets to restore.", projectPath);
 
 				using (var nuget = new Process ()) {
-					nuget.StartInfo.FileName = msbuildPath;
+					nuget.StartInfo.FileName = msbuildPath ();
 					var args = new List<string> ();
 					args.Add ("-t");
 					args.Add ("--");
@@ -56,7 +58,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 					args.Add ("-Verbosity");
 					args.Add ("detailed");
 					nuget.StartInfo.Arguments = StringUtils.FormatArguments (args);
-					EnviromentManager.SetEnvironmentVariables (nuget);
+					EnvironmentManager.SetEnvironmentVariables (nuget);
 					EventLogger.LogEvent (log, "Restoring nugets for {0} ({1}) on path {2}", TestName, Mode, projectPath);
 
 					var timeout = TimeSpan.FromMinutes (15);
@@ -85,6 +87,8 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 				var fixPath = referenceProject.Replace ("\\", "/"); // do the replace in case we use win paths
 				result.Add (fixPath);
 				// get all possible references
+				if (!Path.IsPathRooted (fixPath))
+					fixPath = Path.Combine (Path.GetDirectoryName (csproj), fixPath);
 				result.AddRange (GetNestedReferenceProjects (fixPath));
 			}
 			return result;

@@ -25,16 +25,17 @@ export MSBuildExtensionsPathFallbackPathsOverride=$MAC_DESTDIR/Library/Framework
 
 make
 make .stamp-configure-projects-mac
-../tools/xibuild/xibuild -- bindings-test/bindings-test-mac.csproj
+../tools/xibuild/xibuild -- /r ../external/Touch.Unit/Touch.Client/macOS/mobile/Touch.Client-macOS-mobile.csproj
+../tools/xibuild/xibuild -- /r ../external/Touch.Unit/Touch.Client/macOS/full/Touch.Client-macOS-full.csproj
+../tools/xibuild/xibuild -- /r bindings-test/macOS/bindings-test.csproj
 make build-mac-dontlink build-mac-apitest build-mac-introspection build-mac-linksdk build-mac-linkall build-mac-xammac_tests build-mac-system-dontlink -j8
 
-for app in */bin/x86/*/*.app linker/mac/*/bin/x86/*/*.app introspection/Mac/bin/x86/*/*.app; do
+for app in */bin/x86/*/*.app */generated-projects/*/bin/x86/*/*.app linker/mac/*/bin/x86/*/*.app linker/mac/*/generated-projects/*/bin/x86/*/*.app introspection/Mac/bin/x86/*/*.app; do
 	mkdir -p "$DIR/tests/$app"
 	$CP -R "$app" "$DIR/tests/$app/.."
 done
 
 $CP -p Makefile-mac.inc $DIR/tests
-$CP -p common.mk $DIR/tests
 $CP -p Makefile $DIR/tests
 $CP -p ../Make.config $DIR
 $CP -p ../Make.versions $DIR

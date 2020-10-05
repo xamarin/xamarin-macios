@@ -27,7 +27,7 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 		IMTLDevice device;
 		nuint vector3Size = (nuint) Marshal.SizeOf<OpenTK.NVector3> ();
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Metal ()
 		{
 			TestRuntime.AssertDevice ();

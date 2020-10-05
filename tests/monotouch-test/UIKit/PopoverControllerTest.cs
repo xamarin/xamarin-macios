@@ -40,7 +40,6 @@ namespace MonoTouchFixtures.UIKit {
 		}
 
 		[Test]
-		[ExpectedException (typeof (MonoTouchException))]
 		public void PresentFromBarButtonItem_BadButton ()
 		{
 			if (UIDevice.CurrentDevice.UserInterfaceIdiom != UIUserInterfaceIdiom.Pad)
@@ -53,7 +52,7 @@ namespace MonoTouchFixtures.UIKit {
 			using (var bbi = new UIBarButtonItem (UIBarButtonSystemItem.Action))
 			using (var pc = new UIPopoverController (vc)) {
 				// UIBarButtonItem is itself 'ok' but it's not assigned to a view
-				pc.PresentFromBarButtonItem (bbi, UIPopoverArrowDirection.Down, true);
+				Assert.Throws<MonoTouchException> (() => pc.PresentFromBarButtonItem (bbi, UIPopoverArrowDirection.Down, true));
 				// fails with:
 				// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: -[UIPopoverController presentPopoverFromBarButtonItem:permittedArrowDirections:animated:]: Popovers cannot be presented from a view which does not have a window.
 			}
@@ -76,7 +75,6 @@ namespace MonoTouchFixtures.UIKit {
 		}
 
 		[Test]
-		[ExpectedException (typeof (MonoTouchException))]
 		public void PresentFromRect_BadView ()
 		{
 			if (UIDevice.CurrentDevice.UserInterfaceIdiom != UIUserInterfaceIdiom.Pad)
@@ -89,7 +87,7 @@ namespace MonoTouchFixtures.UIKit {
 			using (var bbi = new UIBarButtonItem (UIBarButtonSystemItem.Action))
 			using (var pc = new UIPopoverController (vc)) {
 				// 'vc' has never been shown
-				pc.PresentFromRect (new CGRect (10, 10, 100, 100), vc.View, UIPopoverArrowDirection.Down, true);
+				Assert.Throws<MonoTouchException> (() => pc.PresentFromRect (new CGRect (10, 10, 100, 100), vc.View, UIPopoverArrowDirection.Down, true));
 				// fails with:
 				// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: -[UIPopoverController presentPopoverFromRect:inView:permittedArrowDirections:animated:]: Popovers cannot be presented from a view which does not have a window.
 			}

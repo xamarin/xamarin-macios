@@ -31,7 +31,7 @@ namespace MonoTouchFixtures.ModelIO {
 	[Preserve (AllMembers = true)]
 	public class A_MDLAnimatedValueTypesTests {
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Setup ()
 		{
 			TestRuntime.AssertXcodeVersion (9, 0);

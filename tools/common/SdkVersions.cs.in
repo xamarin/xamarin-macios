@@ -1,6 +1,6 @@
 using System;
 
-#if MTOUCH || MMP
+#if MTOUCH || MMP || BUNDLER
 using Xamarin.Bundler;
 using Xamarin.Utils;
 #endif
@@ -62,40 +62,40 @@ namespace Xamarin {
 
 		public static Version XcodeVersion { get { return new Version (Xcode); }}
 
-#if MTOUCH || MMP
-		public static Version GetVersion (ApplePlatform platform)
+#if MTOUCH || MMP || BUNDLER
+		public static Version GetVersion (Application app)
 		{
-			switch (platform) {
+			switch (app.Platform) {
 			case ApplePlatform.MacOSX: return OSXVersion;
 			case ApplePlatform.iOS: return iOSVersion;
 			case ApplePlatform.WatchOS: return WatchOSVersion;
 			case ApplePlatform.TVOS: return TVOSVersion;
 			default:
-				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", platform, Application.ProductName);
+				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", app.Platform, app.ProductName);
 			}
 		}
 
-		public static Version GetTargetVersion (ApplePlatform platform)
+		public static Version GetTargetVersion (Application app)
 		{
-			switch (platform) {
+			switch (app.Platform) {
 			case ApplePlatform.MacOSX: return OSXVersion;
 			case ApplePlatform.iOS: return iOSTargetVersion;
 			case ApplePlatform.WatchOS: return WatchOSTargetVersion;
 			case ApplePlatform.TVOS: return TVOSTargetVersion;
 			default:
-				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", platform, Application.ProductName);
+				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", app.Platform, app.ProductName);
 			}
 		}
 
-		public static Version GetMinVersion (ApplePlatform platform)
+		public static Version GetMinVersion (Application app)
 		{
-			switch (platform) {
+			switch (app.Platform) {
 			case ApplePlatform.MacOSX: return MinOSXVersion;
 			case ApplePlatform.iOS: return MiniOSVersion;
 			case ApplePlatform.WatchOS: return MinWatchOSVersion;
 			case ApplePlatform.TVOS: return MinTVOSVersion;
 			default:
-				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", platform, Application.ProductName);
+				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", app.Platform, app.ProductName);
 			}
 		}
 #endif

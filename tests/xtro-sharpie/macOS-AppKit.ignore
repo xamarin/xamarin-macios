@@ -167,7 +167,6 @@
 !missing-enum! NSPDFPanelOptions not bound
 !missing-enum! NSSplitViewItemCollapseBehavior not bound
 !missing-enum! NSTableColumnResizingOptions not bound
-!missing-enum! NSTableViewAnimationOptions not bound
 !missing-enum! NSTableViewGridLineStyle not bound
 !missing-enum! NSWindowStyleMask not bound
 !missing-enum! NSWritingDirectionFormatType not bound
@@ -825,8 +824,6 @@
 !missing-selector! NSMutableAttributedString::fixAttributesInRange: not bound
 !missing-selector! NSMutableFontCollection::exclusionDescriptors not bound
 !missing-selector! NSMutableFontCollection::queryDescriptors not bound
-!missing-selector! NSMutableParagraphStyle::textBlocks not bound
-!missing-selector! NSMutableParagraphStyle::textLists not bound
 !missing-selector! NSNib::instantiateNibWithOwner:topLevelObjects: not bound
 !missing-selector! NSObject::accessibilityActionDescription: not bound
 !missing-selector! NSObject::accessibilityArrayAttributeCount: not bound
@@ -1496,7 +1493,6 @@
 !missing-null-allowed! 'AppKit.NSWindow[] AppKit.NSWindow::get_ChildWindows()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSWindow[] AppKit.NSWindowDelegate::CustomWindowsToEnterFullScreen(AppKit.NSWindow)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSWindow[] AppKit.NSWindowDelegate::CustomWindowsToExitFullScreen(AppKit.NSWindow)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'AppKit.NSWritingDirection AppKit.NSParagraphStyle::DefaultWritingDirection(System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'CoreGraphics.CGColorSpace AppKit.NSColorSpace::get_ColorSpace()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'CoreGraphics.CGImage AppKit.NSBitmapImageRep::get_CGImage()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'CoreGraphics.CGImage AppKit.NSImage::AsCGImage(CoreGraphics.CGRect&,AppKit.NSGraphicsContext,Foundation.NSDictionary)' is missing an [NullAllowed] on return type
@@ -1959,7 +1955,6 @@
 !missing-null-allowed! 'System.Void AppKit.NSMenuItemCell::set_MenuItem(AppKit.NSMenuItem)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSMutableFontCollection::SetExclusionDescriptors(AppKit.NSFontDescriptor[])' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSMutableFontCollection::SetQueryDescriptors(AppKit.NSFontDescriptor[])' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void AppKit.NSMutableParagraphStyle::set_TabStops(AppKit.NSTextTab[])' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSNib::.ctor(Foundation.NSData,Foundation.NSBundle)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Void AppKit.NSObjectController::.ctor(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSObjectController::Add(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
@@ -2238,3 +2233,6 @@
 !missing-null-allowed! 'System.Void Foundation.NSObject::CommitEditing(Foundation.NSObject,ObjCRuntime.Selector,System.IntPtr)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Void Foundation.NSObject::SetDefaultPlaceholder(Foundation.NSObject,Foundation.NSObject,Foundation.NSString)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void Foundation.NSObject::SetDefaultPlaceholder(Foundation.NSObject,Foundation.NSObject,Foundation.NSString)' is missing an [NullAllowed] on parameter #1
+
+# deprecated API
+!missing-selector! NSLayoutManager::replaceTextStorage: not bound

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.iOS.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net5.0-ios</TargetFramework>
+    <RuntimeIdentifier>ios-x64</RuntimeIdentifier>
+    <OutputType>Exe</OutputType>
+    <DefineConstants>NET</DefineConstants>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>dontlink</RootNamespace>
+    <AssemblyName>dont link</AssemblyName>
+    <MtouchLink>None</MtouchLink>
+    <AssetTargetFallback>xamarinios10;$(AssetTargetFallback)</AssetTargetFallback>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NUnitLite" Version="3.12.0" />
+    <PackageReference Include="MonoTouch.Dialog" Version="2.0.0-pre1" />
+    <ProjectReference Include="..\..\..\..\..\..\external\Touch.Unit\Touch.Client\dotnet\iOS\Touch.Client-iOS.dotnet.csproj" />
+    <!-- MonoTouch.Dialog references System.Json, which isn't shipped with .NET5, so reference the NuGet instead -->
+    <PackageReference Include="System.Json" Version="4.7.1" />
+    <!-- The linker resolves some assembly references too eagerly, and fails when it can't find them, so work around this by referencing the missing assemblies-->
+    <!-- ref: https://github.com/mono/linker/issues/1139 -->
+    <PackageReference Include="System.Security.Permissions" Version="5.0.0-preview.2.20160.6" />
+    <PackageReference Include="System.Threading.AccessControl" Version="5.0.0-preview.2.20160.6" />
+    <PackageReference Include="System.CodeDom" Version="5.0.0-preview.2.20160.6" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0-preview.2.20160.6" />
+    <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="5.0.0-preview.2.20160.6" />
+    <PackageReference Include="System.Diagnostics.EventLog" Version="5.0.0-preview.2.20160.6" />
+    <PackageReference Include="System.IO.Ports" Version="5.0.0-preview.2.20160.6" />
+    <PackageReference Include="System.Data.SqlClient" Version="5.0.0-alpha1.19523.8" />
+
+    <ProjectReference Include="..\..\..\..\..\BundledResources\dotnet\iOS\BundledResources.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\Info.plist">
+      <LogicalName>Info.plist</LogicalName>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\Main.cs" />
+    <Compile Include="..\..\AppDelegate.cs" />
+    <Compile Include="..\..\DontLinkRegressionTests.cs" />
+    <Compile Include="..\..\TableViewSourceTest.cs" />
+    <Compile Include="..\..\CalendarTest.cs" />
+    <Compile Include="..\..\..\..\CommonDontLinkTest.cs">
+      <Link>CommonDontLinkTest.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <InterfaceDefinition Include="..\..\LaunchScreen.storyboard" />
+  </ItemGroup>
+  <ItemGroup>
+    <ImageAsset Include="..\..\Assets.xcassets\AppIcons.appiconset\Contents.json" />
+    <ImageAsset Include="..\..\Assets.xcassets\AppIcons.appiconset\Icon-app-60%403x.png" />
+    <ImageAsset Include="..\..\Assets.xcassets\AppIcons.appiconset\icon-app-57.png" />
+    <ImageAsset Include="..\..\Assets.xcassets\AppIcons.appiconset\icon-app-57%402x.png" />
+    <ImageAsset Include="..\..\Assets.xcassets\AppIcons.appiconset\icon-app-60%402x.png" />
+    <ImageAsset Include="..\..\Assets.xcassets\AppIcons.appiconset\icon-app-72.png" />
+    <ImageAsset Include="..\..\Assets.xcassets\AppIcons.appiconset\icon-app-72%402x.png" />
+    <ImageAsset Include="..\..\Assets.xcassets\AppIcons.appiconset\icon-app-76.png" />
+    <ImageAsset Include="..\..\Assets.xcassets\AppIcons.appiconset\icon-app-76%402x.png" />
+    <ImageAsset Include="..\..\Assets.xcassets\AppIcons.appiconset\icon-app-83.5%402x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\BoardingPass.pkpass">
+      <Link>BoardingPass.pkpass</Link>
+    </Content>
+  </ItemGroup>
+</Project>

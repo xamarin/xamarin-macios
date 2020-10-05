@@ -28,6 +28,12 @@ namespace MonoTests.System.Net.Http
 	[TestFixture]
 	public class MessageHandlerTest
 	{
+		public MessageHandlerTest ()
+		{
+			// Https seems broken on our macOS 10.9 bot, so skip this test.
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+		}
+
 		void PrintHandlerToTest ()
 		{
 #if !__WATCHOS__
@@ -73,12 +79,15 @@ namespace MonoTests.System.Net.Http
 
 			Assert.IsTrue (done, "Did not time out");
 			Assert.IsNull (response, $"Response is not null {response}");
-			Assert.IsInstanceOfType (typeof (HttpRequestException), ex, "Exception");
+			Assert.IsInstanceOf (typeof (HttpRequestException), ex, "Exception");
 		}
 
 #if !__WATCHOS__
 		// ensure that we do get the same cookies as the managed handler
 		[Test]
+#if NET
+		[Ignore ("System.EntryPointNotFoundException: AppleCryptoNative_SecKeychainItemCopyKeychain")] // https://github.com/dotnet/runtime/issues/36897
+#endif
 		public void TestNSUrlSessionHandlerCookies ()
 		{
 			var managedCookieResult = false;
@@ -118,12 +127,15 @@ namespace MonoTests.System.Net.Http
 			Assert.IsTrue (nativeCookieResult, $"Failed to get native cookies");
 			Assert.AreEqual (1, managedCookies.Count (), $"Managed Cookie Count");
 			Assert.AreEqual (1, nativeCookies.Count (), $"Native Cookie Count");
-			Assert.That (nativeCookies.First (), Is.StringStarting ("cookie=chocolate-chip;"), $"Native Cookie Value");
-			Assert.That (managedCookies.First (), Is.StringStarting ("cookie=chocolate-chip;"), $"Managed Cookie Value");
+			Assert.That (nativeCookies.First (), Does.StartWith ("cookie=chocolate-chip;"), $"Native Cookie Value");
+			Assert.That (managedCookies.First (), Does.StartWith ("cookie=chocolate-chip;"), $"Managed Cookie Value");
 		}
 
 		// ensure that we can use a cookie container to set the cookies for a url
 		[Test]
+#if NET
+		[Ignore ("System.EntryPointNotFoundException: AppleCryptoNative_SecKeychainItemCopyKeychain")] // https://github.com/dotnet/runtime/issues/36897
+#endif
 		public void TestNSUrlSessionHandlerCookieContainer ()
 		{
 			var url = NetworkResources.Httpbin.CookiesUrl;
@@ -302,6 +314,9 @@ namespace MonoTests.System.Net.Http
 
 #endif
 
+#if NET
+		[Ignore ("System.EntryPointNotFoundException: AppleCryptoNative_SecKeychainItemCopyKeychain")] // https://github.com/dotnet/runtime/issues/36897
+#endif
 		// ensure that if we have a redirect, we do not have the auth headers in the following requests
 #if !__WATCHOS__
 		[TestCase (typeof (HttpClientHandler))]
@@ -349,6 +364,9 @@ namespace MonoTests.System.Net.Http
 			}
 		}
 
+#if NET
+		[Ignore ("System.EntryPointNotFoundException: AppleCryptoNative_SecKeychainItemCopyKeychain")] // https://github.com/dotnet/runtime/issues/36897
+#endif
 #if !__WATCHOS__
 		[TestCase (typeof (HttpClientHandler))]
 #endif
@@ -418,12 +436,15 @@ namespace MonoTests.System.Net.Http
 				Assert.True(validationCbWasExecuted);
 				// assert the exception type
 				Assert.IsNotNull (ex, (result == null)? "Expected exception is missing and got no result" : $"Expected exception but got {result.Content.ReadAsStringAsync ().Result}");
-				Assert.IsInstanceOfType (typeof (HttpRequestException), ex);
+				Assert.IsInstanceOf (typeof (HttpRequestException), ex);
 				Assert.IsNotNull (ex.InnerException);
-				Assert.IsInstanceOfType (expectedExceptionType, ex.InnerException);
+				Assert.IsInstanceOf (expectedExceptionType, ex.InnerException);
 			}
 		}
 
+#if NET
+		[Ignore ("System.EntryPointNotFoundException: AppleCryptoNative_SecKeychainItemCopyKeychain")] // https://github.com/dotnet/runtime/issues/36897
+#endif
 #if !__WATCHOS__
 		[TestCase (typeof (HttpClientHandler))]
 #endif

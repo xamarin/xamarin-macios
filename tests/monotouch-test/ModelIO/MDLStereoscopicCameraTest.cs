@@ -37,7 +37,7 @@ namespace MonoTouchFixtures.ModelIO
 	[Preserve (AllMembers = true)]
 	public class MDLStereoscopicCameraTest
 	{
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Setup ()
 		{
 			TestRuntime.AssertXcodeVersion (7, 0);

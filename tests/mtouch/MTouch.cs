@@ -1077,7 +1077,7 @@ public class B : A {}
 		[Test]
 		[TestCase (Profile.tvOS, "tvOS")]
 		[TestCase (Profile.iOS, "iOS")]
-		public void MT0091 (Profile profile, string name)
+		public void MT0180 (Profile profile, string name)
 		{
 			// Any old Xcode will do.
 			var old_xcode = Configuration.GetOldXcodeRoot ();
@@ -1110,7 +1110,7 @@ public class B : A {}
 				mtouch.Sdk = sdk_version;
 				Assert.AreEqual (1, mtouch.Execute (MTouchAction.BuildSim));
 				var xcodeVersionString = Configuration.XcodeVersionString;
-				mtouch.AssertError (91, String.Format ("This version of Xamarin.iOS requires the {0} {1} SDK (shipped with Xcode {2}). Either upgrade Xcode to get the required header files or set the managed linker behaviour to Link Framework SDKs Only in your project's iOS Build Options > Linker Behavior (to try to avoid the new APIs).", name, GetSdkVersion (profile), xcodeVersionString));
+				mtouch.AssertError (180, String.Format ("This version of Xamarin.iOS requires the {0} {1} SDK (shipped with Xcode {2}). Either upgrade Xcode to get the required header files or set the managed linker behaviour to Link Framework SDKs Only in your project's iOS Build Options > Linker Behavior (to try to avoid the new APIs).", name, GetSdkVersion (profile), xcodeVersionString));
 			}
 		}
 
@@ -1446,7 +1446,7 @@ public class B : A {}
 					app.Linker = MTouchLinker.DontLink;
 					app.WarnAsError = new int [] { 113 };
 					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
-					app.AssertError (113, "Native code sharing has been disabled for the extension 'testServiceExtension' because the managed linker settings are different between the container app (None) and the extension (All).");
+					app.AssertError (113, "Native code sharing has been disabled for the extension 'testServiceExtension' because the managed linker settings are different between the container app (None) and the extension (Full).");
 				}
 			}
 		}
@@ -1768,7 +1768,7 @@ public class TestApp {
 				mtouch.Linker = MTouchLinker.LinkSdk;
 				mtouch.Optimize = new string [] { "foo" };
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
-				mtouch.AssertWarning (132, "Unknown optimization: 'foo'. Valid optimizations are: remove-uithread-checks, dead-code-elimination, inline-isdirectbinding, inline-intptr-size, inline-runtime-arch, blockliteral-setupblock, register-protocols, inline-dynamic-registration-supported, static-block-to-delegate-lookup, remove-dynamic-registrar, remove-unsupported-il-for-bitcode, inline-is-arm64-calling-convention, seal-and-devirtualize, cctor-beforefieldinit, custom-attributes-removal, experimental-xforms-product-type, force-rejected-types-removal.");
+				mtouch.AssertWarning (132, "Unknown optimization: 'foo'. Valid optimizations are: remove-uithread-checks, dead-code-elimination, inline-isdirectbinding, inline-intptr-size, inline-runtime-arch, blockliteral-setupblock, register-protocols, inline-dynamic-registration-supported, static-block-to-delegate-lookup, remove-dynamic-registrar, inline-is-arm64-calling-convention, seal-and-devirtualize, cctor-beforefieldinit, custom-attributes-removal, experimental-xforms-product-type, force-rejected-types-removal.");
 			}
 		}
 
@@ -1971,20 +1971,56 @@ public class TestApp {
 			}
 		}
 
-		static string BindingsLibrary {
-			get {
-				return Path.Combine (Configuration.SourceRoot, "tests/bindings-test/bin/Debug/bindings-test.dll");
+		static void LoadWithoutNetworkAccess (XmlDocument doc, string filename)
+		{
+			using (var fs = new FileStream (filename, FileMode.Open, FileAccess.Read)) {
+				var settings = new XmlReaderSettings () {
+					XmlResolver = null,
+					DtdProcessing = DtdProcessing.Parse,
+				};
+				using (var reader = XmlReader.Create (fs, settings)) {
+					doc.Load (reader);
+				}
 			}
 		}
 
-		static string GetBindingsLibrary (Profile profile)
+		static string [] GetBindingsLibraryWithReferences (Profile profile)
 		{
-			var fn = Path.Combine (Configuration.SourceRoot, "tests", "bindings-test", "bin", "Any CPU", GetConfiguration (profile), "bindings-test.dll");
+			var lib = GetBindingsLibrary (profile, out var version);
+			var nunit_framework = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.UserProfile), ".nuget", "packages", "nunit", version, "lib", "netstandard2.0", "nunit.framework.dll");
+			if (!File.Exists (nunit_framework))
+				throw new FileNotFoundException ($"Could not find nunit.framework.dll in {nunit_framework}. Has the version changed?");
+			return new string [] { lib, nunit_framework };
+		}
 
-			if (!File.Exists (fn)) {
-				var csproj = Path.Combine (Configuration.SourceRoot, "tests", "bindings-test", "bindings-test" + GetProjectSuffix (profile) + ".csproj");
-				XBuild.BuildXI (csproj, platform: "AnyCPU");
+		static string GetBindingsLibrary (Profile profile, out string version)
+		{
+			var project_dir = Path.Combine (Configuration.SourceRoot, "tests", "bindings-test", "iOS");
+			switch (profile) {
+			case Profile.iOS:
+				break;
+			case Profile.tvOS:
+			case Profile.watchOS:
+				project_dir = Path.Combine (project_dir, "generated-projects", profile.ToString ());
+				break;
+			default:
+				throw new NotImplementedException (profile.ToString ());
 			}
+			var csproj = Path.Combine (project_dir, $"bindings-test{GetProjectSuffix (profile)}.csproj");
+
+			// Find the PackageReference node in the csproj and get the Version attribute
+			var doc = new XmlDocument ();
+			LoadWithoutNetworkAccess (doc, csproj);
+			var node = doc.SelectSingleNode ("//*[local-name() = 'PackageReference' and @Include = 'NUnitLite']");
+			version = node.Attributes ["Version"].Value;
+
+			var fn = Path.Combine (project_dir, "bin", "Any CPU", GetConfiguration (profile), "bindings-test.dll");
+
+			if (!File.Exists (fn))
+				XBuild.BuildXI (csproj, platform: "AnyCPU");
+
+			if (!File.Exists (fn))
+				throw new Exception ($"Could not find the bindings-test library for {profile}");
 
 			return fn;
 		}
@@ -2152,11 +2188,12 @@ public class TestApp {
 				Profile = profile,
 				Debug = true,
 				FastDev = true,
-				References = new string [] { GetBindingsLibrary (profile) },
+				References = GetBindingsLibraryWithReferences (profile),
 				NoFastSim = true,
 				Registrar = MTouchRegistrar.Static,
 			}) {
 				mtouch.CreateTemporaryApp_LinkWith ();
+				mtouch.DlsymString = "+nunit.framework.dll"; // nunit.framework.dll has a P/Invoke to GetVersionEx, so we need to use dlsym to avoid a native linker error.
 				Assert.AreEqual (0, mtouch.Execute (MTouchAction.BuildDev), "build");
 
 				var symbols = GetNativeSymbols (mtouch.NativeExecutablePath);
@@ -2179,7 +2216,7 @@ public class TestApp {
 				Profile = profile,
 				Debug = true,
 				FastDev = true,
-				References = new string [] { GetBindingsLibrary (profile) },
+				References = GetBindingsLibraryWithReferences (profile),
 				NoFastSim = true,
 				Linker = MTouchLinker.DontLink,
 			}) {
@@ -2200,7 +2237,7 @@ public class TestApp {
 				Profile = profile,
 				Debug = true,
 				FastDev = true,
-				References = new string [] { GetBindingsLibrary (profile) },
+				References = GetBindingsLibraryWithReferences (profile),
 				NoFastSim = true,
 			}) {
 				mtouch.CreateTemporaryApp_LinkWith ();
@@ -2220,7 +2257,7 @@ public class TestApp {
 				Profile = profile,
 				Debug = true,
 				FastDev = true,
-				References = new string [] { GetBindingsLibrary (profile) },
+				References = GetBindingsLibraryWithReferences (profile),
 				Linker = MTouchLinker.LinkSdk,
 				NoFastSim = true,
 			}) {
@@ -2241,7 +2278,7 @@ public class TestApp {
 				Profile = profile,
 				Debug = true,
 				FastDev = true,
-				References = new string [] { GetBindingsLibrary (profile) },
+				References = GetBindingsLibraryWithReferences (profile),
 			}) {
 				mtouch.CreateTemporaryApp_LinkWith ();
 				Assert.AreEqual (0, mtouch.Execute (MTouchAction.BuildSim), "build");
@@ -2259,7 +2296,7 @@ public class TestApp {
 				Profile = profile,
 				Debug = true,
 				FastDev = true,
-				References = new string [] { GetBindingsLibrary (profile) },
+				References = GetBindingsLibraryWithReferences (profile),
 			}) {
 				mtouch.CreateTemporaryApp_LinkWith ();
 				Assert.AreEqual (0, mtouch.Execute (MTouchAction.BuildDev), "build");
@@ -2279,10 +2316,11 @@ public class TestApp {
 				Profile = profile,
 				Debug = true,
 				FastDev = true,
-				References = new string [] { GetBindingsLibrary (profile) },
+				References = GetBindingsLibraryWithReferences (profile),
 				Linker = MTouchLinker.DontLink,
 			}) {
 				mtouch.CreateTemporaryApp_LinkWith ();
+				mtouch.DlsymString = "+nunit.framework.dll"; // nunit.framework.dll has a P/Invoke to GetVersionEx, so we need to use dlsym to avoid a native linker error.
 				Assert.AreEqual (0, mtouch.Execute (MTouchAction.BuildDev), "build 1");
 			}
 		}
@@ -2298,9 +2336,10 @@ public class TestApp {
 				Profile = profile,
 				Debug = true,
 				FastDev = true,
-				References = new string [] { GetBindingsLibrary (profile) },
+				References = GetBindingsLibraryWithReferences (profile),
 			}) {
 				mtouch.CreateTemporaryApp_LinkWith ();
+				mtouch.DlsymString = "+nunit.framework.dll"; // nunit.framework.dll has a P/Invoke to GetVersionEx, so we need to use dlsym to avoid a native linker error.
 
 				// --fastdev w/all link
 				Assert.AreEqual (0, mtouch.Execute (MTouchAction.BuildDev), "build 1");
@@ -2322,10 +2361,11 @@ public class TestApp {
 				Profile = profile,
 				Debug = true,
 				FastDev = true,
-				References = new string [] { GetBindingsLibrary (profile) },
+				References = GetBindingsLibraryWithReferences (profile),
 				Linker = MTouchLinker.LinkSdk,
 			}) {
 				mtouch.CreateTemporaryApp_LinkWith ();
+				mtouch.DlsymString = "+nunit.framework.dll"; // nunit.framework.dll has a P/Invoke to GetVersionEx, so we need to use dlsym to avoid a native linker error.
 
 				// --fastdev w/sdk link
 				Assert.AreEqual (0, mtouch.Execute (MTouchAction.BuildDev), "build");
@@ -2592,38 +2632,21 @@ public class TestApp {
 		}
 
 		[Test]
-		[TestCase (Target.Dev, Profile.iOS, "dont link", "Release64")]
-		[TestCase (Target.Dev, Profile.iOS, "link all", "Release64")]
-		[TestCase (Target.Dev, Profile.iOS, "link sdk", "Release64")]
-		[TestCase (Target.Dev, Profile.iOS, "monotouch-test", "Release64")]
-		[TestCase (Target.Dev, Profile.iOS, "mscorlib Part 1", "Release64")]
-		[TestCase (Target.Dev, Profile.iOS, "mscorlib Part 2", "Release64")]
-		[TestCase (Target.Dev, Profile.iOS, "BCL tests group 1", "Release64")]
-		public void BuildTestProject (Target target, Profile profile, string testname, string configuration)
+		[TestCase (Target.Dev, Profile.iOS, "linker/ios", "dont link", "Release64")]
+		[TestCase (Target.Dev, Profile.iOS, "linker/ios", "link all", "Release64")]
+		[TestCase (Target.Dev, Profile.iOS, "linker/ios", "link sdk", "Release64")]
+		[TestCase (Target.Dev, Profile.iOS, "", "monotouch-test", "Release64")]
+		[TestCase (Target.Dev, Profile.iOS, "bcl-test/generated/iOS", "mscorlib Part 1", "Release64")]
+		[TestCase (Target.Dev, Profile.iOS, "bcl-test/generated/iOS", "mscorlib Part 2", "Release64")]
+		[TestCase (Target.Dev, Profile.iOS, "bcl-test/generated/iOS", "BCL tests group 1", "Release64")]
+		public void BuildTestProject (Target target, Profile profile, string subdir, string testname, string configuration)
 		{
 			if (target == Target.Dev)
 				AssertDeviceAvailable ();
 			
-			var subdir = string.Empty;
-			switch (testname) {
-			case "dont link":
-			case "link sdk":
-			case "link all":
-				subdir = "/linker/ios";
-				break;
-			case "monotouch-test":
-				break;
-			default:
-				subdir = "/bcl-test";
-				break;
-			}
+			var testDir = Path.Combine (Configuration.SourceRoot, "tests", subdir, testname);
 			var platform = target == Target.Dev ? "iPhone" : "iPhoneSimulator";
-			string csproj = null;
-			if (subdir == "/bcl-test") { // bcl tests are generated and are not in their own dir
-				csproj = Path.Combine (Configuration.SourceRoot, "tests" + subdir, testname + GetProjectSuffix (profile) + ".csproj");
-			} else {
-				csproj = Path.Combine (Configuration.SourceRoot, "tests" + subdir, testname, testname + GetProjectSuffix (profile) + ".csproj");
-			}
+			var csproj = Path.Combine (testDir, testname + GetProjectSuffix (profile) + ".csproj");
 			XBuild.BuildXI (csproj, configuration, platform, timeout: TimeSpan.FromMinutes (15));
 		}
 
@@ -3080,6 +3103,30 @@ class Test {
 				mtouch.AssertErrorPattern ("MT", 5210, "Native linking failed, undefined symbol: _OBJC_METACLASS_._Inexistent. Please verify that all the necessary frameworks have been referenced and native libraries are properly linked in.");
 				mtouch.AssertErrorPattern ("MT", 5211, "Native linking failed, undefined Objective-C class: Inexistent. The symbol ._OBJC_CLASS_._Inexistent. could not be found in any of the libraries or frameworks linked with your application.");
 				mtouch.AssertErrorPattern ("MT", 5202, "Native linking failed. Please review the build log.");
+			}
+		}
+
+		[Test]
+		public void MT5223 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				var code = @"
+using System;
+
+class Test {
+	static void Main ()
+	{
+		Console.WriteLine (typeof (IOSurface.IOSurface));
+	}
+}
+";
+				mtouch.NoFastSim = true;
+				mtouch.CreateTemporaryApp (code: code);
+				mtouch.CreateTemporaryCacheDirectory ();
+
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+				mtouch.AssertWarning ("MT", 5223, "Did not link with the framework 'IOSurface', because the current iOS SDK does not contain support for this framework in the simulator.");
+				mtouch.AssertWarningCount (1);
 			}
 		}
 
@@ -4104,8 +4151,9 @@ public partial class KeyboardViewController : UIKit.UIInputViewController
 		public void RebuildWhenReferenceSymbolsInCode ()
 		{
 			using (var mtouch = new MTouchTool ()) {
-				var bindingsLibrary = GetBindingsLibrary (Profile.iOS);
-				mtouch.References = new string [] { bindingsLibrary };
+				var bindingsLibraryWithReferences = GetBindingsLibraryWithReferences (Profile.iOS);
+				var bindingsLibrary = bindingsLibraryWithReferences [0];
+				mtouch.References = bindingsLibraryWithReferences;
 				mtouch.CreateTemporaryApp_LinkWith ();
 				mtouch.CreateTemporaryCacheDirectory ();
 				mtouch.SymbolMode = MTouchSymbolMode.Code;
@@ -4130,6 +4178,78 @@ public partial class KeyboardViewController : UIKit.UIInputViewController
 				// re-executing clang successfully means we got the clang command line right.
 				Assert.That (output, Does.Contain ("clang"), "clang in second rebuild");
 			}
+		}
+
+		[Test]
+		public void RebuildWithInvalidSymbolFile ()
+		{
+			var csproj = @"<?xml version=""1.0"" encoding=""utf-8""?>
+<Project DefaultTargets=""Build"" ToolsVersion=""4.0"" xmlns=""http://schemas.microsoft.com/developer/msbuild/2003"">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFrameworkIdentifier>Xamarin.iOS</TargetFrameworkIdentifier>
+    <OutputPath>bin</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include=""Xamarin.iOS"" />
+    <PackageReference Include=""NUnitLite"" Version=""3.12.0"" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=""Info.plist"" />
+    <Compile Include=""code.cs"" />
+  </ItemGroup>
+  <Import Project=""$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets"" />
+</Project>
+";
+			var infoPlist = @"<?xml version=""1.0"" encoding=""UTF-8""?>
+<!DOCTYPE plist PUBLIC ""-//Apple//DTD PLIST 1.0//EN"" ""http://www.apple.com/DTDs/PropertyList-1.0.dtd"">
+<plist version=""1.0"">
+<dict>
+	<key>CFBundleIdentifier</key>
+	<string>com.xamarin.monotouch-test</string>
+	<key>MinimumOSVersion</key>
+	<string>12.0</string>
+</dict>
+</plist>
+";
+
+			var code = @"using System;
+class C {
+	static void Main ()
+	{
+		Console.WriteLine (typeof (Foundation.NSObject)); // Make sure there's a reference to Xamarin.iOS.dll
+		Console.WriteLine (typeof (NUnit.Framework.Assert)); // Make sure there's a reference to nunit.framework.dll
+	}
+}";
+			var dir = Cache.CreateTemporaryDirectory ();
+			var csprojPath = Path.Combine (dir, "test.csproj");
+			var infoPlistPath = Path.Combine (dir, "Info.plist");
+			var codePath = Path.Combine (dir, "code.cs");
+			File.WriteAllText (csprojPath, csproj);
+			File.WriteAllText (infoPlistPath, infoPlist);
+			File.WriteAllText (codePath, code);
+
+			var arguments = new string [] {
+				"/p:MtouchArch=x86_64",
+				"/p:MtouchExtraArgs=-vvvvvvvvvv", // make sure mtouch prints out the verbose text we're looking for in our asserts
+				"-consoleLoggerParameters:NoSummary", // this avoids duplicating the errors and warnings at the end of the build
+			};
+			var targets = "Build";
+			XBuild.BuildXI (csprojPath, arguments: arguments, targets: targets);
+
+			// Touch code.cs
+			new FileInfo (codePath).LastWriteTimeUtc = DateTime.UtcNow;
+
+			var output = XBuild.BuildXI (csprojPath, arguments: arguments, targets: targets);
+
+			Assert.That (output, Does.Not.Contain ("must be rebuilt"), "nothing rebuilt in rebuild");
+			Assert.That (output, Does.Not.Contain ("clang"), "no clang in rebuild");
+			Assert.That (output, Does.Contain ("Reloading cached assemblies."), "reloaded cached assemblies");
+
+			var messages = Tool.ParseMessages (output.Split ('\n'), "mtouch");
+			Tool.AssertWarningPattern (messages, "MT", 178, "Debugging symbol file for '.*/nunitlite.dll' is not valid and was ignored.*");
+			Tool.AssertWarningPattern (messages, "MT", 178, "Debugging symbol file for '.*/nunit.framework.dll' is not valid and was ignored.*");
+			Tool.AssertWarningCount (messages, 2);
 		}
 
 		public void XamarinSdkAdjustLibs ()
@@ -4451,7 +4571,8 @@ public class TestApp {
 			args.Add ("/nologo");
 			args.Add ($"/out:{exe}");
 			args.Add ($"/r:{GetBaseLibrary (profile)}");
-			args.Add ($"/r:{GetBindingsLibrary (profile)}");
+			foreach (var r in GetBindingsLibraryWithReferences (profile))
+				args.Add ($"/r:{r}");
 			var compiler = GetCompiler (profile, args);
 			if (ExecutionHelper.Execute (compiler, args, out output) != 0)
 				throw new Exception (output);

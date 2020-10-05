@@ -77,16 +77,33 @@ namespace CoreServices {
 		static IntPtr GetVersion (Version version)
 		{
 			if ((version == null) || version.Equals (HttpVersion.Version11))
-				return _HTTPVersion1_1.Handle;
-			else if (version.Equals (HttpVersion.Version10))
-				return _HTTPVersion1_0.Handle;
-			else if (version.Major == 2 && version.Minor == 0) {
-				if (_HTTPVersion2_0 != null && _HTTPVersion2_0.Handle != IntPtr.Zero)
-					return _HTTPVersion2_0.Handle;
+				return _HTTPVersion1_1;
+
+			if (version.Equals (HttpVersion.Version10))
+				return _HTTPVersion1_0;
+
+			if (version.Major == 3 && version.Minor == 0) {
+				// HTTP 3.0 requires OS X 10.16 or later.
+				if (_HTTPVersion3_0 != IntPtr.Zero)
+					return _HTTPVersion3_0;
+				else if (_HTTPVersion2_0 != IntPtr.Zero)
+					return _HTTPVersion2_0;
+				else 
+					return _HTTPVersion1_1;
+			}
+
+			if (version.Major == 2 && version.Minor == 0) {
 				// HTTP 2.0 requires OS X 10.11 or later.
-				return _HTTPVersion1_1.Handle;
-			} else
-				throw new ArgumentException ();
+				if (_HTTPVersion2_0 != IntPtr.Zero)
+					return _HTTPVersion2_0;
+				else 
+					return _HTTPVersion1_1;
+			}
+
+			if (_HTTPVersion1_1 != IntPtr.Zero)
+				return _HTTPVersion1_1;
+			// not supporting version 1.1 is something to worry about
+			throw new ArgumentException ();
 		}
 
 		[DllImport (Constants.CFNetworkLibrary)]
@@ -195,7 +212,7 @@ namespace CoreServices {
 				IntPtr ptr = CFHTTPMessageCopyVersion (handle);
 				try {
 					// FIXME: .NET HttpVersion does not include (yet) Version20, so Version11 is returned
-					if (ptr == _HTTPVersion1_0.Handle)
+					if (ptr == _HTTPVersion1_0)
 						return HttpVersion.Version10;
 					else
 						return HttpVersion.Version11;

@@ -198,6 +198,7 @@
 
 /tools/common @rolfbjarne @chamons @spouliot
 /tools/common/StaticRegistrar.cs @rolfbjarne
+/tools/tools/devops/device-tests @mandel-macaque @whitneyschmidt
 /tools/linker @spouliot
 /tools/mmp @chamons
 /tools/mtouch @spouliot @rolfbjarne

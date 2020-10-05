@@ -24,6 +24,8 @@ using NSImageScaling=System.Object;
 using NSRulerMarker=System.Object;
 using NSRulerView=System.Object;
 using NSTextBlock=System.Object;
+using NSTextList=System.Object;
+using NSTextTableBlock=System.Object;
 using NSTextStorageEditedFlags=System.Object;
 using NSTextView=System.Object;
 using NSTypesetter=System.Object;
@@ -35,6 +37,14 @@ using NSTextContainer=System.Object;
 using NSTextStorage=System.Object;
 #endif // WATCH
 #endif // !MONOMAC
+
+#if MONOMAC
+using TextAlignment=AppKit.NSTextAlignment;
+using LineBreakMode=AppKit.NSLineBreakMode;
+#else
+using TextAlignment=UIKit.UITextAlignment;
+using LineBreakMode=UIKit.UILineBreakMode;
+#endif
 
 #if MONOMAC
 namespace AppKit {
@@ -63,9 +73,6 @@ namespace UIKit {
 		[Export ("attributedString")]
 		NSAttributedString AttributedString { get; }
 #endif
-
-		[Export ("replaceTextStorage:")]
-		void ReplaceTextStorage (NSTextStorage newTextStorage);
 
 		[Export ("textContainers")]
 		NSTextContainer [] TextContainers { get; }
@@ -724,12 +731,9 @@ namespace UIKit {
 		[Export ("temporaryAttributesAtCharacterIndex:effectiveRange:")]
 		NSDictionary<NSString, NSObject> GetTemporaryAttributes (nuint characterIndex, out NSRange effectiveCharacterRange);
 
+		[NoiOS, NoTV, NoWatch]
 		[Export ("setTemporaryAttributes:forCharacterRange:")]
-#if XAMCORE_4_0 || !MONOMAC
-		void SetTemporaryAttributes (NSDictionary<NSString, NSObject> attributes, NSRange characterReange);
-#else
 		void SetTemporaryAttributes (NSDictionary attrs, NSRange charRange);
-#endif
 
 		[NoiOS][NoTV]
 		[Export ("addTemporaryAttributes:forCharacterRange:")]
@@ -1272,5 +1276,222 @@ namespace UIKit {
 
 		[Export ("reloadSectionsWithIdentifiers:")]
 		void ReloadSections (SectionIdentifierType [] sectionIdentifiers);
+	}
+
+	[ThreadSafe]
+	[BaseType (typeof (NSObject))]
+	interface NSParagraphStyle : NSSecureCoding, NSMutableCopying {
+		[Export ("lineSpacing")]
+		nfloat LineSpacing { get; [NotImplemented] set; }
+
+		[Export ("paragraphSpacing")]
+		nfloat ParagraphSpacing { get; [NotImplemented] set; }
+
+		[Export ("alignment")]
+		TextAlignment Alignment { get; [NotImplemented] set; }
+
+		[Export ("headIndent")]
+		nfloat HeadIndent { get; [NotImplemented] set; }
+
+		[Export ("tailIndent")]
+		nfloat TailIndent { get; [NotImplemented] set; }
+
+		[Export ("firstLineHeadIndent")]
+		nfloat FirstLineHeadIndent { get; [NotImplemented] set; }
+
+		[Export ("minimumLineHeight")]
+		nfloat MinimumLineHeight { get; [NotImplemented] set; }
+
+		[Export ("maximumLineHeight")]
+		nfloat MaximumLineHeight { get; [NotImplemented] set; }
+
+		[Export ("lineBreakMode")]
+		LineBreakMode LineBreakMode { get; [NotImplemented] set; }
+
+		[Export ("baseWritingDirection")]
+		NSWritingDirection BaseWritingDirection { get; [NotImplemented] set; }
+
+		[Export ("lineHeightMultiple")]
+		nfloat LineHeightMultiple { get; [NotImplemented] set; }
+
+		[Export ("paragraphSpacingBefore")]
+		nfloat ParagraphSpacingBefore { get; [NotImplemented] set; }
+
+		[Export ("hyphenationFactor")]
+		float HyphenationFactor { get; [NotImplemented] set; } // Returns a float, not nfloat.
+
+		[Static]
+		[Export ("defaultWritingDirectionForLanguage:")]
+		NSWritingDirection GetDefaultWritingDirection ([NullAllowed] string languageName);
+
+#if MONOMAC && !XAMCORE_4_0
+		[Obsolete ("Use the 'GetDefaultWritingDirection' method instead.")]
+		[Static]
+		[Export ("defaultWritingDirectionForLanguage:")]
+		NSWritingDirection DefaultWritingDirection ([NullAllowed] string languageName);
+#endif
+
+		[Static]
+		[Export ("defaultParagraphStyle", ArgumentSemantic.Copy)]
+		NSParagraphStyle Default { get; }
+
+#if MONOMAC && !XAMCORE_4_0
+		[Obsolete ("Use the 'Default' property instead.")]
+		[Static]
+		[Export ("defaultParagraphStyle", ArgumentSemantic.Copy)]
+		NSParagraphStyle DefaultParagraphStyle { get; [NotImplemented] set; }
+#endif
+
+		[iOS (7,0)]
+		[Export ("defaultTabInterval")]
+		nfloat DefaultTabInterval { get; [NotImplemented] set; }
+
+		[iOS (7,0)]
+		[Export ("tabStops", ArgumentSemantic.Copy)]
+		[NullAllowed]
+		NSTextTab[] TabStops { get; [NotImplemented] set; }
+
+		[iOS (9,0)]
+		[Mac (10,11)]
+		[Export ("allowsDefaultTighteningForTruncation")]
+		bool AllowsDefaultTighteningForTruncation { get; [NotImplemented] set; }
+
+		[NoiOS, NoTV, NoWatch]
+		[Export ("textBlocks")]
+#if XAMCORE_4_0
+		NSTextBlock [] TextBlocks { get; [NotImplemented] set; }
+#else
+		NSTextTableBlock [] TextBlocks { get; [NotImplemented] set; }
+#endif
+
+		[NoiOS, NoTV, NoWatch]
+		[Export ("textLists")]
+		NSTextList[] TextLists { get; [NotImplemented] set; }
+
+		[NoiOS, NoTV, NoWatch]
+		[Export ("tighteningFactorForTruncation")]
+		float TighteningFactorForTruncation { get; [NotImplemented] set; } /* float, not CGFloat */
+
+		[NoiOS, NoTV, NoWatch]
+		[Export ("headerLevel")]
+		nint HeaderLevel { get; [NotImplemented] set; }
+
+		[Mac (11,0), Watch (7,0), TV (14,0), iOS (14,0)]
+		[Export ("lineBreakStrategy")]
+		NSLineBreakStrategy LineBreakStrategy { get; [NotImplemented] set; }
+	}
+
+	[ThreadSafe]
+	[BaseType (typeof (NSParagraphStyle))]
+	interface NSMutableParagraphStyle {
+		[Export ("lineSpacing")]
+		[Override]
+		nfloat LineSpacing { get; set; }
+
+		[Export ("alignment")]
+		[Override]
+		TextAlignment Alignment { get; set; }
+
+		[Export ("headIndent")]
+		[Override]
+		nfloat HeadIndent { get; set; }
+
+		[Export ("tailIndent")]
+		[Override]
+		nfloat TailIndent { get; set; }
+
+		[Export ("firstLineHeadIndent")]
+		[Override]
+		nfloat FirstLineHeadIndent { get; set; }
+
+		[Export ("minimumLineHeight")]
+		[Override]
+		nfloat MinimumLineHeight { get; set; }
+
+		[Export ("maximumLineHeight")]
+		[Override]
+		nfloat MaximumLineHeight { get; set; }
+
+		[Export ("lineBreakMode")]
+		[Override]
+		LineBreakMode LineBreakMode { get; set; }
+
+		[Export ("baseWritingDirection")]
+		[Override]
+		NSWritingDirection BaseWritingDirection { get; set; }
+
+		[Export ("lineHeightMultiple")]
+		[Override]
+		nfloat LineHeightMultiple { get; set; }
+
+		[Export ("paragraphSpacing")]
+		[Override]
+		nfloat ParagraphSpacing { get; set; }
+
+		[Export ("paragraphSpacingBefore")]
+		[Override]
+		nfloat ParagraphSpacingBefore { get; set; }
+
+		[Export ("hyphenationFactor")]
+		[Override]
+		float HyphenationFactor { get; set; } // Returns a float, not nfloat.
+
+		[iOS (7,0)]
+		[Export ("defaultTabInterval")]
+		[Override]
+		nfloat DefaultTabInterval { get; set; }
+
+		[iOS (7,0)]
+		[Export ("tabStops", ArgumentSemantic.Copy)]
+		[Override]
+		[NullAllowed]
+		NSTextTab[] TabStops { get; set; }
+
+		[iOS (9,0)]
+		[Mac (10,11)]
+		[Override]
+		[Export ("allowsDefaultTighteningForTruncation")]
+		bool AllowsDefaultTighteningForTruncation { get; set; }
+
+		[iOS (9,0)]
+		[Export ("addTabStop:")]
+		void AddTabStop (NSTextTab textTab);
+
+		[iOS (9,0)]
+		[Export ("removeTabStop:")]
+		void RemoveTabStop (NSTextTab textTab);
+
+		[iOS (9,0)]
+		[Export ("setParagraphStyle:")]
+		void SetParagraphStyle (NSParagraphStyle paragraphStyle);
+
+		[NoiOS, NoTV, NoWatch]
+		[Override]
+		[Export ("textBlocks")]
+#if XAMCORE_4_0
+		NSTextBlock [] TextBlocks { get; set; }
+#else
+		NSTextTableBlock [] TextBlocks { get; set; }
+#endif
+
+		[NoiOS, NoTV, NoWatch]
+		[Override]
+		[Export ("textLists")]
+		NSTextList [] TextLists { get; set; }
+
+		[NoiOS, NoTV, NoWatch]
+		[Export ("tighteningFactorForTruncation")]
+		[Override]
+		float TighteningFactorForTruncation { get; set; } /* float, not CGFloat */
+
+		[NoiOS, NoTV, NoWatch]
+		[Export ("headerLevel")]
+		[Override]
+		nint HeaderLevel { get; set; }
+
+		[Mac (11,0), Watch (7,0), TV (14,0), iOS (14,0)]
+		[Override]
+		[Export ("lineBreakStrategy", ArgumentSemantic.Assign)]
+		NSLineBreakStrategy LineBreakStrategy { get; set; }
 	}
 }

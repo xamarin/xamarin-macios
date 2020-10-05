@@ -4,13 +4,6 @@ namespace ObjCRuntime {
 		internal const string Revision = "@REVISION@";
 		public const string SdkVersion = "@WATCH_SDK_VERSION@";
 
-		public const string libSystemLibrary = "/usr/lib/libSystem.dylib";
-		public const string libcLibrary = "/usr/lib/libc.dylib";
-		public const string ObjectiveCLibrary = "/usr/lib/libobjc.dylib";
-#if !XAMCORE_4_0
-		public const string libdispatchLibrary = "/usr/lib/system/libdispatch.dylib";
-#endif
-		
 		// WatchOS 2.0
 		public const string CFNetworkLibrary = "/System/Library/Frameworks/CFNetwork.framework/CFNetwork";
 		public const string ClockKitLibrary = "/System/Library/Frameworks/ClockKit.framework/ClockKit";
@@ -35,9 +28,6 @@ namespace ObjCRuntime {
 		public const string WatchConnectivityLibrary = "/System/Library/Frameworks/WatchConnectivity.framework/WatchConnectivity";
 		public const string WatchKitLibrary = "/System/Library/Frameworks/WatchKit.framework/WatchKit";
 		public const string libcompressionLibrary = "/usr/lib/libcompression.dylib";
-#if !XAMCORE_4_0
-		public const string libcompression = "/usr/lib/libcompression.dylib";
-#endif
 
 		// WatchOS 3.0
 		public const string AVFoundationLibrary = "/System/Library/Frameworks/AVFoundation.framework/AVFoundation";
@@ -55,7 +45,9 @@ namespace ObjCRuntime {
 		public const string CoreBluetoothLibrary = "/System/Library/Frameworks/CoreBluetooth.framework/CoreBluetooth";
 		public const string CoreMLLibrary = "/System/Library/Frameworks/CoreML.framework/CoreML";	
 		public const string CoreVideoLibrary = "/System/Library/Frameworks/CoreVideo.framework/CoreVideo";
+#if !XAMCORE_4_0
 		public const string VisionLibrary = "/System/Library/Frameworks/Vision.framework/Vision";
+#endif
 
 		// WatchOS 5
 		public const string NaturalLanguageLibrary = "/System/Library/Frameworks/NaturalLanguage.framework/NaturalLanguage";
@@ -69,5 +61,8 @@ namespace ObjCRuntime {
 		public const string CoreMediaLibrary = "/System/Library/Frameworks/CoreMedia.framework/CoreMedia";
 		public const string StoreKitLibrary = "/System/Library/Frameworks/StoreKit.framework/StoreKit";
 
+		// watchOS 7
+		public const string AccessibilityLibrary = "/System/Library/Frameworks/Accessibility.framework/Accessibility";
+		public const string UniformTypeIdentifiersLibrary = "/System/Library/Frameworks/UniformTypeIdentifiers.framework/UniformTypeIdentifiers";
 	}
 }

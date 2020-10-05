@@ -1060,7 +1060,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			w.AppendLine ($"\t\t\t\tvalue = new {v.Managed} [] {{ {v.ManagedNewExpression} }};");
 			w.AppendLine ($"\t\t\t\tobj.{v.Managed}Array = value;");
 			w.AppendLine ($"\t\t\t\tarray = Runtime.GetNSObject<NSArray> (Messaging.IntPtr_objc_msgSend (obj.Handle, Selector.GetHandle (\"get{v.Managed}Array\")));");
-			w.AppendLine ($"\t\t\t\tAssert.AreEqual (value.Length, array.Count, \"getter B\");");
+			w.AppendLine ($"\t\t\t\tAssert.AreEqual ((nuint) value.Length, array.Count, \"getter B\");");
 			w.AppendLine ($"\t\t\t\tAssert.AreEqual (value [0], {v.FromNSNumberCastExpression}array.GetItem<NSNumber> (0){v.Map}, \"getter B element\");");
 			w.AppendLine ();
 
@@ -1230,7 +1230,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			w.AppendLine ($"\t\t\t\tvalue = new {v.Managed} [] {{ {v.ManagedNewExpression} }};");
 			w.AppendLine ($"\t\t\t\tobj.{v.Managed}Array = value;");
 			w.AppendLine ($"\t\t\t\tarray = Runtime.GetNSObject<NSArray> (Messaging.IntPtr_objc_msgSend (obj.Handle, Selector.GetHandle (\"get{v.Managed}Array\")));");
-			w.AppendLine ($"\t\t\t\tAssert.AreEqual (value.Length, array.Count, \"getter B\");");
+			w.AppendLine ($"\t\t\t\tAssert.AreEqual ((nuint) value.Length, array.Count, \"getter B\");");
 			w.AppendLine ($"\t\t\t\tAssert.AreEqual (value [0], array.GetItem<NSValue> (0){v.Map}, \"getter B element\");");
 			w.AppendLine ($"\t\t\t}}");
 			w.AppendLine ("\t\t}");
@@ -1396,7 +1396,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			w.AppendLine ($"\t\t\t\tvalue = new {v.Managed} [] {{ {v.ManagedNewExpression} }};");
 			w.AppendLine ($"\t\t\t\tobj.PSmart{v.Managed}Properties = value;");
 			w.AppendLine ($"\t\t\t\tarray = Runtime.GetNSObject<NSArray> (Messaging.IntPtr_objc_msgSend (obj.Handle, Selector.GetHandle (\"getSmart{v.Managed}Values\")));");
-			w.AppendLine ($"\t\t\t\tAssert.AreEqual (value.Length, array.Count, \"getter B\");");
+			w.AppendLine ($"\t\t\t\tAssert.AreEqual ((nuint) value.Length, array.Count, \"getter B\");");
 			w.AppendLine ($"\t\t\t\tAssert.AreEqual (value [0], {v.Managed}Extensions.GetValue (array.GetItem<NSString> (0)), \"getter B element\");");
 			w.AppendLine ($"\t\t\t}}");
 			w.AppendLine ("\t\t}");

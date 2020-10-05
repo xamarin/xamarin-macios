@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.iOS.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net5.0-ios</TargetFramework>
+    <RuntimeIdentifier>ios-x64</RuntimeIdentifier>
+    <OutputType>Exe</OutputType>
+    <DefineConstants>NET</DefineConstants>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>linksdk</RootNamespace>
+    <AssemblyName>link sdk</AssemblyName>
+    <MtouchLink>SdkOnly</MtouchLink>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AssetTargetFallback>xamarinios10;$(AssetTargetFallback)</AssetTargetFallback>
+    <MtouchExtraArgs>-disable-thread-check -xml=${ProjectDir}/../extra-linker-defs.xml "--dlsym:-link sdk" -gcc_flags="-UhoItsB0rken"</MtouchExtraArgs>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="support">
+      <HintPath>../../support.dll</HintPath>
+    </Reference>
+
+    <PackageReference Include="NUnitLite" Version="3.12.0" />
+    <PackageReference Include="MonoTouch.Dialog" Version="2.0.0-pre1" />
+    <ProjectReference Include="..\..\..\..\..\..\external\Touch.Unit\Touch.Client\dotnet\iOS\Touch.Client-iOS.dotnet.csproj" />
+    <!-- MonoTouch.Dialog references System.Json, which isn't shipped with .NET5, so reference the NuGet instead -->
+    <PackageReference Include="System.Json" Version="4.7.1" />
+    <!-- The linker resolves some assembly references too eagerly, and fails when it can't find them, so work around this by referencing the missing assemblies-->
+    <!-- ref: https://github.com/mono/linker/issues/1139 -->
+    <PackageReference Include="System.Security.Permissions" Version="5.0.0-preview.2.20160.6" />
+    <PackageReference Include="System.Threading.AccessControl" Version="5.0.0-preview.2.20160.6" />
+    <PackageReference Include="System.CodeDom" Version="5.0.0-preview.2.20160.6" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0-preview.2.20160.6" />
+    <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="5.0.0-preview.2.20160.6" />
+    <PackageReference Include="System.Diagnostics.EventLog" Version="5.0.0-preview.2.20160.6" />
+    <PackageReference Include="System.IO.Ports" Version="5.0.0-preview.3.20209.5" />
+    <PackageReference Include="System.Data.SqlClient" Version="5.0.0-alpha1.19523.8" />
+    <PackageReference Include="System.ServiceModel.Primitives" Version="5.0.0-preview1.20104.1" />
+
+    <ProjectReference Include="..\..\..\..\..\BundledResources\dotnet\iOS\BundledResources.csproj" />
+    <ProjectReference Include="..\..\..\..\..\bindings-test\dotnet\iOS\bindings-test.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\Info.plist">
+      <LogicalName>Info.plist</LogicalName>
+    </None>
+    <None Include="..\..\extra-linker-defs.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\Main.cs" />
+    <Compile Include="..\..\AppDelegate.cs" />
+    <Compile Include="..\..\LinkSdkRegressionTest.cs" />
+    <Compile Include="..\..\Bug1820Test.cs" />
+    <Compile Include="..\..\Bug2096Test.cs" />
+    <Compile Include="..\..\..\..\BaseOptimizeGeneratedCodeTest.cs" />
+    <Compile Include="..\..\OptimizeGeneratedCodeTest.cs" />
+    <Compile Include="..\..\AotBugs.cs" />
+    <Compile Include="..\..\CryptoTest.cs" />
+    <Compile Include="..\..\TaskTest.cs" />
+    <Compile Include="..\..\LinkExtraDefsTest.cs" />
+    <Compile Include="..\..\PclTest.cs" />
+    <Compile Include="..\..\AsyncTest.cs" />
+    <Compile Include="..\..\DataContractTest.cs" />
+    <Compile Include="..\..\CalendarTest.cs" />
+    <Compile Include="..\..\DllImportTest.cs" />
+    <Compile Include="..\..\LocaleTest.cs" />
+    <Compile Include="..\..\ReflectionTest.cs" />
+    <Compile Include="..\..\HttpClientHandlerTest.cs" />
+    <Compile Include="..\..\CanaryTest.cs" />
+    <Compile Include="..\..\..\..\..\common\TestRuntime.cs">
+        <Link>TestRuntime.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\ILReader.cs">
+      <Link>ILReader.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\CommonLinkSdkTest.cs">
+      <Link>CommonLinkSdkTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\CommonLinkAnyTest.cs">
+      <Link>CommonLinkAnyTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\BitcodeTest.cs" />
+    <Compile Include="..\..\..\..\..\monotouch-test\System.Net.Http\NetworkResources.cs">
+      <Link>NetworkResources.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <InterfaceDefinition Include="..\..\LaunchScreen.storyboard" />
+  </ItemGroup>
+  <ItemGroup>
+    <ImageAsset Include="..\..\Assets.xcassets\AppIcons.appiconset\Contents.json" />
+    <ImageAsset Include="..\..\Assets.xcassets\AppIcons.appiconset\Icon-app-60%403x.png" />
+    <ImageAsset Include="..\..\Assets.xcassets\AppIcons.appiconset\icon-app-57.png" />
+    <ImageAsset Include="..\..\Assets.xcassets\AppIcons.appiconset\icon-app-57%402x.png" />
+    <ImageAsset Include="..\..\Assets.xcassets\AppIcons.appiconset\icon-app-60%402x.png" />
+    <ImageAsset Include="..\..\Assets.xcassets\AppIcons.appiconset\icon-app-72.png" />
+    <ImageAsset Include="..\..\Assets.xcassets\AppIcons.appiconset\icon-app-72%402x.png" />
+    <ImageAsset Include="..\..\Assets.xcassets\AppIcons.appiconset\icon-app-76.png" />
+    <ImageAsset Include="..\..\Assets.xcassets\AppIcons.appiconset\icon-app-76%402x.png" />
+    <ImageAsset Include="..\..\Assets.xcassets\AppIcons.appiconset\icon-app-83.5%402x.png" />
+  </ItemGroup>
+</Project>

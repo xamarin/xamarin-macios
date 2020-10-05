@@ -180,30 +180,6 @@ namespace Xamarin.iOS.Tasks
 			}
 		}
 
-		static bool EntitlementsRequireLinkerFlags (string path)
-		{
-			try {
-				var plist = PDictionary.FromFile (path);
-
-				// FIXME: most keys do not require linking in the entitlements file, so we
-				// could probably add some smarter logic here to iterate over all of the
-				// keys in order to determine whether or not we really need to link with
-				// the entitlements or not.
-				return plist.Count != 0;
-			} catch {
-				return false;
-			}
-		}
-
-		void BuildEntitlementFlags (GccOptions gcc)
-		{
-			if (SdkIsSimulator && !string.IsNullOrEmpty (CompiledEntitlements) && EntitlementsRequireLinkerFlags (CompiledEntitlements)) {
-				gcc.Arguments.AddQuoted (new [] { "-Xlinker", "-sectcreate", "-Xlinker", "__TEXT", "-Xlinker", "__entitlements" });
-				gcc.Arguments.Add ("-Xlinker");
-				gcc.Arguments.AddQuoted (Path.GetFullPath (CompiledEntitlements));
-			}
-		}
-
 		static string Unquote (string text, int startIndex)
 		{
 			if (startIndex >= text.Length)
@@ -420,7 +396,7 @@ namespace Xamarin.iOS.Tasks
 			}
 
 			BuildNativeReferenceFlags (gcc);
-			BuildEntitlementFlags (gcc);
+			gcc.Arguments.AddQuoted (LinkNativeCodeTaskBase.GetEmbedEntitlementsInExecutableLinkerFlags (CompiledEntitlements));
 
 			foreach (var framework in gcc.Frameworks)
 				args.AddQuotedLine ($"--framework={framework}");

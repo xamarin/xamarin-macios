@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <PropertyGroup>
+    <RootNamespace>bindingstest</RootNamespace>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\..\..\product.snk</AssemblyOriginatorKeyFile>
+    <LangVersion>latest</LangVersion>
+    <IsBindingProject>true</IsBindingProject>
+
+    <RootTestsDirectory>$(MSBuildThisFileDirectory)\..\..</RootTestsDirectory>
+    <BindingsTestDirectory>$(RootTestsDirectory)\bindings-test</BindingsTestDirectory>
+    <TestLibrariesDirectory>$(RootTestsDirectory)\test-libraries</TestLibrariesDirectory>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NUnitLite" Version="3.12.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ObjcBindingApiDefinition Include="$(BindingsTestDirectory)\ApiDefinition.cs" />
+    <ObjcBindingApiDefinition Include="$(RootTestsDirectory)\generator\tests\ref-out-parameters.cs" />
+    <ObjcBindingApiDefinition Include="$(BindingsTestDirectory)\ApiDefinition.generated.cs" />
+    <ObjcBindingApiDefinition Include="$(BindingsTestDirectory)\ApiProtocol.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ObjcBindingCoreSource Include="$(BindingsTestDirectory)\StructsAndEnums.cs" />
+    <ObjcBindingCoreSource Include="$(BindingsTestDirectory)\StructsAndEnums.generated.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ObjcBindingNativeLibrary Include="$(TestLibrariesDirectory)\.libs\$(NativeLibName)\libtest.a">
+      <Link>libtest.a</Link>
+    </ObjcBindingNativeLibrary>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="$(RootTestsDirectory)\common\ConditionalCompilation.cs">
+      <Link>ConditionalCompilation.cs</Link>
+    </Compile>
+    <Compile Include="$(BindingsTestDirectory)\libtest.linkwith.cs">
+      <DependentUpon>libtest.a</DependentUpon>
+    </Compile>
+    <Compile Include="$(BindingsTestDirectory)\ProtocolTest.cs" />
+    <Compile Include="$(RootTestsDirectory)\api-shared\ObjCRuntime\Registrar.cs">
+      <Link>Registrar.cs</Link>
+    </Compile>
+    <Compile Include="$(BindingsTestDirectory)\RegistrarBindingTest.cs" />
+    <Compile Include="$(RootTestsDirectory)\common\TestRuntime.cs">
+      <Link>TestRuntime.cs</Link>
+    </Compile>
+    <Compile Include="$(BindingsTestDirectory)\RuntimeTest.cs" />
+    <Compile Include="$(BindingsTestDirectory)\CodeBehind.cs" />
+    <Compile Include="$(BindingsTestDirectory)\Messaging.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(TestLibrariesDirectory)\libtest.m">
+      <Link>libtest.m</Link>
+    </None>
+    <None Include="$(TestLibrariesDirectory)\libtest.h">
+      <Link>libtest.h</Link>
+    </None>
+    <None Include="$(TestLibrariesDirectory)\libtest.structs.h">
+      <Link>libtest.structs.h</Link>
+    </None>
+    <None Include="$(TestLibrariesDirectory)\libtest.properties.h">
+      <Link>libtest.properties.h</Link>
+    </None>
+    <None Include="$(TestLibrariesDirectory)\testgenerator.cs">
+      <Link>testgenerator.cs</Link>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <GeneratedTestInput Include="$(TestLibrariesDirectory)\*.m" />
+    <GeneratedTestInput Include="$(TestLibrariesDirectory)\*.h" />
+    <GeneratedTestInput Include="$(TestLibrariesDirectory)\*.cs" />
+    <GeneratedTestInput Include="$(TestLibrariesDirectory)\Makefile" />
+    <GeneratedTestOutput Include="$(TestLibrariesDirectory)\.libs\$(NativeLibName)\libtest.a" />
+    <GeneratedTestOutput Include="$(BindingsTestDirectory)\ApiDefinition.generated.cs" />
+    <GeneratedTestOutput Include="$(BindingsTestDirectory)\StructsAndEnums.generated.cs" />
+  </ItemGroup>
+
+  <Target Name="BuildTestLibraries" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)" BeforeTargets="BeforeBuild">
+    <Exec Command="make -j8 -C $(TestLibrariesDirectory)" />
+  </Target>
+</Project>

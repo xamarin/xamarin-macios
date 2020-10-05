@@ -97,7 +97,7 @@ namespace MonoTouchFixtures.MultipeerConnectivity {
 					Assert.AreSame (s.MyPeerID, peer, "MyPeerID");
 					// it's a self-signed certificate that's used for the identity
 					// so it's not added twice to the collection being returned
-					Assert.That (s.SecurityIdentity.Count, Is.EqualTo (1), "SecurityIdentity");
+					Assert.That (s.SecurityIdentity.Count, Is.EqualTo ((nuint) 1), "SecurityIdentity");
 					Assert.That (s.SecurityIdentity.GetItem<SecIdentity> (0).Handle, Is.EqualTo (certs [0].Handle), "SecurityIdentity");
 					Assert.That (s.EncryptionPreference, Is.EqualTo (MCEncryptionPreference.Required), "EncryptionPreference");
 					Assert.That (s.ConnectedPeers, Is.Empty, "ConnectedPeers");

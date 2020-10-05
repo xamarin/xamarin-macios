@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Json;
 using System.Xml;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
@@ -128,6 +129,7 @@ namespace Xharness {
 		public string MONO_MAC_SDK_DESTDIR { get; }
 		public bool ENABLE_XAMARIN { get; }
 		public string DOTNET { get; }
+		public string DOTNET5 { get; }
 
 		// Run
 
@@ -200,11 +202,12 @@ namespace Xharness {
 			MONO_MAC_SDK_DESTDIR = config ["MONO_MAC_SDK_DESTDIR"];
 			ENABLE_XAMARIN = config.ContainsKey ("ENABLE_XAMARIN") && !string.IsNullOrEmpty (config ["ENABLE_XAMARIN"]);
 			DOTNET = config ["DOTNET"];
+			DOTNET5 = config ["DOTNET5"];
 
 			if (string.IsNullOrEmpty (SdkRoot))
 				SdkRoot = config ["XCODE_DEVELOPER_ROOT"] ?? configuration.SdkRoot;
 
-			processManager = new ProcessManager (XcodeRoot, MlaunchPath);
+			processManager = new ProcessManager (XcodeRoot, MlaunchPath, GetDotNetExecutable, XIBuildPath);
 			TunnelBore = new TunnelBore (processManager);
 		}
 
@@ -285,7 +288,7 @@ namespace Xharness {
 			}
 
 			foreach (var flavor in new MonoNativeFlavor [] { MonoNativeFlavor.Compat, MonoNativeFlavor.Unified }) {
-				var monoNativeInfo = new MacMonoNativeInfo (flavor, RootDirectory, Log);
+				var monoNativeInfo = new MonoNativeInfo (DevicePlatform.macOS, flavor, RootDirectory, Log);
 				var macTestProject = new MacTestProject (monoNativeInfo.ProjectPath, targetFrameworkFlavor: MacFlavors.Modern | MacFlavors.Full) {
 					MonoNativeInfo = monoNativeInfo,
 					Name = monoNativeInfo.ProjectName,
@@ -320,7 +323,6 @@ namespace Xharness {
 
 			foreach (var proj in MacTestProjects) {
 				var target = new MacTarget (MacFlavors.Modern);
-				target.MonoNativeInfo = proj.MonoNativeInfo;
 				configureTarget (target, proj.Path, proj.IsNUnitProject, true);
 				unified_targets.Add (target);
 			}
@@ -336,7 +338,6 @@ namespace Xharness {
 				// Generate variations if requested
 				if (proj.GenerateFull) {
 					var target = new MacTarget (MacFlavors.Full);
-					target.MonoNativeInfo = proj.MonoNativeInfo;
 					configureTarget (target, file, proj.IsNUnitProject, false);
 					unified_targets.Add (target);
 
@@ -348,7 +349,6 @@ namespace Xharness {
 
 				if (proj.GenerateSystem) {
 					var target = new MacTarget (MacFlavors.System);
-					target.MonoNativeInfo = proj.MonoNativeInfo;
 					configureTarget (target, file, proj.IsNUnitProject, false);
 					unified_targets.Add (target);
 
@@ -371,8 +371,8 @@ namespace Xharness {
 
 		void AutoConfigureIOS ()
 		{
-			var test_suites = new string [] { "monotouch-test", "framework-test", "interdependent-binding-projects" };
-			var library_projects = new string [] { "BundledResources", "EmbeddedResources", "bindings-test", "bindings-test2", "bindings-framework-test" };
+			var test_suites = new string [] { "monotouch-test", "framework-test" };
+			var library_projects = new string [] { "BundledResources", "EmbeddedResources", "bindings-test2", "bindings-framework-test" };
 			var fsharp_test_suites = new string [] { "fsharp" };
 			var fsharp_library_projects = new string [] { "fsharplibrary" };
 
@@ -385,13 +385,22 @@ namespace Xharness {
 			foreach (var p in fsharp_library_projects)
 				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".fsproj")), false) { Name = p });
 
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bindings-test", "iOS", "bindings-test.csproj")), false) { Name = "bindings-test" });
+
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "interdependent-binding-projects", "interdependent-binding-projects.csproj"))) { Name = "interdependent-binding-projects" });
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "interdependent-binding-projects", "dotnet", "iOS", "interdependent-binding-projects.csproj"))) { Name = "interdependent-binding-projects", IsDotNetProject = true, SkipiOSVariation = false, SkiptvOSVariation = true, SkipwatchOSVariation = true, SkipTodayExtensionVariation = true, SkipDeviceVariations = true, SkipiOS32Variation = true, });
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "iOS", "introspection-ios.csproj"))) { Name = "introspection" });
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "iOS", "introspection-ios-dotnet.csproj"))) { Name = "introspection", IsDotNetProject = true, SkipiOSVariation = false, SkiptvOSVariation = true, SkipwatchOSVariation = true, SkipTodayExtensionVariation = true, SkipDeviceVariations = true, SkipiOS32Variation = true, });
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "monotouch-test", "dotnet", "iOS", "monotouch-test.csproj"))) { Name = "monotouch-test", IsDotNetProject = true, SkipiOSVariation = false, SkiptvOSVariation = true, SkipwatchOSVariation = true, SkipTodayExtensionVariation = true, SkipDeviceVariations = true, SkipiOS32Variation = true, });
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "dont link", "dont link.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "dont link", "dotnet", "iOS", "dont link.csproj"))) { Configurations = new string [] { "Debug", "Release" }, IsDotNetProject = true, SkipiOSVariation = false, SkiptvOSVariation = true, SkipwatchOSVariation = true, SkipTodayExtensionVariation = true, SkipDeviceVariations = true, SkipiOS32Variation = true });
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link all", "link all.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link all", "dotnet", "iOS", "link all.csproj"))) { Configurations = new string [] { "Debug", "Release" }, IsDotNetProject = true, SkipiOSVariation = false, SkiptvOSVariation = true, SkipwatchOSVariation = true, SkipTodayExtensionVariation = true, SkipDeviceVariations = true, SkipiOS32Variation = true });
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link sdk", "link sdk.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link sdk", "dotnet", "iOS", "link sdk.csproj"))) { Configurations = new string [] { "Debug", "Release" }, IsDotNetProject = true, SkipiOSVariation = false, SkiptvOSVariation = true, SkipwatchOSVariation = true, SkipTodayExtensionVariation = true, SkipDeviceVariations = true, SkipiOS32Variation = true });
 
 			foreach (var flavor in new MonoNativeFlavor [] { MonoNativeFlavor.Compat, MonoNativeFlavor.Unified }) {
-				var monoNativeInfo = new MonoNativeInfo (flavor, RootDirectory, Log);
+				var monoNativeInfo = new MonoNativeInfo (DevicePlatform.iOS, flavor, RootDirectory, Log);
 				var iosTestProject = new iOSTestProject (monoNativeInfo.ProjectPath) {
 					MonoNativeInfo = monoNativeInfo,
 					Name = monoNativeInfo.ProjectName,
@@ -464,6 +473,18 @@ namespace Xharness {
 			return mac ? AutoConfigureMac (true) : ConfigureIOS ();
 		}
 
+		// At startup we:
+		// * Load a list of well-known test projects IOSTestProjects/MacTestProjects. This happens in AutoConfigureIOS/AutoConfigureMac.
+		//   Example projects:
+		//     * introspection
+		//     * dont link, link all, link sdk
+		// * Each of these test projects can used to generate other platform variations (tvOS, watchOS, macOS full, etc),
+		//   if the the TestProject.GenerateVariations property is true.
+		// * For the mono-native template project, we generate a compat+unified version of the mono-native template project (in MonoNativeInfo.Convert).
+		//   GenerateVariations is true for mono-native projects, which means we'll generate platform variations.
+		// * For the BCL tests, we use a BCL test project generator. The BCL test generator generates projects for
+		//   all platforms we're interested in, so we set GenerateVariations to false to avoid generate the platform variations again.
+
 		int ConfigureIOS ()
 		{
 			var rv = 0;
@@ -478,11 +499,8 @@ namespace Xharness {
 			foreach (var monoNativeInfo in IOSTestProjects.Where (x => x.MonoNativeInfo != null).Select (x => x.MonoNativeInfo))
 				monoNativeInfo.Convert ();
 
-			foreach (var proj in IOSTestProjects) {
+			foreach (var proj in IOSTestProjects.Where ((v) => v.GenerateVariations)) {
 				var file = proj.Path;
-
-				if (proj.MonoNativeInfo != null)
-					file = proj.MonoNativeInfo.TemplatePath;
 
 				if (!File.Exists (file)) {
 					Console.WriteLine ($"Can't find the project file {file}.");
@@ -515,23 +533,27 @@ namespace Xharness {
 						TemplateProjectPath = file,
 						Harness = this,
 						TestProject = proj,
+						ShouldSkipProjectGeneration = proj.IsDotNetProject,
 					};
 					unified.Execute ();
 					unified_targets.Add (unified);
 
-					var today = new TodayExtensionTarget {
-						TemplateProjectPath = file,
-						Harness = this,
-						TestProject = proj,
-					};
-					today.Execute ();
-					today_targets.Add (today);
+					if (!proj.SkipTodayExtensionVariation) {
+						var today = new TodayExtensionTarget {
+							TemplateProjectPath = file,
+							Harness = this,
+							TestProject = proj,
+							ShouldSkipProjectGeneration = proj.IsDotNetProject,
+						};
+						today.Execute ();
+						today_targets.Add (today);
+					}
 				}
 			}
 
-			SolutionGenerator.CreateSolution (this, watchos_targets, "watchos");
-			SolutionGenerator.CreateSolution (this, tvos_targets, "tvos");
-			SolutionGenerator.CreateSolution (this, today_targets, "today");
+			SolutionGenerator.CreateSolution (this, watchos_targets, "watchos", DevicePlatform.watchOS);
+			SolutionGenerator.CreateSolution (this, tvos_targets, "tvos", DevicePlatform.tvOS);
+			SolutionGenerator.CreateSolution (this, today_targets, "today", DevicePlatform.iOS);
 			MakefileGenerator.CreateMakefile (this, unified_targets, tvos_targets, watchos_targets, today_targets);
 
 			return rv;
@@ -667,6 +689,7 @@ namespace Xharness {
 		public void Save (StringWriter doc, string path)
 		{
 			if (!File.Exists (path)) {
+				Directory.CreateDirectory (Path.GetDirectoryName (path));
 				File.WriteAllText (path, doc.ToString ());
 				Log (1, "Created {0}", path);
 			} else {
@@ -711,6 +734,54 @@ namespace Xharness {
 				buildConfiguration);
 			rv.InitializeAsync ().Wait ();
 			return rv;
+		}
+
+		// Gets either the DOTNET or DOTNET5 variable, depending on any global.json
+		// config file found in the specified directory or any containing directories.
+		Dictionary<string, string> dotnet_executables = new Dictionary<string, string> ();
+		public string GetDotNetExecutable (string directory)
+		{
+			if (directory == null)
+				throw new ArgumentNullException (nameof (directory));
+
+			lock (dotnet_executables) {
+				if (dotnet_executables.TryGetValue (directory, out var value))
+					return value;
+			}
+
+			// Find the first global.json up the directory hierarchy (stopping at the root directory)
+			string global_json = null;
+			var dir = directory;
+			while (dir.Length > 2) {
+				global_json = Path.Combine (dir, "global.json");
+				if (File.Exists (global_json))
+					break;
+				dir = Path.GetDirectoryName (dir);
+			}
+			if (!File.Exists (global_json))
+				throw new Exception ($"Could not find any global.json file in {directory} or above");
+
+			// Parse the global.json we found, and figure out if it tells us to use .NET 3.1.100 or not.
+			var contents = File.ReadAllBytes (global_json);
+			using (var reader =  JsonReaderWriterFactory.CreateJsonReader (contents, new XmlDictionaryReaderQuotas ())) {
+				var doc = new XmlDocument ();
+				doc.Load (reader);
+				var version = doc.SelectSingleNode ("/root/sdk").InnerText;
+				string executable;
+				switch (version [0]) {
+				case '3':
+					executable = DOTNET;
+					break;
+				default:
+					executable = DOTNET5;
+					break;
+				}
+				Log ($"Mapped .NET SDK version {version} to {executable} for {directory}");
+				lock (dotnet_executables) {
+					dotnet_executables [directory] = executable;
+				}
+				return executable;
+			}
 		}
 	}
 }

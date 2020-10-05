@@ -679,11 +679,13 @@ namespace AudioUnit
 			return MusicDeviceMIDIEvent (handle, status, data1, data2, offsetSampleFrame);
 		}
 
+#if !XAMCORE_4_0
+		[Obsolete ("This API has been removed.")]
 		public AudioUnitStatus SetLatency (double latency)
 		{
-			// ElementCount: Float64, AudioUnitScopeType.Global is the only valid scope for Latency.
-			return AudioUnitSetProperty (handle, AudioUnitPropertyIDType.Latency, AudioUnitScopeType.Global, 0, ref latency, sizeof (double));
+			return AudioUnitStatus.OK;
 		}
+#endif
 
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern AudioUnitStatus AudioUnitGetProperty (IntPtr inUnit, AudioUnitPropertyIDType inID, AudioUnitScopeType inScope, uint inElement, ref double outData, ref uint ioDataSize);
@@ -770,10 +772,12 @@ namespace AudioUnit
 
 #if !MONOMAC
 		[iOS (7,0)]
+		[Deprecated (PlatformName.iOS, 13,0)]
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern AudioComponentStatus AudioOutputUnitPublish (AudioComponentDescription inDesc, IntPtr /* CFStringRef */ inName, uint /* UInt32 */ inVersion, IntPtr /* AudioUnit */ inOutputUnit);
 
 		[iOS (7,0)]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AudioUnit' instead.")]
 		public AudioComponentStatus AudioOutputUnitPublish (AudioComponentDescription description, string name, uint version = 1)
 		{
 
@@ -786,10 +790,12 @@ namespace AudioUnit
 		}
 
 		[iOS (7,0)]
+		[Deprecated (PlatformName.iOS, 13,0)]
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern IntPtr AudioOutputUnitGetHostIcon (IntPtr /* AudioUnit */ au, float /* float */ desiredPointSize);
 
 		[iOS (7,0)]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AudioUnit' instead.")]
 		public UIKit.UIImage GetHostIcon (float desiredPointSize)
 		{
 			return new UIKit.UIImage (AudioOutputUnitGetHostIcon (handle, desiredPointSize));
@@ -1078,6 +1084,8 @@ namespace AudioUnit
 		TranslateBundleIDToTransportManager = 1953325673, // 'tmbi'
 		BoxList = 1651472419, // 'box#'
 		TranslateUIDToBox = 1969841250, // 'uidb'
+		ClockDeviceList = 1668049699, //'clk#'
+		TranslateUidToClockDevice = 1969841251, // 'uidc',
 		ProcessIsMaster = 1835103092, // 'mast'
 		IsInitingOrExiting = 1768845172, // 'inot'
 		UserIDChanged = 1702193508, // 'euid'
@@ -1087,7 +1095,10 @@ namespace AudioUnit
 		HogModeIsAllowed = 1752131442, // 'hogr'
 		UserSessionIsActiveOrHeadless = 1970496882, // 'user'
 		ServiceRestarted = 1936880500, // 'srst'
-		PowerHint = 1886353256 // 'powh'
+		PowerHint = 1886353256, // 'powh'
+		ActualSampleRate = 1634955892,// 'asrt',
+		ClockDevice = 1634755428, // 'apcd',
+		IOThreadOSWorkgroup = 1869838183, // 'oswg'
 	}
 
 	public enum AudioObjectPropertyScope : uint

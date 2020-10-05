@@ -18,7 +18,7 @@ namespace MonoTouchFixtures.Network {
 
 		NWWebSocketOptions options;
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Init () => TestRuntime.AssertXcodeVersion (11, 0);
 
 		[SetUp]
@@ -71,7 +71,7 @@ namespace MonoTouchFixtures.Network {
 		public void TestMaxMessageSize ()
 		{
 			var defaultValue = options.MaximumMessageSize;
-			Assert.AreEqual (defaultValue, 0, "defaultValue");
+			Assert.AreEqual (defaultValue, (nuint) 0, "defaultValue");
 			nuint newValue = 40;
 			options.MaximumMessageSize = newValue;
 			Assert.AreEqual (newValue, options.MaximumMessageSize, "new value");

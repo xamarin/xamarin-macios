@@ -944,7 +944,7 @@ namespace Security {
 		}
 
 		[iOS (8, 0)]
-		[Deprecated (PlatformName.iOS, 9, 0, message : "Use AuthenticationUI property")]
+		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'AuthenticationUI' property instead.")]
 		public bool UseNoAuthenticationUI {
 			get {
 				return Fetch (SecItem.UseNoAuthenticationUI) == CFBoolean.TrueHandle;

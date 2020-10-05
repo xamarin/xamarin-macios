@@ -19,7 +19,7 @@ namespace MonoTouchFixtures.Network {
 		string type = "_ftp._tcp";
 		string domain = "MonoTouchFixtures.Network";
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Init () => TestRuntime.AssertXcodeVersion (11, 0);
 
 		[SetUp]

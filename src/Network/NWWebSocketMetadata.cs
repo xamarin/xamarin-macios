@@ -6,6 +6,9 @@
 //
 // Copyrigh 2019 Microsoft Inc
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
@@ -81,7 +84,7 @@ namespace Network {
 		[MonoPInvokeCallback (typeof (nw_ws_metadata_set_pong_handler_t))]
 		static void TrampolinePongHandler (IntPtr block, IntPtr error)
 		{
-			var del = BlockLiteral.GetTarget<Action<NWError>> (block);
+			var del = BlockLiteral.GetTarget<Action<NWError?>> (block);
 			if (del != null) {
 				var nwError = (error == IntPtr.Zero)? null : new NWError (error, owns: false);
 				del (nwError);
@@ -89,7 +92,7 @@ namespace Network {
 		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public void SetPongHandler (DispatchQueue queue, Action<NWError> handler)
+		public void SetPongHandler (DispatchQueue queue, Action<NWError?> handler)
 		{
 			if (queue == null)
 				throw new ArgumentNullException (nameof (queue));
@@ -111,7 +114,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_ws_response nw_ws_metadata_copy_server_response (OS_nw_protocol_metadata metadata);
 
-		public NWWebSocketResponse ServerResponse {
+		public NWWebSocketResponse? ServerResponse {
 			get {
 				var reponsePtr = nw_ws_metadata_copy_server_response (GetCheckedHandle ());
 				return (reponsePtr == IntPtr.Zero) ? null :  new NWWebSocketResponse (reponsePtr, owns: true);

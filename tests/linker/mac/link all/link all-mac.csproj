@@ -12,6 +12,7 @@
     <TargetFrameworkIdentifier>Xamarin.Mac</TargetFrameworkIdentifier>
     <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
     <LangVersion>latest</LangVersion>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -67,8 +68,8 @@
     <None Include="Info.plist" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\common\mac\MacTestMain.cs">
-      <Link>MacTestMain.cs</Link>
+    <Compile Include="..\..\..\common\mac\MacMain.cs">
+      <Link>MacMain.cs</Link>
     </Compile>
     <Compile Include="..\..\..\common\mac\Mac.cs">
       <Link>Mac.cs</Link>
@@ -84,6 +85,9 @@
     <Compile Include="OptimizeGeneratedCodeTest.cs" />
     <Compile Include="..\..\..\common\TestRuntime.cs">
       <Link>TestRuntime.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\common\mac\TestRuntime.macos.cs">
+      <Link>TestRuntime.macos.cs</Link>
     </Compile>
     <Compile Include="..\..\CommonLinkAllTest.cs">
       <Link>CommonLinkAllTest.cs</Link>
@@ -102,13 +106,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\external\guiunit\src\framework\GuiUnit_xammac_mobile.csproj">
-      <Project>{EACFD119-769E-4E6C-89B7-A6CE3757C431}</Project>
-      <Name>GuiUnit_xammac_mobile</Name>
+    <ProjectReference Include="..\..\..\..\external\Touch.Unit\Touch.Client\macOS\mobile\Touch.Client-macOS-mobile.csproj">
+      <Project>{88A8A1AC-0829-4C98-8F4A-9FC23DC42A06}</Project>
+      <Name>Touch.Client-macOS-mobile</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\bindings-test\bindings-test-mac.csproj">
+    <ProjectReference Include="..\..\..\bindings-test\macOS\bindings-test.csproj">
       <Project>{20BEA313-7E2D-4209-93C0-E4D99C72695A}</Project>
-      <Name>bindings-test-mac</Name>
+      <Name>bindings-test</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />

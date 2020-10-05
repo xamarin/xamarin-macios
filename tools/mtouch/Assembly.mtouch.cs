@@ -11,13 +11,6 @@ using Mono.Cecil;
 using Xamarin.Utils;
 
 namespace Xamarin.Bundler {
-	public enum AssemblyBuildTarget
-	{
-		StaticObject,
-		DynamicLibrary,
-		Framework,
-	}
-
 	public class AotInfo
 	{
 		public AOTTask Task;
@@ -103,46 +96,6 @@ namespace Xamarin.Bundler {
 			ComputeDependencies (exceptions);
 		}
 
-		public delegate bool StripAssembly (string path);
-
-		// returns false if the assembly was not copied (because it was already up-to-date).
-		public bool CopyAssembly (string source, string target, bool copy_debug_symbols = true, StripAssembly strip = null)
-		{
-			var copied = false;
-
-			try {
-				var strip_assembly = strip != null && strip (source);
-				if (!Application.IsUptodate (source, target) && (strip_assembly || !Cache.CompareAssemblies (source, target))) {
-					copied = true;
-					if (strip_assembly) {
-						Driver.FileDelete (target);
-						Directory.CreateDirectory (Path.GetDirectoryName (target));
-						MonoTouch.Tuner.Stripper.Process (source, target);
-					} else {
-						Application.CopyFile (source, target);
-					}
-				} else {
-					Driver.Log (3, "Target '{0}' is up-to-date.", target);
-				}
-
-				// Update the debug symbols file even if the assembly didn't change.
-				if (copy_debug_symbols) {
-					if (File.Exists (source + ".mdb"))
-						Application.UpdateFile (source + ".mdb", target + ".mdb", true);
-
-					var spdb = Path.ChangeExtension (source, "pdb");
-					if (File.Exists (spdb))
-						Application.UpdateFile (spdb, Path.ChangeExtension (target, "pdb"), true);
-				}
-
-				CopyConfigToDirectory (Path.GetDirectoryName (target));
-			} catch (Exception e) {
-				throw new ProductException (1009, true, e, Errors.MX1009, source, target, e.Message);
-			}
-
-			return copied;
-		}
-
 		public void CopyDebugSymbolsToDirectory (string directory)
 		{
 			string mdb_src = FullPath + ".mdb";
@@ -173,15 +126,6 @@ namespace Xamarin.Bundler {
 					string temppath = Path.Combine (destPath, file.Name);
 					file.CopyTo(temppath, true);
 				}
-			}
-		}
-
-		public void CopyConfigToDirectory (string directory)
-		{
-			string config_src = FullPath + ".config";
-			if (File.Exists (config_src)) {
-				string config_target = Path.Combine (directory, FileName + ".config");
-				Application.UpdateFile (config_src, config_target, true);
 			}
 		}
 

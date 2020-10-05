@@ -11,4 +11,7 @@
     <EmbeddedResource Include="TestImporter\Templates\Managed\Resources\**\*" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Mono.Cecil" Version="0.11.2" />
+  </ItemGroup>
 </Project>

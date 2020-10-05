@@ -17,6 +17,7 @@
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)-unified</IntermediateOutputPath>
     <DefineConstants></DefineConstants>
     <LangVersion>latest</LangVersion>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Debug32' Or '$(Configuration)' == 'Debug64' Or '$(Configuration)' == 'Debug64_32' ">
     <DebugSymbols>True</DebugSymbols>
@@ -41,7 +42,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.iOS" />
-    <Reference Include="MonoTouch.NUnitLite" />
+    <PackageReference Include="NUnitLite" Version="3.12.0" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
@@ -87,7 +88,7 @@
     <Exec Command="make -j8 -C $(TestLibrariesDirectory)" />
   </Target>
   <ItemGroup>
-    <ProjectReference Include="..\bindings-test\bindings-test.csproj">
+    <ProjectReference Include="..\bindings-test\iOS\bindings-test.csproj">
       <Project>{48585BC2-D604-4CF2-A827-D887BEA51FD6}</Project>
       <Name>bindings-test</Name>
     </ProjectReference>

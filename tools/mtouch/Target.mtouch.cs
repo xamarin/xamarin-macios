@@ -52,34 +52,6 @@ namespace Xamarin.Bundler
 		// If the assemblies were symlinked.
 		public bool Symlinked;
 
-		// If we're targetting a 32 bit arch for this target.
-		bool? is32bits;
-		public bool Is32Build {
-			get {
-				if (!is32bits.HasValue)
-					is32bits = Application.IsArchEnabled (Abis, Abi.Arch32Mask);
-				return is32bits.Value;
-			}
-		}
-
-		// If we're targetting a 64 bit arch for this target.
-		bool? is64bits;
-		public bool Is64Build {
-			get {
-				if (!is64bits.HasValue)
-					is64bits = Application.IsArchEnabled (Abis, Abi.Arch64Mask);
-				return is64bits.Value;
-			}
-		}
-
-		// If this is an app extension, this returns the equivalent (32/64bit) target for the container app.
-		// This may be null (it's possible to build an extension for 32+64bit, and the main app only for 64-bit, for instance.
-		public Target ContainerTarget {
-			get {
-				return App.ContainerApp.Targets.FirstOrDefault ((v) => v.Is32Build == Is32Build);
-			}
-		}
-
 		// This is a list of all the architectures we need to build, which may include any architectures
 		// in any extensions (but not the main app).
 		List<Abi> all_architectures;
@@ -356,9 +328,8 @@ namespace Xamarin.Bundler
 					// Load all the assemblies in the cached list of assemblies
 					foreach (var assembly in assemblies) {
 						var ad = ManifestResolver.Load (assembly);
-						var asm = new Assembly (this, ad);
+						var asm = AddAssembly (ad);
 						asm.ComputeSatellites ();
-						this.Assemblies.Add (asm);
 					}
 					return;
 				}
@@ -401,9 +372,8 @@ namespace Xamarin.Bundler
 			PrintAssemblyReferences (assembly);
 			assemblies.Add (fqname);
 
-			var asm = new Assembly (this, assembly);
+			var asm = AddAssembly (assembly);
 			asm.ComputeSatellites ();
-			this.Assemblies.Add (asm);
 
 			var main = assembly.MainModule;
 			foreach (AssemblyNameReference reference in main.AssemblyReferences) {
@@ -1501,11 +1471,10 @@ namespace Xamarin.Bundler
 				linker_flags.AddOtherFlag ("-shared");
 				linker_flags.AddOtherFlag ("-install_name", $"@rpath/{App.ExecutableName}.framework/{App.ExecutableName}");
 			} else {
-				string mainlib;
+				string mainlib = null;
 				if (App.IsWatchExtension) {
-					mainlib = "libwatchextension.a";
 					linker_flags.AddOtherFlag ("-e", "_xamarin_watchextension_main");
-					if (App.SdkVersion.Major >= 6) {
+					if (App.SdkVersion.Major >= 6 && App.DeploymentTarget.Major < 6) {
 						// watchOS 6.0's WatchKit contains a WKExtensionMain function, and that's the entry point for Xcode-compiled watch extensions.
 						// To make watch extensions work on earlier watchOS versions, there's a libWKExtensionMainLegacy.a library with a
 						// a WKExtensionMain function that does what's needed (Xcode links with this library when deployment target < 6.0).
@@ -1518,8 +1487,10 @@ namespace Xamarin.Bundler
 				} else {
 					mainlib = "libapp.a";
 				}
-				var libmain = Path.Combine (Driver.GetProductSdkLibDirectory (App), mainlib);
-				linker_flags.AddLinkWith (libmain, true);
+				if (mainlib != null) {
+					var libmain = Path.Combine (Driver.GetProductSdkLibDirectory (App), mainlib);
+					linker_flags.AddLinkWith (libmain, true);
+				}
 			}
 
 			var libmonodir = Driver.GetMonoLibraryDirectory (App);
@@ -1661,7 +1632,7 @@ namespace Xamarin.Bundler
 			}
 		}
 
-		public static void AdjustDylibs (string output)
+		public void AdjustDylibs (string output)
 		{
 			var sb = new List<string> ();
 			foreach (var dependency in Xamarin.MachO.GetNativeDependencies (output)) {
@@ -1674,7 +1645,7 @@ namespace Xamarin.Bundler
 			}
 			if (sb.Count > 0) {
 				sb.Add (output);
-				Driver.RunInstallNameTool (sb);
+				Driver.RunInstallNameTool (App, sb);
 				sb.Clear ();
 			}
 		}
@@ -1705,7 +1676,7 @@ namespace Xamarin.Bundler
 
 			try {
 				var launcher = new StringBuilder ();
-				launcher.Append (Path.Combine (Driver.FrameworkBinDirectory, "simlauncher"));
+				launcher.Append (Path.Combine (Driver.GetFrameworkBinDirectory (App), "simlauncher"));
 				if (Is32Build)
 					launcher.Append ("32");
 				else if (Is64Build)

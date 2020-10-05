@@ -28,7 +28,7 @@ namespace MonoTouchFixtures.Foundation {
 			using (var set1 = new NSMutableOrderedSet (str1))
 			using (var set2 = new NSMutableOrderedSet (str2, str3))
 			using (var result = set1 + set2) {
-				Assert.AreEqual (3, result.Count, "AddTest Count");
+				Assert.AreEqual ((nint) 3, result.Count, "AddTest Count");
 				Assert.IsTrue (result.Contains (str1), "AddTest Contains 1");
 				Assert.IsTrue (result.Contains (str2), "AddTest Contains 2");
 				Assert.IsTrue (result.Contains (str3), "AddTest Contains 3");
@@ -47,7 +47,7 @@ namespace MonoTouchFixtures.Foundation {
 			using (var second = new NSMutableOrderedSet (str3, str4))
 			using (var third = first - second) {
 
-				Assert.AreEqual (2, third.Count, "OperatorSubtract Count");
+				Assert.AreEqual ((nint) 2, third.Count, "OperatorSubtract Count");
 				Assert.IsTrue (third.Contains (str1), "OperatorSubtract 1");
 				Assert.IsTrue (third.Contains (str2), "OperatorSubtract 2");
 				Assert.IsFalse (third.Contains (str3), "OperatorSubtract 3");

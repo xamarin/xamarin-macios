@@ -28,6 +28,18 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 	</PropertyGroup>
 
 	<PropertyGroup>
+		<!-- _XamarinSdkRoot
+			Xamarin.Mac: Defaults to XamarinMacFrameworkRoot, otherwise /Library/Frameworks/Xamarin.Mac.framework/Versions/Current
+			Xamarin.iOS: Defaults to MonoTouchSdkRoot, otherwise use MD_MTOUCH_SDK_ROOT, otherwise /Library/Frameworks/Xamarin.iOS.framework/Versions/Current
+		-->
+		<_XamarinSdkRoot Condition="'$(_XamarinSdkRoot)' == '' And '$(_PlatformName)' == 'macOS' ">$(XamarinMacFrameworkRoot)</_XamarinSdkRoot>
+		<_XamarinSdkRoot Condition="'$(_XamarinSdkRoot)' == '' And '$(_PlatformName)' == 'macOS' ">/Library/Frameworks/Xamarin.Mac.framework/Versions/Current</_XamarinSdkRoot>
+		<_XamarinSdkRoot Condition="'$(_XamarinSdkRoot)' == '' And '$(_PlatformName)' != 'macOS' ">$(MonoTouchSdkRoot)</_XamarinSdkRoot>
+		<_XamarinSdkRoot Condition="'$(_XamarinSdkRoot)' == '' And '$(_PlatformName)' != 'macOS' ">$(MD_MTOUCH_SDK_ROOT)</_XamarinSdkRoot>
+		<_XamarinSdkRoot Condition="'$(_XamarinSdkRoot)' == '' And '$(_PlatformName)' != 'macOS' ">/Library/Frameworks/Xamarin.iOS.framework/Versions/Current</_XamarinSdkRoot>
+	</PropertyGroup>
+
+	<PropertyGroup>
 		<!--
 		     We don't want to use the Platform variable for conditional logic.
 		     Switching to a new property allows us to potentially switch from
@@ -47,6 +59,42 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<ComputedPlatform Condition="'$(_PlatformName)' != 'macOS' And '$(ComputedPlatform)' == 'AnyCPU'">iPhone</ComputedPlatform>
 	</PropertyGroup>
 
+	<Choose>
+		<!-- If TargetFrameworkIdentifier is 'Xamarin.Mac', then we're in Modern mode -->
+		<When Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.Mac'">
+			<PropertyGroup>
+				<TargetFrameworkName>Modern</TargetFrameworkName>
+				<_XamarinBclPath>$(_XamarinSdkRoot)/lib/mono/Xamarin.Mac/</_XamarinBclPath>
+			</PropertyGroup>
+		</When>
+		<!-- If TargetFrameworkIdentifier is not 'Xamarin.Mac', but we're still a macOS app and UseXamMacFullFramework is true, then we're in Full mode -->
+		<When Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.Mac' And '$(_PlatformName)' == 'macOS' And '$(UseXamMacFullFramework)' == 'true'">
+			<PropertyGroup>
+				<TargetFrameworkName>Full</TargetFrameworkName>
+				<_XamarinBclPath>$(_XamarinSdkRoot)/lib/mono/4.5/</_XamarinBclPath>
+			</PropertyGroup>
+		</When>
+		<!-- If the two other conditions don't match, but we're still a macOS app, then we're in System mode -->
+		<When Condition="'$(_PlatformName)' == 'macOS'">
+			<PropertyGroup>
+				<TargetFrameworkName>System</TargetFrameworkName>
+				<_XamarinBclPath>$(_XamarinSdkRoot)/lib/mono/4.5/</_XamarinBclPath>
+			</PropertyGroup>
+		</When>
+	</Choose>
+	<PropertyGroup Condition="'$(_XamarinBclPath)' == ''">
+		<_XamarinBclPath Condition="'$(_PlatformName)' == 'iOS'">$(_XamarinSdkRoot)/lib/mono/Xamarin.iOS/</_XamarinBclPath>
+		<_XamarinBclPath Condition="'$(_PlatformName)' == 'tvOS'">$(_XamarinSdkRoot)/lib/mono/Xamarin.TVOS/</_XamarinBclPath>
+		<_XamarinBclPath Condition="'$(_PlatformName)' == 'watchOS'">$(_XamarinSdkRoot)/lib/mono/Xamarin.WatchOS/</_XamarinBclPath>
+	</PropertyGroup>
+	<PropertyGroup>
+		<_XamarinPlatformAssemblyName Condition="'$(_PlatformName)' == 'iOS'">Xamarin.iOS.dll</_XamarinPlatformAssemblyName>
+		<_XamarinPlatformAssemblyName Condition="'$(_PlatformName)' == 'tvOS'">Xamarin.TVOS.dll</_XamarinPlatformAssemblyName>
+		<_XamarinPlatformAssemblyName Condition="'$(_PlatformName)' == 'watchOS'">Xamarin.WatchOS.dll</_XamarinPlatformAssemblyName>
+		<_XamarinPlatformAssemblyName Condition="'$(_PlatformName)' == 'macOS'">Xamarin.Mac.dll</_XamarinPlatformAssemblyName>
+		<_XamarinPlatformAssemblyPath>$(_XamarinBclPath)$(_XamarinPlatformAssemblyName)</_XamarinPlatformAssemblyPath>
+	</PropertyGroup>
+
 	<!-- Sometimes we've used different variable names for the same thing for Xamarin.iOS and Xamarin.Mac projects. Here we try to unify those variables -->
 	<PropertyGroup>
 		<!-- ResourcePrefix -->
@@ -60,12 +108,6 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<!-- SdkVersion -->
 		<_SdkVersion Condition="'$(_PlatformName)' == 'macOS'">$(MacOSXSdkVersion)</_SdkVersion>
 		<_SdkVersion Condition="'$(_PlatformName)' != 'macOS'">$(MtouchSdkVersion)</_SdkVersion>
-
-		<!-- LinkMode -->
-		<_LinkMode Condition="'$(_LinkMode)' == '' And '$(_PlatformName)' == 'macOS'">$(LinkMode)</_LinkMode>
-		<_LinkMode Condition="'$(_LinkMode)' == '' And '$(_PlatformName)' != 'macOS'">$(MtouchLink)</_LinkMode>
-		<_LinkMode Condition="'$(_LinkMode)' == '' And '$(_PlatformName)' == 'macOS'">None</_LinkMode> <!-- Linking is off by default for macOS apps -->
-		<_LinkMode Condition="'$(_LinkMode)' == '' And '$(_PlatformName)' != 'macOS'">SdkOnly</_LinkMode> <!-- Default linking is SdkOnly for iOS/tvOS/watchOS apps -->
 
 		<!-- RequireCodeSigning -->
 		<!-- iOS/watchOS/tvOS is simple: device builds require code signing, simulator builds do not. This is a big lie, for some simulator builds need to be signed, but the _DetectCodeSigning task handles those cases. -->
@@ -98,12 +140,30 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 
 		<!-- Debug -->
 		<!-- Xamarin.Mac: use MmpDebug, but if that isn't set, use DebugSymbols -->
-		<_BundlerDebug Condition="'$(_PlatformName)' == 'macOS'">$(MmpDebug)</_BundlerDebug>
-		<_BundlerDebug Condition="'$(_PlatformName)' == 'macOS' And '$(_BundlerDebug)' == ''">$(DebugSymbols)</_BundlerDebug>
+		<_BundlerDebug Condition="'$(_BundlerDebug)' == '' And '$(_PlatformName)' == 'macOS'">$(MmpDebug)</_BundlerDebug>
+		<_BundlerDebug Condition="'$(_BundlerDebug)' == '' And '$(_PlatformName)' == 'macOS'">$(DebugSymbols)</_BundlerDebug>
 		<!-- Xamarin.iOS: Use MtouchDebug -->
-		<_BundlerDebug Condition="'$(_PlatformName)' != 'macOS'">$(MtouchDebug)</_BundlerDebug>
-		<!-- The default is false for all platforms -->
+		<_BundlerDebug Condition="'$(_BundlerDebug)' == '' And '$(_PlatformName)' != 'macOS'">$(MtouchDebug)</_BundlerDebug>
+		<!-- Otherwise the default is true if we're building a Debug configuration -->
+		<_BundlerDebug Condition="'$(_BundlerDebug)' == '' And '$(Configuration)' == 'Debug'">true</_BundlerDebug>
+		<!-- As a last resort, the default is false for all platforms -->
 		<_BundlerDebug Condition="'$(_BundlerDebug)' == ''">false</_BundlerDebug>
+
+		<!-- Extra arguments -->
+		<_BundlerArguments Condition="'$(_PlatformName)' == 'macOS'">$(MonoBundlingExtraArgs)</_BundlerArguments>
+		<_BundlerArguments Condition="'$(_PlatformName)' != 'macOS'">$(MtouchExtraArgs)</_BundlerArguments>
+
+		<!-- NoSymbolStrip -->
+		<!-- Xamarin.Mac never had an equivalent for MtouchNoSymbolStrip -->
+		<!-- in either case default to 'false' -->
+		<_NoSymbolStrip Condition="'$(_PlatformName)' != 'macOS'">$(MtouchNoSymbolStrip)</_NoSymbolStrip>
+		<_NoSymbolStrip Condition="'$(_NoSymbolStrip)' == ''">false</_NoSymbolStrip>
+
+		<!-- NoDSymUtil -->
+		<!-- Xamarin.Mac never had an equivalent for MtouchNoDSymUtil -->
+		<!-- in either case default to 'false' -->
+		<_NoDSymUtil Condition="'$(_PlatformName)' != 'macOS'">$(MtouchNoDSymUtil)</_NoDSymUtil>
+		<_NoDSymUtil Condition="'$(_NoDSymUtil)' == ''">false</_NoDSymUtil>
 
 		<!-- DeviceSpecificIntermediateOutputPath -->
 		<!--
@@ -122,6 +182,60 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		     DeviceSpecificOutputPath. -->
 		<DeviceSpecificOutputPath>$(OutputPath)</DeviceSpecificOutputPath>
 		<DeviceSpecificOutputPath Condition="$([System.IO.Path]::IsPathRooted ('$(DeviceSpecificOutputPath)')) == 'true'">$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)','$(OutputPath)'))</DeviceSpecificOutputPath>
+
+		<!-- OptimizePNGs:
+			default to false if a binding project (both XI and XM)
+			otherwise default to false if a Xamarin.Mac project
+			otherwise default to true for Xamarin.iOS
+		-->
+		<OptimizePNGs Condition="'$(IsBindingProject)' == 'true' And '$(OptimizePNGs)' == ''">false</OptimizePNGs>
+		<OptimizePNGs Condition="'$(_PlatformName)' == 'macOS' And '$(OptimizePNGs)' == ''">false</OptimizePNGs>
+		<OptimizePNGs Condition="'$(_PlatformName)' != 'macOS' And '$(OptimizePNGs)' == ''">true</OptimizePNGs>
+
+		<!-- OptimizePropertyLists:
+			default to false if a binding project (both XI and XM)
+			otherwise default to false if a Xamarin.Mac project
+			otherwise default to true for Xamarin.iOS
+		-->
+		<OptimizePropertyLists Condition="'$(IsBindingProject)' == 'true' And '$(OptimizePropertyLists)' == ''">false</OptimizePropertyLists>
+		<OptimizePropertyLists Condition="'$(_PlatformName)' == 'macOS' And '$(OptimizePropertyLists)' == ''">false</OptimizePropertyLists>
+		<OptimizePropertyLists Condition="'$(_PlatformName)' != 'macOS' And '$(OptimizePropertyLists)' == ''">true</OptimizePropertyLists>
+
+		<!-- EnableOnDemandResources: default to true for Xamarin.iOS and false for Xamarin.Mac -->
+		<EnableOnDemandResources Condition="'$(_PlatformName)' == 'macOS' And '$(EnableOnDemandResources)' == ''">false</EnableOnDemandResources>
+		<EnableOnDemandResources Condition="'$(_PlatformName)' != 'macOS' And '$(EnableOnDemandResources)' == ''">true</EnableOnDemandResources>
+
+		<!-- This is the prefix used for embedded resources, both for library projects and binding projects -->
+		<_EmbeddedResourcePrefix Condition="'$(_PlatformName)' == 'macOS'">xammac</_EmbeddedResourcePrefix>
+		<_EmbeddedResourcePrefix Condition="'$(_PlatformName)' != 'macOS'">monotouch</_EmbeddedResourcePrefix>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(IsBindingProject)' == 'true'">
+		<BaseLibDllPath Condition="'$(OS)' == 'Unix'">$(_XamarinPlatformAssemblyPath)</BaseLibDllPath>
+
+		<BTouchToolPath Condition="'$(OS)' == 'Unix' And '$(BTouchToolPath)' == ''">$(_XamarinSdkRoot)/bin/</BTouchToolPath>
+		<BTouchToolPath Condition="'$(OS)' != 'Unix' And '$(_PlatformName)' != 'macOS' And '$(BTouchToolPath)' == ''">$(MSBuildExtensionsPath)\Xamarin\iOS\</BTouchToolPath>
+
+		<BTouchToolExe  Condition="'$(OS)' == 'Unix' And '$(BTouchToolExe)' == ''">bgen</BTouchToolExe>
+		<BTouchToolExe  Condition="'$(OS)' != 'Unix' And '$(BTouchToolExe)' == ''">bgen.exe</BTouchToolExe>
+
+		<GeneratedSourcesDir Condition="'$(GeneratedSourcesDir)' == ''">$(IntermediateOutputPath)$(_PlatformName)</GeneratedSourcesDir>
+		<GeneratedSourcesDir Condition="'$(GeneratedSourcesDir)' != '' and !HasTrailingSlash ('$(GeneratedSourcesDir)')">$(GeneratedSourcesDir)\</GeneratedSourcesDir>
+		<_GeneratedSourcesFileList>$(GeneratedSourcesDir)sources.list</_GeneratedSourcesFileList>
+
+		<ProcessEnums Condition="'$(ProcessEnums)' == ''">false</ProcessEnums>
+
+		<!-- The generated binding code is unsafe, so make sure to allow unsafe code when compiling the C# code -->
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+
+		<!-- Build bindings with the latest (stable) version of C#
+
+		     We require C# 8 for nullability support. However we allow custom
+		     code to be included inside binding projects and we should not
+		     support anything (stable) that the C# compiler (installed
+		     separately) allow, so `latest` it is.
+		-->
+		<LangVersion>latest</LangVersion>
 	</PropertyGroup>
 
 	<Target Name="_ComputeTargetFrameworkMoniker" Condition="'$(_ComputedTargetFrameworkMoniker)' == ''">
@@ -137,6 +251,43 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 			<_ComputedTargetFrameworkMoniker Condition="'$(_PlatformName)' == 'macOS' And '$(UseXamMacFullFramework)' != 'true' And $([MSBuild]::ValueOrDefault('$(_ComputedTargetFrameworkMoniker),', '').StartsWith('.NETFramework,', StringComparison.OrdinalIgnoreCase))">Xamarin.Mac,Version=v4.5,Profile=System</_ComputedTargetFrameworkMoniker>
 		</PropertyGroup>
 	</Target>
+
+	<!-- When looking for related files to copy, look for Mono debugging files as well -->
+	<PropertyGroup>
+		<AllowedReferenceRelatedFileExtensions>
+			$(AllowedReferenceRelatedFileExtensions);
+			.dll.mdb;
+			.exe.mdb;
+			.pdb
+		</AllowedReferenceRelatedFileExtensions>
+	</PropertyGroup>
+
+	<!-- This is used to determine if VS is connected to mac. -->
+	<PropertyGroup>
+		<IsMacEnabled>true</IsMacEnabled>
+		<MtouchTargetsEnabled Condition="'$(_PlatformName)' != 'macOS'">$(IsMacEnabled)</MtouchTargetsEnabled>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<!-- Enable nuget package conflict resolution -->
+		<ResolveAssemblyConflicts>true</ResolveAssemblyConflicts>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<_IsUnifiedDefined>$([System.Text.RegularExpressions.Regex]::IsMatch('$(DefineConstants.Trim())', '(^|;)__UNIFIED__($|;)'))</_IsUnifiedDefined>
+		<_IsMobileDefined>$([System.Text.RegularExpressions.Regex]::IsMatch('$(DefineConstants.Trim())', '(^|;)__MOBILE__($|;)'))</_IsMobileDefined>
+		<_IsIOSDefined>$([System.Text.RegularExpressions.Regex]::IsMatch('$(DefineConstants.Trim())', '(^|;)__IOS__($|;)'))</_IsIOSDefined>
+		<_IsTVOSDefined>$([System.Text.RegularExpressions.Regex]::IsMatch('$(DefineConstants.Trim())', '(^|;)__TVOS__($|;)'))</_IsTVOSDefined>
+		<_IsWatchOSDefined>$([System.Text.RegularExpressions.Regex]::IsMatch('$(DefineConstants.Trim())', '(^|;)__WATCHOS__($|;)'))</_IsWatchOSDefined>
+		<_IsMacOSDefined>$([System.Text.RegularExpressions.Regex]::IsMatch('$(DefineConstants.Trim())', '(^|;)__MACOS__($|;)'))</_IsMacOSDefined>
+
+		<DefineConstants Condition="!$(_IsUnifiedDefined)">__UNIFIED__;$(DefineConstants)</DefineConstants>
+		<DefineConstants Condition="!$(_IsMobileDefined) And '$(_PlatformName)' != 'macOS'">__MOBILE__;$(DefineConstants)</DefineConstants>
+		<DefineConstants Condition="!$(_IsIOSDefined) And '$(_PlatformName)' == 'iOS'">__IOS__;$(DefineConstants)</DefineConstants>
+		<DefineConstants Condition="!$(_IsTVOSDefined) And '$(_PlatformName)' == 'tvOS'">__TVOS__;$(DefineConstants)</DefineConstants>
+		<DefineConstants Condition="!$(_IsWatchOSDefined) And '$(_PlatformName)' == 'watchOS'">__WATCHOS__;$(DefineConstants)</DefineConstants>
+		<DefineConstants Condition="!$(_IsMacOSDefined) And '$(_PlatformName)' == 'macOS'">__MACOS__;$(DefineConstants)</DefineConstants>
+	</PropertyGroup>
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets')"/>

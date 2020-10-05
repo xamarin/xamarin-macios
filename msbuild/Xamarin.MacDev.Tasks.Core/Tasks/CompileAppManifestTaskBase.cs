@@ -70,7 +70,7 @@ namespace Xamarin.MacDev.Tasks
 
 		protected TargetArchitecture architectures;
 
-		public sealed override bool Execute ()
+		public override bool Execute ()
 		{
 			PDictionary plist;
 

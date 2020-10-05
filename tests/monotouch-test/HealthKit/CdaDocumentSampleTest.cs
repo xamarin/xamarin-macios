@@ -32,12 +32,12 @@ namespace MonoTouchFixtures.HealthKit {
 					using (var s = HKCdaDocumentSample.Create (d, NSDate.DistantPast, NSDate.DistantFuture, (NSDictionary)null, out error)) {
 						Assert.NotNull (error, "error");
 						var details = new HKDetailedCdaErrors (error.UserInfo);
-						Assert.That (details.ValidationError.Length, Is.EqualTo (0), "Length");
+						Assert.That (details.ValidationError.Length, Is.EqualTo ((nint) 0), "Length");
 					}
 				};
 				if (TestRuntime.CheckXcodeVersion (11, 0)) {
 					var ex = Assert.Throws<MonoTouchException> (action, "Exception");
-					Assert.That (ex.Message, Is.StringMatching ("startDate.*and endDate.*exceed the maximum allowed duration for this sample type"), "Exception Message");
+					Assert.That (ex.Message, Does.Match ("startDate.*and endDate.*exceed the maximum allowed duration for this sample type"), "Exception Message");
 				} else {
 					action ();
 				}

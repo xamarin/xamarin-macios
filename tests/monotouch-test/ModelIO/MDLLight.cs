@@ -29,7 +29,7 @@ namespace MonoTouchFixtures.ModelIO {
 	// we want the test to be available if we use the linker
 	[Preserve (AllMembers = true)]
 	public class MDLLightTest {
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Setup ()
 		{
 			if (!TestRuntime.CheckXcodeVersion (7, 0))
@@ -55,28 +55,12 @@ namespace MonoTouchFixtures.ModelIO {
 		{
 			using (var obj = new MDLLight ()) {
 				var color = obj.GetIrradiance (new Vector3 (1, 2, 3));
-#if MONOMAC
 				Assert.IsNotNull (color, "color 1");
-#else
-				if (Runtime.Arch == Arch.SIMULATOR && Environment.OSVersion.Version.Major < 15) {
-					Assert.IsNull (color, "color 1");
-				} else {
-					Assert.IsNotNull (color, "color 1");
-				}
-#endif
 			}
 
 			using (var obj = new MDLLight ()) {
 				var color = obj.GetIrradiance (new Vector3 (1, 2, 3), CGColorSpace.CreateGenericRgb ());
-#if MONOMAC
 				Assert.IsNotNull (color, "color 2");
-#else
-				if (Runtime.Arch == Arch.SIMULATOR && Environment.OSVersion.Version.Major < 15) {
-					Assert.IsNull (color, "color 2");
-				} else {
-					Assert.IsNotNull (color, "color 2");
-				}
-#endif
 			}
 		}
 	}

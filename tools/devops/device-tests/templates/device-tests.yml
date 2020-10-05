@@ -22,15 +22,21 @@ parameters:
   type: boolean
   default: false
 
-- name: htmlReportStorage
+- name: useXamarinStorage
+  type: boolean 
+  default: false  # xamarin-storage will disappear, so by default do not use it
+
+- name: vsdropsPrefix
   type: string
-  default: xamarin-storage # takes two different values, 'xamarin-storage' or 'vsdrops'
 
 steps:
 
 - checkout: self
 - checkout: maccore
   persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
+
+- bash: cd $(System.DefaultWorkingDirectory)/xamarin-macios/ && git clean -xdf
+  displayName: 'Clean workspace'
 
 # Run the pipeline script tests to ensure that we will have not have an unexpected behaviour.
 - bash: make -C $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/device-tests/scripts run-tests
@@ -42,7 +48,7 @@ steps:
     Import-Module ./VSTS.psm1
     Import-Module ./GitHub.psm1
     Set-GitHubStatus -Status "error" -Description "Pipeline scripts tests failed." -Context "$Env:CONTEXT"
-    New-GitHubComment -Header "Pipeline scripts tests failed on $Env:CONTEXT" -Emoji ":fire:" -Description "The tests of the scripts used in the pepeline failed. The build was cancelled."
+    New-GitHubComment -Header "Pipeline scripts tests failed on $Env:CONTEXT" -Emoji ":fire:" -Description "The tests of the scripts used in the pipeline failed. The build was cancelled."
     Stop-Pipeline
   env:
     BUILD_REVISION: $(BUILD_REVISION)
@@ -62,9 +68,11 @@ steps:
   timeoutInMinutes: 1
 
 # Uses the powershell cmdlet to remove known directories that are not needed and use space.
+# we might hit issue https://github.com/PowerShell/PowerShell/issues/9246, so we always do exit 0
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/device-tests/scripts/System.psm1
     Clear-HD 
+    exit 0  
   displayName: 'Disk cleanup'
   timeoutInMinutes: 5
 
@@ -82,6 +90,8 @@ steps:
       Set-GitHubStatus -Status "error" -Description "Not enough free space in the host." -Context "$Env:CONTEXT"
       New-GitHubComment -Header "Tests failed catastrophically on $Env:CONTEXT" -Emoji ":fire:" -Description "Not enough free space in the host."
       Stop-Pipeline
+    } else {
+      Set-GitHubStatus -Status "pending" -Description "Device tests on VSTS have been started." -Context "$Env:CONTEXT"
     }
   env:
     BUILD_REVISION: $(BUILD_REVISION)
@@ -90,10 +100,21 @@ steps:
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
   displayName: 'Check HD Free Space'
   timeoutInMinutes: 5
+  condition: succeededOrFailed() # we do not care about the previous step
 
 # if we got to this point, it means that we do have at least 50 Gb to run the test, should
 # be more than enough, else the above script would have stopped the pipeline
-- bash: cd xamarin-macios && ./configure --enable-xamarin
+- bash: |
+    set -x
+    set -e
+    cd xamarin-macios
+    ./configure --enable-xamarin
+    if [[ $? = 0 ]]; then
+      echo "Xamarin private packages configured."
+    else
+      echo "Xamarin packages configuration failed."
+      echo "Configuration exit code $?"
+    fi
   displayName: 'Enable Xamarin'
   timeoutInMinutes: 1
 
@@ -225,7 +246,7 @@ steps:
 
     P=jenkins/xamarin-macios/$BUILD_LANE/$BUILD_REVISION/$ID/device-tests
 
-    echo "##vso[task.setvariable variable=XAMARIN_STORAGE_PATH]$P"
+    echo "##vso[task.setvariable variable=XM_STORAGE_PATH]$P"
 
     X="#vso"
     set +x
@@ -235,34 +256,54 @@ steps:
 
     echo "Html Report: http://xamarin-storage/$P/jenkins-results/tests/index.html"
   displayName: 'Print Html Report link'
-  condition: and(always(), eq('${{ parameters.htmlReportStorage }}', 'xamarin-storage')) # execute always but when we are using vsdrops since we want to send the message and the url at the same time
+  condition: and(always(), ${{ parameters.useXamarinStorage }})
 
 # Run tests. If we are using xamarin-storage add a periodic command to be executed by xharness, else, since we are using vsdrops do nothing.
 - bash: |
     set -x
     set -e
+    P=$(echo $XM_STORAGE_PATH | tr -d \'\")
 
     cd $WORKING_DIR/xamarin-macios
-    if [[ "$HTML_STORAGE" == "xamarin-storage" ]]; then
-      EC=0
-      ssh builder@xamarin-storage "mkdir -p /volume1/storage/$XAMARIN_STORAGE_PATH" || EC=$?
-      if [ $EC -eq 0 ]; then
-        export TESTS_PERIODIC_COMMAND="--periodic-interval 10 --periodic-command rsync --periodic-command-arguments '-avz -e \"ssh\" $PWD/jenkins-results builder@xamarin-storage:/volume1/storage/$XAMARIN_STORAGE_PATH'"
+    if [[ "$USE_XAMARIN_STORAGE" == "True" ]]; then
+      if nc -z xamarin-storage 22 2>/dev/null; then
+        ssh builder@xamarin-storage "mkdir -p /volume1/storage/$P"
+        if [[ $? = 1 ]]; then
+          echo "Remote mkdir failed"
+          echo "##vso[task.setvariable variable=XAMARIN_STORAGE_FAILED;isOutput=true]true"
+          echo "##vso[task.setvariable variable=XAMARIN_STORAGE_PATH;isOutput=true]"
+        else
+          echo "##vso[task.setvariable variable=XAMARIN_STORAGE_PATH;isOutput=true]$P"
+          echo "##vso[task.setvariable variable=XAMARIN_STORAGE_FAILED;isOutput=true]false"
+          export TESTS_PERIODIC_COMMAND="--periodic-interval 10 --periodic-command rsync --periodic-command-arguments '-avz -e \"ssh\" $PWD/jenkins-results builder@xamarin-storage:/volume1/storage/$P'"
+        fi
       else
-        echo "##vso[task.setvariable variable=XAMARIN_STORAGE_FAILED]true"
+        echo "##vso[task.setvariable variable=XAMARIN_STORAGE_FAILED;isOutput=true]true"
+        echo "##vso[task.setvariable variable=XAMARIN_STORAGE_PATH;isOutput=true]"
       fi
     fi
+
+    echo "Running tests on $AGENT_NAME"
+    echo "##vso[task.setvariable variable=TESTS_BOT;isOutput=true]$AGENT_NAME"
 
     make -C builds download -j || true
     make -C builds downloads -j || true
     make -C builds .stamp-mono-ios-sdk-destdir -j || true
-    MONO_ENV_OPTIONS=--trace=E:all make -C tests vsts-device-tests
+    EC=0
+    MONO_ENV_OPTIONS=--trace=E:all make -C tests vsts-device-tests || EC=$?
+    if [ $EC -eq 0 ]; then
+      echo '##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Succeeded'
+    else
+      echo '##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Failed'
+    fi
   env:
     WORKING_DIR: $(System.DefaultWorkingDirectory) 
-    XAMARIN_STORAGE_PATH: $(XAMARIN_STORAGE_PATH)
     TESTS_EXTRA_ARGUMENTS: ${{ parameters.testsLabels }}
-    HTML_STORAGE: ${{ parameters.htmlReportStorage }}
+    USE_XAMARIN_STORAGE: ${{ parameters.useXamarinStorage }}
+    VSDROPS_URI: '${{ parameters.vsdropsPrefix }}/$(Build.BuildNumber)/$(Build.BuildId);/tests/' # uri used to create the vsdrops index using full uri
+    USE_TCP_TUNNEL: 'true'
   displayName: 'Run tests'
+  name: runTests # not to be confused with the displayName, this is used to later use the name of the step to access the output variables from an other job
   timeoutInMinutes: 600
 
 # Upload TestSummary as an artifact.
@@ -270,33 +311,7 @@ steps:
   displayName: 'Publish Artifact: TestSummary'
   inputs:
     targetPath: 'xamarin-macios/tests/TestSummary.md'
-    artifactName: TestSummary.md
-  continueOnError: true
-  condition: succeededOrFailed()
-
-# Use the cmdlet to post a new summary comment. The cmdlet checks if we have the TestSummary.md file or not. It will also add the appropiate links to the commnet. 
-# This step is ONLY executed when we selected the xamarin-storage option. If we use vsdrops we want to wait until the publish_html job to do it so that we can 
-# calculate the url of the html report based in the vsdrop path.
-- pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/device-tests/scripts/GitHub.psm1 
-    New-GitHubSummaryComment -Context "$Env:CONTEXT" -XamarinStoragePath "$Env:XAMARIN_STORAGE_PATH" -TestSummaryPath "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tests/TestSummary.md"
-  env:
-    BUILD_REVISION: $(BUILD_REVISION)
-    CONTEXT: ${{ parameters.statusContext }}
-    GITHUB_TOKEN: $(GitHub.Token)
-    XAMARIN_STORAGE_PATH: $(XAMARIN_STORAGE_PATH) # could be null if the step was not executed if we use vsdrops, the cmdlet will know how to handle that case
-    XAMARIN_STORAGE_REACHED: $(XAMARIN_STORAGE_FAILED) # could not reach xamarin-storage, either the bot is not in the vpn or it finally failed
-  displayName: 'Add summaries'
-  condition: and(always(), eq('${{ parameters.htmlReportStorage }}', 'xamarin-storage')) # execute always but when we are using vsdrops since we want to send the message and the url at the same time from the pusblish_hml job
-  timeoutInMinutes: 1
-
-# Upload test results to vsts.
-- task: PublishTestResults@2
-  displayName: 'Publish NUnit Device Test Results'
-  inputs:
-    testResultsFormat: NUnit
-    testResultsFiles: '**/vsts-*.xml'
-    failTaskOnFailedTests: true
+    artifactName: TestSummary
   continueOnError: true
   condition: succeededOrFailed()
 

@@ -52,7 +52,7 @@ namespace MonoTouchFixtures.GameKit {
 					Assert.That (s.LeaderboardIdentifier, Is.EqualTo ("category-or-identifier"), "LeaderboardIdentifier");
 				}
 
-				Assert.That (s.RetainCount, Is.EqualTo ((nint) 1), "RetainCount");
+				Assert.That (s.RetainCount, Is.EqualTo ((nuint) 1), "RetainCount");
 			}
 		}
 	}

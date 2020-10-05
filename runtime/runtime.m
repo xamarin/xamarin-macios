@@ -1323,6 +1323,9 @@ xamarin_initialize ()
 
 	runtime_initialize = mono_class_get_method_from_name (runtime_class, "Initialize", 1);
 
+	if (runtime_initialize == NULL)
+		xamarin_assertion_message ("Fatal error: failed to load the %s.%s method", "Runtime", "Initialize");
+
 	options.size = sizeof (options);
 #if MONOTOUCH && (defined(__i386__) || defined (__x86_64__))
 	options.flags = (enum InitializationFlags) (options.flags | InitializationFlagsIsSimulator);

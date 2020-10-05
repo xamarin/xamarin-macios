@@ -23,6 +23,8 @@ namespace Xamarin.MacDev.Tasks
 
 		#region Inputs
 
+		public string StampPath { get; set; }
+
 		[Required]
 		public string CodesignAllocate { get; set; }
 
@@ -84,6 +86,27 @@ namespace Xamarin.MacDev.Tasks
 			startInfo.CreateNoWindow = true;
 
 			return startInfo;
+		}
+
+		string GetOutputPath (ITaskItem item)
+		{
+			return Path.Combine (StampPath, item.ItemSpec);
+		}
+
+		bool NeedsCodesign (ITaskItem item)
+		{
+			if (string.IsNullOrEmpty (StampPath))
+				return true;
+
+			var output = GetOutputPath (item);
+
+			if (!File.Exists (output))
+				return true;
+
+			if (File.GetLastWriteTimeUtc (item.ItemSpec) >= File.GetLastWriteTimeUtc (output))
+				return true;
+
+			return false;
 		}
 
 		string GenerateCommandLineArguments (ITaskItem item)
@@ -164,9 +187,13 @@ namespace Xamarin.MacDev.Tasks
 
 			if (exitCode != 0) {
 				if (errors.Length > 0)
-					Log.LogError (null, null, null, item.ItemSpec, 0, 0, 0, 0, "{0}", errors);
+					Log.LogError (MSBStrings.E0004, item.ItemSpec, errors);
 				else
-					Log.LogError (null, null, null, item.ItemSpec, 0, 0, 0, 0, MSBStrings.E0098, startInfo.FileName);
+					Log.LogError (MSBStrings.E0005, item.ItemSpec);
+			} else if (!string.IsNullOrEmpty (StampPath)) {
+				var outputPath = GetOutputPath (item);
+				Directory.CreateDirectory (Path.GetDirectoryName (outputPath));
+				File.WriteAllText (outputPath, string.Empty);
 			}
 		}
 
@@ -176,8 +203,9 @@ namespace Xamarin.MacDev.Tasks
 				return true;
 
 			var codesignedFiles = new List<ITaskItem> ();
+			var resourcesToSign = Resources.Where (v => NeedsCodesign (v));
 
-			Parallel.ForEach (Resources, new ParallelOptions { MaxDegreeOfParallelism = Math.Max (Environment.ProcessorCount / 2, 1) }, (item) => {
+			Parallel.ForEach (resourcesToSign, new ParallelOptions { MaxDegreeOfParallelism = Math.Max (Environment.ProcessorCount / 2, 1) }, (item) => {
 				Codesign (item);
 
 				var files = GetCodesignedFiles (item);

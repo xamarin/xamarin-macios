@@ -57,22 +57,20 @@ namespace MonoTouchFixtures.CoreData {
 		}
 
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void Perform_Null ()
 		{
 			using (var moc = new NSManagedObjectContext (NSManagedObjectContextConcurrencyType.MainQueue)) {
 				// a NULL results in a native crash - but not immediate
-				moc.Perform (null);
+				Assert.Throws<ArgumentNullException> (() => moc.Perform (null));
 			}
 		}
 
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void PerformAndWait_Null ()
 		{
 			using (var moc = new NSManagedObjectContext (NSManagedObjectContextConcurrencyType.MainQueue)) {
 				// a NULL results in a *immediate* native crash
-				moc.PerformAndWait (null);
+				Assert.Throws<ArgumentNullException> (() => moc.PerformAndWait (null));
 			}
 		}
 

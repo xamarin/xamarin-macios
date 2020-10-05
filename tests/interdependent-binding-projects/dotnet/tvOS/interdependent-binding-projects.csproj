@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.tvOS.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net5.0-tvos</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <SignAssembly>true</SignAssembly>
+    <LangVersion>latest</LangVersion>
+    <RuntimeIdentifier>tvos-x64</RuntimeIdentifier>
+    <AssetTargetFallback>xamarintvos10;$(AssetTargetFallback)</AssetTargetFallback>
+    <RootTestsDirectory>..\..\..\</RootTestsDirectory>
+    <!-- This is needed because the packages/ directory might be in the same folder as this project file, and some some packages might have C# files, which would then automatically be included -->
+    <DefaultItemExcludes>$(DefaultItemExcludes);packages/**;</DefaultItemExcludes>
+    <AssemblyOriginatorKeyFile>$(RootTestsDirectory)\..\product.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NUnitLite" Version="3.12.0" />
+    <PackageReference Include="MonoTouch.Dialog" Version="2.0.0-pre1" />
+    <!-- MonoTouch.Dialog references System.Json, which isn't shipped with .NET5, so reference the NuGet instead -->
+    <PackageReference Include="System.Json" Version="4.7.1" />
+    <ProjectReference Include="$(RootTestsDirectory)\..\external\Touch.Unit\Touch.Client\dotnet\tvOS\Touch.Client-tvOS.dotnet.csproj" />
+    <ProjectReference Include="$(RootTestsDirectory)\bindings-test\dotnet\tvOS\bindings-test.csproj" />
+    <ProjectReference Include="$(RootTestsDirectory)\bindings-test2\dotnet\tvOS\bindings-test2.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Info.plist" />
+    <Compile Include="$(RootTestsDirectory)\interdependent-binding-projects\Main.cs" />
+  </ItemGroup>
+</Project>

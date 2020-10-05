@@ -4,6 +4,13 @@
 // Authors:
 //   Miguel de Icaza (miguel@xamarin.com)
 //
+
+// 'AVAudioFormat' defines operator == or operator != but does not override Object.Equals(object o)
+#pragma warning disable 0660
+// 'AVAudioFormat' defines operator == or operator != but does not override Object.GetHashCode()
+#pragma warning disable 0661
+// In both of these cases, the NSObject Equals/GetHashCode implementation works fine, so we can ignore these warnings.
+
 using Foundation;
 using ObjCRuntime;
 using System;
@@ -14,12 +21,16 @@ namespace AVFoundation {
 	public partial class AVAudioFormat {
 		public static bool operator == (AVAudioFormat a, AVAudioFormat b)
 		{
+			if ((object) a == (object) b)
+				return true;
+			if ((object) a == null ^ (object) b == null)
+				return false;
 			return a.Equals (b);
 		}
 		
 		public static bool operator != (AVAudioFormat a, AVAudioFormat b)
 		{
-			return !a.Equals (b);
+			return !(a == b);
 		}
 	}
 }
