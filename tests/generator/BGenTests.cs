@@ -629,6 +629,9 @@ namespace GeneratorTests
 			BuildFile (Profile.iOS, "tests/diamond-protocol.cs");
 		}
 
+		[Test]
+		public void GHIssue9065_Sealed () => BuildFile (Profile.iOS, nowarnings: true, "ghissue9065.cs");
+
 		BGenTool BuildFile (Profile profile, params string [] filenames)
 		{
 			return BuildFile (profile, true, false, filenames);
