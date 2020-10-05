@@ -40,6 +40,7 @@ using ObjCRuntime;
 
 namespace AddressBook {
 
+	[Deprecated (PlatformName.iOS, 9,0)]
 	static class ABMultiValue {
 		public const uint Mask = (1 << 8);
 

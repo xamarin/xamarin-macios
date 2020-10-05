@@ -100,6 +100,7 @@ namespace Security {
 		[DllImport (Constants.SecurityLibrary)]
 		extern static int /* OSStatus = int */ AuthorizationCreate (AuthorizationItemSet *rights, AuthorizationItemSet *environment, AuthorizationFlags flags, out IntPtr auth);
 
+		[Deprecated (PlatformName.MacOSX, 10,7)]
 		[DllImport (Constants.SecurityLibrary)]
 		extern static int /* OSStatus = int */ AuthorizationExecuteWithPrivileges (IntPtr handle, string pathToTool, AuthorizationFlags flags, string [] args, IntPtr FILEPtr);
 
@@ -111,6 +112,7 @@ namespace Security {
 			this.handle = handle;
 		}
 
+		[Deprecated (PlatformName.MacOSX, 10,7)]
 		public int ExecuteWithPrivileges (string pathToTool, AuthorizationFlags flags, string [] args)
 		{
 			return AuthorizationExecuteWithPrivileges (handle, pathToTool, flags, args, IntPtr.Zero);
