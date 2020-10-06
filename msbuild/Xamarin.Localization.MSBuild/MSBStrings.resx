@@ -874,35 +874,9 @@
         </value>
     </data>
     
-    <data name="E7011" xml:space="preserve">
-        <value>The WatchKit Extension '{0}' has an invalid Info.plist: the NSExtension dictionary does not contain an NSExtensionAttributes dictionary.
-        </value>
-    </data>
-    
-    <data name="E7012" xml:space="preserve">
-        <value>The WatchKit Extension '{0}' does not contain any watch apps.
-        </value>
-    </data>
-    
-    <data name="E7012_A" xml:space="preserve">
-        <value>The WatchKit Extension '{0}' contain more than one watch apps.
-        </value>
-    </data>
-    
-    <data name="E7013" xml:space="preserve">
-        <value>The WatchKit Extension '{0}' has an invalid Info.plist: the UIRequiredDeviceCapabilities dictionary must contain the 'watch-companion' capability with a value of 'true'.
-        </value>
-    </data>
-    
-    <data name="E7013_A" xml:space="preserve">
-        <value>The WatchKit Extension '{0}' has an invalid Info.plist: the UIRequiredDeviceCapabilities array must contain the 'watch-companion' capability.
-        </value>
-    </data>
-    
-    <data name="E7013_B" xml:space="preserve">
-        <value>The WatchKit Extension '{0}' has an invalid Info.plist: the UIRequiredDeviceCapabilities key must be present and contain the 'watch-companion' capability.
-        </value>
-    </data>
+    <!-- E7011: not used anymore -->
+    <!-- E7012: not used anymore -->
+    <!-- E7013: not used anymore -->
     
     <data name="E7014" xml:space="preserve">
         <value>The Watch App '{0}' does not contain an Info.plist.
@@ -1195,5 +1169,9 @@
     <data name="E7068" xml:space="preserve">
         <value>Can't create a binding resource package unless there are native references in the binding project.
         </value>
+    </data>
+    
+    <data name="E7069" xml:space="preserve">
+        <value>Xamarin.iOS 14+ does not support watchOS 1 apps. Please migrate your project to watchOS 2+.</value>
     </data>
 </root>
