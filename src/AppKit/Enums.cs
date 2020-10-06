@@ -1601,7 +1601,8 @@ namespace AppKit {
 	public enum NSTableViewSelectionHighlightStyle : long {
 		None = -1,
 		Regular = 0,
-		SourceList = 1
+		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Set 'NSTableView.Style' to 'NSTableViewStyle.SourceList' instead.")]
+		SourceList = 1,
 	}
 
 	[Native]
@@ -3022,6 +3023,8 @@ namespace AppKit {
 		FullWidth,
 		Inset,
 		SourceList,
+		[Mac (11,0)]
+		Plain,
 	}
 
 	[Mac (11,0)]
