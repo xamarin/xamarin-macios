@@ -72,4 +72,11 @@ namespace ImageIO {
 		IncompleteInputImage = -22143,
 		AllocationFailure = -22144,
 	}
+
+	// Yes, no [Native] here
+	[Mac (11,0), iOS (14,2), TV (14,2), Watch (7,1)]
+	public enum CGImagePropertyTgaCompression : uint {
+		None = 0,
+		Rle,
+	}
 }
