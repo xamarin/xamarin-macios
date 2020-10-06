@@ -5,6 +5,7 @@ using System;
 using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
+using UniformTypeIdentifiers;
 
 #if MONOMAC
 using AppKit;
@@ -94,6 +95,10 @@ namespace QuickLookThumbnailing {
 
 		[Export ("representationTypes")]
 		QLThumbnailGenerationRequestRepresentationTypes RepresentationTypes { get; }
+
+		[Mac (11,0)][iOS (14,0)]
+		[NullAllowed, Export ("contentType", ArgumentSemantic.Copy)]
+		UTType ContentType { get; set; }
 	}
 
 	[Mac (10,15), iOS (13,0)]

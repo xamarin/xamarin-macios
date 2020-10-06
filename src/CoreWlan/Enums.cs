@@ -83,9 +83,10 @@ namespace CoreWlan {
 		Wpa3Enterprise = 12,
 		[Mac (10,15)]
 		Wpa3Transition = 13,
-		Unknown = int.MaxValue,
+		Unknown = long.MaxValue,
 	}
 
+	[Deprecated (PlatformName.MacOSX, 11,0)]
 	[Native]
 	public enum CWIbssModeSecurity : ulong {
 		None = 0,
@@ -136,7 +137,11 @@ namespace CoreWlan {
 		LinkQualityDidChange = 6,
 		ModeDidChange = 7,
 		ScanCacheUpdated = 8,
+
+		[Deprecated (PlatformName.MacOSX, 11,0)]
 		VirtualInterfaceStateChanged = 9,
+
+		[Deprecated (PlatformName.MacOSX, 11,0)]
 		RangingReportEvent = 10,
 		Unknown = long.MaxValue
 	}

@@ -11,13 +11,13 @@ namespace Xamarin.iOS.Tasks {
 			var mtouchPathsLibraryA = SetupProjectPaths ("LibraryA", "LibraryA", "../MyBindingsReferences/", false);
 			var mtouchPathsLibraryB = SetupProjectPaths ("LibraryB", "LibraryB", "../MyBindingsReferences/", false);
 
-			var projA = SetupProject (Engine, mtouchPathsLibraryA ["project_csprojpath"]);
+			var projA = SetupProject (Engine, mtouchPathsLibraryA.ProjectCSProjPath);
 			var dllAPath = Path.Combine (mtouchPathsLibraryA.ProjectBinPath, "LibraryA.dll");
 
 			RunTarget (projA, "Build", 0);
 			Assert.IsTrue (File.Exists (dllAPath), "LibraryA dll does not exist: {0} ", dllAPath);
 
-			var projB = SetupProject (Engine, mtouchPathsLibraryB ["project_csprojpath"]);
+			var projB = SetupProject (Engine, mtouchPathsLibraryB.ProjectCSProjPath);
 			var dllBPath = Path.Combine (mtouchPathsLibraryB.ProjectBinPath, "LibraryB.dll");
 
 			RunTarget (projB, "Build", 0);
@@ -30,7 +30,7 @@ namespace Xamarin.iOS.Tasks {
 		{
 			var mtouchPaths = SetupProjectPaths ("iOSBinding", "iOSBinding", "../MySatelliteAssembliesBug/", false);
 
-			var proj = SetupProject (Engine, mtouchPaths ["project_csprojpath"]);
+			var proj = SetupProject (Engine, mtouchPaths.ProjectCSProjPath);
 			var dll = Path.Combine (mtouchPaths.ProjectBinPath, "iOSBinding.dll");
 
 			RunTarget (proj, "Build", 0);

@@ -374,10 +374,7 @@
     
     <!-- E0087: not used anymore -->
     
-    <data name="E0088" xml:space="preserve">
-        <value>Could not get native libraries: {0}
-        </value>
-    </data>
+    <!-- E0088: not used anymore -->
         
     <data name="E0089" xml:space="preserve">
         <value>Unrecognized platform: {0}
@@ -494,7 +491,7 @@
     </data>
     
     <data name="W0111" xml:space="preserve">
-        <value>The iCloud entitlement '{item.Key}' is not supported by the Provisioning Profile.
+        <value>The iCloud entitlement '{0}' is not supported by the Provisioning Profile.
         </value>
     </data>
     

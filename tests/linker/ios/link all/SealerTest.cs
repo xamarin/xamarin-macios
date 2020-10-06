@@ -36,6 +36,9 @@ namespace Linker.Sealer {
 	[Preserve (AllMembers = true)]
 	public class SealerTest {
 
+#if !DEBUG && NET
+		[Ignore ("https://github.com/xamarin/xamarin-macios/issues/9573")]
+#endif
 		[Test]
 		public void Sealed ()
 		{
@@ -59,6 +62,9 @@ namespace Linker.Sealer {
 #endif
 		}
 
+#if !DEBUG && NET
+		[Ignore ("https://github.com/xamarin/xamarin-macios/issues/9573")]
+#endif
 		[Test]
 		public void Final ()
 		{
@@ -79,6 +85,9 @@ namespace Linker.Sealer {
 #endif
 		}
 
+#if !DEBUG && NET
+		[Ignore ("https://github.com/xamarin/xamarin-macios/issues/9573")]
+#endif
 		[Test]
 		public void Virtual ()
 		{

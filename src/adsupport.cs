@@ -22,6 +22,9 @@ namespace AdSupport {
 		[Static]
 		ASIdentifierManager SharedManager { get; }
 
+		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'ATTrackingManager.AppTrackingTransparency' instead.")]
+		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use 'ATTrackingManager.AppTrackingTransparency' instead.")]
+		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use 'ATTrackingManager.AppTrackingTransparency' instead.")]
 		[Export ("advertisingTrackingEnabled")]
 		bool IsAdvertisingTrackingEnabled { [Bind ("isAdvertisingTrackingEnabled")] get; }
 

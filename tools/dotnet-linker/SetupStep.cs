@@ -25,6 +25,17 @@ namespace Xamarin {
 			}
 		}
 
+		void InsertBefore (IStep step, string stepName)
+		{
+			for (int i = 0; i < Steps.Count; i++) {
+				if (Steps [i].GetType ().Name == stepName) {
+					Steps.Insert (i, step);
+					return;
+				}
+			}
+			throw new InvalidOperationException ($"Could not insert {step} before {stepName} because {stepName} wasn't found.");
+		}
+
 		void InsertAfter (IStep step, string stepName)
 		{
 			for (int i = 0; i < Steps.Count;) {
@@ -46,17 +57,29 @@ namespace Xamarin {
 			// This would not be needed of LinkContext.GetAssemblies () was exposed to us.
 			InsertAfter (new CollectAssembliesStep (), "LoadReferencesStep");
 
+			var pre_dynamic_dependency_lookup_substeps = new DotNetSubStepDispatcher ();
+			InsertBefore (pre_dynamic_dependency_lookup_substeps, "DynamicDependencyLookupStep");
+
 			var prelink_substeps = new DotNetSubStepDispatcher ();
 			InsertAfter (prelink_substeps, "RemoveSecurityStep");
 
+			var post_sweep_substeps = new DotNetSubStepDispatcher ();
+			InsertAfter (post_sweep_substeps, "SweepStep");
+
 			if (Configuration.LinkMode != LinkMode.None) {
+				pre_dynamic_dependency_lookup_substeps.Add (new PreserveBlockCodeSubStep ());
+
 				// We need to run the ApplyPreserveAttribute step even we're only linking sdk assemblies, because even
 				// though we know that sdk assemblies will never have Preserve attributes, user assemblies may have
 				// [assembly: LinkSafe] attributes, which means we treat them as sdk assemblies and those may have
 				// Preserve attributes.
 				prelink_substeps.Add (new ApplyPreserveAttribute ());
+				prelink_substeps.Add (new OptimizeGeneratedCodeSubStep ());
 				prelink_substeps.Add (new MarkNSObjects ());
 				prelink_substeps.Add (new PreserveSmartEnumConversionsSubStep ());
+				prelink_substeps.Add (new CollectUnmarkedMembersSubStep ());
+
+				post_sweep_substeps.Add (new RemoveAttributesStep ());
 			}
 
 			Steps.Add (new LoadNonSkippedAssembliesStep ());

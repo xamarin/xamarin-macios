@@ -83,6 +83,8 @@ namespace CoreData {
 	public enum NSPersistentStoreRequestType : ulong {
 		Fetch = 1,
 		Save,
+		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		BatchInsert = 5,
 		BatchUpdate = 6,
 		BatchDelete = 7
 	}
@@ -226,4 +228,20 @@ namespace CoreData {
 		DryRun = 1 << 1,
 		PrintSchema = 1 << 2,
 	}
+
+	[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+	[Native]
+	public enum NSPersistentCloudKitContainerEventResultType : long {
+		Events = 0,
+		CountEvents,
+	}
+
+	[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+	[Native]
+	public enum NSPersistentCloudKitContainerEventType : long {
+		Setup,
+		Import,
+		Export, 
+	}
+
 }

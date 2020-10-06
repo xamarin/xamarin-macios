@@ -25,11 +25,11 @@ namespace Xamarin.iOS.Tasks
 			var clean = true;
 
 			var mtouchPaths = SetupProjectPaths ("Bug60536", "../", true, platform, config);
-			var csproj = mtouchPaths["project_csprojpath"];
+			var csproj = mtouchPaths.ProjectCSProjPath;
 
 			var project = SetupProject (Engine, csproj);
 
-			AppBundlePath = mtouchPaths ["app_bundlepath"];
+			AppBundlePath = mtouchPaths.AppBundlePath;
 			Engine.ProjectCollection.SetGlobalProperty("Platform", platform);
 			Engine.ProjectCollection.SetGlobalProperty("Configuration", config);
 

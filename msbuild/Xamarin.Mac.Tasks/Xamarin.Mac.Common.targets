@@ -122,23 +122,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<RemoveDir Directories="$(IntermediateOutputPath)" />
 	</Target>
 
-	<Target Name="_CodesignNativeLibraries" Condition="'$(_RequireCodeSigning)'" DependsOnTargets="_DetectSigningIdentity">
-		<Codesign
-			SessionId="$(BuildSessionId)"
-			ToolExe="$(CodesignExe)"
-			ToolPath="$(CodesignPath)"
-			Condition="'@(_NativeLibrary)' != '' And '$(IsMacEnabled)' == 'true'"
-			CodesignAllocate="$(_CodesignAllocate)"
-			Keychain="$(CodesignKeychain)"
-			Resources="@(_NativeLibrary)"
-			SigningKey="$(_CodeSigningKey)"
-			ExtraArgs="$(CodesignExtraArgs)"
-			IsAppExtension="$(IsAppExtension)"
-			UseSecureTimestamp="$(UseHardenedRuntime)"
-			>
-		</Codesign>
-	</Target>
-
 	<Target Name="_EmbedProvisionProfile" Condition="'$(_ProvisioningProfile)' != ''" DependsOnTargets="_GenerateBundleName"
 		Outputs="$(_AppBundlePath)Contents\embedded.provisionprofile">
 		<EmbedProvisionProfile
@@ -181,62 +164,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		</CodesignVerify>
 	</Target>
 
-	<Target Name="_SmeltMetal" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(Metal)' != ''" DependsOnTargets="_DetectSdkLocations;_ComputeTargetFrameworkMoniker;_GetMinimumOSVersion">
-		<Metal
-			Condition="'$(IsMacEnabled)' == 'true' and '%(Metal.Identity)' != ''"
-			SessionId="$(BuildSessionId)"
-			IntermediateOutputPath="$(IntermediateOutputPath)"
-			MinimumOSVersion="$(_MinimumOSVersion)"
-			ProjectDir="$(MSBuildProjectDirectory)"
-			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
-			ResourcePrefix="$(_ResourcePrefix)"
-			SdkDevPath="$(_SdkDevPath)"
-			SdkIsSimulator="false"
-			SdkRoot="$(_SdkRoot)"
-			SdkVersion="$(_SdkVersion)"
-			SourceFile="@(Metal)">
-			<Output TaskParameter="OutputFile" ItemName="_SmeltedMetal" />
-		</Metal>
-	</Target>
-
-	<Target Name="_ForgeMetal" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(_SmeltedMetal)' != ''" DependsOnTargets="_SmeltMetal"
-		Inputs="@(_SmeltedMetal)" Outputs="$(IntermediateOutputPath)metal\default.metal-ar">
-		<ArTool
-			Condition="'$(IsMacEnabled)' == 'true' and '$(_IsXcode8)' == 'false'"
-			SessionId="$(BuildSessionId)"
-			Items="@(_SmeltedMetal)"
-			Archive="$(IntermediateOutputPath)metal\default.metal-ar">
-		</ArTool>
-
-		<!-- If !Xcode8 -->
-		<CreateItem Include="$(IntermediateOutputPath)metal\default.metal-ar"
-					Condition="'$(_IsXcode8)' == 'false'">
-			<Output TaskParameter="Include" ItemName="_ForgedMetal" />
-		</CreateItem>
-
-		<!-- Else -->
-		<CreateItem Include="@(_SmeltedMetal)"
-					Condition="'$(_IsXcode8)' == 'true'">
-			<Output TaskParameter="Include" ItemName="_ForgedMetal" />
-		</CreateItem>
-	</Target>
-
-	<Target Name="_TemperMetal" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(_ForgedMetal)' != ''" DependsOnTargets="_ForgeMetal"
-		Inputs="@(_ForgedMetal)" Outputs="$(_AppBundlePath)default.metallib">
-		<MetalLib
-			Condition="'$(IsMacEnabled)' == 'true'"
-			SessionId="$(BuildSessionId)"
-			Items="@(_ForgedMetal)"
-			SdkDevPath="$(_SdkDevPath)"
-			SdkRoot="$(_SdkRoot)"
-			OutputLibrary="$(_AppBundlePath)Contents\Resources\default.metallib">
-		</MetalLib>
-
-		<CreateItem Include="$(_AppBundlePath)Contents\Resources\default.metallib">
-			<Output TaskParameter="Include" ItemName="_NativeLibrary" />
-		</CreateItem>
-	</Target>
-
 	<Target Name="_CompileTextureAtlases" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_CoreCompileTextureAtlases" />
 
 	<Target Name="_CoreCompileTextureAtlases">
@@ -274,10 +201,11 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		</CreateInstallerPackage>
 	</Target>
 
-	<Target Name="_GenerateBundleName">
+	<Target Name="_GenerateBundleName" DependsOnTargets="_ParseBundlerArguments">
 		<PropertyGroup>
 			<AppBundleDir>$(OutputPath)$(_AppBundleName)$(AppBundleExtension)</AppBundleDir>
 			<_AppBundlePath>$(AppBundleDir)\</_AppBundlePath>
+			<_AppContentsPath>$(_AppBundlePath)Contents\$(_CustomBundleName)\</_AppContentsPath>
 			<_AppResourcesPath>$(_AppBundlePath)Contents\Resources\</_AppResourcesPath>
 		</PropertyGroup>
 	</Target>
@@ -330,6 +258,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			Architecture="$(TargetArchitectures)"
 			ArchiveSymbols="$(MonoSymbolArchive)"
+			CustomBundleName="$(_CustomBundleName)"
 			LinkMode="$(_LinkMode)"
 			Debug="$(_BundlerDebug)"
 			HttpClientHandler="$(HttpClientHandler)"
@@ -351,7 +280,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			StandardOutputImportance="High"
 			XamarinSdkRoot="$(_XamarinSdkRoot)"
 			>
-			<Output TaskParameter="NativeLibraries" ItemName="_NativeLibrary" />
 		</Mmp>
 	</Target>
 
@@ -456,69 +384,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<ItemGroup>
 			<FileWrites Include="$(_ACTool_PartialAppManifestCache);$(_ACTool_BundleResourceCache)" />
 		</ItemGroup>
-	</Target>
-
-	<Target Name="_CompileSceneKitAssets" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_CoreCompileSceneKitAssets" />
-
-	<Target Name="_CoreCompileSceneKitAssets" DependsOnTargets="_GenerateBundleName;_ComputeTargetFrameworkMoniker">
-		<CompileSceneKitAssets
-			Condition="'$(IsMacEnabled)' == 'true'"
-			SessionId="$(BuildSessionId)"
-			AppBundleName="$(_AppBundleName)$(AppBundleExtension)"
-			ToolExe="$(CopySceneKitAssetsExe)"
-			ToolPath="$(CopySceneKitAssetsPath)"
-			SceneKitAssets="@(SceneKitAsset)"
-			IntermediateOutputPath="$(IntermediateOutputPath)"
-			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
-			ProjectDir="$(MSBuildProjectDirectory)"
-			ResourcePrefix="$(_ResourcePrefix)"
-			SdkPlatform="MacOSX"
-			SdkDevPath="$(_SdkDevPath)"
-			SdkRoot="$(_SdkRoot)"
-			SdkVersion="$(_SdkVersion)">
-			<Output TaskParameter="BundleResources" ItemName="FileWrites" />
-			<Output TaskParameter="BundleResources" ItemName="_BundleResourceWithLogicalName" />
-		</CompileSceneKitAssets>
-	</Target>
-
-	<Target Name="_CompileInterfaceDefinitions" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_GetMinimumOSVersion;_CoreCompileInterfaceDefinitions" />
-
-	<Target Name="_CoreCompileInterfaceDefinitions">
-		<IBTool
-			Condition="'$(IsMacEnabled)' == 'true'"
-			SessionId="$(BuildSessionId)"
-			ToolExe="$(IBToolExe)"
-			ToolPath="$(IBToolPath)"
-			AppManifest="$(_AppManifest)"
-			EnableOnDemandResources="false"
-			InterfaceDefinitions="@(InterfaceDefinition)"
-			IntermediateOutputPath="$(IntermediateOutputPath)"
-			MinimumOSVersion="$(_MinimumOSVersion)"
-			SdkPlatform="MacOSX"
-			ProjectDir="$(MSBuildProjectDirectory)"
-			ResourcePrefix="$(_ResourcePrefix)"
-			SdkDevPath="$(_SdkDevPath)"
-			SdkBinPath="$(_SdkBinPath)"
-			SdkUsrPath="$(_SdkUsrPath)"
-			SdkRoot="$(_SdkRoot)"
-			SdkVersion="$(_SdkVersion)">
-			<Output TaskParameter="OutputManifests" ItemName="FileWrites" />
-			<Output TaskParameter="BundleResources" ItemName="FileWrites" />
-			<Output TaskParameter="BundleResources" ItemName="_BundleResourceWithLogicalName" />
-		</IBTool>
-	</Target>
-
-	<Target Name="_CreatePkgInfo" DependsOnTargets="_GenerateBundleName" Outputs="$(_AppBundlePath)Contents\PkgInfo">
-		<CreatePkgInfo SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" OutputPath="$(_AppBundlePath)Contents\PkgInfo" />
-
-		<Ditto
-			SessionId="$(BuildSessionId)"
-			Condition="'@(_ResolvedAppExtensionReferences)' != '' And '%(_ResolvedAppExtensionReferences.Identity)' != '' And '$(IsMacEnabled)' == 'true'"
-			ToolExe="$(DittoExe)"
-			ToolPath="$(DittoPath)"
-			Source="@(_ResolvedAppExtensionReferences)"
-			Destination="$(_AppBundlePath)PlugIns\%(_ResolvedAppExtensionReferences.FileName)%(_ResolvedAppExtensionReferences.Extension)"
-		/>
 	</Target>
 
 	<Target Name="_CopyAppExtensionsToBundle"  Condition="'$(IsAppExtension)' != 'true'" DependsOnTargets="_ExtendAppExtensionReferences">

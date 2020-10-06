@@ -484,6 +484,114 @@ namespace Introspection {
 				case "setTileFunction:":
 				case "maxTotalThreadsPerThreadgroup":
 				case "setMaxTotalThreadsPerThreadgroup:":
+				case "binaryArchives":
+				case "setBinaryArchives:":
+					return true;
+				}
+				break;
+			case "MTLBlitPassDescriptor":
+				switch (selectorName) {
+				case "sampleBufferAttachments":
+					return true;
+				}
+				break;
+			case "MTLBlitPassSampleBufferAttachmentDescriptor":
+				switch (selectorName) {
+				case "endOfEncoderSampleIndex":
+				case "setEndOfEncoderSampleIndex:":
+				case "sampleBuffer":
+				case "setSampleBuffer:":
+				case "startOfEncoderSampleIndex":
+				case "setStartOfEncoderSampleIndex:":
+					return true;
+				}
+				break;
+			case "MTLComputePassDescriptor":
+				switch (selectorName) {
+				case "dispatchType":
+				case "setDispatchType:":
+				case "sampleBufferAttachments":
+					return true;
+				}
+				break;
+			case "MTLComputePassSampleBufferAttachmentDescriptor": 
+				switch (selectorName) {
+				case "sampleBuffer":
+				case "setSampleBuffer:":
+				case "startOfEncoderSampleIndex":
+				case "setStartOfEncoderSampleIndex:":
+				case "endOfEncoderSampleIndex":
+				case "setEndOfEncoderSampleIndex:":
+					return true;
+				}
+				break;
+			case "MTLCounterSampleBufferDescriptor":
+				switch (selectorName) {
+				case "counterSet":
+				case "setCounterSet:":
+				case "label":
+				case "setLabel:":
+				case "sampleCount":
+				case "setSampleCount:":
+				case "storageMode":
+				case "setStorageMode:":
+					return true;
+				}
+				break;
+			case "MTLLinkedFunctions":
+				switch (selectorName) {
+				case "binaryFunctions":
+				case "setBinaryFunctions:":
+				case "functions":
+				case "setFunctions:":
+				case "groups":
+				case "setGroups:":
+					return true;
+				}
+				break;
+			case "MTLRenderPassSampleBufferAttachmentDescriptor":
+				switch (selectorName) {
+				case "endOfFragmentSampleIndex":
+				case "setEndOfFragmentSampleIndex:":
+				case "endOfVertexSampleIndex":
+				case "setEndOfVertexSampleIndex:":
+				case "sampleBuffer":
+				case "setSampleBuffer:":
+				case "startOfFragmentSampleIndex":
+				case "setStartOfFragmentSampleIndex:":
+				case "startOfVertexSampleIndex":
+				case "setStartOfVertexSampleIndex:":
+					return true;
+				}
+				break;
+			case "MTLIntersectionFunctionTableDescriptor":
+				switch (selectorName) {
+				case "functionCount":
+				case "setFunctionCount:":
+					return true;
+				}
+				break;
+			case "MTLResourceStatePassDescriptor":
+				switch (selectorName) {
+				case "sampleBufferAttachments":
+					return true;
+				}
+				break;
+			case "MTLResourceStatePassSampleBufferAttachmentDescriptor":
+				switch (selectorName) {
+				case "endOfEncoderSampleIndex":
+				case "setEndOfEncoderSampleIndex:":
+				case "sampleBuffer":
+				case "setSampleBuffer:":
+				case "startOfEncoderSampleIndex":
+				case "setStartOfEncoderSampleIndex:":
+					return true;
+				}
+				break;
+			case "MTLVisibleFunctionTableDescriptor":
+				switch (selectorName) {
+				case "functionCount":
+				case "setFunctionCount:":
 					return true;
 				}
 				break;
@@ -600,6 +708,13 @@ namespace Introspection {
 			case "MPSImageLaplacianPyramidAdd":
 				switch (selectorName) {
 				case "initWithDevice:kernelWidth:kernelHeight:weights:":
+					return true;
+				}
+				break;
+			case "CPMessageListItem":
+				switch (selectorName) {
+				case "initWithConversationIdentifier:text:leadingConfiguration:trailingConfiguration:detailText:trailingText:":
+				case "initWithFullName:phoneOrEmailAddress:leadingConfiguration:trailingConfiguration:detailText:trailingText:":
 					return true;
 				}
 				break;
@@ -882,6 +997,10 @@ namespace Introspection {
 			case "initWithMinCenterCoordinateDistance:":
 			case "initExcludingCategories:":
 			case "initIncludingCategories:":
+			// Vision
+			case "initWithCenter:diameter:":
+			case "initWithCenter:radius:":
+			case "initWithR:theta:":
 				var mi = m as MethodInfo;
 				return mi != null && !mi.IsPublic && mi.ReturnType.Name == "IntPtr";
 			default:

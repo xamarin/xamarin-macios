@@ -77,6 +77,8 @@ namespace MetalPerformanceShaders {
 
 	[Flags]
 	[Native]
+	[iOS (13,0), TV (13,0), Mac (10,15)]
+	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	public enum MPSAliasingStrategy : ulong
 	{
 		Default = 0x0,
@@ -128,6 +130,8 @@ namespace MetalPerformanceShaders {
 	}
 
 	// uses NSUInteger
+	[iOS (13,0), TV (13,0), Mac (10,15)]
+	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	public struct MPSDimensionSlice {
 		public nuint Start;
 		public nuint Length;
@@ -188,6 +192,7 @@ namespace MetalPerformanceShaders {
 		NonPositiveDefinite = -3,
 	}
 
+	[iOS (13,0), TV (13,0), Mac (10,15)]
 	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	[Flags]
 	[Native]
@@ -195,6 +200,9 @@ namespace MetalPerformanceShaders {
 	{
 		Default = 0x1,
 		Uniform = 0x2,
+		[iOS (14,0), TV (14,0), Mac (11,0)]
+		[Introduced (PlatformName.MacCatalyst, 14,0)]
+		Normal = Default | Uniform,
 	}
 
 	// MPSTypes.h
@@ -237,6 +245,8 @@ namespace MetalPerformanceShaders {
 		Exponential,
 		[TV (11,3), Mac (10,13,4), iOS (11,3)]
 		Logarithm,
+		[TV (13,0), Mac (10,15), iOS (13,0)]
+		GeLU,
 #if !XAMCORE_4_0
 		[Obsolete ("The value changes when newer versions are released. It will be removed in the future.")]
 		Count, // must always be last
@@ -369,6 +379,8 @@ namespace MetalPerformanceShaders {
 	public enum MPSBoundingBoxIntersectionTestType : ulong {
 		Default = 0,
 		AxisAligned = 1,
+		[TV (13,0), Mac (10,15), iOS (13,0)]
+		Fast = 2,
 	}
 
 	[TV (12, 0), Mac (10, 14), iOS (12, 0)]
@@ -386,6 +398,8 @@ namespace MetalPerformanceShaders {
 		OriginDirection = 0,
 		OriginMinDistanceDirectionMaxDistance = 1,
 		OriginMaskDirectionMaxDistance = 2,
+		[TV (13,0), Mac (10,15), iOS (13,0)]
+		PackedOriginDirection = 3,
 	}
 
 	[TV (12, 0), Mac (10, 14), iOS (12, 0)]
@@ -412,6 +426,10 @@ namespace MetalPerformanceShaders {
 		None = 0,
 		Refit = 1,
 		FrequentRebuild = 2,
+		[TV (13,0), Mac (10,15), iOS (13,0)]
+		PreferGpuBuild = 4,
+		[TV (13,0), Mac (10,15), iOS (13,0)]
+		PreferCpuBuild = 8,
 	}
 
 	[TV (12, 0), Mac (10, 14), iOS (12, 0)]
@@ -563,6 +581,8 @@ namespace MetalPerformanceShaders {
 		// MaxTextures = 128 or 32,
 	}
 
+	[iOS (11,3), TV (11,3), Mac (10,13,4)]
+	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	public enum MPSCustomKernelIndex : uint
 	{
 		DestIndex = 0,
@@ -574,6 +594,8 @@ namespace MetalPerformanceShaders {
 		UserDataIndex = 30,
 	}
 
+	[iOS (11,2), TV (11,2), Mac (10,13,2)]
+	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MPSMatrixOffset
 	{

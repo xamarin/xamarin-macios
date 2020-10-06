@@ -68,3 +68,8 @@
 !missing-pinvoke! AudioCodecReset is not bound
 !missing-pinvoke! AudioCodecSetProperty is not bound
 !missing-pinvoke! AudioCodecUninitialize is not bound
+
+# ignored due to the Workgroups API missing: https://github.com/xamarin/xamarin-macios/issues/9602 
+!missing-pinvoke! AudioWorkIntervalCreate is not bound
+!missing-selector! AUAudioUnit::osWorkgroup not bound
+!missing-selector! AUAudioUnit::renderContextObserver not bound

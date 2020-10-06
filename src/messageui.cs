@@ -71,7 +71,7 @@ namespace MessageUI {
 	
 	[BaseType (typeof (UINavigationController))]
 	interface MFMessageComposeViewController : UIAppearance {
-		[Export ("messageComposeDelegate", ArgumentSemantic.Assign), NullAllowed]
+		[Export ("messageComposeDelegate", ArgumentSemantic.Weak), NullAllowed]
 		NSObject WeakMessageComposeDelegate { get; set; }
 		
 		[Wrap ("WeakMessageComposeDelegate")]

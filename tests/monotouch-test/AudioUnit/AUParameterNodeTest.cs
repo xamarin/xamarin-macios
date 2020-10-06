@@ -34,25 +34,32 @@ namespace monotouchtest {
 
 			using (var parameter = CreateAUParameter ()) {
 				using (var tree = AUParameterTree.CreateTree (new AUParameterNode[] { parameter })) {
+					Exception ex = null;
 					var recordingObserver = tree.CreateTokenByAddingParameterRecordingObserver ((nint numberOfEvents, ref AURecordedParameterEvent events) => {
-						Assert.True (numberOfEvents == 1,
-							$"Number of events was wrong. Expected {1} but was {numberOfEvents}");
+						try {
+							Assert.True (numberOfEvents == 1,
+								$"Number of events was wrong. Expected {1} but was {numberOfEvents}");
 
-						Assert.True (events.Address == address,
-							$"Address was wrong. Expected {address} but was {events.Address}");
+							Assert.True (events.Address == address,
+								$"Address was wrong. Expected {address} but was {events.Address}");
 
-						Assert.True (events.Value == newValue,
-							$"Value was wrong. Expected {newValue} but was {events.Value}");
+							Assert.True (events.Value == newValue,
+								$"Value was wrong. Expected {newValue} but was {events.Value}");
 
-						recordingObserverInvoked = true;
-						completion.Set ();
+							recordingObserverInvoked = true;
+						} catch (Exception e) {
+							ex = e;
+						} finally {
+							completion.Set ();
+						}
 					});
 
 					Assert.True (recordingObserver.ObserverToken != IntPtr.Zero, "TokenByAddingParameterRecordingObserver return zero pointer for recording observer.");
 					parameter.Value = newValue;
 
 					completion.WaitOne (TimeSpan.FromSeconds (1));
-					Assert.True (recordingObserverInvoked, "Recording observer was not invoked when paramter value was changed.");
+					Assert.IsNull (ex, "Exceptions");
+					Assert.True (recordingObserverInvoked, "Recording observer was not invoked when parameter value was changed.");
 				}
 			}
 		}

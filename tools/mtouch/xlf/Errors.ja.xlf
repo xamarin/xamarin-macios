@@ -1357,19 +1357,20 @@
 		</target>
         <note></note>
       </trans-unit>
-      <trans-unit id="MT2003_A">
-        <source>Option '--optimize={0}' will be ignored since it's only applicable to watchOS.
-		</source>
-        <target state="new">Option '--optimize={0}' will be ignored since it's only applicable to watchOS.
-		</target>
-        <note></note>
-      </trans-unit>
       <trans-unit id="MT2003_B">
         <source>Option '--optimize={0}{1}' will be ignored since linking is disabled
 		</source>
         <target state="new">Option '--optimize={0}{1}' will be ignored since linking is disabled
 		</target>
         <note></note>
+      </trans-unit>
+      <trans-unit id="MT2003_C">
+        <source>Option '--optimize={0}' will be ignored since it's only applicable to {1}.</source>
+        <target state="new">Option '--optimize={0}' will be ignored since it's only applicable to {1}.</target>
+        <note>This is a warning that is shown when the command-line option --optimize=... is not valid for a particular platform
+{0} - The optimization option that is not valid for the current platform
+{1} - The platforms in question, such as 'iOS'.
+		</note>
       </trans-unit>
       <trans-unit id="MT2006">
         <source>Can not load mscorlib.dll from: '{0}'. Please reinstall Xamarin.iOS.
@@ -2698,10 +2699,18 @@
       </trans-unit>
       <trans-unit id="MX5222">
         <source>The native linker failed to execute: {0}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
-        </source>
+ 		</source>
         <target state="new">The native linker failed to execute: {0}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
-        </target>
-        <note></note>
+ 		</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MX5223">
+        <source>Did not link with the framework '{0}', because the current {1} SDK does not contain support for this framework in the simulator.</source>
+        <target state="new">Did not link with the framework '{0}', because the current {1} SDK does not contain support for this framework in the simulator.</target>
+        <note>This is a warning explaining why a native framework won't be referenced from the app when building for the simulator. The following are literal names and should not be translated: SDK
+			{0}: The name of the native framework
+			{1}: The current platform (will be either iOS, tvOS, watchOS or macOS).
+		</note>
       </trans-unit>
       <trans-unit id="MX5305">
         <source>Missing 'lipo' tool. Please install Xcode 'Command-Line Tools' component

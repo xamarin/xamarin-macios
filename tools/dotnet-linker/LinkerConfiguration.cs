@@ -21,6 +21,7 @@ namespace Xamarin.Linker {
 		public string AssemblyName { get; private set; }
 		public string CacheDirectory { get; private set; }
 		public Version DeploymentTarget { get; private set; }
+		public HashSet<string> FrameworkAssemblies { get; private set; } = new HashSet<string> ();
 		public string ItemsDirectory { get; private set; }
 		public bool IsSimulatorBuild { get; private set; }
 		public LinkMode LinkMode => Application.LinkMode;
@@ -44,6 +45,8 @@ namespace Xamarin.Linker {
 
 		// The list of assemblies is populated in CollectAssembliesStep.
 		public List<AssemblyDefinition> Assemblies = new List<AssemblyDefinition> ();
+		
+		string user_optimize_flags;
 
 		public static LinkerConfiguration GetInstance (LinkContext context)
 		{
@@ -105,6 +108,9 @@ namespace Xamarin.Linker {
 						throw new InvalidOperationException ($"Unable to parse the {key} value: {value} in {linker_file}");
 					DeploymentTarget = deployment_target;
 					break;
+				case "FrameworkAssembly":
+					FrameworkAssemblies.Add (value);
+					break;
 				case "ItemsDirectory":
 					ItemsDirectory = value;
 					break;
@@ -130,6 +136,9 @@ namespace Xamarin.Linker {
 						Application.MarshalObjectiveCExceptions = mode;
 					}
 					break;
+				case "Optimize":
+					user_optimize_flags = value;
+					break;
 				case "PartialStaticRegistrarLibrary":
 					PartialStaticRegistrarLibrary = value;
 					break;
@@ -153,6 +162,9 @@ namespace Xamarin.Linker {
 					break;
 				case "PlatformAssembly":
 					PlatformAssembly = Path.GetFileNameWithoutExtension (value);
+					break;
+				case "Registrar":
+					Application.ParseRegistrar (value);
 					break;
 				case "SdkVersion":
 					if (!Version.TryParse (value, out var sdk_version))
@@ -187,11 +199,22 @@ namespace Xamarin.Linker {
 
 			ErrorHelper.Platform = Platform;
 
+			// Optimizations.Parse can only be called after setting ErrorHelper.Platform
+			if (!string.IsNullOrEmpty (user_optimize_flags)) {
+				var messages = new List<ProductException> ();
+				Application.Optimizations.Parse (Application.Platform, user_optimize_flags, messages);
+				ErrorHelper.Show (messages);
+			}
+
 			Application.CreateCache (significantLines.ToArray ());
 			Application.Cache.Location = CacheDirectory;
 			Application.DeploymentTarget = DeploymentTarget;
-			Application.EnableCoopGC ??= Platform == ApplePlatform.WatchOS;
 			Application.SdkVersion = SdkVersion;
+
+			DerivedLinkContext.Target = Target;
+			Target.Abis = Abis;
+			Target.LinkContext = DerivedLinkContext;
+			Application.Abis = Abis;
 
 			switch (Platform) {
 			case ApplePlatform.iOS:
@@ -207,8 +230,7 @@ namespace Xamarin.Linker {
 			if (Driver.TargetFramework.Platform != Platform)
 				throw ErrorHelper.CreateError (99, "Inconsistent platforms. TargetFramework={0}, Platform={1}", Driver.TargetFramework.Platform, Platform);
 
-			Application.SetManagedExceptionMode ();
-			Application.SetObjectiveCExceptionMode ();
+			Application.InitializeCommon ();
 		}
 
 		public void Write ()
@@ -221,13 +243,18 @@ namespace Xamarin.Linker {
 				Console.WriteLine ($"    Debug: {Application.EnableDebug}");
 				Console.WriteLine ($"    DeploymentTarget: {DeploymentTarget}");
 				Console.WriteLine ($"    ItemsDirectory: {ItemsDirectory}");
+				Console.WriteLine ($"    {FrameworkAssemblies.Count} framework assemblies:");
+				foreach (var fw in FrameworkAssemblies.OrderBy (v => v))
+					Console.WriteLine ($"        {fw}");
 				Console.WriteLine ($"    IsSimulatorBuild: {IsSimulatorBuild}");
 				Console.WriteLine ($"    LinkMode: {LinkMode}");
 				Console.WriteLine ($"    MarshalManagedExceptions: {Application.MarshalManagedExceptions} (IsDefault: {Application.IsDefaultMarshalManagedExceptionMode})");
 				Console.WriteLine ($"    MarshalObjectiveCExceptions: {Application.MarshalObjectiveCExceptions}");
+				Console.WriteLine ($"    Optimize: {user_optimize_flags} => {Application.Optimizations}");
 				Console.WriteLine ($"    PartialStaticRegistrarLibrary: {PartialStaticRegistrarLibrary}");
 				Console.WriteLine ($"    Platform: {Platform}");
 				Console.WriteLine ($"    PlatformAssembly: {PlatformAssembly}.dll");
+				Console.WriteLine ($"    Registrar: {Application.Registrar} (Options: {Application.RegistrarOptions})");
 				Console.WriteLine ($"    SdkVersion: {SdkVersion}");
 				Console.WriteLine ($"    Verbosity: {Verbosity}");
 			}

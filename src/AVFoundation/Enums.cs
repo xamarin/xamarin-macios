@@ -207,31 +207,27 @@ namespace AVFoundation {
 		AirPlayControllerRequiresInternet = -11856,
 		AirPlayReceiverRequiresInternet = -11857,
 
-		[iOS (9,0), Mac (10,11)]
 		VideoCompositorFailed = -11858,
 
 #if !MONOMAC
-		[iOS (9,0)]
 		RecordingAlreadyInProgress = -11859,
 #endif
-		[NoWatch, iOS (10,0), TV (10,0), Mac (10,12)]
+		CreateContentKeyRequestFailed = -11860,
 		UnsupportedOutputSettings = -11861,
-		[NoWatch, iOS (10,0), TV (10,0), Mac (10,12)]
 		OperationNotAllowed = -11862,
-		[NoWatch, iOS (11,0), TV (11,0), Mac (10,13)]
 		ContentIsUnavailable = -11863,
-		[NoWatch, iOS (11,0), TV (11,0), Mac (10,13)]
 		FormatUnsupported = -11864,
-		[NoWatch, iOS (11,0), TV (11,0), Mac (10,13)]
 		MalformedDepth = -11865,
-		[NoWatch, iOS (11,0), TV (11,0), Mac (10,13)]
 		ContentNotUpdated = -11866,
-		[NoWatch, iOS (11,0), TV (11,0), Mac (10,13)]
 		NoLongerPlayable = -11867,
-		[NoWatch, iOS (11,0), TV (11,0), Mac (10,13)]
 		NoCompatibleAlternatesForExternalDisplay = -11868,
-		[NoWatch, iOS (11,2), TV (11,2), Mac (10,13,2)]
 		NoSourceTrack = -11869,
+		ExternalPlaybackNotSupportedForAsset = -11870,
+		OperationNotSupportedForPreset = -11871,
+		SessionHardwareCostOverage = -11872,
+		UnsupportedDeviceActiveFormat = -11873,
+		IncorrectlyConfigured = -11875,
+		SegmentStartedWithNonSyncSample = -11876,
 	}
 
 	[Watch (6,0)]
@@ -332,6 +328,12 @@ namespace AVFoundation {
 	public enum AVAudioSessionPortOverride : ulong {
 		None = 0,
 		[NoTV]
+#if XAMCORE_4_0 // Removed in Xcode 12 GM
+		[NoMac, NoWatch]
+#else
+		[Obsoleted (PlatformName.WatchOS, 2,0, message : "Unavailable and will be removed in the future.")]
+		[Obsoleted (PlatformName.MacOSX, 10,7, message : "Unavailable and will be removed in the future.")]
+#endif
 		Speaker = 0x73706b72 // 'spkr'
 	}
 
@@ -354,15 +356,42 @@ namespace AVFoundation {
 	public enum AVAudioSessionCategoryOptions : ulong {
 		MixWithOthers = 1,
 		DuckOthers = 2,
+#if XAMCORE_4_0 // Removed in Xcode 12 GM
+		[NoMac, NoWatch]
+#else
+		[Obsoleted (PlatformName.WatchOS, 2,0, message : "Unavailable and will be removed in the future.")]
+		[Obsoleted (PlatformName.MacOSX, 10,7, message : "Unavailable and will be removed in the future.")]
+#endif
 		[NoTV]
 		AllowBluetooth = 4,
+#if XAMCORE_4_0 // Removed in Xcode 12 GM
+		[NoMac, NoWatch]
+#else
+		[Obsoleted (PlatformName.WatchOS, 2,0, message : "Unavailable and will be removed in the future.")]
+		[Obsoleted (PlatformName.MacOSX, 10,7, message : "Unavailable and will be removed in the future.")]
+#endif
 		[NoTV]
 		DefaultToSpeaker = 8,
 
+#if XAMCORE_4_0 // Removed in Xcode 12 GM
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,7, message : "Unavailable and will be removed in the future.")]
+#endif
 		[iOS (9,0)]
 		InterruptSpokenAudioAndMixWithOthers = 17,
+#if XAMCORE_4_0 // Removed in Xcode 12 GM
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,7, message : "Unavailable and will be removed in the future.")]
+#endif
 		[NoWatch, iOS (10,0), TV (10,0)]
 		AllowBluetoothA2DP = 32,
+#if XAMCORE_4_0 // Removed in Xcode 12 GM
+		[NoMac]
+#else
+		[Obsoleted (PlatformName.MacOSX, 10,7, message : "Unavailable and will be removed in the future.")]
+#endif
 		[NoWatch, iOS (10,0), TV (10,0)]
 		AllowAirPlay = 64,
 	}
@@ -457,7 +486,11 @@ namespace AVFoundation {
 		SphericalHead = 1,
 		HRTF = 2,
 		SoundField = 3,
-		StereoPassThrough = 5
+		StereoPassThrough = 5,
+		[iOS (8,0)][Mac (10,10)]
+		HrtfHQ = 6,
+		[iOS (13,0)][TV (13,0)][Mac (10,15)][NoWatch]
+		Auto = 7,
 	}
 
 #if !MONOMAC || !XAMCORE_4_0
@@ -728,7 +761,7 @@ namespace AVFoundation {
 		SkipItem
 	}
 
-	[TV (10,2), Mac (10,12,4), iOS (10,3), NoWatch]
+	[TV (10,2), Mac (10,12,4), iOS (10,3), Watch (7,0)]
 	[Native]
 	public enum AVContentKeyRequestStatus : long {
 		Requesting,
@@ -739,7 +772,7 @@ namespace AVFoundation {
 		Failed
 	}
 
-	[TV (10, 2), Mac (10, 12, 4), iOS (10, 3), NoWatch]
+	[TV (10, 2), Mac (10, 12, 4), iOS (10, 3), Watch (7, 0)]
 	public enum AVContentKeyRequestRetryReason {
 		[Field ("AVContentKeyRequestRetryReasonTimedOut")]
 		TimedOut,
@@ -749,19 +782,20 @@ namespace AVFoundation {
 		ReceivedObsoleteContentKey,
 	}
 
-	[TV (10, 2), Mac (10, 12, 4), iOS (10, 3), NoWatch]
+	[TV (10, 2), Mac (10, 12, 4), iOS (10, 3), Watch (7, 0)]
 	public enum AVContentKeySystem {
 		[Field ("AVContentKeySystemFairPlayStreaming")]
 		FairPlayStreaming = 0,
 
-		[TV (11, 0), NoWatch, Mac (10, 13), iOS (11, 0)]
+		[TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[Field ("AVContentKeySystemClearKey")]
 		ClearKey = 1,
 
+		[NoWatch]
 		[Obsolete ("Use 'AVContentKeySystem.SystemClearKey' instead.")]
 		AVContentKeySystemClearKey = ClearKey,
 
-		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+		[TV (13,0), Mac (10,15), iOS (13,0)]
 		[Field ("AVContentKeySystemAuthorizationToken")]
 		AuthorizationToken = 2,
 	}
@@ -873,7 +907,9 @@ namespace AVFoundation {
 	public enum AVAudioSessionRouteSharingPolicy : ulong {
 		Default = 0,
 		LongForm = 1,
-		Independent = 2
+		Independent = 2,
+		[iOS (14,0), NoWatch, NoTV, NoMac]
+		LongFormVideo = 3,
 	}
 
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
@@ -1061,5 +1097,51 @@ namespace AVFoundation {
 		Mono = 0,
 		Bypass = 1,
 	}
+
+	[TV (14,0), NoWatch, Mac (11,0), iOS (14,0)]
+	[Native]
+	public enum AVAssetSegmentType : long {
+		Initialization = 1,
+		Separable = 2,
+	}
+
+	[Flags]
+	[Native]
+	[TV (14, 0), Watch (7, 0), Mac (11, 0), iOS (14, 0)]
+	public enum AVAudioSpatializationFormats : ulong {
+		None = 0,
+		MonoAndStereo = 3,
+		Multichannel = 4,
+		MonoStereoAndMultichannel = 7,
+	}
+
+	[Native]
+	[TV (14, 0), Watch (7, 0), Mac (11, 0), iOS (14, 0)]
+	public enum AVAudioStereoOrientation : long {
+		None = 0,
+		Portrait = 1,
+		PortraitUpsideDown = 2,
+		LandscapeRight = 3,
+		LandscapeLeft = 4,
+	}
+
+	[TV (14, 0), Watch (7, 0), Mac (11, 0), iOS (14, 0)]
+	public enum AVFileTypeProfile {
+		[Field (null)]
+		None = 0,
+		[Field ("AVFileTypeProfileMPEG4AppleHLS")]
+		Mpeg4AppleHls,
+		[Field ("AVFileTypeProfileMPEG4CMAFCompliant")]
+		Mpeg4CmafCompliant,
+	}
+
+	[Native]
+	[NoTV, NoWatch, Mac (11, 0), NoiOS]
+	public enum AVAudioRoutingArbitrationCategory : long {
+		Playback = 0,
+		PlayAndRecord = 1,
+		PlayAndRecordVoice = 2,
+	}
+
 
 }

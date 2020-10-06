@@ -20,6 +20,7 @@ namespace Security {
 		Dtls_1_0 = 9,
 		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
 		Tls_1_3 = 10,
+		Dtls_1_2 = 11,
 		
 		/* Obsolete on iOS */
 		Ssl_2_0 = 1,          
@@ -158,6 +159,8 @@ namespace Security {
 		SslAtsLeafCertificateHashAlgorithmViolation = -9884,
 		SslAtsCertificateHashAlgorithmViolation     = -9885,
 		SslAtsCertificateTrustViolation             = -9886,
+		// xcode 12
+		SslEarlyDataRejected                        = -9890,
 	}
 
 	// Security.framework/Headers/SecureTransport.h

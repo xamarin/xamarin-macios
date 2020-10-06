@@ -1,5 +1,7 @@
 using System;
-using System.IO;
+using System.Linq;
+using Microsoft.Build.Utilities;
+
 using NUnit.Framework;
 
 using Xamarin.MacDev.Tasks;
@@ -132,6 +134,52 @@ namespace Xamarin.iOS.Tasks
 			task.ExtraArgs = input;
 			Assert.IsTrue (task.Execute (), input);
 			Assert.AreEqual (output, task.Optimize, output);
+		}
+
+		[TestCase ("--registrar", "")]
+		[TestCase ("--registrar:static", "static")]
+		[TestCase ("--registrar:default", "default")]
+		[TestCase ("--registrar=dynamic,trace", "dynamic,trace")]
+		[TestCase ("-registrar:dummy", "dummy")]
+		[TestCase ("/registrar:dummy", "dummy")]
+		[TestCase ("/registrar:dummy1 /registrar:dummy2", "dummy2")]
+		public void Registrar (string input, string output)
+		{
+			var task = CreateTask<CustomParseBundlerArguments> ();
+			task.ExtraArgs = input;
+			Assert.IsTrue (task.Execute (), input);
+			Assert.AreEqual (output, task.Registrar, output);
+		}
+
+		[TestCase ("--xml", null, "")]
+		[TestCase ("--xml", "", "")]
+		[TestCase ("--xml:abc", null, "abc")]
+		[TestCase ("--xml:abc --xml:def", null, "abc;def")]
+		[TestCase ("--xml:abc --xml:def", "123", "123;abc;def")]
+		[TestCase ("--xml:abc --xml:def", "123;456", "123;456;abc;def")]
+		[TestCase ("-xml:dummy", null, "dummy")]
+		[TestCase ("/xml:dummy", null, "dummy")]
+		[TestCase ("/xml:dummy1 /xml:dummy2", null, "dummy1;dummy2")]
+		public void XmlDefinitions (string input, string existing, string output)
+		{
+			var task = CreateTask<CustomParseBundlerArguments> ();
+			if (existing != null)
+				task.XmlDefinitions = existing.Split (new char [] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select (v => new TaskItem (v)).ToArray ();
+			task.ExtraArgs = input;
+			Assert.IsTrue (task.Execute (), input);
+			Assert.AreEqual (output, string.Join (";", task.XmlDefinitions.Select (v => v.ItemSpec).ToArray ()), output);
+		}
+
+		[TestCase ("--custom_bundle_name", "")]
+		[TestCase ("--custom_bundle_name:", "")]
+		[TestCase ("--custom_bundle_name=", "")]
+		[TestCase ("--custom_bundle_name=abc", "abc")]
+		public void CustomBundleName (string input, string output)
+		{
+			var task = CreateTask<CustomParseBundlerArguments> ();
+			task.ExtraArgs = input;
+			Assert.IsTrue (task.Execute (), input);
+			Assert.AreEqual (output, task.CustomBundleName, output);
 		}
 	}
 }

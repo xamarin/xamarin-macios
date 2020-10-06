@@ -901,6 +901,8 @@ namespace CoreGraphics {
 			CGContextSetFontSize (handle, size);
 		}
 
+		[Deprecated (PlatformName.iOS, 7,0)]
+		[Deprecated (PlatformName.MacOSX, 10,9)]
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGContextSelectFont (/* CGContextRef */ IntPtr c,
 			/* const char* __nullable */ string name, /* CGFloat */ nfloat size, CGTextEncoding textEncoding);
@@ -926,6 +928,8 @@ namespace CoreGraphics {
 			CGContextShowGlyphsAtPositions (handle, glyphs, positions, count);
 		}
 
+		[Deprecated (PlatformName.iOS, 7,0)]
+		[Deprecated (PlatformName.MacOSX, 10,9)]
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGContextShowText (/* CGContextRef */ IntPtr c, /* const char* __nullable */ string s, /* size_t */ nint length);
 
@@ -947,6 +951,8 @@ namespace CoreGraphics {
 			CGContextShowText (handle, str, str == null ? 0 : str.Length);
 		}
 
+		[Deprecated (PlatformName.iOS, 7,0)]
+		[Deprecated (PlatformName.MacOSX, 10,9)]
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGContextShowText (/* CGContextRef */ IntPtr c, /* const char* __nullable */ byte[] bytes, /* size_t */ nint length);
 
@@ -968,6 +974,8 @@ namespace CoreGraphics {
 			CGContextShowText (handle, bytes, bytes == null ? 0 : bytes.Length);
 		}
 
+		[Deprecated (PlatformName.iOS, 7,0)]
+		[Deprecated (PlatformName.MacOSX, 10,9)]
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGContextShowTextAtPoint (/* CGContextRef __nullable */ IntPtr c, /* CGFloat */ nfloat x, 
 			/* CGFloat */ nfloat y, /* const char* __nullable */ string str, /* size_t */ nint length);
@@ -986,6 +994,8 @@ namespace CoreGraphics {
 			CGContextShowTextAtPoint (handle, x, y, str, str == null ? 0 : str.Length);
 		}
 
+		[Deprecated (PlatformName.iOS, 7,0)]
+		[Deprecated (PlatformName.MacOSX, 10,9)]
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGContextShowTextAtPoint (/* CGContextRef */ IntPtr c, /* CGFloat */ nfloat x, /* CGFloat */ nfloat y, /* const char* */ byte[] bytes, /* size_t */ nint length);
 
@@ -999,6 +1009,8 @@ namespace CoreGraphics {
 			CGContextShowTextAtPoint (handle, x, y, bytes, bytes == null ? 0 : bytes.Length);
 		}
 
+		[Deprecated (PlatformName.iOS, 7,0)]
+		[Deprecated (PlatformName.MacOSX, 10,9)]
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGContextShowGlyphs (/* CGContextRef __nullable */ IntPtr c,
 			/* const CGGlyph * __nullable */ ushort [] glyphs, /* size_t */ nint count);
@@ -1021,6 +1033,8 @@ namespace CoreGraphics {
 			CGContextShowGlyphs (handle, glyphs, count);
 		}
 		
+		[Deprecated (PlatformName.iOS, 7,0)]
+		[Deprecated (PlatformName.MacOSX, 10,9)]
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGContextShowGlyphsAtPoint (/* CGContextRef */ IntPtr context, /* CGFloat */ nfloat x,
 			/* CGFloat */ nfloat y, /* const CGGlyph * __nullable */ ushort [] glyphs, /* size_t */ nint count);
@@ -1043,6 +1057,8 @@ namespace CoreGraphics {
 			CGContextShowGlyphsAtPoint (handle, x, y, glyphs, glyphs == null ? 0 : glyphs.Length);
 		}
 
+		[Deprecated (PlatformName.iOS, 7,0)]
+		[Deprecated (PlatformName.MacOSX, 10,9)]
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGContextShowGlyphsWithAdvances (/* CGContextRef __nullable */ IntPtr c,
 			/* const CGGlyph * __nullable */ ushort [] glyphs,

@@ -77,8 +77,12 @@
 !missing-selector! +GKVoiceChatService::defaultVoiceChatService not bound
 !missing-selector! +GKVoiceChatService::isVoIPAllowed not bound
 
-# Initial result from new rule extra-null-allowed
-!extra-null-allowed! 'System.Void GameKit.GKTurnBasedEventHandler::set_WeakDelegate(Foundation.NSObject)' has a extraneous [NullAllowed] on parameter #0
-
 # Initial result from new rule missing-null-allowed
 !missing-null-allowed! 'System.String GameKit.GKTurnBasedParticipant::get_PlayerID()' is missing an [NullAllowed] on return type
+
+# API removed by Apple, marked as deprecated
+!unknown-native-enum! GKAuthenticationType bound
+
+# Xcode 12 beta 6 - these API have been deprecated and were never available on watch before
+!missing-selector! GKMatchRequest::restrictToAutomatch not bound
+!missing-selector! GKMatchRequest::setRestrictToAutomatch: not bound

@@ -17,6 +17,12 @@ using Xamarin.Utils;
 
 namespace Xamarin.iOS.Tasks
 {
+	public enum ExecutionMode {
+		InProcess,
+		MSBuild,
+		DotNet,
+	}
+
 	public abstract class TestBase
 	{
 		protected static class TargetName
@@ -33,45 +39,25 @@ namespace Xamarin.iOS.Tasks
 			public static string ResolveReferences = "ResolveReferences";
 		}
 
-		static Dictionary<string, string> tests_directories = new Dictionary<string, string> ();
-		protected static string GetTestDirectory ()
+		protected static string GetTestDirectory (string mode = null)
 		{
-			var mode = "unknown";
 			var assembly_path = Assembly.GetExecutingAssembly ().Location;
-			if (assembly_path.Contains ("netstandard2.0"))
-				mode = "netstandard2.0";
-			else if (assembly_path.Contains ("net461"))
-				mode = "net461";
-
-			// Copy the test projects to a temporary directory and run the tests there.
-			// Some tests may modify the test code / projects, and this way the working copy doesn't end up dirty.
-			lock (tests_directories) {
-				if (tests_directories.TryGetValue (mode, out var value))
-					return value;
-
-				var testSourceDirectory = Path.Combine (Configuration.RootPath, "msbuild", "tests");
-				var testsTemporaryDirectory = Path.Combine (Path.GetDirectoryName (assembly_path), "tests-tmp", mode);
-
-				// We want to start off clean every time the tests are launched
-				if (Directory.Exists (testsTemporaryDirectory))
-					Directory.Delete (testsTemporaryDirectory, true);
-
-				// Only copy files in git, we want a clean copy
-				var rv = ExecutionHelper.Execute ("git", new string [] { "ls-files" }, out var ls_files_output, working_directory: testSourceDirectory, timeout: TimeSpan.FromSeconds (15));
-				Assert.AreEqual (0, rv, "Failed to list test files");
-				var files = ls_files_output.ToString ().Split (new char [] { '\n' }, StringSplitOptions.RemoveEmptyEntries).ToArray ();
-
-				foreach (var file in files) {
-					var src = Path.Combine (testSourceDirectory, file);
-					var tgt = Path.Combine (testsTemporaryDirectory, file);
-					var tgtDir = Path.GetDirectoryName (tgt);
-					Directory.CreateDirectory (tgtDir);
-					File.Copy (src, tgt);
-				}
-
-				tests_directories [mode] = testsTemporaryDirectory;
-				return testsTemporaryDirectory;
+			if (string.IsNullOrEmpty (mode)) {
+				if (assembly_path.Contains ("netstandard2.0"))
+					mode = "netstandard2.0";
+				else if (assembly_path.Contains ("net461"))
+					mode = "net461";
+				else
+					mode = "unknown";
 			}
+
+			var testSourceDirectory = Path.Combine (Configuration.RootPath, "msbuild", "tests");
+			var rv = Configuration.CloneTestDirectory (testSourceDirectory, mode);
+
+			if (mode == "dotnet")
+				Configuration.CopyDotNetSupportingFiles (rv);
+
+			return rv;
 		}
 
 		public string [] ExpectedAppFiles = { };
@@ -148,7 +134,7 @@ namespace Xamarin.iOS.Tasks
 			get; set;
 		}
 
-		public ProjectPaths SetupProjectPaths (string projectName, string csprojName, string baseDir = "../", bool includePlatform = true, string platform = "iPhoneSimulator", string config = "Debug", string projectPath = null)
+		public ProjectPaths SetupProjectPaths (string projectName, string csprojName, string baseDir = "../", bool includePlatform = true, string platform = "iPhoneSimulator", string config = "Debug", string projectPath = null, bool is_dotnet = false)
 		{
 			var testsBase = GetTestDirectory ();
 			if (projectPath == null) {
@@ -159,9 +145,36 @@ namespace Xamarin.iOS.Tasks
 				}
 			}
 
-			var binPath = includePlatform ? Path.Combine (projectPath, "bin", platform, config) : Path.Combine (projectPath, "bin", config);
-			var objPath = includePlatform ? Path.Combine (projectPath, "obj", platform, config) : Path.Combine (projectPath, "obj", config);
-
+			string binPath;
+			string objPath;
+			if (is_dotnet) {
+				var targetPlatform = "net5.0";
+				var subdir = string.Empty;
+				var targetPlatformSuffix = string.Empty;
+				switch (TargetFrameworkIdentifier) {
+				case "Xamarin.iOS":
+					subdir = platform == "iPhone" ? "ios-arm64" : "ios-x64";
+					targetPlatformSuffix = "ios";
+					break;
+				case "Xamarin.TVOS":
+					subdir = platform == "iPhone" ? "tvos-arm64" : "tvos-x64";
+					targetPlatformSuffix = "tvos";
+					break;
+				case "Xamarin.WatchOS":
+					subdir = platform == "iPhone" ? "watchos-arm" : "watchos-x86";
+					targetPlatformSuffix = "watchos";
+					break;
+				default:
+					throw new NotImplementedException ($"Unknown TargetFrameworkIdentifier: {TargetFrameworkIdentifier}");
+				}
+				targetPlatform += "-" + targetPlatformSuffix;
+				binPath = Path.Combine (projectPath, "bin", platform, config, targetPlatform, subdir);
+				objPath = Path.Combine (projectPath, "obj", platform, config, targetPlatform, subdir);
+			} else {
+				binPath = includePlatform ? Path.Combine (projectPath, "bin", platform, config) : Path.Combine (projectPath, "bin", config);
+				objPath = includePlatform ? Path.Combine (projectPath, "obj", platform, config) : Path.Combine (projectPath, "obj", config);
+			}			
+			
 			return new ProjectPaths {
 				ProjectPath = projectPath,
 				ProjectBinPath = binPath,
@@ -181,19 +194,19 @@ namespace Xamarin.iOS.Tasks
 		{
 			var mtouchPaths = SetupProjectPaths ("MySingleView");
 
-			MonoTouchProjectBinPath = mtouchPaths ["project_binpath"];
-			MonoTouchProjectObjPath = mtouchPaths ["project_objpath"];
-			MonoTouchProjectCSProjPath = mtouchPaths ["project_csprojpath"];
-			MonoTouchProjectPath = mtouchPaths ["project_path"];
+			MonoTouchProjectBinPath = mtouchPaths.ProjectBinPath;
+			MonoTouchProjectObjPath = mtouchPaths.ProjectObjPath;
+			MonoTouchProjectCSProjPath = mtouchPaths.ProjectCSProjPath;
+			MonoTouchProjectPath = mtouchPaths.ProjectPath;
 
-			AppBundlePath = mtouchPaths ["app_bundlepath"];
+			AppBundlePath = mtouchPaths.AppBundlePath;
 
 			var libraryPaths = SetupProjectPaths ("MyLibrary", "../MySingleView/", false);
 
-			LibraryProjectBinPath = libraryPaths ["project_binpath"];
-			LibraryProjectObjPath = libraryPaths ["project_objpath"];
-			LibraryProjectPath = libraryPaths ["project_path"];
-			LibraryProjectCSProjPath = libraryPaths ["project_csprojpath"];
+			LibraryProjectBinPath = libraryPaths.ProjectBinPath;
+			LibraryProjectObjPath = libraryPaths.ProjectObjPath;
+			LibraryProjectPath = libraryPaths.ProjectPath;
+			LibraryProjectCSProjPath = libraryPaths.ProjectCSProjPath;
 
 			SetupEngine ();
 
@@ -232,7 +245,7 @@ namespace Xamarin.iOS.Tasks
 		public void CleanUp () {
 
 			var paths = SetupProjectPaths ("MySingleView");
-			MonoTouchProjectPath = paths ["project_path"];
+			MonoTouchProjectPath = paths.ProjectPath;
 
 			TempDir = Path.Combine (Path.GetDirectoryName (Assembly.GetExecutingAssembly ().Location), "ScratchDir");
 			SafeDelete (TempDir);
@@ -366,7 +379,7 @@ namespace Xamarin.iOS.Tasks
 
 			var paths = SetupProjectPaths ("MySingleView");
 
-			var plist = PDictionary.FromFile (Path.Combine (paths ["project_path"], "Info.plist"));
+			var plist = PDictionary.FromFile (Path.Combine (paths.ProjectPath, "Info.plist"));
 			if (value == null)
 				plist.Remove (key);
 			else
@@ -406,7 +419,74 @@ namespace Xamarin.iOS.Tasks
 
 		public void RunTarget (Project project, string target, int expectedErrorCount = 0)
 		{
-			RunTargetOnInstance (project.CreateProjectInstance (), target, expectedErrorCount);
+			RunTarget (project, null, target, ExecutionMode.InProcess, expectedErrorCount);
+		}
+
+		public void RunTarget (Project project, string project_path, string target, ExecutionMode executionMode = ExecutionMode.InProcess, int expectedErrorCount = 0)
+		{
+			if (executionMode == ExecutionMode.InProcess) {
+				RunTargetOnInstance (project.CreateProjectInstance (), target, expectedErrorCount);
+				return;
+			}
+
+			var platform = Engine.ProjectCollection.GetGlobalProperty ("Platform")?.EvaluatedValue;
+			var configuration = Engine.ProjectCollection.GetGlobalProperty ("Configuration")?.EvaluatedValue;
+			var dict = new Dictionary<string, string> ();
+			if (!string.IsNullOrEmpty (platform))
+				dict ["Platform"] = platform;
+			if (!string.IsNullOrEmpty (configuration))
+				dict ["Configuration"] = configuration;
+
+			ExecutionResult rv;
+			switch (executionMode) {
+			case ExecutionMode.DotNet:
+				rv = Dotnet (target, project_path, dict, assert_success: expectedErrorCount == 0);
+				break;
+			case ExecutionMode.MSBuild:
+				rv = MSBuild (project_path, target, dict, assert_success: expectedErrorCount == 0);
+				break;
+			default:
+				throw new NotImplementedException ($"Unknown excecution mode: {executionMode}");
+			}
+
+			Assert.AreEqual (expectedErrorCount, rv.ExitCode, "ExitCode/ExpectedErrorCount");
+		}
+
+		public ExecutionResult Dotnet (string command, string project, Dictionary<string, string> properties, bool assert_success = true)
+		{
+			return DotNet.Execute (command, project, properties, assert_success: assert_success);
+		}
+
+		public ExecutionResult MSBuild (string project, string target, Dictionary<string, string> properties, string verbosity = "diagnostic", bool assert_success = true)
+		{
+			if (!File.Exists (project))
+				throw new FileNotFoundException ($"The project file '{project}' does not exist.");
+
+			var args = new List<string> ();
+			args.Add ("--");
+			args.Add ($"/t:{target}");
+			args.Add (project);
+			if (properties != null) {
+				foreach (var prop in properties)
+					args.Add ($"/p:{prop.Key}={prop.Value}");
+			}
+			if (!string.IsNullOrEmpty (verbosity))
+				args.Add ($"/verbosity:{verbosity}");
+			args.Add ($"/bl:{Path.Combine (Path.GetDirectoryName (project), "log.binlog")}");
+
+			var output = new StringBuilder ();
+			var executable = Configuration.XIBuildPath;
+			var rv = ExecutionHelper.Execute (executable, args, null, output, output, workingDirectory: Path.GetDirectoryName (project), timeout: TimeSpan.FromMinutes (10));
+			if (assert_success && rv != 0) {
+				Console.WriteLine ($"'{executable} {StringUtils.FormatArguments (args)}' failed with exit code {rv}.");
+				Console.WriteLine (output);
+				Assert.AreEqual (0, rv, $"Exit code: {executable} {StringUtils.FormatArguments (args)}");
+			}
+			return new ExecutionResult {
+				StandardOutput = output,
+				StandardError = output,
+				ExitCode = rv,
+			};
 		}
 
 		public void RunTargetOnInstance (ProjectInstance instance, string target, int expectedErrorCount = 0)
@@ -470,11 +550,11 @@ namespace Xamarin.iOS.Tasks
 		}
 	}
 
-	public class ProjectPaths : Dictionary<string, string> {
-		public string ProjectPath { get { return this ["project_path"]; } set { this ["project_path"] = value; } }
-		public string ProjectBinPath { get { return this ["project_binpath"]; } set { this ["project_binpath"] = value; } }
-		public string ProjectObjPath { get { return this ["project_objpath"]; } set { this ["project_objpath"] = value; } }
-		public string ProjectCSProjPath { get { return this ["project_csprojpath"]; } set { this ["project_csprojpath"] = value; } }
-		public string AppBundlePath { get { return this ["app_bundlepath"]; } set { this ["app_bundlepath"] = value; } }
+	public class ProjectPaths {
+		public string ProjectPath { get; set; }
+		public string ProjectBinPath { get; set; }
+		public string ProjectObjPath { get; set; }
+		public string ProjectCSProjPath { get; set; }
+		public string AppBundlePath { get; set; }
 	}
 }

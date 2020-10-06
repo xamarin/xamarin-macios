@@ -10,8 +10,6 @@
 !missing-selector! +UIColor::colorNamed:inBundle:compatibleWithTraitCollection: not bound
 
 ## lack of availabilty macros on NSItemProvder.PreferredPresentationStyle - intro says they are not available
-!missing-selector! NSItemProvider::preferredPresentationStyle not bound
-!missing-selector! NSItemProvider::setPreferredPresentationStyle: not bound
 ## and that also means the (enum/returned) type is unused
 !missing-enum! UIPreferredPresentationStyle not bound
 
@@ -50,13 +48,5 @@
 !missing-null-allowed! 'Foundation.NSFileWrapper Foundation.NSAttributedString::GetFileWrapperFromRange(Foundation.NSRange,Foundation.NSDictionary,Foundation.NSError&)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject UIKit.UIFontDescriptor::GetObject(Foundation.NSString)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIFontDescriptor UIKit.UIFontDescriptor::CreateWithTraits(UIKit.UIFontDescriptorSymbolicTraits)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'UIKit.UIImage UIKit.UIImage::CreateAnimatedImage(System.String,System.Double)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'UIKit.UIImage UIKit.UIImage::CreateAnimatedImage(System.String,UIKit.UIEdgeInsets,System.Double)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'UIKit.UIImage UIKit.UIImage::CreateAnimatedImage(System.String,UIKit.UIEdgeInsets,UIKit.UIImageResizingMode,System.Double)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'UIKit.UIImage UIKit.UIImage::CreateAnimatedImage(UIKit.UIImage[],System.Double)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'UIKit.UIImage UIKit.UIImage::FromBundle(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'UIKit.UIImage UIKit.UIImage::FromFile(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'UIKit.UIImage UIKit.UIImage::LoadFromData(Foundation.NSData)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'UIKit.UIImage UIKit.UIImage::LoadFromData(Foundation.NSData,System.nfloat)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'UIKit.UIImage[] UIKit.UIImage::get_Images()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'UIKit.UIImageConfiguration UIKit.UIImage::get_Configuration()' is missing an [NullAllowed] on return type
+
+!unknown-field! UIUserNotificationActionResponseTypedTextKey bound

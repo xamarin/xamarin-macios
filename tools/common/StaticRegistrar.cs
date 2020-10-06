@@ -15,6 +15,7 @@ using System.Text;
 
 using Xamarin.Bundler;
 using Xamarin.Linker;
+using Xamarin.Utils;
 
 #if MONOTOUCH
 using PlatformResolver = MonoTouch.Tuner.MonoTouchResolver;
@@ -217,15 +218,11 @@ namespace Registrar {
 		public Dictionary<ICustomAttribute, MethodDefinition> ProtocolMemberMethodMap {
 			get {
 				if (protocol_member_method_map == null) {
-#if MTOUCH
-					if ((App.IsExtension && !App.IsWatchExtension) && App.IsCodeShared) {
+					if (App.Platform != ApplePlatform.MacOSX && App.IsExtension && !App.IsWatchExtension && App.IsCodeShared) {
 						protocol_member_method_map = Target.ContainerTarget.StaticRegistrar.ProtocolMemberMethodMap;
 					} else {
 						protocol_member_method_map = new Dictionary<ICustomAttribute, MethodDefinition> ();
 					}
-#else
-					protocol_member_method_map = new Dictionary<ICustomAttribute, MethodDefinition> ();
-#endif
 				}
 				return protocol_member_method_map;
 			}
@@ -584,9 +581,7 @@ namespace Registrar {
 		PlatformResolver resolver;
 		PlatformResolver Resolver { get { return resolver ?? Target.Resolver; } }
 
-#if MONOMAC
 		readonly Version MacOSTenTwelveVersion = new Version (10,12);
-#endif
 
 		public Xamarin.Tuner.DerivedLinkContext LinkContext {
 			get {
@@ -768,19 +763,13 @@ namespace Registrar {
 			return HasAttribute (method, "System.Runtime.CompilerServices", "ExtensionAttribute");
 		}
 
-#if MTOUCH
 		public bool IsSimulator {
 			get { return App.IsSimulatorBuild; }
 		}
-#endif
 
 		protected override bool IsSimulatorOrDesktop {
 			get {
-#if MONOMAC
-				return true;
-#else
-				return App.IsSimulatorBuild;
-#endif
+				return App.Platform == ApplePlatform.MacOSX || App.IsSimulatorBuild;
 			}
 		}
 			
@@ -1569,23 +1558,22 @@ namespace Registrar {
 		void CollectAvailabilityAttributes (IEnumerable<ICustomAttribute> attributes, ref List<AvailabilityBaseAttribute> list)
 		{
 			PlatformName currentPlatform;
-#if MTOUCH
 			switch (App.Platform) {
-			case Xamarin.Utils.ApplePlatform.iOS:
+			case ApplePlatform.iOS:
 				currentPlatform = global::ObjCRuntime.PlatformName.iOS;
 				break;
-			case Xamarin.Utils.ApplePlatform.TVOS:
+			case ApplePlatform.TVOS:
 				currentPlatform = global::ObjCRuntime.PlatformName.TvOS;
 				break;
-			case Xamarin.Utils.ApplePlatform.WatchOS:
+			case ApplePlatform.WatchOS:
 				currentPlatform = global::ObjCRuntime.PlatformName.WatchOS;
 				break;
+			case ApplePlatform.MacOSX:
+				currentPlatform = global::ObjCRuntime.PlatformName.MacOSX;
+				break;
 			default:
-				throw ErrorHelper.CreateError (71, Errors.MX0071, App.Platform, "Xamarin.iOS");
+				throw ErrorHelper.CreateError (71, Errors.MX0071, App.Platform, App.ProductName);
 			}
-#else
-			currentPlatform = global::ObjCRuntime.PlatformName.MacOSX;
-#endif
 
 			foreach (var ca in attributes) {
 				var caType = ca.AttributeType;
@@ -2101,11 +2089,7 @@ namespace Registrar {
 						reported_frameworks = new HashSet<string> ();
 					if (!reported_frameworks.Contains (framework.Name)) {
 						exceptions.Add (ErrorHelper.CreateError (4134, 
-#if MMP
-									Errors.MM4134,
-#else
-									Errors.MT4134,
-#endif
+							App.Platform == ApplePlatform.MacOSX ? Errors.MM4134 : Errors.MT4134,
 							framework.Name, App.SdkVersion, framework.Version, App.PlatformName));
 						reported_frameworks.Add (framework.Name);
 					}
@@ -2126,56 +2110,51 @@ namespace Registrar {
 			
 			namespaces.Add (ns);
 
-#if !MMP
 			if (App.IsSimulatorBuild && !App.IsFrameworkAvailableInSimulator (ns)) {
 				Driver.Log (5, "Not importing the framework {0} in the generated registrar code because it's not available in the simulator.", ns);
 				return;
 			}
-#endif
 
 			string h;
 			switch (ns) {
-#if MMP
 			case "GLKit":
 				// This prevents this warning:
 				//     /Applications/Xcode83.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk/System/Library/Frameworks/OpenGL.framework/Headers/gl.h:5:2: warning: gl.h and gl3.h are both
 				//     included. Compiler will not invoke errors if using removed OpenGL functionality. [-W#warnings]
 				// This warning shows up when both GLKit/GLKit.h and Quartz/Quartz.h are included.
-				header.WriteLine ("#define GL_DO_NOT_WARN_IF_MULTI_GL_VERSION_HEADERS_INCLUDED 1");
+				if (App.Platform == ApplePlatform.MacOSX)
+					header.WriteLine ("#define GL_DO_NOT_WARN_IF_MULTI_GL_VERSION_HEADERS_INCLUDED 1");
 				goto default;
 			case "CoreBluetooth":
-				header.WriteLine ("#import <IOBluetooth/IOBluetooth.h>");
-				header.WriteLine ("#import <CoreBluetooth/CoreBluetooth.h>");
-				return;
-			case "PdfKit":
+				if (App.Platform == ApplePlatform.MacOSX) {
+					header.WriteLine ("#import <IOBluetooth/IOBluetooth.h>");
+					header.WriteLine ("#import <CoreBluetooth/CoreBluetooth.h>");
+					return;
+				}
+				goto default;
 			case "ImageKit":
 			case "QuartzComposer":
 			case "QuickLookUI":
 				h = "<Quartz/Quartz.h>";
 				break;
-#else
 			case "PdfKit":
-				h = "<PDFKit/PDFKit.h>";
+				h = App.Platform == ApplePlatform.MacOSX ? "<Quartz/Quartz.h>" : "<PDFKit/PDFKit.h>";
 				break;
-#endif
 			case "OpenGLES":
 				return;
 			case "CoreAnimation":
 				header.WriteLine ("#import <QuartzCore/QuartzCore.h>");
-#if MTOUCH
 				switch (App.Platform) {
-				case Xamarin.Utils.ApplePlatform.iOS:
-				case Xamarin.Utils.ApplePlatform.TVOS:
+				case ApplePlatform.iOS:
+				case ApplePlatform.TVOS:
 					if (App.SdkVersion.Major > 7 && App.SdkVersion.Major < 11)
 						header.WriteLine ("#import <QuartzCore/CAEmitterBehavior.h>");
 					break;
 				}
-#endif
 				return;
 			case "CoreMidi":	
 				h = "<CoreMIDI/CoreMIDI.h>";
 				break;
-#if MTOUCH
 			case "CoreTelephony":
 				// Grr, why doesn't CoreTelephony have one header that includes the rest !?
 				header.WriteLine ("#import <CoreTelephony/CoreTelephonyDefines.h>");
@@ -2188,21 +2167,18 @@ namespace Registrar {
 					header.WriteLine ("#import <CoreTelephony/CTSubscriberInfo.h>");
 				}
 				return;
-#endif
-#if MTOUCH
 			case "Accounts":
-				var compiler = Path.GetFileName (App.CompilerPath);
-				if (compiler == "gcc" || compiler == "g++") {
-					exceptions.Add (new ProductException (4121, true, "Cannot use GCC/G++ to compile the generated code from the static registrar when using the Accounts framework (the header files provided by Apple used during the compilation require Clang). Either use Clang (--compiler:clang) or the dynamic registrar (--registrar:dynamic)."));
-					return;
+				if (App.Platform != ApplePlatform.MacOSX) {
+					var compiler = Path.GetFileName (App.CompilerPath);
+					if (compiler == "gcc" || compiler == "g++") {
+						exceptions.Add (new ProductException (4121, true, "Cannot use GCC/G++ to compile the generated code from the static registrar when using the Accounts framework (the header files provided by Apple used during the compilation require Clang). Either use Clang (--compiler:clang) or the dynamic registrar (--registrar:dynamic)."));
+						return;
+					}
 				}
 				goto default;
-#endif
 			case "QTKit":
-#if MONOMAC
-				if (App.SdkVersion >= MacOSTenTwelveVersion)
+				if (App.Platform == ApplePlatform.MacOSX && App.SdkVersion >= MacOSTenTwelveVersion)
 					return; // 10.12 removed the header files for QTKit
-#endif
 				goto default;
 			case "IOSurface": // There is no IOSurface.h
 				h = "<IOSurface/IOSurfaceObjC.h>";
@@ -2404,15 +2380,9 @@ namespace Registrar {
 			}
 
 			switch (td.FullName) {
-#if MMP
-			case "System.Drawing.RectangleF": return "NSRect";
-			case "System.Drawing.PointF": return "NSPoint";
-			case "System.Drawing.SizeF": return "NSSize";
-#else
-			case "System.Drawing.RectangleF": return "CGRect";
-			case "System.Drawing.PointF": return "CGPoint";
-			case "System.Drawing.SizeF": return "CGSize";
-#endif
+			case "System.Drawing.RectangleF": return App.Platform == ApplePlatform.MacOSX ? "NSRect" : "CGRect";
+			case "System.Drawing.PointF": return App.Platform == ApplePlatform.MacOSX ? "NSPoint" : "CGPoint";
+			case "System.Drawing.SizeF": return App.Platform == ApplePlatform.MacOSX ? "NSSize" : "CGSize";
 			case "System.String": return "NSString *";
 			case "System.IntPtr": return "void *";
 			case "System.SByte": return "signed char";
@@ -2519,10 +2489,8 @@ namespace Registrar {
 				return "-(uint32_t) xamarinGetGCHandle";
 			else if (method.CurrentTrampoline == Trampoline.SetGCHandle)
 				return "-(void) xamarinSetGCHandle: (uint32_t) gchandle";
-#if MONOMAC
 			else if (method.CurrentTrampoline == Trampoline.CopyWithZone1 || method.CurrentTrampoline == Trampoline.CopyWithZone2)
 				return "-(id) copyWithZone: (NSZone *)zone";
-#endif
 
 			var sb = new StringBuilder ();
 			var isCtor = method.CurrentTrampoline == Trampoline.Constructor;
@@ -2635,13 +2603,11 @@ namespace Registrar {
 		static bool IsIntentsType (ObjCType type) => IsTypeCore (type, "Intents");
 		static bool IsExternalAccessoryType (ObjCType type) => IsTypeCore (type, "ExternalAccessory");
 
-#if !MONOMAC
 		bool IsTypeAllowedInSimulator (ObjCType type)
 		{
 			var ns = type.Type.Namespace;
 			return App.IsFrameworkAvailableInSimulator (ns);
 		}
-#endif
 
 		class ProtocolInfo
 		{
@@ -2699,17 +2665,16 @@ namespace Registrar {
 				if (!string.IsNullOrEmpty (single_assembly) && single_assembly != @class.Type.Module.Assembly.Name.Name)
 					continue;
 
-#if !MONOMAC
-				var isPlatformType = IsPlatformType (@class.Type);
-				if (isPlatformType && IsSimulatorOrDesktop && !IsTypeAllowedInSimulator (@class)) {
-					Driver.Log (5, "The static registrar won't generate code for {0} because its framework is not supported in the simulator.", @class.ExportedName);
-					continue; // Some types are not supported in the simulator.
+				if (App.Platform != ApplePlatform.MacOSX) {
+					var isPlatformType = IsPlatformType (@class.Type);
+					if (isPlatformType && IsSimulatorOrDesktop && !IsTypeAllowedInSimulator (@class)) {
+						Driver.Log (5, "The static registrar won't generate code for {0} because its framework is not supported in the simulator.", @class.ExportedName);
+						continue; // Some types are not supported in the simulator.
+					}
+				} else {
+					if (IsQTKitType (@class) && App.SdkVersion >= MacOSTenTwelveVersion)
+						continue; // QTKit header was removed in 10.12 SDK
 				}
-#else
-				if (IsQTKitType (@class) && App.SdkVersion >= MacOSTenTwelveVersion)
-					continue; // QTKit header was removed in 10.12 SDK
-#endif
-
 				
 				// Xcode 11 removed WatchKit for iOS!
 				if (IsTypeCore (@class, "WatchKit") && App.Platform == Xamarin.Utils.ApplePlatform.iOS) {
@@ -3065,13 +3030,13 @@ namespace Registrar {
 				map.AppendLine ("static const Protocol* __xamarin_protocols [] = {");
 				foreach (var p in ordered) {
 					bool use_dynamic = false;
-#if MTOUCH
-					switch (p.Protocol.ProtocolName) {
-					case "CAMetalDrawable": // The header isn't available for the simulator.
-						use_dynamic = IsSimulator;
-						break;
+					if (App.Platform != ApplePlatform.MacOSX) {
+						switch (p.Protocol.ProtocolName) {
+						case "CAMetalDrawable": // The header isn't available for the simulator.
+							use_dynamic = IsSimulator;
+							break;
+						}
 					}
-#endif
 					if (use_dynamic) {
 						map.AppendLine ("objc_getProtocol (\"{0}\"), /* {1} */", p.Protocol.ProtocolName, p.Protocol.Type.FullName);
 					} else {
@@ -3170,7 +3135,6 @@ namespace Registrar {
 					return;
 				}
 				break;
-#if MONOMAC
 			case Trampoline.CopyWithZone1:
 				sb.AppendLine ("-(id) copyWithZone: (NSZone *) zone");
 				sb.AppendLine ("{");
@@ -3195,7 +3159,6 @@ namespace Registrar {
 				sb.AppendLine ("return xamarin_copyWithZone_trampoline2 (self, _cmd, zone);");
 				sb.AppendLine ("}");
 				return;
-#endif
 			}
 
 			var rettype = string.Empty;
@@ -3305,37 +3268,23 @@ namespace Registrar {
 					args.Append (", ");
 					switch (type.FullName) {
 					case "System.Drawing.RectangleF":
+						var rectFunc = App.Platform == ApplePlatform.MacOSX ? "NSStringFromRect" : "NSStringFromCGRect";
 						if (isRef) {
 							nslog_start.Append ("%p : %@");
-#if MMP
-							args.AppendFormat ("p{0}, p{0} ? NSStringFromRect (*p{0}) : @\"NULL\"", i);
-#else
-							args.AppendFormat ("p{0}, p{0} ? NSStringFromCGRect (*p{0}) : @\"NULL\"", i);
-#endif
+							args.AppendFormat ("p{0}, p{0} ? {1} (*p{0}) : @\"NULL\"", i, rectFunc);
 						} else {
 							nslog_start.Append ("%@"); 
-#if MMP
-							args.AppendFormat ("NSStringFromRect (p{0})", i);
-#else
-							args.AppendFormat ("NSStringFromCGRect (p{0})", i);
-#endif
+							args.AppendFormat ("{1} (p{0})", i, rectFunc);
 						}
 						break;
 					case "System.Drawing.PointF":
+						var pointFunc = App.Platform == ApplePlatform.MacOSX ? "NSStringFromPoint" : "NSStringFromCGPoint";
 						if (isRef) {
-							nslog_start.Append ("%p: %@"); 
-#if MMP
-							args.AppendFormat ("p{0}, p{0} ? NSStringFromPoint (*p{0}) : @\"NULL\"", i);
-#else
-							args.AppendFormat ("p{0}, p{0} ? NSStringFromCGPoint (*p{0}) : @\"NULL\"", i);
-#endif
+							nslog_start.Append ("%p: %@");
+							args.AppendFormat ("p{0}, p{0} ? {1} (*p{0}) : @\"NULL\"", i, pointFunc);
 						} else {
 							nslog_start.Append ("%@"); 
-#if MMP
-							args.AppendFormat ("NSStringFromPoint (p{0})", i);
-#else
-							args.AppendFormat ("NSStringFromCGPoint (p{0})", i);
-#endif
+							args.AppendFormat ("{1} (p{0})", i, pointFunc);
 						}
 						break;
 					default:

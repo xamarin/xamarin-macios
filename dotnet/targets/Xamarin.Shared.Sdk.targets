@@ -79,6 +79,20 @@
 		<_PlatformAssemblyName Condition=" '$(_PlatformName)' == 'tvOS' ">Xamarin.TVOS</_PlatformAssemblyName>
 		<_PlatformAssemblyName Condition=" '$(_PlatformName)' == 'watchOS' ">Xamarin.WatchOS</_PlatformAssemblyName>
 		<_PlatformAssemblyName Condition=" '$(_PlatformName)' == 'macOS' ">Xamarin.Mac</_PlatformAssemblyName>
+
+		<!-- We have to set DebuggerSupport before importing Microsoft.NET.Sdk -->
+		<!-- That means we have to set _BundlerDebug before that, because DebuggerSupport depends on it -->
+		<!-- Xamarin.Mac: use MmpDebug (this differs from the old-style logic, which checks $(DebugSymbols) as well) -->
+		<_BundlerDebug Condition="'$(_BundlerDebug)' == '' And '$(_PlatformName)' == 'macOS'">$(MmpDebug)</_BundlerDebug>
+		<!-- Xamarin.iOS: Use MtouchDebug -->
+		<_BundlerDebug Condition="'$(_BundlerDebug)' == '' And '$(_PlatformName)' != 'macOS'">$(MtouchDebug)</_BundlerDebug>
+		<!-- Otherwise the default is true if we're building a Debug configuration -->
+		<_BundlerDebug Condition="'$(_BundlerDebug)' == '' And '$(Configuration)' == 'Debug'">true</_BundlerDebug>
+		<!-- As a last resort, the default is false for all platforms -->
+		<_BundlerDebug Condition="'$(_BundlerDebug)' == ''">false</_BundlerDebug>
+
+		<!-- On the other hand, we want the linker to link away debug support in the actual code unless we're building for Debug -->
+		<DebuggerSupport Condition="'$(DebuggerSupport)' == ''">$(_BundlerDebug)</DebuggerSupport>
 	</PropertyGroup>
 
 	<Import Sdk="Microsoft.NET.Sdk" Project="Sdk.targets" />
@@ -125,7 +139,7 @@
 		<_AdditionalTaskAssemblyDirectory>$(_XamarinSdkRootDirectory)tools/dotnet-linker/</_AdditionalTaskAssemblyDirectory>
 		<_AdditionalTaskAssembly>$(_AdditionalTaskAssemblyDirectory)dotnet-linker.dll</_AdditionalTaskAssembly>
 	</PropertyGroup>
-	<Target Name="_ComputeLinkerArguments" DependsOnTargets="_ComputeLinkMode;_ComputeFrameworkVariables;ComputeResolvedFilesToPublishList">
+	<Target Name="_ComputeLinkerArguments" DependsOnTargets="_ComputeLinkMode;_ComputeFrameworkVariables;_ComputeFrameworkAssemblies;ComputeResolvedFilesToPublishList;_ParseBundlerArguments;">
 		<!-- Validate the linker mode -->
 		<Error Text="Invalid link mode: '$(_LinkMode)'. Valid link modes are: 'None', 'SdkOnly' and 'Full'" Condition="'$(_LinkMode)' != 'None' And '$(_LinkMode)' != 'SdkOnly' And '$(_LinkMode)' != 'Full'" />
 
@@ -144,14 +158,17 @@
 				CacheDirectory=$(_LinkerCacheDirectory)
 				Debug=$(_BundlerDebug)
 				DeploymentTarget=$(_MinimumOSVersion)
+				@(_XamarinFrameworkAssemblies -> 'FrameworkAssembly=%(Filename)')
 				ItemsDirectory=$(_LinkerItemsDirectory)
 				IsSimulatorBuild=$(_SdkIsSimulator)
 				LinkMode=$(_LinkMode)
 				MarshalManagedExceptionMode=$(_MarshalManagedExceptionMode)
 				MarshalObjectiveCExceptionMode=$(_MarshalObjectiveCExceptionMode)
+				Optimize=$(_BundlerOptimize)
 				PartialStaticRegistrarLibrary=$(_LibPartialStaticRegistrar)
 				Platform=$(_PlatformName)
 				PlatformAssembly=$(_PlatformAssemblyName).dll
+				Registrar=$(_BundlerRegistrar)
 				SdkVersion=$(_SdkVersion)
 				TargetArchitectures=$(TargetArchitectures)
 				TargetFramework=$(_ComputedTargetFrameworkMoniker)
@@ -182,6 +199,9 @@
 				this yet (ref: https://github.com/dotnet/sdk/pull/12144).
 			-->
 			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) -b</_ExtraTrimmerArgs>
+
+			<!-- We always want the linker to process debug symbols, even when building in Release mode, because the AOT compiler uses the managed debug symbols to output DWARF debugging symbols -->
+			<TrimmerRemoveSymbols Condition="'$(TrimmerRemoveSymbols)' == ''">false</TrimmerRemoveSymbols>
 		</PropertyGroup>
 
 		<ItemGroup>
@@ -201,6 +221,8 @@
 				<BeforeStep>LoadReferencesStep</BeforeStep>
 				<Type>Xamarin.SetupStep</Type>
 			</_TrimmerCustomSteps>
+
+			<TrimmerRootDescriptor Include="@(_BundlerXmlDefinitions)" />
 		</ItemGroup>
 
 		<!-- Create the file with our custom linker options -->
@@ -232,6 +254,10 @@
 		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_BindingLibraryFrameworks.items" Condition="Exists('$(_LinkerItemsDirectory)/_BindingLibraryFrameworks.items')">
 			<Output TaskParameter="Items" ItemName="_BindingLibraryFrameworks" />
 		</ReadItemsFromFile>
+		<!-- Load _RegistrarFile -->
+		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_RegistrarFile.items" Condition="Exists('$(_LinkerItemsDirectory)/_RegistrarFile.items')">
+			<Output TaskParameter="Items" ItemName="_RegistrarFile" />
+		</ReadItemsFromFile>
 	</Target>
 
 	<!-- Native code -->
@@ -253,7 +279,14 @@
 		</PropertyGroup>
 	</Target>
 
-	<Target Name="_ComputeVariables" DependsOnTargets="_GenerateBundleName;_ComputeFrameworkVariables">
+	<Target Name="_ComputeFrameworkAssemblies" DependsOnTargets="_ComputeVariables;ComputeResolvedFilesToPublishList">
+		<ItemGroup>
+			<!-- Define 'framework assembly' or 'sdk assembly' as assemblies that comes from the .NET BCL NuGet -->
+			<_XamarinFrameworkAssemblies Include="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.Extension)' == '.dll' And '%(ResolvedFileToPublish.NuGetPackageId)' == '$(_MonoNugetPackageId)'" />
+		</ItemGroup>
+	</Target>
+
+	<Target Name="_ComputeVariables" DependsOnTargets="_GenerateBundleName;_ComputeFrameworkVariables;ComputeResolvedFilesToPublishList">
 		<PropertyGroup>
 			<_IntermediateNativeLibraryDir>$(IntermediateOutputPath)nativelibraries/</_IntermediateNativeLibraryDir>
 			<_NativeExecutableName>$(_AppBundleName)</_NativeExecutableName>
@@ -296,30 +329,36 @@
 
 	<Target Name="_ComputeBindingVariables" DependsOnTargets="_ComputeFrameworkVariables" Condition="'$(IsBindingProject)' == 'true'">
 		<PropertyGroup>
-			<BTouchToolPath>$(_XamarinSdkRootDirectory)/tools/bin</BTouchToolPath>
+			<BTouchToolExe>bgen.dll</BTouchToolExe>
+			<BTouchToolPath>$(_XamarinSdkRootDirectory)\tools\lib\bgen</BTouchToolPath>
 			<BaseLibDllPath>$(_XamarinRefAssemblyPath)</BaseLibDllPath>
 			<_GeneratorAttributeAssembly>$(_XamarinSdkRootDirectory)/tools/lib/Xamarin.Apple.BindingAttributes.dll</_GeneratorAttributeAssembly>
 		</PropertyGroup>
 	</Target>
 
-	<Target Name="_CompileNativeExecutable"
-		DependsOnTargets="_DetectSdkLocations;_ComputeTargetArchitectures;_GenerateBundleName;_ComputeVariables;_GetMinimumOSVersion"
-		Inputs="@(_MainFile)"
-		Outputs="@(_MainFile -> '%(_IntermediateNativeLibraryDir)%(Filename).o')"
-		>
-
+	<Target Name="_ComputeNativeExecutableInputs" DependsOnTargets="_ComputeVariables">
 		<ItemGroup>
-			<_MainFile Update="@(_MainFile)">
+			<_CompileNativeExecutableFile Include="@(_MainFile)">
 				<OutputFile>$(_IntermediateNativeLibraryDir)%(Filename).o</OutputFile>
-			</_MainFile>
+			</_CompileNativeExecutableFile>
+			<_CompileNativeExecutableFile Include="@(_RegistrarFile)">
+				<OutputFile>$(_IntermediateNativeLibraryDir)%(Filename).o</OutputFile>
+			</_CompileNativeExecutableFile>
 			<_XamarinMainIncludeDirectory Include="$(_XamarinIncludeDirectory)" />
 		</ItemGroup>
+	</Target>
+
+	<Target Name="_CompileNativeExecutable"
+		DependsOnTargets="_DetectSdkLocations;_ComputeTargetArchitectures;_GenerateBundleName;_GetMinimumOSVersion;_ComputeNativeExecutableInputs"
+		Inputs="@(_CompileNativeExecutableFile)"
+		Outputs="@(_CompileNativeExecutableFile -> '%(OutputFile)')"
+		>
 
 		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(_IntermediateNativeLibraryDir)" />
 
 		<CompileNativeCode
 			SessionId="$(BuildSessionId)"
-			CompileInfo="@(_MainFile)"
+			CompileInfo="@(_CompileNativeExecutableFile)"
 			MinimumOSVersion="$(_MinimumOSVersion)"
 			IncludeDirectories="@(_XamarinMainIncludeDirectory)"
 			SdkDevPath="$(_SdkDevPath)"
@@ -344,7 +383,7 @@
 	<Target Name="_UpdateDynamicLibraryId" DependsOnTargets="_ComputeVariables" Inputs="@(_MonoLibrary)" Outputs="@(_MonoLibrary -> '$(_IntermediateNativeLibraryDir)%(Filename)%(Extension)')">
 		<!-- install_name_tool modifies the file in-place, so copy it first to a temporary directory before we fix it -->
 		<Copy SourceFiles="%(_MonoLibrary.FullPath)" DestinationFolder="$(_IntermediateNativeLibraryDir)" />
-		<Exec Command="install_name_tool -id @executable_path/%(_MonoLibrary.Filename)%(_MonoLibrary.Extension) $(_IntermediateNativeLibraryDir)%(_MonoLibrary.Filename)%(_MonoLibrary.Extension)" />
+		<Exec Command="xcrun install_name_tool -id @executable_path/%(_MonoLibrary.Filename)%(_MonoLibrary.Extension) $(_IntermediateNativeLibraryDir)%(_MonoLibrary.Filename)%(_MonoLibrary.Extension)" EnvironmentVariables="DEVELOPER_DIR=$(_SdkDevPath)" />
 		<!-- Update our item groups -->
 		<ItemGroup>
 			<_MonoLibraryFixed Include="@(_MonoLibrary -> '$(_IntermediateNativeLibraryDir)%(Filename)%(Extension)')" />

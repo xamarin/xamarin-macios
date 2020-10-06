@@ -457,11 +457,12 @@ public class MemberInformation
 	public readonly Type category_extension_type;
 	internal readonly WrapPropMemberInformation wpmi;
 	public readonly bool is_abstract, is_protected, is_internal, is_unified_internal, is_override, is_new, is_sealed, is_static, is_thread_static, is_autorelease, is_wrapper, is_forced;
-	public readonly bool is_type_sealed, ignore_category_static_warnings, is_basewrapper_protocol_method;
+	public readonly bool ignore_category_static_warnings, is_basewrapper_protocol_method;
 	public readonly bool has_inner_wrap_attribute;
 	public readonly Generator.ThreadCheck threadCheck;
 	public bool is_unsafe, is_virtual_method, is_export, is_category_extension, is_variadic, is_interface_impl, is_extension_method, is_appearance, is_model, is_ctor;
 	public bool is_return_release;
+	public bool is_type_sealed;
 	public bool protocolize;
 	public string selector, wrap_method, is_forced_owns;
 	public bool is_bindAs => Generator.HasBindAsAttribute (mi);
@@ -637,7 +638,7 @@ public class MemberInformation
 			mods += "static ";
 		} else if (is_abstract) {
 			mods += "abstract ";
-		} else if (is_virtual_method) {
+		} else if (is_virtual_method && !is_type_sealed) {
 			mods += is_override ? "override " : "virtual ";
 		}
 
@@ -2579,8 +2580,13 @@ public partial class Generator : IMemberGatherer {
 			// it can't be conditional without fixing https://github.com/mono/linker/issues/516
 			// but we have a workaround in place because we can't fix old, binary bindings so...
 			// print ("[Preserve (Conditional=true)]");
+			// For .NET we fix it using the DynamicDependency attribute below
 			print ("static internal readonly {0} Handler = {1};", ti.DelegateName, ti.TrampolineName);
 			print ("");
+#if NET
+			print ("[Preserve (Conditional = true)]");
+			print ("[global::System.Diagnostics.CodeAnalysis.DynamicDependency (\"Handler\")]");
+#endif
 			print ("[MonoPInvokeCallback (typeof ({0}))]", ti.DelegateName);
 			print ("static unsafe {0} {1} ({2}) {{", ti.ReturnType, ti.TrampolineName, ti.Parameters);
 			indent++;
@@ -6556,7 +6562,10 @@ public partial class Generator : IMemberGatherer {
 					}
 					GeneratedCode (sw, 2);
 					sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
-					sw.WriteLine ("\t\tprotected internal {0} (IntPtr handle) : base (handle)", TypeName);
+					sw.Write ($"\t\t");
+					if (!is_sealed)
+						sw.Write ("protected ");
+					sw.WriteLine ($"internal {TypeName} (IntPtr handle) : base (handle)");
 					sw.WriteLine ("\t\t{");
 					if (is_direct_binding_value != null)
 						sw.WriteLine ("\t\t\tIsDirectBinding = {0};", is_direct_binding_value);
@@ -6579,6 +6588,8 @@ public partial class Generator : IMemberGatherer {
 					appearance_selectors.Add (mi);
 				
 				var minfo = new MemberInformation (this, this, mi, type, is_category_class ? bta.BaseType : null, is_model: is_model);
+				// the type above is not the the we're generating, e.g. it would be `NSCopying` for `Copy(NSZone?)`
+				minfo.is_type_sealed = is_sealed;
 
 				if (type == mi.DeclaringType || type.IsSubclassOf (mi.DeclaringType)) {
 					// not an injected protocol method.
@@ -6733,6 +6744,12 @@ public partial class Generator : IMemberGatherer {
 						print ("if (_{0} == null)", field_pi.Name);
 						indent++;
 						print ("_{0} = Runtime.GetNSObject<NSArray> (Dlfcn.GetIndirect (Libraries.{2}.Handle, \"{1}\"));", field_pi.Name, fieldAttr.SymbolName, library_name);
+						indent--;
+						print ("return _{0};", field_pi.Name);
+					} else if (field_pi.PropertyType.Name == "UTType") {
+						print ("if (_{0} == null)", field_pi.Name);
+						indent++;
+						print ("_{0} = Runtime.GetNSObject<UTType> (Dlfcn.GetIntPtr (Libraries.{2}.Handle, \"{1}\"));", field_pi.Name, fieldAttr.SymbolName, library_name);
 						indent--;
 						print ("return _{0};", field_pi.Name);
 					} else if (field_pi.PropertyType == TypeManager.System_Int32){

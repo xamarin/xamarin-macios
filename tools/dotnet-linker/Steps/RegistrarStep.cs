@@ -1,4 +1,5 @@
-﻿using System;
+using System.Collections.Generic;
+using System.IO;
 
 using Xamarin.Bundler;
 using Xamarin.Utils;
@@ -40,7 +41,24 @@ namespace Xamarin.Linker {
 				Configuration.CompilerFlags.AddLinkWith (Configuration.PartialStaticRegistrarLibrary);
 				break;
 			case RegistrarMode.Static:
-				Report (ErrorHelper.CreateError (99, Errors.MX0099, $"The static registrar hasn't been implemented yet."));
+				var dir = Configuration.CacheDirectory;
+				var header = Path.Combine (dir, "registrar.h");
+				var code = Path.Combine (dir, "registrar.mm");
+				Configuration.Target.StaticRegistrar.Generate (Configuration.Assemblies, header, code);
+
+				var items = new List<MSBuildItem> ();
+				foreach (var abi in Configuration.Abis) {
+					items.Add (new MSBuildItem {
+						Include = code,
+						Metadata = {
+							{ "Arch", abi.AsArchString () },
+							{ "Arguments", "-std=c++14" },
+						},
+					});
+				}
+
+				Configuration.WriteOutputForMSBuild ("_RegistrarFile", items);
+				Configuration.RegistrationMethods.Add ("xamarin_create_classes");
 				break;
 			case RegistrarMode.Default: // We should have resolved 'Default' to an actual mode by now.
 			default:

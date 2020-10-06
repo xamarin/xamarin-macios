@@ -291,13 +291,6 @@
         </target>
         <note></note>
       </trans-unit>
-      <trans-unit id="E0088">
-        <source>Could not get native libraries: {0}
-        </source>
-        <target state="translated">Abruf der nativen Bibliotheken nicht möglich: {0}
-        </target>
-        <note></note>
-      </trans-unit>
       <trans-unit id="E0089">
         <source>Unrecognized platform: {0}
         </source>
@@ -1581,11 +1574,11 @@
         <note></note>
       </trans-unit>
       <trans-unit id="W0111">
-        <source>The iCloud entitlement '{item.Key}' is not supported by the Provisioning Profile.
+        <source>The iCloud entitlement '{0}' is not supported by the Provisioning Profile.
         </source>
-        <target state="translated">Die iCloud-Berechtigung "{item.Key}" wird vom Bereitstellungsprofil nicht unterstützt.
+        <target state="new">The iCloud entitlement '{0}' is not supported by the Provisioning Profile.
         </target>
-        <note></note>
+        <note />
       </trans-unit>
       <trans-unit id="W0137">
         <source>No installed provisioning profiles match the bundle identifier.

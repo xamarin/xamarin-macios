@@ -1248,7 +1248,7 @@ namespace Registrar {
 			}
 		}
 
-#if MONOMAC
+#if MONOMAC || BUNDLER
 		internal static string AppKit {
 			get {
 				return "AppKit";
@@ -1256,25 +1256,26 @@ namespace Registrar {
 		}
 #endif
 
-#if MONOMAC
-		internal const string AssemblyName = "Xamarin.Mac";
-#else
-#if MTOUCH || BUNDLER
+#if MTOUCH || MMP || BUNDLER
 		internal string AssemblyName
 		{
 			get {
 				switch (App.Platform) {
-				case Xamarin.Utils.ApplePlatform.iOS:
+				case ApplePlatform.iOS:
 					return "Xamarin.iOS";
-				case Xamarin.Utils.ApplePlatform.WatchOS:
+				case ApplePlatform.WatchOS:
 					return "Xamarin.WatchOS";
-				case Xamarin.Utils.ApplePlatform.TVOS:
+				case ApplePlatform.TVOS:
 					return "Xamarin.TVOS";
+				case ApplePlatform.MacOSX:
+					return "Xamarin.Mac";
 				default:
-					throw ErrorHelper.CreateError (71, Errors.MX0071, App.Platform, "Xamarin.iOS");
+					throw ErrorHelper.CreateError (71, Errors.MX0071, App.Platform, App.ProductName);
 				}
 			}
 		}
+#elif MONOMAC
+		internal const string AssemblyName = "Xamarin.Mac";
 #elif WATCH
 		internal const string AssemblyName = "Xamarin.WatchOS";
 #elif TVOS
@@ -1283,7 +1284,6 @@ namespace Registrar {
 		internal const string AssemblyName = "Xamarin.iOS";
 #else
 #error Unknown platform
-#endif
 #endif
 		internal static class StringConstants {
 				internal const string ExportAttribute         =	"ExportAttribute";
@@ -1758,7 +1758,7 @@ namespace Registrar {
 						Type = iface,
 						IsProtocol = true,
 					};
-#if MMP || MTOUCH
+#if MMP || MTOUCH || BUNDLER
 					objcType.ProtocolWrapperType = GetProtocolAttributeWrapperType (objcType.Type);
 					objcType.IsWrapper = objcType.ProtocolWrapperType != null;
 #endif
@@ -2278,9 +2278,16 @@ namespace Registrar {
 
 			var custom_conforms_to_protocol = !is_first_nonWrapper; // we only have to generate the conformsToProtocol method for the first non-wrapper type.
 
-#if MONOMAC
+#if MONOMAC || BUNDLER
 			ObjCMethod custom_copy_with_zone = null;
-			var isNSCellSubclass = IsSubClassOf (type, AppKit, "NSCell");
+			var isNSCellSubclass = false;
+#if BUNDLER
+			var isMac = App.Platform == ApplePlatform.MacOSX;
+#elif MONOMAC
+			const bool isMac = true;
+#endif
+			if (isMac)
+				isNSCellSubclass = IsSubClassOf (type, AppKit, "NSCell");
 #endif
 			Dictionary<TMethod, List<TMethod>> method_map = null;
 
@@ -2330,7 +2337,7 @@ namespace Registrar {
 				if (!objcMethod.SetExportAttribute (ea, ref exceptions))
 					continue;
 
-#if MONOMAC
+#if MONOMAC || BUNDLER
 				if (objcMethod.Selector == "copyWithZone:")
 					custom_copy_with_zone = objcMethod;
 #endif
@@ -2358,7 +2365,7 @@ namespace Registrar {
 				}, ref exceptions);
 			}
 
-#if MONOMAC
+#if MONOMAC || BUNDLER
 			if (isNSCellSubclass) {
 				if (custom_copy_with_zone != null) {
 					custom_copy_with_zone.Trampoline = Trampoline.CopyWithZone2;
@@ -2756,10 +2763,8 @@ namespace Registrar {
 		StaticLong,
 		X86_DoubleABI_StaticStretTrampoline,
 		X86_DoubleABI_StretTrampoline,
-#if MONOMAC
 		CopyWithZone1,
 		CopyWithZone2,
-#endif
 		GetGCHandle,
 		SetGCHandle,
 	}

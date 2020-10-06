@@ -25,6 +25,8 @@ export MSBuildExtensionsPathFallbackPathsOverride=$MAC_DESTDIR/Library/Framework
 
 make
 make .stamp-configure-projects-mac
+../tools/xibuild/xibuild -- /r ../external/Touch.Unit/Touch.Client/macOS/mobile/Touch.Client-macOS-mobile.csproj
+../tools/xibuild/xibuild -- /r ../external/Touch.Unit/Touch.Client/macOS/full/Touch.Client-macOS-full.csproj
 ../tools/xibuild/xibuild -- /r bindings-test/macOS/bindings-test.csproj
 make build-mac-dontlink build-mac-apitest build-mac-introspection build-mac-linksdk build-mac-linkall build-mac-xammac_tests build-mac-system-dontlink -j8
 

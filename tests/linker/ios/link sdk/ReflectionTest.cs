@@ -16,6 +16,9 @@ namespace Linker.Shared.Reflection {
 		{
 		}
 
+#if NET
+		[Ignore ("Metadata reduction not implemented yet: https://github.com/xamarin/xamarin-macios/issues/9612")]
+#endif
 		[Test]
 		public void ParameterInfoName ()
 		{

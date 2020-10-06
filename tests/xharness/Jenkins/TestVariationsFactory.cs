@@ -52,7 +52,11 @@ namespace Xharness.Jenkins {
 					yield return new TestData { Variation = "Release", MTouchExtraArgs = test.TestProject.MTouchExtraArgs, Debug = false, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static };
 				if (test.Platform == TestPlatform.iOS_Unified32)
 					yield return new TestData { Variation = "Release: UseThumb", MTouchExtraArgs = test.TestProject.MTouchExtraArgs, Debug = false, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, UseThumb = true };
-				yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (release)", MTouchExtraArgs = $"--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject {test.TestProject.MTouchExtraArgs}", Debug = false, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static };
+
+				// Disable this by default for tvOS/Release because the app ends up being too big (https://github.com/xamarin/maccore/issues/2282)
+				var sdk_release_skip = test.Platform == TestPlatform.tvOS && test.TestName == "dont link";
+				if (!sdk_release_skip)
+					yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (release)", MTouchExtraArgs = $"--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject {test.TestProject.MTouchExtraArgs}", Debug = false, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, };
 
 				switch (test.TestName) {
 				case "monotouch-test":
@@ -87,10 +91,11 @@ namespace Xharness.Jenkins {
 				}
 				break;
 			case "iPhoneSimulator":
+				if (test.Platform == TestPlatform.iOS_Unified32)
+					ignore = true;
+
 				switch (test.TestName) {
 				case "monotouch-test":
-					if (test.TestProject.IsDotNetProject)
-						ignore = true;
 					// The default is to run monotouch-test with the dynamic registrar (in the simulator), so that's already covered
 					yield return new TestData { Variation = "Debug (LinkSdk)", Debug = true, Profiling = false, LinkMode = "LinkSdk", Ignored = ignore };
 					yield return new TestData { Variation = "Debug (static registrar)", MTouchExtraArgs = "--registrar:static", Debug = true, Profiling = false, Undefines = "DYNAMIC_REGISTRAR", Ignored = ignore };
@@ -98,14 +103,12 @@ namespace Xharness.Jenkins {
 					yield return new TestData { Variation = "Debug (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all,-remove-uithread-checks", Debug = true, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL", Undefines = "DYNAMIC_REGISTRAR", Ignored = ignore ?? !jenkins.IncludeAll };
 					break;
 				case "introspection":
-					if (test.TestProject.IsDotNetProject)
-						break; // Our .NET 5 code hasn't implemented building using static libraries yet, and the iOS 10.3 simulator requires dylibs to be signed, which we don't do yet, thus this doesn't quite work yet for the iOS 10.3 simulator.
 					foreach (var target in test.Platform.GetAppRunnerTargets ())
 						yield return new TestData {
 							Variation = $"Debug ({test.Platform.GetSimulatorMinVersion ()})",
 							Debug = true,
 							Candidates = jenkins.Simulators.SelectDevices (target, jenkins.SimulatorLoadLog, true),
-							Ignored = !jenkins.IncludeOldSimulatorTests, 
+							Ignored = ignore ?? !jenkins.IncludeOldSimulatorTests, 
 						};
 					break;
 				}
@@ -119,7 +122,7 @@ namespace Xharness.Jenkins {
 						yield return new TestData { Variation = "Release (all optimizations)", MonoBundlingExtraArgs = "--registrar:static --optimize:all", Debug = false, LinkMode = "Full", Defines = "OPTIMIZEALL"};
 						break;
 					case "Debug":
-						yield return new TestData { Variation = "Debug (all optimizations)", MonoBundlingExtraArgs = "--registrar:static --optimize:all,-remove-uithread-checks", Debug = true, LinkMode = "Full", Defines = "OPTIMIZEALL", Ignored = !jenkins.IncludeAll };
+						yield return new TestData { Variation = "Debug (all optimizations)", MonoBundlingExtraArgs = "--registrar:static --optimize:all,-remove-uithread-checks", Debug = true, LinkMode = "Full", Defines = "OPTIMIZEALL", Ignored = !(jenkins.IncludeAll && jenkins.IncludeMac) };
 						break;
 					}
 					break;

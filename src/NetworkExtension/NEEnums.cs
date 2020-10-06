@@ -183,7 +183,11 @@ namespace NetworkExtension {
 		Superseded = 11,
 		UserLogout = 12,
 		UserSwitch = 13,
-		ConnectionFailed = 14
+		ConnectionFailed = 14,
+		[Mac (10,15)][iOS (13,0)]
+		Sleep = 15,
+		[Mac (10,15)][iOS (13,0)]
+		AppUpdate,
 	}
 
 	[iOS (9,0)]
@@ -262,4 +266,33 @@ namespace NetworkExtension {
 		TemporaryFailure = 6
 	}
 #endif
+
+	[NoWatch, NoTV, NoMac, iOS (14,0)]
+	[Native]
+	[ErrorDomain ("NEAppPushErrorDomain")]
+	public enum NEAppPushManagerError : long {
+		ConfigurationInvalid = 1,
+		ConfigurationNotLoaded = 2,
+		InternalError = 3,
+		InactiveSession = 4,
+	}
+
+	[NoWatch, NoTV, Mac (11,0), iOS (14,0)]
+	[Native]
+	public enum NEDnsProtocol : long {
+		Cleartext = 1,
+		Tls = 2,
+		Https = 3,
+	}
+
+	[NoWatch, NoTV, Mac (11,0), iOS (14,0)]
+	[Native]
+	[ErrorDomain ("NEDNSSettingsErrorDomain")]
+	public enum NEDnsSettingsManagerError : long {
+		Invalid = 1,
+		Disabled = 2,
+		Stale = 3,
+		CannotBeRemoved = 4,
+	}
+
 }

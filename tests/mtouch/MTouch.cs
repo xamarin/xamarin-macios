@@ -1768,7 +1768,7 @@ public class TestApp {
 				mtouch.Linker = MTouchLinker.LinkSdk;
 				mtouch.Optimize = new string [] { "foo" };
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
-				mtouch.AssertWarning (132, "Unknown optimization: 'foo'. Valid optimizations are: remove-uithread-checks, dead-code-elimination, inline-isdirectbinding, inline-intptr-size, inline-runtime-arch, blockliteral-setupblock, register-protocols, inline-dynamic-registration-supported, static-block-to-delegate-lookup, remove-dynamic-registrar, remove-unsupported-il-for-bitcode, inline-is-arm64-calling-convention, seal-and-devirtualize, cctor-beforefieldinit, custom-attributes-removal, experimental-xforms-product-type, force-rejected-types-removal.");
+				mtouch.AssertWarning (132, "Unknown optimization: 'foo'. Valid optimizations are: remove-uithread-checks, dead-code-elimination, inline-isdirectbinding, inline-intptr-size, inline-runtime-arch, blockliteral-setupblock, register-protocols, inline-dynamic-registration-supported, static-block-to-delegate-lookup, remove-dynamic-registrar, inline-is-arm64-calling-convention, seal-and-devirtualize, cctor-beforefieldinit, custom-attributes-removal, experimental-xforms-product-type, force-rejected-types-removal.");
 			}
 		}
 
@@ -3103,6 +3103,30 @@ class Test {
 				mtouch.AssertErrorPattern ("MT", 5210, "Native linking failed, undefined symbol: _OBJC_METACLASS_._Inexistent. Please verify that all the necessary frameworks have been referenced and native libraries are properly linked in.");
 				mtouch.AssertErrorPattern ("MT", 5211, "Native linking failed, undefined Objective-C class: Inexistent. The symbol ._OBJC_CLASS_._Inexistent. could not be found in any of the libraries or frameworks linked with your application.");
 				mtouch.AssertErrorPattern ("MT", 5202, "Native linking failed. Please review the build log.");
+			}
+		}
+
+		[Test]
+		public void MT5223 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				var code = @"
+using System;
+
+class Test {
+	static void Main ()
+	{
+		Console.WriteLine (typeof (IOSurface.IOSurface));
+	}
+}
+";
+				mtouch.NoFastSim = true;
+				mtouch.CreateTemporaryApp (code: code);
+				mtouch.CreateTemporaryCacheDirectory ();
+
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+				mtouch.AssertWarning ("MT", 5223, "Did not link with the framework 'IOSurface', because the current iOS SDK does not contain support for this framework in the simulator.");
+				mtouch.AssertWarningCount (1);
 			}
 		}
 

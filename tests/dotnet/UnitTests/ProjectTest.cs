@@ -8,11 +8,15 @@ using Mono.Cecil;
 using NUnit.Framework;
 
 using Xamarin.Utils;
+using Xamarin.Tests;
 
 namespace Xamarin.Tests {
 	[TestFixture]
 	public class DotNetProjectTest {
-		Dictionary<string, string> verbosity = new Dictionary<string, string> { { "_BundlerVerbosity", "1" } };
+		Dictionary<string, string> verbosity = new Dictionary<string, string> {
+			{ "MtouchExtraArgs", "-v" },
+			{ "MonoBundlingExtraArgs", "-v" },
+		};
 
 		string GetProjectPath (string project, string subdir = null)
 		{
@@ -55,6 +59,8 @@ namespace Xamarin.Tests {
 		[Test]
 		public void BuildMyCocoaApp ()
 		{
+			if (!Configuration.include_mac)
+				Assert.Ignore ("Ignore until Xamarin.Mac is re-enabled. Issue: https://github.com/xamarin/xamarin-macios/issues/9680");
 			var platform = ApplePlatform.MacOSX;
 			var project_path = GetProjectPath ("MyCocoaApp");
 			Clean (project_path);
@@ -89,6 +95,8 @@ namespace Xamarin.Tests {
 		[TestCase ("macOS")]
 		public void BuildMyClassLibrary (string platform)
 		{
+			if (platform == "macOS" && !Configuration.include_mac)
+				Assert.Ignore ("Ignore until Xamarin.Mac is re-enabled. Issue: https://github.com/xamarin/xamarin-macios/issues/9680");
 			var project_path = GetProjectPath ("MyClassLibrary", platform);
 			Clean (project_path);
 			var result = DotNet.AssertBuild (project_path, verbosity);
@@ -101,12 +109,14 @@ namespace Xamarin.Tests {
 		[TestCase ("macOS")]
 		public void BuildEmbeddedResourcesTest (string platform)
 		{
+			if (!Configuration.include_mac)
+				Assert.Ignore ("Ignore until Xamarin.Mac is re-enabled. Issue: https://github.com/xamarin/xamarin-macios/issues/9680");
 			var assemblyName = "EmbeddedResources";
 			var dotnet_bindings_dir = Path.Combine (Configuration.SourceRoot, "tests", assemblyName, "dotnet");
 			var project_dir = Path.Combine (dotnet_bindings_dir, platform);
 			var project_path = Path.Combine (project_dir, $"{assemblyName}.csproj");
 			Clean (project_path);
-			CopyDotNetSupportingFiles (dotnet_bindings_dir);
+			Configuration.CopyDotNetSupportingFiles (dotnet_bindings_dir);
 			var result = DotNet.AssertBuild (project_path, verbosity);
 			var lines = result.StandardOutput.ToString ().Split ('\n');
 			// Find the resulting binding assembly from the build log
@@ -133,12 +143,14 @@ namespace Xamarin.Tests {
 		[TestCase ("macOS")]
 		public void BuildFSharpLibraryTest (string platform)
 		{
+			if (!Configuration.include_mac)
+				Assert.Ignore ("Ignore until Xamarin.Mac is re-enabled. Issue: https://github.com/xamarin/xamarin-macios/issues/9680");
 			var assemblyName = "fsharplibrary";
 			var dotnet_bindings_dir = Path.Combine (Configuration.SourceRoot, "tests", assemblyName, "dotnet");
 			var project_dir = Path.Combine (dotnet_bindings_dir, platform);
 			var project_path = Path.Combine (project_dir, $"{assemblyName}.fsproj");
 			Clean (project_path);
-			CopyDotNetSupportingFiles (dotnet_bindings_dir);
+			Configuration.CopyDotNetSupportingFiles (dotnet_bindings_dir);
 			var result = DotNet.AssertBuild (project_path, verbosity);
 			var lines = result.StandardOutput.ToString ().Split ('\n');
 			// Find the resulting binding assembly from the build log
@@ -159,13 +171,15 @@ namespace Xamarin.Tests {
 		[TestCase ("macOS")]
 		public void BuildBindingsTest (string platform)
 		{
+			if (!Configuration.include_mac)
+				Assert.Ignore ("Ignore until Xamarin.Mac is re-enabled. Issue: https://github.com/xamarin/xamarin-macios/issues/9680");
 			var assemblyName = "bindings-test";
 			var dotnet_bindings_dir = Path.Combine (Configuration.SourceRoot, "tests", assemblyName, "dotnet");
 			var project_dir = Path.Combine (dotnet_bindings_dir, platform);
 			var project_path = Path.Combine (project_dir, $"{assemblyName}.csproj");
 
 			Clean (project_path);
-			CopyDotNetSupportingFiles (dotnet_bindings_dir);
+			Configuration.CopyDotNetSupportingFiles (dotnet_bindings_dir);
 			var result = DotNet.AssertBuild (project_path, verbosity);
 			var lines = result.StandardOutput.ToString ().Split ('\n');
 			// Find the resulting binding assembly from the build log
@@ -188,13 +202,15 @@ namespace Xamarin.Tests {
 		[TestCase ("macOS")]
 		public void BuildBindingsTest2 (string platform)
 		{
+			if (!Configuration.include_mac)
+				Assert.Ignore ("Ignore until Xamarin.Mac is re-enabled. Issue: https://github.com/xamarin/xamarin-macios/issues/9680");
 			var assemblyName = "bindings-test2";
 			var dotnet_bindings_dir = Path.Combine (Configuration.SourceRoot, "tests", assemblyName, "dotnet");
 			var project_dir = Path.Combine (dotnet_bindings_dir, platform);
 			var project_path = Path.Combine (project_dir, $"{assemblyName}.csproj");
 
 			Clean (project_path);
-			CopyDotNetSupportingFiles (dotnet_bindings_dir);
+			Configuration.CopyDotNetSupportingFiles (dotnet_bindings_dir);
 			var result = DotNet.AssertBuild (project_path, verbosity);
 			var lines = result.StandardOutput.ToString ().Split ('\n');
 			// Find the resulting binding assembly from the build log
@@ -217,13 +233,15 @@ namespace Xamarin.Tests {
 		[TestCase ("macOS", "xammac")]
 		public void BuildBundledResources (string platform, string prefix)
 		{
+			if (!Configuration.include_mac)
+				Assert.Ignore ("Ignore until Xamarin.Mac is re-enabled. Issue: https://github.com/xamarin/xamarin-macios/issues/9680");
 			var assemblyName = "BundledResources";
 			var dotnet_bindings_dir = Path.Combine (Configuration.SourceRoot, "tests", assemblyName, "dotnet");
 			var project_dir = Path.Combine (dotnet_bindings_dir, platform);
 			var project_path = Path.Combine (project_dir, $"{assemblyName}.csproj");
 
 			Clean (project_path);
-			CopyDotNetSupportingFiles (dotnet_bindings_dir);
+			Configuration.CopyDotNetSupportingFiles (dotnet_bindings_dir);
 			var result = DotNet.AssertBuild (project_path, verbosity);
 			var lines = result.StandardOutput.ToString ().Split ('\n');
 			// Find the resulting binding assembly from the build log
@@ -255,10 +273,10 @@ namespace Xamarin.Tests {
 			var project_path = Path.Combine (project_dir, $"{assemblyName}.csproj");
 
 			Clean (project_path);
-			CopyDotNetSupportingFiles (dotnet_bindings_dir);
-			CopyDotNetSupportingFiles (dotnet_bindings_dir.Replace (assemblyName, "bindings-test"));
-			CopyDotNetSupportingFiles (dotnet_bindings_dir.Replace (assemblyName, "bindings-test2"));
-			var cleanupSupportFiles = CopyDotNetSupportingFiles (Path.Combine (Configuration.SourceRoot, "external", "Touch.Unit", "Touch.Client/dotnet"));
+			Configuration.CopyDotNetSupportingFiles (dotnet_bindings_dir);
+			Configuration.CopyDotNetSupportingFiles (dotnet_bindings_dir.Replace (assemblyName, "bindings-test"));
+			Configuration.CopyDotNetSupportingFiles (dotnet_bindings_dir.Replace (assemblyName, "bindings-test2"));
+			var cleanupSupportFiles = Configuration.CopyDotNetSupportingFiles (Path.Combine (Configuration.SourceRoot, "external", "Touch.Unit", "Touch.Client/dotnet"));
 			try {
 				var result = DotNet.AssertBuild (project_path, verbosity);
 				var lines = result.StandardOutput.ToString ().Split ('\n');
@@ -301,19 +319,6 @@ namespace Xamarin.Tests {
 				foreach (var file in cleanupSupportFiles)
 					File.Delete (file);
 			}
-		}
-
-		string[] CopyDotNetSupportingFiles (string targetDirectory)
-		{
-			var srcDirectory = Path.Combine (Configuration.SourceRoot, "tests", "dotnet");
-			var files = new string [] { "global.json", "NuGet.config" };
-			var targets = new string [files.Length];
-			for (var i = 0; i < files.Length; i++) {
-				var fn = files [i];
-				targets [i] = Path.Combine (targetDirectory, fn);
-				File.Copy (Path.Combine (srcDirectory, fn), targets [i], true);
-			}
-			return targets;
 		}
 
 		void AssertThatLinkerExecuted (ExecutionResult result)

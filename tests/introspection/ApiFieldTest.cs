@@ -225,6 +225,14 @@ namespace Introspection {
 					ReportError ("Could not open the library '{0}' to find the field '{1}': {2}", path, name, Dlfcn.dlerror ());
 					failed_fields.Add (name);
 				} else if (Dlfcn.GetIndirect (lib, name) == IntPtr.Zero) {
+#if __IOS__
+					switch (name) {
+					case "CPMaximumListItemImageSize":
+						if (TestRuntime.CheckXcodeVersion (12,0))
+							continue;
+						break;
+					}
+#endif
 					ReportError ("Could not find the field '{0}' in {1}", name, path);
 					failed_fields.Add (name);
 				}

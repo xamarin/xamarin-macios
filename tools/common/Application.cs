@@ -59,6 +59,7 @@ namespace Xamarin.Bundler {
 		public bool EnableDebug;
 		// The list of assemblies that we do generate debugging info for.
 		public bool DebugAll;
+		public bool UseInterpreter;
 		public List<string> DebugAssemblies = new List<string> ();
 		internal RuntimeOptions RuntimeOptions;
 		public Optimizations Optimizations = new Optimizations ();
@@ -66,6 +67,11 @@ namespace Xamarin.Bundler {
 		public RegistrarOptions RegistrarOptions = RegistrarOptions.Default;
 		public SymbolMode SymbolMode;
 		public HashSet<string> IgnoredSymbols = new HashSet<string> ();
+
+		public string CompilerPath;
+
+		public Application ContainerApp; // For extensions, this is the containing app
+		public bool IsCodeShared { get; private set; }
 
 		public HashSet<string> Frameworks = new HashSet<string> ();
 		public HashSet<string> WeakFrameworks = new HashSet<string> ();
@@ -302,13 +308,13 @@ namespace Xamarin.Bundler {
 
 		public bool RequiresPInvokeWrappers {
 			get {
-#if MTOUCH
+				if (Platform == ApplePlatform.MacOSX)
+					return false;
+
 				if (IsSimulatorBuild)
 					return false;
+
 				return MarshalObjectiveCExceptions == MarshalObjectiveCExceptionMode.ThrowManagedException || MarshalObjectiveCExceptions == MarshalObjectiveCExceptionMode.Abort;
-#else
-				return false;
-#endif
 			}
 		}
 
@@ -578,7 +584,10 @@ namespace Xamarin.Bundler {
 				ErrorHelper.Warning (3007, Errors.MX3007);
 			}
 
-			Optimizations.Initialize (this);
+			Optimizations.Initialize (this, out var messages);
+			ErrorHelper.Show (messages);
+			if (Driver.Verbosity > 3)
+				Driver.Log (4, $"Enabled optimizations: {Optimizations}");
 		}
 
 		void SelectMonoNative ()
@@ -703,6 +712,7 @@ namespace Xamarin.Bundler {
 
 		public IEnumerable<Abi> Abis {
 			get { return abis; }
+			set { abis = new List<Abi> (value); }
 		}
 
 		public bool IsArchEnabled (Abi arch)
@@ -887,6 +897,44 @@ namespace Xamarin.Bundler {
 			// We replace any existing abis, to keep the old behavior where '--armv6 --armv7' would 
 			// enable only the last abi specified and disable the rest.
 			abis = res;
+		}
+
+		public void ParseRegistrar (string v)
+		{
+			var split = v.Split ('=');
+			var name = split [0];
+			var value = split.Length > 1 ? split [1] : string.Empty;
+			switch (name) {
+			case "static":
+				Registrar = RegistrarMode.Static;
+				break;
+			case "dynamic":
+				Registrar = RegistrarMode.Dynamic;
+				break;
+			case "default":
+				Registrar = RegistrarMode.Default;
+				break;
+#if !MTOUCH
+			case "partial":
+			case "partial-static":
+				Registrar = RegistrarMode.PartialStatic;
+				break;
+#endif
+			default:
+				throw ErrorHelper.CreateError (20, Errors.MX0020, "--registrar", "static, dynamic or default");
+			}
+
+			switch (value) {
+			case "trace":
+				RegistrarOptions = RegistrarOptions.Trace;
+				break;
+			case "default":
+			case "":
+				RegistrarOptions = RegistrarOptions.Default;
+				break;
+			default:
+				throw ErrorHelper.CreateError (20, Errors.MX0020, "--registrar", "static, dynamic or default");
+			}
 		}
 
 		public static string GetArchitectures (IEnumerable<Abi> abis)

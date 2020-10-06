@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using Mono.Cecil;
 
 using Xamarin.Bundler;
+using Xamarin.Utils;
+using Registrar;
 #endif
 
 using Xamarin.Utils;
@@ -210,6 +212,17 @@ public class Frameworks : Dictionary <string, Framework>
 					//{ "CoreHaptics", "CoreHaptics", 10,15 },
 
 					{ "AutomaticAssessmentConfiguration", "AutomaticAssessmentConfiguration", 10,15,4 },
+
+					{ "Accessibility", "Accessibility", 11,0 },
+					{ "AppTrackingTransparency", "AppTrackingTransparency", 11,0 },
+					{ "CallKit", "CallKit", 11,0 },
+					{ "ClassKit", "ClassKit", 11,0 },
+					{ "MLCompute", "MLCompute", 11,0 },
+					{ "PassKit", "PassKit", 11,0 },
+					{ "ReplayKit", "ReplayKit", 11,0 },
+					{ "ScreenTime", "ScreenTime", 11,0 },
+					{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 11,0 },
+					{ "UserNotificationsUI", "UserNotificationsUI", 11,0 },
 				};
 			}
 			return mac_frameworks;
@@ -317,7 +330,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "IntentsUI", "IntentsUI", 10 },
 
 				{ "ARKit", "ARKit", 11 },
-				{ "CoreNFC", "CoreNFC", 11, true }, /* not always present, e.g. iPad w/iOS 12, so must be weak linked */
+				{ "CoreNFC", "CoreNFC", new Version (11, 0), NotAvailableInSimulator, true }, /* not always present, e.g. iPad w/iOS 12, so must be weak linked; doesn't work in the simulator in Xcode 12 (https://stackoverflow.com/q/63915728/183422) */
 				{ "DeviceCheck", "DeviceCheck", new Version (11, 0), new Version (13, 0) },
 				{ "IdentityLookup", "IdentityLookup", 11 },
 				{ "IOSurface", "IOSurface", new Version (11, 0), NotAvailableInSimulator /* Not available in the simulator (the header is there, but broken) */  },
@@ -347,6 +360,16 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "VisionKit", "VisionKit", 13, 0 },
 
 				{ "AutomaticAssessmentConfiguration", "AutomaticAssessmentConfiguration", 13, 4 },
+
+				{ "Accessibility", "Accessibility", 14,0 },
+				{ "AppClip", "AppClip", 14,0 },
+				{ "AppTrackingTransparency", "AppTrackingTransparency", 14,0 },
+				{ "MediaSetup", "MediaSetup", new Version (14, 0), NotAvailableInSimulator /* no headers in beta 3 */ },
+				{ "MLCompute", "MLCompute", new Version (14,0), NotAvailableInSimulator },
+				{ "NearbyInteraction", "NearbyInteraction", 14,0 },
+				{ "ScreenTime", "ScreenTime", 14,0 },
+				{ "SensorKit", "SensorKit", 14,0 },
+				{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 14,0 },
 
 				// the above MUST be kept in sync with simlauncher
 				// see tools/mtouch/Makefile
@@ -411,8 +434,10 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "PushKit", "PushKit", 6 },
 				{ "SoundAnalysis", "SoundAnalysis", 6 },
 				{ "CoreMedia", "CoreMedia", 6 },
-				{ "StoreKit", "StoreKit", 6,2 }
+				{ "StoreKit", "StoreKit", 6,2 },
 
+				{ "Accessibility", "Accessibility", 7,0 },
+				{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 7,0 },
 			};
 		}
 		return watch_frameworks;
@@ -492,6 +517,14 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "AuthenticationServices", "AuthenticationServices", 13,0 },
 					{ "SoundAnalysis", "SoundAnalysis", 13,0 },
 					{ "BackgroundTasks", "BackgroundTasks", 13, 0 },
+
+					{ "Accessibility", "Accessibility", 14,0 },
+					{ "AppTrackingTransparency", "AppTrackingTransparency", 14,0 },
+					{ "CoreHaptics", "CoreHaptics", 14, 0 },
+					{ "LinkPresentation", "LinkPresentation", 14,0 },
+					{ "MLCompute", "MLCompute", new Version (14,0), NotAvailableInSimulator },
+					{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 14,0 },
+					{ "Intents", "Intents", 14,0 },
 				};
 			}
 			return tvos_frameworks;
@@ -542,9 +575,14 @@ public class Frameworks : Dictionary <string, Framework>
 			if (app.IsSimulatorBuild && !framework.IsFrameworkAvailableInSimulator (app))
 				continue;
 
-			var add_to = app.DeploymentTarget >= framework.Version ? frameworks : weak_frameworks;
+			var weak_link = framework.AlwaysWeakLinked || app.DeploymentTarget < framework.Version;
+			var add_to = weak_link ? weak_frameworks : frameworks;
 			add_to.Add (framework.Name);
 		}
+
+		// Make sure there are no duplicates between frameworks and weak frameworks.
+		// Keep the weak ones.
+		frameworks.ExceptWith (weak_frameworks);
 	}
 
 	static bool FilterFrameworks (Application app, Framework framework)

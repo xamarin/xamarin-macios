@@ -47,7 +47,10 @@ namespace CoreText {
 		Default = 0,
 		PreventAutoActivation = 1 << 0,
 		PreferSystemFont      = 1 << 2,
+#if !XAMCORE_4_0
+		[Obsolete ("This API is not available on this platform.")]
 		IncludeDisabled       = 1 << 7,
+#endif
 	}
 
 	// defined as uint32_t - /System/Library/Frameworks/CoreText.framework/Headers/CTFont.h
@@ -1858,6 +1861,16 @@ namespace CoreText {
 		public bool GetGlyphsForCharacters (char[] characters, CGGlyph[] glyphs)
 		{
 			return GetGlyphsForCharacters (characters, glyphs, Math.Min (characters.Length, glyphs.Length));
+		}
+
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[DllImport (Constants.CoreTextLibrary)]
+		static extern unsafe /* CFStringRef _Nullable */ IntPtr CTFontCopyNameForGlyph (/* CTFontRef */ IntPtr font, CGGlyph glyph);
+
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		public string GetGlyphName (CGGlyph glyph)
+		{
+			return CFString.FetchString (CTFontCopyNameForGlyph (handle, glyph), releaseHandle: true);
 		}
 
 		static void AssertCount (nint count)

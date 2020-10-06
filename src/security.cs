@@ -90,7 +90,9 @@ namespace Security {
 	}
 	
 	[Static]
-	[iOS (8,0), NoMac, NoWatch]
+	[iOS (8,0), NoWatch]
+	[Mac (11,0)]
+	[Introduced (PlatformName.MacCatalyst, 14,0)]
 	[NoTV] // removed in tvOS 10
 	interface SecSharedCredential {
 		[Field ("kSecSharedPassword")]
@@ -1098,8 +1100,9 @@ namespace Security {
 		NSData SharedInfo { get; set; }
 	}
 
-#if IOS
-	[iOS (8,0)][NoTV][NoWatch][NoMac]
+#if IOS || MONOMAC
+	[iOS (8,0)][NoTV][NoWatch]
+	[Mac (11,0)]
 	[Internal][Static]
 	interface SecSharedCredentialKeys {
 		[Field ("kSecAttrServer")]
@@ -1115,7 +1118,8 @@ namespace Security {
 		NSString PortKey { get; }
 	}
 
-	[iOS (8,0)][NoTV][NoWatch][NoMac]
+	[iOS (8,0)][NoTV][NoWatch]
+	[Mac (11,0)]
 	[StrongDictionary ("SecSharedCredentialKeys")]
 	interface SecSharedCredentialInfo {
 

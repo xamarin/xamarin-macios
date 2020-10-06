@@ -331,8 +331,11 @@ DOTNET_TARGETS += \
 	$(foreach target,$(DOTNET_WATCHOS_FILES)      ,$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Sdk/tools/msbuild/watchOS/$(notdir $(target)))       \
 
 # macOS
+ifdef INCLUDE_MAC
 DOTNET_TARGETS += \
 	$(foreach target,$(DOTNET_MACOS_FILES)        ,$(DOTNET_DESTDIR)/$(MACOS_NUGET).Sdk/tools/msbuild/macOS/$(notdir $(target)))           \
+
+endif
 
 DOTNET_DIRECTORIES += \
 	$(DOTNET_DESTDIR)/$(IOS_NUGET).Sdk/tools/msbuild/iOS \

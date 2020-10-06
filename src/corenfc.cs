@@ -23,12 +23,14 @@ namespace CoreNFC {
 		InvalidParameter,
 		InvalidParameterLength,
 		ParameterOutOfBound,
+		RadioDisabled = 6,
 
 		ReaderTransceiveErrorTagConnectionLost = 100,
 		ReaderTransceiveErrorRetryExceeded,
 		ReaderTransceiveErrorTagResponseError,
 		ReaderTransceiveErrorSessionInvalidated,
 		ReaderTransceiveErrorTagNotConnected,
+		ReaderTransceiveErrorPacketTooLong = 105,
 
 		ReaderSessionInvalidationErrorUserCanceled = 200,
 		ReaderSessionInvalidationErrorSessionTimeout,
@@ -37,10 +39,11 @@ namespace CoreNFC {
 		ReaderSessionInvalidationErrorFirstNDEFTagRead,
 
 		TagCommandConfigurationErrorInvalidParameters = 300,
-		NdefReaderSessionErrorTagNotWritable,
-		NdefReaderSessionErrorTagUpdateFailure,
-		NdefReaderSessionErrorTagSizeTooSmall,
-		NdefReaderSessionErrorZeroLengthMessage,
+
+		NdefReaderSessionErrorTagNotWritable = 400,
+		NdefReaderSessionErrorTagUpdateFailure = 401,
+		NdefReaderSessionErrorTagSizeTooSmall = 402,
+		NdefReaderSessionErrorZeroLengthMessage = 403,
 	}
 
 	//[iOS (11,0), NoTV, NoWatch, NoMac]
@@ -132,10 +135,15 @@ namespace CoreNFC {
 
 	interface INFCIso15693Tag { }
 
+	delegate void NFCIso15693TagReadMultipleBlocksCallback (NSData[] dataBlocks, NSError error); 
+	delegate void NFCIso15693TagResponseCallback (NFCIso15693ResponseFlag responseFlag, NSData response, NSError error); 
+	delegate void NFCIso15693TagGetMultipleBlockSecurityStatusCallback (NSNumber [] securityStatus, NSError error);
+	delegate void NFCIso15693TagGetSystemInfoAndUidCallback (NSData uid, nint dsfid, nint afi, nint blockSize, nint blockCount, nint icReference, NSError error);
+
 	//[iOS (11,0), NoTV, NoWatch, NoMac]
 	[iOS (11,0)]
 	[Protocol (Name = "NFCISO15693Tag")]
-	interface NFCIso15693Tag : NFCTag {
+	interface NFCIso15693Tag : NFCTag, NFCNdefTag {
 
 		[Abstract]
 		[Export ("identifier", ArgumentSemantic.Copy)]
@@ -289,6 +297,84 @@ namespace CoreNFC {
 #endif
 		[Export ("extendedReadMultipleBlocksWithRequestFlags:blockRange:completionHandler:")]
 		void ExtendedReadMultipleBlocks (RequestFlag flags, NSRange blockRange, Action<NSData [], NSError> completionHandler);
+
+		[iOS (14, 0)]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("extendedWriteMultipleBlocksWithRequestFlags:blockRange:dataBlocks:completionHandler:")]
+		void ExtendedWriteMultipleBlocks (RequestFlag flags, NSRange blockRange, NSData[] dataBlocks, Action<NSError> completionHandler);
+
+		[iOS (14, 0)]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("authenticateWithRequestFlags:cryptoSuiteIdentifier:message:completionHandler:")]
+		void Authenticate (RequestFlag flags, nint cryptoSuiteIdentifier, NSData message, NFCIso15693TagResponseCallback completionHandler);
+
+		[iOS (14, 0)]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("keyUpdateWithRequestFlags:keyIdentifier:message:completionHandler:")]
+		void KeyUpdate (RequestFlag flags, nint keyIdentifier, NSData message, NFCIso15693TagResponseCallback completionHandler);
+
+		[iOS (14, 0)]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("challengeWithRequestFlags:cryptoSuiteIdentifier:message:completionHandler:")]
+		void Challenge (RequestFlag flags, nint cryptoSuiteIdentifier, NSData message, Action<NSError> completionHandler);
+
+		[iOS (14, 0)]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("readBufferWithRequestFlags:completionHandler:")]
+		void ReadBuffer (RequestFlag flags, NFCIso15693TagResponseCallback completionHandler);
+
+		[iOS (14, 0)]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("extendedGetMultipleBlockSecurityStatusWithRequestFlag:blockRange:completionHandler:")]
+		void ExtendedGetMultipleBlockSecurityStatus (RequestFlag flags, NSRange blockRange, NFCIso15693TagGetMultipleBlockSecurityStatusCallback completionHandler);
+
+		[iOS (14, 0)]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("extendedFastReadMultipleBlocksWithRequestFlag:blockRange:completionHandler:")]
+		void ExtendedFastReadMultipleBlocks (RequestFlag flags, NSRange blockRange, NFCIso15693TagReadMultipleBlocksCallback completionHandler);
+
+		[iOS (14, 0)]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("sendRequestWithFlag:commandCode:data:completionHandler:")]
+		void SendRequest (nint flags, nint commandCode, [NullAllowed] NSData data, NFCIso15693TagResponseCallback completionHandler);
+
+		[iOS (14, 0)]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("getSystemInfoAndUIDWithRequestFlag:completionHandler:")]
+		void GetSystemInfoAndUid (RequestFlag flags, NFCIso15693TagGetSystemInfoAndUidCallback completionHandler);
+
+		[iOS (14, 0)]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("fastReadMultipleBlocksWithRequestFlag:blockRange:completionHandler:")]
+		void FastReadMultipleBlocks (RequestFlag flags, NSRange blockRange, NFCIso15693TagReadMultipleBlocksCallback completionHandler);
+
+		[iOS (14, 0)]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("lockDSFIDWithRequestFlag:completionHandler:")]
+		void LockDsfId (RequestFlag flags, Action<NSError> completionHandler);
+
 	}
 
 	[iOS (11,0)]
@@ -568,7 +654,13 @@ namespace CoreNFC {
 
 	[iOS (13,0)]
 	[Native]
-	enum EncryptionId : long {
+#if XAMCORE_4_0
+	enum NFCFeliCaEncryptionId
+#else
+	[Advice ("The native name of this enum is 'NFCFeliCaEncryptionId'.")]
+	enum EncryptionId
+#endif
+		: long {
 		Aes = 79,
 		Des = 65,
 	}
@@ -601,7 +693,13 @@ namespace CoreNFC {
 
 	[iOS (13,0)]
 	[Native]
-	enum PollingRequestCode : long {
+#if XAMCORE_4_0
+	enum NFCFeliCaPollingRequestCode
+#else
+	[Advice ("The native name of this enum is 'NFCFeliCaPollingRequestCode'.")]
+	enum PollingRequestCode
+#endif
+		: long {
 		NoRequest = 0,
 		SystemCode = 1,
 		CommunicationPerformance = 2,
@@ -609,7 +707,13 @@ namespace CoreNFC {
 
 	[iOS (13,0)]
 	[Native]
-	enum PollingTimeSlot : long {
+#if XAMCORE_4_0
+	enum NFCFeliCaPollingTimeSlot
+#else
+	[Advice ("The native name of this enum is 'NFCFeliCaPollingTimeSlot'.")]
+	enum PollingTimeSlot
+#endif
+		: long {
 		Max1 = 0,
 		Max2 = 1,
 		Max4 = 3,
@@ -619,18 +723,44 @@ namespace CoreNFC {
 
 	[iOS (13,0)]
 	[Flags]
-	enum RequestFlag : byte {
+#if XAMCORE_4_0
+	enum NFCIso15693RequestFlag
+#else
+	[Advice ("The native name of this enum is 'NFCIso15693RequestFlag'.")]
+	enum RequestFlag
+#endif
+		: byte {
 		DualSubCarriers = (1 << 0),
 		HighDataRate = (1 << 1),
 		ProtocolExtension = (1 << 3),
 		Select = (1 << 4),
 		Address = (1 << 5),
 		Option = (1 << 6),
+		[iOS (14,0)]
+		CommandSpecificBit8 = (1 << 7),
+	}
+
+	[Flags, iOS (14, 0)]
+	public enum NFCIso15693ResponseFlag : byte
+	{
+		Error = (1 << 0),
+		ResponseBufferValid = (1 << 1),
+		FinalResponse = (1 << 2),
+		ProtocolExtension = (1 << 3),
+		BlockSecurityStatusBit5 = (1 << 4),
+		BlockSecurityStatusBit6 = (1 << 5),
+		WaitTimeExtension = (1 << 6),
 	}
 
 	[iOS (13,0)]
 	[Native]
-	enum VasErrorCode : long {
+#if XAMCORE_4_0
+	enum NFCVasErrorCode
+#else
+	[Advice ("The native name of this enum is 'NFCVasErrorCode'.")]
+	enum VasErrorCode
+#endif
+		: long {
 		Success = 36864,
 		DataNotFound = 27267,
 		DataNotActivated = 25223,
@@ -643,7 +773,13 @@ namespace CoreNFC {
 
 	[iOS (13,0)]
 	[Native]
-	enum VasMode : long {
+#if XAMCORE_4_0
+	enum NFCVasMode 
+#else
+	[Advice ("The native name of this enum is 'NFCVasMode'.")]
+	enum VasMode 
+#endif
+		: long {
 		UrlOnly = 0,
 		Normal = 1,
 	}

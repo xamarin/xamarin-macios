@@ -749,8 +749,10 @@
 !missing-selector! NSString::getFileSystemRepresentation:maxLength: not bound
 !missing-selector! NSString::hash not bound
 !missing-selector! NSString::initWithBytes:length:encoding: not bound
+!missing-selector! NSString::initWithBytesNoCopy:length:encoding:deallocator: not bound
 !missing-selector! NSString::initWithBytesNoCopy:length:encoding:freeWhenDone: not bound
 !missing-selector! NSString::initWithCharacters:length: not bound
+!missing-selector! NSString::initWithCharactersNoCopy:length:deallocator: not bound
 !missing-selector! NSString::initWithCharactersNoCopy:length:freeWhenDone: not bound
 !missing-selector! NSString::initWithContentsOfFile:encoding:error: not bound
 !missing-selector! NSString::initWithContentsOfFile:usedEncoding:error: not bound
@@ -1431,3 +1433,6 @@
 !missing-null-allowed! 'System.Void Foundation.NSUserDefaults::SetObjectForKey(Foundation.NSObject,System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void Foundation.NSXpcConnection::set_InterruptionHandler(System.Action)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void Foundation.NSXpcConnection::set_InvalidationHandler(System.Action)' is missing an [NullAllowed] on parameter #0
+
+## convenience value (combined flags)
+!extra-enum-value! Managed value 3 for NSKeyValueObservingOptions.OldNew not found in native headers

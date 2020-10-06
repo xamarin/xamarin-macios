@@ -413,17 +413,9 @@ namespace Introspection {
 			case "CGColor":
 				return UIColor.Black.CGColor;
 			case "CMClock":
-				CMClockError ce;
-				CMClock clock = CMClock.CreateAudioClock (out ce);
-				if (ce == CMClockError.None)
-					return clock;
-				throw new InvalidOperationException (string.Format ("Could not create the new instance for type {0}.", t.Name));
+				return CMClock.HostTimeClock;
 			case "CMTimebase":
-				clock = CMClock.CreateAudioClock (out ce);
-				if (ce == CMClockError.None) {
-					return new CMTimebase (clock);
-				}
-				throw new InvalidOperationException (string.Format ("Could not create the new instance for type {0}.", t.Name));
+				return new CMTimebase (CMClock.HostTimeClock);
 			case "CVPixelBufferPool":
 				return new CVPixelBufferPool (
 					new CVPixelBufferPoolSettings (),

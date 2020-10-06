@@ -1331,7 +1331,7 @@ namespace ObjCRuntime {
 			return ConstructNSObject<NSObject> (ptr, target_type, MissingCtorResolution.ThrowConstructor1NotFound);
 		}
 
-		static Type LookupINativeObjectImplementation (IntPtr ptr, Type target_type, Type implementation = null)
+		static Type LookupINativeObjectImplementation (IntPtr ptr, Type target_type, Type implementation = null, bool forced_type = false)
 		{
 			if (!typeof (NSObject).IsAssignableFrom (target_type)) {
 				// If we're not expecting an NSObject, we can't do a dynamic lookup of the type of ptr,
@@ -1348,7 +1348,8 @@ namespace ObjCRuntime {
 					if (implementation == null)
 						implementation = target_type;
 				} else {
-					var runtime_type = Class.Lookup (p);
+					// only throw if we're not forcing the type we want to expose
+					var runtime_type = Class.Lookup (p, throw_on_error: !forced_type);
 					// Check if the runtime type can actually be used.
 					if (target_type.IsAssignableFrom (runtime_type)) {
 						implementation = runtime_type;
@@ -1450,7 +1451,7 @@ namespace ObjCRuntime {
 			}
 
 			// Lookup the ObjC type of the ptr and see if we can use it.
-			var implementation = LookupINativeObjectImplementation (ptr, typeof (T));
+			var implementation = LookupINativeObjectImplementation (ptr, typeof (T), forced_type: forced_type);
 
 			if (implementation.IsSubclassOf (typeof (NSObject))) {
 				if (o != null && !forced_type) {
