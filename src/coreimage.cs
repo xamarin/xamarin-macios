@@ -1327,6 +1327,9 @@ namespace CoreImage {
 
 		[iOS (13,0)][TV (13,0)][Mac (10,15)]
 		bool AuxiliarySemanticSegmentationTeethMatte { get; set; }
+
+		[iOS (14,2)][TV (14,2)][Mac (11,0)]
+		bool ToneMapHdrToSdr { get; set; }
 	}
 
 	[Internal]
@@ -1334,6 +1337,10 @@ namespace CoreImage {
 	interface CIImageInitializationOptionsKeys {
 		[Field ("kCIImageColorSpace")]
 		NSString ColorSpaceKey { get; }
+
+		[iOS (14,2)][TV (14,2)][Mac (11,0)]
+		[Field ("kCIImageToneMapHDRtoSDR")]
+		NSString ToneMapHdrToSdrKey { get; }
 
 		[Field ("kCIImageProperties")]
 		NSString PropertiesKey { get; }
