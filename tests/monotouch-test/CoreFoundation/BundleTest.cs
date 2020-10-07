@@ -356,5 +356,38 @@ namespace MonoTouchFixtures.CoreFoundation {
 		{
 			CFBundle.GetInfoDictionary (null);
 		}
+
+#if MONOMAC
+		[Test]
+		public void TestIsArchitectureLoadable ()
+		{
+			TestRuntime.AssertXcodeVersion (12, 2);
+
+			bool loadable_x86_64 = CFBundle.IsArchitectureLoadable (CFBundle.Architecture.X86_64);
+			if (global::System.Runtime.InteropServices.RuntimeInformation.ProcessArchitecture == global::System.Runtime.InteropServices.Architecture.X64)
+				Assert.IsTrue (loadable_x86_64, "x86_64 Expected => true");
+			else
+				Assert.IsFalse (loadable_x86_64, "x86_64 Expected => false");
+
+			bool loadable_arm64 = CFBundle.IsArchitectureLoadable (CFBundle.Architecture.ARM64);
+			if (global::System.Runtime.InteropServices.RuntimeInformation.ProcessArchitecture == global::System.Runtime.InteropServices.Architecture.Arm64)
+				Assert.IsTrue (loadable_arm64, "arm64 Expected => true");
+			else
+				Assert.IsFalse (loadable_arm64, "arm64 Expected => false");
+		}
+
+		[Test]
+		public void TestIsExecutableLoadable ()
+		{
+			TestRuntime.AssertXcodeVersion (12, 2);
+
+			var main = CFBundle.GetMain ();
+			var loadableBundle = CFBundle.IsExecutableLoadable (main);
+			Assert.IsTrue (loadableBundle, "loadableBundle");
+
+			var loadableBundleUrl = CFBundle.IsExecutableLoadable (main.ExecutableUrl);
+			Assert.IsTrue (loadableBundleUrl, "loadableBundleUrl");
+		}
+#endif
 	}
 }
