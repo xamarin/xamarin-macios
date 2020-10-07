@@ -616,7 +616,8 @@ namespace CoreFoundation {
 		extern static bool CFBundleIsExecutableLoadable (IntPtr bundle);
 
 		[Introduced (PlatformName.MacOSX, 11, 0)]
-		public static bool IsExecutableLoadable (CFBundle bundle) {
+		public static bool IsExecutableLoadable (CFBundle bundle)
+		{
 			if (bundle == null)
 				throw new ArgumentNullException (nameof (bundle));
 			if (bundle.Handle == IntPtr.Zero)
@@ -631,7 +632,8 @@ namespace CoreFoundation {
 		extern static bool CFBundleIsExecutableLoadableForURL (IntPtr bundle);
 
 		[Introduced (PlatformName.MacOSX, 11, 0)]
-		public static bool IsExecutableLoadable (NSUrl url) {
+		public static bool IsExecutableLoadable (NSUrl url)
+		{
 			if (url == null)
 				throw new ArgumentNullException (nameof (url));
 
