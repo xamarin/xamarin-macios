@@ -139,6 +139,10 @@ namespace CoreHaptics {
 		ApplicationSuspended = 2,
 		IdleTimeout = 3,
 		NotifyWhenFinished = 4,
+		[iOS (14,0)][NoMac]
+		EngineDestroyed = 5,
+		[iOS (14,0)][NoMac]
+		GameControllerDisconnect = 6,
 		SystemError = -1,
 	}
 } 

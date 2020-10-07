@@ -71,6 +71,10 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyWebPDictionary")]
 		NSString WebPDictionary { get; }
 
+		[Mac (11,0), iOS (14,2), TV (14,2), Watch (7,1)]
+		[Field ("kCGImagePropertyTGADictionary")]
+		NSString TgaDictionary { get; }
+
 		// Camera-Maker Dictionaries
 		[Field ("kCGImagePropertyMakerCanonDictionary")]
 		NSString MakerCanonDictionary { get; }
@@ -2030,6 +2034,10 @@ namespace ImageIO {
 		[Mac (11,0)][iOS (14,0)][TV (14,0)][Watch (7,0)]
 		[Field ("kCGImagePropertyWebPCanvasPixelHeight")]
 		NSString WebPCanvasPixelHeight { get; }
+
+		[Mac (11,0), iOS (14,2), TV (14,2), Watch (7,1)]
+		[Field ("kCGImagePropertyTGACompression")]
+		NSString TgaCompression { get; }
 	}
 
 	[iOS (7,0)]
@@ -2204,6 +2212,10 @@ namespace ImageIO {
 		[Mac (11,0), iOS (14,0), TV (14,0), Watch (7,0)]
 		[Export ("WebPDictionary")]
 		NSDictionary WebPDictionary { get; set; }
+
+		[Mac (11,0), iOS (14,2), TV (14,2),  Watch (7,1)]
+		[Export ("TgaDictionary")]
+		NSDictionary TgaDictionary { get; set; }
 	}
 
 	[Static]
@@ -2280,6 +2292,10 @@ namespace ImageIO {
 		[Mac (11,0), iOS (14,0), TV (14,0), Watch (7,0)]
 		[Static][Wrap ("CGImageProperties.WebPDictionary")]
 		NSString WebPDictionary { get; }
+
+		[Mac (11,0), iOS (14,2), TV (14,2), Watch (7,1)]
+		[Static][Wrap ("CGImageProperties.TgaDictionary")]
+		NSString TgaDictionary { get; }
 	}
 
 	[Partial]

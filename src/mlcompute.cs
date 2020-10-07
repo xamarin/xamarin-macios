@@ -82,6 +82,7 @@ namespace MLCompute {
 		Float32 = 1,
 		Boolean = 4,
 		Int64 = 5,
+		Int32 = 7,
 		// Count, // must be last, not available in swift
 	}
 

@@ -65,6 +65,7 @@ namespace CoreText {
 		LeftToRight = 0,
 		RightToLeft = 1,
 
+		// part of an unnamed enum inside CTStringAttributes.h
 		Embedding = (0 << 1),
 		Override = (1 << 1)
 	}
@@ -81,8 +82,8 @@ namespace CoreText {
 		LineHeightMultiple      = 7,
 		MaximumLineHeight       = 8,
 		MinimumLineHeight       = 9,
-		[Deprecated (PlatformName.iOS, 6, 0, message : "Please use MaximumLineSpacing")]
-		[Deprecated (PlatformName.MacOSX, 10, 8, message : "Please use MaximumLineSpacing")]
+		[Deprecated (PlatformName.iOS, 6, 0, message : "Use 'MaximumLineSpacing' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 8, message : "Use 'MaximumLineSpacing' instead.")]
 		LineSpacing             = 10,
 		ParagraphSpacing        = 11,
 		ParagraphSpacingBefore  = 12,

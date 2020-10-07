@@ -75,7 +75,15 @@ namespace Security {
 
 	public enum SecAuthenticationType {
 		Invalid = -1,
-		Ntlm, Msn, Dpa, Rpa, HttpBasic, HttpDigest, HtmlForm, Default
+		Any = 0,
+		Ntlm = 1835824238,
+		Msn = 1634628461,
+		Dpa = 1633775716,
+		Rpa = 1633775730,
+		HttpBasic = 1886680168,
+		HttpDigest = 1685353576,
+		HtmlForm = 1836216166,
+		Default = 1953261156,
 	}
 
 	public class SecKeyChain : INativeObject {
@@ -944,7 +952,7 @@ namespace Security {
 		}
 
 		[iOS (8, 0)]
-		[Deprecated (PlatformName.iOS, 9, 0, message : "Use AuthenticationUI property")]
+		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'AuthenticationUI' property instead.")]
 		public bool UseNoAuthenticationUI {
 			get {
 				return Fetch (SecItem.UseNoAuthenticationUI) == CFBoolean.TrueHandle;

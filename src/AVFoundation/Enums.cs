@@ -207,31 +207,26 @@ namespace AVFoundation {
 		AirPlayControllerRequiresInternet = -11856,
 		AirPlayReceiverRequiresInternet = -11857,
 
-		[iOS (9,0), Mac (10,11)]
 		VideoCompositorFailed = -11858,
 
-#if !MONOMAC
-		[iOS (9,0)]
 		RecordingAlreadyInProgress = -11859,
-#endif
-		[NoWatch, iOS (10,0), TV (10,0), Mac (10,12)]
+		CreateContentKeyRequestFailed = -11860,
 		UnsupportedOutputSettings = -11861,
-		[NoWatch, iOS (10,0), TV (10,0), Mac (10,12)]
 		OperationNotAllowed = -11862,
-		[NoWatch, iOS (11,0), TV (11,0), Mac (10,13)]
 		ContentIsUnavailable = -11863,
-		[NoWatch, iOS (11,0), TV (11,0), Mac (10,13)]
 		FormatUnsupported = -11864,
-		[NoWatch, iOS (11,0), TV (11,0), Mac (10,13)]
 		MalformedDepth = -11865,
-		[NoWatch, iOS (11,0), TV (11,0), Mac (10,13)]
 		ContentNotUpdated = -11866,
-		[NoWatch, iOS (11,0), TV (11,0), Mac (10,13)]
 		NoLongerPlayable = -11867,
-		[NoWatch, iOS (11,0), TV (11,0), Mac (10,13)]
 		NoCompatibleAlternatesForExternalDisplay = -11868,
-		[NoWatch, iOS (11,2), TV (11,2), Mac (10,13,2)]
 		NoSourceTrack = -11869,
+		ExternalPlaybackNotSupportedForAsset = -11870,
+		OperationNotSupportedForPreset = -11871,
+		SessionHardwareCostOverage = -11872,
+		UnsupportedDeviceActiveFormat = -11873,
+		IncorrectlyConfigured = -11875,
+		SegmentStartedWithNonSyncSample = -11876,
+		RosettaNotInstalled = -11877,
 	}
 
 	[Watch (6,0)]
@@ -490,7 +485,11 @@ namespace AVFoundation {
 		SphericalHead = 1,
 		HRTF = 2,
 		SoundField = 3,
-		StereoPassThrough = 5
+		StereoPassThrough = 5,
+		[iOS (8,0)][Mac (10,10)]
+		HrtfHQ = 6,
+		[iOS (13,0)][TV (13,0)][Mac (10,15)][NoWatch]
+		Auto = 7,
 	}
 
 #if !MONOMAC || !XAMCORE_4_0
@@ -703,6 +702,8 @@ namespace AVFoundation {
 	public enum AVSampleBufferRequestMode : long {
 		Immediate,
 		Scheduled,
+		[Mac (10,15)]
+		Opportunistic = 2,
 	}
 
 	[NoTV, NoWatch, Mac (10,15), iOS (10,0)]

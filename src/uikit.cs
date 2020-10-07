@@ -2528,18 +2528,18 @@ namespace UIKit {
 		[Protocolize]
 		UIApplicationDelegate Delegate { get; set; }
 
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use UIView's 'UserInteractionEnabled' property instead")]
-		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use UIView's 'UserInteractionEnabled' property instead")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use UIView's 'UserInteractionEnabled' property instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use UIView's 'UserInteractionEnabled' property instead.")]
 		[Export ("beginIgnoringInteractionEvents")]
 		void BeginIgnoringInteractionEvents ();
 		
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use UIView's 'UserInteractionEnabled' property instead")]
-		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use UIView's 'UserInteractionEnabled' property instead")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use UIView's 'UserInteractionEnabled' property instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use UIView's 'UserInteractionEnabled' property instead.")]
 		[Export ("endIgnoringInteractionEvents")]
 		void EndIgnoringInteractionEvents ();
 
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use UIView's 'UserInteractionEnabled' property instead")]
-		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use UIView's 'UserInteractionEnabled' property instead")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use UIView's 'UserInteractionEnabled' property instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use UIView's 'UserInteractionEnabled' property instead.")]
 		[Export ("isIgnoringInteractionEvents")]
 		bool IsIgnoringInteractionEvents { get; }
 
@@ -8495,6 +8495,7 @@ namespace UIKit {
 		[Export ("buttonWithType:")] [Static]
 		UIButton FromType (UIButtonType type);
 
+		[Appearance]
 		[Export ("contentEdgeInsets")]
 		UIEdgeInsets ContentEdgeInsets {get;set;}
 
@@ -8638,6 +8639,7 @@ namespace UIKit {
 		[Export ("attributedTitleForState:")]
 		NSAttributedString GetAttributedTitle (UIControlState state);
 
+		[Appearance]
 		[Watch (6,0), TV (13,0), iOS (13,0)]
 		[Export ("setPreferredSymbolConfiguration:forImageInState:")]
 		void SetPreferredSymbolConfiguration ([NullAllowed] UIImageSymbolConfiguration configuration, UIControlState state);
@@ -9468,6 +9470,7 @@ namespace UIKit {
 		[Export ("backgroundImageForBarPosition:barMetrics:")]
 		UIImage GetBackgroundImage (UIBarPosition barPosition, UIBarMetrics barMetrics);
 		
+		[Appearance]
 		[NoTV]
 		[iOS (11,0)]
 		[Export ("prefersLargeTitles")]
@@ -10210,7 +10213,8 @@ namespace UIKit {
 		[Protocolize]
 		UIPickerViewDelegate Delegate { get; set; }
 
-		[Deprecated (PlatformName.iOS, 13, 0, message: "This property is a no-op on iOS 7 and later.")]
+		[Deprecated (PlatformName.iOS, 13,0)]
+		[Advice ("This property is a no-op since 7.0.")]
 		[Export ("showsSelectionIndicator")]
 		bool ShowSelectionIndicator { get; set; }
 
@@ -11246,9 +11250,11 @@ namespace UIKit {
 		[NullAllowed]
 		UIImage ScopeBarBackgroundImage { get; set;  }
 
+		[Appearance]
 		[Export ("searchFieldBackgroundPositionAdjustment")]
 		UIOffset SearchFieldBackgroundPositionAdjustment { get; set;  }
 
+		[Appearance]
 		[Export ("searchTextPositionAdjustment")]
 		UIOffset SearchTextPositionAdjustment { get; set;  }
 
@@ -11292,9 +11298,11 @@ namespace UIKit {
 		[Appearance]
 		NSDictionary _GetScopeBarButtonTitleTextAttributes (UIControlState state);
 
+		[Appearance]
 		[Export ("setPositionAdjustment:forSearchBarIcon:")]
 		void SetPositionAdjustmentforSearchBarIcon (UIOffset adjustment, UISearchBarIcon icon);
 
+		[Appearance]
 		[Export ("positionAdjustmentForSearchBarIcon:")]
 		UIOffset GetPositionAdjustmentForSearchBarIcon (UISearchBarIcon icon);
 
@@ -11704,6 +11712,7 @@ namespace UIKit {
 		[Export ("selectedSegmentIndex")]
 		nint SelectedSegment { get; set; }
 
+		[Appearance]
 		[iOS (13,0), TV (13,0), Watch (6,0)]
 		[NullAllowed, Export ("selectedSegmentTintColor", ArgumentSemantic.Strong)]
 		UIColor SelectedSegmentTintColor { get; set; }
@@ -12123,19 +12132,23 @@ namespace UIKit {
 		[NullAllowed]
 		UIColor BarTintColor { get; set; }
 
+		[Appearance]
 		[NoTV]
 		[iOS (7,0)]
 		[Export ("itemPositioning")]
 		UITabBarItemPositioning ItemPositioning { get; set; }
 
+		[Appearance]
 		[iOS (7,0)]
 		[Export ("itemWidth")]
 		nfloat ItemWidth { get; set; }
 
+		[Appearance]
 		[iOS (7,0)]
 		[Export ("itemSpacing")]
 		nfloat ItemSpacing { get; set; }
 
+		[Appearance]
 		[NoTV]
 		[iOS (7,0)]
 		[Export ("barStyle")]
@@ -12145,6 +12158,7 @@ namespace UIKit {
 		[Export ("translucent")]
 		bool Translucent { [Bind ("isTranslucent")] get; set; }
 
+		[Appearance]
 		[iOS (10,0), TV (10,0)]
 		[NullAllowed, Export ("unselectedItemTintColor", ArgumentSemantic.Copy)]
 		UIColor UnselectedItemTintColor { get; set; }
@@ -12346,10 +12360,12 @@ namespace UIKit {
 		[Export ("selectedImage", ArgumentSemantic.Retain)][NullAllowed]
 		UIImage SelectedImage { get; set; }
 
+		[Appearance]
 		[iOS (10,0), TV (10,0)]
 		[NullAllowed, Export ("badgeColor", ArgumentSemantic.Copy)]
 		UIColor BadgeColor { get; set; }
 
+		[Appearance]
 		[iOS (10,0), TV (10,0)]
 		[Export ("setBadgeTextAttributes:forState:")]
 		[Internal]
@@ -12359,13 +12375,15 @@ namespace UIKit {
 		[Wrap ("SetBadgeTextAttributes (textAttributes.GetDictionary (), state)")]
 		void SetBadgeTextAttributes (UIStringAttributes textAttributes, UIControlState state);
 
+		[Appearance]
 		[iOS (10,0), TV (10,0)]
 		[Export ("badgeTextAttributesForState:")]
-		[Internal]
-		NSDictionary<NSString, NSObject> _GetBadgeTextAttributes (UIControlState state);
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[return: NullAllowed]
+		NSDictionary<NSString, NSObject> GetBadgeTextAttributesDictionary (UIControlState state);
 
 		[iOS (10,0), TV (10,0)]
-		[Wrap ("new UIStringAttributes (_GetBadgeTextAttributes(state))")]
+		[Wrap ("new UIStringAttributes (GetBadgeTextAttributesDictionary(state))")]
 		UIStringAttributes GetBadgeTextAttributes (UIControlState state);
 
 		[Appearance]
@@ -13083,11 +13101,13 @@ namespace UIKit {
 		[Export ("multipleSelectionBackgroundView", ArgumentSemantic.Retain), NullAllowed]
 		UIView MultipleSelectionBackgroundView { get; set; }
 
+		[Appearance]
 		[NoTV]
 		[iOS (7,0)]
 		[Export ("separatorInset")]
 		UIEdgeInsets SeparatorInset { get; set; }
 
+		[Appearance]
 		[iOS (9,0)] // introduced in Xcode 7.1 SDK (iOS 9.1 but hidden in 9.0)
 		[Export ("focusStyle", ArgumentSemantic.Assign)]
 		UITableViewCellFocusStyle FocusStyle { get; set; }
@@ -13816,12 +13836,14 @@ namespace UIKit {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
 
+		[Appearance]
 		[Export ("barStyle")]
 		UIBarStyle BarStyle { get; set; }
 
 		[Export ("items", ArgumentSemantic.Copy)][NullAllowed]
 		UIBarButtonItem [] Items { get; set; }
 
+		[Appearance]
 		[Export ("translucent", ArgumentSemantic.Assign)]
 		bool Translucent { [Bind ("isTranslucent")] get; set; }
 		

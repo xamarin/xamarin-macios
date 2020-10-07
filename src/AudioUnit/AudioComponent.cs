@@ -48,8 +48,14 @@ namespace AudioUnit
 {
 
 #if !COREBUILD
+
+#if (!WATCH && !TVOS) || ((WATCH || TVOS) && !XAMCORE_4_0)
+
 	// keys are not constants and had to be found in AudioToolbox.framework/Headers/AudioComponent.h
 	[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+#if ((WATCH || TVOS) && !XAMCORE_4_0)
+	[Obsolete ("This API is not available on this platform.")]
+#endif
 	public partial class ResourceUsageInfo : DictionaryContainer {
 		static NSString userClientK = new NSString ("iokit.user-client");
 		static NSString globalNameK = new NSString ("mach-lookup.global-name");
@@ -111,6 +117,9 @@ namespace AudioUnit
 
 	// keys are not constants and had to be found in AudioToolbox.framework/Headers/AudioComponent.h
 	[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+#if ((WATCH || TVOS) && !XAMCORE_4_0)
+	[Obsolete ("This API is not available on this platform.")]
+#endif
 	public partial class AudioComponentInfo : DictionaryContainer {
 		static NSString typeK = new NSString ("type");
 		static NSString subtypeK = new NSString ("subtype");
@@ -213,8 +222,9 @@ namespace AudioUnit
 			}
 		}
 	}
-
 #endif
+
+#endif // !COREBUILD
 
 
 	public class AudioComponent : INativeObject {
@@ -342,20 +352,24 @@ namespace AudioUnit
 
 #if !MONOMAC
 		[iOS (7,0)]
+		[Deprecated (PlatformName.iOS, 14,0)]
 		[DllImport(Constants.AudioUnitLibrary)]
 		static extern IntPtr AudioComponentGetIcon (IntPtr comp, float /* float */ desiredPointSize);
 
 		[iOS (7,0)]
+		[Deprecated (PlatformName.iOS, 14,0, message: "Use 'CopyIcon' instead.")]
 		public UIKit.UIImage GetIcon (float desiredPointSize)
 		{
 			return new UIKit.UIImage (AudioComponentGetIcon (handle, desiredPointSize));
 		}
 
 		[iOS (7,0)]
+		[Deprecated (PlatformName.iOS, 13,0)]
 		[DllImport(Constants.AudioUnitLibrary)]
 		static extern double AudioComponentGetLastActiveTime (IntPtr comp);
 
 		[iOS (7,0)]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AudioUnit' instead.")]
 		public double LastActiveTime {
 			get {
 				return AudioComponentGetLastActiveTime (handle);

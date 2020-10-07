@@ -143,6 +143,9 @@ namespace CoreGraphics {
 		ScrollWheelEventIsContinuous = 88,
 		EventWindowUnderMousePointer = 91,
 		EventWindowUnderMousePointerThatCanHandleThisEvent = 92,
+		ScrollWheelEventScrollPhase = 99,
+		ScrollWheelEventScrollCount = 100,
+		ScrollWheelEventMomentumPhase = 123,
 		EventUnacceleratedPointerMovementX = 170,
 		EventUnacceleratedPointerMovementY = 171,
 	}
@@ -166,6 +169,8 @@ namespace CoreGraphics {
 		OtherMouseDown = 0x19,
 		OtherMouseUp = 0x1a,
 		OtherMouseDragged = 0x1b,
+		TapDisabledByTimeout = 4294967294,
+		TapDisabledByUserInput = 4294967295,
 	}
 
 	// CGEventTypes.h:typedef uint32_t CGEventMouseSubtype;
@@ -190,6 +195,7 @@ namespace CoreGraphics {
 	public enum CGEventSuppressionState : int {
 		SuppressionInterval,
 		RemoteMouseDrag,
+		NumberOfEventSuppressionStates,
 	}
 	
 }

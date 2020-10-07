@@ -169,12 +169,21 @@ partial class TestRuntime
 			watchOS = new { Major = 6, Minor = 0, Build = "?" },
 		};
 
+		var twelvedot2b2 = new {
+			Xcode = new { Major = 12, Minor = 2, Beta = 2 },
+			iOS = new { Major = 14, Minor = 2, Build = "18B5061" },
+			tvOS = new { Major = 14, Minor = 2, Build = "18K5036" },
+			macOS = new { Major = 11, Minor = 0, Build = "?" },
+			watchOS = new { Major = 7, Minor = 1, Build = "18R5561" },
+		};
+
 		var versions = new [] {
 			nineb1,
 			nineb2,
 			nineb3,
 			elevenb5,
 			elevenb6,
+			twelvedot2b2,
 		};
 
 		foreach (var v in versions) {
@@ -193,6 +202,14 @@ partial class TestRuntime
 			var actual = GetiOSBuildVersion ();
 			Console.WriteLine (actual);
 			return actual.StartsWith (v.iOS.Build, StringComparison.Ordinal);
+#elif __TVOS__
+			if (!CheckExacttvOSSystemVersion (v.tvOS.Major, v.tvOS.Minor))
+				return false;
+			if (v.tvOS.Build == "?")
+				throw new NotImplementedException ($"Build number for tvOS {v.tvOS.Major}.{v.tvOS.Minor} beta {beta} (candidate: {GetiOSBuildVersion ()})");
+			var actual = GetiOSBuildVersion ();
+			Console.WriteLine (actual);
+			return actual.StartsWith (v.tvOS.Build, StringComparison.Ordinal);
 #else
 			throw new NotImplementedException ();
 #endif
@@ -664,6 +681,16 @@ partial class TestRuntime
 		return version.Major == major && version.Minor == minor;
 #else
 		throw new Exception ("Can't get iOS System version on other platforms.");
+#endif
+	}
+
+	static bool CheckExacttvOSSystemVersion (int major, int minor)
+	{
+#if __TVOS__
+		var version = Version.Parse (UIDevice.CurrentDevice.SystemVersion);
+		return version.Major == major && version.Minor == minor;
+#else
+		throw new Exception ("Can't get tvOS System version on other platforms.");
 #endif
 	}
 

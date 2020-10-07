@@ -44,3 +44,10 @@
 
 # Looks like the following selectors were released ahead of their time: Xcode 12 / iOS 13 / macOS 15
 !missing-selector! MPSNNGraph::initWithDevice:resultImages:resultsAreNeeded: not bound
+
+# `*Count` values can change over time -> breaking change for us
+!missing-enum-value! MPSCnnLossType native value MPSCNNLossTypeCount = 10 not bound
+!missing-enum-value! MPSCnnNeuronType native value MPSCNNNeuronTypeCount = 16 not bound
+!missing-enum-value! MPSCnnReductionType native value MPSCNNReductionTypeCount = 4 not bound
+!missing-enum-value! MPSImageFeatureChannelFormat native value MPSImageFeatureChannelFormatCount = 6 not bound
+!missing-enum-value! MPSRnnMatrixId native value MPSRNNMatrixId_count = 29 not bound

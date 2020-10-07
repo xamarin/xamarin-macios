@@ -41,6 +41,7 @@ namespace HealthKit {
 		UserCanceled,
 		AnotherWorkoutSessionStarted,
 		UserExitedWorkoutSession,
+		RequiredAuthorizationDenied,
 		NoData,
 	}
 
@@ -62,6 +63,10 @@ namespace HealthKit {
 		Ended,
 		[Watch (3,0)]
 		Paused,
+		[Watch (5,0)]
+		Prepared,
+		[Watch (5,0)]
+		Stopped,
 	}
 
 	[iOS (11,0)]
@@ -2799,11 +2804,11 @@ namespace HealthKit {
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface HKWorkoutSession : NSSecureCoding {
-		[Deprecated (PlatformName.WatchOS, 3, 0, message: "Use WorkoutConfiguration")]
+		[Deprecated (PlatformName.WatchOS, 3, 0, message: "Use 'WorkoutConfiguration' instead.")]
 		[Export ("activityType")]
 		HKWorkoutActivityType ActivityType { get; }
 
-		[Deprecated (PlatformName.WatchOS, 3, 0, message: "Use WorkoutConfiguration")]
+		[Deprecated (PlatformName.WatchOS, 3, 0, message: "Use 'WorkoutConfiguration' instead.")]
 		[Export ("locationType")]
 		HKWorkoutSessionLocationType LocationType { get; }
 

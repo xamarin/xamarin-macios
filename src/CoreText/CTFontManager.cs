@@ -132,6 +132,10 @@ namespace CoreText {
 			}
 		}
 
+		[Deprecated (PlatformName.MacOSX, 10,15)]
+		[Deprecated (PlatformName.iOS, 13,0)]
+		[Deprecated (PlatformName.WatchOS, 6,0)]
+		[Deprecated (PlatformName.TvOS, 13,0)]
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern bool CTFontManagerRegisterFontsForURLs(IntPtr arrayRef, CTFontManagerScope scope, ref IntPtr error_array);
 
@@ -207,6 +211,10 @@ namespace CoreText {
 			}
 		}
 
+		[Deprecated (PlatformName.MacOSX, 10,15)]
+		[Deprecated (PlatformName.iOS, 13,0)]
+		[Deprecated (PlatformName.WatchOS, 6,0)]
+		[Deprecated (PlatformName.TvOS, 13,0)]
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern bool CTFontManagerUnregisterFontsForURLs(IntPtr arrayRef, CTFontManagerScope scope, ref IntPtr error_array);
 

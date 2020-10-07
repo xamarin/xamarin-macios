@@ -773,14 +773,43 @@ namespace Introspection
 		}
 
 		[Test]
+		public virtual void AttributeTypoTest ()
+		{
+			var types = Assembly.GetTypes ();
+			int totalErrors = 0;
+			foreach (Type t in types)
+				AttributeTypo (t, ref totalErrors);
+
+			Assert.AreEqual (0, totalErrors, "Attributes have typos!");
+		}
+
+		void AttributeTypo (Type t, ref int totalErrors)
+		{
+			AttributesMessageTypoRules (t, t.Name, ref totalErrors);
+
+			foreach (var f in t.GetFields ())
+				AttributesMessageTypoRules (f, t.Name, ref totalErrors);
+
+			foreach (var p in t.GetProperties ())
+				AttributesMessageTypoRules (p, t.Name, ref totalErrors);
+
+			foreach (var m in t.GetMethods ())
+				AttributesMessageTypoRules (m, t.Name, ref totalErrors);
+
+			foreach (var e in t.GetEvents ())
+				AttributesMessageTypoRules (e, t.Name, ref totalErrors);
+
+			foreach (var nt in t.GetNestedTypes ())
+				AttributeTypo (nt, ref totalErrors);
+		}
+
+		[Test]
 		public virtual void TypoTest ()
 		{
 			var types = Assembly.GetTypes ();
 			int totalErrors = 0;
 			foreach (Type t in types) {
 				if (t.IsPublic) {
-					AttributesMessageTypoRules (t, t.Name, ref totalErrors);
-
 					if (IsObsolete (t))
 						continue;
 
@@ -797,8 +826,6 @@ namespace Introspection
 					foreach (FieldInfo f in fields) {
 						if (!f.IsPublic && !f.IsFamily)
 							continue;
-
-						AttributesMessageTypoRules (f, t.Name, ref totalErrors);
 
 						if (IsObsolete (f))
 							continue;
@@ -817,8 +844,6 @@ namespace Introspection
 					foreach (MethodInfo m in methods) {
 						if (!m.IsPublic && !m.IsFamily)
 							continue;
-
-						AttributesMessageTypoRules (m, t.Name, ref totalErrors);
 
 						if (IsObsolete (m))
 							continue;
@@ -851,7 +876,7 @@ namespace Introspection
 			foreach (var typo in unused)
 				Console.WriteLine ("Unused entry \"{0}\"", typo);
 #endif
-			Assert.IsTrue ((totalErrors == 0), "We have {0} typos!", totalErrors);
+			Assert.AreEqual (0, totalErrors, "Typos!");
 		}
 
 		string GetMessage (object attribute)
@@ -1004,6 +1029,19 @@ namespace Introspection
 		[Test]
 		public void ConstantsCheck ()
 		{
+			// The constants are file paths for frameworks / dylibs
+			// unless the latest OS is used there's likely to be missing ones
+			// so we run this test only on the latest supported (matching SDK) OS
+			var sdk = new Version (Constants.SdkVersion);
+#if MONOMAC
+			if (!PlatformHelper.CheckSystemVersion (sdk.Major, sdk.Minor))
+#elif __WATCHOS__
+			if (!WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (sdk.Major, sdk.Minor))
+#else
+			if (!UIDevice.CurrentDevice.CheckSystemVersion (sdk.Major, sdk.Minor))
+#endif
+				Assert.Ignore ($"Constants only verified using the latest OS version ({sdk.Major}.{sdk.Minor})");
+
 			var c = typeof (Constants);
 			foreach (var fi in c.GetFields ()) {
 				if (!fi.IsPublic)
@@ -1055,7 +1093,11 @@ namespace Introspection
 						if (fi.Name == "AutomaticAssessmentConfigurationLibrary" && !TestRuntime.CheckXcodeVersion (11, 4))
 							continue;
 #endif
-
+#if __WATCHOS__
+						// added with watchOS 4 (mistake)
+						if (fi.Name == "VisionLibrary")
+							continue;
+#endif
 						Assert.True (CheckLibrary (s), fi.Name);
 					} else {
 						Assert.Fail ($"Unknown '{fi.Name}' field cannot be verified - please fix me!");

@@ -11,6 +11,3 @@
 
 # As of Xcode 12 beta 6 the CarPlay framework does not have an error enum
 !missing-field! CarPlayErrorDomain not bound
-
-# introduced in Xcode 12 but it is not included yet in Xcode 12.2
-!unknown-type! CPEntity bound

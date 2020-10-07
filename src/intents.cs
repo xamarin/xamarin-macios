@@ -1981,6 +1981,7 @@ namespace Intents {
 	[Native]
 	public enum INAddMediaMediaDestinationUnsupportedReason : long {
 		PlaylistNameNotFound = 1,
+		PlaylistNotEditable = 2,
 	}
 
 	[Flags]
