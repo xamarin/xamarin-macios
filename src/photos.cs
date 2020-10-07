@@ -690,6 +690,12 @@ namespace Photos
 		[return: NullAllowed]
 		PHCollectionListChangeRequest ChangeRequest (PHCollectionList collectionList, PHFetchResult childCollections);
 
+		[TV (14,2), Mac (11,0), iOS (14,2)]
+		[Static]
+		[Export ("changeRequestForTopLevelCollectionListUserCollections:")]
+		[return: NullAllowed]
+		PHCollectionListChangeRequest ChangeRequestForTopLevelCollectionList (PHFetchResult childCollections);
+
 		[Export ("title", ArgumentSemantic.Strong)]
 		string Title { get; set; }
 
