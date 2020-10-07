@@ -20,7 +20,7 @@ namespace Xharness.Jenkins {
 
 		public IEnumerator<NUnitExecuteTask> GetEnumerator ()
 		{
-			var netstandard2Project = new TestProject (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "..", "msbuild", "tests", "Xamarin.iOS.Tasks.Tests", "Xamarin.iOS.Tasks.Tests.csproj")));
+			var netstandard2Project = new TestProject (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "msbuild", "Xamarin.iOS.Tasks.Tests", "Xamarin.iOS.Tasks.Tests.csproj")));
 			var buildiOSMSBuild = new MSBuildTask (jenkins: jenkins, testProject: netstandard2Project, processManager: processManager) {
 				SpecifyPlatform = false,
 				SpecifyConfiguration = true,
@@ -30,7 +30,7 @@ namespace Xharness.Jenkins {
 				SupportsParallelExecution = false,
 			};
 			var nunitExecutioniOSMSBuild = new NUnitExecuteTask (jenkins, buildiOSMSBuild, processManager) {
-				TestLibrary = Path.Combine (HarnessConfiguration.RootDirectory, "..", "msbuild", "tests", "Xamarin.iOS.Tasks.Tests", "bin", "Debug", "net461", "Xamarin.iOS.Tasks.Tests.dll"),
+				TestLibrary = Path.Combine (HarnessConfiguration.RootDirectory, "msbuild", "Xamarin.iOS.Tasks.Tests", "bin", "Debug", "net461", "Xamarin.iOS.Tasks.Tests.dll"),
 				TestProject = netstandard2Project,
 				ProjectConfiguration = "Debug",
 				Platform = TestPlatform.iOS,
