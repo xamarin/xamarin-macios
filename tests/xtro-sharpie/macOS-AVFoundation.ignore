@@ -48,3 +48,9 @@
 !missing-field! AVAudioSessionRouteChangeReasonKey not bound
 !missing-field! AVAudioSessionSilenceSecondaryAudioHintNotification not bound
 !missing-field! AVAudioSessionSilenceSecondaryAudioHintTypeKey not bound
+
+# not applicable to macOS
+!extra-enum-value! Managed value -11818 for AVError.SessionWasInterrupted not found in native headers
+!extra-enum-value! Managed value -11819 for AVError.MediaServicesWereReset not found in native headers
+!extra-enum-value! Managed value -11837 for AVError.DeviceIsNotAvailableInBackground not found in native headers
+!extra-enum-value! Managed value -11847 for AVError.OperationInterrupted not found in native headers

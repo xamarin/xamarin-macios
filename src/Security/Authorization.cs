@@ -61,6 +61,7 @@ namespace Security {
 		PartialRights = 1 << 2,
 		DestroyRights = 1 << 3,
 		PreAuthorize = 1 << 4,
+		NoData = 1 << 20,
 	}
 
 	//
