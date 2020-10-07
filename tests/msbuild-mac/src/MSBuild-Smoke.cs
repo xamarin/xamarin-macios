@@ -222,7 +222,7 @@ namespace Xamarin.MMP.Tests
 			var expected = new string [] { "coremldata.bin", "model.espresso.net", "model.espresso.shape", "model.espresso.weights", "model/coremldata.bin", "neural_network_optionals/coremldata.bin" };
 			var mlmodelc = Path.Combine (appBundlePath, modelName + ".mlmodelc");
 
-			Assert.IsTrue (Directory.Exists (mlmodelc));
+			Assert.IsTrue (Directory.Exists (mlmodelc), "mlmodelc existence");
 
 			var files = new HashSet<string> (Directory.EnumerateFiles (mlmodelc, "*.*", SearchOption.AllDirectories));
 
