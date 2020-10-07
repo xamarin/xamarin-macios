@@ -1136,6 +1136,7 @@ namespace CarPlay {
 
 		[iOS (13, 0)]
 		[Field ("CPTemplateApplicationSceneSessionRoleApplication")]
+		[Advice ("Use `UIWindowSceneSessionRole.CarTemplateApplication` instead.")]
 		NSString SessionRoleApplication { get; }
 	}
 

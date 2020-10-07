@@ -2461,6 +2461,9 @@ namespace UIKit {
 
 		[Field ("UIWindowSceneSessionRoleExternalDisplay")]
 		ExternalDisplay,
+
+		[Field ("CPTemplateApplicationSceneSessionRoleApplication")]
+		CarTemplateApplication,
 	}
 
 	[iOS (13,0), TV (13,0), NoWatch]
