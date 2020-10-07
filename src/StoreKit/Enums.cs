@@ -44,6 +44,12 @@ namespace StoreKit {
 		InvalidSignature,
 		MissingOfferParams,
 		InvalidOfferPrice,
+		OverlayCancelled = 15,
+
+		// iOS 14
+		OverlayInvalidConfiguration = 16,
+		OverlayTimeout = 17,
+		IneligibleForOffer = 18,
 	}
 
 	// typedef NSInteger SKDownloadState;

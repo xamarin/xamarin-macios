@@ -1462,3 +1462,6 @@
 !missing-pinvoke! SecTrustedApplicationCopyData is not bound
 !missing-pinvoke! SecTrustedApplicationCreateFromPath is not bound
 !missing-pinvoke! SecTrustedApplicationSetData is not bound
+
+## helper
+!extra-enum-value! Managed value -1 for SecAuthenticationType.Invalid not found in native headers

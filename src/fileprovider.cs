@@ -242,9 +242,18 @@ namespace FileProvider {
 		Renaming = 1 << 3,
 		Trashing = 1 << 4,
 		Deleting = 1 << 5,
+		[NoiOS][NoTV][NoWatch]
+		Evicting = 1 << 6,
 		AddingSubItems = Writing,
 		ContentEnumerating = Reading,
+#if !XAMCORE_4_0
+		[Obsolete ("This enum value is not constant across OS and versions.")]
+	#if MONOMAC
+		All = Reading | Writing | Reparenting | Renaming | Trashing | Deleting | Evicting,
+	#else
 		All = Reading | Writing | Reparenting | Renaming | Trashing | Deleting,
+	#endif
+#endif
 	}
 
 	[iOS (11,0)]

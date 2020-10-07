@@ -101,6 +101,9 @@ namespace Contacts {
 		PolicyViolation = 500,
 		ClientIdentifierInvalid = 600,
 		ClientIdentifierDoesNotExist = 601,
+		ClientIdentifierCollision = 602,
+		ChangeHistoryExpired = 603,
+		ChangeHistoryInvalidAnchor = 604,
 		VCardMalformed = 700,
 		VCardSummarizationError = 701,
 	}

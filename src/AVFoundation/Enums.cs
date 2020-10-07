@@ -209,9 +209,8 @@ namespace AVFoundation {
 
 		VideoCompositorFailed = -11858,
 
-#if !MONOMAC
 		RecordingAlreadyInProgress = -11859,
-#endif
+		CreateContentKeyRequestFailed = -11860,
 		UnsupportedOutputSettings = -11861,
 		OperationNotAllowed = -11862,
 		ContentIsUnavailable = -11863,
@@ -221,6 +220,12 @@ namespace AVFoundation {
 		NoLongerPlayable = -11867,
 		NoCompatibleAlternatesForExternalDisplay = -11868,
 		NoSourceTrack = -11869,
+		ExternalPlaybackNotSupportedForAsset = -11870,
+		OperationNotSupportedForPreset = -11871,
+		SessionHardwareCostOverage = -11872,
+		UnsupportedDeviceActiveFormat = -11873,
+		IncorrectlyConfigured = -11875,
+		SegmentStartedWithNonSyncSample = -11876,
 		RosettaNotInstalled = -11877,
 	}
 
@@ -480,7 +485,11 @@ namespace AVFoundation {
 		SphericalHead = 1,
 		HRTF = 2,
 		SoundField = 3,
-		StereoPassThrough = 5
+		StereoPassThrough = 5,
+		[iOS (8,0)][Mac (10,10)]
+		HrtfHQ = 6,
+		[iOS (13,0)][TV (13,0)][Mac (10,15)][NoWatch]
+		Auto = 7,
 	}
 
 #if !MONOMAC || !XAMCORE_4_0
@@ -693,6 +702,8 @@ namespace AVFoundation {
 	public enum AVSampleBufferRequestMode : long {
 		Immediate,
 		Scheduled,
+		[Mac (10,15)]
+		Opportunistic = 2,
 	}
 
 	[NoTV, NoWatch, Mac (10,15), iOS (10,0)]

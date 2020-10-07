@@ -23,12 +23,14 @@ namespace CoreNFC {
 		InvalidParameter,
 		InvalidParameterLength,
 		ParameterOutOfBound,
+		RadioDisabled = 6,
 
 		ReaderTransceiveErrorTagConnectionLost = 100,
 		ReaderTransceiveErrorRetryExceeded,
 		ReaderTransceiveErrorTagResponseError,
 		ReaderTransceiveErrorSessionInvalidated,
 		ReaderTransceiveErrorTagNotConnected,
+		ReaderTransceiveErrorPacketTooLong = 105,
 
 		ReaderSessionInvalidationErrorUserCanceled = 200,
 		ReaderSessionInvalidationErrorSessionTimeout,
@@ -37,10 +39,11 @@ namespace CoreNFC {
 		ReaderSessionInvalidationErrorFirstNDEFTagRead,
 
 		TagCommandConfigurationErrorInvalidParameters = 300,
-		NdefReaderSessionErrorTagNotWritable,
-		NdefReaderSessionErrorTagUpdateFailure,
-		NdefReaderSessionErrorTagSizeTooSmall,
-		NdefReaderSessionErrorZeroLengthMessage,
+
+		NdefReaderSessionErrorTagNotWritable = 400,
+		NdefReaderSessionErrorTagUpdateFailure = 401,
+		NdefReaderSessionErrorTagSizeTooSmall = 402,
+		NdefReaderSessionErrorZeroLengthMessage = 403,
 	}
 
 	//[iOS (11,0), NoTV, NoWatch, NoMac]

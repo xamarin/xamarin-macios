@@ -119,6 +119,38 @@ namespace Extrospection {
 			}
 		}
 
+		public static bool IsAvailable (this ICustomAttributeProvider cap)
+		{
+			if (!cap.HasCustomAttributes)
+				return true;
+
+			foreach (var ca in cap.CustomAttributes) {
+				switch (ca.Constructor.DeclaringType.Name) {
+				case "UnavailableAttribute":
+					if (GetPlatformManagedValue (Platform) == (byte) ca.ConstructorArguments [0].Value)
+						return false;
+					break;
+				case "NoiOSAttribute":
+					if (Platform == Platforms.iOS)
+						return false;
+					break;
+				case "NoTVAttribute":
+					if (Platform == Platforms.tvOS)
+						return false;
+					break;
+				case "NoWatchAttribute":
+					if (Platform == Platforms.watchOS)
+						return false;
+					break;
+				case "NoMacAttribute":
+					if (Platform == Platforms.macOS)
+						return false;
+					break;
+				}
+			}
+			return true;
+		}
+
 		public static bool IsAvailable (this Decl decl)
 		{
 			// there's no doubt we need to ask for the current platform
