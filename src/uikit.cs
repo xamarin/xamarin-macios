@@ -15832,6 +15832,8 @@ namespace UIKit {
 		IUIViewControllerTransitionCoordinator GetTransitionCoordinator ();
 	}
 
+	[Unavailable (PlatformName.MacCatalyst)]
+	[Advice ("This API is not available when using UIKit on macOS.")]
 	[NoTV]
 	[Deprecated (PlatformName.iOS, 12, 0, message: "No longer supported; please adopt 'WKWebView'.")]
 	[BaseType (typeof (UIView), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof(UIWebViewDelegate)})]
@@ -15935,6 +15937,8 @@ namespace UIKit {
 		bool AllowsLinkPreview { get; set; }
 	}
 
+	[Unavailable (PlatformName.MacCatalyst)]
+	[Advice ("This API is not available when using UIKit on macOS.")]
 	[NoTV]
 	[Deprecated (PlatformName.iOS, 12, 0, message: "No longer supported; please adopt 'WKWebView' APIs.")]
 	[BaseType (typeof (NSObject))]
