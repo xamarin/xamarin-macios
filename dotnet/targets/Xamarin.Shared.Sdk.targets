@@ -400,6 +400,11 @@
 			Outputs="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)"
 		>
 
+		<PropertyGroup>
+			<_NativeExecutablePublishDir Condition="'$(_PlatformName)' != 'macOS'">$(MSBuildProjectDirectory)$(_AppBundlePath)\</_NativeExecutablePublishDir>
+			<_NativeExecutablePublishDir Condition="'$(_PlatformName)' == 'macOS'">$(MSBuildProjectDirectory)$(_AppBundlePath)\Contents\MacOS\</_NativeExecutablePublishDir>
+		</PropertyGroup>
+
 		<ItemGroup>
 			<_XamarinMainLibraries Include="$(_XamarinNativeLibraryDirectory)/$(_LibXamarinName)" />
 			<!-- Link with the libraries shipped with the mono runtime pack -->
@@ -427,7 +432,7 @@
 			<!-- Copy the executable from the intermediate directory to the .app -->
 			<ResolvedFileToPublish
 				Include="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)"
-				RelativePath="$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(MSBuildProjectDirectory)$(_AppBundlePath)))\$(_NativeExecutableName)"/>
+				RelativePath="$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(_NativeExecutablePublishDir)))\$(_NativeExecutableName)"/>
 		</ItemGroup>
 	</Target>
 
