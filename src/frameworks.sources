@@ -1920,6 +1920,7 @@ MAC_FRAMEWORKS =            \
 	NetworkExtension        \
 	NotificationCenter 	\
 	OpenGL                  \
+	OSLog                   \
 	PassKit                 \
 	PdfKit                  \
 	PencilKit               \
