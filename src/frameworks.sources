@@ -1354,17 +1354,8 @@ PRINTCORE_SOURCES = \
 	
 # QTKit
 
-QTKIT_CORE_SOURCES = \
-	QTKit/Defs.cs \
-	QTKit/Enums.cs \
-
 QTKIT_SOURCES = \
-	QTKit/QTCaptureConnection.cs \
-	QTKit/QTCaptureDevice.cs \
-	QTKit/QTCompressionOptions.cs \
-	QTKit/QTFormatDescription.cs \
-	QTKit/QTMedia.cs \
-	QTKit/QTMovie.cs \
+	QTKit/QTCompat.cs \
 
 # QuickLook
 
