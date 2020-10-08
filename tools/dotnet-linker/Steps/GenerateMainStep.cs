@@ -45,17 +45,26 @@ namespace Xamarin {
 				contents.WriteLine ("\txamarin_supports_dynamic_registration = {0};", app.DynamicRegistrationSupported ? "TRUE" : "FALSE");
 				contents.WriteLine ("}");
 				contents.WriteLine ();
-				contents.WriteLine ("void xamarin_initialize_callbacks () __attribute__ ((constructor));");
-				contents.WriteLine ("void xamarin_initialize_callbacks ()");
-				contents.WriteLine ("{");
-				contents.WriteLine ("\txamarin_setup = xamarin_setup_impl;");
-				contents.WriteLine ("}");
-				contents.WriteLine ();
-				contents.WriteLine ("int");
-				contents.WriteLine ("main (int argc, char** argv)");
-				contents.WriteLine ("{");
-				contents.WriteLine ("\t@autoreleasepool { return xamarin_main (argc, argv, XamarinLaunchModeApp); }");
-				contents.WriteLine ("}");
+
+				if (Configuration.Platform == Utils.ApplePlatform.MacOSX) {
+					contents.WriteLine ("extern \"C\" int xammac_setup ()");
+					contents.WriteLine ("{");
+					contents.WriteLine ("\txamarin_setup_impl ();");
+					contents.WriteLine ("\treturn 0;");
+					contents.WriteLine ("}");
+				} else {
+					contents.WriteLine ("void xamarin_initialize_callbacks () __attribute__ ((constructor));");
+					contents.WriteLine ("void xamarin_initialize_callbacks ()");
+					contents.WriteLine ("{");
+					contents.WriteLine ("\txamarin_setup = xamarin_setup_impl;");
+					contents.WriteLine ("}");
+					contents.WriteLine ();
+					contents.WriteLine ("int");
+					contents.WriteLine ("main (int argc, char** argv)");
+					contents.WriteLine ("{");
+					contents.WriteLine ("\t@autoreleasepool { return xamarin_main (argc, argv, XamarinLaunchModeApp); }");
+					contents.WriteLine ("}");
+				}
 
 				File.WriteAllText (file, contents.ToString ());
 
