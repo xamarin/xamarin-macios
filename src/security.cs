@@ -725,11 +725,15 @@ namespace Security {
 		[Field ("kSecUseDataProtectionKeychain")]
 		IntPtr UseDataProtectionKeychain { get; }
 
-#if !MONOMAC // Don't break compat API
-		[iOS (8,0)]
+		[Deprecated (PlatformName.MacOSX, 11,0, message: "Use 'LAContext.InteractionNotAllowed' instead.")]
+		[Deprecated (PlatformName.iOS, 14,0, message: "Use 'LAContext.InteractionNotAllowed' instead.")]
+		[Deprecated (PlatformName.TvOS, 14,0, message: "Use 'LAContext.InteractionNotAllowed' instead.")]
+		[Deprecated (PlatformName.WatchOS, 7,0, message: "Use 'LAContext.InteractionNotAllowed' instead.")]
+		[iOS (8,0)][Mac (10,10)]
 		[Field ("kSecUseOperationPrompt")]
 		IntPtr UseOperationPrompt { get; }
 
+#if !MONOMAC // Don't break compat API
 		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_9_0)]
 		[Field ("kSecUseNoAuthenticationUI")]
 		IntPtr UseNoAuthenticationUI { get; }
