@@ -1136,7 +1136,7 @@ namespace CarPlay {
 
 #if !XAMCORE_4_0
 		[Field ("CPTemplateApplicationSceneSessionRoleApplication")]
-		[Advice ("Use `UIWindowSceneSessionRole.CarTemplateApplication` instead.")]
+		[Advice ("Use 'UIWindowSceneSessionRole.CarTemplateApplication' instead.")]
 		NSString SessionRoleApplication { get; }
 #endif
 	}
