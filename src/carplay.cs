@@ -607,7 +607,6 @@ namespace CarPlay {
 	[BaseType (typeof (NSObject))]
 	interface CPManeuver : NSCopying, NSSecureCoding {
 
-		[Introduced (PlatformName.iOS, 12,0)]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'CPManeuver.SymbolImage' instead.")]
 		[NullAllowed, Export ("symbolSet", ArgumentSemantic.Strong)]
 		CPImageSet SymbolSet { get; set; }
@@ -1134,7 +1133,6 @@ namespace CarPlay {
 		[Export ("carWindow", ArgumentSemantic.Strong)]
 		CPWindow CarWindow { get; }
 
-		[iOS (13, 0)]
 		[Field ("CPTemplateApplicationSceneSessionRoleApplication")]
 		NSString SessionRoleApplication { get; }
 	}

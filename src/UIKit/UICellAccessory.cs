@@ -19,11 +19,9 @@ namespace UIKit {
 
 	public partial class UICellAccessory {
 
-		[TV (14,0), iOS (14,0)]
 		[DllImport (Constants.UIKitLibrary)]
 		static extern IntPtr UICellAccessoryPositionBeforeAccessoryOfClass (IntPtr accessoryCls);
 
-		[TV (14,0), iOS (14,0)]
 		[return: DelegateProxy (typeof (SDUICellAccessoryPosition))]
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static UICellAccessoryPosition GetPositionBeforeAccessory (Class accessoryClass)
@@ -34,16 +32,13 @@ namespace UIKit {
 			return NIDUICellAccessoryPosition.Create (ret)!;
 		}
 		
-		[TV (14,0), iOS (14,0)]
 		[return: DelegateProxy (typeof (SDUICellAccessoryPosition))]
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static UICellAccessoryPosition GetPositionBeforeAccessory (Type accessoryType) => GetPositionBeforeAccessory (new Class (accessoryType));
 
-		[TV (14,0), iOS (14,0)]
 		[DllImport (Constants.UIKitLibrary)]
 		static extern IntPtr UICellAccessoryPositionAfterAccessoryOfClass (IntPtr accessoryCls);
 
-		[TV (14,0), iOS (14,0)]
 		[return: DelegateProxy (typeof (SDUICellAccessoryPosition))]
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static UICellAccessoryPosition GetPositionAfterAccessory (Class accessoryClass)
@@ -54,7 +49,6 @@ namespace UIKit {
 			return NIDUICellAccessoryPosition.Create (ret)!;
 		}
 
-		[TV (14,0), iOS (14,0)]
 		[return: DelegateProxy (typeof (SDUICellAccessoryPosition))]
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static UICellAccessoryPosition GetPositionAfterAccessory (Type accessoryType) => GetPositionAfterAccessory (new Class (accessoryType));

@@ -3251,22 +3251,19 @@ namespace SpriteKit {
 
 #if !WATCH
 		// Static Category from GameplayKit
-		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+		[NoWatch]
 		[Static]
 		[Export ("tileMapNodesWithTileSet:columns:rows:tileSize:fromNoiseMap:tileTypeNoiseMapThresholds:")]
 		SKTileMapNode[] FromTileSet (SKTileSet tileSet, nuint columns, nuint rows, CGSize tileSize, GKNoiseMap noiseMap, NSNumber[] thresholds);
 #endif
 
-		[iOS (9,0), Mac (10,11)]
 		[Export ("attributeValues", ArgumentSemantic.Copy)]
 		NSDictionary<NSString, SKAttributeValue> AttributeValues { get; set; }
 
-		[iOS (9,0), Mac(10,11)]
 		[Export ("valueForAttributeNamed:")]
 		[return: NullAllowed]
 		SKAttributeValue GetValue (string key);
 
-		[iOS (9,0), Mac(10,11)]
 		[Export ("setValue:forAttributeNamed:")]
 		void SetValue (SKAttributeValue value, string key);
 	}

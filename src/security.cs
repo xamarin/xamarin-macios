@@ -59,7 +59,7 @@ namespace Security {
 		[Field ("kSecPolicyAppleRevocation")]
 		NSString AppleRevocation { get; }
 
-		[iOS (7,0)][Mac (10,9)]
+		[Mac (10,9)]
 		[Field ("kSecPolicyApplePassbookSigning")]
 		NSString ApplePassbookSigning { get; }
 
@@ -84,7 +84,7 @@ namespace Security {
 		[Field ("kSecPolicyRevocationFlags")]
 		NSString RevocationFlags { get; }
 
-		[iOS (7,0)][Mac (10,9)]
+		[Mac (10,9)]
 		[Field ("kSecPolicyTeamIdentifier")]
 		NSString TeamIdentifier { get; }
 	}

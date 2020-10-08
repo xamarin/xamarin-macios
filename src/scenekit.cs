@@ -200,11 +200,9 @@ namespace SceneKit {
 		void ResumeAnimation (NSString key);
 
 		[Abstract]
-		[Watch (3, 0)]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'SCNAnimationPlayer.Paused' instead.")]
 		[TV (9, 0)]
 		[Deprecated (PlatformName.TvOS, 11, 0,   message: "Use 'SCNAnimationPlayer.Paused' instead.")]
-		[iOS (8, 0)]
 		[Deprecated (PlatformName.iOS, 11, 0,    message: "Use 'SCNAnimationPlayer.Paused' instead.")]
 		[Mac (10, 9)]
 		[Deprecated (PlatformName.MacOSX, 10, 13,message: "Use 'SCNAnimationPlayer.Paused' instead.")]
@@ -397,15 +395,15 @@ namespace SceneKit {
 		[Static, Export ("camera")]
 		SCNCamera Create ();
 
-		[iOS (8,0)][Mac (10,9)]
+		[Mac (10,9)]
 		[Export ("projectionTransform")]
 		SCNMatrix4 ProjectionTransform { get; [Mac (10,9)] set; }
 
-		[iOS (8,0)][Mac (10,9)]
+		[Mac (10,9)]
 		[Export ("automaticallyAdjustsZRange")]
 		bool AutomaticallyAdjustsZRange { get; set; }
 		
-		[iOS (8,0)][Mac (10,9)]
+		[Mac (10,9)]
 		[Export ("orthographicScale")]
 		double OrthographicScale { get; set; }
 
@@ -413,7 +411,7 @@ namespace SceneKit {
 		[Deprecated (PlatformName.iOS,    11, 0,  message: "Use 'FocusDistance' instead.")]
 		[Deprecated (PlatformName.TvOS,   11, 0,  message: "Use 'FocusDistance' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4, 0,  message: "Use 'FocusDistance' instead.")]
-		[iOS (8,0)][Mac (10,9)]
+		[Mac (10,9)]
 		[Export ("focalDistance")]
 		nfloat FocalDistance { get; set; }
 
@@ -421,7 +419,7 @@ namespace SceneKit {
 		[Deprecated (PlatformName.iOS,    11, 0,  message: "Use 'FocusDistance' instead.")]
 		[Deprecated (PlatformName.TvOS,   11, 0,  message: "Use 'FocusDistance' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4, 0,  message: "Use 'FocusDistance' instead.")]
-		[iOS (8,0)][Mac (10,9)]
+		[Mac (10,9)]
 		[Export ("focalSize")]
 		nfloat FocalSize { get; set; }
 
@@ -429,7 +427,7 @@ namespace SceneKit {
 		[Deprecated (PlatformName.iOS,    11, 0,  message: "Use 'FStop' instead.")]
 		[Deprecated (PlatformName.TvOS,   11, 0,  message: "Use 'FStop' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4, 0,  message: "Use 'FStop' instead.")]
-		[iOS (8,0)][Mac (10,9)]
+		[Mac (10,9)]
 		[Export ("focalBlurRadius")]
 		nfloat FocalBlurRadius { get; set; }
 
@@ -437,7 +435,7 @@ namespace SceneKit {
 		[Deprecated (PlatformName.iOS,    11, 0,  message: "Use 'FStop' instead with FStop = SensorHeight / Aperture.")]
 		[Deprecated (PlatformName.TvOS,   11, 0,  message: "Use 'FStop' instead with FStop = SensorHeight / Aperture.")]
 		[Deprecated (PlatformName.WatchOS, 4, 0,  message: "Use 'FStop' instead with FStop = SensorHeight / Aperture.")]
-		[iOS (8,0)][Mac (10,9)]
+		[Mac (10,9)]
 		[Export ("aperture")]
 		nfloat Aperture { get; set; }
 
@@ -521,7 +519,7 @@ namespace SceneKit {
 		[Export ("colorGrading")]
 		SCNMaterialProperty ColorGrading { get; }
 
-		[iOS (8,0)][Mac (10,10)]
+		[Mac (10,10)]
 		[Export ("categoryBitMask")]
 		nuint CategoryBitMask { get; set; }
 
@@ -1130,7 +1128,7 @@ namespace SceneKit {
 		[Field ("SCNHitTestRootNodeKey")]
 		NSString RootNodeKey { get; }
 
-		[Mac (10,9), iOS (8,0)]
+		[Mac (10,9)]
 		[Field ("SCNHitTestIgnoreHiddenNodesKey")]
 		NSString IgnoreHiddenNodesKey { get; }
 
@@ -1320,7 +1318,7 @@ namespace SceneKit {
 		[Export ("zFar")]
 		nfloat ZFar { get; set; }
 
-		[Mac (10,10), iOS (8,0)]
+		[Mac (10,10)]
 		[Export ("categoryBitMask")]
 		nuint CategoryBitMask { get; set; }
 
@@ -2644,15 +2642,14 @@ namespace SceneKit {
 
 		
 
-		[Mac (10,9), iOS (8,0)]
 		[Field ("SCNSceneExportDestinationURL")]
 		NSString ExportDestinationUrl { get; }
 
-		[Mac (10,10), iOS (8,0)] // More 32-bit brokenness - 17710842
+		[Mac (10,10)] // More 32-bit brokenness - 17710842
 		[Export ("physicsWorld")]
 		SCNPhysicsWorld PhysicsWorld { get; }
 
-		[Mac (10,9), iOS (8,0)]
+		[Mac (10,9)]
 		[Export ("background")]
 		SCNMaterialProperty Background { get; }
 
@@ -2660,42 +2657,41 @@ namespace SceneKit {
 		[Export ("lightingEnvironment")]
 		SCNMaterialProperty LightingEnvironment { get; }
 
-		[Mac (10,10), iOS (8,0)]
+		[Mac (10,10)]
 		[Export ("fogStartDistance")]
 		nfloat FogStartDistance { get; set; }
 
-		[Mac (10,10), iOS (8,0)]
+		[Mac (10,10)]
 		[Export ("fogEndDistance")]
 		nfloat FogEndDistance { get; set; }
 
-		[Mac (10,10), iOS (8,0)]
+		[Mac (10,10)]
 		[Export ("fogDensityExponent")]
 		nfloat FogDensityExponent { get; set; }
 
-		[Mac (10,10), iOS (8,0)]
+		[Mac (10,10)]
 		[Export ("fogColor", ArgumentSemantic.Retain)]
 		NSObject FogColor { get; set; }
 
-		[Mac (10,10), iOS (8,0)]
+		[Mac (10,10)]
 		[Export ("paused")]
 		bool Paused { [Bind ("isPaused")] get; set; }
 
-		[Mac (10,9), iOS (8,0)]
 		[Static, Export ("sceneNamed:")]
 		SCNScene FromFile (string name);
 
-		[Mac (10,10), iOS (8,0)]
+		[Mac (10,10)]
 		[Static, Export ("sceneNamed:inDirectory:options:")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		SCNScene FromFile (string name, [NullAllowed] string directory, [NullAllowed] NSDictionary options);
 
-		[Mac (10,10), iOS (8,0)]
+		[Mac (10,10)]
 		[Static, Wrap ("FromFile (name, directory, options.GetDictionary ())")]
 		SCNScene FromFile (string name, string directory, SCNSceneLoadingOptions options);
 
 		// Keeping here the same name WriteToUrl for iOS and friends because it is how it was bound
 		// initialy for macOS and having it named diferently would hurt shared code
-		[TV (10, 0), NoWatch, Mac (10, 9), iOS (10, 0)]
+		[TV (10, 0), NoWatch, iOS (10, 0)]
 		[Export ("writeToURL:options:delegate:progressHandler:")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		bool WriteToUrl (NSUrl url,
@@ -2703,7 +2699,7 @@ namespace SceneKit {
 			[NullAllowed] ISCNSceneExportDelegate aDelegate,
 			[NullAllowed] SCNSceneExportProgressHandler exportProgressHandler);
 
-		[TV (10, 0), NoWatch, Mac (10, 9), iOS (10, 0)]
+		[TV (10, 0), NoWatch, iOS (10, 0)]
 		[Wrap ("WriteToUrl (url, options.GetDictionary (), handler, exportProgressHandler)")]
 		bool WriteToUrl (NSUrl url, SCNSceneLoadingOptions options, ISCNSceneExportDelegate handler, SCNSceneExportProgressHandler exportProgressHandler);
 
@@ -2736,7 +2732,7 @@ namespace SceneKit {
 		[Field ("SCNSceneFrameRateAttributeKey")]
 		NSString FrameRateAttributeKey { get; }
 
-		[iOS (8,0)][Mac (10,10)]
+		[Mac (10,10)]
 		[Field ("SCNSceneUpAxisAttributeKey")]
 		NSString UpAxisAttributeKey { get; }
 
@@ -2875,34 +2871,34 @@ namespace SceneKit {
 		NSString UseSafeModeKey	 { get; }
 
 		[Mac(10,10)]
-		[iOS (8,0)] // header said NA and docs says "Available in iOS 8.0 through iOS 8.2." but it's back on iOS11
+		// header said NA and docs says "Available in iOS 8.0 through iOS 8.2." but it's back on iOS11
 		[TV (11,0), Watch (4,0)]
 		[Field ("SCNSceneSourceConvertUnitsToMetersKey")]
 		NSString ConvertUnitsToMetersKey { get; }
 
 		[Mac(10,10)]
-		[iOS (8,0)] // header said NA and docs says "Available in iOS 8.0 through iOS 8.2." but it's back on iOS11
+		// header said NA and docs says "Available in iOS 8.0 through iOS 8.2." but it's back on iOS11
 		[TV (11,0), Watch (4,0)]
 		[Field ("SCNSceneSourceConvertToYUpKey")]
 		NSString ConvertToYUpKey { get; }
 
-		[Mac(10,10), iOS(8,0)]
+		[Mac(10,10)]
 		[Field ("SCNSceneSourceAnimationImportPolicyKey")]
 		NSString AnimationImportPolicyKey { get; }
 		
-		[Mac(10,10), iOS(8,0)]
+		[Mac(10,10)]
 		[Field ("SCNSceneSourceAnimationImportPolicyPlay")]
 		NSString AnimationImportPolicyPlay { get; }
 		
-		[Mac(10,10), iOS(8,0)]
+		[Mac(10,10)]
 		[Field ("SCNSceneSourceAnimationImportPolicyPlayRepeatedly")]
 		NSString AnimationImportPolicyPlayRepeatedly { get; }
 		
-		[Mac(10,10), iOS(8,0)]
+		[Mac(10,10)]
 		[Field ("SCNSceneSourceAnimationImportPolicyDoNotPlay")]
 		NSString AnimationImportPolicyDoNotPlay { get; }
 		
-		[Mac(10,10), iOS(8,0)]
+		[Mac(10,10)]
 		[Field ("SCNSceneSourceAnimationImportPolicyPlayUsingSceneTimeBase")]
 		NSString AnimationImportPolicyPlayUsingSceneTimeBase { get; }
 
@@ -3472,7 +3468,7 @@ namespace SceneKit {
 		[Export ("stop:")]
 		void Stop ([NullAllowed] NSObject sender);
 
-		[iOS (8,0)][Mac (10,10)]
+		[Mac (10,10)]
 		[Export ("snapshot")]
 		NSImage Snapshot ();
 
@@ -3480,7 +3476,7 @@ namespace SceneKit {
 		[Export ("preferredFramesPerSecond")]
 		nint PreferredFramesPerSecond { get; set; }
 
-		[iOS (8,0)][Mac (10,10)]
+		[Mac (10,10)]
 		[Export ("antialiasingMode")]
 		SCNAntialiasingMode AntialiasingMode { get; set; }
 
@@ -3628,7 +3624,7 @@ namespace SceneKit {
 		[Export ("influenceFactor")]
 		nfloat InfluenceFactor { get; set; }
 
-		[Mac (10, 10), iOS (8,0)]
+		[Mac (10, 10)]
 		[TV (11,0)][Watch (4,0)]
 		[Export ("enabled")]
 		bool Enabled { [Bind ("isEnabled")] get; set; }

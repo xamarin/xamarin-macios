@@ -199,8 +199,6 @@ namespace CloudKit {
 	interface CKContainer {
 
 		[NoWatch]
-		[iOS (8, 0)]
-		[Mac (10, 10)]
 		[Deprecated (PlatformName.iOS, 10, 0, message : "Use 'CurrentUserDefaultName' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 12, message : "Use 'CurrentUserDefaultName' instead.")]
 		[Field ("CKOwnerDefaultName")]
@@ -433,16 +431,12 @@ namespace CloudKit {
 		[Export ("userRecordID", ArgumentSemantic.Copy)]
 		CKRecordID UserRecordId { get; }
 
-		[iOS (8, 0)]
-		[Mac (10, 10)]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'DisplayContact.GivenName'.")]
 		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'DisplayContact.GivenName'.")]
 		[NullAllowed]
 		[Export ("firstName", ArgumentSemantic.Copy)]
 		string FirstName { get; }
 
-		[iOS (8, 0)]
-		[Mac (10, 10)]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'DisplayContact.FamilyName'.")]
 		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'DisplayContact.FamilyName'.")]
 		[NullAllowed]
@@ -1101,7 +1095,7 @@ namespace CloudKit {
 		[NullAllowed, Export ("recordID", ArgumentSemantic.Copy)]
 		CKRecordID RecordId { get; }
 
-		[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12)]
+		[iOS (10,0), TV (10,0), Mac (10,12)]
 		[Export ("databaseScope", ArgumentSemantic.Assign)]
 		CKDatabaseScope DatabaseScope { get; }
 	}
@@ -1116,7 +1110,7 @@ namespace CloudKit {
 		[Export ("recordZoneID", ArgumentSemantic.Copy)]
 		CKRecordZoneID RecordZoneId { get; }
 
-		[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12)]
+		[iOS (10,0), TV (10,0), Mac (10,12)]
 		[Export ("databaseScope", ArgumentSemantic.Assign)]
 		CKDatabaseScope DatabaseScope { get; }
 	}
@@ -1613,7 +1607,7 @@ namespace CloudKit {
 		[Export ("predicate", ArgumentSemantic.Copy)]
 		NSPredicate Predicate { get; }
 
-		[TV (10,0), Watch (6,0)]
+		[TV (10,0)]
 		[NullAllowed]
 		[Export ("notificationInfo", ArgumentSemantic.Copy)]
 		CKNotificationInfo NotificationInfo { get; set; }
@@ -1665,7 +1659,6 @@ namespace CloudKit {
 		[Export ("desiredKeys", ArgumentSemantic.Copy)]
 		string [] DesiredKeys { get; set; }
 
-		[TV (10, 0)]
 		[Export ("shouldBadge", ArgumentSemantic.UnsafeUnretained)]
 		bool ShouldBadge { get; set; }
 

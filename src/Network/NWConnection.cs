@@ -574,7 +574,7 @@ namespace Network {
 			BlockLiteral.SimpleCall (method, (arg)=> nw_connection_batch (GetCheckedHandle (), arg));
 		}
 
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[TV (13,0), Mac (10,15), iOS (13,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		unsafe static extern void nw_connection_access_establishment_report (IntPtr connection, IntPtr queue, ref BlockLiteral access_block);
 
@@ -592,7 +592,7 @@ namespace Network {
 			}
 		}
 
-		[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+		[TV (13,0), Mac (10,15), iOS (13,0)]
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void GetEstablishmentReport (DispatchQueue queue, Action<NWEstablishmentReport> handler)
 		{

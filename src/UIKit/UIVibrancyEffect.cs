@@ -17,7 +17,6 @@ namespace UIKit {
 		// the resulting syntax does not look good in user code so we provide a better looking API
 		// https://trello.com/c/iQpXOxCd/227-category-and-static-methods-selectors
 		// note: we cannot reuse the same method name - as it would break compilation of existing apps
-		[iOS (8,0)]
 		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'CreatePrimaryVibrancyEffectForNotificationCenter' instead.")]
 		static public UIVibrancyEffect CreateForNotificationCenter ()
 		{
