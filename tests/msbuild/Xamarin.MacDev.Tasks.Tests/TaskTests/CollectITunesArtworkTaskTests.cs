@@ -18,7 +18,7 @@ namespace Xamarin.iOS.Tasks {
 
 			Assert.IsFalse (task.Execute (), "Execute failure");
 			Assert.AreEqual (1, Engine.Logger.ErrorEvents.Count, "ErrorCount");
-			Assert.That (Engine.Logger.ErrorEvents [0].Message, Does.Match ("Error loading '.*/Xamarin.iOS.Tasks.Tests.dll': Unknown image format."), "ErrorMessage");
+			Assert.That (Engine.Logger.ErrorEvents [0].Message, Does.Match ("Error loading '.*/Xamarin.MacDev.Tasks.Tests.dll': Unknown image format."), "ErrorMessage");
 		}
 
 		[Test]
