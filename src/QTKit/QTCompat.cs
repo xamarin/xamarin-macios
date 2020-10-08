@@ -45,39 +45,75 @@ namespace QTKit {
 		{
 		}
 
-		public QTKit.QTMediaType MediaTypeValue { get; }
+		public QTKit.QTMediaType MediaTypeValue {
+			get { return default(QTKit.QTMediaType); }
+		}
 
-		public override System.IntPtr ClassHandle { get; }
+		public override System.IntPtr ClassHandle {
+			get { return default(System.IntPtr); }
+		}
 
-		public virtual Foundation.NSDictionary ConnectionAttributes { get; set; }
+		public virtual Foundation.NSDictionary ConnectionAttributes {
+			get { return default(Foundation.NSDictionary); }
+			set { }
+		}
 
-		public virtual System.Boolean Enabled { get; set; }
+		public virtual System.Boolean Enabled {
+			get { return default(System.Boolean); }
+			set { }
+		}
 
-		public virtual QTKit.QTFormatDescription FormatDescription { get; }
+		public virtual QTKit.QTFormatDescription FormatDescription {
+			get { return default(QTKit.QTFormatDescription); }
+		}
 
-		public virtual System.String MediaType { get; }
+		public virtual System.String MediaType {
+			get { return default(System.String); }
+		}
 
-		public virtual Foundation.NSObject Owner { get; }
+		public virtual Foundation.NSObject Owner {
+			get { return default(Foundation.NSObject); }
+		}
 
-		public static Foundation.NSString AttributeDidChangeNotification { get; }
+		public static Foundation.NSString AttributeDidChangeNotification {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString AttributeWillChangeNotification { get; }
+		public static Foundation.NSString AttributeWillChangeNotification {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString AudioAveragePowerLevelsAttribute { get; }
+		public static Foundation.NSString AudioAveragePowerLevelsAttribute {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString AudioMasterVolumeAttribute { get; }
+		public static Foundation.NSString AudioMasterVolumeAttribute {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString AudioPeakHoldLevelsAttribute { get; }
+		public static Foundation.NSString AudioPeakHoldLevelsAttribute {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString AudioVolumesAttribute { get; }
+		public static Foundation.NSString AudioVolumesAttribute {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString ChangedAttributeKey { get; }
+		public static Foundation.NSString ChangedAttributeKey {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString EnabledAudioChannelsAttribute { get; }
+		public static Foundation.NSString EnabledAudioChannelsAttribute {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString FormatDescriptionDidChangeNotification { get; }
+		public static Foundation.NSString FormatDescriptionDidChangeNotification {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString FormatDescriptionWillChangeNotification { get; }
+		public static Foundation.NSString FormatDescriptionWillChangeNotification {
+			get { return default(Foundation.NSString); }
+		}
 
 		[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 		public static class Notifications : System.Object {
@@ -195,65 +231,127 @@ namespace QTKit {
 			throw new System.PlatformNotSupportedException (ObjCRuntime.Constants.MacOS32bitsUnavailable);
 		}
 
-		public System.Boolean IsAvcTransportControlReadOnly { get; }
+		public System.Boolean IsAvcTransportControlReadOnly {
+			get { return default(System.Boolean); }
+		}
 
-		public QTKit.QTCaptureDeviceTransportControl AvcTransportControl { get; set; }
+		public QTKit.QTCaptureDeviceTransportControl AvcTransportControl {
+			get { return default(QTKit.QTCaptureDeviceTransportControl); }
+			set { }
+		}
 
-		public System.Boolean IsSuspended { get; }
+		public System.Boolean IsSuspended {
+			get { return default(System.Boolean); }
+		}
 
-		public override System.IntPtr ClassHandle { get; }
+		public override System.IntPtr ClassHandle {
+			get { return default(System.IntPtr); }
+		}
 
-		public virtual Foundation.NSDictionary DeviceAttributes { get; set; }
+		public virtual Foundation.NSDictionary DeviceAttributes {
+			get { return default(Foundation.NSDictionary); }
+			set { }
+		}
 
-		public virtual QTKit.QTFormatDescription[] FormatDescriptions { get; }
+		public virtual QTKit.QTFormatDescription[] FormatDescriptions {
+			get { return default(QTKit.QTFormatDescription[]); }
+		}
 
-		public static QTKit.QTCaptureDevice[] InputDevices { get; }
+		public static QTKit.QTCaptureDevice[] InputDevices {
+			get { return default(QTKit.QTCaptureDevice[]); }
+		}
 
-		public virtual System.Boolean IsConnected { get; }
+		public virtual System.Boolean IsConnected {
+			get { return default(System.Boolean); }
+		}
 
-		public virtual System.Boolean IsInUseByAnotherApplication { get; }
+		public virtual System.Boolean IsInUseByAnotherApplication {
+			get { return default(System.Boolean); }
+		}
 
-		public virtual System.Boolean IsOpen { get; }
+		public virtual System.Boolean IsOpen {
+			get { return default(System.Boolean); }
+		}
 
-		public virtual System.String LocalizedDisplayName { get; }
+		public virtual System.String LocalizedDisplayName {
+			get { return default(System.String); }
+		}
 
-		public virtual System.String ModelUniqueID { get; }
+		public virtual System.String ModelUniqueID {
+			get { return default(System.String); }
+		}
 
-		public virtual System.String UniqueID { get; }
+		public virtual System.String UniqueID {
+			get { return default(System.String); }
+		}
 
-		public static Foundation.NSString AVCTransportControlsAttribute { get; }
+		public static Foundation.NSString AVCTransportControlsAttribute {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString AVCTransportControlsPlaybackModeKey { get; }
+		public static Foundation.NSString AVCTransportControlsPlaybackModeKey {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString AVCTransportControlsSpeedKey { get; }
+		public static Foundation.NSString AVCTransportControlsSpeedKey {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString AttributeDidChangeNotification { get; }
+		public static Foundation.NSString AttributeDidChangeNotification {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString AttributeWillChangeNotification { get; }
+		public static Foundation.NSString AttributeWillChangeNotification {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString AvailableInputSourcesAttribute { get; }
+		public static Foundation.NSString AvailableInputSourcesAttribute {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString ChangedAttributeKey { get; }
+		public static Foundation.NSString ChangedAttributeKey {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString FormatDescriptionsDidChangeNotification { get; }
+		public static Foundation.NSString FormatDescriptionsDidChangeNotification {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString FormatDescriptionsWillChangeNotification { get; }
+		public static Foundation.NSString FormatDescriptionsWillChangeNotification {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString InputSourceIdentifierAttribute { get; }
+		public static Foundation.NSString InputSourceIdentifierAttribute {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString InputSourceIdentifierKey { get; }
+		public static Foundation.NSString InputSourceIdentifierKey {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString InputSourceLocalizedDisplayNameKey { get; }
+		public static Foundation.NSString InputSourceLocalizedDisplayNameKey {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString LegacySequenceGrabberAttribute { get; }
+		public static Foundation.NSString LegacySequenceGrabberAttribute {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString LinkedDevicesAttribute { get; }
+		public static Foundation.NSString LinkedDevicesAttribute {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString SuspendedAttribute { get; }
+		public static Foundation.NSString SuspendedAttribute {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString WasConnectedNotification { get; }
+		public static Foundation.NSString WasConnectedNotification {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString WasDisconnectedNotification { get; }
+		public static Foundation.NSString WasDisconnectedNotification {
+			get { return default(Foundation.NSString); }
+		}
 
 		[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 		public static class Notifications : System.Object {
@@ -328,9 +426,15 @@ namespace QTKit {
 			throw new System.PlatformNotSupportedException (ObjCRuntime.Constants.MacOS32bitsUnavailable);
 		}
 
-		public QTKit.QTCaptureDeviceControlsSpeed? Speed { get; set; }
+		public QTKit.QTCaptureDeviceControlsSpeed? Speed {
+			get { return default(System.Nullable<QTKit.QTCaptureDeviceControlsSpeed>); }
+			set { }
+		}
 
-		public QTKit.QTCaptureDevicePlaybackMode? PlaybackMode { get; set; }
+		public QTKit.QTCaptureDevicePlaybackMode? PlaybackMode {
+			get { return default(System.Nullable<QTKit.QTCaptureDevicePlaybackMode>); }
+			set { }
+		}
 
 	}
 
@@ -371,15 +475,25 @@ namespace QTKit {
 			return default (System.Boolean);
 		}
 
-		public QTKit.QTMediaType MediaTypeValue { get; }
+		public QTKit.QTMediaType MediaTypeValue {
+			get { return default(QTKit.QTMediaType); }
+		}
 
-		public override System.IntPtr ClassHandle { get; }
+		public override System.IntPtr ClassHandle {
+			get { return default(System.IntPtr); }
+		}
 
-		public virtual System.String LocalizedCompressionOptionsSummary { get; }
+		public virtual System.String LocalizedCompressionOptionsSummary {
+			get { return default(System.String); }
+		}
 
-		public virtual System.String LocalizedDisplayName { get; }
+		public virtual System.String LocalizedDisplayName {
+			get { return default(System.String); }
+		}
 
-		public virtual System.String MediaType { get; }
+		public virtual System.String MediaType {
+			get { return default(System.String); }
+		}
 
 	}
 
@@ -410,19 +524,33 @@ namespace QTKit {
 			return default (System.Boolean);
 		}
 
-		public QTKit.QTMediaType MediaTypeValue { get; }
+		public QTKit.QTMediaType MediaTypeValue {
+			get { return default(QTKit.QTMediaType); }
+		}
 
-		public override System.IntPtr ClassHandle { get; }
+		public override System.IntPtr ClassHandle {
+			get { return default(System.IntPtr); }
+		}
 
-		public virtual Foundation.NSDictionary FormatDescriptionAttributes { get; }
+		public virtual Foundation.NSDictionary FormatDescriptionAttributes {
+			get { return default(Foundation.NSDictionary); }
+		}
 
-		public virtual System.UInt32 FormatType { get; }
+		public virtual System.UInt32 FormatType {
+			get { return default(System.UInt32); }
+		}
 
-		public virtual System.String LocalizedFormatSummary { get; }
+		public virtual System.String LocalizedFormatSummary {
+			get { return default(System.String); }
+		}
 
-		public virtual System.String MediaType { get; }
+		public virtual System.String MediaType {
+			get { return default(System.String); }
+		}
 
-		public virtual Foundation.NSData QuickTimeSampleDescription { get; }
+		public virtual Foundation.NSData QuickTimeSampleDescription {
+			get { return default(Foundation.NSData); }
+		}
 
 	}
 
@@ -475,47 +603,90 @@ namespace QTKit {
 		{
 		}
 
-		public override System.IntPtr ClassHandle { get; }
+		public override System.IntPtr ClassHandle {
+			get { return default(System.IntPtr); }
+		}
 
-		public virtual Foundation.NSDictionary MediaAttributes { get; set; }
+		public virtual Foundation.NSDictionary MediaAttributes {
+			get { return default(Foundation.NSDictionary); }
+			set { }
+		}
 
-		public virtual System.IntPtr QuickTimeMedia { get; }
+		public virtual System.IntPtr QuickTimeMedia {
+			get { return default(System.IntPtr); }
+		}
 
-		public virtual QTKit.QTTrack Track { get; }
+		public virtual QTKit.QTTrack Track {
+			get { return default(QTKit.QTTrack); }
+		}
 
-		public static Foundation.NSString CharacteristicAudio { get; }
+		public static Foundation.NSString CharacteristicAudio {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString CharacteristicCanSendVideo { get; }
+		public static Foundation.NSString CharacteristicCanSendVideo {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString CharacteristicCanStep { get; }
+		public static Foundation.NSString CharacteristicCanStep {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString CharacteristicHasNoDuration { get; }
+		public static Foundation.NSString CharacteristicHasNoDuration {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString CharacteristicHasSkinData { get; }
+		public static Foundation.NSString CharacteristicHasSkinData {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString CharacteristicHasVideoFrameRate { get; }
+		public static Foundation.NSString CharacteristicHasVideoFrameRate {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString CharacteristicNonLinear { get; }
+		public static Foundation.NSString CharacteristicNonLinear {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString CharacteristicProvidesActions { get; }
+		public static Foundation.NSString CharacteristicProvidesActions {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString CharacteristicProvidesKeyFocus { get; }
+		public static Foundation.NSString CharacteristicProvidesKeyFocus {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString CharacteristicVisual { get; }
+		public static Foundation.NSString CharacteristicVisual {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString CreationTimeAttribute { get; }
+		public static Foundation.NSString CreationTimeAttribute {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString DurationAttribute { get; }
+		public static Foundation.NSString DurationAttribute {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString ModificationTimeAttribute { get; }
+		public static Foundation.NSString ModificationTimeAttribute {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString QualityAttribute { get; }
+		public static Foundation.NSString QualityAttribute {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString SampleCountAttribute { get; }
+		public static Foundation.NSString SampleCountAttribute {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString TimeScaleAttribute { get; }
+		public static Foundation.NSString TimeScaleAttribute {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString TypeAttribute { get; }
+		public static Foundation.NSString TypeAttribute {
+			get { return default(Foundation.NSString); }
+		}
 
 	}
 
@@ -541,11 +712,20 @@ namespace QTKit {
 			return default (Foundation.NSDictionary);
 		}
 
-		public System.String CodecType { get; set; }
+		public System.String CodecType {
+			get { return default(System.String); }
+			set { }
+		}
 
-		public QTKit.QTCodecQuality? Quality { get; set; }
+		public QTKit.QTCodecQuality? Quality {
+			get { return default(System.Nullable<QTKit.QTCodecQuality>); }
+			set { }
+		}
 
-		public System.Int32? TimeScale { get; set; }
+		public System.Int32? TimeScale {
+			get { return default(System.Nullable<System.Int32>); }
+			set { }
+		}
 
 	}
 
@@ -561,13 +741,25 @@ namespace QTKit {
 			return default (Foundation.NSDictionary);
 		}
 
-		public System.Boolean Flatten { get; set; }
+		public System.Boolean Flatten {
+			get { return default(System.Boolean); }
+			set { }
+		}
 
-		public QTKit.QTFileType? ExportType { get; set; }
+		public QTKit.QTFileType? ExportType {
+			get { return default(System.Nullable<QTKit.QTFileType>); }
+			set { }
+		}
 
-		public Foundation.NSData ExportSettings { get; set; }
+		public Foundation.NSData ExportSettings {
+			get { return default(Foundation.NSData); }
+			set { }
+		}
 
-		public System.Int32? ManufacturerCode { get; set; }
+		public System.Int32? ManufacturerCode {
+			get { return default(System.Nullable<System.Int32>); }
+			set { }
+		}
 
 	}
 
@@ -653,55 +845,108 @@ namespace QTKit {
 		{
 		}
 
-		public override System.IntPtr ClassHandle { get; }
+		public override System.IntPtr ClassHandle {
+			get { return default(System.IntPtr); }
+		}
 
-		public virtual System.Boolean Enabled { get; set; }
+		public virtual System.Boolean Enabled {
+			get { return default(System.Boolean); }
+			set { }
+		}
 
-		public virtual QTKit.QTMedia Media { get; }
+		public virtual QTKit.QTMedia Media {
+			get { return default(QTKit.QTMedia); }
+		}
 
-		public virtual QTKit.QTMovie Movie { get; }
+		public virtual QTKit.QTMovie Movie {
+			get { return default(QTKit.QTMovie); }
+		}
 
-		public virtual System.IntPtr QuickTimeTrack { get; }
+		public virtual System.IntPtr QuickTimeTrack {
+			get { return default(System.IntPtr); }
+		}
 
-		public virtual Foundation.NSDictionary TrackAttributes { get; set; }
+		public virtual Foundation.NSDictionary TrackAttributes {
+			get { return default(Foundation.NSDictionary); }
+			set { }
+		}
 
-		public virtual System.Single Volume { get; set; }
+		public virtual System.Single Volume {
+			get { return default(System.Single); }
+			set { }
+		}
 
-		public static Foundation.NSString BoundsAttribute { get; }
+		public static Foundation.NSString BoundsAttribute {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString CreationTimeAttribute { get; }
+		public static Foundation.NSString CreationTimeAttribute {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString DimensionsAttribute { get; }
+		public static Foundation.NSString DimensionsAttribute {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString DisplayNameAttribute { get; }
+		public static Foundation.NSString DisplayNameAttribute {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString EnabledAttribute { get; }
+		public static Foundation.NSString EnabledAttribute {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString FormatSummaryAttribute { get; }
+		public static Foundation.NSString FormatSummaryAttribute {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString HasApertureModeDimensionsAttribute { get; }
+		public static Foundation.NSString HasApertureModeDimensionsAttribute {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString IDAttribute { get; }
+		public static Foundation.NSString IDAttribute {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString IsChapterTrackAttribute { get; }
+		public static Foundation.NSString IsChapterTrackAttribute {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString LayerAttribute { get; }
+		public static Foundation.NSString LayerAttribute {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString MediaTypeAttribute { get; }
+		public static Foundation.NSString MediaTypeAttribute {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString ModificationTimeAttribute { get; }
+		public static Foundation.NSString ModificationTimeAttribute {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString RangeAttribute { get; }
+		public static Foundation.NSString RangeAttribute {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString TimeScaleAttribute { get; }
+		public static Foundation.NSString TimeScaleAttribute {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString UsageInMovieAttribute { get; }
+		public static Foundation.NSString UsageInMovieAttribute {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString UsageInPosterAttribute { get; }
+		public static Foundation.NSString UsageInPosterAttribute {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString UsageInPreviewAttribute { get; }
+		public static Foundation.NSString UsageInPreviewAttribute {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString VolumeAttribute { get; }
+		public static Foundation.NSString VolumeAttribute {
+			get { return default(Foundation.NSString); }
+		}
 
 	}
 
@@ -1087,229 +1332,459 @@ namespace QTKit {
 		{
 		}
 
-		public override System.IntPtr ClassHandle { get; }
-
-		public virtual System.Boolean CanUpdateMovieFile { get; }
-
-		public virtual System.nint ChapterCount { get; }
-
-		public virtual AppKit.NSImage CurrentFrameImage { get; }
-
-		public virtual QTKit.QTTime CurrentTime { get; set; }
-
-		public virtual QTKit.QTTime Duration { get; }
-
-		public virtual System.Boolean HasChapters { get; }
-
-		public virtual System.Boolean Idling { get; }
-
-		public static QTKit.QTMovie Movie { get; }
-
-		public virtual Foundation.NSDictionary MovieAttributes { get; set; }
-
-		public virtual System.Boolean Muted { get; set; }
-
-		public virtual AppKit.NSImage PosterImage { get; }
-
-		public virtual System.Single Rate { get; set; }
-
-		public virtual QTKit.QTTrack[] Tracks { get; }
-
-		public virtual System.Single Volume { get; set; }
-
-		public virtual Foundation.NSObject WeakDelegate { get; set; }
-
-		public static Foundation.NSString ActiveSegmentAttribute { get; }
-
-		public static Foundation.NSString ApertureModeAttribute { get; }
-
-		public static Foundation.NSString ApertureModeClassic { get; }
-
-		public static Foundation.NSString ApertureModeClean { get; }
-
-		public static Foundation.NSString ApertureModeDidChangeNotification { get; }
-
-		public static Foundation.NSString ApertureModeEncodedPixels { get; }
-
-		public static Foundation.NSString ApertureModeProduction { get; }
-
-		public static Foundation.NSString AskUnresolvedDataRefsAttribute { get; }
-
-		public static Foundation.NSString AutoAlternatesAttribute { get; }
-
-		public static Foundation.NSString ChapterDidChangeNotification { get; }
-
-		public static Foundation.NSString ChapterListDidChangeNotification { get; }
-
-		public static Foundation.NSString ChapterName { get; }
-
-		public static Foundation.NSString ChapterStartTime { get; }
-
-		public static Foundation.NSString ChapterTargetTrackAttribute { get; }
-
-		public static Foundation.NSString CloseWindowRequestNotification { get; }
-
-		public static Foundation.NSString CopyrightAttribute { get; }
-
-		public static Foundation.NSString CreationTimeAttribute { get; }
-
-		public static Foundation.NSString CurrentSizeAttribute { get; }
-
-		public static Foundation.NSString CurrentTimeAttribute { get; }
-
-		public static Foundation.NSString DataAttribute { get; }
-
-		public static Foundation.NSString DataReferenceAttribute { get; }
-
-		public static Foundation.NSString DataSizeAttribute { get; }
-
-		public static Foundation.NSString DelegateAttribute { get; }
-
-		public static Foundation.NSString DidEndNotification { get; }
-
-		public static Foundation.NSString DisplayNameAttribute { get; }
-
-		public static Foundation.NSString DontInteractWithUserAttribute { get; }
-
-		public static Foundation.NSString DurationAttribute { get; }
-
-		public static Foundation.NSString EditabilityDidChangeNotification { get; }
-
-		public static Foundation.NSString EditableAttribute { get; }
-
-		public static Foundation.NSString EditedNotification { get; }
-
-		public static Foundation.NSString EnterFullScreenRequestNotification { get; }
-
-		public static Foundation.NSString ExitFullScreenRequestNotification { get; }
-
-		public static Foundation.NSString FileNameAttribute { get; }
-
-		public static Foundation.NSString FileOffsetAttribute { get; }
-
-		public static Foundation.NSString FrameImageDeinterlaceFields { get; }
-
-		public static Foundation.NSString FrameImageHighQuality { get; }
-
-		public static Foundation.NSString FrameImageOpenGLContext { get; }
-
-		public static Foundation.NSString FrameImagePixelFormat { get; }
-
-		public static Foundation.NSString FrameImageRepresentationsType { get; }
-
-		public static Foundation.NSString FrameImageSingleField { get; }
-
-		public static Foundation.NSString FrameImageSize { get; }
-
-		public static Foundation.NSString FrameImageType { get; }
-
-		public static Foundation.NSString FrameImageTypeCGImageRef { get; }
-
-		public static Foundation.NSString FrameImageTypeCIImage { get; }
-
-		public static Foundation.NSString FrameImageTypeCVOpenGLTextureRef { get; }
-
-		public static Foundation.NSString FrameImageTypeCVPixelBufferRef { get; }
-
-		public static Foundation.NSString FrameImageTypeNSImage { get; }
-
-		public static Foundation.NSString HasApertureModeDimensionsAttribute { get; }
-
-		public static Foundation.NSString HasAudioAttribute { get; }
-
-		public static Foundation.NSString HasDurationAttribute { get; }
-
-		public static Foundation.NSString HasVideoAttribute { get; }
-
-		public static Foundation.NSString IsActiveAttribute { get; }
-
-		public static Foundation.NSString IsInteractiveAttribute { get; }
-
-		public static Foundation.NSString IsLinearAttribute { get; }
-
-		public static Foundation.NSString IsSteppableAttribute { get; }
-
-		public static Foundation.NSString LoadStateAttribute { get; }
-
-		public static Foundation.NSString LoadStateDidChangeNotification { get; }
-
-		public static Foundation.NSString LoopModeDidChangeNotification { get; }
-
-		public static Foundation.NSString LoopsAttribute { get; }
-
-		public static Foundation.NSString LoopsBackAndForthAttribute { get; }
-
-		public static Foundation.NSString MessageNotificationParameter { get; }
-
-		public static Foundation.NSString MessageStringPostedNotification { get; }
-
-		public static Foundation.NSString ModificationTimeAttribute { get; }
-
-		public static Foundation.NSString MutedAttribute { get; }
-
-		public static Foundation.NSString NaturalSizeAttribute { get; }
-
-		public static Foundation.NSString OpenAsyncOKAttribute { get; }
-
-		public static Foundation.NSString PasteboardAttribute { get; }
-
-		public static Foundation.NSString PasteboardType { get; }
-
-		public static Foundation.NSString PlaysAllFramesAttribute { get; }
-
-		public static Foundation.NSString PlaysSelectionOnlyAttribute { get; }
-
-		public static Foundation.NSString PosterTimeAttribute { get; }
-
-		public static Foundation.NSString PreferredMutedAttribute { get; }
-
-		public static Foundation.NSString PreferredRateAttribute { get; }
-
-		public static Foundation.NSString PreferredVolumeAttribute { get; }
-
-		public static Foundation.NSString PreviewModeAttribute { get; }
-
-		public static Foundation.NSString PreviewRangeAttribute { get; }
-
-		public static Foundation.NSString RateAttribute { get; }
-
-		public static Foundation.NSString RateChangesPreservePitchAttribute { get; }
-
-		public static Foundation.NSString RateDidChangeNotification { get; }
-
-		public static Foundation.NSString RateDidChangeNotificationParameter { get; }
-
-		public static Foundation.NSString ResolveDataRefsAttribute { get; }
-
-		public static Foundation.NSString SelectionAttribute { get; }
-
-		public static Foundation.NSString SelectionDidChangeNotification { get; }
-
-		public static Foundation.NSString SizeDidChangeNotification { get; }
-
-		public static Foundation.NSString StatusCodeNotificationParameter { get; }
-
-		public static Foundation.NSString StatusFlagsNotificationParameter { get; }
-
-		public static Foundation.NSString StatusStringNotificationParameter { get; }
-
-		public static Foundation.NSString StatusStringPostedNotification { get; }
-
-		public static Foundation.NSString TargetIDNotificationParameter { get; }
-
-		public static Foundation.NSString TargetNameNotificationParameter { get; }
-
-		public static Foundation.NSString TimeDidChangeNotification { get; }
-
-		public static Foundation.NSString TimeScaleAttribute { get; }
-
-		public static Foundation.NSString URLAttribute { get; }
-
-		public static Foundation.NSString UneditableException { get; }
-
-		public static Foundation.NSString VolumeAttribute { get; }
-
-		public static Foundation.NSString VolumeDidChangeNotification { get; }
+		public override System.IntPtr ClassHandle {
+			get { return default(System.IntPtr); }
+		}
+
+		public virtual System.Boolean CanUpdateMovieFile {
+			get { return default(System.Boolean); }
+		}
+
+		public virtual System.nint ChapterCount {
+			get { return default(System.nint); }
+		}
+
+		public virtual AppKit.NSImage CurrentFrameImage {
+			get { return default(AppKit.NSImage); }
+		}
+
+		public virtual QTKit.QTTime CurrentTime {
+			get { return default(QTKit.QTTime); }
+			set { }
+		}
+
+		public virtual QTKit.QTTime Duration {
+			get { return default(QTKit.QTTime); }
+		}
+
+		public virtual System.Boolean HasChapters {
+			get { return default(System.Boolean); }
+		}
+
+		public virtual System.Boolean Idling {
+			get { return default(System.Boolean); }
+		}
+
+		public static QTKit.QTMovie Movie {
+			get { return default(QTKit.QTMovie); }
+		}
+
+		public virtual Foundation.NSDictionary MovieAttributes {
+			get { return default(Foundation.NSDictionary); }
+			set { }
+		}
+
+		public virtual System.Boolean Muted {
+			get { return default(System.Boolean); }
+			set { }
+		}
+
+		public virtual AppKit.NSImage PosterImage {
+			get { return default(AppKit.NSImage); }
+		}
+
+		public virtual System.Single Rate {
+			get { return default(System.Single); }
+			set { }
+		}
+
+		public virtual QTKit.QTTrack[] Tracks {
+			get { return default(QTKit.QTTrack[]); }
+		}
+
+		public virtual System.Single Volume {
+			get { return default(System.Single); }
+			set { }
+		}
+
+		public virtual Foundation.NSObject WeakDelegate {
+			get { return default(Foundation.NSObject); }
+			set { }
+		}
+
+		public static Foundation.NSString ActiveSegmentAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString ApertureModeAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString ApertureModeClassic {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString ApertureModeClean {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString ApertureModeDidChangeNotification {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString ApertureModeEncodedPixels {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString ApertureModeProduction {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString AskUnresolvedDataRefsAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString AutoAlternatesAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString ChapterDidChangeNotification {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString ChapterListDidChangeNotification {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString ChapterName {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString ChapterStartTime {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString ChapterTargetTrackAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString CloseWindowRequestNotification {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString CopyrightAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString CreationTimeAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString CurrentSizeAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString CurrentTimeAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString DataAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString DataReferenceAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString DataSizeAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString DelegateAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString DidEndNotification {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString DisplayNameAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString DontInteractWithUserAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString DurationAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString EditabilityDidChangeNotification {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString EditableAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString EditedNotification {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString EnterFullScreenRequestNotification {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString ExitFullScreenRequestNotification {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString FileNameAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString FileOffsetAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString FrameImageDeinterlaceFields {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString FrameImageHighQuality {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString FrameImageOpenGLContext {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString FrameImagePixelFormat {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString FrameImageRepresentationsType {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString FrameImageSingleField {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString FrameImageSize {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString FrameImageType {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString FrameImageTypeCGImageRef {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString FrameImageTypeCIImage {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString FrameImageTypeCVOpenGLTextureRef {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString FrameImageTypeCVPixelBufferRef {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString FrameImageTypeNSImage {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString HasApertureModeDimensionsAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString HasAudioAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString HasDurationAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString HasVideoAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString IsActiveAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString IsInteractiveAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString IsLinearAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString IsSteppableAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString LoadStateAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString LoadStateDidChangeNotification {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString LoopModeDidChangeNotification {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString LoopsAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString LoopsBackAndForthAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString MessageNotificationParameter {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString MessageStringPostedNotification {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString ModificationTimeAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString MutedAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString NaturalSizeAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString OpenAsyncOKAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString PasteboardAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString PasteboardType {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString PlaysAllFramesAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString PlaysSelectionOnlyAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString PosterTimeAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString PreferredMutedAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString PreferredRateAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString PreferredVolumeAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString PreviewModeAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString PreviewRangeAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString RateAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString RateChangesPreservePitchAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString RateDidChangeNotification {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString RateDidChangeNotificationParameter {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString ResolveDataRefsAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString SelectionAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString SelectionDidChangeNotification {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString SizeDidChangeNotification {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString StatusCodeNotificationParameter {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString StatusFlagsNotificationParameter {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString StatusStringNotificationParameter {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString StatusStringPostedNotification {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString TargetIDNotificationParameter {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString TargetNameNotificationParameter {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString TimeDidChangeNotification {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString TimeScaleAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString URLAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString UneditableException {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString VolumeAttribute {
+			get { return default(Foundation.NSString); }
+		}
+
+		public static Foundation.NSString VolumeDidChangeNotification {
+			get { return default(Foundation.NSString); }
+		}
 
 		[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 		public static class Notifications : System.Object {
@@ -1518,11 +1993,20 @@ namespace QTKit {
 			return default (System.String);
 		}
 
-		public System.Int64 TimeValue { get; set; }
+		public System.Int64 TimeValue {
+			get { return default(System.Int64); }
+			set { }
+		}
 
-		public System.nint TimeScale { get; set; }
+		public System.nint TimeScale {
+			get { return default(System.nint); }
+			set { }
+		}
 
-		public QTKit.TimeFlags Flags { get; set; }
+		public QTKit.TimeFlags Flags {
+			get { return default(QTKit.TimeFlags); }
+			set { }
+		}
 
 	}
 
@@ -1538,9 +2022,15 @@ namespace QTKit {
 			return default (System.String);
 		}
 
-		public QTKit.QTTime Time { get; set; }
+		public QTKit.QTTime Time {
+			get { return default(QTKit.QTTime); }
+			set { }
+		}
 
-		public QTKit.QTTime Duration { get; set; }
+		public QTKit.QTTime Duration {
+			get { return default(QTKit.QTTime); }
+			set { }
+		}
 
 	}
 
@@ -1699,11 +2189,19 @@ namespace QTKit {
 			throw new System.PlatformNotSupportedException (ObjCRuntime.Constants.MacOS32bitsUnavailable);
 		}
 
-		public override System.IntPtr ClassHandle { get; }
+		public override System.IntPtr ClassHandle {
+			get { return default(System.IntPtr); }
+		}
 
-		public virtual System.String OutputDeviceUniqueID { get; set; }
+		public virtual System.String OutputDeviceUniqueID {
+			get { return default(System.String); }
+			set { }
+		}
 
-		public virtual System.Single Volume { get; set; }
+		public virtual System.Single Volume {
+			get { return default(System.Single); }
+			set { }
+		}
 
 	}
 
@@ -1732,17 +2230,34 @@ namespace QTKit {
 		{
 		}
 
-		public override System.IntPtr ClassHandle { get; }
+		public override System.IntPtr ClassHandle {
+			get { return default(System.IntPtr); }
+		}
 
-		public virtual System.Boolean AutomaticallyDropsLateVideoFrames { get; set; }
+		public virtual System.Boolean AutomaticallyDropsLateVideoFrames {
+			get { return default(System.Boolean); }
+			set { }
+		}
 
-		public QTKit.IQTCaptureDecompressedVideoOutputDelegate Delegate { get; set; }
+		public QTKit.IQTCaptureDecompressedVideoOutputDelegate Delegate {
+			get { return default(QTKit.IQTCaptureDecompressedVideoOutputDelegate); }
+			set { }
+		}
 
-		public virtual System.Double MinimumVideoFrameInterval { get; set; }
+		public virtual System.Double MinimumVideoFrameInterval {
+			get { return default(System.Double); }
+			set { }
+		}
 
-		public virtual Foundation.NSDictionary PixelBufferAttributes { get; set; }
+		public virtual Foundation.NSDictionary PixelBufferAttributes {
+			get { return default(Foundation.NSDictionary); }
+			set { }
+		}
 
-		public virtual Foundation.NSObject WeakDelegate { get; set; }
+		public virtual Foundation.NSObject WeakDelegate {
+			get { return default(Foundation.NSObject); }
+			set { }
+		}
 
 		public event System.EventHandler<QTKit.QTCaptureVideoDroppedEventArgs> DidDropVideoFrame;
 
@@ -1762,9 +2277,15 @@ namespace QTKit {
 			throw new System.PlatformNotSupportedException (ObjCRuntime.Constants.MacOS32bitsUnavailable);
 		}
 
-		public QTKit.QTCaptureConnection Connection { get; set; }
+		public QTKit.QTCaptureConnection Connection {
+			get { return default(QTKit.QTCaptureConnection); }
+			set { }
+		}
 
-		public QTKit.QTSampleBuffer SampleBuffer { get; set; }
+		public QTKit.QTSampleBuffer SampleBuffer {
+			get { return default(QTKit.QTSampleBuffer); }
+			set { }
+		}
 
 	}
 
@@ -1780,11 +2301,20 @@ namespace QTKit {
 			throw new System.PlatformNotSupportedException (ObjCRuntime.Constants.MacOS32bitsUnavailable);
 		}
 
-		public QTKit.QTCaptureConnection Connection { get; set; }
+		public QTKit.QTCaptureConnection Connection {
+			get { return default(QTKit.QTCaptureConnection); }
+			set { }
+		}
 
-		public QTKit.QTSampleBuffer SampleBuffer { get; set; }
+		public QTKit.QTSampleBuffer SampleBuffer {
+			get { return default(QTKit.QTSampleBuffer); }
+			set { }
+		}
 
-		public CoreVideo.CVImageBuffer VideoFrame { get; set; }
+		public CoreVideo.CVImageBuffer VideoFrame {
+			get { return default(CoreVideo.CVImageBuffer); }
+			set { }
+		}
 
 	}
 
@@ -1858,9 +2388,13 @@ namespace QTKit {
 			throw new System.PlatformNotSupportedException (ObjCRuntime.Constants.MacOS32bitsUnavailable);
 		}
 
-		public override System.IntPtr ClassHandle { get; }
+		public override System.IntPtr ClassHandle {
+			get { return default(System.IntPtr); }
+		}
 
-		public virtual QTKit.QTCaptureDevice Device { get; }
+		public virtual QTKit.QTCaptureDevice Device {
+			get { return default(QTKit.QTCaptureDevice); }
+		}
 
 	}
 
@@ -1910,29 +2444,60 @@ namespace QTKit {
 			throw new System.PlatformNotSupportedException (ObjCRuntime.Constants.MacOS32bitsUnavailable);
 		}
 
-		public override System.IntPtr ClassHandle { get; }
+		public override System.IntPtr ClassHandle {
+			get { return default(System.IntPtr); }
+		}
 
-		public QTKit.IQTCaptureFileOutputDelegate Delegate { get; set; }
+		public QTKit.IQTCaptureFileOutputDelegate Delegate {
+			get { return default(QTKit.IQTCaptureFileOutputDelegate); }
+			set { }
+		}
 
-		public virtual System.Boolean IsRecordingPaused { get; }
+		public virtual System.Boolean IsRecordingPaused {
+			get { return default(System.Boolean); }
+		}
 
-		public virtual QTKit.QTTime MaximumRecordedDuration { get; set; }
+		public virtual QTKit.QTTime MaximumRecordedDuration {
+			get { return default(QTKit.QTTime); }
+			set { }
+		}
 
-		public virtual System.UInt64 MaximumRecordedFileSize { get; set; }
+		public virtual System.UInt64 MaximumRecordedFileSize {
+			get { return default(System.UInt64); }
+			set { }
+		}
 
-		public virtual CoreGraphics.CGSize MaximumVideoSize { get; set; }
+		public virtual CoreGraphics.CGSize MaximumVideoSize {
+			get { return default(CoreGraphics.CGSize); }
+			set { }
+		}
 
-		public virtual System.Double MinimumVideoFrameInterval { get; set; }
+		public virtual System.Double MinimumVideoFrameInterval {
+			get { return default(System.Double); }
+			set { }
+		}
 
-		public virtual Foundation.NSUrl OutputFileUrl { get; }
+		public virtual Foundation.NSUrl OutputFileUrl {
+			get { return default(Foundation.NSUrl); }
+		}
 
-		public virtual QTKit.QTTime RecordedDuration { get; }
+		public virtual QTKit.QTTime RecordedDuration {
+			get { return default(QTKit.QTTime); }
+		}
 
-		public virtual System.UInt64 RecordedFileSize { get; }
+		public virtual System.UInt64 RecordedFileSize {
+			get { return default(System.UInt64); }
+		}
 
-		public virtual Foundation.NSObject WeakDelegate { get; set; }
+		public virtual Foundation.NSObject WeakDelegate {
+			get { return default(Foundation.NSObject); }
+			set { }
+		}
 
-		public QTKit.QTCaptureFileError ShouldChangeOutputFile { get; set; }
+		public QTKit.QTCaptureFileError ShouldChangeOutputFile {
+			get { return default(QTKit.QTCaptureFileError); }
+			set { }
+		}
 
 		public event System.EventHandler<QTKit.QTCaptureFileErrorEventArgs> DidFinishRecording;
 
@@ -1964,11 +2529,20 @@ namespace QTKit {
 			throw new System.PlatformNotSupportedException (ObjCRuntime.Constants.MacOS32bitsUnavailable);
 		}
 
-		public QTKit.QTCaptureConnection[] Connections { get; set; }
+		public QTKit.QTCaptureConnection[] Connections {
+			get { return default(QTKit.QTCaptureConnection[]); }
+			set { }
+		}
 
-		public Foundation.NSUrl OutputFileURL { get; set; }
+		public Foundation.NSUrl OutputFileURL {
+			get { return default(Foundation.NSUrl); }
+			set { }
+		}
 
-		public Foundation.NSError Reason { get; set; }
+		public Foundation.NSError Reason {
+			get { return default(Foundation.NSError); }
+			set { }
+		}
 
 	}
 
@@ -1984,9 +2558,15 @@ namespace QTKit {
 			throw new System.PlatformNotSupportedException (ObjCRuntime.Constants.MacOS32bitsUnavailable);
 		}
 
-		public QTKit.QTCaptureConnection Connection { get; set; }
+		public QTKit.QTCaptureConnection Connection {
+			get { return default(QTKit.QTCaptureConnection); }
+			set { }
+		}
 
-		public QTKit.QTSampleBuffer SampleBuffer { get; set; }
+		public QTKit.QTSampleBuffer SampleBuffer {
+			get { return default(QTKit.QTSampleBuffer); }
+			set { }
+		}
 
 	}
 
@@ -2002,9 +2582,15 @@ namespace QTKit {
 			throw new System.PlatformNotSupportedException (ObjCRuntime.Constants.MacOS32bitsUnavailable);
 		}
 
-		public QTKit.QTCaptureConnection[] Connections { get; set; }
+		public QTKit.QTCaptureConnection[] Connections {
+			get { return default(QTKit.QTCaptureConnection[]); }
+			set { }
+		}
 
-		public Foundation.NSUrl FileUrl { get; set; }
+		public Foundation.NSUrl FileUrl {
+			get { return default(Foundation.NSUrl); }
+			set { }
+		}
 
 	}
 
@@ -2126,9 +2712,13 @@ namespace QTKit {
 			throw new System.PlatformNotSupportedException (ObjCRuntime.Constants.MacOS32bitsUnavailable);
 		}
 
-		public override System.IntPtr ClassHandle { get; }
+		public override System.IntPtr ClassHandle {
+			get { return default(System.IntPtr); }
+		}
 
-		public virtual QTKit.QTCaptureConnection[] Connections { get; }
+		public virtual QTKit.QTCaptureConnection[] Connections {
+			get { return default(QTKit.QTCaptureConnection[]); }
+		}
 
 	}
 
@@ -2164,9 +2754,14 @@ namespace QTKit {
 			return default (Foundation.NSObject);
 		}
 
-		public override System.IntPtr ClassHandle { get; }
+		public override System.IntPtr ClassHandle {
+			get { return default(System.IntPtr); }
+		}
 
-		public virtual QTKit.QTCaptureSession Session { get; set; }
+		public virtual QTKit.QTCaptureSession Session {
+			get { return default(QTKit.QTCaptureSession); }
+			set { }
+		}
 
 	}
 
@@ -2187,7 +2782,9 @@ namespace QTKit {
 			throw new System.PlatformNotSupportedException (ObjCRuntime.Constants.MacOS32bitsUnavailable);
 		}
 
-		public override System.IntPtr ClassHandle { get; }
+		public override System.IntPtr ClassHandle {
+			get { return default(System.IntPtr); }
+		}
 
 	}
 
@@ -2208,9 +2805,13 @@ namespace QTKit {
 			throw new System.PlatformNotSupportedException (ObjCRuntime.Constants.MacOS32bitsUnavailable);
 		}
 
-		public override System.IntPtr ClassHandle { get; }
+		public override System.IntPtr ClassHandle {
+			get { return default(System.IntPtr); }
+		}
 
-		public virtual QTKit.QTCaptureConnection[] Connections { get; }
+		public virtual QTKit.QTCaptureConnection[] Connections {
+			get { return default(QTKit.QTCaptureConnection[]); }
+		}
 
 	}
 
@@ -2259,17 +2860,29 @@ namespace QTKit {
 		{
 		}
 
-		public override System.IntPtr ClassHandle { get; }
+		public override System.IntPtr ClassHandle {
+			get { return default(System.IntPtr); }
+		}
 
-		public virtual QTKit.QTCaptureInput[] Inputs { get; }
+		public virtual QTKit.QTCaptureInput[] Inputs {
+			get { return default(QTKit.QTCaptureInput[]); }
+		}
 
-		public virtual System.Boolean IsRunning { get; }
+		public virtual System.Boolean IsRunning {
+			get { return default(System.Boolean); }
+		}
 
-		public virtual QTKit.QTCaptureOutput[] Outputs { get; }
+		public virtual QTKit.QTCaptureOutput[] Outputs {
+			get { return default(QTKit.QTCaptureOutput[]); }
+		}
 
-		public static Foundation.NSString ErrorKey { get; }
+		public static Foundation.NSString ErrorKey {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString RuntimeErrorNotification { get; }
+		public static Foundation.NSString RuntimeErrorNotification {
+			get { return default(Foundation.NSString); }
+		}
 
 		[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 		public static class Notifications : System.Object {
@@ -2318,25 +2931,52 @@ namespace QTKit {
 		{
 		}
 
-		public override System.IntPtr ClassHandle { get; }
+		public override System.IntPtr ClassHandle {
+			get { return default(System.IntPtr); }
+		}
 
-		public virtual QTKit.QTCaptureConnection[] AvailableVideoPreviewConnections { get; }
+		public virtual QTKit.QTCaptureConnection[] AvailableVideoPreviewConnections {
+			get { return default(QTKit.QTCaptureConnection[]); }
+		}
 
-		public virtual QTKit.QTCaptureSession CaptureSession { get; set; }
+		public virtual QTKit.QTCaptureSession CaptureSession {
+			get { return default(QTKit.QTCaptureSession); }
+			set { }
+		}
 
-		public QTKit.IQTCaptureViewDelegate Delegate { get; set; }
+		public QTKit.IQTCaptureViewDelegate Delegate {
+			get { return default(QTKit.IQTCaptureViewDelegate); }
+			set { }
+		}
 
-		public virtual AppKit.NSColor FillColor { get; set; }
+		public virtual AppKit.NSColor FillColor {
+			get { return default(AppKit.NSColor); }
+			set { }
+		}
 
-		public virtual System.Boolean PreservesAspectRatio { get; set; }
+		public virtual System.Boolean PreservesAspectRatio {
+			get { return default(System.Boolean); }
+			set { }
+		}
 
-		public virtual CoreGraphics.CGRect PreviewBounds { get; }
+		public virtual CoreGraphics.CGRect PreviewBounds {
+			get { return default(CoreGraphics.CGRect); }
+		}
 
-		public virtual QTKit.QTCaptureConnection VideoPreviewConnection { get; set; }
+		public virtual QTKit.QTCaptureConnection VideoPreviewConnection {
+			get { return default(QTKit.QTCaptureConnection); }
+			set { }
+		}
 
-		public virtual Foundation.NSObject WeakDelegate { get; set; }
+		public virtual Foundation.NSObject WeakDelegate {
+			get { return default(Foundation.NSObject); }
+			set { }
+		}
 
-		public QTKit.QTCaptureImageEvent WillDisplayImage { get; set; }
+		public QTKit.QTCaptureImageEvent WillDisplayImage {
+			get { return default(QTKit.QTCaptureImageEvent); }
+			set { }
+		}
 
 	}
 
@@ -2428,41 +3068,74 @@ namespace QTKit {
 			return default (Foundation.NSObject);
 		}
 
-		public override System.IntPtr ClassHandle { get; }
+		public override System.IntPtr ClassHandle {
+			get { return default(System.IntPtr); }
+		}
 
-		public virtual Foundation.NSData DataRefData { get; }
+		public virtual Foundation.NSData DataRefData {
+			get { return default(Foundation.NSData); }
+		}
 
-		public virtual System.String DataRefType { get; set; }
+		public virtual System.String DataRefType {
+			get { return default(System.String); }
+			set { }
+		}
 
-		public virtual System.String MimeType { get; }
+		public virtual System.String MimeType {
+			get { return default(System.String); }
+		}
 
-		public virtual System.String Name { get; }
+		public virtual System.String Name {
+			get { return default(System.String); }
+		}
 
-		public virtual Foundation.NSData ReferenceData { get; }
+		public virtual Foundation.NSData ReferenceData {
+			get { return default(Foundation.NSData); }
+		}
 
-		public virtual System.String ReferenceFile { get; }
+		public virtual System.String ReferenceFile {
+			get { return default(System.String); }
+		}
 
-		public virtual Foundation.NSUrl ReferenceUrl { get; }
+		public virtual Foundation.NSUrl ReferenceUrl {
+			get { return default(Foundation.NSUrl); }
+		}
 
 	}
 
 	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 	public static class QTErrorKey : System.Object {
-		public static Foundation.NSString CaptureInput { get; }
+		public static Foundation.NSString CaptureInput {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString CaptureOutput { get; }
+		public static Foundation.NSString CaptureOutput {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString Device { get; }
+		public static Foundation.NSString Device {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString Domain { get; }
+		public static Foundation.NSString Domain {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString ExcludingDevice { get; }
+		public static Foundation.NSString ExcludingDevice {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString FileSize { get; }
+		public static Foundation.NSString FileSize {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString RecordingSuccesfullyFinished { get; }
+		public static Foundation.NSString RecordingSuccesfullyFinished {
+			get { return default(Foundation.NSString); }
+		}
 
-		public static Foundation.NSString Time { get; }
+		public static Foundation.NSString Time {
+			get { return default(Foundation.NSString); }
+		}
 
 	}
 
@@ -2498,9 +3171,14 @@ namespace QTKit {
 			return default (QTKit.QTMovieLayer);
 		}
 
-		public override System.IntPtr ClassHandle { get; }
+		public override System.IntPtr ClassHandle {
+			get { return default(System.IntPtr); }
+		}
 
-		public virtual QTKit.QTMovie Movie { get; set; }
+		public virtual QTKit.QTMovie Movie {
+			get { return default(QTKit.QTMovie); }
+			set { }
+		}
 
 	}
 
@@ -2615,41 +3293,91 @@ namespace QTKit {
 		{
 		}
 
-		public override System.IntPtr ClassHandle { get; }
+		public override System.IntPtr ClassHandle {
+			get { return default(System.IntPtr); }
+		}
 
-		public virtual System.Boolean BackButtonVisible { get; set; }
+		public virtual System.Boolean BackButtonVisible {
+			get { return default(System.Boolean); }
+			set { }
+		}
 
-		public virtual System.Single ControllerBarHeight { get; }
+		public virtual System.Single ControllerBarHeight {
+			get { return default(System.Single); }
+		}
 
-		public virtual System.Boolean CustomButtonVisible { get; set; }
+		public virtual System.Boolean CustomButtonVisible {
+			get { return default(System.Boolean); }
+			set { }
+		}
 
-		public QTKit.IQTMovieViewDelegate Delegate { get; set; }
+		public QTKit.IQTMovieViewDelegate Delegate {
+			get { return default(QTKit.IQTMovieViewDelegate); }
+			set { }
+		}
 
-		public virtual System.Boolean Editable { get; set; }
+		public virtual System.Boolean Editable {
+			get { return default(System.Boolean); }
+			set { }
+		}
 
-		public virtual AppKit.NSColor FillColor { get; set; }
+		public virtual AppKit.NSColor FillColor {
+			get { return default(AppKit.NSColor); }
+			set { }
+		}
 
-		public virtual System.Boolean HotSpotButtonVisible { get; set; }
+		public virtual System.Boolean HotSpotButtonVisible {
+			get { return default(System.Boolean); }
+			set { }
+		}
 
-		public virtual System.Boolean IsControllerVisible { get; set; }
+		public virtual System.Boolean IsControllerVisible {
+			get { return default(System.Boolean); }
+			set { }
+		}
 
-		public virtual QTKit.QTMovie Movie { get; set; }
+		public virtual QTKit.QTMovie Movie {
+			get { return default(QTKit.QTMovie); }
+			set { }
+		}
 
-		public virtual CoreGraphics.CGRect MovieBounds { get; }
+		public virtual CoreGraphics.CGRect MovieBounds {
+			get { return default(CoreGraphics.CGRect); }
+		}
 
-		public virtual CoreGraphics.CGRect MovieControllerBounds { get; }
+		public virtual CoreGraphics.CGRect MovieControllerBounds {
+			get { return default(CoreGraphics.CGRect); }
+		}
 
-		public virtual System.Boolean PreservesAspectRatio { get; set; }
+		public virtual System.Boolean PreservesAspectRatio {
+			get { return default(System.Boolean); }
+			set { }
+		}
 
-		public virtual System.Boolean SetStepButtonsVisible { get; set; }
+		public virtual System.Boolean SetStepButtonsVisible {
+			get { return default(System.Boolean); }
+			set { }
+		}
 
-		public virtual System.Boolean TranslateButtonVisible { get; set; }
+		public virtual System.Boolean TranslateButtonVisible {
+			get { return default(System.Boolean); }
+			set { }
+		}
 
-		public virtual System.Boolean VolumeButtonVisible { get; set; }
+		public virtual System.Boolean VolumeButtonVisible {
+			get { return default(System.Boolean); }
+			set { }
+		}
 
-		public virtual Foundation.NSObject WeakDelegate { get; set; }
+		public virtual Foundation.NSObject WeakDelegate {
+			get { return default(Foundation.NSObject); }
+			set { }
+		}
 
-		public virtual System.Boolean ZoomButtonsVisible { get; set; }
+		public virtual System.Boolean ZoomButtonsVisible {
+			get { return default(System.Boolean); }
+			set { }
+		}
 
 	}
 
@@ -2720,25 +3448,45 @@ namespace QTKit {
 			throw new System.PlatformNotSupportedException (ObjCRuntime.Constants.MacOS32bitsUnavailable);
 		}
 
-		public override System.IntPtr ClassHandle { get; }
+		public override System.IntPtr ClassHandle {
+			get { return default(System.IntPtr); }
+		}
 
-		public virtual System.IntPtr BytesForAllSamples { get; }
+		public virtual System.IntPtr BytesForAllSamples {
+			get { return default(System.IntPtr); }
+		}
 
-		public virtual QTKit.QTTime DecodeTime { get; }
+		public virtual QTKit.QTTime DecodeTime {
+			get { return default(QTKit.QTTime); }
+		}
 
-		public virtual QTKit.QTTime Duration { get; }
+		public virtual QTKit.QTTime Duration {
+			get { return default(QTKit.QTTime); }
+		}
 
-		public virtual QTKit.QTFormatDescription FormatDescription { get; }
+		public virtual QTKit.QTFormatDescription FormatDescription {
+			get { return default(QTKit.QTFormatDescription); }
+		}
 
-		public virtual System.nuint LengthForAllSamples { get; }
+		public virtual System.nuint LengthForAllSamples {
+			get { return default(System.nuint); }
+		}
 
-		public virtual QTKit.QTTime PresentationTime { get; }
+		public virtual QTKit.QTTime PresentationTime {
+			get { return default(QTKit.QTTime); }
+		}
 
-		public virtual Foundation.NSDictionary SampleBufferAttributes { get; }
+		public virtual Foundation.NSDictionary SampleBufferAttributes {
+			get { return default(Foundation.NSDictionary); }
+		}
 
-		public virtual System.nint SampleCount { get; }
+		public virtual System.nint SampleCount {
+			get { return default(System.nint); }
+		}
 
-		public virtual System.nint SampleUseCount { get; }
+		public virtual System.nint SampleUseCount {
+			get { return default(System.nint); }
+		}
 
 	}
 
