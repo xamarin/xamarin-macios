@@ -6264,7 +6264,7 @@ namespace Foundation
 		[Field ("NSURLIsApplicationKey")]
 		NSString IsApplicationKey { get; }
 
-		[iOS (9,0)][NoMac]
+		[iOS (9,0), Mac(10,11)]
 		[Field ("NSURLFileProtectionKey")]
 		NSString FileProtectionKey { get; }
 
@@ -7346,6 +7346,7 @@ namespace Foundation
 		[Export ("discretionary")]
 		bool Discretionary { [Bind ("isDiscretionary")] get; set; }
 	
+		[Mac (11,0)]
 		[Export ("sessionSendsLaunchEvents")]
 		bool SessionSendsLaunchEvents { get; set; }
 
@@ -7457,6 +7458,7 @@ namespace Foundation
 		[Export ("URLSession:didReceiveChallenge:completionHandler:")]
 		void DidReceiveChallenge (NSUrlSession session, NSUrlAuthenticationChallenge challenge, Action<NSUrlSessionAuthChallengeDisposition,NSUrlCredential> completionHandler);
 	
+		[Mac (11,0)]
 		[Export ("URLSessionDidFinishEventsForBackgroundURLSession:")]
 		void DidFinishEventsForBackgroundSession (NSUrlSession session);
 	}
