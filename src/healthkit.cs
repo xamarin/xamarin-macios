@@ -85,6 +85,12 @@ namespace HealthKit {
 		AppleMoveTime = 2,
 	}
 
+	[Watch (7,1), iOS (14,2)]
+	[Native]
+	public enum HKCategoryValueHeadphoneAudioExposureEvent : long {
+		SevenDayLimit = 1,
+	}
+
 	delegate void HKAnchoredObjectResultHandler2 (HKAnchoredObjectQuery query, HKSample[] results, nuint newAnchor, NSError error);
 
 	[Obsolete ("Use HKAnchoredObjectResultHandler2 instead")]
@@ -925,6 +931,10 @@ namespace HealthKit {
 		[Watch (6, 0), iOS (13, 0)]
 		[Field ("HKMetadataKeyAudioExposureLevel")]
 		NSString AudioExposureLevel { get; }
+
+		[Watch (7, 1), iOS (14, 2)]
+		[Field ("HKMetadataKeyAudioExposureDuration")]
+		NSString AudioExposureDuration { get; }
 
 		[Watch (7, 0), iOS (14, 0)]
 		[Field ("HKMetadataKeyDevicePlacementSide")]
@@ -2125,6 +2135,10 @@ namespace HealthKit {
 		[Watch (7, 0), iOS (14, 0)]
 		[Field ("HKCategoryTypeIdentifierHandwashingEvent")]
 		HandwashingEvent,
+
+		[Watch (7, 1), iOS (14, 2)]
+		[Field ("HKCategoryTypeIdentifierHeadphoneAudioExposureEvent")]
+		HeadphoneAudioExposureEvent,
 	}
 
 	[Watch (2,0)]
