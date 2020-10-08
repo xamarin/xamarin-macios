@@ -34,6 +34,8 @@ namespace Xamarin.MacDev.Tasks {
 		public string MinimumOSVersion { get; set; }
 
 		public ITaskItem[] Frameworks { get; set; }
+
+		public string DylibRPath { get; set; }
 #endregion
 
 		public override bool Execute ()
@@ -80,7 +82,7 @@ namespace Xamarin.MacDev.Tasks {
 
 			if (hasDylibs) {
 				arguments.Add ("-rpath");
-				arguments.Add ("@executable_path");
+				arguments.Add (DylibRPath ?? "@executable_path");
 			}
 
 			if (Frameworks != null) {
