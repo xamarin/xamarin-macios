@@ -456,7 +456,6 @@ namespace MLCompute {
 	[NoWatch]
 	[BaseType (typeof (MLCOptimizer))]
 	[DisableDefaultCtor]
-	[TV (14,0), Mac (10,15), iOS (14,0)]
 	interface MLCAdamOptimizer : NSCopying {
 
 		[Export ("beta1")]
@@ -510,6 +509,12 @@ namespace MLCompute {
 		[Export ("deviceWithGPUDevices:")]
 		[return: NullAllowed]
 		MLCDevice GetDevice (IMTLDevice[] gpus);
+
+		[iOS (14,2)][TV (14,2)]
+		[Static]
+		[Export ("deviceWithType:selectsMultipleComputeDevices:")]
+		[return: NullAllowed]
+		MLCDevice GetDevice (MLCDeviceType type, bool selectsMultipleComputeDevices);
 	}
 
 	[iOS (14,0)][TV (14,0)][Mac (11,0)]
@@ -2013,7 +2018,7 @@ namespace MLCompute {
 		bool Compile (MLCOptimizer optimizer);
 
 		[Export ("linkWithGraphs:")]
-		bool Link ([NullAllowed] MLCTrainingGraph[] graphs);
+		bool Link (MLCTrainingGraph[] graphs);
 
 		[Export ("sourceGradientTensorsForLayer:")]
 		MLCTensor[] GetSourceGradientTensors (MLCLayer layer);
@@ -2066,6 +2071,10 @@ namespace MLCompute {
 		[Export ("gradientTensorForInput:")]
 		[return: NullAllowed]
 		MLCTensor GetGradientTensor (MLCTensor input);
+
+		[iOS (14,2)][TV (14,2)]
+		[Export ("bindOptimizerData:deviceData:withTensor:")]
+		bool BindOptimizer (MLCTensorData[] data, [NullAllowed] MLCTensorOptimizerDeviceData[] deviceData, MLCTensor tensor);
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
@@ -2094,7 +2103,7 @@ namespace MLCompute {
 		bool Compile (MLCGraphCompilationOptions options, MLCDevice device);
 
 		[Export ("linkWithGraphs:")]
-		bool Link ([NullAllowed] MLCInferenceGraph[] graphs);
+		bool Link (MLCInferenceGraph[] graphs);
 
 		[Async (ResultTypeName = "MLCGraphCompletionResult")]
 		[Export ("executeWithInputsData:batchSize:options:completionHandler:")]
