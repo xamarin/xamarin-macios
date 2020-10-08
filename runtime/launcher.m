@@ -450,10 +450,17 @@ app_initialize (xamarin_initialize_data *data)
 	if (data->launch_mode == XamarinLaunchModeApp) {
 		NSString *exeName = NULL;
 		NSString *exePath;
-		if (plist != NULL)
-			exeName = (NSString *) [plist objectForKey:@"MonoBundleExecutable"];
-		else
-			fprintf (stderr, PRODUCT ": Could not find Info.plist in the bundle.\n");
+
+		if (xamarin_executable_name != NULL) {
+			exeName = [NSString stringWithUTF8String: xamarin_executable_name];
+		}
+
+		if (exeName == NULL) {
+			if (plist != NULL)
+				exeName = (NSString *) [plist objectForKey:@"MonoBundleExecutable"];
+			else
+				fprintf (stderr, PRODUCT ": Could not find Info.plist in the bundle.\n");
+		}
 
 		if (exeName == NULL)
 			exeName = [[NSString stringWithUTF8String: data->basename] stringByAppendingString: @".exe"];
