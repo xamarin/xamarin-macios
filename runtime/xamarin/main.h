@@ -60,6 +60,9 @@ extern char *xamarin_entry_assembly_path;
 extern bool xamarin_init_mono_debug;
 extern int xamarin_log_level;
 extern const char *xamarin_executable_name;
+#if MONOMAC
+extern NSString *xamarin_custom_bundle_name;
+#endif
 extern const char *xamarin_arch_name;
 extern bool xamarin_is_gc_coop;
 extern enum MarshalObjectiveCExceptionMode xamarin_marshal_objectivec_exception_mode;
