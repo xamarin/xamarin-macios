@@ -97,7 +97,7 @@ namespace Xamarin.MacDev.Tasks {
 				{  "DEVELOPER_DIR", sdkDevPath },
 			};
 			Log.LogMessage (MessageImportance.Low, $"Executing '{fileName} {StringUtils.FormatArguments (arguments)}'");
-			var rv = await Execution.RunAsync ("xcrun", arguments, environment: environment, mergeOutput: true);
+			var rv = await Execution.RunAsync (fileName, arguments, environment: environment, mergeOutput: true);
 			if (rv.ExitCode != 0) {
 				Log.LogMessage (MessageImportance.Normal, rv.StandardOutput.ToString ());
 				Log.LogError ($"Executing '{fileName} {StringUtils.FormatArguments (arguments)}' failed with exit code {rv.ExitCode}. Please review build log for more information.");
