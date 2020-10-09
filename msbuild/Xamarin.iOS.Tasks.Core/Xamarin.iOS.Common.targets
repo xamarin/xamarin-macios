@@ -158,7 +158,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			_CreateDebugConfiguration;
 			_CreatePkgInfo;
 			_CopyAppExtensionsToBundle;
-			_CopyWatchOS1AppsToBundle;
 			_CopyWatchOS2AppsToBundle;
 			_ReadAppExtensionDebugSymbolProperties;
 			_GenerateAppExtensionDebugSymbols;
@@ -1153,17 +1152,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</PropertyGroup>
 	</Target>
 
-	<Target Name="_CopyWatchOS1AppsToBundle" Condition="'$(IsAppExtension)' == 'true'" DependsOnTargets="_ResolveWatchAppReferences">
-		<Ditto
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '@(_ResolvedWatchAppReferences)' != '' And '%(_ResolvedWatchAppReferences.Identity)' != ''"
-			ToolExe="$(DittoExe)"
-			ToolPath="$(DittoPath)"
-			Source="@(_ResolvedWatchAppReferences)"
-			Destination="$(_AppBundlePath)%(_ResolvedWatchAppReferences.FileName)%(_ResolvedWatchAppReferences.Extension)"
-		/>
-	</Target>
-
 	<Target Name="_CopyWatchOS2AppsToBundle" Condition="'$(OutputType)' == 'Exe'" DependsOnTargets="_ResolveWatchAppReferences">
 		<Ditto
 			SessionId="$(BuildSessionId)"
@@ -1439,21 +1427,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			ToolPath="$(DittoPath)"
 			Source="$(AppBundleDir)"
 			Destination="$(_IpaAppBundleDir)"
-		/>
-
-		<FindWatchOS1AppExtensionBundle
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '@(_ResolvedAppExtensionReferences)' != ''"
-			AppExtensionReferences="@(_ResolvedAppExtensionReferences)"
-			>
-			<Output TaskParameter="WatchOS1AppExtensionBundle" PropertyName="_WatchOS1AppExtensionBundle"/>
-		</FindWatchOS1AppExtensionBundle>
-
-		<Copy
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '$(_WatchOS1AppExtensionBundle)' != ''"
-			SourceFiles="$(_WatchOS1AppExtensionBundle)\_WatchKitStub\WK"
-			DestinationFolder="$(DeviceSpecificIntermediateOutputPath)ipa\WatchKitSupport"
 		/>
 
 		<FindWatchOS2AppBundle

@@ -733,48 +733,6 @@
         </target>
         <note></note>
       </trans-unit>
-      <trans-unit id="E7011">
-        <source>The WatchKit Extension '{0}' has an invalid Info.plist: the NSExtension dictionary does not contain an NSExtensionAttributes dictionary.
-        </source>
-        <target state="translated">WatchKit 延伸模組 '{0}' 的 Info.plist 無效: NSExtension 字典未包含 NSExtensionAttributes 字典。
-        </target>
-        <note></note>
-      </trans-unit>
-      <trans-unit id="E7012">
-        <source>The WatchKit Extension '{0}' does not contain any watch apps.
-        </source>
-        <target state="translated">WatchKit 延伸模組 '{0}' 未包含任何 Watch 應用程式。
-        </target>
-        <note></note>
-      </trans-unit>
-      <trans-unit id="E7012_A">
-        <source>The WatchKit Extension '{0}' contain more than one watch apps.
-        </source>
-        <target state="translated">WatchKit 延伸模組 '{0}' 包含多個 Watch 應用程式。
-        </target>
-        <note></note>
-      </trans-unit>
-      <trans-unit id="E7013">
-        <source>The WatchKit Extension '{0}' has an invalid Info.plist: the UIRequiredDeviceCapabilities dictionary must contain the 'watch-companion' capability with a value of 'true'.
-        </source>
-        <target state="translated">WatchKit 延伸模組 '{0}' 的 Info.plist 無效: UIRequiredDeviceCapabilities 字典必須包含值為 'true' 的 'watch-companion' 功能。
-        </target>
-        <note></note>
-      </trans-unit>
-      <trans-unit id="E7013_A">
-        <source>The WatchKit Extension '{0}' has an invalid Info.plist: the UIRequiredDeviceCapabilities array must contain the 'watch-companion' capability.
-        </source>
-        <target state="translated">WatchKit 延伸模組 '{0}' 的 Info.plist 無效: UIRequiredDeviceCapabilities 陣列必須包含 'watch-companion' 功能。
-        </target>
-        <note></note>
-      </trans-unit>
-      <trans-unit id="E7013_B">
-        <source>The WatchKit Extension '{0}' has an invalid Info.plist: the UIRequiredDeviceCapabilities key must be present and contain the 'watch-companion' capability.
-        </source>
-        <target state="translated">WatchKit 延伸模組 '{0}' 的 Info.plist 無效: UIRequiredDeviceCapabilities 索引鍵必須存在，而且要包含 'watch-companion' 功能。
-        </target>
-        <note></note>
-      </trans-unit>
       <trans-unit id="E7014">
         <source>The Watch App '{0}' does not contain an Info.plist.
         </source>
@@ -1181,6 +1139,11 @@
         <target state="translated">除非繫結專案中具有原生參考，否則無法建立繫結資源套件。
         </target>
         <note></note>
+      </trans-unit>
+      <trans-unit id="E7069">
+        <source>Xamarin.iOS 14+ does not support watchOS 1 apps. Please migrate your project to watchOS 2+.</source>
+        <target state="new">Xamarin.iOS 14+ does not support watchOS 1 apps. Please migrate your project to watchOS 2+.</target>
+        <note />
       </trans-unit>
       <trans-unit id="M0001">
         <source>Tool {0} execution started with arguments: {1}

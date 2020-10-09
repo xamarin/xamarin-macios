@@ -110,43 +110,7 @@ namespace Xamarin.iOS.Tasks
 			case "com.apple.authentication-services-credential-provider-ui": // iOS
 				break;
 			case "com.apple.watchkit": // iOS8.2
-				var attributes = extension.Get<PDictionary> ("NSExtensionAttributes");
-
-				if (attributes == null) {
-					Log.LogError (7011, info, MSBStrings.E7011, name);
-					return;
-				}
-
-				var wkAppBundleIdentifier = attributes.GetString ("WKAppBundleIdentifier").Value;
-				var apps = Directory.GetDirectories (path, "*.app");
-				if (apps.Length == 0) {
-					Log.LogError (7012, info, MSBStrings.E7012, name);
-				} else if (apps.Length > 1) {
-					Log.LogError (7012, info, MSBStrings.E7012_A, name);
-				} else {
-					PObject requiredDeviceCapabilities;
-
-					if (plist.TryGetValue ("UIRequiredDeviceCapabilities", out requiredDeviceCapabilities)) {
-						var requiredDeviceCapabilitiesDictionary = requiredDeviceCapabilities as PDictionary;
-						var requiredDeviceCapabilitiesArray = requiredDeviceCapabilities as PArray;
-
-						if (requiredDeviceCapabilitiesDictionary != null) {
-							PBoolean watchCompanion;
-
-							if (!requiredDeviceCapabilitiesDictionary.TryGetValue ("watch-companion", out watchCompanion) || !watchCompanion.Value)
-								Log.LogError (7013, info, MSBStrings.E7013, name);
-						} else if (requiredDeviceCapabilitiesArray != null) {
-							if (!requiredDeviceCapabilitiesArray.OfType<PString> ().Any (x => x.Value == "watch-companion"))
-								Log.LogError (7013, info, MSBStrings.E7013_A, name);
-						} else {
-							Log.LogError (7013, info, MSBStrings.E7013_B, name);
-						}
-					} else {
-						Log.LogError (7013, info, MSBStrings.E7013_B, name);
-					}
-
-					ValidateWatchOS1App (apps[0], name, mainBundleIdentifier, wkAppBundleIdentifier);
-				}
+				Log.LogError (7069, info, MSBStrings.E7069 /* Xamarin.iOS 14+ does not support watchOS 1 apps. Please migrate your project to watchOS 2+. */);
 				break;
 			default:
 				Log.LogWarning (MSBStrings.W0073, name, extensionPointIdentifier);
@@ -311,55 +275,6 @@ namespace Xamarin.iOS.Tasks
 						Log.LogError (7032, info, MSBStrings.E7032_A, name);
 				}
 			}
-		}
-
-		void ValidateWatchOS1App (string path, string extensionName, string mainBundleIdentifier, string wkAppBundleIdentifier)
-		{
-			var name = Path.GetFileNameWithoutExtension (path);
-			var info = Path.Combine (path, "Info.plist");
-			if (!File.Exists (info)) {
-				Log.LogError (7033, path, MSBStrings.E7033, name);
-				return;
-			}
-
-			var plist = PDictionary.FromFile (info);
-			var bundleIdentifier = plist.GetCFBundleIdentifier ();
-			if (string.IsNullOrEmpty (bundleIdentifier)) {
-				Log.LogError (7034, info, MSBStrings.E7034, name);
-				return;
-			}
-
-			var deviceFamily = plist.GetUIDeviceFamily ();
-			IPhoneDeviceType expectedDeviceFamily;
-			string expectedDeviceFamilyString;
-			if (SdkIsSimulator) {
-				expectedDeviceFamily = IPhoneDeviceType.Watch | IPhoneDeviceType.IPhone;
-				expectedDeviceFamilyString = "IPhone, Watch (1, 4)";
-			} else {
-				expectedDeviceFamily = IPhoneDeviceType.Watch;
-				expectedDeviceFamilyString = "Watch (4)";
-			}
-
-			if (deviceFamily != expectedDeviceFamily)
-				Log.LogError (7035, info, MSBStrings.E7035, name, expectedDeviceFamilyString, deviceFamily.ToString (), (int) deviceFamily);
-
-			var executable = plist.GetCFBundleExecutable ();
-			if (string.IsNullOrEmpty (executable))
-				Log.LogError (7036, info, MSBStrings.E7036, name);
-
-			if (bundleIdentifier != wkAppBundleIdentifier)
-				Log.LogError (7037, info, MSBStrings.E7037, extensionName, wkAppBundleIdentifier, bundleIdentifier);
-
-			var companionAppBundleIdentifier = plist.Get<PString> ("WKCompanionAppBundleIdentifier");
-			if (companionAppBundleIdentifier != null) {
-				if (companionAppBundleIdentifier.Value != mainBundleIdentifier)
-					Log.LogError (7038, info, MSBStrings.E7038, name, companionAppBundleIdentifier.Value, mainBundleIdentifier);
-			} else {
-				Log.LogError (7038, info, MSBStrings.E7038_A, name);
-			}
-
-			if (plist.ContainsKey ("LSRequiresIPhoneOS"))
-				Log.LogError (7039, info, MSBStrings.E7039, name);
 		}
 
 		public override bool Execute ()
