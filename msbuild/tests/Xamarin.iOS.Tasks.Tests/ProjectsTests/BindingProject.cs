@@ -1,4 +1,3 @@
-﻿using System;
 using NUnit.Framework;
 using System.IO;
 using Xamarin.Tests;
@@ -18,14 +17,16 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void BuildTest ()
 		{
-			var mtouchPaths = SetupProjectPaths ("bindings-test", "bindings-test", Path.Combine (Configuration.RootPath, "tests"), false, Platform, "Any CPU/Debug-unified");
+			var mtouchPaths = SetupProjectPaths ("bindings-test", projectPath: Path.Combine (Configuration.RootPath, "tests", "bindings-test", "iOS"), includePlatform: false, config: "Any CPU/Debug-unified");
 
-			var proj = SetupProject (Engine, mtouchPaths ["project_csprojpath"]);
+			var proj = SetupProject (Engine, mtouchPaths.ProjectCSProjPath);
 
 			AppBundlePath = mtouchPaths.AppBundlePath;
 			var dllPath = Path.Combine(mtouchPaths.ProjectBinPath, "bindings-test.dll");
 
 			Engine.ProjectCollection.SetGlobalProperty ("Platform", Platform);
+
+			RunTarget (proj, "Restore", 0);
 
 			RunTarget (proj, "Build", 0);
 			Assert.IsTrue (File.Exists (dllPath), "{1} binding dll does not exist: {0} ", dllPath, Platform);
@@ -38,7 +39,7 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void FrameworkTest ()
 		{
-			var mtouchPaths = SetupProjectPaths ("bindings-test", "bindings-test", Path.Combine (Configuration.RootPath, "tests"), false, Platform, "Any CPU/Debug-unified");
+			var mtouchPaths = SetupProjectPaths ("bindings-test", projectPath: Path.Combine (Configuration.RootPath, "tests", "bindings-test", "iOS"), includePlatform: false, config: "Any CPU/Debug-unified");
 
 			var proj = SetupProject (Engine, mtouchPaths ["project_csprojpath"]);
 			AppBundlePath = mtouchPaths.AppBundlePath;
