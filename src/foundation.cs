@@ -6264,7 +6264,7 @@ namespace Foundation
 		[Field ("NSURLIsApplicationKey")]
 		NSString IsApplicationKey { get; }
 
-		[iOS (9,0), Mac(10,11)]
+		[iOS (9,0), Mac(11,0)]
 		[Field ("NSURLFileProtectionKey")]
 		NSString FileProtectionKey { get; }
 
