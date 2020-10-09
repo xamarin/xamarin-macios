@@ -481,14 +481,7 @@
 		<_MlaunchPath Condition="'$(_MlaunchPath)' == ''">$(_XamarinSdkRootDirectory)tools\bin\mlaunch</_MlaunchPath>
 	</PropertyGroup>
 
-	<Target Name="_PrepareRunMac" DependsOnTargets="_GenerateBundleName" Condition="'$(_PlatformName)' == 'macOS'">
-		<PropertyGroup Condition="'$(_PlatformName)' == 'macOS'">
-			<RunCommand>open</RunCommand>
-			<RunArguments>-a "$(_AppBundlePath)"</RunArguments>
-		</PropertyGroup>
-	</Target>
-
-	<Target Name="_InstallMobile" DependsOnTargets="_DetectSdkLocations;_GenerateBundleName" Condition="'$(_PlatformName)' != 'macOS' And '$(_SdkIsSimulator)' == 'false'">
+	<Target Name="_InstallMobile" DependsOnTargets="_DetectSdkLocations;_GenerateBundleName" Condition="'$(_SdkIsSimulator)' == 'false'">
 		<GetMlaunchArguments
 			SessionId="$(BuildSessionId)"
 			AppBundlePath="$(_AppBundlePath)"
@@ -507,7 +500,7 @@
 		<Exec Command="$(_MlaunchPath) $(_MlaunchInstallArguments)" />
 	</Target>
 
-	<Target Name="_PrepareRunMobile" DependsOnTargets="_DetectSdkLocations;_GenerateBundleName;_InstallMobile" Condition="'$(_PlatformName)' != 'macOS'">
+	<Target Name="_PrepareRunMobile" DependsOnTargets="_DetectSdkLocations;_GenerateBundleName;_InstallMobile" >
 		<PropertyGroup>
 			<!-- capture output by default -->
 			<_MlaunchCaptureOutput Condition="'$(_MlaunchCaptureOutput)' == ''">true</_MlaunchCaptureOutput>
@@ -540,7 +533,8 @@
 		</PropertyGroup>
 	</Target>
 
-	<Target Name="_PrepareRun" DependsOnTargets="_PrepareRunMac;_PrepareRunMobile" BeforeTargets="Run" />
+	<!-- This is only needed for mobile platforms, RunCommand and RunArguments are defined for macOS in Microsoft.macOS.Sdk.targets. -->
+	<Target Name="_PrepareRun" DependsOnTargets="_PrepareRunMobile" BeforeTargets="Run" Condition="'$(_PlatformName)' != 'macOS'" />
 
 	<!-- Import existing targets -->
 
