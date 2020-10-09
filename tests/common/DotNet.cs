@@ -119,7 +119,6 @@ namespace Xamarin.Tests {
 					switch (dirext) {
 					case ".storyboardc": // TODO
 					case ".atlasc": // TODO
-					case ".scnassets": // TODO
 						return false;
 					}
 

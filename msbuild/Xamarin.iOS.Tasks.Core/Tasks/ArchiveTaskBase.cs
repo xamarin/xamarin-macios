@@ -7,6 +7,7 @@ using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev;
 using Xamarin.MacDev.Tasks;
+using Xamarin.Utils;
 
 namespace Xamarin.iOS.Tasks
 {

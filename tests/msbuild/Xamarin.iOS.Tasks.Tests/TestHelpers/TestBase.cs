@@ -39,7 +39,7 @@ namespace Xamarin.iOS.Tasks
 			public static string ResolveReferences = "ResolveReferences";
 		}
 
-		protected static string GetTestDirectory (string mode = null)
+		protected static string GetTestDirectory (string mode = null, ExecutionMode? executionMode = null)
 		{
 			var assembly_path = Assembly.GetExecutingAssembly ().Location;
 			if (string.IsNullOrEmpty (mode)) {
@@ -53,7 +53,7 @@ namespace Xamarin.iOS.Tasks
 
 			var rv = Configuration.CloneTestDirectory (Configuration.TestProjectsDirectory, mode);
 
-			if (mode == "dotnet")
+			if (executionMode == ExecutionMode.DotNet)
 				Configuration.CopyDotNetSupportingFiles (rv);
 
 			return rv;

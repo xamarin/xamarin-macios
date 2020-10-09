@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Xamarin.Localization.MSBuild;
+using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks
 {
