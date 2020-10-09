@@ -543,10 +543,10 @@ $(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native/%: .libs/$(3)
 endef
 
 # Copy libxammac* to libxamarin* for macOS for now. Eventually we might rename libxammac to libxamarin, which would make it possible to remove this hack.
-.libs/mac/libxamarin%.a: .libs/mac/libxammac%.a
+.libs/mac/libxamarin%a: .libs/mac/libxammac%a
 	$(Q)$(CP) $< $@
 
-.libs/mac/libxamarin%.dylib: .libs/mac/libxammac%.dylib
+.libs/mac/libxamarin%dylib: .libs/mac/libxammac%dylib
 	$(Q)$(CP) $< $@
 	$(Q) install_name_tool -id @rpath/$(@F) $@
 
