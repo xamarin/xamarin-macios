@@ -5,6 +5,8 @@ using System.Collections.Generic;
 
 using Microsoft.Build.Framework;
 
+using Xamarin.Utils;
+
 namespace Xamarin.MacDev
 {
 	public static class BundleResource
