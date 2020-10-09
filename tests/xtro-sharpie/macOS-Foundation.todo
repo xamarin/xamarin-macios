@@ -28,4 +28,3 @@
 !missing-selector! NSOrderedSet::orderedSetByApplyingDifference: not bound
 !missing-type! NSOrderedCollectionChange not bound
 !missing-type! NSOrderedCollectionDifference not bound
-!missing-field! NSURLFileProtectionKey not bound
