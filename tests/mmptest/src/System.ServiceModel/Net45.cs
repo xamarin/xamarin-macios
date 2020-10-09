@@ -4,6 +4,7 @@ using Xamarin.Bundler;
 using System.Text;
 using System.IO;
 using Xamarin.MMP.Tests;
+using Xamarin.Tests;
 
 namespace MonoTouchFixtures.ServiceModel {
 	//https://testrail.xamarin.com/index.php?/cases/view/236768&group_by=cases:section_id&group_order=asc&group_id=72254
@@ -41,7 +42,7 @@ namespace MonoTouchFixtures.ServiceModel {
 		[Test]
 		public void ServiceModelShouldCreateCommunicationException ()
 		{
-			var testFolder = Path.Combine (TI.FindRootDirectory (), "../tests/common/mac/TestProjects/ServiceModel_Test/ServiceModel_Test");
+			var testFolder = Path.Combine (Configuration.TestProjectsDirectory, "ServiceModel_Test", "ServiceModel_Test");
 			var testResults = testFolder + "/TestResult.txt";
 			if (File.Exists (testResults))
 				File.Delete (testResults);

@@ -4,18 +4,18 @@ using System.Text;
 
 using NUnit.Framework;
 
+using Xamarin.Tests;
+
 namespace Xamarin.MMP.Tests
 {
 	[TestFixture]
 	public class RuntimeTests
 	{
-		public string TestProjectRoot => Path.Combine (TI.FindSourceDirectory (), "TestProjects");
-
 		[Test]
 		public void AssemblyRegistration ()
 		{
 			var projectName = "AssemblyRegistration";
-			var projectPath = Path.Combine (TestProjectRoot, projectName, $"{projectName}.csproj");
+			var projectPath = Path.Combine (Configuration.TestProjectsDirectory, projectName, $"{projectName}.csproj");
 
 			TI.CleanUnifiedProject (projectPath);
 			TI.BuildProject (projectPath);
