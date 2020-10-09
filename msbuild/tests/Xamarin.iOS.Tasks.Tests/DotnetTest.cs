@@ -54,8 +54,8 @@ namespace Xamarin.iOS.Tasks {
 		[TestCase ("MyXamarinFormsApp")]
 		public void CompareBuilds (string project, int expectedErrorCount = 0)
 		{
-			var net461 = GetTestDirectory ("net461");
-			var dotnet = GetTestDirectory ("dotnet");
+			var net461 = GetTestDirectory ("net461-" + ProjectConfiguration, ExecutionMode.MSBuild);
+			var dotnet = GetTestDirectory ("dotnet-" + ProjectConfiguration, ExecutionMode.DotNet);
 
 			Configuration.FixupTestFiles (dotnet, "dotnet");
 			Configuration.CopyDotNetSupportingFiles (dotnet);
