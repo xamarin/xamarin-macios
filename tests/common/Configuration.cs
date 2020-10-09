@@ -372,6 +372,12 @@ namespace Xamarin.Tests
 			}
 		}
 
+		public static string TestProjectsDirectory {
+			get {
+				return Path.Combine (RootPath, "tests", "common", "TestProjects");
+			}
+		}
+
 		public static string SdkRoot {
 			get {
 #if MONOMAC

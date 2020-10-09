@@ -215,8 +215,8 @@ killall:
 
 NUNIT_MSBUILD_DIR=$(TOP)/packages/NUnit.Runners.2.6.4/tools/lib
 test-ios-tasks: verify-system-vsmac-xcode-match
-	$(SYSTEM_MSBUILD) $(TOP)/msbuild/tests/Xamarin.iOS.Tasks.Tests/Xamarin.iOS.Tasks.Tests.csproj /p:Configuration=Debug
-	cd $(TOP)/msbuild/tests/Xamarin.iOS.Tasks.Tests && $(SYSTEM_XIBUILD) -t -- $(abspath $(TOP)/tools/nunit3-console-3.11.1) $(abspath $(TOP)/msbuild/tests/Xamarin.iOS.Tasks.Tests/bin/Debug/net461/Xamarin.iOS.Tasks.Tests.dll) "--result=$(abspath $(CURDIR)/TestResults_Xamarin.iOS.Tasks.Tests.xml);format=nunit2" -labels=Before $(TEST_FIXTURE) || touch $(CURDIR)/.$@-failed-stamp
+	$(SYSTEM_MSBUILD) $(TOP)/tests/msbuild/Xamarin.iOS.Tasks.Tests/Xamarin.iOS.Tasks.Tests.csproj /p:Configuration=Debug
+	cd $(TOP)/tests/msbuild/Xamarin.iOS.Tasks.Tests && $(SYSTEM_XIBUILD) -t -- $(abspath $(TOP)/tools/nunit3-console-3.11.1) $(abspath $(TOP)/tests/msbuild/Xamarin.iOS.Tasks.Tests/bin/Debug/net461/Xamarin.iOS.Tasks.Tests.dll) "--result=$(abspath $(CURDIR)/TestResults_Xamarin.iOS.Tasks.Tests.xml);format=nunit2" -labels=Before $(TEST_FIXTURE) || touch $(CURDIR)/.$@-failed-stamp
 	@[[ -z "$$BUILD_REPOSITORY" ]] || ( xsltproc $(TOP)/tests/HtmlTransform.xslt $(CURDIR)/TestResults_Xamarin.iOS.Tasks.Tests.xml > $(TOP)/tests/index.html && echo "@MonkeyWrench: AddFile: $$PWD/index.html" )
 	@if test -e $(CURDIR)/.$@-failed-stamp; then rm $(CURDIR)/.$@-failed-stamp; exit 1; fi
 

@@ -189,7 +189,7 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		public void MyCocoaSceneKitApp ()
 		{
-			var projectPath = Path.Combine (TI.FindSourceDirectory (), "TestProjects", "MyCocoaSceneKitApp", "MyCocoaSceneKitApp.csproj");
+			var projectPath = Path.Combine (Configuration.TestProjectsDirectory, "MyCocoaSceneKitApp", "MyCocoaSceneKitApp.csproj");
 			// Clone the project directory to a temporary directory
 			var testDirectory = Configuration.CloneTestDirectory (Path.GetDirectoryName (projectPath), "macOS");
 			// Update the project path to the clone project path in the temporary directory
@@ -205,7 +205,7 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		public void MyCocoaCoreMLApp ()
 		{
-			var projectPath = Path.Combine (TI.FindSourceDirectory (), "TestProjects", "MyCocoaCoreMLApp", "MyCocoaCoreMLApp.csproj");
+			var projectPath = Path.Combine (Configuration.TestProjectsDirectory, "MyCocoaCoreMLApp", "MyCocoaCoreMLApp.csproj");
 			// Clone the project directory to a temporary directory
 			var testDirectory = Configuration.CloneTestDirectory (Path.GetDirectoryName (projectPath), "macOS");
 			// Update the project path to the clone project path in the temporary directory
